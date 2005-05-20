@@ -9,7 +9,11 @@ iFolderWebService_FLAGS = $(CSC_LIBFLAG)
 iFolderWebService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll SimiasClient.dll Novell.Security.ClientPasswordManager.NetCredential.dll
 iFolderWebService_LIBPATH = $(LOG4NET_DIR)
 
-EXTRA_DIST = iFolder.asmx $(iFolderWebService_CSFILES1) $(srcdir)/iFolderWebService.wsdl
+EXTRA_DIST = iFolder.asmx $(iFolderWebService_CSFILES1) $(srcdir)/iFolderWebService.wsdl AssemblyInfo.cs.in
+
+AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
+	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
+	chmod +x $@
 
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml
@@ -40,7 +44,7 @@ uninstall-local:
 
 installcheck-local: install
 	
-CLEAN_FILES = Novell.iFolder.Web.dll $(DOC_FILE_CLEAN)
+CLEAN_FILES = Novell.iFolder.Web.dll $(DOC_FILE_CLEAN) AssemblyInfo.cs
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
