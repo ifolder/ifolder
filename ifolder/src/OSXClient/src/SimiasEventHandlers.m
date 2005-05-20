@@ -274,7 +274,7 @@ NSDictionary *getNotifyEventProperties(SimiasNotifyEvent *notifyEvent)
 	if(notifyEvent->time != nil)
 		[newProperties setObject:[NSString stringWithUTF8String:notifyEvent->time] forKey:@"time"];
 	if(notifyEvent->type != nil)
-		[newProperties setObject:[NSString stringWithUTF8String:notifyEvent->type] forKey:@"ID"];
+		[newProperties setObject:[NSString stringWithUTF8String:notifyEvent->type] forKey:@"type"];
 
 	return [newProperties autorelease];
 }

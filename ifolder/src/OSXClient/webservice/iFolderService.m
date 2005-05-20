@@ -36,6 +36,8 @@ typedef struct gsoap_creds
 
 void init_gsoap(struct soap *pSoap, GSOAP_CREDS *creds);
 void cleanup_gsoap(struct soap *pSoap, GSOAP_CREDS *creds);
+void handle_soap_error(struct soap *pSoap, GSOAP_CREDS *creds, NSString *methodName);
+
 
 NSDictionary *getiFolderProperties(struct ns1__iFolderWeb *ifolder);
 NSDictionary *getiFolderUserProperties(struct ns1__iFolderUser *user);
@@ -63,7 +65,6 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 {
     struct soap soap;
 	GSOAP_CREDS creds;
-    BOOL isRunning = NO;
     int err_code;
 
     struct _ns1__Ping ns1__Ping;
@@ -76,20 +77,12 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
             &ns1__Ping,
             &ns1__PingResponse);
 
-    if (err_code == SOAP_OK)
-    {
-        isRunning = YES;
-    }
-	else
-	{
-		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
-		cleanup_gsoap(&soap, &creds);
-		[NSException raise:faultString format:@"Error in Ping"];
-	}
+
+	handle_soap_error(&soap, &creds, @"iFolderService.Ping");
 
     cleanup_gsoap(&soap, &creds);
 
-    return isRunning;
+    return YES;
 }
 
 
@@ -114,34 +107,26 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
             &getiFoldersMessage,
             &getiFoldersResponse);
 
- 	if(soap.error)
-	{
-		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
-		cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%@", faultString]
-					format:@"Error in GetAlliFolders"];
-	}
-	else
-	{
-		int iFolderCount = getiFoldersResponse.GetAlliFoldersResult->__sizeiFolderWeb;
-		if(iFolderCount > 0)
-		{
-			ifolders = [[NSMutableArray alloc] initWithCapacity:iFolderCount];
-			
-			int counter;
-			for( counter = 0; counter < iFolderCount; counter++ )
-			{
-				struct ns1__iFolderWeb *curiFolder;
-			
-				curiFolder = getiFoldersResponse.GetAlliFoldersResult->iFolderWeb[counter];
-				iFolder *newiFolder = [[iFolder alloc] init];
+	handle_soap_error(&soap, &creds, @"iFolderService.GetiFolders");
 
-				[newiFolder setProperties:getiFolderProperties(curiFolder)];
-				
-				[ifolders addObject:newiFolder];
-			}
+	int iFolderCount = getiFoldersResponse.GetAlliFoldersResult->__sizeiFolderWeb;
+	if(iFolderCount > 0)
+	{
+		ifolders = [[NSMutableArray alloc] initWithCapacity:iFolderCount];
+		
+		int counter;
+		for( counter = 0; counter < iFolderCount; counter++ )
+		{
+			struct ns1__iFolderWeb *curiFolder;
+		
+			curiFolder = getiFoldersResponse.GetAlliFoldersResult->iFolderWeb[counter];
+			iFolder *newiFolder = [[iFolder alloc] init];
+
+			[newiFolder setProperties:getiFolderProperties(curiFolder)];
+			
+			[ifolders addObject:newiFolder];
 		}
-    }
+	}
 
     cleanup_gsoap(&soap, &creds);
 
@@ -173,28 +158,19 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
             &getiFolderMessage,
             &getiFolderResponse);
 
-	if(soap.error)
+	handle_soap_error(&soap, &creds, @"iFolderService.GetiFolder");
+
+	struct ns1__iFolderWeb *curiFolder = getiFolderResponse.GetiFolderResult;
+	
+	if(curiFolder == NULL)
 	{
-		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
 		cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%@", faultString]
-					format:@"Error in GetiFolder"];
+		[NSException raise:@"Invalid iFolderID" format:@"Error in GetiFolder"];
 	}
-	else
-	{
-		struct ns1__iFolderWeb *curiFolder;
-		curiFolder = getiFolderResponse.GetiFolderResult;
-		
-		if(curiFolder == NULL)
-		{
-		    cleanup_gsoap(&soap, &creds);
-			[NSException raise:@"Invalid iFolderID" format:@"Error in GetiFolder"];
-		}
 
-		ifolder = [[[iFolder alloc] init] retain];
+	ifolder = [[[iFolder alloc] init] retain];
 
-		[ifolder setProperties:getiFolderProperties(curiFolder)];
-    }
+	[ifolder setProperties:getiFolderProperties(curiFolder)];
 
     cleanup_gsoap(&soap, &creds);
 
@@ -229,23 +205,15 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
             &getiFolderMessage,
             &getiFolderResponse);
 
-	if(soap.error)
-	{
-		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
-		cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%@", faultString]
-					format:@"Error in GetAvailableiFolder"];
-	}
-	else
-	{
-		ifolder = [[[iFolder alloc] init] retain];
-		
-		struct ns1__iFolderWeb *curiFolder;
-			
-		curiFolder = getiFolderResponse.GetiFolderInvitationResult;
+	handle_soap_error(&soap, &creds, @"iFolderService.GetAvailableiFolder:inCollection");
 
-		[ifolder setProperties:getiFolderProperties(curiFolder)];
-    }
+	ifolder = [[[iFolder alloc] init] retain];
+	
+	struct ns1__iFolderWeb *curiFolder;
+		
+	curiFolder = getiFolderResponse.GetiFolderInvitationResult;
+
+	[ifolder setProperties:getiFolderProperties(curiFolder)];
 
     cleanup_gsoap(&soap, &creds);
 
@@ -279,23 +247,15 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
             &createiFolderMessage,
             &createiFolderResponse);
 
-	if(soap.error)
-	{
-		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
-		cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%@", faultString]
-					format:@"Error in CreateiFolder:inDomain"];
-	}
-	else
-	{
-		ifolder = [ [iFolder alloc] init];
-		
-		struct ns1__iFolderWeb *curiFolder;
-			
-		curiFolder = createiFolderResponse.CreateiFolderInDomainResult;
+	handle_soap_error(&soap, &creds, @"iFolderService.CreateiFolder:inDomain");
 
-		[ifolder setProperties:getiFolderProperties(curiFolder)];
-    }
+	ifolder = [ [iFolder alloc] init];
+	
+	struct ns1__iFolderWeb *curiFolder;
+		
+	curiFolder = createiFolderResponse.CreateiFolderInDomainResult;
+
+	[ifolder setProperties:getiFolderProperties(curiFolder)];
 
     cleanup_gsoap(&soap, &creds);
 
@@ -332,22 +292,14 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
             &acceptiFolderResponse);
 
 
-	if(soap.error)
-	{
-		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
-		cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%@", faultString]
-					format:@"Error in AcceptiFolderInvitation:inDomain"];
-	}
-	else
-	{
-		ifolder = [ [iFolder alloc] init];
+	handle_soap_error(&soap, &creds, @"iFolderService.AcceptiFolderInvitation:inDomain");
+
+	ifolder = [ [iFolder alloc] init];
+	
+	struct ns1__iFolderWeb *curiFolder;
 		
-		struct ns1__iFolderWeb *curiFolder;
-			
-		curiFolder = acceptiFolderResponse.AcceptiFolderInvitationResult;
-		[ifolder setProperties:getiFolderProperties(curiFolder)];
-    }
+	curiFolder = acceptiFolderResponse.AcceptiFolderInvitationResult;
+	[ifolder setProperties:getiFolderProperties(curiFolder)];
 
     cleanup_gsoap(&soap, &creds);
 
@@ -380,13 +332,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
             &declineiFolderMessage,
             &declineiFolderResponse);
 
-	if(soap.error)
-	{
-		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
-		cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%@", faultString]
-					format:@"Error in DeclineiFolderInvitation:fromDomain"];
-	}
+	handle_soap_error(&soap, &creds, @"iFolderService.DeclineiFolderInvitation:fromDomain");
 
     cleanup_gsoap(&soap, &creds);
 }
@@ -416,22 +362,15 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
             &revertiFolderMessage,
             &revertiFolderResponse);
 
-	if(soap.error)
-	{
-		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
-		cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%@", faultString]
-					format:@"Error in DeleteiFolder"];
-	}
-	else
-	{
-		ifolder = [ [iFolder alloc] init];
+	handle_soap_error(&soap, &creds, @"iFolderService.RevertiFolder");
+
+
+	ifolder = [ [iFolder alloc] init];
+	
+	struct ns1__iFolderWeb *curiFolder;
 		
-		struct ns1__iFolderWeb *curiFolder;
-			
-		curiFolder = revertiFolderResponse.RevertiFolderResult;
-		[ifolder setProperties:getiFolderProperties(curiFolder)];
-    }	
+	curiFolder = revertiFolderResponse.RevertiFolderResult;
+	[ifolder setProperties:getiFolderProperties(curiFolder)];
 
     cleanup_gsoap(&soap, &creds);
 	
@@ -463,13 +402,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
             &syncNowMessage,
             &syncNowResponse);
 
-	if(soap.error)
-	{
-		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
-		cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%@", faultString]
-					format:@"Error in DeleteiFolder"];
-	}
+	handle_soap_error(&soap, &creds, @"iFolderService.SynciFolderNow");
 
     cleanup_gsoap(&soap, &creds);
 }
@@ -500,27 +433,20 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
             &getUserMessage,
             &getUserResponse);
 
- 	if(soap.error)
-	{
-		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
-		cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%@", faultString]
-					format:@"Error in GetiFolderUserFromNodeID"];
-	}
-	else
-	{
-		struct ns1__iFolderUser *curUser;
-		curUser = getUserResponse.GetiFolderUserResult;
+	handle_soap_error(&soap, &creds, @"iFolderService.GetiFolderUser");
 
-		if(curUser == NULL)
-		{
-		    cleanup_gsoap(&soap, &creds);
-			[NSException raise:@"Invalid User" format:@"Error in GetiFolderUser"];
-		}
-	
-		user = [[User alloc] init];
-		[user setProperties:getiFolderUserProperties(curUser)];			
-    }
+
+	struct ns1__iFolderUser *curUser;
+	curUser = getUserResponse.GetiFolderUserResult;
+
+	if(curUser == NULL)
+	{
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:@"Invalid User" format:@"Error in GetiFolderUser"];
+	}
+
+	user = [[User alloc] init];
+	[user setProperties:getiFolderUserProperties(curUser)];			
 
     cleanup_gsoap(&soap, &creds);
 
@@ -555,27 +481,20 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
             &getUserMessage,
             &getUserResponse);
 
- 	if(soap.error)
-	{
-		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
-		cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%@", faultString]
-					format:@"Error in GetiFolderUserFromNodeID"];
-	}
-	else
-	{
-		struct ns1__iFolderUser *curUser;
-		curUser = getUserResponse.GetiFolderUserFromNodeIDResult;
 
-		if(curUser == NULL)
-		{
-		    cleanup_gsoap(&soap, &creds);
-			[NSException raise:@"Invalid User" format:@"Error in GetiFolderUserFromNodeID"];
-		}
-	
-		user = [[User alloc] init];
-		[user setProperties:getiFolderUserProperties(curUser)];			
-    }
+	handle_soap_error(&soap, &creds, @"iFolderService.GetiFolderUserFromNodeID");
+
+	struct ns1__iFolderUser *curUser;
+	curUser = getUserResponse.GetiFolderUserFromNodeIDResult;
+
+	if(curUser == NULL)
+	{
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:@"Invalid User" format:@"Error in GetiFolderUserFromNodeID"];
+	}
+
+	user = [[User alloc] init];
+	[user setProperties:getiFolderUserProperties(curUser)];			
 
     cleanup_gsoap(&soap, &creds);
 
@@ -607,34 +526,26 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
             &getUsersMessage,
             &getUsersResponse);
 
- 	if(soap.error)
-	{
-		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
-		cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%@", faultString]
-					format:@"Error in GetiFolderUsers"];
-	}
-	else
-	{
-		int usercount = getUsersResponse.GetiFolderUsersResult->__sizeiFolderUser;
-		if(usercount > 0)
-		{
-			users = [[NSMutableArray alloc] initWithCapacity:usercount];
-			
-			int counter;
-			for( counter = 0; counter < usercount; counter++ )
-			{
-				struct ns1__iFolderUser *curUser;
-			
-				curUser = getUsersResponse.GetiFolderUsersResult->iFolderUser[counter];
-				User *newUser = [[User alloc] init];
+	handle_soap_error(&soap, &creds, @"iFolderService.GetiFolderUsers");
 
-				[newUser setProperties:getiFolderUserProperties(curUser)];
-				
-				[users addObject:newUser];
-			}
+	int usercount = getUsersResponse.GetiFolderUsersResult->__sizeiFolderUser;
+	if(usercount > 0)
+	{
+		users = [[NSMutableArray alloc] initWithCapacity:usercount];
+		
+		int counter;
+		for( counter = 0; counter < usercount; counter++ )
+		{
+			struct ns1__iFolderUser *curUser;
+		
+			curUser = getUsersResponse.GetiFolderUsersResult->iFolderUser[counter];
+			User *newUser = [[User alloc] init];
+
+			[newUser setProperties:getiFolderUserProperties(curUser)];
+			
+			[users addObject:newUser];
 		}
-    }
+	}
 
     cleanup_gsoap(&soap, &creds);
 
@@ -668,34 +579,26 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
             &getUsersMessage,
             &getUsersResponse);
 
- 	if(soap.error)
-	{
-		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
-		cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%@", faultString]
-					format:@"Error in GetDomainUsers"];
-	}
-	else
-	{
-		int usercount = getUsersResponse.GetDomainUsersResult->__sizeiFolderUser;
-		if(usercount > 0)
-		{
-			users = [[NSMutableArray alloc] initWithCapacity:usercount];
-			
-			int counter;
-			for( counter = 0; counter < usercount; counter++ )
-			{
-				struct ns1__iFolderUser *curUser;
-			
-				curUser = getUsersResponse.GetDomainUsersResult->iFolderUser[counter];
-				User *newUser = [[User alloc] init];
+	handle_soap_error(&soap, &creds, @"iFolderService.GetDomainUsers");
 
-				[newUser setProperties:getiFolderUserProperties(curUser)];
-				
-				[users addObject:newUser];
-			}
+	int usercount = getUsersResponse.GetDomainUsersResult->__sizeiFolderUser;
+	if(usercount > 0)
+	{
+		users = [[NSMutableArray alloc] initWithCapacity:usercount];
+		
+		int counter;
+		for( counter = 0; counter < usercount; counter++ )
+		{
+			struct ns1__iFolderUser *curUser;
+		
+			curUser = getUsersResponse.GetDomainUsersResult->iFolderUser[counter];
+			User *newUser = [[User alloc] init];
+
+			[newUser setProperties:getiFolderUserProperties(curUser)];
+			
+			[users addObject:newUser];
 		}
-    }
+	}
 
     cleanup_gsoap(&soap, &creds);
 
@@ -729,34 +632,26 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
             &searchUsersMessage,
             &searchUsersResponse);
 
- 	if(soap.error)
-	{
-		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
-		cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%@", faultString]
-					format:@"Error in SearchDomainUsers"];
-	}
-	else
-	{
-		int usercount = searchUsersResponse.SearchForDomainUsersResult->__sizeiFolderUser;
-		if(usercount > 0)
-		{
-			users = [[NSMutableArray alloc] initWithCapacity:usercount];
-			
-			int counter;
-			for( counter = 0; counter < usercount; counter++ )
-			{
-				struct ns1__iFolderUser *curUser;
-			
-				curUser = searchUsersResponse.SearchForDomainUsersResult->iFolderUser[counter];
-				User *newUser = [[User alloc] init];
+	handle_soap_error(&soap, &creds, @"iFolderService.SearchDomainUsers");
 
-				[newUser setProperties:getiFolderUserProperties(curUser)];
-				
-				[users addObject:newUser];
-			}
+	int usercount = searchUsersResponse.SearchForDomainUsersResult->__sizeiFolderUser;
+	if(usercount > 0)
+	{
+		users = [[NSMutableArray alloc] initWithCapacity:usercount];
+		
+		int counter;
+		for( counter = 0; counter < usercount; counter++ )
+		{
+			struct ns1__iFolderUser *curUser;
+		
+			curUser = searchUsersResponse.SearchForDomainUsersResult->iFolderUser[counter];
+			User *newUser = [[User alloc] init];
+
+			[newUser setProperties:getiFolderUserProperties(curUser)];
+			
+			[users addObject:newUser];
 		}
-    }
+	}
 
     cleanup_gsoap(&soap, &creds);
 
@@ -791,20 +686,13 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
             &inviteUserMessage,
             &inviteUserResponse);
 
-	if(soap.error)
-	{
-		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
-		cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%@", faultString]
-					format:@"Error in InviteUser:toiFolder:withRights:"];
-	}
-	else
-	{
-		newUser = [ [User alloc] init];
-		
-		[newUser setProperties:getiFolderUserProperties(
-							inviteUserResponse.InviteUserResult)];
-    }
+
+	handle_soap_error(&soap, &creds, @"iFolderService.InviteUser:toiFolder:withRights:");
+
+	newUser = [ [User alloc] init];
+	
+	[newUser setProperties:getiFolderUserProperties(
+						inviteUserResponse.InviteUserResult)];
 
     cleanup_gsoap(&soap, &creds);
 
@@ -837,13 +725,8 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
             &removeUserMessage,
             &removeUserResponse);
 
-	if(soap.error)
-	{
-		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
-		cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%@", faultString]
-					format:@"Error in RemoveUser:fromiFolder:"];
-	}
+	handle_soap_error(&soap, &creds, @"iFolderService.RemoveUser:fromiFolder:");
+
 
     cleanup_gsoap(&soap, &creds);
 }
@@ -873,27 +756,19 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
             &getDSMessage,
             &getDSResponse);
 
- 	if(soap.error)
-	{
-		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
-		cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%@", faultString]
-					format:@"Error in GetiFolderDiskSpace"];
-	}
-	else
-	{
-		struct ns1__DiskSpace *curDS;
-		curDS = getDSResponse.GetiFolderDiskSpaceResult;
+	handle_soap_error(&soap, &creds, @"iFolderService.GetiFolderDiskSpace");
 
-		if(curDS == NULL)
-		{
-		    cleanup_gsoap(&soap, &creds);
-			[NSException raise:@"Invalid iFolderID" format:@"Error in GetiFolderDiskSpace"];
-		}
-	
-		ds = [[DiskSpace alloc] init];
-		[ds setProperties:getDiskSpaceProperties(curDS)];			
-    }
+	struct ns1__DiskSpace *curDS;
+	curDS = getDSResponse.GetiFolderDiskSpaceResult;
+
+	if(curDS == NULL)
+	{
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:@"Invalid iFolderID" format:@"Error in GetiFolderDiskSpace"];
+	}
+
+	ds = [[DiskSpace alloc] init];
+	[ds setProperties:getDiskSpaceProperties(curDS)];			
 
     cleanup_gsoap(&soap, &creds);
 
@@ -926,27 +801,19 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
             &getDSMessage,
             &getDSResponse);
 
- 	if(soap.error)
-	{
-		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
-		cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%@", faultString]
-					format:@"Error in GetUserDiskSpace"];
-	}
-	else
-	{
-		struct ns1__DiskSpace *curDS;
-		curDS = getDSResponse.GetUserDiskSpaceResult;
+	handle_soap_error(&soap, &creds, @"iFolderService.GetUserDiskSpace");
 
-		if(curDS == NULL)
-		{
-		    cleanup_gsoap(&soap, &creds);
-			[NSException raise:@"Invalid userID" format:@"Error in GetUserDiskSpace"];
-		}
-	
-		ds = [[DiskSpace alloc] init];
-		[ds setProperties:getDiskSpaceProperties(curDS)];			
-    }
+	struct ns1__DiskSpace *curDS;
+	curDS = getDSResponse.GetUserDiskSpaceResult;
+
+	if(curDS == NULL)
+	{
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:@"Invalid userID" format:@"Error in GetUserDiskSpace"];
+	}
+
+	ds = [[DiskSpace alloc] init];
+	[ds setProperties:getDiskSpaceProperties(curDS)];			
 
     cleanup_gsoap(&soap, &creds);
 
@@ -979,13 +846,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
             &setDSMessage,
             &setDSResponse);
 
- 	if(soap.error)
-	{
-		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
-		cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%@", faultString]
-					format:@"Error in SetiFolderDiskSpace"];
-	}
+	handle_soap_error(&soap, &creds, @"iFolderService.SetiFolderDiskSpace");
 
     cleanup_gsoap(&soap, &creds);
 }
@@ -1015,36 +876,19 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
             &getSSMessage,
             &getSSResponse);
 
- 	if(soap.error)
-	{
-		if((soap.fault != NULL) &&
-			(soap.fault->faultstring != NULL) )
-		{
-			NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
-			cleanup_gsoap(&soap, &creds);
-			[NSException raise:[NSString stringWithFormat:@"%@", faultString]
-					format:@"Error in CalculateSyncSize"];
-		}
-		else
-		{
-			[NSException raise:[NSString stringWithFormat:@"gSoap Error %d", soap.error]
-					format:@"Error in CalculateSyncSize"];
-		}
-	}
-	else
-	{
-		struct ns1__SyncSize *curSS;
-		curSS = getSSResponse.CalculateSyncSizeResult;
+	handle_soap_error(&soap, &creds, @"iFolderService.CalculateSyncSize");
 
-		if(curSS == NULL)
-		{
-		    cleanup_gsoap(&soap, &creds);
-			[NSException raise:@"Invalid iFolderID" format:@"Error in CalculateSyncSize"];
-		}
-	
-		ss = [[SyncSize alloc] init];
-		[ss setProperties:getSyncSizeProperties(curSS)];			
-    }
+	struct ns1__SyncSize *curSS;
+	curSS = getSSResponse.CalculateSyncSizeResult;
+
+	if(curSS == NULL)
+	{
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:@"Invalid iFolderID" format:@"Error in CalculateSyncSize"];
+	}
+
+	ss = [[SyncSize alloc] init];
+	[ss setProperties:getSyncSizeProperties(curSS)];			
 
     cleanup_gsoap(&soap, &creds);
 
@@ -1069,13 +913,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
             &getIntervalMessage,
             &getIntervalResponse);
 
-	if(soap.error)
-	{
-		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
-		cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%@", faultString]
-					format:@"Error in DeleteiFolder"];
-	}
+	handle_soap_error(&soap, &creds, @"iFolderService.GetDefaultSyncInterval");
 	
 	int interval = getIntervalResponse.GetDefaultSyncIntervalResult;
 
@@ -1106,13 +944,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
             &setIntervalMessage,
             &setIntervalResponse);
 
-	if(soap.error)
-	{
-		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
-		cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%@", faultString]
-					format:@"Error in DeleteiFolder"];
-	}
+	handle_soap_error(&soap, &creds, @"iFolderService.SetDefaultSyncInterval");
 
     cleanup_gsoap(&soap, &creds);
 }
@@ -1143,34 +975,26 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
             &getConflictsMessage,
             &getConflictsResponse);
 
- 	if(soap.error)
-	{
-		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
-		cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%@", faultString]
-					format:@"Error in GetiFolderUsers"];
-	}
-	else
-	{
-		int conflictcount = getConflictsResponse.GetiFolderConflictsResult->__sizeConflict;
-		if(conflictcount > 0)
-		{
-			conflicts = [[NSMutableArray alloc] initWithCapacity:conflictcount];
-			
-			int counter;
-			for( counter = 0; counter < conflictcount; counter++ )
-			{
-				struct ns1__Conflict *curConflict;
-			
-				curConflict = getConflictsResponse.GetiFolderConflictsResult->Conflict[counter];
-				iFolderConflict *newConflict = [[iFolderConflict alloc] init];
+	handle_soap_error(&soap, &creds, @"iFolderService.GetiFolderConflicts");
 
-				[newConflict setProperties:getConflictProperties(curConflict)];
-				
-				[conflicts addObject:newConflict];
-			}
+	int conflictcount = getConflictsResponse.GetiFolderConflictsResult->__sizeConflict;
+	if(conflictcount > 0)
+	{
+		conflicts = [[NSMutableArray alloc] initWithCapacity:conflictcount];
+		
+		int counter;
+		for( counter = 0; counter < conflictcount; counter++ )
+		{
+			struct ns1__Conflict *curConflict;
+		
+			curConflict = getConflictsResponse.GetiFolderConflictsResult->Conflict[counter];
+			iFolderConflict *newConflict = [[iFolderConflict alloc] init];
+
+			[newConflict setProperties:getConflictProperties(curConflict)];
+			
+			[conflicts addObject:newConflict];
 		}
-    }
+	}
 
     cleanup_gsoap(&soap, &creds);
 
@@ -1204,13 +1028,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
             &resolveMessage,
             &resolveResponse);
 
- 	if(soap.error)
-	{
-		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
-		cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%@", faultString]
-					format:@"Error in ResolveFileConflict"];
-	}
+	handle_soap_error(&soap, &creds, @"iFolderService.ResolveFileConflict");
 
     cleanup_gsoap(&soap, &creds);
 }
@@ -1243,13 +1061,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
             &resolveMessage,
             &resolveResponse);
 
- 	if(soap.error)
-	{
-		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
-		cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%@", faultString]
-					format:@"Error in ResolveNameConflict"];
-	}
+	handle_soap_error(&soap, &creds, @"iFolderService.ResolveNameConflict");
 
     cleanup_gsoap(&soap, &creds);
 }
@@ -1282,13 +1094,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
             &resolveMessage,
             &resolveResponse);
 
- 	if(soap.error)
-	{
-		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
-		cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%@", faultString]
-					format:@"Error in RenameAndResolveConflict"];
-	}
+	handle_soap_error(&soap, &creds, @"iFolderService.RenameAndResolveConflict");
 
     cleanup_gsoap(&soap, &creds);
 }
@@ -1321,13 +1127,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
             &setRightsMessage,
             &setRightsResponse);
 
- 	if(soap.error)
-	{
-		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
-		cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%@", faultString]
-					format:@"Error in SetUserRights"];
-	}
+	handle_soap_error(&soap, &creds, @"iFolderService.SetUserRights");
 
     cleanup_gsoap(&soap, &creds);
 }
@@ -1360,13 +1160,8 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
             &changeOwnerMessage,
             &changeOwnerResponse);
 
- 	if(soap.error)
-	{
-		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
-		cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%@", faultString]
-					format:@"Error in ChanageOwner"];
-	}
+	handle_soap_error(&soap, &creds, @"iFolderService.ChanageOwner");
+
 
     cleanup_gsoap(&soap, &creds);
 }
@@ -1554,9 +1349,73 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict)
 
 
 
+//----------------------------------------------------------------------------
+// handle_soap_error
+// This will check the soap structure for any errors and throw an appropriate
+// exception based on that error
+//----------------------------------------------------------------------------
+void handle_soap_error(struct soap *pSoap, GSOAP_CREDS *creds, NSString *methodName)
+{
+	int error = pSoap->error;
+	
+ 	if(error)
+	{
+		if(soap_soap_error_check(error))
+		{
+			if( (pSoap->fault != NULL) && (pSoap->fault->faultstring != NULL) )
+			{
+				NSString *faultString = [NSString stringWithUTF8String:pSoap->fault->faultstring];
+				cleanup_gsoap(pSoap, creds);
+				[NSException raise:[NSString stringWithFormat:@"%@", faultString]
+						format:@"Exception in %@", methodName];
+			}
+			else
+			{
+				cleanup_gsoap(pSoap, creds);
+				[NSException raise:[NSString stringWithFormat:@"SOAP Error %d", error]
+						format:@"SOAP error in %@", methodName];
+			}
+		}
+		else if(soap_http_error_check(error))
+		{
+			cleanup_gsoap(pSoap, creds);
+			[NSException raise:[NSString stringWithFormat:@"HTTP Error %d", error]
+					format:@"HTTP error in %@", methodName];
+		}
+		else if(soap_tcp_error_check(error))
+		{
+			cleanup_gsoap(pSoap, creds);
+			[NSException raise:[NSString stringWithFormat:@"TCP Error %d", error]
+					format:@"TCP error in %@", methodName];
+		}
+		else if(soap_ssl_error_check(error))
+		{
+			cleanup_gsoap(pSoap, creds);
+			[NSException raise:[NSString stringWithFormat:@"SSL Error %d", error]
+					format:@"SSL error in %@", methodName];
+		}
+		else if(soap_xml_error_check(error))
+		{
+			cleanup_gsoap(pSoap, creds);
+			[NSException raise:[NSString stringWithFormat:@"XML Error %d", error]
+					format:@"XML error in %@", methodName];
+		}
+		else
+		{
+			cleanup_gsoap(pSoap, creds);
+			[NSException raise:[NSString stringWithFormat:@"Error %d", error]
+					format:@"Error in %@", methodName];
+		}
+	}
+}
+
+
+
+
 void init_gsoap(struct soap *pSoap, GSOAP_CREDS *creds)
 {
-	soap_init2(pSoap, SOAP_C_UTFSTRING, SOAP_C_UTFSTRING);
+	soap_init2(pSoap, (SOAP_C_UTFSTRING | SOAP_IO_DEFAULT), (SOAP_C_UTFSTRING | SOAP_IO_DEFAULT));
+//	soap_init2(pSoap, SOAP_C_UTFSTRING, SOAP_C_UTFSTRING);
 //	soap_init(pSoap);
 	soap_set_namespaces(pSoap, iFolder_namespaces);
 	
@@ -1578,7 +1437,11 @@ void init_gsoap(struct soap *pSoap, GSOAP_CREDS *creds)
 			pSoap->userid = creds->username;
 			pSoap->passwd = creds->password;
 		}
-	}	
+	}
+	
+	// Set the timeout for send and receive to 30 seconds
+	pSoap->recv_timeout = 30;
+	pSoap->send_timeout = 30;
 }
 
 
