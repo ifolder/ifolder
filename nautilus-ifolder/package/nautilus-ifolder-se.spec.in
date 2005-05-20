@@ -22,10 +22,10 @@
 #
 #######################################################################
 
-%define prefix /opt/novell/ifolder3
+%define prefix /opt/novell/ifolder-se
 %define gnome_root @gnome_root@
 
-Summary      : nautilus-ifolder
+Summary      : nautilus-ifolder-se
 Name         : @PACKAGE@
 Version      : @VERSION@
 Release      : 1
@@ -39,7 +39,7 @@ BuildRoot    : %{_tmppath}/%{name}-%{version}
 
 Requires     : nautilus >= 2.5
 Requires     : simias >= 1.0
-Requires     : ifolder3 >= 3.0
+Requires     : ifolder-se >= 1.0
 Obsoletes    : %{name} < %{version}
 
 #=============================================================================
