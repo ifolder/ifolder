@@ -510,7 +510,7 @@ test/iFolderComponent/Makefile
 package/Makefile
 package/windows/Makefile
 package/linux/Makefile
-package/linux/ifolder.spec
+package/linux/ifolder-se.spec
 package/darwin/Makefile
 doc/Makefile
 help/Makefile

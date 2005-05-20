@@ -109,14 +109,14 @@ PKG_CHECK_MODULES(SIMIAS_CLIENT_C, simias-client-c >= $SIMIAS_CLIENT_MINIMUM_VER
 AC_SUBST(SIMIAS_CLIENT_C_CFLAGS)
 AC_SUBST(SIMIAS_CLIENT_C_LIBS)
 
-PKG_CHECK_MODULES(IFOLDER, ifolder3 >= $IFOLDER_MINIMUM_VERSION)
+PKG_CHECK_MODULES(IFOLDER, ifolder-se >= $IFOLDER_MINIMUM_VERSION)
 AC_SUBST(IFOLDER_LIBS)
 
-PKG_CHECK_MODULES(IFOLDER_C, ifolder3-c >= $IFOLDER_MINIMUM_VERSION)
+PKG_CHECK_MODULES(IFOLDER_C, ifolder-se-c >= $IFOLDER_MINIMUM_VERSION)
 AC_SUBST(IFOLDER_C_CFLAGS)
 AC_SUBST(IFOLDER_C_LIBS)
 
-ifolder_prefix=$(pkg-config --variable=prefix ifolder3)
+ifolder_prefix=$(pkg-config --variable=prefix ifolder-se)
 AC_SUBST(ifolder_prefix)
 
 gnome_root=$(pkg-config --variable=prefix libnautilus-extension)
@@ -161,7 +161,7 @@ AC_OUTPUT([
   src/nautilus-ifolder.h
   src/nautilus-ifolder
   package/Makefile
-  package/nautilus-ifolder.spec
+  package/nautilus-ifolder-se.spec
 ])
 
 #  po/Makefile.in

@@ -21,7 +21,7 @@
 #
 #######################################################################
 
-%define prefix /opt/novell/ifolder3
+%define prefix /opt/novell/ifolder-se
 
 Summary      : Simias
 Name         : @PACKAGE@
