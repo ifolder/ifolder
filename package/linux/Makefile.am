@@ -20,7 +20,7 @@
 #  Author: Paul Thomas <pthomas@novell.com>
 #
 #######################################################################
-EXTRA_DIST = $(srcdir)/Makefile.am $(srcdir)/ifolder.spec.in
+EXTRA_DIST = $(srcdir)/Makefile.am $(srcdir)/ifolder-se.spec.in
 
 RELEASE = 1
 SRPM_FILE   = $(PACKAGE)-$(VERSION)-$(RELEASE).src.rpm
@@ -28,7 +28,7 @@ RPM_FILE    = $(PACKAGE)-$(VERSION)-$(RELEASE).*.rpm
 
 .PHONY: ifolder-dist
 
-all: ifolder.spec ifolder-dist clean
+all: ifolder-se.spec ifolder-dist clean
 	mkdir RPM
 	echo %_topdir `pwd`/RPM > $(HOME)/.rpmmacros
 	mkdir -p RPM/BUILD
@@ -36,9 +36,9 @@ all: ifolder.spec ifolder-dist clean
 	mkdir -p RPM/SOURCES
 	mkdir -p RPM/SPECS
 	mkdir -p RPM/SRPMS
-	cp ifolder.spec RPM/SPECS
+	cp ifolder-se.spec RPM/SPECS
 	cp $(top_srcdir)/$(PACKAGE)-$(VERSION).tar.gz RPM/SOURCES
-	rpmbuild -ba --target=$(target_triplet) RPM/SPECS/ifolder.spec
+	rpmbuild -ba --target=$(target_triplet) RPM/SPECS/ifolder-se.spec
 	cp RPM/SRPMS/$(SRPM_FILE) .
 	cp RPM/RPMS/*/$(RPM_FILE) .
 	@test "x" = "x$(INSTALL_PKGS)" || \
@@ -63,7 +63,7 @@ clean-local:
 	rm -rf *.rpm RPM
 
 distclean-local:
-	rm -f ifolder.spec
+	rm -f ifolder-se.spec
 
 maintainer-clean-local:
 	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
