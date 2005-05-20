@@ -590,7 +590,7 @@
     <value>New iFolder "{0}"</value>
   </data>
   <data name="subscriptionMessage">
-    <value>{0} has invited you to participate in this shared iFolder.  Click here to setup this iFolder.</value>
+    <value>{0} has invited you to participate in this shared iFolder.  Click here to set up this iFolder.</value>
   </data>
   <data name="newMemberTitle">
     <value>New iFolder User</value>
@@ -722,9 +722,9 @@
     <value>Unable to Verify Identity</value>
   </data>
   <data name="createAccount">
-    <value>The iFolder client is now installed and ready to use.  To begin using iFolder, you must first setup an iFolder account.  Would you like to setup your iFolder account now?</value>
+    <value>To begin using iFolder, you must first set up an iFolder account.  Would you like to set up an iFolder account now?</value>
   </data>
   <data name="createAccountTitle">
-    <value>Setup iFolder Account</value>
+    <value>Set Up iFolder Account</value>
   </data>
 </root>
