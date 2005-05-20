@@ -175,9 +175,9 @@ namespace Novell.iFolder
 					"  Jakub Steiner",
 				};
 				
-				About about = new About("iFolder", "@_VERSION_@",
+				About about = new About("iFolder SE", "@_VERSION_@",
 										Util.GS("Copyright (C) 2004-2005 Novell, Inc."),
-										Util.GS("The iFolder Project is a file sharing solution that allows people to easily share folders or files of any type with other users, whether they use the same or different operating system.  This project is built on the mono/.NET framework to integrate seamlessly into existing desktop environments."),
+										Util.GS("The iFolder SE Project is a file sharing solution that allows people to easily share folders or files of any type with other users, whether they use the same or different operating system.  This project is built on the mono/.NET framework to integrate seamlessly into existing desktop environments."),
 										authors,
 										null,
 										null,
