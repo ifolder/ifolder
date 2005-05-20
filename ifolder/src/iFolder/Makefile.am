@@ -9,7 +9,11 @@ iFolder_FLAGS = $(CSC_LIBFLAG)
 iFolder_LIBS = System.dll System.Web.Services.dll $(SYSTEM_XML)
 iFolder_LIBPATH =
 
-EXTRA_DIST = $(srcdir)/AssemblyInfo.cs
+EXTRA_DIST = AssemblyInfo.cs.in
+
+AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
+	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
+	chmod +x $@
 
 CUR_DIR := $(shell pwd)
 
@@ -49,7 +53,7 @@ install-exec-local: Novell.iFolder.dll
 uninstall-local:
 	cd $(DESTDIR)$(libdir); rm -f Novell.iFolder.dll $(DEBUG_FILES)
 
-CLEAN_FILES = Novell.iFolder.dll $(DOC_FILE_CLEAN)
+CLEAN_FILES = Novell.iFolder.dll $(DOC_FILE_CLEAN) AssemblyInfo.cs
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

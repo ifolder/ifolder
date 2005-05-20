@@ -31,12 +31,12 @@ using System.Runtime.InteropServices;
 // General Information about the system assembly
 
 #if (NET_1_0)
-	[assembly: AssemblyVersion("1.0.0.0")]
-	[assembly: SatelliteContractVersion("1.0.0.0")]
+	[assembly: AssemblyVersion("@_VERSION_@")]
+	[assembly: SatelliteContractVersion("@_VERSION_@")]
 #endif
 #if (NET_1_1)
-	[assembly: AssemblyVersion("1.0.0.0")]
-	[assembly: SatelliteContractVersion("1.0.0.0")]
+	[assembly: AssemblyVersion("@_VERSION_@")]
+	[assembly: SatelliteContractVersion("@_VERSION_@")]
 	[assembly: ComCompatibleVersion(1, 0, 0, 0)]
 	[assembly: TypeLibVersion(1, 10)]
 #endif
@@ -51,7 +51,7 @@ using System.Runtime.InteropServices;
 
 [assembly: CLSCompliant(false)]
 [assembly: AssemblyDefaultAlias("Novell.iFolder.dll")]
-[assembly: AssemblyInformationalVersion("0.0.0.1")]
+[assembly: AssemblyInformationalVersion("@_VERSION_@")]
 [assembly: NeutralResourcesLanguage("en-US")]
 
 [assembly: AllowPartiallyTrustedCallers]
