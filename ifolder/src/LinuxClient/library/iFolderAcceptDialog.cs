@@ -42,7 +42,7 @@ namespace Novell.iFolder
 		public iFolderAcceptDialog(iFolderWeb ifolder, string initialPath) : base()
 		{
 			this.Title = 
-				string.Format(Util.GS("Setup iFolder \"{0}\""), ifolder.Name);
+				string.Format(Util.GS("Set up iFolder \"{0}\""), ifolder.Name);
 			this.SetDefaultSize (500, 200);
 
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
@@ -58,7 +58,7 @@ namespace Novell.iFolder
 
 
 			Label l = new Label("<span weight=\"bold\" size=\"larger\">" +
-						Util.GS("Setup iFolder: ") + ifolder.Name + "</span>");
+						Util.GS("Set up iFolder: ") + ifolder.Name + "</span>");
 
 			l.LineWrap = false;
 			l.UseMarkup = true;

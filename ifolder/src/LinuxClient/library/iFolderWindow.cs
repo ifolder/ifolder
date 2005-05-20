@@ -287,7 +287,7 @@ namespace Novell.iFolder
 
 
 		/// <summary>
-		/// Setup the UI inside the Window
+		/// Set up the UI inside the Window
 		/// </summary>
 		private void CreateWidgets()
 		{
@@ -346,7 +346,7 @@ namespace Novell.iFolder
 			ShareButton.Sensitive = false;
 			ConflictButton.Sensitive = false;
 
-			// Setup an event to refresh when the window is
+			// Set up an event to refresh when the window is
 			// being drawn
 			this.Realized += new EventHandler(OnRealizeWidget);
 		}
@@ -369,8 +369,8 @@ namespace Novell.iFolder
 				new Image(new Gdk.Pixbuf(Util.ImagesPath("newifolder24.png"))),
 				new SignalFunc(CreateNewiFolder));
 
-			SetupButton = tb.AppendItem(Util.GS("Setup"),
-				Util.GS("Setup an Existing iFolder"), "Toolbar/Setup iFolder",
+			SetupButton = tb.AppendItem(Util.GS("Set Up"),
+				Util.GS("Set up an existing iFolder"), "Toolbar/Set up iFolder",
 				new Image(new Gdk.Pixbuf(Util.ImagesPath("setup24.png"))),
 				new SignalFunc(SetupiFolder));
 
@@ -450,7 +450,7 @@ namespace Novell.iFolder
 			NewMenuItem.Activated += new EventHandler(NewiFolderHandler);
 
 			SetupMenuItem =
-				new MenuItem (Util.GS("_Setup iFolder"));
+				new MenuItem (Util.GS("_Set up iFolder"));
 			iFolderMenu.Append(SetupMenuItem);
 			SetupMenuItem.Activated += new EventHandler(SetupiFolderHandler);
 
@@ -571,11 +571,11 @@ namespace Novell.iFolder
 			vbox.PackStart(sw, true, true, 0);
 
 
-			// Setup the iFolder TreeView
+			// Set up the iFolder TreeView
 			iFolderTreeStore = new ListStore(typeof(iFolderHolder));
 			iFolderTreeView.Model = iFolderTreeStore;
 
-			// Setup Pixbuf and Text Rendering for "iFolders" column
+			// Set up Pixbuf and Text Rendering for "iFolders" column
 			CellRendererPixbuf ifcrp = new CellRendererPixbuf();
 			TreeViewColumn ifolderColumn = new TreeViewColumn();
 			ifolderColumn.PackStart(ifcrp, false);
@@ -590,7 +590,7 @@ namespace Novell.iFolder
 			iFolderTreeView.AppendColumn(ifolderColumn);
 
 
-			// Setup Text Rendering for "Location" column
+			// Set up Text Rendering for "Location" column
 			CellRendererText locTR = new CellRendererText();
 			locTR.Xpad = 10;
 			TreeViewColumn locColumn = new TreeViewColumn();
@@ -603,7 +603,7 @@ namespace Novell.iFolder
 			iFolderTreeView.AppendColumn(locColumn);
 
 
-			// Setup Text Rendering for "Status" column
+			// Set up Text Rendering for "Status" column
 			CellRendererText statusTR = new CellRendererText();
 			statusTR.Xpad = 10;
 			TreeViewColumn statusColumn = new TreeViewColumn();
@@ -980,7 +980,7 @@ namespace Novell.iFolder
 							else if(ifHolder.iFolder.State == "Available")
 							{
 								MenuItem item_accept = 
-									new MenuItem (Util.GS("Setup iFolder"));
+									new MenuItem (Util.GS("Set up iFolder"));
 								ifMenu.Append (item_accept);
 								item_accept.Activated += new EventHandler(
 										SetupiFolderHandler);
@@ -1230,7 +1230,7 @@ namespace Novell.iFolder
 					iFolderMsgDialog.ButtonSet.YesNo,
 					Util.GS("iFolder Confirmation"),
 					Util.GS("Revert this iFolder?"),
-					Util.GS("This will revert this iFolder back to a normal folder and leave the files intact.  The iFolder will then be available from the server and will need to be setup in a different location in order to sync."));
+					Util.GS("This will revert this iFolder back to a normal folder and leave the files intact.  The iFolder will then be available from the server and will need to be set up in a different location in order to sync."));
 				int rc = dialog.Run();
 				dialog.Hide();
 				dialog.Destroy();

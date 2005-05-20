@@ -166,7 +166,7 @@ namespace Novell.iFolder
 
 
 		/// <summary>
-		/// Setup the UI inside the Window
+		/// Set up the UI inside the Window
 		/// </summary>
 		private void InitializeWidgets()
 		{

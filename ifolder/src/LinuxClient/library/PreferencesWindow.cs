@@ -76,7 +76,7 @@ namespace Novell.iFolder
 
 
 		/// <summary>
-		/// Setup the UI inside the Window
+		/// Set up the UI inside the Window
 		/// </summary>
 		private void InitializeWidgets()
 		{
@@ -92,7 +92,7 @@ namespace Novell.iFolder
 			this.WindowPosition = Gtk.WindowPosition.Center;
 
 			//-----------------------------
-			// Setup the Notebook (tabs)
+			// Set up the Notebook (tabs)
 			//-----------------------------
 			PrefNoteBook = new Notebook();
 

@@ -95,7 +95,7 @@ namespace Novell.iFolder
 
 
 		/// <summary>
-		/// Setup the UI inside the Window
+		/// Set up the UI inside the Window
 		/// </summary>
 		private void InitializeWidgets()
 		{
@@ -111,7 +111,7 @@ namespace Novell.iFolder
 			this.PackStart(sw, true, true, 0);
 
 
-			// Setup the iFolder TreeView
+			// Set up the iFolder TreeView
 			UserTreeStore = new ListStore(typeof(iFolderUser));
 			UserTreeView.Model = UserTreeStore;
 
@@ -160,7 +160,7 @@ namespace Novell.iFolder
 			CurrentUserPixBuf = 
 					new Gdk.Pixbuf(Util.ImagesPath("currentuser.png"));
 
-			// Setup buttons for add/remove/accept/decline
+			// Set up buttons for add/remove/accept/decline
 			HBox buttonBox = new HBox();
 			buttonBox.Spacing = 10;
 			this.PackStart(buttonBox, false, false, 0);

@@ -293,7 +293,7 @@ namespace Novell.iFolder
 
 
 		/// <summary>
-		/// Setup the UI inside the Window
+		/// Set up the UI inside the Window
 		/// </summary>
 		private void InitializeWidgets()
 		{
@@ -502,7 +502,7 @@ namespace Novell.iFolder
 
 			nameConflictBox.Visible = false;
 			
-			// Setup the iFolder TreeView
+			// Set up the iFolder TreeView
 			ConflictTreeStore = new ListStore(typeof(ConflictHolder));
 			ConflictTreeView.Model = ConflictTreeStore;
 			
@@ -546,7 +546,7 @@ namespace Novell.iFolder
 			
 			
 
-			// Setup Pixbuf and Text Rendering for "iFolder Conflicts" column
+			// Set up Pixbuf and Text Rendering for "iFolder Conflicts" column
 //			CellRendererPixbuf mcrp = new CellRendererPixbuf();
 //			TreeViewColumn memberColumn = new TreeViewColumn();
 //			memberColumn.PackStart(mcrp, false);

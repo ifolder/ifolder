@@ -88,7 +88,7 @@ namespace Novell.iFolder
 			serverBox.PackStart(l, false, false, 0);
 
 
-			// Setup Domains
+			// Set up Domains
 			domainOptions = new OptionMenu();
 
 			int defaultDomain = 0;
