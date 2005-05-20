@@ -515,14 +515,10 @@
 //===================================================================
 - (void)processNotifyEvent:(SMNotifyEvent *)smne
 {
+	NSLog(@"Received a \"%@\" event with message \"%@\"", [smne type], [smne message]);
+
 	if([[smne type] compare:@"Domain-Up"] == 0)
 	{
-		// For some reason a "Domain-Up" event is being sent for this
-		if([[smne message] hasPrefix:@"The simias service is terminating"])
-			return;
-
-		NSLog(@"Received a Domain-Up event for domain %@", [smne message]);
-
 		// We need to attempt to connect to Simias to see if the Password has been saved
 		SimiasService *simiasService = [[SimiasService alloc] init];
 		NSString *savedPassword = nil;
@@ -539,7 +535,7 @@
 
 		if(savedPassword != nil)
 		{
-			NSLog(@"Saved Password was found, authenticating...");
+			NSLog(@"Credentials found on domain, authenticating...");
 
 			@try
 			{
