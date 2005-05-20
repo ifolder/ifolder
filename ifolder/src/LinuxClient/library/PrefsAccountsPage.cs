@@ -969,6 +969,18 @@ namespace Novell.iFolder
 						dg.Hide();
 						dg.Destroy();
 						break;
+					case StatusCodes.UnknownDomain:
+						dg = new iFolderMsgDialog(
+							topLevelWindow,
+							iFolderMsgDialog.DialogType.Error,
+							iFolderMsgDialog.ButtonSet.Ok,
+							Util.GS("iFolder Error"),
+							Util.GS("Unable to Connect to iFolder Server"),
+							Util.GS("Unable to contact the specified server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."));
+						dg.Run();
+						dg.Hide();
+						dg.Destroy();
+						break;
 					default:
 						dg = new iFolderMsgDialog(
 							topLevelWindow,
