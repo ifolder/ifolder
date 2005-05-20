@@ -2578,7 +2578,10 @@ namespace Novell.FormsTrayApp
 						updatePassword = false;
 						updateEnabled = false;
 					}
-					catch {}
+					catch (Exception ex)
+					{
+						MessageBox.Show(ex.Message);
+					}
 				}
 			}
 		}

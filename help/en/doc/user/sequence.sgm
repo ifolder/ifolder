@@ -90,7 +90,7 @@ C = InvisibleChapter	-  Used by the HLP2MOAB process only as a way to group a bu
 
 			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
 			<FILENAME>data\accountdetails.html</FILENAME>
-			<TITLE>Viewing Information About an iFolder Account</TITLE>
+			<TITLE>Viewing and Modifying iFolder Account Settings</TITLE>
 			</TOPIC>
 
 			<TOPIC TYPE="File" ELEMTYPE="TOPIC">

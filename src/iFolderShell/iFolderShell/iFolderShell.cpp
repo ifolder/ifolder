@@ -428,7 +428,7 @@ STDMETHODIMP CiFolderShell::QueryInterface(REFIID riid, LPVOID FAR *ppv)
         return NOERROR;
     }
 
-    //OutputDebugString(TEXT("CiFolderShell::QueryInterface()==>Unknown Interface!\n"));
+	OutputDebugString(TEXT("CiFolderShell::QueryInterface()==>Unknown Interface!\n"));
 
     return E_NOINTERFACE;
 }
@@ -483,7 +483,10 @@ STDMETHODIMP CiFolderShell::Initialize(LPCITEMIDLIST pidlFolder,
     OutputDebugString(TEXT("CiFolderShell::Initialize()\n"));
 
 	if (pDataObj == NULL)
+	{
+	    OutputDebugString(TEXT("CiFolderShell::Initialize() returning E_INVALIDARG\n"));
 		return E_INVALIDARG;
+	}
 
     // Initialize can be called more than once
     if (m_pDataObj)
@@ -543,5 +546,6 @@ STDMETHODIMP CiFolderShell::Initialize(LPCITEMIDLIST pidlFolder,
 
 //	ReleaseStgMedium(&medium);
 
+    OutputDebugString(TEXT("CiFolderShell::Initialize() returning NOERROR\n"));
     return NOERROR;
 }

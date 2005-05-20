@@ -52,7 +52,7 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 											 UINT idCmdLast,
 											 UINT uFlags)
 {
-	//OutputDebugString(TEXT("CiFolderShell::QueryContextMenu()\n"));
+	OutputDebugString(TEXT("CiFolderShell::QueryContextMenu()\n"));
 
 	UINT idCmd= idCmdFirst;
 
@@ -77,7 +77,10 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 	FORMATETC fe= {CF_HDROP, NULL, DVASPECT_CONTENT, -1, TYMED_HGLOBAL};
 	HRESULT hr= m_pDataObj->GetData(&fe, &medium);
 	if (FAILED(hr))
+	{
+		OutputDebugString(TEXT("CiFolderShell::QueryContextMenu() returning E_INVALIDARG\n"));
 		return E_INVALIDARG;
+	}
 
 	UINT count= DragQueryFile(reinterpret_cast<HDROP>(medium.hGlobal), -1, NULL, 0);
 	// For now, we only allow one item to be selected.
@@ -128,7 +131,7 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 			}
 			catch (...)
 			{
-//				OutputDebugString(TEXT("Exception caught in CiFolderShell::QueryContextMenu()\n"));
+				OutputDebugString(TEXT("Exception caught in CiFolderShell::QueryContextMenu()\n"));
 			}
 
 			if (biFolder)
@@ -225,6 +228,7 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 				mii.fType= MFT_SEPARATOR;
 				InsertMenuItem(hMenu, indexMenu++, TRUE, &mii);
 
+				OutputDebugString(TEXT("CiFolderShell::QueryContextMenu() returning\n"));
 				return ResultFromShort(idCmd-idCmdFirst);
 			}
 
@@ -301,9 +305,11 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 		InsertMenuItem(hMenu, indexMenu++, TRUE, &mii);
 
 		// Return number of menu items we added.
+		OutputDebugString(TEXT("CiFolderShell::QueryContextMenu() returning\n"));
 		return ResultFromShort(idCmd-idCmdFirst);
    }
 
+	OutputDebugString(TEXT("CiFolderShell::QueryContextMenu() returning NOERROR\n"));
    return NOERROR;
 
 }	/*-- QueryContextMenu() --*/
@@ -324,7 +330,7 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 
 STDMETHODIMP CiFolderShell::InvokeCommand(LPCMINVOKECOMMANDINFO lpcmi)
 {
-    //OutputDebugString(TEXT("CiFolderShell::InvokeCommand()\n"));
+	OutputDebugString(TEXT("CiFolderShell::InvokeCommand()\n"));
 
     HRESULT hr = E_INVALIDARG;
 
@@ -340,7 +346,7 @@ STDMETHODIMP CiFolderShell::InvokeCommand(LPCMINVOKECOMMANDINFO lpcmi)
 
         switch (idCmd)
         {
-            case 0:
+            case 0: // Convert to an iFolder
 				try
 				{
 					// Make this folder an iFolder.
@@ -353,11 +359,11 @@ STDMETHODIMP CiFolderShell::InvokeCommand(LPCMINVOKECOMMANDINFO lpcmi)
 				}
 				catch (...)
 				{
-					//OutputDebugString(TEXT("Exception caught in CiFolderShell::InvokeCommand()\n"));
+					OutputDebugString(TEXT("Exception caught in CiFolderShell::InvokeCommand()\n"));
 				}
                 break;
 
-            case 1:
+            case 1: // Revert to a normal folder
 				try
 				{
 					TCHAR szTitle[MAX_MENU_LENGTH];
@@ -376,11 +382,11 @@ STDMETHODIMP CiFolderShell::InvokeCommand(LPCMINVOKECOMMANDINFO lpcmi)
 				}
 				catch (...)
 				{
-					//OutputDebugString(TEXT("Exception caught in CiFolderShell::InvokeCommand()\n"));
+					OutputDebugString(TEXT("Exception caught in CiFolderShell::InvokeCommand()\n"));
 				}
                 break;
 
-			case 2:
+			case 2: // Resolve conflicts
 				try
 				{
 					// Invoke the conflict resolver.
@@ -388,10 +394,11 @@ STDMETHODIMP CiFolderShell::InvokeCommand(LPCMINVOKECOMMANDINFO lpcmi)
 				}
 				catch (...)
 				{
+					OutputDebugString(TEXT("Exception caught in CiFolderShell::InvokeCommand()\n"));
 				}
 				break;
 
-            case 3:
+            case 3: // Share with...
 				hr= NOERROR;
 				try
 				{
@@ -400,11 +407,11 @@ STDMETHODIMP CiFolderShell::InvokeCommand(LPCMINVOKECOMMANDINFO lpcmi)
 				}
 				catch (...)
 				{
-					//OutputDebugString(TEXT("Exception caught in CiFolderShell::InvokeCommand()\n"));
+					OutputDebugString(TEXT("Exception caught in CiFolderShell::InvokeCommand()\n"));
 				}
                 break;
 
-            case 4:
+            case 4: // Properties
 				// Invoke the properties dialog for this folder with the iFolder tab active.
 //				SHObjectProperties(lpcmi->hwnd, SHOP_FILEPATH, m_szFileUserClickedOn, TEXT("iFolder"));
 				try
@@ -414,11 +421,11 @@ STDMETHODIMP CiFolderShell::InvokeCommand(LPCMINVOKECOMMANDINFO lpcmi)
 				}
 				catch (...)
 				{
-					//OutputDebugString(TEXT("Exception caught in CiFolderShell::InvokeCommand()\n"));
+					OutputDebugString(TEXT("Exception caught in CiFolderShell::InvokeCommand()\n"));
 				}
 				hr= NOERROR;
                 break;
-			case 5:
+			case 5: // Help...
 				// Display the help.
 				m_spiFolder->ShowHelp(m_szShellPath, TEXT(""));
 				hr = NOERROR;
@@ -426,6 +433,7 @@ STDMETHODIMP CiFolderShell::InvokeCommand(LPCMINVOKECOMMANDINFO lpcmi)
         }
     }
 
+	OutputDebugString(TEXT("CiFolderShell::InvokeCommand() returning\n"));
     return hr;
 
 }	/*-- InvokeCommand() --*/
