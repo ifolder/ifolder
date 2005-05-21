@@ -23,7 +23,7 @@ endif
 
 all: Novell.iFolder.Web.dll
 
-Novell.iFolder.Web.dll: $(iFolderWebService_CSFILES) $(iFolderWebService_RESOURCES)
+Novell.iFolder.Web.dll: $(iFolderWebService_CSFILES1) $(iFolderWebService_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderWebService_FLAGS) $(SIMIAS_LIBS) $(SIMIAS_CLIENT_LIBS) $(iFolderWebService_LIBS:%=/r:%) $(iFolderWebService_LIBPATH:%=/lib:%) $(iFolderWebService_RESOURCES:%=$(ICON_FLAG)%) $(iFolderWebService_CSFILES) $(DOC_FILE_CMD)
 
 if DEBUG
