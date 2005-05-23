@@ -7,8 +7,8 @@
 	<key>IFPkgDescriptionDescription</key>
 	<string>iFolder is a web based file sharing app</string>
 	<key>IFPkgDescriptionTitle</key>
-	<string>iFolder</string>
+	<string>iFolder Client</string>
 	<key>IFPkgDescriptionVersion</key>
-	<string>3.0</string>
+	<string>1.0</string>
 </dict>
 </plist>
