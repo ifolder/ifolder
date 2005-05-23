@@ -23,7 +23,7 @@ endif
 
 all: Simias.POBox.Web.dll
 
-Simias.POBox.Web.dll: $(POBoxWS_CSFILES) $(POBoxWS_RESOURCES)
+Simias.POBox.Web.dll: $(POBoxWS_CSFILES1) $(POBoxWS_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(POBoxWS_FLAGS) $(SIMIAS_LIBS) $(POBoxWS_LIBS:%=/r:%) $(POBoxWS_LIBPATH:%=/lib:%) $(POBoxWS_RESOURCES:%=$(ICON_FLAG)%) $(POBoxWS_CSFILES) $(DOC_FILE_CMD)
 
 if DEBUG

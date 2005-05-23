@@ -23,7 +23,7 @@ endif
 
 all: SyncService.Web.dll
 
-SyncService.Web.dll: $(SyncService_CSFILES) $(SyncService_RESOURCES)
+SyncService.Web.dll: $(SyncService_CSFILES1) $(SyncService_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(SyncService_FLAGS) $(SIMIAS_LIBS) $(SyncService_LIBS:%=/r:%) $(SyncService_LIBPATH:%=/lib:%) $(SyncService_RESOURCES:%=$(ICON_FLAG)%) $(SyncService_CSFILES) $(DOC_FILE_CMD)
 
 if DEBUG

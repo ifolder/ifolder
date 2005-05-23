@@ -23,7 +23,7 @@ endif
 
 all: SimiasApp.exe
 
-SimiasApp.exe: $(SimiasApp_CSFILES) $(SimiasApp_RESOURCES)
+SimiasApp.exe: $(SimiasApp_CSFILES1) $(SimiasApp_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(SimiasApp_FLAGS) $(SIMIAS_LIBS) $(SimiasApp_LIBS:%=/r:%) $(SimiasApp_LIBPATH:%=/lib:%) $(SimiasApp_RESOURCES:%=$(ICON_FLAG)%) $(SimiasApp_CSFILES) $(DOC_FILE_CMD)
 
 if DEBUG
