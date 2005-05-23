@@ -1,11 +1,11 @@
 #!/bin/sh -x
 #Create the links in the framework to have it fit the normal Framework structure.
-if [ -d /opt/novell/ifolder3/Applications/iFolder.app ]; then
+if [ -d /opt/novell/ifolder-se/Applications/iFolder.app ]; then
 	if [ -d /Applications/iFolder.app ]; then
 		rm -rf /Applications/iFolder.app
 	fi
-	mv -f /opt/novell/ifolder3/Applications/iFolder.app /Applications
-	rm -rf /opt/novell/ifolder3/Applications
+	mv -f /opt/novell/ifolder-se/Applications/iFolder.app /Applications
+	rm -rf /opt/novell/ifolder-se/Applications
 else 
 	echo "iFolder.app was not found"
 fi
