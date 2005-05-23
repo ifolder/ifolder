@@ -19,7 +19,7 @@
 	<key>IFPkgFlagAuthorizationAction</key>
 	<string>AdminAuthorization</string>
 	<key>IFPkgFlagDefaultLocation</key>
-	<string>/opt/novell/ifolder3</string>
+	<string>/opt/novell/ifolder-se</string>
 	<key>IFPkgFlagFollowLinks</key>
 	<false/>
 	<key>IFPkgFlagInstallFat</key>
@@ -52,7 +52,7 @@
 			<key>TestOperator</key>
 			<string>&gt;=</string>
 			<key>TestObject</key>
-			<string>1.1.6</string>
+			<string>1.1.7</string>
 			<key>Level</key>
 			<string>requires</string>
 			<key>TitleKey</key>
