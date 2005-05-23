@@ -13,15 +13,16 @@ PROJECT_FILES = $(srcdir)/SimiasServer.csproj
 
 EXTRA_DIST = $(SimiasServer_CSFILES) $(PROJECT_FILES) App.ico simias.in simias.cmd SimiasServer.exe.config AssemblyInfo.cs.in
 
-AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
-	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
-	chmod +x $@
 
 simias: $(srcdir)/simias.in
 	sed -e 's,@_webbindir_@,@webbindir@,g' -e 's,@_bindir_@,@bindir@,g' $< > $@
 	chmod +x $@
 
 CUR_DIR := $(shell pwd)
+
+AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
+	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
+	chmod +x $@
 
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml

@@ -11,11 +11,12 @@ AddressBook_LIBPATH = ../SimiasClient ../Simias.dll
 
 EXTRA_DIST = $(AddressBook_CSFILES) AssemblyInfo.cs.in
 
+
+CUR_DIR := $(shell pwd)
+
 AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
 	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
 	chmod +x $@
-
-CUR_DIR := $(shell pwd)
 
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml
