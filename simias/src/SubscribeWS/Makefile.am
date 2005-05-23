@@ -9,7 +9,11 @@ SubscribeWS_FLAGS = $(CSC_LIBFLAG)
 SubscribeWS_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll Simias.dll
 SubscribeWS_LIBPATH = ../Simias.dll
 
-EXTRA_DIST = SubscribeService.asmx $(SubscribeWS_CSFILES)
+EXTRA_DIST = SubscribeService.asmx $(SubscribeWS_CSFILES) AssemblyInfo.cs.in
+
+AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
+	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
+	chmod +x $@
 
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml
@@ -40,7 +44,7 @@ uninstall-local:
 
 installcheck-local: install
 	
-CLEAN_FILES = Simias.Subscribe.Web.dll $(DOC_FILE_CLEAN)
+CLEAN_FILES = Simias.Subscribe.Web.dll $(DOC_FILE_CLEAN) AssemblyInfo.cs
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

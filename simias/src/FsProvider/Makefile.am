@@ -19,7 +19,11 @@ FsProviderTests_FLAGS = $(CSC_LIBFLAG)
 FsProviderTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.framework.dll StoreProvider.dll ProviderTest.dll
 FsProviderTests_LIBPATH = $(NUNIT_LIBPATH) ../StoreProvider
 
-EXTRA_DIST = $(FsProvider_CSFILES) $(FsProviderTests_CSFILES)
+EXTRA_DIST = $(FsProvider_CSFILES) $(FsProviderTests_CSFILES) AssemblyInfo.cs.in
+
+AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
+	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
+	chmod +x $@
 
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml
@@ -56,7 +60,7 @@ installcheck-local: install $(NUNIT_TESTS)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(bindir)
 	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:FsProviderTests.test.xml $(NUNIT_TESTS)
 	
-CLEAN_FILES = FsProvider.dll $(NUNIT_TESTS) $(DOC_FILE_CLEAN) FsProviderTests.test.xml
+CLEAN_FILES = FsProvider.dll $(NUNIT_TESTS) $(DOC_FILE_CLEAN) FsProviderTests.test.xml AssemblyInfo.cs
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

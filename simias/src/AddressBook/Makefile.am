@@ -9,7 +9,11 @@ AddressBook_FLAGS = $(CSC_LIBFLAG)
 AddressBook_LIBS = System.dll System.Data.dll $(SYSTEM_XML) SimiasClient.dll Simias.dll
 AddressBook_LIBPATH = ../SimiasClient ../Simias.dll
 
-EXTRA_DIST = $(AddressBook_CSFILES)
+EXTRA_DIST = $(AddressBook_CSFILES) AssemblyInfo.cs.in
+
+AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
+	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
+	chmod +x $@
 
 CUR_DIR := $(shell pwd)
 
@@ -37,7 +41,7 @@ install-exec-local: Novell.AddressBook.dll
 uninstall-local:
 	cd $(DESTDIR)$(webbindir); rm -f Novell.AddressBook.dll $(DEBUG_FILES)
 
-CLEAN_FILES = Novell.AddressBook.dll $(DOC_FILE_CLEAN)
+CLEAN_FILES = Novell.AddressBook.dll $(DOC_FILE_CLEAN) AssemblyInfo.cs
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

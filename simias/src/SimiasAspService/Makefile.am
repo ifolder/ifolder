@@ -9,7 +9,11 @@ WebService_FLAGS = $(CSC_LIBFLAG)
 WebService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Simias.dll System.Web.dll
 WebService_LIBPATH = ../Simias.dll
 
-EXTRA_DIST = $(WebService_CSFILES)
+EXTRA_DIST = $(WebService_CSFILES) AssemblyInfo.cs.in
+
+AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
+	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
+	chmod +x $@
 
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml
@@ -37,7 +41,7 @@ install-exec-local: SimiasAspService.dll
 uninstall-local:
 	cd $(DESTDIR)$(libdir); rm -f SimiasAspService.dll $(DEBUG_FILES)
 	
-CLEAN_FILES = SimiasAspService.dll $(DEBUG_FILES) $(DOC_FILE_CLEAN)
+CLEAN_FILES = SimiasAspService.dll $(DEBUG_FILES) $(DOC_FILE_CLEAN) AssemblyInfo.cs
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

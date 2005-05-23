@@ -27,7 +27,11 @@ SqliteProviderTests_FLAGS = $(CSC_LIBFLAG)
 SqliteProviderTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.framework.dll StoreProvider.dll ProviderTest.dll SqliteProvider.dll
 SqliteProviderTests_LIBPATH = $(NUNIT_LIBPATH) ../StoreProvider
 
-EXTRA_DIST = $(SqliteProvider_CSFILES) $(SqliteWrapper_CSFILES) $(SqliteProviderTests_CSFILES)
+EXTRA_DIST = $(SqliteProvider_CSFILES) $(SqliteWrapper_CSFILES) $(SqliteProviderTests_CSFILES) AssemblyInfo.cs.in
+
+AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
+	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
+	chmod +x $@
 
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml
@@ -62,7 +66,7 @@ install-exec-local: SqliteProvider.dll SqliteWrapper.dll $(srcdir)/$(STORELIB_PA
 uninstall-local:
 	cd $(DESTDIR)$(webbindir); rm -f SqliteProvider.dll SqliteWrapper.dll SqliteProviderTests.test.xml $(STORELIB) $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
 
-CLEAN_FILES = SqliteProvider.dll SqliteWrapper.dll $(NUNIT_TESTS) $(DOC_FILE_CLEAN) SqliteProviderTests.test.xml
+CLEAN_FILES = SqliteProvider.dll SqliteWrapper.dll $(NUNIT_TESTS) $(DOC_FILE_CLEAN) SqliteProviderTests.test.xml AssemblyInfo.cs
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
