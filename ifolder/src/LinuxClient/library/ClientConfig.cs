@@ -44,7 +44,7 @@ namespace Novell.iFolder
 		private static string NameAttr = "name";
 		private static string ValueAttr = "value";
 		private static string DefaultSection = "iFolderClientConfig";
-		private static string DefaultFileName = "ifolder3.config";
+		private static string DefaultFileName = "ifolder-se.config";
 
 		public static string KEY_SHOW_CREATION = "ShowCreationDialog";
 		public static string KEY_NOTIFY_IFOLDERS = "NotifyiFolders";
