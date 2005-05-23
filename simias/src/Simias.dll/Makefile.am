@@ -18,15 +18,16 @@ endif
 
 EXTRA_DIST = $(srcdir)/Simias.dll.sources $(SIMIAS_CSFILES) ../Common/Simias.log4net ../Common/simias-client-bootstrap.config.in ../Common/MyDns.cs.in ../Login/Login.ashx AssemblyInfo.cs.in
 
-AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
-	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
-	chmod +x $@
 
 if WINDOWS
 	FIXED_WEBDIR := $(shell cygpath --mixed $(webdir))
 else
 	FIXED_WEBDIR := $(webdir)
 endif
+
+AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
+	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
+	chmod +x $@
 
 ../Common/simias-client-bootstrap.config: ../Common/simias-client-bootstrap.config.in
 	sed -e 's,@_webdir_@,$(FIXED_WEBDIR),g' -e 's,@_StoreProviderAssembly_@,@StoreProviderAssembly@,g' -e 's,@_StoreProviderType_@,@StoreProviderType@,g' $< > ../Common/simias-client-bootstrap.config
