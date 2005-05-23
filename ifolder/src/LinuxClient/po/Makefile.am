@@ -37,7 +37,7 @@ update-po: $(POFILES)
 			--files-from=src/LinuxClient/po/POTFILES \
 			--language=C# \
 			--join-existing \
-			--output=$(srcdir)/ifolder3.pot \
+			--output=$(srcdir)/ifolder-se.pot \
 			--keyword="Util.GS"; 
 	cd ../../../; \
 	pofiles='$(POFILES)'; \

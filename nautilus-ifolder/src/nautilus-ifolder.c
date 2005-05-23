@@ -411,6 +411,7 @@ is_ifolder (NautilusFileInfo *file)
 			soap.userid = username;
 			soap.passwd = password;
 		}
+printf("Calling iFolderWebService.IsiFolder()\n");
 		soap_call___ns1__IsiFolder (&soap, 
 									soapURL, 
 									NULL, 
@@ -458,6 +459,7 @@ can_be_ifolder (NautilusFileInfo *file)
 			soap.userid = username;
 			soap.passwd = password;
 		}
+printf("Calling iFolderWebService.CanBeiFolder()\n");
 		soap_call___ns1__CanBeiFolder (&soap,
 									   soapURL, 
 									   NULL, 
@@ -502,6 +504,7 @@ create_ifolder_in_domain (NautilusFileInfo *file, char *domain_id)
 			soap.userid = username;
 			soap.passwd = password;
 		}
+printf("Calling iFolderWebService.CreateiFolderInDomain()\n");
 		soap_call___ns1__CreateiFolderInDomain (&soap, soapURL, NULL, &req, &resp);
 		g_free (folder_path);
 		if (soap.error) {
@@ -553,6 +556,7 @@ get_ifolder_id_by_local_path (gchar *path)
 			soap.userid = username;
 			soap.passwd = password;
 		}
+printf("Calling iFolderWebService.GetiFolderByLocalPath()\n");
 		soap_call___ns1__GetiFolderByLocalPath (&soap, 
 										soapURL, 
 										NULL, 
@@ -609,6 +613,7 @@ revert_ifolder (NautilusFileInfo *file)
 				soap.userid = username;
 				soap.passwd = password;
 			}
+printf("Calling iFolderWebService.RevertiFolder()\n");
 			soap_call___ns1__RevertiFolder (&soap, 
 												 soapURL, 
 												 NULL, 
@@ -665,6 +670,7 @@ get_unmanaged_path (gchar *ifolder_id)
 			soap.userid = username;
 			soap.passwd = password;
 		}
+printf("Calling iFolderWebService.GetiFolder()\n");
 		soap_call___ns1__GetiFolder (&soap,
 									 soapURL,
 									 NULL,
@@ -726,6 +732,7 @@ get_all_ifolder_paths ()
 		soap.userid = username;
 		soap.passwd = password;
 	}
+printf("Calling iFolderWebService.GetAlliFolders()\n");
 	soap_call___ns1__GetAlliFolders (&soap,
 									 soapURL,
 									 NULL,
@@ -973,7 +980,7 @@ get_ifolder_config_file_path (char *dest_path)
 		return NULL;
 	}
 
-	sprintf (dest_path, "%s/ifolder/ifolder3.config", user_profile_dir);
+	sprintf (dest_path, "%s/ifolder/ifolder-se.config", user_profile_dir);
 
 	return dest_path;
 }
@@ -994,7 +1001,7 @@ ifolder_get_config_setting (char *setting_xpath, char *setting_value_return)
 	b_value_found = FALSE;
 	
 	if (get_ifolder_config_file_path (config_file) == NULL) {
-		DEBUG_IFOLDER (("Could not get path to ifolder3.config\n"));
+		DEBUG_IFOLDER (("Could not get path to ifolder-se.config\n"));
 		return -1;
 	}
 	
@@ -1088,7 +1095,7 @@ ifolder_set_config_setting (char *setting_xpath,
 	
 	b_setting_written = FALSE;
 	if (get_ifolder_config_file_path (config_file) == NULL) {
-		DEBUG_IFOLDER (("Could not get path to ifolder3.config\n"));
+		DEBUG_IFOLDER (("Could not get path to ifolder-se.config\n"));
 		return -1;
 	}
 	
@@ -1122,7 +1129,7 @@ ifolder_set_config_setting (char *setting_xpath,
 					b_setting_written = TRUE;
 					fclose (cfg_file);
 				} else {
-					perror ("Could not open ifolder3.config to write ShowCreationDialog setting.");
+					perror ("Could not open ifolder-se.config to write ShowCreationDialog setting.");
 				}
 			} else {
 				DEBUG_IFOLDER (("XPath expression didn't return an attribute node: %s\n", setting_xpath));

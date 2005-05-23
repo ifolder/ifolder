@@ -1,10 +1,10 @@
 /* FIXME: Fix these paths to be setup properly by autotools */
 /**
  * #define NAUTILUS_IFOLDER_SH_PATH	"@prefix@/lib/nautilus-ifolder"
- * #define IFOLDER_IMAGE_IFOLDER		"@ifolder_prefix@/share/ifolder3/images/ifolder.png"
- * #define IFOLDER_IMAGE_BIG_IFOLDER	"@ifolder_prefix@/share/ifolder3/images/ifolder48.png"
+ * #define IFOLDER_IMAGE_IFOLDER		"@ifolder_prefix@/share/ifolder-se/images/ifolder.png"
+ * #define IFOLDER_IMAGE_BIG_IFOLDER	"@ifolder_prefix@/share/ifolder-se/images/ifolder48.png"
  */
-#define NAUTILUS_IFOLDER_SH_PATH	"/opt/novell/ifolder3/lib/nautilus-ifolder"
-#define IFOLDER_IMAGE_IFOLDER		"/opt/novell/ifolder3/share/ifolder3/images/ifolder.png"
-#define IFOLDER_IMAGE_BIG_IFOLDER	"/opt/novell/ifolder3/share/ifolder3/images/ifolder48.png"
+#define NAUTILUS_IFOLDER_SH_PATH	"/opt/novell/ifolder-se/lib/nautilus-ifolder"
+#define IFOLDER_IMAGE_IFOLDER		"/opt/novell/ifolder-se/share/ifolder-se/images/ifolder24.png"
+#define IFOLDER_IMAGE_BIG_IFOLDER	"/opt/novell/ifolder-se/share/ifolder-se/images/ifolder48.png"
  

@@ -38,19 +38,19 @@ $(srcdir)/iFolderClientLib.c: $(srcdir)/iFolderClient.h
 	$(GSOAP_PATH)/soapcpp2 -c -n -piFolder $(srcdir)/iFolderClient.h
 
 install-exec-local:
-	$(mkinstalldirs) $(DESTDIR)$(includedir)/ifolder3
-	$(INSTALL_PROGRAM) iFolderStub.h $(DESTDIR)$(includedir)/ifolder3
-	$(INSTALL_PROGRAM) iFolder.nsmap $(DESTDIR)$(includedir)/ifolder3
-	$(INSTALL_PROGRAM) stdsoap2.h $(DESTDIR)$(includedir)/ifolder3
-	$(INSTALL_PROGRAM) iFolderH.h $(DESTDIR)$(includedir)/ifolder3
-	$(INSTALL_PROGRAM) ifolder.h $(DESTDIR)$(includedir)/ifolder3
+	$(mkinstalldirs) $(DESTDIR)$(includedir)/ifolder-se
+	$(INSTALL_PROGRAM) iFolderStub.h $(DESTDIR)$(includedir)/ifolder-se
+	$(INSTALL_PROGRAM) iFolder.nsmap $(DESTDIR)$(includedir)/ifolder-se
+	$(INSTALL_PROGRAM) stdsoap2.h $(DESTDIR)$(includedir)/ifolder-se
+	$(INSTALL_PROGRAM) iFolderH.h $(DESTDIR)$(includedir)/ifolder-se
+	$(INSTALL_PROGRAM) ifolder.h $(DESTDIR)$(includedir)/ifolder-se
 
 uninstall-local:
-	rm -f $(DESTDIR)$(includedir)/ifolder3/iFolderStub.h
-	rm -f $(DESTDIR)$(includedir)/ifolder3/iFolder.nsmap
-	rm -f $(DESTDIR)$(includedir)/ifolder3/stdsoap2.h
-	rm -f $(DESTDIR)$(includedir)/ifolder3/iFolderH.h
-	rm -f $(DESTDIR)$(includedir)/ifolder3/ifolder.h
+	rm -f $(DESTDIR)$(includedir)/ifolder-se/iFolderStub.h
+	rm -f $(DESTDIR)$(includedir)/ifolder-se/iFolder.nsmap
+	rm -f $(DESTDIR)$(includedir)/ifolder-se/stdsoap2.h
+	rm -f $(DESTDIR)$(includedir)/ifolder-se/iFolderH.h
+	rm -f $(DESTDIR)$(includedir)/ifolder-se/ifolder.h
 
 clean-local:
 	rm -f stdsoap2.* *.xml iFolder* env* soap*
