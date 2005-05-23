@@ -973,7 +973,7 @@ get_ifolder_config_file_path (char *dest_path)
 		return NULL;
 	}
 
-	sprintf (dest_path, "%s/ifolder/ifolder3.config", user_profile_dir);
+	sprintf (dest_path, "%s/ifolder/ifolder-se.config", user_profile_dir);
 
 	return dest_path;
 }
@@ -994,7 +994,7 @@ ifolder_get_config_setting (char *setting_xpath, char *setting_value_return)
 	b_value_found = FALSE;
 	
 	if (get_ifolder_config_file_path (config_file) == NULL) {
-		DEBUG_IFOLDER (("Could not get path to ifolder3.config\n"));
+		DEBUG_IFOLDER (("Could not get path to ifolder-se.config\n"));
 		return -1;
 	}
 	
@@ -1088,7 +1088,7 @@ ifolder_set_config_setting (char *setting_xpath,
 	
 	b_setting_written = FALSE;
 	if (get_ifolder_config_file_path (config_file) == NULL) {
-		DEBUG_IFOLDER (("Could not get path to ifolder3.config\n"));
+		DEBUG_IFOLDER (("Could not get path to ifolder-se.config\n"));
 		return -1;
 	}
 	
@@ -1122,7 +1122,7 @@ ifolder_set_config_setting (char *setting_xpath,
 					b_setting_written = TRUE;
 					fclose (cfg_file);
 				} else {
-					perror ("Could not open ifolder3.config to write ShowCreationDialog setting.");
+					perror ("Could not open ifolder-se.config to write ShowCreationDialog setting.");
 				}
 			} else {
 				DEBUG_IFOLDER (("XPath expression didn't return an attribute node: %s\n", setting_xpath));
