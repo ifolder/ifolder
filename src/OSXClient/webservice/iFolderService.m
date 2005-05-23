@@ -120,6 +120,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 			struct ns1__iFolderWeb *curiFolder;
 		
 			curiFolder = getiFoldersResponse.GetAlliFoldersResult->iFolderWeb[counter];
+
 			iFolder *newiFolder = [[iFolder alloc] init];
 
 			[newiFolder setProperties:getiFolderProperties(curiFolder)];
@@ -207,11 +208,16 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 	handle_soap_error(&soap, &creds, @"iFolderService.GetAvailableiFolder:inCollection");
 
-	ifolder = [[[iFolder alloc] init] retain];
-	
 	struct ns1__iFolderWeb *curiFolder;
-		
+
 	curiFolder = getiFolderResponse.GetiFolderInvitationResult;
+	if(curiFolder == NULL)
+	{
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:@"Invalid iFolderID" format:@"iFolderService.GetAvailableiFolder:inCollection"];
+	}
+
+	ifolder = [[[iFolder alloc] init] retain];
 
 	[ifolder setProperties:getiFolderProperties(curiFolder)];
 
@@ -254,6 +260,13 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	struct ns1__iFolderWeb *curiFolder;
 		
 	curiFolder = createiFolderResponse.CreateiFolderInDomainResult;
+
+	if(curiFolder == NULL)
+	{
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:@"Invalid iFolderID" format:@"iFolderService.CreateiFolder:inDomain"];
+	}
+
 
 	[ifolder setProperties:getiFolderProperties(curiFolder)];
 
@@ -299,6 +312,14 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	struct ns1__iFolderWeb *curiFolder;
 		
 	curiFolder = acceptiFolderResponse.AcceptiFolderInvitationResult;
+
+	if(curiFolder == NULL)
+	{
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:@"Invalid iFolderID" format:@"iFolderService.AcceptiFolderInvitation:inDomain"];
+	}
+
+
 	[ifolder setProperties:getiFolderProperties(curiFolder)];
 
     cleanup_gsoap(&soap, &creds);
@@ -370,6 +391,13 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	struct ns1__iFolderWeb *curiFolder;
 		
 	curiFolder = revertiFolderResponse.RevertiFolderResult;
+
+	if(curiFolder == NULL)
+	{
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:@"Invalid iFolderID" format:@"iFolderService.RevertiFolder"];
+	}
+
 	[ifolder setProperties:getiFolderProperties(curiFolder)];
 
     cleanup_gsoap(&soap, &creds);
