@@ -43,6 +43,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Button close;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Label title;
+		private System.Windows.Forms.Label version;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -57,14 +58,15 @@ namespace Novell.FormsTrayApp
 
 			// Add the version string.
 			System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(About));
-			title.Text = string.Format(resourceManager.GetString("title.Text"), Application.ProductVersion);
+			version.Text = string.Format(resourceManager.GetString("version.Text"), Application.ProductVersion);
 
 			// Center the title text.
-			Graphics g = title.CreateGraphics();
+			Graphics g = version.CreateGraphics();
 			try
 			{
-				SizeF size = g.MeasureString(title.Text, title.Font);
-				title.Left = (ClientRectangle.Width - (int)size.Width) / 2;
+				SizeF size = g.MeasureString(version.Text, version.Font);
+				version.Width = (int)Math.Ceiling(size.Width);
+				version.Left = (ClientRectangle.Width - (int)size.Width) / 2;
 			}
 			finally
 			{
@@ -101,6 +103,7 @@ namespace Novell.FormsTrayApp
 			this.credits = new System.Windows.Forms.Button();
 			this.close = new System.Windows.Forms.Button();
 			this.label3 = new System.Windows.Forms.Label();
+			this.version = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
 			// pictureBox1
@@ -239,6 +242,28 @@ namespace Novell.FormsTrayApp
 			this.label3.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label3.TextAlign")));
 			this.label3.Visible = ((bool)(resources.GetObject("label3.Visible")));
 			// 
+			// version
+			// 
+			this.version.AccessibleDescription = resources.GetString("version.AccessibleDescription");
+			this.version.AccessibleName = resources.GetString("version.AccessibleName");
+			this.version.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("version.Anchor")));
+			this.version.AutoSize = ((bool)(resources.GetObject("version.AutoSize")));
+			this.version.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("version.Dock")));
+			this.version.Enabled = ((bool)(resources.GetObject("version.Enabled")));
+			this.version.Font = ((System.Drawing.Font)(resources.GetObject("version.Font")));
+			this.version.Image = ((System.Drawing.Image)(resources.GetObject("version.Image")));
+			this.version.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("version.ImageAlign")));
+			this.version.ImageIndex = ((int)(resources.GetObject("version.ImageIndex")));
+			this.version.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("version.ImeMode")));
+			this.version.Location = ((System.Drawing.Point)(resources.GetObject("version.Location")));
+			this.version.Name = "version";
+			this.version.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("version.RightToLeft")));
+			this.version.Size = ((System.Drawing.Size)(resources.GetObject("version.Size")));
+			this.version.TabIndex = ((int)(resources.GetObject("version.TabIndex")));
+			this.version.Text = resources.GetString("version.Text");
+			this.version.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("version.TextAlign")));
+			this.version.Visible = ((bool)(resources.GetObject("version.Visible")));
+			// 
 			// About
 			// 
 			this.AcceptButton = this.close;
@@ -250,6 +275,7 @@ namespace Novell.FormsTrayApp
 			this.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMinSize")));
 			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
+			this.Controls.Add(this.version);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.close);
 			this.Controls.Add(this.credits);
