@@ -1,13 +1,14 @@
 {
     IBClasses = (
         {
-            ACTIONS = {accept = id; decline = id; showSheet = id; }; 
+            ACTIONS = {accept = id; decline = id; }; 
             CLASS = AcceptCertSheetController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {certBox = NSBox; certScrollView = NSScrollView; }; 
+            OUTLETS = {certView = SFCertificateView; }; 
             SUPERCLASS = NSWindowController; 
         }, 
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = SFCertificateView; LANGUAGE = ObjC; SUPERCLASS = NSView; }
     ); 
     IBVersion = 1; 
 }
