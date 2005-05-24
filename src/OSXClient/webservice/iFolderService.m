@@ -717,10 +717,20 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 	handle_soap_error(&soap, &creds, @"iFolderService.InviteUser:toiFolder:withRights:");
 
+
+	struct ns1__iFolderUser *curUser;
+	curUser = inviteUserResponse.InviteUserResult;
+
+	if(curUser == NULL)
+	{
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:@"Invalid User" format:@"iFolderService.InviteUser:toiFolder:withRights:"];
+	}
+
+
 	newUser = [ [User alloc] init];
 	
-	[newUser setProperties:getiFolderUserProperties(
-						inviteUserResponse.InviteUserResult)];
+	[newUser setProperties:getiFolderUserProperties(curUser)];
 
     cleanup_gsoap(&soap, &creds);
 
