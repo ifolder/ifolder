@@ -8,11 +8,8 @@
 @interface AcceptCertSheetController : NSWindowController
 {
 	SecCertificateRef	certRef;
-	SFCertificateView	*certView;
 
-    IBOutlet NSBox			*certBox;
-    IBOutlet NSScrollView	*certScrollView;
-	
+	IBOutlet SFCertificateView	*certView;
 }
 
 - (AcceptCertSheetController *) initWithCert:(SecCertificateRef)CertRef;

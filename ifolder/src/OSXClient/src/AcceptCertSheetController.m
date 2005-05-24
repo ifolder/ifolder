@@ -1,7 +1,5 @@
 #import "AcceptCertSheetController.h"
 
-
-
 @implementation AcceptCertSheetController
 
 
@@ -21,19 +19,9 @@
 //===================================================================
 -(void)awakeFromNib
 {
-	certView = [[SFCertificateView alloc] init];
 	[certView setCertificate:certRef];
 	[certView setDisplayTrust:NO];
 	[certView setEditableTrust:NO];
-
-	[certBox setContentView:certView];
-	[certBox sizeToFit];
-
-	NSRect rect = [certBox frame];
-	rect.size.height += 200;
-	[certBox setFrame:rect];
-	[certBox setNeedsDisplay:YES];
-	[certBox scrollPoint:NSMakePoint(0, [certBox frame].size.height)];
 }
 
 - (IBAction)accept:(id)sender
