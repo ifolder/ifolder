@@ -328,7 +328,7 @@ namespace Simias.Storage
 					string userName = Environment.UserName;
 
 					// Get the name of the user to create as the identity.
-					if ( config.Exists( Domain.SectionName, null ) )
+					if ( IsEnterpriseServer )
 					{
 						// If there is a domain specified, get the specified admin user to be the
 						// store owner.
@@ -369,8 +369,11 @@ namespace Simias.Storage
 					domainOwner.IsOwner = true;
 					domain.Commit( new Node[] { domain, domainOwner } );
 
-					// Create a SyncInterval policy.
-					SyncInterval.Create( DefaultMachineSyncInterval );
+					if ( !IsEnterpriseServer )
+					{
+						// Create a SyncInterval policy.
+						SyncInterval.Create( DefaultMachineSyncInterval );
+					}
 
 					// Create a FileFilter local machine policy that disallows the Thumbs.db 
 					// and .DS_Store files from synchronizing. This fix in in response to bug #73517.
