@@ -21,11 +21,11 @@
 #		   Boyd Timothy <btimothy@novell.com>
 #
 #######################################################################
-EXTRA_DIST = $(srcdir)/Makefile.am $(srcdir)/nautilus-ifolder-se.spec
+EXTRA_DIST = $(srcdir)/Makefile.am $(srcdir)/nautilus-ifolder3.spec
 
 .PHONY: package-clean
 
-all: nautilus-ifolder-se.spec nautilus-ifolder-dist
+all: nautilus-ifolder3.spec nautilus-ifolder-dist
 	rm -rf RPM
 	mkdir RPM
 	echo %_topdir `pwd`/RPM > $(HOME)/.rpmmacros
@@ -34,9 +34,9 @@ all: nautilus-ifolder-se.spec nautilus-ifolder-dist
 	mkdir -p RPM/SOURCES
 	mkdir -p RPM/SPECS
 	mkdir -p RPM/SRPMS
-	cp nautilus-ifolder-se.spec RPM/SPECS
+	cp nautilus-ifolder3.spec RPM/SPECS
 	cp $(top_srcdir)/$(PACKAGE)-$(VERSION).tar.gz RPM/SOURCES
-	rpmbuild -ba RPM/SPECS/nautilus-ifolder-se.spec
+	rpmbuild -ba RPM/SPECS/nautilus-ifolder3.spec
 	
 nautilus-ifolder-dist:
 	cd $(top_srcdir); make dist

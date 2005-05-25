@@ -12,13 +12,13 @@ endif
 
 EXTRA_DIST = tools $(srcdir)/$(PACKAGE)*.pc.in $(ADDITIONAL_LIB_FILES)
 
-all: ifolder-se.pc ifolder-se-c.pc
+all: ifolder3.pc ifolder3-c.pc
 
-ifolder-se.pc: $(srcdir)/ifolder-se.pc.in
+ifolder3.pc: $(srcdir)/ifolder3.pc.in
 	sed -e 's,@_VERSION_@,@VERSION@,g' -e 's,@_PKG_CONFIG_REQUIRES_@,@PKG_CONFIG_REQUIRES@,g' -e 's,@_PKG_CONFIG_CONFLICTS_@,@PKG_CONFIG_CONFLICTS@,g' -e 's,@_prefix_@,@prefix@,g' -e 's,@_exec_prefix_@,@exec_prefix@,g' -e 's,@_libdir_@,@libdir@,g' -e 's,@_PKG_CONFIG_LIBS_@,@PKG_CONFIG_LIBS@,g' $< > $@
 	chmod +x $@
 	
-ifolder-se-c.pc: $(srcdir)/ifolder-se-c.pc.in
+ifolder3-c.pc: $(srcdir)/ifolder3-c.pc.in
 	sed -e 's,@_VERSION_@,@VERSION@,g' -e 's,@_PKG_CONFIG_CONFLICTS_@,@PKG_CONFIG_CONFLICTS@,g' -e 's,@_prefix_@,@prefix@,g' -e 's,@_exec_prefix_@,@exec_prefix@,g' -e 's,@_libdir_@,@libdir@,g' $< > $@
 	chmod +x $@
 
@@ -62,7 +62,7 @@ if DEBUG
 endif
 endif
 
-CLEAN_FILES = ifolder-se.pc ifolder-se-c.pc
+CLEAN_FILES = ifolder3.pc ifolder3-c.pc
 
 clean-local:
 	rm -rf $(COMMON_CLEAN_FILES) $(CLEAN_FILES)

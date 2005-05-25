@@ -14,11 +14,11 @@ IMAGE_FILES = $(IMAGE_DIR)/ifolder128.png $(IMAGE_DIR)/inviteduser.png $(IMAGE_D
 EXTRA_DIST =
 
 install-exec-local: $(IMAGE_FILES)
-	$(mkinstalldirs) $(DESTDIR)$(datadir)/ifolder-se/images $(DESTDIR)$(datadir)/pixmaps
-	$(INSTALL_PROGRAM) $(IMAGE_FILES) $(DESTDIR)$(datadir)/ifolder-se/images
+	$(mkinstalldirs) $(DESTDIR)$(datadir)/ifolder3/images $(DESTDIR)$(datadir)/pixmaps
+	$(INSTALL_PROGRAM) $(IMAGE_FILES) $(DESTDIR)$(datadir)/ifolder3/images
 
 uninstall-local:
-	cd $(DESTDIR)$(datadir)/ifolder-se/images; rm -f $(IMAGE_FILES)
+	cd $(DESTDIR)$(datadir)/ifolder3/images; rm -f $(IMAGE_FILES)
 	cd $(DESTDIR)$(datadir)/pixmaps; rm -f ifolder24.png
 
 clean-local:
