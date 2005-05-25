@@ -220,6 +220,8 @@
 			<key>Layout</key>
 			<array>
 				<dict>
+					<key>BecomeActive</key>
+					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -256,14 +258,14 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateExpansionKey</key>
 							<array>
 								<string>29B97314FDCFA39411CA2CEA</string>
-								<string>3E255FFC077235290062AB7A</string>
+								<string>29B97317FDCFA39411CA2CEA</string>
 								<string>1C37FABC05509CD000000102</string>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>12</integer>
-									<integer>8</integer>
+									<integer>18</integer>
+									<integer>11</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -298,8 +300,6 @@
 					<key>Dock</key>
 					<array>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -317,21 +317,20 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>3E0D61010842914C00C1952E</string>
+										<string>3E077EC50844E64600FCFED9</string>
 										<key>history</key>
 										<array>
 											<string>3E7A4B3308427FDA00012B85</string>
 											<string>3E7A4B3408427FDA00012B85</string>
 											<string>3E0D60F708428F7200C1952E</string>
 											<string>3E0D60F808428F7200C1952E</string>
-											<string>3E0D60F908428F7200C1952E</string>
+											<string>3ECC0DE40844E60C00B7C434</string>
 										</array>
 										<key>prevStack</key>
 										<array>
 											<string>3E7A4B3608427FDA00012B85</string>
 											<string>3E7A4B3708427FDA00012B85</string>
 											<string>3E7A4B3808427FDA00012B85</string>
-											<string>3E0D60FA08428F7200C1952E</string>
 											<string>3E0D60FB08428F7200C1952E</string>
 										</array>
 									</dict>
@@ -390,9 +389,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>3E0D60FD08428F7200C1952E</string>
+				<string>3E077EC30844E63E00FCFED9</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>3E0D60FE08428F7200C1952E</string>
+				<string>3E077EC40844E63E00FCFED9</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -526,7 +525,6 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>1C0AD2B3069F1EA900FABCE6</string>
 		<string>/Users/calvin/code/ifolder/ifolder/src/OSXClient/iFolder.xcode</string>
 	</array>
 	<key>WindowString</key>
@@ -962,9 +960,9 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1C0AD2B3069F1EA900FABCE6</string>
-				<string>3E0D60FF08428F7200C1952E</string>
+				<string>3ECC0DE20844E60B00B7C434</string>
 				<string>1CD0528B0623707200166675</string>
-				<string>3E0D610008428F7200C1952E</string>
+				<string>3ECC0DE30844E60B00B7C434</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.run</string>
@@ -973,7 +971,7 @@
 			<key>WindowToolGUID</key>
 			<string>1C0AD2B3069F1EA900FABCE6</string>
 			<key>WindowToolIsVisible</key>
-			<true/>
+			<false/>
 		</dict>
 		<dict>
 			<key>Identifier</key>
