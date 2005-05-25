@@ -373,7 +373,11 @@ namespace Novell.iFolder.Web
 				Node node = poBox.GetNodeByID(iFolderID);
 				if (node != null)
 				{
-					ifolder = new iFolderWeb(new Subscription(node));
+					Subscription sub = new Subscription(node);
+
+					// BHT: Filter out subscriptions that are not iFolders
+					if (sub.SubscriptionCollectionType == iFolderWeb.iFolderType)
+						ifolder = new iFolderWeb(sub);
 				}
 			}
 
