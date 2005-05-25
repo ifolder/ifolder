@@ -2,7 +2,7 @@ AC_INIT(src/WebService/iFolder.cs)
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
 
-AM_INIT_AUTOMAKE(ifolder-se, 1.0)
+AM_INIT_AUTOMAKE(ifolder3, 1.0)
 # ASSEMBLY_INFO_VERSION=$VERSION.`date +%Y.%m%d`
 # VERSION=$VERSION.`date +%Y%m%d`
 AM_MAINTAINER_MODE
@@ -510,7 +510,7 @@ test/iFolderComponent/Makefile
 package/Makefile
 package/windows/Makefile
 package/linux/Makefile
-package/linux/ifolder-se.spec
+package/linux/ifolder3.spec
 package/darwin/Makefile
 doc/Makefile
 help/Makefile

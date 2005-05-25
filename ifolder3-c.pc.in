@@ -8,7 +8,7 @@ Conflicts: @_PKG_CONFIG_CONFLICTS_@
 prefix=@_prefix_@
 exec_prefix=@_exec_prefix_@
 libdir=@_libdir_@
-includedir=@_prefix_@/include/ifolder-se
+includedir=@_prefix_@/include/ifolder3
 
 Libs:-Wl,-rpath,${libdir} -L${libdir} -lifolderclient
 Cflags: -I${includedir}

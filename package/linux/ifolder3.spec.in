@@ -21,10 +21,10 @@
 #
 #######################################################################
 
-%define prefix /opt/novell/ifolder-se
+%define prefix /opt/novell/ifolder3
 %define MONO_MACHINECONF /etc/mono/1.0/machine.config
 
-Summary      : iFolder SE
+Summary      : iFolder 3.0
 Name         : @PACKAGE@
 Version      : @VERSION@
 Release      : 1
@@ -44,7 +44,7 @@ Obsoletes    : %{name} <= %{version}
 
 #=============================================================================
 %Description
-iFolder SE supports file sharing and collaboration across an enterprise.
+iFolder 3.0 supports file sharing and collaboration across an enterprise.
 
 
 #=============================================================================
