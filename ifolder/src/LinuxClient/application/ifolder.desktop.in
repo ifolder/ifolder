@@ -1,9 +1,9 @@
 [Desktop Entry]
-Name=iFolder
-GenericName=iFolder
+Name=iFolder 3
+GenericName=iFolder 3
 Comment=iFolder Collaborative File Sharing Tool
 Exec=@_bindir_@/ifolder
-Icon=@_datadir_@/ifolder-se/images/ifolder24.png
+Icon=@_datadir_@/ifolder3/images/ifolder24.png
 StartupNotify=false
 Terminal=false
 Type=Application
