@@ -1,4 +1,4 @@
-EXTRA_DIST = libsimiasbonjour.dll
+EXTRA_DIST = 
 
 libdir=${webbindir}
 

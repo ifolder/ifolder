@@ -2,7 +2,7 @@ SUBDIRS = src
 
 DIST_SUBDIRS = $(SUBDIRS)
 
-EXTRA_DIST = external
+EXTRA_DIST = tools
 
 .PHONY: doc doc-clean
 doc:
