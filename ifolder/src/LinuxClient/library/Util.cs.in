@@ -34,8 +34,8 @@ namespace Novell.iFolder
 	public class Util
 	{
 		internal static string prefix = "@_prefix_@";
-		internal static string imagesdir = "@_prefix_@/share/ifolder-se/images";
-		internal static string helpdir = "@_prefix_@/share/ifolder-se/help";
+		internal static string imagesdir = "@_prefix_@/share/ifolder3/images";
+		internal static string helpdir = "@_prefix_@/share/ifolder3/help";
 		internal static int SectionSpacing = 20;
 		internal static int SectionTitleSpacing = 5;
 		internal static uint DefaultBorderWidth = 10;
