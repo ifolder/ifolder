@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IFPkgDescriptionDeleteWarning</key>
+	<string>Removing Simias-Bonjour will remove the Bonjour workgroup functionality</string>
+	<key>IFPkgDescriptionDescription</key>
+	<string>Simias-Bonjour adds Bonjour networking to Simias</string>
+	<key>IFPkgDescriptionTitle</key>
+	<string>Simias-Bonjour</string>
+	<key>IFPkgDescriptionVersion</key>
+	<string>1.0</string>
+</dict>
+</plist>

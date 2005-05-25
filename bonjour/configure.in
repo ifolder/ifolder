@@ -489,6 +489,8 @@ Makefile
 src/Makefile
 src/Bonjour/Makefile
 src/libsimiasbonjour/Makefile
+package/Makefile
+package/darwin/Makefile
 ])
 
 
