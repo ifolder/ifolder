@@ -44,17 +44,14 @@ typedef	int	pid_t;
 #endif
 
 #define	kDNSMaxID					32
-#define	kDNSMaxServicePath			128
-#define	kDNSMaxPublicKey			256
+#define	kSimiasMaxServicePath		128
+#define	kSimiasMaxPublicKey			256
 #define	kDNSMaxTextualIP			16
 
-// Note: Rendezvous' max domain name is 1005 but for now we're
+// Note: Bonjour's max domain name is 1005 but for now we're
 // just going to support local. so our's is much smaller
-#define	kDNSMaxDomainName			128
-
-#ifndef kDNSServiceMaxServiceName
-#define kDNSServiceMaxServiceName	128
-#endif
+#define	kSimiasMaxDomainName		128
+#define	kSimiasMaxServiceName		128
 
 #ifndef kDNSServiceInterfaceIndexAny 
 #define kDNSServiceInterfaceIndexAny 0
@@ -85,21 +82,21 @@ typedef void (DNSSD_API *MemberBrowseCallback)
 typedef struct tagMembers
 {
 	char				ID[kDNSMaxID];
-	char				Name[kDNSServiceMaxServiceName];
-	char				HostName[kDNSMaxDomainName];
+	char				Name[kSimiasMaxServiceName];
+	char				HostName[kSimiasMaxDomainName];
 	char				IPAddress[kDNSMaxTextualIP];
-	char				ServicePath[kDNSMaxServicePath];
-	unsigned char		PublicKey[kDNSMaxPublicKey];
+	char				ServicePath[kSimiasMaxServicePath];
+	unsigned char		PublicKey[kSimiasMaxPublicKey];
 	int					Port;
 
 } Members, *PMembers;
 
 typedef struct tagMemberInfo
 {
-	char				Name[kDNSServiceMaxServiceName];
-	char				HostName[kDNSMaxDomainName];
-	char				ServicePath[kDNSMaxServicePath];
-	unsigned char		PublicKey[kDNSMaxPublicKey];
+	char				Name[kSimiasMaxServiceName];
+	char				HostName[kSimiasMaxDomainName];
+	char				ServicePath[kSimiasMaxServicePath];
+	unsigned char		PublicKey[kSimiasMaxPublicKey];
 	int			        Port;
 
 } MemberInfo, *PMemberInfo;

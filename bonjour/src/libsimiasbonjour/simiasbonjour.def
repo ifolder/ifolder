@@ -1,4 +1,4 @@
-LIBRARY	simiasbonjour
+LIBRARY	libsimiasbonjour
 EXPORTS
     RegisterLocalMember
     DeregisterLocalMember
