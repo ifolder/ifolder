@@ -37,7 +37,7 @@ using Simias.POBox;
 
 // shorty
 using SCodes = Simias.Authentication.StatusCodes;
-using RUsers = Simias.mDns.RendezvousUsers;
+using RUsers = Simias.mDns.BonjourUsers;
 
 namespace Simias
 {

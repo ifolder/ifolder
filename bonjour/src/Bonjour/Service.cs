@@ -59,7 +59,6 @@ namespace Simias.mDns
 			SimiasLogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
 		private static string inCredentialEvent = "true";
-		//private	Store store = null;
 		private Simias.mDns.User mDnsUser = null;
 		private Simias.mDnsProvider mDnsProvider = null;
 
@@ -91,17 +90,13 @@ namespace Simias.mDns
 		/// </param>
 		public void Start( Configuration config )
 		{
-			log.Debug("Start called");
+			log.Debug( "Start called" );
 			this.config = config;
-
-			//store = Store.GetStore();
-
-			//
-			// Make sure the mDnsDomain exists
-			//
 
 			try
 			{
+				// Newing up the mDns domain will create the
+				// Bonjour domain if it does not already exist.
 				new Simias.mDns.Domain( null );
 				this.mDnsUser = new Simias.mDns.User();
 
@@ -109,9 +104,9 @@ namespace Simias.mDns
 				// service daemon.
 				Simias.mDns.User.RegisterUser();
 
-				// Load the members in the Rendezvous domain into
+				// Load the members in the Bonjour domain into
 				// our current list which is kept in memory
-				if ( RendezvousUsers.LoadMembersFromDomain( false ) == false )
+				if ( BonjourUsers.LoadMembersFromDomain( false ) == false )
 				{
 					log.Error( "Failed loading the members from the Rendezvous domain" );
 				}
@@ -122,7 +117,7 @@ namespace Simias.mDns
 
 				// Might not be needed in the future but today
 				// the sync thread collects all the Member meta
-				// from the Rendezous daemon when a new member
+				// from the Bonjour daemon when a new member
 				// is added to the list.
 				Simias.mDns.Sync.StartSyncThread();
 
@@ -138,7 +133,7 @@ namespace Simias.mDns
 				// credentials don't exist a "Need Credentials" event is generated
 				// The mDnsDomain service watches for these events and performs
 				// authentication when an event signals authentication is needed
-				// to a remote Rendezvous domain.
+				// to a remote Bonjour domain.
 				this.needsCreds = new NeedCredentialsEventSubscriber();
 				this.needsCreds.NeedCredentials += 
 					new Simias.Authentication.NeedCredentialsEventHandler( OnCredentialsEventHandler );
@@ -191,7 +186,6 @@ namespace Simias.mDns
 				Simias.mDns.User.UnregisterUser();
 			}
 
-			// Temp
 			Simias.mDns.Sync.StopSyncThread();
 		}
 
@@ -249,7 +243,7 @@ namespace Simias.mDns
 			SimiasLogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		static AutoResetEvent syncEvent = null;
-		static bool exiting;
+		static bool up = false;
 		static bool syncOnStart = true;
 		static int syncInterval = 60 * 1000;
 		static Thread syncThread = null;
@@ -263,8 +257,8 @@ namespace Simias.mDns
 			try
 			{
 				mdnsUser = new Simias.mDns.User();
-				exiting = false;
 				syncEvent = new AutoResetEvent(false);
+				up = true;
 				syncThread = new Thread( new ThreadStart( Sync.SyncThread ) );
 				syncThread.IsBackground = true;
 				syncThread.Start();
@@ -282,13 +276,11 @@ namespace Simias.mDns
 		internal static int StopSyncThread()
 		{
 			int status = 0;
-			exiting = true;
+			up = false;
 			try
 			{
 				syncEvent.Set();
 				Thread.Sleep(32);
-				syncEvent.Close();
-				Thread.Sleep(0);
 				mdnsUser = null;
 				log.Debug("StopSyncThread finished");
 			}
@@ -312,18 +304,19 @@ namespace Simias.mDns
 
 		internal static void SyncThread()
 		{
-			while (!exiting)
+			while ( up == true )
 			{
-				if (syncOnStart == false)
+				if ( syncOnStart == false )
 				{
-					syncEvent.WaitOne(syncInterval, false);
+					syncEvent.WaitOne( syncInterval, false );
 				}
 
 				// Always wait after the first iteration
 				syncOnStart = false;
 				mdnsUser.SynchronizeMembers();
 			}
+
+			syncEvent.Close();
 		}
 	}
-
 }

@@ -54,19 +54,19 @@ namespace MemberBrowser
 		}
 
 		[ StructLayout( LayoutKind.Sequential, CharSet=CharSet.Ansi ) ]
-			public class MemberInfo
+		public class MemberInfo
 		{
 			[ MarshalAs( UnmanagedType.ByValTStr, SizeConst=128 ) ]
-			public String Name = null;
+			public string Name = null;
 
 			[ MarshalAs( UnmanagedType.ByValTStr, SizeConst=128 ) ]
-			public String Host = null;
+			public string Host = null;
 
 			[ MarshalAs( UnmanagedType.ByValTStr, SizeConst=128 ) ]
-			public String ServicePath = null;
+			public string ServicePath = null;
 
 			[ MarshalAs( UnmanagedType.ByValTStr, SizeConst=256 ) ]
-			public String PublicKey = null;
+			public string PublicKey = null;
 
 			public int Port;
 		}
@@ -166,14 +166,15 @@ namespace MemberBrowser
 		};
 
 		#region DllImports
-		[ DllImport( nativeLib, CharSet=CharSet.Auto ) ]
+		[ DllImport( nativeLib, CharSet=CharSet.Ansi ) ]
 		private 
 		extern 
 		static 
 		kErrorType
 		GetMemberInfo(
 			[MarshalAs(UnmanagedType.LPStr)] string	ID,
-			[In, Out] MemberInfo Info);
+			[MarshalAs( UnmanagedType.LPStruct)] [In, Out] MemberInfo Info);
+		    //ref MemberInfo Info);
 
 		[ DllImport( nativeLib ) ]
 		private 
@@ -326,8 +327,8 @@ namespace MemberBrowser
 				if ( ( flags & (int) kDNSServiceFlags.kDNSServiceFlagsAdd ) == 
 					(int) kDNSServiceFlags.kDNSServiceFlagsAdd )
 				{
-
 					MemberInfo info = new MemberInfo();
+
 					kErrorType status = GetMemberInfo( serviceName, info );
 					if ( status == kErrorType.kDNSServiceErr_NoError )
 					{

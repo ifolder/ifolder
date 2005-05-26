@@ -38,7 +38,7 @@ namespace Simias.mDns
 {
 	// Quick and dirty - I need to clean this up and
 	// put some thought into it
-	public class RendezvousUsers
+	public class BonjourUsers
 	{
 		static public string StagedName = "StagedMember";
 		static public string HostProperty = "RHost";
@@ -51,13 +51,13 @@ namespace Simias.mDns
 
 		//static internal	UserLock memberListLock = new UserLock();
 
-		public RendezvousUsers()
+		public BonjourUsers()
 		{
 		}
 
 		static public bool LoadMembersFromDomain( bool verifyUniqueness )
 		{
-			lock( typeof( Simias.mDns.RendezvousUsers ) )
+			lock( typeof( Simias.mDns.BonjourUsers ) )
 			{
 				// Add the members in the store
 				Simias.Storage.Domain domain = Store.GetStore().GetDomain( Simias.mDns.Domain.ID );
@@ -75,7 +75,7 @@ namespace Simias.mDns
 
 					Property p = new Property( "InStore", true );
 					member.Properties.AddProperty( p );
-					RendezvousUsers.memberList.Add( member );
+					BonjourUsers.memberList.Add( member );
 				}
 			}
 
@@ -85,11 +85,11 @@ namespace Simias.mDns
 		static public bool AddMember( Member nMember, bool verifyUniqueness )
 		{
 			bool duplicate = false;
-			//lock( typeof( Simias.mDns.RendezvousUsers ) )
-			//{
+			lock( typeof( Simias.mDns.BonjourUsers ) )
+			{
 				if ( verifyUniqueness == true )
 				{
-					foreach( Member cMember in RendezvousUsers.memberList )
+					foreach( Member cMember in BonjourUsers.memberList )
 					{
 						if ( cMember.UserID == nMember.UserID )
 						{
@@ -101,9 +101,9 @@ namespace Simias.mDns
 
 				if ( duplicate == false )
 				{
-					RendezvousUsers.memberList.Add( nMember );
+					BonjourUsers.memberList.Add( nMember );
 				}
-			//}
+			}
 
 			if ( duplicate == true )
 			{
@@ -114,9 +114,9 @@ namespace Simias.mDns
 
 		static public bool AddStagedMember( Member nMember )
 		{
-			//lock( typeof( Simias.mDns.RendezvousUsers ) )
-			//{
-				foreach( Member cMember in RendezvousUsers.stagedList )
+			lock( typeof( Simias.mDns.BonjourUsers ) )
+			{
+				foreach( Member cMember in BonjourUsers.stagedList )
 				{
 					if ( cMember.UserID == nMember.UserID )
 					{
@@ -124,8 +124,8 @@ namespace Simias.mDns
 					}
 				}
 
-				RendezvousUsers.stagedList.Add( nMember );
-			//}
+				BonjourUsers.stagedList.Add( nMember );
+			}
 
 			return true;
 		}
@@ -134,7 +134,7 @@ namespace Simias.mDns
 		{
 			Member cMember = null;
 
-			foreach( Member rMember in RendezvousUsers.memberList )
+			foreach( Member rMember in BonjourUsers.memberList )
 			{
 				if ( rMember.UserID == memberID )
 				{
@@ -149,11 +149,11 @@ namespace Simias.mDns
 		static public string GetMembersPublicKey( string memberID )
 		{
 			string publicKey = null;
-			foreach( Member rMember in RendezvousUsers.memberList )
+			foreach( Member rMember in BonjourUsers.memberList )
 			{
 				if ( rMember.UserID == memberID )
 				{
-					Property p = rMember.Properties.GetSingleProperty( RendezvousUsers.KeyProperty );
+					Property p = rMember.Properties.GetSingleProperty( BonjourUsers.KeyProperty );
 					if ( p != null )
 					{
 						publicKey = p.Value.ToString();
@@ -167,13 +167,13 @@ namespace Simias.mDns
 
 		static public bool UpdateMember( Member member )
 		{
-			foreach( Member cMember in RendezvousUsers.memberList )
+			foreach( Member cMember in BonjourUsers.memberList )
 			{
 				if ( cMember.UserID == member.UserID )
 				{
 					// Out with the old in with the new
-					RendezvousUsers.memberList.Remove( cMember );
-					RendezvousUsers.memberList.Add( member );
+					BonjourUsers.memberList.Remove( cMember );
+					BonjourUsers.memberList.Add( member );
 					return true;
 				}
 			}
@@ -183,36 +183,36 @@ namespace Simias.mDns
 
 		static public bool RemoveMember( string memberID )
 		{
-			//lock( typeof( Simias.mDns.RendezvousUsers ) )
-			//{
-				foreach( Member cMember in RendezvousUsers.memberList )
+			lock( typeof( Simias.mDns.BonjourUsers ) )
+			{
+				foreach( Member cMember in BonjourUsers.memberList )
 				{
 					if ( cMember.UserID == memberID )
 					{
-						RendezvousUsers.memberList.Remove( cMember );
+						BonjourUsers.memberList.Remove( cMember );
 						return true;
 					}
 				}
 
-			//}
+			}
 
 			return false;
 		}
 
 		static public bool RemoveStagedMember( string memberID )
 		{
-			//lock( typeof( Simias.mDns.RendezvousUsers ) )
-			//{
-				foreach( Member cMember in RendezvousUsers.stagedList )
+			lock( typeof( Simias.mDns.BonjourUsers ) )
+			{
+				foreach( Member cMember in BonjourUsers.stagedList )
 				{
 					if ( memberID == cMember.UserID )
 					{
-						RendezvousUsers.stagedList.Remove( cMember );
+						BonjourUsers.stagedList.Remove( cMember );
 						return true;
 					}
 				}
 
-			//}
+			}
 
 			return false;
 		}
@@ -311,8 +311,6 @@ namespace Simias.mDns
 		private static IntPtr userHandle;
 		private static IntPtr browseHandle;
 		private static Thread browseThread = null;
-
-		//private const string nativeLibrary = "ifolder-rendezvous";
 
 		// State for maintaining the Rendezvous user list
 
@@ -540,7 +538,12 @@ namespace Simias.mDns
 				RSACryptoServiceProvider publicKey = Store.GetStore().CurrentUser.PublicKey;
 				short sport = (short) webServiceUri.Port;
 
-				log.Debug( "  calling RegisterLocalMember" );
+				log.Debug( "RegisterLocalMember" );
+				log.Debug( "  UserID:	" + User.mDnsUserID );
+				log.Debug( "  Username: " + User.mDnsUserName );
+				log.Debug( "  ServicePath: " + webServiceUri.AbsolutePath );
+				log.Debug( "  Public Key:  " + publicKey.ToXmlString( false ) );
+
 				kErrorType status =
 					RegisterLocalMember( 
 						User.mDnsUserID, 
@@ -552,9 +555,9 @@ namespace Simias.mDns
 
 				if ( status != kErrorType.kDNSServiceErr_NoError )
 				{
-					throw new SimiasException( "Failed to register local member with Rendezvous" );
+					throw new SimiasException( "Failed to register local member with Bonjour" );
 				}
-				log.Debug( "  out of RegisterLocalMember" );
+				log.Debug( "RegisterLocalMember: Success" );
 			}
 			catch( Exception e2 )
 			{
@@ -638,11 +641,11 @@ namespace Simias.mDns
 				{
 					Member rMember = 
 						new Member( 
-							RendezvousUsers.StagedName,
+							BonjourUsers.StagedName,
 							serviceName,
 							Simias.Storage.Access.Rights.ReadWrite );
 
-					bool added = RendezvousUsers.AddStagedMember( rMember );
+					bool added = BonjourUsers.AddStagedMember( rMember );
 					if ( added == true )
 					{
 						// Force a meta-data sync
@@ -652,9 +655,9 @@ namespace Simias.mDns
 				else
 				{
 					log.Debug( "Removing member: " + serviceName );
-					if ( RendezvousUsers.RemoveStagedMember( serviceName ) == false )
+					if ( BonjourUsers.RemoveStagedMember( serviceName ) == false )
 					{
-						RendezvousUsers.RemoveMember( serviceName );
+						BonjourUsers.RemoveMember( serviceName );
 					}
 				}
 			}
@@ -678,18 +681,27 @@ namespace Simias.mDns
 			// FIXME::define sizes
 			//char[] trimNull = { '\0' };
 
-			log.Debug( "Syncing mDns members" );
+			log.Debug( "Syncing Bonjour members" );
 			Simias.Storage.Member rMember;
-			lock( typeof( Simias.mDns.RendezvousUsers ) )
+			lock( typeof( Simias.mDns.BonjourUsers ) )
 			{
-				// FIXME:: Debug - take out later
+				User.kErrorType ccode;
 				log.Debug( "Current Members" );
-				foreach( Member cMember in RendezvousUsers.memberList )
+				foreach( Member cMember in BonjourUsers.memberList )
 				{
 					log.Debug( "  " + cMember.Name );
+					MemberInfo info = new MemberInfo();
+					ccode = GetMemberInfo( cMember.UserID, info );
+					if ( ccode == kErrorType.kDNSServiceErr_NoError )
+					{
+						log.Debug( "  Friendly Name: " + info.Name );
+						log.Debug( "  Service Path:  " + info.ServicePath );
+						log.Debug( "  Host:          " + info.Host );
+						log.Debug( "  Port:          " + info.Port.ToString() );
+					}
 				}
 
-				IEnumerator memberEnum = RendezvousUsers.stagedList.GetEnumerator();
+				IEnumerator memberEnum = BonjourUsers.stagedList.GetEnumerator();
 				while( memberEnum.MoveNext() )
 				{
 					rMember = memberEnum.Current as Simias.Storage.Member;
@@ -714,18 +726,18 @@ namespace Simias.mDns
 							rMember.FN = rMember.Name;
 
 							Property host = 
-								new Property( RendezvousUsers.HostProperty, info.Host );
+								new Property( BonjourUsers.HostProperty, info.Host );
 							host.LocalProperty = true;
 							rMember.Properties.AddProperty( host );
 
 							Property path = 
 								new Property( 
-								RendezvousUsers.PathProperty,
+								BonjourUsers.PathProperty,
 								info.ServicePath );
 							path.LocalProperty = true;
 							rMember.Properties.AddProperty( path );
 
-							Property rport = new Property( RendezvousUsers.PortProperty, info.Port );
+							Property rport = new Property( BonjourUsers.PortProperty, info.Port );
 							rMember.Properties.AddProperty( rport );
 
 							/*
@@ -735,20 +747,20 @@ namespace Simias.mDns
 
 							Property key = 
 								new Property( 
-									RendezvousUsers.KeyProperty, 
+									BonjourUsers.KeyProperty, 
 									info.PublicKey );
 
 							rMember.Properties.AddProperty( key );
 
 							log.Debug( "Adding meta-data for: " + rMember.Name );
-							RendezvousUsers.stagedList.Remove( rMember );
-							if ( RendezvousUsers.AddMember( rMember, true ) == false )
+							BonjourUsers.stagedList.Remove( rMember );
+							if ( BonjourUsers.AddMember( rMember, true ) == false )
 							{
-								RendezvousUsers.UpdateMember( rMember );
+								BonjourUsers.UpdateMember( rMember );
 							}
 
 							// The collection was changed so reset up a new enumerator
-							memberEnum = RendezvousUsers.stagedList.GetEnumerator();
+							memberEnum = BonjourUsers.stagedList.GetEnumerator();
 						}
 					}
 					catch ( Exception e2 )
