@@ -222,6 +222,9 @@ case $SIMIAS_OS in
 		#ALL_LINGUAS="pt_BR fr it de es ru ja"
 		#AM_GNU_GETTEXT_VERSION(0.10.40)
 		AM_GNU_GETTEXT(external)
+#		gaim_root=$(pkg-config --variable=prefix gaim)
+#		AC_SUBST(gaim_root)
+
     	libexecdir='${exec_prefix}'
     ;;
     #
@@ -488,6 +491,8 @@ AC_OUTPUT([
 Makefile
 src/Makefile
 src/GaimDomain/Makefile
+package/Makefile
+package/gaim-ifolder.spec
 ])
 
 
