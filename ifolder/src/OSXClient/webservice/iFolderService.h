@@ -49,6 +49,7 @@
 
 -(void) DeclineiFolderInvitation:(NSString *)iFolderID fromDomain:(NSString *)DomainID;
 -(iFolder *) RevertiFolder:(NSString *)iFolderID;
+-(void) DeleteiFolder:(NSString *)iFolderID;
 
 // You should call RevertiFolder and DeclineiFolderInvitation instead of delete
 //-(void) DeleteiFolder:(NSString *)iFolderID;
