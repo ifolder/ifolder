@@ -746,11 +746,17 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	addinviteUserMessage.MemberName = (char *)[memberName UTF8String];
 	if(givenName != nil)
 		addinviteUserMessage.GivenName = (char *)[givenName UTF8String];
+	else
+		addinviteUserMessage.GivenName = NULL;
 	if(familyName != nil)
 		addinviteUserMessage.FamilyName = (char *)[familyName UTF8String];
+	else
+		addinviteUserMessage.FamilyName = NULL;
 	addinviteUserMessage.MemberID = (char *)[memberID UTF8String];
 	if(publicKey != nil)
 		addinviteUserMessage.PublicKey = (char *)[publicKey UTF8String];
+	else
+		addinviteUserMessage.PublicKey = NULL;
 	addinviteUserMessage.Rights = (char *)[rights UTF8String];
 
     init_gsoap (&soap, &creds);
