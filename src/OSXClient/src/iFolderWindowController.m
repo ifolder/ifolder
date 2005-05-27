@@ -524,7 +524,8 @@ static iFolderWindowController *sharedInstance = nil;
 		if (selIndex != NSNotFound)
 		{
 			if( ([[[ifoldersController arrangedObjects] objectAtIndex:selIndex] IsSubscription] == NO) &&
-				([[[[ifoldersController arrangedObjects] objectAtIndex:selIndex] valueForKeyPath:@"properties.IsWorkgroup"] boolValue] == NO) )
+				([[[[ifoldersController arrangedObjects] objectAtIndex:selIndex] valueForKeyPath:@"properties.IsWorkgroup"] boolValue] == NO) &&
+				([[[[ifoldersController arrangedObjects] objectAtIndex:selIndex] Role] compare:@"Master"] != 0) )
 				return YES;
 		}
 		return NO;

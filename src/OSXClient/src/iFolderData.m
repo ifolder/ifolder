@@ -569,6 +569,16 @@ static iFolderData *sharedInstance = nil;
 	{
 		if([self isiFolder:ifolderID])
 		{
+			// Take care to delete this ifolder if it's role is master on this
+			// collection (workgroup)
+			iFolder *ifolder = [self getiFolder:ifolderID];
+			if( (ifolder != nil) && ([[ifolder Role] compare:@"Master"] == 0) )
+			{
+				[ifolderService DeleteiFolder:ifolderID];
+				[self _deliFolder:ifolderID];
+				return;
+			}
+		
 			// This is a real iFolder so revert it and get the invitaion ifolder
 			revertediFolder = [ifolderService RevertiFolder:ifolderID];
 			[self _deliFolder:ifolderID];

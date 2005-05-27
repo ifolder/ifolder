@@ -408,6 +408,35 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 
 
+-(void) DeleteiFolder:(NSString *)iFolderID
+{
+    struct soap soap;
+	GSOAP_CREDS creds;
+    int err_code;
+
+	NSAssert( (iFolderID != nil), @"iFolderID was nil");
+
+	struct _ns1__DeleteiFolder			deleteiFolderMessage;
+	struct _ns1__DeleteiFolderResponse	deleteiFolderResponse;
+	
+	deleteiFolderMessage.iFolderID = (char *)[iFolderID UTF8String];
+
+    init_gsoap (&soap, &creds);
+    err_code = soap_call___ns1__DeleteiFolder(
+			&soap,
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
+            NULL,
+            &deleteiFolderMessage,
+            &deleteiFolderResponse);
+
+	handle_soap_error(&soap, &creds, @"iFolderService.DeleteiFolder");
+
+    cleanup_gsoap(&soap, &creds);
+}
+
+
+
+
 -(void) SynciFolderNow:(NSString *)iFolderID
 {
 	iFolder *ifolder = nil;
