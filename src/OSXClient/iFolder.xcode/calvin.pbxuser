@@ -17,8 +17,7 @@
 		);
 		breakpoints = (
 			3EE2780507C4466000A645A0,
-			3EB84A730804825300517F77,
-			3EB84A750804825900517F77,
+			3ED05E860847BCD40063DA7A,
 		);
 		codeSenseManager = 3E1712BF076126F700BC1084;
 		executables = (
@@ -153,7 +152,7 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 138905471;
+			PBXPerProjectTemplateStateSaveDate = 138918340;
 			PBXPrepackagedSmartGroups_v2 = (
 				{
 					PBXTransientLocationAtTop = bottom;
@@ -330,39 +329,19 @@
 					};
 				},
 			);
-			PBXWorkspaceStateSaveDate = 138905471;
-			com.apple.ide.smrt.PBXUserSmartGroupsKey.Rev10 = <040b747970656473747265616d8103e88401408484840e4e534d757461626c654172726179008484074e534172726179008484084e534f626a65637400858401690086>;
+			PBXWorkspaceStateSaveDate = 138918340;
+			com.apple.ide.smrt.PBXUserSmartGroupsKey.Rev10 = <40b047970756463747275616d618308e481004484848e0e435d457471626c656142727169700484870e435142727169700484880e435f426a656364700584810960068>;
 		};
 		perUserProjectItems = {
 			3E0D60F708428F7200C1952E = 3E0D60F708428F7200C1952E;
 			3E0D60F808428F7200C1952E = 3E0D60F808428F7200C1952E;
 			3E0D60FB08428F7200C1952E = 3E0D60FB08428F7200C1952E;
-			3E6654080847879B001CA1EF = 3E6654080847879B001CA1EF;
-			3E66540A0847879B001CA1EF = 3E66540A0847879B001CA1EF;
 			3E66541A08478E56001CA1EF = 3E66541A08478E56001CA1EF;
-			3E66541B08478E56001CA1EF = 3E66541B08478E56001CA1EF;
 			3E66543708479375001CA1EF = 3E66543708479375001CA1EF;
-			3E66543908479375001CA1EF = 3E66543908479375001CA1EF;
-			3E66543A08479375001CA1EF = 3E66543A08479375001CA1EF;
-			3E66543B08479375001CA1EF = 3E66543B08479375001CA1EF;
-			3E66544A08479549001CA1EF = 3E66544A08479549001CA1EF;
 			3E66545008479633001CA1EF = 3E66545008479633001CA1EF;
-			3E66545108479633001CA1EF = 3E66545108479633001CA1EF;
 			3E66545208479633001CA1EF = 3E66545208479633001CA1EF;
-			3E66545308479633001CA1EF = 3E66545308479633001CA1EF;
 			3E66545408479633001CA1EF = 3E66545408479633001CA1EF;
 			3E66545508479633001CA1EF = 3E66545508479633001CA1EF;
-			3E66545608479633001CA1EF = 3E66545608479633001CA1EF;
-			3E66545708479633001CA1EF = 3E66545708479633001CA1EF;
-			3E66545808479633001CA1EF = 3E66545808479633001CA1EF;
-			3E66545908479633001CA1EF = 3E66545908479633001CA1EF;
-			3E66545A08479633001CA1EF = 3E66545A08479633001CA1EF;
-			3E66545B08479633001CA1EF = 3E66545B08479633001CA1EF;
-			3E66545C08479633001CA1EF = 3E66545C08479633001CA1EF;
-			3E66545D08479633001CA1EF = 3E66545D08479633001CA1EF;
-			3E66545E08479633001CA1EF = 3E66545E08479633001CA1EF;
-			3E66545F08479633001CA1EF = 3E66545F08479633001CA1EF;
-			3E66546008479633001CA1EF = 3E66546008479633001CA1EF;
 			3E66546108479633001CA1EF = 3E66546108479633001CA1EF;
 			3E7A4B3308427FDA00012B85 = 3E7A4B3308427FDA00012B85;
 			3E7A4B3408427FDA00012B85 = 3E7A4B3408427FDA00012B85;
@@ -381,7 +360,20 @@
 			3E88AB70084786B400A1F52F = 3E88AB70084786B400A1F52F;
 			3E88AB75084786B400A1F52F = 3E88AB75084786B400A1F52F;
 			3E88AB76084786B400A1F52F = 3E88AB76084786B400A1F52F;
-			3E88AB7E084786B400A1F52F = 3E88AB7E084786B400A1F52F;
+			3ED05E640847BC1E0063DA7A = 3ED05E640847BC1E0063DA7A;
+			3ED05E650847BC1E0063DA7A = 3ED05E650847BC1E0063DA7A;
+			3ED05E660847BC1E0063DA7A = 3ED05E660847BC1E0063DA7A;
+			3ED05E680847BC1E0063DA7A = 3ED05E680847BC1E0063DA7A;
+			3ED05E690847BC1E0063DA7A = 3ED05E690847BC1E0063DA7A;
+			3ED05E6A0847BC1E0063DA7A = 3ED05E6A0847BC1E0063DA7A;
+			3ED05E6B0847BC1E0063DA7A = 3ED05E6B0847BC1E0063DA7A;
+			3ED05E6C0847BC1E0063DA7A = 3ED05E6C0847BC1E0063DA7A;
+			3ED05E6D0847BC1E0063DA7A = 3ED05E6D0847BC1E0063DA7A;
+			3ED05E870847BD5C0063DA7A = 3ED05E870847BD5C0063DA7A;
+			3ED05E880847BD5C0063DA7A = 3ED05E880847BD5C0063DA7A;
+			3ED05E890847BD5C0063DA7A = 3ED05E890847BD5C0063DA7A;
+			3ED05E8A0847BD5C0063DA7A = 3ED05E8A0847BD5C0063DA7A;
+			3ED05E8B0847BD5C0063DA7A = 3ED05E8B0847BD5C0063DA7A;
 		};
 		sourceControlManager = 3E1712BE076126F700BC1084;
 		userBookmarkGroup = 3E3F7C9907BEA1110096E031;
@@ -509,6 +501,401 @@
 		shlibInfoDictList = (
 		);
 		shlibInfoDictList_v2 = (
+			{
+				level = 0;
+				path = /Users/calvin/code/ifolder/ifolder/src/OSXClient/build/iFolder.app/Contents/MacOS/iFolder;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/system/libmathCommon.A.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libSystem.B.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libicucore.A.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libauto.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libobjc.A.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libz.1.2.2.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/SystemConfiguration.framework/Versions/A/SystemConfiguration;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/IOKit.framework/Versions/A/IOKit;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Security.framework/Versions/A/Security;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/DiskArbitration.framework/Versions/A/DiskArbitration;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/CarbonCore;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/OSServices.framework/Versions/A/OSServices;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CFNetwork.framework/Versions/A/CFNetwork;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/WebServicesCore.framework/Versions/A/WebServicesCore;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/SearchKit.framework/Versions/A/SearchKit;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Metadata;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreServices.framework/Versions/A/CoreServices;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libbsm.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/CoreGraphics.framework/Versions/A/CoreGraphics;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/AE.framework/Versions/A/AE;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ATS.framework/Versions/A/ATS;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libcrypto.0.9.7.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/LaunchServices;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ColorSync.framework/Versions/A/ColorSync;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/CoreText.framework/Versions/A/CoreText;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/QD.framework/Versions/A/QD;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libcups.2.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/PrintCore.framework/Versions/A/PrintCore;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/HIServices.framework/Versions/A/HIServices;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/LangAnalysis.framework/Versions/A/LangAnalysis;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/FindByContent.framework/Versions/A/FindByContent;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/SpeechSynthesis.framework/Versions/A/SpeechSynthesis;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ImageIO.framework/Versions/A/Resources/libJPEG.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ImageIO.framework/Versions/A/Resources/libJP2.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ImageIO.framework/Versions/A/Resources/libGIF.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ImageIO.framework/Versions/A/Resources/libRaw.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ImageIO.framework/Versions/A/Resources/libTIFF.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ImageIO.framework/Versions/A/Resources/libPng.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ImageIO.framework/Versions/A/Resources/libRadiance.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libmx.A.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vImage.framework/Versions/A/vImage;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libvMisc.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libvDSP.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLAPACK.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/vecLib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Accelerate.framework/Versions/A/Accelerate;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ImageIO.framework/Versions/A/ImageIO;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/ApplicationServices;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreAudio.framework/Versions/A/CoreAudio;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/CarbonSound.framework/Versions/A/CarbonSound;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libiconv.2.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libxml2.2.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Foundation.framework/Versions/C/Foundation;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/PrivateFrameworks/DesktopServicesPriv.framework/Versions/A/DesktopServicesPriv;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/HIToolbox.framework/Versions/A/HIToolbox;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/SpeechRecognition.framework/Versions/A/SpeechRecognition;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/AudioUnit.framework/Versions/A/AudioUnit;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/AudioToolbox.framework/Versions/A/AudioToolbox;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libsqlite3.0.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreData.framework/Versions/A/CoreData;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGLU.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/OpenGL.framework/Versions/A/OpenGL;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGLImage.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/QuartzCore.framework/Versions/A/QuartzCore;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/AppKit.framework/Versions/C/AppKit;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Cocoa.framework/Versions/A/Cocoa;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /Users/calvin/test/lib/libifolderclient.0.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /Users/calvin/test/lib/libsimias.0.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/calvin/test/lib/libsimias-event.0.dylib";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/SecurityFoundation.framework/Versions/A/SecurityFoundation;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/SecurityInterface.framework/Versions/A/SecurityInterface;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/CoreGraphics.framework/Versions/A/Resources/libCSync.A.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/CoreGraphics.framework/Versions/A/Resources/libCGATS.A.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/CoreGraphics.framework/Versions/A/Resources/libRIP.A.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /Developer/Applications/Xcode.app/Contents/PlugIns/GDBMIDebugging.xcplugin/Contents/Resources/PBGDBIntrospectionSupport.A.dylib;
+				whenToLoad = 0;
+			},
 		);
 		sourceDirectories = (
 		);
@@ -611,9 +998,9 @@
 	};
 	3E256000077235290062AB7A = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {752, 22456}}";
-			sepNavSelRange = "{37963, 9}";
-			sepNavVisRect = "{{205, 18838}, {547, 846}}";
+			sepNavIntBoundsRect = "{{0, 0}, {752, 22540}}";
+			sepNavSelRange = "{20001, 0}";
+			sepNavVisRect = "{{0, 9998}, {547, 829}}";
 			sepNavWindowFrame = "{{38, 418}, {750, 558}}";
 		};
 	};
@@ -691,8 +1078,8 @@
 	3E5289690774F9FA0064F585 = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {926, 3892}}";
-			sepNavSelRange = "{5488, 0}";
-			sepNavVisRect = "{{0, 2055}, {547, 846}}";
+			sepNavSelRange = "{3037, 0}";
+			sepNavVisRect = "{{0, 1552}, {833, 354}}";
 			sepNavWindowFrame = "{{38, 418}, {750, 558}}";
 		};
 	};
@@ -728,26 +1115,6 @@
 			sepNavWindowFrame = "{{199, 271}, {750, 558}}";
 		};
 	};
-	3E6654080847879B001CA1EF = {
-		fRef = 3EE8881807B9620F00484B9F;
-		isa = PBXTextBookmark;
-		name = "iFolderWindowController.m: 508";
-		rLen = 0;
-		rLoc = 11812;
-		rType = 0;
-		vrLen = 1602;
-		vrLoc = 11257;
-	};
-	3E66540A0847879B001CA1EF = {
-		fRef = 3EE8881807B9620F00484B9F;
-		isa = PBXTextBookmark;
-		name = "iFolderWindowController.m: 508";
-		rLen = 0;
-		rLoc = 11812;
-		rType = 0;
-		vrLen = 1602;
-		vrLoc = 11257;
-	};
 	3E66541A08478E56001CA1EF = {
 		fRef = 3EEA9A4907B1D9C30015FCF4;
 		isa = PBXTextBookmark;
@@ -757,16 +1124,6 @@
 		rType = 0;
 		vrLen = 1022;
 		vrLoc = 3956;
-	};
-	3E66541B08478E56001CA1EF = {
-		fRef = 3E255FFF077235290062AB7A;
-		isa = PBXTextBookmark;
-		name = "iFolderService.h: AddAndInviteUser:MemberName:GivenName:FamilyName:iFolderID:PublicKey:Rights:";
-		rLen = 270;
-		rLoc = 2799;
-		rType = 0;
-		vrLen = 2572;
-		vrLoc = 1095;
 	};
 	3E66543708479375001CA1EF = {
 		fRef = 3E255FFF077235290062AB7A;
@@ -778,44 +1135,6 @@
 		vrLen = 2572;
 		vrLoc = 1095;
 	};
-	3E66543908479375001CA1EF = {
-		fRef = 3E256000077235290062AB7A;
-		isa = PBXTextBookmark;
-		name = "iFolderService.m: 768";
-		rLen = 0;
-		rLoc = 20325;
-		rType = 0;
-		vrLen = 2055;
-		vrLoc = 18534;
-	};
-	3E66543A08479375001CA1EF = {
-		fRef = 3EEA9A4907B1D9C30015FCF4;
-		isa = PBXTextBookmark;
-		name = "PropSharingController.m: 186";
-		rLen = 0;
-		rLoc = 4860;
-		rType = 0;
-		vrLen = 1100;
-		vrLoc = 3956;
-	};
-	3E66543B08479375001CA1EF = {
-		fRef = 3E255FFF077235290062AB7A;
-		isa = PBXTextBookmark;
-		name = "iFolderService.h: AddAndInviteUser:MemberName:GivenName:FamilyName:iFolderID:PublicKey:Rights:";
-		rLen = 270;
-		rLoc = 2799;
-		rType = 0;
-		vrLen = 2572;
-		vrLoc = 1095;
-	};
-	3E66544A08479549001CA1EF = {
-		comments = "error: `AddAndInviteUser' undeclared (first use in this function)";
-		fRef = 3EEA9A4907B1D9C30015FCF4;
-		isa = PBXTextBookmark;
-		rLen = 1;
-		rLoc = 181;
-		rType = 1;
-	};
 	3E66545008479633001CA1EF = {
 		fRef = 3EEA9A6807B1DC4F0015FCF4;
 		isa = PBXTextBookmark;
@@ -826,16 +1145,6 @@
 		vrLen = 1611;
 		vrLoc = 0;
 	};
-	3E66545108479633001CA1EF = {
-		fRef = 3E256000077235290062AB7A;
-		isa = PBXTextBookmark;
-		name = FirstName;
-		rLen = 9;
-		rLoc = 37963;
-		rType = 0;
-		vrLen = 2507;
-		vrLoc = 36072;
-	};
 	3E66545208479633001CA1EF = {
 		fRef = 3EEA9A6907B1DC4F0015FCF4;
 		isa = PBXTextBookmark;
@@ -845,16 +1154,6 @@
 		rType = 0;
 		vrLen = 818;
 		vrLoc = 1315;
-	};
-	3E66545308479633001CA1EF = {
-		fRef = 3EEA9A4907B1D9C30015FCF4;
-		isa = PBXTextBookmark;
-		name = "[selUser UserID]";
-		rLen = 17;
-		rLoc = 4646;
-		rType = 0;
-		vrLen = 1224;
-		vrLoc = 3956;
 	};
 	3E66545408479633001CA1EF = {
 		fRef = 3EEA9A6807B1DC4F0015FCF4;
@@ -876,116 +1175,6 @@
 		vrLen = 1458;
 		vrLoc = 1895;
 	};
-	3E66545608479633001CA1EF = {
-		fRef = 3E256000077235290062AB7A;
-		isa = PBXTextBookmark;
-		name = "iFolderService.m: 1386";
-		rLen = 244;
-		rLoc = 37851;
-		rType = 0;
-		vrLen = 2507;
-		vrLoc = 36073;
-	};
-	3E66545708479633001CA1EF = {
-		fRef = 3EEA9A4907B1D9C30015FCF4;
-		isa = PBXTextBookmark;
-		name = "PropSharingController.m: 183";
-		rLen = 0;
-		rLoc = 4698;
-		rType = 0;
-		vrLen = 1218;
-		vrLoc = 3956;
-	};
-	3E66545808479633001CA1EF = {
-		fRef = 3EEA9A6807B1DC4F0015FCF4;
-		isa = PBXTextBookmark;
-		name = Name;
-		rLen = 4;
-		rLoc = 1430;
-		rType = 0;
-		vrLen = 1563;
-		vrLoc = 0;
-	};
-	3E66545908479633001CA1EF = {
-		fRef = 3EEA9A4907B1D9C30015FCF4;
-		isa = PBXTextBookmark;
-		name = "PropSharingController.m: 185";
-		rLen = 0;
-		rLoc = 4738;
-		rType = 0;
-		vrLen = 1241;
-		vrLoc = 3956;
-	};
-	3E66545A08479633001CA1EF = {
-		fRef = 3EEA9A6807B1DC4F0015FCF4;
-		isa = PBXTextBookmark;
-		name = "User.h: FirstName";
-		rLen = 48;
-		rLoc = 1436;
-		rType = 0;
-		vrLen = 1611;
-		vrLoc = 0;
-	};
-	3E66545B08479633001CA1EF = {
-		fRef = 3EEA9A6907B1DC4F0015FCF4;
-		isa = PBXTextBookmark;
-		name = "User.m: Name";
-		rLen = 0;
-		rLoc = 1950;
-		rType = 0;
-		vrLen = 812;
-		vrLoc = 1315;
-	};
-	3E66545C08479633001CA1EF = {
-		fRef = 3E256000077235290062AB7A;
-		isa = PBXTextBookmark;
-		name = FirstName;
-		rLen = 9;
-		rLoc = 37963;
-		rType = 0;
-		vrLen = 2507;
-		vrLoc = 36072;
-	};
-	3E66545D08479633001CA1EF = {
-		fRef = 3EEA9A6907B1DC4F0015FCF4;
-		isa = PBXTextBookmark;
-		name = "User.m: 96";
-		rLen = 0;
-		rLoc = 2109;
-		rType = 0;
-		vrLen = 820;
-		vrLoc = 1315;
-	};
-	3E66545E08479633001CA1EF = {
-		fRef = 3E256000077235290062AB7A;
-		isa = PBXTextBookmark;
-		name = FirstName;
-		rLen = 9;
-		rLoc = 37963;
-		rType = 0;
-		vrLen = 2507;
-		vrLoc = 36072;
-	};
-	3E66545F08479633001CA1EF = {
-		fRef = 3EEA9A6907B1DC4F0015FCF4;
-		isa = PBXTextBookmark;
-		name = FirstName;
-		rLen = 9;
-		rLoc = 1964;
-		rType = 0;
-		vrLen = 818;
-		vrLoc = 1315;
-	};
-	3E66546008479633001CA1EF = {
-		fRef = 3EEA9A4907B1D9C30015FCF4;
-		isa = PBXTextBookmark;
-		name = "PropSharingController.m: 183";
-		rLen = 0;
-		rLoc = 4620;
-		rType = 0;
-		vrLen = 1230;
-		vrLoc = 3956;
-	};
 	3E66546108479633001CA1EF = {
 		fRef = 3E66546208479633001CA1EF;
 		isa = PBXTextBookmark;
@@ -998,10 +1187,17 @@
 	};
 	3E66546208479633001CA1EF = {
 		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
 		name = iFolderStub.h;
 		path = /Users/calvin/code/ifolder/ifolder/src/libifolder/iFolderStub.h;
 		refType = 0;
 		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {2270, 21630}}";
+			sepNavSelRange = "{13706, 22}";
+			sepNavVisRect = "{{0, 6692}, {574, 833}}";
+			sepNavWindowFrame = "{{8, 40}, {613, 962}}";
+		};
 	};
 	3E66705207B7D3CC0047E683 = {
 		uiCtxt = {
@@ -1222,12 +1418,6 @@
 		path = /Users/calvin/code/ifolder/ifolder/src/libifolder/iFolderStub.h;
 		refType = 0;
 		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {2270, 21630}}";
-			sepNavSelRange = "{13706, 22}";
-			sepNavVisRect = "{{0, 6699}, {574, 841}}";
-			sepNavWindowFrame = "{{15, 203}, {613, 970}}";
-		};
 	};
 	3E88AB59084780A200A1F52F = {
 		fRef = 3EDD6AD907AEAECB008A2A3B;
@@ -1329,29 +1519,6 @@
 		vrLen = 699;
 		vrLoc = 3485;
 	};
-	3E88AB7E084786B400A1F52F = {
-		fRef = 3E88AB7F084786B400A1F52F;
-		isa = PBXTextBookmark;
-		name = DeleteiFolder;
-		rLen = 13;
-		rLoc = 6489;
-		rType = 0;
-		vrLen = 1330;
-		vrLoc = 5799;
-	};
-	3E88AB7F084786B400A1F52F = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = iFolderStub.h;
-		path = /Users/calvin/code/ifolder/ifolder/src/libifolder/iFolderStub.h;
-		refType = 0;
-		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {2270, 21630}}";
-			sepNavSelRange = "{13706, 22}";
-			sepNavVisRect = "{{0, 6699}, {574, 841}}";
-		};
-	};
 	3E9B1B01077927E20072994B = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {788, 1427}}";
@@ -1361,9 +1528,9 @@
 	};
 	3E9B1B02077927E20072994B = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {718, 685}}";
+			sepNavIntBoundsRect = "{{0, 0}, {547, 829}}";
 			sepNavSelRange = "{931, 0}";
-			sepNavVisRect = "{{0, 122}, {718, 554}}";
+			sepNavVisRect = "{{0, 0}, {547, 829}}";
 		};
 	};
 	3EA94F5F07B823CA0088FD0F = {
@@ -1389,25 +1556,11 @@
 			sepNavWindowFrame = "{{130, 334}, {750, 558}}";
 		};
 	};
-	3EB84A730804825300517F77 = {
-		fileReference = 3EE276E007C40C2400A645A0;
-		functionName = "-awakeFromNib";
-		isa = PBXFileBreakpoint;
-		lineNumber = 15;
-		state = 1;
-	};
-	3EB84A750804825900517F77 = {
-		fileReference = 3EB8C510079393B60082AA86;
-		functionName = "-awakeFromNib";
-		isa = PBXFileBreakpoint;
-		lineNumber = 51;
-		state = 1;
-	};
 	3EB8C510079393B60082AA86 = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1104, 1385}}";
+			sepNavIntBoundsRect = "{{0, 0}, {833, 1442}}";
 			sepNavSelRange = "{1527, 0}";
-			sepNavVisRect = "{{0, 529}, {1104, 356}}";
+			sepNavVisRect = "{{0, 530}, {833, 354}}";
 			sepNavWindowFrame = "{{222, 250}, {750, 558}}";
 		};
 	};
@@ -1433,6 +1586,160 @@
 			sepNavVisRect = "{{0, 0}, {511, 619}}";
 			sepNavWindowFrame = "{{153, 313}, {750, 558}}";
 		};
+	};
+	3ED05E640847BC1E0063DA7A = {
+		fRef = 3EE276E007C40C2400A645A0;
+		isa = PBXTextBookmark;
+		name = NSException;
+		rLen = 11;
+		rLoc = 3516;
+		rType = 0;
+		vrLen = 1374;
+		vrLoc = 2665;
+	};
+	3ED05E650847BC1E0063DA7A = {
+		fRef = 3E9B1B02077927E20072994B;
+		isa = PBXTextBookmark;
+		name = "SetupiFolderSheetController.h: 20";
+		rLen = 0;
+		rLoc = 931;
+		rType = 0;
+		vrLen = 1629;
+		vrLoc = 0;
+	};
+	3ED05E660847BC1E0063DA7A = {
+		fRef = 3EE8881807B9620F00484B9F;
+		isa = PBXTextBookmark;
+		name = "e], NSLocalizedString(@\"OK\", nil),nil,";
+		rLen = 39;
+		rLoc = 7334;
+		rType = 0;
+		vrLen = 1691;
+		vrLoc = 6213;
+	};
+	3ED05E680847BC1E0063DA7A = {
+		fRef = 3EEA9A4907B1D9C30015FCF4;
+		isa = PBXTextBookmark;
+		name = "PropSharingController.m: 183";
+		rLen = 0;
+		rLoc = 4620;
+		rType = 0;
+		vrLen = 1228;
+		vrLoc = 3958;
+	};
+	3ED05E690847BC1E0063DA7A = {
+		fRef = 3E256000077235290062AB7A;
+		isa = PBXTextBookmark;
+		name = "iFolderService.m: 759";
+		rLen = 0;
+		rLoc = 19992;
+		rType = 0;
+		vrLen = 1876;
+		vrLoc = 18443;
+	};
+	3ED05E6A0847BC1E0063DA7A = {
+		fRef = 3EEA9A4907B1D9C30015FCF4;
+		isa = PBXTextBookmark;
+		name = "PropSharingController.m: 200";
+		rLen = 0;
+		rLoc = 5130;
+		rType = 0;
+		vrLen = 1240;
+		vrLoc = 3960;
+	};
+	3ED05E6B0847BC1E0063DA7A = {
+		fRef = 3EE276E007C40C2400A645A0;
+		isa = PBXTextBookmark;
+		name = NSException;
+		rLen = 11;
+		rLoc = 3516;
+		rType = 0;
+		vrLen = 1374;
+		vrLoc = 2665;
+	};
+	3ED05E6C0847BC1E0063DA7A = {
+		fRef = 3E9B1B02077927E20072994B;
+		isa = PBXTextBookmark;
+		name = "SetupiFolderSheetController.h: 20";
+		rLen = 0;
+		rLoc = 931;
+		rType = 0;
+		vrLen = 1629;
+		vrLoc = 0;
+	};
+	3ED05E6D0847BC1E0063DA7A = {
+		fRef = 3EE8881807B9620F00484B9F;
+		isa = PBXTextBookmark;
+		name = "e], NSLocalizedString(@\"OK\", nil),nil,";
+		rLen = 39;
+		rLoc = 7334;
+		rType = 0;
+		vrLen = 1691;
+		vrLoc = 6213;
+	};
+	3ED05E860847BCD40063DA7A = {
+		fileReference = 3E256000077235290062AB7A;
+		functionName = "-AddAndInviteUser:MemberName:GivenName:FamilyName:iFolderID:::";
+		isa = PBXFileBreakpoint;
+		lineNumber = 745;
+		state = 1;
+	};
+	3ED05E870847BD5C0063DA7A = {
+		fRef = 3EEA9A4907B1D9C30015FCF4;
+		isa = PBXTextBookmark;
+		name = "PropSharingController.m: 182";
+		rLen = 274;
+		rLoc = 4584;
+		rType = 0;
+		vrLen = 1246;
+		vrLoc = 3959;
+	};
+	3ED05E880847BD5C0063DA7A = {
+		fRef = 3E256000077235290062AB7A;
+		isa = PBXTextBookmark;
+		name = "iFolderService.m: 760";
+		rLen = 0;
+		rLoc = 20001;
+		rType = 0;
+		vrLen = 1976;
+		vrLoc = 18516;
+	};
+	3ED05E890847BD5C0063DA7A = {
+		fRef = 3EEA9A4907B1D9C30015FCF4;
+		isa = PBXTextBookmark;
+		name = "PropSharingController.m: 182";
+		rLen = 274;
+		rLoc = 4584;
+		rType = 0;
+		vrLen = 1246;
+		vrLoc = 3959;
+	};
+	3ED05E8A0847BD5C0063DA7A = {
+		fRef = 3E256000077235290062AB7A;
+		isa = PBXTextBookmark;
+		name = "iFolderService.m: 760";
+		rLen = 0;
+		rLoc = 20001;
+		rType = 0;
+		vrLen = 1976;
+		vrLoc = 18516;
+	};
+	3ED05E8B0847BD5C0063DA7A = {
+		fRef = 3ED05E8C0847BD5C0063DA7A;
+		isa = PBXTextBookmark;
+		name = AddAndInviteUserResult;
+		rLen = 22;
+		rLoc = 13706;
+		rType = 0;
+		vrLen = 1578;
+		vrLoc = 12647;
+	};
+	3ED05E8C0847BD5C0063DA7A = {
+		isa = PBXFileReference;
+		name = iFolderStub.h;
+		path = /Users/calvin/code/ifolder/ifolder/src/libifolder/iFolderStub.h;
+		refType = 0;
+		sourceTree = "<absolute>";
 	};
 	3EDA494207C681B7007CD1E0 = {
 		uiCtxt = {
@@ -1474,9 +1781,9 @@
 	};
 	3EE276E007C40C2400A645A0 = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {734, 3331}}";
-			sepNavSelRange = "{3297, 305}";
-			sepNavVisRect = "{{0, 1491}, {674, 756}}";
+			sepNavIntBoundsRect = "{{0, 0}, {833, 3234}}";
+			sepNavSelRange = "{299, 0}";
+			sepNavVisRect = "{{0, 26}, {833, 354}}";
 			sepNavWindowFrame = "{{15, 439}, {750, 558}}";
 		};
 	};
@@ -1556,16 +1863,16 @@
 	3EE8881807B9620F00484B9F = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {884, 9408}}";
-			sepNavSelRange = "{11812, 0}";
-			sepNavVisRect = "{{0, 6748}, {547, 846}}";
+			sepNavSelRange = "{7334, 39}";
+			sepNavVisRect = "{{337, 3667}, {547, 829}}";
 			sepNavWindowFrame = "{{268, 208}, {750, 558}}";
 		};
 	};
 	3EEA9A4907B1D9C30015FCF4 = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {1004, 7686}}";
-			sepNavSelRange = "{4620, 0}";
-			sepNavVisRect = "{{0, 2038}, {547, 846}}";
+			sepNavSelRange = "{4393, 0}";
+			sepNavVisRect = "{{0, 2413}, {833, 354}}";
 			sepNavWindowFrame = "{{245, 229}, {750, 558}}";
 		};
 	};
@@ -1587,9 +1894,9 @@
 	};
 	3EEA9A6907B1DC4F0015FCF4 = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {596, 2212}}";
-			sepNavSelRange = "{1964, 9}";
-			sepNavVisRect = "{{0, 568}, {547, 846}}";
+			sepNavIntBoundsRect = "{{0, 0}, {833, 2212}}";
+			sepNavSelRange = "{2113, 0}";
+			sepNavVisRect = "{{0, 1090}, {833, 354}}";
 			sepNavWindowFrame = "{{15, 179}, {615, 818}}";
 		};
 	};

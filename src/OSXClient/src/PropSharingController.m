@@ -197,7 +197,7 @@
 			}
 			@catch (NSException *e)
 			{
-				NSLog(@"Adding iFolder User failed");
+				NSLog(@"Exception in AddAndInviteUser: %@", [e name] );
 			}
 		}
 		
