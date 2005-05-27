@@ -67,7 +67,13 @@
 -(void) ResolveNameConflict:(NSString *)ifolderID withID:(NSString *)conflictID usingName:(NSString *)newName;
 -(void) RenameAndResolveConflict:(NSString *)ifolderID withID:(NSString *)conflictID usingFileName:(NSString *)newFileName;
 
-
+-(User *) AddAndInviteUser:(NSString *)memberID 
+					MemberName:(NSString *)memberName
+					GivenName:(NSString *)givenName
+					FamilyName:(NSString *)familyName
+					iFolderID:(NSString *)ifolderID
+					PublicKey:(NSString *)publicKey
+					Rights:(NSString *)rights;
 -(User *) InviteUser:(NSString *)userID toiFolder:(NSString *)ifolderID withRights:(NSString *)rights;
 -(void) RemoveUser:(NSString *)userID fromiFolder:(NSString *)ifolderID;
 

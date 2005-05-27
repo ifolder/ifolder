@@ -180,9 +180,18 @@
 			@try
 			{
 				User *newUser = [ifolderService
-								InviteUser:[selUser UserID] 
-								toiFolder:[curiFolder ID]
-								withRights:rights];
+									AddAndInviteUser:[selUser UserID] 
+									MemberName:[selUser Name]
+									GivenName:[selUser FirstName]
+									FamilyName:[selUser Surname]
+									iFolderID:[curiFolder ID]
+									PublicKey:nil
+									Rights:rights];
+
+//				User *newUser = [ifolderService
+//								InviteUser:[selUser UserID] 
+//								toiFolder:[curiFolder ID]
+//								withRights:rights];
 				
 				[self addUser:newUser];
 			}

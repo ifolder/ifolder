@@ -86,6 +86,18 @@
 	return [self valueForKeyPath:@"properties.Name"]; 
 }
 
+-(NSString *) FirstName
+{
+	return [self valueForKeyPath:@"properties.FirstName"];
+}
+
+-(NSString *) Surname
+{
+	return [self valueForKeyPath:@"properties.Surname"];
+}
+
+
+
 -(BOOL)isOwner
 {
 	NSNumber *num = [properties objectForKey:@"IsOwner"];

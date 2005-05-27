@@ -48,6 +48,8 @@
 -(NSString *) UserID;
 -(NSString *) FN;
 -(NSString *) Name;
+-(NSString *) FirstName;
+-(NSString *) Surname;
 -(BOOL)isOwner;
 -(void)setRights:(NSString *)rights;
 -(void)setIsOwner:(BOOL)isOwner;
