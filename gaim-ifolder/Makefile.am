@@ -1,6 +1,6 @@
 SUBDIRS = src
 
-DIST_SUBDIRS = $(SUBDIRS)
+DIST_SUBDIRS = $(SUBDIRS) package
 
 if WINDOWS
 if DEBUG	
@@ -36,3 +36,11 @@ maintainer-clean-local:
 	rm -f install-sh install-sh.lnk INSTALL INSTALL.lnk
 	rm -f missing missing.lnk mkinstalldirs mkinstalldir.lnk
 	rm -rf autom4te.cache
+
+.PHONY: package package-clean
+
+package:
+	$(MAKE) -C package all
+
+package-clean:
+	$(MAKE) -C package clean
