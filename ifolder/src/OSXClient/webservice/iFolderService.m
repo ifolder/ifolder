@@ -717,6 +717,74 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 
 
+
+-(User *) AddAndInviteUser:(NSString *)memberID 
+					MemberName:(NSString *)memberName
+					GivenName:(NSString *)givenName
+					FamilyName:(NSString *)familyName
+					iFolderID:(NSString *)ifolderID
+					PublicKey:(NSString *)publicKey
+					Rights:(NSString *)rights
+{
+	User *newUser = nil;
+    struct soap soap;
+	GSOAP_CREDS creds;
+    int err_code;
+
+	NSAssert( (ifolderID != nil), @"ifolderID was nil");
+	NSAssert( (memberName != nil), @"memberName was nil");
+//	NSAssert( (givenName != nil), @"givenName was nil");
+//	NSAssert( (familyName != nil), @"familyName was nil");
+	NSAssert( (memberID != nil), @"memberID was nil");
+//	NSAssert( (publicKey != nil), @"publicKey was nil");
+	NSAssert( (rights != nil), @"rights was nil");
+
+	struct _ns1__AddAndInviteUser			addinviteUserMessage;
+	struct _ns1__AddAndInviteUserResponse	addinviteUserResponse;
+	
+	addinviteUserMessage.iFolderID = (char *)[ifolderID UTF8String];
+	addinviteUserMessage.MemberName = (char *)[memberName UTF8String];
+	if(givenName != nil)
+		addinviteUserMessage.GivenName = (char *)[givenName UTF8String];
+	if(familyName != nil)
+		addinviteUserMessage.FamilyName = (char *)[familyName UTF8String];
+	addinviteUserMessage.MemberID = (char *)[memberID UTF8String];
+	if(publicKey != nil)
+		addinviteUserMessage.PublicKey = (char *)[publicKey UTF8String];
+	addinviteUserMessage.Rights = (char *)[rights UTF8String];
+
+    init_gsoap (&soap, &creds);
+    err_code = soap_call___ns1__AddAndInviteUser(
+			&soap,
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
+            NULL,
+            &addinviteUserMessage,
+            &addinviteUserResponse);
+
+
+	handle_soap_error(&soap, &creds, @"iFolderService.AddAndInviteUser:");
+
+	struct ns1__iFolderUser *curUser;
+	curUser = addinviteUserResponse.AddAndInviteUserResult;
+
+	if(curUser == NULL)
+	{
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:@"Invalid User" format:@"iFolderService.AddAndInviteUser:"];
+	}
+
+	newUser = [ [User alloc] init];
+	
+	[newUser setProperties:getiFolderUserProperties(curUser)];
+
+    cleanup_gsoap(&soap, &creds);
+
+	return newUser;
+}
+
+
+
+
 -(User *) InviteUser:(NSString *)userID toiFolder:(NSString *)ifolderID withRights:(NSString *)rights
 {
 	User *newUser = nil;
