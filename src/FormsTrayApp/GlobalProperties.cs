@@ -2260,7 +2260,10 @@ namespace Novell.FormsTrayApp
 				iFolderWeb ifolder = ((iFolderObject)lvi.Tag).iFolderWeb;
 				if (ifolder.IsSubscription)
 				{
-					menuAccept_Click(sender, e);
+					if (ifolder.State.Equals("Available"))
+					{
+						menuAccept_Click(sender, e);
+					}
 				}
 				else
 				{
