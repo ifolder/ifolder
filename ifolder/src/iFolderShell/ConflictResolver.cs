@@ -44,6 +44,7 @@ namespace Novell.iFolderCom
 		private iFolderWeb ifolder;
 		private string loadPath;
 		private bool fixPath = true;
+		private bool fixNames = true;
 		private Conflicts conflicts = null;
 		private bool readOnly;
 		private System.Windows.Forms.Label label1;
@@ -495,6 +496,7 @@ namespace Novell.iFolderCom
 			this.localName.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("localName.TextAlign")));
 			this.toolTip1.SetToolTip(this.localName, resources.GetString("localName.ToolTip"));
 			this.localName.Visible = ((bool)(resources.GetObject("localName.Visible")));
+			this.localName.Paint += new System.Windows.Forms.PaintEventHandler(this.localName_Paint);
 			this.localName.DoubleClick += new System.EventHandler(this.localName_DoubleClick);
 			// 
 			// label6
@@ -719,6 +721,7 @@ namespace Novell.iFolderCom
 			this.serverName.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("serverName.TextAlign")));
 			this.toolTip1.SetToolTip(this.serverName, resources.GetString("serverName.ToolTip"));
 			this.serverName.Visible = ((bool)(resources.GetObject("serverName.Visible")));
+			this.serverName.Paint += new System.Windows.Forms.PaintEventHandler(this.localName_Paint);
 			this.serverName.DoubleClick += new System.EventHandler(this.serverName_DoubleClick);
 			// 
 			// label10
@@ -1112,6 +1115,48 @@ namespace Novell.iFolderCom
 		#endregion
 
 		#region Private Methods
+		private void formatLabelString(Label label, string name)
+		{
+			Graphics g = label.CreateGraphics();
+
+			try
+			{
+				// Measure the string.
+				SizeF stringSize = g.MeasureString(name, label.Font);
+				if (stringSize.Width > label.Width)
+				{
+					// Calculate the length of the string that can be displayed ... this will get us in the
+					// ballpark.
+					int length = (int)(label.Width * name.Length / stringSize.Width);
+					string tmp = String.Empty;
+
+					// Remove one character at a time until we fit in the box.  This should only loop 3 or 4 times at most.
+					while (stringSize.Width > label.Width)
+					{
+						tmp = name.Substring(0, length) + "...";
+						stringSize = g.MeasureString(tmp, label.Font);
+						length -= 1;
+					}
+
+					// Set the truncated string in the display.
+					label.Text = tmp;
+
+					// Set up a tooltip to display the complete path.
+					toolTip1.SetToolTip(label, name);
+				}
+				else
+				{
+					// The path fits ... no truncation needed.
+					label.Text = name;
+					toolTip1.SetToolTip(label, string.Empty);
+				}
+			}
+			finally
+			{
+				g.Dispose();
+			}
+		}
+
 		private void resolveConflicts(bool localWins)
 		{
 			foreach (ListViewItem lvi in conflictsView.SelectedItems)
@@ -1365,6 +1410,7 @@ namespace Novell.iFolderCom
 			resolveNameLabel.Text = resourceManager.GetString("resolveNameLabel.Text");
 			newName.Enabled = resolveName.Enabled = true;
 			newName.Text = string.Empty;
+			fixNames = true;
 
 			if (conflictsView.SelectedItems.Count == 0)
 			{
@@ -1520,39 +1566,31 @@ namespace Novell.iFolderCom
 
 		private void ifolderPath_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
 		{
-			// Only do this one time.
 			if (fixPath)
 			{
 				fixPath = false;
 
-				// Measure the string.
-				SizeF stringSize = e.Graphics.MeasureString(ifolder.UnManagedPath, ifolderPath.Font);
-				if (stringSize.Width > ifolderPath.Width)
-				{
-					// Calculate the length of the string that can be displayed ... this will get us in the
-					// ballpark.
-					int length = (int)(ifolderPath.Width * ifolder.UnManagedPath.Length / stringSize.Width);
-					string tmp = String.Empty;
+				// Format the displayed path.
+				formatLabelString(ifolderPath, ifolder.UnManagedPath);
+			}
+		}
 
-					// Remove one character at a time until we fit in the box.  This should only loop 3 or 4 times at most.
-					while (stringSize.Width > ifolderPath.Width)
+		private void localName_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
+		{
+			if (fixNames)
+			{
+				fixNames = false;
+
+				if (conflictsView.SelectedItems.Count == 1)
+				{
+					Conflicts conflicts = (Conflicts)conflictsView.SelectedItems[0].Tag;
+
+					if ((conflicts.ServerConflict != null) && !conflicts.ServerConflict.IsNameConflict)
 					{
-						tmp = ifolder.UnManagedPath.Substring(0, length) + "...";
-						stringSize = e.Graphics.MeasureString(tmp, ifolderPath.Font);
-						length -= 1;
+						// Format the displayed local filename and server filename.
+						formatLabelString(localName, conflicts.ServerConflict.LocalName);
+						formatLabelString(serverName, conflicts.ServerConflict.ServerName);
 					}
-
-					// Set the truncated string in the display.
-					ifolderPath.Text = tmp;
-
-					// Set up a tooltip to display the complete path.
-					toolTip1.SetToolTip(ifolderPath, ifolder.UnManagedPath);
-				}
-				else
-				{
-					// The path fits ... no truncation needed.
-					ifolderPath.Text = ifolder.UnManagedPath;
-					toolTip1.SetToolTip(ifolderPath, string.Empty);
 				}
 			}
 		}
@@ -1564,7 +1602,7 @@ namespace Novell.iFolderCom
 
 		private void ConflictResolver_SizeChanged(object sender, System.EventArgs e)
 		{
-			fixPath = true;
+			fixPath = fixNames = true;
 			localPanel.Width = versionsPanel.Width / 2;
 		}
 		#endregion
