@@ -37,10 +37,12 @@
 		if([[curiFolder CurrentUserID] compare:[curiFolder OwnerUserID]] == 0)
 		{
 			[enableLimit setEnabled:YES];
+			[limitSpace setEditable:YES];
 		}
 		else
 		{
 			[enableLimit setEnabled:NO];
+			[limitSpace setEditable:NO];
 		}
 
 		@try
@@ -137,6 +139,16 @@
 
 	}
 
+}
+
+
+
+
+-(void)dealloc
+{
+	[self updateLimitValue:self];
+	[ifolderService release];	
+	[super dealloc];
 }
 
 
