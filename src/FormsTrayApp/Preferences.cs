@@ -70,6 +70,7 @@ namespace Novell.FormsTrayApp
 		private bool successful;
 		private bool updatePassword = false;
 		private bool updateEnabled = false;
+		private bool updateHost = false;
 		private bool initialPositionSet = false;
 		private System.Windows.Forms.NumericUpDown defaultInterval;
 		private System.Windows.Forms.CheckBox displayConfirmation;
@@ -1672,7 +1673,7 @@ namespace Novell.FormsTrayApp
 						newAccountLvi = null;
 
 						// Successfully joined ... don't allow the fields to be changed.
-						userName.ReadOnly = server.ReadOnly = true;
+						userName.ReadOnly = /*server.ReadOnly =*/ true;
 						processing = false;
 
 						if (EnterpriseConnect != null)
@@ -2109,9 +2110,39 @@ namespace Novell.FormsTrayApp
 					}
 					catch {}
 				}
+
+				if (updateHost)
+				{
+					updateDomainHost(domain);
+					updateHost = false;
+				}
 			}
 
 			return result;
+		}
+
+		private void updateDomainHost(Domain domain)
+		{
+			try
+			{
+				if (simiasWebService.SetDomainHostAddress(domain.ID, server.Text))
+				{
+					foreach (ListViewItem lvi in accounts.Items)
+					{
+						Domain d = (Domain)lvi.Tag;
+						if (d.ID.Equals(domain.ID))
+						{
+							d.DomainInfo = simiasWebService.GetDomainInformation(domain.ID);
+							break;
+						}
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("updateHostError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+				mmb.ShowDialog();
+			}
 		}
 		#endregion
 
@@ -2269,7 +2300,7 @@ namespace Novell.FormsTrayApp
 				login.Visible = true;
 				logout.Visible = false;
 
-				updatePassword = updateEnabled = false;
+				updatePassword = updateEnabled = updateHost = false;
 
 				Hide();
 			}
@@ -2494,10 +2525,15 @@ namespace Novell.FormsTrayApp
 				try
 				{
 					ListViewItem lvi = accounts.SelectedItems[0];
-					lvi.SubItems[0].Text = server.Text;
-					login.Enabled = !userName.Text.Equals(string.Empty) && !server.Text.Equals(string.Empty);
-
-//					apply.Enabled = true;
+					if (lvi.Tag == null)
+					{
+						lvi.SubItems[0].Text = server.Text;
+						login.Enabled = !userName.Text.Equals(string.Empty) && !server.Text.Equals(string.Empty);
+					}
+					else
+					{
+						apply.Enabled = updateHost = true;
+					}
 				}
 				catch {}
 			}
@@ -2522,8 +2558,7 @@ namespace Novell.FormsTrayApp
 				// Remove the new account
 				newAccountLvi = null;
 				lvi.Remove();
-				updatePassword = false;
-				updateEnabled = false;
+				updatePassword = updateEnabled = updateHost = false;
 				addAccount.Enabled = true;
 			}
 			else
@@ -2575,8 +2610,7 @@ namespace Novell.FormsTrayApp
 							}
 						}
 
-						updatePassword = false;
-						updateEnabled = false;
+						updatePassword = updateEnabled = updateHost = false;
 					}
 					catch (Exception ex)
 					{
@@ -2660,7 +2694,7 @@ namespace Novell.FormsTrayApp
 					}
 				}
 
-				if (updatePassword || updateEnabled)
+				if (updatePassword || updateEnabled || updateHost)
 				{
 					if (MessageBox.Show(resourceManager.GetString("updatePrompt"), resourceManager.GetString("updateTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
 					{
@@ -2668,8 +2702,7 @@ namespace Novell.FormsTrayApp
 					}
 					else
 					{
-						updatePassword = false;
-						updateEnabled = false;
+						updatePassword = updateEnabled = updateHost = false;
 					}
 				}
 
@@ -2711,7 +2744,7 @@ namespace Novell.FormsTrayApp
 							{
 								server.Text = selectedDomain.DomainInfo.Host;
 								details.Enabled = true;
-								userName.ReadOnly = server.ReadOnly = true;
+								userName.ReadOnly = /*server.ReadOnly =*/ true;
 
 								defaultServer.Checked = selectedDomain.DomainInfo.IsDefault;
 								defaultServer.Enabled = !defaultServer.Checked;
@@ -2787,6 +2820,12 @@ namespace Novell.FormsTrayApp
 				Domain domain = (Domain)lvi.Tag;
 				if (domain != null)
 				{
+					if (updateHost)
+					{
+						updateDomainHost(domain);
+						updateHost = false;
+					}
+
 					if (loginToDomain(domain.DomainInfo))
 					{
 						logout.Visible = true;
