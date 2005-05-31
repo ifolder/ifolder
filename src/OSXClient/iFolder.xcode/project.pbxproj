@@ -146,7 +146,7 @@
 				19C28FACFE9D520D11CA2CBB,
 			);
 			isa = PBXGroup;
-			name = iFolder;
+			name = "iFolder 3";
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
@@ -2221,15 +2221,15 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "/Users/calvin/code/ifolder/ifolder/src/libifolder/libs /Users/calvin/code/ifolder/ifolder/src/OSXClient /Users/calvin/code/ifolder/ifolder/src/OSXClient/build /Users/calvin/test/lib /Users/calvin";
-				PRODUCT_NAME = iFolder;
+				PRODUCT_NAME = "iFolder 3";
 				WRAPPER_EXTENSION = app;
 			};
 			dependencies = (
 			);
 			isa = PBXNativeTarget;
-			name = iFolder;
+			name = "iFolder 3";
 			productInstallPath = "$(HOME)/Applications";
-			productName = iFolder;
+			productName = "iFolder 3";
 			productReference = 8D1107320486CEB800E47090;
 			productType = "com.apple.product-type.application";
 		};
@@ -2411,7 +2411,7 @@
 			explicitFileType = wrapper.application;
 			includeInIndex = 0;
 			isa = PBXFileReference;
-			path = iFolder.app;
+			path = "iFolder 3.app";
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
