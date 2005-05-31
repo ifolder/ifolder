@@ -51,7 +51,7 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 }
 -(void)dealloc
 {
-	NSLog(@"Dealloc was called on a MemberSearchResult");
+//	NSLog(@"Dealloc was called on a MemberSearchResult");
 	[self freePreviousSearch];
 	[super dealloc];
 }
@@ -255,7 +255,7 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 	struct _ns1__FindSeekMembers			findMessage;
 	struct _ns1__FindSeekMembersResponse	findResponse;
 
-	NSLog(@"fillMembers called to fill in more members");
+//	NSLog(@"fillMembers called to fill in more members");
 
 	findMessage.domainID = (char *)[domainID UTF8String];
 	findMessage.searchContext = (char *)[searchContext UTF8String];
@@ -314,7 +314,7 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 						// fetch results we already have!
 						if(results[actualIndex] != nil)
 						{
-							NSLog(@"Search results already contained this result!");
+//							NSLog(@"Search results already contained this result!");
 							[results[actualIndex] release];
 							results[actualIndex] = nil;
 						}
