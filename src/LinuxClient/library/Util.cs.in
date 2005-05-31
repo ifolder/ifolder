@@ -46,6 +46,10 @@ namespace Novell.iFolder
 		internal static string lastSetupPath = null;
 		internal static string lastCreatedPath = null;
 
+		// Be nice and keep track of the directory where the user saves
+		// the sync log.
+		internal static string lastSavedSyncLogPath = null;
+
 		public static void InitCatalog()
 		{
 			Mono.Posix.Catalog.Init("@_PACKAGE_@", "@_prefix_@/share/locale");
@@ -239,6 +243,30 @@ namespace Novell.iFolder
 					if (lastSlashPos > 0)
 					{
 						lastCreatedPath = value.Substring(0, lastSlashPos);
+					}
+				}
+			}
+		}
+		
+		public static string LastSavedSyncLogPath
+		{
+			get
+			{
+				if (lastSavedSyncLogPath == null)
+				{
+					lastSavedSyncLogPath = GetDefaultUserPath();
+				}
+				
+				return lastSavedSyncLogPath;
+			}
+			set
+			{
+				if (value != null)
+				{
+					int lastSlashPos = value.LastIndexOf('/');
+					if (lastSlashPos > 0)
+					{
+						lastSavedSyncLogPath = value.Substring(0, lastSlashPos);
 					}
 				}
 			}

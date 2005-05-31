@@ -293,69 +293,130 @@ namespace Novell.iFolder
 		private void SaveLog()
 		{
 			int rc = 0;
-			bool saveFile = false;
+			bool saveFile = true;
 			string filename = null;
+			
+			string initialPath = Util.LastSavedSyncLogPath;
 
 			// Switched out to use the compatible file selector
 			CompatFileChooserDialog cfcd = new CompatFileChooserDialog(
 				Util.GS("Save iFolder Log..."), this, 
 				CompatFileChooserDialog.Action.Save);
 
-			rc = cfcd.Run();
-			cfcd.Hide();
+			if (initialPath != null)
+				cfcd.CurrentFolder = initialPath;
 
-			if(rc == -5)
+			while (saveFile)
 			{
-				filename = cfcd.Selections[0];
-
-				if(File.Exists(filename))
+				rc = cfcd.Run();
+				cfcd.Hide();
+	
+				if(rc == -5)
 				{
-					iFolderMsgDialog dialog = new iFolderMsgDialog(
-						this,
-						iFolderMsgDialog.DialogType.Question,
-						iFolderMsgDialog.ButtonSet.YesNo,
-						Util.GS("iFolder Save Log"),
-						Util.GS("Overwrite existing file?"),
-						Util.GS("The file you have selected exists.  Selecting yes will overwrite the contents of this file.  Do you want to overwrite this file?"));
-					rc = dialog.Run();
-					dialog.Hide();
-					dialog.Destroy();
-					if(rc == -8)
+					filename = cfcd.Selections[0];
+					
+					if(File.Exists(filename))
 					{
-						saveFile = true;
+						iFolderMsgDialog dialog = new iFolderMsgDialog(
+							this,
+							iFolderMsgDialog.DialogType.Question,
+							iFolderMsgDialog.ButtonSet.YesNo,
+							Util.GS("iFolder Save Log"),
+							Util.GS("Overwrite existing file?"),
+							Util.GS("The file you have selected exists.  Selecting yes will overwrite the contents of this file.  Do you want to overwrite this file?"));
+						rc = dialog.Run();
+						dialog.Hide();
+						dialog.Destroy();
+						if(rc != -8)
+							saveFile = false;
 					}
 				}
 				else
-					saveFile = true;
-			}
-
-			if(saveFile)
-			{
-				FileStream fs = File.Create(filename);
-				if(fs != null)
+					break;	// out of the while loop
+	
+				if(saveFile)
 				{
-					TreeIter iter;
-					StreamWriter w = new StreamWriter(fs);
-
-					if(LogTreeStore.GetIterFirst(out iter))
+					FileStream fs = null;
+					try
 					{
-						string logEntry = 
-							(string)LogTreeStore.GetValue(iter, 0);
-
-						w.WriteLine(logEntry);
-
-						while(LogTreeStore.IterNext(ref iter))
-						{
-							logEntry = 
-								(string)LogTreeStore.GetValue(iter, 0);
-
-							w.WriteLine(logEntry);
-						}
+						fs = File.Create(filename);
 					}
-					
-					w.Close();
+					catch (System.UnauthorizedAccessException uae)
+					{
+						iFolderMsgDialog dg = new iFolderMsgDialog(
+							this,
+							iFolderMsgDialog.DialogType.Error,
+							iFolderMsgDialog.ButtonSet.Ok,
+							Util.GS("iFolder Error"),
+							Util.GS("Permission denied"),
+							Util.GS("You do not have access to save the file in the location you specified.  Please select a different location."));
+						dg.Run();
+						dg.Hide();
+						dg.Destroy();
+
+						continue;	// To the next iteration of the while loop
+					}
+					catch (Exception e)
+					{
+						iFolderMsgDialog dg = new iFolderMsgDialog(
+							this,
+							iFolderMsgDialog.DialogType.Error,
+							iFolderMsgDialog.ButtonSet.Ok,
+							Util.GS("iFolder Error"),
+							Util.GS("Unknown error"),
+							string.Format(Util.GS("An exception occurred trying to save the log: {0}  Please click on the details button to see the stack trace."), e.Message),
+							e.StackTrace);
+						dg.Run();
+						dg.Hide();
+						dg.Destroy();
+
+						continue;	// To the next iteration of the while loop
+					}
+	
+					if(fs != null)
+					{
+						TreeIter iter;
+						StreamWriter w = new StreamWriter(fs);
+	
+						if(LogTreeStore.GetIterFirst(out iter))
+						{
+							string logEntry = 
+								(string)LogTreeStore.GetValue(iter, 0);
+	
+							w.WriteLine(logEntry);
+	
+							while(LogTreeStore.IterNext(ref iter))
+							{
+								logEntry = 
+									(string)LogTreeStore.GetValue(iter, 0);
+	
+								w.WriteLine(logEntry);
+							}
+						}
+						
+						w.Close();
+	
+						Util.LastSavedSyncLogPath = filename;
+	
+						break;
+					}
+					else
+					{
+						iFolderMsgDialog dg = new iFolderMsgDialog(
+							this,
+							iFolderMsgDialog.DialogType.Error,
+							iFolderMsgDialog.ButtonSet.Ok,
+							Util.GS("iFolder Error"),
+							Util.GS("Unknown error"),
+							Util.GS("The iFolder Client experienced an error trying to save the log.  Please report this bug."));
+						dg.Run();
+						dg.Hide();
+						dg.Destroy();
+					}
 				}
 			}
+
+			cfcd.Destroy();
 		}
 
 
