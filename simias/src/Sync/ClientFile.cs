@@ -751,9 +751,18 @@ namespace Simias.Sync
 			sizeToSync = 0;
 			copyArray = new ArrayList();
 			writeArray = new ArrayList();
-			
+			HashData[] serverHashMap;
+
 			// Get the hash map from the server.
-			HashData[] serverHashMap = syncService.GetHashMap(out blockSize);
+			try
+			{
+				serverHashMap = syncService.GetHashMap(out blockSize);
+			}
+			catch
+			{
+				serverHashMap = new HashData[0];
+				blockSize = 0;
+			}
 			
 			if (serverHashMap.Length == 0)
 			{
