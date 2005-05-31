@@ -2420,7 +2420,7 @@
 		<row><td>ID_STRING27</td><td>1033</td><td>CONTAC~1|Contact Browser</td><td>0</td><td/><td>2065214067</td></row>
 		<row><td>ID_STRING28</td><td>1033</td><td>CONTAC~1|Contact Browser</td><td>0</td><td/><td>2065214067</td></row>
 		<row><td>ID_STRING29</td><td>1033</td><td>Browse contacts</td><td>0</td><td/><td>2065214067</td></row>
-		<row><td>ID_STRING3</td><td>1033</td><td>iFolder</td><td>0</td><td/><td>1394122352</td></row>
+		<row><td>ID_STRING3</td><td>1033</td><td>iFolder 3</td><td>0</td><td/><td>1394122352</td></row>
 		<row><td>ID_STRING30</td><td>1033</td><td>Browse contacts</td><td>0</td><td/><td>2065214067</td></row>
 		<row><td>ID_STRING31</td><td>1033</td><td>Name</td><td>0</td><td/><td>2065226355</td></row>
 		<row><td>ID_STRING32</td><td>1033</td><td>STARTI~1|Start iFolder</td><td>0</td><td/><td>2065228403</td></row>
@@ -2436,12 +2436,12 @@
 		<row><td>ID_STRING41</td><td>1033</td><td>Browse contacts</td><td>0</td><td/><td>2065191603</td></row>
 		<row><td>ID_STRING42</td><td>1033</td><td>INVITA~1|Invitation Wizard</td><td>0</td><td/><td>-2095558415</td></row>
 		<row><td>ID_STRING43</td><td>1033</td><td>CONTAC~1|Contact Browser</td><td>0</td><td/><td>-2095523535</td></row>
-		<row><td>ID_STRING44</td><td>1033</td><td>iFolder</td><td>0</td><td/><td>-2095535695</td></row>
+		<row><td>ID_STRING44</td><td>1033</td><td>iFolder 3 Client</td><td>0</td><td/><td>-2095535695</td></row>
 		<row><td>ID_STRING45</td><td>1033</td><td>"%1"</td><td>0</td><td/><td>-1424467601</td></row>
 		<row><td>ID_STRING46</td><td>1033</td><td>&amp;Open</td><td>0</td><td/><td>-1424483697</td></row>
 		<row><td>ID_STRING47</td><td>1033</td><td>iFolder Invitation</td><td>0</td><td/><td>-1424475697</td></row>
 		<row><td>ID_STRING48</td><td>1033</td><td>1</td><td>0</td><td/><td>471368878</td></row>
-		<row><td>ID_STRING49</td><td>1033</td><td>iFolder Client</td><td>0</td><td/><td>739804560</td></row>
+		<row><td>ID_STRING49</td><td>1033</td><td>iFolder 3 Client</td><td>0</td><td/><td>739804560</td></row>
 		<row><td>ID_STRING5</td><td>1033</td><td>Browse contacts</td><td>0</td><td/><td>1394103984</td></row>
 		<row><td>ID_STRING6</td><td>1033</td><td>iFolder Help Files</td><td>0</td><td/><td>1394101553</td></row>
 		<row><td>ID_STRING7</td><td>1033</td><td>iFolder</td><td>0</td><td/><td>1394091410</td></row>
@@ -2865,7 +2865,7 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<row><td>ProductCode</td><td>{76ACE820-A6D9-4B7E-A2D4-FFF30D2FE710}</td><td/></row>
 		<row><td>ProductID</td><td>none</td><td/></row>
 		<row><td>ProductLanguage</td><td>1033</td><td/></row>
-		<row><td>ProductName</td><td>iFolder Client</td><td/></row>
+		<row><td>ProductName</td><td>iFolder 3 Client</td><td/></row>
 		<row><td>ProductVersion</td><td>1.00.0000</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>
 		<row><td>ProgressType1</td><td>Installing</td><td/></row>
