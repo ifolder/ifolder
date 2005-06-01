@@ -35,13 +35,13 @@ iFolder-dist.tmp:
 	$(mkinstalldirs) $(TMPDIR)
 	cd $(TMPDIR); rm -rf $(PACKAGE)-$(VERSION); 
 	tar -C $(TMPDIR) -zxvf $(top_srcdir)/$(PACKAGE)-$(VERSION).tar.gz
-	cd $(TMPDIR)/$(PACKAGE)-$(VERSION);./configure --prefix=/opt/novell/ifolder-se
+	cd $(TMPDIR)/$(PACKAGE)-$(VERSION);./configure --prefix=/opt/novell/ifolder3
 	cd $(TMPDIR)/$(PACKAGE)-$(VERSION);make;rm -rf $(TMPDIR)/iFolder.dst;
 	cd $(TMPDIR)/$(PACKAGE)-$(VERSION);make DESTDIR=$(TMPDIR)/iFolder.dst install
 	touch iFolder-dist.tmp
 
 iFolderClient.pkg: iFolder-dist.tmp
-	/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker -build -p $(PACKAGE_DIR)/iFolderClient.pkg -f $(TMPDIR)/$(PACKAGE)-$(VERSION)/temp/iFolder.dst/opt/novell/ifolder-se/ -r $(CLIENT_PKG_DIR)/Install_Resources -i $(CLIENT_PKG_DIR)/Info.plist -d $(CLIENT_PKG_DIR)/Description.plist
+	/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker -build -p $(PACKAGE_DIR)/iFolderClient.pkg -f $(TMPDIR)/$(PACKAGE)-$(VERSION)/temp/iFolder.dst/opt/novell/ifolder3 -r $(CLIENT_PKG_DIR)/Install_Resources -i $(CLIENT_PKG_DIR)/Info.plist -d $(CLIENT_PKG_DIR)/Description.plist
 
 
 $(PACKAGE)-$(VERSION).dmg: iFolderClient.pkg $(SIMIAS_PKG)
