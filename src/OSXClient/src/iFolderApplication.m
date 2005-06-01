@@ -129,7 +129,7 @@
 - (IBAction)showHelp:(id)sender
 {
 	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:
-		[NSString stringWithFormat:@"file://localhost%s/share/ifolder-se/help/en/doc/user/data/front.html", IFOLDER_PREFIX]]];
+		[NSString stringWithFormat:@"file://localhost%s/share/ifolder3/help/en/doc/user/data/front.html", IFOLDER_PREFIX]]];
 }
 
 
