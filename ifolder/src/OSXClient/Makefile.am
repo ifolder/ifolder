@@ -20,19 +20,19 @@ endif
 
 CUR_DIR := $(shell pwd)
 
-all: $(srcdir)/build/iFolder.app
+all: "$(srcdir)/build/iFolder 3.app"
 
 
-$(srcdir)/build/iFolder.app: iFolder.xcode
+"$(srcdir)/build/iFolder 3.app": iFolder.xcode
 	xcodebuild -buildstyle $(BUILDSTYLE) HEADER_SEARCH_PATHS="../libifolder $(SIMIAS_CLIENT_C_INCLUDES)" LIBRARY_SEARCH_PATHS="../libifolder/.libs $(SIMIAS_CLIENT_C_LIBS)"
 
-install-exec-local: $(srcdir)/build/iFolder.app
+install-exec-local: "$(srcdir)/build/iFolder 3.app"
 	$(mkinstalldirs) $(DESTDIR)$(prefix)/Applications
-	rm -rf $(DESTDIR)$(prefix)/Applications/iFolder.app
-	cp -rf $(srcdir)/build/iFolder.app $(DESTDIR)$(prefix)/Applications
+	rm -rf "$(DESTDIR)$(prefix)/Applications/iFolder 3.app"
+	cp -rf "$(srcdir)/build/iFolder 3.app" $(DESTDIR)$(prefix)/Applications
 
 uninstall-local:
-	cd $(DESTDIR)$(prefix)/Applications; rm -rf iFolder.app
+	cd $(DESTDIR)$(prefix)/Applications; rm -rf "iFolder 3.app"
 
 CLEAN_FILES =
 
