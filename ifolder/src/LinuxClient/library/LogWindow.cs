@@ -28,6 +28,7 @@ using System;
 using System.IO;
 using System.Collections;
 using Gtk;
+using Simias.Client;
 using Simias.Client.Event;
 
 namespace Novell.iFolder
@@ -208,85 +209,136 @@ namespace Novell.iFolder
 
 		public void HandleFileSyncEvent(FileSyncEventArgs args)
 		{
-			if(args.SizeRemaining == args.SizeToSync)
+			try
 			{
 				string message = null;
-				switch(args.ObjectType)
+				switch (args.Status)
 				{
-					case ObjectType.File:
-						if(args.Delete)
+					case SyncStatus.Success:
+						if(args.SizeRemaining == args.SizeToSync)
 						{
-							message = string.Format(Util.GS(
-								"Deleting file on client: {0}"), args.Name);
+							switch(args.ObjectType)
+							{
+								case ObjectType.File:
+									if(args.Delete)
+									{
+										message = string.Format(Util.GS(
+											"Deleting file on client: {0}"), args.Name);
+									}
+									else if (args.Direction == Simias.Client.Event.Direction.Local)
+									{
+										message = string.Format(
+											Util.GS("Found local change in file: {0}"),
+											args.Name);
+									}
+									else if (args.SizeToSync < args.Size)
+									{
+										// Note: Delta sync works on 4KB blocks, so you won't see delta
+										// sync messages until files reach at least 4KB.
+										int savings = (int)((1 - ((double)args.SizeToSync / (double)args.Size)) * 100);
+										if (args.Direction == Simias.Client.Event.Direction.Uploading)
+											message = string.Format(
+												Util.GS("Uploading file: {0}.  Synchronizing changes only: {1}% savings."),
+												args.Name,
+												savings);
+										else
+											message = string.Format(
+												Util.GS("Downloading file: {0}.  Synchronizing changes only: {1}% savings."),
+											args.Name,
+											savings);
+									}
+									else
+									{
+										if (args.Direction == Simias.Client.Event.Direction.Uploading)
+											message = string.Format(
+												Util.GS("Uploading file: {0}"),
+												args.Name);
+										else
+											message = string.Format(
+												Util.GS("Downloading file: {0}"),
+												args.Name);
+									}
+									break;
+								case ObjectType.Directory:
+									if (args.Delete)
+									{
+										message = string.Format(
+											Util.GS("Deleting directory on client: {0}"),
+											args.Name);
+									}
+									else if (args.Direction == Simias.Client.Event.Direction.Local)
+									{
+										message = string.Format(
+											Util.GS("Found local change in directory: {0}"),
+											args.Name);
+									}
+									else
+									{
+										if (args.Direction == Simias.Client.Event.Direction.Uploading)
+											message = string.Format(
+												Util.GS("Uploading directory: {0}"),
+												args.Name);
+										else
+											message = string.Format(
+												Util.GS("Downloading directory: {0}"),
+												args.Name);
+									}
+									break;
+								case ObjectType.Unknown:
+									message = string.Format(
+										Util.GS("Deleting on server: {0}"),
+										args.Name);
+									break;
+							}
 						}
-						else if (args.Direction == Simias.Client.Event.Direction.Local)
-						{
-							message = string.Format(
-								Util.GS("Found local change in file: {0}"),
-								args.Name);
-						}
-						else if (args.SizeToSync < args.Size)
-						{
-							// Note: Delta sync works on 4KB blocks, so you won't see delta
-							// sync messages until files reach at least 4KB.
-							int savings = (int)((1 - ((double)args.SizeToSync / (double)args.Size)) * 100);
-							if (args.Direction == Simias.Client.Event.Direction.Uploading)
-								message = string.Format(
-									Util.GS("Uploading file: {0}.  Synchronizing changes only: {1}% savings."),
-									args.Name,
-									savings);
-							else
-								message = string.Format(
-									Util.GS("Downloading file: {0}.  Synchronizing changes only: {1}% savings."),
-								args.Name,
-								savings);
-						}
-						else
-						{
-							if (args.Direction == Simias.Client.Event.Direction.Uploading)
-								message = string.Format(
-									Util.GS("Uploading file: {0}"),
-									args.Name);
-							else
-								message = string.Format(
-									Util.GS("Downloading file: {0}"),
-									args.Name);
-						}
+
 						break;
-					case ObjectType.Directory:
-						if (args.Delete)
-						{
-							message = string.Format(
-								Util.GS("Deleting directory on client: {0}"),
-								args.Name);
-						}
-						else if (args.Direction == Simias.Client.Event.Direction.Local)
-						{
-							message = string.Format(
-								Util.GS("Found local change in directory: {0}"),
-								args.Name);
-						}
-						else
-						{
-							if (args.Direction == Simias.Client.Event.Direction.Uploading)
-								message = string.Format(
-									Util.GS("Uploading directory: {0}"),
-									args.Name);
-							else
-								message = string.Format(
-									Util.GS("Downloading directory: {0}"),
-									args.Name);
-						}
-						break;
-					case ObjectType.Unknown:
+					case SyncStatus.UpdateConflict:
+					case SyncStatus.FileNameConflict:
 						message = string.Format(
-							Util.GS("Deleting on server: {0}"),
+							Util.GS("Conflict occurred for: {0}"),
+							args.Name);
+						break;
+					case SyncStatus.Policy:
+						message = string.Format(
+							Util.GS("A policy prevented a sync of: {0}"),
+							args.Name);
+						break;
+					case SyncStatus.Access:
+						message = string.Format(
+							Util.GS("Insuficient rights to sync: {0}"),
+							args.Name);
+						break;
+					case SyncStatus.Locked:
+						message = string.Format(
+							Util.GS("This iFolder is locked and did not sync: {0}"),
+							args.Name);
+						break;
+					case SyncStatus.PolicyQuota:
+						message = string.Format(
+							Util.GS("This iFolder is full and did not sync: {0}"),
+							args.Name);
+						break;
+					case SyncStatus.PolicySize:
+						message = string.Format(
+							Util.GS("A size restriction policy prevented a sync of: {0}"),
+							args.Name);
+						break;
+					case SyncStatus.PolicyType:
+						message = string.Format(
+							Util.GS("A file type restriction policy prevented a sync of: {0}"),
+							args.Name);
+						break;
+					default:
+						message = string.Format(
+							Util.GS("This iFolder failed to sync: {0}"),
 							args.Name);
 						break;
 				}
 
 				LogMessage(message);
 			}
+			catch {}
 		}
 
 
