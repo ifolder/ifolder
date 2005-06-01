@@ -19,7 +19,7 @@
 	<key>IFPkgFlagAuthorizationAction</key>
 	<string>AdminAuthorization</string>
 	<key>IFPkgFlagDefaultLocation</key>
-	<string>/opt/novell/ifolder-se</string>
+	<string>/opt/novell/ifolder3</string>
 	<key>IFPkgFlagFollowLinks</key>
 	<false/>
 	<key>IFPkgFlagInstallFat</key>
