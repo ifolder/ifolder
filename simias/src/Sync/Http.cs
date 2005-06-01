@@ -575,30 +575,38 @@ namespace Simias.Sync.Http
 		/// <returns>The HashData[]</returns>
 		public HashData[] GetHashMap(out int blockSize)
 		{
-			HttpWebRequest request = GetRequest(SyncMethod.GetHashMap2);
-			request.ContentLength = 0;
-			request.GetRequestStream().Close();
-			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 			try
 			{
-				if (response.StatusCode != HttpStatusCode.OK)
+				HttpWebRequest request = GetRequest(SyncMethod.GetHashMap2);
+				request.ContentLength = 0;
+				request.GetRequestStream().Close();
+				HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+				try
 				{
-					throw GetException(response);
+					if (response.StatusCode != HttpStatusCode.OK)
+					{
+						throw GetException(response);
+					}
+					// Now get the HashData.
+					blockSize = 0;
+					int count = int.Parse(response.Headers.Get(SyncHeaders.ObjectCount));
+					string sBlockSize = response.Headers.Get(SyncHeaders.BlockSize);
+					if (sBlockSize != null)
+					{
+						blockSize = int.Parse(sBlockSize);
+					}
+					BinaryReader reader = new BinaryReader(response.GetResponseStream());
+					return HashMap.DeSerializeHashMap(reader, count);
 				}
-				// Now get the HashData.
-				blockSize = 0;
-				int count = int.Parse(response.Headers.Get(SyncHeaders.ObjectCount));
-				string sBlockSize = response.Headers.Get(SyncHeaders.BlockSize);
-				if (sBlockSize != null)
+				finally
 				{
-					blockSize = int.Parse(sBlockSize);
+					response.Close();
 				}
-				BinaryReader reader = new BinaryReader(response.GetResponseStream());
-				return HashMap.DeSerializeHashMap(reader, count);
 			}
-			finally
+			catch
 			{
-				response.Close();
+				blockSize = 0;
+				return new HashData[0];
 			}
 		}
 

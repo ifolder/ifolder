@@ -754,15 +754,7 @@ namespace Simias.Sync
 			HashData[] serverHashMap;
 
 			// Get the hash map from the server.
-			try
-			{
-				serverHashMap = syncService.GetHashMap(out blockSize);
-			}
-			catch
-			{
-				serverHashMap = new HashData[0];
-				blockSize = 0;
-			}
+			serverHashMap = syncService.GetHashMap(out blockSize);
 			
 			if (serverHashMap.Length == 0)
 			{
