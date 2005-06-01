@@ -9,9 +9,9 @@
 	<key>CFBundleName</key>
 	<string>iFolderClient</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>3.0</string>
 	<key>IFMajorVersion</key>
-	<integer>1</integer>
+	<integer>3</integer>
 	<key>IFMinorVersion</key>
 	<integer>0</integer>
 	<key>IFPkgFlagAllowBackRev</key>
@@ -19,7 +19,7 @@
 	<key>IFPkgFlagAuthorizationAction</key>
 	<string>AdminAuthorization</string>
 	<key>IFPkgFlagDefaultLocation</key>
-	<string>/opt/novell/ifolder-se</string>
+	<string>/opt/novell/ifolder3</string>
 	<key>IFPkgFlagFollowLinks</key>
 	<false/>
 	<key>IFPkgFlagInstallFat</key>
