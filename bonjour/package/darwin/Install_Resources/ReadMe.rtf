@@ -11,17 +11,16 @@
 
 \f1\b0\fs24 \
 \pard\pardeftab720\ql\qnatural
-\cf0 If you have already been running iFolder, you will need to edit the Simias.config file to enable the "Bonjour Domain" service.  The line you are looking to modify will look like this:\
+\cf0 The Simias Bonjour install will modify your Simias configuration so the Bonjour Domain service gets loaded when Simias starts.  If there are other users on your system and they have already run iFolder, they will need to locate the following line in their Simias.config:\
 \
 
 \f2 <Service name="Bonjour Domain" assembly="Simias.Bonjour.dll" enabled="False" type="Thread" class="Simias.mDns.Service" />
 \f1 \
 \
-Change it to look like this:\
+And change it to look like this:\
 
 \f2 \
 <Service name="Bonjour Domain" assembly="Simias.Bonjour.dll" enabled="True" type="Thread" class="Simias.mDns.Service" />
 \f1 \
 \
-Restart the iFolder client and you will be able to use Bonjour to create and share iFolders.\
-}
+The Simias.config file is located in a users home directory under the folder ".local/share/simias". After installing the Simias Bojour package you will need to restart the iFolder client to create and share iFolders using Bonjour.  }
