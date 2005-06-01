@@ -494,6 +494,7 @@ namespace Novell.iFolder
 						ied.Run();
 						ied.Hide();
 						ied.Destroy();
+						rad.Destroy();	// Clean up before bailing
 						return;
 					}
 
@@ -634,9 +635,19 @@ namespace Novell.iFolder
 				DetailsButton.Sensitive = true;
 
  				detailsFrame.Sensitive = true;
-				serverEntry.Sensitive = true;
-				serverEntry.Editable = false;
-				serverLabel.Sensitive = false;
+
+				if (dom.Active && !dom.Authenticated)
+				{
+					serverEntry.Sensitive = true;
+					serverEntry.Editable = true;
+					serverLabel.Sensitive = true; 
+				}
+				else
+				{
+					serverEntry.Sensitive = true;
+					serverEntry.Editable = false;
+					serverLabel.Sensitive = false;
+				}
 				nameEntry.Editable = false;
 				nameEntry.Sensitive = true;
 				nameLabel.Sensitive = false;
@@ -784,6 +795,9 @@ namespace Novell.iFolder
 				else
 				{
 					domainInfo = curDomain;
+
+					// The user has changed the server's host
+					simws.SetDomainHostAddress(domainInfo.ID, serverEntry.Text);
 					domainInfo.StatusCode = StatusCodes.Success;
 				}
 				
