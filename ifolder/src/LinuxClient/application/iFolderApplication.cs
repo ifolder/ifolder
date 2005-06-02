@@ -319,6 +319,29 @@ namespace Novell.iFolder
 						"/Simias.asmx";
 					LocalService.Start(simiasWebService);
 
+					// Check if a proxy needs to be set
+					GnomeHttpProxy proxy = new GnomeHttpProxy( di.Host );
+					string user = null;
+					string password = null;
+					if ( proxy.IsProxySet == true )
+					{
+						string proxyHost = "http://" + proxy.Host;
+						if ( proxy.CredentialsSet == true )
+						{
+							user = proxy.Username;
+							password = proxy.Password;
+						}
+						
+						simiasWebService.SetProxyAddress( di.Host, proxyHost, user, password );
+					}
+					
+					// Secure proxy
+					if ( proxy.IsSecureProxySet == true )
+					{
+						string secureHost = "https://" + proxy.SecureHost;
+						simiasWebService.SetProxyAddress( di.Host, secureHost, user, password );
+					}
+					
 					CredentialType credType = 
 						simiasWebService.GetDomainCredentials(
 							domainID, 
