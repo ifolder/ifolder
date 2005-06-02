@@ -128,5 +128,6 @@
 //==========================================
 - (NSString *)getHTTPProxyURI:(NSString *)host UseHTTPS:(BOOL)useHTTPS;
 - (void) setupSimiasProxies:(NSString *)host;
+- (void) setupProxyMonitor;
 
 @end

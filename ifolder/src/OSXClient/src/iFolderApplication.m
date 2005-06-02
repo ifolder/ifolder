@@ -38,10 +38,13 @@
 
 #include <SystemConfiguration/SCDynamicStoreCopySpecific.h>
 #include <SystemConfiguration/SCSchemaDefinitions.h>
+#include <SystemConfiguration/SCDynamicStoreKey.h>
+#include <CoreFoundation/CoreFoundation.h>
 
 @implementation iFolderApplication
 
-
+static 	SCDynamicStoreRef dynStoreRef = NULL;
+void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *info);
 //===================================================================
 // awakeFromNib
 // When this class is loaded from the nib, startup simias and wait
@@ -282,6 +285,8 @@
 	else
 		[self showiFolderWindow:self];
 
+	[self setupProxyMonitor];
+	
 	[iFolderWindowController updateStatusTS:NSLocalizedString(@"Loading synchronization process...", nil)];
 }
 
@@ -387,6 +392,13 @@
 //===================================================================
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
+	// Release the proxy setting monitor
+	if(dynStoreRef != NULL)
+	{
+		CFRelease(dynStoreRef);
+		dynStoreRef = NULL;
+	}
+
 	runThreads = NO;
 	[self addLog:NSLocalizedString(@"Shutting down Simias...", nil)];
 	[ [Simias getInstance] stop];
@@ -542,6 +554,12 @@
 		if(savedPassword != nil)
 		{
 			NSLog(@"Saved Password was found, authenticating...");
+
+			iFolderDomain *dom = [[iFolderData sharedInstance] getDomain:[smne message]];
+			if(dom != nil)
+				[[NSApp delegate] setupSimiasProxies:[dom host]];
+			else
+				NSLog(@"Unable to locate domain to setup proxies");
 
 			@try
 			{
@@ -1260,6 +1278,77 @@
 
 
 
+//===================================================================
+// setupProxyMonitor
+// This will setup a monitor to watch for Proxy changes on the client
+// so if they change or the network interface changes, ifolder will
+// get the new configuration and continue to run
+//===================================================================
+- (void) setupProxyMonitor
+{
+	CFStringRef notifyKeys[2];
+	
+	SCDynamicStoreContext context;
+	
+	context.version = 0;
+	context.info = NULL;
+	context.retain = NULL;
+	context.release = NULL;
+	context.copyDescription = NULL;
+	
+	// Creates the dynamicStore Session which must be freed
+	dynStoreRef = SCDynamicStoreCreate (NULL, (CFStringRef)@"iFolder 3", 
+			dynStoreCallBack, &context);
+
+	CFStringRef proxyRefStr = SCDynamicStoreKeyCreateProxies ( NULL ); 
+
+	notifyKeys[0] = proxyRefStr;
+	notifyKeys[1] = 0;
+	
+	CFArrayRef keysRef = CFArrayCreate(NULL, (const void **)notifyKeys, 1, NULL);
+
+	if(keysRef != NULL)
+	{
+		if(SCDynamicStoreSetNotificationKeys ( dynStoreRef,
+				keysRef, NULL ))
+			NSLog(@"Setup to monitor proxy changes");
+		
+		CFRunLoopSourceRef rlsf = SCDynamicStoreCreateRunLoopSource(NULL, dynStoreRef, 0);
+
+		CFRunLoopAddSource(CFRunLoopGetCurrent(), rlsf, kCFRunLoopCommonModes);
+	
+		CFRelease(keysRef);
+		CFRelease(rlsf);
+	}
+}
+
+
+
+//===================================================================
+// dynStoreCallBack
+// This callback gets called whenever the proxy settings on the client
+// change.  This will adjust for network settings and such.
+//===================================================================
+void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *info)
+{
+	int x;
+	NSArray *domains = [[iFolderData sharedInstance] getDomains];
+	for(x=0; x < [domains count]; x++)
+	{
+		iFolderDomain *dom = [domains objectAtIndex:x];
+		[[NSApp delegate] setupSimiasProxies:[dom host]];
+	}
+} 
+
+
+
+
+//===================================================================
+// getHTTPProxyURI
+// Read the proxy settings and determine if the host passed in is in
+// the ignore list.  Returns a URI (http:// or https://) based on
+// the proxy settings in the system
+//===================================================================
 - (NSString *)getHTTPProxyURI:(NSString *)host UseHTTPS:(BOOL)useHTTPS
 {
 	NSString *proxyURI = nil;
@@ -1319,7 +1408,6 @@
 					if([host compare:(NSString *)bypassHost] == NSOrderedSame)
 					{
 						NSLog(@"Host found in ProxyExceptions, returning nil for proxy");
-//						[proxyURI release];
 						proxyURI = nil;
 						returnURI = NO;
 						break;
@@ -1329,7 +1417,6 @@
 		}
 
 		CFRelease(ref);
-//		CFRelease(nfref);
 	}
 
 	return proxyURI;
@@ -1337,6 +1424,12 @@
 
 
 
+
+//===================================================================
+// setupSimiasProxies
+// Sets up both the http and https proxies or removes them for the
+// current network interface and host passed in.
+//===================================================================
 - (void) setupSimiasProxies:(NSString *)host
 {
 	SimiasService *simiasService = [[SimiasService alloc] init];
@@ -1345,55 +1438,64 @@
 	hostURI = [NSString stringWithFormat:@"https://%@", host];
 
 	NSString *httpsProxyURI = [self getHTTPProxyURI:host UseHTTPS:YES];
-	if(httpsProxyURI != nil)
+	@try
 	{
-		@try
+		if([simiasService SetProxyAddress:hostURI
+				ProxyURI:httpsProxyURI
+				ProxyUser:nil 
+				ProxyPassword:nil] == NO)
 		{
-			if([simiasService SetProxyAddress:hostURI
-					ProxyURI:httpsProxyURI
-					ProxyUser:nil 
-					ProxyPassword:nil] == NO)
-			{
+			if(httpsProxyURI != nil)
 				NSLog(@"iFolder was unable to setup the proxy %@", httpsProxyURI);
-			}
 			else
-			{
-				NSLog(@"iFolder setup with proxy %@", httpsProxyURI);
-			}
+				NSLog(@"iFolder was unable to remove the proxy setting");
 		}
-		@catch (NSException *e)
+		else
 		{
-			NSLog(@"iFolder encountered an exception while setting up the proxy %@: %@", httpsProxyURI, [e name] );
+			if(httpsProxyURI != nil)
+				NSLog(@"iFolder setup with proxy %@", httpsProxyURI);
+			else
+				NSLog(@"iFolder setup without a proxy");
 		}
+	}
+	@catch (NSException *e)
+	{
+		if(httpsProxyURI != nil)
+			NSLog(@"iFolder encountered an exception while setting up the proxy %@: %@", httpsProxyURI, [e name] );
+		else
+			NSLog(@"iFolder encountered an exception while clearing the proxy: %@",[e name] );
 	}
 
 	hostURI = [NSString stringWithFormat:@"http://%@", host];
 
 	NSString *httpProxyURI = [self getHTTPProxyURI:host UseHTTPS:NO];
-	if(httpProxyURI != nil)
+	@try
 	{
-		@try
+		if([simiasService SetProxyAddress:hostURI
+				ProxyURI:httpProxyURI
+				ProxyUser:nil 
+				ProxyPassword:nil] == NO)
 		{
-			if([simiasService SetProxyAddress:hostURI
-					ProxyURI:httpProxyURI
-					ProxyUser:nil 
-					ProxyPassword:nil] == NO)
-			{
+			if(httpProxyURI != nil)
 				NSLog(@"iFolder was unable to setup the proxy %@", httpProxyURI);
-			}
 			else
-			{
-				NSLog(@"iFolder setup with proxy %@", httpProxyURI);
-			}
+				NSLog(@"iFolder was unable to remove the proxy setting");
 		}
-		@catch (NSException *e)
+		else
 		{
-			NSLog(@"iFolder encountered an exception while setting up the proxy %@: %@", httpProxyURI, [e name] );
+			if(httpProxyURI != nil)
+				NSLog(@"iFolder setup with proxy %@", httpProxyURI);
+			else
+				NSLog(@"iFolder setup without a proxy");
 		}
 	}
-
-
-
+	@catch (NSException *e)
+	{
+		if(httpProxyURI != nil)
+			NSLog(@"iFolder encountered an exception while setting up the proxy %@: %@", httpProxyURI, [e name] );
+		else
+			NSLog(@"iFolder encountered an exception while clearing the proxy: %@",[e name] );
+	}
 
 	[simiasService release];
 }
