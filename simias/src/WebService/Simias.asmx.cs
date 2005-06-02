@@ -1009,7 +1009,18 @@ namespace Simias.Web
 		[SoapDocumentMethod]
 		public bool SetProxyAddress( string hostUri, string proxyUri, string proxyUser, string proxyPassword )
 		{
-			return true;
+			bool proxySet = true;
+
+			try
+			{
+				ProxyState.AddProxyState( new Uri( hostUri ), new Uri( proxyUri ), proxyUser, proxyPassword );
+			}
+			catch
+			{
+				proxySet = false;
+			}
+
+			return proxySet;
 		}
 	}
 
