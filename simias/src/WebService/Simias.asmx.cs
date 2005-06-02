@@ -996,6 +996,21 @@ namespace Simias.Web
 
 			return addressSet;
 		}
+
+		/// <summary>
+		/// Sets a proxy address for the specified host.
+		/// </summary>
+		/// <param name="hostUri">String that contains the host address for the Simias server.</param>
+		/// <param name="proxyUri">String that contains the proxy address for the host.</param>
+		/// <param name="proxyUser">The proxy user name. May be null.</param>
+		/// <param name="proxyPassword">The proxy password. May be null.</param>
+		/// <returns>True if proxy was set. Otherwise false is returned.</returns>
+		[WebMethod(EnableSession=true, Description="Sets a new proxy address for the specified host.")]
+		[SoapDocumentMethod]
+		public bool SetProxyAddress( string hostUri, string proxyUri, string proxyUser, string proxyPassword )
+		{
+			return true;
+		}
 	}
 
 
