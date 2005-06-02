@@ -403,7 +403,7 @@ namespace Simias.DomainServices
 			if ( domainServiceUrl == null )
 			{
 				// There was a failure in obtaining the service url. Try a hard coded one.
-				domainServiceUrl = new Uri( Uri.UriSchemeHttps + Uri.SchemeDelimiter + host + DomainServicePath );
+				domainServiceUrl = new Uri( Uri.UriSchemeHttp + Uri.SchemeDelimiter + host + DomainServicePath );
 			}
 
 			// Build a credential from the user name and password.

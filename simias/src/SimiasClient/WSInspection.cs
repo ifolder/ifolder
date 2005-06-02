@@ -67,6 +67,7 @@ namespace Simias.Client
 		{
 			Uri serviceUrl = null;
 			HttpWebResponse response = null;
+			CookieContainer cks = new CookieContainer();
 			// Build a credential from the user name and password.
 			NetworkCredential myCred = new NetworkCredential( user, password ); 
 
@@ -78,22 +79,27 @@ namespace Simias.Client
 			UriBuilder wsUri = new UriBuilder( Uri.UriSchemeHttp, parseUri.Host, port, WSInspectionDocument );
 
 			// Create the web request.
-			WebRequest request = WebRequest.Create( wsUri.Uri );
+			HttpWebRequest request = (HttpWebRequest)WebRequest.Create( wsUri.Uri );
+			
+			bool retry = true;
+		
+			proxyRetry:
+
 			request.Credentials = myCred;
 			request.PreAuthenticate = true;
 			request.Timeout = 15 * 1000;
-			
-			bool retry = true;
-			proxyRetry:
+			request.CookieContainer = cks;
 			try
 			{
 				// Get the response from the web server.
 				response = request.GetResponse() as HttpWebResponse;
+				// Mono has a bug where it doesn't set the cookies in the cookie jar.
+				cks.Add(response.Cookies);
 			}
 			catch ( WebException we )
 			{
-				if ( ( we.Status == WebExceptionStatus.TrustFailure ) ||
-					 ( we.Status == WebExceptionStatus.Timeout ) ||
+				IsTrustFailure(host, we);
+				if ( ( we.Status == WebExceptionStatus.Timeout ) ||
 					 ( we.Status == WebExceptionStatus.NameResolutionFailure ) )
 				{
 					throw we;	
@@ -103,25 +109,17 @@ namespace Simias.Client
 					response = we.Response as HttpWebResponse;
 					if (response != null)
 					{
+						// Mono has a bug where it doesn't set the cookies in the cookie jar.
+						cks.Add(response.Cookies);
 						if (response.StatusCode == HttpStatusCode.Unauthorized && retry == true)
 						{
 							// This should be a free call we must be behind iChain.
-							request = WebRequest.Create( response.ResponseUri );
-							request.Credentials = myCred;
-							request.PreAuthenticate = true;
-							request.Timeout = 15 * 1000;
+							request = (HttpWebRequest)WebRequest.Create( response.ResponseUri );
 							retry = false;
 							goto proxyRetry;
 						}
 					}
-					
 					response = null;
-					CertPolicy.CertificateState cs = CertPolicy.GetCertificate(host);
-					if (cs != null && !cs.Accepted)
-					{
-						// BUGBUG this is here to work around a mono bug.
-						throw new WebException(we.Message, we, WebExceptionStatus.TrustFailure, we.Response);
-					}
 				}
 			}
 			
@@ -161,7 +159,34 @@ namespace Simias.Client
 									{
 										Uri respUri = response.ResponseUri;
 										UriBuilder urb = new UriBuilder( respUri.Scheme, respUri.Host, respUri.Port, uriString.TrimStart( new char[] { '/' } ) );
-										serviceUrl = urb.Uri;
+                                        serviceUrl = urb.Uri;
+										// Check to see if we need to use ssl.
+										// Make the request and see if we get redirected 302;
+										// Create the web request.
+										request = (HttpWebRequest)WebRequest.Create( serviceUrl );
+										request.CookieContainer = cks;
+										response.Close();
+										try
+										{
+											response = request.GetResponse() as HttpWebResponse;
+											serviceUrl = response.ResponseUri;
+										}
+										catch (WebException wex)
+										{
+											IsTrustFailure(host, wex);
+											response = wex.Response as HttpWebResponse;
+											if (response != null)
+											{
+												if (response.StatusCode == HttpStatusCode.Unauthorized)
+												{
+													if (response.Headers.Get("Simias-Error") != null)
+													{
+														// This is expected because this service requires authentication.
+														serviceUrl = response.ResponseUri;
+													}
+												}
+											}
+										}
 									}
 									else
 									{
@@ -183,6 +208,22 @@ namespace Simias.Client
 			}
 
 			return serviceUrl;
+		}
+		#endregion
+
+		#region Private Methods
+		static void IsTrustFailure(string host, WebException we)
+		{
+			if (we.Status == WebExceptionStatus.TrustFailure )
+			{
+				throw we;	
+			}
+			CertPolicy.CertificateState cs = CertPolicy.GetCertificate(host);
+			if (cs != null && !cs.Accepted)
+			{
+				// BUGBUG this is here to work around a mono bug.
+				throw new WebException(we.Message, we, WebExceptionStatus.TrustFailure, we.Response);
+			}
 		}
 		#endregion
 	}
