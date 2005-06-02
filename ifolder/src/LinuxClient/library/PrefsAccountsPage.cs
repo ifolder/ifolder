@@ -17,7 +17,9 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  Author: Calvin Gaisford <cgaisford@novell.com>
+ *  Authors:
+ *		Calvin Gaisford <cgaisford@novell.com>
+ *		Boyd Timothy <btimothy@novell.com>
  * 
  ***********************************************************************/
 
@@ -60,9 +62,7 @@ namespace Novell.iFolder
 		private CheckButton	savePasswordButton;
 		private CheckButton	autoLoginButton;
 		private CheckButton	defaultAccButton;
-//		private Button		proxyButton;
 		private Button		loginButton;
-		private bool		isFirstDomain;
 
 		private string				curDomainPassword;
 		private DomainInformation	curDomain;
@@ -259,18 +259,6 @@ namespace Novell.iFolder
 					AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 
 
-/*
-			HBox proxyBox = new HBox();
-
-			proxyButton =
-				new Button(Util.GS("Pro_xy settings"));
-			proxyBox.PackStart(proxyButton, false, false, 0);
-
-			loginTable.Attach(proxyBox, 1,2,4,5,
-					AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
-*/
-
-
 			vbox.PackStart(loginTable, true, true, 0);
 
 
@@ -315,19 +303,36 @@ namespace Novell.iFolder
 			savePasswordButton.Sensitive = false;
 			autoLoginButton.Sensitive = false;
 			defaultAccButton.Sensitive = false;
-//			proxyButton.Sensitive = false;
 			loginButton.Sensitive = false;
 
 			RemoveButton.Sensitive = false;
 			DetailsButton.Sensitive = false;
+
+			// If there aren't any domains, have the "Add" button
+			// be pressed automatically so the user doesn't have to
+			// do that unnecessary step.
+			if (curDomains.Count == 0)
+			{
+				OnAddAccount(null, null);
+				serverEntry.HasFocus = true;
+
+				// This is a big hack, but I couldn't find any other way to
+				// force Gtk to make the server entry get the focus.
+				GLib.Idle.Add(SetFocusToServerEntry);
+			}
 		}
 
+
+		private bool SetFocusToServerEntry()
+		{
+			serverEntry.HasFocus = true;
+			return false;
+		}
 
 
 
 		private void PopulateDomains()
 		{
-			isFirstDomain = true;
 			DomainInformation[] domains = ifdata.GetDomains();
 
 			foreach(DomainInformation dom in domains)
@@ -335,7 +340,6 @@ namespace Novell.iFolder
 				// only show Domains that are slaves (not on this machine)
 				if(dom.IsSlave)
 				{
-					isFirstDomain = false;
 					TreeIter iter = AccTreeStore.AppendValues(dom);
 					curDomains[dom.ID] = iter;
 				}
@@ -409,11 +413,16 @@ namespace Novell.iFolder
 
 		private void OnAddAccount(object o, EventArgs args)
 		{
+			bool bOtherDomainsExist = false;
+
 			if(NewAccountMode == true)
 			{
 				// This shouldn't be possible but hey, deal with it
 				return;
 			}
+
+			if (curDomains.Count > 0)
+				bOtherDomainsExist = true;
 			
 			AccTreeView.Selection.UnselectAll();
 
@@ -437,29 +446,33 @@ namespace Novell.iFolder
 
 			savePasswordButton.Sensitive = true;
 			autoLoginButton.Sensitive = false;
-			if(isFirstDomain)
-				defaultAccButton.Sensitive = false;
-			else
-				defaultAccButton.Sensitive = true;
 
-//			proxyButton.Sensitive = false;
+			// If there are other domains, at least one of them is already
+			// marked as the default so we can give the user the option to
+			// change that.  Otherwise, we need to force the new domain to
+			// be the default.
+			if (bOtherDomainsExist)
+				defaultAccButton.Sensitive = true;
+			else
+				defaultAccButton.Sensitive = false;
+
 			loginButton.Sensitive = false; 
 
 
 			// set the control values
 			savePasswordButton.Active = false;
 			autoLoginButton.Active = true;
-			if(isFirstDomain)
-				defaultAccButton.Active = true;
-			else
+			if (bOtherDomainsExist)
 				defaultAccButton.Active = false;
+			else
+				defaultAccButton.Active = true;
 
 			nameEntry.Text = "";
 			serverEntry.Text = "";
 			passEntry.Text = "";
 
-			serverEntry.HasFocus = true;
 			loginButton.HasDefault = true;
+			serverEntry.HasFocus = true;
 		}
 
 
@@ -517,11 +530,26 @@ namespace Novell.iFolder
 					savePasswordButton.Sensitive = false;
 					autoLoginButton.Sensitive = false;
 					defaultAccButton.Sensitive = false;
-		//			proxyButton.Sensitive = false;
 					loginButton.Sensitive = false;
 
 					RemoveButton.Sensitive = false;
 					DetailsButton.Sensitive = false;
+
+					// If the domain that we just removed was the default and
+					// there are still remaining accounts, find out from Simias
+					// what the new default domain is and update the UI.
+					if (dom.IsDefault && curDomains.Count > 0)
+					{
+						try
+						{
+							string newDefaultDomainID = simws.GetDefaultDomainID();
+							iter = (TreeIter)curDomains[newDefaultDomainID];
+							
+							dom = (DomainInformation) tModel.GetValue(iter, 0);
+							dom.IsDefault = true;
+						}
+						catch {}
+					}
 				}
 
 				rad.Destroy();
@@ -658,9 +686,6 @@ namespace Novell.iFolder
 
 				savePasswordButton.Sensitive = true;
 				autoLoginButton.Sensitive = true;
-
-//				proxyButton.Sensitive = false;
-
 
 				// set the control values
 				try
@@ -841,13 +866,12 @@ namespace Novell.iFolder
 							case StatusCodes.SuccessInGrace:
 								TreeSelection sel = AccTreeView.Selection;
 
+								domainInfo.Authenticated = true;
+
 								if (NewAccountMode)
 								{
-									ifdata.RefreshDomains();
-									//	AddDomain(domainInfo);
+									ifdata.AddDomain(domainInfo);
 									NewAccountMode = false;
-									// Store the updated DomainInformation
-									domainInfo = ifdata.GetDomain(domainInfo.ID);
 									TreeIter iter = AccTreeStore.AppendValues(domainInfo);
 									curDomains[domainInfo.ID] = iter;
 									curDomain = domainInfo;
@@ -869,8 +893,8 @@ namespace Novell.iFolder
 								}
 								else
 								{
-									ifdata.RefreshDomains();
 									UpdateDomainStatus(domainInfo.ID);
+
 									TreeIter iter = (TreeIter)curDomains[domainInfo.ID];
 									sel.SelectIter(iter);
 
