@@ -123,28 +123,32 @@ namespace Simias.Client.Authentication
 						{
 							this.password = credentials.Password;
 						}
-						else
-						{
-							this.password = "";
-						}
 					}
 
-					// Call Simias for a remote domain authentication
-					status =
-						simiasSvc.LoginToRemoteDomain( 
+					if (this.password != null)
+					{
+						// Call Simias for a remote domain authentication
+						status =
+							simiasSvc.LoginToRemoteDomain( 
 							this.domainID, 
 							this.password );
 
-					if (status.statusCode == StatusCodes.Success ||
-						status.statusCode == StatusCodes.SuccessInGrace )
+						if (status.statusCode == StatusCodes.Success ||
+							status.statusCode == StatusCodes.SuccessInGrace )
+						{
+							// Set the credentials in this process.
+							new NetCredential(
+								this.serviceName, 
+								this.domainID, 
+								true, 
+								cInfo.MemberName, 
+								this.password);
+						}
+					}
+					else
 					{
-						// Set the credentials in this process.
-						new NetCredential(
-							this.serviceName, 
-							this.domainID, 
-							true, 
-							cInfo.MemberName, 
-							this.password);
+						status = new Status();
+						status.statusCode = StatusCodes.InvalidPassword;
 					}
 				}
 				else
