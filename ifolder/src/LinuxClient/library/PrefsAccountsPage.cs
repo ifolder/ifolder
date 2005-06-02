@@ -785,21 +785,27 @@ namespace Novell.iFolder
 					string password = null;
 					if ( proxy.IsProxySet == true )
 					{
-						string proxyHost = "http://" + proxy.Host;
 						if ( proxy.CredentialsSet == true )
 						{
 							user = proxy.Username;
 							password = proxy.Password;
 						}
 						
-						simws.SetProxyAddress( serverEntry.Text, proxyHost, user, password );
+						simws.SetProxyAddress( 
+							"http://" + serverEntry.Text, 
+							"http://" + proxy.Host, 
+							user, 
+							password );
 					}
 					
 					// Secure proxy
 					if ( proxy.IsSecureProxySet == true )
 					{
-						string secureHost = "https://" + proxy.SecureHost;
-						simws.SetProxyAddress( serverEntry.Text, secureHost, user, password );
+						simws.SetProxyAddress( 
+							"https://" + serverEntry.Text, 
+							"https://" + proxy.SecureHost, 
+							user, 
+							password );
 					}
 				
 					domainInfo = simws.ConnectToDomain(nameEntry.Text, passEntry.Text, serverEntry.Text);

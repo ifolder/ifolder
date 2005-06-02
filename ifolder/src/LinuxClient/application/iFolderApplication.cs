@@ -325,21 +325,27 @@ namespace Novell.iFolder
 					string password = null;
 					if ( proxy.IsProxySet == true )
 					{
-						string proxyHost = "http://" + proxy.Host;
 						if ( proxy.CredentialsSet == true )
 						{
 							user = proxy.Username;
 							password = proxy.Password;
 						}
 						
-						simiasWebService.SetProxyAddress( di.Host, proxyHost, user, password );
+						simiasWebService.SetProxyAddress( 
+							"http://" + di.Host, 
+							"http://" + proxy.Host, 
+							user, 
+							password );
 					}
 					
 					// Secure proxy
 					if ( proxy.IsSecureProxySet == true )
 					{
-						string secureHost = "https://" + proxy.SecureHost;
-						simiasWebService.SetProxyAddress( di.Host, secureHost, user, password );
+						simiasWebService.SetProxyAddress( 
+							"https://" + di.Host, 
+							"https://" + proxy.SecureHost, 
+							user, 
+							password );
 					}
 					
 					CredentialType credType = 
