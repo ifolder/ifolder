@@ -153,7 +153,7 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 139422376;
+			PBXPerProjectTemplateStateSaveDate = 139436376;
 			PBXPrepackagedSmartGroups_v2 = (
 				{
 					PBXTransientLocationAtTop = bottom;
@@ -330,13 +330,14 @@
 					};
 				},
 			);
-			PBXWorkspaceStateSaveDate = 139422376;
-			com.apple.ide.smrt.PBXUserSmartGroupsKey.Rev10 = <040b747970656473747265616d8103e88401408484840e4e534d757461626c654172726179008484074e534172726179008484084e534f626a65637400858401690086>;
+			PBXWorkspaceStateSaveDate = 139436376;
+			com.apple.ide.smrt.PBXUserSmartGroupsKey.Rev10 = <40b047970756463747275616d618308e481004484848e0e435d457471626c656142727169700484870e435142727169700484880e435f426a656364700584810960068>;
 		};
 		perUserProjectItems = {
-			3E24CACE084F6AB7000A83E8 = 3E24CACE084F6AB7000A83E8;
 			3E24CB6B084F9B1C000A83E8 = 3E24CB6B084F9B1C000A83E8;
 			3E24CB6D084F9B1C000A83E8 = 3E24CB6D084F9B1C000A83E8;
+			3E55297B084FA29D002B65EF = 3E55297B084FA29D002B65EF;
+			3E55297F084FA29D002B65EF = 3E55297F084FA29D002B65EF;
 			3E6B5192084EB202008BAACC = 3E6B5192084EB202008BAACC;
 			3E6B5193084EB202008BAACC = 3E6B5193084EB202008BAACC;
 			3E6B5194084EB202008BAACC = 3E6B5194084EB202008BAACC;
@@ -361,7 +362,6 @@
 			3ED26BB3084F4C1C009A9F4E = 3ED26BB3084F4C1C009A9F4E;
 			3ED26BB4084F4C1C009A9F4E = 3ED26BB4084F4C1C009A9F4E;
 			3ED26BB8084F4C1C009A9F4E = 3ED26BB8084F4C1C009A9F4E;
-			3ED26C41084F68D5009A9F4E = 3ED26C41084F68D5009A9F4E;
 		};
 		sourceControlManager = 3E1712BE076126F700BC1084;
 		userBookmarkGroup = 3E3F7C9907BEA1110096E031;
@@ -1076,10 +1076,6 @@
 			sepNavWindowFrame = "{{268, 208}, {750, 558}}";
 		};
 	};
-	3E24CACE084F6AB7000A83E8 = {
-		fRef = 3EE886E907B92E8B00484B9F;
-		isa = PBXBookmark;
-	};
 	3E24CB6B084F9B1C000A83E8 = {
 		fRef = 3E24CB6C084F9B1C000A83E8;
 		isa = PBXTextBookmark;
@@ -1092,17 +1088,23 @@
 	};
 	3E24CB6C084F9B1C000A83E8 = {
 		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
 		name = simiasStub.h;
 		path = /Users/calvin/code/ifolder.R1FCSRC1_BR/simias/src/libsimias/simiasStub.h;
 		refType = 0;
 		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {3584, 13132}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRect = "{{0, 0}, {0, 0}}";
+		};
 	};
 	3E24CB6D084F9B1C000A83E8 = {
 		fRef = 3EE886E907B92E8B00484B9F;
 		isa = PBXTextBookmark;
 		name = "iFolderApplication.m: 1291";
 		rLen = 0;
-		rLoc = 36924;
+		rLoc = 37259;
 		rType = 0;
 		vrLen = 1707;
 		vrLoc = 36927;
@@ -1166,7 +1168,7 @@
 		isa = PBXTextBookmark;
 		name = "iFolderApplication.m: 448";
 		rLen = 0;
-		rLoc = 17913;
+		rLoc = 18248;
 		rType = 0;
 		vrLen = 1683;
 		vrLoc = 10904;
@@ -1233,6 +1235,33 @@
 			sepNavVisRect = "{{0, 182}, {675, 771}}";
 			sepNavWindowFrame = "{{199, 271}, {750, 558}}";
 		};
+	};
+	3E55297B084FA29D002B65EF = {
+		fRef = 3E55297C084FA29D002B65EF;
+		isa = PBXTextBookmark;
+		name = "(null): 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 0;
+		vrLoc = 0;
+	};
+	3E55297C084FA29D002B65EF = {
+		isa = PBXFileReference;
+		name = simiasStub.h;
+		path = /Users/calvin/code/ifolder.R1FCSRC1_BR/simias/src/libsimias/simiasStub.h;
+		refType = 0;
+		sourceTree = "<absolute>";
+	};
+	3E55297F084FA29D002B65EF = {
+		fRef = 3EE886E907B92E8B00484B9F;
+		isa = PBXTextBookmark;
+		name = "iFolderApplication.m: 399";
+		rLen = 0;
+		rLoc = 11874;
+		rType = 0;
+		vrLen = 1679;
+		vrLoc = 11072;
 	};
 	3E66705207B7D3CC0047E683 = {
 		uiCtxt = {
@@ -1314,7 +1343,7 @@
 		isa = PBXTextBookmark;
 		name = "iFolderApplication.m: 736";
 		rLen = 0;
-		rLoc = 21580;
+		rLoc = 21915;
 		rType = 0;
 		vrLen = 1737;
 		vrLoc = 19766;
@@ -1470,7 +1499,7 @@
 		isa = PBXTextBookmark;
 		name = "iFolderApplication.m: 1323";
 		rLen = 0;
-		rLoc = 40635;
+		rLoc = 40959;
 		rType = 0;
 		vrLen = 1800;
 		vrLoc = 36214;
@@ -1714,29 +1743,6 @@
 		vrLen = 2019;
 		vrLoc = 272;
 	};
-	3ED26C41084F68D5009A9F4E = {
-		fRef = 3ED26C42084F68D5009A9F4E;
-		isa = PBXTextBookmark;
-		name = "(null): 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 0;
-		vrLoc = 0;
-	};
-	3ED26C42084F68D5009A9F4E = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = simiasStub.h;
-		path = /Users/calvin/code/ifolder.R1FCSRC1_BR/simias/src/libsimias/simiasStub.h;
-		refType = 0;
-		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {3584, 13132}}";
-			sepNavSelRange = "{0, 0}";
-			sepNavVisRect = "{{0, 0}, {0, 0}}";
-		};
-	};
 	3EDA494207C681B7007CD1E0 = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {677, 830}}";
@@ -1835,9 +1841,9 @@
 	};
 	3EE886E907B92E8B00484B9F = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1376, 21070}}";
-			sepNavSelRange = "{36924, 0}";
-			sepNavVisRect = "{{0, 18094}, {689, 795}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1376, 21196}}";
+			sepNavSelRange = "{11874, 0}";
+			sepNavVisRect = "{{0, 5224}, {689, 795}}";
 			sepNavWindowFrame = "{{334, 78}, {728, 924}}";
 		};
 	};

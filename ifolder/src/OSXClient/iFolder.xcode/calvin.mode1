@@ -204,10 +204,10 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>3E24CB6D084F9B1C000A83E8</string>
+						<string>3E55297F084FA29D002B65EF</string>
 						<key>history</key>
 						<array>
-							<string>3E24CACE084F6AB7000A83E8</string>
+							<string>3E24CB6D084F9B1C000A83E8</string>
 						</array>
 					</dict>
 					<key>SplitCount</key>
@@ -355,7 +355,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>3E24CB6B084F9B1C000A83E8</string>
+										<string>3E55297B084FA29D002B65EF</string>
 										<key>history</key>
 										<array>
 											<string>3E6B5192084EB202008BAACC</string>
@@ -370,7 +370,7 @@
 											<string>3E6B521C084ECBE0008BAACC</string>
 											<string>3ED26BB3084F4C1C009A9F4E</string>
 											<string>3ED26BB4084F4C1C009A9F4E</string>
-											<string>3ED26C41084F68D5009A9F4E</string>
+											<string>3E24CB6B084F9B1C000A83E8</string>
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -443,9 +443,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>3E24CAD4084F75EB000A83E8</string>
+				<string>3E55297D084FA29D002B65EF</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>3E24CAD5084F75EB000A83E8</string>
+				<string>3E55297E084FA29D002B65EF</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -579,14 +579,10 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>3E24CB25084F7DB6000A83E8</string>
-		<string>3E24CB26084F7DB6000A83E8</string>
-		<string>3E6B5186084EADD8008BAACC</string>
-		<string>3E24CADF084F75EB000A83E8</string>
-		<string>3E6B51DE084EBDBE008BAACC</string>
+		<string>3E552986084FA29D002B65EF</string>
 		<string>1CD10A99069EF8BA00B06720</string>
-		<string>1C0AD2B3069F1EA900FABCE6</string>
 		<string>/Users/calvin/code/ifolder.R1FCSRC1_BR/ifolder/src/OSXClient/iFolder.xcode</string>
+		<string>1C0AD2B3069F1EA900FABCE6</string>
 		<string>3E24CAD6084F75EB000A83E8</string>
 	</array>
 	<key>WindowString</key>
@@ -775,14 +771,14 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1CD10A99069EF8BA00B06720</string>
-				<string>3E24CAD9084F75EB000A83E8</string>
+				<string>3E552980084FA29D002B65EF</string>
 				<string>1C162984064C10D400B95A72</string>
-				<string>3E24CADA084F75EB000A83E8</string>
-				<string>3E24CADB084F75EB000A83E8</string>
-				<string>3E24CADC084F75EB000A83E8</string>
-				<string>3E24CADD084F75EB000A83E8</string>
-				<string>3E24CADE084F75EB000A83E8</string>
-				<string>3E24CADF084F75EB000A83E8</string>
+				<string>3E552981084FA29D002B65EF</string>
+				<string>3E552982084FA29D002B65EF</string>
+				<string>3E552983084FA29D002B65EF</string>
+				<string>3E552984084FA29D002B65EF</string>
+				<string>3E552985084FA29D002B65EF</string>
+				<string>3E552986084FA29D002B65EF</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.debug</string>
@@ -1041,9 +1037,9 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1C0AD2B3069F1EA900FABCE6</string>
-				<string>3E24CAE0084F75EB000A83E8</string>
+				<string>3E552987084FA29D002B65EF</string>
 				<string>1CD0528B0623707200166675</string>
-				<string>3E24CAE1084F75EB000A83E8</string>
+				<string>3E552988084FA29D002B65EF</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.run</string>

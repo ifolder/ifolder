@@ -43,7 +43,9 @@
 
 @implementation iFolderApplication
 
-static 	SCDynamicStoreRef dynStoreRef = NULL;
+static SCDynamicStoreRef dynStoreRef = NULL;
+static CFRunLoopSourceRef dynStoreRunLoopRef = NULL;
+
 void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *info);
 //===================================================================
 // awakeFromNib
@@ -392,6 +394,15 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 //===================================================================
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
+	// Remove the monitor for proxy settings from the run loop and
+	// release the reference
+	if(dynStoreRunLoopRef != NULL)
+	{
+		CFRunLoopRemoveSource(CFRunLoopGetCurrent(), dynStoreRunLoopRef, kCFRunLoopCommonModes);
+		CFRelease(dynStoreRunLoopRef);
+		dynStoreRunLoopRef = NULL;
+	}
+
 	// Release the proxy setting monitor
 	if(dynStoreRef != NULL)
 	{
@@ -1313,12 +1324,10 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 				keysRef, NULL ))
 			NSLog(@"Setup to monitor proxy changes");
 		
-		CFRunLoopSourceRef rlsf = SCDynamicStoreCreateRunLoopSource(NULL, dynStoreRef, 0);
-
-		CFRunLoopAddSource(CFRunLoopGetCurrent(), rlsf, kCFRunLoopCommonModes);
+		dynStoreRunLoopRef = SCDynamicStoreCreateRunLoopSource(NULL, dynStoreRef, 0);
+		CFRunLoopAddSource(CFRunLoopGetCurrent(), dynStoreRunLoopRef, kCFRunLoopCommonModes);
 	
 		CFRelease(keysRef);
-		CFRelease(rlsf);
 	}
 }
 
