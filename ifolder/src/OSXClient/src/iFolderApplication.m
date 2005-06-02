@@ -36,6 +36,8 @@
 #import "AuthStatus.h"
 #include "simiasStub.h"
 
+#include <SystemConfiguration/SCDynamicStoreCopySpecific.h>
+#include <SystemConfiguration/SCSchemaDefinitions.h>
 
 @implementation iFolderApplication
 
@@ -1253,6 +1255,84 @@
 		}
 	}
 	[fse release];
+}
+
+
+
+
+- (NSString *)getHTTPProxyURI:(NSString *)host UseHTTPS:(BOOL)useHTTPS
+{
+	NSString *proxyURI = nil;
+	BOOL returnURI = NO;
+
+	// Call to copy the System Configuration Proxies
+	CFDictionaryRef ref = SCDynamicStoreCopyProxies(NULL);
+
+	if(ref != NULL)
+	{
+		const void *proxyHost;
+		const void *proxyPort;
+
+		if(useHTTPS)
+		{
+			if(CFDictionaryGetValueIfPresent (ref, kSCPropNetProxiesHTTPSProxy, &proxyHost))
+			{
+				NSLog(@"HTTPS Proxy Value found %@", (NSString *)proxyHost);
+				
+				// If we found the HTTPSProxy, check now for a Port
+				if(CFDictionaryGetValueIfPresent (ref, kSCPropNetProxiesHTTPSPort, &proxyPort))
+				{
+					NSLog(@"HTTPS Proxy Port found %@", (NSNumber *)proxyPort);
+					proxyURI = [NSString stringWithFormat:@"https://%@:%@", (NSString *)proxyHost, (NSNumber *)proxyPort];
+					returnURI = YES;
+				}
+			}
+		}
+		else
+		{
+			if(CFDictionaryGetValueIfPresent (ref, kSCPropNetProxiesHTTPProxy, &proxyHost))
+			{
+				NSLog(@"HTTP Proxy Value found %@", (NSString *)proxyHost);
+				
+				// If we found the HTTPSProxy, check now for a Port
+				if(CFDictionaryGetValueIfPresent (ref, kSCPropNetProxiesHTTPPort, &proxyPort))
+				{
+					NSLog(@"HTTP Proxy Port found %@", (NSNumber *)proxyPort);
+					proxyURI = [NSString stringWithFormat:@"http://%@:%@", (NSString *)proxyHost, (NSNumber *)proxyPort];
+					returnURI = YES;
+				}
+			}
+		}
+
+		if(proxyURI != nil)
+		{
+			const void *exceptionArray;
+			
+			// We found a Proxy setting, now check our host to see if it is in the bypass list
+			if(CFDictionaryGetValueIfPresent (ref, kSCPropNetProxiesExceptionsList, &exceptionArray))
+			{
+				CFIndex counter = 0;
+				for(counter = 0; counter < CFArrayGetCount(exceptionArray); counter++)
+				{
+					CFStringRef bypassHost = CFArrayGetValueAtIndex(exceptionArray, counter);
+
+					if([host compare:(NSString *)bypassHost] == NSOrderedSame)
+					{
+						NSLog(@"Host found in ProxyExceptions, returning nil for proxy");
+//						[proxyURI release];
+						proxyURI = nil;
+						returnURI = NO;
+						break;
+					}
+				}
+			}
+		}
+
+		CFRelease(ref);
+//		CFRelease(nfref);
+	}
+
+	return proxyURI;
 }
 
 

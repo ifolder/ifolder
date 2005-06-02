@@ -230,6 +230,7 @@
 		};
 		29B97323FDCFA39411CA2CEA = {
 			children = (
+				3E6B518A084EAE18008BAACC,
 				3EBE7A2407FC5A0C00DC9A8E,
 				3EAE2EB607FB7F58007BE2E0,
 				3EB7842507C2D31400E2B733,
@@ -999,6 +1000,20 @@
 		};
 		3E67778707AEACEF0027130D = {
 			fileRef = 3E67778607AEACEF0027130D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E6B518A084EAE18008BAACC = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = SystemConfiguration.framework;
+			path = /System/Library/Frameworks/SystemConfiguration.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		3E6B518B084EAE18008BAACC = {
+			fileRef = 3E6B518A084EAE18008BAACC;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -2389,6 +2404,7 @@
 				3EB7842607C2D31400E2B733,
 				3EAE2EB707FB7F58007BE2E0,
 				3EBE7A2507FC5A0C00DC9A8E,
+				3E6B518B084EAE18008BAACC,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

@@ -298,6 +298,18 @@
 		unsigned int statusCode;
 		AuthStatus *authStatus = nil;
 
+		NSString *httpsProxyURI = [[NSApp delegate] getHTTPProxyURI:[host stringValue] UseHTTPS:YES];
+		if(httpsProxyURI != nil)
+		{
+			NSLog(@"Call to set https proxy here using URI: %@", httpsProxyURI);
+		}
+
+		NSString *httpProxyURI = [[NSApp delegate] getHTTPProxyURI:[host stringValue] UseHTTPS:NO];
+		if(httpProxyURI != nil)
+		{
+			NSLog(@"Call to set http proxy here using URI: %@", httpProxyURI);
+		}
+
 		@try
 		{
 			iFolderDomain *newDomain = [simiasService ConnectToDomain:[userName stringValue] 

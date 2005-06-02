@@ -123,5 +123,9 @@
 - (void)processUserNodeEvent:(SMNodeEvent *)userNodeEvent;
 
 
+//==========================================
+// Proxy calls to read OS X Proxy Settings
+//==========================================
+- (NSString *)getHTTPProxyURI:(NSString *)host UseHTTPS:(BOOL)useHTTPS;
 
 @end
