@@ -671,6 +671,59 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 
 
 
+//----------------------------------------------------------------------------
+// SetProxyAddress
+// Sets the Proxy Address and credentials to be used when communicating
+// with the iFolder Server
+//----------------------------------------------------------------------------
+-(BOOL) SetProxyAddress:(NSString *)hostURI 
+				ProxyURI:(NSString *)proxyURI
+				ProxyUser:(NSString *)proxyUser 
+				ProxyPassword:(NSString *)proxyPassword
+{
+    struct soap soap;
+	GSOAP_CREDS creds;
+    int err_code;
+	BOOL setProxyResult = NO;
+
+	struct _ns1__SetProxyAddress			setProxyMessage;
+	struct _ns1__SetProxyAddressResponse	setProxyResponse;
+
+	NSAssert( (hostURI != nil), @"hostURI was nil");
+
+	setProxyMessage.hostUri = (char *)[hostURI UTF8String];
+	if(proxyURI != nil)
+		setProxyMessage.proxyUri = (char *)[proxyURI UTF8String];
+	else
+		setProxyMessage.proxyUri = NULL;
+	if(proxyUser != nil)
+		setProxyMessage.proxyUser = (char *)[proxyUser UTF8String];
+	else
+		setProxyMessage.proxyUser = NULL;
+	if(proxyPassword != nil)
+		setProxyMessage.proxyPassword = (char *)[proxyPassword UTF8String];
+	else
+		setProxyMessage.proxyPassword = NULL;
+
+    init_simias_gsoap (&soap, &creds);
+
+    err_code = soap_call___ns1__SetProxyAddress(
+			&soap,
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
+            NULL,
+            &setProxyMessage,
+            &setProxyResponse);
+
+	handle_simias_soap_error(&soap, &creds, @"SimiasService.SetProxyAddress");
+
+	setProxyResult = (BOOL) setProxyResponse.SetProxyAddressResult;
+
+    cleanup_simias_gsoap(&soap, &creds);
+
+	return setProxyResult;
+}
+
+
 
 
 //----------------------------------------------------------------------------
@@ -692,6 +745,8 @@ NSDictionary *getDomainProperties(struct ns1__DomainInformation *domainInfo)
 		[newProperties setObject:[NSString stringWithUTF8String:domainInfo->Description] forKey:@"description"];
 	if(domainInfo->Host != nil)
 		[newProperties setObject:[NSString stringWithUTF8String:domainInfo->Host] forKey:@"host"];
+	if(domainInfo->HostUrl != nil)
+		[newProperties setObject:[NSString stringWithUTF8String:domainInfo->HostUrl] forKey:@"hostURL"];
 	if(domainInfo->MemberUserID != nil)
 		[newProperties setObject:[NSString stringWithUTF8String:domainInfo->MemberUserID] forKey:@"userID"];
 	if(domainInfo->MemberName != nil)

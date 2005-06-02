@@ -127,6 +127,8 @@
 		(![selectedDomain authenticated]) &&
 		( [[password stringValue] length] > 0 ) )
 	{
+		[[NSApp delegate] setupSimiasProxies:[selectedDomain host]];
+
 		@try
 		{
 			AuthStatus *authStatus = [[simiasService LoginToRemoteDomain:[selectedDomain ID]
@@ -298,17 +300,7 @@
 		unsigned int statusCode;
 		AuthStatus *authStatus = nil;
 
-		NSString *httpsProxyURI = [[NSApp delegate] getHTTPProxyURI:[host stringValue] UseHTTPS:YES];
-		if(httpsProxyURI != nil)
-		{
-			NSLog(@"Call to set https proxy here using URI: %@", httpsProxyURI);
-		}
-
-		NSString *httpProxyURI = [[NSApp delegate] getHTTPProxyURI:[host stringValue] UseHTTPS:NO];
-		if(httpProxyURI != nil)
-		{
-			NSLog(@"Call to set http proxy here using URI: %@", httpProxyURI);
-		}
+		[[NSApp delegate] setupSimiasProxies:[host stringValue]];
 
 		@try
 		{

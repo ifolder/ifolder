@@ -1337,9 +1337,66 @@
 
 
 
+- (void) setupSimiasProxies:(NSString *)host
+{
+	SimiasService *simiasService = [[SimiasService alloc] init];
+	NSString *hostURI;
+	
+	hostURI = [NSString stringWithFormat:@"https://%@", host];
+
+	NSString *httpsProxyURI = [self getHTTPProxyURI:host UseHTTPS:YES];
+	if(httpsProxyURI != nil)
+	{
+		@try
+		{
+			if([simiasService SetProxyAddress:hostURI
+					ProxyURI:httpsProxyURI
+					ProxyUser:nil 
+					ProxyPassword:nil] == NO)
+			{
+				NSLog(@"iFolder was unable to setup the proxy %@", httpsProxyURI);
+			}
+			else
+			{
+				NSLog(@"iFolder setup with proxy %@", httpsProxyURI);
+			}
+		}
+		@catch (NSException *e)
+		{
+			NSLog(@"iFolder encountered an exception while setting up the proxy %@: %@", httpsProxyURI, [e name] );
+		}
+	}
+
+	hostURI = [NSString stringWithFormat:@"http://%@", host];
+
+	NSString *httpProxyURI = [self getHTTPProxyURI:host UseHTTPS:NO];
+	if(httpProxyURI != nil)
+	{
+		@try
+		{
+			if([simiasService SetProxyAddress:hostURI
+					ProxyURI:httpProxyURI
+					ProxyUser:nil 
+					ProxyPassword:nil] == NO)
+			{
+				NSLog(@"iFolder was unable to setup the proxy %@", httpProxyURI);
+			}
+			else
+			{
+				NSLog(@"iFolder setup with proxy %@", httpProxyURI);
+			}
+		}
+		@catch (NSException *e)
+		{
+			NSLog(@"iFolder encountered an exception while setting up the proxy %@: %@", httpProxyURI, [e name] );
+		}
+	}
 
 
 
+
+	[simiasService release];
+}
 
 
 @end

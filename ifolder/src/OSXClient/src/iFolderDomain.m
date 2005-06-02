@@ -104,6 +104,12 @@
 }
 
 
+-(NSString *)hostURL
+{
+	return [self valueForKeyPath:@"properties.hostURL"]; 
+}
+
+
 -(NSString *)poBoxID
 {
 	return [self valueForKeyPath:@"properties.poboxID"]; 

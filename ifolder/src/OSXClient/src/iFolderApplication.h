@@ -127,5 +127,6 @@
 // Proxy calls to read OS X Proxy Settings
 //==========================================
 - (NSString *)getHTTPProxyURI:(NSString *)host UseHTTPS:(BOOL)useHTTPS;
+- (void) setupSimiasProxies:(NSString *)host;
 
 @end

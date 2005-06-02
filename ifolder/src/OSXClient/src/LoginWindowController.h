@@ -32,6 +32,7 @@
     IBOutlet NSTextField *userNameField;
 
 	NSString *authDomainID;
+	NSString *authDomainHost;
 }
 
 
