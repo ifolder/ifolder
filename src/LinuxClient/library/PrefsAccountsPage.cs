@@ -550,6 +550,14 @@ namespace Novell.iFolder
 						}
 						catch {}
 					}
+
+					// Automatically put the window into AddAccount mode to save
+					// the user some extra clicking when the account that was
+					// just removed was the last one.
+					if (curDomains.Count == 0)
+					{
+						OnAddAccount(null, null);
+					}
 				}
 
 				rad.Destroy();
