@@ -188,8 +188,15 @@ namespace Novell.iFolder
 			switch(args.Action)
 			{
 				case Action.StartLocalSync:
-					LogMessage(string.Format(Util.GS(
-						"Checking for local changes: {0}"), args.Name));
+					if (args.Name != null && args.Name.StartsWith("POBox:"))
+					{
+						LogMessage(Util.GS("Checking for new iFolders..."));
+					}
+					else
+					{
+						LogMessage(string.Format(Util.GS(
+							"Checking for local changes: {0}"), args.Name));
+					}
 					break;
 				case Action.StartSync:
 				{
@@ -199,8 +206,15 @@ namespace Novell.iFolder
 				}
 				case Action.StopSync:
 				{
-					LogMessage(string.Format(Util.GS(
-						"Finished sync of: {0}"), args.Name));
+					if (args.Name != null && args.Name.StartsWith("POBox:"))
+					{
+						LogMessage(Util.GS("Done checking for new iFolders"));
+					}
+					else
+					{
+						LogMessage(string.Format(Util.GS(
+							"Finished sync of: {0}"), args.Name));
+					}
 					break;
 				}
 			}
