@@ -219,7 +219,7 @@ namespace Novell.iFolder
 		// AddDomain
 		// adds the domain to the iFolderData internal tables
 		//===================================================================
-		private void AddDomain(DomainInformation newDomain)
+		public void AddDomain(DomainInformation newDomain)
 		{
 			lock (typeof(iFolderData) )
 			{
@@ -681,7 +681,35 @@ namespace Novell.iFolder
 			lock (typeof(iFolderData) )
 			{
 				if(keyedDomains.ContainsKey(domainID))
+				{
+					DomainInformation dom = (DomainInformation)keyedDomains[domainID];
 					keyedDomains.Remove(domainID);
+
+					// If the domain we just removed was the default, ask
+					// simias for the new default domain (if any domains still
+					// exist).
+					if (dom.IsDefault)
+					{
+						try
+						{
+							string newDefaultDomainID = simws.GetDefaultDomainID();
+							if (newDefaultDomainID != null)
+							{
+								// Update the default domain
+								if (keyedDomains.ContainsKey(newDefaultDomainID))
+								{
+									DomainInformation newDefaultDomain =
+										(DomainInformation)keyedDomains[newDefaultDomainID];
+									newDefaultDomain.IsDefault = true;
+									defDomain = newDefaultDomain;
+								}
+							}
+							else
+								defDomain = null;
+						}
+						catch {}
+					}
+				}
 			}
 		}
 
@@ -733,12 +761,11 @@ namespace Novell.iFolder
 				try
 				{
 					simws.SetDefaultDomain(domain.ID);
-					if(defDomain.ID != domain.ID)
-					{
+					if (defDomain != null && defDomain.ID != domain.ID)
 						defDomain.IsDefault = false;
-						defDomain = domain;
-					}
+
 					domain.IsDefault = true;
+					defDomain = domain;
 				}
 				catch (Exception ex)
 				{
