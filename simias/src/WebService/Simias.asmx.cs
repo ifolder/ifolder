@@ -847,7 +847,8 @@ namespace Simias.Web
 		{
 			DomainInformation domainInfo = null;
 			DomainAgent da = new DomainAgent();
-			Simias.Authentication.Status status = da.Attach(Host, UserName, Password);
+			// Normalize the host address.
+			Simias.Authentication.Status status = da.Attach(Host.ToLower(), UserName, Password);
 			if (status.statusCode == Simias.Authentication.StatusCodes.Success ||
 				status.statusCode == Simias.Authentication.StatusCodes.SuccessInGrace)
 			{
@@ -926,7 +927,8 @@ namespace Simias.Web
 		[SoapDocumentMethod]
 		public byte[] GetCertificate(string host)
 		{
-			return Simias.Security.CertificateStore.GetCertificate(host);
+			// Normalize the host address.
+			return Simias.Security.CertificateStore.GetCertificate(host.ToLower());
 		}
 
 		/// <summary>
@@ -938,7 +940,8 @@ namespace Simias.Web
 		[SoapDocumentMethod]
 		public void StoreCertificate(byte[] certificate, string host)
 		{
-			Simias.Security.CertificateStore.StoreCertificate(certificate, host, true);
+			// Normalize the host address.
+			Simias.Security.CertificateStore.StoreCertificate(certificate, host.ToLower(), true);
 		}
 		
 		/// <summary>
@@ -975,7 +978,8 @@ namespace Simias.Web
 				Uri currentAddress = DomainProvider.ResolveLocation( domainID );
 				if ( currentAddress != null )
 				{
-					string[] components = hostAddress.Split( new char[] { ':' } );
+					// Normalize the host adddress.
+					string[] components = hostAddress.ToLower().Split( new char[] { ':' } );
 					UriBuilder ub = new UriBuilder( currentAddress );
 					ub.Host = components[ 0 ];
 
