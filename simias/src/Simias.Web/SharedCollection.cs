@@ -437,6 +437,21 @@ namespace Simias.Web
 			else
 				ifPath = path;
 
+			// Check to see if the user has read rights to the
+			// path used as a collection
+			try
+			{
+				if(Mono.Posix.Syscall.access(ifPath,
+							Mono.Posix.AccessMode.R_OK) != 0)
+				{
+					return false;
+				}
+			}
+			catch(Exception e)
+			{
+				Console.WriteLine(e);
+			}
+
 			// Check to see if the user has write rights to the
 			// path used as a collection
 			try
