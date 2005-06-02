@@ -1616,8 +1616,15 @@ namespace Novell.iFolder
 				}
 				case Action.StartSync:
 				{
-					UpdateStatus(string.Format(Util.GS(
-									"Syncing: {0}"), args.Name));
+					if (args.Name != null && args.Name.StartsWith("POBox:"))
+					{
+						UpdateStatus(Util.GS("Checking for new iFolders..."));
+					}
+					else
+					{
+						UpdateStatus(string.Format(Util.GS(
+										"Syncing: {0}"), args.Name));
+					}
 
 					// Keep track of when a sync starts regardless of
 					// whether the iFolder is currently shown because
