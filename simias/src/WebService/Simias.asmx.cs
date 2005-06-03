@@ -1013,7 +1013,8 @@ namespace Simias.Web
 
 			try
 			{
-				ProxyState.AddProxyState( new Uri( hostUri ), new Uri( proxyUri ), proxyUser, proxyPassword );
+				Uri proxy = ( proxyUri != null ) ? new Uri( proxyUri ) : null;
+				ProxyState.AddProxyState( new Uri( hostUri ), proxy, proxyUser, proxyPassword );
 			}
 			catch
 			{

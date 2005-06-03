@@ -26,7 +26,10 @@ using System.Net;
 using System.Text;
 using System.Xml;
 
-namespace Simias.Client
+using Simias;
+using Simias.Client;
+
+namespace Simias.DomainServices
 {
 	/// <summary>
 	/// Summary description for WSInspection.
@@ -89,6 +92,8 @@ namespace Simias.Client
 			request.PreAuthenticate = true;
 			request.Timeout = 15 * 1000;
 			request.CookieContainer = cks;
+			request.Proxy = ProxyState.GetProxyState( request.RequestUri );
+
 			try
 			{
 				// Get the response from the web server.
@@ -165,6 +170,7 @@ namespace Simias.Client
 										// Create the web request.
 										request = (HttpWebRequest)WebRequest.Create( serviceUrl );
 										request.CookieContainer = cks;
+										request.Proxy = ProxyState.GetProxyState( request.RequestUri );
 										response.Close();
 										try
 										{

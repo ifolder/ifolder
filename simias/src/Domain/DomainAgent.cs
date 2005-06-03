@@ -413,6 +413,7 @@ namespace Simias.DomainServices
 			DomainService domainService = new DomainService();
 			domainService.Url = domainServiceUrl.ToString();
 			domainService.Credentials = myCred;
+			domainService.Proxy = ProxyState.GetProxyState( domainServiceUrl );
 
 			// Check to see if this domain already exists in this store.
 			string domainID = domainService.GetDomainID();

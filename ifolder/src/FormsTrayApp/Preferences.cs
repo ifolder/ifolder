@@ -1609,10 +1609,12 @@ namespace Novell.FormsTrayApp
 			{
 				// Set the proxy for http.
 				ubHost.Scheme = Uri.UriSchemeHttp;
+				ubHost.Port = 80;
 				SetProxyForDomain( ubHost.Uri.ToString(), false );
 
 				// Now set it for https.
 				ubHost.Scheme = Uri.UriSchemeHttps;
+				ubHost.Port = 443;
 				SetProxyForDomain( ubHost.Uri.ToString(), false );
 			}
 			else
