@@ -26,7 +26,6 @@ using System.Collections.Specialized;
 using System.Configuration;
 using System.IO;
 using System.Net;
-using System.Reflection;
 using System.Threading;
 using System.Web;
 using System.Web.Services;
@@ -59,6 +58,11 @@ namespace Simias.Security.Web
 
 		// Response header set by the Http Authentication Module
 		public readonly static string DomainIDHeader = "Domain-ID";
+
+		/// <summary>
+		/// Characters that are trimmed from the beginning and ending of the line.
+		/// </summary>
+		private readonly static char[] trimChars = new char[] { '\"', '/', '\\' };
 
 		/// <summary>
 		/// Enabled if ssl required is set in the web.config.
@@ -182,47 +186,36 @@ namespace Simias.Security.Web
 		{
 			// Get the context for the current request.
 			HttpContext context = HttpContext.Current;
-
-			// See if this request requires authentication.
-			string webService = Path.GetFileName( context.Request.FilePath );
-			if ( unauthenticatedServices.ContainsKey( webService ) == false )
+			if ( context.Session != null )
 			{
-				// See if this request method requires authentication.
-				string soapMethod = context.Request.Headers[ "SOAPAction" ];
-				if ( ( soapMethod == null ) || ( unauthenticatedServices.ContainsKey( soapMethod ) == false ) )
+				// See if the user has a session from a previous login.
+				Session simiasSession = context.Session[ sessionTag ] as Session;
+				if ( simiasSession != null )
 				{
-					if ( context.Session != null )
+					context.User = simiasSession.User;
+					if ( context.User.Identity.IsAuthenticated )
 					{
-						// See if the user has a session from a previous login.
-						Session simiasSession = context.Session[ sessionTag ] as Session;
-						if ( simiasSession != null )
-						{
-							context.User = simiasSession.User;
-							if ( context.User.Identity.IsAuthenticated )
-							{
-								// The user is authenticated, set it as the current principal on this thread.
-								Thread.CurrentPrincipal = context.User;
-							}
-							else
-							{
-								// The user is not authenticated on this session. See if there are
-								// credentials specified on the request.
-								VerifyPrincipalFromRequest( context );
-							}
-						}
-						else
-						{
-							// A simias session from a previous login does not exist. See if there
-							// are credentials specified on the request.
-							VerifyPrincipalFromRequest( context );
-						}
+						// The user is authenticated, set it as the current principal on this thread.
+						Thread.CurrentPrincipal = context.User;
 					}
 					else
 					{
-						// There is no session setup. Authenticate every time.
+						// The user is not authenticated on this session. See if there are
+						// credentials specified on the request.
 						VerifyPrincipalFromRequest( context );
 					}
 				}
+				else
+				{
+					// A simias session from a previous login does not exist. See if there
+					// are credentials specified on the request.
+					VerifyPrincipalFromRequest( context );
+				}
+			}
+			else
+			{
+				// There is no session setup. Authenticate every time.
+				VerifyPrincipalFromRequest( context );
 			}
 		}
 
@@ -294,44 +287,8 @@ namespace Simias.Security.Web
 			string[] services = parseString.Split( new char[] { ',' } );
 			foreach ( string s in services )
 			{
-				// Web methods contain a ':'.
-				if ( s.IndexOf( ':' ) != -1 )
-				{
-					// The format for a web method is as follows:
-					// [ 0 ] - Web method.
-					// [ 1 ] - Web class.
-					// [ 2 ] - Web assembly.
-					string[] values = s.Split( new char[] { ':' } );
-					string webMethod = values[ 0 ].Trim();
-					string webClass = values[ 1 ].Trim();
-					string webAssembly = values[ 2 ].Trim();
-
-					// Load the assembly that contains the web class.
-					Assembly assembly = AppDomain.CurrentDomain.Load( webAssembly );
-					if ( assembly != null )
-					{
-						// Get the class type information.
-						Type type = assembly.GetType( webClass );
-						if ( type != null )
-						{
-							// Get the custome attributes for this class.
-							object[] customAttrs = type.GetCustomAttributes( typeof( WebServiceAttribute ), false );
-							if ( customAttrs.Length == 1 )
-							{
-								// Add the namespace string exactly as it would occur in the HTTP header
-								// SOAPAction parameter.
-								WebServiceAttribute wsa = customAttrs[ 0 ] as WebServiceAttribute;
-								string nss = String.Format( "\"{0}/{1}\"", wsa.Namespace.TrimEnd( new char[] {'/'} ), webMethod );
-								unauthenticatedServices.Add( nss, null );
-							}
-						}
-					}
-				}
-				else
-				{
-					// This is a web service or an http handler.
-					unauthenticatedServices.Add( s.Trim(), null );
-				}
+				// Add this web service or method to the table.
+				unauthenticatedServices.Add( s.Trim().ToLower(), null );
 			}
 		}
 
@@ -341,61 +298,79 @@ namespace Simias.Security.Web
 		/// <param name="context">HttpContext that represents the request.</param>
 		private void VerifyPrincipalFromRequest( HttpContext context )
 		{
-			// Get the Domain ID.
-			string domainID = context.Request.Headers.Get( Http.DomainIDHeader );
-			if ( domainID == null )
+			// See if this request requires authentication.
+			string webService = Path.GetFileName( context.Request.FilePath );
+			if ( !unauthenticatedServices.ContainsKey( webService.ToLower() ) )
 			{
-				if ( StoreReference.IsEnterpriseServer )				
+				// See if this request method requires authentication.
+				string soapPath = context.Request.Headers[ "SOAPAction" ];
+				string soapMethod = ( soapPath != null ) ? Path.GetFileName( soapPath.Trim( trimChars ) ) : null;
+				if ( soapMethod == null )
 				{
-					// If this is an enterprise server use the default domain.
-					domainID = StoreReference.DefaultDomain;
+					// See if it was specified as a query parameter.
+					soapMethod = context.Request.QueryString[ "op" ];
 				}
-				else if ( IsLocalAddress( context.Request.UserHostAddress ) )
-				{
-					// If this address is loopback, set the local domain in the HTTP context.
-					domainID = StoreReference.LocalDomain;
-				}
-			}
 
-			// Try and authenticate the request.
-			if ( domainID != null )
-			{
-				if ( Http.GetMember( domainID, context ) != null )
+				if ( ( soapMethod == null ) || 
+					 !unauthenticatedServices.ContainsKey( String.Format( "{0}:{1}", webService, soapMethod ).ToLower() ) )
 				{
-					// Set the session to never expire on the local web service.
-					if ( context.Session != null )
+					// Get the Domain ID.
+					string domainID = context.Request.Headers.Get( Http.DomainIDHeader );
+					if ( domainID == null )
 					{
-						if ( domainID == StoreReference.LocalDomain )
+						if ( StoreReference.IsEnterpriseServer )				
 						{
-							// Set to a very long time.
-							context.Session.Timeout = 60 * 24 * 365;
+							// If this is an enterprise server use the default domain.
+							domainID = StoreReference.DefaultDomain;
+						}
+						else if ( IsLocalAddress( context.Request.UserHostAddress ) )
+						{
+							// If this address is loopback, set the local domain in the HTTP context.
+							domainID = StoreReference.LocalDomain;
+						}
+					}
+
+					// Try and authenticate the request.
+					if ( domainID != null )
+					{
+						if ( Http.GetMember( domainID, context ) != null )
+						{
+							// Set the session to never expire on the local web service.
+							if ( context.Session != null )
+							{
+								if ( domainID == StoreReference.LocalDomain )
+								{
+									// Set to a very long time.
+									context.Session.Timeout = 60 * 24 * 365;
+								}
+								else
+								{
+									// use the default session timeout
+								}
+							}
+						}
+					}
+					else
+					{
+						string realm = null;
+						if ( StoreReference.IsEnterpriseServer )
+						{
+							realm = 
+								( store.DefaultDomain != null ) ?
+								StoreReference.GetDomain( store.DefaultDomain ).Name :
+								Environment.MachineName;
 						}
 						else
 						{
-							// use the default session timeout
+							realm = Environment.MachineName;
 						}
+
+						context.Response.StatusCode = 401;
+						context.Response.StatusDescription = "Unauthorized";
+						context.Response.AddHeader( "WWW-Authenticate", String.Concat( "Basic realm=\"", realm, "\"" ) );
+						context.ApplicationInstance.CompleteRequest();
 					}
 				}
-			}
-			else
-			{
-				string realm = null;
-				if ( StoreReference.IsEnterpriseServer )
-				{
-					realm = 
-						( store.DefaultDomain != null ) ?
-							StoreReference.GetDomain( store.DefaultDomain ).Name :
-							Environment.MachineName;
-				}
-				else
-				{
-					realm = Environment.MachineName;
-				}
-
-				context.Response.StatusCode = 401;
-				context.Response.StatusDescription = "Unauthorized";
-				context.Response.AddHeader( "WWW-Authenticate", String.Concat( "Basic realm=\"", realm, "\"" ) );
-				context.ApplicationInstance.CompleteRequest();
 			}
 		}
 
