@@ -512,6 +512,9 @@ namespace Novell.FormsTrayApp
 							}
 
 							globalProperties.AddDomainToList(dw);
+
+							// Set the proxy for this domain.
+							preferences.SetProxyForDomain( dw.HostUrl, false );
 						}
 
 						if (domains.Length.Equals(0))
