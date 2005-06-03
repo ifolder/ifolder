@@ -89,7 +89,6 @@ namespace Simias.DomainServices
 			proxyRetry:
 
 			request.Credentials = myCred;
-			request.PreAuthenticate = true;
 			request.Timeout = 15 * 1000;
 			request.CookieContainer = cks;
 			request.Proxy = ProxyState.GetProxyState( request.RequestUri );
