@@ -1381,7 +1381,9 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 				if(CFDictionaryGetValueIfPresent (ref, kSCPropNetProxiesHTTPSPort, &proxyPort))
 				{
 					NSLog(@"HTTPS Proxy Port found %@", (NSNumber *)proxyPort);
-					proxyURI = [NSString stringWithFormat:@"https://%@:%@", (NSString *)proxyHost, (NSNumber *)proxyPort];
+					// Even though this is https, set the http prefix because
+					// you can't talk to a proxy using https
+					proxyURI = [NSString stringWithFormat:@"http://%@:%@", (NSString *)proxyHost, (NSNumber *)proxyPort];
 					returnURI = YES;
 				}
 			}
