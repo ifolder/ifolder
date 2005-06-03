@@ -188,11 +188,19 @@ namespace Simias.Client
 				}
 				else
 				{
-					string requestHost = request.Proxy.GetProxy( request.RequestUri ).Host;
-					if (String.Compare(requestHost, localHost, true) == 0)
+					if ( !request.Proxy.IsBypassed( request.RequestUri ) )
 					{
-						localHost = request.RequestUri.Host;
-						goto CheckForRealHost;
+						string requestHost = request.Proxy.GetProxy( request.RequestUri ).Host;
+						if (String.Compare(requestHost, localHost, true) == 0)
+						{
+							localHost = request.RequestUri.Host;
+							goto CheckForRealHost;
+						}
+						else
+						{
+							// This is a new cert replace the certificate.
+							CertTable[localHost] = new CertificateState(certificate, false, (CertificateProblem)certificateProblem);
+						}
 					}
 					else
 					{
