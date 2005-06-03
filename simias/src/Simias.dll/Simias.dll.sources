@@ -39,6 +39,7 @@ AssemblyInfo.cs
 ../Credentials/Credentials.cs
 ../Credentials/NeedCredentialsEventSubscriber.cs
 ../Domain/DomainAgent.cs
+../Domain/WSInspection.cs
 ../DomainProvider/DomainProvider.cs
 ../DomainProvider/EnterpriseProvider.cs
 ../DomainProvider/IDomainProvider.cs

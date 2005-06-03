@@ -8,7 +8,6 @@
       <xs:element name="PingSimiasResponse">
         <xs:complexType />
       </xs:element>
-
       <xs:element name="AddMemberToDomain">
         <xs:complexType>
           <xs:sequence>
@@ -18,7 +17,6 @@
             <xs:element minOccurs="0" maxOccurs="1" name="PublicKey" type="xs:string" />
             <xs:element minOccurs="0" maxOccurs="1" name="GivenName" type="xs:string" />
             <xs:element minOccurs="0" maxOccurs="1" name="FamilyName" type="xs:string" />
-
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -28,7 +26,6 @@
       <xs:element name="RemoveMemberFromDomain">
         <xs:complexType>
           <xs:sequence>
-
             <xs:element minOccurs="0" maxOccurs="1" name="DomainID" type="xs:string" />
             <xs:element minOccurs="0" maxOccurs="1" name="MemberID" type="xs:string" />
           </xs:sequence>
@@ -38,7 +35,6 @@
         <xs:complexType />
       </xs:element>
       <xs:element name="FindCloseMembers">
-
         <xs:complexType>
           <xs:sequence>
             <xs:element minOccurs="0" maxOccurs="1" name="domainID" type="xs:string" />
@@ -48,7 +44,6 @@
       </xs:element>
       <xs:element name="FindCloseMembersResponse">
         <xs:complexType />
-
       </xs:element>
       <xs:element name="FindFirstMembers">
         <xs:complexType>
@@ -58,7 +53,6 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-
       <xs:complexType name="ArrayOfMemberInfo">
         <xs:sequence>
           <xs:element minOccurs="0" maxOccurs="unbounded" name="MemberInfo" nillable="true" type="s0:MemberInfo" />
@@ -68,7 +62,6 @@
         <xs:sequence>
           <xs:element minOccurs="0" maxOccurs="1" name="ObjectID" type="xs:string" />
           <xs:element minOccurs="0" maxOccurs="1" name="UserID" type="xs:string" />
-
           <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
           <xs:element minOccurs="0" maxOccurs="1" name="GivenName" type="xs:string" />
           <xs:element minOccurs="0" maxOccurs="1" name="FamilyName" type="xs:string" />
@@ -78,7 +71,6 @@
         </xs:sequence>
       </xs:complexType>
       <xs:element name="FindFirstMembersResponse">
-
         <xs:complexType>
           <xs:sequence>
             <xs:element minOccurs="1" maxOccurs="1" name="FindFirstMembersResult" type="xs:boolean" />
@@ -88,7 +80,6 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-
       <xs:simpleType name="SearchType">
         <xs:restriction base="xs:string">
           <xs:enumeration value="Equal" />
@@ -98,7 +89,6 @@
           <xs:enumeration value="Contains" />
           <xs:enumeration value="Greater" />
           <xs:enumeration value="Less" />
-
           <xs:enumeration value="Greater_Equal" />
           <xs:enumeration value="Less_Equal" />
           <xs:enumeration value="Exists" />
@@ -108,7 +98,6 @@
       <xs:element name="FindFirstSpecificMembers">
         <xs:complexType>
           <xs:sequence>
-
             <xs:element minOccurs="0" maxOccurs="1" name="domainID" type="xs:string" />
             <xs:element minOccurs="0" maxOccurs="1" name="attributeName" type="xs:string" />
             <xs:element minOccurs="0" maxOccurs="1" name="searchString" type="xs:string" />
@@ -118,7 +107,6 @@
         </xs:complexType>
       </xs:element>
       <xs:element name="FindFirstSpecificMembersResponse">
-
         <xs:complexType>
           <xs:sequence>
             <xs:element minOccurs="1" maxOccurs="1" name="FindFirstSpecificMembersResult" type="xs:boolean" />
@@ -128,7 +116,6 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-
       <xs:element name="FindNextMembers">
         <xs:complexType>
           <xs:sequence>
@@ -138,7 +125,6 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-
       <xs:element name="FindNextMembersResponse">
         <xs:complexType>
           <xs:sequence>
@@ -148,7 +134,6 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-
       <xs:element name="FindPreviousMembers">
         <xs:complexType>
           <xs:sequence>
@@ -158,7 +143,6 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-
       <xs:element name="FindPreviousMembersResponse">
         <xs:complexType>
           <xs:sequence>
@@ -168,7 +152,6 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-
       <xs:element name="FindSeekMembers">
         <xs:complexType>
           <xs:sequence>
@@ -178,7 +161,6 @@
             <xs:element minOccurs="1" maxOccurs="1" name="count" type="xs:int" />
           </xs:sequence>
         </xs:complexType>
-
       </xs:element>
       <xs:element name="FindSeekMembersResponse">
         <xs:complexType>
@@ -188,7 +170,6 @@
             <xs:element minOccurs="0" maxOccurs="1" name="memberList" type="s0:ArrayOfMemberInfo" />
           </xs:sequence>
         </xs:complexType>
-
       </xs:element>
       <xs:element name="GetSimiasInformation">
         <xs:complexType />
@@ -198,7 +179,6 @@
           <xs:sequence>
             <xs:element minOccurs="0" maxOccurs="1" name="GetSimiasInformationResult" type="xs:string" />
           </xs:sequence>
-
         </xs:complexType>
       </xs:element>
       <xs:element name="GetDomainInformation">
@@ -208,7 +188,6 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-
       <xs:complexType name="DomainInformation">
         <xs:sequence>
           <xs:element minOccurs="1" maxOccurs="1" name="Type" type="s0:DomainType" />
@@ -218,7 +197,6 @@
           <xs:element minOccurs="0" maxOccurs="1" name="Description" type="xs:string" />
           <xs:element minOccurs="0" maxOccurs="1" name="ID" type="xs:string" />
           <xs:element minOccurs="0" maxOccurs="1" name="MemberUserID" type="xs:string" />
-
           <xs:element minOccurs="0" maxOccurs="1" name="MemberName" type="xs:string" />
           <xs:element minOccurs="0" maxOccurs="1" name="RemoteUrl" type="xs:string" />
           <xs:element minOccurs="0" maxOccurs="1" name="POBoxID" type="xs:string" />
@@ -228,7 +206,6 @@
           <xs:element minOccurs="1" maxOccurs="1" name="IsDefault" type="xs:boolean" />
           <xs:element minOccurs="1" maxOccurs="1" name="StatusCode" type="s0:StatusCodes" />
         </xs:sequence>
-
       </xs:complexType>
       <xs:simpleType name="DomainType">
         <xs:restriction base="xs:string">
@@ -238,7 +215,6 @@
           <xs:enumeration value="None" />
         </xs:restriction>
       </xs:simpleType>
-
       <xs:simpleType name="StatusCodes">
         <xs:restriction base="xs:string">
           <xs:enumeration value="Success" />
@@ -248,7 +224,6 @@
           <xs:enumeration value="AmbiguousUser" />
           <xs:enumeration value="InvalidCredentials" />
           <xs:enumeration value="InvalidPassword" />
-
           <xs:enumeration value="AccountDisabled" />
           <xs:enumeration value="AccountLockout" />
           <xs:enumeration value="SimiasLoginDisabled" />
@@ -258,7 +233,6 @@
           <xs:enumeration value="Timeout" />
           <xs:enumeration value="Unknown" />
         </xs:restriction>
-
       </xs:simpleType>
       <xs:element name="GetDomainInformationResponse">
         <xs:complexType>
@@ -268,7 +242,6 @@
         </xs:complexType>
       </xs:element>
       <xs:element name="GetDomains">
-
         <xs:complexType>
           <xs:sequence>
             <xs:element minOccurs="1" maxOccurs="1" name="onlySlaves" type="xs:boolean" />
@@ -278,7 +251,6 @@
       <xs:complexType name="ArrayOfDomainInformation">
         <xs:sequence>
           <xs:element minOccurs="0" maxOccurs="unbounded" name="DomainInformation" nillable="true" type="s0:DomainInformation" />
-
         </xs:sequence>
       </xs:complexType>
       <xs:element name="GetDomainsResponse">
@@ -288,7 +260,6 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-
       <xs:element name="LoginToRemoteDomain">
         <xs:complexType>
           <xs:sequence>
@@ -298,7 +269,6 @@
         </xs:complexType>
       </xs:element>
       <xs:complexType name="Status">
-
         <xs:sequence>
           <xs:element minOccurs="1" maxOccurs="1" name="statusCode" type="s0:StatusCodes" />
           <xs:element minOccurs="0" maxOccurs="1" name="DomainID" type="xs:string" />
@@ -308,7 +278,6 @@
           <xs:element minOccurs="0" maxOccurs="1" name="ExceptionMessage" type="xs:string" />
           <xs:element minOccurs="1" maxOccurs="1" name="TotalGraceLogins" type="xs:int" />
           <xs:element minOccurs="1" maxOccurs="1" name="RemainingGraceLogins" type="xs:int" />
-
         </xs:sequence>
       </xs:complexType>
       <xs:element name="LoginToRemoteDomainResponse">
@@ -318,7 +287,6 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-
       <xs:element name="LogoutFromRemoteDomain">
         <xs:complexType>
           <xs:sequence>
@@ -328,7 +296,6 @@
       </xs:element>
       <xs:element name="LogoutFromRemoteDomainResponse">
         <xs:complexType>
-
           <xs:sequence>
             <xs:element minOccurs="0" maxOccurs="1" name="LogoutFromRemoteDomainResult" type="s0:Status" />
           </xs:sequence>
@@ -338,7 +305,6 @@
         <xs:complexType>
           <xs:sequence>
             <xs:element minOccurs="0" maxOccurs="1" name="domainID" type="xs:string" />
-
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -348,7 +314,6 @@
       <xs:element name="IsDomainActive">
         <xs:complexType>
           <xs:sequence>
-
             <xs:element minOccurs="0" maxOccurs="1" name="domainID" type="xs:string" />
           </xs:sequence>
         </xs:complexType>
@@ -358,7 +323,6 @@
           <xs:sequence>
             <xs:element minOccurs="1" maxOccurs="1" name="IsDomainActiveResult" type="xs:boolean" />
           </xs:sequence>
-
         </xs:complexType>
       </xs:element>
       <xs:element name="SetDomainActive">
@@ -368,7 +332,6 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-
       <xs:element name="SetDomainActiveResponse">
         <xs:complexType>
           <xs:sequence>
@@ -378,7 +341,6 @@
       </xs:element>
       <xs:element name="SetDomainInactive">
         <xs:complexType>
-
           <xs:sequence>
             <xs:element minOccurs="0" maxOccurs="1" name="domainID" type="xs:string" />
           </xs:sequence>
@@ -388,7 +350,6 @@
         <xs:complexType>
           <xs:sequence>
             <xs:element minOccurs="1" maxOccurs="1" name="SetDomainInactiveResult" type="xs:int" />
-
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -398,7 +359,6 @@
             <xs:element minOccurs="0" maxOccurs="1" name="domainID" type="xs:string" />
             <xs:element minOccurs="0" maxOccurs="1" name="memberID" type="xs:string" />
           </xs:sequence>
-
         </xs:complexType>
       </xs:element>
       <xs:element name="ValidCredentialsResponse">
@@ -408,7 +368,6 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-
       <xs:simpleType name="CredentialType">
         <xs:restriction base="xs:string">
           <xs:enumeration value="None" />
@@ -418,7 +377,6 @@
         </xs:restriction>
       </xs:simpleType>
       <xs:element name="SetDomainCredentials">
-
         <xs:complexType>
           <xs:sequence>
             <xs:element minOccurs="0" maxOccurs="1" name="domainID" type="xs:string" />
@@ -428,7 +386,6 @@
         </xs:complexType>
       </xs:element>
       <xs:element name="SetDomainCredentialsResponse">
-
         <xs:complexType />
       </xs:element>
       <xs:element name="GetDomainCredentials">
@@ -438,7 +395,6 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-
       <xs:element name="GetDomainCredentialsResponse">
         <xs:complexType>
           <xs:sequence>
@@ -448,7 +404,6 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-
       <xs:element name="ConnectToDomain">
         <xs:complexType>
           <xs:sequence>
@@ -458,7 +413,6 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-
       <xs:element name="ConnectToDomainResponse">
         <xs:complexType>
           <xs:sequence>
@@ -468,7 +422,6 @@
       </xs:element>
       <xs:element name="LeaveDomain">
         <xs:complexType>
-
           <xs:sequence>
             <xs:element minOccurs="0" maxOccurs="1" name="DomainID" type="xs:string" />
             <xs:element minOccurs="1" maxOccurs="1" name="LocalOnly" type="xs:boolean" />
@@ -478,7 +431,6 @@
       <xs:element name="LeaveDomainResponse">
         <xs:complexType />
       </xs:element>
-
       <xs:element name="SetDefaultDomain">
         <xs:complexType>
           <xs:sequence>
@@ -488,7 +440,6 @@
       </xs:element>
       <xs:element name="SetDefaultDomainResponse">
         <xs:complexType />
-
       </xs:element>
       <xs:element name="GetDefaultDomainID">
         <xs:complexType />
@@ -498,7 +449,6 @@
           <xs:sequence>
             <xs:element minOccurs="0" maxOccurs="1" name="GetDefaultDomainIDResult" type="xs:string" />
           </xs:sequence>
-
         </xs:complexType>
       </xs:element>
       <xs:element name="GetCertificate">
@@ -508,7 +458,6 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-
       <xs:element name="GetCertificateResponse">
         <xs:complexType>
           <xs:sequence>
@@ -518,7 +467,6 @@
       </xs:element>
       <xs:element name="StoreCertificate">
         <xs:complexType>
-
           <xs:sequence>
             <xs:element minOccurs="0" maxOccurs="1" name="certificate" type="xs:base64Binary" />
             <xs:element minOccurs="0" maxOccurs="1" name="host" type="xs:string" />
@@ -528,7 +476,6 @@
       <xs:element name="StoreCertificateResponse">
         <xs:complexType />
       </xs:element>
-
       <xs:element name="GetInvalidSyncFilenameChars">
         <xs:complexType />
       </xs:element>
@@ -538,7 +485,6 @@
         </xs:sequence>
       </xs:complexType>
       <xs:element name="GetInvalidSyncFilenameCharsResponse">
-
         <xs:complexType>
           <xs:sequence>
             <xs:element minOccurs="0" maxOccurs="1" name="GetInvalidSyncFilenameCharsResult" type="s0:ArrayOfChar" />
@@ -548,7 +494,6 @@
       <xs:element name="SetDomainHostAddress">
         <xs:complexType>
           <xs:sequence>
-
             <xs:element minOccurs="0" maxOccurs="1" name="domainID" type="xs:string" />
             <xs:element minOccurs="0" maxOccurs="1" name="hostAddress" type="xs:string" />
           </xs:sequence>
@@ -558,7 +503,23 @@
         <xs:complexType>
           <xs:sequence>
             <xs:element minOccurs="1" maxOccurs="1" name="SetDomainHostAddressResult" type="xs:boolean" />
-
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetProxyAddress">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="hostUri" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="proxyUri" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="proxyUser" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="proxyPassword" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetProxyAddressResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="SetProxyAddressResult" type="xs:boolean" />
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -568,7 +529,6 @@
       <xs:element name="Status" type="s0:Status" />
       <xs:element name="boolean" type="xs:boolean" />
       <xs:element name="int" type="xs:int" />
-
       <xs:element name="base64Binary" type="xs:base64Binary" />
       <xs:element name="ArrayOfChar" type="s0:ArrayOfChar" />
     </xs:schema>
@@ -578,7 +538,6 @@
   </message>
   <message name="PingSimiasSoapOut">
     <part name="parameters" element="s0:PingSimiasResponse" />
-
   </message>
   <message name="AddMemberToDomainSoapIn">
     <part name="parameters" element="s0:AddMemberToDomain" />
@@ -588,7 +547,6 @@
   </message>
   <message name="RemoveMemberFromDomainSoapIn">
     <part name="parameters" element="s0:RemoveMemberFromDomain" />
-
   </message>
   <message name="RemoveMemberFromDomainSoapOut">
     <part name="parameters" element="s0:RemoveMemberFromDomainResponse" />
@@ -598,7 +556,6 @@
   </message>
   <message name="FindCloseMembersSoapOut">
     <part name="parameters" element="s0:FindCloseMembersResponse" />
-
   </message>
   <message name="FindFirstMembersSoapIn">
     <part name="parameters" element="s0:FindFirstMembers" />
@@ -608,7 +565,6 @@
   </message>
   <message name="FindFirstSpecificMembersSoapIn">
     <part name="parameters" element="s0:FindFirstSpecificMembers" />
-
   </message>
   <message name="FindFirstSpecificMembersSoapOut">
     <part name="parameters" element="s0:FindFirstSpecificMembersResponse" />
@@ -618,7 +574,6 @@
   </message>
   <message name="FindNextMembersSoapOut">
     <part name="parameters" element="s0:FindNextMembersResponse" />
-
   </message>
   <message name="FindPreviousMembersSoapIn">
     <part name="parameters" element="s0:FindPreviousMembers" />
@@ -628,7 +583,6 @@
   </message>
   <message name="FindSeekMembersSoapIn">
     <part name="parameters" element="s0:FindSeekMembers" />
-
   </message>
   <message name="FindSeekMembersSoapOut">
     <part name="parameters" element="s0:FindSeekMembersResponse" />
@@ -638,7 +592,6 @@
   </message>
   <message name="GetSimiasInformationSoapOut">
     <part name="parameters" element="s0:GetSimiasInformationResponse" />
-
   </message>
   <message name="GetDomainInformationSoapIn">
     <part name="parameters" element="s0:GetDomainInformation" />
@@ -648,7 +601,6 @@
   </message>
   <message name="GetDomainsSoapIn">
     <part name="parameters" element="s0:GetDomains" />
-
   </message>
   <message name="GetDomainsSoapOut">
     <part name="parameters" element="s0:GetDomainsResponse" />
@@ -658,7 +610,6 @@
   </message>
   <message name="LoginToRemoteDomainSoapOut">
     <part name="parameters" element="s0:LoginToRemoteDomainResponse" />
-
   </message>
   <message name="LogoutFromRemoteDomainSoapIn">
     <part name="parameters" element="s0:LogoutFromRemoteDomain" />
@@ -668,7 +619,6 @@
   </message>
   <message name="DisableDomainAutoLoginSoapIn">
     <part name="parameters" element="s0:DisableDomainAutoLogin" />
-
   </message>
   <message name="DisableDomainAutoLoginSoapOut">
     <part name="parameters" element="s0:DisableDomainAutoLoginResponse" />
@@ -678,7 +628,6 @@
   </message>
   <message name="IsDomainActiveSoapOut">
     <part name="parameters" element="s0:IsDomainActiveResponse" />
-
   </message>
   <message name="SetDomainActiveSoapIn">
     <part name="parameters" element="s0:SetDomainActive" />
@@ -688,7 +637,6 @@
   </message>
   <message name="SetDomainInactiveSoapIn">
     <part name="parameters" element="s0:SetDomainInactive" />
-
   </message>
   <message name="SetDomainInactiveSoapOut">
     <part name="parameters" element="s0:SetDomainInactiveResponse" />
@@ -698,7 +646,6 @@
   </message>
   <message name="ValidCredentialsSoapOut">
     <part name="parameters" element="s0:ValidCredentialsResponse" />
-
   </message>
   <message name="SetDomainCredentialsSoapIn">
     <part name="parameters" element="s0:SetDomainCredentials" />
@@ -708,7 +655,6 @@
   </message>
   <message name="GetDomainCredentialsSoapIn">
     <part name="parameters" element="s0:GetDomainCredentials" />
-
   </message>
   <message name="GetDomainCredentialsSoapOut">
     <part name="parameters" element="s0:GetDomainCredentialsResponse" />
@@ -718,7 +664,6 @@
   </message>
   <message name="ConnectToDomainSoapOut">
     <part name="parameters" element="s0:ConnectToDomainResponse" />
-
   </message>
   <message name="LeaveDomainSoapIn">
     <part name="parameters" element="s0:LeaveDomain" />
@@ -728,7 +673,6 @@
   </message>
   <message name="SetDefaultDomainSoapIn">
     <part name="parameters" element="s0:SetDefaultDomain" />
-
   </message>
   <message name="SetDefaultDomainSoapOut">
     <part name="parameters" element="s0:SetDefaultDomainResponse" />
@@ -738,7 +682,6 @@
   </message>
   <message name="GetDefaultDomainIDSoapOut">
     <part name="parameters" element="s0:GetDefaultDomainIDResponse" />
-
   </message>
   <message name="GetCertificateSoapIn">
     <part name="parameters" element="s0:GetCertificate" />
@@ -748,7 +691,6 @@
   </message>
   <message name="StoreCertificateSoapIn">
     <part name="parameters" element="s0:StoreCertificate" />
-
   </message>
   <message name="StoreCertificateSoapOut">
     <part name="parameters" element="s0:StoreCertificateResponse" />
@@ -758,7 +700,6 @@
   </message>
   <message name="GetInvalidSyncFilenameCharsSoapOut">
     <part name="parameters" element="s0:GetInvalidSyncFilenameCharsResponse" />
-
   </message>
   <message name="SetDomainHostAddressSoapIn">
     <part name="parameters" element="s0:SetDomainHostAddress" />
@@ -766,9 +707,14 @@
   <message name="SetDomainHostAddressSoapOut">
     <part name="parameters" element="s0:SetDomainHostAddressResponse" />
   </message>
+  <message name="SetProxyAddressSoapIn">
+    <part name="parameters" element="s0:SetProxyAddress" />
+  </message>
+  <message name="SetProxyAddressSoapOut">
+    <part name="parameters" element="s0:SetProxyAddressResponse" />
+  </message>
   <message name="PingSimiasHttpGetIn" />
   <message name="PingSimiasHttpGetOut" />
-
   <message name="AddMemberToDomainHttpGetIn">
     <part name="DomainID" type="s:string" />
     <part name="MemberName" type="s:string" />
@@ -778,7 +724,6 @@
     <part name="FamilyName" type="s:string" />
   </message>
   <message name="AddMemberToDomainHttpGetOut" />
-
   <message name="RemoveMemberFromDomainHttpGetIn">
     <part name="DomainID" type="s:string" />
     <part name="MemberID" type="s:string" />
@@ -788,7 +733,6 @@
     <part name="domainID" type="s:string" />
     <part name="searchContext" type="s:string" />
   </message>
-
   <message name="FindCloseMembersHttpGetOut" />
   <message name="GetSimiasInformationHttpGetIn" />
   <message name="GetSimiasInformationHttpGetOut">
@@ -798,7 +742,6 @@
     <part name="domainID" type="s:string" />
   </message>
   <message name="GetDomainInformationHttpGetOut">
-
     <part name="Body" element="s0:DomainInformation" />
   </message>
   <message name="GetDomainsHttpGetIn">
@@ -808,7 +751,6 @@
     <part name="Body" element="s0:ArrayOfDomainInformation" />
   </message>
   <message name="LoginToRemoteDomainHttpGetIn">
-
     <part name="domainID" type="s:string" />
     <part name="password" type="s:string" />
   </message>
@@ -818,7 +760,6 @@
   <message name="LogoutFromRemoteDomainHttpGetIn">
     <part name="domainID" type="s:string" />
   </message>
-
   <message name="LogoutFromRemoteDomainHttpGetOut">
     <part name="Body" element="s0:Status" />
   </message>
@@ -828,7 +769,6 @@
   <message name="DisableDomainAutoLoginHttpGetOut" />
   <message name="IsDomainActiveHttpGetIn">
     <part name="domainID" type="s:string" />
-
   </message>
   <message name="IsDomainActiveHttpGetOut">
     <part name="Body" element="s0:boolean" />
@@ -838,7 +778,6 @@
   </message>
   <message name="SetDomainActiveHttpGetOut">
     <part name="Body" element="s0:int" />
-
   </message>
   <message name="SetDomainInactiveHttpGetIn">
     <part name="domainID" type="s:string" />
@@ -848,7 +787,6 @@
   </message>
   <message name="ValidCredentialsHttpGetIn">
     <part name="domainID" type="s:string" />
-
     <part name="memberID" type="s:string" />
   </message>
   <message name="ValidCredentialsHttpGetOut">
@@ -858,7 +796,6 @@
     <part name="UserName" type="s:string" />
     <part name="Password" type="s:string" />
     <part name="Host" type="s:string" />
-
   </message>
   <message name="ConnectToDomainHttpGetOut">
     <part name="Body" element="s0:DomainInformation" />
@@ -868,7 +805,6 @@
     <part name="LocalOnly" type="s:boolean" />
   </message>
   <message name="LeaveDomainHttpGetOut" />
-
   <message name="SetDefaultDomainHttpGetIn">
     <part name="domainID" type="s:string" />
   </message>
@@ -878,7 +814,6 @@
     <part name="Body" element="s0:string" />
   </message>
   <message name="GetCertificateHttpGetIn">
-
     <part name="host" type="s:string" />
   </message>
   <message name="GetCertificateHttpGetOut">
@@ -888,7 +823,6 @@
     <part name="certificate" type="s:base64Binary" />
     <part name="host" type="s:string" />
   </message>
-
   <message name="StoreCertificateHttpGetOut" />
   <message name="GetInvalidSyncFilenameCharsHttpGetIn" />
   <message name="GetInvalidSyncFilenameCharsHttpGetOut">
@@ -898,8 +832,16 @@
     <part name="domainID" type="s:string" />
     <part name="hostAddress" type="s:string" />
   </message>
-
   <message name="SetDomainHostAddressHttpGetOut">
+    <part name="Body" element="s0:boolean" />
+  </message>
+  <message name="SetProxyAddressHttpGetIn">
+    <part name="hostUri" type="s:string" />
+    <part name="proxyUri" type="s:string" />
+    <part name="proxyUser" type="s:string" />
+    <part name="proxyPassword" type="s:string" />
+  </message>
+  <message name="SetProxyAddressHttpGetOut">
     <part name="Body" element="s0:boolean" />
   </message>
   <message name="PingSimiasHttpPostIn" />
@@ -908,7 +850,6 @@
     <part name="DomainID" type="s:string" />
     <part name="MemberName" type="s:string" />
     <part name="MemberID" type="s:string" />
-
     <part name="PublicKey" type="s:string" />
     <part name="GivenName" type="s:string" />
     <part name="FamilyName" type="s:string" />
@@ -918,7 +859,6 @@
     <part name="DomainID" type="s:string" />
     <part name="MemberID" type="s:string" />
   </message>
-
   <message name="RemoveMemberFromDomainHttpPostOut" />
   <message name="FindCloseMembersHttpPostIn">
     <part name="domainID" type="s:string" />
@@ -928,7 +868,6 @@
   <message name="GetSimiasInformationHttpPostIn" />
   <message name="GetSimiasInformationHttpPostOut">
     <part name="Body" element="s0:string" />
-
   </message>
   <message name="GetDomainInformationHttpPostIn">
     <part name="domainID" type="s:string" />
@@ -938,7 +877,6 @@
   </message>
   <message name="GetDomainsHttpPostIn">
     <part name="onlySlaves" type="s:boolean" />
-
   </message>
   <message name="GetDomainsHttpPostOut">
     <part name="Body" element="s0:ArrayOfDomainInformation" />
@@ -948,7 +886,6 @@
     <part name="password" type="s:string" />
   </message>
   <message name="LoginToRemoteDomainHttpPostOut">
-
     <part name="Body" element="s0:Status" />
   </message>
   <message name="LogoutFromRemoteDomainHttpPostIn">
@@ -958,7 +895,6 @@
     <part name="Body" element="s0:Status" />
   </message>
   <message name="DisableDomainAutoLoginHttpPostIn">
-
     <part name="domainID" type="s:string" />
   </message>
   <message name="DisableDomainAutoLoginHttpPostOut" />
@@ -968,7 +904,6 @@
   <message name="IsDomainActiveHttpPostOut">
     <part name="Body" element="s0:boolean" />
   </message>
-
   <message name="SetDomainActiveHttpPostIn">
     <part name="domainID" type="s:string" />
   </message>
@@ -978,7 +913,6 @@
   <message name="SetDomainInactiveHttpPostIn">
     <part name="domainID" type="s:string" />
   </message>
-
   <message name="SetDomainInactiveHttpPostOut">
     <part name="Body" element="s0:int" />
   </message>
@@ -988,7 +922,6 @@
   </message>
   <message name="ValidCredentialsHttpPostOut">
     <part name="Body" element="s0:boolean" />
-
   </message>
   <message name="ConnectToDomainHttpPostIn">
     <part name="UserName" type="s:string" />
@@ -998,7 +931,6 @@
   <message name="ConnectToDomainHttpPostOut">
     <part name="Body" element="s0:DomainInformation" />
   </message>
-
   <message name="LeaveDomainHttpPostIn">
     <part name="DomainID" type="s:string" />
     <part name="LocalOnly" type="s:boolean" />
@@ -1008,7 +940,6 @@
     <part name="domainID" type="s:string" />
   </message>
   <message name="SetDefaultDomainHttpPostOut" />
-
   <message name="GetDefaultDomainIDHttpPostIn" />
   <message name="GetDefaultDomainIDHttpPostOut">
     <part name="Body" element="s0:string" />
@@ -1018,7 +949,6 @@
   </message>
   <message name="GetCertificateHttpPostOut">
     <part name="Body" element="s0:base64Binary" />
-
   </message>
   <message name="StoreCertificateHttpPostIn">
     <part name="certificate" type="s:base64Binary" />
@@ -1028,7 +958,6 @@
   <message name="GetInvalidSyncFilenameCharsHttpPostIn" />
   <message name="GetInvalidSyncFilenameCharsHttpPostOut">
     <part name="Body" element="s0:ArrayOfChar" />
-
   </message>
   <message name="SetDomainHostAddressHttpPostIn">
     <part name="domainID" type="s:string" />
@@ -1037,8 +966,16 @@
   <message name="SetDomainHostAddressHttpPostOut">
     <part name="Body" element="s0:boolean" />
   </message>
+  <message name="SetProxyAddressHttpPostIn">
+    <part name="hostUri" type="s:string" />
+    <part name="proxyUri" type="s:string" />
+    <part name="proxyUser" type="s:string" />
+    <part name="proxyPassword" type="s:string" />
+  </message>
+  <message name="SetProxyAddressHttpPostOut">
+    <part name="Body" element="s0:boolean" />
+  </message>
   <portType name="Simias Web ServiceSoap">
-
     <operation name="PingSimias">
       <input message="s0:PingSimiasSoapIn" />
       <output message="s0:PingSimiasSoapOut" />
@@ -1047,7 +984,6 @@
     <operation name="AddMemberToDomain">
       <input message="s0:AddMemberToDomainSoapIn" />
       <output message="s0:AddMemberToDomainSoapOut" />
-
       <documentation>Add a member to the domain.</documentation>
     </operation>
     <operation name="RemoveMemberFromDomain">
@@ -1056,7 +992,6 @@
       <documentation>Remove a member from the domain.</documentation>
     </operation>
     <operation name="FindCloseMembers">
-
       <input message="s0:FindCloseMembersSoapIn" />
       <output message="s0:FindCloseMembersSoapOut" />
       <documentation>End the search for domain members.</documentation>
@@ -1065,7 +1000,6 @@
       <input message="s0:FindFirstMembersSoapIn" />
       <output message="s0:FindFirstMembersSoapOut" />
       <documentation>Starts a search for all domain members.</documentation>
-
     </operation>
     <operation name="FindFirstSpecificMembers">
       <input message="s0:FindFirstSpecificMembersSoapIn" />
@@ -1074,7 +1008,6 @@
     </operation>
     <operation name="FindNextMembers">
       <input message="s0:FindNextMembersSoapIn" />
-
       <output message="s0:FindNextMembersSoapOut" />
       <documentation>Continues the search for domain members from the current record location.</documentation>
     </operation>
@@ -1083,7 +1016,6 @@
       <output message="s0:FindPreviousMembersSoapOut" />
       <documentation>Continues the search for domain members previous to the current record location.</documentation>
     </operation>
-
     <operation name="FindSeekMembers">
       <input message="s0:FindSeekMembersSoapIn" />
       <output message="s0:FindSeekMembersSoapOut" />
@@ -1092,7 +1024,6 @@
     <operation name="GetSimiasInformation">
       <input message="s0:GetSimiasInformationSoapIn" />
       <output message="s0:GetSimiasInformationSoapOut" />
-
       <documentation>GetSimiasInformation</documentation>
     </operation>
     <operation name="GetDomainInformation">
@@ -1101,7 +1032,6 @@
       <documentation>GetDomainInformation</documentation>
     </operation>
     <operation name="GetDomains">
-
       <input message="s0:GetDomainsSoapIn" />
       <output message="s0:GetDomainsSoapOut" />
       <documentation>Get a list of local domains</documentation>
@@ -1110,7 +1040,6 @@
       <input message="s0:LoginToRemoteDomainSoapIn" />
       <output message="s0:LoginToRemoteDomainSoapOut" />
       <documentation>Login or authenticate to a remote domain</documentation>
-
     </operation>
     <operation name="LogoutFromRemoteDomain">
       <input message="s0:LogoutFromRemoteDomainSoapIn" />
@@ -1119,7 +1048,6 @@
     </operation>
     <operation name="DisableDomainAutoLogin">
       <input message="s0:DisableDomainAutoLoginSoapIn" />
-
       <output message="s0:DisableDomainAutoLoginSoapOut" />
       <documentation>Disable automatic authentication to the specified domain</documentation>
     </operation>
@@ -1128,7 +1056,6 @@
       <output message="s0:IsDomainActiveSoapOut" />
       <documentation>WebMethod to check if a domain is active</documentation>
     </operation>
-
     <operation name="SetDomainActive">
       <input message="s0:SetDomainActiveSoapIn" />
       <output message="s0:SetDomainActiveSoapOut" />
@@ -1137,7 +1064,6 @@
     <operation name="SetDomainInactive">
       <input message="s0:SetDomainInactiveSoapIn" />
       <output message="s0:SetDomainInactiveSoapOut" />
-
       <documentation>SetDomainInactive - disables remote synchronization</documentation>
     </operation>
     <operation name="ValidCredentials">
@@ -1146,7 +1072,6 @@
       <documentation>ValidCredentials</documentation>
     </operation>
     <operation name="SetDomainCredentials">
-
       <input message="s0:SetDomainCredentialsSoapIn" />
       <output message="s0:SetDomainCredentialsSoapOut" />
       <documentation>Sets domain credentials in the local store</documentation>
@@ -1155,7 +1080,6 @@
       <input message="s0:GetDomainCredentialsSoapIn" />
       <output message="s0:GetDomainCredentialsSoapOut" />
       <documentation>Get the saved credentials from a domain</documentation>
-
     </operation>
     <operation name="ConnectToDomain">
       <input message="s0:ConnectToDomainSoapIn" />
@@ -1164,7 +1088,6 @@
     </operation>
     <operation name="LeaveDomain">
       <input message="s0:LeaveDomainSoapIn" />
-
       <output message="s0:LeaveDomainSoapOut" />
       <documentation>Removes a domain account from the workstation</documentation>
     </operation>
@@ -1173,7 +1096,6 @@
       <output message="s0:SetDefaultDomainSoapOut" />
       <documentation>Change the default domain to the specified domain ID</documentation>
     </operation>
-
     <operation name="GetDefaultDomainID">
       <input message="s0:GetDefaultDomainIDSoapIn" />
       <output message="s0:GetDefaultDomainIDSoapOut" />
@@ -1182,7 +1104,6 @@
     <operation name="GetCertificate">
       <input message="s0:GetCertificateSoapIn" />
       <output message="s0:GetCertificateSoapOut" />
-
       <documentation>Get the certificate of the specified host.</documentation>
     </operation>
     <operation name="StoreCertificate">
@@ -1191,7 +1112,6 @@
       <documentation>Store the certificate for the specified host.</documentation>
     </operation>
     <operation name="GetInvalidSyncFilenameChars">
-
       <input message="s0:GetInvalidSyncFilenameCharsSoapIn" />
       <output message="s0:GetInvalidSyncFilenameCharsSoapOut" />
       <documentation>Returns the characters which cannot be used for filenames in the Simias namespace (files and folders that contain any of these characters cannot be synchronized with iFolder and conflicts will be generated).</documentation>
@@ -1200,7 +1120,11 @@
       <input message="s0:SetDomainHostAddressSoapIn" />
       <output message="s0:SetDomainHostAddressSoapOut" />
       <documentation>Sets a new server network address for a client.</documentation>
-
+    </operation>
+    <operation name="SetProxyAddress">
+      <input message="s0:SetProxyAddressSoapIn" />
+      <output message="s0:SetProxyAddressSoapOut" />
+      <documentation>Sets a new proxy address for the specified host.</documentation>
     </operation>
   </portType>
   <portType name="Simias Web ServiceHttpGet">
@@ -1209,7 +1133,6 @@
       <output message="s0:PingSimiasHttpGetOut" />
       <documentation>Allows a client to ping to make sure the Web Service is up and running</documentation>
     </operation>
-
     <operation name="AddMemberToDomain">
       <input message="s0:AddMemberToDomainHttpGetIn" />
       <output message="s0:AddMemberToDomainHttpGetOut" />
@@ -1218,7 +1141,6 @@
     <operation name="RemoveMemberFromDomain">
       <input message="s0:RemoveMemberFromDomainHttpGetIn" />
       <output message="s0:RemoveMemberFromDomainHttpGetOut" />
-
       <documentation>Remove a member from the domain.</documentation>
     </operation>
     <operation name="FindCloseMembers">
@@ -1227,7 +1149,6 @@
       <documentation>End the search for domain members.</documentation>
     </operation>
     <operation name="GetSimiasInformation">
-
       <input message="s0:GetSimiasInformationHttpGetIn" />
       <output message="s0:GetSimiasInformationHttpGetOut" />
       <documentation>GetSimiasInformation</documentation>
@@ -1236,7 +1157,6 @@
       <input message="s0:GetDomainInformationHttpGetIn" />
       <output message="s0:GetDomainInformationHttpGetOut" />
       <documentation>GetDomainInformation</documentation>
-
     </operation>
     <operation name="GetDomains">
       <input message="s0:GetDomainsHttpGetIn" />
@@ -1245,7 +1165,6 @@
     </operation>
     <operation name="LoginToRemoteDomain">
       <input message="s0:LoginToRemoteDomainHttpGetIn" />
-
       <output message="s0:LoginToRemoteDomainHttpGetOut" />
       <documentation>Login or authenticate to a remote domain</documentation>
     </operation>
@@ -1254,7 +1173,6 @@
       <output message="s0:LogoutFromRemoteDomainHttpGetOut" />
       <documentation>Logout from a remote domain</documentation>
     </operation>
-
     <operation name="DisableDomainAutoLogin">
       <input message="s0:DisableDomainAutoLoginHttpGetIn" />
       <output message="s0:DisableDomainAutoLoginHttpGetOut" />
@@ -1263,7 +1181,6 @@
     <operation name="IsDomainActive">
       <input message="s0:IsDomainActiveHttpGetIn" />
       <output message="s0:IsDomainActiveHttpGetOut" />
-
       <documentation>WebMethod to check if a domain is active</documentation>
     </operation>
     <operation name="SetDomainActive">
@@ -1272,7 +1189,6 @@
       <documentation>SetDomainActive - enables synchronization to the remote server</documentation>
     </operation>
     <operation name="SetDomainInactive">
-
       <input message="s0:SetDomainInactiveHttpGetIn" />
       <output message="s0:SetDomainInactiveHttpGetOut" />
       <documentation>SetDomainInactive - disables remote synchronization</documentation>
@@ -1281,7 +1197,6 @@
       <input message="s0:ValidCredentialsHttpGetIn" />
       <output message="s0:ValidCredentialsHttpGetOut" />
       <documentation>ValidCredentials</documentation>
-
     </operation>
     <operation name="ConnectToDomain">
       <input message="s0:ConnectToDomainHttpGetIn" />
@@ -1290,7 +1205,6 @@
     </operation>
     <operation name="LeaveDomain">
       <input message="s0:LeaveDomainHttpGetIn" />
-
       <output message="s0:LeaveDomainHttpGetOut" />
       <documentation>Removes a domain account from the workstation</documentation>
     </operation>
@@ -1299,7 +1213,6 @@
       <output message="s0:SetDefaultDomainHttpGetOut" />
       <documentation>Change the default domain to the specified domain ID</documentation>
     </operation>
-
     <operation name="GetDefaultDomainID">
       <input message="s0:GetDefaultDomainIDHttpGetIn" />
       <output message="s0:GetDefaultDomainIDHttpGetOut" />
@@ -1308,7 +1221,6 @@
     <operation name="GetCertificate">
       <input message="s0:GetCertificateHttpGetIn" />
       <output message="s0:GetCertificateHttpGetOut" />
-
       <documentation>Get the certificate of the specified host.</documentation>
     </operation>
     <operation name="StoreCertificate">
@@ -1317,7 +1229,6 @@
       <documentation>Store the certificate for the specified host.</documentation>
     </operation>
     <operation name="GetInvalidSyncFilenameChars">
-
       <input message="s0:GetInvalidSyncFilenameCharsHttpGetIn" />
       <output message="s0:GetInvalidSyncFilenameCharsHttpGetOut" />
       <documentation>Returns the characters which cannot be used for filenames in the Simias namespace (files and folders that contain any of these characters cannot be synchronized with iFolder and conflicts will be generated).</documentation>
@@ -1326,7 +1237,11 @@
       <input message="s0:SetDomainHostAddressHttpGetIn" />
       <output message="s0:SetDomainHostAddressHttpGetOut" />
       <documentation>Sets a new server network address for a client.</documentation>
-
+    </operation>
+    <operation name="SetProxyAddress">
+      <input message="s0:SetProxyAddressHttpGetIn" />
+      <output message="s0:SetProxyAddressHttpGetOut" />
+      <documentation>Sets a new proxy address for the specified host.</documentation>
     </operation>
   </portType>
   <portType name="Simias Web ServiceHttpPost">
@@ -1335,7 +1250,6 @@
       <output message="s0:PingSimiasHttpPostOut" />
       <documentation>Allows a client to ping to make sure the Web Service is up and running</documentation>
     </operation>
-
     <operation name="AddMemberToDomain">
       <input message="s0:AddMemberToDomainHttpPostIn" />
       <output message="s0:AddMemberToDomainHttpPostOut" />
@@ -1344,7 +1258,6 @@
     <operation name="RemoveMemberFromDomain">
       <input message="s0:RemoveMemberFromDomainHttpPostIn" />
       <output message="s0:RemoveMemberFromDomainHttpPostOut" />
-
       <documentation>Remove a member from the domain.</documentation>
     </operation>
     <operation name="FindCloseMembers">
@@ -1353,7 +1266,6 @@
       <documentation>End the search for domain members.</documentation>
     </operation>
     <operation name="GetSimiasInformation">
-
       <input message="s0:GetSimiasInformationHttpPostIn" />
       <output message="s0:GetSimiasInformationHttpPostOut" />
       <documentation>GetSimiasInformation</documentation>
@@ -1362,7 +1274,6 @@
       <input message="s0:GetDomainInformationHttpPostIn" />
       <output message="s0:GetDomainInformationHttpPostOut" />
       <documentation>GetDomainInformation</documentation>
-
     </operation>
     <operation name="GetDomains">
       <input message="s0:GetDomainsHttpPostIn" />
@@ -1371,7 +1282,6 @@
     </operation>
     <operation name="LoginToRemoteDomain">
       <input message="s0:LoginToRemoteDomainHttpPostIn" />
-
       <output message="s0:LoginToRemoteDomainHttpPostOut" />
       <documentation>Login or authenticate to a remote domain</documentation>
     </operation>
@@ -1380,7 +1290,6 @@
       <output message="s0:LogoutFromRemoteDomainHttpPostOut" />
       <documentation>Logout from a remote domain</documentation>
     </operation>
-
     <operation name="DisableDomainAutoLogin">
       <input message="s0:DisableDomainAutoLoginHttpPostIn" />
       <output message="s0:DisableDomainAutoLoginHttpPostOut" />
@@ -1389,7 +1298,6 @@
     <operation name="IsDomainActive">
       <input message="s0:IsDomainActiveHttpPostIn" />
       <output message="s0:IsDomainActiveHttpPostOut" />
-
       <documentation>WebMethod to check if a domain is active</documentation>
     </operation>
     <operation name="SetDomainActive">
@@ -1398,7 +1306,6 @@
       <documentation>SetDomainActive - enables synchronization to the remote server</documentation>
     </operation>
     <operation name="SetDomainInactive">
-
       <input message="s0:SetDomainInactiveHttpPostIn" />
       <output message="s0:SetDomainInactiveHttpPostOut" />
       <documentation>SetDomainInactive - disables remote synchronization</documentation>
@@ -1407,7 +1314,6 @@
       <input message="s0:ValidCredentialsHttpPostIn" />
       <output message="s0:ValidCredentialsHttpPostOut" />
       <documentation>ValidCredentials</documentation>
-
     </operation>
     <operation name="ConnectToDomain">
       <input message="s0:ConnectToDomainHttpPostIn" />
@@ -1416,7 +1322,6 @@
     </operation>
     <operation name="LeaveDomain">
       <input message="s0:LeaveDomainHttpPostIn" />
-
       <output message="s0:LeaveDomainHttpPostOut" />
       <documentation>Removes a domain account from the workstation</documentation>
     </operation>
@@ -1425,7 +1330,6 @@
       <output message="s0:SetDefaultDomainHttpPostOut" />
       <documentation>Change the default domain to the specified domain ID</documentation>
     </operation>
-
     <operation name="GetDefaultDomainID">
       <input message="s0:GetDefaultDomainIDHttpPostIn" />
       <output message="s0:GetDefaultDomainIDHttpPostOut" />
@@ -1434,7 +1338,6 @@
     <operation name="GetCertificate">
       <input message="s0:GetCertificateHttpPostIn" />
       <output message="s0:GetCertificateHttpPostOut" />
-
       <documentation>Get the certificate of the specified host.</documentation>
     </operation>
     <operation name="StoreCertificate">
@@ -1443,7 +1346,6 @@
       <documentation>Store the certificate for the specified host.</documentation>
     </operation>
     <operation name="GetInvalidSyncFilenameChars">
-
       <input message="s0:GetInvalidSyncFilenameCharsHttpPostIn" />
       <output message="s0:GetInvalidSyncFilenameCharsHttpPostOut" />
       <documentation>Returns the characters which cannot be used for filenames in the Simias namespace (files and folders that contain any of these characters cannot be synchronized with iFolder and conflicts will be generated).</documentation>
@@ -1452,7 +1354,11 @@
       <input message="s0:SetDomainHostAddressHttpPostIn" />
       <output message="s0:SetDomainHostAddressHttpPostOut" />
       <documentation>Sets a new server network address for a client.</documentation>
-
+    </operation>
+    <operation name="SetProxyAddress">
+      <input message="s0:SetProxyAddressHttpPostIn" />
+      <output message="s0:SetProxyAddressHttpPostOut" />
+      <documentation>Sets a new proxy address for the specified host.</documentation>
     </operation>
   </portType>
   <binding name="Simias Web ServiceSoap" type="s0:Simias Web ServiceSoap">
@@ -1462,7 +1368,6 @@
       <input>
         <soap:body use="literal" />
       </input>
-
       <output>
         <soap:body use="literal" />
       </output>
@@ -1472,7 +1377,6 @@
       <input>
         <soap:body use="literal" />
       </input>
-
       <output>
         <soap:body use="literal" />
       </output>
@@ -1482,7 +1386,6 @@
       <input>
         <soap:body use="literal" />
       </input>
-
       <output>
         <soap:body use="literal" />
       </output>
@@ -1492,7 +1395,6 @@
       <input>
         <soap:body use="literal" />
       </input>
-
       <output>
         <soap:body use="literal" />
       </output>
@@ -1502,7 +1404,6 @@
       <input>
         <soap:body use="literal" />
       </input>
-
       <output>
         <soap:body use="literal" />
       </output>
@@ -1512,7 +1413,6 @@
       <input>
         <soap:body use="literal" />
       </input>
-
       <output>
         <soap:body use="literal" />
       </output>
@@ -1522,7 +1422,6 @@
       <input>
         <soap:body use="literal" />
       </input>
-
       <output>
         <soap:body use="literal" />
       </output>
@@ -1532,7 +1431,6 @@
       <input>
         <soap:body use="literal" />
       </input>
-
       <output>
         <soap:body use="literal" />
       </output>
@@ -1542,7 +1440,6 @@
       <input>
         <soap:body use="literal" />
       </input>
-
       <output>
         <soap:body use="literal" />
       </output>
@@ -1552,7 +1449,6 @@
       <input>
         <soap:body use="literal" />
       </input>
-
       <output>
         <soap:body use="literal" />
       </output>
@@ -1562,7 +1458,6 @@
       <input>
         <soap:body use="literal" />
       </input>
-
       <output>
         <soap:body use="literal" />
       </output>
@@ -1572,7 +1467,6 @@
       <input>
         <soap:body use="literal" />
       </input>
-
       <output>
         <soap:body use="literal" />
       </output>
@@ -1582,7 +1476,6 @@
       <input>
         <soap:body use="literal" />
       </input>
-
       <output>
         <soap:body use="literal" />
       </output>
@@ -1592,7 +1485,6 @@
       <input>
         <soap:body use="literal" />
       </input>
-
       <output>
         <soap:body use="literal" />
       </output>
@@ -1602,7 +1494,6 @@
       <input>
         <soap:body use="literal" />
       </input>
-
       <output>
         <soap:body use="literal" />
       </output>
@@ -1612,7 +1503,6 @@
       <input>
         <soap:body use="literal" />
       </input>
-
       <output>
         <soap:body use="literal" />
       </output>
@@ -1622,7 +1512,6 @@
       <input>
         <soap:body use="literal" />
       </input>
-
       <output>
         <soap:body use="literal" />
       </output>
@@ -1632,7 +1521,6 @@
       <input>
         <soap:body use="literal" />
       </input>
-
       <output>
         <soap:body use="literal" />
       </output>
@@ -1642,7 +1530,6 @@
       <input>
         <soap:body use="literal" />
       </input>
-
       <output>
         <soap:body use="literal" />
       </output>
@@ -1652,7 +1539,6 @@
       <input>
         <soap:body use="literal" />
       </input>
-
       <output>
         <soap:body use="literal" />
       </output>
@@ -1662,7 +1548,6 @@
       <input>
         <soap:body use="literal" />
       </input>
-
       <output>
         <soap:body use="literal" />
       </output>
@@ -1672,7 +1557,6 @@
       <input>
         <soap:body use="literal" />
       </input>
-
       <output>
         <soap:body use="literal" />
       </output>
@@ -1682,7 +1566,6 @@
       <input>
         <soap:body use="literal" />
       </input>
-
       <output>
         <soap:body use="literal" />
       </output>
@@ -1692,7 +1575,6 @@
       <input>
         <soap:body use="literal" />
       </input>
-
       <output>
         <soap:body use="literal" />
       </output>
@@ -1702,7 +1584,6 @@
       <input>
         <soap:body use="literal" />
       </input>
-
       <output>
         <soap:body use="literal" />
       </output>
@@ -1712,7 +1593,6 @@
       <input>
         <soap:body use="literal" />
       </input>
-
       <output>
         <soap:body use="literal" />
       </output>
@@ -1722,7 +1602,6 @@
       <input>
         <soap:body use="literal" />
       </input>
-
       <output>
         <soap:body use="literal" />
       </output>
@@ -1732,7 +1611,6 @@
       <input>
         <soap:body use="literal" />
       </input>
-
       <output>
         <soap:body use="literal" />
       </output>
@@ -1742,7 +1620,15 @@
       <input>
         <soap:body use="literal" />
       </input>
-
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="SetProxyAddress">
+      <soap:operation soapAction="http://novell.com/simias/web/SetProxyAddress" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
       <output>
         <soap:body use="literal" />
       </output>
@@ -1752,7 +1638,6 @@
     <http:binding verb="GET" />
     <operation name="PingSimias">
       <http:operation location="/PingSimias" />
-
       <input>
         <http:urlEncoded />
       </input>
@@ -1762,7 +1647,6 @@
       <http:operation location="/AddMemberToDomain" />
       <input>
         <http:urlEncoded />
-
       </input>
       <output />
     </operation>
@@ -1772,7 +1656,6 @@
         <http:urlEncoded />
       </input>
       <output />
-
     </operation>
     <operation name="FindCloseMembers">
       <http:operation location="/FindCloseMembers" />
@@ -1782,7 +1665,6 @@
       <output />
     </operation>
     <operation name="GetSimiasInformation">
-
       <http:operation location="/GetSimiasInformation" />
       <input>
         <http:urlEncoded />
@@ -1792,7 +1674,6 @@
       </output>
     </operation>
     <operation name="GetDomainInformation">
-
       <http:operation location="/GetDomainInformation" />
       <input>
         <http:urlEncoded />
@@ -1802,7 +1683,6 @@
       </output>
     </operation>
     <operation name="GetDomains">
-
       <http:operation location="/GetDomains" />
       <input>
         <http:urlEncoded />
@@ -1812,7 +1692,6 @@
       </output>
     </operation>
     <operation name="LoginToRemoteDomain">
-
       <http:operation location="/LoginToRemoteDomain" />
       <input>
         <http:urlEncoded />
@@ -1822,7 +1701,6 @@
       </output>
     </operation>
     <operation name="LogoutFromRemoteDomain">
-
       <http:operation location="/LogoutFromRemoteDomain" />
       <input>
         <http:urlEncoded />
@@ -1832,7 +1710,6 @@
       </output>
     </operation>
     <operation name="DisableDomainAutoLogin">
-
       <http:operation location="/DisableDomainAutoLogin" />
       <input>
         <http:urlEncoded />
@@ -1842,7 +1719,6 @@
     <operation name="IsDomainActive">
       <http:operation location="/IsDomainActive" />
       <input>
-
         <http:urlEncoded />
       </input>
       <output>
@@ -1852,7 +1728,6 @@
     <operation name="SetDomainActive">
       <http:operation location="/SetDomainActive" />
       <input>
-
         <http:urlEncoded />
       </input>
       <output>
@@ -1862,7 +1737,6 @@
     <operation name="SetDomainInactive">
       <http:operation location="/SetDomainInactive" />
       <input>
-
         <http:urlEncoded />
       </input>
       <output>
@@ -1872,7 +1746,6 @@
     <operation name="ValidCredentials">
       <http:operation location="/ValidCredentials" />
       <input>
-
         <http:urlEncoded />
       </input>
       <output>
@@ -1882,7 +1755,6 @@
     <operation name="ConnectToDomain">
       <http:operation location="/ConnectToDomain" />
       <input>
-
         <http:urlEncoded />
       </input>
       <output>
@@ -1892,7 +1764,6 @@
     <operation name="LeaveDomain">
       <http:operation location="/LeaveDomain" />
       <input>
-
         <http:urlEncoded />
       </input>
       <output />
@@ -1902,7 +1773,6 @@
       <input>
         <http:urlEncoded />
       </input>
-
       <output />
     </operation>
     <operation name="GetDefaultDomainID">
@@ -1912,7 +1782,6 @@
       </input>
       <output>
         <mime:mimeXml part="Body" />
-
       </output>
     </operation>
     <operation name="GetCertificate">
@@ -1922,7 +1791,6 @@
       </input>
       <output>
         <mime:mimeXml part="Body" />
-
       </output>
     </operation>
     <operation name="StoreCertificate">
@@ -1932,7 +1800,6 @@
       </input>
       <output />
     </operation>
-
     <operation name="GetInvalidSyncFilenameChars">
       <http:operation location="/GetInvalidSyncFilenameChars" />
       <input>
@@ -1942,7 +1809,6 @@
         <mime:mimeXml part="Body" />
       </output>
     </operation>
-
     <operation name="SetDomainHostAddress">
       <http:operation location="/SetDomainHostAddress" />
       <input>
@@ -1952,7 +1818,15 @@
         <mime:mimeXml part="Body" />
       </output>
     </operation>
-
+    <operation name="SetProxyAddress">
+      <http:operation location="/SetProxyAddress" />
+      <input>
+        <http:urlEncoded />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
   </binding>
   <binding name="Simias Web ServiceHttpPost" type="s0:Simias Web ServiceHttpPost">
     <http:binding verb="POST" />
@@ -1962,7 +1836,6 @@
         <mime:content type="application/x-www-form-urlencoded" />
       </input>
       <output />
-
     </operation>
     <operation name="AddMemberToDomain">
       <http:operation location="/AddMemberToDomain" />
@@ -1972,7 +1845,6 @@
       <output />
     </operation>
     <operation name="RemoveMemberFromDomain">
-
       <http:operation location="/RemoveMemberFromDomain" />
       <input>
         <mime:content type="application/x-www-form-urlencoded" />
@@ -1982,7 +1854,6 @@
     <operation name="FindCloseMembers">
       <http:operation location="/FindCloseMembers" />
       <input>
-
         <mime:content type="application/x-www-form-urlencoded" />
       </input>
       <output />
@@ -1992,7 +1863,6 @@
       <input>
         <mime:content type="application/x-www-form-urlencoded" />
       </input>
-
       <output>
         <mime:mimeXml part="Body" />
       </output>
@@ -2002,7 +1872,6 @@
       <input>
         <mime:content type="application/x-www-form-urlencoded" />
       </input>
-
       <output>
         <mime:mimeXml part="Body" />
       </output>
@@ -2012,7 +1881,6 @@
       <input>
         <mime:content type="application/x-www-form-urlencoded" />
       </input>
-
       <output>
         <mime:mimeXml part="Body" />
       </output>
@@ -2022,7 +1890,6 @@
       <input>
         <mime:content type="application/x-www-form-urlencoded" />
       </input>
-
       <output>
         <mime:mimeXml part="Body" />
       </output>
@@ -2032,7 +1899,6 @@
       <input>
         <mime:content type="application/x-www-form-urlencoded" />
       </input>
-
       <output>
         <mime:mimeXml part="Body" />
       </output>
@@ -2042,7 +1908,6 @@
       <input>
         <mime:content type="application/x-www-form-urlencoded" />
       </input>
-
       <output />
     </operation>
     <operation name="IsDomainActive">
@@ -2052,7 +1917,6 @@
       </input>
       <output>
         <mime:mimeXml part="Body" />
-
       </output>
     </operation>
     <operation name="SetDomainActive">
@@ -2062,7 +1926,6 @@
       </input>
       <output>
         <mime:mimeXml part="Body" />
-
       </output>
     </operation>
     <operation name="SetDomainInactive">
@@ -2072,7 +1935,6 @@
       </input>
       <output>
         <mime:mimeXml part="Body" />
-
       </output>
     </operation>
     <operation name="ValidCredentials">
@@ -2082,7 +1944,6 @@
       </input>
       <output>
         <mime:mimeXml part="Body" />
-
       </output>
     </operation>
     <operation name="ConnectToDomain">
@@ -2092,7 +1953,6 @@
       </input>
       <output>
         <mime:mimeXml part="Body" />
-
       </output>
     </operation>
     <operation name="LeaveDomain">
@@ -2102,7 +1962,6 @@
       </input>
       <output />
     </operation>
-
     <operation name="SetDefaultDomain">
       <http:operation location="/SetDefaultDomain" />
       <input>
@@ -2112,7 +1971,6 @@
     </operation>
     <operation name="GetDefaultDomainID">
       <http:operation location="/GetDefaultDomainID" />
-
       <input>
         <mime:content type="application/x-www-form-urlencoded" />
       </input>
@@ -2122,7 +1980,6 @@
     </operation>
     <operation name="GetCertificate">
       <http:operation location="/GetCertificate" />
-
       <input>
         <mime:content type="application/x-www-form-urlencoded" />
       </input>
@@ -2132,7 +1989,6 @@
     </operation>
     <operation name="StoreCertificate">
       <http:operation location="/StoreCertificate" />
-
       <input>
         <mime:content type="application/x-www-form-urlencoded" />
       </input>
@@ -2142,7 +1998,6 @@
       <http:operation location="/GetInvalidSyncFilenameChars" />
       <input>
         <mime:content type="application/x-www-form-urlencoded" />
-
       </input>
       <output>
         <mime:mimeXml part="Body" />
@@ -2152,7 +2007,15 @@
       <http:operation location="/SetDomainHostAddress" />
       <input>
         <mime:content type="application/x-www-form-urlencoded" />
-
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
+    <operation name="SetProxyAddress">
+      <http:operation location="/SetProxyAddress" />
+      <input>
+        <mime:content type="application/x-www-form-urlencoded" />
       </input>
       <output>
         <mime:mimeXml part="Body" />
@@ -2162,7 +2025,6 @@
   <service name="Simias Web Service">
     <port name="Simias Web ServiceSoap" binding="s0:Simias Web ServiceSoap">
       <soap:address location="http://localhost:8086/simias10/Simias.asmx" />
-
     </port>
     <port name="Simias Web ServiceHttpGet" binding="s0:Simias Web ServiceHttpGet">
       <http:address location="http://localhost:8086/simias10/Simias.asmx" />
@@ -2171,6 +2033,5 @@
       <http:address location="http://localhost:8086/simias10/Simias.asmx" />
     </port>
     <documentation>Web Service providing access to Simias</documentation>
-
   </service>
 </definitions>
