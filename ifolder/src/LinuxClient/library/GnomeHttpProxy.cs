@@ -79,10 +79,13 @@ namespace Novell.iFolder
 				{
 					if ( bypass == false )
 					{
-						string shost = (string) client.Get( GCONF_SECURE_HOST );
-						if ( shost != null && shost != "" )
+						if ( (bool) client.Get( GCONF_USE_PROXY ) == true )
 						{
-							return true;
+							string shost = (string) client.Get( GCONF_SECURE_HOST );
+							if ( shost != null && shost != "" )
+							{
+								return true;
+							}
 						}
 					}
 				}
@@ -92,7 +95,8 @@ namespace Novell.iFolder
 		}
 
 		/// <summary>
-		/// Returns true if proxy credentials are set
+		/// Returns true if http proxy is set and the
+		/// proxy credentials are set as well
 		/// </summary>
 		public bool CredentialsSet
 		{
@@ -102,7 +106,10 @@ namespace Novell.iFolder
 				{
 					if ( bypass == false )
 					{
-						return (bool) client.Get( GCONF_USE_AUTHENTICATION );
+						if ( (bool) client.Get( GCONF_USE_PROXY ) == true )
+						{
+							return (bool) client.Get( GCONF_USE_AUTHENTICATION );
+						}
 					}
 				}
 				catch{}
@@ -153,6 +160,7 @@ namespace Novell.iFolder
 				try
 				{
 					if ( bypass == false &&
+						(bool) client.Get( GCONF_USE_PROXY ) == true &&
 						(bool) client.Get( GCONF_USE_AUTHENTICATION ) == true )
 					{
 						return (string) client.Get( GCONF_USER );
@@ -175,6 +183,7 @@ namespace Novell.iFolder
 				try
 				{
 					if ( bypass == false &&
+						(bool) client.Get( GCONF_USE_PROXY ) == true &&
 						(bool) client.Get( GCONF_USE_AUTHENTICATION ) == true )
 					{
 						return (string) client.Get( GCONF_PASSWORD );
@@ -197,16 +206,19 @@ namespace Novell.iFolder
 				{
 					if ( bypass == false )
 					{
-						string shost = (string) client.Get( GCONF_SECURE_HOST );
-						if ( shost != null && shost != "" )
-						{
-							int sport = (int) client.Get( GCONF_SECURE_PORT );
-							if ( sport != 0 )
+						if ( (bool) client.Get( GCONF_USE_PROXY ) == true )
+						{					
+							string shost = (string) client.Get( GCONF_SECURE_HOST );
+							if ( shost != null && shost != "" )
 							{
-								return shost + ":" + sport.ToString();
-							}
+								int sport = (int) client.Get( GCONF_SECURE_PORT );
+								if ( sport != 0 )
+								{
+									return shost + ":" + sport.ToString();
+								}
 							
-							return shost;
+								return shost;
+							}
 						}
 					}
 				}

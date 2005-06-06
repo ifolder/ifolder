@@ -336,6 +336,16 @@ namespace Novell.iFolder
 							"http://" + proxy.Host, 
 							user, 
 							password );
+							
+						// Always need to set both secure and unsecure
+						if ( proxy.IsSecureProxySet == false )
+						{
+							simiasWebService.SetProxyAddress( 
+								"https://" + di.Host, 
+								"http://" + proxy.Host, 
+								user, 
+								password );
+						}
 					}
 					
 					// Secure proxy
@@ -343,7 +353,7 @@ namespace Novell.iFolder
 					{
 						simiasWebService.SetProxyAddress( 
 							"https://" + di.Host, 
-							"https://" + proxy.SecureHost, 
+							"http://" + proxy.SecureHost, 
 							user, 
 							password );
 					}

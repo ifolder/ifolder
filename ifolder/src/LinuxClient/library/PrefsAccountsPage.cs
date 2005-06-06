@@ -796,6 +796,18 @@ namespace Novell.iFolder
 							"http://" + proxy.Host, 
 							user, 
 							password );
+							
+						// Always need to set both secure and unsecure
+						// so if I don't have a real secure setting
+						// set the normal unsecure as the secure setting
+						if ( proxy.IsSecureProxySet == false )
+						{
+							simws.SetProxyAddress( 
+								"https://" + serverEntry.Text, 
+								"http://" + proxy.Host, 
+								user, 
+								password );
+						}
 					}
 					
 					// Secure proxy
@@ -803,7 +815,7 @@ namespace Novell.iFolder
 					{
 						simws.SetProxyAddress( 
 							"https://" + serverEntry.Text, 
-							"https://" + proxy.SecureHost, 
+							"http://" + proxy.SecureHost, 
 							user, 
 							password );
 					}
