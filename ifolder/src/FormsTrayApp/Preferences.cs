@@ -1839,7 +1839,8 @@ namespace Novell.FormsTrayApp
 			catch (Exception ex)
 			{
 				Cursor.Current = Cursors.Default;
-				if (ex.Message.IndexOf("Simias.ExistsException") != -1)
+				if ((ex.Message.IndexOf("Simias.ExistsException") != -1) ||
+					(ex.Message.IndexOf("already exists") != -1))
 				{
 					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("alreadyJoined"), string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
 					mmb.ShowDialog();
