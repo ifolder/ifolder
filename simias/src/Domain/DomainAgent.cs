@@ -183,6 +183,7 @@ namespace Simias.DomainServices
 				response = request.GetResponse() as HttpWebResponse;
 				if ( response != null )
 				{
+					request.CookieContainer.Add(response.Cookies);
 					string grace = 
 						response.GetResponseHeader( 
 							Simias.Security.Web.AuthenticationService.Login.GraceTotalHeader );
@@ -222,6 +223,7 @@ namespace Simias.DomainServices
 					response = webEx.Response as HttpWebResponse;
 					if (response != null)
 					{
+						request.CookieContainer.Add(response.Cookies);
 						// Look for our special header to give us more
 						// information why the authentication failed
 						string iFolderError = 
@@ -375,6 +377,7 @@ namespace Simias.DomainServices
 		/// </returns>
 		public Simias.Authentication.Status Attach(string host, string user, string password)
 		{
+			CookieContainer cookies = new CookieContainer();
 			Store store = Store.GetStore();
 
 			// Get a URL to our service.
@@ -411,6 +414,7 @@ namespace Simias.DomainServices
 
 			// Create the domain service web client object.
 			DomainService domainService = new DomainService();
+			domainService.CookieContainer = cookies;
 			domainService.Url = domainServiceUrl.ToString();
 			domainService.Credentials = myCred;
 			domainService.Proxy = ProxyState.GetProxyState( domainServiceUrl );
