@@ -1011,47 +1011,59 @@ namespace Novell.FormsTrayApp
 		{
 			try
 			{
-				// Only show iFolder sync events.  Or, if the timer is running and it is a StopSync
-				// event ... let it go through (this will happen if the user is removed from the iFolder).
-				if ((ifWebService.GetiFolder(syncEventArgs.ID) != null) ||
-					(syncAnimateTimer.Enabled && syncEventArgs.Action.Equals(Action.StopSync)))
+				// Display a sync message for the event.  POBox sync events will be special-cased.
+				string message = null;
+				switch (syncEventArgs.Action)
 				{
-					string message = null;
-					switch (syncEventArgs.Action)
-					{
-						case Action.StartLocalSync:
+					case Action.StartLocalSync:
+						if (!syncEventArgs.Name.StartsWith("POBox:"))
+						{
 							message = string.Format(resourceManager.GetString("localSync"), syncEventArgs.Name);
-							break;
-						case Action.StartSync:
-						{
-							// Animate the icon.
-							syncAnimateTimer.Start();
+						}
+						break;
+					case Action.StartSync:
+					{
+						// Animate the icon.
+						syncAnimateTimer.Start();
 
+						if (syncEventArgs.Name.StartsWith("POBox:"))
+						{
+							message = resourceManager.GetString("checkingForiFolders");
+						}
+						else
+						{
 							message = string.Format(resourceManager.GetString("synciFolder"), syncEventArgs.Name);
-							break;
 						}
-						case Action.StopSync:
-						{
-							// Stop the icon animation.
-							syncAnimateTimer.Stop();
-							shellNotifyIcon.Icon = trayIcon;
-							shellNotifyIcon.Text = resourceManager.GetString("iFolderServices");
-
-							if (initialSyncCollections.Contains(syncEventArgs.ID) && syncEventArgs.Connected)
-							{
-								// If the collection is in the initial sync list and the sync finished successfully,
-								// remove it from the list.
-								initialSyncCollections.Remove(syncEventArgs.ID);
-							}
-
-							message = string.Format(resourceManager.GetString("syncComplete"), syncEventArgs.Name);
-							break;
-						}
+						break;
 					}
+					case Action.StopSync:
+					{
+						// Stop the icon animation.
+						syncAnimateTimer.Stop();
+						shellNotifyIcon.Icon = trayIcon;
+						shellNotifyIcon.Text = resourceManager.GetString("iFolderServices");
 
-					// Add message to log.
-					syncLog.AddMessageToLog(syncEventArgs.TimeStamp, message);
+						if (initialSyncCollections.Contains(syncEventArgs.ID) && syncEventArgs.Connected)
+						{
+							// If the collection is in the initial sync list and the sync finished successfully,
+							// remove it from the list.
+							initialSyncCollections.Remove(syncEventArgs.ID);
+						}
+
+						if (syncEventArgs.Name.StartsWith("POBox:"))
+						{
+							message = resourceManager.GetString("doneCheckingForiFolders");
+						}
+						else
+						{
+							message = string.Format(resourceManager.GetString("syncComplete"), syncEventArgs.Name);
+						}
+						break;
+					}
 				}
+
+				// Add message to log.
+				syncLog.AddMessageToLog(syncEventArgs.TimeStamp, message);
 			}
 			catch {}
 		}

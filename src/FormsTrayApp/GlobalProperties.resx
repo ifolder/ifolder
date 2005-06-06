@@ -1879,6 +1879,12 @@
   <data name="logEntriesCleared">
     <value>Log entries cleared.</value>
   </data>
+  <data name="checkingForiFolders">
+    <value>Checking for new iFolders...</value>
+  </data>
+  <data name="doneCheckingForiFolders">
+    <value>Done checking for new iFolders</value>
+  </data>
   <data name="localSync">
     <value>Checking for local changes: {0}</value>
   </data>
