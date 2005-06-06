@@ -640,6 +640,12 @@
   <data name="serverConnectErrorTitle">
     <value>Unable to Connect to iFolder Server</value>
   </data>
+  <data name="checkingForiFolders">
+    <value>Checking for new iFolders...</value>
+  </data>
+  <data name="doneCheckingForiFolders">
+    <value>Done checking for new iFolders</value>
+  </data>
   <data name="localSync">
     <value>Checking for local changes: {0}</value>
   </data>

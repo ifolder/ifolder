@@ -1346,29 +1346,39 @@ namespace Novell.FormsTrayApp
 				{
 					case Action.StartLocalSync:
 					{
-						statusBar1.Text = string.Format(resourceManager.GetString("localSync"), syncEventArgs.Name);
-						lock (ht)
+						if (!syncEventArgs.Name.StartsWith("POBox:"))
 						{
-							ListViewItem lvi = (ListViewItem)ht[syncEventArgs.ID];
-							if (lvi != null)
+							statusBar1.Text = string.Format(resourceManager.GetString("localSync"), syncEventArgs.Name);
+							lock (ht)
 							{
-								((iFolderObject)lvi.Tag).iFolderState = iFolderState.SynchronizingLocal;
-								lvi.SubItems[2].Text = resourceManager.GetString("preSync");
+								ListViewItem lvi = (ListViewItem)ht[syncEventArgs.ID];
+								if (lvi != null)
+								{
+									((iFolderObject)lvi.Tag).iFolderState = iFolderState.SynchronizingLocal;
+									lvi.SubItems[2].Text = resourceManager.GetString("preSync");
+								}
 							}
 						}
 						break;
 					}
 					case Action.StartSync:
 					{
-						statusBar1.Text = string.Format(resourceManager.GetString("synciFolder"), syncEventArgs.Name);
-						lock (ht)
+						if (syncEventArgs.Name.StartsWith("POBox:"))
 						{
-							ListViewItem lvi = (ListViewItem)ht[syncEventArgs.ID];
-							if (lvi != null)
+							statusBar1.Text = resourceManager.GetString("checkingForiFolders");
+						}
+						else
+						{
+							statusBar1.Text = string.Format(resourceManager.GetString("synciFolder"), syncEventArgs.Name);
+							lock (ht)
 							{
-								startSync = true;
-								((iFolderObject)lvi.Tag).iFolderState = iFolderState.Synchronizing;
-								lvi.SubItems[2].Text = resourceManager.GetString("statusSyncing");
+								ListViewItem lvi = (ListViewItem)ht[syncEventArgs.ID];
+								if (lvi != null)
+								{
+									startSync = true;
+									((iFolderObject)lvi.Tag).iFolderState = iFolderState.Synchronizing;
+									lvi.SubItems[2].Text = resourceManager.GetString("statusSyncing");
+								}
 							}
 						}
 						break;
