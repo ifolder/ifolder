@@ -214,6 +214,16 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "VirtualListView.cs"
+                    SubType = "Component"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "VirtualListView.resx"
+                    DependentUpon = "VirtualListView.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Win32Window.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

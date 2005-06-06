@@ -90,7 +90,7 @@ namespace Novell.FormsTrayApp
 				{
 					disabledImageList = value;
 					disabledImageList.RecreateHandle += new EventHandler(disabledImageList_RecreateHandle);
-					Win32Window.SendMessage(Handle, Win32Window.TB_SETDISABLEDIMAGELIST, IntPtr.Zero, disabledImageList.Handle);
+					Win32.SendMessage(Handle, Win32Window.TB_SETDISABLEDIMAGELIST, IntPtr.Zero, disabledImageList.Handle);
 				}
 			}
 		}
@@ -107,7 +107,7 @@ namespace Novell.FormsTrayApp
 				{
 					hotImageList = value;
 					hotImageList.RecreateHandle += new EventHandler(hotImageList_RecreateHandle);
-					Win32Window.SendMessage(Handle, Win32Window.TB_SETHOTIMAGELIST, IntPtr.Zero, hotImageList.Handle);
+					Win32.SendMessage(Handle, Win32Window.TB_SETHOTIMAGELIST, IntPtr.Zero, hotImageList.Handle);
 				}
 			}
 		}
@@ -116,12 +116,12 @@ namespace Novell.FormsTrayApp
 		#region Event Handlers
 		private void disabledImageList_RecreateHandle(object sender, EventArgs e)
 		{
-			Win32Window.SendMessage(Handle, Win32Window.TB_SETDISABLEDIMAGELIST, IntPtr.Zero, disabledImageList.Handle);
+			Win32.SendMessage(Handle, Win32Window.TB_SETDISABLEDIMAGELIST, IntPtr.Zero, disabledImageList.Handle);
 		}
 
 		private void hotImageList_RecreateHandle(object sender, EventArgs e)
 		{
-			Win32Window.SendMessage(Handle, Win32Window.TB_SETHOTIMAGELIST, IntPtr.Zero, hotImageList.Handle);
+			Win32.SendMessage(Handle, Win32Window.TB_SETHOTIMAGELIST, IntPtr.Zero, hotImageList.Handle);
 		}
 		#endregion
 	}
