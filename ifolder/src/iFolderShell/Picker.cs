@@ -31,6 +31,8 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 
+using Novell.Win32Util;
+
 namespace Novell.iFolderCom
 {
 	/// <summary>
@@ -41,28 +43,13 @@ namespace Novell.iFolderCom
 	{
 		#region Class Members
 		System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(Picker));
-		private string searchContext;
+		private string searchContext = null;
 		private string searchText = null;
-		private int itemsViewable;
-		private int index;
+		private Hashtable cache;
+		private int offset;
 		private bool stopThread = false;
 		private bool noSearch = true;
 		private Thread worker = null;
-		/// <summary>
-		/// Event used to signal that there is work to do.
-		/// </summary>
-		protected AutoResetEvent workEvent = null;
-
-		/// <summary>
-		/// Event used to signal that the thread has started.
-		/// </summary>
-		protected AutoResetEvent waitEvent = null;
-
-		private delegate void AddLVItemEventDelegate(iFolderUser[] ifolderUsers);
-		private AddLVItemEventDelegate addLVItemEventDelegate;
-
-		private delegate void BeginAddLVItemEventDelegate();
-		private BeginAddLVItemEventDelegate beginAddLVItemEventDelegate;
 
 		private System.Windows.Forms.Button add;
 		private System.Windows.Forms.Button remove;
@@ -76,20 +63,21 @@ namespace Novell.iFolderCom
 		private iFolderUser currentOwner;
 		private Hashtable ht = null;
 		private Hashtable addedHT = null;
+		private int fixedWidth;
+		private int addOffset;
+		private int addedLVOffset;
+		private int dividerOffset;
+		private double rosterLVRatio;
 		private string loadPath;
 		private iFolderWebService ifWebService;
 		private string domainID;
-		private System.Windows.Forms.ListView rosterLV;
 		private System.Windows.Forms.ListView addedLV;
-		private System.Windows.Forms.ColumnHeader columnHeader1;
 		private System.Windows.Forms.ColumnHeader columnHeader2;
 		private System.Windows.Forms.Timer searchTimer;
-		private System.Windows.Forms.Panel panel1;
-		private System.Windows.Forms.Panel panel2;
-		private System.Windows.Forms.Panel panel3;
-		private System.Windows.Forms.Panel panel4;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.ComboBox attributeName;
+		private System.Windows.Forms.ColumnHeader columnHeader3;
+		private Novell.iFolderCom.VirtualListView rosterLV;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -106,11 +94,25 @@ namespace Novell.iFolderCom
 			removedList = new ArrayList();
 			addedHT = new Hashtable();
 
-			addLVItemEventDelegate = new AddLVItemEventDelegate(addLVItemEvent);
-			beginAddLVItemEventDelegate = new BeginAddLVItemEventDelegate(beginAddLVItemEvent);
+			// Calculate the distance between the add button and the right side of the roster listview.
+			addOffset = add.Left - rosterLV.Right;
 
-			workEvent = new AutoResetEvent(false);
-			waitEvent = new AutoResetEvent(false);
+			// Calculate the distance between the right side of the add button and the added listview.
+			addedLVOffset = addedLV.Left - add.Right;
+
+			// Calculate the size of the fixed area of the dialog ...
+			fixedWidth = 
+				rosterLV.Left +
+				addOffset +
+				add.Size.Width +
+                addedLVOffset +
+				this.Right - addedLV.Right;
+
+			// Calculate the size ratio of the roster listview.
+			rosterLVRatio = (double)rosterLV.Size.Width / (double)(this.Right - fixedWidth);
+
+			// Calculate the offset of the divider.
+			dividerOffset = ok.Top - groupBox1.Top;
 
 			this.StartPosition = FormStartPosition.CenterParent;
 		}
@@ -139,8 +141,6 @@ namespace Novell.iFolderCom
 		{
 			this.components = new System.ComponentModel.Container();
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(Picker));
-			this.rosterLV = new System.Windows.Forms.ListView();
-			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
 			this.addedLV = new System.Windows.Forms.ListView();
 			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
 			this.add = new System.Windows.Forms.Button();
@@ -151,49 +151,11 @@ namespace Novell.iFolderCom
 			this.ok = new System.Windows.Forms.Button();
 			this.cancel = new System.Windows.Forms.Button();
 			this.searchTimer = new System.Windows.Forms.Timer(this.components);
-			this.panel1 = new System.Windows.Forms.Panel();
-			this.panel4 = new System.Windows.Forms.Panel();
-			this.panel3 = new System.Windows.Forms.Panel();
-			this.panel2 = new System.Windows.Forms.Panel();
+			this.rosterLV = new Novell.iFolderCom.VirtualListView();
+			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
 			this.label2 = new System.Windows.Forms.Label();
 			this.attributeName = new System.Windows.Forms.ComboBox();
-			this.panel1.SuspendLayout();
-			this.panel4.SuspendLayout();
-			this.panel3.SuspendLayout();
-			this.panel2.SuspendLayout();
 			this.SuspendLayout();
-			// 
-			// rosterLV
-			// 
-			this.rosterLV.AccessibleDescription = resources.GetString("rosterLV.AccessibleDescription");
-			this.rosterLV.AccessibleName = resources.GetString("rosterLV.AccessibleName");
-			this.rosterLV.Alignment = ((System.Windows.Forms.ListViewAlignment)(resources.GetObject("rosterLV.Alignment")));
-			this.rosterLV.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("rosterLV.Anchor")));
-			this.rosterLV.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("rosterLV.BackgroundImage")));
-			this.rosterLV.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-																					   this.columnHeader1});
-			this.rosterLV.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("rosterLV.Dock")));
-			this.rosterLV.Enabled = ((bool)(resources.GetObject("rosterLV.Enabled")));
-			this.rosterLV.Font = ((System.Drawing.Font)(resources.GetObject("rosterLV.Font")));
-			this.rosterLV.HideSelection = false;
-			this.rosterLV.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("rosterLV.ImeMode")));
-			this.rosterLV.LabelWrap = ((bool)(resources.GetObject("rosterLV.LabelWrap")));
-			this.rosterLV.Location = ((System.Drawing.Point)(resources.GetObject("rosterLV.Location")));
-			this.rosterLV.Name = "rosterLV";
-			this.rosterLV.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("rosterLV.RightToLeft")));
-			this.rosterLV.Size = ((System.Drawing.Size)(resources.GetObject("rosterLV.Size")));
-			this.rosterLV.TabIndex = ((int)(resources.GetObject("rosterLV.TabIndex")));
-			this.rosterLV.Text = resources.GetString("rosterLV.Text");
-			this.rosterLV.View = System.Windows.Forms.View.Details;
-			this.rosterLV.Visible = ((bool)(resources.GetObject("rosterLV.Visible")));
-			this.rosterLV.DoubleClick += new System.EventHandler(this.add_Click);
-			this.rosterLV.SelectedIndexChanged += new System.EventHandler(this.rosterLV_SelectedIndexChanged);
-			// 
-			// columnHeader1
-			// 
-			this.columnHeader1.Text = resources.GetString("columnHeader1.Text");
-			this.columnHeader1.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("columnHeader1.TextAlign")));
-			this.columnHeader1.Width = ((int)(resources.GetObject("columnHeader1.Width")));
 			// 
 			// addedLV
 			// 
@@ -396,96 +358,34 @@ namespace Novell.iFolderCom
 			this.searchTimer.Interval = 1000;
 			this.searchTimer.Tick += new System.EventHandler(this.searchTimer_Tick);
 			// 
-			// panel1
+			// rosterLV
 			// 
-			this.panel1.AccessibleDescription = resources.GetString("panel1.AccessibleDescription");
-			this.panel1.AccessibleName = resources.GetString("panel1.AccessibleName");
-			this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("panel1.Anchor")));
-			this.panel1.AutoScroll = ((bool)(resources.GetObject("panel1.AutoScroll")));
-			this.panel1.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("panel1.AutoScrollMargin")));
-			this.panel1.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("panel1.AutoScrollMinSize")));
-			this.panel1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel1.BackgroundImage")));
-			this.panel1.Controls.Add(this.panel4);
-			this.panel1.Controls.Add(this.panel3);
-			this.panel1.Controls.Add(this.panel2);
-			this.panel1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("panel1.Dock")));
-			this.panel1.Enabled = ((bool)(resources.GetObject("panel1.Enabled")));
-			this.panel1.Font = ((System.Drawing.Font)(resources.GetObject("panel1.Font")));
-			this.panel1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("panel1.ImeMode")));
-			this.panel1.Location = ((System.Drawing.Point)(resources.GetObject("panel1.Location")));
-			this.panel1.Name = "panel1";
-			this.panel1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("panel1.RightToLeft")));
-			this.panel1.Size = ((System.Drawing.Size)(resources.GetObject("panel1.Size")));
-			this.panel1.TabIndex = ((int)(resources.GetObject("panel1.TabIndex")));
-			this.panel1.Text = resources.GetString("panel1.Text");
-			this.panel1.Visible = ((bool)(resources.GetObject("panel1.Visible")));
+			this.rosterLV.AccessibleDescription = resources.GetString("rosterLV.AccessibleDescription");
+			this.rosterLV.AccessibleName = resources.GetString("rosterLV.AccessibleName");
+			this.rosterLV.Alignment = ((System.Windows.Forms.ListViewAlignment)(resources.GetObject("rosterLV.Alignment")));
+			this.rosterLV.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("rosterLV.Anchor")));
+			this.rosterLV.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("rosterLV.BackgroundImage")));
+			this.rosterLV.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+																					   this.columnHeader3});
+			this.rosterLV.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("rosterLV.Dock")));
+			this.rosterLV.Enabled = ((bool)(resources.GetObject("rosterLV.Enabled")));
+			this.rosterLV.Font = ((System.Drawing.Font)(resources.GetObject("rosterLV.Font")));
+			this.rosterLV.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("rosterLV.ImeMode")));
+			this.rosterLV.LabelWrap = ((bool)(resources.GetObject("rosterLV.LabelWrap")));
+			this.rosterLV.Location = ((System.Drawing.Point)(resources.GetObject("rosterLV.Location")));
+			this.rosterLV.Name = "rosterLV";
+			this.rosterLV.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("rosterLV.RightToLeft")));
+			this.rosterLV.Size = ((System.Drawing.Size)(resources.GetObject("rosterLV.Size")));
+			this.rosterLV.TabIndex = ((int)(resources.GetObject("rosterLV.TabIndex")));
+			this.rosterLV.Text = resources.GetString("rosterLV.Text");
+			this.rosterLV.Visible = ((bool)(resources.GetObject("rosterLV.Visible")));
+			this.rosterLV.DoubleClick += new EventHandler(add_Click);
 			// 
-			// panel4
+			// columnHeader3
 			// 
-			this.panel4.AccessibleDescription = resources.GetString("panel4.AccessibleDescription");
-			this.panel4.AccessibleName = resources.GetString("panel4.AccessibleName");
-			this.panel4.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("panel4.Anchor")));
-			this.panel4.AutoScroll = ((bool)(resources.GetObject("panel4.AutoScroll")));
-			this.panel4.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("panel4.AutoScrollMargin")));
-			this.panel4.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("panel4.AutoScrollMinSize")));
-			this.panel4.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel4.BackgroundImage")));
-			this.panel4.Controls.Add(this.addedLV);
-			this.panel4.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("panel4.Dock")));
-			this.panel4.Enabled = ((bool)(resources.GetObject("panel4.Enabled")));
-			this.panel4.Font = ((System.Drawing.Font)(resources.GetObject("panel4.Font")));
-			this.panel4.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("panel4.ImeMode")));
-			this.panel4.Location = ((System.Drawing.Point)(resources.GetObject("panel4.Location")));
-			this.panel4.Name = "panel4";
-			this.panel4.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("panel4.RightToLeft")));
-			this.panel4.Size = ((System.Drawing.Size)(resources.GetObject("panel4.Size")));
-			this.panel4.TabIndex = ((int)(resources.GetObject("panel4.TabIndex")));
-			this.panel4.Text = resources.GetString("panel4.Text");
-			this.panel4.Visible = ((bool)(resources.GetObject("panel4.Visible")));
-			// 
-			// panel3
-			// 
-			this.panel3.AccessibleDescription = resources.GetString("panel3.AccessibleDescription");
-			this.panel3.AccessibleName = resources.GetString("panel3.AccessibleName");
-			this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("panel3.Anchor")));
-			this.panel3.AutoScroll = ((bool)(resources.GetObject("panel3.AutoScroll")));
-			this.panel3.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("panel3.AutoScrollMargin")));
-			this.panel3.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("panel3.AutoScrollMinSize")));
-			this.panel3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel3.BackgroundImage")));
-			this.panel3.Controls.Add(this.add);
-			this.panel3.Controls.Add(this.remove);
-			this.panel3.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("panel3.Dock")));
-			this.panel3.Enabled = ((bool)(resources.GetObject("panel3.Enabled")));
-			this.panel3.Font = ((System.Drawing.Font)(resources.GetObject("panel3.Font")));
-			this.panel3.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("panel3.ImeMode")));
-			this.panel3.Location = ((System.Drawing.Point)(resources.GetObject("panel3.Location")));
-			this.panel3.Name = "panel3";
-			this.panel3.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("panel3.RightToLeft")));
-			this.panel3.Size = ((System.Drawing.Size)(resources.GetObject("panel3.Size")));
-			this.panel3.TabIndex = ((int)(resources.GetObject("panel3.TabIndex")));
-			this.panel3.Text = resources.GetString("panel3.Text");
-			this.panel3.Visible = ((bool)(resources.GetObject("panel3.Visible")));
-			// 
-			// panel2
-			// 
-			this.panel2.AccessibleDescription = resources.GetString("panel2.AccessibleDescription");
-			this.panel2.AccessibleName = resources.GetString("panel2.AccessibleName");
-			this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("panel2.Anchor")));
-			this.panel2.AutoScroll = ((bool)(resources.GetObject("panel2.AutoScroll")));
-			this.panel2.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("panel2.AutoScrollMargin")));
-			this.panel2.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("panel2.AutoScrollMinSize")));
-			this.panel2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel2.BackgroundImage")));
-			this.panel2.Controls.Add(this.rosterLV);
-			this.panel2.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("panel2.Dock")));
-			this.panel2.Enabled = ((bool)(resources.GetObject("panel2.Enabled")));
-			this.panel2.Font = ((System.Drawing.Font)(resources.GetObject("panel2.Font")));
-			this.panel2.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("panel2.ImeMode")));
-			this.panel2.Location = ((System.Drawing.Point)(resources.GetObject("panel2.Location")));
-			this.panel2.Name = "panel2";
-			this.panel2.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("panel2.RightToLeft")));
-			this.panel2.Size = ((System.Drawing.Size)(resources.GetObject("panel2.Size")));
-			this.panel2.TabIndex = ((int)(resources.GetObject("panel2.TabIndex")));
-			this.panel2.Text = resources.GetString("panel2.Text");
-			this.panel2.Visible = ((bool)(resources.GetObject("panel2.Visible")));
+			this.columnHeader3.Text = resources.GetString("columnHeader3.Text");
+			this.columnHeader3.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("columnHeader3.TextAlign")));
+			this.columnHeader3.Width = ((int)(resources.GetObject("columnHeader3.Width")));
 			// 
 			// label2
 			// 
@@ -539,7 +439,6 @@ namespace Novell.iFolderCom
 			// 
 			// Picker
 			// 
-			this.AcceptButton = this.ok;
 			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
 			this.AccessibleName = resources.GetString("$this.AccessibleName");
 			this.AutoScaleBaseSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScaleBaseSize")));
@@ -547,16 +446,18 @@ namespace Novell.iFolderCom
 			this.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMargin")));
 			this.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMinSize")));
 			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
-			this.CancelButton = this.cancel;
 			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
+			this.Controls.Add(this.rosterLV);
 			this.Controls.Add(this.attributeName);
 			this.Controls.Add(this.label2);
-			this.Controls.Add(this.panel1);
 			this.Controls.Add(this.cancel);
 			this.Controls.Add(this.ok);
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.search);
 			this.Controls.Add(this.label1);
+			this.Controls.Add(this.addedLV);
+			this.Controls.Add(this.remove);
+			this.Controls.Add(this.add);
 			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
 			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -573,10 +474,6 @@ namespace Novell.iFolderCom
 			this.Closing += new System.ComponentModel.CancelEventHandler(this.Picker_Closing);
 			this.SizeChanged += new System.EventHandler(this.Picker_SizeChanged);
 			this.Load += new System.EventHandler(this.Picker_Load);
-			this.panel1.ResumeLayout(false);
-			this.panel4.ResumeLayout(false);
-			this.panel3.ResumeLayout(false);
-			this.panel2.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -650,278 +547,135 @@ namespace Novell.iFolderCom
 		#endregion
 
 		#region Private Methods
-		private void addLVItemEvent(iFolderUser[] ifolderUsers)
+		private iFolderUser addCacheEntry(int index)
 		{
-			rosterLV.BeginUpdate();
+			iFolderUser[] ifolderUsers;
 
-			try
+//			offset = index - offset;
+			ifWebService.FindSeekiFolderMembers(
+				domainID,
+				ref searchContext,
+				index,
+				1,
+				out ifolderUsers);
+			if (ifolderUsers != null)
 			{
-				if (ifolderUsers != null)
+				foreach (iFolderUser user in ifolderUsers)
 				{
-					foreach (iFolderUser ifolderUser in ifolderUsers)
-					{
-						int imageIndex = ifolderUser.UserID.Equals(currentUser.UserID) ? 0 : 1;
-						string name = (ifolderUser.FN != null) && !ifolderUser.FN.Equals(string.Empty) ? ifolderUser.FN : ifolderUser.Name;
-						ListViewItem lvi = new ListViewItem(name, imageIndex);
-						//ListViewItem lvi = rosterLV.Items[index++];
-						lvi.Text = name;
-						lvi.ImageIndex = imageIndex;
-						lvi.Tag = ifolderUser;
-						rosterLV.Items.Add(lvi);
+					cache.Add(index, user);
+				}
 
-						// Find and update items in the added list.
-						ListViewItem item = (ListViewItem)addedHT[ifolderUser.UserID];
-						if (item != null)
-						{
-							item.Tag = lvi;
-							addedHT[ifolderUser.UserID] = item;
-							lvi.ForeColor = Color.Gray;
-						}
-					}
-				}
-			}
-			catch (Exception ex)
-			{
-				if (ex.Message.IndexOf("The initial synchronization of the roster has not completed.") != -1)
-				{
-					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("rosterNotSynced"), string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
-					mmb.ShowDialog();
-				}
-				else
-				{
-					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("memberReadError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-					mmb.ShowDialog();
-				}
+				return ifolderUsers[0];
 			}
 
-			rosterLV.EndUpdate();
+			return null;
 		}
 
-		private void beginAddLVItemEvent()
+		private int initializeCache()
 		{
-			rosterLV.Items.Clear();
-		}
-
-		private void displayUsers(string search)
-		{
-			Cursor.Current = Cursors.WaitCursor;
-			rosterLV.Items.Clear();
-			rosterLV.BeginUpdate();
 			int totalMembers = 0;
-			index = 0;
+			cache = new Hashtable();
+			offset = 0;
 
-			try
+			if (searchContext != null)
 			{
-				iFolderUser[] ifolderUsers;
-				
-				if (searchContext != null)
+				try
 				{
 					ifWebService.FindCloseiFolderMembers(domainID, searchContext);
 					searchContext = null;
 				}
+				catch {}
+			}
 
-				if ((search != null) && !search.Equals(string.Empty))
-				{
-					string attribute;
-					switch (attributeName.SelectedIndex)
-					{
-						case 0:
-							attribute = "Given";
-							break;
-						case 1:
-							attribute = "Family";
-							break;
-						default:
-							attribute = "FN";
-							break;
-					}
 
-					ifWebService.FindFirstSpecificiFolderMembers(
-						domainID,
-						attribute,
-						search,
-						SearchType.Begins,
-						25,
-						out searchContext,
-						out ifolderUsers,
-						out totalMembers);
-				}
-				else
+			iFolderUser[] ifolderUsers;
+			if ((searchText != null) && !searchText.Equals(string.Empty))
+			{
+				string attribute;
+				switch (attributeName.SelectedIndex)
 				{
-					ifWebService.FindFirstiFolderMembers(
-						domainID,
-						25,
-						out searchContext,
-						out ifolderUsers,
-						out totalMembers);
+					case 1:
+						attribute = "Given";
+						break;
+					case 2:
+						attribute = "Family";
+						break;
+					default:
+						attribute = "FN";
+						break;
 				}
 
-/*				if (totalMembers > 0)
-				{
-					ListViewItem[] lvItems = new ListViewItem[totalMembers];
-					foreach (ListViewItem lvi in lvItems)
-					{
-						lvItems[index] = new ListViewItem("t" + index.ToString());
-						index++;
-					}
+				ifWebService.FindFirstSpecificiFolderMembers(
+					domainID,
+					attribute,
+					searchText,
+					SearchType.Begins,
+					15, // about 15 can fit in the default size of the listview.
+					out searchContext,
+					out ifolderUsers,
+					out totalMembers);
+			}
+			else
+			{
+				ifWebService.FindFirstiFolderMembers(
+					domainID,
+					15, // about 15 can fit in the default size of the listview.
+					out searchContext,
+					out ifolderUsers,
+					out totalMembers);
+			}
 
-					index = 0;
-					rosterLV.Items.AddRange(lvItems);
-				}*/
+			if (ifolderUsers != null)
+			{
+				cache.Add(0, ifolderUsers[0]);
+			}
 
+			return totalMembers;
+		}
+
+		private void updateCache(int from, int to)
+		{
+			if ((from < offset) || (to > cache.Count + offset -1))
+			{
+				iFolderUser[] ifolderUsers;
+
+				offset = from;
+				int count = to - from + 1;
+				ifWebService.FindSeekiFolderMembers(
+					domainID,
+					ref searchContext,
+					offset,
+					count,
+					out ifolderUsers);
 				if (ifolderUsers != null)
 				{
-					foreach (iFolderUser ifolderUser in ifolderUsers)
+					cache = new Hashtable();
+					foreach (iFolderUser user in ifolderUsers)
 					{
-						int imageIndex = ifolderUser.UserID.Equals(currentUser.UserID) ? 0 : 1;
-						string name = (ifolderUser.FN != null) && !ifolderUser.FN.Equals(string.Empty) ? ifolderUser.FN : ifolderUser.Name;
-						ListViewItem lvi = new ListViewItem(name, imageIndex);
-//						ListViewItem lvi = rosterLV.Items[index++];
-						lvi.Text = name;
-						lvi.ImageIndex = imageIndex;
-						lvi.Tag = ifolderUser;
-						rosterLV.Items.Add(lvi);
-
-						// Find and update items in the added list.
-						ListViewItem item = (ListViewItem)addedHT[ifolderUser.UserID];
-						if (item != null)
-						{
-							item.Tag = lvi;
-							addedHT[ifolderUser.UserID] = item;
-							lvi.ForeColor = Color.Gray;
-						}
+						cache.Add(offset++, user);
 					}
 				}
 			}
-			catch (Exception ex)
-			{
-				if (ex.Message.IndexOf("The initial synchronization of the roster has not completed.") != -1)
-				{
-					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("rosterNotSynced"), string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
-					mmb.ShowDialog();
-				}
-				else
-				{
-					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("memberReadError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-					mmb.ShowDialog();
-				}
-			}
-
-			rosterLV.EndUpdate();
-			Cursor.Current = Cursors.Default;
-
-//			if (totalMembers > 25)
-//			{
-//				stopThread = false;
-//				workEvent.Set();
-//			}
 		}
 		
-		
-		private void searchThreadProc()
+		private int removedListContains(iFolderUser ifolderUser)
 		{
-			while (true)
+			int index = -1;
+
+			lock (removedList)
 			{
-				int totalMembers = 0;
-				bool moreUsers = true;
-
-				try
+				for (int i=0; i < removedList.Count; i++)
 				{
-					BeginInvoke(beginAddLVItemEventDelegate);
-
-					while (!stopThread && moreUsers)
+					if (((iFolderUser)removedList[i]).UserID.Equals(ifolderUser.UserID))
 					{
-						iFolderUser[] ifolderUsers;
-				
-						if (searchContext == null)
-						{
-							if ((searchText != null) && !searchText.Equals(string.Empty))
-							{
-								string attribute;
-								switch (attributeName.SelectedIndex)
-								{
-									case 1:
-										attribute = "Given";
-										break;
-									case 2:
-										attribute = "Family";
-										break;
-									default:
-										attribute = "FN";
-										break;
-								}
-
-								moreUsers = ifWebService.FindFirstSpecificiFolderMembers(
-									domainID,
-									attribute,
-									searchText,
-									SearchType.Begins,
-									25,
-									out searchContext,
-									out ifolderUsers,
-									out totalMembers);
-							}
-							else
-							{
-								moreUsers = ifWebService.FindFirstiFolderMembers(
-									domainID,
-									25,
-									out searchContext,
-									out ifolderUsers,
-									out totalMembers);
-							}
-						}
-						else
-						{
-							moreUsers = ifWebService.FindNextiFolderMembers(
-								domainID,
-								ref searchContext,
-								25,
-								out ifolderUsers);
-						}
-
-						if (ifolderUsers != null)
-						{
-							// Signal the event so the wait cursor can be removed.
-							waitEvent.Set();
-
-							// BeginInvoke ...
-							BeginInvoke(addLVItemEventDelegate, new object[] {ifolderUsers});
-						}
+						index = i;
+						break;
 					}
 				}
-				catch (Exception ex)
-				{
-					if (ex.Message.Equals("Thread was being aborted."))
-					{
-						// Ignore.
-					}
-					else if (ex.Message.IndexOf("The initial synchronization of the roster has not completed.") != -1)
-					{
-						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("rosterNotSynced"), string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
-						mmb.ShowDialog();
-					}
-					else
-					{
-						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("memberReadError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-						mmb.ShowDialog();
-					}
-				}
-
-				if (searchContext != null)
-				{
-					try
-					{
-						ifWebService.FindCloseiFolderMembers(domainID, searchContext);
-						searchContext = null;
-					}
-					catch {}
-				}
-
-				// Go to sleep until there is work to do.
-				workEvent.WaitOne();
 			}
-		}		
+
+			return index;
+		}
 		#endregion
 
 		#region Public Methods
@@ -984,47 +738,58 @@ namespace Novell.iFolderCom
 			// TODO: need to add event handler for selection changed and tie it in with the timer.
 			attributeName.SelectedIndex = 0;
 
-			ListViewItem lvItem = new ListViewItem("Test", 0);
-			rosterLV.Items.Add(lvItem);
-			Rectangle rect = rosterLV.GetItemRect(0);
-			itemsViewable = rosterLV.ClientSize.Height / rect.Height;
-			rosterLV.Items.Clear();
-
-			// Set waitcursor.
-			Cursor.Current = Cursors.WaitCursor;
-			waitEvent.WaitOne();
-			Cursor.Current = Cursors.Default;
+			rosterLV.Count = initializeCache();
 		}
 
 		private void Picker_SizeChanged(object sender, System.EventArgs e)
 		{
-			panel2.Width = (panel1.Width - panel3.Width) / 2;
+			// Resize the listviews.
+			int x = this.Width - fixedWidth;
+
+			// Calculate the new widths based on the initial ratios.
+			rosterLV.Width = (int)(x * rosterLVRatio);
+			addedLV.Width = (int)(x * (1 - rosterLVRatio));
+
+			// Relocate the add button.
+			add.Left = rosterLV.Right + addOffset;
+
+			// Relocate the remove button.
+			remove.Left = add.Left;
+
+			// Relocate the added listview.
+			addedLV.Left = add.Right + addedLVOffset;
 		}
 
 		private void add_Click(object sender, System.EventArgs e)
 		{
-			foreach (ListViewItem lvi in rosterLV.SelectedItems)
+			foreach (int index in rosterLV.SelectedIndices)
 			{
-				if (lvi.ForeColor != Color.Gray)
+				iFolderUser ifolderUser = (iFolderUser)cache[index];
+				if (ifolderUser == null)
 				{
-					ok.Enabled = true;
+					ifolderUser = addCacheEntry(index);
+				}
 
-					// Put the item in the added list.
-					ListViewItem item = new ListViewItem(lvi.Text, lvi.ImageIndex);
-					item.Tag = lvi;
-					addedLV.Items.Add(item);
-
-					// Change the fore-color of added items so that they can't be added again.
-					lvi.ForeColor = Color.Gray;
-
-					addedHT.Add(((iFolderUser)lvi.Tag).UserID, item);
-
-					iFolderUser selectedUser = (iFolderUser)lvi.Tag;
-
-					// Remove the item from the removed list.
-					if (removedList.Contains(selectedUser))
+				if (ifolderUser != null)
+				{
+					if (addedHT[ifolderUser.UserID] == null)
 					{
-						removedList.Remove(selectedUser);
+						ok.Enabled = true;
+
+						// Put the item in the added list.
+						ListViewItem item = new ListViewItem(ifolderUser.FN, ifolderUser.UserID.Equals(currentUser.UserID) ? 0 : 1);
+						item.Tag = ifolderUser;
+						addedLV.Items.Add(item);
+
+						// Put the item in the added hashtable.
+						addedHT.Add(ifolderUser.UserID, item);
+
+						// Remove the item from the removed list.
+						int n = removedListContains(ifolderUser);
+						if (n != -1)
+						{
+							removedList.RemoveAt(n);
+						}
 					}
 				}
 			}
@@ -1044,17 +809,10 @@ namespace Novell.iFolderCom
 					if (ht[selectedUser.UserID] != null)
 					{
 						// Add the item to the removed list.
-						if (!removedList.Contains(selectedUser))
+						if (removedListContains(selectedUser) == -1)
 						{
 							removedList.Add(selectedUser);
 						}
-					}
-
-					// Change the color so it can be added again.
-					Type type = lvi.Tag.GetType();
-					if (type.FullName.Equals(typeof(ListViewItem).ToString()))
-					{
-						((ListViewItem)lvi.Tag).ForeColor = Color.Black;
 					}
 
 					// Remove the item from the list view and the hashtable.
@@ -1070,13 +828,17 @@ namespace Novell.iFolderCom
 			// Stop the timer.
 			searchTimer.Stop();
 
-			// Filter the user list view.
-//			displayUsers(search.Text);
-
 			searchText = search.Text;
-			// Signal that there is work to do.
-			stopThread = false;
-			workEvent.Set();
+
+			Cursor.Current = Cursors.WaitCursor;
+
+			// Update the listview.
+			rosterLV.Count = initializeCache();
+
+			Cursor.Current = Cursors.Default;
+
+			// Cause the listview to be repainted.
+			rosterLV.Invalidate();
 		}
 
 		private void search_TextChanged(object sender, System.EventArgs e)
@@ -1102,20 +864,6 @@ namespace Novell.iFolderCom
 					searchTimer.Stop();
 					searchTimer.Start();
 				}
-			}
-		}
-
-		private void rosterLV_SelectedIndexChanged(object sender, System.EventArgs e)
-		{
-			// Enable/disable the add button based on the state of the selected item(s).
-			if (rosterLV.SelectedItems.Count > 0)
-			{
-				ListViewItem lvi = rosterLV.SelectedItems[0];
-				add.Enabled = !lvi.ForeColor.Equals(Color.Gray);
-			}
-			else
-			{
-				add.Enabled = false;
 			}
 		}
 
@@ -1193,14 +941,95 @@ namespace Novell.iFolderCom
 		}
 		#endregion
 
-		protected override void OnHandleCreated(EventArgs e)
+		protected override void WndProc(ref Message m)
 		{
-			base.OnHandleCreated (e);
-
-			if (worker == null)
+			switch (m.Msg)
 			{
-				worker = new Thread(new ThreadStart(searchThreadProc));
-				worker.Start();
+				case Win32.WM_NOTIFY:
+					try
+					{
+						Win32.NMHDR nmhdr = (Win32.NMHDR)m.GetLParam(typeof(Win32.NMHDR));
+						switch(nmhdr.code)
+						{
+							case Win32.LVN_GETDISPINFOW:
+								Win32.LVDISPINFOW lvDispInfo = (Win32.LVDISPINFOW)m.GetLParam(typeof(Win32.LVDISPINFOW));
+								iFolderUser ifolderUser = null;
+									
+								if ((lvDispInfo.item.mask & Win32.LVIF_TEXT) == Win32.LVIF_TEXT)
+								{
+									ifolderUser = (iFolderUser)cache[lvDispInfo.item.iItem];
+									if (ifolderUser == null)
+									{
+										ifolderUser = addCacheEntry(lvDispInfo.item.iItem);
+									}
+
+									if (lvDispInfo.item.iSubItem == 0)
+									{
+										char[] array = new char[ifolderUser.FN.Length + 1];
+										ifolderUser.FN.ToCharArray(0, ifolderUser.FN.Length).CopyTo(array, 0);
+										array[ifolderUser.FN.Length] = '\0';
+										Marshal.Copy(array, 0, lvDispInfo.item.pszText, Math.Min(array.Length, lvDispInfo.item.cchTextMax));
+									}
+/*									else if (lvDispInfo.item.iSubItem == 1)
+									{
+										lvDispInfo.item.pszText = user.SubItem1;
+									}
+									else if (lvDispInfo.item.iSubItem == 2)
+									{
+										lvDispInfo.item.pszText = user.SubItem2;
+									}*/
+								}
+
+								if ((lvDispInfo.item.mask & Win32.LVIF_IMAGE) == Win32.LVIF_IMAGE)
+								{
+									lvDispInfo.item.iImage = ifolderUser.UserID.Equals(currentUser.UserID) ? 0 : 1;
+								}
+
+								if ((lvDispInfo.item.mask & Win32.LVIF_INDENT) == Win32.LVIF_INDENT)
+								{
+									lvDispInfo.item.iIndent = 0;
+								}
+
+								Marshal.StructureToPtr( lvDispInfo, m.LParam, true );
+								return;
+							case Win32.LVN_ODCACHEHINT:
+								Win32.NMLVCACHEHINT nmlvCacheHint = (Win32.NMLVCACHEHINT)m.GetLParam(typeof(Win32.NMLVCACHEHINT));
+								updateCache(nmlvCacheHint.iFrom, nmlvCacheHint.iTo);
+								break;
+							case Win32.LVN_ODFINDITEMW:
+								Win32.NMLVFINDITEM nmlvFindItem = (Win32.NMLVFINDITEM)m.GetLParam(typeof(Win32.NMLVFINDITEM));
+								System.Diagnostics.Debug.WriteLine("iStart = " + nmlvFindItem.iStart.ToString());
+								System.Diagnostics.Debug.WriteLine("psz = " + nmlvFindItem.lvfi.psz);
+//								int index = Int32.Parse(nmlvFindItem.lvfi.psz);
+//								if (!((0 < index) && (index < list.Count)))
+//								{
+//									index = -1;
+//								}
+//								m.Result = (IntPtr)index;
+								return;
+							case Win32.LVN_ITEMCHANGED:
+								Win32.NMLISTVIEW nmListView = (Win32.NMLISTVIEW)m.GetLParam(typeof(Win32.NMLISTVIEW));
+								if ((nmListView.uChanged & Win32.LVIF_STATE) == Win32.LVIF_STATE)
+								{
+									add.Enabled = rosterLV.SelectedCount > 0;
+								}
+								break;
+						}
+					}
+					catch (Exception ex)
+					{
+						System.Diagnostics.Debug.WriteLine("Exception1 - " + ex.Message);
+					}
+					break;
+			}
+
+			try
+			{
+				base.WndProc (ref m);
+			}
+			catch (Exception ex)
+			{
+				System.Diagnostics.Debug.WriteLine("Exception2 - " + ex.Message);
 			}
 		}
 	}
