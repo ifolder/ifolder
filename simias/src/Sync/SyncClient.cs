@@ -321,6 +321,10 @@ namespace Simias.Sync
 					}
 				}
 			}
+			else if (args.Type == NodeTypes.PolicyType)
+			{
+				PolicyChanged();
+			}
 		}
 
 		/// <summary>
@@ -344,6 +348,36 @@ namespace Simias.Sync
 					}
 				}
 			}
+			else if (args.Type == NodeTypes.PolicyType)
+			{
+				PolicyChanged();
+			}
+		}
+
+		/// <summary>
+		/// Called when a Node has been modified.
+		/// </summary>
+		/// <param name="args">Arguments of the modifiction.</param>
+		private void storeEvents_NodeChanged(NodeEventArgs args)
+		{
+			if (args.Type == NodeTypes.PolicyType)
+			{
+				PolicyChanged();
+			}
+		}
+
+		/// <summary>
+		/// Called when a plolicy has been changed.
+		/// </summary>
+		private void PolicyChanged()
+		{
+			lock (collections)
+			{
+				foreach (CollectionSyncClient sc in collections)
+				{
+					sc.PolicyChanged();
+				}
+			}
 		}
 
 		#endregion
@@ -365,6 +399,7 @@ namespace Simias.Sync
 			storeEvents = new EventSubscriber();
 			storeEvents.NodeCreated +=new NodeEventHandler(storeEvents_NodeCreated);
 			storeEvents.NodeDeleted +=new NodeEventHandler(storeEvents_NodeDeleted);
+			storeEvents.NodeChanged +=new NodeEventHandler(storeEvents_NodeChanged);
 
 			syncQueue = new Queue();
 			priorityQueue = new Queue();
@@ -441,6 +476,7 @@ namespace Simias.Sync
 		}
 
 		#endregion
+
 	}
 
 	#endregion
@@ -638,6 +674,14 @@ namespace Simias.Sync
 		}
 
 		/// <summary>
+		/// Called to notify that a policy has changed.
+		/// </summary>
+		internal void PolicyChanged()
+		{
+			firstSync = true;
+		}
+
+		/// <summary>
 		/// Called to synchronize this collection.
 		/// </summary>
 		internal void SyncNow()
@@ -665,7 +709,7 @@ namespace Simias.Sync
 						workArray.SetAccess = collection.GetCurrentMember().Rights;
 				
 						// We are just starting add all the modified nodes to the array.
-						// Get all nodes that have not been synced.
+						// Get all nodes from store that have not been synced.
 						ICSList updateList = collection.Search(PropertyTags.NodeUpdateTime, DateTime.Now, SearchOp.Exists);
 						foreach (ShallowNode sn in updateList)
 						{
