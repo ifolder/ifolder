@@ -3487,4 +3487,7 @@
   <data name="updateHostError">
     <value>An error was encountered while saving the server host address.</value>
   </data>
+  <data name="removeAccountError">
+    <value>An error was encountered while removing the account.</value>
+  </data>
 </root>

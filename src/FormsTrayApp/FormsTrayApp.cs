@@ -303,7 +303,7 @@ namespace Novell.FormsTrayApp
 				preferences.Show();
 			}
 
-			preferences.SelectAccounts();
+			preferences.SelectAccounts(false);
 		}
 
 		private void menuProperties_Click(object sender, System.EventArgs e)
@@ -550,7 +550,7 @@ namespace Novell.FormsTrayApp
 								preferences.Show();
 							}
 
-							preferences.SelectAccounts();
+							preferences.SelectAccounts(true);
 						}
 					}
 				}
