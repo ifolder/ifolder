@@ -201,6 +201,14 @@ namespace Novell.iFolder.Web
 			this.IsSubscription = true;
 			this.EnumeratedState = (int) subscription.SubscriptionState;
 			this.Owner = subscription.FromName;
+			Domain domain = Store.GetStore().GetDomain(subscription.DomainID);
+			if(domain != null)
+			{
+				Simias.Storage.Member member = domain.GetMemberByID(subscription.FromIdentity);
+				if(member != null)
+					this.Owner = member.FN;
+			}
+
 			this.OwnerID = subscription.FromIdentity;
 			this.CurrentUserRights = subscription.SubscriptionRights.ToString();
 
