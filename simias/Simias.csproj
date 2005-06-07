@@ -334,6 +334,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\Encryption\Blowfish.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\Events\DefaultSubscriber.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
