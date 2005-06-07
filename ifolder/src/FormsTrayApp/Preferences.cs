@@ -1442,9 +1442,14 @@ namespace Novell.FormsTrayApp
 		/// <summary>
 		/// Selects the Accounts tab.
 		/// </summary>
-		public void SelectAccounts()
+		/// <param name="createAccount">Set to <b>True</b> to activate the page to create a new account.</param>
+		public void SelectAccounts(bool createAccount)
 		{
 			tabControl1.SelectedTab = tabAccounts;
+			if (createAccount)
+			{
+				addAccount_Click(this, new EventArgs());
+			}
 		}
 
 		/// <summary>
@@ -1971,7 +1976,7 @@ namespace Novell.FormsTrayApp
 				{
 					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("requiredFieldsMissing"), string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
 					mmb.ShowDialog();
-					SelectAccounts();
+					SelectAccounts(false);
 					if (server.Text.Equals(string.Empty))
 					{
 						server.Focus();
@@ -2665,7 +2670,8 @@ namespace Novell.FormsTrayApp
 					}
 					catch (Exception ex)
 					{
-						MessageBox.Show(ex.Message);
+						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("removeAccountError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						mmb.ShowDialog();
 					}
 				}
 			}

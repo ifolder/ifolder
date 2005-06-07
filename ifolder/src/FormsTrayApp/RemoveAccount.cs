@@ -71,6 +71,8 @@ namespace Novell.FormsTrayApp
 			user.Text = domainInfo.MemberName;
 			icon.Image = Novell.Win32Util.Win32Window.IconToAlphaBitmap(SystemIcons.Question);
 
+			removeAll.Enabled = domainInfo.Authenticated;
+
 			Graphics g = server.CreateGraphics();
 			try
 			{
