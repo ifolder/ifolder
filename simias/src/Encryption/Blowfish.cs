@@ -34,7 +34,7 @@ namespace Simias.Encryption
 	/// <summary>
 	/// Class that provides blowfish encryption.
 	/// </summary>
-	class Blowfish
+	public class Blowfish
 	{
 		const int	N = 16;
 		const int	KEYBYTES = 8;

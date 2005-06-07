@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimiasTestsWS", "SimiasTest
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Encryption", "Encryption\Encryption.csproj", "{91E243E7-141B-4EBA-AA3E-DAACD410EB3B}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -29,6 +33,10 @@ Global
 		{76E8BD10-648C-4DA9-8140-81FA7627DCD0}.Debug.Build.0 = Debug|.NET
 		{76E8BD10-648C-4DA9-8140-81FA7627DCD0}.Release.ActiveCfg = Release|.NET
 		{76E8BD10-648C-4DA9-8140-81FA7627DCD0}.Release.Build.0 = Release|.NET
+		{91E243E7-141B-4EBA-AA3E-DAACD410EB3B}.Debug.ActiveCfg = Debug|.NET
+		{91E243E7-141B-4EBA-AA3E-DAACD410EB3B}.Debug.Build.0 = Debug|.NET
+		{91E243E7-141B-4EBA-AA3E-DAACD410EB3B}.Release.ActiveCfg = Release|.NET
+		{91E243E7-141B-4EBA-AA3E-DAACD410EB3B}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
