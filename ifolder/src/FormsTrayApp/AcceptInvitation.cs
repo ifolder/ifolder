@@ -31,6 +31,7 @@ using System.Net;
 using System.Runtime.InteropServices;
 
 using Novell.iFolderCom;
+using Novell.Win32Util;
 
 namespace Novell.FormsTrayApp
 {
@@ -439,57 +440,67 @@ namespace Novell.FormsTrayApp
 
 				if (successful)
 				{
-					// Display wait cursor.
-					Cursor = Cursors.WaitCursor;
-
-					bool isPathInvalid = true;
-
-					// Call into iFolder to make sure the directory specified is valid...
-					try
+					// Check to make sure the user has rights to this directory.
+					if (Win32Security.AccessAllowed(iFolderLocation.Text))
 					{
-						isPathInvalid = ifWebService.IsPathIniFolder(iFolderLocation.Text);
-					}
-					catch (Exception ex)
-					{
-						Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(resourceManager.GetString("pathValidationError"), resourceManager.GetString("pathValidationErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-						mmb.ShowDialog();
-					}
+						// Display wait cursor.
+						Cursor = Cursors.WaitCursor;
 
-					// Restore the cursor.
-					Cursor = Cursors.Default;
+						bool isPathInvalid = true;
 
-					if (isPathInvalid)
-					{
-						// The directory is under an existing iFolder ... 
-						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("pathInvalidError"), resourceManager.GetString("pathInvalidErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-						mmb.ShowDialog();
-						iFolderLocation.Focus();
-
-						successful = false;
-					}
-					else
-					{
+						// Call into iFolder to make sure the directory specified is valid...
 						try
 						{
-							// Accept the invitation.
-							ifWebService.AcceptiFolderInvitation(ifolder.DomainID, ifolder.ID, iFolderLocation.Text);
+							isPathInvalid = ifWebService.IsPathIniFolder(iFolderLocation.Text);
 						}
 						catch (Exception ex)
 						{
-							if (ex.Message.IndexOf("Path specified cannot be an iFolder", 0) != -1)
-							{
-								Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(resourceManager.GetString("pathInvalidError"), resourceManager.GetString("pathInvalidErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
-								mmb.ShowDialog();
-								iFolderLocation.Focus();
-							}
-							else
-							{
-								Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(resourceManager.GetString("acceptError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-								mmb.ShowDialog();
-							}
+							Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(resourceManager.GetString("pathValidationError"), resourceManager.GetString("pathValidationErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+							mmb.ShowDialog();
+						}
+
+						// Restore the cursor.
+						Cursor = Cursors.Default;
+
+						if (isPathInvalid)
+						{
+							// The directory is under an existing iFolder ... 
+							MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("pathInvalidError"), resourceManager.GetString("pathInvalidErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+							mmb.ShowDialog();
+							iFolderLocation.Focus();
 
 							successful = false;
 						}
+						else
+						{
+							try
+							{
+								// Accept the invitation.
+								ifWebService.AcceptiFolderInvitation(ifolder.DomainID, ifolder.ID, iFolderLocation.Text);
+							}
+							catch (Exception ex)
+							{
+								if (ex.Message.IndexOf("Path specified cannot be an iFolder", 0) != -1)
+								{
+									Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(resourceManager.GetString("pathInvalidError"), resourceManager.GetString("pathInvalidErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+									mmb.ShowDialog();
+									iFolderLocation.Focus();
+								}
+								else
+								{
+									Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(resourceManager.GetString("acceptError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+									mmb.ShowDialog();
+								}
+
+								successful = false;
+							}
+						}
+					}
+					else
+					{
+						successful = false;
+						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("accessDenied"), string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						mmb.ShowDialog();
 					}
 				}
 			}

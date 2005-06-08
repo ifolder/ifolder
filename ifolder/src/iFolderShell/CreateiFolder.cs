@@ -509,24 +509,33 @@ namespace Novell.iFolderCom
 
 				if (successful)
 				{
-					Cursor.Current = Cursors.WaitCursor;
-					if (ifWebService.CanBeiFolder(ifolderPath.Text))
+					if (Win32Security.AccessAllowed(ifolderPath.Text))
 					{
-						DomainItem domainItem = (DomainItem)servers.SelectedItem;
+						Cursor.Current = Cursors.WaitCursor;
+						if (ifWebService.CanBeiFolder(ifolderPath.Text))
+						{
+							DomainItem domainItem = (DomainItem)servers.SelectedItem;
 
-						// Create the iFolder.
-						iFolderWeb ifolder = ifWebService.CreateiFolderInDomain(ifolderPath.Text, domainItem.ID);
+							// Create the iFolder.
+							iFolderWeb ifolder = ifWebService.CreateiFolderInDomain(ifolderPath.Text, domainItem.ID);
 
-						// Notify the shell.
-						Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolderPath.Text, IntPtr.Zero);
+							// Notify the shell.
+							Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolderPath.Text, IntPtr.Zero);
 
-						Cursor.Current = Cursors.Default;
+							Cursor.Current = Cursors.Default;
+						}
+						else
+						{
+							successful = false;
+							Cursor.Current = Cursors.Default;
+							MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("invalidFolder"), string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+							mmb.ShowDialog();
+						}
 					}
 					else
 					{
 						successful = false;
-						Cursor.Current = Cursors.Default;
-						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("invalidFolder"), string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("accessDenied"), string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 						mmb.ShowDialog();
 					}
 				}

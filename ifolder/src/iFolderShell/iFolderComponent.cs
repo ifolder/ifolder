@@ -160,10 +160,14 @@ namespace Novell.iFolderCom
 		{
 			try
 			{
-				connectToWebService();
-				if (ifWebService != null)
+				// Make sure the user has read/write access to the directory.
+				if (Win32Security.AccessAllowed(path))
 				{
-					return ifWebService.CanBeiFolder(path);
+					connectToWebService();
+					if (ifWebService != null)
+					{
+						return ifWebService.CanBeiFolder(path);
+					}
 				}
 			}
 			catch (WebException e)

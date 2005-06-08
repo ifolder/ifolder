@@ -224,6 +224,16 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Win32.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Win32Security.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Win32Window.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
