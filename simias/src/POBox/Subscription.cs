@@ -609,6 +609,25 @@ namespace Simias.POBox
 			}
 		}
 
+		/// <summary>
+		/// Gets/sets the originator of this subscription.
+		/// </summary>
+		public string Originator
+		{
+			get
+			{
+				Property p = properties.FindSingleValue(PropertyTags.Originator);
+				return (p != null) ? p.ToString() : null;
+			}
+
+			set
+			{
+				Property p = new Property( PropertyTags.Originator, value );
+				p.LocalProperty = true;
+				properties.ModifyNodeProperty( p );
+			}
+		}
+
 		#endregion
 
 		#region Public Methods

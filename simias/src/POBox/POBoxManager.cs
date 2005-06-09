@@ -43,7 +43,7 @@ namespace Simias.POBox
 		private POBox poBox;
 		private Store store;
 		private EventSubscriber subscriber;
-		private Hashtable threads;
+		private SubscriptionService subscriptionService;
 
 		/// <summary>
 		/// Gets the domain that this poBox belongs to.
@@ -66,9 +66,6 @@ namespace Simias.POBox
 			// open POBox
 			poBox = POBox.GetPOBoxByID(store, id);
 
-			// threads
-			threads = new Hashtable();
-
 			// events
 			subscriber = new EventSubscriber(poBox.ID);
 			subscriber.Enabled = false;
@@ -82,6 +79,7 @@ namespace Simias.POBox
 		/// </summary>
 		public void Start()
 		{
+			subscriptionService = new SubscriptionService(poBox);
 			subscriber.Enabled = true;
 			
 			// Indicate any new subscriptions in the POBox on startup.
@@ -100,6 +98,7 @@ namespace Simias.POBox
 		public void Stop()
 		{
 			subscriber.Enabled = false;
+			subscriptionService.Stop();
 		}
 
 		private void OnMessageChanged(NodeEventArgs args)
@@ -122,25 +121,15 @@ namespace Simias.POBox
 			{
 				// invited (master)
 				case SubscriptionStates.Invited:
+					if ( subscription.Originator == store.LocalDomain )
+					{
+						subscriptionService.QueueSubscription( subscription );
+					}
+					break;
+
 				// replied (slave)
 				case SubscriptionStates.Replied:
-					
-					lock(threads.SyncRoot)
-					{
-						// start threads only on new subscription updates
-						if (!threads.Contains(subscription.ID))
-						{
-							// subscription thread
-							SubscriptionThread st = new SubscriptionThread(poBox, subscription, threads);
-							Thread thread = new Thread(new ThreadStart(st.Run));
-							thread.IsBackground = true;
-							thread.Priority = ThreadPriority.BelowNormal;
-							thread.Start();
-
-							// save thread
-							threads.Add(subscription.ID, thread);
-						}
-					}
+					subscriptionService.QueueSubscription( subscription );
 					break;
 
 				default:

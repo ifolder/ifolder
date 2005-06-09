@@ -176,6 +176,11 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
+		static public string Originator = "Orginator";
+
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
 		static public string Owner = "Owner";
 
 		/// <summary>
@@ -294,6 +299,7 @@ namespace Simias.Storage
 			systemPropertyTable.Add( MasterUrl, null );
 			systemPropertyTable.Add( NodeCreationTime, null );
 			systemPropertyTable.Add( NodeUpdateTime, null );
+			systemPropertyTable.Add( Originator, null );
 			systemPropertyTable.Add( Owner, null );
 			systemPropertyTable.Add( Parent, null );
 			systemPropertyTable.Add( PreviousOwner, null );

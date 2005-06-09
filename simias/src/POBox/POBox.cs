@@ -335,6 +335,7 @@ namespace Simias.POBox
 			subscription.DomainName = collection.StoreReference.GetDomain(collection.Domain).Name;
 			subscription.SubscriptionCollectionType = type;
 			subscription.SubscriptionKey = Guid.NewGuid().ToString();
+			subscription.Originator = collection.StoreReference.LocalDomain;
 
 			// TODO: clean this up
 			subscription.HasDirNode = (collection != null) ? (collection.GetRootDirectory() != null) : false;
