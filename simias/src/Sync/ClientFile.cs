@@ -340,6 +340,11 @@ namespace Simias.Sync
 				try
 				{
 					collection.Commit(node);
+					if (node.Properties.GetSingleProperty(PropertyTags.GhostFile) != null)
+					{
+						node.Properties.DeleteSingleProperty(PropertyTags.GhostFile);
+						collection.Commit(node);
+					}
 					if (conflictingNode != null)
 						collection.Commit(conflictingNode);
 				}
@@ -369,7 +374,21 @@ namespace Simias.Sync
 			{
 				fa = FileAttributes.Normal;
 			}
-			base.Close(commit);
+			try
+			{
+				base.Close(commit);
+			}
+			catch (FileNotFoundException)
+			{
+				if (commit)
+				{
+					// The file was deleted. We will assume this is from a virus scanner.
+					Property p = new Property(PropertyTags.GhostFile, true);
+					p.LocalProperty = true;
+					node.Properties.ModifyProperty(p);
+					collection.Commit(node);
+				}
+			}
 			if (readOnly)
 			{
 				// BUGBUG this is commented out until we decide what to do with readonly collections.
@@ -678,9 +697,13 @@ namespace Simias.Sync
 				if (commit && status.status == SyncStatus.Success)
 				{
 					node.SetMasterIncarnation(node.LocalIncarnation);
-					node.Properties.DeleteSingleProperty(PropertyTags.SyncStatusTag);
 					collection.Commit(node);
-				}
+					if (node.Properties.GetSingleProperty(PropertyTags.SyncStatusTag) != null)
+					{
+						node.Properties.DeleteSingleProperty(PropertyTags.SyncStatusTag);
+						collection.Commit(node);
+					}
+			}
 				return status;
 			}
 			finally

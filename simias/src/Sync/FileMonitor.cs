@@ -154,6 +154,12 @@ namespace Simias.Sync
 		void DeleteNode(Node node)
 		{
 			Log.log.Debug("File Monitor deleting orphaned node {0}, {1}", node.Name, node.ID);
+			
+			// Check to see if this is a ghost file.
+			// If it is we do not want to delete the node.
+			if (node.Properties.GetSingleProperty(PropertyTags.GhostFile) != null)
+				return;
+			
 			// Check to see if we have a collision.
 			bool isDir = (collection.BaseType == NodeTypes.DirNodeType);
 			if (collection.HasCollisions(node))

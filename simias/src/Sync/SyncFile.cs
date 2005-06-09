@@ -409,6 +409,7 @@ namespace Simias.Sync
 					catch
 					{
 						File.Move(tmpFile, file);
+						throw;
 					}
 				}
 				else

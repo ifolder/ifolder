@@ -252,6 +252,12 @@ namespace Simias.Storage
 		/// Well known property name.
 		/// </summary>
 		static public string SyncStatusTag = "SyncStatus";
+
+		/// <summary>
+		/// Well known perperty name.
+		/// The file represented by this node has disapeared.
+		/// </summary>
+		static public string GhostFile = "GhostFile";
 		
 		/// <summary>
 		/// Hashtable providing quick lookup to well-known system properties.
