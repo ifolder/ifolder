@@ -40,7 +40,7 @@ namespace Simias.DomainServices
 		/// <summary>
 		/// Default name for WSIL document.
 		/// </summary>
-		private static string WSInspectionDocument = "inspection.wsil";
+		private static string WSInspectionDocument = "/inspection.wsil";
 
 		/// <summary>
 		/// WSIL specified XML tags.
@@ -74,15 +74,19 @@ namespace Simias.DomainServices
 			// Build a credential from the user name and password.
 			NetworkCredential myCred = new NetworkCredential( user, password ); 
 
-			// Parse the host string in case there is a port specified.
-			Uri parseUri = new Uri( Uri.UriSchemeHttp + Uri.SchemeDelimiter + host );
-
-			// Try 'https' first.
-			int port = ( host.IndexOf( ':' ) != -1 ) ? parseUri.Port : DefaultPort; //SSLDefaultPort;
-			UriBuilder wsUri = new UriBuilder( Uri.UriSchemeHttp, parseUri.Host, port, WSInspectionDocument );
+            // Parse the host string to see if it is a complete uri.
+			Uri tempUri;
+			try 
+			{	
+				tempUri = new Uri( host + WSInspectionDocument ); 
+			}
+			catch 
+			{
+				tempUri = new Uri( Uri.UriSchemeHttp + Uri.SchemeDelimiter + host + WSInspectionDocument );
+			}
 
 			// Create the web request.
-			HttpWebRequest request = (HttpWebRequest)WebRequest.Create( wsUri.Uri );
+			HttpWebRequest request = (HttpWebRequest)WebRequest.Create( tempUri );
 			
 			bool retry = true;
 		

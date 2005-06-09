@@ -406,7 +406,14 @@ namespace Simias.DomainServices
 			if ( domainServiceUrl == null )
 			{
 				// There was a failure in obtaining the service url. Try a hard coded one.
-				domainServiceUrl = new Uri( Uri.UriSchemeHttp + Uri.SchemeDelimiter + host + DomainServicePath );
+				try 
+				{	
+					domainServiceUrl = new Uri( host + DomainServicePath ); 
+				}
+				catch 
+				{
+					domainServiceUrl = new Uri( Uri.UriSchemeHttp + Uri.SchemeDelimiter + host + DomainServicePath );
+				}
 			}
 
 			// Build a credential from the user name and password.
@@ -426,9 +433,12 @@ namespace Simias.DomainServices
 				throw new ExistsException( String.Format( "Domain {0}", domainID ) );
 			}
 
+			string baseUrl = domainServiceUrl.ToString();
+			baseUrl = baseUrl.Substring(0, baseUrl.LastIndexOf('/'));
+
 			status = 
 				this.Login( 
-					new Uri( domainServiceUrl.Scheme + Uri.SchemeDelimiter + host ), 
+					new Uri( baseUrl ),
 					domainID,
 					myCred,
 					false);
