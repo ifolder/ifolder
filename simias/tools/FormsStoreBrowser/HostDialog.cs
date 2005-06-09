@@ -26,13 +26,16 @@ namespace StoreBrowser
 			set { host.Text = value; }
 		}
 
-		public HostDialog( string hostUri )
+		public HostDialog( string hostUri, bool hasParent )
 		{
 			//
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
 			host.Text = hostUri;
+			StartPosition = hasParent ? 
+				System.Windows.Forms.FormStartPosition.CenterParent : 
+				System.Windows.Forms.FormStartPosition.WindowsDefaultLocation;
 		}
 
 		/// <summary>
@@ -113,6 +116,7 @@ namespace StoreBrowser
 			this.MinimizeBox = false;
 			this.Name = "HostDialog";
 			this.ShowInTaskbar = false;
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Enter Host Address";
 			this.TopMost = true;
 			this.ResumeLayout(false);

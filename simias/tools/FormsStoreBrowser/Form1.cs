@@ -435,7 +435,7 @@ namespace StoreBrowser
 
 		private void MI_Open_Store_Click(object sender, System.EventArgs e)
 		{
-			HostDialog hDiag = new HostDialog(hostName);
+			HostDialog hDiag = new HostDialog(hostName, true);
 			while ( true )
 			{
 				if (hDiag.ShowDialog() == DialogResult.OK)
@@ -460,6 +460,7 @@ namespace StoreBrowser
 
 					if ( GetBrowserWithCredentials( isLocal ) )
 					{
+						this.Text = "Store Browser : " + hostName;
 						browser.Show();
 						AddRecentMI( new RecentStore( hostName, username, password, isLocal ) );
 						break;
@@ -720,7 +721,7 @@ namespace StoreBrowser
 			else
 			{
 				hostName = "https://ifoldertest218.provo.novell.com/simias10";
-				HostDialog hDiag = new HostDialog(hostName);
+				HostDialog hDiag = new HostDialog(hostName, false);
 				while ( true )
 				{
 					if (hDiag.ShowDialog() == DialogResult.OK)
@@ -782,6 +783,10 @@ namespace StoreBrowser
 						}
 					}
 				}
+				else
+				{
+					result = true;
+				}
 			}
 			catch ( System.Web.Services.Protocols.SoapHeaderException )
 			{
@@ -816,6 +821,10 @@ namespace StoreBrowser
 							}
 						}
 					}
+				}
+				else
+				{
+					result = true;
 				}
 			}
 			catch ( Exception ex )
