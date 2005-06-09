@@ -163,6 +163,7 @@ case $SIMIAS_OS in
         STORELIB="sqlite"
         STORELIB_PATH="$EXTERNAL_DIR/sqlite/darwin"
 		LDOUT='-o '
+        AC_CHECK_PROG(CXX, g++-3.3, g++-3.3)
 		LD='$(CXX) -dynamiclib '
 		StoreProviderAssembly="Simias.dll"
 		StoreProviderType="Simias.Storage.Provider.Flaim.FlaimProvider"
