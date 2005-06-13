@@ -122,6 +122,13 @@ namespace Novell.iFolder
 			cbutton.Toggled +=
 				new EventHandler(OnRemoveiFoldersToggled);
 
+			// If the account is not logged-in or it's disabled,
+			// gray out this checkbox.  This fixes bug #86867.
+			if (!domainInfo.Active || !domainInfo.Authenticated)
+			{
+				cbutton.Sensitive = false;
+			}
+
 			this.VBox.ShowAll();
 
 //			this.AddButton(Stock.Help, ResponseType.Help);
