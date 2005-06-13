@@ -46,6 +46,8 @@ namespace Novell.iFolderCom
 		private string searchContext = null;
 		private string searchText = null;
 		private Hashtable cache;
+		private Hashtable duplicateNames;
+		private int previousTopIndex = -1;
 		private int offset;
 		private bool stopThread = false;
 		private bool noSearch = true;
@@ -553,7 +555,6 @@ namespace Novell.iFolderCom
 		{
 			iFolderUser[] ifolderUsers;
 
-//			offset = index - offset;
 			ifWebService.FindSeekiFolderMembers(
 				domainID,
 				ref searchContext,
@@ -565,6 +566,14 @@ namespace Novell.iFolderCom
 				foreach (iFolderUser user in ifolderUsers)
 				{
 					cache.Add(index, user);
+
+					iFolderUser previFolderUser = (iFolderUser)cache[index-1];
+					iFolderUser nextiFolderUser = (iFolderUser)cache[index+1];
+					if (((previFolderUser != null) && previFolderUser.FN.Equals(user.FN) && !previFolderUser.UserID.Equals(user.UserID)) ||
+						((nextiFolderUser != null) && nextiFolderUser.FN.Equals(user.FN) && !nextiFolderUser.UserID.Equals(user.UserID)))
+					{
+						duplicateNames[user.FN] = null;
+					}
 				}
 
 				return ifolderUsers[0];
@@ -577,6 +586,7 @@ namespace Novell.iFolderCom
 		{
 			int totalMembers = 0;
 			cache = new Hashtable();
+			duplicateNames = new Hashtable();
 			offset = 0;
 
 			if (searchContext != null)
@@ -629,7 +639,18 @@ namespace Novell.iFolderCom
 
 			if (ifolderUsers != null)
 			{
-				cache.Add(0, ifolderUsers[0]);
+				foreach (iFolderUser ifolderUser in ifolderUsers)
+				{
+					cache.Add(offset, ifolderUser);
+					if (offset > 0)
+					{
+						if (((iFolderUser)cache[offset-1]).FN.Equals(ifolderUser.FN))
+						{
+							duplicateNames[ifolderUser.FN] = null;
+						}
+					}
+					offset++;
+				}
 			}
 
 			return totalMembers;
@@ -641,6 +662,7 @@ namespace Novell.iFolderCom
 			{
 				iFolderUser[] ifolderUsers;
 
+				int oldOffset = offset;
 				offset = from;
 				int count = to - from + 1;
 				ifWebService.FindSeekiFolderMembers(
@@ -651,10 +673,27 @@ namespace Novell.iFolderCom
 					out ifolderUsers);
 				if (ifolderUsers != null)
 				{
+					iFolderUser lastiFolderUser = (iFolderUser)cache[oldOffset-1];
 					cache = new Hashtable();
 					foreach (iFolderUser user in ifolderUsers)
 					{
-						cache.Add(offset++, user);
+						cache.Add(offset, user);
+						if (offset.Equals(from))
+						{
+							if (user.FN.Equals(lastiFolderUser.FN) && !user.UserID.Equals(lastiFolderUser.UserID))
+							{
+								duplicateNames[user.FN] = null;
+							}
+						}
+						else
+						{
+							iFolderUser previFolderUser = (iFolderUser)cache[offset-1];
+							if ((previFolderUser != null) && previFolderUser.FN.Equals(user.FN) && !previFolderUser.UserID.Equals(user.UserID))
+							{
+								duplicateNames[user.FN] = null;
+							}
+						}
+						offset++;
 					}
 				}
 			}
@@ -967,9 +1006,31 @@ namespace Novell.iFolderCom
 
 									if (lvDispInfo.item.iSubItem == 0)
 									{
-										char[] array = new char[ifolderUser.FN.Length + 1];
-										ifolderUser.FN.ToCharArray(0, ifolderUser.FN.Length).CopyTo(array, 0);
-										array[ifolderUser.FN.Length] = '\0';
+										string displayName;
+										if (duplicateNames.Contains(ifolderUser.FN))
+										{
+											displayName = string.Format("{0} ({1})", ifolderUser.FN, ifolderUser.Name);
+											int topItemIndex = rosterLV.TopItemIndex;
+											if (!previousTopIndex.Equals(topItemIndex))
+											{
+												previousTopIndex = topItemIndex;
+												Win32.RECT rect = new Win32.RECT();
+												rect.left = 2;//LVIR_LABEL;
+												if (Win32.SendMessage(rosterLV.Handle, Win32.LVM_GETITEMRECT, lvDispInfo.item.iItem, ref rect) > 0)
+												{
+													// Invalidate the area including the item above and the item below the current item.
+													rosterLV.Invalidate(new Rectangle(rect.left, rect.top - (rect.bottom - rect.top), rect.right - rect.left, (rect.bottom - rect.top) * 3));
+												}
+											}
+										}
+										else
+										{
+											displayName = ifolderUser.FN;
+										}
+
+										char[] array = new char[displayName.Length + 1];
+										displayName.ToCharArray(0, displayName.Length).CopyTo(array, 0);
+										array[displayName.Length] = '\0';
 										Marshal.Copy(array, 0, lvDispInfo.item.pszText, Math.Min(array.Length, lvDispInfo.item.cchTextMax));
 									}
 /*									else if (lvDispInfo.item.iSubItem == 1)
