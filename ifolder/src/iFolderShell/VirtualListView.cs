@@ -67,14 +67,24 @@ namespace Novell.iFolderCom
 		}
 
 		#region Properties
+		/// <summary>
+		/// Gets/sets the number of items in the listview.
+		/// </summary>
 		public int Count
 		{
+			get
+			{
+				return Win32.SendMessage(Handle, Win32.LVM_GETITEMCOUNT, 0, 0);
+			}
 			set
 			{
 				Win32.SendMessage(this.Handle, Win32.LVM_SETITEMCOUNT, value, Win32.LVSICF_NOINVALIDATEALL | Win32.LVSICF_NOSCROLL);
 			}
 		}
 
+		/// <summary>
+		/// Gets the number of items selected in the list view.
+		/// </summary>
 		public int SelectedCount
 		{
 			get
@@ -83,6 +93,9 @@ namespace Novell.iFolderCom
 			}
 		}
 
+		/// <summary>
+		/// Gets an array containing the indices of the selected items.
+		/// </summary>
 		new public ArrayList SelectedIndices
 		{
 			get
@@ -103,6 +116,9 @@ namespace Novell.iFolderCom
 			}
 		}
 
+		/// <summary>
+		/// Gets an array of the selected items.
+		/// </summary>
 		new public ArrayList SelectedItems
 		{
 			get
@@ -142,6 +158,17 @@ namespace Novell.iFolderCom
 				}
 
 				return list;
+			}
+		}
+
+		/// <summary>
+		/// Gets the index of the top-most viewable item in the listview.
+		/// </summary>
+		public int TopItemIndex
+		{
+			get 
+			{
+				return Win32.SendMessage(Handle, Win32.LVM_GETTOPINDEX, 0, 0);
 			}
 		}
 		#endregion
