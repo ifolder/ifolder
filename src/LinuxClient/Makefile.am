@@ -1,6 +1,4 @@
-SUBDIRS = library application
-# bht: Removed the po subdirectory from being built for FCS
-# po
+SUBDIRS = library application po
 
 DIST_SUBDIRS = $(SUBDIRS)
 
