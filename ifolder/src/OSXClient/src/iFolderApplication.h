@@ -95,6 +95,7 @@
 //==========================================
 - (void)applicationDidFinishLaunching:(NSNotification*)notification;
 - (void)applicationWillTerminate:(NSNotification *)notification;
+- (BOOL)applicationShouldHandleReopen:(NSApplication *)theApplication hasVisibleWindows:(BOOL)flag;
 
 
 //==========================================

@@ -397,6 +397,25 @@
 
 
 //===================================================================
+// applicationShouldHandleReopen
+// NSApplication Delegate method, called when the user reactivates
+// iFolder by double-clicking the application in Finder or when they
+// click on our already running icon in the dock.
+//===================================================================
+- (BOOL)applicationShouldHandleReopen:(NSApplication *)theApplication hasVisibleWindows:(BOOL)flag
+{
+	// Make sure the "My iFolders" window is showing
+	[self showiFolderWindow:self];
+
+	// Return NO to let the default behavior know that we already
+	// took care of everything needed.
+	return NO;
+}
+
+
+
+
+//===================================================================
 // startSimiasThread
 // This is a method called on a new thread to start up the Simias
 // process.  When done, this will call back on the main thread
