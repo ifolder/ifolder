@@ -1379,7 +1379,7 @@ namespace Novell.iFolder
 		{
 			int rc = 0;
 
-			if (ifHolder.iFolder.Role.Equals("Master"))
+			if (ifHolder.iFolder.Role != null && ifHolder.iFolder.Role.Equals("Master"))
 			{
 				// This machine is the Workgroup Server for this iFolder
 				iFolderMsgDialog dialog = new iFolderMsgDialog(
