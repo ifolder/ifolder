@@ -32,7 +32,7 @@ Group        : Applications/Productivity
 Source       : %{name}-%{version}.tar.gz
 URL          : http://forge.novell.com/modules/xfmod/project/?ifolder
 #Distribution : 
-Vendor       : <unknown>
+Vendor       : Novell Inc.
 Packager     : <unknown>
 BuildRoot    : %{_tmppath}/%{name}-%{version}
 
