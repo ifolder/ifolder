@@ -1,87 +1,146 @@
 $Id$
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
  -- The building iFolder Clients HOWTO
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 	Authors:	Calvin Gaisford <cgaisford@novell.com>
+				Boyd Timothy <btimothy@novell.com>
 
 
 
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- Introduction --
------------------------------------------------------------------------
-This HOWTO is going to cover the build process as it is done on all platforms.  In order to use these build instructions, you may need to first jump down in the document to the specific prerequisites and instructions for your platform.
+--------------------------------------------------------------------------------
+This HOWTO is going to cover the build process as it is done on all platforms.
+In order to use these build instructions, you may need to first jump down in the
+document to the specific prerequisites and instructions for your platform.
 
 
 
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- Getting the Source Code --
------------------------------------------------------------------------
-You can get the source code one of two ways.  You can checkout the source directly from our CVS repository on the Novell Forge site.  For information on using CVS with Forge, look here:
+--------------------------------------------------------------------------------
+You can get the source code one of two ways.  You can checkout the source
+directly from our CVS repository on the Novell Forge site.  For information on
+using CVS with Forge, look here:
 
 http://forge.novell.com/modules/xfmod/cvs/cvspage.php/ifolder/
 
-You can also download snapshots of the code from the iFolder website.  This is a link directly to the location of our daily builds:
+You can also download snapshots of the code from the iFolder website.  This is a
+link directly to the location of our daily builds:
 
 http://ftp.novell.com/pub/forge/ifolder/client/daily/
 
-Click the date of the snapshot you want to build, then click on source and you will be presented with a list of cvs module snapshots that make up the iFolder Client.
+Click the date of the snapshot you want to build, then click on source and you
+will be presented with a list of cvs module snapshots that make up the iFolder
+Client.
 
 
 
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- CVS Modules --
------------------------------------------------------------------------
-iFolder consists of two major modules, "simias" and "ifolder".  At a minimum, you will need to checkout both the simias and ifolder modules in order to build and run iFolder.
+--------------------------------------------------------------------------------
+iFolder consists of two major modules, "simias" and "ifolder".  At a minimum,
+you will need to checkout both the simias and ifolder modules in order to build
+and run iFolder.
 
-The "simias" module is what provides about 90% of the iFolder functionality.  Things like sync, sharing, encryption, notification, and the overall data store for iFolder are all implemented in Simias.  Simias is all written in C# with the exception of a couple of support libraries.  Simias was built to be a generic collaboration platform on which many collaborative solutions could be built.
+The "simias" module is what provides about 90% of the iFolder functionality.
+Things like sync, sharing, encryption, notification, and the overall data store
+for iFolder are all implemented in Simias.  Simias is all written in C# with the
+exception of a couple of support libraries.  Simias was built to be a generic
+collaboration platform on which many collaborative solutions could be built.
 
-The "ifolder" module contains all of the Client GUI code plus some SOAP interfaces into Simias and is what distinguishes iFolder from the rest of the information contained in Simias.  In fact, Simias doesn't know anything about iFolders.  To Simias, an iFolder is a "Collection" of data and is treated just like any other collection of data.  It's the iFolder module that distinguishes iFolders from other Collections in Simias and presents the product view that is iFolder.
+The "ifolder" module contains all of the Client GUI code plus some SOAP
+interfaces into Simias and is what distinguishes iFolder from the rest of the
+information contained in Simias.  In fact, Simias doesn't know anything about
+iFolders.  To Simias, an iFolder is a "Collection" of data and is treated just
+like any other collection of data.  It's the iFolder module that distinguishes
+iFolders from other Collections in Simias and presents the product view that is
+iFolder.
 
-There are several other modules in the iFolder project that may be of interest but will not be covered in detail here.  
+There are several other modules in the iFolder project that may be of interest
+but will not be covered in detail here.  
 
-The "nautilus-ifolder" module adds Gnome Nautilus integration in the iFolder Client for Linux.  This will allow you to perform most of the iFolder operations directly on folders in the Nautilus file browser.  This module is built and shipped by default with the iFolder Client rpm that Novell provides.  Note: the module name is "nautilus-ifolder".  There is also an "ifolder-nautilus" module which was an effort to build nautilus integration using the mono framework and the effort was abandoned due to lack of mono support on Nautilus.  
+The "nautilus-ifolder" module adds Gnome Nautilus integration in the iFolder
+Client for Linux.  This will allow you to perform most of the iFolder operations
+directly on folders in the Nautilus file browser.  This module is built and
+shipped by default with the iFolder Client RPM that Novell provides.  Note: the
+module name is "nautilus-ifolder".  There is also an "ifolder-nautilus" module
+which was an effort to build nautilus integration using the mono framework and
+the effort was abandoned due to lack of mono support on Nautilus.  
 
-The "bonjour" module will add p2p (peer-to-peer) abilities to the iFolder client.  Using the bonjour module, the client can operate and sync with other clients without the need of a server.  This module is not included in the standard iFolder Client builds.  See the Adding-Bonjour-HOWTO.txt for more information on Bonjour.  
+The "bonjour" module will add p2p (peer-to-peer) abilities to the iFolder
+client.  Using the bonjour module, the client can operate and sync with other
+clients without the need of a server.  This module is not included in the
+standard iFolder Client builds.  See the Adding-Bonjour-HOWTO.txt for more
+information on Bonjour.
 
-The "gaim-ifolder" module also will add p2p (peer-to-peer) abilities to the iFolder client.   This module relies on Gaim in order to discover and share iFolders.
+The "gaim-ifolder" module also will add p2p (peer-to-peer) abilities to the
+iFolder client.   This module relies on Gaim in order to discover and share
+iFolders.  See the Adding-Gaim-iFolder-Sharing-HOWTO.txt for more information on
+the Gaim Workgroup Domain.
 
 The rest of the modules have been abandoned or are no longer active.
 
 
 
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- Dependencies and the configure process --
------------------------------------------------------------------------
-The iFolder build system uses the auto-tools (autogen, automake, libtool, etc). to setup the build environment for the platform you are building on.  It also uses pkgconfig (Package Config) to determine if your machine contains the needed libraries and tools to properly build iFolder on the current platform.  Part of the dependencies is a dependency between the ifolder module and the simias module.  The simias module must be configured, compiled, and installed before you can build the ifolder module.  The easiest way to do this is to configure simias and ifolder the same way.  A standard way to build the entire iFolder client is checkout both simias and ifolder in the same folder.  The result should be a folder that contains two subfolders named simias and ifolder.  To build the simias module, change folders into the simias folder and type:
+--------------------------------------------------------------------------------
+The iFolder build system uses the auto-tools (autogen, automake, libtool, etc.)
+to setup the build environment for the platform you are building on.  It also
+uses pkgconfig (Package Config) to determine if your machine contains the needed
+libraries and tools to properly build iFolder on the current platform.  Part of
+the dependencies is a dependency between the ifolder module and the simias
+module.  The simias module must be configured, compiled, and installed before
+you can build the ifolder module.  The easiest way to do this is to configure
+simias and ifolder the same way.  A standard way to build the entire iFolder
+client is checkout both simias and ifolder in the same folder.  The result
+should be a folder that contains two subfolders named simias and ifolder.  To
+build the simias module, change folders into the simias folder and type:
 
 ./configure --prefix=<the full path where you want to install iFolder>
 
-If you do not specify the prefix, iFolder will default to /usr/local which is NOT recommended.  If my home directory were located in /home/calvin and I wanted to install iFolder into the folder "testifolder" in my home directory I would use the command:
+If you do not specify the prefix, iFolder will default to /usr/local which is
+NOT recommended.  If my home directory were located in /home/calvin and I wanted
+to install iFolder into the folder "testifolder" in my home directory I would
+use the command:
 
 ./configure --prefix=/home/calvin/testifolder
 
-If you are working with files directly from CVS and not from the tarball, you'll need to run autogen.sh instead of configure.  That will generate a configure script and run it like this:
+If you are working with files directly from CVS and not from the tarball, you'll
+need to run autogen.sh instead of configure.  That will generate a configure
+script and run it like this:
 
 ./autogen.sh --prefix=/home/calvin/testifolder
 
-The recommended build pattern is to configure both ifolder and simias to the same prefix.  If for some reason (that we don't want to hear about) you  want or need to use a different prefix, you'll need to set your PKG_CONFIG_PATH environment variable to be able to resolve the simias dependency in iFolder.  For the example used above where the prefix was set to /home/calvin/testifolder, the PKG_CONFIG_PATH would be set as follows:
+The recommended build pattern is to configure both ifolder and simias to the
+same prefix.  If for some reason (that we don't want to hear about) you  want or
+need to use a different prefix, you'll need to set your PKG_CONFIG_PATH
+environment variable to be able to resolve the simias dependency in iFolder.
+For the example used above where the prefix was set to /home/calvin/testifolder,
+the PKG_CONFIG_PATH would be set as follows:
 
 export PKG_CONFIG_PATH=/home/calvin/testifolder/lib/pkgconfig
 
 *** WORD OF WARNING ***
-Our install make target is a little strange right now so pick your prefix wisely!  Read the next session to learn about how and where ifolder and simias are going to copy files.
+Our install make target is a little strange right now so pick your prefix
+wisely.  Read the next session to learn about how and where ifolder and simias
+are going to copy files.
 
 
 
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- Make and install --
------------------------------------------------------------------------
-The iFolder build system includes an "install" target that will install the  ifolder and simias modules into the prefix you have specified.  The ifolder and simias modules will create and use the following directories when the install make target is used:
+--------------------------------------------------------------------------------
+The iFolder build system includes an "install" target that will install the
+ifolder and simias modules into the prefix you have specified.  The ifolder and
+simias modules will create and use the following directories when the install
+make target is used:
 
 $prefix/etc
 $prefix/lib
@@ -91,7 +150,9 @@ $prefix/include
 $prefix/share
 $prefix/Applications   (Macintosh Only)
 
-As you can see, selecting a prefix of /usr could cause some serious contamination of your system.  We realize this is a problem and will be changing the build system to address this some time soon.
+As you can see, selecting a prefix of /usr could cause some serious
+contamination of your system.  We realize this is a problem and will be changing
+the build system to address this some time soon.
 
 To build simias and install simias, go to the root of the simias module and type:
 
@@ -104,25 +165,28 @@ make install
 
 
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- Windows Client -- Building --
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 	** to be added
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- Linux Client -- Building --
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 	** to be added
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- Macintosh Client -- Building --
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 Prerequisites:
 	Macintosh OS X 10.3.9 (Panther)
 	Xcode 1.5 - http://developer.apple.com
 	Mono 1.1.7 - http://www.go-mono.com
 
-We are working to move our build system over to OS X 10.4 (Tiger) and to use the updated developer tools (Xcode 2.1).  We'll update this document when we do that.
+We are working to move our build system over to OS X 10.4 (Tiger) and to use the
+updated developer tools (Xcode 2.1).  We'll update this document when we do that.
 
-After you have run configure and make install, there will be an "iFolder 3.app" bundle in your $prefix/Applications folder.  Running this executable will start the iFolder client.
+After you have run configure and make install, there will be an "iFolder 3.app"
+bundle in your $prefix/Applications folder.  Running this executable will start
+the iFolder client.
 
