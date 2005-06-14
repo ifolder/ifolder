@@ -2,8 +2,7 @@ $Id$
 -----------------------------------------------------------------------
  -- The Adding Languages and Strings in the iFolder Clients HOWTO
 -----------------------------------------------------------------------
-
-Calvin Gaisford <cgaisford@novell.com>
+	Authors:	Calvin Gaisford <cgaisford@novell.com>
 
 
 -----------------------------------------------------------------------
