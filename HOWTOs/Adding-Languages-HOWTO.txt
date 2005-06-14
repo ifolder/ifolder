@@ -1,0 +1,110 @@
+$Id$
+-----------------------------------------------------------------------
+ -- The Adding Languages and Strings in the iFolder Clients HOWTO
+-----------------------------------------------------------------------
+
+Calvin Gaisford <cgaisford@novell.com>
+
+
+-----------------------------------------------------------------------
+-- Windows Client -- Adding new Languages --
+-----------------------------------------------------------------------
+	** to be added
+
+
+
+
+-----------------------------------------------------------------------
+-- Windows Client -- Adding new strings and/or files --
+-----------------------------------------------------------------------
+	** to be added
+
+
+
+
+-----------------------------------------------------------------------
+-- Linux Client -- Adding new Languages --
+-----------------------------------------------------------------------
+All of the strings for the iFolder Linux client are stored in .po files (Portable Object).  The files for the linux client are in the folder src/LinuxClient/po.  The ifolder3.pot file is the "template file" that all other languages should be generated from.  The first step is to make sure the pot file is up to date.  Do this by running:
+
+make update-po
+
+in the src/LinuxClient/po folder.  This will run xgettext and parse all of the files that contain strings to update the ifolder3.pot file.  Next, copy the ifolder3.pot file to the language you wish to translate.  If you were translating to Spanish, you would copy the ifolder3.pot file to es.po.  You then need to edit the new .po file and translate all of the strings contained in it with the translated equivalents.  Each string that needs to be translated has an entry in the file that looks like this:
+
+#: src/LinuxClient/library/AccountDialog.cs:190
+msgid "Used space on server:"
+msgstr ""
+
+The translated string should be added to the msgstr line.  The actual translation of this string would look like this (and I have no idea if that is the correct translation):
+
+#: src/LinuxClient/library/AccountDialog.cs:190
+msgid "Used space on server:"
+msgstr "Espacio usado en el servidor:"
+
+The section at the top of the .po file also needs to be updated to include the correct charset used (normally UTF-8), the translator information and the package version.  If those fields are not updated, the .po compilation will fail.
+
+The final step in adding a new language is updating the Makefile.am.  The POFILES variable needs to contain a line for the new .po you are adding.  The make system will then begin to generate a .mo file (Machine Object) from your .po file and will install it to the correct location.  If you set the LANG environment variable to your .po file's language, iFolder will run and display the newly translated strings.
+
+
+
+
+-----------------------------------------------------------------------
+-- Linux Client -- Adding new strings and/or files --
+-----------------------------------------------------------------------
+The iFolder Linux Client uses GNU gettext to load all of its strings.  We have included a utility class that takes care of everything that needs to happen in order to load the correct languages.  If you have new strings to add to any of the source files, you need to wrap the strings in a Util.GS() method.  If you were setting the iFolder status to be displayed as "Idle..." the statement might look like this:
+
+UpdateStatus(Utils.GS("Idle..."));
+
+The Make system will parse out all strings that are wrapped in Util.GS and add them to the iFolder.pot file AND all .po files that are listed in the Makefile.am.  This way, new strings get added to existing language .po files but without the translated versions.  You can search the .po files for msgstr followed by a blank string "" and you'll find all of the new strings that need to be translated.
+
+If you are adding a new file to the iFolder client and it contains strings that need to be translated, make sure you add the file to the src/LinuxClient/po/POTFILES.in file.  Be sure to use the full path of the file from the root of the project.
+
+
+
+
+-----------------------------------------------------------------------
+-- Macintosh Client -- Adding new Languages --
+-----------------------------------------------------------------------
+The iFolder Macintosh client is written in objective-c and uses standard Cocoa i18n practices.  The strings to be translated are located in two places.  The first place is the Localizable.strings file.  This file contains all of the strings used in the code outside of a .nib file.  The second place is in the individual .nib files.  Now opening each .nib file and changing the strings from english to the translated language would be more work than we are willing to do so we've built in a build target that will extract all of the strings from each .nib file so they can easily be translated and placed back into a translated .nib file.
+
+The first step is to open the iFolder.xcodeproj in Xcode and locate the Localizable.strings file in the Resources folder.  Select the file and choose "Get Info" (cmd-i).  Under the General tab you will see a Localizations table where you can add the language you want to add.  Don't use the pre-defined choices, make sure you use the standard localization abbreviations (ie - Spanish = es).  This will create a new .lproj folder in the OSXClient directory with the prefix of the local (adding a Spanish language would create es.lproj).  You need to repeat those steps for each .nib file located in the Resources folder.  You'll know a resource will handle your new language when you click the arrow next to the resource and see the local abbreviation show up under it.  Make sure you also add the locale to the Credits.rtf file so the about box shows up translated and not in English.  You'll also need to edit the Makefile.am located in the OSXClient folder and add your new .lproj directory to the LPROJDIRS variable so make will find it.
+
+The next step is to generate .strings files for all the .nib files in preparation to be translated.  You can manually open each .nib file in Interface Builder and add the translated strings but that's more work than we are willing to do so we added a build target to extract the strings from all of the .nib files.  Run the following make command when in the OSXClient folder:
+
+make generate-strings
+
+The end result will be an updated Localizable.strings file and a .strings file for each .nib file located in the English.lproj folder.  Ignore the errors about graphics, this happens because we have a common location for the graphics and they are not resolvable by the genstrings tool.  Copy the .strings files to your new locale .lproj directory.
+
+The format of a single string in the .strings file looks like this:
+
+/* No comment provided by engineer. */
+"Clear Log" = "Clear Log";
+
+If this string were translated to spanish it would look like this (I have no idea if this is the correct translation, it's an example):
+
+/* No comment provided by engineer. */
+"Clear Log" = "Registro Claro";
+
+Once all of the strings are translated, you can re-insert them into the .nib files by running the following make command from the OSXClient folder:
+
+make update-strings
+
+This command calls nib tool which is given parameters to leave the .nib file preserved as far as alignments but update the strings.  You may have to open the .nib files and adjust the widgets to align with the new translated strings.  At this point the product is translated into your new locale and you can run the following command to clean up all of the extra .strings files which are no longer needed:
+
+make clean-strings
+
+
+
+
+-----------------------------------------------------------------------
+-- Macintosh Client -- Adding new strings and/or files --
+-----------------------------------------------------------------------
+If you are adding strings to the code, you need to make sure you wrap them in the NSLocalizedString function.  If I were adding the string "Checking for new iFolders..." it would look like this in code:
+
+NSLocalizedString(@"Checking for new iFolders...", nil)
+
+The second parameter is one you can use as a developer to provide a comment to the translators about the use of the string.  These are mostly left as nil in the iFolder client.
+
+If you are adding a new file to the project, you'll need to add that file to the src/OSXClient/intlsrcfiles so it becomes part of the i18n process.  If you are adding a new .nib file, you'll need to add that file to the /src/OSXClient/intlnibfiles so it's becomes part of the i18n process.
+
+
