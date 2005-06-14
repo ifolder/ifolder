@@ -381,6 +381,9 @@ namespace Novell.iFolder
 				this.GdkWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
 			}
 
+			UserAddButton.Sensitive = false;
+			UserDelButton.Sensitive = false;
+
 			if(SearchEntry.Text.Length > 0 && SearchEntry.Text != Util.GS("<Enter text to find a user>"))
 			{
 				int searchAttribIndex = SearchAttribOptionMenu.History;
@@ -406,9 +409,6 @@ namespace Novell.iFolder
 				// Populate the UserTreeStore with the first 25 domain users
 				PerformInitialSearch(null, null);
 			}
-
-			UserAddButton.Sensitive = false;
-			UserDelButton.Sensitive = false;
 
 			if (this.GdkWindow != null)
 			{
@@ -453,6 +453,14 @@ namespace Novell.iFolder
 			memberListModel.Reinitialize(searchContext, memberInfoA, totalMembers);
 			memberList.Reload();
 			memberList.Refresh();
+
+			// The code in this if statement fixes Bug 87444 (User Selector
+			// dialog is not refreshed when performing a search).  By forcing
+			// the first item to be selected, this bug no longer happens.
+			if (totalMembers > 0)
+			{
+				memberList.Selected = 0;
+			}
 		}
 
 
