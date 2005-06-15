@@ -1,7 +1,10 @@
+./English.lproj/AboutBox.nib
+./English.lproj/AcceptCert.nib
 ./English.lproj/ConflictResolver.nib
 ./English.lproj/LogWindow.nib
 ./English.lproj/LoginWindow.nib
 ./English.lproj/MainMenu.nib
 ./English.lproj/Preferences.nib
 ./English.lproj/Properties.nib
+./English.lproj/iFolderView.nib
 ./English.lproj/iFolderWindow.nib
