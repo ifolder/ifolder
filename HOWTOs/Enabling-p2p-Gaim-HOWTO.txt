@@ -161,4 +161,17 @@ of writing this, the latest version of Gaim was 1.3.1.
 --------------------------------------------------------------------------------
 -- Known problems/issues --
 --------------------------------------------------------------------------------
-** TBD **
+1. Will not work through a Firewall
+
+	The iFolder Gaim File Sharing solution does not work through a firewall yet.
+	iFolder opens a randomly generated port number (which you can see when you
+	start iFolder from the command-line).
+	
+	Both machines that you intend to share iFolders between must be able to see
+	each other.  Each one acts as a server and client.  If a firewall exists
+	between the two computers, both iFolder ports (really it's the Simias processs that
+	opens the port) must be opened.
+	
+	We are investigating a UPnP solution which would allow iFolder to request
+	for ports to be opened using many popular home routers.  We do not have any
+	plans set in stone, however, as to when this feature will be added.
