@@ -2,8 +2,7 @@ $Id$
 --------------------------------------------------------------------------------
  -- Enabling p2p in the iFolder Client using Gaim HOWTO --
 --------------------------------------------------------------------------------
-	Authors:	Calvin Gaisford <cgaisford@novell.com>
-				Boyd Timothy <btimothy@novell.com>
+	Authors:	Boyd Timothy <btimothy@novell.com>
 
 --------------------------------------------------------------------------------
 -- Introduction --
