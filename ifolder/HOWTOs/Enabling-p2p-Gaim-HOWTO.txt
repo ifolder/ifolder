@@ -12,8 +12,8 @@ iFolder Client using Gaim (http://gaim.sourceforge.net).
 
 The Gaim file sharing solution presented here consists of two parts:
 
-	1. The iFolder Gaim Plugin
-	2. The Simias Gaim Domain Thread Service
+	1. The Simias Gaim Domain Thread Service
+	2. The iFolder Gaim Plugin
 
 This code currently only works in Windows and Linux.  We intend to eventually
 create a plugin for Adium (http://www.adiumx.com/) for Mac OS X, but we have not
@@ -53,20 +53,110 @@ and download a tarball of the source code.
 
 
 --------------------------------------------------------------------------------
--- Building and Installing the iFolder Gaim Plugin --
---------------------------------------------------------------------------------
-** More to come soon **
-
---------------------------------------------------------------------------------
 -- Building and Installing the Simias Gaim Domain Thread Service --
 --------------------------------------------------------------------------------
 ** More to come soon **
 
---------------------------------------------------------------------------------
--- Configuring and Running --
---------------------------------------------------------------------------------
-** More to come soon **
 
+--------------------------------------------------------------------------------
+-- Building and Installing the iFolder Gaim Plugin --
+--------------------------------------------------------------------------------
+As of right now, we have not spent the time to figure out how to build the
+iFolder Gaim Plugin separately from Gaim itself.  Instead, we've created a patch
+file to apply before building Gaim which builds the iFolder Gaim Plugin all in
+the same process.
+
+Don't worry, we'll walk you through the process here, although, if you're having
+issues building Gaim, you'll need to resolve those on your own (or with the help
+of the friendly folks from Gaim: #gaim or #wingaim on irc.freenode.net).
+
+In the root of the gaim-ifolder module, we update the patch file to correspond
+with the latest version of gaim (i.e., gaim-1.3.1.patches).  Get the Gaim
+source code that corresponds with the latest available patch file.  At the time
+of writing this, the latest version of Gaim was 1.3.1.
+
+1. Get the Gaim sourcecode for Gaim from CVS:
+
+	cvs -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/gaim login
+
+	Just hit enter for the password.
+	
+	cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/gaim checkout \
+		-r v1_3_1 -d gaim-1.3.1 gaim
+
+	This will checkout Gaim Version 1.3.1 into a new directory named
+	"gaim-1.3.1".
+
+2. Patch the Gaim sourcecode to include the Gaim iFolder Plugin
+
+	cd gaim-1.3.1
+	
+	mkdir plugins/gifolder
+	
+	cp -r <Path to the gaim-ifolder module>/gifolder/* plugins/gifolder
+	
+	patch -p0 < <Path to the gaim-ifolder module>/gaim-1.3.1.patches
+
+3. Build Gaim
+
+	Unless you really want to, you will not actually use the Gaim binaries you
+	build here.  All you're after is for it to produce a gifolder.so (Linux) or
+	gifolder.dll (Windows), which you'll insert into your real version of Gaim
+	when the build is finished.
+	
+	Note: Building Gaim in Windows is significantly harder than building Gaim in
+	Linux.  Make sure to follow all the directions on Gaim's website for setting
+	up the build environment before attempting to build Gaim in Windows.
+
+	Linux:
+
+		./autogen.sh
+		make
+	
+	Windows:
+	
+		make -f Makefile.mingw install
+
+	You may hit a couple of file permission/execute rights problems during the
+	build because the file permissions are set incorrectly on a couple files.
+	If you see this, do the following before restarting the build:
+	
+	Linux:
+	
+		chmod 755 gaim-1.3.1/plugins/gifolder/gsoap/linux-2.7/wsdl2h
+		chmod 755 gaim-1.3.1/plugins/gifolder/gsoap/linux-2.7/soapcpp2
+	
+	Windows
+
+		chmod 755 gaim-1.3.1/plugins/gifolder/gsoap/win32-2.7/wsdl2h
+		chmod 755 gaim-1.3.1/plugins/gifolder/gsoap/win32-2.7/soapcpp2
+	
+4. Install the Gaim iFolder Plugin
+
+	When the build is complete, there's one file you'll need to copy/install
+	before running Gaim:
+	
+	Linux (Paths shown here are for NLD with Gaim 1.x):
+	
+		cp gaim-1.3.1/plugins/gifolder/.libs/gifolder.so /opt/gnome/lib/gaim
+		cp gaim-1.3.1/plugins/gifolder/.libs/gifolder.la /opt/gnome/lib/gaim
+	
+	Windows:
+
+		Copy "gifolder.dll" to "C:\Program Files\Gaim\plugins"
+
+5. Start/Restart Gaim
+
+6. Enable the iFolder Gaim Plugin
+
+	Go into the Gaim Preferences and select Plugins.  Scroll down to the iFolder
+	plugin and make sure that it is enabled.
+
+
+--------------------------------------------------------------------------------
+-- Using iFolder Gaim File Sharing --
+--------------------------------------------------------------------------------
+** More to come soon ***
 
 --------------------------------------------------------------------------------
 -- Known problems/issues --
