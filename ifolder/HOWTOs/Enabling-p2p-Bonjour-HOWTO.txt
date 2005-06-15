@@ -1,0 +1,99 @@
+$Id$
+--------------------------------------------------------------------------------
+ -- Enabling p2p in the iFolder Client using Bonjour HOWTO
+--------------------------------------------------------------------------------
+	Authors:	Calvin Gaisford <cgaisford@novell.com>
+
+
+
+
+--------------------------------------------------------------------------------
+-- Introduction --
+--------------------------------------------------------------------------------
+This HOWTO will show you how to add p2p (Peer-to-Peer) functionality to the iFolder Client using Apple's Bonjour (formerly known as Rendezvous).  This document will eventually include information on also enabling the new Wide Area Bonjour which will allow you to share iFolders across the internet without using a central iFolder server.
+
+
+
+
+--------------------------------------------------------------------------------
+-- I don't want to compile code, just tell me how to get it working! --
+--------------------------------------------------------------------------------
+This section is for people that don't want to compile any code but instead want to just download our pre-built packages, install them, and start using iFolder as a p2p solution.
+
+The first thing you need to do is download a stable version of iFolder.  That will not be covered here but you can find a stable build at:
+
+http://www.ifolder.com
+
+Next, you'll need to download the Simias-Bonjour package.  As of the writing of this document, an official open source release of this package does not exist.  The current builds of the Simias-Bonjour packages can be found here:
+
+http://forge.novell.com/modules/xfcontent/downloads.php/ifolder/p2p/current/
+
+As of the writing of this document, the only package available is the Macintosh dmg file.  We are working to get a Windows msi and a SuSE and NLD rpm.
+
+Once you have iFolder and Simias-Bonjour installed, you'll see a new Domain available called Bonjour.  If you create an iFolder in that Domain, you will be able to share it with other iFolder/Simias-Bonjour enabled clients on your network.  The other users will automatically show up in your list of users to share with.
+
+
+
+
+--------------------------------------------------------------------------------
+-- Getting the Source Code --
+--------------------------------------------------------------------------------
+The only way to get the Simias-Bonjour source code is to get the source from CVS.  For information on using CVS with Forge, look here:
+
+http://forge.novell.com/modules/xfmod/cvs/cvspage.php/ifolder/
+
+The bonjour module is the module you want to check out.  If you use the web browser, you can have it create a tarball to download the source code if you need it.
+
+
+
+
+--------------------------------------------------------------------------------
+-- Building and Installing --
+--------------------------------------------------------------------------------
+The bonjour module has dependencies on Simias so make sure you follow the instructions for building Simias (in the Building-iFolder-HOWTO) and do the same for building the bonjour module.
+
+To configure and build the bonjour module, change into the root of the module and run:
+
+./autogen.sh --prefix=<simias prefix>
+
+where <simias prefix> is set to the same prefix where Simias was built and installed.  This must be the same prefix because it installs additional libraries and configuration which enable the p2p functionality.  If you are building from a dist tarball you'll need to run ./configure instead of ./autogen.sh.
+
+To build and install the bonjour module, run "make install".
+
+
+
+
+--------------------------------------------------------------------------------
+-- Configuring and Running --
+--------------------------------------------------------------------------------
+Once you have installed the bonjour module, you'll need to edit a configuration file to enable it (the pre-built packages take care of this for you).  The file you need to edit is $prefix/etc/simias-client-bootstrap.config.  In this file you are looking for the line:
+
+<Service name="Bonjour Domain" assembly="Simias.Bonjour.dll" enabled="False"
+type="Thread" class="Simias.mDns.Service" />
+
+The line needs to change to have "True" where it shows "False" like this:
+
+<Service name="Bonjour Domain" assembly="Simias.Bonjour.dll" enabled="True"
+type="Thread" class="Simias.mDns.Service" />
+
+This will only enable bonjour support if you have never run iFolder.  This bootstrap file gets copied to your Simias data directory and is named Simias.config.  If you have already run iFolder, you also need to update your Simias.config file.  It has the same format as shown above.  It's located in a different location depending on the platform.
+
+On Linux and Macintosh:
+	~/.local/share/simias/Simias.config
+
+On Windows:
+	$HOME_DIR\Local Settings\Application Settings\simias\Simias.config
+
+You will now have p2p iFolder using Bonjour.
+
+
+
+
+--------------------------------------------------------------------------------
+-- Setting up Wide Area Bonjour --
+--------------------------------------------------------------------------------
+Wide Area Bonjour will give you the ability to communicate using the bonjour module but go across a WAN or internet instead of the local LAN.
+
+** more information to be added
+
+
