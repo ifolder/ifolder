@@ -79,7 +79,7 @@ information on Bonjour.
 
 The "gaim-ifolder" module also will add p2p (peer-to-peer) abilities to the
 iFolder client.   This module relies on Gaim in order to discover and share
-iFolders.  See the Adding-Gaim-iFolder-Sharing-HOWTO.txt for more information on
+iFolders.  See the Enabling-p2p-Gaim-HOWTO.txt for more information on
 the Gaim Workgroup Domain.
 
 The rest of the modules have been abandoned or are no longer active.
@@ -173,7 +173,28 @@ make install
 --------------------------------------------------------------------------------
 -- Linux Client -- Building --
 --------------------------------------------------------------------------------
-	** to be added
+Prerequisites:
+	Novell Linux Desktop (NLD) 9.x
+		- iFolder has been built on other Linux platforms...see below
+		- When installing NLD, install the LSB and Development packages
+	Mono 1.1.7 - http://www.go-mono.com
+
+We build the client primarily for Novell Linux Desktop, though others outside
+our team have successfully built it on other Linux platforms.  If you've taken
+the time to figure out issues building on other Linux platforms, please send
+your instructions to ifolder-dev@forge.novell.com and we will include them in
+this document.
+
+Building the "nautilus-ifolder" module requires you to have the "gnome-common"
+package installed.  The "gnome-common" package contains a "gnome-autogen" tool
+which made doing the localization work for this module easy.  This was done
+because we just referenced other nautilus extensions and that's what they were
+doing.
+
+To start the iFolder client, run the following:
+
+/opt/novell/ifolder3/bin/ifolder
+
 
 --------------------------------------------------------------------------------
 -- Macintosh Client -- Building --
