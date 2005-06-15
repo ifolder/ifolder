@@ -591,11 +591,17 @@ namespace Novell.iFolder
 
 					if (memberFullNames.Contains(memberInfo.FullName))
 					{
-						// We've found a duplicate
-						duplicateMembers[memberInfo.FullName] = 0;
+						// If the one we've stored has the same username (CN)
+						// then it's not really a duplicate.
+						string username = (string) memberFullNames[memberInfo.FullName];
+						if (!username.Equals(memberInfo.Name))
+						{
+							// We've found a duplicate
+							duplicateMembers[memberInfo.FullName] = 0;
+						}
 					}
 					else
-						memberFullNames[memberInfo.FullName] = 0;
+						memberFullNames[memberInfo.FullName] = memberInfo.Name;
 
 					memberInfos[i] = memberInfo;
 				}
@@ -666,11 +672,17 @@ namespace Novell.iFolder
 					{
 						if (memberFullNames.Contains(memberInfo.FullName))
 						{
-							// We've found a duplicate
-							duplicateMembers[memberInfo.FullName] = 0;
+							// If the one we've stored has the same username (CN)
+							// then it's not really a duplicate.
+							string username = (string) memberFullNames[memberInfo.FullName];
+							if (!username.Equals(memberInfo.Name))
+							{
+								// We've found a duplicate
+								duplicateMembers[memberInfo.FullName] = 0;
+							}
 						}
 						else
-							memberFullNames[memberInfo.FullName] = 0;
+							memberFullNames[memberInfo.FullName] = memberInfo.Name;
 
 						memberInfos[currentIndex] = memberInfo;
 						currentIndex++;
