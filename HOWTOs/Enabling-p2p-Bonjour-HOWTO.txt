@@ -10,11 +10,29 @@ $Id$
 --------------------------------------------------------------------------------
 -- Introduction --
 --------------------------------------------------------------------------------
-This HOWTO will show you how to add p2p (Peer-to-Peer) functionality to the
-iFolder Client using Apple's Bonjour (formerly known as Rendezvous).  This
+This HOWTO will show you how to add p2p (Peer-to-Peer) functionality to the 
+iFolder Client using Apple's Bonjour (formerly known as Rendezvous).  This 
 document will eventually include information on also enabling the new Wide Area
-Bonjour which will allow you to share iFolders across the internet without using
-a central iFolder server.
+Bonjour which will allow you to share iFolders across the internet without
+using a central iFolder server.
+
+
+
+
+--------------------------------------------------------------------------------
+-- Requirements --
+--------------------------------------------------------------------------------
+You will need to have a working copy of Bonjour running on your machine.  Visit
+the Apple Bonjour Developer site for links to download a working copy of
+Bonjour for your platform.
+
+http://developer.apple.com/networking/bonjour/
+
+Apple provides an install for Windows you can download and install without
+having to build anything.  Linux users will have to compile and install Bonjour
+if your distribution doesn't contain a working copy (SuSE 9.3 does).  Macintosh
+users don't need to download anything as it is already installed and running on
+OS X machines.
 
 
 
@@ -68,8 +86,8 @@ need it.
 -- Building and Installing --
 --------------------------------------------------------------------------------
 The bonjour module has dependencies on Simias so make sure you follow the
-instructions for building Simias (in the Building-iFolder-HOWTO) and do the same
-for building the bonjour module.
+instructions for building Simias (in the Building-iFolder-HOWTO) and do the
+same for building the bonjour module.
 
 To configure and build the bonjour module, change into the root of the module
 and run:
