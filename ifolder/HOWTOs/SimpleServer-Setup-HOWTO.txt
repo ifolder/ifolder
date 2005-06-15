@@ -1,0 +1,48 @@
+$Id$
+--------------------------------------------------------------------------------
+ -- Setting up an iFolder 3.0 "Simple Server" HOWTO
+--------------------------------------------------------------------------------
+	Authors:	Henry McBride <henry.mcbride@gmail.com>
+
+
+1)  Download the simias source. Do this by running
+	cvs -z3 -d:ext:anonymous@forgecvs1.novell.com:/cvsroot/ifolder co simias
+
+2)  cd into the simias directory 
+3)  Run the autogen script (like this): ./autogen --prefix=/opt/simias
+4)  Run 'make install' in the simias code directory
+5)  cd to the other/SimpleServer directory
+6)  Run 'make install' in the SimpleServer Directory 
+7)  Delete the ~/.local/share/simias directory if it exists
+8)  edit the /opt/simias/etc/simias-client-bootstrap-config to look like the 
+    following
+
+<configuration>
+  <section name="Domain">
+    <setting name="SimpleServerName" value="Simias SimpleServer" />
+  </section>
+  <section name="ServiceManager">
+      <setting name="WebServicePath" value="/opt/simias/web" />
+      <setting name="Services">
+      <Service name="Simias Change Log Service" assembly="Simias" enabled="True"
+          type="Thread" class="Simias.Storage.ChangeLog" />
+      <Service name="Simias Simple Server" assembly="Simias.SimpleServer.dll"
+          enabled="True" type="Thread" class="Simias.SimpleServer.Service" />
+    </setting>
+  </section>
+  <section name="StoreProvider">
+    <setting name="Assembly" value="Simias.dll" />
+    <setting name="Type" value="Simias.Storage.Provider.Flaim.FlaimProvider" />
+  </section>
+</configuration>
+
+** Note** 
+  If you leave other services in the file it will cause issues with 
+  simple server
+
+
+9)  Edit the /opt/simias/etc/SimpleServer.xml file with your user information
+10) Run /opt/simias/bin/simias
+11) Attach an iFolder client to the Simple server (ip:8086) I think. It will 
+    show when starting the simple server
+
