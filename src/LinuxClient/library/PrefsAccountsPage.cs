@@ -1044,14 +1044,29 @@ namespace Novell.iFolder
 			}
 			catch (Exception ex)
 			{
-				dg = new iFolderMsgDialog(
-					topLevelWindow,
-					iFolderMsgDialog.DialogType.Error,
-					iFolderMsgDialog.ButtonSet.Ok,
-					Util.GS("iFolder Error"),
-					Util.GS("Unable to Connect to iFolder Server"),
-					Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."),
-					Util.GS(ex.Message));
+				if ((ex.Message.IndexOf("Simias.ExistsException") != -1) ||
+					(ex.Message.IndexOf("already exists") != -1))
+				{
+					dg = new iFolderMsgDialog(
+						topLevelWindow,
+						iFolderMsgDialog.DialogType.Error,
+						iFolderMsgDialog.ButtonSet.Ok,
+						Util.GS("iFolder Error"),
+						Util.GS("Unable to Connect to iFolder Server"),
+						Util.GS("An account for this server already exists on the local machine.  Only one account per server is allowed."));
+				}
+				else
+				{
+					dg = new iFolderMsgDialog(
+						topLevelWindow,
+						iFolderMsgDialog.DialogType.Error,
+						iFolderMsgDialog.ButtonSet.Ok,
+						Util.GS("iFolder Error"),
+						Util.GS("Unable to Connect to iFolder Server"),
+						Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."),
+						Util.GS(ex.Message));
+				}
+
 				dg.Run();
 				dg.Hide();
 				dg.Destroy();
