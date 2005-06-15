@@ -55,8 +55,49 @@ and download a tarball of the source code.
 --------------------------------------------------------------------------------
 -- Building and Installing the Simias Gaim Domain Thread Service --
 --------------------------------------------------------------------------------
-** More to come soon **
+Building this portion of the Gaim Domain is fairly straighforward.  You will
+need to know the prefix of where iFolder/Simias is currently installed, since
+the binaries generated here have to be installed to the same location.
 
+Run the following commands to configure, build, and install the Simias Gaim
+Domain Thread Service (the prefix shown in these instructions is the one used in
+the RPMs we release for Novell Linux Desktop):
+
+	cd gaim-ifolder
+
+	./autogen.sh --prefix=/opt/novell/ifolder3
+
+	make
+
+	make install
+	(you will likely need to "su root" before running this)
+
+Next, you'll need to edit a configuration file to enable the thread service.
+The file you need to edit is $prefix/etc/simias-client-bootstrap.config.  In
+this file, you're looking for the line:
+
+	<Service name="Gaim Workgroup Domain" assembly="Simias.Gaim.dll"
+	 enabled="False" type="Thread" class="Simias.Gaim.GaimService" />
+
+The line needs to be changed to have "True" instead of "False" like this:
+
+	<Service name="Gaim Workgroup Domain" assembly="Simias.Gaim.dll"
+	 enabled="True" type="Thread" class="Simias.Gaim.GaimService" />
+              ^^^^
+
+This will only enable the Gaim Domain if you've never run iFolder before.  This
+bootstrap file is copied to your Simias data directory and is named,
+"Simias.config".  If you have already run iFolder, you'll also need to update
+your "Simias.config" file.  It has the same format as shown above.  It's located
+in a different location depending on your platform:
+
+Linux:
+
+	~/.local/share/simias/Simias.config
+
+Windows:
+
+	$HOME_DIR\Local Settings\Application Settings\simias\Simias.config
 
 --------------------------------------------------------------------------------
 -- Building and Installing the iFolder Gaim Plugin --
@@ -208,7 +249,7 @@ or may not add that as a feature.  Please let us know what you think!
 
 
 --------------------------------------------------------------------------------
--- Known problems/issues/FAQs --
+-- FAQs/known problems/issues --
 --------------------------------------------------------------------------------
 1. Will not work through a Firewall
 
