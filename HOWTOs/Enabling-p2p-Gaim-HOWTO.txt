@@ -1,0 +1,75 @@
+$Id$
+--------------------------------------------------------------------------------
+ -- Enabling p2p in the iFolder Client using Gaim HOWTO --
+--------------------------------------------------------------------------------
+	Authors:	Calvin Gaisford <cgaisford@novell.com>
+				Boyd Timothy <btimothy@novell.com>
+
+--------------------------------------------------------------------------------
+-- Introduction --
+--------------------------------------------------------------------------------
+This HOWTO will show you how to add p2p (Peer-to-Peer) functionality to the
+iFolder Client using Gaim (http://gaim.sourceforge.net).
+
+The Gaim file sharing solution presented here consists of two parts:
+
+	1. The iFolder Gaim Plugin
+	2. The Simias Gaim Domain Thread Service
+
+This code currently only works in Windows and Linux.  We intend to eventually
+create a plugin for Adium (http://www.adiumx.com/) for Mac OS X, but we have not
+yet had the time.  If you have experience there and can help, please let us
+know.
+
+--------------------------------------------------------------------------------
+-- Prerequisites --
+--------------------------------------------------------------------------------
+You will need to install a stable version of iFolder.  This is not covered here
+but you can find a stable build at:
+
+http://www.ifolder.com/
+
+
+--------------------------------------------------------------------------------
+-- I don't want to compile code, just tell me how to get it working! --
+--------------------------------------------------------------------------------
+Unfortunately, we currently do not have a process to automatically build these
+components on a regular basis.  When we finally do, we will update this section
+of this HOWTO document with the location of the binaries.  If we do post some
+hand-built binaries for iFolder Gaim p2p we will post links to it here and on
+www.ifolder.com.
+
+
+--------------------------------------------------------------------------------
+-- Getting the Source Code --
+--------------------------------------------------------------------------------
+You can checkout the source directly from our CVS repository on the Novell Forge
+site.  For information on using CVS with Forge, look here:
+
+http://forge.novell.com/modules/xfmod/cvs/cvspage.php/ifolder/
+
+You will want to check out the "gaim-ifolder" module.  As an alternative to
+using CVS directly, you can also browse the CVS repository with a web browser
+and download a tarball of the source code.
+
+
+--------------------------------------------------------------------------------
+-- Building and Installing the iFolder Gaim Plugin --
+--------------------------------------------------------------------------------
+** More to come soon **
+
+--------------------------------------------------------------------------------
+-- Building and Installing the Simias Gaim Domain Thread Service --
+--------------------------------------------------------------------------------
+** More to come soon **
+
+--------------------------------------------------------------------------------
+-- Configuring and Running --
+--------------------------------------------------------------------------------
+** More to come soon **
+
+
+--------------------------------------------------------------------------------
+-- Known problems/issues --
+--------------------------------------------------------------------------------
+** TBD **
