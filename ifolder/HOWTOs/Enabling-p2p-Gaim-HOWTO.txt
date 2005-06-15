@@ -151,27 +151,140 @@ of writing this, the latest version of Gaim was 1.3.1.
 
 	Go into the Gaim Preferences and select Plugins.  Scroll down to the iFolder
 	plugin and make sure that it is enabled.
+	
+7. Plugin Configuration
+
+	The plugin configuration page in Gaim is, for the most part, a placeholder
+	at the moment for things that we'd eventually like to implement.  Some
+	things work, but don't be surprised if something doesn't quite work as you'd
+	expect it to (this is really alpha-level code).
 
 
 --------------------------------------------------------------------------------
 -- Using iFolder Gaim File Sharing --
 --------------------------------------------------------------------------------
-** More to come soon ***
+If you've just installed the iFolder Gaim Plugin and the iFolder Gaim
+Domain Thread Service, make sure to restart iFolder and Gaim to make sure the
+new modules are loaded.
+
+Inside iFolder, you should now be able to create new iFolders inside of the Gaim
+Domain.  Your computer will act as the iFolder Server for all iFolders you
+create inside of the Gaim Domain.  In other words, remote computers will
+synchronize with your computer to get updates to the shared iFolders.
+
+The member/user list for the Gaim Domain (i.e., the list of users who you can
+share iFolders with) is built by enabling buddies as iFolder users in Gaim.
+You do this by enabling them from the Gaim Buddy List.  Simply right-click on a
+buddy, and select, "Enable iFolder File Sharing".  This will send them an
+invitation to join your iFolder Gaim Domain (be added as an iFolder user).  If
+the "Enable iFolder File Sharing" option does not appear when you right-click on
+a buddy, that means they do not have the iFolder Gaim Plugin installed/enabled.
+Point them to this document if that is the case and help them get it installed.
+
+When a buddy accepts your invitation to be enabled as an iFolder User they will
+be added into the list of users you'll be able to share iFolders with.  You can
+now use the standard iFolder Client to add the new iFolder user as a member of
+one of your iFolders.
+
+Note: Not much testing has been done, if any, with disabling a user as an
+iFolder user.  If you see issues with this, please log a bug.
+
 
 --------------------------------------------------------------------------------
--- Known problems/issues --
+-- Public Shared iFolder Feature --
+--------------------------------------------------------------------------------
+The Public Shared iFolder feature is intended to make iFolder sharing in Gaim
+easier.  With this feature enabled (enable and disable this in the iFolder Gaim
+Plugin preferences) an iFolder is automatically created on your desktop.  Any
+and all Gaim buddies that you enable to participate in your iFolder Gaim Domain
+will automatically be added as Read Only members of this iFolder.  This makes it
+so that all you have to do to share files with everyone is to drag and drop (or
+create) files in this folder and everyone else in your Gaim Domain will
+automatically get these files.
+
+Right now, there is no way to exclude an enabled iFolder user from being added
+to the Public Shared iFolder.  Depending on the feedback we get on this, we may
+or may not add that as a feature.  Please let us know what you think!
+
+
+--------------------------------------------------------------------------------
+-- Known problems/issues/FAQs --
 --------------------------------------------------------------------------------
 1. Will not work through a Firewall
 
-	The iFolder Gaim File Sharing solution does not work through a firewall yet.
-	iFolder opens a randomly generated port number (which you can see when you
-	start iFolder from the command-line).
-	
-	Both machines that you intend to share iFolders between must be able to see
-	each other.  Each one acts as a server and client.  If a firewall exists
-	between the two computers, both iFolder ports (really it's the Simias processs that
-	opens the port) must be opened.
-	
-	We are investigating a UPnP solution which would allow iFolder to request
-	for ports to be opened using many popular home routers.  We do not have any
-	plans set in stone, however, as to when this feature will be added.
+   The iFolder Gaim File Sharing solution does not work through a firewall yet.
+   iFolder opens a randomly generated port number (which you can see when you
+   start iFolder from the command-line).
+   
+   Both machines that you intend to share iFolders between must be able to see
+   each other.  Each one acts as a server and client.  If a firewall exists
+   between the two computers, both iFolder ports (really it's the Simias
+   processs that opens the port) must be opened.
+   
+   We are investigating a UPnP solution which would allow iFolder to request for
+   ports to be opened using many popular home routers.  We do not have any plans
+   set in stone, however, as to when this feature will be added.
+
+2. You cannot control the name of the automatic "Public Shared iFolder" that is
+   created on your desktop automatically.  This is a limitation in the core
+   iFolder code that will be fixed eventually.  If you do not wish to have this
+   automatically maintained public iFolder, disable this feature in the iFolder
+   Gaim Plugin preferences (the last checkbox on the preferences screen).
+   
+   It would be optimal to allow the user to specify the name and location of
+   this automatically maintained iFolder.  Additionally, it would be great if
+   remote users could name the folder on their computers whatever they wanted.
+   This should also be addressed in the future.
+   
+   There is a bug filed against this problem.  You can track it by adding
+   yourself to the CC list:
+   
+   https://bugzilla.novell.com/show_bug.cgi?id=75454
+
+3. I have deleted my Simias Store (~/.local).  Will I still be able to access
+   the iFolders my buddies shared with me?
+   
+   No (Partially yes too...read on).
+   
+   When you deleted your Simias Store, you broke the shared iFolder
+   relationships you previously had configured with other buddies.
+   Additionally, your membership in their shared iFolders was also broken
+   because you no longer have the needed information to connect with their
+   computer again.
+   
+   Here's the "partial yes" part.  The data that you downloaded previously will
+   still be on your own hard drive so you'll still be able to access those
+   files.  The folder will no longer be an iFolder.  It will not synchronize
+   with the remote buddy's computer either.
+   
+   To rejoin a buddy's iFolder, you'll have to have them remove your old user
+   as a member of the iFolder and then add you back in.  This will cause a new
+   iFolder subscription/invitation to be sent to you, which you'll be able to
+   join again.
+
+4. I'm using a laptop.  What happens if my IP address changes?
+
+   This is where the iFolder Gaim Plugin is the most valuable.  When you sign
+   back into Gaim after an IP address, the plugin will exchange new IP address
+   information with other buddies who are online (only those buddies who you've
+   enabled as iFolder Users).  As soon as this exchange has occurred, iFolders
+   will synchronize as usual.
+   
+   Note: If you change the location of your computer to a new IP address behind
+   a filewall as described in issue #1 above, iFolder will not be able to
+   synchronize with other computers even though the plugin will be able to
+   provide your update IP address.
+   
+5. What Gaim protocols can be used?
+
+   Only the AOL Instant Messenger (AIM/Oscar) protocol can be used right now.
+   The plugin has to publish information in your buddy profile for remote users
+   to know that you've got the iFolder Gaim Plugin installed.  Each protocol
+   handles the buddy profile information differently.  Since AIM seems to be the
+   most popular, from our standpoint, we chose to use it initially.
+   
+   Note: Something we have not tested is setting up multiple AIM accounts in
+   Gaim and using the iFolder Gaim Plugin.  It is highly likely that you will
+   run into issues and that only one of the accounts will be enabled and usable
+   in iFolder.  This configuration will not be supported for the forseeable
+   future.
