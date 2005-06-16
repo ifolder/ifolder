@@ -1084,7 +1084,7 @@ namespace Simias.Sync.Http
 				byte[] buffer = new byte[blockSize];
 				Stream outStream = response.OutputStream;
 				int readSize = (seg.EndBlock - seg.StartBlock +1) * blockSize;
-                int bytesRead = service.Read(outStream, seg.StartBlock * blockSize, readSize);
+                int bytesRead = service.Read(outStream, (long)seg.StartBlock * (long)blockSize, readSize);
 				outStream.Close();
 			}
 			else
