@@ -9,7 +9,7 @@ $Id$
 	cvs -z3 -d:ext:anonymous@forgecvs1.novell.com:/cvsroot/ifolder co simias
 
 2)  cd into the simias directory 
-3)  Run the autogen script (like this): ./autogen --prefix=/opt/simias
+3)  Run the autogen script (like this): ./autogen.sh --prefix=/opt/simias
 4)  Run 'make install' in the simias code directory
 5)  cd to the other/SimpleServer directory
 6)  Run 'make install' in the SimpleServer Directory 
@@ -45,4 +45,17 @@ $Id$
 10) Run /opt/simias/bin/simias
 11) Attach an iFolder client to the Simple server (ip:8086) I think. It will 
     show when starting the simple server
+
+
+--------------------------------------------------------------------------------
+ -- Additional help on specific platforms
+--------------------------------------------------------------------------------
+From: Juan C. Olivares <juancri@juancri.com>
+Platform: Debian SID
+Mono: 1.1.7
+
+1) I have problems with libxml2. To fix this, I run 
+	export CFLAGS="-I/usr/include/libxml2 $CFLAGS" before autogen
+2) There is an error compilling Simias.dll. I added Mono.Posix.dll to
+	the list of libraries (Variable SIMIAS_LIBS1 on src/Simias.dll/Makefile)
 
