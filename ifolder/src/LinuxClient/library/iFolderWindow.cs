@@ -1477,9 +1477,23 @@ namespace Novell.iFolder
 					ConflictDialog = null;
 				}
 			}
-			// CRG: TODO
-			// At this point, refresh the selected iFolder to see if it
-			// has any more conflicts
+
+			// Refresh the selected iFolder to see if it has any more conflicts
+			TreeSelection tSelect = iFolderTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				TreeModel tModel;
+				TreeIter iter;
+
+				tSelect.GetSelected(out tModel, out iter);
+				iFolderHolder ifHolder = 
+						(iFolderHolder) tModel.GetValue(iter, 0);
+
+				iFolderHolder updatedHolder = null;
+				updatedHolder = ifdata.ReadiFolder(ifHolder.iFolder.ID);
+				if(updatedHolder != null)
+					iFolderTreeStore.SetValue(iter, 0, updatedHolder);
+			}
 
 			UpdateButtonSensitivity();
 		}
