@@ -46,7 +46,6 @@ AssemblyInfo.cs
 ../DomainProvider/LocalProvider.cs
 ../DomainWatcher/Service.cs
 ../DomainWatcher/DomainWatcher.cs
-../Encryption/Blowfish.cs
 ../FlaimProvider/FlaimError.cs
 ../FlaimProvider/FlaimProvider.cs
 ../FlaimProvider/FlaimRecord.cs

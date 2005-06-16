@@ -224,14 +224,15 @@ namespace Simias.Sync
 		/// </summary>
 		/// <param name="segArray">The array to add the segment to.</param>
 		/// <param name="seg">The new segment to add.</param>
-		public static void AddToArray(ArrayList segArray, DownloadSegment seg)
+		public static void AddToArray(ArrayList segArray, DownloadSegment seg, int blockSize)
 		{
 			DownloadSegment lastSeg;
 			if (segArray.Count > 0)
 			{
 				lastSeg = segArray[segArray.Count -1] as DownloadSegment;
+				int blocksInSeg = lastSeg.EndBlock - lastSeg.StartBlock + 1;
 				// Make sure the source and destination are contiguous.
-				if (lastSeg.EndBlock + 1 == seg.StartBlock && lastSeg.EndBlock - lastSeg.StartBlock < 100) 
+				if (lastSeg.EndBlock + 1 == seg.StartBlock && ((blocksInSeg * blockSize) < (1024 * 300))) 
 				{
 					lastSeg.EndBlock = seg.StartBlock;
 					return;
@@ -429,7 +430,7 @@ namespace Simias.Sync
 				}
 				else
 				{
-					DownloadSegment.AddToArray(downloadMap, new DownloadSegment(i));
+					DownloadSegment.AddToArray(downloadMap, new DownloadSegment(i), blockSize);
 				}
 			}
 				
