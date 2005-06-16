@@ -162,13 +162,52 @@ namespace Novell.iFolder
 
 				if(ifolders != null)
 				{
+					// Save off the state of the current iFolders so we can
+					// restore the properties after we've received the new list.
+					// Doing this fixes Bug 82690 - Status loses sync count when
+					// user forces refresh:
+					//     https://bugzilla.novell.com/show_bug.cgi?id=82690
+					Hashtable oldiFolders = new Hashtable(keyediFolders.Count);
+					foreach (string iFolderID in keyediFolders.Keys)
+					{
+						oldiFolders[iFolderID] = keyediFolders[iFolderID];
+					}
+
 					// clear out the map from subscription to iFolder
 					keyediFolders.Clear();
 					keyedSubscriptions.Clear();
 
 					foreach(iFolderWeb ifolder in ifolders)
 					{
-						AddiFolder(ifolder);
+						string ifolderID =
+							ifolder.IsSubscription ? 
+								ifolder.CollectionID :
+								ifolder.ID;
+						iFolderHolder oldHolder =
+							(iFolderHolder)oldiFolders[ifolderID];
+					
+						if (oldHolder != null)
+						{
+							// Add the old iFolderHolder object back into our
+							// hashtables.
+							if(ifolder.IsSubscription)
+							{
+								keyediFolders[ifolderID] = oldHolder;
+								keyedSubscriptions[ifolder.ID] = ifolder.CollectionID;
+							}
+							else
+							{
+								keyediFolders[ifolderID] = oldHolder;
+							}
+
+							// Update the iFolderWeb object in our iFolderHolder
+							oldHolder.iFolder = ifolder;
+						}
+						else
+						{
+							// This is a new iFolder we haven't seen before
+							AddiFolder(ifolder);
+						}
 					}
 				}
 				// Refresh the Domains
