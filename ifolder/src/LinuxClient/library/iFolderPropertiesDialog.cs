@@ -46,6 +46,7 @@ namespace Novell.iFolder
 		private iFolderConflictDialog 	ConflictDialog;
 		private iFolderPropSharingPage 	SharingPage;
 		private iFolderPropSettingsPage SettingsPage; 
+		private bool				ControlKeyPressed;
 
 		public int CurrentPage
 		{
@@ -108,6 +109,11 @@ namespace Novell.iFolder
 
 			InitializeWidgets();
 			SetValues();
+
+			// Bind ESC and C-w to close the window
+			ControlKeyPressed = false;
+			KeyPressEvent += new KeyPressEventHandler(KeyPressHandler);
+			KeyReleaseEvent += new KeyReleaseEventHandler(KeyReleaseHandler);
 		}
 
 
@@ -154,6 +160,11 @@ namespace Novell.iFolder
 
 			InitializeWidgets();
 			SetValues();
+
+			// Bind ESC and C-w to close the window
+			ControlKeyPressed = false;
+			KeyPressEvent += new KeyPressEventHandler(KeyPressHandler);
+			KeyReleaseEvent += new KeyReleaseEventHandler(KeyReleaseHandler);
 		}
 		
 		public void UpdateiFolder(iFolderWeb theiFolder)
@@ -255,7 +266,47 @@ namespace Novell.iFolder
 			UpdateiFolder(ifolder);
 		}
 
-
+		void KeyPressHandler(object o, KeyPressEventArgs args)
+		{
+			args.RetVal = true;
+			
+			switch(args.Event.Key)
+			{
+				case Gdk.Key.Escape:
+					Respond(ResponseType.Cancel);
+					break;
+				case Gdk.Key.Control_L:
+				case Gdk.Key.Control_R:
+					ControlKeyPressed = true;
+					args.RetVal = false;
+					break;
+				case Gdk.Key.W:
+				case Gdk.Key.w:
+					if (ControlKeyPressed)
+						Respond(ResponseType.Cancel);
+					else
+						args.RetVal = false;
+					break;
+				default:
+					args.RetVal = false;
+					break;
+			}
+		}
+		
+		void KeyReleaseHandler(object o, KeyReleaseEventArgs args)
+		{
+			args.RetVal = false;
+			
+			switch(args.Event.Key)
+			{
+				case Gdk.Key.Control_L:
+				case Gdk.Key.Control_R:
+					ControlKeyPressed = false;
+					break;
+				default:
+					break;
+			}
+		}
 
 
 		private void OnResolveConflicts(object o, EventArgs args)

@@ -227,6 +227,7 @@ namespace Novell.iFolder
 		private Gtk.TreeView		ConflictTreeView;
 		private Gtk.ListStore		ConflictTreeStore;
 //		private Gdk.Pixbuf			ConflictPixBuf;
+		private bool				ControlKeyPressed;
 
 
 		//
@@ -287,6 +288,11 @@ namespace Novell.iFolder
 			InitializeWidgets();
 			EnableConflictControls(false);
 			this.Realized += new EventHandler(OnRealizeWidget);
+
+			// Bind ESC and C-w to close the window
+			ControlKeyPressed = false;
+			KeyPressEvent += new KeyPressEventHandler(KeyPressHandler);
+			KeyReleaseEvent += new KeyReleaseEventHandler(KeyReleaseHandler);
 		}
 
 
@@ -571,6 +577,48 @@ namespace Novell.iFolder
 			this.AddButton(Stock.Help, ResponseType.Help);
 
 			RefreshConflictList();
+		}
+
+		void KeyPressHandler(object o, KeyPressEventArgs args)
+		{
+			args.RetVal = true;
+			
+			switch(args.Event.Key)
+			{
+				case Gdk.Key.Escape:
+					Respond(ResponseType.Cancel);
+					break;
+				case Gdk.Key.Control_L:
+				case Gdk.Key.Control_R:
+					ControlKeyPressed = true;
+					args.RetVal = false;
+					break;
+				case Gdk.Key.W:
+				case Gdk.Key.w:
+					if (ControlKeyPressed)
+						Respond(ResponseType.Cancel);
+					else
+						args.RetVal = false;
+					break;
+				default:
+					args.RetVal = false;
+					break;
+			}
+		}
+		
+		void KeyReleaseHandler(object o, KeyReleaseEventArgs args)
+		{
+			args.RetVal = false;
+			
+			switch(args.Event.Key)
+			{
+				case Gdk.Key.Control_L:
+				case Gdk.Key.Control_R:
+					ControlKeyPressed = false;
+					break;
+				default:
+					break;
+			}
 		}
 
 		private void OnRealizeWidget(object o, EventArgs args)
