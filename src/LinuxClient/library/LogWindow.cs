@@ -47,6 +47,7 @@ namespace Novell.iFolder
 		private ListStore			LogTreeStore;
 		private Widget				SaveButton;
 		private Widget				ClearButton;
+		private bool				ControlKeyPressed;
 		
 
 		/// <summary>
@@ -56,10 +57,58 @@ namespace Novell.iFolder
 			: base (Util.GS("iFolder Synchronization Log"))
 		{
 			CreateWidgets();
+
+			// Bind ESC and C-w to close the window
+			ControlKeyPressed = false;
+			KeyPressEvent += new KeyPressEventHandler(KeyPressHandler);
+			KeyReleaseEvent += new KeyReleaseEventHandler(KeyReleaseHandler);
 		}
 
-
-
+		void KeyPressHandler(object o, KeyPressEventArgs args)
+		{
+			args.RetVal = true;
+			
+			switch(args.Event.Key)
+			{
+				case Gdk.Key.Escape:
+					Hide();
+					Destroy();
+					break;
+				case Gdk.Key.Control_L:
+				case Gdk.Key.Control_R:
+					ControlKeyPressed = true;
+					args.RetVal = false;
+					break;
+				case Gdk.Key.W:
+				case Gdk.Key.w:
+					if (ControlKeyPressed)
+					{
+						Hide();
+						Destroy();
+					}
+					else
+						args.RetVal = false;
+					break;
+				default:
+					args.RetVal = false;
+					break;
+			}
+		}
+		
+		void KeyReleaseHandler(object o, KeyReleaseEventArgs args)
+		{
+			args.RetVal = false;
+			
+			switch(args.Event.Key)
+			{
+				case Gdk.Key.Control_L:
+				case Gdk.Key.Control_R:
+					ControlKeyPressed = false;
+					break;
+				default:
+					break;
+			}
+		}
 
 		/// <summary>
 		/// Set up the UI inside the Window

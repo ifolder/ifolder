@@ -42,6 +42,7 @@ namespace Novell.iFolder
 		private Gtk.Notebook			PrefNoteBook;
 		private PrefsGeneralPage		generalPage;
 		private PrefsAccountsPage		accountsPage;
+		private bool					ControlKeyPressed;
 
 
 		public int CurrentPage
@@ -70,6 +71,11 @@ namespace Novell.iFolder
 			ifws = webService;
 
 			InitializeWidgets();
+			
+			// Bind ESC and C-w to close the window
+			ControlKeyPressed = false;
+			KeyPressEvent += new KeyPressEventHandler(KeyPressHandler);
+			KeyReleaseEvent += new KeyReleaseEventHandler(KeyReleaseHandler);
 		}
 
 
@@ -121,6 +127,47 @@ namespace Novell.iFolder
 			closeButton.Clicked += new EventHandler(CloseEventHandler);
 		}
 
+		void KeyPressHandler(object o, KeyPressEventArgs args)
+		{
+			args.RetVal = true;
+			
+			switch(args.Event.Key)
+			{
+				case Gdk.Key.Escape:
+					CloseWindow();
+					break;
+				case Gdk.Key.Control_L:
+				case Gdk.Key.Control_R:
+					ControlKeyPressed = true;
+					args.RetVal = false;
+					break;
+				case Gdk.Key.W:
+				case Gdk.Key.w:
+					if (ControlKeyPressed)
+						CloseWindow();
+					else
+						args.RetVal = false;
+					break;
+				default:
+					args.RetVal = false;
+					break;
+			}
+		}
+		
+		void KeyReleaseHandler(object o, KeyReleaseEventArgs args)
+		{
+			args.RetVal = false;
+			
+			switch(args.Event.Key)
+			{
+				case Gdk.Key.Control_L:
+				case Gdk.Key.Control_R:
+					ControlKeyPressed = false;
+					break;
+				default:
+					break;
+			}
+		}
 
 
 		private void HelpEventHandler(object o, EventArgs args)
