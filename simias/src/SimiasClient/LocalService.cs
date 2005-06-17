@@ -129,6 +129,14 @@ namespace Simias.Client
 #endif
 		}
 
+		/// <summary>
+		/// Clears the cached credentials.
+		/// </summary>
+		static public void ClearCredentials()
+		{
+			localPassword = null;
+		}
+
 		#endregion
 	}
 }
