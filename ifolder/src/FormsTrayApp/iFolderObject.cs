@@ -68,9 +68,11 @@ namespace Novell.FormsTrayApp
 		/// Constructs an iFolderObject object.
 		/// </summary>
 		/// <param name="ifolderWeb">The iFolderWeb object to base this object on.</param>
-		public iFolderObject(iFolderWeb ifolderWeb)
+		/// <param name="ifolderState">The state of the iFolder.</param>
+		public iFolderObject(iFolderWeb ifolderWeb, iFolderState ifolderState)
 		{
 			this.ifolderWeb = ifolderWeb;
+			this.ifolderState = ifolderState;
 		}
 
 		/// <summary>

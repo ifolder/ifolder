@@ -1556,7 +1556,7 @@ namespace Novell.FormsTrayApp
 				{
 					if (IsSelected(ifolder.DomainID))
 					{
-						addiFolderToListView(ifolder);
+						addiFolderToListView(new iFolderObject(ifolder, iFolderState.Normal));
 
 						if (ifolder.State.Equals("Local"))
 						{
@@ -1608,8 +1608,10 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
-		private void addiFolderToListView(iFolderWeb ifolder)
+		private void addiFolderToListView(iFolderObject ifolderObject)
 		{
+			iFolderWeb ifolder = ifolderObject.iFolderWeb;
+
 			lock (ht)
 			{
 				// Add only if it isn't already in the list.
@@ -1620,10 +1622,10 @@ namespace Novell.FormsTrayApp
 
 					items[0] = ifolder.Name;
 					items[1] = ifolder.IsSubscription ? ifolder.Owner : ifolder.UnManagedPath;
-					items[2] = stateToString(ifolder.State, ifolder.HasConflicts, ifolder.IsSubscription, out imageIndex);
+					items[2] = stateToString(ifolderObject, out imageIndex);
 
 					ListViewItem lvi = new ListViewItem(items, imageIndex);
-					lvi.Tag = new iFolderObject(ifolder);
+					lvi.Tag = ifolderObject;
 					iFolderView.Items.Add(lvi);
 
 					// Add the listviewitem to the hashtable.
@@ -1653,11 +1655,7 @@ namespace Novell.FormsTrayApp
 				int imageIndex;
 				lvi.SubItems[0].Text = ifolder.Name;
 				lvi.SubItems[1].Text = ifolder.IsSubscription ? "" : ifolder.UnManagedPath;
-				string status = stateToString(ifolder.State, ifolder.HasConflicts, ifolder.IsSubscription, out imageIndex);
-				if (ifolderObject.iFolderState.Equals(iFolderState.Normal))
-				{
-					lvi.SubItems[2].Text = status;
-				}
+				string status = stateToString(ifolderObject, out imageIndex);
 				lvi.ImageIndex = imageIndex;
 
 				// If this item is the only one selected, update the menus.
@@ -1668,33 +1666,57 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
-		private string stateToString(string state, bool conflicts, bool isSubscription, out int imageIndex)
+		private string stateToString(iFolderObject ifolderObject, out int imageIndex)
 		{
 			string status;
+			imageIndex = 0;
 
-			switch (state)
+			switch (ifolderObject.iFolderState)
 			{
-				case "Local":
-					if (conflicts)
+				case iFolderState.Normal:
+				{
+					switch (ifolderObject.iFolderWeb.State)
 					{
-						imageIndex = 2;
-						status = resourceManager.GetString("statusConflicts");
-					}
-					else
-					{					
-						imageIndex = 0;
-						status = resourceManager.GetString("statusOK");
+						case "Local":
+							if (ifolderObject.iFolderWeb.HasConflicts)
+							{
+								imageIndex = 2;
+								status = resourceManager.GetString("statusConflicts");
+							}
+							else
+							{					
+								status = resourceManager.GetString("statusOK");
+							}
+							break;
+						case "Available":
+						case "WaitConnect":
+						case "WaitSync":
+							imageIndex = ifolderObject.iFolderWeb.IsSubscription ? 1 : 0;
+							status = resourceManager.GetString(ifolderObject.iFolderWeb.State);
+							break;
+						default:
+							// TODO: what icon to use for unknown status?
+							imageIndex = 1;
+							status = resourceManager.GetString("statusUnknown");
+							break;
 					}
 					break;
-				case "Available":
-				case "WaitConnect":
-				case "WaitSync":
-					imageIndex = isSubscription ? 1 : 0;
-					status = resourceManager.GetString(state);
+				}
+				case iFolderState.Disconnected:
+					status = resourceManager.GetString("disconnected");
+					break;
+				case iFolderState.FailedSync:
+					status = objectsToSync == 0 ?
+						status = resourceManager.GetString("statusSyncFailure") :
+						string.Format(resourceManager.GetString("statusSyncItemsFailed"), objectsToSync);
+					break;
+				case iFolderState.Synchronizing:
+					status = string.Format(resourceManager.GetString("statusSyncingItems"), objectsToSync);
+					break;
+				case iFolderState.SynchronizingLocal:
+					status = resourceManager.GetString("preSync");
 					break;
 				default:
-					// TODO: what icon to use for unknown status?
-					imageIndex = 1;
 					status = resourceManager.GetString("statusUnknown");
 					break;
 			}
@@ -1754,6 +1776,10 @@ namespace Novell.FormsTrayApp
 			// Show the refresh and create menu items.
 			menuRefresh.Visible = menuCreate.Visible = true;
 
+			// Save the old items so that the state can be preserved between refreshes.
+			Array oldValues = Array.CreateInstance(typeof(ListViewItem), ht.Count);
+			ht.Values.CopyTo(oldValues, 0);
+
 			lock(ht)
 			{
 				ht.Clear();
@@ -1768,7 +1794,21 @@ namespace Novell.FormsTrayApp
 					ifWebService.GetiFoldersForDomain(domain.ID);
 				foreach (iFolderWeb ifolder in ifolderArray)
 				{
-					addiFolderToListView(ifolder);
+					iFolderState state = iFolderState.Normal;
+					if (!ifolder.IsSubscription)
+					{
+						foreach (ListViewItem lvi in oldValues)
+						{
+							iFolderObject oldiFolder = (iFolderObject)lvi.Tag;
+							if (oldiFolder.iFolderWeb.ID.Equals(ifolder.ID))
+							{
+								state = oldiFolder.iFolderState;
+								break;
+							}
+						}
+					}
+
+					addiFolderToListView(new iFolderObject(ifolder, state));
 				}
 			}
 			catch (Exception ex)
@@ -2055,7 +2095,7 @@ namespace Novell.FormsTrayApp
 
 					if (newiFolder != null)
 					{
-						lvi.Tag = new iFolderObject(newiFolder);
+						lvi.Tag = new iFolderObject(newiFolder, iFolderState.Normal);
 
 						lock (ht)
 						{
@@ -2218,7 +2258,7 @@ namespace Novell.FormsTrayApp
 							if (newiFolder != null)
 							{
 								// Update the listview item.
-								lvi.Tag = new iFolderObject(newiFolder);
+								lvi.Tag = new iFolderObject(newiFolder, iFolderState.Normal);
 
 								lock (ht)
 								{
