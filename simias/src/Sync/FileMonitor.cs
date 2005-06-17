@@ -607,104 +607,111 @@ namespace Simias.Sync
 		/// <param name="subTreeHasChanged"></param>
 		void DoSubtree(string path, DirNode dnode, string nodeID, bool subTreeHasChanged)
 		{
-			//Log.Spew("Dredger processing subtree of path {0}", path);
-			if (!SyncFile.IsNameValid(Path.GetFileName(path)))
+			try
 			{
-				// This is a name collision this needs to be resolved before
-				// the files can be added.
-				return;
-			}
+				//Log.Spew("Dredger processing subtree of path {0}", path);
+				if (!SyncFile.IsNameValid(Path.GetFileName(path)))
+				{
+					// This is a name collision this needs to be resolved before
+					// the files can be added.
+					return;
+				}
 
-			// Make sure we are not a recursive reparse point or symlink
-			if (IsRecursiveLink(path))
-				return;
+				// Make sure we are not a recursive reparse point or symlink
+				if (IsRecursiveLink(path))
+					return;
 				
-			if (subTreeHasChanged)
-			{
-				// A file or directory has been added or deleted from this directory. We need to find it.
-				Hashtable existingNodes = new Hashtable();
-				// Put all the existing nodes in a hashtable to match against the file system.
-				foreach (ShallowNode sn in collection.Search(PropertyTags.Parent, new Relationship(collection.ID, dnode.ID)))
+				if (subTreeHasChanged)
 				{
-					existingNodes[sn.Name] = sn;
-				}
+					// A file or directory has been added or deleted from this directory. We need to find it.
+					Hashtable existingNodes = new Hashtable();
+					// Put all the existing nodes in a hashtable to match against the file system.
+					foreach (ShallowNode sn in collection.Search(PropertyTags.Parent, new Relationship(collection.ID, dnode.ID)))
+					{
+						existingNodes[sn.Name] = sn;
+					}
 
-				// Look for new and modified files.
-				foreach (string file in Directory.GetFiles(path))
-				{
-					string fName = Path.GetFileName(file);
-					ShallowNode sn = (ShallowNode)existingNodes[fName];
-					if (sn != null)
+					// Look for new and modified files.
+					foreach (string file in Directory.GetFiles(path))
 					{
-						DoShallowNode(dnode, sn, file, false);
-						existingNodes.Remove(fName);
-					}
-					else
-					{
-						// The file is new create a new file node.
-						CreateFileNode(file, dnode, false);
-					}
-				}
-
-				// look for new directories
-				foreach (string dir in Directory.GetDirectories(path))
-				{
-					string dName = Path.GetFileName(dir);
-					ShallowNode sn = (ShallowNode)existingNodes[dName];
-					if (sn != null)
-					{
-						DoShallowNode(dnode, sn, dir, true);
-						existingNodes.Remove(dName);
-					}
-					else
-					{
-						// The directory is new create a new directory node.
-						DirNode newDir = CreateDirNode(dir, dnode, false);
-					}
-				}
-			
-				// look for deleted files.
-				// All remaining nodes need to be deleted.
-				foreach (ShallowNode sn in existingNodes.Values)
-				{
-					DeleteNode(new Node(collection, sn));
-				}
-			}
-			else
-			{
-				// Just look for modified files.
-				foreach (string file in Directory.GetFiles(path))
-				{
-					if (File.GetLastWriteTime(file) > lastDredgeTime)
-					{
-						if (dnode == null)
-							dnode = collection.GetNodeByID(nodeID) as DirNode;
-						DoNode(dnode, file, false);
-					}
-				}
-			
-				foreach (string dir in Directory.GetDirectories(path))
-				{
-					if (Directory.GetLastWriteTime(dir) > lastDredgeTime)
-					{
-						if (dnode == null)
-							dnode = collection.GetNodeByID(nodeID) as DirNode;
-						DoNode(dnode, dir, true);
-					}
-					else 
-					{
-						bool haveConflict;
-						ShallowNode sn = GetShallowNodeForFile(dir, out haveConflict);
+						string fName = Path.GetFileName(file);
+						ShallowNode sn = (ShallowNode)existingNodes[fName];
 						if (sn != null)
-							DoSubtree(dir, null, sn.ID, false);
+						{
+							DoShallowNode(dnode, sn, file, false);
+							existingNodes.Remove(fName);
+						}
 						else
 						{
-							// This should never happen but if it does recall with the modified true.
-							DoSubtree(path, dnode, nodeID, true);
-							break;
+							// The file is new create a new file node.
+							CreateFileNode(file, dnode, false);
+						}
+					}
+
+					// look for new directories
+					foreach (string dir in Directory.GetDirectories(path))
+					{
+						string dName = Path.GetFileName(dir);
+						ShallowNode sn = (ShallowNode)existingNodes[dName];
+						if (sn != null)
+						{
+							DoShallowNode(dnode, sn, dir, true);
+							existingNodes.Remove(dName);
+						}
+						else
+						{
+							// The directory is new create a new directory node.
+							DirNode newDir = CreateDirNode(dir, dnode, false);
+						}
+					}
+			
+					// look for deleted files.
+					// All remaining nodes need to be deleted.
+					foreach (ShallowNode sn in existingNodes.Values)
+					{
+						DeleteNode(new Node(collection, sn));
+					}
+				}
+				else
+				{
+					// Just look for modified files.
+					foreach (string file in Directory.GetFiles(path))
+					{
+						if (File.GetLastWriteTime(file) > lastDredgeTime)
+						{
+							if (dnode == null)
+								dnode = collection.GetNodeByID(nodeID) as DirNode;
+							DoNode(dnode, file, false);
+						}
+					}
+			
+					foreach (string dir in Directory.GetDirectories(path))
+					{
+						if (Directory.GetLastWriteTime(dir) > lastDredgeTime)
+						{
+							if (dnode == null)
+								dnode = collection.GetNodeByID(nodeID) as DirNode;
+							DoNode(dnode, dir, true);
+						}
+						else 
+						{
+							bool haveConflict;
+							ShallowNode sn = GetShallowNodeForFile(dir, out haveConflict);
+							if (sn != null)
+								DoSubtree(dir, null, sn.ID, false);
+							else
+							{
+								// This should never happen but if it does recall with the modified true.
+								DoSubtree(path, dnode, nodeID, true);
+								break;
+							}
 						}
 					}
 				}
+			}
+			catch (Exception ex)
+			{
+				Log.log.Debug(ex, "Failed adding contents of directory {0}", path);
 			}
 		}
 

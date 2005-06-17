@@ -665,6 +665,12 @@ namespace Simias.Sync
 					}
 					catch (Exception ex)
 					{
+						UnauthorizedAccessException uex = ex as UnauthorizedAccessException;
+						if (uex != null)
+						{
+							eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, node.Length, node.Length, node.Length, Direction.Uploading));
+							eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, node.Length, 0, 0, Direction.Uploading, SyncStatus.Access));
+						}
 						Log.log.Debug(ex, "Failed opening file {0}", file);
 						syncService.CloseFile(false);
 						base.Close();
