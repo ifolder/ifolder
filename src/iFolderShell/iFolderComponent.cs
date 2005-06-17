@@ -140,9 +140,10 @@ namespace Novell.iFolderCom
 			}
 			catch (WebException e)
 			{
-				if (e.Status == WebExceptionStatus.ConnectFailure)
+				ifWebService = null;
+				if (e.Status == WebExceptionStatus.ProtocolError)
 				{
-					ifWebService = null;
+					LocalService.ClearCredentials();
 				}
 			}
 			catch
@@ -172,9 +173,10 @@ namespace Novell.iFolderCom
 			}
 			catch (WebException e)
 			{
-				if (e.Status == WebExceptionStatus.ConnectFailure)
+				ifWebService = null;
+				if (e.Status == WebExceptionStatus.ProtocolError)
 				{
-					ifWebService = null;
+					LocalService.ClearCredentials();
 				}
 			}
 			catch (Exception e)
@@ -210,9 +212,10 @@ namespace Novell.iFolderCom
 			}
 			catch (WebException e)
 			{
-				if (e.Status == WebExceptionStatus.ConnectFailure)
+				ifWebService = null;
+				if (e.Status == WebExceptionStatus.ProtocolError)
 				{
-					ifWebService = null;
+					LocalService.ClearCredentials();
 				}
 			}
 			catch (Exception e)
@@ -267,9 +270,10 @@ namespace Novell.iFolderCom
 			}
 			catch (WebException e)
 			{
-				if (e.Status == WebExceptionStatus.ConnectFailure)
+				ifWebService = null;
+				if (e.Status == WebExceptionStatus.ProtocolError)
 				{
-					ifWebService = null;
+					LocalService.ClearCredentials();
 				}
 			}
 			catch (Exception e)
@@ -321,9 +325,10 @@ namespace Novell.iFolderCom
 					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("propertiesDialogError"), string.Empty, e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 
-					if (e.Status == WebExceptionStatus.ConnectFailure)
+					ifWebService = null;
+					if (e.Status == WebExceptionStatus.ProtocolError)
 					{
-						ifWebService = null;
+						LocalService.ClearCredentials();
 					}
 				}
 				catch (Exception e)
