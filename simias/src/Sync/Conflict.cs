@@ -373,7 +373,25 @@ public class Conflict
 					// This file is in the conflict bin and has been sync-ed from the server.  We do not need
 					// To push it back up.  Set internal.
 					node.Properties.State = PropertyList.PropertyListState.Internal;
-					File.Move(FileNameConflictPath, Path.Combine(Path.GetDirectoryName(NonconflictedPath), newNodeName));
+					try
+					{
+						File.Move(FileNameConflictPath, NonconflictedPath);
+					}
+					catch (IOException)
+					{
+						// The file exists it must have been modified locally create a node conflict.
+						File.Move(FileNameConflictPath, GetUpdateConflictPath(collection, fn));
+						fn = (FileNode)RemoveNameConflict(collection, fn);
+						collection.Commit(fn);
+						Node serverNode = collection.GetNodeByID(fn.ID);
+						// Now commit the node to update the file (size and dates);
+						fn.UpdateFileInfo(collection);
+						collection.Commit(fn);
+						// Create the node conflict.
+						fn = (FileNode)collection.CreateCollision(serverNode, false);
+						collection.Commit(fn);
+						return;
+					}
 				}
 			}
 			else
