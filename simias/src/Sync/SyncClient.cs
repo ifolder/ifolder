@@ -373,7 +373,7 @@ namespace Simias.Sync
 		{
 			lock (collections)
 			{
-				foreach (CollectionSyncClient sc in collections)
+				foreach (CollectionSyncClient sc in collections.Values)
 				{
 					sc.PolicyChanged();
 				}
@@ -1516,7 +1516,11 @@ namespace Simias.Sync
 						}
 						catch
 						{
-							conflict = true;
+							// If the parent exists this is a conflict.
+							if (Directory.Exists(Path.GetDirectoryName(path)))
+								conflict = true;
+							else
+								throw;
 						}
 						if (conflict)
 						{
@@ -1602,9 +1606,19 @@ namespace Simias.Sync
 				}
 				catch (DirectoryNotFoundException)
 				{
-					// The directory has been deleted.
-					workArray.RemoveNodeFromServer(nodeID);
-				}
+					// The directory does not exist.
+					// It has either been deleted or it has a conflict.
+					FileNode fn = collection.GetNodeByID(nodeID) as FileNode;
+					if (fn != null)
+					{
+						DirNode parent = fn.GetParent(collection);
+						if (parent != null && !collection.HasCollisions(parent))
+						{
+							// The directory has been deleted.
+							workArray.RemoveNodeFromServer(nodeID);
+						}
+					}
+                }
 				catch (Exception ex)
 				{
 					Log.log.Debug(ex, "Failed Downloading File during close");
