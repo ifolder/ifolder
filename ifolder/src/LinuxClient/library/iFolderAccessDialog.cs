@@ -72,9 +72,9 @@ namespace Novell.iFolder
 				this.TransientFor = parent;
 
 			if(userName == null)
-				this.Title = Util.GS("Properties for multiple users");
+				this.Title = Util.GS("Access for Multiple Users");
 			else
-				this.Title = string.Format(Util.GS("Properties for {0}"), userName);
+				this.Title = string.Format(Util.GS("Access for {0}"), userName);
 			this.HasSeparator = false;
 			this.Resizable = false;
 			this.Modal = true;
@@ -121,7 +121,7 @@ namespace Novell.iFolder
 			this.VBox.PackStart(ownerSectionBox, false, true, 0);
 			ownerSectionBox.BorderWidth = 10;
 
-			OwnerButton = new CheckButton(Util.GS("Make this user the owner of the collection."));
+			OwnerButton = new CheckButton(Util.GS("Make this user the owner of the iFolder."));
 			ownerSectionBox.PackStart(OwnerButton, false, true, 0);
 			if(!enableOwner)
 				OwnerButton.Sensitive = false;

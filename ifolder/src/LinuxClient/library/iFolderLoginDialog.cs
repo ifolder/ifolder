@@ -150,7 +150,7 @@ namespace Novell.iFolder
 	
 			if(FullDialog)
 			{
-				Label nameLabel = new Label(Util.GS("User name:"));
+				Label nameLabel = new Label(Util.GS("Username:"));
 				nameLabel.Xalign = 1; 
 				loginTable.Attach(nameLabel, 0,1,0,1,
 						AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -173,7 +173,7 @@ namespace Novell.iFolder
 				loginTable.Attach(passEntry, 1,2,1,2,
 					AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 
-				Label serverLabel = new Label(Util.GS("Server host:"));
+				Label serverLabel = new Label(Util.GS("iFolder Server:"));
 				serverLabel.Xalign = 1;
 				loginTable.Attach(serverLabel, 0,1,2,3,
 						AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -205,7 +205,7 @@ namespace Novell.iFolder
 
 
 
-				Label nameLabel = new Label(Util.GS("User name:"));
+				Label nameLabel = new Label(Util.GS("Username:"));
 				nameLabel.Xalign = 1;
 				loginTable.Attach(nameLabel, 0,1,1,2,
 						AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -240,7 +240,7 @@ namespace Novell.iFolder
 			this.VBox.ShowAll();
 
 			this.AddButton(Stock.Cancel, ResponseType.Cancel);
-			this.AddButton(Util.GS("_Log in"), ResponseType.Ok);
+			this.AddButton(Util.GS("_Log In"), ResponseType.Ok);
 			this.SetResponseSensitive(ResponseType.Ok, false);
 			this.DefaultResponse = ResponseType.Ok;
 		}

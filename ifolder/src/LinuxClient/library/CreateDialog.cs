@@ -72,7 +72,7 @@ namespace Novell.iFolder
 			this.VBox.PackStart(dialogBox, true, true, 0);
 
 			Label l = new Label("<span weight=\"bold\" size=\"larger\">" +
-						Util.GS("Create a new iFolder</span>"));
+						Util.GS("New iFolder</span>"));
 
 			l.LineWrap = false;
 			l.UseMarkup = true;
@@ -108,7 +108,7 @@ namespace Novell.iFolder
 			VBox locBox = new VBox();
 			dialogBox.PackEnd(locBox, false, true, 0);
 
-			Label pathLabel = new Label(Util.GS("iFolder Path:"));
+			Label pathLabel = new Label(Util.GS("Location:"));
 			pathLabel.Xalign = 0;
 			locBox.PackStart(pathLabel, false, true, 0);
 
@@ -123,7 +123,7 @@ namespace Novell.iFolder
 			if (this.initialPath != null && this.initialPath.Length > 0)
 				pathEntry.Text = this.initialPath;
 
-			Button pathButton = new Button(Stock.Open);
+			Button pathButton = new Button(Util.GS("Browse"));
 			pathButton.Clicked += new EventHandler(OnChoosePath);
 			pathBox.PackEnd(pathButton, false, false, 0);
 
@@ -180,7 +180,7 @@ namespace Novell.iFolder
 		private string GetDisplayRights(string rights)
 		{
 			if(rights == "ReadWrite")
-				return Util.GS("Read Write");
+				return Util.GS("Read/Write");
 			else if(rights == "Admin")
 				return Util.GS("Full Control");
 			else if(rights == "ReadOnly")

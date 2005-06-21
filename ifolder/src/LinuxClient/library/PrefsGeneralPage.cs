@@ -125,7 +125,7 @@ namespace Novell.iFolder
 			notifySectionBox.Spacing = Util.SectionTitleSpacing;
 			this.PackStart(notifySectionBox, false, true, 0);
 			Label notifySectionLabel = new Label("<span weight=\"bold\">" +
-												Util.GS("Notifications") +
+												Util.GS("Notification") +
 												"</span>");
 			notifySectionLabel.UseMarkup = true;
 			notifySectionLabel.Xalign = 0;
@@ -197,7 +197,7 @@ namespace Novell.iFolder
 			syncWidgetBox.PackStart(syncHBox, false, true, 0);
 			syncHBox.Spacing = 10;
 			AutoSyncCheckButton = 
-					new CheckButton(Util.GS("Sync to host _every:"));
+					new CheckButton(Util.GS("Synchronize my iFolders _every:"));
 			syncHBox.PackStart(AutoSyncCheckButton, false, false, 0);
 			SyncSpinButton = new SpinButton(0, 99999, 5);
 

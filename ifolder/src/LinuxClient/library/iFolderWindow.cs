@@ -370,13 +370,13 @@ namespace Novell.iFolder
 				new SignalFunc(CreateNewiFolder));
 
 			SetupButton = tb.AppendItem(Util.GS("Set Up"),
-				Util.GS("Set up an existing iFolder"), "Toolbar/Set up iFolder",
+				Util.GS("Set up an existing iFolder"), "Toolbar/Set Up iFolder",
 				new Image(new Gdk.Pixbuf(Util.ImagesPath("setup24.png"))),
 				new SignalFunc(SetupiFolder));
 
 			tb.AppendSpace ();
 
-			SyncButton = tb.AppendItem(Util.GS("Sync"),
+			SyncButton = tb.AppendItem(Util.GS("Synchronize"),
 				Util.GS("Synchronize an iFolder"), "Toolbar/Sync iFolder",
 				new Image(new Gdk.Pixbuf(Util.ImagesPath("sync24.png"))),
 				new SignalFunc(SynciFolder));
@@ -387,7 +387,7 @@ namespace Novell.iFolder
 				new SignalFunc(ShareiFolder));
 
 			ConflictButton = tb.AppendItem(Util.GS("Resolve"),
-				Util.GS("Resolve File Conflicts"), "Toolbar/Resolve iFolder",
+				Util.GS("Resolve Conflicts"), "Toolbar/Resolve iFolder",
 				new Image(new Gdk.Pixbuf(Util.ImagesPath("conflict24.png"))),
 				new SignalFunc(ResolveConflicts));
 
@@ -440,7 +440,7 @@ namespace Novell.iFolder
 			//----------------------------
 			Menu iFolderMenu = new Menu();
 
-			NewMenuItem = new ImageMenuItem (Util.GS("C_reate"));
+			NewMenuItem = new ImageMenuItem (Util.GS("_New"));
 			NewMenuItem.Image = new Image(
 					new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png")));
 			iFolderMenu.Append(NewMenuItem);
@@ -450,18 +450,18 @@ namespace Novell.iFolder
 			NewMenuItem.Activated += new EventHandler(NewiFolderHandler);
 
 			SetupMenuItem =
-				new MenuItem (Util.GS("_Set up iFolder"));
+				new MenuItem (Util.GS("_Set Up..."));
 			iFolderMenu.Append(SetupMenuItem);
 			SetupMenuItem.Activated += new EventHandler(SetupiFolderHandler);
 
 			DeleteMenuItem =
-				new ImageMenuItem (Util.GS("_Delete iFolder"));
+				new ImageMenuItem (Util.GS("_Delete"));
 			DeleteMenuItem.Image = new Image(Stock.Delete, Gtk.IconSize.Menu);
 			iFolderMenu.Append(DeleteMenuItem);
 			DeleteMenuItem.Activated += new EventHandler(OnRemoveiFolder);
 
 			RemoveMenuItem =
-				new ImageMenuItem (Util.GS("Re_move iFolder"));
+				new ImageMenuItem (Util.GS("Re_move"));
 			RemoveMenuItem.Image = new Image(Stock.Delete, Gtk.IconSize.Menu);
 			iFolderMenu.Append(RemoveMenuItem);
 			RemoveMenuItem.Activated += new EventHandler(OnRemoveiFolder);
@@ -480,12 +480,12 @@ namespace Novell.iFolder
 			ConflictMenuItem.Activated += 
 					new EventHandler(ResolveConflictHandler);
 
-			SyncNowMenuItem = new MenuItem(Util.GS("Sync _now"));
+			SyncNowMenuItem = new MenuItem(Util.GS("Synchronize _now"));
 			iFolderMenu.Append(SyncNowMenuItem);
 			SyncNowMenuItem.Activated += new EventHandler(SynciFolderHandler);
 
 			RevertMenuItem = 
-				new ImageMenuItem (Util.GS("Re_vert to a normal folder"));
+				new ImageMenuItem (Util.GS("Re_vert to a Normal Folder"));
 			RevertMenuItem.Image = new Image(Stock.Undo, Gtk.IconSize.Menu);
 			iFolderMenu.Append(RevertMenuItem);
 			RevertMenuItem.Activated += new EventHandler(OnRevertiFolder);
@@ -936,7 +936,7 @@ namespace Novell.iFolder
 								}
 
 								MenuItem item_sync =
-									new MenuItem(Util.GS("Sync now"));
+									new MenuItem(Util.GS("Synchronize Now"));
 								ifMenu.Append (item_sync);
 								item_sync.Activated += new EventHandler(
 										SynciFolderHandler);
@@ -944,7 +944,7 @@ namespace Novell.iFolder
 								if (!ifHolder.iFolder.Role.Equals("Master"))
 								{
 									MenuItem item_revert = new MenuItem (
-											Util.GS("Revert to a normal folder"));
+											Util.GS("Revert to a Normal Folder"));
 									ifMenu.Append (item_revert);
 									item_revert.Activated += new EventHandler(
 											OnRevertiFolder);
@@ -954,7 +954,7 @@ namespace Novell.iFolder
 												ifHolder.iFolder.CurrentUserID)
 								{
 									MenuItem item_delete = new MenuItem (
-											Util.GS("Delete iFolder"));
+											Util.GS("Delete"));
 									ifMenu.Append (item_delete);
 									item_delete.Activated += new EventHandler(
 											OnRemoveiFolder);
@@ -962,7 +962,7 @@ namespace Novell.iFolder
 								else
 								{
 									MenuItem item_delete = new MenuItem (
-											Util.GS("Remove iFolder"));
+											Util.GS("Remove"));
 									ifMenu.Append (item_delete);
 									item_delete.Activated += new EventHandler(
 											OnRemoveiFolder);
@@ -980,7 +980,7 @@ namespace Novell.iFolder
 							else if(ifHolder.iFolder.State == "Available")
 							{
 								MenuItem item_accept = 
-									new MenuItem (Util.GS("Set up iFolder"));
+									new MenuItem (Util.GS("Set Up..."));
 								ifMenu.Append (item_accept);
 								item_accept.Activated += new EventHandler(
 										SetupiFolderHandler);
@@ -989,7 +989,7 @@ namespace Novell.iFolder
 												ifHolder.iFolder.CurrentUserID)
 								{
 									MenuItem item_decline = 
-										new MenuItem(Util.GS("Delete iFolder"));
+										new MenuItem(Util.GS("Delete"));
 									ifMenu.Append (item_decline);
 									item_decline.Activated += new EventHandler(
 											OnRemoveiFolder);
@@ -997,7 +997,7 @@ namespace Novell.iFolder
 								else
 								{
 									MenuItem item_decline = 
-									new MenuItem (Util.GS("Remove iFolder"));
+									new MenuItem (Util.GS("Remove"));
 									ifMenu.Append (item_decline);
 									item_decline.Activated += new EventHandler(
 											OnRemoveiFolder);
@@ -1006,7 +1006,7 @@ namespace Novell.iFolder
 							else
 							{
 								MenuItem item_decline = 
-									new MenuItem (Util.GS("Remove iFolder"));
+									new MenuItem (Util.GS("Remove"));
 								ifMenu.Append (item_decline);
 								item_decline.Activated += new EventHandler(
 										OnRemoveiFolder);
@@ -1016,13 +1016,13 @@ namespace Novell.iFolder
 					else
 					{
 						MenuItem item_create = 
-							new MenuItem (Util.GS("Create iFolder"));
+							new MenuItem (Util.GS("New..."));
 						ifMenu.Append (item_create);
 						item_create.Activated += 
 							new EventHandler(NewiFolderHandler);
 
 						MenuItem item_refresh = 
-							new MenuItem (Util.GS("Refresh list"));
+							new MenuItem (Util.GS("Refresh"));
 						ifMenu.Append (item_refresh);
 						item_refresh.Activated += 
 							new EventHandler(RefreshiFoldersHandler);

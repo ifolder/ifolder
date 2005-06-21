@@ -42,7 +42,7 @@ namespace Novell.iFolder
 		public iFolderAcceptDialog(iFolderWeb ifolder, string initialPath) : base()
 		{
 			this.Title = 
-				string.Format(Util.GS("Set up iFolder \"{0}\""), ifolder.Name);
+				string.Format(Util.GS("Set Up iFolder \"{0}\""), ifolder.Name);
 			this.SetDefaultSize (500, 200);
 
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
@@ -58,7 +58,7 @@ namespace Novell.iFolder
 
 
 			Label l = new Label("<span weight=\"bold\" size=\"larger\">" +
-						Util.GS("Set up iFolder: ") + ifolder.Name + "</span>");
+						Util.GS("Set Up iFolder: ") + ifolder.Name + "</span>");
 
 			l.LineWrap = false;
 			l.UseMarkup = true;
@@ -70,7 +70,7 @@ namespace Novell.iFolder
 			VBox detailBox = new VBox();
 			dialogBox.PackStart(detailBox, true, true, 0);
 
-			l = new Label(Util.GS("iFolder Details:"));
+			l = new Label(Util.GS("Details:"));
 			l.Xalign = 0;
 			detailBox.PackStart(l, false, false, 0);
 
@@ -80,7 +80,7 @@ namespace Novell.iFolder
 			tv.Editable = false;
 			tv.CursorVisible = false;
 			TextBuffer buffer = tv.Buffer;
-			buffer.Text = string.Format(Util.GS("iFolder name: {0}\nShared by: {1}\nRights: {2}"), ifolder.Name, ifolder.Owner, GetDisplayRights(ifolder.CurrentUserRights));
+			buffer.Text = string.Format(Util.GS("Name: {0}\nShared by: {1}\nAccess: {2}"), ifolder.Name, ifolder.Owner, GetDisplayRights(ifolder.CurrentUserRights));
 
 			ScrolledWindow sw = new ScrolledWindow();
 			sw.ShadowType = Gtk.ShadowType.EtchedIn;
@@ -88,7 +88,7 @@ namespace Novell.iFolder
 			detailBox.PackStart(sw, true, true, 0);
 
 
-			l = new Label(Util.GS("Choose a location for the iFolder to be created on this computer."));
+			l = new Label(Util.GS("Choose a location on this computer for the iFolder."));
 
 			l.LineWrap = false;
 			l.Xalign = 0; l.Yalign = 0;
@@ -99,7 +99,7 @@ namespace Novell.iFolder
 			VBox locBox = new VBox();
 			dialogBox.PackEnd(locBox, false, true, 0);
 
-			Label pathLabel = new Label(Util.GS("iFolder Location:"));
+			Label pathLabel = new Label(Util.GS("Location:"));
 			pathLabel.Xalign = 0;
 			locBox.PackStart(pathLabel, false, true, 0);
 
@@ -114,7 +114,7 @@ namespace Novell.iFolder
 			if (this.initialPath != null && this.initialPath.Length > 0)
 				pathEntry.Text = this.initialPath;
 
-			Button pathButton = new Button(Stock.Open);
+			Button pathButton = new Button(Util.GS("Browse"));
 			pathButton.Clicked += new EventHandler(OnChoosePath);
 			pathBox.PackEnd(pathButton, false, false, 0);
 
@@ -170,7 +170,7 @@ namespace Novell.iFolder
 		private string GetDisplayRights(string rights)
 		{
 			if(rights == "ReadWrite")
-				return Util.GS("Read Write");
+				return Util.GS("Read/Write");
 			else if(rights == "Admin")
 				return Util.GS("Full Control");
 			else if(rights == "ReadOnly")

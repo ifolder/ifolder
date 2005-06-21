@@ -45,7 +45,7 @@ namespace Novell.iFolder
 
 		private void SetupDialog()
 		{
-			this.Title = Util.GS("Account Statistics");
+			this.Title = Util.GS("Details");
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
 			this.HasSeparator = false;
 
@@ -55,7 +55,7 @@ namespace Novell.iFolder
 
 			CreateWidgets();
 
-			this.AddButton(Util.GS("OK"), ResponseType.Ok);
+			this.AddButton(Util.GS("Close"), ResponseType.Ok);
 			
 			this.DefaultResponse = ResponseType.Ok;
 		}
@@ -83,7 +83,7 @@ namespace Novell.iFolder
 			srvSectionBox.Spacing = Util.SectionTitleSpacing;
 			vbox.PackStart(srvSectionBox, false, true, 0);
 			Label srvSectionLabel = new Label("<span weight=\"bold\">" +
-												Util.GS("Server Information") +
+												Util.GS("System Information") +
 												"</span>");
 			srvSectionLabel.UseMarkup = true;
 			srvSectionLabel.Xalign = 0;
@@ -115,7 +115,7 @@ namespace Novell.iFolder
 //			srvTable.Attach(usrNameValue, 1,2,0,1);
 
 
-			Label srvNameLabel = new Label(Util.GS("Server:"));
+			Label srvNameLabel = new Label(Util.GS("Name:"));
 			srvNameLabel.Xalign = 0;
 			srvTable.Attach(srvNameLabel, 0,1,0,1,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -124,7 +124,7 @@ namespace Novell.iFolder
 			srvNameValue.Xalign = 0;
 			srvTable.Attach(srvNameValue, 1,2,0,1);
 
-			Label srvDescLabel = new Label(Util.GS("Server description:"));
+			Label srvDescLabel = new Label(Util.GS("Description:"));
 			srvDescLabel.Xalign = 0;
 			srvDescLabel.Yalign = 0;
 			srvTable.Attach(srvDescLabel, 0,1,1,2,
@@ -155,7 +155,7 @@ namespace Novell.iFolder
 			diskSectionBox.Spacing = Util.SectionTitleSpacing;
 			vbox.PackStart(diskSectionBox, false, true, 0);
 			Label diskSectionLabel = new Label("<span weight=\"bold\">" +
-												Util.GS("Disk Space") +
+												Util.GS("Disk Space on Server") +
 												"</span>");
 			diskSectionLabel.UseMarkup = true;
 			diskSectionLabel.Xalign = 0;
@@ -175,7 +175,7 @@ namespace Novell.iFolder
 			diskTable.ColumnSpacing = 20;
 			diskTable.RowSpacing = 5;
 
-			Label totalLabel = new Label(Util.GS("Free space on server:"));
+			Label totalLabel = new Label(Util.GS("Available:"));
 			totalLabel.Xalign = 0;
 			diskTable.Attach(totalLabel, 0,1,0,1,
 					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
@@ -187,7 +187,7 @@ namespace Novell.iFolder
 			diskTable.Attach(totalUnit, 2,3,0,1,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
-			Label usedLabel = new Label(Util.GS("Used space on server:"));
+			Label usedLabel = new Label(Util.GS("Used:"));
 			usedLabel.Xalign = 0;
 			diskTable.Attach(usedLabel, 0,1,1,2,
 					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
@@ -199,7 +199,7 @@ namespace Novell.iFolder
 			diskTable.Attach(usedUnit, 2,3,1,2,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
-			Label availLabel = new Label(Util.GS("Total space on server:"));
+			Label availLabel = new Label(Util.GS("Quota:"));
 			availLabel.Xalign = 0;
 			diskTable.Attach(availLabel, 0,1,2,3,
 					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
@@ -232,12 +232,12 @@ namespace Novell.iFolder
 			VBox graphLabelBox = new VBox();
 			graphBox.PackStart(graphLabelBox, false, true, 0);
 
-			Label fullLabel = new Label(Util.GS("Full"));
+			Label fullLabel = new Label(Util.GS("full"));
 			fullLabel.Xalign = 0;
 			fullLabel.Yalign = 0;
 			graphLabelBox.PackStart(fullLabel, true, true, 0);
 
-			Label emptyLabel = new Label(Util.GS("Empty"));
+			Label emptyLabel = new Label(Util.GS("empty"));
 			emptyLabel.Xalign = 0;
 			emptyLabel.Yalign = 1;
 			graphLabelBox.PackStart(emptyLabel, true, true, 0);

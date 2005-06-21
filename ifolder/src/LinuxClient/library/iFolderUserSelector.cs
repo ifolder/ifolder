@@ -167,7 +167,7 @@ namespace Novell.iFolder
 			findTable.Attach(SearchEntry, 2, 3, 0, 1,
 				AttachOptions.Expand | AttachOptions.Fill, 0, 0, 0);
 				
-			Label findHelpTextLabel = new Label(Util.GS("(i.e. Full or partial name, or user ID)"));
+			Label findHelpTextLabel = new Label(Util.GS("(Full or partial name)"));
 			findHelpTextLabel.Xalign = 0;
 			findTable.Attach(findHelpTextLabel, 2,3,1,2,
 				AttachOptions.Expand | AttachOptions.Fill, 0, 0, 0);
@@ -205,7 +205,7 @@ namespace Novell.iFolder
 			btnBox.Spacing = 10;
 			selBox.PackStart(btnBox, false, true, 0);
 
-			UserAddButton = new Button(Util.GS("_Add ->"));
+			UserAddButton = new Button(Util.GS("_Add >>"));
 			btnBox.PackStart(UserAddButton, false, true, 0);
 			UserAddButton.Clicked += new EventHandler(OnAddButtonClicked);
 
