@@ -229,10 +229,15 @@ namespace Novell.iFolder
 
 		private void OnSimiasNotifyEvent(object o, NotifyEventArgs args)
 		{
+			if (args == null || args.EventData == null || args.Message == null)
+				return;	// Prevent an exception
+
 			switch(args.EventData)
 			{
 				case "Domain-Up":
 				{
+					if (args.Message == null)
+						return;	// Prevent an exception
 					// See if credentials have already been set in
 					// this process before showing the user the
 					// login dialog.
@@ -545,6 +550,9 @@ namespace Novell.iFolder
 
 		private void OniFolderFileSyncEvent(object o, FileSyncEventArgs args)
 		{
+			if (args == null || args.CollectionID == null || args.Name == null)
+				return;	// Prevent an exception
+
 			if(ifwin != null)
 				ifwin.HandleFileSyncEvent(args);
 			if(logwin != null)
@@ -556,6 +564,9 @@ namespace Novell.iFolder
 
 		private void OniFolderSyncEvent(object o, CollectionSyncEventArgs args)
 		{
+			if (args == null || args.ID == null || args.Name == null)
+				return;	// Prevent an exception
+
 			switch(args.Action)
 			{
 				case Action.StartSync:
@@ -579,6 +590,9 @@ namespace Novell.iFolder
 
 		private void OniFolderAddedEvent(object o, iFolderAddedEventArgs args)
 		{
+			if (args == null || args.iFolderID == null)
+				return;	// Prevent an exception
+		
 			// don't notify us of our own iFolders
 			iFolderHolder ifHolder = ifdata.GetiFolder(args.iFolderID);
 
@@ -608,6 +622,9 @@ namespace Novell.iFolder
 		private void OniFolderChangedEvent(object o, 
 									iFolderChangedEventArgs args)
 		{
+			if (args == null || args.iFolderID == null)
+				return;	// Prevent an exception
+		
 			// don't notify us of our own iFolders
 			iFolderHolder ifHolder = ifdata.GetiFolder(args.iFolderID);
 
@@ -658,6 +675,9 @@ namespace Novell.iFolder
 		private void OniFolderDeletedEvent(object o, 
 									iFolderDeletedEventArgs args)
 		{
+			if (args == null || args.iFolderID == null)
+				return;	// Prevent an exception
+			
 			if(ifwin != null)
 				ifwin.iFolderDeleted(args.iFolderID);
 		}
@@ -666,6 +686,9 @@ namespace Novell.iFolder
 		private void OniFolderUserAddedEvent(object o,
 									iFolderUserAddedEventArgs args)
 		{
+			if (args == null || args.iFolderID == null || args.iFolderUser == null)
+				return;	// Prevent an exception
+			
 			if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_USERS, "true") 
 							== "true")
 			{
