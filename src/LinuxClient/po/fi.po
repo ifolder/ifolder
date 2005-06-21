@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-04-19 09:46-0600\n"
+"POT-Creation-Date: 2005-06-21 12:07-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -60,6 +60,7 @@ msgstr "iFolder Sijainti:"
 #: src/GtkTrayApp/iFolderWindow.cs:1807
 #: src/LinuxClient/library/CreateDialog.cs:138
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:137
+#: src/LinuxClient/library/CreateDialog.cs:146
 msgid "Choose a folder..."
 msgstr "Valita kansion..."
 
@@ -79,6 +80,7 @@ msgstr "Ominaisuudet {0}:lle"
 #: src/GtkTrayApp/iFolderPropSharingPage.cs:126
 #: src/LinuxClient/library/iFolderAccessDialog.cs:93
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:135
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:144
 msgid "Access"
 msgstr "Käyttäminen"
 
@@ -92,6 +94,9 @@ msgstr "Käyttäminen"
 #: src/LinuxClient/library/iFolderAccessDialog.cs:111
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:595
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:666
+#: src/LinuxClient/library/CreateDialog.cs:185
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:646
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:717
 msgid "Full Control"
 msgstr "Kokonaisen Hallinta"
 
@@ -100,6 +105,7 @@ msgstr "Kokonaisen Hallinta"
 #: src/GtkTrayApp/iFolderPropSharingPage.cs:639
 #: src/LinuxClient/library/iFolderAccessDialog.cs:114
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:671
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:722
 msgid "Read/Write"
 msgstr "Lue/Kirjoita"
 
@@ -113,6 +119,9 @@ msgstr "Lue/Kirjoita"
 #: src/LinuxClient/library/iFolderAccessDialog.cs:117
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:597
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:676
+#: src/LinuxClient/library/CreateDialog.cs:187
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:648
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:727
 msgid "Read Only"
 msgstr "Lue Vain"
 
@@ -128,11 +137,13 @@ msgstr ""
 
 #: ../iFolderApplication.cs:401 src/GtkTrayApp/iFolderApplication.cs:364
 #: src/LinuxClient/application/iFolderApplication.cs:631
+#: src/LinuxClient/application/iFolderApplication.cs:655
 msgid "Action Required"
 msgstr "Toiminto Tarvitaan"
 
 #: ../iFolderApplication.cs:402 src/GtkTrayApp/iFolderApplication.cs:365
 #: src/LinuxClient/application/iFolderApplication.cs:632
+#: src/LinuxClient/application/iFolderApplication.cs:656
 #, csharp-format
 msgid "A collision has been detected in iFolder \"{0}\""
 msgstr "Yhteentörmäys huommanut iFolder:ssa \"{0}\""
@@ -141,11 +152,13 @@ msgstr "Yhteentörmäys huommanut iFolder:ssa \"{0}\""
 #: ../iFolderWindow.cs:1049 ../iFolderWindow.cs:1050 ../iFolderWindow.cs:1279
 #: ../iFolderWindow.cs:1922 src/GtkTrayApp/iFolderWindow.cs:1199
 #: src/LinuxClient/library/iFolderWindow.cs:116
+#: src/LinuxClient/library/iFolderWindow.cs:151
 msgid "Available"
 msgstr "Saatavana"
 
 #: ../iFolderApplication.cs:484 src/GtkTrayApp/iFolderApplication.cs:336
 #: src/LinuxClient/application/iFolderApplication.cs:596
+#: src/LinuxClient/application/iFolderApplication.cs:605
 #, csharp-format
 msgid "New iFolder \"{0}\""
 msgstr "Uusi iFolder \"{0}\""
@@ -157,6 +170,7 @@ msgstr "{0} omista tämä iFolder ja se voidaan tahdistaa tässä tietokoneessa"
 
 #: ../iFolderApplication.cs:510 src/GtkTrayApp/iFolderApplication.cs:394
 #: src/LinuxClient/application/iFolderApplication.cs:670
+#: src/LinuxClient/application/iFolderApplication.cs:694
 msgid "New iFolder User"
 msgstr "Uuden iFolder:n Käyttäjä"
 
@@ -168,16 +182,19 @@ msgstr "{0} liittyi iFolder {1}"
 #: ../iFolderApplication.cs:654 src/GtkTrayApp/iFolderApplication.cs:277
 #: src/GtkTrayApp/iFolderApplication.cs:491
 #: src/LinuxClient/application/iFolderApplication.cs:800
+#: src/LinuxClient/application/iFolderApplication.cs:840
 msgid "iFolder Connect Error"
 msgstr "iFolder Yhteys Virhe"
 
 #: ../iFolderApplication.cs:655 src/GtkTrayApp/iFolderApplication.cs:492
 #: src/LinuxClient/application/iFolderApplication.cs:801
+#: src/LinuxClient/application/iFolderApplication.cs:841
 msgid "Unable to locate Simias Process"
 msgstr "Simias käynnistyminen ei sijoiteta"
 
 #: ../iFolderApplication.cs:656 src/GtkTrayApp/iFolderApplication.cs:493
 #: src/LinuxClient/application/iFolderApplication.cs:802
+#: src/LinuxClient/application/iFolderApplication.cs:842
 msgid ""
 "The Simias process must be running in order for iFolder to run.  Start the "
 "Simias process and try again"
@@ -187,6 +204,7 @@ msgstr ""
 
 #: ../iFolderApplication.cs:711 src/GtkTrayApp/iFolderApplication.cs:558
 #: src/LinuxClient/application/iFolderApplication.cs:861
+#: src/LinuxClient/application/iFolderApplication.cs:904
 msgid "My iFolders..."
 msgstr "Minun iFolderit..."
 
@@ -224,11 +242,13 @@ msgstr "iFolder Nimi"
 
 #: ../iFolderConflictDialog.cs:125 src/GtkTrayApp/iFolderConflictDialog.cs:125
 #: src/LinuxClient/library/CreateDialog.cs:107
+#: src/LinuxClient/library/CreateDialog.cs:111
 msgid "iFolder Path:"
 msgstr "iFolder Polku:"
 
 #: ../iFolderConflictDialog.cs:152 src/GtkTrayApp/iFolderConflictDialog.cs:152
 #: src/LinuxClient/library/iFolderConflictDialog.cs:369
+#: src/LinuxClient/library/iFolderConflictDialog.cs:378
 msgid "Local Version"
 msgstr "Paikallisen Versio"
 
@@ -238,6 +258,9 @@ msgstr "Paikallisen Versio"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:331
 #: src/LinuxClient/library/iFolderConflictDialog.cs:376
 #: src/LinuxClient/library/iFolderConflictDialog.cs:419
+#: src/LinuxClient/library/iFolderConflictDialog.cs:340
+#: src/LinuxClient/library/iFolderConflictDialog.cs:385
+#: src/LinuxClient/library/iFolderConflictDialog.cs:428
 msgid "Name:"
 msgstr "Nimi:"
 
@@ -246,6 +269,8 @@ msgstr "Nimi:"
 #: src/GtkTrayApp/iFolderConflictDialog.cs:210
 #: src/LinuxClient/library/iFolderConflictDialog.cs:385
 #: src/LinuxClient/library/iFolderConflictDialog.cs:428
+#: src/LinuxClient/library/iFolderConflictDialog.cs:394
+#: src/LinuxClient/library/iFolderConflictDialog.cs:437
 msgid "Date:"
 msgstr "Päiväys:"
 
@@ -254,11 +279,14 @@ msgstr "Päiväys:"
 #: src/GtkTrayApp/iFolderConflictDialog.cs:219
 #: src/LinuxClient/library/iFolderConflictDialog.cs:394
 #: src/LinuxClient/library/iFolderConflictDialog.cs:437
+#: src/LinuxClient/library/iFolderConflictDialog.cs:403
+#: src/LinuxClient/library/iFolderConflictDialog.cs:446
 msgid "Size:"
 msgstr "Koko:"
 
 #: ../iFolderConflictDialog.cs:194 src/GtkTrayApp/iFolderConflictDialog.cs:194
 #: src/LinuxClient/library/iFolderConflictDialog.cs:412
+#: src/LinuxClient/library/iFolderConflictDialog.cs:421
 msgid "Server Version"
 msgstr "iFolder-palvelin Versio"
 
@@ -324,6 +352,29 @@ msgstr "Älä näytä tämä viesti uudestaan."
 #: src/LinuxClient/library/PrefsAccountsPage.cs:965
 #: src/LinuxClient/library/PrefsAccountsPage.cs:977
 #: src/LinuxClient/library/PrefsAccountsPage.cs:993
+#: src/LinuxClient/application/iFolderApplication.cs:363
+#: src/LinuxClient/application/iFolderApplication.cs:453
+#: src/LinuxClient/application/iFolderApplication.cs:485
+#: src/LinuxClient/application/iFolderApplication.cs:497
+#: src/LinuxClient/application/iFolderApplication.cs:509
+#: src/LinuxClient/application/iFolderApplication.cs:521
+#: src/LinuxClient/library/iFolderWindow.cs:1092
+#: src/LinuxClient/library/LogWindow.cs:465
+#: src/LinuxClient/library/LogWindow.cs:480
+#: src/LinuxClient/library/LogWindow.cs:524
+#: src/LinuxClient/library/PrefsAccountsPage.cs:807
+#: src/LinuxClient/library/PrefsAccountsPage.cs:919
+#: src/LinuxClient/library/PrefsAccountsPage.cs:934
+#: src/LinuxClient/library/PrefsAccountsPage.cs:946
+#: src/LinuxClient/library/PrefsAccountsPage.cs:958
+#: src/LinuxClient/library/PrefsAccountsPage.cs:970
+#: src/LinuxClient/library/PrefsAccountsPage.cs:987
+#: src/LinuxClient/library/PrefsAccountsPage.cs:999
+#: src/LinuxClient/library/PrefsAccountsPage.cs:1011
+#: src/LinuxClient/library/PrefsAccountsPage.cs:1023
+#: src/LinuxClient/library/PrefsAccountsPage.cs:1035
+#: src/LinuxClient/library/PrefsAccountsPage.cs:1054
+#: src/LinuxClient/library/PrefsAccountsPage.cs:1064
 msgid "iFolder Error"
 msgstr "iFolder Virhe"
 
@@ -389,6 +440,8 @@ msgstr "_Kirjaudu sisään"
 #: src/GtkTrayApp/iFolderPropertiesDialog.cs:131
 #: src/LinuxClient/library/iFolderPropertiesDialog.cs:105
 #: src/LinuxClient/library/iFolderPropertiesDialog.cs:151
+#: src/LinuxClient/library/iFolderPropertiesDialog.cs:106
+#: src/LinuxClient/library/iFolderPropertiesDialog.cs:157
 msgid "iFolder Properties"
 msgstr "iFolder:n Ominaisuudet"
 
@@ -406,12 +459,14 @@ msgstr "\"{0}\" Ominaisuudet"
 #: ../iFolderPropertiesDialog.cs:212
 #: src/GtkTrayApp/iFolderPropertiesDialog.cs:278
 #: src/LinuxClient/library/iFolderPropertiesDialog.cs:236
+#: src/LinuxClient/library/iFolderPropertiesDialog.cs:247
 msgid "This iFolder contains conflicts."
 msgstr "Tämä iFolder sisältä selkkauksia."
 
 #: ../iFolderPropertiesDialog.cs:219
 #: src/GtkTrayApp/iFolderPropertiesDialog.cs:285
 #: src/LinuxClient/library/iFolderPropertiesDialog.cs:243
+#: src/LinuxClient/library/iFolderPropertiesDialog.cs:254
 msgid "_Resolve conflicts"
 msgstr "Korjata selkkaukset"
 
@@ -419,6 +474,7 @@ msgstr "Korjata selkkaukset"
 #: src/GtkTrayApp/iFolderPropertiesDialog.cs:355
 #: src/GtkTrayApp/iFolderWindow.cs:1601
 #: src/LinuxClient/library/iFolderWindow.cs:1056
+#: src/LinuxClient/library/iFolderWindow.cs:1093
 msgid "Unable to launch File Browser"
 msgstr "Virhe Tiedostoselaisen Aavamisessa"
 
@@ -426,6 +482,7 @@ msgstr "Virhe Tiedostoselaisen Aavamisessa"
 #: src/GtkTrayApp/iFolderPropertiesDialog.cs:356
 #: src/GtkTrayApp/iFolderWindow.cs:1602
 #: src/LinuxClient/library/iFolderWindow.cs:1057
+#: src/LinuxClient/library/iFolderWindow.cs:1094
 msgid ""
 "iFolder attempted to open the Nautilus File Manager and the Konqueror File "
 "Manager and was unable to launch either of them."
@@ -556,30 +613,35 @@ msgstr "tyhjä"
 #: ../iFolderPropSharingPage.cs:108
 #: src/GtkTrayApp/iFolderPropSharingPage.cs:110
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:119
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:128
 msgid "Users"
 msgstr "Käyttäjät"
 
 #: ../iFolderPropSharingPage.cs:115
 #: src/GtkTrayApp/iFolderPropSharingPage.cs:117
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:126
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:135
 msgid "State"
 msgstr "Tila"
 
 #: ../iFolderPropSharingPage.cs:228
 #: src/GtkTrayApp/iFolderPropSharingPage.cs:235
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:247
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:291
 msgid "Owner"
 msgstr "Omistaja"
 
 #: ../iFolderPropSharingPage.cs:230
 #: src/GtkTrayApp/iFolderPropSharingPage.cs:237
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:249
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:293
 msgid "Invited User"
 msgstr "Kutsuttu Käyttäjä"
 
 #: ../iFolderPropSharingPage.cs:232
 #: src/GtkTrayApp/iFolderPropSharingPage.cs:239
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:251
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:295
 msgid "iFolder User"
 msgstr "iFolder Käyttäjä"
 
@@ -589,18 +651,23 @@ msgstr "iFolder Käyttäjä"
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:295
 #: src/LinuxClient/library/iFolderWindow.cs:1194
 #: src/LinuxClient/library/PrefsAccountsPage.cs:574
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:338
+#: src/LinuxClient/library/iFolderWindow.cs:1231
+#: src/LinuxClient/library/PrefsAccountsPage.cs:611
 msgid "iFolder Confirmation"
 msgstr "iFolder Varmistus"
 
 #: ../iFolderPropSharingPage.cs:274
 #: src/GtkTrayApp/iFolderPropSharingPage.cs:281
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:296
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:339
 msgid "Remove Selected Users?"
 msgstr "Poistako valittu käyttäjät?"
 
 #: ../iFolderPropSharingPage.cs:275
 #: src/GtkTrayApp/iFolderPropSharingPage.cs:282
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:297
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:340
 msgid ""
 "This will remove the selected users from this iFolder.  They will no longer "
 "be able to sync file to this iFolder."
@@ -617,6 +684,11 @@ msgstr ""
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:599
 #: src/LinuxClient/library/iFolderWindow.cs:122
 #: src/LinuxClient/library/iFolderWindow.cs:149
+#: src/LinuxClient/library/CreateDialog.cs:189
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:650
+#: src/LinuxClient/library/iFolderUserSelector.cs:732
+#: src/LinuxClient/library/iFolderWindow.cs:163
+#: src/LinuxClient/library/iFolderWindow.cs:189
 msgid "Unknown"
 msgstr "Tuntematon"
 
@@ -635,6 +707,7 @@ msgstr "iFolder Käyttäjät"
 
 #: ../iFolderUserSelector.cs:218 src/GtkTrayApp/iFolderUserSelector.cs:221
 #: src/LinuxClient/library/iFolderUserSelector.cs:245
+#: src/LinuxClient/library/iFolderUserSelector.cs:240
 msgid "Selected Users"
 msgstr "Valittu Käyttäjät"
 
@@ -645,6 +718,7 @@ msgid "Server"
 msgstr "Palvelin"
 
 #: ../ReunionBrowser.cs:79 src/LinuxClient/library/iFolderWindow.cs:234
+#: src/LinuxClient/library/iFolderWindow.cs:271
 msgid "iFolders"
 msgstr "iFolderit"
 
@@ -656,6 +730,8 @@ msgstr "Toiminta Loki"
 #: src/GtkTrayApp/iFolderWindow.cs:2457
 #: src/LinuxClient/library/iFolderWindow.cs:293
 #: src/LinuxClient/library/iFolderWindow.cs:1608
+#: src/LinuxClient/library/iFolderWindow.cs:324
+#: src/LinuxClient/library/iFolderWindow.cs:1692
 msgid "Idle..."
 msgstr "Jouten"
 
@@ -666,58 +742,69 @@ msgstr "_Luo"
 
 #: ../iFolderWindow.cs:340 src/GtkTrayApp/iFolderWindow.cs:426
 #: src/LinuxClient/library/iFolderWindow.cs:443
+#: src/LinuxClient/library/iFolderWindow.cs:474
 msgid "Share _with..."
 msgstr "_Jae..."
 
 #: ../iFolderWindow.cs:344 src/GtkTrayApp/iFolderWindow.cs:430
 #: src/LinuxClient/library/iFolderWindow.cs:447
+#: src/LinuxClient/library/iFolderWindow.cs:478
 msgid "Re_solve conflicts"
 msgstr "_Korjata selkkaukset"
 
 #: ../iFolderWindow.cs:348 src/GtkTrayApp/iFolderWindow.cs:434
 #: src/LinuxClient/library/iFolderWindow.cs:452
+#: src/LinuxClient/library/iFolderWindow.cs:483
 msgid "Sync _now"
 msgstr "_Tahdista nyt"
 
 #: ../iFolderWindow.cs:353 src/GtkTrayApp/iFolderWindow.cs:439
 #: src/LinuxClient/library/iFolderWindow.cs:457
+#: src/LinuxClient/library/iFolderWindow.cs:488
 msgid "Re_vert to a normal folder"
 msgstr "Pala_utu tavalliseksi kansioksi"
 
 #: ../iFolderWindow.cs:367 src/GtkTrayApp/iFolderWindow.cs:453
 #: src/LinuxClient/library/iFolderWindow.cs:471
+#: src/LinuxClient/library/iFolderWindow.cs:502
 msgid "i_Folder"
 msgstr ""
 
 #: ../iFolderWindow.cs:383 src/GtkTrayApp/iFolderWindow.cs:469
 #: src/LinuxClient/library/iFolderWindow.cs:487
+#: src/LinuxClient/library/iFolderWindow.cs:518
 msgid "_View"
 msgstr "_Näytä"
 
 #: ../iFolderWindow.cs:398 src/GtkTrayApp/iFolderWindow.cs:484
 #: src/LinuxClient/library/iFolderWindow.cs:502
+#: src/LinuxClient/library/iFolderWindow.cs:533
 msgid "A_bout"
 msgstr "_Tietoja"
 
 #: ../iFolderWindow.cs:404 src/GtkTrayApp/iFolderWindow.cs:490
 #: src/LinuxClient/library/iFolderWindow.cs:510
+#: src/LinuxClient/library/iFolderWindow.cs:541
 msgid "_Help"
 msgstr "_Ohje"
 
 #: ../iFolderWindow.cs:451 src/GtkTrayApp/iFolderWindow.cs:537
 #: src/LinuxClient/library/iFolderConflictDialog.cs:152
 #: src/LinuxClient/library/iFolderWindow.cs:557
+#: src/LinuxClient/library/iFolderWindow.cs:588
 msgid "Name"
 msgstr "Nimi"
 
 #: ../iFolderWindow.cs:463 src/GtkTrayApp/iFolderWindow.cs:549
 #: src/LinuxClient/library/iFolderWindow.cs:569
+#: src/LinuxClient/library/iFolderWindow.cs:600
 msgid "Location"
 msgstr "Polku"
 
 #: ../iFolderWindow.cs:476 src/GtkTrayApp/iFolderWindow.cs:562
 #: src/LinuxClient/library/iFolderWindow.cs:582
 #: src/LinuxClient/library/PrefsAccountsPage.cs:142
+#: src/LinuxClient/library/iFolderWindow.cs:613
 msgid "Status"
 msgstr "Tila"
 
@@ -761,6 +848,7 @@ msgstr "Palvelimen Tietoa"
 #: src/LinuxClient/library/iFolderLoginDialog.cs:153
 #: src/LinuxClient/library/iFolderLoginDialog.cs:208
 #: src/LinuxClient/library/PrefsAccountsPage.cs:204
+#: src/LinuxClient/library/RemoveAccountDialog.cs:103
 msgid "User name:"
 msgstr "Käyttäjän nimi:"
 
@@ -790,6 +878,7 @@ msgstr "Palvelimen tila yhteensä:"
 
 #: ../iFolderWindow.cs:981 src/GtkTrayApp/iFolderWindow.cs:1094
 #: src/LinuxClient/library/LogWindow.cs:137
+#: src/LinuxClient/library/LogWindow.cs:189
 msgid "Log"
 msgstr "Loki"
 
@@ -801,47 +890,57 @@ msgstr "iFolder:lla on Selkkaukset"
 #: ../iFolderWindow.cs:1047 src/GtkTrayApp/iFolderWindow.cs:1196
 #: src/LinuxClient/library/AccountDialog.cs:58
 #: src/LinuxClient/library/iFolderWindow.cs:146
+#: src/LinuxClient/library/iFolderWindow.cs:160
+#: src/LinuxClient/library/iFolderWindow.cs:171
 msgid "OK"
 msgstr ""
 
 #: ../iFolderWindow.cs:1052 src/GtkTrayApp/iFolderWindow.cs:1201
 #: src/LinuxClient/library/iFolderWindow.cs:118
+#: src/LinuxClient/library/iFolderWindow.cs:154
 msgid "Waiting to Connect"
 msgstr "Odota Yhteyksestä"
 
 #: ../iFolderWindow.cs:1054 src/GtkTrayApp/iFolderWindow.cs:1203
 #: src/LinuxClient/library/iFolderWindow.cs:120
 #: src/LinuxClient/library/iFolderWindow.cs:138
+#: src/LinuxClient/library/iFolderWindow.cs:157
 msgid "Waiting to Sync"
 msgstr "Odota Tahdistamisesta"
 
 #: ../iFolderWindow.cs:1234 src/GtkTrayApp/iFolderWindow.cs:1425
 #: src/LinuxClient/library/iFolderWindow.cs:880
+#: src/LinuxClient/library/iFolderWindow.cs:914
 msgid "Open"
 msgstr "Avaa"
 
 #: ../iFolderWindow.cs:1242 src/GtkTrayApp/iFolderWindow.cs:1433
 #: src/LinuxClient/library/iFolderWindow.cs:888
+#: src/LinuxClient/library/iFolderWindow.cs:922
 msgid "Share with..."
 msgstr "Jae..."
 
 #: ../iFolderWindow.cs:1251 src/GtkTrayApp/iFolderWindow.cs:1441
 #: src/LinuxClient/library/iFolderWindow.cs:896
+#: src/LinuxClient/library/iFolderWindow.cs:930
 msgid "Resolve conflicts"
 msgstr "Korjata selkkaukset"
 
 #: ../iFolderWindow.cs:1260 src/GtkTrayApp/iFolderWindow.cs:1450
 #: src/LinuxClient/library/iFolderWindow.cs:905
+#: src/LinuxClient/library/iFolderWindow.cs:939
 msgid "Sync now"
 msgstr "Tahdista nyt"
 
 #: ../iFolderWindow.cs:1266 src/GtkTrayApp/iFolderWindow.cs:1456
 #: src/LinuxClient/library/iFolderWindow.cs:911
+#: src/LinuxClient/library/iFolderWindow.cs:947
 msgid "Revert to a normal folder"
 msgstr "Palautu tavalliseksi kansioksi"
 
 #: ../iFolderWindow.cs:1274 src/GtkTrayApp/iFolderWindow.cs:1483
 #: src/LinuxClient/library/iFolderWindow.cs:938
+#: src/LinuxClient/library/iFolderWindow.cs:975
 msgid "Properties"
 msgstr "Ominaisuudet"
 
@@ -856,6 +955,9 @@ msgstr "Aseta iFolder"
 #: src/LinuxClient/library/iFolderWindow.cs:928
 #: src/LinuxClient/library/iFolderWindow.cs:963
 #: src/LinuxClient/library/iFolderWindow.cs:972
+#: src/LinuxClient/library/iFolderWindow.cs:965
+#: src/LinuxClient/library/iFolderWindow.cs:1000
+#: src/LinuxClient/library/iFolderWindow.cs:1009
 msgid "Remove iFolder"
 msgstr "Poista iFolder"
 
@@ -866,16 +968,20 @@ msgstr "Yhdistä nyt..."
 #: ../iFolderWindow.cs:1308 src/GtkTrayApp/iFolderWindow.cs:1527
 #: src/LinuxClient/library/iFolderWindow.cs:982
 #: src/LinuxClient/library/iFolderWindow.cs:1865
+#: src/LinuxClient/library/iFolderWindow.cs:1019
+#: src/LinuxClient/library/iFolderWindow.cs:1986
 msgid "Create iFolder"
 msgstr "Luo iFolder"
 
 #: ../iFolderWindow.cs:1314 src/GtkTrayApp/iFolderWindow.cs:1533
 #: src/LinuxClient/library/iFolderWindow.cs:988
+#: src/LinuxClient/library/iFolderWindow.cs:1025
 msgid "Refresh list"
 msgstr "Päivitä luettelo"
 
 #: ../iFolderWindow.cs:1489 src/GtkTrayApp/iFolderWindow.cs:1763
 #: src/LinuxClient/library/iFolderWindow.cs:1195
+#: src/LinuxClient/library/iFolderWindow.cs:1232
 msgid "Revert this iFolder?"
 msgstr "Palautuko tämän iFolder?"
 
@@ -892,11 +998,22 @@ msgstr ""
 
 #: ../iFolderWindow.cs:1677 src/GtkTrayApp/iFolderWindow.cs:1974
 #: src/LinuxClient/library/iFolderWindow.cs:1275
+#: src/LinuxClient/library/iFolderWindow.cs:1296
+#: src/LinuxClient/library/iFolderWindow.cs:1310
+#: src/LinuxClient/library/iFolderWindow.cs:2017
+#: src/LinuxClient/library/iFolderWindow.cs:2033
+#: src/LinuxClient/library/iFolderWindow.cs:2049
+#: src/LinuxClient/library/iFolderWindow.cs:2076
 msgid "Invalid iFolder Path"
 msgstr "Epäkelpo iFolder Polku"
 
 #: ../iFolderWindow.cs:1678 src/GtkTrayApp/iFolderWindow.cs:1975
 #: src/LinuxClient/library/iFolderWindow.cs:1276
+#: src/LinuxClient/library/iFolderWindow.cs:1311
+#: src/LinuxClient/library/iFolderWindow.cs:2018
+#: src/LinuxClient/library/iFolderWindow.cs:2034
+#: src/LinuxClient/library/iFolderWindow.cs:2050
+#: src/LinuxClient/library/iFolderWindow.cs:2077
 msgid "Invalid iFolder path selected"
 msgstr "Epäkelpo iFolder Polku valittunut"
 
@@ -939,6 +1056,8 @@ msgstr ""
 #: src/LinuxClient/library/CreateDialog.cs:170
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:173
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:593
+#: src/LinuxClient/library/CreateDialog.cs:183
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:644
 msgid "Read Write"
 msgstr "Lue Kirjoita"
 
@@ -953,6 +1072,7 @@ msgstr "Aidon todistamisen palautui virhe: {0}"
 
 #: src/GtkTrayApp/iFolderApplication.cs:338
 #: src/LinuxClient/application/iFolderApplication.cs:598
+#: src/LinuxClient/application/iFolderApplication.cs:607
 #, csharp-format
 msgid "{0} has invited you to participate in this shared iFolder"
 msgstr "{0} on kutsunut sinua osallistua tässä jaettu iFolder:ssa"
@@ -969,6 +1089,7 @@ msgstr "Kirjaudu sisään iFolder-palvelimeen"
 #: src/GtkTrayApp/iFolderLoginDialog.cs:146
 #: src/LinuxClient/library/iFolderLoginDialog.cs:176
 #: src/LinuxClient/library/PrefsAccountsPage.cs:191
+#: src/LinuxClient/library/RemoveAccountDialog.cs:90
 msgid "Server host:"
 msgstr "Palvelimen isäntäkone:"
 
@@ -980,11 +1101,14 @@ msgstr "iFolder-palvelin:"
 #: src/GtkTrayApp/iFolderPropertiesDialog.cs:234
 #: src/LinuxClient/library/iFolderPropertiesDialog.cs:195
 #: src/LinuxClient/library/PreferencesWindow.cs:101
+#: src/LinuxClient/library/iFolderPropertiesDialog.cs:206
+#: src/LinuxClient/library/PreferencesWindow.cs:107
 msgid "_General"
 msgstr "_Yleinen"
 
 #: src/GtkTrayApp/iFolderPropertiesDialog.cs:239
 #: src/LinuxClient/library/iFolderPropertiesDialog.cs:200
+#: src/LinuxClient/library/iFolderPropertiesDialog.cs:211
 msgid "_Sharing"
 msgstr "_Jakaaminen"
 
@@ -1005,11 +1129,13 @@ msgstr "Aseta Käyttäminen"
 
 #: src/GtkTrayApp/iFolderUserSelector.cs:189
 #: src/LinuxClient/library/iFolderUserSelector.cs:213
+#: src/LinuxClient/library/iFolderUserSelector.cs:208
 msgid "_Add ->"
 msgstr "Lisää ->"
 
 #: src/GtkTrayApp/iFolderUserSelector.cs:193
 #: src/LinuxClient/library/iFolderUserSelector.cs:217
+#: src/LinuxClient/library/iFolderUserSelector.cs:212
 msgid "_Remove"
 msgstr "Poista"
 
@@ -1031,6 +1157,7 @@ msgstr "_Palvelimen"
 
 #: src/GtkTrayApp/iFolderWindow.cs:395
 #: src/LinuxClient/library/iFolderWindow.cs:412
+#: src/LinuxClient/library/iFolderWindow.cs:443
 msgid "C_reate"
 msgstr "_Luo"
 
@@ -1041,11 +1168,13 @@ msgstr "A_seta iFolder"
 
 #: src/GtkTrayApp/iFolderWindow.cs:410
 #: src/LinuxClient/library/iFolderWindow.cs:427
+#: src/LinuxClient/library/iFolderWindow.cs:458
 msgid "_Delete iFolder"
 msgstr "_Poista iFolder"
 
 #: src/GtkTrayApp/iFolderWindow.cs:416
 #: src/LinuxClient/library/iFolderWindow.cs:433
+#: src/LinuxClient/library/iFolderWindow.cs:464
 msgid "Re_move iFolder"
 msgstr "Erota iFolder"
 
@@ -1091,6 +1220,7 @@ msgstr "Tämä loki näytä nykyisen iFolder:n toiminta"
 
 #: src/GtkTrayApp/iFolderWindow.cs:1188
 #: src/LinuxClient/library/iFolderWindow.cs:134
+#: src/LinuxClient/library/iFolderWindow.cs:177
 msgid "Synchronizing"
 msgstr "Tahdistamisessa"
 
@@ -1102,11 +1232,14 @@ msgstr "Tahdistaminen Epäonnistui"
 #: src/GtkTrayApp/iFolderWindow.cs:1465 src/GtkTrayApp/iFolderWindow.cs:1500
 #: src/LinuxClient/library/iFolderWindow.cs:920
 #: src/LinuxClient/library/iFolderWindow.cs:955
+#: src/LinuxClient/library/iFolderWindow.cs:957
+#: src/LinuxClient/library/iFolderWindow.cs:992
 msgid "Delete iFolder"
 msgstr "Poista iFolder"
 
 #: src/GtkTrayApp/iFolderWindow.cs:1976
 #: src/LinuxClient/library/iFolderWindow.cs:1277
+#: src/LinuxClient/library/iFolderWindow.cs:1312
 msgid ""
 "The path you have selected is invalid for an iFolder.  iFolders cannot "
 "contain other iFolders.  The folder you selected is either inside an "
@@ -1120,18 +1253,25 @@ msgstr ""
 #: src/GtkTrayApp/iFolderWindow.cs:2087 src/GtkTrayApp/iFolderWindow.cs:2101
 #: src/LinuxClient/library/iFolderWindow.cs:1360
 #: src/LinuxClient/library/iFolderWindow.cs:1374
+#: src/LinuxClient/library/iFolderWindow.cs:1389
+#: src/LinuxClient/library/iFolderWindow.cs:1405
+#: src/LinuxClient/library/iFolderWindow.cs:1419
 msgid "Remove iFolder Confirmation"
 msgstr "Poista iFolder Varmistus"
 
 #: src/GtkTrayApp/iFolderWindow.cs:2088 src/GtkTrayApp/iFolderWindow.cs:2102
 #: src/LinuxClient/library/iFolderWindow.cs:1361
 #: src/LinuxClient/library/iFolderWindow.cs:1375
+#: src/LinuxClient/library/iFolderWindow.cs:1390
+#: src/LinuxClient/library/iFolderWindow.cs:1406
+#: src/LinuxClient/library/iFolderWindow.cs:1420
 #, csharp-format
 msgid "Remove iFolder {0}?"
 msgstr "Poista iFolder {0}?"
 
 #: src/GtkTrayApp/iFolderWindow.cs:2090
 #: src/LinuxClient/library/iFolderWindow.cs:1363
+#: src/LinuxClient/library/iFolderWindow.cs:1408
 msgid ""
 "This will remove this iFolder from your local machine.  Because you are the "
 "owner of this iFolder, the iFolder will also be removed from the iFolder "
@@ -1146,6 +1286,7 @@ msgstr ""
 
 #: src/GtkTrayApp/iFolderWindow.cs:2104
 #: src/LinuxClient/library/iFolderWindow.cs:1377
+#: src/LinuxClient/library/iFolderWindow.cs:1422
 msgid ""
 "This will remove you as a member of this iFolder.  You will not be able to "
 "access this iFolder unless the owner re-invites you to this iFolder.  The "
@@ -1157,18 +1298,21 @@ msgstr ""
 
 #: src/GtkTrayApp/iFolderWindow.cs:2380
 #: src/LinuxClient/library/iFolderWindow.cs:1532
+#: src/LinuxClient/library/iFolderWindow.cs:1640
 #, csharp-format
 msgid "Syncing: {0}"
 msgstr "Tahdistamisessa: {0}"
 
 #: src/GtkTrayApp/iFolderWindow.cs:2415
 #: src/LinuxClient/library/LogWindow.cs:190
+#: src/LinuxClient/library/LogWindow.cs:253
 #, csharp-format
 msgid "Started sync of: {0}"
 msgstr "Aloitti \"{0}\" tahdistaminen"
 
 #: src/GtkTrayApp/iFolderWindow.cs:2460
 #: src/LinuxClient/library/LogWindow.cs:197
+#: src/LinuxClient/library/LogWindow.cs:265
 #, csharp-format
 msgid "Finished sync of: {0}"
 msgstr "Lopetin \"{0}\" tahdistaminen"
@@ -1190,6 +1334,8 @@ msgstr "Tiedoston poistamisessa palvelimelta: {0}"
 #: src/GtkTrayApp/iFolderWindow.cs:2499 src/GtkTrayApp/iFolderWindow.cs:2503
 #: src/LinuxClient/library/iFolderWindow.cs:1684
 #: src/LinuxClient/library/LogWindow.cs:237
+#: src/LinuxClient/library/iFolderWindow.cs:1774
+#: src/LinuxClient/library/LogWindow.cs:317
 #, csharp-format
 msgid "Uploading file: {0}"
 msgstr "Tiedoston lähetyksessä: {0}"
@@ -1202,27 +1348,33 @@ msgstr "Tiedoston poistamisessa: {0}"
 #: src/GtkTrayApp/iFolderWindow.cs:2525 src/GtkTrayApp/iFolderWindow.cs:2529
 #: src/LinuxClient/library/iFolderWindow.cs:1688
 #: src/LinuxClient/library/LogWindow.cs:241
+#: src/LinuxClient/library/iFolderWindow.cs:1779
+#: src/LinuxClient/library/LogWindow.cs:321
 #, csharp-format
 msgid "Downloading file: {0}"
 msgstr "Lataamissa tiedosto: {0}"
 
 #: src/GtkTrayApp/iFolderWindow.cs:2591
 #: src/LinuxClient/library/LogWindow.cs:284
+#: src/LinuxClient/library/LogWindow.cs:418
 msgid "Save iFolder Log..."
 msgstr "Talenna iFolder Loki..."
 
 #: src/GtkTrayApp/iFolderWindow.cs:2607
 #: src/LinuxClient/library/LogWindow.cs:300
+#: src/LinuxClient/library/LogWindow.cs:439
 msgid "iFolder Save Log"
 msgstr "Talennettu iFolder Loki"
 
 #: src/GtkTrayApp/iFolderWindow.cs:2608
 #: src/LinuxClient/library/LogWindow.cs:301
+#: src/LinuxClient/library/LogWindow.cs:440
 msgid "Overwrite existing file?"
 msgstr "Haluatko ylikirjoittaa tiedoston?"
 
 #: src/GtkTrayApp/iFolderWindow.cs:2609
 #: src/LinuxClient/library/LogWindow.cs:302
+#: src/LinuxClient/library/LogWindow.cs:441
 msgid ""
 "The file you have selected exists.  Selecting yes will overwrite the "
 "contents of this file.  Do you want to overwrite this file?"
@@ -1242,12 +1394,18 @@ msgstr ""
 #: src/LinuxClient/application/iFolderApplication.cs:361
 #: src/LinuxClient/application/iFolderApplication.cs:451
 #: src/LinuxClient/library/PrefsAccountsPage.cs:874
+#: src/LinuxClient/application/iFolderApplication.cs:364
+#: src/LinuxClient/application/iFolderApplication.cs:454
+#: src/LinuxClient/library/PrefsAccountsPage.cs:920
 msgid "Expired Password"
 msgstr ""
 
 #: src/LinuxClient/application/iFolderApplication.cs:362
 #: src/LinuxClient/application/iFolderApplication.cs:452
 #: src/LinuxClient/library/PrefsAccountsPage.cs:875
+#: src/LinuxClient/application/iFolderApplication.cs:365
+#: src/LinuxClient/application/iFolderApplication.cs:455
+#: src/LinuxClient/library/PrefsAccountsPage.cs:921
 #, csharp-format
 msgid "Your password has expired.  You have {0} grace logins remaining."
 msgstr ""
@@ -1265,16 +1423,35 @@ msgstr ""
 #: src/LinuxClient/library/PrefsAccountsPage.cs:966
 #: src/LinuxClient/library/PrefsAccountsPage.cs:978
 #: src/LinuxClient/library/PrefsAccountsPage.cs:994
+#: src/LinuxClient/application/iFolderApplication.cs:486
+#: src/LinuxClient/application/iFolderApplication.cs:498
+#: src/LinuxClient/application/iFolderApplication.cs:510
+#: src/LinuxClient/application/iFolderApplication.cs:522
+#: src/LinuxClient/library/PrefsAccountsPage.cs:935
+#: src/LinuxClient/library/PrefsAccountsPage.cs:947
+#: src/LinuxClient/library/PrefsAccountsPage.cs:959
+#: src/LinuxClient/library/PrefsAccountsPage.cs:971
+#: src/LinuxClient/library/PrefsAccountsPage.cs:988
+#: src/LinuxClient/library/PrefsAccountsPage.cs:1000
+#: src/LinuxClient/library/PrefsAccountsPage.cs:1012
+#: src/LinuxClient/library/PrefsAccountsPage.cs:1024
+#: src/LinuxClient/library/PrefsAccountsPage.cs:1036
+#: src/LinuxClient/library/PrefsAccountsPage.cs:1055
+#: src/LinuxClient/library/PrefsAccountsPage.cs:1065
 msgid "Unable to Connect to iFolder Server"
 msgstr ""
 
 #: src/LinuxClient/application/iFolderApplication.cs:484
+#: src/LinuxClient/application/iFolderApplication.cs:487
 msgid "The password is invalid.  Please try again."
 msgstr ""
 
 #: src/LinuxClient/application/iFolderApplication.cs:496
 #: src/LinuxClient/library/PrefsAccountsPage.cs:902
 #: src/LinuxClient/library/PrefsAccountsPage.cs:955
+#: src/LinuxClient/application/iFolderApplication.cs:499
+#: src/LinuxClient/library/PrefsAccountsPage.cs:948
+#: src/LinuxClient/library/PrefsAccountsPage.cs:1001
 msgid ""
 "The user account is disabled.  Please contact your network administrator for "
 "assistance."
@@ -1283,6 +1460,9 @@ msgstr ""
 #: src/LinuxClient/application/iFolderApplication.cs:508
 #: src/LinuxClient/library/PrefsAccountsPage.cs:914
 #: src/LinuxClient/library/PrefsAccountsPage.cs:967
+#: src/LinuxClient/application/iFolderApplication.cs:511
+#: src/LinuxClient/library/PrefsAccountsPage.cs:960
+#: src/LinuxClient/library/PrefsAccountsPage.cs:1013
 msgid ""
 "The user account has been locked out.  Please contact your network "
 "administrator for assistance."
@@ -1292,6 +1472,10 @@ msgstr ""
 #: src/LinuxClient/library/PrefsAccountsPage.cs:926
 #: src/LinuxClient/library/PrefsAccountsPage.cs:979
 #: src/LinuxClient/library/PrefsAccountsPage.cs:995
+#: src/LinuxClient/application/iFolderApplication.cs:523
+#: src/LinuxClient/library/PrefsAccountsPage.cs:972
+#: src/LinuxClient/library/PrefsAccountsPage.cs:1037
+#: src/LinuxClient/library/PrefsAccountsPage.cs:1066
 msgid ""
 "An error was encountered while connecting to the iFolder server.  Please "
 "verify the information entered and try again.  If the problem persists, "
@@ -1301,10 +1485,14 @@ msgstr ""
 #: src/LinuxClient/application/iFolderApplication.cs:521
 #: src/LinuxClient/library/PrefsAccountsPage.cs:927
 #: src/LinuxClient/library/PrefsAccountsPage.cs:980
+#: src/LinuxClient/application/iFolderApplication.cs:524
+#: src/LinuxClient/library/PrefsAccountsPage.cs:973
+#: src/LinuxClient/library/PrefsAccountsPage.cs:1038
 msgid "Authentication Status Code"
 msgstr ""
 
 #: src/LinuxClient/application/iFolderApplication.cs:671
+#: src/LinuxClient/application/iFolderApplication.cs:695
 #, csharp-format
 msgid "{0} has joined the iFolder \"{1}\""
 msgstr ""
@@ -1324,26 +1512,32 @@ msgid ""
 msgstr ""
 
 #: src/LinuxClient/application/iFolderApplication.cs:868
+#: src/LinuxClient/application/iFolderApplication.cs:911
 msgid "Accounts"
 msgstr ""
 
 #: src/LinuxClient/application/iFolderApplication.cs:875
+#: src/LinuxClient/application/iFolderApplication.cs:918
 msgid "Synchronization Log"
 msgstr ""
 
 #: src/LinuxClient/application/iFolderApplication.cs:885
+#: src/LinuxClient/application/iFolderApplication.cs:928
 msgid "Preferences"
 msgstr ""
 
 #: src/LinuxClient/application/iFolderApplication.cs:894
+#: src/LinuxClient/application/iFolderApplication.cs:937
 msgid "Help"
 msgstr ""
 
 #: src/LinuxClient/application/iFolderApplication.cs:903
+#: src/LinuxClient/application/iFolderApplication.cs:946
 msgid "About"
 msgstr ""
 
 #: src/LinuxClient/application/iFolderApplication.cs:931
+#: src/LinuxClient/application/iFolderApplication.cs:974
 msgid "Quit"
 msgstr ""
 
@@ -1355,6 +1549,10 @@ msgstr ""
 #: src/LinuxClient/library/CreateDialog.cs:82
 #: src/LinuxClient/library/iFolderWindow.cs:371
 #: src/LinuxClient/library/iFolderWindow.cs:2007
+#: src/LinuxClient/library/CreateDialog.cs:86
+#: src/LinuxClient/library/iFolderWindow.cs:402
+#: src/LinuxClient/library/iFolderWindow.cs:2198
+#: src/LinuxClient/library/RemoveAccountDialog.cs:77
 msgid "Server:"
 msgstr ""
 
@@ -1367,10 +1565,12 @@ msgid "Empty"
 msgstr ""
 
 #: src/LinuxClient/library/CreateDialog.cs:58
+#: src/LinuxClient/library/CreateDialog.cs:60
 msgid "New iFolder"
 msgstr ""
 
 #: src/LinuxClient/library/CreateDialog.cs:71
+#: src/LinuxClient/library/CreateDialog.cs:75
 msgid "Create a new iFolder</span>"
 msgstr ""
 
@@ -1387,44 +1587,56 @@ msgid "File"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:318
+#: src/LinuxClient/library/iFolderConflictDialog.cs:327
 msgid "This iFolder contains conflicts"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:340
+#: src/LinuxClient/library/iFolderConflictDialog.cs:349
 msgid "Path:"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:466
+#: src/LinuxClient/library/iFolderConflictDialog.cs:475
 msgid "Rename File"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:469
 #: src/LinuxClient/library/iFolderConflictDialog.cs:718
+#: src/LinuxClient/library/iFolderConflictDialog.cs:478
+#: src/LinuxClient/library/iFolderConflictDialog.cs:769
 msgid "Enter a new name for this file and click save to resolve it."
 msgstr ""
 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:478
+#: src/LinuxClient/library/iFolderConflictDialog.cs:487
 msgid "File Name:"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:508
+#: src/LinuxClient/library/iFolderConflictDialog.cs:517
 msgid "File Name"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:520
+#: src/LinuxClient/library/iFolderConflictDialog.cs:529
 msgid "Path in iFolder"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:533
+#: src/LinuxClient/library/iFolderConflictDialog.cs:542
 msgid "Conflict Type"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:590
 #: src/LinuxClient/library/iFolderConflictDialog.cs:591
+#: src/LinuxClient/library/iFolderConflictDialog.cs:641
+#: src/LinuxClient/library/iFolderConflictDialog.cs:642
 msgid "Read Only Membership"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:592
+#: src/LinuxClient/library/iFolderConflictDialog.cs:643
 msgid ""
 "Your ability to resolve conflicts is limited because you have read-only "
 "rights to this iFolder.  Name conflicts must be renamed locally.  File "
@@ -1432,11 +1644,14 @@ msgid ""
 msgstr ""
 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:766
+#: src/LinuxClient/library/iFolderConflictDialog.cs:819
 msgid "Name conflicts must be resolved individually."
 msgstr ""
 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:797
 #: src/LinuxClient/library/iFolderConflictDialog.cs:801
+#: src/LinuxClient/library/iFolderConflictDialog.cs:850
+#: src/LinuxClient/library/iFolderConflictDialog.cs:854
 msgid "Multiple selected"
 msgstr ""
 
@@ -1492,31 +1707,39 @@ msgid "Sync _Now"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:177
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:186
 msgid "Acc_ess..."
 msgstr ""
 
 #: src/LinuxClient/library/iFolderUserSelector.cs:151
+#: src/LinuxClient/library/iFolderUserSelector.cs:146
 msgid "Find:"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderUserSelector.cs:158
+#: src/LinuxClient/library/iFolderUserSelector.cs:153
 msgid "First Name"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderUserSelector.cs:159
+#: src/LinuxClient/library/iFolderUserSelector.cs:154
 msgid "Last Name"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderUserSelector.cs:160
+#: src/LinuxClient/library/iFolderUserSelector.cs:155
 msgid "Full Name"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderUserSelector.cs:167
 #: src/LinuxClient/library/iFolderUserSelector.cs:384
+#: src/LinuxClient/library/iFolderUserSelector.cs:162
+#: src/LinuxClient/library/iFolderUserSelector.cs:387
 msgid "<Enter text to find a user>"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderUserSelector.cs:175
+#: src/LinuxClient/library/iFolderUserSelector.cs:170
 msgid "(i.e. Full or partial name, or user ID)"
 msgstr ""
 
@@ -1526,10 +1749,12 @@ msgid "{0} objects to sync"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderWindow.cs:336
+#: src/LinuxClient/library/iFolderWindow.cs:367
 msgid "New"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderWindow.cs:337
+#: src/LinuxClient/library/iFolderWindow.cs:368
 msgid "Create a New iFolder"
 msgstr ""
 
@@ -1542,64 +1767,82 @@ msgid "Setup an Existing iFolder"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderWindow.cs:348
+#: src/LinuxClient/library/iFolderWindow.cs:379
 msgid "Sync"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderWindow.cs:349
+#: src/LinuxClient/library/iFolderWindow.cs:380
 msgid "Synchronize an iFolder"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderWindow.cs:353
+#: src/LinuxClient/library/iFolderWindow.cs:384
 msgid "Share"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderWindow.cs:354
+#: src/LinuxClient/library/iFolderWindow.cs:385
 msgid "Share an iFolder"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderWindow.cs:358
+#: src/LinuxClient/library/iFolderWindow.cs:389
 msgid "Resolve"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderWindow.cs:359
+#: src/LinuxClient/library/iFolderWindow.cs:390
 msgid "Resolve File Conflicts"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderWindow.cs:368
+#: src/LinuxClient/library/iFolderWindow.cs:399
 msgid "Filter the list of iFolders by server"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderWindow.cs:1678
 #: src/LinuxClient/library/LogWindow.cs:215
+#: src/LinuxClient/library/iFolderWindow.cs:1766
+#: src/LinuxClient/library/LogWindow.cs:289
 #, csharp-format
 msgid "Deleting file on client: {0}"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderWindow.cs:1695
 #: src/LinuxClient/library/LogWindow.cs:249
+#: src/LinuxClient/library/iFolderWindow.cs:1798
+#: src/LinuxClient/library/LogWindow.cs:329
 #, csharp-format
 msgid "Deleting directory on client: {0}"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderWindow.cs:1701
 #: src/LinuxClient/library/LogWindow.cs:256
+#: src/LinuxClient/library/iFolderWindow.cs:1806
+#: src/LinuxClient/library/LogWindow.cs:342
 #, csharp-format
 msgid "Uploading directory: {0}"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderWindow.cs:1705
 #: src/LinuxClient/library/LogWindow.cs:260
+#: src/LinuxClient/library/iFolderWindow.cs:1811
+#: src/LinuxClient/library/LogWindow.cs:346
 #, csharp-format
 msgid "Downloading directory: {0}"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderWindow.cs:1711
 #: src/LinuxClient/library/LogWindow.cs:266
+#: src/LinuxClient/library/iFolderWindow.cs:1829
+#: src/LinuxClient/library/LogWindow.cs:352
 #, csharp-format
 msgid "Deleting on server: {0}"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderWindow.cs:1866
+#: src/LinuxClient/library/iFolderWindow.cs:1987
 msgid "No iFolder Domains"
 msgstr ""
 
@@ -1610,58 +1853,71 @@ msgid ""
 msgstr ""
 
 #: src/LinuxClient/library/iFolderWindow.cs:1968
+#: src/LinuxClient/library/iFolderWindow.cs:2159
 msgid "Show Preferences"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderWindow.cs:1969
+#: src/LinuxClient/library/iFolderWindow.cs:2160
 msgid "This will show preferences"
 msgstr ""
 
 #: src/LinuxClient/library/iFolderWindow.cs:1970
+#: src/LinuxClient/library/iFolderWindow.cs:2161
 msgid ""
 "Eventually Calvin will get around to adding code here that will show the "
 "preferences dialog."
 msgstr ""
 
 #: src/LinuxClient/library/iFolderWindow.cs:2008
+#: src/LinuxClient/library/iFolderWindow.cs:2199
 msgid "Show All"
 msgstr ""
 
 #: src/LinuxClient/library/LogWindow.cs:53
+#: src/LinuxClient/library/LogWindow.cs:57
 msgid "iFolder Synchronization Log"
 msgstr ""
 
 #: src/LinuxClient/library/LogWindow.cs:99
+#: src/LinuxClient/library/LogWindow.cs:151
 msgid "Save"
 msgstr ""
 
 #: src/LinuxClient/library/LogWindow.cs:100
+#: src/LinuxClient/library/LogWindow.cs:152
 msgid "Save the Log to a file"
 msgstr ""
 
 #: src/LinuxClient/library/LogWindow.cs:104
+#: src/LinuxClient/library/LogWindow.cs:156
 msgid "Clear"
 msgstr ""
 
 #: src/LinuxClient/library/LogWindow.cs:105
+#: src/LinuxClient/library/LogWindow.cs:157
 msgid "Clear the log"
 msgstr ""
 
 #: src/LinuxClient/library/LogWindow.cs:224
+#: src/LinuxClient/library/LogWindow.cs:304
 #, csharp-format
 msgid "Uploading file: {0}.  Synchronizing changes only: {1}% savings."
 msgstr ""
 
 #: src/LinuxClient/library/LogWindow.cs:229
+#: src/LinuxClient/library/LogWindow.cs:309
 #, csharp-format
 msgid "Downloading file: {0}.  Synchronizing changes only: {1}% savings."
 msgstr ""
 
 #: src/LinuxClient/library/PreferencesWindow.cs:65
+#: src/LinuxClient/library/PreferencesWindow.cs:66
 msgid "iFolder Preferences"
 msgstr ""
 
 #: src/LinuxClient/library/PreferencesWindow.cs:105
+#: src/LinuxClient/library/PreferencesWindow.cs:111
 msgid "_Accounts"
 msgstr ""
 
@@ -1686,22 +1942,27 @@ msgid "D_efault account"
 msgstr ""
 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:394
+#: src/LinuxClient/library/PrefsAccountsPage.cs:398
 msgid "Logged in"
 msgstr ""
 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:398
+#: src/LinuxClient/library/PrefsAccountsPage.cs:402
 msgid "Logged out"
 msgstr ""
 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:403
+#: src/LinuxClient/library/PrefsAccountsPage.cs:407
 msgid "Disabled"
 msgstr ""
 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:575
+#: src/LinuxClient/library/PrefsAccountsPage.cs:612
 msgid "Lose current settings?"
 msgstr ""
 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:576
+#: src/LinuxClient/library/PrefsAccountsPage.cs:613
 msgid ""
 "You are currently creating a new account.  By selecing a different account "
 "you cancel the operation.  Do you wish to continue and loose the current "
@@ -1717,6 +1978,7 @@ msgid "Unable to logout of iFolder Server"
 msgstr ""
 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:765
+#: src/LinuxClient/library/PrefsAccountsPage.cs:809
 msgid ""
 "An error was encountered while logging out of the iFolder server.  If the "
 "problem persists, please contact your network administrator."
@@ -1724,10 +1986,13 @@ msgstr ""
 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:804
 #: src/LinuxClient/library/PrefsAccountsPage.cs:805
+#: src/LinuxClient/library/PrefsAccountsPage.cs:851
+#: src/LinuxClient/library/PrefsAccountsPage.cs:852
 msgid "Unable to Verify Identity"
 msgstr ""
 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:806
+#: src/LinuxClient/library/PrefsAccountsPage.cs:853
 #, csharp-format
 msgid ""
 "Unable to verify the identity of {0} as a trusted site.  Before accepting "
@@ -1737,6 +2002,8 @@ msgstr ""
 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:890
 #: src/LinuxClient/library/PrefsAccountsPage.cs:943
+#: src/LinuxClient/library/PrefsAccountsPage.cs:936
+#: src/LinuxClient/library/PrefsAccountsPage.cs:989
 msgid "The user name or password is invalid.  Please try again."
 msgstr ""
 
@@ -1752,27 +2019,27 @@ msgstr ""
 msgid "Remove from all workstations"
 msgstr ""
 
-#: src/LinuxClient/library/Util.cs:120
+#: src/LinuxClient/library/Util.cs:120 src/LinuxClient/library/Util.cs:134
 msgid "Developers:"
 msgstr ""
 
-#: src/LinuxClient/library/Util.cs:134
+#: src/LinuxClient/library/Util.cs:134 src/LinuxClient/library/Util.cs:146
 msgid "Quality Assurance:"
 msgstr ""
 
-#: src/LinuxClient/library/Util.cs:140
+#: src/LinuxClient/library/Util.cs:140 src/LinuxClient/library/Util.cs:153
 msgid "Product Management:"
 msgstr ""
 
-#: src/LinuxClient/library/Util.cs:144
+#: src/LinuxClient/library/Util.cs:144 src/LinuxClient/library/Util.cs:162
 msgid "Retired Contributers:"
 msgstr ""
 
-#: src/LinuxClient/library/Util.cs:149
+#: src/LinuxClient/library/Util.cs:149 src/LinuxClient/library/Util.cs:168
 msgid "Organizations:"
 msgstr ""
 
-#: src/LinuxClient/library/Util.cs:153
+#: src/LinuxClient/library/Util.cs:153 src/LinuxClient/library/Util.cs:178
 msgid "Other Contributors:"
 msgstr ""
 
@@ -1780,14 +2047,367 @@ msgstr ""
 msgid "    (some \"borrowed\" graphics)"
 msgstr ""
 
-#: src/LinuxClient/library/Util.cs:170
+#: src/LinuxClient/library/Util.cs:170 src/LinuxClient/library/Util.cs:183
 msgid "Copyright (C) 2004-2005 Novell, Inc."
 msgstr ""
 
-#: src/LinuxClient/library/Util.cs:171
+#: src/LinuxClient/library/Util.cs:171 src/LinuxClient/library/Util.cs:184
 msgid ""
 "The iFolder Project is a file sharing solution that allows people to easily "
 "share folders or files of any type with other users, whether they use the "
 "same or different operating system.  This project is built on the mono/.NET "
 "framework to integrate seamlessly into existing desktop environments."
+msgstr ""
+
+#: src/LinuxClient/application/iFolderApplication.cs:805
+msgid "Set up iFolder Account"
+msgstr ""
+
+#: src/LinuxClient/application/iFolderApplication.cs:806
+msgid "Set up an iFolder Account?"
+msgstr ""
+
+#: src/LinuxClient/application/iFolderApplication.cs:807
+msgid ""
+"To begin using iFolder, you must first set up an iFolder account.  Would you "
+"like to set up an iFolder account now?"
+msgstr ""
+
+#: src/LinuxClient/library/iFolderAcceptDialog.cs:45
+#, csharp-format
+msgid "Set up iFolder \"{0}\""
+msgstr ""
+
+#: src/LinuxClient/library/iFolderAcceptDialog.cs:61
+msgid "Set up iFolder: "
+msgstr ""
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:275
+msgid "Resolve Conflicts"
+msgstr ""
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:1002
+msgid "Error resolving conflict"
+msgstr ""
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:1003
+msgid "An error was encountered while attempting to resolve the conflict."
+msgstr ""
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:1007
+msgid "Invalid name"
+msgstr ""
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:1008
+#, csharp-format
+msgid ""
+"The name entered is invalid.  Please choose a different name and try again.\n"
+"\n"
+"File and directories must not contain any of these characters: {0}"
+msgstr ""
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:1013
+msgid "File or folder already exists"
+msgstr ""
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:1014
+msgid ""
+"A file or folder with the specified name already exists.  Please choose a "
+"different name and try again."
+msgstr ""
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:1025
+msgid "Error"
+msgstr ""
+
+#: src/LinuxClient/library/iFolderLoginDialog.cs:243
+#: src/LinuxClient/library/PrefsAccountsPage.cs:270
+#: src/LinuxClient/library/PrefsAccountsPage.cs:746
+#: src/LinuxClient/library/PrefsAccountsPage.cs:757
+#: src/LinuxClient/library/PrefsAccountsPage.cs:767
+#: src/LinuxClient/library/PrefsAccountsPage.cs:1081
+msgid "_Log in"
+msgstr ""
+
+#: src/LinuxClient/library/iFolderUserSelector.cs:91
+msgid "Select Users"
+msgstr ""
+
+#: src/LinuxClient/library/iFolderWindow.cs:141
+msgid "Has conflicts"
+msgstr ""
+
+#: src/LinuxClient/library/iFolderWindow.cs:169
+#, csharp-format
+msgid "{0} items out of sync"
+msgstr ""
+
+#: src/LinuxClient/library/iFolderWindow.cs:175
+#, csharp-format
+msgid "{0} items to sync"
+msgstr ""
+
+#: src/LinuxClient/library/iFolderWindow.cs:180
+msgid "Sync failed"
+msgstr ""
+
+#: src/LinuxClient/library/iFolderWindow.cs:183
+msgid "Checking for local changes"
+msgstr ""
+
+#: src/LinuxClient/library/iFolderWindow.cs:186
+msgid "Server unavailable"
+msgstr ""
+
+#: src/LinuxClient/library/iFolderWindow.cs:372
+msgid "Set Up"
+msgstr ""
+
+#: src/LinuxClient/library/iFolderWindow.cs:373
+msgid "Set up an existing iFolder"
+msgstr ""
+
+#: src/LinuxClient/library/iFolderWindow.cs:453
+msgid "_Set up iFolder"
+msgstr ""
+
+#: src/LinuxClient/library/iFolderWindow.cs:983
+msgid "Set up iFolder"
+msgstr ""
+
+#: src/LinuxClient/library/iFolderWindow.cs:1233
+msgid ""
+"This will revert this iFolder back to a normal folder and leave the files "
+"intact.  The iFolder will then be available from the server and will need to "
+"be set up in a different location in order to sync."
+msgstr ""
+
+#: src/LinuxClient/library/iFolderWindow.cs:1297
+msgid "Invalid characters in selected path"
+msgstr ""
+
+#: src/LinuxClient/library/iFolderWindow.cs:1298
+#, csharp-format
+msgid ""
+"The path you have entered contains invalid characters for an iFolder.  "
+"iFolders cannot contain the following characters: {0}"
+msgstr ""
+
+#: src/LinuxClient/library/iFolderWindow.cs:1392
+msgid ""
+"This will remove this iFolder from your local machine.  Because you are the "
+"owner of this iFolder, the iFolder will no longer be available to users you "
+"have shared with.  The files will not be deleted from your local hard drive."
+msgstr ""
+
+#: src/LinuxClient/library/iFolderWindow.cs:1619
+#: src/LinuxClient/library/LogWindow.cs:247
+#, csharp-format
+msgid "Checking for local changes: {0}"
+msgstr ""
+
+#: src/LinuxClient/library/iFolderWindow.cs:1635
+#: src/LinuxClient/library/LogWindow.cs:242
+msgid "Checking for new iFolders..."
+msgstr ""
+
+#: src/LinuxClient/library/iFolderWindow.cs:1784
+#: src/LinuxClient/library/LogWindow.cs:294
+#, csharp-format
+msgid "Found local change in file: {0}"
+msgstr ""
+
+#: src/LinuxClient/library/iFolderWindow.cs:1789
+#, csharp-format
+msgid "Synchronizing file: {0}"
+msgstr ""
+
+#: src/LinuxClient/library/iFolderWindow.cs:1816
+#: src/LinuxClient/library/LogWindow.cs:335
+#, csharp-format
+msgid "Found local change in directory: {0}"
+msgstr ""
+
+#: src/LinuxClient/library/iFolderWindow.cs:1821
+#, csharp-format
+msgid "Synchronizing directory: {0}"
+msgstr ""
+
+#: src/LinuxClient/library/iFolderWindow.cs:1988
+msgid ""
+"A new iFolder cannot be created because you have not attached to any iFolder "
+"servers."
+msgstr ""
+
+#: src/LinuxClient/library/iFolderWindow.cs:2019
+msgid ""
+"The path you've specified is empty.  Please enter a properly formatted path "
+"for the new iFolder."
+msgstr ""
+
+#: src/LinuxClient/library/iFolderWindow.cs:2035
+msgid ""
+"The path you've specified is invalid.  Please enter a properly formatted "
+"path for the new iFolder."
+msgstr ""
+
+#: src/LinuxClient/library/iFolderWindow.cs:2051
+msgid ""
+"The path you've specified is invalid.  Please remove the trailing path "
+"separator character (/) and try again."
+msgstr ""
+
+#: src/LinuxClient/library/iFolderWindow.cs:2078
+msgid ""
+"The path you've specified does not exist.  Please select an existing folder "
+"and try again."
+msgstr ""
+
+#: src/LinuxClient/library/LogWindow.cs:260
+msgid "Done checking for new iFolders"
+msgstr ""
+
+#: src/LinuxClient/library/LogWindow.cs:362
+#, csharp-format
+msgid "Conflict occurred for: {0}"
+msgstr ""
+
+#: src/LinuxClient/library/LogWindow.cs:367
+#, csharp-format
+msgid "A policy prevented a sync of: {0}"
+msgstr ""
+
+#: src/LinuxClient/library/LogWindow.cs:372
+#, csharp-format
+msgid "Insuficient rights to sync: {0}"
+msgstr ""
+
+#: src/LinuxClient/library/LogWindow.cs:377
+#, csharp-format
+msgid "This iFolder is locked and did not sync: {0}"
+msgstr ""
+
+#: src/LinuxClient/library/LogWindow.cs:382
+#, csharp-format
+msgid "This iFolder is full and did not sync: {0}"
+msgstr ""
+
+#: src/LinuxClient/library/LogWindow.cs:387
+#, csharp-format
+msgid "A size restriction policy prevented a sync of: {0}"
+msgstr ""
+
+#: src/LinuxClient/library/LogWindow.cs:392
+#, csharp-format
+msgid "A file type restriction policy prevented a sync of: {0}"
+msgstr ""
+
+#: src/LinuxClient/library/LogWindow.cs:397
+#, csharp-format
+msgid "This iFolder failed to sync: {0}"
+msgstr ""
+
+#: src/LinuxClient/library/LogWindow.cs:466
+msgid "Permission denied"
+msgstr ""
+
+#: src/LinuxClient/library/LogWindow.cs:467
+msgid ""
+"You do not have access to save the file in the location you specified.  "
+"Please select a different location."
+msgstr ""
+
+#: src/LinuxClient/library/LogWindow.cs:481
+#: src/LinuxClient/library/LogWindow.cs:525
+msgid "Unknown error"
+msgstr ""
+
+#: src/LinuxClient/library/LogWindow.cs:482
+#, csharp-format
+msgid ""
+"An exception occurred trying to save the log: {0}  Please click on the "
+"details button to see the stack trace."
+msgstr ""
+
+#: src/LinuxClient/library/LogWindow.cs:526
+msgid ""
+"The iFolder Client experienced an error trying to save the log.  Please "
+"report this bug."
+msgstr ""
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:253
+msgid "De_fault account"
+msgstr ""
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:741
+msgid "_Log out"
+msgstr ""
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:808
+msgid "Unable to log out of iFolder Server"
+msgstr ""
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:1025
+msgid ""
+"Unable to contact the specified server.  Please verify the information "
+"entered and try again.  If the problem persists, please contact your network "
+"administrator."
+msgstr ""
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:1056
+msgid ""
+"An account for this server already exists on the local machine.  Only one "
+"account per server is allowed."
+msgstr ""
+
+#: src/LinuxClient/library/PrefsGeneralPage.cs:113
+msgid ""
+"To start up iFolder at login, leave iFolder running when you log out and "
+"save your current setup."
+msgstr ""
+
+#: src/LinuxClient/library/RemoveAccountDialog.cs:45
+msgid "Remove Account"
+msgstr ""
+
+#: src/LinuxClient/library/RemoveAccountDialog.cs:61
+msgid "Remove iFolder Account?"
+msgstr ""
+
+#: src/LinuxClient/library/RemoveAccountDialog.cs:119
+msgid "Remove my iFolders and files from the server"
+msgstr ""
+
+#: src/LinuxClient/library/RemoveAccountDialog.cs:160
+msgid "Warning"
+msgstr ""
+
+#: src/LinuxClient/library/RemoveAccountDialog.cs:161
+msgid "Removing iFolders from Server"
+msgstr ""
+
+#: src/LinuxClient/library/RemoveAccountDialog.cs:162
+msgid ""
+"Removing iFolders from the server will delete the files stored on the "
+"server.  Your files will remain intact on this computer.\n"
+"\n"
+"If you've shared any iFolders with other users, they will no longer be able "
+"to synchronize them with the server.  Additionally, you will no longer be "
+"able to access these iFolders from any other computer."
+msgstr ""
+
+#: src/LinuxClient/library/Util.cs:132
+msgid "iFolder 3 Team"
+msgstr ""
+
+#: src/LinuxClient/library/Util.cs:157
+msgid "Documentation:"
+msgstr ""
+
+#: src/LinuxClient/library/Util.cs:160
+msgid "Special Thanks"
+msgstr ""
+
+#: src/LinuxClient/library/Util.cs:172
+msgid "Code Contributors:"
 msgstr ""

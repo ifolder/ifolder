@@ -116,7 +116,7 @@ namespace Novell.iFolder
 
 			// Server Column
 			TreeViewColumn serverColumn = new TreeViewColumn();
-			serverColumn.Title = Util.GS("Server");
+			serverColumn.Title = Util.GS("System Name");
 			CellRendererText servercr = new CellRendererText();
 			servercr.Xpad = 5;
 			serverColumn.PackStart(servercr, false);
@@ -128,7 +128,7 @@ namespace Novell.iFolder
 
 			// User Name Column
 			TreeViewColumn nameColumn = new TreeViewColumn();
-			nameColumn.Title = Util.GS("User Name");
+			nameColumn.Title = Util.GS("Username");
 			CellRendererText ncrt = new CellRendererText();
 			nameColumn.PackStart(ncrt, false);
 			nameColumn.SetCellDataFunc(ncrt,
@@ -188,7 +188,7 @@ namespace Novell.iFolder
 
 
 			// 1. Server host
-			serverLabel = new Label(Util.GS("Server host:"));
+			serverLabel = new Label(Util.GS("Server:"));
 			serverLabel.Xalign = 1;
 			loginTable.Attach(serverLabel, 0,1,0,1,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -201,7 +201,7 @@ namespace Novell.iFolder
 
 
 			// 2. User name
-			nameLabel = new Label(Util.GS("User name:"));
+			nameLabel = new Label(Util.GS("Username:"));
 			nameLabel.Xalign = 1; 
 			loginTable.Attach(nameLabel, 0,1,1,2,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -267,7 +267,7 @@ namespace Novell.iFolder
 			loginBox.Layout = ButtonBoxStyle.End;
 
 			loginButton =
-				new Button(Util.GS("_Log in"));
+				new Button(Util.GS("_Log In"));
 			loginBox.PackStart(loginButton, false, false, 0);
 			loginButton.Clicked += new EventHandler(OnLoginButtonPressed);
 			loginButton.CanDefault = true;
@@ -738,12 +738,12 @@ namespace Novell.iFolder
 				{
 					if (dom.Authenticated)
 					{
-						loginButton.Label = Util.GS("_Log out");
+						loginButton.Label = Util.GS("_Log Out");
 						loginButton.Sensitive = true;
 					}
 					else
 					{
-						loginButton.Label = Util.GS("_Log in");
+						loginButton.Label = Util.GS("_Log In");
 
 						if (passEntry.Text.Length > 0)
 							loginButton.Sensitive = true;
@@ -754,7 +754,7 @@ namespace Novell.iFolder
 				else
 				{
 					loginButton.Sensitive = false;
-					loginButton.Label = Util.GS("_Log in");
+					loginButton.Label = Util.GS("_Log In");
 				}
 			}
 		}
@@ -764,7 +764,7 @@ namespace Novell.iFolder
 			TreeSelection tSelect = AccTreeView.Selection;
 			if(tSelect.CountSelectedRows() == 1)
 			{
-				if (loginButton.Label == Util.GS("_Log in"))
+				if (loginButton.Label == Util.GS("_Log In"))
 					OnLoginAccount(o, args);
 				else
 					OnLogoutAccount(o, args);
@@ -849,8 +849,8 @@ namespace Novell.iFolder
 							iFolderMsgDialog.DialogType.Question,
 							iFolderMsgDialog.ButtonSet.YesNo,
 							Util.GS("Unable to Verify Identity"),
-							Util.GS("Unable to Verify Identity"),
-							string.Format(Util.GS("Unable to verify the identity of {0} as a trusted site.  Before accepting this certificate, you should examine the certificate by clicking Show Details.  Do you want to accept this certificate?"), serverEntry.Text),
+							string.Format(Util.GS("iFolder cannot verify the identity of the iFolder Server \"{0}\"."), serverEntry.Text),
+							string.Format(Util.GS("The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be \"{0}\" which could put your confidential information at risk.   Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?"), serverEntry.Text),
 							cert.ToString(true));
 						int rc = dialog.Run();
 						dialog.Hide();
@@ -1078,7 +1078,7 @@ namespace Novell.iFolder
 		{
 			if(NewAccountMode)
 			{
-				loginButton.Label = Util.GS("_Log in");
+				loginButton.Label = Util.GS("_Log In");
 
 				if( (nameEntry.Text.Length > 0) &&
 					(passEntry.Text.Length > 0 ) &&
@@ -1228,7 +1228,7 @@ namespace Novell.iFolder
 //					{
 //						if (dom.Authenticated)
 //						{
-//							loginButton.Label = Util.GS("_Log out");
+//							loginButton.Label = Util.GS("_Log Out");
 //							loginButton.Sensitive = true;
 //					}
 				}

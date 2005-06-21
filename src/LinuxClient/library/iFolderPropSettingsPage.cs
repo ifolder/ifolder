@@ -155,7 +155,7 @@ namespace Novell.iFolder
 				if(LimitCheckButton == null)
 				{
 					LimitCheckButton = 
-						new CheckButton(Util.GS("_Limit size to:"));
+						new CheckButton(Util.GS("_Set Quota:"));
 					LimitCheckButton.Toggled += 
 								new EventHandler(OnLimitSizeButton);
 					diskTable.Attach(LimitCheckButton, 0,1,1,2,
@@ -192,7 +192,7 @@ namespace Novell.iFolder
 			{
 				if(LimitLabel == null)
 				{
-					LimitLabel = new Label(Util.GS("iFolder limit:"));
+					LimitLabel = new Label(Util.GS("Quota:"));
 					LimitLabel.Xalign = 0;
 					diskTable.Attach(LimitLabel, 0,1,1,2,
 						AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
@@ -366,7 +366,7 @@ namespace Novell.iFolder
 			diskSectionBox.Spacing = Util.SectionTitleSpacing;
 			this.PackStart(diskSectionBox, false, true, 0);
 			Label diskSectionLabel = new Label("<span weight=\"bold\">" +
-												Util.GS("Disk Space") +
+												Util.GS("Disk Space on Server") +
 												"</span>");
 			diskSectionLabel.UseMarkup = true;
 			diskSectionLabel.Xalign = 0;
@@ -388,7 +388,7 @@ namespace Novell.iFolder
 
 
 
-			Label usedLabel = new Label(Util.GS("iFolder size:"));
+			Label usedLabel = new Label(Util.GS("Used:"));
 			usedLabel.Xalign = 0;
 			diskTable.Attach(usedLabel, 0,1,0,1,
 					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
@@ -406,7 +406,7 @@ namespace Novell.iFolder
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
 
-			AvailLabel = new Label(Util.GS("Available space:"));
+			AvailLabel = new Label(Util.GS("Available:"));
 			AvailLabel.Xalign = 0;
 			diskTable.Attach(AvailLabel, 0,1,2,3,
 					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
@@ -480,7 +480,7 @@ namespace Novell.iFolder
 			syncTable.ColumnSpacing = 20;
 			syncTable.RowSpacing = 5;
 			
-			Label lastSyncLabel = new Label(Util.GS("Last successful sync:"));
+			Label lastSyncLabel = new Label(Util.GS("Last successful synchronization:"));
 			lastSyncLabel.Xalign = 0;
 			syncTable.Attach(lastSyncLabel, 0,1,0,1,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -489,7 +489,7 @@ namespace Novell.iFolder
 			syncTable.Attach(LastSuccessfulSync, 1,2,0,1);
 			
 			Label FFSyncLabel = 
-					new Label(Util.GS("Files/Folders to synchronize:"));
+					new Label(Util.GS("Files/Folders to Synchronize:"));
 			FFSyncLabel.Xalign = 0;
 			syncTable.Attach(FFSyncLabel, 0,1,1,2,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -498,7 +498,7 @@ namespace Novell.iFolder
 			syncTable.Attach(FFSyncValue, 1,2,1,2);
 			
 			Label SyncIntervalLabel =
-				new Label(Util.GS("This iFolder will sync with the host every:"));
+				new Label(Util.GS("Automatically Synchronizes Every:"));
 			SyncIntervalLabel.Xalign = 0;
 			syncTable.Attach(SyncIntervalLabel, 0,1,2,3,
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -510,7 +510,7 @@ namespace Novell.iFolder
 			rightBox.Spacing = 10;
 			syncWidgetBox.PackEnd(rightBox, false, false, 0);
 			
-			SyncNowButton = new Button(Util.GS("Sync _Now"));
+			SyncNowButton = new Button(Util.GS("Synchronize _Now"));
 			rightBox.PackEnd(SyncNowButton, false, false, 0);
 			SyncNowButton.Clicked += new EventHandler(OnSyncNowClicked);
 		}

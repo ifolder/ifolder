@@ -912,7 +912,7 @@ namespace Novell.iFolder
 
 
 			MenuItem iFolders_item = 
-					new MenuItem (Util.GS("My iFolders..."));
+					new MenuItem (Util.GS("iFolders"));
 			trayMenu.Append (iFolders_item);
 			iFolders_item.Activated += 
 					new EventHandler(showiFolderWindow);

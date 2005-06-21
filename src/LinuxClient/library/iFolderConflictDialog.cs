@@ -346,7 +346,7 @@ namespace Novell.iFolder
 			nameValue.Xalign = 0;
 			ifTable.Attach(nameValue, 1,2,0,1);
 
-			Label pathLabel = new Label(Util.GS("Path:"));
+			Label pathLabel = new Label(Util.GS("Location:"));
 			pathLabel.Xalign = 1;
 			ifTable.Attach(pathLabel, 0,1,1,2,
 				Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 0, 0);
@@ -472,10 +472,10 @@ namespace Novell.iFolder
 			nameConflictInternalBox.Spacing = 10;
 			nameConflictInternalBox.BorderWidth = 10;
 
-			renameFileFrame = new Frame(Util.GS("Rename File"));
+			renameFileFrame = new Frame(Util.GS("Rename"));
 			nameConflictBox.PackStart(renameFileFrame, true, true, 0);
 
-			nameConflictSummary = new Label(Util.GS("Enter a new name for this file and click save to resolve it."));
+			nameConflictSummary = new Label(Util.GS("Enter a new name and click Rename to resolve the conflict."));
 			nameConflictSummary.Xalign = 0;
 //			nameConflictSummary.ColumnSpacing = 10;
 			
@@ -484,7 +484,7 @@ namespace Novell.iFolder
 			HBox nameConflictHBox = new HBox();
 			nameConflictHBox.Spacing = 10;
 			
-			nameConflictFileNameLabel = new Label(Util.GS("File Name:"));
+			nameConflictFileNameLabel = new Label(Util.GS("Name:"));
 			nameConflictHBox.PackStart(nameConflictFileNameLabel, false, false, 0);
 			
 			nameConflictEntry = new Entry();
@@ -497,7 +497,7 @@ namespace Novell.iFolder
 			
 			HBox saveButtonBox = new HBox();
 			
-			nameEntrySaveButton = new Button(Stock.Save);
+			nameEntrySaveButton = new Button(Util.GS("Rename"));
 			nameEntrySaveButton.Clicked += new EventHandler(RenameFileHandler);
 			saveButtonBox.PackStart(nameEntrySaveButton, false, false, 0);
 			nameConflictInternalBox.PackEnd(saveButtonBox, false, false, 0);
@@ -514,7 +514,7 @@ namespace Novell.iFolder
 			
 			// File Name Column
 			TreeViewColumn fileNameColumn = new TreeViewColumn();
-			fileNameColumn.Title = Util.GS("File Name");
+			fileNameColumn.Title = Util.GS("Name");
 			CellRendererText fileNameCR = new CellRendererText();
 			fileNameCR.Xpad = 5;
 			fileNameColumn.PackStart(fileNameCR, false);
@@ -526,7 +526,7 @@ namespace Novell.iFolder
 			
 			// Path Column
 			TreeViewColumn pathColumn = new TreeViewColumn();
-			pathColumn.Title = Util.GS("Path in iFolder");
+			pathColumn.Title = Util.GS("Folder");
 			CellRendererText pathCR = new CellRendererText();
 			pathCR.Xpad = 5;
 			pathColumn.PackStart(pathCR, false);

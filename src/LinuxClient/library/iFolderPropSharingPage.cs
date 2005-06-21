@@ -125,7 +125,7 @@ namespace Novell.iFolder
 			UserColumn.PackStart(mcrt, false);
 			UserColumn.SetCellDataFunc(mcrt,
 					new TreeCellDataFunc(UserCellTextDataFunc));
-			UserColumn.Title = Util.GS("Users");
+			UserColumn.Title = Util.GS("User");
 			UserTreeView.AppendColumn(UserColumn);
 			UserColumn.Resizable = true;
 
@@ -393,7 +393,10 @@ namespace Novell.iFolder
 					{
 						iFolderUser user = 
 								(iFolderUser) tModel.GetValue(iter, 0);
-						userName = user.Name;
+						if (user.FN != null)
+							userName = user.FN;
+						else
+							userName = user.Name;
 						defaultRights = user.Rights;
 
 						if( (ifolder.CurrentUserID == ifolder.OwnerID) &&
