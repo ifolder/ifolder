@@ -4,7 +4,7 @@ DIST_SUBDIRS = $(SUBDIRS) doc package test other
 
 PROJECT_FILES = $(srcdir)/Simias.sln $(srcdir)/Simias.csproj
 
-EXTRA_DIST = tools external $(srcdir)/$(PACKAGE)*.pc.in $(PROJECT_FILES)
+EXTRA_DIST = tools/gsoap external/NS external/flaim external/log4net $(srcdir)/$(PACKAGE)*.pc.in $(PROJECT_FILES)
 
 all: simias.pc simias-client.pc simias-client-c.pc
 
