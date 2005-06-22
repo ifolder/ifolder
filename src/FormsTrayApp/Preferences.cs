@@ -1823,7 +1823,7 @@ namespace Novell.FormsTrayApp
 							}
 							catch (Exception ex)
 							{
-								mmb = new MyMessageBox(resourceManager.GetString("setDefaultError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+								mmb = new MyMessageBox(resourceManager.GetString("setDefaultError"), resourceManager.GetString("accountErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 								mmb.ShowDialog();
 							}
 						}
@@ -1876,7 +1876,7 @@ namespace Novell.FormsTrayApp
 				if ((ex.Message.IndexOf("Simias.ExistsException") != -1) ||
 					(ex.Message.IndexOf("already exists") != -1))
 				{
-					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("alreadyJoined"), string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("alreadyJoined"), resourceManager.GetString("alreadyJoinedTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
 					mmb.ShowDialog();
 				}
 				else
@@ -2003,7 +2003,7 @@ namespace Novell.FormsTrayApp
 			{
 				if (userName.Text.Equals(string.Empty) || server.Text.Equals(string.Empty))
 				{
-					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("requiredFieldsMissing"), string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("requiredFieldsMissing"), resourceManager.GetString("iFolderMessageTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
 					mmb.ShowDialog();
 					SelectAccounts(false);
 					if (server.Text.Equals(string.Empty))
@@ -2082,7 +2082,7 @@ namespace Novell.FormsTrayApp
 					{
 						result = false;
 
-						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("saveSyncError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("saveSyncError"), resourceManager.GetString("PreferencesErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 						mmb.ShowDialog();
 					}
 				}
@@ -2091,7 +2091,7 @@ namespace Novell.FormsTrayApp
 			{
 				result = false;
 
-				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readSyncError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readSyncError"), resourceManager.GetString("PreferencesErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 			}
 
@@ -2113,7 +2113,7 @@ namespace Novell.FormsTrayApp
 				{
 					result = false;
 
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("setDefaultError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("setDefaultError"), resourceManager.GetString("accountErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 				}
 			}
@@ -2169,7 +2169,7 @@ namespace Novell.FormsTrayApp
 					catch (Exception ex)
 					{
 						result = false;
-						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("savePasswordError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("savePasswordError"), resourceManager.GetString("passwordErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 						mmb.ShowDialog();
 					}
 				}
@@ -2225,7 +2225,7 @@ namespace Novell.FormsTrayApp
 			}
 			catch (Exception ex)
 			{
-				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("updateHostError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("updateHostError"), resourceManager.GetString("accountErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 			}
 		}
@@ -2323,7 +2323,7 @@ namespace Novell.FormsTrayApp
 				}
 				catch (Exception ex)
 				{
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readAccountsError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readAccountsError"), resourceManager.GetString("accountErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 				}
 
@@ -2350,7 +2350,7 @@ namespace Novell.FormsTrayApp
 				}
 				catch (Exception ex)
 				{
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readSyncError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readSyncError"), resourceManager.GetString("PreferencesErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 				}
 
@@ -2699,7 +2699,7 @@ namespace Novell.FormsTrayApp
 					}
 					catch (Exception ex)
 					{
-						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("removeAccountError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("removeAccountError"), resourceManager.GetString("accountErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 						mmb.ShowDialog();
 					}
 				}
@@ -2749,7 +2749,7 @@ namespace Novell.FormsTrayApp
 						if (userName.Text.Equals(string.Empty) || server.Text.Equals(string.Empty))
 						{
 							processing = true;
-							MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("requiredFieldsMissing"), string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+							MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("requiredFieldsMissing"), resourceManager.GetString("iFolderMessageTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
 							mmb.ShowDialog();
 							timer1.Start();
 

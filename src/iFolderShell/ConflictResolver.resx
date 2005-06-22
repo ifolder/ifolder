@@ -3113,7 +3113,10 @@
     <value>System.Windows.Forms.Form, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="conflictResolveError">
-    <value>An error was encountered while attempting to resolve the conflict.</value>
+    <value>An error was encountered while resolving the conflict.</value>
+  </data>
+  <data name="conflictErrorTitle">
+    <value>iFolder Conflict Error</value>
   </data>
   <data name="conflictReadError">
     <value>An error was encountered while reading the conflicts.</value>
@@ -3124,11 +3127,14 @@
   <data name="readOnlyInfo">
     <value>Your ability to resolve conflicts is limited because you have read-only rights to this iFolder.  If there are conflicts that you are not allowed to resolve, the owner of this iFolder will need to fix the conflicts for you.</value>
   </data>
+  <data name="errorTitle">
+    <value>iFolder Error</value>
+  </data>
   <data name="fileExists">
-    <value>A file by this name already exists.  Please choose a different name.</value>
+    <value>The specified name already exists.  Please choose a different name.</value>
   </data>
   <data name="badFileName">
-    <value>The file name entered is invalid.  Please choose a different name and try again.</value>
+    <value>The specified name contains invalid characters.  Please choose a different name and try again.</value>
   </data>
   <data name="name">
     <value>Name</value>

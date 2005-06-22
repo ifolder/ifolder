@@ -256,7 +256,7 @@ namespace Novell.FormsTrayApp
 					updateStarted = instance.ifWebService.RunClientUpdate(domainID);
 					if ( updateStarted == false )
 					{
-						mmb = new MyMessageBox(resourceManager.GetString("clientUpgradeFailure"), resourceManager.GetString("clientUpgradeTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+						mmb = new MyMessageBox(resourceManager.GetString("clientUpgradeFailure"), resourceManager.GetString("upgradeErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
 						mmb.ShowDialog();
 					}
 				}

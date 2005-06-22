@@ -1151,7 +1151,7 @@
     <value>The iFolder account is disabled.  Please contact your network administrator for assistance.</value>
   </data>
   <data name="accountLockout">
-    <value>The user account has been locked out.  Please contact your network administrator for assistance.</value>
+    <value>The user account has been locked.  Please contact your network administrator for assistance.</value>
   </data>
   <data name="graceLogin">
     <value>Your password has expired.  You have {0} grace logins remaining.</value>
