@@ -155,8 +155,8 @@ namespace Simias.Sync
 				}
 				else
 				{
-					if (!syncQueue.Contains(collectionClient))
-						syncQueue.Enqueue(collectionClient);
+					if (!syncQueue.Contains(cc) && !priorityQueue.Contains(cc))
+						syncQueue.Enqueue(cc);
 				}
 				queueEvent.Set();
 			}
@@ -240,6 +240,8 @@ namespace Simias.Sync
 		/// </summary>
 		private void StartSync()
 		{
+			// Used to not starve the normal queue.
+			int	 priorityCount = 0;
 			while (!shuttingDown)
 			{
 				// Wait for something to be added to the queue.
@@ -251,18 +253,19 @@ namespace Simias.Sync
 					CollectionSyncClient cClient;
 					lock (syncQueue)
 					{
-						if (priorityQueue.Count != 0)
+						if (priorityQueue.Count != 0 && (priorityCount < 3 || syncQueue.Count == 0))
 						{
 							cClient = priorityQueue.Dequeue() as CollectionSyncClient;
+							priorityCount++;
 						}
 						else
 						{
+							priorityCount = 0;
 							if (syncQueue.Count == 0)
 							{
 								queueEvent.Reset();
 								break;
 							}
-
 							cClient = syncQueue.Dequeue() as CollectionSyncClient;
 						}
 					}
@@ -516,6 +519,7 @@ namespace Simias.Sync
 		SyncFile		syncFile;
 		bool			firstSync = true;
 		bool			yielded = false;
+		DateTime		lastSyncTime = DateTime.MinValue;
 		
 		/// <summary>
 		/// Returns true if we should yield our timeslice.
@@ -541,9 +545,10 @@ namespace Simias.Sync
 			get 
 			{ 
 				// If the server is not responding make sure that we are not high priority.
-				if (serverAlive)
-					return collection.Priority == 0 ? true : false; 
-				else return false;
+				if (!serverAlive)
+					return false;
+				
+				return collection.Priority == 0 ? true : false; 
 			}
 		}
 
@@ -642,6 +647,9 @@ namespace Simias.Sync
 		/// <returns></returns>
 		internal DateTime GetLastSyncTime()
 		{
+			if (lastSyncTime != DateTime.MinValue)
+				return lastSyncTime;
+
 			Property cc = collection.Properties.GetSingleProperty(ClientCLContextProp);
 			if (cc != null)
 			{
@@ -842,6 +850,8 @@ namespace Simias.Sync
 							finally
 							{
 								bool status = workArray.Complete;
+								if (status)
+									lastSyncTime = DateTime.Now;
 								if (queuedChanges)
 								{
 									// Save the sync state.
