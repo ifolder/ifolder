@@ -733,6 +733,9 @@
   <data name="chooseFolder">
     <value>Choose a folder to convert to an iFolder.</value>
   </data>
+  <data name="errorTitle">
+    <value>iFolder Error</value>
+  </data>
   <data name="invalidFolder">
     <value>An invalid folder was specified.</value>
   </data>
@@ -740,12 +743,21 @@
     <value>An error was encountered while creating the iFolder.</value>
   </data>
   <data name="createPrompt">
-    <value>The specified path does not exist.  Do you want to create it?</value>
+    <value>The specified location does not exist.  Do you want to create it?</value>
   </data>
   <data name="createPromptTitle">
-    <value>Create Path</value>
+    <value>iFolder Location Error</value>
+  </data>
+  <data name="accessErrorTitle">
+    <value>iFolder Access Error</value>
   </data>
   <data name="accessDenied">
     <value>You do not sufficient access rights to the specified directory.  Please choose a different directory and try again.</value>
+  </data>
+  <data name="createAccount">
+    <value>To begin using iFolder, you must first set up an iFolder account.  Would you like to set up an iFolder account now?</value>
+  </data>
+  <data name="createAccountTitle">
+    <value>Set Up iFolder Account</value>
   </data>
 </root>

@@ -4057,6 +4057,9 @@
   <data name="diskQuotaReadError">
     <value>An error was encountered while reading disk space restrictions.</value>
   </data>
+  <data name="errorTitle">
+    <value>iFolder Error</value>
+  </data>
   <data name="memberReadError">
     <value>An error was encountered while reading iFolder members.</value>
   </data>
@@ -4096,23 +4099,26 @@
   <data name="user">
     <value>iFolder User</value>
   </data>
+  <data name="saveErrorTitle">
+    <value>iFolder Save Error</value>
+  </data>
   <data name="changeOwnerError">
-    <value>An error was encountered while attempting to change the owner of this iFolder.</value>
+    <value>An error was encountered while saving the new owner of the iFolder.</value>
   </data>
   <data name="memberCommitError">
-    <value>An error was encountered while trying to commit changes for {0}.</value>
+    <value>An error was encountered while saving changes for {0}.</value>
   </data>
   <data name="removeError">
     <value>Remove failed with the following exception:</value>
   </data>
   <data name="policyCommitError">
-    <value>An error was encountered while committing policy changes.</value>
+    <value>An error was encountered while saving policy changes.</value>
   </data>
   <data name="iFolderReadError">
     <value>An error was encountered reading iFolder data.</value>
   </data>
   <data name="saveChanges">
-    <value>Do you want to save the changes you have made to this iFolder?</value>
+    <value>Do you want to save the changes you have made to the iFolder?</value>
   </data>
   <data name="saveChangesTitle">
     <value>Save Changes</value>
@@ -4126,14 +4132,23 @@
   <data name="userProperties">
     <value>Access for {0}</value>
   </data>
+  <data name="helpErrorTitle">
+    <value>iFolder Help Error</value>
+  </data>
   <data name="helpFileError">
     <value>An error was encountered while opening the help file.</value>
   </data>
+  <data name="conflictErrorTitle">
+    <value>iFolder Conflict Error</value>
+  </data>
   <data name="conflictDialogError">
-    <value>An error was encountered while attempting to display the Conflict Resolver dialog.</value>
+    <value>An error was encountered while displaying the Conflict Resolver dialog.</value>
+  </data>
+  <data name="propertiesErrorTitle">
+    <value>iFolder Properties Error</value>
   </data>
   <data name="propertiesDialogError">
-    <value>An error was encountered while attempting to display the iFolder properties dialog.</value>
+    <value>An error was encountered while displaying the iFolder properties dialog.</value>
   </data>
   <data name="syncError">
     <value>An error was encountered while sending the sync command.</value>

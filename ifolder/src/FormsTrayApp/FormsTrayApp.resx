@@ -581,7 +581,7 @@
     <value>iFolder Services shutting down...</value>
   </data>
   <data name="collisionMessage">
-    <value>A collision has been detected in iFolder "{0}".  Click here to resolve the conflicts in this iFolder.</value>
+    <value>A conflict has been detected in iFolder "{0}".  Click here to resolve the conflicts in the iFolder.</value>
   </data>
   <data name="actionRequiredTitle">
     <value>Action Required</value>
@@ -590,16 +590,16 @@
     <value>New iFolder "{0}"</value>
   </data>
   <data name="subscriptionMessage">
-    <value>{0} has invited you to participate in this shared iFolder.  Click here to set up this iFolder.</value>
+    <value>{0} has invited you to participate in this shared iFolder.  Click here to set up the iFolder.</value>
   </data>
   <data name="newMemberTitle">
     <value>New iFolder User</value>
   </data>
   <data name="newMemberMessage">
-    <value>{0} has joined the iFolder "{1}".  Click here to view the member list for this iFolder.</value>
+    <value>{0} has joined the iFolder "{1}".  Click here to view the member list for the iFolder.</value>
   </data>
   <data name="fatalErrorMessage">
-    <value>A fatal error was encountered during iFolder initialization.</value>
+    <value>A software error is preventing iFolder from initializing.  Please contact your system administrator.</value>
   </data>
   <data name="fatalErrorTitle">
     <value>Unable to Start iFolder Services</value>
@@ -613,8 +613,11 @@
   <data name="clientUpgradeTitle">
     <value>iFolder Client Upgrade</value>
   </data>
+  <data name="upgradeErrorTitle">
+    <value>Upgrade Failure</value>
+  </data>
   <data name="clientUpgradeFailure">
-    <value>The iFolder client upgrade has failed.</value>
+    <value>The iFolder client upgrade failed.  Please contact your system administrator.</value>
   </data>
   <data name="clientUpgradePrompt">
     <value>A newer version "{0}" of the iFolder Client is available. Would you like to upgrade now?</value>
@@ -635,7 +638,7 @@
     <value>The iFolder account is disabled.  Please contact your network administrator for assistance.</value>
   </data>
   <data name="accountLockout">
-    <value>The user account has been locked out.  Please contact your network administrator for assistance.</value>
+    <value>The user account has been locked.  Please contact your network administrator for assistance.</value>
   </data>
   <data name="serverConnectErrorTitle">
     <value>Unable to Connect to iFolder Server</value>
@@ -647,16 +650,16 @@
     <value>Done checking for new iFolders</value>
   </data>
   <data name="localSync">
-    <value>Checking for local changes: {0}</value>
+    <value>Checking for changes: {0}</value>
   </data>
   <data name="synciFolder">
-    <value>Started sync of: {0}</value>
+    <value>Started synchronization: {0}</value>
   </data>
   <data name="syncComplete">
-    <value>Finished sync of: {0}</value>
+    <value>Finished synchronization: {0}</value>
   </data>
   <data name="deleteClientFile">
-    <value>Deleting file on client: {0}</value>
+    <value>Deleting file: {0}</value>
   </data>
   <data name="uploadDeltaSyncFile">
     <value>Uploading file: {0}. Synchronizing changes only: {1}% savings.</value>
@@ -671,13 +674,13 @@
     <value>Downloading file: {0}</value>
   </data>
   <data name="localFile">
-    <value>Found local change in file: {0}</value>
+    <value>Found changes in file: {0}</value>
   </data>
   <data name="syncingFile">
     <value>Synchronizing file: {0}</value>
   </data>
   <data name="deleteClientDir">
-    <value>Deleting directory on client: {0}</value>
+    <value>Deleting directory: {0}</value>
   </data>
   <data name="uploadDir">
     <value>Uploading directory: {0}</value>
@@ -686,7 +689,7 @@
     <value>Downloading directory: {0}</value>
   </data>
   <data name="localDir">
-    <value>Found local change in directory: {0}</value>
+    <value>Found changes in directory: {0}</value>
   </data>
   <data name="syncingDir">
     <value>Synchronizing directory: {0}</value>
@@ -695,31 +698,31 @@
     <value>Deleting on server: {0}</value>
   </data>
   <data name="conflictFailure">
-    <value>Conflict occurred for: {0}</value>
+    <value>Conflict occurred: {0}</value>
   </data>
   <data name="policyFailure">
-    <value>A policy prevented a sync of: {0}</value>
+    <value>Policy prevented synchronization: {0}</value>
   </data>
   <data name="accessFailure">
-    <value>Insufficient rights to sync: {0}</value>
+    <value>Insufficient rights prevented synchronization: {0}</value>
   </data>
   <data name="lockFailure">
-    <value>iFolder is locked and did not sync: {0}</value>
+    <value>Locked iFolder prevented synchronization: {0}</value>
   </data>
   <data name="quotaFailure">
-    <value>iFolder is full and did not sync: {0}</value>
+    <value>Full iFolder prevented synchronization: {0}</value>
   </data>
   <data name="policySizeFailure">
-    <value>A size restriction policy prevented a sync of: {0}</value>
+    <value>Size restriction policy prevented synchronization: {0}</value>
   </data>
   <data name="policyTypeFailure">
-    <value>A file type restriction policy prevented a sync of: {0}</value>
+    <value>File type restriction policy prevented synchronization: {0}</value>
   </data>
   <data name="genericFailure">
-    <value>iFolder failed to sync: {0}</value>
+    <value>iFolder failed synchronization: {0}</value>
   </data>
   <data name="myiFolders">
-    <value>My iFolders</value>
+    <value>iFolders</value>
   </data>
   <data name="verifyCert">
     <value>iFolder cannot verify the identity of the iFolder Server {0}.  The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be {0} which could put your confidential information at risk.  Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?</value>

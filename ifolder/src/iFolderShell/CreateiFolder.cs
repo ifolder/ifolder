@@ -476,7 +476,7 @@ namespace Novell.iFolderCom
 				}
 				catch
 				{
-					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("invalidFolder"), string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("invalidFolder"), resourceManager.GetString("errorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 					successful = false;
 					return;
@@ -528,14 +528,14 @@ namespace Novell.iFolderCom
 						{
 							successful = false;
 							Cursor.Current = Cursors.Default;
-							MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("invalidFolder"), string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+							MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("invalidFolder"), resourceManager.GetString("errorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 							mmb.ShowDialog();
 						}
 					}
 					else
 					{
 						successful = false;
-						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("accessDenied"), string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("accessDenied"), resourceManager.GetString("accessErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 						mmb.ShowDialog();
 					}
 				}
@@ -544,7 +544,7 @@ namespace Novell.iFolderCom
 			{
 				successful = false;
 				Cursor.Current = Cursors.Default;
-				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("iFolderCreateError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("iFolderCreateError"), resourceManager.GetString("errorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 			}
 		}
