@@ -12,24 +12,24 @@ EXTRA_DIST = $(LPROJDIRS) $(srcdir)/English.lproj $(srcdir)/Info.plist.in $(srcd
 
 
 if DEBUG
-BUILDSTYLE=Development
+BUILDCONF=debug
 else
-BUILDSTYLE=Deployment
+BUILDCONF=release
 endif
 
 
 CUR_DIR := $(shell pwd)
 
-all: "$(srcdir)/build/iFolder 3.app"
+all: "$(srcdir)/build/$(BUILDCONF)/iFolder 3.app"
 
 
-"$(srcdir)/build/iFolder 3.app": iFolder.xcode
-	xcodebuild -buildstyle $(BUILDSTYLE) HEADER_SEARCH_PATHS="../libifolder $(SIMIAS_CLIENT_C_INCLUDES)" LIBRARY_SEARCH_PATHS="../libifolder/.libs $(SIMIAS_CLIENT_C_LIBS)"
+"$(srcdir)/build/$(BUILDCONF)/iFolder 3.app": iFolder.xcode
+	xcodebuild -configuration $(BUILDCONF) HEADER_SEARCH_PATHS="../libifolder $(SIMIAS_CLIENT_C_INCLUDES)" LIBRARY_SEARCH_PATHS="../libifolder/.libs $(SIMIAS_CLIENT_C_LIBS)"
 
-install-exec-local: "$(srcdir)/build/iFolder 3.app"
+install-exec-local: "$(srcdir)/build/$(BUILDCONF)/iFolder 3.app"
 	$(mkinstalldirs) $(DESTDIR)$(prefix)/Applications
 	rm -rf "$(DESTDIR)$(prefix)/Applications/iFolder 3.app"
-	cp -rf "$(srcdir)/build/iFolder 3.app" $(DESTDIR)$(prefix)/Applications
+	cp -rf "$(srcdir)/build/$(BUILDCONF)/iFolder 3.app" $(DESTDIR)$(prefix)/Applications
 
 uninstall-local:
 	cd $(DESTDIR)$(prefix)/Applications; rm -rf "iFolder 3.app"
