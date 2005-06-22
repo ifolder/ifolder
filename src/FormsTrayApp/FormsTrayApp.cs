@@ -824,14 +824,14 @@ namespace Novell.FormsTrayApp
 			this.menuSeparator1 = new System.Windows.Forms.MenuItem();
 			this.menuProperties = new System.Windows.Forms.MenuItem();
 			this.menuAccounts = new System.Windows.Forms.MenuItem();
-			this.menuPreferences = new System.Windows.Forms.MenuItem();
 			this.menuSyncLog = new System.Windows.Forms.MenuItem();
+			this.menuItem1 = new System.Windows.Forms.MenuItem();
+			this.menuPreferences = new System.Windows.Forms.MenuItem();
 			this.menuHelp = new System.Windows.Forms.MenuItem();
+			this.menuAbout = new System.Windows.Forms.MenuItem();
 			this.menuItem10 = new System.Windows.Forms.MenuItem();
 			this.menuExit = new System.Windows.Forms.MenuItem();
 			this.syncAnimateTimer = new System.Windows.Forms.Timer(this.components);
-			this.menuItem1 = new System.Windows.Forms.MenuItem();
-			this.menuAbout = new System.Windows.Forms.MenuItem();
 			// 
 			// contextMenu1
 			// 
@@ -911,16 +911,6 @@ namespace Novell.FormsTrayApp
 			this.menuAccounts.Visible = ((bool)(resources.GetObject("menuAccounts.Visible")));
 			this.menuAccounts.Click += new System.EventHandler(this.menuAccounts_Click);
 			// 
-			// menuPreferences
-			// 
-			this.menuPreferences.Enabled = ((bool)(resources.GetObject("menuPreferences.Enabled")));
-			this.menuPreferences.Index = 6;
-			this.menuPreferences.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuPreferences.Shortcut")));
-			this.menuPreferences.ShowShortcut = ((bool)(resources.GetObject("menuPreferences.ShowShortcut")));
-			this.menuPreferences.Text = resources.GetString("menuPreferences.Text");
-			this.menuPreferences.Visible = ((bool)(resources.GetObject("menuPreferences.Visible")));
-			this.menuPreferences.Click += new System.EventHandler(this.menuPreferences_Click);
-			// 
 			// menuSyncLog
 			// 
 			this.menuSyncLog.Enabled = ((bool)(resources.GetObject("menuSyncLog.Enabled")));
@@ -931,6 +921,25 @@ namespace Novell.FormsTrayApp
 			this.menuSyncLog.Visible = ((bool)(resources.GetObject("menuSyncLog.Visible")));
 			this.menuSyncLog.Click += new System.EventHandler(this.menuSyncLog_Click);
 			// 
+			// menuItem1
+			// 
+			this.menuItem1.Enabled = ((bool)(resources.GetObject("menuItem1.Enabled")));
+			this.menuItem1.Index = 5;
+			this.menuItem1.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuItem1.Shortcut")));
+			this.menuItem1.ShowShortcut = ((bool)(resources.GetObject("menuItem1.ShowShortcut")));
+			this.menuItem1.Text = resources.GetString("menuItem1.Text");
+			this.menuItem1.Visible = ((bool)(resources.GetObject("menuItem1.Visible")));
+			// 
+			// menuPreferences
+			// 
+			this.menuPreferences.Enabled = ((bool)(resources.GetObject("menuPreferences.Enabled")));
+			this.menuPreferences.Index = 6;
+			this.menuPreferences.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuPreferences.Shortcut")));
+			this.menuPreferences.ShowShortcut = ((bool)(resources.GetObject("menuPreferences.ShowShortcut")));
+			this.menuPreferences.Text = resources.GetString("menuPreferences.Text");
+			this.menuPreferences.Visible = ((bool)(resources.GetObject("menuPreferences.Visible")));
+			this.menuPreferences.Click += new System.EventHandler(this.menuPreferences_Click);
+			// 
 			// menuHelp
 			// 
 			this.menuHelp.Enabled = ((bool)(resources.GetObject("menuHelp.Enabled")));
@@ -940,6 +949,16 @@ namespace Novell.FormsTrayApp
 			this.menuHelp.Text = resources.GetString("menuHelp.Text");
 			this.menuHelp.Visible = ((bool)(resources.GetObject("menuHelp.Visible")));
 			this.menuHelp.Click += new System.EventHandler(this.menuHelp_Click);
+			// 
+			// menuAbout
+			// 
+			this.menuAbout.Enabled = ((bool)(resources.GetObject("menuAbout.Enabled")));
+			this.menuAbout.Index = 8;
+			this.menuAbout.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuAbout.Shortcut")));
+			this.menuAbout.ShowShortcut = ((bool)(resources.GetObject("menuAbout.ShowShortcut")));
+			this.menuAbout.Text = resources.GetString("menuAbout.Text");
+			this.menuAbout.Visible = ((bool)(resources.GetObject("menuAbout.Visible")));
+			this.menuAbout.Click += new System.EventHandler(this.menuAbout_Click);
 			// 
 			// menuItem10
 			// 
@@ -963,25 +982,6 @@ namespace Novell.FormsTrayApp
 			// syncAnimateTimer
 			// 
 			this.syncAnimateTimer.Tick += new System.EventHandler(this.syncAnimateTimer_Tick);
-			// 
-			// menuItem1
-			// 
-			this.menuItem1.Enabled = ((bool)(resources.GetObject("menuItem1.Enabled")));
-			this.menuItem1.Index = 5;
-			this.menuItem1.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuItem1.Shortcut")));
-			this.menuItem1.ShowShortcut = ((bool)(resources.GetObject("menuItem1.ShowShortcut")));
-			this.menuItem1.Text = resources.GetString("menuItem1.Text");
-			this.menuItem1.Visible = ((bool)(resources.GetObject("menuItem1.Visible")));
-			// 
-			// menuAbout
-			// 
-			this.menuAbout.Enabled = ((bool)(resources.GetObject("menuAbout.Enabled")));
-			this.menuAbout.Index = 8;
-			this.menuAbout.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuAbout.Shortcut")));
-			this.menuAbout.ShowShortcut = ((bool)(resources.GetObject("menuAbout.ShowShortcut")));
-			this.menuAbout.Text = resources.GetString("menuAbout.Text");
-			this.menuAbout.Visible = ((bool)(resources.GetObject("menuAbout.Visible")));
-			this.menuAbout.Click += new System.EventHandler(this.menuAbout_Click);
 			// 
 			// FormsTrayApp
 			// 

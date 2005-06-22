@@ -329,10 +329,10 @@ namespace Novell.FormsTrayApp
 			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 			this.CancelButton = this.cancel;
 			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
+			this.Controls.Add(this.iFolderLocation);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.browse);
 			this.Controls.Add(this.label2);
-			this.Controls.Add(this.iFolderLocation);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.iFolderDetails);
 			this.Controls.Add(this.cancel);

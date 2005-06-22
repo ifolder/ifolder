@@ -112,6 +112,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.ComboBox timeUnit;
 		private System.Windows.Forms.Button login;
 		private System.Windows.Forms.Button logout;
+		private System.Windows.Forms.Label label1;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -166,6 +167,7 @@ namespace Novell.FormsTrayApp
 			this.notifyShared = new System.Windows.Forms.CheckBox();
 			this.notifyJoins = new System.Windows.Forms.CheckBox();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.label1 = new System.Windows.Forms.Label();
 			this.timeUnit = new System.Windows.Forms.ComboBox();
 			this.autoSync = new System.Windows.Forms.CheckBox();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -459,6 +461,7 @@ namespace Novell.FormsTrayApp
 			this.groupBox1.AccessibleName = resources.GetString("groupBox1.AccessibleName");
 			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("groupBox1.Anchor")));
 			this.groupBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("groupBox1.BackgroundImage")));
+			this.groupBox1.Controls.Add(this.label1);
 			this.groupBox1.Controls.Add(this.timeUnit);
 			this.groupBox1.Controls.Add(this.defaultInterval);
 			this.groupBox1.Controls.Add(this.autoSync);
@@ -479,6 +482,32 @@ namespace Novell.FormsTrayApp
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = resources.GetString("groupBox1.Text");
 			this.groupBox1.Visible = ((bool)(resources.GetObject("groupBox1.Visible")));
+			// 
+			// label1
+			// 
+			this.label1.AccessibleDescription = resources.GetString("label1.AccessibleDescription");
+			this.label1.AccessibleName = resources.GetString("label1.AccessibleName");
+			this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label1.Anchor")));
+			this.label1.AutoSize = ((bool)(resources.GetObject("label1.AutoSize")));
+			this.label1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label1.Dock")));
+			this.label1.Enabled = ((bool)(resources.GetObject("label1.Enabled")));
+			this.label1.Font = ((System.Drawing.Font)(resources.GetObject("label1.Font")));
+			this.helpProvider1.SetHelpKeyword(this.label1, resources.GetString("label1.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.label1, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("label1.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.label1, resources.GetString("label1.HelpString"));
+			this.label1.Image = ((System.Drawing.Image)(resources.GetObject("label1.Image")));
+			this.label1.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label1.ImageAlign")));
+			this.label1.ImageIndex = ((int)(resources.GetObject("label1.ImageIndex")));
+			this.label1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label1.ImeMode")));
+			this.label1.Location = ((System.Drawing.Point)(resources.GetObject("label1.Location")));
+			this.label1.Name = "label1";
+			this.label1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label1.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.label1, ((bool)(resources.GetObject("label1.ShowHelp"))));
+			this.label1.Size = ((System.Drawing.Size)(resources.GetObject("label1.Size")));
+			this.label1.TabIndex = ((int)(resources.GetObject("label1.TabIndex")));
+			this.label1.Text = resources.GetString("label1.Text");
+			this.label1.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label1.TextAlign")));
+			this.label1.Visible = ((bool)(resources.GetObject("label1.Visible")));
 			// 
 			// timeUnit
 			// 
@@ -2406,7 +2435,7 @@ namespace Novell.FormsTrayApp
 				apply.Enabled = true;
 			}
 
-			defaultInterval.Enabled = timeUnit.Enabled = autoSync.Checked;			
+			defaultInterval.Enabled = timeUnit.Enabled = label1.Enabled = autoSync.Checked;			
 		}
 
 		private void notifyShared_CheckedChanged(object sender, System.EventArgs e)
