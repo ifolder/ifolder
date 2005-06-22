@@ -1334,15 +1334,7 @@ namespace Simias.Storage
 				}
 				else if ( ownerTable.Count > 1 )
 				{
-					// Account for the case where the proxy is still around when the real owner
-					// gets pulled down.
-					if ( ( currentOwner == null ) || !currentOwner.IsProxy || ( ownerTable.Count > 2 ) )
-					{
-						throw new AlreadyExistsException( "Collection cannot have more that one owner." );
-					}
-
-					// Remove the proxy owner from the owner table so there is only one entry left.
-					ownerTable.Remove( currentOwner.ID );
+					throw new AlreadyExistsException( "Collection cannot have more that one owner." );
 				}
 
 				// Make sure that the owner rights on the collection are not being downgraded.
