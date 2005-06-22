@@ -152,7 +152,7 @@
     <value>7</value>
   </data>
   <data name="groupBox6.Text">
-    <value>Disk space</value>
+    <value>Disk Space on Server</value>
   </data>
   <data name="groupBox6.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -380,7 +380,7 @@
     <value>gaugeChart1</value>
   </data>
   <data name="&gt;&gt;gaugeChart1.Type">
-    <value>Novell.iFolderCom.GaugeChart, iFolderComponent, Version=1.0.1864.22608, Culture=neutral, PublicKeyToken=null</value>
+    <value>Novell.iFolderCom.GaugeChart, iFolderComponent, Version=1.0.2005.615, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;gaugeChart1.Parent">
     <value>groupBox6</value>
@@ -431,7 +431,7 @@
     <value>NoControl</value>
   </data>
   <data name="totalSpaceUnits.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>280, 80</value>
+    <value>280, 32</value>
   </data>
   <data name="totalSpaceUnits.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -581,7 +581,7 @@
     <value>NoControl</value>
   </data>
   <data name="freeSpaceUnits.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>280, 32</value>
+    <value>280, 80</value>
   </data>
   <data name="freeSpaceUnits.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -656,7 +656,7 @@
     <value>NoControl</value>
   </data>
   <data name="totalSpace.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>160, 80</value>
+    <value>160, 32</value>
   </data>
   <data name="totalSpace.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Yes</value>
@@ -806,7 +806,7 @@
     <value>NoControl</value>
   </data>
   <data name="freeSpace.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>160, 32</value>
+    <value>160, 80</value>
   </data>
   <data name="freeSpace.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Yes</value>
@@ -881,19 +881,19 @@
     <value>NoControl</value>
   </data>
   <data name="label13.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>16, 80</value>
+    <value>16, 32</value>
   </data>
   <data name="label13.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
   </data>
   <data name="label13.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>136, 16</value>
+    <value>112, 16</value>
   </data>
   <data name="label13.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>6</value>
   </data>
   <data name="label13.Text">
-    <value>Total space on server:</value>
+    <value>Quota:</value>
   </data>
   <data name="label13.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>TopLeft</value>
@@ -962,13 +962,13 @@
     <value>Inherit</value>
   </data>
   <data name="label12.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>136, 16</value>
+    <value>112, 16</value>
   </data>
   <data name="label12.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>3</value>
   </data>
   <data name="label12.Text">
-    <value>Used space on server:</value>
+    <value>Used:</value>
   </data>
   <data name="label12.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>TopLeft</value>
@@ -1031,19 +1031,19 @@
     <value>NoControl</value>
   </data>
   <data name="label11.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>16, 32</value>
+    <value>16, 80</value>
   </data>
   <data name="label11.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
   </data>
   <data name="label11.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>136, 16</value>
+    <value>112, 16</value>
   </data>
   <data name="label11.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>0</value>
   </data>
   <data name="label11.Text">
-    <value>Free space on server:</value>
+    <value>Available:</value>
   </data>
   <data name="label11.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>TopLeft</value>
@@ -1175,7 +1175,7 @@
     <value>Inherit</value>
   </data>
   <data name="enterpriseDescription.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>80, 40</value>
+    <value>88, 40</value>
   </data>
   <data name="enterpriseDescription.MaxLength" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>32767</value>
@@ -1193,7 +1193,7 @@
     <value>None</value>
   </data>
   <data name="enterpriseDescription.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>360, 48</value>
+    <value>352, 48</value>
   </data>
   <data name="enterpriseDescription.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>9</value>
@@ -1349,13 +1349,13 @@
     <value>Inherit</value>
   </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>64, 16</value>
+    <value>80, 16</value>
   </data>
   <data name="label1.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>11</value>
   </data>
   <data name="label1.Text">
-    <value>Server:</value>
+    <value>System Name:</value>
   </data>
   <data name="label1.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>TopLeft</value>
@@ -1415,16 +1415,16 @@
     <value>-1</value>
   </data>
   <data name="server.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Inherit</value>
+    <value>NoControl</value>
   </data>
   <data name="server.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>80, 16</value>
+    <value>88, 16</value>
   </data>
   <data name="server.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
   </data>
   <data name="server.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>360, 16</value>
+    <value>352, 16</value>
   </data>
   <data name="server.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>12</value>
@@ -1459,9 +1459,6 @@
   <data name="$this.TrayLargeIcon" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
-  <data name="$this.Name">
-    <value>ServerDetails</value>
-  </data>
   <data name="$this.Localizable" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
@@ -1476,6 +1473,9 @@
   </data>
   <data name="$this.SnapToGrid" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
+  </data>
+  <data name="$this.Name">
+    <value>ServerDetails</value>
   </data>
   <data name="$this.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -1532,7 +1532,7 @@
     <value>CenterParent</value>
   </data>
   <data name="$this.Text">
-    <value>Server Details</value>
+    <value>Details</value>
   </data>
   <data name="&gt;&gt;$this.Name">
     <value>ServerDetails</value>
@@ -1540,10 +1540,10 @@
   <data name="&gt;&gt;$this.Type">
     <value>System.Windows.Forms.Form, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-	<data name="notApplicable">
-		<value>N/A</value>
-	</data>
-	<data name="statusUnknown">
-		<value>Unknown</value>
-	</data>
+  <data name="notApplicable">
+    <value>N/A</value>
+  </data>
+  <data name="statusUnknown">
+    <value>Unknown</value>
+  </data>
 </root>
