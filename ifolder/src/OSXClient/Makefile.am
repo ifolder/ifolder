@@ -8,7 +8,7 @@ dist-hook:
 
 LPROJDIRS = $(srcdir)/Japanese.lproj
 
-EXTRA_DIST = $(LPROJDIRS) $(srcdir)/English.lproj $(srcdir)/Info.plist.in $(srcdir)/iFolder.xcode $(srcdir)/iFolder_Prefix.pch $(srcdir)/ifolder.icns $(srcdir)/main.m $(srcdir)/version.plist $(srcdir)/src $(srcdir)/webservice $(srcdir)/notify
+EXTRA_DIST = $(LPROJDIRS) $(srcdir)/English.lproj $(srcdir)/Info.plist.in $(srcdir)/iFolder.xcodeproj $(srcdir)/iFolder_Prefix.pch $(srcdir)/ifolder.icns $(srcdir)/main.m $(srcdir)/version.plist $(srcdir)/src $(srcdir)/webservice $(srcdir)/notify
 
 
 if DEBUG
@@ -23,7 +23,7 @@ CUR_DIR := $(shell pwd)
 all: "$(srcdir)/build/$(BUILDCONF)/iFolder 3.app"
 
 
-"$(srcdir)/build/$(BUILDCONF)/iFolder 3.app": iFolder.xcode
+"$(srcdir)/build/$(BUILDCONF)/iFolder 3.app": iFolder.xcodeproj
 	xcodebuild -configuration $(BUILDCONF) HEADER_SEARCH_PATHS="../libifolder $(SIMIAS_CLIENT_C_INCLUDES)" LIBRARY_SEARCH_PATHS="../libifolder/.libs $(SIMIAS_CLIENT_C_LIBS)"
 
 install-exec-local: "$(srcdir)/build/$(BUILDCONF)/iFolder 3.app"
