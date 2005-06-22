@@ -200,12 +200,9 @@ To start the iFolder client, run the following:
 -- Macintosh Client -- Building --
 --------------------------------------------------------------------------------
 Prerequisites:
-	Macintosh OS X 10.3.9 (Panther)
-	Xcode 1.5 - http://developer.apple.com
+	Macintosh OS X 10.4 (Tiger)
+	Xcode 2.1 - http://developer.apple.com
 	Mono 1.1.7 - http://www.go-mono.com
-
-We are working to move our build system over to OS X 10.4 (Tiger) and to use the
-updated developer tools (Xcode 2.1).  We'll update this document when we do that.
 
 After you have run configure and make install, there will be an "iFolder 3.app"
 bundle in your $prefix/Applications folder.  Running this executable will start
