@@ -623,7 +623,7 @@
     <value>A newer version "{0}" of the iFolder Client is available. Would you like to upgrade now?</value>
   </data>
   <data name="failedAuth">
-    <value>The user name or password is invalid.</value>
+    <value>The username or password is invalid.</value>
   </data>
   <data name="graceLogin">
     <value>Your password has expired.  You have {0} grace logins remaining.</value>
