@@ -1169,6 +1169,9 @@ namespace Novell.FormsTrayApp
 					case SyncStatus.PolicyType:
 						message = string.Format(resourceManager.GetString("policyTypeFailure"), syncEventArgs.Name);
 						break;
+					case SyncStatus.DiskFull:
+						message = string.Format(syncToServer ? resourceManager.GetString("serverDiskFullFailure") : resourceManager.GetString("clientDiskFullFailure"), syncEventArgs.Name);
+						break;
 					default:
 						message = string.Format(resourceManager.GetString("genericFailure"), syncEventArgs.Name);
 						break;
