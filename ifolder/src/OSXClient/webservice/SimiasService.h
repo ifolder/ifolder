@@ -43,7 +43,8 @@ typedef struct gsoap_creds
 }
 
 -(NSArray *) GetDomains:(BOOL)onlySlaves;
--(iFolderDomain *) ConnectToDomain:(NSString *)UserName usingPassword:(NSString *)Password andHost:(NSString *)Host;
+-(iFolderDomain *) ConnectToDomain:(NSString *)UserName 
+				usingPassword:(NSString *)Password andHost:(NSString *)Host;
 -(void) LeaveDomain:(NSString *)domainID withOption:(BOOL)localOnly;
 -(BOOL) ValidCredentials:(NSString *)domainID forUser:(NSString *)userID;
 -(void) SetDomainPassword:(NSString *)domainID password:(NSString *)password;
@@ -57,9 +58,14 @@ typedef struct gsoap_creds
 
 
 -(void) DisableDomainAutoLogin:(NSString *)domainID;
--(AuthStatus *) LoginToRemoteDomain:(NSString *)domainID usingPassword:(NSString *)password;
+-(AuthStatus *) LoginToRemoteDomain:(NSString *)domainID 
+						usingPassword:(NSString *)password;
 -(AuthStatus *) LogoutFromRemoteDomain:(NSString *)domainID;
 
+-(BOOL) SetProxyAddress:(NSString *)hostURI 
+				ProxyURI:(NSString *)proxyURI
+				ProxyUser:(NSString *)proxyUser 
+				ProxyPassword:(NSString *)proxyPassword;
 
 
 @end
