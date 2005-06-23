@@ -1396,16 +1396,19 @@ namespace Novell.FormsTrayApp
 
 								if (objectsToSync == 0)
 								{
+									iFolderObject ifolderObject = (iFolderObject)lvi.Tag;
+
 									if (syncEventArgs.Connected)
 									{
-										lvi.SubItems[2].Text = resourceManager.GetString("statusOK");
-										((iFolderObject)lvi.Tag).iFolderState = iFolderState.Normal;
+										ifolderObject.iFolderState = iFolderState.Normal;
 									}
 									else
 									{
-										lvi.SubItems[2].Text = resourceManager.GetString("disconnected");
-										((iFolderObject)lvi.Tag).iFolderState = iFolderState.Disconnected;
+										ifolderObject.iFolderState = iFolderState.Disconnected;
 									}
+
+									int imageIndex;
+									lvi.SubItems[2].Text = stateToString(ifolderObject, out imageIndex);
 								}
 								else
 								{
@@ -1655,7 +1658,7 @@ namespace Novell.FormsTrayApp
 				int imageIndex;
 				lvi.SubItems[0].Text = ifolder.Name;
 				lvi.SubItems[1].Text = ifolder.IsSubscription ? "" : ifolder.UnManagedPath;
-				string status = stateToString(ifolderObject, out imageIndex);
+				lvi.SubItems[2].Text = stateToString(ifolderObject, out imageIndex);
 				lvi.ImageIndex = imageIndex;
 
 				// If this item is the only one selected, update the menus.
@@ -1671,54 +1674,54 @@ namespace Novell.FormsTrayApp
 			string status;
 			imageIndex = 0;
 
-			switch (ifolderObject.iFolderState)
+			if (ifolderObject.iFolderWeb.HasConflicts)
 			{
-				case iFolderState.Normal:
+				imageIndex = 2;
+				status = resourceManager.GetString("statusConflicts");
+			}
+			else
+			{
+				switch (ifolderObject.iFolderState)
 				{
-					switch (ifolderObject.iFolderWeb.State)
+					case iFolderState.Normal:
 					{
-						case "Local":
-							if (ifolderObject.iFolderWeb.HasConflicts)
-							{
-								imageIndex = 2;
-								status = resourceManager.GetString("statusConflicts");
-							}
-							else
-							{					
+						switch (ifolderObject.iFolderWeb.State)
+						{
+							case "Local":
 								status = resourceManager.GetString("statusOK");
-							}
-							break;
-						case "Available":
-						case "WaitConnect":
-						case "WaitSync":
-							imageIndex = ifolderObject.iFolderWeb.IsSubscription ? 1 : 0;
-							status = resourceManager.GetString(ifolderObject.iFolderWeb.State);
-							break;
-						default:
-							// TODO: what icon to use for unknown status?
-							imageIndex = 1;
-							status = resourceManager.GetString("statusUnknown");
-							break;
+								break;
+							case "Available":
+							case "WaitConnect":
+							case "WaitSync":
+								imageIndex = ifolderObject.iFolderWeb.IsSubscription ? 1 : 0;
+								status = resourceManager.GetString(ifolderObject.iFolderWeb.State);
+								break;
+							default:
+								// TODO: what icon to use for unknown status?
+								imageIndex = 1;
+								status = resourceManager.GetString("statusUnknown");
+								break;
+						}
+						break;
 					}
-					break;
+					case iFolderState.Disconnected:
+						status = resourceManager.GetString("disconnected");
+						break;
+					case iFolderState.FailedSync:
+						status = objectsToSync == 0 ?
+							status = resourceManager.GetString("statusSyncFailure") :
+							string.Format(resourceManager.GetString("statusSyncItemsFailed"), objectsToSync);
+						break;
+					case iFolderState.Synchronizing:
+						status = string.Format(resourceManager.GetString("statusSyncingItems"), objectsToSync);
+						break;
+					case iFolderState.SynchronizingLocal:
+						status = resourceManager.GetString("preSync");
+						break;
+					default:
+						status = resourceManager.GetString("statusUnknown");
+						break;
 				}
-				case iFolderState.Disconnected:
-					status = resourceManager.GetString("disconnected");
-					break;
-				case iFolderState.FailedSync:
-					status = objectsToSync == 0 ?
-						status = resourceManager.GetString("statusSyncFailure") :
-						string.Format(resourceManager.GetString("statusSyncItemsFailed"), objectsToSync);
-					break;
-				case iFolderState.Synchronizing:
-					status = string.Format(resourceManager.GetString("statusSyncingItems"), objectsToSync);
-					break;
-				case iFolderState.SynchronizingLocal:
-					status = resourceManager.GetString("preSync");
-					break;
-				default:
-					status = resourceManager.GetString("statusUnknown");
-					break;
 			}
 
 			return status;
