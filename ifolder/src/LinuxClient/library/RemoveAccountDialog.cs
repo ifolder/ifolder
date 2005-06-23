@@ -42,7 +42,7 @@ namespace Novell.iFolder
 
 		public RemoveAccountDialog(DomainInformation domainInfo) : base()
 		{
-			this.Title = Util.GS("Remove Account");
+			this.Title = "";
 			this.Resizable = false;
 			this.HasSeparator = false;
 		
@@ -74,7 +74,7 @@ namespace Novell.iFolder
 			//
 			// Row: Server
 			//
-			l = new Label(Util.GS("Server:"));
+			l = new Label(Util.GS("System Name:"));
 			l.Xalign = 1;
 			table.Attach(l, 0,1, 0,1,
 						 AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -87,7 +87,7 @@ namespace Novell.iFolder
 			//
 			// Row: Server host
 			//
-			l = new Label(Util.GS("Server host:"));
+			l = new Label(Util.GS("Server:"));
 			l.Xalign = 1;
 			table.Attach(l, 0,1, 1,2,
 						 AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -98,9 +98,9 @@ namespace Novell.iFolder
 						 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			
 			//
-			// Row: User name
+			// Row: Username
 			//
-			l = new Label(Util.GS("User name:"));
+			l = new Label(Util.GS("Username:"));
 			l.Xalign = 1;
 			table.Attach(l, 0,1, 2,3,
 						 AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -157,7 +157,7 @@ namespace Novell.iFolder
 					this,
 					iFolderMsgDialog.DialogType.Warning,
 					iFolderMsgDialog.ButtonSet.OkCancel,
-					Util.GS("Warning"),
+					"",
 					Util.GS("Removing iFolders from Server"),
 					Util.GS("Removing iFolders from the server will delete the files stored on the server.  Your files will remain intact on this computer.\n\nIf you've shared any iFolders with other users, they will no longer be able to synchronize them with the server.  Additionally, you will no longer be able to access these iFolders from any other computer."));
 				int rc = dialog.Run();

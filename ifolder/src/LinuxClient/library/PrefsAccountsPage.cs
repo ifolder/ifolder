@@ -126,7 +126,7 @@ namespace Novell.iFolder
 			serverColumn.MinWidth = 150;
 			AccTreeView.AppendColumn(serverColumn);
 
-			// User Name Column
+			// Username Column
 			TreeViewColumn nameColumn = new TreeViewColumn();
 			nameColumn.Title = Util.GS("Username");
 			CellRendererText ncrt = new CellRendererText();
@@ -200,7 +200,7 @@ namespace Novell.iFolder
 					AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 
 
-			// 2. User name
+			// 2. Username
 			nameLabel = new Label(Util.GS("Username:"));
 			nameLabel.Xalign = 1; 
 			loginTable.Attach(nameLabel, 0,1,1,2,
@@ -608,9 +608,9 @@ namespace Novell.iFolder
 						topLevelWindow,
 						iFolderMsgDialog.DialogType.Question,
 						iFolderMsgDialog.ButtonSet.YesNo,
-						Util.GS("iFolder Confirmation"),
+						"",
 						Util.GS("Lose current settings?"),
-						Util.GS("You are currently creating a new account.  By selecing a different account you cancel the operation.  Do you wish to continue and loose the current settings?"));
+						Util.GS("You are currently creating a new account.  By selecing a different account you cancel the operation.  Do you wish to continue and lose the current settings?"));
 					int rc = dialog.Run();
 					dialog.Hide();
 					dialog.Destroy();
@@ -804,9 +804,9 @@ namespace Novell.iFolder
 						topLevelWindow,
 						iFolderMsgDialog.DialogType.Error,
 						iFolderMsgDialog.ButtonSet.Ok,
-						Util.GS("iFolder Error"),
-						Util.GS("Unable to log out of iFolder Server"),
-						Util.GS("An error was encountered while logging out of the iFolder server.  If the problem persists, please contact your network administrator."));
+						"",
+						Util.GS("Unable to log out of the iFolder Server"),
+						Util.GS("An error was encountered while logging out of the iFolder Server.  If the problem persists, please contact your network administrator."));
 					dg.Run();
 					dg.Hide();
 					dg.Destroy();
@@ -848,7 +848,7 @@ namespace Novell.iFolder
 							topLevelWindow,
 							iFolderMsgDialog.DialogType.Question,
 							iFolderMsgDialog.ButtonSet.YesNo,
-							Util.GS("Unable to Verify Identity"),
+							"",
 							string.Format(Util.GS("iFolder cannot verify the identity of the iFolder Server \"{0}\"."), serverEntry.Text),
 							string.Format(Util.GS("The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be \"{0}\" which could put your confidential information at risk.   Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?"), serverEntry.Text),
 							cert.ToString(true));
@@ -916,9 +916,9 @@ namespace Novell.iFolder
 										topLevelWindow,
 										iFolderMsgDialog.DialogType.Error,
 										iFolderMsgDialog.ButtonSet.Ok,
-										Util.GS("iFolder Error"),
-										Util.GS("Expired Password"),
-										string.Format(Util.GS("Your password has expired.  You have {0} grace logins remaining."), authStatus.RemainingGraceLogins));
+										"",
+										Util.GS("Your password has expired"),
+										string.Format(Util.GS("You have {0} grace logins remaining."), authStatus.RemainingGraceLogins));
 									dg.Run();
 									dg.Hide();
 									dg.Destroy();
@@ -931,9 +931,9 @@ namespace Novell.iFolder
 									topLevelWindow,
 									iFolderMsgDialog.DialogType.Error,
 									iFolderMsgDialog.ButtonSet.Ok,
-									Util.GS("iFolder Error"),
-									Util.GS("Unable to Connect to iFolder Server"),
-									Util.GS("The user name or password is invalid.  Please try again."));
+									"",
+									Util.GS("The username or password is invalid"),
+									Util.GS("Please try again."));
 								dg.Run();
 								dg.Hide();
 								dg.Destroy();
@@ -943,9 +943,9 @@ namespace Novell.iFolder
 									topLevelWindow,
 									iFolderMsgDialog.DialogType.Error,
 									iFolderMsgDialog.ButtonSet.Ok,
-									Util.GS("iFolder Error"),
-									Util.GS("Unable to Connect to iFolder Server"),
-									Util.GS("The user account is disabled.  Please contact your network administrator for assistance."));
+									"",
+									Util.GS("The iFolder account is disabled"),
+									Util.GS("Please contact your network administrator for assistance."));
 								dg.Run();
 								dg.Hide();
 								dg.Destroy();
@@ -955,9 +955,9 @@ namespace Novell.iFolder
 									topLevelWindow,
 									iFolderMsgDialog.DialogType.Error,
 									iFolderMsgDialog.ButtonSet.Ok,
-									Util.GS("iFolder Error"),
-									Util.GS("Unable to Connect to iFolder Server"),
-									Util.GS("The user account has been locked out.  Please contact your network administrator for assistance."));
+									"",
+									Util.GS("The user account has been locked"),
+									Util.GS("Please contact your network administrator for assistance."));
 								dg.Run();
 								dg.Hide();
 								dg.Destroy();
@@ -967,8 +967,8 @@ namespace Novell.iFolder
 									topLevelWindow,
 									iFolderMsgDialog.DialogType.Error,
 									iFolderMsgDialog.ButtonSet.Ok,
-									Util.GS("iFolder Error"),
-									Util.GS("Unable to Connect to iFolder Server"),
+									"",
+									Util.GS("Unable to connect to the iFolder Server"),
 									Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."),
 									string.Format("{0}: {1}", Util.GS("Authentication Status Code"), authStatus.statusCode));
 								dg.Run();
@@ -984,9 +984,9 @@ namespace Novell.iFolder
 							topLevelWindow,
 							iFolderMsgDialog.DialogType.Error,
 							iFolderMsgDialog.ButtonSet.Ok,
-							Util.GS("iFolder Error"),
-							Util.GS("Unable to Connect to iFolder Server"),
-							Util.GS("The user name or password is invalid.  Please try again."));
+							"",
+							Util.GS("The username or password is invalid"),
+							Util.GS("Please try again."));
 						dg.Run();
 						dg.Hide();
 						dg.Destroy();
@@ -996,9 +996,9 @@ namespace Novell.iFolder
 							topLevelWindow,
 							iFolderMsgDialog.DialogType.Error,
 							iFolderMsgDialog.ButtonSet.Ok,
-							Util.GS("iFolder Error"),
-							Util.GS("Unable to Connect to iFolder Server"),
-							Util.GS("The user account is disabled.  Please contact your network administrator for assistance."));
+							"",
+							Util.GS("The iFolder account is disabled"),
+							Util.GS("Please contact your network administrator for assistance."));
 						dg.Run();
 						dg.Hide();
 						dg.Destroy();
@@ -1008,9 +1008,9 @@ namespace Novell.iFolder
 							topLevelWindow,
 							iFolderMsgDialog.DialogType.Error,
 							iFolderMsgDialog.ButtonSet.Ok,
-							Util.GS("iFolder Error"),
-							Util.GS("Unable to Connect to iFolder Server"),
-							Util.GS("The user account has been locked out.  Please contact your network administrator for assistance."));
+							"",
+							Util.GS("The user account has been locked"),
+							Util.GS("Please contact your network administrator for assistance."));
 						dg.Run();
 						dg.Hide();
 						dg.Destroy();
@@ -1020,9 +1020,9 @@ namespace Novell.iFolder
 							topLevelWindow,
 							iFolderMsgDialog.DialogType.Error,
 							iFolderMsgDialog.ButtonSet.Ok,
-							Util.GS("iFolder Error"),
-							Util.GS("Unable to Connect to iFolder Server"),
-							Util.GS("Unable to contact the specified server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."));
+							"",
+							Util.GS("Unable to contact the specified server"),
+							Util.GS("Please verify the information entered and try again.  If the problem persists, please contact your network administrator."));
 						dg.Run();
 						dg.Hide();
 						dg.Destroy();
@@ -1032,8 +1032,8 @@ namespace Novell.iFolder
 							topLevelWindow,
 							iFolderMsgDialog.DialogType.Error,
 							iFolderMsgDialog.ButtonSet.Ok,
-							Util.GS("iFolder Error"),
-							Util.GS("Unable to Connect to iFolder Server"),
+							"",
+							Util.GS("Unable to connect to the iFolder Server"),
 							Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."),
 							string.Format("{0}: {1}", Util.GS("Authentication Status Code"), domainInfo.StatusCode));
 						dg.Run();
@@ -1051,8 +1051,8 @@ namespace Novell.iFolder
 						topLevelWindow,
 						iFolderMsgDialog.DialogType.Error,
 						iFolderMsgDialog.ButtonSet.Ok,
-						Util.GS("iFolder Error"),
-						Util.GS("Unable to Connect to iFolder Server"),
+						"",
+						Util.GS("An account already exists"),
 						Util.GS("An account for this server already exists on the local machine.  Only one account per server is allowed."));
 				}
 				else
@@ -1061,8 +1061,8 @@ namespace Novell.iFolder
 						topLevelWindow,
 						iFolderMsgDialog.DialogType.Error,
 						iFolderMsgDialog.ButtonSet.Ok,
-						Util.GS("iFolder Error"),
-						Util.GS("Unable to Connect to iFolder Server"),
+						"",
+						Util.GS("Unable to connect to the iFolder Server"),
 						Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."),
 						Util.GS(ex.Message));
 				}

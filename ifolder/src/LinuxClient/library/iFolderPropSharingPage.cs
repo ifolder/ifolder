@@ -313,7 +313,7 @@ namespace Novell.iFolder
 					topLevelWindow,
 					iFolderMsgDialog.DialogType.Question,
 					iFolderMsgDialog.ButtonSet.YesNo,
-					Util.GS("iFolder Confirmation"),
+					"",
 					Util.GS("Remove Selected Users?"),
 					Util.GS("This will remove the selected users from this iFolder.  They will no longer be able to sync file to this iFolder."));
 				int rc = dialog.Run();
@@ -622,7 +622,7 @@ namespace Novell.iFolder
 		private string GetDisplayRights(string rights)
 		{
 			if(rights == "ReadWrite")
-				return Util.GS("Read Write");
+				return Util.GS("Read/Write");
 			else if(rights == "Admin")
 				return Util.GS("Full Control");
 			else if(rights == "ReadOnly")

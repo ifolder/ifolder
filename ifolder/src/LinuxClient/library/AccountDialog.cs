@@ -106,7 +106,7 @@ namespace Novell.iFolder
 			srvTable.ColumnSpacing = 20;
 			srvTable.RowSpacing = 5;
 
-//			Label usrNameLabel = new Label(Util.GS("User name:"));
+//			Label usrNameLabel = new Label(Util.GS("Username:"));
 //			usrNameLabel.Xalign = 0;
 //			srvTable.Attach(usrNameLabel, 0,1,0,1,
 //					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -175,7 +175,7 @@ namespace Novell.iFolder
 			diskTable.ColumnSpacing = 20;
 			diskTable.RowSpacing = 5;
 
-			Label totalLabel = new Label(Util.GS("Available:"));
+			Label totalLabel = new Label(Util.GS("Quota:"));
 			totalLabel.Xalign = 0;
 			diskTable.Attach(totalLabel, 0,1,0,1,
 					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
@@ -199,7 +199,7 @@ namespace Novell.iFolder
 			diskTable.Attach(usedUnit, 2,3,1,2,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
-			Label availLabel = new Label(Util.GS("Quota:"));
+			Label availLabel = new Label(Util.GS("Available:"));
 			availLabel.Xalign = 0;
 			diskTable.Attach(availLabel, 0,1,2,3,
 					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);

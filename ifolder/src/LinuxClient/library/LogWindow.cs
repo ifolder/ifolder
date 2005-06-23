@@ -149,7 +149,7 @@ namespace Novell.iFolder
 			Toolbar tb = new Toolbar();
 
 			SaveButton = tb.AppendItem(Util.GS("Save"), 
-				Util.GS("Save the Log to a file"), "Toolbar/Save Log",
+				Util.GS("Save the log to a file"), "Toolbar/Save Log",
 				new Image(Stock.Save, Gtk.IconSize.LargeToolbar),
 				new SignalFunc(SaveLog));
 
@@ -244,13 +244,20 @@ namespace Novell.iFolder
 					else
 					{
 						LogMessage(string.Format(Util.GS(
-							"Checking for local changes: {0}"), args.Name));
+							"Checking for changes: {0}"), args.Name));
 					}
 					break;
 				case Action.StartSync:
 				{
-					LogMessage(string.Format(Util.GS(
-						"Started sync of: {0}"), args.Name));
+					if (args.Name != null && args.Name.StartsWith("POBox:"))
+					{
+						LogMessage(Util.GS("Checking for new iFolders..."));
+					}
+					else
+					{
+						LogMessage(string.Format(Util.GS(
+							"Started synchronization: {0}"), args.Name));
+					}
 					break;
 				}
 				case Action.StopSync:
@@ -262,7 +269,7 @@ namespace Novell.iFolder
 					else
 					{
 						LogMessage(string.Format(Util.GS(
-							"Finished sync of: {0}"), args.Name));
+							"Finished synchronization: {0}"), args.Name));
 					}
 					break;
 				}
@@ -286,12 +293,12 @@ namespace Novell.iFolder
 									if(args.Delete)
 									{
 										message = string.Format(Util.GS(
-											"Deleting file on client: {0}"), args.Name);
+											"Deleting file: {0}"), args.Name);
 									}
 									else if (args.Direction == Simias.Client.Event.Direction.Local)
 									{
 										message = string.Format(
-											Util.GS("Found local change in file: {0}"),
+											Util.GS("Found changes in file: {0}"),
 											args.Name);
 									}
 									else if (args.SizeToSync < args.Size)
@@ -326,13 +333,13 @@ namespace Novell.iFolder
 									if (args.Delete)
 									{
 										message = string.Format(
-											Util.GS("Deleting directory on client: {0}"),
+											Util.GS("Deleting directory: {0}"),
 											args.Name);
 									}
 									else if (args.Direction == Simias.Client.Event.Direction.Local)
 									{
 										message = string.Format(
-											Util.GS("Found local change in directory: {0}"),
+											Util.GS("Found changes in directory: {0}"),
 											args.Name);
 									}
 									else
@@ -359,42 +366,42 @@ namespace Novell.iFolder
 					case SyncStatus.UpdateConflict:
 					case SyncStatus.FileNameConflict:
 						message = string.Format(
-							Util.GS("Conflict occurred for: {0}"),
+							Util.GS("Conflict occurred: {0}"),
 							args.Name);
 						break;
 					case SyncStatus.Policy:
 						message = string.Format(
-							Util.GS("A policy prevented a sync of: {0}"),
+							Util.GS("Policy prevented synchronization: {0}"),
 							args.Name);
 						break;
 					case SyncStatus.Access:
 						message = string.Format(
-							Util.GS("Insuficient rights to sync: {0}"),
+							Util.GS("Insuficient rights prevented synchronization: {0}"),
 							args.Name);
 						break;
 					case SyncStatus.Locked:
 						message = string.Format(
-							Util.GS("This iFolder is locked and did not sync: {0}"),
+							Util.GS("Locked iFolder prevented synchronization: {0}"),
 							args.Name);
 						break;
 					case SyncStatus.PolicyQuota:
 						message = string.Format(
-							Util.GS("This iFolder is full and did not sync: {0}"),
+							Util.GS("Full iFolder prevented synchronization: {0}"),
 							args.Name);
 						break;
 					case SyncStatus.PolicySize:
 						message = string.Format(
-							Util.GS("A size restriction policy prevented a sync of: {0}"),
+							Util.GS("Size restriction policy prevented synchronization: {0}"),
 							args.Name);
 						break;
 					case SyncStatus.PolicyType:
 						message = string.Format(
-							Util.GS("A file type restriction policy prevented a sync of: {0}"),
+							Util.GS("File type restriction policy prevented synchronization: {0}"),
 							args.Name);
 						break;
 					default:
 						message = string.Format(
-							Util.GS("This iFolder failed to sync: {0}"),
+							Util.GS("iFolder failed synchronization: {0}"),
 							args.Name);
 						break;
 				}
@@ -436,9 +443,9 @@ namespace Novell.iFolder
 							this,
 							iFolderMsgDialog.DialogType.Question,
 							iFolderMsgDialog.ButtonSet.YesNo,
-							Util.GS("iFolder Save Log"),
+							"",
 							Util.GS("Overwrite existing file?"),
-							Util.GS("The file you have selected exists.  Selecting yes will overwrite the contents of this file.  Do you want to overwrite this file?"));
+							Util.GS("The file you selected exists.  Selecting yes will overwrite the contents of this file.  Do you want to overwrite this file?"));
 						rc = dialog.Run();
 						dialog.Hide();
 						dialog.Destroy();
@@ -462,8 +469,8 @@ namespace Novell.iFolder
 							this,
 							iFolderMsgDialog.DialogType.Error,
 							iFolderMsgDialog.ButtonSet.Ok,
-							Util.GS("iFolder Error"),
-							Util.GS("Permission denied"),
+							"",
+							Util.GS("Insufficient access"),
 							Util.GS("You do not have access to save the file in the location you specified.  Please select a different location."));
 						dg.Run();
 						dg.Hide();
@@ -477,9 +484,9 @@ namespace Novell.iFolder
 							this,
 							iFolderMsgDialog.DialogType.Error,
 							iFolderMsgDialog.ButtonSet.Ok,
-							Util.GS("iFolder Error"),
-							Util.GS("Unknown error"),
-							string.Format(Util.GS("An exception occurred trying to save the log: {0}  Please click on the details button to see the stack trace."), e.Message),
+							"",
+							Util.GS("Error saving the log file"),
+							string.Format(Util.GS("An exception occurred trying to save the log: {0}"), e.Message),
 							e.StackTrace);
 						dg.Run();
 						dg.Hide();
@@ -521,8 +528,8 @@ namespace Novell.iFolder
 							this,
 							iFolderMsgDialog.DialogType.Error,
 							iFolderMsgDialog.ButtonSet.Ok,
-							Util.GS("iFolder Error"),
-							Util.GS("Unknown error"),
+							"",
+							Util.GS("Error saving the log file"),
 							Util.GS("The iFolder Client experienced an error trying to save the log.  Please report this bug."));
 						dg.Run();
 						dg.Hide();

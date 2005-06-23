@@ -31,7 +31,7 @@ namespace Novell.iFolder
 		public iFolderCrashDialog(System.Exception e) : base()
 		{
 			this.SetDefaultSize (600, 400);
-			this.Title = Util.GS("iFolder Unhandled Exception");
+			this.Title = "";
 			this.HasSeparator = false;
 //			this.BorderWidth = 10;
 			this.Resizable = true;

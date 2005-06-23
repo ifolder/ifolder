@@ -153,7 +153,7 @@ namespace Novell.iFolder
 						new EventHandler(OnNotifyiFoldersButton);
 
 			NotifyCollisionsButton =
-				new CheckButton(Util.GS("Notify of co_llisions")); 
+				new CheckButton(Util.GS("Notify of conflic_ts")); 
 			notifyWidgetBox.PackStart(NotifyCollisionsButton, false, true, 0);
 			NotifyCollisionsButton.Toggled += 
 						new EventHandler(OnNotifyCollisionsButton);
