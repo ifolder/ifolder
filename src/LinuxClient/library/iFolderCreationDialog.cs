@@ -42,7 +42,7 @@ namespace Novell.iFolder
 		public iFolderCreationDialog(iFolderWeb ifolder) : base()
 		{
 //			this.ifolder = ifolder;
-			this.Title = Util.GS("iFolder Created");
+			this.Title = "";
 			this.HasSeparator = false;
 //			this.BorderWidth = 10;
 			this.Resizable = false;
@@ -66,7 +66,17 @@ namespace Novell.iFolder
 			VBox vbox2 = new VBox();
 			vbox2.Spacing = 10;
 
-			Label l = new Label(Util.GS("The folder you selected is now an iFolder.  To learn more about using iFolder and sharing iFolders with other users, see \"Managing iFolders\" in iFolder Help."));
+			Label l = new Label("<span weight=\"bold\" size=\"larger\">" +
+								Util.GS("iFolder Created") +
+								"</span>");
+			l.LineWrap = false;
+			l.UseMarkup = true;
+			l.Selectable = false;
+			l.Xalign = 0;
+			l.Yalign = 0;
+			vbox2.PackStart(l, false, false, 0);
+
+			l = new Label(Util.GS("The folder you selected is now an iFolder.  To learn more about using iFolder and sharing iFolders with other users, see \"Managing iFolders\" in iFolder Help."));
 			l.LineWrap = true;
 			l.Xalign = 0;
 			vbox2.PackStart(l, true, true, 0);

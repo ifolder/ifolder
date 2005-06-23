@@ -638,9 +638,9 @@ namespace Novell.iFolder
 					this,
 					iFolderMsgDialog.DialogType.Warning,
 					iFolderMsgDialog.ButtonSet.Ok,
+					"",
 					Util.GS("Read Only Membership"),
-					Util.GS("Read Only Membership"),
-					Util.GS("Your ability to resolve conflicts is limited because you have read-only rights to this iFolder.  Name conflicts must be renamed locally.  File conflicts will be overwritten with by the version of the file on the server."));
+					Util.GS("Your ability to resolve conflicts is limited because you have read-only rights to this iFolder.  Name conflicts must be renamed locally.  File conflicts will be overwritten by the version of the file on the server."));
 				dg.Run();
 				dg.Hide();
 				dg.Destroy();
@@ -999,19 +999,19 @@ namespace Novell.iFolder
 					catch (Exception e)
 					{
 						bool bKnownError = true;
-						string headerText = Util.GS("Error resolving conflict");
-						string errText    = Util.GS("An error was encountered while attempting to resolve the conflict.");
+						string headerText = Util.GS("iFolder Conflict Error");
+						string errText    = Util.GS("An error was encountered while resolving the conflict.");
 
 						if (e.Message.IndexOf("Malformed") >= 0)
 						{
-							headerText = Util.GS("Invalid name");
-							errText = string.Format(Util.GS("The name entered is invalid.  Please choose a different name and try again.\n\nFile and directories must not contain any of these characters: {0}"),
+							headerText = Util.GS("Invalid Characters in Name");
+							errText = string.Format(Util.GS("The specified name contains invalid characters.  Please choose a different name and try again.\n\nNames must not contain any of these characters: {0}"),
 													new string(simws.GetInvalidSyncFilenameChars()));
 						}
 						else if (e.Message.IndexOf("already exists") >= 0)
 						{
-							headerText = Util.GS("File or folder already exists");
-							errText = Util.GS("A file or folder with the specified name already exists.  Please choose a different name and try again.");
+							headerText = Util.GS("Name Already Exists");
+							errText = Util.GS("The specified name already exists.  Please choose a different name.");
 						}
 						else
 						{
@@ -1022,7 +1022,7 @@ namespace Novell.iFolder
 							this,
 							iFolderMsgDialog.DialogType.Error,
 							iFolderMsgDialog.ButtonSet.Ok,
-							Util.GS("Error"),
+							"",
 							headerText,
 							errText,
 							bKnownError ? null : e.Message);

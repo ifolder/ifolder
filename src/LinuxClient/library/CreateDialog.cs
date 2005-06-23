@@ -57,7 +57,7 @@ namespace Novell.iFolder
 		{
 			domains = domainArray;
 
-			this.Title = Util.GS("New iFolder");
+			this.Title = "";
 
 			this.SetDefaultSize (500, 200);
 

@@ -353,7 +353,7 @@ namespace Novell.iFolder
 //						this,
 //						iFolderMsgDialog.DialogType.Error,
 //						iFolderMsgDialog.ButtonSet.Ok,
-//						Util.GS("iFolder Error"),
+//						"",
 //						Util.GS("Unable to launch File Browser"),
 //						Util.GS("iFolder attempted to open the Nautilus File Manager and the Konqueror File Manager and was unable to launch either of them."));
 //					dg.Run();

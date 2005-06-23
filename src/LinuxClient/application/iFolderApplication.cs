@@ -52,6 +52,8 @@ namespace Novell.iFolder
 
 	public class iFolderApplication : Gnome.Program
 	{
+		private static iFolderApplication	application = null;
+
 		private Gtk.Image			gAppIcon;
 		private Gdk.Pixbuf			RunningPixbuf;
 		private Gdk.Pixbuf			StartingPixbuf;
@@ -62,20 +64,16 @@ namespace Novell.iFolder
 		private iFolderWebService	ifws;
 		private SimiasWebService	simws;
 		private iFolderData			ifdata;
-		private iFolderWindow 		ifwin;
-		private LogWindow			logwin;
-		private PreferencesWindow	prefswin;
 
 		private iFolderState 		CurrentState;
 		private Gtk.ThreadNotify	iFolderStateChanged;
 		private SimiasEventBroker	EventBroker;
 		private	iFolderLoginDialog	LoginDialog;
-		private bool				logwinShown;
+//		private bool				logwinShown;
 
 		public iFolderApplication(string[] args)
 			: base("ifolder", "1.0", Modules.UI, args)
 		{
-
 			Util.InitCatalog();
 
 			tIcon = new TrayIcon("iFolder");
@@ -104,13 +102,17 @@ namespace Novell.iFolder
 			iFolderStateChanged = new Gtk.ThreadNotify(
 							new Gtk.ReadyEvent(OniFolderStateChanged));
 
-			logwin = new LogWindow();
-			logwin.Destroyed += 
-					new EventHandler(LogWindowDestroyedHandler);
-			logwinShown = false;
+//			logwin = new LogWindow();
+//			logwin.Destroyed += 
+//					new EventHandler(LogWindowDestroyedHandler);
+//			logwinShown = false;
 		}
 
 
+		static public iFolderApplication GetApplication()
+		{
+			return application;
+		}
 
 
 		public new void Run()
@@ -256,6 +258,7 @@ namespace Novell.iFolder
 						// Update the domains so that the Accounts Page in the
 						// Preferences window will be up-to-date.
 						ifdata.RefreshDomains();
+						PreferencesWindow prefswin = Util.GetPreferencesWindow();
 						if (prefswin != null)
 						{
 							prefswin.UpdateDomainStatus(args.Message);
@@ -274,6 +277,7 @@ namespace Novell.iFolder
 		private void OnDomainAddedEvent(object o, DomainEventArgs args)
 		{
 			// Refresh the iFolders Window since a domain was just added
+			iFolderWindow ifwin = Util.GetiFolderWindow();
 			if (ifwin != null)
 			{
 				ifwin.RefreshDomains(false);
@@ -284,6 +288,7 @@ namespace Novell.iFolder
 		private void OnDomainDeletedEvent(object o, DomainEventArgs args)
 		{
 			// Refresh the iFolders Window since a domain was just removed
+			iFolderWindow ifwin = Util.GetiFolderWindow();
 			if (ifwin != null)
 			{
 				ifwin.RefreshDomains(false);
@@ -359,9 +364,9 @@ namespace Novell.iFolder
 										LoginDialog,
 										iFolderMsgDialog.DialogType.Error,
 										iFolderMsgDialog.ButtonSet.Ok,
-										Util.GS("iFolder Error"),
-										Util.GS("Expired Password"),
-										string.Format(Util.GS("Your password has expired.  You have {0} grace logins remaining."), status.RemainingGraceLogins));
+										"",
+										Util.GS("Your password has expired"),
+										string.Format(Util.GS("You have {0} grace logins remaining."), status.RemainingGraceLogins));
 									dg.Run();
 									dg.Hide();
 									dg.Destroy();
@@ -385,6 +390,7 @@ namespace Novell.iFolder
 						// Update the domains so that the Accounts Page in the
 						// Preferences window will be up-to-date.
 						ifdata.RefreshDomains();
+						PreferencesWindow prefswin = Util.GetPreferencesWindow();
 						if (prefswin != null)
 						{
 							prefswin.UpdateDomainStatus(domainID);
@@ -449,9 +455,9 @@ namespace Novell.iFolder
 									LoginDialog,
 									iFolderMsgDialog.DialogType.Error,
 									iFolderMsgDialog.ButtonSet.Ok,
-									Util.GS("iFolder Error"),
-									Util.GS("Expired Password"),
-									string.Format(Util.GS("Your password has expired.  You have {0} grace logins remaining."), status.RemainingGraceLogins));
+									"",
+									Util.GS("Your password has expired"),
+									string.Format(Util.GS("You have {0} grace logins remaining."), status.RemainingGraceLogins));
 								dg.Run();
 								dg.Hide();
 								dg.Destroy();
@@ -461,6 +467,7 @@ namespace Novell.iFolder
 						// Update the domains so that the Accounts Page in the
 						// Preferences window will be up-to-date.
 						ifdata.RefreshDomains();
+						PreferencesWindow prefswin = Util.GetPreferencesWindow();
 						if (prefswin != null)
 						{
 							prefswin.UpdateDomainStatus(LoginDialog.Domain);
@@ -481,9 +488,9 @@ namespace Novell.iFolder
 									LoginDialog,
 									iFolderMsgDialog.DialogType.Error,
 									iFolderMsgDialog.ButtonSet.Ok,
-									Util.GS("iFolder Error"),
-									Util.GS("Unable to Connect to iFolder Server"),
-									Util.GS("The password is invalid.  Please try again."));
+									"",
+									Util.GS("The username or password is invalid"),
+									Util.GS("Please try again."));
 								dg.Run();
 								dg.Hide();
 								dg.Destroy();
@@ -493,9 +500,9 @@ namespace Novell.iFolder
 									LoginDialog,
 									iFolderMsgDialog.DialogType.Error,
 									iFolderMsgDialog.ButtonSet.Ok,
-									Util.GS("iFolder Error"),
-									Util.GS("Unable to Connect to iFolder Server"),
-									Util.GS("The user account is disabled.  Please contact your network administrator for assistance."));
+									"",
+									Util.GS("The user account is disabled"),
+									Util.GS("Please contact your network administrator for assistance."));
 								dg.Run();
 								dg.Hide();
 								dg.Destroy();
@@ -505,9 +512,9 @@ namespace Novell.iFolder
 									LoginDialog,
 									iFolderMsgDialog.DialogType.Error,
 									iFolderMsgDialog.ButtonSet.Ok,
-									Util.GS("iFolder Error"),
-									Util.GS("Unable to Connect to iFolder Server"),
-									Util.GS("The user account has been locked out.  Please contact your network administrator for assistance."));
+									"",
+									Util.GS("The user account has been locked"),
+									Util.GS("Please contact your network administrator for assistance."));
 								dg.Run();
 								dg.Hide();
 								dg.Destroy();
@@ -517,8 +524,8 @@ namespace Novell.iFolder
 									LoginDialog,
 									iFolderMsgDialog.DialogType.Error,
 									iFolderMsgDialog.ButtonSet.Ok,
-									Util.GS("iFolder Error"),
-									Util.GS("Unable to Connect to iFolder Server"),
+									"",
+									Util.GS("Unable to connect to the iFolder Server"),
 									Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."),
 									string.Format("{0}: {1}", Util.GS("Authentication Status Code"), status.statusCode));
 								dg.Run();
@@ -553,8 +560,11 @@ namespace Novell.iFolder
 			if (args == null || args.CollectionID == null || args.Name == null)
 				return;	// Prevent an exception
 
+			iFolderWindow ifwin = Util.GetiFolderWindow();
 			if(ifwin != null)
 				ifwin.HandleFileSyncEvent(args);
+
+			LogWindow logwin = Util.GetLogWindow();
 			if(logwin != null)
 				logwin.HandleFileSyncEvent(args);
 		}
@@ -580,9 +590,12 @@ namespace Novell.iFolder
 					break;
 				}
 			}
+
+			iFolderWindow ifwin = Util.GetiFolderWindow();
 			if(ifwin != null)
 				ifwin.HandleSyncEvent(args);
 
+			LogWindow logwin = Util.GetLogWindow();
 			if(logwin != null)
 				logwin.HandleSyncEvent(args);
 		}
@@ -612,6 +625,7 @@ namespace Novell.iFolder
 				}
 			}
 
+			iFolderWindow ifwin = Util.GetiFolderWindow();
 			if(ifwin != null)
 				ifwin.iFolderCreated(args.iFolderID);
 		}
@@ -645,6 +659,7 @@ namespace Novell.iFolder
 
 			if(ifHolder.iFolder.IsSubscription)
 			{
+				iFolderWindow ifwin = Util.GetiFolderWindow();
 				if(ifwin != null)
 					ifwin.iFolderChanged(args.iFolderID);
 			}
@@ -658,11 +673,12 @@ namespace Novell.iFolder
 					{
 						NotifyWindow notifyWin = new NotifyWindow(
 							tIcon, Util.GS("Action Required"),
-							string.Format(Util.GS("A collision has been detected in iFolder \"{0}\""), ifHolder.iFolder.Name),
+							string.Format(Util.GS("A conflict has been detected in iFolder \"{0}\""), ifHolder.iFolder.Name),
 							Gtk.MessageType.Info, 10000);
 						notifyWin.ShowAll();
 					}
 
+					iFolderWindow ifwin = Util.GetiFolderWindow();
 					if(ifwin != null)
 						ifwin.iFolderHasConflicts(args.iFolderID);
 				}
@@ -678,6 +694,7 @@ namespace Novell.iFolder
 			if (args == null || args.iFolderID == null)
 				return;	// Prevent an exception
 			
+			iFolderWindow ifwin = Util.GetiFolderWindow();
 			if(ifwin != null)
 				ifwin.iFolderDeleted(args.iFolderID);
 		}
@@ -809,11 +826,12 @@ namespace Novell.iFolder
 			if (domains.Length < 1)
 			{
 				// Prompt the user about there not being any domains
+				iFolderWindow ifwin = Util.GetiFolderWindow();
 				iFolderMsgDialog dg = new iFolderMsgDialog(
 					ifwin,
 					iFolderMsgDialog.DialogType.Question,
 					iFolderMsgDialog.ButtonSet.YesNo,
-					Util.GS("Set up iFolder Account"),
+					"",
 					Util.GS("Set up an iFolder Account?"),
 					Util.GS("To begin using iFolder, you must first set up an iFolder account.  Would you like to set up an iFolder account now?"));
 				int rc = dg.Run();
@@ -827,56 +845,6 @@ namespace Novell.iFolder
 
 			return false;	// Prevent this from being called over and over by Gtk.Timeout
 		}
-
-
-		private bool CheckWebService()
-		{
-			if(ifws == null)
-			{
-				try
-				{
-					ifws = new iFolderWebService();
-					ifws.Ping();
-				}
-				catch(System.Net.WebException we)
-				{
-					ifws = null;
-
-					if(we.Message == "Error: ConnectFailure")
-					{
-						iFolderMsgDialog mDialog = new iFolderMsgDialog(
-							null,
-							iFolderMsgDialog.DialogType.Error,
-							iFolderMsgDialog.ButtonSet.Ok,
-							Util.GS("iFolder Connect Error"),
-							Util.GS("Unable to locate Simias Process"),
-							Util.GS("The Simias process must be running in order for iFolder to run.  Start the Simias process and try again"));
-						mDialog.Run();
-						mDialog.Hide();
-						mDialog.Destroy();
-						mDialog = null;
-					}
-					else
-						throw we;
-				}
-				catch(Exception e)
-				{
-					ifws = null;
-
-					iFolderExceptionDialog ied = new iFolderExceptionDialog(
-													null, e);
-					ied.Run();
-					ied.Hide();
-					ied.Destroy();
-					ied = null;
-				}
-			}
-			return(ifws != null);
-		}
-
-
-
-
 
 		private void trayapp_clicked(object obj, ButtonPressEventArgs args)
 		{
@@ -1001,31 +969,7 @@ namespace Novell.iFolder
 
 		private void quit_ifolder(object o, EventArgs args)
 		{
-			if(ifwin != null)
-			{
-				ifwin.Destroyed -= new EventHandler(OniFolderWindowDestroyed);
-				ifwin.Hide();
-				ifwin.Destroy();
-				ifwin = null;
-			}
-
-			if(logwin != null)
-			{
-				logwin.Destroyed -=
-					new EventHandler(LogWindowDestroyedHandler);
-				logwin.Hide();
-				logwin.Destroy();
-				logwin = null;
-			}
-
-			if(prefswin != null)
-			{
-				prefswin.Destroyed -=
-					new EventHandler(PrefsWinDestroyedHandler);
-				prefswin.Hide();
-				prefswin.Destroy();
-				prefswin = null;
-			}
+			Util.CloseiFolderWindows();
 
 			if(CurrentState == iFolderState.Stopping)
 			{
@@ -1069,97 +1013,20 @@ namespace Novell.iFolder
 			showPrefsPage(1);
 		}
 
-
-
-
 		private void showPrefsPage(int page)
 		{
-			if(CheckWebService())
-			{
-				if(prefswin == null)
-				{
-					prefswin = new PreferencesWindow(ifws);
-					
-					prefswin.Destroyed +=
-							new EventHandler(PrefsWinDestroyedHandler);
-					prefswin.ShowAll();
-					prefswin.CurrentPage = page;
-				}
-				else
-				{
-					prefswin.Present();
-					prefswin.CurrentPage = page;
-				}
-			}
+			Util.ShowPrefsPage(page);
 		}
-
-
-
 
 		private void showiFolderWindow(object o, EventArgs args)
 		{
-			if(CheckWebService())
-			{
-				if(ifwin == null)
-				{
-					ifwin = new iFolderWindow(ifws, simws);
-					ifwin.Destroyed += 
-							new EventHandler(OniFolderWindowDestroyed);
-					ifwin.ShowAll();
-				}
-				else
-					ifwin.Present();
-			}
+			Util.ShowiFolderWindow();
 		}
-
-
-
 
 		private void showLogWindow(object o, EventArgs args)
 		{
-			if(logwin == null)
-			{
-				logwin = new LogWindow();
-				logwin.Destroyed += 
-						new EventHandler(LogWindowDestroyedHandler);
-				logwin.ShowAll();
-				logwinShown = true;
-			}
-			else
-			{
-				if(logwinShown)
-					logwin.Present();
-				else
-				{
-					logwinShown = true;
-					logwin.ShowAll();
-				}
-			}
+			Util.ShowLogWindow();
 		}
-
-
-
-
-		private void OniFolderWindowDestroyed(object o, EventArgs args)
-		{
-			ifwin = null;
-		}
-
-
-
-
-		private void LogWindowDestroyedHandler(object o, EventArgs args)
-		{
-			logwin = null;
-			logwinShown = false;
-		}
-
-
-		private void PrefsWinDestroyedHandler(object o, EventArgs args)
-		{
-			prefswin = null;
-		}
-
 
 		public static void Main (string[] args)
 		{
@@ -1174,8 +1041,8 @@ namespace Novell.iFolder
 
 			try
 			{
-				iFolderApplication app = new iFolderApplication(args);
-				app.Run();
+				application = new iFolderApplication(args);
+				application.Run();
 			}
 			catch(Exception bigException)
 			{

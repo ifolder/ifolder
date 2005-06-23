@@ -120,6 +120,7 @@ public class iFolderMsgDialog : Dialog
 		h.PackStart(i, false, false, 0);
 
 		VBox v = new VBox();
+		v.Spacing = 10;
 		Label l = new Label();
 		l.LineWrap = true;
 		l.UseMarkup = true;
@@ -132,7 +133,7 @@ public class iFolderMsgDialog : Dialog
 		l.LineWrap = true;
 		l.Selectable = true;
 		l.Xalign = 0; l.Yalign = 0;
-		v.PackStart(l);
+		v.PackStart(l, true, true, 8);
 		
 		if (details != null)
 		{

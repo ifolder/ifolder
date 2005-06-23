@@ -29,6 +29,8 @@ using Gdk;
 using Gnome;
 using Mono.Posix;
 
+using Simias.Client;
+
 namespace Novell.iFolder
 {
 	public class Util
@@ -39,7 +41,7 @@ namespace Novell.iFolder
 		internal static int SectionSpacing = 20;
 		internal static int SectionTitleSpacing = 5;
 		internal static uint DefaultBorderWidth = 10;
-
+		
 		// The purpose of these variable is to allow us to keep track of
 		// last place the user created/setup an iFolder so that we can open
 		// to the same place the next time they create/setup an iFolder.
@@ -49,6 +51,13 @@ namespace Novell.iFolder
 		// Be nice and keep track of the directory where the user saves
 		// the sync log.
 		internal static string lastSavedSyncLogPath = null;
+
+		internal static iFolderWindow		ifwin		= null;
+		internal static LogWindow			logwin		= null;
+		internal static PreferencesWindow	prefswin	= null;
+
+		private static iFolderWebService	ifws		= null;
+		private static SimiasWebService		simws		= null;
 
 		public static void InitCatalog()
 		{
@@ -191,6 +200,179 @@ namespace Novell.iFolder
 			}
 			catch(Exception e)
 			{
+			}
+		}
+		
+		public static PreferencesWindow GetPreferencesWindow()
+		{
+			return prefswin;
+		}
+		
+		///
+		/// Specify page = 0 to open the preferences to the General tab
+		/// Specify page = 1 to open the preferences to the Accounts tab
+		///
+		public static void ShowPrefsPage(int page)
+		{
+			if (CheckWebService())
+			{
+				if (prefswin == null)
+				{
+					prefswin = new PreferencesWindow(ifws);
+					
+					prefswin.Destroyed +=
+						new EventHandler(PrefsWinDestroyedHandler);
+					prefswin.ShowAll();
+					prefswin.CurrentPage = page;
+				}
+				else
+				{
+					prefswin.Present();
+					prefswin.CurrentPage = page;
+				}
+			}
+		}
+
+		private static void PrefsWinDestroyedHandler(object o, EventArgs args)
+		{
+			prefswin = null;
+		}
+		
+		public static iFolderWindow GetiFolderWindow()
+		{
+			return ifwin;
+		}
+		
+		public static void ShowiFolderWindow()
+		{
+			if(CheckWebService())
+			{
+				if(ifwin == null)
+				{
+					ifwin = new iFolderWindow(ifws, simws);
+					ifwin.Destroyed += 
+							new EventHandler(OniFolderWindowDestroyed);
+					ifwin.ShowAll();
+				}
+				else
+				{
+					ifwin.Present();
+				}
+			}
+		}
+		
+		private static void OniFolderWindowDestroyed(object o, EventArgs args)
+		{
+			ifwin = null;
+		}
+
+		public static LogWindow GetLogWindow()
+		{
+			return logwin;
+		}
+		
+		public static void ShowLogWindow()
+		{
+			if (logwin == null)
+			{
+				logwin = new LogWindow();
+				logwin.Destroyed += 
+						new EventHandler(LogWindowDestroyedHandler);
+//				logwinShown = false;
+				logwin.ShowAll();
+			}
+			else
+			{
+				logwin.Present();
+			}
+		}
+
+		private static void LogWindowDestroyedHandler(object o, EventArgs args)
+		{
+			logwin = null;
+		}
+
+		private static bool CheckWebService()
+		{
+			if(ifws == null)
+			{
+				try
+				{
+					string localServiceUrl =
+						Simias.Client.Manager.LocalServiceUrl.ToString();
+					ifws = new iFolderWebService();
+					ifws.Url = localServiceUrl + "/iFolder.asmx";
+					LocalService.Start(ifws);
+					
+					simws = new SimiasWebService();
+					simws.Url = localServiceUrl + "/Simias.asmx";
+					LocalService.Start(simws);
+					
+					ifws.Ping();
+				}
+				catch(System.Net.WebException we)
+				{
+					ifws = null;
+
+					if(we.Message == "Error: ConnectFailure")
+					{
+						iFolderMsgDialog mDialog = new iFolderMsgDialog(
+							null,
+							iFolderMsgDialog.DialogType.Error,
+							iFolderMsgDialog.ButtonSet.Ok,
+							"",
+							Util.GS("Unable to locate the Simias process"),
+							Util.GS("The Simias process must be running for iFolder to work.  Restart iFolder.  If the problem persists, please contact your network administrator for assistance."));
+						mDialog.Run();
+						mDialog.Hide();
+						mDialog.Destroy();
+						mDialog = null;
+					}
+					else
+						throw we;
+				}
+				catch(Exception e)
+				{
+					ifws = null;
+
+					iFolderExceptionDialog ied = new iFolderExceptionDialog(
+													null, e);
+					ied.Run();
+					ied.Hide();
+					ied.Destroy();
+					ied = null;
+				}
+			}
+			return(ifws != null);
+		}
+
+		public static void CloseiFolderWindows()
+		{
+			if(ifwin != null)
+			{
+				ifwin.Destroyed -=
+					new EventHandler(OniFolderWindowDestroyed);
+				ifwin.Hide();
+				ifwin.Destroy();
+				ifwin = null;
+			}
+
+			if(logwin != null)
+			{
+				logwin.Destroyed -=
+					new EventHandler(LogWindowDestroyedHandler);
+				logwin.Hide();
+				logwin.Destroy();
+				logwin = null;
+			}
+
+			if(prefswin != null)
+			{
+				prefswin.Destroyed -=
+					new EventHandler(PrefsWinDestroyedHandler);
+				prefswin.Hide();
+				prefswin.Destroy();
+				prefswin = null;
 			}
 		}
 		

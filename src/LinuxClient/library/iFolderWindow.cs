@@ -32,6 +32,8 @@ using Gtk;
 using Simias.Client;
 using Simias.Client.Event;
 
+using Novell.iFolder;
+
 namespace Novell.iFolder
 {
 	/// <summary>
@@ -180,7 +182,7 @@ namespace Novell.iFolder
 						stateString = Util.GS("Sync failed");
 						break;
 					case iFolderState.SynchronizingLocal:
-						stateString = Util.GS("Checking for local changes");
+						stateString = Util.GS("Checking for changes");
 						break;
 					case iFolderState.Disconnected:
 						stateString = Util.GS("Server unavailable");
@@ -1089,8 +1091,8 @@ namespace Novell.iFolder
 						this,
 						iFolderMsgDialog.DialogType.Error,
 						iFolderMsgDialog.ButtonSet.Ok,
-						Util.GS("iFolder Error"),
-						Util.GS("Unable to launch File Browser"),
+						"",
+						Util.GS("Unable to launch file browser"),
 						Util.GS("iFolder attempted to open the Nautilus File Manager and the Konqueror File Manager and was unable to launch either of them."));
 					dg.Run();
 					dg.Hide();
@@ -1228,7 +1230,7 @@ namespace Novell.iFolder
 					this,
 					iFolderMsgDialog.DialogType.Question,
 					iFolderMsgDialog.ButtonSet.YesNo,
-					Util.GS("iFolder Confirmation"),
+					"",
 					Util.GS("Revert this iFolder?"),
 					Util.GS("This will revert this iFolder back to a normal folder and leave the files intact.  The iFolder will then be available from the server and will need to be set up in a different location in order to sync."));
 				int rc = dialog.Run();
@@ -1293,9 +1295,9 @@ namespace Novell.iFolder
 						this,
 						iFolderMsgDialog.DialogType.Info,
 						iFolderMsgDialog.ButtonSet.Ok,
-						Util.GS("Invalid iFolder Path"),
-						Util.GS("Invalid characters in selected path"),
-						string.Format(Util.GS("The path you have entered contains invalid characters for an iFolder.  iFolders cannot contain the following characters: {0}"),
+						"",
+						Util.GS("Invalid characters in folder name"),
+						string.Format(Util.GS("The folder you selected contains invalid characters.  iFolders cannot contain the following characters: {0}"),
 									  new string(invalidChars)));
 					dg.Run();
 					dg.Hide();
@@ -1307,9 +1309,9 @@ namespace Novell.iFolder
 						this,
 						iFolderMsgDialog.DialogType.Info,
 						iFolderMsgDialog.ButtonSet.Ok,
-						Util.GS("Invalid iFolder Path"),
-						Util.GS("Invalid iFolder path selected"),
-						Util.GS("The path you have selected is invalid for an iFolder.  iFolders cannot contain other iFolders.  The folder you selected is either inside an iFolder, is an iFolder, or already contains an iFolder by the same name.  Please select an alternate folder."));
+						"",
+						Util.GS("Invalid folder selected"),
+						Util.GS("iFolders cannot contain other iFolders.  The folder you selected is either already an iFolder, contains an iFolder, or is inside an existing iFolder.  Please select an alternate folder."));
 					dg.Run();
 					dg.Hide();
 					dg.Destroy();
@@ -1386,7 +1388,7 @@ namespace Novell.iFolder
 					this,
 					iFolderMsgDialog.DialogType.Question,
 					iFolderMsgDialog.ButtonSet.YesNo,
-					Util.GS("Remove iFolder Confirmation"),
+					"",
 					string.Format(Util.GS("Remove iFolder {0}?"),
 											ifHolder.iFolder.Name),
 					Util.GS("This will remove this iFolder from your local machine.  Because you are the owner of this iFolder, the iFolder will no longer be available to users you have shared with.  The files will not be deleted from your local hard drive."));
@@ -1402,7 +1404,7 @@ namespace Novell.iFolder
 						this,
 						iFolderMsgDialog.DialogType.Question,
 						iFolderMsgDialog.ButtonSet.YesNo,
-						Util.GS("Remove iFolder Confirmation"),
+						"",
 						string.Format(Util.GS("Remove iFolder {0}?"),
 												ifHolder.iFolder.Name),
 						Util.GS("This will remove this iFolder from your local machine.  Because you are the owner of this iFolder, the iFolder will also be removed from the iFolder server and all users you have shared with.  The iFolder cannot be recovered or re-shared on another machine.  The files will not be deleted from your local hard drive."));
@@ -1416,7 +1418,7 @@ namespace Novell.iFolder
 						this,
 						iFolderMsgDialog.DialogType.Question,
 						iFolderMsgDialog.ButtonSet.YesNo,
-						Util.GS("Remove iFolder Confirmation"),
+						"",
 						string.Format(Util.GS("Remove iFolder {0}?"),
 												ifHolder.iFolder.Name),
 						Util.GS("This will remove you as a member of this iFolder.  You will not be able to access this iFolder unless the owner re-invites you to this iFolder.  The files will not be deleted from your local hard drive."));
@@ -1615,8 +1617,15 @@ namespace Novell.iFolder
 			{
 				case Action.StartLocalSync:
 				{
-					UpdateStatus(string.Format(Util.GS(
-									"Checking for local changes: {0}"), args.Name));
+					if (args.Name != null && args.Name.StartsWith("POBox:"))
+					{
+						UpdateStatus(Util.GS("Checking for new iFolders..."));
+					}
+					else
+					{
+						UpdateStatus(string.Format(Util.GS(
+									"Checking for changes: {0}"), args.Name));
+					}
 
 					if (ifHolder != null)
 					{
@@ -1637,7 +1646,7 @@ namespace Novell.iFolder
 					else
 					{
 						UpdateStatus(string.Format(Util.GS(
-										"Syncing: {0}"), args.Name));
+										"Synchronizing: {0}"), args.Name));
 					}
 
 					// Keep track of when a sync starts regardless of
@@ -1763,7 +1772,7 @@ namespace Novell.iFolder
 					case ObjectType.File:
 						if (args.Delete)
 							UpdateStatus(string.Format(
-								Util.GS("Deleting file on client: {0}"),
+								Util.GS("Deleting file: {0}"),
 								args.Name));
 						else
 						{
@@ -1781,7 +1790,7 @@ namespace Novell.iFolder
 									break;
 								case Simias.Client.Event.Direction.Local:
 									UpdateStatus(string.Format(
-										Util.GS("Found local change in file: {0}"),
+										Util.GS("Found changes in file: {0}"),
 										args.Name));
 									break;
 								default:
@@ -1795,7 +1804,7 @@ namespace Novell.iFolder
 					case ObjectType.Directory:
 						if (args.Delete)
 							UpdateStatus(string.Format(
-								Util.GS("Deleting directory on client: {0}"),
+								Util.GS("Deleting directory: {0}"),
 								args.Name));
 						else
 						{
@@ -1813,7 +1822,7 @@ namespace Novell.iFolder
 									break;
 								case Simias.Client.Event.Direction.Local:
 									UpdateStatus(string.Format(
-										Util.GS("Found local change in directory: {0}"),
+										Util.GS("Found changes in directory: {0}"),
 										args.Name));
 									break;
 								default:
@@ -1979,16 +1988,23 @@ namespace Novell.iFolder
 
 			if(ifdata.GetDomainCount() < 1)
 			{
+				// Prompt the user about there not being any domains
+				iFolderWindow ifwin = Util.GetiFolderWindow();
 				iFolderMsgDialog dg = new iFolderMsgDialog(
-					this,
-					iFolderMsgDialog.DialogType.Warning,
-					iFolderMsgDialog.ButtonSet.Ok,
-					Util.GS("Create iFolder"),
-					Util.GS("No iFolder Domains"),
-					Util.GS("A new iFolder cannot be created because you have not attached to any iFolder servers."));
-				dg.Run();
+					ifwin,
+					iFolderMsgDialog.DialogType.Question,
+					iFolderMsgDialog.ButtonSet.YesNo,
+					"",
+					Util.GS("Set up an iFolder Account?"),
+					Util.GS("To begin using iFolder, you must first set up an iFolder account.  Would you like to set up an iFolder account now?"));
+				int response = dg.Run();
 				dg.Hide();
 				dg.Destroy();
+				if (response == -8)
+				{
+					Util.ShowPrefsPage(1);
+				}
+				
 				return;
 			}
 
@@ -2014,9 +2030,9 @@ namespace Novell.iFolder
 							this,
 							iFolderMsgDialog.DialogType.Warning,
 							iFolderMsgDialog.ButtonSet.Ok,
-							Util.GS("Invalid iFolder Path"),
-							Util.GS("Invalid iFolder path selected"),
-							Util.GS("The path you've specified is empty.  Please enter a properly formatted path for the new iFolder."));
+							"",
+							Util.GS("Invalid folder specified"),
+							Util.GS("An invalid folder was specified."));
 						dg.Run();
 						dg.Hide();
 						dg.Destroy();
@@ -2030,9 +2046,9 @@ namespace Novell.iFolder
 							this,
 							iFolderMsgDialog.DialogType.Warning,
 							iFolderMsgDialog.ButtonSet.Ok,
-							Util.GS("Invalid iFolder Path"),
-							Util.GS("Invalid iFolder path selected"),
-							Util.GS("The path you've specified is invalid.  Please enter a properly formatted path for the new iFolder."));
+							"",
+							Util.GS("Invalid folder specified"),
+							Util.GS("An invalid folder was specified"));
 						dg.Run();
 						dg.Hide();
 						dg.Destroy();
@@ -2046,9 +2062,9 @@ namespace Novell.iFolder
 							this,
 							iFolderMsgDialog.DialogType.Warning,
 							iFolderMsgDialog.ButtonSet.Ok,
-							Util.GS("Invalid iFolder Path"),
-							Util.GS("Invalid iFolder path selected"),
-							Util.GS("The path you've specified is invalid.  Please remove the trailing path separator character (/) and try again."));
+							"",
+							Util.GS("Invalid folder specified"),
+							Util.GS("The folder you've specified is invalid.  Please remove the trailing separator character (/) and try again."));
 						dg.Run();
 						dg.Hide();
 						dg.Destroy();
@@ -2073,9 +2089,9 @@ namespace Novell.iFolder
 								this,
 								iFolderMsgDialog.DialogType.Warning,
 								iFolderMsgDialog.ButtonSet.Ok,
-								Util.GS("Invalid iFolder Path"),
-								Util.GS("Invalid iFolder path selected"),
-								Util.GS("The path you've specified does not exist.  Please select an existing folder and try again."));
+								"",
+								Util.GS("Invalid folder specified"),
+								Util.GS("The folder you've specified does not exist.  Please select an existing folder and try again."));
 							dg.Run();
 							dg.Hide();
 							dg.Destroy();
@@ -2146,23 +2162,6 @@ namespace Novell.iFolder
 				}
 			}
 			while(rc == -5);
-		}
-	
-	
-
-		private void ShowPreferences()
-		{
-			iFolderMsgDialog dg = new iFolderMsgDialog(
-				this,
-				iFolderMsgDialog.DialogType.Info,
-				iFolderMsgDialog.ButtonSet.Ok,
-				Util.GS("Show Preferences"),
-				Util.GS("This will show preferences"),
-				Util.GS("Eventually Calvin will get around to adding code here that will show the preferences dialog."));
-			dg.Run();
-			dg.Hide();
-			dg.Destroy();
-		
 		}
 
 		public void DomainFilterChangedHandler(object o, EventArgs args)
