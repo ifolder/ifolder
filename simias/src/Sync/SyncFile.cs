@@ -269,6 +269,15 @@ namespace Simias.Sync
 				workStream.Write(stream, count);
 			}
 		}
+
+		/// <summary>
+		/// Set the Length of the file.
+		/// </summary>
+		/// <param name="length">The size to set.</param>
+		public void SetLength(long length)
+		{
+			workStream.SetLength(length);
+		}
 		
 		/// <summary>
 		/// Get the stream.

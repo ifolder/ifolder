@@ -91,6 +91,10 @@ namespace Simias.Client
 		/// The type policy doesn't allow this file.
 		/// </summary>
 		PolicyType,
+		/// <summary>
+		/// The disk is full.
+		/// </summary>
+		DiskFull,
 	}
 
 	#endregion

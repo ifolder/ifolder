@@ -410,6 +410,16 @@ namespace Simias.Sync
 			long	sizeToSync;
 			long	sizeRemaining;
 			int		blockSize;
+			// Make sure that we have enough space for the file.
+			try
+			{
+				SetLength(Length);
+			}
+			catch (IOException)
+			{
+				eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, 0, 0, 0, Direction.Downloading, SyncStatus.DiskFull));
+				throw;
+			}
 			long[] fileMap = GetDownloadFileMap(out sizeToSync, out blockSize);
 			sizeRemaining = sizeToSync;
 			WritePosition = 0;
@@ -448,6 +458,11 @@ namespace Simias.Sync
 					Write(inStream, bytesToWrite);
 					sizeRemaining -= bytesToWrite;
 					eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Downloading));
+				}
+				catch
+				{
+					eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, 0, 0, 0, Direction.Downloading, SyncStatus.Error));
+					throw;
 				}
 				finally
 				{

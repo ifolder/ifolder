@@ -91,12 +91,26 @@ namespace Simias.Sync
 			collection.ImportNode(node, true, snode.MasterIncarnation);
 			node.IncarnationUpdate = node.LocalIncarnation;
 			base.Open(node);
+			SyncStatus status = SyncStatus.Success;
 			if (NameConflict)
 			{
-				Close(false);
-				return SyncStatus.FileNameConflict;
+				status = SyncStatus.FileNameConflict;
 			}
-			return SyncStatus.Success;
+			// Make sure we have enough disk space.
+			try
+			{
+				SetLength(node.Length);
+			}
+			catch (IOException)
+			{
+				status = SyncStatus.DiskFull;
+			}
+			if (status != SyncStatus.Success)
+			{
+				Close(false);
+			}
+				
+			return status;
 		}
 
 		/// <summary>
