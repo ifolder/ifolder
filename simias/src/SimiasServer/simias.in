@@ -9,11 +9,10 @@
 #
 #######################################################################
 
-export MONO_PATH=@_webbindir_@
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:@_webbindir_@
-export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:@_webbindir_@:/Library/Frameworks/Mono.framework/Versions/Current/lib
+export MONO_PATH=@_webbindir_@:$MONO_PATH
+export LD_LIBRARY_PATH=@_webbindir_@:$LD_LIBRARY_PATH
+export DYLD_LIBRARY_PATH=@_webbindir_@:/Library/Frameworks/Mono.framework/Versions/Current/lib:$DYLD_LIBRARY_PATH
 cd @_bindir_@
 
-ulimit -n 1024
 mono @_bindir_@/SimiasServer.exe $@
 
