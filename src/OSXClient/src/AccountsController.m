@@ -165,7 +165,7 @@
 						SecCertificateRef certRef = [simiasService GetCertificate:[host stringValue]];
 
 						AcceptCertSheetController *certSheet = [[AcceptCertSheetController alloc]
-								initWithCert:certRef];
+								initWithCert:certRef forHost:[selectedDomain host]];
 						
 						[NSApp beginSheet:[certSheet window] modalForWindow:parentWindow
 							modalDelegate:self didEndSelector:@selector(certSheetDidEnd:returnCode:contextInfo:) contextInfo:certRef];
@@ -395,7 +395,7 @@
 						SecCertificateRef certRef = [simiasService GetCertificate:[host stringValue]];
 
 						AcceptCertSheetController *certSheet = [[AcceptCertSheetController alloc]
-								initWithCert:certRef];
+								initWithCert:certRef forHost:[host stringValue]];
 						
 						[NSApp beginSheet:[certSheet window] modalForWindow:parentWindow
 							modalDelegate:self didEndSelector:@selector(certSheetDidEnd:returnCode:contextInfo:) contextInfo:certRef];

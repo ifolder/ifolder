@@ -10,9 +10,13 @@
 	SecCertificateRef	certRef;
 
 	IBOutlet SFCertificateView	*certView;
+    IBOutlet NSTextField		*messageTitle;
+    IBOutlet NSTextField		*message;
+	
+	NSString	*host;
 }
 
-- (AcceptCertSheetController *) initWithCert:(SecCertificateRef)CertRef;
+- (AcceptCertSheetController *) initWithCert:(SecCertificateRef)CertRef forHost:(NSString *)Host;
 
 - (IBAction)accept:(id)sender;
 - (IBAction)decline:(id)sender;
