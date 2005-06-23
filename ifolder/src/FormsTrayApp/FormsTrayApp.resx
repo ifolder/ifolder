@@ -721,6 +721,12 @@
   <data name="genericFailure">
     <value>iFolder failed synchronization: {0}</value>
   </data>
+  <data name="serverDiskFullFailure">
+    <value>Insufficient disk space on the server prevented synchronization: {0}</value>
+  </data>
+  <data name="clientDiskFullFailure">
+    <value>Insufficient disk space on this computer prevented synchronization: {0}</value>
+  </data>
   <data name="myiFolders">
     <value>iFolders</value>
   </data>
