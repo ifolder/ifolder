@@ -585,6 +585,7 @@ namespace Novell.iFolderCom
 		{
 			float width = 0;
 			float height = 0;
+			double lines = 1;
 			SizeF size = new SizeF(0, 0);
 
 			Graphics g = message.CreateGraphics();
@@ -596,7 +597,8 @@ namespace Novell.iFolderCom
 				// Calculate the size for each string.
 				size = g.MeasureString(s, message.Font);
 				width = Math.Max((size.Width / maxWidth) > 1 ? maxWidth : size.Width, width);
-				height += (float)Math.Ceiling(size.Width / width) * size.Height;
+				lines = Math.Ceiling(size.Width / width);
+				height += (float)lines * size.Height;
 			}
 
 			g.Dispose();
@@ -616,7 +618,7 @@ namespace Novell.iFolderCom
 			}
 
 			// Adjust the height to include the blank lines.
-			height += (size.Height * newlineCount) + 2;
+			height += (size.Height * newlineCount) + (float)(2 * lines);
 
 			message.Size = new Size((int)Math.Ceiling(width), (int)Math.Ceiling(height));
 
