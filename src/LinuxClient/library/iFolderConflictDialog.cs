@@ -639,8 +639,8 @@ namespace Novell.iFolder
 					iFolderMsgDialog.DialogType.Warning,
 					iFolderMsgDialog.ButtonSet.Ok,
 					"",
-					Util.GS("Read Only Membership"),
-					Util.GS("Your ability to resolve conflicts is limited because you have read-only rights to this iFolder.  Name conflicts must be renamed locally.  File conflicts will be overwritten by the version of the file on the server."));
+					Util.GS("You have read only access"),
+					Util.GS("Your ability to resolve conflicts is limited because you have read-only access to this iFolder.  Name conflicts must be renamed locally.  File conflicts will be overwritten by the version of the file on the server."));
 				dg.Run();
 				dg.Hide();
 				dg.Destroy();
