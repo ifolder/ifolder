@@ -367,29 +367,29 @@ namespace Novell.iFolder
 			Toolbar tb = new Toolbar();
 
 			NewButton = tb.AppendItem(Util.GS("New"), 
-				Util.GS("Create a New iFolder"), "Toolbar/New iFolder",
+				Util.GS("Create a new iFolder"), "Toolbar/New iFolder",
 				new Image(new Gdk.Pixbuf(Util.ImagesPath("newifolder24.png"))),
 				new SignalFunc(CreateNewiFolder));
 
 			SetupButton = tb.AppendItem(Util.GS("Set Up"),
-				Util.GS("Set up an existing iFolder"), "Toolbar/Set Up iFolder",
+				Util.GS("Set up the selected iFolder"), "Toolbar/Set Up iFolder",
 				new Image(new Gdk.Pixbuf(Util.ImagesPath("setup24.png"))),
 				new SignalFunc(SetupiFolder));
 
 			tb.AppendSpace ();
 
 			SyncButton = tb.AppendItem(Util.GS("Synchronize"),
-				Util.GS("Synchronize an iFolder"), "Toolbar/Sync iFolder",
+				Util.GS("Synchronize the selected iFolder"), "Toolbar/Synchronize iFolder",
 				new Image(new Gdk.Pixbuf(Util.ImagesPath("sync24.png"))),
 				new SignalFunc(SynciFolder));
 
 			ShareButton = tb.AppendItem(Util.GS("Share"),
-				Util.GS("Share an iFolder"), "Toolbar/Share iFolder",
+				Util.GS("Share the selected iFolder"), "Toolbar/Share iFolder",
 				new Image(new Gdk.Pixbuf(Util.ImagesPath("share24.png"))),
 				new SignalFunc(ShareiFolder));
 
 			ConflictButton = tb.AppendItem(Util.GS("Resolve"),
-				Util.GS("Resolve Conflicts"), "Toolbar/Resolve iFolder",
+				Util.GS("Resolve conflicts in the selected iFolder"), "Toolbar/Resolve iFolder",
 				new Image(new Gdk.Pixbuf(Util.ImagesPath("conflict24.png"))),
 				new SignalFunc(ResolveConflicts));
 
