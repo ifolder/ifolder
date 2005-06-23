@@ -60,6 +60,12 @@
 		[authDomainID release];
 		authDomainID = nil;
 	}
+	
+	if(authDomainHost != nil)
+	{
+		[authDomainHost release];
+		authDomainHost = nil;
+	}
 
 	[[self window] orderOut:nil];
 }
@@ -73,6 +79,13 @@
 		[authDomainID release];
 		authDomainID = nil;
 	}
+
+	if(authDomainHost != nil)
+	{
+		[authDomainHost release];
+		authDomainHost = nil;
+	}
+	
 }
 
 
@@ -87,6 +100,11 @@
 		( [[passwordField stringValue] length] > 0 ) )
 	{
 		simiasService = [[SimiasService alloc] init];
+
+		if(authDomainHost != nil)
+		{
+			[[NSApp delegate] setupSimiasProxies:authDomainHost];
+		}
 
 		@try
 		{
@@ -211,6 +229,7 @@
 		[serverField setStringValue:[domain name]];
 		[userNameField setStringValue:[domain userName]];
 		authDomainID = [[domain ID] retain];
+		authDomainHost = [[domain host] retain];
 	}
 
 	[self showWindow:sender];

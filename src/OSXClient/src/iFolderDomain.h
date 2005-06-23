@@ -71,6 +71,7 @@
 -(NSString *)userName;
 -(NSString *)userID;
 -(NSString *)host;
+-(NSString *)hostURL;
 -(NSString *)password;
 -(NSString *)poBoxID;
 -(NSString *)description;
