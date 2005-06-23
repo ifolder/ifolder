@@ -161,7 +161,7 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 141195288;
+			PBXPerProjectTemplateStateSaveDate = 141230194;
 			PBXPrepackagedSmartGroups_v2 = (
 				{
 					PBXTransientLocationAtTop = bottom;
@@ -338,7 +338,7 @@
 					};
 				},
 			);
-			PBXWorkspaceStateSaveDate = 141195288;
+			PBXWorkspaceStateSaveDate = 141230194;
 			com.apple.ide.smrt.PBXUserSmartGroupsKey.Rev10 = <040b747970656473747265616d8103e88401408484840e4e534d757461626c654172726179008484074e534172726179008484084e534f626a65637400858401690086>;
 		};
 		sourceControlManager = 3E1712BE076126F700BC1084 /* Source Control */;
@@ -751,9 +751,9 @@
 	};
 	3E8853CB07C6F80A00E8B6CD /* iFolderNotificationController.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1010, 3527}}";
-			sepNavSelRange = "{4102, 18}";
-			sepNavVisRect = "{{0, 1504}, {788, 646}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1190, 3528}}";
+			sepNavSelRange = "{4100, 0}";
+			sepNavVisRect = "{{0, 977}, {705, 429}}";
 			sepNavWindowFrame = "{{107, 355}, {750, 558}}";
 		};
 	};
@@ -782,7 +782,8 @@
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {1214, 3808}}";
 			sepNavSelRange = "{3405, 0}";
-			sepNavVisRect = "{{0, 1008}, {646, 771}}";
+			sepNavVisRect = "{{0, 0}, {704, 537}}";
+			sepNavWindowFrame = "{{38, 310}, {749, 666}}";
 		};
 	};
 	3E8853D207C6F80A00E8B6CD /* KABubbleWindowView.h */ = {
@@ -796,7 +797,8 @@
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {1418, 2422}}";
 			sepNavSelRange = "{1005, 0}";
-			sepNavVisRect = "{{0, 0}, {646, 771}}";
+			sepNavVisRect = "{{0, 1885}, {704, 537}}";
+			sepNavWindowFrame = "{{15, 331}, {749, 666}}";
 		};
 	};
 	3E9B1B01077927E20072994B /* SetupiFolderSheetController.m */ = {
@@ -1003,10 +1005,10 @@
 	};
 	3EE8881807B9620F00484B9F /* iFolderWindowController.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {884, 9408}}";
-			sepNavSelRange = "{5618, 0}";
-			sepNavVisRect = "{{0, 3172}, {689, 432}}";
-			sepNavWindowFrame = "{{268, 208}, {750, 558}}";
+			sepNavIntBoundsRect = "{{0, 0}, {884, 9394}}";
+			sepNavSelRange = "{16770, 0}";
+			sepNavVisRect = "{{0, 8147}, {704, 537}}";
+			sepNavWindowFrame = "{{55, 105}, {749, 666}}";
 		};
 	};
 	3EEA9A4907B1D9C30015FCF4 /* PropSharingController.m */ = {
