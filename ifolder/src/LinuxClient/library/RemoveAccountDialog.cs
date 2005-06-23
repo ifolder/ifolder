@@ -58,7 +58,7 @@ namespace Novell.iFolder
 
 			VBox v = new VBox();
 			Label l = new Label("<span weight=\"bold\" size=\"larger\">" +
-					Util.GS("Remove iFolder Account?") + "</span>");
+					Util.GS("Remove this iFolder account?") + "</span>");
 			l.LineWrap = true;
 			l.UseMarkup = true;
 			l.Selectable = false;

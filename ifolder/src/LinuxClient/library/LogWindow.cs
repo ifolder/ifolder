@@ -444,8 +444,8 @@ namespace Novell.iFolder
 							iFolderMsgDialog.DialogType.Question,
 							iFolderMsgDialog.ButtonSet.YesNo,
 							"",
-							Util.GS("Overwrite existing file?"),
-							Util.GS("The file you selected exists.  Selecting yes will overwrite the contents of this file.  Do you want to overwrite this file?"));
+							Util.GS("Overwrite the existing file?"),
+							Util.GS("The file you selected exists.  Selecting yes will overwrite the contents of this file."));
 						rc = dialog.Run();
 						dialog.Hide();
 						dialog.Destroy();

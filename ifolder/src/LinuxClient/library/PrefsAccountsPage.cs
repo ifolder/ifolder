@@ -610,7 +610,7 @@ namespace Novell.iFolder
 						iFolderMsgDialog.ButtonSet.YesNo,
 						"",
 						Util.GS("Lose current settings?"),
-						Util.GS("You are currently creating a new account.  By selecing a different account you cancel the operation.  Do you wish to continue and lose the current settings?"));
+						Util.GS("You are currently creating a new account.  By selecing a different account you cancel the operation."));
 					int rc = dialog.Run();
 					dialog.Hide();
 					dialog.Destroy();
@@ -956,7 +956,7 @@ namespace Novell.iFolder
 									iFolderMsgDialog.DialogType.Error,
 									iFolderMsgDialog.ButtonSet.Ok,
 									"",
-									Util.GS("The user account has been locked"),
+									Util.GS("The user account is locked"),
 									Util.GS("Please contact your network administrator for assistance."));
 								dg.Run();
 								dg.Hide();
@@ -1009,7 +1009,7 @@ namespace Novell.iFolder
 							iFolderMsgDialog.DialogType.Error,
 							iFolderMsgDialog.ButtonSet.Ok,
 							"",
-							Util.GS("The user account has been locked"),
+							Util.GS("The user account is locked"),
 							Util.GS("Please contact your network administrator for assistance."));
 						dg.Run();
 						dg.Hide();

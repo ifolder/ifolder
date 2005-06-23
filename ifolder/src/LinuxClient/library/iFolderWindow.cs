@@ -1231,8 +1231,8 @@ namespace Novell.iFolder
 					iFolderMsgDialog.DialogType.Question,
 					iFolderMsgDialog.ButtonSet.YesNo,
 					"",
-					Util.GS("Revert this iFolder?"),
-					Util.GS("This will revert this iFolder back to a normal folder and leave the files intact.  The iFolder will then be available from the server and will need to be set up in a different location in order to sync."));
+					Util.GS("Revert this iFolder to a normal folder?"),
+					Util.GS("This reverts the iFolder back to a normal folder and leaves the files intact.  The iFolder is then available from the server and must be set up in a different location to synchronize."));
 				int rc = dialog.Run();
 				dialog.Hide();
 				dialog.Destroy();
@@ -1391,7 +1391,7 @@ namespace Novell.iFolder
 					"",
 					string.Format(Util.GS("Remove iFolder {0}?"),
 											ifHolder.iFolder.Name),
-					Util.GS("This will remove this iFolder from your local machine.  Because you are the owner of this iFolder, the iFolder will no longer be available to users you have shared with.  The files will not be deleted from your local hard drive."));
+					Util.GS("This removes the iFolder from your local computer.  Because you are the owner, the iFolder is removed from all member computers.  The iFolder cannot be recovered or re-shared on another computer.  The files are not deleted from your local hard drive."));
 				rc = dialog.Run();
 				dialog.Hide();
 				dialog.Destroy();
@@ -1407,7 +1407,7 @@ namespace Novell.iFolder
 						"",
 						string.Format(Util.GS("Remove iFolder {0}?"),
 												ifHolder.iFolder.Name),
-						Util.GS("This will remove this iFolder from your local machine.  Because you are the owner of this iFolder, the iFolder will also be removed from the iFolder server and all users you have shared with.  The iFolder cannot be recovered or re-shared on another machine.  The files will not be deleted from your local hard drive."));
+						Util.GS("This removes the iFolder from your local computer.  Because you are the owner, the iFolder is removed from the server and all member computers.  The iFolder cannot be recovered or re-shared on another computer.  The files are not deleted from your local hard drive."));
 					rc = dialog.Run();
 					dialog.Hide();
 					dialog.Destroy();
@@ -1421,7 +1421,7 @@ namespace Novell.iFolder
 						"",
 						string.Format(Util.GS("Remove iFolder {0}?"),
 												ifHolder.iFolder.Name),
-						Util.GS("This will remove you as a member of this iFolder.  You will not be able to access this iFolder unless the owner re-invites you to this iFolder.  The files will not be deleted from your local hard drive."));
+						Util.GS("This removes you as a member of the iFolder.  You cannot access the iFolder unless the owner re-invites you.  The files are not deleted from your local hard drive."));
 					rc = dialog.Run();
 					dialog.Hide();
 					dialog.Destroy();
@@ -1995,7 +1995,7 @@ namespace Novell.iFolder
 					iFolderMsgDialog.DialogType.Question,
 					iFolderMsgDialog.ButtonSet.YesNo,
 					"",
-					Util.GS("Set up an iFolder Account?"),
+					Util.GS("Set up an iFolder account?"),
 					Util.GS("To begin using iFolder, you must first set up an iFolder account.  Would you like to set up an iFolder account now?"));
 				int response = dg.Run();
 				dg.Hide();

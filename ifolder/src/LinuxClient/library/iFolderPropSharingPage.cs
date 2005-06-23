@@ -314,8 +314,8 @@ namespace Novell.iFolder
 					iFolderMsgDialog.DialogType.Question,
 					iFolderMsgDialog.ButtonSet.YesNo,
 					"",
-					Util.GS("Remove Selected Users?"),
-					Util.GS("This will remove the selected users from this iFolder.  They will no longer be able to sync file to this iFolder."));
+					Util.GS("Remove the selected users?"),
+					Util.GS("This will remove the selected users from this iFolder.  They will no longer be able to synchronize files with this iFolder."));
 				int rc = dialog.Run();
 				dialog.Hide();
 				dialog.Destroy();

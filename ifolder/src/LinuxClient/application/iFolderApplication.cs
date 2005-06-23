@@ -513,7 +513,7 @@ namespace Novell.iFolder
 									iFolderMsgDialog.DialogType.Error,
 									iFolderMsgDialog.ButtonSet.Ok,
 									"",
-									Util.GS("The user account has been locked"),
+									Util.GS("The user account is locked"),
 									Util.GS("Please contact your network administrator for assistance."));
 								dg.Run();
 								dg.Hide();
@@ -832,7 +832,7 @@ namespace Novell.iFolder
 					iFolderMsgDialog.DialogType.Question,
 					iFolderMsgDialog.ButtonSet.YesNo,
 					"",
-					Util.GS("Set up an iFolder Account?"),
+					Util.GS("Set up an iFolder account?"),
 					Util.GS("To begin using iFolder, you must first set up an iFolder account.  Would you like to set up an iFolder account now?"));
 				int rc = dg.Run();
 				dg.Hide();
