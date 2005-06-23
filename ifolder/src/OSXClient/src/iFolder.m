@@ -210,16 +210,17 @@
 	if([self IsSubscription])
 	{
 		if([ [properties objectForKey:@"State"] isEqualToString:@"Available"])
-			[properties setObject:NSLocalizedString(@"Available", nil) forKey:@"Status"];
+			[properties setObject:NSLocalizedString(@"Not set up", @"iFolder Status Message") forKey:@"Status"];
 		else if([ [properties objectForKey:@"State"] isEqualToString:@"WaitConnect"])
-			[properties setObject:NSLocalizedString(@"Waiting to Connect", nil) forKey:@"Status"];
+			[properties setObject:NSLocalizedString(@"Waiting to connect", @"iFolder Status Message") forKey:@"Status"];
 		else if([ [properties objectForKey:@"State"] isEqualToString:@"WaitSync"])
-			[properties setObject:NSLocalizedString(@"Waiting to Sync", nil) forKey:@"Status"];
+			[properties setObject:NSLocalizedString(@"Waiting to synchronize", @"iFolder Status Message") forKey:@"Status"];
 		else
-			[properties setObject:NSLocalizedString(@"Unknown", nil) forKey:@"Status"];
+			[properties setObject:NSLocalizedString(@"Unknown", @"iFolder Status Message") forKey:@"Status"];
 
 		if([ [properties objectForKey:@"State"] isEqualToString:@"Available"])
 		{
+			// set the location to the owner's name
 			[properties setObject:[properties objectForKey:@"Owner"]
 								forKey:@"Location"];
 		}
@@ -231,25 +232,25 @@
 	else
 	{
 		if([self syncState] == SYNC_STATE_SYNCING)
-			[properties setObject:NSLocalizedString(@"Synchronizing", nil) forKey:@"Status"];
+			[properties setObject:NSLocalizedString(@"Synchronizing", @"iFolder Status Message") forKey:@"Status"];
 		else if([self syncState] == SYNC_STATE_PREPARING)
-			[properties setObject:NSLocalizedString(@"Preparing to synchronize", nil) forKey:@"Status"];
+			[properties setObject:NSLocalizedString(@"Preparing to synchronize", @"iFolder Status Message") forKey:@"Status"];
 		else if([ [properties objectForKey:@"HasConflicts"] boolValue])
-			[properties setObject:NSLocalizedString(@"Has Conflicts", nil) forKey:@"Status"];
+			[properties setObject:NSLocalizedString(@"Has conflicts", @"iFolder Status Message") forKey:@"Status"];
 		else if([self syncState] == SYNC_STATE_DISCONNECTED)
-			[properties setObject:NSLocalizedString(@"Server unavailable", nil) forKey:@"Status"];
+			[properties setObject:NSLocalizedString(@"Server unavailable", @"iFolder Status Message") forKey:@"Status"];
 		else if( ([self syncState] == SYNC_STATE_OUT_OF_SYNC) &&
 				 ([self outOfSyncCount] > 0) )
 		{
-			[properties setObject:[NSString stringWithFormat:NSLocalizedString(@"%u items out of sync", nil), [self outOfSyncCount]] forKey:@"Status"];
+			[properties setObject:[NSString stringWithFormat:NSLocalizedString(@"%u items not synchronized", @"iFolder Status Message"), [self outOfSyncCount]] forKey:@"Status"];
 		}
 		else if( ([self syncState] == 0) ||
 				 ([self syncState] == SYNC_STATE_OK) )
 		{
 			if([ [properties objectForKey:@"State"] isEqualToString:@"WaitSync"])
-				[properties setObject:NSLocalizedString(@"Waiting to Sync", nil) forKey:@"Status"];
+				[properties setObject:NSLocalizedString(@"Waiting to synchronize", @"iFolder Status Message") forKey:@"Status"];
 			else
-				[properties setObject:NSLocalizedString(@"OK", nil) forKey:@"Status"];
+				[properties setObject:NSLocalizedString(@"OK", @"iFolder Status Message") forKey:@"Status"];
 		}
 
 		// update the location

@@ -27,9 +27,14 @@
 @implementation LeaveDomainSheetController
 
 
-- (IBAction) showWindow:(id)sender
+- (IBAction)showWindow:(id)sender showSystemName:(NSString *)SystemName
+			showServer:(NSString *)Server showUserName:(NSString *)UserName
 {
 	[leaveAll setState:NO];
+
+	[systemName setStringValue:SystemName];
+	[server setStringValue:Server];
+	[userName setStringValue:UserName];
 	
 	[NSApp beginSheet:leaveDomainSheet modalForWindow:prefsWindow
 		modalDelegate:self didEndSelector:NULL contextInfo:nil];

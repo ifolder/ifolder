@@ -125,16 +125,16 @@
 -(void) updateDisplayInformation
 {
 	if([self isOwner])
-		[properties setObject:NSLocalizedString(@"Owner", nil) forKey:@"Status"];
+		[properties setObject:NSLocalizedString(@"Owner", @"iFolder Member Status") forKey:@"Status"];
 	else
 	{
 		NSString *state = [properties objectForKey:@"State"];
 		if(state != nil)
 		{
 			if([state compare:@"Member"] != 0)
-				[properties setObject:NSLocalizedString(@"Invited User", nil) forKey:@"Status"];
+				[properties setObject:NSLocalizedString(@"Invited User", @"iFolder Member Status") forKey:@"Status"];
 			else
-				[properties setObject:NSLocalizedString(@"Member", nil) forKey:@"Status"];
+				[properties setObject:NSLocalizedString(@"Member", @"iFolder Member Status") forKey:@"Status"];
 		}
 	}
 
@@ -142,13 +142,13 @@
 	if(rights != nil)
 	{
 		if([rights compare:@"Admin"] == 0)
-			[properties setObject:NSLocalizedString(@"Full Control", nil) forKey:@"Access"];
+			[properties setObject:NSLocalizedString(@"Full Control", @"iFolder Member Access") forKey:@"Access"];
 		else if([rights compare:@"ReadWrite"] == 0)
-			[properties setObject:NSLocalizedString(@"Read Write", nil) forKey:@"Access"];
+			[properties setObject:NSLocalizedString(@"Read/Write", @"iFolder Member Access") forKey:@"Access"];
 		else if([rights compare:@"ReadOnly"] == 0)
-			[properties setObject:NSLocalizedString(@"Read Only", nil) forKey:@"Access"];
+			[properties setObject:NSLocalizedString(@"Read Only", @"iFolder Member Access") forKey:@"Access"];
 		else
-			[properties setObject:NSLocalizedString(@"Unknown", nil) forKey:@"Access"];
+			[properties setObject:NSLocalizedString(@"Unknown", @"iFolder Member Access") forKey:@"Access"];
 	}
 
 }

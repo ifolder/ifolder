@@ -32,9 +32,14 @@
     IBOutlet AccountsController *accountsController;
 	IBOutlet NSWindow			*prefsWindow;
 	IBOutlet NSWindow			*leaveDomainSheet;
+
+	IBOutlet NSTextField		*systemName;
+	IBOutlet NSTextField		*server;
+	IBOutlet NSTextField		*userName;
 }
 
-- (IBAction)showWindow:(id)sender;
+- (IBAction)showWindow:(id)sender showSystemName:(NSString *)SystemName
+			showServer:(NSString *)Server showUserName:(NSString *)UserName;
 - (IBAction)cancelLeaveDomain:(id)sender;
 - (IBAction)leaveDomain:(id)sender;
 @end

@@ -289,7 +289,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 
 	[self setupProxyMonitor];
 	
-	[iFolderWindowController updateStatusTS:NSLocalizedString(@"Loading synchronization process...", nil)];
+	[iFolderWindowController updateStatusTS:NSLocalizedString(@"Loading synchronization process...", @"Initial iFolder Status Message")];
 }
 
 
@@ -349,7 +349,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
     [NSThread detachNewThreadSelector:@selector(simiasEventThread:)
         toTarget:self withObject:nil];
 
-	[iFolderWindowController updateStatusTS:NSLocalizedString(@"Idle...", nil)];
+	[iFolderWindowController updateStatusTS:NSLocalizedString(@"Idle...", @"iFolder Window Status Message")];
 
 	// If there are no domains when the app first launches, the show a dialog that
 	// will help get an account created
@@ -357,10 +357,10 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 	{
 		int rc;
 		
-		rc = NSRunAlertPanel(NSLocalizedString(@"Setup  iFolder Account", nil), 
-							NSLocalizedString(@"The iFolder client is now installed and ready to use.  To begin using iFolder, you must first setup an iFolder account.  Would you like to setup your iFolder account now?", nil),
-							NSLocalizedString(@"Yes", nil), 
-							NSLocalizedString(@"No", nil),
+		rc = NSRunAlertPanel(NSLocalizedString(@"Set Up  iFolder Account", @"Initial Setup Dialog Title"), 
+							NSLocalizedString(@"To begin using iFolder, you must first set up an iFolder account.  Would you like to set up an iFolder account now?", @"Initial Setup Dialog Message"),
+							NSLocalizedString(@"Yes", @"Initial Setup Dialog Button"), 
+							NSLocalizedString(@"No", @"Initial Setup Dialog Button"),
 							nil);
 
 		if(rc == NSAlertDefaultReturn)
@@ -411,9 +411,9 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 	}
 
 	runThreads = NO;
-	[self addLog:NSLocalizedString(@"Shutting down Simias...", nil)];
+	[self addLog:NSLocalizedString(@"Shutting down Simias...", @"Sync Log Message")];
 	[ [Simias getInstance] stop];
-	[self addLog:NSLocalizedString(@"Simias is shut down", nil)];
+	[self addLog:NSLocalizedString(@"Simias is shut down", @"Sync Log Message")];
 
 	SimiasEventDisconnect();
 }
@@ -849,15 +849,15 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 		{
 			case SYNC_ACTION_LOCAL:
 			{
-				NSString *syncMessage = NSLocalizedString(@"Checking for new iFolders...", nil);
+				NSString *syncMessage = NSLocalizedString(@"Checking for new iFolders...", @"iFolder Window Status Message");
 				[iFolderWindowController updateStatusTS:syncMessage];
 				[self addLogTS:syncMessage];
 				break;
 			}
 			case SYNC_ACTION_STOP:
 			{
-				NSString *syncMessage = NSLocalizedString(@"Done checking for new iFolders", nil);
-				[iFolderWindowController updateStatusTS:NSLocalizedString(@"Idle...", nil)];
+				NSString *syncMessage = NSLocalizedString(@"Done checking for new iFolders", @"Sync Log Message");
+				[iFolderWindowController updateStatusTS:NSLocalizedString(@"Idle...", @"iFolder Window Status Message")];
 				[self addLogTS:syncMessage];
 				break;
 			}
@@ -886,7 +886,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 			}
 
 			NSString *syncMessage = [NSString
-							stringWithFormat:NSLocalizedString(@"Preparing to synchronize: %@", nil), 
+							stringWithFormat:NSLocalizedString(@"Checking for changes: %@", @"iFolder Window Status Message"), 
 							[cse name]];
 			[iFolderWindowController updateStatusTS:syncMessage];
 			[self addLogTS:syncMessage];
@@ -909,7 +909,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 			}
 		
 			NSString *syncMessage = [NSString
-							stringWithFormat:NSLocalizedString(@"Synchronizing: %@", nil), 
+							stringWithFormat:NSLocalizedString(@"Synchronizing: %@", @"iFolder Window Status Message"), 
 							[cse name]];
 			[iFolderWindowController updateStatusTS:syncMessage];
 			[self addLogTS:syncMessage];
@@ -944,14 +944,14 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 				{
 					[ifolder setSyncState:SYNC_STATE_OK];
 					syncMessage = [NSString
-						stringWithFormat:NSLocalizedString(@"Done synchronizing: %@", nil), 
+						stringWithFormat:NSLocalizedString(@"Finished synchronization: %@", @"Sync Log Message"), 
 						[cse name]];
 				}
 				else
 				{
 					[ifolder setSyncState:SYNC_STATE_DISCONNECTED];
 					syncMessage = [NSString
-								stringWithFormat:NSLocalizedString(@"Sync failed to connect: %@", nil), 
+								stringWithFormat:NSLocalizedString(@"Failed synchronization: %@",  @"Sync Log Message"), 
 								[cse name]];
 				}
 			}
@@ -960,12 +960,12 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 				[ifolder setOutOfSyncCount:[ss SyncNodeCount]];
 				[ifolder setSyncState:SYNC_STATE_OUT_OF_SYNC];
 				syncMessage = [NSString
-								stringWithFormat:NSLocalizedString(@"Out of Sync: %@", nil), 
+								stringWithFormat:NSLocalizedString(@"Not synchronized: %@",  @"Sync Log Message"), 
 								[cse name]];
 			}
 			[ss release];
 
-			[iFolderWindowController updateStatusTS:NSLocalizedString(@"Idle...", nil)];
+			[iFolderWindowController updateStatusTS:NSLocalizedString(@"Idle...", @"iFolder Window Status Message")];
 			[self addLogTS:syncMessage];
 
 			// sending current value of -1 hides the control
@@ -1063,7 +1063,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 				}
 			}
 			
-			syncItemMessage = [NSString stringWithFormat:NSLocalizedString(@"%u of %u items - ", nil),
+			syncItemMessage = [NSString stringWithFormat:NSLocalizedString(@"%u of %u items - ", @"Prefix on an iFolder Window Status Message"),
 								itemSyncCount, totalSyncCount];
 
 			switch([fse direction])
@@ -1073,13 +1073,13 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 					if([fse objectType] == FILE_SYNC_FILE)
 					{
 						[self addLogTS:[NSString
-							stringWithFormat:NSLocalizedString(@"Found local change in file: %@", nil), 
+							stringWithFormat:NSLocalizedString(@"Found changes in file: %@", @"Sync Log Message"), 
 							[fse name]]];
 					}
 					else
 					{
 						[self addLogTS:[NSString
-							stringWithFormat:NSLocalizedString(@"Found local change in folder: %@", nil), 
+							stringWithFormat:NSLocalizedString(@"Found local change in folder: %@", @"Sync Log Message"), 
 							[fse name]]];
 					}	
 					break;
@@ -1088,33 +1088,33 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 				{
 					if([fse isDelete])
 					{
-						if([fse objectType] == FILE_SYNC_FILE)
-						{
-							syncMessage = [NSString
-								stringWithFormat:NSLocalizedString(@"Removing file from server: %@", nil), 
-								[fse name]];
-							[iFolderWindowController updateStatusTS:
-								[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
-							if(updateLog)
-								[self addLogTS:syncMessage];
+						syncMessage = [NSString
+							stringWithFormat:NSLocalizedString(@"Deleting on server: %@", @"iFolder Window Status Message"), 
+							[fse name]];
+						[iFolderWindowController updateStatusTS:
+							[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
+						if(updateLog)
+							[self addLogTS:syncMessage];
+/*
 						}
 						else
 						{
 							syncMessage = [NSString
-								stringWithFormat:NSLocalizedString(@"Removing folder from server: %@", nil), 
+								stringWithFormat:NSLocalizedString(@"Deleting on server: %@", nil), 
 								[fse name]];
 							[iFolderWindowController updateStatusTS:
 								[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
 							if(updateLog)
 								[self addLogTS:syncMessage];
 						}	
+*/
 					}
 					else
 					{
 						if([fse objectType]  == FILE_SYNC_FILE)
 						{
 							syncMessage = [NSString
-								stringWithFormat:NSLocalizedString(@"Uploading file: %@", nil), 
+								stringWithFormat:NSLocalizedString(@"Uploading file: %@", @"iFolder Window Status Message"), 
 								[fse name]];
 							[iFolderWindowController updateStatusTS:
 								[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
@@ -1124,7 +1124,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 						else
 						{
 							syncMessage = [NSString
-								stringWithFormat:NSLocalizedString(@"Creating folder on server: %@", nil), 
+								stringWithFormat:NSLocalizedString(@"Uploading folder: %@", @"iFolder Window Status Message"), 
 								[fse name]];
 							[iFolderWindowController updateStatusTS:
 								[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
@@ -1141,7 +1141,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 						if([fse objectType] == FILE_SYNC_FILE)
 						{
 							syncMessage = [NSString
-								stringWithFormat:NSLocalizedString(@"Deleting file: %@", nil), 
+								stringWithFormat:NSLocalizedString(@"Deleting file: %@", @"iFolder Window Status Message"), 
 								[fse name]];
 							[iFolderWindowController updateStatusTS:
 								[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
@@ -1151,7 +1151,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 						else
 						{
 							syncMessage = [NSString
-								stringWithFormat:NSLocalizedString(@"Removing folder: %@", nil), 
+								stringWithFormat:NSLocalizedString(@"Deleting folder: %@", @"iFolder Window Status Message"), 
 								[fse name]];
 							[iFolderWindowController updateStatusTS:
 								[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
@@ -1164,7 +1164,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 						if([fse objectType] == FILE_SYNC_FILE)
 						{
 							syncMessage = [NSString
-								stringWithFormat:NSLocalizedString(@"Downloading file: %@", nil), 
+								stringWithFormat:NSLocalizedString(@"Downloading file: %@", @"iFolder Window Status Message"), 
 								[fse name]];
 							[iFolderWindowController updateStatusTS:
 								[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
@@ -1174,7 +1174,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 						else
 						{
 							syncMessage = [NSString
-								stringWithFormat:NSLocalizedString(@"Creating folder: %@", nil), 
+								stringWithFormat:NSLocalizedString(@"Downloading folder: %@", @"iFolder Window Status Message"), 
 								[fse name]];
 							[iFolderWindowController updateStatusTS:
 								[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
@@ -1207,7 +1207,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 			if(itemSyncCount >= totalSyncCount)
 				itemSyncCount = totalSyncCount;
 
-			syncItemMessage = [NSString stringWithFormat:NSLocalizedString(@"%u of %u items - ", nil),
+			syncItemMessage = [NSString stringWithFormat:NSLocalizedString(@"%u of %u items - ", @"iFolder window status message prefix"),
 								itemSyncCount, totalSyncCount];
 
 			[iFolderWindowController updateProgress:100
@@ -1219,7 +1219,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 				([[fse status] compare:@"FileNameConflict"] == 0) )
 			{
 				syncMessage = [NSString
-					stringWithFormat:NSLocalizedString(@"Conflict occurred for: %@", nil), 
+					stringWithFormat:NSLocalizedString(@"Conflict occurred: %@", @"iFolder Window Status Message"), 
 					[fse name]];
 				[iFolderWindowController updateStatusTS:
 					[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
@@ -1229,7 +1229,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 			else if([[fse status] compare:@"Policy"] == 0)
 			{
 				syncMessage = [NSString
-					stringWithFormat:NSLocalizedString(@"A policy prevented a sync of: %@", nil), 
+					stringWithFormat:NSLocalizedString(@"Policy prevented synchronization: %@", @"iFolder Window Status Message"), 
 					[fse name]];
 				[iFolderWindowController updateStatusTS:
 					[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
@@ -1239,7 +1239,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 			else if([[fse status] compare:@"Access"] == 0)
 			{
 				syncMessage = [NSString
-					stringWithFormat:NSLocalizedString(@"Insuficient rights to sync: %@", nil), 
+					stringWithFormat:NSLocalizedString(@"Insufficient rights prevented synchronization: %@", @"iFolder Window Status Message"), 
 					[fse name]];
 				[iFolderWindowController updateStatusTS:
 					[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
@@ -1249,7 +1249,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 			else if([[fse status] compare:@"Locked"] == 0)
 			{
 				syncMessage = [NSString
-					stringWithFormat:NSLocalizedString(@"iFolder is locked and did not sync: %@", nil), 
+					stringWithFormat:NSLocalizedString(@"Locked iFolder prevented synchronization: %@", @"iFolder Window Status Message"), 
 					[fse name]];
 				[iFolderWindowController updateStatusTS:
 					[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
@@ -1259,17 +1259,38 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 			else if([[fse status] compare:@"PolicyQuota"] == 0)
 			{
 				syncMessage = [NSString
-					stringWithFormat:NSLocalizedString(@"iFolder is full and did not sync: %@", nil), 
+					stringWithFormat:NSLocalizedString(@"Full iFolder prevented synchronization: %@", @"iFolder Window Status Message"), 
 					[fse name]];
 				[iFolderWindowController updateStatusTS:
 					[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
 				[self addLogTS:syncMessage];
 			}
+			
+/*
+			// PolicyQuota
+			else if([[fse status] compare:@"PolicyQuota"] == 0)
+			{
+
+				if([fse direction] == FILE_SYNC_DOWNLOADING)
+				{
+					syncMessage = [NSString
+						stringWithFormat:NSLocalizedString(@"Insufficient disk space on this computer prevented synchronization: %@", @"iFolder Window Status Message"), 
+						[fse name]];
+				}
+				else
+				{
+					syncMessage = [NSString
+						stringWithFormat:NSLocalizedString(@"Insufficient disk space on the server prevented synchronization: %@", @"iFolder Window Status Message"), 
+						[fse name]];
+				}
+			}
+*/
+
 			// PolicySize
 			else if([[fse status] compare:@"PolicySize"] == 0)
 			{
 				syncMessage = [NSString
-					stringWithFormat:NSLocalizedString(@"A size restriction policy prevented a sync of: %@", nil), 
+					stringWithFormat:NSLocalizedString(@"Size restriction policy prevented synchronization: %@", @"iFolder Window Status Message"), 
 					[fse name]];
 				[iFolderWindowController updateStatusTS:
 					[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
@@ -1279,7 +1300,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 			else if([[fse status] compare:@"PolicyType"] == 0)
 			{
 				syncMessage = [NSString
-					stringWithFormat:NSLocalizedString(@"A file type restriction policy prevented a sync of: %@", nil), 
+					stringWithFormat:NSLocalizedString(@"File type restriction policy prevented synchronization: %@", @"iFolder Window Status Message"), 
 					[fse name]];
 				[iFolderWindowController updateStatusTS:
 					[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
@@ -1289,7 +1310,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 			else
 			{
 				syncMessage = [NSString
-					stringWithFormat:NSLocalizedString(@"iFolder failed to sync: %@", nil), 
+					stringWithFormat:NSLocalizedString(@"iFolder failed synchronization: %@", @"iFolder Window Status Message"), 
 					[fse name]];
 				[iFolderWindowController updateStatusTS:
 					[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
