@@ -150,13 +150,13 @@ namespace Novell.iFolder
 						switch (iFolder.State)
 						{
 							case "Available":
-								stateString = Util.GS("Available");
+								stateString = Util.GS("Not set up");
 								break;
 							case "WaitConnect":
-								stateString = Util.GS("Waiting to Connect");
+								stateString = Util.GS("Waiting to connect");
 								break;
 							case "WaitSync":
-								stateString = Util.GS("Waiting to Sync");
+								stateString = Util.GS("Waiting to synchronize");
 								break;
 							case "Local":
 								stateString = Util.GS("OK");
@@ -168,18 +168,18 @@ namespace Novell.iFolder
 						break;
 					case iFolderState.Normal:
 						if (objectsToSync > 0)
-							stateString = string.Format(Util.GS("{0} items out of sync"), objectsToSync);
+							stateString = string.Format(Util.GS("{0} items not synchronized"), objectsToSync);
 						else
 							stateString = Util.GS("OK");
 						break;
 					case iFolderState.Synchronizing:
 						if (objectsToSync > 0)
-							stateString = string.Format(Util.GS("{0} items to sync"), objectsToSync);
+							stateString = string.Format(Util.GS("{0} items to synchronize"), objectsToSync);
 						else
 							stateString = Util.GS("Synchronizing");
 						break;
 					case iFolderState.FailedSync:
-						stateString = Util.GS("Sync failed");
+						stateString = Util.GS("Incomplete synchronization");
 						break;
 					case iFolderState.SynchronizingLocal:
 						stateString = Util.GS("Checking for changes");
