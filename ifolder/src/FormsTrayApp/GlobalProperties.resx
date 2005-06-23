@@ -1217,7 +1217,7 @@
     <value>Set Up</value>
   </data>
   <data name="toolBarSetup.ToolTipText">
-    <value>Set up this iFolder</value>
+    <value>Set up the selected iFolder</value>
   </data>
   <data name="toolBarSetup.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1238,7 +1238,7 @@
     <value>Share</value>
   </data>
   <data name="toolBarShare.ToolTipText">
-    <value>Share this iFolder</value>
+    <value>Share the selected iFolder</value>
   </data>
   <data name="toolBarShare.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1259,7 +1259,7 @@
     <value>Resolve</value>
   </data>
   <data name="toolBarResolve.ToolTipText">
-    <value>Resolve file conflicts in this iFolder</value>
+    <value>Resolve conflicts in the selected iFolder</value>
   </data>
   <data name="toolBarResolve.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1280,7 +1280,7 @@
     <value>Synchronize</value>
   </data>
   <data name="toolBarSync.ToolTipText">
-    <value>Synchronize this iFolder</value>
+    <value>Synchronize the selected iFolder</value>
   </data>
   <data name="toolBarSync.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
