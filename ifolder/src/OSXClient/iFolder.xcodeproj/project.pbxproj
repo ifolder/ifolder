@@ -177,10 +177,8 @@
 /* End PBXBuildStyle section */
 
 /* Begin PBXFileReference section */
-		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		29B97319FDCFA39411CA2CEA /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32CA4F630368D1EE00C91783 /* iFolder_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iFolder_Prefix.pch; sourceTree = "<group>"; };
@@ -230,11 +228,8 @@
 		3E67778607AEACEF0027130D /* libsimias.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libsimias.0.dylib; sourceTree = "<group>"; };
 		3E6D783207B098E2001DA76A /* LeaveDomainSheetController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = LeaveDomainSheetController.m; path = src/LeaveDomainSheetController.m; sourceTree = "<group>"; };
 		3E6D783307B098E2001DA76A /* LeaveDomainSheetController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LeaveDomainSheetController.h; path = src/LeaveDomainSheetController.h; sourceTree = "<group>"; };
-		3E6F7ACA07B3E4DB00F46F36 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/AboutBox.nib; sourceTree = "<group>"; };
 		3E6F7ACD07B3E55A00F46F36 /* AboutBoxController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AboutBoxController.h; path = src/AboutBoxController.h; sourceTree = "<group>"; };
 		3E6F7ACE07B3E55A00F46F36 /* AboutBoxController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AboutBoxController.m; path = src/AboutBoxController.m; sourceTree = "<group>"; };
-		3E6F7B0E07B3EC5000F46F36 /* English */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = English; path = English.lproj/Credits.rtf; sourceTree = "<group>"; };
-		3E70A408078DFB8A0075681D /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/Preferences.nib; sourceTree = "<group>"; };
 		3E70A40A078DFCD80075681D /* iFolderPrefsController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = iFolderPrefsController.h; path = src/iFolderPrefsController.h; sourceTree = "<group>"; };
 		3E70A40B078DFCD80075681D /* iFolderPrefsController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = iFolderPrefsController.m; path = src/iFolderPrefsController.m; sourceTree = "<group>"; };
 		3E81105D076FF18700E96819 /* LoginWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LoginWindowController.h; path = src/LoginWindowController.h; sourceTree = "<group>"; };
@@ -248,20 +243,29 @@
 		3E8853D207C6F80A00E8B6CD /* KABubbleWindowView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = KABubbleWindowView.h; sourceTree = "<group>"; };
 		3E8853D307C6F80A00E8B6CD /* KABubbleWindowView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = KABubbleWindowView.m; sourceTree = "<group>"; };
 		3E8A565307C1039E00FDAD31 /* mono-powered.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "mono-powered.png"; path = "../images/mono-powered.png"; sourceTree = SOURCE_ROOT; };
+		3E946F7B086A447A00B73E10 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3E946F8B086A448D00B73E10 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		3E946F8E086A449300B73E10 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3E946F91086A449A00B73E10 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = en.lproj/MainMenu.nib; sourceTree = "<group>"; };
+		3E946F94086A44A000B73E10 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = en.lproj/LoginWindow.nib; sourceTree = "<group>"; };
+		3E946F97086A44A600B73E10 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = en.lproj/Preferences.nib; sourceTree = "<group>"; };
+		3E946F9A086A44AB00B73E10 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = en.lproj/Properties.nib; sourceTree = "<group>"; };
+		3E946F9D086A44B100B73E10 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = en.lproj/AboutBox.nib; sourceTree = "<group>"; };
+		3E946FA0086A44B700B73E10 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = en.lproj/LogWindow.nib; sourceTree = "<group>"; };
+		3E946FA3086A44BD00B73E10 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = en.lproj/iFolderWindow.nib; sourceTree = "<group>"; };
+		3E946FA6086A44C300B73E10 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = en.lproj/ConflictResolver.nib; sourceTree = "<group>"; };
+		3E946FA9086A44C900B73E10 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = en.lproj/AcceptCert.nib; sourceTree = "<group>"; };
 		3E9B1B01077927E20072994B /* SetupiFolderSheetController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = SetupiFolderSheetController.m; path = src/SetupiFolderSheetController.m; sourceTree = "<group>"; };
 		3E9B1B02077927E20072994B /* SetupiFolderSheetController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = SetupiFolderSheetController.h; path = src/SetupiFolderSheetController.h; sourceTree = "<group>"; };
 		3EA94F5F07B823CA0088FD0F /* config.h.in */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = config.h.in; path = src/config.h.in; sourceTree = "<group>"; };
-		3EA98AA007C7A4520078451D /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/ConflictResolver.nib; sourceTree = "<group>"; };
 		3EAE2EB607FB7F58007BE2E0 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
 		3EAEF5050769104900B98AF6 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		3EB62D0D07B9C907000C8112 /* iFolderData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iFolderData.h; path = src/iFolderData.h; sourceTree = "<group>"; };
 		3EB62D0E07B9C907000C8112 /* iFolderData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = iFolderData.m; path = src/iFolderData.m; sourceTree = "<group>"; };
 		3EB7842507C2D31400E2B733 /* libsimias-event.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libsimias-event.dylib"; sourceTree = "<group>"; };
-		3EB8C50A079392230082AA86 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/Properties.nib; sourceTree = "<group>"; };
 		3EB8C510079393B60082AA86 /* PropertiesWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = PropertiesWindowController.m; path = src/PropertiesWindowController.m; sourceTree = "<group>"; };
 		3EB8C511079393B60082AA86 /* PropertiesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = PropertiesWindowController.h; path = src/PropertiesWindowController.h; sourceTree = "<group>"; };
 		3EBE7A2407FC5A0C00DC9A8E /* SecurityInterface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SecurityInterface.framework; path = /System/Library/Frameworks/SecurityInterface.framework; sourceTree = "<absolute>"; };
-		3EBE7A8B07FC74CA00DC9A8E /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/AcceptCert.nib; sourceTree = "<group>"; };
 		3EBE7AA307FC76F200DC9A8E /* AcceptCertSheetController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AcceptCertSheetController.m; path = src/AcceptCertSheetController.m; sourceTree = "<group>"; };
 		3EBE7AA407FC76F200DC9A8E /* AcceptCertSheetController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AcceptCertSheetController.h; path = src/AcceptCertSheetController.h; sourceTree = "<group>"; };
 		3EDA494207C681B7007CD1E0 /* MCTableView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = MCTableView.h; path = src/MCTableView.h; sourceTree = "<group>"; };
@@ -284,8 +288,6 @@
 		3EE449E307A7DF0000B93B2F /* serverifolder24.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = serverifolder24.png; path = ../images/serverifolder24.png; sourceTree = SOURCE_ROOT; };
 		3EE886E907B92E8B00484B9F /* iFolderApplication.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = iFolderApplication.m; path = src/iFolderApplication.m; sourceTree = "<group>"; };
 		3EE886EA07B92E8B00484B9F /* iFolderApplication.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = iFolderApplication.h; path = src/iFolderApplication.h; sourceTree = "<group>"; };
-		3EE8876A07B9503200484B9F /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/LogWindow.nib; sourceTree = "<group>"; };
-		3EE8881507B9603E00484B9F /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/iFolderWindow.nib; sourceTree = "<group>"; };
 		3EE8881707B9620F00484B9F /* iFolderWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = iFolderWindowController.h; path = src/iFolderWindowController.h; sourceTree = "<group>"; };
 		3EE8881807B9620F00484B9F /* iFolderWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = iFolderWindowController.m; path = src/iFolderWindowController.m; sourceTree = "<group>"; };
 		3EEA9A3407B1D3580015FCF4 /* ifolderuser.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ifolderuser.png; path = ../images/ifolderuser.png; sourceTree = SOURCE_ROOT; };
@@ -293,8 +295,6 @@
 		3EEA9A4A07B1D9C30015FCF4 /* PropSharingController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = PropSharingController.h; path = src/PropSharingController.h; sourceTree = "<group>"; };
 		3EEA9A6807B1DC4F0015FCF4 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = User.h; path = src/User.h; sourceTree = "<group>"; };
 		3EEA9A6907B1DC4F0015FCF4 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = User.m; path = src/User.m; sourceTree = "<group>"; };
-		3EF2212E07681AA400EE2EF6 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/LoginWindow.nib; sourceTree = "<group>"; };
-		3EF97A7C07DF77E100BA8880 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* iFolder 3.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iFolder 3.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -622,6 +622,7 @@
 				French,
 				German,
 				"",
+				en,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* iFolder 3 */;
 			projectDirPath = "";
@@ -765,7 +766,7 @@
 		089C165CFE840E0CC02AAC07 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				089C165DFE840E0CC02AAC07 /* English */,
+				3E946F8E086A449300B73E10 /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -773,7 +774,7 @@
 		29B97318FDCFA39411CA2CEA /* MainMenu.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				29B97319FDCFA39411CA2CEA /* English */,
+				3E946F91086A449A00B73E10 /* en */,
 			);
 			name = MainMenu.nib;
 			sourceTree = "<group>";
@@ -781,7 +782,7 @@
 		3E6F7AC907B3E4DB00F46F36 /* AboutBox.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				3E6F7ACA07B3E4DB00F46F36 /* English */,
+				3E946F9D086A44B100B73E10 /* en */,
 			);
 			name = AboutBox.nib;
 			sourceTree = "<group>";
@@ -789,7 +790,7 @@
 		3E70A407078DFB8A0075681D /* Preferences.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				3E70A408078DFB8A0075681D /* English */,
+				3E946F97086A44A600B73E10 /* en */,
 			);
 			name = Preferences.nib;
 			sourceTree = "<group>";
@@ -797,7 +798,7 @@
 		3E9D3F2307DFA79C00AA93D6 /* Credits.rtf */ = {
 			isa = PBXVariantGroup;
 			children = (
-				3E6F7B0E07B3EC5000F46F36 /* English */,
+				3E946F8B086A448D00B73E10 /* en */,
 			);
 			name = Credits.rtf;
 			sourceTree = "<group>";
@@ -805,7 +806,7 @@
 		3EA98A9F07C7A4520078451D /* ConflictResolver.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				3EA98AA007C7A4520078451D /* English */,
+				3E946FA6086A44C300B73E10 /* en */,
 			);
 			name = ConflictResolver.nib;
 			sourceTree = "<group>";
@@ -813,7 +814,7 @@
 		3EB8C509079392230082AA86 /* Properties.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				3EB8C50A079392230082AA86 /* English */,
+				3E946F9A086A44AB00B73E10 /* en */,
 			);
 			name = Properties.nib;
 			sourceTree = "<group>";
@@ -821,7 +822,7 @@
 		3EBE7A8A07FC74CA00DC9A8E /* AcceptCert.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				3EBE7A8B07FC74CA00DC9A8E /* English */,
+				3E946FA9086A44C900B73E10 /* en */,
 			);
 			name = AcceptCert.nib;
 			sourceTree = "<group>";
@@ -829,7 +830,7 @@
 		3EE8876907B9503200484B9F /* LogWindow.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				3EE8876A07B9503200484B9F /* English */,
+				3E946FA0086A44B700B73E10 /* en */,
 			);
 			name = LogWindow.nib;
 			sourceTree = "<group>";
@@ -837,7 +838,7 @@
 		3EE8881407B9603E00484B9F /* iFolderWindow.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				3EE8881507B9603E00484B9F /* English */,
+				3E946FA3086A44BD00B73E10 /* en */,
 			);
 			name = iFolderWindow.nib;
 			sourceTree = "<group>";
@@ -845,7 +846,7 @@
 		3EF2212D07681AA400EE2EF6 /* LoginWindow.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				3EF2212E07681AA400EE2EF6 /* English */,
+				3E946F94086A44A000B73E10 /* en */,
 			);
 			name = LoginWindow.nib;
 			sourceTree = "<group>";
@@ -853,7 +854,7 @@
 		3EF97A7B07DF77E100BA8880 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				3EF97A7C07DF77E100BA8880 /* English */,
+				3E946F7B086A447A00B73E10 /* en */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
