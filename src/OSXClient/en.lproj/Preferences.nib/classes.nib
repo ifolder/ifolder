@@ -45,6 +45,9 @@
                 leaveAll = NSButton; 
                 leaveDomainSheet = NSWindow; 
                 prefsWindow = NSWindow; 
+                server = NSTextField; 
+                systemName = NSTextField; 
+                userName = NSTextField; 
             }; 
             SUPERCLASS = NSWindowController; 
         }, 

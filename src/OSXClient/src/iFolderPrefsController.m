@@ -71,7 +71,7 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 	
 	[[self window] setContentSize:[generalView frame].size];
 	[[self window] setContentView: generalView];
-	[[self window] setTitle:NSLocalizedString(@"iFolder Preferences: General", nil)];
+	[[self window] setTitle:NSLocalizedString(@"iFolder Preferences: General", @"General Prefs Window Title")];
 	
 	[self setupToolbar];
 
@@ -221,7 +221,7 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 		[[self window] setContentView: blankView];
 		[self updateSize:[generalView frame].size];
 		[[self window] setContentView: generalView];
-		[[self window] setTitle:NSLocalizedString(@"iFolder Preferences: General", nil)];	
+		[[self window] setTitle:NSLocalizedString(@"iFolder Preferences: General", @"General Prefs Window Title")];	
 	}
 }
 
@@ -234,7 +234,7 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 		[[self window] setContentView: blankView];
 		[self updateSize:[accountsView frame].size];
 		[[self window] setContentView: accountsView];
-		[[self window] setTitle:NSLocalizedString(@"iFolder Preferences: Accounts", nil)];	
+		[[self window] setTitle:NSLocalizedString(@"iFolder Preferences: Accounts", @"Accounts Prefs Window Title")];	
 	}
 }
 
@@ -246,7 +246,7 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 		[[self window] setContentView: blankView];
 		[self updateSize:[syncView frame].size];
 		[[self window] setContentView: syncView];
-		[[self window] setTitle:NSLocalizedString(@"iFolder Preferences: Synchronization", nil)];	
+		[[self window] setTitle:NSLocalizedString(@"iFolder Preferences: Synchronization", @"Sync Prefs Window Title")];	
 	}
 }
 
@@ -258,7 +258,7 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 		[[self window] setContentView: blankView];
 		[self updateSize:[notifyView frame].size];
 		[[self window] setContentView: notifyView];
-		[[self window] setTitle:NSLocalizedString(@"iFolder Preferences: Notification", nil)];	
+		[[self window] setTitle:NSLocalizedString(@"iFolder Preferences: Notification", @"Notify Prefs Window Title")];	
 	}
 }
 
@@ -270,9 +270,9 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 	toolbarItemArray = [[NSMutableArray alloc] init];
 
 	NSToolbarItem *item=[[NSToolbarItem alloc] initWithItemIdentifier:@"General"];
-	[item setPaletteLabel:NSLocalizedString(@"General", nil)]; // name for the "Customize Toolbar" sheet
-	[item setLabel:NSLocalizedString(@"General", nil)]; // name for the item in the toolbar
-	[item setToolTip:NSLocalizedString(@"General Settings", nil)]; // tooltip
+	[item setPaletteLabel:NSLocalizedString(@"General", @"General Prefs Toolbar Pallette Button")]; // name for the "Customize Toolbar" sheet
+	[item setLabel:NSLocalizedString(@"General", @"General Prefs Toolbar Selector Button")]; // name for the item in the toolbar
+	[item setToolTip:NSLocalizedString(@"General Settings", @"General Prefs Toolbar ToolTip")]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(generalPreferences:)];
 	[item setImage:[NSImage imageNamed:@"prefs-general32"]];
@@ -282,9 +282,9 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 
 	
 	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"Accounts"];
-	[item setPaletteLabel:NSLocalizedString(@"Accounts", nil)]; // name for the "Customize Toolbar" sheet
-	[item setLabel:NSLocalizedString(@"Accounts", nil)]; // name for the item in the toolbar
-	[item setToolTip:NSLocalizedString(@"Accounts", nil)]; // tooltip
+	[item setPaletteLabel:NSLocalizedString(@"Accounts", @"Accounts Prefs Toolbar Pallette Button")]; // name for the "Customize Toolbar" sheet
+	[item setLabel:NSLocalizedString(@"Accounts", @"Accounts Prefs Toolbar Selector Button")]; // name for the item in the toolbar
+	[item setToolTip:NSLocalizedString(@"Accounts", @"Accounts Prefs Toolbar ToolTip")]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(accountPreferences:)];
 	[item setImage:[NSImage imageNamed:@"prefs-accounts32"]];
@@ -294,9 +294,9 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 
 
 	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"Synchronization"];
-	[item setPaletteLabel:NSLocalizedString(@"Synchronization", nil)]; // name for the "Customize Toolbar" sheet
-	[item setLabel:NSLocalizedString(@"Synchronization", nil)]; // name for the item in the toolbar
-	[item setToolTip:NSLocalizedString(@"Synchronization", nil)]; // tooltip
+	[item setPaletteLabel:NSLocalizedString(@"Synchronization", @"Synchronization Prefs Toolbar Pallette Button")]; // name for the "Customize Toolbar" sheet
+	[item setLabel:NSLocalizedString(@"Synchronization", @"Synchronization Prefs Toolbar Selector Button")]; // name for the item in the toolbar
+	[item setToolTip:NSLocalizedString(@"Synchronization", @"Synchronization Prefs Toolbar ToolTip")]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(syncPreferences:)];
 	[item setImage:[NSImage imageNamed:@"prefs-sync32"]];
@@ -306,9 +306,9 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 	
 	
 	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"Notification"];
-	[item setPaletteLabel:NSLocalizedString(@"Notification", nil)]; // name for the "Customize Toolbar" sheet
-	[item setLabel:NSLocalizedString(@"Notification", nil)]; // name for the item in the toolbar
-	[item setToolTip:NSLocalizedString(@"Notification", nil)]; // tooltip
+	[item setPaletteLabel:NSLocalizedString(@"Notification", @"Notification Prefs Toolbar Pallette Button")]; // name for the "Customize Toolbar" sheet
+	[item setLabel:NSLocalizedString(@"Notification", @"Notification Prefs Toolbar Selector Button")]; // name for the item in the toolbar
+	[item setToolTip:NSLocalizedString(@"Notification", @"Notification Prefs Toolbar ToolTip")]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(notifyPreferences:)];
 	[item setImage:[NSImage imageNamed:@"prefs-notification32"]];
