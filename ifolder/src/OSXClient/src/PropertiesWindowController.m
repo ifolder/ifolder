@@ -50,8 +50,8 @@ static PropertiesWindowController *sharedInstance = nil;
 {
 	[tabView selectTabViewItemAtIndex:initalTab];
 
-	userMenuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@"Users" action:NULL keyEquivalent:@""];
-	[userMenu setTitle:NSLocalizedString(@"Users", nil)];
+	userMenuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@"Access" action:NULL keyEquivalent:@""];
+	[userMenu setTitle:NSLocalizedString(@"Access", nil)];
     [userMenuItem setSubmenu:userMenu];
     [[NSApp mainMenu] addItem:userMenuItem];	
 }
