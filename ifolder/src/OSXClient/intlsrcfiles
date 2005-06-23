@@ -1,5 +1,6 @@
 ./notify/iFolderNotificationController.m
 ./src/AboutBoxController.m
+./src/AcceptCertSheetController.m
 ./src/AccountsController.m
 ./src/ConflictWindowController.m
 ./src/CreateiFolderSheetController.m

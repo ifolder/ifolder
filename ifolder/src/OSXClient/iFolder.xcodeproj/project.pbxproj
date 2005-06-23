@@ -63,6 +63,7 @@
 		3E70A409078DFB8A0075681D /* Preferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3E70A407078DFB8A0075681D /* Preferences.nib */; };
 		3E70A40C078DFCD80075681D /* iFolderPrefsController.h in Resources */ = {isa = PBXBuildFile; fileRef = 3E70A40A078DFCD80075681D /* iFolderPrefsController.h */; };
 		3E70A40D078DFCD80075681D /* iFolderPrefsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E70A40B078DFCD80075681D /* iFolderPrefsController.m */; };
+		3E7C4E87086A66AE00D41026 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E7C4E86086A66AE00D41026 /* SystemConfiguration.framework */; };
 		3E811061076FF18700E96819 /* LoginWindowController.h in Resources */ = {isa = PBXBuildFile; fileRef = 3E81105D076FF18700E96819 /* LoginWindowController.h */; };
 		3E811062076FF18700E96819 /* LoginWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E81105E076FF18700E96819 /* LoginWindowController.m */; };
 		3E8853D407C6F80A00E8B6CD /* iFolderNotificationController.h in Resources */ = {isa = PBXBuildFile; fileRef = 3E8853CA07C6F80A00E8B6CD /* iFolderNotificationController.h */; };
@@ -232,6 +233,7 @@
 		3E6F7ACE07B3E55A00F46F36 /* AboutBoxController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AboutBoxController.m; path = src/AboutBoxController.m; sourceTree = "<group>"; };
 		3E70A40A078DFCD80075681D /* iFolderPrefsController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = iFolderPrefsController.h; path = src/iFolderPrefsController.h; sourceTree = "<group>"; };
 		3E70A40B078DFCD80075681D /* iFolderPrefsController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = iFolderPrefsController.m; path = src/iFolderPrefsController.m; sourceTree = "<group>"; };
+		3E7C4E86086A66AE00D41026 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
 		3E81105D076FF18700E96819 /* LoginWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LoginWindowController.h; path = src/LoginWindowController.h; sourceTree = "<group>"; };
 		3E81105E076FF18700E96819 /* LoginWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = LoginWindowController.m; path = src/LoginWindowController.m; sourceTree = "<group>"; };
 		3E8853CA07C6F80A00E8B6CD /* iFolderNotificationController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = iFolderNotificationController.h; sourceTree = "<group>"; };
@@ -313,13 +315,14 @@
 				3EB7842607C2D31400E2B733 /* libsimias-event.dylib in Frameworks */,
 				3EAE2EB707FB7F58007BE2E0 /* Security.framework in Frameworks */,
 				3EBE7A2507FC5A0C00DC9A8E /* SecurityInterface.framework in Frameworks */,
+				3E7C4E87086A66AE00D41026 /* SystemConfiguration.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		080E96DDFE201D6D7F000001 /* OtherWIndows */ = {
+		080E96DDFE201D6D7F000001 /* OtherWindows */ = {
 			isa = PBXGroup;
 			children = (
 				3EBE7AA407FC76F200DC9A8E /* AcceptCertSheetController.h */,
@@ -333,7 +336,7 @@
 				3E0E6CFF07C7E7290057D505 /* ConflictWindowController.h */,
 				3E0E6CFE07C7E7290057D505 /* ConflictWindowController.m */,
 			);
-			name = OtherWIndows;
+			name = OtherWindows;
 			sourceTree = "<group>";
 		};
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
@@ -367,7 +370,7 @@
 				3E8853C907C6F80A00E8B6CD /* notify */,
 				3E19994507BAE41E00AAC29A /* Events */,
 				3E66704F07B7D3A90047E683 /* Application */,
-				080E96DDFE201D6D7F000001 /* OtherWIndows */,
+				080E96DDFE201D6D7F000001 /* OtherWindows */,
 				3EE887F507B95C1400484B9F /* Properties */,
 				3EE887F407B95BF000484B9F /* iFolderWindow */,
 				3EE887F307B95BD700484B9F /* Preferences */,
@@ -431,6 +434,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3E7C4E86086A66AE00D41026 /* SystemConfiguration.framework */,
 				3EBE7A2407FC5A0C00DC9A8E /* SecurityInterface.framework */,
 				3EAE2EB607FB7F58007BE2E0 /* Security.framework */,
 				3EB7842507C2D31400E2B733 /* libsimias-event.dylib */,

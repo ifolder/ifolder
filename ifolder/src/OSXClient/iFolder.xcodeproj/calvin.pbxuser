@@ -161,7 +161,7 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 141183321;
+			PBXPerProjectTemplateStateSaveDate = 141190174;
 			PBXPrepackagedSmartGroups_v2 = (
 				{
 					PBXTransientLocationAtTop = bottom;
@@ -338,7 +338,7 @@
 					};
 				},
 			);
-			PBXWorkspaceStateSaveDate = 141183321;
+			PBXWorkspaceStateSaveDate = 141190174;
 			com.apple.ide.smrt.PBXUserSmartGroupsKey.Rev10 = <040b747970656473747265616d8103e88401408484840e4e534d757461626c654172726179008484074e534172726179008484084e534f626a65637400858401690086>;
 		};
 		perUserProjectItems = {
@@ -427,7 +427,7 @@
 		fRef = 3EBE7AA407FC76F200DC9A8E /* AcceptCertSheetController.h */;
 		name = "AcceptCertSheetController.h: 14";
 		rLen = 0;
-		rLoc = 269;
+		rLoc = 365;
 		rType = 0;
 		vrLen = 412;
 		vrLoc = 0;
@@ -677,17 +677,17 @@
 	};
 	3E3BC75307AB5B7B00D2AE46 /* AccountsController.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1436, 12628}}";
-			sepNavSelRange = "{16341, 0}";
-			sepNavVisRect = "{{142, 5585}, {689, 432}}";
-			sepNavWindowFrame = "{{15, 439}, {750, 558}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1436, 12684}}";
+			sepNavSelRange = "{13400, 0}";
+			sepNavVisRect = "{{154, 5419}, {661, 293}}";
+			sepNavWindowFrame = "{{468, 267}, {866, 761}}";
 		};
 	};
 	3E3BC75407AB5B7B00D2AE46 /* AccountsController.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {824, 1427}}";
+			sepNavIntBoundsRect = "{{0, 0}, {824, 1428}}";
 			sepNavSelRange = "{2465, 0}";
-			sepNavVisRect = "{{0, 444}, {674, 756}}";
+			sepNavVisRect = "{{0, 580}, {705, 429}}";
 			sepNavWindowFrame = "{{61, 573}, {750, 558}}";
 		};
 	};
@@ -967,7 +967,7 @@
 		fRef = 3E3BC75307AB5B7B00D2AE46 /* AccountsController.m */;
 		name = "AccountsController.m: 306";
 		rLen = 0;
-		rLoc = 10180;
+		rLoc = 10210;
 		rType = 0;
 		vrLen = 1147;
 		vrLoc = 9788;
@@ -1017,9 +1017,9 @@
 		fRef = 3EBE7AA307FC76F200DC9A8E /* AcceptCertSheetController.m */;
 		name = "AcceptCertSheetController.m: 33";
 		rLen = 0;
-		rLoc = 658;
+		rLoc = 1387;
 		rType = 0;
-		vrLen = 1109;
+		vrLen = 891;
 		vrLoc = 0;
 	};
 	3E7A4B3808427FDA00012B85 /* PBXTextBookmark */ = {
@@ -1054,18 +1054,18 @@
 	};
 	3E81105D076FF18700E96819 /* LoginWindowController.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {684, 747}}";
-			sepNavSelRange = "{1200, 11}";
-			sepNavVisRect = "{{0, 0}, {684, 747}}";
+			sepNavIntBoundsRect = "{{0, 0}, {705, 644}}";
+			sepNavSelRange = "{1213, 40}";
+			sepNavVisRect = "{{0, 214}, {705, 429}}";
 			sepNavWindowFrame = "{{199, 271}, {750, 558}}";
 		};
 	};
 	3E81105E076FF18700E96819 /* LoginWindowController.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1436, 3191}}";
-			sepNavSelRange = "{1573, 0}";
-			sepNavVisRect = "{{0, 2065}, {674, 756}}";
-			sepNavWindowFrame = "{{15, 439}, {750, 558}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1436, 3836}}";
+			sepNavSelRange = "{3988, 0}";
+			sepNavVisRect = "{{0, 1919}, {661, 293}}";
+			sepNavWindowFrame = "{{453, 402}, {773, 776}}";
 		};
 	};
 	3E8853CA07C6F80A00E8B6CD /* iFolderNotificationController.h */ = {
@@ -1307,18 +1307,18 @@
 	};
 	3EBE7AA307FC76F200DC9A8E /* AcceptCertSheetController.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {511, 619}}";
-			sepNavSelRange = "{39, 0}";
-			sepNavVisRect = "{{0, 0}, {511, 619}}";
-			sepNavWindowFrame = "{{61, 397}, {750, 558}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1412, 686}}";
+			sepNavSelRange = "{921, 0}";
+			sepNavVisRect = "{{0, 159}, {705, 429}}";
+			sepNavWindowFrame = "{{536, 59}, {750, 558}}";
 		};
 	};
 	3EBE7AA407FC76F200DC9A8E /* AcceptCertSheetController.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {511, 619}}";
-			sepNavSelRange = "{269, 0}";
-			sepNavVisRect = "{{0, 0}, {511, 619}}";
-			sepNavWindowFrame = "{{153, 313}, {750, 558}}";
+			sepNavIntBoundsRect = "{{0, 0}, {705, 429}}";
+			sepNavSelRange = "{357, 4}";
+			sepNavVisRect = "{{0, 0}, {705, 429}}";
+			sepNavWindowFrame = "{{539, 620}, {750, 558}}";
 		};
 	};
 	3ED05E6B0847BC1E0063DA7A /* PBXTextBookmark */ = {
@@ -1367,7 +1367,7 @@
 		fRef = 3E3BC75307AB5B7B00D2AE46 /* AccountsController.m */;
 		name = "AccountsController.m: 460";
 		rLen = 0;
-		rLoc = 16341;
+		rLoc = 16398;
 		rType = 0;
 		vrLen = 1362;
 		vrLoc = 13420;
