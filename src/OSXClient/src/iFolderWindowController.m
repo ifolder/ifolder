@@ -595,9 +595,9 @@ static iFolderWindowController *sharedInstance = nil;
 	[item release];
 
 	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"SetupiFolder"];
-	[item setPaletteLabel:NSLocalizedString(@"Setup iFolder", nil)]; // name for the "Customize Toolbar" sheet
-	[item setLabel:NSLocalizedString(@"Setup", nil)]; // name for the item in the toolbar
-	[item setToolTip:NSLocalizedString(@"Setup a shared iFolder", nil)]; // tooltip
+	[item setPaletteLabel:NSLocalizedString(@"Set Up iFolder", nil)]; // name for the "Customize Toolbar" sheet
+	[item setLabel:NSLocalizedString(@"Set Up", nil)]; // name for the item in the toolbar
+	[item setToolTip:NSLocalizedString(@"Set up a shared iFolder", nil)]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(setupiFolder:)];
 	[item setImage:[NSImage imageNamed:@"setup32"]];
@@ -610,18 +610,7 @@ static iFolderWindowController *sharedInstance = nil;
 	[toolbarItemKeys addObject:NSToolbarSpaceItemIdentifier];
 	[item release];
 
-	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"SynciFolder"];
-	[item setPaletteLabel:NSLocalizedString(@"Sync iFolder", nil)]; // name for the "Customize Toolbar" sheet
-	[item setLabel:NSLocalizedString(@"Sync", nil)]; // name for the item in the toolbar
-	[item setToolTip:NSLocalizedString(@"Sync selected iFolder now", nil)]; // tooltip
-    [item setTarget:self]; // what should happen when it's clicked
-    [item setAction:@selector(synciFolder:)];
-	[item setImage:[NSImage imageNamed:@"sync32"]];
-    [toolbarItems setObject:item forKey:@"SynciFolder"]; // add to toolbar list
-	[toolbarItemKeys addObject:@"SynciFolder"];
-	[item release];
 	
-
 	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"ShareiFolder"];
 	[item setPaletteLabel:NSLocalizedString(@"Share an iFolder", nil)]; // name for the "Customize Toolbar" sheet
 	[item setLabel:NSLocalizedString(@"Share", nil)]; // name for the item in the toolbar
@@ -644,6 +633,16 @@ static iFolderWindowController *sharedInstance = nil;
 	[toolbarItemKeys addObject:@"ResolveConflicts"];
 	[item release];
 
+	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"SynciFolder"];
+	[item setPaletteLabel:NSLocalizedString(@"Synchronize iFolder", nil)]; // name for the "Customize Toolbar" sheet
+	[item setLabel:NSLocalizedString(@"Synchronize", nil)]; // name for the item in the toolbar
+	[item setToolTip:NSLocalizedString(@"Synchronize the selected iFolder", nil)]; // tooltip
+    [item setTarget:self]; // what should happen when it's clicked
+    [item setAction:@selector(synciFolder:)];
+	[item setImage:[NSImage imageNamed:@"sync32"]];
+    [toolbarItems setObject:item forKey:@"SynciFolder"]; // add to toolbar list
+	[toolbarItemKeys addObject:@"SynciFolder"];
+	[item release];
 
 	item=[[NSToolbarItem alloc] initWithItemIdentifier:NSToolbarFlexibleSpaceItemIdentifier];
 	[toolbarItems setObject:item forKey:NSToolbarFlexibleSpaceItemIdentifier];

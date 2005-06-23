@@ -103,9 +103,9 @@ static iFolderNotificationController *sharedInstance = nil;
 {
 	if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_NOTIFYIFOLDERS])
 	{
-		[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"New iFolder \"%@\"", nil), [ifolder Name]]
+		[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"New iFolder \"%@\"", @"Title in notification window"), [ifolder Name]]
 										forKey:@"title"];
-		[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"%@ has invited you to participate in this shared iFolder", nil), [ifolder OwnerName]]
+		[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"%@ has invited you to participate in this shared iFolder", @"Message in notification window"), [ifolder OwnerName]]
 										forKey:@"description"];
 		[self performNotification:notifyContext];
 	}
@@ -116,8 +116,8 @@ static iFolderNotificationController *sharedInstance = nil;
 {
 	if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_NOTIFYUSER])
 	{
-		[notifyContext setObject:NSLocalizedString(@"New iFolder Members", nil) forKey:@"title"];
-		[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"New members have been added to the iFolder \"%@\"", nil), [ifolder Name]]
+		[notifyContext setObject:NSLocalizedString(@"New iFolder Users", @"Title for notification window") forKey:@"title"];
+		[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"New users have joined the iFolder \"%@\"", @"Message in notification window"), [ifolder Name]]
 										forKey:@"description"];
 
 		[self performNotification:notifyContext];
@@ -128,8 +128,8 @@ static iFolderNotificationController *sharedInstance = nil;
 {
 	if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_NOTIFYCOLL])
 	{
-		[notifyContext setObject:NSLocalizedString(@"Conflicts detected!", nil) forKey:@"title"];
-		[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"The iFolder \"%@\" has conflicts", nil), [ifolder Name]]
+		[notifyContext setObject:NSLocalizedString(@"Conflicts detected!", @"Title for notification window") forKey:@"title"];
+		[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"The iFolder \"%@\" has conflicts", @"message in notification widnow"), [ifolder Name]]
 							forKey:@"description"];
 
 		[self performNotification:notifyContext];
