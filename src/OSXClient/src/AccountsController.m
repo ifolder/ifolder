@@ -490,7 +490,7 @@
 	createMode = YES;
 	[accounts deselectAll:self];
 
-	[name setStringValue:NSLocalizedString(@"<new account>", nil)];
+	[name setStringValue:@""];
 	[name setEnabled:YES];
 	[state setStringValue:NSLocalizedString(@"Logged out", nil)];
 	[state setEnabled:YES];
