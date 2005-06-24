@@ -1828,17 +1828,16 @@ namespace Novell.FormsTrayApp
 							}
 						}
 
-						// TODO: grace logins needs to be part of DomainInformation
-/*						if (authStatus.RemainingGraceLogins < authStatus.TotalGraceLogins)
+						if (domainInfo.StatusCode.Equals(StatusCodes.SuccessInGrace))
 						{
 							mmb = new MyMessageBox(
-								string.Format(resourceManager.GetString("graceLogin"), authStatus.RemainingGraceLogins),
+								string.Format(resourceManager.GetString("graceLogin"), domainInfo.RemainingGraceLogins),
 								resourceManager.GetString("graceLoginTitle"),
 								string.Empty,
 								MyMessageBoxButtons.OK,
 								MyMessageBoxIcon.Information);
 							mmb.ShowDialog();
-						}*/
+						}
 						
 						result = true;
 						break;
