@@ -363,9 +363,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>3E689763086B213A005B57A1</string>
+				<string>3EA2896E086C84AE00891A0F</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>3E689764086B213A005B57A1</string>
+				<string>3EA2896F086C84AE00891A0F</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -418,7 +418,7 @@
 						<dict>
 							<key>PBXSmartGroupTreeModuleColumnWidthsKey</key>
 							<array>
-								<real>219</real>
+								<real>217</real>
 							</array>
 							<key>PBXSmartGroupTreeModuleColumnsKey_v4</key>
 							<array>
@@ -433,13 +433,9 @@
 								<string>1C37FABC05509CD000000102</string>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
-							<array>
-								<array>
-									<integer>0</integer>
-								</array>
-							</array>
+							<array/>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
-							<string>{{0, 0}, {219, 602}}</string>
+							<string>{{0, 0}, {217, 599}}</string>
 						</dict>
 						<key>PBXTopSmartGroupGIDs</key>
 						<array/>
@@ -451,19 +447,19 @@
 					<key>GeometryConfiguration</key>
 					<dict>
 						<key>Frame</key>
-						<string>{{0, 0}, {236, 620}}</string>
+						<string>{{0, 0}, {234, 617}}</string>
 						<key>GroupTreeTableConfiguration</key>
 						<array>
 							<string>MainColumn</string>
-							<real>219</real>
+							<real>217</real>
 						</array>
 						<key>RubberWindowFrame</key>
-						<string>0 341 236 661 0 0 1280 1002 </string>
+						<string>0 344 234 658 0 0 1280 1002 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
 					<key>Proportion</key>
-					<string>236pt</string>
+					<string>234pt</string>
 				</dict>
 			</array>
 			<key>Name</key>
@@ -477,7 +473,7 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>3EDDA66D086C66960040CA8F</string>
+				<string>3EA28970086C84AE00891A0F</string>
 				<string>11E0B1FE06471DED0097A5F4</string>
 			</array>
 			<key>ToolbarConfiguration</key>
@@ -508,12 +504,11 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>3E66544C08479549001CA1EF</string>
 		<string>1C0AD2B3069F1EA900FABCE6</string>
 		<string>/Users/calvin/code/ifolder/ifolder/src/OSXClient/iFolder.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
-	<string>0 341 236 661 0 0 1280 1002 </string>
+	<string>0 344 234 658 0 0 1280 1002 </string>
 	<key>WindowTools</key>
 	<array>
 		<dict>
@@ -964,9 +959,9 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1C0AD2B3069F1EA900FABCE6</string>
-				<string>3EDDA66E086C66960040CA8F</string>
+				<string>3EA28971086C84AE00891A0F</string>
 				<string>1CD0528B0623707200166675</string>
-				<string>3EDDA66F086C66960040CA8F</string>
+				<string>3EA28972086C84AE00891A0F</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.run</string>

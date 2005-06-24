@@ -1265,12 +1265,9 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 					[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
 				[self addLogTS:syncMessage];
 			}
-			
-/*
-			// PolicyQuota
-			else if([[fse status] compare:@"PolicyQuota"] == 0)
+			// DiskFull
+			else if([[fse status] compare:@"DiskFull"] == 0)
 			{
-
 				if([fse direction] == FILE_SYNC_DOWNLOADING)
 				{
 					syncMessage = [NSString
@@ -1283,9 +1280,10 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 						stringWithFormat:NSLocalizedString(@"Insufficient disk space on the server prevented synchronization: %@", @"iFolder Window Status Message"), 
 						[fse name]];
 				}
+				[iFolderWindowController updateStatusTS:
+					[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
+				[self addLogTS:syncMessage];
 			}
-*/
-
 			// PolicySize
 			else if([[fse status] compare:@"PolicySize"] == 0)
 			{
