@@ -109,21 +109,21 @@
 {
 	if(!hasAdminRights)
 	{
-		NSBeginAlertSheet(NSLocalizedString(@"Insufficient Access", nil), 
-		NSLocalizedString(@"OK", nil), nil, nil, 
+		NSBeginAlertSheet(NSLocalizedString(@"You do not have access to add users to this iFolder", @"Error dialog title when users attempt to share and they don't have access"), 
+		NSLocalizedString(@"OK", @"Error dialog button when users attempt to share and they don't have access"), nil, nil, 
 		propertiesWindow, nil, nil, nil, nil, 
-		NSLocalizedString(@"You do not have access rights to add users to this iFolder.  Contact the owner of the iFolder if changes need to be made.", nil));
+		NSLocalizedString(@"Contact the owner of the iFolder if changes need to be made.", @"Error dialog message when users attempt to share and they don't have access"));
 	}
 	else
 	{
 		if([searchedUsers numberOfSelectedRows] > 20)
 		{
-			NSBeginAlertSheet(NSLocalizedString(@"A large number of users is selected", nil), 
-				NSLocalizedString(@"Yes", nil), NSLocalizedString(@"Cancel", nil),
+			NSBeginAlertSheet([NSString stringWithFormat:NSLocalizedString(@"Do you want to share with all %d selected users?", @"Dialog title when a user selects to share with more than 20 users in Properties/Sharing"), [searchedUsers numberOfSelectedRows]], 
+				NSLocalizedString(@"Yes", @"Dialog button when a user selects to share with more than 20 users in Properties/Sharing"), NSLocalizedString(@"No", @"Dialog button when a user selects to share with more than 20 users in Properties/Sharing"),
 				nil, propertiesWindow, self, 
 				@selector(addSelectedUsersResponse:returnCode:contextInfo:), 
 				nil, nil, 
-				[NSString stringWithFormat:NSLocalizedString(@"Do you want to share with all %d selected users?", nil), [searchedUsers numberOfSelectedRows]]);
+				NSLocalizedString(@"A large number of users is selected.", @"Dialog question when a user selects to share with more than 20 users in Properties/Sharing"));
 		}
 		else
 		{
@@ -221,22 +221,22 @@
 {
 	if(!hasAdminRights)
 	{
-		NSBeginAlertSheet(NSLocalizedString(@"Insufficient Access", nil), 
-		NSLocalizedString(@"OK", nil), nil, nil, 
+		NSBeginAlertSheet(NSLocalizedString(@"You do not have access to remove users from this iFolder", @"Error dialog message when removing users without access"), 
+		NSLocalizedString(@"OK", @"Error dialog button when removing users without access"), nil, nil, 
 		propertiesWindow, nil, nil, nil, nil, 
-		NSLocalizedString(@"You do not have access rights to remove a user from this iFolder.  Contact the owner of the iFolder if changes need to be made.", nil));
+		NSLocalizedString(@"Contact the owner of the iFolder if changes need to be made.", @"Error dialog message when removing users without access"));
 	}
 	else
 	{
 		NSArray *selectedUsers = [usersController selectedObjects];
 		if([selectedUsers count] > 0)
 		{
-			NSBeginAlertSheet(NSLocalizedString(@"Remove selected users?", nil), 
-				NSLocalizedString(@"Yes", nil), NSLocalizedString(@"Cancel", nil),
+			NSBeginAlertSheet(NSLocalizedString(@"Remove the selected users?", @"Confirmation dialog message to remove users from an iFolder"), 
+				NSLocalizedString(@"Yes", @"Confirmation dialog button to remove users from an iFolder"), NSLocalizedString(@"No", @"Confirmation dialog button to remove users from an iFolder"),
 				nil, propertiesWindow, self, 
 				@selector(removeSelectedUsersResponse:returnCode:contextInfo:), 
 				nil, nil, 
-				NSLocalizedString(@"Are you sure you want to remove the selected users?", nil));
+				NSLocalizedString(@"Confirm that you want to remove the selected users.", @"Confirmation dialog details to remove users from an iFolder"));
 		}
 	}
 }
@@ -507,7 +507,7 @@
 
 - (IBAction)searchFullName:(id)sender
 {
-	NSLog(@"Dude, search da' full name");
+	NSLog(@"Search set to search by full name");
 	[fullItem setState:NSOnState];
 	[firstItem setState:NSOffState];
 	[lastItem setState:NSOffState];
@@ -521,7 +521,7 @@
 
 - (IBAction)searchFirstName:(id)sender
 {
-	NSLog(@"Dude, search da' first name");
+	NSLog(@"Search set to search by first name");
 	[fullItem setState:NSOffState];
 	[firstItem setState:NSOnState];
 	[lastItem setState:NSOffState];
@@ -535,7 +535,7 @@
 
 - (IBAction)searchLastName:(id)sender
 {
-	NSLog(@"Dude, search da' last name");
+	NSLog(@"Search set to search by last name");
 	[fullItem setState:NSOffState];
 	[firstItem setState:NSOffState];
 	[lastItem setState:NSOnState];

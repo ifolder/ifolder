@@ -70,7 +70,7 @@ static SyncLogWindowController *syncLogInstance = nil;
     NSMutableDictionary *bindingOptions = [NSMutableDictionary dictionary];
     	
 	// binding options for "name"
-	[bindingOptions setObject:@"No Name" forKey:@"NSNullPlaceholder"];
+	[bindingOptions setObject:@"" forKey:@"NSNullPlaceholder"];
 
 //    [accountsColumn bind:@"value" toObject:[[NSApp delegate] DomainsController]
 //	  withKeyPath:@"arrangedObjects.properties.Name" options:bindingOptions];
@@ -181,9 +181,9 @@ static SyncLogWindowController *syncLogInstance = nil;
 
 	// New iFolder ToolbarItem
 	NSToolbarItem *item=[[NSToolbarItem alloc] initWithItemIdentifier:@"Save"];
-	[item setPaletteLabel:NSLocalizedString(@"Save Log", nil)]; // name for the "Customize Toolbar" sheet
-	[item setLabel:NSLocalizedString(@"Save", nil)]; // name for the item in the toolbar
-	[item setToolTip:NSLocalizedString(@"Save Log", nil)]; // tooltip
+	[item setPaletteLabel:NSLocalizedString(@"Save Synchronization Log", @"LogWindow Toolbar Pallette button - save")]; // name for the "Customize Toolbar" sheet
+	[item setLabel:NSLocalizedString(@"Save", @"LogWindow Toolbar button - save")]; // name for the item in the toolbar
+	[item setToolTip:NSLocalizedString(@"Save the syncrhonization log", @"LogWindow Toolbar tooltip - save")]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(saveLog:)];
 	[item setImage:[NSImage imageNamed:@"save32"]];
@@ -192,9 +192,9 @@ static SyncLogWindowController *syncLogInstance = nil;
 	[item release];
 
 	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"Clear"];
-	[item setPaletteLabel:NSLocalizedString(@"Clear Log", nil)]; // name for the "Customize Toolbar" sheet
-	[item setLabel:NSLocalizedString(@"Clear", nil)]; // name for the item in the toolbar
-	[item setToolTip:NSLocalizedString(@"Clear Log", nil)]; // tooltip
+	[item setPaletteLabel:NSLocalizedString(@"Clear Synchronization Log", @"LogWindow Toolbar Pallette button - clear")]; // name for the "Customize Toolbar" sheet
+	[item setLabel:NSLocalizedString(@"Clear", @"LogWindow Toolbar button - clear")]; // name for the item in the toolbar
+	[item setToolTip:NSLocalizedString(@"Clear the synchronization log", @"LogWindow Toolbar tooltip - clear")]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(clearLog:)];
 	[item setImage:[NSImage imageNamed:@"clear32"]];

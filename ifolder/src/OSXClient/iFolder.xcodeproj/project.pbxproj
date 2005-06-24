@@ -213,7 +213,7 @@
 		3E3405A5078B40EF00630436 /* SimiasEventHandlers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimiasEventHandlers.h; path = src/SimiasEventHandlers.h; sourceTree = "<group>"; };
 		3E3405A6078B40EF00630436 /* SimiasEventHandlers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimiasEventHandlers.m; path = src/SimiasEventHandlers.m; sourceTree = "<group>"; };
 		3E34A2810772BF1A009AC400 /* libifolderclient.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libifolderclient.0.dylib; sourceTree = "<group>"; };
-		3E3BC75307AB5B7B00D2AE46 /* AccountsController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AccountsController.m; path = src/AccountsController.m; sourceTree = "<group>"; };
+		3E3BC75307AB5B7B00D2AE46 /* AccountsController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AccountsController.m; path = src/AccountsController.m; sourceTree = "<group>"; wrapsLines = 0; };
 		3E3BC75407AB5B7B00D2AE46 /* AccountsController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AccountsController.h; path = src/AccountsController.h; sourceTree = "<group>"; };
 		3E49BC6B0765224B0040812D /* ifolder.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = ifolder.icns; sourceTree = "<group>"; };
 		3E4F5737078C30DA00313076 /* SyncLogWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = SyncLogWindowController.h; path = src/SyncLogWindowController.h; sourceTree = "<group>"; };

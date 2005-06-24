@@ -51,7 +51,7 @@ static PropertiesWindowController *sharedInstance = nil;
 	[tabView selectTabViewItemAtIndex:initalTab];
 
 	userMenuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@"Access" action:NULL keyEquivalent:@""];
-	[userMenu setTitle:NSLocalizedString(@"Access", nil)];
+	[userMenu setTitle:NSLocalizedString(@"Access", @"Menu Tile for the Access menu for the sharing properties dialog")];
     [userMenuItem setSubmenu:userMenu];
     [[NSApp mainMenu] addItem:userMenuItem];	
 }
