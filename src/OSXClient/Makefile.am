@@ -6,7 +6,7 @@ export MONO_PATH := $(MONO_PATH)
 dist-hook:
 	rm -rf `find $(distdir) -name CVS`
 
-LPROJDIRS = 
+LPROJDIRS = es.lproj
 
 EXTRA_DIST = $(LPROJDIRS) $(srcdir)/English.lproj $(srcdir)/Info.plist.in $(srcdir)/iFolder.xcodeproj $(srcdir)/iFolder_Prefix.pch $(srcdir)/ifolder.icns $(srcdir)/main.m $(srcdir)/version.plist $(srcdir)/src $(srcdir)/webservice $(srcdir)/notify
 

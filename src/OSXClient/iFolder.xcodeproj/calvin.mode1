@@ -363,9 +363,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>3EC8D658086CA0C600851A61</string>
+				<string>3EC8E130086CB08000090BFF</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>3EC8D659086CA0C600851A61</string>
+				<string>3EC8E131086CB08000090BFF</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -430,17 +430,10 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateExpansionKey</key>
 							<array>
 								<string>29B97314FDCFA39411CA2CEA</string>
-								<string>29B97317FDCFA39411CA2CEA</string>
 								<string>1C37FABC05509CD000000102</string>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
-							<array>
-								<array>
-									<integer>12</integer>
-									<integer>11</integer>
-									<integer>0</integer>
-								</array>
-							</array>
+							<array/>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
 							<string>{{0, 0}, {217, 599}}</string>
 						</dict>
@@ -480,7 +473,7 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>3EC8D65A086CA0C600851A61</string>
+				<string>3EC8E132086CB08000090BFF</string>
 				<string>11E0B1FE06471DED0097A5F4</string>
 			</array>
 			<key>ToolbarConfiguration</key>
@@ -594,7 +587,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>3E66544C08479549001CA1EF</string>
-				<string>3EDDA6C4086C7DB40040CA8F</string>
+				<string>3EE17428086CA7CE00095C42</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>
@@ -916,8 +909,8 @@
 										<string>yes</string>
 										<key>sizes</key>
 										<array>
-											<string>{{0, 0}, {491, 168}}</string>
-											<string>{{0, 173}, {491, 270}}</string>
+											<string>{{0, 0}, {493, 168}}</string>
+											<string>{{0, 173}, {493, 270}}</string>
 										</array>
 									</dict>
 									<key>VerticalSplitView</key>
@@ -966,9 +959,9 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1C0AD2B3069F1EA900FABCE6</string>
-				<string>3EC8D65B086CA0C600851A61</string>
+				<string>3EC8E133086CB08000090BFF</string>
 				<string>1CD0528B0623707200166675</string>
-				<string>3EC8D65C086CA0C600851A61</string>
+				<string>3EC8E134086CB08000090BFF</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.run</string>
