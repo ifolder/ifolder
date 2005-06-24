@@ -149,12 +149,12 @@ namespace Novell.iFolder
 			Toolbar tb = new Toolbar();
 
 			SaveButton = tb.AppendItem(Util.GS("Save"), 
-				Util.GS("Save the log to a file"), "Toolbar/Save Log",
+				Util.GS("Save the synchronization log"), "Toolbar/Save Log",
 				new Image(Stock.Save, Gtk.IconSize.LargeToolbar),
 				new SignalFunc(SaveLog));
 
 			ClearButton = tb.AppendItem(Util.GS("Clear"), 
-				Util.GS("Clear the log"), "Toolbar/Clear Log",
+				Util.GS("Clear the synchronization log"), "Toolbar/Clear Log",
 				new Image(Stock.Clear, Gtk.IconSize.LargeToolbar),
 				new SignalFunc(ClearLog));
 
