@@ -236,7 +236,7 @@
 				nil, propertiesWindow, self, 
 				@selector(removeSelectedUsersResponse:returnCode:contextInfo:), 
 				nil, nil, 
-				NSLocalizedString(@"Confirm that you want to remove the selected users.", @"Confirmation dialog details to remove users from an iFolder"));
+				NSLocalizedString(@"This will remove the selected users from this iFolder.  They will no longer be able to synchronize files with this iFolder.", @"Confirmation dialog details to remove users from an iFolder"));
 		}
 	}
 }
