@@ -46,7 +46,7 @@ maintainer-clean-local:
 	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
 
 generate-strings:
-	genstrings -o $(srcdir)/en.lproj `cat intlsrcfiles`
+	genstrings -q -o $(srcdir)/en.lproj `cat intlsrcfiles`
 	nibfiles=`cat intlnibfiles`; \
 	for nibfile in $$nibfiles; do \
 		nibtool -L $$nibfile > $$nibfile.strings; \

@@ -289,7 +289,7 @@ static iFolderWindowController *sharedInstance = nil;
 			}
 			@catch (NSException *e)
 			{
-				NSRunAlertPanel(NSLocalizedString(@"iFolder Revert Error", @"Revert error Dialog title"),  NSLocalizedString("An error was encountered while reverting the iFolder.", @"Revert error Dialog message"), NSLocalizedString(@"OK", @"Revert error Dialog button"),nil, nil);
+				NSRunAlertPanel(NSLocalizedString(@"iFolder Revert Error", @"Revert error Dialog title"),  NSLocalizedString(@"An error was encountered while reverting the iFolder.", @"Revert error Dialog message"), NSLocalizedString(@"OK", @"Revert error Dialog button"),nil, nil);
 			}
 			break;
 		}
@@ -358,7 +358,7 @@ static iFolderWindowController *sharedInstance = nil;
 			}
 			@catch (NSException *e)
 			{
-				NSRunAlertPanel(NSLocalizedString(@"iFolder Deletion Error", nil), NSLocalizedString(@"An error was encountered while deleting the iFolder.", nil), NSLocalizedString(@"OK", nil),nil, nil);
+				NSRunAlertPanel(NSLocalizedString(@"iFolder Deletion Error", @"iFolder delete error dialog title"), NSLocalizedString(@"An error was encountered while deleting the iFolder.", @"iFolder delete error dialog message"), NSLocalizedString(@"OK", @"iFolder delete error dialog button"),nil, nil);
 			}
 			break;
 		}
@@ -429,7 +429,7 @@ static iFolderWindowController *sharedInstance = nil;
 	@catch (NSException *e)
 	{
 		NSString *error = [e name];
-		NSRunAlertPanel(NSLocalizedString(@"Error creating iFolder", nil), [e name], NSLocalizedString(@"OK", nil),nil, nil);
+		NSRunAlertPanel(NSLocalizedString(@"Error creating iFolder", @"iFolder create error dialog title"), [e name], NSLocalizedString(@"OK", @"iFolder create error dialog button"),nil, nil);
 	}
 }
 
@@ -449,7 +449,7 @@ static iFolderWindowController *sharedInstance = nil;
 	@catch (NSException *e)
 	{
 		NSString *error = [e name];
-		NSRunAlertPanel(NSLocalizedString(@"Error setting up iFolder", nil), [e name], NSLocalizedString(@"OK", nil),nil, nil);
+		NSRunAlertPanel(NSLocalizedString(@"Error setting up iFolder", @"iFolder setup error dialog title"), [e name], NSLocalizedString(@"OK", @"iFolder setup error dialog button"),nil, nil);
 	}
 }
 

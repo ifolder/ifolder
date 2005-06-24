@@ -101,10 +101,10 @@ static ConflictWindowController *conflictSharedInstance = nil;
 {
 	if( [[ifolder CurrentUserRights] compare:@"ReadOnly"] == 0 )
 	{
-		NSBeginAlertSheet(NSLocalizedString(@"Read-Only iFolder", nil), 
-			NSLocalizedString(@"OK", nil), nil, nil,
+		NSBeginAlertSheet(NSLocalizedString(@"You have read only access", @"Read Only Access Warning Message"), 
+			NSLocalizedString(@"OK", @"Read Only Access Warning button"), nil, nil,
 			[self window], self, nil, nil, NULL, 
-			NSLocalizedString(@"Your ability to resolve conflicts is limited because you have read-only rights to this iFolder.  If there are conflicts that you are not allowed to resolve, the owner of this iFolder will need to fix the conflicts for you.", nil));
+			NSLocalizedString(@"Your ability to resolve conflicts is limited because you have read-only access to this iFolder.  Name conflicts must be renamed locally.  File conflicts will be overwritten by the version of the file on the server.", @"Read Only Access Warning details"));
 	}
 }
 
@@ -172,10 +172,10 @@ static ConflictWindowController *conflictSharedInstance = nil;
 
 		if([[NSFileManager defaultManager] fileExistsAtPath:newPath])
 		{
-			NSBeginAlertSheet(NSLocalizedString(@"File exists", nil), 
-				NSLocalizedString(@"OK", nil), nil, nil,
+			NSBeginAlertSheet(NSLocalizedString(@"The specified name already exists", @"Resolve has duplicate name error message"), 
+				NSLocalizedString(@"OK", @"Resolve has duplicate name error button"), nil, nil,
 				[self window], self, nil, nil, NULL, 
-				NSLocalizedString(@"You must select a different name in order to resolve this conflict.", nil));
+				NSLocalizedString(@"Please choose a different name.", @"Resolve has duplicate name error details"));
 		}
 		else
 		{

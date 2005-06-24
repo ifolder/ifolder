@@ -55,30 +55,30 @@
 		(seconds % SECONDS_IN_DAY) == 0)
 	{
 		if(seconds/SECONDS_IN_DAY == 1)
-			return NSLocalizedString(@"day", nil);
+			return NSLocalizedString(@"day", @"Time span for one day, sync in 1 \"day\"");
 		else
-			return NSLocalizedString(@"days", nil);
+			return NSLocalizedString(@"days", @"Time span for multiple days, sync in 5 \"days\"");
 	}
 	if( (seconds > SECONDS_IN_HOUR) &&
 		(seconds % SECONDS_IN_HOUR) == 0)
 	{
 		if(seconds/SECONDS_IN_HOUR == 1)
-			return NSLocalizedString(@"hour", nil);
+			return NSLocalizedString(@"hour", @"Time span for one hour, sync in 1 \"hour\"");
 		else
-			return NSLocalizedString(@"hours", nil);
+			return NSLocalizedString(@"hours", @"Time span for multiple hours, sync in 5 \"hours\"");
 	}
 	if( (seconds > SECONDS_IN_MINUTE) &&
 		(seconds % SECONDS_IN_MINUTE) == 0)
 	{
 		if(seconds/SECONDS_IN_MINUTE == 1)
-			return NSLocalizedString(@"minute", nil);
+			return NSLocalizedString(@"minute", @"Time span for one minute, sync in 1 \"minute\"");
 		else
-			return NSLocalizedString(@"minutes", nil);
+			return NSLocalizedString(@"minutes", @"Time span for multiple minutes, sync in 5 \"minutes\"");
 	}
 	if(seconds == 1)
-		return NSLocalizedString(@"second", nil);
+		return NSLocalizedString(@"second",  @"Time span for one second, sync in 1 \"second\"");
 	else
-		return NSLocalizedString(@"seconds", nil);
+		return NSLocalizedString(@"seconds", @"Time span for multiple seconds, sync in 5 \"seconds\"");
 }
 
 

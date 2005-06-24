@@ -1063,7 +1063,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 				}
 			}
 			
-			syncItemMessage = [NSString stringWithFormat:NSLocalizedString(@"%u of %u items - ", @"Prefix on an iFolder Window Status Message"),
+			syncItemMessage = [NSString stringWithFormat:NSLocalizedString(@"%u of %u items - ", @"prefix on a file sync for the iFolder Window status message"),
 								itemSyncCount, totalSyncCount];
 
 			switch([fse direction])
@@ -1207,7 +1207,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 			if(itemSyncCount >= totalSyncCount)
 				itemSyncCount = totalSyncCount;
 
-			syncItemMessage = [NSString stringWithFormat:NSLocalizedString(@"%u of %u items - ", @"iFolder window status message prefix"),
+			syncItemMessage = [NSString stringWithFormat:NSLocalizedString(@"%u of %u items - ", @"prefix on a file sync for the iFolder Window status message"),
 								itemSyncCount, totalSyncCount];
 
 			[iFolderWindowController updateProgress:100

@@ -160,47 +160,54 @@
 				case ns1__StatusCodes__InvalidCredentials:		// InvalidCredentials
 				case ns1__StatusCodes__InvalidPassword:		// InvalidPassword
 				{
-					NSBeginAlertSheet(NSLocalizedString(@"iFolder login failed", nil), 
-					NSLocalizedString(@"OK", nil), nil, nil, 
+					NSBeginAlertSheet(NSLocalizedString(@"The username or password is invalid", @"Error Dialog message when password invalid"), 
+					NSLocalizedString(@"OK", @"Error Dialog button when password invalid"), nil, nil, 
 					[self window], nil, nil, nil, nil, 
-					NSLocalizedString(@"The user name or password is invalid.  Please try again.", nil));
+					NSLocalizedString(@"Please verify the information entered and try again.", @"Error Dialog details when password invalid"));
 					break;
 				}
 				case ns1__StatusCodes__AccountDisabled:		// AccountDisabled
 				{
-					NSBeginAlertSheet(NSLocalizedString(@"iFolder login failed", nil), 
-					NSLocalizedString(@"OK", nil), nil, nil, 
+					NSBeginAlertSheet(NSLocalizedString(@"The user account is disabled", @"Error Dialog message when user account disabled"), 
+					NSLocalizedString(@"OK", @"Error Dialog button when user account disabled"), nil, nil, 
 					[self window], nil, nil, nil, nil, 
-					NSLocalizedString(@"The user account is disabled.  Please contact your network administrator for assistance.", nil));
+					NSLocalizedString(@"Please contact your network administrator for assistance.", @"Error Dialog details when user account disabled"));
 					break;
 				}
 				case ns1__StatusCodes__SimiasLoginDisabled:
 				{
-					NSBeginAlertSheet(NSLocalizedString(@"Unable to Connect to iFolder Server", nil), 
-					NSLocalizedString(@"OK", nil), nil, nil, 
+					NSBeginAlertSheet(NSLocalizedString(@"The iFolder account is disabled", @"Error dialog message when iFolder account disabled"), 
+					NSLocalizedString(@"OK", @"Error dialog button when iFolder account disabled"), nil, nil, 
 					[self window], nil, nil, nil, nil, 
-					NSLocalizedString(@"This user account has been disabled in iFolder.  Please contact your network administrator for assistance.", nil));
+					NSLocalizedString(@"Please contact your network administrator for assistance.", @"Error dialog details when iFolder account disabled"));
 					break;
 				}
 				case ns1__StatusCodes__AccountLockout:		// AccountLockout
 				{
-					NSBeginAlertSheet(NSLocalizedString(@"iFolder login failed", nil), 
-					NSLocalizedString(@"OK", nil), nil, nil, 
+					NSBeginAlertSheet(NSLocalizedString(@"The user account has been locked out", @"Error dialog message when account is locked"), 
+					NSLocalizedString(@"OK", @"Error dialog button when account is locked"), nil, nil, 
 					[self window], nil, nil, nil, nil, 
-					NSLocalizedString(@"The user account has been locked out.  Please contact your network administrator for assistance.", nil));
+					NSLocalizedString(@"Please contact your network administrator for assistance.", @"Error dialog details when account is locked"));
 					break;
 				}
 				case ns1__StatusCodes__UnknownDomain:		// UnknownDomain
+				{
+					NSBeginAlertSheet(NSLocalizedString(@"The server specified can not be located", @"Error dialog message when domain is unknown"), 
+					NSLocalizedString(@"OK", @"Error dialog button when domain is unknown"), nil, nil, 
+					[self window], nil, nil, nil, nil, 
+					NSLocalizedString(@"Please verify the information entered and try again.  If the problem persists, please contact your network administrator.", @"Error dialog details when domain is unknown"));
+					break;
+				}
 				case ns1__StatusCodes__InternalException:		// InternalException
 				case ns1__StatusCodes__MethodNotSupported:	// MethodNotSupported
 				case ns1__StatusCodes__Timeout:	// Timeout
 				case ns1__StatusCodes__AmbiguousUser:		// AmbiguousUser
 				case ns1__StatusCodes__Unknown:	// Unknown
 				{
-					NSBeginAlertSheet(NSLocalizedString(@"iFolder login failed", nil), 
-					NSLocalizedString(@"OK", nil), nil, nil, 
+					NSBeginAlertSheet(NSLocalizedString(@"An error was encountered while connecting to the iFolder server", @"General error dialog message for login"), 
+					NSLocalizedString(@"OK", @"General error dialog button for login"), nil, nil, 
 					[self window], nil, nil, nil, nil, 
-					NSLocalizedString(@"An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.", nil));
+					NSLocalizedString(@"Please verify the information entered and try again.  If the problem persists, please contact your network administrator.", @"General error dialog title for login"));
 					break;
 				}
 			}
@@ -208,10 +215,10 @@
 		}
 		@catch (NSException *e)
 		{
-			NSBeginAlertSheet(NSLocalizedString(@"iFolder login failed", nil), 
-				NSLocalizedString(@"OK", nil), nil, nil, 
-				[self window], nil, nil, nil, nil, 
-				NSLocalizedString(@"An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.", nil));
+			NSBeginAlertSheet(NSLocalizedString(@"An error was encountered while connecting to the iFolder server", @"Exception error message title for login"), 
+			NSLocalizedString(@"OK", @"Exception error button title for login"), nil, nil, 
+			[self window], nil, nil, nil, nil, 
+			NSLocalizedString(@"Please verify the information entered and try again.  If the problem persists, please contact your network administrator.", @"Exception error dialog details for login"));
 		}
 
 		if(simiasService != nil)
