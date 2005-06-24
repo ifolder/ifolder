@@ -1136,7 +1136,7 @@
     <value>An error was encountered while querying for the server and user name.</value>
   </data>
   <data name="failedAuth">
-    <value>The username or password is invalid.  Please try again.</value>
+    <value>The username or password is invalid.  Please verify the information entered and try again.</value>
   </data>
   <data name="badPassword">
     <value>The password is invalid.  Please try again.</value>
