@@ -205,6 +205,7 @@
           <xs:element minOccurs="1" maxOccurs="1" name="IsSlave" type="xs:boolean" />
           <xs:element minOccurs="1" maxOccurs="1" name="IsDefault" type="xs:boolean" />
           <xs:element minOccurs="1" maxOccurs="1" name="StatusCode" type="s0:StatusCodes" />
+          <xs:element minOccurs="1" maxOccurs="1" name="RemainingGraceLogins" type="xs:int" />
         </xs:sequence>
       </xs:complexType>
       <xs:simpleType name="DomainType">

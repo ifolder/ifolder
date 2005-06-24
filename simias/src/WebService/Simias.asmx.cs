@@ -854,6 +854,7 @@ namespace Simias.Web
 			{
 				domainInfo = new DomainInformation(status.DomainID);
 				domainInfo.MemberName = UserName;
+				domainInfo.RemainingGraceLogins = status.RemainingGraceLogins;
 			}
 			else
 			{
@@ -1139,10 +1140,17 @@ namespace Simias.Web
 		/// </summary>
 		public bool IsDefault;
 
+		// TODO: We need to rework this (possibly when multi-server work is done) so that
+		// we don't return status and grace login counts in this structure.
 		/// <summary>
 		/// The status of the authentication request.
 		/// </summary>
 		public Simias.Authentication.StatusCodes StatusCode;
+
+		/// <summary>
+		/// The grace logins remaining.  Valid if StatusCode == StatusCode.SuccessInGrace
+		/// </summary>
+		public int RemainingGraceLogins;
 
 		/// <summary>
 		/// Constructor

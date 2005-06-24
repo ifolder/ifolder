@@ -659,27 +659,26 @@ namespace Simias.Web
 
 			Store store = Store.GetStore();
 
-			// In the old iFolder code we used to get the Collection by
-			// name and use the filename on the path passed in.  That 
-			// will not work because the name of the collection does
-			// not have to be the name of the directory that contains it
-			foreach(ShallowNode sn in store)
+			Property p = new Property( PropertyTags.Root, Path.GetDirectoryName(path) );
+			ICSList list = store.GetCollectionsByProperty(p, SearchOp.Equal);
+			foreach (ShallowNode sn in list)
 			{
 				Collection tmpCol = store.GetCollectionByID(sn.ID);
 				DirNode dirNode = tmpCol.GetRootDirectory();
-				if(dirNode != null)
+				if (dirNode != null)
 				{
 					Uri colPath = GetUriPath( dirNode.GetFullPath(tmpCol) );
 					// Compare the two paths and ignore the case if our
 					// platform is not Unix
 					if ( String.Compare( nPath.LocalPath, colPath.LocalPath, 
-							!MyEnvironment.Unix ) == 0 )
+						!MyEnvironment.Unix ) == 0 )
 					{
 						col = tmpCol;
 						break;
 					}
 				}
 			}
+
 			return col;
 		}
 
