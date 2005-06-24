@@ -1092,8 +1092,8 @@ namespace Novell.iFolder
 						iFolderMsgDialog.DialogType.Error,
 						iFolderMsgDialog.ButtonSet.Ok,
 						"",
-						Util.GS("Unable to launch file browser"),
-						Util.GS("iFolder attempted to open the Nautilus File Manager and the Konqueror File Manager and was unable to launch either of them."));
+						string.Format(Util.GS("Unable to open iFolder \"{0}\""), ifHolder.iFolder.Name),
+						Util.GS("iFolder could not open the Nautilus File Manager or the Konquerer File Manager."));
 					dg.Run();
 					dg.Hide();
 					dg.Destroy();
@@ -1996,7 +1996,7 @@ namespace Novell.iFolder
 					iFolderMsgDialog.ButtonSet.YesNo,
 					"",
 					Util.GS("Set up an iFolder account?"),
-					Util.GS("To begin using iFolder, you must first set up an iFolder account.  Would you like to set up an iFolder account now?"));
+					Util.GS("To begin using iFolder, you must first set up an iFolder account."));
 				int response = dg.Run();
 				dg.Hide();
 				dg.Destroy();
