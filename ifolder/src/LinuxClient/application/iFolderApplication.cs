@@ -833,7 +833,7 @@ namespace Novell.iFolder
 					iFolderMsgDialog.ButtonSet.YesNo,
 					"",
 					Util.GS("Set up an iFolder account?"),
-					Util.GS("To begin using iFolder, you must first set up an iFolder account.  Would you like to set up an iFolder account now?"));
+					Util.GS("To begin using iFolder, you must first set up an iFolder account."));
 				int rc = dg.Run();
 				dg.Hide();
 				dg.Destroy();
