@@ -3488,7 +3488,7 @@
     <value>An error was encountered while reading the iFolder accounts.</value>
   </data>
   <data name="failedAuth">
-    <value>The username or password is invalid.  Please try again.</value>
+    <value>The username or password is invalid.  Please verify the information entered and try again.</value>
   </data>
   <data name="serverConnectErrorTitle">
     <value>Unable to Connect to iFolder Server</value>

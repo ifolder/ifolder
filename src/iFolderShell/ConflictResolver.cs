@@ -1400,7 +1400,7 @@ namespace Novell.iFolderCom
 			if (readOnly)
 			{
 				// Show message explaining limitations in resolving for read-only.
-				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readOnlyInfo"), string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readOnlyInfo"), resourceManager.GetString("readOnlyTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
 				mmb.ShowDialog();
 			}
 		}

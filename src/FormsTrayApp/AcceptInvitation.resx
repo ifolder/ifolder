@@ -905,10 +905,10 @@
     <value>Invalid Directory</value>
   </data>
   <data name="acceptError">
-    <value>An exception occurred while accepting the invitation.</value>
+    <value>An exception occurred while setting up the iFolder.</value>
   </data>
   <data name="networkPath">
-    <value>iFolders must be placed on a local drive.</value>
+    <value>iFolders must be placed on a local hard drive.</value>
   </data>
   <data name="selectLocation">
     <value>Select a location for the iFolder.</value>
