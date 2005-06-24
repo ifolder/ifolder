@@ -8,7 +8,7 @@ dist-hook:
 
 LPROJDIRS = 
 
-EXTRA_DIST = $(LPROJDIRS) $(srcdir)/en.lproj $(srcdir)/Info.plist.in $(srcdir)/iFolder.xcodeproj $(srcdir)/iFolder_Prefix.pch $(srcdir)/ifolder.icns $(srcdir)/main.m $(srcdir)/version.plist $(srcdir)/src $(srcdir)/webservice $(srcdir)/notify
+EXTRA_DIST = $(LPROJDIRS) $(srcdir)/English.lproj $(srcdir)/Info.plist.in $(srcdir)/iFolder.xcodeproj $(srcdir)/iFolder_Prefix.pch $(srcdir)/ifolder.icns $(srcdir)/main.m $(srcdir)/version.plist $(srcdir)/src $(srcdir)/webservice $(srcdir)/notify
 
 
 if DEBUG
@@ -46,7 +46,7 @@ maintainer-clean-local:
 	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
 
 generate-strings:
-	genstrings -q -o $(srcdir)/en.lproj `cat intlsrcfiles`
+	genstrings -q -o $(srcdir)/English.lproj `cat intlsrcfiles`
 	nibfiles=`cat intlnibfiles`; \
 	for nibfile in $$nibfiles; do \
 		nibtool -L $$nibfile > $$nibfile.strings; \
