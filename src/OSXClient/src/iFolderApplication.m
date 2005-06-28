@@ -937,6 +937,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 			}
 		
 			NSString *syncMessage;
+
 			SyncSize *ss = [[[iFolderData sharedInstance] getSyncSize:[cse ID]] retain];			
 			if([ss SyncNodeCount] == 0)
 			{
@@ -1012,60 +1013,63 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 		{
 			BOOL updateLog = NO;
 
-			if([fse sizeRemaining] == [fse sizeToSync])
+			if([fse direction] != FILE_SYNC_LOCAL)
 			{
-				if( (itemSyncCount >= totalSyncCount) ||
-					(totalSyncCount == 0) )
+				if([fse sizeRemaining] == [fse sizeToSync])
 				{
-					SyncSize *ss = [[[iFolderData sharedInstance] getSyncSize:[fse collectionID]] retain];			
-					itemSyncCount = 0;
-					totalSyncCount = [ss SyncNodeCount];
-					[ss release];
-					// If we had a problem reading this dude, set it to one
-					if(totalSyncCount == 0)
+					if( (itemSyncCount >= totalSyncCount) ||
+						(totalSyncCount == 0) )
 					{
-						totalSyncCount = 1;
+						SyncSize *ss = [[[iFolderData sharedInstance] getSyncSize:[fse collectionID]] retain];			
+						itemSyncCount = 0;
+						totalSyncCount = [ss SyncNodeCount];
+						[ss release];
+						// If we had a problem reading this dude, set it to one
+						if(totalSyncCount == 0)
+						{
+							totalSyncCount = 1;
+						}
+					}
+
+					itemSyncCount += 1;
+					if(itemSyncCount >= totalSyncCount)
+						itemSyncCount = totalSyncCount;
+				
+					updateLog = YES;
+					if([fse sizeToSync] > 0)
+					{
+						[iFolderWindowController updateProgress:0
+												withMin:0
+												withMax:[fse sizeToSync]];
+					}
+					else
+					{
+						// sending current value of -1 hides the control
+						[iFolderWindowController updateProgress:-1 withMin:0 withMax:0];
 					}
 				}
-
-				itemSyncCount += 1;
-				if(itemSyncCount >= totalSyncCount)
-					itemSyncCount = totalSyncCount;
-			
-				updateLog = YES;
-				if([fse sizeToSync] > 0)
-				{
-					[iFolderWindowController updateProgress:0
-											withMin:0
-											withMax:[fse sizeToSync]];
-				}
 				else
 				{
-					// sending current value of -1 hides the control
-					[iFolderWindowController updateProgress:-1 withMin:0 withMax:0];
-				}
-			}
-			else
-			{
-				updateLog = NO;
+					updateLog = NO;
 
-				if([fse sizeToSync] == 0)
-				{
-					[iFolderWindowController updateProgress:100
-											withMin:0
-											withMax:100];
+					if([fse sizeToSync] == 0)
+					{
+						[iFolderWindowController updateProgress:100
+												withMin:0
+												withMax:100];
+					}
+					else
+					{
+						[iFolderWindowController updateProgress:([fse sizeToSync] - [fse sizeRemaining])
+												withMin:0
+												withMax:[fse sizeToSync]];
+					}
 				}
-				else
-				{
-					[iFolderWindowController updateProgress:([fse sizeToSync] - [fse sizeRemaining])
-											withMin:0
-											withMax:[fse sizeToSync]];
-				}
+				
+				syncItemMessage = [NSString stringWithFormat:NSLocalizedString(@"%u of %u items - ", @"prefix on a file sync for the iFolder Window status message"),
+									itemSyncCount, totalSyncCount];
 			}
 			
-			syncItemMessage = [NSString stringWithFormat:NSLocalizedString(@"%u of %u items - ", @"prefix on a file sync for the iFolder Window status message"),
-								itemSyncCount, totalSyncCount];
-
 			switch([fse direction])
 			{
 				case FILE_SYNC_LOCAL:
