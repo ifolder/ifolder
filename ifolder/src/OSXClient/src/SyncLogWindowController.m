@@ -113,25 +113,40 @@ static SyncLogWindowController *syncLogInstance = nil;
 	
 	if (result == NSOKButton)
 	{
-		NSOutputStream *outStream = 
-			[NSOutputStream outputStreamToFileAtPath:[sPanel filename] append:NO];
-		if(outStream != nil)
+		FILE *fd;
+		
+		fd = fopen([[sPanel filename] cString], "w");
+		
+		if(fd != NULL)
 		{
-			[outStream open];
 			NSArray *logArray;
 			int logCounter;
 			logArray = [[[NSApp delegate] logArrayController] arrangedObjects];
 			
 			for(logCounter=0; logCounter < [logArray count]; logCounter++)
 			{
+				size_t bytesWritten;
+				size_t bytesToWrite;
+			
 				NSString *logEntry = 
 					[NSString stringWithFormat:@"%@\n", [logArray objectAtIndex:logCounter] ];
-				[outStream write:[logEntry UTF8String] maxLength:[logEntry length]];
+				bytesToWrite = [logEntry cStringLength];
+				
+				bytesWritten = fwrite([logEntry cString], 1, bytesToWrite, fd);
+
+				if(bytesToWrite != bytesWritten)
+					break;
 			}
-			[outStream close];
+			fclose(fd);
 		}
 		else
-			NSLog(@"Unable to open file for log: %@", [sPanel filename]);
+		{
+			// Error opening file
+			NSBeginAlertSheet(NSLocalizedString(@"Unable to save log to specified location", @"Log file save error"), 
+			NSLocalizedString(@"OK", @"Log file save error"), nil, nil, 
+			[self window], nil, nil, nil, nil, 
+			NSLocalizedString(@"iFolder was unable to create a file in the location you specified.  The log file was not saved.", @"Log file save details"));
+		}
 	}
 }
 
