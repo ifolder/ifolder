@@ -87,8 +87,34 @@ namespace Novell.iFolder
 			process = new System.Diagnostics.Process();
 			process.StartInfo.CreateNoWindow = true;
 			process.StartInfo.UseShellExecute = false;
-			process.StartInfo.FileName = "nautilus";
 			process.StartInfo.Arguments = "\"" + path + "\"";
+
+			// Try to start Nautilus from the location it's normally installed
+			// on Novell Linux Desktop
+			process.StartInfo.FileName = "/opt/gnome/bin/nautilus";
+
+			try
+			{
+				process.Start();
+				return;
+			}
+			catch(Exception e)
+			{
+			}
+
+			// Try to start Nautilus by finding it in the PATH
+			process.StartInfo.FileName = "nautilus";
+
+			try
+			{
+				process.Start();
+				return;
+			}
+			catch(Exception e)
+			{
+			}
+
+			process.StartInfo.FileName = "/opt/kde3/bin/konqueror";
 
 			try
 			{
