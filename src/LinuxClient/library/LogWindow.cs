@@ -406,7 +406,8 @@ namespace Novell.iFolder
 						break;
 				}
 
-				LogMessage(message);
+				if (message != null && message.Length > 0)
+					LogMessage(message);
 			}
 			catch {}
 		}
