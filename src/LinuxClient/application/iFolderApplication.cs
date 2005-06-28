@@ -560,13 +560,17 @@ namespace Novell.iFolder
 			if (args == null || args.CollectionID == null || args.Name == null)
 				return;	// Prevent an exception
 
-			iFolderWindow ifwin = Util.GetiFolderWindow();
-			if(ifwin != null)
-				ifwin.HandleFileSyncEvent(args);
+			try
+			{
+				iFolderWindow ifwin = Util.GetiFolderWindow();
+				if(ifwin != null)
+					ifwin.HandleFileSyncEvent(args);
 
-			LogWindow logwin = Util.GetLogWindow();
-			if(logwin != null)
-				logwin.HandleFileSyncEvent(args);
+				LogWindow logwin = Util.GetLogWindow();
+				if(logwin != null)
+					logwin.HandleFileSyncEvent(args);
+			}
+			catch {}
 		}
 
 
@@ -591,13 +595,17 @@ namespace Novell.iFolder
 				}
 			}
 
-			iFolderWindow ifwin = Util.GetiFolderWindow();
-			if(ifwin != null)
-				ifwin.HandleSyncEvent(args);
-
-			LogWindow logwin = Util.GetLogWindow();
-			if(logwin != null)
-				logwin.HandleSyncEvent(args);
+			try
+			{
+				iFolderWindow ifwin = Util.GetiFolderWindow();
+				if(ifwin != null)
+					ifwin.HandleSyncEvent(args);
+	
+				LogWindow logwin = Util.GetLogWindow();
+				if(logwin != null)
+					logwin.HandleSyncEvent(args);
+			}
+			catch {}
 		}
 
 
