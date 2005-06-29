@@ -25,6 +25,7 @@
 #include "iFolderApplication.h"
 #include "SMEvents.h"
 #include "SimiasEventData.h"
+#include "applog.h"
 
 SimiasEventClient simiasEventClient;
 
@@ -76,7 +77,7 @@ int SimiasEventStateCallBack(SEC_STATE_EVENT state_event, const char *message, v
 	switch(state_event)
 	{
 		case SEC_STATE_EVENT_CONNECTED:
-			NSLog(@"Event client connected");
+			ifconlog1(@"Event client connected");
 			[[NSApp delegate] simiasHasStarted];
 			sec_set_event(*sec, ACTION_NODE_CREATED, true, (SimiasEventFunc)SimiasEventNode, nil);
 			sec_set_event(*sec, ACTION_NODE_DELETED, true, (SimiasEventFunc)SimiasEventNode, nil);
@@ -87,10 +88,10 @@ int SimiasEventStateCallBack(SEC_STATE_EVENT state_event, const char *message, v
 			sec_set_event(*sec, ACTION_NOTIFY_MESSAGE, true, (SimiasEventFunc)SimiasEventNotifyMessage, nil);
 			break;
 		case SEC_STATE_EVENT_DISCONNECTED:
-			NSLog(@"Event client disconnected!");
+			ifconlog1(@"Event client disconnected!");
 			break;
 		case SEC_STATE_EVENT_ERROR:
-			NSLog(@"ERROR with Simias Event Client");
+			ifconlog1(@"ERROR with Simias Event Client");
 			break;
 	}
     [pool release];	
@@ -101,7 +102,7 @@ int SimiasEventStateCallBack(SEC_STATE_EVENT state_event, const char *message, v
 int SimiasEventNode(SimiasNodeEvent *nodeEvent, void *data)
 {
     NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
-//	NSLog(@"SimiasNodeEvent fired: %s", nodeEvent->node);
+	ifconlog2(@"SimiasNodeEvent fired: %s", nodeEvent->node);
 
 	NSDictionary *neProps = [getNodeEventProperties(nodeEvent) retain];
 	SMNodeEvent *ne = [[SMNodeEvent alloc] init];
@@ -154,7 +155,7 @@ NSDictionary *getNodeEventProperties(SimiasNodeEvent *nodeEvent)
 int SimiasEventSyncCollection(SimiasCollectionSyncEvent *collectionEvent, void *data)
 {
     NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
-//	NSLog(@"SimiasCollectionSyncEvent fired: %s", collectionEvent->name);
+	ifconlog2(@"SimiasCollectionSyncEvent fired: %s", collectionEvent->name);
 
 	NSDictionary *cseProps = [getCollectionSyncEventProperties(collectionEvent) retain];
 	SMCollectionSyncEvent *cse = [[SMCollectionSyncEvent alloc] init];
@@ -196,7 +197,7 @@ NSDictionary *getCollectionSyncEventProperties(SimiasCollectionSyncEvent *collec
 int SimiasEventSyncFile(SimiasFileSyncEvent *fileEvent, void *data)
 {
     NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
-//	NSLog(@"SimiasFileSyncEvent fired: %s", fileEvent->name);
+	ifconlog2(@"SimiasFileSyncEvent fired: %s", fileEvent->name);
 
 	NSDictionary *fseProps = [getFileSyncEventProperties(fileEvent) retain];
 	SMFileSyncEvent *fse = [[SMFileSyncEvent alloc] init];
@@ -251,7 +252,7 @@ NSDictionary *getFileSyncEventProperties(SimiasFileSyncEvent *fileEvent)
 int SimiasEventNotifyMessage(SimiasNotifyEvent *notifyEvent, void *data)
 {
     NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
-//	NSLog(@"SimiasNotifyEvent fired: %s - %s", notifyEvent->message, notifyEvent->type);
+	ifconlog3(@"SimiasNotifyEvent fired: %s - %s", notifyEvent->message, notifyEvent->type);
 
 	NSDictionary *neProps = [getNotifyEventProperties(notifyEvent) retain];
 	SMNotifyEvent *ne = [[SMNotifyEvent alloc] init];

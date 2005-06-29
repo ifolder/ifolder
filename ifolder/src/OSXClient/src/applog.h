@@ -20,6 +20,23 @@
  *  Author: Calvin Gaisford <cgaisford@novell.com>
  * 
  ***********************************************************************/
+ 
+#import <Cocoa/Cocoa.h>
 
-#define IFOLDER_PREFIX "@prefix@"
-#define SIMIAS_BINARY "@prefix@/bin/simias"
+#define	TheConsoleLogSwitch	( 1 )
+
+#if TheConsoleLogSwitch
+#define ifconlog1(x)		NSLog(x)
+#define ifconlog2(x,y)		NSLog(x,y)
+#define ifconlog3(x,y,z)	NSLog(x,y,z)
+#define ifconlog4(w,x,y,z)	NSLog(w,x,y,z)
+#define ifexconlog(x,y)		iFolderExceptionLog(x,y)
+#else
+#define ifconlog1(x)
+#define ifconlog2(x,y)
+#define ifconlog3(x,y,z)
+#define ifconlog4(w,x,y,z)
+#define ifexconlog(x,y)
+#endif
+
+void iFolderExceptionLog(NSString *methodLocation, NSException *ex);

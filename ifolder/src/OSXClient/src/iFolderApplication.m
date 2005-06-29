@@ -35,6 +35,7 @@
 #import "config.h"
 #import "AuthStatus.h"
 #include "simiasStub.h"
+#include "applog.h"
 
 #include <SystemConfiguration/SCDynamicStoreCopySpecific.h>
 #include <SystemConfiguration/SCSchemaDefinitions.h>
@@ -54,7 +55,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 //===================================================================
 -(void)awakeFromNib
 {
-	NSLog(@"Waiting for app to enable multithreading");
+	ifconlog1(@"Waiting for app to enable multithreading");
 	simiasIsLoaded = NO;
 
 	// this baby will get cocoa objects ready for mutlitple threads
@@ -65,14 +66,14 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 	while(![NSThread isMultiThreaded])
 	{
 		// wait until it is
-		NSLog(@"Waiting for app to enable multithreading");
+		ifconlog1(@"Waiting for app to enable multithreading");
 		[NSThread sleepUntilDate:[[NSDate date] addTimeInterval:.5] ];
 	}
 
-	NSLog(@"initializing Simias Events");
+	ifconlog1(@"initializing Simias Events");
 	[self initializeSimiasEvents];
 	
-	NSLog(@"Starting Simias Process");
+	ifconlog1(@"Starting Simias Process");
 	[ [Simias getInstance] start];
 
 	ifolderdata = [[iFolderData alloc] init];
@@ -342,7 +343,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 	runThreads = YES;
 	simiasIsLoaded = YES;
 
-	NSLog(@"Creating and loading iFolderData");
+	ifconlog1(@"Creating and loading iFolderData");
 	[ifolderdata refresh:NO];
 	
 	// Startup the event processing thread
@@ -452,7 +453,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 
 	if(!simiasRunning)
 	{
-		NSLog(@"Simias is not running, starting....");
+		ifconlog1(@"Simias is not running, starting....");
 		iFolderService *threadWebService;
 		
 		// Startup simias Process
@@ -467,13 +468,13 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 		
 			@try
 			{
-				NSLog(@"Pinging simias to check for startup...");
+				ifconlog1(@"Pinging simias to check for startup...");
 				simiasRunning = [threadWebService Ping];
 			}
-			@catch(NSException *e)
+			@catch(NSException *ex)
 			{
-				NSLog(@"Exception in Ping: %@ - %@", [e name], [e reason]);
-				NSLog(@"Failed to ping simias!");
+				ifconlog1(@"Failed to ping simias!");
+				ifexconlog(@"threadWebService:ping", ex);
 				simiasRunning = NO;
 			}
 			// I tried doing this in the catch above but sometimes we fail
@@ -481,11 +482,11 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 			// tight loop
 			if(!simiasRunning)
 			{
-				NSLog(@"Simias is not running, sleeping.");
+				ifconlog1(@"Simias is not running, sleeping.");
 				[NSThread sleepUntilDate:[[NSDate date] addTimeInterval:1]];
 			}
 
-			NSLog(@"freeing up threadWebService");
+			ifconlog1(@"freeing up threadWebService");
 			[threadWebService release];
 			threadWebService = nil;
 		}
@@ -502,7 +503,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 //===================================================================
 - (void)enableThreads:(id)arg
 {
-	NSLog(@"Enabling multithreaded processing");
+	ifconlog1(@"Enabling multithreaded processing");
 }
 
 
@@ -540,10 +541,10 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 			{
 				[self processFileSyncEvent:(SMFileSyncEvent *)sme];
 			}
-//			else
-//			{
-//				NSLog(@"***** UNHANDLED EVENT ****  Type: %@", [sme eventType]);
-//			}
+			else
+			{
+				ifconlog2(@"simiasEventThread encountered an unhandled event type: %@", [sme eventType]);
+			}
 			[sme release];
 		}
 	}
@@ -559,7 +560,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 //===================================================================
 - (void)processNotifyEvent:(SMNotifyEvent *)smne
 {
-	NSLog(@"Received a \"%@\" event with message \"%@\"", [smne type], [smne message]);
+	ifconlog3(@"Received a \"%@\" event with message \"%@\"", [smne type], [smne message]);
 
 	if([[smne type] compare:@"Domain-Up"] == 0)
 	{
@@ -574,18 +575,18 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 		}
 		@catch(NSException *ex)
 		{
-			NSLog(@"Exception Getting Domain Password %@", [ex name]);
+			ifexconlog(@"processNotifyEvent:GetDomainPassword", ex);
 		}
 
 		if(savedPassword != nil)
 		{
-			NSLog(@"Credentials found on domain, authenticating...");
+			ifconlog1(@"Credentials found on domain, authenticating...");
 
 			iFolderDomain *dom = [[iFolderData sharedInstance] getDomain:[smne message]];
 			if(dom != nil)
 				[[NSApp delegate] setupSimiasProxies:[dom host]];
 			else
-				NSLog(@"Unable to locate domain to setup proxies");
+				ifconlog1(@"Unable to locate domain to setup proxies");
 
 			@try
 			{
@@ -598,16 +599,16 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 			
 				if(	(statusCode == ns1__StatusCodes__Success) ||
 					(statusCode == ns1__StatusCodes__SuccessInGrace) )
-					NSLog(@"Successfully authenticated to domain %@", [smne message]);
+					ifconlog2(@"Successfully authenticated to domain %@", [smne message]);
 				else
 				{
-					NSLog(@"Unable to authenticate, status: %d", statusCode);
+					ifconlog2(@"Unable to authenticate, status: %d", statusCode);
 					showLoginDialog = YES;
 				}
 			}
 			@catch (NSException *e)
 			{
-				NSLog(@"Exception authenticating to domain: %@", [e name]);
+				ifconlog2(@"Exception authenticating to domain: %@", [e name]);
 				showLoginDialog = YES;
 			}			
 		}
@@ -648,10 +649,10 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 	{
 		[self processUserNodeEvent:ne];
 	}
-//	else
-//	{
-//		NSLog(@"***** UNHANDLED NODE EVENT ****  Type: %@", [ne type]);
-//	}
+	else
+	{
+		ifconlog2(@"processNodeEvent encountered an unhandled event type: %@", [ne type]);
+	}
 
 }
 
@@ -668,7 +669,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 	{
 		case NODE_CREATED:
 		{
-			NSLog(@"processCollectionNodeEvent NODE_CREATED");
+			ifconlog2(@"processCollectionNodeEvent NODE_CREATED: %@", [colNodeEvent collectionID]);
 
 			// not sure if we should read on every one but I think we
  			// need to in case of a new iFolder
@@ -678,7 +679,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 		}
 		case NODE_DELETED:
 		{
-//			NSLog(@"processCollectionNodeEvent NODE_DELETED");
+			ifconlog2(@"processCollectionNodeEvent NODE_DELETED: %@", [colNodeEvent collectionID]);
 
 			iFolder *ifolder = [[iFolderData sharedInstance]
 									getiFolder:[colNodeEvent collectionID]];
@@ -707,7 +708,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 									
 				if(![ifolder isSynchronizing])
 				{
-					NSLog(@"Collection is not syncing, processing a NODE_CHANGED on a collection");
+					ifconlog1(@"Collection is not syncing, processing a NODE_CHANGED on a collection");
 
 					[[iFolderData sharedInstance] 
 										readiFolder:[colNodeEvent collectionID]];
@@ -738,7 +739,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 	{
 		case NODE_CREATED:
 		{
-//			NSLog(@"processSubscriptionNodeEvent NODE_CREATED");
+			ifconlog2(@"processSubscriptionNodeEvent NODE_CREATED: %@", [subNodeEvent nodeID]);
 			iFolder *ifolder = [[iFolderData sharedInstance] 
 									readAvailableiFolder:[subNodeEvent nodeID]
 									inCollection:[subNodeEvent collectionID]];
@@ -751,7 +752,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 		}
 		case NODE_DELETED:
 		{
-//			NSLog(@"processSubscriptionNodeEvent NODE_DELETED");
+			ifconlog2(@"processSubscriptionNodeEvent NODE_DELETED: %@", [subNodeEvent nodeID]);
 
 			// Because we use the iFolder ID to hold subscriptions in the
 			// dictionary, we need to get the iFolderID we used
@@ -769,8 +770,8 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 		}
 		case NODE_CHANGED:
 		{
-//			NSLog(@"processSubscriptionNodeEvent NODE_CHANGED");
-	
+			ifconlog2(@"processSubscriptionNodeEvent NODE_CHANGED: %@", [subNodeEvent nodeID]);
+
 			// Because we use the iFolder ID to hold subscriptions in the
 			// dictionary, we need to get the iFolderID we used
 			NSString *ifolderID = [[iFolderData sharedInstance]
@@ -798,7 +799,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 	{
 		case NODE_CREATED:
 		{
-//			NSLog(@"user created, marking as such in iFolderSharedData");
+			ifconlog1(@"user created, marking as such in iFolderSharedData");
 			[[iFolderData sharedInstance] setUsersAdded:[userNodeEvent collectionID]];
 			break;
 		}
@@ -926,7 +927,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 
 				if([ifolder HasConflicts])
 				{
-					NSLog(@"iFolder has collisions, notifying user");
+					ifconlog1(@"iFolder has collisions, notifying user");
 					[iFolderNotificationController collisionNotification:ifolder];								
 				}
 
@@ -1006,6 +1007,8 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 
 	NSString *syncMessage = nil;
 	NSString *syncItemMessage = nil;
+
+	ifconlog2(@"File sync event fired: %@", [fse name]);
 
 	if([fse objectType] != FILE_SYNC_UNKNOWN)
 	{
@@ -1360,7 +1363,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 	{
 		if(SCDynamicStoreSetNotificationKeys ( dynStoreRef,
 				keysRef, NULL ))
-			NSLog(@"Setup to monitor proxy changes");
+			ifconlog1(@"Setup to monitor proxy changes");
 		
 		dynStoreRunLoopRef = SCDynamicStoreCreateRunLoopSource(NULL, dynStoreRef, 0);
 		CFRunLoopAddSource(CFRunLoopGetCurrent(), dynStoreRunLoopRef, kCFRunLoopCommonModes);
@@ -1413,12 +1416,12 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 		{
 			if(CFDictionaryGetValueIfPresent (ref, kSCPropNetProxiesHTTPSProxy, &proxyHost))
 			{
-				NSLog(@"HTTPS Proxy Value found %@", (NSString *)proxyHost);
+				ifconlog2(@"HTTPS Proxy Value found %@", (NSString *)proxyHost);
 				
 				// If we found the HTTPSProxy, check now for a Port
 				if(CFDictionaryGetValueIfPresent (ref, kSCPropNetProxiesHTTPSPort, &proxyPort))
 				{
-					NSLog(@"HTTPS Proxy Port found %@", (NSNumber *)proxyPort);
+					ifconlog2(@"HTTPS Proxy Port found %@", (NSNumber *)proxyPort);
 					// Even though this is https, set the http prefix because
 					// you can't talk to a proxy using https
 					proxyURI = [NSString stringWithFormat:@"http://%@:%@", (NSString *)proxyHost, (NSNumber *)proxyPort];
@@ -1430,12 +1433,12 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 		{
 			if(CFDictionaryGetValueIfPresent (ref, kSCPropNetProxiesHTTPProxy, &proxyHost))
 			{
-				NSLog(@"HTTP Proxy Value found %@", (NSString *)proxyHost);
+				ifconlog2(@"HTTP Proxy Value found %@", (NSString *)proxyHost);
 				
 				// If we found the HTTPSProxy, check now for a Port
 				if(CFDictionaryGetValueIfPresent (ref, kSCPropNetProxiesHTTPPort, &proxyPort))
 				{
-					NSLog(@"HTTP Proxy Port found %@", (NSNumber *)proxyPort);
+					ifconlog2(@"HTTP Proxy Port found %@", (NSNumber *)proxyPort);
 					proxyURI = [NSString stringWithFormat:@"http://%@:%@", (NSString *)proxyHost, (NSNumber *)proxyPort];
 					returnURI = YES;
 				}
@@ -1456,7 +1459,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 
 					if([host compare:(NSString *)bypassHost] == NSOrderedSame)
 					{
-						NSLog(@"Host found in ProxyExceptions, returning nil for proxy");
+						ifconlog1(@"Host found in Proxy Bypass list, returning nil for proxy");
 						proxyURI = nil;
 						returnURI = NO;
 						break;
@@ -1495,24 +1498,26 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 				ProxyPassword:nil] == NO)
 		{
 			if(httpsProxyURI != nil)
-				NSLog(@"iFolder was unable to setup the proxy %@", httpsProxyURI);
+				ifconlog2(@"iFolder was unable to setup the proxy %@", httpsProxyURI);
 			else
-				NSLog(@"iFolder was unable to remove the proxy setting");
+				ifconlog1(@"iFolder was unable to remove the proxy setting");
 		}
 		else
 		{
 			if(httpsProxyURI != nil)
-				NSLog(@"iFolder setup with proxy %@", httpsProxyURI);
+				ifconlog2(@"iFolder setup with proxy %@", httpsProxyURI);
 			else
-				NSLog(@"iFolder setup without a proxy");
+				ifconlog1(@"iFolder setup without a proxy");
 		}
 	}
 	@catch (NSException *e)
 	{
 		if(httpsProxyURI != nil)
-			NSLog(@"iFolder encountered an exception while setting up the proxy %@: %@", httpsProxyURI, [e name] );
+			ifconlog2(@"iFolder encountered an exception while setting up the proxy %@", httpsProxyURI);
 		else
-			NSLog(@"iFolder encountered an exception while clearing the proxy: %@",[e name] );
+			ifconlog1(@"iFolder encountered an exception while clearing the proxy");
+
+		ifexconlog(@"setupSmiasProxies", e);
 	}
 
 	hostURI = [NSString stringWithFormat:@"http://%@", host];
@@ -1526,24 +1531,26 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 				ProxyPassword:nil] == NO)
 		{
 			if(httpProxyURI != nil)
-				NSLog(@"iFolder was unable to setup the proxy %@", httpProxyURI);
+				ifconlog2(@"iFolder was unable to setup the proxy %@", httpProxyURI);
 			else
-				NSLog(@"iFolder was unable to remove the proxy setting");
+				ifconlog1(@"iFolder was unable to remove the proxy setting");
 		}
 		else
 		{
 			if(httpProxyURI != nil)
-				NSLog(@"iFolder setup with proxy %@", httpProxyURI);
+				ifconlog2(@"iFolder setup with proxy %@", httpProxyURI);
 			else
-				NSLog(@"iFolder setup without a proxy");
+				ifconlog1(@"iFolder setup without a proxy");
 		}
 	}
 	@catch (NSException *e)
 	{
-		if(httpProxyURI != nil)
-			NSLog(@"iFolder encountered an exception while setting up the proxy %@: %@", httpProxyURI, [e name] );
+		if(httpsProxyURI != nil)
+			ifconlog2(@"iFolder encountered an exception while setting up the proxy %@", httpsProxyURI);
 		else
-			NSLog(@"iFolder encountered an exception while clearing the proxy: %@",[e name] );
+			ifconlog1(@"iFolder encountered an exception while clearing the proxy");
+
+		ifexconlog(@"setupSmiasProxies", e);
 	}
 
 	[simiasService release];

@@ -21,5 +21,24 @@
  * 
  ***********************************************************************/
 
-#define IFOLDER_PREFIX "@prefix@"
-#define SIMIAS_BINARY "@prefix@/bin/simias"
+#include "applog.h"
+
+void iFolderExceptionLog(NSString *methodLocation, NSException *ex)
+{
+	NSString *name;
+	NSString *reason;
+	if(ex != nil)
+	{
+		name = [ex name];
+		if(name == nil)
+			name = @"nil";
+
+		reason = [ex reason];
+		if(reason == nil)
+			reason = @"nil";
+
+		ifconlog4(@"Exception in %@: %@ %@", methodLocation, [ex name], [ex reason]);
+	}
+	else
+		ifconlog2(@"A nil exception was thrown in %@", methodLocation);
+}
