@@ -144,18 +144,20 @@ namespace Novell.iFolder
 			try
 			{
 				Gnome.Url.Show(HelpURL(helpFile));
+				return;
 			}
-			catch(Exception e)
-			{
-				MessageDialog med = new MessageDialog(parent,
-					DialogFlags.DestroyWithParent | DialogFlags.Modal,
-					MessageType.Error,
-					ButtonsType.Close,
-					string.Format("Error displaying help file:{0}", e));
-				med.Title = "Help file error";
-				med.Run();
-				med.Hide();
-			}
+			catch {}
+
+			iFolderMsgDialog dg = new iFolderMsgDialog(
+				parent,
+				iFolderMsgDialog.DialogType.Error,
+				iFolderMsgDialog.ButtonSet.Ok,
+				"",
+				string.Format(Util.GS("Error displaying help file \"{0}\""), helpFile),
+				Util.GS("iFolder could not open the default web browser to show the help file."));
+			dg.Run();
+			dg.Hide();
+			dg.Destroy();
 		}
 
 		public static void ShowAbout()

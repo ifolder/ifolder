@@ -1179,7 +1179,7 @@ namespace Novell.iFolder
 					{
 						if (PropertiesDialog.CurrentPage == 0)
 						{
-							Util.ShowHelp("properties.html.html", this);
+							Util.ShowHelp("propifolders.html", this);
 						}
 						else if (PropertiesDialog.CurrentPage == 1)
 						{
