@@ -317,19 +317,39 @@ static iFolderWindowController *sharedInstance = nil;
 {
 	int selIndex = [ifoldersController selectionIndex];
 	iFolder *ifolder = [[ifoldersController arrangedObjects] objectAtIndex:selIndex];
-	if([[ifolder OwnerUserID] compare:[ifolder CurrentUserID]] == 0)
+	if([ifolder IsSubscription])
 	{
-		NSBeginAlertSheet(NSLocalizedString(@"Delete iFolder", @"Delete iFolder Dialog Title"), NSLocalizedString(@"Yes", @"Delete iFolder Dialog button"), 
-			NSLocalizedString(@"Cancel", @"Delete iFolder Dialog button"), nil,
-			[self window], self, @selector(deleteiFolderResponse:returnCode:contextInfo:), nil, (void *)selIndex, 
-			NSLocalizedString(@"This removes the iFolder from your local computer.  Because you are the owner, the iFolder is deleted from the server and all member computers.  The iFolder cannot be recovered or re-shared on another computer.  The files are not deleted from your local hard drive.  Are you sure you want to delete the iFolder?", @"Delete iFolder Dialog message"));
+		if([[ifolder OwnerUserID] compare:[ifolder CurrentUserID]] == 0)
+		{
+			NSBeginAlertSheet(NSLocalizedString(@"Are you sure you want to delete the iFolder?", @"Delete iFolder Dialog Title"), NSLocalizedString(@"Yes", @"Delete iFolder Dialog button"), 
+				NSLocalizedString(@"Cancel", @"Delete iFolder Dialog button"), nil,
+				[self window], self, @selector(deleteiFolderResponse:returnCode:contextInfo:), nil, (void *)selIndex, 
+				NSLocalizedString(@"Because you are the iFolder owner, this unshares the iFolder, reverts all copies of the iFolder to normal folders, and deletes the iFolder from the server. Local copies of the iFolder contents are not deleted from computers where the iFolder is currently set up.", @"Delete iFolder Dialog message"));
+		}
+		else
+		{
+			NSBeginAlertSheet(NSLocalizedString(@"Are you sure you want to delete the iFolder?", @"Delete iFolder Dialog Title"), NSLocalizedString(@"Yes", @"Delete iFolder Dialog button"), 
+				NSLocalizedString(@"Cancel", @"Delete iFolder Dialog button"), nil,
+				[self window], self, @selector(deleteiFolderResponse:returnCode:contextInfo:), nil, (void *)selIndex, 
+				NSLocalizedString(@"This removes you as a member of the iFolder. Local copies of the iFolder contents are not deleted from computers where the iFolder is currently set up. You cannot access the original iFolder from any computer unless the owner re-invites you.", @"Delete iFolder Dialog message"));
+		}
 	}
 	else
 	{
-		NSBeginAlertSheet(NSLocalizedString(@"Delete iFolder", @"Delete iFolder Dialog Title"), NSLocalizedString(@"Yes", @"Delete iFolder Dialog button"), 
-			NSLocalizedString(@"Cancel", @"Delete iFolder Dialog button"), nil,
-			[self window], self, @selector(deleteiFolderResponse:returnCode:contextInfo:), nil, (void *)selIndex, 
-			NSLocalizedString(@"This removes you as a member of the iFolder.  You cannot access the iFolder unless the owner re-invites you.  The files are not deleted from your local hard drive.  Are you sure you want to delete the iFolder?", @"Delete iFolder Dialog message"));
+		if([[ifolder OwnerUserID] compare:[ifolder CurrentUserID]] == 0)
+		{
+			NSBeginAlertSheet(NSLocalizedString(@"Are you sure you want to delete the iFolder?", @"Delete iFolder Dialog Title"), NSLocalizedString(@"Yes", @"Delete iFolder Dialog button"), 
+				NSLocalizedString(@"Cancel", @"Delete iFolder Dialog button"), nil,
+				[self window], self, @selector(deleteiFolderResponse:returnCode:contextInfo:), nil, (void *)selIndex, 
+				NSLocalizedString(@"This removes the iFolder from your local computer.  Because you are the owner, the iFolder is deleted from the server and all member computers.  The iFolder cannot be recovered or re-shared on another computer.  The files are not deleted from your local hard drive.", @"Delete iFolder Dialog message"));
+		}
+		else
+		{
+			NSBeginAlertSheet(NSLocalizedString(@"Are you sure you want to delete the iFolder?", @"Delete iFolder Dialog Title"), NSLocalizedString(@"Yes", @"Delete iFolder Dialog button"), 
+				NSLocalizedString(@"Cancel", @"Delete iFolder Dialog button"), nil,
+				[self window], self, @selector(deleteiFolderResponse:returnCode:contextInfo:), nil, (void *)selIndex, 
+				NSLocalizedString(@"This removes you as a member of the iFolder.  You cannot access the iFolder unless the owner re-invites you.  The files are not deleted from your local hard drive.", @"Delete iFolder Dialog message"));
+		}
 	}
 }
 
