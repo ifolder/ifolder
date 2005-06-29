@@ -28,6 +28,7 @@
 #import "iFolderService.h"
 #import "SimiasService.h"
 #import "iFolderWindowController.h"
+#import "applog.h"
 
 
 static iFolderData *sharedInstance = nil;
@@ -158,7 +159,7 @@ static iFolderData *sharedInstance = nil;
 {
 	[instanceLock lock];
 
-//	NSLog(@"Refreshing iFolderData");
+	ifconlog1(@"Refreshing iFolderData");
 
 	@try
 	{
@@ -214,11 +215,11 @@ static iFolderData *sharedInstance = nil;
 	}
 	@catch (NSException *e)
 	{
-		NSLog(@"*********Exception refreshing iFolderData");
-		NSLog(@"%@ :: %@", [e name], [e reason]);
+		ifconlog1(@"Exception refreshing iFolderData");
+		ifexconlog(@"iFolderData:refres", e);
 	}
 
-//	NSLog(@"Done Refreshing iFolderData");	
+	ifconlog1(@"Done Refreshing iFolderData");	
 
 	[instanceLock unlock];
 
@@ -234,7 +235,7 @@ static iFolderData *sharedInstance = nil;
 -(void)_addDomain:(iFolderDomain *)domain
 {
 	[instanceLock lock];
-	NSLog(@"Addding domain: %@", [domain name]);
+	ifconlog2(@"Addding domain: %@", [domain name]);
 	[domainsController addObject:domain];
 	[keyedDomains setObject:domain forKey:[domain ID]];
 	
@@ -392,7 +393,7 @@ static iFolderData *sharedInstance = nil;
 	iFolder *ifolder = nil;
 	[instanceLock lock];
 
-	NSLog(@"iFolderData readiFolder called for iFolder %@", ifolderID);
+	ifconlog2(@"iFolderData readiFolder called for iFolder %@", ifolderID);
 
 	ifolder = [self getiFolder:ifolderID];
 
@@ -413,8 +414,8 @@ static iFolderData *sharedInstance = nil;
 	}
 	@catch (NSException *e)
 	{
-		NSLog(@"*********Exception getting iFolder");
-		NSLog(@"%@ :: %@", [e name], [e reason]);
+		ifconlog1(@"Exception getting iFolder");
+		ifexconlog(@"GetiFolder", e);
 	}
 
 	[instanceLock unlock];
@@ -440,7 +441,7 @@ static iFolderData *sharedInstance = nil;
 	}
 	@catch(NSException *ex)
 	{
-		NSLog(@"iFolderData:createiFolder exception: %@", [ex name]);
+		ifexconlog(@"iFolderData:createiFolder", ex);
 		[instanceLock unlock];
 		[ex raise];
 	}
@@ -673,8 +674,7 @@ static iFolderData *sharedInstance = nil;
 	}
 	@catch (NSException *e)
 	{
-		NSLog(@"*********Exception getting iFolder");
-		NSLog(@"%@ :: %@", [e name], [e reason]);
+		ifexconlog(@"readAvailableiFolder", e);
 	}
 
 	[instanceLock unlock];
@@ -847,7 +847,7 @@ static iFolderData *sharedInstance = nil;
 
 -(void)setUsersAdded:(NSString *)ifolderID
 {
-//	NSLog(@"Setting user added for %@", ifolderID);
+	ifconlog2(@"Setting user added for %@", ifolderID);
 	[instanceLock lock];
 	[ifolderUserChanges setObject:[NSNumber numberWithBool:YES] forKey:ifolderID];
 	[instanceLock unlock];	
@@ -857,7 +857,7 @@ static iFolderData *sharedInstance = nil;
 
 -(BOOL)usersAdded:(NSString *)ifolderID
 {
-//	NSLog(@"Checking user added for %@", ifolderID);
+	ifconlog2(@"Checking user added for %@", ifolderID);
 	BOOL useradded = NO;
 	[instanceLock lock];
 	useradded = ([ifolderUserChanges objectForKey:ifolderID] != nil);
@@ -869,7 +869,7 @@ static iFolderData *sharedInstance = nil;
 
 -(void)clearUsersAdded:(NSString *)ifolderID
 {
-//	NSLog(@"Clearing user added for %@", ifolderID);
+	ifconlog2(@"Clearing user added for %@", ifolderID);
 	[instanceLock lock];
 	[ifolderUserChanges removeObjectForKey:ifolderID];
 	[instanceLock unlock];	

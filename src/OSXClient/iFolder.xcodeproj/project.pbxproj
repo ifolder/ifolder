@@ -75,6 +75,7 @@
 		3E8853DC07C6F80A00E8B6CD /* KABubbleWindowView.h in Resources */ = {isa = PBXBuildFile; fileRef = 3E8853D207C6F80A00E8B6CD /* KABubbleWindowView.h */; };
 		3E8853DD07C6F80A00E8B6CD /* KABubbleWindowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E8853D307C6F80A00E8B6CD /* KABubbleWindowView.m */; };
 		3E8A565407C1039E00FDAD31 /* mono-powered.png in Resources */ = {isa = PBXBuildFile; fileRef = 3E8A565307C1039E00FDAD31 /* mono-powered.png */; };
+		3E9A95700873120200702179 /* applog.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E9A956F0873120200702179 /* applog.m */; };
 		3E9B1B03077927E20072994B /* SetupiFolderSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E9B1B01077927E20072994B /* SetupiFolderSheetController.m */; };
 		3E9B1B04077927E20072994B /* SetupiFolderSheetController.h in Resources */ = {isa = PBXBuildFile; fileRef = 3E9B1B02077927E20072994B /* SetupiFolderSheetController.h */; };
 		3E9D3F2407DFA79C00AA93D6 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 3E9D3F2307DFA79C00AA93D6 /* Credits.rtf */; };
@@ -257,6 +258,8 @@
 		3E946FA3086A44BD00B73E10 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/iFolderWindow.nib; sourceTree = "<group>"; };
 		3E946FA6086A44C300B73E10 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/ConflictResolver.nib; sourceTree = "<group>"; };
 		3E946FA9086A44C900B73E10 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/AcceptCert.nib; sourceTree = "<group>"; };
+		3E9A956E0873120200702179 /* applog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = applog.h; path = src/applog.h; sourceTree = "<group>"; };
+		3E9A956F0873120200702179 /* applog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = applog.m; path = src/applog.m; sourceTree = "<group>"; };
 		3E9B1B01077927E20072994B /* SetupiFolderSheetController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = SetupiFolderSheetController.m; path = src/SetupiFolderSheetController.m; sourceTree = "<group>"; };
 		3E9B1B02077927E20072994B /* SetupiFolderSheetController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = SetupiFolderSheetController.h; path = src/SetupiFolderSheetController.h; sourceTree = "<group>"; };
 		3EA94F5F07B823CA0088FD0F /* config.h.in */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = config.h.in; path = src/config.h.in; sourceTree = "<group>"; };
@@ -491,6 +494,8 @@
 			isa = PBXGroup;
 			children = (
 				3EA94F5F07B823CA0088FD0F /* config.h.in */,
+				3E9A956E0873120200702179 /* applog.h */,
+				3E9A956F0873120200702179 /* applog.m */,
 				3E66705207B7D3CC0047E683 /* Simias.h */,
 				3E66705307B7D3CC0047E683 /* Simias.m */,
 				3EE886EA07B92E8B00484B9F /* iFolderApplication.h */,
@@ -774,6 +779,7 @@
 				3E215A4F07E73C310082EACE /* MemberSearchResults.m in Sources */,
 				3E1F31B407EA2AFB005E45BA /* AuthStatus.m in Sources */,
 				3EBE7AA507FC76F200DC9A8E /* AcceptCertSheetController.m in Sources */,
+				3E9A95700873120200702179 /* applog.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -725,6 +725,47 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 
 
 
+//----------------------------------------------------------------------------
+// SetDomainHostAddress
+// Sets the Address for the specified domainID
+//----------------------------------------------------------------------------
+-(BOOL) SetDomainHostAddress:(NSString *)domainID
+							NewHostAddress:(NSString *)hostAddress
+{
+    struct soap soap;
+	GSOAP_CREDS creds;
+    int err_code;
+	BOOL setHostResult = NO;
+
+	struct _ns1__SetDomainHostAddress			setAddrMessage;
+	struct _ns1__SetDomainHostAddressResponse	setAddrResponse;
+
+	NSAssert( (domainID != nil), @"domainID was nil");
+	NSAssert( (hostAddress != nil), @"hostAddress was nil");
+
+	setAddrMessage.domainID = (char *)[domainID UTF8String];
+	setAddrMessage.hostAddress = (char *)[hostAddress UTF8String];
+	
+    init_simias_gsoap (&soap, &creds);
+
+    err_code = soap_call___ns1__SetDomainHostAddress(
+			&soap,
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
+            NULL,
+            &setAddrMessage,
+            &setAddrResponse);
+
+	handle_simias_soap_error(&soap, &creds, @"SimiasService.SetDomainHostAddress");
+
+	setHostResult = (BOOL) setAddrResponse.SetDomainHostAddressResult;
+
+    cleanup_simias_gsoap(&soap, &creds);
+
+	return setHostResult;
+}
+
+
+
 
 //----------------------------------------------------------------------------
 // getDomainProperties

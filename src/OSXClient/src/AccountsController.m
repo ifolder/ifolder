@@ -35,6 +35,7 @@
 #include "Security/Security.h"
 #import "AcceptCertSheetController.h"
 #include "SecurityInterface/SFCertificatePanel.h"
+#include "applog.h"
 
 @implementation AccountsController
 
@@ -89,7 +90,7 @@
 	}
 	@catch(NSException *ex)
 	{
-		NSLog(@"Exception in GetDomains: %@ - %@", [ex name], [ex reason]);
+		ifexconlog(@"Accounts:awakefromNib:GetDomains", ex);
 	}
 }
 
@@ -131,6 +132,10 @@
 
 		@try
 		{
+			// Set the current host address, I'm not sure what to do if this fails
+			ifconlog1(@"Calling into SetDomainHostAddress");
+			[simiasService SetDomainHostAddress:[selectedDomain ID] NewHostAddress:[host stringValue]];
+
 			AuthStatus *authStatus = [[simiasService LoginToRemoteDomain:[selectedDomain ID]
 										usingPassword:[password stringValue]] retain];
 
@@ -142,6 +147,7 @@
 				case ns1__StatusCodes__SuccessInGrace:		// SuccessInGrace
 				{
 					[loginout setEnabled:YES];
+					[host setEnabled:NO];
 					[loginout setTitle:NSLocalizedString(@"Log Out", @"Login/Logout Button on Accounts Dialog")];
 					[state setStringValue:NSLocalizedString(@"Logged in", @"Login status on Accounts Dialog")];
 					[selectedDomain setValue:[NSNumber numberWithBool:YES] forKeyPath:@"properties.authenticated"];
@@ -172,7 +178,7 @@
 					}
 					@catch(NSException *ex)
 					{
-						NSLog(@"Exception getting cert.");
+						ifexconlog(@"GetCertificate", ex);
 					}						
 					break;
 				}
@@ -236,7 +242,7 @@
 		}
 		@catch (NSException *e)
 		{
-			NSLog(@"Exception thrown calling ConnectToDomain: %@", [e name]);
+			ifexconlog(@"AccountsController:loginAccount", e);
 			NSBeginAlertSheet(NSLocalizedString(@"An error was encountered while connecting to the iFolder server", @"Exception error dialog message for login"), 
 			NSLocalizedString(@"OK", @"Exception error button title for login"), nil, nil, 
 			parentWindow, nil, nil, nil, nil, 
@@ -265,25 +271,28 @@
 				[loginout setTitle:NSLocalizedString(@"Log In", @"Login/Logout Button on Accounts Dialog")];
 				[state setStringValue:NSLocalizedString(@"Logged out", @"Login/Logout status on Accounts dialog")];
 				[selectedDomain setValue:[NSNumber numberWithBool:NO] forKeyPath:@"properties.authenticated"];
+				[host setEnabled:YES];
 			}
 			else
 			{
-				NSLog(@"Error returned from LogoutFromRemoteDomain: %d", statusCode);
+				ifconlog2(@"Error returned from LogoutFromRemoteDomain: %d", statusCode);
 				NSBeginAlertSheet(NSLocalizedString(@"An error was encountered while logging out of the iFolder server.", @"Error Logout Dialog message on Accounts dialog"), 
 				NSLocalizedString(@"OK", @"Error Logout Dialog button on Accounts dialog"), nil, nil, 
 				parentWindow, nil, nil, nil, nil, 
 				NSLocalizedString(@"If the problem persists, please contact your network administrator.", @"Error Logout Dialog details on Accounts dialog"));
+				[host setEnabled:NO];
 			}
 
 			[authStatus release];
 		}
 		@catch (NSException *e)
 		{
-			NSLog(@"Exception thrown calling LogoutFromRemoteDomain: %@", [e name]);
+			ifexconlog(@"LogoutFromRemoteDomain", e);
 			NSBeginAlertSheet(NSLocalizedString(@"An error was encountered while logging out of the iFolder server.", @"Error Logout Dialog message on Accounts dialog"), 
 			NSLocalizedString(@"OK", @"Error Logout Dialog button on Accounts dialog"), nil, nil, 
 			parentWindow, nil, nil, nil, nil, 
 			NSLocalizedString(@"If the problem persists, please contact your network administrator.", @"Error Logout Dialog details on Accounts dialog"));
+			[host setEnabled:NO];
 		}
 	}
 }
@@ -323,8 +332,7 @@
 				}
 				@catch (NSException *e)
 				{
-					NSLog(@"LoginToRemoteDomain Failed");
-					NSLog([e reason]);
+					ifexconlog(@"LoginToRemoteDomain", e);
 				}
 			}
 			
@@ -350,7 +358,7 @@
 						}
 						@catch(NSException *ex)
 						{
-							NSLog(@"SetDefaultDomain Failed with an exception.");
+							ifexconlog(@"SetDefaultDomain", ex);
 						}
 					}
 
@@ -362,7 +370,7 @@
 						}
 						@catch(NSException *ex)
 						{
-							NSLog(@"Saving domain password Failed with an exception.");
+							ifexconlog(@"SetDomainPassword", ex);
 						}			
 					}
 
@@ -402,7 +410,7 @@
 					}
 					@catch(NSException *ex)
 					{
-						NSLog(@"Exception getting cert.");
+						ifexconlog(@"GetCertificate", ex);
 					}						
 					break;
 				}
@@ -464,7 +472,7 @@
 		}
 		@catch (NSException *e)
 		{
-			NSLog(@"Exception thrown calling ConnectToDomain: %@", [e reason]);
+			ifexconlog(@"ConnectToDomain", e);
 			if([[e reason] isEqualToString:@"DomainExistsError"])
 			{
 				NSBeginAlertSheet(NSLocalizedString(@"Account Already Exists", @"Attach Error Account Exists message"), 
@@ -548,12 +556,12 @@
 		}
 		@catch(NSException *ex)
 		{
-			NSLog(@"Exception storing certificate.");
+			ifexconlog(@"StoreCertificate", ex);
 		}						
 	}
 	else
 	{
-		NSLog(@"User did not accept certificate, not storing or authenticating");
+		ifconlog1(@"User did not accept certificate, not storing or authenticating");
 	}
 	
 	if(certRef != NULL)
@@ -577,7 +585,7 @@
 	}
 	@catch(NSException *ex)
 	{
-		NSLog(@"LeaveDomain Failed with an exception.");
+		ifexconlog(@"LeaveDomain", ex);
 	}
 }
 
@@ -608,7 +616,7 @@
 		}
 		@catch(NSException *ex)
 		{
-			NSLog(@"SetDomainActive Failed with an exception.");
+			ifexconlog(@"SetDomainActive", ex);
 		}
 	}
 	else
@@ -625,7 +633,7 @@
 		}
 		@catch(NSException *ex)
 		{
-			NSLog(@"SetDomainInactive Failed with an exception.");
+			ifexconlog(@"SetDomainInactive", ex);
 		}
 	}
 }
@@ -651,7 +659,7 @@
 			}
 			@catch(NSException *ex)
 			{
-				NSLog(@"SetDefaultDomain Failed with an exception.");
+				ifexconlog(@"SetDefaultDomain", ex);
 			}
 		}
 	}
@@ -673,11 +681,11 @@
 				newPassword = [password stringValue];
 			}
 			else
-				NSLog(@"Saved password was nil, removing saved password...");
+				ifconlog1(@"Saved password was nil, removing saved password...");
 		}
 		else
 		{
-			NSLog(@"Removing saved password...");
+			ifconlog1(@"Removing saved password...");
 		}
 
 		@try
@@ -686,7 +694,7 @@
 		}
 		@catch(NSException *ex)
 		{
-			NSLog(@"Saving password failed with an exception");
+			ifexconlog(@"SetDomainPassword", ex);
 		}
 	}
 }

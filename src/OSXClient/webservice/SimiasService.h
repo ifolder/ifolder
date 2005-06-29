@@ -67,6 +67,8 @@ typedef struct gsoap_creds
 				ProxyUser:(NSString *)proxyUser 
 				ProxyPassword:(NSString *)proxyPassword;
 
+-(BOOL) SetDomainHostAddress:(NSString *)domainID
+							NewHostAddress:(NSString *)hostAddress;
 
 @end
 
