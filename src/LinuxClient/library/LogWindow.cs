@@ -399,6 +399,20 @@ namespace Novell.iFolder
 							Util.GS("File type restriction policy prevented synchronization: {0}"),
 							args.Name);
 						break;
+					case SyncStatus.DiskFull:
+						if (args.Direction == Simias.Client.Event.Direction.Uploading)
+						{
+							message = string.Format(
+								Util.GS("Insufficient disk space on the server prevented synchronization: {0}"),
+								args.Name);
+						}
+						else
+						{
+							message = string.Format(
+								Util.GS("Insufficient disk space on this computer prevented synchronization: {0}"),
+								args.Name);
+						}
+						break;
 					default:
 						message = string.Format(
 							Util.GS("iFolder failed synchronization: {0}"),
