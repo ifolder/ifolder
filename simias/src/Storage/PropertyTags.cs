@@ -61,6 +61,11 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
+		static public string Creator = "Creator";
+
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
 		static public string CreationTime = "Create";
 
 		/// <summary>
@@ -286,6 +291,7 @@ namespace Simias.Storage
 			systemPropertyTable.Add( CollectionLock, null );
 			systemPropertyTable.Add( CreateMaster, null );
 			systemPropertyTable.Add( CreationTime, null );
+			systemPropertyTable.Add( Creator, null );
 			systemPropertyTable.Add( DefaultDomain, null );
 			systemPropertyTable.Add( Domain, null );
 			systemPropertyTable.Add( DomainID, null );

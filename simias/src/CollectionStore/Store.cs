@@ -360,7 +360,9 @@ namespace Simias.Storage
 					Member member = new Member( owner.Name, owner.ID, Access.Rights.Admin );
 					member.IsOwner = true;
 
-					// Save the local database changes.
+					// Save the local database changes. Impersonate so that the creator of these nodes
+					// can be set before the identity node is committed to the store.
+					ldb.Impersonate( member );
 					ldb.Commit( new Node[] { ldb, member, owner } );
 
 					// Create the local domain.

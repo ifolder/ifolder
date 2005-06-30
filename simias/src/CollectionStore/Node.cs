@@ -344,6 +344,18 @@ namespace Simias.Storage
 				}
 			}
 		}
+
+		/// <summary>
+		/// Gets the user that created this node.
+		/// </summary>
+		public string Creator
+		{
+			get 
+			{
+				Property p = properties.FindSingleValue( PropertyTags.Creator );
+				return ( p != null ) ? p.ToString() : null;
+			}
+		}
 		#endregion
 
 		#region Constructors

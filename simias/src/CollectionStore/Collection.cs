@@ -477,6 +477,15 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets the current/impersonating user.
+		/// </summary>
+		/// <returns>The member ID for the current/impersonating user.</returns>
+		private string GetCreator()
+		{
+			return ( accessControl.IsImpersonating ) ? accessControl.ImpersonationMember.UserID : store.CurrentUser.ID;
+		}
+
+		/// <summary>
 		/// Increments the local incarnation property.
 		///
 		/// NOTE: The database must be locked before making this call and must continue to be held until
@@ -664,6 +673,9 @@ namespace Simias.Storage
 
 							// Set the update time of the node.
 							node.UpdateTime = commitTime;
+
+							// Set the creator ID on the node.
+							node.Properties.AddNodeProperty( PropertyTags.Creator, GetCreator() );
 
 							// Check so that sync roles can be set on the collection.
 							if ( IsType( node, NodeTypes.CollectionType ) )
