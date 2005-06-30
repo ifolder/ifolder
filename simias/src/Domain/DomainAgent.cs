@@ -33,6 +33,7 @@ using Simias;
 using Simias.Authentication;
 using Simias.Client;
 using Simias.POBox;
+using Simias.Policy;
 using Simias.Security.Web.AuthenticationService;
 using Simias.Storage;
 using Simias.Sync;
@@ -841,20 +842,37 @@ namespace Simias.DomainServices
 				throw new DoesNotExistException( String.Format( "Cannot get domain for user {0}", memberID ) );
 			}
 
-			// Get the network location of the server.
-			Uri uri = DomainProvider.ResolveLocation( domain.ID );
-			if (uri == null)
+			try
 			{
-				throw new SimiasException( String.Format( "The network location could not be determined for domain {0}.", domain.ID ) );
+				// Get the network location of the server.
+				Uri uri = DomainProvider.ResolveLocation( domain.ID );
+				if (uri == null)
+				{
+					throw new SimiasException( String.Format( "The network location could not be determined for domain {0}.", domain.ID ) );
+				}
+
+				// Construct the web client.
+				DomainService domainService = new DomainService();
+				domainService.Url = uri.ToString() + "/DomainService.asmx";
+				WebState webState = new WebState( domain.ID );
+				webState.InitializeWebClient( domainService, domain.ID );
+
+				return domainService.GetMemberDiskSpaceUsed( memberID, out limit );
 			}
+			catch
+			{
+				// Report the disk space quota from the local store. This may not be exact, but it is the 
+				// last known good value.
+				Member member = domain.GetMemberByID( memberID );
+				if ( member == null )
+				{
+					throw new DoesNotExistException( String.Format( "Cannot find member {0} in domain {1}", memberID, domain.ID ) );
+				}
 
-			// Construct the web client.
-			DomainService domainService = new DomainService();
-			domainService.Url = uri.ToString() + "/DomainService.asmx";
-			WebState webState = new WebState( domain.ID );
-			webState.InitializeWebClient( domainService, domain.ID );
-
-			return domainService.GetMemberDiskSpaceUsed( memberID, out limit );
+				DiskSpaceQuota dsq = DiskSpaceQuota.Get( member );
+				limit = dsq.Limit;
+				return dsq.UsedSpace;
+			}
 		}
 
 		/// <summary>
@@ -872,20 +890,30 @@ namespace Simias.DomainServices
 				throw new DoesNotExistException( "The specified collection does not exist." );
 			}
 
-			// Get the network location of the server where this collection is hosted.
-			Uri uri = DomainProvider.ResolveLocation( collection );
-			if (uri == null)
+			try
 			{
-				throw new SimiasException( String.Format( "The network location could not be determined for collection {0}.", collectionID ) );
+				// Get the network location of the server where this collection is hosted.
+				Uri uri = DomainProvider.ResolveLocation( collection );
+				if (uri == null)
+				{
+					throw new SimiasException( String.Format( "The network location could not be determined for collection {0}.", collectionID ) );
+				}
+
+				// Construct the web client.
+				DomainService domainService = new DomainService();
+				domainService.Url = uri.ToString() + "/DomainService.asmx";
+				WebState webState = new WebState( collection.Domain, collectionID );
+				webState.InitializeWebClient( domainService, collection.Domain );
+
+				return domainService.GetiFolderDiskSpaceUsed( collectionID, out limit );
 			}
-
-			// Construct the web client.
-			DomainService domainService = new DomainService();
-			domainService.Url = uri.ToString() + "/DomainService.asmx";
-			WebState webState = new WebState( collection.Domain, collectionID );
-			webState.InitializeWebClient( domainService, collection.Domain );
-
-			return domainService.GetiFolderDiskSpaceUsed( collectionID, out limit );
+			catch
+			{
+				// Report the collection limit from the local store. This may not be exact, but it is the 
+				// last known good value.
+				limit = DiskSpaceQuota.GetLimit( collection );
+				return collection.StorageSize;
+			}
 		}
 		#endregion
 	}
