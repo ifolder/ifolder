@@ -404,7 +404,7 @@ namespace Simias.Sync
 			{
 				if (fileMap[i] != -1)
 				{
-					Copy(fileMap[i], WritePosition, HashData.BlockSize);
+					Copy(fileMap[i], (long)i * (long)HashData.BlockSize, HashData.BlockSize);
 				}
 				else
 				{
@@ -423,6 +423,7 @@ namespace Simias.Sync
 				try
 				{
 					int bytesToWrite = (int)Math.Min(sizeRemaining, (seg.EndBlock - seg.StartBlock + 1) * HashData.BlockSize);
+					WritePosition = (long)seg.StartBlock * (long)HashData.BlockSize;
 					Write(inStream, bytesToWrite);
 					sizeRemaining -= bytesToWrite;
 					eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Downloading));
