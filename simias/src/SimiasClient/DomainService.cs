@@ -143,6 +143,50 @@ public class DomainService : System.Web.Services.Protocols.SoapHttpClientProtoco
         object[] results = this.EndInvoke(asyncResult);
         return ((string)(results[0]));
     }
+    
+    /// <remarks/>
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/domain/GetMemberDiskSpaceUsed", RequestNamespace="http://novell.com/simias/domain", ResponseNamespace="http://novell.com/simias/domain", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    public long GetMemberDiskSpaceUsed(string memberID, out long limit) {
+        object[] results = this.Invoke("GetMemberDiskSpaceUsed", new object[] {
+                    memberID});
+        limit = ((long)(results[1]));
+        return ((long)(results[0]));
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult BeginGetMemberDiskSpaceUsed(string memberID, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("GetMemberDiskSpaceUsed", new object[] {
+                    memberID}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public long EndGetMemberDiskSpaceUsed(System.IAsyncResult asyncResult, out long limit) {
+        object[] results = this.EndInvoke(asyncResult);
+        limit = ((long)(results[1]));
+        return ((long)(results[0]));
+    }
+    
+    /// <remarks/>
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/domain/GetiFolderDiskSpaceUsed", RequestNamespace="http://novell.com/simias/domain", ResponseNamespace="http://novell.com/simias/domain", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    public long GetiFolderDiskSpaceUsed(string collectionID, out long limit) {
+        object[] results = this.Invoke("GetiFolderDiskSpaceUsed", new object[] {
+                    collectionID});
+        limit = ((long)(results[1]));
+        return ((long)(results[0]));
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult BeginGetiFolderDiskSpaceUsed(string collectionID, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("GetiFolderDiskSpaceUsed", new object[] {
+                    collectionID}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public long EndGetiFolderDiskSpaceUsed(System.IAsyncResult asyncResult, out long limit) {
+        object[] results = this.EndInvoke(asyncResult);
+        limit = ((long)(results[1]));
+        return ((long)(results[0]));
+    }
 }
 
 /// <remarks/>

@@ -824,6 +824,69 @@ namespace Simias.DomainServices
 
 			return domainState.AutoLogin;
 		}
+
+		/// <summary>
+		/// Gets the amount of disk space used on the server by the specified user.
+		/// </summary>
+		/// <param name="memberID">Member ID for the user.</param>
+		/// <param name="limit">Gets the disk space limit for this user.</param>
+		/// <returns>The amount of disk space used on the server. Zero indicates 
+		/// that there is no disk space restriction.</returns>
+		public long GetDomainDiskSpaceForMember( string memberID, out long limit )
+		{
+			// Get the domain for this user.
+			Domain domain = store.GetDomainForUser( memberID );
+			if ( domain == null )
+			{
+				throw new DoesNotExistException( String.Format( "Cannot get domain for user {0}", memberID ) );
+			}
+
+			// Get the network location of the server.
+			Uri uri = DomainProvider.ResolveLocation( domain.ID );
+			if (uri == null)
+			{
+				throw new SimiasException( String.Format( "The network location could not be determined for domain {0}.", domain.ID ) );
+			}
+
+			// Construct the web client.
+			DomainService domainService = new DomainService();
+			domainService.Url = uri.ToString() + "/DomainService.asmx";
+			WebState webState = new WebState( domain.ID );
+			webState.InitializeWebClient( domainService, domain.ID );
+
+			return domainService.GetMemberDiskSpaceUsed( memberID, out limit );
+		}
+
+		/// <summary>
+		/// Gets the amount of disk space used on the server by the specified collection.
+		/// </summary>
+		/// <param name="collectionID">Collection ID to get disk space for.</param>
+		/// <param name="limit">Gets the disk space limit for this collection.</param>
+		/// <returns>The amount of disk space used on the server by the specified collection.</returns>
+		public long GetDomainDiskSpaceForCollection( string collectionID, out long limit )
+		{
+			// Get the collection from the specified ID.
+			Collection collection = store.GetCollectionByID( collectionID );
+			if ( collection == null )
+			{
+				throw new DoesNotExistException( "The specified collection does not exist." );
+			}
+
+			// Get the network location of the server where this collection is hosted.
+			Uri uri = DomainProvider.ResolveLocation( collection );
+			if (uri == null)
+			{
+				throw new SimiasException( String.Format( "The network location could not be determined for collection {0}.", collectionID ) );
+			}
+
+			// Construct the web client.
+			DomainService domainService = new DomainService();
+			domainService.Url = uri.ToString() + "/DomainService.asmx";
+			WebState webState = new WebState( collection.Domain, collectionID );
+			webState.InitializeWebClient( domainService, collection.Domain );
+
+			return domainService.GetiFolderDiskSpaceUsed( collectionID, out limit );
+		}
 		#endregion
 	}
 
