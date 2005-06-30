@@ -1549,10 +1549,58 @@ namespace Novell.iFolder.Web
 
 			string path = Path.Combine(LocalPath, sub.DirNodeName);
 			if (Directory.Exists(path))
-				throw new Exception("Path specified cannot be an iFolder, a directory by this name already exists.");
+				throw new Exception("PathExists");
 
-			if(CanBeiFolder(path) == false)
-				throw new Exception("Path specified cannot be an iFolder, it is either a parent or a child of an existing iFolder");
+			CollectionPathStatus pStatus;
+
+			pStatus = SharedCollection.CheckCollectionPath(path);
+			switch(pStatus)
+			{
+				case CollectionPathStatus.ValidPath:
+					break;
+				case CollectionPathStatus.RootOfDrivePath:
+					throw new Exception("RootOfDrivePath");
+					break;
+				case CollectionPathStatus.InvalidCharactersPath:
+					throw new Exception("InvalidCharactersPath");
+					break;
+				case CollectionPathStatus.AtOrInsideStorePath:
+					throw new Exception("AtOrInsideStorePath");
+					break;
+				case CollectionPathStatus.ContainsStorePath:
+					throw new Exception("ContainsStorePath");
+					break;
+				case CollectionPathStatus.NotFixedDrivePath:
+					throw new Exception("NotFixedDrivePath");
+					break;
+				case CollectionPathStatus.SystemDirectoryPath:
+					throw new Exception("SystemDirectoryPath");
+					break;
+				case CollectionPathStatus.SystemDrivePath:
+					throw new Exception("SystemDrivePath");
+					break;
+				case CollectionPathStatus.IncludesWinDirPath:
+					throw new Exception("IncludesWinDirPath");
+					break;
+				case CollectionPathStatus.IncludesProgFilesPath:
+					throw new Exception("IncludesProgFilesPath");
+					break;
+				case CollectionPathStatus.DoesNotExistPath:
+					throw new Exception("DoesNotExistPath");
+					break;
+				case CollectionPathStatus.NoReadRightsPath:
+					throw new Exception("NoReadRightsPath");
+					break;
+				case CollectionPathStatus.NoWriteRightsPath:
+					throw new Exception("NoWriteRightsPath");
+					break;
+				case CollectionPathStatus.ContainsCollectionPath:
+					throw new Exception("ContainsCollectionPath");
+					break;
+				case CollectionPathStatus.AtOrInsideCollectionPath:
+					throw new Exception("AtOrInsideCollectionPath");
+					break;
+			}
 
 			sub.CollectionRoot = Path.GetFullPath(LocalPath);
 			if(sub.SubscriptionState == SubscriptionStates.Ready)

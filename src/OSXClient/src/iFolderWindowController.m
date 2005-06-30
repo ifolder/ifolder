@@ -31,7 +31,7 @@
 #import "iFolderDomain.h"
 #import "iFolderData.h"
 #import "MCTableView.h"
-
+#import "applog.h"
 
 @implementation iFolderWindowController
 
@@ -178,7 +178,7 @@ static iFolderWindowController *sharedInstance = nil;
 		{
 			@try
 			{
-				NSLog(@"Calling to refresh on poBox %@", [dom poBoxID]);
+				ifconlog2(@"Calling to refresh on poBox %@", [dom poBoxID]);
 				[ifolderService SynciFolderNow:[dom poBoxID]];
 			}
 			@catch (NSException *e)
@@ -449,7 +449,13 @@ static iFolderWindowController *sharedInstance = nil;
 	@catch (NSException *e)
 	{
 		NSString *error = [e name];
-		NSRunAlertPanel(NSLocalizedString(@"Error creating iFolder", @"iFolder create error dialog title"), [e name], NSLocalizedString(@"OK", @"iFolder create error dialog button"),nil, nil);
+
+		if(![self handleiFolderError:error])
+		{
+			NSRunAlertPanel(	NSLocalizedString(@"Error creating iFolder", @"iFolder create error dialog title"), 
+				NSLocalizedString(@"iFolder was unable to convert the selected folder to an iFolder for an unknown reason.  Please check the path selected and try again.", @"iFolder create error dialog details"), 
+				NSLocalizedString(@"OK", @"iFolder create error dialog button"),nil, nil);
+		}
 	}
 }
 
@@ -469,8 +475,115 @@ static iFolderWindowController *sharedInstance = nil;
 	@catch (NSException *e)
 	{
 		NSString *error = [e name];
-		NSRunAlertPanel(NSLocalizedString(@"Error setting up iFolder", @"iFolder setup error dialog title"), [e name], NSLocalizedString(@"OK", @"iFolder setup error dialog button"),nil, nil);
+
+		if(![self handleiFolderError:error])
+		{
+			NSRunAlertPanel(	NSLocalizedString(@"Error setting up iFolder", @"iFolder setup error dialog title"), 
+				NSLocalizedString(@"iFolder was unable to set up the selected iFolder for an unknown reason.  Please check the path selected and try again.", @"iFolder setup error dialog details"), 
+				NSLocalizedString(@"OK", @"iFolder setup error dialog button"),nil, nil);
+		}
 	}
+}
+
+
+
+
+- (BOOL)handleiFolderError:(NSString *)error
+{
+	if([error compare:@"PathExists"] == 0)
+	{
+		NSRunAlertPanel(	NSLocalizedString(@"A folder with the same name already exists.", @"iFolder folderexists create error dialog message"), 
+			NSLocalizedString(@"The location you selected already contains a folder with the same name as this iFolder.  Please select a different location and try again.", @"iFolder folderexists create error dialog details"), 
+			NSLocalizedString(@"OK", @"iFolder folderexists create error dialog button"),nil, nil);
+	}
+	else if([error compare:@"RootOfDrivePath"] == 0)
+	{
+		NSRunAlertPanel(	NSLocalizedString(@"iFolders cannot exist at the drive level.", @"iFolder rootdrive create error dialog message"), 
+			NSLocalizedString(@"The location you selected is at the root of the drive.  Please select a location that is not at the root of a drive and try again.", @"iFolder rootdrive create error dialog details"), 
+			NSLocalizedString(@"OK", @"iFolder rootdrive create error dialog button"),nil, nil);
+	}
+	else if([error compare:@"InvalidCharactersPath"] == 0)
+	{
+		NSRunAlertPanel(	NSLocalizedString(@"The selected location contains invalid characters.", @"iFolder badchar create error dialog message"), 
+			NSLocalizedString(@"The characters \\:*?\"<>| cannot be used in an iFolder. Please select a different location and try again.", @"iFolder badchar create error dialog details"), 
+			NSLocalizedString(@"OK", @"iFolder badchar create error dialog button"),nil, nil);
+	}
+	else if([error compare:@"AtOrInsideStorePath"] == 0)
+	{
+		NSRunAlertPanel(	NSLocalizedString(@"The selected location is inside the iFolder data folder.", @"iFolder instorepath create error dialog message"), 
+			NSLocalizedString(@"The iFolder data folder is normally located in your home folder in the folder \".local/share\".  Please select a different location and try again.", @"iFolder instorepath create error dialog details"), 
+			NSLocalizedString(@"OK", @"iFolder instorepath create error dialog button"),nil, nil);
+	}
+	else if([error compare:@"ContainsStorePath"] == 0)
+	{
+		NSRunAlertPanel(	NSLocalizedString(@"The selected location contains the iFolder data files.", @"iFolder storepath create error dialog message"), 
+			NSLocalizedString(@"The location you have selected contains the iFolder data files.  These are normally located in your home folder in the folder \".local/share\".  Please select a different location and try again.", @"iFolder storepath create error dialog details"), 
+			NSLocalizedString(@"OK", @"iFolder storepath create error dialog button"),nil, nil);
+	}
+	else if([error compare:@"NotFixedDrivePath"] == 0)
+	{
+		NSRunAlertPanel(	NSLocalizedString(@"The selected location is on a network or non-physical drive.", @"iFolder notfixed create error dialog message"), 
+			NSLocalizedString(@"iFolders must reside on a physical drive.  Please select a different location and try again.", @"iFolder notfixed create error dialog details"), 
+			NSLocalizedString(@"OK", @"iFolder notfixed create error dialog button"),nil, nil);
+	}
+	else if([error compare:@"SystemDirectoryPath"] == 0)
+	{
+		NSRunAlertPanel(	NSLocalizedString(@"The selected location contains a system folder.", @"iFolder sysdir create error dialog message"), 
+			NSLocalizedString(@"System folders cannot be contained in an iFolder.  Please select a different location and try again.", @"iFolder sysdir create error dialog details"), 
+			NSLocalizedString(@"OK", @"iFolder sysdir create error dialog button"),nil, nil);
+	}
+	else if([error compare:@"SystemDrivePath"] == 0)
+	{
+		NSRunAlertPanel(	NSLocalizedString(@"The selected location is a system drive.", @"iFolder sysdrive create error dialog message"), 
+			NSLocalizedString(@"System drives cannot be contained in an iFolder.  Please select a different location and try again.", @"iFolder sysdrive create error dialog details"), 
+			NSLocalizedString(@"OK", @"iFolder sysdrive create error dialog button"),nil, nil);
+	}
+	else if([error compare:@"IncludesWinDirPath"] == 0)
+	{
+		NSRunAlertPanel(	NSLocalizedString(@"The selected location includes the Windows folder.", @"iFolder windir create error dialog message"), 
+			NSLocalizedString(@"The Windows folder cannot be contained in an iFolder.  Please select a different location and try again.", @"iFolder windir create error dialog details"), 
+			NSLocalizedString(@"OK", @"iFolder windir create error dialog button"),nil, nil);
+	}
+	else if([error compare:@"IncludesProgFilesPath"] == 0)
+	{
+		NSRunAlertPanel(	NSLocalizedString(@"The selected location includes the Program Files folder.", @"iFolder progdir create error dialog message"), 
+			NSLocalizedString(@"The Program Files folder cannot be contained in an iFolder.  Please select a different location and try again.", @"iFolder progdir create error dialog details"), 
+			NSLocalizedString(@"OK", @"iFolder progdir create error dialog button"),nil, nil);
+	}
+	else if([error compare:@"DoesNotExistPath"] == 0)
+	{
+		NSRunAlertPanel(	NSLocalizedString(@"The selected location does not exist.", @"iFolder notexist create error dialog message"), 
+			NSLocalizedString(@"iFolders can only be created from folders that exist.  Please select a different location and try again.", @"iFolder notexist create error dialog details"), 
+			NSLocalizedString(@"OK", @"iFolder notexist create error dialog button"),nil, nil);
+	}
+	else if([error compare:@"NoReadRightsPath"] == 0)
+	{
+		NSRunAlertPanel(	NSLocalizedString(@"You do not have access to read files in the selected location.", @"iFolder readrights create error dialog message"), 
+			NSLocalizedString(@"iFolders can only be created from folders where you have access to read and write files.  Please select a different location and try again.", @"iFolder readrights create error dialog details"), 
+			NSLocalizedString(@"OK", @"iFolder readrights create error dialog button"),nil, nil);
+	}
+	else if([error compare:@"NoWriteRightsPath"] == 0)
+	{
+		NSRunAlertPanel(	NSLocalizedString(@"You do not have access to write files in the selected location.", @"iFolder writerights create error dialog message"), 
+			NSLocalizedString(@"iFolders can only be created from folders where you have access to read and write files.  Please select a different location and try again.", @"iFolder writerights create error dialog details"), 
+			NSLocalizedString(@"OK", @"iFolder writerights create error dialog button"),nil, nil);
+	}
+	else if([error compare:@"ContainsCollectionPath"] == 0)
+	{
+		NSRunAlertPanel(	NSLocalizedString(@"The selected location already contains an iFolder.", @"iFolder containsCollection create error dialog message"), 
+			NSLocalizedString(@"iFolders cannot exist inside other iFolders.  Please select a different location and try again.", @"iFolder containsCollection create error dialog details"), 
+			NSLocalizedString(@"OK", @"iFolder containsCollection create error dialog button"),nil, nil);
+	}
+	else if([error compare:@"AtOrInsideCollectionPath"] == 0)
+	{
+		NSRunAlertPanel(	NSLocalizedString(@"The selected location is inside another iFolder.", @"iFolder insideCollection create error dialog message"), 
+			NSLocalizedString(@"iFolders cannot exist inside other iFolders.  Please select a different location and try again.", @"iFolder insideCollection create error dialog details"), 
+			NSLocalizedString(@"OK", @"iFolder insideCollection create error dialog button"),nil, nil);
+	}
+	else
+		return NO;
+	
+	return YES;
 }
 
 
