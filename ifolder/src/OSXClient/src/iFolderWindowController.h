@@ -109,6 +109,7 @@
 //==========================================
 - (void)createiFolder:(NSString *)path inDomain:(NSString *)domainID;
 - (void)acceptiFolderInvitation:(NSString *)iFolderID InDomain:(NSString *)domainID toPath:(NSString *)localPath;
+- (BOOL)handleiFolderError:(NSString *)error;
 
 +(void)refreshDomainsTS;
 -(void)refreshDomains:(id)args;

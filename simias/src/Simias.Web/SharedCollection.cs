@@ -38,6 +38,88 @@ using Simias.POBox;
 namespace Simias.Web
 {
 	/// <summary>
+	/// Return codes for check Collection Path
+	/// </summary>
+	public enum CollectionPathStatus
+	{
+		/// <summary>
+		/// Indicates the path is valid for a collection
+		/// </summary>
+		ValidPath,
+	
+		/// <summary>
+		/// Indicates the path is at the root of the drive
+		/// </summary>
+		RootOfDrivePath,
+	
+		/// <summary>
+		/// Indicates the path contains invalid characters for an iFolder
+		/// </summary>
+		InvalidCharactersPath,
+
+		/// <summary>
+		/// Indicates the path is at or below the store path
+		/// </summary>
+		AtOrInsideStorePath,
+
+		/// <summary>
+		/// Indicates the path contains the store path
+		/// </summary>
+		ContainsStorePath,
+
+		/// <summary>
+		/// Indicates the path is not a fixed drive
+		/// </summary>
+		NotFixedDrivePath,
+
+		/// <summary>
+		/// Indicates the path is a system directory
+		/// </summary>
+		SystemDirectoryPath,
+
+		/// <summary>
+		/// Indicates the path is a system drive
+		/// </summary>
+		SystemDrivePath,
+
+		/// <summary>
+		/// Indicates the path includes the Windows direcctory
+		/// </summary>
+		IncludesWinDirPath,
+
+		/// <summary>
+		/// Indicates the path includes the Program Files direcctory
+		/// </summary>
+		IncludesProgFilesPath,
+
+		/// <summary>
+		/// Indicates the path doesn't exist
+		/// </summary>
+		DoesNotExistPath,
+
+		/// <summary>
+		/// Indicates the current users doesn't have read rights
+		/// </summary>
+		NoReadRightsPath,
+
+		/// <summary>
+		/// Indicates the current users doesn't have write rights
+		/// </summary>
+		NoWriteRightsPath,
+
+		/// <summary>
+		/// Indicates there is another collection below this path
+		/// </summary>
+		ContainsCollectionPath,
+
+		/// <summary>
+		/// Indicates the path is at or inside another collection
+		/// </summary>
+		AtOrInsideCollectionPath
+	}
+
+
+	/// <summary>
 	/// SharedCollection implements all of the APIs needed to use a Shared
 	/// Collection in Simias.  The APIs are designed to be wrapped by a
 	/// WebService
@@ -247,9 +329,55 @@ namespace Simias.Web
 			// a path, then check to see if that path can be used
 			if(	UnmanagedFiles && (CollectionPath != null) )
 			{
-				if( CanBeCollection( CollectionPath )  == false )
+				CollectionPathStatus pStatus;
+
+				pStatus = CheckCollectionPath(CollectionPath);
+				switch(pStatus)
 				{
-					throw new Exception("Path is either a parent or child of an existing Collection.  Collections cannot be nested");
+					case CollectionPathStatus.ValidPath:
+						break;
+					case CollectionPathStatus.RootOfDrivePath:
+						throw new Exception("RootOfDrivePath");
+						break;
+					case CollectionPathStatus.InvalidCharactersPath:
+						throw new Exception("InvalidCharactersPath");
+						break;
+					case CollectionPathStatus.AtOrInsideStorePath:
+						throw new Exception("AtOrInsideStorePath");
+						break;
+					case CollectionPathStatus.ContainsStorePath:
+						throw new Exception("ContainsStorePath");
+						break;
+					case CollectionPathStatus.NotFixedDrivePath:
+						throw new Exception("NotFixedDrivePath");
+						break;
+					case CollectionPathStatus.SystemDirectoryPath:
+						throw new Exception("SystemDirectoryPath");
+						break;
+					case CollectionPathStatus.SystemDrivePath:
+						throw new Exception("SystemDrivePath");
+						break;
+					case CollectionPathStatus.IncludesWinDirPath:
+						throw new Exception("IncludesWinDirPath");
+						break;
+					case CollectionPathStatus.IncludesProgFilesPath:
+						throw new Exception("IncludesProgFilesPath");
+						break;
+					case CollectionPathStatus.DoesNotExistPath:
+						throw new Exception("DoesNotExistPath");
+						break;
+					case CollectionPathStatus.NoReadRightsPath:
+						throw new Exception("NoReadRightsPath");
+						break;
+					case CollectionPathStatus.NoWriteRightsPath:
+						throw new Exception("NoWriteRightsPath");
+						break;
+					case CollectionPathStatus.ContainsCollectionPath:
+						throw new Exception("ContainsCollectionPath");
+						break;
+					case CollectionPathStatus.AtOrInsideCollectionPath:
+						throw new Exception("AtOrInsideCollectionPath");
+						break;
 				}
 			}
 
@@ -336,13 +464,36 @@ namespace Simias.Web
 		/// </remarks>
 		public static bool CanBeCollection( string path )
 		{
-			bool canBeCollection = true;
+			return(	CheckCollectionPath(path) == 
+						CollectionPathStatus.ValidPath);
+		}
 
+
+
+
+		/// <summary>
+		/// Checks whether it is valid to make a given directory a
+		/// Collection
+		/// </summary>
+		/// <param name="path">
+		/// An absolute path to check.
+		/// </param>
+		/// <returns>
+		/// CollectionPathStatus that contains the path status
+		/// </returns>
+		/// <remarks>
+		/// There are many restrictions on a collection that has
+		/// unmanaged files (like an iFolder).  This will check for all of
+		/// those restrictions.
+		/// </remarks>
+		public static CollectionPathStatus 
+							CheckCollectionPath(string path )
+		{
 			// Don't allow the root of a drive to be a collection.
 			string parentDir = Path.GetDirectoryName( path );
 			if ( ( parentDir == null ) || ( parentDir == String.Empty ) )
 			{
-				return false;
+				return CollectionPathStatus.RootOfDrivePath;
 			}
 
 			// Make sure the name of the collection doesn't contain any invalid
@@ -352,7 +503,7 @@ namespace Simias.Web
 			if (collectionName == null || collectionName == String.Empty
 				|| !Simias.Sync.SyncFile.IsNameValid(collectionName))
 			{
-				return false;
+				return CollectionPathStatus.InvalidCharactersPath;
 			}
 
 			// Make sure the paths end with a separator.
@@ -363,7 +514,7 @@ namespace Simias.Web
 			string excludeDirectory = Configuration.GetConfiguration().StorePath;
 			if (ExcludeDirectory(nPath, excludeDirectory, true))
 			{
-				return false;
+				return CollectionPathStatus.AtOrInsideStorePath;
 			}
 
 			// Any path containing the store path cannot be used
@@ -377,7 +528,7 @@ namespace Simias.Web
 
 				if (ExcludeDirectory(nPath, excludeDirectory, false))
 				{
-					return false;
+					return CollectionPathStatus.ContainsStorePath;
 				}
 			}
 
@@ -385,13 +536,13 @@ namespace Simias.Web
 			// Only allow fixed drives to become iFolders.
 			if (GetDriveType(Path.GetPathRoot(path)) != DRIVE_FIXED)
 			{
-				return false;
+				return CollectionPathStatus.NotFixedDrivePath;
 			}
 
 			// Don't allow System directories to become iFolders.
 			if (Directory.Exists(path) && ((new DirectoryInfo(path).Attributes & FileAttributes.System) == FileAttributes.System))
 			{
-				return false;
+				return CollectionPathStatus.SystemDirectoryPath;
 			}
 #endif
 
@@ -401,21 +552,21 @@ namespace Simias.Web
 				excludeDirectory = Environment.GetEnvironmentVariable("SystemDrive");
 				if (ExcludeDirectory(nPath, excludeDirectory, false))
 				{
-					return false;
+					return CollectionPathStatus.SystemDrivePath;
 				}
 
 				// Don't allow the Windows directory or subdirectories become an iFolder.
 				excludeDirectory = Environment.GetEnvironmentVariable("windir");
 				if (ExcludeDirectory(nPath, excludeDirectory, true))
 				{
-					return false;
+					return CollectionPathStatus.IncludesWinDirPath;
 				}
 
 				// Don't allow the Program Files directory or subdirectories become an iFolder.
 				excludeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
 				if (ExcludeDirectory(nPath, excludeDirectory, true))
 				{
-					return false;
+					return CollectionPathStatus.IncludesProgFilesPath;
 				}
 			}
 
@@ -432,7 +583,7 @@ namespace Simias.Web
 				if(di.Exists)
 					ifPath = di.FullName;
 				else
-					return false;
+					return CollectionPathStatus.DoesNotExistPath;
 			}
 			else
 				ifPath = path;
@@ -444,7 +595,7 @@ namespace Simias.Web
 				if(Mono.Posix.Syscall.access(ifPath,
 							Mono.Posix.AccessMode.R_OK) != 0)
 				{
-					return false;
+					return CollectionPathStatus.NoReadRightsPath;
 				}
 			}
 			catch(Exception e)
@@ -459,7 +610,7 @@ namespace Simias.Web
 				if(Mono.Posix.Syscall.access(ifPath, 
 							Mono.Posix.AccessMode.W_OK) != 0)
 				{
-					return false;
+					return CollectionPathStatus.NoWriteRightsPath;
 				}
 			}
 			catch(Exception e)
@@ -516,8 +667,7 @@ namespace Simias.Web
 	
 					if(!retval)
 					{
-						Console.WriteLine("Unable to find a physical device for: {0}", ifPath);
-						return retval;
+						return CollectionPathStatus.NotFixedDrivePath;
 					}
 				}
 			}
@@ -544,18 +694,28 @@ namespace Simias.Web
 				{
 					Uri colPath = GetUriPath(dirNode.GetFullPath(col));
 
-					if(string.Compare(nPath.LocalPath, 0,
-						colPath.LocalPath,	0,
-						nPath.LocalPath.Length < colPath.LocalPath.Length ? 
-						nPath.LocalPath.Length : colPath.LocalPath.Length, ignoreCase) == 0)
+					if(nPath.LocalPath.Length < colPath.LocalPath.Length)
 					{
-						canBeCollection = false;
-						break;
+						if(	string.Compare(nPath.LocalPath, 0,
+								colPath.LocalPath,	0,
+								nPath.LocalPath.Length, ignoreCase) == 0)
+						{
+							return CollectionPathStatus.ContainsCollectionPath;
+						}
+					}
+					else
+					{
+						if(	string.Compare(nPath.LocalPath, 0,
+								colPath.LocalPath,	0,
+								colPath.LocalPath.Length, ignoreCase) == 0)
+						{
+							return CollectionPathStatus.AtOrInsideCollectionPath;
+						}
 					}
 				}
 			}
 
-			return canBeCollection;
+			return CollectionPathStatus.ValidPath;
 		}
 
 
