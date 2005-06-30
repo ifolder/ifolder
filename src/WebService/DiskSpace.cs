@@ -51,14 +51,14 @@ namespace Novell.iFolder.Web
 
 		/// <summary>
 		/// </summary>
-		public DiskSpace(Simias.Policy.DiskSpaceQuota quota)
+		private DiskSpace(long spaceUsed, long limit)
 		{
-			this.AvailableSpace = quota.AvailableSpace;
-			this.Limit = quota.Limit;
-			this.UsedSpace = quota.UsedSpace;
+			this.UsedSpace = spaceUsed;
+			this.Limit = limit;
+
+			long spaceAvailable = limit - spaceUsed;
+			this.AvailableSpace = ( spaceAvailable < 0 ) ? 0 : spaceAvailable;
 		}
-
-
 
 
 		/// <summary>
@@ -72,22 +72,11 @@ namespace Novell.iFolder.Web
 		/// </returns>
 		public static DiskSpace GetMemberDiskSpace( string UserID )
 		{
-			Store store = Store.GetStore();
+			long limit;
 
-			Domain domain = store.GetDomainForUser(UserID);
-			if(domain == null)
-				throw new Exception("Unable to access domain");
-
-			Simias.Storage.Member simMem = domain.GetMemberByID(UserID);
-			if(simMem == null)
-				throw new Exception("Invalid UserID");
-
-			Simias.Policy.DiskSpaceQuota squota =
-				Simias.Policy.DiskSpaceQuota.Get(simMem);
-			if(squota == null)
-				throw new Exception("Unable to get Disk Space Quota");
-
-			return new DiskSpace(squota);
+			Simias.DomainServices.DomainAgent da = new Simias.DomainServices.DomainAgent();
+			long spaceUsed = da.GetDomainDiskSpaceForMember( UserID, out limit );
+			return new DiskSpace( spaceUsed, limit );
 		}
 
 
@@ -104,21 +93,11 @@ namespace Novell.iFolder.Web
 		/// </returns>
 		public static DiskSpace GetiFolderDiskSpace( string iFolderID )
 		{
-			Store store = Store.GetStore();
+			long limit;
 
-			Collection col = store.GetCollectionByID(iFolderID);
-			if(col == null)
-				throw new Exception("Invalid iFolderID");
-
-
-			DiskSpace space = new DiskSpace();
-			space.UsedSpace = col.StorageSize;
-			space.Limit = Simias.Policy.DiskSpaceQuota.GetLimit(col);
-			space.AvailableSpace = space.Limit - space.UsedSpace;
-			if(space.AvailableSpace < 0)
-				space.AvailableSpace = 0;
-
-			return space;
+			Simias.DomainServices.DomainAgent da = new Simias.DomainServices.DomainAgent();
+			long spaceUsed = da.GetDomainDiskSpaceForCollection( iFolderID, out limit );
+			return new DiskSpace( spaceUsed, limit );
 		}
 
 
