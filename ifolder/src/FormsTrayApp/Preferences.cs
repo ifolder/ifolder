@@ -1771,24 +1771,20 @@ namespace Novell.FormsTrayApp
 						login.Visible = false;
 						logout.Visible = true;
 
-						// Don't burn a grace login looking for an update.
-						if (!domainInfo.StatusCode.Equals(StatusCodes.SuccessInGrace))
+						try
 						{
-							try
+							// Check for an update.
+							if (FormsTrayApp.CheckForClientUpdate(domainInfo.ID))
 							{
-								// Check for an update.
-								if (FormsTrayApp.CheckForClientUpdate(domainInfo.ID))
+								if (ShutdownTrayApp != null)
 								{
-									if (ShutdownTrayApp != null)
-									{
-										// Shut down the tray app.
-										ShutdownTrayApp(this, new EventArgs());
-									}
+									// Shut down the tray app.
+									ShutdownTrayApp(this, new EventArgs());
 								}
 							}
-							catch // Ignore
-							{
-							}
+						}
+						catch // Ignore
+						{
 						}
 
 						if (!rememberPassword.Checked)
@@ -1942,26 +1938,22 @@ namespace Novell.FormsTrayApp
 						mmb.ShowDialog();
 					}
 						
-					// Don't burn a grace login looking for an update.
-					if (!authStatus.statusCode.Equals(StatusCodes.SuccessInGrace))
+					try
 					{
-						try
+						Cursor.Current = Cursors.WaitCursor;
+						bool update = FormsTrayApp.CheckForClientUpdate(domainInfo.ID);
+						Cursor.Current = Cursors.Default;
+						if (update)
 						{
-							Cursor.Current = Cursors.WaitCursor;
-							bool update = FormsTrayApp.CheckForClientUpdate(domainInfo.ID);
-							Cursor.Current = Cursors.Default;
-							if (update)
+							if (ShutdownTrayApp != null)
 							{
-								if (ShutdownTrayApp != null)
-								{
-									// Shut down the tray app.
-									ShutdownTrayApp(this, new EventArgs());
-								}
+								// Shut down the tray app.
+								ShutdownTrayApp(this, new EventArgs());
 							}
 						}
-						catch // Ignore
-						{
-						}
+					}
+					catch // Ignore
+					{
 					}
 					break;
 				case StatusCodes.InvalidCredentials:
