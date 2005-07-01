@@ -1256,6 +1256,19 @@ namespace Novell.FormsTrayApp
 						}
 						else
 						{
+							try
+							{
+								// Check for a client update.
+								bool update = CheckForClientUpdate(domainInfo.ID);
+								if (update)
+								{
+									ShutdownTrayApp(null);
+								}
+							}
+							catch // Ignore
+							{
+							}
+
 							domainInfo.Authenticated = true;
 							preferences.UpdateDomainStatus(new Domain(domainInfo));
 						}
