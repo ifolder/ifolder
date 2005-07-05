@@ -247,19 +247,67 @@ public class SimiasNode {
 		return id;
 	}
 	
-	/**
-	 * Returns true if the node has Types = Collections
-	 * @return
-	 */
+	public boolean isLocalDatabase()
+	{
+		return isType("LocalDatabase");
+	}
+	
+	public boolean isDomain()
+	{
+		return isType("Domain");
+	}
+	
+	public boolean isPOBox()
+	{
+		return isType("POBox");
+	}
+	
+	public boolean isiFolder()
+	{
+		return isType("iFolder");
+	}
+	
 	public boolean isCollection()
 	{
+		return isType("Collection");
+	}
+	
+	public boolean isMember()
+	{
+		return isType("Member");
+	}
+	
+	public boolean isSubscription()
+	{
+		return isType("Subscription");
+	}
+	
+	public boolean isDirectory()
+	{
+		return isType("DirNode");
+	}
+	
+	public boolean isFile()
+	{
+		return isType("FileNode");
+	}
+	
+	public boolean isType(String type)
+	{
+		if (type == null)
+			return false;
+		
+		type = type.trim();
+		if (type.length() <= 0)
+			return false;
+		
 		for (int i = 0; i < properties.size(); i++)
 		{
 			SimiasNodeProperty p = (SimiasNodeProperty)properties.get(i);
 			String name = p.getName();
 			String value = p.getValue();
 			
-			if (name.equals("Types") && value.equals("Collection"))
+			if (name.equals("Types") && value.equals(type))
 			{
 				return true;
 			}

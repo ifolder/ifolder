@@ -26,6 +26,8 @@ package com.novell.simias.storebrowser;
 import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.Component;
+import java.awt.Image;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.RemoteException;
@@ -35,6 +37,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.TreeSet;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -50,6 +54,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeWillExpandListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreePath;
@@ -88,6 +93,80 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 	
 	private String[] columnNames = {"Name", "Value", "Type", "Flags"};
 	
+	static Icon localDatabaseIcon = null;
+	static Icon domainIcon = null;
+	static Icon poBoxIcon = null;
+	static Icon iFolderIcon = null;
+	static Icon collectionIcon = null;
+	static Icon memberIcon = null;
+	static Icon subscriptionIcon = null;
+	static Icon dirNodeIcon = null;
+	static Icon fileNodeIcon = null;
+	
+	static
+	{
+		ImageIcon icon;
+
+		icon = createImageIcon("images/localdatabase.gif");
+		if (icon != null)
+			localDatabaseIcon = icon;
+		
+		icon = createImageIcon("images/domain.gif");
+		if (icon != null)
+			domainIcon = icon;
+		
+		icon = createImageIcon("images/pobox.gif");
+		if (icon != null)
+			poBoxIcon = icon;
+		
+		icon = createImageIcon("images/ifolder.png");
+		if (icon != null)
+			iFolderIcon = icon;
+		
+		icon = createImageIcon("images/collection.gif");
+		if (icon != null)
+			collectionIcon = icon;
+		
+		icon = createImageIcon("images/member.png");
+		if (icon != null)
+			memberIcon = icon;
+		
+		icon = createImageIcon("images/subscription.png");
+		if (icon != null)
+			subscriptionIcon = icon;
+		
+		icon = createImageIcon("images/dirnode.gif");
+		if (icon != null)
+			dirNodeIcon = icon;
+		
+		icon = createImageIcon("images/filenode.gif");
+		if (icon != null)
+			fileNodeIcon = icon;
+	}
+	
+	protected static ImageIcon createImageIcon(String path)
+	{
+		java.io.File iconFile = new java.io.File(path);
+		if (iconFile.exists())
+		{
+			ImageIcon icon = new ImageIcon(path);
+			if (icon != null)
+			{
+				System.out.println("Loaded: " + path);
+
+				Image img =
+					icon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+				return new ImageIcon(img);
+			}
+		}
+		else
+		{
+			System.err.println("Couldn't find file: " + iconFile.getAbsolutePath());
+		}
+
+		return null;
+	}
+
 	/**
 	 * This is the default constructor
 	 */
@@ -512,6 +591,8 @@ System.out.println("failed.");
 			jTree.setModel(new DefaultTreeModel(tree_top));
 			
 			jTree.setShowsRootHandles(true);
+			
+			jTree.setCellRenderer(new iFolderTreeCellRenderer());
 		}
 		return jTree;
 	}
@@ -655,6 +736,84 @@ System.out.println("failed.");
 			}
 			
 			return 0;
+		}
+	}
+
+	public class iFolderTreeCellRenderer extends DefaultTreeCellRenderer
+	{
+		public iFolderTreeCellRenderer()
+		{
+		}
+		
+		public Component getTreeCellRendererComponent(
+							JTree tree,
+							Object value,
+							boolean sel,
+							boolean expanded,
+							boolean leaf,
+							int row,
+							boolean hasFocus)
+		{
+			super.getTreeCellRendererComponent(
+					tree, value, sel, expanded, leaf, row, hasFocus);
+			if (isType(value, "LocalDatabase"))
+			{
+				setIcon(localDatabaseIcon);
+			}
+			else if (isType(value, "Domain"))
+			{
+				setIcon(domainIcon);
+			}
+			else if (isType(value, "POBox"))
+			{
+				setIcon(poBoxIcon);
+			}
+			else if (isType(value, "iFolder"))
+			{
+				setIcon(iFolderIcon);
+			}
+			else if (isType(value, "Collection"))
+			{
+				setIcon(collectionIcon);
+			}
+			else if (isType(value, "Member"))
+			{
+				setIcon(memberIcon);
+			}
+			else if (isType(value, "Subscription"))
+			{
+				setIcon(subscriptionIcon);
+			}
+			else if (isType(value, "DirNode"))
+			{
+				setIcon(dirNodeIcon);
+			}
+			else if (isType(value, "FileNode"))
+			{
+				setIcon(fileNodeIcon);
+			}
+			else
+			{
+				setToolTipText(null);	// no tool tip
+			}
+			
+			return this;
+		}
+		
+		protected boolean isType(Object value, String type)
+		{
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
+			SimiasNode simiasNode = null;
+			try
+			{
+				simiasNode = (SimiasNode)node.getUserObject();
+			}
+			catch (ClassCastException e)
+			{
+				return false;
+			}
+
+			return simiasNode.isType(type);
 		}
 	}
 } //  @jve:visual-info  decl-index=0 visual-constraint="0,0"

@@ -22,7 +22,7 @@ public class Browser_x0020_ServiceLocator extends org.apache.axis.client.Service
     }
 
     // Use to get a proxy class for Browser_x0020_ServiceSoap
-    private java.lang.String Browser_x0020_ServiceSoap_address = "http://127.0.0.1:2602/simias10/mlasky/SimiasBrowser.asmx";
+    private java.lang.String Browser_x0020_ServiceSoap_address = "http://localhost:8086/simias10/SimiasBrowser.asmx";
 
     public java.lang.String getBrowser_x0020_ServiceSoapAddress() {
         return Browser_x0020_ServiceSoap_address;

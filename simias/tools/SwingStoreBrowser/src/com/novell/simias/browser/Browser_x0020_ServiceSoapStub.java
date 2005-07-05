@@ -16,8 +16,9 @@ public class Browser_x0020_ServiceSoapStub extends org.apache.axis.client.Stub i
     static org.apache.axis.description.OperationDesc [] _operations;
 
     static {
-        _operations = new org.apache.axis.description.OperationDesc[9];
+        _operations = new org.apache.axis.description.OperationDesc[12];
         _initOperationDesc1();
+        _initOperationDesc2();
     }
 
     private static void _initOperationDesc1(){
@@ -118,6 +119,38 @@ public class Browser_x0020_ServiceSoapStub extends org.apache.axis.client.Stub i
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
         _operations[8] = oper;
 
+        oper = new org.apache.axis.description.OperationDesc();
+        oper.setName("EnumerateShallowCollections");
+        oper.setReturnType(new javax.xml.namespace.QName("http://novell.com/simias/browser", "ArrayOfBrowserShallowNode"));
+        oper.setReturnClass(com.novell.simias.browser.ArrayOfBrowserShallowNode.class);
+        oper.setReturnQName(new javax.xml.namespace.QName("http://novell.com/simias/browser", "EnumerateShallowCollectionsResult"));
+        oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
+        oper.setUse(org.apache.axis.constants.Use.LITERAL);
+        _operations[9] = oper;
+
+    }
+
+    private static void _initOperationDesc2(){
+        org.apache.axis.description.OperationDesc oper;
+        oper = new org.apache.axis.description.OperationDesc();
+        oper.setName("EnumerateShallowNodes");
+        oper.addParameter(new javax.xml.namespace.QName("http://novell.com/simias/browser", "collectionID"), new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, org.apache.axis.description.ParameterDesc.IN, false, false);
+        oper.setReturnType(new javax.xml.namespace.QName("http://novell.com/simias/browser", "ArrayOfBrowserShallowNode"));
+        oper.setReturnClass(com.novell.simias.browser.ArrayOfBrowserShallowNode.class);
+        oper.setReturnQName(new javax.xml.namespace.QName("http://novell.com/simias/browser", "EnumerateShallowNodesResult"));
+        oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
+        oper.setUse(org.apache.axis.constants.Use.LITERAL);
+        _operations[10] = oper;
+
+        oper = new org.apache.axis.description.OperationDesc();
+        oper.setName("GetVersion");
+        oper.setReturnType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        oper.setReturnClass(java.lang.String.class);
+        oper.setReturnQName(new javax.xml.namespace.QName("http://novell.com/simias/browser", "GetVersionResult"));
+        oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
+        oper.setUse(org.apache.axis.constants.Use.LITERAL);
+        _operations[11] = oper;
+
     }
 
     public Browser_x0020_ServiceSoapStub() throws org.apache.axis.AxisFault {
@@ -147,9 +180,16 @@ public class Browser_x0020_ServiceSoapStub extends org.apache.axis.client.Stub i
             java.lang.Class simpledf = org.apache.axis.encoding.ser.SimpleDeserializerFactory.class;
             java.lang.Class simplelistsf = org.apache.axis.encoding.ser.SimpleListSerializerFactory.class;
             java.lang.Class simplelistdf = org.apache.axis.encoding.ser.SimpleListDeserializerFactory.class;
-            qName = new javax.xml.namespace.QName("http://novell.com/simias/browser", "BrowserNode");
+            qName = new javax.xml.namespace.QName("http://novell.com/simias/browser", "ArrayOfBrowserShallowNode");
             cachedSerQNames.add(qName);
-            cls = com.novell.simias.browser.BrowserNode.class;
+            cls = com.novell.simias.browser.ArrayOfBrowserShallowNode.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://novell.com/simias/browser", "BrowserShallowNode");
+            cachedSerQNames.add(qName);
+            cls = com.novell.simias.browser.BrowserShallowNode.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
@@ -157,6 +197,13 @@ public class Browser_x0020_ServiceSoapStub extends org.apache.axis.client.Stub i
             qName = new javax.xml.namespace.QName("http://novell.com/simias/browser", "ArrayOfBrowserNode");
             cachedSerQNames.add(qName);
             cls = com.novell.simias.browser.ArrayOfBrowserNode.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://novell.com/simias/browser", "BrowserNode");
+            cachedSerQNames.add(qName);
+            cls = com.novell.simias.browser.BrowserNode.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
@@ -460,6 +507,99 @@ public class Browser_x0020_ServiceSoapStub extends org.apache.axis.client.Stub i
             throw (java.rmi.RemoteException)_resp;
         }
         extractAttachments(_call);
+    }
+
+    public com.novell.simias.browser.ArrayOfBrowserShallowNode enumerateShallowCollections() throws java.rmi.RemoteException {
+        if (super.cachedEndpoint == null) {
+            throw new org.apache.axis.NoEndPointException();
+        }
+        org.apache.axis.client.Call _call = createCall();
+        _call.setOperation(_operations[9]);
+        _call.setUseSOAPAction(true);
+        _call.setSOAPActionURI("http://novell.com/simias/browser/EnumerateShallowCollections");
+        _call.setEncodingStyle(null);
+        _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
+        _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
+        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
+        _call.setOperationName(new javax.xml.namespace.QName("http://novell.com/simias/browser", "EnumerateShallowCollections"));
+
+        setRequestHeaders(_call);
+        setAttachments(_call);
+        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {});
+
+        if (_resp instanceof java.rmi.RemoteException) {
+            throw (java.rmi.RemoteException)_resp;
+        }
+        else {
+            extractAttachments(_call);
+            try {
+                return (com.novell.simias.browser.ArrayOfBrowserShallowNode) _resp;
+            } catch (java.lang.Exception _exception) {
+                return (com.novell.simias.browser.ArrayOfBrowserShallowNode) org.apache.axis.utils.JavaUtils.convert(_resp, com.novell.simias.browser.ArrayOfBrowserShallowNode.class);
+            }
+        }
+    }
+
+    public com.novell.simias.browser.ArrayOfBrowserShallowNode enumerateShallowNodes(java.lang.String collectionID) throws java.rmi.RemoteException {
+        if (super.cachedEndpoint == null) {
+            throw new org.apache.axis.NoEndPointException();
+        }
+        org.apache.axis.client.Call _call = createCall();
+        _call.setOperation(_operations[10]);
+        _call.setUseSOAPAction(true);
+        _call.setSOAPActionURI("http://novell.com/simias/browser/EnumerateShallowNodes");
+        _call.setEncodingStyle(null);
+        _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
+        _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
+        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
+        _call.setOperationName(new javax.xml.namespace.QName("http://novell.com/simias/browser", "EnumerateShallowNodes"));
+
+        setRequestHeaders(_call);
+        setAttachments(_call);
+        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {collectionID});
+
+        if (_resp instanceof java.rmi.RemoteException) {
+            throw (java.rmi.RemoteException)_resp;
+        }
+        else {
+            extractAttachments(_call);
+            try {
+                return (com.novell.simias.browser.ArrayOfBrowserShallowNode) _resp;
+            } catch (java.lang.Exception _exception) {
+                return (com.novell.simias.browser.ArrayOfBrowserShallowNode) org.apache.axis.utils.JavaUtils.convert(_resp, com.novell.simias.browser.ArrayOfBrowserShallowNode.class);
+            }
+        }
+    }
+
+    public java.lang.String getVersion() throws java.rmi.RemoteException {
+        if (super.cachedEndpoint == null) {
+            throw new org.apache.axis.NoEndPointException();
+        }
+        org.apache.axis.client.Call _call = createCall();
+        _call.setOperation(_operations[11]);
+        _call.setUseSOAPAction(true);
+        _call.setSOAPActionURI("http://novell.com/simias/browser/GetVersion");
+        _call.setEncodingStyle(null);
+        _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
+        _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
+        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
+        _call.setOperationName(new javax.xml.namespace.QName("http://novell.com/simias/browser", "GetVersion"));
+
+        setRequestHeaders(_call);
+        setAttachments(_call);
+        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {});
+
+        if (_resp instanceof java.rmi.RemoteException) {
+            throw (java.rmi.RemoteException)_resp;
+        }
+        else {
+            extractAttachments(_call);
+            try {
+                return (java.lang.String) _resp;
+            } catch (java.lang.Exception _exception) {
+                return (java.lang.String) org.apache.axis.utils.JavaUtils.convert(_resp, java.lang.String.class);
+            }
+        }
     }
 
 }

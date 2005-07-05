@@ -17,4 +17,7 @@ public interface Browser_x0020_ServiceSoap extends java.rmi.Remote {
     public void deleteProperty(java.lang.String collectionID, java.lang.String nodeID, java.lang.String propertyName, java.lang.String propertyType, java.lang.String propertyValue) throws java.rmi.RemoteException;
     public void deleteCollection(java.lang.String collectionID) throws java.rmi.RemoteException;
     public void deleteNode(java.lang.String collectionID, java.lang.String nodeID) throws java.rmi.RemoteException;
+    public com.novell.simias.browser.ArrayOfBrowserShallowNode enumerateShallowCollections() throws java.rmi.RemoteException;
+    public com.novell.simias.browser.ArrayOfBrowserShallowNode enumerateShallowNodes(java.lang.String collectionID) throws java.rmi.RemoteException;
+    public java.lang.String getVersion() throws java.rmi.RemoteException;
 }
