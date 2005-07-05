@@ -898,17 +898,29 @@
   <data name="pathValidationErrorTitle">
     <value>Unable to Validate Path</value>
   </data>
-  <data name="pathInvalidError">
-    <value>The location selected for the new iFolder is below an existing iFolder, or contains a folder with the same name.  Please select a different location for this iFolder.</value>
+  <data name="pathIniFolderError">
+    <value>The selected location is inside another iFolder.  iFolders cannot exist inside other iFolders.  Please select a different location and try again.</value>
   </data>
   <data name="pathInvalidErrorTitle">
-    <value>Invalid Directory</value>
+    <value>Invalid Location</value>
+  </data>
+  <data name="pathExistsError">
+    <value>The location you selected already contains a folder with the same name as this iFolder.  Please select a different location and try again.</value>
+  </data>
+  <data name="pathInStoreError">
+    <value>The selected location is inside the iFolder data folder.  Please select a different location and try again.</value>
+  </data>
+  <data name="pathIncludesWinDirError">
+    <value>The selected location includes the Windows folder.  The Windows folder cannot contain an iFolder.  Please select a different location and try again.</value>
+  </data>
+  <data name="pathIncludesProgFilesDirError">
+    <value>The selected location includes the Program Files folder.  The Program Files folder cannot contain an iFolder.  Please select a different location and try again.</value>
   </data>
   <data name="acceptError">
     <value>An exception occurred while setting up the iFolder.</value>
   </data>
   <data name="networkPath">
-    <value>iFolders must be placed on a local hard drive.</value>
+    <value>The selected location is on a network or non-physical drive.  iFolders must reside on a physical drive.  Please select a different location and try again.</value>
   </data>
   <data name="selectLocation">
     <value>Select a location for the iFolder.</value>
@@ -935,6 +947,6 @@
     <value>Create Directory</value>
   </data>
   <data name="accessDenied">
-    <value>You do not sufficient access rights to the specified directory.  Please choose a different directory and try again.</value>
+    <value>You do not have sufficient access to the selected location.  iFolders can only be created in folders where you have access to read and write files.  Please select a different location and try again.</value>
   </data>
 </root>

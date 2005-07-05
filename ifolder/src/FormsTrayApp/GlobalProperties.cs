@@ -2205,23 +2205,14 @@ namespace Novell.FormsTrayApp
 			iFolderWeb ifolder = ((iFolderObject)lvi.Tag).iFolderWeb;
 			try
 			{
-				string message, caption;
-
-				if (IsCurrentUser(ifolder.OwnerID))
-				{
-					message = resourceManager.GetString("deleteiFolder") + "\n\n" + 
-						resourceManager.GetString("removePrompt");
-					caption = resourceManager.GetString("removeTitle");
-				}
-				else
-				{
-					message = resourceManager.GetString("removeiFolder")  + "\n\n" + 
-						resourceManager.GetString("removePrompt");
-					caption = resourceManager.GetString("removeTitle");
-				}
+				string message;
+				string caption = resourceManager.GetString("removeTitle");
 
 				if (ifolder.IsSubscription)
 				{
+					message = resourceManager.GetString("removeiFolder2") + "\n\n" +
+						resourceManager.GetString("removePrompt");
+
 					MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(
 						message,
 						caption,
@@ -2236,6 +2227,17 @@ namespace Novell.FormsTrayApp
 				}
 				else
 				{
+					if (IsCurrentUser(ifolder.OwnerID))
+					{
+						message = resourceManager.GetString("deleteiFolder") + "\n\n" + 
+							resourceManager.GetString("removePrompt");
+					}
+					else
+					{
+						message = resourceManager.GetString("removeiFolder")  + "\n\n" + 
+							resourceManager.GetString("removePrompt");
+					}
+
 					MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(
 						message,
 						caption,

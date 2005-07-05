@@ -425,7 +425,7 @@ namespace Novell.FormsTrayApp
 						}
 						catch (Exception ex)
 						{
-							Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(resourceManager.GetString("createDirectoryError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+							MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("createDirectoryError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 							mmb.ShowDialog();
 							iFolderLocation.Focus();
 							successful = false;
@@ -443,57 +443,57 @@ namespace Novell.FormsTrayApp
 					// Check to make sure the user has rights to this directory.
 					if (Win32Security.AccessAllowed(iFolderLocation.Text))
 					{
-						// Display wait cursor.
-						Cursor = Cursors.WaitCursor;
-
-						bool isPathInvalid = true;
-
-						// Call into iFolder to make sure the directory specified is valid...
 						try
 						{
-							isPathInvalid = ifWebService.IsPathIniFolder(iFolderLocation.Text);
+							// Display wait cursor.
+							Cursor = Cursors.WaitCursor;
+
+							// Accept the invitation.
+							ifWebService.AcceptiFolderInvitation(ifolder.DomainID, ifolder.ID, iFolderLocation.Text);
+							Cursor = Cursors.Default;
 						}
 						catch (Exception ex)
 						{
-							Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(resourceManager.GetString("pathValidationError"), resourceManager.GetString("pathValidationErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-							mmb.ShowDialog();
-						}
+							Cursor = Cursors.Default;
+							MyMessageBox mmb;
 
-						// Restore the cursor.
-						Cursor = Cursors.Default;
-
-						if (isPathInvalid)
-						{
-							// The directory is under an existing iFolder ... 
-							MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("pathInvalidError"), resourceManager.GetString("pathInvalidErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-							mmb.ShowDialog();
-							iFolderLocation.Focus();
+							if (ex.Message.IndexOf("PathExists") != -1)
+							{
+								mmb = new MyMessageBox(resourceManager.GetString("pathExistsError"), resourceManager.GetString("pathInvalidErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+								mmb.ShowDialog();
+								iFolderLocation.Focus();
+							}
+							else if (ex.Message.IndexOf("AtOrInsideStorePath") != -1)
+							{
+								mmb = new MyMessageBox(resourceManager.GetString("pathInStoreError"), resourceManager.GetString("pathInvalidErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+								mmb.ShowDialog();
+								iFolderLocation.Focus();
+							}
+							else if (ex.Message.IndexOf("AtOrInsideCollectionPath") != -1)
+							{
+								mmb = new MyMessageBox(resourceManager.GetString("pathIniFolderError"), resourceManager.GetString("pathInvalidErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+								mmb.ShowDialog();
+								iFolderLocation.Focus();
+							}
+							else if (ex.Message.IndexOf("IncludesWinDirPath") != -1)
+							{
+								mmb = new MyMessageBox(resourceManager.GetString("pathIncludesWinDirError"), resourceManager.GetString("pathInvalidErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+								mmb.ShowDialog();
+								iFolderLocation.Focus();
+							}
+							else if (ex.Message.IndexOf("IncludesProgFilesPath") != -1)
+							{
+								mmb = new MyMessageBox(resourceManager.GetString("pathIncludesProgFilesDirError"), resourceManager.GetString("pathInvalidErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+								mmb.ShowDialog();
+								iFolderLocation.Focus();
+							}
+							else
+							{
+								mmb = new MyMessageBox(resourceManager.GetString("acceptError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+								mmb.ShowDialog();
+							}
 
 							successful = false;
-						}
-						else
-						{
-							try
-							{
-								// Accept the invitation.
-								ifWebService.AcceptiFolderInvitation(ifolder.DomainID, ifolder.ID, iFolderLocation.Text);
-							}
-							catch (Exception ex)
-							{
-								if (ex.Message.IndexOf("Path specified cannot be an iFolder", 0) != -1)
-								{
-									Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(resourceManager.GetString("pathInvalidError"), resourceManager.GetString("pathInvalidErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
-									mmb.ShowDialog();
-									iFolderLocation.Focus();
-								}
-								else
-								{
-									Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(resourceManager.GetString("acceptError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-									mmb.ShowDialog();
-								}
-
-								successful = false;
-							}
 						}
 					}
 					else
@@ -506,7 +506,7 @@ namespace Novell.FormsTrayApp
 			}
 			else
 			{
-				MessageBox.Show(resourceManager.GetString("networkPath"));
+				MessageBox.Show(resourceManager.GetString("networkPath"), resourceManager.GetString("pathInvalidErrorTitle"));
 				iFolderLocation.Focus();
 				successful = false;
 			}
