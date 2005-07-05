@@ -292,6 +292,10 @@ namespace Simias.Sync
 			node.Name = Path.GetFileName(newName);
 			string relativePath = GetNormalizedRelativePath(rootPath, newName);
 			node.Properties.ModifyNodeProperty(new Property(PropertyTags.FileSystemPath, Syntax.String, relativePath));
+			// The file may have been modified.  If it has, we need to make sure the length is updated.
+			FileInfo fi = new FileInfo(newName);
+			if (fi.Length != node.Length)
+				node.UpdateFileInfo(collection, newName);
 			// Commit the directory.
 			collection.Commit(node);
 			return node;
