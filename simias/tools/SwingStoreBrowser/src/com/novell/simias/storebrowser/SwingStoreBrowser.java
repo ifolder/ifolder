@@ -24,7 +24,9 @@
 package com.novell.simias.storebrowser;
 
 import java.net.MalformedURLException;
+import java.text.MessageFormat;
 import java.net.URL;
+import java.io.*;
 
 import com.novell.simias.browser.Browser_x0020_ServiceLocator;
 import com.novell.simias.browser.Browser_x0020_ServiceSoap;
@@ -46,7 +48,7 @@ public class SwingStoreBrowser {
 		sbWin.setVisible(true);
 	}
 
-	public static Browser_x0020_ServiceSoap getSoapService(String serviceURL) throws MalformedURLException
+	public static Browser_x0020_ServiceSoap getSoapService(String serviceURL, String username, String password) throws MalformedURLException
 	{
 		String protocol;
 
@@ -62,19 +64,12 @@ public class SwingStoreBrowser {
     		locator.setMaintainSession(true);
 
     		service = locator.getBrowser_x0020_ServiceSoap(url);
-    		
-			SimiasCredentials credentials = SimiasCredentials.getSimiasCredentials();
-			if (credentials != null)
-			{
-				((org.apache.axis.client.Stub) service).setUsername(credentials.getUsername());
-				((org.apache.axis.client.Stub) service).setPassword(credentials.getPassword());
-				//((Stub) service).setUsername(credentials.getUsername());
-				//((Stub) service).setPassword(credentials.getPassword());
-			}
+
+			if (username != null)
+				((org.apache.axis.client.Stub) service).setUsername(username);
+			if (password != null)
+				((org.apache.axis.client.Stub) service).setPassword(password);
 			
-//    		((Stub) service).setUsername(username);
-//    		((Stub) service).setPassword(password);
-            
             // if we make it here without exceptions, we've found a valid server
             return service;
 		}
@@ -85,8 +80,99 @@ public class SwingStoreBrowser {
     	
     	return null;
 	}
+	
+	public static Browser_x0020_ServiceSoap getLocalSoapService()
+	{
+		String username = null;
+		String password = null;
+		
+	    URL url = getLocalServiceURL();
+		if (url == null)
+			return null;
 
-	public static class SimiasCredentials
+		SimiasCredentials credentials = SimiasCredentials.getLocalSimiasCredentials();
+		if (credentials != null)
+		{
+			username = credentials.getUsername();
+			password = credentials.getPassword();
+		}
+		
+		try
+		{
+			return getSoapService(url.toString(), username, password);
+		}
+		catch (MalformedURLException e)
+		{
+			// Intentionally left blank
+		}
+		
+		return null;
+	}
+	
+	private static URL getLocalServiceURL()
+	{
+		String userHomePath = System.getProperty("user.home");
+		String fileSeparator = System.getProperty("file.separator");
+		
+		if (userHomePath == null || fileSeparator == null)
+			return null;
+		
+		String configFilePath =
+			MessageFormat.format("{0}{1}.local{1}share{1}simias{1}Simias.config",
+								 new Object[] {userHomePath, fileSeparator});
+
+		try
+		{
+			BufferedReader br = new BufferedReader(new FileReader(configFilePath));
+			
+			String line = br.readLine();
+			while (line != null)
+			{
+				int settingPos = line.indexOf("<setting name=\"WebServiceUri\"");
+				if (settingPos >= 0)
+				{
+					// Attempt to parse out the URL
+					int valuePos = line.indexOf("value=\"", settingPos + 1);
+					if (valuePos >= 0)
+					{
+						int closingQuotePos = line.indexOf("\"", valuePos + 7);
+						if (closingQuotePos >= 0)
+						{
+							String urlString = line.substring(valuePos + 7, closingQuotePos);
+							try
+							{
+								return new URL(urlString + fileSeparator + "SimiasBrowser.asmx");
+							}
+							catch (MalformedURLException e)
+							{
+								System.err.println("Couldn't parse WebServiceUri from Simias.config");
+								return null;
+							}
+						}
+					}
+				}
+				
+				line = br.readLine();
+			}
+			
+			br.close();
+		}
+		catch (IOException ioe)
+		{
+			System.err.println("Couldn't open: " + configFilePath);
+			ioe.printStackTrace();
+			return null;
+		}
+		catch(Exception e)
+		{
+			System.err.println("Parse error: " + configFilePath);
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	private static class SimiasCredentials
 	{
 		String username;
 		String password;
@@ -107,14 +193,36 @@ public class SwingStoreBrowser {
 			return password;
 		}
 		
-		public static SimiasCredentials getSimiasCredentials()
+		public static SimiasCredentials getLocalSimiasCredentials()
 		{
 			// Read the Simias Credentials from the disk and return
 			// a SimiasCredentials Object
-
-			return new SimiasCredentials("boyd", "c3dbd2b4-7ee6-4cd3-9f26-c0020719e65b96319ecf-92bf-450e-a2c8-cc007a41b81a");
+			String username = System.getProperty("user.name");
+			String userHomePath = System.getProperty("user.home");
+			String fileSeparator = System.getProperty("file.separator");
+			String password = null;
 			
-//			return null;
+			if (username == null || userHomePath == null || fileSeparator == null)
+				return null;
+
+			String passwordFilePath =
+				MessageFormat.format("{0}{1}.local{1}share{1}simias{1}.local.if",
+									 new Object[] {userHomePath, fileSeparator});
+
+			try
+			{
+				BufferedReader br = new BufferedReader(new FileReader(passwordFilePath));
+				
+				password = br.readLine();
+				
+				br.close();
+			}
+			catch (Exception e)
+			{
+				return null;
+			}
+
+			return new SimiasCredentials(username, password);
 		}
 	}
 }

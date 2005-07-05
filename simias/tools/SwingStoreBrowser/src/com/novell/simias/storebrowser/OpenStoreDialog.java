@@ -27,6 +27,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.FlowLayout;
+import javax.swing.BoxLayout;
 import java.awt.Frame;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
@@ -42,6 +43,8 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JPasswordField;
 
 public class OpenStoreDialog extends JDialog implements ActionListener, KeyListener {
 
@@ -51,6 +54,10 @@ public class OpenStoreDialog extends JDialog implements ActionListener, KeyListe
 	private JPanel entryJPanel = null;
 	private JLabel urlJLabel = null;
 	private JComboBox urlJComboBox = null;
+	private JLabel usernameJLabel = null;
+	private JTextField usernameJTextField = null;
+	private JLabel passwordJLabel = null;
+	private JPasswordField passwordJPasswordField = null;
 	private JPanel buttonsJPanel = null;
 	private JButton okButton = null;
 	private JButton cancelButton = null;
@@ -75,7 +82,7 @@ public class OpenStoreDialog extends JDialog implements ActionListener, KeyListe
         this.setTitle("Open Simias Store");
         this.setModal(true);
         this.setContentPane(getMainJPanel());
-        this.setSize(800, 100);
+        this.setSize(800, 400);
 	}
 	/**
 	 * @return
@@ -110,10 +117,13 @@ public class OpenStoreDialog extends JDialog implements ActionListener, KeyListe
 		if (entryJPanel == null)
 		{
 			entryJPanel = new JPanel();
-			entryJPanel.setLayout(new FlowLayout());
+			entryJPanel.setLayout(new BoxLayout(entryJPanel, BoxLayout.Y_AXIS));
 			entryJPanel.add(getUrlJLabel());
 			entryJPanel.add(getUrlJComboBox());
-			
+			entryJPanel.add(getUsernameJLabel());
+			entryJPanel.add(getUsernameJTextField());
+			entryJPanel.add(getPasswordJLabel());
+			entryJPanel.add(getPasswordJPasswordField());
 		}
 		return entryJPanel;
 	}
@@ -139,6 +149,47 @@ public class OpenStoreDialog extends JDialog implements ActionListener, KeyListe
 		}
 		return urlJComboBox;
 	}
+
+	private Component getUsernameJLabel()
+	{
+		if (usernameJLabel == null)
+		{
+			usernameJLabel = new JLabel("Username:");
+		}
+		
+		return usernameJLabel;
+	}
+
+	private Component getUsernameJTextField()
+	{
+		if (usernameJTextField == null)
+		{
+			usernameJTextField = new JTextField();
+		}
+		
+		return usernameJTextField;
+	}
+	
+	private Component getPasswordJLabel()
+	{
+		if (passwordJLabel == null)
+		{
+			passwordJLabel = new JLabel("Password:");
+		}
+		
+		return passwordJLabel;
+	}
+
+	private Component getPasswordJPasswordField()
+	{
+		if (passwordJPasswordField == null)
+		{
+			passwordJPasswordField = new JPasswordField();
+		}
+		
+		return passwordJPasswordField;
+	}
+	
 	/**
 	 * @return
 	 */
@@ -195,6 +246,20 @@ public class OpenStoreDialog extends JDialog implements ActionListener, KeyListe
 											"Invalid URL", JOptionPane.DEFAULT_OPTION);
 				return;
 			}
+
+			String username = getUsername();
+			String password = getPassword();
+			if (username != null)
+				username = username.trim();
+			if (password != null)
+				password = password.trim();
+			if (username == null || username.length() == 0 || password == null || password.length() == 0)
+			{
+				JOptionPane.showMessageDialog(this, "The username and password cannot be blank",
+											  "Invalid Credentials", JOptionPane.DEFAULT_OPTION);
+				
+				return;
+			}
 			
 			okButtonPressed = true;
 			this.setVisible(false);
@@ -245,6 +310,17 @@ public class OpenStoreDialog extends JDialog implements ActionListener, KeyListe
 		String selectedURL = (String) urlJComboBox.getSelectedItem();
 		return selectedURL;
 	}
+
+	public String getUsername()
+	{
+		return usernameJTextField.getText();
+	}
+	
+	public String getPassword()
+	{
+		return new String(passwordJPasswordField.getPassword());
+	}
+	
 	/**
 	 * @return Returns the okButtonPressed.
 	 */

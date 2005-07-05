@@ -112,6 +112,8 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 			}
 		});
 
+		// Attempt to open/connect to the local machine's store
+		openLocalStore();
 	}
 	/**
 	 * This method initializes jContentPane
@@ -174,6 +176,7 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 		}
 		return jMenuItemOpenStore;
 	}
+
 	/**
 	 * 
 	 */
@@ -186,14 +189,18 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 		if (!dialog.getOkButtonPressed()) return;
 		
 		String url = openStoreDialog.getSelectedURL();
+		String username = openStoreDialog.getUsername();
+		String password = openStoreDialog.getPassword();
 		
 		if (url == null)
 		{
 			return;
 		}
+
+		Browser_x0020_ServiceSoap newService = null;
 		
 		try {
-			service = SwingStoreBrowser.getSoapService(url);
+			newService = SwingStoreBrowser.getSoapService(url, username, password);
 			
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
@@ -201,7 +208,7 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 			return;
 		}
 		
-		if (service == null)
+		if (newService == null)
 		{
 			// TODO: Tell the user that the service is null
 			return;
@@ -212,18 +219,24 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 		{
 			// FIXME: We should really add a Ping() method to the WebService instead
 			// of using this function
-			service.enumerateCollections();
+System.out.print("Attempting to connect to store...");
+			newService.enumerateCollections();
+System.out.println("connected.");
 		}
 		catch(Exception e)
 		{
+System.out.println("failed.");
 			// The service is invalid because we weren't able to make a call on it
 			JOptionPane.showMessageDialog(this,
 				"There is no valid store service running at the specified URL",
 				"Invalid Store", JOptionPane.DEFAULT_OPTION);
 			return;
 		}
+
+		// If we make it this far, the service is good and we're connected
+		service = newService;
 		
-		// If we now have a valid service, add this URL to the config file
+		// Add this URL to the config file
 		Config c = getConfig();
 		try {
 			c.addStoreURL(url);
@@ -245,10 +258,49 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 		
 		jTree.setModel(treeModel);
 	}
+
+	protected void openLocalStore()
+	{
+		Browser_x0020_ServiceSoap newService =
+			SwingStoreBrowser.getLocalSoapService();
+		
+		if (newService == null)
+		{
+			// TODO: Tell the user that the service is null
+			return;
+		}
+
+		// Test the service to see if it is valid
+		try
+		{
+			// FIXME: We should really add a Ping() method to the WebService instead
+			// of using this function
+System.out.print("Attempting to connect to local store...");
+			newService.enumerateCollections();
+System.out.println("connected.");
+		}
+		catch(Exception e)
+		{
+System.out.println("failed.");
+			// Couldn't connect to the local store, so bring up the open store dialog
+			openStore();
+			return;
+		}
+
+		// If we make it this far, the service is good and we're connected
+		service = newService;
+		
+		tree_top = new DefaultMutableTreeNode("localhost");
+		addNodes(tree_top);
+		treeModel = new DefaultTreeModel(tree_top);
+		jTree.setModel(treeModel);
+	}
+	
 	/**
 	 * @return
 	 */
-	private OpenStoreDialog getOpenStoreDialog() {
+	private OpenStoreDialog getOpenStoreDialog()
+	{
 		if (openStoreDialog == null)
 		{
 			openStoreDialog = new OpenStoreDialog(this, true);
