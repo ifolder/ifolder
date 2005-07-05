@@ -63,6 +63,15 @@ public class SwingStoreBrowser {
 
     		service = locator.getBrowser_x0020_ServiceSoap(url);
     		
+			SimiasCredentials credentials = SimiasCredentials.getSimiasCredentials();
+			if (credentials != null)
+			{
+				((org.apache.axis.client.Stub) service).setUsername(credentials.getUsername());
+				((org.apache.axis.client.Stub) service).setPassword(credentials.getPassword());
+				//((Stub) service).setUsername(credentials.getUsername());
+				//((Stub) service).setPassword(credentials.getPassword());
+			}
+			
 //    		((Stub) service).setUsername(username);
 //    		((Stub) service).setPassword(password);
             
@@ -75,5 +84,37 @@ public class SwingStoreBrowser {
 		}
     	
     	return null;
+	}
+
+	public static class SimiasCredentials
+	{
+		String username;
+		String password;
+		
+		public SimiasCredentials(String username, String password)
+		{
+			this.username = username;
+			this.password = password;
+		}
+		
+		public String getUsername()
+		{
+			return username;
+		}
+		
+		public String getPassword()
+		{
+			return password;
+		}
+		
+		public static SimiasCredentials getSimiasCredentials()
+		{
+			// Read the Simias Credentials from the disk and return
+			// a SimiasCredentials Object
+
+			return new SimiasCredentials("boyd", "c3dbd2b4-7ee6-4cd3-9f26-c0020719e65b96319ecf-92bf-450e-a2c8-cc007a41b81a");
+			
+//			return null;
+		}
 	}
 }
