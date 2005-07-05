@@ -512,25 +512,15 @@ namespace Novell.iFolderCom
 					if (Win32Security.AccessAllowed(ifolderPath.Text))
 					{
 						Cursor.Current = Cursors.WaitCursor;
-						if (ifWebService.CanBeiFolder(ifolderPath.Text))
-						{
-							DomainItem domainItem = (DomainItem)servers.SelectedItem;
+						DomainItem domainItem = (DomainItem)servers.SelectedItem;
 
-							// Create the iFolder.
-							iFolderWeb ifolder = ifWebService.CreateiFolderInDomain(ifolderPath.Text, domainItem.ID);
+						// Create the iFolder.
+						iFolderWeb ifolder = ifWebService.CreateiFolderInDomain(ifolderPath.Text, domainItem.ID);
 
-							// Notify the shell.
-							Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolderPath.Text, IntPtr.Zero);
+						// Notify the shell.
+						Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolderPath.Text, IntPtr.Zero);
 
-							Cursor.Current = Cursors.Default;
-						}
-						else
-						{
-							successful = false;
-							Cursor.Current = Cursors.Default;
-							MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("invalidFolder"), resourceManager.GetString("errorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-							mmb.ShowDialog();
-						}
+						Cursor.Current = Cursors.Default;
 					}
 					else
 					{
@@ -544,7 +534,57 @@ namespace Novell.iFolderCom
 			{
 				successful = false;
 				Cursor.Current = Cursors.Default;
-				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("iFolderCreateError"), resourceManager.GetString("errorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+				MyMessageBox mmb;
+				string message;
+				string caption = resourceManager.GetString("pathInvalidErrorTitle");
+
+				if (ex.Message.IndexOf("InvalidCharactersPath") != -1)
+				{
+					message = resourceManager.GetString("invalidCharsError");
+				}
+				else if (ex.Message.IndexOf("AtOrInsideStorePath") != -1)
+				{
+					message = resourceManager.GetString("pathInStoreError");
+				}
+				else if (ex.Message.IndexOf("ContainsStorePath") != -1)
+				{
+					message = resourceManager.GetString("pathContainsStoreError");
+				}
+				else if (ex.Message.IndexOf("SystemDirectoryPath") != -1)
+				{
+					message = resourceManager.GetString("systemDirError");
+				}
+				else if (ex.Message.IndexOf("SystemDrivePath") != -1)
+				{
+					message = resourceManager.GetString("systemDriveError");
+				}
+				else if (ex.Message.IndexOf("IncludesWinDirPath") != -1)
+				{
+					message = resourceManager.GetString("winDirError");
+				}
+				else if (ex.Message.IndexOf("IncludesProgFilesPath") != -1)
+				{
+					message = resourceManager.GetString("progFilesDirError");
+				}
+				else if (ex.Message.IndexOf("ContainsCollectionPath") != -1)
+				{
+					message = resourceManager.GetString("containsiFolderError");
+				}
+				else if (ex.Message.IndexOf("AtOrInsideCollectionPath") != -1)
+				{
+					message = resourceManager.GetString("pathIniFolderError");
+				}
+				else if (ex.Message.IndexOf("RootOfDrivePath") != -1)
+				{
+					message = resourceManager.GetString("rootDriveError");
+				}
+				else
+				{
+					message = resourceManager.GetString("iFolderCreateError");
+					caption = resourceManager.GetString("errorTitle");
+				}
+
+				mmb = new MyMessageBox(message, caption, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 			}
 		}

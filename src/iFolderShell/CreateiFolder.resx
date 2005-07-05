@@ -737,7 +737,7 @@
     <value>iFolder Error</value>
   </data>
   <data name="invalidFolder">
-    <value>An invalid folder was specified.</value>
+    <value>An invalid location was specified.</value>
   </data>
   <data name="iFolderCreateError">
     <value>An error was encountered while creating the iFolder.</value>
@@ -746,18 +746,51 @@
     <value>The specified location does not exist.  Do you want to create it?</value>
   </data>
   <data name="createPromptTitle">
-    <value>iFolder Location Error</value>
+    <value>Create Location</value>
   </data>
   <data name="accessErrorTitle">
     <value>iFolder Access Error</value>
   </data>
   <data name="accessDenied">
-    <value>You do not have sufficient access to the specified location.  Please choose a different location and try again.</value>
+    <value>You do not have sufficient access to the selected location.  iFolders can only be created in folders where you have access to read and write files.  Please select a different location and try again.</value>
   </data>
   <data name="createAccount">
     <value>To begin using iFolder, you must first set up an iFolder account.  Would you like to set up an iFolder account now?</value>
   </data>
   <data name="createAccountTitle">
     <value>Set Up iFolder Account</value>
+  </data>
+  <data name="pathInvalidErrorTitle">
+    <value>Invalid Location</value>
+  </data>
+  <data name="invalidCharsError">
+    <value>The selected location contains invalid characters.  The characters \:*?"&lt;&gt;| cannot be used in an iFolder. Please select a different location and try again.</value>
+  </data>
+  <data name="pathInStoreError">
+    <value>The selected location is inside the iFolder data folder.  Please select a different location and try again.</value>
+  </data>
+  <data name="pathContainsStoreError">
+    <value>The selected location contains the iFolder data files.  Please select a different location and try again.</value>
+  </data>
+  <data name="systemDirError">
+    <value>The selected location contains a system folder.  System folders cannot contain an iFolder.  Please select a different location and try again.</value>
+  </data>
+  <data name="systemDriveError">
+    <value>The selected location is a system drive.  System drives cannot contain an iFolder.  Please select a different location and try again.</value>
+  </data>
+  <data name="winDirError">
+    <value>The selected location includes the Windows folder.  The Windows folder cannot contain an iFolder.  Please select a different location and try again.</value>
+  </data>
+  <data name="progFilesDirError">
+    <value>The selected location includes the Program Files folder.  The Program Files folder cannot contain an iFolder.  Please select a different location and try again.</value>
+  </data>
+  <data name="containsiFolderError">
+    <value>The selected location already contains an iFolder.  iFolders cannot exist inside other iFolders.  Please select a different location and try again.</value>
+  </data>
+  <data name="pathIniFolderError">
+    <value>The selected location is inside another iFolder.  iFolders cannot exist inside other iFolders.  Please select a different location and try again.</value>
+  </data>
+  <data name="rootDriveError">
+    <value>iFolders cannot exist at the drive level.  The location selected is at the root of the drive.  Please select a location that is not at the root of a drive and try again.</value>
   </data>
 </root>
