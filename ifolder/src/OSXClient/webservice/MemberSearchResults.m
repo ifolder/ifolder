@@ -34,6 +34,7 @@
 // methods defined in SimiasService.m
 void init_simias_gsoap(struct soap *pSoap, GSOAP_CREDS *creds);
 void cleanup_simias_gsoap(struct soap *pSoap, GSOAP_CREDS *creds);
+void handle_simias_soap_error(struct soap *pSoap, GSOAP_CREDS *creds, NSString *methodName);
 NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 
 @implementation MemberSearchResults
@@ -129,34 +130,29 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
             &findMessage,
             &findResponse);
 
- 	if(soap.error)
-	{
-		NSLog(@"Exception raised while calling FindFirstMembers: %s", soap.fault->faultstring);
-	}
-	else
-	{
-		totalCount = findResponse.totalMembers;
-		if(totalCount > 0)
-		{
-			searchContext = [[NSString stringWithUTF8String:findResponse.searchContext] retain];
-			results = malloc(totalCount * sizeof(User *));
-			memset(results, 0, (totalCount * sizeof(User *)));
-			
-			if(results != NULL)
-			{
-				int counter;
-				for(counter=0;counter<findResponse.memberList->__sizeMemberInfo;counter++)
-				{
-					struct ns1__MemberInfo *curMember;
-					curMember = findResponse.memberList->MemberInfo[counter];
+	handle_simias_soap_error(&soap, &creds, @"MemberSearchResults.searchMembers");
 
-					User *newUser = [ [User alloc] init];
-					[newUser setProperties:getUserProperties(curMember)];
-					results[counter] = [newUser retain];
-				}
+	totalCount = findResponse.totalMembers;
+	if(totalCount > 0)
+	{
+		searchContext = [[NSString stringWithUTF8String:findResponse.searchContext] retain];
+		results = malloc(totalCount * sizeof(User *));
+		memset(results, 0, (totalCount * sizeof(User *)));
+		
+		if(results != NULL)
+		{
+			int counter;
+			for(counter=0;counter<findResponse.memberList->__sizeMemberInfo;counter++)
+			{
+				struct ns1__MemberInfo *curMember;
+				curMember = findResponse.memberList->MemberInfo[counter];
+
+				User *newUser = [ [User alloc] init];
+				[newUser setProperties:getUserProperties(curMember)];
+				results[counter] = [newUser retain];
 			}
 		}
-    }
+	}
 
 	cleanup_simias_gsoap(&soap, &creds);
 }
@@ -188,34 +184,29 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
             &findMessage,
             &findResponse);
 
- 	if(soap.error)
-	{
-		NSLog(@"Exception raised while calling FindFirstMembers: %s", soap.fault->faultstring);
-	}
-	else
-	{
-		totalCount = findResponse.totalMembers;
-		if(totalCount > 0)
-		{
-			searchContext = [[NSString stringWithUTF8String:findResponse.searchContext] retain];
-			results = malloc(totalCount * sizeof(User *));
-			memset(results, 0, (totalCount * sizeof(User *)));
-			
-			if(results != NULL)
-			{
-				int counter;
-				for(counter=0;counter<findResponse.memberList->__sizeMemberInfo;counter++)
-				{
-					struct ns1__MemberInfo *curMember;
-					curMember = findResponse.memberList->MemberInfo[counter];
+	handle_simias_soap_error(&soap, &creds, @"MemberSearchResults.getAllMembers");
 
-					User *newUser = [ [User alloc] init];
-					[newUser setProperties:getUserProperties(curMember)];
-					results[counter] = [newUser retain];
-				}
+	totalCount = findResponse.totalMembers;
+	if(totalCount > 0)
+	{
+		searchContext = [[NSString stringWithUTF8String:findResponse.searchContext] retain];
+		results = malloc(totalCount * sizeof(User *));
+		memset(results, 0, (totalCount * sizeof(User *)));
+		
+		if(results != NULL)
+		{
+			int counter;
+			for(counter=0;counter<findResponse.memberList->__sizeMemberInfo;counter++)
+			{
+				struct ns1__MemberInfo *curMember;
+				curMember = findResponse.memberList->MemberInfo[counter];
+
+				User *newUser = [ [User alloc] init];
+				[newUser setProperties:getUserProperties(curMember)];
+				results[counter] = [newUser retain];
 			}
 		}
-    }
+	}
 
 	cleanup_simias_gsoap(&soap, &creds);
 }
@@ -293,7 +284,7 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 
  	if(soap.error)
 	{
-		NSLog(@"Exception raised while calling FindFirstMembers: %s", soap.fault->faultstring);
+		NSLog(@"Error calling FindSeekMembers %d", soap.error);
 		cleanup_simias_gsoap(&soap, &creds);
 		return NO;
 	}

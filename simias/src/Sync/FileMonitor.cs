@@ -255,7 +255,8 @@ namespace Simias.Sync
 			FileInfo fi = new FileInfo(path);
 			TimeSpan ts = fi.LastWriteTime - fn.LastWriteTime;
 			
-			if (((uint)ts.TotalSeconds != 0) && (fn.UpdateFileInfo(collection, path)))
+			// Fat32 has a 2 second time resolution, Linux has a 1 second resolution. Check for > 1;
+			if ((fi.Length != fn.Length || ((uint)ts.Seconds > 1)) && (fn.UpdateFileInfo(collection, path)))
 			{
 				hasChanges = true;
 				log.Debug("Updating file node for {0} {1}", path, fn.ID);

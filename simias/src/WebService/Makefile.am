@@ -9,7 +9,7 @@ SimiasWebService_FLAGS = $(CSC_LIBFLAG)
 SimiasWebService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll SimiasClient.dll Simias.dll Novell.Security.ClientPasswordManager.NetCredential.dll
 SimiasWebService_LIBPATH = ../SimiasClient ../Simias.dll $(NOVELL_SECURITY_DIR)
 
-EXTRA_DIST = win.web.config mono.web.config Global.asax Simias.asmx SimiasBrowser.asmx Simias.wsdl $(SimiasWebService_CSFILES1)
+EXTRA_DIST = win.web.config mono.web.config Global.asax Simias.asmx Simias.wsdl $(SimiasWebService_CSFILES1)
 
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml
@@ -31,7 +31,7 @@ endif
 install-exec-local: Simias.Web.dll $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(webdir)
 	$(mkinstalldirs) $(DESTDIR)$(webbindir)
-	$(INSTALL_PROGRAM) Global.asax Simias.asmx SimiasBrowser.asmx $(DEBUG_FILES) $(DESTDIR)$(webdir)
+	$(INSTALL_PROGRAM) Global.asax Simias.asmx $(DEBUG_FILES) $(DESTDIR)$(webdir)
 	$(INSTALL_PROGRAM) Simias.Web.dll $(DEBUG_FILES) $(DESTDIR)$(webbindir)
 if WINDOWS
 	$(INSTALL_PROGRAM) win.web.config $(DESTDIR)$(webdir)/web.config
@@ -40,7 +40,7 @@ else
 endif	
 	
 uninstall-local:
-	cd $(DESTDIR)$(webdir); rm -f web.config Global.asax Simias.asmx SimiasBrowser.asmx $(DEBUG_FILES)
+	cd $(DESTDIR)$(webdir); rm -f web.config Global.asax Simias.asmx $(DEBUG_FILES)
 	cd $(DESTDIR)$(webbindir); rm -f Simias.Web.dll $(DEBUG_FILES)
 
 installcheck-local: install

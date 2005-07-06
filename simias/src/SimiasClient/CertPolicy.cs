@@ -172,6 +172,7 @@ namespace Simias.Client
 		public bool CheckValidationResult( ServicePoint srvPoint, X509Certificate certificate, WebRequest request, int certificateProblem )
 		{
 			bool honorCert = false;
+			string localHost = request.RequestUri.Host.ToLower();
 
 			if ((certificateProblem == 0) || (CertificateProblem.CertEXPIRED.Equals(certificateProblem)))
 			{
@@ -179,7 +180,7 @@ namespace Simias.Client
 			}
 			else
 			{
-				CertificateState cs = CertTable[srvPoint.Address.Host] as CertificateState;
+				CertificateState cs = CertTable[localHost] as CertificateState;
 				if (cs != null && cs.IsValid(certificate))
 				{
 					honorCert = true;
@@ -187,7 +188,7 @@ namespace Simias.Client
 				else
 				{
 					// This is a new cert replace the certificate.
-					CertTable[srvPoint.Address.Host] = new CertificateState(certificate, false, (CertificateProblem)certificateProblem);
+					CertTable[localHost] = new CertificateState(certificate, false, (CertificateProblem)certificateProblem);
 				}
 			}
 			return honorCert;

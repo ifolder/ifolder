@@ -100,11 +100,6 @@
                     HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.Services.dll"
                 />
                 <Reference
-                    Name = "ClientUpgrade"
-                    AssemblyName = "ClientUpgrade"
-                    HintPath = "..\..\..\final\web\bin\ClientUpgrade.dll"
-                />
-                <Reference
                     Name = "iFolderComponent"
                     AssemblyName = "iFolderComponent"
                     HintPath = "..\..\..\final\iFolderComponent.dll"

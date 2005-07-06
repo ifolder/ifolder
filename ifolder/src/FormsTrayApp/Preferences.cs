@@ -29,6 +29,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
 using System.Xml;
+using System.Net;
 using Microsoft.Win32;
 using Novell.iFolderCom;
 using Novell.Win32Util;
@@ -1597,6 +1598,51 @@ namespace Novell.FormsTrayApp
 			catch {}
 		}
 
+		public void SetProxyForDomain( string hostUrl, bool unknownScheme )
+		{
+			UriBuilder ubHost = new UriBuilder( hostUrl );
+
+			// If a domain name was passed in without a scheme, a proxy will
+			// need to be setup for both http and https schemes because we don't
+			// know how it will ultimately be sent.
+			if ( unknownScheme )
+			{
+				// Set the proxy for http.
+				ubHost.Scheme = Uri.UriSchemeHttp;
+				ubHost.Port = 80;
+				SetProxyForDomain( ubHost.Uri.ToString(), false );
+
+				// Now set it for https.
+				ubHost.Scheme = Uri.UriSchemeHttps;
+				ubHost.Port = 443;
+				SetProxyForDomain( ubHost.Uri.ToString(), false );
+			}
+			else
+			{
+				// Set any proxy information for this domain.
+				IWebProxy iwp = GlobalProxySelection.Select;
+				if ( !iwp.IsBypassed( ubHost.Uri ) )
+				{
+					string proxyUser = null;
+					string proxyPassword = null;
+
+					Uri proxyUri = iwp.GetProxy( ubHost.Uri );
+					if ( iwp.Credentials != null )
+					{
+						NetworkCredential netCred = iwp.Credentials.GetCredential( proxyUri, "Basic" );
+						if ( netCred != null )
+						{
+							proxyUser = netCred.UserName;
+							proxyPassword = netCred.Password;
+						}
+					}
+
+					// The scheme for the proxy address needs to match the scheme for the host address.
+					simiasWebService.SetProxyAddress( ubHost.Uri.ToString(), proxyUri.ToString(), proxyUser, proxyPassword );
+				}
+			}
+		}
+
 		/// <summary>
 		/// Updates the domain status in the Accounts page.
 		/// </summary>
@@ -1639,6 +1685,10 @@ namespace Novell.FormsTrayApp
 
 			try
 			{
+				// Set the proxy for this url.
+				SetProxyForDomain( server.Text, true );
+
+				// Connect to the domain now that the proxy is set.
 				DomainInformation domainInfo = simiasWebService.ConnectToDomain(userName.Text, password.Text, server.Text);
 
 				MyMessageBox mmb;

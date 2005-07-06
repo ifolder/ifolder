@@ -26,7 +26,10 @@ using System.Net;
 using System.Text;
 using System.Xml;
 
-namespace Simias.Client
+using Simias;
+using Simias.Client;
+
+namespace Simias.DomainServices
 {
 	/// <summary>
 	/// Summary description for WSInspection.
@@ -60,56 +63,66 @@ namespace Simias.Client
 		/// </summary>
 		/// <param name="host">Address and optionally port of the host server.</param>
 		/// <param name="serviceName">Service name to find URL for.</param>
+		/// <param name="user">The user to be authenticated.</param>
+		/// <param name="password">The password of the user.</param>
 		/// <returns>A URL that references the specified service.</returns>
-		static public Uri GetServiceUrl( string host, string serviceName )
+		static public Uri GetServiceUrl( string host, string serviceName, string user, string password )
 		{
 			Uri serviceUrl = null;
 			HttpWebResponse response = null;
+			CookieContainer cks = new CookieContainer();
+			// Build a credential from the user name and password.
+			NetworkCredential myCred = new NetworkCredential( user, password ); 
 
 			// Parse the host string in case there is a port specified.
 			Uri parseUri = new Uri( Uri.UriSchemeHttp + Uri.SchemeDelimiter + host );
 
 			// Try 'https' first.
-			int port = ( host.IndexOf( ':' ) != -1 ) ? parseUri.Port : SSLDefaultPort;
-			UriBuilder wsUri = new UriBuilder( Uri.UriSchemeHttps, parseUri.Host, port, WSInspectionDocument );
+			int port = ( host.IndexOf( ':' ) != -1 ) ? parseUri.Port : DefaultPort; //SSLDefaultPort;
+			UriBuilder wsUri = new UriBuilder( Uri.UriSchemeHttp, parseUri.Host, port, WSInspectionDocument );
 
 			// Create the web request.
-			WebRequest request = WebRequest.Create( wsUri.Uri );
+			HttpWebRequest request = (HttpWebRequest)WebRequest.Create( wsUri.Uri );
+			
+			bool retry = true;
+		
+			proxyRetry:
+
+			request.Credentials = myCred;
 			request.Timeout = 15 * 1000;
+			request.CookieContainer = cks;
+			request.Proxy = ProxyState.GetProxyState( request.RequestUri );
 
 			try
 			{
 				// Get the response from the web server.
 				response = request.GetResponse() as HttpWebResponse;
+				// Mono has a bug where it doesn't set the cookies in the cookie jar.
+				cks.Add(response.Cookies);
 			}
 			catch ( WebException we )
 			{
-				if ( ( we.Status == WebExceptionStatus.TrustFailure ) ||
-					 ( we.Status == WebExceptionStatus.Timeout ) ||
+				IsTrustFailure(host, we);
+				if ( ( we.Status == WebExceptionStatus.Timeout ) ||
 					 ( we.Status == WebExceptionStatus.NameResolutionFailure ) )
 				{
 					throw we;	
 				}
 				else
 				{
-					CertPolicy.CertificateState cs = CertPolicy.GetCertificate(host);
-					if (cs != null && !cs.Accepted)
+					response = we.Response as HttpWebResponse;
+					if (response != null)
 					{
-						// BUGBUG this is here to work around a mono bug.
-						throw new WebException(we.Message, we, WebExceptionStatus.TrustFailure, we.Response);
+						// Mono has a bug where it doesn't set the cookies in the cookie jar.
+						cks.Add(response.Cookies);
+						if (response.StatusCode == HttpStatusCode.Unauthorized && retry == true)
+						{
+							// This should be a free call we must be behind iChain.
+							request = (HttpWebRequest)WebRequest.Create( response.ResponseUri );
+							retry = false;
+							goto proxyRetry;
+						}
 					}
-				}
-				// Try 'http' next.
-				wsUri.Scheme = Uri.UriSchemeHttp;
-				wsUri.Port = ( host.IndexOf( ':' ) != -1 ) ? parseUri.Port : DefaultPort;
-				request = WebRequest.Create( wsUri.Uri );
-
-				try
-				{
-					response = request.GetResponse() as HttpWebResponse;
-				}
-				catch
-				{
 					response = null;
 				}
 			}
@@ -121,7 +134,7 @@ namespace Simias.Client
 				{
 					// Get the stream associated with the response.
 					Stream receiveStream = response.GetResponseStream();
-
+					
 					// Pipes the stream to a higher level stream reader with the required encoding format. 
 					StreamReader readStream = new StreamReader( receiveStream, Encoding.UTF8 );
 					try
@@ -150,7 +163,35 @@ namespace Simias.Client
 									{
 										Uri respUri = response.ResponseUri;
 										UriBuilder urb = new UriBuilder( respUri.Scheme, respUri.Host, respUri.Port, uriString.TrimStart( new char[] { '/' } ) );
-										serviceUrl = urb.Uri;
+                                        serviceUrl = urb.Uri;
+										// Check to see if we need to use ssl.
+										// Make the request and see if we get redirected 302;
+										// Create the web request.
+										request = (HttpWebRequest)WebRequest.Create( serviceUrl );
+										request.CookieContainer = cks;
+										request.Proxy = ProxyState.GetProxyState( request.RequestUri );
+										response.Close();
+										try
+										{
+											response = request.GetResponse() as HttpWebResponse;
+											serviceUrl = response.ResponseUri;
+										}
+										catch (WebException wex)
+										{
+											IsTrustFailure(host, wex);
+											response = wex.Response as HttpWebResponse;
+											if (response != null)
+											{
+												if (response.StatusCode == HttpStatusCode.Unauthorized)
+												{
+													if (response.Headers.Get("Simias-Error") != null)
+													{
+														// This is expected because this service requires authentication.
+														serviceUrl = response.ResponseUri;
+													}
+												}
+											}
+										}
 									}
 									else
 									{
@@ -172,6 +213,22 @@ namespace Simias.Client
 			}
 
 			return serviceUrl;
+		}
+		#endregion
+
+		#region Private Methods
+		static void IsTrustFailure(string host, WebException we)
+		{
+			if (we.Status == WebExceptionStatus.TrustFailure )
+			{
+				throw we;	
+			}
+			CertPolicy.CertificateState cs = CertPolicy.GetCertificate(host);
+			if (cs != null && !cs.Accepted)
+			{
+				// BUGBUG this is here to work around a mono bug.
+				throw new WebException(we.Message, we, WebExceptionStatus.TrustFailure, we.Response);
+			}
 		}
 		#endregion
 	}

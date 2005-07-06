@@ -139,15 +139,16 @@ namespace Simias.DomainServices
 		/// Login to a remote domain using username and password
 		/// Assumes a slave domain has been provisioned locally
 		/// </summary>
+		/// <param name="host">The uri to the host.</param>
 		/// <param name="domainID">ID of the remote domain.</param>
-		/// <param name="user">Member to login as</param>
-		/// <param name="password">Password to validate user.</param>
+		/// <param name="networkCredential">The credentials to authenticate with.</param>
+		/// <param name="calledRecursive">True if called recursively.</param>
 		/// <returns>
 		/// The status of the remote authentication
 		/// </returns>
 		private 
 		Simias.Authentication.Status
-		Login(Uri host, string domainID, NetworkCredential networkCredential)
+		Login(Uri host, string domainID, NetworkCredential networkCredential, bool calledRecursive)
 		{
 			HttpWebResponse response = null;
 
@@ -160,6 +161,7 @@ namespace Simias.DomainServices
 			WebState webState = new WebState(domainID);
 			webState.InitializeWebRequest(request, domainID);
 			request.Credentials = networkCredential;
+			request.PreAuthenticate = true;
 			
 			if ( domainID != null && domainID != "")
 			{
@@ -181,6 +183,7 @@ namespace Simias.DomainServices
 				response = request.GetResponse() as HttpWebResponse;
 				if ( response != null )
 				{
+					request.CookieContainer.Add(response.Cookies);
 					string grace = 
 						response.GetResponseHeader( 
 							Simias.Security.Web.AuthenticationService.Login.GraceTotalHeader );
@@ -220,6 +223,7 @@ namespace Simias.DomainServices
 					response = webEx.Response as HttpWebResponse;
 					if (response != null)
 					{
+						request.CookieContainer.Add(response.Cookies);
 						// Look for our special header to give us more
 						// information why the authentication failed
 						string iFolderError = 
@@ -270,6 +274,14 @@ namespace Simias.DomainServices
 							else
 								if ( iFolderError == StatusCodes.InvalidCredentials.ToString() )
 							{
+								// This could have failed because of iChain.
+								// Check for a via header.
+								string viaHeader = response.Headers.Get("via");
+								if (viaHeader != null && !calledRecursive)
+								{
+									// Try again.
+									return Login(host, domainID, networkCredential, true);
+								}
 								status.statusCode = SCodes.InvalidCredentials;
 							}
 							else
@@ -277,6 +289,13 @@ namespace Simias.DomainServices
 							{
 								status.statusCode = SCodes.SimiasLoginDisabled;
 							}
+						}
+						else if (response.StatusCode == HttpStatusCode.Unauthorized)
+						{
+							// This call is a free call on the server.
+							// If we get a 401 we must have iChain between us.
+							// The user was invalid.
+							status.statusCode = SCodes.UnknownUser;
 						}
 					}
 					else
@@ -358,6 +377,7 @@ namespace Simias.DomainServices
 		/// </returns>
 		public Simias.Authentication.Status Attach(string host, string user, string password)
 		{
+			CookieContainer cookies = new CookieContainer();
 			Store store = Store.GetStore();
 
 			// Get a URL to our service.
@@ -365,7 +385,7 @@ namespace Simias.DomainServices
 			Simias.Authentication.Status status = null;
 			try
 			{
-				domainServiceUrl = WSInspection.GetServiceUrl( host, DomainServiceType );
+				domainServiceUrl = WSInspection.GetServiceUrl( host, DomainServiceType, user, password );
 			}
 			catch (WebException we)
 			{
@@ -389,9 +409,15 @@ namespace Simias.DomainServices
 				domainServiceUrl = new Uri( Uri.UriSchemeHttp + Uri.SchemeDelimiter + host + DomainServicePath );
 			}
 
+			// Build a credential from the user name and password.
+			NetworkCredential myCred = new NetworkCredential( user, password ); 
+
 			// Create the domain service web client object.
 			DomainService domainService = new DomainService();
+			domainService.CookieContainer = cookies;
 			domainService.Url = domainServiceUrl.ToString();
+			domainService.Credentials = myCred;
+			domainService.Proxy = ProxyState.GetProxyState( domainServiceUrl );
 
 			// Check to see if this domain already exists in this store.
 			string domainID = domainService.GetDomainID();
@@ -400,14 +426,12 @@ namespace Simias.DomainServices
 				throw new ExistsException( String.Format( "Domain {0}", domainID ) );
 			}
 
-			// Build a credential from the user name and password.
-			NetworkCredential myCred = new NetworkCredential( user, password ); 
-
 			status = 
 				this.Login( 
 					new Uri( domainServiceUrl.Scheme + Uri.SchemeDelimiter + host ), 
 					domainID,
-					myCred );
+					myCred,
+					false);
 			if ( ( status.statusCode != SCodes.Success ) && ( status.statusCode != SCodes.SuccessInGrace ) )
 			{
 				return status;
@@ -509,7 +533,7 @@ namespace Simias.DomainServices
 				if ( cDomain.Role == SyncRoles.Slave )
 				{
 					NetworkCredential netCred = new NetworkCredential( user, password );
-					status = this.Login( DomainProvider.ResolveLocation(domainID), domainID, netCred );
+					status = this.Login( DomainProvider.ResolveLocation(domainID), domainID, netCred, false );
 					if ( status.statusCode == SCodes.Success ||
 						status.statusCode == SCodes.SuccessInGrace )
 					{

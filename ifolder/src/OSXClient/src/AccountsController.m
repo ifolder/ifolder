@@ -127,6 +127,8 @@
 		(![selectedDomain authenticated]) &&
 		( [[password stringValue] length] > 0 ) )
 	{
+		[[NSApp delegate] setupSimiasProxies:[selectedDomain host]];
+
 		@try
 		{
 			AuthStatus *authStatus = [[simiasService LoginToRemoteDomain:[selectedDomain ID]
@@ -297,6 +299,8 @@
 	{
 		unsigned int statusCode;
 		AuthStatus *authStatus = nil;
+
+		[[NSApp delegate] setupSimiasProxies:[host stringValue]];
 
 		@try
 		{

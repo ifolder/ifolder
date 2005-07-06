@@ -19,6 +19,7 @@
 			3EE2780507C4466000A645A0,
 			3EB84A730804825300517F77,
 			3EB84A750804825900517F77,
+			3E1036F9084FDD9100C17350,
 		);
 		codeSenseManager = 3E1712BF076126F700BC1084;
 		executables = (
@@ -78,7 +79,7 @@
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Target_ColumnID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
-					442,
+					10,
 					20,
 					82,
 					43,
@@ -153,7 +154,7 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 138041589;
+			PBXPerProjectTemplateStateSaveDate = 139450120;
 			PBXPrepackagedSmartGroups_v2 = (
 				{
 					PBXTransientLocationAtTop = bottom;
@@ -330,268 +331,42 @@
 					};
 				},
 			);
-			PBXWorkspaceStateSaveDate = 138041589;
-			com.apple.ide.smrt.PBXUserSmartGroupsKey.Rev10 = <40b047970756463747275616d618308e481004484848e0e435d457471626c656142727169700484870e435142727169700484880e435f426a656364700584810960068>;
+			PBXWorkspaceStateSaveDate = 139450120;
+			com.apple.ide.smrt.PBXUserSmartGroupsKey.Rev10 = <040b747970656473747265616d8103e88401408484840e4e534d757461626c654172726179008484074e534172726179008484084e534f626a65637400858401690086>;
 		};
 		perUserProjectItems = {
-			3E09F82B07C048A200381F59 = 3E09F82B07C048A200381F59;
-			3E09F83107C048AD00381F59 = 3E09F83107C048AD00381F59;
-			3E09F83807C048EB00381F59 = 3E09F83807C048EB00381F59;
-			3E09F83907C048EB00381F59 = 3E09F83907C048EB00381F59;
-			3E09F85107C049DD00381F59 = 3E09F85107C049DD00381F59;
-			3E09F85207C049DD00381F59 = 3E09F85207C049DD00381F59;
-			3E09F86407C04CF400381F59 = 3E09F86407C04CF400381F59;
-			3E09F8F107C0528A00381F59 = 3E09F8F107C0528A00381F59;
-			3E09F8F207C0528A00381F59 = 3E09F8F207C0528A00381F59;
-			3E09F8F307C0528A00381F59 = 3E09F8F307C0528A00381F59;
-			3E09F8F407C0528A00381F59 = 3E09F8F407C0528A00381F59;
-			3E09F8F507C0528A00381F59 = 3E09F8F507C0528A00381F59;
-			3E09F8F707C0528A00381F59 = 3E09F8F707C0528A00381F59;
-			3E09F8F807C0528A00381F59 = 3E09F8F807C0528A00381F59;
-			3E09F8F907C0528A00381F59 = 3E09F8F907C0528A00381F59;
-			3E09F8FA07C0528A00381F59 = 3E09F8FA07C0528A00381F59;
-			3E0AFF250773F7ED003F6B4A = 3E0AFF250773F7ED003F6B4A;
-			3E0E6C3E07C7BA760057D505 = 3E0E6C3E07C7BA760057D505;
-			3E0E6C4007C7BA760057D505 = 3E0E6C4007C7BA760057D505;
-			3E0E6C4207C7BA760057D505 = 3E0E6C4207C7BA760057D505;
-			3E0E6CAC07C7D2B00057D505 = 3E0E6CAC07C7D2B00057D505;
-			3E0E6CC707C7D5150057D505 = 3E0E6CC707C7D5150057D505;
-			3E0E6CD607C7D7720057D505 = 3E0E6CD607C7D7720057D505;
-			3E0E6D1607C7E86C0057D505 = 3E0E6D1607C7E86C0057D505;
-			3E15665C07C527BA00972388 = 3E15665C07C527BA00972388;
-			3E15666A07C5292D00972388 = 3E15666A07C5292D00972388;
-			3E15667307C529ED00972388 = 3E15667307C529ED00972388;
-			3E15667507C529ED00972388 = 3E15667507C529ED00972388;
-			3E1566A007C5333300972388 = 3E1566A007C5333300972388;
-			3E1566A407C5333300972388 = 3E1566A407C5333300972388;
-			3E1566B007C533F800972388 = 3E1566B007C533F800972388;
-			3E169C6207AB08B10032AC48 = 3E169C6207AB08B10032AC48;
-			3E19254E07A7E1F100F9E44D = 3E19254E07A7E1F100F9E44D;
-			3E19255807A7E24400F9E44D = 3E19255807A7E24400F9E44D;
-			3E19255F07A7E2B100F9E44D = 3E19255F07A7E2B100F9E44D;
-			3E1971AE07E0E61C00BA5DE2 = 3E1971AE07E0E61C00BA5DE2;
-			3E1971F807E0EB5500BA5DE2 = 3E1971F807E0EB5500BA5DE2;
-			3E19720D07E0EDEB00BA5DE2 = 3E19720D07E0EDEB00BA5DE2;
-			3E19722207E0EDEE00BA5DE2 = 3E19722207E0EDEE00BA5DE2;
-			3E1998A207BAC6E300AAC29A = 3E1998A207BAC6E300AAC29A;
-			3E1998B407BAC93D00AAC29A = 3E1998B407BAC93D00AAC29A;
-			3E1998C507BACB6900AAC29A = 3E1998C507BACB6900AAC29A;
-			3E1998D607BAD14D00AAC29A = 3E1998D607BAD14D00AAC29A;
-			3E19996C07BAE96E00AAC29A = 3E19996C07BAE96E00AAC29A;
-			3E19997107BAE96E00AAC29A = 3E19997107BAE96E00AAC29A;
-			3E1F31BF07EA2C3D005E45BA = 3E1F31BF07EA2C3D005E45BA;
-			3E1F31C407EA2C3D005E45BA = 3E1F31C407EA2C3D005E45BA;
-			3E1F31CC07EA2C3D005E45BA = 3E1F31CC07EA2C3D005E45BA;
-			3E215A3C07E6940B0082EACE = 3E215A3C07E6940B0082EACE;
-			3E215A5107E73D370082EACE = 3E215A5107E73D370082EACE;
-			3E215A5807E73D370082EACE = 3E215A5807E73D370082EACE;
-			3E23FF000768CE0900877BDF = 3E23FF000768CE0900877BDF;
-			3E255D0D077209950062AB7A = 3E255D0D077209950062AB7A;
-			3E255E0E077219200062AB7A = 3E255E0E077219200062AB7A;
-			3E255E14077219200062AB7A = 3E255E14077219200062AB7A;
-			3E262D5807FDC0E00095E8A4 = 3E262D5807FDC0E00095E8A4;
-			3E262D5907FDC0E00095E8A4 = 3E262D5907FDC0E00095E8A4;
-			3E262D5A07FDC0E00095E8A4 = 3E262D5A07FDC0E00095E8A4;
-			3E3405B3078B42FB00630436 = 3E3405B3078B42FB00630436;
-			3E34ED2F076FB64D007CA6A0 = 3E34ED2F076FB64D007CA6A0;
-			3E34ED36076FB701007CA6A0 = 3E34ED36076FB701007CA6A0;
-			3E34ED64076FC446007CA6A0 = 3E34ED64076FC446007CA6A0;
-			3E3A9154081F3C54002066D5 = 3E3A9154081F3C54002066D5;
-			3E3A916E081F43E1002066D5 = 3E3A916E081F43E1002066D5;
-			3E3A917F081F4D58002066D5 = 3E3A917F081F4D58002066D5;
-			3E3BC77107AB5E0D00D2AE46 = 3E3BC77107AB5E0D00D2AE46;
-			3E3D512E081D4E1F00FCADBC = 3E3D512E081D4E1F00FCADBC;
-			3E3D5159081D9C0800FCADBC = 3E3D5159081D9C0800FCADBC;
-			3E3F7F7E07BF014F0096E031 = 3E3F7F7E07BF014F0096E031;
-			3E408C83083A4C7500930311 = 3E408C83083A4C7500930311;
-			3E408C94083A4DFA00930311 = 3E408C94083A4DFA00930311;
-			3E408CBC083A563B00930311 = 3E408CBC083A563B00930311;
-			3E408CBD083A563B00930311 = 3E408CBD083A563B00930311;
-			3E408CC6083A578400930311 = 3E408CC6083A578400930311;
-			3E4BEB9A0802088100AB90DA = 3E4BEB9A0802088100AB90DA;
-			3E4BEBF2080234C300AB90DA = 3E4BEBF2080234C300AB90DA;
-			3E4BFCB0076DFFC4005A4A32 = 3E4BFCB0076DFFC4005A4A32;
-			3E4BFCB1076DFFC4005A4A32 = 3E4BFCB1076DFFC4005A4A32;
-			3E4F5743078C310D00313076 = 3E4F5743078C310D00313076;
-			3E4F5744078C310D00313076 = 3E4F5744078C310D00313076;
-			3E5289780774FA570064F585 = 3E5289780774FA570064F585;
-			3E52897C0774FA570064F585 = 3E52897C0774FA570064F585;
-			3E5289880774FBD80064F585 = 3E5289880774FBD80064F585;
-			3E54E999080F160C00AFAD44 = 3E54E999080F160C00AFAD44;
-			3E54EA33080F1F7800AFAD44 = 3E54EA33080F1F7800AFAD44;
-			3E54EA66080F24E700AFAD44 = 3E54EA66080F24E700AFAD44;
-			3E54EA67080F24E700AFAD44 = 3E54EA67080F24E700AFAD44;
-			3E54EA9A080F282D00AFAD44 = 3E54EA9A080F282D00AFAD44;
-			3E5CEE3F081E98AD007276AD = 3E5CEE3F081E98AD007276AD;
-			3E5CEE78081EBAC4007276AD = 3E5CEE78081EBAC4007276AD;
-			3E5CF97B07FDF842005D90EC = 3E5CF97B07FDF842005D90EC;
-			3E5DB32B0826CDC500428656 = 3E5DB32B0826CDC500428656;
-			3E5DB3310826CEE200428656 = 3E5DB3310826CEE200428656;
-			3E5DB3320826CEE200428656 = 3E5DB3320826CEE200428656;
-			3E5DB3330826CEE200428656 = 3E5DB3330826CEE200428656;
-			3E5E040F07FCB85300C5E9AE = 3E5E040F07FCB85300C5E9AE;
-			3E5E041A07FCBA1C00C5E9AE = 3E5E041A07FCBA1C00C5E9AE;
-			3E5E044207FCC10F00C5E9AE = 3E5E044207FCC10F00C5E9AE;
-			3E5EB84C07C596B20032A886 = 3E5EB84C07C596B20032A886;
-			3E6007E2081F2E63006B808F = 3E6007E2081F2E63006B808F;
-			3E6007F7081F3006006B808F = 3E6007F7081F3006006B808F;
-			3E6596BE07BE74520095CEE2 = 3E6596BE07BE74520095CEE2;
-			3E66706207B7D7B90047E683 = 3E66706207B7D7B90047E683;
-			3E66706507B7D7B90047E683 = 3E66706507B7D7B90047E683;
-			3E667A8907D3D918003BB9D3 = 3E667A8907D3D918003BB9D3;
-			3E68234D07CA5C2700CCAF98 = 3E68234D07CA5C2700CCAF98;
-			3E68245107CA7F6C00CCAF98 = 3E68245107CA7F6C00CCAF98;
-			3E694B45080C6CF9003AAEF7 = 3E694B45080C6CF9003AAEF7;
-			3E694B4A080C6CF9003AAEF7 = 3E694B4A080C6CF9003AAEF7;
-			3E6D783F07B09B5F001DA76A = 3E6D783F07B09B5F001DA76A;
-			3E6D784007B09B5F001DA76A = 3E6D784007B09B5F001DA76A;
-			3E6F7ADD07B3EA6300F46F36 = 3E6F7ADD07B3EA6300F46F36;
-			3E6F7AEC07B3EB0700F46F36 = 3E6F7AEC07B3EB0700F46F36;
-			3E709695083A590900A5BAEE = 3E709695083A590900A5BAEE;
-			3E709697083A590900A5BAEE = 3E709697083A590900A5BAEE;
-			3E7096A1083A5A1600A5BAEE = 3E7096A1083A5A1600A5BAEE;
-			3E7096A2083A5A1600A5BAEE = 3E7096A2083A5A1600A5BAEE;
-			3E7096B0083A5D0C00A5BAEE = 3E7096B0083A5D0C00A5BAEE;
-			3E7096B5083A5D8700A5BAEE = 3E7096B5083A5D8700A5BAEE;
-			3E70A416078DFD620075681D = 3E70A416078DFD620075681D;
-			3E70A433078DFFAE0075681D = 3E70A433078DFFAE0075681D;
-			3E71DC5007B285080038B5C3 = 3E71DC5007B285080038B5C3;
-			3E729A6A080334C8001FB732 = 3E729A6A080334C8001FB732;
-			3E729A75080336B0001FB732 = 3E729A75080336B0001FB732;
-			3E729A7B080336B0001FB732 = 3E729A7B080336B0001FB732;
-			3E729A870803383D001FB732 = 3E729A870803383D001FB732;
-			3E729A9308033A65001FB732 = 3E729A9308033A65001FB732;
-			3E729A9808033A65001FB732 = 3E729A9808033A65001FB732;
-			3E7839AD081EE5AC0034CEA1 = 3E7839AD081EE5AC0034CEA1;
-			3E7839C3081EEC2E0034CEA1 = 3E7839C3081EEC2E0034CEA1;
-			3E7839C4081EEC2E0034CEA1 = 3E7839C4081EEC2E0034CEA1;
-			3E7A00FC07EF31990013F83B = 3E7A00FC07EF31990013F83B;
-			3E7A011807EF45550013F83B = 3E7A011807EF45550013F83B;
-			3E7A011A07EF45550013F83B = 3E7A011A07EF45550013F83B;
-			3E7C76D5081F02E700E6DE58 = 3E7C76D5081F02E700E6DE58;
-			3E8853EF07C6FB6E00E8B6CD = 3E8853EF07C6FB6E00E8B6CD;
-			3E8853F107C6FB6E00E8B6CD = 3E8853F107C6FB6E00E8B6CD;
-			3E8853F207C6FB6E00E8B6CD = 3E8853F207C6FB6E00E8B6CD;
-			3E8853F307C6FB6E00E8B6CD = 3E8853F307C6FB6E00E8B6CD;
-			3E8853F407C6FB6E00E8B6CD = 3E8853F407C6FB6E00E8B6CD;
-			3E88542B07C7055500E8B6CD = 3E88542B07C7055500E8B6CD;
-			3E88542C07C7055500E8B6CD = 3E88542C07C7055500E8B6CD;
-			3E8A565607C103AF00FDAD31 = 3E8A565607C103AF00FDAD31;
-			3E8A6DBF076FDD85000196AD = 3E8A6DBF076FDD85000196AD;
-			3E8A6E4B076FE807000196AD = 3E8A6E4B076FE807000196AD;
-			3E8AAFEB08304CC600F2A29C = 3E8AAFEB08304CC600F2A29C;
-			3E99E55507D37A870098C250 = 3E99E55507D37A870098C250;
-			3E99E55707D37A870098C250 = 3E99E55707D37A870098C250;
-			3E99E58907D381960098C250 = 3E99E58907D381960098C250;
-			3E9D3F4807DFA9A800AA93D6 = 3E9D3F4807DFA9A800AA93D6;
-			3E9EC07B078DDC3F00348D26 = 3E9EC07B078DDC3F00348D26;
-			3EA1364507E0C4CD00B7E49C = 3EA1364507E0C4CD00B7E49C;
-			3EA1364607E0C4CD00B7E49C = 3EA1364607E0C4CD00B7E49C;
-			3EA1365607E0CBD400B7E49C = 3EA1365607E0CBD400B7E49C;
-			3EA1365C07E0CBD400B7E49C = 3EA1365C07E0CBD400B7E49C;
-			3EA1367207E0DF7100B7E49C = 3EA1367207E0DF7100B7E49C;
-			3EA1367307E0DF7100B7E49C = 3EA1367307E0DF7100B7E49C;
-			3EA1367A07E0DF7100B7E49C = 3EA1367A07E0DF7100B7E49C;
-			3EA1368E07E0DF7100B7E49C = 3EA1368E07E0DF7100B7E49C;
-			3EA1827907695E4B0049C737 = 3EA1827907695E4B0049C737;
-			3EA54754077340CA00CE56E3 = 3EA54754077340CA00CE56E3;
-			3EA94F6607B824030088FD0F = 3EA94F6607B824030088FD0F;
-			3EAE2E7D07FB6A37007BE2E0 = 3EAE2E7D07FB6A37007BE2E0;
-			3EAE2EB107FB7E78007BE2E0 = 3EAE2EB107FB7E78007BE2E0;
-			3EAE2F6B07FBA739007BE2E0 = 3EAE2F6B07FBA739007BE2E0;
-			3EAEF46C0769032700B98AF6 = 3EAEF46C0769032700B98AF6;
-			3EAEF4700769032700B98AF6 = 3EAEF4700769032700B98AF6;
-			3EAEF5410769191800B98AF6 = 3EAEF5410769191800B98AF6;
-			3EB28F78080ACBA900F1F2CE = 3EB28F78080ACBA900F1F2CE;
-			3EB28FA3080ADCCD00F1F2CE = 3EB28FA3080ADCCD00F1F2CE;
-			3EB62D1807B9C951000C8112 = 3EB62D1807B9C951000C8112;
-			3EB84A85080483DD00517F77 = 3EB84A85080483DD00517F77;
-			3EB84A9908048CBB00517F77 = 3EB84A9908048CBB00517F77;
-			3EB84A9A08048CBB00517F77 = 3EB84A9A08048CBB00517F77;
-			3EB84A9B08048CBB00517F77 = 3EB84A9B08048CBB00517F77;
-			3EB84A9F0804911000517F77 = 3EB84A9F0804911000517F77;
-			3EB8C51E079394780082AA86 = 3EB8C51E079394780082AA86;
-			3EB8C51F079394780082AA86 = 3EB8C51F079394780082AA86;
-			3EB956CD07DF666800985BBE = 3EB956CD07DF666800985BBE;
-			3EBB52A807CA877D003E8882 = 3EBB52A807CA877D003E8882;
-			3EBE79EF07FC55DD00DC9A8E = 3EBE79EF07FC55DD00DC9A8E;
-			3EBE7A1407FC596900DC9A8E = 3EBE7A1407FC596900DC9A8E;
-			3EBE7AB007FC7AF300DC9A8E = 3EBE7AB007FC7AF300DC9A8E;
-			3EBE7ADE07FC7BC000DC9A8E = 3EBE7ADE07FC7BC000DC9A8E;
-			3EBE7ADF07FC7BC000DC9A8E = 3EBE7ADF07FC7BC000DC9A8E;
-			3EC395B1078C666D00FABAF9 = 3EC395B1078C666D00FABAF9;
-			3EC396C0078CB3FC00FABAF9 = 3EC396C0078CB3FC00FABAF9;
-			3EC397D5078CDE7500FABAF9 = 3EC397D5078CDE7500FABAF9;
-			3EC9F6C0076962BC0026B239 = 3EC9F6C0076962BC0026B239;
-			3ECB77E407E0E2EF0027B957 = 3ECB77E407E0E2EF0027B957;
-			3ECE9BAB07B0374A001155E6 = 3ECE9BAB07B0374A001155E6;
-			3ECE9BB707B0374A001155E6 = 3ECE9BB707B0374A001155E6;
-			3ECFA36D08034B22000ED54A = 3ECFA36D08034B22000ED54A;
-			3ED3CC9A0805DBFE002C811A = 3ED3CC9A0805DBFE002C811A;
-			3ED3CCB00805DCE6002C811A = 3ED3CCB00805DCE6002C811A;
-			3ED3CCBD0805E206002C811A = 3ED3CCBD0805E206002C811A;
-			3ED3CCBE0805E206002C811A = 3ED3CCBE0805E206002C811A;
-			3ED3CCBF0805E206002C811A = 3ED3CCBF0805E206002C811A;
-			3ED72F28081EDB6D005352EC = 3ED72F28081EDB6D005352EC;
-			3ED72F29081EDB6D005352EC = 3ED72F29081EDB6D005352EC;
-			3ED72F39081EE1D6005352EC = 3ED72F39081EE1D6005352EC;
-			3ED72F51081EE37B005352EC = 3ED72F51081EE37B005352EC;
-			3ED9856507B34D3A0050FE92 = 3ED9856507B34D3A0050FE92;
-			3EDA495907C683A5007CD1E0 = 3EDA495907C683A5007CD1E0;
-			3EDA495D07C683A5007CD1E0 = 3EDA495D07C683A5007CD1E0;
-			3EDB7565081DAE94007E814E = 3EDB7565081DAE94007E814E;
-			3EDB759E081DCCCE007E814E = 3EDB759E081DCCCE007E814E;
-			3EDB75BC081DCF89007E814E = 3EDB75BC081DCF89007E814E;
-			3EDB75BD081DCF89007E814E = 3EDB75BD081DCF89007E814E;
-			3EDB75BE081DCF89007E814E = 3EDB75BE081DCF89007E814E;
-			3EDB75DD081DF6BE007E814E = 3EDB75DD081DF6BE007E814E;
-			3EDB762B081E067B007E814E = 3EDB762B081E067B007E814E;
-			3EDB762D081E067B007E814E = 3EDB762D081E067B007E814E;
-			3EDB762F081E067B007E814E = 3EDB762F081E067B007E814E;
-			3EDB7631081E067B007E814E = 3EDB7631081E067B007E814E;
-			3EE04CBE07EB5A4000FD289A = 3EE04CBE07EB5A4000FD289A;
-			3EE04CC207EB5A4000FD289A = 3EE04CC207EB5A4000FD289A;
-			3EE04CC407EB5A4000FD289A = 3EE04CC407EB5A4000FD289A;
-			3EE238E507C1092900772501 = 3EE238E507C1092900772501;
-			3EE238E607C1092900772501 = 3EE238E607C1092900772501;
-			3EE238E707C1092900772501 = 3EE238E707C1092900772501;
-			3EE238E807C1092900772501 = 3EE238E807C1092900772501;
-			3EE238E907C1092900772501 = 3EE238E907C1092900772501;
-			3EE238EA07C1092900772501 = 3EE238EA07C1092900772501;
-			3EE238EB07C1092900772501 = 3EE238EB07C1092900772501;
-			3EE238EC07C1092900772501 = 3EE238EC07C1092900772501;
-			3EE238EF07C1092900772501 = 3EE238EF07C1092900772501;
-			3EE238F007C1092900772501 = 3EE238F007C1092900772501;
-			3EE238F107C1092900772501 = 3EE238F107C1092900772501;
-			3EE276E907C40CA600A645A0 = 3EE276E907C40CA600A645A0;
-			3EE2772907C41CD200A645A0 = 3EE2772907C41CD200A645A0;
-			3EE2783207C451A200A645A0 = 3EE2783207C451A200A645A0;
-			3EE2783507C451A200A645A0 = 3EE2783507C451A200A645A0;
-			3EE2788607C4603B00A645A0 = 3EE2788607C4603B00A645A0;
-			3EE2788907C4603B00A645A0 = 3EE2788907C4603B00A645A0;
-			3EE278FE07C46EC200A645A0 = 3EE278FE07C46EC200A645A0;
-			3EE2790107C46EC200A645A0 = 3EE2790107C46EC200A645A0;
-			3EE279C007C4832D00A645A0 = 3EE279C007C4832D00A645A0;
-			3EE279EB07C487CB00A645A0 = 3EE279EB07C487CB00A645A0;
-			3EE449EB07A7DF4D00B93B2F = 3EE449EB07A7DF4D00B93B2F;
-			3EE58C0D07CBE1F20030ECF8 = 3EE58C0D07CBE1F20030ECF8;
-			3EE886F507B9371F00484B9F = 3EE886F507B9371F00484B9F;
-			3EE8883907B9664400484B9F = 3EE8883907B9664400484B9F;
-			3EEA9A5307B1DA120015FCF4 = 3EEA9A5307B1DA120015FCF4;
-			3EEA9A5407B1DA120015FCF4 = 3EEA9A5407B1DA120015FCF4;
-			3EEA9A8807B1DE2D0015FCF4 = 3EEA9A8807B1DE2D0015FCF4;
-			3EEA9A8D07B1DE2D0015FCF4 = 3EEA9A8D07B1DE2D0015FCF4;
-			3EEAA521078F01EE00EE44EE = 3EEAA521078F01EE00EE44EE;
-			3EEAA55F078F19C200EE44EE = 3EEAA55F078F19C200EE44EE;
-			3EF4E54507C2EB6400AD5D7C = 3EF4E54507C2EB6400AD5D7C;
-			3EF4E54707C2EB6400AD5D7C = 3EF4E54707C2EB6400AD5D7C;
-			3EF97A2007DF691800BA8880 = 3EF97A2007DF691800BA8880;
-			3EF97A2107DF691800BA8880 = 3EF97A2107DF691800BA8880;
-			3EF97A2407DF691800BA8880 = 3EF97A2407DF691800BA8880;
-			3EF97A5207DF741F00BA8880 = 3EF97A5207DF741F00BA8880;
-			3EF97A7307DF778600BA8880 = 3EF97A7307DF778600BA8880;
-			3EF97A8007DF77EF00BA8880 = 3EF97A8007DF77EF00BA8880;
-			3EF97A8D07DF784800BA8880 = 3EF97A8D07DF784800BA8880;
+			3E1036E7084FDCC400C17350 = 3E1036E7084FDCC400C17350;
+			3E1036EA084FDD4100C17350 = 3E1036EA084FDD4100C17350;
+			3E1036FE084FE40D00C17350 = 3E1036FE084FE40D00C17350;
+			3E103700084FE40D00C17350 = 3E103700084FE40D00C17350;
+			3E103701084FE40D00C17350 = 3E103701084FE40D00C17350;
+			3E103702084FE40D00C17350 = 3E103702084FE40D00C17350;
+			3E55297B084FA29D002B65EF = 3E55297B084FA29D002B65EF;
+			3E55297F084FA29D002B65EF = 3E55297F084FA29D002B65EF;
+			3E6B5192084EB202008BAACC = 3E6B5192084EB202008BAACC;
+			3E6B5193084EB202008BAACC = 3E6B5193084EB202008BAACC;
+			3E6B5194084EB202008BAACC = 3E6B5194084EB202008BAACC;
+			3E6B5197084EB202008BAACC = 3E6B5197084EB202008BAACC;
+			3E6B5198084EB202008BAACC = 3E6B5198084EB202008BAACC;
+			3E6B5199084EB202008BAACC = 3E6B5199084EB202008BAACC;
+			3E6B519A084EB202008BAACC = 3E6B519A084EB202008BAACC;
+			3E6B519E084EB202008BAACC = 3E6B519E084EB202008BAACC;
+			3E6B51C2084EBDBE008BAACC = 3E6B51C2084EBDBE008BAACC;
+			3E6B51C3084EBDBE008BAACC = 3E6B51C3084EBDBE008BAACC;
+			3E6B51C4084EBDBE008BAACC = 3E6B51C4084EBDBE008BAACC;
+			3E6B51C6084EBDBE008BAACC = 3E6B51C6084EBDBE008BAACC;
+			3E6B51C7084EBDBE008BAACC = 3E6B51C7084EBDBE008BAACC;
+			3E6B51C8084EBDBE008BAACC = 3E6B51C8084EBDBE008BAACC;
+			3E6B51CB084EBDBE008BAACC = 3E6B51CB084EBDBE008BAACC;
+			3E6B51CC084EBDBE008BAACC = 3E6B51CC084EBDBE008BAACC;
+			3E6B51CD084EBDBE008BAACC = 3E6B51CD084EBDBE008BAACC;
+			3E6B51CF084EBDBE008BAACC = 3E6B51CF084EBDBE008BAACC;
+			3E6B51D0084EBDBE008BAACC = 3E6B51D0084EBDBE008BAACC;
+			3E6B51D2084EBDBE008BAACC = 3E6B51D2084EBDBE008BAACC;
+			3E6B521C084ECBE0008BAACC = 3E6B521C084ECBE0008BAACC;
+			3ED26BB3084F4C1C009A9F4E = 3ED26BB3084F4C1C009A9F4E;
+			3ED26BB4084F4C1C009A9F4E = 3ED26BB4084F4C1C009A9F4E;
+			3ED26BB8084F4C1C009A9F4E = 3ED26BB8084F4C1C009A9F4E;
 		};
 		sourceControlManager = 3E1712BE076126F700BC1084;
 		userBookmarkGroup = 3E3F7C9907BEA1110096E031;
@@ -612,118 +387,10 @@
 			sepNavVisRect = "{{0, 0}, {733, 512}}";
 		};
 	};
-	3E09F82B07C048A200381F59 = {
-		fRef = 3E09F82107C0489300381F59;
-		isa = PBXBookmark;
-	};
-	3E09F83107C048AD00381F59 = {
-		fRef = 3E09F82707C0489F00381F59;
-		isa = PBXBookmark;
-	};
-	3E09F83807C048EB00381F59 = {
-		fRef = 3E09F82D07C048AA00381F59;
-		isa = PBXBookmark;
-	};
-	3E09F83907C048EB00381F59 = {
-		fRef = 3E09F83307C048B700381F59;
-		isa = PBXBookmark;
-	};
-	3E09F85107C049DD00381F59 = {
-		fRef = 3E09F7AD07C0388400381F59;
-		isa = PBXBookmark;
-	};
-	3E09F85207C049DD00381F59 = {
-		fRef = 3E09F7AB07C0387700381F59;
-		isa = PBXBookmark;
-	};
 	3E09F85F07C04CE200381F59 = {
 		uiCtxt = {
 			sepNavWindowFrame = "{{38, 418}, {750, 558}}";
 		};
-	};
-	3E09F86407C04CF400381F59 = {
-		fRef = 3E09F85F07C04CE200381F59;
-		isa = PBXBookmark;
-	};
-	3E09F8F107C0528A00381F59 = {
-		fRef = 3E09F83307C048B700381F59;
-		isa = PBXBookmark;
-	};
-	3E09F8F207C0528A00381F59 = {
-		fRef = 3E09F82D07C048AA00381F59;
-		isa = PBXBookmark;
-	};
-	3E09F8F307C0528A00381F59 = {
-		fRef = 3E09F82707C0489F00381F59;
-		isa = PBXBookmark;
-	};
-	3E09F8F407C0528A00381F59 = {
-		fRef = 3E09F82107C0489300381F59;
-		isa = PBXBookmark;
-	};
-	3E09F8F507C0528A00381F59 = {
-		fRef = 3EE449E107A7DEDB00B93B2F;
-		isa = PBXBookmark;
-	};
-	3E09F8F707C0528A00381F59 = {
-		fRef = 3E19255007A7E1FF00F9E44D;
-		isa = PBXBookmark;
-	};
-	3E09F8F807C0528A00381F59 = {
-		fRef = 3E19255207A7E20700F9E44D;
-		isa = PBXBookmark;
-	};
-	3E09F8F907C0528A00381F59 = {
-		fRef = 3EEA9A3407B1D3580015FCF4;
-		isa = PBXBookmark;
-	};
-	3E09F8FA07C0528A00381F59 = {
-		fRef = 3E09F7AB07C0387700381F59;
-		isa = PBXBookmark;
-	};
-	3E0AFF250773F7ED003F6B4A = {
-		fRef = 3E8A6D87076FDCDF000196AD;
-		isa = PBXTextBookmark;
-		name = "@interface NSMutableDictionary : NSDictionary\n";
-		rLen = 46;
-		rLoc = 2171;
-		rType = 0;
-		vrLen = 1467;
-		vrLoc = 1264;
-	};
-	3E0E6C3E07C7BA760057D505 = {
-		fRef = 3E8853CE07C6F80A00E8B6CD;
-		isa = PBXTextBookmark;
-		name = "KABubbleWindow.h: 21";
-		rLen = 0;
-		rLoc = 952;
-		rType = 0;
-		vrLen = 1157;
-		vrLoc = 0;
-	};
-	3E0E6C4007C7BA760057D505 = {
-		fRef = 3E8853D007C6F80A00E8B6CD;
-		isa = PBXTextBookmark;
-		name = "KABubbleWindowController.h: 21";
-		rLen = 0;
-		rLoc = 962;
-		rType = 0;
-		vrLen = 1491;
-		vrLoc = 0;
-	};
-	3E0E6C4207C7BA760057D505 = {
-		fRef = 3E8853D207C6F80A00E8B6CD;
-		isa = PBXTextBookmark;
-		name = "KABubbleWindowView.h: 21";
-		rLen = 0;
-		rLoc = 956;
-		rType = 0;
-		vrLen = 1465;
-		vrLoc = 0;
-	};
-	3E0E6CAC07C7D2B00057D505 = {
-		fRef = 3E09F85F07C04CE200381F59;
-		isa = PBXBookmark;
 	};
 	3E0E6CBC07C7D41B0057D505 = {
 		uiCtxt = {
@@ -741,26 +408,6 @@
 			sepNavWindowFrame = "{{84, 376}, {750, 558}}";
 		};
 	};
-	3E0E6CC707C7D5150057D505 = {
-		fRef = 3E0E6CBC07C7D41B0057D505;
-		isa = PBXTextBookmark;
-		name = "Conflict.h: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 1078;
-		vrLoc = 0;
-	};
-	3E0E6CD607C7D7720057D505 = {
-		fRef = 3E0E6CBD07C7D41B0057D505;
-		isa = PBXTextBookmark;
-		name = "Conflict.m: 22";
-		rLen = 0;
-		rLoc = 1015;
-		rType = 0;
-		vrLen = 1495;
-		vrLoc = 0;
-	};
 	3E0E6CFE07C7E7290057D505 = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {1598, 3415}}";
@@ -776,57 +423,67 @@
 			sepNavVisRect = "{{0, 0}, {674, 756}}";
 		};
 	};
-	3E0E6D1607C7E86C0057D505 = {
-		fRef = 3E0E6CFF07C7E7290057D505;
-		isa = PBXTextBookmark;
-		name = "ConflictWindowController.h: 6";
-		rLen = 0;
-		rLoc = 145;
-		rType = 0;
-		vrLen = 192;
-		vrLoc = 0;
-	};
-	3E15665C07C527BA00972388 = {
-		fRef = 3EB8C50A079392230082AA86;
+	3E1036E7084FDCC400C17350 = {
+		fRef = 3E3BC75307AB5B7B00D2AE46;
 		isa = PBXBookmark;
 	};
-	3E15666707C5292D00972388 = {
+	3E1036EA084FDD4100C17350 = {
+		fRef = 3EDD6AD907AEAECB008A2A3B;
+		isa = PBXBookmark;
+	};
+	3E1036F9084FDD9100C17350 = {
+		fileReference = 3E3BC75307AB5B7B00D2AE46;
+		functionName = "-activateAccount";
+		isa = PBXFileBreakpoint;
+		lineNumber = 303;
+		state = 1;
+	};
+	3E1036FE084FE40D00C17350 = {
+		fRef = 3E1036FF084FE40D00C17350;
+		isa = PBXTextBookmark;
+		name = "(null): 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 0;
+		vrLoc = 0;
+	};
+	3E1036FF084FE40D00C17350 = {
 		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.objc;
-		name = ColorRect.m;
-		path = /Developer/Examples/AppKit/Rulers/ColorRect.m;
+		name = simiasStub.h;
+		path = /Users/calvin/code/ifolder.R1FCSRC1_BR/simias/src/libsimias/simiasStub.h;
 		refType = 0;
 		sourceTree = "<absolute>";
 	};
-	3E15666A07C5292D00972388 = {
-		fRef = 3EE276E007C40C2400A645A0;
+	3E103700084FE40D00C17350 = {
+		fRef = 3E3BC75307AB5B7B00D2AE46;
 		isa = PBXTextBookmark;
-		name = "- (void)drawRect:(NSRect)aRect selected:(BOOL)flag";
+		name = "AccountsController.m: 295";
 		rLen = 0;
-		rLoc = 3518;
+		rLoc = 9886;
 		rType = 0;
-		vrLen = 1259;
-		vrLoc = 3069;
+		vrLen = 2063;
+		vrLoc = 9019;
 	};
-	3E15667307C529ED00972388 = {
-		fRef = 3E15666707C5292D00972388;
+	3E103701084FE40D00C17350 = {
+		fRef = 3EDD6AD907AEAECB008A2A3B;
 		isa = PBXTextBookmark;
-		name = "        frame = aRect;";
-		rLen = 22;
-		rLoc = 2597;
+		name = ConnectToDomain;
+		rLen = 15;
+		rLoc = 4363;
 		rType = 0;
-		vrLen = 1606;
-		vrLoc = 1314;
+		vrLen = 1655;
+		vrLoc = 4048;
 	};
-	3E15667507C529ED00972388 = {
-		fRef = 3E15666707C5292D00972388;
+	3E103702084FE40D00C17350 = {
+		fRef = 3EE886E907B92E8B00484B9F;
 		isa = PBXTextBookmark;
-		name = "        frame = aRect;";
-		rLen = 22;
-		rLoc = 2597;
+		name = "iFolderApplication.m: 1385";
+		rLen = 0;
+		rLoc = 39826;
 		rType = 0;
-		vrLen = 1606;
-		vrLoc = 1314;
+		vrLen = 1922;
+		vrLoc = 38922;
 	};
 	3E15669B07C5330600972388 = {
 		uiCtxt = {
@@ -841,48 +498,6 @@
 			sepNavSelRange = "{1098, 69}";
 			sepNavVisRect = "{{0, 0}, {733, 745}}";
 		};
-	};
-	3E1566A007C5333300972388 = {
-		fRef = 3EB8C50A079392230082AA86;
-		isa = PBXBookmark;
-	};
-	3E1566A407C5333300972388 = {
-		fRef = 3E15669B07C5330600972388;
-		isa = PBXTextBookmark;
-		name = "VerticalBarView.m: 1";
-		rLen = 0;
-		rLoc = 1017;
-		rType = 0;
-		vrLen = 252;
-		vrLoc = 0;
-	};
-	3E1566B007C533F800972388 = {
-		fRef = 3E15669C07C5330600972388;
-		isa = PBXTextBookmark;
-		name = "/***********************************************************************\n *  $RCSfile$\n * \n *  Copyright (C) 2004 Novell, Inc.\n *\n *  This program is free software; you can redistribute it and/or\n *  modify it under the terms of the GNU General Public\n *  License as published by the Free Software Foundation; either\n *  version 2 of the License, or (at your option) any later version.\n *\n *  This program is distributed in the hope that it will be useful,\n *  but WITHOUT ANY WARRANTY; without even the implied warranty of\n *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU\n *  Library General Public License for more details.\n *\n *  You should have received a copy of the GNU General Public License\n *  along with this program; if not, write to the Free Software\n *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n *\n *  Author: Calvin Gaisford <cgaisford@novell.com>\n * \n ***********************************************************************/";
-		rLen = 1015;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 1087;
-		vrLoc = 0;
-	};
-	3E169C6107AB07B80032AC48 = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = NSNotification.h;
-		path = /System/Library/Frameworks/Foundation.framework/Versions/C/Headers/NSNotification.h;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3E169C6207AB08B10032AC48 = {
-		fRef = 3E169C6107AB07B80032AC48;
-		isa = PBXTextBookmark;
-		name = "@interface NSNotification : NSObject <NSCopying, NSCoding>\n";
-		rLen = 59;
-		rLoc = 199;
-		rType = 0;
-		vrLen = 1244;
-		vrLoc = 0;
 	};
 	3E1712B4076126E600BC1084 = {
 		activeArgIndex = 2147483647;
@@ -901,12 +516,556 @@
 		enableDebugStr = 1;
 		environmentEntries = (
 		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
 		isa = PBXExecutable;
 		libgmallocEnabled = 0;
 		name = iFolder;
 		savedGlobals = {
 		};
 		shlibInfoDictList = (
+		);
+		shlibInfoDictList_v2 = (
+			{
+				level = 0;
+				path = /Users/calvin/code/ifolder.R1FCSRC1_BR/ifolder/src/OSXClient/build/iFolder.app/Contents/MacOS/iFolder;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/system/libmathCommon.A.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libSystem.B.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libicucore.A.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libauto.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libobjc.A.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libz.1.2.2.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/SystemConfiguration.framework/Versions/A/SystemConfiguration;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/IOKit.framework/Versions/A/IOKit;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Security.framework/Versions/A/Security;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/DiskArbitration.framework/Versions/A/DiskArbitration;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/CarbonCore;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/OSServices.framework/Versions/A/OSServices;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CFNetwork.framework/Versions/A/CFNetwork;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/WebServicesCore.framework/Versions/A/WebServicesCore;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/SearchKit.framework/Versions/A/SearchKit;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Metadata;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreServices.framework/Versions/A/CoreServices;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libbsm.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/CoreGraphics.framework/Versions/A/CoreGraphics;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/AE.framework/Versions/A/AE;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ATS.framework/Versions/A/ATS;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libcrypto.0.9.7.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/LaunchServices;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ColorSync.framework/Versions/A/ColorSync;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/CoreText.framework/Versions/A/CoreText;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/QD.framework/Versions/A/QD;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libcups.2.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/PrintCore.framework/Versions/A/PrintCore;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/HIServices.framework/Versions/A/HIServices;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/LangAnalysis.framework/Versions/A/LangAnalysis;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/FindByContent.framework/Versions/A/FindByContent;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/SpeechSynthesis.framework/Versions/A/SpeechSynthesis;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ImageIO.framework/Versions/A/Resources/libJPEG.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ImageIO.framework/Versions/A/Resources/libJP2.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ImageIO.framework/Versions/A/Resources/libGIF.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ImageIO.framework/Versions/A/Resources/libRaw.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ImageIO.framework/Versions/A/Resources/libTIFF.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ImageIO.framework/Versions/A/Resources/libPng.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ImageIO.framework/Versions/A/Resources/libRadiance.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libmx.A.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vImage.framework/Versions/A/vImage;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libvMisc.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libvDSP.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLAPACK.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/vecLib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Accelerate.framework/Versions/A/Accelerate;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ImageIO.framework/Versions/A/ImageIO;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/ApplicationServices;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreAudio.framework/Versions/A/CoreAudio;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/CarbonSound.framework/Versions/A/CarbonSound;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libiconv.2.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libxml2.2.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Foundation.framework/Versions/C/Foundation;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/PrivateFrameworks/DesktopServicesPriv.framework/Versions/A/DesktopServicesPriv;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/HIToolbox.framework/Versions/A/HIToolbox;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/SpeechRecognition.framework/Versions/A/SpeechRecognition;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/AudioUnit.framework/Versions/A/AudioUnit;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/AudioToolbox.framework/Versions/A/AudioToolbox;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libsqlite3.0.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreData.framework/Versions/A/CoreData;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGLU.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/OpenGL.framework/Versions/A/OpenGL;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGLImage.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/QuartzCore.framework/Versions/A/QuartzCore;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/AppKit.framework/Versions/C/AppKit;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Cocoa.framework/Versions/A/Cocoa;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /Users/calvin/test/lib/libifolderclient.0.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /Users/calvin/test/lib/libsimias.0.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/calvin/test/lib/libsimias-event.0.dylib";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/SecurityFoundation.framework/Versions/A/SecurityFoundation;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/SecurityInterface.framework/Versions/A/SecurityInterface;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/CoreGraphics.framework/Versions/A/Resources/libCGATS.A.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/CoreGraphics.framework/Versions/A/Resources/libRIP.A.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/CoreGraphics.framework/Versions/A/Resources/libCSync.A.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/ImageCapture.framework/Versions/A/ImageCapture;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/SecurityHI.framework/Versions/A/SecurityHI;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/Ink.framework/Versions/A/Ink;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/Help.framework/Versions/A/Help;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/OpenScripting.framework/Versions/A/OpenScripting;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/Print.framework/Versions/A/Print;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/HTMLRendering.framework/Versions/A/HTMLRendering;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/NavigationServices.framework/Versions/A/NavigationServices;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/CommonPanels.framework/Versions/A/CommonPanels;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Carbon.framework/Versions/A/Carbon;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Library/Application Support/DivXNetworks/liblame3.92.dylib";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Library/Application Support/DivXNetworks/libMPAEncode0.1.dylib";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libcrypto.0.9.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libssl.0.9.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Library/Application Support/DivXNetworks/libdpus10.dylib";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Library/Application Support/DivXNetworks/libdpv10.dylib";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Library/Application Support/DivXNetworks/libPSIKey.dylib";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/vecLib.framework/Versions/A/vecLib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/QuickTime.framework/Versions/A/QuickTime;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Library/QuickTime/DivX 5.component/Contents/MacOS/DivX 5";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/AGL.framework/Versions/A/AGL;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/QuickTime/QuickTimeComponents.component/Contents/MacOS/QuickTimeComponents;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Components/DictionaryService.component/Contents/MacOS/DictionaryService;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /Developer/Applications/Xcode.app/Contents/PlugIns/GDBMIDebugging.xcplugin/Contents/Resources/PBGDBIntrospectionSupport.A.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Library/Application Support/Apple/Developer Tools/CustomDataViews/CFDataFormatters.bundle/Contents/MacOS/CFDataFormatters";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Components/CoreAudio.component/Contents/MacOS/CoreAudio;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Extensions/IOAudioFamily.kext/Contents/PlugIns/AOAHALPlugin.bundle/Contents/MacOS/AOAHALPlugin;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /Users/calvin/test.R1FCSRC1_BR/lib/libifolderclient.0.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /Users/calvin/test.R1FCSRC1_BR/lib/libsimias.0.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/calvin/test.R1FCSRC1_BR/lib/libsimias-event.0.dylib";
+				whenToLoad = 0;
+			},
 		);
 		sourceDirectories = (
 		);
@@ -922,68 +1081,6 @@
 	3E1712BF076126F700BC1084 = {
 		indexTemplatePath = "";
 		isa = PBXCodeSenseManager;
-		usesDefaults = 0;
-		wantsCodeCompletion = 1;
-		wantsCodeCompletionAutoSuggestions = 1;
-		wantsCodeCompletionCaseSensitivity = 1;
-		wantsCodeCompletionListAlways = 1;
-		wantsCodeCompletionOnlyMatchingItems = 1;
-		wantsCodeCompletionParametersIncluded = 1;
-		wantsCodeCompletionPlaceholdersInserted = 1;
-		wantsCodeCompletionTabCompletes = 1;
-		wantsIndex = 1;
-	};
-	3E19254E07A7E1F100F9E44D = {
-		fRef = 3EE449E307A7DF0000B93B2F;
-		isa = PBXBookmark;
-	};
-	3E19255807A7E24400F9E44D = {
-		fRef = 3E19255007A7E1FF00F9E44D;
-		isa = PBXBookmark;
-	};
-	3E19255F07A7E2B100F9E44D = {
-		fRef = 3E19255207A7E20700F9E44D;
-		isa = PBXBookmark;
-	};
-	3E1971AE07E0E61C00BA5DE2 = {
-		fRef = 3E6F7B0E07B3EC5000F46F36;
-		isa = PBXTextBookmark;
-		name = "English: 5";
-		rLen = 0;
-		rLoc = 4;
-		rType = 0;
-		vrLen = 340;
-		vrLoc = 0;
-	};
-	3E1971F807E0EB5500BA5DE2 = {
-		fRef = 3EEA9A6807B1DC4F0015FCF4;
-		isa = PBXTextBookmark;
-		name = "-(NSString *) Name;\n";
-		rLen = 20;
-		rLoc = 1416;
-		rType = 0;
-		vrLen = 1095;
-		vrLoc = 468;
-	};
-	3E19720D07E0EDEB00BA5DE2 = {
-		fRef = 3EEA9A6907B1DC4F0015FCF4;
-		isa = PBXTextBookmark;
-		name = "User.m: 116";
-		rLen = 0;
-		rLoc = 2474;
-		rType = 0;
-		vrLen = 1265;
-		vrLoc = 2088;
-	};
-	3E19722207E0EDEE00BA5DE2 = {
-		fRef = 3EF97A7C07DF77E100BA8880;
-		isa = PBXTextBookmark;
-		name = "English: 302";
-		rLen = 0;
-		rLoc = 8891;
-		rType = 0;
-		vrLen = 1308;
-		vrLoc = 7681;
 	};
 	3E19989407BAC5BD00AAC29A = {
 		uiCtxt = {
@@ -1001,16 +1098,6 @@
 			sepNavWindowFrame = "{{176, 292}, {750, 558}}";
 		};
 	};
-	3E1998A207BAC6E300AAC29A = {
-		fRef = 3E19989407BAC5BD00AAC29A;
-		isa = PBXTextBookmark;
-		name = "SimiasEventData.h: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 220;
-		vrLoc = 0;
-	};
 	3E1998AD07BAC93600AAC29A = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {732, 810}}";
@@ -1024,36 +1111,6 @@
 			sepNavSelRange = "{1054, 0}";
 			sepNavVisRect = "{{0, 139}, {674, 756}}";
 		};
-	};
-	3E1998B407BAC93D00AAC29A = {
-		fRef = 3E1998AD07BAC93600AAC29A;
-		isa = PBXTextBookmark;
-		name = "CBQueue.h: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 204;
-		vrLoc = 0;
-	};
-	3E1998C507BACB6900AAC29A = {
-		fRef = 3E1998AE07BAC93600AAC29A;
-		isa = PBXTextBookmark;
-		name = "CBQueue.m: 56";
-		rLen = 0;
-		rLoc = 1637;
-		rType = 0;
-		vrLen = 1332;
-		vrLoc = 0;
-	};
-	3E1998D607BAD14D00AAC29A = {
-		fRef = 3E19989507BAC5BD00AAC29A;
-		isa = PBXTextBookmark;
-		name = "SimiasEventData.m: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 213;
-		vrLoc = 0;
 	};
 	3E19994807BAE47700AAC29A = {
 		uiCtxt = {
@@ -1071,34 +1128,6 @@
 			sepNavWindowFrame = "{{153, 313}, {750, 558}}";
 		};
 	};
-	3E19996C07BAE96E00AAC29A = {
-		fRef = 3E19994807BAE47700AAC29A;
-		isa = PBXTextBookmark;
-		name = "SMNotifyEvent.h: 11";
-		rLen = 0;
-		rLoc = 168;
-		rType = 0;
-		vrLen = 215;
-		vrLoc = 0;
-	};
-	3E19997107BAE96E00AAC29A = {
-		fRef = 3E19994907BAE47700AAC29A;
-		isa = PBXTextBookmark;
-		name = "SMNotifyEvent.m: 26";
-		rLen = 0;
-		rLoc = 1032;
-		rType = 0;
-		vrLen = 1081;
-		vrLoc = 0;
-	};
-	3E1F319A07EA2812005E45BA = {
-		isa = PBXFileReference;
-		lastKnownFileType = text;
-		name = Preferences.cs;
-		path = /Users/calvin/code/ifolder/ifolder/src/FormsTrayApp/Preferences.cs;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
 	3E1F31B107EA2AFB005E45BA = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {788, 769}}";
@@ -1112,54 +1141,6 @@
 			sepNavSelRange = "{1700, 0}";
 			sepNavVisRect = "{{0, 768}, {646, 771}}";
 		};
-	};
-	3E1F31BF07EA2C3D005E45BA = {
-		fRef = 3EDD6AF907AEB3BD008A2A3B;
-		isa = PBXTextBookmark;
-		name = LoginTo;
-		rLen = 7;
-		rLoc = 8266;
-		rType = 0;
-		vrLen = 1584;
-		vrLoc = 2768;
-	};
-	3E1F31C407EA2C3D005E45BA = {
-		fRef = 3E1F31B107EA2AFB005E45BA;
-		isa = PBXTextBookmark;
-		name = "AuthStatus.h: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 211;
-		vrLoc = 0;
-	};
-	3E1F31CC07EA2C3D005E45BA = {
-		fRef = 3E1F31B207EA2AFB005E45BA;
-		isa = PBXTextBookmark;
-		name = "AuthStatus.m: 31";
-		rLen = 0;
-		rLoc = 2125;
-		rType = 0;
-		vrLen = 1073;
-		vrLoc = 0;
-	};
-	3E215A3907E691BD0082EACE = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = NSArray.h;
-		path = /System/Library/Frameworks/Foundation.framework/Versions/C/Headers/NSArray.h;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3E215A3C07E6940B0082EACE = {
-		fRef = 3E215A3907E691BD0082EACE;
-		isa = PBXTextBookmark;
-		name = "@interface NSArray : NSObject <NSCopying, NSMutableCopying, NSCoding>\n";
-		rLen = 70;
-		rLoc = 255;
-		rType = 0;
-		vrLen = 1863;
-		vrLoc = 0;
 	};
 	3E215A4C07E73C310082EACE = {
 		uiCtxt = {
@@ -1177,74 +1158,6 @@
 			sepNavWindowFrame = "{{268, 208}, {750, 558}}";
 		};
 	};
-	3E215A5107E73D370082EACE = {
-		fRef = 3EE8881707B9620F00484B9F;
-		isa = PBXTextBookmark;
-		name = "@class CreateiFolderSheetController;";
-		rLen = 36;
-		rLoc = 1128;
-		rType = 0;
-		vrLen = 1728;
-		vrLoc = 121;
-	};
-	3E215A5807E73D370082EACE = {
-		fRef = 3E215A4C07E73C310082EACE;
-		isa = PBXTextBookmark;
-		name = "MemberSearchResults.h: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 229;
-		vrLoc = 0;
-	};
-	3E23FF000768CE0900877BDF = {
-		fRef = 8D1107310486CEB800E47090;
-		isa = PBXTextBookmark;
-		name = "Info.plist: 12";
-		rLen = 0;
-		rLoc = 419;
-		rType = 0;
-		vrLen = 781;
-		vrLoc = 0;
-	};
-	3E255D0D077209950062AB7A = {
-		fRef = 3E81105D076FF18700E96819;
-		isa = PBXTextBookmark;
-		name = "LoginWindowController.h: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 332;
-		vrLoc = 0;
-	};
-	3E255DE7077217EC0062AB7A = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = AIFF.h;
-		path = /System/Library/Frameworks/CoreServices.framework/Frameworks/CarbonCore.framework/Headers/AIFF.h;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3E255E0E077219200062AB7A = {
-		fRef = 3E255DE7077217EC0062AB7A;
-		isa = PBXTextBookmark;
-		name = "typedef unsigned long                   ID;\n";
-		rLen = 44;
-		rLoc = 2099;
-		rType = 0;
-		vrLen = 1357;
-		vrLoc = 1393;
-	};
-	3E255E14077219200062AB7A = {
-		fRef = 3E255DE7077217EC0062AB7A;
-		isa = PBXTextBookmark;
-		name = "typedef unsigned long                   ID;\n";
-		rLen = 44;
-		rLoc = 2099;
-		rType = 0;
-		vrLen = 1357;
-		vrLoc = 1393;
-	};
 	3E255FFF077235290062AB7A = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {758, 1218}}";
@@ -1255,41 +1168,11 @@
 	};
 	3E256000077235290062AB7A = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {752, 22483}}";
-			sepNavSelRange = "{32750, 123}";
-			sepNavVisRect = "{{0, 17505}, {674, 756}}";
-			sepNavWindowFrame = "{{38, 418}, {750, 558}}";
+			sepNavIntBoundsRect = "{{0, 0}, {752, 21098}}";
+			sepNavSelRange = "{18176, 6}";
+			sepNavVisRect = "{{0, 0}, {720, 620}}";
+			sepNavWindowFrame = "{{38, 227}, {759, 749}}";
 		};
-	};
-	3E262D5807FDC0E00095E8A4 = {
-		fRef = 3E6D783207B098E2001DA76A;
-		isa = PBXTextBookmark;
-		name = "LeaveDomainSheetController.m: 49";
-		rLen = 0;
-		rLoc = 1610;
-		rType = 0;
-		vrLen = 1655;
-		vrLoc = 0;
-	};
-	3E262D5907FDC0E00095E8A4 = {
-		fRef = 3EBE7AA307FC76F200DC9A8E;
-		isa = PBXTextBookmark;
-		name = "AcceptCertSheetController.m: awakeFromNib";
-		rLen = 0;
-		rLoc = 953;
-		rType = 0;
-		vrLen = 1183;
-		vrLoc = 0;
-	};
-	3E262D5A07FDC0E00095E8A4 = {
-		fRef = 3EBE7AA407FC76F200DC9A8E;
-		isa = PBXTextBookmark;
-		name = "AcceptCertSheetController.h: 12";
-		rLen = 0;
-		rLoc = 257;
-		rType = 0;
-		vrLen = 479;
-		vrLoc = 0;
 	};
 	3E3405A5078B40EF00630436 = {
 		uiCtxt = {
@@ -1300,115 +1183,27 @@
 	};
 	3E3405A6078B40EF00630436 = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {746, 3933}}";
-			sepNavSelRange = "{1107, 0}";
-			sepNavVisRect = "{{0, 0}, {674, 756}}";
+			sepNavIntBoundsRect = "{{0, 0}, {789, 3934}}";
+			sepNavSelRange = "{2789, 0}";
+			sepNavVisRect = "{{0, 964}, {789, 355}}";
 			sepNavWindowFrame = "{{220, 202}, {750, 558}}";
 		};
 	};
-	3E3405B3078B42FB00630436 = {
-		fRef = 3E3405A5078B40EF00630436;
-		isa = PBXTextBookmark;
-		name = "SimiasEventHandlers.h: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 181;
-		vrLoc = 0;
-	};
-	3E34ED2F076FB64D007CA6A0 = {
-		fRef = 3EF2212E07681AA400EE2EF6;
-		isa = PBXBookmark;
-	};
-	3E34ED36076FB701007CA6A0 = {
-		fRef = 3E34ED37076FB701007CA6A0;
-		isa = PBXBookmark;
-	};
-	3E34ED37076FB701007CA6A0 = {
-		isa = PBXFileReference;
-		lastKnownFileType = folder;
-		refType = 4;
-		sourceTree = "<group>";
-	};
-	3E34ED64076FC446007CA6A0 = {
-		fRef = 29B97319FDCFA39411CA2CEA;
-		isa = PBXBookmark;
-	};
-	3E3A9154081F3C54002066D5 = {
-		fRef = 3E3BC75307AB5B7B00D2AE46;
-		isa = PBXTextBookmark;
-		name = "AccountsController.m: 447";
-		rLen = 0;
-		rLoc = 15644;
-		rType = 0;
-		vrLen = 2603;
-		vrLoc = 14213;
-	};
-	3E3A916E081F43E1002066D5 = {
-		fRef = 3E5289680774F9FA0064F585;
-		isa = PBXTextBookmark;
-		name = CurrentUserRights;
-		rLen = 17;
-		rLoc = 2233;
-		rType = 0;
-		vrLen = 1102;
-		vrLoc = 1335;
-	};
-	3E3A917F081F4D58002066D5 = {
-		fRef = 3E0E6CBC07C7D41B0057D505;
-		isa = PBXTextBookmark;
-		name = LocalFullPath;
-		rLen = 13;
-		rLoc = 1167;
-		rType = 0;
-		vrLen = 1536;
-		vrLoc = 0;
-	};
 	3E3BC75307AB5B7B00D2AE46 = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1436, 12627}}";
-			sepNavSelRange = "{10180, 0}";
-			sepNavVisRect = "{{0, 4099}, {1104, 356}}";
-			sepNavWindowFrame = "{{15, 439}, {750, 558}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1436, 12684}}";
+			sepNavSelRange = "{9886, 0}";
+			sepNavVisRect = "{{0, 3820}, {899, 812}}";
+			sepNavWindowFrame = "{{294, 61}, {938, 941}}";
 		};
 	};
 	3E3BC75407AB5B7B00D2AE46 = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {824, 1427}}";
+			sepNavIntBoundsRect = "{{0, 0}, {824, 1428}}";
 			sepNavSelRange = "{2465, 0}";
-			sepNavVisRect = "{{0, 444}, {674, 756}}";
+			sepNavVisRect = "{{0, 0}, {0, 0}}";
 			sepNavWindowFrame = "{{61, 573}, {750, 558}}";
 		};
-	};
-	3E3BC77107AB5E0D00D2AE46 = {
-		fRef = 3E3BC75407AB5B7B00D2AE46;
-		isa = PBXTextBookmark;
-		name = "AccountsController.h: 52";
-		rLen = 0;
-		rLoc = 2877;
-		rType = 0;
-		vrLen = 1582;
-		vrLoc = 0;
-	};
-	3E3D512E081D4E1F00FCADBC = {
-		fRef = 3E528C3207754B8E0064F585;
-		isa = PBXTextBookmark;
-		name = "CreateiFolderSheetController.m: 43";
-		rLen = 0;
-		rLoc = 1703;
-		rType = 0;
-		vrLen = 1474;
-		vrLoc = 629;
-	};
-	3E3D5159081D9C0800FCADBC = {
-		fRef = 3E70A40A078DFCD80075681D;
-		isa = PBXTextBookmark;
-		name = "-(void)showAccountsWindow;\n";
-		rLen = 27;
-		rLoc = 1900;
-		rType = 0;
-		vrLen = 1568;
-		vrLoc = 1049;
 	};
 	3E3F7C9907BEA1110096E031 = {
 		children = (
@@ -1422,128 +1217,10 @@
 		isa = PBXTextBookmark;
 		name = "iFolderApplication.m: 448";
 		rLen = 0;
-		rLoc = 17212;
+		rLoc = 18248;
 		rType = 0;
 		vrLen = 1683;
 		vrLoc = 10904;
-	};
-	3E3F7F7D07BF013E0096E031 = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = NSApplication.h;
-		path = /System/Library/Frameworks/AppKit.framework/Versions/C/Headers/NSApplication.h;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3E3F7F7E07BF014F0096E031 = {
-		fRef = 3E3F7F7D07BF013E0096E031;
-		isa = PBXTextBookmark;
-		name = NSCriticalRequest;
-		rLen = 17;
-		rLoc = 4106;
-		rType = 0;
-		vrLen = 2178;
-		vrLoc = 3325;
-	};
-	3E408C83083A4C7500930311 = {
-		fRef = 3E6F7B0E07B3EC5000F46F36;
-		isa = PBXTextBookmark;
-		name = "English: 21";
-		rLen = 0;
-		rLoc = 72;
-		rType = 0;
-		vrLen = 416;
-		vrLoc = 0;
-	};
-	3E408C94083A4DFA00930311 = {
-		fRef = 3EA98AA007C7A4520078451D;
-		isa = PBXBookmark;
-	};
-	3E408CBC083A563B00930311 = {
-		fRef = 3E0E6CFF07C7E7290057D505;
-		isa = PBXTextBookmark;
-		name = "ConflictWindowController.h: 24";
-		rLen = 0;
-		rLoc = 573;
-		rType = 0;
-		vrLen = 580;
-		vrLoc = 0;
-	};
-	3E408CBD083A563B00930311 = {
-		fRef = 3E6F7ACE07B3E55A00F46F36;
-		isa = PBXTextBookmark;
-		name = "AboutBoxController.m: sharedInstance";
-		rLen = 0;
-		rLoc = 480;
-		rType = 0;
-		vrLen = 1101;
-		vrLoc = 124;
-	};
-	3E408CC5083A573700930311 = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = NSPanel.h;
-		path = /System/Library/Frameworks/AppKit.framework/Versions/C/Headers/NSPanel.h;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3E408CC6083A578400930311 = {
-		fRef = 3E408CC5083A573700930311;
-		isa = PBXTextBookmark;
-		name = "APPKIT_EXTERN void NSBeginAlertSheet(NSString *title, NSString *defaultButton, NSString *alternateButton, NSString *otherButton, NSWindow *docWindow, id modalDelegate, SEL didEndSelector, SEL didDismissSelector, void *contextInfo, NSString *msg, ...);\n";
-		rLen = 252;
-		rLoc = 2117;
-		rType = 0;
-		vrLen = 3600;
-		vrLoc = 0;
-	};
-	3E4BEB9A0802088100AB90DA = {
-		fRef = 3E52896A0774F9FA0064F585;
-		isa = PBXTextBookmark;
-		name = "iFolderDomain.h: 31";
-		rLen = 0;
-		rLoc = 1133;
-		rType = 0;
-		vrLen = 1302;
-		vrLoc = 1134;
-	};
-	3E4BEBF2080234C300AB90DA = {
-		fRef = 3E81105D076FF18700E96819;
-		isa = PBXTextBookmark;
-		name = serverField;
-		rLen = 11;
-		rLoc = 1200;
-		rType = 0;
-		vrLen = 1532;
-		vrLoc = 0;
-	};
-	3E4BFCAC076DFFA2005A4A32 = {
-		isa = PBXFileReference;
-		lastKnownFileType = text.xml;
-		name = iFolderWebService.wsdl;
-		path = /Users/calvin/code/ifolder/ifolder/src/WebService/iFolderWebService.wsdl;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3E4BFCB0076DFFC4005A4A32 = {
-		fRef = 3E4BFCAC076DFFA2005A4A32;
-		isa = PBXTextBookmark;
-		name = "http://novell.com/ifolder/web/GetSettings";
-		rLen = 41;
-		rLoc = 73719;
-		rType = 0;
-		vrLen = 2209;
-		vrLoc = 72556;
-	};
-	3E4BFCB1076DFFC4005A4A32 = {
-		fRef = 3E4BFCAC076DFFA2005A4A32;
-		isa = PBXTextBookmark;
-		name = "http://novell.com/ifolder/web/GetSettings";
-		rLen = 41;
-		rLoc = 73719;
-		rType = 0;
-		vrLen = 2209;
-		vrLoc = 72556;
 	};
 	3E4F5737078C30DA00313076 = {
 		uiCtxt = {
@@ -1559,26 +1236,6 @@
 			sepNavVisRect = "{{0, 1414}, {646, 771}}";
 			sepNavWindowFrame = "{{61, 397}, {750, 558}}";
 		};
-	};
-	3E4F5743078C310D00313076 = {
-		fRef = 3E4F5737078C30DA00313076;
-		isa = PBXTextBookmark;
-		name = "SyncLogWindowController.h: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 233;
-		vrLoc = 0;
-	};
-	3E4F5744078C310D00313076 = {
-		fRef = 3E4F5738078C30DA00313076;
-		isa = PBXTextBookmark;
-		name = "SyncLogWindowController.m: 1";
-		rLen = 0;
-		rLoc = 1024;
-		rType = 0;
-		vrLen = 156;
-		vrLoc = 0;
 	};
 	3E5289680774F9FA0064F585 = {
 		uiCtxt = {
@@ -1598,49 +1255,19 @@
 	};
 	3E52896A0774F9FA0064F585 = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {675, 1189}}";
-			sepNavSelRange = "{2404, 0}";
-			sepNavVisRect = "{{0, 406}, {675, 771}}";
+			sepNavIntBoundsRect = "{{0, 0}, {497, 1204}}";
+			sepNavSelRange = "{2262, 0}";
+			sepNavVisRect = "{{0, 535}, {497, 642}}";
 			sepNavWindowFrame = "{{1313, 210}, {536, 771}}";
 		};
 	};
 	3E52896B0774F9FA0064F585 = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {675, 2197}}";
-			sepNavSelRange = "{1920, 0}";
-			sepNavVisRect = "{{0, 114}, {675, 771}}";
+			sepNavIntBoundsRect = "{{0, 0}, {711, 2282}}";
+			sepNavSelRange = "{2244, 0}";
+			sepNavVisRect = "{{0, 1313}, {711, 429}}";
 			sepNavWindowFrame = "{{61, 397}, {750, 558}}";
 		};
-	};
-	3E5289780774FA570064F585 = {
-		fRef = 3E5289680774F9FA0064F585;
-		isa = PBXTextBookmark;
-		name = "iFolder.h: 6";
-		rLen = 0;
-		rLoc = 1;
-		rType = 0;
-		vrLen = 867;
-		vrLoc = 0;
-	};
-	3E52897C0774FA570064F585 = {
-		fRef = 3E52896B0774F9FA0064F585;
-		isa = PBXTextBookmark;
-		name = "iFolderDomain.m: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 866;
-		vrLoc = 0;
-	};
-	3E5289880774FBD80064F585 = {
-		fRef = 3E5289690774F9FA0064F585;
-		isa = PBXTextBookmark;
-		name = "iFolder.m: 12";
-		rLen = 0;
-		rLoc = 1071;
-		rType = 0;
-		vrLen = 846;
-		vrLoc = 200;
 	};
 	3E528C3107754B8E0064F585 = {
 		uiCtxt = {
@@ -1658,232 +1285,66 @@
 			sepNavWindowFrame = "{{199, 271}, {750, 558}}";
 		};
 	};
-	3E54E999080F160C00AFAD44 = {
-		fRef = 3E528C3207754B8E0064F585;
+	3E55297B084FA29D002B65EF = {
+		fRef = 3E55297C084FA29D002B65EF;
 		isa = PBXTextBookmark;
-		name = "CreateiFolderSheetController.m: awakeFromNib";
+		name = "(null): 1";
 		rLen = 0;
-		rLoc = 2523;
+		rLoc = 0;
 		rType = 0;
-		vrLen = 1955;
+		vrLen = 0;
 		vrLoc = 0;
 	};
-	3E54EA33080F1F7800AFAD44 = {
-		fRef = 3EE8881807B9620F00484B9F;
-		isa = PBXTextBookmark;
-		name = NSLog;
-		rLen = 5;
-		rLoc = 4678;
-		rType = 0;
-		vrLen = 1587;
-		vrLoc = 2576;
+	3E55297C084FA29D002B65EF = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
+		name = simiasStub.h;
+		path = /Users/calvin/code/ifolder.R1FCSRC1_BR/simias/src/libsimias/simiasStub.h;
+		refType = 0;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {3584, 13132}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRect = "{{0, 0}, {0, 0}}";
+			sepNavWindowFrame = "{{15, 73}, {728, 924}}";
+		};
 	};
-	3E54EA66080F24E700AFAD44 = {
-		fRef = 3E52896B0774F9FA0064F585;
+	3E55297F084FA29D002B65EF = {
+		fRef = 3EE886E907B92E8B00484B9F;
 		isa = PBXTextBookmark;
-		name = "iFolderDomain.m: 87";
+		name = "iFolderApplication.m: 399";
 		rLen = 0;
-		rLoc = 1920;
+		rLoc = 11874;
 		rType = 0;
-		vrLen = 1240;
-		vrLoc = 337;
-	};
-	3E54EA67080F24E700AFAD44 = {
-		fRef = 3E52896A0774F9FA0064F585;
-		isa = PBXTextBookmark;
-		name = "iFolderDomain.h: statusCode";
-		rLen = 0;
-		rLoc = 2404;
-		rType = 0;
-		vrLen = 1363;
-		vrLoc = 1073;
-	};
-	3E54EA9A080F282D00AFAD44 = {
-		fRef = 3E528C3107754B8E0064F585;
-		isa = PBXTextBookmark;
-		name = NSPopUpButton;
-		rLen = 13;
-		rLoc = 1239;
-		rType = 0;
-		vrLen = 1566;
-		vrLoc = 0;
-	};
-	3E5CEE3F081E98AD007276AD = {
-		fRef = 3EE886EA07B92E8B00484B9F;
-		isa = PBXTextBookmark;
-		name = "\tunsigned long\t\t\t\t\titemSyncCount;\n\tunsigned long\t\t\t\t\ttotalSyncCount;\n";
-		rLen = 69;
-		rLoc = 1987;
-		rType = 0;
-		vrLen = 1575;
-		vrLoc = 1045;
-	};
-	3E5CEE78081EBAC4007276AD = {
-		fRef = 3E5289690774F9FA0064F585;
-		isa = PBXTextBookmark;
-		name = "iFolder.m: 236";
-		rLen = 0;
-		rLoc = 5488;
-		rType = 0;
-		vrLen = 1419;
-		vrLoc = 1492;
-	};
-	3E5CF97B07FDF842005D90EC = {
-		fRef = 3E4F5737078C30DA00313076;
-		isa = PBXTextBookmark;
-		name = "IBOutlet ";
-		rLen = 9;
-		rLoc = 1141;
-		rType = 0;
-		vrLen = 1880;
-		vrLoc = 0;
-	};
-	3E5DB32B0826CDC500428656 = {
-		fRef = 3EC02F9607AED3D9001FF59D;
-		isa = PBXTextBookmark;
-		name = " char *_QName;\n\n/* Extern */\n\n/* Remote Methods */\n\nSOAP_FMAC5 int SOAP_FMAC6 __ns1__Ping(struct soap*, struct _ns1__Ping *, struct _ns1__P";
-		rLen = 139;
-		rLoc = 29816;
-		rType = 0;
-		vrLen = 1532;
-		vrLoc = 23309;
-	};
-	3E5DB3310826CEE200428656 = {
-		fRef = 3E256000077235290062AB7A;
-		isa = PBXTextBookmark;
-		name = "-(void) RenameAndResolveConflict:(NSString *)ifolderID withID:(NSString *)conflictID usingFileName:(NSString *)newFileName\n";
-		rLen = 123;
-		rLoc = 32750;
-		rType = 0;
-		vrLen = 1529;
-		vrLoc = 32660;
-	};
-	3E5DB3320826CEE200428656 = {
-		fRef = 3E255FFF077235290062AB7A;
-		isa = PBXTextBookmark;
-		name = "iFolderService.h: RenameAndResolveConflict:withID:usingFileName:";
-		rLen = 0;
-		rLoc = 2629;
-		rType = 0;
-		vrLen = 2280;
-		vrLoc = 1183;
-	};
-	3E5DB3330826CEE200428656 = {
-		fRef = 3E256000077235290062AB7A;
-		isa = PBXTextBookmark;
-		name = "-(void) RenameAndResolveConflict:(NSString *)ifolderID withID:(NSString *)conflictID usingFileName:(NSString *)newFileName\n";
-		rLen = 123;
-		rLoc = 32750;
-		rType = 0;
-		vrLen = 1529;
-		vrLoc = 32660;
-	};
-	3E5E040F07FCB85300C5E9AE = {
-		fRef = 3E6D783307B098E2001DA76A;
-		isa = PBXTextBookmark;
-		name = "LeaveDomainSheetController.h: showWindow:";
-		rLen = 0;
-		rLoc = 1343;
-		rType = 0;
-		vrLen = 1427;
-		vrLoc = 0;
-	};
-	3E5E041A07FCBA1C00C5E9AE = {
-		fRef = 3EBE7AA407FC76F200DC9A8E;
-		isa = PBXTextBookmark;
-		name = NSScrollView;
-		rLen = 12;
-		rLoc = 298;
-		rType = 0;
-		vrLen = 573;
-		vrLoc = 0;
-	};
-	3E5E044207FCC10F00C5E9AE = {
-		fRef = 3E6F7ACD07B3E55A00F46F36;
-		isa = PBXTextBookmark;
-		name = "AboutBoxController.h: 23";
-		rLen = 0;
-		rLoc = 404;
-		rType = 0;
-		vrLen = 404;
-		vrLoc = 0;
-	};
-	3E5EB84C07C596B20032A886 = {
-		fRef = 3EE2787B07C45E2100A645A0;
-		isa = PBXTextBookmark;
-		name = getSeconds;
-		rLen = 10;
-		rLoc = 1196;
-		rType = 0;
-		vrLen = 1247;
-		vrLoc = 0;
-	};
-	3E6007E2081F2E63006B808F = {
-		fRef = 3E7C76F0081F047C00E6DE58;
-		isa = PBXTextBookmark;
-		name = "simiasStub.h: 118";
-		rLen = 0;
-		rLoc = 4376;
-		rType = 0;
-		vrLen = 2370;
-		vrLoc = 0;
-	};
-	3E6007F7081F3006006B808F = {
-		fRef = 3EDD6AD907AEAECB008A2A3B;
-		isa = PBXTextBookmark;
-		name = LoginToRemote;
-		rLen = 13;
-		rLoc = 13302;
-		rType = 0;
-		vrLen = 1661;
-		vrLoc = 13046;
-	};
-	3E6596BE07BE74520095CEE2 = {
-		fRef = 3E3405A6078B40EF00630436;
-		isa = PBXTextBookmark;
-		name = "SimiasEventHandlers.m: 118";
-		rLen = 0;
-		rLoc = 3698;
-		rType = 0;
-		vrLen = 2429;
-		vrLoc = 4104;
+		vrLen = 1679;
+		vrLoc = 11072;
 	};
 	3E66705207B7D3CC0047E683 = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {763, 810}}";
+			sepNavIntBoundsRect = "{{0, 0}, {520, 962}}";
 			sepNavSelRange = "{1155, 9}";
-			sepNavVisRect = "{{0, 0}, {763, 810}}";
+			sepNavVisRect = "{{0, 0}, {520, 962}}";
 		};
 	};
 	3E66705307B7D3CC0047E683 = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {788, 2155}}";
+			sepNavIntBoundsRect = "{{0, 0}, {536, 2156}}";
 			sepNavSelRange = "{1093, 0}";
-			sepNavVisRect = "{{0, 1509}, {788, 646}}";
+			sepNavVisRect = "{{0, 0}, {520, 962}}";
 			sepNavWindowFrame = "{{15, 439}, {750, 558}}";
 		};
 	};
-	3E66706207B7D7B90047E683 = {
-		fRef = 3E66705207B7D3CC0047E683;
-		isa = PBXTextBookmark;
-		name = "Simias.h: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 202;
-		vrLoc = 0;
-	};
-	3E66706507B7D7B90047E683 = {
+	3E6B5192084EB202008BAACC = {
 		fRef = 3E66705307B7D3CC0047E683;
 		isa = PBXTextBookmark;
-		name = "Simias.m: 22";
+		name = "Simias.m: 29";
 		rLen = 0;
-		rLoc = 943;
+		rLoc = 1093;
 		rType = 0;
-		vrLen = 1058;
+		vrLen = 1536;
 		vrLoc = 0;
 	};
-	3E667A8907D3D918003BB9D3 = {
+	3E6B5193084EB202008BAACC = {
 		fRef = 3E66705207B7D3CC0047E683;
 		isa = PBXTextBookmark;
 		name = simiasurl;
@@ -1893,80 +1354,226 @@
 		vrLen = 1253;
 		vrLoc = 0;
 	};
-	3E68234D07CA5C2700CCAF98 = {
-		fRef = 3EE8881707B9620F00484B9F;
+	3E6B5194084EB202008BAACC = {
+		fRef = 3EB62D0D07B9C907000C8112;
 		isa = PBXTextBookmark;
-		name = "iFolderWindowController.h: ifoldersController";
-		rLen = 0;
-		rLoc = 1771;
+		name = "-(SyncSize *)getSyncSize:(NSString *)ifolderID;";
+		rLen = 48;
+		rLoc = 3162;
 		rType = 0;
-		vrLen = 1903;
-		vrLoc = 2141;
+		vrLen = 2028;
+		vrLoc = 1189;
 	};
-	3E68245107CA7F6C00CCAF98 = {
-		fRef = 3EE276DF07C40C2400A645A0;
+	3E6B5197084EB202008BAACC = {
+		fRef = 3E66705307B7D3CC0047E683;
 		isa = PBXTextBookmark;
-		name = "\tIBOutlet NSTextField\t*ownerName;";
-		rLen = 33;
-		rLoc = 809;
+		name = "Simias.m: 29";
+		rLen = 0;
+		rLoc = 1093;
 		rType = 0;
-		vrLen = 1040;
+		vrLen = 1536;
 		vrLoc = 0;
 	};
-	3E694B45080C6CF9003AAEF7 = {
-		fRef = 3EEA9A4907B1D9C30015FCF4;
+	3E6B5198084EB202008BAACC = {
+		fRef = 3E66705207B7D3CC0047E683;
 		isa = PBXTextBookmark;
-		name = "PropSharingController.m: 36";
-		rLen = 0;
-		rLoc = 1282;
+		name = simiasurl;
+		rLen = 9;
+		rLoc = 1155;
 		rType = 0;
-		vrLen = 1830;
+		vrLen = 1253;
 		vrLoc = 0;
 	};
-	3E694B4A080C6CF9003AAEF7 = {
+	3E6B5199084EB202008BAACC = {
+		fRef = 3EE886EA07B92E8B00484B9F;
+		isa = PBXTextBookmark;
+		name = "iFolderApplication.h: STATE_SHOWLOGWINDOW";
+		rLen = 0;
+		rLoc = 1541;
+		rType = 0;
+		vrLen = 2120;
+		vrLoc = 1987;
+	};
+	3E6B519A084EB202008BAACC = {
 		fRef = 3EE886E907B92E8B00484B9F;
 		isa = PBXTextBookmark;
-		name = readiFolder;
+		name = "iFolderApplication.m: 736";
 		rLen = 0;
-		rLoc = 21777;
+		rLoc = 21915;
 		rType = 0;
-		vrLen = 1218;
-		vrLoc = 20528;
+		vrLen = 1737;
+		vrLoc = 19766;
+	};
+	3E6B519E084EB202008BAACC = {
+		fRef = 3EB62D0D07B9C907000C8112;
+		isa = PBXTextBookmark;
+		name = "-(SyncSize *)getSyncSize:(NSString *)ifolderID;";
+		rLen = 48;
+		rLoc = 3162;
+		rType = 0;
+		vrLen = 2028;
+		vrLoc = 1189;
+	};
+	3E6B51C2084EBDBE008BAACC = {
+		fRef = 3E6D783207B098E2001DA76A;
+		isa = PBXTextBookmark;
+		name = "LeaveDomainSheetController.m: 49";
+		rLen = 0;
+		rLoc = 1610;
+		rType = 0;
+		vrLen = 1655;
+		vrLoc = 0;
+	};
+	3E6B51C3084EBDBE008BAACC = {
+		fRef = 3E6D783307B098E2001DA76A;
+		isa = PBXTextBookmark;
+		name = "LeaveDomainSheetController.h: showWindow:";
+		rLen = 0;
+		rLoc = 1343;
+		rType = 0;
+		vrLen = 0;
+		vrLoc = 0;
+	};
+	3E6B51C4084EBDBE008BAACC = {
+		fRef = 3E6B51C5084EBDBE008BAACC;
+		isa = PBXTextBookmark;
+		name = "(null): 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 0;
+		vrLoc = 0;
+	};
+	3E6B51C5084EBDBE008BAACC = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.objc;
+		name = PropertiesWindowController.m;
+		path = /Users/calvin/code/ifolder/ifolder/src/OSXClient/src/PropertiesWindowController.m;
+		refType = 0;
+		sourceTree = "<absolute>";
+	};
+	3E6B51C6084EBDBE008BAACC = {
+		fRef = 3E70A40B078DFCD80075681D;
+		isa = PBXTextBookmark;
+		name = "iFolderPrefsController.m: 258";
+		rLen = 0;
+		rLoc = 5975;
+		rType = 0;
+		vrLen = 0;
+		vrLoc = 0;
+	};
+	3E6B51C7084EBDBE008BAACC = {
+		fRef = 3E3BC75407AB5B7B00D2AE46;
+		isa = PBXTextBookmark;
+		name = "AccountsController.h: 77";
+		rLen = 0;
+		rLoc = 2465;
+		rType = 0;
+		vrLen = 0;
+		vrLoc = 0;
+	};
+	3E6B51C8084EBDBE008BAACC = {
+		fRef = 3EE886EA07B92E8B00484B9F;
+		isa = PBXTextBookmark;
+		name = "- (NSString *)getHTTPProxyURI:(NSString *)host UseHTTPS:(BOOL)useHTTPS;";
+		rLen = 71;
+		rLoc = 4234;
+		rType = 0;
+		vrLen = 2253;
+		vrLoc = 2059;
+	};
+	3E6B51CB084EBDBE008BAACC = {
+		fRef = 3E3BC75307AB5B7B00D2AE46;
+		isa = PBXTextBookmark;
+		name = "AccountsController.m: 300";
+		rLen = 0;
+		rLoc = 10137;
+		rType = 0;
+		vrLen = 2300;
+		vrLoc = 9292;
+	};
+	3E6B51CC084EBDBE008BAACC = {
+		fRef = 3E6D783207B098E2001DA76A;
+		isa = PBXTextBookmark;
+		name = "LeaveDomainSheetController.m: 49";
+		rLen = 0;
+		rLoc = 1610;
+		rType = 0;
+		vrLen = 1655;
+		vrLoc = 0;
+	};
+	3E6B51CD084EBDBE008BAACC = {
+		fRef = 3E3BC75407AB5B7B00D2AE46;
+		isa = PBXTextBookmark;
+		name = "AccountsController.h: 77";
+		rLen = 0;
+		rLoc = 2465;
+		rType = 0;
+		vrLen = 2216;
+		vrLoc = 1172;
+	};
+	3E6B51CF084EBDBE008BAACC = {
+		fRef = 3E6D783307B098E2001DA76A;
+		isa = PBXTextBookmark;
+		name = "LeaveDomainSheetController.h: showWindow:";
+		rLen = 0;
+		rLoc = 1343;
+		rType = 0;
+		vrLen = 0;
+		vrLoc = 0;
+	};
+	3E6B51D0084EBDBE008BAACC = {
+		fRef = 3E6B51D1084EBDBE008BAACC;
+		isa = PBXTextBookmark;
+		name = "(null): 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 0;
+		vrLoc = 0;
+	};
+	3E6B51D1084EBDBE008BAACC = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.objc;
+		name = PropertiesWindowController.m;
+		path = /Users/calvin/code/ifolder/ifolder/src/OSXClient/src/PropertiesWindowController.m;
+		refType = 0;
+		sourceTree = "<absolute>";
+	};
+	3E6B51D2084EBDBE008BAACC = {
+		fRef = 3E70A40B078DFCD80075681D;
+		isa = PBXTextBookmark;
+		name = "iFolderPrefsController.m: 258";
+		rLen = 0;
+		rLoc = 5975;
+		rType = 0;
+		vrLen = 0;
+		vrLoc = 0;
+	};
+	3E6B521C084ECBE0008BAACC = {
+		fRef = 3EE886E907B92E8B00484B9F;
+		isa = PBXTextBookmark;
+		name = "iFolderApplication.m: 1323";
+		rLen = 0;
+		rLoc = 41067;
+		rType = 0;
+		vrLen = 1800;
+		vrLoc = 36214;
 	};
 	3E6D783207B098E2001DA76A = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {733, 755}}";
+			sepNavIntBoundsRect = "{{0, 0}, {628, 979}}";
 			sepNavSelRange = "{1610, 0}";
-			sepNavVisRect = "{{0, 10}, {733, 745}}";
+			sepNavVisRect = "{{0, 0}, {628, 979}}";
 			sepNavWindowFrame = "{{84, 552}, {750, 558}}";
 		};
 	};
 	3E6D783307B098E2001DA76A = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {733, 745}}";
+			sepNavIntBoundsRect = "{{0, 0}, {628, 574}}";
 			sepNavSelRange = "{1343, 0}";
-			sepNavVisRect = "{{0, 0}, {733, 745}}";
+			sepNavVisRect = "{{0, 0}, {0, 0}}";
 		};
-	};
-	3E6D783F07B09B5F001DA76A = {
-		fRef = 3E6D783207B098E2001DA76A;
-		isa = PBXTextBookmark;
-		name = "LeaveDomainSheetController.m: 1";
-		rLen = 0;
-		rLoc = 1028;
-		rType = 0;
-		vrLen = 175;
-		vrLoc = 0;
-	};
-	3E6D784007B09B5F001DA76A = {
-		fRef = 3E6D783307B098E2001DA76A;
-		isa = PBXTextBookmark;
-		name = "LeaveDomainSheetController.h: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 238;
-		vrLoc = 0;
 	};
 	3E6F7ACD07B3E55A00F46F36 = {
 		uiCtxt = {
@@ -1983,26 +1590,6 @@
 			sepNavWindowFrame = "{{38, 418}, {750, 558}}";
 		};
 	};
-	3E6F7ADD07B3EA6300F46F36 = {
-		fRef = 3E6F7ACD07B3E55A00F46F36;
-		isa = PBXTextBookmark;
-		name = "AboutBoxController.h: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 223;
-		vrLoc = 0;
-	};
-	3E6F7AEC07B3EB0700F46F36 = {
-		fRef = 3E6F7ACE07B3E55A00F46F36;
-		isa = PBXTextBookmark;
-		name = "AboutBoxController.m: 3";
-		rLen = 0;
-		rLoc = 39;
-		rType = 0;
-		vrLen = 73;
-		vrLoc = 0;
-	};
 	3E6F7B0E07B3EC5000F46F36 = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {674, 1370}}";
@@ -2010,59 +1597,6 @@
 			sepNavVisRect = "{{0, 0}, {674, 771}}";
 			sepNavWindowFrame = "{{15, 439}, {750, 558}}";
 		};
-	};
-	3E709695083A590900A5BAEE = {
-		fRef = 3E0E6CFE07C7E7290057D505;
-		isa = PBXTextBookmark;
-		name = "ConflictWindowController.m: 191";
-		rLen = 0;
-		rLoc = 5415;
-		rType = 0;
-		vrLen = 2042;
-		vrLoc = 4372;
-	};
-	3E709697083A590900A5BAEE = {
-		fRef = 3E0E6CFE07C7E7290057D505;
-		isa = PBXTextBookmark;
-		name = "ConflictWindowController.m: 191";
-		rLen = 0;
-		rLoc = 5415;
-		rType = 0;
-		vrLen = 2042;
-		vrLoc = 4372;
-	};
-	3E7096A1083A5A1600A5BAEE = {
-		fRef = 3E0E6CBD07C7D41B0057D505;
-		isa = PBXTextBookmark;
-		name = "iFolderConflict.m: setProperties:";
-		rLen = 0;
-		rLoc = 1752;
-		rType = 0;
-		vrLen = 1298;
-		vrLoc = 1498;
-	};
-	3E7096A2083A5A1600A5BAEE = {
-		fRef = 3E0E6CBD07C7D41B0057D505;
-		isa = PBXTextBookmark;
-		name = "iFolderConflict.m: setProperties:";
-		rLen = 0;
-		rLoc = 1752;
-		rType = 0;
-		vrLen = 1298;
-		vrLoc = 1498;
-	};
-	3E7096B0083A5D0C00A5BAEE = {
-		fRef = 3EA98AA007C7A4520078451D;
-		isa = PBXBookmark;
-	};
-	3E7096B5083A5D8700A5BAEE = {
-		fRef = 3E7096B6083A5D8700A5BAEE;
-		isa = PBXBookmark;
-	};
-	3E7096B6083A5D8700A5BAEE = {
-		isa = PBXFileReference;
-		refType = 4;
-		sourceTree = "<group>";
 	};
 	3E70A40A078DFCD80075681D = {
 		uiCtxt = {
@@ -2074,238 +1608,26 @@
 	};
 	3E70A40B078DFCD80075681D = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {704, 4885}}";
+			sepNavIntBoundsRect = "{{0, 0}, {704, 4886}}";
 			sepNavSelRange = "{5975, 0}";
-			sepNavVisRect = "{{0, 3227}, {674, 756}}";
+			sepNavVisRect = "{{0, 0}, {0, 0}}";
 			sepNavWindowFrame = "{{84, 552}, {750, 558}}";
 		};
 	};
-	3E70A416078DFD620075681D = {
-		fRef = 3E70A40A078DFCD80075681D;
-		isa = PBXTextBookmark;
-		name = iFolderPrefsController;
-		rLen = 45;
-		rLoc = 1086;
-		rType = 0;
-		vrLen = 188;
-		vrLoc = 0;
-	};
-	3E70A433078DFFAE0075681D = {
-		fRef = 29B97319FDCFA39411CA2CEA;
-		isa = PBXBookmark;
-	};
-	3E71DC5007B285080038B5C3 = {
-		fRef = 3EEA9A3407B1D3580015FCF4;
-		isa = PBXBookmark;
-	};
-	3E729A6A080334C8001FB732 = {
-		fRef = 3E215A4C07E73C310082EACE;
-		isa = PBXTextBookmark;
-		name = "MemberSearchResults.h: fillMembers:";
-		rLen = 0;
-		rLoc = 1391;
-		rType = 0;
-		vrLen = 1503;
-		vrLoc = 0;
-	};
-	3E729A75080336B0001FB732 = {
-		fRef = 3E729A76080336B0001FB732;
-		isa = PBXTextBookmark;
-		name = "(null): 28";
-		rLen = 0;
-		rLoc = 1028;
-		rType = 0;
-		vrLen = 1688;
-		vrLoc = 471;
-	};
-	3E729A76080336B0001FB732 = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = libsimias.h;
-		path = /Users/calvin/code/ifolder/simias/src/libsimias/libsimias.h;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3E729A78080336B0001FB732 = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = simias.h;
-		path = /Users/calvin/code/ifolder/simias/src/libsimias/simias.h;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3E729A7B080336B0001FB732 = {
-		fRef = 3E729A7C080336B0001FB732;
-		isa = PBXTextBookmark;
-		name = "(null): 78";
-		rLen = 0;
-		rLoc = 2650;
-		rType = 0;
-		vrLen = 1597;
-		vrLoc = 2103;
-	};
-	3E729A7C080336B0001FB732 = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = simias.h;
-		path = /Users/calvin/code/ifolder/simias/src/libsimias/simias.h;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3E729A870803383D001FB732 = {
-		fRef = 3E729A78080336B0001FB732;
-		isa = PBXTextBookmark;
-		name = "simias.h: 82";
-		rLen = 0;
-		rLoc = 2707;
-		rType = 0;
-		vrLen = 1974;
-		vrLoc = 0;
-	};
-	3E729A9308033A65001FB732 = {
-		fRef = 3E729A9408033A65001FB732;
-		isa = PBXTextBookmark;
-		name = "(null): 253";
-		rLen = 0;
-		rLoc = 6441;
-		rType = 0;
-		vrLen = 908;
-		vrLoc = 11655;
-	};
-	3E729A9408033A65001FB732 = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.c;
-		name = simias.c;
-		path = /Users/calvin/code/ifolder/simias/src/libsimias/simias.c;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3E729A9808033A65001FB732 = {
-		fRef = 3E729A9908033A65001FB732;
-		isa = PBXTextBookmark;
-		name = "(null): 253";
-		rLen = 0;
-		rLoc = 6441;
-		rType = 0;
-		vrLen = 908;
-		vrLoc = 11655;
-	};
-	3E729A9908033A65001FB732 = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.c;
-		name = simias.c;
-		path = /Users/calvin/code/ifolder/simias/src/libsimias/simias.c;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3E7839AD081EE5AC0034CEA1 = {
-		fRef = 3E3405A6078B40EF00630436;
-		isa = PBXTextBookmark;
-		name = "SimiasEventHandlers.m: 26";
-		rLen = 0;
-		rLoc = 1107;
-		rType = 0;
-		vrLen = 1898;
-		vrLoc = 0;
-	};
-	3E7839C3081EEC2E0034CEA1 = {
-		fRef = 3E19994907BAE47700AAC29A;
-		isa = PBXTextBookmark;
-		name = "SMEvents.m: size";
-		rLen = 0;
-		rLoc = 2612;
-		rType = 0;
-		vrLen = 1138;
-		vrLoc = 2095;
-	};
-	3E7839C4081EEC2E0034CEA1 = {
-		fRef = 3E19994807BAE47700AAC29A;
-		isa = PBXTextBookmark;
-		name = FILE_SYNC_LOCAL;
-		rLen = 15;
-		rLoc = 1106;
-		rType = 0;
-		vrLen = 752;
-		vrLoc = 1894;
-	};
-	3E7A00FC07EF31990013F83B = {
-		fRef = 3E1F319A07EA2812005E45BA;
-		isa = PBXTextBookmark;
-		name = "Preferences.cs: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 1618;
-		vrLoc = 0;
-	};
-	3E7A011807EF45550013F83B = {
-		fRef = 3E7A011907EF45550013F83B;
-		isa = PBXTextBookmark;
-		name = "(null): 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 1601;
-		vrLoc = 0;
-	};
-	3E7A011907EF45550013F83B = {
-		isa = PBXFileReference;
-		lastKnownFileType = text;
-		name = iFolderLoginDialog.cs;
-		path = /Users/calvin/code/ifolder/ifolder/src/LinuxClient/library/iFolderLoginDialog.cs;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3E7A011A07EF45550013F83B = {
-		fRef = 3E7A011B07EF45550013F83B;
-		isa = PBXTextBookmark;
-		name = "(null): 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 1549;
-		vrLoc = 0;
-	};
-	3E7A011B07EF45550013F83B = {
-		isa = PBXFileReference;
-		lastKnownFileType = text;
-		name = iFolderApplication.cs;
-		path = /Users/calvin/code/ifolder/ifolder/src/LinuxClient/application/iFolderApplication.cs;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3E7C76D5081F02E700E6DE58 = {
-		fRef = 3EE886E907B92E8B00484B9F;
-		isa = PBXTextBookmark;
-		name = "iFolderApplication.m: 741";
-		rLen = 0;
-		rLoc = 20879;
-		rType = 0;
-		vrLen = 1478;
-		vrLoc = 20443;
-	};
-	3E7C76F0081F047C00E6DE58 = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = simiasStub.h;
-		path = /Users/calvin/code/ifolder/simias/src/libsimias/simiasStub.h;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
 	3E81105D076FF18700E96819 = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {684, 747}}";
-			sepNavSelRange = "{1200, 11}";
-			sepNavVisRect = "{{0, 0}, {684, 747}}";
-			sepNavWindowFrame = "{{199, 271}, {750, 558}}";
+			sepNavIntBoundsRect = "{{0, 0}, {711, 644}}";
+			sepNavSelRange = "{1291, 14}";
+			sepNavVisRect = "{{0, 201}, {711, 429}}";
+			sepNavWindowFrame = "{{366, 291}, {750, 558}}";
 		};
 	};
 	3E81105E076FF18700E96819 = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1436, 3191}}";
-			sepNavSelRange = "{1573, 0}";
-			sepNavVisRect = "{{0, 2065}, {674, 756}}";
-			sepNavWindowFrame = "{{15, 439}, {750, 558}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1436, 3836}}";
+			sepNavSelRange = "{2583, 0}";
+			sepNavVisRect = "{{0, 1045}, {817, 585}}";
+			sepNavWindowFrame = "{{302, 217}, {856, 714}}";
 		};
 	};
 	3E8853CA07C6F80A00E8B6CD = {
@@ -2365,172 +1687,6 @@
 			sepNavVisRect = "{{0, 0}, {646, 771}}";
 		};
 	};
-	3E8853EF07C6FB6E00E8B6CD = {
-		fRef = 3E8853CA07C6F80A00E8B6CD;
-		isa = PBXTextBookmark;
-		name = "JVNotificationController.h: 8";
-		rLen = 0;
-		rLoc = 1453;
-		rType = 0;
-		vrLen = 253;
-		vrLoc = 0;
-	};
-	3E8853F107C6FB6E00E8B6CD = {
-		fRef = 3E8853CE07C6F80A00E8B6CD;
-		isa = PBXTextBookmark;
-		name = "KABubbleWindow.h: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 117;
-		vrLoc = 0;
-	};
-	3E8853F207C6FB6E00E8B6CD = {
-		fRef = 3E8853CF07C6F80A00E8B6CD;
-		isa = PBXTextBookmark;
-		name = "KABubbleWindow.m: 1";
-		rLen = 0;
-		rLoc = 1063;
-		rType = 0;
-		vrLen = 667;
-		vrLoc = 0;
-	};
-	3E8853F307C6FB6E00E8B6CD = {
-		fRef = 3E8853D007C6F80A00E8B6CD;
-		isa = PBXTextBookmark;
-		name = "KABubbleWindowController.h: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 1012;
-		vrLoc = 0;
-	};
-	3E8853F407C6FB6E00E8B6CD = {
-		fRef = 3E8853D107C6F80A00E8B6CD;
-		isa = PBXTextBookmark;
-		name = "KABubbleWindowController.m: 1";
-		rLen = 0;
-		rLoc = 1072;
-		rType = 0;
-		vrLen = 2142;
-		vrLoc = 37;
-	};
-	3E88542B07C7055500E8B6CD = {
-		fRef = 3E8853D207C6F80A00E8B6CD;
-		isa = PBXTextBookmark;
-		name = "/***********************************************************************\n *  $RCSfile$\n * \n *  Copyright © 2003-2004, Timothy Hatcher\n *\n *  This program is free software; you can redistribute it and/or\n *  modify it under the terms of the GNU General Public\n *  License as published by the Free Software Foundation; either\n *  version 2 of the License, or (at your option) any later version.\n *\n *  This program is distributed in the hope that it will be useful,\n *  but WITHOUT ANY WARRANTY; without even the implied warranty of\n *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU\n *  Library General Public License for more details.\n *\n *  You should have received a copy of the GNU General Public License\n *  along with this program; if not, write to the Free Software\n *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n *\n *  Author: Timothy Hatcher <timothy@colloquy.info>\n * \n ***********************************************************************/";
-		rLen = 1062;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 1432;
-		vrLoc = 0;
-	};
-	3E88542C07C7055500E8B6CD = {
-		fRef = 3E8853D307C6F80A00E8B6CD;
-		isa = PBXTextBookmark;
-		name = "KABubbleWindowView.m: 37";
-		rLen = 0;
-		rLoc = 1427;
-		rType = 0;
-		vrLen = 1102;
-		vrLoc = 4388;
-	};
-	3E8A565607C103AF00FDAD31 = {
-		fRef = 3E09F7AD07C0388400381F59;
-		isa = PBXBookmark;
-	};
-	3E8A6D87076FDCDF000196AD = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = NSDictionary.h;
-		path = /System/Library/Frameworks/Foundation.framework/Headers/NSDictionary.h;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3E8A6DBF076FDD85000196AD = {
-		fRef = 3E8A6D87076FDCDF000196AD;
-		isa = PBXTextBookmark;
-		name = "- (id)initWithDictionary:(NSDictionary *)otherDictionary;\n";
-		rLen = 58;
-		rLoc = 1862;
-		rType = 0;
-		vrLen = 1456;
-		vrLoc = 982;
-	};
-	3E8A6E4B076FE807000196AD = {
-		fRef = 29B97316FDCFA39411CA2CEA;
-		isa = PBXTextBookmark;
-		name = "main.m: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 256;
-		vrLoc = 0;
-	};
-	3E8AAFEB08304CC600F2A29C = {
-		fRef = 8D1107310486CEB800E47090;
-		isa = PBXTextBookmark;
-		name = "Info.plist: 3";
-		rLen = 0;
-		rLoc = 170;
-		rType = 0;
-		vrLen = 791;
-		vrLoc = 0;
-	};
-	3E99E55507D37A870098C250 = {
-		fRef = 3E99E55607D37A870098C250;
-		isa = PBXTextBookmark;
-		name = "(null): 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 1117;
-		vrLoc = 0;
-	};
-	3E99E55607D37A870098C250 = {
-		isa = PBXFileReference;
-		lastKnownFileType = text.html;
-		name = index.html;
-		path = /Users/calvin/code/ifolder/ifolder/help/en/doc/index.html;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3E99E55707D37A870098C250 = {
-		fRef = 3E99E55807D37A870098C250;
-		isa = PBXTextBookmark;
-		name = "(null): 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 1138;
-		vrLoc = 0;
-	};
-	3E99E55807D37A870098C250 = {
-		isa = PBXFileReference;
-		lastKnownFileType = text.html;
-		name = index.html;
-		path = /Users/calvin/code/ifolder/ifolder/help/en/docui2002/index.html;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3E99E56207D37B230098C250 = {
-		isa = PBXFileReference;
-		lastKnownFileType = text.html;
-		name = front.html;
-		path = /Users/calvin/code/ifolder/ifolder/help/en/doc/user/data/front.html;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3E99E58907D381960098C250 = {
-		fRef = 3EA94F5F07B823CA0088FD0F;
-		isa = PBXTextBookmark;
-		name = IFOLDER_PREFIX;
-		rLen = 14;
-		rLoc = 1019;
-		rType = 0;
-		vrLen = 1091;
-		vrLoc = 0;
-	};
 	3E9B1B01077927E20072994B = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {788, 1427}}";
@@ -2545,136 +1701,6 @@
 			sepNavVisRect = "{{0, 122}, {718, 554}}";
 		};
 	};
-	3E9D3F4807DFA9A800AA93D6 = {
-		fRef = 3E49BC6B0765224B0040812D;
-		isa = PBXBookmark;
-	};
-	3E9EC079078DDBC800348D26 = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = NSWindowController.h;
-		path = /System/Library/Frameworks/AppKit.framework/Versions/C/Headers/NSWindowController.h;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3E9EC07B078DDC3F00348D26 = {
-		fRef = 3E9EC079078DDBC800348D26;
-		isa = PBXTextBookmark;
-		name = "- (BOOL)shouldCascadeWindows;\n";
-		rLen = 30;
-		rLoc = 2877;
-		rType = 0;
-		vrLen = 4795;
-		vrLoc = 694;
-	};
-	3EA1364507E0C4CD00B7E49C = {
-		fRef = 3E8853CA07C6F80A00E8B6CD;
-		isa = PBXTextBookmark;
-		name = "iFolderNotificationController.h: 43";
-		rLen = 0;
-		rLoc = 1621;
-		rType = 0;
-		vrLen = 1628;
-		vrLoc = 123;
-	};
-	3EA1364607E0C4CD00B7E49C = {
-		fRef = 3E8853CB07C6F80A00E8B6CD;
-		isa = PBXTextBookmark;
-		name = "NSLocalizedString(";
-		rLen = 18;
-		rLoc = 4102;
-		rType = 0;
-		vrLen = 1707;
-		vrLoc = 3268;
-	};
-	3EA1365607E0CBD400B7E49C = {
-		fRef = 3E66705307B7D3CC0047E683;
-		isa = PBXTextBookmark;
-		name = "Simias.m: 29";
-		rLen = 0;
-		rLoc = 1093;
-		rType = 0;
-		vrLen = 1160;
-		vrLoc = 2496;
-	};
-	3EA1365C07E0CBD400B7E49C = {
-		fRef = 3EDA494307C681B7007CD1E0;
-		isa = PBXTextBookmark;
-		name = "MCTableView.m: 22";
-		rLen = 0;
-		rLoc = 407;
-		rType = 0;
-		vrLen = 407;
-		vrLoc = 0;
-	};
-	3EA1367207E0DF7100B7E49C = {
-		fRef = 3EE2787C07C45E2100A645A0;
-		isa = PBXTextBookmark;
-		name = "TimeSpan.m: 81";
-		rLen = 0;
-		rLoc = 2358;
-		rType = 0;
-		vrLen = 1552;
-		vrLoc = 0;
-	};
-	3EA1367307E0DF7100B7E49C = {
-		fRef = 3EB8C511079393B60082AA86;
-		isa = PBXTextBookmark;
-		name = userMenuItem;
-		rLen = 12;
-		rLoc = 1484;
-		rType = 0;
-		vrLen = 1733;
-		vrLoc = 0;
-	};
-	3EA1367A07E0DF7100B7E49C = {
-		fRef = 3E9B1B01077927E20072994B;
-		isa = PBXTextBookmark;
-		name = "SetupiFolderSheetController.m: 28";
-		rLen = 0;
-		rLoc = 1132;
-		rType = 0;
-		vrLen = 1088;
-		vrLoc = 2226;
-	};
-	3EA1368E07E0DF7100B7E49C = {
-		fRef = 3E9B1B01077927E20072994B;
-		isa = PBXTextBookmark;
-		name = "SetupiFolderSheetController.m: 28";
-		rLen = 0;
-		rLoc = 1132;
-		rType = 0;
-		vrLen = 1088;
-		vrLoc = 2226;
-	};
-	3EA1827907695E4B0049C737 = {
-		fRef = 089C165DFE840E0CC02AAC07;
-		isa = PBXTextBookmark;
-		name = "English: 4";
-		rLen = 0;
-		rLoc = 101;
-		rType = 0;
-		vrLen = 152;
-		vrLoc = 0;
-	};
-	3EA54754077340CA00CE56E3 = {
-		fRef = 3EA54755077340CA00CE56E3;
-		isa = PBXTextBookmark;
-		name = "(null): 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 1315;
-		vrLoc = 0;
-	};
-	3EA54755077340CA00CE56E3 = {
-		isa = PBXFileReference;
-		lastKnownFileType = text;
-		name = Makefile.am;
-		path = /Users/calvin/code/ifolder/ifolder/src/OSXClient/Makefile.am;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
 	3EA94F5F07B823CA0088FD0F = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {547, 742}}";
@@ -2682,145 +1708,21 @@
 			sepNavVisRect = "{{0, 0}, {547, 742}}";
 		};
 	};
-	3EA94F6607B824030088FD0F = {
-		fRef = 3EA94F5F07B823CA0088FD0F;
-		isa = PBXTextBookmark;
-		name = SIMIAS_BINARY;
-		rLen = 13;
-		rLoc = 1050;
-		rType = 0;
-		vrLen = 1088;
-		vrLoc = 0;
-	};
-	3EAE2E7D07FB6A37007BE2E0 = {
-		fRef = 3E81105E076FF18700E96819;
-		isa = PBXTextBookmark;
-		name = "LoginWindowController.m: 69";
-		rLen = 0;
-		rLoc = 3621;
-		rType = 0;
-		vrLen = 1265;
-		vrLoc = 1359;
-	};
-	3EAE2EB007FB7DE4007BE2E0 = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = cssmtype.h;
-		path = /System/Library/Frameworks/Security.framework/Versions/A/Headers/cssmtype.h;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3EAE2EB107FB7E78007BE2E0 = {
-		fRef = 3EAE2EB007FB7DE4007BE2E0;
-		isa = PBXTextBookmark;
-		name = "typedef struct cssm_data {\n    uint32 Length; /* in bytes */\n    uint8 *Data;\n} CSSM_DATA, *CSSM_DATA_PTR;";
-		rLen = 106;
-		rLoc = 2387;
-		rType = 0;
-		vrLen = 765;
-		vrLoc = 2083;
-	};
-	3EAE2F6B07FBA739007BE2E0 = {
-		fRef = 29B97316FDCFA39411CA2CEA;
-		isa = PBXTextBookmark;
-		name = "main.m: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 256;
-		vrLoc = 0;
-	};
-	3EAEF4520768FE5E00B98AF6 = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.cpp.cpp;
-		name = soap.cp;
-		path = "/Developer/Examples/Web Services/AppleEvents/soap.cp";
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3EAEF46C0769032700B98AF6 = {
-		fRef = 3EAEF4520768FE5E00B98AF6;
-		isa = PBXTextBookmark;
-		name = "soap.cp: 8";
-		rLen = 0;
-		rLoc = 185;
-		rType = 0;
-		vrLen = 1252;
-		vrLoc = 0;
-	};
-	3EAEF4700769032700B98AF6 = {
-		fRef = 3EAEF4520768FE5E00B98AF6;
-		isa = PBXTextBookmark;
-		name = "soap.cp: 8";
-		rLen = 0;
-		rLoc = 185;
-		rType = 0;
-		vrLen = 1252;
-		vrLoc = 0;
-	};
-	3EAEF53F076918E600B98AF6 = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = CFBase.h;
-		path = /System/Library/Frameworks/CoreFoundation.framework/Versions/A/Headers/CFBase.h;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3EAEF5410769191800B98AF6 = {
-		fRef = 3EAEF53F076918E600B98AF6;
-		isa = PBXTextBookmark;
-		name = "typedef const void * CFTypeRef;\n";
-		rLen = 32;
-		rLoc = 3156;
-		rType = 0;
-		vrLen = 1196;
-		vrLoc = 2465;
-	};
-	3EB28F78080ACBA900F1F2CE = {
-		fRef = 3E8853D307C6F80A00E8B6CD;
-		isa = PBXTextBookmark;
-		name = "KABubbleWindowView.m: 23";
-		rLen = 0;
-		rLoc = 1005;
-		rType = 0;
-		vrLen = 1735;
-		vrLoc = 0;
-	};
-	3EB28FA3080ADCCD00F1F2CE = {
-		fRef = 3EEA9A4A07B1D9C30015FCF4;
-		isa = PBXTextBookmark;
-		name = removeUsers;
-		rLen = 11;
-		rLoc = 1943;
-		rType = 0;
-		vrLen = 1857;
-		vrLoc = 678;
-	};
 	3EB62D0D07B9C907000C8112 = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {674, 1455}}";
+			sepNavIntBoundsRect = "{{0, 0}, {520, 1456}}";
 			sepNavSelRange = "{3162, 48}";
-			sepNavVisRect = "{{0, 699}, {674, 756}}";
+			sepNavVisRect = "{{0, 485}, {520, 962}}";
 			sepNavWindowFrame = "{{38, 138}, {470, 838}}";
 		};
 	};
 	3EB62D0E07B9C907000C8112 = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {674, 12179}}";
-			sepNavSelRange = "{1037, 0}";
-			sepNavVisRect = "{{0, 0}, {674, 756}}";
+			sepNavIntBoundsRect = "{{0, 0}, {711, 12180}}";
+			sepNavSelRange = "{5025, 10}";
+			sepNavVisRect = "{{0, 2285}, {711, 429}}";
 			sepNavWindowFrame = "{{130, 334}, {750, 558}}";
 		};
-	};
-	3EB62D1807B9C951000C8112 = {
-		fRef = 3EB62D0D07B9C907000C8112;
-		isa = PBXTextBookmark;
-		name = "iFolderData.h: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 212;
-		vrLoc = 0;
 	};
 	3EB84A730804825300517F77 = {
 		fileReference = 3EE276E007C40C2400A645A0;
@@ -2836,56 +1738,6 @@
 		lineNumber = 51;
 		state = 1;
 	};
-	3EB84A85080483DD00517F77 = {
-		fRef = 3EB8C510079393B60082AA86;
-		isa = PBXTextBookmark;
-		name = "PropertiesWindowController.m: 54";
-		rLen = 0;
-		rLoc = 1744;
-		rType = 0;
-		vrLen = 1026;
-		vrLoc = 1191;
-	};
-	3EB84A9908048CBB00517F77 = {
-		fRef = 3E215A4D07E73C310082EACE;
-		isa = PBXTextBookmark;
-		name = cleanup;
-		rLen = 0;
-		rLoc = 1367;
-		rType = 0;
-		vrLen = 1589;
-		vrLoc = 343;
-	};
-	3EB84A9A08048CBB00517F77 = {
-		fRef = 3EDD6AD807AEAECB008A2A3B;
-		isa = PBXTextBookmark;
-		name = "SimiasService.h: init_simias_gsoap";
-		rLen = 0;
-		rLoc = 2256;
-		rType = 0;
-		vrLen = 1812;
-		vrLoc = 477;
-	};
-	3EB84A9B08048CBB00517F77 = {
-		fRef = 3EDD6AD907AEAECB008A2A3B;
-		isa = PBXTextBookmark;
-		name = "SimiasService.m: cleanup_simias_gsoap";
-		rLen = 0;
-		rLoc = 1294;
-		rType = 0;
-		vrLen = 1789;
-		vrLoc = 544;
-	};
-	3EB84A9F0804911000517F77 = {
-		fRef = 3EDD6AD807AEAECB008A2A3B;
-		isa = PBXTextBookmark;
-		name = "SimiasService.h: 38";
-		rLen = 0;
-		rLoc = 1276;
-		rType = 0;
-		vrLen = 1812;
-		vrLoc = 477;
-	};
 	3EB8C510079393B60082AA86 = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {1104, 1385}}";
@@ -2900,90 +1752,6 @@
 			sepNavSelRange = "{1484, 12}";
 			sepNavVisRect = "{{0, 0}, {788, 646}}";
 		};
-	};
-	3EB8C51E079394780082AA86 = {
-		fRef = 3EB8C510079393B60082AA86;
-		isa = PBXTextBookmark;
-		name = "PropertiesWindowController.m: 1";
-		rLen = 0;
-		rLoc = 1028;
-		rType = 0;
-		vrLen = 89;
-		vrLoc = 0;
-	};
-	3EB8C51F079394780082AA86 = {
-		fRef = 3EB8C511079393B60082AA86;
-		isa = PBXTextBookmark;
-		name = "PropertiesWindowController.h: 1";
-		rLen = 0;
-		rLoc = 1026;
-		rType = 0;
-		vrLen = 127;
-		vrLoc = 0;
-	};
-	3EB956CD07DF666800985BBE = {
-		fRef = 3EB956CE07DF666800985BBE;
-		isa = PBXTextBookmark;
-		name = "(null): 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 1426;
-		vrLoc = 6747;
-	};
-	3EB956CE07DF666800985BBE = {
-		isa = PBXFileReference;
-		lastKnownFileType = text;
-		name = ifolder3.pot;
-		path = /Users/calvin/code/ifolder/ifolder/src/LinuxClient/po/ifolder3.pot;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3EB956D707DF682C00985BBE = {
-		isa = PBXFileReference;
-		lastKnownFileType = text;
-		name = iFolderData.cs;
-		path = /Users/calvin/code/ifolder/ifolder/src/LinuxClient/library/iFolderData.cs;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3EBB52A807CA877D003E8882 = {
-		fRef = 3EDA494207C681B7007CD1E0;
-		isa = PBXTextBookmark;
-		name = "MCTableView.h: 9";
-		rLen = 0;
-		rLoc = 86;
-		rType = 0;
-		vrLen = 91;
-		vrLoc = 0;
-	};
-	3EBE79EF07FC55DD00DC9A8E = {
-		fRef = 32CA4F630368D1EE00C91783;
-		isa = PBXTextBookmark;
-		name = "iFolder_Prefix.pch: 8";
-		rLen = 0;
-		rLoc = 145;
-		rType = 0;
-		vrLen = 145;
-		vrLoc = 0;
-	};
-	3EBE7A1007FC594C00DC9A8E = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = SecCertificate.h;
-		path = /System/Library/Frameworks/Security.framework/Versions/A/Headers/SecCertificate.h;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3EBE7A1407FC596900DC9A8E = {
-		fRef = 3EBE7A1007FC594C00DC9A8E;
-		isa = PBXTextBookmark;
-		name = "SecCertificate.h: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 1450;
-		vrLoc = 0;
 	};
 	3EBE7AA307FC76F200DC9A8E = {
 		uiCtxt = {
@@ -3001,265 +1769,35 @@
 			sepNavWindowFrame = "{{153, 313}, {750, 558}}";
 		};
 	};
-	3EBE7AB007FC7AF300DC9A8E = {
-		fRef = 3EBE7AA307FC76F200DC9A8E;
-		isa = PBXTextBookmark;
-		name = "AcceptCertSheetController.m: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 158;
-		vrLoc = 0;
-	};
-	3EBE7ADE07FC7BC000DC9A8E = {
-		fRef = 3E15669C07C5330600972388;
-		isa = PBXTextBookmark;
-		name = "-(void)setBarSize:(long long)topValue withFill:(long long)fillValue;\n";
-		rLen = 69;
-		rLoc = 1098;
-		rType = 0;
-		vrLen = 1173;
-		vrLoc = 0;
-	};
-	3EBE7ADF07FC7BC000DC9A8E = {
-		fRef = 3E15669B07C5330600972388;
-		isa = PBXTextBookmark;
-		name = "\tif ((self = [super initWithFrame:frameRect]) != nil)\n\t{\n\t\tdivNum = 1;\n\t}\n\treturn self;\n";
-		rLen = 88;
-		rLoc = 1119;
-		rType = 0;
-		vrLen = 1425;
-		vrLoc = 73;
-	};
-	3EC02F9607AED3D9001FF59D = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = iFolderStub.h;
-		path = /Users/calvin/code/ifolder/ifolder/src/libifolder/iFolderStub.h;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3EC3958A078C616200FABAF9 = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = stdsoap2.h;
-		path = /Users/calvin/code/ifolder/ifolder/src/libifolder/stdsoap2.h;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3EC395B1078C666D00FABAF9 = {
-		fRef = 3EC3958A078C616200FABAF9;
-		isa = PBXTextBookmark;
-		name = "struct soap\n";
-		rLen = 12;
-		rLoc = 30219;
-		rType = 0;
-		vrLen = 2100;
-		vrLoc = 31946;
-	};
-	3EC396BF078CB3D100FABAF9 = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = NSToolbar.h;
-		path = /System/Library/Frameworks/AppKit.framework/Versions/C/Headers/NSToolbar.h;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3EC396C0078CB3FC00FABAF9 = {
-		fRef = 3EC396BF078CB3D100FABAF9;
-		isa = PBXTextBookmark;
-		name = "NSToolbar.h: 10";
-		rLen = 0;
-		rLoc = 173;
-		rType = 0;
-		vrLen = 1080;
-		vrLoc = 0;
-	};
-	3EC3978D078CCB5E00FABAF9 = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = NSToolbarItem.h;
-		path = /System/Library/Frameworks/AppKit.framework/Versions/C/Headers/NSToolbarItem.h;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3EC397D5078CDE7500FABAF9 = {
-		fRef = 3EC3978D078CCB5E00FABAF9;
-		isa = PBXTextBookmark;
-		name = "@interface NSToolbarItem : NSObject <NSCopying, NSValidatedUserInterfaceItem> {\n";
-		rLen = 80;
-		rLoc = 303;
-		rType = 0;
-		vrLen = 1111;
-		vrLoc = 0;
-	};
-	3EC9F6C0076962BC0026B239 = {
-		fRef = 3E49BC6B0765224B0040812D;
-		isa = PBXBookmark;
-	};
-	3ECB77E407E0E2EF0027B957 = {
-		fRef = 089C165DFE840E0CC02AAC07;
-		isa = PBXTextBookmark;
-		name = "English: 4";
-		rLen = 0;
-		rLoc = 152;
-		rType = 0;
-		vrLen = 152;
-		vrLoc = 0;
-	};
-	3ECE9BAB07B0374A001155E6 = {
-		fRef = 3ECE9BAC07B0374A001155E6;
-		isa = PBXTextBookmark;
-		name = "(null): 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 2431;
-		vrLoc = 0;
-	};
-	3ECE9BAC07B0374A001155E6 = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.c;
-		name = simiasClient.c;
-		path = /Users/calvin/code/ifolder/simias/src/libsimias/simiasClient.c;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3ECE9BB707B0374A001155E6 = {
-		fRef = 3ECE9BB807B0374A001155E6;
-		isa = PBXTextBookmark;
-		name = "(null): 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 2431;
-		vrLoc = 0;
-	};
-	3ECE9BB807B0374A001155E6 = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.c;
-		name = simiasClient.c;
-		path = /Users/calvin/code/ifolder/simias/src/libsimias/simiasClient.c;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3ECFA36D08034B22000ED54A = {
+	3ED26BB3084F4C1C009A9F4E = {
 		fRef = 3E3BC75307AB5B7B00D2AE46;
 		isa = PBXTextBookmark;
-		name = "\t\t\t\tcase ns1__StatusCodes__SimiasLoginDisabled:\n\t\t\t\t{\n\t\t\t\t\tNSBeginAlertSheet(NSLocalizedString(@\"Unable to Connect to iFolder Server\", nil), \n\t\t\t\t\tNSLocalizedString(@\"OK\", nil), nil, nil, \n\t\t\t\t\tparentWindow, nil, nil, nil, nil, \n\t\t\t\t\tNSLocalizedString(@\"This user account has been disabled in iFolder.  Please contact your network administrator for assistance.\", nil));\n\t\t\t\t\tbreak;\n\t\t\t\t}\n";
-		rLen = 388;
-		rLoc = 5733;
-		rType = 0;
-		vrLen = 2410;
-		vrLoc = 4513;
-	};
-	3ED3CC9A0805DBFE002C811A = {
-		fRef = 3E215A4D07E73C310082EACE;
-		isa = PBXTextBookmark;
-		name = "MemberSearchResults.m: 343";
+		name = "AccountsController.m: 301";
 		rLen = 0;
-		rLoc = 8607;
+		rLoc = 10137;
 		rType = 0;
-		vrLen = 1752;
-		vrLoc = 7986;
+		vrLen = 2267;
+		vrLoc = 8955;
 	};
-	3ED3CCB00805DCE6002C811A = {
-		fRef = 3E1F31B207EA2AFB005E45BA;
+	3ED26BB4084F4C1C009A9F4E = {
+		fRef = 3EDD6AD807AEAECB008A2A3B;
 		isa = PBXTextBookmark;
-		name = "AuthStatus.m: 75";
+		name = "SimiasService.h: 28";
 		rLen = 0;
-		rLoc = 1700;
+		rLoc = 1094;
 		rType = 0;
-		vrLen = 704;
-		vrLoc = 1427;
+		vrLen = 2019;
+		vrLoc = 272;
 	};
-	3ED3CCBD0805E206002C811A = {
-		fRef = 3E4F5738078C30DA00313076;
+	3ED26BB8084F4C1C009A9F4E = {
+		fRef = 3EDD6AD807AEAECB008A2A3B;
 		isa = PBXTextBookmark;
-		name = "SyncLogWindowController.m: 130";
+		name = "SimiasService.h: 28";
 		rLen = 0;
-		rLoc = 3439;
+		rLoc = 1094;
 		rType = 0;
-		vrLen = 1082;
-		vrLoc = 2714;
-	};
-	3ED3CCBE0805E206002C811A = {
-		fRef = 3E8853CF07C6F80A00E8B6CD;
-		isa = PBXTextBookmark;
-		name = "KABubbleWindow.m: 10";
-		rLen = 0;
-		rLoc = 416;
-		rType = 0;
-		vrLen = 1729;
-		vrLoc = 0;
-	};
-	3ED3CCBF0805E206002C811A = {
-		fRef = 3E8853D107C6F80A00E8B6CD;
-		isa = PBXTextBookmark;
-		name = "KABubbleWindowController.m: 90";
-		rLen = 0;
-		rLoc = 3405;
-		rType = 0;
-		vrLen = 1633;
-		vrLoc = 2543;
-	};
-	3ED72F28081EDB6D005352EC = {
-		fRef = 3E81105E076FF18700E96819;
-		isa = PBXTextBookmark;
-		name = "LoginWindowController.m: 47";
-		rLen = 0;
-		rLoc = 1573;
-		rType = 0;
-		vrLen = 1905;
-		vrLoc = 5144;
-	};
-	3ED72F29081EDB6D005352EC = {
-		fRef = 3E3BC75407AB5B7B00D2AE46;
-		isa = PBXTextBookmark;
-		name = "AccountsController.h: 77";
-		rLen = 0;
-		rLoc = 2465;
-		rType = 0;
-		vrLen = 1567;
-		vrLoc = 1172;
-	};
-	3ED72F39081EE1D6005352EC = {
-		fRef = 3E70A40B078DFCD80075681D;
-		isa = PBXTextBookmark;
-		name = "iFolderPrefsController.m: 258";
-		rLen = 0;
-		rLoc = 5975;
-		rType = 0;
-		vrLen = 1950;
-		vrLoc = 5224;
-	};
-	3ED72F51081EE37B005352EC = {
-		fRef = 3EB62D0E07B9C907000C8112;
-		isa = PBXTextBookmark;
-		name = "iFolderData.m: 25";
-		rLen = 0;
-		rLoc = 1037;
-		rType = 0;
-		vrLen = 1663;
-		vrLoc = 0;
-	};
-	3ED9856307B34CC10050FE92 = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = NSArrayController.h;
-		path = /System/Library/Frameworks/AppKit.framework/Versions/C/Headers/NSArrayController.h;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3ED9856507B34D3A0050FE92 = {
-		fRef = 3ED9856307B34CC10050FE92;
-		isa = PBXTextBookmark;
-		name = "@interface NSArrayController : NSObjectController {\n";
-		rLen = 52;
-		rLoc = 277;
-		rType = 0;
-		vrLen = 2719;
-		vrLoc = 0;
+		vrLen = 2019;
+		vrLoc = 272;
 	};
 	3EDA494207C681B7007CD1E0 = {
 		uiCtxt = {
@@ -3276,230 +1814,21 @@
 			sepNavVisRect = "{{0, 0}, {788, 646}}";
 		};
 	};
-	3EDA495907C683A5007CD1E0 = {
-		fRef = 3EDA494307C681B7007CD1E0;
-		isa = PBXTextBookmark;
-		name = "MCTableView.m: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 59;
-		vrLoc = 0;
-	};
-	3EDA495D07C683A5007CD1E0 = {
-		fRef = 3EDA494207C681B7007CD1E0;
-		isa = PBXTextBookmark;
-		name = "MCTableView.h: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 90;
-		vrLoc = 0;
-	};
-	3EDB7565081DAE94007E814E = {
-		fRef = 3E70A40B078DFCD80075681D;
-		isa = PBXTextBookmark;
-		name = "iFolderPrefsController.m: sharedInstance";
-		rLen = 0;
-		rLoc = 1511;
-		rType = 0;
-		vrLen = 1371;
-		vrLoc = 418;
-	};
-	3EDB759E081DCCCE007E814E = {
-		fRef = 3E3405A5078B40EF00630436;
-		isa = PBXTextBookmark;
-		name = "SimiasEventHandlers.h: 24";
-		rLen = 0;
-		rLoc = 1044;
-		rType = 0;
-		vrLen = 1960;
-		vrLoc = 0;
-	};
-	3EDB75BC081DCF89007E814E = {
-		fRef = 3E1998AE07BAC93600AAC29A;
-		isa = PBXTextBookmark;
-		name = "SMQueue.m: 27";
-		rLen = 0;
-		rLoc = 1054;
-		rType = 0;
-		vrLen = 1237;
-		vrLoc = 400;
-	};
-	3EDB75BD081DCF89007E814E = {
-		fRef = 3E19989407BAC5BD00AAC29A;
-		isa = PBXTextBookmark;
-		name = "SimiasEventData.h: 47";
-		rLen = 0;
-		rLoc = 1466;
-		rType = 0;
-		vrLen = 1472;
-		vrLoc = 0;
-	};
-	3EDB75BE081DCF89007E814E = {
-		fRef = 3E19989507BAC5BD00AAC29A;
-		isa = PBXTextBookmark;
-		name = "SimiasEventData.m: 92";
-		rLen = 0;
-		rLoc = 2721;
-		rType = 0;
-		vrLen = 1597;
-		vrLoc = 109;
-	};
-	3EDB75DD081DF6BE007E814E = {
-		fRef = 3EE2781E07C44B7400A645A0;
-		isa = PBXTextBookmark;
-		name = "DiskSpace.m: 81";
-		rLen = 0;
-		rLoc = 1801;
-		rType = 0;
-		vrLen = 690;
-		vrLoc = 1298;
-	};
-	3EDB762B081E067B007E814E = {
-		fRef = 3EE276E007C40C2400A645A0;
-		isa = PBXTextBookmark;
-		name = "\t\t@try\n\t\t{\n\t\t\tSyncSize *ss = [ifolderService CalculateSyncSize:[curiFolder ID]];\n\t\t\t\n\t\t\tif(ss != nil)\n\t\t\t{\n\t\t\t\t[filesToSync setStringValue:[NSString stringWithFormat:@\"%d\", [ss SyncNodeCount]]];\n\t\t\t}\n\t\t}\n\t\t@catch(NSException *e)\n\t\t{\n\t\t\t[filesToSync setStringValue:NSLocalizedString(@\"unknown\", nil)];\n\t\t}\n";
-		rLen = 305;
-		rLoc = 3297;
-		rType = 0;
-		vrLen = 1236;
-		vrLoc = 2604;
-	};
-	3EDB762D081E067B007E814E = {
-		fRef = 3EB62D0D07B9C907000C8112;
-		isa = PBXTextBookmark;
-		name = "-(SyncSize *)getSyncSize:(NSString *)ifolderID;\n";
-		rLen = 48;
-		rLoc = 3162;
-		rType = 0;
-		vrLen = 1583;
-		vrLoc = 1634;
-	};
-	3EDB762F081E067B007E814E = {
-		fRef = 3EE278ED07C46CD500A645A0;
-		isa = PBXTextBookmark;
-		name = "SyncSize.m: 91";
-		rLen = 0;
-		rLoc = 1961;
-		rType = 0;
-		vrLen = 702;
-		vrLoc = 1341;
-	};
-	3EDB7631081E067B007E814E = {
-		fRef = 3EE278EC07C46CD500A645A0;
-		isa = PBXTextBookmark;
-		name = SyncNodeCount;
-		rLen = 13;
-		rLoc = 1302;
-		rType = 0;
-		vrLen = 1360;
-		vrLoc = 0;
-	};
 	3EDD6AD807AEAECB008A2A3B = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {716, 938}}";
-			sepNavSelRange = "{1094, 0}";
-			sepNavVisRect = "{{0, 228}, {711, 428}}";
+			sepNavIntBoundsRect = "{{0, 0}, {523, 1022}}";
+			sepNavSelRange = "{1725, 0}";
+			sepNavVisRect = "{{0, 259}, {523, 763}}";
+			sepNavWindowFrame = "{{1286, 121}, {562, 892}}";
 		};
 	};
 	3EDD6AD907AEAECB008A2A3B = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1104, 11815}}";
-			sepNavSelRange = "{14001, 0}";
-			sepNavVisRect = "{{0, 6577}, {1104, 356}}";
-			sepNavWindowFrame = "{{1293, 126}, {758, 886}}";
+			sepNavIntBoundsRect = "{{0, 0}, {921, 12768}}";
+			sepNavSelRange = "{4363, 15}";
+			sepNavVisRect = "{{0, 1770}, {921, 778}}";
+			sepNavWindowFrame = "{{1466, 75}, {960, 907}}";
 		};
-	};
-	3EDD6AF907AEB3BD008A2A3B = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = simiasStub.h;
-		path = /Users/calvin/code/ifolder/simias/src/libsimias/simiasStub.h;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3EE04CBE07EB5A4000FD289A = {
-		fRef = 3EE2781D07C44B7400A645A0;
-		isa = PBXTextBookmark;
-		name = "{\n\tNSMutableDictionary * properties;\n}\n\n-(NSMutableDictionary *) properties;\n-(void) setProperties: (NSDictionary *)newProperties;\n\n-(long long) AvailableSpace;\n-(long long) Limit;\n-(long long) UsedSpace;";
-		rLen = 204;
-		rLoc = 1160;
-		rType = 0;
-		vrLen = 1371;
-		vrLoc = 0;
-	};
-	3EE04CC207EB5A4000FD289A = {
-		fRef = 3E1F31B107EA2AFB005E45BA;
-		isa = PBXTextBookmark;
-		name = "\tenum ns1__StatusCodes {\tns1__StatusCodes__Success = 0, \n\t\t\t\t\t\t\tns1__StatusCodes__SuccessInGrace = 1, \n\t\t\t\t\t\t\tns1__StatusCodes__UnknownUser = 2, \n\t\t\t\t\t\t\tns1__StatusCodes__AmbiguousUser = 3, \n\t\t\t\t\t\t\tns1__StatusCodes__InvalidCredentials = 4, \n\t\t\t\t\t\t\tns1__StatusCodes__InvalidPassword = 5, \n\t\t\t\t\t\t\tns1__StatusCodes__AccountDisabled = 6, \n\t\t\t\t\t\t\tns1__StatusCodes__AccountLockout = 7, \n\t\t\t\t\t\t\tns1__StatusCodes__UnknownDomain = 8, \n\t\t\t\t\t\t\tns1__StatusCodes__InternalException = 9, \n\t\t\t\t\t\t\tns1__StatusCodes__MethodNotSupported = 10, \n\t\t\t\t\t\t\tns1__StatusCodes__Timeout = 11, \n\t\t\t\t\t\t\tns1__StatusCodes__Unknown = 12};";
-		rLen = 605;
-		rLoc = 1040;
-		rType = 0;
-		vrLen = 1760;
-		vrLoc = 0;
-	};
-	3EE04CC407EB5A4000FD289A = {
-		fRef = 3EE04CC507EB5A4000FD289A;
-		isa = PBXTextBookmark;
-		name = "(null): 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 1528;
-		vrLoc = 0;
-	};
-	3EE04CC507EB5A4000FD289A = {
-		isa = PBXFileReference;
-		lastKnownFileType = text;
-		name = PrefsAccountsPage.cs;
-		path = /Users/calvin/code/ifolder/ifolder/src/LinuxClient/library/PrefsAccountsPage.cs;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3EE238E507C1092900772501 = {
-		fRef = 3E8A565307C1039E00FDAD31;
-		isa = PBXBookmark;
-	};
-	3EE238E607C1092900772501 = {
-		fRef = 3EE449E307A7DF0000B93B2F;
-		isa = PBXBookmark;
-	};
-	3EE238E707C1092900772501 = {
-		fRef = 3EE238DB07C108EB00772501;
-		isa = PBXBookmark;
-	};
-	3EE238E807C1092900772501 = {
-		fRef = 3EE238DC07C108EB00772501;
-		isa = PBXBookmark;
-	};
-	3EE238E907C1092900772501 = {
-		fRef = 3EE238DD07C108EB00772501;
-		isa = PBXBookmark;
-	};
-	3EE238EA07C1092900772501 = {
-		fRef = 3EE238DE07C108EB00772501;
-		isa = PBXBookmark;
-	};
-	3EE238EB07C1092900772501 = {
-		fRef = 3E8A565307C1039E00FDAD31;
-		isa = PBXBookmark;
-	};
-	3EE238EC07C1092900772501 = {
-		fRef = 3EE238DB07C108EB00772501;
-		isa = PBXBookmark;
-	};
-	3EE238EF07C1092900772501 = {
-		fRef = 3EE238DC07C108EB00772501;
-		isa = PBXBookmark;
-	};
-	3EE238F007C1092900772501 = {
-		fRef = 3EE238DD07C108EB00772501;
-		isa = PBXBookmark;
-	};
-	3EE238F107C1092900772501 = {
-		fRef = 3EE238DE07C108EB00772501;
-		isa = PBXBookmark;
 	};
 	3EE276DF07C40C2400A645A0 = {
 		uiCtxt = {
@@ -3516,34 +1845,6 @@
 			sepNavVisRect = "{{0, 1491}, {674, 756}}";
 			sepNavWindowFrame = "{{15, 439}, {750, 558}}";
 		};
-	};
-	3EE276E907C40CA600A645A0 = {
-		fRef = 3EE276DF07C40C2400A645A0;
-		isa = PBXTextBookmark;
-		name = "PropGeneralController.h: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 485;
-		vrLoc = 0;
-	};
-	3EE2772907C41CD200A645A0 = {
-		fRef = 3EE2772A07C41CD200A645A0;
-		isa = PBXTextBookmark;
-		name = "(null): 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 1941;
-		vrLoc = 0;
-	};
-	3EE2772A07C41CD200A645A0 = {
-		isa = PBXFileReference;
-		lastKnownFileType = text;
-		name = iFolderAdvanced.cs;
-		path = /Users/calvin/code/ifolder/ifolder/src/iFolderShell/iFolderAdvanced.cs;
-		refType = 0;
-		sourceTree = "<absolute>";
 	};
 	3EE2780507C4466000A645A0 = {
 		fileReference = 3E256000077235290062AB7A;
@@ -3566,26 +1867,6 @@
 			sepNavVisRect = "{{0, 574}, {674, 756}}";
 		};
 	};
-	3EE2783207C451A200A645A0 = {
-		fRef = 3EE2781D07C44B7400A645A0;
-		isa = PBXTextBookmark;
-		name = "DiskSpace.h: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 209;
-		vrLoc = 0;
-	};
-	3EE2783507C451A200A645A0 = {
-		fRef = 3EE2781E07C44B7400A645A0;
-		isa = PBXTextBookmark;
-		name = "DiskSpace.m: 2";
-		rLen = 0;
-		rLoc = 98;
-		rType = 0;
-		vrLen = 1067;
-		vrLoc = 0;
-	};
 	3EE2787B07C45E2100A645A0 = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {644, 756}}";
@@ -3599,26 +1880,6 @@
 			sepNavSelRange = "{2358, 0}";
 			sepNavVisRect = "{{0, 0}, {788, 646}}";
 		};
-	};
-	3EE2788607C4603B00A645A0 = {
-		fRef = 3EE2787B07C45E2100A645A0;
-		isa = PBXTextBookmark;
-		name = "TimeSpan.h: 13";
-		rLen = 0;
-		rLoc = 178;
-		rType = 0;
-		vrLen = 207;
-		vrLoc = 0;
-	};
-	3EE2788907C4603B00A645A0 = {
-		fRef = 3EE2787C07C45E2100A645A0;
-		isa = PBXTextBookmark;
-		name = "TimeSpan.m: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 193;
-		vrLoc = 0;
 	};
 	3EE278EC07C46CD500A645A0 = {
 		uiCtxt = {
@@ -3634,85 +1895,21 @@
 			sepNavVisRect = "{{0, 643}, {674, 756}}";
 		};
 	};
-	3EE278FE07C46EC200A645A0 = {
-		fRef = 3EE278EC07C46CD500A645A0;
-		isa = PBXTextBookmark;
-		name = "SyncSize.h: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 207;
-		vrLoc = 0;
-	};
-	3EE2790107C46EC200A645A0 = {
-		fRef = 3EE278ED07C46CD500A645A0;
-		isa = PBXTextBookmark;
-		name = "SyncSize.m: 2";
-		rLen = 0;
-		rLoc = 97;
-		rType = 0;
-		vrLen = 1065;
-		vrLoc = 0;
-	};
-	3EE279C007C4832D00A645A0 = {
-		fRef = 3EC02F9607AED3D9001FF59D;
-		isa = PBXTextBookmark;
-		name = "struct ns1__DiskSpace\n";
-		rLen = 22;
-		rLoc = 2607;
-		rType = 0;
-		vrLen = 1642;
-		vrLoc = 1821;
-	};
-	3EE279EB07C487CB00A645A0 = {
-		fRef = 3E255FFF077235290062AB7A;
-		isa = PBXTextBookmark;
-		name = "-(SyncSize *)CalculateSyncSize:(NSString *)ifolderID;";
-		rLen = 53;
-		rLoc = 3088;
-		rType = 0;
-		vrLen = 1945;
-		vrLoc = 478;
-	};
-	3EE449EB07A7DF4D00B93B2F = {
-		fRef = 3EE449E107A7DEDB00B93B2F;
-		isa = PBXBookmark;
-	};
-	3EE58C0D07CBE1F20030ECF8 = {
-		fRef = 3E1998AD07BAC93600AAC29A;
-		isa = PBXTextBookmark;
-		name = "- (int) count;";
-		rLen = 14;
-		rLoc = 1157;
-		rType = 0;
-		vrLen = 1288;
-		vrLoc = 0;
-	};
 	3EE886E907B92E8B00484B9F = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1376, 16953}}";
-			sepNavSelRange = "{20879, 0}";
-			sepNavVisRect = "{{0, 10178}, {674, 756}}";
-			sepNavWindowFrame = "{{12, 68}, {728, 715}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1376, 21224}}";
+			sepNavSelRange = "{39826, 0}";
+			sepNavVisRect = "{{0, 19022}, {689, 795}}";
+			sepNavWindowFrame = "{{334, 78}, {728, 924}}";
 		};
 	};
 	3EE886EA07B92E8B00484B9F = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {674, 1791}}";
-			sepNavSelRange = "{1987, 69}";
-			sepNavVisRect = "{{0, 357}, {674, 756}}";
-			sepNavWindowFrame = "{{245, 229}, {750, 558}}";
+			sepNavIntBoundsRect = "{{0, 0}, {731, 1876}}";
+			sepNavSelRange = "{4380, 0}";
+			sepNavVisRect = "{{0, 1293}, {731, 569}}";
+			sepNavWindowFrame = "{{1347, 220}, {770, 698}}";
 		};
-	};
-	3EE886F507B9371F00484B9F = {
-		fRef = 3EE886EA07B92E8B00484B9F;
-		isa = PBXTextBookmark;
-		name = "iFolderApplication.h: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 101;
-		vrLoc = 0;
 	};
 	3EE8881707B9620F00484B9F = {
 		uiCtxt = {
@@ -3730,16 +1927,6 @@
 			sepNavWindowFrame = "{{268, 208}, {750, 558}}";
 		};
 	};
-	3EE8883907B9664400484B9F = {
-		fRef = 3EE8881807B9620F00484B9F;
-		isa = PBXTextBookmark;
-		name = "iFolderWindowController.m: 1";
-		rLen = 0;
-		rLoc = 1025;
-		rType = 0;
-		vrLen = 561;
-		vrLoc = 0;
-	};
 	3EEA9A4907B1D9C30015FCF4 = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {1004, 7545}}";
@@ -3755,26 +1942,6 @@
 			sepNavVisRect = "{{0, 210}, {646, 771}}";
 			sepNavWindowFrame = "{{291, 187}, {750, 558}}";
 		};
-	};
-	3EEA9A5307B1DA120015FCF4 = {
-		fRef = 3EEA9A4A07B1D9C30015FCF4;
-		isa = PBXTextBookmark;
-		name = "PropSharingController.h: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 387;
-		vrLoc = 0;
-	};
-	3EEA9A5407B1DA120015FCF4 = {
-		fRef = 3EEA9A4907B1D9C30015FCF4;
-		isa = PBXTextBookmark;
-		name = "PropSharingController.m: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 254;
-		vrLoc = 0;
 	};
 	3EEA9A6807B1DC4F0015FCF4 = {
 		uiCtxt = {
@@ -3792,138 +1959,12 @@
 			sepNavWindowFrame = "{{15, 179}, {615, 818}}";
 		};
 	};
-	3EEA9A8807B1DE2D0015FCF4 = {
-		fRef = 3EEA9A6807B1DC4F0015FCF4;
-		isa = PBXTextBookmark;
-		name = "iFolderUser.h: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 212;
-		vrLoc = 0;
-	};
-	3EEA9A8D07B1DE2D0015FCF4 = {
-		fRef = 3EEA9A6907B1DC4F0015FCF4;
-		isa = PBXTextBookmark;
-		name = "iFolderUser.m: 49";
-		rLen = 0;
-		rLoc = 1377;
-		rType = 0;
-		vrLen = 622;
-		vrLoc = 1107;
-	};
-	3EEAA521078F01EE00EE44EE = {
-		fRef = 3E70A408078DFB8A0075681D;
-		isa = PBXBookmark;
-	};
-	3EEAA55F078F19C200EE44EE = {
-		fRef = 3E70A408078DFB8A0075681D;
-		isa = PBXBookmark;
-	};
-	3EF4E52B07C2E98A00AD5D7C = {
-		isa = PBXFileReference;
-		lastKnownFileType = text.xml;
-		name = Simias.wsdl;
-		path = /Users/calvin/code/ifolder/simias/src/WebService/Simias.wsdl;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3EF4E54507C2EB6400AD5D7C = {
-		fRef = 3EF4E52B07C2E98A00AD5D7C;
-		isa = PBXTextBookmark;
-		name = "Simias.wsdl: 22";
-		rLen = 0;
-		rLoc = 1090;
-		rType = 0;
-		vrLen = 3049;
-		vrLoc = 0;
-	};
-	3EF4E54707C2EB6400AD5D7C = {
-		fRef = 3EF4E52B07C2E98A00AD5D7C;
-		isa = PBXTextBookmark;
-		name = "Simias.wsdl: 22";
-		rLen = 0;
-		rLoc = 1090;
-		rType = 0;
-		vrLen = 3049;
-		vrLoc = 0;
-	};
-	3EF97A2007DF691800BA8880 = {
-		fRef = 3EB956D707DF682C00985BBE;
-		isa = PBXTextBookmark;
-		name = "iFolderData.cs: 77";
-		rLen = 0;
-		rLoc = 2040;
-		rType = 0;
-		vrLen = 814;
-		vrLoc = 1794;
-	};
-	3EF97A2107DF691800BA8880 = {
-		fRef = 3E99E56207D37B230098C250;
-		isa = PBXTextBookmark;
-		name = "front.html: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 1329;
-		vrLoc = 0;
-	};
-	3EF97A2407DF691800BA8880 = {
-		fRef = 3EB62D0E07B9C907000C8112;
-		isa = PBXTextBookmark;
-		name = "iFolderData.m: 573";
-		rLen = 0;
-		rLoc = 14910;
-		rType = 0;
-		vrLen = 1425;
-		vrLoc = 0;
-	};
-	3EF97A5207DF741F00BA8880 = {
-		fRef = 3E8853CB07C6F80A00E8B6CD;
-		isa = PBXTextBookmark;
-		name = "iFolderNotificationController.m: 131";
-		rLen = 0;
-		rLoc = 4143;
-		rType = 0;
-		vrLen = 1642;
-		vrLoc = 0;
-	};
-	3EF97A7307DF778600BA8880 = {
-		fRef = 3E9B1B02077927E20072994B;
-		isa = PBXTextBookmark;
-		name = "SetupiFolderSheetController.h: 20";
-		rLen = 0;
-		rLoc = 931;
-		rType = 0;
-		vrLen = 1278;
-		vrLoc = 351;
-	};
 	3EF97A7C07DF77E100BA8880 = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {1088, 4255}}";
 			sepNavSelRange = "{8891, 0}";
 			sepNavVisRect = "{{0, 3609}, {788, 646}}";
 		};
-	};
-	3EF97A8007DF77EF00BA8880 = {
-		fRef = 3E528C3107754B8E0064F585;
-		isa = PBXTextBookmark;
-		name = "CreateiFolderSheetController.h: 37";
-		rLen = 0;
-		rLoc = 1402;
-		rType = 0;
-		vrLen = 1481;
-		vrLoc = 0;
-	};
-	3EF97A8D07DF784800BA8880 = {
-		fRef = 3EF97A7C07DF77E100BA8880;
-		isa = PBXTextBookmark;
-		name = "English: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 1536;
-		vrLoc = 0;
 	};
 	8D1107260486CEB800E47090 = {
 		activeExec = 0;
