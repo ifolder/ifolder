@@ -12,7 +12,7 @@ msgstr ""
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ASCII\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 #: src/LinuxClient/application/iFolderApplication.cs:368
 #: src/LinuxClient/application/iFolderApplication.cs:459
@@ -273,7 +273,7 @@ msgstr "Access for {0}"
 #: src/LinuxClient/library/iFolderAccessDialog.cs:93
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:144
 msgid "Access"
-msgstr "   hozzáférés            %+5m0  %+4m1.%k2\n"
+msgstr "   hozzáférés            %+5m0  %+4m1.%k2"
 #: src/LinuxClient/library/iFolderAccessDialog.cs:124
 msgid "Make this user the owner of the iFolder."
 msgstr "Make this user the owner of the iFolder."
@@ -762,7 +762,7 @@ msgstr "Synchronizing: {0}"
 #: src/LinuxClient/library/LogWindow.cs:296
 #, csharp-format
 msgid "Deleting file: {0}"
-msgstr "fájl törlése\n"
+msgstr "fájl törlése: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1783
 #: src/LinuxClient/library/LogWindow.cs:324
 #, csharp-format
