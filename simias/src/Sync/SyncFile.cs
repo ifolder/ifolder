@@ -346,6 +346,13 @@ namespace Simias.Sync
 					File.Move(workFile, partialFile);
 					stream = File.Open(partialFile, FileMode.Open, FileAccess.Read, FileShare.None);
 				}
+				else if (oldNode != null)
+				{
+					// The file may have been renamed.
+					string oldPath = oldNode.GetFullPath(collection);
+					if (oldPath != file)
+						stream = File.Open(oldPath, FileMode.Open, FileAccess.Read, FileShare.None);
+				}
 			}
 			// Create the file in the parent directory and then move to the work area.
 			// This will insure that the proper attributes are set.
