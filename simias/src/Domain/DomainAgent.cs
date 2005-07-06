@@ -173,7 +173,21 @@ namespace Simias.DomainServices
 
 			request.Headers.Add(
 				Simias.Security.Web.AuthenticationService.Login.BasicEncodingHeader,
+#if MONO
+				// bht: Fix for Bug 73324 - Client fails to authenticate if LDAP
+				// username has an international character in it.
+				//
+				// Mono converts the username and password to a byte array
+				// without paying attention to the encoding.  In NLD, the
+				// default encoding is UTF-8.  Without this fix, we ended up
+				// sending the username and password in 1252 but the server
+				// was attempting to decode it as UTF-8.  This fix forces the
+				// username and password to be sent with Windows-1252 encoding
+				// which properly gets decoded on the server.
+				System.Text.Encoding.GetEncoding(1252).WebName );
+#else
 				System.Text.Encoding.Default.WebName );
+#endif
 			
 			request.Method = "POST";
 			request.ContentLength = 0;
