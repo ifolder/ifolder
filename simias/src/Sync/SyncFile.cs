@@ -360,7 +360,7 @@ namespace Simias.Sync
 					// The file may have been renamed.
 					string oldPath = oldNode.GetFullPath(collection);
 					if (oldPath != file)
-						stream = File.Open(oldNode.GetFullPath(collection), FileMode.Open, FileAccess.Read, FileShare.None);
+						stream = File.Open(oldPath, FileMode.Open, FileAccess.Read, FileShare.None);
 				}
 			}
 			// Create the file in the parent directory and then move to the work area.
