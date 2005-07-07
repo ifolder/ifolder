@@ -1006,7 +1006,7 @@ namespace Novell.iFolder
 						{
 							headerText = Util.GS("Invalid Characters in Name");
 							errText = string.Format(Util.GS("The specified name contains invalid characters.  Please choose a different name and try again.\n\nNames must not contain any of these characters: {0}"),
-													new string(simws.GetInvalidSyncFilenameChars()));
+													simws.GetInvalidSyncFilenameChars());
 						}
 						else if (e.Message.IndexOf("already exists") >= 0)
 						{

@@ -1288,7 +1288,7 @@ namespace Novell.iFolder
 			if (!ifws.CanBeiFolder(fullPath))
 			{
 				// Check to see if the name has any invalid characters in it
-				char[] invalidChars = simws.GetInvalidSyncFilenameChars();
+				char[] invalidChars = simws.GetInvalidSyncFilenameChars().ToCharArray();
 				if (name.IndexOfAny(invalidChars) >= 0)
 				{
 					iFolderMsgDialog dg = new iFolderMsgDialog(
