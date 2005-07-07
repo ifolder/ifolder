@@ -823,6 +823,47 @@ namespace Novell.iFolder
 				DomainInformation domainInfo;
 				if (NewAccountMode)
 				{
+					// Check if a proxy needs to be set
+					GnomeHttpProxy proxy = new GnomeHttpProxy( serverEntry.Text );
+					string user = null;
+					string password = null;
+					if ( proxy.IsProxySet == true )
+					{
+						if ( proxy.CredentialsSet == true )
+						{
+							user = proxy.Username;
+							password = proxy.Password;
+						}
+						
+						simws.SetProxyAddress( 
+							"http://" + serverEntry.Text, 
+							"http://" + proxy.Host, 
+							user, 
+							password );
+							
+						// Always need to set both secure and unsecure
+						// so if I don't have a real secure setting
+						// set the normal unsecure as the secure setting
+						if ( proxy.IsSecureProxySet == false )
+						{
+							simws.SetProxyAddress( 
+								"https://" + serverEntry.Text, 
+								"http://" + proxy.Host, 
+								user, 
+								password );
+						}
+					}
+					
+					// Secure proxy
+					if ( proxy.IsSecureProxySet == true )
+					{
+						simws.SetProxyAddress( 
+							"https://" + serverEntry.Text, 
+							"http://" + proxy.SecureHost, 
+							user, 
+							password );
+					}
+				
 					domainInfo = simws.ConnectToDomain(nameEntry.Text, passEntry.Text, serverEntry.Text);
 				}
 				else
