@@ -845,6 +845,7 @@ namespace Simias.Web
 												 string Password,
 												 string Host)
 		{
+log.Debug("SimiasWebService.ConnectToDomain() called to connect to {0} as {1}", Host, UserName);
 			DomainInformation domainInfo = null;
 			DomainAgent da = new DomainAgent();
 			// Normalize the host address.
@@ -954,9 +955,9 @@ namespace Simias.Web
 		/// <returns>The characters that cannot be used as a file or directory name for synchronizable files.</returns>
 		[WebMethod(EnableSession=true, Description="Returns the characters which cannot be used for filenames in the Simias namespace (files and folders that contain any of these characters cannot be synchronized with iFolder and conflicts will be generated).")]
 		[SoapDocumentMethod]
-		public char[] GetInvalidSyncFilenameChars()
+		public string GetInvalidSyncFilenameChars()
 		{
-			return Simias.Sync.SyncFile.InvalidChars;
+			return new string(Simias.Sync.SyncFile.InvalidChars);
 		}
 
 		/// <summary>
