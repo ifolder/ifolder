@@ -1038,8 +1038,8 @@
 		<row><td>ISSelfRegisterFinalize</td><td>1</td><td>ISSELFREG.DLL</td><td>ISSelfRegisterFinalize</td><td/></row>
 		<row><td>ISSetAllUsers</td><td>257</td><td>SetAllUsers.dll</td><td>SetAllUsers</td><td/></row>
 		<row><td>ISUnSelfRegisterFiles</td><td>1025</td><td>ISSELFREG.DLL</td><td>ISUnSelfRegisterFiles</td><td/></row>
-		<row><td>InstallUtil_iFolderApp</td><td>114</td><td>LOCATION_OF_INSTALLUTIL</td><td>/LogToConsole=false /ShowCallStack /LogFile=iFolderApp.InstallLog "[INSTALLDIR]iFolderApp.exe"</td><td>Runs InstallUtil on iFolderApp.exe to install it</td></row>
-		<row><td>InstallUtil_iFolderApp_uninstall</td><td>114</td><td>LOCATION_OF_INSTALLUTIL</td><td>/uninstall /LogToConsole=false /ShowCallStack /LogFile=iFolderApp.InstallLog "[INSTALLDIR]iFolderApp.exe"</td><td>Runs InstallUtil on iFolderApp.exe to uninstall it</td></row>
+		<row><td>InstallUtil_iFolderApp</td><td>114</td><td>LOCATION_OF_INSTALLUTIL</td><td>/LogToConsole=true /ShowCallStack /LogFile=iFolderApp.InstallLog "[INSTALLDIR]iFolderApp.exe"</td><td>Runs InstallUtil on iFolderApp.exe to install it</td></row>
+		<row><td>InstallUtil_iFolderApp_uninstall</td><td>114</td><td>LOCATION_OF_INSTALLUTIL</td><td>/uninstall /LogToConsole=true /ShowCallStack /LogFile=iFolderApp.UninstallLog "[INSTALLDIR]iFolderApp.exe"</td><td>Runs InstallUtil on iFolderApp.exe to uninstall it</td></row>
 		<row><td>RegAsm_iFolderComponent</td><td>50</td><td>LOCATION_OF_REGASM</td><td>"[INSTALLDIR]iFolderComponent.dll" /codebase /silent /nologo</td><td>Registers iFolderComponent.dll using RegAsm.exe on target machine</td></row>
 		<row><td>RegAsm_iFolderComponent_uninstall</td><td>50</td><td>LOCATION_OF_REGASM</td><td>"[INSTALLDIR]iFolderComponent.dll" /unregister /silent /nologo</td><td>Unregisters iFolderComponent.dll using RegAsm.exe on target machine</td></row>
 		<row><td>SetARPINSTALLLOCATION</td><td>51</td><td>ARPINSTALLLOCATION</td><td>[INSTALLDIR]</td><td/></row>
@@ -12258,6 +12258,7 @@
 		<row><td>ISSelfRegisterFinalize</td><td/><td>6601</td><td/><td/></row>
 		<row><td>ISSetAllUsers</td><td>Not Installed</td><td>10</td><td/><td/></row>
 		<row><td>ISUnSelfRegisterFiles</td><td/><td>2202</td><td/><td/></row>
+		<row><td>InstallExecute</td><td/><td>6406</td><td/><td/></row>
 		<row><td>InstallFiles</td><td/><td>4000</td><td>InstallFiles</td><td/></row>
 		<row><td>InstallFinalize</td><td/><td>6410</td><td>InstallFinalize</td><td/></row>
 		<row><td>InstallInitialize</td><td/><td>1501</td><td>InstallInitialize</td><td/></row>
@@ -12291,7 +12292,7 @@
 		<row><td>RegisterUser</td><td/><td>6000</td><td>RegisterUser</td><td/></row>
 		<row><td>RemoveDuplicateFiles</td><td/><td>3400</td><td>RemoveDuplicateFiles</td><td/></row>
 		<row><td>RemoveEnvironmentStrings</td><td/><td>3300</td><td>RemoveEnvironmentStrings</td><td/></row>
-		<row><td>RemoveExistingProducts</td><td/><td>1410</td><td>RemoveExistingProducts</td><td/></row>
+		<row><td>RemoveExistingProducts</td><td/><td>6409</td><td>RemoveExistingProducts</td><td/></row>
 		<row><td>RemoveFiles</td><td/><td>3500</td><td>RemoveFiles</td><td/></row>
 		<row><td>RemoveFolders</td><td/><td>3600</td><td>RemoveFolders</td><td/></row>
 		<row><td>RemoveIniValues</td><td/><td>3100</td><td>RemoveIniValues</td><td/></row>
@@ -12933,7 +12934,7 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<col def="S255">Remove</col>
 		<col def="s72">ActionProperty</col>
 		<col def="S72">ISDisplayName</col>
-		<row><td>{321B5343-FC7B-4D9E-B468-33670BF00E99}</td><td>01.00.0000</td><td>01.00.0000</td><td>1033</td><td>769</td><td/><td>OLDAPPFOUND</td><td/></row>
+		<row><td>{321B5343-FC7B-4D9E-B468-33670BF00E99}</td><td>01.00.0000</td><td>03.00.0000</td><td>1033</td><td>769</td><td/><td>OLDAPPFOUND</td><td/></row>
 	</table>
 
 	<table name="Verb">
