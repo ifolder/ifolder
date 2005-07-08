@@ -62,6 +62,11 @@ C = InvisibleChapter	-  Used by the HLP2MOAB process only as a way to group a bu
 			<FILENAME>data\bq1r110.html</FILENAME>
 			<TITLE>Key Features of iFolder</TITLE>
 			</TOPIC>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\bwcku86.html</FILENAME>
+			<TITLE>Cross-Platform Considerations</TITLE>
+			</TOPIC>
 		</TOPIC>
 
 		<TOPIC TYPE="ExpandableHeirarchy" ELEMTYPE="CHAPTER">
@@ -71,11 +76,6 @@ C = InvisibleChapter	-  Used by the HLP2MOAB process only as a way to group a bu
 			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
 			<FILENAME>data\bw08fxi.html</FILENAME>
 			<TITLE>Starting the iFolder Client</TITLE>
-			</TOPIC>
-
-			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
-			<FILENAME>data\bvwppw5.html</FILENAME>
-			<TITLE>Configuring Local Firewall Settings for iFolder Traffic</TITLE>
 			</TOPIC>
 
 			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
@@ -102,11 +102,31 @@ C = InvisibleChapter	-  Used by the HLP2MOAB process only as a way to group a bu
 			<FILENAME>data\preferences.html</FILENAME>
 			<TITLE>Configuring iFolder Preferences for the Client</TITLE>
 			</TOPIC>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\bvwppw5.html</FILENAME>
+			<TITLE>Configuring Local Firewall Settings for iFolder Traffic</TITLE>
+			</TOPIC>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\bwbirb9.html</FILENAME>
+			<TITLE>Configuring Local Virus Scanner Settings for iFolder Traffic</TITLE>
+			</TOPIC>
 		</TOPIC>
 
 		<TOPIC TYPE="ExpandableHeirarchy" ELEMTYPE="CHAPTER">
 		<FILENAME>data\myifolders.html</FILENAME>
 		<TITLE>Managing iFolders</TITLE>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\bx08x4y.html</FILENAME>
+			<TITLE>Guidelines for Locating iFolders</TITLE>
+			</TOPIC>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\bwensdb.html</FILENAME>
+			<TITLE>Guidelines for File Types and Sizes to Be Synchronized</TITLE>
+			</TOPIC>
 
 			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
 			<FILENAME>data\bwagrrn.html</FILENAME>

@@ -6,11 +6,11 @@
 <meta http-equiv="Content-Language" content="en">
 
 <meta name="Generator" content="Novell HTML Conversion 10 March 2004">
-<meta name="Generation-Date" content="Friday, May 20, 2005 02:10">
-<meta name="Content-Date" content="Mon, 20 May 2005 12:00:00 GMT">
+<meta name="Generation-Date" content="Thursday, July 07, 2005 17:15">
+<meta name="Content-Date" content="Mon, 07 Jul 2005 12:00:00 GMT">
 <meta name="Robots" content="INDEX, FOLLOW">
-<meta name="Document_Number" content="zHTML xD.0000.0000.0003.0005.">
-<meta name="Author" content="zHTML xD.0000.0000.0003.0005.">
+<meta name="Document_Number" content="zHTML xD.0000.0000.0003.0007.">
+<meta name="Author" content="zHTML xD.0000.0000.0003.0007.">
 <meta name="Product_Class" content="">
 <meta name="Product_and_Version" content="iFolder(TM)">
 <meta name="Copyright" content="Copyright Novell, Inc. 1983-2004">
@@ -46,7 +46,41 @@ loadMenu();
 <div class="Topic" title="Viewing and Configuring Properties of an iFolder">
 
 <h2 class="TOPIC-TITLE"><br />Viewing and Configuring Properties of an iFolder</h2>
-<p class="TOPIC">You can configure a quota for an iFolder and view other information about it.</p>
+<p class="TOPIC">Use the iFolders Properties page to view and configure the following information about a selected iFolder.</p>
+<h4 class="BRIDGEHEAD"><br />Understanding iFolder Properties</h4>
+<p class="TOPIC">The following parameters report the disk space used on the server:</p>
+<table class="TABLENOTITLE" border="0" cellpadding="5" cellspacing="0">
+<tr class="HEADERROW"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bx0p9os"></a><em class="TBLHEAD">Parameter</em></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">Description</em></th>
+</tr>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bx0p9ot"></a><p class="ENTRY">Available</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">The total amount of server disk space currently available for files or directories in the selected iFolder. The value is equal to the quota minus the used space.</p></td>
+</tr>
+<tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bx0p9ou"></a><p class="ENTRY">Used</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">The total amount of server disk space currently consumed by all files and directories in the selected iFolder.</p></td>
+</tr>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bx0p9ov"></a><p class="ENTRY">One of the following:</p><ul class="LISTBULLETT"><li class="BULLETITEMT">Set Quota </li><li class="BULLETITEMT">Quota </li></ul></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><ul class="LISTBULLETT"><li class="BULLETITEMT"><p class="PARAWITHTITLE"><a name="bx0p9ow"></a><em class="PARAWITHTITLE">Set Quota: </em>If you are the iFolder owner, you can specify a quota for the iFolder.</p></li><li class="BULLETITEMT"><p class="PARAWITHTITLE"><a name="bx0p9ox"></a><em class="PARAWITHTITLE">Quota: </em>If you are a member, the value reports the total amount of server disk space allocated to the selected iFolder by the iFolder owner. If no quota is set, the value is empty or N/A (not applicable).</p></li></ul></td>
+</tr></table>
+
+<p class="TOPIC">The following parameters report the synchronization status for the local copy of the iFolder:</p>
+<table class="TABLENOTITLE" border="0" cellpadding="5" cellspacing="0">
+<tr class="HEADERROW"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bx0ozz9"></a><em class="TBLHEAD">Parameter</em></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">Description</em></th>
+</tr>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bx0ozza"></a><p class="ENTRY">Last Successful Synchronization</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">The completion time of the most recent successful synchronization of your  local copy of the iFolder with the iFolder server.</p></td>
+</tr>
+<tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bx0ozzb"></a><p class="ENTRY">Files/Folders to Synchronize</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">The total number of storage items (files and folders) in the iFolder that need to be synchronized.</p></td>
+</tr>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bx0ozzc"></a><p class="ENTRY">Automatically Synchronizes Every</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">The synchronization interval for the iFolder. Specify the value in minutes, hours, or days. The interval cannot override the minimum interval specified by the iFolder administrator for the server or your account on the server, but it can override the client-wide synchronization interval.</p></td>
+</tr>
+<tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bx0p465"></a><p class="ENTRY">Synchronize Now</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Click the button to initiate a synchronization on demand.</p></td>
+</tr></table>
+
 <h4 class="BRIDGEHEAD"><br />Accessing iFolder Properties from a File Manager</h4>
 <ol class="STEPLIST">
 <li class="STEP"><a name="bv2h29s"></a>
@@ -55,10 +89,10 @@ loadMenu();
 <li class="STEP"><a name="bv2h2hg"></a>
 <p class="STEP">Right-click the iFolder, then click iFolder &gt; Properties.</p></li>
 </ol>
-<h4 class="BRIDGEHEAD"><br />Accessing iFolder Properties from My iFolders</h4>
+<h4 class="BRIDGEHEAD"><br />Accessing iFolder Properties from the iFolders Browser</h4>
 <ol class="STEPLIST">
 <li class="STEP"><a name="bv2h017"></a>
-<p class="STEP">In the status bar, right-click the iFolder application icon <img src="../graphics/ifolder16.png" alt="iFolder Application Icon" />, then click My iFolders to open the My iFolders browser.</p></li>
+<p class="STEP">In the Notification area, right-click the iFolder application icon <img src="../graphics/ifolder16.png" alt="iFolder Application Icon" />, then click iFolders to open the iFolders browser.</p></li>
 
 <li class="STEP"><a name="bv2h0o4"></a>
 <p class="STEP">In the list of iFolders, select the iFolder, then click Properties.</p></li>

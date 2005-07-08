@@ -6,11 +6,11 @@
 <meta http-equiv="Content-Language" content="en">
 
 <meta name="Generator" content="Novell HTML Conversion 10 March 2004">
-<meta name="Generation-Date" content="Friday, May 20, 2005 02:10">
-<meta name="Content-Date" content="Mon, 20 May 2005 12:00:00 GMT">
+<meta name="Generation-Date" content="Thursday, July 07, 2005 17:15">
+<meta name="Content-Date" content="Mon, 07 Jul 2005 12:00:00 GMT">
 <meta name="Robots" content="INDEX, FOLLOW">
-<meta name="Document_Number" content="zHTML xD.0000.0000.0003.0007.">
-<meta name="Author" content="zHTML xD.0000.0000.0003.0007.">
+<meta name="Document_Number" content="zHTML xD.0000.0000.0003.0009.">
+<meta name="Author" content="zHTML xD.0000.0000.0003.0009.">
 <meta name="Product_Class" content="">
 <meta name="Product_and_Version" content="iFolder(TM)">
 <meta name="Copyright" content="Copyright Novell, Inc. 1983-2004">
@@ -46,20 +46,67 @@ loadMenu();
 <div class="Topic" title="Resolving File Conflicts">
 
 <h2 class="TOPIC-TITLE"><br />Resolving File Conflicts</h2>
-<p class="TOPIC">When conflicts occur between file versions saved at the same time or when a filename differs by case only, the file is flagged as a Name Collision and is stored in the conflict area and an alert is sent to flag the file through the iFolder client. Version conflicts should be coordinated with other members before resolving the conflict. Filename conflicts can be resolved by renaming one of the conflicted files. </p>
+<p class="TOPIC">When conflicts occur between file versions saved at the same time or when a filename differs by case only, the file is flagged as a Name Conflict and is stored in the conflict area and an alert is sent to flag the file through the iFolder client. </p>
+<h4 class="BRIDGEHEAD"><br />Version Conflicts</h4>
+<p class="TOPIC">Version conflicts should be coordinated with other members before resolving the conflict. Then choose the correct version in the Conflict Resolution dialog.</p>
 <ol class="STEPLIST">
 <li class="STEP"><a name="bvin9s9"></a>
 <p class="STEP">When a conflict occurs, a pop-up message appears in the Notification area. Click the X to dismiss the message.</p>
 <p class="STEP">You can disable the pop-up behavior by setting the preference in the iFolder Preferences &gt; General tab.</p></li>
 
 <li class="STEP"><a name="bvin9nq"></a>
-<p class="STEP">In the status bar, right-click the iFolder icon <img src="../graphics/ifolder16.png" alt="iFolder Application Icon" />, then click My iFolders to open the My iFolders browser.</p></li>
+<p class="STEP">In the Notification area, right-click the iFolder icon <img src="../graphics/ifolder16.png" alt="iFolder Application Icon" />, then click iFolders to open the iFolders browser.</p></li>
 
 <li class="STEP"><a name="bvinc1r"></a>
-<p class="STEP">Click Resolve <img src="../graphics/conflict_resolution.png" alt="Conflicts Resolution Icon" /> to view the Resolve Conflicts dialog box.</p></li>
+<p class="STEP">Select the file in conflict, then click Resolve <img src="../graphics/conflict_resolution.png" alt="Conflicts Resolution Icon" /> to view the Resolve Conflicts dialog box.</p></li>
+
+<li class="STEP"><a name="bx1anvu"></a>
+<p class="STEP">View the information for the file on your local machine and the file on the server to determine which version of the file you want to keep, then click Save This Version to keep the correct file version.</p></li>
 
 <li class="STEP"><a name="bvincoe"></a>
-<p class="STEP">Resolve the conflict, then click OK.</p></li>
+<p class="STEP">When you are done resolving the conflict, click OK.</p></li>
+</ol>
+<h4 class="BRIDGEHEAD"><br />Filename Conflicts</h4>
+<p class="TOPIC">Filename conflicts occur when the names of the local file version and the server file version differ by case. The content might differ, or it might be the same. These type of conflicts can be resolved by renaming the files, but be careful about where you rename the file. </p>
+<ul class="LISTBULLET">
+<li class="BULLETITEM">If the content is the same, you can rename one of the files in the Resolve Conflicts dialog box.</li>
+
+<li class="BULLETITEM">If the content is different, make sure to make a copy of the local file and give it a different name, then return to the Resolve Conflicts dialog box and save the server version of the file. This allows both versions of the file to exist in the iFolder with different filenames. If you rename a file version within the Resolve Conflicts dialog box, that version of the file overwrites the the other, and the content of the other file is destroyed. </li>
+</ul>
+<ol class="STEPLIST">
+<li class="STEP"><a name="bx1b07n"></a>
+<p class="STEP">When a conflict occurs, a pop-up message appears in the Notification area. Click the X to dismiss the message.</p></li>
+
+<li class="STEP"><a name="bx1b07o"></a>
+<p class="STEP">In the Notification area, right-click the iFolder icon <img src="../graphics/ifolder16.png" alt="iFolder Application Icon" />, then click iFolders to open the iFolders browser.</p></li>
+
+<li class="STEP"><a name="bx1b07p"></a>
+<p class="STEP">Select the file in conflict, then click Resolve <img src="../graphics/conflict_resolution.png" alt="Conflicts Resolution Icon" /> to view the Resolve Conflicts dialog box.</p></li>
+
+<li class="STEP"><a name="bx1atam"></a>
+<p class="STEP">Confirm that it is a file name conflict and determine whether the content is the same or different.</p></li>
+
+<li class="STEP"><a name="bx1au4u"></a>
+<p class="STEP">Do one of the following:</p>
+<ul class="LISTBULLET">
+<li class="BULLETITEM">If the content is the same, rename one of the files, then click Save This Version, then click OK to close the Resolve Conflicts dialog box. You are done.</li>
+
+<li class="BULLETITEM">If the content is different, continue with <a href="conflicts.html#bx1au97">Step 6</a>.</li>
+</ul></li>
+
+<li class="STEP"><a name="bx1au97"></a>
+<p class="STEP">Close the Resolve Conflicts dialog box.</p></li>
+
+<li class="STEP"><a name="bx1b3p9"></a>
+<p class="STEP">Open a file manager and navigate to the local copy of the file in conflict.</p></li>
+
+<li class="STEP"><a name="bx1b3xf"></a>
+<p class="STEP">Copy the file and save it with a unique name in the iFolder. </p>
+<p class="STEP">iFolder synchronizes the file as a new file to the server and member computers.</p></li>
+
+<li class="STEP"><a name="bx1b3k7"></a>
+<p class="STEP">Return to the Resolve Conflicts dialog box, select the server version of the file, click Save this Version, then click OK.</p>
+<p class="STEP">The server version of the file downloads to your local machine and overwrites the local copy of the file by that name.</p></li>
 </ol>
 </div>
 
