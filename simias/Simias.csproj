@@ -548,6 +548,21 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\Simias.Web\SimiasBrowser.asmx"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "src\Simias.Web\SimiasBrowser.asmx.cs"
+                    DependentUpon = "SimiasBrowser.asmx"
+                    SubType = "Component"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Simias.Web\SimiasBrowser.asmx.resx"
+                    DependentUpon = "SimiasBrowser.asmx.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "src\Smtp\Base64AttachmentEncoder.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

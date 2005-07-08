@@ -89,16 +89,6 @@
                     AssemblyName = "System.Web.Services"
                     HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.Services.dll"
                 />
-                <Reference
-                    Name = "SimiasClient"
-                    Project = "{E38BAF80-9B31-4D15-A002-E775B96FAFA6}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
-                    Name = "SimiasWebService"
-                    Project = "{BEB45326-E6BE-45F1-B7AF-8A404656C684}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
             </References>
         </Build>
         <Files>

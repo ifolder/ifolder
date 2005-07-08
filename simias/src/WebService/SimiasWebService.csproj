@@ -95,14 +95,14 @@
                     HintPath = "..\..\external\Novell.Security\net\bin\Novell.Security.ClientPasswordManager.NetCredential.dll"
                 />
                 <Reference
-                    Name = "SimiasClient"
-                    AssemblyName = "SimiasClient"
-                    HintPath = "..\SimiasClient\bin\Debug\SimiasClient.dll"
-                />
-                <Reference
                     Name = "Simias"
                     AssemblyName = "Simias"
                     HintPath = "..\..\stage\web\bin\Simias.dll"
+                />
+                <Reference
+                    Name = "SimiasClient"
+                    AssemblyName = "SimiasClient"
+                    HintPath = "..\..\..\..\final\web\bin\SimiasClient.dll"
                 />
             </References>
         </Build>
@@ -119,11 +119,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Global.asax.resx"
-                    DependentUpon = "Global.asax.cs"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
                     RelPath = "Simias.asmx"
                     BuildAction = "Content"
                 />
@@ -137,16 +132,6 @@
                     RelPath = "Simias.asmx.resx"
                     DependentUpon = "Simias.asmx.cs"
                     BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "SimiasBrowser.asmx"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "SimiasBrowser.asmx.cs"
-                    DependentUpon = "SimiasBrowser.asmx"
-                    SubType = "Component"
-                    BuildAction = "Compile"
                 />
             </Include>
         </Files>

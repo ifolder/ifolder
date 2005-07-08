@@ -338,46 +338,32 @@ namespace Simias.Web
 						break;
 					case CollectionPathStatus.RootOfDrivePath:
 						throw new Exception("RootOfDrivePath");
-						break;
 					case CollectionPathStatus.InvalidCharactersPath:
 						throw new Exception("InvalidCharactersPath");
-						break;
 					case CollectionPathStatus.AtOrInsideStorePath:
 						throw new Exception("AtOrInsideStorePath");
-						break;
 					case CollectionPathStatus.ContainsStorePath:
 						throw new Exception("ContainsStorePath");
-						break;
 					case CollectionPathStatus.NotFixedDrivePath:
 						throw new Exception("NotFixedDrivePath");
-						break;
 					case CollectionPathStatus.SystemDirectoryPath:
 						throw new Exception("SystemDirectoryPath");
-						break;
 					case CollectionPathStatus.SystemDrivePath:
 						throw new Exception("SystemDrivePath");
-						break;
 					case CollectionPathStatus.IncludesWinDirPath:
 						throw new Exception("IncludesWinDirPath");
-						break;
 					case CollectionPathStatus.IncludesProgFilesPath:
 						throw new Exception("IncludesProgFilesPath");
-						break;
 					case CollectionPathStatus.DoesNotExistPath:
 						throw new Exception("DoesNotExistPath");
-						break;
 					case CollectionPathStatus.NoReadRightsPath:
 						throw new Exception("NoReadRightsPath");
-						break;
 					case CollectionPathStatus.NoWriteRightsPath:
 						throw new Exception("NoWriteRightsPath");
-						break;
 					case CollectionPathStatus.ContainsCollectionPath:
 						throw new Exception("ContainsCollectionPath");
-						break;
 					case CollectionPathStatus.AtOrInsideCollectionPath:
 						throw new Exception("AtOrInsideCollectionPath");
-						break;
 				}
 			}
 

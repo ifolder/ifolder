@@ -80,6 +80,7 @@ AssemblyInfo.cs
 ../Service/State.cs
 ../Service/ThreadServiceCtl.cs
 ../Simias.Web/SharedCollection.cs
+../Simias.Web/SimiasBrowser.asmx.cs
 ../Smtp/Base64AttachmentEncoder.cs
 ../Smtp/IAttachmentEncoder.cs
 ../Smtp/MailAddressCollection.cs
