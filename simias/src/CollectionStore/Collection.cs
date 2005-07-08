@@ -482,7 +482,22 @@ namespace Simias.Storage
 		/// <returns>The member ID for the current/impersonating user.</returns>
 		private string GetCreator()
 		{
-			return ( accessControl.IsImpersonating ) ? accessControl.ImpersonationMember.UserID : store.CurrentUser.ID;
+			string currentUserID;
+
+			if ( accessControl.IsImpersonating )
+			{
+				currentUserID = accessControl.ImpersonationMember.UserID;
+			}
+			else
+			{
+				currentUserID = store.GetUserIDFromDomainID( Domain );
+				if ( currentUserID == null )
+				{
+					currentUserID = store.CurrentUser.ID;
+				}
+			}
+
+			return currentUserID;
 		}
 
 		/// <summary>
