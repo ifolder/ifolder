@@ -480,7 +480,7 @@ namespace Novell.iFolder
 			syncTable.ColumnSpacing = 20;
 			syncTable.RowSpacing = 5;
 			
-			Label lastSyncLabel = new Label(Util.GS("Last successful synchronization:"));
+			Label lastSyncLabel = new Label(Util.GS("Last Successful Synchronization:"));
 			lastSyncLabel.Xalign = 0;
 			syncTable.Attach(lastSyncLabel, 0,1,0,1,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
