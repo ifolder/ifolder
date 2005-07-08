@@ -2020,7 +2020,7 @@
 		<col def="S255">DotNetBuildConfiguration</col>
 		<col def="S255">MsiCommandLine</col>
 		<col def="I4">ISSetupPrerequisiteLocation</col>
-		<row><td>release</td><td>web</td><td>&lt;ISProjectDataFolder&gt;</td><td>PackageName</td><td>1</td><td>1033</td><td>2</td><td>1</td><td>Intel</td><td/><td>1033</td><td>2</td><td>0</td><td>1</td><td>0</td><td/><td>0</td><td>&lt;WindowsFolder&gt;\downloaded installations\{c79725ec-ea97-49f0-96d7-2c225ba88db8}\iFolder Client.msi</td><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>108557</td><td/><td/><td>CmdLine=REINSTALLMODE="vomus" REINSTALL="ALL"</td><td/></row>
+		<row><td>release</td><td>web</td><td>&lt;ISProjectDataFolder&gt;</td><td>PackageName</td><td>1</td><td>1033</td><td>2</td><td>1</td><td>Intel</td><td/><td>1033</td><td>2</td><td>0</td><td>1</td><td>0</td><td/><td>0</td><td>&lt;WindowsFolder&gt;\downloaded installations\{c79725ec-ea97-49f0-96d7-2c225ba88db8}\iFolder Client.msi</td><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>108557</td><td/><td/><td>msiexec /i iFolder Client.msi REINSTALLMODE="vomus" REINSTALL="ALL"</td><td/></row>
 	</table>
 
 	<table name="ISReleaseExtended">
