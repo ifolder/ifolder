@@ -1443,13 +1443,13 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I4">ISAttributes</col>
 		<col def="S72">ISComponentSubFolder_</col>
-		<row><td>InstallUtil.exe.config</td><td>AllOtherFiles3</td><td>INSTAL~1.CON|InstallUtil.exe.config</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_SOURCE&gt;\src\FormsTrayApp\InstallUtil.exe.config</td><td>1</td><td/></row>
-		<row><td>explorer.exe.config</td><td>WindowsFolderFiles</td><td>EXPLOR~1.CON|explorer.exe.config</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_SOURCE&gt;\src\ifoldershell\explorer.exe.config</td><td>1</td><td/></row>
-		<row><td>explorer.exe.manifest</td><td>WindowsFolderFiles</td><td>EXPLOR~1.MAN|explorer.exe.manifest</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_SOURCE&gt;\src\ifoldershell\explorer.exe.manifest</td><td>1</td><td/></row>
-		<row><td>iFolderApp.exe</td><td>iFolderApp.exe</td><td>IFOLDE~2.EXE|iFolderApp.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\iFolderApp.exe</td><td>1</td><td/></row>
-		<row><td>iFolderComponent.dll</td><td>iFolderComponent.dll</td><td>IFOLDE~1.DLL|iFolderComponent.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\iFolderComponent.dll</td><td>1</td><td/></row>
-		<row><td>iFolderShell.dll</td><td>iFolderShell.dll</td><td>IFOLDE~1.DLL|iFolderShell.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\iFolderShell.dll</td><td>1</td><td/></row>
-		<row><td>iFolderShell.reg</td><td>iFolderShell.dll</td><td>IFOLDE~1.REG|iFolderShell.reg</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\iFolderShell.reg</td><td>1</td><td/></row>
+		<row><td>InstallUtil.exe.config</td><td>AllOtherFiles3</td><td>INSTAL~1.CON|InstallUtil.exe.config</td><td>0</td><td>3.1</td><td/><td/><td>1</td><td>&lt;PATH_TO_SOURCE&gt;\src\FormsTrayApp\InstallUtil.exe.config</td><td>1</td><td/></row>
+		<row><td>explorer.exe.config</td><td>WindowsFolderFiles</td><td>EXPLOR~1.CON|explorer.exe.config</td><td>0</td><td>3.1</td><td/><td/><td>1</td><td>&lt;PATH_TO_SOURCE&gt;\src\ifoldershell\explorer.exe.config</td><td>1</td><td/></row>
+		<row><td>explorer.exe.manifest</td><td>WindowsFolderFiles</td><td>EXPLOR~1.MAN|explorer.exe.manifest</td><td>0</td><td>3.1</td><td/><td/><td>1</td><td>&lt;PATH_TO_SOURCE&gt;\src\ifoldershell\explorer.exe.manifest</td><td>1</td><td/></row>
+		<row><td>iFolderApp.exe</td><td>iFolderApp.exe</td><td>IFOLDE~2.EXE|iFolderApp.exe</td><td>0</td><td>3.1</td><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\iFolderApp.exe</td><td>1</td><td/></row>
+		<row><td>iFolderComponent.dll</td><td>iFolderComponent.dll</td><td>IFOLDE~1.DLL|iFolderComponent.dll</td><td>0</td><td>3.1</td><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\iFolderComponent.dll</td><td>1</td><td/></row>
+		<row><td>iFolderShell.dll</td><td>iFolderShell.dll</td><td>IFOLDE~1.DLL|iFolderShell.dll</td><td>0</td><td>3.1</td><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\iFolderShell.dll</td><td>1</td><td/></row>
+		<row><td>iFolderShell.reg</td><td>iFolderShell.dll</td><td>IFOLDE~1.REG|iFolderShell.reg</td><td>0</td><td>3.1</td><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\iFolderShell.reg</td><td>1</td><td/></row>
 	</table>
 
 	<table name="FileSFPCatalog">
