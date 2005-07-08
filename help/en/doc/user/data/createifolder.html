@@ -6,11 +6,11 @@
 <meta http-equiv="Content-Language" content="en">
 
 <meta name="Generator" content="Novell HTML Conversion 10 March 2004">
-<meta name="Generation-Date" content="Friday, May 20, 2005 02:10">
-<meta name="Content-Date" content="Mon, 20 May 2005 12:00:00 GMT">
+<meta name="Generation-Date" content="Thursday, July 07, 2005 17:15">
+<meta name="Content-Date" content="Mon, 07 Jul 2005 12:00:00 GMT">
 <meta name="Robots" content="INDEX, FOLLOW">
-<meta name="Document_Number" content="zHTML xD.0000.0000.0003.0002.">
-<meta name="Author" content="zHTML xD.0000.0000.0003.0002.">
+<meta name="Document_Number" content="zHTML xD.0000.0000.0003.0004.">
+<meta name="Author" content="zHTML xD.0000.0000.0003.0004.">
 <meta name="Product_Class" content="">
 <meta name="Product_and_Version" content="iFolder(TM)">
 <meta name="Copyright" content="Copyright Novell, Inc. 1983-2004">
@@ -46,23 +46,26 @@ loadMenu();
 <div class="Topic" title="Creating an iFolder">
 
 <h2 class="TOPIC-TITLE"><br />Creating an iFolder</h2>
-<p class="TOPIC">Whenever you create an iFolder, you can specify an existing normal folder that you want to be converted to an iFolder. If the normal folder does not exist, one is created as part of the process. </p>
-<p class="TOPIC">You can create iFolders directly in your file manager and in the My iFolders browser, which is available in the client application. Within the iFolder, you can set up any subdirectory structure that suits your personal or corporate work habits. The subdirectory structure is constant across all member iFolders. Each workstation can specify a different parent directory for the shared iFolder.</p>
-<h4 class="BRIDGEHEAD"><br />Guidelines for Folders to be Converted</h4>
-<p class="TOPIC">You can make any local directory an iFolder if it meets certain criteria:</p>
+<p class="TOPIC">You can create an iFolder by converting an existing folder that satisfies the following guidelines: </p>
 <ul class="LISTBULLET">
-<li class="BULLETITEM">The root directory cannot be an iFolder.</li>
+<li class="BULLETITEM"><a href="bx08x4y.html#bx08x4y">Guidelines for Locating iFolders</a></li>
 
-<li class="BULLETITEM">An iFolder cannot contain another iFolder.</li>
-
-<li class="BULLETITEM">The iFolder open source client and the Novell<sup>&reg;</sup> iFolder<sup>&reg;</sup> 2.1<em class="VERSIONVARIABLE">x</em> Client can coexist on the same computer, but they are not integrated and their software should not be installed in the same folder. If you also use Novell iFolder 2.1<em class="VERSIONVARIABLE">x</em> on your workstation, you must comply with the following restrictions:
-<ul class="LISTBULLET">
-<li class="BULLETITEM">Any local directory where you store your Novell iFolder 2.1<em class="VERSIONVARIABLE">x</em> data should not be converted to an iFolder.</li>
-
-<li class="BULLETITEM">Any directory that contains a local directory where you store your Novell iFolder 2.1<em class="VERSIONVARIABLE">x</em> data should not be converted to an iFolder.</li>
-</ul></li>
+<li class="BULLETITEM"><a href="bwagrrn.html#bwagrrn">Naming Conventions for an iFolder and Its Folders and Files</a></li>
 </ul>
-<h4 class="BRIDGEHEAD"><br />Creating iFolders in a File Manager</h4>
+<p class="TOPIC">If the folder does not exist, you can browse to a location and create the new folder as part of the process. </p>
+<p class="TOPIC">Within the iFolder, you can set up any subdirectory structure that suits your personal or corporate work habits. The subdirectory structure is constant across all member iFolders. Each workstation can specify a different parent directory for the shared iFolder.</p>
+<p class="TOPIC">You can create iFolders directly in your file manager and in the iFolders browser, which is available in the client application. Use the following methods to create an iFolder:</p>
+<ul class="LISTBULLET">
+<li class="BULLETITEM"><a href="createifolder.html#bwembx5">Creating iFolders in a File Manager</a></li>
+
+<li class="BULLETITEM"><a href="createifolder.html#bwemc36">Creating iFolders in the iFolders Browser</a></li>
+
+<li class="BULLETITEM"><a href="createifolder.html#bwem9n0">Creating iFolders on a FAT32 Mount Point (Linux)</a></li>
+</ul>
+<div class="Head" title="Creating iFolders in a File Manager">
+<a name="bwembx5"></a>
+
+<h3 class="HEAD-TITLE"><br />Creating iFolders in a File Manager</h3>
 <ol class="STEPLIST">
 <li class="STEP"><a name="bq6lwlg"></a>
 <p class="STEP">Use the file manager to navigate to the folder you want to convert to an iFolder, then select the folder.</p></li>
@@ -74,12 +77,26 @@ loadMenu();
 
 <li class="BULLETITEM">In the toolbar, click File &gt; Convert to an iFolder.</li>
 </ul>
-<p class="STEP">The folder icon <img src="../graphics/folder_16.gif" alt="Folder Icon" /> changes to a folder with an overlay of the iFolder icon <img src="../graphics/ifolder16.png" alt="iFolder Icon" />, then iFolder displays a confirmation message. You can dismiss the confirmation message.</p></li>
+<p class="STEP">The folder icon <img src="../graphics/folder_16.gif" alt="Folder Icon" /> changes to a folder with an overlay of the iFolder icon <img src="../graphics/ifolder16.png" alt="iFolder Icon" />.</p></li>
+
+<li class="STEP"><a name="bx19z0q"></a>
+<p class="STEP">If the iFolder Created message appears, do one of the following:</p>
+<ul class="LISTBULLET">
+<li class="BULLETITEM">Click Close to dismiss the message.</li>
+
+<li class="BULLETITEM">Select Do Not Show This Message Again to disable future notifications, then click Close to dismiss the message.
+<p class="BULLETITEM">If you later decide that you want to get Confirmation messages, go to iFolder Preferences, select Show Confirmation Dialog When Creating iFolders, then click OK.</p></li>
+</ul></li>
 </ol>
-<h4 class="BRIDGEHEAD"><br />Creating iFolders in My iFolders</h4>
+</div>
+
+<div class="Head" title="Creating iFolders in the iFolders Browser">
+<a name="bwemc36"></a>
+
+<h3 class="HEAD-TITLE"><br />Creating iFolders in the iFolders Browser</h3>
 <ol class="STEPLIST">
 <li class="STEP"><a name="bv2gxbu"></a>
-<p class="STEP">In the status bar, right-click the iFolder icon <img src="../graphics/ifolder16.png" alt="iFolder Application Icon" />, then click My iFolders to open the My iFolders browser.</p></li>
+<p class="STEP">In the Notification area, right-click the iFolder icon <img src="../graphics/ifolder16.png" alt="iFolder Application Icon" />, then click iFolders to open the iFolders browser.</p></li>
 
 <li class="STEP"><a name="bv2gxbv"></a>
 <p class="STEP">Click New.</p></li>
@@ -101,12 +118,55 @@ loadMenu();
 
 <li class="STEP"><a name="bwb5ss4"></a>
 <p class="STEP">Click OK.</p>
-<p class="STEP">The iFolder <img src="../graphics/ifolder16.png" alt="iFolder Application Icon" /> appears in the My iFolders list.</p></li>
+<p class="STEP">The iFolder <img src="../graphics/ifolder16.png" alt="iFolder Application Icon" /> appears in the iFolders list.</p></li>
 
 <li class="STEP"><a name="bwb5tng"></a>
-<p class="STEP">If the iFolder Created message appears, click Close to dismiss it.</p>
-<p class="STEP">Select Do Not Show This Message Again before clicking Close to disable this notification.</p></li>
+<p class="STEP">If the iFolder Created message appears, do one of the following:</p>
+<ul class="LISTBULLET">
+<li class="BULLETITEM">Click Close to dismiss the message.</li>
+
+<li class="BULLETITEM">Select Do Not Show This Message Again to disable future notifications, then click Close to dismiss the message.
+<p class="BULLETITEM">If you later decide that you want to get Confirmation messages, go to iFolder Preferences, select Show Confirmation Dialog When Creating iFolders, then click OK.</p></li>
+</ul></li>
 </ol>
+</div>
+
+<div class="Head" title="Creating iFolders on a FAT32 Mount Point (Linux)">
+<a name="bwem9n0"></a>
+
+<h3 class="HEAD-TITLE"><br />Creating iFolders on a FAT32 Mount Point (Linux)</h3>
+<p class="HEAD">On Linux, you can create and use iFolders on a mount point for a FAT32 file system. If you have a dual boot system, you can access the data in iFolders as normal folders from the system where the folder is not set up as an iFolder. If you set up the folder as an iFolder on both platforms, the data set is stored in two different iFolders on the server, which consumes double your allocated server disk resources.</p>
+<p class="HEAD">Because the FAT32 file system does not support POSIX file system permissions, you must make sure the iFolder user is the owner of the mount point. Modify the /etc/fstab file to set the user ID (UID) parameter to the iFolder user who creates iFolders on that mount point.</p>
+<ol class="STEPLIST">
+<li class="STEP"><a name="bwenpgg"></a>
+<p class="STEP">Log in to your computer as the root user.</p></li>
+
+<li class="STEP"><a name="bwen6om"></a>
+<p class="STEP">Create the directory where you want to mount the FAT32 file system. At a command prompt, enter</p>
+<p><tt class="USERINPUT">mkdir /home/<em class="VARIABLE">username</em>/<em class="VARIABLE">fsmount</em></tt></p>
+
+<p class="STEP">Replace <em class="VARIABLE">username</em> with the username of the user who plans to use the FAT32 drive for iFolders. Replace <em class="VARIABLE">fsmount</em> with the directory name you want to use as the mount point. For example, if the username is <em class="VARIABLE">jsmith</em> and the directory name is <em class="VARIABLE">fat32mntpt</em> for a FAT32 drive or partition, enter</p>
+<pre class="CODESAMPLENARROW">mkdir /home/jsmith/fat32mntpt</pre>
+</li>
+
+<li class="STEP"><a name="bwemec8"></a>
+<p class="STEP">Mount the FAT32 drive at the desired mount point. At a command prompt, enter</p>
+<p><tt class="USERINPUT">mount -t vfat /dev/<em class="VARIABLE">hda1</em> /home/<em class="VARIABLE">username</em>/<em class="VARIABLE">fsmount </em></tt></p>
+
+<p class="STEP">Replace /dev/<em class="VARIABLE">hda1</em> with the device or partition name of the non-Linux device. Replace <em class="VARIABLE">username</em> with the username of the iFolder user. Replace <em class="VARIABLE">fsmount</em> with the directory name you want to use as the mount point. </p>
+<p class="STEP">Continuing the example, where the FAT32 file system (vfat) is on the hda4 device (<em class="VARIABLE">/dev/hda4</em>), the username is <em class="VARIABLE">jsmith</em>, and the mount point directory is /home/<em class="VARIABLE">jsmith</em>/<em class="VARIABLE">fat32mntpt</em>, enter</p>
+<pre class="CODESAMPLENARROW">mount -t vfat /dev/hda4 /home/jsmith/fat32mntpt</pre>
+</li>
+
+<li class="STEP"><a name="bwemszm"></a>
+<p class="STEP">Edit the /etc/fstab file by adding the uid=username parameter on the line that defines the FAT32 mount point.</p>
+<p><tt class="USERINPUT">/dev/<em class="VARIABLE">hda1</em>  /home/<em class="VARIABLE">username</em>/<em class="VARIABLE">fsmount</em>  <em class="VARIABLE">vfat</em>  uid=<em class="VARIABLE">username</em></tt></p>
+
+<p class="STEP">Continuing the example, modify /etc/fstab file by adding uid=jsmith to the mount point:</p>
+<p class="STEP">/dev/hda4  /home/jsmith/fat32mntpt  vfat  uid=jsmith</p></li>
+</ol>
+</div>
+
 </div>
 
 <script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
