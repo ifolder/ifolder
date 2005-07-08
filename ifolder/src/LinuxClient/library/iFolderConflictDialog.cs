@@ -766,7 +766,7 @@ namespace Novell.iFolder
 				{
 					if (bHasNameConflict)
 					{
-						nameConflictSummary.Text = Util.GS("Enter a new name for this file and click save to resolve it.");
+						nameConflictSummary.Text = Util.GS("Enter a new name and click Rename to resolve the conflict.");
 
 						// This is a name conflict
 						nameConflictBox.Visible = true;
