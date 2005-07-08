@@ -266,7 +266,7 @@ namespace Simias.Web
 						{
 							if ( ( propertyFlags & 0x0002000 ) == 0x00020000 ) p.LocalProperty = true;
 							if ( ( propertyFlags & 0x0004000 ) == 0x00040000 ) p.MultiValuedProperty = true;
-							p.SetValue( new Property( p.Name, p.Type, newPropertyValue ) );
+							p.SetPropertyValue( new Property( p.Name, p.Type, newPropertyValue ) );
 							c.Commit( n );
 							break;
 						}
@@ -299,7 +299,7 @@ namespace Simias.Web
 					if ( ( propertyFlags & 0x00020000 ) == 0x00020000 ) p.LocalProperty = true;
 					if ( ( propertyFlags & 0x00040000 ) == 0x00040000 ) p.MultiValuedProperty = true;
 
-					n.Properties.AddProperty( p );
+					n.Properties.AddNodeProperty( p );
 					c.Commit( n );
 				}
 			}
@@ -329,7 +329,7 @@ namespace Simias.Web
 					{
 						if ( ( p.Type.ToString() == propertyType ) && ( p.ToString() == propertyValue ) )
 						{
-							p.Delete();
+							p.DeleteProperty();
 							c.Commit( n );
 							break;
 						}

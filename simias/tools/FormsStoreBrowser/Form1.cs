@@ -79,7 +79,7 @@ namespace StoreBrowser
 
 		private CertPolicy certPolicy = new CertPolicy();
 		private bool ascending = true;
-		private int prevColumn = -1;
+		private int prevColumn = 0;
 
 		public bool IsXmlView
 		{
