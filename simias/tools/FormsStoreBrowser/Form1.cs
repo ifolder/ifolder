@@ -78,6 +78,8 @@ namespace StoreBrowser
 		private System.Windows.Forms.MenuItem menuItem10;
 
 		private CertPolicy certPolicy = new CertPolicy();
+		private bool ascending = true;
+		private int prevColumn = -1;
 
 		public bool IsXmlView
 		{
@@ -284,10 +286,12 @@ namespace StoreBrowser
 			this.listView1.MultiSelect = false;
 			this.listView1.Name = "listView1";
 			this.listView1.Size = new System.Drawing.Size(613, 574);
+			this.listView1.Sorting = System.Windows.Forms.SortOrder.Ascending;
 			this.listView1.TabIndex = 4;
 			this.listView1.View = System.Windows.Forms.View.Details;
 			this.listView1.Resize += new System.EventHandler(this.listView1_Resize);
 			this.listView1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseUp);
+			this.listView1.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listView1_ColumnClick);
 			// 
 			// CName
 			// 
@@ -476,6 +480,7 @@ namespace StoreBrowser
 		private void tView_AfterSelect(object sender, System.Windows.Forms.TreeViewEventArgs e)
 		{
 			browser.ShowNode(e.Node);
+			SetBackgroundColor();
 		}
 
 		private void tView_BeforeExpand(object sender, System.Windows.Forms.TreeViewCancelEventArgs e)
@@ -620,6 +625,7 @@ namespace StoreBrowser
 					}
 
 					browser.ShowNode(tView.SelectedNode);
+					SetBackgroundColor();
 					listView1.Refresh();
 				}
 			}
@@ -647,6 +653,7 @@ namespace StoreBrowser
 				}
 
 				browser.ShowNode(tView.SelectedNode);
+				SetBackgroundColor();
 				listView1.Refresh();
 			}
 		}
@@ -694,6 +701,7 @@ namespace StoreBrowser
 					}
 
 					browser.ShowNode(tView.SelectedNode);
+					SetBackgroundColor();
 					listView1.Refresh();
 				}
 			}
@@ -840,6 +848,7 @@ namespace StoreBrowser
 			menuItemProperty.Checked = false;
 			menuItemXml.Checked = true;
 			browser.ShowNode(tView.SelectedNode);
+			SetBackgroundColor();
 		}
 
 		private void menuItemProperty_Click(object sender, System.EventArgs e)
@@ -847,6 +856,7 @@ namespace StoreBrowser
 			menuItemProperty.Checked = true;
 			menuItemXml.Checked = false;
 			browser.ShowNode(tView.SelectedNode);
+			SetBackgroundColor();
 		}
 
 		private void menuItemExit_Click(object sender, System.EventArgs e)
@@ -893,6 +903,28 @@ namespace StoreBrowser
 						line = sr.ReadLine();
 					}
 				}
+			}
+		}
+
+		private void listView1_ColumnClick(object sender, System.Windows.Forms.ColumnClickEventArgs e)
+		{
+			if ( prevColumn == e.Column )
+			{
+				ascending = !ascending;
+			}
+
+			listView1.ListViewItemSorter = new ListViewItemComparer(e.Column, ascending);
+			SetBackgroundColor();
+			prevColumn = e.Column;
+		}
+
+		private void SetBackgroundColor()
+		{
+			Color c = Color.White;
+			foreach (ListViewItem item in listView1.Items)
+			{
+				c = (c == Color.LightBlue) ? Color.White : Color.LightBlue;
+				item.BackColor = c;
 			}
 		}
 	}
@@ -979,6 +1011,70 @@ namespace StoreBrowser
 		public override string ToString()
 		{
 			return String.Format( "{0} {1}", local, host );
+		}
+	}
+
+	class ListViewItemComparer : IComparer
+	{
+		private bool ascending;
+		private int col;
+
+		public ListViewItemComparer()
+		{
+			ascending = true;
+			col = 0;
+		}
+
+		public ListViewItemComparer(int column, bool ascending)
+		{
+			this.ascending = ascending;
+			col = column;
+		}
+
+		public int Compare(object x, object y)
+		{
+			int val;
+
+			if (ascending)
+			{
+				if (((ListViewItem)x).SubItems.Count == col && ((ListViewItem)y).SubItems.Count == col)
+				{
+					val = 0;
+				}
+				else if (((ListViewItem)x).SubItems.Count == col)
+				{
+					val = -1;
+				}
+				else if (((ListViewItem)y).SubItems.Count == col)
+				{
+					val = 1;
+				}
+				else
+				{
+					val = String.Compare(((ListViewItem)x).SubItems[col].Text, ((ListViewItem)y).SubItems[col].Text);
+				}
+			}
+			else
+			{
+				if (((ListViewItem)x).SubItems.Count == col && ((ListViewItem)y).SubItems.Count == col)
+				{
+					val = 0;
+				}
+				else if (((ListViewItem)x).SubItems.Count == col)
+				{
+					val = 1;
+				}
+				else if (((ListViewItem)y).SubItems.Count == col)
+				{
+					val = -1;
+				}
+				else
+				{
+					val = String.Compare(((ListViewItem)y).SubItems[col].Text, ((ListViewItem)x).SubItems[col].Text);
+				}
+			}
+
+			return val;
 		}
 	}
 }

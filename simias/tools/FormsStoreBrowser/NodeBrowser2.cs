@@ -240,32 +240,26 @@ namespace StoreBrowser
 
 					// Add the name;
 					ListViewItem item = new ListViewItem("Name");
-					item.BackColor = Color.LightBlue;
 					item.SubItems.Add(dspNode.Name);
 					item.SubItems.Add("String");
 					lView.Items.Add(item);
 
 					// Add the ID.
 					item = new ListViewItem("ID");
-					item.BackColor = Color.White;
 					item.SubItems.Add(dspNode.ID);
 					item.SubItems.Add("String");
 					lView.Items.Add(item);
 
 					// Add the type.
 					item = new ListViewItem("Type");
-					item.BackColor = Color.LightBlue;
 					item.SubItems.Add(dspNode.Type);
 					item.SubItems.Add("String");
 					lView.Items.Add(item);
 
-					Color c = Color.LightBlue;
 					foreach (DisplayProperty p in dspNode)
 					{
-						c = (c == Color.LightBlue) ? Color.White : Color.LightBlue;
 						item = new ListViewItem(p.Name);
 						item.Tag = p;
-						item.BackColor = c;
 
 						if (p.Type == "Relationship")
 						{
