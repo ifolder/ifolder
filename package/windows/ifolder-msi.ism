@@ -58,7 +58,7 @@
 		<comments>##ID_STRING2##</comments>
 		<template>Intel;1033</template>
 		<lastauthor>Administrator</lastauthor>
-		<revnumber>{98375A0F-8C52-475C-B925-C2B74A2766C6}</revnumber>
+		<revnumber>{DEA985AB-4597-41EF-A5C7-0A07A151F368}</revnumber>
 		<lastprinted/>
 		<createdtm>06/21/1999 02:00</createdtm>
 		<lastsavedtm>07/14/2000 05:50</lastsavedtm>
@@ -12646,7 +12646,7 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<row><td>PROGMSG_IIS_ROLLBACKAPPPOOLS</td><td>##IDS_PROGMSG_IIS_ROLLBACKAPPPOOLS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKVROOTS</td><td>##IDS_PROGMSG_IIS_ROLLBACKVROOTS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
-		<row><td>ProductCode</td><td>{E91607AA-583B-4942-BD3A-89C41E1975E8}</td><td/></row>
+		<row><td>ProductCode</td><td>{76ACE820-A6D9-4B7E-A2D4-FFF30D2FE710}</td><td/></row>
 		<row><td>ProductID</td><td>none</td><td/></row>
 		<row><td>ProductLanguage</td><td>1033</td><td/></row>
 		<row><td>ProductName</td><td>iFolder Client</td><td/></row>
