@@ -9,7 +9,7 @@ Book Title: iFolder Help
 Creating C:\DocSys7\Builds\doc\user\data\front.html
 Creating C:\DocSys7\Builds\doc\user\data\overview.html
 UNPROCESSED ELEMENT: <SubToc>
-Creating C:\DocSys7\Builds\doc\user\data\bv1g15h.html
+Creating C:\DocSys7\Builds\doc\user\data\bx3aueg.html
 Creating C:\DocSys7\Builds\doc\user\data\bq1r10z.html
 Creating C:\DocSys7\Builds\doc\user\data\bq1r110.html
 UNPROCESSED ELEMENT: <SubToc>
@@ -41,7 +41,7 @@ Creating C:\DocSys7\Builds\doc\user\data\reverting.html
 Creating C:\DocSys7\Builds\doc\user\data\movelocation.html
 Creating C:\DocSys7\Builds\doc\user\data\deleting.html
 Copying graphics from C:\Documents and Settings\Administrator\Desktop\ifolder_denali\help\htmlhelp\ifolder3\user\graphics
-Copied 8 of 8 graphics
+Copied 7 of 7 graphics
 Creating navigation file: C:\DocSys7\Builds\doc\user\sequence.sgm
 Creating tree title file
 Creating target file C:\DocSys7\Builds\doc\target.txt
@@ -49,7 +49,7 @@ Adding navigation information to html files
 Adding navigation from C:\DocSys7\Builds\doc\user\sequence.sgm
 Modifying c:\docsys7\builds\doc\user\data\front.html
 Modifying c:\docsys7\builds\doc\user\data\overview.html
-Modifying c:\docsys7\builds\doc\user\data\bv1g15h.html
+Modifying c:\docsys7\builds\doc\user\data\bx3aueg.html
 Modifying c:\docsys7\builds\doc\user\data\bq1r10z.html
 Modifying c:\docsys7\builds\doc\user\data\bq1r110.html
 Modifying c:\docsys7\builds\doc\user\data\bwcku86.html

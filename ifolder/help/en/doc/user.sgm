@@ -4,7 +4,7 @@
 <!--========================================================================
  "iFolder Help"
 
- Generated on 7/7/2005 5:15:24 PM by Novell Doc Tools Release 21 December 04
+ Generated on 7/11/2005 2:47:52 PM by Novell Doc Tools Release 21 December 04
 
  Copyright © 2003 Novell, Inc. All rights reserved. No part of this publication
  may be reproduced, photocopied, stored on a retrieval system, or transmitted
@@ -17,18 +17,18 @@
  www.novell.com
 
 
- BASELINE PAGE COUNT 50
+ BASELINE PAGE COUNT 46
 
 
  WORD COUNT
 
        Count    Doctype    Title
       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        1880    Chapter    Overview of iFolder
-        3241    Chapter    Managing iFolder Accounts and Preferences
-        3951    Chapter    Managing iFolders
+        1224    Chapter    Overview of iFolder
+        3278    Chapter    Managing iFolder Accounts and Preferences
+        3994    Chapter    Managing iFolders
       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-       10050    Book       iFolder Help
+        9341    Book       iFolder Help
 
 
  GRAPHICS REFERENCED IN BOOK
@@ -38,7 +38,6 @@
           16       ifolder16.png
            1       ifos_accounts_new_a.png
            2       conflict_resolution.png
-           1       nif3_share002_a.eps
            1       setup.png
            1       sync.png
            6       share.png
@@ -49,28 +48,26 @@
 
        Count       Type
       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-          56       XRefInt
+          57       XRefInt
            0       XRefIntText
            0       XRefExt
            0       XRefExtText
-           6       ULink
+           3       ULink
 
 
  URLS REFERENCED IN ULINKS
 
        URL
       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-       http://www.novell.com/documentation/ifolder3/
+       http://www.novell.com/documentation/ifolderos
        http://www.unicode.org
-       http://www.novell.com/documentation/ifolder3/readme/data/readme.html
-       http://forge.novell.com/modules/xfmod/docman/?group_id=1372
        http://www.novell.com/documentation/ifolder3
 
 ========================================================================-->
 
 
 <?Fm: Book>
- <Book ContentDate="07/07/05" TocLevels="4" RelLinks="None" Language="en">
+ <Book ContentDate="07/11/05" TocLevels="4" RelLinks="None" Language="en">
 
 
  <?Fm: Document 00_frontos.fm>
@@ -146,16 +143,15 @@
    <Para>In Novell documentation, a greater-than symbol (&gt;) is used to separate actions within a step and items in a cross-reference path.</Para>
    <Para>A trademark symbol (&reg;, &trade;, etc.) denotes a Novell trademark. An asterisk (*) denotes a third-party trademark.</Para>
    <Para>When a single pathname can be written with a backslash for some platforms or a forward slash for other platforms, the pathname is presented with a backslash. Users of platforms that require a forward slash, such as Linux or UNIX*, should use forward slashes as required by your software.</Para>
-   <BridgeHead ID="usercomments"><?FM: MARKER [Hypertext] newlink usercomments>User Comments</BridgeHead>
-   <Para>We want to hear your comments and suggestions about this manual and the other documentation included with this product. Please use the User Comment feature at the bottom of each page of the online documentation, or go to www.novell.com/documentation/feedback.html and enter your comments there.</Para>
-   <BridgeHead ID="docupdates"><?FM: MARKER [Hypertext] newlink docupdates>Documentation Updates</BridgeHead>
-   <Para>For the most recent version of the <ManualTitle>iFolder User Guide for Novell iFolder 3.x</ManualTitle>, see the <ULink URL="http://www.novell.com/documentation/ifolder3/" Target="_blank">No<?FM: MARKER [Hypertext] message URL http://www.novell.com/documentation/ifolder3/>vell iFolder 3.<Variable>x<?FM: MARKER [Hypertext] message URL http://www.novell.com/documentation/ifolder3/></Variable><?FM: MARKER [Hypertext] message URL http://www.novell.com/documentation/ifolder3/> Documentation Web site</ULink>.</Para>
-   <Para>For emerging issues for Novell iFolder 3.<VersionVariable>x</VersionVariable>, see the <ULink URL="http://www.novell.com/documentation/ifolder3/readme/data/readme.html" Target="_blank"><ManualTitle>No<?FM: MARKER [Hypertext] message URL http://www.novell.com/documentation/ifolder3/readme/data/readme.html>vell iFolder 3.x Readme</ManualTitle><?FM: MARKER [Hypertext] message URL http://www.novell.com/documentation/ifolder3/readme/data/readme.html></ULink>.</Para>
-   <BridgeHead ID="additionaldoc"><?FM: MARKER [Hypertext] newlink additionaldoc>Additional Documentation</BridgeHead>
-   <Para>For information about installing, configuring, and managing Novell iFolder 3.<VersionVariable>x</VersionVariable> services, see the <ULink URL="http://www.novell.com/documentation/ifolder3" Target="_blank"><ManualTitle>N<?FM: MARKER [Hypertext] message URL http://www.novell.com/documentation/ifolder3><?FM: MARKER [Hypertext] message URL http://www.novell.com/documentation/ifolder3>ovell iFolder 3.x Administration Guide</ManualTitle><?FM: MARKER [Hypertext] message URL http://www.novell.com/documentation/ifolder3></ULink>.</Para>
-   <Para>For iFolder developer documentation, see the <ULink URL="http://forge.novell.com/modules/xfmod/docman/?group_id=1372" Target="_blank"><ManualTitle>i<?FM: MARKER [Hypertext] message URL http://forge.novell.com/modules/xfmod/docman/?group_id=1372><?FM: MARKER [Hypertext] message URL http://forge.novell.com/modules/xfmod/docman/?group_id=1372>Folder Software Developers Kit</ManualTitle><?FM: MARKER [Hypertext] message URL http://forge.novell.com/modules/xfmod/docman/?group_id=1372></ULink>.</Para>
-   <BridgeHead ID="buzp2fh"><?FM: MARKER [Hypertext] newlink buzp2fh>The iFolder Documentation Project</BridgeHead>
-   <Para>For information about how to join and contribute to the iFolder Documentation Project, see the <ULink URL="http://forge.novell.com/modules/xfmod/docman/?group_id=1372" Target="_blank">iF<?FM: MARKER [Hypertext] message URL http://forge.novell.com/modules/xfmod/docman/?group_id=1372>older Doc Project Information</ULink>.</Para>
+   <BridgeHead ID="bx3bgse"><?FM: MARKER [Hypertext] newlink bx3bgse>Additional Documentation</BridgeHead>
+   <ListBullet>
+    <BulletItem>
+     <Para><ULink URL="http://www.novell.com/documentation/ifolder3" Target="_blank">No<?FM: MARKER [Hypertext] message URL http://www.novell.com/documentation/ifolder3>vell iFolder 3.0 Documentation Web Site</ULink></Para>
+    </BulletItem>
+    <BulletItem>
+     <Para><ULink URL="http://www.novell.com/documentation/ifolderos" Target="_blank">iF<?FM: MARKER [Hypertext] message URL http://www.novell.com/documentation/ifolderos>older Open Source Documentation Web Site</ULink></Para>
+    </BulletItem>
+   </ListBullet>
   </Preface>
 
 
@@ -165,13 +161,11 @@
   <Chapter ID="overview" TocLevels="4" RelLinks="DOC"><?FM: MARKER [Hypertext] newlink overview>
    <Title>Overview of iFolder</Title>
    <Para>iFolder&trade; is a file-sharing application for Linux, Windows*, and Macintosh* clients. You can share files in multiple iFolders, each with a different group of users. You control who can participate in an iFolder and the access level for each member. You can also participate in iFolders that others share with you. </Para>
-   <Para>In this release, the iFolder client works with a Novell&reg; iFolder&reg; 3.<VersionVariable>x</VersionVariable> enterprise server. The server provides central storage, synchronization, basic Web access, and backup of your local iFolder data. It allows local files to automatically follow you everywhere&z-mdash-win;online, offline, all the time&z-mdash-win;across computers. You simply save your files locally, as you have always done. The client automatically updates your iFolders&apos; local files to the iFolder 3.<VersionVariable>x</VersionVariable> enterprise server, which delivers them to other user computers that share the iFolders. The iFolder 3.<VersionVariable>x</VersionVariable> enterprise server provides central storage, synchronization, and backup of files in your local iFolders. </Para>
-   <Para>For mobile users, the iFolder 3.<VersionVariable>x</VersionVariable> Web Access server provides anywhere, anytime access to your  iFolder files on the iFolder 3.<VersionVariable>x</VersionVariable> enterprise server. All you need is a Web browser and an Internet or network connection.</Para>
    <Para>This section familiarizes you with the various benefits and features of iFolder:</Para>
    <SubToc>
     <ListBullet>
      <BulletItem>
-      <Para><XRefInt IDREF="bv1g15h" PIDREF="bv1g15h" File="01_overview.fm" Element="Topic" Format="HeadingOnPage"></Para>
+      <Para><XRefInt IDREF="bx3aueg" PIDREF="bx3aueg" File="01_overview.fm" Element="Topic" Format="HeadingOnPage"></Para>
      </BulletItem>
      <BulletItem>
       <Para><XRefInt IDREF="bq1r10z" PIDREF="bq1r10z" File="01_overview.fm" Element="Topic" Format="HeadingOnPage"></Para>
@@ -185,88 +179,56 @@
     </ListBullet>
    </SubToc>
 
-   <Topic ID="bv1g15h" Type="General" Topic="MainTopic"><?FM: MARKER [Hypertext] newlink bv1g15h>
-    <Title>Enterprise Server Sharing</Title>
-    <Para>The iFolder client supports sharing by synchronizing files across multiple computers through a central Novell iFolder 3.<VersionVariable>x</VersionVariable> enterprise server. It provides the following capabilities:</Para>
+   <Topic ID="bx3aueg" Type="General" Topic="MainTopic"><?FM: MARKER [Hypertext] newlink bx3aueg>
+    <Title>iFolder Sharing</Title>
+    <Para>Typically, when you work in multiple locations or in collaboration with others, you must conscientiously manage file versions. With iFolder, the most recent version of your files can follow you to any computer where you have installed the iFolder client and set up the shared iFolder. iFolder also allows you to share multiple iFolders and their separate content with other authorized users. You decide who participates in each iFolder and the level of access for each member. Similarly, you can participate in shared iFolders that are owned by others in your collaboration environment.</Para>
+    <Para>The iFolder client supports sharing by synchronizing files across multiple computers through a central computer. It allows you to do the following:</Para>
     <ListBullet>
      <BulletItem>
-      <Para>Allows you to share files across computers</Para>
+      <Para>Share files across computers</Para>
      </BulletItem>
      <BulletItem>
-      <Para>Allows you to share files with others</Para>
+      <Para>Share files with others</Para>
      </BulletItem>
      <BulletItem>
-      <Para>Allows you to own multiple iFolders</Para>
+      <Para>Own multiple iFolders</Para>
      </BulletItem>
      <BulletItem>
-      <Para>Allows you to participate in multiple iFolders that other users share with you</Para>
+      <Para>Participate in multiple iFolders that other users share with you</Para>
      </BulletItem>
      <BulletItem>
-      <Para>Allows you to participate as owners or a members of iFolders in multiple accounts</Para>
-     </BulletItem>
-     <BulletItem>
-      <Para>Synchronizes files at any time through a central server with improved availability, reliability, and performance over other sharing methods</Para>
-     </BulletItem>
-     <BulletItem>
-      <Para>Autoprovisions users from the administrator-specified enterprise LDAP containers, groups, and users and creates a list of users with whom you can share iFolders for a given iFolder account</Para>
-     </BulletItem>
-     <BulletItem>
-      <Para>Authenticates users with enterprise LDAP directory services</Para>
-     </BulletItem>
-     <BulletItem>
-      <Para>Backs up local files to a server</Para>
-     </BulletItem>
-     <BulletItem>
-      <Para>Allows administrators to back up iFolders to backup media </Para>
-     </BulletItem>
-     <BulletItem>
-      <Para>Allows administrators to restore files from backup media</Para>
-     </BulletItem>
-     <BulletItem>
-      <Para>Allows all iFolders in the enterprise to be managed centrally with policy-based administration tools</Para>
+      <Para>Participate as the owner or a member of iFolders in multiple accounts</Para>
      </BulletItem>
     </ListBullet>
    </Topic>
 
    <Topic ID="bq1r10z" Type="General" Topic="MainTopic"><?FM: MARKER [Hypertext] newlink bq1r10z>
     <Title>Benefits of iFolder</Title>
-    <Para>Typically, when you work in multiple locations or in collaboration with others, you must conscientiously manage file versions. With iFolder, the most recent version of your files can follow you to any computer where you have installed the iFolder client and set up the shared iFolder. iFolder also allows you to share multiple iFolders and their separate content with other authorized users. You decide who participates in each iFolder and the level of access for each member. Similarly, you can participate in shared iFolders that are owned by others in your collaboration environment.</Para>
-    <Para>In the following example, Ulrik owns an iFolder named Denmark and shares it via his iFolder enterprise account with Nigel, Luc, and Alice. Nigel travels frequently, so he also set up the iFolder on his laptop. iFolder members can upload and download files from the Denmark iFolder from anywhere, using the iFolder Web Access server. In addition, Alice shares a non-work iFolder with her friend Ulrik. In this example, an asterisk next to the folder name indicates the iFolder owner.</Para>
-    <Figure Position="PageEdge" ID="bviqoee"><?FM: MARKER [Hypertext] newlink bviqoee>
-     <Title>Collaboration and Sharing with iFolder</Title>
-     <GraphicHolder>
-      <Graphic Fileref="nif3_share002_a.eps" Height="3.750in" Width="7.042in" Dpi="300" Impby="ref" Xoffset="0.000in" Yoffset="0.000in" Position="inline" Align="acenter" Format="png">
-     </GraphicHolder>
-    </Figure>
-    <Para>The iFolder client synchronizes the most recent version of documents to all authorized users of your shared iFolder. All that you and other iFolder members need is an active network connection and the iFolder client. With an enterprise server, your iFolders are stored centrally where they are easily accessed by all iFolder members.  </Para>
     <Para>iFolder provides the following benefits:</Para>
     <ListBullet>
      <BulletItem>
-      <Para>Integrates with your native desktop environment, making it easy to create and manage multiple iFolders.</Para>
+      <Para>Integrates with your native desktop environment, making it easy to create and manage multiple iFolders</Para>
      </BulletItem>
      <BulletItem>
-      <Para>Is highly scalable and flexible, with no practical limit on the number of iFolders per user or on the number of members per iFolder.</Para>
+      <Para>Is highly scalable and flexible, with no practical limit on the number of iFolders per user or on the number of members per iFolder</Para>
      </BulletItem>
      <BulletItem>
-      <Para>Allows you to create iFolders and store files on a central enterprise server for anytime, anywhere access.</Para>
+      <Para>Allows you to easily and selectively share personal and business files</Para>
      </BulletItem>
      <BulletItem>
-      <Para>Allows you to easily and selectively share personal and business files with anyone.</Para>
+      <Para>Allows you to control the access level of member users of the iFolders you own or where you have the necessary rights to control the access rights of members</Para>
      </BulletItem>
      <BulletItem>
-      <Para>Allows you to control the access level of users who share your iFolders.</Para>
+      <Para>Transparently updates your files to member iFolders on multiple workstations</Para>
      </BulletItem>
      <BulletItem>
-      <Para>Transparently updates your files to the iFolder server and member iFolders on multiple workstations.</Para>
+      <Para>Tracks and logs changes made while you work offline, and synchronizes those changes when you go online</Para>
      </BulletItem>
      <BulletItem>
-      <Para>Tracks and logs changes made while you work offline, and synchronizes those changes when you go online.</Para>
+      <Para>Provides secure authentication of member iFolders to synchronize data</Para>
      </BulletItem>
      <BulletItem>
-      <Para>Provides secure authentication of member iFolders to synchronize data.</Para>
-     </BulletItem>
-     <BulletItem>
-      <Para>Offers an alternative to exchanging files via e-mail, which avoids the file-size limits on e-mail attachments and reduces your e-mail storage requirements.</Para>
+      <Para>Offers an alternative to exchanging files via e-mail, which avoids the file-size limits on e-mail attachments and reduces your e-mail storage requirements</Para>
      </BulletItem>
     </ListBullet>
    </Topic>
@@ -280,16 +242,13 @@
        <Para><XRefInt IDREF="bq1r111" PIDREF="bq1r110" File="01_overview.fm" Element="Head" Format="HeadingOnPage"></Para>
       </BulletItem>
       <BulletItem>
+       <Para><XRefInt IDREF="bx3bipv" PIDREF="bq1r110" File="01_overview.fm" Element="Head" Format="HeadingOnPage"></Para>
+      </BulletItem>
+      <BulletItem>
        <Para><XRefInt IDREF="bq1r112" PIDREF="bq1r110" File="01_overview.fm" Element="Head" Format="HeadingOnPage"></Para>
       </BulletItem>
       <BulletItem>
        <Para><XRefInt IDREF="bq1r113" PIDREF="bq1r110" File="01_overview.fm" Element="Head" Format="HeadingOnPage"></Para>
-      </BulletItem>
-      <BulletItem>
-       <Para><XRefInt IDREF="bq655zc" PIDREF="bq1r110" File="01_overview.fm" Element="Head" Format="HeadingOnPage"></Para>
-      </BulletItem>
-      <BulletItem>
-       <Para><XRefInt IDREF="bq5xp9r" PIDREF="bq1r110" File="01_overview.fm" Element="Head" Format="HeadingOnPage"></Para>
       </BulletItem>
       <BulletItem>
        <Para><XRefInt IDREF="bq1r118" PIDREF="bq1r110" File="01_overview.fm" Element="Head" Format="HeadingOnPage"></Para>
@@ -314,14 +273,18 @@
        <Para>Macintosh OS X v10.3 or later</Para>
       </BulletItem>
      </ListBullet>
-     <Para>An iFolder session begins when you log in to an iFolder services account and ends when you log out, or when you exit the iFolder client. Your iFolders synchronize files with other active iFolders only when your session is active and you are working online. You can access data in your local iFolders at any time, whether you are logged in to the account, or not.</Para>
      <Para>The iFolder client allows you to manage your own iFolders and to select which shared iFolders to set up on each computer. For information, see <XRefInt IDREF="myifolders" PIDREF="myifolders" File="04_iFolders.fm" Element="Chapter" Format="HeadingOnPage">.</Para>
+    </Head>
+
+    <Head ID="bx3bipv"><?FM: MARKER [Hypertext] newlink bx3bipv>
+     <Title>iFolder Account</Title>
+     <Para>You must configure at least one iFolder services account before you create iFolders. An iFolder session begins when you log in to an iFolder services account and ends when you log out, or when you exit the iFolder client. Your iFolders synchronize files with other active iFolders only when your session is active and you are working online. You can access data in your local iFolders at any time, whether you are logged in to the account, or not. For information, see <XRefInt IDREF="accounts" PIDREF="accounts" File="04a_Accounts.fm" Element="Topic" Format="HeadingOnPage">.</Para>
     </Head>
 
     <Head ID="bq1r112"><?FM: MARKER [Hypertext] newlink bq1r112>
      <Title>Shared iFolders</Title>
-     <Para>An iFolder is a local directory that selectively shares and synchronizes files via a central server with a user-specified group of users. The iFolder files are accessible to all iFolder members and can be changed by those with the rights to do so. You can access your iFolders across multiple workstations and share them with others.</Para>
-     <Para>You work with iFolders directly in your file manager or in the iFolders browser that is part of the client. Within the iFolder, you can set up any subdirectory structure that suits your personal or corporate work habits. The subdirectory structure is constant across all member iFolders. When you share an iFolder, member users with the Write right can modify the directory structure, and those changes apply to all copies of the iFolder. Each user can specify a different location for the shared iFolder on his or her own computer.</Para>
+     <Para>An iFolder is a local directory that selectively shares and synchronizes files via a central computer with a user-specified group of users. The iFolder files are accessible to all iFolder members and can be changed by those with the rights to do so. You can access your iFolders across multiple workstations and share them with others.</Para>
+     <Para>You work with iFolders directly in your file manager or in the iFolders browser that is part of the client. Within the iFolder, you can set up any subdirectory structure that suits your personal or corporate work habits. The subdirectory structure is constant across all member iFolders. When you share an iFolder, member users with the Write right can modify the directory structure, and those changes apply to all copies of the iFolder. Each user can locate the shared iFolder anywhere on his or her own computer that satisfies the <XRefInt IDREF="bx08x4y" PIDREF="bx08x4y" File="04_iFolders.fm" Element="Topic" Format="HeadingOnPage">.</Para>
     </Head>
 
     <Head ID="bq1r113"><?FM: MARKER [Hypertext] newlink bq1r113>
@@ -331,10 +294,9 @@
       <BulletItem>
        <ParaWithTitle ID="bq8voz4"><?FM: MARKER [Hypertext] newlink bq8voz4>
         <Title>Owner: </Title>
-        <Para>Only one user serves as the owner of an iFolder. This is typically the user who created the iFolder. The owner user can use the iFolder client to transfer ownership to another member of the iFolder. The iFolder administrator can transfer ownership to any user on the iFolder server, using administrator tools.</Para>
+        <Para>Only one user serves as the owner of an iFolder. This is typically the user who creats the iFolder. The owner user can use the iFolder client to transfer ownership to another member of the iFolder. </Para>
        </ParaWithTitle>
-       <Para>The owner of an iFolder has the Full Control right. This user has read/write access to the iFolder, manages membership and access rights for member users, and can remove the Full Control right for any member. With an enterprise server, the disk space used by the owner&apos;s iFolders count against the owner&apos;s user disk quotas on the enterprise server. </Para>
-       <Para>If an owner user is deleted as a user for the iFolder server, the iFolders owned by the user are orphaned. Orphaned iFolders are assigned temporarily to the iFolder administrator, who serves as a temporary custodial owner. Membership and synchronization continues while the iFolder administrator determines whether an orphaned iFolder should be deleted or assigned to a new owner.</Para>
+       <Para>The owner of an iFolder has the Full Control right. This user has read/write access to the iFolder, manages membership and access rights for member users, and can remove the Full Control right for any member.</Para>
       </BulletItem>
       <BulletItem>
        <ParaWithTitle ID="bq8voz5"><?FM: MARKER [Hypertext] newlink bq8voz5>
@@ -351,22 +313,11 @@
       <BulletItem>
        <ParaWithTitle ID="bq8voz7"><?FM: MARKER [Hypertext] newlink bq8voz7>
         <Title>Read Only: </Title>
-        <Para>A member of the shared iFolder, with the Read Only access right to directories and files in the iFolder. This member can modify a file, but the local changes are not synchronized back to the server.</Para>
+        <Para>A member of the shared iFolder, with the Read Only access right to directories and files in the iFolder. This member can modify a file, but the local changes are not synchronized to other members&apos; copies of the iFolder.</Para>
        </ParaWithTitle>
       </BulletItem>
      </ListBullet>
-     <Para>When used with an enterprise server account, the server hosts every iFolder created for that account. When you create an iFolder, the enterprise server makes it available to the specified list of users. You can have a only one account on any given enterprise server, but you can have multiple accounts.</Para>
-     <Para>Any iFolder account holder can own some iFolders and be a member of other iFolders. As an owner users, you always have the Full Control right. As a member user, your level of access in each shared iFolder can differ, depending on the access granted to you by any member with the Full Control right.</Para>
-    </Head>
-
-    <Head ID="bq655zc"><?FM: MARKER [Hypertext] newlink bq655zc>
-     <Title>Account Setup for Enterprise Servers</Title>
-     <Para>The iFolder client allows you to set up multiple accounts, where a single account represents a given enterprise server. You specify the server address, username, and password to uniquely identify an account. On your computer, log in as the local user identity you plan to use to access an account and its iFolders, then set up the iFolder. Under your local login, you can set up multiple iFolder accounts, but each account must belong to a different iFolder enterprise server.  </Para>
-    </Head>
-
-    <Head ID="bq5xp9r"><?FM: MARKER [Hypertext] newlink bq5xp9r>
-     <Title>Access Authentication</Title>
-     <Para>Whenever iFolder connects to an enterprise server to synchronize files, it connects with HTTP BASIC or HTTPS (SSL) connections to the server, and the server authenticates the user against its LDAP directory service. The administrator determines whether iFolder traffic uses HTTP  BASIC or HTTPS connections.</Para>
+     <Para>Any iFolder user can own some iFolders and be a member of other iFolders. As an owner user, you always have the Full Control right. As a member user, your level of access in each shared iFolder can differ, depending on the access granted to you by any member with the Full Control right.</Para>
     </Head>
 
     <Head ID="bq1r118"><?FM: MARKER [Hypertext] newlink bq1r118>
@@ -601,7 +552,7 @@
 
    <Topic ID="accounts" Type="General" Topic="MainTopic"><?FM: MARKER [Hypertext] newlink accounts>
     <Title>Configuring an iFolder Account</Title>
-    <Para>You must configure at least one iFolder account before you can create iFolders or share iFolders on your system. You can create only one account for a Novell iFolder enterprise server, but you can have accounts for multiple iFolder enterprise servers. </Para>
+    <Para>You must configure at least one iFolder account before you can create iFolders or share iFolders on your system. You can create only one account for any given host computer or server, but you can have multiple accounts. </Para>
     <Para>A user with a different local login and user account can log in to the same computer at a different time and use iFolder to create his or her own set of iFolders under that identity. iFolder synchronizes only iFolders belonging to the active user.</Para>
     <Procedure>
      <StepList>
@@ -826,7 +777,7 @@
         <Entry Colname="2">
          <Para>Select Enable Account to allow background synchronization of iFolder invitations, the user list, and iFolders for this account. This governs only client-side functions.</Para>
          <Para>The status of whether an account is Enabled or Disabled is shown in the Status column of the Accounts list. You can view status of the Enabled Account setting at a glance if you have more than one account set up.</Para>
-         <Para>The iFolder system administrator can disable your iFolder account (usually temporarily) on the server side. You can expect the following behavior:</Para>
+         <Para>When you use iFolder with Novell&reg; iFolder&reg; 3.<VersionVariable>x</VersionVariable>, the iFolder system administrator can disable your iFolder account (usually temporarily) on the server side. You can expect the following behavior:</Para>
          <ListBulletT>
           <BulletItemT>
            <Para>If you are logged in when the account is disabled from the server side, you can manage your iFolders and your iFolder data continues to synchronize with the server until you end your session by logging out or disabling synchronization, or until the server disconnects your session, whichever first occurs.</Para>
@@ -879,7 +830,7 @@
          <Para><?FM: MARKER [Hypertext] newlink bvie4e0>Description</Para>
         </Entry>
         <Entry Colname="2">
-         <Para>The user-friendly description of the enterprise server as entered by the iFolder administrator during the iFolder installation. If no description was entered, the value is &ldquo;none.&rdquo;</Para>
+         <Para>The user-friendly description of the enterprise server, simple server, or workgroup host computer as entered by its administrator. If no description was entered, the value is &ldquo;none.&rdquo;</Para>
         </Entry>
        </Row>
        <Row ID="bvie4e1">
@@ -946,7 +897,7 @@
           <Title>Remove the iFolder Account from Only the Current Computer: </Title>
           <Para>Deselect Remove My iFolder and Files from the Server, then click Yes. iFolder removes the selected account only from the local workstation. The local iFolders for this account are reverted to normal folders. Use a file manager to locate and delete the local copy of the data if it is not needed. </Para>
          </ParaWithTitle>
-         <Para>You can continue to access your iFolders for this account from other computers with the iFolder client or from anywhere with Novell iFolder Web access.</Para>
+         <Para>You can continue to access your iFolders for this account from other computers with the iFolder client. When the iFolder client is used with a Novell&reg; iFolder&reg; 3.<VersionVariable>x</VersionVariable> enterprise server, you can access files from anywhere with Novell iFolder 3.<VersionVariable>x</VersionVariable> Web access.</Para>
         </BulletItem>
         <BulletItem>
          <ParaWithTitle ID="bvwsxkq"><?FM: MARKER [Hypertext] newlink bvwsxkq>
@@ -1045,7 +996,8 @@
            </Entry>
            <Entry Colname="2">
             <Para>Select Synchronize to Host Every to enable background synchronization; deselect Synchronize to Host Every to disable background synchronization.</Para>
-            <Para>If you enable synchronization, specify the interval for synchronizing files, such as every 1 hour or every 2 days. The system minimum Synchronization Interval, typically every 5 minutes, is configured by the iFolder administrator. You cannot override the system minimum. The absolute system minimum interval is 1 minute.</Para>
+            <Para>If you enable synchronization, specify the interval for synchronizing files, such as every 1 hour or every 2 days. </Para>
+            <Para>If you use the iFolder client with Novell iFolder 3.<VersionVariable>x</VersionVariable>, the system minimum Synchronization Interval, typically every 5 minutes, is configured by the iFolder administrator. You cannot override the system minimum. The absolute system minimum interval is 1 minute.</Para>
            </Entry>
           </Row>
          </TBody>
@@ -1273,7 +1225,7 @@
 
    <Topic ID="bwensdb" Type="General" Topic="MainTopic"><?FM: MARKER [Hypertext] newlink bwensdb>
     <Title>Guidelines for File Types and Sizes to Be Synchronized</Title>
-    <Para>Your iFolder administrator might specify file type restrictions and maximum file size restrictions at the system, user, or iFolder level. Your account might also be restricted in the amount of space you can use for the data in the iFolders you own. When you participate in other iFolders, the space consumed on the server is counted against the owner of that iFolder.</Para>
+    <Para>When the iFolder client is used with Novell iFolder 3.<VersionVariable>x</VersionVariable>, your iFolder administrator might specify file type restrictions and maximum file size restrictions at the system, user, or iFolder level. Your account might also be restricted in the amount of space you can use for the data in the iFolders you own. When you participate in other iFolders, the space consumed on the server is counted against the owner of that iFolder.</Para>
     <Para>Some file types are not good candidates for synchronization, such as operating system files, hidden files created by a file manager, or databases that are implemented as a collection of linked files. You might include only key file types used for your business, or exclude files that are likely unrelated to business, such as .mp3 files. </Para>
     <BridgeHead ID="bweu18w"><?FM: MARKER [Hypertext] newlink bweu18w>Operating System Files</BridgeHead>
     <Para>You should not convert system directories to iFolders. Most system files change infrequently and it is better to keep an image file of your basic system and key software than to attempt to synchronize those files to the server.</Para>
@@ -2033,7 +1985,8 @@
          <Para><?FM: MARKER [Hypertext] newlink bx0ozzc>Automatically Synchronizes Every</Para>
         </Entry>
         <Entry Colname="2">
-         <Para>The synchronization interval for the iFolder. Specify the value in minutes, hours, or days. The interval cannot override the minimum interval specified by the iFolder administrator for the server or your account on the server, but it can override the client-wide synchronization interval.</Para>
+         <Para>The synchronization interval for the iFolder. Specify the value in minutes, hours, or days. </Para>
+         <Para>When the iFolder client is used with a Novell iFolder 3.<VersionVariable>x </VersionVariable>enterprise server, the interval cannot override the minimum interval specified by the iFolder administrator for the server or your account on the server, but it can override the client-wide synchronization interval.</Para>
         </Entry>
        </Row>
        <Row ID="bx0p465">
@@ -2114,7 +2067,7 @@
       </Step>
       <Step ID="bviet4u"><?FM: MARKER [Hypertext] newlink bviet4u>
        <Para>If you enable synchronization, specify the interval for synchronizing files, such as every 1 hour or every 2 days. </Para>
-       <Para>The minimum system Synchronization Interval, typically every 5 minutes, is configured by the iFolder administrator. You cannot override the system minimum.</Para>
+       <Para>When the iFolder client is used with Novell iFolder 3.<VersionVariable>x</VersionVariable>, the minimum system Synchronization Interval, typically every 5 minutes, is configured by the iFolder administrator. You cannot override the system minimum. The absolute system minimum is 1 minute.</Para>
       </Step>
      </StepList>
     </Procedure>

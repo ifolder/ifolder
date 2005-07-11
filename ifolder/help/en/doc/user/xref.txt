@@ -1,13 +1,12 @@
 front.html                  iFolder Help
 overview.html               Overview of iFolder
-bv1g15h.html                Enterprise Server Sharing
+bx3aueg.html                iFolder Sharing
 bq1r10z.html                Benefits of iFolder
 bq1r110.html                Key Features of iFolder
 bq1r110.html#bq1r111        The iFolder Client
+bq1r110.html#bx3bipv        iFolder Account
 bq1r110.html#bq1r112        Shared iFolders
 bq1r110.html#bq1r113        iFolder Access Rights
-bq1r110.html#bq655zc        Account Setup for Enterprise Servers
-bq1r110.html#bq5xp9r        Access Authentication
 bq1r110.html#bq1r118        File Synchronization and Data Management
 bq1r110.html#bq63xvh        Synchronization Log
 bwcku86.html                Cross-Platform Considerations
