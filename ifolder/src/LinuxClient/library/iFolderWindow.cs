@@ -1278,54 +1278,6 @@ namespace Novell.iFolder
 			SetupiFolder();
 		}
 
-
-		private bool ShowBadiFolderPath(string path, string name)
-		{
-			if (path == null || name == null)
-				throw new Exception("Cannot pass in null parameters to ShowBadiFolderPath");
-
-			string fullPath = System.IO.Path.Combine(path, name);
-			if (!ifws.CanBeiFolder(fullPath))
-			{
-				// Check to see if the name has any invalid characters in it
-				char[] invalidChars = simws.GetInvalidSyncFilenameChars().ToCharArray();
-				if (name.IndexOfAny(invalidChars) >= 0)
-				{
-					iFolderMsgDialog dg = new iFolderMsgDialog(
-						this,
-						iFolderMsgDialog.DialogType.Info,
-						iFolderMsgDialog.ButtonSet.Ok,
-						"",
-						Util.GS("Invalid characters in folder name"),
-						string.Format(Util.GS("The folder you selected contains invalid characters.  iFolders cannot contain the following characters: {0}"),
-									  new string(invalidChars)));
-					dg.Run();
-					dg.Hide();
-					dg.Destroy();
-				}
-				else
-				{
-					iFolderMsgDialog dg = new iFolderMsgDialog(
-						this,
-						iFolderMsgDialog.DialogType.Info,
-						iFolderMsgDialog.ButtonSet.Ok,
-						"",
-						Util.GS("Invalid folder selected"),
-						Util.GS("iFolders cannot contain other iFolders.  The folder you selected is either already an iFolder, contains an iFolder, or is inside an existing iFolder.  Please select an alternate folder."));
-					dg.Run();
-					dg.Hide();
-					dg.Destroy();
-				}
-
-				return true;
-			}
-
-			return false;
-		}
-
-
-
-
 		private void OnRemoveiFolder(object o, EventArgs args)
 		{
 			iFolderHolder ifHolder = null;
@@ -1932,49 +1884,36 @@ namespace Novell.iFolder
 					if(rc != -5)
 						return;
 
-					// if the user selected OK, check the path they
-					// selectected, if we didn't show there was a bad
-					// path, set rc to 0 to accept the ifolder
-					if(!ShowBadiFolderPath(newPath, ifHolder.iFolder.Name))
+					try
 					{
+						// This will remove the current subscription
+						// Read the updated subscription, and place it back
+						// in the list to show status until the real iFolder
+						// comes along
+	//					curiFolders.Remove(ifHolder.iFolder.ID);
+	
+						iFolderHolder newHolder = ifdata.AcceptiFolderInvitation(
+														ifHolder.iFolder.ID,
+														ifHolder.iFolder.DomainID,
+														newPath);
+	
+						tModel.SetValue(iter, 0, newHolder);
+	//					curiFolders.Add(newiFolder.ID, iter);
+
 						rc = 0;
 
 						// Save off the path so that the next time the user
 						// opens the setup dialog, we'll open to the same
 						// directory
 						Util.LastSetupPath = newPath;
+
+					}
+					catch(Exception e)
+					{
+						DisplayCreateOrSetupException(e);
 					}
 				}
 				while(rc == -5);
-				
-				try
-				{
-					// This will remove the current subscription
-					// Read the updated subscription, and place it back
-					// in the list to show status until the real iFolder
-					// comes along
-//					curiFolders.Remove(ifHolder.iFolder.ID);
-
-					iFolderHolder newHolder = ifdata.AcceptiFolderInvitation(
-													ifHolder.iFolder.ID,
-													ifHolder.iFolder.DomainID,
-													newPath);
-
-					tModel.SetValue(iter, 0, newHolder);
-//					curiFolders.Add(newiFolder.ID, iter);
-				}
-				catch(Exception e)
-				{
-					// if we threw an exceptoin, add the old ifolder back
-//					curiFolders.Add(ifHolder.iFolder.ID, iter);
-
-					iFolderExceptionDialog ied = new iFolderExceptionDialog(
-														this, e);
-					ied.Run();
-					ied.Hide();
-					ied.Destroy();
-					return;
-				}
 			}
 		}
 
@@ -2071,9 +2010,6 @@ namespace Novell.iFolder
 						continue;
 					}
 
-					if(ShowBadiFolderPath(parentDir, name))
-					continue;
-
 					iFolderHolder ifHolder = null;
 					try
 					{
@@ -2083,30 +2019,8 @@ namespace Novell.iFolder
 					}
 					catch(Exception e)
 					{
-						if (e.Message.IndexOf("Path did not exist") >= 0)
-						{
-							iFolderMsgDialog dg = new iFolderMsgDialog(
-								this,
-								iFolderMsgDialog.DialogType.Warning,
-								iFolderMsgDialog.ButtonSet.Ok,
-								"",
-								Util.GS("Invalid folder specified"),
-								Util.GS("The folder you've specified does not exist.  Please select an existing folder and try again."));
-							dg.Run();
-							dg.Hide();
-							dg.Destroy();
-							continue;
-						}
-						else
-						{
-							iFolderExceptionDialog ied = 
-								new iFolderExceptionDialog(
-									this,
-									e);
-							ied.Run();
-							ied.Hide();
-							ied.Destroy();
-						}
+						if (DisplayCreateOrSetupException(e))
+							continue;	// The function handled the exception
 					}
 
 					if(ifHolder == null)
@@ -2208,6 +2122,121 @@ namespace Novell.iFolder
 			
 			DomainFilterOptionMenu.Menu = m;
 			DomainFilterOptionMenu.ShowAll();
+		}
+		
+		// Return true if we were able to determine the exception type.
+		private bool DisplayCreateOrSetupException(Exception e)
+		{
+			string primaryText = null;
+			string secondaryText = null;
+			if (e.Message.IndexOf("Path did not exist") >= 0)
+			{
+				primaryText = Util.GS("Invalid folder specified");
+				secondaryText = Util.GS("The folder you've specified does not exist.  Please select an existing folder and try again.");
+			}
+			else if (e.Message.IndexOf("PathExists") >= 0)
+			{
+				primaryText = Util.GS("A folder with the same name already exists.");
+				secondaryText = Util.GS("The location you selected already contains a folder with the same name as this iFolder.  Please select a different location and try again.");
+			}
+			else if (e.Message.IndexOf("RootOfDrivePath") >= 0)
+			{
+				primaryText = Util.GS("iFolders cannot exist at the drive level.");
+				secondaryText = Util.GS("The location you selected is at the root of the drive.  Please select a location that is not at the root of a drive and try again.");
+			}
+			else if (e.Message.IndexOf("InvalidCharactersPath") >= 0)
+			{
+				primaryText = Util.GS("The selected location contains invalid characters.");
+				secondaryText = Util.GS("The characters \\:*?\"<>| cannot be used in an iFolder. Please select a different location and try again.");
+			}
+			else if (e.Message.IndexOf("AtOrInsideStorePath") >= 0)
+			{
+				primaryText = Util.GS("The selected location is inside the iFolder data folder.");
+				secondaryText = Util.GS("The iFolder data folder is normally located in your home folder in the folder \".local/share\".  Please select a different location and try again.");
+			}
+			else if (e.Message.IndexOf("ContainsStorePath") >= 0)
+			{
+				primaryText = Util.GS("The selected location contains the iFolder data files.");
+				secondaryText = Util.GS("The location you have selected contains the iFolder data files.  These are normally located in your home folder in the folder \".local/share\".  Please select a different location and try again.");
+			}
+			else if (e.Message.IndexOf("NotFixedDrivePath") >= 0)
+			{
+				primaryText = Util.GS("The selected location is on a network or non-physical drive.");
+				secondaryText = Util.GS("iFolders must reside on a physical drive.  Please select a different location and try again.");
+			}
+			else if (e.Message.IndexOf("SystemDirectoryPath") >= 0)
+			{
+				primaryText = Util.GS("The selected location contains a system folder.");
+				secondaryText = Util.GS("System folders cannot be contained in an iFolder.  Please select a different location and try again.");
+			}
+			else if (e.Message.IndexOf("SystemDrivePath") >= 0)
+			{
+				primaryText = Util.GS("The selected location is a system drive.");
+				secondaryText = Util.GS("System drives cannot be contained in an iFolder.  Please select a different location and try again.");
+			}
+			else if (e.Message.IndexOf("IncludesWinDirPath") >= 0)
+			{
+				primaryText = Util.GS("The selected location includes the Windows folder.");
+				secondaryText = Util.GS("The Windows folder cannot be contained in an iFolder.  Please select a different location and try again.");
+			}
+			else if (e.Message.IndexOf("IncludesProgFilesPath") >= 0)
+			{
+				primaryText = Util.GS("The selected location includes the Program Files folder.");
+				secondaryText = Util.GS("The Program Files folder cannot be contained in an iFolder.  Please select a different location and try again.");
+			}
+			else if (e.Message.IndexOf("DoesNotExistPath") >= 0)
+			{
+				primaryText = Util.GS("The selected location does not exist.");
+				secondaryText = Util.GS("iFolders can only be created from folders that exist.  Please select a different location and try again.");
+			}
+			else if (e.Message.IndexOf("NoReadRightsPath") >= 0)
+			{
+				primaryText = Util.GS("You do not have access to read files in the selected location.");
+				secondaryText = Util.GS("iFolders can only be created from folders where you have access to read and write files.  Please select a different location and try again.");
+			}
+			else if (e.Message.IndexOf("NoWriteRightsPath") >= 0)
+			{
+				primaryText = Util.GS("You do not have access to write files in the selected location.");
+				secondaryText = Util.GS("iFolders can only be created from folders where you have access to read and write files.  Please select a different location and try again.");
+			}
+			else if (e.Message.IndexOf("ContainsCollectionPath") >= 0)
+			{
+				primaryText = Util.GS("The selected location already contains an iFolder.");
+				secondaryText = Util.GS("iFolders cannot exist inside other iFolders.  Please select a different location and try again.");
+			}
+			else if (e.Message.IndexOf("AtOrInsideCollectionPath") >= 0)
+			{
+				primaryText = Util.GS("The selected location is inside another iFolder.");
+				secondaryText = Util.GS("iFolders cannot exist inside other iFolders.  Please select a different location and try again.");
+			}
+						
+			if (primaryText != null)
+			{
+				iFolderMsgDialog dg = new iFolderMsgDialog(
+					this,
+					iFolderMsgDialog.DialogType.Warning,
+					iFolderMsgDialog.ButtonSet.Ok,
+					"",
+					primaryText,
+					secondaryText);
+					dg.Run();
+					dg.Hide();
+					dg.Destroy();
+					
+					return true;
+			}
+			else
+			{
+				iFolderExceptionDialog ied = 
+					new iFolderExceptionDialog(
+						this,
+						e);
+				ied.Run();
+				ied.Hide();
+				ied.Destroy();
+			}
+			
+			return false;
 		}
 
 /*
