@@ -347,7 +347,7 @@
 		<row><td>AllOtherFiles1</td><td>{31083ADB-E7FF-4411-949D-83F925AF4BD0}</td><td>MICROSOFT.NET</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>AllOtherFiles2</td><td>{860B4627-638C-4BBC-93AF-C93ED105E166}</td><td>FRAMEWORK</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>AllOtherFiles3</td><td>{6DFFEBF0-60AC-4CE2-BDFE-4D557940576B}</td><td>V1.1.4322</td><td>8</td><td/><td>InstallUtil.exe.config</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>AllUsers</td><td>{2C8F8255-076F-4671-B2BF-576D07513763}</td><td>INSTALLDIR</td><td>8</td><td>ALLUSERS</td><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>AllUsers</td><td>{2C8F8255-076F-4671-B2BF-576D07513763}</td><td>INSTALLDIR</td><td>8</td><td>ALLUSERS</td><td/><td>17</td><td/><td>iFolderApp.exe</td><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ContactBrowserShortcutComponent</td><td>{C4E1B853-D90D-4B9B-8565-1F08CFA2DC04}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>HelpFiles</td><td>{B12C9353-241E-44A6-B0F5-E76A373F6771}</td><td>HELP</td><td>0</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ISRegistryComponent</td><td>{F09F7E00-17CF-425E-8466-D8CEF6DE68C7}</td><td>INSTALLDIR</td><td>0</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
@@ -11935,6 +11935,21 @@
 		<row><td>ID_STRING5</td><td>1049</td><td>Browse contacts</td><td>0</td><td/><td>999906475</td></row>
 		<row><td>ID_STRING5</td><td>1051</td><td>Browse contacts</td><td>0</td><td/><td>999900331</td></row>
 		<row><td>ID_STRING5</td><td>2052</td><td>Browse contacts</td><td>0</td><td/><td>999941291</td></row>
+		<row><td>ID_STRING50</td><td>1028</td><td>NewFeature1</td><td>0</td><td/><td>1536773775</td></row>
+		<row><td>ID_STRING50</td><td>1029</td><td>NewFeature1</td><td>0</td><td/><td>1536773775</td></row>
+		<row><td>ID_STRING50</td><td>1031</td><td>NewFeature1</td><td>0</td><td/><td>1536773775</td></row>
+		<row><td>ID_STRING50</td><td>1033</td><td>NewFeature1</td><td>0</td><td/><td>1536773775</td></row>
+		<row><td>ID_STRING50</td><td>1034</td><td>NewFeature1</td><td>0</td><td/><td>1536773775</td></row>
+		<row><td>ID_STRING50</td><td>1036</td><td>NewFeature1</td><td>0</td><td/><td>1536773775</td></row>
+		<row><td>ID_STRING50</td><td>1038</td><td>NewFeature1</td><td>0</td><td/><td>1536773775</td></row>
+		<row><td>ID_STRING50</td><td>1040</td><td>NewFeature1</td><td>0</td><td/><td>1536773775</td></row>
+		<row><td>ID_STRING50</td><td>1041</td><td>NewFeature1</td><td>0</td><td/><td>1536773775</td></row>
+		<row><td>ID_STRING50</td><td>1042</td><td>NewFeature1</td><td>0</td><td/><td>1536773775</td></row>
+		<row><td>ID_STRING50</td><td>1045</td><td>NewFeature1</td><td>0</td><td/><td>1536773775</td></row>
+		<row><td>ID_STRING50</td><td>1046</td><td>NewFeature1</td><td>0</td><td/><td>1536773775</td></row>
+		<row><td>ID_STRING50</td><td>1049</td><td>NewFeature1</td><td>0</td><td/><td>1536773775</td></row>
+		<row><td>ID_STRING50</td><td>1051</td><td>NewFeature1</td><td>0</td><td/><td>1536773775</td></row>
+		<row><td>ID_STRING50</td><td>2052</td><td>NewFeature1</td><td>0</td><td/><td>1536773775</td></row>
 		<row><td>ID_STRING6</td><td>1028</td><td>iFolder Help Files</td><td>0</td><td/><td>999941291</td></row>
 		<row><td>ID_STRING6</td><td>1029</td><td>iFolder Help Files</td><td>0</td><td/><td>999916747</td></row>
 		<row><td>ID_STRING6</td><td>1031</td><td>iFolder Help Files</td><td>0</td><td/><td>-1424406739</td></row>
@@ -12656,8 +12671,9 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<row><td>ProgressType2</td><td>installed</td><td/></row>
 		<row><td>ProgressType3</td><td>installs</td><td/></row>
 		<row><td>RebootYesNo</td><td>Yes</td><td/></row>
-		<row><td>ReinstallModeText</td><td>vomus</td><td/></row>
+		<row><td>ReinstallModeText</td><td>amus</td><td/></row>
 		<row><td>SHOWLAUNCHPROGRAM</td><td>0</td><td/></row>
+		<row><td>SecureCustomProperties</td><td>OLDAPPFOUND</td><td/></row>
 		<row><td>SetupType</td><td>Typical</td><td/></row>
 		<row><td>UpgradeCode</td><td>{BF173CB7-239E-4170-9D36-BC5926FB14FF}</td><td/></row>
 		<row><td>_IsMaintenance</td><td>Change</td><td/></row>
@@ -12934,7 +12950,7 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<col def="S255">Remove</col>
 		<col def="s72">ActionProperty</col>
 		<col def="S72">ISDisplayName</col>
-		<row><td>{BF173CB7-239E-4170-9D36-BC5926FB14FF}</td><td>0001.0000.0000</td><td>***ALL_VERSIONS***</td><td>1033</td><td>257</td><td/><td>OLDAPPFOUND</td><td/></row>
+		<row><td>{BF173CB7-239E-4170-9D36-BC5926FB14FF}</td><td></td><td>***ALL_VERSIONS***</td><td>1033</td><td>257</td><td/><td>OLDAPPFOUND</td><td/></row>
 	</table>
 
 	<table name="Verb">
