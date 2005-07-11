@@ -2494,7 +2494,17 @@ namespace Novell.iFolderCom
 		private void iFolderAdvanced_Load(object sender, EventArgs e)
 		{
 			// Reference the help using locale-specific path.
-			helpProvider1.HelpNamespace = Path.Combine(Path.Combine(Path.Combine(loadPath, "help"), GetLanguageDirectory()), @"doc\user\data\sharewith.html");
+			string helpFile = Path.Combine(Path.Combine(Path.Combine(loadPath, "help"), GetLanguageDirectory()), @"doc\user\data\sharewith.html");
+			if (!File.Exists(helpFile))
+			{
+				// The language help file wasn't found ... default to English.
+				helpFile = Path.Combine(loadPath, @"help\en\doc\user\data\sharewith.html");
+			}
+
+			if (File.Exists(helpFile))
+			{
+				helpProvider1.HelpNamespace = helpFile;
+			}
 
 			// Image list...
 			try

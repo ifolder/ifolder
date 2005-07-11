@@ -1322,7 +1322,17 @@ namespace Novell.iFolderCom
 		private void ConflictResolver_Load(object sender, System.EventArgs e)
 		{
 			// Reference the help using locale-specific path.
-			helpProvider1.HelpNamespace = Path.Combine(Path.Combine(Path.Combine(loadPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"doc\user\data\conflicts.html");
+			string helpFile = Path.Combine(Path.Combine(Path.Combine(loadPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"doc\user\data\conflicts.html");
+			if (!File.Exists(helpFile))
+			{
+				// The language help file wasn't found ... default to English.
+				helpFile = Path.Combine(loadPath, @"help\en\doc\user\data\conflicts.html");
+			}
+
+			if (File.Exists(helpFile))
+			{
+				helpProvider1.HelpNamespace = helpFile;
+			}
 
 			try
 			{
