@@ -362,7 +362,7 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I4">ISAttributes</col>
 		<col def="S72">ISComponentSubFolder_</col>
-		<row><td>simias.cmd.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>Simias.dll.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>simias.cmd</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\simias.cmd</td><td>1</td><td/></row>
+		<row><td>simias.cmd.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>Simias.dll.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>simias.cmd</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\simias.cmd</td><td>17</td><td/></row>
 	</table>
 
 	<table name="FileSFPCatalog">

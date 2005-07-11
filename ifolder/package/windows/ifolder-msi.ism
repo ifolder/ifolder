@@ -58,7 +58,7 @@
 		<comments>##ID_STRING2##</comments>
 		<template>Intel;1033</template>
 		<lastauthor>Administrator</lastauthor>
-		<revnumber>{98375A0F-8C52-475C-B925-C2B74A2766C6}</revnumber>
+		<revnumber>{DEA985AB-4597-41EF-A5C7-0A07A151F367}</revnumber>
 		<lastprinted/>
 		<createdtm>06/21/1999 02:00</createdtm>
 		<lastsavedtm>07/14/2000 05:50</lastsavedtm>
@@ -1446,10 +1446,10 @@
 		<row><td>InstallUtil.exe.config</td><td>AllOtherFiles3</td><td>INSTAL~1.CON|InstallUtil.exe.config</td><td>0</td><td>3.1</td><td/><td/><td>1</td><td>&lt;PATH_TO_SOURCE&gt;\src\FormsTrayApp\InstallUtil.exe.config</td><td>1</td><td/></row>
 		<row><td>explorer.exe.config</td><td>WindowsFolderFiles</td><td>EXPLOR~1.CON|explorer.exe.config</td><td>0</td><td>3.1</td><td/><td/><td>1</td><td>&lt;PATH_TO_SOURCE&gt;\src\ifoldershell\explorer.exe.config</td><td>1</td><td/></row>
 		<row><td>explorer.exe.manifest</td><td>WindowsFolderFiles</td><td>EXPLOR~1.MAN|explorer.exe.manifest</td><td>0</td><td>3.1</td><td/><td/><td>1</td><td>&lt;PATH_TO_SOURCE&gt;\src\ifoldershell\explorer.exe.manifest</td><td>1</td><td/></row>
-		<row><td>iFolderApp.exe</td><td>iFolderApp.exe</td><td>IFOLDE~2.EXE|iFolderApp.exe</td><td>0</td><td>3.1</td><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\iFolderApp.exe</td><td>1</td><td/></row>
-		<row><td>iFolderComponent.dll</td><td>iFolderComponent.dll</td><td>IFOLDE~1.DLL|iFolderComponent.dll</td><td>0</td><td>3.1</td><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\iFolderComponent.dll</td><td>1</td><td/></row>
-		<row><td>iFolderShell.dll</td><td>iFolderShell.dll</td><td>IFOLDE~1.DLL|iFolderShell.dll</td><td>0</td><td>3.1</td><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\iFolderShell.dll</td><td>1</td><td/></row>
-		<row><td>iFolderShell.reg</td><td>iFolderShell.dll</td><td>IFOLDE~1.REG|iFolderShell.reg</td><td>0</td><td>3.1</td><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\iFolderShell.reg</td><td>1</td><td/></row>
+		<row><td>iFolderApp.exe</td><td>iFolderApp.exe</td><td>IFOLDE~2.EXE|iFolderApp.exe</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\iFolderApp.exe</td><td>17</td><td/></row>
+		<row><td>iFolderComponent.dll</td><td>iFolderComponent.dll</td><td>IFOLDE~1.DLL|iFolderComponent.dll</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\iFolderComponent.dll</td><td>17</td><td/></row>
+		<row><td>iFolderShell.dll</td><td>iFolderShell.dll</td><td>IFOLDE~1.DLL|iFolderShell.dll</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\iFolderShell.dll</td><td>17</td><td/></row>
+		<row><td>iFolderShell.reg</td><td>iFolderShell.dll</td><td>IFOLDE~1.REG|iFolderShell.reg</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\iFolderShell.reg</td><td>17</td><td/></row>
 	</table>
 
 	<table name="FileSFPCatalog">
