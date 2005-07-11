@@ -400,6 +400,14 @@ namespace Novell.iFolderCom
 				Path.Combine(Path.Combine(Path.Combine(dllPath, "help"), GetLanguageDirectory()), @"doc\user\data\front.html") :
 				Path.Combine(Path.Combine(Path.Combine(dllPath, "help"), GetLanguageDirectory()), helpFile);
 
+			if (!File.Exists(helpPath))
+			{
+				// Fall back to English if the language isn't installed.
+				helpPath = helpFile.Equals(string.Empty) ? 
+					Path.Combine(dllPath, @"help\en\doc\user\data\front.html") :
+					Path.Combine(Path.Combine(dllPath, @"help\en"), helpFile);
+			}
+
 			try
 			{
 				Process.Start(helpPath);

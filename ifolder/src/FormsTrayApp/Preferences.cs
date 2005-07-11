@@ -2273,7 +2273,17 @@ namespace Novell.FormsTrayApp
 		private void Preferences_Load(object sender, System.EventArgs e)
 		{
 			// Reference the help using locale-specific path.
-			helpProvider1.HelpNamespace = Path.Combine(Path.Combine(Path.Combine(Application.StartupPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"doc\user\data\preferences.html");
+			string helpFile = Path.Combine(Path.Combine(Path.Combine(Application.StartupPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"doc\user\data\preferences.html");
+			if (!File.Exists(helpFile))
+			{
+				// The language help file wasn't found ... default to English.
+				helpFile = Path.Combine(Application.StartupPath, @"help\en\doc\user\data\preferences.html");
+			}
+
+			if (File.Exists(helpFile))
+			{
+				helpProvider1.HelpNamespace = helpFile;
+			}
 
 			// Load the application icon and banner image.
 			try
@@ -2942,15 +2952,36 @@ namespace Novell.FormsTrayApp
 
 		private void tabControl1_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
+			string helpFile;
 			switch (tabControl1.SelectedIndex)
 			{
 				case 0:
 					// Reference the help using locale-specific path.
-					helpProvider1.HelpNamespace = Path.Combine(Path.Combine(Path.Combine(Application.StartupPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"doc\user\data\preferences.html");
+					helpFile = Path.Combine(Path.Combine(Path.Combine(Application.StartupPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"doc\user\data\preferences.html");
+					if (!File.Exists(helpFile))
+					{
+						// The language help file wasn't found ... default to English.
+						helpFile = Path.Combine(Application.StartupPath, @"help\en\doc\user\data\preferences.html");
+					}
+
+					if (File.Exists(helpFile))
+					{
+						helpProvider1.HelpNamespace = helpFile;
+					}
 					break;
 				case 1:
 					// Reference the help using locale-specific path.
-					helpProvider1.HelpNamespace = Path.Combine(Path.Combine(Path.Combine(Application.StartupPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"doc\user\data\accounts.html");
+					helpFile = Path.Combine(Path.Combine(Path.Combine(Application.StartupPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"doc\user\data\accounts.html");
+					if (!File.Exists(helpFile))
+					{
+						// The language help file wasn't found ... default to English.
+						helpFile = Path.Combine(Application.StartupPath, @"help\en\doc\user\data\accounts.html");
+					}
+
+					if (File.Exists(helpFile))
+					{
+						helpProvider1.HelpNamespace = helpFile;
+					}
 					break;
 			}
 		}
