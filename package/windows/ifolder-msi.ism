@@ -1444,8 +1444,8 @@
 		<col def="I4">ISAttributes</col>
 		<col def="S72">ISComponentSubFolder_</col>
 		<row><td>InstallUtil.exe.config</td><td>AllOtherFiles3</td><td>INSTAL~1.CON|InstallUtil.exe.config</td><td>0</td><td>3.1</td><td/><td/><td>1</td><td>&lt;PATH_TO_SOURCE&gt;\src\FormsTrayApp\InstallUtil.exe.config</td><td>1</td><td/></row>
-		<row><td>explorer.exe.config</td><td>WindowsFolderFiles</td><td>EXPLOR~1.CON|explorer.exe.config</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;PATH_TO_SOURCE&gt;\src\ifoldershell\explorer.exe.config</td><td>17</td><td/></row>
-		<row><td>explorer.exe.manifest</td><td>WindowsFolderFiles</td><td>EXPLOR~1.MAN|explorer.exe.manifest</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;PATH_TO_SOURCE&gt;\src\ifoldershell\explorer.exe.manifest</td><td>17</td><td/></row>
+		<row><td>explorer.exe.config</td><td>WindowsFolderFiles</td><td>EXPLOR~1.CON|explorer.exe.config</td><td>0</td><td>65535.0.0.0</td><td/><td>512</td><td>1</td><td>&lt;PATH_TO_SOURCE&gt;\src\ifoldershell\explorer.exe.config</td><td>85</td><td/></row>
+		<row><td>explorer.exe.manifest</td><td>WindowsFolderFiles</td><td>EXPLOR~1.MAN|explorer.exe.manifest</td><td>0</td><td>65535.0.0.0</td><td/><td>512</td><td>1</td><td>&lt;PATH_TO_SOURCE&gt;\src\ifoldershell\explorer.exe.manifest</td><td>85</td><td/></row>
 		<row><td>iFolderApp.exe</td><td>iFolderApp.exe</td><td>IFOLDE~2.EXE|iFolderApp.exe</td><td>0</td><td>65535.0.0.0</td><td/><td>512</td><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\iFolderApp.exe</td><td>85</td><td/></row>
 		<row><td>iFolderComponent.dll</td><td>iFolderComponent.dll</td><td>IFOLDE~1.DLL|iFolderComponent.dll</td><td>0</td><td>65535.0.0.0</td><td/><td>512</td><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\iFolderComponent.dll</td><td>85</td><td/></row>
 		<row><td>iFolderShell.dll</td><td>iFolderShell.dll</td><td>IFOLDE~1.DLL|iFolderShell.dll</td><td>0</td><td>65535.0.0.0</td><td/><td>512</td><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\iFolderShell.dll</td><td>85</td><td/></row>
@@ -2020,7 +2020,7 @@
 		<col def="S255">DotNetBuildConfiguration</col>
 		<col def="S255">MsiCommandLine</col>
 		<col def="I4">ISSetupPrerequisiteLocation</col>
-		<row><td>release</td><td>web</td><td>&lt;ISProjectDataFolder&gt;</td><td>PackageName</td><td>1</td><td>1033</td><td>2</td><td>1</td><td>Intel</td><td/><td>1033</td><td>2</td><td>0</td><td>1</td><td>0</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>108557</td><td/><td/><td/><td/></row>
+		<row><td>release</td><td>web</td><td>&lt;ISProjectDataFolder&gt;</td><td>PackageName</td><td>1</td><td>1033</td><td>2</td><td>1</td><td>Intel</td><td/><td>1033</td><td>2</td><td>0</td><td>1</td><td>0</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>1157261</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISReleaseExtended">
@@ -2054,7 +2054,7 @@
 		<col def="I4">MsiEngineVersion</col>
 		<col def="S255">WinMsi30Url</col>
 		<col def="S255">CertPassword</col>
-		<row><td>release</td><td>web</td><td>0</td><td>http://</td><td>0</td><td>install</td><td>install</td><td>[WindowsFolder]Downloaded Installations</td><td>1</td><td>http://www.installengine.com/Msiengine20</td><td>http://www.installengine.com/Msiengine20</td><td>1</td><td>http://www.installengine.com/cert05/isengine</td><td/><td/><td/><td/><td>2</td><td>http://www.installengine.com/cert05/dotnetfx</td><td>1</td><td>1033</td><td/><td/><td/><td/><td>0</td><td>3</td><td>20</td><td>http://www.installengine.com/Msiengine30</td><td/></row>
+		<row><td>release</td><td>web</td><td>0</td><td>http://</td><td>0</td><td>install</td><td>install</td><td>[WindowsFolder]Downloaded Installations</td><td>1</td><td>http://www.installengine.com/Msiengine20</td><td>http://www.installengine.com/Msiengine20</td><td>1</td><td>http://www.installengine.com/cert05/isengine</td><td/><td/><td/><td/><td>2</td><td>http://www.installengine.com/cert05/dotnetfx</td><td>1</td><td>1033</td><td/><td/><td/><td/><td>0</td><td>2</td><td>20</td><td>http://www.installengine.com/Msiengine30</td><td/></row>
 	</table>
 
 	<table name="ISReleasePublishInfo">
@@ -12646,7 +12646,7 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<row><td>PROGMSG_IIS_ROLLBACKAPPPOOLS</td><td>##IDS_PROGMSG_IIS_ROLLBACKAPPPOOLS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKVROOTS</td><td>##IDS_PROGMSG_IIS_ROLLBACKVROOTS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
-		<row><td>ProductCode</td><td>{76ACE820-A6D9-4B7E-A2D4-FFF30D2FE710}</td><td/></row>
+		<row><td>ProductCode</td><td>{E91607AA-583B-4942-BD3A-89C41E1975E8}</td><td/></row>
 		<row><td>ProductID</td><td>none</td><td/></row>
 		<row><td>ProductLanguage</td><td>1033</td><td/></row>
 		<row><td>ProductName</td><td>iFolder Client</td><td/></row>
@@ -12656,7 +12656,7 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<row><td>ProgressType2</td><td>installed</td><td/></row>
 		<row><td>ProgressType3</td><td>installs</td><td/></row>
 		<row><td>RebootYesNo</td><td>Yes</td><td/></row>
-		<row><td>ReinstallModeText</td><td>omus</td><td/></row>
+		<row><td>ReinstallModeText</td><td>vomus</td><td/></row>
 		<row><td>SHOWLAUNCHPROGRAM</td><td>0</td><td/></row>
 		<row><td>SetupType</td><td>Typical</td><td/></row>
 		<row><td>UpgradeCode</td><td>{BF173CB7-239E-4170-9D36-BC5926FB14FF}</td><td/></row>
@@ -12934,7 +12934,7 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<col def="S255">Remove</col>
 		<col def="s72">ActionProperty</col>
 		<col def="S72">ISDisplayName</col>
-		<row><td>{321B5343-FC7B-4D9E-B468-33670BF00E99}</td><td>01.00.0000</td><td>03.10.000</td><td>1033</td><td>769</td><td/><td>OLDAPPFOUND</td><td/></row>
+		<row><td>{BF173CB7-239E-4170-9D36-BC5926FB14FF}</td><td>0001.0000.0000</td><td>***ALL_VERSIONS***</td><td>1033</td><td>257</td><td/><td>OLDAPPFOUND</td><td/></row>
 	</table>
 
 	<table name="Verb">
