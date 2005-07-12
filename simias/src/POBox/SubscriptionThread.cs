@@ -49,17 +49,17 @@ namespace Simias.POBox
 		/// <summary>
 		/// Queue used to hold subscriptions for processing.
 		/// </summary>
-		private static Queue subQueue = new Queue();
+		private Queue subQueue = new Queue();
 
 		/// <summary>
 		/// Table used for quick lookup of subscription information.
 		/// </summary>
-		private static Hashtable subTable = new Hashtable();
+		private Hashtable subTable = new Hashtable();
 
 		/// <summary>
 		/// Event used to signal thread that items have been placed on the queue.
 		/// </summary>
-		private static AutoResetEvent subEvent = new AutoResetEvent( false );
+		private AutoResetEvent subEvent = new AutoResetEvent( false );
 
 		/// <summary>
 		/// Post office box for this service.
@@ -229,6 +229,7 @@ namespace Simias.POBox
 				catch( Exception e )
 				{
 					log.Debug( e, "Exception in subscription thread - Ignored" );
+					Thread.Sleep( 10 * 1000 );
 				}
 			}
 		}
