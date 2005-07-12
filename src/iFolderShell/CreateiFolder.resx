@@ -793,4 +793,7 @@
   <data name="rootDriveError">
     <value>iFolders cannot exist at the drive level.  The location selected is at the root of the drive.  Please select a location that is not at the root of a drive and try again.</value>
   </data>
+  <data name="networkPathError">
+    <value>The selected location is on a network or non-physical drive.  iFolders must reside on a physical drive.  Please select a different location and try again.</value>
+  </data>
 </root>
