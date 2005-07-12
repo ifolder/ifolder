@@ -578,6 +578,10 @@ namespace Novell.iFolderCom
 				{
 					message = resourceManager.GetString("rootDriveError");
 				}
+				else if (ex.Message.IndexOf("NotFixedDrivePath") != -1)
+				{
+					message = resourceManager.GetString("networkPathError");
+				}
 				else
 				{
 					message = resourceManager.GetString("iFolderCreateError");
