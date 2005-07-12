@@ -2020,7 +2020,7 @@
 		<col def="S255">DotNetBuildConfiguration</col>
 		<col def="S255">MsiCommandLine</col>
 		<col def="I4">ISSetupPrerequisiteLocation</col>
-		<row><td>release</td><td>web</td><td>&lt;ISProjectDataFolder&gt;</td><td>PackageName</td><td>1</td><td>1033</td><td>2</td><td>1</td><td>Intel</td><td/><td>1033</td><td>2</td><td>0</td><td>1</td><td>0</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>1157261</td><td/><td/><td/><td/></row>
+		<row><td>release</td><td>web</td><td>&lt;ISProjectDataFolder&gt;</td><td>PackageName</td><td>1</td><td>1033</td><td>2</td><td>1</td><td>Intel</td><td/><td>1033</td><td>2</td><td>0</td><td>1</td><td>0</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>1124493</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISReleaseExtended">
@@ -12307,7 +12307,7 @@
 		<row><td>RegisterUser</td><td/><td>6000</td><td>RegisterUser</td><td/></row>
 		<row><td>RemoveDuplicateFiles</td><td/><td>3400</td><td>RemoveDuplicateFiles</td><td/></row>
 		<row><td>RemoveEnvironmentStrings</td><td/><td>3300</td><td>RemoveEnvironmentStrings</td><td/></row>
-		<row><td>RemoveExistingProducts</td><td/><td>1500</td><td>RemoveExistingProducts</td><td/></row>
+		<row><td>RemoveExistingProducts</td><td/><td>6411</td><td>RemoveExistingProducts</td><td/></row>
 		<row><td>RemoveFiles</td><td/><td>3500</td><td>RemoveFiles</td><td/></row>
 		<row><td>RemoveFolders</td><td/><td>3600</td><td>RemoveFolders</td><td/></row>
 		<row><td>RemoveIniValues</td><td/><td>3100</td><td>RemoveIniValues</td><td/></row>
@@ -12950,7 +12950,7 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<col def="S255">Remove</col>
 		<col def="s72">ActionProperty</col>
 		<col def="S72">ISDisplayName</col>
-		<row><td>{BF173CB7-239E-4170-9D36-BC5926FB14FF}</td><td></td><td>***ALL_VERSIONS***</td><td></td><td>257</td><td>REMOVE=ALL</td><td>76ACE820-A6D9-4B7E-A2D4-FFF30D2FE710</td><td/></row>
+		<row><td>{BF173CB7-239E-4170-9D36-BC5926FB14FF}</td><td>0.0.0.0</td><td>1.0.0.0</td><td></td><td>257</td><td>ALL</td><td>76ACE820-A6D9-4B7E-A2D4-FFF30D2FE710</td><td/></row>
 	</table>
 
 	<table name="Verb">
