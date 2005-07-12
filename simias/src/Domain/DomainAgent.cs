@@ -439,6 +439,7 @@ namespace Simias.DomainServices
 			domainService.CookieContainer = cookies;
 			domainService.Url = domainServiceUrl.ToString();
 			domainService.Credentials = myCred;
+			domainService.PreAuthenticate = true;
 			domainService.Proxy = ProxyState.GetProxyState( domainServiceUrl );
 
 			// Check to see if this domain already exists in this store.
