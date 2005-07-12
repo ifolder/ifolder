@@ -356,7 +356,7 @@
 		<row><td>WindowsFolderFiles</td><td>{CCFB8608-E84D-402C-AD51-BB6CF2069380}</td><td>WindowsFolder</td><td>16</td><td/><td>explorer.exe.manifest</td><td>17</td><td>This component consists of files not belonging to other components.</td><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>iFolderApp.exe</td><td>{76AD140D-5BCC-4182-865D-0B8576FDB8B8}</td><td>INSTALLDIR</td><td>0</td><td/><td>iFolderApp.exe</td><td>17</td><td>This component consists of a Windows executable.</td><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>iFolderComponent.dll</td><td>{7CFA7C41-C502-4C7E-B1D7-8C0C346E8F28}</td><td>INSTALLDIR</td><td>0</td><td/><td>iFolderComponent.dll</td><td>49</td><td>This component consists of a Windows dynamic link library.</td><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>iFolderShell.dll</td><td>{94EFDE99-0257-4D25-9EE4-2DC0FB9DFF48}</td><td>INSTALLDIR</td><td>0</td><td/><td>iFolderShell.dll</td><td>20</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>iFolderShell.dll</td><td>{07C93A56-B806-4E58-9746-BB29AFB2E8C9}</td><td>INSTALLDIR</td><td>0</td><td/><td>iFolderShell.dll</td><td>20</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
 
 	<table name="Condition">
@@ -12661,7 +12661,7 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<row><td>PROGMSG_IIS_ROLLBACKAPPPOOLS</td><td>##IDS_PROGMSG_IIS_ROLLBACKAPPPOOLS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKVROOTS</td><td>##IDS_PROGMSG_IIS_ROLLBACKVROOTS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
-		<row><td>ProductCode</td><td>{76ACE820-A6D9-4B7E-A2D4-FFF30D2FE710}</td><td/></row>
+		<row><td>ProductCode</td><td>{66044E60-E2E1-42D9-949C-18599D388E8E}</td><td/></row>
 		<row><td>ProductID</td><td>none</td><td/></row>
 		<row><td>ProductLanguage</td><td>1033</td><td/></row>
 		<row><td>ProductName</td><td>iFolder Client</td><td/></row>
@@ -12950,7 +12950,7 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<col def="S255">Remove</col>
 		<col def="s72">ActionProperty</col>
 		<col def="S72">ISDisplayName</col>
-		<row><td>{BF173CB7-239E-4170-9D36-BC5926FB14FF}</td><td></td><td>***ALL_VERSIONS***</td><td>1033</td><td>257</td><td/><td>OLDAPPFOUND</td><td/></row>
+		<row><td>{BF173CB7-239E-4170-9D36-BC5926FB14FF}</td><td></td><td>***ALL_VERSIONS***</td><td></td><td>257</td><td>REMOVE=ALL</td><td>76ACE820-A6D9-4B7E-A2D4-FFF30D2FE710</td><td/></row>
 	</table>
 
 	<table name="Verb">
