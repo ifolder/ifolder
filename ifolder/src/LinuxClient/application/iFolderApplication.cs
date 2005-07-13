@@ -37,6 +37,8 @@ using Egg;
 using Simias.Client.Event;
 using Simias.Client;
 using Simias.Client.Authentication;
+using Novell.iFolder.Events;
+using Novell.iFolder.Controller;
 
 
 namespace Novell.iFolder
@@ -70,6 +72,8 @@ namespace Novell.iFolder
 		private SimiasEventBroker	EventBroker;
 		private	iFolderLoginDialog	LoginDialog;
 //		private bool				logwinShown;
+
+		private DomainController	domainController;
 
 		public iFolderApplication(string[] args)
 			: base("ifolder", "1.0", Modules.UI, args)
@@ -170,9 +174,8 @@ namespace Novell.iFolder
 					// Set up to have data ready for events
 					ifdata = iFolderData.GetData();
 
-					EventBroker = new SimiasEventBroker(ifws);
-
-					EventBroker.Register();
+					EventBroker = SimiasEventBroker.GetSimiasEventBroker();
+					domainController = DomainController.GetDomainController();
 				}
 				catch(Exception e)
 				{
@@ -209,387 +212,70 @@ namespace Novell.iFolder
 			iFolderStateChanged.WakeupMain();
 		}
 
-		private DomainInformation GetDomainInformation(string DomainID)
+		private void OnDomainNeedsCredentialsEvent(object sender, DomainEventArgs args)
 		{
-			DomainInformation di = null;
-
-			try
-			{
-				SimiasWebService simiasSvc = 
-								new SimiasWebService();
-				simiasSvc.Url =
-					Simias.Client.Manager.LocalServiceUrl.ToString() +
-					"/Simias.asmx";
-				LocalService.Start(simiasSvc);
-
-				di = simiasSvc.GetDomainInformation(DomainID);
-			}
-			catch{}
-
-			return di;
+			ReLogin(args.DomainID);
 		}
 
-		private void OnSimiasNotifyEvent(object o, NotifyEventArgs args)
-		{
-			if (args == null || args.EventData == null || args.Message == null)
-				return;	// Prevent an exception
-
-			switch(args.EventData)
-			{
-				case "Domain-Up":
-				{
-					if (args.Message == null)
-						return;	// Prevent an exception
-					// See if credentials have already been set in
-					// this process before showing the user the
-					// login dialog.
-					DomainAuthentication domainAuth =
-						new DomainAuthentication(
-							"iFolder",
-							args.Message,
-							null);
-
-					Status status =
-						domainAuth.Authenticate();
-
-					if( (status.statusCode == StatusCodes.Success) ||
-						(status.statusCode == StatusCodes.SuccessInGrace))
-					{
-						// Update the domains so that the Accounts Page in the
-						// Preferences window will be up-to-date.
-						ifdata.RefreshDomains();
-						PreferencesWindow prefswin = Util.GetPreferencesWindow();
-						if (prefswin != null)
-						{
-							prefswin.UpdateDomainStatus(args.Message);
-						}
-					}
-					else
-					{
-						ReLogin(args.Message);
-					}
-
-					break;
-				}
-			}
-		}
-
-		private void OnDomainAddedEvent(object o, DomainEventArgs args)
-		{
-			// Refresh the iFolders Window since a domain was just added
-			iFolderWindow ifwin = Util.GetiFolderWindow();
-			if (ifwin != null)
-			{
-				ifwin.RefreshDomains(false);
-				ifwin.RefreshiFolders(true);
-			}
-		}
-		
-		private void OnDomainDeletedEvent(object o, DomainEventArgs args)
-		{
-			// Refresh the iFolders Window since a domain was just removed
-			iFolderWindow ifwin = Util.GetiFolderWindow();
-			if (ifwin != null)
-			{
-				ifwin.RefreshDomains(false);
-				ifwin.RefreshiFolders(true);
-			}
-		}
-
-
-/*		private void OnShowReLogin(object o, EventArgs args)
-		{
-			ReLogin(redomainID);
-		}
-*/
 		private void ReLogin(string domainID)
 		{
-			if(LoginDialog == null)
+Console.WriteLine("iFolderApplication.ReLogin() entered");
+			if (LoginDialog == null)
 			{
-				DomainInformation di = 
-					GetDomainInformation(domainID);
-				if(di != null)
+				DomainInformation dom = domainController.GetDomain(domainID);
+				if (dom != null)
 				{
-					bool authenticated = false;
-					string userID;
-					string credentials;
+					LoginDialog =
+						new iFolderLoginDialog(dom.ID, dom.Name, dom.MemberName);
 
-					LoginDialog = new iFolderLoginDialog(
-						di.ID, di.Name, di.MemberName);
+					LoginDialog.Response +=
+						new ResponseHandler(OnReLoginDialogResponse);
 
-					LoginDialog.Response += new ResponseHandler(
-						OnReLoginDialogResponse);
-
-					// See if there is a password saved on this domain.
-					SimiasWebService simiasWebService = 
-						new SimiasWebService();
-
-					simiasWebService.Url = 
-						Simias.Client.Manager.LocalServiceUrl.ToString() + 
-						"/Simias.asmx";
-					LocalService.Start(simiasWebService);
-					
-					// Check if a proxy needs to be set
-					GnomeHttpProxy proxy = new GnomeHttpProxy( di.Host );
-					string user = null;
-					string password = null;
-					if ( proxy.IsProxySet == true )
-					{
-						if ( proxy.CredentialsSet == true )
-						{
-							user = proxy.Username;
-							password = proxy.Password;
-						}
-						
-						simiasWebService.SetProxyAddress( 
-							"http://" + di.Host, 
-							"http://" + proxy.Host, 
-							user, 
-							password );
-							
-						// Always need to set both secure and unsecure
-						if ( proxy.IsSecureProxySet == false )
-						{
-							simiasWebService.SetProxyAddress( 
-								"https://" + di.Host, 
-								"http://" + proxy.Host, 
-								user, 
-								password );
-						}
-					}
-					
-					// Secure proxy
-					if ( proxy.IsSecureProxySet == true )
-					{
-						simiasWebService.SetProxyAddress( 
-							"https://" + di.Host, 
-							"http://" + proxy.SecureHost, 
-							user, 
-							password );
-					}
-					
-					CredentialType credType = 
-						simiasWebService.GetDomainCredentials(
-							domainID, 
-							out userID, 
-							out credentials);
-
-					if ((credType == CredentialType.Basic) && 
-						(credentials != null))
-					{
-						// There are credentials that were saved on the domain.
-						// Use them to authenticate. If the authentication 
-						// fails for any reason, pop up and ask for new 
-						// credentials.
-						DomainAuthentication domainAuth = 
-							new DomainAuthentication(
-								"iFolder",
-								domainID, 
-								credentials);
-
-						Status status = 
-							domainAuth.Authenticate();
-
-						if( (status.statusCode == StatusCodes.Success) ||
-							(status.statusCode == StatusCodes.SuccessInGrace))
-						{
-							authenticated = true;
-							
-							if (status.statusCode == StatusCodes.SuccessInGrace)
-							{
-								if (status.RemainingGraceLogins < status.TotalGraceLogins)
-								{
-									iFolderMsgDialog dg = new iFolderMsgDialog(
-										LoginDialog,
-										iFolderMsgDialog.DialogType.Error,
-										iFolderMsgDialog.ButtonSet.Ok,
-										"",
-										Util.GS("Your password has expired"),
-										string.Format(Util.GS("You have {0} grace logins remaining."), status.RemainingGraceLogins));
-									dg.Run();
-									dg.Hide();
-									dg.Destroy();
-								}
-							}
-						}
-						else if (status.statusCode == StatusCodes.InvalidCredentials)
-						{
-							// There are bad credentials stored. Remove them.
-							simiasWebService.SetDomainCredentials(domainID, null, CredentialType.None);
-						}
-					}
-
-					if (!authenticated)
-						LoginDialog.ShowAll();
-					else
-					{
-						LoginDialog.Destroy();
-						LoginDialog = null;
-
-						// Update the domains so that the Accounts Page in the
-						// Preferences window will be up-to-date.
-						ifdata.RefreshDomains();
-						PreferencesWindow prefswin = Util.GetPreferencesWindow();
-						if (prefswin != null)
-						{
-							prefswin.UpdateDomainStatus(domainID);
-						}
-					}
+					LoginDialog.ShowAll();
 				}
 			}
 			else
+			{
 				LoginDialog.Present();
+			}
 		}
 
 		private void OnReLoginDialogResponse(object o, ResponseArgs args)
 		{
-			switch(args.ResponseId)
+Console.WriteLine("iFolderApplication.OnReLoginDialogResponse() entered");
+			switch (args.ResponseId)
 			{
 				case Gtk.ResponseType.Ok:
-				{
-					Status status;
-					DomainAuthentication cAuth = new DomainAuthentication(
-							"iFolder", 
-							LoginDialog.Domain, 
-							LoginDialog.Password);
-					status = cAuth.Authenticate();
-					if( (status.statusCode == StatusCodes.Success) ||
-						(status.statusCode == StatusCodes.SuccessInGrace))
+					Status status = 
+						domainController.AuthenticateDomain(
+							LoginDialog.Domain,
+							LoginDialog.Password,
+							LoginDialog.ShouldSavePassword);
+Console.WriteLine("iFolderApplication.OnReLoginDialogResponse(): authStatus is: {0}", status.statusCode);
+					if (status == null ||
+						(status.statusCode != StatusCodes.Success &&
+						 status.statusCode != StatusCodes.SuccessInGrace))
 					{
-						if (LoginDialog.ShouldSavePassword)
-						{
-							try
-							{
-								SimiasWebService simws = 
-									new SimiasWebService();
-			
-								simws.Url = 
-									Simias.Client.Manager.LocalServiceUrl.ToString() + 
-									"/Simias.asmx";
-								LocalService.Start(simws);
-
-								if( LoginDialog.Password != null &&
-										LoginDialog.Password.Length > 0)
-								{
-									simws.SetDomainCredentials(LoginDialog.Domain,
-											LoginDialog.Password, CredentialType.Basic);
-								}
-								else
-								{
-									simws.SetDomainCredentials(LoginDialog.Domain,
-											null, CredentialType.None);
-								}
-							}
-							catch (Exception ex)
-							{
-								// Ignore this error for now 
-							}
-						}
-
-						if (status.statusCode == StatusCodes.SuccessInGrace)
-						{
-							if (status.RemainingGraceLogins < status.TotalGraceLogins)
-							{
-								iFolderMsgDialog dg = new iFolderMsgDialog(
-									LoginDialog,
-									iFolderMsgDialog.DialogType.Error,
-									iFolderMsgDialog.ButtonSet.Ok,
-									"",
-									Util.GS("Your password has expired"),
-									string.Format(Util.GS("You have {0} grace logins remaining."), status.RemainingGraceLogins));
-								dg.Run();
-								dg.Hide();
-								dg.Destroy();
-							}
-						}
-						
-						// Update the domains so that the Accounts Page in the
-						// Preferences window will be up-to-date.
-						ifdata.RefreshDomains();
-						PreferencesWindow prefswin = Util.GetPreferencesWindow();
-						if (prefswin != null)
-						{
-							prefswin.UpdateDomainStatus(LoginDialog.Domain);
-						}
-
+						Util.ShowLoginError(LoginDialog, status.statusCode);
+					}
+					else
+					{
+						// Login was successful so close the Login dialog
 						LoginDialog.Hide();
 						LoginDialog.Destroy();
 						LoginDialog = null;
 					}
-					else
-					{
-						iFolderMsgDialog dg;
-						switch(status.statusCode)
-						{
-							case StatusCodes.InvalidCredentials:
-							case StatusCodes.InvalidPassword:
-								dg = new iFolderMsgDialog(
-									LoginDialog,
-									iFolderMsgDialog.DialogType.Error,
-									iFolderMsgDialog.ButtonSet.Ok,
-									"",
-									Util.GS("The username or password is invalid"),
-									Util.GS("Please try again."));
-								dg.Run();
-								dg.Hide();
-								dg.Destroy();
-								break;
-							case StatusCodes.AccountDisabled:
-								dg = new iFolderMsgDialog(
-									LoginDialog,
-									iFolderMsgDialog.DialogType.Error,
-									iFolderMsgDialog.ButtonSet.Ok,
-									"",
-									Util.GS("The user account is disabled"),
-									Util.GS("Please contact your network administrator for assistance."));
-								dg.Run();
-								dg.Hide();
-								dg.Destroy();
-								break;
-							case StatusCodes.AccountLockout:
-								dg = new iFolderMsgDialog(
-									LoginDialog,
-									iFolderMsgDialog.DialogType.Error,
-									iFolderMsgDialog.ButtonSet.Ok,
-									"",
-									Util.GS("The user account is locked"),
-									Util.GS("Please contact your network administrator for assistance."));
-								dg.Run();
-								dg.Hide();
-								dg.Destroy();
-								break;
-							default:
-								dg = new iFolderMsgDialog(
-									LoginDialog,
-									iFolderMsgDialog.DialogType.Error,
-									iFolderMsgDialog.ButtonSet.Ok,
-									"",
-									Util.GS("Unable to connect to the iFolder Server"),
-									Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."),
-									string.Format("{0}: {1}", Util.GS("Authentication Status Code"), status.statusCode));
-								dg.Run();
-								dg.Hide();
-								dg.Destroy();
-								break;
-						}
-					}
+
 					break;
-				}
 				case Gtk.ResponseType.Cancel:
 				case Gtk.ResponseType.DeleteEvent:
-				{
 					// Prevent the auto login feature from being called again
-					try
-					{
-						simws.DisableDomainAutoLogin(LoginDialog.Domain);
-					}
-					catch {}
+					domainController.DisableDomainAutoLogin(LoginDialog.Domain);
 
 					LoginDialog.Hide();
 					LoginDialog.Destroy();
 					LoginDialog = null;
 					break;
-				}
 			}
 		}
 
@@ -791,15 +477,6 @@ namespace Novell.iFolder
 					break;
 
 				case iFolderState.Running:
-/*					if(ifSettings != null)
-					{
-						ifwin = new iFolderWindow(ifws, ifSettings);
-
-						if(!ifSettings.HaveEnterprise)
-							OnJoinEnterprise(null, null);
-					}
-*/
-
 					if(EventBroker != null)
 					{
 						EventBroker.iFolderAdded +=
@@ -820,18 +497,12 @@ namespace Novell.iFolder
 						EventBroker.FileSyncEventFired +=
 							new FileSyncEventHandler(
 												OniFolderFileSyncEvent);
-						
-						EventBroker.NotifyEventFired +=
-							new NotifyEventHandler(
-												OnSimiasNotifyEvent);
-						
-						EventBroker.DomainAdded +=
-							new DomainAddedEventHandler(
-												OnDomainAddedEvent);
-						
-						EventBroker.DomainDeleted +=
-							new DomainDeletedEventHandler(
-												OnDomainDeletedEvent);
+					}
+					
+					if (domainController != null)
+					{
+						domainController.DomainNeedsCredentials +=
+							new DomainNeedsCredentialsEventHandler(OnDomainNeedsCredentialsEvent);
 					}
 
 					gAppIcon.Pixbuf = RunningPixbuf;

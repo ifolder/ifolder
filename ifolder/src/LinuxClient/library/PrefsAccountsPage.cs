@@ -32,6 +32,9 @@ using Simias.Client.Event;
 using Simias.Client;
 using Simias.Client.Authentication;
 
+using Novell.iFolder.Events;
+using Novell.iFolder.Controller;
+
 namespace Novell.iFolder
 {
 
@@ -65,9 +68,11 @@ namespace Novell.iFolder
 		private Button		loginButton;
 
 		private string				curDomainPassword;
-		private DomainInformation	curDomain;
+		private string				curDomain;
 
 		private Hashtable			curDomains;
+		
+		private DomainController	domainController;
 
 		/// <summary>
 		/// Default constructor for iFolderAccountsPage
@@ -84,10 +89,50 @@ namespace Novell.iFolder
 			ifdata = iFolderData.GetData();
 			
 			curDomains = new Hashtable();
-
+			
 			InitializeWidgets();
+
+			domainController = DomainController.GetDomainController();
+			if (domainController != null)
+			{
+				domainController.DomainAdded +=
+					new DomainAddedEventHandler(OnDomainAddedEvent);
+				domainController.DomainDeleted +=
+					new DomainDeletedEventHandler(OnDomainDeletedEvent);
+				domainController.DomainLoggedIn +=
+					new DomainLoggedInEventHandler(OnDomainLoggedInEvent);
+				domainController.DomainLoggedOut +=
+					new DomainLoggedOutEventHandler(OnDomainLoggedOutEvent);
+				domainController.NewDefaultDomain +=
+					new DomainNewDefaultEventHandler(OnDomainNewDefaultEvent);
+				domainController.DomainInGraceLoginPeriod +=
+					new DomainInGraceLoginPeriodEventHandler(OnDomainInGraceLoginPeriodEvent);
+			}
+
 			this.Realized += new EventHandler(OnRealizeWidget);
 		}
+		
+		~PrefsAccountsPage()
+		{
+Console.WriteLine("~PrefsAccountPage() entered");
+
+			if (domainController != null)
+			{
+				// Unregister for domain events
+				domainController.DomainAdded -=
+					new DomainAddedEventHandler(OnDomainAddedEvent);
+				domainController.DomainDeleted -=
+					new DomainDeletedEventHandler(OnDomainDeletedEvent);
+				domainController.DomainLoggedIn -=
+					new DomainLoggedInEventHandler(OnDomainLoggedInEvent);
+				domainController.DomainLoggedOut -=
+					new DomainLoggedOutEventHandler(OnDomainLoggedOutEvent);
+				domainController.NewDefaultDomain -=
+					new DomainNewDefaultEventHandler(OnDomainNewDefaultEvent);
+				domainController.DomainInGraceLoginPeriod -=
+					new DomainInGraceLoginPeriodEventHandler(OnDomainInGraceLoginPeriodEvent);
+			}
+		} 
 
 
 
@@ -111,7 +156,8 @@ namespace Novell.iFolder
 			sw.Add(AccTreeView);
 			this.PackStart(sw, true, true, 0);
 
-			AccTreeStore = new ListStore(typeof(DomainInformation));
+//			AccTreeStore = new ListStore(typeof(DomainInformation));
+			AccTreeStore = new ListStore(typeof(string));
 			AccTreeView.Model = AccTreeStore;
 
 			// Server Column
@@ -333,14 +379,14 @@ namespace Novell.iFolder
 
 		private void PopulateDomains()
 		{
-			DomainInformation[] domains = ifdata.GetDomains();
+			DomainInformation[] domains = domainController.GetDomains();
 
 			foreach(DomainInformation dom in domains)
 			{
 				// only show Domains that are slaves (not on this machine)
 				if(dom.IsSlave)
 				{
-					TreeIter iter = AccTreeStore.AppendValues(dom);
+					TreeIter iter = AccTreeStore.AppendValues(dom.ID);
 					curDomains[dom.ID] = iter;
 				}
 			}
@@ -367,8 +413,13 @@ namespace Novell.iFolder
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-			DomainInformation dom = (DomainInformation) tree_model.GetValue(iter,0);
-			((CellRendererText) cell).Text = dom.Name;
+			string domainID = (string) tree_model.GetValue(iter, 0);
+			DomainInformation dom = domainController.GetDomain(domainID);
+//			DomainInformation dom = (DomainInformation) tree_model.GetValue(iter,0);
+			if (dom != null)
+				((CellRendererText) cell).Text = dom.Name;
+			else
+				((CellRendererText) cell).Text = "";
 		}
 
 
@@ -378,8 +429,13 @@ namespace Novell.iFolder
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-			DomainInformation dom = (DomainInformation) tree_model.GetValue(iter,0);
-			((CellRendererText) cell).Text = dom.MemberName;
+			string domainID = (string) tree_model.GetValue(iter, 0);
+			DomainInformation dom = domainController.GetDomain(domainID);
+//			DomainInformation dom = (DomainInformation) tree_model.GetValue(iter,0);
+			if (dom != null)
+				((CellRendererText) cell).Text = dom.MemberName;
+			else
+				((CellRendererText) cell).Text = "";
 		}
 
 
@@ -389,23 +445,29 @@ namespace Novell.iFolder
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-			DomainInformation dom = (DomainInformation) tree_model.GetValue(iter,0);
-			
-			if (dom.Active)
+			string domainID = (string) tree_model.GetValue(iter, 0);
+			DomainInformation dom = domainController.GetDomain(domainID);
+//			DomainInformation dom = (DomainInformation) tree_model.GetValue(iter,0);
+			if (dom != null)
 			{
-				if (dom.Authenticated)
+				if (dom.Active)
 				{
-					((CellRendererText) cell).Text = Util.GS("Logged in");
+					if (dom.Authenticated)
+					{
+						((CellRendererText) cell).Text = Util.GS("Logged in");
+					}
+					else
+					{
+						((CellRendererText) cell).Text = Util.GS("Logged out");
+					}
 				}
 				else
 				{
-					((CellRendererText) cell).Text = Util.GS("Logged out");
+					((CellRendererText) cell).Text = Util.GS("Disabled");
 				}
 			}
 			else
-			{
-				((CellRendererText) cell).Text = Util.GS("Disabled");
-			}
+				((CellRendererText) cell).Text = "";
 		}
 
 
@@ -487,8 +549,10 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				DomainInformation dom = 
-					(DomainInformation) tModel.GetValue(iter, 0);
+				string domainID = (string) tModel.GetValue(iter, 0);
+				DomainInformation dom = domainController.GetDomain(domainID);
+//				DomainInformation dom = 
+//					(DomainInformation) tModel.GetValue(iter, 0);
 
 				RemoveAccountDialog rad = new RemoveAccountDialog(dom);
 				rad.TransientFor = topLevelWindow;
@@ -498,7 +562,7 @@ namespace Novell.iFolder
 				{
 					try
 					{
-						simws.LeaveDomain(dom.ID, !(rad.RemoveiFoldersFromServer));
+						domainController.RemoveDomain(dom.ID, rad.RemoveiFoldersFromServer);
 					}
 					catch(Exception e)
 					{
@@ -511,53 +575,22 @@ namespace Novell.iFolder
 						return;
 					}
 
-					ifdata.RemoveDomain(dom.ID);
-
-					AccTreeStore.Remove(ref iter);
-					curDomains.Remove(dom.ID);
-					curDomain = null;
 					detailsFrame.Sensitive = false;
 					nameEntry.Sensitive = false;
-					nameEntry.Text = "";
 					nameLabel.Sensitive = false;
 					passEntry.Sensitive = false;
-					passEntry.Text = "";
 					passLabel.Sensitive = false;
 					serverEntry.Sensitive = false;
 					serverLabel.Sensitive = false;
-					serverEntry.Text = "";
 
 					savePasswordButton.Sensitive = false;
 					autoLoginButton.Sensitive = false;
 					defaultAccButton.Sensitive = false;
 					loginButton.Sensitive = false;
 
+					AddButton.Sensitive = false;
 					RemoveButton.Sensitive = false;
 					DetailsButton.Sensitive = false;
-
-					// If the domain that we just removed was the default and
-					// there are still remaining accounts, find out from Simias
-					// what the new default domain is and update the UI.
-					if (dom.IsDefault && curDomains.Count > 0)
-					{
-						try
-						{
-							string newDefaultDomainID = simws.GetDefaultDomainID();
-							iter = (TreeIter)curDomains[newDefaultDomainID];
-							
-							dom = (DomainInformation) tModel.GetValue(iter, 0);
-							dom.IsDefault = true;
-						}
-						catch {}
-					}
-
-					// Automatically put the window into AddAccount mode to save
-					// the user some extra clicking when the account that was
-					// just removed was the last one.
-					if (curDomains.Count == 0)
-					{
-						OnAddAccount(null, null);
-					}
 				}
 
 				rad.Destroy();
@@ -582,8 +615,10 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				DomainInformation dom = 
-						(DomainInformation) tModel.GetValue(iter, 0);
+				string domainID = (string) tModel.GetValue(iter, 0);
+				DomainInformation dom = domainController.GetDomain(domainID);
+//				DomainInformation dom = 
+//						(DomainInformation) tModel.GetValue(iter, 0);
 
 				AccountDialog accDialog = new AccountDialog(dom);
 				accDialog.TransientFor = topLevelWindow;
@@ -660,10 +695,12 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				DomainInformation dom = 
-						(DomainInformation) tModel.GetValue(iter, 0);
+				string domainID = (string) tModel.GetValue(iter, 0);
+				DomainInformation dom = domainController.GetDomain(domainID);
+//				DomainInformation dom = 
+//						(DomainInformation) tModel.GetValue(iter, 0);
 
-				curDomain = dom;
+				curDomain = dom.ID;
 
 				// Set the control states
 				AddButton.Sensitive = true;
@@ -785,8 +822,10 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				DomainInformation dom = 
-						(DomainInformation) tModel.GetValue(iter, 0);
+				string domainID = (string) tModel.GetValue(iter, 0);
+				DomainInformation dom = domainController.GetDomain(domainID);
+//				DomainInformation dom = 
+//						(DomainInformation) tModel.GetValue(iter, 0);
 				try
 				{
 					DomainAuthentication domainAuth = new DomainAuthentication("iFolder", dom.ID, null);
@@ -815,6 +854,124 @@ namespace Novell.iFolder
 		}
 
 		private void OnLoginAccount(object o, EventArgs args)
+		{
+			iFolderMsgDialog dg;
+			
+			DomainInformation dom = null;
+			if (NewAccountMode)
+			{
+				try
+				{
+					dom = domainController.AddDomain(
+							serverEntry.Text,
+							nameEntry.Text,
+							passEntry.Text,
+							savePasswordButton.Active,
+							defaultAccButton.Active);
+				}
+				catch (Exception e)
+				{
+					// FIXME: Handle exceptions here
+Console.WriteLine(e.Message);
+				}
+			}
+			else
+			{
+				// Existing account
+				try
+				{
+					dom = domainController.UpdateDomainHostAddress(dom.ID, serverEntry.Text);
+				}
+				catch (Exception e)
+				{
+					// FIXME: Handle exceptions here
+Console.WriteLine(e.Message);
+				}
+			}
+			
+			if (dom == null) return;	// Shouldn't happen, but just in case...
+
+			switch (dom.StatusCode)
+			{
+				case StatusCodes.InvalidCertificate:
+				{
+					byte[] byteArray = simws.GetCertificate(serverEntry.Text);
+					System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(byteArray);
+
+					iFolderMsgDialog dialog = new iFolderMsgDialog(
+						topLevelWindow,
+						iFolderMsgDialog.DialogType.Question,
+						iFolderMsgDialog.ButtonSet.YesNo,
+						"",
+						string.Format(Util.GS("iFolder cannot verify the identity of the iFolder Server \"{0}\"."), serverEntry.Text),
+						string.Format(Util.GS("The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be \"{0}\" which could put your confidential information at risk.   Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?"), serverEntry.Text),
+						cert.ToString(true));
+					int rc = dialog.Run();
+					dialog.Hide();
+					dialog.Destroy();
+					if(rc == -8) // User clicked the Yes button
+					{
+						simws.StoreCertificate(byteArray, serverEntry.Text);
+						OnLoginAccount(o, args);
+					}
+					break;
+				}
+				case StatusCodes.Success:
+				case StatusCodes.SuccessInGrace:
+					Status authStatus = domainController.AuthenticateDomain(dom.ID, passEntry.Text, savePasswordButton.Active);
+
+					if (authStatus.statusCode == StatusCodes.Success ||
+						authStatus.statusCode == StatusCodes.SuccessInGrace)
+					{
+						// We're logged in!
+//						TreeSelection sel = AccTreeView.Selection;
+
+						if (NewAccountMode)
+						{
+							NewAccountMode = false;
+//							TreeIter iter = AccTreeStore.AppendValues(domainInfo.ID);
+//							curDomains[domainInfo.ID] = iter;
+//							curDomain = domainInfo.ID;
+									
+//							if (savePasswordButton.Active)
+//							{
+//								SavePasswordNow();
+//							}
+										
+//							if (defaultAccButton.Active)
+//							{
+//								if (ifdata.SetDefaultDomain(domainInfo))
+//								{
+//									defaultAccButton.Sensitive = false;
+//								}
+//							}
+										
+//							sel.SelectIter(iter);
+						}
+						else
+						{
+//							UpdateDomainStatus(domainInfo.ID);
+
+//							TreeIter iter = (TreeIter)curDomains[domainInfo.ID];
+//							sel.SelectIter(iter);
+						}
+
+						// Update the login button
+						AccSelectionChangedHandler(null, null);
+					}
+					else
+					{
+						Util.ShowLoginError(topLevelWindow, authStatus.statusCode);
+					}
+					break;
+				default:
+					// We failed to connect
+					Util.ShowLoginError(topLevelWindow, dom.StatusCode);
+					break;
+			}
+		}
+
+		private void OnLoginAccountOld(object o, EventArgs args)
 		{
 			iFolderMsgDialog dg;
 			
@@ -868,7 +1025,8 @@ namespace Novell.iFolder
 				}
 				else
 				{
-					domainInfo = curDomain;
+//					domainInfo = curDomain;
+					domainInfo = domainController.GetDomain(curDomain);
 
 					// The user has changed the server's host
 					simws.SetDomainHostAddress(domainInfo.ID, serverEntry.Text);
@@ -921,9 +1079,10 @@ namespace Novell.iFolder
 								{
 									ifdata.AddDomain(domainInfo);
 									NewAccountMode = false;
-									TreeIter iter = AccTreeStore.AppendValues(domainInfo);
+									TreeIter iter = AccTreeStore.AppendValues(domainInfo.ID);
 									curDomains[domainInfo.ID] = iter;
-									curDomain = domainInfo;
+//									curDomain = domainInfo;
+									curDomain = domainInfo.ID;
 									
 									if (savePasswordButton.Active)
 									{
@@ -932,7 +1091,8 @@ namespace Novell.iFolder
 										
 									if (defaultAccButton.Active)
 									{
-										if (ifdata.SetDefaultDomain(curDomain))
+//										if (ifdata.SetDefaultDomain(curDomain))
+										if (ifdata.SetDefaultDomain(domainInfo))
 										{
 											defaultAccButton.Sensitive = false;
 										}
@@ -1178,13 +1338,17 @@ namespace Novell.iFolder
 				if( (savePasswordButton.Active == true) &&
 						(passEntry.Text.Length > 0) )
 				{
-					simws.SetDomainCredentials(curDomain.ID, 
+//					simws.SetDomainCredentials(curDomain.ID, 
+//							passEntry.Text, CredentialType.Basic);
+					simws.SetDomainCredentials(curDomain,
 							passEntry.Text, CredentialType.Basic);
 				}
 				else
 				{
-					simws.SetDomainCredentials(curDomain.ID, null,
-							CredentialType.None);
+//					simws.SetDomainCredentials(curDomain.ID, null,
+//							CredentialType.None);
+					simws.SetDomainCredentials(curDomain,
+							null, CredentialType.None);
 				}
 				curDomainPassword = passEntry.Text;
 			}
@@ -1201,27 +1365,35 @@ namespace Novell.iFolder
 			// it will be handled at creation time
 			if(!NewAccountMode)
 			{
-				if(autoLoginButton.Active != curDomain.Active)
+				DomainInformation dom = domainController.GetDomain(curDomain);
+//				if(autoLoginButton.Active != curDomain.Active)
+				if(autoLoginButton.Active != dom.Active)
 				{
 					try
 					{
 						if(autoLoginButton.Active)
 						{
-							simws.SetDomainActive(curDomain.ID);
-							curDomain.Active = true;
+//							simws.SetDomainActive(curDomain.ID);
+							simws.SetDomainActive(curDomain);
+//							curDomain.Active = true;
+							dom.Active = true;
 							
 							if (passEntry.Text.Length > 0)
 								loginButton.Sensitive = true;
 							
-							UpdateDomainStatus(curDomain.ID);
+//							UpdateDomainStatus(curDomain.ID);
+							UpdateDomainStatus(curDomain);
 						}
 						else
 						{
-							simws.SetDomainInactive(curDomain.ID);
-							curDomain.Active = false;
+//							simws.SetDomainInactive(curDomain.ID);
+							simws.SetDomainInactive(curDomain);
+//							curDomain.Active = false;
+							dom.Active = false;
 							loginButton.Sensitive = false;
 							
-							UpdateDomainStatus(curDomain.ID);
+//							UpdateDomainStatus(curDomain.ID);
+							UpdateDomainStatus(curDomain);
 						}
 					}
 					catch (Exception ex)
@@ -1238,13 +1410,114 @@ namespace Novell.iFolder
 			// it will be handled at creation time
 			if(!NewAccountMode)
 			{
-				if( (defaultAccButton.Active != curDomain.IsDefault) &&
+				DomainInformation dom = domainController.GetDomain(curDomain);
+//				if( (defaultAccButton.Active != curDomain.IsDefault) &&
+				if( (defaultAccButton.Active != dom.IsDefault) &&
 					(defaultAccButton.Active == true ) )
 				{
 					defaultAccButton.Sensitive = 
-							ifdata.SetDefaultDomain(curDomain);
+//							ifdata.SetDefaultDomain(curDomain);
+							ifdata.SetDefaultDomain(dom);
 				}
 			}
+		}
+
+		public void OnDomainAddedEvent(object sender, DomainEventArgs args)
+		{
+		}
+		
+		public void OnDomainDeletedEvent(object sender, DomainEventArgs args)
+		{
+			TreeIter iter = (TreeIter)curDomains[args.DomainID];
+			AccTreeStore.Remove(ref iter);
+			curDomains.Remove(args.DomainID);
+
+//			curDomain = null;
+//			detailsFrame.Sensitive = false;
+//			nameEntry.Sensitive = false;
+//			nameEntry.Text = "";
+//			nameLabel.Sensitive = false;
+//			passEntry.Sensitive = false;
+//			passEntry.Text = "";
+//			passLabel.Sensitive = false;
+//			serverEntry.Sensitive = false;
+//			serverLabel.Sensitive = false;
+//			serverEntry.Text = "";
+
+//			savePasswordButton.Sensitive = false;
+//			autoLoginButton.Sensitive = false;
+//			defaultAccButton.Sensitive = false;
+//			loginButton.Sensitive = false;
+
+//			RemoveButton.Sensitive = false;
+//			DetailsButton.Sensitive = false;
+
+			// If the domain that we just removed was the default and
+			// there are still remaining accounts, find out from Simias
+			// what the new default domain is and update the UI.
+//			if (dom.IsDefault && curDomains.Count > 0)
+//			{
+//				try
+//				{
+//					string newDefaultDomainID = simws.GetDefaultDomainID();
+//					iter = (TreeIter)curDomains[newDefaultDomainID];
+//							
+//					dom = (DomainInformation) tModel.GetValue(iter, 0);
+//					dom.IsDefault = true;
+//				}
+//				catch {}
+//			}
+
+			// Automatically put the window into AddAccount mode to save
+			// the user some extra clicking when the account that was
+			// just removed was the last one.
+			if (curDomains.Count == 0)
+			{
+				OnAddAccount(null, null);
+			}
+		}
+		
+		public void OnDomainLoggedInEvent(object sender, DomainEventArgs args)
+		{
+
+DomainInformation dom = domainController.GetDomain(args.DomainID);
+Console.WriteLine("PrefsAccountPage.OnDomainLoggedInEvent() for: {0}", dom.Name);
+
+			UpdateDomainStatus(args.DomainID);
+		}
+		
+		public void OnDomainLoggedOutEvent(object sender, DomainEventArgs args)
+		{
+Console.WriteLine("PrefsAccountPage.OnDomainLoggedOutEvent() entered");
+			UpdateDomainStatus(args.DomainID);
+		}
+
+		public void OnDomainNewDefaultEvent(object sender, DomainEventArgs args)
+		{
+Console.WriteLine("PrefsAccountsPage.OnDomainNewDefaultEvent() entered");
+			TreeIter iter = (TreeIter)curDomains[args.DomainID];
+			DomainInformation dom = domainController.GetDomain(args.DomainID);
+			if (dom != null)
+			{
+				AccTreeStore.SetValue(iter, 0, dom.ID);
+			}
+		}
+		
+		public void OnDomainInGraceLoginPeriodEvent(object sender, DomainInGraceLoginPeriodEventArgs args)
+		{
+Console.WriteLine("PrefsAccountsPage.OnDomainInGraceLoginPeriodEvent() entered");
+			DomainInformation dom = domainController.GetDomain(args.DomainID);
+			iFolderMsgDialog dg =
+				new iFolderMsgDialog(
+					topLevelWindow,
+					iFolderMsgDialog.DialogType.Error,
+					iFolderMsgDialog.ButtonSet.Ok,
+					dom != null ? dom.Name : "",
+					Util.GS("Your password has expired"),
+					string.Format(Util.GS("You have {0} grace logins remaining."), args.RemainingGraceLogins));
+			dg.Run();
+			dg.Hide();
+			dg.Destroy();
 		}
 		
 		/// <summary>
@@ -1253,13 +1526,14 @@ namespace Novell.iFolder
 		/// </summary>
 		public void UpdateDomainStatus(string domainID)
 		{
+Console.WriteLine("PrefsAccountPage.UpdateDomainStatus() entered");
 			if (curDomains.Contains(domainID))
 			{
 				TreeIter iter = (TreeIter)curDomains[domainID];
-				DomainInformation dom = ifdata.GetDomain(domainID);
+				DomainInformation dom = domainController.GetDomain(domainID);
 				if (dom != null)
 				{
-					AccTreeStore.SetValue(iter, 0, dom);
+					AccTreeStore.SetValue(iter, 0, dom.ID);
 
 					// Use AccSelectionChangedHandler() to update the
 					// status and login button based on the state of the domain.

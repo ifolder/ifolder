@@ -32,7 +32,8 @@ using Gtk;
 using Simias.Client;
 using Simias.Client.Event;
 
-using Novell.iFolder;
+using Novell.iFolder.Events;
+using Novell.iFolder.Controller;
 
 namespace Novell.iFolder
 {
@@ -266,6 +267,8 @@ namespace Novell.iFolder
 		private uint objectsToSync = 0;
 		private bool startingSync  = false;
 
+		private DomainController	domainController;
+
 		/// <summary>
 		/// Default constructor for iFolderWindow
 		/// </summary>
@@ -281,8 +284,28 @@ namespace Novell.iFolder
 			curiFolders = new Hashtable();
 			curDomain = null;
 			curDomains = null;
-
+			
 			CreateWidgets();
+			
+			domainController = DomainController.GetDomainController();
+			if (domainController != null)
+			{
+				domainController.DomainAdded +=
+					new DomainAddedEventHandler(OnDomainAddedEvent);
+				domainController.DomainDeleted +=
+					new DomainDeletedEventHandler(OnDomainDeletedEvent);
+			}
+		}
+		
+		~iFolderWindow()
+		{
+			if (domainController != null)
+			{
+				domainController.DomainAdded -=
+					new DomainAddedEventHandler(OnDomainAddedEvent);
+				domainController.DomainDeleted -=
+					new DomainDeletedEventHandler(OnDomainDeletedEvent);
+			}
 		}
 
 
@@ -2237,6 +2260,20 @@ namespace Novell.iFolder
 			}
 			
 			return false;
+		}
+		
+		private void OnDomainAddedEvent(object sender, DomainEventArgs args)
+		{
+Console.WriteLine("iFolderWindow.OnDomainAddedEvent() entered");
+			RefreshDomains(false);
+			RefreshiFolders(true);
+		}
+		
+		private void OnDomainDeletedEvent(object sender, DomainEventArgs args)
+		{
+Console.WriteLine("iFolderWindow.OnDomainDeletedEvent() entered");
+			RefreshDomains(false);
+			RefreshiFolders(true);
 		}
 
 /*
