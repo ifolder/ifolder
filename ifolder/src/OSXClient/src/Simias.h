@@ -37,6 +37,7 @@
 -(BOOL)start;
 -(BOOL)stop;
 -(NSString *)simiasURL;
+-(int) getCurrentSimiasPID;
 
 @end
 

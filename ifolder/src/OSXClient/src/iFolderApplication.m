@@ -55,6 +55,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 //===================================================================
 -(void)awakeFromNib
 {
+	BOOL simiasStarted = NO;
 	ifconlog1(@"Waiting for app to enable multithreading");
 	simiasIsLoaded = NO;
 
@@ -70,12 +71,36 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 		[NSThread sleepUntilDate:[[NSDate date] addTimeInterval:.5] ];
 	}
 
-	ifconlog1(@"initializing Simias Events");
-	[self initializeSimiasEvents];
-	
 	ifconlog1(@"Starting Simias Process");
-	[ [Simias getInstance] start];
+	simiasStarted = [[Simias getInstance] start];
+	while(simiasStarted == NO)
+	{
+//		int rc = NSRunAlertPanel(NSLocalizedString(@"iFolder synchronization process found", @"Initial Setup Dialog Title"), 
+//							NSLocalizedString(@"An iFolder synchronization process was found running or in a bad state on the machine.  iFolder can attempt to recover.  Would you like iFolder to cleanup and start the synchronization process again?", @"Initial Setup Dialog Message"),
+//							NSLocalizedString(@"Yes", @"Button yes to ask if we want to restart Simias again"), 
+//							NSLocalizedString(@"No", @"Button no to ask if we want to restart Simias again"), 
+//							nil);
 
+//		if(rc == NSAlertDefaultReturn)
+//		{
+			[[Simias getInstance] stop];
+			simiasStarted = [[Simias getInstance] start];
+/*
+		}
+		else
+		{
+			[NSApp terminate:self];
+			return;
+		}
+*/
+	}
+
+	if(simiasStarted == YES)
+	{
+		ifconlog1(@"initializing Simias Events");
+		[self initializeSimiasEvents];
+	}
+	
 	ifolderdata = [[iFolderData alloc] init];
 }
 
@@ -395,28 +420,31 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 //===================================================================
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
-	// Remove the monitor for proxy settings from the run loop and
-	// release the reference
-	if(dynStoreRunLoopRef != NULL)
+	if(simiasIsLoaded)
 	{
-		CFRunLoopRemoveSource(CFRunLoopGetCurrent(), dynStoreRunLoopRef, kCFRunLoopCommonModes);
-		CFRelease(dynStoreRunLoopRef);
-		dynStoreRunLoopRef = NULL;
+		// Remove the monitor for proxy settings from the run loop and
+		// release the reference
+		if(dynStoreRunLoopRef != NULL)
+		{
+			CFRunLoopRemoveSource(CFRunLoopGetCurrent(), dynStoreRunLoopRef, kCFRunLoopCommonModes);
+			CFRelease(dynStoreRunLoopRef);
+			dynStoreRunLoopRef = NULL;
+		}
+
+		// Release the proxy setting monitor
+		if(dynStoreRef != NULL)
+		{
+			CFRelease(dynStoreRef);
+			dynStoreRef = NULL;
+		}
+
+		runThreads = NO;
+		[self addLog:NSLocalizedString(@"Shutting down Simias...", @"Sync Log Message")];
+		[ [Simias getInstance] stop];
+		[self addLog:NSLocalizedString(@"Simias is shut down", @"Sync Log Message")];
+
+		SimiasEventDisconnect();
 	}
-
-	// Release the proxy setting monitor
-	if(dynStoreRef != NULL)
-	{
-		CFRelease(dynStoreRef);
-		dynStoreRef = NULL;
-	}
-
-	runThreads = NO;
-	[self addLog:NSLocalizedString(@"Shutting down Simias...", @"Sync Log Message")];
-	[ [Simias getInstance] stop];
-	[self addLog:NSLocalizedString(@"Simias is shut down", @"Sync Log Message")];
-
-	SimiasEventDisconnect();
 }
 
 
@@ -436,61 +464,6 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 	// Return NO to let the default behavior know that we already
 	// took care of everything needed.
 	return NO;
-}
-
-
-
-
-//===================================================================
-// startSimiasThread
-// This is a method called on a new thread to start up the Simias
-// process.  When done, this will call back on the main thread
-// the simiasDidFinishStarting
-//===================================================================
-- (void)startSimiasThread:(id)arg
-{
-	BOOL simiasRunning = NO;
-
-	if(!simiasRunning)
-	{
-		ifconlog1(@"Simias is not running, starting....");
-		iFolderService *threadWebService;
-		
-		// Startup simias Process
-		[ [Simias getInstance] start];
-		
-		// Wait 5 seconds for simias to load, then start pinging
-		[NSThread sleepUntilDate:[[NSDate date] addTimeInterval:1]];
-
-		while(!simiasRunning)
-		{
-			threadWebService = [[iFolderService alloc] init];		
-		
-			@try
-			{
-				ifconlog1(@"Pinging simias to check for startup...");
-				simiasRunning = [threadWebService Ping];
-			}
-			@catch(NSException *ex)
-			{
-				ifconlog1(@"Failed to ping simias!");
-				ifexconlog(@"threadWebService:ping", ex);
-				simiasRunning = NO;
-			}
-			// I tried doing this in the catch above but sometimes we fail
-			// and don't throw and exception so I moved it here to avoid a 
-			// tight loop
-			if(!simiasRunning)
-			{
-				ifconlog1(@"Simias is not running, sleeping.");
-				[NSThread sleepUntilDate:[[NSDate date] addTimeInterval:1]];
-			}
-
-			ifconlog1(@"freeing up threadWebService");
-			[threadWebService release];
-			threadWebService = nil;
-		}
-	}
 }
 
 
