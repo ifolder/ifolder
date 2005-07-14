@@ -26,6 +26,10 @@
 
 #import <netinet/in.h>
 #include <arpa/inet.h>
+#include <errno.h>
+#include <sys/sysctl.h>
+#include <signal.h>
+#include "applog.h"
 
 
 @implementation Simias
@@ -67,34 +71,50 @@ static Simias *sharedInstance = nil;
 {
 	if(simiasTask == nil)
 	{
-		NSArray *parameters = nil;
+		int SimiasPID;
+
+		SimiasPID = [self getCurrentSimiasPID];
 		
-		// Detect if the std port is available
-		NSSocketPort *tmpPort = [[NSSocketPort alloc] initWithTCPPort:0];
-		if(tmpPort == nil)
-			return NO;
+		if(SimiasPID != 0)
+		{
+			// We need to kill the current Simias PID!
+			ifconlog2(@"*********Simias process found on PID: %d", SimiasPID);
+		}
+
+		if(SimiasPID == 0)
+		{
+			NSArray *parameters = nil;
 			
-		struct sockaddr_in addrIn = *(struct sockaddr_in*)[[tmpPort address] bytes];
-		NSString *port = [NSString stringWithFormat:@"%d", addrIn.sin_port];
-		[tmpPort release];
-		tmpPort = nil;
-		parameters = [NSArray arrayWithObjects:port, nil];
+			// Detect if the std port is available
+			NSSocketPort *tmpPort = [[NSSocketPort alloc] initWithTCPPort:0];
+			if(tmpPort == nil)
+				return NO;
+				
+			struct sockaddr_in addrIn = *(struct sockaddr_in*)[[tmpPort address] bytes];
+			NSString *port = [NSString stringWithFormat:@"%d", addrIn.sin_port];
+			[tmpPort release];
+			tmpPort = nil;
+			parameters = [NSArray arrayWithObjects:port, nil];
 
-		simiasurl = [[NSString stringWithFormat:@"http://127.0.0.1:%@", port] retain];
+			simiasurl = [[NSString stringWithFormat:@"http://127.0.0.1:%@", port] retain];
 
-		simiasTask = [[NSTask alloc] init];
-		stdInPipe = [[NSPipe alloc] init];
-		[simiasTask setLaunchPath:[NSString stringWithCString:SIMIAS_BINARY]];
-		[simiasTask setArguments:parameters];
-		[simiasTask setStandardInput:stdInPipe];
+			simiasTask = [[NSTask alloc] init];
+			stdInPipe = [[NSPipe alloc] init];
+			[simiasTask setLaunchPath:[NSString stringWithCString:SIMIAS_BINARY]];
+			[simiasTask setArguments:parameters];
+			[simiasTask setStandardInput:stdInPipe];
 
-	    stdInHandle = [stdInPipe fileHandleForWriting];
+			stdInHandle = [stdInPipe fileHandleForWriting];
+		}
 	}
 
-	if(![simiasTask isRunning])
+	if((simiasTask != nil) && (![simiasTask isRunning]))
 		[simiasTask launch];
 
-	return YES;
+	if((simiasTask != nil) && ([simiasTask isRunning]))
+		return YES;
+	else
+		return NO;
 }
 
 
@@ -146,7 +166,142 @@ static Simias *sharedInstance = nil;
 //			[simiasTask waitUntilExit];
 		}	
 	}
+	else
+	{
+		int SimiasPID;
+
+		SimiasPID = [self getCurrentSimiasPID];
+	
+		if(SimiasPID > 0)
+		{
+			// We need to kill the current Simias PID!
+			ifconlog2(@"iFolder killing process PID: %d", SimiasPID);
+			kill(SimiasPID, SIGKILL);
+			ifconlog2(@"Waiting for process to die PID: %d", SimiasPID);
+			sleep(3);
+			SimiasPID = [self getCurrentSimiasPID];
+			while(SimiasPID > 0)
+			{
+				ifconlog2(@"Waiting for process to die PID: %d", SimiasPID);
+				sleep(2);
+				SimiasPID = [self getCurrentSimiasPID];
+			}
+			ifconlog2(@"Process is dead PID: %d", SimiasPID);
+			sleep(5);
+			popen("rm -rf ~/.wapi", "r");
+		}
+	}
 	return YES;
+}
+
+
+
+
+-(int) getCurrentSimiasPID
+{
+	int simiasPID = 0;
+    int	mib[6] = {0,0,0,0,0,0}; //used for sysctl call.
+    int	SuccessfullyGotProcessInformation;
+    size_t sizeOfBufferRequired = 0; //set to zero to start with.
+    int error = 0;
+    long NumberOfRunningProcesses = 0;
+    unsigned int Counter = 0;
+    struct kinfo_proc* BSDProcessInformationStructure = NULL;
+    pid_t CurrentExaminedProcessPID = 0;
+    char* CurrentExaminedProcessName = NULL;
+
+    mib[0] = CTL_KERN;
+    mib[1] = KERN_PROC;
+    mib[2] = KERN_PROC_ALL;
+
+    SuccessfullyGotProcessInformation = FALSE;
+    while (SuccessfullyGotProcessInformation == FALSE)
+    {
+        error = sysctl(mib, 3, NULL, &sizeOfBufferRequired, NULL, 0);
+
+        if (error != 0) 
+        {
+			// if we got an error, just return 0
+			return 0;
+        }
+    
+        BSDProcessInformationStructure = (struct kinfo_proc*) malloc(sizeOfBufferRequired);
+
+        if (BSDProcessInformationStructure == NULL)
+        {
+			return 0;
+        }
+    
+        error = sysctl(mib, 3, BSDProcessInformationStructure, &sizeOfBufferRequired, NULL, 0);
+    
+        //Here we successfully got the process information.  Thus set the variable to end this sysctl calling loop
+        if (error == 0)
+        {
+            SuccessfullyGotProcessInformation = TRUE;
+        }
+        else 
+        {
+			// free it and loop, the processes may have changed
+            free(BSDProcessInformationStructure); 
+        }
+    }//end while loop
+
+    NumberOfRunningProcesses = sizeOfBufferRequired / sizeof(struct kinfo_proc);  
+    
+    for (Counter = 0 ; Counter < NumberOfRunningProcesses ; Counter++)
+    {
+        //Getting PID of process we are examining
+        CurrentExaminedProcessPID = BSDProcessInformationStructure[Counter].kp_proc.p_pid; 
+    
+        //Getting name of process we are examining
+        CurrentExaminedProcessName = BSDProcessInformationStructure[Counter].kp_proc.p_comm; 
+
+        if ((CurrentExaminedProcessPID > 0) //Valid PID
+           && ((strncmp(CurrentExaminedProcessName, "mono", MAXCOMLEN) == 0))) //name matches
+        {	
+			// now get the command line arguments and see if any start SimiasServer.exe
+			int mib2[4];
+			char *arguments;
+			size_t arguments_size = 0;
+			char *endarg;
+
+			mib2[0] = CTL_KERN;
+			mib2[1] = KERN_PROCARGS;
+			mib2[2] = CurrentExaminedProcessPID;
+			mib2[3] = 0;
+
+			if(sysctl(mib2, 3, NULL, &arguments_size, NULL, 0) >= 0)
+			{
+				arguments = (char *) malloc(arguments_size);
+				if (sysctl(mib2, 3, arguments, &arguments_size, NULL, 0) >= 0)
+				{
+					char *curarg;
+
+					curarg = &arguments[0];
+					endarg = &(arguments[arguments_size]);
+					
+					while(curarg < endarg)
+					{
+						if(*curarg != 0)
+						{
+							if(strstr(curarg, "SimiasServer.exe") != NULL)
+								simiasPID = CurrentExaminedProcessPID;
+						}
+
+						while(*curarg != 0)
+							curarg++;
+					
+						// skip the zero at the end of the string
+						curarg++;
+					}
+				}		
+			}
+        }
+    }//end looking through process list
+
+    free(BSDProcessInformationStructure); //done with allocated buffer so release.
+
+	return simiasPID;
 }
 
 
