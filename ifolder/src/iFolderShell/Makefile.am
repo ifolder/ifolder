@@ -13,6 +13,18 @@ iFolderComponent_CSFILES_CSC := $(subst /,$(SEP),$(iFolderComponent_CSFILES))
 iFolderComponent_INCLUDES =
 iFolderComponent_RESOURCES =
 iFolderComponent_RESOURCES_FILES = CreateiFolder.resources ConflictResolver.resources iFolderAdvanced.resources MyMessageBox.resources NewiFolder.resources Picker.resources UserProperties.resources GaugeChart.resources
+iFolderComponent_DE_RESOURCES_FILES = CreateiFolder.de.resources ConflictResolver.de.resources iFolderAdvanced.de.resources MyMessageBox.de.resources NewiFolder.de.resources Picker.de.resources UserProperties.de.resources GaugeChart.de.resources
+iFolderComponent_ES_RESOURCES_FILES = CreateiFolder.es.resources ConflictResolver.es.resources iFolderAdvanced.es.resources MyMessageBox.es.resources NewiFolder.es.resources Picker.es.resources UserProperties.es.resources GaugeChart.es.resources
+iFolderComponent_FR_RESOURCES_FILES = CreateiFolder.fr.resources ConflictResolver.fr.resources iFolderAdvanced.fr.resources MyMessageBox.fr.resources NewiFolder.fr.resources Picker.fr.resources UserProperties.fr.resources GaugeChart.fr.resources
+iFolderComponent_HU_RESOURCES_FILES = CreateiFolder.hu.resources ConflictResolver.hu.resources iFolderAdvanced.hu.resources MyMessageBox.hu.resources NewiFolder.hu.resources Picker.hu.resources UserProperties.hu.resources GaugeChart.hu.resources
+iFolderComponent_IT_RESOURCES_FILES = CreateiFolder.it.resources ConflictResolver.it.resources iFolderAdvanced.it.resources MyMessageBox.it.resources NewiFolder.it.resources Picker.it.resources UserProperties.it.resources GaugeChart.it.resources
+iFolderComponent_JA_RESOURCES_FILES = CreateiFolder.ja.resources ConflictResolver.ja.resources iFolderAdvanced.ja.resources MyMessageBox.ja.resources NewiFolder.ja.resources Picker.ja.resources UserProperties.ja.resources GaugeChart.ja.resources
+iFolderComponent_PL_RESOURCES_FILES = CreateiFolder.pl.resources ConflictResolver.pl.resources iFolderAdvanced.pl.resources MyMessageBox.pl.resources NewiFolder.pl.resources Picker.pl.resources UserProperties.pl.resources GaugeChart.pl.resources
+iFolderComponent_PT_RESOURCES_FILES = CreateiFolder.pt.resources ConflictResolver.pt.resources iFolderAdvanced.pt.resources MyMessageBox.pt.resources NewiFolder.pt.resources Picker.pt.resources UserProperties.pt.resources GaugeChart.pt.resources
+iFolderComponent_RU_RESOURCES_FILES = CreateiFolder.ru.resources ConflictResolver.ru.resources iFolderAdvanced.ru.resources MyMessageBox.ru.resources NewiFolder.ru.resources Picker.ru.resources UserProperties.ru.resources GaugeChart.ru.resources
+iFolderComponent_SK_RESOURCES_FILES = CreateiFolder.sk.resources ConflictResolver.sk.resources iFolderAdvanced.sk.resources MyMessageBox.sk.resources NewiFolder.sk.resources Picker.sk.resources UserProperties.sk.resources GaugeChart.sk.resources
+iFolderComponent_ZH_CN_RESOURCES_FILES = CreateiFolder.zh_CN.resources ConflictResolver.zh_CN.resources iFolderAdvanced.zh_CN.resources MyMessageBox.zh_CN.resources NewiFolder.zh_CN.resources Picker.zh_CN.resources UserProperties.zh_CN.resources GaugeChart.zh_CN.resources
+iFolderComponent_ZH_TW_RESOURCES_FILES = CreateiFolder.zh_TW.resources ConflictResolver.zh_TW.resources iFolderAdvanced.zh_TW.resources MyMessageBox.zh_TW.resources NewiFolder.zh_TW.resources Picker.zh_TW.resources UserProperties.zh_TW.resources GaugeChart.zh_TW.resources
 iFolderComponent_FLAGS = $(CSC_LIBFLAG)
 iFolderComponent_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Drawing.dll System.Windows.Forms.dll Novell.iFolder.dll
 iFolderComponent_LIBPATH = ../iFolder
@@ -78,11 +90,73 @@ iFolderComponent.dll: $(iFolderComponent_RESOURCES_FILES) $(iFolderComponent_CSF
 %.resources : %.resx
 	$(RESG) $< Novell.iFolderCom.$@
 
+%.de.resources : %.de.resx
+	$(RESG) $< Novell.iFolderCom.$@
+de/iFolderComponent.resources.dll : $(iFolderComponent_DE_RESOURCES_FILES)
+	al /out:$@ /c:de $(iFolderComponent_DE_RESOURCES_FILES:%=/embed:Novell.iFolderCom.%)
+
+%.es.resources : %.es.resx
+	$(RESG) $< Novell.iFolderCom.$@
+es/iFolderComponent.resources.dll : $(iFolderComponent_ES_RESOURCES_FILES)
+	al /out:$@ /c:es $(iFolderComponent_ES_RESOURCES_FILES:%=/embed:Novell.iFolderCom.%)
+	
+%.fr.resources : %.fr.resx
+	$(RESG) $< Novell.iFolderCom.$@
+fr/iFolderComponent.resources.dll : $(iFolderComponent_FR_RESOURCES_FILES)
+	al /out:$@ /c:fr $(iFolderComponent_FR_RESOURCES_FILES:%=/embed:Novell.iFolderCom.%)
+
+%.hu.resources : %.hu.resx
+	$(RESG) $< Novell.iFolderCom.$@
+hu/iFolderComponent.resources.dll : $(iFolderComponent_HU_RESOURCES_FILES)
+	al /out:$@ /c:hu $(iFolderComponent_HU_RESOURCES_FILES:%=/embed:Novell.iFolderCom.%)
+
+%.it.resources : %.it.resx
+	$(RESG) $< Novell.iFolderCom.$@
+it/iFolderComponent.resources.dll : $(iFolderComponent_IT_RESOURCES_FILES)
+	al /out:$@ /c:it $(iFolderComponent_IT_RESOURCES_FILES:%=/embed:Novell.iFolderCom.%)
+
+%.ja.resources : %.ja.resx
+	$(RESG) $< Novell.iFolderCom.$@
+ja/iFolderComponent.resources.dll : $(iFolderComponent_JA_RESOURCES_FILES)
+	al /out:$@ /c:ja $(iFolderComponent_JA_RESOURCES_FILES:%=/embed:Novell.iFolderCom.%)
+
+%.pl.resources : %.pl.resx
+	$(RESG) $< Novell.iFolderCom.$@
+pl/iFolderComponent.resources.dll : $(iFolderComponent_PL_RESOURCES_FILES)
+	al /out:$@ /c:pl $(iFolderComponent_PL_RESOURCES_FILES:%=/embed:Novell.iFolderCom.%)
+
+%.pt.resources : %.pt.resx
+	$(RESG) $< Novell.iFolderCom.$@
+pt/iFolderComponent.resources.dll : $(iFolderComponent_PT_RESOURCES_FILES)
+	al /out:$@ /c:pt $(iFolderComponent_PT_RESOURCES_FILES:%=/embed:Novell.iFolderCom.%)
+
+%.ru.resources : %.ru.resx
+	$(RESG) $< Novell.iFolderCom.$@
+ru/iFolderComponent.resources.dll : $(iFolderComponent_RU_RESOURCES_FILES)
+	al /out:$@ /c:ru $(iFolderComponent_RU_RESOURCES_FILES:%=/embed:Novell.iFolderCom.%)
+
+%.sk.resources : %.sk.resx
+	$(RESG) $< Novell.iFolderCom.$@
+sk/iFolderComponent.resources.dll : $(iFolderComponent_SK_RESOURCES_FILES)
+	al /out:$@ /c:sk $(iFolderComponent_SK_RESOURCES_FILES:%=/embed:Novell.iFolderCom.%)
+
+%.zh_CN.resources : %.zh_CN.resx
+	$(RESG) $< Novell.iFolderCom.$@
+zh_CN/iFolderComponent.resources.dll : $(iFolderComponent_ZH_CN_RESOURCES_FILES)
+	al /out:$@ /c:zh_CN $(iFolderComponent_ZH_CN_RESOURCES_FILES:%=/embed:Novell.iFolderCom.%)
+
+%.zh_TW.resources : %.zh_TW.resx
+	$(RESG) $< Novell.iFolderCom.$@
+zh_TW/iFolderComponent.resources.dll : $(iFolderComponent_ZH_TW_RESOURCES_FILES)
+	al /out:$@ /c:zh_TW $(iFolderComponent_ZH_TW_RESOURCES_FILES:%=/embed:Novell.iFolderCom.%)
+	
 if DEBUG
 if WINDOWS
 DEBUG_FILES = iFolderComponent.pdb vc70.pdb
 endif
 endif
+
+languages: de/iFolderComponent.resources.dll es/iFolderComponent.resources.dll fr/iFolderComponent.resources.dll hu/iFolderComponent.resources.dll it/iFolderComponent.resources.dll ja/iFolderComponent.resources.dll pl/iFolderComponent.resources.dll pt/iFolderComponent.resources.dll ru/iFolderComponent.resources.dll sk/iFolderComponent.resources.dll zh_CN/iFolderComponent.resources.dll zh_TW/iFolderComponent.resources.dll 
 
 install-exec-local: iFolderComponent.dll iFolderShell.dll $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
