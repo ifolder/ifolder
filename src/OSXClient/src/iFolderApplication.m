@@ -41,6 +41,7 @@
 #include <SystemConfiguration/SCSchemaDefinitions.h>
 #include <SystemConfiguration/SCDynamicStoreKey.h>
 #include <CoreFoundation/CoreFoundation.h>
+#include <Foundation/NSLocale.h>
 
 @implementation iFolderApplication
 
@@ -161,8 +162,27 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 //===================================================================
 - (IBAction)showHelp:(id)sender
 {
+	NSString *langCode = [[NSLocale currentLocale] objectForKey:NSLocaleIdentifier];
+	NSString *helpPath = [NSString stringWithFormat:@"%s/share/ifolder3/help/%@/doc/user/data/front.html", IFOLDER_PREFIX, langCode];
+	
+	ifconlog2(@"Full help path: %@", helpPath);
+
+	if([[NSFileManager defaultManager] fileExistsAtPath:helpPath] == NO)
+	{
+		langCode = [[NSLocale currentLocale] objectForKey:NSLocaleLanguageCode];
+		helpPath = [NSString stringWithFormat:@"%s/share/ifolder3/help/%@/doc/user/data/front.html", IFOLDER_PREFIX, langCode];
+
+		ifconlog2(@"Language only help path: %@", helpPath);
+
+		if([[NSFileManager defaultManager] fileExistsAtPath:helpPath] == NO)
+		{
+			ifconlog1(@"Language help not found, defaulting to english (en)");
+			helpPath = [NSString stringWithFormat:@"%s/share/ifolder3/help/en/doc/user/data/front.html", IFOLDER_PREFIX];
+		}
+	}
+	
 	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:
-		[NSString stringWithFormat:@"file://localhost%s/share/ifolder3/help/en/doc/user/data/front.html", IFOLDER_PREFIX]]];
+			[NSString stringWithFormat:@"file://localhost%@", helpPath]]];
 }
 
 
