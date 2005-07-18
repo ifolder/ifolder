@@ -12,7 +12,7 @@
 			3EE2780507C4466000A645A0 /* iFolderService.m:620 */,
 			3ED05E860847BCD40063DA7A /* iFolderService.m:745 */,
 			3EDDA68B086C73FC0040CA8F /* LoginWindowController.m:179 */,
-			3E7AD8B50885B9C0004F45F6 /* iFolderApplication.m:472 */,
+			3E7AD8B50885B9C0004F45F6 /* iFolderApplication.m:492 */,
 			3E7AD8D30885BB7D004F45F6 /* Simias.m:76 */,
 			3E7AD8DA0885BC79004F45F6 /* Simias.m:213 */,
 			3E7AD8DD0885BCA7004F45F6 /* Simias.m:280 */,
@@ -172,7 +172,7 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 143071532;
+			PBXPerProjectTemplateStateSaveDate = 143408076;
 			PBXPrepackagedSmartGroups_v2 = (
 				{
 					PBXTransientLocationAtTop = bottom;
@@ -349,12 +349,8 @@
 					};
 				},
 			);
-			PBXWorkspaceStateSaveDate = 143071532;
+			PBXWorkspaceStateSaveDate = 143408076;
 			com.apple.ide.smrt.PBXUserSmartGroupsKey.Rev10 = <040b747970656473747265616d8103e88401408484840e4e534d757461626c654172726179008484074e534172726179008484084e534f626a65637400858401690086>;
-		};
-		perUserProjectItems = {
-			3E3E069B0887207C00268F7C /* PBXTextBookmark */ = 3E3E069B0887207C00268F7C /* PBXTextBookmark */;
-			3E3E06A1088721B200268F7C /* PBXTextBookmark */ = 3E3E06A1088721B200268F7C /* PBXTextBookmark */;
 		};
 		sourceControlManager = 3E1712BE076126F700BC1084 /* Source Control */;
 		userBookmarkGroup = 3E3F7C9907BEA1110096E031 /* PBXBookmarkGroup */;
@@ -627,26 +623,6 @@
 		modificationTime = 143072880.033609;
 		state = 2;
 	};
-	3E3E069B0887207C00268F7C /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 3EE886E907B92E8B00484B9F /* iFolderApplication.m */;
-		name = "iFolderApplication.m: 96";
-		rLen = 0;
-		rLoc = 3570;
-		rType = 0;
-		vrLen = 1440;
-		vrLoc = 2160;
-	};
-	3E3E06A1088721B200268F7C /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 3EE886E907B92E8B00484B9F /* iFolderApplication.m */;
-		name = "iFolderApplication.m: 96";
-		rLen = 0;
-		rLoc = 3572;
-		rType = 0;
-		vrLen = 1352;
-		vrLoc = 2333;
-	};
 	3E3F7C9907BEA1110096E031 /* PBXBookmarkGroup */ = {
 		isa = PBXBookmarkGroup;
 		children = (
@@ -659,7 +635,7 @@
 		fRef = 3EE886E907B92E8B00484B9F /* iFolderApplication.m */;
 		name = "iFolderApplication.m: 448";
 		rLen = 0;
-		rLoc = 16900;
+		rLoc = 17735;
 		rType = 0;
 		vrLen = 1683;
 		vrLoc = 10904;
@@ -790,7 +766,7 @@
 			sepNavWindowFrame = "{{210, 373}, {750, 558}}";
 		};
 	};
-	3E7AD8B50885B9C0004F45F6 /* iFolderApplication.m:472 */ = {
+	3E7AD8B50885B9C0004F45F6 /* iFolderApplication.m:492 */ = {
 		isa = PBXFileBreakpoint;
 		actions = (
 		);
@@ -799,7 +775,7 @@
 		fileReference = 3EE886E907B92E8B00484B9F /* iFolderApplication.m */;
 		functionName = "-startSimiasThread:";
 		hitCount = 0;
-		lineNumber = 472;
+		lineNumber = 492;
 		modificationTime = 143072819.394821;
 		state = 2;
 	};
@@ -975,10 +951,10 @@
 	};
 	3E9A956E0873120200702179 /* applog.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {958, 803}}";
-			sepNavSelRange = "{1390, 0}";
-			sepNavVisRect = "{{0, 0}, {958, 803}}";
-			sepNavWindowFrame = "{{241, 70}, {1003, 932}}";
+			sepNavIntBoundsRect = "{{0, 0}, {958, 602}}";
+			sepNavSelRange = "{1101, 9}";
+			sepNavVisRect = "{{0, 0}, {958, 571}}";
+			sepNavWindowFrame = "{{241, 46}, {1003, 700}}";
 		};
 	};
 	3E9A956F0873120200702179 /* applog.m */ = {
@@ -1202,10 +1178,10 @@
 	};
 	3EE886E907B92E8B00484B9F /* iFolderApplication.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1718, 21476}}";
-			sepNavSelRange = "{3572, 0}";
-			sepNavVisRect = "{{0, 868}, {820, 571}}";
-			sepNavWindowFrame = "{{292, 302}, {865, 700}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1718, 21756}}";
+			sepNavSelRange = "{5437, 0}";
+			sepNavVisRect = "{{0, 2136}, {820, 571}}";
+			sepNavWindowFrame = "{{237, 302}, {865, 700}}";
 		};
 	};
 	3EE886EA07B92E8B00484B9F /* iFolderApplication.h */ = {
@@ -1228,8 +1204,8 @@
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {2054, 11382}}";
 			sepNavSelRange = "{14792, 0}";
-			sepNavVisRect = "{{0, 6643}, {966, 793}}";
-			sepNavWindowFrame = "{{40, 80}, {1011, 922}}";
+			sepNavVisRect = "{{0, 6653}, {966, 571}}";
+			sepNavWindowFrame = "{{40, 46}, {1011, 700}}";
 		};
 	};
 	3EEA9A4907B1D9C30015FCF4 /* PropSharingController.m */ = {
