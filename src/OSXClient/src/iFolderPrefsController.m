@@ -108,7 +108,7 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 		[syncValue setEnabled:YES];
 		[syncLabel setEnabled:YES];
 
-		int value = [TimeSpan getTimeSpanValue:syncInterval];
+		long value = [TimeSpan getTimeSpanValue:syncInterval];
 		[syncValue setStringValue:[NSString stringWithFormat:@"%d", value]];
 		[syncUnits selectItemAtIndex:[TimeSpan getTimeIndex:syncInterval] ];
 	}
@@ -117,7 +117,7 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 
 -(void)saveCurrentSyncInterval
 {
-	int seconds;
+	long seconds;
 	if([enableSync state])
 		seconds = [TimeSpan getSeconds:[syncValue intValue]
 						withIndex:[syncUnits indexOfSelectedItem]];

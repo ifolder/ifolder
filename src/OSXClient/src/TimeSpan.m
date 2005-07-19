@@ -31,46 +31,56 @@
 
 +(long)getTimeSpanValue:(long)seconds
 {
-	if( (seconds > SECONDS_IN_DAY) &&
-		(seconds % SECONDS_IN_DAY) == 0)
+	long secondsValue = seconds;
+	long secDay = SECONDS_IN_DAY;
+	long secHour = SECONDS_IN_HOUR;
+	long secMinute = SECONDS_IN_MINUTE;
+
+	if( (seconds >= secDay) &&
+		((seconds % secDay) == 0) )
 	{
-		return (seconds/SECONDS_IN_DAY);
+		secondsValue = seconds/secDay;
 	}
-	if( (seconds > SECONDS_IN_HOUR) &&
-		(seconds % SECONDS_IN_HOUR) == 0)
+	else if( (seconds >= secHour) &&
+			 ((seconds % secHour) == 0) )
 	{
-		return (seconds/SECONDS_IN_HOUR);
+		secondsValue = seconds/secHour;
 	}
-	if( (seconds > SECONDS_IN_MINUTE) &&
-		(seconds % SECONDS_IN_MINUTE) == 0)
+	else if( (seconds >= secMinute) &&
+		     ((seconds % secMinute) == 0) )
 	{
-		return (seconds/SECONDS_IN_MINUTE);
+		secondsValue = seconds/secMinute;
 	}
-	return seconds;
+
+	return secondsValue;
 }
 
 +(NSString *)getTimeSpanUnits:(long)seconds
 {
-	if( (seconds > SECONDS_IN_DAY) &&
-		(seconds % SECONDS_IN_DAY) == 0)
+	long secDay = SECONDS_IN_DAY;
+	long secHour = SECONDS_IN_HOUR;
+	long secMinute = SECONDS_IN_MINUTE;
+
+	if( (seconds >= secDay) &&
+		(seconds % secDay) == 0)
 	{
-		if(seconds/SECONDS_IN_DAY == 1)
+		if(seconds/secDay == 1)
 			return NSLocalizedString(@"day", @"Time span for one day, sync in 1 \"day\"");
 		else
 			return NSLocalizedString(@"days", @"Time span for multiple days, sync in 5 \"days\"");
 	}
-	if( (seconds > SECONDS_IN_HOUR) &&
-		(seconds % SECONDS_IN_HOUR) == 0)
+	if( (seconds >= secHour) &&
+		(seconds % secHour) == 0)
 	{
-		if(seconds/SECONDS_IN_HOUR == 1)
+		if(seconds/secHour == 1)
 			return NSLocalizedString(@"hour", @"Time span for one hour, sync in 1 \"hour\"");
 		else
 			return NSLocalizedString(@"hours", @"Time span for multiple hours, sync in 5 \"hours\"");
 	}
-	if( (seconds > SECONDS_IN_MINUTE) &&
-		(seconds % SECONDS_IN_MINUTE) == 0)
+	if( (seconds >= secMinute) &&
+		(seconds % secMinute) == 0)
 	{
-		if(seconds/SECONDS_IN_MINUTE == 1)
+		if(seconds/secMinute == 1)
 			return NSLocalizedString(@"minute", @"Time span for one minute, sync in 1 \"minute\"");
 		else
 			return NSLocalizedString(@"minutes", @"Time span for multiple minutes, sync in 5 \"minutes\"");
@@ -85,18 +95,22 @@
 
 +(int)getTimeIndex:(long)seconds
 {
-	if( (seconds > SECONDS_IN_DAY) &&
-		(seconds % SECONDS_IN_DAY) == 0)
+	long secDay = SECONDS_IN_DAY;
+	long secHour = SECONDS_IN_HOUR;
+	long secMinute = SECONDS_IN_MINUTE;
+
+	if( (seconds >= secDay) &&
+		(seconds % secDay) == 0)
 	{
 		return 0;
 	}
-	if( (seconds > SECONDS_IN_HOUR) &&
-		(seconds % SECONDS_IN_HOUR) == 0)
+	if( (seconds >= secHour) &&
+		(seconds % secHour) == 0)
 	{
 		return 1;
 	}
-	if( (seconds > SECONDS_IN_MINUTE) &&
-		(seconds % SECONDS_IN_MINUTE) == 0)
+	if( (seconds >= secMinute) &&
+		(seconds % secMinute) == 0)
 	{
 		return 2;
 	}
