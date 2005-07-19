@@ -2264,14 +2264,12 @@ namespace Novell.iFolder
 		
 		private void OnDomainAddedEvent(object sender, DomainEventArgs args)
 		{
-Console.WriteLine("iFolderWindow.OnDomainAddedEvent() entered");
 			RefreshDomains(false);
 			RefreshiFolders(true);
 		}
 		
 		private void OnDomainDeletedEvent(object sender, DomainEventArgs args)
 		{
-Console.WriteLine("iFolderWindow.OnDomainDeletedEvent() entered");
 			RefreshDomains(false);
 			RefreshiFolders(true);
 		}
