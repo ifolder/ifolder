@@ -114,7 +114,7 @@
 				[syncInterval setHidden:YES];
 				[syncIntervalLabel setStringValue:NSLocalizedString(@"This iFolder does not automatically sync", nil)];
 			}
-			else
+			else if([curiFolder EffectiveSyncInterval] < 0)
 			{
 				[syncInterval setStringValue:[NSString stringWithFormat:@"%d %@", 
 								[TimeSpan getTimeSpanValue:[curiFolder EffectiveSyncInterval]],
