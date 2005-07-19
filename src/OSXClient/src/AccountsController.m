@@ -327,8 +327,11 @@
 			{
 				@try
 				{
-					authStatus = [[simiasService LoginToRemoteDomain:[newDomain ID] usingPassword:[password stringValue]] retain];
-					statusCode = [[authStatus statusCode] unsignedIntValue];
+					// Copying the windows code and just ignoring what happens here
+					[simiasService LoginToRemoteDomain:[newDomain ID] usingPassword:[password stringValue]];
+
+//					authStatus = [[simiasService LoginToRemoteDomain:[newDomain ID] usingPassword:[password stringValue]] retain];
+//					statusCode = [[authStatus statusCode] unsignedIntValue];
 				}
 				@catch (NSException *e)
 				{
@@ -384,15 +387,15 @@
 					
 					[[iFolderData sharedInstance] refresh:YES];
 					
-					if( (authStatus != nil) && ([authStatus remainingGraceLogins] < [authStatus totalGraceLogins]) )
+					if(statusCode == ns1__StatusCodes__SuccessInGrace)
 					{
 						NSBeginAlertSheet(NSLocalizedString(@"Expired Password", @"Grace Login Warning Dialog Title"), 
 						NSLocalizedString(@"OK", @"Grace Login Warning Dialog button"), nil, nil, 
 						parentWindow, nil, nil, nil, nil, 
 						[NSString stringWithFormat:NSLocalizedString(@"Your password has expired.  You have %d grace logins remaining.", 
-									@"Grace Login Warning Dialog message"), [authStatus remainingGraceLogins]]);
-						[authStatus release];
-						authStatus = nil;
+									@"Grace Login Warning Dialog message"), [[newDomain remainingGraceLogins] intValue] ]);
+//						[authStatus release];
+//						authStatus = nil;
 					}
 					break;
 				}

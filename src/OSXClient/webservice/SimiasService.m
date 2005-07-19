@@ -797,6 +797,7 @@ NSDictionary *getDomainProperties(struct ns1__DomainInformation *domainInfo)
 	[newProperties setObject:[NSNumber numberWithBool:domainInfo->Active] forKey:@"isEnabled"];
 	[newProperties setObject:[NSNumber numberWithBool:domainInfo->Authenticated] forKey:@"authenticated"];
 	[newProperties setObject:[NSNumber numberWithUnsignedInt:domainInfo->StatusCode] forKey:@"statusCode"];
+	[newProperties setObject:[NSNumber numberWithInt:domainInfo->RemainingGraceLogins] forKey:@"remainingGraceLogins"];
 
 	return newProperties;
 }
