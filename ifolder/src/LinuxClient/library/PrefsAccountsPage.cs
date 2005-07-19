@@ -103,8 +103,12 @@ namespace Novell.iFolder
 					new DomainLoggedInEventHandler(OnDomainLoggedInEvent);
 				domainController.DomainLoggedOut +=
 					new DomainLoggedOutEventHandler(OnDomainLoggedOutEvent);
+				domainController.DomainActivated +=
+					new DomainActivatedEventHandler(OnDomainActivatedEvent);
+				domainController.DomainInactivated +=
+					new DomainInactivatedEventHandler(OnDomainInactivatedEvent);
 				domainController.NewDefaultDomain +=
-					new DomainNewDefaultEventHandler(OnDomainNewDefaultEvent);
+					new DomainNewDefaultEventHandler(OnNewDefaultDomainEvent);
 				domainController.DomainInGraceLoginPeriod +=
 					new DomainInGraceLoginPeriodEventHandler(OnDomainInGraceLoginPeriodEvent);
 			}
@@ -127,8 +131,12 @@ Console.WriteLine("~PrefsAccountPage() entered");
 					new DomainLoggedInEventHandler(OnDomainLoggedInEvent);
 				domainController.DomainLoggedOut -=
 					new DomainLoggedOutEventHandler(OnDomainLoggedOutEvent);
+				domainController.DomainActivated -=
+					new DomainActivatedEventHandler(OnDomainActivatedEvent);
+				domainController.DomainInactivated -=
+					new DomainInactivatedEventHandler(OnDomainInactivatedEvent);
 				domainController.NewDefaultDomain -=
-					new DomainNewDefaultEventHandler(OnDomainNewDefaultEvent);
+					new DomainNewDefaultEventHandler(OnNewDefaultDomainEvent);
 				domainController.DomainInGraceLoginPeriod -=
 					new DomainInGraceLoginPeriodEventHandler(OnDomainInGraceLoginPeriodEvent);
 			}
@@ -247,7 +255,7 @@ Console.WriteLine("~PrefsAccountPage() entered");
 
 
 			// 2. Username
-			nameLabel = new Label(Util.GS("Username:"));
+			nameLabel = new Label(Util.GS("User Name:"));
 			nameLabel.Xalign = 1; 
 			loginTable.Attach(nameLabel, 0,1,1,2,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -337,37 +345,9 @@ Console.WriteLine("~PrefsAccountPage() entered");
 		private void PopulateWidgets()
 		{
 			PopulateDomains();
-
- 			detailsFrame.Sensitive = false;
-			nameEntry.Sensitive = false;
-			nameLabel.Sensitive = false;
-			passEntry.Sensitive = false;
-			passLabel.Sensitive = false;
-			serverEntry.Sensitive = false;
-			serverLabel.Sensitive = false;
-
-			savePasswordButton.Sensitive = false;
-			autoLoginButton.Sensitive = false;
-			defaultAccButton.Sensitive = false;
-			loginButton.Sensitive = false;
-
-			RemoveButton.Sensitive = false;
-			DetailsButton.Sensitive = false;
-
-			// If there aren't any domains, have the "Add" button
-			// be pressed automatically so the user doesn't have to
-			// do that unnecessary step.
-			if (curDomains.Count == 0)
-			{
-				OnAddAccount(null, null);
-				serverEntry.HasFocus = true;
-
-				// This is a big hack, but I couldn't find any other way to
-				// force Gtk to make the server entry get the focus.
-				GLib.Idle.Add(SetFocusToServerEntry);
-			}
+			
+			UpdateWidgetSensitivity();
 		}
-
 
 		private bool SetFocusToServerEntry()
 		{
@@ -415,7 +395,6 @@ Console.WriteLine("~PrefsAccountPage() entered");
 		{
 			string domainID = (string) tree_model.GetValue(iter, 0);
 			DomainInformation dom = domainController.GetDomain(domainID);
-//			DomainInformation dom = (DomainInformation) tree_model.GetValue(iter,0);
 			if (dom != null)
 				((CellRendererText) cell).Text = dom.Name;
 			else
@@ -431,7 +410,6 @@ Console.WriteLine("~PrefsAccountPage() entered");
 		{
 			string domainID = (string) tree_model.GetValue(iter, 0);
 			DomainInformation dom = domainController.GetDomain(domainID);
-//			DomainInformation dom = (DomainInformation) tree_model.GetValue(iter,0);
 			if (dom != null)
 				((CellRendererText) cell).Text = dom.MemberName;
 			else
@@ -447,7 +425,6 @@ Console.WriteLine("~PrefsAccountPage() entered");
 		{
 			string domainID = (string) tree_model.GetValue(iter, 0);
 			DomainInformation dom = domainController.GetDomain(domainID);
-//			DomainInformation dom = (DomainInformation) tree_model.GetValue(iter,0);
 			if (dom != null)
 			{
 				if (dom.Active)
@@ -471,73 +448,10 @@ Console.WriteLine("~PrefsAccountPage() entered");
 		}
 
 
-
-
 		private void OnAddAccount(object o, EventArgs args)
 		{
-			bool bOtherDomainsExist = false;
-
-			if(NewAccountMode == true)
-			{
-				// This shouldn't be possible but hey, deal with it
-				return;
-			}
-
-			if (curDomains.Count > 0)
-				bOtherDomainsExist = true;
-			
-			AccTreeView.Selection.UnselectAll();
-
-			NewAccountMode = true;
-
-			AddButton.Sensitive = false;
-			RemoveButton.Sensitive = false;
-			DetailsButton.Sensitive = false;
-
-			// Set the control states
- 			detailsFrame.Sensitive = true;
-			nameEntry.Sensitive = true;
-			nameEntry.Editable = true;
-			nameLabel.Sensitive = true;
-			passEntry.Sensitive = true;
-			passEntry.Editable = true;
-			passLabel.Sensitive = true;
-			serverEntry.Sensitive = true;
-			serverEntry.Editable = true;
-			serverLabel.Sensitive = true; 
-
-			savePasswordButton.Sensitive = true;
-			autoLoginButton.Sensitive = false;
-
-			// If there are other domains, at least one of them is already
-			// marked as the default so we can give the user the option to
-			// change that.  Otherwise, we need to force the new domain to
-			// be the default.
-			if (bOtherDomainsExist)
-				defaultAccButton.Sensitive = true;
-			else
-				defaultAccButton.Sensitive = false;
-
-			loginButton.Sensitive = false; 
-
-
-			// set the control values
-			savePasswordButton.Active = false;
-			autoLoginButton.Active = true;
-			if (bOtherDomainsExist)
-				defaultAccButton.Active = false;
-			else
-				defaultAccButton.Active = true;
-
-			nameEntry.Text = "";
-			serverEntry.Text = "";
-			passEntry.Text = "";
-
-			loginButton.HasDefault = true;
-			serverEntry.HasFocus = true;
+			EnterNewAccountMode();
 		}
-
-
 
 		private void OnRemoveAccount(object o, EventArgs args)
 		{
@@ -551,8 +465,6 @@ Console.WriteLine("~PrefsAccountPage() entered");
 				tSelect.GetSelected(out tModel, out iter);
 				string domainID = (string) tModel.GetValue(iter, 0);
 				DomainInformation dom = domainController.GetDomain(domainID);
-//				DomainInformation dom = 
-//					(DomainInformation) tModel.GetValue(iter, 0);
 
 				RemoveAccountDialog rad = new RemoveAccountDialog(dom);
 				rad.TransientFor = topLevelWindow;
@@ -633,6 +545,7 @@ Console.WriteLine("~PrefsAccountPage() entered");
 
 		public void AccSelectionChangedHandler(object o, EventArgs args)
 		{
+Console.WriteLine("PrefsAccountsPage.AccSelectionChangedHandler() entered");
 			if(NewAccountMode)
 			{
 				if( (nameEntry.Text.Length > 0) ||
@@ -670,7 +583,7 @@ Console.WriteLine("~PrefsAccountPage() entered");
 				else
 				{
 					// There isn't any data in the fields so just let them
-					// go ahead and quit
+					// go ahead and quit new account mode
 					NewAccountMode = false;
 				}
 			}
@@ -687,113 +600,7 @@ Console.WriteLine("~PrefsAccountPage() entered");
 				}
 			}
 
-
-			TreeSelection tSelect = AccTreeView.Selection;
-			if(tSelect.CountSelectedRows() == 1)
-			{
-				TreeModel tModel;
-				TreeIter iter;
-
-				tSelect.GetSelected(out tModel, out iter);
-				string domainID = (string) tModel.GetValue(iter, 0);
-				DomainInformation dom = domainController.GetDomain(domainID);
-//				DomainInformation dom = 
-//						(DomainInformation) tModel.GetValue(iter, 0);
-
-				curDomain = dom.ID;
-
-				// Set the control states
-				AddButton.Sensitive = true;
-				RemoveButton.Sensitive = true;
-				DetailsButton.Sensitive = true;
-
- 				detailsFrame.Sensitive = true;
-
-				if (dom.Active && !dom.Authenticated)
-				{
-					serverEntry.Sensitive = true;
-					serverEntry.Editable = true;
-					serverLabel.Sensitive = true; 
-				}
-				else
-				{
-					serverEntry.Sensitive = true;
-					serverEntry.Editable = false;
-					serverLabel.Sensitive = false;
-				}
-				nameEntry.Editable = false;
-				nameEntry.Sensitive = true;
-				nameLabel.Sensitive = false;
-
-				passEntry.Sensitive = true;
-				passEntry.Editable = true;
-				passLabel.Sensitive = true;
-
-				savePasswordButton.Sensitive = true;
-				autoLoginButton.Sensitive = true;
-
-				// set the control values
-				try
-				{
-					string userID;
-					string credentials;
-					CredentialType credType = simws.GetDomainCredentials(
-						dom.ID, out userID, out credentials);
-					if( (credentials != null) &&
-						(credType == CredentialType.Basic) )
-					{
-						curDomainPassword = credentials;
-						passEntry.Text = credentials;
-						savePasswordButton.Active = true;
-					}
-					else
-					{
-						throw new Exception("Invalid Creds");
-					}
-				}
-				catch(Exception e)
-				{
-					curDomainPassword = "";
-					passEntry.Text = "";
-					savePasswordButton.Active = false;
-				}
-
-				autoLoginButton.Active = dom.Active;
-				defaultAccButton.Active = dom.IsDefault;
-				defaultAccButton.Sensitive = !dom.IsDefault;
-
-				if(dom.MemberName != null)
-					nameEntry.Text = dom.MemberName;
-				else
-					nameEntry.Text = "";
-				if(dom.Host != null)
-					serverEntry.Text = dom.Host;
-				else
-					serverEntry.Text = "";
-				
-				if (dom.Active)
-				{
-					if (dom.Authenticated)
-					{
-						loginButton.Label = Util.GS("_Log Out");
-						loginButton.Sensitive = true;
-					}
-					else
-					{
-						loginButton.Label = Util.GS("_Log In");
-
-						if (passEntry.Text.Length > 0)
-							loginButton.Sensitive = true;
-						else
-							loginButton.Sensitive = false;
-					}
-				}
-				else
-				{
-					loginButton.Sensitive = false;
-					loginButton.Label = Util.GS("_Log In");
-				}
-			}
+			UpdateWidgetSensitivity();
 		}
 
 		private void OnLoginButtonPressed(object o, EventArgs args)
@@ -824,8 +631,6 @@ Console.WriteLine("~PrefsAccountPage() entered");
 				tSelect.GetSelected(out tModel, out iter);
 				string domainID = (string) tModel.GetValue(iter, 0);
 				DomainInformation dom = domainController.GetDomain(domainID);
-//				DomainInformation dom = 
-//						(DomainInformation) tModel.GetValue(iter, 0);
 				try
 				{
 					DomainAuthentication domainAuth = new DomainAuthentication("iFolder", dom.ID, null);
@@ -834,8 +639,8 @@ Console.WriteLine("~PrefsAccountPage() entered");
 					dom.Authenticated = false;
 					UpdateDomainStatus(dom.ID);
 
-					// Update the login button
-					AccSelectionChangedHandler(null, null);
+					// FIXME: Update the login button
+					
 				}
 				catch (Exception ex)
 				{
@@ -855,8 +660,6 @@ Console.WriteLine("~PrefsAccountPage() entered");
 
 		private void OnLoginAccount(object o, EventArgs args)
 		{
-			iFolderMsgDialog dg;
-			
 			DomainInformation dom = null;
 			if (NewAccountMode)
 			{
@@ -869,10 +672,24 @@ Console.WriteLine("~PrefsAccountPage() entered");
 							savePasswordButton.Active,
 							defaultAccButton.Active);
 				}
-				catch (Exception e)
+				catch (DomainAccountAlreadyExistsException e1)
 				{
-					// FIXME: Handle exceptions here
-Console.WriteLine(e.Message);
+					iFolderMsgDialog dg = new iFolderMsgDialog(
+						topLevelWindow,
+						iFolderMsgDialog.DialogType.Error,
+						iFolderMsgDialog.ButtonSet.Ok,
+						"",
+						Util.GS("An account already exists"),
+						Util.GS("An account for this server already exists on the local machine.  Only one account per server is allowed."));
+					dg.Run();
+					dg.Hide();
+					dg.Destroy();
+				}
+				catch (Exception e2)
+				{
+					// FIXME: Handle exception here
+					
+Console.WriteLine(e2.Message);
 				}
 			}
 			else
@@ -880,7 +697,7 @@ Console.WriteLine(e.Message);
 				// Existing account
 				try
 				{
-					dom = domainController.UpdateDomainHostAddress(dom.ID, serverEntry.Text);
+					dom = domainController.UpdateDomainHostAddress(curDomain, serverEntry.Text);
 				}
 				catch (Exception e)
 				{
@@ -929,24 +746,6 @@ Console.WriteLine(e.Message);
 						if (NewAccountMode)
 						{
 							NewAccountMode = false;
-//							TreeIter iter = AccTreeStore.AppendValues(domainInfo.ID);
-//							curDomains[domainInfo.ID] = iter;
-//							curDomain = domainInfo.ID;
-									
-//							if (savePasswordButton.Active)
-//							{
-//								SavePasswordNow();
-//							}
-										
-//							if (defaultAccButton.Active)
-//							{
-//								if (ifdata.SetDefaultDomain(domainInfo))
-//								{
-//									defaultAccButton.Sensitive = false;
-//								}
-//							}
-										
-//							sel.SelectIter(iter);
 						}
 						else
 						{
@@ -954,10 +753,11 @@ Console.WriteLine(e.Message);
 
 //							TreeIter iter = (TreeIter)curDomains[domainInfo.ID];
 //							sel.SelectIter(iter);
+							UpdateWidgetSensitivity();
 						}
 
 						// Update the login button
-						AccSelectionChangedHandler(null, null);
+//						AccSelectionChangedHandler(null, null);
 					}
 					else
 					{
@@ -970,342 +770,268 @@ Console.WriteLine(e.Message);
 					break;
 			}
 		}
-
-		private void OnLoginAccountOld(object o, EventArgs args)
-		{
-			iFolderMsgDialog dg;
-			
-			try
-			{
-				DomainInformation domainInfo;
-				if (NewAccountMode)
-				{
-					// Check if a proxy needs to be set
-					GnomeHttpProxy proxy = new GnomeHttpProxy( serverEntry.Text );
-					string user = null;
-					string password = null;
-					if ( proxy.IsProxySet == true )
-					{
-						if ( proxy.CredentialsSet == true )
-						{
-							user = proxy.Username;
-							password = proxy.Password;
-						}
-						
-						simws.SetProxyAddress( 
-							"http://" + serverEntry.Text, 
-							"http://" + proxy.Host, 
-							user, 
-							password );
-							
-						// Always need to set both secure and unsecure
-						// so if I don't have a real secure setting
-						// set the normal unsecure as the secure setting
-						if ( proxy.IsSecureProxySet == false )
-						{
-							simws.SetProxyAddress( 
-								"https://" + serverEntry.Text, 
-								"http://" + proxy.Host, 
-								user, 
-								password );
-						}
-					}
-					
-					// Secure proxy
-					if ( proxy.IsSecureProxySet == true )
-					{
-						simws.SetProxyAddress( 
-							"https://" + serverEntry.Text, 
-							"http://" + proxy.SecureHost, 
-							user, 
-							password );
-					}
-				
-					domainInfo = simws.ConnectToDomain(nameEntry.Text, passEntry.Text, serverEntry.Text);
-				}
-				else
-				{
-//					domainInfo = curDomain;
-					domainInfo = domainController.GetDomain(curDomain);
-
-					// The user has changed the server's host
-					simws.SetDomainHostAddress(domainInfo.ID, serverEntry.Text);
-					domainInfo.StatusCode = StatusCodes.Success;
-				}
-				
-				// Just in case...
-				if (domainInfo == null) return;
-				
-				switch (domainInfo.StatusCode)
-				{
-					case StatusCodes.InvalidCertificate:
-					{
-						byte[] byteArray = simws.GetCertificate(serverEntry.Text);
-						System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(byteArray);
-
-						iFolderMsgDialog dialog = new iFolderMsgDialog(
-							topLevelWindow,
-							iFolderMsgDialog.DialogType.Question,
-							iFolderMsgDialog.ButtonSet.YesNo,
-							"",
-							string.Format(Util.GS("iFolder cannot verify the identity of the iFolder Server \"{0}\"."), serverEntry.Text),
-							string.Format(Util.GS("The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be \"{0}\" which could put your confidential information at risk.   Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?"), serverEntry.Text),
-							cert.ToString(true));
-						int rc = dialog.Run();
-						dialog.Hide();
-						dialog.Destroy();
-						if(rc == -8) // User clicked the Yes button
-						{
-							simws.StoreCertificate(byteArray, serverEntry.Text);
-							OnLoginAccount(o, args);
-						}
-						break;
-					}
-					case StatusCodes.Success:
-					case StatusCodes.SuccessInGrace:
-						// Set the credentials in the current process.
-						DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domainInfo.ID, passEntry.Text);
-						Status authStatus = domainAuth.Authenticate();
 		
-						switch (authStatus.statusCode)
-						{
-							case StatusCodes.Success:
-							case StatusCodes.SuccessInGrace:
-								TreeSelection sel = AccTreeView.Selection;
-
-								domainInfo.Authenticated = true;
-
-								if (NewAccountMode)
-								{
-									ifdata.AddDomain(domainInfo);
-									NewAccountMode = false;
-									TreeIter iter = AccTreeStore.AppendValues(domainInfo.ID);
-									curDomains[domainInfo.ID] = iter;
-//									curDomain = domainInfo;
-									curDomain = domainInfo.ID;
-									
-									if (savePasswordButton.Active)
-									{
-										SavePasswordNow();
-									}
-										
-									if (defaultAccButton.Active)
-									{
-//										if (ifdata.SetDefaultDomain(curDomain))
-										if (ifdata.SetDefaultDomain(domainInfo))
-										{
-											defaultAccButton.Sensitive = false;
-										}
-									}
-										
-									sel.SelectIter(iter);
-								}
-								else
-								{
-									UpdateDomainStatus(domainInfo.ID);
-
-									TreeIter iter = (TreeIter)curDomains[domainInfo.ID];
-									sel.SelectIter(iter);
-
-									// Update the login button
-									AccSelectionChangedHandler(null, null);
-								}
-
-								if (authStatus.RemainingGraceLogins < authStatus.TotalGraceLogins)
-								{
-									dg = new iFolderMsgDialog(
-										topLevelWindow,
-										iFolderMsgDialog.DialogType.Error,
-										iFolderMsgDialog.ButtonSet.Ok,
-										"",
-										Util.GS("Your password has expired"),
-										string.Format(Util.GS("You have {0} grace logins remaining."), authStatus.RemainingGraceLogins));
-									dg.Run();
-									dg.Hide();
-									dg.Destroy();
-								}
-								
-								break;
-							case StatusCodes.InvalidCredentials:
-							case StatusCodes.InvalidPassword:
-								dg = new iFolderMsgDialog(
-									topLevelWindow,
-									iFolderMsgDialog.DialogType.Error,
-									iFolderMsgDialog.ButtonSet.Ok,
-									"",
-									Util.GS("The username or password is invalid"),
-									Util.GS("Please try again."));
-								dg.Run();
-								dg.Hide();
-								dg.Destroy();
-								break;
-							case StatusCodes.AccountDisabled:
-								dg = new iFolderMsgDialog(
-									topLevelWindow,
-									iFolderMsgDialog.DialogType.Error,
-									iFolderMsgDialog.ButtonSet.Ok,
-									"",
-									Util.GS("The iFolder account is disabled"),
-									Util.GS("Please contact your network administrator for assistance."));
-								dg.Run();
-								dg.Hide();
-								dg.Destroy();
-								break;
-							case StatusCodes.AccountLockout:
-								dg = new iFolderMsgDialog(
-									topLevelWindow,
-									iFolderMsgDialog.DialogType.Error,
-									iFolderMsgDialog.ButtonSet.Ok,
-									"",
-									Util.GS("The user account is locked"),
-									Util.GS("Please contact your network administrator for assistance."));
-								dg.Run();
-								dg.Hide();
-								dg.Destroy();
-								break;
-							default:
-								dg = new iFolderMsgDialog(
-									topLevelWindow,
-									iFolderMsgDialog.DialogType.Error,
-									iFolderMsgDialog.ButtonSet.Ok,
-									"",
-									Util.GS("Unable to connect to the iFolder Server"),
-									Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."),
-									string.Format("{0}: {1}", Util.GS("Authentication Status Code"), authStatus.statusCode));
-								dg.Run();
-								dg.Hide();
-								dg.Destroy();
-								break;
-						}
-						break;
-					case StatusCodes.InvalidCredentials:
-					case StatusCodes.InvalidPassword:
-					case StatusCodes.UnknownUser:
-						dg = new iFolderMsgDialog(
-							topLevelWindow,
-							iFolderMsgDialog.DialogType.Error,
-							iFolderMsgDialog.ButtonSet.Ok,
-							"",
-							Util.GS("The username or password is invalid"),
-							Util.GS("Please try again."));
-						dg.Run();
-						dg.Hide();
-						dg.Destroy();
-						break;
-					case StatusCodes.AccountDisabled:
-						dg = new iFolderMsgDialog(
-							topLevelWindow,
-							iFolderMsgDialog.DialogType.Error,
-							iFolderMsgDialog.ButtonSet.Ok,
-							"",
-							Util.GS("The iFolder account is disabled"),
-							Util.GS("Please contact your network administrator for assistance."));
-						dg.Run();
-						dg.Hide();
-						dg.Destroy();
-						break;
-					case StatusCodes.AccountLockout:
-						dg = new iFolderMsgDialog(
-							topLevelWindow,
-							iFolderMsgDialog.DialogType.Error,
-							iFolderMsgDialog.ButtonSet.Ok,
-							"",
-							Util.GS("The user account is locked"),
-							Util.GS("Please contact your network administrator for assistance."));
-						dg.Run();
-						dg.Hide();
-						dg.Destroy();
-						break;
-					case StatusCodes.UnknownDomain:
-						dg = new iFolderMsgDialog(
-							topLevelWindow,
-							iFolderMsgDialog.DialogType.Error,
-							iFolderMsgDialog.ButtonSet.Ok,
-							"",
-							Util.GS("Unable to contact the specified server"),
-							Util.GS("Please verify the information entered and try again.  If the problem persists, please contact your network administrator."));
-						dg.Run();
-						dg.Hide();
-						dg.Destroy();
-						break;
-					default:
-						dg = new iFolderMsgDialog(
-							topLevelWindow,
-							iFolderMsgDialog.DialogType.Error,
-							iFolderMsgDialog.ButtonSet.Ok,
-							"",
-							Util.GS("Unable to connect to the iFolder Server"),
-							Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."),
-							string.Format("{0}: {1}", Util.GS("Authentication Status Code"), domainInfo.StatusCode));
-						dg.Run();
-						dg.Hide();
-						dg.Destroy();
-						break;
-				}
-			}
-			catch (Exception ex)
+		private void UpdateWidgetSensitivity()
+		{
+			if (curDomains.Count == 0)
 			{
-				if ((ex.Message.IndexOf("Simias.ExistsException") != -1) ||
-					(ex.Message.IndexOf("already exists") != -1))
+				curDomain = null;
+				// No domains exist, so put the window into "NewAccountMode".
+				EnterNewAccountMode();
+			}
+			else
+			{
+				TreeSelection tSelect = AccTreeView.Selection;
+				if(tSelect.CountSelectedRows() == 1)
 				{
-					dg = new iFolderMsgDialog(
-						topLevelWindow,
-						iFolderMsgDialog.DialogType.Error,
-						iFolderMsgDialog.ButtonSet.Ok,
-						"",
-						Util.GS("An account already exists"),
-						Util.GS("An account for this server already exists on the local machine.  Only one account per server is allowed."));
+					TreeModel tModel;
+					TreeIter iter;
+	
+					tSelect.GetSelected(out tModel, out iter);
+					string domainID = (string) tModel.GetValue(iter, 0);
+					DomainInformation dom = domainController.GetDomain(domainID);
+					if (dom == null) return;	// Prevent null pointer
+					
+					curDomain = dom.ID;
+	
+					// Set the control states
+					AddButton.Sensitive				= true;
+					RemoveButton.Sensitive			= true;
+					DetailsButton.Sensitive			= true;
+	
+	 				detailsFrame.Sensitive			= true;
+	
+					if (dom.Active && !dom.Authenticated)
+					{
+						serverEntry.Sensitive		= true;
+						serverEntry.Editable		= true;
+						serverLabel.Sensitive		= true; 
+					}
+					else
+					{
+						serverEntry.Sensitive		= true;
+						serverEntry.Editable		= false;
+						serverLabel.Sensitive		= false;
+					}
+					if (dom.Host != null)
+						serverEntry.Text			= dom.Host;
+					else
+						serverEntry.Text			= "";
+
+					nameEntry.Editable				= false;
+					nameEntry.Sensitive				= true;
+					nameLabel.Sensitive				= false;
+					if (dom.MemberName != null)
+						nameEntry.Text				= dom.MemberName;
+					else
+						nameEntry.Text				= "";
+
+					passEntry.Sensitive				= true;
+					passEntry.Editable				= true;
+					passLabel.Sensitive				= true;
+
+					string password = domainController.GetDomainPassword(dom.ID);
+					if (password != null)
+					{
+						curDomainPassword			= password;
+						passEntry.Text				= password;
+						savePasswordButton.Active	= true;
+					}
+					else
+					{
+						curDomainPassword			= "";
+						passEntry.Text				= "";
+						savePasswordButton.Active	= false;
+					}
+
+					if (passEntry.Text.Length == 0)
+						savePasswordButton.Sensitive	= false;
+					else
+						savePasswordButton.Sensitive	= true;
+					
+					autoLoginButton.Sensitive		= true;
+					autoLoginButton.Active			= dom.Active;
+
+					defaultAccButton.Active			= dom.IsDefault;
+					defaultAccButton.Sensitive		= !dom.IsDefault;
+	
+					
+					if (dom.Active)
+					{
+						if (dom.Authenticated)
+						{
+							loginButton.Label		= Util.GS("_Log Out");
+							loginButton.Sensitive	= true;
+						}
+						else
+						{
+							loginButton.Label		= Util.GS("_Log In");
+	
+							if (passEntry.Text.Length > 0)
+								loginButton.Sensitive = true;
+							else
+								loginButton.Sensitive = false;
+						}
+					}
+					else
+					{
+						loginButton.Sensitive		= false;
+						loginButton.Label			= Util.GS("_Log In");
+					}
 				}
 				else
 				{
-					dg = new iFolderMsgDialog(
-						topLevelWindow,
-						iFolderMsgDialog.DialogType.Error,
-						iFolderMsgDialog.ButtonSet.Ok,
-						"",
-						Util.GS("Unable to connect to the iFolder Server"),
-						Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."),
-						Util.GS(ex.Message));
+					// Nothing is selected
+					AddButton.Sensitive				= true;
+					RemoveButton.Sensitive			= false;
+					DetailsButton.Sensitive			= false;
+					
+					detailsFrame.Sensitive			= false;
+					
+					serverLabel.Sensitive			= false;
+					serverEntry.Sensitive			= false;
+					serverEntry.Editable			= false;
+					serverEntry.Text				= "";
+					
+					nameLabel.Sensitive				= false;
+					nameEntry.Sensitive				= false;
+					nameEntry.Editable				= false;
+					nameEntry.Text					= "";
+					
+					passLabel.Sensitive				= false;
+					passEntry.Sensitive				= false;
+					passEntry.Editable				= false;
+					passEntry.Text					= "";
+					
+					savePasswordButton.Sensitive	= false;
+					savePasswordButton.Active		= false;
+					
+					autoLoginButton.Sensitive		= false;
+					autoLoginButton.Active			= false;
+					
+					defaultAccButton.Sensitive		= false;
+					defaultAccButton.Active			= false;
+					
+					loginButton.Label				= Util.GS("_Log In");
+					loginButton.Sensitive			= false;
 				}
-
-				dg.Run();
-				dg.Hide();
-				dg.Destroy();
 			}
 		}
+		
+		private void EnterNewAccountMode()
+		{
+Console.WriteLine("PrefsAccountPage.EnterNewAccountMode()");
+			TreeSelection treeSelection = AccTreeView.Selection;
+			treeSelection.UnselectAll();
+			
+			NewAccountMode = true;
 
+			AddButton.Sensitive				= false;
+			RemoveButton.Sensitive			= false;
+			DetailsButton.Sensitive			= false;
+			
+			detailsFrame.Sensitive			= true;
+			
+			serverLabel.Sensitive			= true;
+			serverEntry.Sensitive			= true;
+			serverEntry.Editable			= true;
+			serverEntry.Text				= "";
+			
+			nameLabel.Sensitive				= true;
+			nameEntry.Sensitive				= true;
+			nameEntry.Editable				= true;
+			nameEntry.Text					= "";
+			
+			passLabel.Sensitive				= true;
+			passEntry.Sensitive				= true;
+			passEntry.Editable				= true;
+			passEntry.Text					= "";
+			
+			savePasswordButton.Sensitive	= true;
+			savePasswordButton.Active		= false;
+			
+			autoLoginButton.Sensitive		= false;
+			autoLoginButton.Active			= true;
+			
+			if (curDomains.Count == 0)
+			{
+				defaultAccButton.Sensitive	= false;
+				defaultAccButton.Active		= true;
+			}
+			else
+			{
+				defaultAccButton.Sensitive	= true;
+				defaultAccButton.Active		= false;
+			}
+			
+			loginButton.Label				= Util.GS("_Log In");
+			loginButton.Sensitive			= false;
+			
+			// Put the cursor focus on the serverEntry widget
+			// This is a big hack, but I couldn't find any other way to
+			// force Gtk to make the server entry get the focus.
+			GLib.Idle.Add(SetFocusToServerEntry);
+Console.WriteLine("PrefsAccountPage.EnterNewAccountMode() exiting");
+		}
 
 		private void OnFieldsChanged(object obj, EventArgs args)
 		{
 			if(NewAccountMode)
 			{
-				loginButton.Label = Util.GS("_Log In");
+				loginButton.Label			= Util.GS("_Log In");
 
 				if( (nameEntry.Text.Length > 0) &&
 					(passEntry.Text.Length > 0 ) &&
 					(serverEntry.Text.Length > 0) )
 				{
-					loginButton.Sensitive = true;
+					loginButton.Sensitive	= true;
 				}
 				else
-					loginButton.Sensitive = false;
+					loginButton.Sensitive	= false;
 			}
 			else
 			{
+				DomainInformation dom = domainController.GetDomain(curDomain);
+				if (dom == null) return;
+
 				if (passEntry.Text.Length > 0)
-					loginButton.Sensitive = true;
+				{
+					savePasswordButton.Sensitive = true;
+					if (dom.Active)
+					{
+						if (!dom.Authenticated)
+							loginButton.Sensitive = true;
+					}
+				}
 				else
-					loginButton.Sensitive = false;
+				{
+					savePasswordButton.Sensitive = false;
+					if (dom.Active)
+					{
+						if (!dom.Authenticated)
+							loginButton.Sensitive = false;
+					}
+					
+					if (savePasswordButton.Active)
+					{
+						savePasswordButton.Active = false;
+						SavePasswordNow();
+					}
+				}
 			}
 		}
 
 
 		private void OnSavePasswordToggled(object obj, EventArgs args)
 		{
+
 			// If we are creating a new account, do nothing
 			// it will be handled at creation time
 			if(	(!NewAccountMode) && (savePasswordButton.HasFocus == true) )
 			{
+				DomainInformation dom = domainController.GetDomain(curDomain);
+				if (dom == null) return;
+
 				SavePasswordNow();
 			}
 		}
@@ -1313,6 +1039,8 @@ Console.WriteLine(e.Message);
 
 		private void OnPassEntryActivated(object o, EventArgs args)
 		{
+			// FIXME: Reimplement OnPassEntryActivated() so that it does a login when a user presses <ENTER>
+
 			if( (!NewAccountMode) && (curDomainPassword != passEntry.Text) && 
 						(savePasswordButton.Active == true ) )
 			{
@@ -1338,17 +1066,12 @@ Console.WriteLine(e.Message);
 				if( (savePasswordButton.Active == true) &&
 						(passEntry.Text.Length > 0) )
 				{
-//					simws.SetDomainCredentials(curDomain.ID, 
-//							passEntry.Text, CredentialType.Basic);
-					simws.SetDomainCredentials(curDomain,
-							passEntry.Text, CredentialType.Basic);
+					domainController.SetDomainPassword(
+						curDomain, passEntry.Text);
 				}
 				else
 				{
-//					simws.SetDomainCredentials(curDomain.ID, null,
-//							CredentialType.None);
-					simws.SetDomainCredentials(curDomain,
-							null, CredentialType.None);
+					domainController.ClearDomainPassword(curDomain);
 				}
 				curDomainPassword = passEntry.Text;
 			}
@@ -1363,37 +1086,21 @@ Console.WriteLine(e.Message);
 		{
 			// If we are creating a new account, do nothing
 			// it will be handled at creation time
-			if(!NewAccountMode)
+			if(!NewAccountMode && autoLoginButton.HasFocus == true)
 			{
 				DomainInformation dom = domainController.GetDomain(curDomain);
-//				if(autoLoginButton.Active != curDomain.Active)
+				if (dom == null) return;
 				if(autoLoginButton.Active != dom.Active)
 				{
 					try
 					{
 						if(autoLoginButton.Active)
 						{
-//							simws.SetDomainActive(curDomain.ID);
-							simws.SetDomainActive(curDomain);
-//							curDomain.Active = true;
-							dom.Active = true;
-							
-							if (passEntry.Text.Length > 0)
-								loginButton.Sensitive = true;
-							
-//							UpdateDomainStatus(curDomain.ID);
-							UpdateDomainStatus(curDomain);
+							domainController.ActivateDomain(curDomain);
 						}
 						else
 						{
-//							simws.SetDomainInactive(curDomain.ID);
-							simws.SetDomainInactive(curDomain);
-//							curDomain.Active = false;
-							dom.Active = false;
-							loginButton.Sensitive = false;
-							
-//							UpdateDomainStatus(curDomain.ID);
-							UpdateDomainStatus(curDomain);
+							domainController.InactivateDomain(curDomain);
 						}
 					}
 					catch (Exception ex)
@@ -1408,22 +1115,64 @@ Console.WriteLine(e.Message);
 		{
 			// If we are creating a new account, do nothing
 			// it will be handled at creation time
-			if(!NewAccountMode)
+			if(!NewAccountMode && defaultAccButton.HasFocus == true)
 			{
-				DomainInformation dom = domainController.GetDomain(curDomain);
-//				if( (defaultAccButton.Active != curDomain.IsDefault) &&
-				if( (defaultAccButton.Active != dom.IsDefault) &&
-					(defaultAccButton.Active == true ) )
+				// The default account checkbox is not sensitive (enabled) when
+				// the default account is highlighted, so the only state that
+				// needs to be handled here is when a user activates the
+				// checkbox.
+				if (!defaultAccButton.Active) return;
+
+				try
 				{
-					defaultAccButton.Sensitive = 
-//							ifdata.SetDefaultDomain(curDomain);
-							ifdata.SetDefaultDomain(dom);
+					domainController.SetDefaultDomain(curDomain);
+				}
+				catch (Exception e)
+				{
+					// FIXME: Popup a real error message to the user
+					Console.WriteLine(e.Message);
 				}
 			}
 		}
 
 		public void OnDomainAddedEvent(object sender, DomainEventArgs args)
 		{
+Console.WriteLine("PrefsAccountPage.OnDomainAddedEvent() entered");
+			if (curDomains.ContainsKey(args.DomainID))
+			{
+Console.WriteLine("This is an already existing domain");
+				// Somehow we've already got this domain in our list, so
+				// just update it.
+				TreeIter iter = (TreeIter)curDomains[args.DomainID];
+				AccTreeStore.SetValue(iter, 0, args.DomainID);
+			}
+			else
+			{
+Console.WriteLine("This is a new domain");
+				// This is a new domain we don't have in the list yet
+				TreeIter iter = AccTreeStore.AppendValues(args.DomainID);
+				curDomains[args.DomainID] = iter;
+
+				// Highlight the new account
+				if (NewAccountMode)
+				{
+					TreeSelection tSelect = AccTreeView.Selection;
+					if(tSelect == null || tSelect.CountSelectedRows() == 0)
+					{
+						// Temporarily disable the selection handler so we can
+						// select the new account without causing the handler
+						// to be called.
+						AccTreeView.Selection.Changed -=
+							new EventHandler(AccSelectionChangedHandler);
+
+						tSelect.SelectIter(iter);
+
+						// hook'r back up
+						AccTreeView.Selection.Changed +=
+							new EventHandler(AccSelectionChangedHandler);
+					}
+				}
+			}
 		}
 		
 		public void OnDomainDeletedEvent(object sender, DomainEventArgs args)
@@ -1475,6 +1224,10 @@ Console.WriteLine(e.Message);
 			{
 				OnAddAccount(null, null);
 			}
+			else
+			{
+				UpdateWidgetSensitivity();
+			}
 		}
 		
 		public void OnDomainLoggedInEvent(object sender, DomainEventArgs args)
@@ -1492,15 +1245,41 @@ Console.WriteLine("PrefsAccountPage.OnDomainLoggedOutEvent() entered");
 			UpdateDomainStatus(args.DomainID);
 		}
 
-		public void OnDomainNewDefaultEvent(object sender, DomainEventArgs args)
+		public void OnDomainActivatedEvent(object sender, DomainEventArgs args)
 		{
-Console.WriteLine("PrefsAccountsPage.OnDomainNewDefaultEvent() entered");
-			TreeIter iter = (TreeIter)curDomains[args.DomainID];
-			DomainInformation dom = domainController.GetDomain(args.DomainID);
+			if (curDomain != null)
+			{
+				if (passEntry.Text.Length > 0)
+					loginButton.Sensitive = true;
+			}
+			
+			UpdateDomainStatus(args.DomainID);
+		}
+
+		public void OnDomainInactivatedEvent(object sender, DomainEventArgs args)
+		{
+			if (curDomain != null)
+			{
+				loginButton.Sensitive = false;
+			}
+
+			UpdateDomainStatus(args.DomainID);
+		}
+
+		public void OnNewDefaultDomainEvent(object sender, NewDefaultDomainEventArgs args)
+		{
+Console.WriteLine("PrefsAccountsPage.OnNewDefaultDomainEvent() entered");
+			TreeIter iter;
+			DomainInformation dom;
+
+			iter = (TreeIter)curDomains[args.NewDomainID];
+			dom = domainController.GetDomain(args.NewDomainID);
 			if (dom != null)
 			{
 				AccTreeStore.SetValue(iter, 0, dom.ID);
 			}
+			
+			UpdateWidgetSensitivity();
 		}
 		
 		public void OnDomainInGraceLoginPeriodEvent(object sender, DomainInGraceLoginPeriodEventArgs args)
@@ -1527,25 +1306,13 @@ Console.WriteLine("PrefsAccountsPage.OnDomainInGraceLoginPeriodEvent() entered")
 		public void UpdateDomainStatus(string domainID)
 		{
 Console.WriteLine("PrefsAccountPage.UpdateDomainStatus() entered");
-			if (curDomains.Contains(domainID))
+			if (curDomains.ContainsKey(domainID))
 			{
 				TreeIter iter = (TreeIter)curDomains[domainID];
 				DomainInformation dom = domainController.GetDomain(domainID);
 				if (dom != null)
 				{
 					AccTreeStore.SetValue(iter, 0, dom.ID);
-
-					// Use AccSelectionChangedHandler() to update the
-					// status and login button based on the state of the domain.
-					AccSelectionChangedHandler(null, null);
-					// 
-//					if (dom.Active)
-//					{
-//						if (dom.Authenticated)
-//						{
-//							loginButton.Label = Util.GS("_Log Out");
-//							loginButton.Sensitive = true;
-//					}
 				}
 				else
 				{
@@ -1554,14 +1321,8 @@ Console.WriteLine("PrefsAccountPage.UpdateDomainStatus() entered");
 					curDomains.Remove(domainID);
 				}
 			}
-			else
-			{
-				// Rebuild the entire list
-				curDomains.Clear();
-				AccTreeStore.Clear();
-	
-				PopulateDomains();
-			}
+			
+			UpdateWidgetSensitivity();
 		}
 	}
 }

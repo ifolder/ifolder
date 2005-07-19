@@ -55,7 +55,8 @@ namespace Novell.iFolder.Controller
 		/// <summary>
 		/// Member to keep track of the default domain
 		/// </summary>
-		private DomainInformation	defDomain = null;
+//		private DomainInformation	defDomain = null;
+		private string defDomainID = null;
 		
 		private SimiasEventBroker eventBroker = null;
 		
@@ -69,6 +70,8 @@ namespace Novell.iFolder.Controller
 		public event DomainLoggedOutEventHandler DomainLoggedOut;
 		public event DomainUpEventHandler DomainUp;
 		public event DomainNeedsCredentialsEventHandler DomainNeedsCredentials;
+		public event DomainActivatedEventHandler DomainActivated;
+		public event DomainInactivatedEventHandler DomainInactivated;
 		public event DomainNewDefaultEventHandler NewDefaultDomain;
 		public event DomainInGraceLoginPeriodEventHandler DomainInGraceLoginPeriod;
 		
@@ -165,7 +168,8 @@ namespace Novell.iFolder.Controller
 					foreach(DomainInformation domain in domains)
 					{
 						if(domain.IsDefault)
-							defDomain = domain;
+							defDomainID = domain.ID;
+//							defDomain = domain;
 
 						AddDomainToHashtable(domain);
 					}
@@ -196,7 +200,55 @@ namespace Novell.iFolder.Controller
 		{
 			lock(typeof(DomainController))
 			{
-				return defDomain;
+				if (keyedDomains.Contains(defDomainID))
+					return (DomainInformation)keyedDomains[defDomainID];
+				else
+				{
+					defDomainID = null;
+					return null;
+				}
+//				return defDomain;
+			}
+		}
+		
+		/// <summary>
+		/// Sets a new default domain
+		/// </summary>
+		public void SetDefaultDomain(string domainID)
+		{
+			lock(typeof(DomainController))
+			{
+				if (defDomainID == null || domainID != defDomainID)
+				{
+					if (!keyedDomains.Contains(domainID))
+					{
+						// FIXME: Change this to InvalidDomainException
+						throw new Exception("InvalidDomainException");
+					}
+					
+					DomainInformation dom = (DomainInformation)keyedDomains[domainID];
+					
+					try
+					{
+						simws.SetDefaultDomain(domainID);
+						dom.IsDefault = true;
+						string oldDomainID = defDomainID;
+						defDomainID = domainID;
+
+						if (oldDomainID != null && keyedDomains.Contains(oldDomainID))
+						{
+							DomainInformation oldDefaultDomain = (DomainInformation)keyedDomains[oldDomainID];
+							oldDefaultDomain.IsDefault = false;
+						}
+						
+						if (NewDefaultDomain != null)
+							NewDefaultDomain(this, new NewDefaultDomainEventArgs(oldDomainID, defDomainID));
+					}
+					catch (Exception e)
+					{
+						throw e;
+					}
+				}
 			}
 		}
 
@@ -233,6 +285,30 @@ namespace Novell.iFolder.Controller
 					// Add this Domain to our cache and notify handlers
 					AddDomainToHashtable(dom);
 					
+					if (bSetAsDefault)
+					{
+						try
+						{
+							simws.SetDefaultDomain(dom.ID);
+							dom.IsDefault = true;
+							
+							string oldDomainID = null;
+							if (defDomainID != null && defDomainID != dom.ID)
+							{
+								oldDomainID = defDomainID;
+								DomainInformation oldDefaultDomain = (DomainInformation)keyedDomains[oldDomainID];
+								if (oldDefaultDomain != null)
+									oldDefaultDomain.IsDefault = false;
+							}
+							
+							defDomainID = dom.ID;
+							
+							if (NewDefaultDomain != null)
+								NewDefaultDomain(this, new NewDefaultDomainEventArgs(oldDomainID, defDomainID));
+						}
+						catch {}
+					}
+
 					// Notify DomainAddedEventHandlers
 					if (DomainAdded != null)
 						DomainAdded(this, new DomainEventArgs(dom.ID));
@@ -243,7 +319,7 @@ namespace Novell.iFolder.Controller
 				if (e.Message.IndexOf("Simias.ExistsException") != -1 ||
 					e.Message.IndexOf("already exists") != -1)
 				{
-					// FIXME: Throw a DomainAlreadyExistsException
+					throw new DomainAccountAlreadyExistsException("An account with this domain already exists");
 				}
 				else
 				{
@@ -344,6 +420,92 @@ Console.WriteLine("DomainController.AuthenticateDomain(<public method>) entered"
 			}
 			catch {}
 		}
+		
+		public string GetDomainPassword(string domainID)
+		{
+			DomainInformation dom = (DomainInformation)keyedDomains[domainID];
+			if (dom != null)
+			{
+				string userID;
+				string credentials;
+				try
+				{
+					CredentialType credType = simws.GetDomainCredentials(
+						dom.ID, out userID, out credentials);
+					if (credentials != null && credType == CredentialType.Basic)
+					{
+						return credentials;
+					}
+				}
+				catch {}
+			}
+			
+			return null;
+		}
+		
+		public void ActivateDomain(string domainID)
+		{
+			try
+			{
+				DomainInformation dom = (DomainInformation)keyedDomains[domainID];
+				if (dom == null)
+				{
+					// FIXME: Replace this with a real class named InvalidDomainException
+					throw new Exception("Invalid Domain ID");
+				}
+				
+				simws.SetDomainActive(domainID);
+				dom.Active = true;
+				
+				if (DomainActivated != null)
+					DomainActivated(this, new DomainEventArgs(domainID));
+			}
+			catch (Exception e)
+			{
+				throw e;
+			}
+		}
+		
+		public void InactivateDomain(string domainID)
+		{
+			try
+			{
+				DomainInformation dom = (DomainInformation)keyedDomains[domainID];
+				if (dom == null)
+				{
+					// FIXME: Replace this with a real class named InvalidDomainException
+					throw new Exception("Invalid Domain ID");
+				}
+				
+				simws.SetDomainInactive(domainID);
+				dom.Active = false;
+
+				if (DomainInactivated != null)
+					DomainInactivated(this, new DomainEventArgs(domainID));
+			}
+			catch (Exception e)
+			{
+				throw e;
+			}
+		}
+		
+		public void ClearDomainPassword(string domainID)
+		{
+			try
+			{
+				simws.SetDomainCredentials(domainID, null, CredentialType.None);
+			}
+			catch {}
+		}
+		
+		public void SetDomainPassword(string domainID, string password)
+		{
+			try
+			{
+				simws.SetDomainCredentials(domainID, password, CredentialType.Basic);
+			}
+			catch {}
+		}
 
 		/// <summary>
 		/// Adds the domain to the keyedDomains hashtable
@@ -386,14 +548,27 @@ Console.WriteLine("DomainController.RemoveDomainFromHashtable() entered");
 									DomainInformation newDefaultDomain =
 										(DomainInformation)keyedDomains[newDefaultDomainID];
 									newDefaultDomain.IsDefault = true;
-									defDomain = newDefaultDomain;
+									string oldDomainID = null;
+									if (defDomainID != null)
+									{
+										DomainInformation oldDefaultDomain = (DomainInformation)keyedDomains[defDomainID];
+										if (oldDefaultDomain != null)
+										{
+											oldDefaultDomain.IsDefault = false;
+											oldDomainID = defDomainID;
+										}
+									}
+	
+									defDomainID = newDefaultDomain.ID;									
+//									defDomain = newDefaultDomain;
 
 									if (NewDefaultDomain != null)
-										NewDefaultDomain(this, new DomainEventArgs(newDefaultDomainID));
+										NewDefaultDomain(this, new NewDefaultDomainEventArgs(oldDomainID, newDefaultDomainID));
 								}
 							}
 							else
-								defDomain = null;
+								defDomainID = null;
+//								defDomain = null;
 						}
 						catch {}
 					}
@@ -635,6 +810,24 @@ Console.WriteLine("DomainController.OnDomainDeletedEvent() entered");
 			// Notify DomainDeletedEventHandlers
 			if (DomainDeleted != null)
 				DomainDeleted(this, args);
+		}
+	}
+
+	public class DomainAccountAlreadyExistsException : Exception
+	{
+		/// <summary>
+		/// Constructs a DomainAccountAlreadyExistsException.
+		/// </summary>
+		public DomainAccountAlreadyExistsException() : base()
+		{
+		}
+		
+		/// <summary>
+		/// Constructs a DomainAccountAlreadyExistsException.
+		/// </summary>
+		/// <param name="message">The message describing the exception.</param>
+		public DomainAccountAlreadyExistsException(string message) : base(message)
+		{
 		}
 	}
 }

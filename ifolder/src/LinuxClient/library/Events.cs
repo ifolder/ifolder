@@ -66,7 +66,9 @@ namespace Novell.iFolder.Events
 	public delegate void DomainLoggedOutEventHandler(object sender, DomainEventArgs args);
 	public delegate void DomainUpEventHandler(object sender, DomainEventArgs args);
 	public delegate void DomainNeedsCredentialsEventHandler(object sender, DomainEventArgs args);
-	public delegate void DomainNewDefaultEventHandler(object sender, DomainEventArgs args);
+	public delegate void DomainActivatedEventHandler(object sender, DomainEventArgs args);
+	public delegate void DomainInactivatedEventHandler(object sender, DomainEventArgs args);
+	public delegate void DomainNewDefaultEventHandler(object sender, NewDefaultDomainEventArgs args);
 	public delegate void DomainInGraceLoginPeriodEventHandler(object sender, DomainInGraceLoginPeriodEventArgs args);
 	
 
@@ -230,6 +232,28 @@ namespace Novell.iFolder.Events
 		public string DomainID
 		{
 			get{ return this.domainID; }
+		}
+	}
+	
+	public class NewDefaultDomainEventArgs : EventArgs
+	{
+		private string oldDomainID;
+		private string newDomainID;
+		
+		public NewDefaultDomainEventArgs(string oldDomainID, string newDomainID)
+		{
+			this.oldDomainID = oldDomainID;
+			this.newDomainID = newDomainID;
+		}
+		
+		public string OldDomainID
+		{
+			get{ return this.oldDomainID; }
+		}
+		
+		public string NewDomainID
+		{
+			get{ return this.newDomainID; }
 		}
 	}
 
