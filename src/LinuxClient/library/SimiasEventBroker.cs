@@ -32,6 +32,7 @@ using Gtk;
 using Simias.Client.Event;
 using Simias.Client;
 
+using Novell.iFolder.Events;
 
 
 namespace Novell.iFolder
@@ -103,171 +104,10 @@ namespace Novell.iFolder
 		}
 	}
 
-
-	public class iFolderAddedEventArgs : EventArgs
-	{
-		private string ifolderID;
-
-		public iFolderAddedEventArgs(string ifolderID)
-		{
-			this.ifolderID = ifolderID;
-		}
-
-		public string iFolderID
-		{
-			get{ return this.ifolderID; }
-		}
-	}
-	public delegate void iFolderAddedEventHandler(object sender,
-							iFolderAddedEventArgs args);
-	
-
-	public class iFolderChangedEventArgs : EventArgs
-	{
-		private string ifolderID;
-
-		public iFolderChangedEventArgs(string ifolderID)
-		{
-			this.ifolderID = ifolderID;
-		}
-
-		public string iFolderID
-		{
-			get{ return this.ifolderID; }
-		}
-	}
-	public delegate void iFolderChangedEventHandler(object sender,
-							iFolderChangedEventArgs args);
-
-
-	public class iFolderDeletedEventArgs : EventArgs
-	{
-		private string ifolderID;
-
-		public iFolderDeletedEventArgs(string ifolderID)
-		{
-			this.ifolderID = ifolderID;
-		}
-
-		public string iFolderID
-		{
-			get{ return this.ifolderID; }
-		}
-	}
-	public delegate void iFolderDeletedEventHandler(object sender,
-							iFolderDeletedEventArgs args);
-
-
-	public class iFolderUserAddedEventArgs : EventArgs
-	{
-		private iFolderUser user;
-		private string ifolderID;
-
-		public iFolderUserAddedEventArgs(iFolderUser ifUser, string iFolderID)
-		{
-			this.user = ifUser;
-			this.ifolderID = iFolderID;
-		}
-
-		public iFolderUser iFolderUser
-		{
-			get{ return this.user; }
-		}
-
-		public string iFolderID
-		{
-			get{ return this.ifolderID; }
-		}
-	}
-	public delegate void iFolderUserAddedEventHandler(object sender,
-							iFolderUserAddedEventArgs args);
-
-
-	public class iFolderUserChangedEventArgs : EventArgs
-	{
-		private iFolderUser user;
-		private string ifolderID;
-
-		public iFolderUserChangedEventArgs(iFolderUser ifUser, string iFolderID)
-		{
-			this.user = ifUser;
-			this.ifolderID = iFolderID;
-		}
-
-		public iFolderUser iFolderUser
-		{
-			get{ return this.user; }
-		}
-
-		public string iFolderID
-		{
-			get{ return this.ifolderID; }
-		}
-	}
-	public delegate void iFolderUserChangedEventHandler(object sender,
-							iFolderUserChangedEventArgs args);
-
-
-	public class iFolderUserDeletedEventArgs : EventArgs
-	{
-		private string userID;
-		private string ifolderID;
-
-		public iFolderUserDeletedEventArgs(string ifUserID, string iFolderID)
-		{
-			this.userID = ifUserID;
-			this.ifolderID = iFolderID;
-		}
-
-		public string UserID
-		{
-			get{ return this.userID; }
-		}
-
-		public string iFolderID
-		{
-			get{ return this.ifolderID; }
-		}
-	}
-	
-	public delegate void iFolderUserDeletedEventHandler(object sender,
-							iFolderUserDeletedEventArgs args);
-
-	public delegate void CollectionSyncEventHandler(object sender,
-							CollectionSyncEventArgs args);
-
-	public delegate void FileSyncEventHandler(object sender,
-							FileSyncEventArgs args);
-
-	public delegate void NotifyEventHandler(object sender,
-							NotifyEventArgs args);
-	
-	public class DomainEventArgs : EventArgs
-	{
-		private string domainID;
-		
-		public DomainEventArgs(string domainID)
-		{
-			this.domainID = domainID;
-		}
-		
-		public string DomainID
-		{
-			get{ return this.domainID; }
-		}
-	}
-	
-	public delegate void DomainAddedEventHandler(object sender,
-							DomainEventArgs args);
-	
-	public delegate void DomainDeletedEventHandler(object sender,
-							DomainEventArgs args);
-
-
-
-
 	public class SimiasEventBroker
 	{
+		private static SimiasEventBroker instance = null;
+	
 		private iFolderWebService	ifws;
 
 		private iFolderData			ifdata;
@@ -286,23 +126,40 @@ namespace Novell.iFolder
 		private Thread				SEThread;
 		private ManualResetEvent	SEEvent;
 
-
+		///
+		/// iFolder Events
+		///
 		public event iFolderAddedEventHandler iFolderAdded;
 		public event iFolderChangedEventHandler iFolderChanged;
 		public event iFolderDeletedEventHandler iFolderDeleted;
+
+		///
+		/// User Events
+		///
 		public event iFolderUserAddedEventHandler iFolderUserAdded;
 		public event iFolderUserChangedEventHandler iFolderUserChanged;
 		public event iFolderUserDeletedEventHandler iFolderUserDeleted;
-		public event DomainAddedEventHandler DomainAdded;
-		public event DomainDeletedEventHandler DomainDeleted;
 
+		///
+		/// Synchronization Events
+		///
 		public event CollectionSyncEventHandler CollectionSyncEventFired;
 		public event FileSyncEventHandler FileSyncEventFired;
-		public event NotifyEventHandler NotifyEventFired;
 
-		public SimiasEventBroker(iFolderWebService iFolderWS)
+		///
+		/// Domain Events
+		///
+		public event DomainAddedEventHandler DomainAdded;
+		public event DomainDeletedEventHandler DomainDeleted;
+		public event DomainUpEventHandler DomainUpEventFired;
+
+		private SimiasEventBroker()
 		{
-			ifws = iFolderWS;
+			string localServiceUrl =
+				Simias.Client.Manager.LocalServiceUrl.ToString();
+			ifws = new iFolderWebService();
+			ifws.Url = localServiceUrl + "/iFolder.asmx";
+			LocalService.Start(ifws);
 		
 			NodeEventQueue = new Queue();
 			SyncEventQueue = new Queue();
@@ -324,10 +181,22 @@ namespace Novell.iFolder
 			SEEvent = new ManualResetEvent(false);
 		}
 
+		public static SimiasEventBroker GetSimiasEventBroker()
+		{
+			lock (typeof(SimiasEventBroker))
+			{
+				if (instance == null)
+				{
+					instance = new SimiasEventBroker();
 
+					instance.Register();
+				}
+				
+				return instance;
+			}
+		}
 
-
-		public void Register()
+		private void Register()
 		{
 			ifdata = iFolderData.GetData();
 
@@ -358,14 +227,15 @@ namespace Novell.iFolder
 			SEThread.Start();
 		}
 
-
-
-
 		public void Deregister()
 		{
 			try
 			{
-				simiasEventClient.Deregister();
+				if (simiasEventClient != null)
+				{
+					simiasEventClient.Deregister();
+					simiasEventClient = null;
+				}
 			}
 			catch(Exception e)
 			{
@@ -374,7 +244,6 @@ namespace Novell.iFolder
 
 			runEventThread = false;
 		}
-
 
 		private void SimiasEventHandler(SimiasEventArgs args)
 		{
@@ -783,8 +652,20 @@ namespace Novell.iFolder
 					args = (NotifyEventArgs)NotifyEventQueue.Dequeue();
 				}
 
-				if(NotifyEventFired != null)
-					NotifyEventFired(this, args);
+				if (args == null || args.EventData == null || args.Message == null)
+					return;	// Prevent null pointer exceptions
+				switch (args.EventData)
+				{
+					case "Domain-Up":
+						if (DomainUpEventFired != null)
+						{
+							string domainID = args.Message;
+							DomainUpEventFired(this, new DomainEventArgs(domainID));
+						}
+						break;
+					default:
+						break;
+				}
 
 				lock(NotifyEventQueue)
 				{

@@ -289,6 +289,67 @@ namespace Novell.iFolder
 			}
 		}
 		
+		public static void ShowLoginError(Gtk.Window parent, StatusCodes statusCode)
+		{
+			string primaryText = null;
+			string secondaryText = null;
+			string exceptionText = null;
+
+			switch(statusCode)
+			{
+				case StatusCodes.InvalidCredentials:
+				case StatusCodes.InvalidPassword:
+				case StatusCodes.UnknownUser:
+					primaryText = Util.GS("The username or password is invalid");
+					secondaryText = Util.GS("Please try again.");
+					break;
+				case StatusCodes.AccountDisabled:
+					primaryText = Util.GS("The user account is disabled");
+					secondaryText = Util.GS("Please contact your network administrator for assistance.");
+					break;
+				case StatusCodes.AccountLockout:
+					primaryText = Util.GS("The user account is locked");
+					secondaryText = Util.GS("Please contact your network administrator for assistance.");
+					break;
+				case StatusCodes.UnknownDomain:
+					primaryText = Util.GS("Unable to contact the specified server");
+					secondaryText = Util.GS("Please verify the information entered and try again.  If the problem persists, please contact your network administrator.");
+					break;
+				default:
+					primaryText = Util.GS("Unable to connect to the iFolder Server");
+					secondaryText = Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.");
+					exceptionText = string.Format("{0}: {1}", Util.GS("Authentication Status Code"), statusCode);
+					break;
+			}
+
+			iFolderMsgDialog dg;
+			if (exceptionText == null)
+			{
+				dg = new iFolderMsgDialog(
+					parent,
+					iFolderMsgDialog.DialogType.Error,
+					iFolderMsgDialog.ButtonSet.Ok,
+					"",
+					primaryText,
+					secondaryText);
+			}
+			else
+			{
+				dg = new iFolderMsgDialog(
+					parent,
+					iFolderMsgDialog.DialogType.Error,
+					iFolderMsgDialog.ButtonSet.Ok,
+					"",
+					primaryText,
+					secondaryText,
+					exceptionText);
+			}
+
+			dg.Run();
+			dg.Hide();
+			dg.Destroy();
+		}
+		
 		private static void OniFolderWindowDestroyed(object o, EventArgs args)
 		{
 			ifwin = null;
