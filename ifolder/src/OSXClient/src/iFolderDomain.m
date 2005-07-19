@@ -159,4 +159,10 @@
 	return [self valueForKeyPath:@"properties.statusCode"]; 
 }
 
+-(NSNumber *)remainingGraceLogins
+{
+	return [self valueForKeyPath:@"properties.remainingGraceLogins"]; 
+}
+
+
 @end

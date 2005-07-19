@@ -80,6 +80,7 @@
 -(NSNumber *)isEnabled;
 -(BOOL)authenticated;
 -(NSNumber *)statusCode;
+-(NSNumber *)remainingGraceLogins;
 
 
 @end
