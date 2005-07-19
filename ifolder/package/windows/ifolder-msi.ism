@@ -252,7 +252,6 @@
 		<col key="yes" def="s72">Name</col>
 		<col def="V0">Data</col>
 		<col def="S255">ISBuildSourcePath</col>
-		<row><td>ISSELFREG.DLL</td><td/><td>&lt;ISProductFolder&gt;\redist\language independent\i386\isregsvr.dll</td></row>
 		<row><td>InteriorBin1</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\IsDialogBanner.ibd</td></row>
 		<row><td>NewBinary1</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\IsDialogBanner.ibd</td></row>
 		<row><td>NewBinary10</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\CompleteSetupIco.ibd</td></row>
@@ -346,17 +345,30 @@
 		<row><td>AllOtherFiles</td><td>{3B6C5DC6-1C33-4CF0-BE3D-E2D5B3459A5C}</td><td>WindowsFolder</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>AllOtherFiles1</td><td>{31083ADB-E7FF-4411-949D-83F925AF4BD0}</td><td>MICROSOFT.NET</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>AllOtherFiles2</td><td>{860B4627-638C-4BBC-93AF-C93ED105E166}</td><td>FRAMEWORK</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>AllOtherFiles3</td><td>{6DFFEBF0-60AC-4CE2-BDFE-4D557940576B}</td><td>V1.1.4322</td><td>8</td><td/><td>InstallUtil.exe.config</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>AllUsers</td><td>{2C8F8255-076F-4671-B2BF-576D07513763}</td><td>INSTALLDIR</td><td>8</td><td>ALLUSERS</td><td/><td>17</td><td/><td>iFolderApp.exe</td><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ContactBrowserShortcutComponent</td><td>{C4E1B853-D90D-4B9B-8565-1F08CFA2DC04}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>HelpFiles</td><td>{B12C9353-241E-44A6-B0F5-E76A373F6771}</td><td>HELP</td><td>0</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ISRegistryComponent</td><td>{F09F7E00-17CF-425E-8466-D8CEF6DE68C7}</td><td>INSTALLDIR</td><td>0</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>InstallUtil.exe.config</td><td>{6DFFEBF0-60AC-4CE2-BDFE-4D557940576B}</td><td>V1.1.4322</td><td>8</td><td/><td>InstallUtil.exe.config</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>NewComponent1</td><td>{AF69A02E-6EDE-4A40-BFB4-3774028D357C}</td><td>FR</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>OnlyCurrentUser</td><td>{F0ACC4E5-664E-490F-891D-B58CEFB2670F}</td><td>INSTALLDIR</td><td>8</td><td>NOT ALLUSERS</td><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ResourceFiles</td><td>{F4C858F9-99C7-440D-8933-FD7629AA43F7}</td><td>RES</td><td>0</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>WindowsFolderFiles</td><td>{CCFB8608-E84D-402C-AD51-BB6CF2069380}</td><td>WindowsFolder</td><td>16</td><td/><td>explorer.exe.manifest</td><td>17</td><td>This component consists of files not belonging to other components.</td><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>iFolderApp.exe</td><td>{76AD140D-5BCC-4182-865D-0B8576FDB8B8}</td><td>INSTALLDIR</td><td>0</td><td/><td>iFolderApp.exe</td><td>17</td><td>This component consists of a Windows executable.</td><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>de</td><td>{9DEEEA88-18FE-4DA8-84C7-CAF0A8B7ED80}</td><td>DE</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>es</td><td>{5CAC21A8-C234-4F51-B208-DAF8F9B5E010}</td><td>ES</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>fr</td><td>{6A04F96F-1C66-4D72-B538-30A5B247F738}</td><td>FR</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>hu</td><td>{EF0A9E96-53A8-4F67-9843-2D5D30C76E05}</td><td>HU</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>iFolderApp.exe</td><td>{EA8A7500-4D83-4A90-8635-F14D590AA839}</td><td>INSTALLDIR</td><td>0</td><td/><td>iFolderApp.exe</td><td>17</td><td>This component consists of a Windows executable.</td><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>iFolderComponent.dll</td><td>{7CFA7C41-C502-4C7E-B1D7-8C0C346E8F28}</td><td>INSTALLDIR</td><td>0</td><td/><td>iFolderComponent.dll</td><td>49</td><td>This component consists of a Windows dynamic link library.</td><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>iFolderShell.dll</td><td>{07C93A56-B806-4E58-9746-BB29AFB2E8C9}</td><td>INSTALLDIR</td><td>0</td><td/><td>iFolderShell.dll</td><td>20</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>iFolderShell.dll</td><td>{94EFDE99-0257-4D25-9EE4-2DC0FB9DFF48}</td><td>INSTALLDIR</td><td>0</td><td/><td>iFolderShell.dll</td><td>20</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>it</td><td>{464DCD2A-EC24-40F8-8017-B6B69B304920}</td><td>IT</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>ja</td><td>{DF45A1CB-8DDC-4881-9711-2E5DE06427A5}</td><td>JA</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>pl</td><td>{0FEB0FAB-EA58-4018-8AC6-0CD0EFDD9CB4}</td><td>PL</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>pt</td><td>{251E2FCD-CCD7-469D-8B9E-1191147ABC8C}</td><td>PT</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>ru</td><td>{87EEE128-188A-437D-B0A8-A35B3ED121C8}</td><td>RU</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>sk</td><td>{C427C295-BE1F-490F-ACFE-3B66576A7081}</td><td>SK</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>zh_CN</td><td>{A23A499B-F9B2-4D1B-8191-822338BE40E7}</td><td>ZH_CN</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>zh_TW</td><td>{1901FBB5-3435-4EF4-895A-5631306B38C4}</td><td>ZH_TW</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
 
 	<table name="Condition">
@@ -1033,11 +1045,7 @@
 		<col def="S255">ISComments</col>
 		<row><td>CheckForProductUpdates</td><td>226</td><td>ISUpdateServiceFolder</td><td>[ISUpdateServiceFolder]agent.exe "/au[ProductCode] /EndOfInstall"</td><td>Checks for product updates</td></row>
 		<row><td>CheckForProductUpdatesOnReboot</td><td>226</td><td>ISUpdateServiceFolder</td><td>[ISUpdateServiceFolder]agent.exe "/au[ProductCode] /EndOfInstall /Reboot"</td><td>Checks for product updates on reboot</td></row>
-		<row><td>ISSelfRegisterCosting</td><td>1</td><td>ISSELFREG.DLL</td><td>ISSelfRegisterCosting</td><td/></row>
-		<row><td>ISSelfRegisterFiles</td><td>1025</td><td>ISSELFREG.DLL</td><td>ISSelfRegisterFiles</td><td/></row>
-		<row><td>ISSelfRegisterFinalize</td><td>1</td><td>ISSELFREG.DLL</td><td>ISSelfRegisterFinalize</td><td/></row>
 		<row><td>ISSetAllUsers</td><td>257</td><td>SetAllUsers.dll</td><td>SetAllUsers</td><td/></row>
-		<row><td>ISUnSelfRegisterFiles</td><td>1025</td><td>ISSELFREG.DLL</td><td>ISUnSelfRegisterFiles</td><td/></row>
 		<row><td>InstallUtil_iFolderApp</td><td>114</td><td>LOCATION_OF_INSTALLUTIL</td><td>/LogToConsole=true /ShowCallStack /LogFile=iFolderApp.InstallLog "[INSTALLDIR]iFolderApp.exe"</td><td>Runs InstallUtil on iFolderApp.exe to install it</td></row>
 		<row><td>InstallUtil_iFolderApp_uninstall</td><td>114</td><td>LOCATION_OF_INSTALLUTIL</td><td>/uninstall /LogToConsole=true /ShowCallStack /LogFile=iFolderApp.UninstallLog "[INSTALLDIR]iFolderApp.exe"</td><td>Runs InstallUtil on iFolderApp.exe to uninstall it</td></row>
 		<row><td>RegAsm_iFolderComponent</td><td>50</td><td>LOCATION_OF_REGASM</td><td>"[INSTALLDIR]iFolderComponent.dll" /codebase /silent /nologo</td><td>Registers iFolderComponent.dll using RegAsm.exe on target machine</td></row>
@@ -1109,30 +1117,40 @@
 		<row><td>CommonAppDataFolder</td><td>TARGETDIR</td><td>.:Common~1|CommonAppData</td><td/><td>0</td><td/></row>
 		<row><td>CommonFiles64Folder</td><td>TARGETDIR</td><td>.:Common64</td><td/><td>0</td><td/></row>
 		<row><td>CommonFilesFolder</td><td>TARGETDIR</td><td>.:Common</td><td/><td>0</td><td/></row>
+		<row><td>DE</td><td>INSTALLDIR</td><td>de</td><td/><td>0</td><td/></row>
 		<row><td>DesktopFolder</td><td>TARGETDIR</td><td>.:Desktop</td><td/><td>3</td><td/></row>
+		<row><td>ES</td><td>INSTALLDIR</td><td>es</td><td/><td>0</td><td/></row>
+		<row><td>FR</td><td>INSTALLDIR</td><td>fr</td><td/><td>0</td><td/></row>
 		<row><td>FRAMEWORK</td><td>MICROSOFT.NET</td><td>FRAMEW~1|Framework</td><td/><td>0</td><td/></row>
 		<row><td>FavoritesFolder</td><td>TARGETDIR</td><td>.:FAVORI~1|Favorites</td><td/><td>0</td><td/></row>
 		<row><td>FontsFolder</td><td>TARGETDIR</td><td>.:Fonts</td><td/><td>0</td><td/></row>
 		<row><td>GlobalAssemblyCache</td><td>TARGETDIR</td><td>.:Global~1|GlobalAssemblyCache</td><td/><td>0</td><td/></row>
 		<row><td>HELP</td><td>INSTALLDIR</td><td>help</td><td/><td>0</td><td/></row>
+		<row><td>HU</td><td>INSTALLDIR</td><td>hu</td><td/><td>0</td><td/></row>
 		<row><td>IFOLDER</td><td>ProgramFilesFolder</td><td>iFolder</td><td/><td>0</td><td/></row>
 		<row><td>INSTALLDIR</td><td>IFOLDER</td><td>.</td><td/><td>0</td><td/></row>
 		<row><td>ISCommonFilesFolder</td><td>CommonFilesFolder</td><td>Instal~1|InstallShield</td><td/><td>0</td><td/></row>
 		<row><td>ISMyCompanyDir</td><td>ProgramFilesFolder</td><td>MYCOMP~1|My Company Name</td><td/><td>0</td><td/></row>
 		<row><td>ISMyProductDir</td><td>ISMyCompanyDir</td><td>MYPROD~1|My Product Name</td><td/><td>0</td><td/></row>
 		<row><td>ISUpdateServiceFolder</td><td>ISCommonFilesFolder</td><td>UPDATE~1|UpdateService</td><td/><td>0</td><td/></row>
+		<row><td>IT</td><td>INSTALLDIR</td><td>it</td><td/><td>0</td><td/></row>
+		<row><td>JA</td><td>INSTALLDIR</td><td>ja</td><td/><td>0</td><td/></row>
 		<row><td>LocalAppDataFolder</td><td>TARGETDIR</td><td>.:LocalA~1|LocalAppData</td><td/><td>0</td><td/></row>
 		<row><td>MICROSOFT.NET</td><td>WindowsFolder</td><td>MICROS~1|Microsoft.NET</td><td/><td>0</td><td/></row>
 		<row><td>MY_PRODUCT_NAME</td><td>NOVELL__INC.</td><td>MYPROD~1|My Product Name</td><td/><td>0</td><td/></row>
 		<row><td>MyPicturesFolder</td><td>TARGETDIR</td><td>.:MyPict~1|MyPictures</td><td/><td>0</td><td/></row>
 		<row><td>NOVELL__INC.</td><td>ProgramFilesFolder</td><td>NOVELL~1|Novell, Inc.</td><td/><td>0</td><td/></row>
 		<row><td>PKGCONFIG</td><td>INSTALLDIR</td><td>PKGCON~1|pkgconfig</td><td/><td>0</td><td/></row>
+		<row><td>PL</td><td>INSTALLDIR</td><td>pl</td><td/><td>0</td><td/></row>
+		<row><td>PT</td><td>INSTALLDIR</td><td>pt</td><td/><td>0</td><td/></row>
 		<row><td>PersonalFolder</td><td>TARGETDIR</td><td>.:Personal</td><td/><td>0</td><td/></row>
 		<row><td>PrimaryVolumePath</td><td>TARGETDIR</td><td>.:Primar~1|PrimaryVolumePath</td><td/><td>0</td><td/></row>
 		<row><td>ProgramFiles64Folder</td><td>TARGETDIR</td><td>.:Prog64~1|Program Files 64</td><td/><td>0</td><td/></row>
 		<row><td>ProgramFilesFolder</td><td>TARGETDIR</td><td>.:PROGRA~1|program files</td><td/><td>0</td><td/></row>
 		<row><td>ProgramMenuFolder</td><td>TARGETDIR</td><td>.:Programs</td><td/><td>3</td><td/></row>
 		<row><td>RES</td><td>INSTALLDIR</td><td>res</td><td/><td>0</td><td/></row>
+		<row><td>RU</td><td>INSTALLDIR</td><td>ru</td><td/><td>0</td><td/></row>
+		<row><td>SK</td><td>INSTALLDIR</td><td>sk</td><td/><td>0</td><td/></row>
 		<row><td>SendToFolder</td><td>TARGETDIR</td><td>.:SendTo</td><td/><td>3</td><td/></row>
 		<row><td>StartMenuFolder</td><td>TARGETDIR</td><td>.:STARTM~1|Start Menu</td><td/><td>3</td><td/></row>
 		<row><td>StartupFolder</td><td>TARGETDIR</td><td>.:StartUp</td><td/><td>3</td><td/></row>
@@ -1146,6 +1164,8 @@
 		<row><td>V1.1.4322</td><td>FRAMEWORK</td><td>V1_1_4~1|v1.1.4322</td><td/><td>0</td><td/></row>
 		<row><td>WindowsFolder</td><td>TARGETDIR</td><td>.:Windows</td><td/><td>0</td><td/></row>
 		<row><td>WindowsVolume</td><td>TARGETDIR</td><td>.:WinRoot</td><td/><td>0</td><td/></row>
+		<row><td>ZH_CN</td><td>INSTALLDIR</td><td>zh_CN</td><td/><td>0</td><td/></row>
+		<row><td>ZH_TW</td><td>INSTALLDIR</td><td>zh_TW</td><td/><td>0</td><td/></row>
 		<row><td>iFolder</td><td>ProgramMenuFolder</td><td>##ID_STRING3##</td><td/><td>1</td><td/></row>
 	</table>
 
@@ -1407,9 +1427,9 @@
 		<col def="S255">ISComments</col>
 		<col def="S255">ISFeatureCabName</col>
 		<col def="S255">ISProFeatureName</col>
-		<row><td>Help_Files</td><td/><td>##ID_STRING6##</td><td/><td>4</td><td>10</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
-		<row><td>iFolder_Files</td><td/><td>##IDS_FEATURE_DISPLAY_NAME2##</td><td/><td>2</td><td>1</td><td>INSTALLDIR</td><td>16</td><td/><td/><td/><td/></row>
-		<row><td>iFolder_SDK</td><td/><td>##IDS_FEATURE_DISPLAY_NAME3##</td><td/><td>6</td><td>200</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
+		<row><td>Help_Files</td><td/><td>##ID_STRING6##</td><td/><td>0</td><td>10</td><td>INSTALLDIR</td><td>8</td><td/><td/><td/><td/></row>
+		<row><td>iFolder_Files</td><td/><td>##IDS_FEATURE_DISPLAY_NAME2##</td><td/><td>0</td><td>1</td><td>INSTALLDIR</td><td>24</td><td/><td/><td/><td/></row>
+		<row><td>iFolder_SDK</td><td/><td>##IDS_FEATURE_DISPLAY_NAME3##</td><td/><td>0</td><td>200</td><td>INSTALLDIR</td><td>8</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="FeatureComponents">
@@ -1418,17 +1438,30 @@
 		<row><td>Help_Files</td><td>AllOtherFiles</td></row>
 		<row><td>Help_Files</td><td>AllOtherFiles1</td></row>
 		<row><td>Help_Files</td><td>AllOtherFiles2</td></row>
-		<row><td>Help_Files</td><td>AllOtherFiles3</td></row>
 		<row><td>Help_Files</td><td>HelpFiles</td></row>
+		<row><td>Help_Files</td><td>InstallUtil.exe.config</td></row>
 		<row><td>iFolder_Files</td><td>AllUsers</td></row>
 		<row><td>iFolder_Files</td><td>ContactBrowserShortcutComponent</td></row>
 		<row><td>iFolder_Files</td><td>ISRegistryComponent</td></row>
+		<row><td>iFolder_Files</td><td>NewComponent1</td></row>
 		<row><td>iFolder_Files</td><td>OnlyCurrentUser</td></row>
 		<row><td>iFolder_Files</td><td>ResourceFiles</td></row>
 		<row><td>iFolder_Files</td><td>WindowsFolderFiles</td></row>
+		<row><td>iFolder_Files</td><td>de</td></row>
+		<row><td>iFolder_Files</td><td>es</td></row>
+		<row><td>iFolder_Files</td><td>fr</td></row>
+		<row><td>iFolder_Files</td><td>hu</td></row>
 		<row><td>iFolder_Files</td><td>iFolderApp.exe</td></row>
 		<row><td>iFolder_Files</td><td>iFolderComponent.dll</td></row>
 		<row><td>iFolder_Files</td><td>iFolderShell.dll</td></row>
+		<row><td>iFolder_Files</td><td>it</td></row>
+		<row><td>iFolder_Files</td><td>ja</td></row>
+		<row><td>iFolder_Files</td><td>pl</td></row>
+		<row><td>iFolder_Files</td><td>pt</td></row>
+		<row><td>iFolder_Files</td><td>ru</td></row>
+		<row><td>iFolder_Files</td><td>sk</td></row>
+		<row><td>iFolder_Files</td><td>zh_CN</td></row>
+		<row><td>iFolder_Files</td><td>zh_TW</td></row>
 	</table>
 
 	<table name="File">
@@ -1443,7 +1476,7 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I4">ISAttributes</col>
 		<col def="S72">ISComponentSubFolder_</col>
-		<row><td>InstallUtil.exe.config</td><td>AllOtherFiles3</td><td>INSTAL~1.CON|InstallUtil.exe.config</td><td>0</td><td>3.1</td><td/><td/><td>1</td><td>&lt;PATH_TO_SOURCE&gt;\src\FormsTrayApp\InstallUtil.exe.config</td><td>1</td><td/></row>
+		<row><td>InstallUtil.exe.config</td><td>InstallUtil.exe.config</td><td>INSTAL~1.CON|InstallUtil.exe.config</td><td>0</td><td>3.1</td><td/><td/><td>1</td><td>&lt;PATH_TO_SOURCE&gt;\src\FormsTrayApp\InstallUtil.exe.config</td><td>1</td><td/></row>
 		<row><td>explorer.exe.config</td><td>WindowsFolderFiles</td><td>EXPLOR~1.CON|explorer.exe.config</td><td>0</td><td>65535.0.0.0</td><td/><td>512</td><td>1</td><td>&lt;PATH_TO_SOURCE&gt;\src\ifoldershell\explorer.exe.config</td><td>85</td><td/></row>
 		<row><td>explorer.exe.manifest</td><td>WindowsFolderFiles</td><td>EXPLOR~1.MAN|explorer.exe.manifest</td><td>0</td><td>65535.0.0.0</td><td/><td>512</td><td>1</td><td>&lt;PATH_TO_SOURCE&gt;\src\ifoldershell\explorer.exe.manifest</td><td>85</td><td/></row>
 		<row><td>iFolderApp.exe</td><td>iFolderApp.exe</td><td>IFOLDE~2.EXE|iFolderApp.exe</td><td>0</td><td>65535.0.0.0</td><td/><td>512</td><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\iFolderApp.exe</td><td>85</td><td/></row>
@@ -1625,17 +1658,30 @@
 		<row><td>AllOtherFiles</td><td/><td/><td>_8FDFED75_131F_4DC4_B2EA_74A1B49E8A85_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>AllOtherFiles1</td><td/><td/><td>_0FDCC006_051D_4072_B95F_497F4CBA407F_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>AllOtherFiles2</td><td/><td/><td>_9BBE0E64_188F_4858_8849_DED3A778BDE8_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>AllOtherFiles3</td><td/><td/><td>_EBE09C9A_8DC4_4E55_94D1_FB3689DD8088_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>AllUsers</td><td/><td/><td>_BFE91B0D_88E8_4258_8665_D293A82A89B1_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ContactBrowserShortcutComponent</td><td/><td/><td>_A2DBA8FA_CC2C_4112_BC7C_955591BB1CB8_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>HelpFiles</td><td/><td/><td>_63A2A061_0B72_4C17_AE7E_241C0929276C_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ISRegistryComponent</td><td/><td/><td>_548C54E2_29EE_4627_A6F5_D1A9149465BA_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>InstallUtil.exe.config</td><td/><td/><td>_EBE09C9A_8DC4_4E55_94D1_FB3689DD8088_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>NewComponent1</td><td/><td/><td>_5DD51059_B13A_417D_BE4B_1523CBB8D344_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>OnlyCurrentUser</td><td/><td/><td>_2187729F_B6AE_4BA3_8749_229DC13A8E67_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ResourceFiles</td><td/><td/><td>_973FE1A6_6311_4C36_8910_2631D644D5B5_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>WindowsFolderFiles</td><td/><td/><td>_F9B4A7DF_BA82_4B0D_AC30_DD72B949703C_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>de</td><td/><td/><td>_E0BDA794_6D5B_4656_92B7_8577B6726E13_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>es</td><td/><td/><td>_0DF55568_5DF0_43B2_8115_A1F12B03841C_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>fr</td><td/><td/><td>_C8B20D10_BEB6_474A_AAC2_0C330D334CBF_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>hu</td><td/><td/><td>_7D939D40_5F52_4AD8_9D40_C388066A83B2_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>iFolderApp.exe</td><td/><td/><td>_33BF21AB_497A_466B_BAD7_5FC39F304AB4_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>iFolderComponent.dll</td><td/><td/><td>_E161F255_4BF7_4D1C_86EF_E443B51549A5_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>iFolderShell.dll</td><td/><td/><td>_CE83ABD6_1860_4709_B036_76A146581344_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>it</td><td/><td/><td>_7108643D_1541_42AD_A6EC_A2455F9FF2B0_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>ja</td><td/><td/><td>_6AB8A236_45D1_4964_BDCE_50F72A949952_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>pl</td><td/><td/><td>_AD16E8EF_6A61_4C08_9380_1D3B72886AA6_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>pt</td><td/><td/><td>_CADAC450_7FB5_45B8_954B_C774464DFA87_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>ru</td><td/><td/><td>_6BC24C4E_98EC_4488_96C6_83943C7E16FE_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>sk</td><td/><td/><td>_7F19DF87_6CDE_4836_AAFF_15A61A8DC1FB_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>zh_CN</td><td/><td/><td>_18FA2C36_1368_46BD_B8B2_E5A957C49C2B_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>zh_TW</td><td/><td/><td>_24CF3081_4712_47CC_B0EF_8C49B671DF40_FILTER</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISDLLWrapper">
@@ -1691,8 +1737,21 @@
 		<col def="S0">ExcludeFiles</col>
 		<col def="I4">ISAttributes</col>
 		<row><td>HelpFiles</td><td>&lt;ISProjectFolder&gt;\msi\install\help</td><td>4</td><td/><td/><td>2</td></row>
+		<row><td>NewComponent1</td><td>&lt;PATH_TO_FR_FILES&gt;</td><td>4</td><td/><td/><td>0</td></row>
 		<row><td>ResourceFiles</td><td>&lt;ISProjectFolder&gt;\msi\install\res</td><td>4</td><td/><td/><td>0</td></row>
+		<row><td>de</td><td>&lt;PATH_TO_DE_FILES&gt;</td><td>4</td><td/><td/><td>0</td></row>
+		<row><td>es</td><td>&lt;PATH_TO_ES_FILES&gt;</td><td>4</td><td/><td/><td>0</td></row>
+		<row><td>fr</td><td>&lt;PATH_TO_FR_FILES&gt;</td><td>4</td><td/><td/><td>0</td></row>
+		<row><td>hu</td><td>&lt;PATH_TO_HU_FILES&gt;</td><td>4</td><td/><td/><td>0</td></row>
 		<row><td>iFolderApp.exe</td><td>&lt;ISProjectFolder&gt;\msi\install</td><td>4</td><td/><td>iFolderShell.*, iFolderComponent.*, Invitation*</td><td>0</td></row>
+		<row><td>it</td><td>&lt;PATH_TO_IT_FILES&gt;</td><td>4</td><td/><td/><td>0</td></row>
+		<row><td>ja</td><td>&lt;PATH_TO_JA_FILES&gt;</td><td>4</td><td/><td/><td>0</td></row>
+		<row><td>pl</td><td>&lt;PATH_TO_PL_FILES&gt;</td><td>4</td><td/><td/><td>0</td></row>
+		<row><td>pt</td><td>&lt;PATH_TO_PT_FILES&gt;</td><td>4</td><td/><td/><td>0</td></row>
+		<row><td>ru</td><td>&lt;PATH_TO_RU_FILES&gt;</td><td>4</td><td/><td/><td>0</td></row>
+		<row><td>sk</td><td>&lt;PATH_TO_SK_FILES&gt;</td><td>4</td><td/><td/><td>0</td></row>
+		<row><td>zh_CN</td><td>&lt;PATH_TO_ZH_CN_FILES&gt;</td><td>4</td><td/><td/><td>0</td></row>
+		<row><td>zh_TW</td><td>&lt;PATH_TO_ZH_TW_FILES&gt;</td><td>4</td><td/><td/><td>0</td></row>
 	</table>
 
 	<table name="ISFeatureMergeModuleExcludes">
@@ -1960,9 +2019,21 @@
 		<row><td>ISProductFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectDataFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectFolder</td><td/><td/><td>1</td></row>
+		<row><td>PATH_TO_DE_FILES</td><td>C:\cvs_wa\ifolderclient\ifolder\src\FormsTrayApp\de</td><td/><td>2</td></row>
+		<row><td>PATH_TO_ES_FILES</td><td>C:\cvs_wa\ifolderclient\ifolder\src\FormsTrayApp\es</td><td/><td>2</td></row>
 		<row><td>PATH_TO_FORMSADDRBOOK_FILES</td><td>&lt;ISProjectFolder&gt;\..\..\..\addressbook\src\FormsAddrBook</td><td/><td>2</td></row>
+		<row><td>PATH_TO_FR_FILES</td><td>C:\cvs_wa\ifolderclient\ifolder\src\FormsTrayApp\fr</td><td/><td>2</td></row>
+		<row><td>PATH_TO_HU_FILES</td><td>C:\cvs_wa\ifolderclient\ifolder\src\FormsTrayApp\hu</td><td/><td>2</td></row>
 		<row><td>PATH_TO_IFOLDERSHELL_FILES</td><td>&lt;ISProjectFolder&gt;\..\..\src\iFolderShell</td><td/><td>2</td></row>
+		<row><td>PATH_TO_IT_FILES</td><td>C:\cvs_wa\ifolderclient\ifolder\src\FormsTrayApp\it</td><td/><td>2</td></row>
+		<row><td>PATH_TO_JA_FILES</td><td>C:\cvs_wa\ifolderclient\ifolder\src\FormsTrayApp\ja</td><td/><td>2</td></row>
+		<row><td>PATH_TO_PL_FILES</td><td>C:\cvs_wa\ifolderclient\ifolder\src\FormsTrayApp\pl</td><td/><td>2</td></row>
+		<row><td>PATH_TO_PT_FILES</td><td>C:\cvs_wa\ifolderclient\ifolder\src\FormsTrayApp\pt</td><td/><td>2</td></row>
+		<row><td>PATH_TO_RU_FILES</td><td>C:\cvs_wa\ifolderclient\ifolder\src\FormsTrayApp\ru</td><td/><td>2</td></row>
+		<row><td>PATH_TO_SK_FILES</td><td>C:\cvs_wa\ifolderclient\ifolder\src\FormsTrayApp\sk</td><td/><td>2</td></row>
 		<row><td>PATH_TO_SOURCE</td><td>&lt;ISProjectFolder&gt;\..\..</td><td/><td>2</td></row>
+		<row><td>PATH_TO_ZH_CN_FILES</td><td>C:\cvs_wa\ifolderclient\ifolder\src\FormsTrayApp\zh_CN</td><td/><td>2</td></row>
+		<row><td>PATH_TO_ZH_TW_FILES</td><td>C:\cvs_wa\ifolderclient\ifolder\src\FormsTrayApp\zh_TW</td><td/><td>2</td></row>
 		<row><td>ProgramFilesFolder</td><td/><td/><td>1</td></row>
 		<row><td>SystemFolder</td><td/><td/><td>1</td></row>
 		<row><td>WindowsFolder</td><td/><td/><td>1</td></row>
@@ -12268,11 +12339,7 @@
 		<row><td>DuplicateFiles</td><td/><td>4210</td><td>DuplicateFiles</td><td/></row>
 		<row><td>FileCost</td><td/><td>900</td><td>FileCost</td><td/></row>
 		<row><td>FindRelatedProducts</td><td>NOT ISSETUPDRIVEN</td><td>420</td><td>FindRelatedProducts</td><td/></row>
-		<row><td>ISSelfRegisterCosting</td><td/><td>2201</td><td/><td/></row>
-		<row><td>ISSelfRegisterFiles</td><td/><td>5601</td><td/><td/></row>
-		<row><td>ISSelfRegisterFinalize</td><td/><td>6601</td><td/><td/></row>
 		<row><td>ISSetAllUsers</td><td>Not Installed</td><td>10</td><td/><td/></row>
-		<row><td>ISUnSelfRegisterFiles</td><td/><td>2202</td><td/><td/></row>
 		<row><td>InstallExecute</td><td/><td>6406</td><td/><td/></row>
 		<row><td>InstallFiles</td><td/><td>4000</td><td>InstallFiles</td><td/></row>
 		<row><td>InstallFinalize</td><td/><td>6410</td><td>InstallFinalize</td><td/></row>
@@ -12307,7 +12374,7 @@
 		<row><td>RegisterUser</td><td/><td>6000</td><td>RegisterUser</td><td/></row>
 		<row><td>RemoveDuplicateFiles</td><td/><td>3400</td><td>RemoveDuplicateFiles</td><td/></row>
 		<row><td>RemoveEnvironmentStrings</td><td/><td>3300</td><td>RemoveEnvironmentStrings</td><td/></row>
-		<row><td>RemoveExistingProducts</td><td/><td>6411</td><td>RemoveExistingProducts</td><td/></row>
+		<row><td>RemoveExistingProducts</td><td/><td>1450</td><td>RemoveExistingProducts</td><td/></row>
 		<row><td>RemoveFiles</td><td/><td>3500</td><td>RemoveFiles</td><td/></row>
 		<row><td>RemoveFolders</td><td/><td>3600</td><td>RemoveFolders</td><td/></row>
 		<row><td>RemoveIniValues</td><td/><td>3100</td><td>RemoveIniValues</td><td/></row>
@@ -12950,7 +13017,7 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<col def="S255">Remove</col>
 		<col def="s72">ActionProperty</col>
 		<col def="S72">ISDisplayName</col>
-		<row><td>{BF173CB7-239E-4170-9D36-BC5926FB14FF}</td><td>0.0.0.0</td><td>1.0.0.0</td><td></td><td>257</td><td>ALL</td><td>76ACE820-A6D9-4B7E-A2D4-FFF30D2FE710</td><td/></row>
+		<row><td>{BF173CB7-239E-4170-9D36-BC5926FB14FF}</td><td></td><td>3.1</td><td></td><td>257</td><td/><td>OLDAPPFOUND</td><td/></row>
 	</table>
 
 	<table name="Verb">
