@@ -2019,21 +2019,21 @@
 		<row><td>ISProductFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectDataFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectFolder</td><td/><td/><td>1</td></row>
-		<row><td>PATH_TO_DE_FILES</td><td>C:\cvs_wa\ifolderclient\ifolder\src\FormsTrayApp\de</td><td/><td>2</td></row>
-		<row><td>PATH_TO_ES_FILES</td><td>C:\cvs_wa\ifolderclient\ifolder\src\FormsTrayApp\es</td><td/><td>2</td></row>
+		<row><td>PATH_TO_DE_FILES</td><td>&lt;ISProjectFolder&gt;\msi\install\de</td><td/><td>2</td></row>
+		<row><td>PATH_TO_ES_FILES</td><td>&lt;ISProjectFolder&gt;\msi\install\es</td><td/><td>2</td></row>
 		<row><td>PATH_TO_FORMSADDRBOOK_FILES</td><td>&lt;ISProjectFolder&gt;\..\..\..\addressbook\src\FormsAddrBook</td><td/><td>2</td></row>
-		<row><td>PATH_TO_FR_FILES</td><td>C:\cvs_wa\ifolderclient\ifolder\src\FormsTrayApp\fr</td><td/><td>2</td></row>
-		<row><td>PATH_TO_HU_FILES</td><td>C:\cvs_wa\ifolderclient\ifolder\src\FormsTrayApp\hu</td><td/><td>2</td></row>
+		<row><td>PATH_TO_FR_FILES</td><td>&lt;ISProjectFolder&gt;\msi\install\fr</td><td/><td>2</td></row>
+		<row><td>PATH_TO_HU_FILES</td><td>&lt;ISProjectFolder&gt;\msi\install\hu</td><td/><td>2</td></row>
 		<row><td>PATH_TO_IFOLDERSHELL_FILES</td><td>&lt;ISProjectFolder&gt;\..\..\src\iFolderShell</td><td/><td>2</td></row>
-		<row><td>PATH_TO_IT_FILES</td><td>C:\cvs_wa\ifolderclient\ifolder\src\FormsTrayApp\it</td><td/><td>2</td></row>
-		<row><td>PATH_TO_JA_FILES</td><td>C:\cvs_wa\ifolderclient\ifolder\src\FormsTrayApp\ja</td><td/><td>2</td></row>
-		<row><td>PATH_TO_PL_FILES</td><td>C:\cvs_wa\ifolderclient\ifolder\src\FormsTrayApp\pl</td><td/><td>2</td></row>
-		<row><td>PATH_TO_PT_FILES</td><td>C:\cvs_wa\ifolderclient\ifolder\src\FormsTrayApp\pt</td><td/><td>2</td></row>
-		<row><td>PATH_TO_RU_FILES</td><td>C:\cvs_wa\ifolderclient\ifolder\src\FormsTrayApp\ru</td><td/><td>2</td></row>
-		<row><td>PATH_TO_SK_FILES</td><td>C:\cvs_wa\ifolderclient\ifolder\src\FormsTrayApp\sk</td><td/><td>2</td></row>
+		<row><td>PATH_TO_IT_FILES</td><td>&lt;ISProjectFolder&gt;\msi\install\it</td><td/><td>2</td></row>
+		<row><td>PATH_TO_JA_FILES</td><td>&lt;ISProjectFolder&gt;\msi\install\ja</td><td/><td>2</td></row>
+		<row><td>PATH_TO_PL_FILES</td><td>&lt;ISProjectFolder&gt;\msi\install\pl</td><td/><td>2</td></row>
+		<row><td>PATH_TO_PT_FILES</td><td>&lt;ISProjectFolder&gt;\msi\install\pt</td><td/><td>2</td></row>
+		<row><td>PATH_TO_RU_FILES</td><td>&lt;ISProjectFolder&gt;\msi\install\ru</td><td/><td>2</td></row>
+		<row><td>PATH_TO_SK_FILES</td><td>&lt;ISProjectFolder&gt;\msi\install\sk</td><td/><td>2</td></row>
 		<row><td>PATH_TO_SOURCE</td><td>&lt;ISProjectFolder&gt;\..\..</td><td/><td>2</td></row>
-		<row><td>PATH_TO_ZH_CN_FILES</td><td>C:\cvs_wa\ifolderclient\ifolder\src\FormsTrayApp\zh_CN</td><td/><td>2</td></row>
-		<row><td>PATH_TO_ZH_TW_FILES</td><td>C:\cvs_wa\ifolderclient\ifolder\src\FormsTrayApp\zh_TW</td><td/><td>2</td></row>
+		<row><td>PATH_TO_ZH_CN_FILES</td><td>&lt;ISProjectFolder&gt;\msi\install\zh_CN</td><td/><td>2</td></row>
+		<row><td>PATH_TO_ZH_TW_FILES</td><td>&lt;ISProjectFolder&gt;\msi\install\zh_TW</td><td/><td>2</td></row>
 		<row><td>ProgramFilesFolder</td><td/><td/><td>1</td></row>
 		<row><td>SystemFolder</td><td/><td/><td>1</td></row>
 		<row><td>WindowsFolder</td><td/><td/><td>1</td></row>
