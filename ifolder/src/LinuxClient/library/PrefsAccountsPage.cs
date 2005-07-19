@@ -23,7 +23,6 @@
  * 
  ***********************************************************************/
 
-
 using System;
 using System.IO;
 using System.Collections;
@@ -44,7 +43,6 @@ namespace Novell.iFolder
 	public class PrefsAccountsPage : VBox
 	{
 		private Gtk.Window				topLevelWindow;
-		private iFolderData				ifdata;
 		private SimiasWebService		simws;
 
 		private iFolderTreeView		AccTreeView;
@@ -86,8 +84,6 @@ namespace Novell.iFolder
 					"/Simias.asmx";
 			LocalService.Start(simws);
 
-			ifdata = iFolderData.GetData();
-			
 			curDomains = new Hashtable();
 			
 			InitializeWidgets();
@@ -118,8 +114,6 @@ namespace Novell.iFolder
 		
 		~PrefsAccountsPage()
 		{
-Console.WriteLine("~PrefsAccountPage() entered");
-
 			if (domainController != null)
 			{
 				// Unregister for domain events
@@ -164,7 +158,6 @@ Console.WriteLine("~PrefsAccountPage() entered");
 			sw.Add(AccTreeView);
 			this.PackStart(sw, true, true, 0);
 
-//			AccTreeStore = new ListStore(typeof(DomainInformation));
 			AccTreeStore = new ListStore(typeof(string));
 			AccTreeView.Model = AccTreeStore;
 
@@ -529,8 +522,6 @@ Console.WriteLine("~PrefsAccountPage() entered");
 				tSelect.GetSelected(out tModel, out iter);
 				string domainID = (string) tModel.GetValue(iter, 0);
 				DomainInformation dom = domainController.GetDomain(domainID);
-//				DomainInformation dom = 
-//						(DomainInformation) tModel.GetValue(iter, 0);
 
 				AccountDialog accDialog = new AccountDialog(dom);
 				accDialog.TransientFor = topLevelWindow;
@@ -545,7 +536,7 @@ Console.WriteLine("~PrefsAccountPage() entered");
 
 		public void AccSelectionChangedHandler(object o, EventArgs args)
 		{
-Console.WriteLine("PrefsAccountsPage.AccSelectionChangedHandler() entered");
+//Console.WriteLine("PrefsAccountsPage.AccSelectionChangedHandler() entered");
 			if(NewAccountMode)
 			{
 				if( (nameEntry.Text.Length > 0) ||
@@ -687,9 +678,17 @@ Console.WriteLine("PrefsAccountsPage.AccSelectionChangedHandler() entered");
 				}
 				catch (Exception e2)
 				{
-					// FIXME: Handle exception here
-					
-Console.WriteLine(e2.Message);
+					iFolderMsgDialog dg2 = new iFolderMsgDialog(
+						topLevelWindow,
+						iFolderMsgDialog.DialogType.Error,
+						iFolderMsgDialog.ButtonSet.Ok,
+						"",
+						Util.GS("Unable to connect to the iFolder Server"),
+						Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."),
+						Util.GS(e2.Message));
+					dg2.Run();
+					dg2.Hide();
+					dg2.Destroy();
 				}
 			}
 			else
@@ -701,8 +700,17 @@ Console.WriteLine(e2.Message);
 				}
 				catch (Exception e)
 				{
-					// FIXME: Handle exceptions here
-Console.WriteLine(e.Message);
+					iFolderMsgDialog dg = new iFolderMsgDialog(
+						topLevelWindow,
+						iFolderMsgDialog.DialogType.Error,
+						iFolderMsgDialog.ButtonSet.Ok,
+						"",
+						Util.GS("Unable to connect to the iFolder Server"),
+						Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."),
+						Util.GS(e.Message));
+					dg.Run();
+					dg.Hide();
+					dg.Destroy();
 				}
 			}
 			
@@ -740,24 +748,14 @@ Console.WriteLine(e.Message);
 					if (authStatus.statusCode == StatusCodes.Success ||
 						authStatus.statusCode == StatusCodes.SuccessInGrace)
 					{
-						// We're logged in!
-//						TreeSelection sel = AccTreeView.Selection;
-
 						if (NewAccountMode)
 						{
 							NewAccountMode = false;
 						}
 						else
 						{
-//							UpdateDomainStatus(domainInfo.ID);
-
-//							TreeIter iter = (TreeIter)curDomains[domainInfo.ID];
-//							sel.SelectIter(iter);
 							UpdateWidgetSensitivity();
 						}
-
-						// Update the login button
-//						AccSelectionChangedHandler(null, null);
 					}
 					else
 					{
@@ -920,7 +918,7 @@ Console.WriteLine(e.Message);
 		
 		private void EnterNewAccountMode()
 		{
-Console.WriteLine("PrefsAccountPage.EnterNewAccountMode()");
+//Console.WriteLine("PrefsAccountPage.EnterNewAccountMode()");
 			TreeSelection treeSelection = AccTreeView.Selection;
 			treeSelection.UnselectAll();
 			
@@ -971,7 +969,6 @@ Console.WriteLine("PrefsAccountPage.EnterNewAccountMode()");
 			// This is a big hack, but I couldn't find any other way to
 			// force Gtk to make the server entry get the focus.
 			GLib.Idle.Add(SetFocusToServerEntry);
-Console.WriteLine("PrefsAccountPage.EnterNewAccountMode() exiting");
 		}
 
 		private void OnFieldsChanged(object obj, EventArgs args)
@@ -1137,10 +1134,9 @@ Console.WriteLine("PrefsAccountPage.EnterNewAccountMode() exiting");
 
 		public void OnDomainAddedEvent(object sender, DomainEventArgs args)
 		{
-Console.WriteLine("PrefsAccountPage.OnDomainAddedEvent() entered");
+//Console.WriteLine("PrefsAccountPage.OnDomainAddedEvent() entered");
 			if (curDomains.ContainsKey(args.DomainID))
 			{
-Console.WriteLine("This is an already existing domain");
 				// Somehow we've already got this domain in our list, so
 				// just update it.
 				TreeIter iter = (TreeIter)curDomains[args.DomainID];
@@ -1148,7 +1144,6 @@ Console.WriteLine("This is an already existing domain");
 			}
 			else
 			{
-Console.WriteLine("This is a new domain");
 				// This is a new domain we don't have in the list yet
 				TreeIter iter = AccTreeStore.AppendValues(args.DomainID);
 				curDomains[args.DomainID] = iter;
@@ -1181,67 +1176,44 @@ Console.WriteLine("This is a new domain");
 			AccTreeStore.Remove(ref iter);
 			curDomains.Remove(args.DomainID);
 
-//			curDomain = null;
-//			detailsFrame.Sensitive = false;
-//			nameEntry.Sensitive = false;
-//			nameEntry.Text = "";
-//			nameLabel.Sensitive = false;
-//			passEntry.Sensitive = false;
-//			passEntry.Text = "";
-//			passLabel.Sensitive = false;
-//			serverEntry.Sensitive = false;
-//			serverLabel.Sensitive = false;
-//			serverEntry.Text = "";
-
-//			savePasswordButton.Sensitive = false;
-//			autoLoginButton.Sensitive = false;
-//			defaultAccButton.Sensitive = false;
-//			loginButton.Sensitive = false;
-
-//			RemoveButton.Sensitive = false;
-//			DetailsButton.Sensitive = false;
-
-			// If the domain that we just removed was the default and
-			// there are still remaining accounts, find out from Simias
-			// what the new default domain is and update the UI.
-//			if (dom.IsDefault && curDomains.Count > 0)
-//			{
-//				try
-//				{
-//					string newDefaultDomainID = simws.GetDefaultDomainID();
-//					iter = (TreeIter)curDomains[newDefaultDomainID];
-//							
-//					dom = (DomainInformation) tModel.GetValue(iter, 0);
-//					dom.IsDefault = true;
-//				}
-//				catch {}
-//			}
-
 			// Automatically put the window into AddAccount mode to save
 			// the user some extra clicking when the account that was
 			// just removed was the last one.
 			if (curDomains.Count == 0)
 			{
-				OnAddAccount(null, null);
+				EnterNewAccountMode();
 			}
 			else
 			{
+				// Select the first domain in the list
+
+				// Temporarily disable the selection handler so we can
+				// select the new account without causing the handler
+				// to be called.
+				AccTreeView.Selection.Changed -=
+					new EventHandler(AccSelectionChangedHandler);
+
+				TreeSelection tSelect = AccTreeView.Selection;
+				tSelect.SelectPath(new TreePath("0"));
+
+				// hook'r back up
+				AccTreeView.Selection.Changed +=
+					new EventHandler(AccSelectionChangedHandler);
+
 				UpdateWidgetSensitivity();
 			}
 		}
 		
 		public void OnDomainLoggedInEvent(object sender, DomainEventArgs args)
 		{
-
-DomainInformation dom = domainController.GetDomain(args.DomainID);
-Console.WriteLine("PrefsAccountPage.OnDomainLoggedInEvent() for: {0}", dom.Name);
-
+//DomainInformation dom = domainController.GetDomain(args.DomainID);
+//Console.WriteLine("PrefsAccountPage.OnDomainLoggedInEvent() for: {0}", dom.Name);
 			UpdateDomainStatus(args.DomainID);
 		}
 		
 		public void OnDomainLoggedOutEvent(object sender, DomainEventArgs args)
 		{
-Console.WriteLine("PrefsAccountPage.OnDomainLoggedOutEvent() entered");
+//Console.WriteLine("PrefsAccountPage.OnDomainLoggedOutEvent() entered");
 			UpdateDomainStatus(args.DomainID);
 		}
 
@@ -1268,7 +1240,7 @@ Console.WriteLine("PrefsAccountPage.OnDomainLoggedOutEvent() entered");
 
 		public void OnNewDefaultDomainEvent(object sender, NewDefaultDomainEventArgs args)
 		{
-Console.WriteLine("PrefsAccountsPage.OnNewDefaultDomainEvent() entered");
+//Console.WriteLine("PrefsAccountsPage.OnNewDefaultDomainEvent() entered");
 			TreeIter iter;
 			DomainInformation dom;
 
@@ -1284,7 +1256,7 @@ Console.WriteLine("PrefsAccountsPage.OnNewDefaultDomainEvent() entered");
 		
 		public void OnDomainInGraceLoginPeriodEvent(object sender, DomainInGraceLoginPeriodEventArgs args)
 		{
-Console.WriteLine("PrefsAccountsPage.OnDomainInGraceLoginPeriodEvent() entered");
+//Console.WriteLine("PrefsAccountsPage.OnDomainInGraceLoginPeriodEvent() entered");
 			DomainInformation dom = domainController.GetDomain(args.DomainID);
 			iFolderMsgDialog dg =
 				new iFolderMsgDialog(
@@ -1305,7 +1277,7 @@ Console.WriteLine("PrefsAccountsPage.OnDomainInGraceLoginPeriodEvent() entered")
 		/// </summary>
 		public void UpdateDomainStatus(string domainID)
 		{
-Console.WriteLine("PrefsAccountPage.UpdateDomainStatus() entered");
+//Console.WriteLine("PrefsAccountPage.UpdateDomainStatus() entered");
 			if (curDomains.ContainsKey(domainID))
 			{
 				TreeIter iter = (TreeIter)curDomains[domainID];

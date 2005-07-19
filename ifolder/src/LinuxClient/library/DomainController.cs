@@ -55,7 +55,6 @@ namespace Novell.iFolder.Controller
 		/// <summary>
 		/// Member to keep track of the default domain
 		/// </summary>
-//		private DomainInformation	defDomain = null;
 		private string defDomainID = null;
 		
 		private SimiasEventBroker eventBroker = null;
@@ -169,7 +168,6 @@ namespace Novell.iFolder.Controller
 					{
 						if(domain.IsDefault)
 							defDomainID = domain.ID;
-//							defDomain = domain;
 
 						AddDomainToHashtable(domain);
 					}
@@ -207,7 +205,6 @@ namespace Novell.iFolder.Controller
 					defDomainID = null;
 					return null;
 				}
-//				return defDomain;
 			}
 		}
 		
@@ -296,9 +293,12 @@ namespace Novell.iFolder.Controller
 							if (defDomainID != null && defDomainID != dom.ID)
 							{
 								oldDomainID = defDomainID;
-								DomainInformation oldDefaultDomain = (DomainInformation)keyedDomains[oldDomainID];
-								if (oldDefaultDomain != null)
-									oldDefaultDomain.IsDefault = false;
+								lock (typeof(DomainController))
+								{
+									DomainInformation oldDefaultDomain = (DomainInformation)keyedDomains[oldDomainID];
+									if (oldDefaultDomain != null)
+										oldDefaultDomain.IsDefault = false;
+								}
 							}
 							
 							defDomainID = dom.ID;
@@ -332,38 +332,40 @@ namespace Novell.iFolder.Controller
 		
 		public DomainInformation UpdateDomainHostAddress(string domainID, string host)
 		{
-			DomainInformation dom = (DomainInformation)keyedDomains[domainID];
-			if (dom != null)
+			lock (typeof(DomainController))
 			{
-				if (String.Compare(dom.Host, host, true) != 0)
+				DomainInformation dom = (DomainInformation)keyedDomains[domainID];
+				if (dom != null)
 				{
-					try
+					if (String.Compare(dom.Host, host, true) != 0)
 					{
-						simws.SetDomainHostAddress(domainID, host);
-						
-						dom = simws.GetDomainInformation(domainID);
-						keyedDomains[domainID] = dom;
-
-						// Notify DomainHostModifiedEventHandlers
-Console.WriteLine("DomainController: Sending DomainHostModified event");
-						if (DomainHostModified != null)
-							DomainHostModified(this, new DomainEventArgs(domainID));
+						try
+						{
+							simws.SetDomainHostAddress(domainID, host);
+							
+							dom = simws.GetDomainInformation(domainID);
+							keyedDomains[domainID] = dom;
+	
+							// Notify DomainHostModifiedEventHandlers
+							if (DomainHostModified != null)
+								DomainHostModified(this, new DomainEventArgs(domainID));
+						}
+						catch (Exception e)
+						{
+							// FIXME: Determine if any exceptions can be thrown by this
+							throw e;
+						}
 					}
-					catch (Exception e)
-					{
-						// FIXME: Determine if any exceptions can be thrown by this
-						throw e;
-					}
+	
+					dom.StatusCode = StatusCodes.Success;
 				}
-
-				dom.StatusCode = StatusCodes.Success;
+				else
+				{
+					// FIXME: Throw DomainDoesNotExistException
+				}
+				
+				return dom;
 			}
-			else
-			{
-				// FIXME: Throw DomainDoesNotExistException
-			}
-			
-			return dom;
 		}
 
 		/// <summary>
@@ -371,7 +373,6 @@ Console.WriteLine("DomainController: Sending DomainHostModified event");
 		/// </summary>
 		public void RemoveDomain(string domainID, bool deleteiFoldersOnServer)
 		{
-Console.WriteLine("DomainController.RemoveDomain() not implemented");
 			simws.LeaveDomain(domainID, !deleteiFoldersOnServer);
 		}
 
@@ -380,7 +381,6 @@ Console.WriteLine("DomainController.RemoveDomain() not implemented");
 		/// </summary>
 		public Status AuthenticateDomain(string domainID, string password, bool bSavePassword)
 		{
-Console.WriteLine("DomainController.AuthenticateDomain(<public method>) entered");
 			Status status;
 			DomainAuthentication domainAuth =
 				new DomainAuthentication(
@@ -423,69 +423,78 @@ Console.WriteLine("DomainController.AuthenticateDomain(<public method>) entered"
 		
 		public string GetDomainPassword(string domainID)
 		{
-			DomainInformation dom = (DomainInformation)keyedDomains[domainID];
-			if (dom != null)
+			lock (typeof(DomainController))
 			{
-				string userID;
-				string credentials;
-				try
+				DomainInformation dom = (DomainInformation)keyedDomains[domainID];
+				if (dom != null)
 				{
-					CredentialType credType = simws.GetDomainCredentials(
-						dom.ID, out userID, out credentials);
-					if (credentials != null && credType == CredentialType.Basic)
+					string userID;
+					string credentials;
+					try
 					{
-						return credentials;
+						CredentialType credType = simws.GetDomainCredentials(
+							dom.ID, out userID, out credentials);
+						if (credentials != null && credType == CredentialType.Basic)
+						{
+							return credentials;
+						}
 					}
+					catch {}
 				}
-				catch {}
+				
+				return null;
 			}
-			
-			return null;
 		}
 		
 		public void ActivateDomain(string domainID)
 		{
-			try
+			lock (typeof(DomainController))
 			{
-				DomainInformation dom = (DomainInformation)keyedDomains[domainID];
-				if (dom == null)
+				try
 				{
-					// FIXME: Replace this with a real class named InvalidDomainException
-					throw new Exception("Invalid Domain ID");
+					DomainInformation dom = (DomainInformation)keyedDomains[domainID];
+					if (dom == null)
+					{
+						// FIXME: Replace this with a real class named InvalidDomainException
+						throw new Exception("Invalid Domain ID");
+					}
+					
+					simws.SetDomainActive(domainID);
+					dom.Active = true;
+					
+					if (DomainActivated != null)
+						DomainActivated(this, new DomainEventArgs(domainID));
 				}
-				
-				simws.SetDomainActive(domainID);
-				dom.Active = true;
-				
-				if (DomainActivated != null)
-					DomainActivated(this, new DomainEventArgs(domainID));
-			}
-			catch (Exception e)
-			{
-				throw e;
+				catch (Exception e)
+				{
+					throw e;
+				}
 			}
 		}
 		
 		public void InactivateDomain(string domainID)
 		{
-			try
+			lock (typeof(DomainController))
 			{
-				DomainInformation dom = (DomainInformation)keyedDomains[domainID];
-				if (dom == null)
+				try
 				{
-					// FIXME: Replace this with a real class named InvalidDomainException
-					throw new Exception("Invalid Domain ID");
+					DomainInformation dom = (DomainInformation)keyedDomains[domainID];
+					if (dom == null)
+					{
+						// FIXME: Replace this with a real class named InvalidDomainException
+						throw new Exception("Invalid Domain ID");
+					}
+					
+					simws.SetDomainInactive(domainID);
+					dom.Active = false;
+	
+					if (DomainInactivated != null)
+						DomainInactivated(this, new DomainEventArgs(domainID));
 				}
-				
-				simws.SetDomainInactive(domainID);
-				dom.Active = false;
-
-				if (DomainInactivated != null)
-					DomainInactivated(this, new DomainEventArgs(domainID));
-			}
-			catch (Exception e)
-			{
-				throw e;
+				catch (Exception e)
+				{
+					throw e;
+				}
 			}
 		}
 		
@@ -512,7 +521,6 @@ Console.WriteLine("DomainController.AuthenticateDomain(<public method>) entered"
 		/// </summary>
 		private void AddDomainToHashtable(DomainInformation newDomain)
 		{
-Console.WriteLine("DomainController.AddDomainToHashtable() entered");
 			lock (typeof(DomainController) )
 			{
 				if(newDomain != null)
@@ -524,7 +532,6 @@ Console.WriteLine("DomainController.AddDomainToHashtable() entered");
 
 		private void RemoveDomainFromHashtable(string domainID)
 		{
-Console.WriteLine("DomainController.RemoveDomainFromHashtable() entered");
 			lock (typeof(DomainController) )
 			{
 				if(keyedDomains.ContainsKey(domainID))
@@ -560,7 +567,6 @@ Console.WriteLine("DomainController.RemoveDomainFromHashtable() entered");
 									}
 	
 									defDomainID = newDefaultDomain.ID;									
-//									defDomain = newDefaultDomain;
 
 									if (NewDefaultDomain != null)
 										NewDefaultDomain(this, new NewDefaultDomainEventArgs(oldDomainID, newDefaultDomainID));
@@ -568,7 +574,6 @@ Console.WriteLine("DomainController.RemoveDomainFromHashtable() entered");
 							}
 							else
 								defDomainID = null;
-//								defDomain = null;
 						}
 						catch {}
 					}
@@ -581,7 +586,6 @@ Console.WriteLine("DomainController.RemoveDomainFromHashtable() entered");
 		///
 		private void OnDomainUpEvent(object o, DomainEventArgs args)
 		{
-Console.WriteLine("DomainController.OnDomainUpEvent() entered");
 			// Nofity DomainUpEventHandlers
 			if (DomainUp != null)
 				DomainUp(this, args);
@@ -606,7 +610,6 @@ Console.WriteLine("DomainController.OnDomainUpEvent() entered");
 			else
 			{
 				// Notify DomainNeedsCredentialsEventHandlers
-Console.WriteLine("DomainController: Sending DomainNeedsCredentials event");
 				if (DomainNeedsCredentials != null)
 					DomainNeedsCredentials(this, args);
 			}
@@ -640,7 +643,6 @@ Console.WriteLine("DomainController: Sending DomainNeedsCredentials event");
 			catch{}
 				
 			// Notify DomainLoggedInEventHandlers
-Console.WriteLine("DomainController: Sending DomainLoggedIn event");
 			if (DomainLoggedIn != null)
 				DomainLoggedIn(this, new DomainEventArgs(domainID));
 
@@ -651,7 +653,6 @@ Console.WriteLine("DomainController: Sending DomainLoggedIn event");
 					// Notify DomainInGraceLoginPeriod
 					if (DomainInGraceLoginPeriod != null)
 					{
-Console.WriteLine("DomainController: Sending DomainInGraceLoginPeriod event");
 						DomainInGraceLoginPeriodEventArgs graceEventArgs =
 							new DomainInGraceLoginPeriodEventArgs(
 								domainID,
@@ -664,7 +665,6 @@ Console.WriteLine("DomainController: Sending DomainInGraceLoginPeriod event");
 		
 		private Status AuthenticateDomain(string domainID)
 		{
-Console.WriteLine("DomainController.AuthenticateDomain() entered");
 			// Attempt to authenticate.  If the authentication is successful,
 			// the credentials were previously saved.
 			DomainAuthentication domainAuth =
@@ -678,7 +678,6 @@ Console.WriteLine("DomainController.AuthenticateDomain() entered");
 		
 		private Status AuthenticateDomainWithProxy(string domainID)
 		{
-Console.WriteLine("DomainController.AuthenticationDomainWithProxy() entered");
 			string userID;
 			string credentials;
 
@@ -723,8 +722,6 @@ Console.WriteLine("DomainController.AuthenticationDomainWithProxy() entered");
 
 		private void SetHttpProxyForHost(string host)
 		{
-Console.WriteLine("DomainController.SetHttpProxyForDomain() entered");
-		
 			// Check if a proxy needs to be set
 			GnomeHttpProxy proxy = new GnomeHttpProxy(host);
 			string user = null;
@@ -768,7 +765,6 @@ Console.WriteLine("DomainController.SetHttpProxyForDomain() entered");
 
 		private void OnDomainAddedEvent(object o, DomainEventArgs args)
 		{
-Console.WriteLine("DomainController.OnDomainAddedEvent() entered");
 			DomainInformation domain = (DomainInformation)keyedDomains[args.DomainID];
 			if (domain != null)
 			{
@@ -797,7 +793,6 @@ Console.WriteLine("DomainController.OnDomainAddedEvent() entered");
 
 		private void OnDomainDeletedEvent(object o, DomainEventArgs args)
 		{
-Console.WriteLine("DomainController.OnDomainDeletedEvent() entered");
 			DomainInformation domain = (DomainInformation)keyedDomains[args.DomainID];
 			if (domain == null)
 			{
