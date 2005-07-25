@@ -96,13 +96,15 @@ namespace Simias.DomainWatcher
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="data"></param>
-		public void Custom(int message, string data)
+		public int Custom(int message, string data)
 		{
 			switch (message)
 			{
 				default:
 					break;
 			}
+
+			return 0;
 		}
 
 		#endregion

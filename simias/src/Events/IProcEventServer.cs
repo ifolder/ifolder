@@ -235,8 +235,9 @@ namespace Simias.Event
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="data"></param>
-		public void Custom( int message, string data )
+		public int Custom( int message, string data )
 		{
+			return 0;
 		}
 		#endregion
 	}
