@@ -53,6 +53,6 @@ namespace Simias.Service
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="data"></param>
-		void Custom(int message, string data);
+		int Custom(int message, string data);
 	}
 }
