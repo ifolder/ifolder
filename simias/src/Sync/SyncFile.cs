@@ -376,15 +376,15 @@ namespace Simias.Sync
 			try
 			{
 				tmpStream.SetLength(node.Length);
+				tmpStream.Close();
+				tmpStream = null;
 				File.Move(createName, workFile);
 			}
 			catch (IOException)
 			{
+				if (tmpStream != null)
+					tmpStream.Close();
 				throw new InsufficientStorageException();
-			}
-			finally
-			{
-				tmpStream.Close();
 			}
 			workStream = new StreamStream(File.Open(workFile, FileMode.Truncate, FileAccess.ReadWrite, FileShare.None));
 		}
