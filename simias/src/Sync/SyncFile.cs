@@ -367,12 +367,25 @@ namespace Simias.Sync
 			// This will insure that the proper attributes are set.
 			// This was added to support EFS (Encrypted File System).
 			string createName = Path.Combine(Path.GetDirectoryName(file), Path.GetFileName(workFile));
-			File.Open(createName, FileMode.Create, FileAccess.ReadWrite, FileShare.None).Close();
+			FileStream tmpStream = File.Open(createName, FileMode.Create, FileAccess.ReadWrite, FileShare.None);
 			if (File.Exists(workFile))
 			{
 				File.Delete(workFile);
 			}
-			File.Move(createName, workFile);
+			// Make sure we have enough space for the file.
+			try
+			{
+				tmpStream.SetLength(node.Length);
+				File.Move(createName, workFile);
+			}
+			catch (IOException)
+			{
+				throw new InsufficientStorageException();
+			}
+			finally
+			{
+				tmpStream.Close();
+			}
 			workStream = new StreamStream(File.Open(workFile, FileMode.Truncate, FileAccess.ReadWrite, FileShare.None));
 		}
 

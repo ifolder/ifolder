@@ -314,6 +314,9 @@ namespace Simias.Sync
 			}
 			catch (Exception ex)
 			{
+				if (ex is InsufficientStorageException)
+					eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, 0, 0, 0, Direction.Downloading, SyncStatus.DiskFull));
+				
 				syncService.CloseFile();
 				base.Close(false);
 				Log.log.Debug(ex, "Failed opening file {0}", file);
@@ -410,16 +413,7 @@ namespace Simias.Sync
 			long	sizeToSync;
 			long	sizeRemaining;
 			int		blockSize;
-			// Make sure that we have enough space for the file.
-			try
-			{
-				SetLength(Length);
-			}
-			catch (IOException)
-			{
-				eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, 0, 0, 0, Direction.Downloading, SyncStatus.DiskFull));
-				throw;
-			}
+
 			long[] fileMap = GetDownloadFileMap(out sizeToSync, out blockSize);
 			sizeRemaining = sizeToSync;
 			WritePosition = 0;

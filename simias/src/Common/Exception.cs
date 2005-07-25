@@ -226,5 +226,18 @@ namespace Simias
 		{
 		}
 	}
-
+	
+	/// <summary>
+	/// Insufficient space Exception.
+	/// </summary>
+	public class InsufficientStorageException : SimiasException
+	{
+		/// <summary>
+		/// Create a NeedCredentialsException
+		/// </summary>
+		public InsufficientStorageException() :
+			base ("Insufficient Storage")
+		{
+		}
+	}
 }

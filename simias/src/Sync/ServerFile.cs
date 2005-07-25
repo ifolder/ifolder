@@ -90,20 +90,18 @@ namespace Simias.Sync
 			}
 			collection.ImportNode(node, true, snode.MasterIncarnation);
 			node.IncarnationUpdate = node.LocalIncarnation;
-			base.Open(node);
 			SyncStatus status = SyncStatus.Success;
+			try
+			{
+				base.Open(node);
+			}
+			catch (InsufficientStorageException)
+			{
+				status = SyncStatus.DiskFull;
+			}
 			if (NameConflict)
 			{
 				status = SyncStatus.FileNameConflict;
-			}
-			// Make sure we have enough disk space.
-			try
-			{
-				SetLength(node.Length);
-			}
-			catch (IOException)
-			{
-				status = SyncStatus.DiskFull;
 			}
 			if (status != SyncStatus.Success)
 			{
