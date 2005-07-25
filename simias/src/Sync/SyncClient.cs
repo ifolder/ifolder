@@ -452,8 +452,9 @@ namespace Simias.Sync
 		/// </summary>
 		/// <param name="message">The custom message.</param>
 		/// <param name="data">The data of the message.</param>
-		public void Custom(int message, string data)
+		public int Custom(int message, string data)
 		{
+			return 0;
 		}
 
 		/// <summary>
