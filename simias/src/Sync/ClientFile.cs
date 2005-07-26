@@ -354,6 +354,7 @@ namespace Simias.Sync
 				}
 				catch (CollisionException)
 				{
+					eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, 0, 0, 0, Direction.Downloading, SyncStatus.UpdateConflict));
 					// Create an update conflict.
 					file = Conflict.GetUpdateConflictPath(collection, node);
 					collection.Commit(collection.CreateCollision(node, false));
