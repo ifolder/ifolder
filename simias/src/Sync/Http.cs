@@ -44,6 +44,9 @@ namespace Simias.Sync.Http
 	/// </summary>
 	public class SyncHeaders
 	{
+		/// <summary>
+		/// 
+		/// </summary>
 		public static string	SyncVersion = "SSyncVersion";
 		/// <summary>
 		/// 
@@ -167,7 +170,7 @@ namespace Simias.Sync.Http
 	/// </summary>
 	public class HttpSyncProxy
 	{
-		static string				version = "1.0";
+		double						serverVersion;
 		Collection					collection;
 		string						domainId;
 		string						url;
@@ -211,7 +214,7 @@ namespace Simias.Sync.Http
 			request.ContentType = "application/octet-stream";
 			request.Method = "POST";
 			WebHeaderCollection headers = request.Headers;
-			headers.Add(SyncHeaders.SyncVersion, version);
+			headers.Add(SyncHeaders.SyncVersion, HttpService.version);
 			headers.Add(SyncHeaders.Method, method.ToString());
 			headers.Add(SyncHeaders.UserName, userName);
 			headers.Add(SyncHeaders.UserID, userID);
@@ -254,6 +257,7 @@ namespace Simias.Sync.Http
 		/// <param name="si">The StartSyncInfo to control the sync.</param>
 		public void StartSync(ref StartSyncInfo si)
 		{
+			serverVersion = 1.0;
 			HttpWebRequest request = GetRequest(SyncMethod.StartSync);
 			BinaryWriter writer = new BinaryWriter(request.GetRequestStream());
 			si.Serialize(writer);
@@ -291,6 +295,10 @@ namespace Simias.Sync.Http
 					}
 					throw GetException(response);
 				}
+				// Get the interface version.
+				string vString = response.Headers.Get(SyncHeaders.SyncVersion);
+				if (vString != null)
+					serverVersion = double.Parse(vString);
 				// Now get the StartSyncInfo back;
 				BinaryReader reader = new BinaryReader(response.GetResponseStream());
 				si = new StartSyncInfo(reader);
@@ -773,6 +781,10 @@ namespace Simias.Sync.Http
 	/// </summary>
 	public class HttpService
 	{
+		/// <summary>
+		///	The version of the interface. 
+		/// </summary>
+		public static string	version = "1.0";
 		SyncService service;
 
 		~HttpService()
@@ -815,6 +827,7 @@ namespace Simias.Sync.Http
 			service = new SyncService();
 			service.Start(ref si, userID, session.SessionID);
 			response.ContentType = "application/octet-stream";
+			response.AddHeader(SyncHeaders.SyncVersion, version);
 			BinaryWriter writer = new BinaryWriter(response.OutputStream);
 			si.Serialize(writer);
 			writer.Close();
