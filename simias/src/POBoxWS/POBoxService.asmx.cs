@@ -429,7 +429,9 @@ namespace Simias.POBoxService.Web
 								// decline is treated as a delete of the shared collection
 								// so we must.
 								// 1) Delete all the subscriptions in all members PO boxes
-								// 2) Delete the shared collection itself
+								// 2) Delete all outstanding subscriptions assigned to the
+								//    shared collection ID.
+								// 3) Delete the shared collection itself
 								//
 								// If I'm already a member of the shared collection but not
 								// the owner.
@@ -501,6 +503,25 @@ namespace Simias.POBoxService.Web
 										}
 									}
 
+									// Now search for all nodes that contain the "sbColID" property
+									// which will find all subscriptions to users that have not
+									// accepted or declined the subscription
+
+									Property sbProp = new Property( "SbColID", cCol.ID );
+									ICSList subList = store.GetNodesByProperty( sbProp, SearchOp.Equal );
+									foreach ( ShallowNode sn in subList )
+									{
+										Collection col = store.GetCollectionByID( sn.CollectionID );
+										if ( col != null )
+										{
+											Subscription sub = new Subscription( col, sn );
+											if ( sub != null )
+											{
+												col.Commit( col.Delete( sub ) );
+											}
+										}
+									}
+
 									// Delete the shared collection itself
 									log.Debug( "  deleting shared collection." );
 									cCol.Commit( cCol.Delete() );
@@ -545,14 +566,33 @@ namespace Simias.POBoxService.Web
 							}
 							else
 							{
-								// FIXEME:: Do we want to still try and cleanup the subscriptions?
+								// The shared collection does not exist but
+								// if any subscriptions are still associated 
+								// delete them from the store
+
+								Property sbProp = new Property( "SbColID", cCol.ID );
+								ICSList subList = store.GetNodesByProperty( sbProp, SearchOp.Equal );
+								foreach ( ShallowNode sn in subList )
+								{
+									// Collection should be a PO Box
+									Collection col = store.GetCollectionByID( sn.CollectionID );
+									if ( col != null )
+									{
+										Subscription sub = new Subscription( col, sn );
+										if ( sub != null )
+										{
+											col.Commit( col.Delete( sub ) );
+										}
+									}
+								}
+
 								log.Debug( "  collection not found" );
 								status = POBoxStatus.UnknownCollection;
 							}
 						}
 						else
 						{
-							log.Debug( "  from or from identity does not match" );
+							log.Debug( "  from or to identity does not match" );
 							status = POBoxStatus.UnknownIdentity;
 						}
 
