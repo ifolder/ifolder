@@ -162,15 +162,18 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 //===================================================================
 - (IBAction)showHelp:(id)sender
 {
-	NSString *langCode = [[NSLocale currentLocale] objectForKey:NSLocaleIdentifier];
+	CFLocaleRef	langRef = CFLocaleCopyCurrent();
+	CFStringRef langCode = CFLocaleGetIdentifier(langRef);
+	
 	NSString *helpPath = [NSString stringWithFormat:@"%s/share/ifolder3/help/%@/doc/user/data/front.html", IFOLDER_PREFIX, langCode];
 	
 	ifconlog2(@"Full help path: %@", helpPath);
 
 	if([[NSFileManager defaultManager] fileExistsAtPath:helpPath] == NO)
 	{
-		langCode = [[NSLocale currentLocale] objectForKey:NSLocaleLanguageCode];
-		helpPath = [NSString stringWithFormat:@"%s/share/ifolder3/help/%@/doc/user/data/front.html", IFOLDER_PREFIX, langCode];
+		NSString *langStrCode = [(NSString *)langCode substringToIndex:2];  // cut off the country and just use first two digits
+
+		helpPath = [NSString stringWithFormat:@"%s/share/ifolder3/help/%@/doc/user/data/front.html", IFOLDER_PREFIX, langStrCode];
 
 		ifconlog2(@"Language only help path: %@", helpPath);
 
@@ -180,9 +183,11 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 			helpPath = [NSString stringWithFormat:@"%s/share/ifolder3/help/en/doc/user/data/front.html", IFOLDER_PREFIX];
 		}
 	}
-	
+
 	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:
 			[NSString stringWithFormat:@"file://localhost%@", helpPath]]];
+
+	CFRelease(langRef);
 }
 
 
