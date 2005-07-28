@@ -85,6 +85,28 @@
 
 
 
+-(void) setSyncProperties: (NSDictionary *)syncProperties
+{
+	if(properties != syncProperties)
+	{
+		NSNumber *totalSyncCount = [syncProperties objectForKey:@"totalSyncCount"];
+		NSNumber *outOfSyncCount = [syncProperties objectForKey:@"outOfSyncCount"];
+		NSNumber *syncState = [syncProperties objectForKey:@"syncState"];
+	
+		if(totalSyncCount != nil)
+			[properties setObject:totalSyncCount forKey:@"totalSyncCount"];
+		if(outOfSyncCount != nil)
+			[properties setObject:outOfSyncCount forKey:@"outOfSyncCount"];
+		if(syncState != nil)
+			[properties setObject:syncState forKey:@"syncState"];
+
+		[self updateDisplayInformation];
+	}
+}
+
+
+
+
 -(int) syncState
 {
 	NSNumber *num = [properties objectForKey:@"syncState"];
