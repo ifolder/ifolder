@@ -165,7 +165,7 @@ static ConflictWindowController *conflictSharedInstance = nil;
 		NSString *localName = [[conflict properties] objectForKey:@"LocalName"];
 		NSString *serverName = [[conflict properties] objectForKey:@"ServerName"];
 		NSString *localID = [[conflict properties] objectForKey:@"LocalConflictID"];
-		NSString *serverID = [[conflict properties] objectForKey:@"ConflictID"];
+		NSString *serverID = [[conflict properties] objectForKey:@"ServerConflictID"];
 
 		NSString *fileDirectory = [[[conflict properties] objectForKey:@"Location"] stringByDeletingLastPathComponent];
 		NSString *newPath = [fileDirectory stringByAppendingPathComponent:newName];
@@ -206,7 +206,12 @@ static ConflictWindowController *conflictSharedInstance = nil;
 					@try
 					{
 						[ifolderService ResolveNameConflict:iFolderID withID:localID usingName:newName];
-						[ifolderService ResolveNameConflict:iFolderID withID:serverID usingName:serverName];
+
+						// If this is because of an illegal character which is supported on Mac, there may not
+						// be a server conflict so check here
+						if(serverID != nil)
+							[ifolderService ResolveNameConflict:iFolderID withID:serverID usingName:serverName];
+
 						[ifoldersController removeObjectAtArrangedObjectIndex:[ifoldersController selectionIndex]];
 					}
 					@catch(NSException *ex)

@@ -1443,11 +1443,15 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict)
 	if(conflict->ConflictID != nil)
 		[newProperties setObject:[NSString stringWithUTF8String:conflict->ConflictID] forKey:@"ConflictID"];
 
+
 	if(conflict->LocalName != nil)
 	{
 		[newProperties setObject:[NSString stringWithUTF8String:conflict->LocalName] forKey:@"LocalName"];
 		[newProperties setObject:[NSString stringWithUTF8String:conflict->LocalName] forKey:@"Name"];
 		haveName = YES;
+
+		if(conflict->ConflictID != nil)
+			[newProperties setObject:[NSString stringWithUTF8String:conflict->ConflictID] forKey:@"LocalConflictID"];
 	}
 
 	if(conflict->LocalDate != nil)
@@ -1468,6 +1472,9 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict)
 		[newProperties setObject:[NSString stringWithUTF8String:conflict->ServerName] forKey:@"ServerName"];
 		if(!haveName)
 			[newProperties setObject:[NSString stringWithUTF8String:conflict->ServerName] forKey:@"Name"];
+
+		if(conflict->ConflictID != nil)
+			[newProperties setObject:[NSString stringWithUTF8String:conflict->ConflictID] forKey:@"ServerConflictID"];
 	}
 
 	if(conflict->ServerDate != nil)
