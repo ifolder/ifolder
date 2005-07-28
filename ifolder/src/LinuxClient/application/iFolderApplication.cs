@@ -219,7 +219,6 @@ namespace Novell.iFolder
 
 		private void ReLogin(string domainID)
 		{
-Console.WriteLine("iFolderApplication.ReLogin() entered");
 			if (LoginDialog == null)
 			{
 				DomainInformation dom = domainController.GetDomain(domainID);
@@ -242,7 +241,6 @@ Console.WriteLine("iFolderApplication.ReLogin() entered");
 
 		private void OnReLoginDialogResponse(object o, ResponseArgs args)
 		{
-Console.WriteLine("iFolderApplication.OnReLoginDialogResponse() entered");
 			switch (args.ResponseId)
 			{
 				case Gtk.ResponseType.Ok:
@@ -251,7 +249,6 @@ Console.WriteLine("iFolderApplication.OnReLoginDialogResponse() entered");
 							LoginDialog.Domain,
 							LoginDialog.Password,
 							LoginDialog.ShouldSavePassword);
-Console.WriteLine("iFolderApplication.OnReLoginDialogResponse(): authStatus is: {0}", status.statusCode);
 					if (status == null ||
 						(status.statusCode != StatusCodes.Success &&
 						 status.statusCode != StatusCodes.SuccessInGrace))
