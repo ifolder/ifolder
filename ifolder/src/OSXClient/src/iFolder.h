@@ -65,6 +65,8 @@
 -(NSMutableDictionary *) properties;
 -(void) setProperties: (NSDictionary *)newProperties;
 
+-(void) setSyncProperties: (NSDictionary *)syncProperties;
+
 -(int) syncState;
 -(void) setSyncState:(int)syncState;
 

@@ -190,12 +190,26 @@ static iFolderData *sharedInstance = nil;
 		
 		if(!onlyDomains)
 		{
-		
+			// Read all of the new ifolders and update them with the state
+			// of the existing iFolders
+			NSArray *newiFolders = [ifolderService GetiFolders];
+			for(objCount = 0; objCount < [newiFolders count]; objCount++)
+			{
+				iFolder *newiFolder = [newiFolders objectAtIndex:objCount];
+				
+				iFolder *existingiFolder = [keyediFolders objectForKey:[newiFolder ID]];
+				if(existingiFolder != nil)
+				{
+					[newiFolder setSyncProperties:[existingiFolder properties]];
+				}
+			}
+
+			// Now that we have updated all of the new ifolders with the old
+			// iFolder's existing state, remove all of them to get ready to
+			// re-add the new ifolders
 			[keyediFolders removeAllObjects];
 			[keyedSubscriptions removeAllObjects];
-//			[ifolders removeAllObjects];
-			// this is the clean way to remove all objects and make sure everyone
-			// knows about it
+
 			if([[ifoldersController arrangedObjects] count] > 0)
 			{
 				NSIndexSet *allIndexes = [[NSIndexSet alloc]
@@ -203,8 +217,9 @@ static iFolderData *sharedInstance = nil;
 										NSMakeRange(0,[[ifoldersController arrangedObjects] count])];
 				[ifoldersController removeObjectsAtArrangedObjectIndexes:allIndexes];
 			}
-			
-			NSArray *newiFolders = [ifolderService GetiFolders];
+
+			// Now that the state is set in all of the existing iFolders
+			// add them back into the iFolder list
 			for(objCount = 0; objCount < [newiFolders count]; objCount++)
 			{
 				iFolder *newiFolder = [newiFolders objectAtIndex:objCount];
