@@ -920,7 +920,7 @@ namespace Simias.DomainServices
 				WebState webState = new WebState( collection.Domain, collectionID );
 				webState.InitializeWebClient( domainService, collection.Domain );
 
-				// Get the quota from the local store this fixes bug 76432.
+				// Get the quota from the local store this fixes bug 97331
 				long usedSize = domainService.GetiFolderDiskSpaceUsed( collectionID, out limit );
 				limit = DiskSpaceQuota.GetLimit( collection );
 				return usedSize;
