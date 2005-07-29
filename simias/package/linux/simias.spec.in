@@ -113,6 +113,7 @@ make DESTDIR=$RPM_BUILD_ROOT install
 %Postun
 INSTANCES_AFTER_UNINSTALL=$1
 if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
+else #upgrade case
 sed "s/.<add key.*=.*\"SimiasAuthNotRequired\".*\/>/        <add key=\"SimiasAuthNotRequired\" value=\"Login.ashx, Simias.asmx:PingSimias, POService.asmx:Invite\" \/>/" %{prefix}/web/web.config > %{prefix}/web/web.config.fixed
 mv %{prefix}/web/web.config.fixed %{prefix}/web/web.config
 fi
