@@ -73,6 +73,15 @@ make DESTDIR=$RPM_BUILD_ROOT install
 
 #=============================================================================
 %Post
+INSTANCES_AFTER_INSTALL=$1
+if [ "$INSTANCES_AFTER_INSTALL" = "2" ]; then
+	# Upgrade
+	# update the Web.config from version 3.0 to 3.1
+	echo "Updating %{prefix}/web/web.config"
+	sed "s/.<add key.*=.*\"SimiasAuthNotRequired\".*\/>/        <add key=\"SimiasAuthNotRequired\" value=\"Login.ashx, Simias.asmx:PingSimias, POService.asmx:Invite\" \/>/" %{prefix}/web/web.config > %{prefix}/web/web.config.fixed
+	mv %{prefix}/web/web.config.fixed %{prefix}/web/web.config
+fi
+
 #INSTANCES_AFTER_INSTALL=$1
 #if [ "$INSTANCES_AFTER_INSTALL" = "1" ]; then
     #
@@ -110,13 +119,10 @@ make DESTDIR=$RPM_BUILD_ROOT install
 #fi
 
 #=============================================================================
-%Postun
-INSTANCES_AFTER_UNINSTALL=$1
-if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
-else #upgrade case
-sed "s/.<add key.*=.*\"SimiasAuthNotRequired\".*\/>/        <add key=\"SimiasAuthNotRequired\" value=\"Login.ashx, Simias.asmx:PingSimias, POService.asmx:Invite\" \/>/" %{prefix}/web/web.config > %{prefix}/web/web.config.fixed
-mv %{prefix}/web/web.config.fixed %{prefix}/web/web.config
-fi
+#%Postun
+#INSTANCES_AFTER_UNINSTALL=$1
+#if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
+#fi
 
 #=============================================================================
 %Files
