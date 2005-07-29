@@ -84,6 +84,8 @@ namespace Novell.FormsTrayApp
 			base.Install(savedState);
 			Console.WriteLine("iFolderApp Install");
 
+			// TODO: Check for existing simias directory and if found, remove it from the pending file rename section of the registry.
+
 			// Get the directory where the assembly is running.
 			string installDir = new Uri(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath;
 
@@ -152,14 +154,15 @@ namespace Novell.FormsTrayApp
 				// Get store path from Simias.config then delete the store path
                 //Give the processes time to die (3 seconds worked on my box--giving extra time for slow box).
 				//Without this command the delete fails.
-				System.Threading.Thread.Sleep(5000); 
+				// TODO: use MoveFileEx to mark the files/directories for deletion upon reboot.
+/*				System.Threading.Thread.Sleep(5000); 
 				Simias.Client.Configuration configuration = new Simias.Client.Configuration();
 				Directory.Delete(configuration.StorePath, true);
 				string configPath = configuration.ConfigPath;
 				if (File.Exists(configPath))
 				{
 					File.Delete(configPath);
-				}
+				}*/
 			}
 		}
 
