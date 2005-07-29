@@ -111,18 +111,28 @@ make DESTDIR=$RPM_BUILD_ROOT install
 
 #=============================================================================
 %Postun
-#INSTANCES_AFTER_UNINSTALL=$1
-#if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
-    #
-    # Remove simias.sh from /etc/profile.d
-    #
-#    %{__rm} -f /etc/profile.d/simias.sh
-#fi
+INSTANCES_AFTER_UNINSTALL=$1
+if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
+sed "s/.<add key.*=.*\"SimiasAuthNotRequired\".*\/>/        <add key=\"SimiasAuthNotRequired\" value=\"Login.ashx, Simias.asmx:PingSimias, POService.asmx:Invite\" \/>/" %{prefix}/web/web.config > %{prefix}/web/web.config.fixed
+mv %{prefix}/web/web.config.fixed %{prefix}/web/web.config
+fi
 
 #=============================================================================
 %Files
 %attr(755,root,root) %dir %{prefix}
 %defattr(755,root,root)
-%{prefix}/*
+%{prefix}/bin/*
+%{prefix}/etc/*
+%{prefix}/include/*
+%{prefix}/lib/*
+%{prefix}/share/*
+%{prefix}/web/bin/*
+%{prefix}/web/iFolder.asmx
+%{prefix}/web/Global.asax
+%{prefix}/web/Login.ashx
+%{prefix}/web/POService.asmx
+%{prefix}/web/Simias.asmx
+%{prefix}/web/SyncHandler.ashx
+%config(noreplace) %{prefix}/web/web.config
 
 
