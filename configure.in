@@ -4,7 +4,8 @@ AM_CONFIG_HEADER(config.h)
 
 AM_INIT_AUTOMAKE(ifolder3, 3.1)
 # ASSEMBLY_INFO_VERSION=$VERSION.`date +%Y.%m%d`
-# VERSION=$VERSION.`date +%Y%m%d`
+let "BUILDNUM=`date +%G%j`-2000000"
+VERSION=$VERSION.$BUILDNUM.1
 AM_MAINTAINER_MODE
 AC_PROG_CC
 
@@ -17,14 +18,12 @@ case $host_os in
         AC_CHECK_PROG(CSC, mcs, mcs)
         test -z "$CSC" && AC_MSG_ERROR([no C Sharp compiler: mcs not found in \$PATH])
         PKG_CONFIG_DIR='lib'
-        VERSION=$VERSION.`date +%Y%m%d`
     ;;
     darwin*)
         IFOLDER_OS='darwin'
         AC_CHECK_PROG(CSC, mcs, mcs)
         test -z "$CSC" && AC_MSG_ERROR([no C Sharp compiler: mcs not found in \$PATH])
         PKG_CONFIG_DIR='lib'
-        VERSION=$VERSION.`date +%Y%m%d`
     ;;
     cygwin*)
         IFOLDER_OS='windows'
@@ -32,7 +31,6 @@ case $host_os in
         test -z "$CSC" && AC_CHECK_PROG(CSC, mcs, mcs)
         test -z "$CSC" && AC_MSG_ERROR([no C Sharp compiler: neither csc nor mcs found in \$PATH])
         PKG_CONFIG_DIR='.'
-        VERSION=$VERSION.`date +%Y.%m%d`
     ;;
     *)
         AC_MSG_ERROR([Unknown host_os: $host_os])
