@@ -1434,7 +1434,6 @@
 		<col def="S255">ISProFeatureName</col>
 		<row><td>Help_Files</td><td/><td>##ID_STRING6##</td><td/><td>2</td><td>10</td><td>INSTALLDIR</td><td>8</td><td/><td/><td/><td/></row>
 		<row><td>iFolder_Files</td><td/><td>##IDS_FEATURE_DISPLAY_NAME2##</td><td/><td>2</td><td>1</td><td>INSTALLDIR</td><td>24</td><td/><td/><td/><td/></row>
-		<row><td>iFolder_SDK</td><td/><td>##IDS_FEATURE_DISPLAY_NAME3##</td><td/><td>0</td><td>200</td><td>INSTALLDIR</td><td>8</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="FeatureComponents">
@@ -1773,8 +1772,6 @@
 		<row><td>iFolder_Files</td><td>VC_User_STL71.09528776_2EA8_4A65_AA88_693146381D7D</td><td>0</td></row>
 		<row><td>iFolder_Files</td><td>ifolder.2E790EF8_369B_4D99_AC96_9EB4734B247E</td><td>0</td></row>
 		<row><td>iFolder_Files</td><td>simias.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>0</td></row>
-		<row><td>iFolder_SDK</td><td>ifolder_sdk.292BBE1D_2B47_4213_B226_08D68798BA46</td><td>0</td></row>
-		<row><td>iFolder_SDK</td><td>simias_sdk.3CFD24D7_12F5_4DD6_9350_BB6B1E9AFB0E</td><td>0</td></row>
 	</table>
 
 	<table name="ISIISAppPool">
@@ -1927,9 +1924,7 @@
 		<row><td>VC_User_CRT71.07D8793C_DC93_47EF_8FDA_3517BC941A0F</td><td>0</td><td>VC User CRT71 RTL X86 ---</td><td>[SystemFolder]</td><td/></row>
 		<row><td>VC_User_STL71.09528776_2EA8_4A65_AA88_693146381D7D</td><td>0</td><td>VC User STL71 RTL X86 ---</td><td>[SystemFolder]</td><td/></row>
 		<row><td>ifolder.2E790EF8_369B_4D99_AC96_9EB4734B247E</td><td>0</td><td>iFolder Merge Module</td><td>[INSTALLDIR]</td><td/></row>
-		<row><td>ifolder_sdk.292BBE1D_2B47_4213_B226_08D68798BA46</td><td>0</td><td>iFolder SDK Merge Module</td><td>[INSTALLDIR]\doc</td><td/></row>
 		<row><td>simias.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>0</td><td>Simias Merge Module</td><td>[INSTALLDIR]</td><td/></row>
-		<row><td>simias_sdk.3CFD24D7_12F5_4DD6_9350_BB6B1E9AFB0E</td><td>0</td><td>Simias SDK Merge Module</td><td>[INSTALLDIR]\doc\simias</td><td/></row>
 	</table>
 
 	<table name="ISMergeModuleCfgValues">
