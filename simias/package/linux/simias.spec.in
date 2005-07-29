@@ -127,7 +127,6 @@ fi
 %{prefix}/lib/*
 %{prefix}/share/*
 %{prefix}/web/bin/*
-%{prefix}/web/iFolder.asmx
 %{prefix}/web/Global.asax
 %{prefix}/web/Login.ashx
 %{prefix}/web/POService.asmx
