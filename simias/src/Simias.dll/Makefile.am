@@ -62,7 +62,7 @@ install-exec-local: all
 	$(INSTALL_PROGRAM) ../Common/simias-client-bootstrap.config $(DESTDIR)$(sysconfdir)
 	$(INSTALL_PROGRAM) ../Login/Login.ashx $(DESTDIR)$(webdir)
 if LINUX
-	$(INSTALL_PROGRAM) Simias.dll.config $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) Simias.dll.config $(DESTDIR)$(webbindir)
 endif
 
 uninstall-local:
