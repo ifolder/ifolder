@@ -78,7 +78,7 @@ if [ "$INSTANCES_AFTER_INSTALL" = "2" ]; then
 	# Upgrade
 	# update the Web.config from version 3.0 to 3.1
 	echo "Updating %{prefix}/web/web.config"
-	sed "s/.<add key.*=.*\"SimiasAuthNotRequired\".*\/>/        <add key=\"SimiasAuthNotRequired\" value=\"Login.ashx, Simias.asmx:PingSimias, POService.asmx:Invite\" \/>/" %{prefix}/web/web.config > %{prefix}/web/web.config.fixed
+	sed -e "s/.<add key.*=.*\"SimiasAuthNotRequired\".*\/>/        <add key=\"SimiasAuthNotRequired\" value=\"Login.ashx, Simias.asmx:PingSimias, POService.asmx:Invite\" \/>/" -e "/<system\.net/,/<\/system.net>/d" -e "s/<\/system.web>/<\/system.web>\n\n    <system.net>\n        <connectionManagement>\n            <add address=\"*\" maxconnection=\"10\" \/>\n        <\/connectionManagement>\n    <\/system.net>\n/" %{prefix}/web/web.config > %{prefix}/web/web.config.fixed
 	mv %{prefix}/web/web.config.fixed %{prefix}/web/web.config
 fi
 
