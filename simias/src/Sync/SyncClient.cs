@@ -1937,7 +1937,7 @@ namespace Simias.Sync
 								case SyncStatus.PolicySize:
 								case SyncStatus.PolicyType:
 									log.Info("Failed Uploading File {0} : reason {1}", file.Name, status.ToString());
-									workArray.RemoveNodeToServer(nodeID);
+									//workArray.RemoveNodeToServer(nodeID);
 									break;
 								case SyncStatus.Locked:
 									log.Info("Failed Uploading File {0} : reason {1}", file.Name, status.ToString());
