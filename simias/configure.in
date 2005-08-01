@@ -168,7 +168,7 @@ case $SIMIAS_OS in
 		GSOAP_PATH="$TOOLDIR/gsoap/macosx-2.7"
 		#StoreProviderAssembly="SqliteProvider.dll"
 		#StoreProviderType="Simias.Storage.Provider.Sqlite.SqliteProvider"
-    	libexecdir='${exec_prefix}'
+    	libexecdir="${exec_prefix}"
     ;;
     #
     # Linux-specific configuration
@@ -204,7 +204,7 @@ case $SIMIAS_OS in
 		StoreProviderAssembly="Simias.dll"
 		StoreProviderType="Simias.Storage.Provider.Flaim.FlaimProvider"
 		GSOAP_PATH="$TOOLDIR/gsoap/linux-2.7"
-    	libexecdir='${exec_prefix}'
+    	libexecdir="${exec_prefix}"
     ;;
     #
     # Windows-specific configuration
@@ -272,10 +272,10 @@ case $SIMIAS_OS in
         #
     	# Override Linux-like directory structure
         #
-    	bindir='${exec_prefix}'
-    	sbindir='${exec_prefix}'
-    	libexecdir='${exec_prefix}'
-    	libdir='${exec_prefix}'
+    	bindir="${exec_prefix}"
+    	sbindir="${exec_prefix}"
+    	libexecdir="${exec_prefix}"
+    	libdir="${exec_prefix}"
 		StoreProviderAssembly="Simias.dll"
 		StoreProviderType="Simias.Storage.Provider.Flaim.FlaimProvider"
     ;;
@@ -316,8 +316,8 @@ AC_SUBST(GSOAP_PATH)
 #
 # We have our own "standard" directories for web services.
 #
-webdir='${libexecdir}/web'
-webbindir='${webdir}/bin'
+webdir="${libexecdir}/web"
+webbindir="${webdir}/bin"
 AC_SUBST(webdir)
 AC_SUBST(webbindir)
 
@@ -435,6 +435,7 @@ src/Makefile
 src/SimiasClient/Makefile
 src/SimiasClient/libsimias-event/Makefile
 src/Simias.dll/Makefile
+src/Simias.dll/Simias.dll.config
 src/FlaimProvider/Makefile
 src/FlaimProvider/FlaimWrapper/Makefile
 src/SimiasApp/Makefile
