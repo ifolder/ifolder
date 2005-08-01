@@ -55,6 +55,8 @@ namespace Novell.iFolder
 		internal static iFolderWindow		ifwin		= null;
 		internal static LogWindow			logwin		= null;
 		internal static PreferencesWindow	prefswin	= null;
+		
+		private static bool bLogWinNeverShown			= true;
 
 		private static iFolderWebService	ifws		= null;
 		private static SimiasWebService		simws		= null;
@@ -357,6 +359,13 @@ namespace Novell.iFolder
 
 		public static LogWindow GetLogWindow()
 		{
+			if (logwin == null)
+			{
+				logwin = new LogWindow();
+				logwin.Destroyed +=
+					new EventHandler(LogWindowDestroyedHandler);
+			}
+			
 			return logwin;
 		}
 		
@@ -367,12 +376,17 @@ namespace Novell.iFolder
 				logwin = new LogWindow();
 				logwin.Destroyed += 
 						new EventHandler(LogWindowDestroyedHandler);
-//				logwinShown = false;
 				logwin.ShowAll();
 			}
 			else
 			{
-				logwin.Present();
+				if (bLogWinNeverShown)
+				{
+					logwin.ShowAll();
+					bLogWinNeverShown = false;
+				}
+				else
+					logwin.Present();
 			}
 		}
 
