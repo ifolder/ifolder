@@ -11,10 +11,6 @@ SyncService_LIBPATH = ../SimiasClient ../Simias.dll
 
 EXTRA_DIST = SyncHandler.ashx $(SyncService_CSFILES1) AssemblyInfo.cs.in
 
-AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
-	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
-	chmod +x $@
-
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml
 DOC_FILE_CMD = /doc:$(DOC_FILE)
@@ -23,8 +19,12 @@ endif
 
 all: SyncService.Web.dll
 
-SyncService.Web.dll: $(SyncService_CSFILES) $(SyncService_RESOURCES)
+SyncService.Web.dll: AssemblyInfo.cs $(SyncService_CSFILES) $(SyncService_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(SyncService_FLAGS) $(SIMIAS_LIBS) $(SyncService_LIBS:%=/r:%) $(SyncService_LIBPATH:%=/lib:%) $(SyncService_RESOURCES:%=$(ICON_FLAG)%) $(SyncService_CSFILES) $(DOC_FILE_CMD)
+
+AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
+	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
+	chmod +x $@
 
 if DEBUG
 if WINDOWS

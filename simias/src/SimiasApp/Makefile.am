@@ -11,10 +11,6 @@ SimiasApp_LIBPATH = $(NUNIT_LIBPATH) $(LOG4NET_DIR) ../SimiasClient ../Simias.dl
 
 EXTRA_DIST = App.ico $(SimiasApp_CSFILES1) AssemblyInfo.cs.in
 
-AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
-	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
-	chmod +x $@
-
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml
 DOC_FILE_CMD = /doc:$(DOC_FILE)
@@ -23,8 +19,12 @@ endif
 
 all: SimiasApp.exe
 
-SimiasApp.exe: $(SimiasApp_CSFILES) $(SimiasApp_RESOURCES)
+SimiasApp.exe: AssemblyInfo.cs $(SimiasApp_CSFILES) $(SimiasApp_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(SimiasApp_FLAGS) $(SIMIAS_LIBS) $(SimiasApp_LIBS:%=/r:%) $(SimiasApp_LIBPATH:%=/lib:%) $(SimiasApp_RESOURCES:%=$(ICON_FLAG)%) $(SimiasApp_CSFILES) $(DOC_FILE_CMD)
+
+AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
+	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
+	chmod +x $@
 
 if DEBUG
 if WINDOWS

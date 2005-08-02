@@ -11,10 +11,6 @@ POBoxWS_LIBPATH = ../SimiasClient ../Simias.dll
 
 EXTRA_DIST = POService.asmx $(POBoxWS_CSFILES1) AssemblyInfo.cs.in
 
-AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
-	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
-	chmod +x $@
-
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml
 DOC_FILE_CMD = /doc:$(DOC_FILE)
@@ -23,9 +19,13 @@ endif
 
 all: Simias.POBox.Web.dll
 
-Simias.POBox.Web.dll: $(POBoxWS_CSFILES) $(POBoxWS_RESOURCES)
+Simias.POBox.Web.dll: AssemblyInfo.cs $(POBoxWS_CSFILES) $(POBoxWS_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(POBoxWS_FLAGS) $(SIMIAS_LIBS) $(POBoxWS_LIBS:%=/r:%) $(POBoxWS_LIBPATH:%=/lib:%) $(POBoxWS_RESOURCES:%=$(ICON_FLAG)%) $(POBoxWS_CSFILES) $(DOC_FILE_CMD)
 
+AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
+	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
+	chmod +x $@
+	
 if DEBUG
 if WINDOWS
 DEBUG_FILES = Simias.POBox.Web.pdb

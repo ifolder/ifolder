@@ -18,10 +18,6 @@ endif
 
 EXTRA_DIST = $(srcdir)/Simias.dll.sources $(SIMIAS_CSFILES) ../Common/Simias.log4net ../Common/simias-client-bootstrap.config.in ../Common/MyDns.cs.in ../Login/Login.ashx Simias.dll.config.in AssemblyInfo.cs.in
 
-AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
-	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
-	chmod +x $@
-
 if WINDOWS
 	FIXED_WEBDIR := $(shell cygpath --mixed $(webdir))
 else
@@ -46,8 +42,12 @@ CUR_DIR := $(shell pwd)
 
 all: Simias.dll ../Common/simias-client-bootstrap.config
 
-Simias.dll: $(SIMIAS_CSFILES_SRC) ../Common/MyDns.cs $(SIMIAS_RESOURCES) $(srcdir)/Simias.dll.sources
+Simias.dll: AssemblyInfo.cs $(SIMIAS_CSFILES_SRC) ../Common/MyDns.cs $(SIMIAS_RESOURCES) $(srcdir)/Simias.dll.sources
 	$(CSC) /out:$@ $(CSCFLAGS) $(SIMIAS_FLAGS) $(SIMIAS_LIBS:%=/r:%) $(SIMIAS_LIBPATH:%=/lib:%) $(SIMIAS_CSFILES_CSC) $(subst /,$(SEP),../Common/MyDns.cs) $(DOC_FILE_CMD)
+
+AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
+	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
+	chmod +x $@
 
 if DEBUG
 if WINDOWS
