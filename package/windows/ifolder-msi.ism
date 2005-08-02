@@ -2010,6 +2010,8 @@
 		<col key="yes" def="s38">Feature_</col>
 		<col key="yes" def="s255">ISMergeModule_</col>
 		<col key="yes" def="i2">Language_</col>
+		<row><td>iFolder_Files</td><td>VC_User_CRT71.07D8793C_DC93_47EF_8FDA_3517BC941A0F</td><td>0</td></row>
+		<row><td>iFolder_Files</td><td>VC_User_STL71.09528776_2EA8_4A65_AA88_693146381D7D</td><td>0</td></row>
 		<row><td>iFolder_Files</td><td>simias.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>0</td></row>
 	</table>
 
@@ -2158,6 +2160,8 @@
 		<col def="s255">Name</col>
 		<col def="S255">Destination</col>
 		<col def="I4">ISAttributes</col>
+		<row><td>VC_User_CRT71.07D8793C_DC93_47EF_8FDA_3517BC941A0F</td><td>0</td><td>VC User CRT71 RTL X86 ---</td><td>[SystemFolder]</td><td/></row>
+		<row><td>VC_User_STL71.09528776_2EA8_4A65_AA88_693146381D7D</td><td>0</td><td>VC User STL71 RTL X86 ---</td><td>[SystemFolder]</td><td/></row>
 		<row><td>simias.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>0</td><td>Simias Merge Module</td><td>[INSTALLDIR]</td><td/></row>
 	</table>
 
@@ -2313,7 +2317,7 @@
 		<col def="S255">DotNetBuildConfiguration</col>
 		<col def="S255">MsiCommandLine</col>
 		<col def="I4">ISSetupPrerequisiteLocation</col>
-		<row><td>release</td><td>web</td><td>&lt;ISProjectDataFolder&gt;</td><td>PackageName</td><td>1</td><td>2052,1028,1029,1033,1036,1031,1038,1040,1041,1045,1046,1049,1051,1034</td><td>2</td><td>1</td><td>Intel</td><td>2052,1028,1029,1033,1036,1031,1038,1040,1041,1045,1046,1049,1051,1034</td><td>1033</td><td>2</td><td>0</td><td>1</td><td>0</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>80029</td><td/><td/><td/><td/></row>
+		<row><td>release</td><td>web</td><td>&lt;ISProjectDataFolder&gt;</td><td>PackageName</td><td>1</td><td>2052,1028,1029,1033,1036,1031,1038,1040,1041,1045,1046,1049,1051,1034</td><td>2</td><td>1</td><td>Intel</td><td>2052,1028,1029,1033,1036,1031,1038,1040,1041,1045,1046,1049,1051,1034</td><td>1029</td><td>2</td><td>0</td><td>1</td><td>0</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>637085</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISReleaseExtended">
@@ -2347,7 +2351,7 @@
 		<col def="I4">MsiEngineVersion</col>
 		<col def="S255">WinMsi30Url</col>
 		<col def="S255">CertPassword</col>
-		<row><td>release</td><td>web</td><td>0</td><td>http://</td><td>0</td><td>install</td><td>install</td><td>[WindowsFolder]Downloaded Installations</td><td>1</td><td>http://www.installengine.com/Msiengine20</td><td>http://www.installengine.com/Msiengine20</td><td>1</td><td>http://www.installengine.com/cert05/isengine</td><td/><td/><td/><td/><td>2</td><td>http://www.installengine.com/cert05/dotnetfx</td><td>1</td><td>1033</td><td>2052,1028,1029,1036,1031,1038,1040,1041,1045,1046,1049,3082</td><td/><td/><td/><td>0</td><td>3</td><td>4</td><td/><td/></row>
+		<row><td>release</td><td>web</td><td>0</td><td>http://</td><td>0</td><td>install</td><td>install</td><td>[WindowsFolder]Downloaded Installations</td><td>1</td><td>http://www.installengine.com/Msiengine20</td><td>http://www.installengine.com/Msiengine20</td><td>1</td><td>http://www.installengine.com/cert05/isengine</td><td/><td/><td/><td/><td>2</td><td>http://www.installengine.com/cert05/dotnetfx</td><td>1</td><td>1033</td><td>2052,1028,1029,1036,1031,1038,1040,1041,1045,1046,1049,3082</td><td/><td/><td/><td>0</td><td>3</td><td>8</td><td/><td/></row>
 	</table>
 
 	<table name="ISReleasePublishInfo">
