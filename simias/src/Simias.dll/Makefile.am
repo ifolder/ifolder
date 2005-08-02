@@ -16,7 +16,11 @@ else
 	SIMIAS_LIBS = $(SIMIAS_LIBS1)
 endif
 
-EXTRA_DIST = $(srcdir)/Simias.dll.sources $(SIMIAS_CSFILES) ../Common/Simias.log4net ../Common/simias-client-bootstrap.config.in ../Common/MyDns.cs.in ../Login/Login.ashx Simias.dll.config.in
+EXTRA_DIST = $(srcdir)/Simias.dll.sources $(SIMIAS_CSFILES) ../Common/Simias.log4net ../Common/simias-client-bootstrap.config.in ../Common/MyDns.cs.in ../Login/Login.ashx Simias.dll.config.in AssemblyInfo.cs.in
+
+AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
+	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
+	chmod +x $@
 
 if WINDOWS
 	FIXED_WEBDIR := $(shell cygpath --mixed $(webdir))
@@ -76,7 +80,7 @@ if LINUX
 	cd $(DESTDIR)$(webbindir); rm -f Simias.dll.config
 endif
 
-CLEAN_FILES = Simias.dll $(DOC_FILE_CLEAN) $(DEBUG_FILES) ../Common/simias-client-bootstrap.config ../Common/MyDns.cs
+CLEAN_FILES = Simias.dll $(DOC_FILE_CLEAN) $(DEBUG_FILES) ../Common/simias-client-bootstrap.config ../Common/MyDns.cs AssemblyInfo.cs
 
 clean-local:
 	rm -rf $(CLEAN_FILES)
