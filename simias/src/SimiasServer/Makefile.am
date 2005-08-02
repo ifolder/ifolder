@@ -11,7 +11,11 @@ SimiasServer_LIBPATH = ../SimiasClient
 
 PROJECT_FILES = $(srcdir)/SimiasServer.csproj
 
-EXTRA_DIST = $(SimiasServer_CSFILES) $(PROJECT_FILES) App.ico simias.in simias.cmd SimiasServer.exe.config
+EXTRA_DIST = $(SimiasServer_CSFILES) $(PROJECT_FILES) App.ico simias.in simias.cmd SimiasServer.exe.config AssemblyInfo.cs.in
+
+AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
+	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
+	chmod +x $@
 
 simias: $(srcdir)/simias.in
 	sed -e 's,@_webbindir_@,@webbindir@,g' -e 's,@_bindir_@,@bindir@,g' $< > $@
@@ -64,7 +68,7 @@ if DEBUG
 endif
 endif
 	
-CLEAN_FILES = SimiasServer.exe $(DEBUG_FILES) $(DOC_FILE_CLEAN) simias
+CLEAN_FILES = SimiasServer.exe $(DEBUG_FILES) $(DOC_FILE_CLEAN) simias AssemblyInfo.cs
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
