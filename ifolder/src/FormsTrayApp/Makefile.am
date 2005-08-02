@@ -35,7 +35,7 @@ RESX_FILES = FormsTrayApp.resx GlobalProperties.resx ServerInfo.resx AcceptInvit
 
 PROJECT_FILES = $(srcdir)/FormsTrayApp.csproj $(srcdir)/FormsTrayApp.sln
 
-EXTRA_DIST = $(iFolderApp_CSFILES) $(DATA_FILES) $(RES_FILES) $(RESX_FILES) iFolderApp.exe.manifest iFolderApp.exe.config InstallUtil.exe.config $(PROJECT_FILES) AssemblyInfo.cs.in
+EXTRA_DIST = $(iFolderApp_CSFILES) $(DATA_FILES) $(RES_FILES) $(RESX_FILES) iFolderApp.exe.manifest iFolderApp.exe.config InstallUtil.exe.config $(PROJECT_FILES) AssemblyInfo.cs.in iFolderUpgrade.exe
 
 AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
 	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
@@ -130,7 +130,7 @@ DEBUG_FILES = iFolderApp.pdb
 endif
 endif
 
-languages: de/iFolderApp.resources.dll es/iFolderApp.resources.dll fr/iFolderApp.resources.dll hu/iFolderApp.resources.dll it/iFolderApp.resources.dll ja/iFolderApp.resources.dll pl/iFolderApp.resources.dll pt/iFolderApp.resources.dll ru/iFolderApp.resources.dll sk/iFolderApp.resources.dll zh_CN/iFolderApp.resources.dll  
+languages: de/iFolderApp.resources.dll es/iFolderApp.resources.dll fr/iFolderApp.resources.dll hu/iFolderApp.resources.dll it/iFolderApp.resources.dll ja/iFolderApp.resources.dll pl/iFolderApp.resources.dll pt/iFolderApp.resources.dll ru/iFolderApp.resources.dll sk/iFolderApp.resources.dll zh_CN/iFolderApp.resources.dll
 	
 install-util:
 	if ! test -f "$(DESTDIR)$(bindir)/iFolderApp.exe"; then \
@@ -147,7 +147,7 @@ uninstall-util:
 install-exec-local: iFolderApp.exe $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)/res
-	$(INSTALL_PROGRAM) iFolderApp.exe iFolderApp.exe.manifest iFolderApp.exe.config $(DEBUG_FILES) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) iFolderApp.exe iFolderApp.exe.manifest iFolderApp.exe.config iFolderUpgrade.exe $(DEBUG_FILES) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(DATA_FILES) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(RES_FILES) $(DESTDIR)$(bindir)/res
 if WINDOWS
@@ -157,7 +157,7 @@ endif
 endif
 
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f iFolderApp.exe iFolderApp.exe.manifest iFolderApp.exe.config $(DEBUG_FILES)
+	cd $(DESTDIR)$(bindir); rm -f iFolderApp.exe iFolderApp.exe.manifest iFolderApp.exe.config iFolderUpgrade.exe $(DEBUG_FILES)
 	cd $(DESTDIR)$(bindir); rm -f $(DATA_FILES)
 	cd $(DESTDIR)$(bindir)/res; rm -f $(RES_FILES:res/%=%) ifolder-banner.png ifolder-banner-scaler.png
 if WINDOWS

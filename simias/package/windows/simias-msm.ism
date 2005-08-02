@@ -188,7 +188,9 @@
 		<col def="S0">ISDotNetInstallerArgsCommit</col>
 		<col def="S0">ISDotNetInstallerArgsUninstall</col>
 		<col def="S0">ISDotNetInstallerArgsRollback</col>
-		<row><td>Simias.dll.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>{8DC60F4B-E4B3-4EEF-B558-E5AC7782004D}</td><td>INSTALLDIR.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>0</td><td/><td>simias.cmd.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>17</td><td>This component consists of a Windows dynamic link library.</td><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>etc_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>{530A65B6-1CD0-49A9-87FD-23FED453D9EF}</td><td>ETC.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>web_bin_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>{76FC71DD-EB07-4207-9435-415E6378D725}</td><td>BIN.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>web_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>{1E3FD548-58D5-4A84-8833-25F2C46421DD}</td><td>WEB.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
 
 	<table name="Condition">
@@ -279,10 +281,12 @@
 		<row><td>ALLUSERSPROFILE</td><td>TARGETDIR</td><td>.:ALLUSE~1|All Users</td><td/><td>0</td><td/></row>
 		<row><td>AdminToolsFolder</td><td>TARGETDIR</td><td>.:Admint~1|AdminTools</td><td/><td>0</td><td/></row>
 		<row><td>AppDataFolder</td><td>TARGETDIR</td><td>.:APPLIC~1|Application Data</td><td/><td>0</td><td/></row>
+		<row><td>BIN.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>WEB.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>bin</td><td/><td>0</td><td/></row>
 		<row><td>CommonAppDataFolder</td><td>TARGETDIR</td><td>.:Common~1|CommonAppData</td><td/><td>0</td><td/></row>
 		<row><td>CommonFiles64Folder</td><td>TARGETDIR</td><td>.:Common64</td><td/><td>0</td><td/></row>
 		<row><td>CommonFilesFolder</td><td>TARGETDIR</td><td>.:Common</td><td/><td>0</td><td/></row>
 		<row><td>DesktopFolder</td><td>TARGETDIR</td><td>.:Desktop</td><td/><td>3</td><td/></row>
+		<row><td>ETC.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>INSTALLDIR.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>etc</td><td/><td>0</td><td/></row>
 		<row><td>FavoritesFolder</td><td>TARGETDIR</td><td>.:FAVORI~1|Favorites</td><td/><td>0</td><td/></row>
 		<row><td>FontsFolder</td><td>TARGETDIR</td><td>.:Fonts</td><td/><td>0</td><td/></row>
 		<row><td>GlobalAssemblyCache</td><td>TARGETDIR</td><td>.:Global~1|GlobalAssemblyCache</td><td/><td>0</td><td/></row>
@@ -304,6 +308,7 @@
 		<row><td>TempFolder</td><td>TARGETDIR</td><td>.:Temp</td><td/><td>0</td><td/></row>
 		<row><td>TemplateFolder</td><td>TARGETDIR</td><td>.:ShellNew</td><td/><td>0</td><td/></row>
 		<row><td>USERPROFILE</td><td>TARGETDIR</td><td>.:USERPR~1|UserProfile</td><td/><td>0</td><td/></row>
+		<row><td>WEB.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>INSTALLDIR.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>web</td><td/><td>0</td><td/></row>
 		<row><td>WindowsFolder</td><td>TARGETDIR</td><td>.:Windows</td><td/><td>0</td><td/></row>
 		<row><td>WindowsVolume</td><td>TARGETDIR</td><td>.:WinRoot</td><td/><td>0</td><td/></row>
 	</table>
@@ -362,7 +367,24 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I4">ISAttributes</col>
 		<col def="S72">ISComponentSubFolder_</col>
-		<row><td>simias.cmd.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>Simias.dll.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>simias.cmd</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\simias.cmd</td><td>17</td><td/></row>
+		<row><td>flaimwrapper.dll.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>web_bin_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>FLAIMW~1.DLL|FlaimWrapper.dll</td><td>0</td><td>65535.0.0.0</td><td/><td>512</td><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\web\bin\FlaimWrapper.dll</td><td>85</td><td/></row>
+		<row><td>global.asax.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>web_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>GLOBAL~1.ASA|Global.asax</td><td>0</td><td>65535.0.0.0</td><td/><td>512</td><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\web\Global.asax</td><td>85</td><td/></row>
+		<row><td>log4net.dll.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>web_bin_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>log4net.dll</td><td>0</td><td>65535.0.0.0</td><td/><td>512</td><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\web\bin\log4net.dll</td><td>85</td><td/></row>
+		<row><td>login.ashx.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>web_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>LOGIN~1.ASH|Login.ashx</td><td>0</td><td>65535.0.0.0</td><td/><td>512</td><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\web\Login.ashx</td><td>85</td><td/></row>
+		<row><td>novell.security.clie.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>web_bin_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>NOVELL~1.DLL|Novell.Security.ClientPasswordManager.NetCredential.dll</td><td>0</td><td>65535.0.0.0</td><td/><td>512</td><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\web\bin\Novell.Security.ClientPasswordManager.NetCredential.dll</td><td>85</td><td/></row>
+		<row><td>novell.security.util.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>web_bin_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>NOVELL~1.DLL|Novell.Security.Utilities.dll</td><td>0</td><td>65535.0.0.0</td><td/><td>512</td><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\web\bin\Novell.Security.Utilities.dll</td><td>85</td><td/></row>
+		<row><td>poservice.asmx.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>web_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>POSERV~1.ASM|POService.asmx</td><td>0</td><td>65535.0.0.0</td><td/><td>512</td><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\web\POService.asmx</td><td>85</td><td/></row>
+		<row><td>simias.asmx.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>web_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>SIMIAS~1.ASM|Simias.asmx</td><td>0</td><td>65535.0.0.0</td><td/><td>512</td><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\web\Simias.asmx</td><td>85</td><td/></row>
+		<row><td>simias.dll.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>web_bin_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>Simias.dll</td><td>0</td><td>65535.0.0.0</td><td/><td>512</td><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\web\bin\Simias.dll</td><td>85</td><td/></row>
+		<row><td>simias.log4net.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>etc_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>SIMIAS~1.LOG|Simias.log4net</td><td>0</td><td>65535.0.0.0</td><td/><td>512</td><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\etc\Simias.log4net</td><td>85</td><td/></row>
+		<row><td>simias.pobox.web.dll.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>web_bin_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>SIMIAS~1.DLL|Simias.POBox.Web.dll</td><td>0</td><td>65535.0.0.0</td><td/><td>512</td><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\web\bin\Simias.POBox.Web.dll</td><td>85</td><td/></row>
+		<row><td>simias.web.dll.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>web_bin_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>SIMIAS~1.DLL|Simias.Web.dll</td><td>0</td><td>65535.0.0.0</td><td/><td>512</td><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\web\bin\Simias.Web.dll</td><td>85</td><td/></row>
+		<row><td>simias_client_bootst.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>etc_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>SIMIAS~1.CON|simias-client-bootstrap.config</td><td>0</td><td>65535.0.0.0</td><td/><td>512</td><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\etc\simias-client-bootstrap.config</td><td>85</td><td/></row>
+		<row><td>simiasapp.exe.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>web_bin_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>SIMIAS~1.EXE|SimiasApp.exe</td><td>0</td><td>65535.0.0.0</td><td/><td>512</td><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\web\bin\SimiasApp.exe</td><td>85</td><td/></row>
+		<row><td>simiasclient.dll.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>web_bin_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>SIMIAS~1.DLL|SimiasClient.dll</td><td>0</td><td>65535.0.0.0</td><td/><td>512</td><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\web\bin\SimiasClient.dll</td><td>85</td><td/></row>
+		<row><td>synchandler.ashx.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>web_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>SYNCHA~1.ASH|SyncHandler.ashx</td><td>0</td><td>65535.0.0.0</td><td/><td>512</td><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\web\SyncHandler.ashx</td><td>85</td><td/></row>
+		<row><td>syncservice.web.dll.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>web_bin_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>SYNCSE~1.DLL|SyncService.Web.dll</td><td>0</td><td>65535.0.0.0</td><td/><td>512</td><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\web\bin\SyncService.Web.dll</td><td>85</td><td/></row>
+		<row><td>web.config.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>web_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>WEB~1.CON|web.config</td><td>0</td><td>65535.0.0.0</td><td/><td>512</td><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\web\web.config</td><td>85</td><td/></row>
 	</table>
 
 	<table name="FileSFPCatalog">
@@ -422,7 +444,9 @@
 		<col def="S0">FTPLocation</col>
 		<col def="S0">HTTPLocation</col>
 		<col def="S0">Miscellaneous</col>
-		<row><td>Simias.dll.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td/><td/><td>_BC3A0462_ADA8_4562_8CA7_A4FDBA5D165A_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>etc_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td/><td/><td>_5D6F7D34_BFDF_4516_A5E2_4A708C5E06E1_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>web_bin_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td/><td/><td>_E8E19EAA_69C2_4544_B69B_96DB64175577_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>web_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td/><td/><td>_413E5FEF_4AFA_40C1_9C1D_2F45055D90B9_FILTER</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISDLLWrapper">
@@ -479,7 +503,6 @@
 		<col def="S0">IncludeFiles</col>
 		<col def="S0">ExcludeFiles</col>
 		<col def="I4">ISAttributes</col>
-		<row><td>Simias.dll.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>&lt;ISProjectFolder&gt;\msi\install</td><td>4</td><td/><td>simias.cmd</td><td>2</td></row>
 	</table>
 
 	<table name="ISFeatureMergeModuleExcludes">
@@ -716,6 +739,7 @@
 		<col def="S255">Publisher</col>
 		<col def="S255">Description</col>
 		<col def="I4">ISAttributes</col>
+		<row><td>release</td><td>web</td><td/><td/><td/><td/><td>0</td></row>
 	</table>
 
 	<table name="ISScriptFile">
@@ -909,7 +933,9 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<col key="yes" def="s72">Component</col>
 		<col key="yes" def="s72">ModuleID</col>
 		<col key="yes" def="i2">Language</col>
-		<row><td>Simias.dll.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>simias.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>0</td></row>
+		<row><td>etc_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>simias.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>0</td></row>
+		<row><td>web_bin_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>simias.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>0</td></row>
+		<row><td>web_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>simias.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>0</td></row>
 	</table>
 
 	<table name="ModuleConfiguration">

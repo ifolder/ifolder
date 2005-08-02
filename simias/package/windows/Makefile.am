@@ -63,7 +63,7 @@ MSI_DISK1     = $(MSI)/$(DISK1)/setup.exe
 MSM_DISK1     = $(MSM)/$(DISK1)/$(subst -,_,$(PACKAGE)).msm
 SDK_MSM_DISK1 = $(SDK_MSM)/$(DISK1)/$(subst -,_,$(PACKAGE))_sdk.msm
 
-all: $(MSI_FILE)
+all: $(MSM_FILE)
 
 $(MSI_FILE): issabld $(MSM_FILE) $(SDK_MSM_FILE) $(MSI).ism
 	@rm -f $@ "$(MSI_DISK1)" "$(MSI_LOG_FILE)"
@@ -91,7 +91,7 @@ $(MSM_FILE): issabld $(PACKAGE)-install $(MSM).ism
 		else \
 			cat "$(MSM_LOG_FILE)"; \
 			echo FAILED; exit 1; \
-		fi 
+		fi
 	@mkdir -p "$(MERGE_MODULES_UNIX)"; \
 		CMD='cp -f "$(MSM_DISK1)" "$(MERGE_MODULES_UNIX)"'; \
 		echo $$CMD; \
@@ -107,7 +107,7 @@ $(SDK_MSM_FILE): issabld $(PACKAGE)-doc $(SDK_MSM).ism
 		else \
 			cat "$(MSM_LOG_FILE)"; \
 			echo FAILED; \
-		fi 
+		fi
 	@mkdir -p "$(MERGE_MODULES_UNIX)"; \
 		CMD='cp -f "$(SDK_MSM_DISK1)" "$(MERGE_MODULES_UNIX)"'; \
 		echo $$CMD; \

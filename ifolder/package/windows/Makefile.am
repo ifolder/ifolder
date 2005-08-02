@@ -69,7 +69,7 @@ SDK_MSM_DISK1 = $(SDK_MSM)/$(DISK1)/$(subst -,_,ifolder)_sdk.msm
 
 all: $(MSI_FILE)
 
-$(MSI_FILE): issabld $(MSM_FILE) $(SDK_MSM_FILE) $(MSI).ism
+$(MSI_FILE): issabld $(PACKAGE)-install $(MSI).ism
 	@rm -f $@ "$(MSI_DISK1)" "$(MSI_LOG_FILE)"
 	@CMD='"$(ISSABLD)" -t "$(REGASM_DIR)" -p "$(MSI).ism" -o "$(ISSABLD_DIR),$(MERGE_MODULES_WIN)"'; \
 		echo $$CMD; \
