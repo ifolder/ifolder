@@ -12,19 +12,10 @@ iFolderComponent_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/iFolderAdvanced.c
 iFolderComponent_CSFILES_CSC := $(subst /,$(SEP),$(iFolderComponent_CSFILES))
 iFolderComponent_INCLUDES =
 iFolderComponent_RESOURCES =
-iFolderComponent_RESOURCES_FILES = CreateiFolder.resources ConflictResolver.resources iFolderAdvanced.resources MyMessageBox.resources NewiFolder.resources Picker.resources UserProperties.resources GaugeChart.resources
-iFolderComponent_DE_RESOURCES_FILES = CreateiFolder.de.resources ConflictResolver.de.resources iFolderAdvanced.de.resources MyMessageBox.de.resources NewiFolder.de.resources Picker.de.resources UserProperties.de.resources GaugeChart.de.resources
-iFolderComponent_ES_RESOURCES_FILES = CreateiFolder.es.resources ConflictResolver.es.resources iFolderAdvanced.es.resources MyMessageBox.es.resources NewiFolder.es.resources Picker.es.resources UserProperties.es.resources GaugeChart.es.resources
-iFolderComponent_FR_RESOURCES_FILES = CreateiFolder.fr.resources ConflictResolver.fr.resources iFolderAdvanced.fr.resources MyMessageBox.fr.resources NewiFolder.fr.resources Picker.fr.resources UserProperties.fr.resources GaugeChart.fr.resources
-iFolderComponent_HU_RESOURCES_FILES = CreateiFolder.hu.resources ConflictResolver.hu.resources iFolderAdvanced.hu.resources MyMessageBox.hu.resources NewiFolder.hu.resources Picker.hu.resources UserProperties.hu.resources GaugeChart.hu.resources
-iFolderComponent_IT_RESOURCES_FILES = CreateiFolder.it.resources ConflictResolver.it.resources iFolderAdvanced.it.resources MyMessageBox.it.resources NewiFolder.it.resources Picker.it.resources UserProperties.it.resources GaugeChart.it.resources
-iFolderComponent_JA_RESOURCES_FILES = CreateiFolder.ja.resources ConflictResolver.ja.resources iFolderAdvanced.ja.resources MyMessageBox.ja.resources NewiFolder.ja.resources Picker.ja.resources UserProperties.ja.resources GaugeChart.ja.resources
-iFolderComponent_PL_RESOURCES_FILES = CreateiFolder.pl.resources ConflictResolver.pl.resources iFolderAdvanced.pl.resources MyMessageBox.pl.resources NewiFolder.pl.resources Picker.pl.resources UserProperties.pl.resources GaugeChart.pl.resources
-iFolderComponent_PT_RESOURCES_FILES = CreateiFolder.pt.resources ConflictResolver.pt.resources iFolderAdvanced.pt.resources MyMessageBox.pt.resources NewiFolder.pt.resources Picker.pt.resources UserProperties.pt.resources GaugeChart.pt.resources
-iFolderComponent_RU_RESOURCES_FILES = CreateiFolder.ru.resources ConflictResolver.ru.resources iFolderAdvanced.ru.resources MyMessageBox.ru.resources NewiFolder.ru.resources Picker.ru.resources UserProperties.ru.resources GaugeChart.ru.resources
-iFolderComponent_SK_RESOURCES_FILES = CreateiFolder.sk.resources ConflictResolver.sk.resources iFolderAdvanced.sk.resources MyMessageBox.sk.resources NewiFolder.sk.resources Picker.sk.resources UserProperties.sk.resources GaugeChart.sk.resources
-iFolderComponent_ZH_CN_RESOURCES_FILES = CreateiFolder.zh-CN.resources ConflictResolver.zh-CN.resources iFolderAdvanced.zh-CN.resources MyMessageBox.zh-CN.resources NewiFolder.zh-CN.resources Picker.zh-CN.resources UserProperties.zh-CN.resources GaugeChart.zh-CN.resources
-iFolderComponent_ZH_TW_RESOURCES_FILES = CreateiFolder.zh-TW.resources ConflictResolver.zh-TW.resources iFolderAdvanced.zh-TW.resources MyMessageBox.zh-TW.resources NewiFolder.zh-TW.resources Picker.zh-TW.resources UserProperties.zh-TW.resources GaugeChart.zh-TW.resources
+iFolderComponent_RESX_FILES := $(wildcard *.resx)
+iFolderComponent_LANGUAGES := $(subst .,,$(sort $(suffix $(basename $(iFolderComponent_RESX_FILES)))))
+iFolderComponent_RESOURCES_DLLS := $(iFolderComponent_LANGUAGES:%=$(srcdir)/%/iFolderComponent.resources.dll)
+iFolderComponent_RESOURCES_FILES = Novell.iFolderCom.CreateiFolder.resources Novell.iFolderCom.ConflictResolver.resources Novell.iFolderCom.iFolderAdvanced.resources Novell.iFolderCom.MyMessageBox.resources Novell.iFolderCom.NewiFolder.resources Novell.iFolderCom.Picker.resources Novell.iFolderCom.UserProperties.resources Novell.iFolderCom.GaugeChart.resources
 iFolderComponent_FLAGS = $(CSC_LIBFLAG)
 iFolderComponent_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Drawing.dll System.Windows.Forms.dll Novell.iFolder.dll
 iFolderComponent_LIBPATH = ../iFolder
@@ -45,12 +36,11 @@ iFolderShellRes_SRCFILES = $(srcdir)/iFolderShell/iFolderShellRes/iFolderShellRe
 iFolderShellRes_OBJFILES = iFolderShell/iFolderShellRes/iFolderShellRes.obj iFolderShell/iFolderShellRes/iFolderShell$(RES_EXT)
 
 DATA_FILES = $(srcdir)/iFolderShell/ifolder_emblem.ico $(srcdir)/iFolderShell/ifolder_conflict_emb.ico
-RESX_FILES = $(srcdir)/CreateiFolder.resx $(srcdir)/ConflictResolver.resx $(srcdir)/iFolderAdvanced.resx $(srcdir)/MyMessageBox.resx $(srcdir)/NewiFolder.resx $(srcdir)/Picker.resx $(srcdir)/UserProperties.resx $(srcdir)/GaugeChart.resx
 WINDOWS_FILES = $(srcdir)/explorer.exe.manifest $(srcdir)/explorer.exe.config
 
 PROJECT_FILES = $(srcdir)/iFolderComponent.csproj $(srcdir)/iFolderComponent.sln
 
-EXTRA_DIST = $(iFolderComponent_CSFILES) $(iFolderShell_SRCFILES) $(iFolderShellRes_SRCFILES) $(iFolderShell_DEF) $(DATA_FILES) $(RESX_FILES) $(WINDOWS_FILES) $(srcdir)/iFolderShell.reg  $(PROJECT_FILES) AssemblyInfo.cs.in iFolderShell/nifver.h.in 
+EXTRA_DIST = $(iFolderComponent_CSFILES) $(iFolderShell_SRCFILES) $(iFolderShellRes_SRCFILES) $(iFolderShell_DEF) $(DATA_FILES) $(iFolderComponent_RESX_FILES) $(WINDOWS_FILES) $(srcdir)/iFolderShell.reg $(PROJECT_FILES) AssemblyInfo.cs.in iFolderShell/nifver.h.in 
 
 AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
 	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
@@ -64,7 +54,7 @@ endif
 
 CUR_DIR := $(shell pwd)
 
-all: languages iFolderShell.dll
+all: iFolderShell.dll iFolderComponent.dll $(iFolderComponent_RESOURCES_DLLS)
 
 iFolderShellRes.dll: $(iFolderShellRes_OBJFILES)
 	$(LD) $(iFolderShell_LIBFLAGS) $(LDFLAGS) $(LDOUT)$@ $(iFolderShell_LIBPATH:%=$(LDINC)%) $(iFolderShellRes_OBJFILES) $(LIBS)
@@ -76,8 +66,6 @@ iFolderShell/nifver.h: $(srcdir)/iFolderShell/nifver.h.in
 	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
 	chmod +x $@
 
-languages: de/iFolderComponent.resources.dll es/iFolderComponent.resources.dll fr/iFolderComponent.resources.dll hu/iFolderComponent.resources.dll it/iFolderComponent.resources.dll ja/iFolderComponent.resources.dll pl/iFolderComponent.resources.dll pt/iFolderComponent.resources.dll ru/iFolderComponent.resources.dll sk/iFolderComponent.resources.dll zh_CN/iFolderComponent.resources.dll zh_TW/iFolderComponent.resources.dll 
-	
 %.obj : %.c
 	$(CC) $(COUT)$@ $(iFolderShell_FLAGS) $(iFolderShell_INCLUDES:%=$(CINC)%) $(CFLAGS) $<
 
@@ -91,123 +79,28 @@ iFolderComponent.tlb: iFolderComponent.dll
 	$(TLBX) $< $(LDOUT)$@
 
 iFolderComponent.dll: $(iFolderComponent_RESOURCES_FILES) $(iFolderComponent_CSFILES) $(iFolderComponent_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderComponent_FLAGS) $(SIMIAS_CLIENT_LIBS) $(iFolderComponent_LIBS:%=/r:%) $(iFolderComponent_LIBPATH:%=/lib:%) $(iFolderComponent_RESOURCES_FILES:%=/res:Novell.iFolderCom.%) $(iFolderComponent_CSFILES_CSC) $(DOC_FILE_CMD)
+	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderComponent_FLAGS) $(SIMIAS_CLIENT_LIBS) $(iFolderComponent_LIBS:%=/r:%) $(iFolderComponent_LIBPATH:%=/lib:%) $(iFolderComponent_RESOURCES_FILES:%=/res:%) $(iFolderComponent_CSFILES_CSC) $(DOC_FILE_CMD)
 	
-%.resources : %.resx
-	$(RESG) $< Novell.iFolderCom.$@
+Novell.iFolderCom.%.resources: %.resx
+	$(RESG) $< $@
 
-%.de.resources : %.de.resx
-	$(RESG) $< Novell.iFolderCom.$@
-	mkdir de
-de/iFolderComponent.resources.dll : $(iFolderComponent_DE_RESOURCES_FILES)
-	al /out:$@ /c:de $(iFolderComponent_DE_RESOURCES_FILES:%=/embed:Novell.iFolderCom.%)
-
-%.es.resources : %.es.resx
-	$(RESG) $< Novell.iFolderCom.$@
-	mkdir es
-es/iFolderComponent.resources.dll : $(iFolderComponent_ES_RESOURCES_FILES)
-	al /out:$@ /c:es $(iFolderComponent_ES_RESOURCES_FILES:%=/embed:Novell.iFolderCom.%)
-	
-%.fr.resources : %.fr.resx
-	$(RESG) $< Novell.iFolderCom.$@
-	mkdir fr
-fr/iFolderComponent.resources.dll : $(iFolderComponent_FR_RESOURCES_FILES)
-	al /out:$@ /c:fr $(iFolderComponent_FR_RESOURCES_FILES:%=/embed:Novell.iFolderCom.%)
-
-%.hu.resources : %.hu.resx
-	$(RESG) $< Novell.iFolderCom.$@
-	mkdir hu
-hu/iFolderComponent.resources.dll : $(iFolderComponent_HU_RESOURCES_FILES)
-	al /out:$@ /c:hu $(iFolderComponent_HU_RESOURCES_FILES:%=/embed:Novell.iFolderCom.%)
-
-%.it.resources : %.it.resx
-	$(RESG) $< Novell.iFolderCom.$@
-	mkdir it
-it/iFolderComponent.resources.dll : $(iFolderComponent_IT_RESOURCES_FILES)
-	al /out:$@ /c:it $(iFolderComponent_IT_RESOURCES_FILES:%=/embed:Novell.iFolderCom.%)
-
-%.ja.resources : %.ja.resx
-	$(RESG) $< Novell.iFolderCom.$@
-	mkdir ja
-ja/iFolderComponent.resources.dll : $(iFolderComponent_JA_RESOURCES_FILES)
-	al /out:$@ /c:ja $(iFolderComponent_JA_RESOURCES_FILES:%=/embed:Novell.iFolderCom.%)
-
-%.pl.resources : %.pl.resx
-	$(RESG) $< Novell.iFolderCom.$@
-	mkdir pl
-pl/iFolderComponent.resources.dll : $(iFolderComponent_PL_RESOURCES_FILES)
-	al /out:$@ /c:pl $(iFolderComponent_PL_RESOURCES_FILES:%=/embed:Novell.iFolderCom.%)
-
-%.pt.resources : %.pt.resx
-	$(RESG) $< Novell.iFolderCom.$@
-	mkdir pt
-pt/iFolderComponent.resources.dll : $(iFolderComponent_PT_RESOURCES_FILES)
-	al /out:$@ /c:pt $(iFolderComponent_PT_RESOURCES_FILES:%=/embed:Novell.iFolderCom.%)
-
-%.ru.resources : %.ru.resx
-	$(RESG) $< Novell.iFolderCom.$@
-	mkdir ru
-ru/iFolderComponent.resources.dll : $(iFolderComponent_RU_RESOURCES_FILES)
-	al /out:$@ /c:ru $(iFolderComponent_RU_RESOURCES_FILES:%=/embed:Novell.iFolderCom.%)
-
-%.sk.resources : %.sk.resx
-	$(RESG) $< Novell.iFolderCom.$@
-	mkdir sk
-sk/iFolderComponent.resources.dll : $(iFolderComponent_SK_RESOURCES_FILES)
-	al /out:$@ /c:sk $(iFolderComponent_SK_RESOURCES_FILES:%=/embed:Novell.iFolderCom.%)
-
-%.zh-CN.resources : %.zh-CN.resx
-	$(RESG) $< Novell.iFolderCom.$@
-	mkdir zh_CN
-zh_CN/iFolderComponent.resources.dll : $(iFolderComponent_ZH_CN_RESOURCES_FILES)
-	al /out:$@ /c:zh-CN $(iFolderComponent_ZH_CN_RESOURCES_FILES:%=/embed:Novell.iFolderCom.%)
-
-%.zh-TW.resources : %.zh-TW.resx
-	$(RESG) $< Novell.iFolderCom.$@
-	mkdir zh_TW
-zh_TW/iFolderComponent.resources.dll : $(iFolderComponent_ZH_TW_RESOURCES_FILES)
-	al /out:$@ /c:zh-TW $(iFolderComponent_ZH_TW_RESOURCES_FILES:%=/embed:Novell.iFolderCom.%)
+%/iFolderComponent.resources.dll: Novell.iFolderCom.CreateiFolder.%.resources Novell.iFolderCom.ConflictResolver.%.resources Novell.iFolderCom.iFolderAdvanced.%.resources Novell.iFolderCom.MyMessageBox.%.resources Novell.iFolderCom.NewiFolder.%.resources Novell.iFolderCom.Picker.%.resources Novell.iFolderCom.UserProperties.%.resources Novell.iFolderCom.GaugeChart.%.resources
+	$(mkinstalldirs) $*
+	al /out:$@ /c:$* $(patsubst %,/embed:%,$^)
 	
 if DEBUG
-if WINDOWS
 DEBUG_FILES = iFolderComponent.pdb vc70.pdb
 endif
-endif
 
-
-install-exec-local: iFolderComponent.dll iFolderShell.dll $(DATA_FILES) all
+install-exec-local: all $(DATA_FILES) all
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) iFolderComponent.dll iFolderShell.dll $(srcdir)/iFolderShell.reg $(DEBUG_FILES) $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) $(DATA_FILES) $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) $(WINDOWS_FILES) $(DESTDIR)$(WINDIR_UNIX)
-if WINDOWS
-	$(mkinstalldirs) $(DESTDIR)$(bindir)/de
-	$(mkinstalldirs) $(DESTDIR)$(bindir)/es
-	$(mkinstalldirs) $(DESTDIR)$(bindir)/fr
-	$(mkinstalldirs) $(DESTDIR)$(bindir)/hu
-	$(mkinstalldirs) $(DESTDIR)$(bindir)/it
-	$(mkinstalldirs) $(DESTDIR)$(bindir)/ja
-	$(mkinstalldirs) $(DESTDIR)$(bindir)/pl
-	$(mkinstalldirs) $(DESTDIR)$(bindir)/pt
-	$(mkinstalldirs) $(DESTDIR)$(bindir)/ru
-	$(mkinstalldirs) $(DESTDIR)$(bindir)/sk
-	$(mkinstalldirs) $(DESTDIR)$(bindir)/zh_CN
-	$(mkinstalldirs) $(DESTDIR)$(bindir)/zh_TW
-	$(INSTALL_PROGRAM) de/iFolderComponent.resources.dll $(DESTDIR)$(bindir)/de
-	$(INSTALL_PROGRAM) es/iFolderComponent.resources.dll $(DESTDIR)$(bindir)/es
-	$(INSTALL_PROGRAM) fr/iFolderComponent.resources.dll $(DESTDIR)$(bindir)/fr
-	$(INSTALL_PROGRAM) hu/iFolderComponent.resources.dll $(DESTDIR)$(bindir)/hu
-	$(INSTALL_PROGRAM) it/iFolderComponent.resources.dll $(DESTDIR)$(bindir)/it
-	$(INSTALL_PROGRAM) ja/iFolderComponent.resources.dll $(DESTDIR)$(bindir)/ja
-	$(INSTALL_PROGRAM) pl/iFolderComponent.resources.dll $(DESTDIR)$(bindir)/pl
-	$(INSTALL_PROGRAM) pt/iFolderComponent.resources.dll $(DESTDIR)$(bindir)/pt
-	$(INSTALL_PROGRAM) ru/iFolderComponent.resources.dll $(DESTDIR)$(bindir)/ru
-	$(INSTALL_PROGRAM) sk/iFolderComponent.resources.dll $(DESTDIR)$(bindir)/sk
-	$(INSTALL_PROGRAM) zh_CN/iFolderComponent.resources.dll $(DESTDIR)$(bindir)/zh_CN
-	$(INSTALL_PROGRAM) zh_TW/iFolderComponent.resources.dll $(DESTDIR)$(bindir)/zh_TW
+	$(mkinstalldirs) $(iFolderComponent_LANGUAGES:%=$(DESTDIR)$(bindir)/%)
+	cp -r $(iFolderComponent_LANGUAGES) $(DESTDIR)$(bindir)
 if DEBUG	
 	$(INSTALL_PROGRAM) $(PROJECT_FILES) $(DESTDIR)$(libdir)
-endif
 endif
 
 uninstall-local:
@@ -215,10 +108,9 @@ uninstall-local:
 	cd $(DESTDIR)$(libdir); rm -f $(DATA_FILES:$(srcdir)/iFolderShell/%=%)
 	cd $(DESTDIR)$(libdir); rm -f $(DATA_FILES:$(srcdir)/iFolderShell/%=%)
 	cd $(DESTDIR)$(WINDIR_UNIX); rm -f $(WINDOWS_FILES)
-if WINDOWS
+	cd $(DESTDIR)$(bindir); rm -f $(iFolderComponent_RESOURCES_DLLS)
 if DEBUG	
 	cd $(DESTDIR)$(libdir); rm -f $(PROJECT_FILES:$(srcdir)/%=%)
-endif
 endif
 
 register:
@@ -230,7 +122,7 @@ unregister:
 	-$(REGSVR32) /u /s `cygpath --windows $(DESTDIR)$(libdir)/iFolderShell.dll`
 	$(REGASM) `cygpath --windows $(DESTDIR)$(libdir)/iFolderComponent.dll` /unregister
 
-CLEAN_FILES = iFolderShell.dll iFolderComponent.tlb iFolderComponent.dll $(iFolderComponent_RESOURCES_FILES:%=Novell.iFolderCom.%) $(iFolderShell_OBJFILES) $(iFolderShellRes_OBJFILES) iFolderShell/ifoldercomponent.tlh iFolderShell/ifoldercomponent.tli $(DOC_FILE_CLEAN) iFolderShell.exp iFolderShell.lib AssemblyInfo.cs iFolderShell/nifver.h
+CLEAN_FILES = $(iFolderComponent_LANGUAGES) iFolderShell.dll iFolderComponent.tlb iFolderComponent.dll $(iFolderComponent_RESX_FILES:%.resx=Novell.iFolderCom.%.resources) $(iFolderShell_OBJFILES) $(iFolderShellRes_OBJFILES) iFolderShell/ifoldercomponent.tlh iFolderShell/ifoldercomponent.tli $(DOC_FILE_CLEAN) iFolderShell.exp iFolderShell.lib AssemblyInfo.cs iFolderShell/nifver.h
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
