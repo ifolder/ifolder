@@ -50,7 +50,7 @@ WINDOWS_FILES = $(srcdir)/explorer.exe.manifest $(srcdir)/explorer.exe.config
 
 PROJECT_FILES = $(srcdir)/iFolderComponent.csproj $(srcdir)/iFolderComponent.sln
 
-EXTRA_DIST = $(iFolderComponent_CSFILES) $(iFolderShell_SRCFILES) $(iFolderShellRes_SRCFILES) $(iFolderShell_DEF) $(DATA_FILES) $(RESX_FILES) $(WINDOWS_FILES) $(srcdir)/iFolderShell.reg  $(PROJECT_FILES) AssemblyInfo.cs.in iFolderShell/nifver.h.in de/iFolderComponent.resources.dll es/iFolderComponent.resources.dll fr/iFolderComponent.resources.dll it/iFolderComponent.resources.dll hu/iFolderComponent.resources.dll ja/iFolderComponent.resources.dll pl/iFolderComponent.resources.dll pt/iFolderComponent.resources.dll ru/iFolderComponent.resources.dll sk/iFolderComponent.resources.dll zh_CN/iFolderComponent.resources.dll zh_TW/iFolderComponent.resources.dll 
+EXTRA_DIST = $(iFolderComponent_CSFILES) $(iFolderShell_SRCFILES) $(iFolderShellRes_SRCFILES) $(iFolderShell_DEF) $(DATA_FILES) $(RESX_FILES) $(WINDOWS_FILES) $(srcdir)/iFolderShell.reg  $(PROJECT_FILES) AssemblyInfo.cs.in de/iFolderComponent.resources.dll es/iFolderComponent.resources.dll fr/iFolderComponent.resources.dll it/iFolderComponent.resources.dll hu/iFolderComponent.resources.dll ja/iFolderComponent.resources.dll pl/iFolderComponent.resources.dll pt/iFolderComponent.resources.dll ru/iFolderComponent.resources.dll sk/iFolderComponent.resources.dll zh_CN/iFolderComponent.resources.dll zh_TW/iFolderComponent.resources.dll iFolderShell/nifver.h.in 
 
 AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
 	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
@@ -64,18 +64,18 @@ endif
 
 CUR_DIR := $(shell pwd)
 
-all: iFolderShell/nifver.h iFolderShell.dll
-
-iFolderShell/nifver.h: $(srcdir)/iFolderShell/nifver.h.in
-	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
-	chmod +x $@
+all: iFolderShell.dll
 
 iFolderShellRes.dll: $(iFolderShellRes_OBJFILES)
 	$(LD) $(iFolderShell_LIBFLAGS) $(LDFLAGS) $(LDOUT)$@ $(iFolderShell_LIBPATH:%=$(LDINC)%) $(iFolderShellRes_OBJFILES) $(LIBS)
 	
-iFolderShell.dll: iFolderShellRes.dll iFolderComponent.tlb $(iFolderShell_OBJFILES)
+iFolderShell.dll: iFolderShell/nifver.h iFolderShellRes.dll iFolderComponent.tlb $(iFolderShell_OBJFILES)
 	$(LD) $(iFolderShell_LIBFLAGS) $(LDFLAGS) $(LDOUT)$@ $(iFolderShell_LIBPATH:%=$(LDINC)%) $(iFolderShell_DEF:%=$(DEF)%) $(iFolderShell_OBJFILES) $(iFolderShell_LIBS:%=$(LIBFLAG)%) $(LIBS)
 
+iFolderShell/nifver.h: $(srcdir)/iFolderShell/nifver.h.in
+	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
+	chmod +x $@
+	
 %.obj : %.c
 	$(CC) $(COUT)$@ $(iFolderShell_FLAGS) $(iFolderShell_INCLUDES:%=$(CINC)%) $(CFLAGS) $<
 
