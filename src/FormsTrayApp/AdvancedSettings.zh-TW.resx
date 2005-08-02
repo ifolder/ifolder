@@ -171,7 +171,7 @@
 	</data>
   
 	<data name="groupBox5.Text">
-		<value>代理</value>
+		<value>Proxy</value>
 	</data>
   
 	<data name="groupBox5.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -479,7 +479,7 @@
 	</data>
   
 	<data name="useProxy.Text">
-		<value>使用者此代理伺服器同步化 iFolder 與主機(&amp;U)</value>
+		<value>Diesen Proxyserver zum Synchronisieren mit dem Host ben&amp;utzen</value>
 	</data>
   
 	<data name="useProxy.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -579,7 +579,7 @@
 	</data>
   
 	<data name="label7.Text">
-		<value>連接埠(&amp;T)：</value>
+		<value>An&amp;schluss</value>
 	</data>
   
 	<data name="label7.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -679,7 +679,7 @@
 	</data>
   
 	<data name="label4.Text">
-		<value>代理主機(&amp;P)：</value>
+		<value>Pro&amp;xyhost:</value>
 	</data>
   
 	<data name="label4.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -783,7 +783,7 @@
 	</data>
   
 	<data name="ok.Text">
-		<value>確定</value>
+		<value>OK</value>
 	</data>
   
 	<data name="ok.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -887,7 +887,7 @@
 	</data>
   
 	<data name="cancel.Text">
-		<value>取消</value>
+		<value>Abbrechen</value>
 	</data>
   
 	<data name="cancel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -1023,7 +1023,7 @@
 	</data>
   
 	<data name="$this.Text">
-		<value>進階設定</value>
+		<value>Erweiterte Einstellungen</value>
 	</data>
   
 	<data name="&gt;&gt;$this.Name">

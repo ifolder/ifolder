@@ -327,11 +327,11 @@
 	</data>
   
 	<data name="toolBarSave.Text">
-		<value>儲存</value>
+		<value>Speichern</value>
 	</data>
   
 	<data name="toolBarSave.ToolTipText">
-		<value>將記錄儲存至檔案</value>
+		<value>Protokoll in einer Datei speichern</value>
 	</data>
   
 	<data name="toolBarSave.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -355,11 +355,12 @@
 	</data>
   
 	<data name="toolBarClear.Text">
-		<value>清除</value>
+		<value>Entfernen</value>
 	</data>
   
 	<data name="toolBarClear.ToolTipText">
-		<value>清除記錄</value>
+		<value>Inhalt des Protokolls löschen
+</value>
 	</data>
   
 	<data name="toolBarClear.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -475,7 +476,7 @@
 	</data>
   
 	<data name="$this.Text">
-		<value>iFolder 同步化記錄</value>
+		<value>iFolder-Synchronisierungsprotokoll</value>
 	</data>
   
 	<data name="&gt;&gt;toolBarSave.Name">
@@ -503,6 +504,6 @@
 	</data>
   
 	<data name="logEntriesCleared">
-		<value>記錄項目已清除。</value>
+		<value>Protokolleinträge gelöscht</value>
 	</data>
 </root>
