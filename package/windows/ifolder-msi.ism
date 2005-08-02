@@ -58,7 +58,7 @@
 		<comments>This installer database contains the logic and data required to install iFolder.</comments>
 		<template>Intel;1033</template>
 		<lastauthor>Administrator</lastauthor>
-		<revnumber>{5CED0A71-DA20-4DE3-BFBF-E393A7E68BD7}</revnumber>
+		<revnumber>{21212BA0-0955-4A85-B197-4205B2526BC4}</revnumber>
 		<lastprinted/>
 		<createdtm>06/21/1999 02:00</createdtm>
 		<lastsavedtm>07/14/2000 05:50</lastsavedtm>
@@ -12172,7 +12172,7 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<row><td>ProductCode</td><td>{761A2112-ED3C-4D3F-AF72-448296FCDBC2}</td><td/></row>
 		<row><td>ProductID</td><td>none</td><td/></row>
 		<row><td>ProductLanguage</td><td>1033</td><td/></row>
-		<row><td>ProductName</td><td>iFolder Client</td><td/></row>
+		<row><td>ProductName</td><td>iFolder 3 Client</td><td/></row>
 		<row><td>ProductVersion</td><td>3.1.0</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>
 		<row><td>ProgressType1</td><td>Installing</td><td/></row>
