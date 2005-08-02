@@ -35,7 +35,7 @@ RESX_FILES = FormsTrayApp.resx GlobalProperties.resx ServerInfo.resx AcceptInvit
 
 PROJECT_FILES = $(srcdir)/FormsTrayApp.csproj $(srcdir)/FormsTrayApp.sln
 
-EXTRA_DIST = $(iFolderApp_CSFILES) $(DATA_FILES) $(RES_FILES) $(RESX_FILES) iFolderApp.exe.manifest iFolderApp.exe.config InstallUtil.exe.config $(PROJECT_FILES) AssemblyInfo.cs.in iFolderUpgrade.exe de/iFolderApp.resources.dll es/iFolderApp.resources.dll fr/iFolderApp.resources.dll hu/iFolderApp.resources.dll it/iFolderApp.resources.dll ja/iFolderApp.resources.dll pl/iFolderApp.resources.dll pt/iFolderApp.resources.dll ru/iFolderApp.resources.dll sk/iFolderApp.resources.dll zh_CN/iFolderApp.resources.dll
+EXTRA_DIST = $(iFolderApp_CSFILES) $(DATA_FILES) $(RES_FILES) $(RESX_FILES) iFolderApp.exe.manifest iFolderApp.exe.config InstallUtil.exe.config $(PROJECT_FILES) AssemblyInfo.cs.in iFolderUpgrade.exe
 
 AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
 	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
@@ -47,71 +47,85 @@ DOC_FILE_CMD = /doc:$(DOC_FILE)
 DOC_FILE_CLEAN = *.doc.xml
 endif
 
-all: iFolderApp.exe
+all: languages iFolderApp.exe
 
 iFolderApp.exe: $(iFolderApp_RESOURCES_FILES) $(iFolderApp_CSFILES) $(iFolderApp_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderApp_FLAGS) $(SIMIAS_CLIENT_LIBS) $(iFolderApp_LIBS:%=/r:%) $(iFolderApp_LIBPATH:%=/lib:%) $(iFolderApp_RESOURCES:%=$(ICON_FLAG)%) $(iFolderApp_RESOURCES_FILES:%=/res:Novell.FormsTrayApp.%) $(iFolderApp_CSFILES_CSC) $(DOC_FILE_CMD)
+
+languages: de/iFolderApp.resources.dll es/iFolderApp.resources.dll fr/iFolderApp.resources.dll hu/iFolderApp.resources.dll it/iFolderApp.resources.dll ja/iFolderApp.resources.dll pl/iFolderApp.resources.dll pt/iFolderApp.resources.dll ru/iFolderApp.resources.dll sk/iFolderApp.resources.dll zh_CN/iFolderApp.resources.dll
 	
 %.resources : %.resx
 	$(RESG) $< Novell.FormsTrayApp.$@
 	
 %.de.resources : %.de.resx
 	$(RESG) $< Novell.FormsTrayApp.$@
+	mkdir de
 de/iFolderApp.resources.dll : $(iFolderApp_DE_RESOURCES_FILES)
 	al /out:$@ /c:de $(iFolderApp_DE_RESOURCES_FILES:%=/embed:Novell.FormsTrayApp.%)
 
 %.es.resources : %.es.resx
 	$(RESG) $< Novell.FormsTrayApp.$@
+	mkdir es
 es/iFolderApp.resources.dll : $(iFolderApp_ES_RESOURCES_FILES)
 	al /out:$@ /c:es $(iFolderApp_ES_RESOURCES_FILES:%=/embed:Novell.FormsTrayApp.%)
 	
 %.fr.resources : %.fr.resx
 	$(RESG) $< Novell.FormsTrayApp.$@
+	mkdir fr
 fr/iFolderApp.resources.dll : $(iFolderApp_FR_RESOURCES_FILES)
 	al /out:$@ /c:fr $(iFolderApp_FR_RESOURCES_FILES:%=/embed:Novell.FormsTrayApp.%)
 	
 %.hu.resources : %.hu.resx
 	$(RESG) $< Novell.FormsTrayApp.$@
+	mkdir hu
 hu/iFolderApp.resources.dll : $(iFolderApp_HU_RESOURCES_FILES)
 	al /out:$@ /c:hu $(iFolderApp_HU_RESOURCES_FILES:%=/embed:Novell.FormsTrayApp.%)
 	
 %.it.resources : %.it.resx
 	$(RESG) $< Novell.FormsTrayApp.$@
+	mkdir it
 it/iFolderApp.resources.dll : $(iFolderApp_IT_RESOURCES_FILES)
 	al /out:$@ /c:it $(iFolderApp_IT_RESOURCES_FILES:%=/embed:Novell.FormsTrayApp.%)
 	
 %.ja.resources : %.ja.resx
 	$(RESG) $< Novell.FormsTrayApp.$@
+	mkdir ja
 ja/iFolderApp.resources.dll : $(iFolderApp_JA_RESOURCES_FILES)
 	al /out:$@ /c:ja $(iFolderApp_JA_RESOURCES_FILES:%=/embed:Novell.FormsTrayApp.%)
 	
 %.pl.resources : %.pl.resx
 	$(RESG) $< Novell.FormsTrayApp.$@
+	mkdir pl
 pl/iFolderApp.resources.dll : $(iFolderApp_PL_RESOURCES_FILES)
 	al /out:$@ /c:pl $(iFolderApp_PL_RESOURCES_FILES:%=/embed:Novell.FormsTrayApp.%)
 	
 %.pt.resources : %.pt.resx
 	$(RESG) $< Novell.FormsTrayApp.$@
+	mkdir pt
 pt/iFolderApp.resources.dll : $(iFolderApp_PT_RESOURCES_FILES)
 	al /out:$@ /c:pt $(iFolderApp_PT_RESOURCES_FILES:%=/embed:Novell.FormsTrayApp.%)
 	
 %.ru.resources : %.ru.resx
 	$(RESG) $< Novell.FormsTrayApp.$@
+	mkdir ru
 ru/iFolderApp.resources.dll : $(iFolderApp_RU_RESOURCES_FILES)
 	al /out:$@ /c:ru $(iFolderApp_RU_RESOURCES_FILES:%=/embed:Novell.FormsTrayApp.%)
 	
 %.sk.resources : %.sk.resx
 	$(RESG) $< Novell.FormsTrayApp.$@
+	mkdir sk
 sk/iFolderApp.resources.dll : $(iFolderApp_SK_RESOURCES_FILES)
 	al /out:$@ /c:sk $(iFolderApp_SK_RESOURCES_FILES:%=/embed:Novell.FormsTrayApp.%)
 	
 %.zh-CN.resources : %.zh-CN.resx
 	$(RESG) $< Novell.FormsTrayApp.$@
+	mkdir zh_CN
 zh_CN/iFolderApp.resources.dll : $(iFolderApp_ZH_CN_RESOURCES_FILES)
 	al /out:$@ /c:zh-CN $(iFolderApp_ZH_CN_RESOURCES_FILES:%=/embed:Novell.FormsTrayApp.%)
 	
 %.zh-TW.resources : %.zh-TW.resx
 	$(RESG) $< Novell.FormsTrayApp.$@
+	mkdir zh_TW
 zh_TW/iFolderApp.resources.dll : $(iFolderApp_ZH_TW_RESOURCES_FILES)
 	al /out:$@ /c:zh-TW $(iFolderApp_ZH_TW_RESOURCES_FILES:%=/embed:Novell.FormsTrayApp.%)
 	
@@ -130,8 +144,6 @@ DEBUG_FILES = iFolderApp.pdb
 endif
 endif
 
-languages: de/iFolderApp.resources.dll es/iFolderApp.resources.dll fr/iFolderApp.resources.dll hu/iFolderApp.resources.dll it/iFolderApp.resources.dll ja/iFolderApp.resources.dll pl/iFolderApp.resources.dll pt/iFolderApp.resources.dll ru/iFolderApp.resources.dll sk/iFolderApp.resources.dll zh_CN/iFolderApp.resources.dll
-	
 install-util:
 	if ! test -f "$(DESTDIR)$(bindir)/iFolderApp.exe"; then \
 		echo "run 'make install' before 'make install-util'"; \
@@ -144,7 +156,7 @@ uninstall-util:
 		$(INSTALLUTIL) /uninstall /LogToConsole=false /ShowCallStack /LogFile=iFolderApp.UninstallLog `cygpath --windows "$(DESTDIR)$(bindir)/iFolderApp.exe"`; \
 	fi
 
-install-exec-local: iFolderApp.exe $(DATA_FILES)
+install-exec-local: iFolderApp.exe $(DATA_FILES) all
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)/res
 	$(INSTALL_PROGRAM) iFolderApp.exe iFolderApp.exe.manifest iFolderApp.exe.config iFolderUpgrade.exe $(DEBUG_FILES) $(DESTDIR)$(bindir)
