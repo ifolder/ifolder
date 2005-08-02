@@ -23,8 +23,8 @@ iFolderComponent_PL_RESOURCES_FILES = CreateiFolder.pl.resources ConflictResolve
 iFolderComponent_PT_RESOURCES_FILES = CreateiFolder.pt.resources ConflictResolver.pt.resources iFolderAdvanced.pt.resources MyMessageBox.pt.resources NewiFolder.pt.resources Picker.pt.resources UserProperties.pt.resources GaugeChart.pt.resources
 iFolderComponent_RU_RESOURCES_FILES = CreateiFolder.ru.resources ConflictResolver.ru.resources iFolderAdvanced.ru.resources MyMessageBox.ru.resources NewiFolder.ru.resources Picker.ru.resources UserProperties.ru.resources GaugeChart.ru.resources
 iFolderComponent_SK_RESOURCES_FILES = CreateiFolder.sk.resources ConflictResolver.sk.resources iFolderAdvanced.sk.resources MyMessageBox.sk.resources NewiFolder.sk.resources Picker.sk.resources UserProperties.sk.resources GaugeChart.sk.resources
-iFolderComponent_ZH_CN_RESOURCES_FILES = CreateiFolder.zh_CN.resources ConflictResolver.zh_CN.resources iFolderAdvanced.zh_CN.resources MyMessageBox.zh_CN.resources NewiFolder.zh_CN.resources Picker.zh_CN.resources UserProperties.zh_CN.resources GaugeChart.zh_CN.resources
-iFolderComponent_ZH_TW_RESOURCES_FILES = CreateiFolder.zh_TW.resources ConflictResolver.zh_TW.resources iFolderAdvanced.zh_TW.resources MyMessageBox.zh_TW.resources NewiFolder.zh_TW.resources Picker.zh_TW.resources UserProperties.zh_TW.resources GaugeChart.zh_TW.resources
+iFolderComponent_ZH_CN_RESOURCES_FILES = CreateiFolder.zh-CN.resources ConflictResolver.zh-CN.resources iFolderAdvanced.zh-CN.resources MyMessageBox.zh-CN.resources NewiFolder.zh-CN.resources Picker.zh-CN.resources UserProperties.zh-CN.resources GaugeChart.zh-CN.resources
+iFolderComponent_ZH_TW_RESOURCES_FILES = CreateiFolder.zh-TW.resources ConflictResolver.zh-TW.resources iFolderAdvanced.zh-TW.resources MyMessageBox.zh-TW.resources NewiFolder.zh-TW.resources Picker.zh-TW.resources UserProperties.zh-TW.resources GaugeChart.zh-TW.resources
 iFolderComponent_FLAGS = $(CSC_LIBFLAG)
 iFolderComponent_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Drawing.dll System.Windows.Forms.dll Novell.iFolder.dll
 iFolderComponent_LIBPATH = ../iFolder
@@ -144,15 +144,15 @@ ru/iFolderComponent.resources.dll : $(iFolderComponent_RU_RESOURCES_FILES)
 sk/iFolderComponent.resources.dll : $(iFolderComponent_SK_RESOURCES_FILES)
 	al /out:$@ /c:sk $(iFolderComponent_SK_RESOURCES_FILES:%=/embed:Novell.iFolderCom.%)
 
-%.zh_CN.resources : %.zh_CN.resx
+%.zh-CN.resources : %.zh-CN.resx
 	$(RESG) $< Novell.iFolderCom.$@
 zh_CN/iFolderComponent.resources.dll : $(iFolderComponent_ZH_CN_RESOURCES_FILES)
-	al /out:$@ /c:zh_CN $(iFolderComponent_ZH_CN_RESOURCES_FILES:%=/embed:Novell.iFolderCom.%)
+	al /out:$@ /c:zh-CN $(iFolderComponent_ZH_CN_RESOURCES_FILES:%=/embed:Novell.iFolderCom.%)
 
-%.zh_TW.resources : %.zh_TW.resx
+%.zh-TW.resources : %.zh-TW.resx
 	$(RESG) $< Novell.iFolderCom.$@
 zh_TW/iFolderComponent.resources.dll : $(iFolderComponent_ZH_TW_RESOURCES_FILES)
-	al /out:$@ /c:zh_TW $(iFolderComponent_ZH_TW_RESOURCES_FILES:%=/embed:Novell.iFolderCom.%)
+	al /out:$@ /c:zh-TW $(iFolderComponent_ZH_TW_RESOURCES_FILES:%=/embed:Novell.iFolderCom.%)
 	
 if DEBUG
 if WINDOWS
