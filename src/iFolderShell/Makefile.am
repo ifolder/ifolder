@@ -50,7 +50,7 @@ WINDOWS_FILES = $(srcdir)/explorer.exe.manifest $(srcdir)/explorer.exe.config
 
 PROJECT_FILES = $(srcdir)/iFolderComponent.csproj $(srcdir)/iFolderComponent.sln
 
-EXTRA_DIST = $(iFolderComponent_CSFILES) $(iFolderShell_SRCFILES) $(iFolderShellRes_SRCFILES) $(iFolderShell_DEF) $(DATA_FILES) $(RESX_FILES) $(WINDOWS_FILES) $(srcdir)/iFolderShell.reg  $(PROJECT_FILES) AssemblyInfo.cs.in
+EXTRA_DIST = $(iFolderComponent_CSFILES) $(iFolderShell_SRCFILES) $(iFolderShellRes_SRCFILES) $(iFolderShell_DEF) $(DATA_FILES) $(RESX_FILES) $(WINDOWS_FILES) $(srcdir)/iFolderShell.reg  $(PROJECT_FILES) AssemblyInfo.cs.in iFolderShell/nifver.h.in de/iFolderComponent.resources.dll es/iFolderComponent.resources.dll fr/iFolderComponent.resources.dll it/iFolderComponent.resources.dll hu/iFolderComponent.resources.dll ja/iFolderComponent.resources.dll pl/iFolderComponent.resources.dll pt/iFolderComponent.resources.dll ru/iFolderComponent.resources.dll sk/iFolderComponent.resources.dll zh_CN/iFolderComponent.resources.dll zh_TW/iFolderComponent.resources.dll 
 
 AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
 	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
@@ -64,7 +64,11 @@ endif
 
 CUR_DIR := $(shell pwd)
 
-all: iFolderShell.dll
+all: iFolderShell/nifver.h iFolderShell.dll
+
+iFolderShell/nifver.h: $(srcdir)/iFolderShell/nifver.h.in
+	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
+	chmod +x $@
 
 iFolderShellRes.dll: $(iFolderShellRes_OBJFILES)
 	$(LD) $(iFolderShell_LIBFLAGS) $(LDFLAGS) $(LDOUT)$@ $(iFolderShell_LIBPATH:%=$(LDINC)%) $(iFolderShellRes_OBJFILES) $(LIBS)
@@ -164,6 +168,30 @@ install-exec-local: iFolderComponent.dll iFolderShell.dll $(DATA_FILES)
 	$(INSTALL_PROGRAM) $(DATA_FILES) $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) $(WINDOWS_FILES) $(DESTDIR)$(WINDIR_UNIX)
 if WINDOWS
+	$(mkinstalldirs) $(DESTDIR)$(bindir)/de
+	$(mkinstalldirs) $(DESTDIR)$(bindir)/es
+	$(mkinstalldirs) $(DESTDIR)$(bindir)/fr
+	$(mkinstalldirs) $(DESTDIR)$(bindir)/hu
+	$(mkinstalldirs) $(DESTDIR)$(bindir)/it
+	$(mkinstalldirs) $(DESTDIR)$(bindir)/ja
+	$(mkinstalldirs) $(DESTDIR)$(bindir)/pl
+	$(mkinstalldirs) $(DESTDIR)$(bindir)/pt
+	$(mkinstalldirs) $(DESTDIR)$(bindir)/ru
+	$(mkinstalldirs) $(DESTDIR)$(bindir)/sk
+	$(mkinstalldirs) $(DESTDIR)$(bindir)/zh_CN
+	$(mkinstalldirs) $(DESTDIR)$(bindir)/zh_TW
+	$(INSTALL_PROGRAM) de/iFolderComponent.resources.dll $(DESTDIR)$(bindir)/de
+	$(INSTALL_PROGRAM) es/iFolderComponent.resources.dll $(DESTDIR)$(bindir)/es
+	$(INSTALL_PROGRAM) fr/iFolderComponent.resources.dll $(DESTDIR)$(bindir)/fr
+	$(INSTALL_PROGRAM) hu/iFolderComponent.resources.dll $(DESTDIR)$(bindir)/hu
+	$(INSTALL_PROGRAM) it/iFolderComponent.resources.dll $(DESTDIR)$(bindir)/it
+	$(INSTALL_PROGRAM) ja/iFolderComponent.resources.dll $(DESTDIR)$(bindir)/ja
+	$(INSTALL_PROGRAM) pl/iFolderComponent.resources.dll $(DESTDIR)$(bindir)/pl
+	$(INSTALL_PROGRAM) pt/iFolderComponent.resources.dll $(DESTDIR)$(bindir)/pt
+	$(INSTALL_PROGRAM) ru/iFolderComponent.resources.dll $(DESTDIR)$(bindir)/ru
+	$(INSTALL_PROGRAM) sk/iFolderComponent.resources.dll $(DESTDIR)$(bindir)/sk
+	$(INSTALL_PROGRAM) zh_CN/iFolderComponent.resources.dll $(DESTDIR)$(bindir)/zh_CN
+	$(INSTALL_PROGRAM) zh_TW/iFolderComponent.resources.dll $(DESTDIR)$(bindir)/zh_TW
 if DEBUG	
 	$(INSTALL_PROGRAM) $(PROJECT_FILES) $(DESTDIR)$(libdir)
 endif
@@ -189,7 +217,7 @@ unregister:
 	-$(REGSVR32) /u /s `cygpath --windows $(DESTDIR)$(libdir)/iFolderShell.dll`
 	$(REGASM) `cygpath --windows $(DESTDIR)$(libdir)/iFolderComponent.dll` /unregister
 
-CLEAN_FILES = iFolderShell.dll iFolderComponent.tlb iFolderComponent.dll $(iFolderComponent_RESOURCES_FILES:%=Novell.iFolderCom.%) $(iFolderShell_OBJFILES) $(iFolderShellRes_OBJFILES) iFolderShell/ifoldercomponent.tlh iFolderShell/ifoldercomponent.tli $(DOC_FILE_CLEAN) iFolderShell.exp iFolderShell.lib AssemblyInfo.cs
+CLEAN_FILES = iFolderShell.dll iFolderComponent.tlb iFolderComponent.dll $(iFolderComponent_RESOURCES_FILES:%=Novell.iFolderCom.%) $(iFolderShell_OBJFILES) $(iFolderShellRes_OBJFILES) iFolderShell/ifoldercomponent.tlh iFolderShell/ifoldercomponent.tli $(DOC_FILE_CLEAN) iFolderShell.exp iFolderShell.lib AssemblyInfo.cs iFolderShell/nifver.h
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
