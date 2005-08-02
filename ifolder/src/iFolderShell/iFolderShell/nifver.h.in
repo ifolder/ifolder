@@ -43,23 +43,23 @@
 //
 
 #ifndef VER_ID
-#define VER_ID   1,0,0,0
+#define VER_ID   3,1,5214,1
 #endif
 
 #ifndef VER_STR
-#define VER_STR  "v1.0"
+#define VER_STR  "@_VERSION_@"
 #endif
 
 #ifndef VER_PROD_ID
-#define VER_PROD_ID   1,0,0,0
+#define VER_PROD_ID   @_VERSION_@
 #endif
 
 #ifndef VER_PROD_STR
-#define VER_PROD_STR  "v1.0.0"
+#define VER_PROD_STR  "@_VERSION_@"
 #endif
 
 #ifndef VER_DATE
-#define VER_DATE "(20041020_v1.0.0)"
+#define VER_DATE "@_VERSION_@"
 #endif
 
 #define VER_VERSION_TEXT(module)   static char versionText[] = \
@@ -76,8 +76,8 @@
 #define VER_FILEVERSION      		VER_ID
 #define VER_COMPANYNAME_STR		TEXT("Novell, Inc.")
 #define VER_PRODUCTNAME_STR		TEXT("Novell iFolder\0")
-#define VER_PRODUCTVERSION_STR	TEXT(VER_PROD_STR) TEXT(" ") TEXT(VER_DATE)
-#define VER_FILEVERSION_STR		TEXT(VER_STR) TEXT(" ") TEXT(VER_DATE)
+#define VER_PRODUCTVERSION_STR	TEXT(VER_PROD_STR)
+#define VER_FILEVERSION_STR		TEXT(VER_STR)
 #define VER_LEGALCOPYRIGHT_STR	TEXT("Copyright \251 2004 ") VER_COMPANYNAME_STR, TEXT("\0")
 
 //===[ Type definitions                     ]==============================
