@@ -160,6 +160,16 @@ namespace Novell.FormsTrayApp
 				{
 					File.Delete(configPath);
 				}
+
+				// Build the path to the iFolder application data directory.
+				string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "iFolder");
+
+				try
+				{
+					// Delete the directory
+					Directory.Delete(path, true);
+				}
+				catch {} // Ignore.
 			}
 		}
 
@@ -278,9 +288,16 @@ namespace Novell.FormsTrayApp
 			configDoc = new XmlDocument();
 			configDoc.Load(webConfigFile);
 
-			// Build the path.
+			// Build the path to the iFolder application data directory.
 			string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "iFolder");
 
+			try
+			{
+				// Delete the directory
+				Directory.Delete(path, true);
+			}
+			catch {} // Ignore.
+			
 			// Make sure the path exists.
 			if (!Directory.Exists(path))
 			{
