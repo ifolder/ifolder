@@ -35,7 +35,7 @@ RESX_FILES = FormsTrayApp.resx GlobalProperties.resx ServerInfo.resx AcceptInvit
 
 PROJECT_FILES = $(srcdir)/FormsTrayApp.csproj $(srcdir)/FormsTrayApp.sln
 
-EXTRA_DIST = $(iFolderApp_CSFILES) $(DATA_FILES) $(RES_FILES) $(RESX_FILES) iFolderApp.exe.manifest iFolderApp.exe.config InstallUtil.exe.config $(PROJECT_FILES) AssemblyInfo.cs.in iFolderUpgrade.exe
+EXTRA_DIST = $(iFolderApp_CSFILES) $(DATA_FILES) $(RES_FILES) $(RESX_FILES) iFolderApp.exe.manifest iFolderApp.exe.config InstallUtil.exe.config $(PROJECT_FILES) AssemblyInfo.cs.in iFolderUpgrade.exe de/iFolderApp.resources.dll es/iFolderApp.resources.dll fr/iFolderApp.resources.dll hu/iFolderApp.resources.dll it/iFolderApp.resources.dll ja/iFolderApp.resources.dll pl/iFolderApp.resources.dll pt/iFolderApp.resources.dll ru/iFolderApp.resources.dll sk/iFolderApp.resources.dll zh_CN/iFolderApp.resources.dll
 
 AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
 	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
@@ -151,6 +151,30 @@ install-exec-local: iFolderApp.exe $(DATA_FILES)
 	$(INSTALL_PROGRAM) $(DATA_FILES) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(RES_FILES) $(DESTDIR)$(bindir)/res
 if WINDOWS
+	$(mkinstalldirs) $(DESTDIR)$(bindir)/de
+	$(mkinstalldirs) $(DESTDIR)$(bindir)/es
+	$(mkinstalldirs) $(DESTDIR)$(bindir)/fr
+	$(mkinstalldirs) $(DESTDIR)$(bindir)/hu
+	$(mkinstalldirs) $(DESTDIR)$(bindir)/it
+	$(mkinstalldirs) $(DESTDIR)$(bindir)/ja
+	$(mkinstalldirs) $(DESTDIR)$(bindir)/pl
+	$(mkinstalldirs) $(DESTDIR)$(bindir)/pt
+	$(mkinstalldirs) $(DESTDIR)$(bindir)/ru
+	$(mkinstalldirs) $(DESTDIR)$(bindir)/sk
+	$(mkinstalldirs) $(DESTDIR)$(bindir)/zh_CN
+	$(mkinstalldirs) $(DESTDIR)$(bindir)/zh_TW
+	$(INSTALL_PROGRAM) de/iFolderApp.resources.dll $(DESTDIR)$(bindir)/de
+	$(INSTALL_PROGRAM) es/iFolderApp.resources.dll $(DESTDIR)$(bindir)/es
+	$(INSTALL_PROGRAM) fr/iFolderApp.resources.dll $(DESTDIR)$(bindir)/fr
+	$(INSTALL_PROGRAM) hu/iFolderApp.resources.dll $(DESTDIR)$(bindir)/hu
+	$(INSTALL_PROGRAM) it/iFolderApp.resources.dll $(DESTDIR)$(bindir)/it
+	$(INSTALL_PROGRAM) ja/iFolderApp.resources.dll $(DESTDIR)$(bindir)/ja
+	$(INSTALL_PROGRAM) pl/iFolderApp.resources.dll $(DESTDIR)$(bindir)/pl
+	$(INSTALL_PROGRAM) pt/iFolderApp.resources.dll $(DESTDIR)$(bindir)/pt
+	$(INSTALL_PROGRAM) ru/iFolderApp.resources.dll $(DESTDIR)$(bindir)/ru
+	$(INSTALL_PROGRAM) sk/iFolderApp.resources.dll $(DESTDIR)$(bindir)/sk
+	$(INSTALL_PROGRAM) zh_CN/iFolderApp.resources.dll $(DESTDIR)$(bindir)/zh_CN
+	$(INSTALL_PROGRAM) de/iFolderApp.resources.dll $(DESTDIR)$(bindir)/zh_TW
 if DEBUG	
 	$(INSTALL_PROGRAM) $(PROJECT_FILES) $(DESTDIR)$(bindir)
 endif
