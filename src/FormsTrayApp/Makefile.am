@@ -20,8 +20,8 @@ iFolderApp_PL_RESOURCES_FILES = FormsTrayApp.pl.resources GlobalProperties.pl.re
 iFolderApp_PT_RESOURCES_FILES = FormsTrayApp.pt.resources GlobalProperties.pt.resources ServerInfo.pt.resources AcceptInvitation.pt.resources ServerDetails.pt.resources SyncLog.pt.resources Preferences.pt.resources AdvancedSettings.pt.resources About.pt.resources Credits.pt.resources RemoveAccount.pt.resources
 iFolderApp_RU_RESOURCES_FILES = FormsTrayApp.ru.resources GlobalProperties.ru.resources ServerInfo.ru.resources AcceptInvitation.ru.resources ServerDetails.ru.resources SyncLog.ru.resources Preferences.ru.resources AdvancedSettings.ru.resources About.ru.resources Credits.ru.resources RemoveAccount.ru.resources
 iFolderApp_SK_RESOURCES_FILES = FormsTrayApp.sk.resources GlobalProperties.sk.resources ServerInfo.sk.resources AcceptInvitation.sk.resources ServerDetails.sk.resources SyncLog.sk.resources Preferences.sk.resources AdvancedSettings.sk.resources About.sk.resources Credits.sk.resources RemoveAccount.sk.resources
-iFolderApp_ZH_CN_RESOURCES_FILES = FormsTrayApp.zh_CN.resources GlobalProperties.zh_CN.resources ServerInfo.zh_CN.resources AcceptInvitation.zh_CN.resources ServerDetails.zh_CN.resources SyncLog.zh_CN.resources Preferences.zh_CN.resources AdvancedSettings.zh_CN.resources About.zh_CN.resources Credits.zh_CN.resources RemoveAccount.zh_CN.resources
-iFolderApp_ZH_TW_RESOURCES_FILES = FormsTrayApp.zh_TW.resources GlobalProperties.zh_TW.resources ServerInfo.zh_TW.resources AcceptInvitation.zh_TW.resources ServerDetails.zh_TW.resources SyncLog.zh_TW.resources Preferences.zh_TW.resources AdvancedSettings.zh_TW.resources About.zh_TW.resources Credits.zh_TW.resources RemoveAccount.zh_TW.resources
+iFolderApp_ZH_CN_RESOURCES_FILES = FormsTrayApp.zh-CN.resources GlobalProperties.zh-CN.resources ServerInfo.zh-CN.resources AcceptInvitation.zh-CN.resources ServerDetails.zh-CN.resources SyncLog.zh-CN.resources Preferences.zh-CN.resources AdvancedSettings.zh-CN.resources About.zh-CN.resources Credits.zh-CN.resources RemoveAccount.zh-CN.resources
+iFolderApp_ZH_TW_RESOURCES_FILES = FormsTrayApp.zh-TW.resources GlobalProperties.zh-TW.resources ServerInfo.zh-TW.resources AcceptInvitation.zh-TW.resources ServerDetails.zh-TW.resources SyncLog.zh-TW.resources Preferences.zh-TW.resources AdvancedSettings.zh-TW.resources About.zh-TW.resources Credits.zh-TW.resources RemoveAccount.zh-TW.resources
 # iFolderApp_LANGUAGES = de es fr
 # iFolderApp_LANGUAGE_RESOURCES_FILES = FormsTrayApp.$(iFolderApp_LANGUAGES).resources GlobalProperties.$(iFolderApp_LANGUAGES).resources ServerInfo.$(iFolderApp_LANGUAGES).resources AcceptInvitation.$(iFolderApp_LANGUAGES).resources ServerDetails.$(iFolderApp_LANGUAGES).resources SyncLog.$(iFolderApp_LANGUAGES).resources Preferences.$(iFolderApp_LANGUAGES).resources AdvancedSettings.$(iFolderApp_LANGUAGES).resources About.$(iFolderApp_LANGUAGES).resources Credits.$(iFolderApp_LANGUAGES).resources RemoveAccount.$(iFolderApp_LANGUAGES).resources
 
@@ -105,15 +105,15 @@ ru/iFolderApp.resources.dll : $(iFolderApp_RU_RESOURCES_FILES)
 sk/iFolderApp.resources.dll : $(iFolderApp_SK_RESOURCES_FILES)
 	al /out:$@ /c:sk $(iFolderApp_SK_RESOURCES_FILES:%=/embed:Novell.FormsTrayApp.%)
 	
-%.zh_CN.resources : %.zh_CN.resx
+%.zh-CN.resources : %.zh-CN.resx
 	$(RESG) $< Novell.FormsTrayApp.$@
 zh_CN/iFolderApp.resources.dll : $(iFolderApp_ZH_CN_RESOURCES_FILES)
-	al /out:$@ /c:zh_CN $(iFolderApp_ZH_CN_RESOURCES_FILES:%=/embed:Novell.FormsTrayApp.%)
+	al /out:$@ /c:zh-CN $(iFolderApp_ZH_CN_RESOURCES_FILES:%=/embed:Novell.FormsTrayApp.%)
 	
-%.zh_TW.resources : %.zh_TW.resx
+%.zh-TW.resources : %.zh-TW.resx
 	$(RESG) $< Novell.FormsTrayApp.$@
 zh_TW/iFolderApp.resources.dll : $(iFolderApp_ZH_TW_RESOURCES_FILES)
-	al /out:$@ /c:zh_TW $(iFolderApp_ZH_TW_RESOURCES_FILES:%=/embed:Novell.FormsTrayApp.%)
+	al /out:$@ /c:zh-TW $(iFolderApp_ZH_TW_RESOURCES_FILES:%=/embed:Novell.FormsTrayApp.%)
 	
 
 
