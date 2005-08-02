@@ -48,6 +48,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("iFolder")]
 [assembly: AssemblyCopyright("(c) 2004 Novell, Inc.")]
 [assembly: AssemblyTrademark("")]
+[assembly: AssemblyVersion("@_VERSION_@")]
 
 [assembly: CLSCompliant(false)]
 [assembly: AssemblyDefaultAlias("Novell.iFolder.dll")]
