@@ -1285,9 +1285,12 @@ namespace Novell.FormsTrayApp
 		private void ShutdownTrayApp(Exception ex)
 		{
 			// Hide the dialogs.
-			preferences.Hide();
-			globalProperties.Hide();
-			syncLog.Hide();
+			if (preferences != null)
+				preferences.Hide();
+			if (globalProperties != null)
+				globalProperties.Hide();
+			if (syncLog != null)
+				syncLog.Hide();
 
 			Cursor.Current = Cursors.WaitCursor;
 
