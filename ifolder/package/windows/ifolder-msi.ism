@@ -12375,8 +12375,8 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<col def="I4">MinDate</col>
 		<col def="I4">MaxDate</col>
 		<col def="S255">Languages</col>
-		<row><td>NewSignature1</td><td>InstallUtil.exe</td><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>NewSignature11</td><td>RegAsm.exe</td><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>NewSignature1</td><td>InstallUtil.exe</td><td>1.1</td><td/><td/><td/><td/><td/><td/></row>
+		<row><td>NewSignature11</td><td>RegAsm.exe</td><td>1.1</td><td/><td/><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="TextStyle">
