@@ -1,0 +1,186 @@
+<!DOCTYPE TOPIC [
+
+<!ELEMENT TOPIC - - (FILENAME, TITLE, TOPIC*)>
+<!ATTLIST TOPIC 
+	TYPE (ExpandableHeirarchy|NonExpandableHeirarchy|File|InvisibleFile|InvisibleChapter) #REQUIRED
+	ELEMTYPE CDATA #REQUIRED
+	PREFACE CDATA #IMPLIED
+>
+
+<!ELEMENT FILENAME - - (#PCDATA)>
+<!ELEMENT TITLE - - (B|SUP|#PCDATA)+>
+<!ELEMENT SUP - - (SMALL|#PCDATA)>
+<!ELEMENT SMALL - - (#PCDATA)>
+<!ELEMENT B - - (#PCDATA)>
+
+<!ENTITY lt     SDATA "[lt    ]"--=less-than sign R:-->
+<!ENTITY equals SDATA "[equals]"--=equals sign R:-->
+<!ENTITY gt     SDATA "[gt    ]"--=greater-than sign R:-->
+<!ENTITY amp    SDATA "[amp   ]"--=ampersand-->
+<!ENTITY bsol   SDATA "[bsol  ]"--/backslash =reverse solidus-->
+<!ENTITY copy   SDATA "[copy  ]"--=copyright sign-->
+<!ENTITY reg    SDATA "[reg   ]"--/circledR =registered sign-->
+<!ENTITY trade  SDATA "[trade ]"--=trade mark sign-->
+<!ENTITY quot   SDATA "[quot  ]"--=quotation mark-->
+<!ENTITY apos   SDATA "[apos  ]"--=apostrophe-->
+<!ENTITY lsquo  SDATA "[lsquo ]"--=single quotation mark, left-->
+<!ENTITY rsquo  SDATA "[rsquo ]"--=single quotation mark, right-->
+<!ENTITY ldquo  SDATA "[ldquo ]"--=double quotation mark, left-->
+<!ENTITY rdquo  SDATA "[rdquo ]"--=double quotation mark, right-->
+<!ENTITY nbsp   SDATA "[nbsp  ]"--=no break (required) space-->
+
+<!--
+2 = ExpandableHeirarchy - This is equivalent to a book, chapter, appendix etc that has viewable children
+4 = NonExpandableHeirarchy	-  Same as ExpandableHeirarchy except children are not viewable
+6 = File - Is itself viewable and has no children
+8 = InvisibleFile -  is not viewable and has no chilren
+C = InvisibleChapter	-  Used by the HLP2MOAB process only as a way to group a bunch of files that should not show up in the toc
+-->
+]>
+
+                                         
+
+	<TOPIC TYPE="ExpandableHeirarchy" ELEMTYPE="BOOK">
+	<FILENAME>data\front.html</FILENAME>
+	<TITLE>iFolder Help</TITLE>
+
+		<TOPIC TYPE="ExpandableHeirarchy" ELEMTYPE="CHAPTER">
+		<FILENAME>data\overview.html</FILENAME>
+		<TITLE>Overview of iFolder</TITLE>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\bx3aueg.html</FILENAME>
+			<TITLE>iFolder Sharing</TITLE>
+			</TOPIC>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\bq1r10z.html</FILENAME>
+			<TITLE>Benefits of iFolder</TITLE>
+			</TOPIC>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\bq1r110.html</FILENAME>
+			<TITLE>Key Features of iFolder</TITLE>
+			</TOPIC>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\bwcku86.html</FILENAME>
+			<TITLE>Cross-Platform Considerations</TITLE>
+			</TOPIC>
+		</TOPIC>
+
+		<TOPIC TYPE="ExpandableHeirarchy" ELEMTYPE="CHAPTER">
+		<FILENAME>data\accountsprefs.html</FILENAME>
+		<TITLE>Managing iFolder Accounts and Preferences</TITLE>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\bw08fxi.html</FILENAME>
+			<TITLE>Starting the iFolder Client</TITLE>
+			</TOPIC>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\accounts.html</FILENAME>
+			<TITLE>Configuring an iFolder Account</TITLE>
+			</TOPIC>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\login.html</FILENAME>
+			<TITLE>Logging In to an iFolder Account</TITLE>
+			</TOPIC>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\accountdetails.html</FILENAME>
+			<TITLE>Viewing and Modifying iFolder Account Settings</TITLE>
+			</TOPIC>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\bvwsp7c.html</FILENAME>
+			<TITLE>Deleting an iFolder Account</TITLE>
+			</TOPIC>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\preferences.html</FILENAME>
+			<TITLE>Configuring iFolder Preferences for the Client</TITLE>
+			</TOPIC>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\bvwppw5.html</FILENAME>
+			<TITLE>Configuring Local Firewall Settings for iFolder Traffic</TITLE>
+			</TOPIC>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\bwbirb9.html</FILENAME>
+			<TITLE>Configuring Local Virus Scanner Settings for iFolder Traffic</TITLE>
+			</TOPIC>
+		</TOPIC>
+
+		<TOPIC TYPE="ExpandableHeirarchy" ELEMTYPE="CHAPTER">
+		<FILENAME>data\myifolders.html</FILENAME>
+		<TITLE>Managing iFolders</TITLE>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\bx08x4y.html</FILENAME>
+			<TITLE>Guidelines for Locating iFolders</TITLE>
+			</TOPIC>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\bwensdb.html</FILENAME>
+			<TITLE>Guidelines for File Types and Sizes to Be Synchronized</TITLE>
+			</TOPIC>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\bwagrrn.html</FILENAME>
+			<TITLE>Naming Conventions for an iFolder and Its Folders and Files</TITLE>
+			</TOPIC>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\createifolder.html</FILENAME>
+			<TITLE>Creating an iFolder</TITLE>
+			</TOPIC>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\sharewith.html</FILENAME>
+			<TITLE>Sharing an iFolder</TITLE>
+			</TOPIC>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\setupifolder.html</FILENAME>
+			<TITLE>Setting Up an Available iFolder</TITLE>
+			</TOPIC>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\propifolders.html</FILENAME>
+			<TITLE>Viewing and Configuring Properties of an iFolder</TITLE>
+			</TOPIC>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\sync.html</FILENAME>
+			<TITLE>Synchronizing Files</TITLE>
+			</TOPIC>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\conflicts.html</FILENAME>
+			<TITLE>Resolving File Conflicts</TITLE>
+			</TOPIC>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\reverting.html</FILENAME>
+			<TITLE>Reverting an iFolder to a Normal Folder</TITLE>
+			</TOPIC>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\movelocation.html</FILENAME>
+			<TITLE>Moving an iFolder</TITLE>
+			</TOPIC>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\deleting.html</FILENAME>
+			<TITLE>Deleting an iFolder</TITLE>
+			</TOPIC>
+		</TOPIC>
+
+		<TOPIC TYPE="File" ELEMTYPE="LEGALNOTICES">
+		<FILENAME>data\legal.html</FILENAME>
+		<TITLE>Legal Notices</TITLE>
+		</TOPIC>
+	</TOPIC>
