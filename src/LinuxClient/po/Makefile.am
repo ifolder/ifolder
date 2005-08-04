@@ -17,20 +17,9 @@ SUFFIXES = .c .o .po .pox .gmo .mo
 	  && rm -f $$file && $(GMSGFMT) --statistics -o $$file $<
 
 POFILES = $(srcdir)/pt_BR.po \
-	 $(srcdir)/cz.po \
-	 $(srcdir)/de.po \
 	 $(srcdir)/en.po \
-	 $(srcdir)/es.po \
 	 $(srcdir)/fi.po \
-	 $(srcdir)/fr.po \
-	 $(srcdir)/it.po \
-	 $(srcdir)/ja.po \
-	 $(srcdir)/ma.po \
-	 $(srcdir)/pl.po \
-	 $(srcdir)/ru.po \
-	 $(srcdir)/sk.po \
-	 $(srcdir)/zh_CN.po \
-	 $(srcdir)/zh_TW.po
+	 $(srcdir)/ma.po
 
 CATALOGS := $(subst .po,.mo,$(POFILES))
 
