@@ -631,6 +631,6 @@
 	</data>
 	
 	<data name="saveConfigError">
-		<value>An error was encountered while saving configuration.</value>
+		<value>Error al guardar la configuración.</value>
 	</data>
 </root>

@@ -307,7 +307,7 @@
 	</data>
   
 	<data name="label2.Text">
-		<value>Nome</value>
+		<value>Nome:</value>
 	</data>
   
 	<data name="label2.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -507,7 +507,7 @@
 	</data>
   
 	<data name="ifolderName.HelpString">
-		<value>The name of the iFolder containing the conflict.</value>
+		<value>Nome da pasta do iFolder onde está o conflito.</value>
 	</data>
   
 	<data name="ifolderName.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -627,7 +627,7 @@
 	</data>
   
 	<data name="ifolderPath.HelpString">
-		<value>The full path of the iFolder containing the conflict.</value>
+		<value>Caminho completo da pasta do iFolder onde está o conflito.</value>
 	</data>
   
 	<data name="ifolderPath.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -751,7 +751,7 @@
 	</data>
   
 	<data name="conflictsView.HelpString">
-		<value>The list of files that have conflicts.</value>
+		<value>Lista dos arquivos que possuem conflitos.</value>
 	</data>
   
 	<data name="conflictsView.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1039,7 +1039,7 @@
 	</data>
   
 	<data name="saveLocal.HelpString">
-		<value>Click to replace the file on the iFolder server with the file on the local computer.</value>
+		<value>Clique para substituir o arquivo no servidor iFolder pelo arquivo no computador local.</value>
 	</data>
   
 	<data name="saveLocal.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1159,7 +1159,7 @@
 	</data>
   
 	<data name="localSize.HelpString">
-		<value>The size of the file on the local computer.</value>
+		<value>Tamanho do arquivo no computador local.</value>
 	</data>
   
 	<data name="localSize.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1279,7 +1279,7 @@
 	</data>
   
 	<data name="localDate.HelpString">
-		<value>The date of the file on the local computer.</value>
+		<value>Data do arquivo no computador local.</value>
 	</data>
   
 	<data name="localDate.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1399,7 +1399,7 @@
 	</data>
   
 	<data name="localName.HelpString">
-		<value>The name of the file on the local computer.  Double-click the name to open the file.</value>
+		<value>Nome do arquivo no computador local. Clique duas vezes no nome do arquivo para abri-lo.</value>
 	</data>
   
 	<data name="localName.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1799,7 +1799,7 @@
 	</data>
   
 	<data name="label4.Text">
-		<value>Nome</value>
+		<value>Nome:</value>
 	</data>
   
 	<data name="label4.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -1999,7 +1999,7 @@
 	</data>
   
 	<data name="saveServer.HelpString">
-		<value>Click to replace the file on the local computer with the file on the iFolder server.</value>
+		<value>Clique para substituir o arquivo no computador local pelo arquivo no servidor iFolder.</value>
 	</data>
   
 	<data name="saveServer.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2119,7 +2119,7 @@
 	</data>
   
 	<data name="serverSize.HelpString">
-		<value>The size of the file on the iFolder server.</value>
+		<value>Tamanho do arquivo no servidor iFolder.</value>
 	</data>
   
 	<data name="serverSize.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2239,7 +2239,7 @@
 	</data>
   
 	<data name="serverDate.HelpString">
-		<value>The date of the file on the iFolder server.</value>
+		<value>Data do arquivo no servidor iFolder.</value>
 	</data>
   
 	<data name="serverDate.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2359,7 +2359,7 @@
 	</data>
   
 	<data name="serverName.HelpString">
-		<value>The name of the file on the iFolder server.  Double-click the name to open the file.</value>
+		<value>Nome do arquivo no servidor iFolder. Clique duas vezes no nome do arquivo para abri-lo.</value>
 	</data>
   
 	<data name="serverName.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2759,7 +2759,7 @@
 	</data>
   
 	<data name="label12.Text">
-		<value>Nome</value>
+		<value>Nome:</value>
 	</data>
   
 	<data name="label12.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -3519,7 +3519,7 @@
 	</data>
   
 	<data name="resolveName.Text">
-		<value>Renomear</value>
+		<value>&amp;Renomear</value>
 	</data>
   
 	<data name="resolveName.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -3771,7 +3771,7 @@
 	</data>
   
 	<data name="label8.Text">
-		<value>Nome</value>
+		<value>Nome:</value>
 	</data>
   
 	<data name="label8.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -3891,7 +3891,7 @@
 	</data>
   
 	<data name="resolveNameLabel.Text">
-		<value>Enter a new name and click Rename to resolve the conflict.</value>
+		<value>Digite um novo nome e clique em Renomear para resolver o conflito.</value>
 	</data>
   
 	<data name="resolveNameLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -4119,27 +4119,27 @@
 	</data>
   
 	<data name="conflictResolveError">
-		<value>An error was encountered while resolving the conflict.</value>
+		<value>Erro ao resolver o conflito.</value>
 	</data>
   
 	<data name="conflictErrorTitle">
-		<value>iFolder Conflict Error</value>
+		<value>Erro de Conflito do iFolder</value>
 	</data>
   
 	<data name="conflictReadError">
-		<value>An error was encountered while reading the conflicts.</value>
+		<value>Erro ao ler os conflitos.</value>
 	</data>
   
 	<data name="openFileError">
-		<value>Impossível abrir arquivo {0}</value>
+		<value>Impossível abrir arquivo.</value>
 	</data>
   
 	<data name="readOnlyTitle">
-		<value>Acesso Apenas Leitura:</value>
+		<value>Acesso Apenas Leitura</value>
 	</data>
   
 	<data name="readOnlyInfo">
-		<value>Your ability to resolve conflicts is limited because you have read-only access to the iFolder.  Name conflicts must be renamed locally.  File conflicts will be overwritten by the version of the file on the server.</value>
+		<value>Sua capacidade de resolver conflitos está limitada devido ao seu acesso apenas leitura ao iFolder. Os conflitos de nome devem ser renomeados localmente. Os conflitos de arquivo serão sobregravados pela versão do arquivo no servidor.</value>
 	</data>
   
 	<data name="errorTitle">
@@ -4147,11 +4147,11 @@
 	</data>
   
 	<data name="fileExists">
-		<value>The specified name already exists.  Please choose a different name.</value>
+		<value>O nome especificado já existe. Escolha outro nome.</value>
 	</data>
   
 	<data name="badFileName">
-		<value>The specified name contains invalid characters.  Please choose a different name and try again.</value>
+		<value>O nome especificado contém caracteres inválidos. Escolha outro nome e tente novamente.</value>
 	</data>
   
 	<data name="name">
@@ -4163,7 +4163,7 @@
 	</data>
   
 	<data name="multiNameConflict">
-		<value>Name conflicts must be resolved individually.</value>
+		<value>Os conflitos de nome devem ser resolvidos individualmente.</value>
 	</data>
   
 	<data name="multiSelect">

@@ -791,7 +791,7 @@
 	</data>
   
 	<data name="label2.Text">
-		<value>位置</value>
+		<value>位置(&amp;L)：</value>
 	</data>
   
 	<data name="label2.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -995,7 +995,7 @@
 	</data>
   
 	<data name="label3.Text">
-		<value>Choose a location on this computer for the iFolder.</value>
+		<value>在此计算机上为 iFolder 选择位置。</value>
 	</data>
   
 	<data name="label3.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -1047,7 +1047,7 @@
 	</data>
   
 	<data name="$this.Name">
-		<value>AcceptInvitation</value>
+		<value>接受邀请</value>
 	</data>
   
 	<data name="$this.TrayHeight" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1159,15 +1159,15 @@
 	</data>
   
 	<data name="pathValidationError">
-		<value>An exception occurred while validating the path.</value>
+		<value>验证路径时出现异常。</value>
 	</data>
   
 	<data name="pathValidationErrorTitle">
-		<value>Unable to Validate Path</value>
+		<value>无法验证路径</value>
 	</data>
   
 	<data name="pathIniFolderError">
-		<value>The selected location is inside another iFolder.  iFolders cannot exist inside other iFolders.  Please select a different location and try again.</value>
+		<value>所选位置位于另一个 iFolder 内。iFolder 无法存在于其它 iFolder 内。请选择一个不同的位置并重试。</value>
 	</data>
   
 	<data name="pathInvalidErrorTitle">
@@ -1175,43 +1175,43 @@
 	</data>
   
 	<data name="pathExistsError">
-		<value>The location you selected already contains a folder with the same name as this iFolder.  Please select a different location and try again.</value>
+		<value>所选的位置已包含与此 iFolder 同名的文件夹。请选择一个不同的位置并重试。</value>
 	</data>
   
 	<data name="pathInStoreError">
-		<value>The selected location is inside the iFolder data folder.  Please select a different location and try again.</value>
+		<value>所选位置位于 iFolder 数据文件夹内。请选择一个不同的位置并重试。</value>
 	</data>
   
 	<data name="pathIncludesWinDirError">
-		<value>The selected location includes the Windows folder.  The Windows folder cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>所选位置包含 Windows 文件夹。Windows 文件夹不能包含 iFolder。请选择一个不同的位置并重试。</value>
 	</data>
   
 	<data name="pathIncludesProgFilesDirError">
-		<value>The selected location includes the Program Files folder.  The Program Files folder cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>所选位置包含 Program Files 文件夹。Program Files 文件夹不能包含 iFolder。请选择一个不同的位置并重试。</value>
 	</data>
   
 	<data name="acceptError">
-		<value>An exception occurred while setting up the iFolder.</value>
+		<value>设置 iFolder 时出现异常。</value>
 	</data>
   
 	<data name="networkPath">
-		<value>The selected location is on a network or non-physical drive.  iFolders must reside on a physical drive.  Please select a different location and try again.</value>
+		<value>所选位置位于网络驱动器或非物理驱动器上。iFolder 必须驻留在物理驱动器上。请选择一个不同的位置并重试。</value>
 	</data>
   
 	<data name="selectLocation">
-		<value>Select a location for the iFolder.</value>
+		<value>请为 iFolder 选择位置。</value>
 	</data>
   
 	<data name="iFolderName">
-		<value>姓名</value>
+		<value>名称：{0}</value>
 	</data>
   
 	<data name="sharedBy">
-		<value>Shared by: {0}</value>
+		<value>共享对象：{0}</value>
 	</data>
   
 	<data name="rights">
-		<value>访问</value>
+		<value>访问：{0}</value>
 	</data>
   
 	<data name="Deny">
@@ -1223,7 +1223,7 @@
 	</data>
   
 	<data name="createDirectoryMessage">
-		<value>The directory specified does not exist.  Do you want to create the directory?</value>
+		<value>指定的目录不存在。是否要创建目录？</value>
 	</data>
   
 	<data name="createDirectoryTitle">
@@ -1231,6 +1231,6 @@
 	</data>
   
 	<data name="accessDenied">
-		<value>You do not have sufficient access to the selected location.  iFolders can only be created in folders where you have access to read and write files.  Please select a different location and try again.</value>
+		<value>您对所选位置没有足够的访问权限。您只能在具有读写文件访问权限的文件夹中创建 iFolder。请选择一个不同的位置并重试。</value>
 	</data>
 </root>

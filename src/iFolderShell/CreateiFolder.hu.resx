@@ -691,7 +691,7 @@
 	</data>
   
 	<data name="label2.Text">
-		<value>Hely</value>
+		<value>&amp;Hely:</value>
 	</data>
   
 	<data name="label2.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -943,7 +943,7 @@
 	</data>
   
 	<data name="chooseFolder">
-		<value>Choose a folder to convert to an iFolder.</value>
+		<value>Válasszon egy mappát, amelyet iFolder mappává kíván alakítani.</value>
 	</data>
   
 	<data name="errorTitle">
@@ -951,35 +951,35 @@
 	</data>
   
 	<data name="invalidFolder">
-		<value>An invalid location was specified.</value>
+		<value>Érvénytelen hely volt megadva.</value>
 	</data>
   
 	<data name="iFolderCreateError">
-		<value>An error was encountered while creating the iFolder.</value>
+		<value>Hiba történt az iFolder mappa létrehozásakor.</value>
 	</data>
   
 	<data name="createPrompt">
-		<value>The specified location does not exist.  Do you want to create it?</value>
+		<value>A megadott hely nem létezik. Létrehozza?</value>
 	</data>
   
 	<data name="createPromptTitle">
-		<value>Create Location</value>
+		<value>Hely létrehozása</value>
 	</data>
   
 	<data name="accessErrorTitle">
-		<value>iFolder Access Error</value>
+		<value>iFolder hozzáférési hiba</value>
 	</data>
   
 	<data name="accessDenied">
-		<value>You do not have sufficient access to the selected location.  iFolders can only be created in folders where you have access to read and write files.  Please select a different location and try again.</value>
+		<value>A kiválasztott hely eléréséhez nem rendelkezik megfelelő jogosultsággal. Az iFolder mappa csak olyan mappában hozható létre, amelynél rendelkezik a fájlok olvasási és írási jogosultságával is. Válasszon másik helyet, és próbálja meg újra.</value>
 	</data>
   
 	<data name="createAccount">
-		<value>To begin using iFolder, you must first set up an iFolder account.  Would you like to set up an iFolder account now?</value>
+		<value>Az iFolder mappa használatának megkezdéséhez előbb be kell állítania egy iFolder fiókot. Elvégzi most az iFolder fiók beállítását?</value>
 	</data>
   
 	<data name="createAccountTitle">
-		<value>Set Up iFolder Account</value>
+		<value>iFolder fiók beállítása</value>
 	</data>
   
 	<data name="pathInvalidErrorTitle">
@@ -987,46 +987,46 @@
 	</data>
   
 	<data name="invalidCharsError">
-		<value>The selected location contains invalid characters.  The characters \:*?"&lt;&gt;| cannot be used in an iFolder. Please select a different location and try again.</value>
+		<value>A kiválasztott hely érvénytelen karaktereket tartalmaz. Az iFolder mappa neve nem tartalmazhatja a \:*?"&lt;&gt;| karaktereket. Válasszon másik helyet, és próbálja meg újra.</value>
 	</data>
   
 	<data name="pathInStoreError">
-		<value>The selected location is inside the iFolder data folder.  Please select a different location and try again.</value>
+		<value>A kiválasztott hely az iFolder adatmappán belül van. Válasszon másik helyet, és próbálja meg újra.</value>
 	</data>
   
 	<data name="pathContainsStoreError">
-		<value>The selected location contains the iFolder data files.  Please select a different location and try again.</value>
+		<value>A kiválasztott hely az iFolder adatfájljait tartalmazza. Válasszon másik helyet, és próbálja meg újra.</value>
 	</data>
   
 	<data name="systemDirError">
-		<value>The selected location contains a system folder.  System folders cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>A kiválasztott hely rendszermappát tartalmaz. A rendszermappák nem tartalmazhatnak iFolder mappákat. Válasszon másik helyet, és próbálja meg újra.</value>
 	</data>
   
 	<data name="systemDriveError">
-		<value>The selected location is a system drive.  System drives cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>A kiválasztott hely rendszermeghajtó. A rendszermeghajtók nem tartalmazhatnak iFolder mappát. Válasszon másik helyet, és próbálja meg újra.</value>
 	</data>
   
 	<data name="winDirError">
-		<value>The selected location includes the Windows folder.  The Windows folder cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>A kiválasztott helyen belül szerepel a Windows mappa. A Windows mappa nem tartalmazhat iFolder mappát. Válasszon másik helyet, és próbálja meg újra.</value>
 	</data>
   
 	<data name="progFilesDirError">
-		<value>The selected location includes the Program Files folder.  The Program Files folder cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>A kiválasztott helyen belül szerepel a Program Files mappa. A Program Files mappa nem tartalmazhat iFolder mappát. Válasszon másik helyet, és próbálja meg újra.</value>
 	</data>
   
 	<data name="containsiFolderError">
-		<value>The selected location already contains an iFolder.  iFolders cannot exist inside other iFolders.  Please select a different location and try again.</value>
+		<value>A kiválasztott hely már tartalmaz egy iFolder mappát. Az iFolder mappák nem lehetnek másik iFolder mappán belül. Válasszon másik helyet, és próbálja meg újra.</value>
 	</data>
   
 	<data name="pathIniFolderError">
-		<value>The selected location is inside another iFolder.  iFolders cannot exist inside other iFolders.  Please select a different location and try again.</value>
+		<value>A kiválasztott hely egy másik iFolder mappán belül van. Az iFolder mappák nem lehetnek más iFolder mappán belül. Válasszon másik helyet, és próbálja meg újra.</value>
 	</data>
   
 	<data name="rootDriveError">
-		<value>iFolders cannot exist at the drive level.  The location selected is at the root of the drive.  Please select a location that is not at the root of a drive and try again.</value>
+		<value>Az iFolder mappák nem lehetnek a meghajtó szintjén. A kiválasztott hely a meghajtó gyökerében van. Válasszon olyan helyet, amelyik nem a meghajtó gyökerében van, és próbálja meg újra.</value>
 	</data>
   
 	<data name="networkPathError">
-		<value>The selected location is on a network or non-physical drive.  iFolders must reside on a physical drive.  Please select a different location and try again.</value>
+		<value>A kiválasztott hely hálózati vagy nem fizikai meghajtó. Az iFolder mappáknak fizikai meghajtón kell lenniük. Válasszon másik helyet, és próbálja meg újra.</value>
 	</data>
 </root>

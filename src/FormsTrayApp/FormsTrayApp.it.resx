@@ -735,15 +735,15 @@
 	</data>
   
 	<data name="iFolderServicesStarting">
-		<value>iFolder Services starting up...</value>
+		<value>Avvio dei servizi iFolder in corso...</value>
 	</data>
   
 	<data name="iFolderServicesStopping">
-		<value>iFolder Services shutting down...</value>
+		<value>Chiusura dei servizi iFolder in corso...</value>
 	</data>
   
 	<data name="collisionMessage">
-		<value>A conflict has been detected in iFolder "{0}".  Click here to resolve the conflicts in the iFolder.</value>
+		<value>È stato rilevato un conflitto nella cartella iFolder "{0}". Fare clic qui per risolvere i conflitti nella cartella iFolder.</value>
 	</data>
   
 	<data name="actionRequiredTitle">
@@ -755,7 +755,7 @@
 	</data>
   
 	<data name="subscriptionMessage">
-		<value>{0} has invited you to participate in this shared iFolder.  Click here to set up the iFolder.</value>
+		<value>{0} ha inviato un invito ad aderire a questa cartella condivisa iFolder. Fare clic qui per configurare la cartella iFolder.</value>
 	</data>
   
 	<data name="newMemberTitle">
@@ -763,15 +763,15 @@
 	</data>
   
 	<data name="newMemberMessage">
-		<value>{0} has joined the iFolder "{1}".  Click here to view the member list for the iFolder.</value>
+		<value>{0} ha aderito alla condivisione della cartella iFolder "{1}". Fare clic qui per visualizzare l'elenco dei membri relativo alla cartella iFolder.</value>
 	</data>
   
 	<data name="fatalErrorMessage">
-		<value>A software error is preventing iFolder from initializing.  Please contact your system administrator.</value>
+		<value>Errore software. Impossibile inizializzare iFolder. Contattare l'amministratore di sistema.</value>
 	</data>
   
 	<data name="fatalErrorTitle">
-		<value>Unable to Start iFolder Services</value>
+		<value>Impossibile avviare i servizi iFolder</value>
 	</data>
   
 	<data name="downloading">
@@ -783,67 +783,67 @@
 	</data>
   
 	<data name="clientUpgradeTitle">
-		<value>iFolder Client Upgrade</value>
+		<value>Upgrade del client iFolder</value>
 	</data>
   
 	<data name="upgradeErrorTitle">
-		<value>Upgrade Failure</value>
+		<value>Errore durante l'upgrade</value>
 	</data>
   
 	<data name="clientUpgradeFailure">
-		<value>The iFolder client upgrade failed.  Please contact your system administrator.</value>
+		<value>Upgrade del client iFolder non riuscito. Contattare l'amministratore di sistema.</value>
 	</data>
   
 	<data name="clientUpgradePrompt">
-		<value>A newer version "{0}" of the iFolder Client is available. Would you like to upgrade now?</value>
+		<value>È disponibile una versione "{0}" più recente del client iFolder. Eseguire l'upgrade adesso?</value>
 	</data>
   
 	<data name="failedAuth">
-		<value>The username or password is invalid.  Please verify the information entered and try again.</value>
+		<value>Nome utente o parola d'ordine non valido. Verificare le informazioni immesse e riprovare.</value>
 	</data>
   
 	<data name="graceLogin">
-		<value>Your password has expired.  You have {0} grace logins remaining.</value>
+		<value>Parola d'ordine scaduta. Si dispone di {0} login extra rimanenti.</value>
 	</data>
   
 	<data name="graceLoginTitle">
-		<value>Expired Password</value>
+		<value>Parola d'ordine scaduta</value>
 	</data>
   
 	<data name="accountDisabled">
-		<value>The user account is disabled.  Please contact your network administrator for assistance. </value>
+		<value>Conto utente disabilitato. Contattare l'amministratore di rete per assistenza. </value>
 	</data>
   
 	<data name="iFolderAccountDisabled">
-		<value>The iFolder account is disabled.  Please contact your network administrator for assistance.</value>
+		<value>Conto iFolder disabilitato. Contattare l'amministratore di rete per assistenza.</value>
 	</data>
   
 	<data name="accountLockout">
-		<value>The user account has been locked.  Please contact your network administrator for assistance.</value>
+		<value>Conto utente bloccato. Contattare l'amministratore di rete per assistenza.</value>
 	</data>
   
 	<data name="serverConnectErrorTitle">
-		<value>Unable to Connect to iFolder Server</value>
+		<value>Impossibile eseguire la connessione al server iFolder</value>
 	</data>
   
 	<data name="checkingForiFolders">
-		<value>Checking for new iFolders...</value>
+		<value>Ricerca di nuove cartelle iFolder in corso...</value>
 	</data>
   
 	<data name="doneCheckingForiFolders">
-		<value>Done checking for new iFolders</value>
+		<value>Ricerca di nuove cartelle iFolder completata</value>
 	</data>
   
 	<data name="localSync">
-		<value>Checking for changes: {0}</value>
+		<value>Ricerca delle modifiche in corso: {0}</value>
 	</data>
   
 	<data name="synciFolder">
-		<value>Started synchronization: {0}</value>
+		<value>Sincronizzazione avviata: {0}</value>
 	</data>
   
 	<data name="syncComplete">
-		<value>Finished synchronization: {0}</value>
+		<value>Sincronizzazione completata: {0}</value>
 	</data>
   
 	<data name="deleteClientFile">
@@ -851,11 +851,11 @@
 	</data>
   
 	<data name="uploadDeltaSyncFile">
-		<value>Uploading file: {0}. Synchronizing changes only: {1}% savings.</value>
+		<value>Caricamento del file: {0}. Sincronizzazione delle sole modifiche in corso: {1}% salvato.</value>
 	</data>
   
 	<data name="downloadDeltaSyncFile">
-		<value>Downloading file: {0}. Synchronizing changes only: {1}% savings.</value>
+		<value>Scaricamento del file: {0}. Sincronizzazione delle sole modifiche in corso: {1}% salvato.</value>
 	</data>
   
 	<data name="uploadFile">
@@ -867,11 +867,11 @@
 	</data>
   
 	<data name="localFile">
-		<value>Found changes in file: {0}</value>
+		<value>Trovate modifiche nel file: {0}</value>
 	</data>
   
 	<data name="syncingFile">
-		<value>Synchronizing file: {0}</value>
+		<value>Sincronizzazione del file in corso: {0}</value>
 	</data>
   
 	<data name="deleteClientDir">
@@ -879,63 +879,63 @@
 	</data>
   
 	<data name="uploadDir">
-		<value>Uploading directory: {0}</value>
+		<value>Caricamento della directory in corso: {0}</value>
 	</data>
   
 	<data name="downloadDir">
-		<value>Downloading directory: {0}</value>
+		<value>Scaricamento della directory in corso: {0}</value>
 	</data>
   
 	<data name="localDir">
-		<value>Found changes in directory: {0}</value>
+		<value>Trovate modifiche nella directory: {0}</value>
 	</data>
   
 	<data name="syncingDir">
-		<value>Synchronizing directory: {0}</value>
+		<value>Sincronizzazione della directory in corso: {0}</value>
 	</data>
   
 	<data name="deleteUnknown">
-		<value>Deleting on server: {0}</value>
+		<value>Cancellazione sul server in corso: {0}</value>
 	</data>
   
 	<data name="conflictFailure">
-		<value>Conflict occurred: {0}</value>
+		<value>Conflitto: {0}</value>
 	</data>
   
 	<data name="policyFailure">
-		<value>Policy prevented synchronization: {0}</value>
+		<value>Sincronizzazione non eseguita a causa delle norme: {0}</value>
 	</data>
   
 	<data name="accessFailure">
-		<value>Insufficient rights prevented synchronization: {0}</value>
+		<value>Diritti insufficienti. Sincronizzazione non eseguita: {0}</value>
 	</data>
   
 	<data name="lockFailure">
-		<value>Locked iFolder prevented synchronization: {0}</value>
+		<value>Cartella iFolder bloccata. Sincronizzazione non eseguita: {0}</value>
 	</data>
   
 	<data name="quotaFailure">
-		<value>Full iFolder prevented synchronization: {0}</value>
+		<value>Cartella iFolder piena. Sincronizzazione non eseguita: {0}</value>
 	</data>
   
 	<data name="policySizeFailure">
-		<value>Size restriction policy prevented synchronization: {0}</value>
+		<value>Sincronizzazione non eseguita a causa delle norme relative alle dimensioni: {0}</value>
 	</data>
   
 	<data name="policyTypeFailure">
-		<value>File type restriction policy prevented synchronization: {0}</value>
+		<value>Sincronizzazione non eseguita a causa delle norme relative ai tipi di file: {0}</value>
 	</data>
   
 	<data name="genericFailure">
-		<value>iFolder failed synchronization: {0}</value>
+		<value>Sincronizzazione cartella iFolder non riuscita: {0}</value>
 	</data>
   
 	<data name="serverDiskFullFailure">
-		<value>Insufficient disk space on the server prevented synchronization: {0}</value>
+		<value>Spazio su disco insufficiente sul serve. Sincronizzazione non eseguita: {0}</value>
 	</data>
   
 	<data name="clientDiskFullFailure">
-		<value>Insufficient disk space on this computer prevented synchronization: {0}</value>
+		<value>Spazio su disco insufficiente sul computer in uso. Sincronizzazione non eseguita: {0}</value>
 	</data>
   
 	<data name="myiFolders">
@@ -943,18 +943,18 @@
 	</data>
   
 	<data name="verifyCert">
-		<value>iFolder cannot verify the identity of the iFolder Server {0}.  The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be {0} which could put your confidential information at risk.Â Â Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?</value>
+		<value>Impossibile verificare l'identità del server iFolder {0}. Il certificato relativo a questo server iFolder è firmato da un'autorità di certificazione sconosciuta. È possibile che il server a cui si sta tentando di eseguire la connessione non sia {0}. Ciò può costituire un rischio per la riservatezza dei propri dati.Â Â  Prima di accettare il certificato, è necessario rivolgersi all'amministratore di sistema. Accettare il certificato in modo permanente e continuare la connessione?</value>
 	</data>
   
 	<data name="verifyCertTitle">
-		<value>Unable to Verify Identity</value>
+		<value>Impossibile verificare l'identità</value>
 	</data>
   
 	<data name="createAccount">
-		<value>To begin using iFolder, you must first set up an iFolder account.  Would you like to set up an iFolder account now?</value>
+		<value>Per iniziare a utilizzare iFolder, è necessario configurare un conto. Configurare un conto iFolder adesso?</value>
 	</data>
   
 	<data name="createAccountTitle">
-		<value>Set Up iFolder Account</value>
+		<value>Configura conto iFolder</value>
 	</data>
 </root>

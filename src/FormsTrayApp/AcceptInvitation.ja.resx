@@ -791,7 +791,7 @@
 	</data>
   
 	<data name="label2.Text">
-		<value>場所</value>
+		<value>場所(&amp;L):</value>
 	</data>
   
 	<data name="label2.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -995,7 +995,7 @@
 	</data>
   
 	<data name="label3.Text">
-		<value>Choose a location on this computer for the iFolder.</value>
+		<value>このコンピュータ上でiFolderの場所を選択してください。</value>
 	</data>
   
 	<data name="label3.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -1159,59 +1159,59 @@
 	</data>
   
 	<data name="pathValidationError">
-		<value>An exception occurred while validating the path.</value>
+		<value>パスの検証中に例外が発生しました。</value>
 	</data>
   
 	<data name="pathValidationErrorTitle">
-		<value>Unable to Validate Path</value>
+		<value>パスの検証ができません</value>
 	</data>
   
 	<data name="pathIniFolderError">
-		<value>The selected location is inside another iFolder.  iFolders cannot exist inside other iFolders.  Please select a different location and try again.</value>
+		<value>選択された場所は他のiFolderの中にあります。iFolderは他のiFolderの中に存在できません。別の場所を選択し、再度実行してください。</value>
 	</data>
   
 	<data name="pathInvalidErrorTitle">
-		<value>無効なディレクトリ</value>
+		<value>無効な場所</value>
 	</data>
   
 	<data name="pathExistsError">
-		<value>The location you selected already contains a folder with the same name as this iFolder.  Please select a different location and try again.</value>
+		<value>選択した場所には、すでにこのiFolderと同じ名前のフォルダがあります。別の場所を選択し、再度実行してください。</value>
 	</data>
   
 	<data name="pathInStoreError">
-		<value>The selected location is inside the iFolder data folder.  Please select a different location and try again.</value>
+		<value>選択された場所は、iFolderデータフォルダ内にあります。別の場所を選択し、再度実行してください。</value>
 	</data>
   
 	<data name="pathIncludesWinDirError">
-		<value>The selected location includes the Windows folder.  The Windows folder cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>選択された場所にはWindowsフォルダが含まれています。WindowsフォルダにiFolderを含めることはできません。別の場所を選択し、再度実行してください。</value>
 	</data>
   
 	<data name="pathIncludesProgFilesDirError">
-		<value>The selected location includes the Program Files folder.  The Program Files folder cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>選択された場所にはProgram Filesフォルダが含まれています。Program FilesにiFolderを含めることはできません。異なる場所を選択し、再度実行してください。</value>
 	</data>
   
 	<data name="acceptError">
-		<value>An exception occurred while setting up the iFolder.</value>
+		<value>iFolderのセットアップ中に例外が発生しました。</value>
 	</data>
   
 	<data name="networkPath">
-		<value>The selected location is on a network or non-physical drive.  iFolders must reside on a physical drive.  Please select a different location and try again.</value>
+		<value>選択された場所はネットワーク上または非物理ドライブです。iFolderは物理ドライブ上に配置する必要があります。別の場所を選択し、再度実行してください。</value>
 	</data>
   
 	<data name="selectLocation">
-		<value>Select a location for the iFolder.</value>
+		<value>iFolderの場所を選択してください。</value>
 	</data>
   
 	<data name="iFolderName">
-		<value>名前</value>
+		<value>名前: {0}</value>
 	</data>
   
 	<data name="sharedBy">
-		<value>Shared by: {0}</value>
+		<value>共有者: {0}</value>
 	</data>
   
 	<data name="rights">
-		<value>アクセス</value>
+		<value>アクセス: {0}</value>
 	</data>
   
 	<data name="Deny">
@@ -1219,11 +1219,11 @@
 	</data>
   
 	<data name="createDirectoryError">
-		<value>ディレクトリを作成できません</value>
+		<value>ディレクトリを作成できません。</value>
 	</data>
   
 	<data name="createDirectoryMessage">
-		<value>The directory specified does not exist.  Do you want to create the directory?</value>
+		<value>指定されたディレクトリは存在しません。ディレクトリを作成しますか?</value>
 	</data>
   
 	<data name="createDirectoryTitle">
@@ -1231,6 +1231,6 @@
 	</data>
   
 	<data name="accessDenied">
-		<value>You do not have sufficient access to the selected location.  iFolders can only be created in folders where you have access to read and write files.  Please select a different location and try again.</value>
+		<value>選択された場所に対する十分なアクセス権がありません。iFolderは、ファイルの読み込み権と書き込み権があるフォルダにのみ作成できます。別の場所を選択し、再度実行してください。</value>
 	</data>
 </root>

@@ -143,7 +143,7 @@
 	</data>
   
 	<data name="defaultInterval.HelpString">
-		<value>Specifies the interval at which iFolders are synchronized.</value>
+		<value>Gibt das Intervall an, in dem iFolder-Ordner synchronisiert werden.</value>
 	</data>
   
 	<data name="defaultInterval.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -263,7 +263,7 @@
 	</data>
   
 	<data name="displayConfirmation.HelpString">
-		<value>Check to display the Confirmation dialog when a new iFolder is created.</value>
+		<value>Wählen Sie diese Option, um beim Erstellen eines neuen iFolder-Ordners das Bestätigungsdialogfeld einzublenden.</value>
 	</data>
   
 	<data name="displayConfirmation.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -767,7 +767,7 @@
 	</data>
   
 	<data name="notifyCollisions.HelpString">
-		<value>Check to receive notifications when a conflict occurs in an iFolder.</value>
+		<value>Wählen Sie diese Option, um bei Konflikten in einem iFolder Benachrichtigungen zu erhalten.</value>
 	</data>
   
 	<data name="notifyCollisions.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -807,7 +807,7 @@
 	</data>
   
 	<data name="notifyCollisions.Text">
-		<value>N&amp;otify of conflicts</value>
+		<value>Bei K&amp;onflikten benachrichtigen</value>
 	</data>
   
 	<data name="notifyCollisions.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -895,7 +895,7 @@
 	</data>
   
 	<data name="notifyShared.HelpString">
-		<value>Check to receive notifications when an iFolder is shared with you.</value>
+		<value>Wählen Sie diese Option, um Benachrichtigungen zu erhalten, wenn ein iFolder für Sie freigegeben wird.</value>
 	</data>
   
 	<data name="notifyShared.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1023,7 +1023,7 @@
 	</data>
   
 	<data name="notifyJoins.HelpString">
-		<value>Check to receive notifications when a user joins one of your iFolders.</value>
+		<value>Wählen Sie diese Option, um Benachrichtigungen zu erhalten, wenn ein Benutzer einem Ihrer iFolder-Ordner beitritt.</value>
 	</data>
   
 	<data name="notifyJoins.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1291,7 +1291,7 @@
 	</data>
   
 	<data name="label1.Text">
-		<value>Synchronize iFolders Every</value>
+		<value>iFolder synchronisieren alle</value>
 	</data>
   
 	<data name="label1.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -1495,7 +1495,7 @@
 	</data>
   
 	<data name="autoSync.HelpString">
-		<value>Check to enable synchronization at the specified interval or uncheck to disable synchronization.</value>
+		<value>Wählen Sie diese Option, um die Synchronisierung im angegebenen Intervall zu aktivieren oder heben Sie die Auswahl auf, um die Synchronisierung zu deaktivieren.</value>
 	</data>
   
 	<data name="autoSync.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1535,7 +1535,7 @@
 	</data>
   
 	<data name="autoSync.Text">
-		<value>Automatically S&amp;ynchronize iFolders</value>
+		<value>iFolder automatisch s&amp;ynchronisieren</value>
 	</data>
   
 	<data name="autoSync.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -1735,7 +1735,7 @@
 	</data>
   
 	<data name="autoStart.HelpString">
-		<value>Check to start the iFolder client at logon time.</value>
+		<value>Wählen Sie diese Option, um den iFolder-Client bei der Anmeldung zu starten.</value>
 	</data>
   
 	<data name="autoStart.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1987,7 +1987,7 @@
 	</data>
   
 	<data name="accounts.HelpString">
-		<value>Displays the list of iFolder accounts on this computer.</value>
+		<value>Zeigt die Liste der iFolder-Konten auf diesem Computer an.</value>
 	</data>
   
 	<data name="accounts.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2155,7 +2155,7 @@
 	</data>
   
 	<data name="details.HelpString">
-		<value>Click to view details for the selected account.</value>
+		<value>Klicken Sie, um Details für das ausgewählte Konto anzuzeigen.</value>
 	</data>
   
 	<data name="details.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2547,7 +2547,7 @@
 	</data>
   
 	<data name="login.Text">
-		<value>anmelden</value>
+		<value>&amp;Anmelden</value>
 	</data>
   
 	<data name="login.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -2755,7 +2755,7 @@
 	</data>
   
 	<data name="server.HelpString">
-		<value>Specifies the iFolder server to connect to.</value>
+		<value>Gibt den iFolder-Server an, zu dem die Verbindung aufgebaut werden soll.</value>
 	</data>
   
 	<data name="server.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -3371,7 +3371,7 @@
 	</data>
   
 	<data name="enableAccount.HelpString">
-		<value>Check to enable the selected account or uncheck to disable the selected account.</value>
+		<value>Wählen Sie diese Option, um das ausgewählte Konto zu aktivieren oder heben Sie die Auswahl auf, um das Konto zu deaktivieren.</value>
 	</data>
   
 	<data name="enableAccount.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -3499,7 +3499,7 @@
 	</data>
   
 	<data name="rememberPassword.HelpString">
-		<value>Check to have the iFolder client remember the account password.</value>
+		<value>Wählen Sie diese Option, damit der iFolder-Client das Kontopasswort speichert.</value>
 	</data>
   
 	<data name="rememberPassword.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -3655,7 +3655,7 @@
 	</data>
   
 	<data name="label10.Text">
-		<value>Benutzername:</value>
+		<value>&amp;Benutzername:</value>
 	</data>
   
 	<data name="label10.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -3743,7 +3743,7 @@
 	</data>
   
 	<data name="defaultServer.HelpString">
-		<value>Check to make this account the default account.</value>
+		<value>Wählen Sie diese Option, um dieses Konto zum Standardkonto zu machen.</value>
 	</data>
   
 	<data name="defaultServer.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -3863,7 +3863,7 @@
 	</data>
   
 	<data name="removeAccount.HelpString">
-		<value>Click to remove the selected iFolder account.</value>
+		<value>Klicken Sie, um das ausgewählte iFolder-Konto zu entfernen.</value>
 	</data>
   
 	<data name="removeAccount.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -3983,7 +3983,7 @@
 	</data>
   
 	<data name="addAccount.HelpString">
-		<value>Click to create a new iFolder account.</value>
+		<value>Klicken Sie, um ein neues iFolder-Konto zu erstellen.</value>
 	</data>
   
 	<data name="addAccount.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -4615,103 +4615,103 @@
 	</data>
   
 	<data name="readAccountsError">
-		<value>An error was encountered while reading the iFolder accounts.</value>
+		<value>Fehler beim Lesen der iFolder-Konten.</value>
 	</data>
   
 	<data name="failedAuth">
-		<value>The username or password is invalid.  Please verify the information entered and try again.</value>
+		<value>Der Benutzername oder das Passwort ist ungültig. Überprüfen Sie die eingegebenen Informationen und versuchen Sie es erneut.</value>
 	</data>
   
 	<data name="serverConnectErrorTitle">
-		<value>Unable to Connect to iFolder Server</value>
+		<value>Verbindung zu iFolder-Server kann nicht aufgebaut werden</value>
 	</data>
   
 	<data name="serverConnectError">
-		<value>An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.</value>
+		<value>Fehler beim Aufbauen der Verbindung zum iFolder-Server. Überprüfen Sie die eingegebenen Informationen und versuchen Sie es erneut. Wenn das Problem weiterhin auftritt, wenden Sie sich an den Netzwerkverwalter.</value>
 	</data>
   
 	<data name="unknownDomain">
-		<value>Unable to contact the specified server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.</value>
+		<value>Kontakt zum angegebenen Server nicht möglich. Überprüfen Sie die eingegebenen Informationen und versuchen Sie es erneut. Wenn das Problem weiterhin auftritt, wenden Sie sich an den Netzwerkverwalter.</value>
 	</data>
   
 	<data name="accountDisabled">
-		<value>The user account is disabled.  Please contact your network administrator for assistance.</value>
+		<value>Das Benutzerkonto ist deaktiviert. Wenden Sie sich wegen Unterstützung an den Netzwerkverwalter.</value>
 	</data>
   
 	<data name="iFolderAccountDisabled">
-		<value>The iFolder account is disabled.  Please contact your network administrator for assistance.</value>
+		<value>Das iFolder-Konto ist deaktiviert. Wenden Sie sich wegen Unterstützung an Ihren Netzwerkverwalter.</value>
 	</data>
   
 	<data name="accountLockout">
-		<value>The user account has been locked.  Please contact your network administrator for assistance.</value>
+		<value>Das Benutzerkonto wurde gesperrt. Wenden Sie sich wegen Unterstützung an Ihren Netzwerkverwalter.</value>
 	</data>
   
 	<data name="graceLogin">
-		<value>Your password has expired.  You have {0} grace logins remaining.</value>
+		<value>Ihr Passwort ist abgelaufen. Sie haben noch {0} Kulanzanmeldungen.</value>
 	</data>
   
 	<data name="graceLoginTitle">
-		<value>Expired Password</value>
+		<value>Passwort abgelaufen</value>
 	</data>
   
 	<data name="alreadyJoined">
-		<value>An account for this server already exists for your current local login identity on this computer.  Only one account per server is allowed.</value>
+		<value>Für Ihre aktuelle lokale Anmeldeidentität auf diesem Computer gibt es bereits ein Konto für diesen Server. Nur ein Konto pro Server ist zulässig.</value>
 	</data>
   
 	<data name="alreadyJoinedTitle">
-		<value>Account Already Exists</value>
+		<value>Konto bereits vorhanden</value>
 	</data>
   
 	<data name="PreferencesErrorTitle">
-		<value>iFolder Preferences Error</value>
+		<value>Fehler bei iFolder-Einstellungen</value>
 	</data>
   
 	<data name="saveSyncError">
-		<value>An error was encountered while saving the default synchronization interval.</value>
+		<value>Fehler beim Speichern des Standardsynchronisierungsintervalls.</value>
 	</data>
   
 	<data name="readSyncError">
-		<value>An error was encountered while reading the default synchronization interval.</value>
+		<value>Fehler beim Lesen des Standardsynchronisierungsintervalls.</value>
 	</data>
   
 	<data name="setDefaultError">
-		<value>An error was encountered while setting the default account.</value>
+		<value>Fehler beim Festlegen des Standardkontos.</value>
 	</data>
   
 	<data name="accountErrorTitle">
-		<value>iFolder Account Error</value>
+		<value>Fehler bei iFolder-Konto</value>
 	</data>
   
 	<data name="saveAccountPrompt">
-		<value>Do you want to save the new account?</value>
+		<value>Möchten Sie das neue Konto speichern?</value>
 	</data>
   
 	<data name="saveAccountTitle">
-		<value>Save New Account</value>
+		<value>Neues Konto speichern</value>
 	</data>
   
 	<data name="savePasswordError">
-		<value>An error was encountered while saving the password.</value>
+		<value>Fehler beim Speichern des Passworts.</value>
 	</data>
   
 	<data name="passwordErrorTitle">
-		<value>iFolder Password Error</value>
+		<value>Fehler bei iFolder-Passwort</value>
 	</data>
   
 	<data name="updatePrompt">
-		<value>Do you want to save the changes made to this account?</value>
+		<value>Möchten Sie die für dieses Konto vorgenommenen Änderungen speichern?</value>
 	</data>
   
 	<data name="updateTitle">
-		<value>Save Account</value>
+		<value>Konto speichern</value>
 	</data>
   
 	<data name="requiredFieldsMissing">
-		<value>The Username and Server are required fields.  Please fill in the missing information and try again.</value>
+		<value>Der Benutzername und der Server sind erforderliche Felder. Geben Sie die fehlenden Informationen ein und versuchen Sie es erneut.</value>
 	</data>
   
 	<data name="iFolderMessageTitle">
-		<value>iFolder Message</value>
+		<value>iFolder-Nachricht</value>
 	</data>
   
 	<data name="statusLoggedIn">
@@ -4743,18 +4743,18 @@
 	</data>
   
 	<data name="verifyCert">
-		<value>iFolder cannot verify the identity of the iFolder Server {0}.  The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be {0} which could put your confidential information at risk.Â Â Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?</value>
+		<value>iFolder kann die Identität von iFolder-Server {0} nicht überprüfen. Das Zertifikat für diesen iFolder-Server wurde von einer unbekannten Zertifizierungsstelle signiert. Sie bauen möglicherweise eine Verbindung zu einem Server auf, der vorgibt, {0} zu sein; dies könnte Ihre vertraulichen Informationen gefährden..Â Â Klären Sie den Sachverhalt mit Ihrem Systemadministrator, bevor Sie dieses Zertifikat akzeptieren. Möchten Sie dieses Zertifikat dauerhaft akzeptieren und den Verbindungsaufbau fortsetzen?</value>
 	</data>
   
 	<data name="verifyCertTitle">
-		<value>Unable to Verify Identity</value>
+		<value>Identität kann nicht überprüft werden</value>
 	</data>
   
 	<data name="updateHostError">
-		<value>An error was encountered while saving the server value.</value>
+		<value>Fehler beim Speichern des Serverwerts.</value>
 	</data>
   
 	<data name="removeAccountError">
-		<value>An error was encountered while removing the account.</value>
+		<value>Fehler beim Entfernen des Kontos.</value>
 	</data>
 </root>

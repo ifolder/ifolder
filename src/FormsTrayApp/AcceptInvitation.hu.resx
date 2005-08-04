@@ -579,7 +579,7 @@
 	</data>
   
 	<data name="label1.Text">
-		<value>Részletek</value>
+		<value>Részletek:</value>
 	</data>
   
 	<data name="label1.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -791,7 +791,7 @@
 	</data>
   
 	<data name="label2.Text">
-		<value>Hely</value>
+		<value>&amp;Hely:</value>
 	</data>
   
 	<data name="label2.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -995,7 +995,7 @@
 	</data>
   
 	<data name="label3.Text">
-		<value>Choose a location on this computer for the iFolder.</value>
+		<value>Válassza ki, hogy hol legyen a számítógépen az iFolder mappa.</value>
 	</data>
   
 	<data name="label3.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -1159,15 +1159,15 @@
 	</data>
   
 	<data name="pathValidationError">
-		<value>An exception occurred while validating the path.</value>
+		<value>Kivétel történt az elérési út ellenőrzésekor.</value>
 	</data>
   
 	<data name="pathValidationErrorTitle">
-		<value>Unable to Validate Path</value>
+		<value>Nem lehet ellenőrizni az elérési utat.</value>
 	</data>
   
 	<data name="pathIniFolderError">
-		<value>The selected location is inside another iFolder.  iFolders cannot exist inside other iFolders.  Please select a different location and try again.</value>
+		<value>A kiválasztott hely egy másik iFolder mappán belül van. Az iFolder mappák nem lehetnek más iFolder mappán belül. Válasszon másik helyet, és próbálja meg újra.</value>
 	</data>
   
 	<data name="pathInvalidErrorTitle">
@@ -1175,47 +1175,47 @@
 	</data>
   
 	<data name="pathExistsError">
-		<value>The location you selected already contains a folder with the same name as this iFolder.  Please select a different location and try again.</value>
+		<value>A kiválasztott helyen már vagy egy ugyanolyan nevű mappa, mint ez az iFolder mappa. Válasszon másik helyet, és próbálja meg újra.</value>
 	</data>
   
 	<data name="pathInStoreError">
-		<value>The selected location is inside the iFolder data folder.  Please select a different location and try again.</value>
+		<value>A kiválasztott hely az iFolder adatmappán belül van. Válasszon másik helyet, és próbálja meg újra.</value>
 	</data>
   
 	<data name="pathIncludesWinDirError">
-		<value>The selected location includes the Windows folder.  The Windows folder cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>A kiválasztott helyen belül szerepel a Windows mappa. A Windows mappa nem tartalmazhat iFolder mappát. Válasszon másik helyet, és próbálja meg újra.</value>
 	</data>
   
 	<data name="pathIncludesProgFilesDirError">
-		<value>The selected location includes the Program Files folder.  The Program Files folder cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>A kiválasztott helyen belül szerepel a Program Files mappa. A Program Files mappa nem tartalmazhat iFolder mappát. Válasszon másik helyet, és próbálja meg újra.</value>
 	</data>
   
 	<data name="acceptError">
-		<value>An exception occurred while setting up the iFolder.</value>
+		<value>Kivétel történt az iFolder beállításakor.</value>
 	</data>
   
 	<data name="networkPath">
-		<value>The selected location is on a network or non-physical drive.  iFolders must reside on a physical drive.  Please select a different location and try again.</value>
+		<value>A kiválasztott hely hálózati vagy nem fizikai meghajtó. Az iFolder mappáknak fizikai meghajtón kell lenniük. Válasszon másik helyet, és próbálja meg újra.</value>
 	</data>
   
 	<data name="selectLocation">
-		<value>Select a location for the iFolder.</value>
+		<value>Válasszon helyet az iFolder mappa számára.</value>
 	</data>
   
 	<data name="iFolderName">
-		<value>Név</value>
+		<value>Név: {0}</value>
 	</data>
   
 	<data name="sharedBy">
-		<value>Shared by: {0}</value>
+		<value>Megosztotta: {0}</value>
 	</data>
   
 	<data name="rights">
-		<value>   hozzáférés            %+5m0  %+4m1.%k2\n</value>
+		<value>Hozzáférés: {0}</value>
 	</data>
   
 	<data name="Deny">
-		<value>Deny</value>
+		<value>Elutasítás</value>
 	</data>
   
 	<data name="createDirectoryError">
@@ -1223,7 +1223,7 @@
 	</data>
   
 	<data name="createDirectoryMessage">
-		<value>The directory specified does not exist.  Do you want to create the directory?</value>
+		<value>A megadott könyvtár nem létezik. Létrehozza a könyvtárat?</value>
 	</data>
   
 	<data name="createDirectoryTitle">
@@ -1231,6 +1231,6 @@
 	</data>
   
 	<data name="accessDenied">
-		<value>You do not have sufficient access to the selected location.  iFolders can only be created in folders where you have access to read and write files.  Please select a different location and try again.</value>
+		<value>A kiválasztott hely eléréséhez nem rendelkezik megfelelő jogosultsággal. Az iFolder mappa csak olyan mappában hozható létre, amelynél rendelkezik a fájlok olvasási és írási jogosultságával is. Válasszon másik helyet, és próbálja meg újra.</value>
 	</data>
 </root>

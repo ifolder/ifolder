@@ -483,7 +483,7 @@
 	</data>
   
 	<data name="iFolderOverview.Text">
-		<value>Zaznaczony folder funkcjonuje teraz jako iFolder i różni się od innych folderów specjalnym oznaczeniem iFolder. Aby uzyskać więcej informacji na temat wykorzystania iFolderów i współdzielenia ich z innymi użytkownikami, patrz Zarządzanie iFolderami w Pomocy dotyczącej iFolderów.</value>
+		<value>Zaznaczony folder funkcjonuje teraz jako iFolder i różni się od innych folderów specjalnym oznaczeniem iFolder. Aby uzyskać więcej informacji na temat wykorzystania iFolderów i współdzielenia ich z innymi użytkownikami, patrz Zarządzanie iFolderami w pomocy dotyczącej iFolderów.</value>
 	</data>
   
 	<data name="iFolderOverview.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -631,6 +631,6 @@
 	</data>
 	
 	<data name="saveConfigError">
-		<value>An error was encountered while saving configuration.</value>
+		<value>Podczas zapisywania konfiguracji wystąpił błąd.</value>
 	</data>
 </root>

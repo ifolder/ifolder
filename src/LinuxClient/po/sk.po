@@ -19,26 +19,26 @@ msgstr ""
 #: src/LinuxClient/application/iFolderApplication.cs:459
 #: src/LinuxClient/library/PrefsAccountsPage.cs:920
 msgid "Your password has expired"
-msgstr "Your password has expired"
+msgstr "Platnosť hesla vypršala"
 #: src/LinuxClient/application/iFolderApplication.cs:369 
 #: src/LinuxClient/application/iFolderApplication.cs:460
 #: src/LinuxClient/library/PrefsAccountsPage.cs:921
 #, csharp-format
 msgid "You have {0} grace logins remaining."
-msgstr "You have {0} grace logins remaining."
+msgstr "Zostáva vám {0} darovaných pokusov o prihlásenie"
 #: src/LinuxClient/application/iFolderApplication.cs:492 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:935
 #: src/LinuxClient/library/PrefsAccountsPage.cs:988
 msgid "The username or password is invalid"
-msgstr "The username or password is invalid"
+msgstr "Meno používateľa alebo heslo je neplatné"
 #: src/LinuxClient/application/iFolderApplication.cs:493 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:936
 #: src/LinuxClient/library/PrefsAccountsPage.cs:989
 msgid "Please try again."
-msgstr "Please try again."
+msgstr "Skúste to znova."
 #: src/LinuxClient/application/iFolderApplication.cs:504 
 msgid "The user account is disabled"
-msgstr "The user account is disabled"
+msgstr "Konto používateľa je zakázané"
 #: src/LinuxClient/application/iFolderApplication.cs:505 
 #: src/LinuxClient/application/iFolderApplication.cs:517
 #: src/LinuxClient/library/PrefsAccountsPage.cs:948
@@ -46,18 +46,18 @@ msgstr "The user account is disabled"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:1001
 #: src/LinuxClient/library/PrefsAccountsPage.cs:1013
 msgid "Please contact your network administrator for assistance."
-msgstr "Please contact your network administrator for assistance."
+msgstr "Požiadajte o pomoc správcu siete."
 #: src/LinuxClient/application/iFolderApplication.cs:516 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:959
 #: src/LinuxClient/library/PrefsAccountsPage.cs:1012
 msgid "The user account is locked"
-msgstr "The user account is locked"
+msgstr "Konto používateľa je uzamknuté"
 #: src/LinuxClient/application/iFolderApplication.cs:528 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:971
 #: src/LinuxClient/library/PrefsAccountsPage.cs:1036
 #: src/LinuxClient/library/PrefsAccountsPage.cs:1065
 msgid "Unable to connect to the iFolder Server"
-msgstr "Unable to connect to the iFolder Server"
+msgstr "Nedá sa pripojiť k serveru iFolder"
 #: src/LinuxClient/application/iFolderApplication.cs:529 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:972
 #: src/LinuxClient/library/PrefsAccountsPage.cs:1037
@@ -66,12 +66,12 @@ msgid ""
 "An error was encountered while connecting to the iFolder server.  Please "
 "verify the information entered and try again.  If the problem persists, "
 "please contact your network administrator."
-msgstr "An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."
+msgstr "Pri pripájaní sa k serveru iFolder nastala chyba. Skontrolujte zadané informácie a skúste to znova. Ak problém pretrváva, obráťte sa na správcu siete."
 #: src/LinuxClient/application/iFolderApplication.cs:530 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:973
 #: src/LinuxClient/library/PrefsAccountsPage.cs:1038
 msgid "Authentication Status Code"
-msgstr "Authentication Status Code"
+msgstr "Kód stavu overenia"
 #: src/LinuxClient/application/iFolderApplication.cs:628 
 #, csharp-format
 msgid "New iFolder \"{0}\""
@@ -79,29 +79,29 @@ msgstr "Nový priečinok iFolder"
 #: src/LinuxClient/application/iFolderApplication.cs:630 
 #, csharp-format
 msgid "{0} has invited you to participate in this shared iFolder"
-msgstr "{0} has invited you to participate in this shared iFolder"
+msgstr "{0} vás pozval k zdieľaniu tohto priečinku iFolder"
 #: src/LinuxClient/application/iFolderApplication.cs:683 
 msgid "Action Required"
-msgstr "Action Required"
+msgstr "Požaduje sa akcia"
 #: src/LinuxClient/application/iFolderApplication.cs:684 
 #, csharp-format
 msgid "A conflict has been detected in iFolder \"{0}\""
-msgstr "A conflict has been detected in iFolder \"{0}\""
+msgstr "V priečinku iFolder \"{0}\" bol zistený konflikt"
 #: src/LinuxClient/application/iFolderApplication.cs:730 
 msgid "New iFolder User"
-msgstr "New iFolder User"
+msgstr "Nový používateľ priečinku iFolder"
 #: src/LinuxClient/application/iFolderApplication.cs:731 
 #, csharp-format
 msgid "{0} has joined the iFolder \"{1}\""
-msgstr "{0} has joined the iFolder \"{1}\""
+msgstr "{0} sa pridal k priečinku iFolder \"{1}\""
 #: src/LinuxClient/application/iFolderApplication.cs:843 
 #: src/LinuxClient/library/iFolderWindow.cs:1998
 msgid "Set up an iFolder account?"
-msgstr "Set up an iFolder account?"
+msgstr "Nastaviť konto priečinku iFolder?"
 #: src/LinuxClient/application/iFolderApplication.cs:844 
 #: src/LinuxClient/library/iFolderWindow.cs:1999
 msgid "To begin using iFolder, you must first set up an iFolder account."
-msgstr "To begin using iFolder, you must first set up an iFolder account."
+msgstr "Ak chcete začať používať priečinok iFolder, je nutné najprv nastaviť konto priečinku iFolder."
 #: src/LinuxClient/application/iFolderApplication.cs:891 
 #: src/LinuxClient/library/iFolderWindow.cs:273
 msgid "iFolders"
@@ -123,7 +123,7 @@ msgid "About"
 msgstr "Čo je"
 #: src/LinuxClient/application/iFolderApplication.cs:961 
 msgid "Quit"
-msgstr "Quit"
+msgstr "Skončiť"
 #: src/LinuxClient/library/AccountDialog.cs:48 
 msgid "Details"
 msgstr "Podrobnosti"
@@ -132,7 +132,7 @@ msgid "Close"
 msgstr "Zavrieť"
 #: src/LinuxClient/library/AccountDialog.cs:86 
 msgid "System Information"
-msgstr "System Information"
+msgstr "Informácie o systéme"
 #: src/LinuxClient/library/AccountDialog.cs:118 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:340
 #: src/LinuxClient/library/iFolderConflictDialog.cs:385
@@ -146,7 +146,7 @@ msgstr "Popis"
 #: src/LinuxClient/library/AccountDialog.cs:158 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:369
 msgid "Disk Space on Server"
-msgstr "Disk Space on Server"
+msgstr "Miesto na disku na serveri"
 #: src/LinuxClient/library/AccountDialog.cs:178 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:195
 msgid "Quota:"
@@ -191,7 +191,7 @@ msgid "N/A"
 msgstr "Nie je k dispozícii"
 #: src/LinuxClient/library/CreateDialog.cs:75 
 msgid "New iFolder</span>"
-msgstr "New iFolder</span>"
+msgstr "Nový priečinok iFolder</span>"
 #: src/LinuxClient/library/CreateDialog.cs:86 
 #: src/LinuxClient/library/iFolderWindow.cs:404
 #: src/LinuxClient/library/iFolderWindow.cs:2197
@@ -212,7 +212,7 @@ msgstr "Prehľadávať"
 #: src/LinuxClient/library/CreateDialog.cs:146 
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:136
 msgid "Choose a folder..."
-msgstr "Choose a folder..."
+msgstr "Vyberte priečinok..."
 #: src/LinuxClient/library/CreateDialog.cs:183 
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:172
 #: src/LinuxClient/library/iFolderAccessDialog.cs:114
@@ -244,13 +244,13 @@ msgid "Unknown"
 msgstr "Neznáme"
 #: src/LinuxClient/library/FileRenameDialog.cs:57 
 msgid "Rename file"
-msgstr "Rename file"
+msgstr "Premenovať súbor"
 #: src/LinuxClient/library/FileRenameDialog.cs:68 
 msgid "File name:"
 msgstr "Názov súboru:"
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:60 
 msgid "Set Up iFolder: "
-msgstr "Nastaviť priečinok iFolder"
+msgstr "Nastaviť priečinok iFolder "
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:72 
 msgid "Details:"
 msgstr "Podrobnosti"
@@ -260,24 +260,24 @@ msgid ""
 "Name: {0}\n"
 "Shared by: {1}\n"
 "Access: {2}"
-msgstr "Name: {0}\nShared by: {1}\nAccess: {2}"
+msgstr "Názov: {0}\nZdieľané: {1}\nPrístup: {2}"
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:90 
 msgid "Choose a location on this computer for the iFolder."
-msgstr "Choose a location on this computer for the iFolder."
+msgstr "Vyberte umiestnenie priečinka iFolder v počítači."
 #: src/LinuxClient/library/iFolderAccessDialog.cs:75 
 msgid "Access for Multiple Users"
-msgstr "Access for Multiple Users"
+msgstr "Prístup pre viacerých používateľov"
 #: src/LinuxClient/library/iFolderAccessDialog.cs:77 
 #, csharp-format
 msgid "Access for {0}"
-msgstr "Access for {0}"
+msgstr "Prístup pre {0}"
 #: src/LinuxClient/library/iFolderAccessDialog.cs:93 
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:144
 msgid "Access"
 msgstr "Prístup"
 #: src/LinuxClient/library/iFolderAccessDialog.cs:124 
 msgid "Make this user the owner of the iFolder."
-msgstr "Make this user the owner of the iFolder."
+msgstr "Zmeňte tohto používateľa na vlastníka priečinku iFolder."
 #: src/LinuxClient/library/iFolderConflictDialog.cs:152 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:517
 #: src/LinuxClient/library/iFolderWindow.cs:590
@@ -312,7 +312,7 @@ msgid "Rename"
 msgstr "Premenovať"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:478 
 msgid "Enter a new name and click Rename to resolve the conflict."
-msgstr "Enter a new name and click Rename to resolve the conflict."
+msgstr "Zadajte nový názov a kliknutím na tlačidlo Premenovať vyriešte konflikt."
 #: src/LinuxClient/library/iFolderConflictDialog.cs:529 
 msgid "Folder"
 msgstr "Priečinok"
@@ -321,32 +321,32 @@ msgid "Conflict Type"
 msgstr "Typ konfliktu"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:642 
 msgid "You have read only access"
-msgstr "You have read only access"
+msgstr "Máte prístup iba na čítanie"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:643 
 msgid ""
 "Your ability to resolve conflicts is limited because you have read-only "
 "access to this iFolder.  Name conflicts must be renamed locally.  File "
 "conflicts will be overwritten by the version of the file on the server."
-msgstr "Your ability to resolve conflicts is limited because you have read-only access to this iFolder.  Name conflicts must be renamed locally.  File conflicts will be overwritten by the version of the file on the server."
+msgstr "Vaše možnosti pri riešení konfliktov sú obmedzené, pretože máte k tomuto priečinku iFolder prístup iba na čítanie. Konflikty názvov musia byť lokálne premenované. Konflikty súborov budú prepísané verziou súboru na serveri."
 #: src/LinuxClient/library/iFolderConflictDialog.cs:769 
 msgid "Enter a new name for this file and click save to resolve it."
-msgstr "Enter a new name for this file and click save to resolve it."
+msgstr "Zadajte nový názov súboru a kliknutím na tlačidlo Uložiť vyriešte konflikt."
 #: src/LinuxClient/library/iFolderConflictDialog.cs:819 
 msgid "Name conflicts must be resolved individually."
-msgstr "Name conflicts must be resolved individually."
+msgstr "Konflikty názvov musia byť riešené jednotlivo."
 #: src/LinuxClient/library/iFolderConflictDialog.cs:850 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:854
 msgid "Multiple selected"
 msgstr "Výber viacerých položiek"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:1002 
 msgid "iFolder Conflict Error"
-msgstr "iFolder Conflict Error"
+msgstr "Chyba konfliktu priečinku iFolder"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:1003 
 msgid "An error was encountered while resolving the conflict."
-msgstr "An error was encountered while resolving the conflict."
+msgstr "Pri riešení konfliktu nastala chyba."
 #: src/LinuxClient/library/iFolderConflictDialog.cs:1007 
 msgid "Invalid Characters in Name"
-msgstr "Invalid Characters in Name"
+msgstr "Názov obsahuje neplatný znak"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:1008 
 #, csharp-format
 msgid ""
@@ -354,16 +354,16 @@ msgid ""
 "name and try again.\n"
 "\n"
 "Names must not contain any of these characters: {0}"
-msgstr "The specified name contains invalid characters.  Please choose a different name and try again.\n\nNames must not contain any of these characters: {0}"
+msgstr "Zadaný názov obsahuje neplatné znaky. Vyberte iný názov a skúste to znova.\n\nNázvy nesmú obsahovať žiadny z nasledujúcich znakov: {0}"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:1013 
 msgid "Name Already Exists"
-msgstr "Name Already Exists"
+msgstr "Názov už existuje"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:1014 
 msgid "The specified name already exists.  Please choose a different name."
-msgstr "The specified name already exists.  Please choose a different name."
+msgstr "Zadaný názov už existuje. Vyberte iný názov."
 #: src/LinuxClient/library/iFolderCrashDialog.cs:50 
 msgid "iFolder crashed because of an unhandled exception"
-msgstr "iFolder crashed because of an unhandled exception"
+msgstr "Aplikácia iFolder zlyhala kvôli neošetrenej výnimke"
 #: src/LinuxClient/library/iFolderCreationDialog.cs:70 
 msgid "iFolder Created"
 msgstr "Priečinok iFolder je vytvorený"
@@ -372,7 +372,7 @@ msgid ""
 "The folder you selected is now an iFolder.  To learn more about using "
 "iFolder and sharing iFolders with other users, see \"Managing iFolders\" in "
 "iFolder Help."
-msgstr "The folder you selected is now an iFolder.  To learn more about using iFolder and sharing iFolders with other users, see \"Managing iFolders\" in iFolder Help."
+msgstr "Vybratý priečinok je teraz priečinkom iFolder. Ďalšie informácie o použití priečinku iFolder a zdieľaní priečinku iFolder s inými používateľmi nájdete v časti  \„Správa priečinkov iFolder \“ v pomocníkovi aplikácie iFolder."
 #: src/LinuxClient/library/iFolderCreationDialog.cs:92 
 msgid "Do not show this message again."
 msgstr "Nabudúce toto hlásenie nezobrazovať"
@@ -388,7 +388,7 @@ msgstr "(Zobraziť detaily.)"
 #: src/LinuxClient/library/iFolderExceptionDialog.cs:97
 msgid ""
 "Click \"Show Details\" below to get the full message returned with this error"
-msgstr "Click \"Show Details\" below to get the full message returned with this error"
+msgstr "Ak chcete zobraziť úplné hlásenie, ktoré bolo vrátené s touto chybou, kliknite na tlačidlo \„Zobraziť podrobnosti\“"
 #: src/LinuxClient/library/iFolderExceptionDialog.cs:93 
 msgid "Hide Details"
 msgstr "(Skryť detaily.)"
@@ -434,7 +434,7 @@ msgstr "(Skryť detaily.)"
 #: src/LinuxClient/library/iFolderPropertiesDialog.cs:106 
 #: src/LinuxClient/library/iFolderPropertiesDialog.cs:157
 msgid "iFolder Properties"
-msgstr "iFolder Properties"
+msgstr "Vlastnosti priečinka iFolder"
 #: src/LinuxClient/library/iFolderPropertiesDialog.cs:206 
 #: src/LinuxClient/library/PreferencesWindow.cs:107
 msgid "_General"
@@ -450,10 +450,10 @@ msgid "_Resolve conflicts"
 msgstr "Vyriešiť konflikty"
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:115 
 msgid "minute(s)"
-msgstr "minute(s)"
+msgstr "min."
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:158 
 msgid "_Set Quota:"
-msgstr "_Set Quota:"
+msgstr "Nastaviť kvótu"
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:336 
 msgid "Owner:"
 msgstr "Vlastník"
@@ -469,10 +469,10 @@ msgid "Files/Folders to Synchronize:"
 msgstr "Súbory a priečinky na synchronizáciu:"
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:501 
 msgid "Automatically Synchronizes Every:"
-msgstr "Automatically Synchronizes Every:"
+msgstr "Automaticky sa synchronizuje každých:"
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:513 
 msgid "Synchronize _Now"
-msgstr "Synchronize _Now"
+msgstr "Synchronizovať teraz"
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:128 
 msgid "User"
 msgstr "Používateľ"
@@ -481,24 +481,24 @@ msgid "State"
 msgstr "Stav"
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:186 
 msgid "Acc_ess..."
-msgstr "Acc_ess..."
+msgstr "Prístup..."
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:269 
 msgid "Owner"
 msgstr "Vlastník"
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:271 
 msgid "Invited User"
-msgstr "Invited User"
+msgstr "Pozvaný používateľ"
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:273 
 msgid "iFolder User"
-msgstr "iFolder User"
+msgstr "Používateľ priečinka iFolder"
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:317 
 msgid "Remove the selected users?"
-msgstr "Remove the selected users?"
+msgstr "Odstrániť vybratých používateľov?"
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:318 
 msgid ""
 "This will remove the selected users from this iFolder.  They will no longer "
 "be able to synchronize files with this iFolder."
-msgstr "This will remove the selected users from this iFolder.  They will no longer be able to synchronize files with this iFolder."
+msgstr "Táto akcia odstráni z priečinka iFolder vybratých používateľov. Títo používatelia nebudú už schopní synchronizovať súbory s priečinkom iFolder."
 #: src/LinuxClient/library/iFolderUserSelector.cs:91 
 msgid "Select Users"
 msgstr "Vybratí používatelia"
@@ -517,13 +517,13 @@ msgstr "Celý názov"
 #: src/LinuxClient/library/iFolderUserSelector.cs:162 
 #: src/LinuxClient/library/iFolderUserSelector.cs:387
 msgid "<Enter text to find a user>"
-msgstr "<Enter text to find a user>"
+msgstr "<Zadajte text, podľa ktorého chcete nájsť používateľa>"
 #: src/LinuxClient/library/iFolderUserSelector.cs:170 
 msgid "(Full or partial name)"
-msgstr "(Full or partial name)"
+msgstr "(Úplný alebo čiastočný názov)"
 #: src/LinuxClient/library/iFolderUserSelector.cs:208 
 msgid "_Add >>"
-msgstr "Pridať"
+msgstr "Pridať >>"
 #: src/LinuxClient/library/iFolderUserSelector.cs:212 
 msgid "_Remove"
 msgstr "Odstrániť"
@@ -532,16 +532,16 @@ msgid "Selected Users"
 msgstr "Vybratí používatelia:"
 #: src/LinuxClient/library/iFolderWindow.cs:143 
 msgid "Has conflicts"
-msgstr "Has conflicts"
+msgstr "Má konflikty"
 #: src/LinuxClient/library/iFolderWindow.cs:153 
 msgid "Not set up"
-msgstr "Not set up"
+msgstr "Nie je nastavený"
 #: src/LinuxClient/library/iFolderWindow.cs:156 
 msgid "Waiting to connect"
-msgstr "Waiting to connect"
+msgstr "Čaká na pripojenie"
 #: src/LinuxClient/library/iFolderWindow.cs:159 
 msgid "Waiting to synchronize"
-msgstr "Waiting to synchronize"
+msgstr "Čaká na synchronizáciu"
 #: src/LinuxClient/library/iFolderWindow.cs:162 
 #: src/LinuxClient/library/iFolderWindow.cs:173
 msgid "OK"
@@ -549,23 +549,23 @@ msgstr "OK"
 #: src/LinuxClient/library/iFolderWindow.cs:171 
 #, csharp-format
 msgid "{0} items not synchronized"
-msgstr "{0} items not synchronized"
+msgstr "{0} položiek nie je synchronizovaných"
 #: src/LinuxClient/library/iFolderWindow.cs:177 
 #, csharp-format
 msgid "{0} items to synchronize"
-msgstr "{0} items to synchronize"
+msgstr "{0} položiek na synchronizáciu"
 #: src/LinuxClient/library/iFolderWindow.cs:179 
 msgid "Synchronizing"
-msgstr "Synchronizing"
+msgstr "Synchronizuje sa"
 #: src/LinuxClient/library/iFolderWindow.cs:182 
 msgid "Incomplete synchronization"
-msgstr "Incomplete synchronization"
+msgstr "Neukončená synchronizácia"
 #: src/LinuxClient/library/iFolderWindow.cs:185 
 msgid "Checking for changes"
-msgstr "Checking for changes"
+msgstr "Zisťujú sa zmeny"
 #: src/LinuxClient/library/iFolderWindow.cs:188 
 msgid "Server unavailable"
-msgstr "Server unavailable"
+msgstr "Server nie je k dispozícii"
 #: src/LinuxClient/library/iFolderWindow.cs:326 
 #: src/LinuxClient/library/iFolderWindow.cs:1701
 msgid "Idle..."
@@ -581,28 +581,28 @@ msgid "Set Up"
 msgstr "Nastaviť"
 #: src/LinuxClient/library/iFolderWindow.cs:375 
 msgid "Set up the selected iFolder"
-msgstr "Set up the selected iFolder"
+msgstr "Nastaviť vybratý priečinok iFolder"
 #: src/LinuxClient/library/iFolderWindow.cs:381 
 msgid "Synchronize"
 msgstr "Synchronizovať"
 #: src/LinuxClient/library/iFolderWindow.cs:382 
 msgid "Synchronize the selected iFolder"
-msgstr "Synchronize the selected iFolder"
+msgstr "Synchronizovať vybratý priečinok iFolder"
 #: src/LinuxClient/library/iFolderWindow.cs:386 
 msgid "Share"
 msgstr "Zdieľať"
 #: src/LinuxClient/library/iFolderWindow.cs:387 
 msgid "Share the selected iFolder"
-msgstr "Share the selected iFolder"
+msgstr "Zdieľať vybratý priečinok iFolder"
 #: src/LinuxClient/library/iFolderWindow.cs:391 
 msgid "Resolve"
 msgstr "Vyriešiť"
 #: src/LinuxClient/library/iFolderWindow.cs:392 
 msgid "Resolve conflicts in the selected iFolder"
-msgstr "Resolve conflicts in the selected iFolder"
+msgstr "Vyriešiť konflikty vo vybratom priečinku iFolder"
 #: src/LinuxClient/library/iFolderWindow.cs:401 
 msgid "Filter the list of iFolders by server"
-msgstr "Filter the list of iFolders by server"
+msgstr "Filtrovať zoznam priečinkov iFolder podľa servera"
 #: src/LinuxClient/library/iFolderWindow.cs:445 
 msgid "_New"
 msgstr "Nové"
@@ -614,19 +614,19 @@ msgid "_Delete"
 msgstr "Odstrániť"
 #: src/LinuxClient/library/iFolderWindow.cs:466 
 msgid "Re_move"
-msgstr "Re_move"
+msgstr "Pre_sunúť"
 #: src/LinuxClient/library/iFolderWindow.cs:476 
 msgid "Share _with..."
 msgstr "Zdieľať s..."
 #: src/LinuxClient/library/iFolderWindow.cs:480 
 msgid "Re_solve conflicts"
-msgstr "Re_solve conflicts"
+msgstr "Vy_riešiť konflikty"
 #: src/LinuxClient/library/iFolderWindow.cs:485 
 msgid "Synchronize _now"
-msgstr "Synchronize _now"
+msgstr "Synchronizovať _teraz"
 #: src/LinuxClient/library/iFolderWindow.cs:490 
 msgid "Re_vert to a Normal Folder"
-msgstr "Re_vert to a Normal Folder"
+msgstr "Zm_eniť na normálny priečinok"
 #: src/LinuxClient/library/iFolderWindow.cs:504 
 msgid "i_Folder"
 msgstr "i_Folder"
@@ -635,7 +635,7 @@ msgid "_View"
 msgstr "Zobraziť"
 #: src/LinuxClient/library/iFolderWindow.cs:535 
 msgid "A_bout"
-msgstr "A_bout"
+msgstr "I_nformácie"
 #: src/LinuxClient/library/iFolderWindow.cs:543 
 msgid "_Help"
 msgstr "Pomocník"
@@ -657,7 +657,7 @@ msgid "Resolve conflicts"
 msgstr "Vyriešiť konflikty"
 #: src/LinuxClient/library/iFolderWindow.cs:941 
 msgid "Synchronize Now"
-msgstr "Synchronize Now"
+msgstr "Synchronizovať"
 #: src/LinuxClient/library/iFolderWindow.cs:949 
 msgid "Revert to a Normal Folder"
 msgstr "Zmeniť na normálny priečinok"
@@ -685,39 +685,39 @@ msgstr "Obnoviť"
 #: src/LinuxClient/library/iFolderWindow.cs:1095 
 #, csharp-format
 msgid "Unable to open iFolder \"{0}\""
-msgstr "Unable to open iFolder \"{0}\""
+msgstr "Nie je možné otvoriť priečinok iFolder \"{0}\"."
 #: src/LinuxClient/library/iFolderWindow.cs:1096 
 msgid ""
 "iFolder could not open the Nautilus File Manager or the Konquerer File "
 "Manager."
-msgstr "iFolder could not open the Nautilus File Manager or the Konquerer File Manager."
+msgstr "Aplikácii iFolder sa nepodarilo otvoriť správcu súborov Nautilus alebo Konquerer."
 #: src/LinuxClient/library/iFolderWindow.cs:1234 
 msgid "Revert this iFolder to a normal folder?"
-msgstr "Revert this iFolder to a normal folder?"
+msgstr "Zmeniť tento priečinok iFolder na normálny priečinok?"
 #: src/LinuxClient/library/iFolderWindow.cs:1235 
 msgid ""
 "This reverts the iFolder back to a normal folder and leaves the files "
 "intact.  The iFolder is then available from the server and must be set up in "
 "a different location to synchronize."
-msgstr "This reverts the iFolder back to a normal folder and leaves the files intact.  The iFolder is then available from the server and must be set up in a different location to synchronize."
+msgstr "Táto akcia zmení priečinok iFolder na normálny priečinok a ponechá súbory neporušené. Priečinok iFolder bude potom k dispozícii zo servera. Ak ho budete chcieť synchronizovať, bude potrebné ho nastaviť v inom umiestnení."
 #: src/LinuxClient/library/iFolderWindow.cs:1299 
 msgid "Invalid characters in folder name"
-msgstr "Invalid characters in folder name"
+msgstr "Názov priečinka obsahuje neplatné znaky"
 #: src/LinuxClient/library/iFolderWindow.cs:1300 
 #, csharp-format
 msgid ""
 "The folder you selected contains invalid characters.  iFolders cannot "
 "contain the following characters: {0}"
-msgstr "The folder you selected contains invalid characters.  iFolders cannot contain the following characters: {0}"
+msgstr "Vybratý priečinok obsahuje neplatné znaky. Priečinky iFolder nemôžu obsahovať nasledujúce znaky: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1313 
 msgid "Invalid folder selected"
-msgstr "Invalid folder selected"
+msgstr "Vybratý je neplatný priečinok"
 #: src/LinuxClient/library/iFolderWindow.cs:1314 
 msgid ""
 "iFolders cannot contain other iFolders.  The folder you selected is either "
 "already an iFolder, contains an iFolder, or is inside an existing iFolder.  "
 "Please select an alternate folder."
-msgstr "iFolders cannot contain other iFolders.  The folder you selected is either already an iFolder, contains an iFolder, or is inside an existing iFolder.  Please select an alternate folder."
+msgstr "Priečinky iFolder nemôžu obsahovať iné priečinky iFolder. Vybratý priečinok už buď je priečinkom iFolder, obsahuje priečinok iFolder, alebo sa nachádza v existujúcom priečinku iFolder. Vyberte iný priečinok."
 #: src/LinuxClient/library/iFolderWindow.cs:1392 
 #: src/LinuxClient/library/iFolderWindow.cs:1408
 #: src/LinuxClient/library/iFolderWindow.cs:1422
@@ -730,110 +730,110 @@ msgid ""
 "owner, the iFolder is removed from all member computers.  The iFolder cannot "
 "be recovered or re-shared on another computer.  The files are not deleted "
 "from your local hard drive."
-msgstr "This removes the iFolder from your local computer.  Because you are the owner, the iFolder is removed from all member computers.  The iFolder cannot be recovered or re-shared on another computer.  The files are not deleted from your local hard drive."
+msgstr "Táto akcia odstráni priečinok iFolder z lokálneho počítača. Keďže ste vlastníkom, priečinok iFolder bude odstránený zo všetkých členských počítačov. Priečinok iFolder nie je možné obnoviť alebo znova zdieľať na inom počítači. Súbory na lokálnom pevnom disku nebudú odstránené."
 #: src/LinuxClient/library/iFolderWindow.cs:1410 
 msgid ""
 "This removes the iFolder from your local computer.  Because you are the "
 "owner, the iFolder is removed from the server and all member computers.  The "
 "iFolder cannot be recovered or re-shared on another computer.  The files are "
 "not deleted from your local hard drive."
-msgstr "This removes the iFolder from your local computer.  Because you are the owner, the iFolder is removed from the server and all member computers.  The iFolder cannot be recovered or re-shared on another computer.  The files are not deleted from your local hard drive."
+msgstr "Táto akcia odstráni priečinok iFolder z lokálneho počítača. Keďže ste vlastníkom, priečinok iFolder bude odstránený zo servera aj z členských počítačov. Priečinok iFolder nie je možné obnoviť alebo znova zdieľať na inom počítači. Súbory na lokálnom pevnom disku nebudú odstránené."
 #: src/LinuxClient/library/iFolderWindow.cs:1424 
 msgid ""
 "This removes you as a member of the iFolder.  You cannot access the iFolder "
 "unless the owner re-invites you.  The files are not deleted from your local "
 "hard drive."
-msgstr "This removes you as a member of the iFolder.  You cannot access the iFolder unless the owner re-invites you.  The files are not deleted from your local hard drive."
+msgstr "Táto akcia vám odoberie členstvo v priečinku iFolder. Nebudete mať prístup k priečinku iFolder, kým vás vlastník znova nepozve. Súbory na lokálnom pevnom disku nebudú odstránené."
 #: src/LinuxClient/library/iFolderWindow.cs:1622 
 #: src/LinuxClient/library/iFolderWindow.cs:1644
 #: src/LinuxClient/library/LogWindow.cs:242
 #: src/LinuxClient/library/LogWindow.cs:254
 msgid "Checking for new iFolders..."
-msgstr "Checking for new iFolders..."
+msgstr "Zisťujú sa nové priečinky iFolder..."
 #: src/LinuxClient/library/iFolderWindow.cs:1627 
 #: src/LinuxClient/library/LogWindow.cs:247
 #, csharp-format
 msgid "Checking for changes: {0}"
-msgstr "Checking for changes: {0}"
+msgstr "Zisťujú sa zmeny: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1649 
 #, csharp-format
 msgid "Synchronizing: {0}"
-msgstr "Synchronizing: {0}"
+msgstr "Prebieha synchronizácia: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1775 
 #: src/LinuxClient/library/LogWindow.cs:296
 #, csharp-format
 msgid "Deleting file: {0}"
-msgstr "Deleting file: {0}"
+msgstr "Odstraňuje sa súbor: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1783 
 #: src/LinuxClient/library/LogWindow.cs:324
 #, csharp-format
 msgid "Uploading file: {0}"
-msgstr " Súbor sa odovzdáva"
+msgstr "Súbor sa odovzdáva"
 #: src/LinuxClient/library/iFolderWindow.cs:1788 
 #: src/LinuxClient/library/LogWindow.cs:328
 #, csharp-format
 msgid "Downloading file: {0}"
-msgstr "Downloading file: {0}"
+msgstr "Preberá sa súbor: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1793 
 #: src/LinuxClient/library/LogWindow.cs:301
 #, csharp-format
 msgid "Found changes in file: {0}"
-msgstr "Found changes in file: {0}"
+msgstr "Boli nájdené zmeny v súbore: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1798 
 #, csharp-format
 msgid "Synchronizing file: {0}"
-msgstr "Synchronizing file: {0}"
+msgstr "Synchronizuje sa súbor: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1807 
 #: src/LinuxClient/library/LogWindow.cs:336
 #, csharp-format
 msgid "Deleting directory: {0}"
-msgstr "Deleting directory: {0}"
+msgstr "Odstraňuje sa adresár: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1815 
 #: src/LinuxClient/library/LogWindow.cs:349
 #, csharp-format
 msgid "Uploading directory: {0}"
-msgstr "Uploading directory: {0}"
+msgstr "Odovzdáva sa adresár: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1820 
 #: src/LinuxClient/library/LogWindow.cs:353
 #, csharp-format
 msgid "Downloading directory: {0}"
-msgstr "Downloading directory: {0}"
+msgstr "Preberá sa adresár: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1825 
 #: src/LinuxClient/library/LogWindow.cs:342
 #, csharp-format
 msgid "Found changes in directory: {0}"
-msgstr "Found changes in directory: {0}"
+msgstr "Boli nájdené zmeny v adresári: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1830 
 #, csharp-format
 msgid "Synchronizing directory: {0}"
-msgstr "Synchronizing directory: {0}"
+msgstr "Synchronizuje sa adresár: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1838 
 #: src/LinuxClient/library/LogWindow.cs:359
 #, csharp-format
 msgid "Deleting on server: {0}"
-msgstr "Deleting on server: {0}"
+msgstr "Prebieha odstraňovanie na serveri: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:2034 
 #: src/LinuxClient/library/iFolderWindow.cs:2050
 #: src/LinuxClient/library/iFolderWindow.cs:2066
 #: src/LinuxClient/library/iFolderWindow.cs:2093
 msgid "Invalid folder specified"
-msgstr "Invalid folder specified"
+msgstr "Určený je neplatný priečinok"
 #: src/LinuxClient/library/iFolderWindow.cs:2035 
 msgid "An invalid folder was specified."
-msgstr "An invalid folder was specified."
+msgstr "Bol zadaný neplatný priečinok."
 #: src/LinuxClient/library/iFolderWindow.cs:2051 
 msgid "An invalid folder was specified"
-msgstr "An invalid folder was specified"
+msgstr "Bol zadaný neplatný priečinok"
 #: src/LinuxClient/library/iFolderWindow.cs:2067 
 msgid ""
 "The folder you've specified is invalid.  Please remove the trailing "
 "separator character (/) and try again."
-msgstr "The folder you've specified is invalid.  Please remove the trailing separator character (/) and try again."
+msgstr "Zadaný priečinok je neplatný. Odstráňte záverečný oddeľovací znak (/) a skúste to znova."
 #: src/LinuxClient/library/iFolderWindow.cs:2094 
 msgid ""
 "The folder you've specified does not exist.  Please select an existing "
 "folder and try again."
-msgstr "The folder you've specified does not exist.  Please select an existing folder and try again."
+msgstr "Zadaný priečinok neexistuje. Vyberte existujúci priečinok a skúste to znova."
 #: src/LinuxClient/library/iFolderWindow.cs:2198 
 msgid "Show All"
 msgstr "-- Zobraziť všetky --"
@@ -845,78 +845,78 @@ msgid "Save"
 msgstr "Uložiť"
 #: src/LinuxClient/library/LogWindow.cs:152 
 msgid "Save the synchronization log"
-msgstr "Save the synchronization log"
+msgstr "Uložiť denník synchronizácie"
 #: src/LinuxClient/library/LogWindow.cs:156 
 msgid "Clear"
 msgstr "Vymazať"
 #: src/LinuxClient/library/LogWindow.cs:157 
 msgid "Clear the synchronization log"
-msgstr "Clear the synchronization log"
+msgstr "Vymazať denník synchronizácie"
 #: src/LinuxClient/library/LogWindow.cs:189 
 msgid "Log"
 msgstr "Denník"
 #: src/LinuxClient/library/LogWindow.cs:259 
 #, csharp-format
 msgid "Started synchronization: {0}"
-msgstr "Started synchronization: {0}"
+msgstr "Spustila sa synchronizácia: {0}"
 #: src/LinuxClient/library/LogWindow.cs:267 
 msgid "Done checking for new iFolders"
-msgstr "Done checking for new iFolders"
+msgstr "Zisťovanie nových priečinkov iFolder je dokončené"
 #: src/LinuxClient/library/LogWindow.cs:272 
 #, csharp-format
 msgid "Finished synchronization: {0}"
-msgstr "Finished synchronization: {0}"
+msgstr "Dokončila sa synchronizácia: {0}"
 #: src/LinuxClient/library/LogWindow.cs:311 
 #, csharp-format
 msgid "Uploading file: {0}.  Synchronizing changes only: {1}% savings."
-msgstr "Uploading file: {0}.  Synchronizing changes only: {1}% savings."
+msgstr "Odovzdáva sa súbor: {0}. Synchronizujú sa iba zmeny: {1}% uložení."
 #: src/LinuxClient/library/LogWindow.cs:316 
 #, csharp-format
 msgid "Downloading file: {0}.  Synchronizing changes only: {1}% savings."
-msgstr "Downloading file: {0}.  Synchronizing changes only: {1}% savings."
+msgstr "Preberá sa súbor: {0}. Synchronizujú sa iba zmeny: {1}% uložení."
 #: src/LinuxClient/library/LogWindow.cs:369 
 #, csharp-format
 msgid "Conflict occurred: {0}"
-msgstr "Conflict occurred: {0}"
+msgstr "Vyskytol sa konflikt: {0}"
 #: src/LinuxClient/library/LogWindow.cs:374 
 #, csharp-format
 msgid "Policy prevented synchronization: {0}"
-msgstr "Policy prevented synchronization: {0}"
+msgstr "Synchronizácii zabránila politika: {0}"
 #: src/LinuxClient/library/LogWindow.cs:379 
 #, csharp-format
 msgid "Insuficient rights prevented synchronization: {0}"
-msgstr "Insuficient rights prevented synchronization: {0}"
+msgstr "Synchronizácii zabránili nedostatočné práva: {0}"
 #: src/LinuxClient/library/LogWindow.cs:384 
 #, csharp-format
 msgid "Locked iFolder prevented synchronization: {0}"
-msgstr "Locked iFolder prevented synchronization: {0}"
+msgstr "Synchronizácii zabránil zamknutý priečinok iFolder: {0}"
 #: src/LinuxClient/library/LogWindow.cs:389 
 #, csharp-format
 msgid "Full iFolder prevented synchronization: {0}"
-msgstr "Full iFolder prevented synchronization: {0}"
+msgstr "Synchronizácii zabránil plný priečinok iFolder: {0}"
 #: src/LinuxClient/library/LogWindow.cs:394 
 #, csharp-format
 msgid "Size restriction policy prevented synchronization: {0}"
-msgstr "Size restriction policy prevented synchronization: {0}"
+msgstr "Synchronizácii zabránila politika obmedzenia veľkosti: {0}"
 #: src/LinuxClient/library/LogWindow.cs:399 
 #, csharp-format
 msgid "File type restriction policy prevented synchronization: {0}"
-msgstr "File type restriction policy prevented synchronization: {0}"
+msgstr "Synchronizácii zabránila politika obmedzenia typu súboru: {0}"
 #: src/LinuxClient/library/LogWindow.cs:404 
 #, csharp-format
 msgid "iFolder failed synchronization: {0}"
-msgstr "iFolder failed synchronization: {0}"
+msgstr "Zlyhala synchronizácia priečinku iFolder: {0}"
 #: src/LinuxClient/library/LogWindow.cs:425 
 msgid "Save iFolder Log..."
-msgstr "Save iFolder Log..."
+msgstr "Uložiť denník aplikácie iFolder..."
 #: src/LinuxClient/library/LogWindow.cs:447 
 msgid "Overwrite the existing file?"
-msgstr "Overwrite the existing file?"
+msgstr "Prepísať existujúci súbor?"
 #: src/LinuxClient/library/LogWindow.cs:448 
 msgid ""
 "The file you selected exists.  Selecting yes will overwrite the contents of "
 "this file."
-msgstr "The file you selected exists.  Selecting yes will overwrite the contents of this file."
+msgstr "Vybratý súbor už existuje. Pokiaľ vyberiete možnosť Áno, obsah tohto súboru bude prepísaný."
 #: src/LinuxClient/library/LogWindow.cs:473 
 msgid "Insufficient access"
 msgstr "Nedostatočný prístup"
@@ -924,20 +924,20 @@ msgstr "Nedostatočný prístup"
 msgid ""
 "You do not have access to save the file in the location you specified.  "
 "Please select a different location."
-msgstr "You do not have access to save the file in the location you specified.  Please select a different location."
+msgstr "Nemôžete súbor uložiť do zadaného umiestnenia, pretože nemáte dostatočný prístup. Vyberte iné umiestnenie."
 #: src/LinuxClient/library/LogWindow.cs:488 
 #: src/LinuxClient/library/LogWindow.cs:532
 msgid "Error saving the log file"
-msgstr "Error saving the log file"
+msgstr "Chyba ukladania súboru denníka"
 #: src/LinuxClient/library/LogWindow.cs:489 
 #, csharp-format
 msgid "An exception occurred trying to save the log: {0}"
-msgstr "An exception occurred trying to save the log: {0}"
+msgstr "V priebehu pokusu o uloženie denníka nastala výnimka: {0}"
 #: src/LinuxClient/library/LogWindow.cs:533 
 msgid ""
 "The iFolder Client experienced an error trying to save the log.  Please "
 "report this bug."
-msgstr "The iFolder Client experienced an error trying to save the log.  Please report this bug."
+msgstr "Klient aplikácie iFolder narazil na chybu pri pokuse o uloženie denníka. Nahláste túto chybu."
 #: src/LinuxClient/library/PreferencesWindow.cs:66 
 msgid "iFolder Preferences"
 msgstr "Preferencie aplikácie iFolder"
@@ -958,42 +958,42 @@ msgid "Account Settings"
 msgstr "Nastavenie konta"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:246 
 msgid "_Enable account"
-msgstr " Zapnúť konto"
+msgstr "_Zapnúť konto"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:253 
 msgid "De_fault account"
-msgstr "De_fault account"
+msgstr "Pr_edvolené konto"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:398 
 msgid "Logged in"
-msgstr "Logged in"
+msgstr "Prihlásený"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:402 
 msgid "Logged out"
-msgstr "Logged out"
+msgstr "Odhlásený"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:407 
 msgid "Disabled"
 msgstr "Vypnutá"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:612 
 msgid "Lose current settings?"
-msgstr "Lose current settings?"
+msgstr "Chcete zrušiť aktuálne nastavenia?"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:613 
 msgid ""
 "You are currently creating a new account.  By selecing a different account "
 "you cancel the operation."
-msgstr "You are currently creating a new account.  By selecing a different account you cancel the operation."
+msgstr "Momentálne vytvárate nové konto. Vybratím iného konta túto operáciu zrušíte."
 #: src/LinuxClient/library/PrefsAccountsPage.cs:741 
 msgid "_Log Out"
 msgstr "Odhlásiť sa"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:808 
 msgid "Unable to log out of the iFolder Server"
-msgstr "Unable to log out of the iFolder Server"
+msgstr "Nepodarilo sa odhlásiť zo servera iFolder"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:809 
 msgid ""
 "An error was encountered while logging out of the iFolder Server.  If the "
 "problem persists, please contact your network administrator."
-msgstr "An error was encountered while logging out of the iFolder Server.  If the problem persists, please contact your network administrator."
+msgstr "Pri odhlasovaní sa zo servera iFolder nastala chyba. Ak problém pretrváva, obráťte sa na správcu siete."
 #: src/LinuxClient/library/PrefsAccountsPage.cs:852 
 #, csharp-format
 msgid "iFolder cannot verify the identity of the iFolder Server \"{0}\"."
-msgstr "iFolder cannot verify the identity of the iFolder Server \"{0}\"."
+msgstr "Aplikácia iFolder nemôže overiť identitu servera iFolder \"{0}\"."
 #: src/LinuxClient/library/PrefsAccountsPage.cs:853 
 #, csharp-format
 msgid ""
@@ -1003,27 +1003,27 @@ msgid ""
 "accepting this certificate, you should check with your system "
 "administrator.  Do you want to accept this certificate permanently and "
 "continue to connect?"
-msgstr "The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be \"{0}\" which could put your confidential information at risk.   Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?"
+msgstr "Certifikát tohto servera iFolder bol podpísaný neznámou certifikačnou autoritou. Je možné, že sa pripájate k serveru, ktorý predstiera, že je \"{0}\", čím môžete riskovať únik dôverných informácií. Skôr, ako tento certifikát prijmete, overte si tento postup u správcu systému. Chcete natrvalo prijať tento certifikát a pripojiť sa?"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:947 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:1000
 msgid "The iFolder account is disabled"
-msgstr "The iFolder account is disabled"
+msgstr "Konto priečinku iFolder je zakázané"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:1024 
 msgid "Unable to contact the specified server"
-msgstr "Unable to contact the specified server"
+msgstr "Nepodarilo sa nadviazať spojenie so zadaným serverom"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:1025 
 msgid ""
 "Please verify the information entered and try again.  If the problem "
 "persists, please contact your network administrator."
-msgstr "Please verify the information entered and try again.  If the problem persists, please contact your network administrator."
+msgstr "Overte zadané informácie a skúste to znova. Ak problém pretrváva, obráťte sa na správcu siete."
 #: src/LinuxClient/library/PrefsAccountsPage.cs:1055 
 msgid "An account already exists"
-msgstr "An account already exists"
+msgstr "Konto už existuje"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:1056 
 msgid ""
 "An account for this server already exists on the local machine.  Only one "
 "account per server is allowed."
-msgstr "An account for this server already exists on the local machine.  Only one account per server is allowed."
+msgstr "Konto pre tento server už na lokálnom počítači existuje. Povolené je iba jedno konto na server."
 #: src/LinuxClient/library/PrefsGeneralPage.cs:88 
 msgid "Application"
 msgstr "Aplikácia"
@@ -1034,7 +1034,7 @@ msgstr "Pri vytvorení priečinka iFolder zobraziť dialógové okno s potvrden�
 msgid ""
 "To start up iFolder at login, leave iFolder running when you log out and "
 "save your current setup."
-msgstr "To start up iFolder at login, leave iFolder running when you log out and save your current setup."
+msgstr "Ak chcete, aby sa po prihlásení spustila aplikácia iFolder, ponechajte aplikáciu iFolder pri odhlásení spustenú a uložte svoje aktuálne nastavenie."
 #: src/LinuxClient/library/PrefsGeneralPage.cs:128 
 msgid "Notification"
 msgstr "Upozornenie"
@@ -1043,28 +1043,28 @@ msgid "_Notify of shared iFolders"
 msgstr "Upozorniť na zdieľané priečinky iFolder"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:156 
 msgid "Notify of conflic_ts"
-msgstr "Notify of conflic_ts"
+msgstr "Upozorniť na konflik_ty"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:162 
 msgid "Notify when a _user joins"
 msgstr "Upozorniť na pripojenie používateľa"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:200 
 msgid "Synchronize my iFolders _every:"
-msgstr "Synchronize my iFolders _every:"
+msgstr "Synchronizovať moje priečinky iFolder _každých:"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:205 
 msgid "seconds"
 msgstr "s"
 #: src/LinuxClient/library/RemoveAccountDialog.cs:61 
 msgid "Remove this iFolder account?"
-msgstr "Remove this iFolder account?"
+msgstr "Odstrániť toto konto priečinku iFolder?"
 #: src/LinuxClient/library/RemoveAccountDialog.cs:77 
 msgid "System Name:"
 msgstr "Názov systému"
 #: src/LinuxClient/library/RemoveAccountDialog.cs:119 
 msgid "Remove my iFolders and files from the server"
-msgstr "Remove my iFolders and files from the server"
+msgstr "Odstrániť moje priečinky iFolder a súbory zo servera"
 #: src/LinuxClient/library/RemoveAccountDialog.cs:161 
 msgid "Removing iFolders from Server"
-msgstr "Removing iFolders from Server"
+msgstr "Odstraňujú sa priečinky iFolder zo servera"
 #: src/LinuxClient/library/RemoveAccountDialog.cs:162 
 msgid ""
 "Removing iFolders from the server will delete the files stored on the "
@@ -1073,37 +1073,37 @@ msgid ""
 "If you've shared any iFolders with other users, they will no longer be able "
 "to synchronize them with the server.  Additionally, you will no longer be "
 "able to access these iFolders from any other computer."
-msgstr "Removing iFolders from the server will delete the files stored on the server.  Your files will remain intact on this computer.\n\nIf you've shared any iFolders with other users, they will no longer be able to synchronize them with the server.  Additionally, you will no longer be able to access these iFolders from any other computer."
+msgstr "Ak odstránite priečinky iFolder zo servera, budú odstránené súbory na serveri. Súbory na tomto počítači zostanú neporušené.\n\nAk ste zdieľali akýkoľvek priečinok iFolder s inými používateľmi, používatelia už nebudú schopní synchronizovať svoje priečinky iFolder so serverom. Navyše vy nebudete môcť pristupovať k týmto priečinkom iFolder zo žiadneho iného počítača."
 #: src/LinuxClient/library/Util.cs:156 
 msgid "iFolder 3 Team"
-msgstr "iFolder 3 Team"
+msgstr "Tím autorov aplikácie iFolder 3"
 #: src/LinuxClient/library/Util.cs:158 
 msgid "Developers:"
-msgstr "Developers:"
+msgstr "Vývojári:"
 #: src/LinuxClient/library/Util.cs:170 
 msgid "Quality Assurance:"
-msgstr "Quality Assurance:"
+msgstr "Kontrola kvality:"
 #: src/LinuxClient/library/Util.cs:177 
 msgid "Product Management:"
-msgstr "Product Management:"
+msgstr "Správa produktu:"
 #: src/LinuxClient/library/Util.cs:181 
 msgid "Documentation:"
-msgstr "Dokumentácia"
+msgstr "Dokumentácia:"
 #: src/LinuxClient/library/Util.cs:184 
 msgid "Special Thanks"
-msgstr "Special Thanks"
+msgstr "Zvláštne poďakovanie"
 #: src/LinuxClient/library/Util.cs:186 
 msgid "Retired Contributers:"
-msgstr "Retired Contributers:"
+msgstr "Osoby, podieľajúce sa na produkte v minulosti:"
 #: src/LinuxClient/library/Util.cs:192 
 msgid "Organizations:"
-msgstr "Organizations:"
+msgstr "Organizácie:"
 #: src/LinuxClient/library/Util.cs:196 
 msgid "Code Contributors:"
-msgstr "Code Contributors:"
+msgstr "Osoby, podieľajúce sa na kóde:"
 #: src/LinuxClient/library/Util.cs:202 
 msgid "Other Contributors:"
-msgstr "Other Contributors:"
+msgstr "Iné osoby, podieľajúce sa na produkte:"
 #: src/LinuxClient/library/Util.cs:207 
 msgid "Copyright (C) 2004-2005 Novell, Inc."
 msgstr "Copyright (C) 2004 – 2005 Novell, Inc."
@@ -1113,13 +1113,13 @@ msgid ""
 "share folders or files of any type with other users, whether they use the "
 "same or different operating system.  This project is built on the mono/.NET "
 "framework to integrate seamlessly into existing desktop environments."
-msgstr "The iFolder Project is a file sharing solution that allows people to easily share folders or files of any type with other users, whether they use the same or different operating system.  This project is built on the mono/.NET framework to integrate seamlessly into existing desktop environments."
+msgstr "Projekt iFolder je riešenie zdieľania súborov, ktoré umožňuje používateľom jednoducho zdieľať priečinky alebo súbory akéhokoľvek typu s inými používateľmi, bez ohľadu na to, či používajú rovnaký alebo odlišný operačný systém. Tento projekt je postavený na základoch technológie mono/.NET, čo mu umožňuje plynulú integráciu do existujúcich prostredí v počítačoch."
 #: src/LinuxClient/library/Util.cs:339 
 msgid "Unable to locate the Simias process"
-msgstr "Unable to locate the Simias process"
+msgstr "Nepodarilo sa nájsť proces Simias"
 #: src/LinuxClient/library/Util.cs:340 
 msgid ""
 "The Simias process must be running for iFolder to work.  Restart iFolder.  "
 "If the problem persists, please contact your network administrator for "
 "assistance."
-msgstr "The Simias process must be running for iFolder to work.  Restart iFolder.  If the problem persists, please contact your network administrator for assistance."
+msgstr "Aby mohla aplikácia iFolder pracovať, je nutné, aby bol spustený proces Simias. Ak problém pretrváva, požiadajte o pomoc správcu siete."

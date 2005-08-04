@@ -855,7 +855,7 @@
 	</data>
   
 	<data name="$this.Name">
-		<value>CreateiFolder</value>
+		<value>创建 iFolder</value>
 	</data>
   
 	<data name="$this.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -943,7 +943,7 @@
 	</data>
   
 	<data name="chooseFolder">
-		<value>Choose a folder to convert to an iFolder.</value>
+		<value>选择要转换为 iFolder 的文件夹。</value>
 	</data>
   
 	<data name="errorTitle">
@@ -951,35 +951,35 @@
 	</data>
   
 	<data name="invalidFolder">
-		<value>An invalid location was specified.</value>
+		<value>指定了无效位置。</value>
 	</data>
   
 	<data name="iFolderCreateError">
-		<value>An error was encountered while creating the iFolder.</value>
+		<value>创建 iFolder 时出现错误。</value>
 	</data>
   
 	<data name="createPrompt">
-		<value>The specified location does not exist.  Do you want to create it?</value>
+		<value>指定的位置不存在。是否要创建该位置？</value>
 	</data>
   
 	<data name="createPromptTitle">
-		<value>Create Location</value>
+		<value>创建位置</value>
 	</data>
   
 	<data name="accessErrorTitle">
-		<value>iFolder Access Error</value>
+		<value>iFolder 访问错误</value>
 	</data>
   
 	<data name="accessDenied">
-		<value>You do not have sufficient access to the selected location.  iFolders can only be created in folders where you have access to read and write files.  Please select a different location and try again.</value>
+		<value>您对所选位置没有足够的访问权限。您只能在具有读写文件访问权限的文件夹中创建 iFolder。请选择一个不同的位置并重试。</value>
 	</data>
   
 	<data name="createAccount">
-		<value>To begin using iFolder, you must first set up an iFolder account.  Would you like to set up an iFolder account now?</value>
+		<value>要开始使用 iFolder，首先必须设置 iFolder 帐户。是否要立即设置 iFolder 帐户？</value>
 	</data>
   
 	<data name="createAccountTitle">
-		<value>Set Up iFolder Account</value>
+		<value>设置 iFolder 帐户</value>
 	</data>
   
 	<data name="pathInvalidErrorTitle">
@@ -987,46 +987,46 @@
 	</data>
   
 	<data name="invalidCharsError">
-		<value>The selected location contains invalid characters.  The characters \:*?"&lt;&gt;| cannot be used in an iFolder. Please select a different location and try again.</value>
+		<value>所选位置包含无效字符。在 iFolder 中不能使用字符 \:*?"&lt;&gt;|。请选择一个不同的位置并重试。</value>
 	</data>
   
 	<data name="pathInStoreError">
-		<value>The selected location is inside the iFolder data folder.  Please select a different location and try again.</value>
+		<value>所选位置位于 iFolder 数据文件夹内。请选择一个不同的位置并重试。</value>
 	</data>
   
 	<data name="pathContainsStoreError">
-		<value>The selected location contains the iFolder data files.  Please select a different location and try again.</value>
+		<value>所选位置包含 iFolder 数据文件。请选择一个不同的位置并重试。</value>
 	</data>
   
 	<data name="systemDirError">
-		<value>The selected location contains a system folder.  System folders cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>所选位置包含系统文件夹。系统文件夹不能包含 iFolder。请选择一个不同的位置并重试。</value>
 	</data>
   
 	<data name="systemDriveError">
-		<value>The selected location is a system drive.  System drives cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>所选位置是系统驱动器。系统驱动器不能包含 iFolder。请选择一个不同位置并重试。</value>
 	</data>
   
 	<data name="winDirError">
-		<value>The selected location includes the Windows folder.  The Windows folder cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>所选位置包含 Windows 文件夹。Windows 文件夹不能包含 iFolder。请选择一个不同的位置并重试。</value>
 	</data>
   
 	<data name="progFilesDirError">
-		<value>The selected location includes the Program Files folder.  The Program Files folder cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>所选位置包含 Program Files 文件夹。Program Files 文件夹不能包含 iFolder。请选择一个不同的位置并重试。</value>
 	</data>
   
 	<data name="containsiFolderError">
-		<value>The selected location already contains an iFolder.  iFolders cannot exist inside other iFolders.  Please select a different location and try again.</value>
+		<value>所选位置已包含 iFolder。iFolder 不能存在于其它 iFolder 中。请选择一个不同位置并重试。</value>
 	</data>
   
 	<data name="pathIniFolderError">
-		<value>The selected location is inside another iFolder.  iFolders cannot exist inside other iFolders.  Please select a different location and try again.</value>
+		<value>所选位置位于另一个 iFolder 内。iFolder 无法存在于其它 iFolder 内。请选择一个不同的位置并重试。</value>
 	</data>
   
 	<data name="rootDriveError">
-		<value>iFolders cannot exist at the drive level.  The location selected is at the root of the drive.  Please select a location that is not at the root of a drive and try again.</value>
+		<value>iFolder 不能存在于驱动器级别上。所选位置位于驱动器的根。请选择一个不在驱动器根的位置并重试。</value>
 	</data>
   
 	<data name="networkPathError">
-		<value>The selected location is on a network or non-physical drive.  iFolders must reside on a physical drive.  Please select a different location and try again.</value>
+		<value>所选位置位于网络驱动器或非物理驱动器上。iFolder 必须驻留在物理驱动器上。请选择一个不同的位置并重试。</value>
 	</data>
 </root>

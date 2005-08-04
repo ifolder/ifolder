@@ -175,7 +175,7 @@
 	</data>
   
 	<data name="ok.Text">
-		<value>efetuar login</value>
+		<value>Efetuar Login</value>
 	</data>
   
 	<data name="ok.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -1467,58 +1467,58 @@
 	</data>
   
 	<data name="serverConnectError">
-		<value>An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.</value>
+		<value>Erro ao conectar-se ao servidor iFolder. Verifique as informações digitadas e tente novamente. Se o problema persistir, contate o administrador da rede.</value>
 	</data>
   
 	<data name="serverConnectErrorTitle">
-		<value>Unable to Connect to iFolder Server</value>
+		<value>Impossível Conectar-se ao Servidor iFolder</value>
 	</data>
   
 	<data name="serverReconnectError">
-		<value>The authentication returned the error {0}.</value>
+		<value>A autenticação retornou o erro {0}.</value>
 	</data>
   
 	<data name="domainInfoReadError">
-		<value>An error was encountered while querying for the server and user name.</value>
+		<value>Erro ao consultar o servidor e o nome de usuário.</value>
 	</data>
   
 	<data name="failedAuth">
-		<value>The username or password is invalid.  Please verify the information entered and try again.</value>
+		<value>Nome de usuário ou senha inválidos. Verifique as informações digitadas e tente novamente.</value>
 	</data>
   
 	<data name="badPassword">
-		<value>The password is invalid.  Please try again.</value>
+		<value>Senha inválida. Tente novamente.</value>
 	</data>
   
 	<data name="savePasswordError">
-		<value>An error was encountered while saving the password.</value>
+		<value>Erro ao gravar a senha.</value>
 	</data>
   
 	<data name="accountDisabled">
-		<value>The user account is disabled.  Please contact your network administrator for assistance. </value>
+		<value>A conta do usuário está desabilitada. Contate o administrador da rede para obter assistência. </value>
 	</data>
   
 	<data name="iFolderAccountDisabled">
-		<value>The iFolder account is disabled.  Please contact your network administrator for assistance.</value>
+		<value>A conta do iFolder está desabilitada. Contate o administrador da rede para obter assistência.</value>
 	</data>
   
 	<data name="accountLockout">
-		<value>The user account has been locked.  Please contact your network administrator for assistance.</value>
+		<value>A conta do usuário foi bloqueada. Contate o administrador da rede para obter assistência.</value>
 	</data>
   
 	<data name="graceLogin">
-		<value>Your password has expired.  You have {0} grace logins remaining.</value>
+		<value>Sua senha expirou. Você tem {0} logins extras restantes.</value>
 	</data>
   
 	<data name="graceLoginTitle">
-		<value>Expired Password</value>
+		<value>Senha Vencida</value>
 	</data>
   
 	<data name="verifyCert">
-		<value>iFolder cannot verify the identity of the iFolder Server {0}.  The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be {0} which could put your confidential information at risk.Â Â Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?</value>
+		<value>O iFolder não pode verificar a identidade do Servidor iFolder {0}. O certificado desse Servidor iFolder foi assinado por uma autoridade de certificação desconhecida. Talvez você esteja se conectando a um servidor que simule {0}, o que pode colocar em risco suas informações confidenciais.Â Â Antes de aceitar este certificado, verifique com o administrador do sistema. Deseja aceitar este certificado permanentemente e continuar com a conexão?</value>
 	</data>
   
 	<data name="verifyCertTitle">
-		<value>Unable to Verify Identity</value>
+		<value>Impossível Verificar a Identidade</value>
 	</data>
 </root>

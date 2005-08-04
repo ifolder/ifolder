@@ -163,7 +163,7 @@
 	</data>
   
 	<data name="listBox1.Items">
-		<value>			iFolder 3 Team</value>
+		<value>			Skupina pre vývoj systému iFolder 3</value>
 	</data>
   
 	<data name="listBox1.Items1">
@@ -171,7 +171,7 @@
 	</data>
   
 	<data name="listBox1.Items2">
-		<value>Developers</value>
+		<value>Vývojári</value>
 	</data>
   
 	<data name="listBox1.Items3">
@@ -219,7 +219,7 @@
 	</data>
   
 	<data name="listBox1.Items14">
-		<value>Quality Assurance</value>
+		<value>Kontrola kvality</value>
 	</data>
   
 	<data name="listBox1.Items15">
@@ -247,7 +247,7 @@
 	</data>
   
 	<data name="listBox1.Items21">
-		<value>Product Management</value>
+		<value>Správa produktu</value>
 	</data>
   
 	<data name="listBox1.Items22">
@@ -279,7 +279,7 @@
 	</data>
   
 	<data name="listBox1.Items29">
-		<value>			Special Thanks</value>
+		<value>			Zvláštne poďakovanie</value>
 	</data>
   
 	<data name="listBox1.Items30">
@@ -287,7 +287,7 @@
 	</data>
   
 	<data name="listBox1.Items31">
-		<value>Retired Contributors</value>
+		<value>Osoby, podieľajúce sa na produkte v minulosti</value>
 	</data>
   
 	<data name="listBox1.Items32">
@@ -311,7 +311,7 @@
 	</data>
   
 	<data name="listBox1.Items37">
-		<value>Organizations</value>
+		<value>Organizácie</value>
 	</data>
   
 	<data name="listBox1.Items38">
@@ -327,7 +327,7 @@
 	</data>
   
 	<data name="listBox1.Items41">
-		<value>Code Contributors</value>
+		<value>Osoby, podieľajúce sa na kóde</value>
 	</data>
   
 	<data name="listBox1.Items42">
@@ -351,7 +351,7 @@
 	</data>
   
 	<data name="listBox1.Items47">
-		<value>Other Contributors</value>
+		<value>Iné osoby, podieľajúce sa na produkte</value>
 	</data>
   
 	<data name="listBox1.Items48">

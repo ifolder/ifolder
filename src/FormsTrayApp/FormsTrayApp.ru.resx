@@ -735,15 +735,15 @@
 	</data>
   
 	<data name="iFolderServicesStarting">
-		<value>iFolder Services starting up...</value>
+		<value>Запуск сервисов iFolder...</value>
 	</data>
   
 	<data name="iFolderServicesStopping">
-		<value>iFolder Services shutting down...</value>
+		<value>Закрытие сервисов iFolder...</value>
 	</data>
   
 	<data name="collisionMessage">
-		<value>A conflict has been detected in iFolder "{0}".  Click here to resolve the conflicts in the iFolder.</value>
+		<value>Обнаружен конфликт в iFolder "{0}". Щелкните здесь для разрешения конфликтов в iFolder.</value>
 	</data>
   
 	<data name="actionRequiredTitle">
@@ -755,23 +755,23 @@
 	</data>
   
 	<data name="subscriptionMessage">
-		<value>{0} has invited you to participate in this shared iFolder.  Click here to set up the iFolder.</value>
+		<value>{0} отправил Вам приглашение на совместное использование этой папки iFolder. Щелкните здесь для настройки iFolder.</value>
 	</data>
   
 	<data name="newMemberTitle">
-		<value>New iFolder User</value>
+		<value>Новый пользователь iFolder</value>
 	</data>
   
 	<data name="newMemberMessage">
-		<value>{0} has joined the iFolder "{1}".  Click here to view the member list for the iFolder.</value>
+		<value>{0} присоединился к папке iFolder "{1}". Щелкните здесь для просмотра списка членов папки iFolder.</value>
 	</data>
   
 	<data name="fatalErrorMessage">
-		<value>A software error is preventing iFolder from initializing.  Please contact your system administrator.</value>
+		<value>Не удается установить iFolder из-за ошибки в программном обеспечении. Обратитесь к администратору системы.</value>
 	</data>
   
 	<data name="fatalErrorTitle">
-		<value>Unable to Start iFolder Services</value>
+		<value>Не удается запустить сервисы iFolder</value>
 	</data>
   
 	<data name="downloading">
@@ -783,67 +783,67 @@
 	</data>
   
 	<data name="clientUpgradeTitle">
-		<value>iFolder Client Upgrade</value>
+		<value>Обновление клиента iFolder</value>
 	</data>
   
 	<data name="upgradeErrorTitle">
-		<value>Upgrade Failure</value>
+		<value>Сбой при обновлении</value>
 	</data>
   
 	<data name="clientUpgradeFailure">
-		<value>The iFolder client upgrade failed.  Please contact your system administrator.</value>
+		<value>Сбой при обновлении клиента iFolder. Обратитесь к администратору системы.</value>
 	</data>
   
 	<data name="clientUpgradePrompt">
-		<value>A newer version "{0}" of the iFolder Client is available. Would you like to upgrade now?</value>
+		<value>Доступна новая версия "{0}" клиента iFolder. Выполнить обновление сейчас?</value>
 	</data>
   
 	<data name="failedAuth">
-		<value>The username or password is invalid.  Please verify the information entered and try again.</value>
+		<value>Имя пользователя или пароль неверны. Проверьте введенную информацию и повторите попытку.</value>
 	</data>
   
 	<data name="graceLogin">
-		<value>Your password has expired.  You have {0} grace logins remaining.</value>
+		<value>Срок действия пароля истек. Осталось {0} регистраций с просроченным паролем.</value>
 	</data>
   
 	<data name="graceLoginTitle">
-		<value>Expired Password</value>
+		<value>Просроченный пароль</value>
 	</data>
   
 	<data name="accountDisabled">
-		<value>The user account is disabled.  Please contact your network administrator for assistance. </value>
+		<value>Учетная запись пользователя отключена. Обратитесь к администратору сети за помощью. </value>
 	</data>
   
 	<data name="iFolderAccountDisabled">
-		<value>The iFolder account is disabled.  Please contact your network administrator for assistance.</value>
+		<value>Учетная запись iFolder отключена. Обратитесь к администратору сети за помощью.</value>
 	</data>
   
 	<data name="accountLockout">
-		<value>The user account has been locked.  Please contact your network administrator for assistance.</value>
+		<value>Учетная запись пользователя заблокирована. Обратитесь к администратору сети за помощью.</value>
 	</data>
   
 	<data name="serverConnectErrorTitle">
-		<value>Unable to Connect to iFolder Server</value>
+		<value>Не удается подключиться к серверу iFolder</value>
 	</data>
   
 	<data name="checkingForiFolders">
-		<value>Checking for new iFolders...</value>
+		<value>Проверка новых папок iFolder...</value>
 	</data>
   
 	<data name="doneCheckingForiFolders">
-		<value>Done checking for new iFolders</value>
+		<value>Проверка новых папок iFolder выполнена</value>
 	</data>
   
 	<data name="localSync">
-		<value>Checking for changes: {0}</value>
+		<value>Проверка изменений: {0}</value>
 	</data>
   
 	<data name="synciFolder">
-		<value>Started synchronization: {0}</value>
+		<value>Синхронизация начата: {0}</value>
 	</data>
   
 	<data name="syncComplete">
-		<value>Finished synchronization: {0}</value>
+		<value>Синхронизация завершена: {0}</value>
 	</data>
   
 	<data name="deleteClientFile">
@@ -851,11 +851,11 @@
 	</data>
   
 	<data name="uploadDeltaSyncFile">
-		<value>Uploading file: {0}. Synchronizing changes only: {1}% savings.</value>
+		<value>Передача файла: {0}. Только синхронизация изменений: {1}% сохранений.</value>
 	</data>
   
 	<data name="downloadDeltaSyncFile">
-		<value>Downloading file: {0}. Synchronizing changes only: {1}% savings.</value>
+		<value>Загрузка файла: {0}. Только синхронизация изменений: {1}% сохранений.</value>
 	</data>
   
 	<data name="uploadFile">
@@ -867,11 +867,11 @@
 	</data>
   
 	<data name="localFile">
-		<value>Found changes in file: {0}</value>
+		<value>Найдены изменения в файле: {0}</value>
 	</data>
   
 	<data name="syncingFile">
-		<value>Synchronizing file: {0}</value>
+		<value>Синхронизация файла: {0}</value>
 	</data>
   
 	<data name="deleteClientDir">
@@ -879,63 +879,63 @@
 	</data>
   
 	<data name="uploadDir">
-		<value>Uploading directory: {0}</value>
+		<value>Передача каталога: {0}</value>
 	</data>
   
 	<data name="downloadDir">
-		<value>Downloading directory: {0}</value>
+		<value>Загрузка каталога: {0}</value>
 	</data>
   
 	<data name="localDir">
-		<value>Found changes in directory: {0}</value>
+		<value>Найдены изменения в каталоге: {0}</value>
 	</data>
   
 	<data name="syncingDir">
-		<value>Synchronizing directory: {0}</value>
+		<value>Синхронизация каталога: {0}</value>
 	</data>
   
 	<data name="deleteUnknown">
-		<value>Deleting on server: {0}</value>
+		<value>Удаление на сервере: {0}</value>
 	</data>
   
 	<data name="conflictFailure">
-		<value>Conflict occurred: {0}</value>
+		<value>Произошел конфликт: {0}</value>
 	</data>
   
 	<data name="policyFailure">
-		<value>Policy prevented synchronization: {0}</value>
+		<value>Запрещенная политикой синхронизация: {0}</value>
 	</data>
   
 	<data name="accessFailure">
-		<value>Insufficient rights prevented synchronization: {0}</value>
+		<value>Синхронизация запрещена из-за недостаточных прав: {0}</value>
 	</data>
   
 	<data name="lockFailure">
-		<value>Locked iFolder prevented synchronization: {0}</value>
+		<value>Синхронизация запрещена из-за блокировки iFolder: {0}</value>
 	</data>
   
 	<data name="quotaFailure">
-		<value>Full iFolder prevented synchronization: {0}</value>
+		<value>Синхронизация запрещена из-за переполнения папки iFolder: {0}</value>
 	</data>
   
 	<data name="policySizeFailure">
-		<value>Size restriction policy prevented synchronization: {0}</value>
+		<value>Синхронизация запрещена из-за политики ограничения размера: {0}</value>
 	</data>
   
 	<data name="policyTypeFailure">
-		<value>File type restriction policy prevented synchronization: {0}</value>
+		<value>Синхронизация запрещена из-за политики ограничения типов файлов: {0}</value>
 	</data>
   
 	<data name="genericFailure">
-		<value>iFolder failed synchronization: {0}</value>
+		<value>Сбой синхронизации iFolder: {0}</value>
 	</data>
   
 	<data name="serverDiskFullFailure">
-		<value>Insufficient disk space on the server prevented synchronization: {0}</value>
+		<value>Синхронизация запрещена из-за недостаточного дискового пространства на сервере: {0}</value>
 	</data>
   
 	<data name="clientDiskFullFailure">
-		<value>Insufficient disk space on this computer prevented synchronization: {0}</value>
+		<value>Синхронизация запрещена из-за недостаточного дискового пространства на данном компьютере: {0}</value>
 	</data>
   
 	<data name="myiFolders">
@@ -943,18 +943,18 @@
 	</data>
   
 	<data name="verifyCert">
-		<value>iFolder cannot verify the identity of the iFolder Server {0}.  The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be {0} which could put your confidential information at risk.В В Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?</value>
+		<value>iFolder не удается проверить идентичность сервера iFolder {0}. Сертификат для данного сервера iFolder подписан неизвестной сертифицирующей организацией. Возможно, Вы подключаетесь к серверу, который выполняет функцию {0}, что может привести к потере конфиденциальной информации. Перед принятием данного сертификата необходимо проконсультироваться с администратором системы.  Вы действительно хотите принять данный сертификат и продолжить установку соединения?</value>
 	</data>
   
 	<data name="verifyCertTitle">
-		<value>Unable to Verify Identity</value>
+		<value>Не удается проверить идентичность</value>
 	</data>
   
 	<data name="createAccount">
-		<value>To begin using iFolder, you must first set up an iFolder account.  Would you like to set up an iFolder account now?</value>
+		<value>Чтобы начать использование iFolder, необходимо сначала настроить учетную запись iFolder. Настроить учетную запись iFolder сейчас?</value>
 	</data>
   
 	<data name="createAccountTitle">
-		<value>Set Up iFolder Account</value>
+		<value>Настроить учетную запись iFolder</value>
 	</data>
 </root>

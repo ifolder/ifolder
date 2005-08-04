@@ -615,7 +615,7 @@
 	</data>
   
 	<data name="owner.Text">
-		<value>Make this user the owner of the iFolder</value>
+		<value>将此用户作为 iFolder 的拥有者</value>
 	</data>
   
 	<data name="owner.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -887,7 +887,7 @@
 	</data>
   
 	<data name="$this.Name">
-		<value>UserProperties</value>
+		<value>用户属性</value>
 	</data>
   
 	<data name="$this.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -959,7 +959,7 @@
 	</data>
   
 	<data name="$this.Text">
-		<value>Access for Multiple Users</value>
+		<value>多个用户访问</value>
 	</data>
   
 	<data name="&gt;&gt;$this.Name">

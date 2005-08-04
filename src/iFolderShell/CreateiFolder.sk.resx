@@ -691,7 +691,7 @@
 	</data>
   
 	<data name="label2.Text">
-		<value>Umiestnenie</value>
+		<value>&amp;Umiestnenie</value>
 	</data>
   
 	<data name="label2.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -943,7 +943,7 @@
 	</data>
   
 	<data name="chooseFolder">
-		<value>Choose a folder to convert to an iFolder.</value>
+		<value>Vyberte priečinok, ktorý chcete konvertovať na priečinok iFolder.</value>
 	</data>
   
 	<data name="errorTitle">
@@ -951,82 +951,82 @@
 	</data>
   
 	<data name="invalidFolder">
-		<value>An invalid location was specified.</value>
+		<value>Bolo zadané neplatné umiestnenie.</value>
 	</data>
   
 	<data name="iFolderCreateError">
-		<value>An error was encountered while creating the iFolder.</value>
+		<value>Pri vytváraní priečinku iFolder nastala chyba.</value>
 	</data>
   
 	<data name="createPrompt">
-		<value>The specified location does not exist.  Do you want to create it?</value>
+		<value>Zadané umiestnenie neexistuje. Chcete ho vytvoriť?</value>
 	</data>
   
 	<data name="createPromptTitle">
-		<value>Create Location</value>
+		<value>Vytvoriť umiestnenie</value>
 	</data>
   
 	<data name="accessErrorTitle">
-		<value>iFolder Access Error</value>
+		<value>Chyba prístupu k priečinku iFolder</value>
 	</data>
   
 	<data name="accessDenied">
-		<value>You do not have sufficient access to the selected location.  iFolders can only be created in folders where you have access to read and write files.  Please select a different location and try again.</value>
+		<value>K vybratému umiestneniu nemáte dostatočný prístup. Priečinky iFolder môžu byť vytvorené iba v priečinkoch, ku ktorým máte prístup aj na zápis aj na čítanie súborov. Vyberte iné umiestnenie a skúste to znova.</value>
 	</data>
   
 	<data name="createAccount">
-		<value>To begin using iFolder, you must first set up an iFolder account.  Would you like to set up an iFolder account now?</value>
+		<value>Ak chcete začať používať priečinok iFolder, je najprv nutné nastaviť konto priečinku iFolder. Chcete teraz nastaviť konto priečinku iFolder?</value>
 	</data>
   
 	<data name="createAccountTitle">
-		<value>Set Up iFolder Account</value>
+		<value>Nastaviť konto priečinku iFolder</value>
 	</data>
   
 	<data name="pathInvalidErrorTitle">
-		<value>Invalid Location</value>
+		<value>Neplatné umiestnenie</value>
 	</data>
   
 	<data name="invalidCharsError">
-		<value>The selected location contains invalid characters.  The characters \:*?"&lt;&gt;| cannot be used in an iFolder. Please select a different location and try again.</value>
+		<value>Vybraté umiestnenie obsahuje neplatné znaky. V priečinku iFolder nemôžu byť použité znaky \:*?"&lt;&gt;|. Vyberte iné umiestnenie a skúste to znova.</value>
 	</data>
   
 	<data name="pathInStoreError">
-		<value>The selected location is inside the iFolder data folder.  Please select a different location and try again.</value>
+		<value>Vybraté umiestnenie sa nachádza v priečinku údajov pre priečinok iFolder. Vyberte iné umiestnenie a skúste to znova.</value>
 	</data>
   
 	<data name="pathContainsStoreError">
-		<value>The selected location contains the iFolder data files.  Please select a different location and try again.</value>
+		<value>Vybraté umiestnenie obsahuje súbory údajov pre priečinok iFolder. Vyberte iné umiestnenie a skúste to znova.</value>
 	</data>
   
 	<data name="systemDirError">
-		<value>The selected location contains a system folder.  System folders cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>Vybraté umiestnenie zahŕňa systémový priečinok. Systémové priečinky nemôžu obsahovať priečinok iFolder. Vyberte iné umiestnenie a skúste to znova</value>
 	</data>
   
 	<data name="systemDriveError">
-		<value>The selected location is a system drive.  System drives cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>Vybraté umiestnenie je systémovou jednotkou. Systémové jednotky nemôžu obsahovať priečinok iFolder. Vyberte iné umiestnenie a skúste to znova.</value>
 	</data>
   
 	<data name="winDirError">
-		<value>The selected location includes the Windows folder.  The Windows folder cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>Vybraté umiestnenie zahŕňa priečinok systému Windows. Priečinok systému Windows nemôže obsahovať priečinok iFolder. Vyberte iné umiestnenie a skúste to znova.</value>
 	</data>
   
 	<data name="progFilesDirError">
-		<value>The selected location includes the Program Files folder.  The Program Files folder cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>Vybraté umiestnenie zahŕňa priečinok Program Files. Priečinok Program Files nemôže obsahovať priečinok iFolder. Vyberte iné umiestnenie a skúste to znova.</value>
 	</data>
   
 	<data name="containsiFolderError">
-		<value>The selected location already contains an iFolder.  iFolders cannot exist inside other iFolders.  Please select a different location and try again.</value>
+		<value>Vybraté umiestnenie už obsahuje priečinok iFolder. Priečinky iFolder nemôžu byť umiestnené v iných priečinkoch iFolder. Vyberte iné umiestnenie a skúste to znova.</value>
 	</data>
   
 	<data name="pathIniFolderError">
-		<value>The selected location is inside another iFolder.  iFolders cannot exist inside other iFolders.  Please select a different location and try again.</value>
+		<value>Vybraté umiestnenie sa nachádza v inom priečinku iFolder. Priečinky iFolder nemôžu byť umiestnené v iných priečinkoch iFolder. Vyberte iné umiestnenie a skúste to znova.</value>
 	</data>
   
 	<data name="rootDriveError">
-		<value>iFolders cannot exist at the drive level.  The location selected is at the root of the drive.  Please select a location that is not at the root of a drive and try again.</value>
+		<value>Priečinky iFolder nemôžu existovať na úrovni jednotky. Vybraté umiestnenie sa nachádza v koreni jednotky. Vyberte umiestenie, ktoré sa nenachádza v koreni jednotky a skúste to znova.</value>
 	</data>
   
 	<data name="networkPathError">
-		<value>The selected location is on a network or non-physical drive.  iFolders must reside on a physical drive.  Please select a different location and try again.</value>
+		<value>Vybraté umiestnenie sa nachádza na sieti alebo inej jednotke ako fyzickej. Priečinky iFolder musia byť umiestnené na fyzickej jednotke. Vyberte iné umiestnenie a skúste to znova.</value>
 	</data>
 </root>

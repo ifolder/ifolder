@@ -943,7 +943,7 @@
 	</data>
   
 	<data name="chooseFolder">
-		<value>Choose a folder to convert to an iFolder.</value>
+		<value>Wählen Sie einen Ordner für die Konvertierung in einen iFolder aus.</value>
 	</data>
   
 	<data name="errorTitle">
@@ -951,35 +951,35 @@
 	</data>
   
 	<data name="invalidFolder">
-		<value>An invalid location was specified.</value>
+		<value>Ein ungültiger Standort wurde angegeben.</value>
 	</data>
   
 	<data name="iFolderCreateError">
-		<value>An error was encountered while creating the iFolder.</value>
+		<value>Fehler beim Erstellen des iFolder-Ordners.</value>
 	</data>
   
 	<data name="createPrompt">
-		<value>The specified location does not exist.  Do you want to create it?</value>
+		<value>Der angegebene Standort ist nicht vorhanden. Möchten Sie ihn erstellen?</value>
 	</data>
   
 	<data name="createPromptTitle">
-		<value>Create Location</value>
+		<value>Standort erstellen</value>
 	</data>
   
 	<data name="accessErrorTitle">
-		<value>iFolder Access Error</value>
+		<value>Fehler bei Zugriff auf iFolder</value>
 	</data>
   
 	<data name="accessDenied">
-		<value>You do not have sufficient access to the selected location.  iFolders can only be created in folders where you have access to read and write files.  Please select a different location and try again.</value>
+		<value>Sie haben unzureichenden Zugriff auf den ausgewählten Standort. iFolder-Ordner können nur in Ordnern erstellt werden, in denen Sie Zugriff zum Lesen und Schreiben von Dateien haben.  Wählen Sie einen anderen Standort und versuchen Sie es erneut.</value>
 	</data>
   
 	<data name="createAccount">
-		<value>To begin using iFolder, you must first set up an iFolder account.  Would you like to set up an iFolder account now?</value>
+		<value>Um iFolder verwenden zu können, müssen Sie zuerst ein iFolder-Konto einrichten. Möchten Sie jetzt ein iFolder-Konto einrichten?</value>
 	</data>
   
 	<data name="createAccountTitle">
-		<value>Set Up iFolder Account</value>
+		<value>iFolder-Konto einrichten</value>
 	</data>
   
 	<data name="pathInvalidErrorTitle">
@@ -987,46 +987,46 @@
 	</data>
   
 	<data name="invalidCharsError">
-		<value>The selected location contains invalid characters.  The characters \:*?"&lt;&gt;| cannot be used in an iFolder. Please select a different location and try again.</value>
+		<value>Der ausgewählte Standort enthält ungültige Zeichen. Die Zeichen \:*?"&lt;&gt;| können in einem iFolder nicht verwendet werden. Wählen Sie einen anderen Standort und versuchen Sie es erneut.</value>
 	</data>
   
 	<data name="pathInStoreError">
-		<value>The selected location is inside the iFolder data folder.  Please select a different location and try again.</value>
+		<value>Der ausgewählte Standort befindet sich im iFolder-Datenordner. Wählen Sie einen anderen Standort und versuchen Sie es erneut.</value>
 	</data>
   
 	<data name="pathContainsStoreError">
-		<value>The selected location contains the iFolder data files.  Please select a different location and try again.</value>
+		<value>Der ausgewählte Standort enthält die iFolder-Datendateien. Wählen Sie einen anderen Standort und versuchen Sie es erneut.</value>
 	</data>
   
 	<data name="systemDirError">
-		<value>The selected location contains a system folder.  System folders cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>Der ausgewählte Standort enthält einen Systemordner. Systemordner können keinen iFolder enthalten. Wählen Sie einen anderen Standort und versuchen Sie es erneut.</value>
 	</data>
   
 	<data name="systemDriveError">
-		<value>The selected location is a system drive.  System drives cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>Der ausgewählte Standort ist ein Systemlaufwerk. Systemlaufwerke können keinen iFolder enthalten. Wählen Sie einen anderen Standort und versuchen Sie es erneut.</value>
 	</data>
   
 	<data name="winDirError">
-		<value>The selected location includes the Windows folder.  The Windows folder cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>Der ausgewählte Standort enthält den Windows-Ordner. Der Windows-Ordner kann keinen iFolder enthalten. Wählen Sie einen anderen Standort und versuchen Sie es erneut.</value>
 	</data>
   
 	<data name="progFilesDirError">
-		<value>The selected location includes the Program Files folder.  The Program Files folder cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>Der ausgewählte Standort enthält den Programme-Ordner. Der Programme-Ordner kann keinen iFolder enthalten. Wählen Sie einen anderen Standort und versuchen Sie es erneut.</value>
 	</data>
   
 	<data name="containsiFolderError">
-		<value>The selected location already contains an iFolder.  iFolders cannot exist inside other iFolders.  Please select a different location and try again.</value>
+		<value>Der ausgewählte Standort enthält bereits einen iFolder. Ein iFolder kann nicht in einem anderen iFolder existieren. Wählen Sie einen anderen Standort und versuchen Sie es erneut.</value>
 	</data>
   
 	<data name="pathIniFolderError">
-		<value>The selected location is inside another iFolder.  iFolders cannot exist inside other iFolders.  Please select a different location and try again.</value>
+		<value>Der ausgewählte Standort befindet sich in einem anderen iFolder. Ein iFolder kann nicht in einem anderen iFolder existieren. Wählen Sie einen anderen Standort und versuchen Sie es erneut.</value>
 	</data>
   
 	<data name="rootDriveError">
-		<value>iFolders cannot exist at the drive level.  The location selected is at the root of the drive.  Please select a location that is not at the root of a drive and try again.</value>
+		<value>iFolder-Ordner können nicht auf der Laufwerkebene existieren. Der ausgewählte Standort befindet sich im Stammverzeichnis des Laufwerks. Wählen Sie einen Standort, der sich nicht im Stammverzeichnis eines Laufwerks befindet, und versuchen Sie es erneut.</value>
 	</data>
   
 	<data name="networkPathError">
-		<value>The selected location is on a network or non-physical drive.  iFolders must reside on a physical drive.  Please select a different location and try again.</value>
+		<value>Der ausgewählte Standort befindet sich in einem Netzwerk oder auf einem nicht-physikalischen Laufwerk. Ein iFolder muss sich auf einem physikalischen Laufwerk befinden. Wählen Sie einen anderen Standort und versuchen Sie es erneut.</value>
 	</data>
 </root>

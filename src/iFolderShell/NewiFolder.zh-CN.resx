@@ -515,7 +515,7 @@
 	</data>
   
 	<data name="$this.Name">
-		<value>NewiFolder</value>
+		<value>新建 iFolder</value>
 	</data>
   
 	<data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -631,6 +631,6 @@
 	</data>
 	
 	<data name="saveConfigError">
-		<value>An error was encountered while saving configuration.</value>
+		<value>保存配置时出现错误。</value>
 	</data>
 </root>

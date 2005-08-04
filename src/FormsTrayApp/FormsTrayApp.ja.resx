@@ -735,15 +735,15 @@
 	</data>
   
 	<data name="iFolderServicesStarting">
-		<value>iFolder Services starting up...</value>
+		<value>iFolderサービスを開始しています...</value>
 	</data>
   
 	<data name="iFolderServicesStopping">
-		<value>iFolder Services shutting down...</value>
+		<value>iFolderサービスをシャットダウンしています...</value>
 	</data>
   
 	<data name="collisionMessage">
-		<value>A conflict has been detected in iFolder "{0}".  Click here to resolve the conflicts in the iFolder.</value>
+		<value>iFolder 「{0}」で競合が検出されました。iFolder内の競合を解決するにはここをクリックしてください。</value>
 	</data>
   
 	<data name="actionRequiredTitle">
@@ -755,7 +755,7 @@
 	</data>
   
 	<data name="subscriptionMessage">
-		<value>{0} has invited you to participate in this shared iFolder.  Click here to set up the iFolder.</value>
+		<value>{0} がこの共有iFolderへの参加を招待しました。iFolderをセットアップするにはここをクリックしてください。</value>
 	</data>
   
 	<data name="newMemberTitle">
@@ -763,15 +763,15 @@
 	</data>
   
 	<data name="newMemberMessage">
-		<value>{0} has joined the iFolder "{1}".  Click here to view the member list for the iFolder.</value>
+		<value>{0} がiFolder 「{1}」へ参加しました。iFolderのメンバーリストを表示するにはここをクリックしてください。</value>
 	</data>
   
 	<data name="fatalErrorMessage">
-		<value>A software error is preventing iFolder from initializing.  Please contact your system administrator.</value>
+		<value>ソフトウェアエラーが発生したためiFolderを初期化できません。システム管理者に連絡してください。</value>
 	</data>
   
 	<data name="fatalErrorTitle">
-		<value>Unable to Start iFolder Services</value>
+		<value>iFolderサービスを開始できません</value>
 	</data>
   
 	<data name="downloading">
@@ -783,67 +783,67 @@
 	</data>
   
 	<data name="clientUpgradeTitle">
-		<value>iFolder Client Upgrade</value>
+		<value>iFolderクライアントのアップグレード</value>
 	</data>
   
 	<data name="upgradeErrorTitle">
-		<value>Upgrade Failure</value>
+		<value>アップグレードの失敗</value>
 	</data>
   
 	<data name="clientUpgradeFailure">
-		<value>The iFolder client upgrade failed.  Please contact your system administrator.</value>
+		<value>iFolderクライアントのアップグレードに失敗しました。システム管理者に連絡してください。</value>
 	</data>
   
 	<data name="clientUpgradePrompt">
-		<value>A newer version "{0}" of the iFolder Client is available. Would you like to upgrade now?</value>
+		<value>iFolder Clientの新しいバージョン「{0}」が使用可能です。今すぐアップグレードしますか?</value>
 	</data>
   
 	<data name="failedAuth">
-		<value>The username or password is invalid.  Please verify the information entered and try again.</value>
+		<value>ユーザ名またはパスワードが無効です。入力した情報を確認し、再度実行してください。</value>
 	</data>
   
 	<data name="graceLogin">
-		<value>Your password has expired.  You have {0} grace logins remaining.</value>
+		<value>パスワードの有効期限が切れています。残りの猶予ログイン回数は {0} です。</value>
 	</data>
   
 	<data name="graceLoginTitle">
-		<value>Expired Password</value>
+		<value>有効期限の切れたパスワード</value>
 	</data>
   
 	<data name="accountDisabled">
-		<value>The user account is disabled.  Please contact your network administrator for assistance. </value>
+		<value>ユーザアカウントが無効です。ネットワーク管理者に連絡して支援を求めてください。 </value>
 	</data>
   
 	<data name="iFolderAccountDisabled">
-		<value>The iFolder account is disabled.  Please contact your network administrator for assistance.</value>
+		<value>iFolderアカウントは無効です。ネットワーク管理者に連絡して支援を求めてください。</value>
 	</data>
   
 	<data name="accountLockout">
-		<value>The user account has been locked.  Please contact your network administrator for assistance.</value>
+		<value>ユーザアカウントがロックされています。ネットワーク管理者に連絡して支援を求めてください。</value>
 	</data>
   
 	<data name="serverConnectErrorTitle">
-		<value>Unable to Connect to iFolder Server</value>
+		<value>iFolderサーバに接続できません</value>
 	</data>
   
 	<data name="checkingForiFolders">
-		<value>Checking for new iFolders...</value>
+		<value>新しいiFolderを確認しています...</value>
 	</data>
   
 	<data name="doneCheckingForiFolders">
-		<value>Done checking for new iFolders</value>
+		<value>新しいiFolder の確認を終了しました</value>
 	</data>
   
 	<data name="localSync">
-		<value>Checking for changes: {0}</value>
+		<value>変更を確認しています: {0}</value>
 	</data>
   
 	<data name="synciFolder">
-		<value>Started synchronization: {0}</value>
+		<value>同期を開始しました: {0}</value>
 	</data>
   
 	<data name="syncComplete">
-		<value>Finished synchronization: {0}</value>
+		<value>同期を完了しました: {0}</value>
 	</data>
   
 	<data name="deleteClientFile">
@@ -851,11 +851,11 @@
 	</data>
   
 	<data name="uploadDeltaSyncFile">
-		<value>Uploading file: {0}. Synchronizing changes only: {1}% savings.</value>
+		<value>ファイルをアップロード中: {0}。変更のみを同期中: {1}% 保存しました。</value>
 	</data>
   
 	<data name="downloadDeltaSyncFile">
-		<value>Downloading file: {0}. Synchronizing changes only: {1}% savings.</value>
+		<value>ファイルをダウンロード中: {0}。変更のみを同期中: {1}% 保存しました。</value>
 	</data>
   
 	<data name="uploadFile">
@@ -867,75 +867,75 @@
 	</data>
   
 	<data name="localFile">
-		<value>Found changes in file: {0}</value>
+		<value>ファイルに変更が見つかりました: {0}</value>
 	</data>
   
 	<data name="syncingFile">
-		<value>Synchronizing file: {0}</value>
+		<value>ファイルを同期中: {0}</value>
 	</data>
   
 	<data name="deleteClientDir">
-		<value>ディレクトリを削除中</value>
+		<value>ディレクトリを削除中: {0}</value>
 	</data>
   
 	<data name="uploadDir">
-		<value>Uploading directory: {0}</value>
+		<value>ディレクトリをアップロード中: {0}</value>
 	</data>
   
 	<data name="downloadDir">
-		<value>Downloading directory: {0}</value>
+		<value>ディレクトリをダウンロード中: {0}</value>
 	</data>
   
 	<data name="localDir">
-		<value>Found changes in directory: {0}</value>
+		<value>ディレクトリに変更が見つかりました: {0}</value>
 	</data>
   
 	<data name="syncingDir">
-		<value>Synchronizing directory: {0}</value>
+		<value>ディレクトリを同期中: {0}</value>
 	</data>
   
 	<data name="deleteUnknown">
-		<value>Deleting on server: {0}</value>
+		<value>サーバ上で削除中: {0}</value>
 	</data>
   
 	<data name="conflictFailure">
-		<value>Conflict occurred: {0}</value>
+		<value>競合が発生しました: {0}</value>
 	</data>
   
 	<data name="policyFailure">
-		<value>Policy prevented synchronization: {0}</value>
+		<value>ポリシーによって同期が中止されました: {0}</value>
 	</data>
   
 	<data name="accessFailure">
-		<value>Insufficient rights prevented synchronization: {0}</value>
+		<value>権利が適正でないため同期できません: {0}</value>
 	</data>
   
 	<data name="lockFailure">
-		<value>Locked iFolder prevented synchronization: {0}</value>
+		<value>iFolderがロックされているため同期できません: {0}</value>
 	</data>
   
 	<data name="quotaFailure">
-		<value>Full iFolder prevented synchronization: {0}</value>
+		<value>iFolderが一杯なため同期できません: {0}</value>
 	</data>
   
 	<data name="policySizeFailure">
-		<value>Size restriction policy prevented synchronization: {0}</value>
+		<value>サイズ制限ポリシーによって同期が中止されました: {0}</value>
 	</data>
   
 	<data name="policyTypeFailure">
-		<value>File type restriction policy prevented synchronization: {0}</value>
+		<value>ファイルタイプの制限ポリシーによって同期が中止されました: {0}</value>
 	</data>
   
 	<data name="genericFailure">
-		<value>iFolder failed synchronization: {0}</value>
+		<value>iFolderの同期に失敗しました: {0}</value>
 	</data>
   
 	<data name="serverDiskFullFailure">
-		<value>Insufficient disk space on the server prevented synchronization: {0}</value>
+		<value>サーバのディスクスペースが十分でないため同期できません: {0}</value>
 	</data>
   
 	<data name="clientDiskFullFailure">
-		<value>Insufficient disk space on this computer prevented synchronization: {0}</value>
+		<value>このコンピュータのディスクスペースが十分でないため同期できません: {0}</value>
 	</data>
   
 	<data name="myiFolders">
@@ -943,18 +943,18 @@
 	</data>
   
 	<data name="verifyCert">
-		<value>iFolder cannot verify the identity of the iFolder Server {0}.  The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be {0} which could put your confidential information at risk.ﾂﾂBefore accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?</value>
+		<value>iFolderはiFolderサーバ {0} のIDを確認できません。このiFolderサーバの証明書が不明な認証局によって署名されています。{0} になりすましているサーバに接続している可能性があり、機密情報が危険にさらされるおそれがあります。この証明書を受け入れる前に、管理者に確認する必要があります。この証明書を永続的に受け入れて、接続を続行しますか?</value>
 	</data>
   
 	<data name="verifyCertTitle">
-		<value>Unable to Verify Identity</value>
+		<value>IDを確認できません</value>
 	</data>
   
 	<data name="createAccount">
-		<value>To begin using iFolder, you must first set up an iFolder account.  Would you like to set up an iFolder account now?</value>
+		<value>iFolderの使用を開始するには、最初にiFolderアカウントをセットアップする必要があります。iFolderアカウントを今すぐセットアップしますか?</value>
 	</data>
   
 	<data name="createAccountTitle">
-		<value>Set Up iFolder Account</value>
+		<value>iFolderアカウントのセットアップ</value>
 	</data>
 </root>

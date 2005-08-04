@@ -855,7 +855,7 @@
 	</data>
   
 	<data name="$this.Name">
-		<value>CreateiFolder</value>
+		<value>Создать iFolder</value>
 	</data>
   
 	<data name="$this.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -943,7 +943,7 @@
 	</data>
   
 	<data name="chooseFolder">
-		<value>Choose a folder to convert to an iFolder.</value>
+		<value>Выберите папку для ее преобразования в папку iFolder.</value>
 	</data>
   
 	<data name="errorTitle">
@@ -951,35 +951,35 @@
 	</data>
   
 	<data name="invalidFolder">
-		<value>An invalid location was specified.</value>
+		<value>Указано неверное местоположение.</value>
 	</data>
   
 	<data name="iFolderCreateError">
-		<value>An error was encountered while creating the iFolder.</value>
+		<value>Обнаружена ошибка при создании iFolder.</value>
 	</data>
   
 	<data name="createPrompt">
-		<value>The specified location does not exist.  Do you want to create it?</value>
+		<value>Указанное местоположение не существует. Создать его?</value>
 	</data>
   
 	<data name="createPromptTitle">
-		<value>Create Location</value>
+		<value>Создать местоположение</value>
 	</data>
   
 	<data name="accessErrorTitle">
-		<value>iFolder Access Error</value>
+		<value>Ошибка доступа к iFolder</value>
 	</data>
   
 	<data name="accessDenied">
-		<value>You do not have sufficient access to the selected location.  iFolders can only be created in folders where you have access to read and write files.  Please select a different location and try again.</value>
+		<value>Недостаточно прав для доступа к выбранному местоположению. Папки iFolder могут быть созданы только в папках, доступных для чтения и записи файлов.  Выберите другое местоположение и повторите попытку.</value>
 	</data>
   
 	<data name="createAccount">
-		<value>To begin using iFolder, you must first set up an iFolder account.  Would you like to set up an iFolder account now?</value>
+		<value>Чтобы начать использование iFolder, необходимо сначала настроить учетную запись iFolder. Настроить учетную запись iFolder сейчас?</value>
 	</data>
   
 	<data name="createAccountTitle">
-		<value>Set Up iFolder Account</value>
+		<value>Настроить учетную запись iFolder</value>
 	</data>
   
 	<data name="pathInvalidErrorTitle">
@@ -987,46 +987,46 @@
 	</data>
   
 	<data name="invalidCharsError">
-		<value>The selected location contains invalid characters.  The characters \:*?"&lt;&gt;| cannot be used in an iFolder. Please select a different location and try again.</value>
+		<value>Выбранное местоположение содержит недопустимые символы. Символы \:*?"&lt;&gt;| не могут использоваться в iFolder. Выберите другое местоположение и повторите попытку.</value>
 	</data>
   
 	<data name="pathInStoreError">
-		<value>The selected location is inside the iFolder data folder.  Please select a different location and try again.</value>
+		<value>Выбранное местоположение находится внутри папки с данными iFolder. Выберите другое местоположение и повторите попытку.</value>
 	</data>
   
 	<data name="pathContainsStoreError">
-		<value>The selected location contains the iFolder data files.  Please select a different location and try again.</value>
+		<value>Выбранное местоположение содержит файлы данных iFolder. Выберите другое местоположение и повторите попытку.</value>
 	</data>
   
 	<data name="systemDirError">
-		<value>The selected location contains a system folder.  System folders cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>Выбранное местоположение содержит системную папку. Системные папки не могут содержать папку iFolder. Выберите другое местоположение и повторите попытку.</value>
 	</data>
   
 	<data name="systemDriveError">
-		<value>The selected location is a system drive.  System drives cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>Выбранное местоположение является системным устройством. Системные устройства не могут содержать папку iFolder. Выберите другое местоположение и повторите попытку.</value>
 	</data>
   
 	<data name="winDirError">
-		<value>The selected location includes the Windows folder.  The Windows folder cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>Выбранное местоположение включает папку Windows. Папка Windows не может содержать папку iFolder. Выберите другое местоположение и повторите попытку.</value>
 	</data>
   
 	<data name="progFilesDirError">
-		<value>The selected location includes the Program Files folder.  The Program Files folder cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>Выбранное местоположение не может включать папку Program Files. Папка Program Files не может содержать папку iFolder. Выберите другое местоположение и повторите попытку.</value>
 	</data>
   
 	<data name="containsiFolderError">
-		<value>The selected location already contains an iFolder.  iFolders cannot exist inside other iFolders.  Please select a different location and try again.</value>
+		<value>Выбранное местоположение уже содержит папку iFolder. Папки iFolder не могут существовать внутри других папок iFolder. Выберите другое местоположение и повторите попытку.</value>
 	</data>
   
 	<data name="pathIniFolderError">
-		<value>The selected location is inside another iFolder.  iFolders cannot exist inside other iFolders.  Please select a different location and try again.</value>
+		<value>Выбранное местоположение находится внутри другой папки iFolder. Папки iFolder не могут существовать внутри других папок iFolder. Выберите другое местоположение и повторите попытку.</value>
 	</data>
   
 	<data name="rootDriveError">
-		<value>iFolders cannot exist at the drive level.  The location selected is at the root of the drive.  Please select a location that is not at the root of a drive and try again.</value>
+		<value>Папки iFolder не могут существовать на уровне дисков. Выбранное местоположение находится в корне диска. Выберите другое местоположение вне корня диска и повторите попытку.</value>
 	</data>
   
 	<data name="networkPathError">
-		<value>The selected location is on a network or non-physical drive.  iFolders must reside on a physical drive.  Please select a different location and try again.</value>
+		<value>Выбранное местоположение находится на сетевом или нефизическом диске. Папки iFolder должны располагаться на физическом диске. Выберите другое местоположение и повторите попытку.</value>
 	</data>
 </root>

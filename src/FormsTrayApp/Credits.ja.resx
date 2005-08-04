@@ -163,7 +163,7 @@
 	</data>
   
 	<data name="listBox1.Items">
-		<value>			iFolder 3 Team</value>
+		<value>			iFolder 3チーム</value>
 	</data>
   
 	<data name="listBox1.Items1">
@@ -171,7 +171,7 @@
 	</data>
   
 	<data name="listBox1.Items2">
-		<value>Developers</value>
+		<value>開発者</value>
 	</data>
   
 	<data name="listBox1.Items3">
@@ -219,7 +219,7 @@
 	</data>
   
 	<data name="listBox1.Items14">
-		<value>Quality Assurance</value>
+		<value>品質保証</value>
 	</data>
   
 	<data name="listBox1.Items15">
@@ -247,7 +247,7 @@
 	</data>
   
 	<data name="listBox1.Items21">
-		<value>Product Management</value>
+		<value>製品管理</value>
 	</data>
   
 	<data name="listBox1.Items22">
@@ -279,7 +279,7 @@
 	</data>
   
 	<data name="listBox1.Items29">
-		<value>			Special Thanks</value>
+		<value>			謝意</value>
 	</data>
   
 	<data name="listBox1.Items30">
@@ -287,7 +287,7 @@
 	</data>
   
 	<data name="listBox1.Items31">
-		<value>Retired Contributors</value>
+		<value>退職された貢献者</value>
 	</data>
   
 	<data name="listBox1.Items32">
@@ -327,7 +327,7 @@
 	</data>
   
 	<data name="listBox1.Items41">
-		<value>Code Contributors</value>
+		<value>開発コードの貢献者</value>
 	</data>
   
 	<data name="listBox1.Items42">
@@ -351,7 +351,7 @@
 	</data>
   
 	<data name="listBox1.Items47">
-		<value>Other Contributors</value>
+		<value>その他の貢献者</value>
 	</data>
   
 	<data name="listBox1.Items48">

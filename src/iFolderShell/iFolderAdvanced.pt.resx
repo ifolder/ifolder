@@ -539,7 +539,7 @@
 	</data>
   
 	<data name="syncNow.HelpString">
-		<value>Click to cause this iFolder to synchronize at the next available time.</value>
+		<value>Clique para que o iFolder seja sincronizado no próximo horário disponível.</value>
 	</data>
   
 	<data name="syncNow.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -579,7 +579,7 @@
 	</data>
   
 	<data name="syncNow.Text">
-		<value>Sincronizar agora</value>
+		<value>Sincronizar &amp;Agora</value>
 	</data>
   
 	<data name="syncNow.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -659,7 +659,7 @@
 	</data>
   
 	<data name="lastSync.HelpString">
-		<value>Displays the last time that this iFolder successfully synchronized files to/from the server.</value>
+		<value>Exibe o último horário em que esta pasta do iFolder sincronizou arquivos de/para o servidor com êxito.</value>
 	</data>
   
 	<data name="lastSync.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -819,7 +819,7 @@
 	</data>
   
 	<data name="label4.Text">
-		<value>Última sincronização bem-sucedida:</value>
+		<value>Última sincronização com sucesso:</value>
 	</data>
   
 	<data name="label4.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -895,7 +895,7 @@
 	</data>
   
 	<data name="syncInterval.HelpString">
-		<value>Specifies the interval at which this iFolder will synchronize.</value>
+		<value>Especifica o intervalo em que esta pasta do iFolder será sincronizada.</value>
 	</data>
   
 	<data name="syncInterval.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1139,7 +1139,7 @@
 	</data>
   
 	<data name="autoSync.HelpString">
-		<value>Check to set the interval at which this iFolder will synchronize.  If this box is unchecked, the iFolder will never synchronize.</value>
+		<value>Marque para definir o intervalo em que esta pasta do iFolder será sincronizada. Se essa pasta estiver desmarcada, o iFolder nunca será sincronizado.</value>
 	</data>
   
 	<data name="autoSync.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1179,7 +1179,7 @@
 	</data>
   
 	<data name="autoSync.Text">
-		<value>Automatically &amp;Synchronizes Every:</value>
+		<value>&amp;Sincroniza Automaticamente a Cada:</value>
 	</data>
   
 	<data name="autoSync.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -1259,7 +1259,7 @@
 	</data>
   
 	<data name="objectCount.HelpString">
-		<value>Displays the number of files and/or folders in this iFolder that need to be synchronized.</value>
+		<value>Exibe o número de arquivos e/ou pastas deste iFolder que precisam ser sincronizados.</value>
 	</data>
   
 	<data name="objectCount.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1539,7 +1539,7 @@
 	</data>
   
 	<data name="groupBox3.Text">
-		<value>Disk Space on Server</value>
+		<value>Espaço em Disco no Servidor</value>
 	</data>
   
 	<data name="groupBox3.ToolTip">
@@ -1627,7 +1627,7 @@
 	</data>
   
 	<data name="gaugeChart.HelpString">
-		<value>Displays the amount of space used.</value>
+		<value>Exibe o espaço usado.</value>
 	</data>
   
 	<data name="gaugeChart.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1851,7 +1851,7 @@
 	</data>
   
 	<data name="limitEdit.HelpString">
-		<value>Displays the size limit of this iFolder.</value>
+		<value>Exibe o limite de tamanho desta pasta do iFolder.</value>
 	</data>
   
 	<data name="limitEdit.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1991,7 +1991,7 @@
 	</data>
   
 	<data name="setLimit.HelpString">
-		<value>Check to set a size limit on this iFolder.</value>
+		<value>Marque para definir um limite de tamanho nesta pasta do iFolder.</value>
 	</data>
   
 	<data name="setLimit.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2031,7 +2031,7 @@
 	</data>
   
 	<data name="setLimit.Text">
-		<value>Set &amp;Quota:</value>
+		<value>Definir &amp;Quota:</value>
 	</data>
   
 	<data name="setLimit.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -2271,7 +2271,7 @@
 	</data>
   
 	<data name="label3.Text">
-		<value>Completo</value>
+		<value>Cheio</value>
 	</data>
   
 	<data name="label3.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -2471,7 +2471,7 @@
 	</data>
   
 	<data name="available.HelpString">
-		<value>Displays the amount of space available in this iFolder.</value>
+		<value>Exibe o espaço disponível nesta pasta do iFolder.</value>
 	</data>
   
 	<data name="available.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2631,7 +2631,7 @@
 	</data>
   
 	<data name="label9.Text">
-		<value>Disponível</value>
+		<value>Disponível:</value>
 	</data>
   
 	<data name="label9.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -2831,7 +2831,7 @@
 	</data>
   
 	<data name="used.HelpString">
-		<value>Displays the size of this iFolder.</value>
+		<value>Exibe o tamanho deste iFolder.</value>
 	</data>
   
 	<data name="used.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2991,7 +2991,7 @@
 	</data>
   
 	<data name="label1.Text">
-		<value>Usadas</value>
+		<value>Usado:</value>
 	</data>
   
 	<data name="label1.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -3111,7 +3111,7 @@
 	</data>
   
 	<data name="limitLabel.Text">
-		<value>Cota</value>
+		<value>Quota:</value>
 	</data>
   
 	<data name="limitLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -3191,7 +3191,7 @@
 	</data>
   
 	<data name="limit.HelpString">
-		<value>Displays the size limit of this iFolder.</value>
+		<value>Exibe o limite de tamanho desta pasta do iFolder.</value>
 	</data>
   
 	<data name="limit.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -3451,7 +3451,7 @@
 	</data>
   
 	<data name="access.HelpString">
-		<value>Click to set the selected user(s) access rights to this iFolder.</value>
+		<value>Clique para definir os direitos de acesso do(s) usuário(s) selecionado(s) a esta pasta do iFolder.</value>
 	</data>
   
 	<data name="access.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -3575,7 +3575,7 @@
 	</data>
   
 	<data name="add.HelpString">
-		<value>Click to add users to share this iFolder with.</value>
+		<value>Clique para adicionar usuários com os quais compartilhar esta pasta do iFolder.</value>
 	</data>
   
 	<data name="add.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -3699,7 +3699,7 @@
 	</data>
   
 	<data name="remove.HelpString">
-		<value>Click to stop sharing this iFolder with the selected user(s).</value>
+		<value>Clique para parar o compartilhamento desta pasta do iFolder com o(s) usuário(s) selecionado(s).</value>
 	</data>
   
 	<data name="remove.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -3823,7 +3823,7 @@
 	</data>
   
 	<data name="shareWith.HelpString">
-		<value>Lists the users that this iFolder is currently being shared with.</value>
+		<value>Lista os usuários com os quais esta pasta do iFolder está compartilhada no momento.</value>
 	</data>
   
 	<data name="shareWith.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -3931,7 +3931,7 @@
 	</data>
   
 	<data name="columnHeader3.Text">
-		<value>ACESSO</value>
+		<value>Acesso</value>
 	</data>
   
 	<data name="columnHeader3.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -4091,7 +4091,7 @@
 	</data>
   
 	<data name="conflicts.HelpString">
-		<value>Click to resolve conflicts in this iFolder.</value>
+		<value>Clique para resolver os conflitos nesta pasta do iFolder.</value>
 	</data>
   
 	<data name="conflicts.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -4711,7 +4711,7 @@
 	</data>
   
 	<data name="ifolders.HelpString">
-		<value>The list of iFolders on this computer.</value>
+		<value>Lista de pastas do iFolder neste computador.</value>
 	</data>
   
 	<data name="ifolders.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -4955,7 +4955,7 @@
 	</data>
   
 	<data name="open.HelpString">
-		<value>Click to open this iFolder in Explorer.</value>
+		<value>Clique para abrir esta pasta do iFolder no Explorer.</value>
 	</data>
   
 	<data name="open.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -5375,7 +5375,7 @@
 	</data>
   
 	<data name="diskQuotaReadError">
-		<value>An error was encountered while reading disk space restrictions.</value>
+		<value>Erro ao ler as restrições de espaço em disco.</value>
 	</data>
   
 	<data name="errorTitle">
@@ -5383,7 +5383,7 @@
 	</data>
   
 	<data name="memberReadError">
-		<value>An error was encountered while reading iFolder members.</value>
+		<value>Erro ao ler os membros do iFolder.</value>
 	</data>
   
 	<data name="Admin">
@@ -5399,7 +5399,7 @@
 	</data>
   
 	<data name="Deny">
-		<value>negar</value>
+		<value>Negar</value>
 	</data>
   
 	<data name="unknown">
@@ -5407,7 +5407,7 @@
 	</data>
   
 	<data name="Invited">
-		<value>Invited</value>
+		<value>Convidado</value>
 	</data>
   
 	<data name="WaitSync">
@@ -5415,7 +5415,7 @@
 	</data>
   
 	<data name="AccessRequest">
-		<value>Access requested</value>
+		<value>Acesso solicitado</value>
 	</data>
   
 	<data name="Declined">
@@ -5423,7 +5423,7 @@
 	</data>
   
 	<data name="Inviting">
-		<value>Ready to invite</value>
+		<value>Pronto para convidar</value>
 	</data>
   
 	<data name="owner">
@@ -5435,79 +5435,79 @@
 	</data>
   
 	<data name="saveErrorTitle">
-		<value>iFolder Save Error</value>
+		<value>Erro de Gravação do iFolder</value>
 	</data>
   
 	<data name="changeOwnerError">
-		<value>An error was encountered while saving the new owner of the iFolder.</value>
+		<value>Erro ao gravar o novo proprietário do iFolder.</value>
 	</data>
   
 	<data name="memberCommitError">
-		<value>An error was encountered while saving changes for {0}.</value>
+		<value>Erro ao gravar mudanças em {0}.</value>
 	</data>
   
 	<data name="removeError">
-		<value>Remove failed with the following exception:</value>
+		<value>Falha ao remover com a seguinte exceção:</value>
 	</data>
   
 	<data name="policyCommitError">
-		<value>An error was encountered while saving policy changes.</value>
+		<value>Erro ao gravar mudanças de política.</value>
 	</data>
   
 	<data name="iFolderReadError">
-		<value>An error was encountered reading iFolder data.</value>
+		<value>Erro ao ler dados do iFolder.</value>
 	</data>
   
 	<data name="saveChanges">
-		<value>Do you want to save the changes you have made to the iFolder?</value>
+		<value>Deseja gravar as mudanças feitas no iFolder?</value>
 	</data>
   
 	<data name="saveChangesTitle">
-		<value>Gravar mudanças?</value>
+		<value>Gravar Mudanças</value>
 	</data>
   
 	<data name="iFolderProperties">
-		<value>Propriedades da Pasta do iFolder \"{0}\</value>
+		<value>Propriedades do iFolder para {0}</value>
 	</data>
   
 	<data name="iFolderOpenError">
-		<value>Unable to open iFolder {0}.</value>
+		<value>Impossível abrir o iFolder {0}.</value>
 	</data>
   
 	<data name="userProperties">
-		<value>Access for {0}</value>
+		<value>Acesso para {0}</value>
 	</data>
   
 	<data name="helpErrorTitle">
-		<value>iFolder Help Error</value>
+		<value>Erro da Ajuda do iFolder</value>
 	</data>
   
 	<data name="helpFileError">
-		<value>An error was encountered while opening the help file.</value>
+		<value>Erro ao abrir o arquivo de ajuda.</value>
 	</data>
   
 	<data name="conflictErrorTitle">
-		<value>iFolder Conflict Error</value>
+		<value>Erro de Conflito do iFolder</value>
 	</data>
   
 	<data name="conflictDialogError">
-		<value>An error was encountered while displaying the Conflict Resolver dialog.</value>
+		<value>Erro ao exibir caixa de diálogo Resolvedor de Conflitos.</value>
 	</data>
   
 	<data name="propertiesErrorTitle">
-		<value>iFolder Properties Error</value>
+		<value>Erro de Propriedades do iFolder</value>
 	</data>
   
 	<data name="propertiesDialogError">
-		<value>An error was encountered while displaying the iFolder properties dialog.</value>
+		<value>Erro ao exibir a caixa de diálogo de propriedades do iFolder.</value>
 	</data>
   
 	<data name="syncError">
-		<value>An error was encountered while sending the sync command.</value>
+		<value>Erro ao enviar o comando de sincronização.</value>
 	</data>
   
 	<data name="slaveSyncInterval">
-		<value>Automatically Synchronizes Every: {0} {1}</value>
+		<value>Sincroniza Automaticamente a Cada: {0} {1}</value>
 	</data>
   
 	<data name="seconds">
@@ -5515,14 +5515,14 @@
 	</data>
   
 	<data name="minutes">
-		<value> minuto(s)</value>
+		<value>minuto(s)</value>
 	</data>
   
 	<data name="hours">
-		<value>Hora(s)</value>
+		<value>hora(s)</value>
 	</data>
   
 	<data name="days">
-		<value> dia(s)</value>
+		<value>dia(s)</value>
 	</data>
 </root>

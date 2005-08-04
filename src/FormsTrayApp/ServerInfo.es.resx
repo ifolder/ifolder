@@ -175,7 +175,8 @@
 	</data>
   
 	<data name="ok.Text">
-		<value>conectarse</value>
+		<value>Entrar a la sesión
+</value>
 	</data>
   
 	<data name="ok.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -1467,58 +1468,58 @@
 	</data>
   
 	<data name="serverConnectError">
-		<value>An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.</value>
+		<value>Error al conectar con el servidor iFolder. Verifique la información que ha escrito e inténtelo de nuevo. Si el problema persiste, póngase en contacto con el administrador de red.</value>
 	</data>
   
 	<data name="serverConnectErrorTitle">
-		<value>Unable to Connect to iFolder Server</value>
+		<value>No es posible establecer conexión con el servidor iFolder</value>
 	</data>
   
 	<data name="serverReconnectError">
-		<value>The authentication returned the error {0}.</value>
+		<value>La autenticación ha devuelto el error {0}.</value>
 	</data>
   
 	<data name="domainInfoReadError">
-		<value>An error was encountered while querying for the server and user name.</value>
+		<value>Error al consultar el servidor y el usuario.</value>
 	</data>
   
 	<data name="failedAuth">
-		<value>The username or password is invalid.  Please verify the information entered and try again.</value>
+		<value>Nombre de usuario o contraseña no válidos. Verifique la información que ha escrito e inténtelo de nuevo.</value>
 	</data>
   
 	<data name="badPassword">
-		<value>The password is invalid.  Please try again.</value>
+		<value>La contraseña no es válida. Inténtelo de nuevo.</value>
 	</data>
   
 	<data name="savePasswordError">
-		<value>An error was encountered while saving the password.</value>
+		<value>Error al guardar la contraseña.</value>
 	</data>
   
 	<data name="accountDisabled">
-		<value>The user account is disabled.  Please contact your network administrator for assistance. </value>
+		<value>La cuenta de usuario está inhabilitada. Póngase en contacto con el administrador de red para obtener asistencia. </value>
 	</data>
   
 	<data name="iFolderAccountDisabled">
-		<value>The iFolder account is disabled.  Please contact your network administrator for assistance.</value>
+		<value>La cuenta iFolder está inhabilitada. Póngase en contacto con el administrador de red para obtener asistencia.</value>
 	</data>
   
 	<data name="accountLockout">
-		<value>The user account has been locked.  Please contact your network administrator for assistance.</value>
+		<value>Se ha bloqueado la cuenta de usuario. Póngase en contacto con el administrador de red para obtener asistencia.</value>
 	</data>
   
 	<data name="graceLogin">
-		<value>Your password has expired.  You have {0} grace logins remaining.</value>
+		<value>La contraseña ha caducado. Dispone de {0} entradas de gracia.</value>
 	</data>
   
 	<data name="graceLoginTitle">
-		<value>Expired Password</value>
+		<value>Contraseña caducada</value>
 	</data>
   
 	<data name="verifyCert">
-		<value>iFolder cannot verify the identity of the iFolder Server {0}.  The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be {0} which could put your confidential information at risk.Â Â Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?</value>
+		<value>iFolder no puede verificar la identidad del servidor iFolder {0}. Una autoridad de certificación desconocida ha firmado el certificado del servidor iFolder. Es posible que se esté conectando a un servidor que se hace pasar por {0} y puede poner la información confidencial en peligro.Â Â Antes de aceptar este certificado, compruébelo con la ayuda del administrador del sistema. ¿Desea aceptar este certificado de forma permanente y continuar con la conexión?</value>
 	</data>
   
 	<data name="verifyCertTitle">
-		<value>Unable to Verify Identity</value>
+		<value>No es posible verificar la identidad</value>
 	</data>
 </root>
