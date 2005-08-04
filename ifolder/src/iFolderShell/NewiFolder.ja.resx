@@ -631,6 +631,6 @@
 	</data>
 	
 	<data name="saveConfigError">
-		<value>An error was encountered while saving configuration.</value>
+		<value>環境設定の保存中にエラーが発生しました。</value>
 	</data>
 </root>

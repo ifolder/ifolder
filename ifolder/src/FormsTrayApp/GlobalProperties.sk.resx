@@ -515,7 +515,7 @@
 	</data>
   
 	<data name="menuCreate.Text">
-		<value>Nové</value>
+		<value>&amp;Nové...</value>
 	</data>
   
 	<data name="menuCreate.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -571,7 +571,7 @@
 	</data>
   
 	<data name="menuAccept.Text">
-		<value>Nastaviť</value>
+		<value>&amp;Nastaviť...</value>
 	</data>
   
 	<data name="menuAccept.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -683,7 +683,7 @@
 	</data>
   
 	<data name="menuSyncNow.Text">
-		<value>S&amp;ynchronize Now</value>
+		<value>S&amp;ynchronizovať teraz</value>
 	</data>
   
 	<data name="menuSyncNow.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -711,7 +711,7 @@
 	</data>
   
 	<data name="menuRevert.Text">
-		<value>Zmeniť na normálny priečinok</value>
+		<value>Zmeniť na &amp;normálny priečinok</value>
 	</data>
   
 	<data name="menuRevert.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -867,7 +867,7 @@
 	</data>
   
 	<data name="menuActionCreate.Text">
-		<value>Nové</value>
+		<value>&amp;Nové...</value>
 	</data>
   
 	<data name="menuActionCreate.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -923,7 +923,7 @@
 	</data>
   
 	<data name="menuActionAccept.Text">
-		<value>Nastaviť</value>
+		<value>&amp;Nastaviť</value>
 	</data>
   
 	<data name="menuActionAccept.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1091,7 +1091,7 @@
 	</data>
   
 	<data name="menuActionSync.Text">
-		<value>S&amp;ynchronize now</value>
+		<value>S&amp;ynchronizovať teraz</value>
 	</data>
   
 	<data name="menuActionSync.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1119,7 +1119,7 @@
 	</data>
   
 	<data name="menuActionRevert.Text">
-		<value>Zmeniť na normálny priečinok</value>
+		<value>Zmeniť na &amp;normálny priečinok</value>
 	</data>
   
 	<data name="menuActionRevert.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1591,7 +1591,7 @@
 	</data>
   
 	<data name="toolBarSetup.ToolTipText">
-		<value>Set up the selected iFolder</value>
+		<value>Nastaviť vybratý priečinok iFolder</value>
 	</data>
   
 	<data name="toolBarSetup.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1619,7 +1619,7 @@
 	</data>
   
 	<data name="toolBarShare.ToolTipText">
-		<value>Share the selected iFolder</value>
+		<value>Zdieľať vybratý priečinok iFolder</value>
 	</data>
   
 	<data name="toolBarShare.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1647,7 +1647,7 @@
 	</data>
   
 	<data name="toolBarResolve.ToolTipText">
-		<value>Resolve conflicts in the selected iFolder</value>
+		<value>Vyriešiť konflikty vo vybratom priečinku iFolder</value>
 	</data>
   
 	<data name="toolBarResolve.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1675,7 +1675,7 @@
 	</data>
   
 	<data name="toolBarSync.ToolTipText">
-		<value>Synchronize the selected iFolder</value>
+		<value>Synchronizovať vybratý priečinok iFolder</value>
 	</data>
   
 	<data name="toolBarSync.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2419,7 +2419,7 @@
 	</data>
   
 	<data name="statusConflicts">
-		<value>Has conflicts</value>
+		<value>Má konflikty</value>
 	</data>
   
 	<data name="statusOK">
@@ -2427,15 +2427,15 @@
 	</data>
   
 	<data name="Available">
-		<value>Not set up</value>
+		<value>Nie je nastavený</value>
 	</data>
   
 	<data name="WaitConnect">
-		<value>Waiting to connect</value>
+		<value>Čaká na pripojenie</value>
 	</data>
   
 	<data name="WaitSync">
-		<value>Waiting to synchronize</value>
+		<value>Čaká na synchronizáciu</value>
 	</data>
   
 	<data name="statusUnknown">
@@ -2443,35 +2443,35 @@
 	</data>
   
 	<data name="iFolderError">
-		<value>An error was encountered while reading the iFolders.</value>
+		<value>Pri čítaní priečinkov iFolder nastala chyba.</value>
 	</data>
   
 	<data name="iFolderErrorTitle">
-		<value>Unable to Read iFolders</value>
+		<value>Nie je možné čítať priečinky iFolder</value>
 	</data>
   
 	<data name="syncError">
-		<value>An error was encountered while synchronizing the iFolder.</value>
+		<value>Pri synchronizácii priečinku iFolder nastala chyba.</value>
 	</data>
   
 	<data name="syncErrorTitle">
-		<value>iFolder Synchronization Error</value>
+		<value>Chyba synchronizácie priečinku iFolder</value>
 	</data>
   
 	<data name="iFolderOpenError">
-		<value>Unable to open iFolder {0}.</value>
+		<value>Nie je možné otvoriť priečinok iFolder {0}.</value>
 	</data>
   
 	<data name="openErrorTitle">
-		<value>iFolder Open Error</value>
+		<value>Chyba otvárania priečinku iFolder</value>
 	</data>
   
 	<data name="iFolderRevertError">
-		<value>An error was encountered while reverting the iFolder.</value>
+		<value>Pri zmene priečinku iFolder na normálny priečinok nastala chyba.</value>
 	</data>
   
 	<data name="revertErrorTitle">
-		<value>iFolder Revert Error</value>
+		<value>Chyba zmeny priečinku iFolder na normálny priečinok</value>
 	</data>
   
 	<data name="logEntriesCleared">
@@ -2479,79 +2479,79 @@
 	</data>
   
 	<data name="checkingForiFolders">
-		<value>Checking for new iFolders...</value>
+		<value>Zisťujú sa nové priečinky iFolder...</value>
 	</data>
   
 	<data name="doneCheckingForiFolders">
-		<value>Done checking for new iFolders</value>
+		<value>Zisťovanie nových priečinkov iFolder je dokončené</value>
 	</data>
   
 	<data name="localSync">
-		<value>Checking for changes: {0}</value>
+		<value>Zisťujú sa zmeny: {0}</value>
 	</data>
   
 	<data name="preSync">
-		<value>Checking for changes</value>
+		<value>Zisťujú sa zmeny</value>
 	</data>
   
 	<data name="disconnected">
-		<value>Server unavailable</value>
+		<value>Server nie je k dispozícii</value>
 	</data>
   
 	<data name="synciFolder">
-		<value>Started synchronization: {0}</value>
+		<value>Spustila sa synchronizácia: {0}</value>
 	</data>
   
 	<data name="syncComplete">
-		<value>Finished synchronization: {0}</value>
+		<value>Dokončila sa synchronizácia: {0}</value>
 	</data>
   
 	<data name="uploadFile">
-		<value> Súbor sa odovzdáva</value>
+		<value>Súbor sa odovzdáva</value>
 	</data>
   
 	<data name="downloadFile">
-		<value>Downloading file: {0}</value>
+		<value>Preberá sa súbor: {0}</value>
 	</data>
   
 	<data name="localFile">
-		<value>Found changes in file: {0}</value>
+		<value>Boli nájdené zmeny v súbore: {0}</value>
 	</data>
   
 	<data name="syncingFile">
-		<value>Synchronizing file: {0}</value>
+		<value>Synchronizuje sa súbor: {0}</value>
 	</data>
   
 	<data name="uploadDir">
-		<value>Uploading directory: {0}</value>
+		<value>Odovzdáva sa adresár: {0}</value>
 	</data>
   
 	<data name="downloadDir">
-		<value>Downloading directory: {0}</value>
+		<value>Preberá sa adresár: {0}</value>
 	</data>
   
 	<data name="localDir">
-		<value>Found changes in directory: {0}</value>
+		<value>Boli nájdené zmeny v adresári: {0}</value>
 	</data>
   
 	<data name="syncingDir">
-		<value>Synchronizing directory: {0}</value>
+		<value>Synchronizuje sa adresár: {0}</value>
 	</data>
   
 	<data name="deleteClientFile">
-		<value>Deleting file: {0}</value>
+		<value>Odstraňuje sa súbor: {0}</value>
 	</data>
   
 	<data name="deleteClientDir">
-		<value>Deleting directory: {0}</value>
+		<value>Odstraňuje sa adresár: {0}</value>
 	</data>
   
 	<data name="deleteUnknown">
-		<value>Deleting on server: {0}</value>
+		<value>Prebieha odstraňovanie na serveri: {0}</value>
 	</data>
   
 	<data name="declineError">
-		<value>An error was encountered while removing the iFolder.</value>
+		<value>Pri odstraňovaní priečinku iFolder nastala chyba.</value>
 	</data>
   
 	<data name="errorTitle">
@@ -2559,19 +2559,19 @@
 	</data>
   
 	<data name="statusSyncing">
-		<value>Synchronizing</value>
+		<value>Synchronizuje sa</value>
 	</data>
   
 	<data name="statusSyncFailure">
-		<value>Incomplete synchronization</value>
+		<value>Neukončená synchronizácia</value>
 	</data>
   
 	<data name="statusSyncingItems">
-		<value>{0} items to synchronize</value>
+		<value>{0} položiek na synchronizáciu</value>
 	</data>
   
 	<data name="statusSyncItemsFailed">
-		<value>{0} items not synchronized</value>
+		<value>{0} položiek nie je synchronizovaných</value>
 	</data>
   
 	<data name="deleteAction">
@@ -2579,11 +2579,11 @@
 	</data>
   
 	<data name="revertTitle">
-		<value>Revert iFolder</value>
+		<value>Zmeniť priečinok iFolder na normálny priečinok</value>
 	</data>
   
 	<data name="revertPrompt">
-		<value>Are you sure you want to revert the iFolder to a normal folder?</value>
+		<value>Naozaj chcete zmeniť priečinok iFolder naspäť na normálny priečinok?</value>
 	</data>
   
 	<data name="removeTitle">
@@ -2591,23 +2591,23 @@
 	</data>
   
 	<data name="removePrompt">
-		<value>Are you sure you want to remove the iFolder?</value>
+		<value>Naozaj chcete odstrániť priečinok iFolder?</value>
 	</data>
   
 	<data name="removeiFolder">
-		<value>This removes you as a member of the iFolder.  You cannot access the iFolder unless the owner re-invites you.  The files are not deleted from your local hard drive.</value>
+		<value>Táto akcia vám odoberie členstvo v priečinku iFolder. Nebudete mať prístup k priečinku iFolder, kým vás vlastník znova nepozve. Súbory na lokálnom pevnom disku nebudú odstránené.</value>
 	</data>
   
 	<data name="deleteiFolder">
-		<value>This removes the iFolder from your local computer.  Because you are the owner, the iFolder is removed from the server and all member computers.  The iFolder cannot be recovered or re-shared on another computer.  The files are not deleted from your local hard drive.</value>
+		<value>Táto akcia odstráni priečinok iFolder z lokálneho počítača. Keďže ste vlastníkom, priečinok iFolder bude odstránený zo servera aj z členských počítačov. Priečinok iFolder nie je možné obnoviť alebo znova zdieľať na inom počítači. Súbory na lokálnom pevnom disku nebudú odstránené.</value>
 	</data>
   
 	<data name="removeiFolder2">
-		<value>If you are the iFolder owner, this unshares the iFolder, reverts all copies of the iFolder to normal folders, and deletes the iFolder from the server. If you are a member, this removes you as a member, and you cannot access the original iFolder from any computer unless the owner re-invites you. Local copies of the iFolder contents are not deleted from computers where the iFolder is currently set up.</value>
+		<value>Ak ste vlastníkom priečinku iFolder, táto akcia zruší zdieľanie priečinku iFolder, zmení všetky jeho kópie späť na normálne priečinky, a odstráni priečinok iFolder zo servera. Akste členom, táto akcia vám odoberie členstvo, a nebudete mať prístup k pôvodnému priečinku iFolder zo žiadneho počítača, pokiaľ vás vlastník znova nepozve. Z počítačov, na ktorých je priečinok iFolder momentálne nastavený, nebudú odstránené lokálne kópie obsahu priečinku iFolder.</value>
 	</data>
   
 	<data name="revertiFolder">
-		<value>This reverts the iFolder back to a normal folder and leaves the files intact.  The iFolder is then available from the server and must be set up in a different location to synchronize.</value>
+		<value>Táto akcia zmení priečinok iFolder na normálny priečinok a ponechá súbory neporušené. Priečinok iFolder bude potom k dispozícii zo servera. Ak ho budete chcieť synchronizovať, bude potrebné ho nastaviť v inom umiestnení.</value>
 	</data>
   
 	<data name="showAll">

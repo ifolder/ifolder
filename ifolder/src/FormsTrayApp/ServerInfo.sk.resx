@@ -1467,58 +1467,58 @@
 	</data>
   
 	<data name="serverConnectError">
-		<value>An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.</value>
+		<value>Pri pripájaní sa k serveru iFolder nastala chyba. Skontrolujte zadané informácie a skúste to znova. Ak problém pretrváva, obráťte sa na správcu siete.</value>
 	</data>
   
 	<data name="serverConnectErrorTitle">
-		<value>Unable to Connect to iFolder Server</value>
+		<value>Nedá sa pripojiť k serveru iFolder</value>
 	</data>
   
 	<data name="serverReconnectError">
-		<value>The authentication returned the error {0}.</value>
+		<value>Overenie vrátilo chybu {0}.</value>
 	</data>
   
 	<data name="domainInfoReadError">
-		<value>An error was encountered while querying for the server and user name.</value>
+		<value>Pri zisťovaní servera a používateľského mena nastala chyba.</value>
 	</data>
   
 	<data name="failedAuth">
-		<value>The username or password is invalid.  Please verify the information entered and try again.</value>
+		<value>Meno používateľa alebo heslo sú neplatné. Skontrolujte zadané informácie a skúste to znova.</value>
 	</data>
   
 	<data name="badPassword">
-		<value>The password is invalid.  Please try again.</value>
+		<value>Heslo je neplatné. Skúste to znova.</value>
 	</data>
   
 	<data name="savePasswordError">
-		<value>An error was encountered while saving the password.</value>
+		<value>Pri ukladaní hesla nastala chyba.</value>
 	</data>
   
 	<data name="accountDisabled">
-		<value>The user account is disabled.  Please contact your network administrator for assistance. </value>
+		<value>Toto používateľské konto je zakázané. Požiadajte o pomoc správcu siete. </value>
 	</data>
   
 	<data name="iFolderAccountDisabled">
-		<value>The iFolder account is disabled.  Please contact your network administrator for assistance.</value>
+		<value>Toto konto priečinku iFolder je zakázané. Požiadajte o pomoc správcu siete.</value>
 	</data>
   
 	<data name="accountLockout">
-		<value>The user account has been locked.  Please contact your network administrator for assistance.</value>
+		<value>Toto používateľské konto bolo uzamknuté. Požiadajte o pomoc správcu siete.</value>
 	</data>
   
 	<data name="graceLogin">
-		<value>Your password has expired.  You have {0} grace logins remaining.</value>
+		<value>Platnosť hesla vypršala. Zostáva vám {0} darovaných pokusov o prihlásenie.</value>
 	</data>
   
 	<data name="graceLoginTitle">
-		<value>Expired Password</value>
+		<value>Platnosť hesla vypršala</value>
 	</data>
   
 	<data name="verifyCert">
-		<value>iFolder cannot verify the identity of the iFolder Server {0}.  The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be {0} which could put your confidential information at risk.Â Â Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?</value>
+		<value>Priečinok iFolder nemôže overiť identitu servera iFolder {0}. Certifikát tohto servera iFolder bol podpísaný neznámou certifikačnou autoritou. Je možné, že sa pripájate k serveru, ktorý predstiera, že je {0}, čím môžete riskovať únik dôverných informácií.Â Â Skôr, ako tento certifikát prijmete, overte si tento postup u správcu systému. Chcete natrvalo prijať tento certifikát a pripojiť sa?</value>
 	</data>
   
 	<data name="verifyCertTitle">
-		<value>Unable to Verify Identity</value>
+		<value>Nedá sa overiť identita</value>
 	</data>
 </root>

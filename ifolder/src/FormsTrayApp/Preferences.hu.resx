@@ -143,7 +143,7 @@
 	</data>
   
 	<data name="defaultInterval.HelpString">
-		<value>Specifies the interval at which iFolders are synchronized.</value>
+		<value>Az iFolder mappák szinkronizálásának gyakoriságát adja meg.</value>
 	</data>
   
 	<data name="defaultInterval.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -263,7 +263,7 @@
 	</data>
   
 	<data name="displayConfirmation.HelpString">
-		<value>Check to display the Confirmation dialog when a new iFolder is created.</value>
+		<value>Bejelölésével új iFolder mappa létrehozásakor megjelenik a megerősítést kérő párbeszédpanel.</value>
 	</data>
   
 	<data name="displayConfirmation.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -767,7 +767,7 @@
 	</data>
   
 	<data name="notifyCollisions.HelpString">
-		<value>Check to receive notifications when a conflict occurs in an iFolder.</value>
+		<value>Bejelölésével értesítést kap, amikor valamelyik iFolder mappában ütközés tapasztalható.</value>
 	</data>
   
 	<data name="notifyCollisions.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -807,7 +807,7 @@
 	</data>
   
 	<data name="notifyCollisions.Text">
-		<value>N&amp;otify of conflicts</value>
+		<value>É&amp;rtesítés az ütközésekről</value>
 	</data>
   
 	<data name="notifyCollisions.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -895,7 +895,7 @@
 	</data>
   
 	<data name="notifyShared.HelpString">
-		<value>Check to receive notifications when an iFolder is shared with you.</value>
+		<value>Bejelölésével értesítést kap, amikor valamelyik iFolder mappa megosztottá válik a számára.</value>
 	</data>
   
 	<data name="notifyShared.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1023,7 +1023,7 @@
 	</data>
   
 	<data name="notifyJoins.HelpString">
-		<value>Check to receive notifications when a user joins one of your iFolders.</value>
+		<value>Bejelölésével értesítést kap, amikor valamelyik iFolder mappájához egy felhasználó csatlakozik.</value>
 	</data>
   
 	<data name="notifyJoins.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1291,7 +1291,7 @@
 	</data>
   
 	<data name="label1.Text">
-		<value>Synchronize iFolders Every</value>
+		<value>iFolder mappák szinkronizálási gyakorisága:</value>
 	</data>
   
 	<data name="label1.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -1495,7 +1495,7 @@
 	</data>
   
 	<data name="autoSync.HelpString">
-		<value>Check to enable synchronization at the specified interval or uncheck to disable synchronization.</value>
+		<value>Bejelölésével a megadott időközönkénti szinkronizálást engedélyezi, illetve a jel eltávolításával letiltja a szinkronizálást.</value>
 	</data>
   
 	<data name="autoSync.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1535,7 +1535,7 @@
 	</data>
   
 	<data name="autoSync.Text">
-		<value>Automatically S&amp;ynchronize iFolders</value>
+		<value>iFolder mappák automatikus &amp;szinkronizálása</value>
 	</data>
   
 	<data name="autoSync.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -1735,7 +1735,7 @@
 	</data>
   
 	<data name="autoStart.HelpString">
-		<value>Check to start the iFolder client at logon time.</value>
+		<value>Bejelölésével az iFolder ügyfélprogram a bejelentkezéskor elindul.</value>
 	</data>
   
 	<data name="autoStart.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1987,7 +1987,7 @@
 	</data>
   
 	<data name="accounts.HelpString">
-		<value>Displays the list of iFolder accounts on this computer.</value>
+		<value>Az ezen a számítógépen található iFolder fiókokat listázza.</value>
 	</data>
   
 	<data name="accounts.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2071,7 +2071,7 @@
 	</data>
   
 	<data name="columnHeader2.Text">
-		<value>Felhasználónév:</value>
+		<value>Felhasználónév</value>
 	</data>
   
 	<data name="columnHeader2.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2155,7 +2155,7 @@
 	</data>
   
 	<data name="details.HelpString">
-		<value>Click to view details for the selected account.</value>
+		<value>Kattintson ide a kiválasztott fiók adatainak megjelenítéséhez.</value>
 	</data>
   
 	<data name="details.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2547,7 +2547,7 @@
 	</data>
   
 	<data name="login.Text">
-		<value>ismét</value>
+		<value>&amp;Bejelentkezés</value>
 	</data>
   
 	<data name="login.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -2755,7 +2755,7 @@
 	</data>
   
 	<data name="server.HelpString">
-		<value>Specifies the iFolder server to connect to.</value>
+		<value>Megadja, hogy melyik iFolder kiszolgálóhoz kell kapcsolódni.</value>
 	</data>
   
 	<data name="server.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -3371,7 +3371,7 @@
 	</data>
   
 	<data name="enableAccount.HelpString">
-		<value>Check to enable the selected account or uncheck to disable the selected account.</value>
+		<value>Bejelölésével engedélyezi, illetve a jel eltávolításával letiltja a kiválasztott fiókot.</value>
 	</data>
   
 	<data name="enableAccount.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -3499,7 +3499,7 @@
 	</data>
   
 	<data name="rememberPassword.HelpString">
-		<value>Check to have the iFolder client remember the account password.</value>
+		<value>Jelölje be, ha azt szeretné, hogy az iFolder ügyfélprogram emlékezzen a fiók jelszavára.</value>
 	</data>
   
 	<data name="rememberPassword.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -3655,7 +3655,7 @@
 	</data>
   
 	<data name="label10.Text">
-		<value>Felhasználónév:</value>
+		<value>&amp;Felhasználónév:</value>
 	</data>
   
 	<data name="label10.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -3743,7 +3743,7 @@
 	</data>
   
 	<data name="defaultServer.HelpString">
-		<value>Check to make this account the default account.</value>
+		<value>Jelölje be, ha azt szeretné, hogy ez legyen az alapértelmezett fiók.</value>
 	</data>
   
 	<data name="defaultServer.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -3863,7 +3863,7 @@
 	</data>
   
 	<data name="removeAccount.HelpString">
-		<value>Click to remove the selected iFolder account.</value>
+		<value>Kattintson ide a kijelölt iFolder fiók eltávolításához.</value>
 	</data>
   
 	<data name="removeAccount.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -3983,7 +3983,7 @@
 	</data>
   
 	<data name="addAccount.HelpString">
-		<value>Click to create a new iFolder account.</value>
+		<value>Kattintson ide egy új iFolder fiók létrehozásához.</value>
 	</data>
   
 	<data name="addAccount.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -4615,111 +4615,111 @@
 	</data>
   
 	<data name="readAccountsError">
-		<value>An error was encountered while reading the iFolder accounts.</value>
+		<value>Hiba történt az iFolder fiókok olvasásakor.</value>
 	</data>
   
 	<data name="failedAuth">
-		<value>The username or password is invalid.  Please verify the information entered and try again.</value>
+		<value>Érvénytelen a felhasználónév vagy a jelszó. Ellenőrizze a megadott adatokat, és próbálja meg újra.</value>
 	</data>
   
 	<data name="serverConnectErrorTitle">
-		<value>Unable to Connect to iFolder Server</value>
+		<value>Nem lehet csatlakozni az iFolder kiszolgálóhoz</value>
 	</data>
   
 	<data name="serverConnectError">
-		<value>An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.</value>
+		<value>Hiba történt az iFolder kiszolgálóhoz való csatlakozáskor. Ellenőrizze a megadott adatokat, és próbálja meg újra. Ha a probléma továbbra is fennáll, forduljon a hálózati rendszergazdához.</value>
 	</data>
   
 	<data name="unknownDomain">
-		<value>Unable to contact the specified server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.</value>
+		<value>Nem lehet kapcsolatba lépni a megadott kiszolgálóval. Ellenőrizze a megadott adatokat, és próbálja meg újra. Ha a probléma továbbra is fennáll, forduljon a hálózati rendszergazdához.</value>
 	</data>
   
 	<data name="accountDisabled">
-		<value>The user account is disabled.  Please contact your network administrator for assistance.</value>
+		<value>A felhasználói fiók le van tiltva. Forduljon a hálózati rendszergazdához segítségért.</value>
 	</data>
   
 	<data name="iFolderAccountDisabled">
-		<value>The iFolder account is disabled.  Please contact your network administrator for assistance.</value>
+		<value>Az iFolder fiók le van tiltva. Forduljon a hálózati rendszergazdához segítségért.</value>
 	</data>
   
 	<data name="accountLockout">
-		<value>The user account has been locked.  Please contact your network administrator for assistance.</value>
+		<value>A felhasználói fiók zárolva van. Forduljon a hálózati rendszergazdához segítségért.</value>
 	</data>
   
 	<data name="graceLogin">
-		<value>Your password has expired.  You have {0} grace logins remaining.</value>
+		<value>A jelszó érvényessége lejárt. Még {0} bejelentkezési kísérletet tehet.</value>
 	</data>
   
 	<data name="graceLoginTitle">
-		<value>Expired Password</value>
+		<value>Lejárt jelszó</value>
 	</data>
   
 	<data name="alreadyJoined">
-		<value>An account for this server already exists for your current local login identity on this computer.  Only one account per server is allowed.</value>
+		<value>Ehhez a kiszolgálóhoz már szerepel fiók a számítógépen az aktuális helyi bejelentkezési identitásnál. Kiszolgálónként csak egy fiók használható.</value>
 	</data>
   
 	<data name="alreadyJoinedTitle">
-		<value>Account Already Exists</value>
+		<value>Már meglévő fiók</value>
 	</data>
   
 	<data name="PreferencesErrorTitle">
-		<value>iFolder Preferences Error</value>
+		<value>iFolder beállítási hiba</value>
 	</data>
   
 	<data name="saveSyncError">
-		<value>An error was encountered while saving the default synchronization interval.</value>
+		<value>Hiba történt a szinkronizálási időköz mentésekor.</value>
 	</data>
   
 	<data name="readSyncError">
-		<value>An error was encountered while reading the default synchronization interval.</value>
+		<value>Hiba történt az alapértelmezett szinkronizálási időköz olvasásakor.</value>
 	</data>
   
 	<data name="setDefaultError">
-		<value>An error was encountered while setting the default account.</value>
+		<value>Hiba történt az alapértelmezett fiók beállításakor.</value>
 	</data>
   
 	<data name="accountErrorTitle">
-		<value>iFolder Account Error</value>
+		<value>iFolder fiókkal kapcsolatos hiba</value>
 	</data>
   
 	<data name="saveAccountPrompt">
-		<value>Do you want to save the new account?</value>
+		<value>Menti az új fiókot?</value>
 	</data>
   
 	<data name="saveAccountTitle">
-		<value>Save New Account</value>
+		<value>Új fiók mentése</value>
 	</data>
   
 	<data name="savePasswordError">
-		<value>An error was encountered while saving the password.</value>
+		<value>Hiba történt a jelszó mentésekor.</value>
 	</data>
   
 	<data name="passwordErrorTitle">
-		<value>iFolder Password Error</value>
+		<value>iFolder jelszóval kapcsolatos hiba</value>
 	</data>
   
 	<data name="updatePrompt">
-		<value>Do you want to save the changes made to this account?</value>
+		<value>Menti a fiókon végzett változtatásokat?</value>
 	</data>
   
 	<data name="updateTitle">
-		<value>Save Account</value>
+		<value>Fiók mentése</value>
 	</data>
   
 	<data name="requiredFieldsMissing">
-		<value>The Username and Server are required fields.  Please fill in the missing information and try again.</value>
+		<value>A Felhasználónév és a Kiszolgáló mezők kitöltése kötelező. Adja meg a hiányzó adatokat, és próbálja meg újra.</value>
 	</data>
   
 	<data name="iFolderMessageTitle">
-		<value>iFolder Message</value>
+		<value>iFolder üzenet</value>
 	</data>
   
 	<data name="statusLoggedIn">
-		<value>Logged in</value>
+		<value>Bejelentkezve</value>
 	</data>
   
 	<data name="statusLoggedOut">
-		<value>Logged out</value>
+		<value>Kijelentkezve</value>
 	</data>
   
 	<data name="statusDisabled">
@@ -4743,18 +4743,18 @@
 	</data>
   
 	<data name="verifyCert">
-		<value>iFolder cannot verify the identity of the iFolder Server {0}.  The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be {0} which could put your confidential information at risk.Â Â Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?</value>
+		<value>Az iFolder nem tudja ellenőrizni a(z) {0} iFolder kiszolgáló valódiságát. Ennek az iFolder kiszolgálónak a tanúsítványát ismeretlen hitelesítésszolgáltató írta alá. Előfordulhat, hogy olyan kiszolgálóhoz csatlakozik, amely csupán színleli, hogy ő a(z) {0}, ezzel viszont bizalmas adatait teheti kockára.Â Â Mielőtt elfogadná a tanúsítványt, célszerű a rendszergazdával egyeztetnie. Elfogadja véglegesen a tanúsítványt, és folytatja a csatlakozást?</value>
 	</data>
   
 	<data name="verifyCertTitle">
-		<value>Unable to Verify Identity</value>
+		<value>Nem lehet ellenőrizni az identitást</value>
 	</data>
   
 	<data name="updateHostError">
-		<value>An error was encountered while saving the server value.</value>
+		<value>Hiba történt a kiszolgáló értékének mentésekor.</value>
 	</data>
   
 	<data name="removeAccountError">
-		<value>An error was encountered while removing the account.</value>
+		<value>Hiba történt a fiók eltávolításakor.</value>
 	</data>
 </root>

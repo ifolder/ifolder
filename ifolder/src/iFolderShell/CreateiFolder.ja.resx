@@ -943,7 +943,7 @@
 	</data>
   
 	<data name="chooseFolder">
-		<value>Choose a folder to convert to an iFolder.</value>
+		<value>iFolderに変換するフォルダを選択してください。</value>
 	</data>
   
 	<data name="errorTitle">
@@ -951,35 +951,35 @@
 	</data>
   
 	<data name="invalidFolder">
-		<value>An invalid location was specified.</value>
+		<value>無効な場所が指定されました。</value>
 	</data>
   
 	<data name="iFolderCreateError">
-		<value>An error was encountered while creating the iFolder.</value>
+		<value>iFolderの作成中にエラーが発生しました。</value>
 	</data>
   
 	<data name="createPrompt">
-		<value>The specified location does not exist.  Do you want to create it?</value>
+		<value>指定された場所は存在しません。作成しますか?</value>
 	</data>
   
 	<data name="createPromptTitle">
-		<value>Create Location</value>
+		<value>場所を作成</value>
 	</data>
   
 	<data name="accessErrorTitle">
-		<value>iFolder Access Error</value>
+		<value>iFolderアクセスエラー</value>
 	</data>
   
 	<data name="accessDenied">
-		<value>You do not have sufficient access to the selected location.  iFolders can only be created in folders where you have access to read and write files.  Please select a different location and try again.</value>
+		<value>選択された場所に対する十分なアクセス権がありません。iFolderは、ファイルの読み込み権と書き込み権があるフォルダにのみ作成できます。別の場所を選択し、再度実行してください。</value>
 	</data>
   
 	<data name="createAccount">
-		<value>To begin using iFolder, you must first set up an iFolder account.  Would you like to set up an iFolder account now?</value>
+		<value>iFolderの使用を開始するには、最初にiFolderアカウントをセットアップする必要があります。iFolderアカウントを今すぐセットアップしますか?</value>
 	</data>
   
 	<data name="createAccountTitle">
-		<value>Set Up iFolder Account</value>
+		<value>iFolderアカウントのセットアップ</value>
 	</data>
   
 	<data name="pathInvalidErrorTitle">
@@ -987,46 +987,46 @@
 	</data>
   
 	<data name="invalidCharsError">
-		<value>The selected location contains invalid characters.  The characters \:*?"&lt;&gt;| cannot be used in an iFolder. Please select a different location and try again.</value>
+		<value>選択された場所には無効な文字が含まれています。\:*?"&lt;&gt;| などの文字はiFolderに使用できません。別の場所を選択し、再度実行してください。</value>
 	</data>
   
 	<data name="pathInStoreError">
-		<value>The selected location is inside the iFolder data folder.  Please select a different location and try again.</value>
+		<value>選択された場所は、iFolderデータフォルダ内にあります。別の場所を選択し、再度実行してください。</value>
 	</data>
   
 	<data name="pathContainsStoreError">
-		<value>The selected location contains the iFolder data files.  Please select a different location and try again.</value>
+		<value>選択された場所にはiFolderデータファイルが含まれています。別の場所を選択し、再度実行してください。</value>
 	</data>
   
 	<data name="systemDirError">
-		<value>The selected location contains a system folder.  System folders cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>選択された場所にはシステムフォルダが含まれています。システムフォルダにiFolderを含めることはできません。別の場所を選択し、再度実行してください。</value>
 	</data>
   
 	<data name="systemDriveError">
-		<value>The selected location is a system drive.  System drives cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>選択された場所はシステムドライブです。システムドライブにiFolderを含めることはできません。別の場所を選択し、再度実行してください。</value>
 	</data>
   
 	<data name="winDirError">
-		<value>The selected location includes the Windows folder.  The Windows folder cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>選択された場所にはWindowsフォルダが含まれています。WindowsフォルダにiFolderを含めることはできません。別の場所を選択し、再度実行してください。</value>
 	</data>
   
 	<data name="progFilesDirError">
-		<value>The selected location includes the Program Files folder.  The Program Files folder cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>選択された場所にはProgram Filesフォルダが含まれています。Program FilesにiFolderを含めることはできません。異なる場所を選択し、再度実行してください。</value>
 	</data>
   
 	<data name="containsiFolderError">
-		<value>The selected location already contains an iFolder.  iFolders cannot exist inside other iFolders.  Please select a different location and try again.</value>
+		<value>選択された場所にはiFolderがすでに含まれています。iFolderは他のiFolderの中に存在できません。別の場所を選択し、再度実行してください。</value>
 	</data>
   
 	<data name="pathIniFolderError">
-		<value>The selected location is inside another iFolder.  iFolders cannot exist inside other iFolders.  Please select a different location and try again.</value>
+		<value>選択された場所は他のiFolderの中にあります。iFolderは他のiFolderの中に存在できません。別の場所を選択し、再度実行してください。</value>
 	</data>
   
 	<data name="rootDriveError">
-		<value>iFolders cannot exist at the drive level.  The location selected is at the root of the drive.  Please select a location that is not at the root of a drive and try again.</value>
+		<value>iFolderはドライブレベルには存在できません。選択された場所はドライブのルートです。ドライブのルート以外の場所を選択し、再度実行してください。</value>
 	</data>
   
 	<data name="networkPathError">
-		<value>The selected location is on a network or non-physical drive.  iFolders must reside on a physical drive.  Please select a different location and try again.</value>
+		<value>選択された場所はネットワーク上または非物理ドライブです。iFolderは物理ドライブ上に配置する必要があります。別の場所を選択し、再度実行してください。</value>
 	</data>
 </root>

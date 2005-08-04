@@ -539,7 +539,7 @@
 	</data>
   
 	<data name="syncNow.HelpString">
-		<value>Click to cause this iFolder to synchronize at the next available time.</value>
+		<value>Kattintson ide, ha azt szeretné, hogy az iFolder a legközelebbi lehetséges időpontban elvégezze a szinkronizálást.</value>
 	</data>
   
 	<data name="syncNow.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -579,7 +579,7 @@
 	</data>
   
 	<data name="syncNow.Text">
-		<value>Synchronize &amp;Now</value>
+		<value>Azonnali &amp;szinkronizálás</value>
 	</data>
   
 	<data name="syncNow.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -659,7 +659,7 @@
 	</data>
   
 	<data name="lastSync.HelpString">
-		<value>Displays the last time that this iFolder successfully synchronized files to/from the server.</value>
+		<value>Megjeleníti, hogy az iFolder utoljára mikor szinkronizálta sikeresen a fájlokat erről a kiszolgálóról/erre a kiszolgálóra.</value>
 	</data>
   
 	<data name="lastSync.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -895,7 +895,7 @@
 	</data>
   
 	<data name="syncInterval.HelpString">
-		<value>Specifies the interval at which this iFolder will synchronize.</value>
+		<value>Megadja, hogy ez az iFolder mappa milyen gyakran végezze el a szinkronizálást.</value>
 	</data>
   
 	<data name="syncInterval.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1139,7 +1139,7 @@
 	</data>
   
 	<data name="autoSync.HelpString">
-		<value>Check to set the interval at which this iFolder will synchronize.  If this box is unchecked, the iFolder will never synchronize.</value>
+		<value>Bejelölésével beállíthatja, hogy ez az iFolder mappa milyen gyakran végezze el a szinkronizálást. Ha ez a jelölőnégyzet üresen marad, az iFolder mappa egyáltalán nem végez szinkronizálást.</value>
 	</data>
   
 	<data name="autoSync.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1179,7 +1179,7 @@
 	</data>
   
 	<data name="autoSync.Text">
-		<value>Automatically &amp;Synchronizes Every:</value>
+		<value>Automatikus &amp;szinkronizálás időköze:</value>
 	</data>
   
 	<data name="autoSync.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -1259,7 +1259,7 @@
 	</data>
   
 	<data name="objectCount.HelpString">
-		<value>Displays the number of files and/or folders in this iFolder that need to be synchronized.</value>
+		<value>Mutatja, hogy ebben az iFolder mappában hány fájlt és/vagy mappát kell szinkronizálni.</value>
 	</data>
   
 	<data name="objectCount.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1539,7 +1539,7 @@
 	</data>
   
 	<data name="groupBox3.Text">
-		<value>Disk Space on Server</value>
+		<value>Lemezterület a kiszolgálón</value>
 	</data>
   
 	<data name="groupBox3.ToolTip">
@@ -1627,7 +1627,7 @@
 	</data>
   
 	<data name="gaugeChart.HelpString">
-		<value>Displays the amount of space used.</value>
+		<value>Mutatja a használatban lévő lemezterület méretét.</value>
 	</data>
   
 	<data name="gaugeChart.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1851,7 +1851,7 @@
 	</data>
   
 	<data name="limitEdit.HelpString">
-		<value>Displays the size limit of this iFolder.</value>
+		<value>Mutatja az erre az iFolder mappára érvényes méretkorlátozást.</value>
 	</data>
   
 	<data name="limitEdit.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1991,7 +1991,7 @@
 	</data>
   
 	<data name="setLimit.HelpString">
-		<value>Check to set a size limit on this iFolder.</value>
+		<value>Jelölje be, ha erre az iFolder mappára méretkorlátozást kíván beállítani.</value>
 	</data>
   
 	<data name="setLimit.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2031,7 +2031,7 @@
 	</data>
   
 	<data name="setLimit.Text">
-		<value>Set &amp;Quota:</value>
+		<value>&amp;Kvóta beállítása:</value>
 	</data>
   
 	<data name="setLimit.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -2471,7 +2471,7 @@
 	</data>
   
 	<data name="available.HelpString">
-		<value>Displays the amount of space available in this iFolder.</value>
+		<value>Mutatja, hogy mennyi szabad hely van ebben az iFolder mappában.</value>
 	</data>
   
 	<data name="available.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2631,7 +2631,7 @@
 	</data>
   
 	<data name="label9.Text">
-		<value>Használható</value>
+		<value>Használható:</value>
 	</data>
   
 	<data name="label9.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -2831,7 +2831,7 @@
 	</data>
   
 	<data name="used.HelpString">
-		<value>Displays the size of this iFolder.</value>
+		<value>Ennek az iFolder mappának a méretét mutatja.</value>
 	</data>
   
 	<data name="used.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2991,7 +2991,7 @@
 	</data>
   
 	<data name="label1.Text">
-		<value>Használt:</value>
+		<value>Használatban:</value>
 	</data>
   
 	<data name="label1.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -3111,7 +3111,7 @@
 	</data>
   
 	<data name="limitLabel.Text">
-		<value>Kvóta</value>
+		<value>Kvóta:</value>
 	</data>
   
 	<data name="limitLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -3191,7 +3191,7 @@
 	</data>
   
 	<data name="limit.HelpString">
-		<value>Displays the size limit of this iFolder.</value>
+		<value>Mutatja az erre az iFolder mappára érvényes méretkorlátozást.</value>
 	</data>
   
 	<data name="limit.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -3451,7 +3451,7 @@
 	</data>
   
 	<data name="access.HelpString">
-		<value>Click to set the selected user(s) access rights to this iFolder.</value>
+		<value>Kattintson ide a kijelölt felhasználók erre az iFolder mappára érvényes jogosultságainak beállításához.</value>
 	</data>
   
 	<data name="access.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -3491,7 +3491,7 @@
 	</data>
   
 	<data name="access.Text">
-		<value>   hozzáférés            %+5m0  %+4m1.%k2\n</value>
+		<value>Hozzáférés...</value>
 	</data>
   
 	<data name="access.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -3575,7 +3575,7 @@
 	</data>
   
 	<data name="add.HelpString">
-		<value>Click to add users to share this iFolder with.</value>
+		<value>Kattintson ide azoknak a felhasználóknak a felvételéhez, akikkel megosztja ezt az iFolder mappát.</value>
 	</data>
   
 	<data name="add.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -3699,7 +3699,7 @@
 	</data>
   
 	<data name="remove.HelpString">
-		<value>Click to stop sharing this iFolder with the selected user(s).</value>
+		<value>Kattintson ide, ha a kijelölt felhasználókkal a továbbiakban nem kívánja megosztani ezt az iFolder mappát.</value>
 	</data>
   
 	<data name="remove.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -3823,7 +3823,7 @@
 	</data>
   
 	<data name="shareWith.HelpString">
-		<value>Lists the users that this iFolder is currently being shared with.</value>
+		<value>Azoknak a felhasználóknak a listáját adja meg, akikkel jelenleg meg van osztva ez az iFolder mappa.</value>
 	</data>
   
 	<data name="shareWith.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -3931,7 +3931,7 @@
 	</data>
   
 	<data name="columnHeader3.Text">
-		<value>   hozzáférés            %+5m0  %+4m1.%k2\n</value>
+		<value>Hozzáférés</value>
 	</data>
   
 	<data name="columnHeader3.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -4091,7 +4091,7 @@
 	</data>
   
 	<data name="conflicts.HelpString">
-		<value>Click to resolve conflicts in this iFolder.</value>
+		<value>Kattintson ide az ebben az iFolder mappában található ütközések feloldásához.</value>
 	</data>
   
 	<data name="conflicts.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -4711,7 +4711,7 @@
 	</data>
   
 	<data name="ifolders.HelpString">
-		<value>The list of iFolders on this computer.</value>
+		<value>A számítógépen található iFolder mappák listája.</value>
 	</data>
   
 	<data name="ifolders.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -4955,7 +4955,7 @@
 	</data>
   
 	<data name="open.HelpString">
-		<value>Click to open this iFolder in Explorer.</value>
+		<value>Kattintson ide, ha az Intézőben meg kívánja nyitni ezt az iFolder mappát.</value>
 	</data>
   
 	<data name="open.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -5375,7 +5375,7 @@
 	</data>
   
 	<data name="diskQuotaReadError">
-		<value>An error was encountered while reading disk space restrictions.</value>
+		<value>Hiba történt a lemezterület-korlátozások olvasásakor.</value>
 	</data>
   
 	<data name="errorTitle">
@@ -5383,7 +5383,7 @@
 	</data>
   
 	<data name="memberReadError">
-		<value>An error was encountered while reading iFolder members.</value>
+		<value>Hiba történt az iFolder mappa tagjainak olvasásakor.</value>
 	</data>
   
 	<data name="Admin">
@@ -5399,7 +5399,7 @@
 	</data>
   
 	<data name="Deny">
-		<value>Deny</value>
+		<value>Elutasítás</value>
 	</data>
   
 	<data name="unknown">
@@ -5407,15 +5407,15 @@
 	</data>
   
 	<data name="Invited">
-		<value>Invited</value>
+		<value>Meghívott</value>
 	</data>
   
 	<data name="WaitSync">
-		<value>Waiting to sync</value>
+		<value>Várakozás a szinkronizálásra</value>
 	</data>
   
 	<data name="AccessRequest">
-		<value>Access requested</value>
+		<value>Hozzáférést kért</value>
 	</data>
   
 	<data name="Declined">
@@ -5423,7 +5423,7 @@
 	</data>
   
 	<data name="Inviting">
-		<value>Ready to invite</value>
+		<value>Meghívásra kész</value>
 	</data>
   
 	<data name="owner">
@@ -5431,35 +5431,35 @@
 	</data>
   
 	<data name="user">
-		<value>iFolder User</value>
+		<value>iFolder felhasználó</value>
 	</data>
   
 	<data name="saveErrorTitle">
-		<value>iFolder Save Error</value>
+		<value>iFolder mentési hiba</value>
 	</data>
   
 	<data name="changeOwnerError">
-		<value>An error was encountered while saving the new owner of the iFolder.</value>
+		<value>Hiba történt az iFolder mappa új tulajdonosának mentésekor.</value>
 	</data>
   
 	<data name="memberCommitError">
-		<value>An error was encountered while saving changes for {0}.</value>
+		<value>Hiba történt a(z) {0} változásainak mentésekor.</value>
 	</data>
   
 	<data name="removeError">
-		<value>Remove failed with the following exception:</value>
+		<value>Az eltávolítás a következő kivétel miatt sikertelen volt:</value>
 	</data>
   
 	<data name="policyCommitError">
-		<value>An error was encountered while saving policy changes.</value>
+		<value>Hiba történt a házirendváltozások mentésekor.</value>
 	</data>
   
 	<data name="iFolderReadError">
-		<value>An error was encountered reading iFolder data.</value>
+		<value>Hiba történt az iFolder adatok olvasásakor.</value>
 	</data>
   
 	<data name="saveChanges">
-		<value>Do you want to save the changes you have made to the iFolder?</value>
+		<value>Menti az iFolder mappán végzett változtatásokat?</value>
 	</data>
   
 	<data name="saveChangesTitle">
@@ -5467,47 +5467,47 @@
 	</data>
   
 	<data name="iFolderProperties">
-		<value>iFolder Properties for {0}</value>
+		<value>{0} iFolder mappa tulajdonságai</value>
 	</data>
   
 	<data name="iFolderOpenError">
-		<value>Unable to open iFolder {0}.</value>
+		<value>Nem lehet megnyitni a(z) {0} iFolder mappát.</value>
 	</data>
   
 	<data name="userProperties">
-		<value>Access for {0}</value>
+		<value>{0} hozzáférése</value>
 	</data>
   
 	<data name="helpErrorTitle">
-		<value>iFolder Help Error</value>
+		<value>iFolder súgóhiba</value>
 	</data>
   
 	<data name="helpFileError">
-		<value>An error was encountered while opening the help file.</value>
+		<value>Hiba történt a súgófájl megnyitásakor.</value>
 	</data>
   
 	<data name="conflictErrorTitle">
-		<value>iFolder Conflict Error</value>
+		<value>iFolder ütközési hiba</value>
 	</data>
   
 	<data name="conflictDialogError">
-		<value>An error was encountered while displaying the Conflict Resolver dialog.</value>
+		<value>Hiba történt az ütközésfeloldási párbeszédpanel megjelenítésekor.</value>
 	</data>
   
 	<data name="propertiesErrorTitle">
-		<value>iFolder Properties Error</value>
+		<value>iFolder tulajdonságokkal kapcsolatos hiba</value>
 	</data>
   
 	<data name="propertiesDialogError">
-		<value>An error was encountered while displaying the iFolder properties dialog.</value>
+		<value>Hiba történt az iFolder tulajdonságlapjának megjelenítésekor.</value>
 	</data>
   
 	<data name="syncError">
-		<value>An error was encountered while sending the sync command.</value>
+		<value>Hiba történt a szinkronizálási parancs elküldésekor.</value>
 	</data>
   
 	<data name="slaveSyncInterval">
-		<value>Automatically Synchronizes Every: {0} {1}</value>
+		<value>Automatikus szinkronizálás gyakorisága: {0} {1}</value>
 	</data>
   
 	<data name="seconds">
@@ -5523,6 +5523,6 @@
 	</data>
   
 	<data name="days">
-		<value>nap múlva</value>
+		<value>nap</value>
 	</data>
 </root>

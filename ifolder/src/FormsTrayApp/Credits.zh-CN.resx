@@ -163,7 +163,7 @@
 	</data>
   
 	<data name="listBox1.Items">
-		<value>			iFolder 3 Team</value>
+		<value>			iFolder 3 小组</value>
 	</data>
   
 	<data name="listBox1.Items1">
@@ -171,7 +171,7 @@
 	</data>
   
 	<data name="listBox1.Items2">
-		<value>Developers</value>
+		<value>开发人员</value>
 	</data>
   
 	<data name="listBox1.Items3">
@@ -219,7 +219,7 @@
 	</data>
   
 	<data name="listBox1.Items14">
-		<value>Quality Assurance</value>
+		<value>质量保证</value>
 	</data>
   
 	<data name="listBox1.Items15">
@@ -247,7 +247,7 @@
 	</data>
   
 	<data name="listBox1.Items21">
-		<value>Product Management</value>
+		<value>产品管理</value>
 	</data>
   
 	<data name="listBox1.Items22">
@@ -279,7 +279,7 @@
 	</data>
   
 	<data name="listBox1.Items29">
-		<value>			Special Thanks</value>
+		<value>			特别感谢</value>
 	</data>
   
 	<data name="listBox1.Items30">
@@ -287,7 +287,7 @@
 	</data>
   
 	<data name="listBox1.Items31">
-		<value>Retired Contributors</value>
+		<value>退休的参与人员</value>
 	</data>
   
 	<data name="listBox1.Items32">
@@ -315,7 +315,7 @@
 	</data>
   
 	<data name="listBox1.Items38">
-		<value>	Mono Team</value>
+		<value>	Mono 小组</value>
 	</data>
   
 	<data name="listBox1.Items39">
@@ -327,7 +327,7 @@
 	</data>
   
 	<data name="listBox1.Items41">
-		<value>Code Contributors</value>
+		<value>代码参与人员</value>
 	</data>
   
 	<data name="listBox1.Items42">
@@ -351,7 +351,7 @@
 	</data>
   
 	<data name="listBox1.Items47">
-		<value>Other Contributors</value>
+		<value>其他参与人员</value>
 	</data>
   
 	<data name="listBox1.Items48">

@@ -171,7 +171,7 @@
 	</data>
   
 	<data name="accessButtons.Text">
-		<value>   hozzáférés            %+5m0  %+4m1.%k2\n</value>
+		<value>Hozzáférés</value>
 	</data>
   
 	<data name="accessButtons.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -615,7 +615,7 @@
 	</data>
   
 	<data name="owner.Text">
-		<value>Make this user the owner of the iFolder</value>
+		<value>Ez a felhasználó legyen az iFolder mappa tulajdonosa</value>
 	</data>
   
 	<data name="owner.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -959,7 +959,7 @@
 	</data>
   
 	<data name="$this.Text">
-		<value>Access for Multiple Users</value>
+		<value>Hozzáférés több felhasználó számára</value>
 	</data>
   
 	<data name="&gt;&gt;$this.Name">

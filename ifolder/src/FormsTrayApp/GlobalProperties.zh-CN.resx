@@ -515,7 +515,7 @@
 	</data>
   
 	<data name="menuCreate.Text">
-		<value>新建</value>
+		<value>新建(&amp;N)...</value>
 	</data>
   
 	<data name="menuCreate.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -571,7 +571,7 @@
 	</data>
   
 	<data name="menuAccept.Text">
-		<value>设置</value>
+		<value>设置(&amp;U)...</value>
 	</data>
   
 	<data name="menuAccept.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -683,7 +683,7 @@
 	</data>
   
 	<data name="menuSyncNow.Text">
-		<value>立即同步</value>
+		<value>立即同步(&amp;Y)</value>
 	</data>
   
 	<data name="menuSyncNow.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -711,7 +711,7 @@
 	</data>
   
 	<data name="menuRevert.Text">
-		<value>恢复到常规文件夹</value>
+		<value>恢复为常规文件夹(&amp;V)</value>
 	</data>
   
 	<data name="menuRevert.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -867,7 +867,7 @@
 	</data>
   
 	<data name="menuActionCreate.Text">
-		<value>新建</value>
+		<value>新建(&amp;N)...</value>
 	</data>
   
 	<data name="menuActionCreate.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -923,7 +923,7 @@
 	</data>
   
 	<data name="menuActionAccept.Text">
-		<value>设置</value>
+		<value>设置(&amp;U)...</value>
 	</data>
   
 	<data name="menuActionAccept.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1091,7 +1091,7 @@
 	</data>
   
 	<data name="menuActionSync.Text">
-		<value>立即同步</value>
+		<value>立即同步(&amp;Y)</value>
 	</data>
   
 	<data name="menuActionSync.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1119,7 +1119,7 @@
 	</data>
   
 	<data name="menuActionRevert.Text">
-		<value>恢复到常规文件夹</value>
+		<value>恢复为常规文件夹(&amp;V)</value>
 	</data>
   
 	<data name="menuActionRevert.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1591,7 +1591,7 @@
 	</data>
   
 	<data name="toolBarSetup.ToolTipText">
-		<value>Set up the selected iFolder</value>
+		<value>设置所选的 iFolder</value>
 	</data>
   
 	<data name="toolBarSetup.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1619,7 +1619,7 @@
 	</data>
   
 	<data name="toolBarShare.ToolTipText">
-		<value>Share the selected iFolder</value>
+		<value>共享所选的 iFolder</value>
 	</data>
   
 	<data name="toolBarShare.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1647,7 +1647,7 @@
 	</data>
   
 	<data name="toolBarResolve.ToolTipText">
-		<value>Resolve conflicts in the selected iFolder</value>
+		<value>解决所选 iFolder 中的冲突</value>
 	</data>
   
 	<data name="toolBarResolve.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1675,7 +1675,7 @@
 	</data>
   
 	<data name="toolBarSync.ToolTipText">
-		<value>Synchronize the selected iFolder</value>
+		<value>同步所选的 iFolder</value>
 	</data>
   
 	<data name="toolBarSync.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1991,7 +1991,7 @@
 	</data>
   
 	<data name="$this.Name">
-		<value>GlobalProperties</value>
+		<value>全局属性</value>
 	</data>
   
 	<data name="$this.DrawGrid" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2419,7 +2419,7 @@
 	</data>
   
 	<data name="statusConflicts">
-		<value>Has conflicts</value>
+		<value>有冲突</value>
 	</data>
   
 	<data name="statusOK">
@@ -2427,15 +2427,15 @@
 	</data>
   
 	<data name="Available">
-		<value>Not set up</value>
+		<value>未设置</value>
 	</data>
   
 	<data name="WaitConnect">
-		<value>Waiting to connect</value>
+		<value>正在等待连接</value>
 	</data>
   
 	<data name="WaitSync">
-		<value>Waiting to synchronize</value>
+		<value>正在等待同步</value>
 	</data>
   
 	<data name="statusUnknown">
@@ -2443,35 +2443,35 @@
 	</data>
   
 	<data name="iFolderError">
-		<value>An error was encountered while reading the iFolders.</value>
+		<value>读取 iFolder 时出现错误。</value>
 	</data>
   
 	<data name="iFolderErrorTitle">
-		<value>Unable to Read iFolders</value>
+		<value>无法读取 iFolder</value>
 	</data>
   
 	<data name="syncError">
-		<value>An error was encountered while synchronizing the iFolder.</value>
+		<value>同步 iFolder 时出现错误。</value>
 	</data>
   
 	<data name="syncErrorTitle">
-		<value>iFolder Synchronization Error</value>
+		<value>iFolder 同步错误</value>
 	</data>
   
 	<data name="iFolderOpenError">
-		<value>Unable to open iFolder {0}.</value>
+		<value>无法打开 iFolder {0}。</value>
 	</data>
   
 	<data name="openErrorTitle">
-		<value>iFolder Open Error</value>
+		<value>iFolder 打开错误</value>
 	</data>
   
 	<data name="iFolderRevertError">
-		<value>An error was encountered while reverting the iFolder.</value>
+		<value>恢复 iFolder 时出现错误。</value>
 	</data>
   
 	<data name="revertErrorTitle">
-		<value>iFolder Revert Error</value>
+		<value>iFolder 恢复错误</value>
 	</data>
   
 	<data name="logEntriesCleared">
@@ -2479,31 +2479,31 @@
 	</data>
   
 	<data name="checkingForiFolders">
-		<value>Checking for new iFolders...</value>
+		<value>正在检查新 iFolder...</value>
 	</data>
   
 	<data name="doneCheckingForiFolders">
-		<value>Done checking for new iFolders</value>
+		<value>检查新 iFolder 完成</value>
 	</data>
   
 	<data name="localSync">
-		<value>Checking for changes: {0}</value>
+		<value>正在检查更改：{0}</value>
 	</data>
   
 	<data name="preSync">
-		<value>Checking for changes</value>
+		<value>正在检查更改</value>
 	</data>
   
 	<data name="disconnected">
-		<value>Server unavailable</value>
+		<value>服务器不可用</value>
 	</data>
   
 	<data name="synciFolder">
-		<value>Started synchronization: {0}</value>
+		<value>已开始同步：{0}</value>
 	</data>
   
 	<data name="syncComplete">
-		<value>Finished synchronization: {0}</value>
+		<value>已完成同步：{0}</value>
 	</data>
   
 	<data name="uploadFile">
@@ -2515,27 +2515,27 @@
 	</data>
   
 	<data name="localFile">
-		<value>Found changes in file: {0}</value>
+		<value>文件 {0} 中存在更改</value>
 	</data>
   
 	<data name="syncingFile">
-		<value>Synchronizing file: {0}</value>
+		<value>正在同步文件：{0}</value>
 	</data>
   
 	<data name="uploadDir">
-		<value>Uploading directory: {0}</value>
+		<value>正在上载目录：{0}</value>
 	</data>
   
 	<data name="downloadDir">
-		<value>Downloading directory: {0}</value>
+		<value>正在下载目录：{0}</value>
 	</data>
   
 	<data name="localDir">
-		<value>Found changes in directory: {0}</value>
+		<value>目录 {0} 中存在更改</value>
 	</data>
   
 	<data name="syncingDir">
-		<value>Synchronizing directory: {0}</value>
+		<value>正在同步目录：{0}</value>
 	</data>
   
 	<data name="deleteClientFile">
@@ -2547,11 +2547,11 @@
 	</data>
   
 	<data name="deleteUnknown">
-		<value>Deleting on server: {0}</value>
+		<value>正在服务器 {0} 上删除</value>
 	</data>
   
 	<data name="declineError">
-		<value>An error was encountered while removing the iFolder.</value>
+		<value>去除 iFolder 时出现错误。</value>
 	</data>
   
 	<data name="errorTitle">
@@ -2559,19 +2559,19 @@
 	</data>
   
 	<data name="statusSyncing">
-		<value>Synchronizing</value>
+		<value>正在同步</value>
 	</data>
   
 	<data name="statusSyncFailure">
-		<value>Incomplete synchronization</value>
+		<value>同步不完整</value>
 	</data>
   
 	<data name="statusSyncingItems">
-		<value>{0} items to synchronize</value>
+		<value>要同步 {0} 个项目</value>
 	</data>
   
 	<data name="statusSyncItemsFailed">
-		<value>{0} items not synchronized</value>
+		<value>{0} 个项目未同步</value>
 	</data>
   
 	<data name="deleteAction">
@@ -2579,35 +2579,35 @@
 	</data>
   
 	<data name="revertTitle">
-		<value>Revert iFolder</value>
+		<value>恢复 iFolder</value>
 	</data>
   
 	<data name="revertPrompt">
-		<value>Are you sure you want to revert the iFolder to a normal folder?</value>
+		<value>是否确实要将 iFolder 恢复为常规文件夹？</value>
 	</data>
   
 	<data name="removeTitle">
-		<value>去除 Folder</value>
+		<value>去除 iFolder</value>
 	</data>
   
 	<data name="removePrompt">
-		<value>Are you sure you want to remove the iFolder?</value>
+		<value>是否确实要去除 iFolder？</value>
 	</data>
   
 	<data name="removeiFolder">
-		<value>This removes you as a member of the iFolder.  You cannot access the iFolder unless the owner re-invites you.  The files are not deleted from your local hard drive.</value>
+		<value>此操作将您作为 iFolder 的成员去除。除非拥有者重新邀请您，否则您无法访问此 iFolder。文件并未从本地硬盘驱动器中删除。</value>
 	</data>
   
 	<data name="deleteiFolder">
-		<value>This removes the iFolder from your local computer.  Because you are the owner, the iFolder is removed from the server and all member computers.  The iFolder cannot be recovered or re-shared on another computer.  The files are not deleted from your local hard drive.</value>
+		<value>此操作将从本地计算机中去除 iFolder。因为您是拥有者，所以将从服务器和所有成员计算机中去除 iFolder。iFolder 无法在另一个计算机上恢复或重新共享。文件并未从本地硬盘驱动器中删除。</value>
 	</data>
   
 	<data name="removeiFolder2">
-		<value>If you are the iFolder owner, this unshares the iFolder, reverts all copies of the iFolder to normal folders, and deletes the iFolder from the server. If you are a member, this removes you as a member, and you cannot access the original iFolder from any computer unless the owner re-invites you. Local copies of the iFolder contents are not deleted from computers where the iFolder is currently set up.</value>
+		<value>如果您是 iFolder 拥有者，则此操作将取消对 iFolder 的共享，将 iFolder 的所有副本恢复为常规文件夹，并从服务器中删除 iFolder。如果您是一个成员，则此操作将您作为成员去除，除非拥有者重新邀请您，否则您无法从任何计算机访问原始 iFolder。iFolder 内容的本地副本并未从当前设置 iFolder 的计算机中删除。</value>
 	</data>
   
 	<data name="revertiFolder">
-		<value>This reverts the iFolder back to a normal folder and leaves the files intact.  The iFolder is then available from the server and must be set up in a different location to synchronize.</value>
+		<value>此操作将此 iFolder 恢复为常规文件夹并保留文件不动。然后，可以从服务器使用 iFolder，并且需要在不同位置进行设置才能进行同步。</value>
 	</data>
   
 	<data name="showAll">

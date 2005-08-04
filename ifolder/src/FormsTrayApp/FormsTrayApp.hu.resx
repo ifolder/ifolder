@@ -735,207 +735,207 @@
 	</data>
   
 	<data name="iFolderServicesStarting">
-		<value>iFolder Services starting up...</value>
+		<value>Az iFolder szolgáltatások indulása...</value>
 	</data>
   
 	<data name="iFolderServicesStopping">
-		<value>iFolder Services shutting down...</value>
+		<value>Az iFolder szolgáltatások leállása...</value>
 	</data>
   
 	<data name="collisionMessage">
-		<value>A conflict has been detected in iFolder "{0}".  Click here to resolve the conflicts in the iFolder.</value>
+		<value>A(z) "{0}" iFolder mappában ütközés észlelhető. Kattintson ide az iFolder mappán belüli ütközés feloldásához.</value>
 	</data>
   
 	<data name="actionRequiredTitle">
-		<value>Action Required</value>
+		<value>Beavatkozás szükséges</value>
 	</data>
   
 	<data name="subscriptionTitle">
-		<value>Új iFolder</value>
+		<value>Új iFolder mappa: "{0}"</value>
 	</data>
   
 	<data name="subscriptionMessage">
-		<value>{0} has invited you to participate in this shared iFolder.  Click here to set up the iFolder.</value>
+		<value>{0} meghívta, hogy vegyen részt ebben a megosztott iFolder mappában. Kattintson ide az iFolder mappa beállításához.</value>
 	</data>
   
 	<data name="newMemberTitle">
-		<value>New iFolder User</value>
+		<value>Új iFolder felhasználó</value>
 	</data>
   
 	<data name="newMemberMessage">
-		<value>{0} has joined the iFolder "{1}".  Click here to view the member list for the iFolder.</value>
+		<value>{0} csatlakozott a(z) "{1}" iFolder mappához. Kattintson ide az iFolder mappa taglistájának megjelenítéséhez.</value>
 	</data>
   
 	<data name="fatalErrorMessage">
-		<value>A software error is preventing iFolder from initializing.  Please contact your system administrator.</value>
+		<value>Az iFolder inicializálása szoftverhiba miatt nem hajtható végre. Forduljon a rendszergazdához.</value>
 	</data>
   
 	<data name="fatalErrorTitle">
-		<value>Unable to Start iFolder Services</value>
+		<value>Nem lehet elindítani az iFolder szolgáltatásokat</value>
 	</data>
   
 	<data name="downloading">
-		<value>Letöltés:</value>
+		<value>Letöltés: {0}</value>
 	</data>
   
 	<data name="uploading">
-		<value>Feltöltés: %s</value>
+		<value>Feltöltés: {0}</value>
 	</data>
   
 	<data name="clientUpgradeTitle">
-		<value>iFolder Client Upgrade</value>
+		<value>iFolder ügyfélprogram frissítése</value>
 	</data>
   
 	<data name="upgradeErrorTitle">
-		<value>Upgrade Failure</value>
+		<value>Frissítési hiba</value>
 	</data>
   
 	<data name="clientUpgradeFailure">
-		<value>The iFolder client upgrade failed.  Please contact your system administrator.</value>
+		<value>Az iFolder ügyfélprogram frissítése sikertelen volt. Forduljon a rendszergazdához.</value>
 	</data>
   
 	<data name="clientUpgradePrompt">
-		<value>A newer version "{0}" of the iFolder Client is available. Would you like to upgrade now?</value>
+		<value>Elérhetővé vált az iFolder ügyfélprogram újabb, "{0}" verziója. Elvégzi most a frissítést?</value>
 	</data>
   
 	<data name="failedAuth">
-		<value>The username or password is invalid.  Please verify the information entered and try again.</value>
+		<value>Érvénytelen a felhasználónév vagy a jelszó. Ellenőrizze a megadott adatokat, és próbálja meg újra.</value>
 	</data>
   
 	<data name="graceLogin">
-		<value>Your password has expired.  You have {0} grace logins remaining.</value>
+		<value>A jelszó érvényessége lejárt. Még {0} bejelentkezési kísérletet tehet.</value>
 	</data>
   
 	<data name="graceLoginTitle">
-		<value>Expired Password</value>
+		<value>Lejárt jelszó</value>
 	</data>
   
 	<data name="accountDisabled">
-		<value>The user account is disabled.  Please contact your network administrator for assistance. </value>
+		<value>A felhasználói fiók le van tiltva. Forduljon a hálózati rendszergazdához segítségért. </value>
 	</data>
   
 	<data name="iFolderAccountDisabled">
-		<value>The iFolder account is disabled.  Please contact your network administrator for assistance.</value>
+		<value>Az iFolder fiók le van tiltva. Forduljon a hálózati rendszergazdához segítségért.</value>
 	</data>
   
 	<data name="accountLockout">
-		<value>The user account has been locked.  Please contact your network administrator for assistance.</value>
+		<value>A felhasználói fiók zárolva van. Forduljon a hálózati rendszergazdához segítségért.</value>
 	</data>
   
 	<data name="serverConnectErrorTitle">
-		<value>Unable to Connect to iFolder Server</value>
+		<value>Nem lehet csatlakozni az iFolder kiszolgálóhoz</value>
 	</data>
   
 	<data name="checkingForiFolders">
-		<value>Checking for new iFolders...</value>
+		<value>Új iFolder mappák keresése...</value>
 	</data>
   
 	<data name="doneCheckingForiFolders">
-		<value>Done checking for new iFolders</value>
+		<value>Az új iFolder mappák keresése befejeződött</value>
 	</data>
   
 	<data name="localSync">
-		<value>Checking for changes: {0}</value>
+		<value>Változások keresése: {0}</value>
 	</data>
   
 	<data name="synciFolder">
-		<value>Started synchronization: {0}</value>
+		<value>Szinkronizálás megkezdve: {0}</value>
 	</data>
   
 	<data name="syncComplete">
-		<value>Finished synchronization: {0}</value>
+		<value>Szinkronizálás befejeződött: {0}</value>
 	</data>
   
 	<data name="deleteClientFile">
-		<value>fájl törlése\n</value>
+		<value>Fájl törlése: {0}</value>
 	</data>
   
 	<data name="uploadDeltaSyncFile">
-		<value>Uploading file: {0}. Synchronizing changes only: {1}% savings.</value>
+		<value>Fájl feltöltése: {0}. Csak a változások szinkronizálása: {1}% megtakarítás.</value>
 	</data>
   
 	<data name="downloadDeltaSyncFile">
-		<value>Downloading file: {0}. Synchronizing changes only: {1}% savings.</value>
+		<value>Fájl letöltése: {0}. Csak a változások szinkronizálása: {1}% megtakarítás.</value>
 	</data>
   
 	<data name="uploadFile">
-		<value> Fájl feltöltése</value>
+		<value>Fájl feltöltése: {0}</value>
 	</data>
   
 	<data name="downloadFile">
-		<value>Downloading file: {0}</value>
+		<value>Fájl letöltése: {0}</value>
 	</data>
   
 	<data name="localFile">
-		<value>Found changes in file: {0}</value>
+		<value>Változás található a fájlban: {0}</value>
 	</data>
   
 	<data name="syncingFile">
-		<value>Synchronizing file: {0}</value>
+		<value>Fájl szinkronizálása: {0}</value>
 	</data>
   
 	<data name="deleteClientDir">
-		<value>Deleting directory: {0}</value>
+		<value>Könyvtár törlése: {0}</value>
 	</data>
   
 	<data name="uploadDir">
-		<value>Uploading directory: {0}</value>
+		<value>Könyvtár feltöltése: {0}</value>
 	</data>
   
 	<data name="downloadDir">
-		<value>Downloading directory: {0}</value>
+		<value>Könyvtár letöltése: {0}</value>
 	</data>
   
 	<data name="localDir">
-		<value>Found changes in directory: {0}</value>
+		<value>Változás található a könyvtárban: {0}</value>
 	</data>
   
 	<data name="syncingDir">
-		<value>Synchronizing directory: {0}</value>
+		<value>Könyvtár szinkronizálása: {0}</value>
 	</data>
   
 	<data name="deleteUnknown">
-		<value>Deleting on server: {0}</value>
+		<value>Törlés a kiszolgálón: {0}</value>
 	</data>
   
 	<data name="conflictFailure">
-		<value>Conflict occurred: {0}</value>
+		<value>Ütközés történt: {0}</value>
 	</data>
   
 	<data name="policyFailure">
-		<value>Policy prevented synchronization: {0}</value>
+		<value>A házirend miatt nem lehetett végrehajtani a szinkronizálást: {0}</value>
 	</data>
   
 	<data name="accessFailure">
-		<value>Insufficient rights prevented synchronization: {0}</value>
+		<value>Az elégtelen jogosultság miatt nem lehetett végrehajtani a szinkronizálást:: {0}</value>
 	</data>
   
 	<data name="lockFailure">
-		<value>Locked iFolder prevented synchronization: {0}</value>
+		<value>A zárolt iFolder mappa miatt nem lehetett végrehajtani a szinkronizálást:: {0}</value>
 	</data>
   
 	<data name="quotaFailure">
-		<value>Full iFolder prevented synchronization: {0}</value>
+		<value>A megtelt iFolder mappa miatt nem lehetett végrehajtani a szinkronizálást: {0}: {0}</value>
 	</data>
   
 	<data name="policySizeFailure">
-		<value>Size restriction policy prevented synchronization: {0}</value>
+		<value>A méretkorlátozó házirend miatt nem lehetett végrehajtani a szinkronizálást: {0}</value>
 	</data>
   
 	<data name="policyTypeFailure">
-		<value>File type restriction policy prevented synchronization: {0}</value>
+		<value>Fájltípust korlátozó házirend miatt nem lehetett végrehajtani a szinkronizálást: {0}</value>
 	</data>
   
 	<data name="genericFailure">
-		<value>iFolder failed synchronization: {0}</value>
+		<value>Sikertelen volt az iFolder mappa szinkronizálása: {0}</value>
 	</data>
   
 	<data name="serverDiskFullFailure">
-		<value>Insufficient disk space on the server prevented synchronization: {0}</value>
+		<value>A kiszolgálón lévő elégtelen szabad lemezterület miatt nem lehetett végrehajtani a szinkronizálást: {0}</value>
 	</data>
   
 	<data name="clientDiskFullFailure">
-		<value>Insufficient disk space on this computer prevented synchronization: {0}</value>
+		<value>A számítógépen lévő elégtelen szabad lemezterület miatt nem lehetett végrehajtani a szinkronizálást: {0}</value>
 	</data>
   
 	<data name="myiFolders">
@@ -943,18 +943,18 @@
 	</data>
   
 	<data name="verifyCert">
-		<value>iFolder cannot verify the identity of the iFolder Server {0}.  The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be {0} which could put your confidential information at risk.Â Â Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?</value>
+		<value>Az iFolder nem tudja ellenőrizni a(z) {0} iFolder kiszolgáló valódiságát. Ennek az iFolder kiszolgálónak a tanúsítványát ismeretlen hitelesítésszolgáltató írta alá. Előfordulhat, hogy olyan kiszolgálóhoz csatlakozik, amely csupán színleli, hogy ő a(z) {0}, ezzel viszont bizalmas adatait teheti kockára.Â Â Mielőtt elfogadná a tanúsítványt, célszerű a rendszergazdával egyeztetnie. Elfogadja véglegesen a tanúsítványt, és folytatja a csatlakozást?</value>
 	</data>
   
 	<data name="verifyCertTitle">
-		<value>Unable to Verify Identity</value>
+		<value>Nem lehet ellenőrizni az identitást</value>
 	</data>
   
 	<data name="createAccount">
-		<value>To begin using iFolder, you must first set up an iFolder account.  Would you like to set up an iFolder account now?</value>
+		<value>Az iFolder mappa használatának megkezdéséhez előbb be kell állítania egy iFolder fiókot. Elvégzi most az iFolder fiók beállítását?</value>
 	</data>
   
 	<data name="createAccountTitle">
-		<value>Set Up iFolder Account</value>
+		<value>iFolder fiók beállítása</value>
 	</data>
 </root>

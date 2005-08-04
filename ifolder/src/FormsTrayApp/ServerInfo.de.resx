@@ -175,7 +175,7 @@
 	</data>
   
 	<data name="ok.Text">
-		<value>anmelden</value>
+		<value>Anmelden</value>
 	</data>
   
 	<data name="ok.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -1467,58 +1467,58 @@
 	</data>
   
 	<data name="serverConnectError">
-		<value>An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.</value>
+		<value>Fehler beim Aufbauen der Verbindung zum iFolder-Server. Überprüfen Sie die eingegebenen Informationen und versuchen Sie es erneut. Wenn das Problem weiterhin auftritt, wenden Sie sich an den Netzwerkverwalter.</value>
 	</data>
   
 	<data name="serverConnectErrorTitle">
-		<value>Unable to Connect to iFolder Server</value>
+		<value>Verbindung zu iFolder-Server kann nicht aufgebaut werden</value>
 	</data>
   
 	<data name="serverReconnectError">
-		<value>The authentication returned the error {0}.</value>
+		<value>Bei der Beglaubigung wurde der Fehler {0} zurückgegeben.</value>
 	</data>
   
 	<data name="domainInfoReadError">
-		<value>An error was encountered while querying for the server and user name.</value>
+		<value>Fehler beim Abfragen von Server und Benutzername.</value>
 	</data>
   
 	<data name="failedAuth">
-		<value>The username or password is invalid.  Please verify the information entered and try again.</value>
+		<value>Der Benutzername oder das Passwort ist ungültig. Überprüfen Sie die eingegebenen Informationen und versuchen Sie es erneut.</value>
 	</data>
   
 	<data name="badPassword">
-		<value>The password is invalid.  Please try again.</value>
+		<value>Das Passwort ist ungültig. Bitte versuchen Sie es erneut.</value>
 	</data>
   
 	<data name="savePasswordError">
-		<value>An error was encountered while saving the password.</value>
+		<value>Fehler beim Speichern des Passworts.</value>
 	</data>
   
 	<data name="accountDisabled">
-		<value>The user account is disabled.  Please contact your network administrator for assistance. </value>
+		<value>Das Benutzerkonto ist deaktiviert. Wenden Sie sich wegen Unterstützung an Ihren Netzwerkverwalter. </value>
 	</data>
   
 	<data name="iFolderAccountDisabled">
-		<value>The iFolder account is disabled.  Please contact your network administrator for assistance.</value>
+		<value>Das iFolder-Konto ist deaktiviert. Wenden Sie sich wegen Unterstützung an Ihren Netzwerkverwalter.</value>
 	</data>
   
 	<data name="accountLockout">
-		<value>The user account has been locked.  Please contact your network administrator for assistance.</value>
+		<value>Das Benutzerkonto wurde gesperrt. Wenden Sie sich wegen Unterstützung an Ihren Netzwerkverwalter.</value>
 	</data>
   
 	<data name="graceLogin">
-		<value>Your password has expired.  You have {0} grace logins remaining.</value>
+		<value>Ihr Passwort ist abgelaufen. Sie haben noch {0} Kulanzanmeldungen.</value>
 	</data>
   
 	<data name="graceLoginTitle">
-		<value>Expired Password</value>
+		<value>Passwort abgelaufen</value>
 	</data>
   
 	<data name="verifyCert">
-		<value>iFolder cannot verify the identity of the iFolder Server {0}.  The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be {0} which could put your confidential information at risk.Â Â Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?</value>
+		<value>iFolder kann die Identität von iFolder-Server {0} nicht überprüfen. Das Zertifikat für diesen iFolder-Server wurde von einer unbekannten Zertifizierungsstelle signiert. Sie bauen möglicherweise eine Verbindung zu einem Server auf, der vorgibt, {0} zu sein; dies könnte Ihre vertraulichen Informationen gefährden..Â Â Klären Sie den Sachverhalt mit Ihrem Systemadministrator, bevor Sie dieses Zertifikat akzeptieren. Möchten Sie dieses Zertifikat dauerhaft akzeptieren und den Verbindungsaufbau fortsetzen?</value>
 	</data>
   
 	<data name="verifyCertTitle">
-		<value>Unable to Verify Identity</value>
+		<value>Identität kann nicht überprüft werden</value>
 	</data>
 </root>

@@ -507,7 +507,7 @@
 	</data>
   
 	<data name="ifolderName.HelpString">
-		<value>The name of the iFolder containing the conflict.</value>
+		<value>Имя iFolder с конфликтом.</value>
 	</data>
   
 	<data name="ifolderName.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -627,7 +627,7 @@
 	</data>
   
 	<data name="ifolderPath.HelpString">
-		<value>The full path of the iFolder containing the conflict.</value>
+		<value>Полный путь к iFolder с конфликтом.</value>
 	</data>
   
 	<data name="ifolderPath.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -751,7 +751,7 @@
 	</data>
   
 	<data name="conflictsView.HelpString">
-		<value>The list of files that have conflicts.</value>
+		<value>Список файлов с конфликтами.</value>
 	</data>
   
 	<data name="conflictsView.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1039,7 +1039,7 @@
 	</data>
   
 	<data name="saveLocal.HelpString">
-		<value>Click to replace the file on the iFolder server with the file on the local computer.</value>
+		<value>Щелкните для замены файла, расположенного на сервере iFolder, файлом, расположенным на локальном компьютере.</value>
 	</data>
   
 	<data name="saveLocal.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1159,7 +1159,7 @@
 	</data>
   
 	<data name="localSize.HelpString">
-		<value>The size of the file on the local computer.</value>
+		<value>Размер файла, расположенного на локальном компьютере.</value>
 	</data>
   
 	<data name="localSize.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1279,7 +1279,7 @@
 	</data>
   
 	<data name="localDate.HelpString">
-		<value>The date of the file on the local computer.</value>
+		<value>Дата создания файла, расположенного на локальном компьютере.</value>
 	</data>
   
 	<data name="localDate.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1399,7 +1399,7 @@
 	</data>
   
 	<data name="localName.HelpString">
-		<value>The name of the file on the local computer.  Double-click the name to open the file.</value>
+		<value>Имя файла, расположенного на локальном компьютере. Дважды щелкните имя для открытия файла.</value>
 	</data>
   
 	<data name="localName.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1999,7 +1999,7 @@
 	</data>
   
 	<data name="saveServer.HelpString">
-		<value>Click to replace the file on the local computer with the file on the iFolder server.</value>
+		<value>Щелкните для замены файла, расположенного на локальном компьютере, файлом, расположенным на сервере iFolder.</value>
 	</data>
   
 	<data name="saveServer.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2119,7 +2119,7 @@
 	</data>
   
 	<data name="serverSize.HelpString">
-		<value>The size of the file on the iFolder server.</value>
+		<value>Размер файла, расположенного на сервере iFolder.</value>
 	</data>
   
 	<data name="serverSize.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2239,7 +2239,7 @@
 	</data>
   
 	<data name="serverDate.HelpString">
-		<value>The date of the file on the iFolder server.</value>
+		<value>Дата создания файла, расположенного на сервере iFolder.</value>
 	</data>
   
 	<data name="serverDate.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2359,7 +2359,7 @@
 	</data>
   
 	<data name="serverName.HelpString">
-		<value>The name of the file on the iFolder server.  Double-click the name to open the file.</value>
+		<value>Имя файла, расположенного на сервере iFolder. Дважды щелкните имя для открытия файла.</value>
 	</data>
   
 	<data name="serverName.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -3519,7 +3519,7 @@
 	</data>
   
 	<data name="resolveName.Text">
-		<value>Переименовать</value>
+		<value>&amp;Переименовать</value>
 	</data>
   
 	<data name="resolveName.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -3891,7 +3891,7 @@
 	</data>
   
 	<data name="resolveNameLabel.Text">
-		<value>Enter a new name and click Rename to resolve the conflict.</value>
+		<value>Введите новое имя и щелкните "Переименовать" для устранения конфликта.</value>
 	</data>
   
 	<data name="resolveNameLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -4119,15 +4119,15 @@
 	</data>
   
 	<data name="conflictResolveError">
-		<value>An error was encountered while resolving the conflict.</value>
+		<value>Произошла ошибка при устранении конфликта.</value>
 	</data>
   
 	<data name="conflictErrorTitle">
-		<value>iFolder Conflict Error</value>
+		<value>Ошибка при устранении конфликта iFolder</value>
 	</data>
   
 	<data name="conflictReadError">
-		<value>An error was encountered while reading the conflicts.</value>
+		<value>Произошла ошибка при чтении информации о конфликтах.</value>
 	</data>
   
 	<data name="openFileError">
@@ -4135,11 +4135,11 @@
 	</data>
   
 	<data name="readOnlyTitle">
-		<value>Доступ только для чтения:</value>
+		<value>Доступ только для чтения</value>
 	</data>
   
 	<data name="readOnlyInfo">
-		<value>Your ability to resolve conflicts is limited because you have read-only access to the iFolder.  Name conflicts must be renamed locally.  File conflicts will be overwritten by the version of the file on the server.</value>
+		<value>Вы не можете устранить конфликты, так как имеете к iFolder доступ только для чтения. Конфликты имен должны устраняться локально. Конфликты файлов разрешаются путем замены версией файла, расположенного на сервере.</value>
 	</data>
   
 	<data name="errorTitle">
@@ -4147,11 +4147,11 @@
 	</data>
   
 	<data name="fileExists">
-		<value>The specified name already exists.  Please choose a different name.</value>
+		<value>Указанное имя уже существует. Выберите другое имя.</value>
 	</data>
   
 	<data name="badFileName">
-		<value>The specified name contains invalid characters.  Please choose a different name and try again.</value>
+		<value>Указанное имя содержит неверные символы. Выберите другое имя и повторите попытку.</value>
 	</data>
   
 	<data name="name">
@@ -4163,7 +4163,7 @@
 	</data>
   
 	<data name="multiNameConflict">
-		<value>Name conflicts must be resolved individually.</value>
+		<value>Конфликты имен должны устраняться индивидуально.</value>
 	</data>
   
 	<data name="multiSelect">

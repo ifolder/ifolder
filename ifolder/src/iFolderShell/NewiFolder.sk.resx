@@ -631,6 +631,6 @@
 	</data>
 	
 	<data name="saveConfigError">
-		<value>An error was encountered while saving configuration.</value>
+		<value>Pri ukladaní konfigurácie nastala chyb.</value>
 	</data>
 </root>

@@ -175,7 +175,7 @@
 	</data>
   
 	<data name="ok.Text">
-		<value>connettersi</value>
+		<value>Login</value>
 	</data>
   
 	<data name="ok.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -1467,58 +1467,58 @@
 	</data>
   
 	<data name="serverConnectError">
-		<value>An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.</value>
+		<value>Errore durante la connessione al server iFolder. Verificare le informazioni immesse e riprovare. Se il problema persiste, contattare l'amministratore di rete.</value>
 	</data>
   
 	<data name="serverConnectErrorTitle">
-		<value>Unable to Connect to iFolder Server</value>
+		<value>Impossibile eseguire la connessione al server iFolder</value>
 	</data>
   
 	<data name="serverReconnectError">
-		<value>The authentication returned the error {0}.</value>
+		<value>L'autenticazione ha restituito l'errore {0}.</value>
 	</data>
   
 	<data name="domainInfoReadError">
-		<value>An error was encountered while querying for the server and user name.</value>
+		<value>Errore durante la ricerca di server e nome utente.</value>
 	</data>
   
 	<data name="failedAuth">
-		<value>The username or password is invalid.  Please verify the information entered and try again.</value>
+		<value>Nome utente o parola d'ordine non valido. Verificare le informazioni immesse e riprovare.</value>
 	</data>
   
 	<data name="badPassword">
-		<value>The password is invalid.  Please try again.</value>
+		<value>Parola d'ordine non valida. Riprovare.</value>
 	</data>
   
 	<data name="savePasswordError">
-		<value>An error was encountered while saving the password.</value>
+		<value>Errore durante il salvataggio della parola d'ordine.</value>
 	</data>
   
 	<data name="accountDisabled">
-		<value>The user account is disabled.  Please contact your network administrator for assistance. </value>
+		<value>Conto utente disabilitato. Contattare l'amministratore di rete per assistenza. </value>
 	</data>
   
 	<data name="iFolderAccountDisabled">
-		<value>The iFolder account is disabled.  Please contact your network administrator for assistance.</value>
+		<value>Conto iFolder disabilitato. Contattare l'amministratore di rete per assistenza.</value>
 	</data>
   
 	<data name="accountLockout">
-		<value>The user account has been locked.  Please contact your network administrator for assistance.</value>
+		<value>Conto utente bloccato. Contattare l'amministratore di rete per assistenza.</value>
 	</data>
   
 	<data name="graceLogin">
-		<value>Your password has expired.  You have {0} grace logins remaining.</value>
+		<value>Parola d'ordine scaduta. Si dispone di {0} login extra rimanenti.</value>
 	</data>
   
 	<data name="graceLoginTitle">
-		<value>Expired Password</value>
+		<value>Parola d'ordine scaduta</value>
 	</data>
   
 	<data name="verifyCert">
-		<value>iFolder cannot verify the identity of the iFolder Server {0}.  The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be {0} which could put your confidential information at risk.Â Â Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?</value>
+		<value>Impossibile verificare l'identità del server iFolder {0}. Il certificato relativo a questo server iFolder è firmato da un'autorità di certificazione sconosciuta. È possibile che il server a cui si sta tentando di eseguire la connessione non sia {0}. Ciò può costituire un rischio per la riservatezza dei propri dati.Â Â  Prima di accettare il certificato, è necessario rivolgersi all'amministratore di sistema. Accettare il certificato in modo permanente e continuare la connessione?</value>
 	</data>
   
 	<data name="verifyCertTitle">
-		<value>Unable to Verify Identity</value>
+		<value>Impossibile verificare l'identità</value>
 	</data>
 </root>

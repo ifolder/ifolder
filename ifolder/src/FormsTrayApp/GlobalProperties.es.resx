@@ -515,7 +515,7 @@
 	</data>
   
 	<data name="menuCreate.Text">
-		<value>Nuevo</value>
+		<value>&amp;Nuevo...</value>
 	</data>
   
 	<data name="menuCreate.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -571,7 +571,7 @@
 	</data>
   
 	<data name="menuAccept.Text">
-		<value>Configurar</value>
+		<value>C&amp;onfigurar...</value>
 	</data>
   
 	<data name="menuAccept.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -683,7 +683,7 @@
 	</data>
   
 	<data name="menuSyncNow.Text">
-		<value>Sincronizar ahora</value>
+		<value>S&amp;incronizar ahora</value>
 	</data>
   
 	<data name="menuSyncNow.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -711,7 +711,7 @@
 	</data>
   
 	<data name="menuRevert.Text">
-		<value>Revertir a una carpeta normal</value>
+		<value>Re&amp;vertir a una carpeta normal</value>
 	</data>
   
 	<data name="menuRevert.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -867,7 +867,7 @@
 	</data>
   
 	<data name="menuActionCreate.Text">
-		<value>Nuevo</value>
+		<value>&amp;Nuevo...</value>
 	</data>
   
 	<data name="menuActionCreate.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -923,7 +923,7 @@
 	</data>
   
 	<data name="menuActionAccept.Text">
-		<value>Configurar</value>
+		<value>Config&amp;urar...</value>
 	</data>
   
 	<data name="menuActionAccept.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1091,7 +1091,7 @@
 	</data>
   
 	<data name="menuActionSync.Text">
-		<value>Sincronizar ahora</value>
+		<value>S&amp;incronizar ahora</value>
 	</data>
   
 	<data name="menuActionSync.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1119,7 +1119,7 @@
 	</data>
   
 	<data name="menuActionRevert.Text">
-		<value>Revertir a una carpeta normal</value>
+		<value>Re&amp;vertir a una carpeta normal</value>
 	</data>
   
 	<data name="menuActionRevert.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1591,7 +1591,7 @@
 	</data>
   
 	<data name="toolBarSetup.ToolTipText">
-		<value>Set up the selected iFolder</value>
+		<value>Configurar la iFolder seleccionada</value>
 	</data>
   
 	<data name="toolBarSetup.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1619,7 +1619,7 @@
 	</data>
   
 	<data name="toolBarShare.ToolTipText">
-		<value>Share the selected iFolder</value>
+		<value>Compartir la iFolder seleccionada</value>
 	</data>
   
 	<data name="toolBarShare.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1647,7 +1647,7 @@
 	</data>
   
 	<data name="toolBarResolve.ToolTipText">
-		<value>Resolve conflicts in the selected iFolder</value>
+		<value>Resolver conflictos en la iFolder seleccionada</value>
 	</data>
   
 	<data name="toolBarResolve.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1675,7 +1675,7 @@
 	</data>
   
 	<data name="toolBarSync.ToolTipText">
-		<value>Synchronize the selected iFolder</value>
+		<value>Sincronizar la iFolder seleccionada</value>
 	</data>
   
 	<data name="toolBarSync.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2419,7 +2419,7 @@
 	</data>
   
 	<data name="statusConflicts">
-		<value>Has conflicts</value>
+		<value>Tiene conflictos</value>
 	</data>
   
 	<data name="statusOK">
@@ -2427,7 +2427,7 @@
 	</data>
   
 	<data name="Available">
-		<value>Not set up</value>
+		<value>Sin configuración</value>
 	</data>
   
 	<data name="WaitConnect">
@@ -2435,7 +2435,7 @@
 	</data>
   
 	<data name="WaitSync">
-		<value>Waiting to synchronize</value>
+		<value>Esperando sincronizar</value>
 	</data>
   
 	<data name="statusUnknown">
@@ -2443,35 +2443,35 @@
 	</data>
   
 	<data name="iFolderError">
-		<value>An error was encountered while reading the iFolders.</value>
+		<value>Error al leer las carpetas iFolder.</value>
 	</data>
   
 	<data name="iFolderErrorTitle">
-		<value>Unable to Read iFolders</value>
+		<value>No es posible leer carpetas iFolder</value>
 	</data>
   
 	<data name="syncError">
-		<value>An error was encountered while synchronizing the iFolder.</value>
+		<value>Error al sincronizar la iFolder.</value>
 	</data>
   
 	<data name="syncErrorTitle">
-		<value>iFolder Synchronization Error</value>
+		<value>Error de sincronización de iFolder</value>
 	</data>
   
 	<data name="iFolderOpenError">
-		<value>Unable to open iFolder {0}.</value>
+		<value>No es posible abrir la iFolder {0}.</value>
 	</data>
   
 	<data name="openErrorTitle">
-		<value>iFolder Open Error</value>
+		<value>Error de apertura de iFolder</value>
 	</data>
   
 	<data name="iFolderRevertError">
-		<value>An error was encountered while reverting the iFolder.</value>
+		<value>Error al revertir la iFolder.</value>
 	</data>
   
 	<data name="revertErrorTitle">
-		<value>iFolder Revert Error</value>
+		<value>Error de reversión de iFolder</value>
 	</data>
   
 	<data name="logEntriesCleared">
@@ -2479,31 +2479,31 @@
 	</data>
   
 	<data name="checkingForiFolders">
-		<value>Checking for new iFolders...</value>
+		<value>Buscando carpetas iFolder nuevas...</value>
 	</data>
   
 	<data name="doneCheckingForiFolders">
-		<value>Done checking for new iFolders</value>
+		<value>Búsqueda de carpetas iFolder nuevas finalizada</value>
 	</data>
   
 	<data name="localSync">
-		<value>Checking for changes: {0}</value>
+		<value>Buscando cambios: {0}</value>
 	</data>
   
 	<data name="preSync">
-		<value>Checking for changes</value>
+		<value>Buscando cambios</value>
 	</data>
   
 	<data name="disconnected">
-		<value>Server unavailable</value>
+		<value>Servidor no disponible</value>
 	</data>
   
 	<data name="synciFolder">
-		<value>Started synchronization: {0}</value>
+		<value>Sincronización iniciada: {0}</value>
 	</data>
   
 	<data name="syncComplete">
-		<value>Finished synchronization: {0}</value>
+		<value>Sincronicación finalizada: {0}</value>
 	</data>
   
 	<data name="uploadFile">
@@ -2515,27 +2515,27 @@
 	</data>
   
 	<data name="localFile">
-		<value>Found changes in file: {0}</value>
+		<value>Cambios encontrados en el archivo: {0}</value>
 	</data>
   
 	<data name="syncingFile">
-		<value>Synchronizing file: {0}</value>
+		<value>Sincronizando archivo: {0}</value>
 	</data>
   
 	<data name="uploadDir">
-		<value>Uploading directory: {0}</value>
+		<value>Cargando directorio: {0}</value>
 	</data>
   
 	<data name="downloadDir">
-		<value>Downloading directory: {0}</value>
+		<value>Descargando directorio: {0}</value>
 	</data>
   
 	<data name="localDir">
-		<value>Found changes in directory: {0}</value>
+		<value>Cambios encontrados en el directorio: {0}</value>
 	</data>
   
 	<data name="syncingDir">
-		<value>Synchronizing directory: {0}</value>
+		<value>Sincronizando directorio: {0}</value>
 	</data>
   
 	<data name="deleteClientFile">
@@ -2547,11 +2547,11 @@
 	</data>
   
 	<data name="deleteUnknown">
-		<value>Deleting on server: {0}</value>
+		<value>Suprimiendo del servidor: {0}</value>
 	</data>
   
 	<data name="declineError">
-		<value>An error was encountered while removing the iFolder.</value>
+		<value>Error al eliminar la iFolder.</value>
 	</data>
   
 	<data name="errorTitle">
@@ -2559,19 +2559,19 @@
 	</data>
   
 	<data name="statusSyncing">
-		<value>Synchronizing</value>
+		<value>Sincronizando</value>
 	</data>
   
 	<data name="statusSyncFailure">
-		<value>Incomplete synchronization</value>
+		<value>Sincronización incompleta</value>
 	</data>
   
 	<data name="statusSyncingItems">
-		<value>{0} items to synchronize</value>
+		<value>{0} elementos para sincronizar</value>
 	</data>
   
 	<data name="statusSyncItemsFailed">
-		<value>{0} items not synchronized</value>
+		<value>{0} elementos no sincronizados</value>
 	</data>
   
 	<data name="deleteAction">
@@ -2579,35 +2579,35 @@
 	</data>
   
 	<data name="revertTitle">
-		<value>Revert iFolder</value>
+		<value>Revertir iFolder</value>
 	</data>
   
 	<data name="revertPrompt">
-		<value>Are you sure you want to revert the iFolder to a normal folder?</value>
+		<value>¿Desea revertir la iFolder a una carpeta normal?</value>
 	</data>
   
 	<data name="removeTitle">
-		<value>Eliminar carpeta iFolder</value>
+		<value>Eliminar iFolder</value>
 	</data>
   
 	<data name="removePrompt">
-		<value>Are you sure you want to remove the iFolder?</value>
+		<value>¿Desea eliminar la iFolder?</value>
 	</data>
   
 	<data name="removeiFolder">
-		<value>This removes you as a member of the iFolder.  You cannot access the iFolder unless the owner re-invites you.  The files are not deleted from your local hard drive.</value>
+		<value>Esta opción le elimina como integrante de la iFolder. No podrá acceder a la iFolder a menos que el propietario le vuelva a invitar. Los archivos no se borrarán de la unidad de disco duro local.</value>
 	</data>
   
 	<data name="deleteiFolder">
-		<value>This removes the iFolder from your local computer.  Because you are the owner, the iFolder is removed from the server and all member computers.  The iFolder cannot be recovered or re-shared on another computer.  The files are not deleted from your local hard drive.</value>
+		<value>Esta opción elimina la iFolder del equipo local. Como usted es el propietario, la iFolder se elimina del servidor y de todos los equipos integrantes. La iFolder no se puede recuperar ni volver a compartir en otro equipo. Los archivos no se borrarán de la unidad de disco duro local.</value>
 	</data>
   
 	<data name="removeiFolder2">
-		<value>If you are the iFolder owner, this unshares the iFolder, reverts all copies of the iFolder to normal folders, and deletes the iFolder from the server. If you are a member, this removes you as a member, and you cannot access the original iFolder from any computer unless the owner re-invites you. Local copies of the iFolder contents are not deleted from computers where the iFolder is currently set up.</value>
+		<value>Si es el propietario de iFolder, esta opción elimina la compartición de la iFolder, revierte todas sus copias a carpetas normales y la borra del servidor. Si es integrante, esta opción le elimina como tal y usted no podrá acceder a la iFolder original de ningún equipo a no ser que el propietario le vuelva a invitar. Las copias locales del contenido de la iFolder no se borran de los equipos en que iFolder está configurado.</value>
 	</data>
   
 	<data name="revertiFolder">
-		<value>This reverts the iFolder back to a normal folder and leaves the files intact.  The iFolder is then available from the server and must be set up in a different location to synchronize.</value>
+		<value>Esta opción revierte la iFolder a una carpeta normal y deja los archivos intactos. La iFolder está disponible desde el servidor y se debe configurar en una ubicación diferente para sincronizarla.</value>
 	</data>
   
 	<data name="showAll">

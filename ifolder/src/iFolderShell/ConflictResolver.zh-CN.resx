@@ -507,7 +507,7 @@
 	</data>
   
 	<data name="ifolderName.HelpString">
-		<value>The name of the iFolder containing the conflict.</value>
+		<value>包含冲突的 iFolder 的名称。</value>
 	</data>
   
 	<data name="ifolderName.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -627,7 +627,7 @@
 	</data>
   
 	<data name="ifolderPath.HelpString">
-		<value>The full path of the iFolder containing the conflict.</value>
+		<value>包含冲突的 iFolder 的完整路径。</value>
 	</data>
   
 	<data name="ifolderPath.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -751,7 +751,7 @@
 	</data>
   
 	<data name="conflictsView.HelpString">
-		<value>The list of files that have conflicts.</value>
+		<value>出现冲突的文件的列表。</value>
 	</data>
   
 	<data name="conflictsView.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -819,7 +819,7 @@
 	</data>
   
 	<data name="columnHeader1.Text">
-		<value>姓名</value>
+		<value>名称</value>
 	</data>
   
 	<data name="columnHeader1.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1039,7 +1039,7 @@
 	</data>
   
 	<data name="saveLocal.HelpString">
-		<value>Click to replace the file on the iFolder server with the file on the local computer.</value>
+		<value>单击以使用本地计算机上的文件替换 iFolder 服务器上的文件。</value>
 	</data>
   
 	<data name="saveLocal.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1159,7 +1159,7 @@
 	</data>
   
 	<data name="localSize.HelpString">
-		<value>The size of the file on the local computer.</value>
+		<value>本地计算机上文件的大小。</value>
 	</data>
   
 	<data name="localSize.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1279,7 +1279,7 @@
 	</data>
   
 	<data name="localDate.HelpString">
-		<value>The date of the file on the local computer.</value>
+		<value>本地计算机上文件的日期。</value>
 	</data>
   
 	<data name="localDate.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1399,7 +1399,7 @@
 	</data>
   
 	<data name="localName.HelpString">
-		<value>The name of the file on the local computer.  Double-click the name to open the file.</value>
+		<value>本地计算机上文件的名称。双击此名称可打开文件。</value>
 	</data>
   
 	<data name="localName.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1999,7 +1999,7 @@
 	</data>
   
 	<data name="saveServer.HelpString">
-		<value>Click to replace the file on the local computer with the file on the iFolder server.</value>
+		<value>单击以使用 iFolder 服务器上的文件替换本地计算机上的文件。</value>
 	</data>
   
 	<data name="saveServer.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2119,7 +2119,7 @@
 	</data>
   
 	<data name="serverSize.HelpString">
-		<value>The size of the file on the iFolder server.</value>
+		<value>iFolder 服务器上文件的大小。</value>
 	</data>
   
 	<data name="serverSize.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2239,7 +2239,7 @@
 	</data>
   
 	<data name="serverDate.HelpString">
-		<value>The date of the file on the iFolder server.</value>
+		<value>iFolder 服务器上文件的日期。</value>
 	</data>
   
 	<data name="serverDate.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2359,7 +2359,7 @@
 	</data>
   
 	<data name="serverName.HelpString">
-		<value>The name of the file on the iFolder server.  Double-click the name to open the file.</value>
+		<value>iFolder 服务器上文件的名称。双击此名称可打开文件。</value>
 	</data>
   
 	<data name="serverName.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -3519,7 +3519,7 @@
 	</data>
   
 	<data name="resolveName.Text">
-		<value>重命名</value>
+		<value>重命名(&amp;R)</value>
 	</data>
   
 	<data name="resolveName.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -3891,7 +3891,7 @@
 	</data>
   
 	<data name="resolveNameLabel.Text">
-		<value>Enter a new name and click Rename to resolve the conflict.</value>
+		<value>请输入新名称并单击“重命名”来解决冲突。</value>
 	</data>
   
 	<data name="resolveNameLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -3963,7 +3963,7 @@
 	</data>
   
 	<data name="$this.Name">
-		<value>ConflictResolver</value>
+		<value>冲突解析程序</value>
 	</data>
   
 	<data name="$this.TrayHeight" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -4119,15 +4119,15 @@
 	</data>
   
 	<data name="conflictResolveError">
-		<value>An error was encountered while resolving the conflict.</value>
+		<value>解决冲突时出现错误。</value>
 	</data>
   
 	<data name="conflictErrorTitle">
-		<value>iFolder Conflict Error</value>
+		<value>iFolder 冲突错误</value>
 	</data>
   
 	<data name="conflictReadError">
-		<value>An error was encountered while reading the conflicts.</value>
+		<value>读取冲突时出现错误。</value>
 	</data>
   
 	<data name="openFileError">
@@ -4135,11 +4135,11 @@
 	</data>
   
 	<data name="readOnlyTitle">
-		<value>只读访问：</value>
+		<value>只读访问</value>
 	</data>
   
 	<data name="readOnlyInfo">
-		<value>Your ability to resolve conflicts is limited because you have read-only access to the iFolder.  Name conflicts must be renamed locally.  File conflicts will be overwritten by the version of the file on the server.</value>
+		<value>因为您对 iFolder 只有只读访问权限，所以解决冲突的能力受到限制。对于名称冲突，必须在本地进行重命名。对于文件冲突，将由服务器上文件的版本进行覆盖。</value>
 	</data>
   
 	<data name="errorTitle">
@@ -4147,11 +4147,11 @@
 	</data>
   
 	<data name="fileExists">
-		<value>The specified name already exists.  Please choose a different name.</value>
+		<value>指定的名称已存在。请选择一个不同的名称。</value>
 	</data>
   
 	<data name="badFileName">
-		<value>The specified name contains invalid characters.  Please choose a different name and try again.</value>
+		<value>指定的名称包含无效字符。请选择一个不同的名称并重试。</value>
 	</data>
   
 	<data name="name">
@@ -4163,7 +4163,7 @@
 	</data>
   
 	<data name="multiNameConflict">
-		<value>Name conflicts must be resolved individually.</value>
+		<value>必须逐个解决名称冲突。</value>
 	</data>
   
 	<data name="multiSelect">
