@@ -691,7 +691,7 @@
 	</data>
   
 	<data name="label2.Text">
-		<value>Emplacement</value>
+		<value>&amp;Emplacement :</value>
 	</data>
   
 	<data name="label2.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -943,7 +943,7 @@
 	</data>
   
 	<data name="chooseFolder">
-		<value>Choose a folder to convert to an iFolder.</value>
+		<value>Choisissez un dossier à convertir en iFolder.</value>
 	</data>
   
 	<data name="errorTitle">
@@ -951,35 +951,35 @@
 	</data>
   
 	<data name="invalidFolder">
-		<value>An invalid location was specified.</value>
+		<value>L'emplacement spécifié est incorrect.</value>
 	</data>
   
 	<data name="iFolderCreateError">
-		<value>An error was encountered while creating the iFolder.</value>
+		<value>Une erreur est survenue lors de la création du dossier iFolder.</value>
 	</data>
   
 	<data name="createPrompt">
-		<value>The specified location does not exist.  Do you want to create it?</value>
+		<value>L'emplacement spécifié n'existe pas. Voulez-vous le créer ?</value>
 	</data>
   
 	<data name="createPromptTitle">
-		<value>Create Location</value>
+		<value>Créer l'emplacement</value>
 	</data>
   
 	<data name="accessErrorTitle">
-		<value>iFolder Access Error</value>
+		<value>Erreur d'accès iFolder</value>
 	</data>
   
 	<data name="accessDenied">
-		<value>You do not have sufficient access to the selected location.  iFolders can only be created in folders where you have access to read and write files.  Please select a different location and try again.</value>
+		<value>Vos droits d'accès pour l'emplacement sélectionné sont insuffisants. Les dossiers iFolder peuvent être créés uniquement dans des dossiers pour lesquels vous avez les droits en lecture et en écriture. Sélectionnez un autre emplacement et recommencez.</value>
 	</data>
   
 	<data name="createAccount">
-		<value>To begin using iFolder, you must first set up an iFolder account.  Would you like to set up an iFolder account now?</value>
+		<value>Pour utiliser iFolder, vous devez d'abord configurer un compte iFolder. Voulez-vous configurer un compte iFolder maintenant ?</value>
 	</data>
   
 	<data name="createAccountTitle">
-		<value>Set Up iFolder Account</value>
+		<value>Configurer un compte iFolder</value>
 	</data>
   
 	<data name="pathInvalidErrorTitle">
@@ -987,46 +987,46 @@
 	</data>
   
 	<data name="invalidCharsError">
-		<value>The selected location contains invalid characters.  The characters \:*?"&lt;&gt;| cannot be used in an iFolder. Please select a different location and try again.</value>
+		<value>L'emplacement sélectionné contient des caractères incorrects. Les caractères \:*?"&lt;&gt;| ne peuvent pas être utilisés dans un dossier iFolder. Sélectionnez un autre emplacement et recommencez.</value>
 	</data>
   
 	<data name="pathInStoreError">
-		<value>The selected location is inside the iFolder data folder.  Please select a different location and try again.</value>
+		<value>L'emplacement sélectionné se trouve à l'intérieur du dossier de données iFolder. Sélectionnez un autre emplacement et recommencez.</value>
 	</data>
   
 	<data name="pathContainsStoreError">
-		<value>The selected location contains the iFolder data files.  Please select a different location and try again.</value>
+		<value>L'emplacement sélectionné contient les fichiers de données iFolder. Sélectionnez un autre emplacement et recommencez.</value>
 	</data>
   
 	<data name="systemDirError">
-		<value>The selected location contains a system folder.  System folders cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>L'emplacement sélectionné contient un dossier système. Les dossiers système ne peuvent pas contenir un dossier iFolder. Sélectionnez un autre emplacement et recommencez.</value>
 	</data>
   
 	<data name="systemDriveError">
-		<value>The selected location is a system drive.  System drives cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>L'emplacement sélectionné est un lecteur système. Les lecteurs système ne peuvent pas contenir un dossier iFolder. Sélectionnez un autre emplacement et recommencez.</value>
 	</data>
   
 	<data name="winDirError">
-		<value>The selected location includes the Windows folder.  The Windows folder cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>L'emplacement sélectionné comprend le dossier Windows. Le dossier Windows ne peut pas contenir un dossier iFolder. Sélectionnez un autre emplacement et recommencez.</value>
 	</data>
   
 	<data name="progFilesDirError">
-		<value>The selected location includes the Program Files folder.  The Program Files folder cannot contain an iFolder.  Please select a different location and try again.</value>
+		<value>L'emplacement sélectionné comprend le dossier Program Files. Le dossier Program Files ne peut pas contenir un dossier iFolder. Sélectionnez un autre emplacement et recommencez.</value>
 	</data>
   
 	<data name="containsiFolderError">
-		<value>The selected location already contains an iFolder.  iFolders cannot exist inside other iFolders.  Please select a different location and try again.</value>
+		<value>L'emplacement sélectionné contient déjà un dossier iFolder. Les dossiers iFolder ne peuvent pas résider à l'intérieur d'autres dossiers iFolder. Sélectionnez un autre emplacement et recommencez.</value>
 	</data>
   
 	<data name="pathIniFolderError">
-		<value>The selected location is inside another iFolder.  iFolders cannot exist inside other iFolders.  Please select a different location and try again.</value>
+		<value>L'emplacement sélectionné se trouve à l'intérieur d'un autre dossier iFolder. Les dossiers iFolder ne peuvent pas résider à l'intérieur d'autres dossiers iFolder. Sélectionnez un autre emplacement et recommencez.</value>
 	</data>
   
 	<data name="rootDriveError">
-		<value>iFolders cannot exist at the drive level.  The location selected is at the root of the drive.  Please select a location that is not at the root of a drive and try again.</value>
+		<value>Les dossiers iFolder ne peuvent pas résider au niveau du lecteur. L'emplacement sélectionné se trouve à la racine du lecteur. Sélectionnez un emplacement qui ne soit pas à la racine d'un lecteur et recommencez.</value>
 	</data>
   
 	<data name="networkPathError">
-		<value>The selected location is on a network or non-physical drive.  iFolders must reside on a physical drive.  Please select a different location and try again.</value>
+		<value>L'emplacement sélectionné se trouve sur un réseau ou sur un lecteur non physique. Les dossiers iFolder doivent se trouver sur un lecteur physique. Sélectionnez un autre emplacement et recommencez.</value>
 	</data>
 </root>
