@@ -28,7 +28,6 @@ POFILES = $(srcdir)/pt_BR.po \
 	 $(srcdir)/ma.po \
 	 $(srcdir)/pl.po \
 	 $(srcdir)/ru.po \
-	 $(srcdir)/sk.po \
 	 $(srcdir)/zh_CN.po \
 	 $(srcdir)/zh_TW.po
 
