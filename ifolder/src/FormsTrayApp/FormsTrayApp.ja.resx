@@ -747,11 +747,11 @@
 	</data>
   
 	<data name="actionRequiredTitle">
-		<value>必要なアクション:</value>
+		<value>必要なアクション</value>
 	</data>
   
 	<data name="subscriptionTitle">
-		<value>新しいiFolder</value>
+		<value>新しいiFolder "{0}"</value>
 	</data>
   
 	<data name="subscriptionMessage">
@@ -775,11 +775,11 @@
 	</data>
   
 	<data name="downloading">
-		<value>%s をダウンロードしています</value>
+		<value>{0} をダウンロードしています</value>
 	</data>
   
 	<data name="uploading">
-		<value>%s をアップロードしています</value>
+		<value>{0} をアップロードしています</value>
 	</data>
   
 	<data name="clientUpgradeTitle">
@@ -847,7 +847,7 @@
 	</data>
   
 	<data name="deleteClientFile">
-		<value>ファイルを削除中</value>
+		<value>ファイルを削除中: {0}</value>
 	</data>
   
 	<data name="uploadDeltaSyncFile">
@@ -859,11 +859,11 @@
 	</data>
   
 	<data name="uploadFile">
-		<value>ファイルをアップロードしています...</value>
+		<value>ファイルをアップロードしています: {0}</value>
 	</data>
   
 	<data name="downloadFile">
-		<value>ファイルをダウンロードしています...</value>
+		<value>ファイルをダウンロードしています: {0}</value>
 	</data>
   
 	<data name="localFile">

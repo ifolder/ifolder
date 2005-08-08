@@ -2507,11 +2507,11 @@
 	</data>
   
 	<data name="uploadFile">
-		<value>Téléchargement du fichier...</value>
+		<value>Téléchargement du fichier  : {0}</value>
 	</data>
   
 	<data name="downloadFile">
-		<value>Téléchargement du fichier...</value>
+		<value>Téléchargement du fichier  : {0}</value>
 	</data>
   
 	<data name="localFile">
@@ -2539,11 +2539,11 @@
 	</data>
   
 	<data name="deleteClientFile">
-		<value>suppression du fichier\n</value>
+		<value>Suppression du fichier : {0}</value>
 	</data>
   
 	<data name="deleteClientDir">
-		<value>Suppression du répertoire</value>
+		<value>Suppression du répertoire  : {0}</value>
 	</data>
   
 	<data name="deleteUnknown">

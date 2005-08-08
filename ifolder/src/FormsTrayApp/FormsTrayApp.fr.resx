@@ -747,7 +747,7 @@
 	</data>
   
 	<data name="actionRequiredTitle">
-		<value>Opération requise :</value>
+		<value>Opération requise</value>
 	</data>
   
 	<data name="subscriptionTitle">
@@ -775,11 +775,11 @@
 	</data>
   
 	<data name="downloading">
-		<value>Téléchargement de %s du serveur</value>
+		<value>Téléchargement de {0} du serveur</value>
 	</data>
   
 	<data name="uploading">
-		<value>Téléchargement de %s vers le serveur</value>
+		<value>Téléchargement de {0} vers le serveur</value>
 	</data>
   
 	<data name="clientUpgradeTitle">
@@ -859,11 +859,11 @@
 	</data>
   
 	<data name="uploadFile">
-		<value>Téléchargement du fichier...</value>
+		<value>Téléchargement du fichier  : {0}</value>
 	</data>
   
 	<data name="downloadFile">
-		<value>Téléchargement du fichier...</value>
+		<value>Téléchargement du fichier  : {0}</value>
 	</data>
   
 	<data name="localFile">
@@ -875,7 +875,7 @@
 	</data>
   
 	<data name="deleteClientDir">
-		<value>Suppression du répertoire</value>
+		<value>Suppression du répertoire  : {0}</value>
 	</data>
   
 	<data name="uploadDir">

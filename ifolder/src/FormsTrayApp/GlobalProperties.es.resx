@@ -2507,11 +2507,11 @@
 	</data>
   
 	<data name="uploadFile">
-		<value>Cargando archivo</value>
+		<value>Cargando archivo: {0}</value>
 	</data>
   
 	<data name="downloadFile">
-		<value>Descargando archivo...</value>
+		<value>Descargando archivo: {0}</value>
 	</data>
   
 	<data name="localFile">
@@ -2539,11 +2539,11 @@
 	</data>
   
 	<data name="deleteClientFile">
-		<value>suprimiendo archivo\n</value>
+		<value>Suprimiendo archivo: {0}</value>
 	</data>
   
 	<data name="deleteClientDir">
-		<value>Suprimiendo directorio</value>
+		<value>Suprimiendo directorio: {0}</value>
 	</data>
   
 	<data name="deleteUnknown">

@@ -75,14 +75,14 @@ msgstr "Код состояния аутентификации"
 #: src/LinuxClient/application/iFolderApplication.cs:628 
 #, csharp-format
 msgid "New iFolder \"{0}\""
-msgstr "Новая папка iFolder"
+msgstr "Новая папка iFolder \"{0}\""
 #: src/LinuxClient/application/iFolderApplication.cs:630 
 #, csharp-format
 msgid "{0} has invited you to participate in this shared iFolder"
 msgstr "{0} отправил Вам приглашение на совместное использование этой папки iFolder"
 #: src/LinuxClient/application/iFolderApplication.cs:683 
 msgid "Action Required"
-msgstr "Необходимое действие:"
+msgstr "Необходимое действие"
 #: src/LinuxClient/application/iFolderApplication.cs:684 
 #, csharp-format
 msgid "A conflict has been detected in iFolder \"{0}\""
@@ -139,7 +139,7 @@ msgstr "Информация о системе"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:428
 #: src/LinuxClient/library/iFolderConflictDialog.cs:487
 msgid "Name:"
-msgstr "Имя"
+msgstr "Имя:"
 #: src/LinuxClient/library/AccountDialog.cs:127 
 msgid "Description:"
 msgstr "Описание:"
@@ -150,7 +150,7 @@ msgstr "Дисковое пространство на сервере"
 #: src/LinuxClient/library/AccountDialog.cs:178 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:195
 msgid "Quota:"
-msgstr "Квота"
+msgstr "Квота:"
 #: src/LinuxClient/library/AccountDialog.cs:186 
 #: src/LinuxClient/library/AccountDialog.cs:198
 #: src/LinuxClient/library/AccountDialog.cs:210
@@ -165,11 +165,11 @@ msgstr "Мб"
 #: src/LinuxClient/library/AccountDialog.cs:190 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:391
 msgid "Used:"
-msgstr "Используется"
+msgstr "Используется:"
 #: src/LinuxClient/library/AccountDialog.cs:202 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:409
 msgid "Available:"
-msgstr "Доступен"
+msgstr "Доступен:"
 #: src/LinuxClient/library/AccountDialog.cs:235 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:438
 msgid "full"
@@ -198,7 +198,7 @@ msgstr "Новая папка iFolder</span>"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:191
 #: src/LinuxClient/library/RemoveAccountDialog.cs:90
 msgid "Server:"
-msgstr "Сервер"
+msgstr "Сервер:"
 #: src/LinuxClient/library/CreateDialog.cs:111 
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:101
 #: src/LinuxClient/library/iFolderConflictDialog.cs:349
@@ -244,16 +244,16 @@ msgid "Unknown"
 msgstr "Неизвестно"
 #: src/LinuxClient/library/FileRenameDialog.cs:57 
 msgid "Rename file"
-msgstr "Переименовать файл:"
+msgstr "Переименовать файл"
 #: src/LinuxClient/library/FileRenameDialog.cs:68 
 msgid "File name:"
-msgstr "Имя файла"
+msgstr "Имя файла:"
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:60 
 msgid "Set Up iFolder: "
-msgstr "Настройка iFolder"
+msgstr "Настройка iFolder:"
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:72 
 msgid "Details:"
-msgstr "Подробная информация"
+msgstr "Подробная информация:"
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:82 
 #, csharp-format
 msgid ""
@@ -298,21 +298,21 @@ msgstr "Локальная версия"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:394 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:437
 msgid "Date:"
-msgstr "Дата"
+msgstr "Дата:"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:403 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:446
 msgid "Size:"
-msgstr "Размер"
+msgstr "Размер:"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:421 
 msgid "Server Version"
-msgstr "Версия сервера:"
+msgstr "Версия сервера"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:475 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:500
 msgid "Rename"
 msgstr "Переименовать"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:478 
 msgid "Enter a new name and click Rename to resolve the conflict."
-msgstr "Введите новое имя и щелкните "Переименовать" для разрешения конфликта."
+msgstr "Введите новое имя и щелкните \"Переименовать\" для разрешения конфликта."
 #: src/LinuxClient/library/iFolderConflictDialog.cs:529 
 msgid "Folder"
 msgstr "Папка"
@@ -330,7 +330,7 @@ msgid ""
 msgstr "Возможность разрешения конфликтов ограничена, поскольку папка iFolder доступна только для чтения. Конфликты имен можно разрешить локально. Конфликты файлов будут разрешены путем перезаписи версии файла на сервере."
 #: src/LinuxClient/library/iFolderConflictDialog.cs:769 
 msgid "Enter a new name for this file and click save to resolve it."
-msgstr "Введите новое имя файла и щелкните "Сохранить" для разрешения конфликта."
+msgstr "Введите новое имя файла и щелкните \"Сохранить\" для разрешения конфликта."
 #: src/LinuxClient/library/iFolderConflictDialog.cs:819 
 msgid "Name conflicts must be resolved individually."
 msgstr "Конфликты имен необходимо разрешать в индивидуальном порядке."
@@ -357,7 +357,7 @@ msgid ""
 msgstr "Указанное имя содержит недопустимые символы. Выберите другое имя и повторите попытку.\n\nИмена не должны содержать какие-либо из следующих символов: {0}"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:1013 
 msgid "Name Already Exists"
-msgstr "Имя уже существует:"
+msgstr "Имя уже существует"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:1014 
 msgid "The specified name already exists.  Please choose a different name."
 msgstr "Указанное имя уже существует.  Выберите другое имя."
@@ -456,7 +456,7 @@ msgid "_Set Quota:"
 msgstr "_Установить квоту:"
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:336 
 msgid "Owner:"
-msgstr "Владелец"
+msgstr "Владелец:"
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:458 
 #: src/LinuxClient/library/PrefsGeneralPage.cs:178
 msgid "Synchronization"
@@ -504,7 +504,7 @@ msgid "Select Users"
 msgstr "Выбор пользователей"
 #: src/LinuxClient/library/iFolderUserSelector.cs:146 
 msgid "Find:"
-msgstr "Поиск"
+msgstr "Поиск:"
 #: src/LinuxClient/library/iFolderUserSelector.cs:153 
 msgid "First Name"
 msgstr "Имя"
@@ -596,7 +596,7 @@ msgid "Share the selected iFolder"
 msgstr "Совместно использовать выбранную папку iFolder"
 #: src/LinuxClient/library/iFolderWindow.cs:391 
 msgid "Resolve"
-msgstr "Исправить "
+msgstr "Исправить"
 #: src/LinuxClient/library/iFolderWindow.cs:392 
 msgid "Resolve conflicts in the selected iFolder"
 msgstr "Разрешить конфликты в выбранной папке iFolder"
@@ -641,7 +641,7 @@ msgid "_Help"
 msgstr "Справка"
 #: src/LinuxClient/library/iFolderWindow.cs:602 
 msgid "Location"
-msgstr "Расположение:"
+msgstr "Расположение"
 #: src/LinuxClient/library/iFolderWindow.cs:615 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:142
 msgid "Status"
@@ -723,7 +723,7 @@ msgstr "Папки iFolder не могут содержать другие па�
 #: src/LinuxClient/library/iFolderWindow.cs:1422
 #, csharp-format
 msgid "Remove iFolder {0}?"
-msgstr "Удалить iFolder"
+msgstr "Удалить iFolder {0}?"
 #: src/LinuxClient/library/iFolderWindow.cs:1394 
 msgid ""
 "This removes the iFolder from your local computer.  Because you are the "
@@ -763,17 +763,17 @@ msgstr "Синхронизация: {0}"
 #: src/LinuxClient/library/LogWindow.cs:296
 #, csharp-format
 msgid "Deleting file: {0}"
-msgstr "удаление файла\n"
+msgstr "удаление файла: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1783 
 #: src/LinuxClient/library/LogWindow.cs:324
 #, csharp-format
 msgid "Uploading file: {0}"
-msgstr "Загрузка файла..."
+msgstr "Загрузка файла: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1788 
 #: src/LinuxClient/library/LogWindow.cs:328
 #, csharp-format
 msgid "Downloading file: {0}"
-msgstr "Выгрузка файла..."
+msgstr "Выгрузка файла: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1793 
 #: src/LinuxClient/library/LogWindow.cs:301
 #, csharp-format
@@ -787,7 +787,7 @@ msgstr "Синхронизация файла: {0}"
 #: src/LinuxClient/library/LogWindow.cs:336
 #, csharp-format
 msgid "Deleting directory: {0}"
-msgstr "Удаление каталога"
+msgstr "Удаление каталога: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1815 
 #: src/LinuxClient/library/LogWindow.cs:349
 #, csharp-format
@@ -916,7 +916,7 @@ msgstr "Перезаписать существующий файл"
 msgid ""
 "The file you selected exists.  Selecting yes will overwrite the contents of "
 "this file."
-msgstr "Выбранный файл существует. Выберите "Да", чтобы перезаписать содержимое данного файла."
+msgstr "Выбранный файл существует. Выберите \"Да\", чтобы перезаписать содержимое данного файла."
 #: src/LinuxClient/library/LogWindow.cs:473 
 msgid "Insufficient access"
 msgstr "Неполный доступ"
@@ -949,7 +949,7 @@ msgid "System Name"
 msgstr "Имя системы"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:131 
 msgid "Username"
-msgstr "Имя пользователя:"
+msgstr "Имя пользователя"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:169 
 msgid "_Details"
 msgstr "Подробная информация"
@@ -958,7 +958,7 @@ msgid "Account Settings"
 msgstr "Настройки учетной записи"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:246 
 msgid "_Enable account"
-msgstr " Разрешение учетной записи"
+msgstr "_Разрешение учетной записи"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:253 
 msgid "De_fault account"
 msgstr "Учетная запись по у_молчанию"
@@ -967,7 +967,7 @@ msgid "Logged in"
 msgstr "Регистрация"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:402 
 msgid "Logged out"
-msgstr "<1> :: <2> : разрегистрирован"
+msgstr "Pазрегистрирован"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:407 
 msgid "Disabled"
 msgstr "Запрещено"
@@ -1029,7 +1029,7 @@ msgid "Application"
 msgstr "Приложение"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:108 
 msgid "_Show Confirmation dialog when creating iFolders"
-msgstr "Отображение диалогового окна "Подтверждение" при создании iFolder"
+msgstr "_Отображение диалогового окна \"Подтверждение\" при создании iFolder"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:113 
 msgid ""
 "To start up iFolder at login, leave iFolder running when you log out and "
@@ -1058,7 +1058,7 @@ msgid "Remove this iFolder account?"
 msgstr "Удалить данную учетную запись iFolder?"
 #: src/LinuxClient/library/RemoveAccountDialog.cs:77 
 msgid "System Name:"
-msgstr "Имя системы"
+msgstr "Имя системы:"
 #: src/LinuxClient/library/RemoveAccountDialog.cs:119 
 msgid "Remove my iFolders and files from the server"
 msgstr "Удалить мои папки iFolder и файлы с сервера"
@@ -1088,7 +1088,7 @@ msgid "Product Management:"
 msgstr "Управление продуктом:"
 #: src/LinuxClient/library/Util.cs:181 
 msgid "Documentation:"
-msgstr "Документация"
+msgstr "Документация:"
 #: src/LinuxClient/library/Util.cs:184 
 msgid "Special Thanks"
 msgstr "Особая благодарность"
@@ -1097,7 +1097,7 @@ msgid "Retired Contributers:"
 msgstr "Содействовавшие лица:"
 #: src/LinuxClient/library/Util.cs:192 
 msgid "Organizations:"
-msgstr "Организации"
+msgstr "Организации:"
 #: src/LinuxClient/library/Util.cs:196 
 msgid "Code Contributors:"
 msgstr "Разработчики кодов:"

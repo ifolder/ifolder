@@ -75,7 +75,7 @@ msgstr "鉴定状态代码"
 #: src/LinuxClient/application/iFolderApplication.cs:628 
 #, csharp-format
 msgid "New iFolder \"{0}\""
-msgstr "新建 iFolder"
+msgstr "新建 iFolder \"{0}\""
 #: src/LinuxClient/application/iFolderApplication.cs:630 
 #, csharp-format
 msgid "{0} has invited you to participate in this shared iFolder"
@@ -250,7 +250,7 @@ msgid "File name:"
 msgstr "文件名"
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:60 
 msgid "Set Up iFolder: "
-msgstr "设置 iFolder"
+msgstr "设置 iFolder："
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:72 
 msgid "Details:"
 msgstr "细节"
@@ -357,7 +357,7 @@ msgid ""
 msgstr "指定的名称包含无效字符。请选择一个不同的名称并重试。\n\n名称不能包含以下任何字符：{0}"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:1013 
 msgid "Name Already Exists"
-msgstr "名称已存在：%1。"
+msgstr "名称已存在"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:1014 
 msgid "The specified name already exists.  Please choose a different name."
 msgstr "指定的名称已存在。请选择一个不同的名称。"
@@ -723,7 +723,7 @@ msgstr "iFolder 不能包含其它 iFolder。所选的文件夹或者已是一�
 #: src/LinuxClient/library/iFolderWindow.cs:1422
 #, csharp-format
 msgid "Remove iFolder {0}?"
-msgstr "去除 Folder"
+msgstr "去除 Folder {0}?"
 #: src/LinuxClient/library/iFolderWindow.cs:1394 
 msgid ""
 "This removes the iFolder from your local computer.  Because you are the "
@@ -763,17 +763,17 @@ msgstr "正在同步：{0}"
 #: src/LinuxClient/library/LogWindow.cs:296
 #, csharp-format
 msgid "Deleting file: {0}"
-msgstr "正在删除文件"
+msgstr "正在删除文件: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1783 
 #: src/LinuxClient/library/LogWindow.cs:324
 #, csharp-format
 msgid "Uploading file: {0}"
-msgstr " 正在上载文件"
+msgstr "正在上载文件: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1788 
 #: src/LinuxClient/library/LogWindow.cs:328
 #, csharp-format
 msgid "Downloading file: {0}"
-msgstr "正在下载文件..."
+msgstr "正在下载文件: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1793 
 #: src/LinuxClient/library/LogWindow.cs:301
 #, csharp-format
@@ -787,7 +787,7 @@ msgstr "正在同步文件：{0}"
 #: src/LinuxClient/library/LogWindow.cs:336
 #, csharp-format
 msgid "Deleting directory: {0}"
-msgstr "正在删除目录"
+msgstr "正在删除目录: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1815 
 #: src/LinuxClient/library/LogWindow.cs:349
 #, csharp-format
@@ -958,7 +958,7 @@ msgid "Account Settings"
 msgstr "帐户设置"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:246 
 msgid "_Enable account"
-msgstr " 启用帐户"
+msgstr "启用帐户"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:253 
 msgid "De_fault account"
 msgstr "默认帐户"
@@ -967,7 +967,7 @@ msgid "Logged in"
 msgstr "已登录"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:402 
 msgid "Logged out"
-msgstr "<1> :: <2> : 已注销"
+msgstr "已注销"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:407 
 msgid "Disabled"
 msgstr "已禁用"
@@ -1088,7 +1088,7 @@ msgid "Product Management:"
 msgstr "产品管理："
 #: src/LinuxClient/library/Util.cs:181 
 msgid "Documentation:"
-msgstr "文档"
+msgstr "文档："
 #: src/LinuxClient/library/Util.cs:184 
 msgid "Special Thanks"
 msgstr "特别感谢"
@@ -1097,7 +1097,7 @@ msgid "Retired Contributers:"
 msgstr "退休参与人员："
 #: src/LinuxClient/library/Util.cs:192 
 msgid "Organizations:"
-msgstr "<1> 组织"
+msgstr "组织："
 #: src/LinuxClient/library/Util.cs:196 
 msgid "Code Contributors:"
 msgstr "代码参与人员："
@@ -1106,7 +1106,7 @@ msgid "Other Contributors:"
 msgstr "其他参与人员："
 #: src/LinuxClient/library/Util.cs:207 
 msgid "Copyright (C) 2004-2005 Novell, Inc."
-msgstr "Copyright (C) 1998, Novell Inc."
+msgstr "Copyright (C) 2004-2005, Novell Inc."
 #: src/LinuxClient/library/Util.cs:208 
 msgid ""
 "The iFolder Project is a file sharing solution that allows people to easily "

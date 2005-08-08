@@ -75,14 +75,14 @@ msgstr "Código de estado de autenticación"
 #: src/LinuxClient/application/iFolderApplication.cs:628 
 #, csharp-format
 msgid "New iFolder \"{0}\""
-msgstr "Nueva carpeta iFolder"
+msgstr "Nueva carpeta iFolder \"{0}\""
 #: src/LinuxClient/application/iFolderApplication.cs:630 
 #, csharp-format
 msgid "{0} has invited you to participate in this shared iFolder"
 msgstr "{0} le ha invitado a participar en esta iFolder compartida"
 #: src/LinuxClient/application/iFolderApplication.cs:683 
 msgid "Action Required"
-msgstr "Acción requerida:"
+msgstr "Acción requerida"
 #: src/LinuxClient/application/iFolderApplication.cs:684 
 #, csharp-format
 msgid "A conflict has been detected in iFolder \"{0}\""
@@ -139,7 +139,7 @@ msgstr "Información de sistema"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:428
 #: src/LinuxClient/library/iFolderConflictDialog.cs:487
 msgid "Name:"
-msgstr "Nombre"
+msgstr "Nombre:"
 #: src/LinuxClient/library/AccountDialog.cs:127 
 msgid "Description:"
 msgstr "Descripción:"
@@ -150,7 +150,7 @@ msgstr "Espacio del disco en el servidor"
 #: src/LinuxClient/library/AccountDialog.cs:178 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:195
 msgid "Quota:"
-msgstr "Cuota"
+msgstr ":Cuota"
 #: src/LinuxClient/library/AccountDialog.cs:186 
 #: src/LinuxClient/library/AccountDialog.cs:198
 #: src/LinuxClient/library/AccountDialog.cs:210
@@ -165,11 +165,11 @@ msgstr "MB"
 #: src/LinuxClient/library/AccountDialog.cs:190 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:391
 msgid "Used:"
-msgstr "Usado"
+msgstr "Usado:"
 #: src/LinuxClient/library/AccountDialog.cs:202 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:409
 msgid "Available:"
-msgstr "Disponible"
+msgstr "Disponible:"
 #: src/LinuxClient/library/AccountDialog.cs:235 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:438
 msgid "full"
@@ -198,13 +198,13 @@ msgstr "Nueva iFolder</span>"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:191
 #: src/LinuxClient/library/RemoveAccountDialog.cs:90
 msgid "Server:"
-msgstr "Servidor"
+msgstr "Servidor:"
 #: src/LinuxClient/library/CreateDialog.cs:111 
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:101
 #: src/LinuxClient/library/iFolderConflictDialog.cs:349
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:348
 msgid "Location:"
-msgstr "Ubicación"
+msgstr "Ubicación:"
 #: src/LinuxClient/library/CreateDialog.cs:126 
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:116
 msgid "Browse"
@@ -244,16 +244,16 @@ msgid "Unknown"
 msgstr "Desconocido"
 #: src/LinuxClient/library/FileRenameDialog.cs:57 
 msgid "Rename file"
-msgstr "Renombrar archivo:"
+msgstr "Renombrar archivo"
 #: src/LinuxClient/library/FileRenameDialog.cs:68 
 msgid "File name:"
 msgstr "Nombre de archivo:"
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:60 
 msgid "Set Up iFolder: "
-msgstr "Configurar iFolder"
+msgstr "Configurar iFolder: "
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:72 
 msgid "Details:"
-msgstr "Detalles"
+msgstr "Detalles:"
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:82 
 #, csharp-format
 msgid ""
@@ -298,14 +298,14 @@ msgstr "Versión local"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:394 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:437
 msgid "Date:"
-msgstr "Fecha"
+msgstr "Fecha:"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:403 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:446
 msgid "Size:"
-msgstr "Tamaño"
+msgstr "Tamaño:"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:421 
 msgid "Server Version"
-msgstr "Versión del servidor:"
+msgstr "Versión del servidor"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:475 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:500
 msgid "Rename"
@@ -357,7 +357,7 @@ msgid ""
 msgstr "El nombre especificado contiene caracteres no válidos. Seleccione un nombre diferente e inténtelo de nuevo.\n\nLos nombres no deben contener ninguno de estos caracteres: {0}"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:1013 
 msgid "Name Already Exists"
-msgstr "El nombre ya existe:"
+msgstr "El nombre ya existe"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:1014 
 msgid "The specified name already exists.  Please choose a different name."
 msgstr "El nombre especificado ya existe. Seleccione un nombre diferente."
@@ -456,7 +456,7 @@ msgid "_Set Quota:"
 msgstr "_Set Quota:"
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:336 
 msgid "Owner:"
-msgstr "Propietario"
+msgstr "Propietario:"
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:458 
 #: src/LinuxClient/library/PrefsGeneralPage.cs:178
 msgid "Synchronization"
@@ -504,7 +504,7 @@ msgid "Select Users"
 msgstr "Seleccionar usuarios"
 #: src/LinuxClient/library/iFolderUserSelector.cs:146 
 msgid "Find:"
-msgstr "Buscar"
+msgstr "Buscar:"
 #: src/LinuxClient/library/iFolderUserSelector.cs:153 
 msgid "First Name"
 msgstr "N.de pila"
@@ -523,7 +523,7 @@ msgid "(Full or partial name)"
 msgstr "(Nombre completo o parcial)"
 #: src/LinuxClient/library/iFolderUserSelector.cs:208 
 msgid "_Add >>"
-msgstr "Añadir"
+msgstr "_Añadir >>"
 #: src/LinuxClient/library/iFolderUserSelector.cs:212 
 msgid "_Remove"
 msgstr "Eliminar"
@@ -723,7 +723,7 @@ msgstr "No es posible que dentro de una iFolder haya otras carpetas iFolder. La 
 #: src/LinuxClient/library/iFolderWindow.cs:1422
 #, csharp-format
 msgid "Remove iFolder {0}?"
-msgstr "Eliminar carpeta iFolder"
+msgstr "¿Eliminar carpeta iFolder: {0}?"
 #: src/LinuxClient/library/iFolderWindow.cs:1394 
 msgid ""
 "This removes the iFolder from your local computer.  Because you are the "
@@ -763,17 +763,17 @@ msgstr "Sincronizando: {0}"
 #: src/LinuxClient/library/LogWindow.cs:296
 #, csharp-format
 msgid "Deleting file: {0}"
-msgstr "suprimiendo archivo\n"
+msgstr "Suprimiendo archivo: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1783 
 #: src/LinuxClient/library/LogWindow.cs:324
 #, csharp-format
 msgid "Uploading file: {0}"
-msgstr "Cargando archivo"
+msgstr "Cargando archivo: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1788 
 #: src/LinuxClient/library/LogWindow.cs:328
 #, csharp-format
 msgid "Downloading file: {0}"
-msgstr "Descargando archivo..."
+msgstr "Descargando archivo: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1793 
 #: src/LinuxClient/library/LogWindow.cs:301
 #, csharp-format
@@ -787,7 +787,7 @@ msgstr "Sincronizando archivo: {0}"
 #: src/LinuxClient/library/LogWindow.cs:336
 #, csharp-format
 msgid "Deleting directory: {0}"
-msgstr "Suprimiendo directorio"
+msgstr "Suprimiendo directorio: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1815 
 #: src/LinuxClient/library/LogWindow.cs:349
 #, csharp-format
@@ -949,7 +949,7 @@ msgid "System Name"
 msgstr "Nombre del sistema"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:131 
 msgid "Username"
-msgstr "Usuario:"
+msgstr "Usuario"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:169 
 msgid "_Details"
 msgstr "Detalles"
@@ -967,7 +967,7 @@ msgid "Logged in"
 msgstr "Conectado"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:402 
 msgid "Logged out"
-msgstr "<1> :: <2> : Salió"
+msgstr "Salió"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:407 
 msgid "Disabled"
 msgstr "Inhabilitado"
@@ -1058,7 +1058,7 @@ msgid "Remove this iFolder account?"
 msgstr "¿Desea eliminar esta cuenta iFolder?"
 #: src/LinuxClient/library/RemoveAccountDialog.cs:77 
 msgid "System Name:"
-msgstr "Nombre del sistema"
+msgstr "Nombre del sistema:"
 #: src/LinuxClient/library/RemoveAccountDialog.cs:119 
 msgid "Remove my iFolders and files from the server"
 msgstr "Eliminar mis carpetas iFolder y archivos del servidor"
@@ -1088,7 +1088,7 @@ msgid "Product Management:"
 msgstr "Gestión del producto:"
 #: src/LinuxClient/library/Util.cs:181 
 msgid "Documentation:"
-msgstr "Documentación"
+msgstr "Documentación:"
 #: src/LinuxClient/library/Util.cs:184 
 msgid "Special Thanks"
 msgstr "Agradecimientos"
@@ -1097,16 +1097,16 @@ msgid "Retired Contributers:"
 msgstr "Colaboradores jubilados:"
 #: src/LinuxClient/library/Util.cs:192 
 msgid "Organizations:"
-msgstr "Organizaciones"
+msgstr "Organizaciones:"
 #: src/LinuxClient/library/Util.cs:196 
 msgid "Code Contributors:"
-msgstr "Colaboradores desarrolladores"
+msgstr "Colaboradores desarrolladores:"
 #: src/LinuxClient/library/Util.cs:202 
 msgid "Other Contributors:"
 msgstr "Otros colaboradores:"
 #: src/LinuxClient/library/Util.cs:207 
 msgid "Copyright (C) 2004-2005 Novell, Inc."
-msgstr "Copyright (C) 1998, Novell Inc."
+msgstr "Copyright (C) 2004-2005, Novell Inc."
 #: src/LinuxClient/library/Util.cs:208 
 msgid ""
 "The iFolder Project is a file sharing solution that allows people to easily "

@@ -885,15 +885,15 @@ msgstr "A házirend miatt nem lehetett végrehajtani a szinkronizálást: {0}"
 #: src/LinuxClient/library/LogWindow.cs:379 
 #, csharp-format
 msgid "Insuficient rights prevented synchronization: {0}"
-msgstr "Az elégtelen jogosultság miatt nem lehetett végrehajtani a szinkronizálást:: {0}"
+msgstr "Az elégtelen jogosultság miatt nem lehetett végrehajtani a szinkronizálást: {0}"
 #: src/LinuxClient/library/LogWindow.cs:384 
 #, csharp-format
 msgid "Locked iFolder prevented synchronization: {0}"
-msgstr "A zárolt iFolder mappa miatt nem lehetett végrehajtani a szinkronizálást:: {0}"
+msgstr "A zárolt iFolder mappa miatt nem lehetett végrehajtani a szinkronizálást: {0}"
 #: src/LinuxClient/library/LogWindow.cs:389 
 #, csharp-format
 msgid "Full iFolder prevented synchronization: {0}"
-msgstr "A megtelt iFolder mappa miatt nem lehetett végrehajtani a szinkronizálást: {0}: {0}"
+msgstr "A megtelt iFolder mappa miatt nem lehetett végrehajtani a szinkronizálást: {0}"
 #: src/LinuxClient/library/LogWindow.cs:394 
 #, csharp-format
 msgid "Size restriction policy prevented synchronization: {0}"

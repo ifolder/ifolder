@@ -2507,11 +2507,11 @@
 	</data>
   
 	<data name="uploadFile">
-		<value>Загрузка файла...</value>
+		<value>Загрузка файла: {0}</value>
 	</data>
   
 	<data name="downloadFile">
-		<value>Выгрузка файла...</value>
+		<value>Выгрузка файла: {0}</value>
 	</data>
   
 	<data name="localFile">
@@ -2539,11 +2539,11 @@
 	</data>
   
 	<data name="deleteClientFile">
-		<value>удаление файла\n</value>
+		<value>удаление файла: {0}</value>
 	</data>
   
 	<data name="deleteClientDir">
-		<value>Удаление каталога</value>
+		<value>Удаление каталога: {0}</value>
 	</data>
   
 	<data name="deleteUnknown">

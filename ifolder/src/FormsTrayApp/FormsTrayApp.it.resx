@@ -747,11 +747,11 @@
 	</data>
   
 	<data name="actionRequiredTitle">
-		<value>Azione richiesta:</value>
+		<value>Azione richiesta</value>
 	</data>
   
 	<data name="subscriptionTitle">
-		<value>Nuova cartella iFolder</value>
+		<value>Nuova cartella iFolder "{0}"</value>
 	</data>
   
 	<data name="subscriptionMessage">
@@ -775,11 +775,11 @@
 	</data>
   
 	<data name="downloading">
-		<value>Scaricamento di %s</value>
+		<value>Scaricamento di {0}</value>
 	</data>
   
 	<data name="uploading">
-		<value>Caricamento di %s</value>
+		<value>Caricamento di {0}</value>
 	</data>
   
 	<data name="clientUpgradeTitle">
@@ -847,7 +847,7 @@
 	</data>
   
 	<data name="deleteClientFile">
-		<value>cancellazione del file\n</value>
+		<value>Cancellazione del file: {0}</value>
 	</data>
   
 	<data name="uploadDeltaSyncFile">
@@ -859,11 +859,11 @@
 	</data>
   
 	<data name="uploadFile">
-		<value> Caricamento del file in corso</value>
+		<value>Caricamento del file in corso: {0}</value>
 	</data>
   
 	<data name="downloadFile">
-		<value>Scaricamento del file in corso...</value>
+		<value>Scaricamento del file in corso: {0}</value>
 	</data>
   
 	<data name="localFile">
@@ -875,7 +875,7 @@
 	</data>
   
 	<data name="deleteClientDir">
-		<value>Cancellazione della directory</value>
+		<value>Cancellazione della directory: {0}</value>
 	</data>
   
 	<data name="uploadDir">

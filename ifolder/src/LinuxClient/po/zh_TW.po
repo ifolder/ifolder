@@ -75,7 +75,7 @@ msgstr "驗證狀態碼"
 #: src/LinuxClient/application/iFolderApplication.cs:628 
 #, csharp-format
 msgid "New iFolder \"{0}\""
-msgstr "新增 iFolder"
+msgstr "新增 iFolder「{0}」"
 #: src/LinuxClient/application/iFolderApplication.cs:630 
 #, csharp-format
 msgid "{0} has invited you to participate in this shared iFolder"
@@ -139,7 +139,7 @@ msgstr "系統資訊"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:428
 #: src/LinuxClient/library/iFolderConflictDialog.cs:487
 msgid "Name:"
-msgstr "姓名"
+msgstr "姓名："
 #: src/LinuxClient/library/AccountDialog.cs:127 
 msgid "Description:"
 msgstr "描述："
@@ -150,7 +150,7 @@ msgstr "伺服器上的磁碟空間"
 #: src/LinuxClient/library/AccountDialog.cs:178 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:195
 msgid "Quota:"
-msgstr "配額"
+msgstr "配額："
 #: src/LinuxClient/library/AccountDialog.cs:186 
 #: src/LinuxClient/library/AccountDialog.cs:198
 #: src/LinuxClient/library/AccountDialog.cs:210
@@ -165,11 +165,11 @@ msgstr "MB"
 #: src/LinuxClient/library/AccountDialog.cs:190 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:391
 msgid "Used:"
-msgstr "已使用"
+msgstr "已使用："
 #: src/LinuxClient/library/AccountDialog.cs:202 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:409
 msgid "Available:"
-msgstr "可用的"
+msgstr "可用的："
 #: src/LinuxClient/library/AccountDialog.cs:235 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:438
 msgid "full"
@@ -198,13 +198,13 @@ msgstr "新 iFolder</span>"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:191
 #: src/LinuxClient/library/RemoveAccountDialog.cs:90
 msgid "Server:"
-msgstr "伺服器"
+msgstr "伺服器："
 #: src/LinuxClient/library/CreateDialog.cs:111 
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:101
 #: src/LinuxClient/library/iFolderConflictDialog.cs:349
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:348
 msgid "Location:"
-msgstr "位置"
+msgstr "位置："
 #: src/LinuxClient/library/CreateDialog.cs:126 
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:116
 msgid "Browse"
@@ -244,16 +244,16 @@ msgid "Unknown"
 msgstr "未知"
 #: src/LinuxClient/library/FileRenameDialog.cs:57 
 msgid "Rename file"
-msgstr "更名檔案："
+msgstr "更名檔案"
 #: src/LinuxClient/library/FileRenameDialog.cs:68 
 msgid "File name:"
-msgstr "檔案名稱"
+msgstr "檔案名稱："
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:60 
 msgid "Set Up iFolder: "
-msgstr "設定 iFolder"
+msgstr "設定 iFolder： "
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:72 
 msgid "Details:"
-msgstr "細節"
+msgstr "細節："
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:82 
 #, csharp-format
 msgid ""
@@ -298,11 +298,11 @@ msgstr "本地版本"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:394 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:437
 msgid "Date:"
-msgstr "日期"
+msgstr "日期："
 #: src/LinuxClient/library/iFolderConflictDialog.cs:403 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:446
 msgid "Size:"
-msgstr "大小"
+msgstr "大小："
 #: src/LinuxClient/library/iFolderConflictDialog.cs:421 
 msgid "Server Version"
 msgstr "伺服器版本："
@@ -357,7 +357,7 @@ msgid ""
 msgstr "指定的名稱包含無效的字元。請選擇其他名稱，並再試一次。\n\n名稱不能包含這些字元中的任何一個：{0}"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:1013 
 msgid "Name Already Exists"
-msgstr "已經存有此名稱：%1。"
+msgstr "已經存有此名稱"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:1014 
 msgid "The specified name already exists.  Please choose a different name."
 msgstr "指定的名稱已經存在。請選擇其他名稱。"
@@ -456,7 +456,7 @@ msgid "_Set Quota:"
 msgstr "設定配額(_S)："
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:336 
 msgid "Owner:"
-msgstr "擁有者"
+msgstr "擁有者："
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:458 
 #: src/LinuxClient/library/PrefsGeneralPage.cs:178
 msgid "Synchronization"
@@ -504,7 +504,7 @@ msgid "Select Users"
 msgstr "選擇使用者"
 #: src/LinuxClient/library/iFolderUserSelector.cs:146 
 msgid "Find:"
-msgstr "尋找"
+msgstr "尋找："
 #: src/LinuxClient/library/iFolderUserSelector.cs:153 
 msgid "First Name"
 msgstr "名"
@@ -723,7 +723,7 @@ msgstr "iFolder 不能包含其他 iFolder。您選取的資料夾已經是 iFol
 #: src/LinuxClient/library/iFolderWindow.cs:1422
 #, csharp-format
 msgid "Remove iFolder {0}?"
-msgstr "移除 iFolder"
+msgstr "移除 iFolder {0}?"
 #: src/LinuxClient/library/iFolderWindow.cs:1394 
 msgid ""
 "This removes the iFolder from your local computer.  Because you are the "
@@ -763,17 +763,17 @@ msgstr "正在同步化：{0}"
 #: src/LinuxClient/library/LogWindow.cs:296
 #, csharp-format
 msgid "Deleting file: {0}"
-msgstr "刪除檔案中\n"
+msgstr "刪除檔案中：{0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1783 
 #: src/LinuxClient/library/LogWindow.cs:324
 #, csharp-format
 msgid "Uploading file: {0}"
-msgstr " 上載檔案中"
+msgstr "上載檔案中：{0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1788 
 #: src/LinuxClient/library/LogWindow.cs:328
 #, csharp-format
 msgid "Downloading file: {0}"
-msgstr "正在下載檔案..."
+msgstr "正在下載檔案：{0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1793 
 #: src/LinuxClient/library/LogWindow.cs:301
 #, csharp-format
@@ -787,7 +787,7 @@ msgstr "正在同步化檔案：{0}"
 #: src/LinuxClient/library/LogWindow.cs:336
 #, csharp-format
 msgid "Deleting directory: {0}"
-msgstr "刪除目錄中"
+msgstr "刪除目錄中：{0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1815 
 #: src/LinuxClient/library/LogWindow.cs:349
 #, csharp-format
@@ -958,7 +958,7 @@ msgid "Account Settings"
 msgstr "帳戶設定"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:246 
 msgid "_Enable account"
-msgstr " 開啟帳戶"
+msgstr "開啟帳戶"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:253 
 msgid "De_fault account"
 msgstr "預設帳戶(_F)"
@@ -967,7 +967,7 @@ msgid "Logged in"
 msgstr "已經登入"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:402 
 msgid "Logged out"
-msgstr "<1> :: <2> ：登出"
+msgstr "登出"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:407 
 msgid "Disabled"
 msgstr "關閉"
@@ -1058,7 +1058,7 @@ msgid "Remove this iFolder account?"
 msgstr "移除此 iFolder 帳戶？"
 #: src/LinuxClient/library/RemoveAccountDialog.cs:77 
 msgid "System Name:"
-msgstr "系統名稱"
+msgstr "系統名稱："
 #: src/LinuxClient/library/RemoveAccountDialog.cs:119 
 msgid "Remove my iFolders and files from the server"
 msgstr "從伺服器移除我的 iFolder 及檔案"
@@ -1088,16 +1088,16 @@ msgid "Product Management:"
 msgstr "產品管理："
 #: src/LinuxClient/library/Util.cs:181 
 msgid "Documentation:"
-msgstr "說明文件"
+msgstr "說明文件："
 #: src/LinuxClient/library/Util.cs:184 
 msgid "Special Thanks"
-msgstr "特別感謝"
+msgstr "特別感謝："
 #: src/LinuxClient/library/Util.cs:186 
 msgid "Retired Contributers:"
 msgstr "退休顧問："
 #: src/LinuxClient/library/Util.cs:192 
 msgid "Organizations:"
-msgstr "<1> 組織"
+msgstr "組織："
 #: src/LinuxClient/library/Util.cs:196 
 msgid "Code Contributors:"
 msgstr "程式碼顧問："
@@ -1106,7 +1106,7 @@ msgid "Other Contributors:"
 msgstr "其他顧問："
 #: src/LinuxClient/library/Util.cs:207 
 msgid "Copyright (C) 2004-2005 Novell, Inc."
-msgstr "版權 (C) 1998, Novell Inc."
+msgstr "版權 (C) 2004-2005, Novell Inc."
 #: src/LinuxClient/library/Util.cs:208 
 msgid ""
 "The iFolder Project is a file sharing solution that allows people to easily "

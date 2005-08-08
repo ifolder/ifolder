@@ -150,7 +150,7 @@ msgstr "Diskový prostor na serveru"
 #: src/LinuxClient/library/AccountDialog.cs:178 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:195
 msgid "Quota:"
-msgstr "Kvóta"
+msgstr "Kvóta:"
 #: src/LinuxClient/library/AccountDialog.cs:186 
 #: src/LinuxClient/library/AccountDialog.cs:198
 #: src/LinuxClient/library/AccountDialog.cs:210
@@ -916,7 +916,7 @@ msgstr "Přepsat existující soubor?"
 msgid ""
 "The file you selected exists.  Selecting yes will overwrite the contents of "
 "this file."
-msgstr "Vybraný soubor již existuje.  Vybráním volby "ano" přepíšete obsah tohoto souboru."
+msgstr "Vybraný soubor již existuje.  Vybráním volby \"ano\" přepíšete obsah tohoto souboru."
 #: src/LinuxClient/library/LogWindow.cs:473 
 msgid "Insufficient access"
 msgstr "Nedostatečný přístup"

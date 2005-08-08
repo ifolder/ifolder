@@ -75,7 +75,7 @@ msgstr "Kod stanu uwierzytelniania"
 #: src/LinuxClient/application/iFolderApplication.cs:628 
 #, csharp-format
 msgid "New iFolder \"{0}\""
-msgstr "Nowy iFolder"
+msgstr "Nowy iFolder \"{0}\""
 #: src/LinuxClient/application/iFolderApplication.cs:630 
 #, csharp-format
 msgid "{0} has invited you to participate in this shared iFolder"
@@ -723,7 +723,7 @@ msgstr "iFoldery nie mogą zawierać innych iFolderów. Wybrany folder jest już
 #: src/LinuxClient/library/iFolderWindow.cs:1422
 #, csharp-format
 msgid "Remove iFolder {0}?"
-msgstr "Usuń iFolder"
+msgstr "Usuń iFolder {0}?"
 #: src/LinuxClient/library/iFolderWindow.cs:1394 
 msgid ""
 "This removes the iFolder from your local computer.  Because you are the "
