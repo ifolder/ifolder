@@ -907,15 +907,15 @@
 	</data>
   
 	<data name="accessFailure">
-		<value>Az elégtelen jogosultság miatt nem lehetett végrehajtani a szinkronizálást:: {0}</value>
+		<value>Az elégtelen jogosultság miatt nem lehetett végrehajtani a szinkronizálást: {0}</value>
 	</data>
   
 	<data name="lockFailure">
-		<value>A zárolt iFolder mappa miatt nem lehetett végrehajtani a szinkronizálást:: {0}</value>
+		<value>A zárolt iFolder mappa miatt nem lehetett végrehajtani a szinkronizálást: {0}</value>
 	</data>
   
 	<data name="quotaFailure">
-		<value>A megtelt iFolder mappa miatt nem lehetett végrehajtani a szinkronizálást: {0}: {0}</value>
+		<value>A megtelt iFolder mappa miatt nem lehetett végrehajtani a szinkronizálást: {0}</value>
 	</data>
   
 	<data name="policySizeFailure">

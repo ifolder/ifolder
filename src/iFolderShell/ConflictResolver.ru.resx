@@ -307,7 +307,7 @@
 	</data>
   
 	<data name="label2.Text">
-		<value>Имя</value>
+		<value>Имя:</value>
 	</data>
   
 	<data name="label2.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -1799,7 +1799,7 @@
 	</data>
   
 	<data name="label4.Text">
-		<value>Имя</value>
+		<value>Имя:</value>
 	</data>
   
 	<data name="label4.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -2759,7 +2759,7 @@
 	</data>
   
 	<data name="label12.Text">
-		<value>Имя</value>
+		<value>Имя:</value>
 	</data>
   
 	<data name="label12.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -3771,7 +3771,7 @@
 	</data>
   
 	<data name="label8.Text">
-		<value>Имя</value>
+		<value>Имя:</value>
 	</data>
   
 	<data name="label8.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -4131,7 +4131,7 @@
 	</data>
   
 	<data name="openFileError">
-		<value>Не удалось открыть файл: &lt;1&gt;</value>
+		<value>Не удалось открыть файл.</value>
 	</data>
   
 	<data name="readOnlyTitle">

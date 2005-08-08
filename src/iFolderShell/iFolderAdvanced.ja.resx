@@ -2631,7 +2631,7 @@
 	</data>
   
 	<data name="label9.Text">
-		<value>使用可能</value>
+		<value>使用可能:</value>
 	</data>
   
 	<data name="label9.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -2991,7 +2991,7 @@
 	</data>
   
 	<data name="label1.Text">
-		<value>使用済み</value>
+		<value>使用済み:</value>
 	</data>
   
 	<data name="label1.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -3111,7 +3111,7 @@
 	</data>
   
 	<data name="limitLabel.Text">
-		<value>割り当て量</value>
+		<value>割り当て量:</value>
 	</data>
   
 	<data name="limitLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">

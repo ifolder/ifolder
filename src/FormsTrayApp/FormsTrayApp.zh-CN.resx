@@ -751,7 +751,7 @@
 	</data>
   
 	<data name="subscriptionTitle">
-		<value>新建 iFolder</value>
+		<value>新建 iFolder "{0}"</value>
 	</data>
   
 	<data name="subscriptionMessage">
@@ -775,11 +775,11 @@
 	</data>
   
 	<data name="downloading">
-		<value>正在下载</value>
+		<value>正在下载：{0}</value>
 	</data>
   
 	<data name="uploading">
-		<value>正在上载 %s</value>
+		<value>正在上载：{0}</value>
 	</data>
   
 	<data name="clientUpgradeTitle">
@@ -847,7 +847,7 @@
 	</data>
   
 	<data name="deleteClientFile">
-		<value>正在删除文件</value>
+		<value>正在删除文件：{0}</value>
 	</data>
   
 	<data name="uploadDeltaSyncFile">
@@ -859,11 +859,11 @@
 	</data>
   
 	<data name="uploadFile">
-		<value> 正在上载文件</value>
+		<value>正在上载文件：{0}</value>
 	</data>
   
 	<data name="downloadFile">
-		<value>正在下载文件...</value>
+		<value>正在下载文件：{0}</value>
 	</data>
   
 	<data name="localFile">
@@ -875,7 +875,7 @@
 	</data>
   
 	<data name="deleteClientDir">
-		<value>正在删除目录</value>
+		<value>正在删除目录：{0}</value>
 	</data>
   
 	<data name="uploadDir">

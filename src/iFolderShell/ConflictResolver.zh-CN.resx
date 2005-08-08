@@ -4131,7 +4131,7 @@
 	</data>
   
 	<data name="openFileError">
-		<value>无法打开文件 {0}</value>
+		<value>无法打开文件</value>
 	</data>
   
 	<data name="readOnlyTitle">

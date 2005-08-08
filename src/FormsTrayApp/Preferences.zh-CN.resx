@@ -4719,7 +4719,7 @@
 	</data>
   
 	<data name="statusLoggedOut">
-		<value>&lt;1&gt; :: &lt;2&gt; : 已注销</value>
+		<value>已注销</value>
 	</data>
   
 	<data name="statusDisabled">

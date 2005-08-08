@@ -5519,10 +5519,10 @@
 	</data>
   
 	<data name="hours">
-		<value>%d1 小时</value>
+		<value>小时</value>
 	</data>
   
 	<data name="days">
-		<value> 天</value>
+		<value>天</value>
 	</data>
 </root>

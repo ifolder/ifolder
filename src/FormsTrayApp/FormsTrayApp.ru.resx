@@ -747,11 +747,11 @@
 	</data>
   
 	<data name="actionRequiredTitle">
-		<value>Необходимое действие:</value>
+		<value>Необходимое действие</value>
 	</data>
   
 	<data name="subscriptionTitle">
-		<value>Новая папка iFolder</value>
+		<value>Новая папка iFolder "{0}"</value>
 	</data>
   
 	<data name="subscriptionMessage">
@@ -775,11 +775,11 @@
 	</data>
   
 	<data name="downloading">
-		<value>Выгрузка %1%</value>
+		<value>Выгрузка: {0}</value>
 	</data>
   
 	<data name="uploading">
-		<value>Загрузка %s</value>
+		<value>Загрузка: {0}</value>
 	</data>
   
 	<data name="clientUpgradeTitle">
@@ -847,7 +847,7 @@
 	</data>
   
 	<data name="deleteClientFile">
-		<value>удаление файла\n</value>
+		<value>удаление файла: {0}</value>
 	</data>
   
 	<data name="uploadDeltaSyncFile">
@@ -859,11 +859,11 @@
 	</data>
   
 	<data name="uploadFile">
-		<value>Загрузка файла...</value>
+		<value>Загрузка файла: {0}</value>
 	</data>
   
 	<data name="downloadFile">
-		<value>Выгрузка файла...</value>
+		<value>Выгрузка файла: {0}</value>
 	</data>
   
 	<data name="localFile">
@@ -875,7 +875,7 @@
 	</data>
   
 	<data name="deleteClientDir">
-		<value>Удаление каталога</value>
+		<value>Удаление каталога: {0}</value>
 	</data>
   
 	<data name="uploadDir">
