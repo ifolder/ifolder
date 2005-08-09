@@ -16,7 +16,7 @@ PROJECT_FILES = $(srcdir)/InvitationWizard.csproj $(srcdir)/FormsInvitationWizar
 
 EXTRA_DIST = $(InvitationWizard_CSFILES) $(DATA_FILES) $(RESX_FILES) $(PROJECT_FILES) AssemblyInfo.cs.in
 
-AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
+AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in Makefile
 	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
 	chmod +x $@
 

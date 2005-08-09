@@ -24,7 +24,7 @@ PROJECT_FILES = $(srcdir)/FormsTrayApp.csproj $(srcdir)/FormsTrayApp.sln
 
 EXTRA_DIST = $(iFolderApp_CSFILES) $(DATA_FILES) $(RES_FILES) $(iFolderApp_RESX_FILES) iFolderApp.exe.manifest iFolderApp.exe.config InstallUtil.exe.config $(PROJECT_FILES) AssemblyInfo.cs.in iFolderUpgrade.exe
 
-AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
+AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in Makefile
 	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
 	chmod +x $@
 
@@ -44,7 +44,7 @@ Novell.FormsTrayApp.%.resources : %.resx
 	
 %/iFolderApp.resources.dll: Novell.FormsTrayApp.FormsTrayApp.%.resources Novell.FormsTrayApp.GlobalProperties.%.resources Novell.FormsTrayApp.ServerInfo.%.resources Novell.FormsTrayApp.AcceptInvitation.%.resources Novell.FormsTrayApp.ServerDetails.%.resources Novell.FormsTrayApp.SyncLog.%.resources Novell.FormsTrayApp.Preferences.%.resources Novell.FormsTrayApp.AdvancedSettings.%.resources Novell.FormsTrayApp.About.%.resources Novell.FormsTrayApp.Credits.%.resources Novell.FormsTrayApp.RemoveAccount.%.resources
 	$(mkinstalldirs) $*
-	al /out:$@ /c:$* $(patsubst %,/embed:%,$^)
+	al /nologo /out:$@ /c:$* /template:iFolderApp.exe $(patsubst %,/embed:%,$^)
 
 
 if DEBUG

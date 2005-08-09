@@ -42,7 +42,7 @@ PROJECT_FILES = $(srcdir)/iFolderComponent.csproj $(srcdir)/iFolderComponent.sln
 
 EXTRA_DIST = $(iFolderComponent_CSFILES) $(iFolderShell_SRCFILES) $(iFolderShellRes_SRCFILES) $(iFolderShell_DEF) $(DATA_FILES) $(iFolderComponent_RESX_FILES) $(WINDOWS_FILES) $(srcdir)/iFolderShell.reg $(PROJECT_FILES) AssemblyInfo.cs.in iFolderShell/nifver.h.in 
 
-AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
+AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in Makefile
 	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
 	chmod +x $@
 
@@ -86,13 +86,13 @@ Novell.iFolderCom.%.resources: %.resx
 
 %/iFolderComponent.resources.dll: Novell.iFolderCom.CreateiFolder.%.resources Novell.iFolderCom.ConflictResolver.%.resources Novell.iFolderCom.iFolderAdvanced.%.resources Novell.iFolderCom.MyMessageBox.%.resources Novell.iFolderCom.NewiFolder.%.resources Novell.iFolderCom.Picker.%.resources Novell.iFolderCom.UserProperties.%.resources Novell.iFolderCom.GaugeChart.%.resources
 	$(mkinstalldirs) $*
-	al /out:$@ /c:$* $(patsubst %,/embed:%,$^)
+	al /nologo /out:$@ /c:$* /template:iFolderComponent.dll $(patsubst %,/embed:%,$^)
 	
 if DEBUG
 DEBUG_FILES = iFolderComponent.pdb vc70.pdb
 endif
 
-install-exec-local: all $(DATA_FILES) all
+install-exec-local: all $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) iFolderComponent.dll iFolderShell.dll $(srcdir)/iFolderShell.reg $(DEBUG_FILES) $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) $(DATA_FILES) $(DESTDIR)$(libdir)
