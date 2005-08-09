@@ -1,15 +1,15 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-Bonjour_CSFILES1 = $(srcdir)/Service.cs $(srcdir)/Domain.cs $(srcdir)/User.cs $(srcdir)/DomainProvider.cs $(srcdir)/Auth.cs  
-Bonjour_CSFILES := $(subst /,$(SEP),$(Bonjour_CSFILES1))
+Bonjour_CSFILES = $(srcdir)/Service.cs $(srcdir)/Domain.cs $(srcdir)/User.cs $(srcdir)/DomainProvider.cs $(srcdir)/Auth.cs  
+Bonjour_CSFILES_CSC := $(subst /,$(SEP),$(Bonjour_CSFILES))
 Bonjour_INCLUDES =
 Bonjour_RESOURCES =
 Bonjour_FLAGS = $(CSC_LIBFLAG)
 Bonjour_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll Simias.dll SimiasClient.dll log4net.dll Novell.Security.ClientPasswordManager.NetCredential.dll
 Bonjour_LIBPATH = ../SimiasClient ../Simias.dll ./external $(NOVELL_SECURITY_DIR) $(LOG4NET_DIR)
 
-EXTRA_DIST = $(Bonjour_CSFILES1)
+EXTRA_DIST = $(Bonjour_CSFILES)
 
 #if MAKE_DOC_FILE
 #DOC_FILE = $(basename $@).doc.xml
@@ -20,7 +20,7 @@ EXTRA_DIST = $(Bonjour_CSFILES1)
 all: Simias.Bonjour.dll
 
 Simias.Bonjour.dll: $(Bonjour_CSFILES) $(Bonjour_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(Bonjour_FLAGS) $(SIMIAS_LIBS) $(Bonjour_LIBS:%=/r:%) $(Bonjour_LIBPATH:%=/lib:%) $(Bonjour_RESOURCES:%=$(ICON_FLAG)%) $(Bonjour_CSFILES) $(DOC_FILE_CMD)
+	$(CSC) /out:$@ $(CSCFLAGS) $(Bonjour_FLAGS) $(SIMIAS_LIBS) $(Bonjour_LIBS:%=/r:%) $(Bonjour_LIBPATH:%=/lib:%) $(Bonjour_RESOURCES:%=$(ICON_FLAG)%) $(Bonjour_CSFILES_CSC) $(DOC_FILE_CMD)
 
 if DEBUG
 if WINDOWS

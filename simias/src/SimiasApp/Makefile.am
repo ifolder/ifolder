@@ -1,15 +1,15 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-SimiasApp_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/server.cs $(srcdir)/ApplicationServer.cs $(srcdir)/IApplicationHost.cs $(srcdir)/IWebSource.cs $(srcdir)/Tracing.cs $(srcdir)/XSPApplicationHost.cs $(srcdir)/BaseApplicationHost.cs $(srcdir)/BaseRequestBroker.cs $(srcdir)/MonoWorkerRequest.cs $(srcdir)/XSPWorkerRequest.cs $(srcdir)/LingeringNetworkStream.cs $(srcdir)/InitialWorkerRequest.cs
-SimiasApp_CSFILES := $(subst /,$(SEP),$(SimiasApp_CSFILES1))
+SimiasApp_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/server.cs $(srcdir)/ApplicationServer.cs $(srcdir)/IApplicationHost.cs $(srcdir)/IWebSource.cs $(srcdir)/Tracing.cs $(srcdir)/XSPApplicationHost.cs $(srcdir)/BaseApplicationHost.cs $(srcdir)/BaseRequestBroker.cs $(srcdir)/MonoWorkerRequest.cs $(srcdir)/XSPWorkerRequest.cs $(srcdir)/LingeringNetworkStream.cs $(srcdir)/InitialWorkerRequest.cs
+SimiasApp_CSFILES_CSC := $(subst /,$(SEP),$(SimiasApp_CSFILES))
 SimiasApp_INCLUDES =
 SimiasApp_RESOURCES = $(srcdir)/App$(ICON_EXT)
 SimiasApp_FLAGS = $(CSC_EXEFLAG)
 SimiasApp_LIBS = System.dll System.Data.dll $(SYSTEM_XML) SimiasClient.dll Simias.dll Simias.Web.dll System.Web.dll
 SimiasApp_LIBPATH = $(NUNIT_LIBPATH) $(LOG4NET_DIR) ../SimiasClient ../Simias.dll ../WebService
 
-EXTRA_DIST = App.ico $(SimiasApp_CSFILES1) AssemblyInfo.cs.in
+EXTRA_DIST = App.ico $(SimiasApp_CSFILES) AssemblyInfo.cs.in
 
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml
@@ -20,9 +20,9 @@ endif
 all: SimiasApp.exe
 
 SimiasApp.exe: AssemblyInfo.cs $(SimiasApp_CSFILES) $(SimiasApp_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(SimiasApp_FLAGS) $(SIMIAS_LIBS) $(SimiasApp_LIBS:%=/r:%) $(SimiasApp_LIBPATH:%=/lib:%) $(SimiasApp_RESOURCES:%=$(ICON_FLAG)%) $(SimiasApp_CSFILES) $(DOC_FILE_CMD)
+	$(CSC) /out:$@ $(CSCFLAGS) $(SimiasApp_FLAGS) $(SIMIAS_LIBS) $(SimiasApp_LIBS:%=/r:%) $(SimiasApp_LIBPATH:%=/lib:%) $(SimiasApp_RESOURCES:%=$(ICON_FLAG)%) $(SimiasApp_CSFILES_CSC) $(DOC_FILE_CMD)
 
-AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
+AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in Makefile
 	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
 	chmod +x $@
 

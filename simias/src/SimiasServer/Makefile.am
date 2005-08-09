@@ -30,7 +30,7 @@ all: SimiasServer.exe simias
 SimiasServer.exe: AssemblyInfo.cs $(SimiasServer_CSFILES) $(SimiasServer_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(SimiasServer_FLAGS) $(SimiasServer_LIBS:%=/r:%) $(SimiasServer_LIBPATH:%=/lib:%) $(SimiasServer_CSFILES_CSC) $(DOC_FILE_CMD)
 
-AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
+AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in Makefile
 	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
 	chmod +x $@
 

@@ -1,15 +1,15 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-SyncService_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/SyncHandler.ashx.cs
-SyncService_CSFILES := $(subst /,$(SEP),$(SyncService_CSFILES1))
+SyncService_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/SyncHandler.ashx.cs
+SyncService_CSFILES_CSC := $(subst /,$(SEP),$(SyncService_CSFILES))
 SyncService_INCLUDES =
 SyncService_RESOURCES =
 SyncService_FLAGS = $(CSC_LIBFLAG)
 SyncService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll SimiasClient.dll Simias.dll
 SyncService_LIBPATH = ../SimiasClient ../Simias.dll
 
-EXTRA_DIST = SyncHandler.ashx $(SyncService_CSFILES1) AssemblyInfo.cs.in
+EXTRA_DIST = SyncHandler.ashx $(SyncService_CSFILES) AssemblyInfo.cs.in
 
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml
@@ -20,9 +20,9 @@ endif
 all: SyncService.Web.dll
 
 SyncService.Web.dll: AssemblyInfo.cs $(SyncService_CSFILES) $(SyncService_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(SyncService_FLAGS) $(SIMIAS_LIBS) $(SyncService_LIBS:%=/r:%) $(SyncService_LIBPATH:%=/lib:%) $(SyncService_RESOURCES:%=$(ICON_FLAG)%) $(SyncService_CSFILES) $(DOC_FILE_CMD)
+	$(CSC) /out:$@ $(CSCFLAGS) $(SyncService_FLAGS) $(SIMIAS_LIBS) $(SyncService_LIBS:%=/r:%) $(SyncService_LIBPATH:%=/lib:%) $(SyncService_RESOURCES:%=$(ICON_FLAG)%) $(SyncService_CSFILES_CSC) $(DOC_FILE_CMD)
 
-AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
+AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in Makefile
 	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
 	chmod +x $@
 

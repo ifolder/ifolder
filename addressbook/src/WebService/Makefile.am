@@ -1,8 +1,8 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-CABWebService_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/AddressBookService.cs $(srcdir)/AddressBook.cs $(srcdir)/Contact.cs
-CABWebService_CSFILES := $(subst /,$(SEP),$(CABWebService_CSFILES1))
+CABWebService_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/AddressBookService.cs $(srcdir)/AddressBook.cs $(srcdir)/Contact.cs
+CABWebService_CSFILES_CSC := $(subst /,$(SEP),$(CABWebService_CSFILES))
 CABWervice_INCLUDES =
 CABWebService_RESOURCES =
 CABWebService_FLAGS = $(CSC_LIBFLAG)
@@ -20,7 +20,7 @@ endif
 all: Novell.AddressBook.Web.dll
 
 Novell.AddressBook.Web.dll: $(CABWebService_CSFILES) $(CABWebService_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(CABWebService_FLAGS) $(SIMIAS_LIBS) $(IFOLDER_LIBS) $(CABWebService_LIBS:%=/r:%) $(CABWebService_LIBPATH:%=/lib:%) $(CABWebService_RESOURCES:%=$(ICON_FLAG)%) $(CABWebService_CSFILES) $(DOC_FILE_CMD)
+	$(CSC) /out:$@ $(CSCFLAGS) $(CABWebService_FLAGS) $(SIMIAS_LIBS) $(IFOLDER_LIBS) $(CABWebService_LIBS:%=/r:%) $(CABWebService_LIBPATH:%=/lib:%) $(CABWebService_RESOURCES:%=$(ICON_FLAG)%) $(CABWebService_CSFILES_CSC) $(DOC_FILE_CMD)
 
 if DEBUG
 if WINDOWS

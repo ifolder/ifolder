@@ -1,15 +1,15 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-SimiasWebService_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/Global.asax.cs $(srcdir)/Simias.asmx.cs
-SimiasWebService_CSFILES := $(subst /,$(SEP),$(SimiasWebService_CSFILES1))
+SimiasWebService_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/Global.asax.cs $(srcdir)/Simias.asmx.cs
+SimiasWebService_CSFILES_CSC := $(subst /,$(SEP),$(SimiasWebService_CSFILES))
 SimiasWebService_INCLUDES =
 SimiasWebService_RESOURCES =
 SimiasWebService_FLAGS = $(CSC_LIBFLAG)
 SimiasWebService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll SimiasClient.dll Simias.dll Novell.Security.ClientPasswordManager.NetCredential.dll
 SimiasWebService_LIBPATH = ../SimiasClient ../Simias.dll $(NOVELL_SECURITY_DIR)
 
-EXTRA_DIST = win.web.config mono.web.config Global.asax Simias.asmx Simias.wsdl $(SimiasWebService_CSFILES1) AssemblyInfo.cs.in
+EXTRA_DIST = win.web.config mono.web.config Global.asax Simias.asmx Simias.wsdl $(SimiasWebService_CSFILES) AssemblyInfo.cs.in
 
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml
@@ -20,9 +20,9 @@ endif
 all: Simias.Web.dll
 
 Simias.Web.dll: AssemblyInfo.cs $(SimiasWebService_CSFILES) $(SimiasWebService_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(SimiasWebService_FLAGS) $(SIMIAS_LIBS) $(SimiasWebService_LIBS:%=/r:%) $(SimiasWebService_LIBPATH:%=/lib:%) $(SimiasWebService_RESOURCES:%=$(ICON_FLAG)%) $(SimiasWebService_CSFILES) $(DOC_FILE_CMD)
+	$(CSC) /out:$@ $(CSCFLAGS) $(SimiasWebService_FLAGS) $(SIMIAS_LIBS) $(SimiasWebService_LIBS:%=/r:%) $(SimiasWebService_LIBPATH:%=/lib:%) $(SimiasWebService_RESOURCES:%=$(ICON_FLAG)%) $(SimiasWebService_CSFILES_CSC) $(DOC_FILE_CMD)
 
-AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
+AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in Makefile
 	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
 	chmod +x $@
 

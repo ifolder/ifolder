@@ -1,8 +1,8 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-SubscribeWS_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/SubscribeService.asmx.cs
-SubscribeWS_CSFILES := $(subst /,$(SEP),$(SubscribeWS_CSFILES1))
+SubscribeWS_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/SubscribeService.asmx.cs
+SubscribeWS_CSFILES_CSC := $(subst /,$(SEP),$(SubscribeWS_CSFILES))
 SubscribeWS_INCLUDES =
 SubscribeWS_RESOURCES =
 SubscribeWS_FLAGS = $(CSC_LIBFLAG)
@@ -20,7 +20,7 @@ endif
 all: Simias.Subscribe.Web.dll
 
 Simias.Subscribe.Web.dll: $(SubscribeWS_CSFILES) $(SubscribeWS_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(SubscribeWS_FLAGS) $(SIMIAS_LIBS) $(SubscribeWS_LIBS:%=/r:%) $(SubscribeWS_LIBPATH:%=/lib:%) $(SubscribeWS_RESOURCES:%=$(ICON_FLAG)%) $(SubscribeWS_CSFILES) $(DOC_FILE_CMD)
+	$(CSC) /out:$@ $(CSCFLAGS) $(SubscribeWS_FLAGS) $(SIMIAS_LIBS) $(SubscribeWS_LIBS:%=/r:%) $(SubscribeWS_LIBPATH:%=/lib:%) $(SubscribeWS_RESOURCES:%=$(ICON_FLAG)%) $(SubscribeWS_CSFILES_CSC) $(DOC_FILE_CMD)
 
 if DEBUG
 if WINDOWS

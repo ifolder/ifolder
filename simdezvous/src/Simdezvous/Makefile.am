@@ -1,15 +1,15 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-Simdezvous_CSFILES1 = $(srcdir)/Service.cs $(srcdir)/Domain.cs $(srcdir)/User.cs $(srcdir)/DomainProvider.cs $(srcdir)/Auth.cs  
-Simdezvous_CSFILES := $(subst /,$(SEP),$(Simdezvous_CSFILES1))
+Simdezvous_CSFILES = $(srcdir)/Service.cs $(srcdir)/Domain.cs $(srcdir)/User.cs $(srcdir)/DomainProvider.cs $(srcdir)/Auth.cs  
+Simdezvous_CSFILES_CSC := $(subst /,$(SEP),$(Simdezvous_CSFILES))
 Simdezvous_INCLUDES =
 Simdezvous_RESOURCES =
 Simdezvous_FLAGS = $(CSC_LIBFLAG)
 Simdezvous_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll Simias.dll SimiasClient.dll log4net.dll Novell.Security.ClientPasswordManager.NetCredential.dll
 Simdezvous_LIBPATH = ../SimiasClient ../Simias.dll ./external $(NOVELL_SECURITY_DIR) $(LOG4NET_DIR)
 
-EXTRA_DIST = $(Simdezvous_CSFILES1)
+EXTRA_DIST = $(Simdezvous_CSFILES)
 
 #if MAKE_DOC_FILE
 #DOC_FILE = $(basename $@).doc.xml
@@ -20,7 +20,7 @@ EXTRA_DIST = $(Simdezvous_CSFILES1)
 all: Simdezvous.dll
 
 Simdezvous.dll: $(Simdezvous_CSFILES) $(Simdezvous_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(Simdezvous_FLAGS) $(SIMIAS_LIBS) $(Simdezvous_LIBS:%=/r:%) $(Simdezvous_LIBPATH:%=/lib:%) $(Simdezvous_RESOURCES:%=$(ICON_FLAG)%) $(Simdezvous_CSFILES) $(DOC_FILE_CMD)
+	$(CSC) /out:$@ $(CSCFLAGS) $(Simdezvous_FLAGS) $(SIMIAS_LIBS) $(Simdezvous_LIBS:%=/r:%) $(Simdezvous_LIBPATH:%=/lib:%) $(Simdezvous_RESOURCES:%=$(ICON_FLAG)%) $(Simdezvous_CSFILES_CSC) $(DOC_FILE_CMD)
 
 if DEBUG
 if WINDOWS
