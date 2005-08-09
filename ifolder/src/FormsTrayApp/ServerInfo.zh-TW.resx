@@ -175,7 +175,7 @@
 	</data>
   
 	<data name="ok.Text">
-		<value>anmelden</value>
+		<value>登入</value>
 	</data>
   
 	<data name="ok.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -279,7 +279,7 @@
 	</data>
   
 	<data name="cancel.Text">
-		<value>Abbrechen</value>
+		<value>取消</value>
 	</data>
   
 	<data name="cancel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -583,7 +583,7 @@
 	</data>
   
 	<data name="serverLabel2.Text">
-		<value>iFolder-Server:</value>
+		<value>iFolder 伺服器：</value>
 	</data>
   
 	<data name="serverLabel2.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -683,7 +683,7 @@
 	</data>
   
 	<data name="userLabel2.Text">
-		<value>Benutzername:</value>
+		<value>使用者名稱：</value>
 	</data>
   
 	<data name="userLabel2.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -783,7 +783,7 @@
 	</data>
   
 	<data name="passwordLabel2.Text">
-		<value>Passwort:</value>
+		<value>密碼：</value>
 	</data>
   
 	<data name="passwordLabel2.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -895,7 +895,7 @@
 	</data>
   
 	<data name="rememberPassword.Text">
-		<value>&amp;Passwort speichern</value>
+		<value>記住密碼(&amp;R)</value>
 	</data>
   
 	<data name="rememberPassword.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -1455,7 +1455,7 @@
 	</data>
   
 	<data name="$this.Text">
-		<value>iFolder-Anmeldung</value>
+		<value>iFolder 登入</value>
 	</data>
   
 	<data name="&gt;&gt;$this.Name">
@@ -1467,58 +1467,58 @@
 	</data>
   
 	<data name="serverConnectError">
-		<value>An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.</value>
+		<value>連接至 iFolder 伺服器時發生錯誤。請驗證所輸入的資訊，並再試一次。如果仍有問題，請與網路管理員聯絡。</value>
 	</data>
   
 	<data name="serverConnectErrorTitle">
-		<value>Unable to Connect to iFolder Server</value>
+		<value>無法連接至 iFolder 伺服器</value>
 	</data>
   
 	<data name="serverReconnectError">
-		<value>The authentication returned the error {0}.</value>
+		<value>驗證傳回錯誤 {0}。</value>
 	</data>
   
 	<data name="domainInfoReadError">
-		<value>An error was encountered while querying for the server and user name.</value>
+		<value>查詢伺服器及使用者名稱時發生錯誤。</value>
 	</data>
   
 	<data name="failedAuth">
-		<value>The username or password is invalid.  Please verify the information entered and try again.</value>
+		<value>使用者名稱或密碼無效。請驗證所輸入的資訊，並再試一次。</value>
 	</data>
   
 	<data name="badPassword">
-		<value>The password is invalid.  Please try again.</value>
+		<value>密碼無效。請再試一次。</value>
 	</data>
   
 	<data name="savePasswordError">
-		<value>An error was encountered while saving the password.</value>
+		<value>儲存密碼時發生錯誤。</value>
 	</data>
   
 	<data name="accountDisabled">
-		<value>The user account is disabled.  Please contact your network administrator for assistance. </value>
+		<value>使用者帳戶已經停用。請與網路管理員聯絡，以尋求協助。 </value>
 	</data>
   
 	<data name="iFolderAccountDisabled">
-		<value>The iFolder account is disabled.  Please contact your network administrator for assistance.</value>
+		<value>iFolder 帳戶已經停用。請與網路管理員聯絡，以尋求協助。</value>
 	</data>
   
 	<data name="accountLockout">
-		<value>The user account has been locked.  Please contact your network administrator for assistance.</value>
+		<value>使用者帳戶已經鎖定。請與網路管理員聯絡，以尋求協助。</value>
 	</data>
   
 	<data name="graceLogin">
-		<value>Your password has expired.  You have {0} grace logins remaining.</value>
+		<value>您的密碼已經過期。您剩下的寬限登入次數為 {0}。</value>
 	</data>
   
 	<data name="graceLoginTitle">
-		<value>Expired Password</value>
+		<value>密碼過期</value>
 	</data>
   
 	<data name="verifyCert">
-		<value>iFolder cannot verify the identity of the iFolder Server {0}.  The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be {0} which could put your confidential information at risk.Â Â Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?</value>
+		<value>iFolder cannot verify the identity of the iFolder Server {0}.  The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be {0} which could put your confidential information at risk.  Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?</value>
 	</data>
   
 	<data name="verifyCertTitle">
-		<value>Unable to Verify Identity</value>
+		<value>無法驗證身份</value>
 	</data>
 </root>
