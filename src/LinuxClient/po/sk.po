@@ -372,7 +372,7 @@ msgid ""
 "The folder you selected is now an iFolder.  To learn more about using "
 "iFolder and sharing iFolders with other users, see \"Managing iFolders\" in "
 "iFolder Help."
-msgstr "Vybratý priečinok je teraz priečinkom iFolder. Ďalšie informácie o použití priečinku iFolder a zdieľaní priečinku iFolder s inými používateľmi nájdete v časti  \„Správa priečinkov iFolder \“ v pomocníkovi aplikácie iFolder."
+msgstr "Vybratý priečinok je teraz priečinkom iFolder. Ďalšie informácie o použití priečinku iFolder a zdieľaní priečinku iFolder s inými používateľmi nájdete v časti  „Správa priečinkov iFolder “ v pomocníkovi aplikácie iFolder."
 #: src/LinuxClient/library/iFolderCreationDialog.cs:92 
 msgid "Do not show this message again."
 msgstr "Nabudúce toto hlásenie nezobrazovať"
@@ -388,7 +388,7 @@ msgstr "(Zobraziť detaily.)"
 #: src/LinuxClient/library/iFolderExceptionDialog.cs:97
 msgid ""
 "Click \"Show Details\" below to get the full message returned with this error"
-msgstr "Ak chcete zobraziť úplné hlásenie, ktoré bolo vrátené s touto chybou, kliknite na tlačidlo \„Zobraziť podrobnosti\“"
+msgstr "Ak chcete zobraziť úplné hlásenie, ktoré bolo vrátené s touto chybou, kliknite na tlačidlo „Zobraziť podrobnosti“"
 #: src/LinuxClient/library/iFolderExceptionDialog.cs:93 
 msgid "Hide Details"
 msgstr "(Skryť detaily.)"
