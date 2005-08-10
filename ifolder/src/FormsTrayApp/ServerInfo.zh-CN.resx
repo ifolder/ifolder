@@ -1515,7 +1515,7 @@
 	</data>
   
 	<data name="verifyCert">
-		<value>iFolder 无法校验 iFolder 服务器 {0} 的身份。此 iFolder 服务器的证书由未知的认证授权者签名。您可能连接到假扮 {0} 的服务器，这可能泄漏机密信息。在接受此证书前，您应与系统管理员进行核对。是否要永久接受此证书并继续连接？</value>
+		<value>iFolder cannot verify the identity of the iFolder Server {0}.  The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be {0} which could put your confidential information at risk.  Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?</value>
 	</data>
   
 	<data name="verifyCertTitle">

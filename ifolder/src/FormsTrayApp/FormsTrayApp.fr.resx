@@ -943,7 +943,7 @@
 	</data>
   
 	<data name="verifyCert">
-		<value>iFolder ne peut pas vérifier l'identité du serveur iFolder {0}. Le certificat de ce serveur iFolder est signé par une autorité inconnue. Il est possible que vous soyez connecté à un serveur qui prétend être {0} et qui peut constituer un risque pour vos informations confidentielles.Â Â Avant d'accepter ce certificat, demandez l'avis de l'administrateur de votre système. Voulez-vous accepter ce certificat de façon permanente et continuer la connexion ?</value>
+		<value>iFolder cannot verify the identity of the iFolder Server {0}.  The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be {0} which could put your confidential information at risk.  Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?</value>
 	</data>
   
 	<data name="verifyCertTitle">
