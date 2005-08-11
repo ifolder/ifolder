@@ -1,0 +1,21 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomAction", "CustomAction.csproj", "{3B05C7D7-2E36-46DF-9AA1-677C3D63B3F2}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{3B05C7D7-2E36-46DF-9AA1-677C3D63B3F2}.Debug.ActiveCfg = Debug|.NET
+		{3B05C7D7-2E36-46DF-9AA1-677C3D63B3F2}.Debug.Build.0 = Debug|.NET
+		{3B05C7D7-2E36-46DF-9AA1-677C3D63B3F2}.Release.ActiveCfg = Release|.NET
+		{3B05C7D7-2E36-46DF-9AA1-677C3D63B3F2}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
