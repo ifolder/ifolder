@@ -1,4 +1,4 @@
-EXTRA_DIST = en de es fr hu it ja pl pt ru sk zh-CN zh-TW
+EXTRA_DIST = en cs de es fr hu it ja pl pt ru sk zh-CN zh-TW
 
 if WINDOWS
 
