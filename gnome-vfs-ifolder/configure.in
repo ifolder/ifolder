@@ -1,0 +1,262 @@
+AC_INIT(gnome-vfs-ifolder.pc.in)
+AC_CANONICAL_SYSTEM
+AM_INIT_AUTOMAKE(gnome-vfs-ifolder, 3.1.0)
+AM_MAINTAINER_MODE
+
+#
+# Check for a valid operating system and C# compiler
+#
+case $host_os in
+    linux*)
+        IFOLDER_OS='linux'
+        AC_CHECK_PROG(CSC, mcs, mcs)
+        test -z "$CSC" && AC_MSG_ERROR([no C Sharp compiler: mcs not found in \$PATH])
+	PKG_CONFIG_DIR='lib'
+    ;;
+    darwin*)
+        IFOLDER_OS='darwin'
+        AC_CHECK_PROG(CSC, mcs, mcs)
+        test -z "$CSC" && AC_MSG_ERROR([no C Sharp compiler: mcs not found in \$PATH])
+	    PKG_CONFIG_DIR='lib'
+    ;;
+    cygwin*)
+        IFOLDER_OS='windows'
+        AC_CHECK_PROG(CSC, csc, csc)
+        test -z "$CSC" && AC_CHECK_PROG(CSC, mcs, mcs)
+        test -z "$CSC" && AC_MSG_ERROR([no C Sharp compiler: neither csc nor mcs found in \$PATH])
+	PKG_CONFIG_DIR='.'
+    ;;
+    *)
+        AC_MSG_ERROR([Unknown host_os: $host_os])
+    ;;
+esac
+AC_SUBST(IFOLDER_OS)
+AC_SUBST(VERSION)
+AC_SUBST(LIB_VERSION)
+AM_CONDITIONAL(LINUX, test "$IFOLDER_OS" = "linux")
+AM_CONDITIONAL(WINDOWS, test "$IFOLDER_OS" = "windows")
+AM_CONDITIONAL(DARWIN, test "$IFOLDER_OS" = "darwin")
+
+#
+# Run standard macros
+#
+AM_PROG_CC_STDC
+AC_PROG_INSTALL
+AC_HEADER_STDC
+AM_PROG_LIBTOOL
+
+#
+# We add $prefix to PKG_CONFIG_PATH so pkg-config will find any other
+# packages 'make install'-ed to the same prefix.
+#
+# The default value of $prefix is not set until later in the script.
+# We set the default here, if needed.
+#
+test "x$prefix" = xNONE && prefix=$ac_default_prefix
+test "x$exec_prefix" = xNONE && exec_prefix="${prefix}"
+
+#
+# Installation directory options.
+#
+# These are normally left unexpanded so users can "make install exec_prefix=/foo".
+# However, we want them expanded.
+#
+bindir="${exec_prefix}/bin"
+sbindir="${exec_prefix}/sbin"
+libexecdir="${exec_prefix}/libexec"
+datadir="${prefix}/share"
+sysconfdir="${prefix}/etc"
+sharedstatedir="${prefix}/com"
+localstatedir="${prefix}/var"
+libdir="${exec_prefix}/lib"
+includedir="${prefix}/include"
+oldincludedir="/usr/include"
+infodir="${prefix}/info"
+mandir="${prefix}/man"
+
+#
+# Configure C# compiler settings
+#
+case $CSC in
+    #
+    # Mono-specific configuration
+    #
+    mcs)
+        CSC_EXEFLAG=/target:exe
+        CSC_LIBFLAG=/target:library
+        CSC_WINEXEFLAG=/target:winexe
+        CSCFLAGS='/d:MONO /warn:4 /d:TRACE'
+        CSCFLAGS_DEBUG="/debug+ /d:DEBUG"
+        CSCFLAGS_OPTIMIZE="/optimize+"
+        MONO=mono
+        MONO_DEBUG='mono --debug'
+        MONO_PATH='$(LOG4NET_DIR):\$(srcdir)/external/'
+        SYSTEM_XML='System.Xml.dll'
+    ;;
+    #
+    # .NET-specific configuration
+    #
+    csc)
+        CSC_EXEFLAG=/target:exe
+        CSC_LIBFLAG=/target:library
+        CSC_WINEXEFLAG=/target:winexe
+        CSCFLAGS='/d:DOTNET /warn:4 /d:TRACE /nologo'
+        CSCFLAGS_DEBUG="/debug+ /d:DEBUG"
+        CSCFLAGS_OPTIMIZE="/optimize+"
+        MONO=
+        MONO_DEBUG=
+        MONO_PATH=
+        SYSTEM_XML='System.XML.dll'
+    ;;
+esac
+AC_SUBST(CSC)
+AC_SUBST(CSC_EXEFLAG)
+AC_SUBST(CSC_LIBFLAG)
+AC_SUBST(CSC_WINEXEFLAG)
+AC_SUBST(CSCFLAGS)
+AC_SUBST(MONO)
+AC_SUBST(MONO_PATH)
+AC_SUBST(SYSTEM_XML)
+
+SRCDIR='$(top_srcdir)/src'
+TOOLDIR='$(top_srcdir)/tools'
+EXTERNAL_DIR='$(top_srcdir)/external'
+
+AC_SUBST(SRCDIR)
+AC_SUBST(TOOLDIR)
+AC_SUBST(EXTERNAL_DIR)
+
+EMPTY=
+SPACE='$(EMPTY) $(EMPTY)'
+
+AC_SUBST(EMPTY)
+AC_SUBST(SPACE)
+
+COMMON_CLEAN_FILES='*.dbg *.pdb */*.pdb *.doc.xml */*.doc.xml *.test.xml */*.test.xml'
+COMMON_DISTCLEAN_FILES='*.suo */*.suo *.csproj.user */*.csproj.user bin obj */bin */obj'
+COMMON_MAINTAINER_CLEAN_FILES='Makefile.in'
+AC_SUBST(COMMON_CLEAN_FILES)
+AC_SUBST(COMMON_DISTCLEAN_FILES)
+AC_SUBST(COMMON_MAINTAINER_CLEAN_FILES)
+
+#
+# Set platform-specific variables
+#
+case $IFOLDER_OS in
+    #
+    # Darwin-specific configuration
+    #
+    darwin)
+        #
+        # Set variables
+        #
+        ICON_EXT='.ico'
+        ICON_FLAG='/resource:'
+        INSTALL_EXE_OPTS='--mode=644'
+        LOG4NET_DIR="$EXTERNAL_DIR/log4net/bin/mono/1.0/release"
+        NUNIT="$EXTERNAL_DIR/NUnit/mono/bin/nunit-console.exe"
+        NUNIT_LIBPATH="$EXTERNAL_DIR/NUnit/mono/bin"
+        NUNIT_FLAGS='/nologo'
+        NUNITFLAGS_DEBUG=''
+        NUNITFLAGS_OPTIMIZE=''
+        PLATFORM_SUBDIRS=$LINUX_SUBDIRS
+        REPORT_DIR='$(DESTDIR)$(bindir)'
+        REPORT_EXE='mono $(top_srcdir)/tools/Report/Report.exe'
+        SEP='/'
+	PATH_SEP=':'
+	GSOAP_DIR='$(EXTERNAL_DIR)/gsoap-macosx'
+    ;;
+    #
+    # Linux-specific configuration
+    #
+    linux)
+        #
+        # Set variables
+        #
+        ICON_EXT='.ico'
+        ICON_FLAG='/resource:'
+        INSTALL_EXE_OPTS='--mode=644'
+        LOG4NET_DIR="$EXTERNAL_DIR/log4net/bin/mono/1.0/release"
+        NUNIT="$EXTERNAL_DIR/NUnit/mono/bin/nunit-console.exe"
+        NUNIT_LIBPATH="$EXTERNAL_DIR/NUnit/mono/bin"
+        NUNIT_FLAGS='/nologo'
+        NUNITFLAGS_DEBUG=''
+        NUNITFLAGS_OPTIMIZE=''
+        PLATFORM_SUBDIRS=$LINUX_SUBDIRS
+        REPORT_DIR='$(DESTDIR)$(bindir)'
+        REPORT_EXE='mono $(top_srcdir)/tools/Report/Report.exe'
+        SEP='/'
+	PATH_SEP=':'
+	GSOAP_DIR='$(EXTERNAL_DIR)/gsoap-linux'
+    ;;
+    #
+    # Windows-specific configuration
+    #
+    windows)
+        ICON_EXT='.ico'
+        ICON_FLAG='/win32icon:'
+        INSTALL_EXE_OPTS=''
+        LOG4NET_DIR="$EXTERNAL_DIR/log4net/bin/net/1.0/release"
+        NUNIT="$EXTERNAL_DIR/NUnit/net/bin/nunit-console.exe"
+        NUNIT_LIBPATH="$EXTERNAL_DIR/NUnit/net/bin"
+        NUNIT_FLAGS='/nologo'
+        NUNITFLAGS_DEBUG=''
+        NUNITFLAGS_OPTIMIZE=''
+        PLATFORM_SUBDIRS=$WINDOWS_SUBDIRS
+        REPORT_DIR='$(shell cygpath --mixed $(DESTDIR)$(bindir))'
+        REPORT_EXE='$(top_srcdir)/tools/Report/Report.exe'
+	SEP='$(EMPTY)\\$(EMPTY)'
+	PATH_SEP=';'
+	GSOAP_DIR='$(EXTERNAL_DIR)/gsoap-win32'
+	
+	# override Linux-like directory structure
+	bindir="${exec_prefix}"
+	sbindir="${exec_prefix}"
+	libexecdir="${exec_prefix}"
+	libdir="${exec_prefix}"
+	;;
+esac
+AC_SUBST(ICON_EXT)
+AC_SUBST(ICON_FLAG)
+AC_SUBST(INSTALL_EXE_OPTS)
+AC_SUBST(LOG4NET_DIR)
+AC_SUBST(NUNIT)
+AC_SUBST(NUNIT_FLAGS)
+AC_SUBST(NUNIT_LIBPATH)
+AC_SUBST(PLATFORM_SUBDIRS)
+AC_SUBST(REPORT_DIR)
+AC_SUBST(REPORT_EXE)
+AC_SUBST(SEP)
+AC_SUBST(PATH_SEP)
+AC_SUBST(GSOAP_DIR)
+
+#
+# Handle --enable-debug
+#
+AC_ARG_ENABLE(debug, [
+  --enable-debug          configure the Makefiles to build in DEBUG mode],
+    [case "${enableval}" in
+        yes) enable_debug=true ;;
+        no)  enable_debug=false ;;
+        *) AC_MSG_ERROR(bad value ${enableval} for --enable-debug) ;;
+    esac],[enable_debug=false])
+AM_CONDITIONAL(DEBUG, test x$enable_debug = xtrue)
+if test "$enable_debug" = "true"
+then
+  # Build debug version.
+  CSCFLAGS="$CSCFLAGS_DEBUG $CSCFLAGS"
+else
+  # Build optimized version.
+  CSCFLAGS="$CSCFLAGS_OPTIMIZE $CSCFLAGS"
+fi
+
+#
+# Configure files
+#
+AC_OUTPUT([
+Makefile
+gnome-vfs-ifolder.pc
+src/Makefile
+package/Makefile
+package/gnome-vfs-ifolder.spec
+])
