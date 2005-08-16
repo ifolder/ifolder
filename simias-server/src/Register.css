@@ -1,0 +1,100 @@
+h1
+{
+	font-size:300%;
+	color:#FF0000;
+	text-align:center;
+}
+
+window
+{
+}
+
+form
+{
+	float:left;
+	width:50em;
+	height:18em;
+	border:none;
+	padding:1em;
+}
+
+.userLabels
+{
+	position:relative;
+	background-color:Teal;
+	font-family:Comic Sans MS;
+	font-size:small;
+	width:9em;
+	top:1em;
+	left:1em;
+	border-style:none;
+}
+
+.registerContent
+{
+	font-family:Comic Sans MS;
+	font-size:small;
+	border-style:none;
+}
+
+#firstEdit
+{
+	font-family:Comic Sans MS;
+	font-size:small;
+	width:20em;
+}
+
+#lastEdit
+{
+	font-family:Comic Sans MS;
+	font-size:small;
+	width:20em;
+}
+
+#userEdit
+{
+	font-family:Comic Sans MS;
+	font-size:small;
+	width:20em;
+}
+
+#passwordEdit
+{
+	width:20em;
+}
+
+#pwdVerifyEdit
+{
+	width:20em;
+}
+
+#notify
+{
+	background-color:#edeeec;
+	color:#000000;
+	font-family:Comic Sans MS;
+	font-size:small;
+	width:20em;
+	border:none;
+}
+
+
+/*
+input
+{
+  border-width: 1px;
+  border-style: solid;
+  border-color: #ccc #666 #666 #ccc;
+  padding: 3px;
+  color:Black
+}
+*/
+
+#notifyLabel
+{
+	color:Red;
+}
+
+span.errormessage {
+  color: red;
+}

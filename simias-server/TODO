@@ -1,0 +1,6 @@
+1) Simias Server creation - read from an XML file to determine the Simias Server Admin/Password,
+server name and description.
+
+2) Server Admin - ASP.NET server admin console for statistics, user management, ifolder management
+and policy management.
+
