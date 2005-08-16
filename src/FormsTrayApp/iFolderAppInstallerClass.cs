@@ -354,7 +354,7 @@ namespace Novell.FormsTrayApp
 		private void saveXmlFile(XmlDocument doc, string path)
 		{
 			// Save the config file.
-			XmlTextWriter xtw = new XmlTextWriter(path, Encoding.ASCII);
+			XmlTextWriter xtw = new XmlTextWriter(path, Encoding.UTF8);
 			try
 			{
 				xtw.Formatting = Formatting.Indented;
