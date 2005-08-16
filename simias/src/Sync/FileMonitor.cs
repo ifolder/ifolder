@@ -220,6 +220,25 @@ namespace Simias.Sync
 			collection.Commit((Node[])nodeList.ToArray(typeof(Node)));
 		}
 
+		bool ExecuteBitSet(string path)
+		{
+#if MONO
+			if (MyEnvironment.Unix)
+			{
+				// Get the posix access flags for owner.
+				Mono.Unix.Stat sStat;
+				if (Mono.Unix.Syscall.stat(path, out sStat) == 0)
+				{
+					if ((sStat.st_mode & Mono.Unix.FilePermissions.S_IXUSR) != 0)
+					{
+						return true;
+					}
+				}
+			}
+#endif 
+			return false;
+		}
+
 		/// <summary>
 		/// Create a FileNode for the specified file.
 		/// </summary>
@@ -232,6 +251,12 @@ namespace Simias.Sync
 			if (isSyncFile(path) || collection.HasCollisions(parentNode))
 				return null;
 			FileNode fnode = new FileNode(collection, parentNode, Path.GetFileName(path));
+			if (ExecuteBitSet(path))
+			{
+				// The execute bit is set for the user save the value.
+				fnode.Properties.ModifyProperty(SyncFile.ModeProperty, SyncFile.FAMode.Execute);
+			}
+					
 			log.Debug("Adding file node for {0} {1}", path, fnode.ID);
 			// Make sure that we support the Simias Name Space.
 			if (!SyncFile.IsNameValid(fnode.Name))
@@ -271,6 +296,23 @@ namespace Simias.Sync
 			{
 				// This is a conflict.
 				fn = Conflict.CreateNameConflict(collection, fn, path) as BaseFileNode;
+				hasChanges = true;
+			}
+			bool exAlready = false;
+			if (fn.Properties.GetSingleProperty(SyncFile.ModeProperty) != null)
+				exAlready = true;
+			if (ExecuteBitSet(path))
+			{
+				if (!exAlready)
+				{
+					// The execute bit is set for the user save the value.
+					fn.Properties.ModifyProperty(SyncFile.ModeProperty, SyncFile.FAMode.Execute);
+					hasChanges = true;
+				}
+			}
+			else if (exAlready)
+			{
+				fn.Properties.DeleteSingleProperty(SyncFile.ModeProperty);
 				hasChanges = true;
 			}
 			if (hasChanges)
@@ -602,6 +644,23 @@ namespace Simias.Sync
 			return false;
 		}
 
+/*		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="path"></param>
+		/// <returns></returns>
+		bool IsFat32(string path)
+		{	
+#if !WINDOWS
+			string extension = Path.GetExtension(path);
+			string fName = Path.GetFileNameWithoutExtension(path);
+			if (fName.Length > 8 || extension.Length > 3)
+				return false;
+#endif
+
+			return false;
+		}
+*/
 		/// <summary>
 		/// 
 		/// </summary>
@@ -624,6 +683,8 @@ namespace Simias.Sync
 				// Make sure we are not a recursive reparse point or symlink
 				if (IsRecursiveLink(path))
 					return;
+
+//				bool fat32 = IsFat32(path);
 				
 				if (subTreeHasChanged)
 				{

@@ -378,6 +378,23 @@ namespace Simias.Sync
 				tmpStream.SetLength(node.Length);
 				tmpStream.Close();
 				tmpStream = null;
+#if MONO
+				if (MyEnvironment.Unix)
+				{
+					if (node.Properties.GetSingleProperty(SyncFile.ModeProperty) != null)
+					{
+						// Get the posix mode flags for the file.
+						Mono.Unix.Stat sStat;
+						if (Mono.Unix.Syscall.stat(createName, out sStat) == 0)
+						{
+							// Now or in the execute bit and set it on the file.
+							Mono.Unix.FilePermissions fp = sStat.st_mode | Mono.Unix.FilePermissions.S_IXUSR;
+							Mono.Unix.Syscall.chmod(createName, fp);
+						}
+					}
+				}
+#endif 
+
 				File.Move(createName, workFile);
 			}
 			catch (IOException)
@@ -520,6 +537,13 @@ namespace Simias.Sync
 
 		/// <summary>Used to publish Sync events.</summary>
 		static public			EventPublisher	eventPublisher = new EventPublisher();
+		static internal string	ModeProperty = "FAMode";
+		[Flags]
+		public enum FAMode
+		{
+			None = 0,
+			Execute = 1,
+		};
 		
 		#endregion
 
