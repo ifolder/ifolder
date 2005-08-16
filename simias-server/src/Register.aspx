@@ -234,7 +234,7 @@
     <td vAlign=middle align=center width="100%">
       <table class=registerDialog cellSpacing=0 cellPadding=0 border=0>
         <tr bgColor=#e50000>
-          <td><IMG alt="Simias Server User Registration" src="images/product_title.gif" ></td>
+          <td><IMG alt="Simias Server User Registration" src="images/title.gif" ></td>
           <td style="BORDER-LEFT: white 1px solid" vAlign=middle align=center><a id=helpButton href="help/en/login.html" >Help</a></td>
         </tr>
         <tr>
