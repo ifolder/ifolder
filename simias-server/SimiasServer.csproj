@@ -150,6 +150,7 @@
                 <File
                     RelPath = "src\Register.aspx.cs"
                     DependentUpon = "Register.aspx"
+                    SubType = "ASPXCodeBehind"
                     BuildAction = "Compile"
                 />
                 <File
