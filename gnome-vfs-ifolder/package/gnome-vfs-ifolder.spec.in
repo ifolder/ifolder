@@ -22,9 +22,9 @@
 #######################################################################
 
 %define prefix /opt/gnome
-%define sysconfdir /etc/opt/gnome
+%define sysconfdir /etc
 
-Summary      : iFolder Web Access C
+Summary      : iFolder Gnome VFS
 Name         : @PACKAGE@
 Version      : @VERSION@
 Release      : 1
@@ -40,7 +40,7 @@ Obsoletes    : %{name} <= %{version}
 
 #=============================================================================
 %Description
-The iFolder Web Access C project adds C web access to an iFolder server.
+The iFolder Gnome VFS project adds an ifolders method to Gnome VFS.
 #=============================================================================
 %ChangeLog
 
@@ -86,4 +86,6 @@ make DESTDIR=$RPM_BUILD_ROOT install
 %defattr(755,root,root)
 %dir %prefix
 %{prefix}/*
+%dir %sysconfdir
+%{sysconfdir}/*
 
