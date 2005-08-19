@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="nativebrowse"
-	ProjectGUID="{62260274-C082-41F4-9D19-69B947EF2B74}"
+	Name="libsimiasbonjour"
+	ProjectGUID="{A1CC1204-6CCE-4D9B-9CD7-FC788070F53F}"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -14,16 +14,16 @@
 			Name="Debug|Win32"
 			OutputDirectory="Debug"
 			IntermediateDirectory="Debug"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="C:\ifolder\bonjour\src\libsimiasbonjour;C:\ifolder\bonjour\src\libsimiasbonjour\external"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				AdditionalIncludeDirectories="C:\ifolder\bonjour\src\libsimiasbonjour\external"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBSIMIASBONJOUR_EXPORTS"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="5"
+				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
@@ -32,13 +32,15 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libsimiasbonjour.lib"
-				OutputFile="$(OutDir)/nativebrowse.exe"
+				AdditionalDependencies="ws2_32.lib dnssd.lib"
+				OutputFile="$(OutDir)/libsimiasbonjour.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="C:\ifolder\bonjour\src\libsimiasbonjour\Debug;C:\ifolder\bonjour\src\libsimiasbonjour\simiasbonjour\Debug"
+				AdditionalLibraryDirectories="C:\ifolder\bonjour\src\libsimiasbonjour\external\win32"
+				ModuleDefinitionFile="simiasbonjour.def"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/nativebrowse.pdb"
-				SubSystem="1"
+				ProgramDatabaseFile="$(OutDir)/libsimiasbonjour.pdb"
+				SubSystem="2"
+				ImportLibrary="$(OutDir)/libsimiasbonjour.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -65,12 +67,13 @@
 			Name="Release|Win32"
 			OutputDirectory="Release"
 			IntermediateDirectory="Release"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
-				RuntimeLibrary="4"
+				AdditionalIncludeDirectories="C:\ifolder\bonjour\src\libsimiasbonjour\external"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBSIMIASBONJOUR_EXPORTS"
+				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
@@ -79,13 +82,15 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libsimiasbonjour.lib"
-				OutputFile="$(OutDir)/nativebrowse.exe"
+				AdditionalDependencies="dnssd.lib"
+				OutputFile="$(OutDir)/libsimiasbonjour.dll"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="C:\ifolder\bonjour\src\libsimiasbonjour\external\win32"
 				GenerateDebugInformation="TRUE"
-				SubSystem="1"
+				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				ImportLibrary="$(OutDir)/libsimiasbonjour.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -117,13 +122,22 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
-				RelativePath=".\nativebrowse.c">
+				RelativePath=".\simiasbonjour.c">
+			</File>
+			<File
+				RelativePath=".\simiasbonjour.def">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
+			<File
+				RelativePath=".\external\dns_sd.h">
+			</File>
+			<File
+				RelativePath=".\simiasbonjour.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
