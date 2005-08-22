@@ -2,7 +2,7 @@ AC_INIT(src/GaimDomain/GaimDomain.cs)
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
 
-AM_INIT_AUTOMAKE(gaim-domain, 1.0)
+AM_INIT_AUTOMAKE(gaim-ifolder, 0.1)
 VERSION=$VERSION.`date +%Y%m%d`
 AM_MAINTAINER_MODE
 AC_PROG_CC
