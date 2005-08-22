@@ -33,18 +33,22 @@
 
 #define IFOLDERS_URI "ifolders:"
 
+static GnomeVFSMethod *file_method = NULL;
+
 typedef struct
 {
 	GNode *gnode;
 	gchar *name;
+	char *path;
 	
 } fs_node;
 
 typedef struct
 {
 	GNode *gnode;
-	GNode *current;
-} directory_handle;
+	GNode *children;
+	GnomeVFSMethodHandle *method_handle;
+} dir_handle;
 
 static char *
 get_local_ifolder_url (void)
@@ -88,6 +92,7 @@ new_ifolder_node (struct ns1__iFolderWeb *ifolder)
 
 	fsnode = g_new0 (fs_node, 1);
 	fsnode->name = g_strdup (ifolder->Name);
+	fsnode->path = g_strdup (ifolder->UnManagedPath);
 
 	return fsnode;
 }
@@ -98,6 +103,7 @@ free_fs_node (GNode *node, gpointer data)
 	fs_node *fsnode = node->data;
 	
 	g_free (fsnode->name);
+	g_free (fsnode->path);
 	g_free (fsnode);
 }
 
@@ -144,8 +150,11 @@ get_all_ifolders (void)
 			{
 				struct ns1__iFolderWeb *ifolder = ifolders->iFolderWeb[i];
 				
-				fs_node *fsnode = new_ifolder_node (ifolder);
-				fsnode->gnode = g_node_append_data (root->gnode, fsnode);
+				if (ifolder->UnManagedPath)
+				{
+					fs_node *fsnode = new_ifolder_node (ifolder);
+					fsnode->gnode = g_node_append_data (root->gnode, fsnode);
+				}
 			}
 		}
 	}
@@ -157,8 +166,90 @@ get_all_ifolders (void)
 	return root->gnode;
 }
 
+static fs_node *
+get_ifolder (const char *name)
+{
+	fs_node *result = NULL;
+	GNode *root = get_all_ifolders ();
+	GNode *current = root->children;
+
+	while (current)
+	{
+		fs_node *tmp = (fs_node *) current->data;
+		
+		if (!strcmp(name, tmp->name))
+		{
+			result = tmp;
+			break;
+		}
+		
+		current = current->next;
+	}
+
+	return result;
+}
+
+static GnomeVFSURI *
+get_file_uri (const GnomeVFSURI *ifolders_uri)
+{
+	GnomeVFSURI *file_uri = NULL;
+	const gchar *path;
+
+	path = gnome_vfs_uri_get_path (ifolders_uri);
+
+	path = gnome_vfs_unescape_string (path, NULL);
+		
+    if (path && strcmp(path, "/"))
+    {
+		char *s;
+		char *name;
+		char *p;
+		fs_node *ifolder;
+		
+		if (path[0] == '/')
+		{
+			++path;
+		}
+
+		name = g_strdup (path);
+
+		if (name[strlen (name) - 1] == '/')
+		{
+			name[strlen (name) - 1] = '\0';
+		}
+		
+		p = strchr(name, '/');
+		
+		if (p)
+		{
+			*p++ = '\0';
+		}
+
+		ifolder = get_ifolder (name);
+		
+
+		if (ifolder)
+		{
+			s = g_strconcat ("file://", ifolder->path, "/", p, NULL);
+		
+			if (s[strlen (s) - 1] == '/')
+			{
+				s[strlen (s) - 1] = '\0';
+			}
+			
+			file_uri = gnome_vfs_uri_new (s);
+	
+			g_free (s);
+		}
+
+		g_free(name);
+	}
+	
+	return file_uri;
+}
+
 void
-free_ifolders (GNode *root)
+free_dir (GNode *root)
 {
 	g_node_traverse (root,
 		G_PRE_ORDER,
@@ -217,7 +308,16 @@ do_open (GnomeVFSMethod			*method,
 		 GnomeVFSOpenMode		mode,
 		 GnomeVFSContext		*context)
 {
-	return GNOME_VFS_OK;
+	GnomeVFSResult result;
+	GnomeVFSURI *file_uri;
+
+	file_uri = get_file_uri (uri);
+
+	result = (* file_method->open) (method, method_handle, file_uri, mode, context);
+	
+	gnome_vfs_uri_unref (file_uri);
+
+    return result;
 }
 
 static GnomeVFSResult
@@ -228,7 +328,11 @@ do_read (GnomeVFSMethod			*method,
 		 GnomeVFSFileSize		*bytes_read,
 		 GnomeVFSContext		*context)
 {
-	return GNOME_VFS_OK;
+	GnomeVFSResult result;
+
+	result = (* file_method->read) (method, method_handle, buffer, bytes, bytes_read, context);
+
+	return result;
 }
 
 static GnomeVFSResult
@@ -236,7 +340,11 @@ do_close (GnomeVFSMethod		*method,
 		  GnomeVFSMethodHandle	*method_handle,
 		  GnomeVFSContext		*context)
 {
-	return GNOME_VFS_OK;
+	GnomeVFSResult result;
+
+	result = (* file_method->close) (method, method_handle, context);
+	
+    return result;
 }
 
 static GnomeVFSResult
@@ -246,16 +354,33 @@ do_open_directory (GnomeVFSMethod			*method,
 				   GnomeVFSFileInfoOptions	options,
 				   GnomeVFSContext			*context)
 {
-	directory_handle *handle;
+	GnomeVFSResult result;
+	dir_handle *handle;
+	GnomeVFSURI *file_uri;
 
-	handle = g_new0 (directory_handle, 1);
+	file_uri = get_file_uri (uri);
 
-	handle->gnode = get_all_ifolders();
-	handle->current = handle->gnode->children;
+    handle = g_new0 (dir_handle, 1);
 
-	*method_handle = (GnomeVFSMethodHandle *) handle;
-	
-	return GNOME_VFS_OK;
+    if (!file_uri)
+    {
+    	handle->gnode = get_all_ifolders();
+    	handle->children = handle->gnode->children;
+
+		result = GNOME_VFS_OK;
+    }
+	else
+	{
+		handle->gnode = NULL;
+		
+		result = (* file_method->open_directory) (file_method, &(handle->method_handle), file_uri, options, context);
+		
+		gnome_vfs_uri_unref (file_uri);
+	}
+
+    *method_handle = (GnomeVFSMethodHandle *) handle;
+
+	return result;
 }
 
 static GnomeVFSResult
@@ -264,25 +389,36 @@ do_read_directory (GnomeVFSMethod			*method,
 				   GnomeVFSFileInfo			*file_info,
 				   GnomeVFSContext			*context)
 {
-	directory_handle *handle = (directory_handle *) method_handle;
+	GnomeVFSResult result;
+	dir_handle *handle = (dir_handle *) method_handle;
 	fs_node *node;
 	
-	if (!handle->current)
+	if (!handle->gnode)
 	{
-		return GNOME_VFS_ERROR_EOF;
+		result = (* file_method->read_directory) (file_method, handle->method_handle, file_info, context);
+	}
+	else
+	{
+		if (!handle->children)
+		{
+			return GNOME_VFS_ERROR_EOF;
+		}
+	
+		node = handle->children->data;
+		
+		file_info->name = g_strdup (node->name);
+		file_info->type = GNOME_VFS_FILE_TYPE_DIRECTORY;
+		file_info->valid_fields |= GNOME_VFS_FILE_INFO_FIELDS_TYPE;
+		//file_info->mime_type = g_strdup ("application/ifolder");
+		file_info->mime_type = g_strdup ("x-directory/normal");
+		file_info->valid_fields |= GNOME_VFS_FILE_INFO_FIELDS_MIME_TYPE;
+	
+		handle->children = handle->children->next;
+	
+		result = GNOME_VFS_OK;
 	}
 
-	node = handle->current->data;
-	
-	file_info->name = g_strdup (node->name);
-	file_info->type = GNOME_VFS_FILE_TYPE_DIRECTORY;
-	file_info->valid_fields |= GNOME_VFS_FILE_INFO_FIELDS_TYPE;
-	file_info->mime_type = g_strdup ("x-directory/normal");
-	file_info->valid_fields |= GNOME_VFS_FILE_INFO_FIELDS_MIME_TYPE;
-
-	handle->current = handle->current->next;
-	
-	return GNOME_VFS_OK;
+	return result;
 }
 
 static GnomeVFSResult
@@ -290,13 +426,23 @@ do_close_directory (GnomeVFSMethod			*method,
 					GnomeVFSMethodHandle	*method_handle,
 					GnomeVFSContext			*context)
 {
-	directory_handle *handle = (directory_handle *) method_handle;
+	GnomeVFSResult result;
+	dir_handle *handle = (dir_handle *) method_handle;
 
-	free_ifolders (handle->gnode);
+    if (handle->gnode)
+    {
+        free_dir (handle->gnode);
+
+		result = GNOME_VFS_OK;
+    }
+	else
+	{
+		result = (* file_method->close_directory) (file_method, handle->method_handle, context);
+	}
 	
 	g_free (handle);
 	
-	return GNOME_VFS_OK;
+	return result;
 }
 
 static GnomeVFSResult
@@ -306,13 +452,30 @@ do_get_file_info (GnomeVFSMethod			*method,
 				  GnomeVFSFileInfoOptions	options,
 				  GnomeVFSContext			*context)
 {
-	file_info->name = g_strdup ("iFolders");
-	file_info->type = GNOME_VFS_FILE_TYPE_DIRECTORY;
-	file_info->valid_fields |= GNOME_VFS_FILE_INFO_FIELDS_TYPE;
-	file_info->mime_type = g_strdup ("x-directory/normal");
-	file_info->valid_fields |= GNOME_VFS_FILE_INFO_FIELDS_MIME_TYPE;
-	
-	return GNOME_VFS_OK;
+	GnomeVFSResult result;
+	GnomeVFSURI *file_uri;
+
+	file_uri = get_file_uri (uri);
+
+	if (!file_uri)
+    {
+        file_info->name = g_strdup ("iFolders");
+        file_info->type = GNOME_VFS_FILE_TYPE_DIRECTORY;
+        file_info->valid_fields |= GNOME_VFS_FILE_INFO_FIELDS_TYPE;
+        //file_info->mime_type = g_strdup ("application/ifolder");
+        file_info->mime_type = g_strdup ("x-directory/normal");
+        file_info->valid_fields |= GNOME_VFS_FILE_INFO_FIELDS_MIME_TYPE;
+
+		result = GNOME_VFS_OK;
+    }
+	else
+    {
+		result = (* file_method->get_file_info) (file_method, file_uri, file_info, options, context);
+		
+		gnome_vfs_uri_unref (file_uri);
+    }
+
+    return result;
 }
 
 static gboolean
@@ -320,6 +483,25 @@ do_is_local (GnomeVFSMethod		*method,
 			 const GnomeVFSURI	*uri)
 {
 	return TRUE;
+	
+	/* too slow - work on ifolder lookup
+	gboolean result;
+	GnomeVFSURI *file_uri;
+
+	file_uri = get_file_uri (uri);
+
+	if (!file_uri)
+    {
+		result = TRUE;
+    }
+	else
+    {
+		result = (* file_method->is_local) (file_method, file_uri);
+		
+		gnome_vfs_uri_unref (file_uri);
+    }
+
+    return result; */
 }
 
 static GnomeVFSMethod method =
@@ -356,8 +538,18 @@ static GnomeVFSMethod method =
 
 GnomeVFSMethod *vfs_module_init(const char *method_name, const char *args)
 {
+	/* iFolders volume */
 	create_volume();
 
+	/* file method */
+	file_method = gnome_vfs_method_get ("file");
+
+	if (file_method == NULL)
+	{
+		g_error ("Error getting 'file' method for gnome-vfs");
+		return NULL;
+	}
+	
 	return &method;
 }
 
