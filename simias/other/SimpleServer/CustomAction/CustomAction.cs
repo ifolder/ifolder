@@ -12,6 +12,13 @@ namespace Simias
 	/// </summary>
 	public class CustomAction : System.Windows.Forms.Form
 	{
+		#region Class Members
+
+		// String to look for in the simias.cmd file.
+		static private string SimiasServerExe = "SimiasServer.exe";
+
+		#endregion
+
 		#region Constructor
 		/// <summary>
 		/// Initializes a new instance for this object.
@@ -175,6 +182,34 @@ namespace Simias
 			catch {}
 		}
 
+		private void AddPortNumber( string portNumber, string applicationPath )
+		{
+			// Build a file path to the simias.cmd file.
+			string filePath = Path.Combine( applicationPath, "simias.cmd" );
+
+			// Open the file in R/W mode.
+			using( FileStream fs = new FileStream( filePath, FileMode.Open, FileAccess.ReadWrite, FileShare.None ) )
+			{
+				// Read all of the data.
+				StreamReader sr = new StreamReader( fs );
+				string rString = sr.ReadToEnd();
+
+				// Look for the string where the port number gets added behind.
+				int index = rString.IndexOf( SimiasServerExe );
+				if ( index != -1 )
+				{
+					// Set up the writer and truncate the file.
+					StreamWriter sw = new StreamWriter( fs );
+					fs.Position = 0;
+					fs.SetLength( 0 );
+
+					// Write out the new string with the port number added.
+					sw.Write( rString.Insert( index + SimiasServerExe.Length, String.Format( " {0}", portNumber ) ) );
+					sw.Flush();
+				}
+			}
+		}
+
 		#endregion
 
 		#region Protected Methods
@@ -205,7 +240,8 @@ namespace Simias
 					case "-a":
 					{
 						// Add the Simias Server services to the bootstrap configuration file.
-						ca.AddServices( args[ 1 ] );
+						ca.AddPortNumber( args[ 1 ], args[ 2 ] );
+						ca.AddServices( args[ 2 ] );
 						break;
 					}
 
