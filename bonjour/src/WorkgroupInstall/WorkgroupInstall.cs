@@ -116,6 +116,7 @@ namespace Novell.iFolder
 							wgInstall.configureBonjour(configFilePath, true);
 						}
 						catch (FileNotFoundException) {}
+						catch (DirectoryNotFoundException) {}
 						break;
 					case "-d": // disable
 					case "/d":
@@ -129,6 +130,7 @@ namespace Novell.iFolder
 							wgInstall.configureBonjour(configFilePath, false);
 						}
 						catch (FileNotFoundException) {}
+						catch (DirectoryNotFoundException) {}
 						break;
 				}
 			}
