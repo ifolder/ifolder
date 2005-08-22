@@ -4,6 +4,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 
+using Microsoft.Win32;
+
 namespace Novell.iFolder
 {
 	/// <summary>
@@ -22,12 +24,10 @@ namespace Novell.iFolder
 		#endregion
 
 		#region Private Methods
-		private void configureBonjour(bool enabled)
+		private void configureBonjour(string configFilePath, bool enabled)
 		{
-			string configFile = Path.Combine(Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), @"simias\simias.config");
-
 			XmlDocument doc = new XmlDocument();
-			doc.Load(configFile);
+			doc.Load(configFilePath);
 
 		
 			// Look for the ServiceManager element.
@@ -57,7 +57,7 @@ namespace Novell.iFolder
 			}
 
 			// Write the changes back to the file.
-			XmlTextWriter xtw = new XmlTextWriter(configFile, Encoding.UTF8);
+			XmlTextWriter xtw = new XmlTextWriter(configFilePath, Encoding.UTF8);
 			try
 			{
 				xtw.Formatting = Formatting.Indented;
@@ -88,17 +88,47 @@ namespace Novell.iFolder
 		{
 			WorkgroupInstall wgInstall = new WorkgroupInstall();
 
+			string bootstrapConfigPath = null;
+
 			try
 			{
+				RegistryKey key = Registry.ClassesRoot.OpenSubKey(@"CLSID\{AA81D830-3B41-497C-B508-E9D02F8DF421}\InprocServer32");
+				string installPath = Path.GetDirectoryName(key.GetValue(null) as string);
+				bootstrapConfigPath = Path.Combine(installPath, @"etc\simias-client-bootstrap.config");
+			}
+			catch {}
+
+			try
+			{
+
+				string configFilePath = Path.Combine(Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), @"simias\simias.config");
 				switch (args[0].ToLower())
 				{
-					case "-i": // install
-					case "/i":
-						wgInstall.configureBonjour(true);
+					case "-e": // enable
+					case "/e":
+						if (bootstrapConfigPath != null)
+						{
+							wgInstall.configureBonjour(bootstrapConfigPath, true);
+						}
+
+						try
+						{
+							wgInstall.configureBonjour(configFilePath, true);
+						}
+						catch (FileNotFoundException) {}
 						break;
-					case "-u": // uninstall
-					case "/u":
-						wgInstall.configureBonjour(false);
+					case "-d": // disable
+					case "/d":
+						if (bootstrapConfigPath != null)
+						{
+							wgInstall.configureBonjour(bootstrapConfigPath, false);
+						}
+
+						try
+						{
+							wgInstall.configureBonjour(configFilePath, false);
+						}
+						catch (FileNotFoundException) {}
 						break;
 				}
 			}
