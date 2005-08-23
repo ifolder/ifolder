@@ -39,7 +39,6 @@ BuildRoot    : %{_tmppath}/%{name}-%{version}
 Requires     : mono-core >= 1.1.7.7
 Requires     : mono-data >= 1.1.7.7
 Requires     : mono-web >= 1.1.7.7
-Requires     : xsp >= 1.0.9
 Obsoletes    : %{name} <= %{version}
 
 #=============================================================================
