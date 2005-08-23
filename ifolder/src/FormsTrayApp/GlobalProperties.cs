@@ -1391,8 +1391,12 @@ namespace Novell.FormsTrayApp
 
 							if (lvi != null)
 							{
-								SyncSize syncSize = ifWebService.CalculateSyncSize(syncEventArgs.ID);
-								objectsToSync = syncSize.SyncNodeCount;
+								try
+								{
+									SyncSize syncSize = ifWebService.CalculateSyncSize(syncEventArgs.ID);
+									objectsToSync = syncSize.SyncNodeCount;
+								}
+								catch {}
 
 								if (objectsToSync == 0)
 								{

@@ -1792,10 +1792,7 @@ namespace Novell.iFolderCom
 					objectsToSync--;
 				}
 			}
-			catch
-			{
-				// TODO: message?
-			}
+			catch {}
 		}
 
 		private void collectionSync(CollectionSyncEventArgs collectionSyncEventArgs)
@@ -2056,7 +2053,14 @@ namespace Novell.iFolderCom
 			}
 			catch
 			{
-				objectCount.Text = resourceManager.GetString("unknown");
+				if (currentiFolder.Role.Equals("Master"))
+				{
+					objectCount.Text = "0";
+				}
+				else
+				{
+					objectCount.Text = resourceManager.GetString("unknown");
+				}
 			}
 
 			shareWith.Items.Clear();
