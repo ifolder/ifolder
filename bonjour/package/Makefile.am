@@ -22,7 +22,7 @@
 #######################################################################
 SUBDIRS = @SIMD_OS@
 
-DIST_SUBDIRS = darwin
+DIST_SUBDIRS = darwin linux
 
 sdk:	
 	$(MAKE) -C $(IFOLDER_OS) sdk
