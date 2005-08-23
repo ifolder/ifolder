@@ -37,6 +37,7 @@ Packager     : <unknown>
 BuildRoot    : %{_tmppath}/%{name}-%{version}
 
 Requires     : simias >= 1.1
+PreReq		 : nscd
 Obsoletes    : %{name} <= %{version}
 
 #=============================================================================
@@ -69,8 +70,26 @@ make DESTDIR=$RPM_BUILD_ROOT install
 #=============================================================================
 %Post
 INSTANCES_AFTER_INSTALL=$1
-#if [ "$INSTANCES_AFTER_INSTALL" = "1" ]; then
-#fi
+if [ "$INSTANCES_AFTER_INSTALL" = "1" ]; then
+
+	if [ -f /opt/novell/ifolder3/etc/simias-client-bootstrap.config ]; then
+		sed "s/assembly=\"Simias.Bonjour.dll\" enabled=\"False\"/assembly=\"Simias.Bonjour.dll\" enabled=\"True\"/" < /opt/novell/ifolder3/etc/simias-client-bootstrap.config > /opt/novell/ifolder3/etc/simias-client-bootstrap.config.new
+		mv /opt/novell/ifolder3/etc/simias-client-bootstrap.config.new /opt/novell/ifolder3/etc/simias-client-bootstrap.config
+	fi
+
+	if [ -f ~/.local/share/simias/Simias.config ]; then
+		sed "s/assembly=\"Simias.Bonjour.dll\" enabled=\"False\"/assembly=\"Simias.Bonjour.dll\" enabled=\"True\"/" < ~/.local/share/simias/Simias.config > ~/.local/share/simias/Simias.config.new
+		mv ~/.local/share/simias/Simias.config.new ~/.local/share/simias/Simias.config
+	fi
+
+	# check for mdns and restart nscd if it's not found
+	if ! grep mdns /etc/nsswitch.conf > /dev/null; then
+		sed -e "s/^hosts:\(.*\)/hosts:\1 mdns/" /etc/nsswitch.conf > /etc/nsswitch.conf.tmp
+		mv /etc/nsswitch.conf.tmp /etc/nsswitch.conf
+		/etc/init.d/nscd restart
+	fi
+
+fi
 
 #=============================================================================
 %Preun
