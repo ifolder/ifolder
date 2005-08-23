@@ -1,6 +1,6 @@
 SUBDIRS = src
 
-DIST_SUBDIRS = package $(SUBDIRS)
+DIST_SUBDIRS = $(SUBDIRS)
 
 EXTRA_DIST = tools
 
