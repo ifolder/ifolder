@@ -1777,17 +1777,24 @@ namespace Novell.iFolderCom
 
 		private void fileSync(FileSyncEventArgs fileSyncEventArgs)
 		{
-			if (fileSyncEventArgs.SizeRemaining == fileSyncEventArgs.SizeToSync)
+			try
 			{
-				if (startSync || (objectsToSync <= 0))
+				if (fileSyncEventArgs.SizeRemaining == fileSyncEventArgs.SizeToSync)
 				{
-					startSync = false;
-					SyncSize syncSize = ifWebService.CalculateSyncSize(currentiFolder.ID);
-					objectsToSync = syncSize.SyncNodeCount;				
-				}
+					if (startSync || (objectsToSync <= 0))
+					{
+						startSync = false;
+						SyncSize syncSize = ifWebService.CalculateSyncSize(currentiFolder.ID);
+						objectsToSync = syncSize.SyncNodeCount;				
+					}
 
-				objectCount.Text = objectsToSync.ToString();
-				objectsToSync--;
+					objectCount.Text = objectsToSync.ToString();
+					objectsToSync--;
+				}
+			}
+			catch
+			{
+				// TODO: message?
 			}
 		}
 
