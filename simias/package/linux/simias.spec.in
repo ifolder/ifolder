@@ -47,6 +47,15 @@ Simias is a technology that allows various types of data to be stored and
 related in what is known as a collection.  Initially, Simias is the underlying
 data store for the iFolder project, although it has potiential to do much more.
 
+%package simple-server
+Summary		: Simias Server
+Version		: @VERSION@
+Group		: Applications/Productivity
+
+Requires     : @PACKAGE@ >= @VERSION@
+%description simple-server
+Simias Simple Server is a simple server that allows clients (like iFolder
+clients) to connect and create collections and nodes in Simias.
 
 #=============================================================================
 %ChangeLog
@@ -108,6 +117,24 @@ fi
 #fi
 
 #=============================================================================
+%post simple-server
+INSTANCES_AFTER_INSTALL=$1
+if [ "$INSTANCES_AFTER_INSTALL" = "2" ]; then
+	# This is an upgrade
+	echo "Backing up the old server config files"
+	mv %{prefix}/web/web.config %{prefix}/web/server.web.config.bak
+	mv %{prefix}/etc/simias-client-bootstrap.config %{prefix}/etc/simias-server-bootstrap.config.bak
+else
+	# First time install
+	echo "Replacing web.config and simias-client-bootstrap.config with server versions"
+	mv %{prefix}/web/web.config %{prefix}/web/client.web.config
+	mv %{prefix}/etc/simias-client-bootstrap.config %{prefix}/etc/simias-client-bootstrap.config.bak
+fi
+
+mv %{prefix}/web/server.web.config %{prefix}/web/web.config
+mv %{prefix}/etc/simias-server-bootstrap.config %{prefix}/etc/simias-client-bootstrap.config
+
+#=============================================================================
 %Preun
 #INSTANCES_AFTER_UNINSTALL=$1
 #if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
@@ -116,6 +143,17 @@ fi
     #
 #    %{prefix}/bin/install-simias-to-gac -u
 #fi
+
+#=============================================================================
+%preun simple-server
+# Replace the server versions of the files so that the RPM uninstall will
+# remove them.
+mv %{prefix}/web/web.config %{prefix}/web/server.web.config
+mv %{prefix}/etc/simias-client-bootstrap.config %{prefix}/etc/simias-server-bootstrap.config
+
+# Restore the client versions of the config files
+mv %{prefix}/web/client.web.config %{prefix}/web/web.config
+mv %{prefix}/etc/simias-client-bootstrap.config.bak %{prefix}/etc/simias-client-bootstrap.config
 
 #=============================================================================
 #%Postun
@@ -128,16 +166,38 @@ fi
 %attr(755,root,root) %dir %{prefix}
 %defattr(755,root,root)
 %{prefix}/bin/*
-%{prefix}/etc/*
+%{prefix}/etc/simias-client-bootstrap.config
+%{prefix}/etc/Simias.log4net
 %{prefix}/include/*
 %{prefix}/lib/*
 %{prefix}/share/*
-%{prefix}/web/bin/*
+%{prefix}/web/bin/SimiasClient.dll
+%{prefix}/web/bin/SimiasApp.exe
+%{prefix}/web/bin/Simias.Web.dll
+%{prefix}/web/bin/Novell.Security.ClientPasswordManager.NetCredential.dll
+%{prefix}/web/bin/Novell.Security.Utilities.dll
+%{prefix}/web/bin/Simias.POBox.Web.dll
+%{prefix}/web/bin/Simias.dll.config
+%{prefix}/web/bin/ifdata
+%{prefix}/web/bin/SyncService.Web.dll
+%{prefix}/web/bin/Simias.dll
+%{prefix}/web/bin/FlaimWrapper.so
+%{prefix}/web/bin/log4net.dll
 %{prefix}/web/Global.asax
 %{prefix}/web/Login.ashx
 %{prefix}/web/POService.asmx
 %{prefix}/web/Simias.asmx
 %{prefix}/web/SyncHandler.ashx
+%{prefix}/web/web.config
 %config(noreplace) %{prefix}/web/web.config
+
+%files simple-server
+%attr(755,root,root) %dir %{prefix}
+%defattr(755,root,root)
+%config(noreplace) %{prefix}/etc/SimpleServer.xml
+%{prefix}/etc/simias-server-bootstrap.config
+%{prefix}/web/DomainService.asmx
+%{prefix}/web/server.web.config
+%{prefix}/web/bin/Simias.SimpleServer.dll
 
 
