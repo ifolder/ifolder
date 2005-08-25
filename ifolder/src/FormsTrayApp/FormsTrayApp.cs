@@ -533,6 +533,9 @@ namespace Novell.FormsTrayApp
 					shellNotifyIcon.Text = resourceManager.GetString("iFolderServices");
 					shellNotifyIcon.Icon = trayIcon;
 
+					// Display the overlay icon on all iFolders.
+					updateOverlayIcons();
+
 					if (accountPrompt)
 					{
 						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("createAccount"), resourceManager.GetString("createAccountTitle"), string.Empty, MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button1);
@@ -1435,6 +1438,23 @@ namespace Novell.FormsTrayApp
 					workEvent.WaitOne();
 				}
 			}
+		}
+
+		private void updateOverlayIcons()
+		{
+			try
+			{
+				iFolderWeb[] ifolderArray = ifWebService.GetAlliFolders();
+				foreach (iFolderWeb ifolder in ifolderArray)
+				{
+					if (!ifolder.IsSubscription)
+					{
+						// Notify the shell.
+						Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
+					}
+				}
+			}
+			catch {}
 		}
 		#endregion
 	}
