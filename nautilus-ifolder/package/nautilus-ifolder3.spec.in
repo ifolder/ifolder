@@ -41,6 +41,7 @@ Requires     : nautilus >= 2.5
 Requires     : simias >= 1.1
 Requires     : ifolder3 >= 3.1
 Obsoletes    : %{name} < %{version}
+Obsoletes    : nautilus-ifolder
 
 #=============================================================================
 %Description

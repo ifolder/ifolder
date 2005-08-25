@@ -1515,7 +1515,7 @@
 	</data>
   
 	<data name="verifyCert">
-		<value>Az iFolder nem tudja ellenőrizni a(z) {0} iFolder kiszolgáló valódiságát. Ennek az iFolder kiszolgálónak a tanúsítványát ismeretlen hitelesítésszolgáltató írta alá. Előfordulhat, hogy olyan kiszolgálóhoz csatlakozik, amely csupán színleli, hogy ő a(z) {0}, ezzel viszont bizalmas adatait teheti kockára.Â Â Mielőtt elfogadná a tanúsítványt, célszerű a rendszergazdával egyeztetnie. Elfogadja véglegesen a tanúsítványt, és folytatja a csatlakozást?</value>
+		<value>Az iFolder nem tudja ellenőrizni a(z) {0} iFolder kiszolgáló valódiságát. Ennek az iFolder kiszolgálónak a tanúsítványát ismeretlen hitelesítésszolgáltató írta alá. Előfordulhat, hogy olyan kiszolgálóhoz csatlakozik, amely csupán színleli, hogy ő a(z) {0}, ezzel viszont bizalmas adatait teheti kockára. Mielőtt elfogadná a tanúsítványt, célszerű a rendszergazdával egyeztetnie. Elfogadja véglegesen a tanúsítványt, és folytatja a csatlakozást?</value>
 	</data>
   
 	<data name="verifyCertTitle">

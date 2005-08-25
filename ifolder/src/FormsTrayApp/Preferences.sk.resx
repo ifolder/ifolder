@@ -4743,7 +4743,7 @@
 	</data>
   
 	<data name="verifyCert">
-		<value>Priečinok iFolder nemôže overiť identitu servera iFolder {0}. Certifikát tohto servera iFolder bol podpísaný neznámou certifikačnou autoritou. Je možné, že sa pripájate k serveru, ktorý predstiera, že je {0}, čím môžete riskovať únik dôverných informácií.Â Â Skôr, ako tento certifikát prijmete, overte si tento postup u správcu systému. Chcete natrvalo prijať tento certifikát a pripojiť sa?</value>
+		<value>Priečinok iFolder nemôže overiť identitu servera iFolder {0}. Certifikát tohto servera iFolder bol podpísaný neznámou certifikačnou autoritou. Je možné, že sa pripájate k serveru, ktorý predstiera, že je {0}, čím môžete riskovať únik dôverných informácií. Skôr, ako tento certifikát prijmete, overte si tento postup u správcu systému. Chcete natrvalo prijať tento certifikát a pripojiť sa?</value>
 	</data>
   
 	<data name="verifyCertTitle">
