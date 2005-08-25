@@ -518,6 +518,7 @@ namespace Novell.iFolder
 					// exit after 2 seconds.
 					//ThreadPool.QueueUserWorkItem(new WaitCallback(GuaranteeShutdown));
 					System.Threading.Thread th = new System.Threading.Thread (new System.Threading.ThreadStart (GuaranteeShutdown));
+					th.IsBackground = true;
 					th.Start ();
 
 					Application.Quit();
