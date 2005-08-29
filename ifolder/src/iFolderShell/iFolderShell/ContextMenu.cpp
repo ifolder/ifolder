@@ -97,15 +97,18 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 			wchar_t lpszRoot[MAX_ROOT_PATH + 1];
 			lstrcpyn(lpszRoot, m_szFileUserClickedOn, MAX_ROOT_PATH + 1);
 
-/* This is now handled in the call to CanBeiFolder
+			// Only allow fixed drives to hold iFolders ... also, the root of a drive cannot be an iFolder.
+			// This is also handled in the CanBeiFolder call but sometimes we get delays calling across to the
+			// web service.
 			UINT type = GetDriveType(lpszRoot);
 			if ((attrs == INVALID_FILE_ATTRIBUTES) || 
+				(lstrcmp(lpszRoot, m_szFileUserClickedOn) == 0) ||
 				((type != DRIVE_FIXED) &&
 				(type != DRIVE_REMOVABLE)))
 			{
 				// Error.
 				return 0;
-			}*/
+			}
 
 			if (m_hBmpMenu)
 			{
