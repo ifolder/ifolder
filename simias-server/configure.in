@@ -170,6 +170,8 @@ case $SERVERD_OS in
         SEP='/'
         SHARED_LIB_EXT='.dylib'
         SHARED_LIB_FLAG='-shared'
+		StoreProviderAssembly="Simias.dll"
+		StoreProviderType="Simias.Storage.Provider.Flaim.FlaimProvider"
         STORELIB_PATH="../../external/sqlite/darwin"
         STORELIB="sqlite"
         SYSTEM_XML='System.Xml.dll'
@@ -206,6 +208,8 @@ case $SERVERD_OS in
         SEP='/'
         SHARED_LIB_EXT='.so'
         SHARED_LIB_FLAG='-shared'
+		StoreProviderAssembly="Simias.dll"
+		StoreProviderType="Simias.Storage.Provider.Flaim.FlaimProvider"
         STORELIB_PATH="../../external/sqlite/linux"
         STORELIB="libsqlite.so"
         SYSTEM_XML='System.Xml.dll'
@@ -287,6 +291,8 @@ case $SERVERD_OS in
         TLBX='tlbexp'
         TYPE_LIB_EXT='.tlb'
 		GSOAP_PATH="$TOOLDIR/gsoap/WIN32-2.7"
+		StoreProviderAssembly="Simias.dll"
+		StoreProviderType="Simias.Storage.Provider.Flaim.FlaimProvider"
         #
         # Set pkg-config variables
         #
@@ -332,6 +338,8 @@ AC_SUBST(SYSTEM_XML)
 AC_SUBST(TLBX)
 AC_SUBST(webdir)
 AC_SUBST(webbindir)
+AC_SUBST(StoreProviderAssembly)
+AC_SUBST(StoreProviderType)
 #AC_SUBST(GSOAP_PATH)
 
 #
