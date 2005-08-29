@@ -1,0 +1,19 @@
+<configuration>
+  <section name="Domain">
+    <setting name="simias-server-name" value="Simias Server" />
+    <setting name="simias-server-description" value="Default Simias Simple Server" />
+    <setting name="simias-server-admin" value="ServerAdmin" />
+    <setting name="simias-server-admin-password" value="root" />
+  </section>
+  <section name="ServiceManager">
+      <setting name="WebServicePath" value="@_webdir_@" />
+      <setting name="Services">
+      <Service name="Simias Simple Server" assembly="Simias.Server.dll" enabled="True" type="Thread" class="Simias.Server.Service" />
+      <Service name="Simias Change Log Service" assembly="Simias" enabled="True" type="Thread" class="Simias.Storage.ChangeLog" />
+    </setting>
+  </section>
+  <section name="StoreProvider">
+    <setting name="Assembly" value="@_StoreProviderAssembly_@" />
+    <setting name="Type" value="@_StoreProviderType_@" />
+  </section>
+</configuration>
