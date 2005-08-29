@@ -52,12 +52,11 @@ namespace Simias.Server
 		private string domainName = "Simias Server";
 		private string hostAddress;
 		private string description = "Stand-alone server for Simias";
+		private string adminName = "ServerAdmin";
+		private string adminPassword = "root";
 
-		/// <summary>
-		/// Known public credentials for the server administrator
-		/// </summary>
-		static public string AdminName = "ServerAdmin";
-		static public string AdminPassword = "root";
+		private readonly string DomainSection = "Domain";
+
 
 		/// <summary>
 		/// Used to log messages.
@@ -134,7 +133,7 @@ namespace Simias.Server
 
 		internal void Init()
 		{
-			hostAddress = MyDns.GetHostName();
+			//hostAddress = MyDns.GetHostName();
 			Store store = Store.GetStore();
 
 			try
@@ -233,6 +232,36 @@ namespace Simias.Server
 
 				if ( ssDomain == null && create == true )
 				{
+					// Get the domain name and description from the config file
+					Configuration config =
+						Simias.Configuration.GetConfiguration();
+					if ( config != null )
+					{
+						string name = config.Get( DomainSection, "simias-server-name", "" );
+						if ( name != null && name != "" )
+						{
+							this.domainName = name;
+						}
+
+						string description = config.Get( DomainSection, "simias-server-description", "" );
+						if ( description != null && description != "" )
+						{
+							this.description = description;
+						}
+
+						string admin = config.Get( DomainSection, "simias-server-admin", "" );
+						if ( admin != null && admin != "" )
+						{
+							this.adminName = admin;
+						}
+
+						string adminPwd = config.Get( DomainSection, "simias-server-admin-password", "" );
+						if ( adminPwd != null && adminPwd != "" )
+						{
+							this.adminPassword = adminPwd;
+						}
+					}
+
 					this.id = Guid.NewGuid().ToString();
 					//Uri localUri = new Uri("http://" + MyDns.GetHostName() + "/simias10");
 
@@ -258,7 +287,7 @@ namespace Simias.Server
 					// Create the owner member for the domain.
 					Member member = 
 						new Member(
-							Simias.Server.Domain.AdminName,
+							this.adminName,
 							Guid.NewGuid().ToString(), 
 							Access.Rights.Admin );
 
@@ -269,10 +298,7 @@ namespace Simias.Server
 					//
 
 					// Set the admin password
-					Property pwd = 
-						new Property( 
-								"SS:PWD", 
-								Simias.Server.Domain.AdminPassword );
+					Property pwd = new Property( "SS:PWD", this.adminPassword );
 					pwd.LocalProperty = true;
 					member.Properties.ModifyProperty( pwd );
 
