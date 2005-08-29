@@ -54,11 +54,11 @@ namespace Simias.DomainService.Web
 		public DomainInfo GetDomainInfo( string userID )
 		{
 			// domain
-			Simias.Server.Domain ssDomain = new Simias.Server.Domain( false );
-			Simias.Storage.Domain domain = ssDomain.GetSimiasServerDomain( false );
+			Simias.SimpleServer.Domain ssDomain = new Simias.SimpleServer.Domain( false );
+			Simias.Storage.Domain domain = ssDomain.GetSimpleServerDomain( false, "" );
 			if ( domain == null )
 			{
-				throw new SimiasException( "SimiasServer domain does not exist" );
+				throw new SimiasException( "SimpleServer domain does not exist" );
 			}
 
 			DomainInfo info = new DomainInfo();
@@ -96,8 +96,8 @@ namespace Simias.DomainService.Web
 			ProvisionInfo info = null;
 
 			// store
-			Simias.Server.Domain ssDomain = new Simias.Server.Domain( false );
-			Simias.Storage.Domain domain = ssDomain.GetSimiasServerDomain( false );
+			Simias.SimpleServer.Domain ssDomain = new Simias.SimpleServer.Domain( false );
+			Simias.Storage.Domain domain = ssDomain.GetSimpleServerDomain( false, "" );
 			if ( domain == null )
 			{
 				throw new SimiasException( "SimpleServer domain does not exist" );
@@ -151,10 +151,10 @@ namespace Simias.DomainService.Web
 			Store store = Store.GetStore();
 
 			Simias.Storage.Domain domain = 
-				new Simias.Server.Domain( false ).GetSimiasServerDomain( false );
+				new Simias.SimpleServer.Domain( false ).GetSimpleServerDomain( false, "" );
 			if ( domain == null )
 			{
-				throw new SimiasException( "Simias Server domain does not exist." );
+				throw new SimiasException( "SimpleServer domain does not exist." );
 			}
 
 			Collection c = new Collection( store, collectionName, collectionID, domain.ID );
@@ -222,34 +222,34 @@ namespace Simias.DomainService.Web
 		{
 			// This method can only target the simple server
 			Simias.Storage.Domain domain = 
-				new Simias.Server.Domain( false ).GetSimiasServerDomain( false );
+				new Simias.SimpleServer.Domain( false ).GetSimpleServerDomain( false, "" );
 			if ( domain == null )
 			{
-				throw new SimiasException( "Simias Server domain does not exist." );
+				throw new SimiasException( "SimpleServer domain does not exist." );
 			}
 
 			if ( domainID != domain.ID )
 			{
-				throw new SimiasException("Only the Simias Server domain can be used.");
+				throw new SimiasException("Only the SimpleServer domain can be used.");
 			}
 
 			// Make sure that the caller is the current owner.
 			Store store = Store.GetStore();
 			string existingUserID = Thread.CurrentPrincipal.Identity.Name;
-			Member existingMember = domain.GetMemberByID( existingUserID );
-			if ( existingMember == null )
+			Member existingMember = domain.GetMemberByID(existingUserID);
+			if (existingMember == null)
 			{
 				throw new SimiasException(String.Format("Impersonating user: {0} is not a member of the domain.", Thread.CurrentPrincipal.Identity.Name));
 			}
 
 			// Make sure the creator and the owner are the same ID.
-			if ( existingUserID != userID )
+			if (existingUserID != userID)
 			{
-				throw new SimiasException( String.Format( "Creator ID {0} is not the same as the caller ID {1}.", existingUserID, userID ) );
+				throw new SimiasException(String.Format("Creator ID {0} is not the same as the caller ID {1}.", existingUserID, userID));
 			}
 
 			// Get all of the collections that this user is member of.
-			ICSList cList = store.GetCollectionsByUser( userID );
+			ICSList cList = store.GetCollectionsByUser(userID);
 			foreach (ShallowNode sn in cList)
 			{
 				// Remove the user as a member of this collection.
@@ -259,8 +259,8 @@ namespace Simias.DomainService.Web
 				// don't allow this user's membership from being removed from the domain.
 				if ( ( c.Domain == domainID ) && !c.IsBaseType( c, Simias.Client.NodeTypes.DomainType ) )
 				{
-					Member member = c.GetMemberByID( userID );
-					if ( member != null )
+					Member member = c.GetMemberByID(userID);
+					if (member != null)
 					{
 						if ( member.IsOwner )
 						{
@@ -268,13 +268,13 @@ namespace Simias.DomainService.Web
 							if ( ( member.UserID != domain.Owner.UserID ) || ( c.PreviousOwner == null ) )
 							{
 								// The user is the owner, delete this collection.
-								c.Commit( c.Delete() );
+								c.Commit(c.Delete());
 							}
 						}
 						else
 						{
 							// Not the owner, just remove the membership.
-							c.Commit( c.Delete( member ) );
+							c.Commit(c.Delete(member));
 						}
 					}
 				}
@@ -282,15 +282,15 @@ namespace Simias.DomainService.Web
 		}
 
 		/// <summary>
-		/// Gets the ID for this simias server domain.
+		/// Gets the ID for this simple server domain.
 		/// </summary>
-		/// <returns>Domain ID for the simias server domain.</returns>
+		/// <returns>Domain ID for the simple server domain.</returns>
 		[WebMethod(EnableSession=true)]
 		[SoapDocumentMethod]
 		public string GetDomainID()
 		{
-			Simias.Server.Domain ssDomain = new Simias.Server.Domain( false );
-			Simias.Storage.Domain domain = ssDomain.GetSimiasServerDomain( false );
+			Simias.SimpleServer.Domain ssDomain = new Simias.SimpleServer.Domain( false );
+			Simias.Storage.Domain domain = ssDomain.GetSimpleServerDomain( false, "" );
 			return ( domain != null ) ? domain.ID : null;
 		}
 	}

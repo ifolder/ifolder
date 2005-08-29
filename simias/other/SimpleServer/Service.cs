@@ -36,7 +36,7 @@ using Simias.Service;
 using Simias.Storage;
 
 
-namespace Simias.Server
+namespace Simias.SimpleServer
 {
 	/// <summary>
 	/// Class the handles presence as a service
@@ -55,7 +55,7 @@ namespace Simias.Server
 		/// </summary>
 		private Configuration config;
 
-		private Simias.Server.Authentication authProvider = null;
+		private Simias.SimpleServer.Authentication authProvider = null;
 		#endregion
 
 		#region Constructor
@@ -81,9 +81,9 @@ namespace Simias.Server
 			this.config = config;
 
 			// Register with the domain provider service.
-			this.authProvider = new Simias.Server.Authentication();
+			this.authProvider = new Simias.SimpleServer.Authentication();
 			DomainProvider.RegisterProvider( this.authProvider );
-			Simias.Server.Sync.StartSyncThread();
+			Simias.SimpleServer.Sync.StartSyncThread();
 		}
 
 		/// <summary>
@@ -116,7 +116,7 @@ namespace Simias.Server
 		public void Stop()
 		{
 			log.Debug( "Stop called" );
-			Simias.Server.Sync.StopSyncThread();
+			Simias.SimpleServer.Sync.StopSyncThread();
 			DomainProvider.Unregister( this.authProvider );
 		}
 		#endregion
@@ -136,7 +136,7 @@ namespace Simias.Server
 		static int syncInterval = 60 * 1000;
 		static Thread syncThread = null;
 
-		internal static Simias.Server.Domain ssDomain = null;
+		internal static Simias.SimpleServer.Domain ssDomain = null;
 		//internal static DateTime lastSyncTime;
 
 		internal static int StartSyncThread()
@@ -145,7 +145,7 @@ namespace Simias.Server
 
 			try
 			{
-				ssDomain = new Simias.Server.Domain( true );
+				ssDomain = new Simias.SimpleServer.Domain( true );
 			}
 			catch{}
 
@@ -159,7 +159,7 @@ namespace Simias.Server
 			}
 			else
 			{
-				log.Debug( "Failed to initialize the Simias Server domain" );
+				log.Debug( "Failed to initialize the SimpleServer domain" );
 			}
 
 			log.Debug( "StartSyncThread finished" );
@@ -214,7 +214,7 @@ namespace Simias.Server
 
 				// Always wait after the first iteration
 				syncOnStart = false;
-				//ssDomain.SynchronizeMembers();
+				ssDomain.SynchronizeMembers();
 			}
 		}
 	}
