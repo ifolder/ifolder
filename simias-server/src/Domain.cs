@@ -237,25 +237,25 @@ namespace Simias.Server
 						Simias.Configuration.GetConfiguration();
 					if ( config != null )
 					{
-						string name = config.Get( DomainSection, "simias-server-name", "" );
+						string name = config.Get( DomainSection, "EnterpriseName", "" );
 						if ( name != null && name != "" )
 						{
 							this.domainName = name;
 						}
 
-						string description = config.Get( DomainSection, "simias-server-description", "" );
+						string description = config.Get( DomainSection, "EnterpriseDescription", "" );
 						if ( description != null && description != "" )
 						{
 							this.description = description;
 						}
 
-						string admin = config.Get( DomainSection, "simias-server-admin", "" );
+						string admin = config.Get( DomainSection, "SimiasServerAdmin", "" );
 						if ( admin != null && admin != "" )
 						{
 							this.adminName = admin;
 						}
 
-						string adminPwd = config.Get( DomainSection, "simias-server-admin-password", "" );
+						string adminPwd = config.Get( DomainSection, "SimiasServerAdminPassword", "" );
 						if ( adminPwd != null && adminPwd != "" )
 						{
 							this.adminPassword = adminPwd;

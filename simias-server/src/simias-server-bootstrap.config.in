@@ -1,9 +1,9 @@
 <configuration>
   <section name="Domain">
-    <setting name="simias-server-name" value="Simias Server" />
-    <setting name="simias-server-description" value="Default Simias Simple Server" />
-    <setting name="simias-server-admin" value="ServerAdmin" />
-    <setting name="simias-server-admin-password" value="root" />
+    <setting name="EnterpriseName" value="Simias Server" />
+    <setting name="EnterpriseDescription" value="Default Simias Simple Server" />
+    <setting name="SimiasServerAdmin" value="ServerAdmin" />
+    <setting name="SimiasServerAdminPassword" value="root" />
   </section>
   <section name="ServiceManager">
       <setting name="WebServicePath" value="@_webdir_@" />

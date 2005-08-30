@@ -7,7 +7,7 @@ SimpleServer_INCLUDES =
 SimpleServer_RESOURCES =
 SimpleServer_FLAGS = $(CSC_LIBFLAG)
 SimpleServer_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll Simias.dll SimiasClient.dll
-SimpleServer_LIBPATH = ../../src/Simias.dll ../../src/SimiasClient $(DESTDIR)$(webbindir)
+SimpleServer_LIBPATH = ../../simias/src/Simias.dll ../../simias/src/SimiasClient $(DESTDIR)$(webbindir)
 
 EXTRA_DIST = ../web-config/win.web.config ../web-config/mono.web.config ../simias-server-boostrap.config.in DomainService.asmx Register.css Register.aspx $(SimpleServer_CSFILES)
 
@@ -26,7 +26,7 @@ NUNIT_TESTS := Simias.Server.dll simias-server-bootstrap.config
 all: $(NUNIT_TESTS)
 
 Simias.Server.dll: $(SimpleServer_CSFILES) $(SimpleServer_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(SimpleServer_FLAGS) $(SimpleServer_LIBS:%=/r:%) $(SimpleServer_LIBPATH:%=/lib:%) $(SimpleServer_RESOURCES:%=$(ICON_FLAG)%) $(SimpleServer_CSFILES_CSC) $(DOC_FILE_CMD)
+	$(CSC) /out:$@ $(CSCFLAGS) $(SimpleServer_FLAGS) $(SimpleServer_LIBPATH:%=/lib:%) $(SimpleServer_LIBS:%=/r:%) $(SimpleServer_RESOURCES:%=$(ICON_FLAG)%) $(SimpleServer_CSFILES_CSC) $(DOC_FILE_CMD)
 	
 if DEBUG
 if WINDOWS
