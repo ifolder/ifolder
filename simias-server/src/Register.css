@@ -60,11 +60,15 @@ form
 
 #passwordEdit
 {
+	font-family:Comic Sans MS;
+	font-size:small;
 	width:20em;
 }
 
 #pwdVerifyEdit
 {
+	font-family:Comic Sans MS;
+	font-size:small;
 	width:20em;
 }
 

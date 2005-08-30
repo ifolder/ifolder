@@ -247,17 +247,17 @@
               </tr>
               <tr bgColor=#edeeec>
                 <td style="PADDING-TOP: 12px" align="left">First Name:</td>
-                <td style="PADDING-TOP: 12px"><input id=firstEdit type=text></td>
+                <td><input id=firstEdit type=text></td>
                 <td style="PADDING-RIGHT:2px; PADDING-LEFT: 2px; PADDING-BOTTOM: 2px; PADDING-TOP: 2px">&nbsp;</td>
               </tr>
               <tr bgColor=#edeeec>
                 <td style="padding-top:12px" align="left">Last Name:</td>
-                <td style="padding-top:12px"><input type="text" id="lastEdit"></td>
+                <td><input type="text" id="lastEdit"></td>
                 <td style="PADDING-RIGHT: 2px; PADDING-LEFT: 2px; PADDING-BOTTOM: 2px; PADDING-TOP: 2px">&nbsp;</td>
               </tr>
               <tr bgColor=#edeeec>
                 <td align="left">Username:</td>
-                <td style="padding-top:12px"> <input type="text" id="userEdit"/></td>
+                <td><input type="text" id="userEdit"/></td>
                 <td style="padding-right:2px; padding-left:2px; padding-bottom:2px; padding-top:2px">&nbsp;</td>
               </tr>
               <tr bgColor=#edeeec>
