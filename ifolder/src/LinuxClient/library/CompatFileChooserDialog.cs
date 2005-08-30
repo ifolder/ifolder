@@ -47,14 +47,27 @@ namespace Novell.iFolder
 		public CompatFileChooserDialog (string title, Gtk.Window parent, 
 										Action action)
 		{
-			// CG: it appears this will return a null or a zero length
-			// string it it's ok
+			// CG: this will return a null or a zero length string it it's ok
 			string gtkResults = Gtk.Global.CheckVersion(2,4,0);
-
-			if( (gtkResults == null) || (gtkResults.Length == 0) )
-				use_file_chooser = true;
+			if (gtkResults == null || gtkResults.Length == 0)
+			{
+				// bht: we have to do this extra check to make this work in openSUSE
+				// FIXME: Fix CompatFileChooserDialog to work correctly in openSUSE
+				gtkResults = Gtk.Global.CheckVersion(2,8,0);
+				if (gtkResults == null || gtkResults.Length == 0)
+					use_file_chooser = false;
+				else
+					use_file_chooser = true;
+			}
 			else
+			{
 				use_file_chooser = false;
+			}
+
+//			if( (gtkResults == null) || (gtkResults.Length == 0) )
+//				use_file_chooser = true;
+//			else
+//				use_file_chooser = false;
 
 			if (use_file_chooser)
 				create_with_file_chooser (title, parent, action);
