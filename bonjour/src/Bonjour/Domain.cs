@@ -47,7 +47,7 @@ namespace Simias.mDns
 		/// <summary>
 		/// Friendly name for the workgroup domain.
 		/// </summary>
-		private string mDnsDomainName = "Bonjour";
+		private string mDnsDomainName = "Peer-to-Peer (P2P)";
 
 		private string description = "";
 		private string mDnsHostName;
@@ -134,7 +134,7 @@ namespace Simias.mDns
 			try
 			{
 				//
-				// Verify the Bonjour domain exists
+				// Verify the Peers (bonjour) domain exists
 				//
 
 				Simias.Storage.Domain rDomain = store.GetDomain( Simias.mDns.Domain.ID );
@@ -149,10 +149,10 @@ namespace Simias.mDns
 					}
 					else
 					{
-						description = mDnsUserName + "'s Bonjour Domain";
+						description = mDnsUserName + "'s Peer-to-Peer (P2P) Domain";
 					}
 
-					// Create the Bonjour domain
+					// Create the Peers (bonjour) domain
 					rDomain = 
 						new Simias.Storage.Domain(
 							store, 
@@ -162,7 +162,7 @@ namespace Simias.mDns
 							Simias.Sync.SyncRoles.Master,
 							Simias.Storage.Domain.ConfigurationType.Workgroup );
 
-					rDomain.SetType( rDomain, "Bonjour" );
+					rDomain.SetType( rDomain, "Peer-to-Peer (P2P)" );
 
 					// See if we have setup an mdns user on this box previously
 					member = this.GetMemberInfoFromFile();
@@ -330,7 +330,7 @@ namespace Simias.mDns
 		#region Public Methods
 
 		/// <summary>
-		/// Checks if the local/master Bonjour domain exists.
+		/// Checks if the local/master Peers (bonjour) domain exists.
 		/// </summary>
 		/// <returns>true if the domain exists otherwise false</returns>
 		public bool Exists()
