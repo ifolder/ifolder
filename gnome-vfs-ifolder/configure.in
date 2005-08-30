@@ -63,6 +63,7 @@ AC_OUTPUT([
 	Makefile
 	gnome-vfs-ifolder.pc
 	src/Makefile
+	icons/Makefile
 	package/Makefile
 	package/gnome-vfs-ifolder.spec
 ])

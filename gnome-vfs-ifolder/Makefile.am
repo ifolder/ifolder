@@ -1,4 +1,4 @@
-SUBDIRS = src
+SUBDIRS = src icons
 
 DIST_SUBDIRS = $(SUBDIRS) package
 
