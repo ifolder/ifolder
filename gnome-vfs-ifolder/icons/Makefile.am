@@ -1,5 +1,7 @@
 GPREFIX=`pkg-config --variable=prefix gnome-vfs-module-2.0`
 
+EXTRA_DIST = $(img48_DATA)
+
 img48_DATA = \
 	gnome-mime-x-directory-ifolder.png \
 	gnome-mime-x-directory-ifolder-place.png \

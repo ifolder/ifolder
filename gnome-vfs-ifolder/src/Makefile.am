@@ -6,7 +6,7 @@ INCLUDES = \
 
 GPREFIX=`pkg-config --variable=prefix gnome-vfs-module-2.0`
 
-EXTRA_DIST = ifolder.conf
+EXTRA_DIST = $(conf_DATA)
 
 mod_LTLIBRARIES = libifolder.la
 

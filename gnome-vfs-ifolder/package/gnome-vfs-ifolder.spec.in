@@ -36,6 +36,8 @@ Vendor       : <unknown>
 Packager     : <unknown>
 BuildRoot    : %{_tmppath}/%{name}-%{version}
 
+Requires     : ifolder3 >= 3.1
+Requires     : gnome-vfs2 >= 2.10
 Obsoletes    : %{name} <= %{version}
 
 #=============================================================================
@@ -77,6 +79,8 @@ make DESTDIR=$RPM_BUILD_ROOT install
 
 #=============================================================================
 #%Postun
+echo "To initialize, restart nautilus ('killall nautilus')"
+echo "and enter 'ifolder:' as a nautilus URL."
 #INSTANCES_AFTER_UNINSTALL=$1
 #if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
 #fi

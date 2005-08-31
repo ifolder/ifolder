@@ -1,1 +1,13 @@
-After installing, type ifolder: in nautilus to initialize.
+To initialize, restart nautilus ('killall nautilus')
+and enter 'ifolder:' as a nautilus URL.
+
+TODO:
+
+- Handle multiple iFolders with the same name.
+- New iFolder APIs are needed for better performance and code.
+- Show the owners full names instead of usernames.
+- Consolidate prototype code.
+- Events with a new or removed iFolders.
+- Restrict iFolders through owners (when the URL is entered directly).
+- Review of GLib code and usage.
+- Access to non-setup (non-local) iFolders.

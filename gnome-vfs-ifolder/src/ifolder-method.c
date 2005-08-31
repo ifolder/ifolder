@@ -26,11 +26,9 @@
 #include <libgnomevfs/gnome-vfs-module.h>
 
 #include <simiasweb.h>
-//#include <simias-event-client.h>
 
 #include <iFolderStub.h>
 #include <iFolder.nsmap>
-//#include <ifolder.h>
 
 #define IFOLDER_METHOD "ifolder:"
 
@@ -586,8 +584,6 @@ do_open_directory (GnomeVFSMethod           *method,
 
 	file_uri = parse_ifolder_uri (uri, &uri_type);
 
-	g_mutex_lock (ifolder_lock);
-
 	/* leaf */
 	path = gnome_vfs_uri_get_path (uri);
 
@@ -603,24 +599,37 @@ do_open_directory (GnomeVFSMethod           *method,
 	switch (uri_type)
 	{
 		case IFOLDER_URI_ROOT:
+			refresh_ifolders ();
+			
 			handle->root = NULL;
 			handle->root = g_slist_append (handle->root, new_name_entry ("ifolders"));
 			handle->root = g_slist_append (handle->root, new_name_entry ("owners"));
 			handle->current = handle->root;
+
 			result = GNOME_VFS_OK;
 			break;
 
 		case IFOLDER_URI_IFOLDERS:
+			g_mutex_lock (ifolder_lock);
+
 			handle->root = NULL;
             g_hash_table_foreach (ifolders_table, add_entry_to_list, &handle->root);
 			handle->current = handle->root;
+
+			g_mutex_unlock (ifolder_lock);
+
 			result = GNOME_VFS_OK;
 			break;
 
 		case IFOLDER_URI_OWNERS:
+			g_mutex_lock (ifolder_lock);
+
 			handle->root = NULL;
 			g_hash_table_foreach (owners_table, add_entry_to_list, &handle->root);
 			handle->current = handle->root;
+
+			g_mutex_unlock (ifolder_lock);
+
 			result = GNOME_VFS_OK;
 			break;
 
@@ -630,14 +639,16 @@ do_open_directory (GnomeVFSMethod           *method,
 				GSList *ifolders;
 				GSList *current;
 				
+				g_mutex_lock (ifolder_lock);
+
 				ifolders = NULL;
 				g_hash_table_foreach (ifolders_table, add_entry_to_list, &ifolders);
-
 
 				handle->root = NULL;
 				current = ifolders;
 				
-				/* TODO: cleanup */
+				g_mutex_unlock (ifolder_lock);
+
 				while (current)
 				{
 					entry_t *entry = (entry_t *) current->data;
@@ -671,8 +682,6 @@ do_open_directory (GnomeVFSMethod           *method,
 			result = GNOME_VFS_ERROR_INVALID_URI;
 			break;
 	}
-
-	g_mutex_unlock (ifolder_lock);
 
 	gnome_vfs_uri_unref (file_uri);
 
