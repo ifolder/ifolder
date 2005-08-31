@@ -23,6 +23,8 @@
 
 using System;
 using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web;
 
 using Simias;
@@ -166,6 +168,17 @@ namespace Simias.Server
 		{
 			return ( ( this.username != null ) && ( this.password != null ) ) ? true : false;
 		}
+
+		static public string HashPassword( string password )
+		{
+			UTF8Encoding utf8 = new UTF8Encoding();
+			byte[] bytes = new Byte[ utf8.GetByteCount( password ) ];
+			bytes = utf8.GetBytes( password );
+			MD5 md5 = new MD5CryptoServiceProvider();
+			byte[] hashedPassword = new MD5CryptoServiceProvider().ComputeHash( bytes );
+			return Convert.ToBase64String( hashedPassword );
+		}
+
 		#endregion
 	}
 
@@ -236,7 +249,8 @@ namespace Simias.Server
 						Property pwd = member.Properties.GetSingleProperty( "SS:PWD" );
 						if ( pwd != null )
 						{
-							if (password == ( string ) pwd.Value)
+							string hashedPassword = SimiasCredentials.HashPassword( password );
+							if ( hashedPassword == ( string ) pwd.Value)
 							{
 								status.statusCode = SCodes.Success;
 								status.UserID = member.UserID;

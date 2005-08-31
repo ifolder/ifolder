@@ -56,15 +56,11 @@ namespace Simias.Server
 							firstName,
 							lastName );
 
-				// Note! need to first perform a known
-				// hash on the password before storing it.
-				//
-
-				// Set the admin password
+				// Set the admin hashed password
 				Property pwd = 
 					new Property( 
 					"SS:PWD", 
-					password );
+					SimiasCredentials.HashPassword( password ) );
 				pwd.LocalProperty = true;
 				cMember.Properties.ModifyProperty( pwd );
 

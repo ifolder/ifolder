@@ -298,7 +298,8 @@ namespace Simias.Server
 					//
 
 					// Set the admin password
-					Property pwd = new Property( "SS:PWD", this.adminPassword );
+					string hashedPwd = SimiasCredentials.HashPassword( this.adminPassword );
+					Property pwd = new Property( "SS:PWD", hashedPwd );
 					pwd.LocalProperty = true;
 					member.Properties.ModifyProperty( pwd );
 
