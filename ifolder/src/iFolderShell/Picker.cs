@@ -116,6 +116,14 @@ namespace Novell.iFolderCom
 			// Calculate the offset of the divider.
 			dividerOffset = ok.Top - groupBox1.Top;
 
+			// Adjust the search controls based on the length of the strings.
+			int delta = calculateSize(label1, 0);
+			label1.Width += delta;
+			attributeName.Left = label1.Left + label1.Width;
+			int temp = search.Left;
+			search.Left = label2.Left = attributeName.Left + attributeName.Width + 8;
+			search.Width -= search.Left - temp;
+
 			this.StartPosition = FormStartPosition.CenterParent;
 		}
 
@@ -552,6 +560,23 @@ namespace Novell.iFolderCom
 		#endregion
 
 		#region Private Methods
+		private int calculateSize(Control control, int delta)
+		{
+			int size;
+			Graphics g = control.CreateGraphics();
+			try
+			{
+				SizeF textSize = g.MeasureString(control.Text, control.Font);
+				size = (int)Math.Ceiling(textSize.Width) - control.Width;
+			}
+			finally
+			{
+				g.Dispose();
+			}
+
+			return (int)Math.Max(delta, size);
+		}
+
 		private iFolderUser addCacheEntry(int index)
 		{
 			iFolderUser[] ifolderUsers;
@@ -645,7 +670,10 @@ namespace Novell.iFolderCom
 					cache.Add(offset, ifolderUser);
 					if (offset > 0)
 					{
-						if (((iFolderUser)cache[offset-1]).FN.Equals(ifolderUser.FN))
+						iFolderUser prevUser = (iFolderUser)cache[offset-1];
+						if ((prevUser.FN != null) &&
+							(ifolderUser.FN != null) &&
+							prevUser.FN.Equals(ifolderUser.FN))
 						{
 							duplicateNames[ifolderUser.FN] = null;
 						}
@@ -681,7 +709,10 @@ namespace Novell.iFolderCom
 						cache.Add(offset, user);
 						if (offset.Equals(from))
 						{
-							if (user.FN.Equals(lastiFolderUser.FN) && !user.UserID.Equals(lastiFolderUser.UserID))
+							if ((user.FN != null) &&
+								(lastiFolderUser.FN != null) &&
+								user.FN.Equals(lastiFolderUser.FN) && 
+								!user.UserID.Equals(lastiFolderUser.UserID))
 							{
 								duplicateNames[user.FN] = null;
 							}
@@ -689,7 +720,11 @@ namespace Novell.iFolderCom
 						else
 						{
 							iFolderUser previFolderUser = (iFolderUser)cache[offset-1];
-							if ((previFolderUser != null) && previFolderUser.FN.Equals(user.FN) && !previFolderUser.UserID.Equals(user.UserID))
+							if ((previFolderUser != null) && 
+								(previFolderUser.FN != null) &&
+								(user.FN != null) &&
+								previFolderUser.FN.Equals(user.FN) && 
+								!previFolderUser.UserID.Equals(user.UserID))
 							{
 								duplicateNames[user.FN] = null;
 							}
@@ -819,7 +854,9 @@ namespace Novell.iFolderCom
 						ok.Enabled = true;
 
 						// Put the item in the added list.
-						ListViewItem item = new ListViewItem(ifolderUser.FN, ifolderUser.UserID.Equals(currentUser.UserID) ? 0 : 1);
+						ListViewItem item = 
+							new ListViewItem(ifolderUser.FN != null ? ifolderUser.FN : ifolderUser.Name,
+							ifolderUser.UserID.Equals(currentUser.UserID) ? 0 : 1);
 						item.Tag = ifolderUser;
 						addedLV.Items.Add(item);
 
@@ -1008,7 +1045,7 @@ namespace Novell.iFolderCom
 									if (lvDispInfo.item.iSubItem == 0)
 									{
 										string displayName;
-										if (duplicateNames.Contains(ifolderUser.FN))
+										if ((ifolderUser.FN != null) && duplicateNames.Contains(ifolderUser.FN))
 										{
 											displayName = string.Format("{0} ({1})", ifolderUser.FN, ifolderUser.Name);
 											int topItemIndex = rosterLV.TopItemIndex;
@@ -1026,7 +1063,7 @@ namespace Novell.iFolderCom
 										}
 										else
 										{
-											displayName = ifolderUser.FN;
+											displayName = ifolderUser.FN != null ? ifolderUser.FN : ifolderUser.Name;
 										}
 
 										char[] array = new char[displayName.Length + 1];
