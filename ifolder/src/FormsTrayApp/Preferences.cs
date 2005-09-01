@@ -2119,6 +2119,27 @@ namespace Novell.FormsTrayApp
 			return result;
 		}
 
+		private void resizeButton(Button button)
+		{
+			Graphics g = button.CreateGraphics();
+			try
+			{
+				Point p = button.Location;
+				int width = button.Width;
+				// Calculate the size of the string.
+				SizeF size = g.MeasureString(button.Text, button.Font);
+				button.Width = (int)Math.Ceiling(size.Width) + 20;
+				if ((button.Anchor & AnchorStyles.Right) == AnchorStyles.Right)
+				{
+					button.Left = p.X - (button.Width - width);
+				}
+			}
+			finally
+			{
+				g.Dispose();
+			}
+		}
+
 		/// <summary>
 		/// Set the auto-run value in the Windows registery.
 		/// </summary>
@@ -2313,27 +2334,6 @@ namespace Novell.FormsTrayApp
 			// Resize the buttons
 			resizeButton(login);
 			resizeButton(logout);
-		}
-
-		private void resizeButton(Button button)
-		{
-			Graphics g = button.CreateGraphics();
-			try
-			{
-				Point p = button.Location;
-				int width = button.Width;
-				// Calculate the size of the string.
-				SizeF size = g.MeasureString(button.Text, button.Font);
-				button.Width = (int)Math.Ceiling(size.Width) + 20;
-				if ((button.Anchor & AnchorStyles.Right) == AnchorStyles.Right)
-				{
-					button.Left = p.X - (button.Width - width);
-				}
-			}
-			finally
-			{
-				g.Dispose();
-			}
 		}
 
 		private void Preferences_VisibleChanged(object sender, System.EventArgs e)

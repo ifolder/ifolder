@@ -581,6 +581,27 @@ namespace Novell.iFolderCom
 		#endregion
 
 		#region Private Methods
+		private void resizeButton(Button button)
+		{
+			Graphics g = button.CreateGraphics();
+			try
+			{
+				Point p = button.Location;
+				int width = button.Width;
+				// Calculate the size of the string.
+				SizeF size = g.MeasureString(button.Text, button.Font);
+				button.Width = (int)Math.Ceiling(size.Width) + 20;
+				if ((button.Anchor & AnchorStyles.Right) == AnchorStyles.Right)
+				{
+					button.Left = p.X - (button.Width - width);
+				}
+			}
+			finally
+			{
+				g.Dispose();
+			}
+		}
+
 		private void resizeControl()
 		{
 			float width = 0;
@@ -621,6 +642,11 @@ namespace Novell.iFolderCom
 			height += (size.Height * newlineCount) + (float)(2 * lines);
 
 			message.Size = new Size((int)Math.Ceiling(width), (int)Math.Ceiling(height));
+
+			if (details.Visible)
+			{
+				resizeButton(details);
+			}
 
 			// Calculate the size of the message box.
 			int msgWidth = message.Width + message.Left + 4;
