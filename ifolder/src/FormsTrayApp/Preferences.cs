@@ -142,6 +142,13 @@ namespace Novell.FormsTrayApp
 					rememberPassword.Left = enableAccount.Left = defaultServer.Left = label5.Left + label5.Width;
 			}
 
+			delta = calculateSize(label1, 0);
+
+			if (delta > 0)
+			{
+				groupBox1.Height += 8 * (int)Math.Ceiling((float)delta / (float)label1.Width);
+			}
+
 			this.StartPosition = FormStartPosition.CenterScreen;
 		}
 
