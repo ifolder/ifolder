@@ -113,7 +113,7 @@
     <value />
   </data>
   <data name="defaultInterval.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Top, Left</value>
+    <value>Bottom, Left</value>
   </data>
   <data name="defaultInterval.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -137,7 +137,7 @@
     <value>Inherit</value>
   </data>
   <data name="defaultInterval.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>200, 48</value>
+    <value>216, 48</value>
   </data>
   <data name="defaultInterval.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -941,7 +941,7 @@
     <value />
   </data>
   <data name="label1.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Top, Left</value>
+    <value>Top, Bottom, Left</value>
   </data>
   <data name="label1.AutoSize" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -986,7 +986,7 @@
     <value>False</value>
   </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>160, 16</value>
+    <value>176, 16</value>
   </data>
   <data name="label1.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>4</value>
@@ -1028,7 +1028,7 @@
     <value />
   </data>
   <data name="timeUnit.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Top, Left</value>
+    <value>Bottom, Left</value>
   </data>
   <data name="timeUnit.BackgroundImage" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1061,7 +1061,7 @@
     <value>13</value>
   </data>
   <data name="timeUnit.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>272, 48</value>
+    <value>288, 48</value>
   </data>
   <data name="timeUnit.MaxDropDownItems" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>8</value>
@@ -3265,6 +3265,9 @@
   <data name="$this.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
+  <data name="$this.Name">
+    <value>Preferences</value>
+  </data>
   <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>(Default)</value>
   </data>
@@ -3288,9 +3291,6 @@
   </data>
   <data name="$this.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
-  </data>
-  <data name="$this.Name">
-    <value>Preferences</value>
   </data>
   <data name="$this.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -3335,7 +3335,7 @@
     <value />
   </data>
   <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Inherit</value>
+    <value>NoControl</value>
   </data>
   <data name="$this.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
