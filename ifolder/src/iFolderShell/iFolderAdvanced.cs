@@ -166,6 +166,9 @@ namespace Novell.iFolderCom
 			currentControl = firstControl = this.ifolders;
 			lastControl = this.apply;
 
+			// Resize the Sync Now button.
+			resizeButton(syncNow);
+
 			this.StartPosition = FormStartPosition.CenterParent;
 		}
 
@@ -1777,18 +1780,22 @@ namespace Novell.iFolderCom
 
 		private void fileSync(FileSyncEventArgs fileSyncEventArgs)
 		{
-			if (fileSyncEventArgs.SizeRemaining == fileSyncEventArgs.SizeToSync)
+			try
 			{
-				if (startSync || (objectsToSync <= 0))
+				if (fileSyncEventArgs.SizeRemaining == fileSyncEventArgs.SizeToSync)
 				{
-					startSync = false;
-					SyncSize syncSize = ifWebService.CalculateSyncSize(currentiFolder.ID);
-					objectsToSync = syncSize.SyncNodeCount;				
-				}
+					if (startSync || (objectsToSync <= 0))
+					{
+						startSync = false;
+						SyncSize syncSize = ifWebService.CalculateSyncSize(currentiFolder.ID);
+						objectsToSync = syncSize.SyncNodeCount;				
+					}
 
-				objectCount.Text = objectsToSync.ToString();
-				objectsToSync--;
+					objectCount.Text = objectsToSync.ToString();
+					objectsToSync--;
+				}
 			}
+			catch {}
 		}
 
 		private void collectionSync(CollectionSyncEventArgs collectionSyncEventArgs)
@@ -2049,7 +2056,14 @@ namespace Novell.iFolderCom
 			}
 			catch
 			{
-				objectCount.Text = resourceManager.GetString("unknown");
+				if (currentiFolder.Role.Equals("Master"))
+				{
+					objectCount.Text = "0";
+				}
+				else
+				{
+					objectCount.Text = resourceManager.GetString("unknown");
+				}
 			}
 
 			shareWith.Items.Clear();
@@ -2155,6 +2169,27 @@ namespace Novell.iFolderCom
 			}
 
 			return rightsString;
+		}
+
+		private void resizeButton(Button button)
+		{
+			Graphics g = button.CreateGraphics();
+			try
+			{
+				Point p = button.Location;
+				int width = button.Width;
+				// Calculate the size of the string.
+				SizeF size = g.MeasureString(button.Text, button.Font);
+				button.Width = (int)Math.Ceiling(size.Width) + 20;
+				if ((button.Anchor & AnchorStyles.Right) == AnchorStyles.Right)
+				{
+					button.Left = p.X - (button.Width - width);
+				}
+			}
+			finally
+			{
+				g.Dispose();
+			}
 		}
 
 		private string stateToString(string state, bool isOwner)
