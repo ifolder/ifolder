@@ -116,6 +116,14 @@ namespace Novell.iFolderCom
 			// Calculate the offset of the divider.
 			dividerOffset = ok.Top - groupBox1.Top;
 
+			// Adjust the search controls based on the length of the strings.
+			int delta = calculateSize(label1, 0);
+			label1.Width += delta;
+			attributeName.Left = label1.Left + label1.Width;
+			int temp = search.Left;
+			search.Left = label2.Left = attributeName.Left + attributeName.Width + 8;
+			search.Width -= search.Left - temp;
+
 			this.StartPosition = FormStartPosition.CenterParent;
 		}
 
@@ -552,6 +560,23 @@ namespace Novell.iFolderCom
 		#endregion
 
 		#region Private Methods
+		private int calculateSize(Control control, int delta)
+		{
+			int size;
+			Graphics g = control.CreateGraphics();
+			try
+			{
+				SizeF textSize = g.MeasureString(control.Text, control.Font);
+				size = (int)Math.Ceiling(textSize.Width) - control.Width;
+			}
+			finally
+			{
+				g.Dispose();
+			}
+
+			return (int)Math.Max(delta, size);
+		}
+
 		private iFolderUser addCacheEntry(int index)
 		{
 			iFolderUser[] ifolderUsers;
