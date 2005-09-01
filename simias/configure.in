@@ -201,6 +201,7 @@ case $SIMIAS_OS in
 		LDOUT='-o'
 		# have to add this check on redhat for some reason
         AC_CHECK_PROG(CXX, g++, g++)
+		LD='$(CXX) -dynamiclib '
 		StoreProviderAssembly="Simias.dll"
 		StoreProviderType="Simias.Storage.Provider.Flaim.FlaimProvider"
 		GSOAP_PATH="$TOOLDIR/gsoap/linux-2.7"
