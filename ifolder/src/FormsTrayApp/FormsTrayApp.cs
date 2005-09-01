@@ -37,6 +37,7 @@ using Novell.CustomUIControls;
 using Simias.Client;
 using Simias.Client.Authentication;
 using Simias.Client.Event;
+using Microsoft.Win32;
 
 namespace Novell.FormsTrayApp
 {
@@ -172,6 +173,19 @@ namespace Novell.FormsTrayApp
 			}
 			else
 			{
+				// Create/open the iFolder key.
+				RegistryKey regKey = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Novell\iFolder");
+				string language = regKey.GetValue("language") as String;
+				if (language != null)
+				{
+					try
+					{
+						// Use the language stored in the registry.
+						Thread.CurrentThread.CurrentUICulture = new CultureInfo(language);
+					}
+					catch {}
+				}
+
 				InitializeComponent();
 
 				// Append the username to the window string so we can search for it.
@@ -506,15 +520,19 @@ namespace Novell.FormsTrayApp
 						domains = this.simiasWebService.GetDomains(false);
 						foreach(DomainInformation dw in domains)
 						{
-							if (dw.IsSlave)
+							try
 							{
-								preferences.AddDomainToList(dw);
+								if (dw.IsSlave)
+								{
+									preferences.AddDomainToList(dw);
+								}
+
+								globalProperties.AddDomainToList(dw);
+
+								// Set the proxy for this domain.
+								preferences.SetProxyForDomain( dw.HostUrl, false );
 							}
-
-							globalProperties.AddDomainToList(dw);
-
-							// Set the proxy for this domain.
-							preferences.SetProxyForDomain( dw.HostUrl, false );
+							catch {}
 						}
 
 						if (domains.Length.Equals(0))
@@ -522,7 +540,7 @@ namespace Novell.FormsTrayApp
 							accountPrompt = true;
 						}
 					}
-					catch{}
+					catch {}
 
 					if (worker == null)
 					{

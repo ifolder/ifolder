@@ -105,7 +105,6 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.TabPage tabGeneral;
 		private System.Windows.Forms.TabPage tabAccounts;
 		private System.Windows.Forms.Timer timer1;
-		private System.Windows.Forms.Button proxy;
 		private System.Windows.Forms.ColumnHeader columnHeader1;
 		private System.Windows.Forms.CheckBox enableAccount;
 		private System.Windows.Forms.HelpProvider helpProvider1;
@@ -130,6 +129,18 @@ namespace Novell.FormsTrayApp
 
 			ifWebService = ifolderWebService;
 			this.simiasWebService = simiasWebService;
+
+			// Resize/reposition controls
+			int delta = calculateSize(label5, 0);
+			delta = calculateSize(label10, delta);
+			delta = calculateSize(label9, delta);
+
+			if (delta > 0)
+			{
+				label5.Width = label10.Width = label9.Width += delta;
+				server.Left = userName.Left = password.Left = 
+					rememberPassword.Left = enableAccount.Left = defaultServer.Left = label5.Left + label5.Width;
+			}
 
 			this.StartPosition = FormStartPosition.CenterScreen;
 		}
@@ -186,7 +197,6 @@ namespace Novell.FormsTrayApp
 			this.userName = new System.Windows.Forms.TextBox();
 			this.label9 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
-			this.proxy = new System.Windows.Forms.Button();
 			this.enableAccount = new System.Windows.Forms.CheckBox();
 			this.rememberPassword = new System.Windows.Forms.CheckBox();
 			this.label10 = new System.Windows.Forms.Label();
@@ -750,7 +760,6 @@ namespace Novell.FormsTrayApp
 			this.groupBox2.Controls.Add(this.userName);
 			this.groupBox2.Controls.Add(this.label9);
 			this.groupBox2.Controls.Add(this.label5);
-			this.groupBox2.Controls.Add(this.proxy);
 			this.groupBox2.Controls.Add(this.enableAccount);
 			this.groupBox2.Controls.Add(this.rememberPassword);
 			this.groupBox2.Controls.Add(this.label10);
@@ -970,34 +979,6 @@ namespace Novell.FormsTrayApp
 			this.label5.Text = resources.GetString("label5.Text");
 			this.label5.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label5.TextAlign")));
 			this.label5.Visible = ((bool)(resources.GetObject("label5.Visible")));
-			// 
-			// proxy
-			// 
-			this.proxy.AccessibleDescription = resources.GetString("proxy.AccessibleDescription");
-			this.proxy.AccessibleName = resources.GetString("proxy.AccessibleName");
-			this.proxy.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("proxy.Anchor")));
-			this.proxy.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("proxy.BackgroundImage")));
-			this.proxy.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("proxy.Dock")));
-			this.proxy.Enabled = ((bool)(resources.GetObject("proxy.Enabled")));
-			this.proxy.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("proxy.FlatStyle")));
-			this.proxy.Font = ((System.Drawing.Font)(resources.GetObject("proxy.Font")));
-			this.helpProvider1.SetHelpKeyword(this.proxy, resources.GetString("proxy.HelpKeyword"));
-			this.helpProvider1.SetHelpNavigator(this.proxy, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("proxy.HelpNavigator"))));
-			this.helpProvider1.SetHelpString(this.proxy, resources.GetString("proxy.HelpString"));
-			this.proxy.Image = ((System.Drawing.Image)(resources.GetObject("proxy.Image")));
-			this.proxy.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("proxy.ImageAlign")));
-			this.proxy.ImageIndex = ((int)(resources.GetObject("proxy.ImageIndex")));
-			this.proxy.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("proxy.ImeMode")));
-			this.proxy.Location = ((System.Drawing.Point)(resources.GetObject("proxy.Location")));
-			this.proxy.Name = "proxy";
-			this.proxy.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("proxy.RightToLeft")));
-			this.helpProvider1.SetShowHelp(this.proxy, ((bool)(resources.GetObject("proxy.ShowHelp"))));
-			this.proxy.Size = ((System.Drawing.Size)(resources.GetObject("proxy.Size")));
-			this.proxy.TabIndex = ((int)(resources.GetObject("proxy.TabIndex")));
-			this.proxy.Text = resources.GetString("proxy.Text");
-			this.proxy.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("proxy.TextAlign")));
-			this.proxy.Visible = ((bool)(resources.GetObject("proxy.Visible")));
-			this.proxy.Click += new System.EventHandler(this.proxy_Click);
 			// 
 			// enableAccount
 			// 
@@ -1712,6 +1693,23 @@ namespace Novell.FormsTrayApp
 		#endregion
 
 		#region Private Methods
+		private int calculateSize(Control control, int delta)
+		{
+			int size;
+			Graphics g = control.CreateGraphics();
+			try
+			{
+				SizeF textSize = g.MeasureString(control.Text, control.Font);
+				size = (int)Math.Ceiling(textSize.Width) - control.Width;
+			}
+			finally
+			{
+				g.Dispose();
+			}
+
+			return (int)Math.Max(delta, size);
+		}
+
 		private bool connectToEnterprise()
 		{
 			bool result = false;
@@ -2296,7 +2294,7 @@ namespace Novell.FormsTrayApp
 				& Environment.OSVersion.Version.Minor > 0 
 				& System.IO.File.Exists(Application.ExecutablePath + ".manifest"))
 			{
-				tabGeneral.BackColor = tabAccounts.BackColor = Color.FromKnownColor(KnownColor.ControlLightLight);
+//				tabGeneral.BackColor = tabAccounts.BackColor = Color.FromKnownColor(KnownColor.ControlLightLight);
 			}
 
 			minimumSyncInterval = minimumSeconds = defaultMinimumSeconds;
@@ -2304,6 +2302,31 @@ namespace Novell.FormsTrayApp
 			timeUnit.Items.Add(resourceManager.GetString("minutes"));
 			timeUnit.Items.Add(resourceManager.GetString("hours"));
 			timeUnit.Items.Add(resourceManager.GetString("days"));
+
+			// Resize the buttons
+			resizeButton(login);
+			resizeButton(logout);
+		}
+
+		private void resizeButton(Button button)
+		{
+			Graphics g = button.CreateGraphics();
+			try
+			{
+				Point p = button.Location;
+				int width = button.Width;
+				// Calculate the size of the string.
+				SizeF size = g.MeasureString(button.Text, button.Font);
+				button.Width = (int)Math.Ceiling(size.Width) + 20;
+				if ((button.Anchor & AnchorStyles.Right) == AnchorStyles.Right)
+				{
+					button.Left = p.X - (button.Width - width);
+				}
+			}
+			finally
+			{
+				g.Dispose();
+			}
 		}
 
 		private void Preferences_VisibleChanged(object sender, System.EventArgs e)
@@ -2381,7 +2404,7 @@ namespace Novell.FormsTrayApp
 				addAccount.Enabled = true;
 				userName.Enabled = server.Enabled = password.Enabled = rememberPassword.Enabled =
 					enableAccount.Enabled = defaultServer.Enabled = details.Enabled = 
-					removeAccount.Enabled = proxy.Enabled = login.Enabled = false;
+					removeAccount.Enabled = login.Enabled = false;
 
 				login.Visible = true;
 				logout.Visible = false;
@@ -2799,8 +2822,6 @@ namespace Novell.FormsTrayApp
 					ListViewItem lvi = accounts.SelectedItems[0];
 					if (lvi != null)
 					{
-						proxy.Enabled = true;
-
 						if ((newAccountLvi == null) || (lvi == newAccountLvi))
 						{
 							userName.Enabled = server.Enabled = 
@@ -2875,7 +2896,7 @@ namespace Novell.FormsTrayApp
 					// Disable the controls.
 					userName.Enabled = server.Enabled = password.Enabled = rememberPassword.Enabled =
 						enableAccount.Enabled = defaultServer.Enabled = details.Enabled = 
-						removeAccount.Enabled = proxy.Enabled = login.Enabled = false;
+						removeAccount.Enabled = login.Enabled = false;
 
 					login.Visible = true;
 					logout.Visible = false;
@@ -2891,12 +2912,6 @@ namespace Novell.FormsTrayApp
 				ServerDetails serverDetails = new ServerDetails(this.ifWebService, domain);
 				serverDetails.ShowDialog();
 			}
-		}
-
-		private void proxy_Click(object sender, System.EventArgs e)
-		{
-			AdvancedSettings advancedSettings = new AdvancedSettings();
-			advancedSettings.ShowDialog();
 		}
 
 		private void login_Click(object sender, System.EventArgs e)
