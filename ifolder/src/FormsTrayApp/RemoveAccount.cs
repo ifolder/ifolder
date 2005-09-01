@@ -73,43 +73,144 @@ namespace Novell.FormsTrayApp
 
 			removeAll.Enabled = domainInfo.Authenticated;
 
-			Graphics g = server.CreateGraphics();
+			int delta;
+			int temp;
+
+			// Calculate any needed expansion of label1 control.
+			Graphics g = label1.CreateGraphics();
+			try
+			{
+				SizeF textSize = g.MeasureString(label1.Text, label1.Font);
+				delta = (int)Math.Ceiling(textSize.Width) - label1.Width;
+			}
+			finally
+			{
+				g.Dispose();
+			}
+
+			// Calculate any needed expansion of label2, label3, and label4 controls.
+			SizeF label2Size;
+			g = label2.CreateGraphics();
+			try
+			{
+				label2Size = g.MeasureString(label2.Text, label2.Font);
+			}
+			finally
+			{
+				g.Dispose();
+			}
+
+			SizeF label3Size;
+			g = label3.CreateGraphics();
+			try
+			{
+				label3Size = g.MeasureString(label3.Text, label3.Font);
+			}
+			finally
+			{
+				g.Dispose();
+			}
+
+			SizeF label4Size;
+			g = label4.CreateGraphics();
+			try
+			{
+				label4Size = g.MeasureString(label4.Text, label4.Font);
+			}
+			finally
+			{
+				g.Dispose();
+			}
+
+			if (label2Size.Width > label3Size.Width &&
+				label2Size.Width > label4Size.Width)
+			{
+				temp = (int)Math.Ceiling(label2Size.Width) - label2.Width;
+			}
+			else if (label3Size.Width > label2Size.Width &&
+				label3Size.Width > label4Size.Width)
+			{
+				temp = (int)Math.Ceiling(label3Size.Width) - label3.Width;
+			}
+			else
+			{
+				temp = (int)Math.Ceiling(label4Size.Width) - label4.Width;
+			}
+
+			if (temp > 0)
+			{
+				// Adjust the size of the labels and positions of the controls next to the labels.
+				label2.Width = label3.Width = label4.Width += temp + 8;
+				server.Left = host.Left = user.Left = label2.Left + label2.Width + 8;
+			}
+
+			// We only need to keep track of the largest delta.
+			if (temp > delta)
+			{
+				delta = temp;
+			}
+
+			// Calculate any needed expansion of server, host, and user controls.
+			g = server.CreateGraphics();
 			try
 			{
 				SizeF serverSize = g.MeasureString(server.Text, server.Font);
+				g.Dispose();
 				g = host.CreateGraphics();
 				SizeF hostSize = g.MeasureString(host.Text, host.Font);
+				g.Dispose();
 				g = user.CreateGraphics();
 				SizeF userSize = g.MeasureString(user.Text, user.Font);
-
-				int delta;
 
 				if ((serverSize.Width > hostSize.Width) &&
 					(serverSize.Width > userSize.Width))
 				{
 					// The server name is the longest.
-					delta = (int)Math.Ceiling(serverSize.Width) - server.Width;
+					temp = (int)Math.Ceiling(serverSize.Width) - server.Width;
 				}
 				else if ((hostSize.Width > serverSize.Width) &&
 					(hostSize.Width > userSize.Width))
 				{
 					// The host is the longest.
-					delta = (int)Math.Ceiling(hostSize.Width) - host.Width;
+					temp = (int)Math.Ceiling(hostSize.Width) - host.Width;
 				}
 				else
 				{
 					// The username is the longest.
-					delta = (int)Math.Ceiling(userSize.Width) - user.Width;
-				}
-
-				if (delta > 0)
-				{
-					this.Width += delta;
+					temp = (int)Math.Ceiling(userSize.Width) - user.Width;
 				}
 			}
 			finally
 			{
 				g.Dispose();
+			}
+
+			if (temp > delta)
+			{
+				delta = temp;
+			}
+
+			// Calculate any needed expansion of removeAll control.
+			g = removeAll.CreateGraphics();
+			try
+			{
+				SizeF removeAllSize = g.MeasureString(removeAll.Text, removeAll.Font);
+				temp = (int)Math.Ceiling(removeAllSize.Width) - removeAll.Width + 18; // +18 to account for the checkbox.
+			}
+			finally
+			{
+				g.Dispose();
+			}
+
+			if (temp > delta)
+			{
+				delta = temp;
+			}
+
+			// Adjust the width based on the largest delta.
+			if (delta > 0)
+			{
+				this.Width += delta;
 			}
 
 			CenterToParent();
