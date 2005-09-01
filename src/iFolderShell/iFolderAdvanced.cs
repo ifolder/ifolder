@@ -166,6 +166,9 @@ namespace Novell.iFolderCom
 			currentControl = firstControl = this.ifolders;
 			lastControl = this.apply;
 
+			// Resize the Sync Now button.
+			resizeButton(syncNow);
+
 			this.StartPosition = FormStartPosition.CenterParent;
 		}
 
@@ -2166,6 +2169,27 @@ namespace Novell.iFolderCom
 			}
 
 			return rightsString;
+		}
+
+		private void resizeButton(Button button)
+		{
+			Graphics g = button.CreateGraphics();
+			try
+			{
+				Point p = button.Location;
+				int width = button.Width;
+				// Calculate the size of the string.
+				SizeF size = g.MeasureString(button.Text, button.Font);
+				button.Width = (int)Math.Ceiling(size.Width) + 20;
+				if ((button.Anchor & AnchorStyles.Right) == AnchorStyles.Right)
+				{
+					button.Left = p.X - (button.Width - width);
+				}
+			}
+			finally
+			{
+				g.Dispose();
+			}
 		}
 
 		private string stateToString(string state, bool isOwner)
