@@ -60,17 +60,10 @@ namespace Novell.FormsTrayApp
 			title.Text = string.Format(resourceManager.GetString("title.Text"), Application.ProductVersion);
 
 			// Center the title text.
-			Graphics g = title.CreateGraphics();
-			try
-			{
-				SizeF size = g.MeasureString(title.Text, title.Font);
-				title.Width = (int)Math.Ceiling(size.Width);
-				title.Left = (ClientRectangle.Width - (int)size.Width) / 2;
-			}
-			finally
-			{
-				g.Dispose();
-			}
+			centerString(title);
+
+			// Center the copyright string.
+			centerString(label3);
 		}
 
 		/// <summary>
@@ -277,6 +270,24 @@ namespace Novell.FormsTrayApp
 		}
 		#endregion
 
+		#region Private Methods
+		private void centerString(Control label)
+		{
+			Graphics g = label.CreateGraphics();
+			try
+			{
+				SizeF size = g.MeasureString(label.Text, label.Font);
+				label.Width = (int)Math.Ceiling(size.Width);
+				label.Left = (ClientRectangle.Width - (int)size.Width) / 2;
+			}
+			finally
+			{
+				g.Dispose();
+			}
+		}
+		#endregion
+
+		#region Event Handlers
 		private void credits_Click(object sender, System.EventArgs e)
 		{
 			Credits creds = new Credits();
@@ -295,5 +306,6 @@ namespace Novell.FormsTrayApp
 			Bitmap bmap = Win32Window.IconToAlphaBitmap(Icon.FromHandle(hIcon));
 			e.Graphics.DrawImage(bmap, 0, 0);
 		}
+		#endregion
 	}
 }
