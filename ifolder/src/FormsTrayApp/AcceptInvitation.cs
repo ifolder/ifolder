@@ -74,6 +74,16 @@ namespace Novell.FormsTrayApp
 			this.ifolder = ifolder;
 
 			//iFolderLocation.Text = Subscription.DefaultRootPath;
+
+			// Adjust the controls based on the length of the strings.
+			int delta = calculateSize(label2, 0);
+			if (delta > 0)
+			{
+				label2.Width += delta;
+				int temp = iFolderLocation.Left;
+				iFolderLocation.Left = label2.Left + label2.Width;
+				iFolderLocation.Width -= iFolderLocation.Left - temp;
+			}
 		}
 
 		/// <summary>
@@ -361,6 +371,23 @@ namespace Novell.FormsTrayApp
 		#endregion
 
 		#region Private Methods
+		private int calculateSize(Control control, int delta)
+		{
+			int size;
+			Graphics g = control.CreateGraphics();
+			try
+			{
+				SizeF textSize = g.MeasureString(control.Text, control.Font);
+				size = (int)Math.Ceiling(textSize.Width) - control.Width;
+			}
+			finally
+			{
+				g.Dispose();
+			}
+
+			return (int)Math.Max(delta, size);
+		}
+
 		private string rightsToString(string rights)
 		{
 			string rightsString;

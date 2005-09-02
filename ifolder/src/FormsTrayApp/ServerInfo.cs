@@ -80,6 +80,19 @@ namespace Novell.FormsTrayApp
 				this.password.Text = password;
 				rememberPassword.Checked = true;
 			}
+
+			// Resize/reposition controls
+			int delta = calculateSize(serverLabel2, 0);
+			delta = calculateSize(userLabel2, delta);
+			delta = calculateSize(passwordLabel2, delta);
+
+			if (delta > 0)
+			{
+				serverLabel2.Width = userLabel2.Width = passwordLabel2.Width += delta;
+				int temp = serverName.Left;
+				serverName.Left = userName.Left = this.password.Left = rememberPassword.Left = serverLabel2.Left + serverLabel2.Width;
+				serverName.Width = userName.Width = this.password.Width = rememberPassword.Width -= serverName.Left - temp;
+			}
 		}
 
 		/// <summary>
@@ -565,6 +578,23 @@ namespace Novell.FormsTrayApp
 
 			Cursor.Current = Cursors.Default;
 			return result;
+		}
+
+		private int calculateSize(Control control, int delta)
+		{
+			int size;
+			Graphics g = control.CreateGraphics();
+			try
+			{
+				SizeF textSize = g.MeasureString(control.Text, control.Font);
+				size = (int)Math.Ceiling(textSize.Width) - control.Width;
+			}
+			finally
+			{
+				g.Dispose();
+			}
+
+			return (int)Math.Max(delta, size);
 		}
 		#endregion
 
