@@ -110,6 +110,14 @@ TOOLDIR='$(top_srcdir)/tools'
 EXTERNAL_DIR='$(top_srcdir)/external'
 DOCDIR="$SRCDIR/doc"
 
+case $host_os in
+    darwin*)
+		# fix up the flaim libraries
+        ranlib external/flaim/macosx/release/libflm.a
+        ranlib external/flaim/macosx/release/libsmiflm.a
+    ;;
+esac
+
 AC_SUBST(SRCDIR)
 AC_SUBST(TOOLDIR)
 AC_SUBST(DOCDIR)
@@ -161,8 +169,9 @@ case $SIMIAS_OS in
         STORELIB="sqlite"
         STORELIB_PATH="$EXTERNAL_DIR/sqlite/darwin"
 		LDOUT='-o '
-        AC_CHECK_PROG(CXX, g++-3.3, g++-3.3)
-		LD='$(CXX) -dynamiclib '
+        AC_CHECK_PROG(CXX, g++, g++)
+        # AC_CHECK_PROG(CXX, g++-3.3, g++-3.3)
+		# LD='$(CXX) -dynamiclib '
 		StoreProviderAssembly="Simias.dll"
 		StoreProviderType="Simias.Storage.Provider.Flaim.FlaimProvider"
 		GSOAP_PATH="$TOOLDIR/gsoap/macosx-2.7"

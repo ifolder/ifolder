@@ -84,6 +84,11 @@ libFlaimWrapper_la_SOURCES = 	CSPObjectIterator.cpp \
 								FlaimWrapper.h \
 								resource.h
 
+if LINUX
+libFlaimWrapper_la_CXXFLAGS = -I "../../../external/flaim/include" -fshort-wchar -DFLAIMWRAPPER_EXPORTS -DUNIX -D_REENTRANT -c
+
+libFlaimWrapper_la_LDFLAGS = -L"../../../external/flaim/lxx86/gcc3/release" -lflm
+
 install-exec-local: libFlaimWrapper.la
 	$(mkinstalldirs) $(DESTDIR)$(webbindir)
 	ln -s $(DESTDIR)$(libdir)/libFlaimWrapper$(SHARED_LIB_EXT) $(DESTDIR)$(webbindir)/FlaimWrapper$(SHARED_LIB_EXT)
@@ -91,16 +96,20 @@ install-exec-local: libFlaimWrapper.la
 uninstall-local:
 	cd $(DESTDIR)$(webbindir); rm -f FlaimWrapper$(SHARED_LIB_EXT)
 
-if LINUX
-libFlaimWrapper_la_CXXFLAGS = -I "../../../external/flaim/include" -fshort-wchar -DFLAIMWRAPPER_EXPORTS -DUNIX -D_REENTRANT -c
-
-libFlaimWrapper_la_LDFLAGS = -L"../../../external/flaim/lxx86/gcc3/release" -lflm
 endif
 
 if DARWIN
 libFlaimWrapper_la_CXXFLAGS = -I"../../../external/flaim/macosx/include" -fshort-wchar -DFLAIMWRAPPER_EXPORTS -DUNIX -D_REENTRANT -DOSX -c
 
 libFlaimWrapper_la_LDFLAGS = -L"../../../external/flaim/macosx/release" -lflm
+
+install-exec-local: libFlaimWrapper.la
+	$(mkinstalldirs) $(DESTDIR)$(webbindir)
+	ln -s $(DESTDIR)$(libdir)/libFlaimWrapper.dylib $(DESTDIR)$(webbindir)/FlaimWrapper
+
+uninstall-local:
+	cd $(DESTDIR)$(webbindir); rm -f FlaimWrapper
+
 endif
 
 endif
