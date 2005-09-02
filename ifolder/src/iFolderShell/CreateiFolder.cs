@@ -68,6 +68,15 @@ namespace Novell.iFolderCom
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
+
+			// Adjust the multi-selector controls based on the length of the strings.
+			int delta = calculateSize(label1, 0);
+			delta = calculateSize(label2, delta);
+
+			label1.Width = label2.Width += delta;
+			int temp = servers.Left;
+			servers.Left = ifolderPath.Left = label1.Left + label1.Width;
+			servers.Width = ifolderPath.Width -= servers.Left - temp;
 		}
 
 		#region Properties
@@ -642,6 +651,25 @@ namespace Novell.iFolderCom
 			catch {}
 
 			return path;
+		}
+		#endregion
+
+		#region Private Methods
+		private int calculateSize(Control control, int delta)
+		{
+			int size;
+			Graphics g = control.CreateGraphics();
+			try
+			{
+				SizeF textSize = g.MeasureString(control.Text, control.Font);
+				size = (int)Math.Ceiling(textSize.Width) - control.Width;
+			}
+			finally
+			{
+				g.Dispose();
+			}
+
+			return (int)Math.Max(delta, size);
 		}
 		#endregion
 	}
