@@ -169,6 +169,13 @@ namespace Novell.iFolderCom
 			// Resize the Sync Now button.
 			resizeButton(syncNow);
 
+			// Adjust the multi-selector controls based on the length of the strings.
+			int delta = calculateSize(ifolderLabel, 0);
+			ifolderLabel.Width += delta;
+			int temp = ifolders.Left;
+			ifolders.Left = ifolderLabel.Left + ifolderLabel.Width;
+			ifolders.Width -= ifolders.Left - temp;
+
 			this.StartPosition = FormStartPosition.CenterParent;
 		}
 
@@ -1715,6 +1722,23 @@ namespace Novell.iFolderCom
 		#endregion
 
 		#region Private Methods
+		private int calculateSize(Control control, int delta)
+		{
+			int size;
+			Graphics g = control.CreateGraphics();
+			try
+			{
+				SizeF textSize = g.MeasureString(control.Text, control.Font);
+				size = (int)Math.Ceiling(textSize.Width) - control.Width;
+			}
+			finally
+			{
+				g.Dispose();
+			}
+
+			return (int)Math.Max(delta, size);
+		}
+
 		private void nodeEvent(iFolderWeb ifolder, iFolderUser ifolderUser, string eventData)
 		{
 			try
