@@ -612,7 +612,8 @@ namespace Simias.mDns
 				{
 					// A timeout is returning success so we're OK
 					log.Debug( "  calling BrowseMembers" );
-					status = BrowseMembers( User.browseHandle.ToInt32(), 300 );
+					status = BrowseMembers( User.browseHandle.ToInt32(), 30 );
+					log.Debug( "  return from BrowseMembers - status: " + status.ToString() );
 				}
 			} while ( status == User.kErrorType.kDNSServiceErr_NoError );
 
