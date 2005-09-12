@@ -1901,7 +1901,7 @@ namespace Novell.iFolder
 							new iFolderAcceptDialog(ifHolder.iFolder, Util.LastSetupPath);
 					iad.TransientFor = this;
 					rc = iad.Run();
-					newPath = iad.Path;
+					newPath = ParseAndReplaceTildeInPath(iad.Path);
 					iad.Hide();
 					iad.Destroy();
 					if(rc != -5)
@@ -2033,6 +2033,8 @@ namespace Novell.iFolder
 						continue;
 					}
 
+					selectedFolder = ParseAndReplaceTildeInPath(selectedFolder);
+
 					iFolderHolder ifHolder = null;
 					try
 					{
@@ -2043,7 +2045,11 @@ namespace Novell.iFolder
 					catch(Exception e)
 					{
 						if (DisplayCreateOrSetupException(e))
+						{
+							// Update the selectedFolder path
+							cd.iFolderPath = selectedFolder;
 							continue;	// The function handled the exception
+						}
 					}
 
 					if(ifHolder == null)
@@ -2260,6 +2266,21 @@ namespace Novell.iFolder
 			}
 			
 			return false;
+		}
+
+		///
+		/// Searches for a '~' character in the specified path and replaces it
+		/// with the user's home directory
+		private string ParseAndReplaceTildeInPath(string origPath)
+		{
+			string parsedString = origPath;
+			if (origPath.IndexOf('~') >= 0)
+			{
+				string homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+				parsedString = origPath.Replace("~", homeDirectory);
+			}
+			
+			return parsedString;
 		}
 		
 		private void OnDomainAddedEvent(object sender, DomainEventArgs args)
