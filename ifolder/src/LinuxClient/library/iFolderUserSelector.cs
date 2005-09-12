@@ -155,6 +155,7 @@ namespace Novell.iFolder
 			m.Append(new MenuItem(Util.GS("Full Name")));
 			SearchAttribOptionMenu.Menu = m;
 			SearchAttribOptionMenu.ShowAll();
+			SearchAttribOptionMenu.SetHistory(2);
 			SearchAttribOptionMenu.Changed += new EventHandler(OnSearchAttribOptionMenuChanged);
 			findTable.Attach(SearchAttribOptionMenu, 1, 2, 0, 1,
 				AttachOptions.Shrink, 0, 0, 0);
