@@ -41,6 +41,10 @@ namespace Novell.iFolder
 			{
 				return pathEntry.Text;
 			}
+			set
+			{
+				pathEntry.Text = value;
+			}
 		}
 
 
