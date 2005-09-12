@@ -26,7 +26,7 @@ if WINDOWS
 		-documenter=MSDN -Title=Simias -OutputDirectory=$(PACKAGE)-ndoc
 else # NOT WINDOWS
 	"$(NDOC_CMD)" \
-		"$(webbindir)/Simias.dll","../src/Simias.dll/Simias.doc.xml" \
+		"$(webbindir)/SimiasLib.dll","../src/SimiasLib.dll/Simias.doc.xml" \
 		-documenter=MSDN -Title=Simias -OutputDirectory=$(PACKAGE)-ndoc
 endif # WINDOWS
 	tar -czf $(DOC_TARBALL) $(PACKAGE)-ndoc

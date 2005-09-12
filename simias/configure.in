@@ -172,7 +172,7 @@ case $SIMIAS_OS in
         AC_CHECK_PROG(CXX, g++, g++)
         # AC_CHECK_PROG(CXX, g++-3.3, g++-3.3)
 		# LD='$(CXX) -dynamiclib '
-		StoreProviderAssembly="Simias.dll"
+		StoreProviderAssembly="SimiasLib.dll"
 		StoreProviderType="Simias.Storage.Provider.Flaim.FlaimProvider"
 		GSOAP_PATH="$TOOLDIR/gsoap/macosx-2.7"
 		#StoreProviderAssembly="SqliteProvider.dll"
@@ -210,7 +210,7 @@ case $SIMIAS_OS in
 		LDOUT='-o'
 		# have to add this check on redhat for some reason
         AC_CHECK_PROG(CXX, g++, g++)
-		StoreProviderAssembly="Simias.dll"
+		StoreProviderAssembly="SimiasLib.dll"
 		StoreProviderType="Simias.Storage.Provider.Flaim.FlaimProvider"
 		GSOAP_PATH="$TOOLDIR/gsoap/linux-2.7"
     	libexecdir="${exec_prefix}"
@@ -268,7 +268,7 @@ case $SIMIAS_OS in
         RC='rc'
         RC_FLAGS='-r'
         REPORT_DIR='$(shell cygpath --windows $(DESTDIR)$(webbindir) | sed ''s,\\\\,/,g'')'
-        
+
         REPORT_EXE='$(top_srcdir)/tools/Report/Report.exe'
         RES_EXT='.res'
         SEP='$(EMPTY)\\$(EMPTY)'
@@ -285,7 +285,7 @@ case $SIMIAS_OS in
     	sbindir="${exec_prefix}"
     	libexecdir="${exec_prefix}"
     	libdir="${exec_prefix}"
-		StoreProviderAssembly="Simias.dll"
+		StoreProviderAssembly="SimiasLib.dll"
 		StoreProviderType="Simias.Storage.Provider.Flaim.FlaimProvider"
     ;;
 esac
@@ -336,7 +336,7 @@ AC_SUBST(webbindir)
 #
 PKG_CONFIG_REQUIRES=""
 PKG_CONFIG_CONFLICTS=""
-PKG_CONFIG_LIBS="/r:Simias.dll"
+PKG_CONFIG_LIBS="/r:SimiasLib.dll"
 AC_SUBST(PKG_CONFIG_REQUIRES)
 AC_SUBST(PKG_CONFIG_CONFLICTS)
 AC_SUBST(PKG_CONFIG_LIBS)
@@ -443,8 +443,8 @@ Makefile
 src/Makefile
 src/SimiasClient/Makefile
 src/SimiasClient/libsimias-event/Makefile
-src/Simias.dll/Makefile
-src/Simias.dll/Simias.dll.config
+src/SimiasLib.dll/Makefile
+src/SimiasLib.dll/SimiasLib.dll.config
 src/FlaimProvider/Makefile
 src/FlaimProvider/FlaimWrapper/Makefile
 src/SimiasApp/Makefile

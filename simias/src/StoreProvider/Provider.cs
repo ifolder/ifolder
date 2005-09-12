@@ -186,7 +186,7 @@ namespace Simias.Storage.Provider
 				{
 					if (assembly == null)
 					{
-						assembly = "Simias.dll";
+						assembly = "SimiasLib.dll";
 						assembly = conf.Get(CFG_Section, CFG_Assembly, assembly);
 					}
 				}
@@ -250,7 +250,7 @@ namespace Simias.Storage.Provider
 		}
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		/// <param name="key"></param>
 		/// <param name="keyValue"></param>
@@ -265,21 +265,21 @@ namespace Simias.Storage.Provider
 	}
 
 	/// <summary>
-	/// 
+	///
 	/// </summary>
 	public class CommitException : SimiasException
 	{
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		public XmlDocument CreateDoc;
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		public XmlDocument DeleteDoc;
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		/// <param name="createDoc"></param>
 		/// <param name="deleteDoc"></param>
@@ -292,7 +292,7 @@ namespace Simias.Storage.Provider
 		}
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		public override string Message
 		{

@@ -6,8 +6,8 @@ CollectionStoreTests_CSFILES_CSC := $(subst /,$(SEP),$(CollectionStoreTests_CSFI
 CollectionStoreTests_INCLUDES =
 CollectionStoreTests_RESOURCES =
 CollectionStoreTests_FLAGS = $(CSC_LIBFLAG)
-CollectionStoreTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Simias.dll Novell.Security.SecureSink.dll Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll Novell.Security.SecureSink.SecurityProvider.dll Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll nunit.framework.dll
-CollectionStoreTests_LIBPATH = ../../src/Simias.dll $(srcdir)/../../external/SecureChannelSinks $(NUNIT_LIBPATH)
+CollectionStoreTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll SimiasLib.dll Novell.Security.SecureSink.dll Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll Novell.Security.SecureSink.SecurityProvider.dll Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll nunit.framework.dll
+CollectionStoreTests_LIBPATH = ../../src/SimiasLib.dll $(srcdir)/../../external/SecureChannelSinks $(NUNIT_LIBPATH)
 
 EXTRA_DIST = $(CollectionStoreTests_CSFILES)
 

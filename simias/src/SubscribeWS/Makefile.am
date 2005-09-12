@@ -6,8 +6,8 @@ SubscribeWS_CSFILES_CSC := $(subst /,$(SEP),$(SubscribeWS_CSFILES))
 SubscribeWS_INCLUDES =
 SubscribeWS_RESOURCES =
 SubscribeWS_FLAGS = $(CSC_LIBFLAG)
-SubscribeWS_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll Simias.dll
-SubscribeWS_LIBPATH = ../Simias.dll
+SubscribeWS_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll SimiasLib.dll
+SubscribeWS_LIBPATH = ../SimiasLib.dll
 
 EXTRA_DIST = SubscribeService.asmx $(SubscribeWS_CSFILES)
 

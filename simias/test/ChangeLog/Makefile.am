@@ -6,8 +6,8 @@ ChangeLogTest_CSFILES_CSC := $(subst /,$(SEP),$(ChangeLogTest_CSFILES))
 ChangeLogTest_INCLUDES =
 ChangeLogTest_RESOURCES =
 ChangeLogTest_FLAGS = $(CSC_LIBFLAG)
-ChangeLogTest_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Simias.dll Novell.Security.SecureSink.dll Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll Novell.Security.SecureSink.SecurityProvider.dll Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll nunit.framework.dll
-ChangeLogTest_LIBPATH = ../../src/Simias.dll $(srcdir)/../../external/SecureChannelSinks $(NUNIT_LIBPATH)
+ChangeLogTest_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll SimiasLib.dll Novell.Security.SecureSink.dll Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll Novell.Security.SecureSink.SecurityProvider.dll Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll nunit.framework.dll
+ChangeLogTest_LIBPATH = ../../src/SimiasLib.dll $(srcdir)/../../external/SecureChannelSinks $(NUNIT_LIBPATH)
 
 EXTRA_DIST = $(ChangeLogTest_CSFILES)
 

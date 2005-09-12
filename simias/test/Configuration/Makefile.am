@@ -6,8 +6,8 @@ ConfigurationTests_CSFILES_CSC := $(subst /,$(SEP),$(ConfigurationTests_CSFILES)
 ConfigurationTests_INCLUDES =
 ConfigurationTests_RESOURCES =
 ConfigurationTests_FLAGS = $(CSC_LIBFLAG)
-ConfigurationTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Simias.dll Novell.Security.SecureSink.dll Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll Novell.Security.SecureSink.SecurityProvider.dll Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll nunit.framework.dll
-ConfigurationTests_LIBPATH = ../../src/Simias.dll $(srcdir)/../../external/SecureChannelSinks $(NUNIT_LIBPATH)
+ConfigurationTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll SimiasLib.dll Novell.Security.SecureSink.dll Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll Novell.Security.SecureSink.SecurityProvider.dll Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll nunit.framework.dll
+ConfigurationTests_LIBPATH = ../../src/SimiasLib.dll $(srcdir)/../../external/SecureChannelSinks $(NUNIT_LIBPATH)
 
 EXTRA_DIST = $(ConfigurationTests_CSFILES)
 
@@ -42,7 +42,7 @@ CLEAN_FILES = $(NUNIT_TESTS) ConfigurationTests.doc.xml ConfigurationTests.test.
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
-    
+
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)
 

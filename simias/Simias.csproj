@@ -9,7 +9,7 @@
             <Settings
                 ApplicationIcon = ""
                 AssemblyKeyContainerName = ""
-                AssemblyName = "Simias"
+                AssemblyName = "SimiasLib"
                 AssemblyOriginatorKeyFile = ""
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
@@ -538,7 +538,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Simias.dll\AssemblyInfo.cs"
+                    RelPath = "src\SimiasLib.dll\AssemblyInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

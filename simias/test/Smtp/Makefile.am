@@ -6,8 +6,8 @@ SmtpTests_CSFILES_CSC := $(subst /,$(SEP),$(SmtpTests_CSFILES))
 SmtpTests_INCLUDES =
 SmtpTests_RESOURCES = smtptst1.gif smtptst2.gif
 SmtpTests_FLAGS = $(CSC_LIBFLAG)
-SmtpTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Simias.dll Novell.Security.SecureSink.dll Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll Novell.Security.SecureSink.SecurityProvider.dll Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll nunit.framework.dll
-SmtpTests_LIBPATH = ../../src/Simias.dll $(srcdir)/../../external/SecureChannelSinks $(NUNIT_LIBPATH)
+SmtpTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll SimiasLib.dll Novell.Security.SecureSink.dll Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll Novell.Security.SecureSink.SecurityProvider.dll Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll nunit.framework.dll
+SmtpTests_LIBPATH = ../../src/SimiasLib.dll $(srcdir)/../../external/SecureChannelSinks $(NUNIT_LIBPATH)
 
 EXTRA_DIST = $(SmtpTests_CSFILES) $(SmtpTests_RESOURCES)
 
@@ -42,7 +42,7 @@ CLEAN_FILES = $(NUNIT_TESTS) SmtpTests.doc.xml SmtpTests.test.xml
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
-    
+
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)
 

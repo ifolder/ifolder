@@ -6,8 +6,8 @@ WebService_CSFILES_CSC := $(subst /,$(SEP),$(WebService_CSFILES))
 WebService_INCLUDES =
 WebService_RESOURCES =
 WebService_FLAGS = $(CSC_LIBFLAG)
-WebService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Simias.dll System.Web.dll
-WebService_LIBPATH = ../Simias.dll
+WebService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) SimiasLib.dll System.Web.dll
+WebService_LIBPATH = ../SimiasLib.dll
 
 EXTRA_DIST = $(WebService_CSFILES)
 

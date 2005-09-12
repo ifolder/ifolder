@@ -6,8 +6,8 @@ CommonTests_CSFILES_CSC := $(subst /,$(SEP),$(CommonTests_CSFILES))
 CommonTests_INCLUDES =
 CommonTests_RESOURCES =
 CommonTests_FLAGS = $(CSC_LIBFLAG)
-CommonTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) SimiasClient.dll Simias.dll nunit.framework.dll
-CommonTests_LIBPATH = ../../src/Simias.dll ../../src/SimiasClient $(NUNIT_LIBPATH)
+CommonTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) SimiasClient.dll SimiasLib.dll nunit.framework.dll
+CommonTests_LIBPATH = ../../src/SimiasLib.dll ../../src/SimiasClient $(NUNIT_LIBPATH)
 
 EXTRA_DIST = $(CommonTests_CSFILES)
 
@@ -42,7 +42,7 @@ CLEAN_FILES = $(NUNIT_TESTS) CommonTests.doc.xml CommonTests.test.xml
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
-    
+
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)
 

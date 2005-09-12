@@ -31,7 +31,7 @@ Copyright    : GPL
 Group        : Applications/Productivity
 Source       : %{name}-%{version}.tar.gz
 URL          : http://forge.novell.com/modules/xfmod/project/?ifolder
-#Distribution : 
+#Distribution :
 Vendor       : Novell Inc.
 Packager     : <unknown>
 BuildRoot    : %{_tmppath}/%{name}-%{version}
@@ -177,10 +177,10 @@ mv %{prefix}/etc/simias-client-bootstrap.config.bak %{prefix}/etc/simias-client-
 %{prefix}/web/bin/Novell.Security.ClientPasswordManager.NetCredential.dll
 %{prefix}/web/bin/Novell.Security.Utilities.dll
 %{prefix}/web/bin/Simias.POBox.Web.dll
-%{prefix}/web/bin/Simias.dll.config
+%{prefix}/web/bin/SimiasLib.dll.config
 %{prefix}/web/bin/ifdata
 %{prefix}/web/bin/SyncService.Web.dll
-%{prefix}/web/bin/Simias.dll
+%{prefix}/web/bin/SimiasLib.dll
 %{prefix}/web/bin/FlaimWrapper.so
 %{prefix}/web/bin/log4net.dll
 %{prefix}/web/Global.asax
