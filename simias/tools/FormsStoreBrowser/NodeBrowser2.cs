@@ -210,7 +210,7 @@ namespace StoreBrowser
 
 		public void ShowNode(TreeNode tNode)
 		{
-			if ( tNode.Tag != null )
+			if ( tNode != null && tNode.Tag != null )
 			{
 				DisplayShallowNode sNode = (DisplayShallowNode)tNode.Tag;
 				BrowserNode bNode = browser.GetNodeByID( sNode.CollectionID, sNode.ID );
