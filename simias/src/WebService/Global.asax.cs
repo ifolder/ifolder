@@ -40,6 +40,13 @@ namespace Simias.Web
 	public class Global : HttpApplication
 	{
 		#region Class Members
+
+		/// <summary>
+		/// Environment variables used by apache.
+		/// </summary>
+		private static string EnvSimiasRunAsServer = "SimiasRunAsServer";
+		private static string EnvSimiasDataPath = "SimiasDataPath";
+		private static string EnvSimiasVerbose = "SimiasVerbose";
 		
 		/// <summary>
 		/// Object used to manage the simias services.
@@ -56,7 +63,150 @@ namespace Simias.Web
 		/// </summary>
 		private bool quit;
 
+		/// <summary>
+		/// Event used to tell the controlling server process to shut us down.
+		/// </summary>
+		private static ManualResetEvent shutDownEvent = new ManualResetEvent( false );
+
+		/// <summary>
+		/// Specifies whether to run as a client or server.
+		/// </summary>
+		private static bool runAsServer = false;
+
+		/// <summary>
+		/// Prints extra data for debugging purposes.
+		/// </summary>
+		private static bool verbose = false;
+
+		/// <summary>
+		/// Path to the simias data area.
+		/// </summary>
+		private static string simiasDataPath = null;
+
 		#endregion
+
+		#region Constructor
+
+		/// <summary>
+		/// Static constructor that starts only one shutdown thread.
+		/// </summary>
+		static Global()
+		{
+			// Check to see if there is an environment variable set to run as a server.
+			// If so then we are being started by apache and there are no command line
+			// parameters available.
+			if ( !ParseEnvironmentVariables() )
+			{
+				// Parse the command line parameters.
+				ParseConfigurationParameters( Environment.GetCommandLineArgs() );
+			}
+
+			// Start the shutdown thread running waiting to signal a shutdown.
+			Thread thread = new Thread( new ThreadStart( ShutDownThread ) );
+			thread.IsBackground = true;
+			thread.Start();
+		}
+
+		#endregion
+
+		#region Private Methods
+
+		/// <summary>
+		/// Parses the command line parameters to get the configuration for Simias.
+		/// </summary>
+		/// <param name="args">Command line parameters.</param>
+		private static void ParseConfigurationParameters( string[] args )
+		{
+			for ( int i = 0; i < args.Length; ++i )
+			{
+				Console.Error.WriteLine( "Args: {0}", args[ i ] );
+
+				switch ( args[ i ].ToLower() )
+				{
+					case "--runasserver":
+					{
+						runAsServer = true;
+						break;
+					}
+
+					case "--datadir":
+					{
+						if ( ( i + 1 ) < args.Length )
+						{
+							simiasDataPath = args[ ++i ];
+						}
+						else
+						{
+							ApplicationException apEx = new ApplicationException( "Error: The Simias data path was not specified." );
+							Console.Error.WriteLine( apEx.Message );
+							throw apEx;
+						}
+
+						break;
+					}
+
+					case "--verbose":
+					{
+						verbose = true;
+						break;
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the Simias environment variables set by mod-mono-server in the apache process.
+		/// </summary>
+		/// <returns>True if the environment variables were found. Otherwise false is returned.</returns>
+		private static bool ParseEnvironmentVariables()
+		{
+			bool foundEnv = false;
+
+			if ( Environment.GetEnvironmentVariable( EnvSimiasRunAsServer ) != null )
+			{
+				runAsServer = true;
+				simiasDataPath = Environment.GetEnvironmentVariable( EnvSimiasDataPath );
+				if ( simiasDataPath == null )
+				{
+					ApplicationException apEx = new ApplicationException( "Error: The Simias data path was not specified." );
+					Console.Error.WriteLine( apEx.Message );
+					throw apEx;
+				}
+
+				verbose = ( Environment.GetEnvironmentVariable( EnvSimiasVerbose ) != null ) ? true : false;
+				foundEnv = true;
+			}
+
+			return foundEnv;
+		}
+
+		/// <summary>
+		/// Signals a named mutex that the controlling server process is blocked on to
+		/// cause the server to shutdown the web service. The reason that this must
+		/// happen within a thread is that the mutex can only be released by the thread
+		/// that owns it. Since the web services can come in on different threads, the
+		/// the thread that signals the mutex may not be the owner.
+		/// </summary>
+		private static void ShutDownThread()
+		{
+			string mutexName = simiasDataPath.Replace( '\\', '/' );
+
+			Console.Error.WriteLine( "Simias mutex name: SimiasExitProcessMutex_" + mutexName );
+
+			// Create and own the mutex that the controlling server process will wait on.
+			Mutex mutex = new Mutex( true, "SimiasExitProcessMutex_" + mutexName );
+
+			// Wait for the shutdown event to be signaled before releasing the mutex.
+			shutDownEvent.WaitOne();
+
+			// Tell the controlling server process to shut us down.
+			mutex.ReleaseMutex();
+			mutex.Close();
+		}
+
+		#endregion
+
+		#region Protected Methods
 
 		/// <summary>
 		/// Application_Start
@@ -68,11 +218,20 @@ namespace Simias.Web
 			// update the prefix of the installed directory
 			SimiasSetup.prefix = Path.Combine(Server.MapPath(null), "..");
 			Environment.CurrentDirectory = SimiasSetup.webbindir;
-			Console.Error.WriteLine("Simias Application Path: {0}", Environment.CurrentDirectory);
 
-            Simias.Storage.Store.GetStore();
+			if ( verbose )
+			{
+				Console.Error.WriteLine("Simias Application Path: {0}", Environment.CurrentDirectory);
+				Console.Error.WriteLine("Simias Data Path: {0}", simiasDataPath);
+			}
 
-			Console.Error.WriteLine("Simias Process Starting");
+			Simias.Storage.Store.GetStore();
+
+			if ( verbose )
+			{
+				Console.Error.WriteLine("Simias Process Starting");
+			}
+
 			serviceManager = Simias.Service.Manager.GetManager();
 			serviceManager.StartServices();
 			serviceManager.WaitForServicesStarted();
@@ -80,7 +239,11 @@ namespace Simias.Web
 			// Send the simias up event.
 			EventPublisher eventPub = new EventPublisher();
 			eventPub.RaiseEvent( new NotifyEventArgs("Simias-Up", "The simias service is running", DateTime.Now) );
-			Console.Error.WriteLine("Simias Process Running");
+
+			if ( verbose )
+			{
+				Console.Error.WriteLine("Simias Process Running");
+			}
 
 			// start keep alive
 			// NOTE: We have seen a FLAIM corruption because the database was not given
@@ -169,7 +332,10 @@ namespace Simias.Web
 		/// <param name="e"></param>
 		protected void Application_End(Object sender, EventArgs e)
 		{
-            Console.Error.WriteLine("Simias Process Starting Shutdown");
+			if ( verbose )
+			{
+				Console.Error.WriteLine("Simias Process Starting Shutdown");
+			}
 
 			if ( serviceManager != null )
 			{
@@ -183,12 +349,29 @@ namespace Simias.Web
 				serviceManager = null;
 			}
 
-			Console.Error.WriteLine("Simias Process Shutdown");
+			if ( verbose )
+			{
+				Console.Error.WriteLine("Simias Process Shutdown");
+			}
 
 			// end keep alive
 			// NOTE: an interrupt or abort here is currently causing a hang on Mono
 			quit = true;
 		}
+
+		#endregion
+
+		#region Public Methods
+
+		/// <summary>
+		/// Causes the controlling server process to shut down the web services.
+		/// </summary>
+		public static void SimiasProcessExit()
+		{
+			shutDownEvent.Set();
+		}
+
+		#endregion
 	}
 }
 

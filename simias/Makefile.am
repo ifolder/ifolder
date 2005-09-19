@@ -2,7 +2,7 @@ SUBDIRS = src other
 
 DIST_SUBDIRS = $(SUBDIRS) doc package test
 
-PROJECT_FILES = $(srcdir)/Simias.sln $(srcdir)/Simias.csproj
+PROJECT_FILES = $(srcdir)/SimiasLib.sln $(srcdir)/SimiasLib.csproj
 
 EXTRA_DIST = tools/gsoap external/NS external/flaim external/log4net $(srcdir)/$(PACKAGE)*.pc.in $(PROJECT_FILES)
 

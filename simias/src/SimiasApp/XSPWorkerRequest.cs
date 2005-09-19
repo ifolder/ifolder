@@ -70,7 +70,6 @@ namespace Mono.ASPNET
 		bool haveContentLength;
 		long contentSent;
 		long contentLength;
-		bool isclosed;
 		
 		static string serverHeader;
 
@@ -261,7 +260,7 @@ namespace Mono.ASPNET
 					string value = line.Substring (colon + 1).Trim ();
 					headers [key] = value;
 				}
-			} catch (IOException ioe) {
+			} catch (IOException) {
 				throw;
 			} catch (Exception e) {
 				throw new Exception ("Error reading headers.", e);

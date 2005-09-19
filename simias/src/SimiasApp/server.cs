@@ -40,6 +40,8 @@ namespace Mono.ASPNET
 {
 	public class Server
 	{
+		private static ApplicationServer server;
+
 		static void ShowVersion ()
 		{
 			Assembly assembly = Assembly.GetExecutingAssembly ();
@@ -159,8 +161,8 @@ namespace Mono.ASPNET
 		{
 			if ((options & value) != 0) {
 				ShowHelp ();
-				Console.WriteLine ();
-				Console.WriteLine ("ERROR: Option '{0}' duplicated.", name);
+				Console.Error.WriteLine ();
+				Console.Error.WriteLine ("ERROR: Option '{0}' duplicated.", name);
 				Environment.Exit (1);
 			}
 
@@ -168,13 +170,13 @@ namespace Mono.ASPNET
 			if ((options & Options.FileName) != 0 &&
 			    ((options & Options.Port) != 0 || (options & Options.Address) != 0)) {
 				ShowHelp ();
-				Console.WriteLine ();
-				Console.WriteLine ("ERROR: --port/--address and --filename are mutually exclusive");
+				Console.Error.WriteLine ();
+				Console.Error.WriteLine ("ERROR: --port/--address and --filename are mutually exclusive");
 				Environment.Exit (1);
 			}
 		}
 
-		public static int Main (string [] args)
+		public static int Start (string [] args)
 		{
 			bool nonstop = false;
 			bool verbose = false;
@@ -246,7 +248,7 @@ namespace Mono.ASPNET
 					verbose = true;
 					break;
 				default:
-					Console.WriteLine ("Unknown argument: {0}", a);
+					Console.Error.WriteLine ("Unknown argument: {0}", a);
 					ShowHelp ();
 					return 1;
 				}
@@ -271,14 +273,14 @@ namespace Mono.ASPNET
 			try {
 				port = Convert.ToUInt16 (oport);
 			} catch (Exception) {
-				Console.WriteLine ("The value given for the listen port is not valid: " + oport);
+				Console.Error.WriteLine ("The value given for the listen port is not valid: " + oport);
 				return 1;
 			}
 
 			try {
 				ipaddr = IPAddress.Parse (ip);
 			} catch (Exception) {
-				Console.WriteLine ("The value given for the address is not valid: " + ip);
+				Console.Error.WriteLine ("The value given for the address is not valid: " + ip);
 				return 1;
 			}
 
@@ -286,7 +288,7 @@ namespace Mono.ASPNET
 				try {
 					Environment.CurrentDirectory = rootDir;
 				} catch (Exception e) {
-					Console.WriteLine ("Error: {0}", e.Message);
+					Console.Error.WriteLine ("Error: {0}", e.Message);
 					return 1;
 				}
 			}
@@ -312,14 +314,15 @@ namespace Mono.ASPNET
 				return (res) ? 0 : 1;
 			}
 
-			ApplicationServer server = new ApplicationServer (webSource);
+			server = new ApplicationServer (webSource);
 #else
 			webSource = new XSPWebSource (ipaddr, port);
-			ApplicationServer server = new ApplicationServer (webSource);
+			server = new ApplicationServer (webSource);
 #endif
 			server.Verbose = verbose;
 
-			Console.WriteLine (Assembly.GetExecutingAssembly ().GetName ().Name);
+			if ( verbose )
+				Console.Error.WriteLine (Assembly.GetExecutingAssembly ().GetName ().Name);
 			if (apps != null)
 				server.AddApplicationsFromCommandLine (apps);
 
@@ -337,47 +340,40 @@ namespace Mono.ASPNET
 			} else
 #endif
 			{
-				Console.WriteLine ("Listening on port: {0}", port);
-				Console.WriteLine ("Listening on address: {0}", ip);
+				if ( verbose )
+				{
+					Console.Error.WriteLine ("Listening on port: {0}", port);
+					Console.Error.WriteLine ("Listening on address: {0}", ip);
+				}
 			}
 			
-			Console.WriteLine ("Root directory: {0}", rootDir);
+			if ( verbose )
+				Console.Error.WriteLine ("Root directory: {0}", rootDir);
 
 			try {
-				if (server.Start (!nonstop) == false)
+				if (server.Start (true) == false)
 					return 2;
-/*
-				//
-				// Temp kludge for FCS so we can run workgroup
-				// this needs to be re-evaluated when Simias can
-				// stand on its own.
-				//
 
-#if !MODMONO_SERVER
-				//char[] sep = new char[':'];
-				string sep = ":";
-				string[] virtAndPath = apps.Split( sep.ToCharArray() );
-				if ( virtAndPath[0] != null )
-				{
-					Uri uri = new Uri( new UriBuilder( "http", IPAddress.Loopback.ToString(), port, virtAndPath[0] ).ToString() );
-					Simias.Client.SimiasSetup.prefix = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "../..");
-					Simias.Client.Manager.SetWebServiceUri( new Simias.Client.Configuration(), uri );
-				}
-#endif
-*/
 				if (!nonstop) 
 				{
-					Console.WriteLine ("Hit Return to stop the server.");
+					if ( verbose )
+						Console.Error.WriteLine ("Hit Return to stop the server.");
+
 					Console.ReadLine ();
 					server.Stop ();
 				}
 			} catch (Exception e) {
-				Console.WriteLine ("Error: {0}", e.Message);
-				Console.WriteLine ("Stack: {0}", e.StackTrace);
+				Console.Error.WriteLine ("Error: {0}", e.Message);
+				Console.Error.WriteLine ("Stack: {0}", e.StackTrace);
 				return 1;
 			}
 
 			return 0;
+		}
+
+		public static void Stop()
+		{
+			server.Stop();
 		}
 	}
 }

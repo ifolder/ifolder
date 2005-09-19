@@ -60,14 +60,14 @@ namespace Simias.Client
 		/// <summary>
 		/// Gets the local password.
 		/// </summary>
-		static private void GetLocalPassword()
+		/// <param name="simiasDataPath">Path to the directory where the Simias data is stored.</param>
+		static private void GetLocalPassword( string simiasDataPath )
 		{
 			lock( typeof( LocalService ) )
 			{
 				if ( localPassword == null )
 				{
-					Configuration config = new Configuration();
-					string path = Path.Combine( config.StorePath, LocalPasswordFile );
+					string path = Path.Combine( simiasDataPath, LocalPasswordFile );
 
 					try
 					{
@@ -86,12 +86,13 @@ namespace Simias.Client
 		/// Pings the local web service to get simias started if it is not
 		/// started already.
 		/// </summary>
-		static private void Ping()
+		/// <param name="webServiceUri">Uri that references the local web service.</param>
+		static private void Ping( Uri webServiceUri )
 		{
 			try
 			{
 				SimiasWebService webService = new SimiasWebService();
-				webService.Url = Manager.LocalServiceUrl.ToString() + "/Simias.asmx";
+				webService.Url = webServiceUri.ToString() + "/Simias.asmx";
 				webService.PingSimias();
 			}
 			catch
@@ -108,11 +109,23 @@ namespace Simias.Client
 		/// <param name="webClient">HttpWebClientProtocol object.</param>
 		static public void Start( HttpWebClientProtocol webClient )
 		{
+			Configuration config = new Configuration();
+			Start( webClient, Manager.LocalServiceUrl, config.StorePath );
+		}
+
+		/// <summary>
+		/// Connects the specified webClient to its web service.
+		/// </summary>
+		/// <param name="webClient">HttpWebClientProtocol object.</param>
+		/// <param name="webServiceUri">Uri that references the local web service.</param>
+		/// <param name="simiasDataPath">Path to the directory where the Simias data is stored.</param>
+		static public void Start( HttpWebClientProtocol webClient, Uri webServiceUri, string simiasDataPath )
+		{
 			// Start the web service so the password file will be created.
 			while ( localPassword == null )
 			{
-				Ping();
-				GetLocalPassword();
+				Ping( webServiceUri );
+				GetLocalPassword( simiasDataPath );
 				if ( localPassword == null )
 				{
 					Thread.Sleep( 500 );

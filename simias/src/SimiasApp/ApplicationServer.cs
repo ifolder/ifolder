@@ -319,7 +319,7 @@ namespace Mono.ASPNET
 						try {
 							client = s.Accept ();
 							client.Blocking = true;
-						} catch (Exception e) {
+						} catch (Exception) {
 							continue;
 						}
 						WebTrace.WriteLine ("Accepted connection.");

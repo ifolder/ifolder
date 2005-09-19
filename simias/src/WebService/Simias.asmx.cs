@@ -27,6 +27,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Web;
 using System.Web.Services;
 using System.Web.Services.Protocols;
@@ -1028,6 +1029,46 @@ log.Debug("SimiasWebService.ConnectToDomain() called to connect to {0} as {1}", 
 			}
 
 			return proxySet;
+		}
+
+		/// <summary>
+		/// Checks to see if this instance of Simias is shareable.
+		/// </summary>
+		/// <param name="simiasDataPath">Application's path to it Simias data area.</param>
+		/// <param name="isClient">True if the application wishing to share the service is running as a client.
+		/// If it is running as a server, this parameter should be false.</param>
+		/// <returns>The directory path for the simias directory.</returns>
+		[WebMethod(EnableSession=true, Description="Checks to see if this instance of Simias is shareable.")]
+		[SoapDocumentMethod]
+		public bool CanShareService( string simiasDataPath, bool isClient )
+		{
+			bool canShare = false;
+			bool caseInsensitive = ( MyEnvironment.Platform == MyPlatformID.Windows ) ? true : false;
+			Store store = Store.GetStore();
+
+			// The application's simias data path must be the same as this instance's path.
+			if ( String.Compare( Path.GetFullPath( simiasDataPath ), store.StorePath, caseInsensitive ) == 0 )
+			{
+				// Can't share services between clients and enterprise servers because their
+				// configurations are different. Not all client services are available on a
+				// server.
+				if ( isClient && !store.IsEnterpriseServer )
+				{
+					canShare = true;
+				}
+			}
+
+			return canShare;
+		}
+
+		/// <summary>
+		/// Causes the controlling server process to shutdown the web services and exit.
+		/// </summary>
+		[WebMethod(EnableSession=true, Description="Shuts down the controlling server process.")]
+		[SoapDocumentMethod]
+		public void StopSimiasProcess()
+		{
+			Global.SimiasProcessExit();
 		}
 	}
 
