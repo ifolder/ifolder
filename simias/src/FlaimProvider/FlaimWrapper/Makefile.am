@@ -91,6 +91,9 @@ libFlaimWrapper_la_LDFLAGS = -L"../../../external/flaim/lxx86/gcc3/release" -lfl
 
 install-exec-local: libFlaimWrapper.la
 	$(mkinstalldirs) $(DESTDIR)$(webbindir)
+	if test -e $(DESTDIR)$(webbindir)/FlaimWrapper$(SHARED_LIB_EXT); then \
+		rm $(DESTDIR)$(webbindir)/FlaimWrapper$(SHARED_LIB_EXT); \
+	fi;
 	ln -s $(DESTDIR)$(libdir)/libFlaimWrapper$(SHARED_LIB_EXT) $(DESTDIR)$(webbindir)/FlaimWrapper$(SHARED_LIB_EXT)
 
 uninstall-local:
@@ -105,6 +108,9 @@ libFlaimWrapper_la_LDFLAGS = -L"../../../external/flaim/macosx/release" -lflm
 
 install-exec-local: libFlaimWrapper.la
 	$(mkinstalldirs) $(DESTDIR)$(webbindir)
+	if test -e $(DESTDIR)$(webbindir)/FlaimWrapper; then \
+		rm $(DESTDIR)$(webbindir)/FlaimWrapper; \
+	fi;
 	ln -s $(DESTDIR)$(libdir)/libFlaimWrapper.dylib $(DESTDIR)$(webbindir)/FlaimWrapper
 
 uninstall-local:
