@@ -575,7 +575,7 @@
 	</data>
   
 	<data name="serverLabel2.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-		<value>100, 16</value>
+		<value>80, 16</value>
 	</data>
   
 	<data name="serverLabel2.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -675,7 +675,7 @@
 	</data>
   
 	<data name="userLabel2.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-		<value>100, 16</value>
+		<value>80, 16</value>
 	</data>
   
 	<data name="userLabel2.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -775,7 +775,7 @@
 	</data>
   
 	<data name="passwordLabel2.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-		<value>100, 16</value>
+		<value>80, 16</value>
 	</data>
   
 	<data name="passwordLabel2.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1515,7 +1515,7 @@
 	</data>
   
 	<data name="verifyCert">
-		<value>Az iFolder nem tudja ellenőrizni a(z) {0} iFolder kiszolgáló valódiságát. Ennek az iFolder kiszolgálónak a tanúsítványát ismeretlen hitelesítésszolgáltató írta alá. Előfordulhat, hogy olyan kiszolgálóhoz csatlakozik, amely csupán színleli, hogy ő a(z) {0}, ezzel viszont bizalmas adatait teheti kockára.Â Â Mielőtt elfogadná a tanúsítványt, célszerű a rendszergazdával egyeztetnie. Elfogadja véglegesen a tanúsítványt, és folytatja a csatlakozást?</value>
+		<value>Az iFolder nem tudja ellenőrizni a(z) {0} iFolder kiszolgáló valódiságát. Ennek az iFolder kiszolgálónak a tanúsítványát ismeretlen hitelesítésszolgáltató írta alá. Előfordulhat, hogy olyan kiszolgálóhoz csatlakozik, amely csupán színleli, hogy ő a(z) {0}, ezzel viszont bizalmas adatait teheti kockára. Mielőtt elfogadná a tanúsítványt, célszerű a rendszergazdával egyeztetnie. Elfogadja véglegesen a tanúsítványt, és folytatja a csatlakozást?</value>
 	</data>
   
 	<data name="verifyCertTitle">
