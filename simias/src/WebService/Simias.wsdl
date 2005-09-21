@@ -540,6 +540,46 @@
       <s:element name="StopSimiasProcessResponse">
         <s:complexType />
       </s:element>
+      <s:element name="AddSimiasReference">
+        <s:complexType />
+      </s:element>
+      <s:element name="AddSimiasReferenceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="AddSimiasReferenceResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RemoveSimiasReference">
+        <s:complexType />
+      </s:element>
+      <s:element name="RemoveSimiasReferenceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="RemoveSimiasReferenceResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetSimiasDataPath">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetSimiasDataPathResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetSimiasDataPathResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetSimiasProcessID">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetSimiasProcessIDResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GetSimiasProcessIDResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
     </s:schema>
   </wsdl:types>
   <wsdl:message name="PingSimiasSoapIn">
@@ -734,6 +774,30 @@
   <wsdl:message name="StopSimiasProcessSoapOut">
     <wsdl:part name="parameters" element="tns:StopSimiasProcessResponse" />
   </wsdl:message>
+  <wsdl:message name="AddSimiasReferenceSoapIn">
+    <wsdl:part name="parameters" element="tns:AddSimiasReference" />
+  </wsdl:message>
+  <wsdl:message name="AddSimiasReferenceSoapOut">
+    <wsdl:part name="parameters" element="tns:AddSimiasReferenceResponse" />
+  </wsdl:message>
+  <wsdl:message name="RemoveSimiasReferenceSoapIn">
+    <wsdl:part name="parameters" element="tns:RemoveSimiasReference" />
+  </wsdl:message>
+  <wsdl:message name="RemoveSimiasReferenceSoapOut">
+    <wsdl:part name="parameters" element="tns:RemoveSimiasReferenceResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetSimiasDataPathSoapIn">
+    <wsdl:part name="parameters" element="tns:GetSimiasDataPath" />
+  </wsdl:message>
+  <wsdl:message name="GetSimiasDataPathSoapOut">
+    <wsdl:part name="parameters" element="tns:GetSimiasDataPathResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetSimiasProcessIDSoapIn">
+    <wsdl:part name="parameters" element="tns:GetSimiasProcessID" />
+  </wsdl:message>
+  <wsdl:message name="GetSimiasProcessIDSoapOut">
+    <wsdl:part name="parameters" element="tns:GetSimiasProcessIDResponse" />
+  </wsdl:message>
   <wsdl:portType name="Simias_x0020_Web_x0020_ServiceSoap">
     <wsdl:operation name="PingSimias">
       <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Allows a client to ping to make sure the Web Service is up and running</documentation>
@@ -891,9 +955,29 @@
       <wsdl:output message="tns:CanShareServiceSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="StopSimiasProcess">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Checks to see if this instance of Simias is shareable.</documentation>
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Shuts down the controlling server process.</documentation>
       <wsdl:input message="tns:StopSimiasProcessSoapIn" />
       <wsdl:output message="tns:StopSimiasProcessSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddSimiasReference">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Increments the reference count that keeps Simias services running.</documentation>
+      <wsdl:input message="tns:AddSimiasReferenceSoapIn" />
+      <wsdl:output message="tns:AddSimiasReferenceSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RemoveSimiasReference">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Decrements the Simias service reference count and signals the server to stop if the count goes to zero.</documentation>
+      <wsdl:input message="tns:RemoveSimiasReferenceSoapIn" />
+      <wsdl:output message="tns:RemoveSimiasReferenceSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSimiasDataPath">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Gets the directory path to the Simias data area.</documentation>
+      <wsdl:input message="tns:GetSimiasDataPathSoapIn" />
+      <wsdl:output message="tns:GetSimiasDataPathSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSimiasProcessID">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Gets the process ID for the current running process.</documentation>
+      <wsdl:input message="tns:GetSimiasProcessIDSoapIn" />
+      <wsdl:output message="tns:GetSimiasProcessIDSoapOut" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="Simias_x0020_Web_x0020_ServiceSoap" type="tns:Simias_x0020_Web_x0020_ServiceSoap">
@@ -1186,11 +1270,47 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="AddSimiasReference">
+      <soap:operation soapAction="http://novell.com/simias/web/AddSimiasReference" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveSimiasReference">
+      <soap:operation soapAction="http://novell.com/simias/web/RemoveSimiasReference" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSimiasDataPath">
+      <soap:operation soapAction="http://novell.com/simias/web/GetSimiasDataPath" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSimiasProcessID">
+      <soap:operation soapAction="http://novell.com/simias/web/GetSimiasProcessID" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="Simias_x0020_Web_x0020_Service">
     <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Web Service providing access to Simias</documentation>
     <wsdl:port name="Simias_x0020_Web_x0020_ServiceSoap" binding="tns:Simias_x0020_Web_x0020_ServiceSoap">
-      <soap:address location="http://localhost:8080/simias10/mlasky/Simias.asmx" />
+      <soap:address location="http://localhost:8086/simias10/Simias.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

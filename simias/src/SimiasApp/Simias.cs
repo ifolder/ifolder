@@ -55,6 +55,16 @@ namespace Mono.ASPNET
 		private static string ApplicationPath;
 
 		/// <summary>
+		/// Virtual path used in uri to contact the web service.
+		/// </summary>
+		private static string VirtualPath = "/simias10";
+
+		/// <summary>
+		/// Prefix added to create a process file name.
+		/// </summary>
+		private static string ProcessFilePrefix = "Simias_";
+
+		/// <summary>
 		/// Tags used to set the port number in the port configuration file.
 		/// </summary>
 		private static string PortConfigurationFileName = "xspport.cfg";
@@ -104,6 +114,11 @@ namespace Mono.ASPNET
 			/// Stop all Simias services in the user's context immediately.
 			/// </summary>
 			KillAll,
+
+			/// <summary>
+			/// Show information about the currently executing Simias processes.
+			/// </summary>
+			Info,
 
 			/// <summary>
 			///  Show version information.
@@ -161,39 +176,6 @@ namespace Mono.ASPNET
 		#region Properties
 
 		/// <summary>
-		/// Builds a unique mutex name for the Simias process.
-		/// </summary>
-		private string ExitMutexName
-		{
-			get { return "SimiasExitProcessMutex_" + simiasDataPath.Replace( '\\', '/' ); }
-		}
-
-		/// <summary>
-		/// Returns whether the current OS is Windows.
-		/// </summary>
-		private bool IsWindows
-		{
-			get 
-			{ 
-				switch ( Environment.OSVersion.Platform )
-				{
-					case PlatformID.Win32NT:
-					case PlatformID.Win32S:
-					case PlatformID.Win32Windows:
-					case PlatformID.WinCE:
-					{
-						return true;
-					}
-
-					default:
-					{
-						return false;
-					}
-				}
-			}
-		}
-
-		/// <summary>
 		/// Gets the default Simias data path.
 		/// </summary>
 		private static string DefaultSimiasDataPath
@@ -208,6 +190,14 @@ namespace Mono.ASPNET
 
 				return Path.Combine( path, "simias" );
 			}
+		}
+
+		/// <summary>
+		/// Builds a unique mutex name for the Simias process.
+		/// </summary>
+		private string ExitMutexName
+		{
+			get { return "SimiasExitProcessMutex_" + simiasDataPath.Replace( '\\', '/' ); }
 		}
 
 		#endregion
@@ -226,6 +216,38 @@ namespace Mono.ASPNET
 		#endregion
 
 		#region Private Methods
+
+		/// <summary>
+		/// Increments the reference count that keeps Simias services running.
+		/// </summary>
+		/// <param name="webServiceUri">The uri that references the web service.</param>
+		/// <returns>The current reference count.</returns>
+		private int AddReference( Uri webServiceUri )
+		{
+			return AddReference( webServiceUri, simiasDataPath );
+		}
+
+		/// <summary>
+		/// Increments the reference count that keeps Simias services running.
+		/// </summary>
+		/// <param name="webServiceUri">The uri that references the web service.</param>
+		/// <param name="dataPath">Directory path to the Simias data area.</param>
+		/// <returns>The current reference count.</returns>
+		private int AddReference( Uri webServiceUri, string dataPath )
+		{
+			int refCount = -1;
+
+			try
+			{
+				SimiasWebService svc = new SimiasWebService();
+				svc.Url = webServiceUri.ToString() + "/Simias.asmx";
+				Simias.Client.LocalService.Start( svc, webServiceUri, dataPath );
+				refCount = svc.AddSimiasReference();
+			}
+			catch {}
+
+			return refCount;
+		}
 
 		/// <summary>
 		/// Checks to see if the specified port is available.
@@ -277,6 +299,48 @@ namespace Mono.ASPNET
 		}
 
 		/// <summary>
+		/// Creates a unique file for this process in the temporary directory that the
+		/// kill all command uses to stop all running simias processes.
+		/// </summary>
+		private void CreateProcessFile()
+		{
+			try
+			{
+				using( File.Create( CreateProcessFileName() ) ) {}
+			}
+			catch
+			{}
+		}
+
+		/// <summary>
+		/// Creates a unique name for this simias process.
+		/// </summary>
+		/// <returns>An absolute path to a unique Simias process file.</returns>
+		private string CreateProcessFileName()
+		{
+			string s1 = simiasDataPath.Replace( ':', '@' ).Replace( Path.DirectorySeparatorChar, '_' );
+			return Path.Combine( Path.GetTempPath(), String.Format( "{0}{1}.tmp", ProcessFilePrefix, s1 ) );
+		}
+
+		/// <summary>
+		/// Deletes the unique file for this process in the temporary directory that the
+		/// kill all command uses to stop all running simias processes.
+		/// </summary>
+		private void DeleteProcessFile()
+		{
+			try
+			{
+				string pfName = CreateProcessFileName();
+				if ( File.Exists( pfName ) )
+				{
+					File.Delete( pfName );
+				}
+			}
+			catch
+			{}
+		}
+
+		/// <summary>
 		/// Gets a specified range of ports to use as the local listener.
 		/// </summary>
 		/// <param name="portString">String that contains port or port range.</param>
@@ -315,6 +379,39 @@ namespace Mono.ASPNET
 			}
 
 			return range;
+		}
+
+		/// <summary>
+		/// Gets the Simias data path from the specified encoded name.
+		/// </summary>
+		/// <param name="processFileName">Name created by CreateProcessFileName().</param>
+		/// <returns>The directory path to the Simias data area.</returns>
+		private string GetProcessFileName( string processFileName )
+		{
+			string s1 = Path.GetFileNameWithoutExtension( processFileName ).Substring( ProcessFilePrefix.Length );
+			return s1.Replace( '@', ':' ).Replace( '_', Path.DirectorySeparatorChar );
+		}
+
+		/// <summary>
+		/// Attaches a process object to the Simias process specified by the uri.
+		/// </summary>
+		/// <param name="uri">URI to the Simias web service.</param>
+		/// <param name="dataPath">Directory path to the Simias data area.</param>
+		/// <returns>Process object if successful. Otherwise a null is returned.</returns>
+		private Process GetSimiasProcess( Uri uri, string dataPath )
+		{
+			Process process = null;
+
+			try
+			{
+				SimiasWebService svc = new SimiasWebService();
+				svc.Url = uri.ToString() + "/Simias.asmx";
+				Simias.Client.LocalService.Start( svc, uri, dataPath );
+				process = Process.GetProcessById( svc.GetSimiasProcessID() );
+			}
+			catch {}
+
+			return process;
 		}
 
 		/// <summary>
@@ -377,16 +474,171 @@ namespace Mono.ASPNET
 		{
 			bool isInRange = false;
 
-			int[] range = GetPortRange( portRange );
-			if ( range != null )
+			if ( portRange != null )
 			{
-				if ( ( port >= range[ 0 ] ) && ( port <= range[ range.Length - 1 ] ) )
+				int[] range = GetPortRange( portRange );
+				if ( range != null )
 				{
-					isInRange = true;
+					if ( ( port >= range[ 0 ] ) && ( port <= range[ range.Length - 1 ] ) )
+					{
+						isInRange = true;
+					}
 				}
+			}
+			else
+			{
+				// There was no port range specified. Therefore the current port is valid.
+				isInRange = true;
 			}
 
 			return isInRange;
+		}
+
+		/// <summary>
+		/// Checks if specified web service is running from the specified simiasDataPath.
+		/// </summary>
+		/// <param name="uri">URI to the Simias web service.</param>
+		/// <returns>True if service is the same, otherwise false is returned.</returns>
+		private bool IsSameService( Uri uri )
+		{
+			return IsSameService( uri, simiasDataPath );
+		}
+
+		/// <summary>
+		/// Checks if specified web service is running from the specified simiasDataPath.
+		/// </summary>
+		/// <param name="uri">URI to the Simias web service.</param>
+		/// <param name="dataPath">Directory path to the Simias data area.</param>
+		/// <returns>True if service is the same, otherwise false is returned.</returns>
+		private bool IsSameService( Uri uri, string dataPath )
+		{
+			bool sameService = false;
+			bool caseInsensitive = ( MyEnvironment.Platform == MyPlatformID.Windows ) ? true : false;
+
+			try
+			{
+				SimiasWebService svc = new SimiasWebService();
+				svc.Url = uri.ToString() + "/Simias.asmx";
+				Simias.Client.LocalService.Start( svc, uri, dataPath );
+				if ( String.Compare( dataPath, svc.GetSimiasDataPath(), caseInsensitive ) == 0 )
+				{
+					sameService = true;
+				}
+			}
+			catch {}
+
+			return sameService;
+		}
+
+		/// <summary>
+		/// Stops all of the Simias services immediately.
+		/// </summary>
+		/// <returns>SimiasStatus</returns>
+		private SimiasStatus KillAllSimias()
+		{
+			SimiasStatus status = SimiasStatus.Success;
+
+			// Find all of the temp Simias_* files.
+			string[] simiasFiles = Directory.GetFiles( Path.GetTempPath(), "Simias_*" );
+			if ( simiasFiles.Length > 0 )
+			{
+				// Kill the process for each of the files in the list.
+				foreach ( string file in simiasFiles )
+				{
+					// Get the Simias data path from the file name.
+					string processFileName = GetProcessFileName( file );
+
+					// See if there is a port configured in the specified data area.
+					int port = ReadXspPortFromFile( processFileName );
+					if ( port != -1 )
+					{
+						// Build the URI for web services.
+						UriBuilder ub = new UriBuilder( Uri.UriSchemeHttp, IPAddress.Loopback.ToString(), port, VirtualPath );
+
+						// There has been a port configured previously. Check to see if the Simias services 
+						// are already running on this port or range.
+						if ( PingWebService( ub.Uri ) && IsSameService( ub.Uri, processFileName ) )
+						{
+							KillSimiasServer( ub.Uri, processFileName );
+						}
+					}
+				}
+			}
+			else
+			{
+				Console.Error.WriteLine( "Error: No Simias processes are running." );
+				status = SimiasStatus.ServiceNotAvailable;
+			}
+
+			return status;
+		}
+
+		/// <summary>
+		/// Stops the simias services immediately for the specified --datadir.
+		/// </summary>
+		/// <returns>SimiasStatus</returns>
+		private SimiasStatus KillSimias()
+		{
+			SimiasStatus status = SimiasStatus.Success;
+
+			// See if there is a port configured in the specified data area.
+			int port = ReadXspPortFromFile();
+			if ( port != -1 )
+			{
+				// Build the URI for web services.
+				UriBuilder ub = new UriBuilder( Uri.UriSchemeHttp, IPAddress.Loopback.ToString(), port, VirtualPath );
+
+				// There has been a port configured previously. Check to see if the Simias services 
+				// are already running on this port or range.
+				if ( PingWebService( ub.Uri ) && IsSameService( ub.Uri ) )
+				{
+					if ( !KillSimiasServer( ub.Uri ) )
+					{
+						Console.Error.WriteLine( "Error: Cannot contact {0} to kill the service.", ub.Uri );
+						status = SimiasStatus.ServiceNotAvailable;
+					}
+				}
+				else
+				{
+					Console.Error.WriteLine( "Error: No service found for {0}.", simiasDataPath );
+					status = SimiasStatus.ServiceNotAvailable;
+				}
+			}
+
+			return status;
+		}
+
+		/// <summary>
+		/// Stops the Simias service immediately. Does not honor the reference count.
+		/// </summary>
+		/// <param name="webServiceUri">The uri that references the web service.</param>
+		/// <returns>True if the webservice responded to the kill command. Otherwise false is returned.</returns>
+		private bool KillSimiasServer( Uri webServiceUri )
+		{
+			return KillSimiasServer( webServiceUri, simiasDataPath );
+		}
+
+		/// <summary>
+		/// Stops the Simias service immediately. Does not honor the reference count.
+		/// </summary>
+		/// <param name="webServiceUri">The uri that references the web service.</param>
+		/// <param name="dataPath">Directory path to the Simias data area.</param>
+		/// <returns>True if the webservice responded to the kill command. Otherwise false is returned.</returns>
+		private bool KillSimiasServer( Uri webServiceUri, string dataPath )
+		{
+			bool status = false;
+
+			try
+			{
+				SimiasWebService svc = new SimiasWebService();
+				svc.Url = webServiceUri.ToString() + "/Simias.asmx";
+				Simias.Client.LocalService.Start( svc, webServiceUri, dataPath );
+				svc.StopSimiasProcess();
+				status = true;
+			}
+			catch {}
+
+			return status;
 		}
 
 		/// <summary>
@@ -502,6 +754,22 @@ namespace Mono.ASPNET
 						break;
 					}
 
+					case "--info":
+					{
+						if ( command != SimiasCommand.Start )
+						{
+							// A different command was specified earlier. Show an error.
+							Console.WriteLine( "Invalid command line parameters. More than one command was specified." );
+							status = SimiasStatus.InvalidCommandLine;
+						}
+						else
+						{
+							command = SimiasCommand.Info;
+						}
+
+						break;
+					}
+
 					case "--version":
 					{
 						if ( command != SimiasCommand.Start )
@@ -550,6 +818,17 @@ namespace Mono.ASPNET
 				}
 			}
 
+			// If --noexec was specified, make sure that --port and --datadir were also specified.
+			if ( noExec )
+			{
+				if ( ( Environment.CommandLine.IndexOf( "--port " ) == -1 ) ||
+					 ( Environment.CommandLine.IndexOf( "--datadir " ) == -1 ) )
+				{
+					Console.Error.WriteLine( "Error: Invalid command line parameters.\nMust specify --port and --datadir when using --noexec." );
+					status = SimiasStatus.InvalidCommandLine;
+				}
+			}
+
 			return status;
 		}
 
@@ -586,18 +865,60 @@ namespace Mono.ASPNET
 		/// <returns>Port number if successful, otherwise -1 is returned.</returns>
 		private int ReadXspPortFromFile()
 		{
+			return ReadXspPortFromFile( simiasDataPath );
+		}
+
+		/// <summary>
+		/// Gets the port from the configuration file.
+		/// </summary>
+		/// <param name="dataPath">The directory path to the Simias data.</param>
+		/// <returns>Port number if successful, otherwise -1 is returned.</returns>
+		private int ReadXspPortFromFile( string dataPath )
+		{
 			int port = -1;
 
 			try
 			{
 				XmlDocument document = new XmlDocument();
-				document.Load( Path.Combine( simiasDataPath, PortConfigurationFileName ) );
+				document.Load( Path.Combine( dataPath, PortConfigurationFileName ) );
 				port = Convert.ToInt32( document.DocumentElement[ PortTag ].InnerText );
 			}
 			catch
 			{}
 
 			return port;
+		}
+
+		/// <summary>
+		/// Decrements the Simias service reference count and signals the server to stop if the count goes to zero.
+		/// </summary>
+		/// <param name="webServiceUri">The uri that references the web service.</param>
+		/// <returns>The current reference count.</returns>
+		private int RemoveReference( Uri webServiceUri )
+		{
+			return RemoveReference( webServiceUri, simiasDataPath );
+		}
+
+		/// <summary>
+		/// Decrements the Simias service reference count and signals the server to stop if the count goes to zero.
+		/// </summary>
+		/// <param name="webServiceUri">The uri that references the web service.</param>
+		/// <param name="dataPath">Directory path to the Simias data area.</param>
+		/// <returns>The current reference count.</returns>
+		private int RemoveReference( Uri webServiceUri, string dataPath )
+		{
+			int refCount = -1;
+
+			try
+			{
+				SimiasWebService svc = new SimiasWebService();
+				svc.Url = webServiceUri.ToString() + "/Simias.asmx";
+				Simias.Client.LocalService.Start( svc, webServiceUri, dataPath );
+				refCount = svc.RemoveSimiasReference();
+			}
+			catch {}
+
+			return refCount;
 		}
 
 		/// <summary>
@@ -639,7 +960,8 @@ namespace Mono.ASPNET
 			Console.WriteLine();							
 			Console.WriteLine( "    --noexec:" );
 			Console.WriteLine( "        Does not detach new Simias.exe child process. Runs Simias services" );
-			Console.WriteLine( "        from the current process. This is documented for debugging purposes" );
+			Console.WriteLine( "        from the current process. Must also specify --port and --datadir" );
+			Console.WriteLine( "        when using this option. This is documented for debugging purposes" );
 			Console.WriteLine( "        only." );
 			Console.WriteLine( "        Default: None" );
 			Console.WriteLine();							
@@ -669,6 +991,10 @@ namespace Mono.ASPNET
 			Console.WriteLine( "        Simias process immediately. To stop the shared Simias services" );
 			Console.WriteLine( "        immediately, do not specify --datadir. To stop all Simias services" );
 			Console.WriteLine( "        immediately, specify the 'all' value." );
+			Console.WriteLine();
+			Console.WriteLine( "    --info:" );
+			Console.WriteLine( "        Displays information regarding the currently executing Simias" );
+			Console.WriteLine( "        processes." );
 			Console.WriteLine();							
 			Console.WriteLine( "    --version:" );
 			Console.WriteLine( "        Displays the version information and exits." );
@@ -679,12 +1005,87 @@ namespace Mono.ASPNET
 		}
 
 		/// <summary>
+		/// Displays information about the currently executing Simias processes.
+		/// </summary>
+		private void ShowInfo()
+		{
+			// Find all of the temp Simias_* files.
+			string[] simiasFiles = Directory.GetFiles( Path.GetTempPath(), "Simias_*" );
+			if ( simiasFiles.Length > 0 )
+			{
+				// Kill the process for each of the files in the list.
+				foreach ( string file in simiasFiles )
+				{
+					// Convert the file name to a Simias data directory.
+					string dataPath = GetProcessFileName( file );
+
+					// See if there is a port configured in the specified data area.
+					int port = ReadXspPortFromFile( dataPath );
+					if ( port != -1 )
+					{
+						// Build the URI for web services.
+						UriBuilder ub = new UriBuilder( Uri.UriSchemeHttp, IPAddress.Loopback.ToString(), port, VirtualPath );
+
+						// There has been a port configured previously. Check to see if the Simias services 
+						// are already running on this port or range.
+						if ( PingWebService( ub.Uri ) && IsSameService( ub.Uri, dataPath ) )
+						{
+							int refCount = AddReference( ub.Uri, dataPath );
+							try
+							{
+								Process process = GetSimiasProcess( ub.Uri, dataPath );
+
+								Console.WriteLine( "Simias process:   {0}", process.Id );
+								Console.WriteLine( "Data directory:   {0}", dataPath );
+								Console.WriteLine( "Web Service Uri:  {0}", ub.Uri );
+
+								if ( verbose )
+								{
+									Console.WriteLine( "Reference count:  {0}", refCount - 1 );
+									Console.WriteLine( "Start time:       {0}", process.StartTime );
+									Console.WriteLine( "{0}", process.MainModule.FileVersionInfo );
+								}
+
+								Console.WriteLine();
+							}
+							finally
+							{
+								RemoveReference( ub.Uri, dataPath );
+							}
+						}
+						else
+						{
+							Console.WriteLine( "Simias process terminated abnormally." );
+							Console.WriteLine( "Data directory:   {0}", dataPath );
+							Console.WriteLine( "Web Service Uri:  {0}", ub.Uri );
+						}
+					}
+					else
+					{
+						Console.WriteLine( "Simias process terminated abnormally." );
+						Console.WriteLine( "No port information." );
+						Console.WriteLine( "Data directory:   {0}", dataPath );
+					}
+				}
+			}
+			else
+			{
+				Console.WriteLine( "No Simias processes are running." );
+			}
+		}
+
+		/// <summary>
 		/// Shows the Simias.exe version information.
 		/// </summary>
 		private void ShowVersion()
 		{
-			AssemblyName name = Assembly.GetExecutingAssembly().GetName();
-			Console.WriteLine( name.FullName );
+			Assembly assembly = Assembly.GetExecutingAssembly();
+			string version = assembly.GetName().Version.ToString();
+
+			object[] att = assembly.GetCustomAttributes( typeof( AssemblyCopyrightAttribute ), false );
+			string copyright = ( ( AssemblyCopyrightAttribute ) att[ 0 ] ).Copyright;
+
+			Console.WriteLine ("{0} {1}\n{2}", Path.GetFileName( assembly.Location ), version, copyright );
 		}
 
 		/// <summary>
@@ -700,19 +1101,16 @@ namespace Mono.ASPNET
 			{
 				// Either this is the Simias child process or --noexec was specified on the command line
 				// for the controller process.
-				StartSimiasServer();
+				status = StartSimiasServer();
 			}
 			else
 			{
-				// Virtual path.
-				string virtualPath = runAsServer ? "/simias10" : "/simias10/" + Environment.UserName;
-
 				// See if there is a port configured in the specified data area.
 				int port = ReadXspPortFromFile();
 				if ( port != -1 )
 				{
 					// Build the URI for web services.
-					UriBuilder ub = new UriBuilder( Uri.UriSchemeHttp, IPAddress.Loopback.ToString(), port, virtualPath );
+					UriBuilder ub = new UriBuilder( Uri.UriSchemeHttp, IPAddress.Loopback.ToString(), port, VirtualPath );
 
 					// There has been a port configured previously. Check to see if the Simias services 
 					// are already running on this port or range.
@@ -722,8 +1120,12 @@ namespace Mono.ASPNET
 						// on the command line, see if it is the same port or in the same port range.
 						if ( IsPortInRange( port ) )
 						{
+							// Increment the reference count for this instance, so that another application
+							// won't shut down this process on us.
+							AddReference( ub.Uri );
+
 							// The service is already running, don't start a new one, just use the old one.
-							Console.WriteLine( ub.Uri.ToString() );
+							Console.WriteLine( ub.Uri );
 						}
 						else
 						{
@@ -832,14 +1234,12 @@ namespace Mono.ASPNET
 			int[] range = GetPortRange( portRange );
 			if ( range != null )
 			{
-				// Build the virtual server path.
-				string virtualPath = runAsServer ? "/simias10" : "/simias10/" + Environment.UserName;
-
 				// Build the URI for web services and write it to stdout.
-				UriBuilder ub = new UriBuilder( Uri.UriSchemeHttp, IPAddress.Loopback.ToString(), range[ 0 ], virtualPath );
+				UriBuilder ub = new UriBuilder( Uri.UriSchemeHttp, IPAddress.Loopback.ToString(), range[ 0 ], VirtualPath );
 
 				// Split the application path into root and web paths.
-				int index = ApplicationPath.LastIndexOf( "web" );
+				string appPath = ( MyEnvironment.Platform != MyPlatformID.Windows ) ? ApplicationPath : ApplicationPath.ToLower();
+				int index =  appPath.LastIndexOf( "web" );
 				if ( index != -1 )
 				{
 					// Get the parent directory to the "web/bin" directory.
@@ -847,7 +1247,7 @@ namespace Mono.ASPNET
 
 					// See which platform we are running on.
 					ArrayList args = new ArrayList();
-					if ( !IsWindows )
+					if ( MyEnvironment.Platform != MyPlatformID.Windows )
 					{
 						// mono requires the application path as it's first argument.
 						args.Add( ApplicationPath );
@@ -857,7 +1257,7 @@ namespace Mono.ASPNET
 					args.Add( "--root" );
 					args.Add( rootPath );
 					args.Add( "--applications" );
-					args.Add( String.Format( "{0}:web", ub.Uri.AbsolutePath ) );
+					args.Add( String.Format( "{0}:{1}", ub.Uri.AbsolutePath, ApplicationPath.Substring( index, 3 ) ) );
 					args.Add( "--port" );
 					args.Add( ub.Port.ToString() );
 					args.Add( "--nonstop" );
@@ -875,9 +1275,19 @@ namespace Mono.ASPNET
 					PingWebService( ub.Uri );
 					Console.WriteLine( ub.Uri );
 
-					// Initialize the process end mutex and wait for it to become signalled.
+					// Increment the reference count for this instance, so that another application
+					// won't shut down this process on us.
+					AddReference( ub.Uri );
+
+					// Create a temporary file to provide information about this process.
+					CreateProcessFile();
+
+					// Initialize the process end mutex and wait for it to become signaled.
 					Mutex mutex = new Mutex( false, ExitMutexName );
 					mutex.WaitOne();
+
+					// Get rid of the temporary file.
+					DeleteProcessFile();
 
 					// Stop the server before exiting.
 					Server.Stop();
@@ -906,24 +1316,27 @@ namespace Mono.ASPNET
 		{
 			SimiasStatus status = SimiasStatus.Success;
 
-			// Virtual path.
-			string virtualPath = runAsServer ? "/simias10" : "/simias10/" + Environment.UserName;
-
 			// See if there is a port configured in the specified data area.
 			int port = ReadXspPortFromFile();
 			if ( port != -1 )
 			{
 				// Build the URI for web services.
-				UriBuilder ub = new UriBuilder( Uri.UriSchemeHttp, IPAddress.Loopback.ToString(), port, virtualPath );
+				UriBuilder ub = new UriBuilder( Uri.UriSchemeHttp, IPAddress.Loopback.ToString(), port, VirtualPath );
 
 				// There has been a port configured previously. Check to see if the Simias services 
 				// are already running on this port or range.
-				if ( PingWebService( ub.Uri ) && CanShareSimiasService( ub.Uri ) )
+				if ( PingWebService( ub.Uri ) && IsSameService( ub.Uri ) )
 				{
-					SimiasWebService svc = new SimiasWebService();
-					svc.Url = ub.Uri.ToString() + "/Simias.asmx";
-					Simias.Client.LocalService.Start( svc, ub.Uri, simiasDataPath );
-					svc.StopSimiasProcess();
+					if ( RemoveReference( ub.Uri ) == -1 )
+					{
+						Console.Error.WriteLine( "Error: Cannot contact {0} to shutdown the service.", ub.Uri );
+						status = SimiasStatus.ServiceNotAvailable;
+					}
+				}
+				else
+				{
+					Console.Error.WriteLine( "Error: No service found for {0}.", simiasDataPath );
+					status = SimiasStatus.ServiceNotAvailable;
 				}
 			}
 
@@ -987,11 +1400,13 @@ namespace Mono.ASPNET
 
 						case SimiasCommand.Kill:
 						{
+							server.KillSimias();
 							break;
 						}
 
 						case SimiasCommand.KillAll:
 						{
+							server.KillAllSimias();
 							break;
 						}
 
@@ -1031,6 +1446,12 @@ namespace Mono.ASPNET
 						case SimiasCommand.Stop:
 						{
 							server.StopSimias();
+							break;
+						}
+
+						case SimiasCommand.Info:
+						{
+							server.ShowInfo();
 							break;
 						}
 

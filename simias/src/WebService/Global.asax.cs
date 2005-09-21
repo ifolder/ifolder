@@ -101,6 +101,14 @@ namespace Simias.Web
 				ParseConfigurationParameters( Environment.GetCommandLineArgs() );
 			}
 
+			// Make sure that there is a data path specified.
+			if ( simiasDataPath == null )
+			{
+				ApplicationException apEx = new ApplicationException( "The Simias data path was not specified." );
+				Console.Error.WriteLine( apEx.Message );
+				throw apEx;
+			}
+
 			// Start the shutdown thread running waiting to signal a shutdown.
 			Thread thread = new Thread( new ThreadStart( ShutDownThread ) );
 			thread.IsBackground = true;
@@ -191,8 +199,6 @@ namespace Simias.Web
 		{
 			string mutexName = simiasDataPath.Replace( '\\', '/' );
 
-			Console.Error.WriteLine( "Simias mutex name: SimiasExitProcessMutex_" + mutexName );
-
 			// Create and own the mutex that the controlling server process will wait on.
 			Mutex mutex = new Mutex( true, "SimiasExitProcessMutex_" + mutexName );
 
@@ -223,6 +229,7 @@ namespace Simias.Web
 			{
 				Console.Error.WriteLine("Simias Application Path: {0}", Environment.CurrentDirectory);
 				Console.Error.WriteLine("Simias Data Path: {0}", simiasDataPath);
+				Console.Error.WriteLine("Run in {0} configuration", runAsServer ? "server" : "client" );
 			}
 
 			Simias.Storage.Store.GetStore();
