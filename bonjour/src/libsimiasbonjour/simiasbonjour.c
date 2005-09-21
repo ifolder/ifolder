@@ -294,6 +294,7 @@ RegisterLocalMember(
 	char				txtStrings[2048];
 	DNSServiceErrorType err;
 	DNSServiceErrorType	cbErr;
+	DNSServiceFlags		flags;
 	int txtLength;
 
 	pid_t pid = getpid();
@@ -303,7 +304,7 @@ RegisterLocalMember(
 		pServicePath == NULL || pPublicKey == NULL ||
 		pCookie == NULL )
 	{
-		return -1;
+		return kDNSServiceErr_BadParam;
 	}
 
 	if ( ( strlen( pPublicKey ) + strlen( keyLabel ) ) > 255 )
@@ -348,12 +349,13 @@ RegisterLocalMember(
 
 	*pCookie = NULL;
 	cbErr = kDNSServiceErr_Unknown;
+	flags = kDNSServiceFlagsNoAutoRename;
 
 	//Opaque16 registerPort = { { pid >> 8, pid & 0xFF } };
 	err = 
 		DNSServiceRegister(
 			pCookie, 
-			0, 
+			flags,
 			kDNSServiceInterfaceIndexAny, 
 			pID, 
 			"_ifolder_member._tcp.", 
