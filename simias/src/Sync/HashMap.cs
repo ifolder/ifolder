@@ -109,11 +109,12 @@ namespace Simias.Sync.Delta
 		static Queue			mapQ = new Queue();
 		static AutoResetEvent	queueEvent = new AutoResetEvent(false);
 		delegate void	HashMapDelegate();
+		static int				version = 1;
 
 		internal struct HashFileHeader
 		{
-			static byte[]	signature = {(byte)'#', (byte)'M', (byte)'a', (byte)'P', (byte)'f', (byte)'I', (byte)'l', (byte)'e'};
-			static int		headerSize = 12;
+			static byte[]	signature = {(byte)'!', (byte)'M', (byte)'a', (byte)'P', (byte)'f', (byte)'I', (byte)'l', (byte)'e'};
+			static int		headerSize = 24;
 
 			/// <summary>
 			/// 
@@ -122,10 +123,12 @@ namespace Simias.Sync.Delta
 			/// <param name="blockSize"></param>
 			/// <param name="entryCount"></param>
 			/// <returns></returns>
-			internal static bool ReadHeader(BinaryReader reader, out int blockSize, out int entryCount)
+			internal static bool ReadHeader(BinaryReader reader, out int blockSize, out int entryCount, out ulong localIncarnation)
 			{
 				byte[] sig = reader.ReadBytes(8);
 				blockSize = reader.ReadInt32();
+				int ver = reader.ReadInt32();
+				localIncarnation = reader.ReadUInt64();
 				entryCount = 0;
 				if (sig.Length == signature.Length)
 				{
@@ -134,6 +137,8 @@ namespace Simias.Sync.Delta
 						if (sig[i] != signature[i])
 							return false;
 					}
+					if (version != ver)
+						return false;
 					entryCount = (int)((reader.BaseStream.Length - headerSize)/ HashData.InstanceSize);
 					return true;
 				}
@@ -145,10 +150,12 @@ namespace Simias.Sync.Delta
 			/// </summary>
 			/// <param name="writer"></param>
 			/// <param name="blockSize"></param>
-			internal static void WriteHeader(BinaryWriter writer, int blockSize)
+			internal static void WriteHeader(BinaryWriter writer, int blockSize, ulong localIncarnation)
 			{
 				writer.Write(signature);
 				writer.Write(blockSize);
+				writer.Write(version);
+				writer.Write(localIncarnation);
 			}
 		}
 
@@ -221,7 +228,7 @@ namespace Simias.Sync.Delta
 				BinaryWriter writer = new BinaryWriter( File.OpenWrite(tmpMapFile));
 
 				// Write the header.
-				HashFileHeader.WriteHeader(writer, blockSize);
+				HashFileHeader.WriteHeader(writer, blockSize, node.LocalIncarnation);
 				try
 				{
 					mapSrcStream.Position = 0;
@@ -327,10 +334,12 @@ namespace Simias.Sync.Delta
 		{
 			if (File.Exists(file))
 			{
+				ulong localIncarnation;
 				FileStream stream = File.OpenRead(file);
-				if (HashFileHeader.ReadHeader(new BinaryReader(stream), out blockSize, out entryCount))
+				if (HashFileHeader.ReadHeader(new BinaryReader(stream), out blockSize, out entryCount, out localIncarnation))
 				{
-					return stream;
+					if (node.LocalIncarnation == localIncarnation)
+						return stream;
 				}
 			}
 			this.CreateHashMap();
