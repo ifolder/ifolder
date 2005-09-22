@@ -50,7 +50,6 @@ namespace Simias.Service
 
 		private static Manager instance;
 
-		static internal string XmlTypeAttr = "type";
 		static internal string XmlAssemblyAttr = "assembly";
 		static internal string XmlEnabledAttr = "enabled";
 		static internal string XmlNameAttr = "name";
@@ -58,20 +57,14 @@ namespace Simias.Service
 
 		private Thread startThread = null;
 		private Thread stopThread = null;
-		private XmlElement servicesElement;
 		private ArrayList serviceList = new ArrayList();
 
-		private const string CFG_Section = "ServiceManager";
-		private const string CFG_Services = "Services";
-		private const string XmlServiceTag = "Service";
+		private const string ModulesDirectory = "modules";
+		private const string ServiceConfigFiles = "*.conf";
 
 		private ManualResetEvent servicesStarted = new ManualResetEvent(false);
 		private ManualResetEvent servicesStopped = new ManualResetEvent(true);
-		private DefaultSubscriber	subscriber = null;
-#if CLIENT_MEMORY_ROLL
-		static private int thresholdTimeLimit = 10;
-		static private float growthLimit = 80;
-#endif
+		private DefaultSubscriber subscriber = null;
 
 		#region Events
 		/// <summary>
@@ -99,43 +92,39 @@ namespace Simias.Service
 
 			lock (this)
 			{
-				// Get the XmlElement for the Services.
-				servicesElement = Store.GetStore().Config.GetElement(CFG_Section, CFG_Services);
+				// Add the Change Log Service and Local Domain Service by default.
+				serviceList.Add( new ThreadServiceCtl( "Simias Change Log Service", "SimiasLib", "Simias.Storage.ChangeLog" ) );
+				serviceList.Add( new ThreadServiceCtl( "Simias Local Domain Provider", "SimiasLib", "Simias.LocalProvider" ) );
 
-				XmlNodeList serviceNodes = servicesElement.SelectNodes(XmlServiceTag);
-				foreach (XmlElement serviceNode in serviceNodes)
+				// Check if there is an overriding modules directory in the simias data area.
+				string[] confFileList = null;
+				string modulesDir = Path.Combine( Store.StorePath, ModulesDirectory );
+				if ( Directory.Exists( modulesDir ) )
 				{
-					ServiceType sType = (ServiceType)Enum.Parse(typeof(ServiceType), serviceNode.GetAttribute(XmlTypeAttr));
-					switch (sType)
+					confFileList = Directory.GetFiles( modulesDir, ServiceConfigFiles );
+				}
+
+				// Check if there are any service configuration files.
+				if ( ( confFileList == null ) || ( confFileList.Length == 0 ) )
+				{
+					// There is no overriding directory, use the default one.
+					modulesDir = SimiasSetup.modulesdir;
+					confFileList = Directory.GetFiles( modulesDir, ServiceConfigFiles );
+				}
+
+				// Get all of the configuration files from the modules directory.
+				foreach ( string confFile in confFileList )
+				{
+					string assembly = Path.GetFileNameWithoutExtension( confFile );
+					XmlDocument confDoc = new XmlDocument();
+					confDoc.Load( confFile );
+
+					// Get the XmlElement for the Services.
+					foreach ( XmlElement serviceNode in confDoc.DocumentElement )
 					{
-						case ServiceType.Process:
-							serviceList.Add(new ProcessServiceCtl(serviceNode));
-							break;
-						case ServiceType.Thread:
-							serviceList.Add(new ThreadServiceCtl(serviceNode));
-							break;
+						serviceList.Add( new ThreadServiceCtl( assembly, serviceNode ) );
 					}
 				}
-
-#if CLIENT_MEMORY_ROLL
-				// TODO: Remove when mono compacts the heap.
-				if (config.Exists("ClientRollOver", "GrowthLimit"))
-				{
-					string tempString = config.Get( "ClientRollOver", "GrowthLimit", null);
-					growthLimit = Convert.ToSingle( tempString );
-				}
-
-				if (config.Exists("ClientRollOver", "ThresholdTime"))
-				{
-					string tempString = config.Get("ClientRollOver", "ThresholdTime", null);
-					thresholdTimeLimit = Convert.ToInt32( tempString );
-				}
-				// TODO: End
-#endif
-				// Start a monitor thread to keep the services running.
-				Thread mThread = new Thread(new ThreadStart(Monitor));
-				mThread.IsBackground = true;
-				mThread.Start();
 			}
 
 			// reset the log4net configurations after a lock on Flaim was obtained
@@ -233,114 +222,6 @@ namespace Simias.Service
 			}
 		}
 		
-		#endregion
-
-		#region Monitor
-#if CLIENT_MEMORY_ROLL
-		/// <summary>
-		/// Hack used to get the virtual memory size of the SimiasApp process. This
-		/// is only used on Linux to determine if the SimiasApp process needs to be
-		/// restarted in order to get around the non-compacting heap problem on mono.
-		/// TODO: Can be removed when mono compacts the heap.
-		/// </summary>
-		/// <returns>The amount of memory in bytes consumed by the SimiasApp process.</returns>
-		private float GetSimiasMemorySize()
-		{
-			float memSize = 1;
-
-			try
-			{
-				// First entry will be the virtual memory size in pages.
-				using ( StreamReader sr = new StreamReader( "/proc/self/statm" ) )
-				{
-					String[] lines = sr.ReadLine().Split( null );
-					memSize = Convert.ToSingle( lines[ 0 ].Trim() ) * 4096;
-				}
-			}
-			catch
-			{}
-
-			return memSize;
-		}
-#endif
-		private void Monitor()
-		{
-#if CLIENT_MEMORY_ROLL
-			// TODO: This can be removed when mono compacts the heap.
-			bool isClient = !Store.GetStore().IsEnterpriseServer;
-			DateTime thresholdTime = DateTime.Now;
-			float initialMemorySize = 0;
-			if ( MyEnvironment.Mono && isClient )
-			{
-				Thread.Sleep( 1000 * 60 );
-				thresholdTime += new TimeSpan(0, thresholdTimeLimit, 0);
-				initialMemorySize = GetSimiasMemorySize();
-				logger.Debug( "Intialize memory size = {0} KB", initialMemorySize / 1024 );
-			}
-			// TODO: End
-#endif
-			while (true)
-			{
-				try
-				{
-					lock (this)
-					{
-						// Make sure all running processes are still running.
-						foreach (ServiceCtl svc in serviceList)
-						{
-							if (svc.state == State.Running && svc.HasExited)
-							{
-								// The service has exited. Restart it.
-								logger.Info("\"{0}\" service exited.  Restarting ....", svc.Name);
-								svc.state = State.Stopped;
-								svc.Start();
-							}
-						}
-					}
-#if CLIENT_MEMORY_ROLL
-					// TODO: This can be removed when mono compacts the heap.
-					// Check how much memory is being used by the process.
-					if (MyEnvironment.Mono && isClient)
-					{
-						float delta = GetSimiasMemorySize() - initialMemorySize;
-						if ( delta > 0 )
-						{
-							float growthPercentage = (delta / initialMemorySize) * 100;
-							logger.Debug("Simias memory growth = {0}%", growthPercentage);
-							if (growthPercentage > growthLimit)
-							{
-								// See if the memory useage has been up for a sufficient period of time.
-								if ( DateTime.Now >= thresholdTime )
-								{
-									// Send out an event that will cause the application to restart.
-									logger.Info( "Hit memory threshold. Restarting SimiasApp." );
-									EventPublisher publisher = new EventPublisher();
-									publisher.RaiseEvent(new NotifyEventArgs("Simias-Restart", "The application is restarting.", DateTime.Now));
-								}
-							}
-							else
-							{
-								// The memory has fallen below the threshold. Restart the time.
-								thresholdTime = DateTime.Now + new TimeSpan(0, thresholdTimeLimit, 0);
-							}
-						}
-						else
-						{
-							// The memory has fallen below the threshold. Restart the time.
-							thresholdTime = DateTime.Now + new TimeSpan(0, thresholdTimeLimit, 0);
-						}
-					}
-					// TODO: End
-#endif
-				}
-				catch
-				{
-				}
-
-				Thread.Sleep(1000 * 60);
-			}
-		}
-
 		#endregion
 
 		#region Control Methods.

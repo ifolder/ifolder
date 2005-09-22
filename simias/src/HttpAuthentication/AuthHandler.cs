@@ -393,29 +393,29 @@ namespace Simias.Security.Web
 			app.AuthenticateRequest += new EventHandler( OnAuthenticateRequest );
 			app.AcquireRequestState += new EventHandler( OnAcquireRequestState );
 
-			// Get the application settings from the web.config.
-			NameValueCollection AppSettings = ConfigurationSettings.AppSettings;
-			string[] settings = AppSettings.GetValues( "SimiasRequireSSL" );
-			if ( ( settings != null ) && ( settings[ 0 ] != null ) )
+			// Get the application settings from the Simias.config.
+			Configuration config = Store.GetStore().Config;
+			string setting = config.Get( "Authentication", "SimiasRequireSSL" );
+			if ( setting != null )
 			{
-				if ( String.Compare( settings[ 0 ], "no", true ) == 0 )
+				if ( String.Compare( setting, "no", true ) == 0 )
 				{
 					sslRequired = false;
 				}
 			}
 
 			// Get the ssl port setting.
-			settings = AppSettings.GetValues( "SimiasSSLPort" );
-			if ( ( settings != null ) && ( settings[ 0 ] != null ) )
+			setting = config.Get( "Authentication", "SimiasSSLPort" );
+			if ( setting != null )
 			{
-				sslPort = Convert.ToInt32( settings[ 0 ] );
+				sslPort = Convert.ToInt32( setting );
 			}
 
 			// Get the services that do not need authentication.
-			settings = AppSettings.GetValues( "SimiasAuthNotRequired" );
-			if ( ( settings != null ) && ( settings[ 0 ] != null ) )
+			setting = config.Get( "Authentication", "SimiasAuthNotRequired" );
+			if ( setting != null )
 			{
-				ParseAuthNotRequiredServices( settings[ 0 ] );
+				ParseAuthNotRequiredServices( setting );
 			}
 
 			// Get all the addresses that this host is known by.

@@ -51,11 +51,12 @@ namespace Simias.Service
 		/// <summary>
 		/// Initializes the Service Control object.
 		/// </summary>
+		/// <param name="serviceAssembly">The assembly that the service belongs to.</param>
 		/// <param name="serviceElement">XML element that describes the service.</param>
-		protected ServiceCtl(XmlElement serviceElement)
+		protected ServiceCtl(string serviceAssembly, XmlElement serviceElement)
 		{
 			name = serviceElement.GetAttribute(Manager.XmlNameAttr);
-			assembly = serviceElement.GetAttribute(Manager.XmlAssemblyAttr);
+			assembly = serviceAssembly;
 			enabled = bool.Parse(serviceElement.GetAttribute(Manager.XmlEnabledAttr));
 		}
 

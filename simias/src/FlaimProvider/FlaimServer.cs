@@ -513,7 +513,6 @@ namespace Simias.Storage.Provider.Flaim
 		string					IdPath;
 		const string			Name = "FlaimSimias.db";
 		const string			IdName = "FlaimSimias.IDs";
-		const string			version = "0.2";
 
 		private Flaim4 Flaim
 		{
@@ -630,17 +629,7 @@ namespace Simias.Storage.Provider.Flaim
 				rc = Flaim.OpenStore();
 				if (FlaimError.IsSuccess(rc))
 				{
-					// Make sure the version is correct.
-					string lv = conf.Version;
-					if (lv != "0" && lv == version)
-					{
-						AlreadyDisposed = false;
-					}
-					else
-					{
-						rc = FlaimError.Error.FERR_UNSUPPORTED_VERSION;
-						Flaim.CloseStore();
-					}
+					AlreadyDisposed = false;
 				}
 			}
 			return rc;

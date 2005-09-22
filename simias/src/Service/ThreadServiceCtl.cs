@@ -47,8 +47,8 @@ namespace Simias.Service
 		/// </summary>
 		/// <param name="conf"></param>
 		/// <param name="serviceElement"></param>
-		public ThreadServiceCtl(XmlElement serviceElement) :
-			base(serviceElement)
+		public ThreadServiceCtl(string assembly, XmlElement serviceElement) :
+			base(assembly, serviceElement)
 		{
 			classType = serviceElement.GetAttribute(XmlClassAttr);
 		}
@@ -160,7 +160,6 @@ namespace Simias.Service
 		public override void ToXml(XmlElement element)
 		{
 			base.ToXml(element);
-			element.SetAttribute(Manager.XmlTypeAttr, ServiceType.Thread.ToString());
 			element.SetAttribute(XmlClassAttr, classType);
 		}
 

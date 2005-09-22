@@ -49,6 +49,7 @@ namespace Simias.Client
 		// custom setup paths
 		private static string _webdir = "@_webdir_@";
 		private static string _webbindir = "@_webbindir_@";
+		private static string _modulesdir = "@_modulesdir_@";
 		
 		// setup info
 		private static string _target = "@_target_@";
@@ -118,6 +119,7 @@ namespace Simias.Client
 				_sysconfdir = Path.GetFullPath(_sysconfdir.Replace(_prefix, value));
 				_webdir = Path.GetFullPath(_webdir.Replace(_prefix, value));
 				_webbindir = Path.GetFullPath(_webbindir.Replace(_prefix, value));
+				_modulesdir = Path.GetFullPath(_modulesdir.Replace(_prefix, value));
 				
 				// update prefix
 				_prefix = Path.GetFullPath(value);
@@ -226,6 +228,14 @@ namespace Simias.Client
 		public static string webbindir
 		{
 			get { return _webbindir; }
+		}
+		
+		/// <summary>
+		/// modulesdir
+		/// </summary>
+		public static string modulesdir
+		{
+			get { return _modulesdir; }
 		}
 		
 		/// <summary>

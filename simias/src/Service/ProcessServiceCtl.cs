@@ -43,8 +43,8 @@ namespace Simias.Service
 		
 		#region Constructor
 
-		internal ProcessServiceCtl(XmlElement serviceElement) :
-			base(serviceElement)
+		internal ProcessServiceCtl(string assembly, XmlElement serviceElement) :
+			base(assembly, serviceElement)
 		{
 		}
 

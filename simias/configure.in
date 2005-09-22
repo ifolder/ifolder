@@ -318,6 +318,7 @@ AC_SUBST(STORELIB)
 AC_SUBST(STORELIB_PATH)
 AC_SUBST(webdir)
 AC_SUBST(webbindir)
+AC_SUBST(modulesdir)
 AC_SUBST(StoreProviderAssembly)
 AC_SUBST(StoreProviderType)
 AC_SUBST(GSOAP_PATH)
@@ -327,8 +328,10 @@ AC_SUBST(GSOAP_PATH)
 #
 webdir="${libexecdir}/web"
 webbindir="${webdir}/bin"
+modulesdir="${webdir}/modules"
 AC_SUBST(webdir)
 AC_SUBST(webbindir)
+AC_SUBST(modulesdir)
 
 
 #

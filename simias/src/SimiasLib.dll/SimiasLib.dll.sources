@@ -70,11 +70,9 @@ AssemblyInfo.cs
 ../Policy/FileSizeFilter.cs
 ../Policy/FileTypeFilter.cs
 ../Policy/SyncInterval.cs
-../Service/BaseProcessService.cs
 ../Service/IThreadService.cs
 ../Service/Manager.cs
 ../Service/Message.cs
-../Service/ProcessServiceCtl.cs
 ../Service/ServiceCtl.cs
 ../Service/ServiceType.cs
 ../Service/State.cs

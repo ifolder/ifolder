@@ -107,9 +107,7 @@ namespace Simias.Storage.Provider
 		private const string CFG_Path = "Path";
 		private const string CFG_Assembly = "Assembly";
 		private const string CFG_TypeName = "Type";
-		private const string CFG_Version = "Version";
 		private const string StoreName = "simias";
-		private string version = null;
 		private string assembly = null;
 		private string typeName = null;
 		private Hashtable settingTable = new Hashtable();
@@ -138,27 +136,6 @@ namespace Simias.Storage.Provider
 			}
 		}
 
-		/// <summary>
-		/// Gets and Sets the Provider Version.
-		/// </summary>
-		public string Version
-		{
-			get
-			{
-				lock(this)
-				{
-					if (version == null)
-					{
-						version = conf.Get(CFG_Section, CFG_Version);
-						if ( version == null )
-						{
-							version = "0";
-						}
-					}
-				}
-				return version;
-			}
-		}
 
 		/// <summary>
 		/// Gets and Sets the Assembly that implements the provider instance used.

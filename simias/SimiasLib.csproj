@@ -493,11 +493,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Service\BaseProcessService.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\Service\IThreadService.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -509,11 +504,6 @@
                 />
                 <File
                     RelPath = "src\Service\Message.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Service\ProcessServiceCtl.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
