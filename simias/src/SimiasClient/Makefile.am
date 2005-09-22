@@ -3,7 +3,7 @@ SUBDIRS = libsimias-event
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-SimiasClient_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/CertPolicy.cs $(srcdir)/CollectionSyncEventArgs.cs $(srcdir)/FileSyncEventArgs.cs $(srcdir)/DomainService.cs $(srcdir)/IProcEventClient.cs $(srcdir)/IProcEventData.cs $(srcdir)/IProcEventListener.cs $(srcdir)/IProcEventRegistration.cs $(srcdir)/IProcEventTypes.cs $(srcdir)/LocalService.cs $(srcdir)/MyEnvironment.cs $(srcdir)/MyPath.cs $(srcdir)/MyPlatformID.cs $(srcdir)/MyRuntimeID.cs $(srcdir)/NeedCredentialsEventArgs.cs $(srcdir)/NodeEventArgs.cs $(srcdir)/NodeTypes.cs $(srcdir)/NotifyEventArgs.cs $(srcdir)/SimiasEventArgs.cs $(srcdir)/Authentication.cs $(srcdir)/SimiasService.cs $(srcdir)/SyncStatus.cs
+SimiasClient_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/CertPolicy.cs $(srcdir)/CollectionSyncEventArgs.cs $(srcdir)/FileSyncEventArgs.cs $(srcdir)/DomainService.cs $(srcdir)/IProcEventClient.cs $(srcdir)/IProcEventData.cs $(srcdir)/IProcEventListener.cs $(srcdir)/IProcEventRegistration.cs $(srcdir)/IProcEventTypes.cs $(srcdir)/LocalService.cs $(srcdir)/Manager.cs $(srcdir)/MyEnvironment.cs $(srcdir)/MyPath.cs $(srcdir)/MyPlatformID.cs $(srcdir)/MyRuntimeID.cs $(srcdir)/NeedCredentialsEventArgs.cs $(srcdir)/NodeEventArgs.cs $(srcdir)/NodeTypes.cs $(srcdir)/NotifyEventArgs.cs $(srcdir)/SimiasEventArgs.cs $(srcdir)/Authentication.cs $(srcdir)/SimiasService.cs $(srcdir)/SyncStatus.cs
 SimiasClient_CSFILES_CSC := $(subst /,$(SEP),$(SimiasClient_CSFILES))
 SimiasClient_INCLUDES =
 SimiasClient_RESOURCES =
