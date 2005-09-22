@@ -103,30 +103,23 @@ namespace Simias.Client
 			return applicationPath;
 		}
 
-		#endregion
-
-		#region Public Methods
-
 		/// <summary>
-		/// Starts up the simias web service process.
+		/// Starts the Simias process running.
 		/// </summary>
-		static public string Start()
+		/// <param name="applicationPath">Path to the Simias application.</param>
+		/// <param name="arguments">Arguments to pass to Simias.exe.</param>
+		/// <returns>The URI of the web service if successful.</returns>
+		private static string StartSimiasProcess( string applicationPath, string arguments )
 		{
 			string webServiceUri = null;
 
-			// Get the path to the simias executable.
-			string simiasApp = GetSimiasApplicationPath();
-			if ( simiasApp == null )
-			{
-				throw new ApplicationException( "Cannot locate Simias application path." );
-			}
-
 			// Create the process structure.
 			Process simiasProcess = new Process();
-			simiasProcess.StartInfo.FileName = simiasApp;
+			simiasProcess.StartInfo.FileName = applicationPath;
 			simiasProcess.StartInfo.CreateNoWindow = true;
 			simiasProcess.StartInfo.RedirectStandardOutput = true;
 			simiasProcess.StartInfo.UseShellExecute = false;
+			simiasProcess.StartInfo.Arguments = arguments;
 			simiasProcess.Start();
 
 			// Wait for the process to exit, so we can tell if things started successfully.
@@ -155,32 +148,55 @@ namespace Simias.Client
 			return webServiceUri;
 		}
 
+		#endregion
+
+		#region Public Methods
+
 		/// <summary>
 		/// Starts up the simias web service process.
 		/// </summary>
-		static public void Start( string applicationPath )
+		static public string Start()
 		{
+			// Get the path to the simias executable.
+			string simiasApp = GetSimiasApplicationPath();
+			if ( simiasApp == null )
+			{
+				throw new ApplicationException( "Cannot locate Simias application path." );
+			}
+
+			return StartSimiasProcess( simiasApp, null );
 		}
 
 		/// <summary>
 		/// Starts up the simias web service process.
 		/// </summary>
-		public static void Start( string applicationPath, string simiasDataPath )
+		static public string Start( string applicationPath )
 		{
+			return StartSimiasProcess( applicationPath, null );
 		}
 
 		/// <summary>
 		/// Starts up the simias web service process.
 		/// </summary>
-		public static void Start( string applicationPath, string simiasDataPath, int port )
+		public static string Start( string applicationPath, string simiasDataPath )
 		{
+			return StartSimiasProcess( applicationPath, String.Format( "--datadir {0}", simiasDataPath ) );
 		}
 
 		/// <summary>
 		/// Starts up the simias web service process.
 		/// </summary>
-		public static void Start( string applicationPath, string simiasDataPath, int port, bool isServer )
+		public static string Start( string applicationPath, string simiasDataPath, int port )
 		{
+			return StartSimiasProcess( applicationPath, String.Format( "--datadir {0} --port {1}", simiasDataPath, port ) );
+		}
+
+		/// <summary>
+		/// Starts up the simias web service process.
+		/// </summary>
+		public static string Start( string applicationPath, string simiasDataPath, int port, bool isServer )
+		{
+			return StartSimiasProcess( applicationPath, String.Format( "--datadir {0} --port {1}{2}", simiasDataPath, port, isServer ? " --runasserver" : String.Empty ) );
 		}
 
 		/// <summary>
