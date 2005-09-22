@@ -136,7 +136,7 @@ namespace Simias.Sync
 			SetupFileNames(node, sessionID);
 			Log.log.Debug("Opening File {0}", file);
 			FileInfo fi = new FileInfo(file);
-			if (Store.GetStore().IsEnterpriseServer || fi.Length > (1024 * 100000))
+			if (Store.IsEnterpriseServer || fi.Length > (1024 * 100000))
 			{
 				workStream = new StreamStream(File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read));
 				workFile = null;
@@ -578,7 +578,7 @@ namespace Simias.Sync
 			}
 			if (workBin == null)
 			{
-				workBin = Path.Combine(Configuration.GetConfiguration().StorePath, workBinDir);
+				workBin = Path.Combine(collection.StorePath, workBinDir);
 				if (!Directory.Exists(workBin))
 					Directory.CreateDirectory(workBin);
 			}

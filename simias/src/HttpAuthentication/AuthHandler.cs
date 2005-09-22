@@ -318,7 +318,7 @@ namespace Simias.Security.Web
 					string domainID = context.Request.Headers.Get( Http.DomainIDHeader );
 					if ( domainID == null )
 					{
-						if ( StoreReference.IsEnterpriseServer )				
+						if ( Store.IsEnterpriseServer )				
 						{
 							// If this is an enterprise server use the default domain.
 							domainID = StoreReference.DefaultDomain;
@@ -353,7 +353,7 @@ namespace Simias.Security.Web
 					else
 					{
 						string realm = null;
-						if ( StoreReference.IsEnterpriseServer )
+						if ( Store.IsEnterpriseServer )
 						{
 							realm = 
 								( store.DefaultDomain != null ) ?

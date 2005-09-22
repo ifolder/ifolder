@@ -137,8 +137,7 @@ namespace Simias.Event
 		/// <summary>
 		/// Starts the server listening for incoming event registration requests.
 		/// </summary>
-		/// <param name="config">Configuration file object that indicates which Collection Store to use.</param>
-		public void Start( Configuration config )
+		public void Start()
 		{
 			// Start the server listening.
 			regSocket.Bind( new IPEndPoint( IPAddress.Loopback, 0 ) );

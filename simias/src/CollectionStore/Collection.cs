@@ -143,7 +143,7 @@ namespace Simias.Storage
 		/// </summary>
 		public string UnmanagedPath
 		{
-			get { return ( store.IsEnterpriseServer ) ? store.GetStoreUnmanagedPath( id ) : null; }
+			get { return ( Store.IsEnterpriseServer ) ? store.GetStoreUnmanagedPath( id ) : null; }
 		}
 
 		/// <summary>
@@ -282,7 +282,7 @@ namespace Simias.Storage
 		/// </summary>
 		public string StorePath
 		{
-			get { return store.StorePath; }
+			get { return Store.StorePath; }
 		}
 
 		/// <summary>
@@ -1291,7 +1291,7 @@ namespace Simias.Storage
 				{
 					if ( state == PropertyList.PropertyListState.Add )
 					{
-						if ( store.IsEnterpriseServer )
+						if ( Store.IsEnterpriseServer )
 						{
 							role = SyncRoles.Master;
 						}
@@ -1307,7 +1307,7 @@ namespace Simias.Storage
 					}
 					else if ( state == PropertyList.PropertyListState.Proxy )
 					{
-						role = store.IsEnterpriseServer ? SyncRoles.Master : SyncRoles.Slave;
+						role = Store.IsEnterpriseServer ? SyncRoles.Master : SyncRoles.Slave;
 					}
 				}
 			}

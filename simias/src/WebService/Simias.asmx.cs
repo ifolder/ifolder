@@ -1044,16 +1044,16 @@ log.Debug("SimiasWebService.ConnectToDomain() called to connect to {0} as {1}", 
 		public bool CanShareService( string simiasDataPath, bool isClient )
 		{
 			bool canShare = false;
-			bool caseInsensitive = ( MyEnvironment.Platform == MyPlatformID.Windows ) ? true : false;
+			bool ignoreCase = ( MyEnvironment.Platform == MyPlatformID.Windows ) ? true : false;
 			Store store = Store.GetStore();
 
 			// The application's simias data path must be the same as this instance's path.
-			if ( String.Compare( Path.GetFullPath( simiasDataPath ), store.StorePath, caseInsensitive ) == 0 )
+			if ( String.Compare( Path.GetFullPath( simiasDataPath ), Store.StorePath, ignoreCase ) == 0 )
 			{
 				// Can't share services between clients and enterprise servers because their
 				// configurations are different. Not all client services are available on a
 				// server.
-				if ( isClient && !store.IsEnterpriseServer )
+				if ( isClient && !Store.IsEnterpriseServer )
 				{
 					canShare = true;
 				}
@@ -1117,7 +1117,7 @@ log.Debug("SimiasWebService.ConnectToDomain() called to connect to {0} as {1}", 
 		[SoapDocumentMethod]
 		public string GetSimiasDataPath()
 		{
-			return Store.GetStore().StorePath;
+			return Store.StorePath;
 		}
 
 		/// <summary>

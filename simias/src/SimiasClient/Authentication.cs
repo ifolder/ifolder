@@ -90,15 +90,15 @@ namespace Simias.Client.Authentication
 		/// Authenticate to a remote Simias server
 		/// </summary>
 		/// <returns>Simias.Client.Authentication.Status object</returns>
-		public Status Authenticate()
+		public Status Authenticate(Uri webServiceUri, string simiasDataPath)
 		{
 			Status status = null;
 
 			try
 			{
 				SimiasWebService simiasSvc = new SimiasWebService();
-				simiasSvc.Url = Simias.Client.Manager.LocalServiceUrl.ToString() + "/Simias.asmx";
-				LocalService.Start( simiasSvc );
+				simiasSvc.Url = webServiceUri.ToString() + "/Simias.asmx";
+				LocalService.Start( simiasSvc, webServiceUri, simiasDataPath );
 
 				DomainInformation cInfo = simiasSvc.GetDomainInformation( this.domainID );
 				if ( cInfo != null )
@@ -173,15 +173,15 @@ namespace Simias.Client.Authentication
 		/// Logout from a remote Simias server
 		/// </summary>
 		/// <returns>Simias.Client.Authentication.Status object</returns>
-		public Status Logout()
+		public Status Logout( Uri webServiceUri, string simiasDataPath)
 		{
 			Status status = null;
 
 			try
 			{
 				SimiasWebService simiasSvc = new SimiasWebService();
-				simiasSvc.Url = Simias.Client.Manager.LocalServiceUrl.ToString() + "/Simias.asmx";
-				LocalService.Start( simiasSvc );
+				simiasSvc.Url = webServiceUri.ToString() + "/Simias.asmx";
+				LocalService.Start( simiasSvc, webServiceUri, simiasDataPath );
 
 				DomainInformation cInfo = simiasSvc.GetDomainInformation( this.domainID );
 				if ( cInfo != null )

@@ -31,6 +31,7 @@ using Simias;
 using Simias.Client;
 using Simias.Client.Event;
 using Simias.Event;
+using Simias.Storage;
 
 namespace Simias.Web
 {
@@ -109,6 +110,9 @@ namespace Simias.Web
 				throw apEx;
 			}
 
+			// Initialize the store.
+			Store.Initialize( simiasDataPath, runAsServer );
+
 			// Start the shutdown thread running waiting to signal a shutdown.
 			Thread thread = new Thread( new ThreadStart( ShutDownThread ) );
 			thread.IsBackground = true;
@@ -127,8 +131,6 @@ namespace Simias.Web
 		{
 			for ( int i = 0; i < args.Length; ++i )
 			{
-				Console.Error.WriteLine( "Args: {0}", args[ i ] );
-
 				switch ( args[ i ].ToLower() )
 				{
 					case "--runasserver":
@@ -230,12 +232,6 @@ namespace Simias.Web
 				Console.Error.WriteLine("Simias Application Path: {0}", Environment.CurrentDirectory);
 				Console.Error.WriteLine("Simias Data Path: {0}", simiasDataPath);
 				Console.Error.WriteLine("Run in {0} configuration", runAsServer ? "server" : "client" );
-			}
-
-			Simias.Storage.Store.GetStore();
-
-			if ( verbose )
-			{
 				Console.Error.WriteLine("Simias Process Starting");
 			}
 

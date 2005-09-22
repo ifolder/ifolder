@@ -203,7 +203,7 @@ public class Conflict
 		{
 			if (conflictBin == null)
 			{
-				conflictBin = Path.Combine(Configuration.GetConfiguration().StorePath, ConflictBinDir);
+				conflictBin = Path.Combine(Store.StorePath, ConflictBinDir);
 				if (!Directory.Exists(conflictBin))
 					Directory.CreateDirectory(conflictBin);
 			}

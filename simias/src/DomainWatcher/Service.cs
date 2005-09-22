@@ -47,9 +47,9 @@ namespace Simias.DomainWatcher
 		/// <summary>
 		/// Start the Domain Watcher service.
 		/// </summary>
-		public void Start(Configuration config)
+		public void Start()
 		{
-			this.manager = new Simias.DomainWatcher.Manager(config);
+			this.manager = new Simias.DomainWatcher.Manager();
 			this.manager.Start();
 		}
 

@@ -27,6 +27,7 @@ using System.Reflection;
 using System.Diagnostics;
 
 using Simias.Client;
+using Simias.Storage;
 
 namespace Simias.Service
 {
@@ -42,19 +43,18 @@ namespace Simias.Service
 		
 		#region Constructor
 
-		internal ProcessServiceCtl(Configuration conf, XmlElement serviceElement) :
-			base(conf, serviceElement)
+		internal ProcessServiceCtl(XmlElement serviceElement) :
+			base(serviceElement)
 		{
 		}
 
 		/// <summary>
 		/// Construct a ProcessServiceCtl.
 		/// </summary>
-		/// <param name="conf"></param>
 		/// <param name="name"></param>
 		/// <param name="assembly"></param>
-		public ProcessServiceCtl(Configuration conf, string name, string assembly) :
-			base(conf, name, assembly)
+		public ProcessServiceCtl(string name, string assembly) :
+			base(name, assembly)
 		{
 		}
 
@@ -114,7 +114,7 @@ namespace Simias.Service
 						process.StartInfo.FileName = assembly;
 						process.StartInfo.Arguments = null;
 					}
-					process.StartInfo.Arguments += "\"" + conf.StorePath +"\"";
+					process.StartInfo.Arguments += "\"" + Store.StorePath +"\"";
 					process.Start();
 					reader = process.StandardOutput;
 					writer = process.StandardInput;

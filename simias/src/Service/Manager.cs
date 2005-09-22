@@ -49,7 +49,6 @@ namespace Simias.Service
 		static public ISimiasLog logger = Simias.SimiasLogManager.GetLogger(typeof(Manager));
 
 		private static Manager instance;
-		static private Configuration conf;
 
 		static internal string XmlTypeAttr = "type";
 		static internal string XmlAssemblyAttr = "assembly";
@@ -87,13 +86,12 @@ namespace Simias.Service
 		#region Constructor
 
 		/// <summary>
-		/// Creates a Manager for the specified Configuration.
+		/// Creates a Manager.
 		/// </summary>
-		/// <param name="config">The Configuration location to manage.</param>
-		private Manager(Configuration config)
+		private Manager()
 		{
 			// configure
-			SimiasLogManager.Configure(config);
+			SimiasLogManager.Configure(Store.StorePath);
 
 			// Get an event subscriber to handle shutdown events.
 			subscriber = new DefaultSubscriber();
@@ -101,10 +99,8 @@ namespace Simias.Service
 
 			lock (this)
 			{
-				conf = config;
-
 				// Get the XmlElement for the Services.
-				servicesElement = config.GetElement(CFG_Section, CFG_Services);
+				servicesElement = Store.GetStore().Config.GetElement(CFG_Section, CFG_Services);
 
 				XmlNodeList serviceNodes = servicesElement.SelectNodes(XmlServiceTag);
 				foreach (XmlElement serviceNode in serviceNodes)
@@ -113,15 +109,13 @@ namespace Simias.Service
 					switch (sType)
 					{
 						case ServiceType.Process:
-							serviceList.Add(new ProcessServiceCtl(config, serviceNode));
+							serviceList.Add(new ProcessServiceCtl(serviceNode));
 							break;
 						case ServiceType.Thread:
-							serviceList.Add(new ThreadServiceCtl(config, serviceNode));
+							serviceList.Add(new ThreadServiceCtl(serviceNode));
 							break;
 					}
 				}
-
-				installDefaultServices();
 
 #if CLIENT_MEMORY_ROLL
 				// TODO: Remove when mono compacts the heap.
@@ -161,7 +155,7 @@ namespace Simias.Service
 			{
 				if (instance == null)
 				{
-					instance = new Manager(Configuration.GetConfiguration());
+					instance = new Manager();
 				}
 
 				return instance;
@@ -349,126 +343,6 @@ namespace Simias.Service
 
 		#endregion
 
-		#region Installation methods.
-
-		/// <summary>
-		/// Installs the default services.
-		/// </summary>
-		private void installDefaultServices()
-		{
-		}
-
-		/// <summary>
-		/// Installs the specified service at the specified index.
-		/// </summary>
-		/// <param name="svc">The service to install</param>
-		/// <param name="index">The index to install at.</param>
-		public void Install(ServiceCtl svc, int index)
-		{
-			lock (this)
-			{
-				if (GetService(svc.Name) == null)
-				{
-					if (index > serviceList.Count)
-					{
-						serviceList.Add(svc);
-					}
-					else
-					{
-						serviceList.Insert(index, svc);
-					}
-					XmlElement el = servicesElement.OwnerDocument.CreateElement(XmlServiceTag);
-					svc.ToXml(el);
-					XmlElement refEl = (XmlElement)servicesElement.FirstChild;
-					while(index-- != 0 && refEl != null)
-					{
-						refEl = (XmlElement)refEl.NextSibling;
-					}
-
-					if (refEl != null)
-					{
-						servicesElement.InsertBefore(el, refEl);
-					}
-					else
-					{
-						servicesElement.AppendChild(el);
-					}
-					conf.SetElement(CFG_Section, CFG_Services, servicesElement);
-					logger.Info("{0} service installed", svc.Name);
-				}
-				else
-				{
-					// Replace the existing service
-					lock (this)
-					{
-						for (int i =0; i < serviceList.Count; ++i)
-						{
-							ServiceCtl oldSvc = (ServiceCtl)serviceList[i];
-							if (oldSvc.Name.Equals(svc.Name))
-							{
-								svc.enabled = oldSvc.enabled;
-								InternalUninstall(oldSvc.Name);
-								if (index < i)
-									Install(svc, index);
-								else
-									Install(svc, i);
-								break;
-							}
-						}
-					}
-				}
-			}
-		}
-
-		/// <summary>
-		/// Install the specified service.
-		/// </summary>
-		/// <param name="svc">The service to install.</param>
-		public void Install(ServiceCtl svc)
-		{
-			Install(svc, serviceList.Count + 1);
-		}
-
-		/// <summary>
-		/// Unistall the specified service.
-		/// </summary>
-		/// <param name="svcName">The name of the service.</param>
-		public void Uninstall(string svcName)
-		{
-			if (InternalUninstall(svcName))
-			{
-				logger.Info("{0} service uninstalled", svcName);
-			}
-			else
-			{
-				logger.Warn("{0} service not installed", svcName);
-			}
-		}
-
-		/// <summary>
-		/// Unistall the specified service.
-		/// </summary>
-		/// <param name="svcName">The name of the service.</param>
-		private bool InternalUninstall(string svcName)
-		{
-			bool bStatus = false;
-			lock (this)
-			{
-				serviceList.Remove(GetService(svcName));
-				XmlElement el = (XmlElement)servicesElement.SelectSingleNode(string.Format("//{0}[@{1}='{2}']",XmlServiceTag, XmlNameAttr, svcName));
-				if (el != null)
-				{
-					servicesElement.RemoveChild(el);
-					conf.SetElement(CFG_Section, CFG_Services, servicesElement);
-					bStatus = true;
-				}
-			}
-			return bStatus;
-		}
-
-
-		#endregion
-
 		#region Control Methods.
 		/// <summary>
 		/// Start the installed services.
@@ -564,14 +438,6 @@ namespace Simias.Service
 		#endregion
 
 		#region Properties
-		/// <summary>
-		/// Get the configuration for this instance.
-		/// </summary>
-		public Configuration Config
-		{
-			get { return conf; }
-		}
-
 		/// <summary>
 		/// Gets the started state of the services.
 		/// </summary>

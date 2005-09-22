@@ -1003,8 +1003,6 @@ namespace Simias.Storage.Provider.Sqlite
 		public void CreateStore()
 		{
 			manager.CreateStore();
-			// Set the version.
-			conf.Version = version;
 		}
 
 

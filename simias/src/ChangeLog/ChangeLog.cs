@@ -1039,8 +1039,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Starts the thread service.
 		/// </summary>
-		/// <param name="config">Configuration file object that indicates which Collection Store to use.</param>
-		public void Start( Configuration config )
+		public void Start()
 		{
 			// Get a store object.
 			Store store = Store.GetStore();
@@ -1196,7 +1195,7 @@ namespace Simias.Storage
 			try
 			{
 				// Get the path to the store managed directory for this collection.
-				string logFileDir = Path.Combine( Configuration.GetConfiguration().StorePath, "log" );
+				string logFileDir = Path.Combine( Store.StorePath, "log" );
 				if ( !Directory.Exists( logFileDir ) )
 				{
 					Directory.CreateDirectory( logFileDir );
@@ -1821,7 +1820,7 @@ namespace Simias.Storage
 			mutex = new LogMutex( collectionID );
 
 			// Build the log file path.
-			logFilePath = Path.Combine( Path.Combine( collection.StoreReference.StorePath, "log" ), collection.ID + ".changelog" );
+			logFilePath = Path.Combine( Path.Combine( Store.StorePath, "log" ), collection.ID + ".changelog" );
 		}
 		#endregion
 

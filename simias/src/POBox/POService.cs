@@ -47,9 +47,9 @@ namespace Simias.POBox
 		/// <summary>
 		/// Start the PO service.
 		/// </summary>
-		public void Start(Configuration config)
+		public void Start()
 		{
-			this.manager = new POManager(config);
+			this.manager = new POManager();
 			manager.Start();
 		}
 

@@ -137,6 +137,11 @@ namespace Mono.ASPNET
 		private bool disposed = false;
 
 		/// <summary>
+		/// Debug flag specified on the --noexec option.
+		/// </summary>
+		private bool debug = false;
+
+		/// <summary>
 		/// Execute Simias services in a child process.
 		/// </summary>
 		private bool noExec = false;
@@ -513,19 +518,20 @@ namespace Mono.ASPNET
 		private bool IsSameService( Uri uri, string dataPath )
 		{
 			bool sameService = false;
-			bool caseInsensitive = ( MyEnvironment.Platform == MyPlatformID.Windows ) ? true : false;
+			bool ignoreCase = ( MyEnvironment.Platform == MyPlatformID.Windows ) ? true : false;
 
 			try
 			{
 				SimiasWebService svc = new SimiasWebService();
 				svc.Url = uri.ToString() + "/Simias.asmx";
 				Simias.Client.LocalService.Start( svc, uri, dataPath );
-				if ( String.Compare( dataPath, svc.GetSimiasDataPath(), caseInsensitive ) == 0 )
+				if ( String.Compare( dataPath, svc.GetSimiasDataPath(), ignoreCase ) == 0 )
 				{
 					sameService = true;
 				}
 			}
-			catch {}
+			catch 
+			{}
 
 			return sameService;
 		}
@@ -692,6 +698,12 @@ namespace Mono.ASPNET
 
 					case "--noexec":
 					{
+						if ( ( ( i + 1 ) < args.Length ) && ( args[ i + 1 ].ToLower() == "debug" ) )
+						{
+							debug = true;
+							++i;
+						}
+
 						noExec = true;
 						break;
 					}
@@ -958,11 +970,12 @@ namespace Mono.ASPNET
 			Console.WriteLine( "            Linux and OSX: ~/.local/share" );
 			Console.WriteLine( "        Example: --datadir \"/home/mlasky/simias/shared\"" );
 			Console.WriteLine();							
-			Console.WriteLine( "    --noexec:" );
+			Console.WriteLine( "    --noexec [debug]:" );
 			Console.WriteLine( "        Does not detach new Simias.exe child process. Runs Simias services" );
 			Console.WriteLine( "        from the current process. Must also specify --port and --datadir" );
 			Console.WriteLine( "        when using this option. This is documented for debugging purposes" );
-			Console.WriteLine( "        only." );
+			Console.WriteLine( "        only. The debug flag forces the port to be written to the configuration" );
+			Console.WriteLine( "        file." );
 			Console.WriteLine( "        Default: None" );
 			Console.WriteLine();							
 			Console.WriteLine( "    --showconsole:" );
@@ -1230,12 +1243,24 @@ namespace Mono.ASPNET
 		{
 			SimiasStatus status = SimiasStatus.Success;
 
+			// If the data directory has not been created, do it now.
+			if ( !Directory.Exists( simiasDataPath ) )
+			{
+				Directory.CreateDirectory( simiasDataPath );
+			}
+
 			// Get the port to listen on.
 			int[] range = GetPortRange( portRange );
 			if ( range != null )
 			{
 				// Build the URI for web services and write it to stdout.
 				UriBuilder ub = new UriBuilder( Uri.UriSchemeHttp, IPAddress.Loopback.ToString(), range[ 0 ], VirtualPath );
+
+				// If the debug flag is set, write the port to the configuration file.
+				if ( debug )
+				{
+					WriteXspPortToFile( ub.Port );
+				}
 
 				// Split the application path into root and web paths.
 				string appPath = ( MyEnvironment.Platform != MyPlatformID.Windows ) ? ApplicationPath : ApplicationPath.ToLower();

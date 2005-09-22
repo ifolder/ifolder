@@ -123,7 +123,6 @@ namespace Simias.Sync
 		#region Fields
 
 		internal static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SyncClient));
-//		Configuration		conf;
 		Store				store;
 		static Hashtable	collections;
 		EventSubscriber		storeEvents;
@@ -391,11 +390,10 @@ namespace Simias.Sync
 		/// Starts the Sync client.
 		/// </summary>
 		/// <param name="conf">The configuration object to use.</param>
-		public void Start(Configuration conf)
+		public void Start()
 		{
 			shuttingDown = false;
 			paused = false;
-//			this.conf = conf;
 			store = Store.GetStore();
 
 			// Subscribe for node events so that we can add new CollectionSyncClients.

@@ -49,6 +49,11 @@ namespace Simias.Client
 		static private string localPassword = null;
 
 		/// <summary>
+		/// Data path that local password was retrieved from.
+		/// </summary>
+		static private string dataPath = null;
+
+		/// <summary>
 		/// Same container is used for all local web services.
 		/// </summary>
 		static private CookieContainer cookies = new CookieContainer();
@@ -65,20 +70,18 @@ namespace Simias.Client
 		{
 			lock( typeof( LocalService ) )
 			{
-				if ( localPassword == null )
-				{
-					string path = Path.Combine( simiasDataPath, LocalPasswordFile );
+				string path = Path.Combine( simiasDataPath, LocalPasswordFile );
 
-					try
+				try
+				{
+					using ( StreamReader sr = new StreamReader( path ) )
 					{
-						using ( StreamReader sr = new StreamReader( path ) )
-						{
-							localPassword = sr.ReadLine();
-						}
+						localPassword = sr.ReadLine();
 					}
-					catch
-					{}
+
+					dataPath = simiasDataPath;
 				}
+				catch {}
 			}
 		}
 
@@ -107,22 +110,14 @@ namespace Simias.Client
 		/// Connects the specified webClient to its web service.
 		/// </summary>
 		/// <param name="webClient">HttpWebClientProtocol object.</param>
-		static public void Start( HttpWebClientProtocol webClient )
-		{
-			Configuration config = new Configuration();
-			Start( webClient, Manager.LocalServiceUrl, config.StorePath );
-		}
-
-		/// <summary>
-		/// Connects the specified webClient to its web service.
-		/// </summary>
-		/// <param name="webClient">HttpWebClientProtocol object.</param>
 		/// <param name="webServiceUri">Uri that references the local web service.</param>
 		/// <param name="simiasDataPath">Path to the directory where the Simias data is stored.</param>
 		static public void Start( HttpWebClientProtocol webClient, Uri webServiceUri, string simiasDataPath )
 		{
+			bool ignoreCase = ( MyEnvironment.Platform == MyPlatformID.Windows ) ? true : false;
+
 			// Start the web service so the password file will be created.
-			while ( localPassword == null )
+			while ( ( localPassword == null ) || ( String.Compare( dataPath, simiasDataPath, ignoreCase ) != 0 ) )
 			{
 				Ping( webServiceUri );
 				GetLocalPassword( simiasDataPath );

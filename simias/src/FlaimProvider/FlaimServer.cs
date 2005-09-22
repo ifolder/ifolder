@@ -530,21 +530,21 @@ namespace Simias.Storage.Provider.Flaim
 			}
 		}
 
-		internal static FlaimServer GetServer()
+		internal static FlaimServer GetServer(ProviderConfig config)
 		{
 			lock (typeof(FlaimServer))
 			{
 				if (instance == null)
 				{
-					instance = new FlaimServer();
+					instance = new FlaimServer(config);
 				}
 				return instance;
 			}
 		}
 		
-		private FlaimServer()
+		private FlaimServer(ProviderConfig config)
 		{
-			conf = new ProviderConfig();
+			conf = config;
 			DbPath = Path.Combine(Path.GetFullPath(conf.Path), Name);
 
 			// Read the Available Id queue from disk.
@@ -598,7 +598,6 @@ namespace Simias.Storage.Provider.Flaim
 					if (FlaimError.IsSuccess(rc))
 					{
 						// Set the version.
-						conf.Version = version;
 						AlreadyDisposed = false;
 					}
 				}

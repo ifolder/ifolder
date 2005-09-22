@@ -656,8 +656,7 @@ namespace Simias
 		/// <summary>
 		/// Starts the thread service.
 		/// </summary>
-		/// <param name="config">Configuration file object that indicates which Collection Store to use.</param>
-		public void Start( Configuration conf )
+		public void Start()
 		{
 			// Register with the domain provider service.
 			DomainProvider.RegisterProvider( this );

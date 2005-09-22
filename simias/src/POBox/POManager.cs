@@ -44,7 +44,6 @@ namespace Simias.POBox
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(POManager));
 
 		private Store store;
-		private Configuration config;
 		private Hashtable boxManagers;
 		private EventSubscriber subscriber;
 		private EventSubscriber invitationSubscriber;
@@ -54,10 +53,8 @@ namespace Simias.POBox
 		/// Constructor
 		/// </summary>
 		/// <param name="config">Simias configuration</param>
-		public POManager(Configuration config)
+		public POManager()
 		{
-			this.config = config;
-			
 			// store
 			store = Store.GetStore();
 
@@ -268,14 +265,6 @@ namespace Simias.POBox
 		{
 			get { return serviceUrl; }
 			set { serviceUrl = value; }
-		}
-
-		/// <summary>
-		/// Configuration object
-		/// </summary>
-		public Configuration Config
-		{
-			get { return config; }
 		}
 
 		#endregion
