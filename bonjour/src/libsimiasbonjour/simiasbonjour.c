@@ -47,113 +47,6 @@ typedef struct tagMemberBrowseContext
 	void					*pCallersCtx;
 } MemberBrowseContext, *PMemberBrowseContext;
 
-/*
-static
-void
-DNSSD_API
-ResolveInfoCallback(
-	DNSServiceRef		client, 
-	DNSServiceFlags		flags, 
-	uint32_t			ifIndex, 
-	DNSServiceErrorType errorCode,
-	const char			*pFullName, 
-	const char			*pHostTarget, 
-	uint16_t			opaqueport, 
-	uint16_t			txtLen, 
-	const char			*pTxt,
-	void				*pCtx)
-{
-	PMemberInfoCtx pInfoCtx = ( PMemberInfoCtx) pCtx;
-	unsigned char label[32];
-	const unsigned char *src = ( unsigned char *) pTxt;
-	unsigned char *dst;
-	union { uint16_t s; u_char b[2]; } port = { opaqueport };
-	uint16_t PortAsNumber = ((uint16_t)port.b[0]) << 8 | port.b[1];
-
-	(void) client;       // Unused
-	(void) ifIndex;      // Unused
-	(void) txtLen;       // Unused
-
-	//printf( "ResolveInfoCallback called" );
-	//printf( "errorCode: %d\n", errorCode );
-
-	pInfoCtx->CBError = errorCode;
-	if ( errorCode == 0 )
-	{
-		*pInfoCtx->pPort = PortAsNumber;
-		strcpy( pInfoCtx->pHost, pHostTarget );
-
-		//printf( "Host: %s\n", pInfoCtx->pHost );
-
-		// Parse TXT strings
-		// iFolder Member TXT strings are registered in the following format:
-		// MemberName=<member name>
-		// ServicePath=<path>
-		// PK=<pub key>
-		// PK2=<rest of the public key>
-
-		if (*src)
-		{
-			int total = 0;
-			int	compLength;
-			while ( ( total < txtLen ) && *src != '\0' )
-			{
-				compLength = *src++;
-				total += compLength;
-
-				// can't be good
-				if ( total > txtLen )
-				{
-					continue;
-				}
-
-				// Get the label
-				dst = label;
-				while( *src != '=' && *src != '\0' && compLength > 0 )
-				{
-					*dst++ = *src++;
-					compLength--;
-				}
-
-				// Past the = and null terminate
-				*dst++ = *src++;
-				compLength--;
-				*dst = 0;
-
-				if ( strcmp( (char *) label, memberLabel ) == 0 )
-				{
-					dst = (unsigned char *) pInfoCtx->pName;
-				}
-				else
-				if ( strcmp( label, serviceLabel ) == 0 )
-				{
-					dst = (unsigned char *) pInfoCtx->pServicePath;
-				}
-				else
-				if ( strcmp( label, keyLabel ) == 0 )
-				{
-					dst = (unsigned char *) pInfoCtx->pPublicKey;
-				}
-				else
-				{
-					pInfoCtx->CBError = -1;
-					return;
-				}
-
-				while( ( compLength > 0 ) && *src != '\0' )
-				{
-					*dst++ = *src++;
-					compLength--;
-				}
-
-				*dst = 0;
-			}
-		}
-	}
-}
-*/
-
-
 static
 void
 DNSSD_API
@@ -230,12 +123,12 @@ ResolveInfoCallback(
 					dst = (unsigned char *) pCtx->pInfo->Name;
 				}
 				else
-				if ( strcmp( label, serviceLabel ) == 0 )
+				if ( strcmp( (char *) label, serviceLabel ) == 0 )
 				{
 					dst = (unsigned char *) pCtx->pInfo->ServicePath;
 				}
 				else
-				if ( strcmp( label, keyLabel ) == 0 )
+				if ( strcmp( (char *) label, keyLabel ) == 0 )
 				{
 					dst = (unsigned char *) pCtx->pInfo->PublicKey;
 				}
@@ -275,7 +168,8 @@ RegistrationCallback(
 	(void) client; // Unused
 	(void) flags;  // Unused
 
-	//printf( "Got a reply for %s.%s%s: ", pName, pType, pDomain );
+	//printf( "Got a reply for %s.%s%s: \n", pName, pType, pDomain );
+	printf( "  RegistrationCallback::errorCode: %d\n", errorCode );
 	*cbErr = errorCode;
 }
 
@@ -297,6 +191,8 @@ RegisterLocalMember(
 	DNSServiceFlags		flags;
 	int txtLength;
 
+	printf( "RegisterLocalMember - called\n" );
+
 	pid_t pid = getpid();
 
 	// Valid Parameters?
@@ -307,11 +203,11 @@ RegisterLocalMember(
 		return kDNSServiceErr_BadParam;
 	}
 
-	if ( ( strlen( pPublicKey ) + strlen( keyLabel ) ) > 255 )
+	if ( ( strlen( (char *) pPublicKey ) + strlen( keyLabel ) ) > 255 )
 	{
-		strncpy( keyPartOne, pPublicKey, 250 );
+		strncpy( keyPartOne, (char *) pPublicKey, 250 );
 		keyPartOne[250] = '\0';
-		strcpy( keyPartTwo, &pPublicKey[250] );
+		strcpy( keyPartTwo, (char *) &pPublicKey[250] );
 
 		txtLength =
 			sprintf( 
@@ -342,7 +238,7 @@ RegisterLocalMember(
 				(unsigned char) ( strlen( pServicePath ) + sizeof( serviceLabel ) - 1 ),
 				serviceLabel,
 				pServicePath,
-				(unsigned char) ( strlen( pPublicKey ) + (int) sizeof( keyLabel ) - (int) 1 ),
+				(unsigned char) ( strlen( (char *) pPublicKey ) + (int) sizeof( keyLabel ) - (int) 1 ),
 				keyLabel,
 				pPublicKey );
 	}
@@ -350,7 +246,7 @@ RegisterLocalMember(
 	*pCookie = NULL;
 	cbErr = kDNSServiceErr_Unknown;
 	flags = kDNSServiceFlagsNoAutoRename;
-
+	
 	//Opaque16 registerPort = { { pid >> 8, pid & 0xFF } };
 	err = 
 		DNSServiceRegister(
@@ -366,17 +262,23 @@ RegisterLocalMember(
 			(uint16_t) txtLength,
 			txtStrings, 
 			RegistrationCallback, 
-			(void *) (&cbErr));
+			(void *) &cbErr );
 
 	if ( err == 0 )
 	{
+		printf( "  DNSServiceRegister returned success\n" );
 		err = DNSServiceProcessResult( *pCookie );
 		if ( err == 0 )
 		{
 			err = cbErr;
 		}
 	}
+	else
+	{
+		printf( "  DNSServiceRegister failed - status: %d\n", err );
+	}
 
+	printf( "RegisterLocalMember exit - returning: %d\n", err );
 	return (int) err;
 }
 
@@ -542,7 +444,6 @@ BrowseMembers(DNSServiceRef client, int timeout)
 	}
 
 	nfds = dns_sd_fd + 1;
-	//printf("descriptor = %d\n", nfds);
 
 	while ( !stop )
 	{

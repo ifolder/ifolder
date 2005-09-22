@@ -535,8 +535,8 @@ namespace Simias.mDns
 			log.Debug( "RegisterUser called" );
 
 			User.registerThread = new Thread( new ThreadStart( User.RegisterThread ) );
-			User.browseThread.IsBackground = true;
-			User.browseThread.Start();
+			User.registerThread.IsBackground = true;
+			User.registerThread.Start();
 
 		}
 
@@ -589,7 +589,7 @@ namespace Simias.mDns
 						log.Debug( "RegisterLocalMember failed  Status: " + status.ToString() );
 						Thread.Sleep( 60000 );
 					}
-				} while ( status == User.kErrorType.kDNSServiceErr_NoError );
+				} while ( status != User.kErrorType.kDNSServiceErr_NoError );
 
 
 				/*
