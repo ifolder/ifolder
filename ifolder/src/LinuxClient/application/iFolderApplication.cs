@@ -596,10 +596,7 @@ namespace Novell.iFolder
 			switch(args.Event.Button)
 			{
 				case 1: // first mouse button
-					if(args.Event.Type == Gdk.EventType.TwoButtonPress)
-					{
-						showiFolderWindow(obj, args);
-					}
+					show_tray_menu();
 					break;
 				case 2: // second mouse button
 					break;
