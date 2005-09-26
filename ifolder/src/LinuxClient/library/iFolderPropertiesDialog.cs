@@ -99,10 +99,10 @@ namespace Novell.iFolder
 						"Unable to read the iFolder");
 			}
 			
+			this.Modal = false;
+			this.TypeHint = Gdk.WindowTypeHint.Normal;
+			
 			this.HasSeparator = false;
-			this.Modal = true;
-			if(parent != null)
-				this.TransientFor = parent;
 			this.Title = Util.GS("iFolder Properties");
 
 //			ifHash = new Hashtable();
@@ -122,6 +122,7 @@ namespace Novell.iFolder
 		/// <summary>
 		/// Default constructor for iFolderPropertiesDialog
 		/// </summary>
+/*
 		public iFolderPropertiesDialog(	string ifolderID )
 			: base()
 		{
@@ -166,7 +167,7 @@ namespace Novell.iFolder
 			KeyPressEvent += new KeyPressEventHandler(KeyPressHandler);
 			KeyReleaseEvent += new KeyReleaseEventHandler(KeyReleaseHandler);
 		}
-		
+*/		
 		public void UpdateiFolder(iFolderWeb theiFolder)
 		{
 			SettingsPage.UpdateiFolder(theiFolder);
