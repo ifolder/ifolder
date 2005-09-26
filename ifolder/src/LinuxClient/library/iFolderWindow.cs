@@ -251,7 +251,6 @@ namespace Novell.iFolder
 		private ImageMenuItem		AboutMenuItem;
 
 		private iFolderConflictDialog ConflictDialog;
-		private iFolderPropertiesDialog PropertiesDialog;
 
 		private Hashtable			curiFolders;
 
@@ -269,6 +268,11 @@ namespace Novell.iFolder
 
 		private DomainController	domainController;
 
+		// Keep track of the properties dialogs so that if a user attempts
+		// to open the properties of an iFolder that is already opened, it
+		// won't open additional properties dialogs for the same iFolder.
+		private Hashtable			propDialogs;
+
 		/// <summary>
 		/// Default constructor for iFolderWindow
 		/// </summary>
@@ -284,6 +288,8 @@ namespace Novell.iFolder
 			curiFolders = new Hashtable();
 			curDomain = null;
 			curDomains = null;
+
+			propDialogs = new Hashtable();
 			
 			CreateWidgets();
 			
@@ -1162,32 +1168,45 @@ namespace Novell.iFolder
 				iFolderHolder ifHolder = 
 							(iFolderHolder) tModel.GetValue(iter, 0);
 
-				try
+				if (ifHolder != null)
 				{
-					PropertiesDialog = 
-						new iFolderPropertiesDialog(this, 
-									ifHolder.iFolder, 
-									ifws, simws);
-					PropertiesDialog.Response += 
-							new ResponseHandler(OnPropertiesDialogResponse);
-					PropertiesDialog.CurrentPage = currentPage;
-					PropertiesDialog.ShowAll();
-				}
-				catch(Exception e)
-				{
-					if(PropertiesDialog != null)
+					iFolderPropertiesDialog propsDialog =
+						(iFolderPropertiesDialog) propDialogs[ifHolder.iFolder.ID];
+					if (propsDialog == null)
 					{
-						PropertiesDialog.Hide();
-						PropertiesDialog.Destroy();
-						PropertiesDialog = null;
+						try
+						{
+							propsDialog = 
+								new iFolderPropertiesDialog(this, ifHolder.iFolder, ifws, simws);
+							propsDialog.Response += 
+									new ResponseHandler(OnPropertiesDialogResponse);
+							propsDialog.CurrentPage = currentPage;
+							propsDialog.ShowAll();
+		
+							propDialogs[ifHolder.iFolder.ID] = propsDialog;
+						}
+						catch(Exception e)
+						{
+							if(propsDialog != null)
+							{
+								propsDialog.Hide();
+								propsDialog.Destroy();
+								propsDialog = null;
+							}
+		
+							iFolderExceptionDialog ied = 
+								new iFolderExceptionDialog(this, e);
+							ied.Run();
+							ied.Hide();
+							ied.Destroy();
+							ied = null;
+						}
 					}
-
-					iFolderExceptionDialog ied = 
-						new iFolderExceptionDialog(this, e);
-					ied.Run();
-					ied.Hide();
-					ied.Destroy();
-					ied = null;
+					else
+					{
+						propsDialog.Present();
+						propsDialog.CurrentPage = currentPage;
+					}
 				}
 			}
 		}
@@ -1195,16 +1214,18 @@ namespace Novell.iFolder
 
 		private void OnPropertiesDialogResponse(object o, ResponseArgs args)
 		{
+			iFolderPropertiesDialog propsDialog = (iFolderPropertiesDialog) o;
+
 			switch(args.ResponseId)
 			{
 				case Gtk.ResponseType.Help:
-					if (PropertiesDialog != null)
+					if (propsDialog != null)
 					{
-						if (PropertiesDialog.CurrentPage == 0)
+						if (propsDialog.CurrentPage == 0)
 						{
 							Util.ShowHelp("propifolders.html", this);
 						}
-						else if (PropertiesDialog.CurrentPage == 1)
+						else if (propsDialog.CurrentPage == 1)
 						{
 							Util.ShowHelp("sharewith.html", this);
 						}
@@ -1216,11 +1237,15 @@ namespace Novell.iFolder
 					break;
 				default:
 				{
-					if(PropertiesDialog != null)
+					if(propsDialog != null)
 					{
-						PropertiesDialog.Hide();
-						PropertiesDialog.Destroy();
-						PropertiesDialog = null;
+						propsDialog.Hide();
+						propsDialog.Destroy();
+
+						if (propDialogs.ContainsKey(propsDialog.iFolder.ID))
+							propDialogs.Remove(propsDialog.iFolder.ID);
+
+						propsDialog = null;
 					}
 					break;
 				}
@@ -1680,11 +1705,17 @@ namespace Novell.iFolder
 
 			// If the properties dialog is open, update it so it shows the
 			// current status (last sync time, objects to sync, etc.)						
-			if (ifHolder != null &&
-				PropertiesDialog != null && 
-				PropertiesDialog.iFolder.ID == args.ID)
+//			if (ifHolder != null &&
+//				PropertiesDialog != null && 
+//				PropertiesDialog.iFolder.ID == args.ID)
+			if (ifHolder != null)
 			{
-				PropertiesDialog.UpdateiFolder(ifHolder.iFolder);
+				iFolderPropertiesDialog propsDialog =
+					(iFolderPropertiesDialog) propDialogs[ifHolder.iFolder.ID];
+				if (propsDialog != null)
+				{
+					propsDialog.UpdateiFolder(ifHolder.iFolder);
+				}
 			}
 		}
 
