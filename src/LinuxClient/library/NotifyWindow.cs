@@ -100,10 +100,14 @@ namespace Novell.iFolder
 
 			hbox.PackStart(msgImage, false, true, 0);
 //			vbox.Spacing = 5;
-//			Label l = new Label("<span weight=\"bold\" size=\"large\">" +
-			Label l = new Label("<span size=\"small\" weight=\"bold\">" +
-							message + 
-							"</span>");
+			// Fix for Bug #116812: iFolders w/ underscore characters are not
+			// displayed correctly in bubble.
+			// If we put the text in the constructor of the Label widget,
+			// the markup is parsed to look for mnemonics.  If we just set
+			// the Markup property later, the underscore character is
+			// interpreted correctly.
+			Label l = new Label();
+			l.Markup = "<span size=\"small\" weight=\"bold\">" + message + "</span>";
 			l.LineWrap = false;
 			l.UseMarkup = true;
 			l.Selectable = false;
