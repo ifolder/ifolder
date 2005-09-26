@@ -73,6 +73,13 @@ namespace Novell.iFolder
 		private	iFolderLoginDialog	LoginDialog;
 //		private bool				logwinShown;
 
+		/// These variables are used to track when to animate the
+		/// iFolder Icon in the notification panel.  The animation
+		/// should only occur when files/folders are actually
+		/// being uploaded/downloaded.
+		private bool				bCollectionIsSynchronizing;
+		private bool				bCurrentlyAnimatingIcon;
+		
 		private DomainController	domainController;
 
 		public iFolderApplication(string[] args)
@@ -81,6 +88,9 @@ namespace Novell.iFolder
 			Util.InitCatalog();
 
 			tIcon = new TrayIcon("iFolder");
+
+			bCollectionIsSynchronizing = false;
+			bCurrentlyAnimatingIcon = false;
 
 			eBox = new EventBox();
 			eBox.ButtonPressEvent += 
@@ -284,6 +294,17 @@ namespace Novell.iFolder
 
 			try
 			{
+				// Animate the iFolder Icon only when we're actually uploading
+				// or downloading a file/directory.
+				if ((args.Direction == Simias.Client.Event.Direction.Uploading
+					|| args.Direction == Simias.Client.Event.Direction.Downloading)
+					&& bCollectionIsSynchronizing && !bCurrentlyAnimatingIcon)
+				{
+					// Start the iFolder Icon Animation
+					gAppIcon.FromAnimation = SyncingPixbuf;
+					bCurrentlyAnimatingIcon = true;
+				}
+
 				iFolderWindow ifwin = Util.GetiFolderWindow();
 				if(ifwin != null)
 					ifwin.HandleFileSyncEvent(args);
@@ -307,11 +328,13 @@ namespace Novell.iFolder
 			{
 				case Action.StartSync:
 				{
-					gAppIcon.FromAnimation = SyncingPixbuf;
+					bCollectionIsSynchronizing = true;
 					break;
 				}
 				case Action.StopSync:
 				{
+					bCollectionIsSynchronizing = false;
+					bCurrentlyAnimatingIcon = false;
 					gAppIcon.Pixbuf = RunningPixbuf;
 					break;
 				}
