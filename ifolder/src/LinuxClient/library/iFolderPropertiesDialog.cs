@@ -122,7 +122,6 @@ namespace Novell.iFolder
 		/// <summary>
 		/// Default constructor for iFolderPropertiesDialog
 		/// </summary>
-/*
 		public iFolderPropertiesDialog(	string ifolderID )
 			: base()
 		{
@@ -167,7 +166,7 @@ namespace Novell.iFolder
 			KeyPressEvent += new KeyPressEventHandler(KeyPressHandler);
 			KeyReleaseEvent += new KeyReleaseEventHandler(KeyReleaseHandler);
 		}
-*/		
+		
 		public void UpdateiFolder(iFolderWeb theiFolder)
 		{
 			SettingsPage.UpdateiFolder(theiFolder);
