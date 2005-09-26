@@ -156,7 +156,7 @@ namespace Simias.Sync
 		/// <returns></returns>
 		public FileStream GetHashMap(out int entryCount, out int blockSize)
 		{
-			return map.GetHashMapStream(out entryCount, out blockSize);
+			return map.GetHashMapStream(out entryCount, out blockSize, false, oldNode.LocalIncarnation);
 		}
 	}
 
@@ -212,7 +212,7 @@ namespace Simias.Sync
 		/// <returns></returns>
 		public FileStream GetHashMap(out int entryCount, out int blockSize)
 		{
-			return map.GetHashMapStream(out entryCount, out blockSize);
+			return map.GetHashMapStream(out entryCount, out blockSize, true, node.LocalIncarnation);
 		}
 	}
 }

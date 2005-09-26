@@ -110,7 +110,7 @@ namespace Simias.Sync.Delta
 		static AutoResetEvent	queueEvent = new AutoResetEvent(false);
 		delegate void	HashMapDelegate();
 		static int				version = 1;
-
+		
 		internal struct HashFileHeader
 		{
 			static byte[]	signature = {(byte)'!', (byte)'M', (byte)'a', (byte)'P', (byte)'f', (byte)'I', (byte)'l', (byte)'e'};
@@ -122,13 +122,14 @@ namespace Simias.Sync.Delta
 			/// <param name="reader"></param>
 			/// <param name="blockSize"></param>
 			/// <param name="entryCount"></param>
+			/// <param name="nodeRev">The revision of the node.</param>
 			/// <returns></returns>
-			internal static bool ReadHeader(BinaryReader reader, out int blockSize, out int entryCount, out ulong localIncarnation)
+			internal static bool ReadHeader(BinaryReader reader, out int blockSize, out int entryCount, ulong nodeRev)
 			{
 				byte[] sig = reader.ReadBytes(8);
 				blockSize = reader.ReadInt32();
 				int ver = reader.ReadInt32();
-				localIncarnation = reader.ReadUInt64();
+				ulong fileRev = reader.ReadUInt64();
 				entryCount = 0;
 				if (sig.Length == signature.Length)
 				{
@@ -138,6 +139,8 @@ namespace Simias.Sync.Delta
 							return false;
 					}
 					if (version != ver)
+						return false;
+					if (fileRev != nodeRev)
 						return false;
 					entryCount = (int)((reader.BaseStream.Length - headerSize)/ HashData.InstanceSize);
 					return true;
@@ -150,12 +153,13 @@ namespace Simias.Sync.Delta
 			/// </summary>
 			/// <param name="writer"></param>
 			/// <param name="blockSize"></param>
-			internal static void WriteHeader(BinaryWriter writer, int blockSize, ulong localIncarnation)
+			/// <param name="nodeRev">The revision of the node.</param>
+			internal static void WriteHeader(BinaryWriter writer, int blockSize, ulong nodeRev)
 			{
 				writer.Write(signature);
 				writer.Write(blockSize);
 				writer.Write(version);
-				writer.Write(localIncarnation);
+				writer.Write(nodeRev);
 			}
 		}
 
@@ -166,6 +170,11 @@ namespace Simias.Sync.Delta
 		// We are assuming that larger files are less likely to change.
 		static int maxBlocks = 18000;
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="collection"></param>
+		/// <param name="node"></param>
 		internal HashMap(Collection collection, BaseFileNode node)
 		{
 			this.collection = collection;
@@ -329,20 +338,25 @@ namespace Simias.Sync.Delta
 		/// </summary>
 		/// <param name="entryCount">The number of hash entries.</param>
 		/// <param name="blockSize">The size of the data blocks that were hashed.</param>
+		/// <param name="create">If true create hashmap on error.</param>
+		/// <param name="mapRev">The desired map revision.</param>
 		/// <returns></returns>
-		internal FileStream GetHashMapStream(out int entryCount, out int blockSize)
+		internal FileStream GetHashMapStream(out int entryCount, out int blockSize, bool create, ulong mapRev)
 		{
 			if (File.Exists(file))
 			{
-				ulong localIncarnation;
 				FileStream stream = File.OpenRead(file);
-				if (HashFileHeader.ReadHeader(new BinaryReader(stream), out blockSize, out entryCount, out localIncarnation))
+				if (HashFileHeader.ReadHeader(new BinaryReader(stream), out blockSize, out entryCount, mapRev))
 				{
-					if (node.LocalIncarnation == localIncarnation)
-						return stream;
+					return stream;
 				}
+				stream.Close();
 			}
-			this.CreateHashMap();
+			if (create)
+				this.CreateHashMap();
+			else
+				Delete();
+
 			entryCount = 0;
 			blockSize = 0;
 			return null;
