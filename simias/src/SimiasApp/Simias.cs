@@ -1308,7 +1308,23 @@ namespace Mono.ASPNET
 
 					// Initialize the process end mutex and wait for it to become signaled.
 					Mutex mutex = new Mutex( false, ExitMutexName );
+					while ( mutex.WaitOne( 0, false ) )
+					{
+						Console.Error.WriteLine( "Mutex is not ready..." );
+						mutex.ReleaseMutex();
+						Thread.Sleep( 100 );
+					}
+
+					Console.Error.WriteLine( "Going to sleep on mutex." );
+
+					// Wait for the mutex to be signaled.
 					mutex.WaitOne();
+
+					Console.Error.WriteLine( "Waking up from mutex." );
+
+					// Clean it up.
+					mutex.ReleaseMutex();
+					mutex.Close();
 
 					// Get rid of the temporary file.
 					DeleteProcessFile();

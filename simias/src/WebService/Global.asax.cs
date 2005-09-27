@@ -202,7 +202,17 @@ namespace Simias.Web
 			string mutexName = simiasDataPath.Replace( '\\', '/' );
 
 			// Create and own the mutex that the controlling server process will wait on.
-			Mutex mutex = new Mutex( true, "SimiasExitProcessMutex_" + mutexName );
+			Mutex mutex = new Mutex( false, "SimiasExitProcessMutex_" + mutexName );
+			while ( !mutex.WaitOne( 0, false ) )
+			{
+				// Wait and try to acquire it again.
+				Thread.Sleep( 50 );
+			}
+
+			if ( verbose )
+			{
+				Console.Error.WriteLine( "Acquire the shutdown mutex." );
+			}
 
 			// Wait for the shutdown event to be signaled before releasing the mutex.
 			shutDownEvent.WaitOne();
