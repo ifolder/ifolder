@@ -1044,9 +1044,6 @@ namespace Novell.FormsTrayApp
 						break;
 					case Action.StartSync:
 					{
-						// Animate the icon.
-						syncAnimateTimer.Start();
-
 						if (syncEventArgs.Name.StartsWith("POBox:"))
 						{
 							message = resourceManager.GetString("checkingForiFolders");
@@ -1093,6 +1090,9 @@ namespace Novell.FormsTrayApp
 		{
 			try
 			{
+				// Animate the icon.
+				syncAnimateTimer.Start();
+
 				syncToServer = syncEventArgs.Direction == Direction.Uploading;
 				string message = null;
 				
