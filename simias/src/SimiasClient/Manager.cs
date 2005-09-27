@@ -44,74 +44,146 @@ namespace Simias.Client
 		/// The default mapping directories for the specific platforms.
 		/// </summary>
 		private static string DefaultWindowsMappingDir = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.CommonApplicationData ), "Simias" );
-		private const string DefaultLinuxMappingDir = "/etc/simias";
+		private static string DefaultLinuxMappingDir = "/etc/simias";
+
+		/// <summary>
+		/// Path to the Simias.exe application.
+		/// </summary>
+		private string applicationPath = DefaultSimiasApplicationPath;
+
+		/// <summary>
+		/// Path to the Simias data area.
+		/// </summary>
+		private string simiasDataPath = null;
+
+		/// <summary>
+		/// Port to listen on. Initialized to use a dynamic port.
+		/// </summary>
+		private string port = null;
+
+		/// <summary>
+		/// Type of configuration to use - server or client.
+		/// </summary>
+		private bool isServer = false;
+
+		/// <summary>
+		/// Uri to the web service.
+		/// </summary>
+		private string webServiceUri = null;
 
 		#endregion
 
 		#region Properties
 
 		/// <summary>
-		/// Gets the default Simias data path.
+		/// Gets the path to the Simias.exe application file.
 		/// </summary>
-		private static string DefaultSimiasDataPath
+		/// <returns>The path to the Simias.exe application file if successful. 
+		/// Otherwise a null is returned.</returns>
+		private static string DefaultSimiasApplicationPath
 		{
-			get 
+			get
 			{
-				string path = Environment.GetFolderPath( Environment.SpecialFolder.LocalApplicationData );
-				if ( ( path == null ) || ( path.Length == 0 ) )
+				string applicationPath = null;
+
+				// Look for the application mapping file in the current directory first.
+				string tempPath = Path.Combine( Directory.GetCurrentDirectory(), MappingFile );
+				if ( !File.Exists( tempPath ) )
 				{
-					path = Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData );
+					// The file is not in the current directory. Look in the well known place.
+					tempPath = Path.Combine( 
+						( MyEnvironment.Platform == MyPlatformID.Windows ) ? 
+							DefaultWindowsMappingDir : 
+							DefaultLinuxMappingDir, 
+						MappingFile );
 				}
 
-				return Path.Combine( path, "simias" );
+				// Open the file and get the mapping contents.
+				try
+				{
+					using ( StreamReader sr = new StreamReader( tempPath ) )
+					{
+						applicationPath = sr.ReadLine();
+					}
+				}
+				catch
+				{}
+
+				return applicationPath;
 			}
+		}
+
+		/// <summary>
+		/// Getter/Setter for the Simias application path.
+		/// </summary>
+		public string ApplicationPath
+		{
+			get { return applicationPath; }
+			set { applicationPath = value; }
+		}
+
+		/// <summary>
+		/// Getter/Setter for the Simias data path.
+		/// </summary>
+		public string DataPath
+		{
+			get { return simiasDataPath; }
+			set { simiasDataPath = value; }
+		}
+
+		/// <summary>
+		/// Getter/Setter for the web service port or range. Null indicates to
+		/// to use a dynamic port.
+		/// </summary>
+		public string Port
+		{
+			get { return port; }
+			set { port = value; }
+		}
+
+		/// <summary>
+		/// Getter/Setter for running in a client or server configuration.
+		/// </summary>
+		public bool IsServer
+		{
+			get { return isServer; }
+			set { isServer = value; }
+		}
+
+		/// <summary>
+		/// Gets the web service URI.
+		/// </summary>
+		public Uri WebServiceUri
+		{
+			get { return new Uri( webServiceUri ); }
 		}
 
 		#endregion
 
-		#region Private Methods
+		#region Constructor
 
 		/// <summary>
-		/// Gets the path to the Simias.exe application file.
+		/// Initializes an instance of this object.
 		/// </summary>
-		/// <returns>The path to the Simias.exe application file if successful. Otherwise a null is returned.</returns>
-		private static string GetSimiasApplicationPath()
+		public Manager()
 		{
-			string applicationPath = null;
-
-			// Look for the application mapping file in the current directory first.
-			string tempPath = Path.Combine( Directory.GetCurrentDirectory(), MappingFile );
-			if ( !File.Exists( tempPath ) )
-			{
-				// The file is not in the current directory. Look in the well known place.
-				tempPath = Path.Combine( 
-					( MyEnvironment.Platform == MyPlatformID.Windows ) ? DefaultWindowsMappingDir : DefaultLinuxMappingDir, 
-					MappingFile );
-			}
-
-			// Open the file and get the mapping contents.
-			try
-			{
-				using ( StreamReader sr = new StreamReader( tempPath ) )
-				{
-					applicationPath = sr.ReadLine();
-				}
-			}
-			catch
-			{}
-
-			return applicationPath;
 		}
+
+		#endregion
+
+		#region Public Methods
 
 		/// <summary>
 		/// Starts the Simias process running.
 		/// </summary>
-		/// <param name="applicationPath">Path to the Simias application.</param>
-		/// <param name="arguments">Arguments to pass to Simias.exe.</param>
 		/// <returns>The URI of the web service if successful.</returns>
-		private static string StartSimiasProcess( string applicationPath, string arguments )
+		public string Start()
 		{
-			string webServiceUri = null;
+			// Build the arguments string.
+			string args = String.Format( "{0}{1}{2}", 
+				( simiasDataPath != null ) ? String.Format( "--datadir {0} ", simiasDataPath ) : String.Empty, 
+				( isServer == true ) ? "--runasserver " : String.Empty, 
+				( port != null ) ? String.Format( "--port {0}", port ) : String.Empty );
 
 			// Create the process structure.
 			Process simiasProcess = new Process();
@@ -119,7 +191,7 @@ namespace Simias.Client
 			simiasProcess.StartInfo.CreateNoWindow = true;
 			simiasProcess.StartInfo.RedirectStandardOutput = true;
 			simiasProcess.StartInfo.UseShellExecute = false;
-			simiasProcess.StartInfo.Arguments = arguments;
+			simiasProcess.StartInfo.Arguments = args;
 			simiasProcess.Start();
 
 			// Wait for the process to exit, so we can tell if things started successfully.
@@ -131,8 +203,9 @@ namespace Simias.Client
 				// Get the exit code to see if it was successful.
 				if ( simiasProcess.ExitCode == 0 )
 				{
-					// Read the uri that was printed to stdout.
+					// Read the uri and data path that was printed to stdout.
 					webServiceUri = simiasProcess.StandardOutput.ReadLine();
+					simiasDataPath = simiasProcess.StandardOutput.ReadLine();
 				}
 				else
 				{
@@ -148,78 +221,24 @@ namespace Simias.Client
 			return webServiceUri;
 		}
 
-		#endregion
-
-		#region Public Methods
-
-		/// <summary>
-		/// Starts up the simias web service process.
-		/// </summary>
-		static public string Start()
-		{
-			// Get the path to the simias executable.
-			string simiasApp = GetSimiasApplicationPath();
-			if ( simiasApp == null )
-			{
-				throw new ApplicationException( "Cannot locate Simias application path." );
-			}
-
-			return StartSimiasProcess( simiasApp, null );
-		}
-
-		/// <summary>
-		/// Starts up the simias web service process.
-		/// </summary>
-		static public string Start( string applicationPath )
-		{
-			return StartSimiasProcess( applicationPath, null );
-		}
-
-		/// <summary>
-		/// Starts up the simias web service process.
-		/// </summary>
-		public static string Start( string applicationPath, string simiasDataPath )
-		{
-			return StartSimiasProcess( applicationPath, String.Format( "--datadir {0}", simiasDataPath ) );
-		}
-
-		/// <summary>
-		/// Starts up the simias web service process.
-		/// </summary>
-		public static string Start( string applicationPath, string simiasDataPath, int port )
-		{
-			return StartSimiasProcess( applicationPath, String.Format( "--datadir {0} --port {1}", simiasDataPath, port ) );
-		}
-
-		/// <summary>
-		/// Starts up the simias web service process.
-		/// </summary>
-		public static string Start( string applicationPath, string simiasDataPath, int port, bool isServer )
-		{
-			return StartSimiasProcess( applicationPath, String.Format( "--datadir {0} --port {1}{2}", simiasDataPath, port, isServer ? " --runasserver" : String.Empty ) );
-		}
-
 		/// <summary>
 		/// Shuts down the simias web service process.
 		/// </summary>
-		static public bool Stop()
+		public bool Stop()
 		{
 			bool stopped = false;
 
-			// Get the path to the simias executable.
-			string simiasApp = GetSimiasApplicationPath();
-			if ( simiasApp == null )
-			{
-				throw new ApplicationException( "Cannot locate Simias application path." );
-			}
+			// Build the arguments string.
+			string args = String.Format( "--stop{0}", 
+				( simiasDataPath != null ) ? String.Format( " --datadir {0}", simiasDataPath ) : String.Empty );
 
 			// Create the process structure.
 			Process simiasProcess = new Process();
-			simiasProcess.StartInfo.FileName = simiasApp;
+			simiasProcess.StartInfo.FileName = applicationPath;
 			simiasProcess.StartInfo.CreateNoWindow = true;
 			simiasProcess.StartInfo.RedirectStandardOutput = true;
 			simiasProcess.StartInfo.UseShellExecute = false;
-			simiasProcess.StartInfo.Arguments = "--stop";
+			simiasProcess.StartInfo.Arguments = args;
 			simiasProcess.Start();
 
 			// Wait for the process to exit, so we can tell if things started successfully.

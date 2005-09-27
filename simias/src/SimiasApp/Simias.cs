@@ -1139,6 +1139,7 @@ namespace Mono.ASPNET
 
 							// The service is already running, don't start a new one, just use the old one.
 							Console.WriteLine( ub.Uri );
+							Console.WriteLine( simiasDataPath );
 						}
 						else
 						{
@@ -1226,6 +1227,7 @@ namespace Mono.ASPNET
 				// Wait for the web service uri to be written to the child's stdout descriptor.
 				// Then write it to the parent's stdout descriptor.
 				Console.WriteLine( serverProcess.StandardOutput.ReadLine() );
+				Console.WriteLine( serverProcess.StandardOutput.ReadLine() );
 			}
 			catch
 			{
@@ -1298,7 +1300,10 @@ namespace Mono.ASPNET
 					// Wait for the server listener to start.
 					Thread.Sleep( 100 );
 					PingWebService( ub.Uri );
+
+					// Write out the web service uri and data store path to stdout.
 					Console.WriteLine( ub.Uri );
+					Console.WriteLine( simiasDataPath );
 
 					// Increment the reference count for this instance, so that another application
 					// won't shut down this process on us.

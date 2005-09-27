@@ -125,6 +125,8 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.MenuItem menuItem1;
 		private System.Windows.Forms.MenuItem menuAbout;
 		private System.Windows.Forms.MenuItem menuAccounts;
+		private Manager simiasManager = new Manager();
+		private string iFolderLogPath;
 		static private FormsTrayApp instance;
 		#endregion
 
@@ -185,6 +187,16 @@ namespace Novell.FormsTrayApp
 					}
 					catch {}
 				}
+
+				// Create an iFolder directory for this user where the iFolderApp.log file will be placed.
+				iFolderLogPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "iFolder");
+				if (!Directory.Exists(iFolderLogPath))
+				{
+					Directory.CreateDirectory(iFolderLogPath);
+				}
+
+				// Parse the command line arguments for configuration directives.
+				ParseConfigurationParameters();
 
 				InitializeComponent();
 
@@ -459,12 +471,17 @@ namespace Novell.FormsTrayApp
 					// See Bug 77741 - for some reason the web services won't get started properly
 					// when the application is run with the working directory set to a different drive.
 					Environment.CurrentDirectory = Application.StartupPath;
-					Manager.Start();
+					simiasManager.Start();
+
+					// Write the web service information out to the registry where the iFolder Shell
+					// component and any other iFolder type applications can get access to the web
+					// service.
+					SetWebServiceInformation(simiasManager.WebServiceUri, simiasManager.DataPath);
 
 					ifWebService = new iFolderWebService();
-					ifWebService.Url = Manager.LocalServiceUrl.ToString() + "/iFolder.asmx";
+					ifWebService.Url = simiasManager.WebServiceUri + "/iFolder.asmx";
 					simiasWebService = new SimiasWebService();
-					simiasWebService.Url = Simias.Client.Manager.LocalServiceUrl.ToString() + "/Simias.asmx";
+					simiasWebService.Url = simiasManager.WebServiceUri + "/Simias.asmx";
 
 					eventQueue = new Queue();
 					workEvent = new AutoResetEvent(false);
@@ -483,7 +500,7 @@ namespace Novell.FormsTrayApp
 					}
 
 					// Instantiate the Preferences dialog.
-					preferences = new Preferences(ifWebService, simiasWebService);
+					preferences = new Preferences(ifWebService, simiasWebService, simiasManager);
 					preferences.EnterpriseConnect += new Novell.FormsTrayApp.Preferences.EnterpriseConnectDelegate(preferences_EnterpriseConnect);
 					preferences.ChangeDefaultDomain += new Novell.FormsTrayApp.Preferences.ChangeDefaultDomainDelegate(preferences_EnterpriseConnect);
 					preferences.RemoveDomain += new Novell.FormsTrayApp.Preferences.RemoveDomainDelegate(preferences_RemoveDomain);
@@ -500,8 +517,8 @@ namespace Novell.FormsTrayApp
 					handle = syncLog.Handle;
 
 					// Cause the web services to start.
-					LocalService.Start(simiasWebService);
-					LocalService.Start(ifWebService);
+					LocalService.Start(simiasWebService, simiasManager.WebServiceUri, simiasManager.DataPath);
+					LocalService.Start(ifWebService, simiasManager.WebServiceUri, simiasManager.DataPath);
 					simiasRunning = true;
 
 					// Instantiate the GlobalProperties dialog.
@@ -586,7 +603,7 @@ namespace Novell.FormsTrayApp
 		{
 			try
 			{
-				string errorFile = Path.Combine(Path.GetDirectoryName(new Configuration().ConfigPath), "iFolderApp.log");
+				string errorFile = Path.Combine(iFolderLogPath, "iFolderApp.log");
 
 				// Create an instance of StreamWriter to write text to a file.
 				using (StreamWriter sw = new StreamWriter(errorFile, true))
@@ -725,6 +742,22 @@ namespace Novell.FormsTrayApp
 				}
 			}
 		}
+
+		private void SetWebServiceInformation(Uri webServiceUri, string simiasDataPath)
+		{
+			// Create/open the iFolder key.
+			RegistryKey regKey = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Novell\iFolder");
+			if (regKey != null)
+			{
+				regKey.SetValue("WebServiceUri", webServiceUri.ToString());
+				regKey.SetValue("SimiasDataPath", simiasDataPath);
+				regKey.Close();
+			}
+			else
+			{
+				throw new ApplicationException("Cannot open iFolder registry key to set web service information.");
+			}
+		}
 		#endregion
 
 		#region Private Methods
@@ -744,7 +777,7 @@ namespace Novell.FormsTrayApp
 					null);
 
 				MyMessageBox mmb;
-				Status status = domainAuth.Authenticate();
+				Status status = domainAuth.Authenticate(simiasManager.WebServiceUri, simiasManager.DataPath);
 				switch (status.statusCode)
 				{
 					case StatusCodes.InvalidCertificate:
@@ -782,7 +815,7 @@ namespace Novell.FormsTrayApp
 							// There are credentials that were saved on the domain. Use them to authenticate.
 							// If the authentication fails for any reason, pop up and ask for new credentials.
 							domainAuth = new DomainAuthentication("iFolder", domainInfo.ID, credentials);
-							Status authStatus = domainAuth.Authenticate();
+							Status authStatus = domainAuth.Authenticate(simiasManager.WebServiceUri, simiasManager.DataPath);
 							switch (authStatus.statusCode)
 							{
 								case StatusCodes.Success:
@@ -1269,7 +1302,7 @@ namespace Novell.FormsTrayApp
 							// Only display one dialog.
 							if (serverInfo == null)
 							{
-								serverInfo = new ServerInfo(domainInfo, credentials);
+								serverInfo = new ServerInfo(simiasManager, domainInfo, credentials);
 								serverInfo.Closed += new EventHandler(serverInfo_Closed);
 								serverInfo.Show();
 								ShellNotifyIcon.SetForegroundWindow(serverInfo.Handle);
@@ -1337,7 +1370,7 @@ namespace Novell.FormsTrayApp
 				}
 
 				// Shut down the web server.
-				Manager.Stop();
+				simiasManager.Stop();
 
 				if ((worker != null) && worker.IsAlive)
 				{
@@ -1473,6 +1506,47 @@ namespace Novell.FormsTrayApp
 				}
 			}
 			catch {}
+		}
+
+		/// <summary>
+		/// Parses the command line parameters to get the configuration for iFolder.
+		/// </summary>
+		private void ParseConfigurationParameters()
+		{
+			string[] args = Environment.GetCommandLineArgs();
+			for ( int i = 0; i < args.Length; ++i )
+			{
+				switch ( args[ i ].ToLower() )
+				{
+					case "-port":
+					{
+						if ( ( i + 1 ) < args.Length )
+						{
+							simiasManager.Port = args[ ++i ];
+						}
+						else
+						{
+							Console.Error.WriteLine( "Invalid command line parameters. No port or range was specified." );
+						}
+
+						break;
+					}
+
+					case "-datadir":
+					{
+						if ( ( i + 1 ) < args.Length )
+						{
+							simiasManager.DataPath = args[ ++i ];
+						}
+						else
+						{
+							Console.Error.WriteLine( "Invalid command line parameters. No store path was specified." );
+						}
+
+						break;
+					}
+				}
+			}
 		}
 		#endregion
 	}

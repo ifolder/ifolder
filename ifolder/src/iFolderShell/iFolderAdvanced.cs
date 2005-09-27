@@ -33,6 +33,7 @@ using System.Net;
 using System.Globalization;
 using Simias.Client;
 using Simias.Client.Event;
+using Microsoft.Win32;
 
 namespace Novell.iFolderCom
 {
@@ -1845,12 +1846,19 @@ namespace Novell.iFolderCom
 		{
 			if (ifWebService == null)
 			{
-				Uri uri = Manager.LocalServiceUrl;
-				if (uri != null)
+				RegistryKey regKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Novell\iFolder");
+				if (regKey != null)
 				{
-					ifWebService = new iFolderWebService();
-					ifWebService.Url = uri.ToString() + "/iFolder.asmx";
-					LocalService.Start(ifWebService);
+					string webServiceUri = regKey.GetValue("WebServiceUri") as string;
+					string simiasDataPath = regKey.GetValue("SimiasDataPath") as string;
+					if ((webServiceUri != null) && (simiasDataPath != null))
+					{
+						ifWebService = new iFolderWebService();
+						ifWebService.Url = webServiceUri + "/iFolder.asmx";
+						LocalService.Start(ifWebService, new Uri(webServiceUri), simiasDataPath);
+					}
+
+					regKey.Close();
 				}
 			}
 		}

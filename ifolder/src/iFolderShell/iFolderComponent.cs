@@ -441,12 +441,21 @@ namespace Novell.iFolderCom
 					if ((currentTime.Ticks - ticks) > delta)
 					{
 						ticks = currentTime.Ticks;
-						Uri uri = Manager.LocalServiceUrl;
-						if (uri != null)
+
+						// The registry holds the information needed to connect to the web service.
+						RegistryKey regKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Novell\iFolder");
+						if (regKey != null)
 						{
-							ifWebService = new iFolderWebService();
-							ifWebService.Url = uri.ToString() + "/iFolder.asmx";
-							LocalService.Start(ifWebService);
+							string webServiceUri = regKey.GetValue("WebServiceUri") as string;
+							string simiasDataPath = regKey.GetValue("SimiasDataPath") as string;
+							if ((webServiceUri != null) && (simiasDataPath != null))
+							{
+								ifWebService = new iFolderWebService();
+								ifWebService.Url = webServiceUri + "/iFolder.asmx";
+								LocalService.Start(ifWebService, new Uri(webServiceUri), simiasDataPath);
+							}
+
+							regKey.Close();
 						}
 					}
 				}
