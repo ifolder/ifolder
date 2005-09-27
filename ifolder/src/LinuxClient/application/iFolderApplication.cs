@@ -79,7 +79,8 @@ namespace Novell.iFolder
 		/// should only occur when files/folders are actually
 		/// being uploaded/downloaded.
 		private bool				bCollectionIsSynchronizing;
-		private bool				bCurrentlyAnimatingIcon;
+		// 0 = Not animating, 1 = uploading, -1 = downloading
+		private int					currentIconAnimationDirection;
 		
 		private DomainController	domainController;
 
@@ -91,7 +92,7 @@ namespace Novell.iFolder
 			tIcon = new TrayIcon("iFolder");
 
 			bCollectionIsSynchronizing = false;
-			bCurrentlyAnimatingIcon = false;
+			currentIconAnimationDirection = 0;
 
 			eBox = new EventBox();
 			eBox.ButtonPressEvent += 
@@ -299,17 +300,18 @@ namespace Novell.iFolder
 			{
 				// Animate the iFolder Icon only when we're actually uploading
 				// or downloading a file/directory.
-				if ((args.Direction == Simias.Client.Event.Direction.Uploading
-					|| args.Direction == Simias.Client.Event.Direction.Downloading)
-					&& bCollectionIsSynchronizing && !bCurrentlyAnimatingIcon)
+				if (args.Direction == Simias.Client.Event.Direction.Uploading
+					&& bCollectionIsSynchronizing && currentIconAnimationDirection != 1)
 				{
-					// Start the iFolder Icon Animation
-					if (args.Direction == Simias.Client.Event.Direction.Downloading)
-						gAppIcon.FromAnimation = DownloadingPixbuf;
-					else
-						gAppIcon.FromAnimation = UploadingPixbuf;
-					
-					bCurrentlyAnimatingIcon = true;
+					gAppIcon.FromAnimation = UploadingPixbuf;
+					currentIconAnimationDirection = 1;
+				}
+				else if (args.Direction == Simias.Client.Event.Direction.Downloading
+						 && bCollectionIsSynchronizing
+						 && currentIconAnimationDirection != -1)
+				{
+					gAppIcon.FromAnimation = DownloadingPixbuf;
+					currentIconAnimationDirection = -1;
 				}
 
 				iFolderWindow ifwin = Util.GetiFolderWindow();
@@ -341,7 +343,7 @@ namespace Novell.iFolder
 				case Action.StopSync:
 				{
 					bCollectionIsSynchronizing = false;
-					bCurrentlyAnimatingIcon = false;
+					currentIconAnimationDirection = 0;
 					gAppIcon.Pixbuf = RunningPixbuf;
 					break;
 				}
