@@ -60,7 +60,8 @@ namespace Novell.iFolder
 		private Gdk.Pixbuf			RunningPixbuf;
 		private Gdk.Pixbuf			StartingPixbuf;
 		private Gdk.Pixbuf			StoppingPixbuf;
-		private Gdk.PixbufAnimation	SyncingPixbuf;
+		private Gdk.PixbufAnimation	DownloadingPixbuf;
+		private Gdk.PixbufAnimation	UploadingPixbuf;
 		private Gtk.EventBox		eBox;
 		private TrayIcon			tIcon;
 		private iFolderWebService	ifws;
@@ -102,8 +103,10 @@ namespace Novell.iFolder
 					new Pixbuf(Util.ImagesPath("ifolder-startup.png"));
 			StoppingPixbuf = 
 					new Pixbuf(Util.ImagesPath("ifolder-shutdown.png"));
-			SyncingPixbuf =
+			DownloadingPixbuf =
 					new Gdk.PixbufAnimation(Util.ImagesPath("ifolder24.gif"));
+			UploadingPixbuf =
+					new Gdk.PixbufAnimation(Util.ImagesPath("ifolder24-upload.gif"));
 
 			gAppIcon = new Gtk.Image(RunningPixbuf);
 
@@ -301,7 +304,11 @@ namespace Novell.iFolder
 					&& bCollectionIsSynchronizing && !bCurrentlyAnimatingIcon)
 				{
 					// Start the iFolder Icon Animation
-					gAppIcon.FromAnimation = SyncingPixbuf;
+					if (args.Direction == Simias.Client.Event.Direction.Downloading)
+						gAppIcon.FromAnimation = DownloadingPixbuf;
+					else
+						gAppIcon.FromAnimation = UploadingPixbuf;
+					
 					bCurrentlyAnimatingIcon = true;
 				}
 
