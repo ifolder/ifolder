@@ -1273,15 +1273,8 @@ namespace Mono.ASPNET
 					// Get the parent directory to the "web/bin" directory.
 					string rootPath = ApplicationPath.Substring( 0, index ).TrimEnd( new char[] { Path.DirectorySeparatorChar } );
 
-					// See which platform we are running on.
-					ArrayList args = new ArrayList();
-					if ( MyEnvironment.Platform != MyPlatformID.Windows )
-					{
-						// mono requires the application path as it's first argument.
-						args.Add( ApplicationPath );
-					}
-
 					// Build the argument list for the Xsp server.
+					ArrayList args = new ArrayList();
 					args.Add( "--root" );
 					args.Add( rootPath );
 					args.Add( "--applications" );
