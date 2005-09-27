@@ -1210,13 +1210,14 @@ namespace Mono.ASPNET
 				Process serverProcess = new Process();
 
 				// Setup the child process information.
-				serverProcess.StartInfo.FileName = ApplicationPath;
+				serverProcess.StartInfo.FileName = MyEnvironment.DotNet ? ApplicationPath : "mono";
 				serverProcess.StartInfo.UseShellExecute = false;
 				serverProcess.StartInfo.CreateNoWindow = !showConsole ? true : false;
 				serverProcess.StartInfo.RedirectStandardOutput = true;
 				serverProcess.StartInfo.Arguments = 
 					String.Format(
-						"--port {0} {1}--datadir \"{2}\" --noexec --start {3}", 
+						"{0}--port {1} {2}--datadir \"{3}\" --noexec --start {4}", 
+						MyEnvironment.DotNet ? String.Empty : ApplicationPath + " ",
 						port,
 						runAsServer ? "--runasserver " : String.Empty,
 						simiasDataPath,
