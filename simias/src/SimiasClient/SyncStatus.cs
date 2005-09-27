@@ -95,6 +95,10 @@ namespace Simias.Client
 		/// The disk is full.
 		/// </summary>
 		DiskFull,
+		/// <summary>
+		/// The Object is readonly.
+		/// </summary>
+		ReadOnly,
 	}
 
 	#endregion
