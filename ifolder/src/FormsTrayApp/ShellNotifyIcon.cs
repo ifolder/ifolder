@@ -482,8 +482,6 @@ namespace Novell.CustomUIControls
 								return;
 							}
 							break;
-						case WM_LBUTTONUP:
-							break;
 						case WM_LBUTTONDBLCLK:
 							if (DoubleClick != null)
 							{
@@ -494,6 +492,7 @@ namespace Novell.CustomUIControls
 							break;
 						case WM_RBUTTONDOWN:
 							break;
+						case WM_LBUTTONUP:
 						case WM_RBUTTONUP:
 							if ((shellNotifyIcon.ContextMenu != null) && 
 								(shellNotifyIcon.ContextMenu.Handle != IntPtr.Zero))
