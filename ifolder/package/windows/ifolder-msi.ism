@@ -5192,7 +5192,7 @@
 		<col def="S255">DotNetBuildConfiguration</col>
 		<col def="S255">MsiCommandLine</col>
 		<col def="I4">ISSetupPrerequisiteLocation</col>
-		<row><td>release</td><td>web</td><td>&lt;ISProjectDataFolder&gt;</td><td>PackageName</td><td>1</td><td>2052,1028,1029,1033,1036,1031,1038,1040,1041,1045,1046,1049,1051,1034</td><td>2</td><td>1</td><td>Intel</td><td>2052,1028,1029,1033,1036,1031,1038,1040,1041,1045,1046,1049,1051,1034</td><td>1033</td><td>2</td><td>0</td><td>1</td><td>0</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>637085</td><td/><td/><td/><td/></row>
+		<row><td>release</td><td>web</td><td>&lt;ISProjectDataFolder&gt;</td><td>PackageName</td><td>1</td><td>2052,1028,1029,1033,1036,1031,1038,1040,1041,1045,1046,1049,1051,1034</td><td>2</td><td>1</td><td>Intel</td><td>2052,1028,1029,1033,1036,1031,1038,1040,1041,1045,1046,1049,1051,1034</td><td>1033</td><td>2</td><td>0</td><td>1</td><td>0</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>112797</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISReleaseExtended">
@@ -5364,6 +5364,7 @@
 		<col key="yes" def="s72">ISSetupPrerequisites</col>
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I2">Order</col>
+		<row><td>_3367AEB2_4372_4C3D_</td><td>&lt;ISProductFolder&gt;\SetupPrerequisites\MySetupPrerequisite.prq</td><td/></row>
 	</table>
 
 	<table name="ISSetupType">
@@ -15052,7 +15053,7 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<row><td>ProductID</td><td>none</td><td/></row>
 		<row><td>ProductLanguage</td><td>1033</td><td/></row>
 		<row><td>ProductName</td><td>iFolder 3 Client</td><td/></row>
-		<row><td>ProductVersion</td><td>3.1.0</td><td/></row>
+		<row><td>ProductVersion</td><td>3.2.0</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>
 		<row><td>ProgressType1</td><td>Installing</td><td/></row>
 		<row><td>ProgressType2</td><td>installed</td><td/></row>
