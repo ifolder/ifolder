@@ -56,7 +56,12 @@ namespace Novell.FormsTrayApp
 		/// <summary>
 		/// The notification is for a collision in an iFolder.
 		/// </summary>
-		Collision
+		Collision,
+
+		/// <summary>
+		/// The notification is for a synchronization error.
+		/// </summary>
+		SyncError
 	};
 
 	/// <summary>
@@ -93,6 +98,10 @@ namespace Novell.FormsTrayApp
 		private Thread worker = null;
 
 		private Hashtable initialSyncCollections = new Hashtable();
+
+		// Hashtable used to hold collection IDs for collections that have already had notifications posted.
+		private Hashtable collectionsNotified = new Hashtable();
+		private string currentSyncCollectionName;
 
 		/// <summary>
 		/// Event used to signal that there are events in the queue that need to be processed.
@@ -421,6 +430,9 @@ namespace Novell.FormsTrayApp
 					ShellNotifyIcon.SetForegroundWindow(acceptInvitation.Handle);
 					acceptInvitation.ShowDialog();
 					acceptInvitation.Dispose();
+					break;
+				case NotifyType.SyncError:
+					syncLog.Show();
 					break;
 			}
 		}
@@ -1044,6 +1056,8 @@ namespace Novell.FormsTrayApp
 						break;
 					case Action.StartSync:
 					{
+						currentSyncCollectionName = syncEventArgs.Name;
+
 						if (syncEventArgs.Name.StartsWith("POBox:"))
 						{
 							message = resourceManager.GetString("checkingForiFolders");
@@ -1182,6 +1196,14 @@ namespace Novell.FormsTrayApp
 						message = string.Format(resourceManager.GetString("lockFailure"), syncEventArgs.Name);
 						break;
 					case SyncStatus.PolicyQuota:
+						if (!collectionsNotified.Contains(syncEventArgs.CollectionID))
+						{
+							// TODO: need to add a value that indicates what type of failure was displayed.
+							collectionsNotified.Add(syncEventArgs.CollectionID, null);
+							string title = string.Format(resourceManager.GetString("quotaFailureTitle"), currentSyncCollectionName);
+							notifyType = NotifyType.SyncError;
+							shellNotifyIcon.DisplayBalloonTooltip(title, resourceManager.GetString("quotaFailureInfo"), BalloonType.Error);
+						}
 						message = string.Format(resourceManager.GetString("quotaFailure"), syncEventArgs.Name);
 						break;
 					case SyncStatus.PolicySize:
@@ -1192,6 +1214,17 @@ namespace Novell.FormsTrayApp
 						break;
 					case SyncStatus.DiskFull:
 						message = string.Format(syncToServer ? resourceManager.GetString("serverDiskFullFailure") : resourceManager.GetString("clientDiskFullFailure"), syncEventArgs.Name);
+						break;
+					case SyncStatus.ReadOnly:
+						if (!collectionsNotified.Contains(syncEventArgs.CollectionID))
+						{
+							// TODO: need to add a value that indicates what type of failure was displayed.
+							collectionsNotified.Add(syncEventArgs.CollectionID, null);
+							string title = string.Format(resourceManager.GetString("quotaFailureTitle"), currentSyncCollectionName);
+							notifyType = NotifyType.SyncError;
+							shellNotifyIcon.DisplayBalloonTooltip(title, resourceManager.GetString("readOnlyFailureInfo"), BalloonType.Error);
+						}
+						message = string.Format(resourceManager.GetString("readOnlyFailure"), syncEventArgs.Name);
 						break;
 					default:
 						message = string.Format(resourceManager.GetString("genericFailure"), syncEventArgs.Name);
