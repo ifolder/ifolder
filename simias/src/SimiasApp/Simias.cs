@@ -1517,12 +1517,14 @@ namespace Mono.ASPNET
 
 			if ( ipcServerSocket != null )
 			{
+				ipcServerSocket.Shutdown( SocketShutdown.Both );
 				ipcServerSocket.Close();
 				ipcServerSocket = null;
 			}
 
 			if ( ipcMessageSocket != null )
 			{
+				ipcMessageSocket.Shutdown( SocketShutdown.Receive );
 				ipcMessageSocket.Close();
 				ipcMessageSocket = null;
 			}
@@ -1572,7 +1574,6 @@ namespace Mono.ASPNET
 		{
 			// Wait for the server to indicate to shutdown.
 			stopServerEvent.WaitOne();
-			Console.Error.WriteLine( "Woke up from shutdown event." );
 		}
 
 		/// <summary>

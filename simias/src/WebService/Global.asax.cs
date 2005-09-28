@@ -204,6 +204,36 @@ namespace Simias.Web
 			return foundEnv;
 		}
 
+		/// <summary>
+		/// Sends the specified message via the IPC to the listening process.
+		/// </summary>
+		/// <param name="message">Message to send.</param>
+		private static void SendIpcMessage( string message )
+		{
+			// Put the message into a length preceeded buffer.
+			UTF8Encoding utf8 = new UTF8Encoding();
+			int msgLength = utf8.GetByteCount( message );
+			byte[] msgHeader = BitConverter.GetBytes( msgLength );
+			byte[] buffer = new byte[ msgHeader.Length + msgLength ];
+
+			// Copy the message length and the message into the buffer.
+			msgHeader.CopyTo( buffer, 0 );
+			utf8.GetBytes( message, 0, message.Length, buffer, 4 );
+
+			// Allocate a socket to send the shutdown message on.
+			Socket socket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
+			try
+			{
+				// Connect to the listening client on the specifed ipc port.
+				socket.Connect( new IPEndPoint( IPAddress.Loopback, ipcPort ) );
+				socket.Send( buffer );
+				socket.Shutdown( SocketShutdown.Send );
+				socket.Close();
+			}
+			catch
+			{}
+		}
+
 		#endregion
 
 		#region Protected Methods
@@ -363,23 +393,7 @@ namespace Simias.Web
 		/// </summary>
 		public static void SimiasProcessExit()
 		{
-			// Allocate a socket to listen for requests on.
-			Socket socket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
-			socket.Connect( new IPEndPoint( IPAddress.Loopback, ipcPort ) );
-
-			string msgString = "stop_server";
-			UTF8Encoding utf8 = new UTF8Encoding();
-			int msgLength = utf8.GetByteCount( msgString );
-			byte[] msgHeader = BitConverter.GetBytes( msgLength );
-			byte[] buffer = new byte[ msgHeader.Length + msgLength ];
-
-			// Copy the message length and the message into the buffer.
-			msgHeader.CopyTo( buffer, 0 );
-			utf8.GetBytes( msgString, 0, msgString.Length, buffer, 4 );
-			socket.Send( buffer );
-
-			socket.Shutdown( SocketShutdown.Send );
-			socket.Close();
+			SendIpcMessage( "stop_server" );
 		}
 
 		#endregion
