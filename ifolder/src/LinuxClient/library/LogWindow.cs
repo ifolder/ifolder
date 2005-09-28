@@ -413,6 +413,11 @@ namespace Novell.iFolder
 								args.Name);
 						}
 						break;
+					case SyncStatus.ReadOnly:
+						message = string.Format(
+							Util.GS("Read-only iFolder prevented synchronization: {0}"),
+							args.Name);
+						break;
 					default:
 						message = string.Format(
 							Util.GS("iFolder failed synchronization: {0}"),

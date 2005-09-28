@@ -386,9 +386,9 @@ namespace Novell.iFolder
 //							message = Util.GS("Insufficient disk space on this computer prevented complete synchronization.");
 //						}
 //						break;
-//					case SyncStatus.ReadOnly
-//						message = Util.GS("You have read only access to this iFolder.  The file(s) you placed inside this iFolder will not synchronize to the server.");
-//						break;
+					case SyncStatus.ReadOnly:
+						message = Util.GS("You have Read-only access to this iFolder.  Files that you place in this iFolder will not be synchronized.");
+						break;
 //					default:
 //						message = Util.GS("iFolder synchronization failed.");
 //						break;
