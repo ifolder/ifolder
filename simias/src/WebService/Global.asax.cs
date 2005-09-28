@@ -22,10 +22,13 @@
 using System;
 using System.Collections;
 using System.ComponentModel;
+using System.IO;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
 using System.Web;
 using System.Web.SessionState;
-using System.IO;
-using System.Threading;
 
 using Simias;
 using Simias.Client;
@@ -65,11 +68,6 @@ namespace Simias.Web
 		private bool quit;
 
 		/// <summary>
-		/// Event used to tell the controlling server process to shut us down.
-		/// </summary>
-		private static ManualResetEvent shutDownEvent = new ManualResetEvent( false );
-
-		/// <summary>
 		/// Specifies whether to run as a client or server.
 		/// </summary>
 		private static bool runAsServer = false;
@@ -83,6 +81,11 @@ namespace Simias.Web
 		/// Path to the simias data area.
 		/// </summary>
 		private static string simiasDataPath = null;
+
+		/// <summary>
+		/// Port used as an IPC between application domains.
+		/// </summary>
+		private static int ipcPort;
 
 		#endregion
 
@@ -112,11 +115,6 @@ namespace Simias.Web
 
 			// Initialize the store.
 			Store.Initialize( simiasDataPath, runAsServer );
-
-			// Start the shutdown thread running waiting to signal a shutdown.
-			Thread thread = new Thread( new ThreadStart( ShutDownThread ) );
-			thread.IsBackground = true;
-			thread.Start();
 		}
 
 		#endregion
@@ -148,6 +146,22 @@ namespace Simias.Web
 						else
 						{
 							ApplicationException apEx = new ApplicationException( "Error: The Simias data path was not specified." );
+							Console.Error.WriteLine( apEx.Message );
+							throw apEx;
+						}
+
+						break;
+					}
+
+					case "--ipcport":
+					{
+						if ( ( i + 1 ) < args.Length )
+						{
+							ipcPort = Convert.ToInt32( args[ ++i ] );
+						}
+						else
+						{
+							ApplicationException apEx = new ApplicationException( "Error: The IPC port was not specified." );
 							Console.Error.WriteLine( apEx.Message );
 							throw apEx;
 						}
@@ -188,38 +202,6 @@ namespace Simias.Web
 			}
 
 			return foundEnv;
-		}
-
-		/// <summary>
-		/// Signals a named mutex that the controlling server process is blocked on to
-		/// cause the server to shutdown the web service. The reason that this must
-		/// happen within a thread is that the mutex can only be released by the thread
-		/// that owns it. Since the web services can come in on different threads, the
-		/// the thread that signals the mutex may not be the owner.
-		/// </summary>
-		private static void ShutDownThread()
-		{
-			string mutexName = simiasDataPath.Replace( '\\', '/' );
-
-			// Create and own the mutex that the controlling server process will wait on.
-			Mutex mutex = new Mutex( false, "SimiasExitProcessMutex_" + mutexName );
-			while ( !mutex.WaitOne( 0, false ) )
-			{
-				// Wait and try to acquire it again.
-				Thread.Sleep( 50 );
-			}
-
-			if ( verbose )
-			{
-				Console.Error.WriteLine( "Acquire the shutdown mutex." );
-			}
-
-			// Wait for the shutdown event to be signaled before releasing the mutex.
-			shutDownEvent.WaitOne();
-
-			// Tell the controlling server process to shut us down.
-			mutex.ReleaseMutex();
-			mutex.Close();
 		}
 
 		#endregion
@@ -381,7 +363,23 @@ namespace Simias.Web
 		/// </summary>
 		public static void SimiasProcessExit()
 		{
-			shutDownEvent.Set();
+			// Allocate a socket to listen for requests on.
+			Socket socket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
+			socket.Connect( new IPEndPoint( IPAddress.Loopback, ipcPort ) );
+
+			string msgString = "stop_server";
+			UTF8Encoding utf8 = new UTF8Encoding();
+			int msgLength = utf8.GetByteCount( msgString );
+			byte[] msgHeader = BitConverter.GetBytes( msgLength );
+			byte[] buffer = new byte[ msgHeader.Length + msgLength ];
+
+			// Copy the message length and the message into the buffer.
+			msgHeader.CopyTo( buffer, 0 );
+			utf8.GetBytes( msgString, 0, msgString.Length, buffer, 4 );
+			socket.Send( buffer );
+
+			socket.Shutdown( SocketShutdown.Send );
+			socket.Close();
 		}
 
 		#endregion

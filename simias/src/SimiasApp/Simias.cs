@@ -28,6 +28,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Web;
 using System.Xml;
@@ -164,7 +165,12 @@ namespace Mono.ASPNET
 		/// <summary>
 		/// Port or range of ports.
 		/// </summary>
-		private string portRange;
+		private string portRangeString;
+
+		/// <summary>
+		/// Port used as an IPC between AppDomains.
+		/// </summary>
+		private string ipcPortString;
 
 		/// <summary>
 		/// Used shared Simias data directory.
@@ -175,6 +181,19 @@ namespace Mono.ASPNET
 		/// Default command is Start if no other commands are specified.
 		/// </summary>
 		private SimiasCommand command = SimiasCommand.Start;
+
+		/// <summary>
+		/// Socket used to communicate with the XSP server running in a different
+		/// application domain.
+		/// </summary>
+		private Socket ipcServerSocket = null;
+		private Socket ipcMessageSocket = null;
+		private bool ipcIsClosed = false;
+
+		/// <summary>
+		/// Event used to hold the main execution thread until signaled to shut down.
+		/// </summary>
+		private ManualResetEvent stopServerEvent = new ManualResetEvent( false );
 
 		#endregion
 
@@ -195,14 +214,6 @@ namespace Mono.ASPNET
 
 				return Path.Combine( path, "simias" );
 			}
-		}
-
-		/// <summary>
-		/// Builds a unique mutex name for the Simias process.
-		/// </summary>
-		private string ExitMutexName
-		{
-			get { return "SimiasExitProcessMutex_" + simiasDataPath.Replace( '\\', '/' ); }
 		}
 
 		#endregion
@@ -479,9 +490,9 @@ namespace Mono.ASPNET
 		{
 			bool isInRange = false;
 
-			if ( portRange != null )
+			if ( portRangeString != null )
 			{
-				int[] range = GetPortRange( portRange );
+				int[] range = GetPortRange( portRangeString );
 				if ( range != null )
 				{
 					if ( ( port >= range[ 0 ] ) && ( port <= range[ range.Length - 1 ] ) )
@@ -664,7 +675,7 @@ namespace Mono.ASPNET
 					{
 						if ( ( i + 1 ) < args.Length )
 						{
-							portRange = args[ ++i ];
+							portRangeString = args[ ++i ];
 						}
 						else
 						{
@@ -690,6 +701,21 @@ namespace Mono.ASPNET
 						else
 						{
 							Console.Error.WriteLine( "Invalid command line parameters. No path was specified." );
+							status = SimiasStatus.InvalidCommandLine;
+						}
+
+						break;
+					}
+
+					case "--ipcport":
+					{
+						if ( ( i + 1 ) < args.Length )
+						{
+							ipcPortString = args[ ++i ];
+						}
+						else
+						{
+							Console.Error.WriteLine( "Invalid command line parameters. No IPC port was specified." );
 							status = SimiasStatus.InvalidCommandLine;
 						}
 
@@ -771,7 +797,7 @@ namespace Mono.ASPNET
 						if ( command != SimiasCommand.Start )
 						{
 							// A different command was specified earlier. Show an error.
-							Console.WriteLine( "Invalid command line parameters. More than one command was specified." );
+							Console.Error.WriteLine( "Invalid command line parameters. More than one command was specified." );
 							status = SimiasStatus.InvalidCommandLine;
 						}
 						else
@@ -787,7 +813,7 @@ namespace Mono.ASPNET
 						if ( command != SimiasCommand.Start )
 						{
 							// A different command was specified earlier. Show an error.
-							Console.WriteLine( "Invalid command line parameters. More than one command was specified." );
+							Console.Error.WriteLine( "Invalid command line parameters. More than one command was specified." );
 							status = SimiasStatus.InvalidCommandLine;
 						}
 						else
@@ -834,9 +860,10 @@ namespace Mono.ASPNET
 			if ( noExec )
 			{
 				if ( ( Environment.CommandLine.IndexOf( "--port " ) == -1 ) ||
-					 ( Environment.CommandLine.IndexOf( "--datadir " ) == -1 ) )
+					 ( Environment.CommandLine.IndexOf( "--datadir " ) == -1 ) ||
+					 ( Environment.CommandLine.IndexOf( "--ipcport " ) == -1 ) )
 				{
-					Console.Error.WriteLine( "Error: Invalid command line parameters.\nMust specify --port and --datadir when using --noexec." );
+					Console.Error.WriteLine( "Error: Invalid command line parameters.\nMust specify --port, --datadir and --ipcport when using --noexec." );
 					status = SimiasStatus.InvalidCommandLine;
 				}
 			}
@@ -869,6 +896,28 @@ namespace Mono.ASPNET
 			catch {}
 
 			return pingStatus;
+		}
+
+		/// <summary>
+		/// Processes IPC messages from the XSP server.
+		/// </summary>
+		/// <param name="message">String containing message.</param>
+		private void ProcessIpcMessage( string message )
+		{
+			switch ( message.ToLower() )
+			{
+				case "stop_server":
+				{
+					stopServerEvent.Set();
+					break;
+				}
+
+				default:
+				{
+					Console.Error.WriteLine( "Error: Received unknown message: {0}", message );
+					break;
+				}
+			}
 		}
 
 		/// <summary>
@@ -934,6 +983,100 @@ namespace Mono.ASPNET
 		}
 
 		/// <summary>
+		/// The IPC mechanism for communicating with the server.
+		/// </summary>
+		private void ServerMessageIpc()
+		{
+			// Allocate a socket to listen for requests on.
+			ipcServerSocket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
+
+			// Bind the socket to the IPC port on the loopback address.
+			ipcServerSocket.Bind( new IPEndPoint( IPAddress.Loopback, Convert.ToInt32( ipcPortString ) ) );
+			ipcServerSocket.Listen( 10 ); 
+
+			byte[] buffer = new byte[ 512 ];
+			int bufferLength = 0;
+
+			while ( !ipcIsClosed )
+			{
+				try
+				{
+					// Wait for an incoming request.
+					ipcMessageSocket = ipcServerSocket.Accept();
+
+					// Make sure that this request came from the loopback address. Off-box requests are not supported.
+					if ( IPAddress.IsLoopback( ( ipcMessageSocket.RemoteEndPoint as IPEndPoint ).Address ) )
+					{
+						bool connectionClosed = false;
+						while ( !ipcIsClosed && !connectionClosed )
+						{
+							// Get the data.
+							int bytesReceived = ipcMessageSocket.Receive( buffer );
+							if ( bytesReceived > 0 )
+							{
+								// Keep track of how much data is in the buffer.
+								bufferLength += bytesReceived;
+								int bytesToProcess = bufferLength;
+								int msgIndex = 0;
+
+								// Process as much as is available. 
+								while ( bytesToProcess > 0 )
+								{
+									// There needs to be at least 4 bytes for the message length.
+									if ( bytesToProcess >= 4 )
+									{
+										// Get the length of the message, add in the prepended length.
+										int msgLength = BitConverter.ToInt32( buffer, msgIndex ) + 4;
+					
+										// See if the entire message is represented in the buffer.
+										if ( bytesToProcess >= msgLength )
+										{
+											// Process the message received from the client. Skip the message length.
+											ProcessIpcMessage( new UTF8Encoding().GetString( buffer, msgIndex + 4, msgLength - 4 ) );
+											msgIndex += msgLength;
+											bytesToProcess -= msgLength;
+										}
+										else
+										{
+											break;
+										}
+									}
+									else
+									{
+										break;
+									}
+								}
+
+								// Update how much data is left in the buffer.
+								bufferLength = bytesToProcess;
+
+								// If any data has been processed at the beginning of the buffer, the unprocessed
+								// data needs to be moved to the front.
+								if ( ( bytesToProcess > 0 ) && ( msgIndex > 0 ) )
+								{
+									// Move any existing data up.
+									Buffer.BlockCopy( buffer, msgIndex, buffer, 0, bytesToProcess );
+								}
+							}
+							else
+							{
+								// The connection has closed.
+								connectionClosed = true;
+							}
+						}
+					}
+				}
+				catch ( SocketException se )
+				{
+					if ( !ipcIsClosed )
+					{
+						Console.Error.WriteLine( "Error: IPC Socket - {0}", se.Message );
+					}
+				}
+			}
+		}
+
+		/// <summary>
 		/// Shows the help for Simias.exe
 		/// </summary>
 		private void ShowHelp()
@@ -956,6 +1099,14 @@ namespace Mono.ASPNET
 			Console.WriteLine( "        Default value: 8080 when running as a server or dynamic port is used" );
 			Console.WriteLine( "        when running as a client." );
 			Console.WriteLine( "        Example: --port 8080 OR --port 8080-8086" );
+			Console.WriteLine();
+			Console.WriteLine( "    --ipcport [ Port number ]:" );
+			Console.WriteLine( "        The TCP port to use between the Simias.exe application and the XSP" );
+			Console.WriteLine( "        server for communication across the application domains. IPC" );
+			Console.WriteLine( "        messages will be sent across this port to tell the XSP server to shut" );
+			Console.WriteLine( "        down and other needed operations. This parameter must be specified if" );
+			Console.WriteLine( "        --noexec is specified." );
+			Console.WriteLine( "        Default value: None" );
 			Console.WriteLine();							
 			Console.WriteLine( "    --runasserver:" );
 			Console.WriteLine( "        Simias is to run in a server configuration." );
@@ -1102,6 +1253,16 @@ namespace Mono.ASPNET
 		}
 
 		/// <summary>
+		/// Starts the server listening for messages from the XSP server.
+		/// </summary>
+		private void StartServerIpc()
+		{
+			Thread thread = new Thread( new ThreadStart( ServerMessageIpc ) );
+			thread.IsBackground = true;
+			thread.Start();
+		}
+
+		/// <summary>
 		/// Creates a child process and executes Simias.exe in that process with the specified
 		/// configuration.
 		/// </summary>
@@ -1154,7 +1315,7 @@ namespace Mono.ASPNET
 						// There either is no service running, the database paths point to different directories or
 						// The service is running in the wrong configuration ( client vs. server ). See if the port
 						// read from the file is available and start a new service.
-						port = GetXspPort( portRange );
+						port = GetXspPort( portRangeString );
 						if ( port != -1 )
 						{
 							status = StartSimiasChild( port );
@@ -1169,7 +1330,7 @@ namespace Mono.ASPNET
 				else
 				{
 					// No port has been configured for this data area.
-					port = GetXspPort( portRange );
+					port = GetXspPort( portRangeString );
 					if ( port != -1 )
 					{
 						// Start the child service.
@@ -1178,13 +1339,13 @@ namespace Mono.ASPNET
 					else
 					{
 						// No ports available.
-						if ( portRange == null )
+						if ( portRangeString == null )
 						{
 							Console.Error.WriteLine( "There are no available ports in the dynamic range." );
 						}
 						else
 						{
-							Console.Error.WriteLine( "Port or Range: {0} is not available.", portRange );
+							Console.Error.WriteLine( "Port or Range: {0} is not available.", portRangeString );
 						}
 
 						status = SimiasStatus.NoAvailablePorts;
@@ -1204,35 +1365,46 @@ namespace Mono.ASPNET
 		{
 			SimiasStatus status = SimiasStatus.Success;
 
-			try
+			// Get a dynamic port to use as the IPC between application domains.
+			int ipcPort = AvailablePortCheck( 0 );
+			if ( ipcPort != -1 )
 			{
-				// Set up the process info to start the Simias server process.
-				Process serverProcess = new Process();
+				try
+				{
+					// Set up the process info to start the Simias server process.
+					Process serverProcess = new Process();
 
-				// Setup the child process information.
-				serverProcess.StartInfo.FileName = MyEnvironment.DotNet ? ApplicationPath : "mono";
-				serverProcess.StartInfo.UseShellExecute = false;
-				serverProcess.StartInfo.CreateNoWindow = !showConsole ? true : false;
-				serverProcess.StartInfo.RedirectStandardOutput = true;
-				serverProcess.StartInfo.Arguments = 
-					String.Format(
-						"{0}--port {1} {2}--datadir \"{3}\" --noexec --start {4}", 
+					// Setup the child process information.
+					serverProcess.StartInfo.FileName = MyEnvironment.DotNet ? ApplicationPath : "mono";
+					serverProcess.StartInfo.UseShellExecute = false;
+					serverProcess.StartInfo.CreateNoWindow = !showConsole ? true : false;
+					serverProcess.StartInfo.RedirectStandardOutput = true;
+					serverProcess.StartInfo.Arguments = 
+						String.Format(
+						"{0}--port {1} --ipcport {2} {3}--datadir \"{4}\" --noexec --start {5}", 
 						MyEnvironment.DotNet ? String.Empty : ApplicationPath + " ",
 						port,
+						ipcPort,
 						runAsServer ? "--runasserver " : String.Empty,
 						simiasDataPath,
 						verbose ? " --verbose" : String.Empty );
 
-				serverProcess.Start();
+					serverProcess.Start();
 
-				// Wait for the web service uri to be written to the child's stdout descriptor.
-				// Then write it to the parent's stdout descriptor.
-				Console.WriteLine( serverProcess.StandardOutput.ReadLine() );
-				Console.WriteLine( serverProcess.StandardOutput.ReadLine() );
+					// Wait for the web service uri to be written to the child's stdout descriptor.
+					// Then write it to the parent's stdout descriptor.
+					Console.WriteLine( serverProcess.StandardOutput.ReadLine() );
+					Console.WriteLine( serverProcess.StandardOutput.ReadLine() );
+				}
+				catch
+				{
+					status = SimiasStatus.ProcessFailure;
+				}
 			}
-			catch
+			else
 			{
-				status = SimiasStatus.ProcessFailure;
+				Console.Error.WriteLine( "Error: Cannot allocate an IPC socket." );
+				status = SimiasStatus.NoAvailablePorts;
 			}
 
 			return status;
@@ -1253,7 +1425,7 @@ namespace Mono.ASPNET
 			}
 
 			// Get the port to listen on.
-			int[] range = GetPortRange( portRange );
+			int[] range = GetPortRange( portRangeString );
 			if ( range != null )
 			{
 				// Build the URI for web services and write it to stdout.
@@ -1291,6 +1463,9 @@ namespace Mono.ASPNET
 					// Start the Xsp server.
 					Server.Start( args.ToArray( typeof( string ) ) as string[] );
 
+					// Start the IPC mechanism listening for messages.
+					StartServerIpc();
+
 					// Wait for the server listener to start.
 					Thread.Sleep( 100 );
 					PingWebService( ub.Uri );
@@ -1306,28 +1481,14 @@ namespace Mono.ASPNET
 					// Create a temporary file to provide information about this process.
 					CreateProcessFile();
 
-					// Initialize the process end mutex and wait for it to become signaled.
-					Mutex mutex = new Mutex( false, ExitMutexName );
-					while ( mutex.WaitOne( 0, false ) )
-					{
-						Console.Error.WriteLine( "Mutex is not ready..." );
-						mutex.ReleaseMutex();
-						Thread.Sleep( 100 );
-					}
-
-					Console.Error.WriteLine( "Going to sleep on mutex." );
-
-					// Wait for the mutex to be signaled.
-					mutex.WaitOne();
-
-					Console.Error.WriteLine( "Waking up from mutex." );
-
-					// Clean it up.
-					mutex.ReleaseMutex();
-					mutex.Close();
+					// Wait for a message to stop the server.
+					WaitForShutdown();
 
 					// Get rid of the temporary file.
 					DeleteProcessFile();
+
+					// Stop the server IPC mechanism.
+					StopServerIpc();
 
 					// Stop the server before exiting.
 					Server.Stop();
@@ -1345,6 +1506,26 @@ namespace Mono.ASPNET
 			}
 
 			return status;
+		}
+
+		/// <summary>
+		/// Stops the server listening for messages from the XSP server.
+		/// </summary>
+		private void StopServerIpc()
+		{
+			ipcIsClosed = true;
+
+			if ( ipcServerSocket != null )
+			{
+				ipcServerSocket.Close();
+				ipcServerSocket = null;
+			}
+
+			if ( ipcMessageSocket != null )
+			{
+				ipcMessageSocket.Close();
+				ipcMessageSocket = null;
+			}
 		}
 
 		/// <summary>
@@ -1381,6 +1562,17 @@ namespace Mono.ASPNET
 			}
 
 			return status;
+		}
+
+		/// <summary>
+		/// Waits for a shutdown message from the XSP server that runs in a different application
+		/// domain.
+		/// </summary>
+		private void WaitForShutdown()
+		{
+			// Wait for the server to indicate to shutdown.
+			stopServerEvent.WaitOne();
+			Console.Error.WriteLine( "Woke up from shutdown event." );
 		}
 
 		/// <summary>
@@ -1476,7 +1668,7 @@ namespace Mono.ASPNET
 							else
 							{
 								// Timed out waiting for other controller processes to finish.
-								Console.WriteLine( "Error: Timed out waiting for other controller processes." );
+								Console.Error.WriteLine( "Error: Timed out waiting for other controller processes." );
 								status = SimiasStatus.ControllerTimeout;
 							}
 
