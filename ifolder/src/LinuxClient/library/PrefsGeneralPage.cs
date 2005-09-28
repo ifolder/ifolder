@@ -48,6 +48,7 @@ namespace Novell.iFolder
 		private Gtk.CheckButton			NotifyUsersButton; 
 		private Gtk.CheckButton			NotifyCollisionsButton; 
 		private Gtk.CheckButton			NotifyiFoldersButton; 
+//		private Gtk.CheckButton			NotifySyncErrorsButton;
 		private int						lastSyncInterval;
 
 
@@ -164,6 +165,12 @@ namespace Novell.iFolder
 
 			NotifyUsersButton.Toggled += 
 						new EventHandler(OnNotifyUsersButton);
+			
+//			NotifySyncErrorsButton =
+//				new CheckButton(Util.GS("Notify of _synchronization errors"));
+//			notifyWidgetBox.PackStart(NotifySyncErrorsButton, false, true, 0);
+//			NotifySyncErrorsButton.Toggled +=
+//						new EventHandler(OnNotifySyncErrorsButton);
 
 			
 
@@ -242,6 +249,12 @@ namespace Novell.iFolder
 			else
 				NotifyiFoldersButton.Active = false;
 
+//			if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_SYNC_ERRORS, "true")
+//										== "true")
+//				NotifySyncErrorsButton.Active = true;
+//			else
+//				NotifySyncErrorsButton.Active = false;
+
 			try
 			{
 				lastSyncInterval = ifws.GetDefaultSyncInterval();
@@ -309,6 +322,14 @@ namespace Novell.iFolder
 				ClientConfig.Set(ClientConfig.KEY_NOTIFY_IFOLDERS, "false");
 		}
 
+
+//		private void OnNotifySyncErrorsButton(object o, EventArgs args)
+//		{
+//			if (NotifySyncErrorsButton.Active)
+//				ClientConfig.Set(ClientConfig.KEY_NOTIFY_SYNC_ERRORS, "true");
+//			else
+//				ClientConfig.Set(ClientConfig.KEY_NOTIFY_SYNC_ERRORS, "false");
+//		}
 
 		private void OnShowConfButton(object o, EventArgs args)
 		{
