@@ -713,7 +713,7 @@
     <value>Read-only iFolder prevented synchronization: {0}</value>
   </data>
   <data name="readOnlyFailureInfo">
-    <value>You have Read-only access to this iFolder.  Files that you place in this iFolder will not be synchronized.  Click here to view the iFolder Synchronization Log.</value>
+    <value>You have Read-only access to this iFolder.  Files that you place in this iFolder will not be synchronized.  Click here to view the Synchronization Log.</value>
   </data>
   <data name="quotaFailure">
     <value>Full iFolder prevented synchronization: {0}</value>
@@ -722,7 +722,7 @@
     <value>Incomplete Synchronization: {0}</value>
   </data>
   <data name="quotaFailureInfo">
-    <value>The iFolder is full.  Click here to view the iFolder Synchronization Log.</value>
+    <value>The iFolder is full.  Click here to view the Synchronization Log.</value>
   </data>
   <data name="policySizeFailure">
     <value>Size restriction policy prevented synchronization: {0}</value>
