@@ -178,7 +178,7 @@ namespace Novell.iFolder
 					// Set up to have data ready for events
 					ifdata = iFolderData.GetData();
 
-					EventBroker = SimiasEventBroker.GetSimiasEventBroker();
+					EventBroker = SimiasEventBroker.GetSimiasEventBroker(simiasManager);
 					domainController = DomainController.GetDomainController();
 				}
 				catch(Exception e)

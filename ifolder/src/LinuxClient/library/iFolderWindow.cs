@@ -291,7 +291,7 @@ namespace Novell.iFolder
 			
 			CreateWidgets();
 			
-			domainController = DomainController.GetDomainController();
+			domainController = DomainController.GetDomainController(simiasManager);
 			if (domainController != null)
 			{
 				domainController.DomainAdded +=

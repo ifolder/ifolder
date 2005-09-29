@@ -153,13 +153,13 @@ namespace Novell.iFolder
 		public event DomainDeletedEventHandler DomainDeleted;
 		public event DomainUpEventHandler DomainUpEventFired;
 
-		private SimiasEventBroker()
+		private SimiasEventBroker(Manager simiasManager)
 		{
 			string localServiceUrl =
-				Simias.Client.Manager.LocalServiceUrl.ToString();
+				simiasManager.WebServiceUri.ToString();
 			ifws = new iFolderWebService();
 			ifws.Url = localServiceUrl + "/iFolder.asmx";
-			LocalService.Start(ifws);
+			LocalService.Start(ifws, simiasManager.WebServiceUri, simiasManager.DataPath);
 		
 			NodeEventQueue = new Queue();
 			SyncEventQueue = new Queue();
@@ -181,13 +181,13 @@ namespace Novell.iFolder
 			SEEvent = new ManualResetEvent(false);
 		}
 
-		public static SimiasEventBroker GetSimiasEventBroker()
+		public static SimiasEventBroker GetSimiasEventBroker(Manager simiasManager)
 		{
 			lock (typeof(SimiasEventBroker))
 			{
 				if (instance == null)
 				{
-					instance = new SimiasEventBroker();
+					instance = new SimiasEventBroker(simiasManager);
 
 					instance.Register();
 				}
