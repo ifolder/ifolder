@@ -24,6 +24,7 @@
 
 using Gtk;
 using System;
+using Simias.Client;
 
 namespace Novell.iFolder
 {

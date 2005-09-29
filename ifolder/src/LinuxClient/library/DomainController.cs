@@ -387,7 +387,7 @@ namespace Novell.iFolder.Controller
 					"iFolder",
 					domainID,
 					password);
-			status = domainAuth.Authenticate();
+			status = domainAuth.Authenticate(simiasManager.WebServiceUri, simiasManager.DataPath);
 			if (status.statusCode == StatusCodes.Success ||
 				status.statusCode == StatusCodes.SuccessInGrace)
 			{
@@ -673,7 +673,7 @@ namespace Novell.iFolder.Controller
 					domainID,
 					null);
 
-			return domainAuth.Authenticate();
+			return domainAuth.Authenticate(simiasManager.WebServiceUri, simiasManager.DataPath);
 		}
 		
 		private Status AuthenticateDomainWithProxy(string domainID)
@@ -706,7 +706,7 @@ namespace Novell.iFolder.Controller
 						domainID,
 						credentials);
 						
-				Status status = domainAuth.Authenticate();
+				Status status = domainAuth.Authenticate(simiasManager.WebServiceUri, simiasManager.DataPath);
 
 				if (status.statusCode == StatusCodes.InvalidCredentials)
 				{

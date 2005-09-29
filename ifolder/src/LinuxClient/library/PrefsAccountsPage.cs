@@ -627,7 +627,7 @@ namespace Novell.iFolder
 				try
 				{
 					DomainAuthentication domainAuth = new DomainAuthentication("iFolder", dom.ID, null);
-					domainAuth.Logout();
+					domainAuth.Logout(simiasManager.WebServiceUri, simiasManager.DataPath);
 
 					dom.Authenticated = false;
 					UpdateDomainStatus(dom.ID);
