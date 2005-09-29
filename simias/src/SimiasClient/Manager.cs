@@ -303,7 +303,7 @@ namespace Simias.Client
 		{
 			// Build the arguments string.
 			string args = String.Format( "{0}{1}{2}{3}{4}{5}", 
-				IsWindows ? String.Empty : applicationPath,
+				IsWindows ? String.Empty : applicationPath + " ",
 				( simiasDataPath != null ) ? String.Format( "--datadir {0} ", simiasDataPath ) : String.Empty, 
 				( isServer == true ) ? "--runasserver " : String.Empty, 
 				( port != null ) ? String.Format( "--port {0}", port ) : String.Empty,
