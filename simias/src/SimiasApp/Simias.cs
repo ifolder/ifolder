@@ -1391,7 +1391,7 @@ namespace Mono.ASPNET
 					serverProcess.StartInfo.RedirectStandardOutput = true;
 					serverProcess.StartInfo.Arguments = 
 						String.Format(
-						"{0}--port {1} --ipcport {2} {3}--datadir \"{4}\" --noexec --start {5}", 
+						"{0}--port {1} --ipcport {2} {3}--datadir \"{4}\" --noexec --start{5}", 
 						MyEnvironment.DotNet ? String.Empty : ApplicationPath + " ",
 						port,
 						ipcPort,
