@@ -1171,7 +1171,7 @@ namespace Novell.iFolder
 					PropertiesDialog = 
 						new iFolderPropertiesDialog(this, 
 									ifHolder.iFolder, 
-									ifws, simws);
+									ifws, simws, simiasManager);
 					PropertiesDialog.Response += 
 							new ResponseHandler(OnPropertiesDialogResponse);
 					PropertiesDialog.CurrentPage = currentPage;

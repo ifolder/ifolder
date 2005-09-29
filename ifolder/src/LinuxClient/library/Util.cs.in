@@ -249,7 +249,7 @@ namespace Novell.iFolder
 			{
 				if (prefswin == null)
 				{
-					prefswin = new PreferencesWindow(ifws);
+					prefswin = new PreferencesWindow(ifws, simiasManager);
 					
 					prefswin.Destroyed +=
 						new EventHandler(PrefsWinDestroyedHandler);

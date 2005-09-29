@@ -44,7 +44,6 @@ namespace Novell.iFolder
 		private PrefsAccountsPage		accountsPage;
 		private bool					ControlKeyPressed;
 
-
 		public int CurrentPage
 		{
 			set
@@ -62,7 +61,7 @@ namespace Novell.iFolder
 		/// <summary>
 		/// Default constructor for iFolderWindow
 		/// </summary>
-		public PreferencesWindow(iFolderWebService webService)
+		public PreferencesWindow(iFolderWebService webService, Manager simiasManager)
 			: base(Util.GS("iFolder Preferences"))
 		{
 			if(webService == null)
@@ -70,7 +69,7 @@ namespace Novell.iFolder
 
 			ifws = webService;
 
-			InitializeWidgets();
+			InitializeWidgets(simiasManager);
 			
 			// Bind ESC and C-w to close the window
 			ControlKeyPressed = false;
@@ -106,7 +105,7 @@ namespace Novell.iFolder
 			PrefNoteBook.AppendPage( generalPage,
 										new Label(Util.GS("_General")));
 
-			accountsPage = new PrefsAccountsPage(this);
+			accountsPage = new PrefsAccountsPage(this, simiasManager);
 			PrefNoteBook.AppendPage( accountsPage,
 										new Label(Util.GS("_Accounts")));
 

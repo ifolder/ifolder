@@ -75,20 +75,20 @@ namespace Novell.iFolder
 		/// <summary>
 		/// Default constructor for iFolderAccountsPage
 		/// </summary>
-		public PrefsAccountsPage( Gtk.Window topWindow )
+		public PrefsAccountsPage( Gtk.Window topWindow, Manager simiasManager )
 			: base()
 		{
 			this.topLevelWindow = topWindow;
 			this.simws = new SimiasWebService();
-			simws.Url = Simias.Client.Manager.LocalServiceUrl.ToString() +
+			simws.Url = simiasManager.WebServiceUri.ToString() +
 					"/Simias.asmx";
-			LocalService.Start(simws);
+			LocalService.Start(simws, simiasManager.WebServiceUri, simiasManager.DataPath);
 
 			curDomains = new Hashtable();
 			
 			InitializeWidgets();
 
-			domainController = DomainController.GetDomainController();
+			domainController = DomainController.GetDomainController(simiasManager);
 			if (domainController != null)
 			{
 				domainController.DomainAdded +=
