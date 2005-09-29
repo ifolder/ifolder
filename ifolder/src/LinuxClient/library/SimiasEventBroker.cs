@@ -125,6 +125,7 @@ namespace Novell.iFolder
 		private bool				runEventThread;
 		private Thread				SEThread;
 		private ManualResetEvent	SEEvent;
+		private Manager				simiasManager;
 
 		///
 		/// iFolder Events
@@ -155,6 +156,7 @@ namespace Novell.iFolder
 
 		private SimiasEventBroker(Manager simiasManager)
 		{
+			this.simiasManager = simiasManager;
 			string localServiceUrl =
 				simiasManager.WebServiceUri.ToString();
 			ifws = new iFolderWebService();
@@ -198,7 +200,7 @@ namespace Novell.iFolder
 
 		private void Register()
 		{
-			ifdata = iFolderData.GetData();
+			ifdata = iFolderData.GetData(simiasManager);
 
 			simiasEventClient = new IProcEventClient( 
 					new IProcEventError( ErrorHandler), null);

@@ -84,7 +84,7 @@ namespace Novell.iFolder
 		/// <summary>
 		/// Set up the UI inside the Window
 		/// </summary>
-		private void InitializeWidgets()
+		private void InitializeWidgets(Manager simiasManager)
 		{
 			this.SetDefaultSize (480, 550);
 

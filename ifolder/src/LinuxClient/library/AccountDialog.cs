@@ -37,7 +37,7 @@ namespace Novell.iFolder
 			: base()
 		{
 			domain = curDomain;
-			ifdata = iFolderData.GetData();
+			ifdata = iFolderData.GetData(simiasManager);
 			SetupDialog();
 		}
 

@@ -71,6 +71,7 @@ namespace Novell.iFolder
 		private Hashtable			curDomains;
 		
 		private DomainController	domainController;
+		private Manager				simiasManager;
 
 		/// <summary>
 		/// Default constructor for iFolderAccountsPage
@@ -79,6 +80,7 @@ namespace Novell.iFolder
 			: base()
 		{
 			this.topLevelWindow = topWindow;
+			this.simiasManager = simiasManager;
 			this.simws = new SimiasWebService();
 			simws.Url = simiasManager.WebServiceUri.ToString() +
 					"/Simias.asmx";
@@ -523,7 +525,7 @@ namespace Novell.iFolder
 				string domainID = (string) tModel.GetValue(iter, 0);
 				DomainInformation dom = domainController.GetDomain(domainID);
 
-				AccountDialog accDialog = new AccountDialog(dom);
+				AccountDialog accDialog = new AccountDialog(dom, simiasManager);
 				accDialog.TransientFor = topLevelWindow;
 				accDialog.Run();
 				accDialog.Hide();

@@ -284,7 +284,7 @@ namespace Novell.iFolder
 			ifws = webService;
 			simws = SimiasWS;
 			this.simiasManager = simiasManager;
-			ifdata = iFolderData.GetData();
+			ifdata = iFolderData.GetData(simiasManager);
 			curiFolders = new Hashtable();
 			curDomain = null;
 			curDomains = null;
