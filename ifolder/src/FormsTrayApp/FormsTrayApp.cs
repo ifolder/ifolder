@@ -125,7 +125,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.MenuItem menuItem1;
 		private System.Windows.Forms.MenuItem menuAbout;
 		private System.Windows.Forms.MenuItem menuAccounts;
-		private Manager simiasManager = new Manager();
+		private Manager simiasManager;
 		private string iFolderLogPath;
 		static private FormsTrayApp instance;
 		#endregion
@@ -195,8 +195,8 @@ namespace Novell.FormsTrayApp
 					Directory.CreateDirectory(iFolderLogPath);
 				}
 
-				// Parse the command line arguments for configuration directives.
-				ParseConfigurationParameters();
+				// Initialize the simias manager object.
+				this.simiasManager = new Manager( Environment.GetCommandLineArgs() );
 
 				InitializeComponent();
 
@@ -1506,47 +1506,6 @@ namespace Novell.FormsTrayApp
 				}
 			}
 			catch {}
-		}
-
-		/// <summary>
-		/// Parses the command line parameters to get the configuration for iFolder.
-		/// </summary>
-		private void ParseConfigurationParameters()
-		{
-			string[] args = Environment.GetCommandLineArgs();
-			for ( int i = 0; i < args.Length; ++i )
-			{
-				switch ( args[ i ].ToLower() )
-				{
-					case "-port":
-					{
-						if ( ( i + 1 ) < args.Length )
-						{
-							simiasManager.Port = args[ ++i ];
-						}
-						else
-						{
-							Console.Error.WriteLine( "Invalid command line parameters. No port or range was specified." );
-						}
-
-						break;
-					}
-
-					case "-datadir":
-					{
-						if ( ( i + 1 ) < args.Length )
-						{
-							simiasManager.DataPath = args[ ++i ];
-						}
-						else
-						{
-							Console.Error.WriteLine( "Invalid command line parameters. No store path was specified." );
-						}
-
-						break;
-					}
-				}
-			}
 		}
 		#endregion
 	}

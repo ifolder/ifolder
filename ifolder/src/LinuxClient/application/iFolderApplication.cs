@@ -74,6 +74,7 @@ namespace Novell.iFolder
 //		private bool				logwinShown;
 
 		private DomainController	domainController;
+		private Manager				simiasManager;
 
 		public iFolderApplication(string[] args)
 			: base("ifolder", "1.0", Modules.UI, args)
@@ -105,6 +106,10 @@ namespace Novell.iFolder
 
 			iFolderStateChanged = new Gtk.ThreadNotify(
 							new Gtk.ReadyEvent(OniFolderStateChanged));
+
+			// Create the simias manager object and set any command line
+			// configuration in the object.
+			simiasManager = new Manager(args);
 
 //			logwin = new LogWindow();
 //			logwin.Destroyed += 
@@ -140,17 +145,16 @@ namespace Novell.iFolder
 
 			if(ifws == null)
 			{
-				Simias.Client.Manager.Start();
+				simiasManager.Start();
 
-				string localServiceUrl =
-					Simias.Client.Manager.LocalServiceUrl.ToString();
+				string localServiceUrl = simiasManager.WebServiceUri.ToString();
 				ifws = new iFolderWebService();
 				ifws.Url = localServiceUrl + "/iFolder.asmx";
-				LocalService.Start(ifws);
+				LocalService.Start(ifws, simiasManager.WebServiceUri, simiasManager.DataPath);
 				
 				simws = new SimiasWebService();
 				simws.Url = localServiceUrl + "/Simias.asmx";
-				LocalService.Start(simws);
+				LocalService.Start(simws, simiasManager.WebServiceUri, simiasManager.DataPath);
 
 				// wait for simias to start up
 				while(!simiasRunning)
@@ -200,7 +204,7 @@ namespace Novell.iFolder
 			{
 				if(EventBroker != null)
 					EventBroker.Deregister();
-				Simias.Client.Manager.Stop();
+				simiasManager.Stop();
 			}
 			catch(Exception e)
 			{
@@ -731,12 +735,12 @@ namespace Novell.iFolder
 
 		private void showPrefsPage(int page)
 		{
-			Util.ShowPrefsPage(page);
+			Util.ShowPrefsPage(page, simiasManager);
 		}
 
 		private void showiFolderWindow(object o, EventArgs args)
 		{
-			Util.ShowiFolderWindow();
+			Util.ShowiFolderWindow(simiasManager);
 		}
 
 		private void showLogWindow(object o, EventArgs args)
@@ -771,7 +775,5 @@ namespace Novell.iFolder
 				Application.Quit();
 			}
 		}
-
-
 	}
 }

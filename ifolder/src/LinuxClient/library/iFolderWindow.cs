@@ -269,10 +269,13 @@ namespace Novell.iFolder
 
 		private DomainController	domainController;
 
+		// Manager object that knows about simias resources.
+		private Manager				simiasManager;
+
 		/// <summary>
 		/// Default constructor for iFolderWindow
 		/// </summary>
-		public iFolderWindow(iFolderWebService webService, SimiasWebService SimiasWS)
+		public iFolderWindow(iFolderWebService webService, SimiasWebService SimiasWS, Manager simiasManager)
 			: base (Util.GS("iFolders"))
 		{
 			if(webService == null)
@@ -280,6 +283,7 @@ namespace Novell.iFolder
 
 			ifws = webService;
 			simws = SimiasWS;
+			this.simiasManager = simiasManager;
 			ifdata = iFolderData.GetData();
 			curiFolders = new Hashtable();
 			curDomain = null;
@@ -1964,7 +1968,7 @@ namespace Novell.iFolder
 				dg.Destroy();
 				if (response == -8)
 				{
-					Util.ShowPrefsPage(1);
+					Util.ShowPrefsPage(1, simiasManager);
 				}
 				
 				return;

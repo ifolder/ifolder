@@ -169,6 +169,80 @@ namespace Simias.Client
 		{
 		}
 
+		/// <summary>
+		/// Initializes an instance of this object.
+		/// </summary>
+		/// <param name="args">Configuration argument array.</param>
+		public Manager( string[] args )
+		{
+			ParseConfigurationParameters( args );
+		}
+
+		#endregion
+
+		#region Private Methods
+
+		/// <summary>
+		/// Parses the command line parameters to get the configuration for Simias.
+		/// </summary>
+		/// <param name="args">Array of arguments to set as configuration.</param>
+		private void ParseConfigurationParameters( string[] args )
+		{
+			for ( int i = 0; i < args.Length; ++i )
+			{
+				switch ( args[ i ].ToLower() )
+				{
+					case "-port":
+					{
+						if ( ( i + 1 ) < args.Length )
+						{
+							Port = args[ ++i ];
+						}
+						else
+						{
+							Console.Error.WriteLine( "Invalid command line parameters. No port or range was specified." );
+						}
+
+						break;
+					}
+
+					case "-datadir":
+					{
+						if ( ( i + 1 ) < args.Length )
+						{
+							DataPath = args[ ++i ];
+						}
+						else
+						{
+							Console.Error.WriteLine( "Invalid command line parameters. No store path was specified." );
+						}
+
+						break;
+					}
+
+					case "-apppath":
+					{
+						if ( ( i + 1 ) < args.Length )
+						{
+							ApplicationPath = args[ ++i ];
+						}
+						else
+						{
+							Console.Error.WriteLine( "Invalid command line parameters. No store path was specified." );
+						}
+
+						break;
+					}
+
+					case "-isServer":
+					{
+						IsServer = true;
+						break;
+					}
+				}
+			}
+		}
+
 		#endregion
 
 		#region Public Methods
