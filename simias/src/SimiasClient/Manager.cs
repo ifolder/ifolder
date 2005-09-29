@@ -355,7 +355,7 @@ namespace Simias.Client
 
 			// Build the arguments string.
 			string args = String.Format( "{0}--stop{1}{2}{3}", 
-				IsWindows ? String.Empty : applicationPath,
+				IsWindows ? String.Empty : applicationPath + " ",
 				( simiasDataPath != null ) ? String.Format( " --datadir {0}", simiasDataPath ) : String.Empty,
 				( showConsole == true ) ? " --showconsole" : String.Empty,
 				( verbose == true ) ? " --verbose" : String.Empty );
