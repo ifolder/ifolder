@@ -367,7 +367,7 @@ namespace Mono.ASPNET
 				return GetApplicationForPath (vhost, port, "/", false);
 
 			if (verbose)
-				Console.WriteLine ("No application defined for: {0}:{1}{2}", vhost, port, path);
+				Console.Error.WriteLine ("No application defined for: {0}:{1}{2}", vhost, port, path);
 
 			return null;
 		}
