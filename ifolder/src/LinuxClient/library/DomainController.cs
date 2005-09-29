@@ -58,6 +58,7 @@ namespace Novell.iFolder.Controller
 		private string defDomainID = null;
 		
 		private SimiasEventBroker eventBroker = null;
+		private Manager simiasManager;
 		
 		///
 		/// Events
@@ -76,6 +77,7 @@ namespace Novell.iFolder.Controller
 		
 		private DomainController(Manager simiasManager)
 		{
+			this.simiasManager = simiasManager;
 			string localServiceUrl = simiasManager.WebServiceUri.ToString();
 			try
 			{
