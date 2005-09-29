@@ -26,6 +26,7 @@ using System;
 using System.IO;
 using System.Collections;
 using Gtk;
+using Simias.Client;
 using Simias.Client.Event;
 
 namespace Novell.iFolder
