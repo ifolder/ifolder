@@ -179,7 +179,7 @@ namespace Novell.iFolder
 					ifdata = iFolderData.GetData(simiasManager);
 
 					EventBroker = SimiasEventBroker.GetSimiasEventBroker(simiasManager);
-					domainController = DomainController.GetDomainController();
+					domainController = DomainController.GetDomainController(simiasManager);
 				}
 				catch(Exception e)
 				{

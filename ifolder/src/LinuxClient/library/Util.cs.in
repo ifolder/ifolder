@@ -58,7 +58,6 @@ namespace Novell.iFolder
 		
 		private static bool bLogWinNeverShown			  = true;
 
-		private static Manager				simiasManager = null;
 		private static iFolderWebService	ifws		  = null;
 		private static SimiasWebService		simws		  = null;
 
