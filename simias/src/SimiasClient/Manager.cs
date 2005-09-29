@@ -67,6 +67,16 @@ namespace Simias.Client
 		private bool isServer = false;
 
 		/// <summary>
+		/// Flag that creates a console window for Simias.
+		/// </summary>
+		private bool showConsole = false;
+
+		/// <summary>
+		/// Flag that turns on extra debug messages.
+		/// </summary>
+		private bool verbose = false;
+
+		/// <summary>
 		/// Uri to the web service.
 		/// </summary>
 		private string webServiceUri = null;
@@ -114,6 +124,14 @@ namespace Simias.Client
 		}
 
 		/// <summary>
+		/// Returns whether the current platform is running on Windows.
+		/// </summary>
+		private bool IsWindows
+		{
+			get { return ( MyEnvironment.Platform == MyPlatformID.Windows ) ? true : false; }
+		}
+
+		/// <summary>
 		/// Getter/Setter for the Simias application path.
 		/// </summary>
 		public string ApplicationPath
@@ -148,6 +166,24 @@ namespace Simias.Client
 		{
 			get { return isServer; }
 			set { isServer = value; }
+		}
+
+		/// <summary>
+		/// Getter/Setter for creating a console window when launching Simias.
+		/// </summary>
+		public bool ShowConsole
+		{
+			get { return showConsole; }
+			set { showConsole = value; }
+		}
+
+		/// <summary>
+		/// Getter/Setter to turn on extra debug messages.
+		/// </summary>
+		public bool Verbose
+		{
+			get { return verbose; }
+			set { verbose = value; }
 		}
 
 		/// <summary>
@@ -239,6 +275,18 @@ namespace Simias.Client
 						IsServer = true;
 						break;
 					}
+
+					case "-showconsole":
+					{
+						showConsole = true;
+						break;
+					}
+
+					case "-verbose":
+					{
+						verbose = true;
+						break;
+					}
 				}
 			}
 		}
@@ -254,15 +302,18 @@ namespace Simias.Client
 		public string Start()
 		{
 			// Build the arguments string.
-			string args = String.Format( "{0}{1}{2}", 
+			string args = String.Format( "{0}{1}{2}{3}{4}{5}", 
+				IsWindows ? String.Empty : applicationPath,
 				( simiasDataPath != null ) ? String.Format( "--datadir {0} ", simiasDataPath ) : String.Empty, 
 				( isServer == true ) ? "--runasserver " : String.Empty, 
-				( port != null ) ? String.Format( "--port {0}", port ) : String.Empty );
+				( port != null ) ? String.Format( "--port {0}", port ) : String.Empty,
+				( showConsole == true ) ? " --showconsole" : String.Empty,
+				( verbose == true ) ? " --verbose" : String.Empty );
 
 			// Create the process structure.
 			Process simiasProcess = new Process();
-			simiasProcess.StartInfo.FileName = applicationPath;
-			simiasProcess.StartInfo.CreateNoWindow = true;
+			simiasProcess.StartInfo.FileName = IsWindows ? applicationPath : "mono";
+			simiasProcess.StartInfo.CreateNoWindow = showConsole ? false : true;
 			simiasProcess.StartInfo.RedirectStandardOutput = true;
 			simiasProcess.StartInfo.UseShellExecute = false;
 			simiasProcess.StartInfo.Arguments = args;
@@ -303,13 +354,16 @@ namespace Simias.Client
 			bool stopped = false;
 
 			// Build the arguments string.
-			string args = String.Format( "--stop{0}", 
-				( simiasDataPath != null ) ? String.Format( " --datadir {0}", simiasDataPath ) : String.Empty );
+			string args = String.Format( "{0}--stop{1}{2}{3}", 
+				IsWindows ? String.Empty : applicationPath,
+				( simiasDataPath != null ) ? String.Format( " --datadir {0}", simiasDataPath ) : String.Empty,
+				( showConsole == true ) ? " --showconsole" : String.Empty,
+				( verbose == true ) ? " --verbose" : String.Empty );
 
 			// Create the process structure.
 			Process simiasProcess = new Process();
-			simiasProcess.StartInfo.FileName = applicationPath;
-			simiasProcess.StartInfo.CreateNoWindow = true;
+			simiasProcess.StartInfo.FileName = IsWindows ? applicationPath : "mono";
+			simiasProcess.StartInfo.CreateNoWindow = showConsole ? false : true;
 			simiasProcess.StartInfo.RedirectStandardOutput = true;
 			simiasProcess.StartInfo.UseShellExecute = false;
 			simiasProcess.StartInfo.Arguments = args;
