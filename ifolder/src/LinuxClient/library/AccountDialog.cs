@@ -33,7 +33,7 @@ namespace Novell.iFolder
 		private DomainInformation	domain;
 
 
-		public AccountDialog(DomainInformation curDomain)
+		public AccountDialog(DomainInformation curDomain, Manager simiasManager)
 			: base()
 		{
 			domain = curDomain;
