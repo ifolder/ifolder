@@ -228,7 +228,8 @@ namespace Simias.Client
 			{
 				switch ( args[ i ].ToLower() )
 				{
-					case "-port":
+					case "-p":
+					case "--port":
 					{
 						if ( ( i + 1 ) < args.Length )
 						{
@@ -242,7 +243,8 @@ namespace Simias.Client
 						break;
 					}
 
-					case "-datadir":
+					case "-d":
+					case "--datadir":
 					{
 						if ( ( i + 1 ) < args.Length )
 						{
@@ -256,7 +258,8 @@ namespace Simias.Client
 						break;
 					}
 
-					case "-apppath":
+					case "-a":
+					case "--apppath":
 					{
 						if ( ( i + 1 ) < args.Length )
 						{
@@ -270,19 +273,22 @@ namespace Simias.Client
 						break;
 					}
 
-					case "-isServer":
+					case "-i":
+					case "--isServer":
 					{
 						IsServer = true;
 						break;
 					}
 
-					case "-showconsole":
+					case "-s":
+					case "--showconsole":
 					{
 						showConsole = true;
 						break;
 					}
 
-					case "-verbose":
+					case "-v":
+					case "--verbose":
 					{
 						verbose = true;
 						break;
