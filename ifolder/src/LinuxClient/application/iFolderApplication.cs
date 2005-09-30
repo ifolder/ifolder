@@ -817,7 +817,15 @@ namespace Novell.iFolder
 			switch(args.Event.Button)
 			{
 				case 1: // first mouse button
-					show_tray_menu();
+					// When the user clicks on the iFolder icon, show the
+					// iFolder window if it's not already showing and hide
+					// it if it's not showing.  This behavior is used by
+					// Beagle and Gaim.
+					iFolderWindow ifwin = Util.GetiFolderWindow();
+					if (ifwin == null || !ifwin.Visible)
+						Util.ShowiFolderWindow();
+					else
+						ifwin.Hide();
 					break;
 				case 2: // second mouse button
 					break;
