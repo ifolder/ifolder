@@ -41,14 +41,12 @@ namespace Novell.iFolder
 		private Pixbuf	inactivebackground = null;
 		private Gdk.Color activeBackgroundColor;
 		private Gdk.Color inactiveBackgroundColor;
-		private TextView detailsTextView;
+		private LinkTextView detailsTextView;
 		private uint	closeWindowTimeoutID;
 		private bool	isSelected = false;
 		private int		wbsize = 16;
 		private int		messageTextWidth = 300;
 		private uint	timeout;
-		private Gdk.Cursor handCursor;
-		private bool hoveringOverLink;
 
 		///
 		/// Fired when a user clicks on a link inside the details of the
@@ -81,10 +79,6 @@ namespace Novell.iFolder
 
 			activeBackgroundColor = new Gdk.Color(249, 253, 202);
 			inactiveBackgroundColor = new Gdk.Color(255, 255, 255);
-
-			handCursor = new Gdk.Cursor (Gdk.CursorType.Hand2);
-			
-			hoveringOverLink = false;
 
 			Gtk.HBox outBox = new HBox();
 			this.Add(outBox);
@@ -162,7 +156,20 @@ namespace Novell.iFolder
 			l.WidthRequest = messageTextWidth;
 			messageVBox.PackStart(l, false, true, 0);
 
-			detailsTextView = CreateTextView(details);
+			detailsTextView = new LinkTextView(details);
+
+			detailsTextView.Editable = false;
+			detailsTextView.CursorVisible = false;
+			detailsTextView.WrapMode = WrapMode.Word;
+
+			// Determine how tall to make the TextView by allocating a random
+			// height.  This will allow us to see the "optimal" height so that
+			// all the text will be displayed without having to make the user
+			// scroll through the details of the message.
+			detailsTextView.SizeAllocate(new Gdk.Rectangle(0, 0, messageTextWidth, 600));
+
+			detailsTextView.LinkClicked +=
+				new LinkClickedEventHandler(OnLinkClicked);
 			messageVBox.PackStart(detailsTextView, false, false, 3);
 
 			// This spacer has to be here to make sure that the bottom of the
@@ -178,183 +185,12 @@ namespace Novell.iFolder
 
 
 
-		private TextView CreateTextView(string message)
+		private void OnLinkClicked(object sender, LinkClickedEventArgs args)
 		{
-			TextView textView = new TextView();
-
-			string xmlMessage = "<message>" + message + "</message>";
-			
-			XmlDocument messageDom = new XmlDocument();
-			try
-			{
-				messageDom.LoadXml(xmlMessage);
-			}
-			catch(Exception e)
-			{
-				Console.WriteLine(e.Message);
-				return textView;
-			}
-
-			TextTagTable textTagTable = CreateTextTagTable(messageDom);
-			TextBuffer textBuffer = new TextBuffer(textTagTable);
-
-			FormatTextBuffer(textBuffer, messageDom.DocumentElement);
-
-			textView.Buffer = textBuffer;
-			textView.Editable = false;
-			textView.CursorVisible = false;
-			textView.WrapMode = WrapMode.Word;
-
-			// Determine how tall to make the TextView by allocating a random
-			// height.  This will allow us to see the "optimal" height so that
-			// all the text will be displayed without having to make the user
-			// scroll through the details of the message.
-			textView.SizeAllocate(new Gdk.Rectangle(0, 0, messageTextWidth, 600));
-			
-			textView.MotionNotifyEvent +=
-				new MotionNotifyEventHandler(TextViewMotionNotifyEvent);
-			
-			return textView;
+			// Pass the event on
+			if (LinkClicked != null)
+				LinkClicked(this, args);
 		}
-		
-		/// Parse through and create TextTag objects for every
-		/// <a href="TextTagName"> found in the message text.
-		private TextTagTable CreateTextTagTable(XmlNode topLevelNode)
-		{
-			TextTagTable textTagTable = new TextTagTable();
-			
-			TextTag smallFontTag = new TextTag("small-font");
-			smallFontTag.Scale = Pango.Scale.Small;
-			textTagTable.Add(smallFontTag);
-
-			XmlNodeList linkNodes = topLevelNode.SelectNodes("//a");
-			if (linkNodes != null)
-			{
-				foreach(XmlNode linkNode in linkNodes)
-				{
-					XmlAttribute href = linkNode.Attributes["href"];
-					if (href != null)
-					{
-						string textTagName = href.Value;
-
-						if (textTagTable.Lookup(textTagName) != null)
-							continue;
-						
-						TextTag textTag = new TextTag(textTagName);
-						textTag.Underline = Pango.Underline.Single;
-						textTag.Foreground = "blue";
-						textTag.TextEvent +=
-							new TextEventHandler(OnTextEvent);
-						textTagTable.Add(textTag);
-					}
-				}
-			}
-
-			return textTagTable;			
-		}
-		
-		
-		
-		/// Walk through the message and add TextTag objects as needed
-		private void FormatTextBuffer(TextBuffer textBuffer, XmlNode messageNode)
-		{
-			XmlNodeList childNodes = messageNode.ChildNodes;
-			foreach(XmlNode childNode in childNodes)
-			{
-				if (childNode.Name.Equals("a"))
-				{
-					XmlAttribute href = childNode.Attributes["href"];
-					if (href != null)
-					{
-						string textTagName = href.Value;
-
-						TextTag textTag = textBuffer.TagTable.Lookup(textTagName);
-						if (textTag != null)
-						{
-							TextMark startTagMark = textBuffer.CreateMark(textTagName, textBuffer.EndIter, true);
-							textBuffer.InsertAtCursor(childNode.InnerText);
-							TextIter startTagIter = textBuffer.GetIterAtMark(startTagMark);
-							TextIter endTagIter = textBuffer.EndIter;
-							textBuffer.ApplyTag(textTag, startTagIter, endTagIter);
-						}
-					}
-					else
-						textBuffer.InsertAtCursor(childNode.InnerText);
-				}
-				else
-				{
-					textBuffer.InsertAtCursor(childNode.InnerText);
-				}
-			}
-			
-			// Make the font size smaller
-			textBuffer.ApplyTag("small-font", textBuffer.StartIter, textBuffer.EndIter);
-		}
-		
-		
-		
-		private void OnTextEvent(object sender, TextEventArgs args)
-		{
-
-			// Call the event delegates
-			if (LinkClicked != null && args.Event.Type == EventType.ButtonPress)
-			{
-				TextTag textTag = (TextTag)sender;
-				string linkID = textTag.Name;
-				LinkClicked(this, new LinkClickedEventArgs(linkID));
-			}
-		}
-		
-		
-		
-		// Update the cursor image if the pointer is moved
-		private void TextViewMotionNotifyEvent(object sender, MotionNotifyEventArgs args)
-		{
-			TextView view = sender as TextView;
-			int x, y;
-			Gdk.ModifierType state;
-			
-			view.WindowToBufferCoords(TextWindowType.Widget,
-									  (int) args.Event.X,
-									  (int) args.Event.Y,
-									  out x, out y);
-			SetTextViewCursorIfAppropriate(view, x, y);
-			
-			view.GdkWindow.GetPointer(out x, out y, out state);
-		}
-		
-		
-		
-		// Looks at all the tags covering the position (x, y) in the TextView.
-		// If one of them is a link it changes the cursor to the "hands"
-		// cursor typically used by web browsers.
-		private void SetTextViewCursorIfAppropriate(TextView view, int x, int y)
-		{
-			bool hovering = false;
-			TextIter iter = view.GetIterAtLocation(x, y);
-			
-			foreach(TextTag tag in iter.Tags)
-			{
-				if (tag.Name != null && !tag.Name.Equals("small-font"))
-				{
-					hovering = true;
-					break;
-				}
-			}
-
-			if (hovering != hoveringOverLink)
-			{
-				Gdk.Window window = view.GetWindow(Gtk.TextWindowType.Text);
-
-				hoveringOverLink = hovering;
-				if (hoveringOverLink)
-					window.Cursor = handCursor;
-				else
-					window.Cursor = null;
-			}
-		}
-
-
 
 		protected override void OnShown()
 		{
@@ -732,6 +568,202 @@ namespace Novell.iFolder
 
 			pixmap_return = new Gdk.Pixmap(pm_handle);
 			mask_return = new Gdk.Bitmap(bm_handle);
+		}
+	}
+	
+	public class LinkTextView : TextView
+	{
+		// -1 = cursor never set, 0 = null cursor, 1 = hand cursor
+		private int currentCursor;
+
+		private Gdk.Cursor handCursor;
+		private bool hoveringOverLink;
+
+		///
+		/// Fired when a user clicks on a link inside the details of the
+		/// notification message.
+		///
+		public event LinkClickedEventHandler LinkClicked;
+
+
+		public LinkTextView(string linkText) : base()
+		{
+			currentCursor = -1;
+
+			handCursor = new Gdk.Cursor (Gdk.CursorType.Hand2);
+			
+			hoveringOverLink = false;
+
+			string xmlLinkText = "<message>" + linkText + "</message>";
+			
+			XmlDocument linkTextDom = new XmlDocument();
+			linkTextDom.LoadXml(xmlLinkText);
+
+			TextTagTable textTagTable = CreateTextTagTable(linkTextDom);
+			TextBuffer textBuffer = new TextBuffer(textTagTable);
+
+			FormatTextBuffer(textBuffer, linkTextDom.DocumentElement);
+
+			this.Buffer = textBuffer;
+		}
+		
+		/// Parse through and create TextTag objects for every
+		/// <a href="TextTagName"> found in the message text.
+		private TextTagTable CreateTextTagTable(XmlNode topLevelNode)
+		{
+			TextTagTable textTagTable = new TextTagTable();
+			
+			TextTag smallFontTag = new TextTag("small-font");
+			smallFontTag.Scale = Pango.Scale.Small;
+			textTagTable.Add(smallFontTag);
+
+			XmlNodeList linkNodes = topLevelNode.SelectNodes("//a");
+			if (linkNodes != null)
+			{
+				foreach(XmlNode linkNode in linkNodes)
+				{
+					XmlAttribute href = linkNode.Attributes["href"];
+					if (href != null)
+					{
+						string textTagName = href.Value;
+
+						if (textTagTable.Lookup(textTagName) != null)
+							continue;
+						
+						TextTag textTag = new TextTag(textTagName);
+						textTag.Underline = Pango.Underline.Single;
+						textTag.Foreground = "blue";
+						textTag.TextEvent +=
+							new TextEventHandler(OnTextEvent);
+						textTagTable.Add(textTag);
+					}
+				}
+			}
+
+			return textTagTable;			
+		}
+		
+		
+		
+		/// Walk through the message and add TextTag objects as needed
+		private void FormatTextBuffer(TextBuffer textBuffer, XmlNode linkTextNode)
+		{
+			XmlNodeList childNodes = linkTextNode.ChildNodes;
+			foreach(XmlNode childNode in childNodes)
+			{
+				if (childNode.Name.Equals("a"))
+				{
+					XmlAttribute href = childNode.Attributes["href"];
+					if (href != null)
+					{
+						string textTagName = href.Value;
+
+						TextTag textTag = textBuffer.TagTable.Lookup(textTagName);
+						if (textTag != null)
+						{
+							TextMark startTagMark = textBuffer.CreateMark(textTagName, textBuffer.EndIter, true);
+							textBuffer.InsertAtCursor(childNode.InnerText);
+							TextIter startTagIter = textBuffer.GetIterAtMark(startTagMark);
+							TextIter endTagIter = textBuffer.EndIter;
+							textBuffer.ApplyTag(textTag, startTagIter, endTagIter);
+						}
+					}
+					else
+						textBuffer.InsertAtCursor(childNode.InnerText);
+				}
+				else
+				{
+					textBuffer.InsertAtCursor(childNode.InnerText);
+				}
+			}
+			
+			// Make the font size smaller
+			textBuffer.ApplyTag("small-font", textBuffer.StartIter, textBuffer.EndIter);
+		}
+		
+		
+		
+		private void OnTextEvent(object sender, TextEventArgs args)
+		{
+			// Call the event delegates
+			if (LinkClicked != null && args.Event.Type == EventType.ButtonPress)
+			{
+				TextTag textTag = (TextTag)sender;
+				string linkID = textTag.Name;
+				LinkClicked(this, new LinkClickedEventArgs(linkID));
+			}
+		}
+		
+		
+		// Update the cursor image if the pointer is moved
+		protected override bool OnMotionNotifyEvent(Gdk.EventMotion eventMotion)
+		{
+			int x, y;
+			Gdk.ModifierType state;
+			
+			this.WindowToBufferCoords(TextWindowType.Widget,
+									  (int) eventMotion.X,
+									  (int) eventMotion.Y,
+									  out x, out y);
+			SetTextViewCursorIfAppropriate(x, y);
+			
+			this.GdkWindow.GetPointer(out x, out y, out state);
+			
+			return false;
+		}
+		
+		// Looks at all the tags covering the position (x, y) in the TextView.
+		// If one of them is a link it changes the cursor to the "hands"
+		// cursor typically used by web browsers.
+		private void SetTextViewCursorIfAppropriate(int x, int y)
+		{
+			bool hovering = false;
+			TextIter iter = this.GetIterAtLocation(x, y);
+			
+			foreach(TextTag tag in iter.Tags)
+			{
+				if (tag.Name != null && !tag.Name.Equals("small-font"))
+				{
+					hovering = true;
+					break;
+				}
+			}
+
+			if (hovering != hoveringOverLink)
+			{
+				Gdk.Window window = this.GetWindow(Gtk.TextWindowType.Text);
+
+				hoveringOverLink = hovering;
+				if (hoveringOverLink)
+				{
+					window.Cursor = handCursor;
+					currentCursor = 1;
+				}
+				else
+				{
+					window.Cursor = null;
+					currentCursor = 0;
+				}
+			}
+
+			if (!hoveringOverLink && currentCursor != 0)
+			{
+				Gdk.Window window = this.GetWindow(Gtk.TextWindowType.Text);
+				window.Cursor = null;
+				currentCursor = 0;
+			}
+		}
+		
+		protected override bool OnButtonPressEvent(Gdk.EventButton eventButton)
+		{
+			// Do nothing (this prevents selection)
+			return false;
+		}
+
+		protected override bool OnButtonReleaseEvent(Gdk.EventButton eventButton)
+		{
+			// Do nothing (this prevents selection)
+			return false;
 		}
 	}
 
