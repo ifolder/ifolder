@@ -1,4 +1,4 @@
-/***********************************************************************
+/**********************************************************************
  *  $RCSfile$
  *
  *  Copyright (C) 2005 Novell, Inc.
@@ -40,15 +40,17 @@ namespace Mono.ASPNET
 	/// <summary>
 	/// Implements the web server functionality for Simias.
 	/// </summary>
-	public class SimiasWebServer : IDisposable
+	public class SimiasWebServer
 	{
 		#region Class Members
 
 		/// <summary>
 		/// Mutex used to force only one controlling process at a time to run.
 		/// </summary>
-		private static Mutex ControllerMutex = new Mutex( false, "SimiasControllerMutex" );
+		private static string ControllerMutexName = "SimiasControllerMutex";
 		private const int ControllerMutexTimeout = 15 * 1000;
+		private static FileStream mutexFileStream = null;
+
 
 		/// <summary>
 		/// Path to running application. Remove the quotes that get added to the string.
@@ -133,11 +135,6 @@ namespace Mono.ASPNET
 		}
 
 		/// <summary>
-		/// Object disposed flag.
-		/// </summary>
-		private bool disposed = false;
-
-		/// <summary>
 		/// Debug flag specified on the --noexec option.
 		/// </summary>
 		private bool debug = false;
@@ -200,6 +197,23 @@ namespace Mono.ASPNET
 		#region Properties
 
 		/// <summary>
+		/// Gets the full name of the Simias Controller mutex.
+		/// </summary>
+		private static string ControllerMutex
+		{
+			get
+			{
+				string path = Environment.GetFolderPath( Environment.SpecialFolder.LocalApplicationData );
+				if ( ( path == null ) || ( path.Length == 0 ) )
+				{
+					path = Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData );
+				}
+
+				return String.Format( "{0}.{1}", Path.Combine( path, ControllerMutexName ), Process.GetCurrentProcess().Id );
+			}
+		}
+
+		/// <summary>
 		/// Gets the default Simias data path.
 		/// </summary>
 		private static string DefaultSimiasDataPath
@@ -232,6 +246,71 @@ namespace Mono.ASPNET
 		#endregion
 
 		#region Private Methods
+
+		/// <summary>
+		/// Acquires the controller mutex that allows only one controller at a time to run.
+		/// </summary>
+		/// <returns>True if the controller was acquired. Otherwise false is returned.</returns>
+		private static bool AcquireControllerMutex()
+		{
+			bool processWaitTimeout = false;
+			string fileName = ControllerMutex;
+			string processIDString = Path.GetExtension( fileName );
+
+			// Create this processes mutex file. This will hold this controller's place in line.
+			mutexFileStream = File.Create( fileName );
+
+			// Search for any existing mutex files.
+			string[] fileList = Directory.GetFiles( Path.GetDirectoryName( fileName ), Path.GetFileNameWithoutExtension( fileName ) + ".*" );
+			foreach ( string file in fileList )
+			{
+				string fileExt = Path.GetExtension( file );
+
+				// If this is the file that was just created, skip it.
+				if ( processIDString != fileExt )
+				{
+					try
+					{
+						// Try and open the file to see if the process has just gone away. If the file cannot be
+						// opened, the corresponding controller process is still running.
+						using ( FileStream fs = new FileStream( file, FileMode.Open, FileAccess.ReadWrite, FileShare.None ) )
+						{}
+
+						// The file was opened successfully. The process must have terminated abnormally.
+						// Clean up the file.
+						File.Delete( file );
+					}
+					catch ( System.IO.FileNotFoundException )
+					{
+						// The file must have been deleted by the time we went to open it. Proceed normally.
+					}
+					catch ( System.IO.IOException )
+					{
+						// The file is in use. Wait for the process to exit before going on.
+						int processID = Convert.ToInt32( fileExt.TrimStart( new char[] { '.' } ) );
+						try
+						{
+							// Attach to the running process.
+							Process process = Process.GetProcessById( processID );
+							process.WaitForExit( SimiasWebServer.ControllerMutexTimeout );
+							if ( !process.HasExited )
+							{
+								processWaitTimeout = true;
+
+								// We can't acquire the mutex because another controller is still
+								// running and we have timed out. Clean up our own mutex file.
+								ReleaseControllerMutex();
+								break;
+							}
+						}
+						catch ( ArgumentException )
+						{}
+					}
+				}
+			}
+
+			return processWaitTimeout ? false : true;
+		}
 
 		/// <summary>
 		/// Increments the reference count that keeps Simias services running.
@@ -961,6 +1040,25 @@ namespace Mono.ASPNET
 		}
 
 		/// <summary>
+		/// Releases the controller mutex that allows only one controller at a time to run.
+		/// </summary>
+		private static void ReleaseControllerMutex()
+		{
+			if ( mutexFileStream != null )
+			{
+				mutexFileStream.Close();
+				try
+				{
+					File.Delete( mutexFileStream.Name );
+				}
+				catch
+				{}
+
+				mutexFileStream = null;
+			}
+		}
+
+		/// <summary>
 		/// Decrements the Simias service reference count and signals the server to stop if the count goes to zero.
 		/// </summary>
 		/// <param name="webServiceUri">The uri that references the web service.</param>
@@ -1527,14 +1625,26 @@ namespace Mono.ASPNET
 
 			if ( ipcServerSocket != null )
 			{
-				ipcServerSocket.Shutdown( SocketShutdown.Both );
+				try
+				{
+					ipcServerSocket.Shutdown( SocketShutdown.Both );
+				}
+				catch
+				{}
+
 				ipcServerSocket.Close();
 				ipcServerSocket = null;
 			}
 
 			if ( ipcMessageSocket != null )
 			{
-				ipcMessageSocket.Shutdown( SocketShutdown.Receive );
+				try
+				{
+					ipcMessageSocket.Shutdown( SocketShutdown.Receive );
+				}
+				catch
+				{}
+
 				ipcMessageSocket.Close();
 				ipcMessageSocket = null;
 			}
@@ -1626,145 +1736,82 @@ namespace Mono.ASPNET
 		/// <returns>0 >= Successful, otherwise an error is indicated.</returns>
 		public static int Main( string[] args )
 		{
-			SimiasStatus status = SimiasStatus.Success;
 			SimiasWebServer server = new SimiasWebServer();
-			try
+			SimiasStatus status = server.ParseConfigurationParameters( args );
+			if ( status == SimiasStatus.Success )
 			{
-				status = server.ParseConfigurationParameters( args );
-				if ( status == SimiasStatus.Success )
+				switch ( server.command )
 				{
-					switch ( server.command )
+					case SimiasCommand.Help:
 					{
-						case SimiasCommand.Help:
-						{
-							server.ShowHelp();
-							break;
-						}
+						server.ShowHelp();
+						break;
+					}
 
-						case SimiasCommand.Kill:
-						{
-							server.KillSimias();
-							break;
-						}
+					case SimiasCommand.Kill:
+					{
+						server.KillSimias();
+						break;
+					}
 
-						case SimiasCommand.KillAll:
-						{
-							server.KillAllSimias();
-							break;
-						}
+					case SimiasCommand.KillAll:
+					{
+						server.KillAllSimias();
+						break;
+					}
 
-						case SimiasCommand.Start:
+					case SimiasCommand.Start:
+					{
+						// If this is a controller process, acquire the controller mutex so 
+						// that this process is the only Simias controller running.
+						bool acquired = ( server.noExec == false ) ? AcquireControllerMutex() : true;
+						if ( acquired )
 						{
-							// If this is a controller process, acquire the controller mutex so 
-							// that this process is the only Simias controller running.
-							bool acquired = ( server.noExec == false ) ? 
-								ControllerMutex.WaitOne( ControllerMutexTimeout, false ) : true;
-
-							if ( acquired )
+							try
 							{
-								try
+								server.StartSimias();
+							}
+							finally
+							{
+								// If this is a controller process, release the mutex to let other controllers
+								// run.
+								if ( server.noExec == false )
 								{
-									server.StartSimias();
-								}
-								finally
-								{
-									// If this is a controller process, release the mutex to let other controllers
-									// run.
-									if ( server.noExec == false )
-									{
-										ControllerMutex.ReleaseMutex();
-									}
+									ReleaseControllerMutex();
 								}
 							}
-							else
-							{
-								// Timed out waiting for other controller processes to finish.
-								Console.Error.WriteLine( "Error: Timed out waiting for other controller processes." );
-								status = SimiasStatus.ControllerTimeout;
-							}
-
-							break;
 						}
-
-						case SimiasCommand.Stop:
+						else
 						{
-							server.StopSimias();
-							break;
+							// Timed out waiting for other controller processes to finish.
+							Console.Error.WriteLine( "Error: Timed out waiting for other controller processes." );
+							status = SimiasStatus.ControllerTimeout;
 						}
 
-						case SimiasCommand.Info:
-						{
-							server.ShowInfo();
-							break;
-						}
+						break;
+					}
 
-						case SimiasCommand.Version:
-						{
-							server.ShowVersion();
-							break;
-						}
+					case SimiasCommand.Stop:
+					{
+						server.StopSimias();
+						break;
+					}
+
+					case SimiasCommand.Info:
+					{
+						server.ShowInfo();
+						break;
+					}
+
+					case SimiasCommand.Version:
+					{
+						server.ShowVersion();
+						break;
 					}
 				}
 			}
-			finally
-			{
-				// Don't wait for the GC to clean up.
-				server.Dispose();
-			}
 
 			return ( int )status;
-		}
-
-		#endregion
-
-		#region IDisposable Members
-
-		/// <summary>
-		/// Allows for quick release of managed and unmanaged resources.
-		/// Called by applications.
-		/// </summary>
-		public void Dispose()
-		{
-			Dispose( true );
-			GC.SuppressFinalize( this );
-		}
-
-		/// <summary>
-		/// Dispose( bool disposing ) executes in two distinct scenarios.
-		/// If disposing equals true, the method has been called directly
-		/// or indirectly by a user's code. Managed and unmanaged resources
-		/// can be disposed.
-		/// If disposing equals false, the method has been called by the 
-		/// runtime from inside the finalizer and you should not reference 
-		/// other objects. Only unmanaged resources can be disposed.
-		/// </summary>
-		/// <param name="disposing">Specifies whether called from the finalizer or from the application.</param>
-		private void Dispose( bool disposing )
-		{
-			// Check to see if Dispose has already been called.
-			if ( !disposed )
-			{
-				// Protect callers from accessing the freed members.
-				disposed = true;
-
-				// If disposing equals true, dispose all managed and unmanaged resources.
-				if ( disposing )
-				{
-					// Dispose managed resources.
-					ControllerMutex.Close();
-				}
-			}
-		}
-		
-		/// <summary>
-		/// Use C# destructor syntax for finalization code.
-		/// This destructor will run only if the Dispose method does not get called.
-		/// It gives your base class the opportunity to finalize.
-		/// Do not provide destructors in types derived from this class.
-		/// </summary>
-		~SimiasWebServer()      
-		{
-			Dispose( false );
 		}
 
 		#endregion
