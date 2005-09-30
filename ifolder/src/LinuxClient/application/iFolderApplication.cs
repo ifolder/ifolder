@@ -354,10 +354,7 @@ namespace Novell.iFolder
 						break;
 //					case SyncStatus.UpdateConflict:
 //					case SyncStatus.FileNameConflict:
-//						// Conflicts are already handled elsewhere.
-//						message = string.Format(
-//							Util.GS("A conflict exists in this iFolder."),
-//							args.Name);
+//						// Conflicts are handled in the OniFolderChangedEvent method
 //						break;
 //					case SyncStatus.Policy:
 //						message = Util.GS("A policy prevented complete synchronization.");
@@ -577,15 +574,23 @@ namespace Novell.iFolder
 					if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_COLLISIONS, 
 							"true") == "true")
 					{
-						NotifyWindow notifyWin = new NotifyWindow(
-							tIcon, Util.GS("Action Required"),
-							string.Format(Util.GS("A conflict has been detected in iFolder \"{0}\".\n\nClick <a href=\"ResolveiFolderConflicts:{1}\">here</a> to resolve the conflicts.\nWhat is a <a href=\"ShowConflictHelp\">conflict</a>?"),
-										  ifHolder.iFolder.Name,
-										  ifHolder.iFolder.ID),
-							Gtk.MessageType.Warning, 10000);
-						notifyWin.LinkClicked +=
-							new LinkClickedEventHandler(OnNotifyWindowLinkClicked);
-						notifyWin.ShowAll();
+						string message = string.Format(
+							Util.GS("A conflict has been detected in this iFolder.\n\nClick <a href=\"ResolveiFolderConflicts:{0}\">here</a> to resolve the conflicts.\nWhat is a <a href=\"ShowConflictHelp\">conflict</a>?"),
+							args.iFolderID);
+
+						Hashtable collectionSyncErrors = null;
+						if (synchronizationErrors.ContainsKey(args.iFolderID))
+							collectionSyncErrors = (Hashtable)synchronizationErrors[args.iFolderID];
+						else
+						{
+							collectionSyncErrors = new Hashtable();
+							synchronizationErrors[args.iFolderID] = collectionSyncErrors;
+						}
+						
+						if (!collectionSyncErrors.ContainsKey(SyncStatus.FileNameConflict))
+						{
+							collectionSyncErrors[SyncStatus.FileNameConflict] = message;
+						}
 					}
 
 					iFolderWindow ifwin = Util.GetiFolderWindow();
@@ -752,6 +757,8 @@ namespace Novell.iFolder
 					int colonPos = args.LinkID.IndexOf(':');
 					if (colonPos > 0)
 					{
+						Util.ShowiFolderWindow();
+					
 						string ifolderID = args.LinkID.Substring(colonPos + 1);
 						iFolderWindow ifwin = Util.GetiFolderWindow();
 						ifwin.SetUpiFolder(ifolderID);
@@ -762,6 +769,8 @@ namespace Novell.iFolder
 					int colonPos = args.LinkID.IndexOf(':');
 					if (colonPos > 0)
 					{
+						Util.ShowiFolderWindow();
+					
 						string ifolderID = args.LinkID.Substring(colonPos + 1);
 						iFolderWindow ifwin = Util.GetiFolderWindow();
 						ifwin.ResolveConflicts(ifolderID);
