@@ -1431,6 +1431,20 @@ namespace Novell.iFolder
 		}
 
 
+		public void ResolveConflicts(string ifolderID)
+		{
+			// Guarantee that the iFolderWindow is showing
+			Util.ShowiFolderWindow();
+
+			// Select the specified available iFolder and call SetupiFolder().
+			if(curiFolders.ContainsKey(ifolderID))
+			{
+				TreeIter iter = (TreeIter)curiFolders[ifolderID];
+				TreeSelection tSelect = iFolderTreeView.Selection;
+				tSelect.SelectIter(iter);
+				ResolveConflicts();
+			}
+		}
 
 		private void ResolveConflicts()
 		{
@@ -1908,7 +1922,20 @@ namespace Novell.iFolder
 		}
 
 
+		public void SetUpiFolder(string ifolderID)
+		{
+			// Guarantee that the iFolderWindow is showing
+			Util.ShowiFolderWindow();
 
+			// Select the specified available iFolder and call SetupiFolder().
+			if(curiFolders.ContainsKey(ifolderID))
+			{
+				TreeIter iter = (TreeIter)curiFolders[ifolderID];
+				TreeSelection tSelect = iFolderTreeView.Selection;
+				tSelect.SelectIter(iter);
+				SetupiFolder();
+			}
+		}
 
 		private void SetupiFolder()
 		{
