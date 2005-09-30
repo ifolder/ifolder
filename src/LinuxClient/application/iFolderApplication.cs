@@ -92,6 +92,8 @@ namespace Novell.iFolder
 
 		private DomainController	domainController;
 
+		private NotifyWindow		startingUpNotifyWindow = null;
+
 		public iFolderApplication(string[] args)
 			: base("ifolder", "1.0", Modules.UI, args)
 		{
@@ -368,7 +370,7 @@ namespace Novell.iFolder
 //						break;
 					case SyncStatus.PolicyQuota:
 //						message = Util.GS("The iFolder is full.  Click here to view the Synchronization Log.");
-						message = Util.GS("The iFolder is full.");
+						message = Util.GS("The iFolder is full.\n\nClick <a href=\"ShowSyncLog\">here</a> to view the Synchronization Log.");
 						break;
 //					case SyncStatus.PolicySize:
 //						message = Util.GS("A size restriction policy prevented complete synchronization.");
@@ -387,7 +389,7 @@ namespace Novell.iFolder
 //						}
 //						break;
 					case SyncStatus.ReadOnly:
-						message = Util.GS("You have Read-only access to this iFolder.  Files that you place in this iFolder will not be synchronized.");
+						message = Util.GS("You have Read-only access to this iFolder.  Files that you place in this iFolder will not be synchronized.\n\nClick <a href=\"ShowSyncLog\">here</a> to view the Synchronization Log.");
 						break;
 //					default:
 //						message = Util.GS("iFolder synchronization failed.");
@@ -459,7 +461,9 @@ namespace Novell.iFolder
 											NotifyWindow notifyWin = new NotifyWindow(
 												tIcon, string.Format(Util.GS("Incomplete Synchronization: {0}"), ifHolder.iFolder.Name),
 												errMsg,
-												Gtk.MessageType.Error, 10000);
+												Gtk.MessageType.Warning, 10000);
+											notifyWin.LinkClicked +=
+												new LinkClickedEventHandler(OnNotifyWindowLinkClicked);
 											notifyWin.ShowAll();
 											
 											// Set this message to "" so that
@@ -518,8 +522,11 @@ namespace Novell.iFolder
 							tIcon, 
 							string.Format(Util.GS("New iFolder \"{0}\""), 
 								ifHolder.iFolder.Name),
-							string.Format(Util.GS("{0} has invited you to participate in this shared iFolder"), ifHolder.iFolder.Owner),
+							string.Format(Util.GS("{0} has invited you to participate in this shared iFolder.\n\nClick <a href=\"SetUpiFolder:{1}\">here</a> to set up this iFolder."),
+										  ifHolder.iFolder.Owner, ifHolder.iFolder.CollectionID),
 							Gtk.MessageType.Info, 10000);
+					notifyWin.LinkClicked +=
+						new LinkClickedEventHandler(OnNotifyWindowLinkClicked);
 					notifyWin.ShowAll();
 				}
 			}
@@ -572,8 +579,12 @@ namespace Novell.iFolder
 					{
 						NotifyWindow notifyWin = new NotifyWindow(
 							tIcon, Util.GS("Action Required"),
-							string.Format(Util.GS("A conflict has been detected in iFolder \"{0}\""), ifHolder.iFolder.Name),
-							Gtk.MessageType.Info, 10000);
+							string.Format(Util.GS("A conflict has been detected in iFolder \"{0}\".\n\nClick <a href=\"ResolveiFolderConflicts:{1}\">here</a> to resolve the conflicts.\nWhat is a <a href=\"ShowConflictHelp\">conflict</a>?"),
+										  ifHolder.iFolder.Name,
+										  ifHolder.iFolder.ID),
+							Gtk.MessageType.Warning, 10000);
+						notifyWin.LinkClicked +=
+							new LinkClickedEventHandler(OnNotifyWindowLinkClicked);
 						notifyWin.ShowAll();
 					}
 
@@ -621,7 +632,8 @@ namespace Novell.iFolder
 					tIcon, Util.GS("New iFolder User"), 
 					string.Format(Util.GS("{0} has joined the iFolder \"{1}\""), username, ifHolder.iFolder.Name),
 					Gtk.MessageType.Info, 10000);
-
+				notifyWin.LinkClicked +=
+					new LinkClickedEventHandler(OnNotifyWindowLinkClicked);
 				notifyWin.ShowAll();
 			}
 							
@@ -671,6 +683,13 @@ namespace Novell.iFolder
 							new DomainNeedsCredentialsEventHandler(OnDomainNeedsCredentialsEvent);
 					}
 
+					if (startingUpNotifyWindow != null)
+					{
+						startingUpNotifyWindow.Hide();
+						startingUpNotifyWindow.Destroy();
+						startingUpNotifyWindow = null;
+					}
+
 					gAppIcon.Pixbuf = RunningPixbuf;
 
 					// Bring up the accounts dialog if there are no domains
@@ -710,34 +729,81 @@ namespace Novell.iFolder
 			DomainInformation[] domains = simws.GetDomains(false);
 			if (domains.Length < 1)
 			{
-				// Prompt the user about there not being any domains
-				iFolderWindow ifwin = Util.GetiFolderWindow();
-				iFolderMsgDialog dg = new iFolderMsgDialog(
-					ifwin,
-					iFolderMsgDialog.DialogType.Question,
-					iFolderMsgDialog.ButtonSet.YesNo,
-					"",
-					Util.GS("Set up an iFolder account?"),
-					Util.GS("To begin using iFolder, you must first set up an iFolder account."));
-				int rc = dg.Run();
-				dg.Hide();
-				dg.Destroy();
-				if (rc == -8)
-				{
-					showPrefsPage(1);
-				}
+				NotifyWindow notifyWin = new NotifyWindow(
+					tIcon, Util.GS("Welcome to iFolder"),
+					"To begin using iFolder, you must first set up an iFolder account.\n\nClick <a href=\"ShowAccountsPage\">here</a> to add a new account.",
+					Gtk.MessageType.Info, 10000);
+				notifyWin.LinkClicked +=
+					new LinkClickedEventHandler(OnNotifyWindowLinkClicked);
+				notifyWin.ShowAll();
 			}
 
 			return false;	// Prevent this from being called over and over by Gtk.Timeout
+		}
+
+		private void OnNotifyWindowLinkClicked(object sender, LinkClickedEventArgs args)
+		{
+			if (args.LinkID != null)
+			{
+				if (args.LinkID.Equals("ShowSyncLog"))
+					Util.ShowLogWindow();
+				else if (args.LinkID.StartsWith("SetUpiFolder"))
+				{
+					int colonPos = args.LinkID.IndexOf(':');
+					if (colonPos > 0)
+					{
+						string ifolderID = args.LinkID.Substring(colonPos + 1);
+						iFolderWindow ifwin = Util.GetiFolderWindow();
+						ifwin.SetUpiFolder(ifolderID);
+					}
+				}
+				else if (args.LinkID.StartsWith("ResolveiFolderConflicts"))
+				{
+					int colonPos = args.LinkID.IndexOf(':');
+					if (colonPos > 0)
+					{
+						string ifolderID = args.LinkID.Substring(colonPos + 1);
+						iFolderWindow ifwin = Util.GetiFolderWindow();
+						ifwin.ResolveConflicts(ifolderID);
+					}
+				}
+				else if (args.LinkID.Equals("ShowAccountsPage"))
+				{
+					NotifyWindow notifyWindow = sender as NotifyWindow;
+					notifyWindow.Hide();
+					notifyWindow.Destroy();
+
+					showPrefsPage(1);
+				}
+				else if (args.LinkID.Equals("ShowConflictHelp"))
+				{
+					Util.ShowHelp("conflicts.html", null);
+				}
+			}
 		}
 
 		private void trayapp_clicked(object obj, ButtonPressEventArgs args)
 		{
 			// Prevent the trayapp context menu from showing if we're
 			// starting up or shutting down.
-			if(CurrentState == iFolderState.Starting ||
-				CurrentState == iFolderState.Stopping)
+			if (CurrentState == iFolderState.Starting)
+			{
+				startingUpNotifyWindow = new NotifyWindow(
+					tIcon, Util.GS("iFolder is starting"),
+					"Please wait for iFolder to start...",
+					Gtk.MessageType.Info, 0);
+				startingUpNotifyWindow.ShowAll();
 				return;
+			}
+			else if (CurrentState == iFolderState.Stopping)
+			{
+				NotifyWindow notifyWin = new NotifyWindow(
+					tIcon, Util.GS("iFolder is shutting down"),
+					"",
+					Gtk.MessageType.Info, 10000);
+				notifyWin.ShowAll();
+				return;
+			}
 
 			switch(args.Event.Button)
 			{
