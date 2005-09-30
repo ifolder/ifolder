@@ -329,6 +329,7 @@ AC_SUBST(GSOAP_PATH)
 webdir="${libexecdir}/web"
 webbindir="${webdir}/bin"
 modulesdir="${webdir}/modules"
+simiasdatadir=
 AC_SUBST(webdir)
 AC_SUBST(webbindir)
 AC_SUBST(modulesdir)
@@ -416,6 +417,17 @@ else
   NUNIT_FLAGS="$NUNITFLAGS_OPTIMIZE $NUNIT_FLAGS"
 fi
 AC_SUBST(DEVENV_CONFIGURATION)
+
+#
+# Handle --with-simiasdatadir
+#
+AC_MSG_CHECKING([whether a location for the simias data directory was specified])
+AC_ARG_WITH(simiasdatadir,
+	[AS_HELP_STRING([--with-simiasdatadir=PATH],
+	[configure the directory where the simias data files will be placed. [Default=/var/opt/novell/simias]])],
+	[simiasdatadir="$withval"],
+	[simiasdatadir="/var/opt/novell/simias"])
+AC_SUBST(simiasdatadir)
 
 #
 # Configure PKG_CONFIG

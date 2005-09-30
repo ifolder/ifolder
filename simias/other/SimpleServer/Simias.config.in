@@ -1,0 +1,13 @@
+<configuration>
+  <section name="Domain">
+    <setting name="SimpleServerName" value="Simias SimpleServer" />
+  </section>
+  <section name="Authentication">
+	<setting name="SimiasAuthNotRequired" value="Login.ashx, Simias.asmx:PingSimias, DomainService.asmx:GetDomainID" />
+	<setting name="SimiasRequireSSL" value="no" />
+  </section>
+  <section name="StoreProvider">
+    <setting name="Assembly" value="@_StoreProviderAssembly_@" />
+    <setting name="Type" value="@_StoreProviderType_@" />
+  </section>
+</configuration>

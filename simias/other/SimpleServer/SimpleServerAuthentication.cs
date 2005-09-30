@@ -204,8 +204,11 @@ namespace Simias.SimpleServer
 		/// </summary>
 		public Authentication()
 		{
-			Configuration config = Configuration.GetConfiguration();
-			defaultBasicEncodingName = config.Get( Storage.Domain.SectionName, Storage.Domain.Encoding, "iso-8859-1" );
+			defaultBasicEncodingName = store.Config.Get( Storage.Domain.SectionName, Storage.Domain.Encoding );
+			if ( defaultBasicEncodingName == null )
+			{
+				defaultBasicEncodingName = "iso-8859-1";
+			}
 		}
 
 		#endregion

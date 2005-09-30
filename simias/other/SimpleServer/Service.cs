@@ -50,11 +50,6 @@ namespace Simias.SimpleServer
 		private static readonly ISimiasLog log = 
 			SimiasLogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		/// <summary>
-		/// Configuration object for the Collection Store.
-		/// </summary>
-		private Configuration config;
-
 		private Simias.SimpleServer.Authentication authProvider = null;
 		#endregion
 
@@ -75,10 +70,9 @@ namespace Simias.SimpleServer
 		/// Configuration file object for the configured store 
 		/// Store to use.
 		/// </param>
-		public void Start( Configuration config )
+		public void Start()
 		{
 			log.Debug( "Start called" );
-			this.config = config;
 
 			// Register with the domain provider service.
 			this.authProvider = new Simias.SimpleServer.Authentication();

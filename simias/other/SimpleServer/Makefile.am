@@ -9,7 +9,7 @@ SimpleServer_FLAGS = $(CSC_LIBFLAG)
 SimpleServer_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll SimiasLib.dll SimiasClient.dll
 SimpleServer_LIBPATH = ../../src/SimiasLib.dll ../../src/SimiasClient $(DESTDIR)$(webbindir)
 
-EXTRA_DIST = win.web.config mono.web.config DomainService.asmx $(SimpleServer_CSFILES) SimpleServer.xml simias-server-bootstrap.config.in
+EXTRA_DIST = DomainService.asmx $(SimpleServer_CSFILES) SimpleServer.xml Simias.config.in Simias.SimpleServer.conf
 
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml
@@ -25,11 +25,12 @@ else
 	FIXED_WEBDIR := $(webdir)
 endif
 
-simias-server-bootstrap.config: simias-server-bootstrap.config.in
-	sed -e 's,@_webdir_@,$(FIXED_WEBDIR),g' -e 's,@_StoreProviderAssembly_@,@StoreProviderAssembly@,g' -e 's,@_StoreProviderType_@,@StoreProviderType@,g' $< > simias-server-bootstrap.config
+Simias.config: Simias.config.in
+	echo simiasdatadir = $(simiasdatadir)
+	sed -e 's,@_StoreProviderAssembly_@,@StoreProviderAssembly@,g' -e 's,@_StoreProviderType_@,@StoreProviderType@,g' $< > Simias.config
 	chmod +x $@
 
-all: $(NUNIT_TESTS) simias-server-bootstrap.config
+all: $(NUNIT_TESTS) Simias.config
 
 Simias.SimpleServer.dll: $(SimpleServer_CSFILES) $(SimpleServer_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(SimpleServer_FLAGS) $(SimpleServer_LIBS:%=/r:%) $(SimpleServer_LIBPATH:%=/lib:%) $(SimpleServer_RESOURCES:%=$(ICON_FLAG)%) $(SimpleServer_CSFILES_CSC) $(DOC_FILE_CMD)
