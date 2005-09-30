@@ -98,6 +98,8 @@ namespace Novell.iFolder
 			: base("ifolder", "1.0", Modules.UI, args)
 		{
 			Util.InitCatalog();
+			
+			Util.SetQuitiFolderDelegate(new QuitiFolderDelegate(QuitiFolder));
 
 			tIcon = new TrayIcon("iFolder");
 
@@ -930,6 +932,10 @@ namespace Novell.iFolder
 		}
 
 
+		public void QuitiFolder()
+		{
+			quit_ifolder(null, null);
+		}
 
 
 		private void quit_ifolder(object o, EventArgs args)
