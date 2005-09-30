@@ -246,9 +246,14 @@ namespace Novell.iFolder
 		private Gtk.MenuItem		SetupMenuItem;
 		private ImageMenuItem		PropMenuItem;
 		private ImageMenuItem		CloseMenuItem;
+		private ImageMenuItem		QuitMenuItem;
 		private ImageMenuItem		RefreshMenuItem;
 		private ImageMenuItem		HelpMenuItem;
 		private ImageMenuItem		AboutMenuItem;
+		
+		private ImageMenuItem		PreferencesMenuItem;
+		private Gtk.MenuItem		AccountsMenuItem;
+		private Gtk.MenuItem		SyncLogMenuItem;
 
 		private iFolderConflictDialog ConflictDialog;
 
@@ -529,11 +534,27 @@ namespace Novell.iFolder
 			CloseMenuItem = new ImageMenuItem (Stock.Close, agrp);
 			iFolderMenu.Append(CloseMenuItem);
 			CloseMenuItem.Activated += new EventHandler(CloseEventHandler);
+			
+			QuitMenuItem = new ImageMenuItem(Stock.Quit, agrp);
+			iFolderMenu.Append(QuitMenuItem);
+			QuitMenuItem.Activated += new EventHandler(QuitEventHandler);
 
 			MenuItem iFolderMenuItem = new MenuItem(Util.GS("i_Folder"));
 			iFolderMenuItem.Submenu = iFolderMenu;
 			menubar.Append (iFolderMenuItem);
 
+			//----------------------------
+			// Edit Menu
+			//----------------------------
+			Menu EditMenu = new Menu();
+			PreferencesMenuItem = new ImageMenuItem(Util.GS("_Preferences"));
+			PreferencesMenuItem.Image = new Image(Stock.Preferences, Gtk.IconSize.Menu);
+			EditMenu.Append(PreferencesMenuItem);
+			PreferencesMenuItem.Activated += new EventHandler(ShowPreferencesHandler);
+			
+			MenuItem EditMenuItem = new MenuItem(Util.GS("_Edit"));
+			EditMenuItem.Submenu = EditMenu;
+			menubar.Append(EditMenuItem);
 
 			//----------------------------
 			// View Menu
@@ -545,6 +566,18 @@ namespace Novell.iFolder
 			ViewMenu.Append(RefreshMenuItem);
 			RefreshMenuItem.Activated += 
 					new EventHandler(RefreshiFoldersHandler);
+					
+			ViewMenu.Append(new SeparatorMenuItem());
+			
+			AccountsMenuItem =
+				new MenuItem (Util.GS("_Accounts"));
+			ViewMenu.Append(AccountsMenuItem);
+			AccountsMenuItem.Activated += new EventHandler(AccountsMenuItemHandler);
+
+			SyncLogMenuItem =
+				new MenuItem (Util.GS("Synchronization _Log"));
+			ViewMenu.Append(SyncLogMenuItem);
+			SyncLogMenuItem.Activated += new EventHandler(SyncLogMenuItemHandler);
 
 			MenuItem ViewMenuItem = new MenuItem(Util.GS("_View"));
 			ViewMenuItem.Submenu = ViewMenu;
@@ -785,6 +818,19 @@ namespace Novell.iFolder
 
 
 
+		private void AccountsMenuItemHandler(object o, EventArgs args)
+		{
+			Util.ShowPrefsPage(1);
+		}
+
+
+
+		private void SyncLogMenuItemHandler(object o, EventArgs args)
+		{
+			Util.ShowLogWindow();
+		}
+
+
 
 		private void CloseEventHandler(object o, EventArgs args)
 		{
@@ -797,6 +843,18 @@ namespace Novell.iFolder
 		{
 			this.Hide();
 			this.Destroy();
+		}
+		
+		
+		private void QuitEventHandler(object o, EventArgs args)
+		{
+			Util.QuitiFolder();
+		}
+		
+		
+		private void ShowPreferencesHandler(object o, EventArgs args)
+		{
+			Util.ShowPrefsPage(0);
 		}
 
 
