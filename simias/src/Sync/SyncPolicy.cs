@@ -54,7 +54,7 @@ namespace Simias.Sync
 		{
 			// Check if files pass policy.
 			Member member = collection.GetCurrentMember();
-			dsQuota = DiskSpaceQuota.Get(member, collection);
+			dsQuota = DiskSpaceQuota.Get(collection);
 			fsFilter = FileSizeFilter.Get(member, collection);
 			ftFilter = FileTypeFilter.Get(member, collection);
 		}
