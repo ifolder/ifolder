@@ -2088,7 +2088,7 @@ namespace Novell.iFolder
 
 			DomainInformation[] domains = ifdata.GetDomains();
 	
-			CreateDialog cd = new CreateDialog(domains, Util.LastCreatedPath);
+			CreateDialog cd = new CreateDialog(domains, curDomain, Util.LastCreatedPath);
 			cd.TransientFor = this;
 	
 			int rc = 0;
