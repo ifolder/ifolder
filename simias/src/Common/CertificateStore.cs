@@ -38,6 +38,29 @@ namespace Simias.Security
 		const string hostProperty = "Host";
 		const string CertType = "X509Certificate";
 
+		private static string GetHostFromUri( string uriString )
+		{
+			string host = uriString;
+
+			try
+			{
+				if ( uriString.StartsWith( Uri.UriSchemeHttp ) )
+				{
+					Uri uri = new Uri( uriString );
+					host = uri.Host;
+				}
+				else
+				{
+					Uri uri = new Uri( Uri.UriSchemeHttp + Uri.SchemeDelimiter + uriString );
+					host = uri.Host;
+				}
+			}
+			catch
+			{}
+
+			return host;
+		}
+
 		/// <summary>
 		/// Get the Certificate for the specified store.
 		/// </summary>
@@ -45,7 +68,7 @@ namespace Simias.Security
 		/// <returns>The certificate as a byte array.</returns>
 		public static byte[] GetCertificate(string host)
 		{
-			CertPolicy.CertificateState cs = CertPolicy.GetCertificate(host);
+			CertPolicy.CertificateState cs = CertPolicy.GetCertificate(GetHostFromUri(host));
 			if (cs != null)
 			{
 				return cs.Certificate.GetRawCertData();
@@ -61,16 +84,17 @@ namespace Simias.Security
 		/// <param name="persist">If true save in store.</param>
 		public static void StoreCertificate(byte[] certificate, string host, bool persist)
 		{
-			CertPolicy.StoreCertificate(certificate, host);
+			string uriHost = GetHostFromUri(host);
+			CertPolicy.StoreCertificate(certificate, uriHost);
 			if (persist)
 			{
 				// Save the cert in the store.
 				Store store = Store.GetStore();
 				Domain domain = store.GetDomain(store.LocalDomain);
-				Node cn = new Node("Certificate for " + host);
+				Node cn = new Node("Certificate for " + uriHost);
 				domain.SetType(cn, CertType);
 				cn.Properties.ModifyNodeProperty(new Property(certificateProperty, Convert.ToBase64String(certificate)));
-				cn.Properties.ModifyNodeProperty(new Property(hostProperty, host));
+				cn.Properties.ModifyNodeProperty(new Property(hostProperty, uriHost));
 				domain.Commit(cn);
 			}
 		}
