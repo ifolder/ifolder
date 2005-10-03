@@ -46,14 +46,24 @@ namespace Simias.Policy
 		static public string DiskSpaceQuotaShortDescription = "Disk space quota";
 
 		/// <summary>
-		/// Policy object that is used to manage quota.
+		/// Policy object that contains the aggregate policy for the domain and member only.
 		/// </summary>
-		private Policy policy;
+		private Policy memberPolicy;
 
 		/// <summary>
-		/// Member that is associated with this policy.
+		/// Policy object that contains the aggregate policy including the collection limits.
 		/// </summary>
-		private Member member;
+		private Policy collectionPolicy = null;
+
+		/// <summary>
+		/// A snapshot of the amount of space used by the collection.
+		/// </summary>
+		private long collectionSpace = 0;
+
+		/// <summary>
+		///  Disk space quota limit.
+		/// </summary>
+		private long limit = 0;
 
 		/// <summary>
 		/// A snapshot of the amount of spaced used by the member.
@@ -79,26 +89,7 @@ namespace Simias.Policy
 		/// </summary>
 		public long Limit
 		{
-			get
-			{
-				// Set to no limit.
-				long limit = 0;
-
-				// If there is a policy find the most restrictive limit.
-				if ( policy != null )
-				{
-					foreach ( Rule rule in policy.Rules )
-					{
-						long ruleLimit = ( long )rule.Operand;
-						if ( ( limit == 0 ) || ( ruleLimit < limit ) )
-						{
-							limit = ruleLimit;
-						}
-					}
-				}
-
-				return limit;
-			}
+			get { return limit; }
 		}
 
 		/// <summary>
@@ -106,11 +97,7 @@ namespace Simias.Policy
 		/// </summary>
 		public long UsedSpace
 		{
-			get 
-			{ 
-				usedDiskSpace = GetUsedDiskSpace( member ); 
-				return usedDiskSpace;
-			}
+			get { return usedDiskSpace; }
 		}
 		#endregion
 
@@ -119,12 +106,27 @@ namespace Simias.Policy
 		/// Initializes a new instance of an object.
 		/// </summary>
 		/// <param name="member">Member that this disk space quota is associated with.</param>
-		/// <param name="policy">The aggregate quota policy object.</param>
-		private DiskSpaceQuota( Member member, Policy policy )
+		private DiskSpaceQuota( Member member )
 		{
-			this.policy = policy;
-			this.member = member;
+			PolicyManager pm = new PolicyManager();
+			this.memberPolicy = pm.GetAggregatePolicy( DiskSpaceQuotaPolicyID, member );
 			this.usedDiskSpace = GetUsedDiskSpace( member );
+			this.limit = GetAggregateLimit( memberPolicy );
+		}
+
+		/// <summary>
+		/// Initializes a new instance of an object.
+		/// </summary>
+		/// <param name="collection">Collection that this disk space quota is associated with.</param>
+		private DiskSpaceQuota( Collection collection )
+		{
+			PolicyManager pm = new PolicyManager();
+			Member member = collection.Owner;
+			this.memberPolicy = pm.GetAggregatePolicy( DiskSpaceQuotaPolicyID, member );
+			this.collectionPolicy = pm.GetAggregatePolicy( DiskSpaceQuotaPolicyID, member, collection );
+			this.collectionSpace = collection.StorageSize;
+			this.usedDiskSpace = GetUsedDiskSpace( member );
+			this.limit = GetAggregateLimit( collectionPolicy );
 		}
 		#endregion
 
@@ -298,9 +300,7 @@ namespace Simias.Policy
 		/// <returns>A DiskSpaceQuota object that contains the policy for the specified member.</returns>
 		static public DiskSpaceQuota Get( Member member )
 		{
-			PolicyManager pm = new PolicyManager();
-			Policy policy = pm.GetAggregatePolicy( DiskSpaceQuotaPolicyID, member );
-			return new DiskSpaceQuota( member, policy );
+			return new DiskSpaceQuota( member );
 		}
 
 		/// <summary>
@@ -324,10 +324,7 @@ namespace Simias.Policy
 		/// <returns>A DiskSpaceQuota object that contains the policy for the specified member.</returns>
 		static public DiskSpaceQuota Get( Collection collection )
 		{
-			Member owner = collection.Owner;
-			PolicyManager pm = new PolicyManager();
-			Policy policy = pm.GetAggregatePolicy( DiskSpaceQuotaPolicyID, owner, collection );
-			return new DiskSpaceQuota( owner, policy );
+			return new DiskSpaceQuota( collection );
 		}
 
 		/// <summary>
@@ -399,6 +396,32 @@ namespace Simias.Policy
 
 		#region Private Methods
 		/// <summary>
+		/// Gets the aggregate disk space quota limit for the specified policy.
+		/// </summary>
+		/// <param name="policy">Policy to get the disk space quota limit from.</param>
+		/// <returns>The aggregate disk space quota limit.</returns>
+		private long GetAggregateLimit( Policy policy )
+		{
+			// Set to no limit.
+			long limit = 0;
+
+			// If there is a policy find the most restrictive limit.
+			if ( policy != null )
+			{
+				foreach ( Rule rule in policy.Rules )
+				{
+					long ruleLimit = ( long )rule.Operand;
+					if ( ( limit == 0 ) || ( ruleLimit < limit ) )
+					{
+						limit = ruleLimit;
+					}
+				}
+			}
+
+			return limit;
+		}
+
+		/// <summary>
 		/// Gets the disk space quota rule for the specified policy.
 		/// </summary>
 		/// <param name="policy">Policy to retrieve the quota rule from.</param>
@@ -447,14 +470,38 @@ namespace Simias.Policy
 		{
 			bool hasSpace = true;
 
-			if ( policy != null )
+			// Check the overall domain/member policy first to make sure that there
+			// is space available.
+			if ( memberPolicy != null )
 			{
 				// Apply the rule to see if there is space available.
-				Rule.Result result = policy.Apply( usedDiskSpace + space );
+				Rule.Result result = memberPolicy.Apply( usedDiskSpace + space );
 				if ( result == Rule.Result.Allow )
 				{
-					// Update the snapshot.
+					// If there is a collection policy, let it update the
+					// used disk space.
+					if ( collectionPolicy == null )
+					{
+						// Update the snapshot.
+						usedDiskSpace += space;
+					}
+				}
+				else
+				{
+					hasSpace = false;
+				}
+			}
+
+			// See if there is a collection policy that limits the amount of data
+			// in the collection.
+			if ( ( collectionPolicy != null ) && ( hasSpace == true ) )
+			{
+				// Apply the rule to see if there is space available in the collection.
+				Rule.Result result = collectionPolicy.Apply( collectionSpace + space );
+				if ( result == Rule.Result.Allow )
+				{
 					usedDiskSpace += space;
+					collectionSpace += space;
 				}
 				else
 				{
