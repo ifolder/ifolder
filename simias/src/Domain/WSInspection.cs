@@ -78,7 +78,14 @@ namespace Simias.DomainServices
 			Uri tempUri;
 			try 
 			{	
-				tempUri = new Uri( host + WSInspectionDocument ); 
+				if ( host.StartsWith( Uri.UriSchemeHttp ) )
+				{
+					tempUri = new Uri( host + WSInspectionDocument ); 
+				}
+				else
+				{
+					tempUri = new Uri ( Uri.UriSchemeHttp + Uri.SchemeDelimiter + host + WSInspectionDocument );
+				}
 			}
 			catch 
 			{
