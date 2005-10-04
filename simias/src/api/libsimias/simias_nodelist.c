@@ -20,27 +20,29 @@
  *  Author: Calvin Gaisford <cgaisford@novell.com>
  * 
  ***********************************************************************/
-#ifndef _SIMIAS_H
-#define _SIMIAS_H
+#include "simias.h"
+#include "simias_internal.h"
 
-#include <stdbool.h>
-
-#define SIMIAS_SUCCESS 0
-#define SIMIAS_ERROR_UNKNOWN				-1
-
-typedef void *SimiasHandle;
-typedef void *SimiasNodeList;
-
-int simias_init_local(SimiasHandle *hSimias);
-int simias_free(SimiasHandle *hSimias);
-
-int simias_ping(SimiasHandle hSimias);
-
-int simias_get_domains(SimiasHandle hSimias, SimiasNodeList *hNodeList);
-
-int simias_nodelist_free(SimiasNodeList *hNodeList);
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 
+int simias_nodelist_free(SimiasNodeList *hNodeList)
+{
+	struct _SimiasNodeList *_hNodeList =
+		(struct _SimiasNodeList *)*hNodeList;
 
+	if(_hNodeList != NULL)
+	{
+		if(_hNodeList->result != NULL)
+			free(_hNodeList->result);
 
-#endif	// _SIMIAS_H
+		free(_hNodeList);
+	}
+
+	*hNodeList = NULL;
+
+	return 0;
+}
+

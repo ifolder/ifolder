@@ -47,6 +47,16 @@ using Simias.Security.Web.AuthenticationService;
 namespace Simias.Web
 {
 	/// <summary>
+	/// SimiasResult holds the results to the WebService calls
+	/// </summary>
+	public struct SimiasResult
+	{
+		public int code;
+		public string result;
+		public string exception;
+	}
+
+	/// <summary>
 	/// This is the core of the SimiasServce.  All of the methods in the
 	/// web service are implemented here.
 	/// </summary>
@@ -72,6 +82,42 @@ namespace Simias.Web
 		public void Ping()
 		{
 			// Nothing to do here, just return
+		}
+
+
+		/// <summary>
+		/// WebMethod that gets all domains
+		/// </summary>
+		[WebMethod(EnableSession=true, Description="Returns all domains in Simias with optional only slaves")]
+		[SoapDocumentMethod]
+		public string GetDomains()
+		{
+			StringBuilder result = new StringBuilder();
+			result.Append("<?xml verion=\"1.0\"?>");
+			result.Append("<ObjectList>");
+
+			try
+			{
+				Store store = Store.GetStore();
+
+				ICSList domainList = store.GetDomainList();
+
+				foreach( ShallowNode sn in domainList )
+				{
+					Collection c = store.GetCollectionByID(sn.CollectionID);
+					Node node = c.GetNodeByID(sn.ID);
+
+					result.Append(node.Properties.ToString(false).Replace("<ObjectList>", "").Replace("</ObjectList>", ""));
+				}
+			}
+			catch(Exception e) 
+			{
+				return e.ToString();
+			}
+			
+			result.Append("</ObjectList>");
+
+			return result.ToString();
 		}
 	}
 }

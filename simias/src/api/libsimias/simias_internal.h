@@ -26,6 +26,8 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+#include "simiaswebStub.h"
+
 #define SIMIAS_SUCCESS 0
 #define SIMIAS_ERROR_UNKNOWN				-1
 #define SIMIAS_ERROR_NO_USER_PROFILE		-101
@@ -35,6 +37,21 @@
 #define SIMIAS_ERROR_OUT_OF_MEMORY			-105
 #define SIMIAS_ERROR_NO_PASSWORD_FILE		-106
 #define SIMIAS_ERROR_OPENING_PASSWORD_FILE	-107
+
+struct _SimiasHandle
+{
+	char	*username;
+	char	*password;
+	char	*serviceURL;
+	bool	connected;
+	struct	soap soap;
+};
+
+struct _SimiasNodeList
+{
+	char *result;
+};
+
 
 
 /**

@@ -16,10 +16,6 @@ all: SimiasAPIService.Web.dll
 SimiasAPIService.Web.dll: AssemblyInfo.cs $(SimiasWebService_CSFILES) $(SimiasWebService_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(SimiasWebService_FLAGS) $(SIMIAS_LIBS) $(SimiasWebService_LIBS:%=/r:%) $(SimiasWebService_LIBPATH:%=/lib:%) $(SimiasWebService_RESOURCES:%=$(ICON_FLAG)%) $(SimiasWebService_CSFILES_CSC) $(DOC_FILE_CMD)
 
-AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in Makefile
-	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
-	chmod +x $@
-
 if DEBUG
 if WINDOWS
 DEBUG_FILES = SimiasAPIService.Web.pdb
@@ -38,7 +34,7 @@ uninstall-local:
 
 installcheck-local: install
 	
-CLEAN_FILES = SimiasAPIService.Web.dll $(DOC_FILE_CLEAN) AssemblyInfo.cs
+CLEAN_FILES = SimiasAPIService.Web.dll $(DOC_FILE_CLEAN)
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
@@ -47,5 +43,5 @@ distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)
 
 maintainer-clean-local:
-	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
+	rm -rf AssemblyInfo.cs $(COMMON_MAINTAINER_CLEAN_FILES)
 

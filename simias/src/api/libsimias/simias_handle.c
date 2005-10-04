@@ -23,25 +23,15 @@
 #include "simias.h"
 #include "simias_internal.h"
 
-#include "simiaswebStub.h"
 #include "simiasweb.nsmap"
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-struct _SimiasHandle
-{
-	char	*username;
-	char	*password;
-	char	*serviceURL;
-	bool	connected;
-	struct	soap soap;
-};
-
 // internal prototypes
-void simias_api_init_gsoap(struct _SimiasHandle *hSimias);
-void simias_api_cleanup_gsoap(struct _SimiasHandle *hSimias);
+void _simias_init_gsoap(struct _SimiasHandle *hSimias);
+
 
 /**
  * This function will connect
@@ -59,7 +49,7 @@ int simias_init_local(SimiasHandle *hSimias)
 
 		_hSimias->connected = false;
 
-		simias_api_init_gsoap(_hSimias);
+		_simias_init_gsoap(_hSimias);
 
 		simias_get_local_service_url(&tmpServiceURL);
 		if(tmpServiceURL != NULL)
@@ -87,7 +77,18 @@ int simias_free(SimiasHandle *hSimias)
 
 	if(_hSimias != NULL)
 	{
-		simias_api_cleanup_gsoap(_hSimias);
+		soap_done(&(_hSimias->soap));
+
+		if(_hSimias->username != NULL)
+		{
+			free(_hSimias->username);
+			_hSimias->username = NULL;
+		}
+		if(_hSimias->password != NULL)
+		{
+			free(_hSimias->password);
+			_hSimias->password = NULL;
+		}
 
 		if(_hSimias->serviceURL != NULL)
 			free(_hSimias->serviceURL);
@@ -135,7 +136,7 @@ int simias_ping(SimiasHandle hSimias)
 
 
 
-void simias_api_init_gsoap(struct _SimiasHandle *_hSimias)
+void _simias_init_gsoap(struct _SimiasHandle *_hSimias)
 {
 	soap_init2(&(_hSimias->soap), (SOAP_C_UTFSTRING | SOAP_IO_DEFAULT), 
 				(SOAP_C_UTFSTRING | SOAP_IO_DEFAULT));
@@ -168,24 +169,4 @@ void simias_api_init_gsoap(struct _SimiasHandle *_hSimias)
 	_hSimias->soap.send_timeout = 30;
 }
 
-
-
-void simias_api_cleanup_gsoap(struct _SimiasHandle *_hSimias)
-{
-	if(_hSimias != NULL)
-	{
-		if(_hSimias->username != NULL)
-		{
-			free(_hSimias->username);
-			_hSimias->username = NULL;
-		}
-		if(_hSimias->password != NULL)
-		{
-			free(_hSimias->password);
-			_hSimias->password = NULL;
-		}
-
-		soap_done(&(_hSimias->soap));
-	}
-}
 

@@ -18,6 +18,17 @@
       <xs:element name="PingResponse">
         <xs:complexType/>
       </xs:element>
+      <xs:element name="GetDomains">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="GetDomainsResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GetDomainsResult" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="string" type="xs:string"/>
     </xs:schema>
   </types>
   <message name="PingSoapIn">
@@ -26,16 +37,35 @@
   <message name="PingSoapOut">
     <part name="parameters" element="s0:PingResponse"/>
   </message>
+  <message name="GetDomainsSoapIn">
+    <part name="parameters" element="s0:GetDomains"/>
+  </message>
+  <message name="GetDomainsSoapOut">
+    <part name="parameters" element="s0:GetDomainsResponse"/>
+  </message>
   <message name="PingHttpGetIn"/>
   <message name="PingHttpGetOut"/>
+  <message name="GetDomainsHttpGetIn"/>
+  <message name="GetDomainsHttpGetOut">
+    <part name="Body" element="s0:string"/>
+  </message>
   <message name="PingHttpPostIn"/>
   <message name="PingHttpPostOut"/>
+  <message name="GetDomainsHttpPostIn"/>
+  <message name="GetDomainsHttpPostOut">
+    <part name="Body" element="s0:string"/>
+  </message>
   <portType name="SimiasAPIServiceSoap">
     <operation name="Ping">
       <input message="s0:PingSoapIn"/>
       <output message="s0:PingSoapOut"/>
       <documentation>Allows a client to ping to make sure the Web Service is up and
             running</documentation>
+    </operation>
+    <operation name="GetDomains">
+      <input message="s0:GetDomainsSoapIn"/>
+      <output message="s0:GetDomainsSoapOut"/>
+      <documentation>Returns all domains in Simias with optional only slaves</documentation>
     </operation>
   </portType>
   <portType name="SimiasAPIServiceHttpGet">
@@ -45,6 +75,11 @@
       <documentation>Allows a client to ping to make sure the Web Service is up and
             running</documentation>
     </operation>
+    <operation name="GetDomains">
+      <input message="s0:GetDomainsHttpGetIn"/>
+      <output message="s0:GetDomainsHttpGetOut"/>
+      <documentation>Returns all domains in Simias with optional only slaves</documentation>
+    </operation>
   </portType>
   <portType name="SimiasAPIServiceHttpPost">
     <operation name="Ping">
@@ -53,11 +88,25 @@
       <documentation>Allows a client to ping to make sure the Web Service is up and
             running</documentation>
     </operation>
+    <operation name="GetDomains">
+      <input message="s0:GetDomainsHttpPostIn"/>
+      <output message="s0:GetDomainsHttpPostOut"/>
+      <documentation>Returns all domains in Simias with optional only slaves</documentation>
+    </operation>
   </portType>
   <binding name="SimiasAPIServiceSoap" type="s0:SimiasAPIServiceSoap">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
     <operation name="Ping">
       <soap:operation soapAction="http://novell.com/simiasapi/web/Ping" style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="GetDomains">
+      <soap:operation soapAction="http://novell.com/simiasapi/web/GetDomains" style="document"/>
       <input>
         <soap:body use="literal"/>
       </input>
@@ -75,6 +124,15 @@
       </input>
       <output/>
     </operation>
+    <operation name="GetDomains">
+      <http:operation location="/GetDomains"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
   </binding>
   <binding name="SimiasAPIServiceHttpPost" type="s0:SimiasAPIServiceHttpPost">
     <http:binding verb="POST"/>
@@ -84,6 +142,15 @@
         <mime:content type="application/x-www-form-urlencoded"/>
       </input>
       <output/>
+    </operation>
+    <operation name="GetDomains">
+      <http:operation location="/GetDomains"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
     </operation>
   </binding>
   <service name="SimiasAPIService">
@@ -99,17 +166,4 @@
     <documentation>Web Service providing access to SimiasAPI</documentation>
   </service>
 </definitions>
-
-
-
-
-
-
-
-
-
-
-
-
-
 

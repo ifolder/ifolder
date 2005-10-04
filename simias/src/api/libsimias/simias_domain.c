@@ -20,27 +20,47 @@
  *  Author: Calvin Gaisford <cgaisford@novell.com>
  * 
  ***********************************************************************/
-#ifndef _SIMIAS_H
-#define _SIMIAS_H
+#include "simias.h"
+#include "simias_internal.h"
 
-#include <stdbool.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
-#define SIMIAS_SUCCESS 0
-#define SIMIAS_ERROR_UNKNOWN				-1
+int simias_get_domains(SimiasHandle hSimias, SimiasNodeList *hNodeList)
+{
+	int err_code;
+	int rc = 0;
+	struct _SimiasHandle *_hSimias = (struct _SimiasHandle *)hSimias;
 
-typedef void *SimiasHandle;
-typedef void *SimiasNodeList;
+	struct _ns1__GetDomains				message;
+	struct _ns1__GetDomainsResponse		response;
 
-int simias_init_local(SimiasHandle *hSimias);
-int simias_free(SimiasHandle *hSimias);
+	err_code = soap_call___ns1__GetDomains(
+			&(_hSimias->soap),
+			_hSimias->serviceURL,
+			NULL, 
+			&message,
+			&response);
 
-int simias_ping(SimiasHandle hSimias);
+	if(err_code != SOAP_OK)
+	{
+		rc = err_code;
+		*hNodeList = NULL;
+	}
+	else
+	{
+		struct _SimiasNodeList *nl = malloc(sizeof(struct _SimiasNodeList));
+		nl->result = strdup(response.GetDomainsResult);
+		*hNodeList = (SimiasNodeList *)nl;
+	}
 
-int simias_get_domains(SimiasHandle hSimias, SimiasNodeList *hNodeList);
+	// Free up the tmp resources with this soap call
+	soap_end(&(_hSimias->soap));
 
-int simias_nodelist_free(SimiasNodeList *hNodeList);
+	return rc;
+}
 
 
 
 
-#endif	// _SIMIAS_H
