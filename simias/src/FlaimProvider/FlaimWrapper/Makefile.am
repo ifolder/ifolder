@@ -94,7 +94,7 @@ install-exec-local: libFlaimWrapper.la
 	if test -e $(DESTDIR)$(webbindir)/FlaimWrapper$(SHARED_LIB_EXT); then \
 		rm $(DESTDIR)$(webbindir)/FlaimWrapper$(SHARED_LIB_EXT); \
 	fi;
-	ln -s $(DESTDIR)$(libdir)/libFlaimWrapper$(SHARED_LIB_EXT) $(DESTDIR)$(webbindir)/FlaimWrapper$(SHARED_LIB_EXT)
+	ln -s $(libdir)/libFlaimWrapper$(SHARED_LIB_EXT) $(DESTDIR)$(webbindir)/FlaimWrapper$(SHARED_LIB_EXT)
 
 uninstall-local:
 	cd $(DESTDIR)$(webbindir); rm -f FlaimWrapper$(SHARED_LIB_EXT)
