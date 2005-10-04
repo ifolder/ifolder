@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+      xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+      xmlns:s="http://www.w3.org/2001/XMLSchema"
+      xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+      xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+      xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/"
+      xmlns:s0="http://novell.com/simiasapi/web/" name="SimiasAPIService"
+      targetNamespace="http://novell.com/simiasapi/web/"
+      xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xs:schema elementFormDefault="qualified"
+          targetNamespace="http://novell.com/simiasapi/web/"
+          xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="Ping">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="PingResponse">
+        <xs:complexType/>
+      </xs:element>
+    </xs:schema>
+  </types>
+  <message name="PingSoapIn">
+    <part name="parameters" element="s0:Ping"/>
+  </message>
+  <message name="PingSoapOut">
+    <part name="parameters" element="s0:PingResponse"/>
+  </message>
+  <message name="PingHttpGetIn"/>
+  <message name="PingHttpGetOut"/>
+  <message name="PingHttpPostIn"/>
+  <message name="PingHttpPostOut"/>
+  <portType name="SimiasAPIServiceSoap">
+    <operation name="Ping">
+      <input message="s0:PingSoapIn"/>
+      <output message="s0:PingSoapOut"/>
+      <documentation>Allows a client to ping to make sure the Web Service is up and
+            running</documentation>
+    </operation>
+  </portType>
+  <portType name="SimiasAPIServiceHttpGet">
+    <operation name="Ping">
+      <input message="s0:PingHttpGetIn"/>
+      <output message="s0:PingHttpGetOut"/>
+      <documentation>Allows a client to ping to make sure the Web Service is up and
+            running</documentation>
+    </operation>
+  </portType>
+  <portType name="SimiasAPIServiceHttpPost">
+    <operation name="Ping">
+      <input message="s0:PingHttpPostIn"/>
+      <output message="s0:PingHttpPostOut"/>
+      <documentation>Allows a client to ping to make sure the Web Service is up and
+            running</documentation>
+    </operation>
+  </portType>
+  <binding name="SimiasAPIServiceSoap" type="s0:SimiasAPIServiceSoap">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="Ping">
+      <soap:operation soapAction="http://novell.com/simiasapi/web/Ping" style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+  <binding name="SimiasAPIServiceHttpGet" type="s0:SimiasAPIServiceHttpGet">
+    <http:binding verb="GET"/>
+    <operation name="Ping">
+      <http:operation location="/Ping"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output/>
+    </operation>
+  </binding>
+  <binding name="SimiasAPIServiceHttpPost" type="s0:SimiasAPIServiceHttpPost">
+    <http:binding verb="POST"/>
+    <operation name="Ping">
+      <http:operation location="/Ping"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output/>
+    </operation>
+  </binding>
+  <service name="SimiasAPIService">
+    <port name="SimiasAPIServiceSoap" binding="s0:SimiasAPIServiceSoap">
+      <soap:address location="http://127.0.0.1:8086/simias10/SimiasAPI.asmx"/>
+    </port>
+    <port name="SimiasAPIServiceHttpGet" binding="s0:SimiasAPIServiceHttpGet">
+      <http:address location="http://127.0.0.1:8086/simias10/SimiasAPI.asmx"/>
+    </port>
+    <port name="SimiasAPIServiceHttpPost" binding="s0:SimiasAPIServiceHttpPost">
+      <http:address location="http://127.0.0.1:8086/simias10/SimiasAPI.asmx"/>
+    </port>
+    <documentation>Web Service providing access to SimiasAPI</documentation>
+  </service>
+</definitions>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
