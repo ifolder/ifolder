@@ -202,27 +202,6 @@ namespace Novell.iFolder.Web
 
 
 		/// <summary>
-		/// WebMethod that checks if a file is in an iFolder
-		/// </summary>
-		/// <param name = "filename">
-		/// The filename to check
-		/// </param>
-		/// <returns>
-		/// true if it is in an iFolder, false if it isn't
-		/// </returns>
-		[WebMethod(EnableSession=true, Description="Checks a file to see if it's in an iFolder")]
-		[SoapDocumentMethod]
-		public bool IsFileIniFolder(string filename)
-		{
-			Collection col = SharedCollection.GetCollectionForPath(filename);
-
-			return col != null;
-		}
-
-
-
-
-		/// <summary>
 		/// WebMethod that gets a LocalPath to see if it's an iFolder
 		/// </summary>
 		/// <param name = "LocalPath">
