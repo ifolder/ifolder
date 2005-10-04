@@ -832,43 +832,6 @@ namespace Simias.Web
 
 
 		/// <summary>
-		/// Get the Collection that a local path belongs to
-		/// </summary>
-		/// <param name="path">
-		/// The local path to search the collections for (can be a file or directory).
-		/// </param>
-		/// <returns>
-		/// The Collection that the path belongs to, if found.  If no collection is found a <b>null</b> is returned.
-		/// </returns>
-		public static Collection GetCollectionForPath( string path )
-		{
-			Collection col = null;
-			string pathRoot = Path.GetPathRoot(path);
-			while (true)
-			{
-				path = Path.GetDirectoryName(path);
-				if ((path == null) || 
-					path.Equals(Path.DirectorySeparatorChar.ToString()) ||
-					path.Equals(pathRoot))
-				{
-					break;
-				}
-
-				col = GetCollectionByPath(path);
-				if(col != null)
-				{
-					break;
-				}
-			}
-
-			return col;
-
-		}
-
-
-
-
-		/// <summary>
 		/// WebMethod that deletes a SharedCollection and removes all
 		/// subscriptions from all members.  Any files that were in place
 		/// if there was a DirNode will remain there
