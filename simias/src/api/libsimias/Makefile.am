@@ -1,4 +1,4 @@
-SIMIAS_WSDL = ../../WebService/SimiasAPI.wsdl
+SIMIAS_WSDL = ../WebService/SimiasAPI.wsdl
 
 EXTRA_DIST =
 
