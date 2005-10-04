@@ -40,37 +40,37 @@ struct _SimiasHandle
 };
 
 // internal prototypes
-void simias_api_init_gsoap(struct _SimiasHandle *handle);
-void simias_api_cleanup_gsoap(struct _SimiasHandle *handle);
+void simias_api_init_gsoap(struct _SimiasHandle *hSimias);
+void simias_api_cleanup_gsoap(struct _SimiasHandle *hSimias);
 
 /**
  * This function will connect
  * 
  */
-int simias_handle_init_local(SimiasHandle *handle)
+int simias_init_local(SimiasHandle *hSimias)
 {
-	struct _SimiasHandle *sHandle = NULL;
+	struct _SimiasHandle *_hSimias = NULL;
 	char	*tmpServiceURL;
 
-	sHandle = (struct _SimiasHandle *) malloc(sizeof(struct _SimiasHandle));
-	if(sHandle != NULL)
+	_hSimias = (struct _SimiasHandle *) malloc(sizeof(struct _SimiasHandle));
+	if(_hSimias != NULL)
 	{
-		bzero((char *) sHandle, sizeof(struct _SimiasHandle));
+		bzero((char *) _hSimias, sizeof(struct _SimiasHandle));
 
-		sHandle->connected = false;
+		_hSimias->connected = false;
 
-		simias_api_init_gsoap(sHandle);
+		simias_api_init_gsoap(_hSimias);
 
 		simias_get_local_service_url(&tmpServiceURL);
 		if(tmpServiceURL != NULL)
 		{
-			sHandle->serviceURL = (char *) malloc(strlen(tmpServiceURL) + 25);
-			sprintf(sHandle->serviceURL, "%s/SimiasAPI.asmx", tmpServiceURL);
+			_hSimias->serviceURL = (char *) malloc(strlen(tmpServiceURL) + 25);
+			sprintf(_hSimias->serviceURL, "%s/SimiasAPI.asmx", tmpServiceURL);
 			free(tmpServiceURL);
 		}
 	}
 
-	*handle = sHandle;
+	*hSimias = _hSimias;
 
 	return 0;
 }
@@ -81,20 +81,20 @@ int simias_handle_init_local(SimiasHandle *handle)
  * This function will disconnect and free all memory
  * 
  */
-int simias_handle_delete(SimiasHandle *handle)
+int simias_free(SimiasHandle *hSimias)
 {
-	struct _SimiasHandle *sHandle = (struct _SimiasHandle *)*handle;
+	struct _SimiasHandle *_hSimias = (struct _SimiasHandle *)*hSimias;
 
-	if(sHandle != NULL)
+	if(_hSimias != NULL)
 	{
-		simias_api_cleanup_gsoap(sHandle);
+		simias_api_cleanup_gsoap(_hSimias);
 
-		if(sHandle->serviceURL != NULL)
-			free(sHandle->serviceURL);
+		if(_hSimias->serviceURL != NULL)
+			free(_hSimias->serviceURL);
 
-		free(sHandle);
+		free(_hSimias);
 
-		*handle = NULL;
+		*hSimias = NULL;
 	}
 	else
 		return -1;
@@ -105,18 +105,18 @@ int simias_handle_delete(SimiasHandle *handle)
 
 
 
-int simias_ping(SimiasHandle handle)
+int simias_ping(SimiasHandle hSimias)
 {
 	int err_code;
 	int rc = 0;
-	struct _SimiasHandle *sHandle = (struct _SimiasHandle *)handle;
+	struct _SimiasHandle *_hSimias = (struct _SimiasHandle *)hSimias;
 
 	struct _ns1__Ping 			pingMessage;
 	struct _ns1__PingResponse	pingResponse;
 
 	err_code = soap_call___ns1__Ping(
-			&(sHandle->soap),
-			sHandle->serviceURL,
+			&(_hSimias->soap),
+			_hSimias->serviceURL,
 			NULL, 
 			&pingMessage,
 			&pingResponse);
@@ -127,7 +127,7 @@ int simias_ping(SimiasHandle handle)
 	}
 
 	// Free up the tmp resources with this soap call
-	soap_end(&(sHandle->soap));
+	soap_end(&(_hSimias->soap));
 
 	return rc;
 }
@@ -135,57 +135,57 @@ int simias_ping(SimiasHandle handle)
 
 
 
-void simias_api_init_gsoap(struct _SimiasHandle *handle)
+void simias_api_init_gsoap(struct _SimiasHandle *_hSimias)
 {
-	soap_init2(&(handle->soap), (SOAP_C_UTFSTRING | SOAP_IO_DEFAULT), 
+	soap_init2(&(_hSimias->soap), (SOAP_C_UTFSTRING | SOAP_IO_DEFAULT), 
 				(SOAP_C_UTFSTRING | SOAP_IO_DEFAULT));
 
-	soap_set_namespaces(&(handle->soap), simiasweb_namespaces);
+	soap_set_namespaces(&(_hSimias->soap), simiasweb_namespaces);
 
-	handle->username = malloc(1024);
-	if(handle->username != NULL)
+	_hSimias->username = malloc(1024);
+	if(_hSimias->username != NULL)
 	{
-		memset(handle->username, 0, 1024);
+		memset(_hSimias->username, 0, 1024);
 	}
-	handle->password = malloc(1024);
-	if(handle->password != NULL)
+	_hSimias->password = malloc(1024);
+	if(_hSimias->password != NULL)
 	{
-		memset(handle->password, 0, 1024);
+		memset(_hSimias->password, 0, 1024);
 	}
 
-	if( (handle->username != NULL) && (handle->password != NULL) )
+	if( (_hSimias->username != NULL) && (_hSimias->password != NULL) )
 	{
-		if(simias_get_web_service_credential(handle->username, 
-											handle->password) == 0)
+		if(simias_get_web_service_credential(_hSimias->username, 
+											_hSimias->password) == 0)
 		{
-			handle->soap.userid = handle->username;
-			handle->soap.passwd = handle->password;
+			_hSimias->soap.userid = _hSimias->username;
+			_hSimias->soap.passwd = _hSimias->password;
 		}
 	}
 
 	// Set the timeout for send and receive to 30 seconds
-	handle->soap.recv_timeout = 30;
-	handle->soap.send_timeout = 30;
+	_hSimias->soap.recv_timeout = 30;
+	_hSimias->soap.send_timeout = 30;
 }
 
 
 
-void simias_api_cleanup_gsoap(struct _SimiasHandle *handle)
+void simias_api_cleanup_gsoap(struct _SimiasHandle *_hSimias)
 {
-	if(handle != NULL)
+	if(_hSimias != NULL)
 	{
-		if(handle->username != NULL)
+		if(_hSimias->username != NULL)
 		{
-			free(handle->username);
-			handle->username = NULL;
+			free(_hSimias->username);
+			_hSimias->username = NULL;
 		}
-		if(handle->password != NULL)
+		if(_hSimias->password != NULL)
 		{
-			free(handle->password);
-			handle->password = NULL;
+			free(_hSimias->password);
+			_hSimias->password = NULL;
 		}
 
-		soap_done(&(handle->soap));
+		soap_done(&(_hSimias->soap));
 	}
 }
 

@@ -25,7 +25,7 @@ bool simiasHandleTests()
 
 	for(counter = 0; counter < 20; counter++)
 	{
-		rc = simias_handle_init_local(&sHandle);
+		rc = simias_init_local(&sHandle);
 		if(!rc)
 		{
 			for(counter2 = 0; counter2 < 200; counter2++)
@@ -38,7 +38,7 @@ bool simiasHandleTests()
 					break;
 				}
 			}
-			rc = simias_handle_delete(&sHandle);
+			rc = simias_free(&sHandle);
 			if(!passed)
 				break;
 		}

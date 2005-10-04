@@ -30,9 +30,9 @@
 
 typedef void *SimiasHandle;
 
-int simias_handle_init_local(SimiasHandle *handle);
-int simias_handle_delete(SimiasHandle *handle);
+int simias_init_local(SimiasHandle *hSimias);
+int simias_free(SimiasHandle *hSimias);
 
-int simias_ping(SimiasHandle handle);
+int simias_ping(SimiasHandle hSimias);
 
 #endif	// _SIMIAS_H
