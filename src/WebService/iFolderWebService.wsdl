@@ -8,6 +8,20 @@
       <s:element name="PingResponse">
         <s:complexType />
       </s:element>
+      <s:element name="IsFileIniFolder">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="filename" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IsFileIniFolderResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="IsFileIniFolderResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="IsiFolder">
         <s:complexType>
           <s:sequence>
@@ -847,6 +861,12 @@
   <message name="PingSoapOut">
     <part name="parameters" element="s0:PingResponse" />
   </message>
+  <message name="IsFileIniFolderSoapIn">
+    <part name="parameters" element="s0:IsFileIniFolder" />
+  </message>
+  <message name="IsFileIniFolderSoapOut">
+    <part name="parameters" element="s0:IsFileIniFolderResponse" />
+  </message>
   <message name="IsiFolderSoapIn">
     <part name="parameters" element="s0:IsiFolder" />
   </message>
@@ -1177,6 +1197,11 @@
       <input message="s0:PingSoapIn" />
       <output message="s0:PingSoapOut" />
     </operation>
+    <operation name="IsFileIniFolder">
+      <documentation>Checks a file to see if it's in an iFolder</documentation>
+      <input message="s0:IsFileIniFolderSoapIn" />
+      <output message="s0:IsFileIniFolderSoapOut" />
+    </operation>
     <operation name="IsiFolder">
       <documentation>Checks a LocalPath to see if it's an iFolder</documentation>
       <input message="s0:IsiFolderSoapIn" />
@@ -1452,6 +1477,15 @@
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
     <operation name="Ping">
       <soap:operation soapAction="http://novell.com/ifolder/web/Ping" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="IsFileIniFolder">
+      <soap:operation soapAction="http://novell.com/ifolder/web/IsFileIniFolder" style="document" />
       <input>
         <soap:body use="literal" />
       </input>
