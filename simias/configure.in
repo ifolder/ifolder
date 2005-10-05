@@ -421,12 +421,17 @@ AC_SUBST(DEVENV_CONFIGURATION)
 #
 # Handle --with-simiasdatadir
 #
-AC_MSG_CHECKING([whether a location for the simias data directory was specified])
+AC_CHECKING([whether a location for the simias data directory was specified])
 AC_ARG_WITH(simiasdatadir,
 	[AS_HELP_STRING([--with-simiasdatadir=PATH],
-	[configure the directory where the simias data files will be placed. [Default=/var/opt/novell/simias]])],
+	[configure the directory where the simias data files will be placed. [Default=~/.local/share/SimpleServer/simias]])],
 	[simiasdatadir="$withval"],
-	[simiasdatadir="/var/opt/novell/simias"])
+	[case $SIMIAS_OS in
+		windows) simiasdatadir='"$(shell cygpath --unix "$(USERPROFILE)")/Local Settings/Application Data/SimpleServer/simias"' ;;
+		linux) simiasdatadir="~/.local/share/SimpleServer/simias" ;;
+		darwin) simiasdatadir="~/.local/share/SimpleServer/simias" ;;
+	esac]
+	)
 AC_SUBST(simiasdatadir)
 
 #

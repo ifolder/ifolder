@@ -25,7 +25,7 @@ endif
 
 all: Simias.exe
 
-Simias.exe: AssemblyInfo.cs $(Simias_CSFILES) $(Simias_RESOURCES) SimiasDirectoryMapping
+Simias.exe: AssemblyInfo.cs $(Simias_CSFILES) $(Simias_RESOURCES) SimiasDirectoryMapping simias
 	$(CSC) /out:$@ $(CSCFLAGS) $(Simias_FLAGS) $(SIMIAS_LIBS) $(Simias_LIBS:%=/r:%) $(Simias_LIBPATH:%=/lib:%) $(Simias_RESOURCES:%=$(ICON_FLAG)%) $(Simias_CSFILES_CSC) $(DOC_FILE_CMD)
 
 AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in Makefile
@@ -34,6 +34,10 @@ AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in Makefile
 	
 SimiasDirectoryMapping: SimiasDirectoryMapping.in
 	sed -e 's,@_mappingpath_@,$(SIMIAS_PATH),g' $< > $@
+	chmod +x $@
+
+simias: simias.in
+	sed -e 's,@_webbindir_@,@webbindir@,g' $< > simias
 	chmod +x $@
 
 if DEBUG
@@ -46,15 +50,25 @@ install-exec-local: Simias.exe $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(webbindir) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) Simias.exe $(DEBUG_FILES) $(DESTDIR)$(webbindir)
 	$(INSTALL_PROGRAM) SimiasDirectoryMapping $(DESTDIR)$(bindir)
+if WINDOWS
+	$(INSTALL_PROGRAM) simias.cmd $(DESTDIR)$(bindir)
+else
+	$(INSTALL_PROGRAM) simias $(DESTDIR)$(bindir)
+endif
 
 	
 uninstall-local:
 	cd $(DESTDIR)$(webbindir); rm -f Simias.exe $(DEBUG_FILES)
 	cd $(DESTDIR)$(bindir); rm -f SimiasDirectoryMapping
+if WINDOWS
+	cd $(DESTDIR)$(bindir); rm -f simias.cmd
+else
+	cd $(DESTDIR)$(bindir); rm -f simias
+endif
 
 installcheck-local: install
 	
-CLEAN_FILES = Simias.exe $(DOC_FILE_CLEAN) AssemblyInfo.cs SimiasDirectoryMapping
+CLEAN_FILES = Simias.exe $(DOC_FILE_CLEAN) AssemblyInfo.cs SimiasDirectoryMapping simias
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

@@ -620,8 +620,10 @@ namespace Mono.ASPNET
 					sameService = true;
 				}
 			}
-			catch 
-			{}
+			catch ( Exception ex )
+			{
+				Console.Error.WriteLine( ex.Message );
+			}
 
 			return sameService;
 		}
@@ -775,7 +777,7 @@ namespace Mono.ASPNET
 					{
 						if ( ( i + 1 ) < args.Length )
 						{
-							simiasDataPath = args[ ++i ];
+							simiasDataPath = Path.GetFullPath( args[ ++i ] );
 						}
 						else
 						{

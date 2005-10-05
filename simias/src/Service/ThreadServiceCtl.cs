@@ -79,7 +79,7 @@ namespace Simias.Service
 			lock (typeof(ThreadServiceCtl))
 			{
 				// Load the assembly and start it.
-				Assembly pAssembly = AppDomain.CurrentDomain.Load(Path.GetFileNameWithoutExtension(Assembly));
+				Assembly pAssembly = AppDomain.CurrentDomain.Load(Assembly);
 				service = (IThreadService)pAssembly.CreateInstance(classType);
 				service.Start();
 				state = Service.State.Running;

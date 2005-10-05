@@ -1,1 +1,1 @@
-<%@ WebHandler Language="C#" CodeBehind="Login.ashx.cs" Class="Simias.Login,Simias" %>
+<%@ WebHandler Language="C#" CodeBehind="Login.ashx.cs" Class="Simias.Login,SimiasLib" %>

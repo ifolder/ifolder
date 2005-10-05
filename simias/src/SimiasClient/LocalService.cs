@@ -38,6 +38,11 @@ namespace Simias.Client
 		#region Class Members
 
 		/// <summary>
+		/// Length of a string guid.
+		/// </summary>
+		static private readonly int GuidLength = Guid.NewGuid().ToString().Length;
+
+		/// <summary>
 		/// Name of the local password file that is used to authenticate local
 		/// web services.
 		/// </summary>
@@ -127,7 +132,8 @@ namespace Simias.Client
 				}
 			}
 
-			webClient.Credentials = new NetworkCredential( Environment.UserName, localPassword );
+			string localDomain = localPassword.Substring( 0, GuidLength );
+			webClient.Credentials = new NetworkCredential( Environment.UserName, localPassword, localDomain );
 			webClient.PreAuthenticate = true;
 
 			// BUGBUG!! - Force mono to authenticate everytime until cookies work on a loopback

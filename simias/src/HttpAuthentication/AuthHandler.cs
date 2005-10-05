@@ -146,6 +146,42 @@ namespace Simias.Security.Web
 		#region Private Methods
 
 		/// <summary>
+		/// Gets the domain ID from the realm if it exists.
+		/// </summary>
+		/// <param name="context">HttpContext object.</param>
+		/// <returns>The domain ID if found, otherwise a null is returned.</returns>
+		private string GetDomainIDFromRealm( HttpContext context )
+		{
+			string domainID = null;
+
+			// Check for an authorization header.
+			string[] encodedCredentials = context.Request.Headers.GetValues( "Authorization" );
+			if ( ( encodedCredentials != null ) && ( encodedCredentials[ 0 ] != null ) )
+			{
+				// Make sure we are dealing with "Basic" credentials
+				if ( encodedCredentials[ 0 ].StartsWith( "Basic " ) )
+				{
+					// The authHeader after the basic signature is encoded
+					string authHeader = encodedCredentials[ 0 ].Remove( 0, 6 );
+					byte[] credential = System.Convert.FromBase64String( authHeader );
+					string decodedCredential = System.Text.Encoding.Default.GetString( credential, 0, credential.Length );
+   
+					// Clients that newed up a NetCredential object with a URL
+					// come though on the authorization line in the following format:
+					// http://domain:port/simias10/service.asmx\username:password
+
+					int index = decodedCredential.LastIndexOf( '\\' );
+					if ( index != -1 )
+					{
+						domainID = decodedCredential.Substring( 0, index );
+					}
+				}
+			}
+
+			return domainID;
+		}
+
+		/// <summary>
 		/// Returns whether address is an address local to this machine.
 		/// </summary>
 		/// <param name="address">The address to test.</param>
@@ -314,19 +350,24 @@ namespace Simias.Security.Web
 				if ( ( soapMethod == null ) || 
 					 !unauthenticatedServices.ContainsKey( String.Format( "{0}:{1}", webService, soapMethod ).ToLower() ) )
 				{
-					// Get the Domain ID.
-					string domainID = context.Request.Headers.Get( Http.DomainIDHeader );
+					// Check if the domain ID was specified in the basic realm.
+					string domainID = GetDomainIDFromRealm( context );
 					if ( domainID == null )
 					{
-						if ( Store.IsEnterpriseServer )				
+						// Get the Domain ID.
+						domainID = context.Request.Headers.Get( Http.DomainIDHeader );
+						if ( domainID == null )
 						{
-							// If this is an enterprise server use the default domain.
-							domainID = StoreReference.DefaultDomain;
-						}
-						else if ( IsLocalAddress( context.Request.UserHostAddress ) )
-						{
-							// If this address is loopback, set the local domain in the HTTP context.
-							domainID = StoreReference.LocalDomain;
+							if ( Store.IsEnterpriseServer )				
+							{
+								// If this is an enterprise server use the default domain.
+								domainID = StoreReference.DefaultDomain;
+							}
+							else if ( IsLocalAddress( context.Request.UserHostAddress ) )
+							{
+								// If this address is loopback, set the local domain in the HTTP context.
+								domainID = StoreReference.LocalDomain;
+							}
 						}
 					}
 
@@ -352,19 +393,7 @@ namespace Simias.Security.Web
 					}
 					else
 					{
-						string realm = null;
-						if ( Store.IsEnterpriseServer )
-						{
-							realm = 
-								( store.DefaultDomain != null ) ?
-								StoreReference.GetDomain( store.DefaultDomain ).Name :
-								Environment.MachineName;
-						}
-						else
-						{
-							realm = Environment.MachineName;
-						}
-
+						string realm = store.GetDomain( ( Store.IsEnterpriseServer ) ? store.DefaultDomain : store.LocalDomain ).Name;
 						context.Response.StatusCode = 401;
 						context.Response.StatusDescription = "Unauthorized";
 						context.Response.AddHeader( "WWW-Authenticate", String.Concat( "Basic realm=\"", realm, "\"" ) );

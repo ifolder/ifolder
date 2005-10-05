@@ -309,8 +309,8 @@ namespace Simias.Client
 		{
 			// Build the arguments string.
 			string args = String.Format( "{0}{1}{2}{3}{4}{5}", 
-				IsWindows ? String.Empty : applicationPath + " ",
-				( simiasDataPath != null ) ? String.Format( "--datadir {0} ", simiasDataPath ) : String.Empty, 
+				IsWindows ? String.Empty : String.Format( "\"{0}\" ", applicationPath),
+				( simiasDataPath != null ) ? String.Format( "--datadir \"{0}\" ", simiasDataPath ) : String.Empty, 
 				( isServer == true ) ? "--runasserver " : String.Empty, 
 				( port != null ) ? String.Format( "--port {0}", port ) : String.Empty,
 				( showConsole == true ) ? " --showconsole" : String.Empty,
@@ -361,8 +361,8 @@ namespace Simias.Client
 
 			// Build the arguments string.
 			string args = String.Format( "{0}--stop{1}{2}{3}", 
-				IsWindows ? String.Empty : applicationPath + " ",
-				( simiasDataPath != null ) ? String.Format( " --datadir {0}", simiasDataPath ) : String.Empty,
+				IsWindows ? String.Empty : String.Format( "\"{0}\" ", applicationPath ),
+				( simiasDataPath != null ) ? String.Format( " --datadir \"{0}\"", simiasDataPath ) : String.Empty,
 				( showConsole == true ) ? " --showconsole" : String.Empty,
 				( verbose == true ) ? " --verbose" : String.Empty );
 
@@ -375,7 +375,7 @@ namespace Simias.Client
 			simiasProcess.StartInfo.Arguments = args;
 			simiasProcess.Start();
 
-			// Wait for the process to exit, so we can tell if things started successfully.
+			// Wait for the process to exit, so we can tell if things stopped successfully.
 			simiasProcess.WaitForExit( 15000 );
 
 			// See if the process is still running.
