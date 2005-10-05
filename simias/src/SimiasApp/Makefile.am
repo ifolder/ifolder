@@ -37,7 +37,7 @@ SimiasDirectoryMapping: SimiasDirectoryMapping.in
 	chmod +x $@
 
 simias: simias.in
-	sed -e 's,@_webbindir_@,@webbindir@,g' $< > simias
+	sed -e 's,@_webbindir_@,@webbindir@,g' -e 's,@_bindir_@,@bindir@,g' $< > simias
 	chmod +x $@
 
 if DEBUG

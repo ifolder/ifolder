@@ -24,8 +24,10 @@ simpleserver: simpleserver.in
 	chmod +x $@
 
 simpleserver.cmd: simpleserver.cmd.in
+if WINDOWS
 	sed -e 's,@_simiasdatadir_@,$(shell cygpath --mixed $(simiasdatadir)),g' $< > simpleserver.cmd
 	chmod +x $@
+endif
 	
 Simias.config: Simias.config.in
 	sed -e 's,@_StoreProviderAssembly_@,@StoreProviderAssembly@,g' -e 's,@_StoreProviderType_@,@StoreProviderType@,g' $< > Simias.config
@@ -34,7 +36,6 @@ Simias.config: Simias.config.in
 all: $(NUNIT_TESTS) Simias.config simpleserver simpleserver.cmd
 
 Simias.SimpleServer.dll: $(SimpleServer_CSFILES) $(SimpleServer_RESOURCES)
-	echo simiasdatadir=$(simiasdatadir)
 	$(CSC) /out:$@ $(CSCFLAGS) $(SimpleServer_FLAGS) $(SimpleServer_LIBS:%=/r:%) $(SimpleServer_LIBPATH:%=/lib:%) $(SimpleServer_RESOURCES:%=$(ICON_FLAG)%) $(SimpleServer_CSFILES_CSC) $(DOC_FILE_CMD)
 	
 if DEBUG
