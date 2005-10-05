@@ -9,7 +9,7 @@ Simias_FLAGS = $(CSC_EXEFLAG)
 Simias_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll SimiasClient.dll
 Simias_LIBPATH = ../SimiasClient
 
-EXTRA_DIST = App.ico $(Simias_CSFILES) AssemblyInfo.cs.in SimiasDirectoryMapping.in simias.cmd simias
+EXTRA_DIST = App.ico $(Simias_CSFILES) AssemblyInfo.cs.in $(srcdir)/SimiasDirectoryMapping.in $(srcdir)/simias.cmd $(srcdir)/simias.in
 
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml
@@ -30,7 +30,7 @@ AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in Makefile
 	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
 	chmod +x $@
 	
-SimiasDirectoryMapping: SimiasDirectoryMapping.in
+SimiasDirectoryMapping: $(srcdir)/SimiasDirectoryMapping.in
 	sed -e 's,@_mappingpath_@,$(SIMIAS_PATH),g' $< > $@
 	chmod +x $@
 
