@@ -468,7 +468,6 @@ src/SimiasLib.dll/SimiasLib.dll.config
 src/FlaimProvider/Makefile
 src/FlaimProvider/FlaimWrapper/Makefile
 src/SimiasApp/Makefile
-src/SimiasServer/Makefile
 src/WebService/Makefile
 src/POBoxWS/Makefile
 src/SyncService/Makefile
