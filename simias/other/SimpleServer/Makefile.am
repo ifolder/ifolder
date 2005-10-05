@@ -20,7 +20,7 @@ endif
 NUNIT_TESTS := Simias.SimpleServer.dll
 
 simpleserver: simpleserver.in
-	sed -e 's,@_simiasdatadir_@,@simiasdatadir@,g' -e 's,@_webbindir_@,@webbindir@,g' $< > simpleserver
+	sed -e 's,@_simiasdatadir_@,@simiasdatadir@,g' -e 's,@_webbindir_@,@webbindir@,g' -e 's,@_bindir_@,@bindir@,g' $< > simpleserver
 	chmod +x $@
 
 simpleserver.cmd: simpleserver.cmd.in
