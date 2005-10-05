@@ -223,6 +223,56 @@ namespace Novell.iFolder.Web
 
 
 		/// <summary>
+		/// WebMethod that gets the journal entries for a file in an iFolder
+		/// </summary>
+		/// <param name = "filename">
+		/// The filename to get the journal entries for
+		/// </param>
+		/// <returns>
+		/// An array of journal entries
+		/// </returns>
+		[WebMethod(EnableSession=true, Description="Gets the journal entries for a file in an iFolder")]
+		[SoapDocumentMethod]
+		public JournalEntry[] GetJournalEntriesForFile(string filename)
+		{
+			ArrayList entries = new ArrayList();
+
+			Collection col = SharedCollection.GetCollectionForPath(filename);
+			if ( col == null )
+			{
+				throw new SimiasException("File specified is not in an iFolder");
+			}
+
+			Store store = Store.GetStore();
+			Domain domain = store.GetDomain( col.Domain );
+
+			Journal journal = col.GetJournalForFile( filename );
+
+			if ( journal != null )
+			{
+				XmlDocument doc;
+				Property history = journal.Properties.GetSingleProperty( "History" );
+				if ( history != null )
+				{
+					doc = (XmlDocument)history.Value;
+					XmlElement root = doc.DocumentElement;
+					XmlElement entry = (XmlElement)root.FirstChild;
+
+					while ( entry != null )
+					{
+						entries.Add( new JournalEntry( domain, entry ) );
+						entry = (XmlElement)entry.NextSibling;
+					}
+				}
+			}
+
+			return ( JournalEntry[] )entries.ToArray( typeof( JournalEntry ) );
+		}
+
+
+
+
+		/// <summary>
 		/// WebMethod that gets a LocalPath to see if it's an iFolder
 		/// </summary>
 		/// <param name = "LocalPath">
@@ -1574,55 +1624,60 @@ namespace Novell.iFolder.Web
 
 			CollectionPathStatus pStatus;
 
+			Exception exception = null;
 			pStatus = SharedCollection.CheckCollectionPath(path);
 			switch(pStatus)
 			{
 				case CollectionPathStatus.ValidPath:
 					break;
 				case CollectionPathStatus.RootOfDrivePath:
-					throw new Exception("RootOfDrivePath");
+					exception = new Exception("RootOfDrivePath");
 					break;
 				case CollectionPathStatus.InvalidCharactersPath:
-					throw new Exception("InvalidCharactersPath");
+					exception = new Exception("InvalidCharactersPath");
 					break;
 				case CollectionPathStatus.AtOrInsideStorePath:
-					throw new Exception("AtOrInsideStorePath");
+					exception = new Exception("AtOrInsideStorePath");
 					break;
 				case CollectionPathStatus.ContainsStorePath:
-					throw new Exception("ContainsStorePath");
+					exception = new Exception("ContainsStorePath");
 					break;
 				case CollectionPathStatus.NotFixedDrivePath:
-					throw new Exception("NotFixedDrivePath");
+					exception = new Exception("NotFixedDrivePath");
 					break;
 				case CollectionPathStatus.SystemDirectoryPath:
-					throw new Exception("SystemDirectoryPath");
+					exception = new Exception("SystemDirectoryPath");
 					break;
 				case CollectionPathStatus.SystemDrivePath:
-					throw new Exception("SystemDrivePath");
+					exception = new Exception("SystemDrivePath");
 					break;
 				case CollectionPathStatus.IncludesWinDirPath:
-					throw new Exception("IncludesWinDirPath");
+					exception = new Exception("IncludesWinDirPath");
 					break;
 				case CollectionPathStatus.IncludesProgFilesPath:
-					throw new Exception("IncludesProgFilesPath");
+					exception = new Exception("IncludesProgFilesPath");
 					break;
 				case CollectionPathStatus.DoesNotExistPath:
-					throw new Exception("DoesNotExistPath");
+					exception = new Exception("DoesNotExistPath");
 					break;
 				case CollectionPathStatus.NoReadRightsPath:
-					throw new Exception("NoReadRightsPath");
+					exception = new Exception("NoReadRightsPath");
 					break;
 				case CollectionPathStatus.NoWriteRightsPath:
-					throw new Exception("NoWriteRightsPath");
+					exception = new Exception("NoWriteRightsPath");
 					break;
 				case CollectionPathStatus.ContainsCollectionPath:
-					throw new Exception("ContainsCollectionPath");
+					exception = new Exception("ContainsCollectionPath");
 					break;
 				case CollectionPathStatus.AtOrInsideCollectionPath:
-					throw new Exception("AtOrInsideCollectionPath");
+					exception = new Exception("AtOrInsideCollectionPath");
 					break;
 			}
 
+			if (exception != null)
+			{
+				throw exception;
+			}
 			sub.CollectionRoot = Path.GetFullPath(LocalPath);
 			if(sub.SubscriptionState == SubscriptionStates.Ready)
 			{
