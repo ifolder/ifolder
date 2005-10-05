@@ -184,6 +184,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\CollectionStore\Journal.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\CollectionStore\LinkNode.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -67,6 +67,11 @@ namespace Simias.Client
 			Identity,
 
 			/// <summary>
+			/// Journal
+			/// </summary>
+			Journal,
+
+			/// <summary>
 			/// LinkNode
 			/// </summary>
 			LinkNode,
@@ -174,11 +179,19 @@ namespace Simias.Client
 		}
 
 		/// <summary>
+		/// Gets the Journal class name.
+		/// </summary>
+		static public string JournalType
+		{
+			get { return classNames[ 6 ]; }
+		}
+
+		/// <summary>
 		/// Gets the LinkNode class name.
 		/// </summary>
 		static public string LinkNodeType
 		{
-			get { return classNames[ 6 ]; }
+			get { return classNames[ 7 ]; }
 		}
 
 		/// <summary>
@@ -186,7 +199,7 @@ namespace Simias.Client
 		/// </summary>
 		static public string LocalDatabaseType
 		{
-			get { return classNames[ 7 ]; }
+			get { return classNames[ 8 ]; }
 		}
 
 		/// <summary>
@@ -194,7 +207,7 @@ namespace Simias.Client
 		/// </summary>
 		static public string MemberType
 		{
-			get { return classNames[ 8 ]; }
+			get { return classNames[ 9 ]; }
 		}
 
 		/// <summary>
@@ -202,7 +215,7 @@ namespace Simias.Client
 		/// </summary>
 		static public string MessageType
 		{
-			get { return classNames[ 9 ]; }
+			get { return classNames[ 10 ]; }
 		}
 
 		/// <summary>
@@ -210,7 +223,7 @@ namespace Simias.Client
 		/// </summary>
 		static public string NodeType
 		{
-			get { return classNames[ 10 ]; }
+			get { return classNames[ 11 ]; }
 		}
 
 		/// <summary>
@@ -218,7 +231,7 @@ namespace Simias.Client
 		/// </summary>
 		static public string POBoxType
 		{
-			get { return classNames[ 11 ]; }
+			get { return classNames[ 12 ]; }
 		}
 
 		/// <summary>
@@ -226,7 +239,7 @@ namespace Simias.Client
 		/// </summary>
 		static public string PolicyType
 		{
-			get { return classNames[ 12 ]; }
+			get { return classNames[ 13 ]; }
 		}
 
 		/// <summary>
@@ -234,7 +247,7 @@ namespace Simias.Client
 		/// </summary>
 		static public string StoreFileNodeType
 		{
-			get { return classNames[ 13 ]; }
+			get { return classNames[ 14 ]; }
 		}
 
 		/// <summary>
@@ -242,7 +255,7 @@ namespace Simias.Client
 		/// </summary>
 		static public string SubscriptionType
 		{
-			get { return classNames[ 14 ]; }
+			get { return classNames[ 15 ]; }
 		}
 
 		/// <summary>
@@ -250,7 +263,7 @@ namespace Simias.Client
 		/// </summary>
 		static public string TombstoneType
 		{
-			get { return classNames[ 15 ]; }
+			get { return classNames[ 16 ]; }
 		}
 		#endregion
 
@@ -266,6 +279,7 @@ namespace Simias.Client
 										  "Domain",
 										  "FileNode",
 										  "Identity",
+										  "Journal",
 										  "LinkNode",
 										  "LocalDatabase",
 										  "Member",
