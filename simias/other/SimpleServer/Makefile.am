@@ -19,25 +19,25 @@ endif
 
 NUNIT_TESTS := Simias.SimpleServer.dll
 
-simpleserver: simpleserver.in
-	sed -e 's,@_simiasdatadir_@,@simiasdatadir@,g' -e 's,@_webbindir_@,@webbindir@,g' -e 's,@_bindir_@,@bindir@,g' $< > simpleserver
+simpleserver: $(srcdir)/simpleserver.in
+	sed -e 's,@_simiasdatadir_@,@simiasdatadir@,g' -e 's,@_webbindir_@,@webbindir@,g' -e 's,@_bindir_@,@bindir@,g' $< > $@
 	chmod +x $@
 
-simpleserver.cmd: simpleserver.cmd.in
+simpleserver.cmd: $(srcdir)/simpleserver.cmd.in
 if WINDOWS
-	sed -e 's,@_simiasdatadir_@,$(shell cygpath --mixed $(simiasdatadir)),g' $< > simpleserver.cmd
+	sed -e 's,@_simiasdatadir_@,$(shell cygpath --mixed $(simiasdatadir)),g' $< > $@
 	chmod +x $@
 endif
 	
-Simias.config: Simias.config.in
-	sed -e 's,@_StoreProviderAssembly_@,@StoreProviderAssembly@,g' -e 's,@_StoreProviderType_@,@StoreProviderType@,g' $< > Simias.config
+Simias.config: $(srcdir)/Simias.config.in
+	sed -e 's,@_StoreProviderAssembly_@,@StoreProviderAssembly@,g' -e 's,@_StoreProviderType_@,@StoreProviderType@,g' $< > $@
 	chmod +x $@
-
-all: $(NUNIT_TESTS) Simias.config simpleserver simpleserver.cmd
 
 Simias.SimpleServer.dll: $(SimpleServer_CSFILES) $(SimpleServer_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(SimpleServer_FLAGS) $(SimpleServer_LIBS:%=/r:%) $(SimpleServer_LIBPATH:%=/lib:%) $(SimpleServer_RESOURCES:%=$(ICON_FLAG)%) $(SimpleServer_CSFILES_CSC) $(DOC_FILE_CMD)
 	
+all: $(NUNIT_TESTS) Simias.config simpleserver simpleserver.cmd
+
 if DEBUG
 if WINDOWS
 DEBUG_CHECK_FILES = Simias.SimpleServer.pdb

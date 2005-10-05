@@ -9,7 +9,7 @@ Simias_FLAGS = $(CSC_EXEFLAG)
 Simias_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll SimiasClient.dll
 Simias_LIBPATH = ../SimiasClient
 
-EXTRA_DIST = App.ico $(Simias_CSFILES) AssemblyInfo.cs.in SimiasDirectoryMapping.in
+EXTRA_DIST = App.ico $(Simias_CSFILES) AssemblyInfo.cs.in SimiasDirectoryMapping.in simias.cmd simias
 
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml
@@ -23,9 +23,7 @@ else
 SIMIAS_PATH = @webbindir@/Simias.exe
 endif
 
-all: Simias.exe
-
-Simias.exe: AssemblyInfo.cs $(Simias_CSFILES) $(Simias_RESOURCES) SimiasDirectoryMapping simias
+Simias.exe: AssemblyInfo.cs $(Simias_CSFILES) $(Simias_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(Simias_FLAGS) $(SIMIAS_LIBS) $(Simias_LIBS:%=/r:%) $(Simias_LIBPATH:%=/lib:%) $(Simias_RESOURCES:%=$(ICON_FLAG)%) $(Simias_CSFILES_CSC) $(DOC_FILE_CMD)
 
 AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in Makefile
@@ -36,9 +34,11 @@ SimiasDirectoryMapping: SimiasDirectoryMapping.in
 	sed -e 's,@_mappingpath_@,$(SIMIAS_PATH),g' $< > $@
 	chmod +x $@
 
-simias: simias.in
-	sed -e 's,@_webbindir_@,@webbindir@,g' -e 's,@_bindir_@,@bindir@,g' $< > simias
+simias: $(srcdir)/simias.in
+	sed -e 's,@_webbindir_@,@webbindir@,g' -e 's,@_bindir_@,@bindir@,g' $< > $@
 	chmod +x $@
+
+all: Simias.exe SimiasDirectoryMapping simias
 
 if DEBUG
 if WINDOWS
