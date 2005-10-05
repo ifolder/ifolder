@@ -23,13 +23,15 @@ else
 SIMIAS_PATH = @webbindir@/Simias.exe
 endif
 
-Simias.exe: AssemblyInfo.cs $(Simias_CSFILES) $(Simias_RESOURCES)
+all: Simias.exe
+
+Simias.exe: AssemblyInfo.cs $(Simias_CSFILES) $(Simias_RESOURCES) SimiasDirectoryMapping simias
 	$(CSC) /out:$@ $(CSCFLAGS) $(Simias_FLAGS) $(SIMIAS_LIBS) $(Simias_LIBS:%=/r:%) $(Simias_LIBPATH:%=/lib:%) $(Simias_RESOURCES:%=$(ICON_FLAG)%) $(Simias_CSFILES_CSC) $(DOC_FILE_CMD)
 
 AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in Makefile
 	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
 	chmod +x $@
-	
+
 SimiasDirectoryMapping: $(srcdir)/SimiasDirectoryMapping.in
 	sed -e 's,@_mappingpath_@,$(SIMIAS_PATH),g' $< > $@
 	chmod +x $@
@@ -37,8 +39,6 @@ SimiasDirectoryMapping: $(srcdir)/SimiasDirectoryMapping.in
 simias: $(srcdir)/simias.in
 	sed -e 's,@_webbindir_@,@webbindir@,g' -e 's,@_bindir_@,@bindir@,g' $< > $@
 	chmod +x $@
-
-all: Simias.exe SimiasDirectoryMapping simias
 
 if DEBUG
 if WINDOWS
