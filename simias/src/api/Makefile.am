@@ -1,19 +1,5 @@
-DIST_SUBDIRS = libsimias 
-
-if DARWIN
-SUBDIRS = libsimias
-
-endif
-
-if LINUX
-SUBDIRS = libsimias
-
-endif
-
-if WINDOWS
-SUBDIRS = libsimias
-
-endif
+DIST_SUBDIRS = libsimias WebService
+SUBDIRS = libsimias WebService
 
 EXTRA_DIST = 
 
