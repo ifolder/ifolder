@@ -2282,11 +2282,12 @@ namespace Simias.Storage
 				foreach ( ShallowNode sn in nodes )
 				{
 					FileNode fileNode = new FileNode( this, sn );
+					lastWriteTime = fileNode.LastWriteTime;
+					version = fileNode.MasterIncarnation;
+
 					journal = GetJournalForNode( fileNode );
 					if (journal != null)
 					{
-						lastWriteTime = fileNode.LastWriteTime;
-						version = fileNode.MasterIncarnation;
 						break;
 					}
 				}

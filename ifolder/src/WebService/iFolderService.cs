@@ -280,9 +280,11 @@ namespace Novell.iFolder.Web
 				// If local changes have been made to the file, add an extra entry.  This entry will sync down in the
 				// journal the next sync cycle.
 				FileInfo fi = new FileInfo(filename);
-				if (!fi.LastWriteTime.Equals(lastWriteTime) || lastEntryVersion != serverVersion)
+				TimeSpan ts = fi.LastWriteTime - lastWriteTime;
+				if ( ( ts.Seconds > 1 ) || ( lastEntryVersion != serverVersion ) )
 				{
-					entries.Add( new JournalEntry( domain, "modify", store.GetUserIDFromDomainID( domain.ID ), fi.LastWriteTime ) );
+					string type = entries.Count == 0 ? "create" : "modify";
+					entries.Add( new JournalEntry( domain, type, store.GetUserIDFromDomainID( domain.ID ), fi.LastWriteTime ) );
 				}
 			}
 			catch {}
