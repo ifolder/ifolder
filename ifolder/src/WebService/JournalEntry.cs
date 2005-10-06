@@ -65,20 +65,36 @@ namespace Novell.iFolder.Web
 			this.UserID = journalElement.GetAttribute( "userID" );
 			DateTime time = new DateTime( Int64.Parse( journalElement.GetAttribute( "ts" ) ) );
 			this.TimeStamp = time.ToString();
+			this.UserName = getNameForUser( domain, this.UserID );
+		}
 
-			Member member = domain.GetMemberByID( this.UserID );
+		public JournalEntry( Domain domain, string type, string userID, DateTime time )
+		{
+			this.Type = type;
+			this.UserID = userID;
+			this.TimeStamp = time.ToString();
+			this.UserName = getNameForUser( domain, this.UserID );
+		}
+
+		private string getNameForUser( Domain domain, string userID )
+		{
+			string name = string.Empty;
+
+			Member member = domain.GetMemberByID( userID );
 			if ( member != null )
 			{
 				if ( member.FN != null && 
 					 !member.FN.Equals( string.Empty ))
 				{
-					this.UserName = member.FN;
+					name = member.FN;
 				}
 				else
 				{
-					this.UserName = member.Name;
+					name = member.Name;
 				}
 			}
+
+			return name;
 		}
 	}
 }

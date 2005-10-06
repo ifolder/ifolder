@@ -2260,7 +2260,7 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="path">The file to retrieve the journal for.</param>
 		/// <returns>The Journal object for the file.</returns>
-		public Journal GetJournalForFile( string path )
+		public Journal GetJournalForFile( string path, ref DateTime lastWriteTime, ref ulong version )
 		{
 			Journal journal = null;
 
@@ -2281,9 +2281,14 @@ namespace Simias.Storage
 				ICSList nodes = Search( PropertyTags.FileSystemPath, relativePath, SearchOp.Equal );
 				foreach ( ShallowNode sn in nodes )
 				{
-					journal = GetJournalForNode( new Node( this, sn ) );
+					FileNode fileNode = new FileNode( this, sn );
+					journal = GetJournalForNode( fileNode );
 					if (journal != null)
+					{
+						lastWriteTime = fileNode.LastWriteTime;
+						version = fileNode.MasterIncarnation;
 						break;
+					}
 				}
 			}
 

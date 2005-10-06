@@ -246,7 +246,10 @@ namespace Novell.iFolder.Web
 			Store store = Store.GetStore();
 			Domain domain = store.GetDomain( col.Domain );
 
-			Journal journal = col.GetJournalForFile( filename );
+			DateTime lastWriteTime = DateTime.Now;
+			ulong serverVersion = 0;
+			ulong lastEntryVersion = 0;
+			Journal journal = col.GetJournalForFile( filename, ref lastWriteTime, ref serverVersion );
 
 			if ( journal != null )
 			{
@@ -261,10 +264,29 @@ namespace Novell.iFolder.Web
 					while ( entry != null )
 					{
 						entries.Add( new JournalEntry( domain, entry ) );
+						if ( entry.Equals( root.LastChild ) )
+						{
+							// Get the version on the last entry.
+							lastEntryVersion = ulong.Parse( entry.GetAttribute( "v" ) );
+							break;
+						}
 						entry = (XmlElement)entry.NextSibling;
 					}
 				}
 			}
+
+			try
+			{
+				// If local changes have been made to the file, add an extra entry.  This entry will sync down in the
+				// journal the next sync cycle.
+				FileInfo fi = new FileInfo(filename);
+				if (!fi.LastWriteTime.Equals(lastWriteTime) || lastEntryVersion != serverVersion)
+				{
+					entries.Add( new JournalEntry( domain, "modify", store.GetUserIDFromDomainID( domain.ID ), fi.LastWriteTime ) );
+				}
+			}
+			catch {}
+
 
 			return ( JournalEntry[] )entries.ToArray( typeof( JournalEntry ) );
 		}
