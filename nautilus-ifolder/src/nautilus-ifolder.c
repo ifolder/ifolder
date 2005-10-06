@@ -2175,34 +2175,111 @@ create_file_history_property_page(NautilusFileInfo *file)
 static void
 add_file_history_to_store (NautilusFileInfo *file, GtkListStore *store)
 {
-	/* FIXME: Make calls to iFolder to get the list of changes */
 	GtkTreeIter iter;
-	
+	int i;			
+	struct soap soap;
+	struct _ns1__GetJournalEntriesForFile ns1__GetJournalEntriesForFile;
+	struct _ns1__GetJournalEntriesForFileResponse ns1__GetJournalEntriesForFileResponse;
+	gchar *file_path;
+	char *user_name;
+	char *created;
+	char username[512];
+	char password[1024];
+
 	DEBUG_PROP_PAGE (("add_file_history_to_store()\n"));
 
-	gtk_list_store_append (store, &iter);
-	gtk_list_store_set(store, &iter,
-					   0, "Boyd Timothy",
-					   1, "3:14 PM",
-					   -1);
-
-	gtk_list_store_append (store, &iter);
-	gtk_list_store_set(store, &iter,
-					   0, "Brady Anderson",
-					   1, "Yesterday 7:56 AM",
-					   -1);
-
-	gtk_list_store_append (store, &iter);
-	gtk_list_store_set(store, &iter,
-					   0, "Bruce Getter",
-					   1, "Thu 8:24 AM",
-					   -1);
+	file_path = get_file_path (file);
 	
-	gtk_list_store_append (store, &iter);
-	gtk_list_store_set(store, &iter,
-					   0, "Boyd Timothy (created file)",
-					   1, "Sept 24 3:45 PM",
-					   -1);
+	DEBUG_PROP_PAGE (("****About to call GetJournalEntriesForFile ()\n"));
+
+	ns1__GetJournalEntriesForFile.filename = file_path;
+
+	init_gsoap (&soap);
+	if (simias_get_web_service_credential(username, password) == SIMIAS_SUCCESS) {
+		soap.userid = username;
+		soap.passwd = password;
+	}
+
+	soap_call___ns1__GetJournalEntriesForFile (&soap,
+											   soapURL,
+											   NULL,
+											   &ns1__GetJournalEntriesForFile,
+											   &ns1__GetJournalEntriesForFileResponse);
+	if (soap.error) {
+		DEBUG_PROP_PAGE (("****error calling GetJournalEntriesForFile***\n"));
+		soap_print_fault (&soap, stderr);
+		if (soap.error == SOAP_TCP_ERROR) {
+			reread_local_service_url ();
+		}
+		cleanup_gsoap (&soap);
+		g_free (file_path);
+		return;
+	} else {
+		DEBUG_PROP_PAGE (("***calling GetJournalEntriesForFile succeeded***\n"));
+		struct ns1__ArrayOfJournalEntry *array_of_journal_entries =
+			ns1__GetJournalEntriesForFileResponse.GetJournalEntriesForFileResult;
+		if (array_of_journal_entries == NULL) {
+			DEBUG_PROP_PAGE (("***GetJournalEntriesForFile returned NULL\n"));
+			cleanup_gsoap (&soap);
+			g_free (file_path);
+			
+			/* FIXME: Add in one entry saying that there are no journal entries. */
+
+			return;
+		} else {
+
+			if (array_of_journal_entries->__sizeJournalEntry > 0) {
+				for (i = array_of_journal_entries->__sizeJournalEntry - 1; i >= 0; i--) {
+
+/*
+					DEBUG_PROP_PAGE (("Adding journal entry\n\tType: %s\n\tTimestamp: %s\n\tUserID: %s\n\tUserName: %s\n",
+										array_of_journal_entries->JournalEntry [i]->Type,
+										array_of_journal_entries->JournalEntry [i]->TimeStamp,
+										array_of_journal_entries->JournalEntry [i]->UserID,
+										array_of_journal_entries->JournalEntry [i]->UserName
+									));
+*/
+					user_name = array_of_journal_entries->JournalEntry [i]->UserName;
+					
+					gtk_list_store_append (store, &iter);
+
+					if (strcmp("create", array_of_journal_entries->JournalEntry [i]->Type) == 0) {
+						created = strdup (_(" (File created)"));
+						user_name = malloc (sizeof (char ) * (strlen (user_name) + strlen (created)));
+						
+						if (!user_name) {
+							/* FIXME: Handle out of memory error */
+							free (created);
+							return;
+						}
+						
+						sprintf(user_name, "%s%s",
+								array_of_journal_entries->JournalEntry [i]->UserName,
+								created);
+						
+						free (created);
+					
+						gtk_list_store_set (store, &iter,
+											0, user_name,
+											1, array_of_journal_entries->JournalEntry [i]->TimeStamp,
+											-1);
+						free (user_name);
+					} else {
+						gtk_list_store_set (store, &iter,
+											0, user_name,
+											1, array_of_journal_entries->JournalEntry [i]->TimeStamp,
+											-1);
+					}
+				}
+			} else {
+				/* FIXME: Add in one entry saying that there are no journal entries. */
+			}
+		}
+	}
+
+	cleanup_gsoap (&soap);
+
+	g_free (file_path);
 }
 
 static void
