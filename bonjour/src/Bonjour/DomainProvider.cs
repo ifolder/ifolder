@@ -37,7 +37,6 @@ using Simias.POBox;
 
 // shorty
 using SCodes = Simias.Authentication.StatusCodes;
-using RUsers = Simias.mDns.BonjourUsers;
 
 namespace Simias
 {
@@ -46,13 +45,14 @@ namespace Simias
 	/// </summary>
 	public class mDnsProvider : IDomainProvider
 	{
-		private string providerName = "Rendezvous Domain Provider";
+		private string providerName = "Bonjour Domain Provider";
 		private string description = "Simias Location provider which uses the mDns protocol to resolve objects";
 		private static readonly ISimiasLog log = 
 			SimiasLogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
 		private Hashtable searchContexts;
 		private mDnsProviderLock mdnsLock;
+		private Simias.mDns.Browser browser = null;
 
 		#region Properties
 
@@ -78,6 +78,7 @@ namespace Simias
 		{
 			searchContexts = new Hashtable();
 			mdnsLock = new mDnsProviderLock();
+			browser = new Simias.mDns.Browser();
 		}
 		#endregion
 
@@ -101,67 +102,50 @@ namespace Simias
 		private Uri MemberIDToUri( string memberID )
 		{
 			Uri locationUri = null;
+			Member member = null;
 
 			// Have we seen this member??
-			//lock( Simias.mDns.User.memberListLock )
-			//{
-				foreach( Member member in RUsers.memberList )
+			lock( Simias.mDns.Browser.MemberListLock )
+			{
+				foreach( Member cMember in Simias.mDns.Browser.MemberList )
 				{
-					if ( member.UserID == memberID )
+					if ( cMember.UserID == memberID )
 					{
-						Property propHost =
-							member.Properties.GetSingleProperty( RUsers.HostProperty );
-
-						if ( propHost == null )
-						{
-							break;
-						}
-
-						string hostName = propHost.Value as string;
-						log.Debug( "Resolving host: " + hostName );
-
-						IPHostEntry host = null;
-						try
-						{
-							host = Dns.GetHostByName( hostName );
-						}
-						catch( Exception e2 )
-						{
-							log.Debug( e2.Message );
-							log.Debug( e2.StackTrace );
-						}
-
-						if ( host != null )
-						{
-							Property port =
-								member.Properties.GetSingleProperty( RUsers.PortProperty );
-
-							Property path =
-								member.Properties.GetSingleProperty( RUsers.PathProperty );
-
-							long addr = host.AddressList[0].Address;
-							string ipAddr = 
-								String.Format( "{0}.{1}.{2}.{3}", 
-								( addr & 0x000000FF ),
-								( ( addr >> 8 ) & 0x000000FF ),
-								( ( addr >> 16 ) & 0x000000FF ),
-								( ( addr >> 24 ) & 0x000000FF ) );
-
-							string fullPath = 
-								"http://" + 
-								ipAddr + 
-								":" + 
-								port.Value.ToString() +
-								path.Value.ToString();
-
-							log.Debug( "fullPath: " + fullPath );
-							locationUri = new Uri( fullPath );
-						}
-
+						member = cMember;
 						break;
 					}
 				}
-			//}
+			}
+
+			if ( member != null )
+			{
+				try
+				{
+					string hostName =
+						member.Properties.GetSingleProperty( browser.HostProperty ).Value as string;
+					log.Debug( "Resolving host: " + hostName );
+
+					IPHostEntry host = Dns.GetHostByName( hostName );
+					long addr = host.AddressList[0].Address;
+					string ipAddr = 
+						String.Format( "{0}.{1}.{2}.{3}", 
+						( addr & 0x000000FF ),
+						( ( addr >> 8 ) & 0x000000FF ),
+						( ( addr >> 16 ) & 0x000000FF ),
+						( ( addr >> 24 ) & 0x000000FF ) );
+
+					string port = member.Properties.GetSingleProperty( browser.PortProperty ).Value as string;
+					string path = member.Properties.GetSingleProperty( browser.PathProperty ).Value as string;
+					string fullPath = "http://" + ipAddr + ":" + port + path;
+					log.Debug( "fullPath: " + fullPath );
+					locationUri = new Uri( fullPath );
+				}
+				catch( Exception e )
+				{
+					log.Error( e.Message );
+					log.Error( e.StackTrace );
+				}
+			}
 
 			return locationUri;
 		}
@@ -229,9 +213,9 @@ namespace Simias
 					mdnsSession.MemberID = member.UserID;
 					mdnsSession.State = 1;
 
-					// Fixme
+					// Note:: come up with a better one time password scheme
 					mdnsSession.OneTimePassword = DateTime.UtcNow.Ticks.ToString();
-					string publicKey = RUsers.GetMembersPublicKey( member.UserID );
+					string publicKey = browser.GetMembersPublicKey( member.UserID );
 					if ( publicKey != null )
 					{
 						RSACryptoServiceProvider credential = new RSACryptoServiceProvider();
@@ -273,7 +257,7 @@ namespace Simias
 						mdnsSession.OneTimePassword = DateTime.UtcNow.Ticks.ToString();
 						mdnsSession.State = 1;
 
-						string publicKey = RUsers.GetMembersPublicKey( member.UserID );
+						string publicKey = browser.GetMembersPublicKey( member.UserID );
 						if ( publicKey != null )
 						{
 							try
@@ -364,18 +348,18 @@ namespace Simias
 
 			// First go through and build the full list for members
 			// that match the search criteria
-			foreach( Member rMember in RUsers.memberList )
+			foreach( Member cMember in Simias.mDns.Browser.MemberList )
 			{
 				if ( searchAll == true )
 				{
-					searchCtx.memberList.Add( rMember );
+					searchCtx.memberList.Add( cMember );
 				}
 				else
 				{
-					Match m = ss.Match( rMember.Name );
+					Match m = ss.Match( cMember.Name );
 					if ( m.Success == true )
 					{
-						searchCtx.memberList.Add( rMember );
+						searchCtx.memberList.Add( cMember );
 					}
 				}
 			}
@@ -602,7 +586,7 @@ namespace Simias
 		/// specified domain. Otherwise, False is returned.</returns>
 		public bool OwnsDomain( string domainID )
 		{
-			return ( domainID.ToLower() == Simias.mDns.Domain.ID ) ? true : false;
+			return ( domainID.ToLower() == Simias.mDns.Domain.ID.ToLower() ) ? true : false;
 		}
 
 		/// <summary>

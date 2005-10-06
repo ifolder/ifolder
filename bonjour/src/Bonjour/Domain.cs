@@ -1,7 +1,7 @@
 /***********************************************************************
  *  $RCSfile$
  *
- *  Copyright (C) 2004 Novell, Inc.
+ *  Copyright (C) 2005 Novell, Inc.
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public
@@ -99,10 +99,19 @@ namespace Simias.mDns
 		/// <summary>
 		/// Gets the mDnsDomain's current user
 		/// </summary>
-		public string User
+		public string UserName
 		{
 			get { return( this.mDnsUserName ); }
 		}
+
+		/// <summary>
+		/// Gets the mDnsDomain current user's ID
+		/// </summary>
+		public string UserID
+		{
+			get { return( this.mDnsUserID ); }
+		}
+
 		#endregion
 
 		#region Constructors
@@ -149,7 +158,7 @@ namespace Simias.mDns
 					}
 					else
 					{
-						description = mDnsUserName + "'s Peer-to-Peer (P2P) Domain";
+						description = mDnsUserName + "'s " + mDnsDomainName + " Domain";
 					}
 
 					// Create the Peers (bonjour) domain
@@ -165,7 +174,7 @@ namespace Simias.mDns
 					rDomain.SetType( rDomain, "Peer-to-Peer (P2P)" );
 
 					// See if we have setup an mdns user on this box previously
-					member = this.GetMemberInfoFromFile();
+					member = this.GetMemberIDFromFile( mDnsUserName );
 					if ( member == null )
 					{
 						// Create the owner member for the domain.
@@ -175,10 +184,6 @@ namespace Simias.mDns
 								Guid.NewGuid().ToString().ToLower(), 
 								Access.Rights.Admin );
 						firstTime = true;
-					}
-					else
-					{
-						mDnsUserName = member.Name;
 					}
 
 					member.IsOwner = true;
@@ -205,6 +210,7 @@ namespace Simias.mDns
 
 					mDnsUserName = member.Name;
 					mDnsUserID = member.UserID;
+					mDnsHostName = Environment.MachineName;
 				}
 
 				//
@@ -224,6 +230,23 @@ namespace Simias.mDns
 		}
 
 		/// <summary>
+		/// Method to prod the domain to see if the host name has changed.
+		/// If it has the domain instance will update itself and return true.
+		/// If not false is returned
+		/// </summary>
+		internal bool CheckForHostChange()
+		{
+			if ( mDnsHostName != Environment.MachineName )
+			{
+				mDnsHostName = Environment.MachineName;
+				mDnsUserName = Environment.UserName + "@" + Environment.MachineName;
+				return true;
+			}
+
+			return false;
+		}
+
+			/// <summary>
 		/// Method to use previously saved mdns user info.
 		/// </summary>
 		internal Member GetMemberInfoFromFile()
@@ -275,6 +298,59 @@ namespace Simias.mDns
 				if ( name != null && id != null )
 				{
 					member = new Member( name, id, Access.Rights.Admin );
+				}
+			}
+			catch{}
+			return member;
+		}
+
+		/// <summary>
+		/// Method to use previously saved mdns user ID.
+		/// </summary>
+		internal Member GetMemberIDFromFile( string friendlyName )
+		{
+			Member	member = null;
+			string	id = null;
+			//string	name = null;
+
+			string path = Environment.GetFolderPath( Environment.SpecialFolder.LocalApplicationData );
+			if ( ( path == null ) || ( path.Length == 0 ) )
+			{
+				path = Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData );
+				if ( ( path == null ) || ( path.Length == 0 ) )
+				{
+					return null;
+				}
+			}
+
+			path = path + Path.DirectorySeparatorChar + configDir;
+			if ( Directory.Exists( path ) == false )
+			{
+				return null;
+			}
+
+			path += Path.DirectorySeparatorChar + configFile;
+
+			// Load the configuration document from the file.
+			XmlDocument mdnsInfo = new XmlDocument();
+			try
+			{
+				mdnsInfo.Load( path ); 
+				XmlElement domainElement = mdnsInfo.DocumentElement;
+				if ( domainElement.Name == rootLabel )
+				{
+					for ( int i = 0; i < domainElement.ChildNodes.Count; i++ )
+					{
+						if ( domainElement.ChildNodes[i].Name == idLabel )
+						{
+							id = domainElement.ChildNodes[i].InnerText;
+						}
+					}
+				}
+
+				if ( id != null )
+				{
+					member = new Member( friendlyName, id, Access.Rights.Admin );
 				}
 			}
 			catch{}

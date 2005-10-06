@@ -59,8 +59,16 @@ namespace Simias.mDns
 			SimiasLogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
 		private static string inCredentialEvent = "true";
-		private Simias.mDns.User mDnsUser = null;
+		//private Simias.mDns.User mDnsUser = null;
 		private Simias.mDnsProvider mDnsProvider = null;
+		private Simias.mDns.Register register = null;
+		private Simias.mDns.Browser browser = null;
+		private Simias.mDns.Domain domain = null;
+
+		// For controlling the monitor thread
+		private AutoResetEvent monitorEvent = null;
+		private bool up = false;
+		private Thread monitorThread = null;
 
 		// Register for authentication events
 		private Simias.Authentication.NeedCredentialsEventSubscriber needsCreds;
@@ -97,33 +105,39 @@ namespace Simias.mDns
 			{
 				// Newing up the mDns domain will create the
 				// Bonjour domain if it does not already exist.
-				new Simias.mDns.Domain( null );
-				this.mDnsUser = new Simias.mDns.User();
+				domain = new Simias.mDns.Domain( null );
+
+				log.Debug( "domain.UserName: " + domain.UserName );
+				log.Debug( "domain.UserID: " + domain.UserID );
 
 				// Registers our iFolder member with the Bonjour
 				// service daemon.
-				Simias.mDns.User.RegisterUser();
-
-				// Load the members in the Bonjour domain into
-				// our current list which is kept in memory
-				if ( BonjourUsers.LoadMembersFromDomain( false ) == false )
-				{
-					log.Error( "Failed loading the members from the Rendezvous domain" );
-				}
+				register = new Register( domain.UserID, domain.UserName );
+				register.RegisterUser();
 
 				// Start up an mDns browse session which watches
-				// for the coming and going of iFolder Rendezvous users.
-				Simias.mDns.User.StartMemberBrowsing();
+				// for the coming and going of iFolder Bonjour users.
+				browser = new Simias.mDns.Browser();
+
+				// Load up all Bonjour iFolder users that are persisted
+				// in the Bonjour (p2p) domain
+				browser.LoadMembersFromDomain( false );
+
+				// Start browsing which manages the coming and going of
+				// iFolder Bonjour users.
+				browser.StartBrowsing();
 
 				// Might not be needed in the future but today
 				// the sync thread collects all the Member meta
 				// from the Bonjour daemon when a new member
 				// is added to the list.
-				Simias.mDns.Sync.StartSyncThread();
+				//Simias.mDns.Sync.StartSyncThread();
+
+				StartMonitorThread();
 
 				// Register with the DomainProvider service
 				// Provides location resolution, member searching
-				// and authentication to the Rendezvous domain
+				// and authentication to the Bonjour domain
 				this.mDnsProvider = new Simias.mDnsProvider();
 				Simias.DomainProvider.RegisterProvider( this.mDnsProvider );
 
@@ -176,18 +190,24 @@ namespace Simias.mDns
 		{
 			log.Debug( "Stop called" );
 
+			// Unregister from the Domain container
 			if ( this.mDnsProvider != null )
 			{
 				Simias.DomainProvider.Unregister( this.mDnsProvider );
 			}
 
-			if ( this.mDnsUser != null )
+			if ( this.browser != null )
 			{
-				Simias.mDns.User.StopMemberBrowsing();
-				Simias.mDns.User.UnregisterUser();
+				browser.StopBrowsing();
 			}
 
-			Simias.mDns.Sync.StopSyncThread();
+			if ( register != null )
+			{
+				register.UnregisterUser();
+				register = null;
+			}
+
+			StopMonitorThread();
 		}
 
 		/// <summary>
@@ -224,6 +244,14 @@ namespace Simias.mDns
 							userID,
 							"@PPK@" );
 					}
+					else
+					{
+						log.Error( 
+							"Failed authentication to Collection: " + 
+							args.CollectionID + 
+							" Status: " + 
+							authStatus.statusCode.ToString() );
+					}
 				}
 			}
 		}
@@ -231,93 +259,71 @@ namespace Simias.mDns
 		#endregion
 
 		#region Private Methods
-		#endregion
-	}
-
-	/// <summary>
-	/// Temporary
-	/// Class for controlling the synchronization thread
-	/// </summary>
-	public class Sync
-	{
-		private static readonly ISimiasLog log = 
-			SimiasLogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-		static AutoResetEvent syncEvent = null;
-		static bool up = false;
-		static bool syncOnStart = true;
-		static int syncInterval = 60 * 1000;
-		static Thread syncThread = null;
-
-		internal static Simias.mDns.User mdnsUser = null;
-
-		internal static int StartSyncThread()
+		internal int StartMonitorThread()
 		{
 			int status = 0;
 
 			try
 			{
-				mdnsUser = new Simias.mDns.User();
-				syncEvent = new AutoResetEvent(false);
+				//mdnsUser = new Simias.mDns.User();
+				monitorEvent = new AutoResetEvent(false);
 				up = true;
-				syncThread = new Thread( new ThreadStart( Sync.SyncThread ) );
-				syncThread.IsBackground = true;
-				syncThread.Start();
+				monitorThread = new Thread( new ThreadStart( MonitorThread ) );
+				monitorThread.IsBackground = true;
+				monitorThread.Start();
 			}
 			catch( SimiasException e )
 			{
-				log.Debug( e.Message );
-				log.Debug( e.StackTrace );
+				log.Error( e.Message );
+				log.Error( e.StackTrace );
 				status = -1;
 			}
 
 			return status;
 		}
 
-		internal static int StopSyncThread()
+		internal int StopMonitorThread()
 		{
 			int status = 0;
 			up = false;
 			try
 			{
-				syncEvent.Set();
+				monitorEvent.Set();
 				Thread.Sleep(32);
-				mdnsUser = null;
-				log.Debug("StopSyncThread finished");
 			}
 			catch( SimiasException e )
 			{
-				log.Debug("StopSyncThread failed with an exception");
-				log.Debug(e.Message);
+				log.Error( "StopMonitorThread failed with an exception" );
+				log.Error( e.Message );
 				status = -1;
 			}
 
 			return status;
 		}
 
-		public static int SyncNow(string data)
-		{
-			log.Debug( "SyncNow called" );
-			syncEvent.Set();
-			log.Debug( "SyncNow finished" );
-			return 0;
-		}
-
-		internal static void SyncThread()
+		private void MonitorThread()
 		{
 			while ( up == true )
 			{
-				if ( syncOnStart == false )
+				monitorEvent.WaitOne( 60000, false );
+				log.Debug( "Checking for host change" );
+				if( domain.CheckForHostChange() == true )
 				{
-					syncEvent.WaitOne( syncInterval, false );
-				}
+					log.Debug( "iFolder Bonjour detected a host change" );
+					register.UnregisterUser();
+					register = null;
+					Thread.Sleep( 32 );
 
-				// Always wait after the first iteration
-				syncOnStart = false;
-				mdnsUser.SynchronizeMembers();
+					// Registers our iFolder member with the Bonjour
+					// service daemon.
+					log.Debug( "  reregistering service" );
+					register = new Register( domain.UserID, domain.UserName );
+					register.RegisterUser();
+				}
 			}
 
-			syncEvent.Close();
+			monitorEvent.Close();
 		}
+		#endregion
 	}
 }
