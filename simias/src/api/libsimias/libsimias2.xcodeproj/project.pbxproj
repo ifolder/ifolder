@@ -1,0 +1,464 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3E11311008F58327000D776C /* libsimias2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D2AAC0630554660B00DB518D /* libsimias2.dylib */; };
+		3EBAC45E08F575AD00AE1526 /* envC.c in Sources */ = {isa = PBXBuildFile; fileRef = 3EBAC45D08F575AD00AE1526 /* envC.c */; };
+		3EBAC46008F575CE00AE1526 /* simiaswebClientLib.c in Sources */ = {isa = PBXBuildFile; fileRef = 3EBAC45F08F575CE00AE1526 /* simiaswebClientLib.c */; };
+		3EBAC46208F575DD00AE1526 /* stdsoap2.c in Sources */ = {isa = PBXBuildFile; fileRef = 3EBAC46108F575DD00AE1526 /* stdsoap2.c */; };
+		3EBAC46908F575EB00AE1526 /* simias_domain.c in Sources */ = {isa = PBXBuildFile; fileRef = 3EBAC46308F575EB00AE1526 /* simias_domain.c */; };
+		3EBAC46A08F575EB00AE1526 /* simias_handle.c in Sources */ = {isa = PBXBuildFile; fileRef = 3EBAC46408F575EB00AE1526 /* simias_handle.c */; };
+		3EBAC46B08F575EB00AE1526 /* simias_internal.c in Sources */ = {isa = PBXBuildFile; fileRef = 3EBAC46508F575EB00AE1526 /* simias_internal.c */; };
+		3EBAC46C08F575EB00AE1526 /* simias_internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 3EBAC46608F575EB00AE1526 /* simias_internal.h */; };
+		3EBAC46D08F575EB00AE1526 /* simias_nodelist.c in Sources */ = {isa = PBXBuildFile; fileRef = 3EBAC46708F575EB00AE1526 /* simias_nodelist.c */; };
+		3EBAC46E08F575EB00AE1526 /* simias.h in Headers */ = {isa = PBXBuildFile; fileRef = 3EBAC46808F575EB00AE1526 /* simias.h */; };
+		3EBAC47708F5767600AE1526 /* simiaswebStub.h in Headers */ = {isa = PBXBuildFile; fileRef = 3EBAC47608F5767600AE1526 /* simiaswebStub.h */; };
+		3EBAC47908F5767D00AE1526 /* stdsoap2.h in Headers */ = {isa = PBXBuildFile; fileRef = 3EBAC47808F5767D00AE1526 /* stdsoap2.h */; };
+		3EBAC49808F5785400AE1526 /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = 3EBAC49708F5785400AE1526 /* test.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXBuildStyle section */
+		014CEA520018CE5811CA2923 /* Debug */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		014CEA530018CE5811CA2923 /* Release */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+/* End PBXBuildStyle section */
+
+/* Begin PBXContainerItemProxy section */
+		3EBAC49C08F5790400AE1526 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC0620554660B00DB518D;
+			remoteInfo = libsimias;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		3EBAC45D08F575AD00AE1526 /* envC.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = envC.c; sourceTree = "<group>"; };
+		3EBAC45F08F575CE00AE1526 /* simiaswebClientLib.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = simiaswebClientLib.c; sourceTree = "<group>"; };
+		3EBAC46108F575DD00AE1526 /* stdsoap2.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = stdsoap2.c; sourceTree = "<group>"; };
+		3EBAC46308F575EB00AE1526 /* simias_domain.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = simias_domain.c; sourceTree = "<group>"; };
+		3EBAC46408F575EB00AE1526 /* simias_handle.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = simias_handle.c; sourceTree = "<group>"; };
+		3EBAC46508F575EB00AE1526 /* simias_internal.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = simias_internal.c; sourceTree = "<group>"; };
+		3EBAC46608F575EB00AE1526 /* simias_internal.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = simias_internal.h; sourceTree = "<group>"; };
+		3EBAC46708F575EB00AE1526 /* simias_nodelist.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = simias_nodelist.c; sourceTree = "<group>"; };
+		3EBAC46808F575EB00AE1526 /* simias.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = simias.h; sourceTree = "<group>"; };
+		3EBAC47308F5763300AE1526 /* simiasweb.nsmap */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = simiasweb.nsmap; sourceTree = "<group>"; };
+		3EBAC47608F5767600AE1526 /* simiaswebStub.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = simiaswebStub.h; sourceTree = "<group>"; };
+		3EBAC47808F5767D00AE1526 /* stdsoap2.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = stdsoap2.h; sourceTree = "<group>"; };
+		3EBAC49108F5782000AE1526 /* testapi */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = testapi; sourceTree = BUILT_PRODUCTS_DIR; };
+		3EBAC49708F5785400AE1526 /* test.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = test.c; sourceTree = "<group>"; };
+		D2AAC0630554660B00DB518D /* libsimias2.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libsimias2.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3EBAC48F08F5781F00AE1526 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3E11311008F58327000D776C /* libsimias2.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D289988505E68E00004EDB86 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08FB7794FE84155DC02AAC07 /* libsimias */ = {
+			isa = PBXGroup;
+			children = (
+				3EBAC4B308F5808400AE1526 /* testapi */,
+				08FB7795FE84155DC02AAC07 /* libsimias */,
+				1AB674ADFE9D54B511CA2CBB /* Products */,
+			);
+			name = libsimias;
+			sourceTree = "<group>";
+		};
+		08FB7795FE84155DC02AAC07 /* libsimias */ = {
+			isa = PBXGroup;
+			children = (
+				3EBAC47608F5767600AE1526 /* simiaswebStub.h */,
+				3EBAC47308F5763300AE1526 /* simiasweb.nsmap */,
+				3EBAC46308F575EB00AE1526 /* simias_domain.c */,
+				3EBAC46408F575EB00AE1526 /* simias_handle.c */,
+				3EBAC46508F575EB00AE1526 /* simias_internal.c */,
+				3EBAC46608F575EB00AE1526 /* simias_internal.h */,
+				3EBAC46708F575EB00AE1526 /* simias_nodelist.c */,
+				3EBAC46808F575EB00AE1526 /* simias.h */,
+				3EBAC47808F5767D00AE1526 /* stdsoap2.h */,
+				3EBAC46108F575DD00AE1526 /* stdsoap2.c */,
+				3EBAC45F08F575CE00AE1526 /* simiaswebClientLib.c */,
+				3EBAC45D08F575AD00AE1526 /* envC.c */,
+			);
+			name = libsimias;
+			sourceTree = "<group>";
+		};
+		1AB674ADFE9D54B511CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2AAC0630554660B00DB518D /* libsimias2.dylib */,
+				3EBAC49108F5782000AE1526 /* testapi */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3EBAC4B308F5808400AE1526 /* testapi */ = {
+			isa = PBXGroup;
+			children = (
+				3EBAC49708F5785400AE1526 /* test.c */,
+			);
+			name = testapi;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D2AAC0600554660B00DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3EBAC46C08F575EB00AE1526 /* simias_internal.h in Headers */,
+				3EBAC46E08F575EB00AE1526 /* simias.h in Headers */,
+				3EBAC47708F5767600AE1526 /* simiaswebStub.h in Headers */,
+				3EBAC47908F5767D00AE1526 /* stdsoap2.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		3EBAC49008F5781F00AE1526 /* testapi */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3EBAC49308F5783E00AE1526 /* Build configuration list for PBXNativeTarget "testapi" */;
+			buildPhases = (
+				3EBAC48E08F5781F00AE1526 /* Sources */,
+				3EBAC48F08F5781F00AE1526 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = "$(HOME)/bin";
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = testapi;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			dependencies = (
+				3EBAC49D08F5790400AE1526 /* PBXTargetDependency */,
+			);
+			name = testapi;
+			productName = testapi;
+			productReference = 3EBAC49108F5782000AE1526 /* testapi */;
+			productType = "com.apple.product-type.tool";
+		};
+		D2AAC0620554660B00DB518D /* libsimias2 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3EBAC45308F5758D00AE1526 /* Build configuration list for PBXNativeTarget "libsimias2" */;
+			buildPhases = (
+				D2AAC0600554660B00DB518D /* Headers */,
+				D2AAC0610554660B00DB518D /* Sources */,
+				D289988505E68E00004EDB86 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INSTALL_PATH = /usr/local/lib;
+				LIBRARY_STYLE = DYNAMIC;
+				PREBINDING = NO;
+				PRODUCT_NAME = libsimias;
+			};
+			dependencies = (
+			);
+			name = libsimias2;
+			productName = libsimias;
+			productReference = D2AAC0630554660B00DB518D /* libsimias2.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 3EBAC45708F5758D00AE1526 /* Build configuration list for PBXProject "libsimias2" */;
+			buildSettings = {
+			};
+			buildStyles = (
+				014CEA520018CE5811CA2923 /* Debug */,
+				014CEA530018CE5811CA2923 /* Release */,
+			);
+			hasScannedForEncodings = 1;
+			mainGroup = 08FB7794FE84155DC02AAC07 /* libsimias */;
+			projectDirPath = "";
+			targets = (
+				D2AAC0620554660B00DB518D /* libsimias2 */,
+				3EBAC49008F5781F00AE1526 /* testapi */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3EBAC48E08F5781F00AE1526 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3EBAC49808F5785400AE1526 /* test.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D2AAC0610554660B00DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3EBAC45E08F575AD00AE1526 /* envC.c in Sources */,
+				3EBAC46008F575CE00AE1526 /* simiaswebClientLib.c in Sources */,
+				3EBAC46208F575DD00AE1526 /* stdsoap2.c in Sources */,
+				3EBAC46908F575EB00AE1526 /* simias_domain.c in Sources */,
+				3EBAC46A08F575EB00AE1526 /* simias_handle.c in Sources */,
+				3EBAC46B08F575EB00AE1526 /* simias_internal.c in Sources */,
+				3EBAC46D08F575EB00AE1526 /* simias_nodelist.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3EBAC49D08F5790400AE1526 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D2AAC0620554660B00DB518D /* libsimias2 */;
+			targetProxy = 3EBAC49C08F5790400AE1526 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		3EBAC45408F5758D00AE1526 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INSTALL_PATH = /usr/local/lib;
+				LIBRARY_STYLE = DYNAMIC;
+				PREBINDING = NO;
+				PRODUCT_NAME = libsimias2;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		3EBAC45508F5758D00AE1526 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INSTALL_PATH = /usr/local/lib;
+				LIBRARY_STYLE = DYNAMIC;
+				PREBINDING = NO;
+				PRODUCT_NAME = libsimias2;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		3EBAC45608F5758D00AE1526 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INSTALL_PATH = /usr/local/lib;
+				LIBRARY_STYLE = DYNAMIC;
+				PREBINDING = NO;
+				PRODUCT_NAME = libsimias2;
+			};
+			name = Default;
+		};
+		3EBAC45808F5758D00AE1526 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OTHER_CFLAGS = (
+					"-DWITH_NONAMESPACES",
+					"-DWITH_COOKIES",
+				);
+			};
+			name = Debug;
+		};
+		3EBAC45908F5758D00AE1526 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OTHER_CFLAGS = (
+					"-DWITH_NONAMESPACES",
+					"-DWITH_COOKIES",
+				);
+			};
+			name = Release;
+		};
+		3EBAC45A08F5758D00AE1526 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OTHER_CFLAGS = (
+					"-DWITH_NONAMESPACES",
+					"-DWITH_COOKIES",
+				);
+			};
+			name = Default;
+		};
+		3EBAC49408F5783E00AE1526 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = "$(HOME)/bin";
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = testapi;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Debug;
+		};
+		3EBAC49508F5783E00AE1526 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = "$(HOME)/bin";
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = testapi;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Release;
+		};
+		3EBAC49608F5783E00AE1526 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = "$(HOME)/bin";
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = testapi;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Default;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3EBAC45308F5758D00AE1526 /* Build configuration list for PBXNativeTarget "libsimias2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3EBAC45408F5758D00AE1526 /* Debug */,
+				3EBAC45508F5758D00AE1526 /* Release */,
+				3EBAC45608F5758D00AE1526 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		3EBAC45708F5758D00AE1526 /* Build configuration list for PBXProject "libsimias2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3EBAC45808F5758D00AE1526 /* Debug */,
+				3EBAC45908F5758D00AE1526 /* Release */,
+				3EBAC45A08F5758D00AE1526 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		3EBAC49308F5783E00AE1526 /* Build configuration list for PBXNativeTarget "testapi" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3EBAC49408F5783E00AE1526 /* Debug */,
+				3EBAC49508F5783E00AE1526 /* Release */,
+				3EBAC49608F5783E00AE1526 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}
