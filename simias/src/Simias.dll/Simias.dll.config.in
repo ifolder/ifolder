@@ -1,4 +1,0 @@
-<configuration>
-	<dllmap dll="FlaimWrapper" target="@webbindir@/FlaimWrapper.so" />
-</configuration>
-
