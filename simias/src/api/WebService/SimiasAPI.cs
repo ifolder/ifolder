@@ -93,7 +93,7 @@ namespace Simias.Web
 		public string GetDomains()
 		{
 			StringBuilder result = new StringBuilder();
-			result.Append("<?xml verion=\"1.0\"?>");
+			result.Append("<?xml version=\"1.0\"?>");
 			result.Append("<ObjectList>");
 
 			try

@@ -30,6 +30,7 @@
 
 typedef void *SimiasHandle;
 typedef void *SimiasNodeList;
+typedef void *SimiasNode;
 
 int simias_init_local(SimiasHandle *hSimias);
 int simias_free(SimiasHandle *hSimias);
@@ -38,6 +39,20 @@ int simias_ping(SimiasHandle hSimias);
 
 int simias_get_domains(SimiasHandle hSimias, SimiasNodeList *hNodeList);
 
+char *simias_node_get_name(SimiasNode hNode);
+char *simias_node_get_id(SimiasNode hNode);
+char *simias_node_get_type(SimiasNode hNode);
+
+int simias_node_free(SimiasNodeList *hNodeList);
+
+
+int simias_nodelist_extract_node(SimiasNodeList hNodeList, 
+								SimiasNode *hNode, 
+								int index);
+int simias_nodelist_get_node(SimiasNodeList hNodeList, 
+								SimiasNode *hNode, 
+								int index);
+int simias_nodelist_get_node_count(SimiasNodeList hNodeList, int *count);
 int simias_nodelist_free(SimiasNodeList *hNodeList);
 
 

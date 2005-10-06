@@ -63,17 +63,41 @@ bool simiasDomainTests()
 	rc = simias_init_local(&hSimias);
 	if(!rc)
 	{
-		for(counter = 0; counter < 20000; counter++)
+		for(counter = 0; counter < 200; counter++)
 		{
 			SimiasNodeList hNodeList;
+			int nodeCounter, nodeCount = 0;
 
 			rc = simias_get_domains(hSimias, &hNodeList);
 			if(!rc)
 			{
+				rc = simias_nodelist_get_node_count(hNodeList, &nodeCount);
+				if(rc)
+				{
+					printf("Error getting node counte: %d\n", rc);
+					break;
+				}
+					
+				for(nodeCounter = 0; nodeCounter < nodeCount; nodeCounter++)
+				{
+					SimiasNode hNode;
+					
+					rc = simias_nodelist_extract_node(hNodeList, &hNode,
+															nodeCounter);
+					if(rc == 0)
+					{
+						printf("Node Name: %s\nNode Id: %s\n Node Type: %s\n",
+							simias_node_get_name(hNode),
+							simias_node_get_id(hNode),
+							simias_node_get_type(hNode));
+					
+						simias_node_free(&hNode);
+					}
+				}
 				rc = simias_nodelist_free(&hNodeList);
 			}
 
-			printf("simias_get_domains: %d\n", counter);
+			printf("simias_get_domains: %d  count = %d\n", counter, nodeCount);
 
 			if(rc)
 			{
@@ -95,8 +119,8 @@ int main(int argc, char **argv)
 	bool	passedTest = true;
 	bool	allTests = true;
 	
-	struct timeb startTime;
-	struct timeb stopTime;
+//	struct timeb startTime;
+//	struct timeb stopTime;
 /*
 
 	printf("Test: simiasHandleTests()\n");

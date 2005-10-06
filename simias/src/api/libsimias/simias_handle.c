@@ -42,6 +42,11 @@ int simias_init_local(SimiasHandle *hSimias)
 	struct _SimiasHandle *_hSimias = NULL;
 	char	*tmpServiceURL;
 
+	 /* this initialize the library and check potential ABI mismatches
+	 * between the version it was compiled for and the actual shared
+	 * library used.*/
+	LIBXML_TEST_VERSION
+
 	_hSimias = (struct _SimiasHandle *) malloc(sizeof(struct _SimiasHandle));
 	if(_hSimias != NULL)
 	{
@@ -74,6 +79,8 @@ int simias_init_local(SimiasHandle *hSimias)
 int simias_free(SimiasHandle *hSimias)
 {
 	struct _SimiasHandle *_hSimias = (struct _SimiasHandle *)*hSimias;
+
+    xmlCleanupParser();	
 
 	if(_hSimias != NULL)
 	{

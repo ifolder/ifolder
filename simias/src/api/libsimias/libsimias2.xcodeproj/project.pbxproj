@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		3E11311008F58327000D776C /* libsimias2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D2AAC0630554660B00DB518D /* libsimias2.dylib */; };
+		3E27D43908F58FC3005699A7 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E27D43808F58FC3005699A7 /* libxml2.dylib */; };
+		3E27D54A08F5CDF1005699A7 /* simias_node.c in Sources */ = {isa = PBXBuildFile; fileRef = 3E27D54808F5CDF1005699A7 /* simias_node.c */; };
+		3E27D54B08F5CDF1005699A7 /* simias_nodelist.c in Sources */ = {isa = PBXBuildFile; fileRef = 3E27D54908F5CDF1005699A7 /* simias_nodelist.c */; };
 		3EBAC45E08F575AD00AE1526 /* envC.c in Sources */ = {isa = PBXBuildFile; fileRef = 3EBAC45D08F575AD00AE1526 /* envC.c */; };
 		3EBAC46008F575CE00AE1526 /* simiaswebClientLib.c in Sources */ = {isa = PBXBuildFile; fileRef = 3EBAC45F08F575CE00AE1526 /* simiaswebClientLib.c */; };
 		3EBAC46208F575DD00AE1526 /* stdsoap2.c in Sources */ = {isa = PBXBuildFile; fileRef = 3EBAC46108F575DD00AE1526 /* stdsoap2.c */; };
@@ -15,7 +18,6 @@
 		3EBAC46A08F575EB00AE1526 /* simias_handle.c in Sources */ = {isa = PBXBuildFile; fileRef = 3EBAC46408F575EB00AE1526 /* simias_handle.c */; };
 		3EBAC46B08F575EB00AE1526 /* simias_internal.c in Sources */ = {isa = PBXBuildFile; fileRef = 3EBAC46508F575EB00AE1526 /* simias_internal.c */; };
 		3EBAC46C08F575EB00AE1526 /* simias_internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 3EBAC46608F575EB00AE1526 /* simias_internal.h */; };
-		3EBAC46D08F575EB00AE1526 /* simias_nodelist.c in Sources */ = {isa = PBXBuildFile; fileRef = 3EBAC46708F575EB00AE1526 /* simias_nodelist.c */; };
 		3EBAC46E08F575EB00AE1526 /* simias.h in Headers */ = {isa = PBXBuildFile; fileRef = 3EBAC46808F575EB00AE1526 /* simias.h */; };
 		3EBAC47708F5767600AE1526 /* simiaswebStub.h in Headers */ = {isa = PBXBuildFile; fileRef = 3EBAC47608F5767600AE1526 /* simiaswebStub.h */; };
 		3EBAC47908F5767D00AE1526 /* stdsoap2.h in Headers */ = {isa = PBXBuildFile; fileRef = 3EBAC47808F5767D00AE1526 /* stdsoap2.h */; };
@@ -57,6 +59,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3E27D43808F58FC3005699A7 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = file; name = libxml2.dylib; path = /Users/calvin/libxml2.dylib; sourceTree = "<absolute>"; };
+		3E27D54808F5CDF1005699A7 /* simias_node.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = simias_node.c; sourceTree = "<group>"; };
+		3E27D54908F5CDF1005699A7 /* simias_nodelist.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = simias_nodelist.c; sourceTree = "<group>"; };
 		3EBAC45D08F575AD00AE1526 /* envC.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = envC.c; sourceTree = "<group>"; };
 		3EBAC45F08F575CE00AE1526 /* simiaswebClientLib.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = simiaswebClientLib.c; sourceTree = "<group>"; };
 		3EBAC46108F575DD00AE1526 /* stdsoap2.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = stdsoap2.c; sourceTree = "<group>"; };
@@ -64,7 +69,6 @@
 		3EBAC46408F575EB00AE1526 /* simias_handle.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = simias_handle.c; sourceTree = "<group>"; };
 		3EBAC46508F575EB00AE1526 /* simias_internal.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = simias_internal.c; sourceTree = "<group>"; };
 		3EBAC46608F575EB00AE1526 /* simias_internal.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = simias_internal.h; sourceTree = "<group>"; };
-		3EBAC46708F575EB00AE1526 /* simias_nodelist.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = simias_nodelist.c; sourceTree = "<group>"; };
 		3EBAC46808F575EB00AE1526 /* simias.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = simias.h; sourceTree = "<group>"; };
 		3EBAC47308F5763300AE1526 /* simiasweb.nsmap */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = simiasweb.nsmap; sourceTree = "<group>"; };
 		3EBAC47608F5767600AE1526 /* simiaswebStub.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = simiaswebStub.h; sourceTree = "<group>"; };
@@ -87,6 +91,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3E27D43908F58FC3005699A7 /* libxml2.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -111,8 +116,9 @@
 				3EBAC46308F575EB00AE1526 /* simias_domain.c */,
 				3EBAC46408F575EB00AE1526 /* simias_handle.c */,
 				3EBAC46508F575EB00AE1526 /* simias_internal.c */,
+				3E27D54808F5CDF1005699A7 /* simias_node.c */,
+				3E27D54908F5CDF1005699A7 /* simias_nodelist.c */,
 				3EBAC46608F575EB00AE1526 /* simias_internal.h */,
-				3EBAC46708F575EB00AE1526 /* simias_nodelist.c */,
 				3EBAC46808F575EB00AE1526 /* simias.h */,
 				3EBAC47808F5767D00AE1526 /* stdsoap2.h */,
 				3EBAC46108F575DD00AE1526 /* stdsoap2.c */,
@@ -125,6 +131,7 @@
 		1AB674ADFE9D54B511CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
+				3E27D43808F58FC3005699A7 /* libxml2.dylib */,
 				D2AAC0630554660B00DB518D /* libsimias2.dylib */,
 				3EBAC49108F5782000AE1526 /* testapi */,
 			);
@@ -260,7 +267,8 @@
 				3EBAC46908F575EB00AE1526 /* simias_domain.c in Sources */,
 				3EBAC46A08F575EB00AE1526 /* simias_handle.c in Sources */,
 				3EBAC46B08F575EB00AE1526 /* simias_internal.c in Sources */,
-				3EBAC46D08F575EB00AE1526 /* simias_nodelist.c in Sources */,
+				3E27D54A08F5CDF1005699A7 /* simias_node.c in Sources */,
+				3E27D54B08F5CDF1005699A7 /* simias_nodelist.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -288,7 +296,9 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INSTALL_PATH = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../../../../..\"";
 				LIBRARY_STYLE = DYNAMIC;
 				PREBINDING = NO;
 				PRODUCT_NAME = libsimias2;
@@ -307,7 +317,9 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INSTALL_PATH = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../../../../..\"";
 				LIBRARY_STYLE = DYNAMIC;
 				PREBINDING = NO;
 				PRODUCT_NAME = libsimias2;
@@ -324,7 +336,9 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INSTALL_PATH = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../../../../..\"";
 				LIBRARY_STYLE = DYNAMIC;
 				PREBINDING = NO;
 				PRODUCT_NAME = libsimias2;

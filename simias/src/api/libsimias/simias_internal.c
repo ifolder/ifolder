@@ -56,8 +56,8 @@ simias_get_user_profile_dir_path(char *dest_path)
 	sprintf (dest_path, user_profile);
 #else
 	char *home_dir;
-	char dot_local_path[1024];
-	char dot_local_share_path[1024];
+//	char dot_local_path[1024];
+//	char dot_local_share_path[1024];
 	char dot_local_share_simias_path[1024];
 	
 	home_dir = getenv ("HOME");

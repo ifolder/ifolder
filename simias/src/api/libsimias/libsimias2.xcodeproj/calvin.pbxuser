@@ -4,13 +4,13 @@
 		activeBuildConfigurationName = Debug;
 		activeBuildStyle = 014CEA520018CE5811CA2923 /* Debug */;
 		activeExecutable = 3EBAC49208F5782000AE1526 /* testapi */;
-		activeTarget = D2AAC0620554660B00DB518D /* libsimias2 */;
+		activeTarget = 3EBAC49008F5781F00AE1526 /* testapi */;
 		addToTargets = (
-			3EBAC49008F5781F00AE1526 /* testapi */,
+			D2AAC0620554660B00DB518D /* libsimias2 */,
 		);
 		breakpoints = (
-			3EBAC4A608F5799000AE1526 /* test.c:112 */,
 		);
+		breakpointsGroup = 3E27D46708F59515005699A7 /* XCBreakpointsBucket */;
 		codeSenseManager = 3EBAC45C08F5758D00AE1526 /* Code sense */;
 		executables = (
 			3EBAC49208F5782000AE1526 /* testapi */,
@@ -21,7 +21,7 @@
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
-					268,
+					276,
 					20,
 					48,
 					43,
@@ -60,11 +60,33 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 150307671;
-			PBXWorkspaceStateSaveDate = 150307671;
+			PBXPerProjectTemplateStateSaveDate = 150307788;
+			PBXWorkspaceStateSaveDate = 150307788;
 		};
 		sourceControlManager = 3EBAC45B08F5758D00AE1526 /* Source Control */;
 		userBuildSettings = {
+		};
+	};
+	3E27D46708F59515005699A7 /* XCBreakpointsBucket */ = {
+		isa = XCBreakpointsBucket;
+		name = "Project Breakpoints";
+		objects = (
+		);
+	};
+	3E27D54808F5CDF1005699A7 /* simias_node.c */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {590, 1778}}";
+			sepNavSelRange = "{1123, 44}";
+			sepNavVisRect = "{{0, 286}, {590, 590}}";
+			sepNavWindowFrame = "{{629, 278}, {629, 719}}";
+		};
+	};
+	3E27D54908F5CDF1005699A7 /* simias_nodelist.c */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {897, 3178}}";
+			sepNavSelRange = "{2052, 0}";
+			sepNavVisRect = "{{0, 593}, {897, 453}}";
+			sepNavWindowFrame = "{{107, 194}, {629, 719}}";
 		};
 	};
 	3EBAC45B08F5758D00AE1526 /* Source Control */ = {
@@ -87,18 +109,44 @@
 			sepNavWindowFrame = "{{84, 136}, {1046, 798}}";
 		};
 	};
+	3EBAC46308F575EB00AE1526 /* simias_domain.c */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {897, 938}}";
+			sepNavSelRange = "{1611, 0}";
+			sepNavVisRect = "{{0, 467}, {897, 453}}";
+			sepNavWindowFrame = "{{280, 56}, {671, 946}}";
+		};
+	};
+	3EBAC46408F575EB00AE1526 /* simias_handle.c */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {632, 2520}}";
+			sepNavSelRange = "{2252, 0}";
+			sepNavVisRect = "{{0, 874}, {632, 817}}";
+			sepNavWindowFrame = "{{317, 56}, {671, 946}}";
+		};
+	};
 	3EBAC46508F575EB00AE1526 /* simias_internal.c */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {563, 3654}}";
-			sepNavSelRange = "{1755, 28}";
-			sepNavVisRect = "{{0, 732}, {563, 175}}";
+			sepNavSelRange = "{1787, 34}";
+			sepNavVisRect = "{{0, 691}, {563, 175}}";
+			sepNavWindowFrame = "{{38, 54}, {671, 946}}";
 		};
 	};
 	3EBAC46608F575EB00AE1526 /* simias_internal.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {563, 1400}}";
-			sepNavSelRange = "{1110, 27}";
-			sepNavVisRect = "{{0, 312}, {563, 175}}";
+			sepNavIntBoundsRect = "{{0, 0}, {563, 1652}}";
+			sepNavSelRange = "{3278, 0}";
+			sepNavVisRect = "{{0, 1446}, {563, 175}}";
+			sepNavWindowFrame = "{{293, 134}, {627, 797}}";
+		};
+	};
+	3EBAC46808F575EB00AE1526 /* simias.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {508, 868}}";
+			sepNavSelRange = "{1413, 135}";
+			sepNavVisRect = "{{0, 18}, {508, 822}}";
+			sepNavWindowFrame = "{{276, 51}, {547, 951}}";
 		};
 	};
 	3EBAC47308F5763300AE1526 /* simiasweb.nsmap */ = {
@@ -111,9 +159,9 @@
 	};
 	3EBAC47608F5767600AE1526 /* simiaswebStub.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {956, 1792}}";
-			sepNavSelRange = "{366, 26}";
-			sepNavVisRect = "{{0, 46}, {563, 175}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1007, 1792}}";
+			sepNavSelRange = "{368, 0}";
+			sepNavVisRect = "{{0, 0}, {1007, 669}}";
 			sepNavWindowFrame = "{{130, 94}, {1046, 798}}";
 		};
 	};
@@ -152,24 +200,11 @@
 	};
 	3EBAC49708F5785400AE1526 /* test.c */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1007, 1890}}";
-			sepNavSelRange = "{0, 0}";
-			sepNavVisRect = "{{0, 1221}, {1007, 669}}";
-			sepNavWindowFrame = "{{152, 73}, {1046, 798}}";
+			sepNavIntBoundsRect = "{{0, 0}, {897, 2156}}";
+			sepNavSelRange = "{1391, 0}";
+			sepNavVisRect = "{{0, 803}, {897, 453}}";
+			sepNavWindowFrame = "{{641, 283}, {629, 719}}";
 		};
-	};
-	3EBAC4A608F5799000AE1526 /* test.c:112 */ = {
-		isa = PBXFileBreakpoint;
-		actions = (
-		);
-		continueAfterActions = 0;
-		delayBeforeContinue = 0;
-		fileReference = 3EBAC49708F5785400AE1526 /* test.c */;
-		functionName = "main()";
-		hitCount = 1;
-		lineNumber = 112;
-		modificationTime = 150305176.535178;
-		state = 1;
 	};
 	D2AAC0620554660B00DB518D /* libsimias2 */ = {
 		activeExec = 0;
