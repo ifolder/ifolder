@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-Bonjour_CSFILES = $(srcdir)/Service.cs $(srcdir)/Domain.cs $(srcdir)/User.cs $(srcdir)/DomainProvider.cs $(srcdir)/Auth.cs  
+Bonjour_CSFILES = $(srcdir)/Service.cs $(srcdir)/Domain.cs $(srcdir)/DnsdTypes.cs $(srcdir)/DomainProvider.cs $(srcdir)/Auth.cs $(srcdir)/Browser.cs $(srcdir)/Register.cs  
 Bonjour_CSFILES_CSC := $(subst /,$(SEP),$(Bonjour_CSFILES))
 Bonjour_INCLUDES =
 Bonjour_RESOURCES =
