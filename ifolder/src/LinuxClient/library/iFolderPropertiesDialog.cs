@@ -102,10 +102,10 @@ namespace Novell.iFolder
 						"Unable to read the iFolder");
 			}
 			
+			this.Modal = false;
+			this.TypeHint = Gdk.WindowTypeHint.Normal;
+			
 			this.HasSeparator = false;
-			this.Modal = true;
-			if(parent != null)
-				this.TransientFor = parent;
 			this.Title = Util.GS("iFolder Properties");
 
 //			ifHash = new Hashtable();

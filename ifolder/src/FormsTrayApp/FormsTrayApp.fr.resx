@@ -914,8 +914,24 @@
 		<value>Un dossier iFolder verrouillé a empêché la synchronisation : {0}</value>
 	</data>
   
+	<data name="readOnlyFailure">
+		<value>Read-only iFolder prevented synchronization: {0}</value>
+	</data>
+  
+	<data name="readOnlyFailureInfo">
+		<value>You have Read-only access to this iFolder.  Files that you place in this iFolder will not be synchronized.  Click here to view the Synchronization Log.</value>
+	</data>
+  
 	<data name="quotaFailure">
 		<value>Un dossier iFolder saturé a empêché la synchronisation : {0}</value>
+	</data>
+  
+	<data name="quotaFailureTitle">
+		<value>Incomplete Synchronization: {0}</value>
+	</data>
+  
+	<data name="quotaFailureInfo">
+		<value>The iFolder is full.  Click here to view the Synchronization Log.</value>
 	</data>
   
 	<data name="policySizeFailure">
@@ -943,7 +959,7 @@
 	</data>
   
 	<data name="verifyCert">
-		<value>iFolder ne peut pas vérifier l'identité du serveur iFolder {0}. Le certificat de ce serveur iFolder est signé par une autorité inconnue. Il est possible que vous soyez connecté à un serveur qui prétend être {0} et qui peut constituer un risque pour vos informations confidentielles.Â Â Avant d'accepter ce certificat, demandez l'avis de l'administrateur de votre système. Voulez-vous accepter ce certificat de façon permanente et continuer la connexion ?</value>
+		<value>iFolder ne peut pas vérifier l'identité du serveur iFolder {0}. Le certificat de ce serveur iFolder est signé par une autorité inconnue. Il est possible que vous soyez connecté à un serveur qui prétend être {0} et qui peut constituer un risque pour vos informations confidentielles. Avant d'accepter ce certificat, demandez l'avis de l'administrateur de votre système. Voulez-vous accepter ce certificat de façon permanente et continuer la connexion ?</value>
 	</data>
   
 	<data name="verifyCertTitle">

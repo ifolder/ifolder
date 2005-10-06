@@ -298,7 +298,7 @@ namespace Simias.Sync.Http
 				// Get the interface version.
 				string vString = response.Headers.Get(SyncHeaders.SyncVersion);
 				if (vString != null)
-					serverVersion = double.Parse(vString);
+					serverVersion = double.Parse(vString, System.Globalization.NumberFormatInfo.InvariantInfo);
 				// Now get the StartSyncInfo back;
 				BinaryReader reader = new BinaryReader(response.GetResponseStream());
 				si = new StartSyncInfo(reader);

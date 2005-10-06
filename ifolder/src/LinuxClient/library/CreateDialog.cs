@@ -41,6 +41,10 @@ namespace Novell.iFolder
 			{
 				return pathEntry.Text;
 			}
+			set
+			{
+				pathEntry.Text = value;
+			}
 		}
 
 
@@ -52,8 +56,11 @@ namespace Novell.iFolder
 			}
 		}
 
-
-		public CreateDialog(DomainInformation[] domainArray, string initialPath) : base()
+		///
+		/// filteredDomainID: If the main iFolders window is currently
+		/// filtering the list of domains, this parameter is used to allow this
+		/// dialog to respect the currently selected domain.
+		public CreateDialog(DomainInformation[] domainArray, string filteredDomainID, string initialPath) : base()
 		{
 			domains = domainArray;
 
@@ -96,8 +103,13 @@ namespace Novell.iFolder
 			for(int x=0; x < domains.Length; x++)
 			{
 				m.Append(new MenuItem(domains[x].Name));
-				if(domains[x].IsDefault)
-					defaultDomain = x;
+				if (filteredDomainID != null)
+				{
+					if (filteredDomainID == domains[x].ID)
+						defaultDomain = x;
+				}
+				else if(domains[x].IsDefault)
+						defaultDomain = x;
 			}
 
 			domainOptions.Menu = m;

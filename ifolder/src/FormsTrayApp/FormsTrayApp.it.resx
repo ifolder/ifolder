@@ -914,8 +914,24 @@
 		<value>Cartella iFolder bloccata. Sincronizzazione non eseguita: {0}</value>
 	</data>
   
+	<data name="readOnlyFailure">
+		<value>Read-only iFolder prevented synchronization: {0}</value>
+	</data>
+  
+	<data name="readOnlyFailureInfo">
+		<value>You have Read-only access to this iFolder.  Files that you place in this iFolder will not be synchronized.  Click here to view the Synchronization Log.</value>
+	</data>
+  
 	<data name="quotaFailure">
 		<value>Cartella iFolder piena. Sincronizzazione non eseguita: {0}</value>
+	</data>
+  
+	<data name="quotaFailureTitle">
+		<value>Incomplete Synchronization: {0}</value>
+	</data>
+  
+	<data name="quotaFailureInfo">
+		<value>The iFolder is full.  Click here to view the Synchronization Log.</value>
 	</data>
   
 	<data name="policySizeFailure">
@@ -943,7 +959,7 @@
 	</data>
   
 	<data name="verifyCert">
-		<value>Impossibile verificare l'identità del server iFolder {0}. Il certificato relativo a questo server iFolder è firmato da un'autorità di certificazione sconosciuta. È possibile che il server a cui si sta tentando di eseguire la connessione non sia {0}. Ciò può costituire un rischio per la riservatezza dei propri dati.Â Â  Prima di accettare il certificato, è necessario rivolgersi all'amministratore di sistema. Accettare il certificato in modo permanente e continuare la connessione?</value>
+		<value>Impossibile verificare l'identità del server iFolder {0}. Il certificato relativo a questo server iFolder è firmato da un'autorità di certificazione sconosciuta. È possibile che il server a cui si sta tentando di eseguire la connessione non sia {0}. Ciò può costituire un rischio per la riservatezza dei propri dati. Prima di accettare il certificato, è necessario rivolgersi all'amministratore di sistema. Accettare il certificato in modo permanente e continuare la connessione?</value>
 	</data>
   
 	<data name="verifyCertTitle">

@@ -60,7 +60,8 @@ namespace Novell.iFolder
 		private Gdk.Pixbuf			RunningPixbuf;
 		private Gdk.Pixbuf			StartingPixbuf;
 		private Gdk.Pixbuf			StoppingPixbuf;
-		private Gdk.PixbufAnimation	SyncingPixbuf;
+		private Gdk.PixbufAnimation	DownloadingPixbuf;
+		private Gdk.PixbufAnimation	UploadingPixbuf;
 		private Gtk.EventBox		eBox;
 		private TrayIcon			tIcon;
 		private iFolderWebService	ifws;
@@ -73,15 +74,38 @@ namespace Novell.iFolder
 		private	iFolderLoginDialog	LoginDialog;
 //		private bool				logwinShown;
 
+		/// These variables are used to track when to animate the
+		/// iFolder Icon in the notification panel.  The animation
+		/// should only occur when files/folders are actually
+		/// being uploaded/downloaded.
+		private bool				bCollectionIsSynchronizing;
+		// 0 = Not animating, 1 = uploading, -1 = downloading
+		private int					currentIconAnimationDirection;
+		
+		/// The following variables are used to keep track of the
+		/// iFolder that is currently synchronizing and any errors
+		/// encountered during a sync cycle so that the application
+		/// is able to notify the user at the end when there's a
+		/// problem.
+		private string				collectionSynchronizing;
+		private Hashtable			synchronizationErrors;
+
 		private DomainController	domainController;
 		private Manager				simiasManager;
+
+		private NotifyWindow		startingUpNotifyWindow = null;
 
 		public iFolderApplication(string[] args)
 			: base("ifolder", "1.0", Modules.UI, args)
 		{
 			Util.InitCatalog();
+			
+			Util.SetQuitiFolderDelegate(new QuitiFolderDelegate(QuitiFolder));
 
 			tIcon = new TrayIcon("iFolder");
+
+			bCollectionIsSynchronizing = false;
+			currentIconAnimationDirection = 0;
 
 			eBox = new EventBox();
 			eBox.ButtonPressEvent += 
@@ -93,8 +117,10 @@ namespace Novell.iFolder
 					new Pixbuf(Util.ImagesPath("ifolder-startup.png"));
 			StoppingPixbuf = 
 					new Pixbuf(Util.ImagesPath("ifolder-shutdown.png"));
-			SyncingPixbuf =
+			DownloadingPixbuf =
 					new Gdk.PixbufAnimation(Util.ImagesPath("ifolder24.gif"));
+			UploadingPixbuf =
+					new Gdk.PixbufAnimation(Util.ImagesPath("ifolder24-upload.gif"));
 
 			gAppIcon = new Gtk.Image(RunningPixbuf);
 
@@ -103,6 +129,9 @@ namespace Novell.iFolder
 			tIcon.ShowAll();	
 
 			LoginDialog = null;
+
+			collectionSynchronizing = null;
+			synchronizationErrors = new Hashtable();
 
 			iFolderStateChanged = new Gtk.ThreadNotify(
 							new Gtk.ReadyEvent(OniFolderStateChanged));
@@ -288,6 +317,22 @@ namespace Novell.iFolder
 
 			try
 			{
+				// Animate the iFolder Icon only when we're actually uploading
+				// or downloading a file/directory.
+				if (args.Direction == Simias.Client.Event.Direction.Uploading
+					&& bCollectionIsSynchronizing && currentIconAnimationDirection != 1)
+				{
+					gAppIcon.FromAnimation = UploadingPixbuf;
+					currentIconAnimationDirection = 1;
+				}
+				else if (args.Direction == Simias.Client.Event.Direction.Downloading
+						 && bCollectionIsSynchronizing
+						 && currentIconAnimationDirection != -1)
+				{
+					gAppIcon.FromAnimation = DownloadingPixbuf;
+					currentIconAnimationDirection = -1;
+				}
+
 				iFolderWindow ifwin = Util.GetiFolderWindow();
 				if(ifwin != null)
 					ifwin.HandleFileSyncEvent(args);
@@ -297,6 +342,82 @@ namespace Novell.iFolder
 					logwin.HandleFileSyncEvent(args);
 			}
 			catch {}
+
+			// Keep track of certain error conditions during a sync and notify
+			// the user when there is a problem at the end of a sync cycle.
+			if (args.Status != SyncStatus.Success)
+			{
+				string message = null;
+
+				switch(args.Status)
+				{
+					case SyncStatus.Success:
+						// Clear all synchronization errors (if any old ones
+						// exist) since the this just synchronized successfully.
+						if (synchronizationErrors.ContainsKey(args.CollectionID))
+							synchronizationErrors.Remove(args.CollectionID);
+
+						break;
+//					case SyncStatus.UpdateConflict:
+//					case SyncStatus.FileNameConflict:
+//						// Conflicts are handled in the OniFolderChangedEvent method
+//						break;
+//					case SyncStatus.Policy:
+//						message = Util.GS("A policy prevented complete synchronization.");
+//						break;
+//					case SyncStatus.Access:
+//						message = Util.GS("Insuficient rights prevented complete synchronization.");
+//						break;
+//					case SyncStatus.Locked:
+//						message = Util.GS("The iFolder is locked.");
+//						break;
+					case SyncStatus.PolicyQuota:
+//						message = Util.GS("The iFolder is full.  Click here to view the Synchronization Log.");
+						message = Util.GS("The iFolder is full.\n\nClick <a href=\"ShowSyncLog\">here</a> to view the Synchronization Log.");
+						break;
+//					case SyncStatus.PolicySize:
+//						message = Util.GS("A size restriction policy prevented complete synchronization.");
+//						break;
+//					case SyncStatus.PolicyType:
+//						message = Util.GS("A file type restriction policy prevented complete synchronization.");
+//						break;
+//					case SyncStatus.DiskFull:
+//						if (args.Direction == Simias.Client.Event.Direction.Uploading)
+//						{
+//							message = Util.GS("Insufficient disk space on the server prevented complete synchronization.");
+//						}
+//						else
+//						{
+//							message = Util.GS("Insufficient disk space on this computer prevented complete synchronization.");
+//						}
+//						break;
+					case SyncStatus.ReadOnly:
+						message = Util.GS("You have Read-only access to this iFolder.  Files that you place in this iFolder will not be synchronized.\n\nClick <a href=\"ShowSyncLog\">here</a> to view the Synchronization Log.");
+						break;
+//					default:
+//						message = Util.GS("iFolder synchronization failed.");
+//						break;
+				}
+				
+				if (message != null)
+				{
+					Hashtable collectionSyncErrors = null;
+					if (synchronizationErrors.ContainsKey(args.CollectionID))
+					{
+						collectionSyncErrors = (Hashtable)synchronizationErrors[args.CollectionID];
+					}
+					else
+					{
+						collectionSyncErrors = new Hashtable();
+						synchronizationErrors[args.CollectionID] = collectionSyncErrors;
+					}
+					
+					if (!collectionSyncErrors.ContainsKey(args.Status))
+					{
+						collectionSyncErrors[args.Status] = message;
+					}
+				}
+			}
 		}
 
 
@@ -311,12 +432,63 @@ namespace Novell.iFolder
 			{
 				case Action.StartSync:
 				{
-					gAppIcon.FromAnimation = SyncingPixbuf;
+					bCollectionIsSynchronizing = true;
+
+					collectionSynchronizing = args.ID;
 					break;
 				}
 				case Action.StopSync:
 				{
+					bCollectionIsSynchronizing = false;
+					currentIconAnimationDirection = 0;
 					gAppIcon.Pixbuf = RunningPixbuf;
+
+//					if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_SYNC_ERRORS, 
+//							"true") == "true")
+//					{
+						if (collectionSynchronizing != null)
+						{
+							iFolderHolder ifHolder = ifdata.GetiFolder(collectionSynchronizing);
+							if (ifHolder != null)
+							{
+								if (synchronizationErrors.ContainsKey(ifHolder.iFolder.ID))
+								{
+									Hashtable collectionSyncErrors = (Hashtable)synchronizationErrors[ifHolder.iFolder.ID];
+									ICollection errors = collectionSyncErrors.Keys;
+									ArrayList keysToClear = new ArrayList();
+									foreach(SyncStatus syncStatusKey in errors)
+									{
+										string errMsg = (string) collectionSyncErrors[syncStatusKey];
+										if (errMsg != null && errMsg.Length > 0)
+										{
+											NotifyWindow notifyWin = new NotifyWindow(
+												tIcon, string.Format(Util.GS("Incomplete Synchronization: {0}"), ifHolder.iFolder.Name),
+												errMsg,
+												Gtk.MessageType.Warning, 10000);
+											notifyWin.LinkClicked +=
+												new LinkClickedEventHandler(OnNotifyWindowLinkClicked);
+											notifyWin.ShowAll();
+											
+											// Set this message to "" so that
+											// the notification bubble isn't
+											// popped-up on every sync cycle.
+											keysToClear.Add(syncStatusKey);
+										}
+									}
+									
+									// Clear out all the keys whose messages
+									// were just notified to the user.
+									foreach(SyncStatus syncStatusKey in keysToClear)
+									{
+										collectionSyncErrors[syncStatusKey] = "";
+									}
+								}
+							}
+						}
+//					}
+
+					collectionSynchronizing = null;
+
 					break;
 				}
 			}
@@ -353,8 +525,11 @@ namespace Novell.iFolder
 							tIcon, 
 							string.Format(Util.GS("New iFolder \"{0}\""), 
 								ifHolder.iFolder.Name),
-							string.Format(Util.GS("{0} has invited you to participate in this shared iFolder"), ifHolder.iFolder.Owner),
+							string.Format(Util.GS("{0} has invited you to participate in this shared iFolder.\n\nClick <a href=\"SetUpiFolder:{1}\">here</a> to set up this iFolder."),
+										  ifHolder.iFolder.Owner, ifHolder.iFolder.CollectionID),
 							Gtk.MessageType.Info, 10000);
+					notifyWin.LinkClicked +=
+						new LinkClickedEventHandler(OnNotifyWindowLinkClicked);
 					notifyWin.ShowAll();
 				}
 			}
@@ -405,11 +580,23 @@ namespace Novell.iFolder
 					if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_COLLISIONS, 
 							"true") == "true")
 					{
-						NotifyWindow notifyWin = new NotifyWindow(
-							tIcon, Util.GS("Action Required"),
-							string.Format(Util.GS("A conflict has been detected in iFolder \"{0}\""), ifHolder.iFolder.Name),
-							Gtk.MessageType.Info, 10000);
-						notifyWin.ShowAll();
+						string message = string.Format(
+							Util.GS("A conflict has been detected in this iFolder.\n\nClick <a href=\"ResolveiFolderConflicts:{0}\">here</a> to resolve the conflicts.\nWhat is a <a href=\"ShowConflictHelp\">conflict</a>?"),
+							args.iFolderID);
+
+						Hashtable collectionSyncErrors = null;
+						if (synchronizationErrors.ContainsKey(args.iFolderID))
+							collectionSyncErrors = (Hashtable)synchronizationErrors[args.iFolderID];
+						else
+						{
+							collectionSyncErrors = new Hashtable();
+							synchronizationErrors[args.iFolderID] = collectionSyncErrors;
+						}
+						
+						if (!collectionSyncErrors.ContainsKey(SyncStatus.FileNameConflict))
+						{
+							collectionSyncErrors[SyncStatus.FileNameConflict] = message;
+						}
 					}
 
 					iFolderWindow ifwin = Util.GetiFolderWindow();
@@ -456,7 +643,8 @@ namespace Novell.iFolder
 					tIcon, Util.GS("New iFolder User"), 
 					string.Format(Util.GS("{0} has joined the iFolder \"{1}\""), username, ifHolder.iFolder.Name),
 					Gtk.MessageType.Info, 10000);
-
+				notifyWin.LinkClicked +=
+					new LinkClickedEventHandler(OnNotifyWindowLinkClicked);
 				notifyWin.ShowAll();
 			}
 							
@@ -506,6 +694,13 @@ namespace Novell.iFolder
 							new DomainNeedsCredentialsEventHandler(OnDomainNeedsCredentialsEvent);
 					}
 
+					if (startingUpNotifyWindow != null)
+					{
+						startingUpNotifyWindow.Hide();
+						startingUpNotifyWindow.Destroy();
+						startingUpNotifyWindow = null;
+					}
+
 					gAppIcon.Pixbuf = RunningPixbuf;
 
 					// Bring up the accounts dialog if there are no domains
@@ -545,42 +740,98 @@ namespace Novell.iFolder
 			DomainInformation[] domains = simws.GetDomains(false);
 			if (domains.Length < 1)
 			{
-				// Prompt the user about there not being any domains
-				iFolderWindow ifwin = Util.GetiFolderWindow();
-				iFolderMsgDialog dg = new iFolderMsgDialog(
-					ifwin,
-					iFolderMsgDialog.DialogType.Question,
-					iFolderMsgDialog.ButtonSet.YesNo,
-					"",
-					Util.GS("Set up an iFolder account?"),
-					Util.GS("To begin using iFolder, you must first set up an iFolder account."));
-				int rc = dg.Run();
-				dg.Hide();
-				dg.Destroy();
-				if (rc == -8)
-				{
-					showPrefsPage(1);
-				}
+				NotifyWindow notifyWin = new NotifyWindow(
+					tIcon, Util.GS("Welcome to iFolder"),
+					"To begin using iFolder, you must first set up an iFolder account.\n\nClick <a href=\"ShowAccountsPage\">here</a> to add a new account.",
+					Gtk.MessageType.Info, 10000);
+				notifyWin.LinkClicked +=
+					new LinkClickedEventHandler(OnNotifyWindowLinkClicked);
+				notifyWin.ShowAll();
 			}
 
 			return false;	// Prevent this from being called over and over by Gtk.Timeout
+		}
+
+		private void OnNotifyWindowLinkClicked(object sender, LinkClickedEventArgs args)
+		{
+			if (args.LinkID != null)
+			{
+				if (args.LinkID.Equals("ShowSyncLog"))
+					Util.ShowLogWindow();
+				else if (args.LinkID.StartsWith("SetUpiFolder"))
+				{
+					int colonPos = args.LinkID.IndexOf(':');
+					if (colonPos > 0)
+					{
+						Util.ShowiFolderWindow();
+					
+						string ifolderID = args.LinkID.Substring(colonPos + 1);
+						iFolderWindow ifwin = Util.GetiFolderWindow();
+						ifwin.SetUpiFolder(ifolderID);
+					}
+				}
+				else if (args.LinkID.StartsWith("ResolveiFolderConflicts"))
+				{
+					int colonPos = args.LinkID.IndexOf(':');
+					if (colonPos > 0)
+					{
+						Util.ShowiFolderWindow();
+					
+						string ifolderID = args.LinkID.Substring(colonPos + 1);
+						iFolderWindow ifwin = Util.GetiFolderWindow();
+						ifwin.ResolveConflicts(ifolderID);
+					}
+				}
+				else if (args.LinkID.Equals("ShowAccountsPage"))
+				{
+					NotifyWindow notifyWindow = sender as NotifyWindow;
+					notifyWindow.Hide();
+					notifyWindow.Destroy();
+
+					showPrefsPage(1);
+				}
+				else if (args.LinkID.Equals("ShowConflictHelp"))
+				{
+					Util.ShowHelp("conflicts.html", null);
+				}
+			}
 		}
 
 		private void trayapp_clicked(object obj, ButtonPressEventArgs args)
 		{
 			// Prevent the trayapp context menu from showing if we're
 			// starting up or shutting down.
-			if(CurrentState == iFolderState.Starting ||
-				CurrentState == iFolderState.Stopping)
+			if (CurrentState == iFolderState.Starting)
+			{
+				startingUpNotifyWindow = new NotifyWindow(
+					tIcon, Util.GS("iFolder is starting"),
+					"Please wait for iFolder to start...",
+					Gtk.MessageType.Info, 0);
+				startingUpNotifyWindow.ShowAll();
 				return;
+			}
+			else if (CurrentState == iFolderState.Stopping)
+			{
+				NotifyWindow notifyWin = new NotifyWindow(
+					tIcon, Util.GS("iFolder is shutting down"),
+					"",
+					Gtk.MessageType.Info, 10000);
+				notifyWin.ShowAll();
+				return;
+			}
 
 			switch(args.Event.Button)
 			{
 				case 1: // first mouse button
-					if(args.Event.Type == Gdk.EventType.TwoButtonPress)
-					{
-						showiFolderWindow(obj, args);
-					}
+					// When the user clicks on the iFolder icon, show the
+					// iFolder window if it's not already showing and hide
+					// it if it's not showing.  This behavior is used by
+					// Beagle and Gaim.
+					iFolderWindow ifwin = Util.GetiFolderWindow();
+					if (ifwin == null || !ifwin.Visible)
+						Util.ShowiFolderWindow();
+					else
+						ifwin.Hide();
 					break;
 				case 2: // second mouse button
 					break;
@@ -685,6 +936,10 @@ namespace Novell.iFolder
 		}
 
 
+		public void QuitiFolder()
+		{
+			quit_ifolder(null, null);
+		}
 
 
 		private void quit_ifolder(object o, EventArgs args)

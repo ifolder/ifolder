@@ -914,8 +914,24 @@
 		<value>鎖定的 iFolder 導致無法同步化：{0}</value>
 	</data>
   
+	<data name="readOnlyFailure">
+		<value>Read-only iFolder prevented synchronization: {0}</value>
+	</data>
+  
+	<data name="readOnlyFailureInfo">
+		<value>You have Read-only access to this iFolder.  Files that you place in this iFolder will not be synchronized.  Click here to view the Synchronization Log.</value>
+	</data>
+  
 	<data name="quotaFailure">
 		<value>完整的 iFolder 導致無法同步化：{0}</value>
+	</data>
+  
+	<data name="quotaFailureTitle">
+		<value>Incomplete Synchronization: {0}</value>
+	</data>
+  
+	<data name="quotaFailureInfo">
+		<value>The iFolder is full.  Click here to view the Synchronization Log.</value>
 	</data>
   
 	<data name="policySizeFailure">
@@ -943,7 +959,7 @@
 	</data>
   
 	<data name="verifyCert">
-		<value>iFolder cannot verify the identity of the iFolder Server {0}.  The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be {0} which could put your confidential information at risk.  Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?</value>
+		<value>iFolder 無法驗證「iFolder 伺服器 {0}」的身份。此「iFolder 伺服器」的憑證由不明證書權限簽署。您可能正連接至偽裝成 {0} 的伺服器，這樣會使機密資訊存在風險。在接受此憑證之前，應先洽詢系統管理員。您要永久接受此憑證並繼續連接嗎？</value>
 	</data>
   
 	<data name="verifyCertTitle">

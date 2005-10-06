@@ -914,8 +914,24 @@
 		<value>Synchronizácii zabránil zamknutý priečinok iFolder: {0}</value>
 	</data>
   
+	<data name="readOnlyFailure">
+		<value>Read-only iFolder prevented synchronization: {0}</value>
+	</data>
+  
+	<data name="readOnlyFailureInfo">
+		<value>You have Read-only access to this iFolder.  Files that you place in this iFolder will not be synchronized.  Click here to view the Synchronization Log.</value>
+	</data>
+  
 	<data name="quotaFailure">
 		<value>Synchronizácii zabránil plný priečinok iFolder: {0}</value>
+	</data>
+  
+	<data name="quotaFailureTitle">
+		<value>Incomplete Synchronization: {0}</value>
+	</data>
+  
+	<data name="quotaFailureInfo">
+		<value>The iFolder is full.  Click here to view the Synchronization Log.</value>
 	</data>
   
 	<data name="policySizeFailure">
@@ -943,7 +959,7 @@
 	</data>
   
 	<data name="verifyCert">
-		<value>Priečinok iFolder nemôže overiť identitu servera iFolder {0}. Certifikát tohto servera iFolder bol podpísaný neznámou certifikačnou autoritou. Je možné, že sa pripájate k serveru, ktorý predstiera, že je {0}, čím môžete riskovať únik dôverných informácií.Â Â Skôr, ako tento certifikát prijmete, overte si tento postup u správcu systému. Chcete natrvalo prijať tento certifikát a pripojiť sa?</value>
+		<value>Priečinok iFolder nemôže overiť identitu servera iFolder {0}. Certifikát tohto servera iFolder bol podpísaný neznámou certifikačnou autoritou. Je možné, že sa pripájate k serveru, ktorý predstiera, že je {0}, čím môžete riskovať únik dôverných informácií. Skôr, ako tento certifikát prijmete, overte si tento postup u správcu systému. Chcete natrvalo prijať tento certifikát a pripojiť sa?</value>
 	</data>
   
 	<data name="verifyCertTitle">

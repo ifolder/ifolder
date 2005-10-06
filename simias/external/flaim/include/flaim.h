@@ -5,8 +5,8 @@ Owner:   FLAIM Team
 Tabs:    4,3
 
 	Copyright © 1991-2005 Novell, Inc. All Rights Reserved.
-	Use and redistribution of this work is subject to the developer license
-	agreement through which this work is made available.
+	Use and redistribution of this work is subject to the Novell Binary 
+	Restricted license agreement through which this work is made available.
 	THIS WORK MAY NOT BE REVISED OR MODIFIED WITHOUT THE PRIOR WRITTEN CONSENT
 	OF NOVELL, INC.  THE WORK IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND,
 	EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
@@ -20,6 +20,12 @@ Desc: This include file contains the structure definitions and prototypes
 		needed by an application to interface with FLAIM.
 
  * $Log$
+ * Revision 1.4.16.1  2005/10/06 17:01:07  mlasky
+ * 1. Merged with head.
+ *
+ * Revision 1.5  2005/09/21 19:55:38  ryoung65
+ * Changed the license to Novell Binary Restricted.
+ *
  * Revision 1.4  2005/05/02 23:42:55  ryoung65
  * Fixed the member list that would crash after waiting for awhile and then trying to read more members.
  * The flaim handle was being freed because a thread went away.

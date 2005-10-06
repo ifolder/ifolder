@@ -124,14 +124,16 @@ public class iFolderMsgDialog : Dialog
 		Label l = new Label();
 		l.LineWrap = true;
 		l.UseMarkup = true;
-		l.Selectable = true;
+		l.Selectable = false;
+		l.CanFocus = false;
 		l.Xalign = 0; l.Yalign = 0;
 		l.Markup = "<span weight=\"bold\" size=\"larger\">" + statement + "</span>";
 		v.PackStart(l);
 
 		l = new Label(secondaryStatement);
 		l.LineWrap = true;
-		l.Selectable = true;
+		l.Selectable = false;
+		l.CanFocus = false;
 		l.Xalign = 0; l.Yalign = 0;
 		v.PackStart(l, true, true, 8);
 		

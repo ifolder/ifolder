@@ -914,8 +914,24 @@
 		<value>Zablokowany iFolder uniemożliwił synchronizację: {0}</value>
 	</data>
   
+	<data name="readOnlyFailure">
+		<value>Read-only iFolder prevented synchronization: {0}</value>
+	</data>
+  
+	<data name="readOnlyFailureInfo">
+		<value>You have Read-only access to this iFolder.  Files that you place in this iFolder will not be synchronized.  Click here to view the Synchronization Log.</value>
+	</data>
+  
 	<data name="quotaFailure">
 		<value>Synchronizacja uniemożliwiona z powodu zapełnienia iFolderu: {0}</value>
+	</data>
+  
+	<data name="quotaFailureTitle">
+		<value>Incomplete Synchronization: {0}</value>
+	</data>
+  
+	<data name="quotaFailureInfo">
+		<value>The iFolder is full.  Click here to view the Synchronization Log.</value>
 	</data>
   
 	<data name="policySizeFailure">
@@ -943,7 +959,7 @@
 	</data>
   
 	<data name="verifyCert">
-		<value>Program iFolder nie może zweryfikować tożsamości serwera iFolder {0}. Certyfikat tego serwera iFolder został podpisany przez nieznany ośrodek certyfikacji. Użytkownik może łączyć się z serwerem podszywającym się pod {0}, co niesie za sobą ryzyko ujawnienia poufnych informacji użytkownika.Â Â Przed zaakceptowaniem tego certyfikatu należy skontaktować się z administratorem systemu. Czy chcesz zaakceptować ten certyfikat na stałe i kontynuować łączenie?</value>
+		<value>Program iFolder nie może zweryfikować tożsamości serwera iFolder {0}. Certyfikat tego serwera iFolder został podpisany przez nieznany ośrodek certyfikacji. Użytkownik może łączyć się z serwerem podszywającym się pod {0}, co niesie za sobą ryzyko ujawnienia poufnych informacji użytkownika. Przed zaakceptowaniem tego certyfikatu należy skontaktować się z administratorem systemu. Czy chcesz zaakceptować ten certyfikat na stałe i kontynuować łączenie?</value>
 	</data>
   
 	<data name="verifyCertTitle">

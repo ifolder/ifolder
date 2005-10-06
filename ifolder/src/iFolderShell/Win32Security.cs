@@ -29,6 +29,7 @@ namespace Novell.Win32Util
 	/// <summary>
 	/// Summary description for Win32Security.
 	/// </summary>
+	[ComVisible(false)]
 	public class Win32Security
 	{
 		private const int OWNER_SECURITY_INFORMATION = 0x00000001;

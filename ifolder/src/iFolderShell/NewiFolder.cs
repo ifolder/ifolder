@@ -61,6 +61,13 @@ namespace Novell.iFolderCom
 			//
 			InitializeComponent();
 
+			int start = iFolderOverview.Text.IndexOf( "[hyperlink]" );
+			System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(NewiFolder));
+			string s = resourceManager.GetString( "[hyperlink]" );
+
+			iFolderOverview.Text = iFolderOverview.Text.Replace( "[hyperlink]", s );			
+			iFolderOverview.LinkArea = new LinkArea(start, s.Length );
+
 			// Center the window.
 			this.StartPosition = FormStartPosition.CenterScreen;
 		}

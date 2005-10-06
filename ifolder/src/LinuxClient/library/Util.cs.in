@@ -58,8 +58,10 @@ namespace Novell.iFolder
 		
 		private static bool bLogWinNeverShown			  = true;
 
-		private static iFolderWebService	ifws		  = null;
-		private static SimiasWebService		simws		  = null;
+		private static iFolderWebService	ifws		= null;
+		private static SimiasWebService		simws		= null;
+		
+		private static QuitiFolderDelegate quitiFolderDelegate = null;
 
 		public static void InitCatalog()
 		{
@@ -478,6 +480,17 @@ namespace Novell.iFolder
 			}
 		}
 		
+		public static void SetQuitiFolderDelegate(QuitiFolderDelegate aQuitiFolderDelegate)
+		{
+			quitiFolderDelegate = aQuitiFolderDelegate;
+		}
+		
+		public static void QuitiFolder()
+		{
+			if (quitiFolderDelegate != null)
+				quitiFolderDelegate();
+		}
+		
 		public static string LastSetupPath
 		{
 			get
@@ -569,4 +582,6 @@ namespace Novell.iFolder
 			return path;
 		}
 	}
+	
+	public delegate void QuitiFolderDelegate();
 }

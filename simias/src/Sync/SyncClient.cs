@@ -493,7 +493,7 @@ namespace Simias.Sync
 		#region fields
 
 		internal static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(CollectionSyncClient));
-		EventPublisher	eventPublisher = new EventPublisher();
+		static EventPublisher	eventPublisher = new EventPublisher();
 		HttpSyncProxy	service;
 		SyncWorkArray	workArray;
 		Store			store;
@@ -780,7 +780,7 @@ namespace Simias.Sync
 				switch (si.Status)
 				{
 					case StartSyncStatus.AccessDenied:
-						new EventPublisher().RaiseEvent(
+						eventPublisher.RaiseEvent(
 							new NodeEventArgs(
 							"Sync", collection.ID, collection.ID, 
 							collection.BaseType, EventType.NoAccess, 
@@ -796,7 +796,7 @@ namespace Simias.Sync
 						log.Info("The server is busy");
 						break;
 					case StartSyncStatus.NotFound:
-						new EventPublisher().RaiseEvent(
+						eventPublisher.RaiseEvent(
 							new NodeEventArgs(
 							"Sync", collection.ID, collection.ID, 
 							collection.BaseType, EventType.NoAccess, 
@@ -1341,6 +1341,8 @@ namespace Simias.Sync
 				catch {}
 				offset += batchCount;
 			}
+			// Update the collection in case it changed.
+			collection.Refresh();
 		}
 	
 		/// <summary>
@@ -1972,6 +1974,7 @@ namespace Simias.Sync
 		Hashtable		nodesToServer;
 		Access.Rights	rights;
 		bool			sparseReplica = false;
+		static EventPublisher eventPublisher = new EventPublisher();
 		
 		internal class nodeTypeEntry : IComparable
 		{
@@ -2056,8 +2059,6 @@ namespace Simias.Sync
 			{
 				if (rights == Access.Rights.ReadOnly)
 				{
-					Log.log.Debug("Failed Uploading Node (ReadOnly rights)");
-				
 					// If this node exists on the server.
 					if (stamp.MasterIncarnation != 0)
 					{
@@ -2066,14 +2067,36 @@ namespace Simias.Sync
 						stamp.LocalIncarnation = stamp.MasterIncarnation + 1;
 						AddNodeFromServer(stamp);
 					}
-					else if (stamp.Operation == SyncOperation.Delete)
+					else 
 					{
-						// Since this is a delete just delete the tombstone.
 						Node tNode = collection.GetNodeByID(stamp.ID);
 						if (tNode != null)
 						{
-							collection.Delete(tNode);
-							collection.Commit(tNode);
+							
+							if (stamp.Operation == SyncOperation.Delete)
+							{
+								// Since this is a delete just delete the tombstone.
+								collection.Delete(tNode);
+								collection.Commit(tNode);
+							}
+							else
+							{
+								ObjectType type;
+								switch (stamp.NodeType)
+								{
+									case SyncNodeType.Directory:
+										type = ObjectType.Directory;
+										break;
+									case SyncNodeType.File:
+										type = ObjectType.File;
+										break;
+									default:
+										type = ObjectType.Unknown;
+										break;
+								}
+								eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, type, false, tNode.Name, 0, 0, 0, Direction.Uploading, SyncStatus.ReadOnly));
+								Log.log.Debug("Failed Uploading Node (ReadOnly rights)");
+							}
 						}
 					}
 				}

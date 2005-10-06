@@ -246,12 +246,16 @@ namespace Novell.iFolder
 		private Gtk.MenuItem		SetupMenuItem;
 		private ImageMenuItem		PropMenuItem;
 		private ImageMenuItem		CloseMenuItem;
+		private ImageMenuItem		QuitMenuItem;
 		private ImageMenuItem		RefreshMenuItem;
 		private ImageMenuItem		HelpMenuItem;
 		private ImageMenuItem		AboutMenuItem;
+		
+		private ImageMenuItem		PreferencesMenuItem;
+		private Gtk.MenuItem		AccountsMenuItem;
+		private Gtk.MenuItem		SyncLogMenuItem;
 
 		private iFolderConflictDialog ConflictDialog;
-		private iFolderPropertiesDialog PropertiesDialog;
 
 		private Hashtable			curiFolders;
 
@@ -272,6 +276,11 @@ namespace Novell.iFolder
 		// Manager object that knows about simias resources.
 		private Manager				simiasManager;
 
+		// Keep track of the properties dialogs so that if a user attempts
+		// to open the properties of an iFolder that is already opened, it
+		// won't open additional properties dialogs for the same iFolder.
+		private Hashtable			propDialogs;
+
 		/// <summary>
 		/// Default constructor for iFolderWindow
 		/// </summary>
@@ -288,6 +297,8 @@ namespace Novell.iFolder
 			curiFolders = new Hashtable();
 			curDomain = null;
 			curDomains = null;
+
+			propDialogs = new Hashtable();
 			
 			CreateWidgets();
 			
@@ -527,11 +538,27 @@ namespace Novell.iFolder
 			CloseMenuItem = new ImageMenuItem (Stock.Close, agrp);
 			iFolderMenu.Append(CloseMenuItem);
 			CloseMenuItem.Activated += new EventHandler(CloseEventHandler);
+			
+			QuitMenuItem = new ImageMenuItem(Stock.Quit, agrp);
+			iFolderMenu.Append(QuitMenuItem);
+			QuitMenuItem.Activated += new EventHandler(QuitEventHandler);
 
 			MenuItem iFolderMenuItem = new MenuItem(Util.GS("i_Folder"));
 			iFolderMenuItem.Submenu = iFolderMenu;
 			menubar.Append (iFolderMenuItem);
 
+			//----------------------------
+			// Edit Menu
+			//----------------------------
+			Menu EditMenu = new Menu();
+			PreferencesMenuItem = new ImageMenuItem(Util.GS("_Preferences"));
+			PreferencesMenuItem.Image = new Image(Stock.Preferences, Gtk.IconSize.Menu);
+			EditMenu.Append(PreferencesMenuItem);
+			PreferencesMenuItem.Activated += new EventHandler(ShowPreferencesHandler);
+			
+			MenuItem EditMenuItem = new MenuItem(Util.GS("_Edit"));
+			EditMenuItem.Submenu = EditMenu;
+			menubar.Append(EditMenuItem);
 
 			//----------------------------
 			// View Menu
@@ -543,6 +570,18 @@ namespace Novell.iFolder
 			ViewMenu.Append(RefreshMenuItem);
 			RefreshMenuItem.Activated += 
 					new EventHandler(RefreshiFoldersHandler);
+					
+			ViewMenu.Append(new SeparatorMenuItem());
+			
+			AccountsMenuItem =
+				new MenuItem (Util.GS("_Accounts"));
+			ViewMenu.Append(AccountsMenuItem);
+			AccountsMenuItem.Activated += new EventHandler(AccountsMenuItemHandler);
+
+			SyncLogMenuItem =
+				new MenuItem (Util.GS("Synchronization _Log"));
+			ViewMenu.Append(SyncLogMenuItem);
+			SyncLogMenuItem.Activated += new EventHandler(SyncLogMenuItemHandler);
 
 			MenuItem ViewMenuItem = new MenuItem(Util.GS("_View"));
 			ViewMenuItem.Submenu = ViewMenu;
@@ -783,6 +822,19 @@ namespace Novell.iFolder
 
 
 
+		private void AccountsMenuItemHandler(object o, EventArgs args)
+		{
+			Util.ShowPrefsPage(1);
+		}
+
+
+
+		private void SyncLogMenuItemHandler(object o, EventArgs args)
+		{
+			Util.ShowLogWindow();
+		}
+
+
 
 		private void CloseEventHandler(object o, EventArgs args)
 		{
@@ -795,6 +847,18 @@ namespace Novell.iFolder
 		{
 			this.Hide();
 			this.Destroy();
+		}
+		
+		
+		private void QuitEventHandler(object o, EventArgs args)
+		{
+			Util.QuitiFolder();
+		}
+		
+		
+		private void ShowPreferencesHandler(object o, EventArgs args)
+		{
+			Util.ShowPrefsPage(0);
 		}
 
 
@@ -1166,32 +1230,45 @@ namespace Novell.iFolder
 				iFolderHolder ifHolder = 
 							(iFolderHolder) tModel.GetValue(iter, 0);
 
-				try
+				if (ifHolder != null)
 				{
-					PropertiesDialog = 
-						new iFolderPropertiesDialog(this, 
-									ifHolder.iFolder, 
-									ifws, simws, simiasManager);
-					PropertiesDialog.Response += 
-							new ResponseHandler(OnPropertiesDialogResponse);
-					PropertiesDialog.CurrentPage = currentPage;
-					PropertiesDialog.ShowAll();
-				}
-				catch(Exception e)
-				{
-					if(PropertiesDialog != null)
+					iFolderPropertiesDialog propsDialog =
+						(iFolderPropertiesDialog) propDialogs[ifHolder.iFolder.ID];
+					if (propsDialog == null)
 					{
-						PropertiesDialog.Hide();
-						PropertiesDialog.Destroy();
-						PropertiesDialog = null;
+						try
+						{
+							propsDialog = 
+								new iFolderPropertiesDialog(this, ifHolder.iFolder, ifws, simws, simiasManager);
+							propsDialog.Response += 
+									new ResponseHandler(OnPropertiesDialogResponse);
+							propsDialog.CurrentPage = currentPage;
+							propsDialog.ShowAll();
+		
+							propDialogs[ifHolder.iFolder.ID] = propsDialog;
+						}
+						catch(Exception e)
+						{
+							if(propsDialog != null)
+							{
+								propsDialog.Hide();
+								propsDialog.Destroy();
+								propsDialog = null;
+							}
+		
+							iFolderExceptionDialog ied = 
+								new iFolderExceptionDialog(this, e);
+							ied.Run();
+							ied.Hide();
+							ied.Destroy();
+							ied = null;
+						}
 					}
-
-					iFolderExceptionDialog ied = 
-						new iFolderExceptionDialog(this, e);
-					ied.Run();
-					ied.Hide();
-					ied.Destroy();
-					ied = null;
+					else
+					{
+						propsDialog.Present();
+						propsDialog.CurrentPage = currentPage;
+					}
 				}
 			}
 		}
@@ -1199,16 +1276,18 @@ namespace Novell.iFolder
 
 		private void OnPropertiesDialogResponse(object o, ResponseArgs args)
 		{
+			iFolderPropertiesDialog propsDialog = (iFolderPropertiesDialog) o;
+
 			switch(args.ResponseId)
 			{
 				case Gtk.ResponseType.Help:
-					if (PropertiesDialog != null)
+					if (propsDialog != null)
 					{
-						if (PropertiesDialog.CurrentPage == 0)
+						if (propsDialog.CurrentPage == 0)
 						{
 							Util.ShowHelp("propifolders.html", this);
 						}
-						else if (PropertiesDialog.CurrentPage == 1)
+						else if (propsDialog.CurrentPage == 1)
 						{
 							Util.ShowHelp("sharewith.html", this);
 						}
@@ -1220,11 +1299,15 @@ namespace Novell.iFolder
 					break;
 				default:
 				{
-					if(PropertiesDialog != null)
+					if(propsDialog != null)
 					{
-						PropertiesDialog.Hide();
-						PropertiesDialog.Destroy();
-						PropertiesDialog = null;
+						propsDialog.Hide();
+						propsDialog.Destroy();
+
+						if (propDialogs.ContainsKey(propsDialog.iFolder.ID))
+							propDialogs.Remove(propsDialog.iFolder.ID);
+
+						propsDialog = null;
 					}
 					break;
 				}
@@ -1410,6 +1493,20 @@ namespace Novell.iFolder
 		}
 
 
+		public void ResolveConflicts(string ifolderID)
+		{
+			// Guarantee that the iFolderWindow is showing
+			Util.ShowiFolderWindow();
+
+			// Select the specified available iFolder and call SetupiFolder().
+			if(curiFolders.ContainsKey(ifolderID))
+			{
+				TreeIter iter = (TreeIter)curiFolders[ifolderID];
+				TreeSelection tSelect = iFolderTreeView.Selection;
+				tSelect.SelectIter(iter);
+				ResolveConflicts();
+			}
+		}
 
 		private void ResolveConflicts()
 		{
@@ -1684,11 +1781,17 @@ namespace Novell.iFolder
 
 			// If the properties dialog is open, update it so it shows the
 			// current status (last sync time, objects to sync, etc.)						
-			if (ifHolder != null &&
-				PropertiesDialog != null && 
-				PropertiesDialog.iFolder.ID == args.ID)
+//			if (ifHolder != null &&
+//				PropertiesDialog != null && 
+//				PropertiesDialog.iFolder.ID == args.ID)
+			if (ifHolder != null)
 			{
-				PropertiesDialog.UpdateiFolder(ifHolder.iFolder);
+				iFolderPropertiesDialog propsDialog =
+					(iFolderPropertiesDialog) propDialogs[ifHolder.iFolder.ID];
+				if (propsDialog != null)
+				{
+					propsDialog.UpdateiFolder(ifHolder.iFolder);
+				}
 			}
 		}
 
@@ -1881,7 +1984,20 @@ namespace Novell.iFolder
 		}
 
 
+		public void SetUpiFolder(string ifolderID)
+		{
+			// Guarantee that the iFolderWindow is showing
+			Util.ShowiFolderWindow();
 
+			// Select the specified available iFolder and call SetupiFolder().
+			if(curiFolders.ContainsKey(ifolderID))
+			{
+				TreeIter iter = (TreeIter)curiFolders[ifolderID];
+				TreeSelection tSelect = iFolderTreeView.Selection;
+				tSelect.SelectIter(iter);
+				SetupiFolder();
+			}
+		}
 
 		private void SetupiFolder()
 		{
@@ -1905,7 +2021,7 @@ namespace Novell.iFolder
 							new iFolderAcceptDialog(ifHolder.iFolder, Util.LastSetupPath);
 					iad.TransientFor = this;
 					rc = iad.Run();
-					newPath = iad.Path;
+					newPath = ParseAndReplaceTildeInPath(iad.Path);
 					iad.Hide();
 					iad.Destroy();
 					if(rc != -5)
@@ -1976,7 +2092,7 @@ namespace Novell.iFolder
 
 			DomainInformation[] domains = ifdata.GetDomains();
 	
-			CreateDialog cd = new CreateDialog(domains, Util.LastCreatedPath);
+			CreateDialog cd = new CreateDialog(domains, curDomain, Util.LastCreatedPath);
 			cd.TransientFor = this;
 	
 			int rc = 0;
@@ -2037,6 +2153,8 @@ namespace Novell.iFolder
 						continue;
 					}
 
+					selectedFolder = ParseAndReplaceTildeInPath(selectedFolder);
+
 					iFolderHolder ifHolder = null;
 					try
 					{
@@ -2047,7 +2165,11 @@ namespace Novell.iFolder
 					catch(Exception e)
 					{
 						if (DisplayCreateOrSetupException(e))
+						{
+							// Update the selectedFolder path
+							cd.iFolderPath = selectedFolder;
 							continue;	// The function handled the exception
+						}
 					}
 
 					if(ifHolder == null)
@@ -2264,6 +2386,21 @@ namespace Novell.iFolder
 			}
 			
 			return false;
+		}
+
+		///
+		/// Searches for a '~' character in the specified path and replaces it
+		/// with the user's home directory
+		private string ParseAndReplaceTildeInPath(string origPath)
+		{
+			string parsedString = origPath;
+			if (origPath.IndexOf('~') >= 0)
+			{
+				string homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+				parsedString = origPath.Replace("~", homeDirectory);
+			}
+			
+			return parsedString;
 		}
 		
 		private void OnDomainAddedEvent(object sender, DomainEventArgs args)

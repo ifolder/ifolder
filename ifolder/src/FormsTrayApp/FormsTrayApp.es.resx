@@ -914,8 +914,24 @@
 		<value>La iFolder bloqueada no ha permitido la sincronización: {0}</value>
 	</data>
   
+	<data name="readOnlyFailure">
+		<value>Read-only iFolder prevented synchronization: {0}</value>
+	</data>
+  
+	<data name="readOnlyFailureInfo">
+		<value>You have Read-only access to this iFolder.  Files that you place in this iFolder will not be synchronized.  Click here to view the Synchronization Log.</value>
+	</data>
+  
 	<data name="quotaFailure">
 		<value>La iFolder llena no ha permitido la sincronización: {0}</value>
+	</data>
+  
+	<data name="quotaFailureTitle">
+		<value>Incomplete Synchronization: {0}</value>
+	</data>
+  
+	<data name="quotaFailureInfo">
+		<value>The iFolder is full.  Click here to view the Synchronization Log.</value>
 	</data>
   
 	<data name="policySizeFailure">
@@ -943,7 +959,7 @@
 	</data>
   
 	<data name="verifyCert">
-		<value>iFolder no puede verificar la identidad del servidor iFolder {0}. Una autoridad de certificación desconocida ha firmado el certificado del servidor iFolder. Es posible que se esté conectando a un servidor que se hace pasar por {0} y puede poner la información confidencial en peligro.Â Â Antes de aceptar este certificado, compruébelo con la ayuda del administrador del sistema. ¿Desea aceptar este certificado de forma permanente y continuar con la conexión?</value>
+		<value>iFolder no puede verificar la identidad del servidor iFolder {0}. Una autoridad de certificación desconocida ha firmado el certificado del servidor iFolder. Es posible que se esté conectando a un servidor que se hace pasar por {0} y puede poner la información confidencial en peligro. Antes de aceptar este certificado, compruébelo con la ayuda del administrador del sistema. ¿Desea aceptar este certificado de forma permanente y continuar con la conexión?</value>
 	</data>
   
 	<data name="verifyCertTitle">

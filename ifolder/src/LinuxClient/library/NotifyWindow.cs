@@ -17,7 +17,9 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  Author: Calvin Gaisford <cgaisford@novell.com>
+ *  Authors:
+ *		Calvin Gaisford <cgaisford@novell.com>
+ *		Boyd Timothy <btimothy@novell.com>
  * 
  ***********************************************************************/
 
@@ -27,6 +29,7 @@ using Gdk;
 using System;
 using System.Collections;
 using System.Runtime.InteropServices;
+using System.Xml;
 
 namespace Novell.iFolder
 {
@@ -36,12 +39,36 @@ namespace Novell.iFolder
 		private Pixbuf	background = null;
 		private Pixbuf	activebackground = null;
 		private Pixbuf	inactivebackground = null;
+		private Gdk.Color activeBackgroundColor;
+		private Gdk.Color inactiveBackgroundColor;
+		private LinkTextView detailsTextView;
 		private uint	closeWindowTimeoutID;
 		private bool	isSelected = false;
 		private int		wbsize = 16;
+		private int		messageTextWidth = 300;
 		private uint	timeout;
 
+		///
+		/// Fired when a user clicks on a link inside the details of the
+		/// notification message.
+		///
+		public event LinkClickedEventHandler LinkClicked;
 
+		///
+		/// details: The details of the notification.  Links can be sepecified
+		/// using anchor tags similar to those found in HTML.  Each link will
+		/// be underlined and made blue.  When users click on the link, they
+		/// will cause the LinkClicked event to fire.  An example details
+		/// string with links would be:
+		///
+		///		Click <a href="MyLinkID">here</a> to open a new window.
+		///
+		/// Multiple links may be specified.
+		///
+		/// timeout: Specify the number of milliseconds to leave the popup on
+		/// the screen.  Set to 0 to leave on the screen until the user closes
+		/// it or the code which launched the window hides and destroys it.
+		///
 		public NotifyWindow(Gtk.Widget parent, string message, string details,
 							Gtk.MessageType messageType, uint timeout)
 			: base(Gtk.WindowType.Popup)
@@ -49,6 +76,9 @@ namespace Novell.iFolder
 			this.AppPaintable = true;
 			parentWidget = parent;
 			this.timeout = timeout;
+
+			activeBackgroundColor = new Gdk.Color(249, 253, 202);
+			inactiveBackgroundColor = new Gdk.Color(255, 255, 255);
 
 			Gtk.HBox outBox = new HBox();
 			this.Add(outBox);
@@ -76,6 +106,9 @@ namespace Novell.iFolder
 			Gtk.HBox hbox = new HBox();
 			hbox.Spacing = 5;
 			vbox.PackStart(hbox, false, false, 0);
+			
+			VBox iconVBox = new VBox();
+			hbox.PackStart(iconVBox, false, false, 0);
 
 			Gtk.Image msgImage = new Gtk.Image();
 			switch(messageType)
@@ -98,58 +131,72 @@ namespace Novell.iFolder
 					break;
 			}
 
-			hbox.PackStart(msgImage, false, true, 0);
+//			hbox.PackStart(msgImage, false, true, 0);
+			iconVBox.PackStart(msgImage, false, false, 0);
 //			vbox.Spacing = 5;
-//			Label l = new Label("<span weight=\"bold\" size=\"large\">" +
-			Label l = new Label("<span size=\"small\" weight=\"bold\">" +
-							message + 
-							"</span>");
+			// Fix for Bug #116812: iFolders w/ underscore characters are not
+			// displayed correctly in bubble.
+			// If we put the text in the constructor of the Label widget,
+			// the markup is parsed to look for mnemonics.  If we just set
+			// the Markup property later, the underscore character is
+			// interpreted correctly.
+
+			VBox messageVBox = new VBox();
+			hbox.PackStart(messageVBox, true, true, 0);
+
+			Label l = new Label();
+			l.Markup = "<span size=\"small\" weight=\"bold\">" + message + "</span>";
 			l.LineWrap = false;
 			l.UseMarkup = true;
 			l.Selectable = false;
 			l.Xalign = 0;
 			l.Yalign = 0;
-			hbox.PackStart(l, false, true, 0);
+			l.LineWrap = true;
+			l.Wrap = true;
+			l.WidthRequest = messageTextWidth;
+			messageVBox.PackStart(l, false, true, 0);
 
-			Label l2 = new Label("<span size=\"small\">" + details + "</span>");
-			l2.WidthRequest = 400;
-			l2.UseMarkup = true;
-			l2.LineWrap = true;
-			l2.Xalign = 0;
-			l.Yalign = 0;
-			vbox.PackStart(l2, false, true, 0);
-/*
-			l = new Label("<span size=\"small\" underline=\"single\">" +
-				"Go There" + "</span>");
-			l.UseMarkup = true;
-			l.LineWrap = false;
-			l.Xalign = 1;
-			l.Yalign = 0;
-			fxd.Put(l, 160, 80);
-			l.ButtonPressEvent += new ButtonPressEventHandler(
-						OnLabelClicked);
-*/
-/*
-			HBox buttonBox = new HBox();
-			buttonBox.Spacing = 10;
-			vbox.PackStart(buttonBox, true, true, 0);
+			detailsTextView = new LinkTextView(details);
 
-			Button but = new Button("_Close");
-			but.Clicked += new EventHandler(OnCloseButton);
-			but.Relief = Gtk.ReliefStyle.None;
-			buttonBox.PackEnd(but, false, true, 0);
-*/
+			detailsTextView.Editable = false;
+			detailsTextView.CursorVisible = false;
+			detailsTextView.WrapMode = WrapMode.Word;
 
+			// Determine how tall to make the TextView by allocating a random
+			// height.  This will allow us to see the "optimal" height so that
+			// all the text will be displayed without having to make the user
+			// scroll through the details of the message.
+			detailsTextView.SizeAllocate(new Gdk.Rectangle(0, 0, messageTextWidth, 600));
+
+			detailsTextView.LinkClicked +=
+				new LinkClickedEventHandler(OnLinkClicked);
+			messageVBox.PackStart(detailsTextView, false, false, 3);
+
+			// This spacer has to be here to make sure that the bottom of the
+			// detailsTextView does not get chopped off.  I'm not sure why,
+			// it's just another one of those crazy things we do.
+			Label spacer = new Label();
+			spacer.UseMarkup = true;
+			spacer.Markup = "<span size=\"xx-small\"> </span>";
+			messageVBox.PackEnd(spacer, false, false, 0);
+		
 			closeWindowTimeoutID = 0;
 		}
 
 
 
+		private void OnLinkClicked(object sender, LinkClickedEventArgs args)
+		{
+			// Pass the event on
+			if (LinkClicked != null)
+				LinkClicked(this, args);
+		}
+
 		protected override void OnShown()
 		{
 			base.OnShown();
 
-			if(closeWindowTimeoutID == 0)
+			if(closeWindowTimeoutID == 0 && timeout > 0)
 			{
 				closeWindowTimeoutID = Gtk.Timeout.Add(timeout, new Gtk.Function(
 						HideWindowCallback));
@@ -168,7 +215,7 @@ namespace Novell.iFolder
 			this.Destroy();
 			return false;
 		}
-
+		
 		private void OnCloseEvent(object obj, ButtonPressEventArgs args)
 		{
 			this.Hide();
@@ -193,7 +240,7 @@ namespace Novell.iFolder
 				if(mask != null)
 					this.ShapeCombineMask(mask, 0, 0);
 				else
-					Console.WriteLine("mask was null");
+					Console.WriteLine("Novell.iFolder.NotifyWindow: mask was null");
 			}
 
 		}
@@ -447,6 +494,8 @@ namespace Novell.iFolder
 			isSelected = true;
 			QueueDraw();
 
+			detailsTextView.ModifyBase(StateType.Normal, activeBackgroundColor);
+
 			return false;
 		}
 		
@@ -459,18 +508,23 @@ namespace Novell.iFolder
 			isSelected = false;
 			QueueDraw();
 
+			// Reset the base color back to normal
+			detailsTextView.ModifyBase(StateType.Normal, inactiveBackgroundColor);
+			
 			if(closeWindowTimeoutID != 0)
 			{
 				Gtk.Timeout.Remove(closeWindowTimeoutID);
 				closeWindowTimeoutID = 0;
 			}
 
-			closeWindowTimeoutID = Gtk.Timeout.Add(timeout, new Gtk.Function(
-						HideWindowCallback));
+			if (timeout > 0)
+			{
+				closeWindowTimeoutID = Gtk.Timeout.Add(timeout, new Gtk.Function(
+							HideWindowCallback));
+			}
 
 			return false;
 		}
-
 
 		[DllImport("libgtk-x11-2.0.so.0")]
 		static extern IntPtr gdk_pixmap_create_from_xpm(IntPtr drawable, 
@@ -515,7 +569,218 @@ namespace Novell.iFolder
 			pixmap_return = new Gdk.Pixmap(pm_handle);
 			mask_return = new Gdk.Bitmap(bm_handle);
 		}
+	}
+	
+	public class LinkTextView : TextView
+	{
+		// -1 = cursor never set, 0 = null cursor, 1 = hand cursor
+		private int currentCursor;
+
+		private Gdk.Cursor handCursor;
+		private bool hoveringOverLink;
+
+		///
+		/// Fired when a user clicks on a link inside the details of the
+		/// notification message.
+		///
+		public event LinkClickedEventHandler LinkClicked;
 
 
+		public LinkTextView(string linkText) : base()
+		{
+			currentCursor = -1;
+
+			handCursor = new Gdk.Cursor (Gdk.CursorType.Hand2);
+			
+			hoveringOverLink = false;
+
+			string xmlLinkText = "<message>" + linkText + "</message>";
+			
+			XmlDocument linkTextDom = new XmlDocument();
+			linkTextDom.LoadXml(xmlLinkText);
+
+			TextTagTable textTagTable = CreateTextTagTable(linkTextDom);
+			TextBuffer textBuffer = new TextBuffer(textTagTable);
+
+			FormatTextBuffer(textBuffer, linkTextDom.DocumentElement);
+
+			this.Buffer = textBuffer;
+		}
+		
+		/// Parse through and create TextTag objects for every
+		/// <a href="TextTagName"> found in the message text.
+		private TextTagTable CreateTextTagTable(XmlNode topLevelNode)
+		{
+			TextTagTable textTagTable = new TextTagTable();
+			
+			TextTag smallFontTag = new TextTag("small-font");
+			smallFontTag.Scale = Pango.Scale.Small;
+			textTagTable.Add(smallFontTag);
+
+			XmlNodeList linkNodes = topLevelNode.SelectNodes("//a");
+			if (linkNodes != null)
+			{
+				foreach(XmlNode linkNode in linkNodes)
+				{
+					XmlAttribute href = linkNode.Attributes["href"];
+					if (href != null)
+					{
+						string textTagName = href.Value;
+
+						if (textTagTable.Lookup(textTagName) != null)
+							continue;
+						
+						TextTag textTag = new TextTag(textTagName);
+						textTag.Underline = Pango.Underline.Single;
+						textTag.Foreground = "blue";
+						textTag.TextEvent +=
+							new TextEventHandler(OnTextEvent);
+						textTagTable.Add(textTag);
+					}
+				}
+			}
+
+			return textTagTable;			
+		}
+		
+		
+		
+		/// Walk through the message and add TextTag objects as needed
+		private void FormatTextBuffer(TextBuffer textBuffer, XmlNode linkTextNode)
+		{
+			XmlNodeList childNodes = linkTextNode.ChildNodes;
+			foreach(XmlNode childNode in childNodes)
+			{
+				if (childNode.Name.Equals("a"))
+				{
+					XmlAttribute href = childNode.Attributes["href"];
+					if (href != null)
+					{
+						string textTagName = href.Value;
+
+						TextTag textTag = textBuffer.TagTable.Lookup(textTagName);
+						if (textTag != null)
+						{
+							TextMark startTagMark = textBuffer.CreateMark(textTagName, textBuffer.EndIter, true);
+							textBuffer.InsertAtCursor(childNode.InnerText);
+							TextIter startTagIter = textBuffer.GetIterAtMark(startTagMark);
+							TextIter endTagIter = textBuffer.EndIter;
+							textBuffer.ApplyTag(textTag, startTagIter, endTagIter);
+						}
+					}
+					else
+						textBuffer.InsertAtCursor(childNode.InnerText);
+				}
+				else
+				{
+					textBuffer.InsertAtCursor(childNode.InnerText);
+				}
+			}
+			
+			// Make the font size smaller
+			textBuffer.ApplyTag("small-font", textBuffer.StartIter, textBuffer.EndIter);
+		}
+		
+		
+		
+		private void OnTextEvent(object sender, TextEventArgs args)
+		{
+			// Call the event delegates
+			if (LinkClicked != null && args.Event.Type == EventType.ButtonPress)
+			{
+				TextTag textTag = (TextTag)sender;
+				string linkID = textTag.Name;
+				LinkClicked(this, new LinkClickedEventArgs(linkID));
+			}
+		}
+		
+		
+		// Update the cursor image if the pointer is moved
+		protected override bool OnMotionNotifyEvent(Gdk.EventMotion eventMotion)
+		{
+			int x, y;
+			Gdk.ModifierType state;
+			
+			this.WindowToBufferCoords(TextWindowType.Widget,
+									  (int) eventMotion.X,
+									  (int) eventMotion.Y,
+									  out x, out y);
+			SetTextViewCursorIfAppropriate(x, y);
+			
+			this.GdkWindow.GetPointer(out x, out y, out state);
+			
+			return false;
+		}
+		
+		// Looks at all the tags covering the position (x, y) in the TextView.
+		// If one of them is a link it changes the cursor to the "hands"
+		// cursor typically used by web browsers.
+		private void SetTextViewCursorIfAppropriate(int x, int y)
+		{
+			bool hovering = false;
+			TextIter iter = this.GetIterAtLocation(x, y);
+			
+			foreach(TextTag tag in iter.Tags)
+			{
+				if (tag.Name != null && !tag.Name.Equals("small-font"))
+				{
+					hovering = true;
+					break;
+				}
+			}
+
+			if (hovering != hoveringOverLink)
+			{
+				Gdk.Window window = this.GetWindow(Gtk.TextWindowType.Text);
+
+				hoveringOverLink = hovering;
+				if (hoveringOverLink)
+				{
+					window.Cursor = handCursor;
+					currentCursor = 1;
+				}
+				else
+				{
+					window.Cursor = null;
+					currentCursor = 0;
+				}
+			}
+
+			if (!hoveringOverLink && currentCursor != 0)
+			{
+				Gdk.Window window = this.GetWindow(Gtk.TextWindowType.Text);
+				window.Cursor = null;
+				currentCursor = 0;
+			}
+		}
+		
+		protected override bool OnButtonPressEvent(Gdk.EventButton eventButton)
+		{
+			// Do nothing (this prevents selection)
+			return false;
+		}
+
+		protected override bool OnButtonReleaseEvent(Gdk.EventButton eventButton)
+		{
+			// Do nothing (this prevents selection)
+			return false;
+		}
+	}
+
+	public delegate void LinkClickedEventHandler(object sender, LinkClickedEventArgs args);
+	
+	public class LinkClickedEventArgs : EventArgs
+	{
+		private string linkID;
+
+		public LinkClickedEventArgs(string linkID)
+		{
+			this.linkID = linkID;
+		}
+		
+		public string LinkID
+		{
+			get{ return this.linkID; }
+		}
 	}
 }

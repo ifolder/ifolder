@@ -551,7 +551,7 @@ namespace Novell.iFolder
 						iFolderMsgDialog.ButtonSet.YesNo,
 						"",
 						Util.GS("Lose current settings?"),
-						Util.GS("You are currently creating a new account.  By selecing a different account you cancel the operation."));
+						Util.GS("You are currently creating a new account.  By selecting a different account you cancel the operation."));
 					int rc = dialog.Run();
 					dialog.Hide();
 					dialog.Destroy();

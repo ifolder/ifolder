@@ -575,7 +575,7 @@
 	</data>
   
 	<data name="serverLabel2.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-		<value>100, 16</value>
+		<value>80, 16</value>
 	</data>
   
 	<data name="serverLabel2.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -675,7 +675,7 @@
 	</data>
   
 	<data name="userLabel2.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-		<value>100, 16</value>
+		<value>80, 16</value>
 	</data>
   
 	<data name="userLabel2.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -775,7 +775,7 @@
 	</data>
   
 	<data name="passwordLabel2.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-		<value>100, 16</value>
+		<value>80, 16</value>
 	</data>
   
 	<data name="passwordLabel2.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1515,7 +1515,7 @@
 	</data>
   
 	<data name="verifyCert">
-		<value>iFolder ne peut pas vérifier l'identité du serveur iFolder {0}. Le certificat de ce serveur iFolder est signé par une autorité inconnue. Il est possible que vous soyez connecté à un serveur qui prétend être {0} et qui peut constituer un risque pour vos informations confidentielles.Â Â Avant d'accepter ce certificat, demandez l'avis de l'administrateur de votre système. Voulez-vous accepter ce certificat de façon permanente et continuer la connexion ?</value>
+		<value>iFolder ne peut pas vérifier l'identité du serveur iFolder {0}. Le certificat de ce serveur iFolder est signé par une autorité inconnue. Il est possible que vous soyez connecté à un serveur qui prétend être {0} et qui peut constituer un risque pour vos informations confidentielles. Avant d'accepter ce certificat, demandez l'avis de l'administrateur de votre système. Voulez-vous accepter ce certificat de façon permanente et continuer la connexion ?</value>
 	</data>
   
 	<data name="verifyCertTitle">

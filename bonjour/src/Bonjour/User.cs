@@ -268,6 +268,20 @@ namespace Simias.mDns
 		extern 
 		static 
 		User.kErrorType
+		RegisterLocalMemberCallback(
+			RegistrationCallback	callback,
+			string				id,
+			string				name,
+			short				port,
+			string				servicePath,
+			string				publicKey,
+			ref IntPtr			cookie);
+
+		[ DllImport( nativeLib ) ]
+		private 
+		extern 
+		static 
+		User.kErrorType
 		DeregisterLocalMember(string ID, int Cookie);
 
 		[ DllImport( nativeLib, CharSet=CharSet.Auto ) ]
@@ -311,6 +325,7 @@ namespace Simias.mDns
 		private static IntPtr userHandle;
 		private static IntPtr browseHandle;
 		private static Thread browseThread = null;
+		private static Thread registerThread = null;
 
 		// State for maintaining the Rendezvous user list
 
@@ -518,8 +533,20 @@ namespace Simias.mDns
 		internal static void RegisterUser()
 		{
 			log.Debug( "RegisterUser called" );
+
+			User.registerThread = new Thread( new ThreadStart( User.RegisterThread ) );
+			User.registerThread.IsBackground = true;
+			User.registerThread.Start();
+
+		}
+
+		internal static void RegisterThread()
+		{
+			User.kErrorType status;
+
 			if ( registered == true )
 			{
+				log.Debug( "User already registered.  Calling Unregister first" );
 				User.UnregisterUser();
 			}
 
@@ -538,12 +565,34 @@ namespace Simias.mDns
 				RSACryptoServiceProvider publicKey = Store.GetStore().CurrentUser.PublicKey;
 				short sport = (short) webServiceUri.Port;
 
-				log.Debug( "RegisterLocalMember" );
-				log.Debug( "  UserID:	" + User.mDnsUserID );
-				log.Debug( "  Username: " + User.mDnsUserName );
-				log.Debug( "  ServicePath: " + webServiceUri.AbsolutePath );
-				log.Debug( "  Public Key:  " + publicKey.ToXmlString( false ) );
+				RegistrationCallback myCallback = new RegistrationCallback( RegisterCallback );
 
+				do
+				{
+					log.Debug( "RegisterLocalMember" );
+					log.Debug( "  UserID:	" + User.mDnsUserID );
+					log.Debug( "  Username: " + User.mDnsUserName );
+					log.Debug( "  ServicePath: " + webServiceUri.AbsolutePath );
+					log.Debug( "  Public Key:  " + publicKey.ToXmlString( false ) );
+					//log.Debug( "  calling RegisterWithCallback" );
+					status = 
+						RegisterLocalMember( 
+							User.mDnsUserID, 
+							User.mDnsUserName,
+							IPAddress.HostToNetworkOrder( sport ),
+							webServiceUri.AbsolutePath,
+							publicKey.ToXmlString( false ),
+							ref userHandle );
+
+					if ( status != User.kErrorType.kDNSServiceErr_NoError )
+					{
+						log.Debug( "RegisterLocalMember failed  Status: " + status.ToString() );
+						Thread.Sleep( 60000 );
+					}
+				} while ( status != User.kErrorType.kDNSServiceErr_NoError );
+
+
+				/*
 				kErrorType status =
 					RegisterLocalMember( 
 						User.mDnsUserID, 
@@ -557,13 +606,16 @@ namespace Simias.mDns
 				{
 					throw new SimiasException( "Failed to register local member with Bonjour" );
 				}
-				log.Debug( "RegisterLocalMember: Success" );
+				*/
+
+				log.Debug( "RegisterLocalMember: " + status.ToString() );
 			}
 			catch( Exception e2 )
 			{
 				log.Error( e2.Message );
 				log.Error( e2.StackTrace );
-			}			
+			}	
+		
 			log.Debug( "RegisterUser exit" );
 		}
 
@@ -575,6 +627,29 @@ namespace Simias.mDns
 				registered = false;
 			}
 		}
+
+		internal
+		static 
+		bool 
+		RegisterCallback( 
+			int			handle,
+			int			flags,
+			uint		ifIndex,
+			kErrorType	errorCode,
+			[MarshalAs(UnmanagedType.I4)] int userHandle)
+		{ 
+			if ( errorCode == kErrorType.kDNSServiceErr_NoError )
+			{
+				log.Debug( "User handle: " + userHandle.ToString() );
+			}
+			else
+			{
+				log.Debug( 
+					"Received an error on RegisterCallback.  status: " + errorCode.ToString() );
+			}
+			return true;
+		}
+
 
 		internal static void StartMemberBrowsing()
 		{
@@ -788,7 +863,19 @@ namespace Simias.mDns
 			[MarshalAs(UnmanagedType.LPStr)] string regType,
 			[MarshalAs(UnmanagedType.LPStr)] string domain,
 			[MarshalAs(UnmanagedType.I4)] int context);
-		}
+
+		public 
+		delegate 
+		bool 
+		RegistrationCallback(
+			int			handle,
+			int			flags,
+			uint		ifIndex,
+			kErrorType	errorCode,
+			[MarshalAs(UnmanagedType.I4)] int userHandle);
+	}
+
+
 		#endregion
 	}
 
