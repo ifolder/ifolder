@@ -686,6 +686,10 @@ namespace Simias.Storage
 							// Don't allow Journal nodes to be added.
 							if ( IsType( node, NodeTypes.JournalType ) )
 							{
+								// TODO: This needs to be handled in a different way ... the change is coming 
+								// from the client but we somehow need to "reverse" the change so that the
+								// client doesn't continue to request the change.
+
 								// TODO: Fix this message ... create a different exception?
 								throw new CollectionStoreException( "Creating a Journal node is not allowed." );
 							}
@@ -830,6 +834,10 @@ namespace Simias.Storage
 							// Don't allow Journal nodes to be modified.
 							if ( IsType( node, NodeTypes.JournalType ) )
 							{
+								// TODO: This needs to be handled in a different way ... the change is coming 
+								// from the client but we somehow need to "reverse" the change so that the
+								// client doesn't continue to request the change.
+
 								// TODO: Fix this message ... create a different exception?
 								throw new CollectionStoreException( "Modifying a Journal node is not allowed." );
 							}
@@ -909,6 +917,10 @@ namespace Simias.Storage
 							// Don't allow Journal nodes to sync from the client.
 							if ( Role.Equals(SyncRoles.Master) && IsType( node, NodeTypes.JournalType ) )
 							{
+								// TODO: This needs to be handled in a different way ... the change is coming 
+								// from the client but we somehow need to "reverse" the change so that the
+								// client doesn't continue to request the change.
+
 								// TODO: Fix this message ... create a different exception?
 								throw new CollectionStoreException( "Importing a Journal node from the client to the server is not allowed." );
 							}
@@ -1593,6 +1605,9 @@ namespace Simias.Storage
 			// Set the timestamp in the entry ... we use the commit time so that times are
 			// consistent.
 			newEntry.SetAttribute( "ts", time.Ticks.ToString() );
+
+			// Set the version in the entry.
+			newEntry.SetAttribute( "v", node.LocalIncarnation.ToString() );
 
 			// Check the last journal entry ... if modified by the same person, replace
 			// the last entry with this entry.
