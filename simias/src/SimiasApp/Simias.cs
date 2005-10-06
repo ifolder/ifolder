@@ -209,6 +209,11 @@ namespace Mono.ASPNET
 					path = Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData );
 				}
 
+				if ( !Directory.Exists( path ) )
+				{
+					Directory.CreateDirectory( path );
+				}
+
 				return String.Format( "{0}.{1}", Path.Combine( path, ControllerMutexName ), Process.GetCurrentProcess().Id );
 			}
 		}
