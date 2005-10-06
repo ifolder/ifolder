@@ -1,6 +1,6 @@
 /***********************************************************************
  *  $RCSfile$
- * 
+ *
  *  Copyright (C) 2004 Novell, Inc.
  *
  *  This program is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
  *  Authors:
  *		Calvin Gaisford <cgaisford@novell.com>
  *		Boyd Timothy <btimothy@novell.com>
- * 
+ *
  ***********************************************************************/
 
 using System;
@@ -108,14 +108,14 @@ namespace Novell.iFolder
 			currentIconAnimationDirection = 0;
 
 			eBox = new EventBox();
-			eBox.ButtonPressEvent += 
+			eBox.ButtonPressEvent +=
 				new ButtonPressEventHandler(trayapp_clicked);
 
-			RunningPixbuf = 
+			RunningPixbuf =
 					new Pixbuf(Util.ImagesPath("ifolder24.png"));
-			StartingPixbuf = 
+			StartingPixbuf =
 					new Pixbuf(Util.ImagesPath("ifolder-startup.png"));
-			StoppingPixbuf = 
+			StoppingPixbuf =
 					new Pixbuf(Util.ImagesPath("ifolder-shutdown.png"));
 			DownloadingPixbuf =
 					new Gdk.PixbufAnimation(Util.ImagesPath("ifolder24.gif"));
@@ -141,7 +141,7 @@ namespace Novell.iFolder
 			simiasManager = new Manager(args);
 
 //			logwin = new LogWindow();
-//			logwin.Destroyed += 
+//			logwin.Destroyed +=
 //					new EventHandler(LogWindowDestroyedHandler);
 //			logwinShown = false;
 		}
@@ -155,7 +155,7 @@ namespace Novell.iFolder
 
 		public new void Run()
 		{
-			System.Threading.Thread startupThread = 
+			System.Threading.Thread startupThread =
 					new System.Threading.Thread(new ThreadStart(StartiFolder));
 			startupThread.Start();
 
@@ -277,7 +277,7 @@ namespace Novell.iFolder
 			switch (args.ResponseId)
 			{
 				case Gtk.ResponseType.Ok:
-					Status status = 
+					Status status =
 						domainController.AuthenticateDomain(
 							LoginDialog.Domain,
 							LoginDialog.Password,
@@ -443,7 +443,7 @@ namespace Novell.iFolder
 					currentIconAnimationDirection = 0;
 					gAppIcon.Pixbuf = RunningPixbuf;
 
-//					if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_SYNC_ERRORS, 
+//					if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_SYNC_ERRORS,
 //							"true") == "true")
 //					{
 						if (collectionSynchronizing != null)
@@ -518,12 +518,12 @@ namespace Novell.iFolder
 			if(!ifdata.IsCurrentUser(ifHolder.iFolder.OwnerID))
 			{
 				if(ifHolder.iFolder.IsSubscription &&
-					(ClientConfig.Get(ClientConfig.KEY_NOTIFY_IFOLDERS, "true") 
+					(ClientConfig.Get(ClientConfig.KEY_NOTIFY_IFOLDERS, "true")
 						 == "true"))
 				{
 					NotifyWindow notifyWin = new NotifyWindow(
-							tIcon, 
-							string.Format(Util.GS("New iFolder \"{0}\""), 
+							tIcon,
+							string.Format(Util.GS("New iFolder \"{0}\""),
 								ifHolder.iFolder.Name),
 							string.Format(Util.GS("{0} has invited you to participate in this shared iFolder.\n\nClick <a href=\"SetUpiFolder:{1}\">here</a> to set up this iFolder."),
 										  ifHolder.iFolder.Owner, ifHolder.iFolder.CollectionID),
@@ -542,7 +542,7 @@ namespace Novell.iFolder
 
 
 
-		private void OniFolderChangedEvent(object o, 
+		private void OniFolderChangedEvent(object o,
 									iFolderChangedEventArgs args)
 		{
 			if (args == null || args.iFolderID == null)
@@ -577,7 +577,7 @@ namespace Novell.iFolder
 				// this may be called when a subscription gets updated
 				if(ifHolder.iFolder.HasConflicts)
 				{
-					if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_COLLISIONS, 
+					if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_COLLISIONS,
 							"true") == "true")
 					{
 						string message = string.Format(
@@ -609,7 +609,7 @@ namespace Novell.iFolder
 
 
 
-		private void OniFolderDeletedEvent(object o, 
+		private void OniFolderDeletedEvent(object o,
 									iFolderDeletedEventArgs args)
 		{
 			if (args == null || args.iFolderID == null)
@@ -627,7 +627,7 @@ namespace Novell.iFolder
 			if (args == null || args.iFolderID == null || args.iFolderUser == null)
 				return;	// Prevent an exception
 			
-			if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_USERS, "true") 
+			if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_USERS, "true")
 							== "true")
 			{
 				string username;
@@ -640,7 +640,7 @@ namespace Novell.iFolder
 					username = args.iFolderUser.Name;
 
 				NotifyWindow notifyWin = new NotifyWindow(
-					tIcon, Util.GS("New iFolder User"), 
+					tIcon, Util.GS("New iFolder User"),
 					string.Format(Util.GS("{0} has joined the iFolder \"{1}\""), username, ifHolder.iFolder.Name),
 					Gtk.MessageType.Info, 10000);
 				notifyWin.LinkClicked +=
@@ -763,7 +763,7 @@ namespace Novell.iFolder
 					int colonPos = args.LinkID.IndexOf(':');
 					if (colonPos > 0)
 					{
-						Util.ShowiFolderWindow();
+						Util.ShowiFolderWindow(simiasManager);
 					
 						string ifolderID = args.LinkID.Substring(colonPos + 1);
 						iFolderWindow ifwin = Util.GetiFolderWindow();
@@ -775,7 +775,7 @@ namespace Novell.iFolder
 					int colonPos = args.LinkID.IndexOf(':');
 					if (colonPos > 0)
 					{
-						Util.ShowiFolderWindow();
+						Util.ShowiFolderWindow(simiasManager);
 					
 						string ifolderID = args.LinkID.Substring(colonPos + 1);
 						iFolderWindow ifwin = Util.GetiFolderWindow();
@@ -829,7 +829,7 @@ namespace Novell.iFolder
 					// Beagle and Gaim.
 					iFolderWindow ifwin = Util.GetiFolderWindow();
 					if (ifwin == null || !ifwin.Visible)
-						Util.ShowiFolderWindow();
+						Util.ShowiFolderWindow(simiasManager);
 					else
 						ifwin.Hide();
 					break;
@@ -850,24 +850,24 @@ namespace Novell.iFolder
 			Menu trayMenu = new Menu();
 
 
-			MenuItem iFolders_item = 
+			MenuItem iFolders_item =
 					new MenuItem (Util.GS("iFolders"));
 			trayMenu.Append (iFolders_item);
-			iFolders_item.Activated += 
+			iFolders_item.Activated +=
 					new EventHandler(showiFolderWindow);
 
 
-			MenuItem accounts_item = 
+			MenuItem accounts_item =
 					new MenuItem (Util.GS("Accounts"));
 			trayMenu.Append (accounts_item);
-			accounts_item.Activated += 
+			accounts_item.Activated +=
 					new EventHandler(show_accounts);
 
 
-			MenuItem logview_item = 
+			MenuItem logview_item =
 					new MenuItem (Util.GS("Synchronization Log"));
 			trayMenu.Append (logview_item);
-			logview_item.Activated += 
+			logview_item.Activated +=
 					new EventHandler(showLogWindow);
 
 			trayMenu.Append(new SeparatorMenuItem());
@@ -879,7 +879,7 @@ namespace Novell.iFolder
 			prefs_item.Image = new Gtk.Image(Gtk.Stock.Preferences,
 											Gtk.IconSize.Menu);
 			trayMenu.Append(prefs_item);
-			prefs_item.Activated += 
+			prefs_item.Activated +=
 					new EventHandler(show_preferences);
 
 
@@ -888,7 +888,7 @@ namespace Novell.iFolder
 			help_item.Image = new Gtk.Image(Gtk.Stock.Help,
 											Gtk.IconSize.Menu);
 			trayMenu.Append(help_item);
-			help_item.Activated += 
+			help_item.Activated +=
 					new EventHandler(show_help);
 
 
@@ -897,13 +897,13 @@ namespace Novell.iFolder
 			about_item.Image = new Gtk.Image(Gnome.Stock.About,
 											Gtk.IconSize.Menu);
 			trayMenu.Append(about_item);
-			about_item.Activated += 
+			about_item.Activated +=
 					new EventHandler(show_about);
 
 			
 /*			if( (ifSettings != null) && (!ifSettings.HaveEnterprise) )
 			{
-				MenuItem connect_item = 
+				MenuItem connect_item =
 						new MenuItem (Util.GS("Join Enterprise Server"));
 				trayMenu.Append (connect_item);
 				connect_item.Activated += new EventHandler(OnJoinEnterprise);
@@ -925,13 +925,13 @@ namespace Novell.iFolder
 			quit_item.Image = new Gtk.Image(Gtk.Stock.Quit,
 											Gtk.IconSize.Menu);
 			trayMenu.Append(quit_item);
-			quit_item.Activated += 
+			quit_item.Activated +=
 					new EventHandler(quit_ifolder);
 
 
 			trayMenu.ShowAll();
 
-			trayMenu.Popup(null, null, null, IntPtr.Zero, 3, 
+			trayMenu.Popup(null, null, null, IntPtr.Zero, 3,
 					Gtk.Global.CurrentEventTime);
 		}
 
@@ -952,7 +952,7 @@ namespace Novell.iFolder
 			}
 			else
 			{
-				System.Threading.Thread stopThread = 
+				System.Threading.Thread stopThread =
 					new System.Threading.Thread(new ThreadStart(StopiFolder));
 				stopThread.Start();
 			}
@@ -1005,7 +1005,7 @@ namespace Novell.iFolder
 
 		public static void Main (string[] args)
 		{
-			Process[] processes = 
+			Process[] processes =
 				System.Diagnostics.Process.GetProcessesByName("iFolderClient");
 
 			if(processes.Length > 1)
