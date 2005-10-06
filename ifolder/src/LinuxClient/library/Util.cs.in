@@ -23,6 +23,7 @@
  *
  ***********************************************************************/
 using System;
+using System.Diagnostics;
 
 using Gtk;
 using Gdk;
@@ -147,10 +148,15 @@ namespace Novell.iFolder
 		{
 			try
 			{
-				Gnome.Url.Show(HelpURL(helpFile));
-				return;
+//				Gnome.Url.Show(HelpURL(helpFile));
+				if (GnomeUrlShowExternal(HelpURL(helpFile)))
+					return;
 			}
-			catch {}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.Message);
+				Console.WriteLine(e.StackTrace);
+			}
 
 			iFolderMsgDialog dg = new iFolderMsgDialog(
 				parent,
@@ -581,6 +587,42 @@ namespace Novell.iFolder
 				path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 					
 			return path;
+		}
+
+		/// <summary>
+		/// Fix for Bug 119785 - Help doesn't work on NLD SP2 or SUSE 10.
+		///
+		/// FIXME: This method spawns "gnome-open" (a C program which invokes
+		/// gnome_url_show().  Something in the way that we're running iFolder
+		/// prevents Gnome.Url.Show() from working correctly.  When we have
+		/// more time to figure out exactly what's going on, we can take care
+		/// of this.
+		/// </summary>
+		private static bool GnomeUrlShowExternal(string url)
+		{
+			// Launch the small "gnome-url-show" executable
+			// to show the url.
+			Process gnomeUrlShowProcess = new Process();
+			
+			gnomeUrlShowProcess.StartInfo.FileName = "gnome-open";
+			gnomeUrlShowProcess.StartInfo.Arguments = url;
+			
+			try
+			{
+				gnomeUrlShowProcess.Start();
+				gnomeUrlShowProcess.WaitForExit();
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.Message);
+				Console.WriteLine(e.StackTrace);
+				return false;
+			}
+
+			if (gnomeUrlShowProcess.ExitCode == 0)
+				return true;
+			else
+				return false;
 		}
 	}
 	
