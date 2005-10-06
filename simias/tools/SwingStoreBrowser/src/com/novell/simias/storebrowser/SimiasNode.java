@@ -23,14 +23,17 @@
 
 package com.novell.simias.storebrowser;
 
-import java.io.IOException;
-import java.io.StringReader;
+import java.io.*;
 import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
+
+import javax.xml.transform.*;
+import javax.xml.transform.dom.*;
+import javax.xml.transform.stream.*;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -55,6 +58,7 @@ public class SimiasNode {
 	 * @param nodeData
 	 */
 	public SimiasNode(String xml) {
+		
 		Document dom = getDocument(xml);
 		if (dom != null)
 		{
@@ -212,10 +216,34 @@ public class SimiasNode {
 		Node firstChild = node.getFirstChild();
 		if (firstChild != null)
 		{
-			String nodeValue = firstChild.getNodeValue();
-			if (nodeValue != null)
+			if (p.getType().equals("XmlDocument"))
 			{
-				p.setValue(nodeValue);
+				try
+				{
+					Source source = new DOMSource(firstChild);
+					Transformer transformer = TransformerFactory.newInstance().newTransformer();
+					StringWriter xmlStringWriter = new StringWriter();
+					BufferedWriter bw = new BufferedWriter(xmlStringWriter);
+					
+					Result result = new StreamResult(bw);
+	
+					transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+					transformer.transform(source, result);
+					
+					p.setValue(xmlStringWriter.toString());
+				}
+				catch (Exception e)
+				{
+					p.setValue("n/a");
+				}
+			}
+			else
+			{
+				String nodeValue = firstChild.getNodeValue();
+				if (nodeValue != null)
+				{
+					p.setValue(nodeValue);
+				}
 			}
 		}
 		
