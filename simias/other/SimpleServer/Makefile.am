@@ -44,7 +44,7 @@ DEBUG_CHECK_FILES = Simias.SimpleServer.pdb
 endif
 endif
 
-install-exec-local: all
+install-simpleserver: all
 	$(mkinstalldirs) $(DESTDIR)$(webbindir) $(simiasdatadir) $(simiasdatadir)/modules
 	$(INSTALL_PROGRAM) SimpleServer.xml $(DESTDIR)$(sysconfdir)
 	$(INSTALL_PROGRAM) Simias.config $(simiasdatadir)
@@ -57,7 +57,7 @@ else
 	$(INSTALL_PROGRAM) simpleserver $(DESTDIR)$(bindir)
 endif	
 
-uninstall-local:
+uninstall-simpleserver:
 	cd $(DESTDIR)$(webdir); rm -f DomainService.asmx
 	cd $(DESTDIR)$(sysconfdir); rm -f SimpleServer.xml
 	cd $(DESTDIR)$(webbindir); rm -f $(NUNIT_TESTS) $(DEBUG_CHECK_FILES)

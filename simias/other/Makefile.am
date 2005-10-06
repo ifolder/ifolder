@@ -1,4 +1,4 @@
-SUBDIRS =
+SUBDIRS = SimpleServer
 
 DIST_SUBDIRS = $(SUBDIRS)
 
