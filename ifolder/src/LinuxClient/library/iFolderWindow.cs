@@ -1691,7 +1691,11 @@ namespace Novell.iFolder
 				{
 					if (args.Name != null && args.Name.StartsWith("POBox:"))
 					{
-						UpdateStatus(Util.GS("Checking for new iFolders..."));
+						DomainInformation domain = domainController.GetPOBoxDomain(args.ID);
+						if (domain != null)
+							UpdateStatus(string.Format(Util.GS("Checking for new iFolders: {0}"), domain.Name));
+						else
+							UpdateStatus(Util.GS("Checking for new iFolders..."));
 					}
 					else
 					{
@@ -1713,7 +1717,11 @@ namespace Novell.iFolder
 				{
 					if (args.Name != null && args.Name.StartsWith("POBox:"))
 					{
-						UpdateStatus(Util.GS("Checking for new iFolders..."));
+						DomainInformation domain = domainController.GetPOBoxDomain(args.ID);
+						if (domain != null)
+							UpdateStatus(string.Format(Util.GS("Checking for new iFolders: {0}"), domain.Name));
+						else
+							UpdateStatus(Util.GS("Checking for new iFolders..."));
 					}
 					else
 					{
