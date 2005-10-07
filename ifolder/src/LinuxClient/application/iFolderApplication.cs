@@ -771,6 +771,10 @@ namespace Novell.iFolder
 					int colonPos = args.LinkID.IndexOf(':');
 					if (colonPos > 0)
 					{
+						NotifyWindow notifyWindow = sender as NotifyWindow;
+						notifyWindow.Hide();
+						notifyWindow.Destroy();
+
 						Util.ShowiFolderWindow();
 					
 						string ifolderID = args.LinkID.Substring(colonPos + 1);
