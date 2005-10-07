@@ -745,21 +745,28 @@ namespace Novell.iFolder
 				case StatusCodes.SuccessInGrace:
 					Status authStatus = domainController.AuthenticateDomain(dom.ID, passEntry.Text, savePasswordButton.Active);
 
-					if (authStatus.statusCode == StatusCodes.Success ||
-						authStatus.statusCode == StatusCodes.SuccessInGrace)
+					if (authStatus != null)
 					{
-						if (NewAccountMode)
+						if (authStatus.statusCode == StatusCodes.Success ||
+							authStatus.statusCode == StatusCodes.SuccessInGrace)
 						{
-							NewAccountMode = false;
+							if (NewAccountMode)
+							{
+								NewAccountMode = false;
+							}
+							else
+							{
+								UpdateWidgetSensitivity();
+							}
 						}
 						else
 						{
-							UpdateWidgetSensitivity();
+							Util.ShowLoginError(topLevelWindow, authStatus.statusCode);
 						}
 					}
 					else
 					{
-						Util.ShowLoginError(topLevelWindow, authStatus.statusCode);
+						Util.ShowLoginError(topLevelWindow, StatusCodes.Unknown);
 					}
 					break;
 				default:
