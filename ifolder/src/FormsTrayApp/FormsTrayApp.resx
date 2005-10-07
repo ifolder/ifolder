@@ -644,10 +644,10 @@
     <value>Unable to Connect to iFolder Server</value>
   </data>
   <data name="checkingForiFolders">
-    <value>Checking for new iFolders...</value>
+    <value>Checking for new iFolders on: {0}</value>
   </data>
   <data name="doneCheckingForiFolders">
-    <value>Done checking for new iFolders</value>
+    <value>Done checking for new iFolders: {0}</value>
   </data>
   <data name="localSync">
     <value>Checking for changes: {0}</value>
