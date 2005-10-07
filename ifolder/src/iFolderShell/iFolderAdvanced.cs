@@ -2268,8 +2268,11 @@ namespace Novell.iFolderCom
 				}
 				catch (Exception e)
 				{
-					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("changeOwnerError"), resourceManager.GetString("saveErrorTitle"), e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-					mmb.ShowDialog();
+					if (e.Message.IndexOf("Invalid iFolderID") == -1)
+					{
+						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("changeOwnerError"), resourceManager.GetString("saveErrorTitle"), e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						mmb.ShowDialog();
+					}
 				}
 			}
 
@@ -2328,8 +2331,11 @@ namespace Novell.iFolderCom
 				}
 				catch (Exception e)
 				{
-					MyMessageBox mmb = new MyMessageBox(string.Format(resourceManager.GetString("memberCommitError"), slMember.Name), resourceManager.GetString("saveErrorTitle"), e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-					mmb.ShowDialog();
+					if (e.Message.IndexOf("Invalid iFolderID") == -1)
+					{
+						MyMessageBox mmb = new MyMessageBox(string.Format(resourceManager.GetString("memberCommitError"), slMember.Name), resourceManager.GetString("saveErrorTitle"), e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						mmb.ShowDialog();
+					}
 				}
 			}
 
@@ -2357,8 +2363,11 @@ namespace Novell.iFolderCom
 					}
 					catch (Exception e)
 					{
-						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("removeError"), resourceManager.GetString("saveErrorTitle"), e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-						mmb.ShowDialog();
+						if (e.Message.IndexOf("Invalid iFolderID") == -1)
+						{
+							MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("removeError"), resourceManager.GetString("saveErrorTitle"), e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+							mmb.ShowDialog();
+						}
 					}
 				}
 
@@ -2401,8 +2410,11 @@ namespace Novell.iFolderCom
 			}
 			catch (Exception e)
 			{
-				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("policyCommitError"), resourceManager.GetString("saveErrorTitle"), e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-				mmb.ShowDialog();
+				if (e.Message.IndexOf("Invalid iFolderID") == -1)
+				{
+					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("policyCommitError"), resourceManager.GetString("saveErrorTitle"), e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					mmb.ShowDialog();
+				}
 			}
 
 			// Disable the apply button.

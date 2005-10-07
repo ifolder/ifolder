@@ -354,6 +354,8 @@ namespace Novell.CustomUIControls
 	#region NotifyMessageLoop
 	internal class NotifyMessageLoop : System.Windows.Forms.Form
 	{
+		private bool balloonClicked = false;
+		private bool iconClicked = false;
 		private ShellNotifyIcon shellNotifyIcon = null;
 		internal NotifyMessageLoop(ShellNotifyIcon shellNotifyIcon)
 		{
@@ -467,6 +469,7 @@ namespace Novell.CustomUIControls
 					switch ((int)msg.LParam)
 					{
 						case NIN_BALLOONUSERCLICK:
+							balloonClicked = true;
 							if (BalloonClick != null)
 							{
 								// Fire the BalloonClick event.
@@ -474,13 +477,26 @@ namespace Novell.CustomUIControls
 								return;
 							}
 							break;
+						case WM_MOUSEMOVE:
+							if (!iconClicked)
+								balloonClicked = false;
+							break;
 						case WM_LBUTTONDOWN:
-							if (Click != null)
+							iconClicked = true;
+							break;
+						case WM_LBUTTONUP:
+							// Don't fire this event if the balloon-click event was just fired.
+							if (!balloonClicked)
 							{
-								// Fire the Click event.
-								Click(this, new EventArgs());
-								return;
+								if (Click != null)
+								{
+									// Fire the Click event.
+									Click(this, new EventArgs());
+									iconClicked = balloonClicked = false;
+									return;
+								}
 							}
+							iconClicked = balloonClicked = false;
 							break;
 						case WM_LBUTTONDBLCLK:
 							if (DoubleClick != null)
@@ -492,7 +508,6 @@ namespace Novell.CustomUIControls
 							break;
 						case WM_RBUTTONDOWN:
 							break;
-						case WM_LBUTTONUP:
 						case WM_RBUTTONUP:
 							if ((shellNotifyIcon.ContextMenu != null) && 
 								(shellNotifyIcon.ContextMenu.Handle != IntPtr.Zero))
