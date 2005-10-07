@@ -511,6 +511,12 @@ namespace Novell.iFolder
 			// don't notify us of our own iFolders
 			iFolderHolder ifHolder = ifdata.GetiFolder(args.iFolderID);
 
+			if (ifHolder == null)
+				return;
+			
+			if (ifHolder.iFolder == null)
+				return;
+
 			if(!ifdata.IsCurrentUser(ifHolder.iFolder.OwnerID))
 			{
 				if(ifHolder.iFolder.IsSubscription &&
@@ -701,6 +707,12 @@ namespace Novell.iFolder
 
 					// Bring up the accounts dialog if there are no domains
 					Gtk.Timeout.Add(500, new Gtk.Function(PromptIfNoDomains));
+
+					// Make sure the iFolder and Synchronization Windows are
+					// initialized so that they begin receiving events as soon
+					// as possible.
+					iFolderWindow ifwin = Util.GetiFolderWindow();
+					LogWindow logwin = Util.GetLogWindow();
 
 					break;
 
