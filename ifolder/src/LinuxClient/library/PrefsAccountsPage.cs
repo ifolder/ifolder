@@ -1062,9 +1062,11 @@ namespace Novell.iFolder
 
 		private void OnPassEntryActivated(object o, EventArgs args)
 		{
-			// FIXME: Reimplement OnPassEntryActivated() so that it does a login when a user presses <ENTER>
-
-			if( (!NewAccountMode) && (curDomainPassword != passEntry.Text) && 
+			if (loginButton.Label == Util.GS("_Log In"))
+			{
+				OnLoginAccount(null, null);
+			}
+			else if ( (!NewAccountMode) && (curDomainPassword != passEntry.Text) && 
 						(savePasswordButton.Active == true ) )
 			{
 				SavePasswordNow();

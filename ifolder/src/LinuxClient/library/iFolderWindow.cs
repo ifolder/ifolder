@@ -297,6 +297,9 @@ namespace Novell.iFolder
 			propDialogs = new Hashtable();
 			
 			CreateWidgets();
+
+			RefreshDomains(true);
+			RefreshiFolders(true);
 			
 			domainController = DomainController.GetDomainController();
 			if (domainController != null)
@@ -704,8 +707,8 @@ namespace Novell.iFolder
 		private void OnRealizeWidget(object o, EventArgs args)
 		{
 			iFolderTreeView.HasFocus = true;
-			RefreshDomains(false);
-			RefreshiFolders(false);
+//			RefreshDomains(false);
+//			RefreshiFolders(false);
 		}
 
 

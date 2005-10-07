@@ -57,6 +57,7 @@ namespace Novell.iFolder
 		internal static LogWindow			logwin		= null;
 		internal static PreferencesWindow	prefswin	= null;
 		
+		private static bool biFolderWindowNeverShown	= true;
 		private static bool bLogWinNeverShown			= true;
 
 		private static iFolderWebService	ifws		= null;
@@ -278,23 +279,41 @@ namespace Novell.iFolder
 		
 		public static iFolderWindow GetiFolderWindow()
 		{
+			if(ifwin == null && CheckWebService())
+			{
+				ifwin = new iFolderWindow(ifws, simws);
+				ifwin.DeleteEvent +=
+						new DeleteEventHandler(OniFolderWindowDeleteEvent);
+				ifwin.Destroyed += 
+						new EventHandler(OniFolderWindowDestroyed);
+			}
+
 			return ifwin;
 		}
 		
 		public static void ShowiFolderWindow()
 		{
-			if(CheckWebService())
+			if (CheckWebService())
 			{
-				if(ifwin == null)
+				if (ifwin == null)
 				{
 					ifwin = new iFolderWindow(ifws, simws);
+					ifwin.DeleteEvent +=
+							new DeleteEventHandler(OniFolderWindowDeleteEvent);
 					ifwin.Destroyed += 
 							new EventHandler(OniFolderWindowDestroyed);
 					ifwin.ShowAll();
+					biFolderWindowNeverShown = false;
 				}
 				else
 				{
-					ifwin.Present();
+					if (biFolderWindowNeverShown)
+					{
+						ifwin.ShowAll();
+						biFolderWindowNeverShown = false;
+					}
+					else
+						ifwin.Present();
 				}
 			}
 		}
@@ -360,6 +379,11 @@ namespace Novell.iFolder
 			dg.Destroy();
 		}
 		
+		private static void OniFolderWindowDeleteEvent(object o, DeleteEventArgs args)
+		{
+			ifwin.Hide();
+		}
+
 		private static void OniFolderWindowDestroyed(object o, EventArgs args)
 		{
 			ifwin = null;
@@ -385,6 +409,7 @@ namespace Novell.iFolder
 				logwin.Destroyed += 
 						new EventHandler(LogWindowDestroyedHandler);
 				logwin.ShowAll();
+				bLogWinNeverShown = false;
 			}
 			else
 			{
