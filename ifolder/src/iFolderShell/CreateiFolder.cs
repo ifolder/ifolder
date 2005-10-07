@@ -515,6 +515,10 @@ namespace Novell.iFolderCom
 						successful = false;
 					}
 				}
+				else
+				{
+					ifolderPath.Text = FixPath( ifolderPath.Text );
+				}
 
 				if (successful)
 				{
