@@ -779,6 +779,11 @@ namespace Novell.iFolder
 			}
 			else
 			{
+				// Temporarily disable the OnFieldsChanged handler
+				nameEntry.Changed 	-= new EventHandler(OnFieldsChanged);
+				serverEntry.Changed	-= new EventHandler(OnFieldsChanged);
+				passEntry.Changed	-= new EventHandler(OnFieldsChanged);
+
 				TreeSelection tSelect = AccTreeView.Selection;
 				if(tSelect.CountSelectedRows() == 1)
 				{
@@ -913,17 +918,31 @@ namespace Novell.iFolder
 					loginButton.Label				= Util.GS("_Log In");
 					loginButton.Sensitive			= false;
 				}
+
+				// Hook the OnFieldsChanged handlers back up
+				nameEntry.Changed 	+= new EventHandler(OnFieldsChanged);
+				serverEntry.Changed	+= new EventHandler(OnFieldsChanged);
+				passEntry.Changed	+= new EventHandler(OnFieldsChanged);
 			}
 		}
 		
 		private void EnterNewAccountMode()
 		{
-//Console.WriteLine("PrefsAccountPage.EnterNewAccountMode()");
+			NewAccountMode = true;
+
+			// Temporarily disable the selection handler so we can
+			// select the new account without causing the handler
+			// to be called.
+			AccTreeView.Selection.Changed -=
+				new EventHandler(AccSelectionChangedHandler);
+			
 			TreeSelection treeSelection = AccTreeView.Selection;
 			treeSelection.UnselectAll();
 			
-			NewAccountMode = true;
-
+			// hook'r back up
+			AccTreeView.Selection.Changed +=
+				new EventHandler(AccSelectionChangedHandler);
+			
 			AddButton.Sensitive				= false;
 			RemoveButton.Sensitive			= false;
 			DetailsButton.Sensitive			= false;
