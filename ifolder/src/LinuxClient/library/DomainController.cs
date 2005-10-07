@@ -387,23 +387,31 @@ namespace Novell.iFolder.Controller
 					"iFolder",
 					domainID,
 					password);
-			status = domainAuth.Authenticate();
-			if (status.statusCode == StatusCodes.Success ||
-				status.statusCode == StatusCodes.SuccessInGrace)
+
+			try
 			{
-				if (bSavePassword)
+				status = domainAuth.Authenticate();
+				if (status.statusCode == StatusCodes.Success ||
+					status.statusCode == StatusCodes.SuccessInGrace)
 				{
-					try
+					if (bSavePassword)
 					{
-						if (password != null && password.Length > 0)
-							simws.SetDomainCredentials(domainID, password, CredentialType.Basic);
-						else
-							simws.SetDomainCredentials(domainID, null, CredentialType.None);
+						try
+						{
+							if (password != null && password.Length > 0)
+								simws.SetDomainCredentials(domainID, password, CredentialType.Basic);
+							else
+								simws.SetDomainCredentials(domainID, null, CredentialType.None);
+						}
+						catch{}
 					}
-					catch{}
+					
+					HandleDomainLoggedIn(domainID, status);
 				}
-				
-				HandleDomainLoggedIn(domainID, status);
+			}
+			catch (Exception e)
+			{
+				status = null;
 			}
 
 			return status;
@@ -673,7 +681,13 @@ namespace Novell.iFolder.Controller
 					domainID,
 					null);
 
-			return domainAuth.Authenticate();
+			try
+			{
+				return domainAuth.Authenticate();
+			}
+			catch {}
+			
+			return null;
 		}
 		
 		private Status AuthenticateDomainWithProxy(string domainID)
@@ -685,37 +699,41 @@ namespace Novell.iFolder.Controller
 			if (dom == null)
 				return null;
 
-			SetHttpProxyForHost(dom.Host);
-					
-			CredentialType credentialType =
-				simws.GetDomainCredentials(
-					domainID,
-					out userID,
-					out credentials);
-					
-			if ((credentialType == CredentialType.Basic) &&
-				(credentials != null))
+			try
 			{
-				// There are credentials that are saved on the domain.
-				// Use these to attempt to authenticate.  If the
-				// authentication fails, post a DomainNeedsCredentials
-				// event.
-				DomainAuthentication domainAuth =
-					new DomainAuthentication(
-						"iFolder",
-						domainID,
-						credentials);
+				SetHttpProxyForHost(dom.Host);
 						
-				Status status = domainAuth.Authenticate();
-
-				if (status.statusCode == StatusCodes.InvalidCredentials)
+				CredentialType credentialType =
+					simws.GetDomainCredentials(
+						domainID,
+						out userID,
+						out credentials);
+	
+				if ((credentialType == CredentialType.Basic) &&
+					(credentials != null))
 				{
-					// Remove the bad credentials.
-					simws.SetDomainCredentials(domainID, null, CredentialType.None);
+					// There are credentials that are saved on the domain.
+					// Use these to attempt to authenticate.  If the
+					// authentication fails, post a DomainNeedsCredentials
+					// event.
+					DomainAuthentication domainAuth =
+						new DomainAuthentication(
+							"iFolder",
+							domainID,
+							credentials);
+							
+					Status status = domainAuth.Authenticate();
+	
+					if (status.statusCode == StatusCodes.InvalidCredentials)
+					{
+						// Remove the bad credentials.
+						simws.SetDomainCredentials(domainID, null, CredentialType.None);
+					}
+					
+					return status;
 				}
-				
-				return status;
 			}
+			catch {}
 			
 			return null;
 		}
