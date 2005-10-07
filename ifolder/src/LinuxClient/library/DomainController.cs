@@ -524,6 +524,21 @@ namespace Novell.iFolder.Controller
 			catch {}
 		}
 
+		public DomainInformation GetPOBoxDomain(string poBoxID)
+		{
+			lock(typeof(DomainController))
+			{
+				DomainInformation[] domains = this.GetDomains();
+				foreach (DomainInformation domain in domains)
+				{
+					if(domain.POBoxID.Equals(poBoxID))
+						return domain;
+				}
+
+				return null;
+			}
+		}
+
 		/// <summary>
 		/// Adds the domain to the keyedDomains hashtable
 		/// </summary>

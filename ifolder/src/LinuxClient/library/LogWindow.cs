@@ -30,6 +30,7 @@ using System.Collections;
 using Gtk;
 using Simias.Client;
 using Simias.Client.Event;
+using Novell.iFolder.Controller;
 
 namespace Novell.iFolder
 {
@@ -239,7 +240,12 @@ namespace Novell.iFolder
 				case Action.StartLocalSync:
 					if (args.Name != null && args.Name.StartsWith("POBox:"))
 					{
-						LogMessage(Util.GS("Checking for new iFolders..."));
+						DomainController domainController = DomainController.GetDomainController();
+						DomainInformation domain = domainController.GetPOBoxDomain(args.ID);
+						if (domain != null)
+							LogMessage(string.Format(Util.GS("Checking for new iFolders: {0}"), domain.Name));
+						else
+							LogMessage(Util.GS("Checking for new iFolders..."));
 					}
 					else
 					{
@@ -249,11 +255,9 @@ namespace Novell.iFolder
 					break;
 				case Action.StartSync:
 				{
-					if (args.Name != null && args.Name.StartsWith("POBox:"))
-					{
-						LogMessage(Util.GS("Checking for new iFolders..."));
-					}
-					else
+					// We only need to add a log entry for the PO Box in the
+					// StartLocalSync case.  Moved that code there.
+					if (args.Name != null && !args.Name.StartsWith("POBox:"))
 					{
 						LogMessage(string.Format(Util.GS(
 							"Started synchronization: {0}"), args.Name));
@@ -264,7 +268,12 @@ namespace Novell.iFolder
 				{
 					if (args.Name != null && args.Name.StartsWith("POBox:"))
 					{
-						LogMessage(Util.GS("Done checking for new iFolders"));
+						DomainController domainController = DomainController.GetDomainController();
+						DomainInformation domain = domainController.GetPOBoxDomain(args.ID);
+						if (domain != null)
+							LogMessage(string.Format(Util.GS("Done checking for new iFolders: {0}"), domain.Name));
+						else
+							LogMessage(Util.GS("Done checking for new iFolders"));
 					}
 					else
 					{
