@@ -749,9 +749,9 @@
     <value>Unable to Verify Identity</value>
   </data>
   <data name="createAccount">
-    <value>To begin using iFolder, you must first set up an iFolder account.  Would you like to set up an iFolder account now?</value>
+    <value>To begin using iFolder, you must first set up an iFolder account.  Click here to add a new account.</value>
   </data>
   <data name="createAccountTitle">
-    <value>Set Up iFolder Account</value>
+    <value>Welcome to iFolder</value>
   </data>
 </root>

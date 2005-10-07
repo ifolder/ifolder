@@ -80,6 +80,8 @@ namespace Novell.FormsTrayApp
 		public event RemoveDomainDelegate RemoveDomain;
 
 		System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(GlobalProperties));
+		private Preferences preferences;
+		private SyncLog syncLog;
 		private System.Timers.Timer updateEnterpriseTimer;
 		private Hashtable ht;
 		private uint objectsToSync;
@@ -141,6 +143,11 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Panel panel1;
 		private System.Windows.Forms.StatusBar statusBar1;
 		private System.Windows.Forms.GroupBox groupBox1;
+		private System.Windows.Forms.MenuItem menuItem1;
+		private System.Windows.Forms.MenuItem menuViewAccounts;
+		private System.Windows.Forms.MenuItem menuViewLog;
+		private System.Windows.Forms.MenuItem menuEdit;
+		private System.Windows.Forms.MenuItem menuEditPrefs;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -295,6 +302,11 @@ namespace Novell.FormsTrayApp
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.statusBar1 = new System.Windows.Forms.StatusBar();
+			this.menuItem1 = new System.Windows.Forms.MenuItem();
+			this.menuViewAccounts = new System.Windows.Forms.MenuItem();
+			this.menuViewLog = new System.Windows.Forms.MenuItem();
+			this.menuEdit = new System.Windows.Forms.MenuItem();
+			this.menuEditPrefs = new System.Windows.Forms.MenuItem();
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -534,6 +546,7 @@ namespace Novell.FormsTrayApp
 			// 
 			this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
 																					  this.menuAction,
+																					  this.menuEdit,
 																					  this.menuView,
 																					  this.menuHelp});
 			this.mainMenu1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("mainMenu1.RightToLeft")));
@@ -691,9 +704,12 @@ namespace Novell.FormsTrayApp
 			// menuView
 			// 
 			this.menuView.Enabled = ((bool)(resources.GetObject("menuView.Enabled")));
-			this.menuView.Index = 1;
+			this.menuView.Index = 2;
 			this.menuView.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-																					 this.menuViewRefresh});
+																					 this.menuViewRefresh,
+																					 this.menuItem1,
+																					 this.menuViewAccounts,
+																					 this.menuViewLog});
 			this.menuView.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuView.Shortcut")));
 			this.menuView.ShowShortcut = ((bool)(resources.GetObject("menuView.ShowShortcut")));
 			this.menuView.Text = resources.GetString("menuView.Text");
@@ -712,7 +728,7 @@ namespace Novell.FormsTrayApp
 			// menuHelp
 			// 
 			this.menuHelp.Enabled = ((bool)(resources.GetObject("menuHelp.Enabled")));
-			this.menuHelp.Index = 2;
+			this.menuHelp.Index = 3;
 			this.menuHelp.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
 																					 this.menuHelpHelp,
 																					 this.menuHelpAbout});
@@ -894,6 +910,56 @@ namespace Novell.FormsTrayApp
 			this.statusBar1.Text = resources.GetString("statusBar1.Text");
 			this.statusBar1.Visible = ((bool)(resources.GetObject("statusBar1.Visible")));
 			// 
+			// menuItem1
+			// 
+			this.menuItem1.Enabled = ((bool)(resources.GetObject("menuItem1.Enabled")));
+			this.menuItem1.Index = 1;
+			this.menuItem1.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuItem1.Shortcut")));
+			this.menuItem1.ShowShortcut = ((bool)(resources.GetObject("menuItem1.ShowShortcut")));
+			this.menuItem1.Text = resources.GetString("menuItem1.Text");
+			this.menuItem1.Visible = ((bool)(resources.GetObject("menuItem1.Visible")));
+			// 
+			// menuViewAccounts
+			// 
+			this.menuViewAccounts.Enabled = ((bool)(resources.GetObject("menuViewAccounts.Enabled")));
+			this.menuViewAccounts.Index = 2;
+			this.menuViewAccounts.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuViewAccounts.Shortcut")));
+			this.menuViewAccounts.ShowShortcut = ((bool)(resources.GetObject("menuViewAccounts.ShowShortcut")));
+			this.menuViewAccounts.Text = resources.GetString("menuViewAccounts.Text");
+			this.menuViewAccounts.Visible = ((bool)(resources.GetObject("menuViewAccounts.Visible")));
+			this.menuViewAccounts.Click += new System.EventHandler(this.menuViewAccounts_Click);
+			// 
+			// menuViewLog
+			// 
+			this.menuViewLog.Enabled = ((bool)(resources.GetObject("menuViewLog.Enabled")));
+			this.menuViewLog.Index = 3;
+			this.menuViewLog.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuViewLog.Shortcut")));
+			this.menuViewLog.ShowShortcut = ((bool)(resources.GetObject("menuViewLog.ShowShortcut")));
+			this.menuViewLog.Text = resources.GetString("menuViewLog.Text");
+			this.menuViewLog.Visible = ((bool)(resources.GetObject("menuViewLog.Visible")));
+			this.menuViewLog.Click += new System.EventHandler(this.menuViewLog_Click);
+			// 
+			// menuEdit
+			// 
+			this.menuEdit.Enabled = ((bool)(resources.GetObject("menuEdit.Enabled")));
+			this.menuEdit.Index = 1;
+			this.menuEdit.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																					 this.menuEditPrefs});
+			this.menuEdit.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuEdit.Shortcut")));
+			this.menuEdit.ShowShortcut = ((bool)(resources.GetObject("menuEdit.ShowShortcut")));
+			this.menuEdit.Text = resources.GetString("menuEdit.Text");
+			this.menuEdit.Visible = ((bool)(resources.GetObject("menuEdit.Visible")));
+			// 
+			// menuEditPrefs
+			// 
+			this.menuEditPrefs.Enabled = ((bool)(resources.GetObject("menuEditPrefs.Enabled")));
+			this.menuEditPrefs.Index = 0;
+			this.menuEditPrefs.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuEditPrefs.Shortcut")));
+			this.menuEditPrefs.ShowShortcut = ((bool)(resources.GetObject("menuEditPrefs.ShowShortcut")));
+			this.menuEditPrefs.Text = resources.GetString("menuEditPrefs.Text");
+			this.menuEditPrefs.Visible = ((bool)(resources.GetObject("menuEditPrefs.Visible")));
+			this.menuEditPrefs.Click += new System.EventHandler(this.menuEditPrefs_Click);
+			// 
 			// GlobalProperties
 			// 
 			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
@@ -939,6 +1005,16 @@ namespace Novell.FormsTrayApp
 		public bool InitialConnect
 		{
 			set { initialConnect = value; }
+		}
+
+		public Preferences PreferenceDialog
+		{
+			set { preferences = value; }
+		}
+
+		public SyncLog SyncLogDialog
+		{
+			set { syncLog = value; }
 		}
 		#endregion
 
@@ -2187,6 +2263,46 @@ namespace Novell.FormsTrayApp
 		private void menuRefresh_Click(object sender, System.EventArgs e)
 		{
 			refreshAll((Domain)servers.SelectedItem);
+		}
+
+		private void menuViewAccounts_Click(object sender, System.EventArgs e)
+		{
+			if (preferences.Visible)
+			{
+				preferences.Activate();
+			}
+			else
+			{
+				preferences.Show();
+			}
+
+			preferences.SelectAccounts(false);
+		}
+
+		private void menuViewLog_Click(object sender, System.EventArgs e)
+		{
+			if (syncLog.Visible)
+			{
+				syncLog.Activate();
+			}
+			else
+			{
+				syncLog.Show();
+			}
+		}
+
+		private void menuEditPrefs_Click(object sender, System.EventArgs e)
+		{
+			if (preferences.Visible)
+			{
+				preferences.Activate();
+			}
+			else
+			{
+				preferences.Show();
+			}
+
+			preferences.SelectGeneral();
 		}
 
 		private void menuAccept_Click(object sender, System.EventArgs e)

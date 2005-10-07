@@ -61,7 +61,12 @@ namespace Novell.FormsTrayApp
 		/// <summary>
 		/// The notification is for a synchronization error.
 		/// </summary>
-		SyncError
+		SyncError,
+
+		/// <summary>
+		/// The notification is for creating an account.
+		/// </summary>
+		CreateAccount,
 	};
 
 	/// <summary>
@@ -233,7 +238,7 @@ namespace Novell.FormsTrayApp
 					shellNotifyIcon.Text = resourceManager.GetString("iFolderServicesStarting");
 					shellNotifyIcon.Icon = startupIcon;
 					shellNotifyIcon.ContextMenu = contextMenu1;
-					shellNotifyIcon.DoubleClick += new Novell.CustomUIControls.ShellNotifyIcon.DoubleClickDelegate(shellNotifyIcon_DoubleClick);
+					shellNotifyIcon.Click += new Novell.CustomUIControls.ShellNotifyIcon.ClickDelegate(shellNotifyIcon_Click);
 					shellNotifyIcon.BalloonClick += new Novell.CustomUIControls.ShellNotifyIcon.BalloonClickDelegate(shellNotifyIcon_BalloonClick);
 					shellNotifyIcon.ContextMenuPopup += new Novell.CustomUIControls.ShellNotifyIcon.ContextMenuPopupDelegate(shellNotifyIcon_ContextMenuPopup);
 				}
@@ -388,7 +393,7 @@ namespace Novell.FormsTrayApp
 			ShutdownTrayApp(null);
 		}
 
-		private void shellNotifyIcon_DoubleClick(object sender, EventArgs e)
+		private void shellNotifyIcon_Click(object sender, EventArgs e)
 		{
 			if (simiasRunning)
 			{
@@ -433,6 +438,17 @@ namespace Novell.FormsTrayApp
 					break;
 				case NotifyType.SyncError:
 					syncLog.Show();
+					break;
+				case NotifyType.CreateAccount:
+					if (preferences.Visible)
+					{
+						preferences.Activate();
+					}
+					else
+					{
+						preferences.Show();
+					}
+					preferences.SelectAccounts(true);
 					break;
 			}
 		}
@@ -519,6 +535,8 @@ namespace Novell.FormsTrayApp
 					// Instantiate the GlobalProperties dialog.
 					globalProperties = new GlobalProperties(ifWebService, simiasWebService, eventClient);
 					globalProperties.RemoveDomain += new Novell.FormsTrayApp.GlobalProperties.RemoveDomainDelegate(globalProperties_RemoveDomain);
+					globalProperties.PreferenceDialog = preferences;
+					globalProperties.SyncLogDialog = syncLog;
 					globalProperties.CreateControl();
 					handle = globalProperties.Handle;
 
@@ -568,23 +586,8 @@ namespace Novell.FormsTrayApp
 
 					if (accountPrompt)
 					{
-						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("createAccount"), resourceManager.GetString("createAccountTitle"), string.Empty, MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button1);
-						mmb.StartPosition = FormStartPosition.CenterScreen;
-						mmb.CreateControl();
-						ShellNotifyIcon.SetForegroundWindow(mmb.Handle);
-						if (mmb.ShowDialog() == DialogResult.Yes)
-						{
-							if (preferences.Visible)
-							{
-								preferences.Activate();
-							}
-							else
-							{
-								preferences.Show();
-							}
-
-							preferences.SelectAccounts(true);
-						}
+						notifyType = NotifyType.CreateAccount;
+						shellNotifyIcon.DisplayBalloonTooltip(resourceManager.GetString("createAccountTitle"), resourceManager.GetString("createAccount"), BalloonType.Info);
 					}
 				}
 				catch (Exception ex)
