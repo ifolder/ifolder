@@ -382,6 +382,7 @@ namespace Novell.iFolder
 		private static void OniFolderWindowDeleteEvent(object o, DeleteEventArgs args)
 		{
 			ifwin.Hide();
+			args.RetVal = true;
 		}
 
 		private static void OniFolderWindowDestroyed(object o, EventArgs args)
