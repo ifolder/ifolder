@@ -853,10 +853,19 @@ namespace Novell.iFolderCom
 					{
 						ok.Enabled = true;
 
+						string displayName;
+						if ((ifolderUser.FN != null) && duplicateNames.Contains(ifolderUser.FN))
+						{
+							displayName = string.Format("{0} ({1})", ifolderUser.FN, ifolderUser.Name);
+						}
+						else
+						{
+							displayName = ifolderUser.FN != null ? ifolderUser.FN : ifolderUser.Name;
+						}
+
 						// Put the item in the added list.
 						ListViewItem item = 
-							new ListViewItem(ifolderUser.FN != null ? ifolderUser.FN : ifolderUser.Name,
-							ifolderUser.UserID.Equals(currentUser.UserID) ? 0 : 1);
+							new ListViewItem(displayName, ifolderUser.UserID.Equals(currentUser.UserID) ? 0 : 1);
 						item.Tag = ifolderUser;
 						addedLV.Items.Add(item);
 
