@@ -1063,7 +1063,7 @@ namespace Novell.FormsTrayApp
 
 						if (syncEventArgs.Name.StartsWith("POBox:"))
 						{
-							message = resourceManager.GetString("checkingForiFolders");
+							message = string.Format(resourceManager.GetString("checkingForiFolders"), preferences.GetDomainName(syncEventArgs.ID));
 						}
 						else
 						{
@@ -1087,7 +1087,7 @@ namespace Novell.FormsTrayApp
 
 						if (syncEventArgs.Name.StartsWith("POBox:"))
 						{
-							message = resourceManager.GetString("doneCheckingForiFolders");
+							message = string.Format(resourceManager.GetString("doneCheckingForiFolders"), preferences.GetDomainName(syncEventArgs.ID));
 						}
 						else
 						{

@@ -1524,6 +1524,29 @@ namespace Novell.FormsTrayApp
 		}
 
 		/// <summary>
+		/// Gets the name of the domain for the specified ID.
+		/// </summary>
+		/// <param name="poBoxID">The ID of the POBox for the domain.</param>
+		/// <returns>The name of the domain.</returns>
+		public string GetDomainName(string poBoxID)
+		{
+			string name = string.Empty;
+
+			foreach (ListViewItem lvi in accounts.Items)
+			{
+				Domain d = (Domain)lvi.Tag;
+
+				if (d.DomainInfo.POBoxID.Equals(poBoxID))
+				{
+					name = d.Name;
+					break;
+				}
+			}
+
+			return name;
+		}
+
+		/// <summary>
 		/// Check the specified ID to see if it is the current user.
 		/// </summary>
 		/// <param name="userID">The ID of the user to check.</param>
