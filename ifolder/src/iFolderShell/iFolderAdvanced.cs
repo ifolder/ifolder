@@ -1938,11 +1938,29 @@ namespace Novell.iFolderCom
 						}
 
 						lvitem.Tag = slMember;
-						shareWith.Items.Add(lvitem);
 
-						// Add/update the user to the UserID hashtable.
 						lock (userIDHT)
 						{
+							// Check for duplicate names.
+							bool duplicateName = false;
+							foreach (ListViewItem item in userIDHT.Values)
+							{
+								if (lvitem.SubItems[0].Text.ToLower().Equals(item.SubItems[0].Text.ToLower()))
+								{
+									duplicateName = true;
+									ShareListMember slm = (ShareListMember)item.Tag;
+									item.SubItems[0].Text = string.Format("{0} ({1})", slm.iFolderUser.FN, slm.iFolderUser.Name);
+								}
+							}
+
+							if (duplicateName)
+							{
+								lvitem.SubItems[0].Text = string.Format("{0} ({1})", ifolderUser.FN, ifolderUser.Name);
+							}
+
+							shareWith.Items.Add(lvitem);
+
+							// Add/update the user to the UserID hashtable.
 							userIDHT[slMember.iFolderUser.UserID] = lvitem;
 						}
 					}

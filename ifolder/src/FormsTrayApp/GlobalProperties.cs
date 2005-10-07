@@ -1007,11 +1007,17 @@ namespace Novell.FormsTrayApp
 			set { initialConnect = value; }
 		}
 
+		/// <summary>
+		/// Set the Preferences dialog.
+		/// </summary>
 		public Preferences PreferenceDialog
 		{
 			set { preferences = value; }
 		}
 
+		/// <summary>
+		/// Set the SyncLog dialog.
+		/// </summary>
 		public SyncLog SyncLogDialog
 		{
 			set { syncLog = value; }
@@ -1467,8 +1473,12 @@ namespace Novell.FormsTrayApp
 
 							if (lvi != null)
 							{
-								SyncSize syncSize = ifWebService.CalculateSyncSize(syncEventArgs.ID);
-								objectsToSync = syncSize.SyncNodeCount;
+								try
+								{
+									SyncSize syncSize = ifWebService.CalculateSyncSize(syncEventArgs.ID);
+									objectsToSync = syncSize.SyncNodeCount;
+								}
+								catch {}
 
 								if (objectsToSync == 0)
 								{
