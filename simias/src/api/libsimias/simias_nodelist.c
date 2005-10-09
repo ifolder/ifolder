@@ -144,7 +144,7 @@ int _simias_nodelist_create(struct _SimiasNodeList **_hNodeList,
 										char *resultXML)
 {
 	int rc = 0;
-	xmlNode *root_element, *cur_node;
+	xmlNode *root_element, *cur_node, *next_node;
 	xmlDoc*	doc;
 	int nodeCounter, nodeCount = 0;
 	
@@ -198,9 +198,13 @@ int _simias_nodelist_create(struct _SimiasNodeList **_hNodeList,
 		nl->nodeCount = nodeCount;
 
 		nodeCounter = 0;
-		for(cur_node = root_element->children; cur_node; cur_node = cur_node->next)
+		cur_node = next_node = root_element->children;
+		for(nodeCounter = 0; nodeCounter < nodeCount; nodeCounter++)
 		{
-			if (cur_node->type == XML_ELEMENT_NODE)
+			// get the next node here because the call to simias_node_create 
+			// will unlink the node from the dom
+			next_node = cur_node->next;
+			if((cur_node != NULL) && (cur_node->type == XML_ELEMENT_NODE))
 			{
 				rc = _simias_node_create(&(nl->nodeArray[nodeCounter]),
 												cur_node);	
@@ -210,8 +214,8 @@ int _simias_nodelist_create(struct _SimiasNodeList **_hNodeList,
 					simias_nodelist_free((SimiasNodeList *)&nl);				
 					return rc;					
 				}
-				nodeCounter++;
 			}
+			cur_node = next_node;
 		}
 	}
 
