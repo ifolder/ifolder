@@ -11,10 +11,13 @@ dist-hook:
 lib_LTLIBRARIES = libsimias2.la
 
 libsimias2_la_SOURCES = \
- 	envC.c simiaswebClientLib.c stdsoap2.c simias_internal.c simias_internal.h simias_handle.c simias.h simias_domain.c simias_nodelist.c
+ 	envC.c simiaswebClientLib.c stdsoap2.c simias_internal.c simias_internal.h simias_handle.c simias.h simias_domain.c simias_node.c simias_nodelist.c simias_collection.c
  	
 libsimias2_la_CFLAGS = \
-	-DWITH_NONAMESPACES -DWITH_COOKIES
+	$(XML2_CFLAGS) -DWITH_NONAMESPACES -DWITH_COOKIES
+
+libsimias2_la_LDFLAGS = \
+	$(XML2_LIBS)
 
 bin_PROGRAMS = testapi
 testapi_SOURCES = test.c

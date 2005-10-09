@@ -26,7 +26,7 @@
 #include <stdbool.h>
 
 #define SIMIAS_SUCCESS 0
-#define SIMIAS_ERROR_UNKNOWN				-1
+#define SIMIAS_ERROR_UNKNOWN	-1
 
 typedef void *SimiasHandle;
 typedef void *SimiasNodeList;
@@ -38,6 +38,17 @@ int simias_free(SimiasHandle *hSimias);
 int simias_ping(SimiasHandle hSimias);
 
 int simias_get_domains(SimiasHandle hSimias, SimiasNodeList *hNodeList);
+int simias_get_collections(SimiasHandle hSimias, SimiasNodeList *hNodeList);
+int simias_get_collections_by_type(SimiasHandle hSimias, 
+								   SimiasNodeList *hNodeList, 
+								   const char *type);
+int simias_get_collections_for_domain(SimiasHandle hSimias, 
+									  SimiasNodeList *hNodeList, 
+									  const char *domainID);
+int simias_get_collections_for_domain_by_type(SimiasHandle hSimias, 
+											  SimiasNodeList *hNodeList, 
+											  const char *domainID, 
+											  const char *type);
 
 char *simias_node_get_name(SimiasNode hNode);
 char *simias_node_get_id(SimiasNode hNode);

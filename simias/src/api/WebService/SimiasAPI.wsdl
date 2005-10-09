@@ -28,6 +28,63 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
+      <xs:element name="GetCollections">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="GetCollectionsResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GetCollectionsResult"
+                  type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetCollectionsInDomain">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="domainID" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetCollectionsInDomainResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GetCollectionsInDomainResult"
+                  type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetCollectionsByType">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="type" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetCollectionsByTypeResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GetCollectionsByTypeResult"
+                  type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetCollectionsInDomainByType">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="domainID" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="type" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetCollectionsInDomainByTypeResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GetCollectionsInDomainByTypeResult"
+                  type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
       <xs:element name="string" type="xs:string"/>
     </xs:schema>
   </types>
@@ -43,16 +100,86 @@
   <message name="GetDomainsSoapOut">
     <part name="parameters" element="s0:GetDomainsResponse"/>
   </message>
+  <message name="GetCollectionsSoapIn">
+    <part name="parameters" element="s0:GetCollections"/>
+  </message>
+  <message name="GetCollectionsSoapOut">
+    <part name="parameters" element="s0:GetCollectionsResponse"/>
+  </message>
+  <message name="GetCollectionsInDomainSoapIn">
+    <part name="parameters" element="s0:GetCollectionsInDomain"/>
+  </message>
+  <message name="GetCollectionsInDomainSoapOut">
+    <part name="parameters" element="s0:GetCollectionsInDomainResponse"/>
+  </message>
+  <message name="GetCollectionsByTypeSoapIn">
+    <part name="parameters" element="s0:GetCollectionsByType"/>
+  </message>
+  <message name="GetCollectionsByTypeSoapOut">
+    <part name="parameters" element="s0:GetCollectionsByTypeResponse"/>
+  </message>
+  <message name="GetCollectionsInDomainByTypeSoapIn">
+    <part name="parameters" element="s0:GetCollectionsInDomainByType"/>
+  </message>
+  <message name="GetCollectionsInDomainByTypeSoapOut">
+    <part name="parameters" element="s0:GetCollectionsInDomainByTypeResponse"/>
+  </message>
   <message name="PingHttpGetIn"/>
   <message name="PingHttpGetOut"/>
   <message name="GetDomainsHttpGetIn"/>
   <message name="GetDomainsHttpGetOut">
     <part name="Body" element="s0:string"/>
   </message>
+  <message name="GetCollectionsHttpGetIn"/>
+  <message name="GetCollectionsHttpGetOut">
+    <part name="Body" element="s0:string"/>
+  </message>
+  <message name="GetCollectionsInDomainHttpGetIn">
+    <part name="domainID" type="s:string"/>
+  </message>
+  <message name="GetCollectionsInDomainHttpGetOut">
+    <part name="Body" element="s0:string"/>
+  </message>
+  <message name="GetCollectionsByTypeHttpGetIn">
+    <part name="type" type="s:string"/>
+  </message>
+  <message name="GetCollectionsByTypeHttpGetOut">
+    <part name="Body" element="s0:string"/>
+  </message>
+  <message name="GetCollectionsInDomainByTypeHttpGetIn">
+    <part name="domainID" type="s:string"/>
+    <part name="type" type="s:string"/>
+  </message>
+  <message name="GetCollectionsInDomainByTypeHttpGetOut">
+    <part name="Body" element="s0:string"/>
+  </message>
   <message name="PingHttpPostIn"/>
   <message name="PingHttpPostOut"/>
   <message name="GetDomainsHttpPostIn"/>
   <message name="GetDomainsHttpPostOut">
+    <part name="Body" element="s0:string"/>
+  </message>
+  <message name="GetCollectionsHttpPostIn"/>
+  <message name="GetCollectionsHttpPostOut">
+    <part name="Body" element="s0:string"/>
+  </message>
+  <message name="GetCollectionsInDomainHttpPostIn">
+    <part name="domainID" type="s:string"/>
+  </message>
+  <message name="GetCollectionsInDomainHttpPostOut">
+    <part name="Body" element="s0:string"/>
+  </message>
+  <message name="GetCollectionsByTypeHttpPostIn">
+    <part name="type" type="s:string"/>
+  </message>
+  <message name="GetCollectionsByTypeHttpPostOut">
+    <part name="Body" element="s0:string"/>
+  </message>
+  <message name="GetCollectionsInDomainByTypeHttpPostIn">
+    <part name="domainID" type="s:string"/>
+    <part name="type" type="s:string"/>
+  </message>
+  <message name="GetCollectionsInDomainByTypeHttpPostOut">
     <part name="Body" element="s0:string"/>
   </message>
   <portType name="SimiasAPIServiceSoap">
@@ -67,6 +194,26 @@
       <output message="s0:GetDomainsSoapOut"/>
       <documentation>Returns all domains in Simias with optional only slaves</documentation>
     </operation>
+    <operation name="GetCollections">
+      <input message="s0:GetCollectionsSoapIn"/>
+      <output message="s0:GetCollectionsSoapOut"/>
+      <documentation>Returns all collections in Simias with optional only slaves</documentation>
+    </operation>
+    <operation name="GetCollectionsInDomain">
+      <input message="s0:GetCollectionsInDomainSoapIn"/>
+      <output message="s0:GetCollectionsInDomainSoapOut"/>
+      <documentation>Returns all collections in Simias with optional only slaves</documentation>
+    </operation>
+    <operation name="GetCollectionsByType">
+      <input message="s0:GetCollectionsByTypeSoapIn"/>
+      <output message="s0:GetCollectionsByTypeSoapOut"/>
+      <documentation>Returns all collections in Simias with optional only slaves</documentation>
+    </operation>
+    <operation name="GetCollectionsInDomainByType">
+      <input message="s0:GetCollectionsInDomainByTypeSoapIn"/>
+      <output message="s0:GetCollectionsInDomainByTypeSoapOut"/>
+      <documentation>Returns all collections in Simias with optional only slaves</documentation>
+    </operation>
   </portType>
   <portType name="SimiasAPIServiceHttpGet">
     <operation name="Ping">
@@ -80,6 +227,26 @@
       <output message="s0:GetDomainsHttpGetOut"/>
       <documentation>Returns all domains in Simias with optional only slaves</documentation>
     </operation>
+    <operation name="GetCollections">
+      <input message="s0:GetCollectionsHttpGetIn"/>
+      <output message="s0:GetCollectionsHttpGetOut"/>
+      <documentation>Returns all collections in Simias with optional only slaves</documentation>
+    </operation>
+    <operation name="GetCollectionsInDomain">
+      <input message="s0:GetCollectionsInDomainHttpGetIn"/>
+      <output message="s0:GetCollectionsInDomainHttpGetOut"/>
+      <documentation>Returns all collections in Simias with optional only slaves</documentation>
+    </operation>
+    <operation name="GetCollectionsByType">
+      <input message="s0:GetCollectionsByTypeHttpGetIn"/>
+      <output message="s0:GetCollectionsByTypeHttpGetOut"/>
+      <documentation>Returns all collections in Simias with optional only slaves</documentation>
+    </operation>
+    <operation name="GetCollectionsInDomainByType">
+      <input message="s0:GetCollectionsInDomainByTypeHttpGetIn"/>
+      <output message="s0:GetCollectionsInDomainByTypeHttpGetOut"/>
+      <documentation>Returns all collections in Simias with optional only slaves</documentation>
+    </operation>
   </portType>
   <portType name="SimiasAPIServiceHttpPost">
     <operation name="Ping">
@@ -92,6 +259,26 @@
       <input message="s0:GetDomainsHttpPostIn"/>
       <output message="s0:GetDomainsHttpPostOut"/>
       <documentation>Returns all domains in Simias with optional only slaves</documentation>
+    </operation>
+    <operation name="GetCollections">
+      <input message="s0:GetCollectionsHttpPostIn"/>
+      <output message="s0:GetCollectionsHttpPostOut"/>
+      <documentation>Returns all collections in Simias with optional only slaves</documentation>
+    </operation>
+    <operation name="GetCollectionsInDomain">
+      <input message="s0:GetCollectionsInDomainHttpPostIn"/>
+      <output message="s0:GetCollectionsInDomainHttpPostOut"/>
+      <documentation>Returns all collections in Simias with optional only slaves</documentation>
+    </operation>
+    <operation name="GetCollectionsByType">
+      <input message="s0:GetCollectionsByTypeHttpPostIn"/>
+      <output message="s0:GetCollectionsByTypeHttpPostOut"/>
+      <documentation>Returns all collections in Simias with optional only slaves</documentation>
+    </operation>
+    <operation name="GetCollectionsInDomainByType">
+      <input message="s0:GetCollectionsInDomainByTypeHttpPostIn"/>
+      <output message="s0:GetCollectionsInDomainByTypeHttpPostOut"/>
+      <documentation>Returns all collections in Simias with optional only slaves</documentation>
     </operation>
   </portType>
   <binding name="SimiasAPIServiceSoap" type="s0:SimiasAPIServiceSoap">
@@ -107,6 +294,46 @@
     </operation>
     <operation name="GetDomains">
       <soap:operation soapAction="http://novell.com/simiasapi/web/GetDomains" style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="GetCollections">
+      <soap:operation soapAction="http://novell.com/simiasapi/web/GetCollections"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="GetCollectionsInDomain">
+      <soap:operation soapAction="http://novell.com/simiasapi/web/GetCollectionsInDomain"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="GetCollectionsByType">
+      <soap:operation soapAction="http://novell.com/simiasapi/web/GetCollectionsByType"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="GetCollectionsInDomainByType">
+      <soap:operation soapAction="http://novell.com/simiasapi/web/GetCollectionsInDomainByType"
+            style="document"/>
       <input>
         <soap:body use="literal"/>
       </input>
@@ -133,6 +360,42 @@
         <mime:mimeXml part="Body"/>
       </output>
     </operation>
+    <operation name="GetCollections">
+      <http:operation location="/GetCollections"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="GetCollectionsInDomain">
+      <http:operation location="/GetCollectionsInDomain"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="GetCollectionsByType">
+      <http:operation location="/GetCollectionsByType"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="GetCollectionsInDomainByType">
+      <http:operation location="/GetCollectionsInDomainByType"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
   </binding>
   <binding name="SimiasAPIServiceHttpPost" type="s0:SimiasAPIServiceHttpPost">
     <http:binding verb="POST"/>
@@ -145,6 +408,42 @@
     </operation>
     <operation name="GetDomains">
       <http:operation location="/GetDomains"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="GetCollections">
+      <http:operation location="/GetCollections"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="GetCollectionsInDomain">
+      <http:operation location="/GetCollectionsInDomain"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="GetCollectionsByType">
+      <http:operation location="/GetCollectionsByType"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="GetCollectionsInDomainByType">
+      <http:operation location="/GetCollectionsInDomainByType"/>
       <input>
         <mime:content type="application/x-www-form-urlencoded"/>
       </input>

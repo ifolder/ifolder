@@ -80,7 +80,9 @@ int simias_node_free(SimiasNode *hNode)
 	if(_hNode != NULL)
 	{
 		if(_hNode->node != NULL)
+		{
 			xmlFreeNode(_hNode->node);
+		}
 		
 		if(_hNode->name != NULL)
 			xmlFree(_hNode->name);
@@ -90,7 +92,7 @@ int simias_node_free(SimiasNode *hNode)
 		
 		if(_hNode->type != NULL)
 			xmlFree(_hNode->type);
-			
+			 
 		free(_hNode);
 	}
 
@@ -112,8 +114,7 @@ int _simias_node_create(struct _SimiasNode **_hNode, xmlNode *node)
 		
 	memset(*_hNode, 0, sizeof(struct _SimiasNode));
 	
-	(*_hNode)->node = node;
-	xmlUnlinkNode(node);
+	(*_hNode)->node = xmlCopyNode(node, 1);
 
 	(*_hNode)->name = 
 			(char *)xmlGetProp((*_hNode)->node, (const xmlChar *)"name");
