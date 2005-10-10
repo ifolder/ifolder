@@ -827,11 +827,11 @@
 	</data>
   
 	<data name="checkingForiFolders">
-		<value>Új iFolder mappák keresése...</value>
+		<value>Checking for new iFolders on: {0}</value>
 	</data>
   
 	<data name="doneCheckingForiFolders">
-		<value>Az új iFolder mappák keresése befejeződött</value>
+		<value>Done checking for new iFolders: {0}</value>
 	</data>
   
 	<data name="localSync">
@@ -967,10 +967,10 @@
 	</data>
   
 	<data name="createAccount">
-		<value>Az iFolder mappa használatának megkezdéséhez előbb be kell állítania egy iFolder fiókot. Elvégzi most az iFolder fiók beállítását?</value>
+		<value>To begin using iFolder, you must first set up an iFolder account.  Click here to add a new account.</value>
 	</data>
   
 	<data name="createAccountTitle">
-		<value>iFolder fiók beállítása</value>
+		<value>Welcome to iFolder</value>
 	</data>
 </root>

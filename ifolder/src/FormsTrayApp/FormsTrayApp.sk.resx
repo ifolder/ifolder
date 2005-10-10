@@ -827,11 +827,11 @@
 	</data>
   
 	<data name="checkingForiFolders">
-		<value>Zisťujú sa nové priečinky iFolder...</value>
+		<value>Checking for new iFolders on: {0}</value>
 	</data>
   
 	<data name="doneCheckingForiFolders">
-		<value>Zisťovanie nových priečinkov iFolder je dokončené</value>
+		<value>Done checking for new iFolders: {0}</value>
 	</data>
   
 	<data name="localSync">
@@ -967,10 +967,10 @@
 	</data>
   
 	<data name="createAccount">
-		<value>Ak chcete začať používať priečinok iFolder, je najprv nutné nastaviť konto priečinku iFolder. Chcete teraz nastaviť konto priečinku iFolder?</value>
+		<value>To begin using iFolder, you must first set up an iFolder account.  Click here to add a new account.</value>
 	</data>
   
 	<data name="createAccountTitle">
-		<value>Nastaviť konto priečinku iFolder</value>
+		<value>Welcome to iFolder</value>
 	</data>
 </root>
