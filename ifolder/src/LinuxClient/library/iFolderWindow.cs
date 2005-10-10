@@ -845,7 +845,6 @@ namespace Novell.iFolder
 		private void CloseWindow()
 		{
 			this.Hide();
-			this.Destroy();
 		}
 		
 		
