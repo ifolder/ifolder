@@ -20,8 +20,10 @@ endif
 NUNIT_TESTS := Simias.SimpleServer.dll
 
 simpleserver: $(srcdir)/simpleserver.in
+if !WINDOWS
 	sed -e 's,@_simiasdatadir_@,@simiasdatadir@,g' -e 's,@_webbindir_@,@webbindir@,g' -e 's,@_bindir_@,@bindir@,g' $< > $@
 	chmod +x $@
+endif	
 
 simpleserver.cmd: $(srcdir)/simpleserver.cmd.in
 if WINDOWS

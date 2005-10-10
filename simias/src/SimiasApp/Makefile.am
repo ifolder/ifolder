@@ -37,8 +37,10 @@ SimiasDirectoryMapping: $(srcdir)/SimiasDirectoryMapping.in
 	chmod +x $@
 
 simias: $(srcdir)/simias.in
+if !WINDOWS
 	sed -e 's,@_webbindir_@,@webbindir@,g' -e 's,@_bindir_@,@bindir@,g' $< > $@
 	chmod +x $@
+endif	
 
 if DEBUG
 if WINDOWS
