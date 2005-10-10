@@ -827,11 +827,11 @@
 	</data>
   
 	<data name="checkingForiFolders">
-		<value>Kontrola nových složek iFolder...</value>
+		<value>Checking for new iFolders on: {0}</value>
 	</data>
   
 	<data name="doneCheckingForiFolders">
-		<value>Kontrola nových složek iFolder je dokončena</value>
+		<value>Done checking for new iFolders: {0}</value>
 	</data>
   
 	<data name="localSync">
@@ -967,10 +967,10 @@
 	</data>
   
 	<data name="createAccount">
-		<value>Chcete-li začít používat aplikaci iFolder, musíte nejprve nastavit účet aplikace Folder.  Chcete nastavit účet aplikace iFolder nyní?</value>
+		<value>To begin using iFolder, you must first set up an iFolder account.  Click here to add a new account.</value>
 	</data>
   
 	<data name="createAccountTitle">
-		<value>Nastavit účet aplikace iFolder</value>
+		<value>Welcome to iFolder</value>
 	</data>
 </root>

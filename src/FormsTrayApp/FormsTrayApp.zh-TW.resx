@@ -827,11 +827,11 @@
 	</data>
   
 	<data name="checkingForiFolders">
-		<value>正在檢查新的 iFolder...</value>
+		<value>Checking for new iFolders on: {0}</value>
 	</data>
   
 	<data name="doneCheckingForiFolders">
-		<value>新 iFolder 檢查完畢</value>
+		<value>Done checking for new iFolders: {0}</value>
 	</data>
   
 	<data name="localSync">
@@ -967,10 +967,10 @@
 	</data>
   
 	<data name="createAccount">
-		<value>若要開始使用 iFolder，您必須首先設定 iFolder 帳戶。您要立即設定 iFolder 帳戶嗎？</value>
+		<value>To begin using iFolder, you must first set up an iFolder account.  Click here to add a new account.</value>
 	</data>
   
 	<data name="createAccountTitle">
-		<value>設定 iFolder 帳戶</value>
+		<value>Welcome to iFolder</value>
 	</data>
 </root>
