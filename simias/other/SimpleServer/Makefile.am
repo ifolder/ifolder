@@ -74,7 +74,7 @@ installcheck-local: install
 .PHONY: test
 test: installcheck
 
-CLEAN_FILES = $(NUNIT_TESTS) $(DOC_FILE_CLEAN)
+CLEAN_FILES = $(NUNIT_TESTS) $(DOC_FILE_CLEAN) Simias.config simpleserver simpleserver.cmd
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

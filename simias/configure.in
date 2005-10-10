@@ -329,7 +329,6 @@ AC_SUBST(GSOAP_PATH)
 webdir="${libexecdir}/web"
 webbindir="${webdir}/bin"
 modulesdir="${webdir}/modules"
-simiasdatadir=
 AC_SUBST(webdir)
 AC_SUBST(webbindir)
 AC_SUBST(modulesdir)
