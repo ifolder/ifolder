@@ -72,6 +72,7 @@ int doCD(char *name)
 	{
 		printf("Error: the object %s has no containment\n", 
 					simias_node_get_name(hCurNode));
+		return 0;
 	}
 
 
