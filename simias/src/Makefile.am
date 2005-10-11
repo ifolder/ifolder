@@ -1,17 +1,17 @@
-DIST_SUBDIRS = SimiasClient Simias.dll FlaimProvider WebService SyncService POBoxWS SimiasApp SimiasServer libsimias api
+DIST_SUBDIRS = SimiasClient Simias.dll FlaimProvider WebService SyncService POBoxWS SimiasApp SimiasServer libsimias api simias-shell
 
 if DARWIN
-SUBDIRS = SimiasClient Simias.dll FlaimProvider WebService SyncService POBoxWS SimiasApp SimiasServer libsimias api
+SUBDIRS = SimiasClient Simias.dll FlaimProvider WebService SyncService POBoxWS SimiasApp SimiasServer libsimias api simias-shell
 
 endif
 
 if LINUX
-SUBDIRS = SimiasClient Simias.dll FlaimProvider WebService SyncService POBoxWS SimiasApp SimiasServer libsimias api
+SUBDIRS = SimiasClient Simias.dll FlaimProvider WebService SyncService POBoxWS SimiasApp SimiasServer libsimias api simias-shell
 
 endif
 
 if WINDOWS
-SUBDIRS = SimiasClient Simias.dll FlaimProvider WebService SyncService POBoxWS SimiasApp SimiasServer libsimias api
+SUBDIRS = SimiasClient Simias.dll FlaimProvider WebService SyncService POBoxWS SimiasApp SimiasServer libsimias api simias-shell
 
 endif
 
