@@ -12,7 +12,7 @@
 
 #include "simias.h"
 
-#define TEST_LOOP_COUNT 1
+#define TEST_LOOP_COUNT 5
 
 /**
  *	Simias Handle tests
@@ -509,6 +509,7 @@ bool simiasNodeTests()
 			passed = false;
 			break;
 		}
+
 			
 		for(nodeCounter = 0; nodeCounter < nodeCount; nodeCounter++)
 		{
@@ -558,6 +559,7 @@ bool simiasNodeTests()
 				}
 
 				propertyCount = simias_property_get_count(hNode2);
+		//		printf("Properties on Node: %d\n", propertyCount);
 
 				for(pCounter = 0; pCounter < propertyCount; pCounter++)
 				{
@@ -573,12 +575,8 @@ bool simiasNodeTests()
 						break;
 					}
 
-					printf("Name = %s\nType=%s\nValue=%s\n",
-		 							simias_property_get_name(hProperty),
-		 							simias_property_get_type(hProperty),
-		 							simias_property_get_value_as_string(hProperty));
-
 					rc = simias_property_free(&hProperty);
+					if(rc)
 					{
 						printf("Error simias_property_free: %d\n", rc);
 						passed = false;
@@ -645,7 +643,7 @@ int main(int argc, char **argv)
 //	struct timeb startTime;
 //	struct timeb stopTime;
 	printf("Test: simiasHandleTests()\n");
-//	passedTest = simiasHandleTests();
+	passedTest = simiasHandleTests();
 	if(passedTest)
 		printf("Test: simiasHandleTests() - PASS\n");
 	else
@@ -655,7 +653,7 @@ int main(int argc, char **argv)
 	}
 
 	printf("Test: simiasDomainTests()\n");
-//	passedTest = simiasDomainTests();
+	passedTest = simiasDomainTests();
 	if(passedTest)
 		printf("Test: simiasDomainTests() - PASS\n");
 	else
@@ -665,7 +663,7 @@ int main(int argc, char **argv)
 	}
 
 	printf("Test: simiasCollectionTests()\n");
-//	passedTest = simiasCollectionTests();
+	passedTest = simiasCollectionTests();
 	if(passedTest)
 		printf("Test: simiasCollectionTests() - PASS\n");
 	else

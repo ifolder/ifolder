@@ -22,6 +22,8 @@
 		3EBAC47708F5767600AE1526 /* simiaswebStub.h in Headers */ = {isa = PBXBuildFile; fileRef = 3EBAC47608F5767600AE1526 /* simiaswebStub.h */; };
 		3EBAC47908F5767D00AE1526 /* stdsoap2.h in Headers */ = {isa = PBXBuildFile; fileRef = 3EBAC47808F5767D00AE1526 /* stdsoap2.h */; };
 		3EBAC49808F5785400AE1526 /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = 3EBAC49708F5785400AE1526 /* test.c */; };
+		3ED013EF08FB4D1E0006E0D9 /* simias_collection.c in Sources */ = {isa = PBXBuildFile; fileRef = 3ED013EE08FB4D1E0006E0D9 /* simias_collection.c */; };
+		3ED013F108FB4D310006E0D9 /* simias_property.c in Sources */ = {isa = PBXBuildFile; fileRef = 3ED013F008FB4D310006E0D9 /* simias_property.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildStyle section */
@@ -75,6 +77,8 @@
 		3EBAC47808F5767D00AE1526 /* stdsoap2.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = stdsoap2.h; sourceTree = "<group>"; };
 		3EBAC49108F5782000AE1526 /* testapi */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = testapi; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EBAC49708F5785400AE1526 /* test.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = test.c; sourceTree = "<group>"; };
+		3ED013EE08FB4D1E0006E0D9 /* simias_collection.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = simias_collection.c; sourceTree = "<group>"; };
+		3ED013F008FB4D310006E0D9 /* simias_property.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = simias_property.c; sourceTree = "<group>"; };
 		D2AAC0630554660B00DB518D /* libsimias2.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libsimias2.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -113,12 +117,14 @@
 			children = (
 				3EBAC47608F5767600AE1526 /* simiaswebStub.h */,
 				3EBAC47308F5763300AE1526 /* simiasweb.nsmap */,
+				3ED013EE08FB4D1E0006E0D9 /* simias_collection.c */,
 				3EBAC46308F575EB00AE1526 /* simias_domain.c */,
 				3EBAC46408F575EB00AE1526 /* simias_handle.c */,
 				3EBAC46508F575EB00AE1526 /* simias_internal.c */,
 				3E27D54808F5CDF1005699A7 /* simias_node.c */,
 				3E27D54908F5CDF1005699A7 /* simias_nodelist.c */,
 				3EBAC46608F575EB00AE1526 /* simias_internal.h */,
+				3ED013F008FB4D310006E0D9 /* simias_property.c */,
 				3EBAC46808F575EB00AE1526 /* simias.h */,
 				3EBAC47808F5767D00AE1526 /* stdsoap2.h */,
 				3EBAC46108F575DD00AE1526 /* stdsoap2.c */,
@@ -269,6 +275,8 @@
 				3EBAC46B08F575EB00AE1526 /* simias_internal.c in Sources */,
 				3E27D54A08F5CDF1005699A7 /* simias_node.c in Sources */,
 				3E27D54B08F5CDF1005699A7 /* simias_nodelist.c in Sources */,
+				3ED013EF08FB4D1E0006E0D9 /* simias_collection.c in Sources */,
+				3ED013F108FB4D310006E0D9 /* simias_property.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

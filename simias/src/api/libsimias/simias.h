@@ -78,9 +78,9 @@ int simias_nodelist_get_node(SimiasNodeList hNodeList,
 int simias_nodelist_get_node_count(SimiasNodeList hNodeList, int *count);
 int simias_nodelist_free(SimiasNodeList *hNodeList);
 
-char *simias_property_get_name(SimiasProperty *hProp);
-char *simias_property_get_type(SimiasProperty *hProp);
-char *simias_property_get_value_as_string(SimiasProperty *hProp);
+char *simias_property_get_name(SimiasProperty hProp);
+char *simias_property_get_type(SimiasProperty hProp);
+char *simias_property_get_value_as_string(SimiasProperty hProp);
 
 int simias_property_free(SimiasProperty *hProp);
 int simias_property_get_count(SimiasNode hNode);

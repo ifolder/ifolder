@@ -76,8 +76,8 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 150397160;
-			PBXWorkspaceStateSaveDate = 150397160;
+			PBXPerProjectTemplateStateSaveDate = 150686971;
+			PBXWorkspaceStateSaveDate = 150686971;
 		};
 		sourceControlManager = 3EBAC45B08F5758D00AE1526 /* Source Control */;
 		userBuildSettings = {
@@ -99,9 +99,9 @@
 	};
 	3E27D54908F5CDF1005699A7 /* simias_nodelist.c */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {571, 3206}}";
-			sepNavSelRange = "{4775, 0}";
-			sepNavVisRect = "{{0, 0}, {571, 573}}";
+			sepNavIntBoundsRect = "{{0, 0}, {535, 3234}}";
+			sepNavSelRange = "{2050, 0}";
+			sepNavVisRect = "{{0, 698}, {535, 590}}";
 			sepNavWindowFrame = "{{274, 44}, {616, 702}}";
 		};
 	};
@@ -159,10 +159,10 @@
 	};
 	3EBAC46808F575EB00AE1526 /* simias.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {508, 868}}";
-			sepNavSelRange = "{1413, 135}";
-			sepNavVisRect = "{{0, 18}, {508, 822}}";
-			sepNavWindowFrame = "{{276, 51}, {547, 951}}";
+			sepNavIntBoundsRect = "{{0, 0}, {502, 1302}}";
+			sepNavSelRange = "{2902, 0}";
+			sepNavVisRect = "{{0, 727}, {502, 575}}";
+			sepNavWindowFrame = "{{276, 42}, {547, 704}}";
 		};
 	};
 	3EBAC47308F5763300AE1526 /* simiasweb.nsmap */ = {
@@ -175,9 +175,9 @@
 	};
 	3EBAC47608F5767600AE1526 /* simiaswebStub.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1007, 1792}}";
-			sepNavSelRange = "{368, 0}";
-			sepNavVisRect = "{{0, 0}, {1007, 669}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1280, 3486}}";
+			sepNavSelRange = "{366, 26}";
+			sepNavVisRect = "{{0, 0}, {557, 175}}";
 			sepNavWindowFrame = "{{130, 94}, {1046, 798}}";
 		};
 	};
@@ -216,10 +216,18 @@
 	};
 	3EBAC49708F5785400AE1526 /* test.c */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {590, 2226}}";
-			sepNavSelRange = "{1391, 0}";
-			sepNavVisRect = "{{0, 0}, {590, 575}}";
+			sepNavIntBoundsRect = "{{0, 0}, {535, 9814}}";
+			sepNavSelRange = "{10609, 0}";
+			sepNavVisRect = "{{0, 7622}, {535, 590}}";
 			sepNavWindowFrame = "{{336, 42}, {629, 704}}";
+		};
+	};
+	3ED013F008FB4D310006E0D9 /* simias_property.c */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {535, 3066}}";
+			sepNavSelRange = "{1431, 0}";
+			sepNavVisRect = "{{0, 362}, {535, 590}}";
+			sepNavWindowFrame = "{{15, 39}, {616, 702}}";
 		};
 	};
 	D2AAC0620554660B00DB518D /* libsimias2 */ = {

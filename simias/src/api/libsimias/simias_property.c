@@ -29,10 +29,10 @@
 
 //  <Property name="NodeCreate" type="DateTime">632643783391302280</Property>
 
-char *simias_property_get_name(SimiasProperty *hProp)
+char *simias_property_get_name(SimiasProperty hProp)
 {
 	struct _SimiasProperty *_hProp =
-		(struct _SimiasProperty *)*hProp;
+		(struct _SimiasProperty *)hProp;
 
 	if(_hProp == NULL)
 		return NULL;
@@ -43,10 +43,10 @@ char *simias_property_get_name(SimiasProperty *hProp)
 	return _hProp->name;
 }
 
-char *simias_property_get_value_as_string(SimiasProperty *hProp)
+char *simias_property_get_value_as_string(SimiasProperty hProp)
 {
 	struct _SimiasProperty *_hProp =
-		(struct _SimiasProperty *)*hProp;
+		(struct _SimiasProperty *)hProp;
 
 	if(_hProp == NULL)
 		return NULL;
@@ -57,10 +57,10 @@ char *simias_property_get_value_as_string(SimiasProperty *hProp)
 	return _hProp->value;
 }
 
-char *simias_property_get_type(SimiasProperty *hProp)
+char *simias_property_get_type(SimiasProperty hProp)
 {
 	struct _SimiasProperty *_hProp =
-		(struct _SimiasProperty *)*hProp;
+		(struct _SimiasProperty *)hProp;
 
 	if(_hProp == NULL)
 		return NULL;
