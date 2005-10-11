@@ -72,6 +72,9 @@ int simias_node_free(SimiasNodeList *hNodeList);
 int simias_nodelist_extract_node(SimiasNodeList hNodeList, 
 								SimiasNode *hNode, 
 								int index);
+int simias_nodelist_extract_node_by_name(SimiasNodeList hNodeList,
+										SimiasNode *hNode,
+										const char *name);
 int simias_nodelist_get_node(SimiasNodeList hNodeList, 
 								SimiasNode *hNode, 
 								int index);

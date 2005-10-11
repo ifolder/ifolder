@@ -70,6 +70,44 @@ int simias_nodelist_extract_node(SimiasNodeList hNodeList,
 }
 
 
+int simias_nodelist_extract_node_by_name(SimiasNodeList hNodeList,
+										SimiasNode *hNode,
+										const char *name)
+{
+	int rc = -1;
+	struct _SimiasNodeList *_hNodeList =
+		(struct _SimiasNodeList *)hNodeList;
+
+	*hNode = NULL;
+
+	if(_hNodeList != NULL)
+	{
+		if((_hNodeList->nodeCount > 0) && (_hNodeList->nodeArray != NULL) )
+		{
+			int counter;
+			
+			for(counter = 0; counter < _hNodeList->nodeCount; counter++)
+			{
+				struct _SimiasNode *sNode = _hNodeList->nodeArray[counter];
+				if(sNode != NULL)
+				{
+					if(strcmp(name, simias_node_get_name((SimiasNode) sNode)) == 0)
+					{
+						rc = 0;
+						*hNode = (SimiasNode *)_hNodeList->nodeArray[counter];
+						_hNodeList->nodeArray[counter] = NULL;
+					}
+				}
+			}
+		}
+	}
+
+	return rc;
+}
+
+
+
+
 int simias_nodelist_get_node_count(SimiasNodeList hNodeList, int *count)
 {
 	struct _SimiasNodeList *_hNodeList;
