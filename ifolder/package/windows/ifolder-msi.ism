@@ -4887,7 +4887,6 @@
 		<col key="yes" def="i2">Language_</col>
 		<row><td>iFolder_Files</td><td>VC_User_CRT71.07D8793C_DC93_47EF_8FDA_3517BC941A0F</td><td>0</td></row>
 		<row><td>iFolder_Files</td><td>VC_User_STL71.09528776_2EA8_4A65_AA88_693146381D7D</td><td>0</td></row>
-		<row><td>iFolder_Files</td><td>simias.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>0</td></row>
 	</table>
 
 	<table name="ISIISAppPool">
@@ -5037,7 +5036,6 @@
 		<col def="I4">ISAttributes</col>
 		<row><td>VC_User_CRT71.07D8793C_DC93_47EF_8FDA_3517BC941A0F</td><td>0</td><td>VC User CRT71 RTL X86 ---</td><td>[SystemFolder]</td><td/></row>
 		<row><td>VC_User_STL71.09528776_2EA8_4A65_AA88_693146381D7D</td><td>0</td><td>VC User STL71 RTL X86 ---</td><td>[SystemFolder]</td><td/></row>
-		<row><td>simias.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>0</td><td>Simias Merge Module</td><td>[INSTALLDIR]</td><td/></row>
 	</table>
 
 	<table name="ISMergeModuleCfgValues">
