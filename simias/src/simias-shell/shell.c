@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "simias.h"
 
@@ -31,13 +32,17 @@ int doCD(char *name)
 			return 0;
 		else if(level == 1)
 		{
-			simias_node_free(hCurNode);
+			printf("Level is one\n");
+			if(hCurNode != NULL)
+				simias_node_free(hCurNode);
+			hCurNode = NULL;
 			hDomain = NULL;
 			level = 0;
 			return 0;
 		}
 		else if(level == 2)
 		{
+			printf("Level is two\n");
 			simias_node_free(hCurNode);
 			hCurNode = hDomain;
 			level = 1;
@@ -56,9 +61,10 @@ int doCD(char *name)
 	}
 	else if(level == 1)
 	{
-		rc = simias_get_collections_for_domain(hSimias, 
+		rc = simias_get_collections_for_domain_by_type(hSimias, 
 											   &hNodeList, 
-											   simias_node_get_id(hCurNode));
+											   simias_node_get_id(hCurNode),
+												"Collection");
 		if(rc)
 			return rc;
 	}
@@ -81,9 +87,9 @@ int doCD(char *name)
 
 	if(hNewNode != NULL)
 	{
-		if(level == 0)
+		if(level == 1)
 			hDomain = hCurNode;
-		else
+		else if(level != 0)
 			simias_node_free(hCurNode);
 		level++;
 		hCurNode = hNewNode;
@@ -179,9 +185,21 @@ int shell_prompt()
 			doList();
 		if(strncmp(buffer, "cd", 2) == 0)
 		{
-			char *name = strchr(buffer, ' ');
-			if(name != NULL)
-				doCD(name++);
+			char *tmpName;
+			tmpName = strchr(buffer, ' ');
+			if(tmpName != NULL)
+			{
+				char *name;
+				tmpName = ++tmpName;
+				name = strchr(tmpName, '\r');
+				if(name != NULL)
+					*name = 0;
+				name = strchr(tmpName, '\n');
+				if(name != NULL)
+					*name = 0;
+				name = tmpName;
+				doCD(name);
+			}
 		}
 		else if(strncmp(buffer, "quit", 4) == 0)
 			reprompt = false;
