@@ -660,7 +660,7 @@ namespace Mono.ASPNET
 
 						// There has been a port configured previously. Check to see if the Simias services 
 						// are already running on this port or range.
-						if ( PingWebService( ub.Uri, false ) && IsSameService( ub.Uri, processFileName ) )
+						if ( PingWebService( ub.Uri, processFileName, false ) && IsSameService( ub.Uri, processFileName ) )
 						{
 							KillSimiasServer( ub.Uri, processFileName );
 						}
@@ -693,7 +693,7 @@ namespace Mono.ASPNET
 
 				// There has been a port configured previously. Check to see if the Simias services 
 				// are already running on this port or range.
-				if ( PingWebService( ub.Uri, false ) && IsSameService( ub.Uri ) )
+				if ( PingWebService( ub.Uri, simiasDataPath, false ) && IsSameService( ub.Uri ) )
 				{
 					if ( !KillSimiasServer( ub.Uri ) )
 					{
@@ -961,13 +961,14 @@ namespace Mono.ASPNET
 		/// Pings the Simias web service to start the server running.
 		/// </summary>
 		/// <param name="uri">The URI of the web service to ping.</param>
+		/// <param name="dataPath">Directory path to the Simias data area.</param>
 		/// <param name="waitForDefaultTimeout">If true, the method waits the default
 		/// amount of time for the web service to answer. This should be set to true
 		/// if starting the web service. If just checking for an already running web
 		/// service, a quicker timeout can be used and waitForDefaultTimeout should
 		/// be set to false.</param>
 		/// <returns>True if ping was successful, otherwise false is returned.</returns>
-		private bool PingWebService( Uri uri, bool waitForDefaultTimeout )
+		private bool PingWebService( Uri uri, string dataPath, bool waitForDefaultTimeout )
 		{
 			bool pingStatus = false;
 
@@ -975,6 +976,7 @@ namespace Mono.ASPNET
 			{
 				SimiasWebService svc = new SimiasWebService();
 				svc.Url = uri.ToString() + "/Simias.asmx";
+				Simias.Client.LocalService.Start( svc, uri, dataPath );
 				if ( !waitForDefaultTimeout )
 				{
 					// Don't wait very long. The web service should already be up.
@@ -989,7 +991,8 @@ namespace Mono.ASPNET
 				svc.PingSimias();
 				pingStatus = true;
 			}
-			catch {}
+			catch
+			{}
 
 			return pingStatus;
 		}
@@ -1307,7 +1310,7 @@ namespace Mono.ASPNET
 
 						// There has been a port configured previously. Check to see if the Simias services 
 						// are already running on this port or range.
-						if ( PingWebService( ub.Uri, false ) && IsSameService( ub.Uri, dataPath ) )
+						if ( PingWebService( ub.Uri, dataPath, false ) && IsSameService( ub.Uri, dataPath ) )
 						{
 							int refCount = AddReference( ub.Uri, dataPath );
 							try
@@ -1403,7 +1406,7 @@ namespace Mono.ASPNET
 
 					// There has been a port configured previously. Check to see if the Simias services 
 					// are already running on this port or range.
-					if ( PingWebService( ub.Uri, false ) && CanShareSimiasService( ub.Uri ) )
+					if ( PingWebService( ub.Uri, simiasDataPath, false ) && CanShareSimiasService( ub.Uri ) )
 					{
 						// There is already services running on this port. If there was a port specified
 						// on the command line, see if it is the same port or in the same port range.
@@ -1583,7 +1586,7 @@ namespace Mono.ASPNET
 
 					// Wait for the server listener to start.
 					Thread.Sleep( 100 );
-					PingWebService( ub.Uri, true );
+					PingWebService( ub.Uri, simiasDataPath, true );
 
 					// Write out the web service uri and data store path to stdout.
 					Console.WriteLine( ub.Uri );
@@ -1675,7 +1678,7 @@ namespace Mono.ASPNET
 
 				// There has been a port configured previously. Check to see if the Simias services 
 				// are already running on this port or range.
-				if ( PingWebService( ub.Uri, false ) && IsSameService( ub.Uri ) )
+				if ( PingWebService( ub.Uri, simiasDataPath, false ) && IsSameService( ub.Uri ) )
 				{
 					if ( RemoveReference( ub.Uri ) == -1 )
 					{

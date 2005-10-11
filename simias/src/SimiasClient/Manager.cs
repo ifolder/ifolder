@@ -191,7 +191,7 @@ namespace Simias.Client
 		/// </summary>
 		public Uri WebServiceUri
 		{
-			get { return new Uri( webServiceUri ); }
+			get { return ( webServiceUri != null ) ? new Uri( webServiceUri ) : null; }
 		}
 
 		#endregion

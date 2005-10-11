@@ -173,7 +173,11 @@ namespace Simias.Security.Web
 					int index = decodedCredential.LastIndexOf( '\\' );
 					if ( index != -1 )
 					{
-						domainID = decodedCredential.Substring( 0, index );
+						string tempDomainID = decodedCredential.Substring( 0, index );
+						if ( ( tempDomainID != null ) && ( store.GetDomain( tempDomainID ) != null ) )
+						{
+							domainID = tempDomainID;
+						}
 					}
 				}
 			}
@@ -393,7 +397,8 @@ namespace Simias.Security.Web
 					}
 					else
 					{
-						string realm = store.GetDomain( ( Store.IsEnterpriseServer ) ? store.DefaultDomain : store.LocalDomain ).Name;
+						string realmID = ( Store.IsEnterpriseServer ) ? store.DefaultDomain : store.LocalDomain;
+						string realm = store.GetDomain( ( realmID != null ) ? realmID : store.LocalDomain ).Name;
 						context.Response.StatusCode = 401;
 						context.Response.StatusDescription = "Unauthorized";
 						context.Response.AddHeader( "WWW-Authenticate", String.Concat( "Basic realm=\"", realm, "\"" ) );
