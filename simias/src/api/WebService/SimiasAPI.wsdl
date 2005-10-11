@@ -85,6 +85,21 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
+      <xs:element name="GetNodes">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="collectionID" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="type" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetNodesResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GetNodesResult" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
       <xs:element name="string" type="xs:string"/>
     </xs:schema>
   </types>
@@ -124,6 +139,12 @@
   <message name="GetCollectionsInDomainByTypeSoapOut">
     <part name="parameters" element="s0:GetCollectionsInDomainByTypeResponse"/>
   </message>
+  <message name="GetNodesSoapIn">
+    <part name="parameters" element="s0:GetNodes"/>
+  </message>
+  <message name="GetNodesSoapOut">
+    <part name="parameters" element="s0:GetNodesResponse"/>
+  </message>
   <message name="PingHttpGetIn"/>
   <message name="PingHttpGetOut"/>
   <message name="GetDomainsHttpGetIn"/>
@@ -153,6 +174,13 @@
   <message name="GetCollectionsInDomainByTypeHttpGetOut">
     <part name="Body" element="s0:string"/>
   </message>
+  <message name="GetNodesHttpGetIn">
+    <part name="collectionID" type="s:string"/>
+    <part name="type" type="s:string"/>
+  </message>
+  <message name="GetNodesHttpGetOut">
+    <part name="Body" element="s0:string"/>
+  </message>
   <message name="PingHttpPostIn"/>
   <message name="PingHttpPostOut"/>
   <message name="GetDomainsHttpPostIn"/>
@@ -180,6 +208,13 @@
     <part name="type" type="s:string"/>
   </message>
   <message name="GetCollectionsInDomainByTypeHttpPostOut">
+    <part name="Body" element="s0:string"/>
+  </message>
+  <message name="GetNodesHttpPostIn">
+    <part name="collectionID" type="s:string"/>
+    <part name="type" type="s:string"/>
+  </message>
+  <message name="GetNodesHttpPostOut">
     <part name="Body" element="s0:string"/>
   </message>
   <portType name="SimiasAPIServiceSoap">
@@ -214,6 +249,11 @@
       <output message="s0:GetCollectionsInDomainByTypeSoapOut"/>
       <documentation>Returns all collections in Simias with optional only slaves</documentation>
     </operation>
+    <operation name="GetNodes">
+      <input message="s0:GetNodesSoapIn"/>
+      <output message="s0:GetNodesSoapOut"/>
+      <documentation>Returns all nodes in a collection</documentation>
+    </operation>
   </portType>
   <portType name="SimiasAPIServiceHttpGet">
     <operation name="Ping">
@@ -247,6 +287,11 @@
       <output message="s0:GetCollectionsInDomainByTypeHttpGetOut"/>
       <documentation>Returns all collections in Simias with optional only slaves</documentation>
     </operation>
+    <operation name="GetNodes">
+      <input message="s0:GetNodesHttpGetIn"/>
+      <output message="s0:GetNodesHttpGetOut"/>
+      <documentation>Returns all nodes in a collection</documentation>
+    </operation>
   </portType>
   <portType name="SimiasAPIServiceHttpPost">
     <operation name="Ping">
@@ -279,6 +324,11 @@
       <input message="s0:GetCollectionsInDomainByTypeHttpPostIn"/>
       <output message="s0:GetCollectionsInDomainByTypeHttpPostOut"/>
       <documentation>Returns all collections in Simias with optional only slaves</documentation>
+    </operation>
+    <operation name="GetNodes">
+      <input message="s0:GetNodesHttpPostIn"/>
+      <output message="s0:GetNodesHttpPostOut"/>
+      <documentation>Returns all nodes in a collection</documentation>
     </operation>
   </portType>
   <binding name="SimiasAPIServiceSoap" type="s0:SimiasAPIServiceSoap">
@@ -341,6 +391,15 @@
         <soap:body use="literal"/>
       </output>
     </operation>
+    <operation name="GetNodes">
+      <soap:operation soapAction="http://novell.com/simiasapi/web/GetNodes" style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
   </binding>
   <binding name="SimiasAPIServiceHttpGet" type="s0:SimiasAPIServiceHttpGet">
     <http:binding verb="GET"/>
@@ -396,6 +455,15 @@
         <mime:mimeXml part="Body"/>
       </output>
     </operation>
+    <operation name="GetNodes">
+      <http:operation location="/GetNodes"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
   </binding>
   <binding name="SimiasAPIServiceHttpPost" type="s0:SimiasAPIServiceHttpPost">
     <http:binding verb="POST"/>
@@ -444,6 +512,15 @@
     </operation>
     <operation name="GetCollectionsInDomainByType">
       <http:operation location="/GetCollectionsInDomainByType"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="GetNodes">
+      <http:operation location="/GetNodes"/>
       <input>
         <mime:content type="application/x-www-form-urlencoded"/>
       </input>

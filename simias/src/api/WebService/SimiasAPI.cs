@@ -270,6 +270,55 @@ namespace Simias.Web
 			return result.ToString();
 		}
 
+
+        /// <summary>
+        /// WebMethod that gets nodes from a collection
+        /// </summary>
+        [WebMethod(EnableSession=true, 
+                   Description="Returns all nodes in a collection")]
+        [SoapDocumentMethod]
+        public string GetNodes(string collectionID, string type)
+        {
+            StringBuilder result = new StringBuilder();
+            result.Append("<?xml version=\"1.0\"?>");
+            result.Append("<ObjectList>");
+
+            try
+            {
+                Store store = Store.GetStore();
+
+                Collection col = store.GetCollectionByID(collectionID);
+
+                if(type.Length > 0)
+                {
+                    ICSList nodeList = col.GetNodesByType(type);
+                    foreach( ShallowNode sn in nodeList )
+                    {
+                        Node node = col.GetNodeByID(sn.ID);
+                        result.Append(node.Properties.ToString(false).Replace("<ObjectList>", "").Replace("</ObjectList>", ""));
+                    }
+                }
+                else
+                {
+                    foreach( ShallowNode sn in col )
+                    {
+                        Node node = col.GetNodeByID(sn.ID);
+                        result.Append(node.Properties.ToString(false).Replace("<ObjectList>", "").Replace("</ObjectList>", ""));
+                    }
+                }
+            }
+            catch(Exception e) 
+            {
+                return e.ToString();
+            }
+
+            result.Append("</ObjectList>");
+
+            return result.ToString();
+        }
+
+
+
 	}
 }
 

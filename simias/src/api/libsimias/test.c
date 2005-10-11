@@ -12,7 +12,7 @@
 
 #include "simias.h"
 
-#define TEST_LOOP_COUNT 200
+#define TEST_LOOP_COUNT 1
 
 /**
  *	Simias Handle tests
@@ -51,7 +51,7 @@ bool simiasHandleTests()
 
 
 /**
- *	Simias Handle tests
+ *	Simias Domain tests
  */
 bool simiasDomainTests()
 {
@@ -130,8 +130,10 @@ bool simiasDomainTests()
 }
 
 
+
+
 /**
- *	Simias Handle tests
+ *	Simias Collection tests
  */
 bool simiasCollectionTests()
 {
@@ -253,7 +255,7 @@ bool simiasCollectionTests()
 		}
 
 
-		// GetCollections by domain
+		// GetCollections for domain
 
 
 		rc = simias_get_domains(hSimias, &hNodeList);
@@ -351,6 +353,107 @@ bool simiasCollectionTests()
 			break;
 		}
 
+
+
+
+		// GetCollections for domain by type
+
+
+		rc = simias_get_domains(hSimias, &hNodeList);
+		if(rc)
+		{
+			printf("Error simias_get_collections: %d\n", rc);
+			passed = false;
+			break;
+		}
+
+		rc = simias_nodelist_get_node_count(hNodeList, &nodeCount);
+		if(rc)
+		{
+			printf("Error simias_nodelist_get_node_count: %d\n", rc);
+			passed = false;
+			break;
+		}
+
+		for(nodeCounter = 0; nodeCounter < nodeCount; nodeCounter++)
+		{
+			SimiasNodeList hNodeList2;
+			int nodeCounter2, nodeCount2 = 0;
+			SimiasNode hNode;
+
+			rc = simias_nodelist_extract_node(hNodeList, &hNode,
+													nodeCounter);
+			if(rc)
+			{
+				printf("Error simias_nodelist_extract_node: %d\n", rc);
+				passed = false;
+				break;
+			}
+
+			rc = simias_get_collections_for_domain_by_type(hSimias, &hNodeList2, 
+													simias_node_get_id(hNode),
+													"iFolder");
+			if(rc)
+			{
+				printf("Error simias_get_collections: %d\n", rc);
+				passed = false;
+				break;
+			}
+
+			rc = simias_nodelist_get_node_count(hNodeList2, &nodeCount2);
+			if(rc)
+			{
+				printf("Error simias_nodelist_get_node_count: %d\n", rc);
+				passed = false;
+				break;
+			}
+
+			for(nodeCounter2 = 0; nodeCounter2 < nodeCount2; nodeCounter2++)
+			{
+				SimiasNode hNode2;
+
+				rc = simias_nodelist_extract_node(hNodeList2, &hNode2,
+														nodeCounter2);
+				if(rc)
+				{
+					printf("Error simias_nodelist_extract_node: %d\n", rc);
+					passed = false;
+					break;
+				}
+
+				rc = simias_node_free(&hNode2);
+				if(rc)
+				{
+					printf("Error simias_node_free: %d\n", rc);
+					passed = false;
+					break;
+				}
+			}
+
+			rc = simias_nodelist_free(&hNodeList2);
+			if(rc)
+			{
+				printf("Error simias_nodelist_free: %d\n", rc);
+				passed = false;
+				break;
+			}
+
+			rc = simias_node_free(&hNode);
+			if(rc)
+			{
+				printf("Error simias_node_free: %d\n", rc);
+				passed = false;
+				break;
+			}
+		}
+
+		rc = simias_nodelist_free(&hNodeList);
+		if(rc)
+		{
+			printf("Error simias_nodelist_free: %d\n", rc);
+			passed = false;
+			break;
+		}
 	}
 
 	rc = simias_free(&hSimias);
@@ -366,6 +469,174 @@ bool simiasCollectionTests()
 
 
 
+/**
+ *	Simias Node tests
+ */
+bool simiasNodeTests()
+{
+	SimiasHandle hSimias;
+	int rc = 0;
+	int counter;
+	bool passed = true;
+
+	rc = simias_init_local(&hSimias);
+	if(rc)
+	{
+		printf("Error simias_init_local: %d\n", rc);
+		return false;
+	}
+
+	for(counter = 0; counter < TEST_LOOP_COUNT; counter++)
+	{
+		SimiasNodeList hNodeList;
+		int nodeCounter, nodeCount = 0;
+
+
+		// GetNodes (from all collections)
+
+		rc = simias_get_collections(hSimias, &hNodeList);
+		if(rc)
+		{
+			printf("Error simias_get_collections: %d\n", rc);
+			passed = false;
+			break;
+		}
+
+		rc = simias_nodelist_get_node_count(hNodeList, &nodeCount);
+		if(rc)
+		{
+			printf("Error simias_nodelist_get_node_count: %d\n", rc);
+			passed = false;
+			break;
+		}
+			
+		for(nodeCounter = 0; nodeCounter < nodeCount; nodeCounter++)
+		{
+			SimiasNodeList hNodeList2;
+			int nodeCounter2, nodeCount2 = 0;
+			SimiasNode hNode;
+
+			rc = simias_nodelist_extract_node(hNodeList, &hNode,
+													nodeCounter);
+			if(rc)
+			{
+				printf("Error simias_nodelist_extract_node: %d\n", rc);
+				passed = false;
+				break;
+			}
+
+			rc = simias_get_nodes(hSimias, 
+								  &hNodeList2,
+								  simias_node_get_id(hNode) );
+			if(rc)
+			{
+				printf("Error simias_get_nodes: %d\n", rc);
+				passed = false;
+				break;
+			}
+
+			rc = simias_nodelist_get_node_count(hNodeList2, &nodeCount2);
+			if(rc)
+			{
+				printf("Error simias_nodelist_get_node_count: %d\n", rc);
+				passed = false;
+				break;
+			}
+
+			for(nodeCounter2 = 0; nodeCounter2 < nodeCount2; nodeCounter2++)
+			{
+				SimiasNode hNode2;
+				int propertyCount, pCounter;
+
+				rc = simias_nodelist_extract_node(hNodeList2, &hNode2,
+														nodeCounter2);
+				if(rc)
+				{
+					printf("Error simias_nodelist_extract_node: %d\n", rc);
+					passed = false;
+					break;
+				}
+
+				propertyCount = simias_property_get_count(hNode2);
+
+				for(pCounter = 0; pCounter < propertyCount; pCounter++)
+				{
+					SimiasProperty hProperty;
+
+					rc = simias_property_extract_property(hNode2, 
+														&hProperty,
+														pCounter);
+					if(rc)
+					{
+						printf("Error simias_property_extract_property: %d\n", rc);
+						passed = false;
+						break;
+					}
+
+					printf("Name = %s\nType=%s\nValue=%s\n",
+		 							simias_property_get_name(hProperty),
+		 							simias_property_get_type(hProperty),
+		 							simias_property_get_value_as_string(hProperty));
+
+					rc = simias_property_free(&hProperty);
+					{
+						printf("Error simias_property_free: %d\n", rc);
+						passed = false;
+						break;
+					}
+				}
+
+				rc = simias_node_free(&hNode2);
+				if(rc)
+				{
+					printf("Error simias_node_free: %d\n", rc);
+					passed = false;
+					break;
+				}
+			}
+
+			rc = simias_nodelist_free(&hNodeList2);
+			if(rc)
+			{
+				printf("Error simias_nodelist_free: %d\n", rc);
+				passed = false;
+				break;
+			}
+
+			rc = simias_node_free(&hNode);
+			if(rc)
+			{
+				printf("Error simias_node_free: %d\n", rc);
+				passed = false;
+				break;
+			}
+		}
+
+		rc = simias_nodelist_free(&hNodeList);
+		if(rc)
+		{
+			printf("Error simias_nodelist_free: %d\n", rc);
+			passed = false;
+			break;
+		}
+	}
+
+	rc = simias_free(&hSimias);
+	if(rc)
+	{
+		printf("Error simias_free: %d\n", rc);
+		passed = false;
+	}
+
+	return passed;
+}
+
+
+
+
+
+
+
 int main(int argc, char **argv)
 {
 	bool	passedTest = true;
@@ -374,7 +645,7 @@ int main(int argc, char **argv)
 //	struct timeb startTime;
 //	struct timeb stopTime;
 	printf("Test: simiasHandleTests()\n");
-	passedTest = simiasHandleTests();
+//	passedTest = simiasHandleTests();
 	if(passedTest)
 		printf("Test: simiasHandleTests() - PASS\n");
 	else
@@ -384,7 +655,7 @@ int main(int argc, char **argv)
 	}
 
 	printf("Test: simiasDomainTests()\n");
-	passedTest = simiasDomainTests();
+//	passedTest = simiasDomainTests();
 	if(passedTest)
 		printf("Test: simiasDomainTests() - PASS\n");
 	else
@@ -394,12 +665,22 @@ int main(int argc, char **argv)
 	}
 
 	printf("Test: simiasCollectionTests()\n");
-	passedTest = simiasCollectionTests();
+//	passedTest = simiasCollectionTests();
 	if(passedTest)
 		printf("Test: simiasCollectionTests() - PASS\n");
 	else
 	{
 		printf("Test: simiasCollectionTests() - FAILED\n");
+		allTests = false;
+	}
+
+	printf("Test: simiasNodeTests()\n");
+	passedTest = simiasNodeTests();
+	if(passedTest)
+		printf("Test: simiasNodeTests() - PASS\n");
+	else
+	{
+		printf("Test: simiasNodeTests() - FAILED\n");
 		allTests = false;
 	}
 

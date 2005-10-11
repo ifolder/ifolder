@@ -69,7 +69,14 @@ struct _SimiasNode
 	xmlNode	*node;
 };
 
+struct _SimiasProperty
+{
+	char *name;
+	char *type;
+	char *value;
 
+	xmlNode *node;
+};
 
 /**
  * This function will return the full URL of where Simias is currently running.
@@ -116,6 +123,10 @@ int _simias_node_create(struct _SimiasNode **_hNode, xmlNode *node);
 int _simias_nodelist_create(struct _SimiasNodeList **_hNodeList,
 										char *resultXML);
 
-
+int _simias_property_create(struct _SimiasProperty **_hProperty, xmlNode *node);
+int _simias_property_get_count(struct _SimiasNode *_hNode);
+int _simias_property_extract_property(struct _SimiasNode *_hNode, 
+									  struct _SimiasProperty **_hProperty,
+									  int index);
 
 #endif	// _SIMIAS_INTERNAL_H

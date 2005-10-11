@@ -11,7 +11,7 @@ dist-hook:
 lib_LTLIBRARIES = libsimias2.la
 
 libsimias2_la_SOURCES = \
- 	envC.c simiaswebClientLib.c stdsoap2.c simias_internal.c simias_internal.h simias_handle.c simias.h simias_domain.c simias_node.c simias_nodelist.c simias_collection.c
+ 	envC.c simiaswebClientLib.c stdsoap2.c simias_internal.c simias_internal.h simias_handle.c simias.h simias_domain.c simias_node.c simias_nodelist.c simias_collection.c simias_property.c
  	
 libsimias2_la_CFLAGS = \
 	$(XML2_CFLAGS) -DWITH_NONAMESPACES -DWITH_COOKIES

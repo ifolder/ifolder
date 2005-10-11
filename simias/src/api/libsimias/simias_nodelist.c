@@ -133,7 +133,7 @@ int __simias_nodelist_get_check_struct(SimiasNodeList hNodeList,
 	if(*_hNodeList == NULL)
 		return SIMIAS_ERROR_INVALID_POINTER;
 
-	if((*_hNodeList)->nodeArray == NULL)
+	if( ((*_hNodeList)->nodeCount != 0) && ((*_hNodeList)->nodeArray == NULL) )
 		return SIMIAS_ERROR_INVALID_POINTER;
 
 	return 0;
@@ -147,7 +147,9 @@ int _simias_nodelist_create(struct _SimiasNodeList **_hNodeList,
 	xmlNode *root_element, *cur_node, *next_node;
 	xmlDoc*	doc;
 	int nodeCounter, nodeCount = 0;
-	
+
+
+//	printf("%s\n", resultXML);
 	*_hNodeList = NULL;
 
 	doc = xmlReadMemory(resultXML,strlen(resultXML),"result.xml",NULL, 0);

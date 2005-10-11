@@ -31,6 +31,7 @@
 typedef void *SimiasHandle;
 typedef void *SimiasNodeList;
 typedef void *SimiasNode;
+typedef void *SimiasProperty;
 
 int simias_init_local(SimiasHandle *hSimias);
 int simias_free(SimiasHandle *hSimias);
@@ -50,6 +51,17 @@ int simias_get_collections_for_domain_by_type(SimiasHandle hSimias,
 											  const char *domainID, 
 											  const char *type);
 
+
+
+
+int simias_get_nodes(SimiasHandle hSimias, 
+					SimiasNodeList *hNodeList, 
+					const char *collectionID);
+int simias_get_nodes_by_type(SimiasHandle hSimias, 
+					SimiasNodeList *hNodeList, 
+					const char *collectionID,
+					const char *type);
+
 char *simias_node_get_name(SimiasNode hNode);
 char *simias_node_get_id(SimiasNode hNode);
 char *simias_node_get_type(SimiasNode hNode);
@@ -66,7 +78,15 @@ int simias_nodelist_get_node(SimiasNodeList hNodeList,
 int simias_nodelist_get_node_count(SimiasNodeList hNodeList, int *count);
 int simias_nodelist_free(SimiasNodeList *hNodeList);
 
+char *simias_property_get_name(SimiasProperty *hProp);
+char *simias_property_get_type(SimiasProperty *hProp);
+char *simias_property_get_value_as_string(SimiasProperty *hProp);
 
+int simias_property_free(SimiasProperty *hProp);
+int simias_property_get_count(SimiasNode hNode);
+int simias_property_extract_property(SimiasNode hNode, 
+									  SimiasProperty *hProp,
+									  int index);
 
 
 #endif	// _SIMIAS_H

@@ -28,6 +28,103 @@
 #include <string.h>
 
 
+int simias_get_nodes(SimiasHandle hSimias, 
+					SimiasNodeList *hNodeList, 
+					const char *collectionID)
+{
+	int err_code;
+	int rc = 0;
+	struct _SimiasHandle *_hSimias = (struct _SimiasHandle *)hSimias;
+
+	struct _ns1__GetNodes				message;
+	struct _ns1__GetNodesResponse		response;
+
+	// check for a null in type
+	if(collectionID == NULL)
+		return SIMIAS_ERROR_INVALID_POINTER;
+
+	message.collectionID = collectionID;
+	message.type = "";
+
+	err_code = soap_call___ns1__GetNodes(
+			&(_hSimias->soap),
+			_hSimias->serviceURL,
+			NULL, 
+			&message,
+			&response);
+
+	if(err_code != SOAP_OK)
+	{
+		rc = err_code;
+		*hNodeList = NULL;
+	}
+	else
+	{
+		struct _SimiasNodeList *nl;
+		_simias_nodelist_create(&nl, 
+								response.GetNodesResult);
+		*hNodeList = (SimiasNodeList *)nl;
+	}
+
+	// Free up the tmp resources with this soap call
+	soap_end(&(_hSimias->soap));
+
+	return rc;
+}
+
+
+
+
+int simias_get_nodes_by_type(SimiasHandle hSimias, 
+					SimiasNodeList *hNodeList, 
+					const char *collectionID,
+					const char *type)
+{
+	int err_code;
+	int rc = 0;
+	struct _SimiasHandle *_hSimias = (struct _SimiasHandle *)hSimias;
+
+	struct _ns1__GetNodes				message;
+	struct _ns1__GetNodesResponse		response;
+
+	// check for a null in type
+	if(collectionID == NULL)
+		return SIMIAS_ERROR_INVALID_POINTER;
+
+	if(type == NULL)
+		return SIMIAS_ERROR_INVALID_POINTER;
+
+	message.collectionID = collectionID;
+	message.type = type;
+
+	err_code = soap_call___ns1__GetNodes(
+			&(_hSimias->soap),
+			_hSimias->serviceURL,
+			NULL, 
+			&message,
+			&response);
+
+	if(err_code != SOAP_OK)
+	{
+		rc = err_code;
+		*hNodeList = NULL;
+	}
+	else
+	{
+		struct _SimiasNodeList *nl;
+		_simias_nodelist_create(&nl, 
+								response.GetNodesResult);
+		*hNodeList = (SimiasNodeList *)nl;
+	}
+
+	// Free up the tmp resources with this soap call
+	soap_end(&(_hSimias->soap));
+
+	return rc;
+}
+
+
+
 char *simias_node_get_name(SimiasNode hNode)
 {
 	struct _SimiasNode *_hNode =
