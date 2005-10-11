@@ -375,9 +375,13 @@ namespace Novell.iFolder.Web
 				{
 					Subscription sub = new Subscription(node);
 
-					// BHT: Filter out subscriptions that are not iFolders
-					if (sub.SubscriptionCollectionType == iFolderWeb.iFolderType)
-						ifolder = new iFolderWeb(sub);
+					// Only return subscriptions that are for us (the current user)
+					if(sub.ToIdentity == poBox.Owner.UserID)
+					{
+						// BHT: Filter out subscriptions that are not iFolders
+						if (sub.SubscriptionCollectionType == iFolderWeb.iFolderType)
+							ifolder = new iFolderWeb(sub);
+					}
 				}
 			}
 
