@@ -17,6 +17,101 @@ static int level = 0;
 
 int doList(void);
 int doCD(char *name);
+int doCat(char *name);
+
+int doCat(char *name)
+{
+	int rc = 0;
+	SimiasNodeList hNodeList;
+	SimiasNode		hNewNode;
+	
+	// if level is 0, we are at the top
+	if(level == 0)
+	{
+		rc = simias_get_domains(hSimias, &hNodeList);
+		if(rc)
+			return rc;
+	}
+	else if(level == 1)
+	{
+		rc = simias_get_collections_for_domain_by_type(hSimias, 
+											   &hNodeList, 
+											   simias_node_get_id(hCurNode),
+												"Collection");
+		if(rc)
+			return rc;
+	}
+	else if(level == 2)
+	{
+		rc = simias_get_nodes(hSimias, 
+					&hNodeList, 
+					simias_node_get_id(hCurNode));
+		if(rc)
+			return rc;
+	}
+
+
+	rc = simias_nodelist_extract_node_by_name(hNodeList,
+											  &hNewNode,
+											  name);
+	if(rc)
+	{
+		printf("Error extracting node by name\n");
+		simias_nodelist_free(&hNodeList);
+		return rc;
+	}
+
+	if(hNewNode != NULL)
+	{
+		int propertyCount, pCounter;
+
+		printf("Node Name: %s\nNode Type: %s\nNode ID:   %s\n---Properties---\n",
+							simias_node_get_name(hNewNode),
+							simias_node_get_type(hNewNode),
+							simias_node_get_id(hNewNode));
+
+		propertyCount = simias_property_get_count(hNewNode);
+
+		for(pCounter = 0; pCounter < propertyCount; pCounter++)
+		{
+			SimiasProperty hProperty;
+
+			rc = simias_property_extract_property(hNewNode, 
+												&hProperty,
+												pCounter);
+			if(rc)
+			{
+				printf("Error simias_property_extract_property: %d\n", rc);
+				return rc;
+			}
+
+			printf("Name: %-15s\tType: %-7s\tValue: %s\n", 
+							simias_property_get_name(hProperty),
+							simias_property_get_type(hProperty),
+							simias_property_get_value_as_string(hProperty));
+
+			rc = simias_property_free(&hProperty);
+			if(rc)
+			{
+				printf("Error simias_property_free: %d\n", rc);
+				return rc;
+			}
+		}
+
+		rc = simias_node_free(&hNewNode);
+		if(rc)
+		{
+			printf("Error simias_node_free: %d\n", rc);
+			return rc;
+		}
+	}
+
+	rc = simias_nodelist_free(&hNodeList);
+	if(rc)
+		return rc;
+}
+
+
 
 
 int doCD(char *name)
@@ -196,6 +291,24 @@ int shell_prompt()
 					*name = 0;
 				name = tmpName;
 				doCD(name);
+			}
+		}
+		if(strncmp(buffer, "cat", 3) == 0)
+		{
+			char *tmpName;
+			tmpName = strchr(buffer, ' ');
+			if(tmpName != NULL)
+			{
+				char *name;
+				tmpName = ++tmpName;
+				name = strchr(tmpName, '\r');
+				if(name != NULL)
+					*name = 0;
+				name = strchr(tmpName, '\n');
+				if(name != NULL)
+					*name = 0;
+				name = tmpName;
+				doCat(name);
 			}
 		}
 		else if(strncmp(buffer, "quit", 4) == 0)
