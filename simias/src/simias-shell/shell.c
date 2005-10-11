@@ -9,10 +9,10 @@
 #include "simias.h"
 
 // Globals for shell environment
-SimiasHandle hSimias;
-SimiasNode	 hDomain;
-SimiasNode	 hCurNode;
-int level = 0;
+static SimiasHandle hSimias;
+static SimiasNode	 hDomain;
+static SimiasNode	 hCurNode;
+static int level = 0;
 
 
 int doList(void);
@@ -24,17 +24,15 @@ int doCD(char *name)
 	int rc = 0;
 	SimiasNodeList hNodeList;
 	SimiasNode		hNewNode;
-
-	printf("Changing into %s\n", name);
+	
 	if(strncmp(name, "..", 2) == 0)
 	{
 		if(level == 0)
 			return 0;
 		else if(level == 1)
 		{
-			printf("Level is one\n");
 			if(hCurNode != NULL)
-				simias_node_free(hCurNode);
+				simias_node_free(&hCurNode);
 			hCurNode = NULL;
 			hDomain = NULL;
 			level = 0;
@@ -42,8 +40,7 @@ int doCD(char *name)
 		}
 		else if(level == 2)
 		{
-			printf("Level is two\n");
-			simias_node_free(hCurNode);
+			simias_node_free(&hCurNode);
 			hCurNode = hDomain;
 			level = 1;
 			return 0;
@@ -54,7 +51,6 @@ int doCD(char *name)
 	// if level is 0, we are at the top
 	if(level == 0)
 	{
-		printf("Getting domain list...\n");
 		rc = simias_get_domains(hSimias, &hNodeList);
 		if(rc)
 			return rc;
@@ -91,7 +87,7 @@ int doCD(char *name)
 		if(level == 1)
 			hDomain = hCurNode;
 		else if(level != 0)
-			simias_node_free(hCurNode);
+			simias_node_free(&hCurNode);
 		level++;
 		hCurNode = hNewNode;
 	}
