@@ -38,12 +38,13 @@ namespace Simias
 	{
 		#region Class Members
 
+		public const string DefaultConfigFileName = "Simias.config";
+
 		private const string SectionTag = "section";
 		private const string SettingTag = "setting";
 		private const string NameAttr = "name";
 		private const string ValueAttr = "value";
 		private const string DefaultSection = "SimiasDefault";
-		private const string DefaultFileName = "Simias.config";
 
 		private XmlDocument configDoc;
 
@@ -59,7 +60,7 @@ namespace Simias
 		public Configuration( string storePath, bool isServer )
 		{
 			// The server's Simias.config file must always be in the data directory.
-			string configFilePath = Path.Combine( storePath, DefaultFileName );
+			string configFilePath = Path.Combine( storePath, DefaultConfigFileName );
 			
 			if ( !isServer )
 			{
@@ -67,7 +68,7 @@ namespace Simias
 				// directory. If not, then get the global copy.
 				if ( !File.Exists( configFilePath ) )
 				{
-					configFilePath = Path.Combine( SimiasSetup.sysconfdir, DefaultFileName );
+					configFilePath = Path.Combine( SimiasSetup.sysconfdir, DefaultConfigFileName );
 				}
 			}
 
