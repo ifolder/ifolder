@@ -267,14 +267,14 @@ namespace Simias.Client
 						}
 						else
 						{
-							Console.Error.WriteLine( "Invalid command line parameters. No store path was specified." );
+							Console.Error.WriteLine( "Invalid command line parameters. No application path was specified." );
 						}
 
 						break;
 					}
 
 					case "-i":
-					case "--isServer":
+					case "--isserver":
 					{
 						IsServer = true;
 						break;
