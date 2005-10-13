@@ -404,7 +404,14 @@ namespace Simias.Sync
 		/// <returns></returns>
 		bool HasParentChanged(string oldPath, string newPath)
 		{
-			return (!(Path.GetDirectoryName(oldPath).Equals(Path.GetDirectoryName(newPath))));
+			if (MyEnvironment.Windows)
+			{
+				return String.Compare(Path.GetDirectoryName(oldPath), Path.GetDirectoryName(newPath), true) == 0 ? false : true;
+			}
+			else
+			{
+				return (!(Path.GetDirectoryName(oldPath).Equals(Path.GetDirectoryName(newPath))));
+			}
 		}
 
 		/// <summary>
@@ -1141,12 +1148,22 @@ namespace Simias.Sync
 			{
 				try
 				{
-					string[] caseSensitivePath = Directory.GetFileSystemEntries(Path.GetDirectoryName(fullPath), Path.GetFileName(fullPath));
-					if (caseSensitivePath.Length == 1)
+					string path = rootPath;
+					// We need to get the name with case preserved.
+					string relPath = fullPath.Replace(rootPath, "");
+					relPath = relPath.TrimStart(Path.DirectorySeparatorChar);
+					string[] pathComponents = relPath.Split(Path.DirectorySeparatorChar);
+					foreach (string pc in pathComponents)
 					{
-						// We should only have one match.
-						fullPath = caseSensitivePath[0];
+						//string[] caseSensitivePath = Directory.GetFileSystemEntries(Path.GetDirectoryName(fullPath), Path.GetFileName(fullPath));
+						string[] caseSensitivePath = Directory.GetFileSystemEntries(path, pc);
+						if (caseSensitivePath.Length == 1)
+						{
+							// We should only have one match.
+							path = Path.Combine(path, Path.GetFileName(caseSensitivePath[0]));
+						}
 					}
+					fullPath = path;
 				}
 				catch {}
 			}
