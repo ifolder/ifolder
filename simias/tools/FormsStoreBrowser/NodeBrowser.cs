@@ -339,7 +339,7 @@ namespace StoreBrowser
 
 		public bool ValidateCredentials(string storePath)
 		{
-			Simias.Client.LocalService.Start(browser, new Uri(browser.Url), storePath);
+			Simias.Client.LocalService.Start(browser, new Uri(host), storePath);
 			return !NeedsAuthentication();
 		}
 
