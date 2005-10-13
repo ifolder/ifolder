@@ -50,7 +50,7 @@ namespace Novell.iFolder.Web
 	/// <summary>
 	/// Supported store search operators.
 	/// </summary>
-	public enum SearchType
+	public enum iFolderSearchType
 	{
 		/// <summary>
 		/// Used to compare if two values are equal.
@@ -1106,7 +1106,7 @@ namespace Novell.iFolder.Web
 			string domainID, 
 			string attributeName, 
 			string searchString, 
-			SearchType operation, 
+			iFolderSearchType operation, 
 			int count,
 			out string searchContext, 
 			out iFolderUser[] memberList, 
