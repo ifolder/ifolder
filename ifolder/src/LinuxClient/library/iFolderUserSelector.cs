@@ -444,7 +444,7 @@ namespace Novell.iFolder
 					domainID,
 					searchAttribute,
 					SearchEntry.Text,
-					iFolderSearchType.Begins,
+					SearchType.Begins,
 					NumOfMembersToReturnDefault,
 					out searchContext,
 					out memberInfoA,
