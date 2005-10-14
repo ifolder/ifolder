@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections;
+using System.Runtime.InteropServices;
 using Gtk;
 
 using Simias.Client;
@@ -46,6 +47,8 @@ namespace Novell.iFolder
 		private iFolderConflictDialog 	ConflictDialog;
 		private iFolderPropSharingPage 	SharingPage;
 		private iFolderPropSettingsPage SettingsPage; 
+		private Gtk.Widget			CBasedSettingsPage;
+		private Gtk.Widget			CBasedSharingPage;
 		private bool				ControlKeyPressed;
 
 		public int CurrentPage
@@ -167,10 +170,19 @@ namespace Novell.iFolder
 			KeyReleaseEvent += new KeyReleaseEventHandler(KeyReleaseHandler);
 		}
 		
+		~iFolderPropertiesDialog()
+		{
+			CBasedSettingsPage.Destroy();
+			CBasedSharingPage.Destroy();
+		}
+		
 		public void UpdateiFolder(iFolderWeb theiFolder)
 		{
 			SettingsPage.UpdateiFolder(theiFolder);
 			SharingPage.UpdateiFolder(theiFolder);
+			
+			UpdateiFolderGeneralPropertyPage(CBasedSettingsPage, theiFolder.ID);
+			UpdateiFolderSharingPropertyPage(CBasedSharingPage, theiFolder.ID);
 		}
 
 
@@ -209,6 +221,14 @@ namespace Novell.iFolder
 
 			propNoteBook.AppendPage(SharingPage, 
 								new Label(Util.GS("_Sharing")));
+
+			CBasedSettingsPage = GetiFolderGeneralPropertyPage(ifolder.ID);
+			propNoteBook.AppendPage(CBasedSettingsPage,
+									new Label("General (C-based)"));
+			
+			CBasedSharingPage = GetiFolderSharingPropertyPage(ifolder.ID);
+			propNoteBook.AppendPage(CBasedSharingPage,
+									new Label("Sharing (C-based)"));
 
 			dialogBox.PackStart(propNoteBook);
 
@@ -361,6 +381,49 @@ namespace Novell.iFolder
 //					dg.Destroy();
 //				}
 //		}
+
+		[DllImport("libifolder-gtk.so.0")]
+		static extern IntPtr ifolder_general_property_page_new (string ifolder_id);
+		
+		private static Gtk.Widget GetiFolderGeneralPropertyPage(string ifolderID)
+		{
+			IntPtr generalPropPageHandle;
+			
+			generalPropPageHandle = ifolder_general_property_page_new(ifolderID);
+			return new Gtk.Widget(generalPropPageHandle);
+		}
+		
+		[DllImport("libifolder-gtk.so.0")]
+		static extern void ifolder_general_property_page_update (IntPtr widgetPtr, string ifolder_id);
+		
+		private static void UpdateiFolderGeneralPropertyPage(
+				Gtk.Widget generalPropertyPage, string ifolderID)
+		{
+			ifolder_general_property_page_update(
+				generalPropertyPage.Handle, ifolderID);
+		}
+
+
+		[DllImport("libifolder-gtk.so.0")]
+		static extern IntPtr ifolder_sharing_property_page_new (string ifolder_id);
+		
+		private static Gtk.Widget GetiFolderSharingPropertyPage(string ifolderID)
+		{
+			IntPtr sharingPropPageHandle;
+			
+			sharingPropPageHandle = ifolder_sharing_property_page_new(ifolderID);
+			return new Gtk.Widget(sharingPropPageHandle);
+		}
+		
+		[DllImport("libifolder-gtk.so.0")]
+		static extern void ifolder_sharing_property_page_update (IntPtr widgetPtr, string ifolder_id);
+		
+		private static void UpdateiFolderSharingPropertyPage(
+				Gtk.Widget sharingPropertyPage, string ifolderID)
+		{
+			ifolder_sharing_property_page_update(
+				sharingPropertyPage.Handle, ifolderID);
+		}
 
 	}
 }

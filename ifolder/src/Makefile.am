@@ -1,5 +1,5 @@
 if LINUX
-SUBDIRS = WebService libifolder iFolder TrayIcon LinuxClient
+SUBDIRS = WebService libifolder libifolder-gtk iFolder TrayIcon LinuxClient
 endif
 
 if DARWIN

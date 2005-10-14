@@ -10,6 +10,6 @@ exec_prefix=@_exec_prefix_@
 libdir=@_libdir_@
 includedir=@_prefix_@/include/ifolder3
 
-Libs:-Wl,-rpath,${libdir} -L${libdir} -lifolderclient
+Libs:-Wl,-rpath,${libdir} -L${libdir} -lifolderclient -lifolder-gtk
 Cflags: -I${includedir}
 
