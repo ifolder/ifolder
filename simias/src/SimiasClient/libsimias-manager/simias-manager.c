@@ -20,14 +20,20 @@
  *
  ***********************************************************************/
 
+#ifdef WIN32
+#include <windows.h>
+#endif
+
 #include <stdio.h>
 #include <io.h>
 #include <direct.h>
+#include <process.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define MAX_PATH_SIZE				260
+#define MAX_STDOUT_BUFFER_SIZE		1024
 
 #define WIN_ALL_USERS_PROFILE		"ALLUSERSPROFILE"
 #define MAPPING_FILE				"SimiasDirectoryMapping"
@@ -60,17 +66,24 @@ typedef struct _Manager_
 } Manager;
 
 /*
- * Forward declaration of static functions.
+ * Forward declaration of functions.
  */
+
+#ifdef WIN32
+static BOOL ReadChildStdoutPipe( Manager *pManager, HANDLE hRead );
+static BOOL StartChildProcess( Manager *pManager );
+static BOOL StopChildProcess( Manager *pManager );
+#endif
 
 static const char *GetDefaultApplicationPath();
 static const char *GetDefaultMappingFile();
+static void SetWebServiceUri( Manager *pManager, const char *pWebServiceUri );
 static void ShowError( const char *format, ... );
 
 void SetApplicationPath( Manager *pManager, const char *pApplicationPath );
 void SetDataPath( Manager *pManager, const char *pDataPath );
 void SetIsServer( Manager *pManager, char isServer );
-void SetPort( Manager *pManager, const char *pPort );
+void SetWebPort( Manager *pManager, const char *pPort );
 void SetShowConsole( Manager *pManager, char showConsole );
 void SetVerbose( Manager *pManager, char verbose );
 
@@ -80,6 +93,219 @@ void SetVerbose( Manager *pManager, char verbose );
  */
 static char errorBuffer[ 512 ];
 
+
+#ifdef WIN32
+
+/*
+ * Reads the child process's redirected stdout handle to get the output
+ * from the child process.
+ */
+static BOOL ReadChildStdoutPipe( Manager *pManager, HANDLE hRead )
+{
+	BOOL bStatus;
+	char *pBuffer;
+	char *pCmd;
+	char *pDataPath;
+	unsigned long bytesRead = 0;
+
+	/* Allocate a buffer to read the data from. */
+	pBuffer = malloc( MAX_STDOUT_BUFFER_SIZE );
+	if ( pBuffer != NULL )
+	{
+		/* Read from the dup handle. */
+		bStatus = ReadFile( hRead, pBuffer, MAX_STDOUT_BUFFER_SIZE, &bytesRead, NULL );
+		if ( bStatus && ( bytesRead > 0 ) )
+		{
+			/* NULL append the buffer. */
+			pBuffer[ bytesRead ] = '\0';
+
+			/* Copy the first line to the web service uri. */
+			pCmd = strchr( pBuffer, '\r' );
+			if ( pCmd != NULL )
+			{
+				*pCmd = '\0';
+				SetWebServiceUri( pManager, pBuffer );
+
+				/* Copy the next line to the simias data path */
+				/* Skip over the '\r\n'. */
+				pDataPath = pCmd + 2;
+				pCmd = strchr( pDataPath, '\r' );
+				if ( pCmd != NULL )
+				{
+					*pCmd = '\0';
+					SetDataPath( pManager, pDataPath );
+				}
+			}
+		}
+		else
+		{
+			/* No data was written. */
+			bStatus = FALSE;
+		}
+
+		free( pBuffer );
+	}
+	else
+	{
+		ShowError( "Cannot allocate %d bytes in ReadChildStdoutPipe()", MAX_STDOUT_BUFFER_SIZE );
+		bStatus = FALSE;
+	}
+
+	return bStatus;
+
+}	/*-- End of ReadChildStdoutPipe() --*/
+
+/*
+ * Starts the Simias.exe child process.
+ */
+static BOOL StartChildProcess( Manager *pManager )
+{
+	BOOL bStatus;
+	char *pArgs;
+	PROCESS_INFORMATION pi;
+	STARTUPINFO si;
+
+	/* Allocate space for the argument string. */
+	pArgs = malloc( 1024 );
+	if ( pArgs != NULL )
+	{
+		/* First parameter is the application name */
+		strcpy( pArgs, "\"" );
+		strcat( pArgs, pManager->applicationPath );
+		strcat( pArgs, "\"" );
+
+		/* Set the data path if specified */
+		if ( pManager->simiasDataPath != NULL )
+		{
+			strcat( pArgs, " --datadir \"" );
+			strcat( pArgs, pManager->simiasDataPath );
+			strcat( pArgs, "\"" );
+		}
+
+		/* Set the port if specified */
+		if ( pManager->port != NULL )
+		{
+			strcat( pArgs, " --port " );
+			strcat( pArgs, pManager->port );
+		}
+
+		/* Set the configuration type */
+		if ( pManager->flags.IsServer )
+		{
+			strcat( pArgs, " --runasserver" );
+		}
+
+		/* Set whether to show the output console */
+		if ( pManager->flags.ShowConsole )
+		{
+			strcat( pArgs, " --showconsole" );
+		}
+
+		/* Set whether to show the extra information */
+		if ( pManager->flags.Verbose )
+		{
+			strcat( pArgs, " --verbose" );
+		}
+
+		/* Initialize the input structures. */
+		memset( &pi, 0, sizeof( pi ) );
+		memset( &si, 0, sizeof( si ) );
+		si.cb = sizeof( si );
+
+		/* Create the child process. */
+		bStatus = CreateProcess( NULL, pArgs, NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi );
+		if ( bStatus )
+		{
+			/* Wait for the process to terminate then close the handles. */
+			WaitForSingleObject( pi.hProcess, INFINITE );
+			CloseHandle( pi.hProcess );
+			CloseHandle( pi.hThread );
+		}
+		else
+		{
+			ShowError( "Failed to create Simias.exe process - %d.", GetLastError() );
+		}
+
+		free( pArgs );
+	}
+	else
+	{
+		ShowError( "Cannot allocate %d bytes in StartChildProcess()", 1024 );
+		bStatus = FALSE;
+	}
+
+	return bStatus;
+
+}	/*-- End of StartChildProcess() --*/
+
+/*
+ * Stops the Simias.exe child process.
+ */
+static BOOL StopChildProcess( Manager *pManager )
+{
+	BOOL bStatus;
+	char *pArgs;
+	PROCESS_INFORMATION pi;
+	STARTUPINFO si;
+
+	/* Allocate space for the argument string. */
+	pArgs = malloc( 1024 );
+	if ( pArgs != NULL )
+	{
+		/* First parameter is the application name */
+		strcpy( pArgs, "\"" );
+		strcat( pArgs, pManager->applicationPath );
+		strcat( pArgs, "\"" );
+
+		/* Set the data path if specified */
+		if ( pManager->simiasDataPath != NULL )
+		{
+			strcat( pArgs, " --datadir \"" );
+			strcat( pArgs, pManager->simiasDataPath );
+			strcat( pArgs, "\"" );
+		}
+
+		/* Set whether to show the extra information */
+		if ( pManager->flags.Verbose )
+		{
+			strcat( pArgs, " --verbose" );
+		}
+
+		/* Add the stop command. */
+		strcat( pArgs, " --stop" );
+
+		/* Initialize the input structures. */
+		memset( &pi, 0, sizeof( pi ) );
+		memset( &si, 0, sizeof( si ) );
+		si.cb = sizeof( si );
+
+		/* Create the child process. */
+		bStatus = CreateProcess( NULL, pArgs, NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi );
+		if ( bStatus )
+		{
+			/* Wait for the process to terminate then close the handles. */
+			WaitForSingleObject( pi.hProcess, INFINITE );
+			CloseHandle( pi.hProcess );
+			CloseHandle( pi.hThread );
+		}
+		else
+		{
+			ShowError( "Failed to create Simias.exe process - %d.", GetLastError() );
+		}
+
+		free( pArgs );
+	}
+	else
+	{
+		ShowError( "Cannot allocate %d bytes in StopChildProcess()", 1024 );
+		bStatus = FALSE;
+	}
+
+	return bStatus;
+
+}	/*-- End of StopChildProcess() --*/
+
+#endif	/*-- WIN32 --*/
 
 /*
  * Gets the default path to the Simias.exe file.
@@ -183,7 +409,8 @@ static const char *GetDefaultApplicationPath()
 	}
 
 	return pApplicationPath;
-}
+
+}	/*-- End of GetDefaultApplicationPath() --*/
 
 /*
  * Gets the default location where the DirectoryMappingFile exists.
@@ -221,7 +448,8 @@ static const char *GetDefaultMappingFile()
 	}
 
 	return ( const char * )DefaultMappingPath;
-}
+
+}	/*-- End of GetDefaultMappingFile() --*/
 
 /*
  * Parses the command line arguments and sets the values in the object.
@@ -237,7 +465,7 @@ static void ParseConfigurationParameters( Manager *pManager, int argsLength, con
 		{
 			if ( ( i + 1 ) < argsLength )
 			{
-				SetPort( pManager, args[ ++i ] );
+				SetWebPort( pManager, args[ ++i ] );
 			}
 			else
 			{
@@ -279,7 +507,32 @@ static void ParseConfigurationParameters( Manager *pManager, int argsLength, con
 			pManager->flags.Verbose = 1;
 		}
 	}
-}
+
+}	/*-- End of ParseConfigurationParameters() --*/
+
+/*
+ * Sets a new uri in the webServiceUri.
+ */
+static void SetWebServiceUri( Manager *pManager, const char *pWebServiceUri )
+{
+	const char *pTemp = pManager->webServiceUri;
+
+	pManager->webServiceUri = malloc( strlen( pWebServiceUri ) + 1 );
+	if ( pManager->webServiceUri != NULL )
+	{
+		strcpy( ( char * )pManager->webServiceUri, pWebServiceUri );
+		if ( pTemp != NULL )
+		{
+			free( ( char * )pTemp );
+		}
+	}
+	else
+	{
+		ShowError( "Could not allocate %d bytes in SetWebServiceUri()", strlen( pWebServiceUri ) + 1 );
+		pManager->webServiceUri = pTemp;
+	}
+
+}	/*-- End of SetWebServiceUri() --*/
 
 /*
  * Displays errors to the console.
@@ -294,7 +547,8 @@ static void ShowError( const char *format, ... )
 	va_end( list );
 
 	perror( buffer );
-}
+
+}	/*-- End of ShowError() --*/
 
 
 
@@ -367,7 +621,8 @@ void FreeManager( Manager *pManager )
 		memset( pManager, 0, sizeof( Manager ) );
 		free( pManager );
 	}
-}
+
+}	/*-- End of FreeManager() --*/
 
 /*
  * Gets the path to the Simias.exe application.
@@ -375,7 +630,8 @@ void FreeManager( Manager *pManager )
 const char *GetApplicationPath( Manager *pManager )
 {
 	return pManager->applicationPath;
-}
+
+}	/*-- End of GetApplicationPath() --*/
 
 /*
  * Gets the path to the simias data directory.
@@ -383,7 +639,8 @@ const char *GetApplicationPath( Manager *pManager )
 const char *GetDataPath( Manager *pManager )
 {
 	return pManager->simiasDataPath;
-}
+
+}	/*-- End of GetDataPath() --*/
 
 /*
  * Gets whether to run in a server configuration.
@@ -391,15 +648,17 @@ const char *GetDataPath( Manager *pManager )
 char GetIsServer( Manager *pManager )
 {
 	return ( char )( pManager->flags.IsServer ? 1 : 0 );
-}
+
+}	/*-- End of GetIsServer() --*/
 
 /*
  * Gets the web service listener port or range.
  */
-const char *GetPort( Manager *pManager )
+const char *GetWebPort( Manager *pManager )
 {
 	return pManager->port;
-}
+
+}	/*-- End of GetWebPort() --*/
 
 /*
  * Gets whether to show console output for the Simias process.
@@ -407,7 +666,8 @@ const char *GetPort( Manager *pManager )
 char GetShowConsole( Manager *pManager )
 {
 	return ( char )( pManager->flags.ShowConsole ? 1 : 0 );
-}
+
+}	/*-- End of GetShowConsole() --*/
 
 /*
  * Gets the url for the local web service.
@@ -415,7 +675,8 @@ char GetShowConsole( Manager *pManager )
 const char *GetWebServiceUrl( Manager *pManager )
 {
 	return pManager->webServiceUri;
-}
+
+}	/*-- End of GetWebServiceUrl() --*/
 
 /*
  * Gets whether to print extra informational messages.
@@ -423,7 +684,8 @@ const char *GetWebServiceUrl( Manager *pManager )
 char GetVerbose( Manager *pManager )
 {
 	return ( char )(pManager->flags.Verbose ? 1 : 0 );
-}
+
+}	/*-- End of GetVerbose() --*/
 
 /*
  * Sets a new path to the Simias.exe application.
@@ -432,18 +694,22 @@ void SetApplicationPath( Manager *pManager, const char *pApplicationPath )
 {
 	const char *pTemp = pManager->applicationPath;
 
-	pManager->applicationPath = malloc( strlen( pApplicationPath + 1 ) );
+	pManager->applicationPath = malloc( strlen( pApplicationPath ) + 1 );
 	if ( pManager->applicationPath != NULL )
 	{
 		strcpy( ( char * )pManager->applicationPath, pApplicationPath );
-		free( ( char * )pTemp );
+		if ( pTemp != NULL )
+		{
+			free( ( char * )pTemp );
+		}
 	}
 	else
 	{
 		ShowError( "Could not allocate %d bytes in SetApplicationPath()", strlen( pApplicationPath ) + 1 );
 		pManager->applicationPath = pTemp;
 	}
-}
+
+}	/*-- End of SetApplicationPath() --*/
 
 /*
  * Sets a new path to the simias data directory.
@@ -452,18 +718,22 @@ void SetDataPath( Manager *pManager, const char *pDataPath )
 {
 	const char *pTemp = pManager->simiasDataPath;
 
-	pManager->simiasDataPath = malloc( strlen( pDataPath + 1 ) );
+	pManager->simiasDataPath = malloc( strlen( pDataPath ) + 1 );
 	if ( pManager->simiasDataPath != NULL )
 	{
 		strcpy( ( char * )pManager->simiasDataPath, pDataPath );
-		free( ( char * )pTemp );
+		if ( pTemp != NULL )
+		{
+			free( ( char * )pTemp );
+		}
 	}
 	else
 	{
 		ShowError( "Could not allocate %d bytes in SetDataPath()", strlen( pDataPath ) + 1 );
 		pManager->simiasDataPath = pTemp;
 	}
-}
+
+}	/*-- End of SetDataPath() --*/
 
 /*
  * Sets whether to run in a server configuration.
@@ -471,27 +741,32 @@ void SetDataPath( Manager *pManager, const char *pDataPath )
 void SetIsServer( Manager *pManager, char isServer )
 {
 	pManager->flags.IsServer = isServer ? 1 : 0;
-}
+
+}	/*-- End of SetIsServer() --*/
 
 /*
  * Sets a new web service listener port or range.
  */
-void SetPort( Manager *pManager, const char *pPort )
+void SetWebPort( Manager *pManager, const char *pPort )
 {
 	const char *pTemp = pManager->port;
 
-	pManager->port = malloc( strlen( pPort + 1 ) );
+	pManager->port = malloc( strlen( pPort ) + 1 );
 	if ( pManager->port != NULL )
 	{
 		strcpy( ( char * )pManager->port, pPort );
-		free( ( char * )pTemp );
+		if ( pTemp != NULL )
+		{
+			free( ( char * )pTemp );
+		}
 	}
 	else
 	{
-		ShowError( "Could not allocate %d bytes in SetPort()", strlen( pPort ) + 1 );
+		ShowError( "Could not allocate %d bytes in SetWebPort()", strlen( pPort ) + 1 );
 		pManager->port = pTemp;
 	}
-}
+
+}	/*-- End of SetWebPort() --*/
 
 /*
  * Sets whether to show console output for the Simias process.
@@ -499,7 +774,8 @@ void SetPort( Manager *pManager, const char *pPort )
 void SetShowConsole( Manager *pManager, char showConsole )
 {
 	pManager->flags.ShowConsole = showConsole ? 1 : 0;
-}
+
+}	/*-- End of SetShowConsole() --*/
 
 /*
  * Sets whether to print extra informational messages.
@@ -507,6 +783,165 @@ void SetShowConsole( Manager *pManager, char showConsole )
 void SetVerbose( Manager *pManager, char verbose )
 {
 	pManager->flags.Verbose = verbose ? 1 : 0;
-}
 
+}	/*-- End of SetVerbose() --*/
+
+/*
+ * Starts the simias process running.
+ */
+const char *Start( Manager *pManager )
+{
+	const char *pWebServiceUri = NULL;
+
+#ifdef WIN32
+
+	BOOL bStatus;
+	HANDLE hReadStdout;
+	HANDLE hReadStdoutDup;
+	HANDLE hSaveStdout;
+	HANDLE hWriteStdout;
+	SECURITY_ATTRIBUTES sa;
+
+	/* Setup the pipe to be inheritable */
+	sa.nLength = sizeof( SECURITY_ATTRIBUTES );
+	sa.bInheritHandle = TRUE;
+	sa.lpSecurityDescriptor = NULL;
+
+	/* Save the current stdout handle. */
+	hSaveStdout = GetStdHandle( STD_OUTPUT_HANDLE );
+
+	/* Create a pipe for the child process's STDOUT. */
+	bStatus = CreatePipe( &hReadStdout, &hWriteStdout, &sa, 0 );
+	if ( bStatus )
+	{
+		/* Set the write-end of the pipe to be STDOUT for this process. */
+		bStatus = SetStdHandle( STD_OUTPUT_HANDLE, hWriteStdout );
+		if ( bStatus )
+		{
+			/* Create a noninheiritable read handle and close the inheritable read handle. */
+			bStatus = DuplicateHandle( 
+				GetCurrentProcess(), 
+				hReadStdout, 
+				GetCurrentProcess(),
+				&hReadStdoutDup,
+				0,
+				FALSE,
+				DUPLICATE_SAME_ACCESS | DUPLICATE_CLOSE_SOURCE );
+
+			if ( bStatus )
+			{
+				/* Create the child process. */
+				bStatus = StartChildProcess( pManager );
+				if ( bStatus )
+				{
+					/* Restore the saved stdout handle. */
+					bStatus = SetStdHandle( STD_OUTPUT_HANDLE, hSaveStdout );
+					if ( !bStatus )
+					{
+						ShowError( "Failed to restore stdout handle." );
+					}
+
+					/* Close the write stdout handle. */
+					CloseHandle( hWriteStdout );
+
+					/* Read from the dup handle. */
+					bStatus = ReadChildStdoutPipe( pManager, hReadStdoutDup );
+					if ( bStatus )
+					{
+						/* Return the uri on success. */
+						pWebServiceUri = pManager->webServiceUri;
+					}
+				}
+
+				/* Close the dup read handle. */
+				CloseHandle( hReadStdoutDup );
+			}
+			else
+			{
+				ShowError( "Could not duplicate read handle - %d.", GetLastError() );
+			}
+		}
+		else
+		{
+			ShowError( "Could not redirect the stdout handle - %d.", GetLastError() );
+		}
+	}
+	else
+	{
+		ShowError( "Failed to create redirected stdout handle - %d", GetLastError() );
+	}
+
+#else
+
+	const char *ppArgs[ 9 ];
+	const char **ppCurArg = &ppArgs[ 0 ];
+	intptr_t status;
+
+	/* First parameter is the application name */
+	*ppCurArg++ = pManager->applicationPath;
+
+	/* Set the data path if specified */
+	if ( pManager->simiasDataPath != NULL )
+	{
+		*ppCurArg++ = "--datadir";
+		*ppCurArg++ = pManager->simiasDataPath;
+	}
+
+	/* Set the port if specified */
+	if ( pManager->port != NULL )
+	{
+		*ppCurArg++ = "--port";
+		*ppCurArg++ = pManager->port;
+	}
+
+	/* Set the configuration type */
+	if ( pManager->flags.IsServer )
+	{
+		*ppCurArg++ = "--runasserver";
+	}
+
+	/* Set whether to show the output console */
+	if ( pManager->flags.ShowConsole )
+	{
+		*ppCurArg++ = "--showconsole";
+	}
+
+	/* Set whether to show the extra information */
+	if ( pManager->flags.Verbose )
+	{
+		*ppCurArg++ = "--verbose";
+	}
+
+	/* End of the argument list */
+	*ppCurArg = NULL;
+
+	status = _spawnv( _P_WAIT, pManager->applicationPath, ppArgs );
+	if ( status == 0 )
+	{
+	}
+
+#endif
+
+	return pWebServiceUri;
+
+}	/*-- End of Start() --*/
+
+/*
+ * Stops the simias process from running.
+ */
+int Stop( Manager *pManager )
+{
+	int status;
+
+#ifdef WIN32
+
+	/* Stop the child process. */
+	status = StopChildProcess( pManager ) ? 1 : 0;
+
+#else
+#endif
+
+	return status;
+
+}	/*-- End of Stop() --*/
 

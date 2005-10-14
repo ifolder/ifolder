@@ -123,11 +123,7 @@
         </Build>
         <Files>
             <Include>
-                <File
-                    RelPath = "src\ChangeLog\ChangeLog.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
+                <Folder RelPath = "src\ChangeLog\" />
                 <File
                     RelPath = "src\CollectionStore\AccessControl.cs"
                     SubType = "Code"
@@ -135,6 +131,11 @@
                 />
                 <File
                     RelPath = "src\CollectionStore\BaseFileNode.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\CollectionStore\ChangeLog.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
