@@ -32,7 +32,7 @@ libnautilus_ifolder_la_SOURCES =     \
 	nautilus-ifolder.c
 
 libnautilus_ifolder_la_LDFLAGS = -module -export-dynamic -avoid-version $(SIMIAS_CLIENT_C_LIBS) $(IFOLDER_C_LIBS) $(XML2_LIBS)
-libnautilus_ifolder_la_LIBADD  = $(NAUTILUS_LIBS)
+libnautilus_ifolder_la_LIBADD  = $(NAUTILUS_LIBS) $(IFOLDER_C_LIBS)
 
 libnautilus_ifolder_la_DEPENDENCIES = nautilus-ifolder.exe
 

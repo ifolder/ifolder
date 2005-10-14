@@ -24,6 +24,7 @@
 #include <libnautilus-extension/nautilus-file-info.h>
 #include <libnautilus-extension/nautilus-info-provider.h>
 #include <libnautilus-extension/nautilus-menu-provider.h>
+#include <libnautilus-extension/nautilus-property-page-provider.h>
 
 #include <eel/eel-stock-dialogs.h>
 
@@ -48,6 +49,7 @@
 #include <ifolder.h>
 #include <iFolderStub.h>
 #include <iFolder.nsmap>
+#include <ifolder-gtk.h>
 
 #include "nautilus-ifolder.h"
 #include "../config.h"
@@ -58,6 +60,8 @@
 #else
 #define DEBUG_IFOLDER
 #endif
+
+#define DEBUG_PROP_PAGE(args) (g_print("nautilus-ifolder: "), g_printf args)
 
 #ifdef _
 #undef _
@@ -126,6 +130,9 @@ static void init_gsoap (struct soap *p_soap);
 static void cleanup_gsoap (struct soap *p_soap);
 static gchar * get_file_path (NautilusFileInfo *file);
 static gboolean is_ifolder (NautilusFileInfo *file);
+/*
+static gboolean is_file_inside_ifolder (NautilusFileInfo *file);
+*/
 static gboolean can_be_ifolder (NautilusFileInfo *file);
 static gint create_ifolder_in_domain (NautilusFileInfo *file, char *domain_id);
 static gchar * get_ifolder_id_by_local_path (gchar *path);
@@ -155,6 +162,10 @@ static int ifolder_set_config_setting (char *setting_xpath,
 static gboolean show_created_dialog ();
 									   
 static void ifolder_help_callback (NautilusMenuItem *item, gpointer user_data);
+
+/* Functions used to build property pages */
+static GtkWidget * create_convert_to_ifolder_property_page (NautilusFileInfo *file);
+static void convert_folder_button_callback (GtkButton *button, gpointer user_data);
 
 /**
  * This function is intended to be called using g_idle_add by the event system
@@ -411,7 +422,7 @@ is_ifolder (NautilusFileInfo *file)
 			soap.userid = username;
 			soap.passwd = password;
 		}
-printf("Calling iFolderWebService.IsiFolder()\n");
+
 		soap_call___ns1__IsiFolder (&soap, 
 									soapURL, 
 									NULL, 
@@ -436,6 +447,53 @@ printf("Calling iFolderWebService.IsiFolder()\n");
 	return b_is_ifolder;
 }
 
+/*
+static gboolean
+is_file_inside_ifolder (NautilusFileInfo *file)
+{
+	struct soap soap;
+	gboolean b_is_file_inside_ifolder = FALSE;
+	gchar *file_path;
+	char username[512];
+	char password[1024];
+
+	file_path = get_file_path (file);
+	if (file_path != NULL) {
+		DEBUG_IFOLDER (("****About to call IsFileInsideiFolder (\"%s\")...\n", file_path));
+		struct _ns1__IsFileIniFolder ns1__IsFileIniFolder;
+		struct _ns1__IsFileIniFolderResponse ns1__IsFileIniFolderResponse;
+		ns1__IsFileIniFolder.filename = file_path;
+		init_gsoap (&soap);
+		if (simias_get_web_service_credential(username, password) == SIMIAS_SUCCESS) {
+			soap.userid = username;
+			soap.passwd = password;
+		}
+
+		soap_call___ns1__IsFileIniFolder (&soap, 
+									soapURL, 
+									NULL, 
+									&ns1__IsFileIniFolder, 
+									&ns1__IsFileIniFolderResponse);		
+		if (soap.error) {
+			DEBUG_IFOLDER (("****error calling IsFileIniFolder***\n"));
+			soap_print_fault (&soap, stderr);
+			if (soap.error == SOAP_TCP_ERROR) {
+				reread_local_service_url ();
+			}
+		} else {
+			DEBUG_IFOLDER (("***calling IsFileIniFolder succeeded***\n"));
+			if (ns1__IsFileIniFolderResponse.IsFileIniFolderResult)
+				b_is_file_inside_ifolder = TRUE;
+		}
+
+		cleanup_gsoap (&soap);
+		g_free (file_path);
+	}
+
+	return b_is_file_inside_ifolder;
+}
+*/
+
 static gboolean
 can_be_ifolder (NautilusFileInfo *file)
 {
@@ -459,7 +517,7 @@ can_be_ifolder (NautilusFileInfo *file)
 			soap.userid = username;
 			soap.passwd = password;
 		}
-printf("Calling iFolderWebService.CanBeiFolder()\n");
+
 		soap_call___ns1__CanBeiFolder (&soap,
 									   soapURL, 
 									   NULL, 
@@ -504,7 +562,7 @@ create_ifolder_in_domain (NautilusFileInfo *file, char *domain_id)
 			soap.userid = username;
 			soap.passwd = password;
 		}
-printf("Calling iFolderWebService.CreateiFolderInDomain()\n");
+
 		soap_call___ns1__CreateiFolderInDomain (&soap, soapURL, NULL, &req, &resp);
 		g_free (folder_path);
 		if (soap.error) {
@@ -556,7 +614,7 @@ get_ifolder_id_by_local_path (gchar *path)
 			soap.userid = username;
 			soap.passwd = password;
 		}
-printf("Calling iFolderWebService.GetiFolderByLocalPath()\n");
+
 		soap_call___ns1__GetiFolderByLocalPath (&soap, 
 										soapURL, 
 										NULL, 
@@ -613,7 +671,7 @@ revert_ifolder (NautilusFileInfo *file)
 				soap.userid = username;
 				soap.passwd = password;
 			}
-printf("Calling iFolderWebService.RevertiFolder()\n");
+
 			soap_call___ns1__RevertiFolder (&soap, 
 												 soapURL, 
 												 NULL, 
@@ -670,7 +728,7 @@ get_unmanaged_path (gchar *ifolder_id)
 			soap.userid = username;
 			soap.passwd = password;
 		}
-printf("Calling iFolderWebService.GetiFolder()\n");
+
 		soap_call___ns1__GetiFolder (&soap,
 									 soapURL,
 									 NULL,
@@ -732,7 +790,7 @@ get_all_ifolder_paths ()
 		soap.userid = username;
 		soap.passwd = password;
 	}
-printf("Calling iFolderWebService.GetAlliFolders()\n");
+
 	soap_call___ns1__GetAlliFolders (&soap,
 									 soapURL,
 									 NULL,
@@ -1859,6 +1917,199 @@ ifolder_nautilus_menu_provider_iface_init (NautilusMenuProviderIface *iface)
 	iface->get_file_items = ifolder_nautilus_get_file_items;
 }
 
+static GList *
+ifolder_nautilus_get_pages (NautilusPropertyPageProvider *provider,
+							GList *files)
+{
+	DEBUG_PROP_PAGE (("ifolder_nautilus_get_pages called\n"));
+	NautilusFileInfo *file;
+	NautilusPropertyPage *property_page;
+	GtkWidget *label;
+	GtkWidget *page;
+	GList *items;
+
+	gchar *folder_path;
+	gchar *ifolder_id;
+
+	page = NULL;
+
+	/* If, for any reason, this function is called with files == NULL */
+	if (files == NULL)
+		return NULL;
+
+	/**
+	 * Multiple select on a file/folder is not supported.  If the user has
+	 * selected more than one file/folder, don't add any iFolder context menus.
+	 */
+	if (g_list_length (files) > 1)
+		return NULL;
+
+	file = NAUTILUS_FILE_INFO (files->data);
+
+	/**
+	 * If the user selected a file (not a directory), don't add any iFolder
+	 * context menus.
+	 *if (!nautilus_file_info_is_directory (file))
+	 *	return NULL;
+	 */
+		
+	/**
+	 * Don't show any iFolder property pages if the iFolder client is not
+	 * running
+	 */
+	if (!is_ifolder_running ())
+		return NULL;
+		
+	items = NULL;
+	
+	if (nautilus_file_info_is_directory (file)) {
+		if (is_ifolder (file)) {
+
+			folder_path = get_file_path (file);
+			if (folder_path != NULL) {
+				ifolder_id = get_ifolder_id_by_local_path (folder_path);
+				g_free (folder_path);
+
+				/**
+				 * iFolder Tab
+				 */
+				label = gtk_label_new(_("iFolder"));
+	
+				DEBUG_PROP_PAGE (("Adding the iFolder General property page\n"));
+				
+				page = ifolder_general_property_page_new (ifolder_id);
+				
+				gtk_widget_show_all (page);
+			
+				property_page =
+					nautilus_property_page_new(
+						"ifolder-general",
+						label,
+						page);
+				
+				items = g_list_append (items, property_page);
+				
+				/**
+				 * Sharing Tab
+				 */
+				label = gtk_label_new(_("Sharing"));
+				
+				DEBUG_PROP_PAGE (("Adding the iFolder Sharing property page\n"));
+				
+				page = ifolder_sharing_property_page_new (ifolder_id);
+				
+				gtk_widget_show_all (page);
+			
+				property_page =
+					nautilus_property_page_new(
+						"ifolder-sharing",
+						label,
+						page);
+				
+				items = g_list_append (items, property_page);
+				
+				g_free (ifolder_id);
+			}
+		} else if (can_be_ifolder (file)){
+			// This is a folder but not an iFolder
+			// Add a sharing tab
+			label = gtk_label_new(_("Sharing"));
+			
+			DEBUG_PROP_PAGE (("Adding the iFolder Sharing property page\n"));
+			
+			page = create_convert_to_ifolder_property_page (file);
+			
+			gtk_widget_show_all (page);
+		
+			property_page =
+				nautilus_property_page_new(
+					"ifolder-sharing",
+					label,
+					page);
+			
+			items = g_list_append (items, property_page);
+		}
+	} else {
+		DEBUG_PROP_PAGE(("This is not an iFolder\n"));
+	}
+
+	DEBUG_PROP_PAGE (("Returning %d new property pages\n", g_list_length(items)));
+
+	return items;
+}
+
+static GtkWidget *
+create_convert_to_ifolder_property_page (NautilusFileInfo *file)
+{
+	GtkWidget *vbox, *vbox2, *hbox, *hbox2;
+	GtkWidget *ifolder_image;
+	GtkWidget *label;
+	GtkWidget *convert_button;
+	
+	GtkWidget *domain_scrolled_window;
+	GtkWidget *domain_icon_view;
+
+	vbox = gtk_vbox_new (FALSE, 10);
+
+	gtk_container_border_width (GTK_CONTAINER (vbox), 10);
+
+	hbox = gtk_hbox_new (FALSE, 12);
+
+	ifolder_image = gtk_image_new_from_file (IFOLDER_IMAGE_BIG_IFOLDER);
+	gtk_misc_set_alignment (GTK_MISC (ifolder_image), 0.5, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), ifolder_image, FALSE, FALSE, 0);
+
+	vbox2 = gtk_vbox_new (FALSE, 10);
+
+	label = gtk_label_new (_("This folder can be shared using iFolder.  To learn more about iFolder, please visit http://www.ifolder.com/"));
+	gtk_label_set_line_wrap	(GTK_LABEL (label), TRUE);
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_box_pack_start (GTK_BOX (vbox2), label, TRUE, TRUE, 0);
+
+	hbox2 = gtk_hbox_new (FALSE, 10);
+	gtk_box_pack_start (GTK_BOX (vbox2), hbox2, TRUE, TRUE, 0);
+	
+	/* spacer */
+	label = gtk_label_new ("");
+	gtk_box_pack_start (GTK_BOX (hbox2), label, TRUE, TRUE, 0);
+
+	convert_button = gtk_button_new_with_label (_("Share this folder"));
+	gtk_box_pack_start (GTK_BOX (hbox2), convert_button, FALSE, FALSE, 0);
+	
+	gtk_box_pack_end (GTK_BOX (hbox), vbox2, TRUE, TRUE, 0);
+	
+	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+	
+	/* Hook up the signal callback for the button */
+	g_signal_connect (convert_button,
+					  "clicked",
+					  G_CALLBACK (convert_folder_button_callback),
+					  file);
+
+	/* Domain GtkIconView */
+
+	return vbox;
+}
+
+static void
+convert_folder_button_callback (GtkButton *button, gpointer user_data)
+{
+	NautilusFileInfo *file;
+	
+	file = (NautilusFileInfo *)user_data;
+
+DEBUG_PROP_PAGE (("convert_folder_button_callback()\n"));
+
+	/* FIXME: Split out the dialog in create_ifolder_callback() so that it can be used here too */
+/*	create_ifolder_callback (file, NULL);*/
+}
+
+static void
+ifolder_nautilus_property_page_provider_iface_init (NautilusPropertyPageProviderIface *iface)
+{
+	iface->get_pages = ifolder_nautilus_get_pages;
+}
+
 static GType
 ifolder_nautilus_get_type (void)
 {
@@ -1921,6 +2172,17 @@ ifolder_extension_register_type (GTypeModule *module)
 								 NAUTILUS_TYPE_MENU_PROVIDER,
 								 &menu_provider_iface_info);
 	/* Nautilus Property Page Interface */
+	static const GInterfaceInfo property_page_provider_iface_info =
+	{
+		(GInterfaceInitFunc)ifolder_nautilus_property_page_provider_iface_init,
+		NULL,
+		NULL
+	};
+	g_type_module_add_interface(module,
+								ifolder_nautilus_type,
+								NAUTILUS_TYPE_PROPERTY_PAGE_PROVIDER,
+								&property_page_provider_iface_info);
+
 	/* Nautilus Column Provider Interface (we probably won't need this one) */
 }
 
