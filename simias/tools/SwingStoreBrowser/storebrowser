@@ -1,0 +1,14 @@
+export AXIS_LIB_DIR=./tools/axis-1_2RC2/lib
+export CLASSPATH=
+export CLASSPATH=$CLASSPATH:$AXIS_LIB_DIR/axis.jar
+export CLASSPATH=$CLASSPATH:$AXIS_LIB_DIR/axis-ant.jar
+export CLASSPATH=$CLASSPATH:$AXIS_LIB_DIR/commons-discovery.jar
+export CLASSPATH=$CLASSPATH:$AXIS_LIB_DIR/commons-logging.jar
+export CLASSPATH=$CLASSPATH:$AXIS_LIB_DIR/jaxrpc.jar
+export CLASSPATH=$CLASSPATH:$AXIS_LIB_DIR/log4j-1.2.8.jar
+export CLASSPATH=$CLASSPATH:$AXIS_LIB_DIR/saaj.jar
+export CLASSPATH=$CLASSPATH:$AXIS_LIB_DIR/wsdl4j.jar
+export CLASSPATH=$CLASSPATH:./SwingStoreBrowser.jar
+
+java -classpath $CLASSPATH com.novell.simias.storebrowser.SwingStoreBrowser
+
