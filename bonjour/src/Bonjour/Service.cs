@@ -63,6 +63,7 @@ namespace Simias.mDns
 		private Simias.mDnsProvider mDnsProvider = null;
 		private Simias.mDns.Register register = null;
 		private Simias.mDns.Browser browser = null;
+		private Simias.mDns.Publish publish = null;
 		private Simias.mDns.Domain domain = null;
 
 		// For controlling the monitor thread
@@ -126,6 +127,10 @@ namespace Simias.mDns
 				// Start browsing which manages the coming and going of
 				// iFolder Bonjour users.
 				browser.StartBrowsing();
+
+				// Register all P2P collections with MDNS
+				publish = new Simias.mDns.Publish();
+				publish.StartPublishing();
 
 				// Might not be needed in the future but today
 				// the sync thread collects all the Member meta
@@ -194,6 +199,11 @@ namespace Simias.mDns
 			if ( this.mDnsProvider != null )
 			{
 				Simias.DomainProvider.Unregister( this.mDnsProvider );
+			}
+
+			if ( this.publish != null )
+			{
+				this.publish.StopPublishing();
 			}
 
 			if ( this.browser != null )
