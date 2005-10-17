@@ -25,9 +25,21 @@
 #endif
 
 #include <stdio.h>
+
+#ifdef WIN32
+
 #include <io.h>
 #include <direct.h>
 #include <process.h>
+
+#else
+
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <dirent.h>
+
+#endif	/*-- WIN32 --*/
+
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
@@ -297,7 +309,6 @@ static BOOL StopChildProcess( Manager *pManager )
 	}
 	else
 	{
-		ShowError( "Cannot allocate %d bytes in StopChildProcess()", 1024 );
 		bStatus = FALSE;
 	}
 
@@ -306,6 +317,98 @@ static BOOL StopChildProcess( Manager *pManager )
 }	/*-- End of StopChildProcess() --*/
 
 #endif	/*-- WIN32 --*/
+
+#ifndef WIN32
+
+/*
+ * Gets the specified file to be sure that it exists.
+ */
+static unsigned long findfirst( const char *pFile, struct dirent **ppFileData )
+{
+	char *pDirName;
+	char fileName[ MAX_PATH_SIZE + 1 ];
+	char *pTmp;
+	DIR *hDir;
+	struct stat sb;
+	unsigned long fileSize = -1;
+
+
+	/* See if there is a directory attached to the file name. */
+	pTmp = strrchr( pFile, '/' );
+	if ( pTmp != NULL )
+	{
+		/* Separate the parent directory and file name. */
+		*pTmp = '\0';
+
+		pDirName = ( char * )malloc( strlen( pFile ) + 1 );
+		if ( pDirName != NULL )
+		{
+			/* Copy the directory and file names. */
+			strcpy( pDirName, pFile );
+			strcpy( fileName, pTmp + 1 );
+		}
+
+		/* Put back the character. */
+		*pTmp = '/';
+	}
+	else
+	{
+		/* Use the current working directory. */
+		pDirName = ( char *)getcwd( NULL, 0 );
+		strcpy( fileName, pFile );
+	}
+
+
+	/* Get the name of the directory to scan. */
+	if ( pDirName != NULL )
+	{
+		/* Open the directory */
+		if ( ( hDir = opendir( pDirName ) ) != NULL )
+		{
+			*ppFileData = readdir( hDir );
+			while ( *ppFileData != NULL )
+			{
+				/* See if this is the file that we are looking for. */
+				if ( !stricmp( ( *ppFileData )->d_name, fileName ) )
+				{
+					/* Get the length of this file. */
+					if ( stat( pFile, &sb ) != -1 )
+					{
+						fileSize = sb.st_size;
+					}
+					else
+					{
+						ShowError( "Cannot get file stats for file %s.", pFile );
+					}
+
+					break;
+				}
+
+				/* Get the next entry */
+				*ppFileData = readdir( hDir );
+			}
+
+			/* Close the directory handle. */
+			closedir( hDir );
+		}
+		else
+		{
+			ShowError( "Cannot open directory %s", pDirName );
+		}
+
+		free ( pDirName );
+	}
+	else
+	{
+		ShowError( "Cannot get the current directory." );
+	}
+
+	return fileSize;
+
+}	/*-- End of findfirst() --*/
+
+#endif
+
 
 /*
  * Gets the default path to the Simias.exe file.
@@ -316,9 +419,20 @@ static const char *GetDefaultApplicationPath()
 	char *pApplicationPath = NULL;
 	char *pTempPath;
 	FILE *fp;
+	unsigned long length = 0;
+
+#ifdef WIN32
+
 	intptr_t hFile;
 	struct _finddata_t fileData;
-	unsigned long length = 0;
+
+#else
+
+	struct dirent *fileData;
+
+#endif	/*-- WIN32 --*/
+
+#ifdef WIN32
 
 	/* See if the DefaultMappingFile is in the current directory. */
 	if ( ( hFile = _findfirst( MAPPING_FILE, &fileData ) ) != -1 )
@@ -362,6 +476,47 @@ static const char *GetDefaultApplicationPath()
 			ShowError( "Cannot file default mapping file %s", pDefaultPath );
 		}
 	}
+
+#else
+
+	/* See if the DefaultMappingFile is in the current directory. */
+	if ( ( length = findfirst( MAPPING_FILE, &fileData ) ) != -1 )
+	{
+		pTempPath = ( char * )malloc( strlen( fileData->d_name ) + 1 );
+		if ( pTempPath != NULL )
+		{
+			strcpy( pTempPath, fileData->d_name );
+		}
+		else
+		{
+			ShowError( "Could not allocate %d bytes in GetDefaultApplicationPath()", strlen( fileData->d_name ) + 1 );
+		}
+	}
+	else
+	{
+		/* The file does not exist in the current directory. Look for it in the
+		 * default place.
+		 */
+		pDefaultPath = GetDefaultMappingFile();
+		if ( ( length = findfirst( pDefaultPath, &fileData ) ) != -1 )
+		{
+			pTempPath = ( char * )malloc( strlen( pDefaultPath ) + 1 );
+			if ( pTempPath != NULL )
+			{
+				strcpy( pTempPath, pDefaultPath );
+			}
+			else
+			{
+				ShowError( "Could not allocate %d bytes in GetDefaultApplicationPath()", strlen( pDefaultPath ) + 1 );
+			}
+		}
+		else
+		{
+			ShowError( "Cannot file default mapping file %s", pDefaultPath );
+		}
+	}
+
+#endif	/*-- WIN32 --*/
 
 	/* See if a path to the file was found. */
 	if ( pTempPath != NULL )
@@ -875,7 +1030,6 @@ const char *Start( Manager *pManager )
 
 	const char *ppArgs[ 9 ];
 	const char **ppCurArg = &ppArgs[ 0 ];
-	intptr_t status;
 
 	/* First parameter is the application name */
 	*ppCurArg++ = pManager->applicationPath;
@@ -914,11 +1068,6 @@ const char *Start( Manager *pManager )
 
 	/* End of the argument list */
 	*ppCurArg = NULL;
-
-	status = _spawnv( _P_WAIT, pManager->applicationPath, ppArgs );
-	if ( status == 0 )
-	{
-	}
 
 #endif
 
