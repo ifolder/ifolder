@@ -11844,6 +11844,7 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<col def="I4">ISAttributes</col>
 		<row><td>Registry1</td><td>2</td><td>SOFTWARE\Novell\Simias</td><td/><td/><td>ISRegistryComponent</td><td>0</td></row>
 		<row><td>Registry2</td><td>2</td><td>SOFTWARE\Novell\Simias\1.20.000</td><td/><td/><td>ISRegistryComponent</td><td>0</td></row>
+		<row><td>Registry6</td><td>2</td><td>SOFTWARE\Novell\Simias</td><td>InstallDir</td><td>[INSTALLDIR]</td><td>ISRegistryComponent</td><td>0</td></row>
 	</table>
 
 	<table name="RemoveFile">
