@@ -110,6 +110,9 @@ namespace Novell.iFolder
 			PrefNoteBook.AppendPage( accountsPage,
 										new Label(Util.GS("_Accounts")));
 
+			PrefNoteBook.SwitchPage +=
+				new SwitchPageHandler(OnSwitchPageEvent);
+
 			winBox.PackStart(PrefNoteBook, true, true, 0);
 
 			HButtonBox buttonBox = new HButtonBox();
@@ -168,6 +171,12 @@ namespace Novell.iFolder
 					break;
 			}
 		}
+		
+		private void OnSwitchPageEvent(object o, SwitchPageArgs args)
+		{
+			if (args.PageNum != 0)
+				generalPage.LeavingGeneralPage();
+		}
 
 
 		private void HelpEventHandler(object o, EventArgs args)
@@ -193,6 +202,9 @@ namespace Novell.iFolder
 
 		private void CloseWindow()
 		{
+			if (CurrentPage == 0)
+				generalPage.LeavingGeneralPage();
+
 			this.Hide();
 			this.Destroy();
 		}
