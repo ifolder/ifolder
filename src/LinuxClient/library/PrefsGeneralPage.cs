@@ -30,7 +30,6 @@ using Simias.Client.Event;
 
 namespace Novell.iFolder
 {
-
 	/// <summary>
 	/// This is the main iFolder Window.  This window implements all of the
 	/// client code for iFolder.
@@ -42,7 +41,7 @@ namespace Novell.iFolder
 
 		private Gtk.CheckButton			AutoSyncCheckButton;
 		private Gtk.SpinButton			SyncSpinButton;
-		private Gtk.Label				SyncUnitsLabel;
+		private Gtk.OptionMenu			SyncUnitsOptionMenu;
 
 		private Gtk.CheckButton			ShowConfirmationButton; 
 		private Gtk.CheckButton			NotifyUsersButton; 
@@ -50,7 +49,9 @@ namespace Novell.iFolder
 		private Gtk.CheckButton			NotifyiFoldersButton; 
 //		private Gtk.CheckButton			NotifySyncErrorsButton;
 		private int						lastSyncInterval;
+		private SyncUnit				currentSyncUnit;
 
+		private NotifyWindow			oneMinuteLimitNotifyWindow;
 
 		/// <summary>
 		/// Default constructor for iFolderPropSharingPage
@@ -63,6 +64,18 @@ namespace Novell.iFolder
 			this.ifws = webService;
 			InitializeWidgets();
 			this.Realized += new EventHandler(OnRealizeWidget);
+		}
+		
+		
+		
+		public void LeavingGeneralPage()
+		{
+			if (oneMinuteLimitNotifyWindow != null)
+			{
+				oneMinuteLimitNotifyWindow.Hide();
+				oneMinuteLimitNotifyWindow.Destroy();
+				oneMinuteLimitNotifyWindow = null;
+			}
 		}
 
 
@@ -199,19 +212,40 @@ namespace Novell.iFolder
 			syncSpacerBox.PackStart(syncWidgetBox, false, true, 0);
 			syncWidgetBox.Spacing = 10;
 
+			HBox syncHBox0 = new HBox();
+			syncWidgetBox.PackStart(syncHBox0, false, true, 0);
+			syncHBox0.Spacing = 10;
+			AutoSyncCheckButton =
+				new CheckButton(Util.GS("Automatically S_ynchronize iFolders"));
+			syncHBox0.PackStart(AutoSyncCheckButton, false, false, 0);
 
 			HBox syncHBox = new HBox();
-			syncWidgetBox.PackStart(syncHBox, false, true, 0);
 			syncHBox.Spacing = 10;
-			AutoSyncCheckButton = 
-					new CheckButton(Util.GS("Synchronize iFolders _Every:"));
-			syncHBox.PackStart(AutoSyncCheckButton, false, false, 0);
-			SyncSpinButton = new SpinButton(0, 99999, 5);
+			syncWidgetBox.PackStart(syncHBox, true, true, 0);
+
+			Label spacerLabel = new Label("  ");
+			syncHBox.PackStart(spacerLabel, true, true, 0);
+
+			Label syncEveryLabel = new Label(Util.GS("Synchronize iFolders Every"));
+			syncEveryLabel.Xalign = 1;
+			syncHBox.PackStart(syncEveryLabel, false, false, 0);
+			
+			SyncSpinButton = new SpinButton(1, Int32.MaxValue, 1);
 
 			syncHBox.PackStart(SyncSpinButton, false, false, 0);
-			SyncUnitsLabel = new Label(Util.GS("seconds"));
-			SyncUnitsLabel.Xalign = 0;
-			syncHBox.PackEnd(SyncUnitsLabel, true, true, 0);
+
+			SyncUnitsOptionMenu = new OptionMenu();
+			syncHBox.PackStart(SyncUnitsOptionMenu, false, false, 0);
+
+			Menu m = new Menu();
+			m.Append(new MenuItem(Util.GS("seconds")));
+			m.Append(new MenuItem(Util.GS("minutes")));
+			m.Append(new MenuItem(Util.GS("hours")));
+			m.Append(new MenuItem(Util.GS("days")));
+			
+			SyncUnitsOptionMenu.Menu = m;
+			SyncUnitsOptionMenu.SetHistory((int)SyncUnit.Minutes);
+			currentSyncUnit = SyncUnit.Minutes;
 		}
 
 
@@ -261,7 +295,33 @@ namespace Novell.iFolder
 				if(lastSyncInterval == -1)
 					SyncSpinButton.Value = 0;
 				else
-					SyncSpinButton.Value = lastSyncInterval;
+				{
+					string syncUnitString =
+						ClientConfig.Get(ClientConfig.KEY_SYNC_UNIT, "Minutes");
+					switch (syncUnitString)
+					{
+						case "Seconds":
+							currentSyncUnit = SyncUnit.Seconds;
+							SyncUnitsOptionMenu.SetHistory((int)SyncUnit.Seconds);
+							break;
+						case "Minutes":
+							currentSyncUnit = SyncUnit.Minutes;
+							SyncUnitsOptionMenu.SetHistory((int)SyncUnit.Minutes);
+							break;
+						case "Hours":
+							currentSyncUnit = SyncUnit.Hours;
+							SyncUnitsOptionMenu.SetHistory((int)SyncUnit.Hours);
+							break;
+						case "Days":
+							currentSyncUnit = SyncUnit.Days;
+							SyncUnitsOptionMenu.SetHistory((int)SyncUnit.Days);
+							break;
+						default:
+							break;
+					}
+
+					SyncSpinButton.Value = CalculateSyncSpinValue(lastSyncInterval, currentSyncUnit);
+				}
 			}
 			catch(Exception e)
 			{
@@ -273,18 +333,20 @@ namespace Novell.iFolder
 			{
 				AutoSyncCheckButton.Active = false;
 				SyncSpinButton.Sensitive = false;
-				SyncUnitsLabel.Sensitive = false; 
+				SyncUnitsOptionMenu.Sensitive = false;
 			}
 			else
 			{
 				AutoSyncCheckButton.Active = true;
 				SyncSpinButton.Sensitive = true;
-				SyncUnitsLabel.Sensitive = true;
+				SyncUnitsOptionMenu.Sensitive = true;
 			}
 
 			AutoSyncCheckButton.Toggled += new EventHandler(OnAutoSyncButton);
 			SyncSpinButton.ValueChanged += 
 					new EventHandler(OnSyncIntervalChanged);
+			SyncUnitsOptionMenu.Changed +=
+					new EventHandler(OnSyncUnitsChanged);
 		}
 
 
@@ -347,13 +409,27 @@ namespace Novell.iFolder
 			if(AutoSyncCheckButton.Active == true)
 			{
 				SyncSpinButton.Sensitive = true;
-				SyncUnitsLabel.Sensitive = true;
-				SyncSpinButton.Value = 60;
+				SyncUnitsOptionMenu.Sensitive = true;
+
+				SyncUnitsOptionMenu.Changed -= new EventHandler(OnSyncUnitsChanged);
+				SyncUnitsOptionMenu.SetHistory((int)SyncUnit.Minutes);
+				currentSyncUnit = SyncUnit.Minutes;
+				SaveSyncUnitConfig();
+				SyncUnitsOptionMenu.Changed += new EventHandler(OnSyncUnitsChanged);
+
+				SyncSpinButton.Value = 5;
 			}
 			else
 			{
+				if (oneMinuteLimitNotifyWindow != null)
+				{
+					oneMinuteLimitNotifyWindow.Hide();
+					oneMinuteLimitNotifyWindow.Destroy();
+					oneMinuteLimitNotifyWindow = null;
+				}
+	
 				SyncSpinButton.Sensitive = false;
-				SyncUnitsLabel.Sensitive = false;
+				SyncUnitsOptionMenu.Sensitive = false;
 				SyncSpinButton.Value = 0;
 			}
 		}
@@ -363,27 +439,191 @@ namespace Novell.iFolder
 
 		private void OnSyncIntervalChanged(object o, EventArgs args)
 		{
-			if(SyncSpinButton.Value != lastSyncInterval)
+			if (oneMinuteLimitNotifyWindow != null)
 			{
-				try
-				{
-					lastSyncInterval = (int)SyncSpinButton.Value;
-					if(lastSyncInterval == 0)
-						ifws.SetDefaultSyncInterval(-1);
-					else
-						ifws.SetDefaultSyncInterval(lastSyncInterval);
-				}
-				catch(Exception e)
-				{
-					iFolderExceptionDialog ied = new iFolderExceptionDialog(
-														topLevelWindow, e);
-					ied.Run();
-					ied.Hide();
-					ied.Destroy();
-					return;
-				}
+				oneMinuteLimitNotifyWindow.Hide();
+				oneMinuteLimitNotifyWindow.Destroy();
+				oneMinuteLimitNotifyWindow = null;
 			}
 
+			int syncSpinValue =
+				CalculateActualSyncInterval((int)SyncSpinButton.Value,
+											currentSyncUnit);
+		
+			try
+			{
+				lastSyncInterval = syncSpinValue;
+				if(lastSyncInterval == 0)
+				{
+					ifws.SetDefaultSyncInterval(-1);
+				}
+				else
+				{
+					ifws.SetDefaultSyncInterval(lastSyncInterval);
+				}
+			}
+			catch(Exception e)
+			{
+				iFolderExceptionDialog ied = new iFolderExceptionDialog(
+													topLevelWindow, e);
+				ied.Run();
+				ied.Hide();
+				ied.Destroy();
+				return;
+			}
 		}
+		
+		private void OnSyncUnitsChanged(object o, EventArgs args)
+		{
+			if (oneMinuteLimitNotifyWindow != null)
+			{
+				oneMinuteLimitNotifyWindow.Hide();
+				oneMinuteLimitNotifyWindow.Destroy();
+				oneMinuteLimitNotifyWindow = null;
+			}
+
+			int syncSpinValue = (int)SyncSpinButton.Value;
+											
+			currentSyncUnit = (SyncUnit)SyncUnitsOptionMenu.History;
+
+			if (currentSyncUnit == SyncUnit.Seconds)
+			{
+				// Prevent the user from setting a sync interval less than
+				// one minute.
+				SyncSpinButton.Adjustment.Lower = 60;
+
+				if (syncSpinValue < 60)
+				{
+					oneMinuteLimitNotifyWindow =
+						new NotifyWindow(
+						SyncSpinButton, Util.GS("Synchronization Interval Limit"),
+						Util.GS("The synchronization interval cannot be set to less than one minute.  It was automatically changed to 60 seconds."),
+						Gtk.MessageType.Info, 10000);
+					oneMinuteLimitNotifyWindow.ShowAll();
+
+					SyncSpinButton.ValueChanged -= 
+						new EventHandler(OnSyncIntervalChanged);
+					SyncSpinButton.Value = 60;
+					syncSpinValue = 60;
+					SyncSpinButton.ValueChanged += 
+						new EventHandler(OnSyncIntervalChanged);
+				}
+			}
+			else
+			{
+				SyncSpinButton.Adjustment.Lower = 1;
+			}
+
+			int syncInterval =
+				CalculateActualSyncInterval(syncSpinValue,
+											currentSyncUnit);
+
+			try
+			{
+				lastSyncInterval = syncInterval;
+				if(lastSyncInterval == 0)
+				{
+					ifws.SetDefaultSyncInterval(-1);
+				}
+				else
+				{
+					ifws.SetDefaultSyncInterval(lastSyncInterval);
+				}
+
+				SaveSyncUnitConfig();
+			}
+			catch(Exception e)
+			{
+				iFolderExceptionDialog ied = new iFolderExceptionDialog(
+													topLevelWindow, e);
+				ied.Run();
+				ied.Hide();
+				ied.Destroy();
+				return;
+			}
+		}
+
+		private int CalculateSyncSpinValue(int syncInterval, SyncUnit syncUnit)
+		{
+			int convertedInterval;
+
+			switch (syncUnit)
+			{
+				case SyncUnit.Seconds:
+					convertedInterval = syncInterval; // No conversion
+					break;
+				case SyncUnit.Minutes:
+					convertedInterval = syncInterval / 60;
+					break;
+				case SyncUnit.Hours:
+					convertedInterval = syncInterval / 60 / 60;
+					break;
+				case SyncUnit.Days:
+					convertedInterval = syncInterval / 60 / 60 / 24;
+					break;
+				default:
+					convertedInterval = 0;
+					break;
+			}
+
+			return convertedInterval;
+		}
+		
+		private int CalculateActualSyncInterval(int spinValue, SyncUnit syncUnit)
+		{
+			int actualSyncInterval;
+			
+			switch (syncUnit)
+			{
+				case SyncUnit.Seconds:
+					actualSyncInterval = spinValue; // No conversion
+					break;
+				case SyncUnit.Minutes:
+					actualSyncInterval = spinValue * 60;
+					break;
+				case SyncUnit.Hours:
+					actualSyncInterval = spinValue * 60 * 60;
+					break;
+				case SyncUnit.Days:
+					actualSyncInterval = spinValue * 60 * 60 * 24;
+					break;
+				default:
+					actualSyncInterval = 0;
+					break;
+			}
+
+			return actualSyncInterval;
+		}
+		
+		private void SaveSyncUnitConfig()
+		{
+			string syncUnitString;
+			switch (currentSyncUnit)
+			{
+				case SyncUnit.Seconds:
+					syncUnitString = "Seconds";
+					break;
+				case SyncUnit.Hours:
+					syncUnitString = "Hours";
+					break;
+				case SyncUnit.Days:
+					syncUnitString = "Days";
+					break;
+				case SyncUnit.Minutes:
+				default:
+					syncUnitString = "Minutes";
+					break;
+			}
+			
+			ClientConfig.Set(ClientConfig.KEY_SYNC_UNIT, syncUnitString);
+		}
+	}
+	
+	public enum SyncUnit
+	{
+		Seconds = 0,
+		Minutes,
+		Hours,
+		Days
 	}
 }
