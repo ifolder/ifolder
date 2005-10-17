@@ -51,6 +51,7 @@ namespace Novell.iFolder
 		public static string KEY_NOTIFY_COLLISIONS = "NotifyCollisions";
 		public static string KEY_NOTIFY_USERS = "NotifyUsers";
 //		public static string KEY_NOTIFY_SYNC_ERRORS = "NotifySyncErrors";
+		public static string KEY_SYNC_UNIT = "SyncUnit";
 
 
 		private static XmlDocument configDoc;
