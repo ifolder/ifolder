@@ -462,6 +462,7 @@ Makefile
 src/Makefile
 src/SimiasClient/Makefile
 src/SimiasClient/libsimias-event/Makefile
+src/SimiasClient/libsimias-manager/Makefile
 src/SimiasLib.dll/Makefile
 src/SimiasLib.dll/SimiasLib.dll.config
 src/FlaimProvider/Makefile

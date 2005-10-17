@@ -1,4 +1,4 @@
-SUBDIRS = libsimias-event
+SUBDIRS = libsimias-event libsimias-manager
 
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)

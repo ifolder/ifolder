@@ -109,7 +109,7 @@ static BOOL ReadChildStdoutPipe( Manager *pManager, HANDLE hRead )
 	unsigned long bytesRead = 0;
 
 	/* Allocate a buffer to read the data from. */
-	pBuffer = malloc( MAX_STDOUT_BUFFER_SIZE );
+	pBuffer = ( char * )malloc( MAX_STDOUT_BUFFER_SIZE );
 	if ( pBuffer != NULL )
 	{
 		/* Read from the dup handle. */
@@ -166,7 +166,7 @@ static BOOL StartChildProcess( Manager *pManager )
 	STARTUPINFO si;
 
 	/* Allocate space for the argument string. */
-	pArgs = malloc( 1024 );
+	pArgs = ( char * )malloc( 1024 );
 	if ( pArgs != NULL )
 	{
 		/* First parameter is the application name */
@@ -249,7 +249,7 @@ static BOOL StopChildProcess( Manager *pManager )
 	STARTUPINFO si;
 
 	/* Allocate space for the argument string. */
-	pArgs = malloc( 1024 );
+	pArgs = ( char * )malloc( 1024 );
 	if ( pArgs != NULL )
 	{
 		/* First parameter is the application name */
@@ -323,7 +323,7 @@ static const char *GetDefaultApplicationPath()
 	/* See if the DefaultMappingFile is in the current directory. */
 	if ( ( hFile = _findfirst( MAPPING_FILE, &fileData ) ) != -1 )
 	{
-		pTempPath = malloc( strlen( fileData.name ) + 1 );
+		pTempPath = ( char * )malloc( strlen( fileData.name ) + 1 );
 		if ( pTempPath != NULL )
 		{
 			strcpy( pTempPath, fileData.name );
@@ -344,7 +344,7 @@ static const char *GetDefaultApplicationPath()
 		pDefaultPath = GetDefaultMappingFile();
 		if ( ( hFile = _findfirst( pDefaultPath, &fileData ) ) != -1 )
 		{
-			pTempPath = malloc( strlen( pDefaultPath ) + 1 );
+			pTempPath = ( char * )malloc( strlen( pDefaultPath ) + 1 );
 			if ( pTempPath != NULL )
 			{
 				strcpy( pTempPath, pDefaultPath );
@@ -370,7 +370,7 @@ static const char *GetDefaultApplicationPath()
 		if ( ( fp = fopen( pTempPath, "rb" ) ) != NULL )
 		{
 			/* Allocate space to read the string into. */
-			pApplicationPath = malloc( length + 1 );
+			pApplicationPath = ( char * )malloc( length + 1 );
 			if ( pApplicationPath != NULL )
 			{
 				if ( fgets( pApplicationPath, length, fp ) != NULL )
@@ -517,7 +517,7 @@ static void SetWebServiceUri( Manager *pManager, const char *pWebServiceUri )
 {
 	const char *pTemp = pManager->webServiceUri;
 
-	pManager->webServiceUri = malloc( strlen( pWebServiceUri ) + 1 );
+	pManager->webServiceUri = ( const char * )malloc( strlen( pWebServiceUri ) + 1 );
 	if ( pManager->webServiceUri != NULL )
 	{
 		strcpy( ( char * )pManager->webServiceUri, pWebServiceUri );
@@ -559,7 +559,7 @@ static void ShowError( const char *format, ... )
  */
 Manager *AllocateManager()
 {
-	Manager *pManager = malloc( sizeof( Manager ) );
+	Manager *pManager = ( Manager * )malloc( sizeof( Manager ) );
 	if ( pManager != NULL )
 	{
 		pManager->applicationPath = GetDefaultApplicationPath();
@@ -694,7 +694,7 @@ void SetApplicationPath( Manager *pManager, const char *pApplicationPath )
 {
 	const char *pTemp = pManager->applicationPath;
 
-	pManager->applicationPath = malloc( strlen( pApplicationPath ) + 1 );
+	pManager->applicationPath = ( const char * )malloc( strlen( pApplicationPath ) + 1 );
 	if ( pManager->applicationPath != NULL )
 	{
 		strcpy( ( char * )pManager->applicationPath, pApplicationPath );
@@ -718,7 +718,7 @@ void SetDataPath( Manager *pManager, const char *pDataPath )
 {
 	const char *pTemp = pManager->simiasDataPath;
 
-	pManager->simiasDataPath = malloc( strlen( pDataPath ) + 1 );
+	pManager->simiasDataPath = ( const char * )malloc( strlen( pDataPath ) + 1 );
 	if ( pManager->simiasDataPath != NULL )
 	{
 		strcpy( ( char * )pManager->simiasDataPath, pDataPath );
@@ -751,7 +751,7 @@ void SetWebPort( Manager *pManager, const char *pPort )
 {
 	const char *pTemp = pManager->port;
 
-	pManager->port = malloc( strlen( pPort ) + 1 );
+	pManager->port = ( const char * )malloc( strlen( pPort ) + 1 );
 	if ( pManager->port != NULL )
 	{
 		strcpy( ( char * )pManager->port, pPort );
