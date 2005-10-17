@@ -34,9 +34,11 @@
 
 #else
 
+#include <dirent.h>
+#include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <dirent.h>
+#include <sys/wait.h>
 
 #endif	/*-- WIN32 --*/
 
@@ -83,14 +85,15 @@ typedef struct _Manager_
 
 #ifdef WIN32
 static BOOL ReadChildStdoutPipe( Manager *pManager, HANDLE hRead );
-static BOOL StartChildProcess( Manager *pManager );
-static BOOL StopChildProcess( Manager *pManager );
 #endif
 
 static const char *GetDefaultApplicationPath();
 static const char *GetDefaultMappingFile();
+static long GetFileLength( const char *pFile );
 static void SetWebServiceUri( Manager *pManager, const char *pWebServiceUri );
 static void ShowError( const char *format, ... );
+static int StartChildProcess( Manager *pManager );
+static int StopChildProcess( Manager *pManager );
 
 void SetApplicationPath( Manager *pManager, const char *pApplicationPath );
 void SetDataPath( Manager *pManager, const char *pDataPath );
@@ -167,170 +170,37 @@ static BOOL ReadChildStdoutPipe( Manager *pManager, HANDLE hRead )
 
 }	/*-- End of ReadChildStdoutPipe() --*/
 
-/*
- * Starts the Simias.exe child process.
- */
-static BOOL StartChildProcess( Manager *pManager )
-{
-	BOOL bStatus;
-	char *pArgs;
-	PROCESS_INFORMATION pi;
-	STARTUPINFO si;
+#endif
 
-	/* Allocate space for the argument string. */
-	pArgs = ( char * )malloc( 1024 );
-	if ( pArgs != NULL )
-	{
-		/* First parameter is the application name */
-		strcpy( pArgs, "\"" );
-		strcat( pArgs, pManager->applicationPath );
-		strcat( pArgs, "\"" );
-
-		/* Set the data path if specified */
-		if ( pManager->simiasDataPath != NULL )
-		{
-			strcat( pArgs, " --datadir \"" );
-			strcat( pArgs, pManager->simiasDataPath );
-			strcat( pArgs, "\"" );
-		}
-
-		/* Set the port if specified */
-		if ( pManager->port != NULL )
-		{
-			strcat( pArgs, " --port " );
-			strcat( pArgs, pManager->port );
-		}
-
-		/* Set the configuration type */
-		if ( pManager->flags.IsServer )
-		{
-			strcat( pArgs, " --runasserver" );
-		}
-
-		/* Set whether to show the output console */
-		if ( pManager->flags.ShowConsole )
-		{
-			strcat( pArgs, " --showconsole" );
-		}
-
-		/* Set whether to show the extra information */
-		if ( pManager->flags.Verbose )
-		{
-			strcat( pArgs, " --verbose" );
-		}
-
-		/* Initialize the input structures. */
-		memset( &pi, 0, sizeof( pi ) );
-		memset( &si, 0, sizeof( si ) );
-		si.cb = sizeof( si );
-
-		/* Create the child process. */
-		bStatus = CreateProcess( NULL, pArgs, NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi );
-		if ( bStatus )
-		{
-			/* Wait for the process to terminate then close the handles. */
-			WaitForSingleObject( pi.hProcess, INFINITE );
-			CloseHandle( pi.hProcess );
-			CloseHandle( pi.hThread );
-		}
-		else
-		{
-			ShowError( "Failed to create Simias.exe process - %d.", GetLastError() );
-		}
-
-		free( pArgs );
-	}
-	else
-	{
-		ShowError( "Cannot allocate %d bytes in StartChildProcess()", 1024 );
-		bStatus = FALSE;
-	}
-
-	return bStatus;
-
-}	/*-- End of StartChildProcess() --*/
 
 /*
- * Stops the Simias.exe child process.
+ * Gets the length of the specfied file.
+ * Returns (-1) if the file does not exist.
  */
-static BOOL StopChildProcess( Manager *pManager )
+static long GetFileLength( const char *pFile )
 {
-	BOOL bStatus;
-	char *pArgs;
-	PROCESS_INFORMATION pi;
-	STARTUPINFO si;
+	long fileLength = -1;
 
-	/* Allocate space for the argument string. */
-	pArgs = ( char * )malloc( 1024 );
-	if ( pArgs != NULL )
+#ifdef WIN32
+
+	intptr_t hFile;
+	struct _finddata_t fileData;
+
+	/* See if the DefaultMappingFile is in the current directory. */
+	if ( ( hFile = _findfirst( pFile, &fileData ) ) != -1 )
 	{
-		/* First parameter is the application name */
-		strcpy( pArgs, "\"" );
-		strcat( pArgs, pManager->applicationPath );
-		strcat( pArgs, "\"" );
-
-		/* Set the data path if specified */
-		if ( pManager->simiasDataPath != NULL )
-		{
-			strcat( pArgs, " --datadir \"" );
-			strcat( pArgs, pManager->simiasDataPath );
-			strcat( pArgs, "\"" );
-		}
-
-		/* Set whether to show the extra information */
-		if ( pManager->flags.Verbose )
-		{
-			strcat( pArgs, " --verbose" );
-		}
-
-		/* Add the stop command. */
-		strcat( pArgs, " --stop" );
-
-		/* Initialize the input structures. */
-		memset( &pi, 0, sizeof( pi ) );
-		memset( &si, 0, sizeof( si ) );
-		si.cb = sizeof( si );
-
-		/* Create the child process. */
-		bStatus = CreateProcess( NULL, pArgs, NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi );
-		if ( bStatus )
-		{
-			/* Wait for the process to terminate then close the handles. */
-			WaitForSingleObject( pi.hProcess, INFINITE );
-			CloseHandle( pi.hProcess );
-			CloseHandle( pi.hThread );
-		}
-		else
-		{
-			ShowError( "Failed to create Simias.exe process - %d.", GetLastError() );
-		}
-
-		free( pArgs );
-	}
-	else
-	{
-		bStatus = FALSE;
+		fileLength = ( long )fileData.size;
+		_findclose( hFile );
 	}
 
-	return bStatus;
+#else
 
-}	/*-- End of StopChildProcess() --*/
-
-#endif	/*-- WIN32 --*/
-
-#ifndef WIN32
-
-/*
- * Gets the specified file to be sure that it exists.
- */
-static unsigned long findfirst( const char *pFile, struct dirent **ppFileData )
-{
-	char *pDirName;
 	char fileName[ MAX_PATH_SIZE + 1 ];
+	char *pDirName;
 	char *pTmp;
 	DIR *hDir;
+	struct dirent *pFileData;
 	struct stat sb;
-	unsigned long fileSize = -1;
 
 
 	/* See if there is a directory attached to the file name. */
@@ -365,16 +235,16 @@ static unsigned long findfirst( const char *pFile, struct dirent **ppFileData )
 		/* Open the directory */
 		if ( ( hDir = opendir( pDirName ) ) != NULL )
 		{
-			*ppFileData = readdir( hDir );
-			while ( *ppFileData != NULL )
+			pFileData = readdir( hDir );
+			while ( pFileData != NULL )
 			{
 				/* See if this is the file that we are looking for. */
-				if ( !stricmp( ( *ppFileData )->d_name, fileName ) )
+				if ( !stricmp( pFileData->d_name, fileName ) )
 				{
 					/* Get the length of this file. */
 					if ( stat( pFile, &sb ) != -1 )
 					{
-						fileSize = sb.st_size;
+						fileLength = ( long )sb.st_size;
 					}
 					else
 					{
@@ -385,7 +255,7 @@ static unsigned long findfirst( const char *pFile, struct dirent **ppFileData )
 				}
 
 				/* Get the next entry */
-				*ppFileData = readdir( hDir );
+				pFileData = readdir( hDir );
 			}
 
 			/* Close the directory handle. */
@@ -403,11 +273,11 @@ static unsigned long findfirst( const char *pFile, struct dirent **ppFileData )
 		ShowError( "Cannot get the current directory." );
 	}
 
-	return fileSize;
-
-}	/*-- End of findfirst() --*/
-
 #endif
+
+	return fileLength;
+
+}	/*-- End of GetFileLength() --*/
 
 
 /*
@@ -417,59 +287,22 @@ static const char *GetDefaultApplicationPath()
 {
 	const char *pDefaultPath;
 	char *pApplicationPath = NULL;
-	char *pTempPath;
+	char *pTempPath = NULL;
 	FILE *fp;
-	unsigned long length = 0;
-
-#ifdef WIN32
-
-	intptr_t hFile;
-	struct _finddata_t fileData;
-
-#else
-
-	struct dirent *fileData;
-
-#endif	/*-- WIN32 --*/
-
-#ifdef WIN32
+	long length = 0;
 
 	/* See if the DefaultMappingFile is in the current directory. */
-	if ( ( hFile = _findfirst( MAPPING_FILE, &fileData ) ) != -1 )
+	if ( ( length = GetFileLength( MAPPING_FILE ) ) != -1 )
 	{
-		pTempPath = ( char * )malloc( strlen( fileData.name ) + 1 );
-		if ( pTempPath != NULL )
-		{
-			strcpy( pTempPath, fileData.name );
-			length = fileData.size;
-		}
-		else
-		{
-			ShowError( "Could not allocate %d bytes in GetDefaultApplicationPath()", strlen( fileData.name ) + 1 );
-		}
-
-		_findclose( hFile );
+		pTempPath = MAPPING_FILE;
 	}
 	else
 	{
-		/* The file does not exist in the current directory. Look for it in the
-		 * default place.
-		 */
+		/* The file does not exist in the current directory. Look for it in the default place.*/
 		pDefaultPath = GetDefaultMappingFile();
-		if ( ( hFile = _findfirst( pDefaultPath, &fileData ) ) != -1 )
+		if ( ( length = GetFileLength( pDefaultPath ) ) != -1 )
 		{
-			pTempPath = ( char * )malloc( strlen( pDefaultPath ) + 1 );
-			if ( pTempPath != NULL )
-			{
-				strcpy( pTempPath, pDefaultPath );
-				length = fileData.size;
-			}
-			else
-			{
-				ShowError( "Could not allocate %d bytes in GetDefaultApplicationPath()", strlen( pDefaultPath ) + 1 );
-			}
-
-			_findclose( hFile );
+			pTempPath = ( char * )pDefaultPath;
 		}
 		else
 		{
@@ -477,46 +310,6 @@ static const char *GetDefaultApplicationPath()
 		}
 	}
 
-#else
-
-	/* See if the DefaultMappingFile is in the current directory. */
-	if ( ( length = findfirst( MAPPING_FILE, &fileData ) ) != -1 )
-	{
-		pTempPath = ( char * )malloc( strlen( fileData->d_name ) + 1 );
-		if ( pTempPath != NULL )
-		{
-			strcpy( pTempPath, fileData->d_name );
-		}
-		else
-		{
-			ShowError( "Could not allocate %d bytes in GetDefaultApplicationPath()", strlen( fileData->d_name ) + 1 );
-		}
-	}
-	else
-	{
-		/* The file does not exist in the current directory. Look for it in the
-		 * default place.
-		 */
-		pDefaultPath = GetDefaultMappingFile();
-		if ( ( length = findfirst( pDefaultPath, &fileData ) ) != -1 )
-		{
-			pTempPath = ( char * )malloc( strlen( pDefaultPath ) + 1 );
-			if ( pTempPath != NULL )
-			{
-				strcpy( pTempPath, pDefaultPath );
-			}
-			else
-			{
-				ShowError( "Could not allocate %d bytes in GetDefaultApplicationPath()", strlen( pDefaultPath ) + 1 );
-			}
-		}
-		else
-		{
-			ShowError( "Cannot file default mapping file %s", pDefaultPath );
-		}
-	}
-
-#endif	/*-- WIN32 --*/
 
 	/* See if a path to the file was found. */
 	if ( pTempPath != NULL )
@@ -559,8 +352,6 @@ static const char *GetDefaultApplicationPath()
 		{
 			ShowError( "Cannot open mapping file %s", pTempPath );
 		}
-
-		free( pTempPath );
 	}
 
 	return pApplicationPath;
@@ -705,6 +496,222 @@ static void ShowError( const char *format, ... )
 
 }	/*-- End of ShowError() --*/
 
+
+/*
+ * Starts the Simias.exe child process.
+ */
+static int StartChildProcess( Manager *pManager )
+{
+	int status;
+
+#ifdef WIN32
+
+	char *pArgs;
+	PROCESS_INFORMATION pi;
+	STARTUPINFO si;
+	DWORD processStatus;
+
+	/* Allocate space for the argument string. */
+	pArgs = ( char * )malloc( 1024 );
+	if ( pArgs != NULL )
+	{
+		/* First parameter is the application name */
+		strcpy( pArgs, "\"" );
+		strcat( pArgs, pManager->applicationPath );
+		strcat( pArgs, "\"" );
+
+		/* Set the data path if specified */
+		if ( pManager->simiasDataPath != NULL )
+		{
+			strcat( pArgs, " --datadir \"" );
+			strcat( pArgs, pManager->simiasDataPath );
+			strcat( pArgs, "\"" );
+		}
+
+		/* Set the port if specified */
+		if ( pManager->port != NULL )
+		{
+			strcat( pArgs, " --port " );
+			strcat( pArgs, pManager->port );
+		}
+
+		/* Set the configuration type */
+		if ( pManager->flags.IsServer )
+		{
+			strcat( pArgs, " --runasserver" );
+		}
+
+		/* Set whether to show the output console */
+		if ( pManager->flags.ShowConsole )
+		{
+			strcat( pArgs, " --showconsole" );
+		}
+
+		/* Set whether to show the extra information */
+		if ( pManager->flags.Verbose )
+		{
+			strcat( pArgs, " --verbose" );
+		}
+
+		/* Initialize the input structures. */
+		memset( &pi, 0, sizeof( pi ) );
+		memset( &si, 0, sizeof( si ) );
+		si.cb = sizeof( si );
+
+		/* Create the child process. */
+		if ( CreateProcess( NULL, pArgs, NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi ) )
+		{
+			/* Wait for the process to terminate then close the handles. */
+			WaitForSingleObject( pi.hProcess, INFINITE );
+			GetExitCodeProcess( pi.hProcess, &processStatus );
+			CloseHandle( pi.hProcess );
+			CloseHandle( pi.hThread );
+			status = ( int )processStatus;
+		}
+		else
+		{
+			ShowError( "Failed to create Simias.exe process - %d.", GetLastError() );
+			status = -1;
+		}
+
+		free( pArgs );
+	}
+	else
+	{
+		ShowError( "Cannot allocate %d bytes in StartChildProcess()", 1024 );
+		status = -1;
+	}
+
+#else
+
+	char *ppArgs[ 9 ];
+	char **ppCurArg = &ppArgs[ 0 ];
+
+	/* First parameter is the application name */
+	*ppCurArg++ = ( char * )pManager->applicationPath;
+
+	/* Set the data path if specified */
+	if ( pManager->simiasDataPath != NULL )
+	{
+		*ppCurArg++ = "--datadir";
+		*ppCurArg++ = ( char * )pManager->simiasDataPath;
+	}
+
+	/* Set the port if specified */
+	if ( pManager->port != NULL )
+	{
+		*ppCurArg++ = "--port";
+		*ppCurArg++ = ( char * )pManager->port;
+	}
+
+	/* Set the configuration type */
+	if ( pManager->flags.IsServer )
+	{
+		*ppCurArg++ = "--runasserver";
+	}
+
+	/* Set whether to show the output console */
+	if ( pManager->flags.ShowConsole )
+	{
+		*ppCurArg++ = "--showconsole";
+	}
+
+	/* Set whether to show the extra information */
+	if ( pManager->flags.Verbose )
+	{
+		*ppCurArg++ = "--verbose";
+	}
+
+	/* End of the argument list */
+	*ppCurArg = NULL;
+
+	/* Replace the child process with Simias.exe.*/
+	if ( execv( pManager->applicationPath, ppArgs ) == -1 )
+	{
+		/* Only will get here on an error from execv.*/
+		ShowError( "Cannot start the child process." );
+		status = -1;
+	}
+
+#endif	/*-- WIN32 --*/
+
+	return status;
+
+}	/*-- End of StartChildProcess() --*/
+
+
+/*
+ * Stops the Simias.exe child process.
+ */
+static int StopChildProcess( Manager *pManager )
+{
+	int status;
+
+#ifdef WIN32
+
+	char *pArgs;
+	PROCESS_INFORMATION pi;
+	STARTUPINFO si;
+
+	/* Allocate space for the argument string. */
+	pArgs = ( char * )malloc( 1024 );
+	if ( pArgs != NULL )
+	{
+		/* First parameter is the application name */
+		strcpy( pArgs, "\"" );
+		strcat( pArgs, pManager->applicationPath );
+		strcat( pArgs, "\"" );
+
+		/* Set the data path if specified */
+		if ( pManager->simiasDataPath != NULL )
+		{
+			strcat( pArgs, " --datadir \"" );
+			strcat( pArgs, pManager->simiasDataPath );
+			strcat( pArgs, "\"" );
+		}
+
+		/* Set whether to show the extra information */
+		if ( pManager->flags.Verbose )
+		{
+			strcat( pArgs, " --verbose" );
+		}
+
+		/* Add the stop command. */
+		strcat( pArgs, " --stop" );
+
+		/* Initialize the input structures. */
+		memset( &pi, 0, sizeof( pi ) );
+		memset( &si, 0, sizeof( si ) );
+		si.cb = sizeof( si );
+
+		/* Create the child process. */
+		status = ( int )CreateProcess( NULL, pArgs, NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi );
+		if ( status )
+		{
+			/* Wait for the process to terminate then close the handles. */
+			WaitForSingleObject( pi.hProcess, INFINITE );
+			CloseHandle( pi.hProcess );
+			CloseHandle( pi.hThread );
+		}
+		else
+		{
+			ShowError( "Failed to create Simias.exe process - %d.", GetLastError() );
+		}
+
+		free( pArgs );
+	}
+	else
+	{
+		status = FALSE;
+	}
+
+#else
+
+#endif	/*-- WIN32 -- */
+
+	return status;
+
+}	/*-- End of StopChildProcess() --*/
 
 
 
@@ -955,6 +962,7 @@ const char *Start( Manager *pManager )
 	HANDLE hReadStdoutDup;
 	HANDLE hSaveStdout;
 	HANDLE hWriteStdout;
+	int status;
 	SECURITY_ATTRIBUTES sa;
 
 	/* Setup the pipe to be inheritable */
@@ -986,16 +994,9 @@ const char *Start( Manager *pManager )
 			if ( bStatus )
 			{
 				/* Create the child process. */
-				bStatus = StartChildProcess( pManager );
-				if ( bStatus )
+				status = StartChildProcess( pManager );
+				if ( status == 0 )
 				{
-					/* Restore the saved stdout handle. */
-					bStatus = SetStdHandle( STD_OUTPUT_HANDLE, hSaveStdout );
-					if ( !bStatus )
-					{
-						ShowError( "Failed to restore stdout handle." );
-					}
-
 					/* Close the write stdout handle. */
 					CloseHandle( hWriteStdout );
 
@@ -1006,6 +1007,17 @@ const char *Start( Manager *pManager )
 						/* Return the uri on success. */
 						pWebServiceUri = pManager->webServiceUri;
 					}
+				}
+				else
+				{
+					ShowError( "Child process failed with status = %d", status );
+				}
+
+				/* Restore the saved stdout handle. */
+				bStatus = SetStdHandle( STD_OUTPUT_HANDLE, hSaveStdout );
+				if ( !bStatus )
+				{
+					ShowError( "Failed to restore stdout handle." );
 				}
 
 				/* Close the dup read handle. */
@@ -1028,46 +1040,59 @@ const char *Start( Manager *pManager )
 
 #else
 
-	const char *ppArgs[ 9 ];
-	const char **ppCurArg = &ppArgs[ 0 ];
+	int redirectPipe[ 2 ];
+	int status;
+	pid_t pid;
+  
 
-	/* First parameter is the application name */
-	*ppCurArg++ = pManager->applicationPath;
-
-	/* Set the data path if specified */
-	if ( pManager->simiasDataPath != NULL )
+	/* Create the pipe that will be used to redirect stdout in the child process. */
+	if ( pipe( redirectPipe ) != -1 )
 	{
-		*ppCurArg++ = "--datadir";
-		*ppCurArg++ = pManager->simiasDataPath;
-	}
+		/* Fork the process */
+		pid = fork();
+		if ( pid == 0 )
+		{
+			/* In the child process. Don't need the read side of the pipe.*/
+			close( redirectPipe[ 0 ] );
 
-	/* Set the port if specified */
-	if ( pManager->port != NULL )
+			/* Dup the write side of the pipe as the stdout descriptor.*/
+			if ( dup2( redirectPipe[ 1 ], STDOUT_FILENO ) != -1 )
+			{
+				/* Should not return from this method unless there was an error.*/
+				StartChildProcess( pManager );
+			}
+			else
+			{
+				ShowError( "Failed to redirect stdout in child process." );
+			}
+
+			close( redirectPipe[ 1 ] );
+		}
+		else
+		{
+			/* In the parent process. Don't need the write side of the pipe.*/
+			close( redirectPipe[ 1 ] );
+
+			/* Wait for the child process to exit.*/
+			waitpid( pid, &status, 0 );
+
+			/* Make sure the child exited properly.*/
+			if ( status != -1 )
+			{
+				
+			}
+			else
+			{
+				ShowError( "Child process failed with status = %d.", status );
+			}
+
+			close( redirectPipe[ 0 ] );
+		}
+	}
+	else
 	{
-		*ppCurArg++ = "--port";
-		*ppCurArg++ = pManager->port;
+		ShowError( "Cannot open a pipe." );
 	}
-
-	/* Set the configuration type */
-	if ( pManager->flags.IsServer )
-	{
-		*ppCurArg++ = "--runasserver";
-	}
-
-	/* Set whether to show the output console */
-	if ( pManager->flags.ShowConsole )
-	{
-		*ppCurArg++ = "--showconsole";
-	}
-
-	/* Set whether to show the extra information */
-	if ( pManager->flags.Verbose )
-	{
-		*ppCurArg++ = "--verbose";
-	}
-
-	/* End of the argument list */
-	*ppCurArg = NULL;
 
 #endif
 
@@ -1080,17 +1105,8 @@ const char *Start( Manager *pManager )
  */
 int Stop( Manager *pManager )
 {
-	int status;
-
-#ifdef WIN32
-
 	/* Stop the child process. */
-	status = StopChildProcess( pManager ) ? 1 : 0;
-
-#else
-#endif
-
-	return status;
+	return StopChildProcess( pManager );
 
 }	/*-- End of Stop() --*/
 
