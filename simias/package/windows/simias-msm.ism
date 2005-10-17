@@ -188,9 +188,9 @@
 		<col def="S0">ISDotNetInstallerArgsCommit</col>
 		<col def="S0">ISDotNetInstallerArgsUninstall</col>
 		<col def="S0">ISDotNetInstallerArgsRollback</col>
-		<row><td>etc_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>{530A65B6-1CD0-49A9-87FD-23FED453D9EF}</td><td>ETC.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>web_bin_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>{76FC71DD-EB07-4207-9435-415E6378D725}</td><td>BIN.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>web_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>{1E3FD548-58D5-4A84-8833-25F2C46421DD}</td><td>WEB.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>etc_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>{530A65B6-1CD0-49A9-87FD-23FED453D9EF}</td><td>ETC.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>8</td><td/><td>simias.config1.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>web_bin_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>{76FC71DD-EB07-4207-9435-415E6378D725}</td><td>BIN.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>8</td><td/><td>simias.exe.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>web_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>{1E3FD548-58D5-4A84-8833-25F2C46421DD}</td><td>WEB.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>8</td><td/><td>global.asax.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>web_modules_files.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>{A5735DC3-4491-4127-86A6-5A88B44903AE}</td><td>MODULES.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>0</td><td/><td>simiaslib.conf.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>17</td><td>This component consists of files not belonging to other components.</td><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
 
