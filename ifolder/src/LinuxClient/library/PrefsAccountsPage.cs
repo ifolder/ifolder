@@ -480,6 +480,10 @@ namespace Novell.iFolder
 						return;
 					}
 
+					serverEntry.Text = "";
+					nameEntry.Text = "";
+					passEntry.Text = "";
+
 					detailsFrame.Sensitive = false;
 					nameEntry.Sensitive = false;
 					nameLabel.Sensitive = false;
