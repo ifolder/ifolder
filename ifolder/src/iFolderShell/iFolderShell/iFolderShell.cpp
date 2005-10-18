@@ -488,42 +488,52 @@ STDMETHODIMP CiFolderShell::Initialize(LPCITEMIDLIST pidlFolder,
 		return E_INVALIDARG;
 	}
 
-    // Initialize can be called more than once
-    if (m_pDataObj)
-        m_pDataObj->Release();
+	// Initialize can be called more than once
+	if (m_pDataObj)
+		m_pDataObj->Release();
 
-    // duplicate the object pointer and registry handle
-    if (pDataObj)
-    {
-        m_pDataObj= pDataObj;
-        pDataObj->AddRef();
-    }
+	// duplicate the object pointer and registry handle
+	if (pDataObj)
+	{
+		m_pDataObj= pDataObj;
+		pDataObj->AddRef();
+	}
 
 	if (g_hmodResDll == NULL)
 	{
+		// Default to English.
+		g_hmodResDll = g_hmodThisDll;
+
 		if (m_spiFolder == NULL)
 		{
 			// Instantiate the iFolder smart pointer.
 			m_spiFolder.CreateInstance(__uuidof(iFolderComponent));
 		}
 
-		// Get the language directory
-		BSTR strLang = m_spiFolder->GetLanguageDirectory();
-
-		// Build the path to the resource dll.
-		TCHAR szPath[MAX_PATH];
-		lstrcpy(szPath, m_szShellPath);
-		lstrcat(szPath, strLang);
-		lstrcat(szPath, TEXT("\\iFolderShellRes.dll"));
-
-		g_hmodResDll = LoadLibrary(szPath);
-		if (g_hmodResDll == NULL)
+		try
 		{
-			// Can't find the resource file ... default to English.
-			g_hmodResDll = g_hmodThisDll;
-		}
+			// Get the language directory
+			BSTR strLang = m_spiFolder->GetLanguageDirectory();
 
-		SysFreeString(strLang);
+			// Build the path to the resource dll.
+			TCHAR szPath[MAX_PATH];
+			lstrcpy(szPath, m_szShellPath);
+			lstrcat(szPath, strLang);
+			lstrcat(szPath, TEXT("\\iFolderShellRes.dll"));
+
+			g_hmodResDll = LoadLibrary(szPath);
+			if (g_hmodResDll == NULL)
+			{
+				// Can't find the resource file ... default to English.
+				g_hmodResDll = g_hmodThisDll;
+			}
+
+			SysFreeString(strLang);
+		}
+		catch (...)
+		{
+			OutputDebugString(TEXT("***Caught exception in CiFolderShell::Initialize()***\n"));
+		}
 	}
 
 
