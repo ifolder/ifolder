@@ -322,9 +322,16 @@ namespace Simias.POBoxService.Web
 								case SubscriptionStates.Posted:
 								{
 									// Accepted. Next state = Responded and disposition is set.
-									cSub.Accept( store, cSub.SubscriptionRights );
-									poBox.Commit( cSub );
-									status = POBoxStatus.Success;
+									try
+									{
+										cSub.Accept( store, cSub.SubscriptionRights );
+										poBox.Commit( cSub );
+										status = POBoxStatus.Success;
+									}
+									catch ( DoesNotExistException )
+									{
+										status = POBoxStatus.UnknownCollection;
+									}
 									break;
 								}
 

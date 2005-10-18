@@ -843,7 +843,7 @@ namespace Simias.POBox
 
 			// check collection
 			if (c == null)
-				throw new ApplicationException("Collection does not exist.");
+				throw new DoesNotExistException("Collection does not exist.");
 
 			// member
 			Member member = new Member(this.ToName, this.ToIdentity, rights, this.ToPublicKey);
