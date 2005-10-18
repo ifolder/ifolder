@@ -359,7 +359,7 @@ namespace Simias.POBox
 				Property p = properties.GetSingleProperty( ToPublicKeyProperty );
 				if ( p != null )
 				{
-					pk = new RSACryptoServiceProvider( Identity.DummyCsp );
+					pk = Identity.DummyCsp;
 					pk.FromXmlString( p.ToString() );
 				}
 
@@ -386,7 +386,7 @@ namespace Simias.POBox
 				Property p = properties.GetSingleProperty( FromPublicKeyProperty );
 				if ( p != null )
 				{
-					pk = new RSACryptoServiceProvider( Identity.DummyCsp );
+					pk = Identity.DummyCsp;
 					pk.FromXmlString( p.ToString() );
 				}
 

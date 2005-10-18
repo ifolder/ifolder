@@ -40,11 +40,16 @@ namespace Simias.Storage
 	{
 		#region Class Members
 		/// <summary>
+		/// Used to log messages.
+		/// </summary>
+		static private readonly ISimiasLog log = SimiasLogManager.GetLogger( typeof( Identity ) );
+
+		/// <summary>
 		/// This is used to keep from generating a new key set everytime a new RSACryptoSecurityProvider
 		/// object is instantiated. This is passed as a parameter to the constructor and will initially
 		/// use the dummy key set until the real key set is imported.
 		/// </summary>
-		static internal CspParameters DummyCsp;
+		static private CspParameters DummyParameters;
 
 		/// <summary>
 		/// Xml tags used to store the domain mapping information.
@@ -91,7 +96,7 @@ namespace Simias.Storage
 				XmlDocument mapDoc = GetDocumentByDomain( StoreReference.LocalDomain );
 				if ( mapDoc != null )
 				{
-					credential = new RSACryptoServiceProvider( Identity.DummyCsp );
+					credential = DummyCsp;
 					credential.FromXmlString( mapDoc.DocumentElement.GetAttribute( CredentialTag ) );
 				}
 
@@ -123,13 +128,57 @@ namespace Simias.Storage
 				RSACryptoServiceProvider credential = Credential;
 				if ( credential != null )
 				{
-					pk = new RSACryptoServiceProvider( Identity.DummyCsp );
+					pk = DummyCsp;
 					pk.ImportParameters( credential.ExportParameters( false ) );
 				}
 
 				return pk;
 			}
 		}
+
+		/// <summary>
+		/// Gets the CSP for the dummy key container.
+		/// </summary>
+		static internal RSACryptoServiceProvider DummyCsp
+		{
+			get
+			{
+				RSACryptoServiceProvider csp = null;
+
+				lock( DummyParameters )
+				{
+					try
+					{
+						csp = new RSACryptoServiceProvider( DummyParameters );
+					}
+					catch ( CryptographicException e )
+					{
+						log.Debug( e, "Corrupt cryptographic key container." );
+#if WINDOWS
+						IntPtr phProv = IntPtr.Zero;
+						if ( CryptAcquireContext(
+							ref phProv,
+							DummyParameters.KeyContainerName,
+							"Microsoft Strong Cryptographic Provider",
+							1, // PROV_RSA_FULL
+							0x10) ) // CRYPT_DELETEKEYSET
+						{
+							csp = new RSACryptoServiceProvider( DummyParameters );
+						}
+#endif
+					}
+				}
+
+				return csp;
+			}
+		}
+		#endregion
+
+		#region Win32APIs
+#if WINDOWS
+		[System.Runtime.InteropServices.DllImport( "advapi32.dll", SetLastError=true )]
+		static extern bool CryptAcquireContext( ref IntPtr phProv, string pszContainer, string pszProvider, uint dwProvType, uint dwFlags );
+#endif
 		#endregion
 
 		#region Constructors
@@ -139,9 +188,9 @@ namespace Simias.Storage
 		static Identity()
 		{
 			// Set up the dummy key store so that it will contain a dummy key set.
-			DummyCsp = new CspParameters();
-			DummyCsp.KeyContainerName = "DummyKeyStore";
-			new RSACryptoServiceProvider( DummyCsp );
+			DummyParameters = new CspParameters();
+			DummyParameters.KeyContainerName = "DummyKeyStore";
+			RSACryptoServiceProvider csp = DummyCsp;
 		}
 
 		/// <summary>
