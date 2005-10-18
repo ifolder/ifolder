@@ -48,21 +48,20 @@ endif
 
 
 else
-lib_LTLIBRARIES = libsimias-manager.la
+lib_LIBRARIES = libsimias-manager.a
 
-libsimias_manager_la_SOURCES = 	simias-manager.c \
+libsimias_manager_a_SOURCES = 	simias-manager.c \
 				simias-manager.h
 
 if LINUX
-libsimias_manager_la_CXXFLAGS = -I "../../../external/flaim/include" -fshort-wchar -c
 
-libsimias_manager_la_LDFLAGS = -L"../../../external/flaim/lxx86/gcc3/release"
+libsimias_manager_a_CXXFLAGS = -c
 
-install-exec-local: libsimias-manager.la
+install-exec-local: libsimias-manager.a
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
 
 uninstall-local:
-	cd $(DESTDIR)$(libdir); rm -f libsimias-manager$(SHARED_LIB_EXT)
+	cd $(DESTDIR)$(libdir); rm -f libsimias-manager.a
 
 endif
 

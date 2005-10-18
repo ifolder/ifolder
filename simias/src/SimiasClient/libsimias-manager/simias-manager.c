@@ -46,6 +46,20 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef WIN32
+
+#define	stricmp		_stricmp
+#define PARSE_CHAR	'\r'
+#define SKIP_CHARS	2
+
+#else
+
+#define stricmp 	strcasecmp
+#define PARSE_CHAR	'\n'
+#define SKIP_CHARS	1
+
+#endif	/*-- WIN32 --*/
+
 #define MAX_PATH_SIZE				260
 #define MAX_STDOUT_BUFFER_SIZE		1024
 
@@ -83,14 +97,15 @@ typedef struct _Manager_
  * Forward declaration of functions.
  */
 
-#ifdef WIN32
-static BOOL ReadChildStdoutPipe( Manager *pManager, HANDLE hRead );
-#endif
-
 static const char *GetDefaultApplicationPath();
 static const char *GetDefaultMappingFile();
 static long GetFileLength( const char *pFile );
 static void SetWebServiceUri( Manager *pManager, const char *pWebServiceUri );
+#ifdef WIN32
+static int ReadChildStdoutPipe( Manager *pManager, HANDLE hRead );
+#else
+static int ReadChildStdoutPipe( Manager *pManager, int hRead );
+#endif	/*-- WIN32 --*/
 static void ShowError( const char *format, ... );
 static int StartChildProcess( Manager *pManager );
 static int StopChildProcess( Manager *pManager );
@@ -107,70 +122,6 @@ void SetVerbose( Manager *pManager, char verbose );
  * Buffer used to show errors.
  */
 static char errorBuffer[ 512 ];
-
-
-#ifdef WIN32
-
-/*
- * Reads the child process's redirected stdout handle to get the output
- * from the child process.
- */
-static BOOL ReadChildStdoutPipe( Manager *pManager, HANDLE hRead )
-{
-	BOOL bStatus;
-	char *pBuffer;
-	char *pCmd;
-	char *pDataPath;
-	unsigned long bytesRead = 0;
-
-	/* Allocate a buffer to read the data from. */
-	pBuffer = ( char * )malloc( MAX_STDOUT_BUFFER_SIZE );
-	if ( pBuffer != NULL )
-	{
-		/* Read from the dup handle. */
-		bStatus = ReadFile( hRead, pBuffer, MAX_STDOUT_BUFFER_SIZE, &bytesRead, NULL );
-		if ( bStatus && ( bytesRead > 0 ) )
-		{
-			/* NULL append the buffer. */
-			pBuffer[ bytesRead ] = '\0';
-
-			/* Copy the first line to the web service uri. */
-			pCmd = strchr( pBuffer, '\r' );
-			if ( pCmd != NULL )
-			{
-				*pCmd = '\0';
-				SetWebServiceUri( pManager, pBuffer );
-
-				/* Copy the next line to the simias data path */
-				/* Skip over the '\r\n'. */
-				pDataPath = pCmd + 2;
-				pCmd = strchr( pDataPath, '\r' );
-				if ( pCmd != NULL )
-				{
-					*pCmd = '\0';
-					SetDataPath( pManager, pDataPath );
-				}
-			}
-		}
-		else
-		{
-			/* No data was written. */
-			bStatus = FALSE;
-		}
-
-		free( pBuffer );
-	}
-	else
-	{
-		ShowError( "Cannot allocate %d bytes in ReadChildStdoutPipe()", MAX_STDOUT_BUFFER_SIZE );
-		bStatus = FALSE;
-	}
-
-	return bStatus;
-
-}	/*-- End of ReadChildStdoutPipe() --*/
-
-#endif
 
 
 /*
@@ -407,7 +358,7 @@ static void ParseConfigurationParameters( Manager *pManager, int argsLength, con
 	/* Skip the first argument as it will be the program name. */
 	for ( i = 1; i < argsLength; ++i )
 	{
-		if ( !_stricmp( args[ i ], "-p" ) || !_stricmp( args[ i ], "--port" ) )
+		if ( !stricmp( args[ i ], "-p" ) || !stricmp( args[ i ], "--port" ) )
 		{
 			if ( ( i + 1 ) < argsLength )
 			{
@@ -418,7 +369,7 @@ static void ParseConfigurationParameters( Manager *pManager, int argsLength, con
 				ShowError( "Invalid command line parameters. No port or range was specified" );
 			}
 		}
-		else if ( !_stricmp( args[ i ], "-d" ) || !_stricmp( args[ i ], "--datadir" ) )
+		else if ( !stricmp( args[ i ], "-d" ) || !stricmp( args[ i ], "--datadir" ) )
 		{
 			if ( ( i + 1 ) < argsLength )
 			{
@@ -429,7 +380,7 @@ static void ParseConfigurationParameters( Manager *pManager, int argsLength, con
 				ShowError( "Invalid command line parameters. No store path was specified" );
 			}
 		}
-		else if ( !_stricmp( args[ i ], "-a" ) || !_stricmp( args[ i ], "--apppath" ) )
+		else if ( !stricmp( args[ i ], "-a" ) || !stricmp( args[ i ], "--apppath" ) )
 		{
 			if ( ( i + 1 ) < argsLength )
 			{
@@ -440,21 +391,99 @@ static void ParseConfigurationParameters( Manager *pManager, int argsLength, con
 				ShowError( "Invalid command line parameters. No application path was specified" );
 			}
 		}
-		else if ( !_stricmp( args[ i ], "-i" ) || !_stricmp( args[ i ], "--isserver" ) )
+		else if ( !stricmp( args[ i ], "-i" ) || !stricmp( args[ i ], "--isserver" ) )
 		{
 			pManager->flags.IsServer = 1;
 		}
-		else if ( !_stricmp( args[ i ], "-s" ) || !_stricmp( args[ i ], "--showconsole" ) )
+		else if ( !stricmp( args[ i ], "-s" ) || !stricmp( args[ i ], "--showconsole" ) )
 		{
 			pManager->flags.ShowConsole = 1;
 		}
-		else if ( !_stricmp( args[ i ], "-v" ) || !_stricmp( args[ i ], "--verbose" ) )
+		else if ( !stricmp( args[ i ], "-v" ) || !stricmp( args[ i ], "--verbose" ) )
 		{
 			pManager->flags.Verbose = 1;
 		}
 	}
 
 }	/*-- End of ParseConfigurationParameters() --*/
+
+
+/*
+ * Reads the child process's redirected stdout handle to get the output
+ * from the child process.
+ */
+#ifdef WIN32
+static int ReadChildStdoutPipe( Manager *pManager, HANDLE hRead )
+#else
+static int ReadChildStdoutPipe( Manager *pManager, int hRead )
+#endif	/*-- WIN32 --*/
+{
+	char *pBuffer;
+	char *pCmd;
+	char *pDataPath;
+	int status;
+	unsigned long bytesRead = 0;
+
+	/* Allocate a buffer to read the data from. */
+	pBuffer = ( char * )malloc( MAX_STDOUT_BUFFER_SIZE );
+	if ( pBuffer != NULL )
+	{
+		/* Read from the dup handle. */
+#ifdef WIN32
+		status = ( int )ReadFile( hRead, pBuffer, MAX_STDOUT_BUFFER_SIZE, &bytesRead, NULL );
+#else
+		status = ( int )read( hRead, pBuffer, MAX_STDOUT_BUFFER_SIZE );
+		if ( status != -1 )
+		{
+			bytesRead = status;
+			status = 1;
+		}
+		else
+		{
+			status = bytesRead = 0;
+		}
+#endif	/*-- WIN32 --*/
+
+		if ( status && ( bytesRead > 0 ) )
+		{
+			/* NULL append the buffer. */
+			pBuffer[ bytesRead ] = '\0';
+
+			/* Copy the first line to the web service uri. */
+			pCmd = strchr( pBuffer, PARSE_CHAR );
+			if ( pCmd != NULL )
+			{
+				*pCmd = '\0';
+				SetWebServiceUri( pManager, pBuffer );
+
+				/* Copy the next line to the simias data path */
+				/* Skip over the '\r\n'. */
+				pDataPath = pCmd + SKIP_CHARS;
+				pCmd = strchr( pDataPath, PARSE_CHAR );
+				if ( pCmd != NULL )
+				{
+					*pCmd = '\0';
+					SetDataPath( pManager, pDataPath );
+				}
+			}
+		}
+		else
+		{
+			/* No data was written. */
+			status = -1;
+		}
+
+		free( pBuffer );
+	}
+	else
+	{
+		ShowError( "Cannot allocate %d bytes in ReadChildStdoutPipe()", MAX_STDOUT_BUFFER_SIZE );
+		status = -1;
+	}
+
+	return status;
+
+}	/*-- End of ReadChildStdoutPipe() --*/
 
 /*
  * Sets a new uri in the webServiceUri.
@@ -584,10 +613,13 @@ static int StartChildProcess( Manager *pManager )
 
 #else
 
-	char *ppArgs[ 9 ];
+	char *ppArgs[ 10 ];
 	char **ppCurArg = &ppArgs[ 0 ];
 
-	/* First parameter is the application name */
+	/* First parameter is the application name.*/
+	*ppCurArg++ = "mono";
+
+	/* Second parameter is the application name */
 	*ppCurArg++ = ( char * )pManager->applicationPath;
 
 	/* Set the data path if specified */
@@ -626,7 +658,7 @@ static int StartChildProcess( Manager *pManager )
 	*ppCurArg = NULL;
 
 	/* Replace the child process with Simias.exe.*/
-	if ( execv( pManager->applicationPath, ppArgs ) == -1 )
+	if ( execvp( "mono", ppArgs ) == -1 )
 	{
 		/* Only will get here on an error from execv.*/
 		ShowError( "Cannot start the child process." );
@@ -706,6 +738,42 @@ static int StopChildProcess( Manager *pManager )
 	}
 
 #else
+
+	char *ppArgs[ 6 ];
+	char **ppCurArg = &ppArgs[ 0 ];
+
+	/* First parameter is the application name.*/
+	*ppCurArg++ = "mono";
+
+	/* Second parameter is the application name */
+	*ppCurArg++ = ( char * )pManager->applicationPath;
+
+	/* Set the data path if specified */
+	if ( pManager->simiasDataPath != NULL )
+	{
+		*ppCurArg++ = "--datadir";
+		*ppCurArg++ = ( char * )pManager->simiasDataPath;
+	}
+
+	/* Set whether to show the extra information */
+	if ( pManager->flags.Verbose )
+	{
+		*ppCurArg++ = "--verbose";
+	}
+
+	/* Set the stop command.*/
+	*ppCurArg++ = "--stop";
+
+	/* End of the argument list */
+	*ppCurArg = NULL;
+
+	/* Replace the child process with Simias.exe.*/
+	if ( execvp( "mono", ppArgs ) == -1 )
+	{
+		/* Only will get here on an error from execv.*/
+		ShowError( "Cannot start the child process." );
+		status = -1;
+	}
 
 #endif	/*-- WIN32 -- */
 
@@ -1073,17 +1141,31 @@ const char *Start( Manager *pManager )
 			/* In the parent process. Don't need the write side of the pipe.*/
 			close( redirectPipe[ 1 ] );
 
-			/* Wait for the child process to exit.*/
-			waitpid( pid, &status, 0 );
-
-			/* Make sure the child exited properly.*/
-			if ( status != -1 )
+			if ( pid != -1 )
 			{
-				
+				/* Wait for the child process to exit.*/
+				waitpid( pid, &status, 0 );
+
+				/* Make sure the child exited properly.*/
+				if ( status != -1 )
+				{
+					/* Read the output from the child to get the web service uri
+					 * and the data path.
+					 */
+					status = ReadChildStdoutPipe( pManager, redirectPipe[ 0 ] );
+					if ( status != -1 )
+					{
+						pWebServiceUri = pManager->webServiceUri;
+					}
+				}
+				else
+				{
+					ShowError( "Child process failed with status = %d.", status );
+				}
 			}
 			else
 			{
-				ShowError( "Child process failed with status = %d.", status );
+				ShowError( "Failed to start the child process." );
 			}
 
 			close( redirectPipe[ 0 ] );
@@ -1105,8 +1187,41 @@ const char *Start( Manager *pManager )
  */
 int Stop( Manager *pManager )
 {
+
+#ifdef WIN32
+
 	/* Stop the child process. */
 	return StopChildProcess( pManager );
+
+#else
+
+	int status;
+	pid_t pid;
+
+	/* Fork the process */
+	pid = fork();
+	if ( pid == 0 )
+	{
+		/* Should not return from this method unless there was an error.*/
+		status = StopChildProcess( pManager );
+	}
+	else
+	{
+		if ( pid != -1 )
+		{
+			/* Wait for the child process to exit.*/
+			waitpid( pid, &status, 0 );
+		}
+		else
+		{
+			ShowError( "Failed to start the child process." );
+			status = -1;
+		}
+	}
+
+	return status;
+
+#endif	/*-- WIN32 --*/
 
 }	/*-- End of Stop() --*/
 

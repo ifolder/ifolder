@@ -35,7 +35,7 @@ extern Manager *AllocateManager();
  * command line arguments.
  * Returns:	A pointer to a Manager object.
  */
-extern Manager *AllocateManagerWithArgs( int argsLength, const char *args[] );
+extern Manager *AllocateManagerWithArgs( int argsLength, char *args[] );
 
 /*
  * Frees the specified Manager object.
