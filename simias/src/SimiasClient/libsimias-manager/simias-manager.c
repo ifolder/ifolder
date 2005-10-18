@@ -1280,7 +1280,7 @@ int Stop( Manager *pManager )
 		}
 	}
 
-	return status;
+	return ( status == 0 ) ? 1 : 0;
 
 #endif	/*-- WIN32 --*/
 
