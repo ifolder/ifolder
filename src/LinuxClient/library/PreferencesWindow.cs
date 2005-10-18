@@ -176,6 +176,19 @@ namespace Novell.iFolder
 		{
 			if (args.PageNum != 0)
 				generalPage.LeavingGeneralPage();
+			else
+			{
+				PrefNoteBook.SwitchPage -=
+					new SwitchPageHandler(OnSwitchPageEvent);
+
+				CurrentPage = 1;
+
+				if (accountsPage.AllowLeavingAccountsPage())
+					CurrentPage = 0;
+
+				PrefNoteBook.SwitchPage +=
+					new SwitchPageHandler(OnSwitchPageEvent);
+			}
 		}
 
 
@@ -197,6 +210,10 @@ namespace Novell.iFolder
 
 		private void CloseEventHandler(object o, EventArgs args)
 		{
+			if (CurrentPage == 1)
+				if (!accountsPage.AllowLeavingAccountsPage())
+					return;
+
 			CloseWindow();
 		}
 

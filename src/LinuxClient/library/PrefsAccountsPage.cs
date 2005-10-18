@@ -1324,5 +1324,61 @@ namespace Novell.iFolder
 			
 			UpdateWidgetSensitivity();
 		}
+
+		public bool AllowLeavingAccountsPage()
+		{
+			if(NewAccountMode)
+			{
+				if( (nameEntry.Text.Length > 0) ||
+					(passEntry.Text.Length > 0 ) ||
+					(serverEntry.Text.Length > 0) )
+				{
+					iFolderMsgDialog dialog = new iFolderMsgDialog(
+						topLevelWindow,
+						iFolderMsgDialog.DialogType.Question,
+						iFolderMsgDialog.ButtonSet.YesNo,
+						"",
+						Util.GS("Lose current settings?"),
+						Util.GS("You are currently creating a new account.  By closing the window or changing to a different page you cancel the operation."));
+					int rc = dialog.Run();
+					dialog.Hide();
+					dialog.Destroy();
+					if(rc == -8)
+					{
+						if (curDomains.Count == 0)
+						{
+							EnterNewAccountMode();
+						}
+						else
+						{
+							NewAccountMode = false;
+
+							// Select the first domain in the list
+			
+							// Temporarily disable the selection handler so we can
+							// select the new account without causing the handler
+							// to be called.
+							AccTreeView.Selection.Changed -=
+								new EventHandler(AccSelectionChangedHandler);
+			
+							TreeSelection tSelect = AccTreeView.Selection;
+							tSelect.SelectPath(new TreePath("0"));
+			
+							// hook'r back up
+							AccTreeView.Selection.Changed +=
+								new EventHandler(AccSelectionChangedHandler);
+			
+							UpdateWidgetSensitivity();
+						}
+
+						return true;
+					}
+
+					return false;
+				}
+			}
+			
+			return true;
+		}
 	}
 }
