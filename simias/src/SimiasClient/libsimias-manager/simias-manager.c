@@ -20,13 +20,17 @@
  *
  ***********************************************************************/
 
-#ifdef WIN32
-#include <windows.h>
-#endif
-
+/******************************************************************************
+ * Include files
+ *****************************************************************************/
 #include <stdio.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
 
 #ifdef WIN32
+
+#include <windows.h>
 
 #include <io.h>
 #include <direct.h>
@@ -42,21 +46,21 @@
 
 #endif	/*-- WIN32 --*/
 
-#include <stdarg.h>
-#include <stdlib.h>
-#include <string.h>
 
+/******************************************************************************
+ * Manifest constants
+ *****************************************************************************/
 #ifdef WIN32
 
-#define	stricmp		_stricmp
-#define PARSE_CHAR	'\r'
-#define SKIP_CHARS	2
+#define	stricmp						_stricmp
+#define PARSE_CHAR					'\r'
+#define SKIP_CHARS					2
 
 #else
 
-#define stricmp 	strcasecmp
-#define PARSE_CHAR	'\n'
-#define SKIP_CHARS	1
+#define stricmp 					strcasecmp
+#define PARSE_CHAR					'\n'
+#define SKIP_CHARS					1
 
 #endif	/*-- WIN32 --*/
 
@@ -68,9 +72,10 @@
 #define DEFAULT_LINUX_MAPPING_DIR	"/etc/simias/"
 #define DEFAULT_WINDOWS_MAPPING_DIR	"\\Application Data\\Simias\\"
 
-/**
- * Structure used to hold the default settings and user specified settings.
- */
+
+/******************************************************************************
+ * Structure used to hold the default settings and user specified settings
+ *****************************************************************************/
 typedef struct _Manager_
 {
 	const char	*applicationPath;
@@ -93,19 +98,26 @@ typedef struct _Manager_
 	
 } Manager;
 
-/*
- * Forward declaration of functions.
- */
 
+/******************************************************************************
+ * Forward declaration of functions
+ *****************************************************************************/
 static const char *GetDefaultApplicationPath();
 static const char *GetDefaultMappingFile();
 static long GetFileLength( const char *pFile );
+static const char *GetFullPath( const char *pPath );
 static void SetWebServiceUri( Manager *pManager, const char *pWebServiceUri );
+
 #ifdef WIN32
+
 static int ReadChildStdoutPipe( Manager *pManager, HANDLE hRead );
+
 #else
+
 static int ReadChildStdoutPipe( Manager *pManager, int hRead );
+
 #endif	/*-- WIN32 --*/
+
 static void ShowError( const char *format, ... );
 static int StartChildProcess( Manager *pManager );
 static int StopChildProcess( Manager *pManager );
@@ -118,12 +130,15 @@ void SetShowConsole( Manager *pManager, char showConsole );
 void SetVerbose( Manager *pManager, char verbose );
 
 
-/*
- * Buffer used to show errors.
- */
-static char errorBuffer[ 512 ];
+/******************************************************************************
+ * Global Variables
+ *****************************************************************************/
+static char errorBuffer[ 512 ];				/* Buffer used to show errors. */
 
 
+/******************************************************************************
+ * Private methods
+ *****************************************************************************/
 /*
  * Gets the length of the specfied file.
  * Returns (-1) if the file does not exist.
@@ -224,7 +239,7 @@ static long GetFileLength( const char *pFile )
 		ShowError( "Cannot get the current directory." );
 	}
 
-#endif
+#endif	/*-- WIN32 --*/
 
 	return fileLength;
 
@@ -269,28 +284,28 @@ static const char *GetDefaultApplicationPath()
 		if ( ( fp = fopen( pTempPath, "rb" ) ) != NULL )
 		{
 			/* Allocate space to read the string into. */
-			pApplicationPath = ( char * )malloc( length + 1 );
-			if ( pApplicationPath != NULL )
+			pTempPath = ( char * )malloc( length + 1 );
+			if ( pTempPath != NULL )
 			{
-				if ( fgets( pApplicationPath, length, fp ) != NULL )
+				if ( fgets( pTempPath, length, fp ) != NULL )
 				{
 					/* Remove the '\n' at the end if there is one. */
-					if ( pApplicationPath[ length - 2 ] == 0x0D )
+					if ( pTempPath[ length - 2 ] == 0x0D )
 					{
 						// Windows
-						pApplicationPath[ length - 2 ] = '\0';
+						pTempPath[ length - 2 ] = '\0';
 					}
-					else if ( pApplicationPath[ length - 1 ] == 0x0A )
+					else if ( pTempPath[ length - 1 ] == 0x0A )
 					{
 						// Linux
-						pApplicationPath[ length - 1 ] = '\0';
+						pTempPath[ length - 1 ] = '\0';
 					}
+
+					// Pretty up the path.
+					pApplicationPath = ( char * )GetFullPath( pTempPath );
 				}
-				else
-				{
-					free( pApplicationPath );
-					pApplicationPath = NULL;
-				}
+
+				free( pTempPath );
 			}
 			else
 			{
@@ -340,13 +355,48 @@ static const char *GetDefaultMappingFile()
 		strcpy( DefaultMappingPath, DEFAULT_LINUX_MAPPING_DIR );
 		strcat( DefaultMappingPath, MAPPING_FILE );
 
-#endif
+#endif	/*-- WIN32 --*/
 
 	}
 
 	return ( const char * )DefaultMappingPath;
 
 }	/*-- End of GetDefaultMappingFile() --*/
+
+/*
+ * Formats the path.
+ */
+static const char *GetFullPath( const char *pPath )
+{
+	int length = strlen( pPath ) + 1;
+	char *pFullPath = malloc( length );
+	if ( pFullPath != NULL )
+	{
+#ifdef WIN32
+
+		if ( _fullpath( pFullPath, pPath, length ) == NULL )
+		{
+			free( pFullPath );
+			pFullPath = NULL;
+		}
+
+		/* Upcase the drive name. */
+		if ( pFullPath[ 1 ] == ':' )
+		{
+			pFullPath[ 0 ] = toupper( pFullPath[ 0 ] );
+		}
+
+#else
+		/* Nothing to do on Linux. */
+		strcpy( pFullPath, pPath );
+
+#endif	/*-- WIN32 --*/
+
+	}
+
+	return pFullPath;
+
+}	/*-- End of GetFullPath() --*/
 
 /*
  * Parses the command line arguments and sets the values in the object.
@@ -413,10 +463,15 @@ static void ParseConfigurationParameters( Manager *pManager, int argsLength, con
  * from the child process.
  */
 #ifdef WIN32
+
 static int ReadChildStdoutPipe( Manager *pManager, HANDLE hRead )
+
 #else
+
 static int ReadChildStdoutPipe( Manager *pManager, int hRead )
+
 #endif	/*-- WIN32 --*/
+
 {
 	char *pBuffer;
 	char *pCmd;
@@ -430,8 +485,11 @@ static int ReadChildStdoutPipe( Manager *pManager, int hRead )
 	{
 		/* Read from the dup handle. */
 #ifdef WIN32
+
 		status = ( int )ReadFile( hRead, pBuffer, MAX_STDOUT_BUFFER_SIZE, &bytesRead, NULL );
+
 #else
+
 		status = ( int )read( hRead, pBuffer, MAX_STDOUT_BUFFER_SIZE );
 		if ( status != -1 )
 		{
@@ -442,6 +500,7 @@ static int ReadChildStdoutPipe( Manager *pManager, int hRead )
 		{
 			status = bytesRead = 0;
 		}
+
 #endif	/*-- WIN32 --*/
 
 		if ( status && ( bytesRead > 0 ) )
@@ -782,7 +841,9 @@ static int StopChildProcess( Manager *pManager )
 }	/*-- End of StopChildProcess() --*/
 
 
-
+/******************************************************************************
+ * Public methods
+ *****************************************************************************/
 /*
  * Method:	Allocates a Manager object and populates it with the defaults.
  * Returns:	A pointer to a Manager object.
@@ -1176,7 +1237,7 @@ const char *Start( Manager *pManager )
 		ShowError( "Cannot open a pipe." );
 	}
 
-#endif
+#endif	/*-- WIN32 --*/
 
 	return pWebServiceUri;
 
