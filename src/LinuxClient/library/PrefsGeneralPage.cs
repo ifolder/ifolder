@@ -303,6 +303,10 @@ namespace Novell.iFolder
 						case "Seconds":
 							currentSyncUnit = SyncUnit.Seconds;
 							SyncUnitsOptionMenu.SetHistory((int)SyncUnit.Seconds);
+
+							// Prevent the user from setting a sync interval less than
+							// one minute.
+							SyncSpinButton.Adjustment.Lower = 60;
 							break;
 						case "Minutes":
 							currentSyncUnit = SyncUnit.Minutes;
