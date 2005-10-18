@@ -91,10 +91,29 @@ namespace Simias.Security
 				// Save the cert in the store.
 				Store store = Store.GetStore();
 				Domain domain = store.GetDomain(store.LocalDomain);
-				Node cn = new Node("Certificate for " + uriHost);
-				domain.SetType(cn, CertType);
+
+				// Check for an existing cert in the store.
+				Node cn = null;
+				ICSList nodeList = domain.Search(hostProperty, uriHost, SearchOp.Equal);
+				foreach (ShallowNode sn in nodeList)
+				{
+					cn = new Node(domain, sn);
+					if (!domain.IsType(cn, CertType))
+					{
+						cn = null;
+						continue;
+					}
+					break;
+				}
+
+				if (cn == null)
+				{
+					// The cert doesn't exist ... create it.
+					cn = new Node("Certificate for " + uriHost);
+					domain.SetType(cn, CertType);
+					cn.Properties.ModifyNodeProperty(new Property(hostProperty, uriHost));
+				}
 				cn.Properties.ModifyNodeProperty(new Property(certificateProperty, Convert.ToBase64String(certificate)));
-				cn.Properties.ModifyNodeProperty(new Property(hostProperty, uriHost));
 				domain.Commit(cn);
 			}
 		}
