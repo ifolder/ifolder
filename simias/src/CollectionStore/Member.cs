@@ -102,7 +102,7 @@ namespace Simias.Storage
 				Property p = properties.GetSingleProperty( PropertyTags.PublicKey );
 				if ( p != null )
 				{
-					pk = new RSACryptoServiceProvider( Identity.DummyCsp );
+					pk = Identity.DummyCsp;
 					pk.FromXmlString( p.ToString() );
 				}
 
