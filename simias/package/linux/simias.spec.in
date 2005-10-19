@@ -77,36 +77,15 @@ if [ "$INSTANCES_AFTER_INSTALL" = "2" ]; then
 	# Upgrade
 	# update the Web.config from version 3.0 to 3.1
 	echo "Updating %{prefix}/web/web.config"
-	sed -e "s/.<add key.*=.*\"SimiasAuthNotRequired\".*\/>/        <add key=\"SimiasAuthNotRequired\" value=\"Login.ashx, Simias.asmx:PingSimias, POService.asmx:Invite\" \/>/" -e "/<system\.net/,/<\/system.net>/d" -e "s/<\/system.web>/<\/system.web>\n\n    <system.net>\n        <connectionManagement>\n            <add address=\"*\" maxconnection=\"10\" \/>\n        <\/connectionManagement>\n    <\/system.net>\n/" %{prefix}/web/web.config > %{prefix}/web/web.config.fixed
+	sed -e "/<system\.net/,/<\/system.net>/d" -e "s/<\/system.web>/<\/system.web>\n\n    <system.net>\n        <connectionManagement>\n            <add address=\"*\" maxconnection=\"10\" \/>\n        <\/connectionManagement>\n    <\/system.net>\n/" %{prefix}/web/web.config > %{prefix}/web/web.config.fixed
 	mv %{prefix}/web/web.config.fixed %{prefix}/web/web.config
 fi
 
-#INSTANCES_AFTER_INSTALL=$1
-#if [ "$INSTANCES_AFTER_INSTALL" = "1" ]; then
     #
-    # If path is not already in ld.so.conf, append it
+    # Copying the SimiasDirectoryMapping file to /etc/simias
     #
-#    if ! grep -q "^%{prefix}/lib$" /etc/ld.so.conf ; then
-#        echo "%{prefix}/lib" >> /etc/ld.so.conf
-#        /sbin/ldconfig
-#    fi
-
-    #
-    # Create simias.sh in /etc/profile.d to set PKG_CONFIG_PATH
-    #
-#    cat<<HERE > /etc/profile.d/simias.sh
-#if test -z "\$PKG_CONFIG_PATH" ; then
-#    export PKG_CONFIG_PATH="%{prefix}/lib/pkgconfig"
-#else
-#    export PKG_CONFIG_PATH="\$PKG_CONFIG_PATH:%{prefix}/lib/pkgconfig"
-#fi
-#HERE
-    #
-    # Install assemblies into the gac
-    #
-#    %{prefix}/bin/install-simias-to-gac -i
-#fi
-
+    mkdir /etc/simias
+    cp -f %{prefix}/bin/SimiasDirectoryMapping /etc/simias/.
 
 #=============================================================================
 %Preun
@@ -120,11 +99,11 @@ fi
 
 
 #=============================================================================
-#%Postun
+%Postun
+%{__rm} -rf /etc/simias
 #INSTANCES_AFTER_UNINSTALL=$1
 #if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
 #fi
-
 #=============================================================================
 %Files
 %attr(755,root,root) %dir %{prefix}
@@ -153,4 +132,5 @@ fi
 %{prefix}/web/POService.asmx
 %{prefix}/web/Simias.asmx
 %{prefix}/web/SyncHandler.ashx
-%config(noreplace) %{prefix}/web/web.config
+%{prefix}/web/web.config
+#%config(noreplace) %{prefix}/web/web.config
