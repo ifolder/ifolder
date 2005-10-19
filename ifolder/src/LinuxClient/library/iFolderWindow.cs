@@ -2420,13 +2420,13 @@ namespace Novell.iFolder
 		
 		private void OnDomainAddedEvent(object sender, DomainEventArgs args)
 		{
-			RefreshDomains(false);
+			RefreshDomains(true);
 			RefreshiFolders(true);
 		}
 		
 		private void OnDomainDeletedEvent(object sender, DomainEventArgs args)
 		{
-			RefreshDomains(false);
+			RefreshDomains(true);
 			RefreshiFolders(true);
 		}
 
