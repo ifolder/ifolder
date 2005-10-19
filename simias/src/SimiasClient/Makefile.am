@@ -37,7 +37,7 @@ if DARWIN
 endif
 
 SimiasClient.dll: AssemblyInfo.cs $(srcdir)/SimiasSetup.cs $(SimiasClient_CSFILES) $(SimiasClient_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(SimiasClient_FLAGS) $(SIMIAS_LIBS) $(SimiasClient_LIBS:%=/r:%) $(SimiasClient_LIBPATH:%=/lib:%) $(SimiasClient_RESOURCES:%=$(ICON_FLAG)%) $(SimiasClient_CSFILES_CSC) $(subst /,$(SEP),$(srcdir)/SimiasSetup.cs) $(DOC_FILE_CMD)
+	$(CSC) /out:$@ $(CSCFLAGS) $(SimiasClient_FLAGS) $(SimiasClient_LIBS:%=/r:%) $(SimiasClient_LIBPATH:%=/lib:%) $(SimiasClient_RESOURCES:%=$(ICON_FLAG)%) $(SimiasClient_CSFILES_CSC) $(subst /,$(SEP),$(srcdir)/SimiasSetup.cs) $(DOC_FILE_CMD)
 
 AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in Makefile
 	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@

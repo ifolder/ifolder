@@ -113,7 +113,7 @@ namespace Simias.Client
 				{
 					using ( StreamReader sr = new StreamReader( tempPath ) )
 					{
-						applicationPath = sr.ReadLine();
+						applicationPath = Path.GetFullPath( sr.ReadLine() );
 					}
 				}
 				catch
