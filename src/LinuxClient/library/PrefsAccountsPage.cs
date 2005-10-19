@@ -71,6 +71,11 @@ namespace Novell.iFolder
 		private Hashtable			curDomains;
 		
 		private DomainController	domainController;
+		
+		// Hashtable used to keep track of the details
+		// dialogs that are spawned so that we don't open
+		// multiple for the same account.
+		private Hashtable			detailsDialogs;
 
 		/// <summary>
 		/// Default constructor for iFolderAccountsPage
@@ -108,6 +113,8 @@ namespace Novell.iFolder
 				domainController.DomainInGraceLoginPeriod +=
 					new DomainInGraceLoginPeriodEventHandler(OnDomainInGraceLoginPeriodEvent);
 			}
+			
+			detailsDialogs = new Hashtable();
 
 			this.Realized += new EventHandler(OnRealizeWidget);
 		}
@@ -527,14 +534,39 @@ namespace Novell.iFolder
 				string domainID = (string) tModel.GetValue(iter, 0);
 				DomainInformation dom = domainController.GetDomain(domainID);
 
-				AccountDialog accDialog = new AccountDialog(dom);
-				accDialog.TransientFor = topLevelWindow;
-				accDialog.Run();
-				accDialog.Hide();
-				accDialog.Destroy();
+				AccountDialog accDialog = null;
+				if (detailsDialogs.ContainsKey(domainID))
+				{
+					accDialog = (AccountDialog) detailsDialogs[domainID];
+					accDialog.Present();
+				}
+				else
+				{
+					accDialog = new AccountDialog(dom);
+					detailsDialogs[domainID] = accDialog;
+					accDialog.SetPosition(WindowPosition.Center);
+					accDialog.Destroyed += 
+							new EventHandler(OnAccountDialogDestroyedEvent);
+
+					accDialog.ShowAll();
+				}
 			}
 		}
 
+
+		private void OnAccountDialogDestroyedEvent(object o, EventArgs args)
+		{
+			AccountDialog accDialog = (AccountDialog) o;
+			if (accDialog != null)
+			{
+				string domainID = accDialog.DomainID;
+				if (domainID != null && detailsDialogs.ContainsKey(domainID))
+				{
+					detailsDialogs.Remove(domainID);
+				}
+			}
+		}
+		
 
 
 
