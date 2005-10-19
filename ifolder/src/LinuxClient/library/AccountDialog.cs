@@ -142,6 +142,7 @@ namespace Novell.iFolder
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
 			Label srvNameValue = new Label(domain.Name);
+			srvNameValue.UseUnderline = false;
 			srvNameValue.Xalign = 0;
 			srvTable.Attach(srvNameValue, 1,2,0,1);
 

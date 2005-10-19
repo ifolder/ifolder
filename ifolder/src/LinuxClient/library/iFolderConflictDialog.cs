@@ -343,6 +343,7 @@ namespace Novell.iFolder
 				Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 0, 0);
 
 			Label nameValue = new Label(ifolder.Name);
+			nameValue.UseUnderline = false;
 			nameValue.Xalign = 0;
 			ifTable.Attach(nameValue, 1,2,0,1);
 
@@ -352,6 +353,7 @@ namespace Novell.iFolder
 				Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 0, 0);
 
 			Label pathValue = new Label(ifolder.UnManagedPath);
+			pathValue.UseUnderline = false;
 			pathValue.Xalign = 0;
 			ifTable.Attach(pathValue, 1,2,1,2);
 
@@ -388,6 +390,7 @@ namespace Novell.iFolder
 				Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 0, 0);
 
 			LocalNameValue = new Label("");
+			LocalNameValue.UseUnderline = false;
 			LocalNameValue.Xalign = 0;
 			localTable.Attach(LocalNameValue, 1,2,0,1);
 
@@ -431,6 +434,7 @@ namespace Novell.iFolder
 				Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 0, 0);
 
 			ServerNameValue = new Label("");
+			ServerNameValue.UseUnderline = false;
 			ServerNameValue.Xalign = 0;
 			serverTable.Attach(ServerNameValue, 1,2,0,1);
 

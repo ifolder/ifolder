@@ -62,6 +62,7 @@ namespace Novell.iFolder
 				exception.Message + "</span>");
 			l.LineWrap = true;
 			l.UseMarkup = true;
+			l.UseUnderline = false;
 			l.Selectable = true;
 			l.Xalign = 0; l.Yalign = 0;
 			v.PackStart(l);

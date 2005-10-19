@@ -324,6 +324,7 @@ namespace Novell.iFolder
 
 			NameLabel = new Label("");
 			NameLabel.UseMarkup = true;
+			NameLabel.UseUnderline = false;
 			NameLabel.Xalign = 0;
 			basicLabelsBox.PackStart(NameLabel, false, true, 5);
 
@@ -341,6 +342,7 @@ namespace Novell.iFolder
 			
 			OwnerLabel = new Label("");
 			OwnerLabel.UseMarkup = true;
+			OwnerLabel.UseUnderline = false;
 			OwnerLabel.Xalign = 0;
 			BasicTable.Attach(OwnerLabel, 1, 2, 0, 1,
 					AttachOptions.Expand | AttachOptions.Fill, 0, 0, 0);
@@ -353,6 +355,7 @@ namespace Novell.iFolder
 			
 			LocationLabel = new Label("");
 			LocationLabel.UseMarkup = true;
+			LocationLabel.UseUnderline = false;
 			LocationLabel.Xalign = 0;
 			BasicTable.Attach(LocationLabel, 1, 2, 1, 2,
 					AttachOptions.Expand | AttachOptions.Fill, 0, 0, 0);
