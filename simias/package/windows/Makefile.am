@@ -63,9 +63,9 @@ MSI_DISK1     = $(MSI)/$(DISK1)/setup.exe
 MSM_DISK1     = $(MSM)/$(DISK1)/$(subst -,_,$(PACKAGE)).msm
 SDK_MSM_DISK1 = $(SDK_MSM)/$(DISK1)/$(subst -,_,$(PACKAGE))_sdk.msm
 
-all: $(MSM_FILE)
+all: $(MSI_FILE)
 
-$(MSI_FILE): issabld $(MSM_FILE) $(SDK_MSM_FILE) $(MSI).ism
+$(MSI_FILE): issabld $(MSM_FILE) $(MSI).ism
 	@rm -f $@ "$(MSI_DISK1)" "$(MSI_LOG_FILE)"
 	@CMD='"$(ISSABLD)" -p "$(MSI).ism" -o "$(ISSABLD_DIR),$(MERGE_MODULES_WIN)"'; \
 		echo $$CMD; \
@@ -73,7 +73,7 @@ $(MSI_FILE): issabld $(MSM_FILE) $(SDK_MSM_FILE) $(MSI).ism
 		if test -f "$(MSI_DISK1)"; then \
 			ln "$(MSI_DISK1)" $@; \
 		else \
-			cat "$(MSI_LOG_FILE);" \
+			cat "$(MSI_LOG_FILE)"; \
 			echo FAILED; exit 1; \
 		fi
 	@test "x" = "x$(INSTALL_PKGS)" || \
