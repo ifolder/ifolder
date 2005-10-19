@@ -199,6 +199,7 @@ namespace Novell.iFolder
 
 
 				Label domainNameLabel = new Label(DomainName);
+				domainNameLabel.UseUnderline = false;
 				domainNameLabel.Xalign = 0;
 				loginTable.Attach(domainNameLabel, 1,2,0,1,
 						AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
@@ -211,6 +212,7 @@ namespace Novell.iFolder
 						AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 	
 				Label userNameLabel = new Label(DomainUserName);
+				userNameLabel.UseUnderline = false;
 				userNameLabel.Xalign = 0;
 				loginTable.Attach(userNameLabel, 1,2,1,2, 
 						AttachOptions.Fill | AttachOptions.Expand, 0,0,0);

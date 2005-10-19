@@ -61,6 +61,7 @@ namespace Novell.iFolder
 
 			l.LineWrap = false;
 			l.UseMarkup = true;
+			l.UseUnderline = false;
 			l.Selectable = false;
 			l.Xalign = 0; l.Yalign = 0;
 			dialogBox.PackStart(l, false, false, 0);
