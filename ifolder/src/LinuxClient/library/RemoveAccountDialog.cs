@@ -80,6 +80,7 @@ namespace Novell.iFolder
 						 AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
 			l = new Label(domainInfo.Name);
+			l.UseUnderline = false;
 			l.Xalign = 0;
 			table.Attach(l, 1,2, 0,1,
 						 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
@@ -106,6 +107,7 @@ namespace Novell.iFolder
 						 AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
 			l = new Label(domainInfo.MemberName);
+			l.UseUnderline = false;
 			l.Xalign = 0;
 			table.Attach(l, 1,2, 2,3,
 						 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
@@ -116,7 +118,7 @@ namespace Novell.iFolder
 
 			this.VBox.PackStart(h, true, true, 0);
 
-			cbutton = new CheckButton(Util.GS("Remove my iFolders and files from the server"));
+			cbutton = new CheckButton(Util.GS("_Remove my iFolders and files from the server"));
 			this.VBox.PackStart(cbutton, false, false, 10);
 
 			cbutton.Toggled +=
