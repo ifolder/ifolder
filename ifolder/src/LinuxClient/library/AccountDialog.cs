@@ -31,6 +31,12 @@ namespace Novell.iFolder
 	{
 		private iFolderData			ifdata;
 		private DomainInformation	domain;
+		private bool				ControlKeyPressed;
+
+		public string DomainID
+		{
+			get { return domain.ID; }
+		}
 
 
 		public AccountDialog(DomainInformation curDomain)
@@ -40,8 +46,7 @@ namespace Novell.iFolder
 			ifdata = iFolderData.GetData();
 			SetupDialog();
 		}
-
-
+		
 
 		private void SetupDialog()
 		{
@@ -50,7 +55,8 @@ namespace Novell.iFolder
 			this.HasSeparator = false;
 
 			this.Resizable = false;
-			this.Modal = true;
+			this.Modal = false;
+			this.TypeHint = Gdk.WindowTypeHint.Normal;
 			this.DefaultResponse = ResponseType.Ok;
 
 			CreateWidgets();
@@ -58,6 +64,21 @@ namespace Novell.iFolder
 			this.AddButton(Util.GS("Close"), ResponseType.Ok);
 			
 			this.DefaultResponse = ResponseType.Ok;
+			
+			this.Response += new ResponseHandler(OnAccountDialogResponse);
+
+			// Bind ESC and C-w to close the window
+			ControlKeyPressed = false;
+			KeyPressEvent += new KeyPressEventHandler(KeyPressHandler);
+			KeyReleaseEvent += new KeyReleaseEventHandler(KeyReleaseHandler);
+		}
+		
+		private void OnAccountDialogResponse(object o, ResponseArgs args)
+		{
+			// Since there's only one button to respond with, ignore the actual
+			// response and just hide and destroy this widget.
+			this.Hide();
+			this.Destroy();
 		}
 
 
@@ -312,8 +333,52 @@ namespace Novell.iFolder
 
 		}
 
-
-
-
+		void KeyPressHandler(object o, KeyPressEventArgs args)
+		{
+			args.RetVal = true;
+			
+			switch(args.Event.Key)
+			{
+				case Gdk.Key.Escape:
+					CloseDialog();
+					break;
+				case Gdk.Key.Control_L:
+				case Gdk.Key.Control_R:
+					ControlKeyPressed = true;
+					args.RetVal = false;
+					break;
+				case Gdk.Key.W:
+				case Gdk.Key.w:
+					if (ControlKeyPressed)
+						CloseDialog();
+					else
+						args.RetVal = false;
+					break;
+				default:
+					args.RetVal = false;
+					break;
+			}
+		}
+		
+		void KeyReleaseHandler(object o, KeyReleaseEventArgs args)
+		{
+			args.RetVal = false;
+			
+			switch(args.Event.Key)
+			{
+				case Gdk.Key.Control_L:
+				case Gdk.Key.Control_R:
+					ControlKeyPressed = false;
+					break;
+				default:
+					break;
+			}
+		}
+		
+		public void CloseDialog()
+		{
+			this.Hide();
+			this.Destroy();
+		}
 	}
 }
