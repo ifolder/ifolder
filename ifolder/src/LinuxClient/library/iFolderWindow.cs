@@ -1238,6 +1238,7 @@ namespace Novell.iFolder
 						{
 							propsDialog = 
 								new iFolderPropertiesDialog(this, ifHolder.iFolder, ifws, simws);
+							propsDialog.SetPosition(WindowPosition.Center);
 							propsDialog.Response += 
 									new ResponseHandler(OnPropertiesDialogResponse);
 							propsDialog.CurrentPage = currentPage;
@@ -2109,124 +2110,132 @@ namespace Novell.iFolder
 
 				if(rc == -5)
 				{
-					string selectedFolder = cd.iFolderPath.Trim();
-					string selectedDomain = cd.DomainID;
-
-					if (selectedFolder == String.Empty)
-					{
-						iFolderMsgDialog dg = new iFolderMsgDialog(
-							this,
-							iFolderMsgDialog.DialogType.Warning,
-							iFolderMsgDialog.ButtonSet.Ok,
-							"",
-							Util.GS("Invalid folder specified"),
-							Util.GS("An invalid folder was specified."));
-						dg.Run();
-						dg.Hide();
-						dg.Destroy();
-						continue;
-					}
-						
-					string parentDir = System.IO.Path.GetDirectoryName( selectedFolder );
-					if ( ( parentDir == null ) || ( parentDir == String.Empty ) )
-					{
-						iFolderMsgDialog dg = new iFolderMsgDialog(
-							this,
-							iFolderMsgDialog.DialogType.Warning,
-							iFolderMsgDialog.ButtonSet.Ok,
-							"",
-							Util.GS("Invalid folder specified"),
-							Util.GS("An invalid folder was specified"));
-						dg.Run();
-						dg.Hide();
-						dg.Destroy();
-						continue;
-					}
-					
-					string name = selectedFolder.Substring(parentDir.Length + 1);
-					if (name == null || name == String.Empty)
-					{
-						iFolderMsgDialog dg = new iFolderMsgDialog(
-							this,
-							iFolderMsgDialog.DialogType.Warning,
-							iFolderMsgDialog.ButtonSet.Ok,
-							"",
-							Util.GS("Invalid folder specified"),
-							Util.GS("The folder you've specified is invalid.  Please remove the trailing separator character (/) and try again."));
-						dg.Run();
-						dg.Hide();
-						dg.Destroy();
-						continue;
-					}
-
-					selectedFolder = ParseAndReplaceTildeInPath(selectedFolder);
-
-					iFolderHolder ifHolder = null;
 					try
 					{
-						ifHolder = 
-							ifdata.CreateiFolder(	selectedFolder,
-													selectedDomain);
-					}
-					catch(Exception e)
-					{
-						if (DisplayCreateOrSetupException(e))
-						{
-							// Update the selectedFolder path
-							cd.iFolderPath = selectedFolder;
-							continue;	// The function handled the exception
-						}
-					}
-
-					if(ifHolder == null)
-						throw new Exception("Simias returned null");
-
-					// If we make it this far, we've succeeded and we don't
-					// need to keep looping.
-					rc = 0;
-
-					// Reset the domain filter so the new iFolder will show
-					// up in the list regardless of what was selected previously.
-					// DomainFilterOptionMenu.SetHistory(0);
-
-					TreeIter iter = 
-						iFolderTreeStore.AppendValues(ifHolder);
-
-					curiFolders[ifHolder.iFolder.ID] = iter;
+						string selectedFolder = cd.iFolderPath.Trim();
+						string selectedDomain = cd.DomainID;
 	
-					UpdateButtonSensitivity();
-
-					// Save off the path so that the next time the user
-					// creates an iFolder, we'll open it to the directory
-					// they used last.
-					Util.LastCreatedPath = ifHolder.iFolder.UnManagedPath;
-
-					if(ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION, 
-									"true") == "true")
-					{
-						iFolderCreationDialog dlg = 
-							new iFolderCreationDialog(ifHolder.iFolder);
-						dlg.TransientFor = this;
-						int createRC;
-						do
+						if (selectedFolder == String.Empty)
 						{
-							createRC = dlg.Run();
-							if(createRC == (int)Gtk.ResponseType.Help)
+							iFolderMsgDialog dg = new iFolderMsgDialog(
+								this,
+								iFolderMsgDialog.DialogType.Warning,
+								iFolderMsgDialog.ButtonSet.Ok,
+								"",
+								Util.GS("Invalid folder specified"),
+								Util.GS("An invalid folder was specified."));
+							dg.Run();
+							dg.Hide();
+							dg.Destroy();
+							continue;
+						}
+							
+						string parentDir = System.IO.Path.GetDirectoryName( selectedFolder );
+						if ( ( parentDir == null ) || ( parentDir == String.Empty ) )
+						{
+							iFolderMsgDialog dg = new iFolderMsgDialog(
+								this,
+								iFolderMsgDialog.DialogType.Warning,
+								iFolderMsgDialog.ButtonSet.Ok,
+								"",
+								Util.GS("Invalid folder specified"),
+								Util.GS("An invalid folder was specified"));
+							dg.Run();
+							dg.Hide();
+							dg.Destroy();
+							continue;
+						}
+						
+						string name = selectedFolder.Substring(parentDir.Length + 1);
+						if (name == null || name == String.Empty)
+						{
+							iFolderMsgDialog dg = new iFolderMsgDialog(
+								this,
+								iFolderMsgDialog.DialogType.Warning,
+								iFolderMsgDialog.ButtonSet.Ok,
+								"",
+								Util.GS("Invalid folder specified"),
+								Util.GS("The folder you've specified is invalid.  Please remove the trailing separator character (/) and try again."));
+							dg.Run();
+							dg.Hide();
+							dg.Destroy();
+							continue;
+						}
+	
+						selectedFolder = ParseAndReplaceTildeInPath(selectedFolder);
+	
+						iFolderHolder ifHolder = null;
+						try
+						{
+							ifHolder = 
+								ifdata.CreateiFolder(	selectedFolder,
+														selectedDomain);
+						}
+						catch(Exception e)
+						{
+							if (DisplayCreateOrSetupException(e))
 							{
-								Util.ShowHelp("myifolders.html", this);
+								// Update the selectedFolder path
+								cd.iFolderPath = selectedFolder;
+								continue;	// The function handled the exception
 							}
-						}while(createRC != (int)Gtk.ResponseType.Ok);
-
-						dlg.Hide();
-	
-						if(dlg.HideDialog)
-						{
-							ClientConfig.Set(
-								ClientConfig.KEY_SHOW_CREATION, "false");
 						}
 	
-						cd.Destroy();
-						cd = null;
+						if(ifHolder == null)
+							throw new Exception("Simias returned null");
+	
+						// If we make it this far, we've succeeded and we don't
+						// need to keep looping.
+						rc = 0;
+	
+						// Reset the domain filter so the new iFolder will show
+						// up in the list regardless of what was selected previously.
+						// DomainFilterOptionMenu.SetHistory(0);
+	
+						TreeIter iter = 
+							iFolderTreeStore.AppendValues(ifHolder);
+	
+						curiFolders[ifHolder.iFolder.ID] = iter;
+		
+						UpdateButtonSensitivity();
+	
+						// Save off the path so that the next time the user
+						// creates an iFolder, we'll open it to the directory
+						// they used last.
+						Util.LastCreatedPath = ifHolder.iFolder.UnManagedPath;
+	
+						if(ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION, 
+										"true") == "true")
+						{
+							iFolderCreationDialog dlg = 
+								new iFolderCreationDialog(ifHolder.iFolder);
+							dlg.TransientFor = this;
+							int createRC;
+							do
+							{
+								createRC = dlg.Run();
+								if(createRC == (int)Gtk.ResponseType.Help)
+								{
+									Util.ShowHelp("myifolders.html", this);
+								}
+							}while(createRC != (int)Gtk.ResponseType.Ok);
+	
+							dlg.Hide();
+		
+							if(dlg.HideDialog)
+							{
+								ClientConfig.Set(
+									ClientConfig.KEY_SHOW_CREATION, "false");
+							}
+		
+							cd.Destroy();
+							cd = null;
+						}
+					}
+					catch (Exception e)
+					{
+						Console.WriteLine(e.Message);
+						continue;
 					}
 				}
 			}
@@ -2284,7 +2293,7 @@ namespace Novell.iFolder
 		{
 			string primaryText = null;
 			string secondaryText = null;
-			if (e.Message.IndexOf("Path did not exist") >= 0)
+			if (e.Message.IndexOf("Path did not exist") >= 0 || e.Message.IndexOf("URI scheme was not recognized") >= 0)
 			{
 				primaryText = Util.GS("Invalid folder specified");
 				secondaryText = Util.GS("The folder you've specified does not exist.  Please select an existing folder and try again.");
