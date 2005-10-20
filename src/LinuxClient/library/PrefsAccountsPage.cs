@@ -1220,9 +1220,12 @@ namespace Novell.iFolder
 		
 		public void OnDomainDeletedEvent(object sender, DomainEventArgs args)
 		{
-			TreeIter iter = (TreeIter)curDomains[args.DomainID];
-			AccTreeStore.Remove(ref iter);
-			curDomains.Remove(args.DomainID);
+			if (curDomains.ContainsKey(args.DomainID))
+			{
+				TreeIter iter = (TreeIter)curDomains[args.DomainID];
+				AccTreeStore.Remove(ref iter);
+				curDomains.Remove(args.DomainID);
+			}
 		}
 		
 		public void OnDomainLoggedInEvent(object sender, DomainEventArgs args)
