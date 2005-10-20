@@ -93,6 +93,7 @@ namespace Novell.iFolder
 		private DomainController	domainController;
 
 		private NotifyWindow		startingUpNotifyWindow = null;
+		private NotifyWindow		shuttingDownNotifyWindow = null;
 
 		public iFolderApplication(string[] args)
 			: base("ifolder", "1.0", Modules.UI, args)
@@ -815,20 +816,28 @@ namespace Novell.iFolder
 			// starting up or shutting down.
 			if (CurrentState == iFolderState.Starting)
 			{
-				startingUpNotifyWindow = new NotifyWindow(
-					tIcon, Util.GS("iFolder is starting"),
-					"Please wait for iFolder to start...",
-					Gtk.MessageType.Info, 0);
-				startingUpNotifyWindow.ShowAll();
+				if (startingUpNotifyWindow == null)
+				{
+					startingUpNotifyWindow = new NotifyWindow(
+						tIcon, Util.GS("iFolder is starting"),
+						"Please wait for iFolder to start...",
+						Gtk.MessageType.Info, 0);
+					startingUpNotifyWindow.ShowAll();
+				}
+
 				return;
 			}
 			else if (CurrentState == iFolderState.Stopping)
 			{
-				NotifyWindow notifyWin = new NotifyWindow(
-					tIcon, Util.GS("iFolder is shutting down"),
-					"",
-					Gtk.MessageType.Info, 10000);
-				notifyWin.ShowAll();
+				if (shuttingDownNotifyWindow == null)
+				{
+					shuttingDownNotifyWindow = new NotifyWindow(
+						tIcon, Util.GS("iFolder is shutting down"),
+						"",
+						Gtk.MessageType.Info, 0);
+					shuttingDownNotifyWindow.ShowAll();
+				}
+
 				return;
 			}
 
