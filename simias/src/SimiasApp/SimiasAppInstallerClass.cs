@@ -20,6 +20,7 @@
  *	Author: Mike Lasky <mlasky@novell.com>
  *
  ***********************************************************************/
+#if WINDOWS
 
 using System;
 using System.ComponentModel;
@@ -138,3 +139,4 @@ namespace Mono.ASPNET
 	}
 }
 
+#endif
