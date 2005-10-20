@@ -31,6 +31,8 @@ if WINDOWS
 OUT_DIR := $(shell cygpath --windows $(CUR_DIR))
 MERGE_MODULES_WIN  := $(shell cygpath --windows "$(USERPROFILE)\My Documents\My InstallShield DevStudio Projects\MergeModules")
 MERGE_MODULES_UNIX := $(shell cygpath --unix "$(USERPROFILE)\My Documents\My InstallShield DevStudio Projects\MergeModules")
+PREREQUISITES_WIN  := $(shell cygpath --windows "$(PROGRAMFILES)\InstallShield 11\SetupPrerequisites\")
+PREREQUISITES_UNIX := $(shell cygpath --unix "$(PROGRAMFILES)\InstallShield 11\SetupPrerequisites\")
 ISSABLD_DIR := $(shell cygpath --windows `dirname $(ISSABLD)`)
 REGASM_DIR1 := $(shell cygpath --unix $$FRAMEWORKDIR/v1.1*)
 REGASM_DIR2 := $(shell ls -d $(REGASM_DIR1))
@@ -84,6 +86,10 @@ $(MSI_FILE): issabld $(PACKAGE)-install $(MSI).ism
 		CMD='cp -f $@ "$(INSTALL_PKGS)"'; \
 		echo $$CMD; \
 		eval $$CMD
+        @CMD='cp -f SimiasSetupPrerequisite.prq "$(PREREQUISITES_UNIX)"';
+	echo $$CMD;
+	eval $$CMD
+
 
 $(MSM_FILE): issabld $(PACKAGE)-install $(MSM).ism
 	@rm -f $@ "$(MSM_DISK1)" "$(MSM_LOG_FILE)"
