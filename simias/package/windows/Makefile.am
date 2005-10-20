@@ -79,7 +79,10 @@ $(MSI_FILE): issabld $(MSM_FILE) $(MSI).ism
 	@test "x" = "x$(INSTALL_PKGS)" || \
 		CMD='cp -f $@ "$(INSTALL_PKGS)"'; \
 		echo $$CMD; \
-		eval $$CMD
+		eval $$CMD 
+        @CMD='cp -f "$(MSI_DISK1)" "/cygdrive/c/temp/"';
+	echo $$CMD;
+	eval $$CMD
 
 $(MSM_FILE): issabld $(PACKAGE)-install $(MSM).ism
 	@rm -f $@ "$(MSM_DISK1)" "$(MSM_LOG_FILE)"
