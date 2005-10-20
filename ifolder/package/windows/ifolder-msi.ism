@@ -5368,7 +5368,7 @@
 		<col key="yes" def="s72">ISSetupPrerequisites</col>
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I2">Order</col>
-		<row><td>_3367AEB2_4372_4C3D_</td><td>&lt;ISProductFolder&gt;\SetupPrerequisites\MySetupPrerequisite.prq</td><td/></row>
+		<row><td>_B66583C7_C31F_4253_</td><td>&lt;ISProductFolder&gt;\SetupPrerequisites\SimiasSetupPrerequisite.prq</td><td/></row>
 	</table>
 
 	<table name="ISSetupType">
