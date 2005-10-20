@@ -94,6 +94,11 @@
                     AssemblyName = "SimiasClient"
                     HintPath = "..\..\..\..\final.enterprise\web\bin\SimiasClient.dll"
                 />
+                <Reference
+                    Name = "System.Configuration.Install"
+                    AssemblyName = "System.Configuration.Install"
+                    HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Configuration.Install.dll"
+                />
             </References>
         </Build>
         <Files>
@@ -155,6 +160,11 @@
                 <File
                     RelPath = "Simias.cs"
                     SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SimiasAppInstallerClass.cs"
+                    SubType = "Component"
                     BuildAction = "Compile"
                 />
                 <File
