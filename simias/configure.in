@@ -271,7 +271,6 @@ case $SIMIAS_OS in
         RC='rc'
         RC_FLAGS='-r'
         REPORT_DIR='$(shell cygpath --windows $(DESTDIR)$(webbindir) | sed ''s,\\\\,/,g'')'
-
         REPORT_EXE='$(top_srcdir)/tools/Report/Report.exe'
         RES_EXT='.res'
         SEP='$(EMPTY)\\$(EMPTY)'
@@ -436,6 +435,18 @@ AC_ARG_WITH(simiasdatadir,
 	esac]
 	)
 AC_SUBST(simiasdatadir)
+
+#
+# Needed to properly set the key file conditional for SimiasClient.
+#
+if test -e "src/SimiasClient/simiasclient.snk"; then
+  SIMIASCLIENT_KEYFILE=simiasclient.snk
+else
+  SIMIASCLIENT_KEYFILE=
+fi
+AC_SUBST(SIMIASCLIENT_KEYFILE)
+AM_CONDITIONAL(HAS_SIMIASCLIENT_KEYFILE, test -n "$SIMIASCLIENT_KEYFILE")
+
 
 #
 # Configure PKG_CONFIG

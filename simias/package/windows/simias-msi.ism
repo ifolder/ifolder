@@ -225,6 +225,7 @@
 	<table name="AppSearch">
 		<col key="yes" def="s72">Property</col>
 		<col key="yes" def="s72">Signature_</col>
+		<row><td>LOCATION_OF_INSTALLUTIL</td><td>NewSignature1</td></row>
 	</table>
 
 	<table name="BBControl">
@@ -1005,6 +1006,8 @@
 		<row><td>ISSelfRegisterFiles</td><td>1025</td><td>ISSELFREG.DLL</td><td>ISSelfRegisterFiles</td><td/></row>
 		<row><td>ISSelfRegisterFinalize</td><td>1</td><td>ISSELFREG.DLL</td><td>ISSelfRegisterFinalize</td><td/></row>
 		<row><td>ISUnSelfRegisterFiles</td><td>1025</td><td>ISSELFREG.DLL</td><td>ISUnSelfRegisterFiles</td><td/></row>
+		<row><td>InstallUtil_Simias</td><td>114</td><td>LOCATION_OF_INSTALLUTIL</td><td>/ShowCallStack /LogToConsole=false /LogFile=Simias.InstallLog "[INSTALLDIR]\web\bin\Simias.exe"</td><td>Runs InstallUtil on Simias.exe to install it.</td></row>
+		<row><td>InstallUtil_Simias_uninstall</td><td>114</td><td>LOCATION_OF_INSTALLUTIL</td><td>/uninstall /ShowCallStack /LogToConsole=false /LogFile=Simias.UninstallLog "[INSTALLDIR]web\bin\Simias.exe"</td><td>Runs InstallUtil on Simias.exe to uninstall it.</td></row>
 		<row><td>SetARPINSTALLLOCATION</td><td>51</td><td>ARPINSTALLLOCATION</td><td>[INSTALLDIR]</td><td/></row>
 		<row><td>SetAllUsersProfileNT</td><td>51</td><td>ALLUSERSPROFILE</td><td>[%SystemRoot]\Profiles\All Users</td><td/></row>
 		<row><td>setAllUsersProfile2K</td><td>51</td><td>ALLUSERSPROFILE</td><td>[%ALLUSERSPROFILE]</td><td/></row>
@@ -1109,6 +1112,7 @@
 		<col key="yes" def="S72">Parent</col>
 		<col key="yes" def="S255">Path</col>
 		<col def="I2">Depth</col>
+		<row><td>NewSignature1</td><td></td><td>[WindowsFolder]\Microsoft.NET\Framework</td><td>3</td></row>
 	</table>
 
 	<table name="DuplicateFile">
@@ -11404,6 +11408,8 @@
 		<row><td>InstallInitialize</td><td/><td>1501</td><td>InstallInitialize</td><td/></row>
 		<row><td>InstallODBC</td><td/><td>5400</td><td>InstallODBC</td><td/></row>
 		<row><td>InstallServices</td><td>VersionNT</td><td>5800</td><td>InstallServices</td><td/></row>
+		<row><td>InstallUtil_Simias</td><td>(NOT REMOVE) AND LOCATION_OF_INSTALLUTIL</td><td>6651</td><td/><td/></row>
+		<row><td>InstallUtil_Simias_uninstall</td><td>REMOVE="ALL" AND (NOT UPGRADINGPRODUCTCODE)</td><td>1405</td><td/><td/></row>
 		<row><td>InstallValidate</td><td/><td>1400</td><td>InstallValidate</td><td/></row>
 		<row><td>IsolateComponents</td><td/><td>950</td><td>IsolateComponents</td><td/></row>
 		<row><td>LaunchConditions</td><td>Not Installed</td><td>410</td><td>LaunchConditions</td><td/></row>
@@ -11756,6 +11762,7 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<row><td>IS_SQLSERVER_SERVER</td><td/><td/></row>
 		<row><td>IS_SQLSERVER_USERNAME</td><td>sa</td><td/></row>
 		<row><td>InstallChoice</td><td>AR</td><td/></row>
+		<row><td>LOCATION_OF_INSTALLUTIL</td><td/><td/></row>
 		<row><td>Manufacturer</td><td>##COMPANY_NAME##</td><td/></row>
 		<row><td>PIDTemplate</td><td>12345&lt;###-%%%%%%%&gt;@@@@@</td><td/></row>
 		<row><td>PROGMSG_IIS_CREATEAPPPOOL</td><td>##IDS_PROGMSG_IIS_CREATEAPPPOOL##</td><td/></row>
@@ -11946,6 +11953,7 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<col def="I4">MinDate</col>
 		<col def="I4">MaxDate</col>
 		<col def="S255">Languages</col>
+		<row><td>NewSignature1</td><td>InstallUtil.exe</td><td>1.1</td><td/><td/><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="TextStyle">
