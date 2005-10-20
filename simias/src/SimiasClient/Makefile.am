@@ -53,10 +53,16 @@ install-exec-local: SimiasClient.dll $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(webbindir) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) SimiasClient.dll $(DEBUG_FILES) $(DESTDIR)$(webbindir)
 	$(INSTALL_PROGRAM) $(srcdir)/$(NOVELL_SECURITY_DIR)/Novell.Security.ClientPasswordManager.NetCredential.dll $(DESTDIR)$(webbindir)
+	$(INSTALL_PROGRAM) $(srcdir)/$(NOVELL_SECURITY_DIR)/Novell.Security.Utilities.dll $(DESTDIR)$(webbindir)
+if WINDOWS
+	$(GACINSTALL) $(shell cygpath --mixed $(webbindir))/SimiasClient.dll
+	$(GACINSTALL) $(shell cygpath --mixed $(webbindir))/Novell.Security.ClientPasswordManager.NetCredential.dll
+	$(GACINSTALL) $(shell cygpath --mixed $(webbindir))/Novell.Security.Utilities.dll
+endif	
 	
 uninstall-local:
 	cd $(DESTDIR)$(webbindir); rm -f SimiasClient.dll $(DEBUG_FILES)
-	cd $(DESTDIR)$(webbindir); rm -f Novell.Security.ClientPasswordManager.NetCredential.dll
+	cd $(DESTDIR)$(webbindir); rm -f Novell.Security.*.dll
 	
 installcheck-local: install
 	

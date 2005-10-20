@@ -149,6 +149,7 @@ case $SIMIAS_OS in
         CFLAGS_DEBUG="-DDEBUG"
         CSCFLAGS="/d:DARWIN $CSCFLAGS"
         EXE_EXT=''
+	GACINSTALL=
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
         INSTALL_EXE_OPTS='-m 644'
@@ -189,6 +190,7 @@ case $SIMIAS_OS in
         CFLAGS_DEBUG="-DDEBUG"
         CSCFLAGS="/d:LINUX $CSCFLAGS"
         EXE_EXT=''
+	GACINSTALL=
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
         INSTALL_EXE_OPTS='--mode=644'
@@ -246,6 +248,7 @@ case $SIMIAS_OS in
         DEF='-def:'
         EMPTY=
         EXE_EXT='.exe'
+	GACINSTALL='gacutil /i'
         ICON_EXT='.ico'
         ICON_FLAG='/win32icon:'
         INSTALL_EXE_OPTS=''
@@ -295,6 +298,7 @@ AC_SUBST(COUT)
 AC_SUBST(CXX)
 AC_SUBST(CXXFLAGS)
 AC_SUBST(DEF)
+AC_SUBST(GACINSTALL)
 AC_SUBST(ICON_EXT)
 AC_SUBST(ICON_FLAG)
 AC_SUBST(INSTALL_EXE_OPTS)
