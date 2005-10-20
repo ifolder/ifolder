@@ -152,6 +152,9 @@ namespace Novell.iFolder
 
 			UserTreeView.ButtonPressEvent += new ButtonPressEventHandler(
 						OnUserTreeViewButtonPressed);
+			
+			UserTreeView.RowActivated += new RowActivatedHandler(
+						OnUserTreeViewRowActivated);
 
 			UserPixBuf = 
 					new Gdk.Pixbuf(Util.ImagesPath("ifolderuser.png"));
@@ -677,76 +680,80 @@ namespace Novell.iFolder
 				{
 					TreePath tPath = null;
 					TreeViewColumn tColumn = null;
-//					TreeModel tModel;
 
 					if(UserTreeView.GetPathAtPos(	(int)args.Event.X,
 													(int)args.Event.Y,
 													out tPath,
 													out tColumn) == true)
 					{
-						// User clicked in a column with data
-						if(UserTreeView.GetColumn(2) == tColumn)
+						TreeSelection tSelect = UserTreeView.Selection;
+
+						if( (ifolder.CurrentUserRights == "Admin") &&
+							(tSelect.CountSelectedRows() > 0) )
 						{
-							TreeSelection tSelect = UserTreeView.Selection;
-
-							if( (ifolder.CurrentUserRights == "Admin") &&
-								(tSelect.CountSelectedRows() > 0) )
-							{
-								Menu rightsMenu = new Menu();
+							Menu rightsMenu = new Menu();
 			
-								RadioMenuItem adminItem = 
-									new RadioMenuItem (Util.GS("Full Control"));
-								rightsMenu.Append(adminItem);
+							RadioMenuItem adminItem = 
+								new RadioMenuItem (Util.GS("Full Control"));
+							rightsMenu.Append(adminItem);
 
-								RadioMenuItem rwItem = 
-									new RadioMenuItem (adminItem.Group, 
-														Util.GS("Read/Write"));
-								rightsMenu.Append(rwItem);
+							RadioMenuItem rwItem = 
+								new RadioMenuItem (adminItem.Group, 
+													Util.GS("Read/Write"));
+							rightsMenu.Append(rwItem);
 
-								RadioMenuItem roItem = 
-									new RadioMenuItem (adminItem.Group, 
-														Util.GS("Read Only"));
-								rightsMenu.Append(roItem);
+							RadioMenuItem roItem = 
+								new RadioMenuItem (adminItem.Group, 
+													Util.GS("Read Only"));
+							rightsMenu.Append(roItem);
 
-								if(SelectionHasOwnerOrCurrent())
-								{
-									adminItem.Sensitive = false;
-									rwItem.Sensitive = false;
-									roItem.Sensitive = false;
-								}
-
-								// Get the Value of the actual user selected
-								TreeIter iter;
-		
-								if(UserTreeStore.GetIter(out iter, tPath))
-								{
-									iFolderUser user = (iFolderUser) 
-											UserTreeStore.GetValue(iter, 0);
-									if(user.Rights == "ReadWrite")
-										rwItem.Active = true;
-									else if(user.Rights == "Admin")
-										adminItem.Active = true;
-									else
-										roItem.Active = true;
-								}
-
-								adminItem.Activated += new EventHandler(
-										OnAdminRightsMenu);
-								rwItem.Activated += new EventHandler(
-										OnRWRightsMenu);
-								roItem.Activated += new EventHandler(
-										OnRORightsMenu);
-
-								rightsMenu.ShowAll();
-
-								rightsMenu.Popup(null, null, null, 
-									IntPtr.Zero, 3, 
-									Gtk.Global.CurrentEventTime);
+							if(SelectionHasOwnerOrCurrent())
+							{
+								adminItem.Sensitive = false;
+								rwItem.Sensitive = false;
+								roItem.Sensitive = false;
 							}
+
+							// Get the Value of the actual user selected
+							TreeIter iter;
+		
+							if(UserTreeStore.GetIter(out iter, tPath))
+							{
+								iFolderUser user = (iFolderUser) 
+										UserTreeStore.GetValue(iter, 0);
+								if(user.Rights == "ReadWrite")
+									rwItem.Active = true;
+								else if(user.Rights == "Admin")
+									adminItem.Active = true;
+								else
+									roItem.Active = true;
+							}
+
+							adminItem.Activated += new EventHandler(
+									OnAdminRightsMenu);
+							rwItem.Activated += new EventHandler(
+									OnRWRightsMenu);
+							roItem.Activated += new EventHandler(
+									OnRORightsMenu);
+
+							rightsMenu.ShowAll();
+
+							rightsMenu.Popup(null, null, null, 
+								IntPtr.Zero, 3, 
+								Gtk.Global.CurrentEventTime);
 						}
 					}
 					break;
 				}
+			}
+		}
+		
+		private void OnUserTreeViewRowActivated(object o, RowActivatedArgs args)
+		{
+			TreeSelection tSelect = UserTreeView.Selection;
+			if (tSelect.CountSelectedRows() == 1)
+			{
+				OnAccessClicked(null, null);
 			}
 		}
 
