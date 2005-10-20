@@ -76,6 +76,14 @@ namespace Novell.iFolder
 		// dialogs that are spawned so that we don't open
 		// multiple for the same account.
 		private Hashtable			detailsDialogs;
+		
+		// Gtk.Entry.Sensitive = false; does not behave like it ought to.  It
+		// does not gray out the background or lighten the text color.  These
+		// next two colors are used to work around this issue.
+		private Gdk.Color entryInactiveBackgroundColor;
+		private Gdk.Color entryInactiveTextColor;
+		private Gdk.Color entryActiveBackgroundColor;
+		private Gdk.Color entryActiveTextColor;
 
 		/// <summary>
 		/// Default constructor for iFolderAccountsPage
@@ -90,6 +98,12 @@ namespace Novell.iFolder
 			LocalService.Start(simws);
 
 			curDomains = new Hashtable();
+
+			// FIXME: Figure out how to tie into the user-selected theme for these colors
+			entryInactiveBackgroundColor = new Gdk.Color(246, 246, 246);	// Light gray
+			entryInactiveTextColor = new Gdk.Color(126, 126, 126);			// Darker gray
+			entryActiveBackgroundColor = new Gdk.Color(255, 255, 255);		// White
+			entryActiveTextColor = new Gdk.Color(0, 0, 0);					// Black
 			
 			InitializeWidgets();
 
@@ -378,12 +392,6 @@ namespace Novell.iFolder
 		private void OnRealizeWidget(object o, EventArgs args)
 		{
 			PopulateWidgets();
-
-			// Select the first item in the TreeView
-			if (AccTreeView.Selection != null)
-			{
-				AccTreeView.Selection.SelectPath(new TreePath("0"));
-			}
 		}
 
 
@@ -491,12 +499,11 @@ namespace Novell.iFolder
 					nameEntry.Text = "";
 					passEntry.Text = "";
 
-					detailsFrame.Sensitive = false;
-					nameEntry.Sensitive = false;
+					EnableEntry(nameEntry, false);
 					nameLabel.Sensitive = false;
-					passEntry.Sensitive = false;
+					EnableEntry(passEntry, false);
 					passLabel.Sensitive = false;
-					serverEntry.Sensitive = false;
+					EnableEntry(serverEntry, false);
 					serverLabel.Sensitive = false;
 
 					savePasswordButton.Sensitive = false;
@@ -572,7 +579,6 @@ namespace Novell.iFolder
 
 		public void AccSelectionChangedHandler(object o, EventArgs args)
 		{
-//Console.WriteLine("PrefsAccountsPage.AccSelectionChangedHandler() entered");
 			if(NewAccountMode)
 			{
 				if( (nameEntry.Text.Length > 0) ||
@@ -815,158 +821,142 @@ namespace Novell.iFolder
 		private void UpdateWidgetSensitivity()
 		{
 			if (curDomains.Count == 0)
-			{
 				curDomain = null;
-				// No domains exist, so put the window into "NewAccountMode".
-				EnterNewAccountMode();
-			}
-			else
+
+			// Temporarily disable the OnFieldsChanged handler
+			nameEntry.Changed 	-= new EventHandler(OnFieldsChanged);
+			serverEntry.Changed	-= new EventHandler(OnFieldsChanged);
+			passEntry.Changed	-= new EventHandler(OnFieldsChanged);
+
+			TreeSelection tSelect = AccTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
 			{
-				// Temporarily disable the OnFieldsChanged handler
-				nameEntry.Changed 	-= new EventHandler(OnFieldsChanged);
-				serverEntry.Changed	-= new EventHandler(OnFieldsChanged);
-				passEntry.Changed	-= new EventHandler(OnFieldsChanged);
-
-				TreeSelection tSelect = AccTreeView.Selection;
-				if(tSelect.CountSelectedRows() == 1)
+				TreeModel tModel;
+				TreeIter iter;
+	
+				tSelect.GetSelected(out tModel, out iter);
+				string domainID = (string) tModel.GetValue(iter, 0);
+				DomainInformation dom = domainController.GetDomain(domainID);
+				if (dom == null) return;	// Prevent null pointer
+					
+				curDomain = dom.ID;
+	
+				// Set the control states
+				AddButton.Sensitive				= true;
+				RemoveButton.Sensitive			= true;
+				DetailsButton.Sensitive			= true;
+	
+				if (dom.Active && !dom.Authenticated)
 				{
-					TreeModel tModel;
-					TreeIter iter;
-	
-					tSelect.GetSelected(out tModel, out iter);
-					string domainID = (string) tModel.GetValue(iter, 0);
-					DomainInformation dom = domainController.GetDomain(domainID);
-					if (dom == null) return;	// Prevent null pointer
+					EnableEntry(serverEntry, true);
+					serverLabel.Sensitive		= true; 
+				}
+				else
+				{
+					EnableEntry(serverEntry, false);
+					serverLabel.Sensitive		= false;
+				}
+				if (dom.Host != null)
+					serverEntry.Text			= dom.Host;
+				else
+					serverEntry.Text			= "";
+
+				EnableEntry(nameEntry, false);
+
+				nameLabel.Sensitive				= false;
+				if (dom.MemberName != null)
+					nameEntry.Text				= dom.MemberName;
+				else
+					nameEntry.Text				= "";
+
+				EnableEntry(passEntry, true);
+
+				passLabel.Sensitive				= true;
+
+				string password = domainController.GetDomainPassword(dom.ID);
+				if (password != null)
+				{
+					curDomainPassword			= password;
+					passEntry.Text				= password;
+					savePasswordButton.Active	= true;
+				}
+				else
+				{
+					curDomainPassword			= "";
+					passEntry.Text				= "";
+					savePasswordButton.Active	= false;
+				}
+
+				if (passEntry.Text.Length == 0)
+					savePasswordButton.Sensitive	= false;
+				else
+					savePasswordButton.Sensitive	= true;
 					
-					curDomain = dom.ID;
+				autoLoginButton.Sensitive		= true;
+				autoLoginButton.Active			= dom.Active;
+
+				defaultAccButton.Active			= dom.IsDefault;
+				defaultAccButton.Sensitive		= !dom.IsDefault;
 	
-					// Set the control states
-					AddButton.Sensitive				= true;
-					RemoveButton.Sensitive			= true;
-					DetailsButton.Sensitive			= true;
-	
-	 				detailsFrame.Sensitive			= true;
-	
-					if (dom.Active && !dom.Authenticated)
+				if (dom.Active)
+				{
+					if (dom.Authenticated)
 					{
-						serverEntry.Sensitive		= true;
-						serverEntry.Editable		= true;
-						serverLabel.Sensitive		= true; 
+						loginButton.Label		= Util.GS("_Log Out");
+						loginButton.Sensitive	= true;
 					}
 					else
 					{
-						serverEntry.Sensitive		= true;
-						serverEntry.Editable		= false;
-						serverLabel.Sensitive		= false;
-					}
-					if (dom.Host != null)
-						serverEntry.Text			= dom.Host;
-					else
-						serverEntry.Text			= "";
+						loginButton.Label		= Util.GS("_Log In");
 
-					nameEntry.Editable				= false;
-					nameEntry.Sensitive				= true;
-					nameLabel.Sensitive				= false;
-					if (dom.MemberName != null)
-						nameEntry.Text				= dom.MemberName;
-					else
-						nameEntry.Text				= "";
-
-					passEntry.Sensitive				= true;
-					passEntry.Editable				= true;
-					passLabel.Sensitive				= true;
-
-					string password = domainController.GetDomainPassword(dom.ID);
-					if (password != null)
-					{
-						curDomainPassword			= password;
-						passEntry.Text				= password;
-						savePasswordButton.Active	= true;
-					}
-					else
-					{
-						curDomainPassword			= "";
-						passEntry.Text				= "";
-						savePasswordButton.Active	= false;
-					}
-
-					if (passEntry.Text.Length == 0)
-						savePasswordButton.Sensitive	= false;
-					else
-						savePasswordButton.Sensitive	= true;
-					
-					autoLoginButton.Sensitive		= true;
-					autoLoginButton.Active			= dom.Active;
-
-					defaultAccButton.Active			= dom.IsDefault;
-					defaultAccButton.Sensitive		= !dom.IsDefault;
-	
-					
-					if (dom.Active)
-					{
-						if (dom.Authenticated)
-						{
-							loginButton.Label		= Util.GS("_Log Out");
-							loginButton.Sensitive	= true;
-						}
+						if (passEntry.Text.Length > 0)
+							loginButton.Sensitive = true;
 						else
-						{
-							loginButton.Label		= Util.GS("_Log In");
-	
-							if (passEntry.Text.Length > 0)
-								loginButton.Sensitive = true;
-							else
-								loginButton.Sensitive = false;
-						}
-					}
-					else
-					{
-						loginButton.Sensitive		= false;
-						loginButton.Label			= Util.GS("_Log In");
+							loginButton.Sensitive = false;
 					}
 				}
 				else
 				{
-					// Nothing is selected
-					AddButton.Sensitive				= true;
-					RemoveButton.Sensitive			= false;
-					DetailsButton.Sensitive			= false;
-					
-					detailsFrame.Sensitive			= false;
-					
-					serverLabel.Sensitive			= false;
-					serverEntry.Sensitive			= false;
-					serverEntry.Editable			= false;
-					serverEntry.Text				= "";
-					
-					nameLabel.Sensitive				= false;
-					nameEntry.Sensitive				= false;
-					nameEntry.Editable				= false;
-					nameEntry.Text					= "";
-					
-					passLabel.Sensitive				= false;
-					passEntry.Sensitive				= false;
-					passEntry.Editable				= false;
-					passEntry.Text					= "";
-					
-					savePasswordButton.Sensitive	= false;
-					savePasswordButton.Active		= false;
-					
-					autoLoginButton.Sensitive		= false;
-					autoLoginButton.Active			= false;
-					
-					defaultAccButton.Sensitive		= false;
-					defaultAccButton.Active			= false;
-					
-					loginButton.Label				= Util.GS("_Log In");
-					loginButton.Sensitive			= false;
+					loginButton.Sensitive		= false;
+					loginButton.Label			= Util.GS("_Log In");
 				}
-
-				// Hook the OnFieldsChanged handlers back up
-				nameEntry.Changed 	+= new EventHandler(OnFieldsChanged);
-				serverEntry.Changed	+= new EventHandler(OnFieldsChanged);
-				passEntry.Changed	+= new EventHandler(OnFieldsChanged);
 			}
+			else
+			{
+				// Nothing is selected
+				AddButton.Sensitive				= true;
+				RemoveButton.Sensitive			= false;
+				DetailsButton.Sensitive			= false;
+					
+				serverLabel.Sensitive			= false;
+				EnableEntry(serverEntry, false);
+				serverEntry.Text				= "";
+					
+				nameLabel.Sensitive				= false;
+				EnableEntry(nameEntry, false);
+				nameEntry.Text					= "";
+					
+				passLabel.Sensitive				= false;
+				EnableEntry(passEntry, false);
+				passEntry.Text					= "";
+					
+				savePasswordButton.Sensitive	= false;
+				savePasswordButton.Active		= false;
+					
+				autoLoginButton.Sensitive		= false;
+				autoLoginButton.Active			= false;
+					
+				defaultAccButton.Sensitive		= false;
+				defaultAccButton.Active			= false;
+					
+				loginButton.Label				= Util.GS("_Log In");
+				loginButton.Sensitive			= false;
+			}
+
+			// Hook the OnFieldsChanged handlers back up
+			nameEntry.Changed 	+= new EventHandler(OnFieldsChanged);
+			serverEntry.Changed	+= new EventHandler(OnFieldsChanged);
+			passEntry.Changed	+= new EventHandler(OnFieldsChanged);
 		}
 		
 		private void EnterNewAccountMode()
@@ -990,21 +980,16 @@ namespace Novell.iFolder
 			RemoveButton.Sensitive			= false;
 			DetailsButton.Sensitive			= false;
 			
-			detailsFrame.Sensitive			= true;
-			
 			serverLabel.Sensitive			= true;
-			serverEntry.Sensitive			= true;
-			serverEntry.Editable			= true;
+			EnableEntry(serverEntry, true);
 			serverEntry.Text				= "";
 			
 			nameLabel.Sensitive				= true;
-			nameEntry.Sensitive				= true;
-			nameEntry.Editable				= true;
+			EnableEntry(nameEntry, true);
 			nameEntry.Text					= "";
 			
 			passLabel.Sensitive				= true;
-			passEntry.Sensitive				= true;
-			passEntry.Editable				= true;
+			EnableEntry(passEntry, true);
 			passEntry.Text					= "";
 			
 			savePasswordButton.Sensitive	= true;
@@ -1198,7 +1183,6 @@ namespace Novell.iFolder
 
 		public void OnDomainAddedEvent(object sender, DomainEventArgs args)
 		{
-//Console.WriteLine("PrefsAccountPage.OnDomainAddedEvent() entered");
 			if (curDomains.ContainsKey(args.DomainID))
 			{
 				// Somehow we've already got this domain in our list, so
@@ -1239,45 +1223,15 @@ namespace Novell.iFolder
 			TreeIter iter = (TreeIter)curDomains[args.DomainID];
 			AccTreeStore.Remove(ref iter);
 			curDomains.Remove(args.DomainID);
-
-			// Automatically put the window into AddAccount mode to save
-			// the user some extra clicking when the account that was
-			// just removed was the last one.
-			if (curDomains.Count == 0)
-			{
-				EnterNewAccountMode();
-			}
-			else
-			{
-				// Select the first domain in the list
-
-				// Temporarily disable the selection handler so we can
-				// select the new account without causing the handler
-				// to be called.
-				AccTreeView.Selection.Changed -=
-					new EventHandler(AccSelectionChangedHandler);
-
-				TreeSelection tSelect = AccTreeView.Selection;
-				tSelect.SelectPath(new TreePath("0"));
-
-				// hook'r back up
-				AccTreeView.Selection.Changed +=
-					new EventHandler(AccSelectionChangedHandler);
-
-				UpdateWidgetSensitivity();
-			}
 		}
 		
 		public void OnDomainLoggedInEvent(object sender, DomainEventArgs args)
 		{
-//DomainInformation dom = domainController.GetDomain(args.DomainID);
-//Console.WriteLine("PrefsAccountPage.OnDomainLoggedInEvent() for: {0}", dom.Name);
 			UpdateDomainStatus(args.DomainID);
 		}
 		
 		public void OnDomainLoggedOutEvent(object sender, DomainEventArgs args)
 		{
-//Console.WriteLine("PrefsAccountPage.OnDomainLoggedOutEvent() entered");
 			UpdateDomainStatus(args.DomainID);
 		}
 
@@ -1304,7 +1258,6 @@ namespace Novell.iFolder
 
 		public void OnNewDefaultDomainEvent(object sender, NewDefaultDomainEventArgs args)
 		{
-//Console.WriteLine("PrefsAccountsPage.OnNewDefaultDomainEvent() entered");
 			TreeIter iter;
 			DomainInformation dom;
 
@@ -1320,7 +1273,6 @@ namespace Novell.iFolder
 		
 		public void OnDomainInGraceLoginPeriodEvent(object sender, DomainInGraceLoginPeriodEventArgs args)
 		{
-//Console.WriteLine("PrefsAccountsPage.OnDomainInGraceLoginPeriodEvent() entered");
 			DomainInformation dom = domainController.GetDomain(args.DomainID);
 			iFolderMsgDialog dg =
 				new iFolderMsgDialog(
@@ -1341,7 +1293,6 @@ namespace Novell.iFolder
 		/// </summary>
 		public void UpdateDomainStatus(string domainID)
 		{
-//Console.WriteLine("PrefsAccountPage.UpdateDomainStatus() entered");
 			if (curDomains.ContainsKey(domainID))
 			{
 				TreeIter iter = (TreeIter)curDomains[domainID];
@@ -1381,40 +1332,38 @@ namespace Novell.iFolder
 					dialog.Destroy();
 					if(rc == -8)
 					{
-						if (curDomains.Count == 0)
-						{
-							EnterNewAccountMode();
-						}
-						else
-						{
-							NewAccountMode = false;
-
-							// Select the first domain in the list
-			
-							// Temporarily disable the selection handler so we can
-							// select the new account without causing the handler
-							// to be called.
-							AccTreeView.Selection.Changed -=
-								new EventHandler(AccSelectionChangedHandler);
-			
-							TreeSelection tSelect = AccTreeView.Selection;
-							tSelect.SelectPath(new TreePath("0"));
-			
-							// hook'r back up
-							AccTreeView.Selection.Changed +=
-								new EventHandler(AccSelectionChangedHandler);
-			
-							UpdateWidgetSensitivity();
-						}
+						NewAccountMode = false;
+						UpdateWidgetSensitivity();
 
 						return true;
 					}
 
 					return false;
 				}
+
+				NewAccountMode = false;
+				UpdateWidgetSensitivity();
 			}
 			
 			return true;
+		}
+		
+		private void EnableEntry(Entry entry, bool bEnable)
+		{
+			if (bEnable)
+			{
+				entry.Sensitive = true;
+				entry.Editable = true;
+				entry.ModifyBase(StateType.Normal, entryActiveBackgroundColor);
+				entry.ModifyText(StateType.Normal, entryActiveTextColor);
+			}
+			else
+			{
+				entry.Sensitive = false;
+				entry.Editable = false;
+				entry.ModifyBase(StateType.Insensitive, entryInactiveBackgroundColor);
+				entry.ModifyText(StateType.Insensitive, entryInactiveTextColor);
+			}
 		}
 	}
 }
