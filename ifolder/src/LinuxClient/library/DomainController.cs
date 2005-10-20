@@ -403,7 +403,10 @@ namespace Novell.iFolder.Controller
 							else
 								simws.SetDomainCredentials(domainID, null, CredentialType.None);
 						}
-						catch{}
+						catch (Exception e)
+						{
+							Console.WriteLine("Error saving the password: {0}", e.Message);
+						}
 					}
 					
 					HandleDomainLoggedIn(domainID, status);
