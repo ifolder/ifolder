@@ -53,8 +53,6 @@ namespace Novell.iFolder.Nautilus
 					return showPropertiesDialog (args);
 				case "help":
 					return showHelp (args);
-				case "confirm-revert":
-					return confirmRevertiFolder (args);
 			}
 			
 			program.Run ();
@@ -112,32 +110,6 @@ namespace Novell.iFolder.Nautilus
 		private static int showHelp (string[] args)
 		{
 			Util.ShowHelp("front.html", null);
-			return 0;
-		}
-		
-		private static int confirmRevertiFolder (string[] args)
-		{
-			if (args.Length < 2) {
-				System.Console.Write ("ERROR: iFolder ID not specified\n");
-				return -1;
-			}
-			
-			iFolderMsgDialog msgDialog;
-			msgDialog = new iFolderMsgDialog (
-							null,
-							iFolderMsgDialog.DialogType.Question,
-							iFolderMsgDialog.ButtonSet.YesNo,
-							Util.GS("iFolder Confirmation"),
-							Util.GS("Revert this iFolder?"),
-							Util.GS("This will revert this iFolder back to a normal folder and leave the files intact.  The iFolder will then be available from the server and will need to be setup in a different location in order to sync."));
-			int rc = msgDialog.Run ();
-			msgDialog.Hide ();
-			msgDialog.Destroy ();
-			if (rc == -8) {
-				System.Console.Write ("yes");
-			} else {
-				System.Console.Write ("no");
-			}
 			return 0;
 		}
 	}

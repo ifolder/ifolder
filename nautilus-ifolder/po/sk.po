@@ -3,11 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 # Automatically generated, 2005.
 #
+#: src/nautilus-ifolder.c:1323 src/nautilus-ifolder.c:1362
+#: src/nautilus-ifolder.c:1582 src/nautilus-ifolder.c:1604
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-10-04 16:55-0600\n"
+"POT-Creation-Date: 2005-10-21 14:23-0600\n"
 "PO-Revision-Date: 2005-10-04 16:55-0600\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -15,17 +17,114 @@ msgstr ""
 "Content-Type: text/plain; charset=ASCII\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/nautilus-ifolder.cs:130
-msgid "iFolder Confirmation"
+#: src/nautilus-ifolder.c:1242
+msgid "iFolder Created"
 msgstr ""
 
-#: src/nautilus-ifolder.cs:131
-msgid "Revert this iFolder?"
-msgstr ""
-
-#: src/nautilus-ifolder.cs:132
+#: src/nautilus-ifolder.c:1269
 msgid ""
-"This will revert this iFolder back to a normal folder and leave the files "
-"intact.  The iFolder will then be available from the server and will need to "
-"be setup in a different location in order to sync."
+"The folder you selected is now an iFolder.  To learn more about using "
+"iFolder and sharing iFolders with other users, see \"Managing iFolders\" in "
+"iFolder Help."
+msgstr ""
+
+#: src/nautilus-ifolder.c:1279
+msgid "Do not show this message again."
+msgstr ""
+
+#: src/nautilus-ifolder.c:1324
+msgid "Error opening dialog."
+msgstr ""
+
+#: src/nautilus-ifolder.c:1325
+msgid "Sorry, unable to open the window to perform the specified action."
+msgstr ""
+
+#: src/nautilus-ifolder.c:1363
+msgid "The folder could not be converted."
+msgstr ""
+
+#: src/nautilus-ifolder.c:1364
+msgid "Sorry, unable to convert the specified folder into an iFolder."
+msgstr ""
+
+#: src/nautilus-ifolder.c:1438
+msgid "Create iFolder"
+msgstr ""
+
+#: src/nautilus-ifolder.c:1439
+msgid "No iFolder Domains"
+msgstr ""
+
+#: src/nautilus-ifolder.c:1440
+msgid ""
+"A new iFolder cannot be created because you have not attached to any iFolder "
+"domains."
+msgstr ""
+
+#: src/nautilus-ifolder.c:1462 src/nautilus-ifolder.c:1839
+msgid "Convert to an iFolder"
+msgstr ""
+
+#: src/nautilus-ifolder.c:1480
+msgid "<b>_Domain:</b>"
+msgstr ""
+
+#: src/nautilus-ifolder.c:1500
+msgid "<b>_Path:</b>"
+msgstr ""
+
+#: src/nautilus-ifolder.c:1583
+msgid "The iFolder could not be reverted."
+msgstr ""
+
+#: src/nautilus-ifolder.c:1584
+msgid "Sorry, unable to revert the specified iFolder to a normal folder."
+msgstr ""
+
+#: src/nautilus-ifolder.c:1602
+msgid "Revert this iFolder to a normal folder?"
+msgstr ""
+
+#: src/nautilus-ifolder.c:1603
+msgid ""
+"This reverts the iFolder back to a normal folder and leaves the files "
+"intact.  The iFolder is then available from the server and must be set up in "
+"a different location to synchronize."
+msgstr ""
+
+#: src/nautilus-ifolder.c:1772
+msgid "Revert to a Normal Folder"
+msgstr ""
+
+#: src/nautilus-ifolder.c:1773
+msgid "Revert the selected iFolder back to normal folder"
+msgstr ""
+
+#: src/nautilus-ifolder.c:1787
+msgid "Share iFolder with..."
+msgstr ""
+
+#: src/nautilus-ifolder.c:1788
+msgid "Share the selected iFolder with another user"
+msgstr ""
+
+#: src/nautilus-ifolder.c:1802
+msgid "iFolder Properties"
+msgstr ""
+
+#: src/nautilus-ifolder.c:1803
+msgid "View the properties of the selected iFolder"
+msgstr ""
+
+#: src/nautilus-ifolder.c:1817
+msgid "iFolder Help..."
+msgstr ""
+
+#: src/nautilus-ifolder.c:1818
+msgid "View the iFolder help"
+msgstr ""
+
+#: src/nautilus-ifolder.c:1840
+msgid "Convert the selected folder to an iFolder"
 msgstr ""
