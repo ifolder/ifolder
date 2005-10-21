@@ -73,6 +73,12 @@ all: $(MSI_FILE)
 
 $(MSI_FILE): issabld $(PACKAGE)-install $(MSI).ism
 	@rm -f $@ "$(MSI_DISK1)" "$(MSI_LOG_FILE)"
+
+	@mkdir -p "$(PREREQUISITES_UNIX)"; 
+	@CMD='cp -f SimiasSetupPrerequisite.prq "$(PREREQUISITES_UNIX)"'; \
+		echo $$CMD; \
+		eval $$CMD
+
 	@CMD='"$(ISSABLD)" -t "$(REGASM_DIR)" -p "$(MSI).ism" -o "$(ISSABLD_DIR),$(MERGE_MODULES_WIN)"'; \
 		echo $$CMD; \
 		eval $$CMD > "$(MSI_LOG_FILE)" 2>&1; \
@@ -86,9 +92,7 @@ $(MSI_FILE): issabld $(PACKAGE)-install $(MSI).ism
 		CMD='cp -f $@ "$(INSTALL_PKGS)"'; \
 		echo $$CMD; \
 		eval $$CMD
-        @CMD='cp -f SimiasSetupPrerequisite.prq "$(PREREQUISITES_UNIX)"';
-	echo $$CMD;
-	eval $$CMD
+        
 
 
 $(MSM_FILE): issabld $(PACKAGE)-install $(MSM).ism
