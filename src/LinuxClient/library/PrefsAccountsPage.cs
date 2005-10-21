@@ -77,14 +77,6 @@ namespace Novell.iFolder
 		// multiple for the same account.
 		private Hashtable			detailsDialogs;
 		
-		// Gtk.Entry.Sensitive = false; does not behave like it ought to.  It
-		// does not gray out the background or lighten the text color.  These
-		// next two colors are used to work around this issue.
-		private Gdk.Color entryInactiveBackgroundColor;
-		private Gdk.Color entryInactiveTextColor;
-		private Gdk.Color entryActiveBackgroundColor;
-		private Gdk.Color entryActiveTextColor;
-
 		/// <summary>
 		/// Default constructor for iFolderAccountsPage
 		/// </summary>
@@ -99,12 +91,6 @@ namespace Novell.iFolder
 
 			curDomains = new Hashtable();
 
-			// FIXME: Figure out how to tie into the user-selected theme for these colors
-			entryInactiveBackgroundColor = new Gdk.Color(246, 246, 246);	// Light gray
-			entryInactiveTextColor = new Gdk.Color(126, 126, 126);			// Darker gray
-			entryActiveBackgroundColor = new Gdk.Color(255, 255, 255);		// White
-			entryActiveTextColor = new Gdk.Color(0, 0, 0);					// Black
-			
 			InitializeWidgets();
 
 			domainController = DomainController.GetDomainController();
@@ -1357,15 +1343,11 @@ namespace Novell.iFolder
 			{
 				entry.Sensitive = true;
 				entry.Editable = true;
-				entry.ModifyBase(StateType.Normal, entryActiveBackgroundColor);
-				entry.ModifyText(StateType.Normal, entryActiveTextColor);
 			}
 			else
 			{
 				entry.Sensitive = false;
 				entry.Editable = false;
-				entry.ModifyBase(StateType.Insensitive, entryInactiveBackgroundColor);
-				entry.ModifyText(StateType.Insensitive, entryInactiveTextColor);
 			}
 		}
 	}
