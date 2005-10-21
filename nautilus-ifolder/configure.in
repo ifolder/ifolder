@@ -21,12 +21,13 @@ AC_PROG_CC
 AM_PROG_LIBTOOL
 
 dnl ==========================================================================
-ALL_LINGUAS="es de fi fr it ja pt_BR ru"
 
+AC_PROG_INTLTOOL
 GETTEXT_PACKAGE=$PACKAGE
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [gettext package])
-AC_DEFINE_UNQUOTED(GNOME_EXPLICIT_TRANSLATION_DOMAIN,"$GETTEXT_PACKAGE", [library gettext package])
+dnl AC_DEFINE_UNQUOTED(GNOME_EXPLICIT_TRANSLATION_DOMAIN,"$GETTEXT_PACKAGE", [library gettext package])
+ALL_LINGUAS="cs de en es fi fr it ja hu pl pt pt_BR ru sk zh_CN zh_TW"
 
 dnl Check for ngettext
 AC_CHECK_FUNCS(ngettext)
@@ -34,7 +35,6 @@ AC_CHECK_FUNCS(ngettext)
 AM_GLIB_GNU_GETTEXT
 AM_GLIB_DEFINE_LOCALEDIR([GNOMELOCALEDIR])
 
-AC_PROG_INTLTOOL
 dnl ==========================================================================
 
 #GNOME_COMPILE_WARNINGS(maximum)
@@ -163,6 +163,5 @@ AC_OUTPUT([
   src/nautilus-ifolder
   package/Makefile
   package/nautilus-ifolder3.spec
+  po/Makefile.in
 ])
-
-#  po/Makefile.in

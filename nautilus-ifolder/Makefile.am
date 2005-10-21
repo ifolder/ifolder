@@ -1,8 +1,6 @@
-@INTLTOOL_DESKTOP_RULE@
+# @INTLTOOL_DESKTOP_RULE@
 
-SUBDIRS = src
-# bht: Removed the po subdirectory from being built for FCS
-# po
+SUBDIRS = po src
 
 DIST_SUBDIRS = $(SUBDIRS) package
 
@@ -12,6 +10,8 @@ EXTRA_DIST = \
 	intltool-merge.in \
 	intltool-update.in
 
+DISTCLEANFILES = intl-extract intltool-update intltool-merge
+
 installcheck-summary:
 	$(MAKE) -C src $@
 
@@ -20,9 +20,6 @@ clean-local:
 
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)
-	rm intltool-extract
-	rm intltool-merge
-	rm intltool-update
 
 maintainer-clean-local:
 	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)

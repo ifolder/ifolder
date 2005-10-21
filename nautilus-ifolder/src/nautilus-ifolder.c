@@ -411,7 +411,7 @@ is_ifolder (NautilusFileInfo *file)
 			soap.userid = username;
 			soap.passwd = password;
 		}
-printf("Calling iFolderWebService.IsiFolder()\n");
+//printf("Calling iFolderWebService.IsiFolder()\n");
 		soap_call___ns1__IsiFolder (&soap, 
 									soapURL, 
 									NULL, 
@@ -459,7 +459,7 @@ can_be_ifolder (NautilusFileInfo *file)
 			soap.userid = username;
 			soap.passwd = password;
 		}
-printf("Calling iFolderWebService.CanBeiFolder()\n");
+//printf("Calling iFolderWebService.CanBeiFolder()\n");
 		soap_call___ns1__CanBeiFolder (&soap,
 									   soapURL, 
 									   NULL, 
@@ -504,7 +504,7 @@ create_ifolder_in_domain (NautilusFileInfo *file, char *domain_id)
 			soap.userid = username;
 			soap.passwd = password;
 		}
-printf("Calling iFolderWebService.CreateiFolderInDomain()\n");
+//printf("Calling iFolderWebService.CreateiFolderInDomain()\n");
 		soap_call___ns1__CreateiFolderInDomain (&soap, soapURL, NULL, &req, &resp);
 		g_free (folder_path);
 		if (soap.error) {
@@ -556,7 +556,7 @@ get_ifolder_id_by_local_path (gchar *path)
 			soap.userid = username;
 			soap.passwd = password;
 		}
-printf("Calling iFolderWebService.GetiFolderByLocalPath()\n");
+//printf("Calling iFolderWebService.GetiFolderByLocalPath()\n");
 		soap_call___ns1__GetiFolderByLocalPath (&soap, 
 										soapURL, 
 										NULL, 
@@ -613,7 +613,7 @@ revert_ifolder (NautilusFileInfo *file)
 				soap.userid = username;
 				soap.passwd = password;
 			}
-printf("Calling iFolderWebService.RevertiFolder()\n");
+//printf("Calling iFolderWebService.RevertiFolder()\n");
 			soap_call___ns1__RevertiFolder (&soap, 
 												 soapURL, 
 												 NULL, 
@@ -670,7 +670,7 @@ get_unmanaged_path (gchar *ifolder_id)
 			soap.userid = username;
 			soap.passwd = password;
 		}
-printf("Calling iFolderWebService.GetiFolder()\n");
+//printf("Calling iFolderWebService.GetiFolder()\n");
 		soap_call___ns1__GetiFolder (&soap,
 									 soapURL,
 									 NULL,
@@ -732,7 +732,7 @@ get_all_ifolder_paths ()
 		soap.userid = username;
 		soap.passwd = password;
 	}
-printf("Calling iFolderWebService.GetAlliFolders()\n");
+//printf("Calling iFolderWebService.GetAlliFolders()\n");
 	soap_call___ns1__GetAlliFolders (&soap,
 									 soapURL,
 									 NULL,
@@ -1320,7 +1320,7 @@ ifolder_dialog_thread (gpointer user_data)
 		free (args);
 		iFolderErrorMessage *errMsg = malloc (sizeof (iFolderErrorMessage));
 		errMsg->window = g_object_get_data (G_OBJECT (item), "parent_window");
-		errMsg->title	= _("iFolder Error");
+		errMsg->title	= _("");
 		errMsg->message	= _("Error opening dialog.");
 		errMsg->detail	= _("Sorry, unable to open the window to perform the specified action.");
 		g_idle_add (show_ifolder_error_message, errMsg);
@@ -1359,7 +1359,7 @@ create_ifolder_thread (gpointer user_data)
 		DEBUG_IFOLDER (("An error occurred creating an iFolder\n"));
 		iFolderErrorMessage *errMsg = malloc (sizeof (iFolderErrorMessage));
 		errMsg->window = g_object_get_data (G_OBJECT (item), "parent_window");
-		errMsg->title	= _("iFolder Error");
+		errMsg->title	= _("");
 		errMsg->message	= _("The folder could not be converted.");
 		errMsg->detail	= _("Sorry, unable to convert the specified folder into an iFolder.");
 		g_idle_add (show_ifolder_error_message, errMsg);
@@ -1579,7 +1579,7 @@ revert_ifolder_thread (gpointer user_data)
 		DEBUG_IFOLDER (("An error occurred reverting an iFolder\n"));
 		iFolderErrorMessage *errMsg = malloc (sizeof (iFolderErrorMessage));
 		errMsg->window = g_object_get_data (G_OBJECT (item), "parent_window");
-		errMsg->title	= _("iFolder Error");
+		errMsg->title	= _("");
 		errMsg->message	= _("The iFolder could not be reverted.");
 		errMsg->detail	= _("Sorry, unable to revert the specified iFolder to a normal folder.");
 		g_idle_add (show_ifolder_error_message, errMsg);
@@ -1599,9 +1599,9 @@ revert_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 	window = g_object_get_data (G_OBJECT (item), "parent_window");
 
 	message_dialog = eel_show_yes_no_dialog (
-						_("Revert this iFolder?"), 
-	                    _("This will revert this iFolder back to a normal folder and leave the files intact.  The iFolder will then be available from the server and will need to be setup in a different location in order to sync."),
-						_("iFolder Confirmation"), 
+						_("Revert this iFolder to a normal folder?"), 
+	                    _("This reverts the iFolder back to a normal folder and leaves the files intact.  The iFolder is then available from the server and must be set up in a different location to synchronize."),
+						_(""), 
 						GTK_STOCK_YES,
 						GTK_STOCK_NO,
 						GTK_WINDOW (window));
