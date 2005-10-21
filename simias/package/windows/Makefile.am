@@ -72,6 +72,8 @@ $(MSI_FILE): issabld $(MSM_FILE) $(MSI).ism
 		eval $$CMD > "$(MSI_LOG_FILE)" 2>&1; \
 		if test -f "$(MSI_DISK1)"; then \
 			ln "$(MSI_DISK1)" $@; \
+			mkdir -p "/cygdrive/c/temp/"; \
+			cp -f "$(MSI_DISK1)" "/cygdrive/c/temp/"; \
 		else \
 			cat "$(MSI_LOG_FILE)"; \
 			echo FAILED; exit 1; \
@@ -80,10 +82,10 @@ $(MSI_FILE): issabld $(MSM_FILE) $(MSI).ism
 		CMD='cp -f $@ "$(INSTALL_PKGS)"'; \
 		echo $$CMD; \
 		eval $$CMD 
-	@mkdir -p "/cygdrive/c/temp/"; \
-      @CMD='cp -f "$(MSI_DISK1)" "/cygdrive/c/temp/"'; \
-		echo $$CMD; \
-		eval $$CMD
+#	@mkdir -p "/cygdrive/c/temp/"; \
+#      @CMD='cp -f "$(MSI_DISK1)" "/cygdrive/c/temp/"'; \
+#		echo $$CMD; \
+#		eval $$CMD
 
 $(MSM_FILE): issabld $(PACKAGE)-install $(MSM).ism
 	@rm -f $@ "$(MSM_DISK1)" "$(MSM_LOG_FILE)"
