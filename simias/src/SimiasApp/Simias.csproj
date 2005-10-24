@@ -164,7 +164,7 @@
                 />
                 <File
                     RelPath = "SimiasAppInstallerClass.cs"
-                    SubType = "Component"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File

@@ -189,7 +189,7 @@ namespace Simias.Web
 			if ( Environment.GetEnvironmentVariable( EnvSimiasRunAsServer ) != null )
 			{
 				runAsServer = true;
-				simiasDataPath = Environment.GetEnvironmentVariable( EnvSimiasDataPath );
+				simiasDataPath = Environment.GetEnvironmentVariable( EnvSimiasDataPath ).Trim( new char [] { '\"' } );
 				if ( simiasDataPath == null )
 				{
 					ApplicationException apEx = new ApplicationException( "Error: The Simias data path was not specified." );
