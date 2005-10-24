@@ -1477,7 +1477,7 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 
 	/* Domain drop-down list */
 	domain_label = gtk_label_new(NULL);
-	gtk_label_set_markup_with_mnemonic(GTK_LABEL(domain_label), _("<b>_Domain:</b>"));
+	gtk_label_set_markup_with_mnemonic(GTK_LABEL(domain_label), _("<b>_Server:</b>"));
 	gtk_misc_set_alignment(GTK_MISC(domain_label), 0, 0.5);
 	gtk_box_pack_start(GTK_BOX(vbox), domain_label, FALSE, FALSE, 0);
 	
@@ -1497,7 +1497,7 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 	
 	/* Folder Path */
 	path_label = gtk_label_new(NULL);
-	gtk_label_set_markup_with_mnemonic(GTK_LABEL(path_label), _("<b>_Path:</b>"));
+	gtk_label_set_markup_with_mnemonic(GTK_LABEL(path_label), _("<b>_Location:</b>"));
 	gtk_misc_set_alignment(GTK_MISC(path_label), 0, 0.5);
 	gtk_box_pack_start(GTK_BOX(vbox), path_label, FALSE, FALSE, 0);
 
