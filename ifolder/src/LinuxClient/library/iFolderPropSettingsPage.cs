@@ -155,7 +155,7 @@ namespace Novell.iFolder
 				if(LimitCheckButton == null)
 				{
 					LimitCheckButton = 
-						new CheckButton(Util.GS("_Set Quota:"));
+						new CheckButton(Util.GS("Set _Quota:"));
 					LimitCheckButton.Toggled += 
 								new EventHandler(OnLimitSizeButton);
 					diskTable.Attach(LimitCheckButton, 0,1,1,2,

@@ -514,17 +514,17 @@ namespace Novell.iFolder
 			iFolderMenu.Append(ShareMenuItem);
 			ShareMenuItem.Activated += new EventHandler(ShareiFolderHandler);
 
-			ConflictMenuItem = new MenuItem (Util.GS("Re_solve conflicts"));
+			ConflictMenuItem = new MenuItem (Util.GS("Resolve conflic_ts"));
 			iFolderMenu.Append(ConflictMenuItem);
 			ConflictMenuItem.Activated += 
 					new EventHandler(ResolveConflictHandler);
 
-			SyncNowMenuItem = new MenuItem(Util.GS("Synchronize _now"));
+			SyncNowMenuItem = new MenuItem(Util.GS("S_ynchronize now"));
 			iFolderMenu.Append(SyncNowMenuItem);
 			SyncNowMenuItem.Activated += new EventHandler(SynciFolderHandler);
 
 			RevertMenuItem = 
-				new ImageMenuItem (Util.GS("Re_vert to a Normal Folder"));
+				new ImageMenuItem (Util.GS("_Revert to a Normal Folder"));
 			RevertMenuItem.Image = new Image(Stock.Undo, Gtk.IconSize.Menu);
 			iFolderMenu.Append(RevertMenuItem);
 			RevertMenuItem.Activated += new EventHandler(OnRevertiFolder);
