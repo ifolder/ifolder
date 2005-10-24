@@ -108,7 +108,7 @@ namespace Novell.iFolder
 
 			accountsPage = new PrefsAccountsPage(this);
 			PrefNoteBook.AppendPage( accountsPage,
-										new Label(Util.GS("_Accounts")));
+										new Label(Util.GS("Accou_nts")));
 
 			PrefNoteBook.SwitchPage +=
 				new SwitchPageHandler(OnSwitchPageEvent);
