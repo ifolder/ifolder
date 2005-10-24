@@ -289,7 +289,7 @@ namespace Novell.iFolder
 
 			savePasswordButton = 
 				new CheckButton(Util.GS(
-					"_Remember password"));
+					"Remember _password"));
 			optBox.PackStart(savePasswordButton, false, false,0);
 			savePasswordButton.Toggled += 
 							new EventHandler(OnSavePasswordToggled);

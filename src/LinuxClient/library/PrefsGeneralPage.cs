@@ -160,7 +160,7 @@ namespace Novell.iFolder
 
 
 			NotifyiFoldersButton =
-				new CheckButton(Util.GS("_Notify of shared iFolders")); 
+				new CheckButton(Util.GS("Notify of share_d iFolders")); 
 			notifyWidgetBox.PackStart(NotifyiFoldersButton, false, true, 0);
 
 			NotifyiFoldersButton.Toggled += 
