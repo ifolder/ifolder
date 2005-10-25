@@ -6,8 +6,8 @@
 <meta http-equiv="Content-Language" content="en">
 
 <meta name="Generator" content="Novell HTML Conversion 10 March 2004">
-<meta name="Generation-Date" content="Monday, July 11, 2005 14:47">
-<meta name="Content-Date" content="Mon, 11 Jul 2005 12:00:00 GMT">
+<meta name="Generation-Date" content="Sunday, October 23, 2005 15:54">
+<meta name="Content-Date" content="Mon, 22 Oct 2005 12:00:00 GMT">
 <meta name="Robots" content="INDEX, FOLLOW">
 <meta name="Document_Number" content="zHTML xD.0000.0000.0003.0002.">
 <meta name="Author" content="zHTML xD.0000.0000.0003.0002.">
@@ -43,9 +43,9 @@ loadMenu();
 
 <a name="bwensdb"></a>
 
-<div class="Topic" title="Guidelines for File Types and Sizes to Be Synchronized">
+<div class="Topic" title="Guidelines for File Types and Sizes to Not Synchronize">
 
-<h2 class="TOPIC-TITLE"><br />Guidelines for File Types and Sizes to Be Synchronized</h2>
+<h2 class="TOPIC-TITLE"><br />Guidelines for File Types and Sizes to Not Synchronize</h2>
 <p class="TOPIC">When the iFolder client is used with Novell iFolder 3.<em class="VERSIONVARIABLE">x</em>, your iFolder administrator might specify file type restrictions and maximum file size restrictions at the system, user, or iFolder level. Your account might also be restricted in the amount of space you can use for the data in the iFolders you own. When you participate in other iFolders, the space consumed on the server is counted against the owner of that iFolder.</p>
 <p class="TOPIC">Some file types are not good candidates for synchronization, such as operating system files, hidden files created by a file manager, or databases that are implemented as a collection of linked files. You might include only key file types used for your business, or exclude files that are likely unrelated to business, such as .mp3 files. </p>
 <h4 class="BRIDGEHEAD"><br />Operating System Files</h4>
@@ -54,8 +54,8 @@ loadMenu();
 <p class="TOPIC">If your file system uses hidden files to track display preferences, your administrator might restrict those file types to exclude them from being synchronized on your system. Usually, hidden files are relevant only to the particular computer where they were created, and they change every time the file or directory is accessed. You do not need to keep these files, and synchronizing them results in repeated file conflict errors. </p>
 <p class="TOPIC">For example, iFolder automatically excludes two hidden file manager files called thumbs.db and .DS_Store.</p>
 <h4 class="BRIDGEHEAD"><br />Database Files</h4>
-<p class="TOPIC">iFolder synchronizes the changed portions of a file; it does not synchronize files as a set. If you have a database file that is implemented as a collection of linked files, do not try to synchronize them in an iFolder.</p>
-<p class="TOPIC">Do not try to synchronize your GroupWise<sup>&reg;</sup> data by making the GroupWise archive, cache, or remote directories into iFolders. If you do this, the GroupWise data files becomes corrupted after synchronizing the file a few times. GroupWise needs the files in the archive to be maintained as a set of files.</p>
+<p class="TOPIC">iFolder synchronizes individual files or the changed portions of individual files; it does not synchronize files as a set. If you have a database file that is implemented as a collection of linked files, do not try to synchronize them in an iFolder.</p>
+<p class="TOPIC">Do not try to synchronize your GroupWise<sup>&reg;</sup> data by making the GroupWise archive, cache, or remote directories into iFolders. If you do this, the GroupWise data files become corrupted after synchronizing the file a few times. GroupWise needs the files in the archive to be maintained as a set of files.</p>
 </div>
 
 <script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>

@@ -21,12 +21,12 @@ bvwppw5.html                Configuring Local Firewall Settings for iFolder Traf
 bwbirb9.html                Configuring Local Virus Scanner Settings for iFolder Traffic
 myifolders.html             Managing iFolders
 bx08x4y.html                Guidelines for Locating iFolders
-bwensdb.html                Guidelines for File Types and Sizes to Be Synchronized
+bwensdb.html                Guidelines for File Types and Sizes to Not Synchronize
 bwagrrn.html                Naming Conventions for an iFolder and Its Folders and Files
 createifolder.html          Creating an iFolder
 createifolder.html#bwembx5   Creating iFolders in a File Manager
 createifolder.html#bwemc36   Creating iFolders in the iFolders Browser
-createifolder.html#bwem9n0   Creating iFolders on a FAT32 Mount Point (Linux)
+createifolder.html#fat32mtpt   Creating iFolders on a FAT32 Mount Point (Linux)
 sharewith.html              Sharing an iFolder
 sharewith.html#bv2hnvt      Understanding User Access Rights
 sharewith.html#bq6lwm0      Adding a User to an iFolder
