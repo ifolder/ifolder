@@ -26,6 +26,7 @@ using System;
 using System.IO;
 using System.Collections;
 using Gtk;
+using Simias.Client;
 using Simias.Client.Event;
 
 namespace Novell.iFolder
@@ -44,7 +45,6 @@ namespace Novell.iFolder
 		private PrefsAccountsPage		accountsPage;
 		private bool					ControlKeyPressed;
 
-
 		public int CurrentPage
 		{
 			set
@@ -62,7 +62,7 @@ namespace Novell.iFolder
 		/// <summary>
 		/// Default constructor for iFolderWindow
 		/// </summary>
-		public PreferencesWindow(iFolderWebService webService)
+		public PreferencesWindow(iFolderWebService webService, Manager simiasManager)
 			: base(Util.GS("iFolder Preferences"))
 		{
 			if(webService == null)
@@ -70,7 +70,7 @@ namespace Novell.iFolder
 
 			ifws = webService;
 
-			InitializeWidgets();
+			InitializeWidgets(simiasManager);
 			
 			// Bind ESC and C-w to close the window
 			ControlKeyPressed = false;
@@ -84,7 +84,7 @@ namespace Novell.iFolder
 		/// <summary>
 		/// Set up the UI inside the Window
 		/// </summary>
-		private void InitializeWidgets()
+		private void InitializeWidgets(Manager simiasManager)
 		{
 			this.SetDefaultSize (480, 550);
 
@@ -106,7 +106,7 @@ namespace Novell.iFolder
 			PrefNoteBook.AppendPage( generalPage,
 										new Label(Util.GS("_General")));
 
-			accountsPage = new PrefsAccountsPage(this);
+			accountsPage = new PrefsAccountsPage(this, simiasManager);
 			PrefNoteBook.AppendPage( accountsPage,
 										new Label(Util.GS("Accou_nts")));
 

@@ -58,6 +58,7 @@ namespace Novell.iFolder.Controller
 		private string defDomainID = null;
 		
 		private SimiasEventBroker eventBroker = null;
+		private Manager simiasManager;
 		
 		///
 		/// Events
@@ -74,14 +75,15 @@ namespace Novell.iFolder.Controller
 		public event DomainNewDefaultEventHandler NewDefaultDomain;
 		public event DomainInGraceLoginPeriodEventHandler DomainInGraceLoginPeriod;
 		
-		private DomainController()
+		private DomainController(Manager simiasManager)
 		{
-			string localServiceUrl = Simias.Client.Manager.LocalServiceUrl.ToString();
+			this.simiasManager = simiasManager;
+			string localServiceUrl = simiasManager.WebServiceUri.ToString();
 			try
 			{
 				ifws = new iFolderWebService();
 				ifws.Url = localServiceUrl + "/iFolder.asmx";
-				LocalService.Start(ifws);
+				LocalService.Start(ifws, simiasManager.WebServiceUri, simiasManager.DataPath);
 			}
 			catch(Exception e)
 			{
@@ -92,7 +94,7 @@ namespace Novell.iFolder.Controller
 			{
 				simws = new SimiasWebService();
 				simws.Url = localServiceUrl + "/Simias.asmx";
-				LocalService.Start(simws);
+				LocalService.Start(simws, simiasManager.WebServiceUri, simiasManager.DataPath);
 			}
 			catch(Exception e)
 			{
@@ -105,7 +107,7 @@ namespace Novell.iFolder.Controller
 			Refresh();
 
 			// Register with the SimiasEventBroker to get Simias Events
-			eventBroker = SimiasEventBroker.GetSimiasEventBroker();
+			eventBroker = SimiasEventBroker.GetSimiasEventBroker(simiasManager);
 			if (eventBroker != null)
 			{
 				eventBroker.DomainUpEventFired +=
@@ -130,13 +132,13 @@ namespace Novell.iFolder.Controller
 			}
 		}
 		
-		public static DomainController GetDomainController()
+		public static DomainController GetDomainController(Manager simiasManager)
 		{
 			lock (typeof(DomainController))
 			{
 				if (instance == null)
 				{
-					instance = new DomainController();
+					instance = new DomainController(simiasManager);
 				}
 				
 				return instance;

@@ -364,12 +364,12 @@
             <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="attributeName" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="searchString" type="s:string" />
-            <s:element minOccurs="1" maxOccurs="1" name="operation" type="s0:SearchType" />
+            <s:element minOccurs="1" maxOccurs="1" name="operation" type="s0:iFolderSearchType" />
             <s:element minOccurs="1" maxOccurs="1" name="count" type="s:int" />
           </s:sequence>
         </s:complexType>
       </s:element>
-      <s:simpleType name="SearchType">
+      <s:simpleType name="iFolderSearchType">
         <s:restriction base="s:string">
           <s:enumeration value="Equal" />
           <s:enumeration value="Not_Equal" />

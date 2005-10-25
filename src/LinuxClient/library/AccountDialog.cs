@@ -24,6 +24,7 @@
 
 using Gtk;
 using System;
+using Simias.Client;
 
 namespace Novell.iFolder
 {
@@ -39,11 +40,11 @@ namespace Novell.iFolder
 		}
 
 
-		public AccountDialog(DomainInformation curDomain)
+		public AccountDialog(DomainInformation curDomain, Manager simiasManager)
 			: base()
 		{
 			domain = curDomain;
-			ifdata = iFolderData.GetData();
+			ifdata = iFolderData.GetData(simiasManager);
 			SetupDialog();
 		}
 		

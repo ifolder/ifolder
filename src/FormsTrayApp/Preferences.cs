@@ -113,12 +113,13 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Button logout;
 		private System.Windows.Forms.Label label1;
 		private System.ComponentModel.IContainer components;
+		private Manager simiasManager;
 		#endregion
 
 		/// <summary>
 		/// Instantiates a Preferences object.
 		/// </summary>
-		public Preferences(iFolderWebService ifolderWebService, SimiasWebService simiasWebService)
+		public Preferences(iFolderWebService ifolderWebService, SimiasWebService simiasWebService, Manager simiasManager)
 		{
 			//
 			// Required for Windows Form Designer support
@@ -129,6 +130,7 @@ namespace Novell.FormsTrayApp
 
 			ifWebService = ifolderWebService;
 			this.simiasWebService = simiasWebService;
+			this.simiasManager = simiasManager;
 
 			// Resize/reposition controls
 			int delta = calculateSize(label5, 0);
@@ -1771,7 +1773,7 @@ namespace Novell.FormsTrayApp
 					case StatusCodes.SuccessInGrace:
 						// Set the credentials in the current process.
 						DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domainInfo.ID, password.Text);
-						domainAuth.Authenticate();
+						domainAuth.Authenticate(simiasManager.WebServiceUri, simiasManager.DataPath);
 
 						Domain domain = new Domain(domainInfo);
 						updateAccount(domain);
@@ -1937,7 +1939,7 @@ namespace Novell.FormsTrayApp
 
 			Cursor.Current = Cursors.WaitCursor;
 			DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domainInfo.ID, password.Text);
-			Status authStatus = domainAuth.Authenticate();
+			Status authStatus = domainAuth.Authenticate(simiasManager.WebServiceUri, simiasManager.DataPath);
 			Cursor.Current = Cursors.Default;
 			MyMessageBox mmb;
 			switch (authStatus.statusCode)
@@ -2985,7 +2987,7 @@ namespace Novell.FormsTrayApp
 				if (domain != null)
 				{
 					DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domain.ID, null);
-					domainAuth.Logout();
+					domainAuth.Logout(simiasManager.WebServiceUri, simiasManager.DataPath);
 					login.Visible = true;
 					logout.Visible = false;
 					domain.DomainInfo.Authenticated = false;

@@ -1,6 +1,6 @@
 /***********************************************************************
  *  $RCSfile$
- * 
+ *
  *  Copyright (C) 2004 Novell, Inc.
  *
  *  This program is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
  *  Authors:
  *		Calvin Gaisford <cgaisford@novell.com>
  *		Boyd Timothy <btimothy@novell.com>
- * 
+ *
  ***********************************************************************/
 
 
@@ -98,8 +98,8 @@ namespace Novell.iFolder
 			get{ return ifolder; }
 
 			set
-			{ 
-				this.ifolder = value; 
+			{
+				this.ifolder = value;
 				UpdateDisplayData();
 			}
 		}
@@ -273,6 +273,9 @@ namespace Novell.iFolder
 
 		private DomainController	domainController;
 
+		// Manager object that knows about simias resources.
+		private Manager				simiasManager;
+
 		// Keep track of the properties dialogs so that if a user attempts
 		// to open the properties of an iFolder that is already opened, it
 		// won't open additional properties dialogs for the same iFolder.
@@ -281,7 +284,7 @@ namespace Novell.iFolder
 		/// <summary>
 		/// Default constructor for iFolderWindow
 		/// </summary>
-		public iFolderWindow(iFolderWebService webService, SimiasWebService SimiasWS)
+		public iFolderWindow(iFolderWebService webService, SimiasWebService SimiasWS, Manager simiasManager)
 			: base (Util.GS("iFolders"))
 		{
 			if(webService == null)
@@ -289,7 +292,8 @@ namespace Novell.iFolder
 
 			ifws = webService;
 			simws = SimiasWS;
-			ifdata = iFolderData.GetData();
+			this.simiasManager = simiasManager;
+			ifdata = iFolderData.GetData(simiasManager);
 			curiFolders = new Hashtable();
 			curDomain = null;
 			curDomains = null;
@@ -301,7 +305,7 @@ namespace Novell.iFolder
 			RefreshDomains(true);
 			RefreshiFolders(true);
 			
-			domainController = DomainController.GetDomainController();
+			domainController = DomainController.GetDomainController(simiasManager);
 			if (domainController != null)
 			{
 				domainController.DomainAdded +=
@@ -403,7 +407,7 @@ namespace Novell.iFolder
 		{
 			Toolbar tb = new Toolbar();
 
-			NewButton = tb.AppendItem(Util.GS("New"), 
+			NewButton = tb.AppendItem(Util.GS("New"),
 				Util.GS("Create a new iFolder"), "Toolbar/New iFolder",
 				new Image(new Gdk.Pixbuf(Util.ImagesPath("newifolder24.png"))),
 				new SignalFunc(CreateNewiFolder));
@@ -516,7 +520,7 @@ namespace Novell.iFolder
 
 			ConflictMenuItem = new MenuItem (Util.GS("Resolve conflic_ts"));
 			iFolderMenu.Append(ConflictMenuItem);
-			ConflictMenuItem.Activated += 
+			ConflictMenuItem.Activated +=
 					new EventHandler(ResolveConflictHandler);
 
 			SyncNowMenuItem = new MenuItem(Util.GS("S_ynchronize now"));
@@ -564,10 +568,10 @@ namespace Novell.iFolder
 			//----------------------------
 			Menu ViewMenu = new Menu();
 
-			RefreshMenuItem = 
+			RefreshMenuItem =
 				new ImageMenuItem(Stock.Refresh, agrp);
 			ViewMenu.Append(RefreshMenuItem);
-			RefreshMenuItem.Activated += 
+			RefreshMenuItem.Activated +=
 					new EventHandler(RefreshiFoldersHandler);
 					
 			ViewMenu.Append(new SeparatorMenuItem());
@@ -592,13 +596,13 @@ namespace Novell.iFolder
 			//----------------------------
 			Menu HelpMenu = new Menu();
 
-			HelpMenuItem = 
+			HelpMenuItem =
 				new ImageMenuItem(Stock.Help, agrp);
 			HelpMenu.Append(HelpMenuItem);
 			HelpMenuItem.Activated += new EventHandler(OnHelpMenuItem);
 
 			AboutMenuItem = new ImageMenuItem(Util.GS("A_bout"));
-			AboutMenuItem.Image = new Image(Gnome.Stock.About, 
+			AboutMenuItem.Image = new Image(Gnome.Stock.About,
 							Gtk.IconSize.Menu);
 //			AboutMenuItem.Image = new Image(
 //					new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png")));
@@ -694,7 +698,7 @@ namespace Novell.iFolder
 						OniFolderRowActivated);
 
 
-			ServeriFolderPixBuf = 
+			ServeriFolderPixBuf =
 				new Gdk.Pixbuf(Util.ImagesPath("serverifolder24.png"));
 			iFolderPixBuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
 		
@@ -719,7 +723,7 @@ namespace Novell.iFolder
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-			iFolderHolder ifHolder = 
+			iFolderHolder ifHolder =
 						(iFolderHolder) tree_model.GetValue(iter,0);
 			((CellRendererText) cell).Text = ifHolder.Path;
 		}
@@ -756,7 +760,7 @@ namespace Novell.iFolder
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-			iFolderHolder ifHolder = 
+			iFolderHolder ifHolder =
 					(iFolderHolder) tree_model.GetValue(iter,0);
 
 			if(ifHolder.iFolder.IsSubscription)
@@ -823,7 +827,7 @@ namespace Novell.iFolder
 
 		private void AccountsMenuItemHandler(object o, EventArgs args)
 		{
-			Util.ShowPrefsPage(1);
+			Util.ShowPrefsPage(1, simiasManager);
 		}
 
 
@@ -858,6 +862,18 @@ namespace Novell.iFolder
 		{
 			Util.ShowPrefsPage(0);
 		}
+		
+		
+		private void QuitEventHandler(object o, EventArgs args)
+		{
+			Util.QuitiFolder();
+		}
+		
+		
+		private void ShowPreferencesHandler(object o, EventArgs args)
+		{
+			Util.ShowPrefsPage(0, simiasManager);
+		}
 
 
 
@@ -881,10 +897,10 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				iFolderHolder ifHolder = 
+				iFolderHolder ifHolder =
 						(iFolderHolder) tModel.GetValue(iter, 0);
 
-				if(	(ifHolder.iFolder != null) && 
+				if(	(ifHolder.iFolder != null) &&
 									(ifHolder.iFolder.HasConflicts) )
 				{
 					ConflictMenuItem.Sensitive = true;
@@ -926,7 +942,7 @@ namespace Novell.iFolder
 					ShareButton.Sensitive = false;
 				}
 
-				if(ifHolder.iFolder.OwnerID == 
+				if(ifHolder.iFolder.OwnerID ==
 						ifHolder.iFolder.CurrentUserID)
 				{
 					DeleteMenuItem.Sensitive = true;
@@ -967,7 +983,7 @@ namespace Novell.iFolder
 
 
 		[GLib.ConnectBefore]
-		public void iFolderTreeViewButtonPressed(	object obj, 
+		public void iFolderTreeViewButtonPressed(	object obj,
 								ButtonPressEventArgs args)
 		{
 			switch(args.Event.Button)
@@ -982,7 +998,7 @@ namespace Novell.iFolder
 
 					TreePath tPath = null;
 
-					iFolderTreeView.GetPathAtPos((Int32)args.Event.X, 
+					iFolderTreeView.GetPathAtPos((Int32)args.Event.X,
 								(Int32)args.Event.Y, out tPath);
 
 					if(tPath != null)
@@ -1001,7 +1017,7 @@ namespace Novell.iFolder
 
 							if(ifHolder.iFolder.IsSubscription == false)
 							{
-								MenuItem item_open = 
+								MenuItem item_open =
 									new MenuItem (Util.GS("Open"));
 								ifMenu.Append (item_open);
 								item_open.Activated += new EventHandler(
@@ -1009,7 +1025,7 @@ namespace Novell.iFolder
 
 								ifMenu.Append(new SeparatorMenuItem());
 
-								MenuItem item_share = 
+								MenuItem item_share =
 									new MenuItem (Util.GS("Share with..."));
 								ifMenu.Append (item_share);
 								item_share.Activated += new EventHandler(
@@ -1041,7 +1057,7 @@ namespace Novell.iFolder
 											OnRevertiFolder);
 								}
 
-								if(ifHolder.iFolder.OwnerID == 
+								if(ifHolder.iFolder.OwnerID ==
 												ifHolder.iFolder.CurrentUserID)
 								{
 									MenuItem item_delete = new MenuItem (
@@ -1062,24 +1078,24 @@ namespace Novell.iFolder
 
 								ifMenu.Append(new SeparatorMenuItem());
 	
-								MenuItem item_properties = 
+								MenuItem item_properties =
 									new MenuItem (Util.GS("Properties"));
 								ifMenu.Append (item_properties);
-								item_properties.Activated += 
+								item_properties.Activated +=
 									new EventHandler( OnShowProperties );
 							}
 							else if(ifHolder.iFolder.State == "Available")
 							{
-								MenuItem item_accept = 
+								MenuItem item_accept =
 									new MenuItem (Util.GS("Set Up..."));
 								ifMenu.Append (item_accept);
 								item_accept.Activated += new EventHandler(
 										SetupiFolderHandler);
 
-								if(ifHolder.iFolder.OwnerID == 
+								if(ifHolder.iFolder.OwnerID ==
 												ifHolder.iFolder.CurrentUserID)
 								{
-									MenuItem item_decline = 
+									MenuItem item_decline =
 										new MenuItem(Util.GS("Delete"));
 									ifMenu.Append (item_decline);
 									item_decline.Activated += new EventHandler(
@@ -1087,7 +1103,7 @@ namespace Novell.iFolder
 								}
 								else
 								{
-									MenuItem item_decline = 
+									MenuItem item_decline =
 									new MenuItem (Util.GS("Remove"));
 									ifMenu.Append (item_decline);
 									item_decline.Activated += new EventHandler(
@@ -1096,7 +1112,7 @@ namespace Novell.iFolder
 							}
 							else
 							{
-								MenuItem item_decline = 
+								MenuItem item_decline =
 									new MenuItem (Util.GS("Remove"));
 								ifMenu.Append (item_decline);
 								item_decline.Activated += new EventHandler(
@@ -1106,22 +1122,22 @@ namespace Novell.iFolder
 					}
 					else
 					{
-						MenuItem item_create = 
+						MenuItem item_create =
 							new MenuItem (Util.GS("New..."));
 						ifMenu.Append (item_create);
-						item_create.Activated += 
+						item_create.Activated +=
 							new EventHandler(NewiFolderHandler);
 
-						MenuItem item_refresh = 
+						MenuItem item_refresh =
 							new MenuItem (Util.GS("Refresh"));
 						ifMenu.Append (item_refresh);
-						item_refresh.Activated += 
+						item_refresh.Activated +=
 							new EventHandler(RefreshiFoldersHandler);
 					}
 		
 					ifMenu.ShowAll();
 
-					ifMenu.Popup(null, null, null, IntPtr.Zero, 3, 
+					ifMenu.Popup(null, null, null, IntPtr.Zero, 3,
 						Gtk.Global.CurrentEventTime);
 					break;
 				}
@@ -1143,7 +1159,7 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				iFolderHolder ifHolder = 
+				iFolderHolder ifHolder =
 						(iFolderHolder) tModel.GetValue(iter, 0);
 				if(ifHolder.iFolder.IsSubscription)
 				{
@@ -1167,7 +1183,7 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				iFolderHolder ifHolder = 
+				iFolderHolder ifHolder =
 						(iFolderHolder) tModel.GetValue(iter, 0);
 
 				try
@@ -1225,7 +1241,7 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				iFolderHolder ifHolder = 
+				iFolderHolder ifHolder =
 							(iFolderHolder) tModel.GetValue(iter, 0);
 
 				if (ifHolder != null)
@@ -1237,7 +1253,7 @@ namespace Novell.iFolder
 						try
 						{
 							propsDialog = 
-								new iFolderPropertiesDialog(this, ifHolder.iFolder, ifws, simws);
+								new iFolderPropertiesDialog(this, ifHolder.iFolder, ifws, simws, simiasManager);
 							propsDialog.SetPosition(WindowPosition.Center);
 							propsDialog.Response += 
 									new ResponseHandler(OnPropertiesDialogResponse);
@@ -1332,7 +1348,7 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				iFolderHolder ifHolder = 
+				iFolderHolder ifHolder =
 						(iFolderHolder) tModel.GetValue(iter, 0);
 
 				iFolderMsgDialog dialog = new iFolderMsgDialog(
@@ -1357,7 +1373,7 @@ namespace Novell.iFolder
 					}
 					catch(Exception e)
 					{
-						iFolderExceptionDialog ied = 
+						iFolderExceptionDialog ied =
 							new iFolderExceptionDialog(
 								this,
 								e);
@@ -1423,7 +1439,7 @@ namespace Novell.iFolder
 				}
 				catch(Exception e)
 				{
-					iFolderExceptionDialog ied = 
+					iFolderExceptionDialog ied =
 						new iFolderExceptionDialog(
 							this,
 							e);
@@ -1495,7 +1511,7 @@ namespace Novell.iFolder
 		public void ResolveConflicts(string ifolderID)
 		{
 			// Guarantee that the iFolderWindow is showing
-			Util.ShowiFolderWindow();
+			Util.ShowiFolderWindow(simiasManager);
 
 			// Select the specified available iFolder and call SetupiFolder().
 			if(curiFolders.ContainsKey(ifolderID))
@@ -1516,7 +1532,7 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				iFolderHolder ifHolder = 
+				iFolderHolder ifHolder =
 						(iFolderHolder) tModel.GetValue(iter, 0);
 			
 				
@@ -1525,7 +1541,7 @@ namespace Novell.iFolder
 										ifHolder.iFolder,
 										ifws,
 										simws);
-				ConflictDialog.Response += 
+				ConflictDialog.Response +=
 							new ResponseHandler(OnConflictDialogResponse);
 				ConflictDialog.ShowAll();
 			}
@@ -1563,7 +1579,7 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				iFolderHolder ifHolder = 
+				iFolderHolder ifHolder =
 						(iFolderHolder) tModel.GetValue(iter, 0);
 
 				iFolderHolder updatedHolder = null;
@@ -1634,7 +1650,7 @@ namespace Novell.iFolder
 				TreeIter iter;
 				iFolderHolder ifHolder = ifdata.GetiFolder(iFolderID);
 
-				if( (curDomain != null) && 
+				if( (curDomain != null) &&
 						(curDomain != ifHolder.iFolder.DomainID) )
 				{
 					// don't do anything because we are not showing this
@@ -1650,7 +1666,7 @@ namespace Novell.iFolder
 			{
 				// just update with the current from ifdata
 				TreeIter iter = (TreeIter)curiFolders[iFolderID];
-				iFolderHolder ifHolder = 
+				iFolderHolder ifHolder =
 							ifdata.GetiFolder(iFolderID);
 				iFolderTreeStore.SetValue(iter, 0, ifHolder);
 			}
@@ -1970,7 +1986,7 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				iFolderHolder ifHolder = 
+				iFolderHolder ifHolder =
 						(iFolderHolder) tModel.GetValue(iter, 0);
 
 				try
@@ -1979,7 +1995,7 @@ namespace Novell.iFolder
 				}
 				catch(Exception e)
 				{
-					iFolderExceptionDialog ied = 
+					iFolderExceptionDialog ied =
 						new iFolderExceptionDialog(
 							this,
 							e);
@@ -1994,7 +2010,7 @@ namespace Novell.iFolder
 		public void SetUpiFolder(string ifolderID)
 		{
 			// Guarantee that the iFolderWindow is showing
-			Util.ShowiFolderWindow();
+			Util.ShowiFolderWindow(simiasManager);
 
 			// Select the specified available iFolder and call SetupiFolder().
 			if(curiFolders.ContainsKey(ifolderID))
@@ -2024,7 +2040,7 @@ namespace Novell.iFolder
 
 				do
 				{
-					iFolderAcceptDialog iad = 
+					iFolderAcceptDialog iad =
 							new iFolderAcceptDialog(ifHolder.iFolder, Util.LastSetupPath);
 					iad.TransientFor = this;
 					rc = iad.Run();
@@ -2091,7 +2107,7 @@ namespace Novell.iFolder
 				dg.Destroy();
 				if (response == -8)
 				{
-					Util.ShowPrefsPage(1);
+					Util.ShowPrefsPage(1, simiasManager);
 				}
 				
 				return;
@@ -2391,7 +2407,7 @@ namespace Novell.iFolder
 			}
 			else
 			{
-				iFolderExceptionDialog ied = 
+				iFolderExceptionDialog ied =
 					new iFolderExceptionDialog(
 						this,
 						e);
