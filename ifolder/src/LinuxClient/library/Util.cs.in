@@ -277,14 +277,14 @@ namespace Novell.iFolder
 			prefswin = null;
 		}
 		
-		public static iFolderWindow GetiFolderWindow()
+		public static iFolderWindow GetiFolderWindow(Manager simiasManager)
 		{
-			if(ifwin == null && CheckWebService())
+			if(ifwin == null && CheckWebService(simiasManager))
 			{
 				ifwin = new iFolderWindow(ifws, simws);
 				ifwin.DeleteEvent +=
 						new DeleteEventHandler(OniFolderWindowDeleteEvent);
-				ifwin.Destroyed += 
+				ifwin.Destroyed +=
 						new EventHandler(OniFolderWindowDestroyed);
 			}
 
@@ -300,7 +300,7 @@ namespace Novell.iFolder
 					ifwin = new iFolderWindow(ifws, simws, simiasManager);
 					ifwin.DeleteEvent +=
 							new DeleteEventHandler(OniFolderWindowDeleteEvent);
-					ifwin.Destroyed += 
+					ifwin.Destroyed +=
 							new EventHandler(OniFolderWindowDestroyed);
 					ifwin.ShowAll();
 					biFolderWindowNeverShown = false;
@@ -390,11 +390,11 @@ namespace Novell.iFolder
 			ifwin = null;
 		}
 
-		public static LogWindow GetLogWindow()
+		public static LogWindow GetLogWindow(Manager simiasManager)
 		{
 			if (logwin == null)
 			{
-				logwin = new LogWindow();
+				logwin = new LogWindow(simiasManager);
 				logwin.Destroyed +=
 					new EventHandler(LogWindowDestroyedHandler);
 			}
@@ -407,7 +407,7 @@ namespace Novell.iFolder
 			if (logwin == null)
 			{
 				logwin = new LogWindow();
-				logwin.Destroyed += 
+				logwin.Destroyed +=
 						new EventHandler(LogWindowDestroyedHandler);
 				logwin.ShowAll();
 				bLogWinNeverShown = false;
