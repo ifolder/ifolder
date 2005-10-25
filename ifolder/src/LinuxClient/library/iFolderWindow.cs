@@ -860,18 +860,6 @@ namespace Novell.iFolder
 		
 		private void ShowPreferencesHandler(object o, EventArgs args)
 		{
-			Util.ShowPrefsPage(0);
-		}
-		
-		
-		private void QuitEventHandler(object o, EventArgs args)
-		{
-			Util.QuitiFolder();
-		}
-		
-		
-		private void ShowPreferencesHandler(object o, EventArgs args)
-		{
 			Util.ShowPrefsPage(0, simiasManager);
 		}
 
