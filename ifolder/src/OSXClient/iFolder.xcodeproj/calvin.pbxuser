@@ -21,11 +21,8 @@
 			3E7AD8E40885BE1E004F45F6 /* Simias.m:304 */,
 			3E3E066F08871E2900268F7C /* Simias.m:256 */,
 			3E3E068508871E6E00268F7C /* Simias.m:255 */,
-			3ED46B7B088CC38B001A7FB0 /* AccountsController.m:316 */,
-			3E0C97A7088D526400DF7811 /* iFolderPrefsController.m:121 */,
 			3E0C97A9088D527100DF7811 /* iFolderPrefsController.m:72 */,
 			3E0C97BA088D52A800DF7811 /* iFolderPrefsController.m:95 */,
-			3E0C97C4088D57D100DF7811 /* iFolderPrefsController.m:111 */,
 		);
 		breakpointsGroup = 3EE583F60871F24900915842 /* XCBreakpointsBucket */;
 		codeSenseManager = 3E1712BF076126F700BC1084 /* Code sense */;
@@ -177,7 +174,7 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 144177841;
+			PBXPerProjectTemplateStateSaveDate = 151952915;
 			PBXPrepackagedSmartGroups_v2 = (
 				{
 					PBXTransientLocationAtTop = bottom;
@@ -354,12 +351,8 @@
 					};
 				},
 			);
-			PBXWorkspaceStateSaveDate = 144177841;
+			PBXWorkspaceStateSaveDate = 151952915;
 			com.apple.ide.smrt.PBXUserSmartGroupsKey.Rev10 = <040b747970656473747265616d8103e88401408484840e4e534d757461626c654172726179008484074e534172726179008484084e534f626a65637400858401690086>;
-		};
-		perUserProjectItems = {
-			3EE584BC0898277C00D594B9 /* PBXTextBookmark */ = 3EE584BC0898277C00D594B9 /* PBXTextBookmark */;
-			3EE584C60898283900D594B9 /* PBXTextBookmark */ = 3EE584C60898283900D594B9 /* PBXTextBookmark */;
 		};
 		sourceControlManager = 3E1712BE076126F700BC1084 /* Source Control */;
 		userBookmarkGroup = 3E3F7C9907BEA1110096E031 /* PBXBookmarkGroup */;
@@ -385,19 +378,6 @@
 			sepNavWindowFrame = "{{38, 418}, {750, 558}}";
 		};
 	};
-	3E0C97A7088D526400DF7811 /* iFolderPrefsController.m:121 */ = {
-		isa = PBXFileBreakpoint;
-		actions = (
-		);
-		continueAfterActions = 0;
-		delayBeforeContinue = 0;
-		fileReference = 3E70A40B078DFCD80075681D /* iFolderPrefsController.m */;
-		functionName = "-saveCurrentSyncInterval";
-		hitCount = 0;
-		lineNumber = 121;
-		modificationTime = 144188508.355972;
-		state = 1;
-	};
 	3E0C97A9088D527100DF7811 /* iFolderPrefsController.m:72 */ = {
 		isa = PBXFileBreakpoint;
 		actions = (
@@ -408,7 +388,7 @@
 		functionName = "-awakeFromNib";
 		hitCount = 0;
 		lineNumber = 72;
-		modificationTime = 144188508.35598;
+		modificationTime = 151955920.533855;
 		state = 2;
 	};
 	3E0C97BA088D52A800DF7811 /* iFolderPrefsController.m:95 */ = {
@@ -421,7 +401,7 @@
 		functionName = "-awakeFromNib";
 		hitCount = 0;
 		lineNumber = 95;
-		modificationTime = 144188508.355989;
+		modificationTime = 151955920.533864;
 		state = 2;
 	};
 	3E0C97C4088D57D100DF7811 /* iFolderPrefsController.m:111 */ = {
@@ -432,9 +412,9 @@
 		delayBeforeContinue = 0;
 		fileReference = 3E70A40B078DFCD80075681D /* iFolderPrefsController.m */;
 		functionName = "-awakeFromNib";
-		hitCount = 0;
+		hitCount = 1;
 		lineNumber = 111;
-		modificationTime = 144188508.355997;
+		modificationTime = 151953000.844082;
 		state = 1;
 	};
 	3E0E6CBC07C7D41B0057D505 /* iFolderConflict.h */ = {
@@ -621,9 +601,9 @@
 	};
 	3E256000077235290062AB7A /* iFolderService.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {752, 22540}}";
-			sepNavSelRange = "{1043, 25}";
-			sepNavVisRect = "{{0, 18792}, {705, 429}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1009, 22638}}";
+			sepNavSelRange = "{5362, 0}";
+			sepNavVisRect = "{{0, 2544}, {1009, 391}}";
 			sepNavWindowFrame = "{{38, 418}, {750, 558}}";
 		};
 	};
@@ -668,7 +648,7 @@
 		functionName = "-getCurrentSimiasPID";
 		hitCount = 0;
 		lineNumber = 256;
-		modificationTime = 144188508.355942;
+		modificationTime = 151955920.533822;
 		state = 2;
 	};
 	3E3E068508871E6E00268F7C /* Simias.m:255 */ = {
@@ -681,7 +661,7 @@
 		functionName = "-getCurrentSimiasPID";
 		hitCount = 0;
 		lineNumber = 255;
-		modificationTime = 144188508.355955;
+		modificationTime = 151955920.533828;
 		state = 2;
 	};
 	3E3F7C9907BEA1110096E031 /* PBXBookmarkGroup */ = {
@@ -821,9 +801,9 @@
 	};
 	3E70A40B078DFCD80075681D /* iFolderPrefsController.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {962, 4886}}";
-			sepNavSelRange = "{10058, 0}";
-			sepNavVisRect = "{{0, 830}, {664, 610}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1009, 4886}}";
+			sepNavSelRange = "{2758, 0}";
+			sepNavVisRect = "{{0, 1352}, {1009, 391}}";
 			sepNavWindowFrame = "{{238, 263}, {709, 739}}";
 		};
 	};
@@ -837,7 +817,7 @@
 		functionName = "-startSimiasThread:";
 		hitCount = 0;
 		lineNumber = 497;
-		modificationTime = 144188508.355787;
+		modificationTime = 151955920.533753;
 		state = 2;
 	};
 	3E7AD8D30885BB7D004F45F6 /* Simias.m:76 */ = {
@@ -850,7 +830,7 @@
 		functionName = "-start";
 		hitCount = 0;
 		lineNumber = 76;
-		modificationTime = 144188508.355796;
+		modificationTime = 151955920.53378;
 		state = 2;
 	};
 	3E7AD8DA0885BC79004F45F6 /* Simias.m:213 */ = {
@@ -863,7 +843,7 @@
 		functionName = "-getCurrentSimiasPID";
 		hitCount = 0;
 		lineNumber = 213;
-		modificationTime = 144188508.355804;
+		modificationTime = 151955920.533788;
 		state = 2;
 	};
 	3E7AD8DD0885BCA7004F45F6 /* Simias.m:280 */ = {
@@ -876,7 +856,7 @@
 		functionName = "-getCurrentSimiasPID";
 		hitCount = 0;
 		lineNumber = 280;
-		modificationTime = 144188508.355875;
+		modificationTime = 151955920.533795;
 		state = 1;
 	};
 	3E7AD8E00885BCE2004F45F6 /* Simias.m:268 */ = {
@@ -889,7 +869,7 @@
 		functionName = "-getCurrentSimiasPID";
 		hitCount = 0;
 		lineNumber = 268;
-		modificationTime = 144188508.355891;
+		modificationTime = 151955920.533801;
 		state = 2;
 	};
 	3E7AD8E20885BD2F004F45F6 /* Simias.m:295 */ = {
@@ -902,7 +882,7 @@
 		functionName = "-getCurrentSimiasPID";
 		hitCount = 0;
 		lineNumber = 295;
-		modificationTime = 144188508.3559;
+		modificationTime = 151955920.533808;
 		state = 2;
 	};
 	3E7AD8E40885BE1E004F45F6 /* Simias.m:304 */ = {
@@ -915,7 +895,7 @@
 		functionName = "-getCurrentSimiasPID";
 		hitCount = 0;
 		lineNumber = 304;
-		modificationTime = 144188508.355909;
+		modificationTime = 151955920.533815;
 		state = 2;
 	};
 	3E81105D076FF18700E96819 /* LoginWindowController.h */ = {
@@ -936,18 +916,18 @@
 	};
 	3E8853CA07C6F80A00E8B6CD /* iFolderNotificationController.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {552, 686}}";
-			sepNavSelRange = "{1621, 0}";
-			sepNavVisRect = "{{0, 117}, {552, 569}}";
-			sepNavWindowFrame = "{{458, 304}, {597, 698}}";
+			sepNavIntBoundsRect = "{{0, 0}, {558, 700}}";
+			sepNavSelRange = "{1370, 0}";
+			sepNavVisRect = "{{0, 117}, {558, 569}}";
+			sepNavWindowFrame = "{{249, 74}, {597, 698}}";
 		};
 	};
 	3E8853CB07C6F80A00E8B6CD /* iFolderNotificationController.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1190, 3528}}";
-			sepNavSelRange = "{4100, 0}";
-			sepNavVisRect = "{{0, 977}, {705, 429}}";
-			sepNavWindowFrame = "{{107, 355}, {750, 558}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1190, 3626}}";
+			sepNavSelRange = "{1894, 0}";
+			sepNavVisRect = "{{0, 1002}, {711, 429}}";
+			sepNavWindowFrame = "{{510, 435}, {750, 558}}";
 		};
 	};
 	3E8853CE07C6F80A00E8B6CD /* KABubbleWindow.h */ = {
@@ -959,9 +939,10 @@
 	};
 	3E8853CF07C6F80A00E8B6CD /* KABubbleWindow.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {646, 771}}";
-			sepNavSelRange = "{416, 0}";
-			sepNavVisRect = "{{0, 0}, {646, 771}}";
+			sepNavIntBoundsRect = "{{0, 0}, {571, 742}}";
+			sepNavSelRange = "{886, 0}";
+			sepNavVisRect = "{{0, 53}, {571, 689}}";
+			sepNavWindowFrame = "{{15, 179}, {610, 818}}";
 		};
 	};
 	3E8853D007C6F80A00E8B6CD /* KABubbleWindowController.h */ = {
@@ -1059,9 +1040,9 @@
 	};
 	3EB62D0E07B9C907000C8112 /* iFolderData.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {705, 12320}}";
-			sepNavSelRange = "{406, 0}";
-			sepNavVisRect = "{{0, 949}, {705, 429}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1009, 12530}}";
+			sepNavSelRange = "{17247, 0}";
+			sepNavVisRect = "{{0, 9248}, {1009, 391}}";
 			sepNavWindowFrame = "{{130, 334}, {750, 558}}";
 		};
 	};
@@ -1106,20 +1087,7 @@
 		functionName = "-AddAndInviteUser:MemberName:GivenName:FamilyName:iFolderID:::";
 		hitCount = 0;
 		lineNumber = 745;
-		modificationTime = 144188508.355614;
-		state = 1;
-	};
-	3ED46B7B088CC38B001A7FB0 /* AccountsController.m:316 */ = {
-		isa = PBXFileBreakpoint;
-		actions = (
-		);
-		continueAfterActions = 0;
-		delayBeforeContinue = 0;
-		fileReference = 3E3BC75307AB5B7B00D2AE46 /* AccountsController.m */;
-		functionName = "-activateAccount";
-		hitCount = 0;
-		lineNumber = 316;
-		modificationTime = 144188508.355964;
+		modificationTime = 151955920.533737;
 		state = 1;
 	};
 	3EDA494207C681B7007CD1E0 /* MCTableView.h */ = {
@@ -1164,7 +1132,7 @@
 		functionName = "-authenticate:";
 		hitCount = 0;
 		lineNumber = 179;
-		modificationTime = 144188508.355765;
+		modificationTime = 151955920.533747;
 		state = 1;
 	};
 	3EE276DF07C40C2400A645A0 /* PropGeneralController.h */ = {
@@ -1193,7 +1161,7 @@
 		functionName = "-GetiFolderUserFromNodeID:inCollection:";
 		hitCount = 0;
 		lineNumber = 620;
-		modificationTime = 144188508.338325;
+		modificationTime = 151955920.533681;
 		state = 1;
 	};
 	3EE2781D07C44B7400A645A0 /* DiskSpace.h */ = {
@@ -1257,36 +1225,16 @@
 			3E7AD8E40885BE1E004F45F6 /* Simias.m:304 */,
 			3E3E066F08871E2900268F7C /* Simias.m:256 */,
 			3E3E068508871E6E00268F7C /* Simias.m:255 */,
-			3ED46B7B088CC38B001A7FB0 /* AccountsController.m:316 */,
-			3E0C97A7088D526400DF7811 /* iFolderPrefsController.m:121 */,
 			3E0C97A9088D527100DF7811 /* iFolderPrefsController.m:72 */,
 			3E0C97BA088D52A800DF7811 /* iFolderPrefsController.m:95 */,
 			3E0C97C4088D57D100DF7811 /* iFolderPrefsController.m:111 */,
 		);
 	};
-	3EE584BC0898277C00D594B9 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		comments = "warning: invalid receiver type 'CFStringRef'";
-		fRef = 3EE886E907B92E8B00484B9F /* iFolderApplication.m */;
-		rLen = 1;
-		rLoc = 173;
-		rType = 1;
-	};
-	3EE584C60898283900D594B9 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 3EE886E907B92E8B00484B9F /* iFolderApplication.m */;
-		name = "iFolderApplication.m: 174";
-		rLen = 0;
-		rLoc = 5656;
-		rType = 0;
-		vrLen = 1460;
-		vrLoc = 5041;
-	};
 	3EE886E907B92E8B00484B9F /* iFolderApplication.m */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {1718, 21826}}";
-			sepNavSelRange = "{5656, 0}";
-			sepNavVisRect = "{{0, 2246}, {820, 571}}";
+			sepNavSelRange = "{21933, 0}";
+			sepNavVisRect = "{{0, 10200}, {1009, 391}}";
 			sepNavWindowFrame = "{{237, 302}, {865, 700}}";
 		};
 	};

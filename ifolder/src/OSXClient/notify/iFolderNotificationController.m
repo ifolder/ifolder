@@ -50,7 +50,6 @@ static iFolderNotificationController *sharedInstance = nil;
 }
 
 
-
 - (id) init
 {
 	if( ( self = [super init] ) )
@@ -75,6 +74,14 @@ static iFolderNotificationController *sharedInstance = nil;
 
 	_bubbles = nil;
 	notifyContext = nil;
+
+	if(notifySound != nil)
+	{
+		if( [notifySound isPlaying] )
+			[notifySound stop];
+		
+		[notifySound autorelease];
+	}
 	
 	[super dealloc];
 }
@@ -225,27 +232,27 @@ static iFolderNotificationController *sharedInstance = nil;
 	if([sName compare:@"No sound"] == 0)
 		return;
 
-	NSSound *sound = [NSSound soundNamed:sName];
+	notifySound = [NSSound soundNamed:sName];
 	
 //	if( ! path ) return;
 
 //	if( ! [path isAbsolutePath] ) path = [[NSString stringWithFormat:@"%@/Sounds", [[NSBundle mainBundle] resourcePath]] stringByAppendingPathComponent:path];
 
 //	NSSound *sound = [[NSSound alloc] initWithContentsOfFile:path byReference:YES];
-	[sound setDelegate:self];
+	//[sound setDelegate:self];
 
 	// When run on a laptop using battery power, the play method may block while the audio
 	// hardware warms up.  If it blocks, the sound WILL NOT PLAY after the block ends.
 	// To get around this, we check to make sure the sound is playing, and if it isn't
 	// we call the play method again.
 
-	[sound play];
-	if( ! [sound isPlaying] ) [sound play];
+	[notifySound play];
+	if( ! [notifySound isPlaying] ) [notifySound play];
 }
 
-- (void) sound:(NSSound *) sound didFinishPlaying:(BOOL) finish
-{
-	[sound autorelease];
-}
+//- (void) sound:(NSSound *) sound didFinishPlaying:(BOOL) finish
+//{
+//	[sound autorelease];
+//}
 @end
 

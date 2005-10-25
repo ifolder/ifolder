@@ -32,7 +32,8 @@
 	NSMutableDictionary *_bubbles;
 	BOOL _growlInstalled;
 
-	NSMutableDictionary		*notifyContext;		
+	NSMutableDictionary		*notifyContext;
+	NSSound					*notifySound;	
 }
 + (iFolderNotificationController *) defaultManager;
 - (void) performNotification:(NSDictionary *) context;
