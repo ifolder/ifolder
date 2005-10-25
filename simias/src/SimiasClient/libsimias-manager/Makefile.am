@@ -65,22 +65,16 @@ uninstall-local:
 
 endif
 
-#if DARWIN
-#libFlaimWrapper_la_CXXFLAGS = -I"../../../external/flaim/macosx/include" -fshort-wchar -DFLAIMWRAPPER_EXPORTS -DUNIX -D_REENTRANT -DOSX -c
-#
-#libFlaimWrapper_la_LDFLAGS = -L"../../../external/flaim/macosx/release" -lflm
-#
-#install-exec-local: libFlaimWrapper.la
-#	$(mkinstalldirs) $(DESTDIR)$(webbindir)
-#	if test -e $(DESTDIR)$(webbindir)/FlaimWrapper; then \
-#		rm $(DESTDIR)$(webbindir)/FlaimWrapper; \
-#	fi;
-#	ln -s $(DESTDIR)$(libdir)/libFlaimWrapper.dylib $(DESTDIR)$(webbindir)/FlaimWrapper
-#
-#uninstall-local:
-#	cd $(DESTDIR)$(webbindir); rm -f FlaimWrapper
-#
-#endif
+if DARWIN
+libsimias_manager_a_CXXFLAGS = -DUNIX -D_REENTRANT -DOSX -c
+
+install-exec-local: libsimias-manager.a
+	$(mkinstalldirs) $(DESTDIR)$(libdir)
+
+uninstall-local:
+	cd $(DESTDIR)$(libdir); rm -f libsimias-manager.a
+
+endif
 
 endif
 	
