@@ -42,11 +42,13 @@
 + (void) newUserNotification:(iFolder *)ifolder;
 + (void) collisionNotification:(iFolder *)ifolder;
 + (void) readOnlyNotification:(iFolder *)ifolder;
++ (void) iFolderFullNotification:(iFolder *)ifolder;
 
 - (void) ifolderNotify:(iFolder *)ifolder;
 - (void) userNotify:(iFolder *)ifolder;
 - (void) colNotify:(iFolder *)ifolder;
 - (void) readOnlyNotify:(iFolder *)ifolder;
+- (void) iFolderFullNotify:(iFolder *)ifolder;
 
 @end
 	

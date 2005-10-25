@@ -111,6 +111,12 @@ static iFolderNotificationController *sharedInstance = nil;
 				withObject:ifolder waitUntilDone:YES ];
 }
 
++ (void) iFolderFullNotification:(iFolder *)ifolder
+{
+	[[self defaultManager] performSelectorOnMainThread:@selector(iFolderFullNotify:) 
+				withObject:ifolder waitUntilDone:YES ];
+}
+
 - (void) ifolderNotify:(iFolder *)ifolder
 {
 	if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_NOTIFYIFOLDERS])
@@ -159,6 +165,16 @@ static iFolderNotificationController *sharedInstance = nil;
 	}
 }
 
+- (void) iFolderFullNotify:(iFolder *)ifolder
+{
+	if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_NOTIFYIFOLDERS])
+	{
+		[notifyContext setObject:[ifolder Name] forKey:@"title"];
+		[notifyContext setObject:NSLocalizedString(@"Incomplete synchronization because the iFolder is full.", @"Message in notification window")
+										forKey:@"description"];
+		[self performNotification:notifyContext];
+	}
+}
 
 
 - (void) performNotification:(NSDictionary *) context

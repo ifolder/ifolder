@@ -103,6 +103,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 	}
 
 	readOnlyNotifications = [[NSMutableDictionary alloc] init];
+	iFolderFullNotifications = [[NSMutableDictionary alloc] init];
 		
 	ifolderdata = [[iFolderData alloc] init];
 }
@@ -1271,6 +1272,19 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 				[iFolderWindowController updateStatusTS:
 					[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
 				[self addLogTS:syncMessage];
+
+				if([iFolderFullNotifications objectForKey:[fse collectionID]] == nil)
+				{
+					// if the current iFolder is not found, add it to the readOnly notifications
+					// and notify
+					[iFolderFullNotifications setObject:[fse collectionID] forKey:[fse collectionID]];
+
+					iFolder *ifolder = [[iFolderData sharedInstance] getiFolder:[fse collectionID]];
+					
+					// if this wasn't an iFolder before we read it, notify the user
+					if(ifolder != nil)
+						[iFolderNotificationController iFolderFullNotification:ifolder];
+				}
 			}
 			// DiskFull
 			else if([[fse status] compare:@"DiskFull"] == 0)
