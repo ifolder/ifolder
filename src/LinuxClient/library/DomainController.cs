@@ -392,7 +392,7 @@ namespace Novell.iFolder.Controller
 
 			try
 			{
-				status = domainAuth.Authenticate();
+				status = domainAuth.Authenticate(simiasManager.WebServiceUri, simiasManager.DataPath);
 				if (status.statusCode == StatusCodes.Success ||
 					status.statusCode == StatusCodes.SuccessInGrace)
 				{
@@ -703,7 +703,7 @@ namespace Novell.iFolder.Controller
 
 			try
 			{
-				return domainAuth.Authenticate();
+				return domainAuth.Authenticate(simiasManager.WebServiceUri, simiasManager.DataPath);
 			}
 			catch {}
 			
@@ -742,7 +742,7 @@ namespace Novell.iFolder.Controller
 							domainID,
 							credentials);
 							
-					Status status = domainAuth.Authenticate();
+					Status status = domainAuth.Authenticate(simiasManager.WebServiceUri, simiasManager.DataPath);
 	
 					if (status.statusCode == StatusCodes.InvalidCredentials)
 					{

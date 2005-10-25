@@ -2082,7 +2082,7 @@ namespace Novell.iFolder
 			if(ifdata.GetDomainCount() < 1)
 			{
 				// Prompt the user about there not being any domains
-				iFolderWindow ifwin = Util.GetiFolderWindow();
+				iFolderWindow ifwin = Util.GetiFolderWindow(simiasManager);
 				iFolderMsgDialog dg = new iFolderMsgDialog(
 					ifwin,
 					iFolderMsgDialog.DialogType.Question,

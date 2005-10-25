@@ -49,14 +49,17 @@ namespace Novell.iFolder
 		private Widget				SaveButton;
 		private Widget				ClearButton;
 		private bool				ControlKeyPressed;
+		private Manager				simiasManager;
 		
 
 		/// <summary>
 		/// Default constructor for LogWindow
 		/// </summary>
-		public LogWindow()
+		public LogWindow(Manager simiasManager)
 			: base (Util.GS("iFolder Synchronization Log"))
 		{
+			this.simiasManager = simiasManager;
+
 			CreateWidgets();
 
 			// Bind ESC and C-w to close the window
@@ -240,7 +243,7 @@ namespace Novell.iFolder
 				case Action.StartLocalSync:
 					if (args.Name != null && args.Name.StartsWith("POBox:"))
 					{
-						DomainController domainController = DomainController.GetDomainController();
+						DomainController domainController = DomainController.GetDomainController(simiasManager);
 						DomainInformation domain = domainController.GetPOBoxDomain(args.ID);
 						if (domain != null)
 							LogMessage(string.Format(Util.GS("Checking for new iFolders: {0}"), domain.Name));
@@ -268,7 +271,7 @@ namespace Novell.iFolder
 				{
 					if (args.Name != null && args.Name.StartsWith("POBox:"))
 					{
-						DomainController domainController = DomainController.GetDomainController();
+						DomainController domainController = DomainController.GetDomainController(simiasManager);
 						DomainInformation domain = domainController.GetPOBoxDomain(args.ID);
 						if (domain != null)
 							LogMessage(string.Format(Util.GS("Done checking for new iFolders: {0}"), domain.Name));

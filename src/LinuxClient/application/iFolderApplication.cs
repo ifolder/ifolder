@@ -336,11 +336,11 @@ namespace Novell.iFolder
 					currentIconAnimationDirection = -1;
 				}
 
-				iFolderWindow ifwin = Util.GetiFolderWindow();
+				iFolderWindow ifwin = Util.GetiFolderWindow(simiasManager);
 				if(ifwin != null)
 					ifwin.HandleFileSyncEvent(args);
 
-				LogWindow logwin = Util.GetLogWindow();
+				LogWindow logwin = Util.GetLogWindow(simiasManager);
 				if(logwin != null)
 					logwin.HandleFileSyncEvent(args);
 			}
@@ -498,11 +498,11 @@ namespace Novell.iFolder
 
 			try
 			{
-				iFolderWindow ifwin = Util.GetiFolderWindow();
+				iFolderWindow ifwin = Util.GetiFolderWindow(simiasManager);
 				if(ifwin != null)
 					ifwin.HandleSyncEvent(args);
 	
-				LogWindow logwin = Util.GetLogWindow();
+				LogWindow logwin = Util.GetLogWindow(simiasManager);
 				if(logwin != null)
 					logwin.HandleSyncEvent(args);
 			}
@@ -543,7 +543,7 @@ namespace Novell.iFolder
 				}
 			}
 
-			iFolderWindow ifwin = Util.GetiFolderWindow();
+			iFolderWindow ifwin = Util.GetiFolderWindow(simiasManager);
 			if(ifwin != null)
 				ifwin.iFolderCreated(args.iFolderID);
 		}
@@ -577,7 +577,7 @@ namespace Novell.iFolder
 
 			if(ifHolder.iFolder.IsSubscription)
 			{
-				iFolderWindow ifwin = Util.GetiFolderWindow();
+				iFolderWindow ifwin = Util.GetiFolderWindow(simiasManager);
 				if(ifwin != null)
 					ifwin.iFolderChanged(args.iFolderID);
 			}
@@ -608,7 +608,7 @@ namespace Novell.iFolder
 						}
 					}
 
-					iFolderWindow ifwin = Util.GetiFolderWindow();
+					iFolderWindow ifwin = Util.GetiFolderWindow(simiasManager);
 					if(ifwin != null)
 						ifwin.iFolderHasConflicts(args.iFolderID);
 				}
@@ -624,7 +624,7 @@ namespace Novell.iFolder
 			if (args == null || args.iFolderID == null)
 				return;	// Prevent an exception
 			
-			iFolderWindow ifwin = Util.GetiFolderWindow();
+			iFolderWindow ifwin = Util.GetiFolderWindow(simiasManager);
 			if(ifwin != null)
 				ifwin.iFolderDeleted(args.iFolderID);
 		}
@@ -718,8 +718,8 @@ namespace Novell.iFolder
 					// Make sure the iFolder and Synchronization Windows are
 					// initialized so that they begin receiving events as soon
 					// as possible.
-					iFolderWindow ifwin = Util.GetiFolderWindow();
-					LogWindow logwin = Util.GetLogWindow();
+					iFolderWindow ifwin = Util.GetiFolderWindow(simiasManager);
+					LogWindow logwin = Util.GetLogWindow(simiasManager);
 
 					break;
 
@@ -785,7 +785,7 @@ namespace Novell.iFolder
 						Util.ShowiFolderWindow(simiasManager);
 					
 						string ifolderID = args.LinkID.Substring(colonPos + 1);
-						iFolderWindow ifwin = Util.GetiFolderWindow();
+						iFolderWindow ifwin = Util.GetiFolderWindow(simiasManager);
 						ifwin.SetUpiFolder(ifolderID);
 					}
 				}
@@ -797,7 +797,7 @@ namespace Novell.iFolder
 						Util.ShowiFolderWindow(simiasManager);
 					
 						string ifolderID = args.LinkID.Substring(colonPos + 1);
-						iFolderWindow ifwin = Util.GetiFolderWindow();
+						iFolderWindow ifwin = Util.GetiFolderWindow(simiasManager);
 						ifwin.ResolveConflicts(ifolderID);
 					}
 				}
@@ -854,7 +854,7 @@ namespace Novell.iFolder
 					// iFolder window if it's not already showing and hide
 					// it if it's not showing.  This behavior is used by
 					// Beagle and Gaim.
-					iFolderWindow ifwin = Util.GetiFolderWindow();
+					iFolderWindow ifwin = Util.GetiFolderWindow(simiasManager);
 					if (ifwin == null || !ifwin.Visible)
 						Util.ShowiFolderWindow(simiasManager);
 					else
