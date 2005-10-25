@@ -770,7 +770,7 @@ namespace Novell.iFolder
 			if (args.LinkID != null)
 			{
 				if (args.LinkID.Equals("ShowSyncLog"))
-					Util.ShowLogWindow();
+					Util.ShowLogWindow(simiasManager);
 				else if (args.LinkID.StartsWith("SetUpiFolder"))
 				{
 					int colonPos = args.LinkID.IndexOf(':');
