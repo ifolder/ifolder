@@ -421,13 +421,13 @@ namespace Simias.DomainServices
 			if ( domainServiceUrl == null )
 			{
 				// There was a failure in obtaining the service url. Try a hard coded one.
-				try 
+				if ( host.StartsWith( Uri.UriSchemeHttp ) || host.StartsWith( Uri.UriSchemeHttps ) )
 				{	
-					domainServiceUrl = new Uri( host + DomainServicePath ); 
+					domainServiceUrl = new Uri( host.TrimEnd( new char[] {'/'} ) + DomainServicePath ); 
 				}
-				catch 
+				else
 				{
-					domainServiceUrl = new Uri( Uri.UriSchemeHttp + Uri.SchemeDelimiter + host + DomainServicePath );
+					domainServiceUrl = new Uri( Uri.UriSchemeHttp + Uri.SchemeDelimiter + host.TrimEnd( new char[] {'/'} ) + DomainServicePath );
 				}
 			}
 
