@@ -76,8 +76,9 @@
 -(iFolder *)readAvailableiFolder:(NSString *)ifolderID 
 									inCollection:(NSString *)collectionID;
 
-
 -(iFolderDomain *)getDomain:(NSString *)domainID;
+-(iFolderDomain *)getPOBoxDomain:(NSString *)poBoxID;
+
 -(NSArray *)getDomains;
 -(NSArray *)getiFolders;
 -(iFolderDomain *)getDefaultDomain;

@@ -746,6 +746,31 @@ static iFolderData *sharedInstance = nil;
 }
 
 
+//===================================================================
+// getDomain
+// Returns the domain for the current domainID or nil if it ain't there
+//===================================================================
+-(iFolderDomain *)getPOBoxDomain:(NSString *)poBoxID
+{
+	iFolderDomain *dom;
+	[instanceLock lock];
+
+	NSEnumerator *enumerator = [keyedDomains objectEnumerator];
+
+	while ((dom = [enumerator nextObject]))
+	{
+		if([[dom poBoxID] compare:poBoxID] == 0)
+		{
+			break;
+		}
+	}
+
+	[instanceLock unlock];
+
+	return dom;
+}
+
+
 
 
 //===================================================================
