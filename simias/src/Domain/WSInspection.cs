@@ -78,18 +78,18 @@ namespace Simias.DomainServices
 			Uri tempUri;
 			try 
 			{	
-				if ( host.StartsWith( Uri.UriSchemeHttp ) )
+				if ( host.StartsWith( Uri.UriSchemeHttp ) || host.StartsWith( Uri.UriSchemeHttps ) )
 				{
-					tempUri = new Uri( host + WSInspectionDocument ); 
+					tempUri = new Uri( host.TrimEnd( new char[] { '/'} ) + WSInspectionDocument ); 
 				}
 				else
 				{
-					tempUri = new Uri ( Uri.UriSchemeHttp + Uri.SchemeDelimiter + host + WSInspectionDocument );
+					tempUri = new Uri ( Uri.UriSchemeHttp + Uri.SchemeDelimiter + host.TrimEnd( new char[] { '/' } ) + WSInspectionDocument );
 				}
 			}
 			catch 
 			{
-				tempUri = new Uri( Uri.UriSchemeHttp + Uri.SchemeDelimiter + host + WSInspectionDocument );
+				tempUri = new Uri( Uri.UriSchemeHttp + Uri.SchemeDelimiter + host.TrimEnd( new char[] { '/' } ) + WSInspectionDocument );
 			}
 
 			// Create the web request.
