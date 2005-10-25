@@ -1,10 +1,10 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simias", "Simias.csproj", "{7839E703-0177-4162-B083-BCFD4ED1CC1B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimiasLib", "SimiasLib.csproj", "{7839E703-0177-4162-B083-BCFD4ED1CC1B}"
 	ProjectSection(ProjectDependencies) = postProject
 		{E38BAF80-9B31-4D15-A002-E775B96FAFA6} = {E38BAF80-9B31-4D15-A002-E775B96FAFA6}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimiasApp", "src\SimiasApp\SimiasApp.csproj", "{FBC32721-2AEE-48D5-8353-FAACC2AF16B2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simias", "src\SimiasApp\Simias.csproj", "{FBC32721-2AEE-48D5-8353-FAACC2AF16B2}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -25,10 +25,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncService", "src\SyncServ
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimiasClient", "src\SimiasClient\SimiasClient.csproj", "{E38BAF80-9B31-4D15-A002-E775B96FAFA6}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimiasServer", "src\SimiasServer\SimiasServer.csproj", "{CCA97DC4-AA28-4A9B-9C90-1E4F5D98B0CA}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -66,10 +62,6 @@ Global
 		{E38BAF80-9B31-4D15-A002-E775B96FAFA6}.Debug.Build.0 = Debug|.NET
 		{E38BAF80-9B31-4D15-A002-E775B96FAFA6}.Release.ActiveCfg = Release|.NET
 		{E38BAF80-9B31-4D15-A002-E775B96FAFA6}.Release.Build.0 = Release|.NET
-		{CCA97DC4-AA28-4A9B-9C90-1E4F5D98B0CA}.Debug.ActiveCfg = Debug|.NET
-		{CCA97DC4-AA28-4A9B-9C90-1E4F5D98B0CA}.Debug.Build.0 = Debug|.NET
-		{CCA97DC4-AA28-4A9B-9C90-1E4F5D98B0CA}.Release.ActiveCfg = Release|.NET
-		{CCA97DC4-AA28-4A9B-9C90-1E4F5D98B0CA}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

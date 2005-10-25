@@ -6,8 +6,8 @@ AddressBook_CSFILES_CSC := $(subst /,$(SEP),$(AddressBook_CSFILES))
 AddressBook_INCLUDES =
 AddressBook_RESOURCES =
 AddressBook_FLAGS = $(CSC_LIBFLAG)
-AddressBook_LIBS = System.dll System.Data.dll $(SYSTEM_XML) SimiasClient.dll Simias.dll
-AddressBook_LIBPATH = ../SimiasClient ../Simias.dll
+AddressBook_LIBS = System.dll System.Data.dll $(SYSTEM_XML) SimiasClient.dll SimiasLib.dll
+AddressBook_LIBPATH = ../SimiasClient ../SimiasLib.dll
 
 EXTRA_DIST = $(AddressBook_CSFILES)
 

@@ -77,23 +77,26 @@ namespace Novell.iFolder
 		// multiple for the same account.
 		private Hashtable			detailsDialogs;
 		
+		private Manager				simiasManager;
+
 		/// <summary>
 		/// Default constructor for iFolderAccountsPage
 		/// </summary>
-		public PrefsAccountsPage( Gtk.Window topWindow )
+		public PrefsAccountsPage( Gtk.Window topWindow, Manager simiasManager )
 			: base()
 		{
 			this.topLevelWindow = topWindow;
+			this.simiasManager = simiasManager;
 			this.simws = new SimiasWebService();
-			simws.Url = Simias.Client.Manager.LocalServiceUrl.ToString() +
+			simws.Url = simiasManager.WebServiceUri.ToString() +
 					"/Simias.asmx";
-			LocalService.Start(simws);
+			LocalService.Start(simws, simiasManager.WebServiceUri, simiasManager.DataPath);
 
 			curDomains = new Hashtable();
 
 			InitializeWidgets();
 
-			domainController = DomainController.GetDomainController();
+			domainController = DomainController.GetDomainController(simiasManager);
 			if (domainController != null)
 			{
 				domainController.DomainAdded +=
@@ -535,7 +538,7 @@ namespace Novell.iFolder
 				}
 				else
 				{
-					accDialog = new AccountDialog(dom);
+					accDialog = new AccountDialog(dom, simiasManager);
 					detailsDialogs[domainID] = accDialog;
 					accDialog.SetPosition(WindowPosition.Center);
 					accDialog.Destroyed += 
@@ -653,7 +656,7 @@ namespace Novell.iFolder
 				try
 				{
 					DomainAuthentication domainAuth = new DomainAuthentication("iFolder", dom.ID, null);
-					domainAuth.Logout();
+					domainAuth.Logout(simiasManager.WebServiceUri, simiasManager.DataPath);
 
 					dom.Authenticated = false;
 					UpdateDomainStatus(dom.ID);

@@ -47,8 +47,8 @@ namespace Simias.Service
 		/// </summary>
 		/// <param name="conf"></param>
 		/// <param name="serviceElement"></param>
-		public ThreadServiceCtl(Configuration conf, XmlElement serviceElement) :
-			base(conf, serviceElement)
+		public ThreadServiceCtl(string assembly, XmlElement serviceElement) :
+			base(assembly, serviceElement)
 		{
 			classType = serviceElement.GetAttribute(XmlClassAttr);
 		}
@@ -60,8 +60,8 @@ namespace Simias.Service
 		/// <param name="name"></param>
 		/// <param name="assembly"></param>
 		/// <param name="classType"></param>
-		public ThreadServiceCtl(Configuration conf, string name, string assembly, string classType) :
-			base(conf, name, assembly)
+		public ThreadServiceCtl(string name, string assembly, string classType) :
+			base(name, assembly)
 		{
 			this.classType = classType;
 		}
@@ -79,9 +79,9 @@ namespace Simias.Service
 			lock (typeof(ThreadServiceCtl))
 			{
 				// Load the assembly and start it.
-				Assembly pAssembly = AppDomain.CurrentDomain.Load(Path.GetFileNameWithoutExtension(Assembly));
+				Assembly pAssembly = AppDomain.CurrentDomain.Load(Assembly);
 				service = (IThreadService)pAssembly.CreateInstance(classType);
-				service.Start(conf);
+				service.Start();
 				state = Service.State.Running;
 				Manager.logger.Info("\"{0}\" service started.", Name);
 			}
@@ -160,7 +160,6 @@ namespace Simias.Service
 		public override void ToXml(XmlElement element)
 		{
 			base.ToXml(element);
-			element.SetAttribute(Manager.XmlTypeAttr, ServiceType.Thread.ToString());
 			element.SetAttribute(XmlClassAttr, classType);
 		}
 

@@ -111,13 +111,13 @@ namespace Mono.ASPNET
 				throw new InvalidOperationException ("The server is already started.");
 
 			if (verbose) {
-				Console.WriteLine("Registering application:");
-				Console.WriteLine("    Host:          {0}", (vhost != null) ? vhost : "any");
-				Console.WriteLine("    Port:          {0}", (vport != -1) ?
+				Console.Error.WriteLine("Registering application:");
+				Console.Error.WriteLine("    Host:          {0}", (vhost != null) ? vhost : "any");
+				Console.Error.WriteLine("    Port:          {0}", (vport != -1) ?
 									     vport.ToString () : "any");
 
-				Console.WriteLine("    Virtual path:  {0}", vpath);
-				Console.WriteLine("    Physical path: {0}", fullPath);
+				Console.Error.WriteLine("    Virtual path:  {0}", vpath);
+				Console.Error.WriteLine("    Physical path: {0}", fullPath);
 			}
 
 			vpathToHost.Add (new VPathToHost (vhost, vport, vpath, fullPath));
@@ -126,7 +126,7 @@ namespace Mono.ASPNET
  		public void AddApplicationsFromConfigDirectory (string directoryName)
  		{
 			if (verbose) {
-				Console.WriteLine ("Adding applications from *.webapp files in " +
+				Console.Error.WriteLine ("Adding applications from *.webapp files in " +
 						   "directory '{0}'", directoryName);
 			}
 
@@ -143,7 +143,7 @@ namespace Mono.ASPNET
  		public void AddApplicationsFromConfigFile (string fileName)
  		{
 			if (verbose) {
-				Console.WriteLine ("Adding applications from config file '{0}'", fileName);
+				Console.Error.WriteLine ("Adding applications from config file '{0}'", fileName);
 			}
 
 			try {
@@ -154,7 +154,7 @@ namespace Mono.ASPNET
 					AddApplicationFromElement (el);
 				}
 			} catch {
-				Console.WriteLine ("Error loading '{0}'", fileName);
+				Console.Error.WriteLine ("Error loading '{0}'", fileName);
 				throw;
 			}
 		}
@@ -205,7 +205,7 @@ namespace Mono.ASPNET
 				return;
 
 			if (verbose) {
-				Console.WriteLine("Adding applications '{0}'...", applications);
+				Console.Error.WriteLine("Adding applications '{0}'...", applications);
 			}
 
  			string [] apps = applications.Split (',');
@@ -319,7 +319,7 @@ namespace Mono.ASPNET
 						try {
 							client = s.Accept ();
 							client.Blocking = true;
-						} catch (Exception e) {
+						} catch (Exception) {
 							continue;
 						}
 						WebTrace.WriteLine ("Accepted connection.");
@@ -367,7 +367,7 @@ namespace Mono.ASPNET
 				return GetApplicationForPath (vhost, port, "/", false);
 
 			if (verbose)
-				Console.WriteLine ("No application defined for: {0}:{1}{2}", vhost, port, path);
+				Console.Error.WriteLine ("No application defined for: {0}:{1}{2}", vhost, port, path);
 
 			return null;
 		}

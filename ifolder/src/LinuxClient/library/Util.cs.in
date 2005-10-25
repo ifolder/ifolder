@@ -53,9 +53,9 @@ namespace Novell.iFolder
 		// the sync log.
 		internal static string lastSavedSyncLogPath = null;
 
-		internal static iFolderWindow		ifwin		= null;
-		internal static LogWindow			logwin		= null;
-		internal static PreferencesWindow	prefswin	= null;
+		internal static iFolderWindow		ifwin		  = null;
+		internal static LogWindow			logwin		  = null;
+		internal static PreferencesWindow	prefswin	  = null;
 		
 		private static bool biFolderWindowNeverShown	= true;
 		private static bool bLogWinNeverShown			= true;
@@ -251,13 +251,13 @@ namespace Novell.iFolder
 		/// Specify page = 0 to open the preferences to the General tab
 		/// Specify page = 1 to open the preferences to the Accounts tab
 		///
-		public static void ShowPrefsPage(int page)
+		public static void ShowPrefsPage(int page, Manager simiasManager)
 		{
-			if (CheckWebService())
+			if (CheckWebService(simiasManager))
 			{
 				if (prefswin == null)
 				{
-					prefswin = new PreferencesWindow(ifws);
+					prefswin = new PreferencesWindow(ifws, simiasManager);
 					
 					prefswin.Destroyed +=
 						new EventHandler(PrefsWinDestroyedHandler);
@@ -291,13 +291,13 @@ namespace Novell.iFolder
 			return ifwin;
 		}
 		
-		public static void ShowiFolderWindow()
+		public static void ShowiFolderWindow(Manager simiasManager)
 		{
-			if (CheckWebService())
+			if(CheckWebService(simiasManager))
 			{
 				if (ifwin == null)
 				{
-					ifwin = new iFolderWindow(ifws, simws);
+					ifwin = new iFolderWindow(ifws, simws, simiasManager);
 					ifwin.DeleteEvent +=
 							new DeleteEventHandler(OniFolderWindowDeleteEvent);
 					ifwin.Destroyed += 
@@ -429,21 +429,20 @@ namespace Novell.iFolder
 			logwin = null;
 		}
 
-		private static bool CheckWebService()
+		private static bool CheckWebService(Manager simiasManager)
 		{
 			if(ifws == null)
 			{
 				try
 				{
-					string localServiceUrl =
-						Simias.Client.Manager.LocalServiceUrl.ToString();
+					string localServiceUrl = simiasManager.WebServiceUri.ToString();
 					ifws = new iFolderWebService();
 					ifws.Url = localServiceUrl + "/iFolder.asmx";
-					LocalService.Start(ifws);
+					LocalService.Start(ifws, simiasManager.WebServiceUri, simiasManager.DataPath);
 					
 					simws = new SimiasWebService();
 					simws.Url = localServiceUrl + "/Simias.asmx";
-					LocalService.Start(simws);
+					LocalService.Start(simws, simiasManager.WebServiceUri, simiasManager.DataPath);
 					
 					ifws.Ping();
 				}

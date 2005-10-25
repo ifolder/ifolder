@@ -26,8 +26,6 @@ RELEASE = 1
 RPM_FILE    = $(PACKAGE)-$(VERSION)-$(RELEASE).*.rpm
 SRPM_FILE   = $(PACKAGE)-$(VERSION)-$(RELEASE).src.rpm
 
-SERVER_RPM_FILE	= $(PACKAGE)-simple-server-$(VERSION)-$(RELEASE).*.rpm
-
 .PHONY: simias-dist
 
 all: simias.spec simias-dist clean
@@ -47,7 +45,6 @@ all: simias.spec simias-dist clean
 		CMD='cp -f $(RPM_FILE) $(SRPM_FILE) "$(INSTALL_PKGS)"'; \
 		echo $$CMD; \
 		eval $$CMD
-	cp RPM/RPMS/*/$(SERVER_RPM_FILE) .
 
 simias-dist:
 	cd $(top_srcdir); make dist
@@ -70,4 +67,3 @@ distclean-local:
 
 maintainer-clean-local:
 	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
-

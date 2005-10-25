@@ -57,21 +57,12 @@ namespace Simias.Service
 			}
 			
             // configure logging
-            SimiasLogManager.Configure(GetConfiguration());
+            SimiasLogManager.Configure(Store.StorePath);
 		}
 
 		#endregion
 
 		#region Helper Methods used by the service
-
-		/// <summary>
-		/// Called to get the Simias.Configuration object.
-		/// </summary>
-		/// <returns>The configuration for the service.</returns>
-		protected Configuration GetConfiguration()
-		{
-			return Configuration.GetConfiguration();
-		}
 
 		/// <summary>
 		/// Called to start the service.

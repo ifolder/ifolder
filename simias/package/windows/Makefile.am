@@ -63,23 +63,29 @@ MSI_DISK1     = $(MSI)/$(DISK1)/setup.exe
 MSM_DISK1     = $(MSM)/$(DISK1)/$(subst -,_,$(PACKAGE)).msm
 SDK_MSM_DISK1 = $(SDK_MSM)/$(DISK1)/$(subst -,_,$(PACKAGE))_sdk.msm
 
-all: $(MSM_FILE)
+all: $(MSI_FILE)
 
-$(MSI_FILE): issabld $(MSM_FILE) $(SDK_MSM_FILE) $(MSI).ism
+$(MSI_FILE): issabld $(MSM_FILE) $(MSI).ism
 	@rm -f $@ "$(MSI_DISK1)" "$(MSI_LOG_FILE)"
 	@CMD='"$(ISSABLD)" -p "$(MSI).ism" -o "$(ISSABLD_DIR),$(MERGE_MODULES_WIN)"'; \
 		echo $$CMD; \
 		eval $$CMD > "$(MSI_LOG_FILE)" 2>&1; \
 		if test -f "$(MSI_DISK1)"; then \
 			ln "$(MSI_DISK1)" $@; \
+			mkdir -p "/cygdrive/c/temp/"; \
+			cp -f "$(MSI_DISK1)" "/cygdrive/c/temp/"; \
 		else \
-			cat "$(MSI_LOG_FILE);" \
+			cat "$(MSI_LOG_FILE)"; \
 			echo FAILED; exit 1; \
 		fi
 	@test "x" = "x$(INSTALL_PKGS)" || \
 		CMD='cp -f $@ "$(INSTALL_PKGS)"'; \
 		echo $$CMD; \
-		eval $$CMD
+		eval $$CMD 
+#	@mkdir -p "/cygdrive/c/temp/"; \
+#      @CMD='cp -f "$(MSI_DISK1)" "/cygdrive/c/temp/"'; \
+#		echo $$CMD; \
+#		eval $$CMD
 
 $(MSM_FILE): issabld $(PACKAGE)-install $(MSM).ism
 	@rm -f $@ "$(MSM_DISK1)" "$(MSM_LOG_FILE)"

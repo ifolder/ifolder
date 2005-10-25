@@ -7,7 +7,7 @@ SimiasTestsCmd_INCLUDES =
 SimiasTestsCmd_RESOURCES =
 SimiasTestsCmd_FLAGS = $(CSC_LIBFLAG)
 SimiasTestsCmd_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll nunit.framework.dll
-SimiasTestsCmd_LIBPATH = ../../src/Simias.dll $(NUNIT_LIBPATH)
+SimiasTestsCmd_LIBPATH = ../../src/SimiasLib.dll $(NUNIT_LIBPATH)
 
 EXTRA_DIST = $(SimiasTestsCmd_CSFILES)
 
@@ -42,7 +42,7 @@ CLEAN_FILES = $(NUNIT_TESTS) SimiasTestsCmd.doc.xml SimiasTestsCmd.test.xml
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
-    
+
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)
 

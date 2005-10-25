@@ -367,7 +367,6 @@ namespace Simias.Web
 				}
 			}
 
-			Configuration config = Configuration.GetConfiguration();
 			Store store = Store.GetStore();
 
 			// Create the Collection and set it as an iFolder
@@ -404,7 +403,7 @@ namespace Simias.Web
 					// create a root dir node for this iFolder in the
 					// ~/.local/shared/simias/SimiasFiles/<guid>/name
 					// directory
-					dirNodePath = Path.Combine(config.StorePath, FilesDirName);
+					dirNodePath = Path.Combine(Store.StorePath, FilesDirName);
 					dirNodePath = Path.Combine(dirNodePath, c.ID);
 					dirNodePath = Path.Combine(dirNodePath, Name);
 
@@ -497,7 +496,7 @@ namespace Simias.Web
 			Uri nPath = GetUriPath(path);
 
 			// The store path cannot be used nor any path under the store path.
-			string excludeDirectory = Configuration.GetConfiguration().StorePath;
+			string excludeDirectory = Store.StorePath;
 			if (ExcludeDirectory(nPath, excludeDirectory, true))
 			{
 				return CollectionPathStatus.AtOrInsideStorePath;

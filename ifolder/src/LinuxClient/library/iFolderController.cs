@@ -72,14 +72,14 @@ namespace Novell.iFolder.Controller
 		public event iFolderChangedEventHandler iFolderChanged;
 		public event iFolderInvitationReceivedEventHandler iFolderInvitationReceived;
 		
-		private iFolderController()
+		private iFolderController(Manager simiasManager)
 		{
-			string localServiceUrl = Simias.Client.Manager.LocalServiceUrl.ToString();
+			string localServiceUrl = simiasManager.WebServiceUri.ToString();
 			try
 			{
 				ifws = new iFolderWebService();
 				ifws.Url = localServiceUrl + "/iFolder.asmx";
-				LocalService.Start(ifws);
+				LocalService.Start(ifws, simiasManager.WebServiceUri, simiasManager.DataPath);
 			}
 			catch(Exception e)
 			{
@@ -90,7 +90,7 @@ namespace Novell.iFolder.Controller
 			{
 				simws = new SimiasWebService();
 				simws.Url = localServiceUrl + "/Simias.asmx";
-				LocalService.Start(simws);
+				LocalService.Start(simws, simiasManager.WebServiceUri, simiasManager.DataPath);
 			}
 			catch(Exception e)
 			{
@@ -101,7 +101,7 @@ namespace Novell.iFolder.Controller
 			keyediFolders = new Hashtable();
 			keyedSubscriptions = new Hashtable();
 
-			domainController = DomainController.GetDomainController();
+			domainController = DomainController.GetDomainController(simiasManager);
 			if (domainController != null)
 			{
 				domainController.DomainLoggedIn +=
@@ -111,13 +111,13 @@ namespace Novell.iFolder.Controller
 			}
 		}
 		
-		public static iFolderController GetiFolderController()
+		public static iFolderController GetiFolderController(Manager simiasManager)
 		{
 			lock (typeof(iFolderController))
 			{
 				if (instance == null)
 				{
-					instance = new iFolderController();
+					instance = new iFolderController(simiasManager);
 				}
 			
 				return instance;

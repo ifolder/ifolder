@@ -48,16 +48,6 @@ namespace Simias.Storage.Provider
 		#region Static Methods.
 
 		/// <summary>
-		/// Connect to the default provider.
-		/// </summary>
-		/// <param name="created">True if the Store was created.</param>
-		/// <returns></returns>
-		public static IProvider Connect(out bool created)
-		{
-			return Connect(new ProviderConfig(), out created);
-		}
-
-		/// <summary>
 		/// Connect to the store using the provided configuration.
 		/// </summary>
 		/// <param name="conf"></param>
@@ -85,11 +75,8 @@ namespace Simias.Storage.Provider
 				catch
 				{
 					provider.CreateStore();
-					// Set the Provider in the configuration.
-					conf.Assembly = assembly;
-					conf.TypeName = providerType;
 					created = true;
-					logger.Info("Created new store {0}.", provider.StoreDirectory);
+					logger.Info("Created new store {0}.", conf.Path);
 				}
 			}
 			
@@ -120,21 +107,22 @@ namespace Simias.Storage.Provider
 		private const string CFG_Path = "Path";
 		private const string CFG_Assembly = "Assembly";
 		private const string CFG_TypeName = "Type";
-		private const string CFG_Version = "Version";
 		private const string StoreName = "simias";
-		private string version = null;
 		private string assembly = null;
 		private string typeName = null;
 		private Hashtable settingTable = new Hashtable();
 
-		Simias.Configuration conf;
+		private Simias.Configuration conf;
+		private string storePath;
+		
 
 		/// <summary>
 		/// Default Constructor
 		/// </summary>
-		public ProviderConfig()
+		public ProviderConfig(Configuration config, string storePath)
 		{
-			conf = Simias.Configuration.GetConfiguration();
+			this.conf = config;
+			this.storePath = storePath;
 		}
 
 		/// <summary>
@@ -144,36 +132,10 @@ namespace Simias.Storage.Provider
 		{
 			get
 			{
-				return conf.StorePath;
+				return storePath;
 			}
 		}
 
-		/// <summary>
-		/// Gets and Sets the Provider Version.
-		/// </summary>
-		public string Version
-		{
-			get
-			{
-				lock(this)
-				{
-					if (version == null)
-					{
-						version = "0";
-						version = conf.Get(CFG_Section, CFG_Version, version);
-					}
-				}
-				return version;
-			}
-			set
-			{
-				lock (this)
-				{
-					version = value;
-					conf.Set(CFG_Section, CFG_Version, value);
-				}
-			}
-		}
 
 		/// <summary>
 		/// Gets and Sets the Assembly that implements the provider instance used.
@@ -186,19 +148,14 @@ namespace Simias.Storage.Provider
 				{
 					if (assembly == null)
 					{
-						assembly = "Simias.dll";
-						assembly = conf.Get(CFG_Section, CFG_Assembly, assembly);
+						assembly = conf.Get(CFG_Section, CFG_Assembly);
+						if ( assembly == null )
+						{
+							assembly = "SimiasLib.dll";
+						}
 					}
 				}
 				return assembly;
-			}
-			set
-			{
-				lock (this)
-				{
-					assembly = value;
-					conf.Set(CFG_Section, CFG_Assembly, value);
-				}
 			}
 		}
 
@@ -213,19 +170,14 @@ namespace Simias.Storage.Provider
 				{
 					if (typeName == null)
 					{
-						typeName = "Simias.Storage.Provider.Flaim.FlaimProvider";
-						typeName = conf.Get(CFG_Section, CFG_TypeName, typeName);
+						typeName = conf.Get(CFG_Section, CFG_TypeName);
+						if ( typeName == null )
+						{
+							typeName = "Simias.Storage.Provider.Flaim.FlaimProvider";
+						}
 					}
 				}
 				return typeName;
-			}
-			set
-			{
-				lock (this)
-				{
-					typeName = value;
-					conf.Set(CFG_Section, CFG_TypeName, value);
-				}
 			}
 		}
 
@@ -242,44 +194,35 @@ namespace Simias.Storage.Provider
 			{
 				if (!settingTable.Contains(key))
 				{
-					setting = conf.Get(CFG_Section, key, defaultValue);
+					setting = conf.Get(CFG_Section, key);
+					if ( setting == null )
+					{
+						setting = defaultValue;
+					}
+
 					settingTable[key] = setting;
 				}
 			}
 			return (string)settingTable[key];
 		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="key"></param>
-		/// <param name="keyValue"></param>
-		public void Set(string key, string keyValue)
-		{
-			lock (this)
-			{
-				settingTable[key] = keyValue;
-				conf.Set(CFG_Section, key, keyValue);
-			}
-		}
 	}
 
 	/// <summary>
-	/// 
+	///
 	/// </summary>
 	public class CommitException : SimiasException
 	{
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		public XmlDocument CreateDoc;
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		public XmlDocument DeleteDoc;
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		/// <param name="createDoc"></param>
 		/// <param name="deleteDoc"></param>
@@ -292,7 +235,7 @@ namespace Simias.Storage.Provider
 		}
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		public override string Message
 		{

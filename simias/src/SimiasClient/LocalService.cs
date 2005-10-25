@@ -38,6 +38,11 @@ namespace Simias.Client
 		#region Class Members
 
 		/// <summary>
+		/// Length of a string guid.
+		/// </summary>
+		static private readonly int GuidLength = Guid.NewGuid().ToString().Length;
+
+		/// <summary>
 		/// Name of the local password file that is used to authenticate local
 		/// web services.
 		/// </summary>
@@ -47,6 +52,11 @@ namespace Simias.Client
 		/// Caches the local password.
 		/// </summary>
 		static private string localPassword = null;
+
+		/// <summary>
+		/// Data path that local password was retrieved from.
+		/// </summary>
+		static private string dataPath = null;
 
 		/// <summary>
 		/// Same container is used for all local web services.
@@ -60,25 +70,23 @@ namespace Simias.Client
 		/// <summary>
 		/// Gets the local password.
 		/// </summary>
-		static private void GetLocalPassword()
+		/// <param name="simiasDataPath">Path to the directory where the Simias data is stored.</param>
+		static private void GetLocalPassword( string simiasDataPath )
 		{
 			lock( typeof( LocalService ) )
 			{
-				if ( localPassword == null )
-				{
-					Configuration config = new Configuration();
-					string path = Path.Combine( config.StorePath, LocalPasswordFile );
+				string path = Path.Combine( simiasDataPath, LocalPasswordFile );
 
-					try
+				try
+				{
+					using ( StreamReader sr = new StreamReader( path ) )
 					{
-						using ( StreamReader sr = new StreamReader( path ) )
-						{
-							localPassword = sr.ReadLine();
-						}
+						localPassword = sr.ReadLine();
 					}
-					catch
-					{}
+
+					dataPath = simiasDataPath;
 				}
+				catch {}
 			}
 		}
 
@@ -86,12 +94,13 @@ namespace Simias.Client
 		/// Pings the local web service to get simias started if it is not
 		/// started already.
 		/// </summary>
-		static private void Ping()
+		/// <param name="webServiceUri">Uri that references the local web service.</param>
+		static private void Ping( Uri webServiceUri )
 		{
 			try
 			{
 				SimiasWebService webService = new SimiasWebService();
-				webService.Url = Manager.LocalServiceUrl.ToString() + "/Simias.asmx";
+				webService.Url = webServiceUri.ToString() + "/Simias.asmx";
 				webService.PingSimias();
 			}
 			catch
@@ -106,20 +115,25 @@ namespace Simias.Client
 		/// Connects the specified webClient to its web service.
 		/// </summary>
 		/// <param name="webClient">HttpWebClientProtocol object.</param>
-		static public void Start( HttpWebClientProtocol webClient )
+		/// <param name="webServiceUri">Uri that references the local web service.</param>
+		/// <param name="simiasDataPath">Path to the directory where the Simias data is stored.</param>
+		static public void Start( HttpWebClientProtocol webClient, Uri webServiceUri, string simiasDataPath )
 		{
+			bool ignoreCase = ( MyEnvironment.Platform == MyPlatformID.Windows ) ? true : false;
+
 			// Start the web service so the password file will be created.
-			while ( localPassword == null )
+			while ( ( localPassword == null ) || ( String.Compare( dataPath, simiasDataPath, ignoreCase ) != 0 ) )
 			{
-				Ping();
-				GetLocalPassword();
+				Ping( webServiceUri );
+				GetLocalPassword( simiasDataPath );
 				if ( localPassword == null )
 				{
 					Thread.Sleep( 500 );
 				}
 			}
 
-			webClient.Credentials = new NetworkCredential( Environment.UserName, localPassword );
+			string localDomain = localPassword.Substring( 0, GuidLength );
+			webClient.Credentials = new NetworkCredential( Environment.UserName, localPassword, localDomain );
 			webClient.PreAuthenticate = true;
 
 			// BUGBUG!! - Force mono to authenticate everytime until cookies work on a loopback

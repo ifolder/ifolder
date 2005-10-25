@@ -9,7 +9,7 @@
             <Settings
                 ApplicationIcon = ""
                 AssemblyKeyContainerName = ""
-                AssemblyName = "Simias"
+                AssemblyName = "SimiasLib"
                 AssemblyOriginatorKeyFile = ""
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
@@ -123,11 +123,7 @@
         </Build>
         <Files>
             <Include>
-                <File
-                    RelPath = "src\ChangeLog\ChangeLog.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
+                <Folder RelPath = "src\ChangeLog\" />
                 <File
                     RelPath = "src\CollectionStore\AccessControl.cs"
                     SubType = "Code"
@@ -135,6 +131,11 @@
                 />
                 <File
                     RelPath = "src\CollectionStore\BaseFileNode.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\CollectionStore\ChangeLog.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -493,11 +494,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Service\BaseProcessService.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\Service\IThreadService.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -509,11 +505,6 @@
                 />
                 <File
                     RelPath = "src\Service\Message.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Service\ProcessServiceCtl.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -538,11 +529,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Simias.dll\AssemblyInfo.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\Simias.Web\SharedCollection.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -563,97 +549,7 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "src\Smtp\Base64AttachmentEncoder.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Smtp\IAttachmentEncoder.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Smtp\MailAddress.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Smtp\MailAddressCollection.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Smtp\MailAttachment.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Smtp\MailEncoding.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Smtp\MailFormat.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Smtp\MailHeader.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Smtp\MailMessage.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Smtp\MailMessageWrapper.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Smtp\MailPriority.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Smtp\MailUtil.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Smtp\SmtpClient.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Smtp\SmtpException.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Smtp\SmtpMail.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Smtp\SmtpResponse.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Smtp\SmtpStream.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Smtp\ToUUEncodingTransform.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Smtp\UUAttachmentEncoder.cs"
+                    RelPath = "src\SimiasLib.dll\AssemblyInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

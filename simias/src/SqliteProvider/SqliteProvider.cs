@@ -1003,8 +1003,6 @@ namespace Simias.Storage.Provider.Sqlite
 		public void CreateStore()
 		{
 			manager.CreateStore();
-			// Set the version.
-			conf.Version = version;
 		}
 
 
@@ -1023,11 +1021,6 @@ namespace Simias.Storage.Provider.Sqlite
 		/// </summary>
 		public void OpenStore()
 		{
-			// Make sure the version is correct.
-			if (conf.Version != "0" && conf.Version != version)
-			{
-				throw new VersionException(conf.Path, conf.Version, version);
-			}
 			manager.OpenStore();
 		}
 

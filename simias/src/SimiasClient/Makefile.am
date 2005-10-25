@@ -1,9 +1,9 @@
-SUBDIRS = libsimias-event
+SUBDIRS = libsimias-event libsimias-manager
 
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-SimiasClient_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/CertPolicy.cs $(srcdir)/CollectionSyncEventArgs.cs $(srcdir)/FileSyncEventArgs.cs $(srcdir)/Configuration.cs $(srcdir)/DomainService.cs $(srcdir)/IProcEventClient.cs $(srcdir)/IProcEventData.cs $(srcdir)/IProcEventListener.cs $(srcdir)/IProcEventRegistration.cs $(srcdir)/IProcEventTypes.cs $(srcdir)/LocalService.cs $(srcdir)/Manager.cs $(srcdir)/MyEnvironment.cs $(srcdir)/MyPath.cs $(srcdir)/MyPlatformID.cs $(srcdir)/MyRuntimeID.cs $(srcdir)/NeedCredentialsEventArgs.cs $(srcdir)/NodeEventArgs.cs $(srcdir)/NodeTypes.cs $(srcdir)/NotifyEventArgs.cs $(srcdir)/SimiasEventArgs.cs $(srcdir)/Authentication.cs $(srcdir)/SimiasService.cs $(srcdir)/SyncStatus.cs
+SimiasClient_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/CertPolicy.cs $(srcdir)/CollectionSyncEventArgs.cs $(srcdir)/FileSyncEventArgs.cs $(srcdir)/DomainService.cs $(srcdir)/IProcEventClient.cs $(srcdir)/IProcEventData.cs $(srcdir)/IProcEventListener.cs $(srcdir)/IProcEventRegistration.cs $(srcdir)/IProcEventTypes.cs $(srcdir)/LocalService.cs $(srcdir)/Manager.cs $(srcdir)/MyEnvironment.cs $(srcdir)/MyPath.cs $(srcdir)/MyPlatformID.cs $(srcdir)/MyRuntimeID.cs $(srcdir)/NeedCredentialsEventArgs.cs $(srcdir)/NodeEventArgs.cs $(srcdir)/NodeTypes.cs $(srcdir)/NotifyEventArgs.cs $(srcdir)/SimiasEventArgs.cs $(srcdir)/Authentication.cs $(srcdir)/SimiasService.cs $(srcdir)/SyncStatus.cs
 SimiasClient_CSFILES_CSC := $(subst /,$(SEP),$(SimiasClient_CSFILES))
 SimiasClient_INCLUDES =
 SimiasClient_RESOURCES =
@@ -11,10 +11,18 @@ SimiasClient_FLAGS = $(CSC_LIBFLAG)
 SimiasClient_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Security.dll System.Web.dll System.Web.Services.dll Novell.Security.ClientPasswordManager.NetCredential.dll
 SimiasClient_LIBPATH = $(NOVELL_SECURITY_DIR)
 
-EXTRA_DIST = $(SimiasClient_CSFILES) $(srcdir)/SimiasSetup.cs.in AssemblyInfo.cs.in
+EXTRA_DIST = $(SimiasClient_CSFILES) $(srcdir)/SimiasSetup.cs.in AssemblyInfo.cs.in $(SIMIASCLIENT_KEYFILE)
+
+# This is defined by including a PPK in a file named "simiasclient.snk" in the SimiasClient source directory.
+# Note: that autogen must be run in order for this to take effect.
+if HAS_SIMIASCLIENT_KEYFILE
+STRONG_NAME = /d:STRONGNAME
+else
+STRONG_NAME=
+endif
 
 SimiasSetup.cs: $(srcdir)/SimiasSetup.cs.in
-	sed -e 's,@_prefix_@,@prefix@,g' -e 's,@_bindir_@,@bindir@,g' -e 's,@_datadir_@,@datadir@,g' -e 's,@_includedir_@,@includedir@,g' -e 's,@_infodir_@,@infodir@,g' -e 's,@_libexecdir_@,@libexecdir@,g' -e 's,@_libdir_@,@libdir@,g' -e 's,@_localstatedir_@,@localstatedir@,g' -e 's,@_mandir_@,@mandir@,g' -e 's,@_sbindir_@,@sbindir@,g' -e 's,@_sharedstatedir_@,@sharedstatedir@,g' -e 's,@_sysconfdir_@,@sysconfdir@,g' -e 's,@_webdir_@,@webdir@,g' -e 's,@_webbindir_@,@webbindir@,g' -e 's,@_target_@,@target@,g' $< > $@
+	sed -e 's,@_prefix_@,@prefix@,g' -e 's,@_bindir_@,@bindir@,g' -e 's,@_datadir_@,@datadir@,g' -e 's,@_includedir_@,@includedir@,g' -e 's,@_infodir_@,@infodir@,g' -e 's,@_libexecdir_@,@libexecdir@,g' -e 's,@_libdir_@,@libdir@,g' -e 's,@_localstatedir_@,@localstatedir@,g' -e 's,@_mandir_@,@mandir@,g' -e 's,@_sbindir_@,@sbindir@,g' -e 's,@_sharedstatedir_@,@sharedstatedir@,g' -e 's,@_sysconfdir_@,@sysconfdir@,g' -e 's,@_webdir_@,@webdir@,g' -e 's,@_webbindir_@,@webbindir@,g' -e 's,@_modulesdir_@,@modulesdir@,g' -e 's,@_target_@,@target@,g' $< > $@
 	chmod +x $@
 
 if MAKE_DOC_FILE
@@ -37,7 +45,7 @@ if DARWIN
 endif
 
 SimiasClient.dll: AssemblyInfo.cs $(srcdir)/SimiasSetup.cs $(SimiasClient_CSFILES) $(SimiasClient_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(SimiasClient_FLAGS) $(SIMIAS_LIBS) $(SimiasClient_LIBS:%=/r:%) $(SimiasClient_LIBPATH:%=/lib:%) $(SimiasClient_RESOURCES:%=$(ICON_FLAG)%) $(SimiasClient_CSFILES_CSC) $(subst /,$(SEP),$(srcdir)/SimiasSetup.cs) $(DOC_FILE_CMD)
+	$(CSC) /out:$@ $(CSCFLAGS) $(STRONG_NAME) $(SimiasClient_FLAGS) $(SimiasClient_LIBS:%=/r:%) $(SimiasClient_LIBPATH:%=/lib:%) $(SimiasClient_RESOURCES:%=$(ICON_FLAG)%) $(SimiasClient_CSFILES_CSC) $(subst /,$(SEP),$(srcdir)/SimiasSetup.cs) $(DOC_FILE_CMD)
 
 AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in Makefile
 	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
@@ -53,10 +61,16 @@ install-exec-local: SimiasClient.dll $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(webbindir) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) SimiasClient.dll $(DEBUG_FILES) $(DESTDIR)$(webbindir)
 	$(INSTALL_PROGRAM) $(srcdir)/$(NOVELL_SECURITY_DIR)/Novell.Security.ClientPasswordManager.NetCredential.dll $(DESTDIR)$(webbindir)
+	$(INSTALL_PROGRAM) $(srcdir)/$(NOVELL_SECURITY_DIR)/Novell.Security.Utilities.dll $(DESTDIR)$(webbindir)
+if HAS_SIMIASCLIENT_KEYFILE
+	$(GACINSTALL) $(shell cygpath --mixed $(webbindir))/SimiasClient.dll
+	$(GACINSTALL) $(shell cygpath --mixed $(webbindir))/Novell.Security.ClientPasswordManager.NetCredential.dll
+	$(GACINSTALL) $(shell cygpath --mixed $(webbindir))/Novell.Security.Utilities.dll
+endif	
 	
 uninstall-local:
 	cd $(DESTDIR)$(webbindir); rm -f SimiasClient.dll $(DEBUG_FILES)
-	cd $(DESTDIR)$(webbindir); rm -f Novell.Security.ClientPasswordManager.NetCredential.dll
+	cd $(DESTDIR)$(webbindir); rm -f Novell.Security.*.dll
 	
 installcheck-local: install
 	

@@ -1,7 +1,7 @@
 /***********************************************************************
  *  $RCSfile$
  *
- *  Copyright (C) 2004 Novell, Inc.
+ *  Copyright (C) 2005 Novell, Inc.
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public
@@ -17,20 +17,14 @@
  *  License along with this program; if not, write to the Free
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- *  Author: Russ Young
+ *  Author: Mike Lasky
  *
  ***********************************************************************/
 
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
 using System.Threading;
-using System.Xml;
-
-using Simias.Client.Event;
 
 namespace Simias.Client
 {
@@ -40,446 +34,363 @@ namespace Simias.Client
 	public class Manager
 	{
 		#region Class Members
-		/// <summary>
-		/// XML configuation tags.
-		/// </summary>
-		private const string CFG_Section = "ServiceManager";
-		private const string CFG_Services = "Services";
-		private const string CFG_WebServicePath = "WebServicePath";
-		private const string CFG_ShowOutput = "WebServiceOutput";
-		private const string CFG_WebServiceUri = "WebServiceUri";
-		private const string CFG_WebServicePortRange = "WebServicePortRange";
 
-		static private Process webProcess = null;
-		static private EventHandler appDomainUnloadEvent;
-#if CLIENT_MEMORY_ROLL
-		static private IProcEventClient eventClient = null;
-#endif
-		#endregion
-
-		#region Constructor
-#if CLIENT_MEMORY_ROLL
-		// TODO: Remove this when the mono heap doesn't grow forever.
 		/// <summary>
-		/// Static constructor for the Manager class.
+		/// The name of the simias mapping file.
 		/// </summary>
-		static Manager()
-		{
-			// Setup an event listener waiting for a restart event.
-			if ( MyEnvironment.Mono )
-			{
-				eventClient = new IProcEventClient( new IProcEventError( ErrorHandler ), null );
-				eventClient.SetEvent( IProcEventAction.AddNotifyMessage, new IProcEventHandler( EventHandler ) );
-				eventClient.Register();
-			}
-		}
-		// TODO: End
-#endif
+		private const string MappingFile = "SimiasDirectoryMapping";
+
+		/// <summary>
+		/// The default mapping directories for the specific platforms.
+		/// </summary>
+		private static string DefaultWindowsMappingDir = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.CommonApplicationData ), "Simias" );
+		private static string DefaultLinuxMappingDir = "/etc/simias";
+
+		/// <summary>
+		/// Path to the Simias.exe application.
+		/// </summary>
+		private string applicationPath = DefaultSimiasApplicationPath;
+
+		/// <summary>
+		/// Path to the Simias data area.
+		/// </summary>
+		private string simiasDataPath = null;
+
+		/// <summary>
+		/// Port to listen on. Initialized to use a dynamic port.
+		/// </summary>
+		private string port = null;
+
+		/// <summary>
+		/// Type of configuration to use - server or client.
+		/// </summary>
+		private bool isServer = false;
+
+		/// <summary>
+		/// Flag that creates a console window for Simias.
+		/// </summary>
+		private bool showConsole = false;
+
+		/// <summary>
+		/// Flag that turns on extra debug messages.
+		/// </summary>
+		private bool verbose = false;
+
+		/// <summary>
+		/// Uri to the web service.
+		/// </summary>
+		private string webServiceUri = null;
+
 		#endregion
 
 		#region Properties
+
 		/// <summary>
-		/// Gets the path to the web service directory. Returns a null if the web service path
-		/// does not exist.
+		/// Gets the path to the Simias.exe application file.
 		/// </summary>
-		static public string LocalServicePath
+		/// <returns>The path to the Simias.exe application file if successful. 
+		/// Otherwise a null is returned.</returns>
+		private static string DefaultSimiasApplicationPath
 		{
 			get
 			{
-				Configuration config = new Configuration();
-				return config.Get( CFG_Section, CFG_WebServicePath );
+				string applicationPath = null;
+
+				// Look for the application mapping file in the current directory first.
+				string tempPath = Path.Combine( Directory.GetCurrentDirectory(), MappingFile );
+				if ( !File.Exists( tempPath ) )
+				{
+					// The file is not in the current directory. Look in the well known place.
+					tempPath = Path.Combine( 
+						( MyEnvironment.Platform == MyPlatformID.Windows ) ? 
+							DefaultWindowsMappingDir : 
+							DefaultLinuxMappingDir, 
+						MappingFile );
+				}
+
+				// Open the file and get the mapping contents.
+				try
+				{
+					using ( StreamReader sr = new StreamReader( tempPath ) )
+					{
+						applicationPath = Path.GetFullPath( sr.ReadLine() );
+					}
+				}
+				catch
+				{}
+
+				return applicationPath;
 			}
 		}
 
 		/// <summary>
-		/// Gets the port number to talk to the web service on. Returns a -1 if the web service port
-		/// does not exist.
+		/// Returns whether the current platform is running on Windows.
 		/// </summary>
-		static public int LocalServicePort
+		private bool IsWindows
 		{
-			get
-			{
-				Configuration config = new Configuration();
-				string uriString = config.Get( CFG_Section, CFG_WebServiceUri );
-				return ( uriString != null ) ? new Uri( uriString ).Port : -1;
-			}
+			get { return ( MyEnvironment.Platform == MyPlatformID.Windows ) ? true : false; }
 		}
 
 		/// <summary>
-		/// Gets the local service url so that applications can talk to the local webservice.
-		/// Returns a null if the local service url does not exist.
+		/// Getter/Setter for the Simias application path.
 		/// </summary>
-		static public Uri LocalServiceUrl
+		public string ApplicationPath
 		{
-			get
-			{
-				Configuration config = new Configuration();
-				string uriString = config.Get( CFG_Section, CFG_WebServiceUri );
-				return ( uriString != null ) ? new Uri( uriString ) : null;
-			}
+			get { return applicationPath; }
+			set { applicationPath = value; }
 		}
+
+		/// <summary>
+		/// Getter/Setter for the Simias data path.
+		/// </summary>
+		public string DataPath
+		{
+			get { return simiasDataPath; }
+			set { simiasDataPath = value; }
+		}
+
+		/// <summary>
+		/// Getter/Setter for the web service port or range. Null indicates to
+		/// to use a dynamic port.
+		/// </summary>
+		public string Port
+		{
+			get { return port; }
+			set { port = value; }
+		}
+
+		/// <summary>
+		/// Getter/Setter for running in a client or server configuration.
+		/// </summary>
+		public bool IsServer
+		{
+			get { return isServer; }
+			set { isServer = value; }
+		}
+
+		/// <summary>
+		/// Getter/Setter for creating a console window when launching Simias.
+		/// </summary>
+		public bool ShowConsole
+		{
+			get { return showConsole; }
+			set { showConsole = value; }
+		}
+
+		/// <summary>
+		/// Getter/Setter to turn on extra debug messages.
+		/// </summary>
+		public bool Verbose
+		{
+			get { return verbose; }
+			set { verbose = value; }
+		}
+
+		/// <summary>
+		/// Gets the web service URI.
+		/// </summary>
+		public Uri WebServiceUri
+		{
+			get { return ( webServiceUri != null ) ? new Uri( webServiceUri ) : null; }
+		}
+
+		#endregion
+
+		#region Constructor
+
+		/// <summary>
+		/// Initializes an instance of this object.
+		/// </summary>
+		public Manager()
+		{
+		}
+
+		/// <summary>
+		/// Initializes an instance of this object.
+		/// </summary>
+		/// <param name="args">Configuration argument array.</param>
+		public Manager( string[] args )
+		{
+			ParseConfigurationParameters( args );
+		}
+
 		#endregion
 
 		#region Private Methods
-		/// <summary>
-		/// Gets the path portion of the uri.
-		/// </summary>
-		/// <param name="uri">Uri to a web resource.</param>
-		/// <returns>A string containing the virtual path.</returns>
-		static private string GetVirtualPath( Uri uri )
-		{
-			string escString = uri.PathAndQuery;
-			StringBuilder sb = new StringBuilder( escString.Length );
-			for ( int i = 0; i < escString.Length; )
-			{
-				sb.Append( Uri.HexUnescape( escString, ref i ) );
-			}
-
-			return sb.ToString();
-		}
-
 
 		/// <summary>
-		/// Callback that gets notified when the XSP process terminates.
+		/// Parses the command line parameters to get the configuration for Simias.
 		/// </summary>
-		static private void XspProcessExited(object sender, EventArgs e)
+		/// <param name="args">Array of arguments to set as configuration.</param>
+		private void ParseConfigurationParameters( string[] args )
 		{
-			lock( typeof( Manager ) )
+			for ( int i = 0; i < args.Length; ++i )
 			{
-				if ( webProcess != null )
+				switch ( args[ i ].ToLower() )
 				{
-					webProcess = null;
-					Start();
-				}
-			}
-		}
-
-		/// <summary>
-		/// Checks to see if the specified port is available.
-		/// </summary>
-		/// <param name="port">Port number to check for availability.</param>
-		/// <returns>The port number if it is available. Otherwise a -1 is returned.</returns>
-		static private int AvailablePortCheck( int port )
-		{
-			int boundPort = -1;
-
-			Socket s = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
-			try
-			{
-				try
-				{
-					s.Bind( new IPEndPoint( IPAddress.Loopback, port ) );
-					boundPort = ( s.LocalEndPoint as IPEndPoint ).Port;
-				}
-				catch( SocketException )
-				{}
-			}
-			finally
-			{
-				s.Close();
-			}
-
-			return boundPort;
-		}
-
-		/// <summary>
-		/// Error handler for event listener.
-		/// </summary>
-		/// <param name="ex">The error that occurred.</param>
-		/// <param name="context">Context</param>
-		static private void ErrorHandler( ApplicationException ex, object context )
-		{
-			// Don't inform about any errors. The event service should heal itself.
-		}
-
-#if CLIENT_MEMORY_ROLL
-		/// <summary>
-		/// Event handler that subscribes to NotifyEvents.
-		/// </summary>
-		/// <param name="args">Event data.</param>
-		static private void EventHandler( SimiasEventArgs args )
-		{
-			NotifyEventArgs nea = args as NotifyEventArgs;
-			if ( nea.EventData == "Simias-Restart" )
-			{
-				// Restart the SimiasApp.exe service.
-				Stop();
-				Start();
-				Ping();
-			}
-		}
-#endif
-
-		/// <summary>
-		/// Gets a specified range of ports to use as the local listener.
-		/// </summary>
-		/// <param name="config">Configuration object.</param>
-		/// <returns>An array of integers that represent a range of TCP port numbers.
-		/// A null is returned if no port range was specified.</returns>
-		static private int[] GetPortRange( Configuration config )
-		{
-			int[] portRange = null;
-
-			// See if there is a range specified.
-			string rangeString = config.Get( CFG_Section, CFG_WebServicePortRange );
-			if ( rangeString != null )
-			{
-				// See if there is a range separator.
-				int sep = rangeString.IndexOf( '-' );
-				if ( sep != -1 )
-				{
-					// Get the start and end values.
-					int start = Convert.ToInt32( rangeString.Substring( 0, sep ).Trim() );
-					int end = Convert.ToInt32( rangeString.Substring( sep + 1 ).Trim() );
-
-					// Make sure the range is valid.
-					if ( end >= start )
+					case "-p":
+					case "--port":
 					{
-						// Fill the array with the range of port numbers.
-						portRange = new int[ ( end - start ) + 1 ];
-						for ( int i = start; i <= end; ++i )
+						if ( ( i + 1 ) < args.Length )
 						{
-							portRange[ i - start ] = i;
+							Port = args[ ++i ];
 						}
+						else
+						{
+							Console.Error.WriteLine( "Invalid command line parameters. No port or range was specified." );
+						}
+
+						break;
 					}
-					else
+
+					case "-d":
+					case "--datadir":
 					{
-						throw new ApplicationException( "An invalid port range was specified." );
+						if ( ( i + 1 ) < args.Length )
+						{
+							DataPath = args[ ++i ];
+						}
+						else
+						{
+							Console.Error.WriteLine( "Invalid command line parameters. No store path was specified." );
+						}
+
+						break;
 					}
+
+					case "-a":
+					case "--apppath":
+					{
+						if ( ( i + 1 ) < args.Length )
+						{
+							ApplicationPath = args[ ++i ];
+						}
+						else
+						{
+							Console.Error.WriteLine( "Invalid command line parameters. No application path was specified." );
+						}
+
+						break;
+					}
+
+					case "-i":
+					case "--isserver":
+					{
+						IsServer = true;
+						break;
+					}
+
+					case "-s":
+					case "--showconsole":
+					{
+						showConsole = true;
+						break;
+					}
+
+					case "-v":
+					case "--verbose":
+					{
+						verbose = true;
+						break;
+					}
+				}
+			}
+		}
+
+		#endregion
+
+		#region Public Methods
+
+		/// <summary>
+		/// Starts the Simias process running.
+		/// </summary>
+		/// <returns>The URI of the web service if successful.</returns>
+		public string Start()
+		{
+			// Build the arguments string.
+			string args = String.Format( "{0}{1}{2}{3}{4}{5}", 
+				IsWindows ? String.Empty : String.Format( "\"{0}\" ", applicationPath),
+				( simiasDataPath != null ) ? String.Format( "--datadir \"{0}\" ", simiasDataPath ) : String.Empty, 
+				( isServer == true ) ? "--runasserver " : String.Empty, 
+				( port != null ) ? String.Format( "--port {0}", port ) : String.Empty,
+				( showConsole == true ) ? " --showconsole" : String.Empty,
+				( verbose == true ) ? " --verbose" : String.Empty );
+
+			// Create the process structure.
+			Process simiasProcess = new Process();
+			simiasProcess.StartInfo.FileName = IsWindows ? applicationPath : "mono";
+			simiasProcess.StartInfo.CreateNoWindow = showConsole ? false : true;
+			simiasProcess.StartInfo.RedirectStandardOutput = true;
+			simiasProcess.StartInfo.UseShellExecute = false;
+			simiasProcess.StartInfo.Arguments = args;
+			simiasProcess.Start();
+
+			// Wait for the process to exit, so we can tell if things started successfully.
+			simiasProcess.WaitForExit( 15000 );
+
+			// See if the process is still running.
+			if ( simiasProcess.HasExited )
+			{
+				// Get the exit code to see if it was successful.
+				if ( simiasProcess.ExitCode == 0 )
+				{
+					// Read the uri and data path that was printed to stdout.
+					webServiceUri = simiasProcess.StandardOutput.ReadLine();
+					simiasDataPath = simiasProcess.StandardOutput.ReadLine();
 				}
 				else
 				{
-					// No range was specified, just a single port.
-					portRange = new int[ 1 ] { Convert.ToInt32( rangeString.Trim() ) };
-				}
-			}
-
-			return portRange;
-		}
-
-		/// <summary>
-		/// Gets a port to use to start the web server.
-		/// </summary>
-		static private int GetXspPort( Configuration config )
-		{
-			// See if there is a port range specified.
-			int[] portRange = GetPortRange( config );
-			if ( portRange == null )
-			{
-				// Just use a single dynamic port.
-				portRange = new int[ 1 ] { 0 };
-			}
-
-			// Loop through looking for an available port.
-			foreach( int port in portRange )
-			{
-				// Make sure that the socket is available.
-				int boundPort = AvailablePortCheck( port );
-				if ( boundPort == -1 )
-				{
-					continue;
-				}
-
-				return boundPort;
-			}
-
-			// No available port could be found.
-			throw new ApplicationException( "No ports available" );
-		}
-
-#if CLIENT_MEMORY_ROLL
-		/// <summary>
-		/// Starts the simias web service.
-		/// </summary>
-		static private void Ping()
-		{
-			SimiasWebService service = new SimiasWebService();
-			service.Url = Manager.LocalServiceUrl + "/Simias.asmx";
-
-			// Stay in the ping loop until the service comes up successfully.
-			bool serviceStarted = false;
-			while ( !serviceStarted )
-			{
-				try
-				{
-					service.PingSimias();
-					serviceStarted = true;
-				}
-				catch
-				{
-					Thread.Sleep( 100 );
-				}
-			}
-		}
-#endif
-
-		/// <summary>
-		/// Sets the specified URI in the configuration file. Normally, applications outside of the Simias
-		/// web service process should not modify the configuration file. It is okay to do so here because
-		/// the Simias process has not been started yet.
-		/// </summary>
-		static public void SetWebServiceUri( Configuration config, Uri uri )
-		{
-			bool updatedFile = false;
-			XmlDocument document = new XmlDocument();
-			document.Load( config.ConfigPath );
-
-			foreach ( XmlElement section in document.DocumentElement )
-			{
-				// Only look at section nodes for the ServiceManager section.
-				if ( ( section.Name == Configuration.SectionTag ) && ( section.GetAttribute( Configuration.NameAttr ) == CFG_Section ) )
-				{
-					XmlElement uriElement = null;
-					foreach( XmlElement setting in section )
-					{
-						// Now look for an existing element for the uri property.
-						if ( ( setting.Name == Configuration.SettingTag ) && ( setting.GetAttribute( Configuration.NameAttr ) == CFG_WebServiceUri ) )
-						{
-							uriElement = setting;
-							break;
-						}
-					}
-
-					// Check to see if an existing element was found.
-					if ( uriElement == null )
-					{
-						uriElement = document.CreateElement( Configuration.SettingTag );
-						uriElement.SetAttribute( Configuration.NameAttr, CFG_WebServiceUri );
-						section.AppendChild( uriElement );
-					}
-
-					// Set the element value attribute.
-					uriElement.SetAttribute( Configuration.ValueAttr, uri.ToString() );
-					updatedFile = true;
-					break;
-				}
-			}
-
-			// Check to see if the file needs to be written back out.
-			if ( updatedFile )
-			{
-				XmlTextWriter xtw = new XmlTextWriter(config.ConfigPath, Encoding.UTF8);
-				try
-				{
-					xtw.Formatting = Formatting.Indented;
-					document.WriteTo(xtw);
-				}
-				finally
-				{
-					xtw.Close();
+					throw new ApplicationException( String.Format( "The Simias process returned an error: {0}", simiasProcess.ExitCode ) );
 				}
 			}
 			else
 			{
-				throw new ApplicationException( String.Format( "{0} did not get updated in {1}", CFG_WebServiceUri, config.ConfigPath ) );
+				simiasProcess.Kill();
+				throw new ApplicationException( "Timed out waiting for Simias process to start." );
 			}
-		}
-		#endregion
 
-		#region Public Methods
-		/// <summary>
-		/// Starts up the simias web service.
-		/// </summary>
-		static public void Start()
-		{
-			lock ( typeof( Manager ) )
-			{
-				// Make sure the process is not already started.
-				if ( webProcess == null )
-				{
-					// Set up the process info to start the XSP process.
-					webProcess = new Process();
-					appDomainUnloadEvent = new EventHandler( XspProcessExited );
-					webProcess.Exited += appDomainUnloadEvent;
-
-					// Get the web service path from the configuration file.
-					Configuration config = new Configuration();
-					string webPath = config.Get( CFG_Section, CFG_WebServicePath );
-					if ( webPath == null )
-					{
-						throw new ApplicationException( String.Format( "There is no {0} entry in {1}", CFG_WebServicePath, config.ConfigPath ) );
-					}
-
-					// Build a path to the web server application.
-					string webApp = Path.Combine( webPath, String.Format( "bin{0}SimiasApp.exe", Path.DirectorySeparatorChar ) );
-
-					webProcess.StartInfo.FileName = MyEnvironment.DotNet ? webApp : "mono";
-					webProcess.StartInfo.UseShellExecute = false;
-					webProcess.StartInfo.RedirectStandardInput = true;
-					webProcess.StartInfo.CreateNoWindow = true;
-					webProcess.EnableRaisingEvents = true;
-
-					// See if process output is to be shown.
-					string showOutput = config.Get( CFG_Section, CFG_ShowOutput );
-					if ( ( showOutput != null ) && ( String.Compare( showOutput, "True", true ) == 0 ) )
-					{
-						webProcess.StartInfo.CreateNoWindow = false;
-					}
-
-					if ( !Path.IsPathRooted( webPath ) )
-					{
-						throw new ApplicationException( String.Format( "Web service path must be absolute: {0}", webPath ) );
-					}
-
-					// See if there is already a uri specified in the configuration file.
-					Uri uri = null;
-					string virtualRoot = null;
-
-					string webUriString = config.Get( CFG_Section, CFG_WebServiceUri );
-					if ( webUriString != null )
-					{
-						// Make sure that the specified port is available.
-						UriBuilder ub = new UriBuilder( webUriString );
-						if ( AvailablePortCheck( ub.Port ) == -1 )						
-						{
-							// The port is in use by another application. Allocate a new port.
-							ub.Port = GetXspPort( config );
-
-							// Set the uri with the new port back into the config file.
-							SetWebServiceUri( config, ub.Uri );
-						}
-				
-						uri = ub.Uri;
-						virtualRoot = GetVirtualPath( uri );
-					}
-					else
-					{
-						// Get the dynamic port that xsp should use and write it out to the config file.
-						virtualRoot = String.Format( "/simias10/{0}", Environment.UserName );
-						uri = new Uri( new UriBuilder( "http", IPAddress.Loopback.ToString(), GetXspPort( config ), virtualRoot ).ToString() );
-						SetWebServiceUri( config, uri );
-					}
-
-					// Strip off the volume if it exists and the file name and make the path absolute from the root.
-					string appPath = String.Format( "{0}{1}", Path.DirectorySeparatorChar, webPath.Remove( 0, Path.GetPathRoot( webPath ).Length ) );
-					webProcess.StartInfo.Arguments = String.Format( "{0} --applications \"{1}\":\"{2}\" --port {3}", MyEnvironment.DotNet ? String.Empty : "\"" + webApp + "\" ", virtualRoot, appPath, uri.Port.ToString() );
-					webProcess.Start();
-				}
-			}
+			return webServiceUri;
 		}
 
 		/// <summary>
-		/// Shuts down the XSP process.
+		/// Shuts down the simias web service process.
 		/// </summary>
-		static public void Stop()
+		public bool Stop()
 		{
-			lock ( typeof( Manager ) )
-			{
-				if ( webProcess != null )
-				{
-					// Remove the exit event handler before shutting down the process.
-					webProcess.Exited -= appDomainUnloadEvent;
+			bool stopped = false;
 
-					// Tell XSP to terminate and wait for it to exit.
-					webProcess.StandardInput.WriteLine( "" );
-					if (!webProcess.WaitForExit(10000))
-					{
-						if (webProcess.HasExited == false)
-							webProcess.Kill();
-					}
-					webProcess = null;
-				}
+			// Build the arguments string.
+			string args = String.Format( "{0}--stop{1}{2}{3}", 
+				IsWindows ? String.Empty : String.Format( "\"{0}\" ", applicationPath ),
+				( simiasDataPath != null ) ? String.Format( " --datadir \"{0}\"", simiasDataPath ) : String.Empty,
+				( showConsole == true ) ? " --showconsole" : String.Empty,
+				( verbose == true ) ? " --verbose" : String.Empty );
+
+			// Create the process structure.
+			Process simiasProcess = new Process();
+			simiasProcess.StartInfo.FileName = IsWindows ? applicationPath : "mono";
+			simiasProcess.StartInfo.CreateNoWindow = showConsole ? false : true;
+			simiasProcess.StartInfo.RedirectStandardOutput = true;
+			simiasProcess.StartInfo.UseShellExecute = false;
+			simiasProcess.StartInfo.Arguments = args;
+			simiasProcess.Start();
+
+			// Wait for the process to exit, so we can tell if things stopped successfully.
+			simiasProcess.WaitForExit( 15000 );
+
+			// See if the process is still running.
+			if ( simiasProcess.HasExited )
+			{
+				// Get the exit code to see if it was successful.
+				stopped = ( simiasProcess.ExitCode == 0 ) ? true : false;
 			}
+			else
+			{
+				simiasProcess.Kill();
+				throw new ApplicationException( "Timed out waiting for Simias process to start." );
+			}
+
+			return stopped;
 		}
 		#endregion
 	}

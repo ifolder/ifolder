@@ -40,10 +40,6 @@ namespace Simias.Service
 		/// </summary>
 		internal string		assembly;
 		/// <summary>
-		/// The configuration for this service.
-		/// </summary>
-		internal Configuration	conf;
-		/// <summary>
 		/// Used to enable or disable the service.
 		/// </summary>
 		internal bool			enabled = true;
@@ -55,25 +51,22 @@ namespace Simias.Service
 		/// <summary>
 		/// Initializes the Service Control object.
 		/// </summary>
-		/// <param name="conf">The configuration to use.</param>
+		/// <param name="serviceAssembly">The assembly that the service belongs to.</param>
 		/// <param name="serviceElement">XML element that describes the service.</param>
-		protected ServiceCtl(Configuration conf, XmlElement serviceElement)
+		protected ServiceCtl(string serviceAssembly, XmlElement serviceElement)
 		{
-			this.conf = conf;
 			name = serviceElement.GetAttribute(Manager.XmlNameAttr);
-			assembly = serviceElement.GetAttribute(Manager.XmlAssemblyAttr);
+			assembly = serviceAssembly;
 			enabled = bool.Parse(serviceElement.GetAttribute(Manager.XmlEnabledAttr));
 		}
 
 		/// <summary>
 		/// Initializes the Service Control object.
 		/// </summary>
-		/// <param name="conf">The configuration to use.</param>
 		/// <param name="name">The name of ther service.</param>
 		/// <param name="assembly">The assembly where the service exists.</param>
-		protected ServiceCtl(Configuration conf, string name, string assembly)
+		protected ServiceCtl(string name, string assembly)
 		{
-			this.conf = conf;
 			this.name = name;
 			this.assembly = assembly;
 		}

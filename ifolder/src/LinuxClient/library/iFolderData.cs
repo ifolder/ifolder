@@ -83,15 +83,15 @@ namespace Novell.iFolder
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		private iFolderData()
+		private iFolderData(Manager simiasManager)
 		{
 			try
 			{
 				ifws = new iFolderWebService();
 				ifws.Url = 
-					Simias.Client.Manager.LocalServiceUrl.ToString() +
+					simiasManager.WebServiceUri.ToString() +
 					"/iFolder.asmx";
-				LocalService.Start(ifws);
+				LocalService.Start(ifws, simiasManager.WebServiceUri, simiasManager.DataPath);
 			}
 			catch(Exception e)
 			{
@@ -102,9 +102,9 @@ namespace Novell.iFolder
 			{
 				simws = new SimiasWebService();
 				simws.Url = 
-					Simias.Client.Manager.LocalServiceUrl.ToString() +
+					simiasManager.WebServiceUri.ToString() +
 					"/Simias.asmx";
-				LocalService.Start(simws);
+				LocalService.Start(simws, simiasManager.WebServiceUri, simiasManager.DataPath);
 			}
 			catch(Exception e)
 			{
@@ -127,13 +127,13 @@ namespace Novell.iFolder
 		// GetData
 		// Gets the current instance of iFolderData
 		//===================================================================
-		static public iFolderData GetData()
+		static public iFolderData GetData(Manager simiasManager)
 		{
 			lock (typeof(iFolderData))
 			{
 				if (instance == null)
 				{
-					instance = new iFolderData();
+					instance = new iFolderData(simiasManager);
 				}
 
 				return instance;

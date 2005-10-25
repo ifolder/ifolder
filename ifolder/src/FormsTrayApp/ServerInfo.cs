@@ -57,6 +57,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.TextBox serverName;
 		private System.Windows.Forms.PictureBox bannerFill;
 		private System.Windows.Forms.Panel panel1;
+		private Manager simiasManager;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -66,7 +67,7 @@ namespace Novell.FormsTrayApp
 		/// Constructs a ServerInfo object.
 		/// </summary>
 		/// <param name="domainInfo">The DomainInformation object for the domain.</param>
-		public ServerInfo(DomainInformation domainInfo, string password)
+		public ServerInfo(Manager simiasManager, DomainInformation domainInfo, string password)
 		{
 			//
 			// Required for Windows Form Designer support
@@ -74,6 +75,7 @@ namespace Novell.FormsTrayApp
 			InitializeComponent();
 
 			this.domainInfo = domainInfo;
+			this.simiasManager = simiasManager;
 
 			if (password != null)
 			{
@@ -496,7 +498,7 @@ namespace Novell.FormsTrayApp
 			try
 			{
 				DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domainInfo.ID, password.Text);
-				Status authStatus = domainAuth.Authenticate();
+				Status authStatus = domainAuth.Authenticate(simiasManager.WebServiceUri, simiasManager.DataPath);
 				MyMessageBox mmb;
 				switch (authStatus.statusCode)
 				{
@@ -643,8 +645,8 @@ namespace Novell.FormsTrayApp
 			try
 			{
 				simiasWebService = new SimiasWebService();
-				simiasWebService.Url = Simias.Client.Manager.LocalServiceUrl.ToString() + "/Simias.asmx";
-				LocalService.Start(simiasWebService);
+				simiasWebService.Url = simiasManager.WebServiceUri.ToString() + "/Simias.asmx";
+				LocalService.Start(simiasWebService, simiasManager.WebServiceUri, simiasManager.DataPath);
 
 				if (domainInfo != null)
 				{

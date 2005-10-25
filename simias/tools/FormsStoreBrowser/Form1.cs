@@ -80,6 +80,7 @@ namespace StoreBrowser
 		private CertPolicy certPolicy = new CertPolicy();
 		private bool ascending = true;
 		private int prevColumn = 0;
+		private string storePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "simias");
 
 		public bool IsXmlView
 		{
@@ -372,7 +373,7 @@ namespace StoreBrowser
 		/// The main entry point for the application.
 		/// </summary>
 		[STAThread]
-		static void Main() 
+		static void Main( string[] args ) 
 		{
 			Application.Run(new Form1());
 		}
@@ -707,6 +708,28 @@ namespace StoreBrowser
 			}
 		}
 
+		private Uri GetLocalUri()
+		{
+			Uri uri = null;
+
+			// Start simias so we can get a local URI if there is one.
+			try
+			{
+				Manager manager = new Manager( Environment.GetCommandLineArgs() );
+				if ( ( manager.DataPath != null ) || ( Directory.Exists( storePath ) ) )
+				{
+					manager.Start();
+					uri = manager.WebServiceUri;
+					storePath = manager.DataPath;
+					manager.Stop();
+				}
+			}
+			catch ( ApplicationException )
+			{}
+
+			return uri;
+		}
+
 		private void Form1_Load(object sender, System.EventArgs e)
 		{
 			this.listView1.Hide();
@@ -715,7 +738,7 @@ namespace StoreBrowser
 
 			LoadRecentStores();
 
-			Uri uri = Manager.LocalServiceUrl;
+			Uri uri = GetLocalUri();
 			if ( uri != null )
 			{
 				hostName = uri.AbsoluteUri;
@@ -759,7 +782,7 @@ namespace StoreBrowser
 
 			try
 			{
-				browser = new NodeBrowser2(this, tView, listView1, richTextBox1, hostName);
+				browser = new NodeBrowser2(this, tView, listView1, richTextBox1, hostName, storePath);
 
 				this.Cursor = Cursors.WaitCursor;
 				bool needsAuth = browser.NeedsAuthentication();
@@ -770,7 +793,7 @@ namespace StoreBrowser
 					if ( local )
 					{
 						this.Cursor = Cursors.WaitCursor;
-						result = browser.ValidateCredentials();
+						result = browser.ValidateCredentials(storePath);
 						this.Cursor = Cursors.Default;
 					}
 					else
@@ -798,7 +821,7 @@ namespace StoreBrowser
 			}
 			catch ( System.Web.Services.Protocols.SoapHeaderException )
 			{
-				browser = new NodeBrowser(this, tView, listView1, richTextBox1, hostName);
+				browser = new NodeBrowser(this, tView, listView1, richTextBox1, hostName, storePath);
 
 				this.Cursor = Cursors.WaitCursor;
 				bool needsAuth = browser.NeedsAuthentication();
@@ -809,7 +832,7 @@ namespace StoreBrowser
 					if ( local )
 					{
 						this.Cursor = Cursors.WaitCursor;
-						result = browser.ValidateCredentials();
+						result = browser.ValidateCredentials(storePath);
 						this.Cursor = Cursors.Default;
 					}
 					else
@@ -935,7 +958,7 @@ namespace StoreBrowser
 		void ShowNode(TreeNode node);
 		void AddChildren(TreeNode tNode);
 		bool NeedsAuthentication();
-		bool ValidateCredentials();
+		bool ValidateCredentials( string storePath );
 		bool ValidateCredentials( string userName, string password );
 		BrowserService StoreBrowser { get; }
 		string UserName { get; }

@@ -90,6 +90,11 @@ namespace Simias.Storage
 		private Persist.IProvider storageProvider = null;
 
 		/// <summary>
+		/// Path to where the store is kept.
+		/// </summary>
+		private static string storePath;
+
+		/// <summary>
 		/// Path to where store managed files are kept.
 		/// </summary>
 		private string storeManagedPath;
@@ -137,7 +142,12 @@ namespace Simias.Storage
 		/// <summary>
 		/// Used to indicate whether this instance is running on an enterprise server.
 		/// </summary>
-		private bool enterpriseServer = false;
+		private static bool enterpriseServer = false;
+
+		/// <summary>
+		/// Set to true if the store was created when this instance was initialized.
+		/// </summary>
+		private static bool created = false;
 
 		/// <summary>
 		/// Object used to cache node objects.
@@ -247,7 +257,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Gets whether this instance is running on a enterprise server.
 		/// </summary>
-		public bool IsEnterpriseServer
+		public static bool IsEnterpriseServer
 		{
 			get { return enterpriseServer; }
 		}
@@ -263,9 +273,9 @@ namespace Simias.Storage
 		/// <summary>
 		///  Specifies where the default store path
 		/// </summary>
-		public string StorePath
+		public static string StorePath
 		{
-			get { return Config.StorePath; }
+			get { return storePath; }
 		}
 
 		/// <summary>
@@ -294,17 +304,18 @@ namespace Simias.Storage
 		/// <summary>
 		/// Constructor for the Store object.
 		/// </summary>
-		/// <param name="config">A Configuration object that contains a path that specifies where to create
-		/// or open the database.</param>
-		private Store( Configuration config )
+		/// <param name="simiasStorePath">The directory path to the store.</param>
+		/// <param name="isServer">True if running in a server configuration.</param>
+		private Store( string simiasStorePath, bool isServer )
 		{
-			bool created;
+			// Save the path to the store.
+			storePath = Path.GetFullPath( simiasStorePath );
 
 			// Store the configuration that opened this instance.
-			this.config = config;
+			config = new Configuration( storePath, isServer );
 
 			// Does the configuration indicate that this is an enterprise server?
-			enterpriseServer = config.Exists( Domain.SectionName, null );
+			enterpriseServer = isServer;
 
 			// Setup the event publisher object.
 			eventPublisher = new EventPublisher();
@@ -313,11 +324,11 @@ namespace Simias.Storage
 			cache = new NodeCache( this );
 
 			// Create or open the underlying database.
-			storageProvider = Persist.Provider.Connect( new Persist.ProviderConfig(), out created );
+			storageProvider = Persist.Provider.Connect( new Persist.ProviderConfig( config, storePath ), out created );
 
 			// Set the managed and unmanaged paths to the store.
-			storeManagedPath = Path.Combine( storageProvider.StoreDirectory.LocalPath, storeManagedDirectoryName );
-			storeUnmanagedPath = Path.Combine( storageProvider.StoreDirectory.LocalPath, storeUnmanagedDirectoryName );
+			storeManagedPath = Path.Combine( storePath, storeManagedDirectoryName );
+			storeUnmanagedPath = Path.Combine( storePath, storeUnmanagedDirectoryName );
 
 			// Either create the store or authenticate to it.
 			if ( created )
@@ -332,7 +343,7 @@ namespace Simias.Storage
 					{
 						// If there is a domain specified, get the specified admin user to be the
 						// store owner.
-						string adminDNName = config.Get( Domain.SectionName, Domain.AdminDNTag, null );
+						string adminDNName = config.Get( Domain.SectionName, Domain.AdminDNTag );
 						if ( adminDNName != null )
 						{
 							userName = ParseUserName( adminDNName );
@@ -370,18 +381,6 @@ namespace Simias.Storage
 					Member domainOwner = new Member( owner.Name, owner.ID, Access.Rights.Admin, owner.PublicKey );
 					domainOwner.IsOwner = true;
 					domain.Commit( new Node[] { domain, domainOwner } );
-
-					if ( !IsEnterpriseServer )
-					{
-						// Create a SyncInterval policy.
-						SyncInterval.Create( DefaultMachineSyncInterval );
-					}
-
-					// Create a FileFilter local machine policy that disallows the Thumbs.db 
-					// and .DS_Store files from synchronizing. This fix in in response to bug #73517.
-					FileTypeFilter.Create( new FileTypeEntry[] { new FileTypeEntry( "Thumbs.db", false, true ),
-																 new FileTypeEntry( ".DS_Store", false, false )
-															   } );
 				}
 				catch ( Exception e )
 				{
@@ -442,7 +441,35 @@ namespace Simias.Storage
 			{
 				if ( instance == null )
 				{
-					instance = new Store( Configuration.GetConfiguration() );
+					throw new CollectionStoreException( "The store has not been initialized." );
+				}
+
+				return instance;
+			}
+		}
+
+		/// <summary>
+		/// Creates the singleton store instance and sets the required store parameters.
+		/// </summary>
+		/// <param name="storePath">The directory path to the store.</param>
+		/// <param name="isServer">True if running in a server configuration.</param>
+		/// <returns>A reference to a Store object.</returns>
+		static public Store Initialize( string storePath, bool isServer )
+		{
+			lock ( typeof( Store ) )
+			{
+				if ( instance == null )
+				{
+					// Create and initialize the store instance.
+					instance = new Store( storePath, isServer );
+
+					// Set the default store policies if the store is new.
+					if ( created )
+					{
+						CreateDefaultPolicies();
+					}
+
+					// Create the certificate policy and load the certs.
 					new CertPolicy();
 					Simias.Security.CertificateStore.LoadCertsFromStore();
 				}
@@ -467,6 +494,24 @@ namespace Simias.Storage
 		#endregion
 
 		#region Private Methods
+		/// <summary>
+		/// Creates the default policies for the store.
+		/// </summary>
+		private static void CreateDefaultPolicies()
+		{
+			if ( !IsEnterpriseServer )
+			{
+				// Create a SyncInterval policy.
+				SyncInterval.Create( DefaultMachineSyncInterval );
+			}
+
+			// Create a FileFilter local machine policy that disallows the Thumbs.db 
+			// and .DS_Store files from synchronizing. This fix in in response to bug #73517.
+			FileTypeFilter.Create( new FileTypeEntry[] { new FileTypeEntry( "Thumbs.db", false, true ),
+														   new FileTypeEntry( ".DS_Store", false, false )
+													   } );
+		}
+
 		/// <summary>
 		/// Creates a local credential to be used to identify the local user.
 		/// </summary>

@@ -26,5 +26,5 @@
 export MONO_PATH=@_prefix_@/lib:@_webbindir_@:$MONO_PATH
 export LD_LIBRARY_PATH=@_prefix_@/lib:@_webbindir_@:$LD_LIBRARY_PATH
 cd @_prefix_@/bin
-mono iFolderClient.exe
+mono iFolderClient.exe $@
 

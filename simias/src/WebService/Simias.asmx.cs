@@ -27,6 +27,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Web;
 using System.Web.Services;
 using System.Web.Services.Protocols;
@@ -186,6 +187,7 @@ namespace Simias.Web
 	public class SimiasService : WebService
 	{
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SimiasService));
+		private static int simiasReferenceCount = 0;
 
 		/// <summary>
 		/// Creates the SimiasService and sets up logging
@@ -1028,6 +1030,105 @@ log.Debug("SimiasWebService.ConnectToDomain() called to connect to {0} as {1}", 
 			}
 
 			return proxySet;
+		}
+
+		/// <summary>
+		/// Checks to see if this instance of Simias is shareable.
+		/// </summary>
+		/// <param name="simiasDataPath">Application's path to it Simias data area.</param>
+		/// <param name="isClient">True if the application wishing to share the service is running as a client.
+		/// If it is running as a server, this parameter should be false.</param>
+		/// <returns>The directory path for the simias directory.</returns>
+		[WebMethod(EnableSession=true, Description="Checks to see if this instance of Simias is shareable.")]
+		[SoapDocumentMethod]
+		public bool CanShareService( string simiasDataPath, bool isClient )
+		{
+			bool canShare = false;
+			bool ignoreCase = ( MyEnvironment.Platform == MyPlatformID.Windows ) ? true : false;
+			Store store = Store.GetStore();
+
+			// The application's simias data path must be the same as this instance's path.
+			if ( String.Compare( Path.GetFullPath( simiasDataPath ), Store.StorePath, ignoreCase ) == 0 )
+			{
+				// Can't share services between clients and enterprise servers because their
+				// configurations are different. Not all client services are available on a
+				// server.
+				if ( isClient && !Store.IsEnterpriseServer )
+				{
+					canShare = true;
+				}
+			}
+
+			return canShare;
+		}
+
+		/// <summary>
+		/// Causes the controlling server process to shutdown the web services and exit.
+		/// </summary>
+		[WebMethod(EnableSession=true, Description="Shuts down the controlling server process.")]
+		[SoapDocumentMethod]
+		public void StopSimiasProcess()
+		{
+			Global.SimiasProcessExit();
+		}
+
+		/// <summary>
+		/// Increments the reference count that keeps Simias services running.
+		/// </summary>
+		/// <returns>The new reference count.</returns>
+		[WebMethod(EnableSession=true, Description="Increments the reference count that keeps Simias services running.")]
+		[SoapDocumentMethod]
+		public int AddSimiasReference()
+		{
+			lock ( typeof( SimiasService ) )
+			{
+				return ++simiasReferenceCount;
+			}
+		}
+
+		/// <summary>
+		/// Decrements the Simias service reference count and signals the server to stop if the count goes to zero.
+		/// </summary>
+		/// <returns>The new reference count.</returns>
+		[WebMethod(EnableSession=true, Description="Decrements the Simias service reference count and signals the server to stop if the count goes to zero.")]
+		[SoapDocumentMethod]
+		public int RemoveSimiasReference()
+		{
+			lock ( typeof( SimiasService ) )
+			{
+				// Don't let the count go negative.
+				if ( simiasReferenceCount >= 1 )
+				{
+					if ( --simiasReferenceCount == 0 )
+					{
+						StopSimiasProcess();
+					}
+				}
+
+				return simiasReferenceCount;
+			}
+		}
+
+		/// <summary>
+		/// Gets the directory path to the Simias data area.
+		/// </summary>
+		/// <returns>The path to the Simias data area.</returns>
+		[WebMethod(EnableSession=true, Description="Gets the directory path to the Simias data area.")]
+		[SoapDocumentMethod]
+		public string GetSimiasDataPath()
+		{
+			return Store.StorePath;
+		}
+
+		/// <summary>
+		/// Gets the process ID for the current running process.
+		/// </summary>
+		/// <returns></returns>
+		[WebMethod(EnableSession=true, Description="Gets the process ID for the current running process.")]
+		[SoapDocumentMethod]
+		public int GetSimiasProcessID()
+		{
+			return Process.GetCurrentProcess().Id;
 		}
 	}
 

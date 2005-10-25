@@ -186,8 +186,7 @@ namespace Simias.DomainService.Web
 				&& (rootDirName != null) && (rootDirName.Length > 0))
 			{
 				// files path
-				Configuration config = Configuration.GetConfiguration();
-				string path = Path.Combine(config.StorePath, FilesDirectory);
+				string path = Path.Combine(Store.StorePath, FilesDirectory);
 				path = Path.Combine(path, collectionID);
 				path = Path.Combine(path, rootDirName);
 

@@ -99,16 +99,18 @@ namespace StoreBrowser
 		RichTextBox rView;
 		bool alreadyDisposed;
 		string host;
+		string storePath;
 		string userName = String.Empty;
 		string password = String.Empty;
 
-		public NodeBrowser2(Form1 form, TreeView view, ListView lView, RichTextBox rView, string host)
+		public NodeBrowser2(Form1 form, TreeView view, ListView lView, RichTextBox rView, string host, string storePath)
 		{
 			tView = view;
 			this.form = form;
 			this.lView = lView;
 			this.rView = rView;
 			this.host = host;
+			this.storePath = storePath;
 			rView.Show();
 			lView.Show();
 
@@ -178,9 +180,9 @@ namespace StoreBrowser
 			return needsAuth;
 		}
 
-		public bool ValidateCredentials()
+		public bool ValidateCredentials(string storePath)
 		{
-			Simias.Client.LocalService.Start(browser);
+			Simias.Client.LocalService.Start(browser, new Uri(host), storePath);
 			return !NeedsAuthentication();
 		}
 

@@ -81,14 +81,13 @@ namespace Simias.Storage
 					NodeCache.store = store;
 
 					// Get the cache entry time to live.
-					string timeString = store.Config.Get( NodeCacheSectionTag, TimeToLiveTag, defaultTimeToLive.ToString() );
-					cacheTimeToLive = Convert.ToInt32( timeString );
+					string timeString = store.Config.Get( NodeCacheSectionTag, TimeToLiveTag );
+					cacheTimeToLive = ( timeString != null ) ? Convert.ToInt32( timeString ) : defaultTimeToLive;
 
 					// Make sure the time to live is between 1 second and 30 minutes.
 					if ( ( cacheTimeToLive < 1 ) || ( cacheTimeToLive > 1800 ) )
 					{
 						cacheTimeToLive = defaultTimeToLive;
-						store.Config.Set( NodeCacheSectionTag, TimeToLiveTag, defaultTimeToLive.ToString() );
 					}
 
 					// Set the time to wait to purge the cache to 1/2 of the time to live.

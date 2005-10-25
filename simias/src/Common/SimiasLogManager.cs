@@ -77,15 +77,6 @@ namespace Simias
 		}
 
 		/// <summary>
-		/// Configure the log manager to a specific Simias store.
-		/// </summary>
-		/// <param name="configuration">A Simias configuration object.</param>
-		public static void Configure(Configuration configuration)
-		{
-			Configure(configuration.StorePath);
-		}
-
-		/// <summary>
 		/// Configure the log manater to a specific Simias store.
 		/// </summary>
 		/// <param name="storePath">The full path to the store directory.</param>

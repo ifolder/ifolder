@@ -92,7 +92,6 @@ namespace Novell.FormsTrayApp
 
 			fixAppConfigFile(Path.Combine(windowsDir, "explorer.exe.config"), installDir);
 			fixWebConfigFile(Path.Combine(installDir, @"web\web.config"));
-			fixBootstrapConfigFile(Path.Combine(installDir, @"etc\simias-client-bootstrap.config"), Path.Combine(installDir, "web"));
 		}
 		/// <summary>
 		/// Override the 'Commit' method.
@@ -127,17 +126,6 @@ namespace Novell.FormsTrayApp
 				base.Uninstall(savedState);
 				Console.WriteLine( "iFolderApp Uninstall" );
 
-				// Kill SimiasApp
-                Process[] simiasAppProcesses = Process.GetProcessesByName("SimiasApp");
-				foreach (Process process in simiasAppProcesses)
-				{
-					try
-					{
-						process.Kill(); // This will throw if the process is no longer running
-					}
-					catch {}
-					process.Close();
-				}
 				// Kill iFolderApp
                 Process[] ifolderAppProcesses = Process.GetProcessesByName("iFolderApp");
 				foreach (Process process in ifolderAppProcesses)
@@ -148,17 +136,6 @@ namespace Novell.FormsTrayApp
 					}
 					catch {}
 					process.Close();
-				}
-				// Get store path from Simias.config then delete the store path
-                //Give the processes time to die (3 seconds worked on my box--giving extra time for slow box).
-				//Without this command the delete fails.
-				System.Threading.Thread.Sleep(5000); 
-				Simias.Client.Configuration configuration = new Simias.Client.Configuration();
-				Directory.Delete(configuration.StorePath, true);
-				string configPath = configuration.ConfigPath;
-				if (File.Exists(configPath))
-				{
-					File.Delete(configPath);
 				}
 
 				// Build the path to the iFolder application data directory.
@@ -263,24 +240,6 @@ namespace Novell.FormsTrayApp
 			}
 
 			return true;
-		}
-
-		private void fixBootstrapConfigFile(string bootstrapConfigFile, string installPath)
-		{
-			configDoc = new XmlDocument();
-			configDoc.Load(bootstrapConfigFile);
-
-			XmlElement sectionElement = (XmlElement)configDoc.DocumentElement.SelectSingleNode("//section[@name='ServiceManager']");
-			if (sectionElement != null)
-			{
-				XmlNode webServicePathNode = sectionElement.SelectSingleNode("//setting[@name='WebServicePath']");
-				if (webServicePathNode != null)
-				{
-					((XmlElement)webServicePathNode).SetAttribute("value", installPath);
-				}
-			}
-
-			saveXmlFile(configDoc, bootstrapConfigFile);
 		}
 
 		private void fixWebConfigFile(string webConfigFile)

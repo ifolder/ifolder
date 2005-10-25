@@ -6,8 +6,8 @@ SyncService_CSFILES_CSC := $(subst /,$(SEP),$(SyncService_CSFILES))
 SyncService_INCLUDES =
 SyncService_RESOURCES =
 SyncService_FLAGS = $(CSC_LIBFLAG)
-SyncService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll SimiasClient.dll Simias.dll
-SyncService_LIBPATH = ../SimiasClient ../Simias.dll
+SyncService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll SimiasClient.dll SimiasLib.dll
+SyncService_LIBPATH = ../SimiasClient ../SimiasLib.dll
 
 EXTRA_DIST = SyncHandler.ashx $(SyncService_CSFILES) AssemblyInfo.cs.in
 

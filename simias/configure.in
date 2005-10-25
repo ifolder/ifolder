@@ -149,6 +149,7 @@ case $SIMIAS_OS in
         CFLAGS_DEBUG="-DDEBUG"
         CSCFLAGS="/d:DARWIN $CSCFLAGS"
         EXE_EXT=''
+	GACINSTALL=
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
         INSTALL_EXE_OPTS='-m 644'
@@ -172,7 +173,7 @@ case $SIMIAS_OS in
         AC_CHECK_PROG(CXX, g++, g++)
         # AC_CHECK_PROG(CXX, g++-3.3, g++-3.3)
 		# LD='$(CXX) -dynamiclib '
-		StoreProviderAssembly="Simias.dll"
+		StoreProviderAssembly="SimiasLib.dll"
 		StoreProviderType="Simias.Storage.Provider.Flaim.FlaimProvider"
 		GSOAP_PATH="$TOOLDIR/gsoap/macosx-2.7"
 		#StoreProviderAssembly="SqliteProvider.dll"
@@ -189,6 +190,7 @@ case $SIMIAS_OS in
         CFLAGS_DEBUG="-DDEBUG"
         CSCFLAGS="/d:LINUX $CSCFLAGS"
         EXE_EXT=''
+	GACINSTALL=
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
         INSTALL_EXE_OPTS='--mode=644'
@@ -210,7 +212,7 @@ case $SIMIAS_OS in
 		LDOUT='-o'
 		# have to add this check on redhat for some reason
         AC_CHECK_PROG(CXX, g++, g++)
-		StoreProviderAssembly="Simias.dll"
+		StoreProviderAssembly="SimiasLib.dll"
 		StoreProviderType="Simias.Storage.Provider.Flaim.FlaimProvider"
 		GSOAP_PATH="$TOOLDIR/gsoap/linux-2.7"
     	libexecdir="${exec_prefix}"
@@ -246,6 +248,7 @@ case $SIMIAS_OS in
         DEF='-def:'
         EMPTY=
         EXE_EXT='.exe'
+	GACINSTALL='gacutil /i'
         ICON_EXT='.ico'
         ICON_FLAG='/win32icon:'
         INSTALL_EXE_OPTS=''
@@ -268,7 +271,6 @@ case $SIMIAS_OS in
         RC='rc'
         RC_FLAGS='-r'
         REPORT_DIR='$(shell cygpath --windows $(DESTDIR)$(webbindir) | sed ''s,\\\\,/,g'')'
-        
         REPORT_EXE='$(top_srcdir)/tools/Report/Report.exe'
         RES_EXT='.res'
         SEP='$(EMPTY)\\$(EMPTY)'
@@ -285,7 +287,7 @@ case $SIMIAS_OS in
     	sbindir="${exec_prefix}"
     	libexecdir="${exec_prefix}"
     	libdir="${exec_prefix}"
-		StoreProviderAssembly="Simias.dll"
+		StoreProviderAssembly="SimiasLib.dll"
 		StoreProviderType="Simias.Storage.Provider.Flaim.FlaimProvider"
     ;;
 esac
@@ -295,6 +297,7 @@ AC_SUBST(COUT)
 AC_SUBST(CXX)
 AC_SUBST(CXXFLAGS)
 AC_SUBST(DEF)
+AC_SUBST(GACINSTALL)
 AC_SUBST(ICON_EXT)
 AC_SUBST(ICON_FLAG)
 AC_SUBST(INSTALL_EXE_OPTS)
@@ -318,6 +321,7 @@ AC_SUBST(STORELIB)
 AC_SUBST(STORELIB_PATH)
 AC_SUBST(webdir)
 AC_SUBST(webbindir)
+AC_SUBST(modulesdir)
 AC_SUBST(StoreProviderAssembly)
 AC_SUBST(StoreProviderType)
 AC_SUBST(GSOAP_PATH)
@@ -327,8 +331,10 @@ AC_SUBST(GSOAP_PATH)
 #
 webdir="${libexecdir}/web"
 webbindir="${webdir}/bin"
+modulesdir="${webdir}/modules"
 AC_SUBST(webdir)
 AC_SUBST(webbindir)
+AC_SUBST(modulesdir)
 
 
 #
@@ -336,7 +342,7 @@ AC_SUBST(webbindir)
 #
 PKG_CONFIG_REQUIRES=""
 PKG_CONFIG_CONFLICTS=""
-PKG_CONFIG_LIBS="/r:Simias.dll"
+PKG_CONFIG_LIBS="/r:SimiasLib.dll"
 AC_SUBST(PKG_CONFIG_REQUIRES)
 AC_SUBST(PKG_CONFIG_CONFLICTS)
 AC_SUBST(PKG_CONFIG_LIBS)
@@ -415,6 +421,34 @@ fi
 AC_SUBST(DEVENV_CONFIGURATION)
 
 #
+# Handle --with-simiasdatadir
+#
+AC_CHECKING([whether a location for the simias data directory was specified])
+AC_ARG_WITH(simiasdatadir,
+	[AS_HELP_STRING([--with-simiasdatadir=PATH],
+	[configure the directory where the simias data files will be placed. [Default=$HOME/.local/share/SimpleServer/simias]])],
+	[simiasdatadir="$withval"],
+	[case $SIMIAS_OS in
+		windows) simiasdatadir='"$(shell cygpath --unix "$(USERPROFILE)")/Local Settings/Application Data/SimpleServer/simias"' ;;
+		linux) simiasdatadir="$HOME/.local/share/SimpleServer/simias" ;;
+		darwin) simiasdatadir="$HOME/.local/share/SimpleServer/simias" ;;
+	esac]
+	)
+AC_SUBST(simiasdatadir)
+
+#
+# Needed to properly set the key file conditional for SimiasClient.
+#
+if test -e "src/SimiasClient/simiasclient.snk"; then
+  SIMIASCLIENT_KEYFILE=simiasclient.snk
+else
+  SIMIASCLIENT_KEYFILE=
+fi
+AC_SUBST(SIMIASCLIENT_KEYFILE)
+AM_CONDITIONAL(HAS_SIMIASCLIENT_KEYFILE, test -n "$SIMIASCLIENT_KEYFILE")
+
+
+#
 # Configure PKG_CONFIG
 #
 AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
@@ -443,12 +477,12 @@ Makefile
 src/Makefile
 src/SimiasClient/Makefile
 src/SimiasClient/libsimias-event/Makefile
-src/Simias.dll/Makefile
-src/Simias.dll/Simias.dll.config
+src/SimiasClient/libsimias-manager/Makefile
+src/SimiasLib.dll/Makefile
+src/SimiasLib.dll/SimiasLib.dll.config
 src/FlaimProvider/Makefile
 src/FlaimProvider/FlaimWrapper/Makefile
 src/SimiasApp/Makefile
-src/SimiasServer/Makefile
 src/WebService/Makefile
 src/POBoxWS/Makefile
 src/SyncService/Makefile

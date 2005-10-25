@@ -267,7 +267,7 @@ namespace Mono.ASPNET
 			} catch (Exception e) {
 				bool ignore = ((e is RequestLineException) || (e is IOException));
 				if (!ignore)
-					Console.WriteLine (e);
+					Console.Error.WriteLine (e);
 
 				try {
 					if (!ignore) {

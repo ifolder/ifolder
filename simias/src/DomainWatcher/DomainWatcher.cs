@@ -53,7 +53,6 @@ namespace Simias.DomainWatcher
 
 		private bool			started = false;
 		private	bool			stop = false;
-		private Configuration	config;
 		private Thread			watcherThread = null;
 		private AutoResetEvent	stopEvent;
 		private Store			store;
@@ -63,11 +62,8 @@ namespace Simias.DomainWatcher
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		/// <param name="config">Simias configuration</param>
-		public Manager(Configuration config)
+		public Manager()
 		{
-			this.config = config;
-			
 			// store
 			store = Store.GetStore();
 		}

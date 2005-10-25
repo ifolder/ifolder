@@ -1,4 +1,4 @@
-SUBDIRS = 
+SUBDIRS =
 
 DIST_SUBDIRS = $(SUBDIRS)
 
@@ -30,7 +30,7 @@ CP = $(subst $(SPACE),$(PATH_SEP),$(CP1))
 
 all: SwingStoreBrowser.jar
 
-SwingStoreBrowser.jar: $(SRC_FILES) 
+SwingStoreBrowser.jar: $(SRC_FILES)
 	rm -rf $(CLASSES_DIR)
 	$(mkinstalldirs) $(CLASSES_DIR)
 	$(JAVAC) $(JAVACFLAGS) -d "$(CLASSES_DIR)" -classpath "$(CP)" $(SRC_FILES)

@@ -6,10 +6,10 @@ SimpleServer_CSFILES_CSC := $(subst /,$(SEP),$(SimpleServer_CSFILES))
 SimpleServer_INCLUDES =
 SimpleServer_RESOURCES =
 SimpleServer_FLAGS = $(CSC_LIBFLAG)
-SimpleServer_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll Simias.dll SimiasClient.dll
-SimpleServer_LIBPATH = ../../src/Simias.dll ../../src/SimiasClient $(DESTDIR)$(webbindir)
+SimpleServer_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll SimiasLib.dll SimiasClient.dll
+SimpleServer_LIBPATH = ../../src/SimiasLib.dll ../../src/SimiasClient $(DESTDIR)$(webbindir)
 
-EXTRA_DIST = win.web.config mono.web.config DomainService.asmx $(SimpleServer_CSFILES) SimpleServer.xml simias-server-bootstrap.config.in
+EXTRA_DIST = DomainService.asmx $(SimpleServer_CSFILES) SimpleServer.xml Simias.config.in Simias.SimpleServer.conf simpleserver.in simpleserver.cmd.in
 
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml
@@ -19,50 +19,64 @@ endif
 
 NUNIT_TESTS := Simias.SimpleServer.dll
 
-if WINDOWS
-	FIXED_WEBDIR := $(shell cygpath --mixed $(webdir))
-else
-	FIXED_WEBDIR := $(webdir)
-endif
-
-simias-server-bootstrap.config: simias-server-bootstrap.config.in
-	sed -e 's,@_webdir_@,$(FIXED_WEBDIR),g' -e 's,@_StoreProviderAssembly_@,@StoreProviderAssembly@,g' -e 's,@_StoreProviderType_@,@StoreProviderType@,g' $< > simias-server-bootstrap.config
+simpleserver: $(srcdir)/simpleserver.in
+if !WINDOWS
+	sed -e 's,@_simiasdatadir_@,@simiasdatadir@,g' -e 's,@_webbindir_@,@webbindir@,g' -e 's,@_bindir_@,@bindir@,g' $< > $@
 	chmod +x $@
+endif	
 
-all: $(NUNIT_TESTS) simias-server-bootstrap.config
+simpleserver.cmd: $(srcdir)/simpleserver.cmd.in
+if WINDOWS
+	sed -e 's,@_simiasdatadir_@,$(shell cygpath --mixed $(simiasdatadir)),g' $< > $@
+	chmod +x $@
+endif
+	
+Simias.config: $(srcdir)/Simias.config.in
+	sed -e 's,@_StoreProviderAssembly_@,@StoreProviderAssembly@,g' -e 's,@_StoreProviderType_@,@StoreProviderType@,g' $< > $@
+	chmod +x $@
 
 Simias.SimpleServer.dll: $(SimpleServer_CSFILES) $(SimpleServer_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(SimpleServer_FLAGS) $(SimpleServer_LIBS:%=/r:%) $(SimpleServer_LIBPATH:%=/lib:%) $(SimpleServer_RESOURCES:%=$(ICON_FLAG)%) $(SimpleServer_CSFILES_CSC) $(DOC_FILE_CMD)
 	
+all: $(NUNIT_TESTS) Simias.config simpleserver simpleserver.cmd
+
 if DEBUG
 if WINDOWS
 DEBUG_CHECK_FILES = Simias.SimpleServer.pdb
 endif
 endif
 
-install-exec-local: all
-	$(mkinstalldirs) $(DESTDIR)$(webbindir)
+install-simpleserver: all
+	$(mkinstalldirs) $(DESTDIR)$(webbindir) $(simiasdatadir) $(simiasdatadir)/modules
 	$(INSTALL_PROGRAM) SimpleServer.xml $(DESTDIR)$(sysconfdir)
-	$(INSTALL_PROGRAM) simias-server-bootstrap.config $(DESTDIR)$(sysconfdir)
+	$(INSTALL_PROGRAM) Simias.config $(simiasdatadir)
 	$(INSTALL_PROGRAM) DomainService.asmx $(DEBUG_FILES) $(DESTDIR)$(webdir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(webbindir)
-if WINDOWS
-	$(INSTALL_PROGRAM) win.web.config $(DESTDIR)$(webdir)/web.config
+	$(INSTALL_PROGRAM) Simias.SimpleServer.conf $(simiasdatadir)/modules
+if WINDOWS	
+	$(INSTALL_PROGRAM) simpleserver.cmd $(DESTDIR)$(bindir)
 else
-	$(INSTALL_PROGRAM) mono.web.config $(DESTDIR)$(webdir)/server.web.config
+	$(INSTALL_PROGRAM) simpleserver $(DESTDIR)$(bindir)
 endif	
-	
 
-uninstall-local:
-	cd $(DESTDIR)$(webbindir); $(NUNIT) $(NUNIT_FLAGS) /xml:SimiasTests.test.xml $(NUNIT_TESTS)
-	cd $(DESTDIR)$(webdir); rm -f  web.config DomainService.asmx
+uninstall-simpleserver:
+	cd $(DESTDIR)$(webdir); rm -f DomainService.asmx
+	cd $(DESTDIR)$(sysconfdir); rm -f SimpleServer.xml
+	cd $(DESTDIR)$(webbindir); rm -f $(NUNIT_TESTS) $(DEBUG_CHECK_FILES)
+	cd $(simiasdatadir); rm -f Simias.config
+	cd $(simiasdatadir)/modules; rm -f Simias.SimpleServer.conf
+if WINDOWS	
+	cd $(DESTDIR)$(bindir); rm -f simpleserver.cmd
+else
+	cd $(DESTDIR)$(bindir); rm -f simpleserver
+endif
 
 installcheck-local: install
 		
 .PHONY: test
 test: installcheck
 
-CLEAN_FILES = $(NUNIT_TESTS) $(DOC_FILE_CLEAN)
+CLEAN_FILES = $(NUNIT_TESTS) $(DOC_FILE_CLEAN) Simias.config simpleserver simpleserver.cmd
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

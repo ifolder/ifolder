@@ -38,9 +38,8 @@ namespace Simias.Storage.Provider.Flaim
 	/// </summary>
 	public class FlaimProvider : IProvider
 	{
-		#region Varibles
+		#region Variables
 		FlaimServer				Flaim;
-		ProviderConfig			conf;
 		
 		#endregion
 		
@@ -52,8 +51,7 @@ namespace Simias.Storage.Provider.Flaim
 		/// <param name="conf">The config object for this provider.</param>
 		public FlaimProvider(ProviderConfig conf)
 		{
-			this.conf = conf;
-			Flaim = FlaimServer.GetServer();
+			Flaim = FlaimServer.GetServer(conf);
 		}
 
 		/// <summary>
@@ -215,18 +213,6 @@ namespace Simias.Storage.Provider.Flaim
 		}
 
 
-		#endregion
-
-		#region Properties
-
-		/// <summary>
-		/// Property to get the directory to where the store is rooted.
-		/// </summary>
-		public Uri StoreDirectory
-		{
-			get {return new Uri(conf.Path);}
-		}
-		
 		#endregion
 		
 		#endregion

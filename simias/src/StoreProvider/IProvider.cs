@@ -106,18 +106,6 @@ namespace Simias.Storage.Provider
 
 		#endregion
 
-		#region Properties
-
-		/// <summary>
-		/// Property to get the directory to where the store is rooted.
-		/// </summary>
-		Uri StoreDirectory
-		{
-			get;
-		}
-
-		#endregion
-
 
 	}
 }
