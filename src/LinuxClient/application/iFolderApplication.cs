@@ -94,8 +94,6 @@ namespace Novell.iFolder
 		private Manager				simiasManager;
 
 		private NotifyWindow		startingUpNotifyWindow = null;
-
-		private NotifyWindow		startingUpNotifyWindow = null;
 		private NotifyWindow		shuttingDownNotifyWindow = null;
 
 		public iFolderApplication(string[] args)
