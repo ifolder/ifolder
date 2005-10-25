@@ -105,6 +105,11 @@ static iFolderNotificationController *sharedInstance = nil;
 				withObject:ifolder waitUntilDone:YES ];
 }
 
++ (void) readOnlyNotification:(iFolder *)ifolder
+{
+	[[self defaultManager] performSelectorOnMainThread:@selector(readOnlyNotify:) 
+				withObject:ifolder waitUntilDone:YES ];
+}
 
 - (void) ifolderNotify:(iFolder *)ifolder
 {
@@ -139,6 +144,17 @@ static iFolderNotificationController *sharedInstance = nil;
 		[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"The iFolder \"%@\" has conflicts", @"message in notification widnow"), [ifolder Name]]
 							forKey:@"description"];
 
+		[self performNotification:notifyContext];
+	}
+}
+
+- (void) readOnlyNotify:(iFolder *)ifolder
+{
+	if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_NOTIFYIFOLDERS])
+	{
+		[notifyContext setObject:[ifolder Name] forKey:@"title"];
+		[notifyContext setObject:NSLocalizedString(@"Files placed in this read-only iFolder will not be synchronized.", @"Message in notification window")
+										forKey:@"description"];
 		[self performNotification:notifyContext];
 	}
 }

@@ -101,7 +101,9 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 		ifconlog1(@"initializing Simias Events");
 		[self initializeSimiasEvents];
 	}
-	
+
+	readOnlyNotifications = [[NSMutableDictionary alloc] init];
+		
 	ifolderdata = [[iFolderData alloc] init];
 }
 
@@ -1308,6 +1310,29 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 				[iFolderWindowController updateStatusTS:
 					[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
 				[self addLogTS:syncMessage];
+			}
+			// ReadOnly
+			else if([[fse status] compare:@"ReadOnly"] == 0)
+			{
+				syncMessage = [NSString
+					stringWithFormat:NSLocalizedString(@"Read-only iFolder prevented synchronization: %@", @"iFolder Window Status Message"), 
+					[fse name]];
+				[iFolderWindowController updateStatusTS:
+					[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
+				[self addLogTS:syncMessage];
+				
+				if([readOnlyNotifications objectForKey:[fse collectionID]] == nil)
+				{
+					// if the current iFolder is not found, add it to the readOnly notifications
+					// and notify
+					[readOnlyNotifications setObject:[fse collectionID] forKey:[fse collectionID]];
+					
+					iFolder *ifolder = [[iFolderData sharedInstance] getiFolder:[fse collectionID]];
+					
+					// if this wasn't an iFolder before we read it, notify the user
+					if(ifolder != nil)
+						[iFolderNotificationController readOnlyNotification:ifolder];
+				}
 			}
 			// All other errors
 			else
