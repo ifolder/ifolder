@@ -834,7 +834,7 @@ namespace Novell.iFolder
 
 		private void SyncLogMenuItemHandler(object o, EventArgs args)
 		{
-			Util.ShowLogWindow();
+			Util.ShowLogWindow(simiasManager);
 		}
 
 

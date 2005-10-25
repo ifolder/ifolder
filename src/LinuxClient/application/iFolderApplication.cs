@@ -1027,7 +1027,7 @@ namespace Novell.iFolder
 
 		private void showLogWindow(object o, EventArgs args)
 		{
-			Util.ShowLogWindow();
+			Util.ShowLogWindow(simiasManager);
 		}
 
 		public static void Main (string[] args)
