@@ -847,18 +847,40 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 	// UGLY!!!!!
 	if([[cse name] hasPrefix:@"POBox:"])
 	{
+		iFolderDomain *dom = [[iFolderData sharedInstance] getPOBoxDomain:[cse ID]];
+		NSString *syncMessage;
+		
 		switch([cse syncAction])
 		{
 			case SYNC_ACTION_LOCAL:
 			{
-				NSString *syncMessage = NSLocalizedString(@"Checking for new iFolders...", @"iFolder Window Status Message");
+				if(dom != nil)
+				{
+					syncMessage = [NSString
+							stringWithFormat:NSLocalizedString(@"Checking for new iFolders on: %@", @"iFolder Window Status Message"), 
+							[dom name]];			
+				}
+				else
+				{
+					syncMessage = NSLocalizedString(@"Checking for new iFolders...", @"iFolder Window Status Message");			
+				}
 				[iFolderWindowController updateStatusTS:syncMessage];
 				[self addLogTS:syncMessage];
 				break;
 			}
 			case SYNC_ACTION_STOP:
 			{
-				NSString *syncMessage = NSLocalizedString(@"Done checking for new iFolders", @"Sync Log Message");
+				if(dom != nil)
+				{
+					syncMessage = [NSString
+							stringWithFormat:NSLocalizedString(@"Done checking for new iFolders on: %@", @"iFolder Window Status Message"), 
+							[dom name]];			
+				}
+				else
+				{
+					syncMessage = NSLocalizedString(@"Done checking for new iFolders.", @"iFolder Window Status Message");			
+				}
+
 				[iFolderWindowController updateStatusTS:NSLocalizedString(@"Idle...", @"iFolder Window Status Message")];
 				[self addLogTS:syncMessage];
 				break;
