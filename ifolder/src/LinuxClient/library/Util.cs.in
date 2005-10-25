@@ -281,7 +281,7 @@ namespace Novell.iFolder
 		{
 			if(ifwin == null && CheckWebService(simiasManager))
 			{
-				ifwin = new iFolderWindow(ifws, simws);
+				ifwin = new iFolderWindow(ifws, simws, simiasManager);
 				ifwin.DeleteEvent +=
 						new DeleteEventHandler(OniFolderWindowDeleteEvent);
 				ifwin.Destroyed +=
@@ -402,11 +402,11 @@ namespace Novell.iFolder
 			return logwin;
 		}
 		
-		public static void ShowLogWindow()
+		public static void ShowLogWindow(Manager simiasManager)
 		{
 			if (logwin == null)
 			{
-				logwin = new LogWindow();
+				logwin = new LogWindow(simiasManager);
 				logwin.Destroyed +=
 						new EventHandler(LogWindowDestroyedHandler);
 				logwin.ShowAll();
