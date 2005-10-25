@@ -56,7 +56,8 @@
 	NSMutableArray					*logEntries;
     IBOutlet NSArrayController		*logController;
 	NSMutableDictionary				*readOnlyNotifications;	
-	
+	NSMutableDictionary				*iFolderFullNotifications;	
+		
 	unsigned long					itemSyncCount;
 	unsigned long					totalSyncCount;
 }

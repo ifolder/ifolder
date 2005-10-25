@@ -190,6 +190,46 @@
 			<key>Content</key>
 			<dict>
 				<key>PBXProjectModuleGUID</key>
+				<string>3ECAC5E8090EDEA000C94891</string>
+				<key>PBXProjectModuleLabel</key>
+				<string>iFolderApplication.m</string>
+				<key>PBXSplitModuleInNavigatorKey</key>
+				<dict>
+					<key>Split0</key>
+					<dict>
+						<key>PBXProjectModuleGUID</key>
+						<string>3ECAC5E9090EDEA000C94891</string>
+						<key>PBXProjectModuleLabel</key>
+						<string>iFolderApplication.m</string>
+						<key>_historyCapacity</key>
+						<integer>0</integer>
+						<key>bookmark</key>
+						<string>3ECAC5EA090EDEA000C94891</string>
+						<key>history</key>
+						<array>
+							<string>3ECAC5D7090EDD2500C94891</string>
+						</array>
+					</dict>
+					<key>SplitCount</key>
+					<string>1</string>
+				</dict>
+				<key>StatusBarVisibility</key>
+				<true/>
+			</dict>
+			<key>Geometry</key>
+			<dict>
+				<key>Frame</key>
+				<string>{{0, 20}, {1010, 632}}</string>
+				<key>PBXModuleWindowStatusBarHidden2</key>
+				<false/>
+				<key>RubberWindowFrame</key>
+				<string>237 329 1010 673 0 0 1280 1002 </string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Content</key>
+			<dict>
+				<key>PBXProjectModuleGUID</key>
 				<string>3EF628E9090ECCCC00342377</string>
 				<key>PBXProjectModuleLabel</key>
 				<string>iFolderData.m</string>
@@ -204,10 +244,10 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>3EF628EC090ECCED00342377</string>
+						<string>3ECAC5EB090EDEA000C94891</string>
 						<key>history</key>
 						<array>
-							<string>3EF628DC090EBD0000342377</string>
+							<string>3EF628EC090ECCED00342377</string>
 						</array>
 					</dict>
 					<key>SplitCount</key>
@@ -404,9 +444,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>3E91099D090E9E4E004A207A</string>
+				<string>3ECAC5A5090ED6CD00C94891</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>3E91099E090E9E4E004A207A</string>
+				<string>3ECAC5A6090ED6CD00C94891</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -516,7 +556,7 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>3EF628CD090EBA9F00342377</string>
+				<string>3ECAC5A7090ED6CD00C94891</string>
 				<string>11E0B1FE06471DED0097A5F4</string>
 			</array>
 			<key>ToolbarConfiguration</key>
@@ -547,7 +587,9 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
+		<string>3EE584A20898246400D594B9</string>
 		<string>3EF628E9090ECCCC00342377</string>
+		<string>3ECAC5E8090EDEA000C94891</string>
 		<string>1C0AD2B3069F1EA900FABCE6</string>
 		<string>/Users/calvin/code/ifolder.RC2/ifolder/src/OSXClient/iFolder.xcodeproj</string>
 	</array>
@@ -595,7 +637,7 @@
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXBuildLogShowsTranscriptDefaultKey</key>
-								<string>{{0, 123}, {765, 486}}</string>
+								<string>{{0, 112}, {765, 497}}</string>
 								<key>PBXProjectModuleGUID</key>
 								<string>XCMainBuildResultsModuleGUID</string>
 								<key>PBXProjectModuleLabel</key>
@@ -633,7 +675,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>3EE584A20898246400D594B9</string>
-				<string>3E9109A0090E9E4E004A207A</string>
+				<string>3ECAC5CB090EDC1B00C94891</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>
@@ -955,8 +997,8 @@
 										<string>yes</string>
 										<key>sizes</key>
 										<array>
-											<string>{{0, 0}, {493, 168}}</string>
-											<string>{{0, 173}, {493, 270}}</string>
+											<string>{{0, 0}, {367, 168}}</string>
+											<string>{{0, 173}, {367, 270}}</string>
 										</array>
 									</dict>
 									<key>VerticalSplitView</key>
@@ -1005,9 +1047,9 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1C0AD2B3069F1EA900FABCE6</string>
-				<string>3EF628D1090EBA9F00342377</string>
+				<string>3ECAC5A9090ED6CD00C94891</string>
 				<string>1CD0528B0623707200166675</string>
-				<string>3EF628D2090EBA9F00342377</string>
+				<string>3ECAC5AA090ED6CD00C94891</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.run</string>
