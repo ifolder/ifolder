@@ -6,8 +6,8 @@
 <meta http-equiv="Content-Language" content="en">
 
 <meta name="Generator" content="Novell HTML Conversion 10 March 2004">
-<meta name="Generation-Date" content="Monday, July 11, 2005 14:47">
-<meta name="Content-Date" content="Mon, 11 Jul 2005 12:00:00 GMT">
+<meta name="Generation-Date" content="Sunday, October 23, 2005 15:54">
+<meta name="Content-Date" content="Mon, 22 Oct 2005 12:00:00 GMT">
 <meta name="Robots" content="INDEX, FOLLOW">
 <meta name="Document_Number" content="zHTML xD.0000.0000.0002.0004.">
 <meta name="Author" content="zHTML xD.0000.0000.0002.0004.">
@@ -46,16 +46,21 @@ loadMenu();
 <div class="Topic" title="Viewing and Modifying iFolder Account Settings">
 
 <h2 class="TOPIC-TITLE"><br />Viewing and Modifying iFolder Account Settings</h2>
-<p class="TOPIC">Right-click the iFolder icon in the Notification area, then select Accounts to open iFolder Preferences to the Accounts tab. Select the account to view or modify the following parameters:</p>
+<ol class="STEPLIST">
+<li class="STEP"><a name="byku43y"></a>
+<p class="STEP">Right-click the iFolder icon <img src="../graphics/ifolder16.png" alt="iFolder icon" /> in the Notification area, then select Accounts to open iFolder Preferences to the Accounts tab. </p></li>
+
+<li class="STEP"><a name="byku46c"></a>
+<p class="STEP">Select the account to view or modify the following parameters:</p>
 <table class="TABLENOTITLE" border="0" cellpadding="5" cellspacing="0">
 <tr class="HEADERROW"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bvwskog"></a><em class="TBLHEAD">Parameter</em></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">Description</em></th>
 </tr>
 <tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bvwskoh"></a><p class="ENTRY">Server</p></td>
-<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">The DNS name of the enterprise server. For example: svr21.mydomain.com.</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">The DNS name of the enterprise server. For example: svr21.example.com.</p></td>
 </tr>
 <tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bvwskoi"></a><p class="ENTRY">Username</p></td>
-<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Your network username in the domain served by the iFolder server. For example: jdoe or acatt.</p><p class="ENTRY">You can create only one account per enterprise server domain.</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">The user identity for this account. Your iFolder administrator decides whether the format you should use is your network user ID (LDAP common name) or your e-mail address.</p><p class="ENTRY">For example, if your name is John Smith with a user ID of jsmith and an e-mail address of john.smith@example.com, your administrator configures a setting for the server that determines which of the two formats to accept in the Username field for authentication purposes.</p><p class="ENTRY">You can create only one account per enterprise server.</p></td>
 </tr>
 <tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bvwskoj"></a><p class="ENTRY">Password</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">The password for your username. </p></td>
@@ -69,14 +74,16 @@ loadMenu();
 <tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bvwskom"></a><p class="ENTRY">Default Account</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Select Default Account to make this account the one selected by default in the drop-down list of accounts when you create iFolders.</p></td>
 </tr></table>
+</li>
 
-<p class="TOPIC">On the Accounts tab in iFolder Preferences, select the iFolder account, then click Details to view the following information about your iFolder Account.</p>
+<li class="STEP"><a name="byku4l9"></a>
+<p class="STEP">On the Accounts tab in iFolder Preferences, select the iFolder account, then click Details to view the following information about your iFolder Account.</p>
 <table class="TABLENOTITLE" border="0" cellpadding="5" cellspacing="0">
 <tr class="HEADERROW"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bvie4dy"></a><em class="TBLHEAD">Parameter</em></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">Description</em></th>
 </tr>
 <tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bvie4dz"></a><p class="ENTRY">Server</p></td>
-<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">The host name of the enterprise server. For example, if the server's DNS name is svr21.mydomain.com, svr1 is the information reported.</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">The host name of the enterprise server. For example, if the server's DNS name is svr21.example.com, svr1 is the information reported.</p></td>
 </tr>
 <tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bvie4e0"></a><p class="ENTRY">Description</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">The user-friendly description of the enterprise server, simple server, or workgroup host computer as entered by its administrator. If no description was entered, the value is "none."</p></td>
@@ -90,7 +97,8 @@ loadMenu();
 <tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bvieb8x"></a><p class="ENTRY">Quota</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">The total amount of space allocated to your iFolder account on the enterprise server. This value might be the default quota set for all users, or a user-specific quota. If no quota is set, the value is empty or N/A (not applicable).</p></td>
 </tr></table>
-
+</li>
+</ol>
 </div>
 
 <script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>

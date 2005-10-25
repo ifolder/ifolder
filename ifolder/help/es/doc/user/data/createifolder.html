@@ -6,8 +6,8 @@
 <meta http-equiv="Content-Language" content="en">
 
 <meta name="Generator" content="Novell HTML Conversion 10 March 2004">
-<meta name="Generation-Date" content="Monday, July 11, 2005 14:47">
-<meta name="Content-Date" content="Mon, 11 Jul 2005 12:00:00 GMT">
+<meta name="Generation-Date" content="Sunday, October 23, 2005 15:54">
+<meta name="Content-Date" content="Mon, 22 Oct 2005 12:00:00 GMT">
 <meta name="Robots" content="INDEX, FOLLOW">
 <meta name="Document_Number" content="zHTML xD.0000.0000.0003.0004.">
 <meta name="Author" content="zHTML xD.0000.0000.0003.0004.">
@@ -60,7 +60,7 @@ loadMenu();
 
 <li class="BULLETITEM"><a href="createifolder.html#bwemc36">Creating iFolders in the iFolders Browser</a></li>
 
-<li class="BULLETITEM"><a href="createifolder.html#bwem9n0">Creating iFolders on a FAT32 Mount Point (Linux)</a></li>
+<li class="BULLETITEM"><a href="createifolder.html#fat32mtpt">Creating iFolders on a FAT32 Mount Point (Linux)</a></li>
 </ul>
 <div class="Head" title="Creating iFolders in a File Manager">
 <a name="bwembx5"></a>
@@ -132,11 +132,14 @@ loadMenu();
 </div>
 
 <div class="Head" title="Creating iFolders on a FAT32 Mount Point (Linux)">
-<a name="bwem9n0"></a>
+<a name="fat32mtpt"></a>
 
 <h3 class="HEAD-TITLE"><br />Creating iFolders on a FAT32 Mount Point (Linux)</h3>
-<p class="HEAD">On Linux, you can create and use iFolders on a mount point for a FAT32 file system. If you have a dual boot system, you can access the data in iFolders as normal folders from the system where the folder is not set up as an iFolder. If you set up the folder as an iFolder on both platforms, the data set is stored in two different iFolders on the server, which consumes double your allocated server disk resources.</p>
-<p class="HEAD">Because the FAT32 file system does not support POSIX file system permissions, you must make sure the iFolder user is the owner of the mount point. Modify the /etc/fstab file to set the user ID (UID) parameter to the iFolder user who creates iFolders on that mount point.</p>
+<p class="HEAD">On Linux, iFolder supports creating and using iFolders on a mount point for a FAT32 file system. Before you can create new iFolders or set up shared iFolders on a FAT32 volume on your Linux computer, the iFolder user must own the FAT32 mount point where you want to store the iFolders, and the /etc/fstab file must explicitly identify the iFolder user's local user ID for the mount point. </p>
+<p class="NOTE-IMPORTANT"><em class="NOTE-IMPORTANT">IMPORTANT:&nbsp;&nbsp;</em>This is required because FAT32 does not support file permissions. Any other file sytem that does not support permissions would have the same issue.</p>
+
+<p class="HEAD">For dual boot systems, you can access the data in iFolders as normal folders from the system where the folder is not set up as an iFolder. If you set up the folder as an iFolder on both platforms, the data set is stored in two different iFolders on the server, which consumes double your allocated server disk resources.</p>
+<p class="HEAD">Because the FAT32 file system does not support POSIX file system permissions, make sure the iFolder user is the local owner of the mount point. Modify the /etc/fstab file to set the user ID (UID) parameter of the user's local login identity to the iFolder user who creates iFolders on that mount point.</p>
 <ol class="STEPLIST">
 <li class="STEP"><a name="bwenpgg"></a>
 <p class="STEP">Log in to your computer as the root user.</p></li>
@@ -159,11 +162,12 @@ loadMenu();
 </li>
 
 <li class="STEP"><a name="bwemszm"></a>
-<p class="STEP">Edit the /etc/fstab file by adding the uid=username parameter on the line that defines the FAT32 mount point.</p>
+<p class="STEP">Edit the /etc/fstab file by adding the uid=username parameter of the iFolder user on the line that defines the FAT32 mount point.</p>
 <p><tt class="USERINPUT">/dev/<em class="VARIABLE">hda1</em>  /home/<em class="VARIABLE">username</em>/<em class="VARIABLE">fsmount</em>  <em class="VARIABLE">vfat</em>  uid=<em class="VARIABLE">username</em></tt></p>
 
 <p class="STEP">Continuing the example, modify /etc/fstab file by adding uid=jsmith to the mount point:</p>
-<p class="STEP">/dev/hda4  /home/jsmith/fat32mntpt  vfat  uid=jsmith</p></li>
+<pre class="CODESAMPLENARROW">/dev/hda4  /home/jsmith/fat32mntpt  vfat  uid=jsmith</pre>
+</li>
 </ol>
 </div>
 

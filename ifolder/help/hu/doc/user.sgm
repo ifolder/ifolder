@@ -4,7 +4,7 @@
 <!--========================================================================
  "iFolder Help"
 
- Generated on 7/11/2005 2:47:52 PM by Novell Doc Tools Release 21 December 04
+ Generated on 10/23/2005 3:54:26 PM by Novell Doc Tools Release 21 December 04
 
  Copyright © 2003 Novell, Inc. All rights reserved. No part of this publication
  may be reproduced, photocopied, stored on a retrieval system, or transmitted
@@ -17,7 +17,7 @@
  www.novell.com
 
 
- BASELINE PAGE COUNT 46
+ BASELINE PAGE COUNT 48
 
 
  WORD COUNT
@@ -25,19 +25,20 @@
        Count    Doctype    Title
       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         1224    Chapter    Overview of iFolder
-        3278    Chapter    Managing iFolder Accounts and Preferences
-        3994    Chapter    Managing iFolders
+        3456    Chapter    Managing iFolder Accounts and Preferences
+        4189    Chapter    Managing iFolders
       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        9341    Book       iFolder Help
+        9715    Book       iFolder Help
 
 
  GRAPHICS REFERENCED IN BOOK
 
        Count       Filename
       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-          16       ifolder16.png
+          19       ifolder16.png
            1       ifos_accounts_new_a.png
            2       conflict_resolution.png
+           1       if_preferences_a.png
            1       setup.png
            1       sync.png
            6       share.png
@@ -67,7 +68,7 @@
 
 
 <?Fm: Book>
- <Book ContentDate="07/11/05" TocLevels="4" RelLinks="None" Language="en">
+ <Book ContentDate="10/22/05" TocLevels="4" RelLinks="None" Language="en">
 
 
  <?Fm: Document 00_frontos.fm>
@@ -75,7 +76,7 @@
   <OSFront ID="Front"><?FM: MARKER [Hypertext] newlink Front>
    <Product>iFolder&trade;</Product>
    <Version></Version>
-   <PartNumber>August 18, 2005</PartNumber>
+   <PartNumber>December 23, 2005</PartNumber>
    <BookName>HelP</BookName>
    <LegalNotices>
     <Disclaimer>
@@ -102,7 +103,7 @@
      <URL>www.novell.com</URL>
     </Address>
     <BookTitle ID="Bktitle"><?FM: MARKER [Hypertext] newlink Bktitle>iFolder Help</BookTitle>
-    <ReleaseDate>August 18, 2005</ReleaseDate>
+    <ReleaseDate>December 23, 2005</ReleaseDate>
     <OnlineDocRef>
      <Para>To access the online documentation for this and other Novell products, and to get updates, see www.novell.com/documentation.</Para>
     </OnlineDocRef>
@@ -146,7 +147,7 @@
    <BridgeHead ID="bx3bgse"><?FM: MARKER [Hypertext] newlink bx3bgse>Additional Documentation</BridgeHead>
    <ListBullet>
     <BulletItem>
-     <Para><ULink URL="http://www.novell.com/documentation/ifolder3" Target="_blank">No<?FM: MARKER [Hypertext] message URL http://www.novell.com/documentation/ifolder3>vell iFolder 3.0 Documentation Web Site</ULink></Para>
+     <Para><ULink URL="http://www.novell.com/documentation/ifolder3" Target="_blank">No<?FM: MARKER [Hypertext] message URL http://www.novell.com/documentation/ifolder3>vell iFolder 3.<VersionVariable>x<?FM: MARKER [Hypertext] message URL http://www.novell.com/documentation/ifolder3> </VersionVariable><?FM: MARKER [Hypertext] message URL http://www.novell.com/documentation/ifolder3>Documentation Web Site</ULink></Para>
     </BulletItem>
     <BulletItem>
      <Para><ULink URL="http://www.novell.com/documentation/ifolderos" Target="_blank">iF<?FM: MARKER [Hypertext] message URL http://www.novell.com/documentation/ifolderos>older Open Source Documentation Web Site</ULink></Para>
@@ -557,8 +558,15 @@
     <Procedure>
      <StepList>
       <Step ID="bviaku6"><?FM: MARKER [Hypertext] newlink bviaku6>
-       <Para>Right-click the iFolder application icon <InlineGraphic Fileref="ifolder16.png" Height="0.155in" Width="0.164in" Dpi="110" Impby="ref" Xoffset="0.000in" Yoffset="0.000in" Position="inline" Align="acenter" Description="iFolder Application Icon" Format="png"> in the Notification area, then select Accounts to open the iFolder Preferences dialog box to the Accounts tab.</Para>
-       <Para>The first time you start iFolder after the install, iFolder prompts you to set up an iFolder account. Click Yes to go directly to the iFolder Preferences &gt; Accounts tab.</Para>
+       <Para>Use one of these methods to access account setup:</Para>
+       <ListBullet>
+        <BulletItem>
+         <Para>The first time you start iFolder after the install, iFolder prompts you to set up an iFolder account. Click Yes to go directly to the iFolder Preferences &gt; Accounts tab.</Para>
+        </BulletItem>
+        <BulletItem>
+         <Para>Right-click the iFolder application icon <InlineGraphic Fileref="ifolder16.png" Height="0.155in" Width="0.164in" Dpi="110" Impby="ref" Xoffset="0.000in" Yoffset="0.000in" Position="inline" Align="acenter" Description="iFolder Application Icon" Format="png"> in the Notification area, then select Accounts to open the iFolder Preferences dialog box to the Accounts tab.</Para>
+        </BulletItem>
+       </ListBullet>
       </Step>
       <Step ID="bvial71"><?FM: MARKER [Hypertext] newlink bvial71>
        <Para>Click New to access the Account Settings area. </Para>
@@ -587,7 +595,7 @@
             <Para><?FM: MARKER [Hypertext] newlink bvibwil>Server</Para>
            </Entry>
            <Entry Colname="2">
-            <Para>The DNS name or IP address of the iFolder enterprise server where you have an account. For example: svr21.mydomain.com or 192.168.1.1.</Para>
+            <Para>The DNS name or IP address of the iFolder enterprise server where you have an account. For example: svr21.example.com or 192.168.1.1.</Para>
            </Entry>
           </Row>
           <Row ID="bvibwim">
@@ -595,7 +603,8 @@
             <Para><?FM: MARKER [Hypertext] newlink bvibwim>Username</Para>
            </Entry>
            <Entry Colname="2">
-            <Para>Your network username in the domain served by the iFolder server. For example: jdoe or acatt.</Para>
+            <Para>Enter your user identity for this account. Your iFolder administrator decides whether the format you should use is your network user ID (LDAP common name) or your e-mail address.</Para>
+            <Para>For example, if your name is John Smith with a user ID of jsmith and an e-mail address of john.smith@example.com, your administrator configures a setting for the server that determines which of the two formats to accept in the Username field for authentication purposes.</Para>
            </Entry>
           </Row>
           <Row ID="bvibwin">
@@ -679,7 +688,7 @@
     <Procedure>
      <StepList>
       <Step ID="bvwrn0v"><?FM: MARKER [Hypertext] newlink bvwrn0v>
-       <Para>Right-click the iFolder Services menu, then select Accounts.</Para>
+       <Para>Right-click the iFolder icon <InlineGraphic Fileref="ifolder16.png" Height="0.155in" Width="0.164in" Dpi="110" Impby="ref" Xoffset="0.000in" Yoffset="0.000in" Position="inline" Align="acenter" Description="iFolder icon" Format="png"> in the Notification area, then select Accounts.</Para>
       </Step>
       <Step ID="bvwrn0w"><?FM: MARKER [Hypertext] newlink bvwrn0w>
        <Para>Select the iFolder account to view its account settings.</Para>
@@ -699,7 +708,7 @@
     <Procedure>
      <StepList>
       <Step ID="bvwntnx"><?FM: MARKER [Hypertext] newlink bvwntnx>
-       <Para>Right-click the iFolder Services menu, then select Accounts.</Para>
+       <Para>Right-click the iFolder icon <InlineGraphic Fileref="ifolder16.png" Height="0.155in" Width="0.164in" Dpi="110" Impby="ref" Xoffset="0.000in" Yoffset="0.000in" Position="inline" Align="acenter" Description="iFolder icon" Format="png"> in the Notification area, then select Accounts.</Para>
       </Step>
       <Step ID="bvwnufo"><?FM: MARKER [Hypertext] newlink bvwnufo>
        <Para>Select the iFolder account to view its account settings.</Para>
@@ -718,148 +727,160 @@
 
    <Topic ID="accountdetails" Type="General" Topic="MainTopic"><?FM: MARKER [Hypertext] newlink accountdetails>
     <Title>Viewing and Modifying iFolder Account Settings</Title>
-    <Para>Right-click the iFolder icon in the Notification area, then select Accounts to open iFolder Preferences to the Accounts tab. Select the account to view or modify the following parameters:</Para>
-    <TableNoTitle>
-     <TGroup Cols="2" TGroupStyle="Narrow2WithLines">
-      <ColSpec Colname="1" Colnum="1" Colwidth="1.111in">
-      
-      <ColSpec Colname="2" Colnum="2" Colwidth="4.556in">
-      
-      <THead>
-       <Row ID="bvwskog">
-        <Entry Colname="1">
-         <TblHead><?FM: MARKER [Hypertext] newlink bvwskog>Parameter</TblHead>
-        </Entry>
-        <Entry Colname="2">
-         <TblHead>Description</TblHead>
-        </Entry>
-       </Row>
-      </THead>
-      <TBody>
-       <Row ID="bvwskoh">
-        <Entry Colname="1">
-         <Para><?FM: MARKER [Hypertext] newlink bvwskoh>Server</Para>
-        </Entry>
-        <Entry Colname="2">
-         <Para>The DNS name of the enterprise server. For example: svr21.mydomain.com.</Para>
-        </Entry>
-       </Row>
-       <Row ID="bvwskoi">
-        <Entry Colname="1">
-         <Para><?FM: MARKER [Hypertext] newlink bvwskoi>Username</Para>
-        </Entry>
-        <Entry Colname="2">
-         <Para>Your network username in the domain served by the iFolder server. For example: jdoe or acatt.</Para>
-         <Para>You can create only one account per enterprise server domain.</Para>
-        </Entry>
-       </Row>
-       <Row ID="bvwskoj">
-        <Entry Colname="1">
-         <Para><?FM: MARKER [Hypertext] newlink bvwskoj>Password</Para>
-        </Entry>
-        <Entry Colname="2">
-         <Para>The password for your username. </Para>
-        </Entry>
-       </Row>
-       <Row ID="bvwskok">
-        <Entry Colname="1">
-         <Para><?FM: MARKER [Hypertext] newlink bvwskok>Remember Password</Para>
-        </Entry>
-        <Entry Colname="2">
-         <Para>Select Remember Password to log in automatically to this iFolder account whenever you log in to your computer. For information, see <XRefInt IDREF="login" PIDREF="login" File="04a_Accounts.fm" Element="Topic" Format="HeadingOnPage">.</Para>
-         <Para>If your network password changes, automatic authentication fails gracefully the next time iFolder attempts to log in to the iFolder account. iFolder prompts you to log in with your new password and allows you to specify and save the new password.</Para>
-        </Entry>
-       </Row>
-       <Row ID="bvwskol">
-        <Entry Colname="1">
-         <Para><?FM: MARKER [Hypertext] newlink bvwskol>Enable Account</Para>
-        </Entry>
-        <Entry Colname="2">
-         <Para>Select Enable Account to allow background synchronization of iFolder invitations, the user list, and iFolders for this account. This governs only client-side functions.</Para>
-         <Para>The status of whether an account is Enabled or Disabled is shown in the Status column of the Accounts list. You can view status of the Enabled Account setting at a glance if you have more than one account set up.</Para>
-         <Para>When you use iFolder with Novell&reg; iFolder&reg; 3.<VersionVariable>x</VersionVariable>, the iFolder system administrator can disable your iFolder account (usually temporarily) on the server side. You can expect the following behavior:</Para>
-         <ListBulletT>
-          <BulletItemT>
-           <Para>If you are logged in when the account is disabled from the server side, you can manage your iFolders and your iFolder data continues to synchronize with the server until you end your session by logging out or disabling synchronization, or until the server disconnects your session, whichever first occurs.</Para>
-          </BulletItemT>
-          <BulletItemT>
-           <Para>If the account is disabled on the server side, you receive a pop-up message informing you that the account is disabled whenever you attempt to log in. Contact your iFolder system administrator for assistance. </Para>
-          </BulletItemT>
-         </ListBulletT>
-        </Entry>
-       </Row>
-       <Row ID="bvwskom">
-        <Entry Colname="1">
-         <Para><?FM: MARKER [Hypertext] newlink bvwskom>Default Account</Para>
-        </Entry>
-        <Entry Colname="2">
-         <Para>Select Default Account to make this account the one selected by default in the drop-down list of accounts when you create iFolders.</Para>
-        </Entry>
-       </Row>
-      </TBody>
-     </TGroup>
-    </TableNoTitle>
-    <Para>On the Accounts tab in iFolder Preferences, select the iFolder account, then click Details to view the following information about your iFolder Account.</Para>
-    <TableNoTitle>
-     <TGroup Cols="2" TGroupStyle="Narrow2WithLines">
-      <ColSpec Colname="1" Colnum="1" Colwidth="1.111in">
-      
-      <ColSpec Colname="2" Colnum="2" Colwidth="4.556in">
-      
-      <THead>
-       <Row ID="bvie4dy">
-        <Entry Colname="1">
-         <TblHead><?FM: MARKER [Hypertext] newlink bvie4dy>Parameter</TblHead>
-        </Entry>
-        <Entry Colname="2">
-         <TblHead>Description</TblHead>
-        </Entry>
-       </Row>
-      </THead>
-      <TBody>
-       <Row ID="bvie4dz">
-        <Entry Colname="1">
-         <Para><?FM: MARKER [Hypertext] newlink bvie4dz>Server</Para>
-        </Entry>
-        <Entry Colname="2">
-         <Para>The host name of the enterprise server. For example, if the server&apos;s DNS name is svr21.mydomain.com, svr1 is the information reported.</Para>
-        </Entry>
-       </Row>
-       <Row ID="bvie4e0">
-        <Entry Colname="1">
-         <Para><?FM: MARKER [Hypertext] newlink bvie4e0>Description</Para>
-        </Entry>
-        <Entry Colname="2">
-         <Para>The user-friendly description of the enterprise server, simple server, or workgroup host computer as entered by its administrator. If no description was entered, the value is &ldquo;none.&rdquo;</Para>
-        </Entry>
-       </Row>
-       <Row ID="bvie4e1">
-        <Entry Colname="1">
-         <Para><?FM: MARKER [Hypertext] newlink bvie4e1>Available</Para>
-        </Entry>
-        <Entry Colname="2">
-         <Para>The total amount of space currently available to you for iFolders on this iFolder account. The value is equal to the quota minus the used space.</Para>
-        </Entry>
-       </Row>
-       <Row ID="bvieb8w">
-        <Entry Colname="1">
-         <Para><?FM: MARKER [Hypertext] newlink bvieb8w>Used</Para>
-        </Entry>
-        <Entry Colname="2">
-         <Para>The total amount of space currently consumed by all the iFolders you own on this account.</Para>
-        </Entry>
-       </Row>
-       <Row ID="bvieb8x">
-        <Entry Colname="1">
-         <Para><?FM: MARKER [Hypertext] newlink bvieb8x>Quota</Para>
-        </Entry>
-        <Entry Colname="2">
-         <Para>The total amount of space allocated to your iFolder account on the enterprise server. This value might be the default quota set for all users, or a user-specific quota. If no quota is set, the value is empty or N/A (not applicable).</Para>
-        </Entry>
-       </Row>
-      </TBody>
-     </TGroup>
-    </TableNoTitle>
+    <Procedure>
+     <StepList>
+      <Step ID="byku43y"><?FM: MARKER [Hypertext] newlink byku43y>
+       <Para>Right-click the iFolder icon <InlineGraphic Fileref="ifolder16.png" Height="0.155in" Width="0.164in" Dpi="110" Impby="ref" Xoffset="0.000in" Yoffset="0.000in" Position="inline" Align="acenter" Description="iFolder icon" Format="png"> in the Notification area, then select Accounts to open iFolder Preferences to the Accounts tab. </Para>
+      </Step>
+      <Step ID="byku46c"><?FM: MARKER [Hypertext] newlink byku46c>
+       <Para>Select the account to view or modify the following parameters:</Para>
+       <TableNoTitle>
+        <TGroup Cols="2" TGroupStyle="Narrow2WithLines">
+         <ColSpec Colname="1" Colnum="1" Colwidth="1.111in">
+         
+         <ColSpec Colname="2" Colnum="2" Colwidth="4.556in">
+         
+         <THead>
+          <Row ID="bvwskog">
+           <Entry Colname="1">
+            <TblHead><?FM: MARKER [Hypertext] newlink bvwskog>Parameter</TblHead>
+           </Entry>
+           <Entry Colname="2">
+            <TblHead>Description</TblHead>
+           </Entry>
+          </Row>
+         </THead>
+         <TBody>
+          <Row ID="bvwskoh">
+           <Entry Colname="1">
+            <Para><?FM: MARKER [Hypertext] newlink bvwskoh>Server</Para>
+           </Entry>
+           <Entry Colname="2">
+            <Para>The DNS name of the enterprise server. For example: svr21.example.com.</Para>
+           </Entry>
+          </Row>
+          <Row ID="bvwskoi">
+           <Entry Colname="1">
+            <Para><?FM: MARKER [Hypertext] newlink bvwskoi>Username</Para>
+           </Entry>
+           <Entry Colname="2">
+            <Para>The user identity for this account. Your iFolder administrator decides whether the format you should use is your network user ID (LDAP common name) or your e-mail address.</Para>
+            <Para>For example, if your name is John Smith with a user ID of jsmith and an e-mail address of john.smith@example.com, your administrator configures a setting for the server that determines which of the two formats to accept in the Username field for authentication purposes.</Para>
+            <Para>You can create only one account per enterprise server.</Para>
+           </Entry>
+          </Row>
+          <Row ID="bvwskoj">
+           <Entry Colname="1">
+            <Para><?FM: MARKER [Hypertext] newlink bvwskoj>Password</Para>
+           </Entry>
+           <Entry Colname="2">
+            <Para>The password for your username. </Para>
+           </Entry>
+          </Row>
+          <Row ID="bvwskok">
+           <Entry Colname="1">
+            <Para><?FM: MARKER [Hypertext] newlink bvwskok>Remember Password</Para>
+           </Entry>
+           <Entry Colname="2">
+            <Para>Select Remember Password to log in automatically to this iFolder account whenever you log in to your computer. For information, see <XRefInt IDREF="login" PIDREF="login" File="04a_Accounts.fm" Element="Topic" Format="HeadingOnPage">.</Para>
+            <Para>If your network password changes, automatic authentication fails gracefully the next time iFolder attempts to log in to the iFolder account. iFolder prompts you to log in with your new password and allows you to specify and save the new password.</Para>
+           </Entry>
+          </Row>
+          <Row ID="bvwskol">
+           <Entry Colname="1">
+            <Para><?FM: MARKER [Hypertext] newlink bvwskol>Enable Account</Para>
+           </Entry>
+           <Entry Colname="2">
+            <Para>Select Enable Account to allow background synchronization of iFolder invitations, the user list, and iFolders for this account. This governs only client-side functions.</Para>
+            <Para>The status of whether an account is Enabled or Disabled is shown in the Status column of the Accounts list. You can view status of the Enabled Account setting at a glance if you have more than one account set up.</Para>
+            <Para>When you use iFolder with Novell&reg; iFolder&reg; 3.<VersionVariable>x</VersionVariable>, the iFolder system administrator can disable your iFolder account (usually temporarily) on the server side. You can expect the following behavior:</Para>
+            <ListBulletT>
+             <BulletItemT>
+              <Para>If you are logged in when the account is disabled from the server side, you can manage your iFolders and your iFolder data continues to synchronize with the server until you end your session by logging out or disabling synchronization, or until the server disconnects your session, whichever first occurs.</Para>
+             </BulletItemT>
+             <BulletItemT>
+              <Para>If the account is disabled on the server side, you receive a pop-up message informing you that the account is disabled whenever you attempt to log in. Contact your iFolder system administrator for assistance. </Para>
+             </BulletItemT>
+            </ListBulletT>
+           </Entry>
+          </Row>
+          <Row ID="bvwskom">
+           <Entry Colname="1">
+            <Para><?FM: MARKER [Hypertext] newlink bvwskom>Default Account</Para>
+           </Entry>
+           <Entry Colname="2">
+            <Para>Select Default Account to make this account the one selected by default in the drop-down list of accounts when you create iFolders.</Para>
+           </Entry>
+          </Row>
+         </TBody>
+        </TGroup>
+       </TableNoTitle>
+      </Step>
+      <Step ID="byku4l9"><?FM: MARKER [Hypertext] newlink byku4l9>
+       <Para>On the Accounts tab in iFolder Preferences, select the iFolder account, then click Details to view the following information about your iFolder Account.</Para>
+       <TableNoTitle>
+        <TGroup Cols="2" TGroupStyle="Narrow2WithLines">
+         <ColSpec Colname="1" Colnum="1" Colwidth="1.111in">
+         
+         <ColSpec Colname="2" Colnum="2" Colwidth="4.556in">
+         
+         <THead>
+          <Row ID="bvie4dy">
+           <Entry Colname="1">
+            <TblHead><?FM: MARKER [Hypertext] newlink bvie4dy>Parameter</TblHead>
+           </Entry>
+           <Entry Colname="2">
+            <TblHead>Description</TblHead>
+           </Entry>
+          </Row>
+         </THead>
+         <TBody>
+          <Row ID="bvie4dz">
+           <Entry Colname="1">
+            <Para><?FM: MARKER [Hypertext] newlink bvie4dz>Server</Para>
+           </Entry>
+           <Entry Colname="2">
+            <Para>The host name of the enterprise server. For example, if the server&apos;s DNS name is svr21.example.com, svr1 is the information reported.</Para>
+           </Entry>
+          </Row>
+          <Row ID="bvie4e0">
+           <Entry Colname="1">
+            <Para><?FM: MARKER [Hypertext] newlink bvie4e0>Description</Para>
+           </Entry>
+           <Entry Colname="2">
+            <Para>The user-friendly description of the enterprise server, simple server, or workgroup host computer as entered by its administrator. If no description was entered, the value is &ldquo;none.&rdquo;</Para>
+           </Entry>
+          </Row>
+          <Row ID="bvie4e1">
+           <Entry Colname="1">
+            <Para><?FM: MARKER [Hypertext] newlink bvie4e1>Available</Para>
+           </Entry>
+           <Entry Colname="2">
+            <Para>The total amount of space currently available to you for iFolders on this iFolder account. The value is equal to the quota minus the used space.</Para>
+           </Entry>
+          </Row>
+          <Row ID="bvieb8w">
+           <Entry Colname="1">
+            <Para><?FM: MARKER [Hypertext] newlink bvieb8w>Used</Para>
+           </Entry>
+           <Entry Colname="2">
+            <Para>The total amount of space currently consumed by all the iFolders you own on this account.</Para>
+           </Entry>
+          </Row>
+          <Row ID="bvieb8x">
+           <Entry Colname="1">
+            <Para><?FM: MARKER [Hypertext] newlink bvieb8x>Quota</Para>
+           </Entry>
+           <Entry Colname="2">
+            <Para>The total amount of space allocated to your iFolder account on the enterprise server. This value might be the default quota set for all users, or a user-specific quota. If no quota is set, the value is empty or N/A (not applicable).</Para>
+           </Entry>
+          </Row>
+         </TBody>
+        </TGroup>
+       </TableNoTitle>
+      </Step>
+     </StepList>
+    </Procedure>
    </Topic>
 
    <Topic ID="bvwsp7c" Type="General" Topic="MainTopic"><?FM: MARKER [Hypertext] newlink bvwsp7c>
@@ -924,6 +945,12 @@
      <StepList>
       <Step ID="bvibeb7"><?FM: MARKER [Hypertext] newlink bvibeb7>
        <Para>Right-click the iFolder application icon <InlineGraphic Fileref="ifolder16.png" Height="0.155in" Width="0.164in" Dpi="110" Impby="ref" Xoffset="0.000in" Yoffset="0.000in" Position="inline" Align="acenter" Description="iFolder Application Icon" Format="png"> in the Notification area, then select Preferences to open the iFolder Preferences dialog box to the General tab.</Para>
+       <Figure Position="CurrentIndent" ID="byktv78"><?FM: MARKER [Hypertext] newlink byktv78>
+        <Description>iFolder Preferences Window</Description>
+        <GraphicHolder>
+         <Graphic Fileref="if_preferences_a.png" Height="4.133in" Width="3.820in" Dpi="150" Impby="ref" Xoffset="0.000in" Yoffset="0.000in" Position="inline" Align="acenter" Format="png">
+        </GraphicHolder>
+       </Figure>
       </Step>
       <Step ID="bvibeba"><?FM: MARKER [Hypertext] newlink bvibeba>
        <Para>Specify the following values:</Para>
@@ -995,9 +1022,26 @@
             <Para><?FM: MARKER [Hypertext] newlink bviaxna>Synchronization</Para>
            </Entry>
            <Entry Colname="2">
-            <Para>Select Synchronize to Host Every to enable background synchronization; deselect Synchronize to Host Every to disable background synchronization.</Para>
-            <Para>If you enable synchronization, specify the interval for synchronizing files, such as every 1 hour or every 2 days. </Para>
-            <Para>If you use the iFolder client with Novell iFolder 3.<VersionVariable>x</VersionVariable>, the system minimum Synchronization Interval, typically every 5 minutes, is configured by the iFolder administrator. You cannot override the system minimum. The absolute system minimum interval is 1 minute.</Para>
+            <ParaWithTitle ID="byktvwf"><?FM: MARKER [Hypertext] newlink byktvwf>
+             <Title>Automatically Synchronize iFolders: </Title>
+             <Para>Select this checkbox to enable synchronization for all iFolders on this computer under your current local login/logon identity. Deselect the checkbox to disable synchronization.</Para>
+            </ParaWithTitle>
+            <ParaWithTitle ID="byktwky"><?FM: MARKER [Hypertext] newlink byktwky>
+             <Title>Synchronize iFolders Every: </Title>
+             <Para>Specify the minimum interval to use for synchronizing iFolders on this computer under your current local login/logon identity. Specify the value and units.</Para>
+            </ParaWithTitle>
+            <Para>If you use the iFolder client with Novell iFolder 3.<VersionVariable>x</VersionVariable>, the effective minimum synchronization interval is always the largest value of the following settings:</Para>
+            <ListBulletT>
+             <BulletItemT>
+              <Para>The system policy (default of zero), unless there is a user policy set. If a user policy is set, the user policy overrides the system policy, whether the user policy is larger or smaller in value.</Para>
+             </BulletItemT>
+             <BulletItemT>
+              <Para>The local machine policy, or the setting on the client machine synchronizing with the server.</Para>
+             </BulletItemT>
+             <BulletItemT>
+              <Para>The iFolder (collection) policy.</Para>
+             </BulletItemT>
+            </ListBulletT>
            </Entry>
           </Row>
          </TBody>
@@ -1016,8 +1060,8 @@
 
    <Topic ID="bvwppw5" Type="General" Topic="MainTopic"><?FM: MARKER [Hypertext] newlink bvwppw5>
     <Title>Configuring Local Firewall Settings for iFolder Traffic</Title>
-    <Para>If you use a local firewall, you must set your firewall to allow iFolder to choose a local dynamic port or configure a local static port for the iFolder client to communicate locally (the same computer) with Mono XSP Server. iFolder uses Mono XSP Web services to communicate via HTTP BASIC or HTTPS (SSL) with the Novell iFolder enterprise servers where you have iFolder accounts. The iFolder administrator configures iFolder services that determine whether communications use HTTP BASIC or HTTPS in your environment.</Para>
-    <Para>Your firewall does not block traffic between Mono XSP and the Novell iFolder enterprise server because Mono XSP uses the standard HTTP BASIC or HTTPS ports for traffic. However, if you block the traffic between the client and Mono-XSP, the client has no way to communicate with the server. You would not be able to log in to your iFolder account and synchronize iFolder data.</Para>
+    <Para>If you use a local firewall, you must set your firewall to allow iFolder to choose a local dynamic port or configure a local static port for the iFolder client to communicate locally (the same computer) with Mono XSP Server. iFolder uses Mono XSP Web services to communicate via HTTP or HTTPS (SSL, default) with the Novell iFolder enterprise servers where you have iFolder accounts. The iFolder administrator configures iFolder services that determine whether communications use HTTP or HTTPS in your environment.</Para>
+    <Para>Your firewall does not block traffic between Mono XSP and the Novell iFolder enterprise server because Mono XSP uses the standard HTTP or HTTPS ports for traffic. However, if you block the traffic between the client and Mono-XSP, the client has no way to communicate with the server. You would not be able to log in to your iFolder account and synchronize iFolder data.</Para>
     <Para>Initially, the iFolder configuration does not specify a particular port to use for client-to-Mono XSP communications. When iFolder first runs, it opens an available local port to listen for requests from the Mono XSP and to send data to the server via Mono XSP. It writes the port number to a configuration file and uses this port thereafter unless the port is not available whenever iFolder starts. If the port is in use by another application, iFolder selects a different available port, reconfigures the port in the configuration file, and uses the new port thereafter. For example, if iFolder is down and another application takes the port, when you restart iFolder, iFolder must select and configure a different port to use.</Para>
     <BridgeHead ID="bw4di5b"><?FM: MARKER [Hypertext] newlink bw4di5b>Using a Local Dynamic Port</BridgeHead>
     <Para>If you use a local firewall on your computer, the firewall should detect the local traffic between the iFolder and Mono XSP server whenever iFolder contacts the server to synchronize its list of users and iFolder data. Allow the traffic to avoid receiving the pop-up alert whenever the client starts. If you allow the traffic permanently, your firewall should not remind you again.</Para>
@@ -1108,9 +1152,9 @@
 
    <Topic ID="bwbirb9" Type="General" Topic="MainTopic"><?FM: MARKER [Hypertext] newlink bwbirb9>
     <Title>Configuring Local Virus Scanner Settings for iFolder Traffic</Title>
-    <Para>If you use virus scanning software on your computer, exclude the ..\simias\work area\ directory from the virus scan. For example, the location of the ..\simias\work area\ directory on Windows is c:\documents and setting\<Variable>username</Variable>\local settings\application data\simias\work area\.simias.wf.<Variable>guid</Variable>. </Para>
-    <Para>The ..\simias\work area\ directory is where iFolder stages files for download from the server. If an iFolder file has a virus attached and your virus scanning software scans that virus while the file is in the ..\simias\work area directory, the virus scanner pops up with a message a virus has been found, moves the file to quarantine, then iFolder again tries to synchronize the file. </Para>
-    <Para>Not scanning the work area allows the synchronization to complete; the infected file is successfully downloaded and moved to the local iFolder. The virus scanner then detects the infected file in the iFolder and moves it from that folder to quarantine, protecting the computer from infection. iFolder detects the deletion of the file and when the next synchronization begins, iFolder removes the file from the server and member computers. </Para>
+    <Para>If you use virus scanning software on your computer, exclude the ..\simias\WorkArea\ directory from the virus scan. For example, the location of the ..\simias\WorkArea\ directory on Windows is c:\documents and settings\<Variable>username</Variable>\local settings\application data\simias\WorkArea\.simias.wf.<Variable>guid</Variable>. </Para>
+    <Para>The ..\simias\WorkArea\ directory is where iFolder stages files for download from the server. If an iFolder file has a virus attached and your virus scanning software scans that virus while the file is in the ..\simias\WorkArea directory, the virus scanner pops up with a message a virus has been found, moves the file to quarantine, then iFolder again tries to synchronize the file. </Para>
+    <Para>Not scanning the WorkArea allows the synchronization to complete; the infected file is successfully downloaded and moved to the local iFolder. The virus scanner then detects the infected file in the iFolder and moves it from that folder to quarantine, protecting the computer from infection. iFolder detects the deletion of the file and when the next synchronization begins, iFolder removes the file from the server and member computers. </Para>
     <Para>However, if the iFolder where the file is downloaded is Read-Only, the local deletion is not enforced to the server and other member computers. The virus must be detected elsewhere where permissions allow changes to be synchronized. The user&apos;s virus scanner probably alerts the user of the virus, so the user should alert other iFolder members about the virus.</Para>
    </Topic>
   </Chapter>
@@ -1224,7 +1268,7 @@
    </Topic>
 
    <Topic ID="bwensdb" Type="General" Topic="MainTopic"><?FM: MARKER [Hypertext] newlink bwensdb>
-    <Title>Guidelines for File Types and Sizes to Be Synchronized</Title>
+    <Title>Guidelines for File Types and Sizes to Not Synchronize</Title>
     <Para>When the iFolder client is used with Novell iFolder 3.<VersionVariable>x</VersionVariable>, your iFolder administrator might specify file type restrictions and maximum file size restrictions at the system, user, or iFolder level. Your account might also be restricted in the amount of space you can use for the data in the iFolders you own. When you participate in other iFolders, the space consumed on the server is counted against the owner of that iFolder.</Para>
     <Para>Some file types are not good candidates for synchronization, such as operating system files, hidden files created by a file manager, or databases that are implemented as a collection of linked files. You might include only key file types used for your business, or exclude files that are likely unrelated to business, such as .mp3 files. </Para>
     <BridgeHead ID="bweu18w"><?FM: MARKER [Hypertext] newlink bweu18w>Operating System Files</BridgeHead>
@@ -1233,8 +1277,8 @@
     <Para>If your file system uses hidden files to track display preferences, your administrator might restrict those file types to exclude them from being synchronized on your system. Usually, hidden files are relevant only to the particular computer where they were created, and they change every time the file or directory is accessed. You do not need to keep these files, and synchronizing them results in repeated file conflict errors. </Para>
     <Para>For example, iFolder automatically excludes two hidden file manager files called thumbs.db and .DS_Store.</Para>
     <BridgeHead ID="bwepcz5"><?FM: MARKER [Hypertext] newlink bwepcz5>Database Files</BridgeHead>
-    <Para>iFolder synchronizes the changed portions of a file; it does not synchronize files as a set. If you have a database file that is implemented as a collection of linked files, do not try to synchronize them in an iFolder.</Para>
-    <Para>Do not try to synchronize your GroupWise&reg; data by making the GroupWise archive, cache, or remote directories into iFolders. If you do this, the GroupWise data files becomes corrupted after synchronizing the file a few times. GroupWise needs the files in the archive to be maintained as a set of files.</Para>
+    <Para>iFolder synchronizes individual files or the changed portions of individual files; it does not synchronize files as a set. If you have a database file that is implemented as a collection of linked files, do not try to synchronize them in an iFolder.</Para>
+    <Para>Do not try to synchronize your GroupWise&reg; data by making the GroupWise archive, cache, or remote directories into iFolders. If you do this, the GroupWise data files become corrupted after synchronizing the file a few times. GroupWise needs the files in the archive to be maintained as a set of files.</Para>
    </Topic>
 
    <Topic ID="bwagrrn" Type="General" Topic="MainTopic"><?FM: MARKER [Hypertext] newlink bwagrrn>
@@ -1255,6 +1299,10 @@
      </BulletItem>
      <BulletItem>
       <Para>Names of iFolders, folders, and files are case insensitive; however, case is preserved. If filenames differ only by case, iFolder creates a name conflict. The conflict must be resolved before the file or folder can be synchronized.</Para>
+     </BulletItem>
+     <BulletItem>
+      <Para>If you create iFolders on a FAT32 file system on Linux, avoid naming files in all uppercase characters. The VFAT or FAT32 file handling on Linux automatically changes the filenames that are all uppercase characters and meet the MS-DOS 8.3 file format from all uppercase characters to all lowercase characters. This creates synchronization problems for those files if the iFolder is set with the Read Only access right.</Para>
+      <Comment>(Bug 84722, Russ Young, Last updated: July 29, 2005)</Comment>
      </BulletItem>
     </ListBullet>
    </Topic>
@@ -1282,7 +1330,7 @@
        <Para><XRefInt IDREF="bwemc36" PIDREF="createifolder" File="04_iFolders.fm" Element="Head" Format="HeadingOnPage"></Para>
       </BulletItem>
       <BulletItem>
-       <Para><XRefInt IDREF="bwem9n0" PIDREF="createifolder" File="04_iFolders.fm" Element="Head" Format="HeadingOnPage"></Para>
+       <Para><XRefInt IDREF="fat32mtpt" PIDREF="createifolder" File="04_iFolders.fm" Element="Head" Format="HeadingOnPage"></Para>
       </BulletItem>
      </ListBullet>
     </SubToc>
@@ -1370,10 +1418,14 @@
      </Procedure>
     </Head>
 
-    <Head ID="bwem9n0"><?FM: MARKER [Hypertext] newlink bwem9n0>
+    <Head ID="fat32mtpt"><?FM: MARKER [Hypertext] newlink fat32mtpt>
      <Title>Creating iFolders on a FAT32 Mount Point (Linux)</Title>
-     <Para>On Linux, you can create and use iFolders on a mount point for a FAT32 file system. If you have a dual boot system, you can access the data in iFolders as normal folders from the system where the folder is not set up as an iFolder. If you set up the folder as an iFolder on both platforms, the data set is stored in two different iFolders on the server, which consumes double your allocated server disk resources.</Para>
-     <Para>Because the FAT32 file system does not support POSIX file system permissions, you must make sure the iFolder user is the owner of the mount point. Modify the /etc/fstab file to set the user ID (UID) parameter to the iFolder user who creates iFolders on that mount point.</Para>
+     <Para>On Linux, iFolder supports creating and using iFolders on a mount point for a FAT32 file system. Before you can create new iFolders or set up shared iFolders on a FAT32 volume on your Linux computer, the iFolder user must own the FAT32 mount point where you want to store the iFolders, and the /etc/fstab file must explicitly identify the iFolder user&apos;s local user ID for the mount point. </Para>
+     <Note-Important>
+      <Para>This is required because FAT32 does not support file permissions. Any other file sytem that does not support permissions would have the same issue.</Para>
+     </Note-Important>
+     <Para>For dual boot systems, you can access the data in iFolders as normal folders from the system where the folder is not set up as an iFolder. If you set up the folder as an iFolder on both platforms, the data set is stored in two different iFolders on the server, which consumes double your allocated server disk resources.</Para>
+     <Para>Because the FAT32 file system does not support POSIX file system permissions, make sure the iFolder user is the local owner of the mount point. Modify the /etc/fstab file to set the user ID (UID) parameter of the user&apos;s local login identity to the iFolder user who creates iFolders on that mount point.</Para>
      <Procedure>
       <StepList>
        <Step ID="bwenpgg"><?FM: MARKER [Hypertext] newlink bwenpgg>
@@ -1393,10 +1445,10 @@
         <CodeSampleNarrow>mount -t vfat /dev/hda4 /home/jsmith/fat32mntpt</CodeSampleNarrow>
        </Step>
        <Step ID="bwemszm"><?FM: MARKER [Hypertext] newlink bwemszm>
-        <Para>Edit the /etc/fstab file by adding the uid=username parameter on the line that defines the FAT32 mount point.</Para>
+        <Para>Edit the /etc/fstab file by adding the uid=username parameter of the iFolder user on the line that defines the FAT32 mount point.</Para>
         <UserInput Wrap="Yes">/dev/<Variable>hda1</Variable>  /home/<Variable>username</Variable>/<Variable>fsmount</Variable>  <Variable>vfat</Variable>  uid=<Variable>username</Variable></UserInput>
         <Para>Continuing the example, modify /etc/fstab file by adding uid=jsmith to the mount point:</Para>
-        <Para>/dev/hda4  /home/jsmith/fat32mntpt  vfat  uid=jsmith</Para>
+        <CodeSampleNarrow>/dev/hda4  /home/jsmith/fat32mntpt  vfat  uid=jsmith</CodeSampleNarrow>
        </Step>
       </StepList>
      </Procedure>
@@ -1740,9 +1792,13 @@
        </Step>
        <Step ID="bv2hqlb"><?FM: MARKER [Hypertext] newlink bv2hqlb>
         <Para>From the list of users, select one or more users by added them to the Selected Users list, then click OK.</Para>
+        <Para>It can take several seconds for the invitations to synchronize up to the server.</Para>
        </Step>
        <Step ID="bv2hqlc"><?FM: MARKER [Hypertext] newlink bv2hqlc>
         <Para>Select one or more users, click Access, select the Full Control, Read/Write, or Read Only access right, then click OK.</Para>
+       </Step>
+       <Step ID="bx3vxly"><?FM: MARKER [Hypertext] newlink bx3vxly>
+        <Para>Repeat Steps 4 and 5 until you have invited all the desired users to share the iFolder</Para>
        </Step>
        <Step ID="bv2hqld"><?FM: MARKER [Hypertext] newlink bv2hqld>
         <Para>Click Apply, then click OK to close the iFolder Properties window.</Para>

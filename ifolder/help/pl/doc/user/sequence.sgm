@@ -125,7 +125,7 @@ C = InvisibleChapter	-  Used by the HLP2MOAB process only as a way to group a bu
 
 			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
 			<FILENAME>data\bwensdb.html</FILENAME>
-			<TITLE>Guidelines for File Types and Sizes to Be Synchronized</TITLE>
+			<TITLE>Guidelines for File Types and Sizes to Not Synchronize</TITLE>
 			</TOPIC>
 
 			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
