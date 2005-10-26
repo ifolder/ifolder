@@ -104,8 +104,6 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 
 	readOnlyNotifications = [[NSMutableDictionary alloc] init];
 	iFolderFullNotifications = [[NSMutableDictionary alloc] init];
-		
-	ifolderdata = [[iFolderData alloc] init];
 }
 
 
@@ -277,7 +275,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 //===================================================================
 - (void)showLoginWindow:(NSString *)domainID
 {
-	iFolderDomain *dom = [ifolderdata getDomain:domainID];
+	iFolderDomain *dom = [[iFolderData sharedInstance] getDomain:domainID];
 	if(dom != nil)
 	{
 		if(loginWindowController == nil)
@@ -397,7 +395,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 	simiasIsLoaded = YES;
 
 	ifconlog1(@"Creating and loading iFolderData");
-	[ifolderdata refresh:NO];
+	[[iFolderData sharedInstance] refresh:NO];
 	
 	// Startup the event processing thread
     [NSThread detachNewThreadSelector:@selector(simiasEventThread:)
@@ -407,7 +405,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 
 	// If there are no domains when the app first launches, the show a dialog that
 	// will help get an account created
-	if([ifolderdata getDomainCount] < 1)
+	if([[iFolderData sharedInstance] getDomainCount] < 1)
 	{
 		int rc;
 		
@@ -434,6 +432,8 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 //===================================================================
 -(void)simiasHasStarted
 {
+	[[iFolderData sharedInstance] readCredentials];
+	
 	[self performSelectorOnMainThread:@selector(postSimiasInit:) 
 				withObject:nil waitUntilDone:NO ];
 }

@@ -920,6 +920,13 @@ static iFolderData *sharedInstance = nil;
 	return [simiasService InitMemberSearchResults];
 }
 
+-(void)readCredentials
+{
+	[instanceLock lock];
+	[simiasService readCredentials];
+	[ifolderService readCredentials];
+	[instanceLock unlock];		
+}
 
 
 @end
