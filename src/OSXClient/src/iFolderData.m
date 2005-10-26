@@ -915,5 +915,11 @@ static iFolderData *sharedInstance = nil;
 	[instanceLock unlock];	
 }
 
+-(MemberSearchResults *) InitMemberSearchResults
+{
+	return [simiasService InitMemberSearchResults];
+}
+
+
 
 @end

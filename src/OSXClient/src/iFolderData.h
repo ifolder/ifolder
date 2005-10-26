@@ -29,6 +29,7 @@
 @class iFolderService;
 @class SimiasService;
 @class SyncSize;
+@class MemberSearchResults;
 
 @interface iFolderData : NSObject 
 {
@@ -100,5 +101,7 @@
 -(void)clearUsersAdded:(NSString *)ifolderID;
 
 -(SyncSize *)getSyncSize:(NSString *)ifolderID;
+
+-(MemberSearchResults *) InitMemberSearchResults;
 
  @end

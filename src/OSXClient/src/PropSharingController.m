@@ -293,7 +293,7 @@
 				searchResults = nil;
 			}
 			// valid search attributes: "Given" "Family" "FN"
-			searchResults = [[MemberSearchResults alloc] init];
+			searchResults = [[iFolderData sharedInstance] InitMemberSearchResults];
 			[searchResults searchMembers:[curiFolder DomainID] onAttribute:searchAttribute usingValue:[userSearch stringValue]];
 		}
 		else
@@ -303,7 +303,7 @@
 				[searchResults release];
 				searchResults = nil;
 			}
-			searchResults = [[MemberSearchResults alloc] init];
+			searchResults = [[iFolderData sharedInstance] InitMemberSearchResults];
 			[searchResults getAllMembers:[curiFolder DomainID]];
 		}
 
