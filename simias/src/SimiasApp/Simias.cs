@@ -58,6 +58,11 @@ namespace Mono.ASPNET
 		private static string ApplicationPath;
 
 		/// <summary>
+		/// Simias directory where the data is stored.
+		/// </summary>
+		private static string SimiasDir = "simias";
+
+		/// <summary>
 		/// Virtual path used in uri to contact the web service.
 		/// </summary>
 		private static string VirtualPath = "/simias10";
@@ -77,13 +82,14 @@ namespace Mono.ASPNET
 		/// <summary>
 		/// Default server port.
 		/// </summary>
-		private const int DefaultServerPort = 8080;
+		private const int DefaultServerPort = 8086;
 
 		/// <summary>
 		/// Return program status values.
 		/// </summary>
 		private enum SimiasStatus
 		{
+			InvalidSimiasDataPath = -7,
 			InvalidSimiasApplicationPath = -6,
 			ServiceNotAvailable = -5,
 			ProcessFailure = -4,
@@ -138,6 +144,11 @@ namespace Mono.ASPNET
 		/// Debug flag specified on the --noexec option.
 		/// </summary>
 		private bool debug = false;
+
+		/// <summary>
+		/// Used for path comparisions.
+		/// </summary>
+		private bool ignoreCase = ( MyEnvironment.Platform == MyPlatformID.Windows ) ? true : false;
 
 		/// <summary>
 		/// Execute Simias services in a child process.
@@ -231,7 +242,7 @@ namespace Mono.ASPNET
 					path = Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData );
 				}
 
-				return Path.Combine( path, "simias" );
+				return Path.Combine( path, SimiasDir );
 			}
 		}
 
@@ -613,7 +624,6 @@ namespace Mono.ASPNET
 		private bool IsSameService( Uri uri, string dataPath )
 		{
 			bool sameService = false;
-			bool ignoreCase = ( MyEnvironment.Platform == MyPlatformID.Windows ) ? true : false;
 
 			try
 			{
@@ -782,7 +792,12 @@ namespace Mono.ASPNET
 					{
 						if ( ( i + 1 ) < args.Length )
 						{
-							simiasDataPath = Path.GetFullPath( args[ ++i ] );
+							simiasDataPath = ProcessSimiasDataPath( args[ ++i ] );
+							if ( simiasDataPath == null )
+							{
+								Console.Error.WriteLine( "Error: Invalid Simias data path: {0}", args[ i - 1 ] );
+								status = SimiasStatus.InvalidSimiasDataPath;
+							}
 						}
 						else
 						{
@@ -943,7 +958,7 @@ namespace Mono.ASPNET
 			}
 
 			// If --noexec was specified, make sure that --port and --datadir were also specified.
-			if ( noExec )
+			if ( noExec && ( status == SimiasStatus.Success ) )
 			{
 				if ( ( Environment.CommandLine.IndexOf( "--port " ) == -1 ) ||
 					 ( Environment.CommandLine.IndexOf( "--datadir " ) == -1 ) ||
@@ -1006,6 +1021,33 @@ namespace Mono.ASPNET
 					break;
 				}
 			}
+		}
+
+		/// <summary>
+		/// Makes sure that the specified path conforms to the format for the simias data path.
+		/// </summary>
+		/// <param name="dataPath">Path to the simias data area.</param>
+		/// <returns>Processed path if successful, otherwise a null is returned.</returns>
+		private string ProcessSimiasDataPath( string dataPath )
+		{
+			string processedPath = null;
+
+			try
+			{
+				string tempPath = Path.GetFullPath( dataPath );
+				if ( String.Compare( Path.GetDirectoryName( tempPath ), "simias", ignoreCase ) == 0 )
+				{
+					processedPath = tempPath;
+				}
+				else
+				{
+					processedPath = Path.Combine( tempPath, "simias" );
+				}
+			}
+			catch
+			{}
+
+			return processedPath;
 		}
 
 		/// <summary>
