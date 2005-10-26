@@ -1365,7 +1365,6 @@
 		<col def="S255">ISFeatureCabName</col>
 		<col def="S255">ISProFeatureName</col>
 		<row><td>Simias_Files</td><td/><td>##IDS_FEATURE_DISPLAY_NAME2##</td><td/><td>2</td><td>1</td><td>INSTALLDIR</td><td>16</td><td/><td/><td/><td/></row>
-		<row><td>Simias_SDK</td><td/><td>##ID_STRING4##</td><td/><td>4</td><td>200</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="FeatureComponents">
@@ -1622,7 +1621,6 @@
 		<col key="yes" def="s255">ISMergeModule_</col>
 		<col key="yes" def="i2">Language_</col>
 		<row><td>Simias_Files</td><td>simias.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>0</td></row>
-		<row><td>Simias_SDK</td><td>simias_sdk.3CFD24D7_12F5_4DD6_9350_BB6B1E9AFB0E</td><td>0</td></row>
 	</table>
 
 	<table name="ISIISAppPool">
@@ -1771,7 +1769,6 @@
 		<col def="S255">Destination</col>
 		<col def="I4">ISAttributes</col>
 		<row><td>simias.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>0</td><td>Simias Workgroup Merge Module</td><td>[INSTALLDIR]</td><td/></row>
-		<row><td>simias_sdk.3CFD24D7_12F5_4DD6_9350_BB6B1E9AFB0E</td><td>0</td><td>Simias SDK Merge Module</td><td>[INSTALLDIR]\doc</td><td/></row>
 	</table>
 
 	<table name="ISMergeModuleCfgValues">
@@ -1922,7 +1919,7 @@
 		<col def="S255">DotNetBuildConfiguration</col>
 		<col def="S255">MsiCommandLine</col>
 		<col def="I4">ISSetupPrerequisiteLocation</col>
-		<row><td>release</td><td>web</td><td>&lt;ISProjectDataFolder&gt;</td><td>PackageName</td><td>1</td><td>1033</td><td>2</td><td>1</td><td>Intel</td><td/><td>1033</td><td>2</td><td>0</td><td>1</td><td>0</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>8497165</td><td/><td/><td/><td/></row>
+		<row><td>release</td><td>web</td><td>&lt;ISProjectDataFolder&gt;</td><td>PackageName</td><td>1</td><td>1033</td><td>2</td><td>1</td><td>Intel</td><td/><td>1033</td><td>2</td><td>0</td><td>1</td><td>0</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>8488973</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISReleaseExtended">
