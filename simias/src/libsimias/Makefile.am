@@ -17,7 +17,7 @@ libsimias_la_SOURCES = \
  	envC.c simiasClientLib.c stdsoap2.c simias.c simias.h simiasweb.c simiasweb.h
  	
 libsimias_la_CFLAGS = \
-	-DWITH_NONAMESPACES
+	-DWITH_NONAMESPACES -DWITH_COOKIES
 
 envC.c: $(srcdir)/stdsoap2.c
 	> $(srcdir)/env.h
