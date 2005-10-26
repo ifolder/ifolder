@@ -29,17 +29,13 @@
 #import "iFolderDomain.h"
 #include "Security/Security.h"
 
-typedef struct gsoap_creds
-{
-	char *username;
-	char *password;
-} GSOAP_CREDS;
-
 @class AuthStatus;
+@class MemberSearchResults;
 
 @interface SimiasService : NSObject
 {
 	NSString	*simiasURL;
+	void		*soapData;	
 }
 
 -(NSArray *) GetDomains:(BOOL)onlySlaves;
@@ -69,6 +65,8 @@ typedef struct gsoap_creds
 
 -(BOOL) SetDomainHostAddress:(NSString *)domainID
 							NewHostAddress:(NSString *)hostAddress;
+
+-(MemberSearchResults *) InitMemberSearchResults;
 
 @end
 

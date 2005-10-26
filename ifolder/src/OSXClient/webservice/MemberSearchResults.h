@@ -33,8 +33,10 @@
 	NSString	*domainID;
 	int			totalCount;
 	NSString	*searchContext;
+	void		*soapData;
 }
 
+-(id)initWithSoapData:(void *)soapdata;
 -(void)getAllMembers:(NSString *)DomainID;
 -(void)searchMembers:(NSString *)DomainID onAttribute:(NSString *)attribute usingValue:(NSString *)value;
 -(BOOL)fillMembers:(int)index;
