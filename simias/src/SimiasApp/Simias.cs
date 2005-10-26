@@ -1035,7 +1035,7 @@ namespace Mono.ASPNET
 			try
 			{
 				string tempPath = Path.GetFullPath( dataPath );
-				if ( String.Compare( Path.GetDirectoryName( tempPath ), "simias", ignoreCase ) == 0 )
+				if ( String.Compare( Path.GetFileName( tempPath ), "simias", ignoreCase ) == 0 )
 				{
 					processedPath = tempPath;
 				}

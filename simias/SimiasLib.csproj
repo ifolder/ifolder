@@ -123,7 +123,11 @@
         </Build>
         <Files>
             <Include>
-                <Folder RelPath = "src\ChangeLog\" />
+                <File
+                    RelPath = "src\ChangeLog\ChangeLog.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
                 <File
                     RelPath = "src\CollectionStore\AccessControl.cs"
                     SubType = "Code"
@@ -131,11 +135,6 @@
                 />
                 <File
                     RelPath = "src\CollectionStore\BaseFileNode.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\CollectionStore\ChangeLog.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -550,31 +549,6 @@
                 />
                 <File
                     RelPath = "src\SimiasLib.dll\AssemblyInfo.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Sniffer\SnifferClientChannelSink.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Sniffer\SnifferClientChannelSinkProvider.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Sniffer\SnifferMessage.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Sniffer\SnifferServerChannelSink.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Sniffer\SnifferServerChannelSinkProvider.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
