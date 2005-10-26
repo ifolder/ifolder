@@ -18,7 +18,7 @@ libifolderclient_la_SOURCES = \
 
 libifolderclient_la_CFLAGS = \
 	$(SIMIAS_CLIENT_C_CFLAGS) \
-	-DWITH_NONAMESPACES
+	-DWITH_NONAMESPACES -DWITH_COOKIES
 
 libifolderclient_la_LDFLAGS = \
 	$(SIMIAS_CLIENT_C_LIBS)
