@@ -30,16 +30,16 @@
 
 #define PAGED_RESULT_COUNT	25
 
-
 // methods defined in SimiasService.m
-void init_simias_gsoap(struct soap *pSoap, GSOAP_CREDS *creds);
-void cleanup_simias_gsoap(struct soap *pSoap, GSOAP_CREDS *creds);
-void handle_simias_soap_error(struct soap *pSoap, GSOAP_CREDS *creds, NSString *methodName);
+void handle_simias_soap_error(void *soapData, NSString *methodName);
+struct soap *lockSimiasSoap(void *soapData);
+void unlockSimiasSoap(void *soapData);
+
 NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 
 @implementation MemberSearchResults
 
-- (id)init 
+- (id)initWithSoapData:(void *)soapdata
 {
 	[super init];
 	simiasURL = [[NSString stringWithFormat:@"%@/simias10/Simias.asmx", [[Simias getInstance] simiasURL]] retain];
@@ -47,6 +47,7 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 	domainID = nil;
 	searchContext = nil;
 	totalCount = 0;
+	soapData = soapdata;
     return self;
 }
 -(void)dealloc
@@ -62,8 +63,7 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 	if( (domainID != nil) && (searchContext != nil) )
 	{
 		// Call to release the soap structures
-		struct soap soap;
-		GSOAP_CREDS creds;		
+		struct soap *pSoap = lockSimiasSoap(soapData);
 
 		struct _ns1__FindCloseMembers			findMessage;
 		struct _ns1__FindCloseMembersResponse	findResponse;
@@ -71,15 +71,14 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 		findMessage.domainID = (char *)[domainID UTF8String];
 		findMessage.searchContext =  (char *)[searchContext UTF8String];
 
-		init_simias_gsoap (&soap, &creds);		
 		soap_call___ns1__FindCloseMembers(
-				&soap,
+				pSoap,
 				[simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
 				NULL,
 				&findMessage,
 				&findResponse);
 
-		cleanup_simias_gsoap(&soap, &creds);
+		unlockSimiasSoap(soapData);
 
 		[domainID release];
 		[simiasURL release];
@@ -104,9 +103,8 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 
 -(void)searchMembers:(NSString *)DomainID onAttribute:(NSString *)attribute usingValue:(NSString *)value
 {
-    struct soap soap;
-	GSOAP_CREDS creds;	
     int err_code;
+	struct soap *pSoap = lockSimiasSoap(soapData);	
 
 	struct _ns1__FindFirstSpecificMembers			findMessage;
 	struct _ns1__FindFirstSpecificMembersResponse	findResponse;
@@ -122,15 +120,14 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 
 	findMessage.count = PAGED_RESULT_COUNT;
 
-	init_simias_gsoap (&soap, &creds);
     err_code = soap_call___ns1__FindFirstSpecificMembers(
-			&soap,
+			pSoap,
             [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &findMessage,
             &findResponse);
 
-	handle_simias_soap_error(&soap, &creds, @"MemberSearchResults.searchMembers");
+	handle_simias_soap_error(soapData, @"MemberSearchResults.searchMembers");
 
 	totalCount = findResponse.totalMembers;
 	if(totalCount > 0)
@@ -154,7 +151,7 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 		}
 	}
 
-	cleanup_simias_gsoap(&soap, &creds);
+	unlockSimiasSoap(soapData);
 }
 
 
@@ -162,10 +159,9 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 
 -(void)getAllMembers:(NSString *)DomainID
 {
-    struct soap soap;
-	GSOAP_CREDS creds;		
     int err_code;
-
+	struct soap *pSoap = lockSimiasSoap(soapData);
+	
 	struct _ns1__FindFirstMembers			findMessage;
 	struct _ns1__FindFirstMembersResponse	findResponse;
 
@@ -176,15 +172,14 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 	findMessage.domainID = (char *)[domainID UTF8String];
 	findMessage.count = PAGED_RESULT_COUNT;
 
-	init_simias_gsoap (&soap, &creds);
     err_code = soap_call___ns1__FindFirstMembers(
-			&soap,
+			pSoap,
             [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &findMessage,
             &findResponse);
 
-	handle_simias_soap_error(&soap, &creds, @"MemberSearchResults.getAllMembers");
+	handle_simias_soap_error(soapData, @"MemberSearchResults.getAllMembers");
 
 	totalCount = findResponse.totalMembers;
 	if(totalCount > 0)
@@ -208,7 +203,7 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 		}
 	}
 
-	cleanup_simias_gsoap(&soap, &creds);
+	unlockSimiasSoap(soapData);
 }
 
 
@@ -247,10 +242,9 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 
 -(BOOL)fillMembers:(int)index
 {
-    struct soap soap;
-	GSOAP_CREDS creds;		
     int err_code;
 	int actualIndex;
+	struct soap *pSoap = lockSimiasSoap(soapData);
 
 	struct _ns1__FindSeekMembers			findMessage;
 	struct _ns1__FindSeekMembersResponse	findResponse;
@@ -274,18 +268,17 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 	findMessage.offset = actualIndex;
 	findMessage.count = PAGED_RESULT_COUNT;
 
-	init_simias_gsoap (&soap, &creds);
     err_code = soap_call___ns1__FindSeekMembers(
-			&soap,
+			pSoap,
             [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &findMessage,
             &findResponse);
 
- 	if(soap.error)
+ 	if(pSoap->error)
 	{
-		NSLog(@"Error calling FindSeekMembers %d", soap.error);
-		cleanup_simias_gsoap(&soap, &creds);
+		NSLog(@"Error calling FindSeekMembers %d", pSoap->error);
+		unlockSimiasSoap(soapData);
 		return NO;
 	}
 	else
@@ -327,7 +320,7 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 		}
     }
 
-	cleanup_simias_gsoap(&soap, &creds);
+	unlockSimiasSoap(soapData);
 	return YES;
 }
 
