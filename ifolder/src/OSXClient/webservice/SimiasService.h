@@ -67,6 +67,7 @@
 							NewHostAddress:(NSString *)hostAddress;
 
 -(MemberSearchResults *) InitMemberSearchResults;
+-(void)readCredentials;
 
 @end
 

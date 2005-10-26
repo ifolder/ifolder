@@ -88,7 +88,7 @@
 
 -(void)SetUserRights:(NSString *)ifolderID forUser:(NSString *)userID withRights:(NSString *)rights;
 -(void)ChanageOwner:(NSString *)ifolderID toUser:(NSString *)userID oldOwnerRights:(NSString *)rights;
-
+-(void)readCredentials;
 
 @end
 

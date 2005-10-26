@@ -103,5 +103,6 @@
 -(SyncSize *)getSyncSize:(NSString *)ifolderID;
 
 -(MemberSearchResults *) InitMemberSearchResults;
+-(void)readCredentials;
 
  @end

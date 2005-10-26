@@ -948,6 +948,18 @@ void unlockSimiasSoap(void *soapData)
 	return searchResults;
 }
 
-
+-(void)readCredentials
+{
+	SOAP_DATA *pSoap = (SOAP_DATA *)soapData;
+	
+	if( (pSoap->username != NULL) && (pSoap->password != NULL) && (pSoap->soap != NULL) )
+	{
+		if(simias_get_web_service_credential(pSoap->username, pSoap->password) == 0)
+		{
+			pSoap->soap->userid = pSoap->username;
+			pSoap->soap->passwd = pSoap->password;
+		}
+	}
+}
 
 @end
