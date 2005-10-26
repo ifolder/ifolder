@@ -50,7 +50,6 @@
 @interface iFolderApplication : NSObject
 {
 	LoginWindowController			*loginWindowController;
-	iFolderData						*ifolderdata;
 	BOOL							runThreads;
 	BOOL							simiasIsLoaded;
 	NSMutableArray					*logEntries;
