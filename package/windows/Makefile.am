@@ -74,11 +74,9 @@ all: $(MSI_FILE)
 $(MSI_FILE): issabld $(PACKAGE)-install $(MSI).ism
 	@rm -f $@ "$(MSI_DISK1)" "$(MSI_LOG_FILE)"
 	mkdir -p "$(PREREQUISITES_UNIX)";
-#	mkdir -p "$(PROGRAMFILES)\InstallShield 11\SetupPrerequisites";
+	mkdir -p "$(ISSABLD_DIR)\SetupPrerequisites";
 	cp -f SimiasSetupPrerequisite.prq "$(PREREQUISITES_UNIX)";
-#	cp -f SimiasSetupPrerequisite.prq "$(PROGRAMFILES)\InstallShield 11\SetupPrerequisites";
-#		echo $$CMD; \
-#		eval $$CMD
+	cp -f SimiasSetupPrerequisite.prq "$(ISSABLD_DIR)\SetupPrerequisites";
 
 	@CMD='"$(ISSABLD)" -t "$(REGASM_DIR)" -p "$(MSI).ism" -o "$(ISSABLD_DIR),$(MERGE_MODULES_WIN)"'; \
 		echo $$CMD; \
