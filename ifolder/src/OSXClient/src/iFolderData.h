@@ -94,6 +94,7 @@
 									fromDomain:(NSString *)domainID;
 -(void)revertiFolder:(NSString *)iFolderID;
 -(void)deleteiFolder:(NSString *)ifolderID;
+-(void)synciFolderNow:(NSString *)ifolderID;
 
 
 -(void)setUsersAdded:(NSString *)ifolderID;

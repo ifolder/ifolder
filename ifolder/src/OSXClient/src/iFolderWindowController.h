@@ -48,8 +48,6 @@
     NSArrayController						*ifoldersController;
 	
 	PropertiesWindowController				*propertiesController;
-	iFolderService							*ifolderService;
-	SimiasService							*simiasService;
 	
 	NSToolbar								*toolbar;
 	NSMutableDictionary						*toolbarItems;

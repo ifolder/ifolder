@@ -51,8 +51,8 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 {
 	SOAP_DATA	*pSoap;
 	[super init];
-	simiasURL = [[NSString stringWithFormat:@"%@/simias10/iFolder.asmx", [[Simias getInstance] simiasURL]] retain];
-	NSLog(@"Initialized iFolderService on URL: %@", simiasURL);
+	simiasURL = [[NSString stringWithFormat:@"%@/iFolder.asmx", [[Simias getInstance] simiasURL]] retain];
+//	NSLog(@"Initialized iFolderService on URL: %@", simiasURL);
 
 	soapData = malloc(sizeof(SOAP_DATA));
 	pSoap = (SOAP_DATA *)soapData;
@@ -79,6 +79,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 		memset(pSoap->password, 0, 1024);
 	}
 
+/*
 	if( (pSoap->username != NULL) && (pSoap->password != NULL) && (pSoap->soap != NULL) )
 	{
 		if(simias_get_web_service_credential(pSoap->username, pSoap->password) == 0)
@@ -87,7 +88,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 			pSoap->soap->passwd = pSoap->password;
 		}
 	}
-	
+*/	
 	pSoap->instanceLock = [[NSRecursiveLock alloc] init];
 	
     return self;
@@ -118,7 +119,8 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	pSoap = NULL;
 	soapData = NULL;
 
-	[simiasURL release];
+	if(simiasURL != nil)
+		[simiasURL release];
     [super dealloc];
 }
 
@@ -1580,6 +1582,11 @@ void unlockSoap(void *soapData)
 			pSoap->soap->passwd = pSoap->password;
 		}
 	}
+	if(simiasURL != nil)	
+		[simiasURL release];
+	
+	simiasURL = [[NSString stringWithFormat:@"%@/iFolder.asmx", [[Simias getInstance] simiasURL]] retain];
+	NSLog(@"Initialized iFolderService on URL: %@", simiasURL);
 }
 
 @end

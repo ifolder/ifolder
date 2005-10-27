@@ -628,6 +628,27 @@ static iFolderData *sharedInstance = nil;
 
 
 //===================================================================
+// synciFolderNow
+// causes an iFolder to be synced
+//===================================================================
+-(void)synciFolderNow:(NSString *)ifolderID
+{
+	[instanceLock lock];
+	@try
+	{
+		ifconlog2(@"Calling to refresh: %@", ifolderID);
+		[ifolderService SynciFolderNow:ifolderID];
+	}
+	@catch (NSException *e)
+	{
+	}
+	[instanceLock unlock];		
+}
+
+
+
+
+//===================================================================
 // getAvailableiFolder
 // gets the available iFolder from the iFolderData structures
 //===================================================================

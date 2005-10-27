@@ -102,8 +102,8 @@
 //==========================================
 // Simias startup and shutdown methods
 //==========================================
+- (void)startSimias:(id)arg;
 - (void)postSimiasInit:(id)arg;
--(void)simiasHasStarted;
 
 
 //==========================================

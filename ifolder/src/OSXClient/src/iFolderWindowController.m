@@ -129,9 +129,6 @@ static iFolderWindowController *sharedInstance = nil;
 		[super setWindowFrameAutosaveName:@"iFolderWindow"];
 	}
 
-	ifolderService = [[iFolderService alloc] init];
-	simiasService = [[SimiasService alloc] init];
-
 	ifoldersController = [[iFolderData sharedInstance] ifolderArrayController];
 
     NSMutableDictionary *bindingOptions = [NSMutableDictionary dictionary];
@@ -176,14 +173,7 @@ static iFolderWindowController *sharedInstance = nil;
 		
 		if(dom != nil)
 		{
-			@try
-			{
-				ifconlog2(@"Calling to refresh on poBox %@", [dom poBoxID]);
-				[ifolderService SynciFolderNow:[dom poBoxID]];
-			}
-			@catch (NSException *e)
-			{
-			}
+			[[iFolderData sharedInstance] synciFolderNow:[dom poBoxID]];
 		}
 	}
 	
@@ -302,13 +292,7 @@ static iFolderWindowController *sharedInstance = nil;
 {
 	int selIndex = [ifoldersController selectionIndex];
 	iFolder *ifolder = [[ifoldersController arrangedObjects] objectAtIndex:selIndex];
-	@try
-	{
-		[ifolderService SynciFolderNow:[ifolder ID]];
-	}
-	@catch (NSException *e)
-	{
-	}
+	[[iFolderData sharedInstance] synciFolderNow:[ifolder ID]];
 }
 
 
@@ -373,8 +357,6 @@ static iFolderWindowController *sharedInstance = nil;
 			@try
 			{
 				[[iFolderData sharedInstance] deleteiFolder:[ifolder ID]];
-//				[ifolderService DeleteiFolder:[ifolder ID]];
-//				[ifoldersController removeObject:ifolder];
 			}
 			@catch (NSException *e)
 			{

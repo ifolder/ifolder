@@ -93,6 +93,7 @@
 		3EBE7A8C07FC74CA00DC9A8E /* AcceptCert.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3EBE7A8A07FC74CA00DC9A8E /* AcceptCert.nib */; };
 		3EBE7AA507FC76F200DC9A8E /* AcceptCertSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EBE7AA307FC76F200DC9A8E /* AcceptCertSheetController.m */; };
 		3EBE7AA607FC76F200DC9A8E /* AcceptCertSheetController.h in Resources */ = {isa = PBXBuildFile; fileRef = 3EBE7AA407FC76F200DC9A8E /* AcceptCertSheetController.h */; };
+		3ED30DD809115D2C00FFC59E /* libsimias-manager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ED30DD709115D2C00FFC59E /* libsimias-manager.a */; };
 		3EDA494407C681B7007CD1E0 /* MCTableView.h in Resources */ = {isa = PBXBuildFile; fileRef = 3EDA494207C681B7007CD1E0 /* MCTableView.h */; };
 		3EDA494507C681B7007CD1E0 /* MCTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EDA494307C681B7007CD1E0 /* MCTableView.m */; };
 		3EDD6ADA07AEAECB008A2A3B /* SimiasService.h in Resources */ = {isa = PBXBuildFile; fileRef = 3EDD6AD807AEAECB008A2A3B /* SimiasService.h */; };
@@ -273,6 +274,7 @@
 		3EBE7A2407FC5A0C00DC9A8E /* SecurityInterface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SecurityInterface.framework; path = /System/Library/Frameworks/SecurityInterface.framework; sourceTree = "<absolute>"; };
 		3EBE7AA307FC76F200DC9A8E /* AcceptCertSheetController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AcceptCertSheetController.m; path = src/AcceptCertSheetController.m; sourceTree = "<group>"; };
 		3EBE7AA407FC76F200DC9A8E /* AcceptCertSheetController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AcceptCertSheetController.h; path = src/AcceptCertSheetController.h; sourceTree = "<group>"; };
+		3ED30DD709115D2C00FFC59E /* libsimias-manager.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libsimias-manager.a"; sourceTree = "<group>"; };
 		3EDA494207C681B7007CD1E0 /* MCTableView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = MCTableView.h; path = src/MCTableView.h; sourceTree = "<group>"; };
 		3EDA494307C681B7007CD1E0 /* MCTableView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = MCTableView.m; path = src/MCTableView.m; sourceTree = "<group>"; };
 		3EDD6AD807AEAECB008A2A3B /* SimiasService.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SimiasService.h; sourceTree = "<group>"; };
@@ -331,6 +333,7 @@
 				3EAE2EB707FB7F58007BE2E0 /* Security.framework in Frameworks */,
 				3EBE7A2507FC5A0C00DC9A8E /* SecurityInterface.framework in Frameworks */,
 				3E7C4E87086A66AE00D41026 /* SystemConfiguration.framework in Frameworks */,
+				3ED30DD809115D2C00FFC59E /* libsimias-manager.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -455,6 +458,7 @@
 				3EB7842507C2D31400E2B733 /* libsimias-event.dylib */,
 				3E67778607AEACEF0027130D /* libsimias.0.dylib */,
 				3E34A2810772BF1A009AC400 /* libifolderclient.0.dylib */,
+				3ED30DD709115D2C00FFC59E /* libsimias-manager.a */,
 				3EAEF5050769104900B98AF6 /* CoreServices.framework */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
@@ -912,13 +916,16 @@
 					../libifolder,
 					"../../../simias/src/SimiasClient/libsimias-event",
 					../../../simias/src/libsimias,
+					"../../../simias/src/SimiasClient/libsimias-manager",
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
 					../libifolder/.libs,
 					"../../../simias/src/SimiasClient/libsimias-event/.libs",
+					"../../../simias/src/SimiasClient/libsimias-manager",
 					../../../simias/src/libsimias/.libs,
+					"$(SRCROOT)",
 				);
 				PREBINDING = YES;
 				PRODUCT_NAME = "iFolder 3";
@@ -940,13 +947,16 @@
 					../libifolder,
 					"../../../simias/src/SimiasClient/libsimias-event",
 					../../../simias/src/libsimias,
+					"../../../simias/src/SimiasClient/libsimias-manager",
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
 					../libifolder/.libs,
 					"../../../simias/src/SimiasClient/libsimias-event/.libs",
+					"../../../simias/src/SimiasClient/libsimias-manager",
 					../../../simias/src/libsimias/.libs,
+					"$(SRCROOT)",
 				);
 				OTHER_LDFLAGS = "-flat_namespace";
 				PRODUCT_NAME = "iFolder 3";
