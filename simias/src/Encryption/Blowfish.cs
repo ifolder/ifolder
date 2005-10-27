@@ -269,7 +269,7 @@ namespace Simias.Encryption
 
 			for (i = 0; i < N + 2; i += 2) 
 			{
-				Blowfish_encipher(ref datal, ref datar);
+				Encipher(ref datal, ref datar);
 				P[i] = datal;
 				P[i + 1] = datar;
 			}
@@ -278,7 +278,7 @@ namespace Simias.Encryption
 			{
 				for (j = 0; j < 256; j += 2) 
 				{
-					Blowfish_encipher(ref datal, ref datar);
+					Encipher(ref datal, ref datar);
    
 					S[i,j] = datal;
 					S[i,j + 1] = datar;
@@ -319,7 +319,7 @@ namespace Simias.Encryption
 		/// </summary>
 		/// <param name="data">The array to encrypt.</param>
 		/// <param name="length">The amount to encrypt.</param>
-		public void Blowfish_encipher(byte[] data, int length)
+		public void Encipher(byte[] data, int length)
 		{
 			uint xl, xr;
 			if ((length % 8) != 0)
@@ -329,7 +329,7 @@ namespace Simias.Encryption
 				// Encode the data in 8 byte blocks.
 				xl = (uint)((data[i] << 24) | (data[i+1] << 16) | (data[i+2] << 8) | data[i+3]);
 				xr = (uint)((data[i+4] << 24) | (data[i+5] << 16) | (data[i+6] << 8) | data[i+7]);
-				Blowfish_encipher(ref xl, ref xr);
+				Encipher(ref xl, ref xr);
 				// Now Replace the data.
 				data[i] = (byte)(xl >> 24);
 				data[i+1] = (byte)(xl >> 16);
@@ -346,7 +346,7 @@ namespace Simias.Encryption
 		/// </summary>
 		/// <param name="xl">The left part of the 8 bytes.</param>
 		/// <param name="xr">The right part of the 8 bytes.</param>
-		public void Blowfish_encipher(ref uint xl, ref uint xr)
+		private void Encipher(ref uint xl, ref uint xr)
 		{
 			uint	Xl;
 			uint	Xr;
@@ -382,7 +382,7 @@ namespace Simias.Encryption
 		/// </summary>
 		/// <param name="data">The array to decrypt.</param>
 		/// <param name="length">The amount to decrypt.</param>
-		public void Blowfish_decipher(byte[] data, int length)
+		public void Decipher(byte[] data, int length)
 		{
 			uint xl, xr;
 			if ((length % 8) != 0)
@@ -392,7 +392,7 @@ namespace Simias.Encryption
 				// Encode the data in 8 byte blocks.
 				xl = (uint)((data[i] << 24) | (data[i+1] << 16) | (data[i+2] << 8) | data[i+3]);
 				xr = (uint)((data[i+4] << 24) | (data[i+5] << 16) | (data[i+6] << 8) | data[i+7]);
-				Blowfish_decipher(ref xl, ref xr);
+				Decipher(ref xl, ref xr);
 				// Now Replace the data.
 				data[i] = (byte)(xl >> 24);
 				data[i+1] = (byte)(xl >> 16);
@@ -409,7 +409,7 @@ namespace Simias.Encryption
 		/// </summary>
 		/// <param name="xl">The left part of the 8 bytes.</param>
 		/// <param name="xr">The right part of the 8 bytes.</param>
-		public void Blowfish_decipher(ref uint xl, ref uint xr)
+		private void Decipher(ref uint xl, ref uint xr)
 		{
 			uint	Xl;
 			uint	Xr;
@@ -440,6 +440,238 @@ namespace Simias.Encryption
 
 			xl = Xl;
 			xr = Xr;
+		}
+	}
+
+	public class BlowfishStream : Stream
+	{
+		class CBState : IAsyncResult
+		{
+			internal AsyncCallback callback;
+			internal object state;
+			internal byte[]	buffer;
+			internal IAsyncResult result;
+			internal CBState(AsyncCallback callback, object state, byte[] buffer)
+			{
+				this.callback = callback;
+				this.state = state;
+				this.buffer = buffer;
+			}
+			#region IAsyncResult Members
+
+			public object AsyncState
+			{
+				get
+				{
+					return state;
+				}
+			}
+
+			public bool CompletedSynchronously
+			{
+				get
+				{
+					return result.CompletedSynchronously;
+				}
+			}
+
+			public System.Threading.WaitHandle AsyncWaitHandle
+			{
+				get
+				{
+					return result.AsyncWaitHandle;
+				}
+			}
+
+			public bool IsCompleted
+			{
+				get
+				{
+					return result.IsCompleted;
+				}
+			}
+
+			#endregion
+		}
+
+		public enum Target
+		{
+			Encrypted,
+			Normal
+		};
+
+		Stream				stream;
+		Blowfish			bf;
+		Target				target;
+
+		BlowfishStream(Stream stream, Blowfish bf, Target target)
+		{
+			this.stream = stream;
+			this.bf = bf;
+			this.target = target;
+		}
+
+		/// <summary>
+		/// Returns true if the stream support reads.
+		/// </summary>
+		public override bool CanRead
+		{
+			get {return stream.CanRead;}
+		}
+
+		/// <summary>
+		/// Returns true is the stream supports seeks.
+		/// </summary>
+		public override bool CanSeek
+		{
+			get {return stream.CanSeek;}
+		}
+
+		/// <summary>
+		/// Returns true if the stream supports writes.
+		/// </summary>
+		public override bool CanWrite
+		{
+			get {return stream.CanWrite;}
+		}
+
+		/// <summary>
+		/// Returns the length of the stream.
+		/// </summary>
+		public override long Length
+		{
+			get {return stream.Length;}
+		}
+
+		/// <summary>
+		/// Gets or Sets the posistion of the stream.
+		/// </summary>
+		public override long Position
+		{
+			get {return stream.Position;}
+			set {stream.Position = value;}
+		}
+
+		/// <summary>
+		/// Flushes the stream.
+		/// </summary>
+		public override void Flush()
+		{
+			stream.Flush();
+		}
+
+		/// <summary>
+		/// Read data from the stream and encrypt it.
+		/// </summary>
+		/// <param name="buffer">The buffer to read into.</param>
+		/// <param name="offset">The offset in the buffer to begin storing data.</param>
+		/// <param name="count">The number of bytes to read.</param>
+		/// <returns></returns>
+		public override int Read(byte[] buffer, int offset, int count)
+		{
+			int bytesRead = stream.Read(buffer, offset, count);
+			if (target == Target.Normal)
+				bf.Encipher(buffer, bytesRead);
+			else
+				bf.Decipher(buffer, bytesRead);
+			return bytesRead;
+		}
+
+		/// <summary>
+		/// Write data to the stream after decrypting it.
+		/// </summary>
+		/// <param name="buffer">The buffer containing the data to write.</param>
+		/// <param name="offset">The offset in the buffer where the data begins.</param>
+		/// <param name="count">The number of bytes to write.</param>
+		public override void Write(byte[] buffer, int offset, int count)
+		{
+			if (target == Target.Normal)
+				bf.Decipher(buffer, count);
+			else
+				bf.Encipher(buffer, count);
+			stream.Write(buffer, offset, count);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="buffer"></param>
+		/// <param name="offset"></param>
+		/// <param name="count"></param>
+		/// <param name="callback"></param>
+		/// <param name="state"></param>
+		/// <returns></returns>
+		public override IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback callback, object state)
+		{
+			CBState cbs = new CBState(callback, state, buffer);
+			cbs.result = base.BeginRead (buffer, offset, count, new AsyncCallback(ReadComplete), cbs);
+			return cbs;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="asyncResult"></param>
+		/// <returns></returns>
+		public override int EndRead(IAsyncResult asyncResult)
+		{
+			CBState cbs = (CBState)asyncResult.AsyncState;
+			int bytesRead = base.EndRead (cbs.result);
+			if (target == Target.Normal)
+				bf.Encipher(cbs.buffer, bytesRead);
+			else
+				bf.Decipher(cbs.buffer, bytesRead);
+			return bytesRead;
+		}
+
+
+		/// <summary>
+		/// The Read has completed.
+		/// </summary>
+		/// <param name="result">The result of the async write.</param>
+		private void ReadComplete(IAsyncResult result)
+		{
+			CBState cbs = (CBState)result.AsyncState;
+			cbs.callback(cbs);
+		}
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="buffer"></param>
+		/// <param name="offset"></param>
+		/// <param name="count"></param>
+		/// <param name="callback"></param>
+		/// <param name="state"></param>
+		/// <returns></returns>
+		public override IAsyncResult BeginWrite(byte[] buffer, int offset, int count, AsyncCallback callback, object state)
+		{
+			if (target == Target.Normal)
+				bf.Decipher(buffer, count);
+			else
+				bf.Encipher(buffer, count);
+			return base.BeginWrite (buffer, offset, count, callback, state);
+		}
+
+		/// <summary>
+		/// Move the current stream posistion to the specified location.
+		/// </summary>
+		/// <param name="offset">The offset from the origin to seek.</param>
+		/// <param name="origin">The origin to seek from.</param>
+		/// <returns>The new position.</returns>
+		public override long Seek(long offset, SeekOrigin origin)
+		{
+			return stream.Seek(offset, origin);
+		}
+
+		/// <summary>
+		/// Set the stream length.
+		/// </summary>
+		/// <param name="value">The length to set.</param>
+		public override void SetLength(long value)
+		{
+			stream.SetLength(value);
 		}
 	}
 }

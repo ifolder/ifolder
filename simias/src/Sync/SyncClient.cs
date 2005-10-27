@@ -213,6 +213,19 @@ namespace Simias.Sync
 			if (sc != null)
 				sc.Stop();
 		}
+
+		/// <summary>
+		/// Gets the state of the server for this collection.
+		/// </summary>
+		/// <param name="collectionID">The collection to check.</param>
+		/// <returns>True if the server is unavailable</returns>
+		public static bool ServerUnavailable(string collectionID)
+		{
+			CollectionSyncClient sc = GetCollectionSyncClient(collectionID);
+			if (sc != null)
+				return !sc.Connected;
+			return false;
+		}
 	
 		#endregion
 		#endregion
@@ -693,12 +706,13 @@ namespace Simias.Sync
 		/// </summary>
 		internal void SyncNow()
 		{
+			// Assume the server is alive.
+			bool	sAlive = true;
 			try
 			{
 				eventPublisher.RaiseEvent(new CollectionSyncEventArgs(collection.Name, collection.ID, Action.StartLocalSync, true));
 				syncStartTime = DateTime.Now;
 				queuedChanges = false;
-				serverAlive = false;
 				serverStatus = StartSyncStatus.Success;
 				// Refresh the collection.
 				collection.Refresh();
@@ -718,6 +732,7 @@ namespace Simias.Sync
 						// We are just starting add all the modified nodes to the array.
 						// Get all nodes from store that have not been synced.
 						ICSList updateList = collection.Search(PropertyTags.NodeUpdateTime, DateTime.Now, SearchOp.Exists);
+						log.Debug("Found {0} nodes that have NodeUpdate Time", updateList.Count);
 						foreach (ShallowNode sn in updateList)
 						{
 							workArray.AddNodeToServer(new SyncNodeInfo(collection, sn));
@@ -735,7 +750,6 @@ namespace Simias.Sync
 				yielded = false;
 				if (collection.Role != SyncRoles.Slave)
 				{
-					serverAlive = true;
 					return;
 				}
 
@@ -766,11 +780,11 @@ namespace Simias.Sync
 				}
 				catch (Exception ex)
 				{
+					sAlive = false;
 					service = null;
 					throw ex;
 				}
 			
-				serverAlive = true;
 				eventPublisher.RaiseEvent(new CollectionSyncEventArgs(collection.Name, collection.ID, Action.StartSync, true));
 
 				tempServerContext = si.Context;
@@ -866,6 +880,7 @@ namespace Simias.Sync
 			}
 			finally
 			{
+				serverAlive = sAlive;
 				eventPublisher.RaiseEvent(new CollectionSyncEventArgs(collection.Name, collection.ID, Action.StopSync, serverAlive));
 			}
 		}
@@ -1095,6 +1110,7 @@ namespace Simias.Sync
 
 			if (cstamps != null)
 			{
+				log.Debug("Client Change Log has {0} node modifications.", cstamps.Length);
 				for (int i = 0; i < cstamps.Length; ++i)
 				{
 					workArray.AddNodeToServer(cstamps[i]);
@@ -1113,6 +1129,7 @@ namespace Simias.Sync
 		/// </summary>
 		private void ReconcileAllNodeStamps()
 		{
+			log.Debug("Brute force sync");
 			SyncNodeInfo[] cstamps = GetNodeInfoArray();
 			SyncNodeInfo[] sstamps;
 			// Clear the current work because we are doing a full sync.
@@ -2028,23 +2045,20 @@ namespace Simias.Sync
 		/// <param name="stamp">The SyncNodeStamp describing this node.</param>
 		internal void AddNodeFromServer(SyncNodeInfo stamp)
 		{
-			// Make sure the node does not exist in the nodesToServer table.
 			if (NodeHasChanged(stamp.ID, stamp.LocalIncarnation) || stamp.Operation == SyncOperation.Delete)
 			{
+				// Make sure the node does not exist in the nodesToServer table.
 				if (nodesToServer.Contains(stamp.ID))
 				{
 					nodesToServer.Remove(stamp.ID);
 				}
+				if (stamp.Operation == SyncOperation.Delete)
+				{
+					nodesFromServer[stamp.ID] = new nodeTypeEntry(stamp.ID, SyncNodeType.Tombstone);
+				}
 				else
 				{
-					if (stamp.Operation == SyncOperation.Delete)
-					{
-						nodesFromServer[stamp.ID] = new nodeTypeEntry(stamp.ID, SyncNodeType.Tombstone);
-					}
-					else
-					{
-						nodesFromServer[stamp.ID] = new nodeTypeEntry(stamp.ID, stamp.NodeType);
-					}
+					nodesFromServer[stamp.ID] = new nodeTypeEntry(stamp.ID, stamp.NodeType);
 				}
 			}
 		}
