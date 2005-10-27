@@ -81,7 +81,7 @@ namespace Simias.Storage
 					NodeCache.store = store;
 
 					// Get the cache entry time to live.
-					string timeString = store.Config.Get( NodeCacheSectionTag, TimeToLiveTag );
+					string timeString = Store.Config.Get( NodeCacheSectionTag, TimeToLiveTag );
 					cacheTimeToLive = ( timeString != null ) ? Convert.ToInt32( timeString ) : defaultTimeToLive;
 
 					// Make sure the time to live is between 1 second and 30 minutes.

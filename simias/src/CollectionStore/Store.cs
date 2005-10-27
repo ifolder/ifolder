@@ -92,7 +92,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Path to where the store is kept.
 		/// </summary>
-		private static string storePath;
+		private static string storePath = null;
 
 		/// <summary>
 		/// Path to where store managed files are kept.
@@ -107,7 +107,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Configuration object passed during connect.
 		/// </summary>
-		private Configuration config;
+		private static Configuration config = null;
 
 		/// <summary>
 		/// Cross-process database lock function.
@@ -219,9 +219,17 @@ namespace Simias.Storage
 		/// <summary>
 		/// Gets the configuration object passed to the store.Connect() method.
 		/// </summary>
-		public Configuration Config
+		public static Configuration Config
 		{
-			get { return config; }
+			get 
+			{ 
+				if ( config == null )
+				{
+					throw new CollectionStoreException( "The store has not been initialized." );
+				}
+
+				return config; 
+			}
 		}
 
 		/// <summary>
@@ -275,7 +283,15 @@ namespace Simias.Storage
 		/// </summary>
 		public static string StorePath
 		{
-			get { return storePath; }
+			get 
+			{ 
+				if ( storePath == null )
+				{
+					throw new CollectionStoreException( "The store has not been initialized." );
+				}
+
+				return storePath; 
+			}
 		}
 
 		/// <summary>
@@ -304,19 +320,8 @@ namespace Simias.Storage
 		/// <summary>
 		/// Constructor for the Store object.
 		/// </summary>
-		/// <param name="simiasStorePath">The directory path to the store.</param>
-		/// <param name="isServer">True if running in a server configuration.</param>
-		private Store( string simiasStorePath, bool isServer )
+		private Store()
 		{
-			// Save the path to the store.
-			storePath = Path.GetFullPath( simiasStorePath );
-
-			// Store the configuration that opened this instance.
-			config = new Configuration( storePath, isServer );
-
-			// Does the configuration indicate that this is an enterprise server?
-			enterpriseServer = isServer;
-
 			// Setup the event publisher object.
 			eventPublisher = new EventPublisher();
 
@@ -441,27 +446,14 @@ namespace Simias.Storage
 			{
 				if ( instance == null )
 				{
-					throw new CollectionStoreException( "The store has not been initialized." );
-				}
+					// Make sure that Initialize has been called previously.
+					if ( storePath == null )
+					{
+						throw new CollectionStoreException( "The store has not been initialized." );
+					}
 
-				return instance;
-			}
-		}
-
-		/// <summary>
-		/// Creates the singleton store instance and sets the required store parameters.
-		/// </summary>
-		/// <param name="storePath">The directory path to the store.</param>
-		/// <param name="isServer">True if running in a server configuration.</param>
-		/// <returns>A reference to a Store object.</returns>
-		static public Store Initialize( string storePath, bool isServer )
-		{
-			lock ( typeof( Store ) )
-			{
-				if ( instance == null )
-				{
 					// Create and initialize the store instance.
-					instance = new Store( storePath, isServer );
+					instance = new Store();
 
 					// Set the default store policies if the store is new.
 					if ( created )
@@ -479,6 +471,33 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Creates the singleton store instance and sets the required store parameters.
+		/// </summary>
+		/// <param name="simiasStorePath">The directory path to the store.</param>
+		/// <param name="isServer">True if running in a server configuration.</param>
+		static public void Initialize( string simiasStorePath, bool isServer )
+		{
+			lock ( typeof( Store ) )
+			{
+				if ( instance == null )
+				{
+					// Save the path to the store.
+					storePath = Path.GetFullPath( simiasStorePath );
+
+					// Store the configuration that opened this instance.
+					config = new Configuration( storePath, isServer );
+
+					// Does the configuration indicate that this is an enterprise server?
+					enterpriseServer = isServer;
+				}
+				else
+				{
+					throw new CollectionStoreException( "The store has already been initialized." );
+				}
+			}
+		}
+
+		/// <summary>
 		/// Deletes the singleton instance of the store object.
 		/// NOTE: This call is for utility programs that need to browse to the store.
 		/// Don't call this unless you understand the consequences of closing
@@ -489,6 +508,8 @@ namespace Simias.Storage
 			lock ( typeof( Store ) )
 			{
 				instance = null;
+				storePath = null;
+				config = null;
 			}
 		}
 		#endregion

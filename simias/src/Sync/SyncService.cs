@@ -51,7 +51,7 @@ namespace Simias.Sync
 
 		static CollectionLock()
 		{
-			Configuration conf = Store.GetStore().Config;
+			Configuration conf = Store.Config;
 			string str = conf.Get(SyncService.configSection, "ConcurrentClients");
 			totalDepth = ( str != null ) ? int.Parse(str) : 64;
 		}

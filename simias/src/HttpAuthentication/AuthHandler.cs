@@ -428,8 +428,7 @@ namespace Simias.Security.Web
 			app.AcquireRequestState += new EventHandler( OnAcquireRequestState );
 
 			// Get the application settings from the Simias.config.
-			Configuration config = Store.GetStore().Config;
-			string setting = config.Get( "Authentication", "SimiasRequireSSL" );
+			string setting = Store.Config.Get( "Authentication", "SimiasRequireSSL" );
 			if ( setting != null )
 			{
 				if ( String.Compare( setting, "no", true ) == 0 )
@@ -439,14 +438,14 @@ namespace Simias.Security.Web
 			}
 
 			// Get the ssl port setting.
-			setting = config.Get( "Authentication", "SimiasSSLPort" );
+			setting = Store.Config.Get( "Authentication", "SimiasSSLPort" );
 			if ( setting != null )
 			{
 				sslPort = Convert.ToInt32( setting );
 			}
 
 			// Get the services that do not need authentication.
-			setting = config.Get( "Authentication", "SimiasAuthNotRequired" );
+			setting = Store.Config.Get( "Authentication", "SimiasAuthNotRequired" );
 			if ( setting != null )
 			{
 				ParseAuthNotRequiredServices( setting );

@@ -113,6 +113,13 @@ namespace Simias.Web
 				throw apEx;
 			}
 
+			if ( verbose )
+			{
+				Console.Error.WriteLine("Simias Application Path: {0}", Environment.CurrentDirectory);
+				Console.Error.WriteLine("Simias Data Path: {0}", simiasDataPath);
+				Console.Error.WriteLine("Run in {0} configuration", runAsServer ? "server" : "client" );
+			}
+
 			// Initialize the store.
 			Store.Initialize( simiasDataPath, runAsServer );
 		}
@@ -251,9 +258,6 @@ namespace Simias.Web
 
 			if ( verbose )
 			{
-				Console.Error.WriteLine("Simias Application Path: {0}", Environment.CurrentDirectory);
-				Console.Error.WriteLine("Simias Data Path: {0}", simiasDataPath);
-				Console.Error.WriteLine("Run in {0} configuration", runAsServer ? "server" : "client" );
 				Console.Error.WriteLine("Simias Process Starting");
 			}
 
