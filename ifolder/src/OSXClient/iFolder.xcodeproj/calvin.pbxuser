@@ -91,7 +91,7 @@
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Target_ColumnID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
-					281,
+					10,
 					20,
 					82,
 					43,
@@ -182,7 +182,7 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 152123962;
+			PBXPerProjectTemplateStateSaveDate = 152142790;
 			PBXPrepackagedSmartGroups_v2 = (
 				{
 					PBXTransientLocationAtTop = bottom;
@@ -359,7 +359,7 @@
 					};
 				},
 			);
-			PBXWorkspaceStateSaveDate = 152123962;
+			PBXWorkspaceStateSaveDate = 152142790;
 			com.apple.ide.smrt.PBXUserSmartGroupsKey.Rev10 = <040b747970656473747265616d8103e88401408484840e4e534d757461626c654172726179008484074e534172726179008484084e534f626a65637400858401690086>;
 		};
 		sourceControlManager = 3E1712BE076126F700BC1084 /* Source Control */;
@@ -697,9 +697,9 @@
 	};
 	3E66705307B7D3CC0047E683 /* Simias.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {775, 1512}}";
-			sepNavSelRange = "{1436, 0}";
-			sepNavVisRect = "{{0, 427}, {775, 779}}";
+			sepNavIntBoundsRect = "{{0, 0}, {775, 1596}}";
+			sepNavSelRange = "{1299, 0}";
+			sepNavVisRect = "{{0, 450}, {775, 779}}";
 			sepNavWindowFrame = "{{333, 94}, {820, 908}}";
 		};
 	};
@@ -876,7 +876,7 @@
 	3EA94F5F07B823CA0088FD0F /* config.h.in */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {958, 803}}";
-			sepNavSelRange = "{1089, 0}";
+			sepNavSelRange = "{1097, 19}";
 			sepNavVisRect = "{{0, 0}, {958, 803}}";
 			sepNavWindowFrame = "{{242, 67}, {1003, 932}}";
 		};
