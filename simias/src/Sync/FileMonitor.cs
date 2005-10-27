@@ -78,28 +78,34 @@ namespace Simias.Sync
 //		string						collectionId;
 		internal FileSystemWatcher	watcher;
 		Hashtable					changes = new Hashtable();
+		Hashtable					oldNames = new Hashtable();
 		EventPublisher	eventPublisher = new EventPublisher();
 		
 		
 		internal class fileChangeEntry : IComparable
 		{
+			internal static int				settleTime = 2;
 			internal static int				counter = 0;
 			internal FileSystemEventArgs	eArgs;
 			internal int					eventNumber;
+			internal DateTime				eventTime;
 
 			internal fileChangeEntry(FileSystemEventArgs e)
 			{
 				eArgs = e;
 				eventNumber = Interlocked.Increment(ref counter);
+				eventTime = DateTime.Now;
 			}
 		
 			internal void update(FileSystemEventArgs e)
 			{
 				eArgs = e;
+				eventTime = DateTime.Now;
 			}
 
 			internal void update()
 			{
+				eventTime = DateTime.Now;
 			}
 			
 			#region IComparable Members
@@ -792,9 +798,19 @@ namespace Simias.Sync
 
 					// Sort these by time that way they will be put in the change log in order.
 					Array.Sort(fChanges);
-			
+
 					foreach (fileChangeEntry fc in fChanges)
 					{
+						if (fc.eArgs.ChangeType == WatcherChangeTypes.Renamed)
+						{
+							RenamedEventArgs args = (RenamedEventArgs)fc.eArgs;
+							log.Debug("Queued Event ---- {0}: {1} -> {2}", args.ChangeType, args.OldFullPath, args.FullPath);
+						}
+						else
+						{
+							log.Debug("Queued Event ---- {0}: {1}", fc.eArgs.ChangeType, fc.eArgs.FullPath);
+						}
+			
 						string fullName = GetName(fc.eArgs.FullPath);
 						bool isDir = false;
 
@@ -806,8 +822,23 @@ namespace Simias.Sync
 							}
 							continue;
 						}
+
 						FileInfo fi = new FileInfo(fullName);
 						isDir = (fi.Attributes & FileAttributes.Directory) > 0;
+
+						// Make sure that we let modifications settle.
+						TimeSpan tSpan = DateTime.Now - fc.eventTime;
+                        if (tSpan.Seconds < fileChangeEntry.settleTime)
+						{
+							continue;
+						}
+
+						if (!isDir && fi.Exists)
+						{
+							tSpan = DateTime.Now - fi.LastWriteTime;
+							if (tSpan.Seconds < fileChangeEntry.settleTime)
+								continue;
+						}
 						
 						bool haveConflict;
 						ShallowNode sn = GetShallowNodeForFile(fullName, out haveConflict);
@@ -841,6 +872,7 @@ namespace Simias.Sync
 								case WatcherChangeTypes.Renamed:
 								{
 									RenamedEventArgs args = (RenamedEventArgs)fc.eArgs;
+									oldNames.Remove(args.OldFullPath);
 
 									// Remove any name collisions.
 									if (collection.HasCollisions(node))
@@ -919,6 +951,7 @@ namespace Simias.Sync
 									// Check if there is a node for the old name.
 									// Get the node from the old name.
 									RenamedEventArgs args = (RenamedEventArgs)fc.eArgs;
+									oldNames.Remove(args.OldFullPath);
 									DirNode parent = null;
 									sn = GetShallowNodeForFile(args.OldFullPath, out haveConflict);
 									if (sn != null)
@@ -1101,6 +1134,11 @@ namespace Simias.Sync
 							// We should only have one match.
 							path = Path.Combine(path, Path.GetFileName(caseSensitivePath[0]));
 						}
+						else
+						{
+							// We didn't find the component return the passed in name.
+							return fullPath;
+						}
 					}
 					fullPath = path;
 				}
@@ -1117,7 +1155,8 @@ namespace Simias.Sync
 		private void OnChanged(object source, FileSystemEventArgs e)
 		{
 			string fullPath = e.FullPath;
-
+			
+			log.Debug("Changed ---- {0}", e.FullPath);
 			if (isSyncFile(e.Name))
 				return;
 			
@@ -1150,7 +1189,8 @@ namespace Simias.Sync
 		private void OnRenamed(object source, RenamedEventArgs e)
 		{
 			string fullPath = e.FullPath;
-
+			log.Debug("Renamed ---- {0} -> {1}", e.OldFullPath, e.FullPath);
+			
 			if (isSyncFile(e.Name) || isSyncFile(e.OldName))
 				return;
 			
@@ -1159,26 +1199,60 @@ namespace Simias.Sync
 				// Any changes made to the old file need to be removed.
 				changes.Remove(e.OldFullPath);
 				changes[fullPath] = new fileChangeEntry(e);
+				oldNames[e.OldFullPath] = e.FullPath;
+				// If We have an oldName of the new name this is a rename back.
+				// Create the node for the original rename.
+				string createName = (string)oldNames[e.FullPath];
+				if (createName != null)
+				{
+					oldNames.Remove(e.FullPath);
+
+					if (File.Exists(createName))
+					{
+						changes[createName] = new fileChangeEntry(
+							new FileSystemEventArgs(
+							WatcherChangeTypes.Created, Path.GetDirectoryName(createName), Path.GetFileName(createName)));
+					}
+				}
 			}
 		}
 
 		private void OnDeleted(object source, FileSystemEventArgs e)
 		{
 			string fullPath = e.FullPath;
-
+			log.Debug("Deleted ---- {0}", e.FullPath);
+			
 			if (isSyncFile(e.Name))
 				return;
 						
 			lock (changes)
 			{
+				// Check to see if we had a pending rename.
+				// If so we may need to delete both the new and old
+				// name.
+				fileChangeEntry entry = (fileChangeEntry)changes[fullPath];
 				changes[fullPath] = new fileChangeEntry(e);
+				if (entry != null && entry.eArgs.ChangeType == WatcherChangeTypes.Renamed)
+				{
+					RenamedEventArgs args = entry.eArgs as RenamedEventArgs;
+					if (!changes.Contains(args.OldFullPath))
+					{
+						// We do not have a file by the old name delete it.
+						changes[args.OldFullPath] = new fileChangeEntry(
+							new FileSystemEventArgs(
+								WatcherChangeTypes.Deleted, Path.GetDirectoryName(args.OldFullPath), args.OldName));
+					}
+					// Now remove the old name entry.
+					oldNames.Remove(args.OldFullPath);
+				}
 			}
 		}
 
 		private void OnCreated(object source, FileSystemEventArgs e)
 		{
 			string fullPath = e.FullPath;
-
+			log.Debug("Created ---- {0}", e.FullPath);
+			
 			if (isSyncFile(e.Name))
 				return;
 						
