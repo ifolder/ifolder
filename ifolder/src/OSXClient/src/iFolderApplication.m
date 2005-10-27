@@ -600,7 +600,17 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 			
 				if(	(statusCode == ns1__StatusCodes__Success) ||
 					(statusCode == ns1__StatusCodes__SuccessInGrace) )
+				{
 					ifconlog2(@"Successfully authenticated to domain %@", [smne message]);
+					if( (statusCode == ns1__StatusCodes__SuccessInGrace) && (dom != nil) )
+					{
+						ifconlog1(@"Grace logins are expired");					
+						NSRunAlertPanel(NSLocalizedString(@"iFolder Password Expired", @"Grace Login Warning Dialog Title"), 
+								[NSString stringWithFormat:NSLocalizedString(@"Your password has expired.  You have %d grace logins remaining.", 
+								@"Grace Login Warning Dialog message"), [[dom remainingGraceLogins] intValue] ],
+								nil, nil, nil);
+					}
+				}
 				else
 				{
 					ifconlog2(@"Unable to authenticate, status: %d", statusCode);
