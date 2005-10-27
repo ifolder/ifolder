@@ -56,8 +56,6 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 //===================================================================
 -(void)awakeFromNib
 {
-	BOOL simiasStarted = NO;
-	ifconlog1(@"Waiting for app to enable multithreading");
 	simiasIsLoaded = NO;
 
 	// this baby will get cocoa objects ready for mutlitple threads
@@ -72,36 +70,9 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 		[NSThread sleepUntilDate:[[NSDate date] addTimeInterval:.5] ];
 	}
 
-	ifconlog1(@"Starting Simias Process");
-	simiasStarted = [[Simias getInstance] start];
-	while(simiasStarted == NO)
-	{
-//		int rc = NSRunAlertPanel(NSLocalizedString(@"iFolder synchronization process found", @"Initial Setup Dialog Title"), 
-//							NSLocalizedString(@"An iFolder synchronization process was found running or in a bad state on the machine.  iFolder can attempt to recover.  Would you like iFolder to cleanup and start the synchronization process again?", @"Initial Setup Dialog Message"),
-//							NSLocalizedString(@"Yes", @"Button yes to ask if we want to restart Simias again"), 
-//							NSLocalizedString(@"No", @"Button no to ask if we want to restart Simias again"), 
-//							nil);
-
-//		if(rc == NSAlertDefaultReturn)
-//		{
-			[[Simias getInstance] stop];
-			simiasStarted = [[Simias getInstance] start];
-/*
-		}
-		else
-		{
-			[NSApp terminate:self];
-			return;
-		}
-*/
-	}
-
-	if(simiasStarted == YES)
-	{
-		ifconlog1(@"initializing Simias Events");
-		[self initializeSimiasEvents];
-	}
-
+    [NSThread detachNewThreadSelector:@selector(startSimias:)
+        toTarget:self withObject:nil];
+	
 	readOnlyNotifications = [[NSMutableDictionary alloc] init];
 	iFolderFullNotifications = [[NSMutableDictionary alloc] init];
 }
@@ -325,6 +296,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 //===================================================================
 - (void)applicationDidFinishLaunching:(NSNotification*)notification
 {
+	ifconlog1(@"Loading application defaults");
 	[self setupApplicationDefaults];
 
 	// check if we should restore windows
@@ -332,16 +304,23 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 	{
 		// yes, so only restore it was there before
 		if([[NSUserDefaults standardUserDefaults] boolForKey:STATE_SHOWMAINWINDOW])		
+		{
+			ifconlog1(@"Showing iFolder Window");
 			[self showiFolderWindow:self];
+		}
 		if([[NSUserDefaults standardUserDefaults] boolForKey:STATE_SHOWLOGWINDOW])		
+		{
+			ifconlog1(@"Showing Sync Log Window");
 			[self showSyncLog:self];
+		}
 	}
 	else
 		[self showiFolderWindow:self];
 
 	[self setupProxyMonitor];
-	
-	[iFolderWindowController updateStatusTS:NSLocalizedString(@"Loading synchronization process...", @"Initial iFolder Status Message")];
+
+	if([self simiasIsRunning] == NO)
+		[iFolderWindowController updateStatusTS:NSLocalizedString(@"Loading synchronization process...", @"Initial iFolder Status Message")];
 }
 
 
@@ -394,6 +373,12 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 	runThreads = YES;
 	simiasIsLoaded = YES;
 
+	ifconlog1(@"reading Simias credentials");
+	[[iFolderData sharedInstance] readCredentials];
+
+	ifconlog1(@"initializing Simias Events");
+	[self initializeSimiasEvents];
+
 	ifconlog1(@"Creating and loading iFolderData");
 	[[iFolderData sharedInstance] refresh:NO];
 	
@@ -423,19 +408,33 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 }
 
 
-
-
 //===================================================================
-// simiasHasStarted
+// startSimias
 // This is a thread safe method that the simias startup routine calls
 // once simias is up and running
 //===================================================================
--(void)simiasHasStarted
+- (void)startSimias:(id)arg
 {
-	[[iFolderData sharedInstance] readCredentials];
+	BOOL simiasStarted;
+
+	ifconlog1(@"Starting Simias Process");	
+	simiasStarted = [[Simias getInstance] start];
+	if(simiasStarted == NO)
+	{
+		[[Simias getInstance] stop];
+		simiasStarted = [[Simias getInstance] start];
+	}
 	
-	[self performSelectorOnMainThread:@selector(postSimiasInit:) 
-				withObject:nil waitUntilDone:NO ];
+	if(simiasStarted == YES)
+	{
+		ifconlog1(@"Simias Process Running");	
+		[self performSelectorOnMainThread:@selector(postSimiasInit:) 
+				withObject:nil waitUntilDone:NO ];			
+	}
+	else
+	{
+		ifconlog1(@"Simias Process Failed to start");		
+	}
 }
 
 
@@ -465,13 +464,19 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 			CFRelease(dynStoreRef);
 			dynStoreRef = NULL;
 		}
+		
 
 		runThreads = NO;
 		[self addLog:NSLocalizedString(@"Shutting down Simias...", @"Sync Log Message")];
-		[ [Simias getInstance] stop];
+		ifconlog1(@"Calling to stop Simias");			
+		if([ [Simias getInstance] stop])
+			ifconlog1(@"Simias has been stopped");			
+		else
+			ifconlog1(@"Simias has NOT been stopped");			
+		
 		[self addLog:NSLocalizedString(@"Simias is shut down", @"Sync Log Message")];
 
-		SimiasEventDisconnect();
+		SimiasEventDisconnect();		
 	}
 }
 

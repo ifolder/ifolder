@@ -22,22 +22,22 @@
  ***********************************************************************/
 
 #import <Cocoa/Cocoa.h>
-
+#include "simias-manager.h"
 
 @interface Simias : NSObject
 {
-	NSTask			*simiasTask;
-	NSPipe			*stdInPipe;
-    NSFileHandle	*stdInHandle;
+//	NSTask			*simiasTask;
+//	NSPipe			*stdInPipe;
+//  NSFileHandle	*stdInHandle;
 	
-	NSString		*simiasurl;
+//	NSString		*simiasurl;
+	Manager			*simiasManager;
 }
 
 + (Simias *)getInstance;
 -(BOOL)start;
 -(BOOL)stop;
 -(NSString *)simiasURL;
--(int) getCurrentSimiasPID;
 
 @end
 

@@ -49,8 +49,8 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 {
 	SOAP_DATA	*pSoap;
 	[super init];
-	simiasURL = [[NSString stringWithFormat:@"%@/simias10/Simias.asmx", [[Simias getInstance] simiasURL]] retain];
-	NSLog(@"Initialized SimiasService on URL: %@", simiasURL);
+	simiasURL = [[NSString stringWithFormat:@"%@/Simias.asmx", [[Simias getInstance] simiasURL]] retain];
+//	NSLog(@"Initialized SimiasService on URL: %@", simiasURL);
 	
 	soapData = malloc(sizeof(SOAP_DATA));
 	pSoap = (SOAP_DATA *)soapData;
@@ -116,7 +116,8 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 	pSoap = NULL;
 	soapData = NULL;
 
-	[simiasURL release];
+	if(simiasURL != nil)	
+		[simiasURL release];
     [super dealloc];
 }
 
@@ -960,6 +961,11 @@ void unlockSimiasSoap(void *soapData)
 			pSoap->soap->passwd = pSoap->password;
 		}
 	}
+	if(simiasURL != nil)
+		[simiasURL release];
+	
+	simiasURL = [[NSString stringWithFormat:@"%@/Simias.asmx", [[Simias getInstance] simiasURL]] retain];
+	NSLog(@"Initialized SimiasService on URL: %@", simiasURL);	
 }
 
 @end

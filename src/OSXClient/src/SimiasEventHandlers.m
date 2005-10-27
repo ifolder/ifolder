@@ -78,7 +78,7 @@ int SimiasEventStateCallBack(SEC_STATE_EVENT state_event, const char *message, v
 	{
 		case SEC_STATE_EVENT_CONNECTED:
 			ifconlog1(@"Event client connected");
-			[[NSApp delegate] simiasHasStarted];
+			//[[NSApp delegate] simiasHasStarted];
 			sec_set_event(*sec, ACTION_NODE_CREATED, true, (SimiasEventFunc)SimiasEventNode, nil);
 			sec_set_event(*sec, ACTION_NODE_DELETED, true, (SimiasEventFunc)SimiasEventNode, nil);
 			sec_set_event(*sec, ACTION_NODE_CHANGED, true, (SimiasEventFunc)SimiasEventNode, nil);

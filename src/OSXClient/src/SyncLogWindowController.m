@@ -58,7 +58,6 @@ static SyncLogWindowController *syncLogInstance = nil;
 
 -(void)awakeFromNib
 {
-	NSLog(@"SyncLogWindowController Awoke from Nib");
 	[self setupToolbar];
 
 	if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_WINPOS])
