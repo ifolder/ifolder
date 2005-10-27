@@ -23,3 +23,4 @@
 
 #define IFOLDER_PREFIX "@prefix@"
 #define SIMIAS_BINARY "@prefix@/bin/simias"
+#define DEFAULT_SIMIAS_PATH "@prefix@/web/bin/Simias.exe"

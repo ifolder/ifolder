@@ -30,6 +30,7 @@
 #include <sys/sysctl.h>
 #include <signal.h>
 #include "applog.h"
+#include "config.h"
 
 
 @implementation Simias
@@ -51,6 +52,10 @@ static Simias *sharedInstance = nil;
 	simiasManager = AllocateManager();
 	SetShowConsole(simiasManager, 1);
 	SetVerbose(simiasManager, 1);
+	// If simiasManager couldn't find the simias path,
+	// set it to the default SIMIAS_PATH that we built against
+	if(GetApplicationPath(simiasManager) == NULL)
+		SetApplicationPath(simiasManager, DEFAULT_SIMIAS_PATH);
     return sharedInstance;
 }
 
