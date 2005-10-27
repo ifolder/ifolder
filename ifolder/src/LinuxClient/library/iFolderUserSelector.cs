@@ -102,6 +102,8 @@ namespace Novell.iFolder
 
 			InitializeWidgets();
 
+			this.Realized += new EventHandler(OnRealizeWidget);
+
 			searchTimeoutID = 0;
 			selectedUsers = new Hashtable();
 		}
@@ -163,7 +165,6 @@ namespace Novell.iFolder
 			SearchEntry = new Gtk.Entry(Util.GS("<Enter text to find a user>"));
 			SearchEntry.SelectRegion(0, -1);
 			SearchEntry.CanFocus = true;
-			SearchEntry.GrabFocus();
 			SearchEntry.Changed += new EventHandler(OnSearchEntryChanged);
 			findTable.Attach(SearchEntry, 2, 3, 0, 1,
 				AttachOptions.Expand | AttachOptions.Fill, 0, 0, 0);
@@ -254,6 +255,13 @@ namespace Novell.iFolder
 			this.AddButton(Stock.Help, ResponseType.Help);
 
 			SearchiFolderUsers();
+		}
+
+
+
+		private void OnRealizeWidget(object o, EventArgs args)
+		{
+			SearchEntry.HasFocus = true;
 		}
 
 
