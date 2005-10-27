@@ -53,6 +53,9 @@ lib_LIBRARIES = libsimias-manager.a
 libsimias_manager_a_SOURCES = 	simias-manager.c \
 				simias-manager.h
 
+pkginclude_HEADERS = \
+				simias-manager.h
+
 if LINUX
 
 libsimias_manager_a_CXXFLAGS = -c
