@@ -419,6 +419,50 @@ namespace Simias.Web
 		}
 
 		/// <summary>
+		/// Searches for shallow nodes containing a specific property.
+		/// </summary>
+		/// <param name="collectionID"></param>
+		/// <param name="propertyName"></param>
+		/// <param name="propertyType"></param>
+		/// <param name="propertyValue"></param>
+		/// <returns></returns>
+		[ WebMethod(EnableSession = true) ]
+		[ SoapDocumentMethod ]
+		public BrowserShallowNode[] SearchForShallowNodes( string collectionID, string propertyName, string propertyType, string propertyValue, string operation )
+		{
+			ArrayList list = new ArrayList();
+			Store store = Store.GetStore();
+
+			// Build the property to search for.
+			Property p = new Property( propertyName, ( Syntax )Enum.Parse( typeof( Syntax ), propertyType ), propertyValue );
+			if ( collectionID == null || collectionID.Equals( string.Empty ) )
+			{
+				// The collection ID was not specified ... perform a store-wide search.
+				ICSList nodeList = store.GetNodesByProperty( p, ( SearchOp )Enum.Parse( typeof( SearchOp ), operation ) );
+				foreach ( ShallowNode sn in nodeList )
+				{
+					list.Add( new BrowserShallowNode( sn ) );
+				}
+			}
+			else
+			{
+				// Get the collection.
+				Collection c = store.GetCollectionByID( collectionID );
+				if ( c != null )
+				{
+					// Search the collection.
+					ICSList nodeList = c.Search( p, ( SearchOp )Enum.Parse( typeof( SearchOp ), operation ) );
+					foreach ( ShallowNode sn in nodeList )
+					{
+						list.Add( new BrowserShallowNode( sn ) );
+					}
+				}
+			}
+
+			return list.ToArray( typeof( BrowserShallowNode ) ) as BrowserShallowNode[];
+		}
+
+		/// <summary>
 		/// Gets the web service version.
 		/// </summary>
 		/// <returns>A string containing the web service version.</returns>
