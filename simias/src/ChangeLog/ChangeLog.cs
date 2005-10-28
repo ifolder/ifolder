@@ -857,7 +857,14 @@ namespace Simias.Storage
 			this.masterRev = args.MasterRev;
 			this.slaveRev = args.SlaveRev;
 			this.fileLength = args.FileSize;
-			this.type = ( NodeTypes.NodeTypeEnum )Enum.Parse( typeof( NodeTypes.NodeTypeEnum ), args.Type );
+			try
+			{
+				this.type = ( NodeTypes.NodeTypeEnum )Enum.Parse( typeof( NodeTypes.NodeTypeEnum ), args.Type );
+			}
+			catch
+			{
+				this.type = NodeTypes.NodeTypeEnum.Node;
+			}
 		}
 
 		/// <summary>
@@ -903,7 +910,14 @@ namespace Simias.Storage
 			fileLength = BitConverter.ToInt64( encodedRecord, index );
 			index += fileLengthSize;
 
-			type = ( NodeTypes.NodeTypeEnum )Enum.ToObject( typeof( NodeTypes.NodeTypeEnum ), BitConverter.ToInt32( encodedRecord, index ) );
+			try
+			{
+				type = ( NodeTypes.NodeTypeEnum )Enum.ToObject( typeof( NodeTypes.NodeTypeEnum ), BitConverter.ToInt32( encodedRecord, index ) );
+			}
+			catch
+			{
+				type = NodeTypes.NodeTypeEnum.Node;
+			}
 			index += typeSize;
 		}
 		#endregion
