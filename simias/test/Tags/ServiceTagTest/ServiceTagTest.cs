@@ -129,6 +129,7 @@ namespace ServiceTagTest
 			this.TestFour();
 			this.TestFive();
 			this.TestSix();
+			this.TestSeven();
 
 			log.Debug( "Tests finished" );
 		}
@@ -148,7 +149,7 @@ namespace ServiceTagTest
 			redTag.Add( domain.ID );
 
 			log.Debug( "  querying for all tags on the default domain" );
-			ICSList tagList = Simias.Tags.Tag.GetTags( domain );
+			ICSList tagList = Simias.Tags.Query.Tags( domain );
 			foreach( ShallowNode sn in tagList )
 			{
 				Tag tag = new Tag( sn );
@@ -165,7 +166,7 @@ namespace ServiceTagTest
 			log.Debug( "  adding the green tag to node1" );
 			greenTag.TagNode( domain.ID, nodes[0] );
 			log.Debug( "  query for all nodes with the green tag - should find 1 node" );
-			ICSList results = Simias.Tags.Query.QueryNodes( domain.ID, greenTag );
+			ICSList results = Simias.Tags.Query.Nodes( domain.ID, greenTag );
 			log.Debug( "  found: " + results.Count.ToString() + " tag(s)" );
 			foreach( ShallowNode sn in results )
 			{
@@ -257,7 +258,7 @@ namespace ServiceTagTest
 			whiteTag.TagNode( domain.ID, nodes[499] );
 
 			log.Debug( "  query for all nodes with the purple tag - should find 250 nodes" );
-			ICSList results = Simias.Tags.Query.QueryNodes( domain.ID, purpleTag );
+			ICSList results = Simias.Tags.Query.Nodes( domain.ID, purpleTag );
 			log.Debug( "  found: " + results.Count.ToString() );
 			foreach( ShallowNode sn in results )
 			{
@@ -429,7 +430,7 @@ namespace ServiceTagTest
 			}
 
 			int verified = 0;
-			ICSList results = Simias.Tags.Tag.GetTags( domain );
+			ICSList results = Simias.Tags.Query.Tags( domain );
 			if ( results.Count > 0 )
 			{
 				foreach( ShallowNode sn in results )
@@ -456,6 +457,42 @@ namespace ServiceTagTest
 			log.Debug( "Finished TestSix\n" );
 		}
 
+		private void TestSeven()
+		{
+			log.Debug( "Starting TestSeven" );
+			log.Debug( "Test the TagNode and UntagNode methods of the framework" );
+
+			Store store = Store.GetStore();
+			Domain domain = store.GetDomain( store.LocalDomain );
+			log.Debug( "  retrieved the default domain: " + domain.Name );
+
+			Tag tagOne = new Tag( "TestSevenTagOne" );
+			log.Debug( "  creating tag: " + tagOne.Name );
+			tagOne.Add( domain.ID );
+
+			Tag tagTwo = new Tag( "TestSevenTagTwo" );
+			log.Debug( "  creating tag: " + tagTwo.Name );
+			tagTwo.Add( domain.ID );
+
+			Node node = new Node( "TestSevenNode" );
+			log.Debug( "  creating node: " + node.Name );
+			domain.Commit( node );
+
+			log.Debug( "  tagging node \"" + node.Name + "\" with tag \"" + tagOne.Name + "\"" );
+			tagOne.TagNode( domain.ID, node );
+
+			log.Debug( "  tagging node \"" + node.Name + "\" with tag \"" + tagTwo.Name + "\"" );
+			tagTwo.TagNode( domain.ID, node );
+
+			log.Debug( "  untagging node \"" + node.Name + "\" from tag \"" + tagOne.Name + "\"" );
+			tagOne.UntagNode( domain.ID, node );
+
+			log.Debug( "  deleting nodes and tags" );
+			domain.Commit( domain.Delete( node ) );
+			tagOne.Remove( domain.ID );
+			tagTwo.Remove( domain.ID );
+			log.Debug( "Finished TestSeven\n" );
+		}
 		#endregion
 	}
 }
