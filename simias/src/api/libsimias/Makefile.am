@@ -8,7 +8,12 @@ dist-hook:
 	rm -rf `find $(distdir) |grep envC.c`
 	rm -rf `find $(distdir) |grep stdsoap2.c`
 
+
 lib_LTLIBRARIES = libsimias2.la
+
+if WINDOWS
+override CFLAGS =
+endif
 
 libsimias2_la_SOURCES = \
  	envC.c simiaswebClientLib.c stdsoap2.c simias_internal.c simias_internal.h simias_handle.c simias.h simias_domain.c simias_node.c simias_nodelist.c simias_collection.c simias_property.c
@@ -19,9 +24,11 @@ libsimias2_la_CFLAGS = \
 libsimias2_la_LDFLAGS = \
 	$(XML2_LIBS)
 
+if DARWIN
 bin_PROGRAMS = testapi
 testapi_SOURCES = test.c
 LDADD = libsimias2.la
+endif
 
 envC.c: $(srcdir)/stdsoap2.c
 	> $(srcdir)/env.h
