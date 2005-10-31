@@ -42,9 +42,9 @@ namespace Simias.Tags
 		/// <summary>
 		/// Constructor will throw an exception if the collection does not exist
 		/// </summary>
-		public Query( string CollectionID )
+		public Query( string collectionID )
 		{
-			collection = Store.GetStore().GetCollectionByID( CollectionID );
+			collection = Store.GetStore().GetCollectionByID( collectionID );
 			if ( collection == null )
 			{
 				throw new SimiasException( "Specified Collection does not exist" );
@@ -56,22 +56,22 @@ namespace Simias.Tags
 		/// <summary>
 		/// Constructor will throw an exception if the collection does not exist
 		/// </summary>
-		public Query( string CollectionID, Tag TagObject )
+		public Query( string collectionID, Tag tag )
 		{
-			collection = Store.GetStore().GetCollectionByID( CollectionID );
+			collection = Store.GetStore().GetCollectionByID( collectionID );
 			if ( collection == null )
 			{
 				throw new SimiasException( "Specified Collection does not exist" );
 			}
 
 			tagList = new ArrayList();
-			tagList.Add( TagObject );
+			tagList.Add( tag );
 		}
 		#endregion
 
-		public bool AddTag( Tag SearchTag )
+		public bool AddTag( Tag searchTag )
 		{
-			tagList.Add( SearchTag );
+			tagList.Add( searchTag );
 			return true;
 		}
 
@@ -130,18 +130,48 @@ namespace Simias.Tags
 		/// query object.
 		/// </summary>
 		/// <returns>An ICSList object containing the ShallowNode objects for the search results
-		static public ICSList QueryNodes( string CollectionID, Tag SearchTag )
+		static public ICSList Nodes( string collectionID, Tag searchTag )
 		{
 			ICSList queryResult = null;
-			Collection collection = Store.GetStore().GetCollectionByID( CollectionID );
+			Collection collection = Store.GetStore().GetCollectionByID( collectionID );
 			if ( collection != null )
 			{
 				Relationship relationshipTag = 
-					new Relationship( collection.ID, SearchTag.ID );
+					new Relationship( collection.ID, searchTag.ID );
 				Property p = new Property( "Tag", relationshipTag );
 				queryResult = collection.Search( p, SearchOp.Equal );
 			}
 			
+			return queryResult;
+		}
+
+		/// <summary>
+		/// Query for all tags that exist in the collection.
+		/// </summary>
+		/// <returns>An ICSList object containing the ShallowNode objects for the search results
+		static public ICSList Tags( Collection collection )
+		{
+			return collection.Search( PropertyTags.Types, NodeTypes.TagType, SearchOp.Equal );
+		}
+
+		/// <summary>
+		/// Query for all tags that exist in the collection.
+		/// </summary>
+		/// <returns>An ICSList object containing the ShallowNode objects for the search results
+		static public ICSList Tags( string collectionID )
+		{
+			ICSList queryResult = null;
+			Collection collection = Store.GetStore().GetCollectionByID( collectionID );
+			if ( collection != null )
+			{
+				queryResult =
+					collection.Search( PropertyTags.Types, NodeTypes.TagType, SearchOp.Equal );
+			}
+			else
+			{
+				throw new NotExistException( collectionID );
+			}
+
 			return queryResult;
 		}
 	}

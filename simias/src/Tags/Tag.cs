@@ -182,32 +182,6 @@ namespace Simias.Tags
 		}
 
 		/// <summary>
-		/// Get all Tags attached to the collection
-		/// </summary>
-		/// <returns>An ICSList object containing the ShallowNode objects that represent the Tag object(s).</returns>
-		static public ICSList GetTags( Collection collection )
-		{
-			return collection.GetNodesByType( NodeTypes.TagType );
-			//return collection.Search( PropertyTags.Types, NodeTypes.TagType , SearchOp.Equal );
-		}
-
-		/// <summary>
-		/// Get all Tags attached to the collection
-		/// </summary>
-		/// <returns>An ICSList object containing the ShallowNode objects that represent the Tag object(s).</returns>
-		static public ICSList GetTags( string CollectionID )
-		{
-			Collection collection = Store.GetStore().GetCollectionByID( CollectionID );
-			if ( collection != null )
-			{
-				return collection.GetNodesByType( NodeTypes.TagType );
-				//return collection.Search( PropertyTags.Types, NodeTypes.TagType , SearchOp.Equal );
-			}
-
-			return null;
-		}
-
-		/// <summary>
 		/// Imports an Icon which will graphically represent the tag
 		/// </summary>
 		/// <param name="FileName">Source Filename</param>
@@ -433,69 +407,80 @@ namespace Simias.Tags
 		}
 
 		/// <summary>
-		/// Tag a node
+		/// Tag a node with this tag instance
+		/// A "NotExistException" will be thrown if the collectionID is invalid
+		/// An "ExistException" will be thrown if the node is already tagged
+		/// with this instance.
 		/// </summary>
-		public bool TagNode( string collectionID, Node node )
+		public void TagNode( string collectionID, Node node )
 		{
-			bool result = false;
 			Collection collection = Store.GetStore().GetCollectionByID( collectionID );
 			if ( collection != null )
 			{
-				try
+				// Add a relationship that will reference the tag.
+				Relationship tagRelationship = new Relationship( collection.ID, this.ID );
+				MultiValuedList mvl = node.Properties.GetProperties( "Tag" );
+				if ( mvl.Count > 0 )
 				{
-					// Add a relationship that will reference the tag.
-					bool exists = false;
-					Relationship tagRelationship = new Relationship( collection.ID, this.ID );
-					MultiValuedList mvl = node.Properties.GetProperties( "Tag" );
-					if ( mvl.Count > 0 )
+					foreach( Property property in mvl )
 					{
-						foreach( Property property in mvl )
+						Relationship relationship = property.Value as Relationship;
+						if ( relationship.NodeID == tagRelationship.NodeID )
 						{
-							Relationship relationship = property.Value as Relationship;
-							if ( relationship.NodeID == tagRelationship.NodeID )
-							{
-								exists = true;
-								break;
-							}
+							throw new ExistsException( this.Name );
 						}
 					}
-
-					if ( exists == false )
-					{
-						node.Properties.AddProperty( "Tag", tagRelationship );
-						collection.Commit( node );
-						result = true;
-					}
 				}
-				catch{}
-			}
 
-			return result;
+				node.Properties.AddProperty( "Tag", tagRelationship );
+				collection.Commit( node );
+			}
+			else
+			{
+				throw new NotExistException( collectionID );
+			}
 		}
 
 		/// <summary>
 		/// Untag a previously tagged node
+		/// A "NotExistException" will be thrown if any of the following occurs:
+		///   collectionID does not exist
+		///   this (tag) has not been previously tagged to the node
 		/// </summary>
-		public bool UntagNode( string collectionID, Node node )
+		public void UntagNode( string collectionID, Node node )
 		{
-			bool result = false;
 			Collection collection = Store.GetStore().GetCollectionByID( collectionID );
 			if ( collection != null )
 			{
-				try
+				// build a relationship for this tag instance
+				Relationship tagRelationship = new Relationship( collection.ID, this.ID );
+
+				// Get all "Tag" properties on the node
+				MultiValuedList mvl = node.Properties.GetProperties( "Tag" );
+				if ( mvl.Count > 0 )
 				{
-					// Add a relationship that will reference the tag.
-					Relationship tagRelationship = new Relationship( collection.ID, this.ID );
+					foreach( Property property in mvl )
+					{
+						Relationship relationship = property.Value as Relationship;
+						if ( relationship.NodeID == tagRelationship.NodeID )
+						{
+							property.DeleteProperty();
+							collection.Commit( node );
+							return;
+						}
+					}
 
-					Property p = new Property( "Tag", tagRelationship );
-					node.Properties.DeleteSingleProperty( p );
-					collection.Commit( node );
-					result = true;
+					throw new NotExistException( this.Name );
 				}
-				catch{}
+				else
+				{
+					throw new NotExistException( this.Name );
+				}
 			}
-
-			return result;
+			else
+			{
+				throw new NotExistException( collectionID );
+			}
 		}
 		#endregion
 	}
