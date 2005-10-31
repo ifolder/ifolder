@@ -408,6 +408,32 @@ namespace Simias.Tags
 
 		/// <summary>
 		/// Tag a node with this tag instance
+		/// An "ExistException" will be thrown if the node is already tagged
+		/// with this instance.
+		/// </summary>
+		public void TagNode( Collection collection, Node node )
+		{
+			// Add a relationship that will reference the tag.
+			Relationship tagRelationship = new Relationship( collection.ID, this.ID );
+			MultiValuedList mvl = node.Properties.GetProperties( "Tag" );
+			if ( mvl.Count > 0 )
+			{
+				foreach( Property property in mvl )
+				{
+					Relationship relationship = property.Value as Relationship;
+					if ( relationship.NodeID == tagRelationship.NodeID )
+					{
+						throw new ExistsException( this.Name );
+					}
+				}
+			}
+
+			node.Properties.AddProperty( "Tag", tagRelationship );
+			collection.Commit( node );
+		}
+
+		/// <summary>
+		/// Tag a node with this tag instance
 		/// A "NotExistException" will be thrown if the collectionID is invalid
 		/// An "ExistException" will be thrown if the node is already tagged
 		/// with this instance.
@@ -417,27 +443,44 @@ namespace Simias.Tags
 			Collection collection = Store.GetStore().GetCollectionByID( collectionID );
 			if ( collection != null )
 			{
-				// Add a relationship that will reference the tag.
-				Relationship tagRelationship = new Relationship( collection.ID, this.ID );
-				MultiValuedList mvl = node.Properties.GetProperties( "Tag" );
-				if ( mvl.Count > 0 )
-				{
-					foreach( Property property in mvl )
-					{
-						Relationship relationship = property.Value as Relationship;
-						if ( relationship.NodeID == tagRelationship.NodeID )
-						{
-							throw new ExistsException( this.Name );
-						}
-					}
-				}
-
-				node.Properties.AddProperty( "Tag", tagRelationship );
-				collection.Commit( node );
+				this.TagNode( collection, node );
 			}
 			else
 			{
 				throw new NotExistException( collectionID );
+			}
+		}
+
+		/// <summary>
+		/// Untag a previously tagged node
+		/// A "NotExistException" will be thrown if any of the following occurs:
+		///   this (tag) has not been previously tagged to the node
+		/// </summary>
+		public void UntagNode( Collection collection, Node node )
+		{
+			// build a relationship for this tag instance
+			Relationship tagRelationship = new Relationship( collection.ID, this.ID );
+
+			// Get all "Tag" properties on the node
+			MultiValuedList mvl = node.Properties.GetProperties( "Tag" );
+			if ( mvl.Count > 0 )
+			{
+				foreach( Property property in mvl )
+				{
+					Relationship relationship = property.Value as Relationship;
+					if ( relationship.NodeID == tagRelationship.NodeID )
+					{
+						property.DeleteProperty();
+						collection.Commit( node );
+						return;
+					}
+				}
+
+				throw new NotExistException( this.Name );
+			}
+			else
+			{
+				throw new NotExistException( this.Name );
 			}
 		}
 
@@ -452,30 +495,7 @@ namespace Simias.Tags
 			Collection collection = Store.GetStore().GetCollectionByID( collectionID );
 			if ( collection != null )
 			{
-				// build a relationship for this tag instance
-				Relationship tagRelationship = new Relationship( collection.ID, this.ID );
-
-				// Get all "Tag" properties on the node
-				MultiValuedList mvl = node.Properties.GetProperties( "Tag" );
-				if ( mvl.Count > 0 )
-				{
-					foreach( Property property in mvl )
-					{
-						Relationship relationship = property.Value as Relationship;
-						if ( relationship.NodeID == tagRelationship.NodeID )
-						{
-							property.DeleteProperty();
-							collection.Commit( node );
-							return;
-						}
-					}
-
-					throw new NotExistException( this.Name );
-				}
-				else
-				{
-					throw new NotExistException( this.Name );
-				}
+				this.UntagNode( collection, node );
 			}
 			else
 			{
