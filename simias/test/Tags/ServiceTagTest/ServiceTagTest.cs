@@ -119,23 +119,86 @@ namespace ServiceTagTest
 
 		private void TestThread()
 		{
+			int testsPassed = 0;
+			int testsFailed = 0;
+
 			log.Debug( "Waiting a bit before we start the tests!" );
 			testEvent.WaitOne( 30000, false );
 			log.Debug( "Starting tag tests" );
 
-			this.TestOne();
-			this.TestTwo();
-			this.TestThree();
-			this.TestFour();
-			this.TestFive();
-			this.TestSix();
-			this.TestSeven();
+			if ( this.TestOne() == true )
+			{
+				testsPassed++;
+			}
+			else
+			{
+				testsFailed++;
+			}
+
+			if ( this.TestTwo() == true )
+			{
+				testsPassed++;
+			}
+			else
+			{
+				testsFailed++;
+			}
+
+			if ( this.TestThree() == true )
+			{
+				testsPassed++;
+			}
+			else
+			{
+				testsFailed++;
+			}
+
+			if ( this.TestFour() == true )
+			{
+				testsPassed++;
+			}
+			else
+			{
+				testsFailed++;
+			}
+
+			if ( this.TestFive() == true )
+			{
+				testsPassed++;
+			}
+			else
+			{
+				testsFailed++;
+			}
+
+			if ( this.TestSix() == true )
+			{
+				testsPassed++;
+			}
+			else
+			{
+				testsFailed++;
+			}
+
+			if ( this.TestSeven() == true )
+			{
+				testsPassed++;
+			}
+			else
+			{
+				testsFailed++;
+			}
+
+			log.Debug( "  Test Results" );
+			log.Debug( "    Passed: " + testsPassed.ToString() );
+			log.Debug( "    Failed: " + testsFailed.ToString() );
 
 			log.Debug( "Tests finished" );
 		}
 
-		private void TestOne()
+		private bool TestOne()
 		{
+			bool passed = true;
 			log.Debug( "Starting TestOne" );
 			Store store = Store.GetStore();
 			Domain domain = store.GetDomain( store.LocalDomain );
@@ -143,17 +206,31 @@ namespace ServiceTagTest
 
 			log.Debug( "  creating two tags in the default domain" );
 			Tag greenTag = new Tag( "Green" );
-			greenTag.Add( domain.ID );
-
 			Tag redTag = new Tag( "Red" );
-			redTag.Add( domain.ID );
+
+			try
+			{
+				greenTag.Add( domain.ID );
+				redTag.Add( domain.ID );
+			}
+			catch
+			{
+				passed = false;
+			}
 
 			log.Debug( "  querying for all tags on the default domain" );
 			ICSList tagList = Simias.Tags.Query.Tags( domain );
-			foreach( ShallowNode sn in tagList )
+			if ( tagList.Count >= 2 )
 			{
-				Tag tag = new Tag( sn );
-				log.Debug( "  Tag: " + tag.Name );
+				foreach( ShallowNode sn in tagList )
+				{
+					Tag tag = new Tag( sn );
+					log.Debug( "  Tag: " + tag.Name );
+				}
+			}
+			else
+			{
+				passed = false;
 			}
 		
 			Node[] nodes = new Node[3];
@@ -168,9 +245,16 @@ namespace ServiceTagTest
 			log.Debug( "  query for all nodes with the green tag - should find 1 node" );
 			ICSList results = Simias.Tags.Query.Nodes( domain.ID, greenTag );
 			log.Debug( "  found: " + results.Count.ToString() + " tag(s)" );
-			foreach( ShallowNode sn in results )
+			if ( results.Count == 1 )
 			{
-				log.Debug( "  Node: " + sn.Name );
+				foreach( ShallowNode sn in results )
+				{
+					log.Debug( "  Node: " + sn.Name );
+				}
+			}
+			else
+			{
+				passed = false;
 			}
 
 			log.Debug( "  adding red tag to node2" );
@@ -182,9 +266,16 @@ namespace ServiceTagTest
 			query.AddTag( greenTag );
 			query.AddTag( redTag );
 			ICSList results2 = query.QueryNodes();
-			foreach( ShallowNode sn in results2 )
+			if ( results2.Count == 2 )
 			{
-				log.Debug( "  Node: " + sn.Name );
+				foreach( ShallowNode sn in results2 )
+				{
+					log.Debug( "  Node: " + sn.Name );
+				}
+			}
+			else
+			{
+				passed = false;
 			}
 
 			log.Debug( "  adding red tag to node3" );
@@ -192,9 +283,16 @@ namespace ServiceTagTest
 
 			log.Debug( "  query for all nodes with the red and green tag - should find 3 nodes" );
 			ICSList results3 = query.QueryNodes();
-			foreach( ShallowNode sn in results3 )
+			if ( results3.Count == 3 )
 			{
-				log.Debug( "  Node: " + sn.Name );
+				foreach( ShallowNode sn in results3 )
+				{
+					log.Debug( "  Node: " + sn.Name );
+				}
+			}
+			else
+			{
+				passed = false;
 			}
 
 			log.Debug( "  cleaning up nodes and tags" );
@@ -203,10 +301,12 @@ namespace ServiceTagTest
 			redTag.Remove( domain.ID );
 
 			log.Debug( "TestOne finished\n" );
+			return passed;
 		}
 
-		private void TestTwo()
+		private bool TestTwo()
 		{
+			bool passed = true;
 			log.Debug( "Starting TestTwo" );
 			Store store = Store.GetStore();
 			Domain domain = store.GetDomain( store.LocalDomain );
@@ -283,10 +383,12 @@ namespace ServiceTagTest
 			whiteTag.Remove( domain.ID );
 
 			log.Debug( "TestTwo finished\n" );
+			return passed;
 		}
 
-		private void TestThree()
+		private bool TestThree()
 		{
+			bool passed = true;
 			log.Debug( "Starting TestThree" );
 			log.Debug( "Create a tag and a node and leave them in the store" );
 
@@ -314,10 +416,12 @@ namespace ServiceTagTest
 				threeTag.TagNode( domain.ID, threeNode );
 			}
 			log.Debug( "Finished TestThree\n" );
+			return passed;
 		}
 
-		private void TestFour()
+		private bool TestFour()
 		{
+			bool passed = true;
 			log.Debug( "Starting TestFour" );
 			log.Debug( "Create a tag and then attempt to create the same tag again" );
 
@@ -327,33 +431,44 @@ namespace ServiceTagTest
 
 			log.Debug( "  creating \"DuplicateTag\" in the default domain" );
 			Tag dupTag = new Tag( "DuplicateTag" );
-			dupTag.Add( domain.ID );
+			try
+			{
+				dupTag.Add( domain.ID );
+			}
+			catch
+			{
+				log.Debug( "  failed creating tag" );
+				passed = false;
+			}
 
 			log.Debug( "  attempting to duplicate the same tag" );
 			Tag dup2Tag = new Tag( "DuplicateTag" );
-
-			bool caught = false;
 			try
 			{
 				dup2Tag.Add( domain.ID );
+				log.Debug( "  an \"ExistsException\" should have been thrown" );
+				passed = false;
 			}
 			catch( ExistsException e )
 			{
-				log.Debug( e.Message );
-				caught = true;
+				log.Debug( "  caught expected \"ExistsException\"" );
 			}
-
-			if ( caught == false )
+			catch( Exception e2 )
 			{
-				log.Debug( "  an \"ExistsException\" should have been thrown" );
+				log.Debug( "  An unexpected exception was caught" );
+				passed = false;
 			}
 
-			domain.Commit( domain.Delete( dupTag ) );
+			dupTag.Remove( domain.ID );
+
+			//domain.Commit( domain.Delete( dupTag ) );
 			log.Debug( "Finished TestFour\n" );
+			return passed;
 		}
 
-		private void TestFive()
+		private bool TestFive()
 		{
+			bool passed = true;
 			log.Debug( "Starting TestFive" );
 			log.Debug( "Create two tags, assign them to a node then delete one of the tags and verify it was deleted from the node" );
 
@@ -361,45 +476,84 @@ namespace ServiceTagTest
 			Domain domain = store.GetDomain( store.LocalDomain );
 			log.Debug( "  retrieved the default domain: " + domain.Name );
 
-			log.Debug( "  creating \"TestFiveTagOne\" in the default domain" );
 			Tag tagFiveOne = new Tag( "TestFiveTagOne" );
-			tagFiveOne.Add( domain.ID );
-
-			log.Debug( "  creating \"TestFiveTagTwo\" in the default domain" );
 			Tag tagFiveTwo = new Tag( "TestFiveTagTwo" );
 
-			bool caught = false;
+			try
+			{
+				log.Debug( "  creating \"TestFiveTagOne\" in the default domain" );
+				tagFiveOne.Add( domain.ID );
+			}
+			catch
+			{
+				passed = false;
+				log.Debug( "  failed creating TestFiveTagOne" );
+			}
+
+			log.Debug( "  creating \"TestFiveTagTwo\" in the default domain" );
 			try
 			{
 				tagFiveTwo.Add( domain.ID );
 			}
 			catch( ExistsException e )
 			{
-				log.Debug( e.Message );
-				caught = true;
+				passed = false;
+				log.Debug( "  failed creating TestFiveTagTwo with ExistsException" );
+			}
+			catch
+			{
+				passed = false;
+				log.Debug( "  failed creating TestFiveTagTwo with an unknown exception" );
 			}
 
 			log.Debug( "  creating TestFiveNode" );
 			Node testFiveNode = new Node( "TestFiveNode" );
 			domain.Commit( testFiveNode );
 
-			log.Debug( "  tagging TestFiveNode with \"TestFiveTagOne\" and \"TestFiveTagTwo\"" );
-			tagFiveOne.TagNode( domain.ID, testFiveNode );
-			tagFiveTwo.TagNode( domain.ID, testFiveNode );
-
-			log.Debug( "  deleting tag: \"TestFiveTagTwo\"" );
-			tagFiveTwo.Remove( domain.ID );
+			try
+			{
+				log.Debug( "  tagging TestFiveNode with \"TestFiveTagOne\" and \"TestFiveTagTwo\"" );
+				tagFiveOne.TagNode( domain.ID, testFiveNode );
+				tagFiveTwo.TagNode( domain.ID, testFiveNode );
+			}
+			catch
+			{
+				log.Debug( "  failed tagging node" );
+				passed = false;
+			}
+			
+			try
+			{
+				log.Debug( "  deleting tag: \"TestFiveTagTwo\"" );
+				tagFiveTwo.Remove( domain.ID );
+			}
+			catch
+			{
+				log.Debug( "  failed removing TestFiveTagTwo from the library" );
+				passed = false;
+			}
 
 			log.Debug( "  deleting node: " + testFiveNode.Name );
 			domain.Commit( domain.Delete( testFiveNode ) );
 
-			log.Debug( "  deleting tag: " + tagFiveOne.Name );
-			tagFiveOne.Remove( domain.ID );
+			try
+			{
+				log.Debug( "  deleting tag: " + tagFiveOne.Name );
+				tagFiveOne.Remove( domain.ID );
+			}
+			catch
+			{
+				log.Debug( "  failed removing TestFiveTagOne from the library" );
+				passed = false;
+			}
+
 			log.Debug( "Finished TestFive\n" );
+			return passed;
 		}
 
-		private void TestSix()
+		private bool TestSix()
 		{
+			bool passed = true;
 			int numberTags = 1000;
 
 			log.Debug( "Starting TestSix" );
@@ -415,7 +569,6 @@ namespace ServiceTagTest
 			for( int i = 0; i < numberTags; i++)
 			{
 				tags[i] = new Tag( "TestSixTag" + i.ToString() );
-				//log.Debug( "  creating tag: " + tags[i].Name );
 				tagTable.Add( tags[i].Name, tags[i] );
 			}
 
@@ -426,39 +579,45 @@ namespace ServiceTagTest
 			catch( Exception e )
 			{
 				log.Debug( "  failed to create all tags!" );
-				log.Debug( "  " + e.Message );
+				passed = false;
 			}
 
-			int verified = 0;
-			ICSList results = Simias.Tags.Query.Tags( domain );
-			if ( results.Count > 0 )
+			if ( passed == true )
 			{
-				foreach( ShallowNode sn in results )
+				int verified = 0;
+				ICSList results = Simias.Tags.Query.Tags( domain );
+				if ( results.Count > 0 )
 				{
-					if ( tagTable.Contains( sn.Name ) == true )
+					foreach( ShallowNode sn in results )
 					{
-						verified++;
+						if ( tagTable.Contains( sn.Name ) == true )
+						{
+							verified++;
+						}
 					}
 				}
-			}
 
-			if ( verified == numberTags )
-			{
-				log.Debug( "  verified all " + verified.ToString() + " tags." );
-			}
-			else
-			{
-				log.Debug( "  failed verifying all the tags.  verified: " + verified.ToString() + " of the " + numberTags.ToString() + " created" );
+				if ( verified == numberTags )
+				{
+					log.Debug( "  verified all " + verified.ToString() + " tags." );
+				}
+				else
+				{
+					log.Debug( "  failed verifying all the tags.  verified: " + verified.ToString() + " of the " + numberTags.ToString() + " created" );
+					passed = false;
+				}
 			}
 
 			// Remove all the previously created tags
 			log.Debug( "  removing tags from the collection" );
 			Simias.Tags.Tag.Remove( domain, tags );
 			log.Debug( "Finished TestSix\n" );
+			return passed;
 		}
 
-		private void TestSeven()
+		private bool TestSeven()
 		{
+			bool passed = true;
 			log.Debug( "Starting TestSeven" );
 			log.Debug( "Test the TagNode and UntagNode methods of the framework" );
 
@@ -467,31 +626,48 @@ namespace ServiceTagTest
 			log.Debug( "  retrieved the default domain: " + domain.Name );
 
 			Tag tagOne = new Tag( "TestSevenTagOne" );
-			log.Debug( "  creating tag: " + tagOne.Name );
-			tagOne.Add( domain.ID );
-
 			Tag tagTwo = new Tag( "TestSevenTagTwo" );
-			log.Debug( "  creating tag: " + tagTwo.Name );
-			tagTwo.Add( domain.ID );
+			try
+			{
+				log.Debug( "  creating tag: " + tagOne.Name );
+				tagOne.Add( domain.ID );
+
+				log.Debug( "  creating tag: " + tagTwo.Name );
+				tagTwo.Add( domain.ID );
+			}
+			catch
+			{
+				log.Debug( "  failed creating tags" );
+				passed = false;
+			}
 
 			Node node = new Node( "TestSevenNode" );
 			log.Debug( "  creating node: " + node.Name );
 			domain.Commit( node );
 
-			log.Debug( "  tagging node \"" + node.Name + "\" with tag \"" + tagOne.Name + "\"" );
-			tagOne.TagNode( domain.ID, node );
+			try
+			{
+				log.Debug( "  tagging node \"" + node.Name + "\" with tag \"" + tagOne.Name + "\"" );
+				tagOne.TagNode( domain.ID, node );
 
-			log.Debug( "  tagging node \"" + node.Name + "\" with tag \"" + tagTwo.Name + "\"" );
-			tagTwo.TagNode( domain.ID, node );
+				log.Debug( "  tagging node \"" + node.Name + "\" with tag \"" + tagTwo.Name + "\"" );
+				tagTwo.TagNode( domain.ID, node );
 
-			log.Debug( "  untagging node \"" + node.Name + "\" from tag \"" + tagOne.Name + "\"" );
-			tagOne.UntagNode( domain.ID, node );
+				log.Debug( "  untagging node \"" + node.Name + "\" from tag \"" + tagOne.Name + "\"" );
+				tagOne.UntagNode( domain.ID, node );
+			}
+			catch
+			{
+				log.Debug( "  failed tagging/untagging node" );
+				passed = false;
+			}
 
 			log.Debug( "  deleting nodes and tags" );
 			domain.Commit( domain.Delete( node ) );
 			tagOne.Remove( domain.ID );
 			tagTwo.Remove( domain.ID );
 			log.Debug( "Finished TestSeven\n" );
+			return passed;
 		}
 		#endregion
 	}
