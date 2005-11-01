@@ -46,7 +46,7 @@ namespace Novell.iFolder
 		private BigList				memberList;
 		private MemberListModel		memberListModel;
 		
-		private Gtk.OptionMenu		SearchAttribOptionMenu;
+		private Gtk.ComboBox		SearchAttribComboBox;
 
 		private Gtk.Entry			SearchEntry;
 		private Gtk.Button			UserAddButton;
@@ -150,16 +150,13 @@ namespace Novell.iFolder
 			findTable.Attach(findLabel, 0, 1, 0, 1,
 				AttachOptions.Shrink, 0, 0, 0);
 
-			SearchAttribOptionMenu = new OptionMenu();
-			Menu m = new Menu();
-			m.Append(new MenuItem(Util.GS("First Name")));
-			m.Append(new MenuItem(Util.GS("Last Name")));
-			m.Append(new MenuItem(Util.GS("Full Name")));
-			SearchAttribOptionMenu.Menu = m;
-			SearchAttribOptionMenu.ShowAll();
-			SearchAttribOptionMenu.SetHistory(2);
-			SearchAttribOptionMenu.Changed += new EventHandler(OnSearchAttribOptionMenuChanged);
-			findTable.Attach(SearchAttribOptionMenu, 1, 2, 0, 1,
+			SearchAttribComboBox = ComboBox.NewText();
+			SearchAttribComboBox.AppendText(Util.GS("First Name"));
+			SearchAttribComboBox.AppendText(Util.GS("Last Name"));
+			SearchAttribComboBox.AppendText(Util.GS("Full Name"));
+			SearchAttribComboBox.Active = 2;
+			SearchAttribComboBox.Changed += new EventHandler(OnSearchAttribComboBoxChanged);
+			findTable.Attach(SearchAttribComboBox, 1, 2, 0, 1,
 				AttachOptions.Shrink, 0, 0, 0);
 
 			SearchEntry = new Gtk.Entry(Util.GS("<Enter text to find a user>"));
@@ -337,12 +334,12 @@ namespace Novell.iFolder
 
 
 
-		public void OnSearchAttribOptionMenuChanged(object o, EventArgs args)
+		public void OnSearchAttribComboBoxChanged(object o, EventArgs args)
 		{
 			// Prevent a call to SearchCallback if a timeout call has been added
 			if (searchTimeoutID != 0)
 			{
-				Gtk.Timeout.Remove(searchTimeoutID);
+				GLib.Source.Remove(searchTimeoutID);
 				searchTimeoutID = 0;
 			}
 				
@@ -363,11 +360,11 @@ namespace Novell.iFolder
 		{
 			if(searchTimeoutID != 0)
 			{
-				Gtk.Timeout.Remove(searchTimeoutID);
+				GLib.Source.Remove(searchTimeoutID);
 				searchTimeoutID = 0;
 			}
 
-			searchTimeoutID = Gtk.Timeout.Add(500, new Gtk.Function(
+			searchTimeoutID = GLib.Timeout.Add(500, new GLib.TimeoutHandler(
 						SearchCallback));
 		}
 
@@ -395,7 +392,7 @@ namespace Novell.iFolder
 
 			if(SearchEntry.Text.Length > 0 && SearchEntry.Text != Util.GS("<Enter text to find a user>"))
 			{
-				int searchAttribIndex = SearchAttribOptionMenu.History;
+				int searchAttribIndex = SearchAttribComboBox.Active;
 				string searchAttribute;
 				switch(searchAttribIndex)
 				{
