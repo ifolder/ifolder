@@ -41,7 +41,7 @@ namespace Novell.iFolder
 
 		private Gtk.CheckButton			AutoSyncCheckButton;
 		private Gtk.SpinButton			SyncSpinButton;
-		private Gtk.OptionMenu			SyncUnitsOptionMenu;
+		private Gtk.ComboBox			SyncUnitsComboBox;
 
 		private Gtk.CheckButton			ShowConfirmationButton; 
 		private Gtk.CheckButton			NotifyUsersButton; 
@@ -234,17 +234,15 @@ namespace Novell.iFolder
 
 			syncHBox.PackStart(SyncSpinButton, false, false, 0);
 
-			SyncUnitsOptionMenu = new OptionMenu();
-			syncHBox.PackStart(SyncUnitsOptionMenu, false, false, 0);
-
-			Menu m = new Menu();
-			m.Append(new MenuItem(Util.GS("seconds")));
-			m.Append(new MenuItem(Util.GS("minutes")));
-			m.Append(new MenuItem(Util.GS("hours")));
-			m.Append(new MenuItem(Util.GS("days")));
+			SyncUnitsComboBox = ComboBox.NewText();
+			syncHBox.PackStart(SyncUnitsComboBox, false, false, 0);
 			
-			SyncUnitsOptionMenu.Menu = m;
-			SyncUnitsOptionMenu.SetHistory((int)SyncUnit.Minutes);
+			SyncUnitsComboBox.AppendText(Util.GS("seconds"));
+			SyncUnitsComboBox.AppendText(Util.GS("minutes"));
+			SyncUnitsComboBox.AppendText(Util.GS("hours"));
+			SyncUnitsComboBox.AppendText(Util.GS("days"));
+			
+			SyncUnitsComboBox.Active = (int)SyncUnit.Minutes;
 			currentSyncUnit = SyncUnit.Minutes;
 		}
 
@@ -302,7 +300,7 @@ namespace Novell.iFolder
 					{
 						case "Seconds":
 							currentSyncUnit = SyncUnit.Seconds;
-							SyncUnitsOptionMenu.SetHistory((int)SyncUnit.Seconds);
+							SyncUnitsComboBox.Active = (int)SyncUnit.Seconds;
 
 							// Prevent the user from setting a sync interval less than
 							// one minute.
@@ -310,15 +308,15 @@ namespace Novell.iFolder
 							break;
 						case "Minutes":
 							currentSyncUnit = SyncUnit.Minutes;
-							SyncUnitsOptionMenu.SetHistory((int)SyncUnit.Minutes);
+							SyncUnitsComboBox.Active = (int)SyncUnit.Minutes;
 							break;
 						case "Hours":
 							currentSyncUnit = SyncUnit.Hours;
-							SyncUnitsOptionMenu.SetHistory((int)SyncUnit.Hours);
+							SyncUnitsComboBox.Active = (int)SyncUnit.Hours;
 							break;
 						case "Days":
 							currentSyncUnit = SyncUnit.Days;
-							SyncUnitsOptionMenu.SetHistory((int)SyncUnit.Days);
+							SyncUnitsComboBox.Active = (int)SyncUnit.Days;
 							break;
 						default:
 							break;
@@ -337,19 +335,19 @@ namespace Novell.iFolder
 			{
 				AutoSyncCheckButton.Active = false;
 				SyncSpinButton.Sensitive = false;
-				SyncUnitsOptionMenu.Sensitive = false;
+				SyncUnitsComboBox.Sensitive = false;
 			}
 			else
 			{
 				AutoSyncCheckButton.Active = true;
 				SyncSpinButton.Sensitive = true;
-				SyncUnitsOptionMenu.Sensitive = true;
+				SyncUnitsComboBox.Sensitive = true;
 			}
 
 			AutoSyncCheckButton.Toggled += new EventHandler(OnAutoSyncButton);
 			SyncSpinButton.ValueChanged += 
 					new EventHandler(OnSyncIntervalChanged);
-			SyncUnitsOptionMenu.Changed +=
+			SyncUnitsComboBox.Changed +=
 					new EventHandler(OnSyncUnitsChanged);
 		}
 
@@ -413,13 +411,13 @@ namespace Novell.iFolder
 			if(AutoSyncCheckButton.Active == true)
 			{
 				SyncSpinButton.Sensitive = true;
-				SyncUnitsOptionMenu.Sensitive = true;
+				SyncUnitsComboBox.Sensitive = true;
 
-				SyncUnitsOptionMenu.Changed -= new EventHandler(OnSyncUnitsChanged);
-				SyncUnitsOptionMenu.SetHistory((int)SyncUnit.Minutes);
+				SyncUnitsComboBox.Changed -= new EventHandler(OnSyncUnitsChanged);
+				SyncUnitsComboBox.Active = (int)SyncUnit.Minutes;
 				currentSyncUnit = SyncUnit.Minutes;
 				SaveSyncUnitConfig();
-				SyncUnitsOptionMenu.Changed += new EventHandler(OnSyncUnitsChanged);
+				SyncUnitsComboBox.Changed += new EventHandler(OnSyncUnitsChanged);
 
 				SyncSpinButton.Value = 5;
 			}
@@ -433,7 +431,7 @@ namespace Novell.iFolder
 				}
 	
 				SyncSpinButton.Sensitive = false;
-				SyncUnitsOptionMenu.Sensitive = false;
+				SyncUnitsComboBox.Sensitive = false;
 				SyncSpinButton.Value = 0;
 			}
 		}
@@ -488,7 +486,7 @@ namespace Novell.iFolder
 
 			int syncSpinValue = (int)SyncSpinButton.Value;
 											
-			currentSyncUnit = (SyncUnit)SyncUnitsOptionMenu.History;
+			currentSyncUnit = (SyncUnit)SyncUnitsComboBox.Active;
 
 			if (currentSyncUnit == SyncUnit.Seconds)
 			{

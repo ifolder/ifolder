@@ -228,12 +228,14 @@ namespace Novell.iFolder
 		private Gtk.TreeView		iFolderTreeView;
 		private Gtk.ListStore		iFolderTreeStore;
 
-		private Gtk.Widget			NewButton;
-		private Gtk.Widget			SetupButton;
-		private Gtk.Widget			SyncButton;
-		private Gtk.Widget			ShareButton;
-		private Gtk.Widget			ConflictButton;
-		private Gtk.OptionMenu		DomainFilterOptionMenu;
+		private Gtk.Tooltips		ToolbarTooltips;
+		private ToolButton			NewButton;
+		private ToolButton			SetupButton;
+		private ToolButton			SyncButton;
+		private ToolButton			ShareButton;
+		private ToolButton			ConflictButton;
+		private Gtk.ComboBox		DomainFilterComboBox;
+		private Gtk.ListStore		DomainListStore;
 
 		private ImageMenuItem		NewMenuItem;
 		private Gtk.MenuItem		ShareMenuItem;
@@ -259,10 +261,10 @@ namespace Novell.iFolder
 
 		private Hashtable			curiFolders;
 
-		// curDomain should be set to the ID of the domain selected in the
+		// curDomain should be set to the domain selected in the
 		// Domain Filter or if "all" domains are selected, this should be
-		// set to null.		
-		private string				curDomain;
+		// set to null.
+		private DomainInformation	curDomain;
 		private DomainInformation[] curDomains;
 
 		// These variables are used to keep track of how many
@@ -407,41 +409,54 @@ namespace Novell.iFolder
 		{
 			Toolbar tb = new Toolbar();
 
-			NewButton = tb.AppendItem(Util.GS("New"),
-				Util.GS("Create a new iFolder"), "Toolbar/New iFolder",
+			ToolbarTooltips = new Tooltips();
+
+			NewButton = new ToolButton(
 				new Image(new Gdk.Pixbuf(Util.ImagesPath("newifolder24.png"))),
-				new SignalFunc(CreateNewiFolder));
+				Util.GS("New"));
+			NewButton.SetTooltip(ToolbarTooltips, Util.GS("Create a new iFolder"), "Toolbar/New iFolder");
+			NewButton.Clicked += new EventHandler(NewiFolderHandler);
+			tb.Insert(NewButton, -1);
 
-			SetupButton = tb.AppendItem(Util.GS("Set Up"),
-				Util.GS("Set up the selected iFolder"), "Toolbar/Set Up iFolder",
+			SetupButton = new ToolButton(
 				new Image(new Gdk.Pixbuf(Util.ImagesPath("setup24.png"))),
-				new SignalFunc(SetupiFolder));
+				Util.GS("Set Up"));
+			SetupButton.SetTooltip(ToolbarTooltips, Util.GS("Set up the selected iFolder"), "Toolbar/Set Up iFolder");
+			SetupButton.Clicked += new EventHandler(SetupiFolderHandler);
+			tb.Insert(SetupButton, -1);
 
-			tb.AppendSpace ();
+			tb.Insert(new SeparatorToolItem(), -1);
 
-			SyncButton = tb.AppendItem(Util.GS("Synchronize"),
-				Util.GS("Synchronize the selected iFolder"), "Toolbar/Synchronize iFolder",
+			SyncButton = new ToolButton(
 				new Image(new Gdk.Pixbuf(Util.ImagesPath("sync24.png"))),
-				new SignalFunc(SynciFolder));
+				Util.GS("Synchronize"));
+			SyncButton.SetTooltip(ToolbarTooltips, Util.GS("Synchronize the selected iFolder"), "Toolbar/Synchronize iFolder");
+			SyncButton.Clicked += new EventHandler(SynciFolderHandler);
+			tb.Insert(SyncButton, -1);
 
-			ShareButton = tb.AppendItem(Util.GS("Share"),
-				Util.GS("Share the selected iFolder"), "Toolbar/Share iFolder",
+			ShareButton = new ToolButton(
 				new Image(new Gdk.Pixbuf(Util.ImagesPath("share24.png"))),
-				new SignalFunc(ShareiFolder));
+				Util.GS("Share"));
+			ShareButton.SetTooltip(ToolbarTooltips, Util.GS("Share the selected iFolder"), "Toolbar/Share iFolder");
+			ShareButton.Clicked += new EventHandler(ShareiFolderHandler);
+			tb.Insert(ShareButton, -1);
 
-			ConflictButton = tb.AppendItem(Util.GS("Resolve"),
-				Util.GS("Resolve conflicts in the selected iFolder"), "Toolbar/Resolve iFolder",
+			ConflictButton = new ToolButton(
 				new Image(new Gdk.Pixbuf(Util.ImagesPath("conflict24.png"))),
-				new SignalFunc(ResolveConflicts));
+				Util.GS("Resolve"));
+			ConflictButton.SetTooltip(ToolbarTooltips, Util.GS("Resolve conflicts in the selected iFolder"), "Toolbar/Resolve iFolder");
+			ConflictButton.Clicked += new EventHandler(ResolveConflictHandler);
+			tb.Insert(ConflictButton, -1);
 
-			tb.AppendSpace();
+			// FIXME: Figure out why if this next separator is added, the server filter combobox disappears
+//			tb.Insert(new SeparatorToolItem(), -1);
 
 			HBox domainFilterBox = new HBox();
 			domainFilterBox.Spacing = 5;
-			tb.AppendWidget(domainFilterBox,
-							Util.GS("Filter the list of iFolders by server"),
-							null);
-							
+			ToolItem domainFilterToolItem = new ToolItem();
+			domainFilterToolItem.SetTooltip(ToolbarTooltips, Util.GS("Filter the list of iFolders by server"), "Toolbar/Server Filter");
+			domainFilterToolItem.Add(domainFilterBox);
+
 			Label l = new Label(Util.GS("Server:"));
 			domainFilterBox.PackStart(l, false, false, 0);
 
@@ -453,12 +468,26 @@ namespace Novell.iFolder
 			Label spacer = new Label("");
 			domainFilterSpacerBox.PackStart(spacer, false, false, 0);
 			
-			DomainFilterOptionMenu = new OptionMenu();
-			DomainFilterOptionMenu.Changed += new EventHandler(DomainFilterChangedHandler);
-			domainFilterSpacerBox.PackStart(DomainFilterOptionMenu, false, false, 0);
+			DomainFilterComboBox = new ComboBox();
+			domainFilterSpacerBox.PackStart(DomainFilterComboBox, false, false, 0);
+
+			DomainListStore = new ListStore(typeof(DomainInformation));
+			DomainFilterComboBox.Model = DomainListStore;
+			
+			CellRenderer domainTR = new CellRendererText();
+			DomainFilterComboBox.PackStart(domainTR, true);
+
+			DomainFilterComboBox.SetCellDataFunc(domainTR,
+				new CellLayoutDataFunc(DomainFilterComboBoxCellTextDataFunc));
+
+			DomainFilterComboBox.Changed += new EventHandler(DomainFilterChangedHandler);
+			
+			DomainFilterComboBox.ShowAll();
 
 			spacer = new Label("");
 			domainFilterSpacerBox.PackEnd(spacer, false, false, 0);
+
+			tb.Insert(domainFilterToolItem, -1);
 
 			return tb;
 		}
@@ -771,6 +800,17 @@ namespace Novell.iFolder
 			}
 		}
 
+		private void DomainFilterComboBoxCellTextDataFunc(
+				CellLayout cell_layout,
+				CellRenderer cell,
+				TreeModel tree_model,
+				TreeIter iter)
+		{
+			DomainInformation domain =
+				(DomainInformation)tree_model.GetValue(iter, 0);
+			if (domain != null)
+				((CellRendererText) cell).Text = domain.Name;
+		}
 
 		private void RefreshiFoldersHandler(object o, EventArgs args)
 		{
@@ -791,12 +831,12 @@ namespace Novell.iFolder
 			{
 				foreach(iFolderHolder holder in ifolders)
 				{
-					if (curDomain == null)
+					if (curDomain == null || curDomain.ID == "0")
 					{
 						TreeIter iter = iFolderTreeStore.AppendValues(holder);
 						curiFolders[holder.iFolder.CollectionID] = iter;
 					}
-					else if (curDomain == holder.iFolder.DomainID)
+					else if (curDomain.ID == holder.iFolder.DomainID)
 					{
 						// Only add in iFolders that match the current domain filter
 						TreeIter iter = iFolderTreeStore.AppendValues(holder);
@@ -1639,7 +1679,7 @@ namespace Novell.iFolder
 				iFolderHolder ifHolder = ifdata.GetiFolder(iFolderID);
 
 				if( (curDomain != null) &&
-						(curDomain != ifHolder.iFolder.DomainID) )
+						(curDomain.ID != ifHolder.iFolder.DomainID) )
 				{
 					// don't do anything because we are not showing this
 					// domain right now
@@ -1694,7 +1734,7 @@ namespace Novell.iFolder
 
 			switch(args.Action)
 			{
-				case Action.StartLocalSync:
+				case Simias.Client.Event.Action.StartLocalSync:
 				{
 					if (args.Name != null && args.Name.StartsWith("POBox:"))
 					{
@@ -1720,7 +1760,7 @@ namespace Novell.iFolder
 					
 					break;
 				}
-				case Action.StartSync:
+				case Simias.Client.Event.Action.StartSync:
 				{
 					if (args.Name != null && args.Name.StartsWith("POBox:"))
 					{
@@ -1751,7 +1791,7 @@ namespace Novell.iFolder
 					}
 					break;
 				}
-				case Action.StopSync:
+				case Simias.Client.Event.Action.StopSync:
 				{
 					if(SyncBar != null)
 						SyncBar.Hide();
@@ -1852,7 +1892,7 @@ namespace Novell.iFolder
 					// Get the iFolderHolder and set the objectsToSync (only if the
 					// domain filter isn't set or is for this iFolder's domain.
 					iFolderHolder ifHolder = ifdata.GetiFolder(args.CollectionID);
-					if (ifHolder != null && (curDomain == null || curDomain == ifHolder.iFolder.DomainID))
+					if (ifHolder != null && (curDomain == null || curDomain.ID == "0" || curDomain.ID == ifHolder.iFolder.DomainID))
 					{
 						ifHolder.ObjectsToSync = objectsToSync;
 						TreeIter iter = (TreeIter)curiFolders[args.CollectionID];
@@ -2102,8 +2142,17 @@ namespace Novell.iFolder
 			}
 
 			DomainInformation[] domains = ifdata.GetDomains();
+			string domainID = null;
+			if (curDomain == null)
+			{
+				DomainInformation defaultDomain = ifdata.GetDefaultDomain();
+				if (defaultDomain != null)
+					domainID = defaultDomain.ID;
+			}
+			else
+				domainID = curDomain.ID;
 	
-			CreateDialog cd = new CreateDialog(domains, curDomain, Util.LastCreatedPath);
+			CreateDialog cd = new CreateDialog(domains, domainID, Util.LastCreatedPath);
 			cd.TransientFor = this;
 	
 			int rc = 0;
@@ -2252,19 +2301,22 @@ namespace Novell.iFolder
 			// the user) and then make the call to refresh the window.
 			if (curDomains != null)
 			{
-				int selectedItem = DomainFilterOptionMenu.History;
-				if (selectedItem == 0)
+				TreeIter iter;
+				
+				if (DomainFilterComboBox.GetActiveIter(out iter))
 				{
-					curDomain = null;
+					DomainInformation tmpDomain = (DomainInformation)
+						DomainFilterComboBox.Model.GetValue(iter, 0);
+					if (tmpDomain.ID == "0")
+						curDomain = null;
+					else
+						curDomain = tmpDomain;
 				}
 				else
 				{
-					// The OptionMenu has 1 extra item in it than the list
-					// of domains in curDomain, so offset the index by 1.
-					selectedItem--;
-					curDomain = curDomains[selectedItem].ID;
+					curDomain = null;
 				}
-			
+				
 				RefreshiFolders(false);
 			}
 		}
@@ -2273,23 +2325,24 @@ namespace Novell.iFolder
 		{
 			if(readFromSimias)
 				ifdata.RefreshDomains();
-
-			// Add on "Show All Servers"
-			Menu m = new Menu();
-			m.Title = Util.GS("Server:");
-			m.Append(new MenuItem(Util.GS("Show All")));
+			
+			DomainListStore.Clear();
 
 			curDomains = ifdata.GetDomains();
 			if (curDomains != null)
 			{
+				DomainInformation selectAllDomain = new DomainInformation();
+				selectAllDomain.ID = "0";
+				selectAllDomain.Name = Util.GS("Show All");
+				DomainListStore.AppendValues(selectAllDomain);
+
 				foreach(DomainInformation domain in curDomains)
 				{
-					m.Append(new MenuItem(domain.Name));
+					DomainListStore.AppendValues(domain);
 				}
 			}
 			
-			DomainFilterOptionMenu.Menu = m;
-			DomainFilterOptionMenu.ShowAll();
+			DomainFilterComboBox.Active = 0;	// Show All
 		}
 		
 		// Return true if we were able to determine the exception type.
