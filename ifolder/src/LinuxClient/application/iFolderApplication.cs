@@ -431,14 +431,14 @@ namespace Novell.iFolder
 
 			switch(args.Action)
 			{
-				case Action.StartSync:
+				case Simias.Client.Event.Action.StartSync:
 				{
 					bCollectionIsSynchronizing = true;
 
 					collectionSynchronizing = args.ID;
 					break;
 				}
-				case Action.StopSync:
+				case Simias.Client.Event.Action.StopSync:
 				{
 					bCollectionIsSynchronizing = false;
 					currentIconAnimationDirection = 0;
@@ -711,7 +711,7 @@ namespace Novell.iFolder
 					gAppIcon.Pixbuf = RunningPixbuf;
 
 					// Bring up the accounts dialog if there are no domains
-					Gtk.Timeout.Add(500, new Gtk.Function(PromptIfNoDomains));
+					GLib.Timeout.Add(500, new GLib.TimeoutHandler(PromptIfNoDomains));
 
 					// Make sure the iFolder and Synchronization Windows are
 					// initialized so that they begin receiving events as soon
@@ -762,7 +762,7 @@ namespace Novell.iFolder
 				notifyWin.ShowAll();
 			}
 
-			return false;	// Prevent this from being called over and over by Gtk.Timeout
+			return false;	// Prevent this from being called over and over by GLib.Timeout
 		}
 
 		private void OnNotifyWindowLinkClicked(object sender, LinkClickedEventArgs args)

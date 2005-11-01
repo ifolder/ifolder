@@ -350,13 +350,13 @@ namespace Novell.iFolder
 
 				switch (syncEventArgs.Action)
 				{
-					case Action.StartLocalSync:
+					case Simias.Client.Event.Action.StartLocalSync:
 						ifHolder.State = iFolderState.SynchronizingLocal;
 						break;
-					case Action.StartSync:
+					case Simias.Client.Event.Action.StartSync:
 						ifHolder.State = iFolderState.Synchronizing;
 						break;
-					case Action.StopSync:
+					case Simias.Client.Event.Action.StopSync:
 						try
 						{
 							SyncSize syncSize = ifws.CalculateSyncSize(syncEventArgs.ID);

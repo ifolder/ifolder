@@ -32,7 +32,7 @@ namespace Novell.iFolder
 	{
 		private Entry				pathEntry;
 		private DomainInformation[]	domains;
-		private OptionMenu			domainOptions;
+		private ComboBox			domainComboBox;
 		private string				initialPath;
 
 		public string iFolderPath
@@ -52,7 +52,11 @@ namespace Novell.iFolder
 		{
 			get
 			{
-				return domains[domainOptions.History].ID;
+				int activeIndex = domainComboBox.Active;
+				if (activeIndex >= 0)
+					return domains[0].ID;
+				else
+					return "0";
 			}
 		}
 
@@ -96,26 +100,23 @@ namespace Novell.iFolder
 
 
 			// Set up Domains
-			domainOptions = new OptionMenu();
-
+			domainComboBox = ComboBox.NewText();
+			serverBox.PackStart(domainComboBox, true, true, 0);
+			
 			int defaultDomain = 0;
-			Menu m = new Menu();
-			for(int x=0; x < domains.Length; x++)
+			for (int x = 0; x < domains.Length; x++)
 			{
-				m.Append(new MenuItem(domains[x].Name));
+				domainComboBox.AppendText(domains[x].Name);
 				if (filteredDomainID != null)
 				{
 					if (filteredDomainID == domains[x].ID)
 						defaultDomain = x;
 				}
-				else if(domains[x].IsDefault)
-						defaultDomain = x;
+				else
+					defaultDomain = x;
 			}
-
-			domainOptions.Menu = m;
-			domainOptions.SetHistory((uint)defaultDomain);
 			
-			serverBox.PackStart(domainOptions, true, true, 0);
+			domainComboBox.Active = defaultDomain;
 
 			VBox locBox = new VBox();
 			dialogBox.PackEnd(locBox, false, true, 0);

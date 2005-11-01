@@ -198,7 +198,7 @@ namespace Novell.iFolder
 
 			if(closeWindowTimeoutID == 0 && timeout > 0)
 			{
-				closeWindowTimeoutID = Gtk.Timeout.Add(timeout, new Gtk.Function(
+				closeWindowTimeoutID = GLib.Timeout.Add(timeout, new GLib.TimeoutHandler(
 						HideWindowCallback));
 			}
 		}
@@ -228,7 +228,8 @@ namespace Novell.iFolder
 
 			if(background == null)
 			{
-				Gdk.Bitmap mask;
+//				Gdk.Bitmap mask;
+				Gdk.Pixmap mask;
 
 				RenderBubbles(this.RootWindow, sized, out activebackground, 
 							out inactivebackground, out mask);
@@ -247,11 +248,12 @@ namespace Novell.iFolder
 		
 		private void RenderBubbles(Gdk.Window win, Gdk.Rectangle size, 
 						out Pixbuf pbactive, out Pixbuf pbinactive, 
-						out Bitmap pbbm)
+						out Gdk.Pixmap pbpm)
 		{
 			int pmHeight, pmWidth;
 			Gdk.Pixmap daPixmap;
-			Gdk.Bitmap daBitmap;
+//			Gdk.Bitmap daOtherPixmap;
+			Gdk.Pixmap daOtherPixmap;
 
 			pmHeight = size.Height - (wbsize * 2);
 			pmWidth = size.Width - (wbsize * 2);
@@ -299,13 +301,13 @@ namespace Novell.iFolder
 			Gdk.Pixbuf pb = new Pixbuf(Gdk.Colorspace.Rgb, false, 
 						8, size.Width, size.Height);
 
-			pb = pb.CreateFromDrawable(	pm, pm.Colormap, 0, 0, 0, 0, 
+			pb = Pixbuf.FromDrawable(	pm, pm.Colormap, 0, 0, 0, 0, 
 						size.Width, size.Height);
 			pb = pb.AddAlpha(true, 255, 255,255);
 
-			RenderPixmapAndMask(pb, out daPixmap, out daBitmap, 2);
+			RenderPixmapAndMask(pb, out daPixmap, out daOtherPixmap, 2);
 			pbactive = pb;
-			pbbm = daBitmap;
+			pbpm = daOtherPixmap;
 
 			// Reset backgound to white and get next bitmap
 			gc.RgbFgColor = new Gdk.Color(255, 255, 255);
@@ -325,7 +327,7 @@ namespace Novell.iFolder
 			pm.DrawLine(gc, balloonptr[1].X, balloonptr[1].Y, balloonptr[2].X,
 							balloonptr[2].Y - 1);
 
-			pb = pb.CreateFromDrawable(	pm, 
+			pb = Pixbuf.FromDrawable(	pm, 
 						pm.Colormap, 0, 0, 0, 0, size.Width, size.Height);
 
 			pbinactive = pb;
@@ -487,7 +489,7 @@ namespace Novell.iFolder
 
 			if(closeWindowTimeoutID != 0)
 			{
-				Gtk.Timeout.Remove(closeWindowTimeoutID);
+				GLib.Source.Remove(closeWindowTimeoutID);
 				closeWindowTimeoutID = 0;
 			}
 
@@ -513,13 +515,13 @@ namespace Novell.iFolder
 			
 			if(closeWindowTimeoutID != 0)
 			{
-				Gtk.Timeout.Remove(closeWindowTimeoutID);
+				GLib.Source.Remove(closeWindowTimeoutID);
 				closeWindowTimeoutID = 0;
 			}
 
 			if (timeout > 0)
 			{
-				closeWindowTimeoutID = Gtk.Timeout.Add(timeout, new Gtk.Function(
+				closeWindowTimeoutID = GLib.Timeout.Add(timeout, new GLib.TimeoutHandler(
 							HideWindowCallback));
 			}
 
@@ -531,7 +533,7 @@ namespace Novell.iFolder
 			out IntPtr mask, ref Gdk.Color transparent_color, string filename);
 
 		public static Gdk.Pixmap CreateFromXpm(Gdk.Drawable drawable, 
-			out Gdk.Bitmap mask, Gdk.Color transparent_color, string filename) 
+			out Gdk.Pixmap mask, Gdk.Color transparent_color, string filename) 
 		{
 			IntPtr mask_handle;
 			IntPtr raw_ret = gdk_pixmap_create_from_xpm(drawable.Handle, 
@@ -546,7 +548,7 @@ namespace Novell.iFolder
 
 //			GLib.Object obj = GLib.Object.GetObject(mask_handle);
 //			Console.WriteLine(obj);
-			mask = new Gdk.Bitmap(mask_handle);
+			mask = new Gdk.Pixmap(mask_handle);
 
 			return ret;
 		}
@@ -557,7 +559,7 @@ namespace Novell.iFolder
 				int alpha_threshold);
 
 		public void RenderPixmapAndMask(Gdk.Pixbuf pixbuf, 
-				out Gdk.Pixmap pixmap_return, out Gdk.Bitmap mask_return, 
+				out Gdk.Pixmap pixmap_return, out Gdk.Pixmap mask_return, 
 				int alpha_threshold) 
 		{
 			IntPtr pm_handle;
@@ -567,7 +569,8 @@ namespace Novell.iFolder
 					out bm_handle, alpha_threshold);
 
 			pixmap_return = new Gdk.Pixmap(pm_handle);
-			mask_return = new Gdk.Bitmap(bm_handle);
+//			mask_return = new Gdk.Bitmap(bm_handle);
+			mask_return = new Gdk.Pixmap(bm_handle);
 		}
 	}
 	

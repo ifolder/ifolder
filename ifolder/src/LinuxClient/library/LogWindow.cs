@@ -44,10 +44,11 @@ namespace Novell.iFolder
 //		private iFolderWebService	iFolderWS;
 
 		private Toolbar				toolbar;
+		private Tooltips			ToolbarTooltips;
 		private TreeView			LogTreeView;
 		private ListStore			LogTreeStore;
-		private Widget				SaveButton;
-		private Widget				ClearButton;
+		private ToolButton			SaveButton;
+		private ToolButton			ClearButton;
 		private bool				ControlKeyPressed;
 		private Manager				simiasManager;
 		
@@ -151,16 +152,25 @@ namespace Novell.iFolder
 		private Toolbar CreateToolbar()
 		{
 			Toolbar tb = new Toolbar();
+			ToolbarTooltips = new Tooltips();
 
-			SaveButton = tb.AppendItem(Util.GS("Save"), 
-				Util.GS("Save the synchronization log"), "Toolbar/Save Log",
-				new Image(Stock.Save, Gtk.IconSize.LargeToolbar),
-				new SignalFunc(SaveLog));
+//			SaveButton = tb.AppendItem(Util.GS("Save"), 
+//				Util.GS("Save the synchronization log"), "Toolbar/Save Log",
+//				new Image(Stock.Save, Gtk.IconSize.LargeToolbar),
+//				new SignalFunc(SaveLog));
+			SaveButton = new ToolButton(Gtk.Stock.Save);
+			SaveButton.SetTooltip(ToolbarTooltips, Util.GS("Save the synchronization log"), "Toolbar/Save Log");
+			SaveButton.Clicked += new EventHandler(SaveLogHandler);
+			tb.Insert(SaveButton, -1);
 
-			ClearButton = tb.AppendItem(Util.GS("Clear"), 
-				Util.GS("Clear the synchronization log"), "Toolbar/Clear Log",
-				new Image(Stock.Clear, Gtk.IconSize.LargeToolbar),
-				new SignalFunc(ClearLog));
+//			ClearButton = tb.AppendItem(Util.GS("Clear"), 
+//				Util.GS("Clear the synchronization log"), "Toolbar/Clear Log",
+//				new Image(Stock.Clear, Gtk.IconSize.LargeToolbar),
+//				new SignalFunc(ClearLog));
+			ClearButton = new ToolButton(Gtk.Stock.Clear);
+			ClearButton.SetTooltip(ToolbarTooltips, Util.GS("Clear the synchronization log"), "Toolbar/Clear Log");
+			ClearButton.Clicked += new EventHandler(ClearLogHandler);
+			tb.Insert(ClearButton, -1);
 
 			SaveButton.Sensitive = false;
 			ClearButton.Sensitive = false;
@@ -240,7 +250,7 @@ namespace Novell.iFolder
 		{
 			switch(args.Action)
 			{
-				case Action.StartLocalSync:
+				case Simias.Client.Event.Action.StartLocalSync:
 					if (args.Name != null && args.Name.StartsWith("POBox:"))
 					{
 						DomainController domainController = DomainController.GetDomainController(simiasManager);
@@ -256,7 +266,7 @@ namespace Novell.iFolder
 							"Checking for changes: {0}"), args.Name));
 					}
 					break;
-				case Action.StartSync:
+				case Simias.Client.Event.Action.StartSync:
 				{
 					// We only need to add a log entry for the PO Box in the
 					// StartLocalSync case.  Moved that code there.
@@ -267,7 +277,7 @@ namespace Novell.iFolder
 					}
 					break;
 				}
-				case Action.StopSync:
+				case Simias.Client.Event.Action.StopSync:
 				{
 					if (args.Name != null && args.Name.StartsWith("POBox:"))
 					{
@@ -443,6 +453,10 @@ namespace Novell.iFolder
 			catch {}
 		}
 
+		private void SaveLogHandler(object sender, EventArgs args)
+		{
+			SaveLog();
+		}
 
 		private void SaveLog()
 		{
@@ -573,6 +587,11 @@ namespace Novell.iFolder
 			cfcd.Destroy();
 		}
 
+
+		private void ClearLogHandler(object sender, EventArgs args)
+		{
+			ClearLog();
+		}
 
 
 		private void ClearLog()
