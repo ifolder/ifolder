@@ -37,26 +37,27 @@ CATALOGS := $(subst .po,.mo,$(POFILES))
 
 EXTRA_DIST = $(POFILES)
 
-update-po: $(POFILES)
+update-po:
 	cd ../../../; \
-	echo Updating po file: $$pofile; \
+	echo Updating pot file: $(PACKAGE).pot; \
 	xgettext --output-dir=src/LinuxClient/po/ \
 			--files-from=src/LinuxClient/po/POTFILES \
 			--language=C# \
 			--join-existing \
+			--from-code=UTF-8 \
 			--output=$(srcdir)/ifolder3.pot \
 			--keyword="Util.GS"; 
-	cd ../../../; \
+
+	echo updating CHARSET to UTF-8;
+	cp ifolder3.pot ifolder3.bak;
+	cat ifolder3.bak | sed "s/charset=CHARSET/charset=UTF-8/" > ifolder3.pot;
+	rm -f ifolder3.bak;
+	
+	echo Updating po files from $(PACKAGE).pot;
 	pofiles='$(POFILES)'; \
 	for pofile in $$pofiles; do \
 		pofile=`basename $$pofile`; \
-		echo Updating po file: $$pofile; \
-		xgettext --output-dir=src/LinuxClient/po/ \
-				--files-from=src/LinuxClient/po/POTFILES \
-				--language=C# \
-				--join-existing \
-				--output=$$pofile \
-				--keyword="Util.GS"; \
+		msginit -l UTF-8 -o $$pofile -i $(srcdir)/ifolder3.pot --no-translator; \
 	done
 
 all: $(CATALOGS)
