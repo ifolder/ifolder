@@ -296,8 +296,8 @@ namespace Simias.Web
 				string Name, string UserID, string Type, 
 				bool UnmanagedFiles, string CollectionPath)
 		{
-			return (CreateSharedCollection(Name, Store.GetStore().DefaultDomain,
-										   UserID, Type, UnmanagedFiles, CollectionPath));
+			return (CreateSharedCollection(Name, null, UserID, Type,
+				UnmanagedFiles, CollectionPath));
 		}
 
 
@@ -323,7 +323,38 @@ namespace Simias.Web
 			string Name, string DomainID, string UserID, string Type,
 			bool UnmanagedFiles, string CollectionPath)
 		{
+			return (CreateSharedCollection(Name, null, UserID, Type,
+				UnmanagedFiles, CollectionPath, null));
+		}
+
+		/// <summary>
+		/// WebMethod that creates a SharedCollection
+		/// </summary>
+		/// <param name="Name">The name of the SharedCollection to create.  If a Path is
+		/// specified, it must match the name of the last folder in the path.</param>
+		/// <param name="DomainID">The ID of the domain to create the collection in.</param>
+		/// <param name="UserID">The UserID to be made the owner of this SharedCollection. 
+		/// A subscription will be placed in this UserID's POBox.</param>
+		/// <param name="Type">A Type value to add to the collection type.  Examples would be
+		/// iFolder, AB:AddressBook, etc. Leave this blank and no type will be added.</param>
+		/// <param name="UnmanagedFiles">A value indicating if this collection contains files
+		/// that are not store-managed.</param>
+		/// <param name="CollectionPath">The full path to this SharedCollection.  If Path is 
+		/// null or "", it will be ignored. The last folder name in the path should match the 
+		/// name of this SharedCollection</param>
+		/// <param name="Description">The description of the SharedCollection to create.</param>
+		/// <returns>The Collection object that was created.</returns>
+		public static Collection CreateSharedCollection(
+			string Name, string DomainID, string UserID, string Type,
+			bool UnmanagedFiles, string CollectionPath, string Description)
+		{
 			ArrayList nodeList = new ArrayList();
+
+			// check DomainID and default
+			if (DomainID == null)
+			{
+				DomainID = Store.GetStore().DefaultDomain;
+			}
 
 			// if they are attempting to create a Collection using
 			// a path, then check to see if that path can be used
@@ -373,8 +404,15 @@ namespace Simias.Web
 			Collection c = 
 					new Collection(store, Name, DomainID);
 
+			// type
 			if( (Type != null) && (Type.Length > 0) )
 				c.SetType(c, Type);
+
+			// description
+			if ((Description != null) && (Description.Length > 0))
+			{
+				c.Properties.AddProperty(PropertyTags.Description, Description);
+			}
 
 			nodeList.Add(c);
 
