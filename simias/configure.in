@@ -488,6 +488,11 @@ src/POBoxWS/Makefile
 src/SyncService/Makefile
 src/SqliteProvider/Makefile
 src/libsimias/Makefile
+src/simias-shell/Makefile
+src/api/Makefile
+src/api/libsimias/Makefile
+src/api/WebService/Makefile
+src/api/WebService/AssemblyInfo.cs
 test/Makefile
 test/Common/Makefile
 test/ChangeLog/Makefile

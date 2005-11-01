@@ -3,7 +3,6 @@ SUBDIRS = libsimias WebService
 
 EXTRA_DIST = 
 
-
 clean-local:
 	rm -rf $(COMMON_CLEAN_FILES)
 

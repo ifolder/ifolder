@@ -25,6 +25,8 @@
 
 #include <stdbool.h>
 #include <stdio.h>
+#include <libxml/parser.h>
+#include <libxml/tree.h>
 
 #include "simiaswebStub.h"
 
@@ -38,6 +40,11 @@
 #define SIMIAS_ERROR_NO_PASSWORD_FILE		-106
 #define SIMIAS_ERROR_OPENING_PASSWORD_FILE	-107
 
+#define SIMIAS_ERROR_INVALID_POINTER		-108
+#define SIMIAS_ERROR_INDEX_OUT_OF_RANGE		-109
+
+#define _SIMIAS_ERROR_INVALID_RESULTXML		-201
+
 struct _SimiasHandle
 {
 	char	*username;
@@ -49,10 +56,27 @@ struct _SimiasHandle
 
 struct _SimiasNodeList
 {
-	char *result;
+	int nodeCount;
+	struct _SimiasNode **nodeArray;
 };
 
+struct _SimiasNode
+{
+	char *name;
+	char *id;
+	char *type;
 
+	xmlNode	*node;
+};
+
+struct _SimiasProperty
+{
+	char *name;
+	char *type;
+	char *value;
+
+	xmlNode *node;
+};
 
 /**
  * This function will return the full URL of where Simias is currently running.
@@ -94,6 +118,15 @@ int simias_get_local_service_url(char **url);
  */
 static char *parse_local_service_url(FILE *file);
 
+int _simias_node_create(struct _SimiasNode **_hNode, xmlNode *node);
 
+int _simias_nodelist_create(struct _SimiasNodeList **_hNodeList,
+										char *resultXML);
+
+int _simias_property_create(struct _SimiasProperty **_hProperty, xmlNode *node);
+int _simias_property_get_count(struct _SimiasNode *_hNode);
+int _simias_property_extract_property(struct _SimiasNode *_hNode, 
+									  struct _SimiasProperty **_hProperty,
+									  int index);
 
 #endif	// _SIMIAS_INTERNAL_H

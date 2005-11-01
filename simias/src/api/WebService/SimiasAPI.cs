@@ -93,7 +93,7 @@ namespace Simias.Web
 		public string GetDomains()
 		{
 			StringBuilder result = new StringBuilder();
-			result.Append("<?xml verion=\"1.0\"?>");
+			result.Append("<?xml version=\"1.0\"?>");
 			result.Append("<ObjectList>");
 
 			try
@@ -119,6 +119,206 @@ namespace Simias.Web
 
 			return result.ToString();
 		}
+
+		/// <summary>
+		/// WebMethod that gets collections
+		/// </summary>
+		[WebMethod(EnableSession=true, Description="Returns all collections in Simias with optional only slaves")]
+		[SoapDocumentMethod]
+		public string GetCollections()
+		{
+			StringBuilder result = new StringBuilder();
+			result.Append("<?xml version=\"1.0\"?>");
+			result.Append("<ObjectList>");
+
+			try
+			{
+				Store store = Store.GetStore();
+
+				ICSList domainList = store.GetDomainList();
+
+				foreach( ShallowNode sn in domainList )
+				{
+                    ICSList collectionlist = store.GetCollectionsByDomain(sn.ID);
+
+                    foreach( ShallowNode csn in collectionlist )
+                    {
+                        Collection c = store.GetCollectionByID(csn.CollectionID);
+
+                        result.Append(c.Properties.ToString(false).Replace("<ObjectList>", "").Replace("</ObjectList>", ""));
+                    }
+				}
+			}
+			catch(Exception e) 
+			{
+				return e.ToString();
+			}
+			
+			result.Append("</ObjectList>");
+
+			return result.ToString();
+		}
+
+		/// <summary>
+		/// WebMethod that gets collections
+		/// </summary>
+		[WebMethod(EnableSession=true, Description="Returns all collections in Simias with optional only slaves")]
+		[SoapDocumentMethod]
+		public string GetCollectionsInDomain(string domainID)
+		{
+			StringBuilder result = new StringBuilder();
+			result.Append("<?xml version=\"1.0\"?>");
+			result.Append("<ObjectList>");
+
+			try
+			{
+				Store store = Store.GetStore();
+
+                ICSList collectionlist = store.GetCollectionsByDomain(domainID);
+
+                foreach( ShallowNode csn in collectionlist )
+                {
+                    Collection c = store.GetCollectionByID(csn.CollectionID);
+
+                    result.Append(c.Properties.ToString(false).Replace("<ObjectList>", "").Replace("</ObjectList>", ""));
+                }
+			}
+			catch(Exception e) 
+			{
+				return e.ToString();
+			}
+			
+			result.Append("</ObjectList>");
+
+			return result.ToString();
+		}
+
+		/// <summary>
+		/// WebMethod that gets collections
+		/// </summary>
+		[WebMethod(EnableSession=true, Description="Returns all collections in Simias with optional only slaves")]
+		[SoapDocumentMethod]
+		public string GetCollectionsByType(string type)
+		{
+			StringBuilder result = new StringBuilder();
+			result.Append("<?xml version=\"1.0\"?>");
+			result.Append("<ObjectList>");
+
+			try
+			{
+				Store store = Store.GetStore();
+
+				ICSList domainList = store.GetDomainList();
+
+				foreach( ShallowNode sn in domainList )
+				{
+                    ICSList collectionlist = store.GetCollectionsByDomain(sn.ID);
+
+                    foreach( ShallowNode csn in collectionlist )
+                    {
+                        Collection col = store.GetCollectionByID(csn.CollectionID);
+                        if (col.IsType(col, type))
+                        {
+                            result.Append(col.Properties.ToString(false).Replace("<ObjectList>", "").Replace("</ObjectList>", ""));
+                        }
+                    }
+				}
+			}
+			catch(Exception e) 
+			{
+				return e.ToString();
+			}
+			
+			result.Append("</ObjectList>");
+
+			return result.ToString();
+		}
+
+		/// <summary>
+		/// WebMethod that gets collections
+		/// </summary>
+		[WebMethod(EnableSession=true, Description="Returns all collections in Simias with optional only slaves")]
+		[SoapDocumentMethod]
+		public string GetCollectionsInDomainByType(string domainID, string type)
+		{
+			StringBuilder result = new StringBuilder();
+			result.Append("<?xml version=\"1.0\"?>");
+			result.Append("<ObjectList>");
+
+			try
+			{
+				Store store = Store.GetStore();
+
+                ICSList collectionlist = store.GetCollectionsByDomain(domainID);
+
+                foreach( ShallowNode csn in collectionlist )
+                {
+                    Collection col = store.GetCollectionByID(csn.CollectionID);
+                    if (col.IsType(col, type))
+                    {
+                        result.Append(col.Properties.ToString(false).Replace("<ObjectList>", "").Replace("</ObjectList>", ""));
+                    }
+                }
+			}
+			catch(Exception e) 
+			{
+				return e.ToString();
+			}
+			
+			result.Append("</ObjectList>");
+
+			return result.ToString();
+		}
+
+
+        /// <summary>
+        /// WebMethod that gets nodes from a collection
+        /// </summary>
+        [WebMethod(EnableSession=true, 
+                   Description="Returns all nodes in a collection")]
+        [SoapDocumentMethod]
+        public string GetNodes(string collectionID, string type)
+        {
+            StringBuilder result = new StringBuilder();
+            result.Append("<?xml version=\"1.0\"?>");
+            result.Append("<ObjectList>");
+
+            try
+            {
+                Store store = Store.GetStore();
+
+                Collection col = store.GetCollectionByID(collectionID);
+
+                if(type.Length > 0)
+                {
+                    ICSList nodeList = col.GetNodesByType(type);
+                    foreach( ShallowNode sn in nodeList )
+                    {
+                        Node node = col.GetNodeByID(sn.ID);
+                        result.Append(node.Properties.ToString(false).Replace("<ObjectList>", "").Replace("</ObjectList>", ""));
+                    }
+                }
+                else
+                {
+                    foreach( ShallowNode sn in col )
+                    {
+                        Node node = col.GetNodeByID(sn.ID);
+                        result.Append(node.Properties.ToString(false).Replace("<ObjectList>", "").Replace("</ObjectList>", ""));
+                    }
+                }
+            }
+            catch(Exception e) 
+            {
+                return e.ToString();
+            }
+
+            result.Append("</ObjectList>");
+
+            return result.ToString();
+        }
+
+
+
 	}
 }
 

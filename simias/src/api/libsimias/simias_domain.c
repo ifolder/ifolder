@@ -50,8 +50,8 @@ int simias_get_domains(SimiasHandle hSimias, SimiasNodeList *hNodeList)
 	}
 	else
 	{
-		struct _SimiasNodeList *nl = malloc(sizeof(struct _SimiasNodeList));
-		nl->result = strdup(response.GetDomainsResult);
+		struct _SimiasNodeList *nl;
+		_simias_nodelist_create(&nl, response.GetDomainsResult);
 		*hNodeList = (SimiasNodeList *)nl;
 	}
 
