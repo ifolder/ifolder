@@ -28,24 +28,30 @@ namespace Novell.iFolder
 {
 	public class iFolderAcceptDialog : Dialog
 	{
-		private Entry		pathEntry;
+		FileChooserWidget fileChooserWidget;
+
 		private string		initialPath;
+		private Label		previewPath;
+		private iFolderWeb	ifolder;
+		
 
 		public new string Path
 		{
 			get
 			{
-				return pathEntry.Text;
+				return fileChooserWidget.CurrentFolder;
+				// FIXME: Replace the above line with fileChooserWidget.Filename once iFolder allows users to name their local iFolder
 			}
 		}
 
 		public iFolderAcceptDialog(iFolderWeb ifolder, string initialPath) : base()
 		{
 			this.Title = "";
-			this.SetDefaultSize (500, 200);
+			this.SetDefaultSize (600, 500);
 
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
 
+			this.ifolder = ifolder;
 			this.initialPath = initialPath;
 
 //			this.BorderWidth = 10;
@@ -68,7 +74,7 @@ namespace Novell.iFolder
 
 
 			VBox detailBox = new VBox();
-			dialogBox.PackStart(detailBox, true, true, 0);
+			dialogBox.PackStart(detailBox, false, false, 0);
 
 			l = new Label(Util.GS("Details:"));
 			l.Xalign = 0;
@@ -85,39 +91,35 @@ namespace Novell.iFolder
 			ScrolledWindow sw = new ScrolledWindow();
 			sw.ShadowType = Gtk.ShadowType.EtchedIn;
 			sw.Add(tv);
-			detailBox.PackStart(sw, true, true, 0);
+			detailBox.PackStart(sw, false, false, 0);
 
 
-			l = new Label(Util.GS("Choose a location on this computer for the iFolder."));
+			l = new Label(Util.GS("The iFolder will be set up here:"));
 
 			l.LineWrap = false;
-			l.Xalign = 0; l.Yalign = 0;
+			l.Xalign = 0; l.Yalign = 1;
 			dialogBox.PackStart(l, false, false, 0);
 
+			previewPath = new Label();
+			previewPath.Xalign = 0; previewPath.Yalign = 0;
+			previewPath.Wrap = true;
+			dialogBox.PackStart(previewPath, false, false, 0);
 
-
-			VBox locBox = new VBox();
-			dialogBox.PackEnd(locBox, false, true, 0);
-
-			Label pathLabel = new Label(Util.GS("Location:"));
-			pathLabel.Xalign = 0;
-			locBox.PackStart(pathLabel, false, true, 0);
-
-			HBox pathBox = new HBox();
-			pathBox.Spacing = 10;
-			locBox.PackStart(pathBox, false, true, 0);
-
-			pathEntry = new Entry();
-			pathEntry.Changed += new EventHandler(OnPathChanged);
-			pathBox.PackStart(pathEntry, true, true, 0);
-
+			fileChooserWidget =
+				new FileChooserWidget(FileChooserAction.SelectFolder, "");
+// FIXME: Remove the above line and replace it with the line below once iFolder allows users to name their local iFolders
+//				new FileChooserWidget(FileChooserAction.CreateFolder, "");
+			fileChooserWidget.SelectMultiple = false;
+			fileChooserWidget.LocalOnly = true;
+			fileChooserWidget.CurrentName = ifolder.Name;
+			
 			if (this.initialPath != null && this.initialPath.Length > 0)
-				pathEntry.Text = this.initialPath;
-
-			Button pathButton = new Button(Util.GS("Browse"));
-			pathButton.Clicked += new EventHandler(OnChoosePath);
-			pathBox.PackEnd(pathButton, false, false, 0);
-
+				fileChooserWidget.SetCurrentFolder(this.initialPath);
+			
+			fileChooserWidget.SelectionChanged +=
+				new EventHandler(OnFileChooserSelectionChanged);
+			
+			dialogBox.PackStart(fileChooserWidget, true, true, 0);
 
 			this.VBox.ShowAll();
 
@@ -128,44 +130,12 @@ namespace Novell.iFolder
 			else
 				this.SetResponseSensitive(ResponseType.Ok, false);
 		}
-
-
-		private void OnChoosePath(object o, EventArgs args)
+		
+		
+		private void OnFileChooserSelectionChanged(object sender, EventArgs args)
 		{
-			// Switched out to use the compatible file selector
-			CompatFileChooserDialog cfcd = new CompatFileChooserDialog(
-					Util.GS("Choose a folder..."), this, 
-					CompatFileChooserDialog.Action.SelectFolder);
-
-			if (pathEntry.Text != null && pathEntry.Text.Length > 0)
-				cfcd.CurrentFolder = pathEntry.Text;
-			else if (this.initialPath != null && this.initialPath.Length > 0)
-				cfcd.CurrentFolder = this.initialPath;
-
-			int rc = cfcd.Run();
-			cfcd.Hide();
-
-			if(rc == -5)
-			{
-				pathEntry.Text = cfcd.Selections[0];
-			}
+			previewPath.Text = System.IO.Path.Combine(fileChooserWidget.Filename, ifolder.Name);
 		}
-
-
-
-		private void OnPathChanged(object obj, EventArgs args)
-		{
-			if(pathEntry.Text.Length > 0)
-			{
-				this.SetResponseSensitive(ResponseType.Ok, true);
-			}
-			else
-			{
-				this.SetResponseSensitive(ResponseType.Ok, false);
-			}
-		}
-
-
 
 		private string GetDisplayRights(string rights)
 		{
