@@ -831,7 +831,7 @@
 	</data>
   
 	<data name="doneCheckingForiFolders">
-		<value>Done checking for new iFolders: {0}</value>
+		<value>检查新 iFolder 完成</value>
 	</data>
   
 	<data name="localSync">
@@ -927,7 +927,7 @@
 	</data>
   
 	<data name="quotaFailureTitle">
-		<value>Incomplete Synchronization: {0}</value>
+		<value>同步不完整</value>
 	</data>
   
 	<data name="quotaFailureInfo">
