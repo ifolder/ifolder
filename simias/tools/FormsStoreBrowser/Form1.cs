@@ -79,6 +79,8 @@ namespace StoreBrowser
 
 		private CertPolicy certPolicy = new CertPolicy();
 		private bool ascending = true;
+		private StoreBrowser.SearchEditor searchEditor1;
+		private System.Windows.Forms.MenuItem menuSearch;
 		private int prevColumn = 0;
 
 		public bool IsXmlView
@@ -142,10 +144,12 @@ namespace StoreBrowser
 			this.Flags = new System.Windows.Forms.ColumnHeader();
 			this.NodeMenu = new System.Windows.Forms.ContextMenu();
 			this.cmDelete = new System.Windows.Forms.MenuItem();
+			this.menuSearch = new System.Windows.Forms.MenuItem();
 			this.PropertyMenu = new System.Windows.Forms.ContextMenu();
 			this.pcmDelete = new System.Windows.Forms.MenuItem();
 			this.pcmNew = new System.Windows.Forms.MenuItem();
 			this.pcmEdit = new System.Windows.Forms.MenuItem();
+			this.searchEditor1 = new StoreBrowser.SearchEditor();
 			this.SuspendLayout();
 			// 
 			// mainMenu1
@@ -235,6 +239,7 @@ namespace StoreBrowser
 			// tView
 			// 
 			this.tView.Dock = System.Windows.Forms.DockStyle.Left;
+			this.tView.HideSelection = false;
 			this.tView.ImageIndex = -1;
 			this.tView.Location = new System.Drawing.Point(0, 0);
 			this.tView.Name = "tView";
@@ -316,13 +321,21 @@ namespace StoreBrowser
 			// NodeMenu
 			// 
 			this.NodeMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-																					 this.cmDelete});
+																					 this.cmDelete,
+																					 this.menuSearch});
+			this.NodeMenu.Popup += new System.EventHandler(this.NodeMenu_Popup);
 			// 
 			// cmDelete
 			// 
 			this.cmDelete.Index = 0;
 			this.cmDelete.Text = "Delete";
 			this.cmDelete.Click += new System.EventHandler(this.cmDelete_Click);
+			// 
+			// menuSearch
+			// 
+			this.menuSearch.Index = 1;
+			this.menuSearch.Text = "Search";
+			this.menuSearch.Click += new System.EventHandler(this.menuSearch_Click);
 			// 
 			// PropertyMenu
 			// 
@@ -349,11 +362,21 @@ namespace StoreBrowser
 			this.pcmEdit.Text = "Edit";
 			this.pcmEdit.Click += new System.EventHandler(this.pcmEdit_Click);
 			// 
+			// searchEditor1
+			// 
+			this.searchEditor1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.searchEditor1.Location = new System.Drawing.Point(299, 0);
+			this.searchEditor1.Name = "searchEditor1";
+			this.searchEditor1.Size = new System.Drawing.Size(613, 574);
+			this.searchEditor1.TabIndex = 5;
+			this.searchEditor1.Visible = false;
+			// 
 			// Form1
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.ClientSize = new System.Drawing.Size(912, 574);
 			this.Controls.Add(this.listView1);
+			this.Controls.Add(this.searchEditor1);
 			this.Controls.Add(this.richTextBox1);
 			this.Controls.Add(this.splitter1);
 			this.Controls.Add(this.tView);
@@ -479,26 +502,43 @@ namespace StoreBrowser
 
 		private void tView_AfterSelect(object sender, System.Windows.Forms.TreeViewEventArgs e)
 		{
-			browser.ShowNode(e.Node);
-			SetBackgroundColor();
+			searchEditor1.BringToFront();
+			if ( e.Node.Text.Equals( "Queries" ) ||
+				( e.Node.Tag != null && e.Node.Tag.GetType().Equals( typeof( SearchExpression ) ) ) )
+			{
+				searchEditor1.Visible = true;
+				searchEditor1.SearchNode = e.Node;
+			}
+			else
+			{
+				searchEditor1.Visible = false;
+				Cursor.Current = Cursors.WaitCursor;
+				browser.ShowNode(e.Node);
+				Cursor.Current = Cursors.Default;
+				SetBackgroundColor();
+			}
 		}
 
 		private void tView_BeforeExpand(object sender, System.Windows.Forms.TreeViewCancelEventArgs e)
 		{
+			if ( e.Node.Text.Equals( "Queries" ) ||
+				( e.Node.Tag != null && e.Node.Tag.GetType().Equals( typeof( SearchExpression ) ) ) )
+				return;
+
 			e.Node.Nodes.Clear();
-			browser.AddChildren(e.Node);	
+
+			Cursor.Current = Cursors.WaitCursor;
+			browser.AddChildren(e.Node);
+			Cursor.Current = Cursors.Default;
 		}
 
 		private void tView_AfterCollapse(object sender, System.Windows.Forms.TreeViewEventArgs e)
 		{
-			if (e.Node.Tag != null)
+			if ((e.Node.Tag != null && !e.Node.Tag.GetType().Equals( typeof( SearchExpression ) ) )
+				|| e.Node.Text.Equals( "Store" ))
 			{
 				e.Node.Nodes.Clear();
 				e.Node.Nodes.Add("Temp");
-			}
-			else
-			{
-				browser.Show();
 			}
 		}
 
@@ -518,49 +558,91 @@ namespace StoreBrowser
 			}
 		}
 
+		private void NodeMenu_Popup(object sender, System.EventArgs e)
+		{
+			menuSearch.Enabled = tView.SelectedNode.Text.Equals( "Store" ) || 
+				( tView.SelectedNode.Tag != null &&
+				tView.SelectedNode.Tag.GetType().Equals( typeof( DisplayShallowNode ) ) &&
+				(( DisplayShallowNode )tView.SelectedNode.Tag).IsCollection );
+
+			cmDelete.Enabled = !( tView.SelectedNode.Text.Equals( "Store" ) || tView.SelectedNode.Text.Equals( "Queries" ) );
+		}
+
 		private void cmDelete_Click(object sender, System.EventArgs e)
 		{
 			tView.BeginUpdate();
 			TreeNode tn = tView.SelectedNode;
-			DisplayNode dspNode = (DisplayNode)tn.Tag;
-			if (dspNode != null)
+			if ( tn.Tag.GetType().Equals( typeof( DisplayNode ) ) )
 			{
-				if (dspNode.IsCollection)
+				DisplayNode dspNode = (DisplayNode)tn.Tag;
+				if (dspNode != null)
 				{
-					try
+					if (dspNode.IsCollection)
 					{
-						DialogResult result = MessageBox.Show("Do you really want to delete this collection?", "Delete collection", MessageBoxButtons.YesNo);
-						if (result == DialogResult.Yes)
+						try
 						{
-							browser.StoreBrowser.DeleteCollection(dspNode.ID);
-							tn.Remove();
+							DialogResult result = MessageBox.Show("Do you really want to delete this collection?", "Delete collection", MessageBoxButtons.YesNo);
+							if (result == DialogResult.Yes)
+							{
+								browser.StoreBrowser.DeleteCollection(dspNode.ID);
+								tn.Remove();
+							}
+						}
+						catch(Exception ex)
+						{
+							MessageBox.Show(ex.Message, "Error deleting collection");
 						}
 					}
-					catch(Exception ex)
+					else
 					{
-						MessageBox.Show(ex.Message, "Error deleting collection");
-					}
-				}
-				else
-				{
-					try
-					{
-						DialogResult result = MessageBox.Show("Do you really want to delete this node?", "Delete node", MessageBoxButtons.YesNo);
-						if (result == DialogResult.Yes)
+						try
 						{
-							browser.StoreBrowser.DeleteNode(dspNode.CollectionID, dspNode.ID);
-							tn.Remove();
+							DialogResult result = MessageBox.Show("Do you really want to delete this node?", "Delete node", MessageBoxButtons.YesNo);
+							if (result == DialogResult.Yes)
+							{
+								browser.StoreBrowser.DeleteNode(dspNode.CollectionID, dspNode.ID);
+								tn.Remove();
+							}
+						}
+						catch(Exception ex)
+						{
+							MessageBox.Show(ex.Message, "Error deleting node");
 						}
 					}
-					catch(Exception ex)
-					{
-						MessageBox.Show(ex.Message, "Error deleting node");
-					}
 				}
+			}
+			else if ( tn.Tag.GetType().Equals( typeof( SearchExpression ) ) )
+			{
+				tn.Remove();
 			}
 
 			tView.EndUpdate();
 			tView.Update();
+		}
+
+		private void menuSearch_Click(object sender, System.EventArgs e)
+		{
+			TreeNode node = tView.SelectedNode;
+			TreeNode queryNode;
+			SearchExpression search = new SearchExpression( (DisplayNode)tView.SelectedNode.Tag );
+			if ( node.Tag == null )
+			{
+				queryNode = node.PrevNode;
+			}
+			else
+			{
+				if ( node.Parent.Tag == null )
+				{
+					queryNode = node.Parent.PrevNode;
+				}
+				else
+				{
+					queryNode = node.Parent.Parent;
+				}
+			}
+
+			queryNode.Tag = search;
+			tView.SelectedNode = queryNode;
 		}
 
 		private void CmNew_Click(object sender, System.EventArgs e)
@@ -712,6 +794,7 @@ namespace StoreBrowser
 			this.listView1.Hide();
 			tView.ImageList = imageList1;
 			tView.Dock = DockStyle.Fill;
+			this.AcceptButton = this.searchEditor1.SearchButton;
 
 			LoadRecentStores();
 
@@ -840,6 +923,8 @@ namespace StoreBrowser
 				MessageBox.Show( ex.Message, "Error", MessageBoxButtons.OK );
 			}
 
+			searchEditor1.Browser = browser;
+
 			return result;
 		}
 
@@ -934,6 +1019,7 @@ namespace StoreBrowser
 		void Show();
 		void ShowNode(TreeNode node);
 		void AddChildren(TreeNode tNode);
+		void Search( SearchExpression searchExpression );
 		bool NeedsAuthentication();
 		bool ValidateCredentials();
 		bool ValidateCredentials( string userName, string password );
