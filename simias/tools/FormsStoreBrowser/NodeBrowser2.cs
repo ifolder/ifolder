@@ -92,6 +92,7 @@ namespace StoreBrowser
 	/// </summary>
 	public class NodeBrowser2 : IStoreBrowser
 	{
+		private TreeNode searchNode;
 		BrowserService browser;
 		Form1 form;
 		TreeView tView;
@@ -151,6 +152,85 @@ namespace StoreBrowser
 			get { return password; }
 		}
 
+		public void Search( SearchExpression searchExpression )
+		{
+			TreeNode tNode;
+
+			// Build the name of the node.
+			string name = buildDisplayName( searchExpression );
+
+			if ( tView.SelectedNode.Equals( searchNode ) )
+			{
+				// Create a tree node to place this search under.
+				tNode = new TreeNode( name, nodeImage( "Search" ), nodeImage( "Search" ) );
+				tNode.Tag = searchNode.Tag;
+				searchNode.Nodes.Add( tNode );
+			}
+			else
+			{
+				// A new search is being performed ... clear the current tree node.
+				tNode = tView.SelectedNode;
+				tNode.Text = name;
+				tNode.Nodes.Clear();
+			}
+
+			try
+			{
+				string searchTarget = searchExpression.Target == null ? string.Empty : searchExpression.Target.CollectionID;
+
+				BrowserShallowNode[] bsnList = 
+					browser.SearchForShallowNodes(
+					searchTarget,
+					searchExpression.PropertyName,
+					searchExpression.PropertyType,
+					searchExpression.PropertyValue,
+					searchExpression.Operation);
+				foreach (BrowserShallowNode bsn in bsnList)
+				{
+					DisplayShallowNode n = new DisplayShallowNode( bsn );
+					TreeNode nNode = new TreeNode(n.Name, nodeImage(n.Type), nodeImage(n.Type));
+					nNode.Tag = n;
+					tNode.Nodes.Add(nNode);
+					if ( n.IsCollection )
+					{
+						nNode.Nodes.Add("temp");
+					}
+				}
+
+				tView.SelectedNode = tNode;
+			}
+			catch (Exception e)
+			{
+				MessageBox.Show("Exception caught during search\n" + e.Message);
+			}
+		}
+
+		public void AddChildren(TreeNode tNode)
+		{
+			if (tNode.Tag == null)
+			{
+				addCollections(tNode);
+			}
+			else
+			{
+				DisplayShallowNode dspNode = (DisplayShallowNode)tNode.Tag;
+				if (dspNode.IsCollection)
+				{
+					BrowserShallowNode[] bsList = browser.EnumerateShallowNodes(dspNode.ID);
+					foreach (BrowserShallowNode bsn in bsList)
+					{
+						DisplayShallowNode n = new DisplayShallowNode( bsn );
+						if (n.ID != dspNode.ID)
+						{
+							TreeNode nNode = new TreeNode(n.Name, nodeImage(n.Type), nodeImage(n.Type));
+							nNode.Tag = n;
+							tNode.Nodes.Add(nNode);
+						}
+					}
+				}
+			}
+		}
+
 		public bool NeedsAuthentication()
 		{
 			bool needsAuth = true;
@@ -204,6 +284,9 @@ namespace StoreBrowser
 		{
 			tView.Nodes.Clear();
 			tView.BeginUpdate();
+			searchNode = new TreeNode( "Queries", nodeImage("Search"), nodeImage("Search") );
+			searchNode.Tag = new SearchExpression( null );
+			tView.Nodes.Add( searchNode );
 			TreeNode storeNode = new TreeNode("Store", nodeImage("Store"), nodeImage("Store"));
             tView.Nodes.Add(storeNode);
 			storeNode.Nodes.Add("temp");
@@ -212,7 +295,7 @@ namespace StoreBrowser
 
 		public void ShowNode(TreeNode tNode)
 		{
-			if ( tNode != null && tNode.Tag != null )
+			if ( tNode.Tag != null )
 			{
 				DisplayShallowNode sNode = (DisplayShallowNode)tNode.Tag;
 				BrowserNode bNode = browser.GetNodeByID( sNode.CollectionID, sNode.ID );
@@ -294,6 +377,60 @@ namespace StoreBrowser
 
 		#endregion
 
+		#region Private Methods
+		private string buildDisplayName( SearchExpression searchExpression )
+		{
+			string s;
+
+			switch ( searchExpression.Operation )
+			{
+				case "Equal":
+					s = "{0} = {1} (case-insensitive)";
+					break;
+				case "Not_Equal":
+					s = "{0} != {1}";
+					break;
+				case "Begins":
+					s = "{0} begins with {1}";
+					break;
+				case "Ends":
+					s = "{0} ends with {1}";
+					break;
+				case "Contains":
+					s = "{0} contains {1}";
+					break;
+				case "Greater":
+					s = "{0} > {1}";
+					break;
+				case "Less":
+					s = "{0} < {1}";
+					break;
+				case "Greater_Equal":
+					s = "{0} >= {1}";
+					break;
+				case "Less_Equal":
+					s = "{0} <= {1}";
+					break;
+				case "Exists":
+					s = "{0} exists";
+					break;
+				case "CaseEqual":
+					s = "{0} = {1} (case-sensitive)";
+					break;
+				default:
+					s = string.Empty;
+					break;
+			}
+
+			s = string.Format(
+				s + " ({2})", 
+				searchExpression.PropertyName,
+				searchExpression.PropertyValue,
+				searchExpression.Target == null ? "Store" : searchExpression.Target.Name);
+
+			return s;
+		}
+
 		private void writeXml(XmlDocument doc, TextWriter tw)
 		{
 			if (doc != null)
@@ -338,6 +475,9 @@ namespace StoreBrowser
 				case "Policy":
 					return 9;
 
+				case "Search":
+					return 12;
+
 				default:
 					return 10;
 			}
@@ -370,32 +510,6 @@ namespace StoreBrowser
 			tView.EndUpdate();
 		}
 
-		public void AddChildren(TreeNode tNode)
-		{
-			if (tNode.Tag == null)
-			{
-				addCollections(tNode);
-			}
-			else
-			{
-				DisplayShallowNode dspNode = (DisplayShallowNode)tNode.Tag;
-				if (dspNode.IsCollection)
-				{
-					BrowserShallowNode[] bsList = browser.EnumerateShallowNodes(dspNode.ID);
-					foreach (BrowserShallowNode bsn in bsList)
-					{
-						DisplayShallowNode n = new DisplayShallowNode( bsn );
-						if (n.ID != dspNode.ID)
-						{
-							TreeNode nNode = new TreeNode(n.Name, nodeImage(n.Type), nodeImage(n.Type));
-							nNode.Tag = n;
-							tNode.Nodes.Add(nNode);
-						}
-					}
-				}
-			}
-		}
-
 		private void Dispose(bool inFinalize)
 		{
 			if (!alreadyDisposed)
@@ -407,6 +521,7 @@ namespace StoreBrowser
 				alreadyDisposed = true;
 			}
 		}
+		#endregion
         
 		#region IDisposable Members
 

@@ -182,6 +182,21 @@
                     DependentUpon = "PropertyForm.cs"
                     BuildAction = "EmbeddedResource"
                 />
+                <File
+                    RelPath = "SearchEditor.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SearchEditor.resx"
+                    DependentUpon = "SearchEditor.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "SearchExpression.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
             </Include>
         </Files>
     </CSHARP>

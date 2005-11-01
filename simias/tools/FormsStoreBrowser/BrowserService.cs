@@ -271,6 +271,34 @@ public class BrowserService : System.Web.Services.Protocols.SoapHttpClientProtoc
     }
     
     /// <remarks/>
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/browser/SearchForShallowNodes", RequestNamespace="http://novell.com/simias/browser", ResponseNamespace="http://novell.com/simias/browser", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    public BrowserShallowNode[] SearchForShallowNodes(string collectionID, string propertyName, string propertyType, string propertyValue, string operation) {
+        object[] results = this.Invoke("SearchForShallowNodes", new object[] {
+                    collectionID,
+                    propertyName,
+                    propertyType,
+                    propertyValue,
+                    operation});
+        return ((BrowserShallowNode[])(results[0]));
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult BeginSearchForShallowNodes(string collectionID, string propertyName, string propertyType, string propertyValue, string operation, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("SearchForShallowNodes", new object[] {
+                    collectionID,
+                    propertyName,
+                    propertyType,
+                    propertyValue,
+                    operation}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public BrowserShallowNode[] EndSearchForShallowNodes(System.IAsyncResult asyncResult) {
+        object[] results = this.EndInvoke(asyncResult);
+        return ((BrowserShallowNode[])(results[0]));
+    }
+    
+    /// <remarks/>
     [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/browser/GetVersion", RequestNamespace="http://novell.com/simias/browser", ResponseNamespace="http://novell.com/simias/browser", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
     public string GetVersion() {
         object[] results = this.Invoke("GetVersion", new object[0]);
