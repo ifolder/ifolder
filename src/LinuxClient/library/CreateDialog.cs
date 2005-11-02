@@ -28,25 +28,26 @@ using System;
 
 namespace Novell.iFolder
 {
-	public class CreateDialog : Dialog
+	public class CreateDialog : FileChooserDialog
 	{
-		private Entry				pathEntry;
 		private DomainInformation[]	domains;
 		private ComboBox			domainComboBox;
 		private string				initialPath;
+		TextView					descriptionTextView;
+		iFolderWebService			ifws;
+		private uint				keyReleasedTimeoutID;
 
 		public string iFolderPath
 		{
 			get
 			{
-				return pathEntry.Text;
+				return this.Filename;
 			}
 			set
 			{
-				pathEntry.Text = value;
+				this.SetCurrentFolder(value);
 			}
 		}
-
 
 		public string DomainID
 		{
@@ -59,49 +60,66 @@ namespace Novell.iFolder
 					return "0";
 			}
 		}
+		
+		public string Description
+		{
+			get
+			{
+				return descriptionTextView.Buffer.Text;
+			}
+			set
+			{
+				descriptionTextView.Buffer.Text = value;
+			}
+		}
 
 		///
 		/// filteredDomainID: If the main iFolders window is currently
 		/// filtering the list of domains, this parameter is used to allow this
 		/// dialog to respect the currently selected domain.
-		public CreateDialog(DomainInformation[] domainArray, string filteredDomainID, string initialPath) : base()
+		public CreateDialog(Gtk.Window parentWindow, DomainInformation[] domainArray, string filteredDomainID, string initialPath, iFolderWebService ifws)
+				: base("", Util.GS("New iFolder..."), parentWindow, FileChooserAction.CreateFolder, Stock.Cancel, ResponseType.Cancel,
+                Stock.Ok, ResponseType.Ok)
 		{
 			domains = domainArray;
-
-			this.Title = "";
-
-			this.SetDefaultSize (500, 200);
 
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
 
 			this.initialPath = initialPath;
+			
+			this.ifws = ifws;
+			
+			keyReleasedTimeoutID = 0;
 
-			VBox dialogBox = new VBox();
-			dialogBox.Spacing = 10;
-			dialogBox.BorderWidth = 10;
-			dialogBox.Homogeneous = false;
-			this.VBox.PackStart(dialogBox, true, true, 0);
+			if (this.initialPath != null && this.initialPath.Length > 0)
+				this.SetCurrentFolder(this.initialPath);
 
-			Label l = new Label("<span weight=\"bold\" size=\"larger\">" +
-						Util.GS("New iFolder</span>"));
+			// More options expander
+			this.ExtraWidget = CreateMoreOptionsExpander(filteredDomainID);
 
-			l.LineWrap = false;
-			l.UseMarkup = true;
-			l.Selectable = false;
-			l.Xalign = 0; l.Yalign = 0;
-			dialogBox.PackStart(l, false, false, 0);
+			this.SetResponseSensitive(ResponseType.Ok, false);
+		}
+		
+		private Widget CreateMoreOptionsExpander(string filteredDomainID)
+		{
+			Expander moreOptionsExpander = new Expander(Util.GS("More options"));
 
-			VBox serverBox = new VBox();
-			dialogBox.PackStart(serverBox, false, true, 0);
-
-			l = new Label(Util.GS("Server:"));
+			Table optionsTable = new Table(2, 3, false);
+			moreOptionsExpander.Add(optionsTable);
+			
+			optionsTable.ColumnSpacing = 10;
+			optionsTable.RowSpacing = 10;
+			optionsTable.SetColSpacing(0, 30);
+			
+			Label l = new Label(Util.GS("iFolder Server:"));
 			l.Xalign = 0;
-			serverBox.PackStart(l, false, false, 0);
-
+			optionsTable.Attach(l, 1,2,0,1,
+								AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
 			// Set up Domains
 			domainComboBox = ComboBox.NewText();
-			serverBox.PackStart(domainComboBox, true, true, 0);
+			optionsTable.Attach(domainComboBox, 2,3,0,1,
+								AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
 			
 			int defaultDomain = 0;
 			for (int x = 0; x < domains.Length; x++)
@@ -118,89 +136,82 @@ namespace Novell.iFolder
 			
 			domainComboBox.Active = defaultDomain;
 
-			VBox locBox = new VBox();
-			dialogBox.PackEnd(locBox, false, true, 0);
-
-			Label pathLabel = new Label(Util.GS("Location:"));
-			pathLabel.Xalign = 0;
-			locBox.PackStart(pathLabel, false, true, 0);
-
-			HBox pathBox = new HBox();
-			pathBox.Spacing = 10;
-			locBox.PackStart(pathBox, false, true, 0);
-
-			pathEntry = new Entry();
-			pathEntry.Changed += new EventHandler(OnPathChanged);
-			pathBox.PackStart(pathEntry, true, true, 0);
+			l = new Label(Util.GS("Description:"));
+			l.Xalign = 0;
+			optionsTable.Attach(l, 1,2,1,2,
+								AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			
-			if (this.initialPath != null && this.initialPath.Length > 0)
-				pathEntry.Text = this.initialPath;
-
-			Button pathButton = new Button(Util.GS("Browse"));
-			pathButton.Clicked += new EventHandler(OnChoosePath);
-			pathBox.PackEnd(pathButton, false, false, 0);
-
-
-			this.VBox.ShowAll();
-
-			this.AddButton(Stock.Cancel, ResponseType.Cancel);
-			this.AddButton(Stock.Ok, ResponseType.Ok);
+			descriptionTextView = new TextView();
+			descriptionTextView.LeftMargin = 4;
+			descriptionTextView.RightMargin = 4;
+			descriptionTextView.Editable = true;
+			descriptionTextView.CursorVisible = true;
+			descriptionTextView.AcceptsTab = false;
+			descriptionTextView.WrapMode = WrapMode.WordChar;
 			
-			this.SetResponseSensitive(ResponseType.Ok, false);
+			ScrolledWindow sw = new ScrolledWindow();
+			sw.ShadowType = ShadowType.EtchedIn;
+			sw.Add(descriptionTextView);
+			optionsTable.Attach(sw, 2,3,1,2,
+								AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
+			
+			optionsTable.ShowAll();
+			
+			return moreOptionsExpander;
 		}
 
-
-
-
-		private void OnChoosePath(object o, EventArgs args)
+		protected override void OnSelectionChanged()
 		{
-			// Switched out to use the compatible file selector
-			CompatFileChooserDialog cfcd = new CompatFileChooserDialog(
-					Util.GS("Choose a folder..."), this, 
-					CompatFileChooserDialog.Action.SelectFolder);
+			string currentPath = this.Filename;
 
-			if (pathEntry.Text != null && pathEntry.Text.Length > 0)
-				cfcd.CurrentFolder = pathEntry.Text;
-			else if (this.initialPath != null && this.initialPath.Length > 0)
-				cfcd.CurrentFolder = this.initialPath;
-
-			int rc = cfcd.Run();
-			cfcd.Hide();
-
-			if(rc == -5)
+			try
 			{
-				pathEntry.Text = cfcd.Selections[0];
+				if (ifws.CanBeiFolder(currentPath))
+					this.SetResponseSensitive(ResponseType.Ok, true);
+				else
+					this.SetResponseSensitive(ResponseType.Ok, false);
 			}
-		}
-
-
-
-
-		private void OnPathChanged(object obj, EventArgs args)
-		{
-			if(pathEntry.Text.Length > 0)
-			{
-				this.SetResponseSensitive(ResponseType.Ok, true);
-			}
-			else
+			catch (Exception e)
 			{
 				this.SetResponseSensitive(ResponseType.Ok, false);
 			}
 		}
-
-
-
-		private string GetDisplayRights(string rights)
+		
+		protected override bool OnKeyReleaseEvent(Gdk.EventKey evnt)
 		{
-			if(rights == "ReadWrite")
-				return Util.GS("Read/Write");
-			else if(rights == "Admin")
-				return Util.GS("Full Control");
-			else if(rights == "ReadOnly")
-				return Util.GS("Read Only");
-			else
-				return Util.GS("Unknown");
-		}
+			if (descriptionTextView.HasFocus)
+				return true;  // Don't do anything here
+			
+			if (keyReleasedTimeoutID != 0)
+			{
+				GLib.Source.Remove(keyReleasedTimeoutID);
+				keyReleasedTimeoutID = 0;
+			}
 
+			// If the user is typing something in the name really quickly
+			// delay the ifws.CanBeiFolder() call so that the dialog is
+			// more responsive.
+			keyReleasedTimeoutID =
+				GLib.Timeout.Add(100,
+								 new GLib.TimeoutHandler(CheckEnableOkButton));
+
+			return true;
+		}
+		
+		private bool CheckEnableOkButton()
+		{
+			try
+			{
+				string currentPath = this.Filename;
+				if (ifws.CanBeiFolder(currentPath))
+				{
+					this.SetResponseSensitive(ResponseType.Ok, true);
+					return false;
+				}
+			}
+			catch{}
+			this.SetResponseSensitive(ResponseType.Ok, false);
+			return false;
+		}
 	}
 }

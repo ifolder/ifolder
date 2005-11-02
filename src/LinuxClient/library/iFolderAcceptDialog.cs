@@ -28,11 +28,10 @@ namespace Novell.iFolder
 {
 	public class iFolderAcceptDialog : Dialog
 	{
-		FileChooserWidget fileChooserWidget;
-
+		private iFolderWeb	ifolder;
 		private string		initialPath;
 		private Label		previewPath;
-		private iFolderWeb	ifolder;
+		FileChooserWidget	fileChooserWidget;
 		
 
 		public new string Path
