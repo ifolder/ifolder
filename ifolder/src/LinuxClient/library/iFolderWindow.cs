@@ -2151,8 +2151,8 @@ namespace Novell.iFolder
 			}
 			else
 				domainID = curDomain.ID;
-	
-			CreateDialog cd = new CreateDialog(domains, domainID, Util.LastCreatedPath);
+
+			CreateDialog cd = new CreateDialog(this, domains, domainID, Util.LastCreatedPath, ifws);
 			cd.TransientFor = this;
 	
 			int rc = 0;
@@ -2161,7 +2161,8 @@ namespace Novell.iFolder
 				rc = cd.Run();
 				cd.Hide();
 
-				if(rc == -5)
+				if (rc == (int)ResponseType.Ok)
+//				if(rc == -5)
 				{
 					try
 					{
@@ -2292,7 +2293,8 @@ namespace Novell.iFolder
 					}
 				}
 			}
-			while(rc == -5);
+			while(rc == (int)ResponseType.Ok);
+//			while(rc == -5);
 		}
 
 		public void DomainFilterChangedHandler(object o, EventArgs args)
