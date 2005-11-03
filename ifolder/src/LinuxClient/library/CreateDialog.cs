@@ -138,6 +138,7 @@ namespace Novell.iFolder
 
 			l = new Label(Util.GS("Description:"));
 			l.Xalign = 0;
+			l.Yalign = 0;
 			optionsTable.Attach(l, 1,2,1,2,
 								AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			

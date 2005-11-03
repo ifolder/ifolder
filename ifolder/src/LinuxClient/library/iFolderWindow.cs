@@ -205,9 +205,55 @@ namespace Novell.iFolder
 			}
 		}
 	}
-
-
-
+	
+	
+	
+	public enum DomainFilterType
+	{
+		All,
+		AllAvailable,
+		AllSynchronized,
+		Domain,
+		DomainAvailable,
+		DomainSynchronized
+	}
+	
+	
+	
+	public class DomainFilterItem
+	{
+		private DomainFilterType myFilterType;
+		private DomainInformation myDomain;
+		
+		public DomainFilterType Type
+		{
+			get
+			{
+				return myFilterType;
+			}
+		}
+		
+		public DomainInformation Domain
+		{
+			get
+			{
+				return myDomain;
+			}
+			set
+			{
+				myDomain = value;
+			}
+		}
+		
+		public DomainFilterItem(DomainFilterType type, DomainInformation domain)
+		{
+			myFilterType = type;
+			myDomain = domain;
+		}
+	}
+	
+	
+	
 	/// <summary>
 	/// This is the main iFolder Window.  This window implements all of the
 	/// client code for iFolder.
@@ -219,8 +265,10 @@ namespace Novell.iFolder
 		private iFolderWebService	ifws;
 		private SimiasWebService	simws;
 		private iFolderData			ifdata;
-		private Gdk.Pixbuf			iFolderPixBuf;
-		private Gdk.Pixbuf			ServeriFolderPixBuf;
+		private Gdk.Pixbuf			iFolderPixbuf;
+		private Gdk.Pixbuf			SubscriptionPixbuf;
+//		private Gdk.Pixbuf			ThisComputerPixbuf;
+//		private Gdk.Pixbuf			ServerPixbuf;
 
 		private Statusbar			MainStatusBar;
 		private ProgressBar			SyncBar;
@@ -234,8 +282,8 @@ namespace Novell.iFolder
 		private ToolButton			SyncButton;
 		private ToolButton			ShareButton;
 		private ToolButton			ConflictButton;
-		private Gtk.ComboBox		DomainFilterComboBox;
-		private Gtk.ListStore		DomainListStore;
+//		private Gtk.ComboBox		DomainFilterComboBox;
+//		private Gtk.ListStore		DomainListStore;
 
 		private ImageMenuItem		NewMenuItem;
 		private Gtk.MenuItem		ShareMenuItem;
@@ -282,6 +330,10 @@ namespace Novell.iFolder
 		// to open the properties of an iFolder that is already opened, it
 		// won't open additional properties dialogs for the same iFolder.
 		private Hashtable			propDialogs;
+
+		private TreeView			domainsTreeView;
+		private TreeStore			domainsTreeStore;
+		private TreeIter			allSynchronizedIter;
 
 		/// <summary>
 		/// Default constructor for iFolderWindow
@@ -336,7 +388,8 @@ namespace Novell.iFolder
 		/// </summary>
 		private void CreateWidgets()
 		{
-			this.SetDefaultSize (600, 480);
+//			this.SetDefaultSize (600, 480);
+			this.SetDefaultSize (800, 600);
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
 			this.WindowPosition = Gtk.WindowPosition.Center;
 
@@ -357,9 +410,21 @@ namespace Novell.iFolder
 
 
 			//-----------------------------
+			// Create the Content Area
+			//-----------------------------
+			HPaned contentHPaned = new HPaned();
+			
+			contentHPaned.Pack1(SetupDomainsTreeView(), false, true);
+			contentHPaned.Pack2(SetupTreeView(), true, true);
+			contentHPaned.Position = 200;
+			
+			vbox.PackStart(contentHPaned, true, true, 0);
+
+
+			//-----------------------------
 			// Create the Tree View
 			//-----------------------------
-			vbox.PackStart(SetupTreeView(), true, true, 0);
+//			vbox.PackStart(SetupTreeView(), true, true, 0);
 
 
 			//-----------------------------
@@ -451,43 +516,44 @@ namespace Novell.iFolder
 			// FIXME: Figure out why if this next separator is added, the server filter combobox disappears
 //			tb.Insert(new SeparatorToolItem(), -1);
 
-			HBox domainFilterBox = new HBox();
-			domainFilterBox.Spacing = 5;
-			ToolItem domainFilterToolItem = new ToolItem();
-			domainFilterToolItem.SetTooltip(ToolbarTooltips, Util.GS("Filter the list of iFolders by server"), "Toolbar/Server Filter");
-			domainFilterToolItem.Add(domainFilterBox);
+//			HBox domainFilterBox = new HBox();
+//			domainFilterBox.Spacing = 5;
+//			ToolItem domainFilterToolItem = new ToolItem();
+//			domainFilterToolItem.SetTooltip(ToolbarTooltips, Util.GS("Filter the list of iFolders by server"), "Toolbar/Server Filter");
+//			domainFilterToolItem.Add(domainFilterBox);
 
-			Label l = new Label(Util.GS("Server:"));
-			domainFilterBox.PackStart(l, false, false, 0);
+//			Label l = new Label(Util.GS("Server:"));
+//			domainFilterBox.PackStart(l, false, false, 0);
 
-			VBox domainFilterSpacerBox = new VBox();
-			domainFilterBox.PackStart(domainFilterSpacerBox, false, false, 0);
+//			VBox domainFilterSpacerBox = new VBox();
+//			domainFilterBox.PackStart(domainFilterSpacerBox, false, false, 0);
 
 			// We have to add a spacer before and after the option menu to get the
 			// OptionMenu to size properly in the Toolbar.
-			Label spacer = new Label("");
-			domainFilterSpacerBox.PackStart(spacer, false, false, 0);
+//			Label spacer = new Label("");
+//			domainFilterSpacerBox.PackStart(spacer, false, false, 0);
 			
-			DomainFilterComboBox = new ComboBox();
-			domainFilterSpacerBox.PackStart(DomainFilterComboBox, false, false, 0);
+//			DomainFilterComboBox = new ComboBox();
+//			domainFilterSpacerBox.PackStart(DomainFilterComboBox, false, false, 0);
 
-			DomainListStore = new ListStore(typeof(DomainInformation));
-			DomainFilterComboBox.Model = DomainListStore;
+//			DomainListStore = new ListStore(typeof(DomainInformation));
+//			DomainFilterComboBox.Model = DomainListStore;
 			
-			CellRenderer domainTR = new CellRendererText();
-			DomainFilterComboBox.PackStart(domainTR, true);
+//			CellRenderer domainTR = new CellRendererText();
+//			DomainFilterComboBox.PackStart(domainTR, true);
 
-			DomainFilterComboBox.SetCellDataFunc(domainTR,
-				new CellLayoutDataFunc(DomainFilterComboBoxCellTextDataFunc));
+//			DomainFilterComboBox.SetCellDataFunc(domainTR,
+//				new CellLayoutDataFunc(DomainFilterComboBoxCellTextDataFunc));
 
-			DomainFilterComboBox.Changed += new EventHandler(DomainFilterChangedHandler);
+//			DomainFilterComboBox.Changed +=
+//				new EventHandler(DomainFilterChangedHandler);
 			
-			DomainFilterComboBox.ShowAll();
+//			DomainFilterComboBox.ShowAll();
 
-			spacer = new Label("");
-			domainFilterSpacerBox.PackEnd(spacer, false, false, 0);
+//			spacer = new Label("");
+//			domainFilterSpacerBox.PackEnd(spacer, false, false, 0);
 
-			tb.Insert(domainFilterToolItem, -1);
+//			tb.Insert(domainFilterToolItem, -1);
 
 			return tb;
 		}
@@ -644,6 +710,42 @@ namespace Novell.iFolder
 
 			return menubar;
 		}
+		
+		
+		
+		private Widget SetupDomainsTreeView()
+		{
+			ScrolledWindow sw = new ScrolledWindow();
+
+			domainsTreeStore = new TreeStore(typeof(DomainFilterItem));
+			domainsTreeView = new TreeView(domainsTreeStore);
+			sw.Add(domainsTreeView);
+			sw.ShadowType = Gtk.ShadowType.EtchedIn;
+
+			// Set up Pixbuf and Text Rendering for "iFolders" column
+			CellRendererPixbuf crp = new CellRendererPixbuf();
+			crp.Xpad = 2;
+			
+			CellRendererText crt = new CellRendererText();
+			crt.Underline = Pango.Underline.None;
+			crt.Xpad = 2;
+			TreeViewColumn column = new TreeViewColumn();
+			column.PackStart(crp, false);
+			column.SetCellDataFunc(crp, new TreeCellDataFunc(
+						DomainsTreeViewCellPixbufDataFunc));
+			column.PackStart(crt, true);
+			column.SetCellDataFunc(crt, new TreeCellDataFunc(
+						DomainsTreeViewCellTextDataFunc));
+			column.Title = "";
+			column.Resizable = true;
+			column.MinWidth = 200;
+			domainsTreeView.AppendColumn(column);
+			
+			domainsTreeView.Selection.Changed +=
+				new EventHandler(OnDomainsTreeViewSelectionChanged);
+
+			return sw;
+		}
 
 
 
@@ -727,9 +829,12 @@ namespace Novell.iFolder
 						OniFolderRowActivated);
 
 
-			ServeriFolderPixBuf =
+			SubscriptionPixbuf =
 				new Gdk.Pixbuf(Util.ImagesPath("serverifolder24.png"));
-			iFolderPixBuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
+			iFolderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
+			
+//			ThisComputerPixbuf = new Image(Stock.Home, IconSize.SmallToolbar).Pixbuf;
+//			ServerPixbuf = new Image(Stock.Network, IconSize.SmallToolbar).Pixbuf;
 		
 			return vbox;
 		}
@@ -739,11 +844,140 @@ namespace Novell.iFolder
 
 		private void OnRealizeWidget(object o, EventArgs args)
 		{
+			// Initially, show all iFolders that are "set up"
+			// FIXME: Eventually, save off which item the user selected last and show that
+			domainsTreeView.ExpandRow(new TreePath("0"), false);	// Expand the top-level
+			domainsTreeView.Selection.SelectIter(allSynchronizedIter);
+
 			iFolderTreeView.HasFocus = true;
 //			RefreshDomains(false);
 //			RefreshiFolders(false);
 		}
+		
+		
+		
+		public void OnDomainsTreeViewSelectionChanged(object o, EventArgs args)
+		{
+			TreeSelection tSelect = domainsTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				TreeModel tModel;
+				TreeIter iter;
 
+				tSelect.GetSelected(out tModel, out iter);
+				DomainFilterItem item = 
+					(DomainFilterItem)tModel.GetValue(iter, 0);
+				if (item.Type == DomainFilterType.All
+					|| item.Type == DomainFilterType.AllAvailable
+					|| item.Type == DomainFilterType.AllSynchronized)
+					curDomain = null;
+				else
+					curDomain = item.Domain;
+
+//				DomainFilterComboBox.Changed -=
+//					new EventHandler(DomainFilterChangedHandler);
+//				DomainFilterComboBox.SetActiveIter(iter);
+//				DomainFilterComboBox.Changed +=
+//					new EventHandler(DomainFilterChangedHandler);
+			}
+			else
+			{
+				curDomain = null;
+			}
+
+			RefreshiFolders(false);
+
+		}
+		
+		
+		
+		private void DomainsTreeViewCellPixbufDataFunc(
+				Gtk.TreeViewColumn tree_column,
+				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
+				Gtk.TreeIter iter)
+		{
+			DomainFilterItem item =
+				(DomainFilterItem)tree_model.GetValue(iter, 0);
+			if (item != null)
+			{
+				Gdk.Pixbuf pixbuf = null;
+				CellRendererPixbuf crp;
+
+				switch(item.Type)
+				{
+					case DomainFilterType.All:
+						crp = (CellRendererPixbuf)cell;
+						crp.StockId = Stock.Home;
+						return;
+						break;
+					case DomainFilterType.AllAvailable:
+						pixbuf = SubscriptionPixbuf;
+						break;
+					case DomainFilterType.AllSynchronized:
+						pixbuf = iFolderPixbuf;
+						break;
+					case DomainFilterType.Domain:
+						crp = (CellRendererPixbuf)cell;
+						crp.StockId = Stock.Network;
+						return;
+						break;
+					case DomainFilterType.DomainAvailable:
+						pixbuf = SubscriptionPixbuf;
+						break;
+					case DomainFilterType.DomainSynchronized:
+						pixbuf = iFolderPixbuf;
+						break;
+					default:
+						break;					
+				}
+				
+				((CellRendererPixbuf) cell).StockId = null;
+				((CellRendererPixbuf) cell).Pixbuf = pixbuf;
+			}
+		}		
+		
+		
+		private void DomainsTreeViewCellTextDataFunc(
+				Gtk.TreeViewColumn tree_column,
+				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
+				Gtk.TreeIter iter)
+		{
+			DomainFilterItem item =
+				(DomainFilterItem)tree_model.GetValue(iter, 0);
+			if (item != null)
+			{
+				string itemText = "";
+
+				switch(item.Type)
+				{
+					case DomainFilterType.All:
+						itemText = string.Format("<span weight=\"bold\">{0}</span>", Util.GS("On This Computer"));
+						break;
+					case DomainFilterType.AllAvailable:
+						// FIXME: Calculate how many "new" iFolders there are and show that in parenthesis
+						itemText = Util.GS("Available iFolders");
+						break;
+					case DomainFilterType.AllSynchronized:
+						itemText = Util.GS("Synchronized iFolders");
+						break;
+					case DomainFilterType.Domain:
+						itemText = string.Format("<span weight=\"bold\">{0}</span>", item.Domain.Name);
+						break;
+					case DomainFilterType.DomainAvailable:
+						// FIXME: Calculate how many "new" iFolders there are for this domain and show that in parenthesis
+						itemText = Util.GS("Available iFolders");
+						break;
+					case DomainFilterType.DomainSynchronized:
+						itemText = Util.GS("Synchronized iFolders");
+						break;
+					default:
+						break;					
+				}
+				
+				// FIXME: Make it bold if top-level and also if there are new items shown in parenthesis
+				((CellRendererText) cell).Markup = itemText;
+			}
+		}
 
 
 
@@ -793,24 +1027,24 @@ namespace Novell.iFolder
 					(iFolderHolder) tree_model.GetValue(iter,0);
 
 			if(ifHolder.iFolder.IsSubscription)
-				((CellRendererPixbuf) cell).Pixbuf = ServeriFolderPixBuf;
+				((CellRendererPixbuf) cell).Pixbuf = SubscriptionPixbuf;
 			else
 			{
-				((CellRendererPixbuf) cell).Pixbuf = iFolderPixBuf;
+				((CellRendererPixbuf) cell).Pixbuf = iFolderPixbuf;
 			}
 		}
 
-		private void DomainFilterComboBoxCellTextDataFunc(
-				CellLayout cell_layout,
-				CellRenderer cell,
-				TreeModel tree_model,
-				TreeIter iter)
-		{
-			DomainInformation domain =
-				(DomainInformation)tree_model.GetValue(iter, 0);
-			if (domain != null)
-				((CellRendererText) cell).Text = domain.Name;
-		}
+//		private void DomainFilterComboBoxCellTextDataFunc(
+//				CellLayout cell_layout,
+//				CellRenderer cell,
+//				TreeModel tree_model,
+//				TreeIter iter)
+//		{
+//			DomainInformation domain =
+//				(DomainInformation)tree_model.GetValue(iter, 0);
+//			if (domain != null)
+//				((CellRendererText) cell).Text = domain.Name;
+//		}
 
 		private void RefreshiFoldersHandler(object o, EventArgs args)
 		{
@@ -829,8 +1063,42 @@ namespace Novell.iFolder
 			iFolderHolder[] ifolders = ifdata.GetiFolders();
 			if(ifolders != null)
 			{
+				// Determine what the current DomainFilterType is
+				DomainFilterType currentDomainFilterType = DomainFilterType.All;
+
+				TreeSelection tSelect = domainsTreeView.Selection;
+				if(tSelect.CountSelectedRows() == 1)
+				{
+					TreeModel tModel;
+					TreeIter iter;
+	
+					tSelect.GetSelected(out tModel, out iter);
+					DomainFilterItem item = 
+						(DomainFilterItem)tModel.GetValue(iter, 0);
+					if (item != null)
+						currentDomainFilterType = item.Type;
+				}
+
 				foreach(iFolderHolder holder in ifolders)
 				{
+					if ((currentDomainFilterType == 
+							DomainFilterType.AllAvailable ||
+						 currentDomainFilterType ==
+						 	DomainFilterType.DomainAvailable) &&
+						 !holder.iFolder.IsSubscription)
+					{
+						continue;	// Don't add a configured iFolder
+					}
+
+					if ((currentDomainFilterType == 
+							DomainFilterType.AllSynchronized ||
+						 currentDomainFilterType ==
+						 	DomainFilterType.DomainSynchronized) &&
+						 holder.iFolder.IsSubscription)
+					{
+						continue;	// Don't add a subscription
+					}
+
 					if (curDomain == null || curDomain.ID == "0")
 					{
 						TreeIter iter = iFolderTreeStore.AppendValues(holder);
@@ -2297,54 +2565,73 @@ namespace Novell.iFolder
 //			while(rc == -5);
 		}
 
-		public void DomainFilterChangedHandler(object o, EventArgs args)
-		{
+//		public void DomainFilterChangedHandler(object o, EventArgs args)
+//		{
 			// Change the global "domainSelected" (null if "All" is chosen by
 			// the user) and then make the call to refresh the window.
-			if (curDomains != null)
-			{
-				TreeIter iter;
+//			if (curDomains != null)
+//			{
+//				TreeIter iter;
 				
-				if (DomainFilterComboBox.GetActiveIter(out iter))
-				{
-					DomainInformation tmpDomain = (DomainInformation)
-						DomainFilterComboBox.Model.GetValue(iter, 0);
-					if (tmpDomain.ID == "0")
-						curDomain = null;
-					else
-						curDomain = tmpDomain;
-				}
-				else
-				{
-					curDomain = null;
-				}
+//				if (DomainFilterComboBox.GetActiveIter(out iter))
+//				{
+//					DomainInformation tmpDomain = (DomainInformation)
+//						DomainFilterComboBox.Model.GetValue(iter, 0);
+//					if (tmpDomain.ID == "0")
+//						curDomain = null;
+//					else
+//						curDomain = tmpDomain;
+//				}
+//				else
+//				{
+//					curDomain = null;
+//				}
 				
-				RefreshiFolders(false);
-			}
-		}
+//				RefreshiFolders(false);
+//			}
+//		}
 
 		public void RefreshDomains(bool readFromSimias)
 		{
 			if(readFromSimias)
 				ifdata.RefreshDomains();
 			
-			DomainListStore.Clear();
+//			DomainListStore.Clear();
+
+			domainsTreeStore.Clear();
+			
+			TreeIter iter;
+
+			DomainFilterItem item =
+				new DomainFilterItem(DomainFilterType.All, null);
+			iter = domainsTreeStore.AppendValues(item);
+			item = new DomainFilterItem(DomainFilterType.AllAvailable, null);
+			domainsTreeStore.AppendValues(iter, item);
+			item = new DomainFilterItem(DomainFilterType.AllSynchronized, null);
+			allSynchronizedIter = domainsTreeStore.AppendValues(iter, item);
 
 			curDomains = ifdata.GetDomains();
 			if (curDomains != null)
 			{
-				DomainInformation selectAllDomain = new DomainInformation();
-				selectAllDomain.ID = "0";
-				selectAllDomain.Name = Util.GS("Show All");
-				DomainListStore.AppendValues(selectAllDomain);
+//				DomainInformation selectAllDomain = new DomainInformation();
+//				selectAllDomain.ID = "0";
+//				selectAllDomain.Name = Util.GS("On This Computer");
+//				DomainListStore.AppendValues(selectAllDomain);
 
 				foreach(DomainInformation domain in curDomains)
 				{
-					DomainListStore.AppendValues(domain);
+					item = new DomainFilterItem(DomainFilterType.Domain, domain);
+					iter = domainsTreeStore.AppendValues(item);
+					item = new DomainFilterItem(DomainFilterType.DomainAvailable, domain);
+					domainsTreeStore.AppendValues(iter, item);
+					item = new DomainFilterItem(DomainFilterType.DomainSynchronized, domain);
+					domainsTreeStore.AppendValues(iter, item);					
+
+//					DomainListStore.AppendValues(domain);
 				}
 			}
 			
-			DomainFilterComboBox.Active = 0;	// Show All
+//			DomainFilterComboBox.Active = 0;	// Show All
 		}
 		
 		// Return true if we were able to determine the exception type.
