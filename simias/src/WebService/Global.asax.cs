@@ -87,6 +87,12 @@ namespace Simias.Web
 		/// </summary>
 		private static int ipcPort;
 
+		/// <summary>
+		/// Port used to talk local service. This will be (-1) if running
+		/// in an enterprise configuration.
+		/// </summary>
+		private static int localServicePort = -1;
+
 		#endregion
 
 		#region Constructor
@@ -118,10 +124,11 @@ namespace Simias.Web
 				Console.Error.WriteLine("Simias Application Path: {0}", Environment.CurrentDirectory);
 				Console.Error.WriteLine("Simias Data Path: {0}", simiasDataPath);
 				Console.Error.WriteLine("Run in {0} configuration", runAsServer ? "server" : "client" );
+				Console.Error.WriteLine("Local service port = {0}", localServicePort );
 			}
 
 			// Initialize the store.
-			Store.Initialize( simiasDataPath, runAsServer );
+			Store.Initialize( simiasDataPath, runAsServer, localServicePort );
 		}
 
 		#endregion
@@ -153,6 +160,22 @@ namespace Simias.Web
 						else
 						{
 							ApplicationException apEx = new ApplicationException( "Error: The Simias data path was not specified." );
+							Console.Error.WriteLine( apEx.Message );
+							throw apEx;
+						}
+
+						break;
+					}
+
+					case "--port":
+					{
+						if ( ( i + 1 ) < args.Length )
+						{
+							localServicePort = Convert.ToInt32( args[ ++i ] );
+						}
+						else
+						{
+							ApplicationException apEx = new ApplicationException( "Error: The local service port was not specified." );
 							Console.Error.WriteLine( apEx.Message );
 							throw apEx;
 						}

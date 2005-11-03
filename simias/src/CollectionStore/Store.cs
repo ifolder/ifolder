@@ -95,6 +95,11 @@ namespace Simias.Storage
 		private static string storePath = null;
 
 		/// <summary>
+		/// Port used by the local loopback service.
+		/// </summary>
+		private static int localServicePort = -1;
+
+		/// <summary>
 		/// Path to where store managed files are kept.
 		/// </summary>
 		private string storeManagedPath;
@@ -276,6 +281,14 @@ namespace Simias.Storage
 		public string LocalDomain
 		{
 			get { return LocalDb.Domain; }
+		}
+
+		/// <summary>
+		/// Gets the port number that the local service is listening on.
+		/// </summary>
+		public static int LocalServicePort
+		{
+			get { return localServicePort; }
 		}
 
 		/// <summary>
@@ -475,7 +488,9 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="simiasStorePath">The directory path to the store.</param>
 		/// <param name="isServer">True if running in a server configuration.</param>
-		static public void Initialize( string simiasStorePath, bool isServer )
+		/// <param name="port">The port number that the local service is listening on. If this
+		/// is an enterprise server, this value is ignored.</param>
+		static public void Initialize( string simiasStorePath, bool isServer, int port )
 		{
 			lock ( typeof( Store ) )
 			{
@@ -489,6 +504,12 @@ namespace Simias.Storage
 
 					// Does the configuration indicate that this is an enterprise server?
 					enterpriseServer = isServer;
+
+					// Save the port that the service is listening on.
+					if ( !enterpriseServer )
+					{
+						localServicePort = port;
+					}
 				}
 				else
 				{
@@ -510,6 +531,7 @@ namespace Simias.Storage
 				instance = null;
 				storePath = null;
 				config = null;
+				localServicePort = -1;
 			}
 		}
 		#endregion
