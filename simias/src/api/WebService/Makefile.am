@@ -9,7 +9,7 @@ SimiasWebService_FLAGS = $(CSC_LIBFLAG)
 SimiasWebService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll SimiasClient.dll SimiasLib.dll Novell.Security.ClientPasswordManager.NetCredential.dll
 SimiasWebService_LIBPATH = ../../SimiasClient ../../SimiasLib.dll $(NOVELL_SECURITY_DIR)
 
-EXTRA_DIST = SimiasAPI.wsdl $(SimiasWebService_CSFILES) AssemblyInfo.cs.in
+EXTRA_DIST = SimiasAPI.asmx SimiasAPI.wsdl $(SimiasWebService_CSFILES) AssemblyInfo.cs.in
 
 all: SimiasAPIService.Web.dll
 
