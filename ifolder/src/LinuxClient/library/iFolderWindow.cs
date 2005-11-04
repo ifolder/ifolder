@@ -72,6 +72,13 @@ namespace Novell.iFolder
 		/// </summary>
 		Disconnected
 	}
+	
+	public enum HomeActionItem
+	{
+		AddFolderToSync,
+		SearchRemoteFolder,
+		ConnectToNewServer
+	}
 
 	/// <summary>
 	/// This is a holder class for iFolders so the client can place
@@ -282,6 +289,13 @@ namespace Novell.iFolder
 		// to open the properties of an iFolder that is already opened, it
 		// won't open additional properties dialogs for the same iFolder.
 		private Hashtable			propDialogs;
+		
+		private iFolderNotebook		myiFolderNotebook;
+		private Gdk.Pixbuf			addNewiFolderPixbuf;
+		private Gdk.Pixbuf			searchRemoteFoldersPixbuf;
+		private Gdk.Pixbuf			connectAdditionalServerPixbuf;
+		private ListStore			homeStore;
+		private TreeView			homeTreeView;
 
 		/// <summary>
 		/// Default constructor for iFolderWindow
@@ -348,6 +362,9 @@ namespace Novell.iFolder
 			//-----------------------------
 			MenuBar menubar = CreateMenu ();
 			vbox.PackStart (menubar, false, false, 0);
+			
+			myiFolderNotebook = CreateiFolderNotebook();
+			vbox.PackStart (myiFolderNotebook, true, true, 0);
 
 			//-----------------------------
 			// Create the Toolbar
@@ -395,6 +412,157 @@ namespace Novell.iFolder
 			// being drawn
 			this.Realized += new EventHandler(OnRealizeWidget);
 		}
+		
+		
+		
+		private iFolderNotebook CreateiFolderNotebook()
+		{
+			iFolderNotebook notebook = new iFolderNotebook();
+		
+			ToggleToolButton homeButton = new ToggleToolButton(Stock.Home);
+			
+			ScrolledWindow sw = new ScrolledWindow();
+			sw.VscrollbarPolicy = PolicyType.Automatic;
+			sw.HscrollbarPolicy = PolicyType.Automatic;
+
+			addNewiFolderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png"));
+			searchRemoteFoldersPixbuf = new Gdk.Pixbuf(Util.ImagesPath("sync24.png"));
+			connectAdditionalServerPixbuf = new Gdk.Pixbuf(Util.ImagesPath("share24.png"));
+
+			homeStore = new ListStore(typeof(HomeActionItem), typeof(Gdk.Pixbuf), typeof(string), typeof(string));
+			homeStore.AppendValues(HomeActionItem.AddFolderToSync, addNewiFolderPixbuf,
+								   Util.GS("Add a folder to synchronize"),
+								   Util.GS("Choose a folder on your computer to synchronize with an iFolder Server"));
+//			homeStore.AppendValues(null,
+//								   Util.GS("Share a synchronized folder"), 
+//								   Util.GS("Give other people access to the files of your synchronized folder"));
+			homeStore.AppendValues(HomeActionItem.SearchRemoteFolder, searchRemoteFoldersPixbuf,
+								   Util.GS("Search for remote folders"), 
+								   Util.GS("Search for remote folders to synchronize to your computer"));
+			homeStore.AppendValues(HomeActionItem.ConnectToNewServer, connectAdditionalServerPixbuf,
+								   Util.GS("Connect to an additional iFolder Server"), 
+								   Util.GS("Connect to another iFolder server to access additional folders"));
+
+			homeTreeView = new TreeView(homeStore);
+			homeTreeView.HeadersVisible = false;
+
+
+			// Set up Pixbuf and Text Rendering for "iFolders" column
+			CellRendererPixbuf crp = new CellRendererPixbuf();
+			TreeViewColumn column = new TreeViewColumn();
+			column.PackStart(crp, false);
+			column.SetCellDataFunc(crp, new TreeCellDataFunc(
+						HomeIconCellPixbufDataFunc));
+			CellRendererText crt = new CellRendererText();
+			crt.Editable = false;
+			crt.Underline = Pango.Underline.None;
+			crt.Xpad = 4;
+			crt.Ypad = 10;
+			column.PackStart(crt, true);
+			column.SetCellDataFunc(crt, new TreeCellDataFunc(
+						HomeIconCellTextDataFunc));
+			homeTreeView.AppendColumn(column);
+
+			homeTreeView.Selection.Changed +=
+				new EventHandler(OnHomeItemSelected);
+
+			sw.Add(homeTreeView);
+			notebook.AppendPage(sw, homeButton);
+			
+			ToggleToolButton availableButton = new ToggleToolButton(Stock.Open);
+			availableButton.Label = Util.GS("Synchronized Folders");
+			notebook.AppendPage(new Label("Not implemented"), availableButton);
+			
+			ToggleToolButton remoteButton = new ToggleToolButton(Stock.Network);
+			remoteButton.Label = Util.GS("Remote Folders");
+			notebook.AppendPage(new Label("Not implemented"), remoteButton);
+			
+			notebook.CurrentPage = 0;
+
+			
+			return notebook;
+		}
+		
+		
+		
+		private void HomeIconCellPixbufDataFunc (Gtk.TreeViewColumn tree_column,
+				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
+				Gtk.TreeIter iter)
+		{
+			Gdk.Pixbuf pixbuf = (Gdk.Pixbuf)tree_model.GetValue(iter, 1);
+			((CellRendererPixbuf) cell).Pixbuf = pixbuf;
+		}
+
+		private void HomeIconCellTextDataFunc(Gtk.TreeViewColumn tree_column,
+				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
+				Gtk.TreeIter iter)
+		{
+			string primaryText = (string)tree_model.GetValue(iter, 2);
+			string secondaryText = (string)tree_model.GetValue(iter, 3);
+			
+			((CellRendererText) cell).Markup =
+				string.Format("<span size=\"large\" weight=\"bold\">{0}</span>\n<span size=\"small\" weight=\"normal\">{1}</span>",
+							  primaryText,
+							  secondaryText == null ? "" : secondaryText);
+		}
+		
+		private void OnHomeItemSelected(object o, EventArgs args)
+		{
+			Console.WriteLine("OnHomeItemSelected");
+
+			TreeSelection tSelect = homeTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				TreeModel tModel;
+				TreeIter iter;
+
+				tSelect.GetSelected(out tModel, out iter);
+
+				// Unselect it so it doesn't get highlighted
+				homeTreeView.Selection.Changed -= new EventHandler(OnHomeItemSelected);
+				homeTreeView.Selection.UnselectAll();
+				homeTreeView.Selection.Changed += new EventHandler(OnHomeItemSelected);
+
+				HomeActionItem action =
+					(HomeActionItem)tModel.GetValue(iter, 0);
+					
+				switch(action)
+				{
+					case HomeActionItem.AddFolderToSync:
+						// FIXME: Implement HomeActionItem.AddFolderToSync
+						Console.WriteLine("AddFolderToSync");
+						break;
+					case HomeActionItem.SearchRemoteFolder:
+						// FIXME: Implement HomeActionItem.SearchRemoteFolder
+						Console.WriteLine("SearchRemoteFolder");
+						break;
+					case HomeActionItem.ConnectToNewServer:
+						// FIXME: Implement HomeActionItem.ConnectToNewServer
+						Console.WriteLine("ConnectToNewServer");
+
+						Util.ShowPrefsPage(1, simiasManager);
+
+						break;
+					default:
+						break;
+				}
+				
+				// Unselect the item after 200ms
+//				GLib.Timeout.Add(
+//					200, new GLib.TimeoutHandler(DeselectHomeTreeView));
+			}
+		}
+		
+		
+		
+//		public bool DeselectHomeTreeView()
+//		{
+//			homeTreeView.Selection.Changed -= new EventHandler(OnHomeItemSelected);
+//			homeTreeView.Selection.UnselectAll();
+//			homeTreeView.Selection.Changed += new EventHandler(OnHomeItemSelected);
+			
+//			return false;
+//		}
 
 
 
@@ -811,6 +979,12 @@ namespace Novell.iFolder
 			if (domain != null)
 				((CellRendererText) cell).Text = domain.Name;
 		}
+
+//		private void OnHomePageLinkClicked(object o, LinkClickedArgs args)
+//		{
+//			// FIXME: Implement OnHomePageLinkClicked
+//			Console.WriteLine("OnHomePageLinkClicked: {0}", args.Url);
+//		}
 
 		private void RefreshiFoldersHandler(object o, EventArgs args)
 		{
