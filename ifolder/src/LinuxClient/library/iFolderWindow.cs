@@ -415,6 +415,129 @@ namespace Novell.iFolder
 		
 		
 		
+		/// <summary>
+		/// </summary>
+		private Gdk.Pixbuf CreateImageWithEmblem(string mainImagePath, string emblemImagePath,
+												 int height, int width, double emblemOverlap)
+		{
+			Gdk.Pixbuf mainPixbuf = new Gdk.Pixbuf(mainImagePath);
+			Gdk.Pixbuf emblemPixbuf = new Gdk.Pixbuf(emblemImagePath);
+			
+			int bigHeight = mainPixbuf.Height + (int)(emblemPixbuf.Height * (1 - emblemOverlap));
+			int bigWidth  = mainPixbuf.Width  + (int)(emblemPixbuf.Width  * (1 - emblemOverlap));
+			
+			Gdk.Pixbuf bigPixbuf0 = new Gdk.Pixbuf(Gdk.Colorspace.Rgb, false, 8, bigHeight, bigWidth);
+			bigPixbuf0.Fill(0xffffffff); // opaque white background
+			
+			mainPixbuf.Composite(bigPixbuf0,
+								 0, 0,	// dest x,y
+//								 mainPixbuf.Width, mainPixbuf.Height, // dest width,height
+								 bigWidth, bigHeight,
+								 0, 0,	// offset x,y
+								 1, 1,	// scale x,y
+								 Gdk.InterpType.Bilinear,
+								 255);	// overall alpha
+			
+//			Gdk.Pixbuf bigPixbuf1 = new Gdk.Pixbuf(Gdk.Colorspace.Rgb, false, 8, bigHeight, bigWidgth);
+//			bigPixbuf1.Fill(0xffffffff); // opaque white background
+			
+			emblemPixbuf.Composite(bigPixbuf0,
+								   bigWidth - emblemPixbuf.Width,		// dest_x
+								   bigHeight - emblemPixbuf.Height,		// dest_y
+//								   emblemPixbuf.Width,					// dest_width
+//								   emblemPixbuf.Height,					// dest_height
+								   bigWidth, bigHeight,
+								   0, 0,								// offset x,y
+								   1, 1,								// scale x,y
+								   Gdk.InterpType.Bilinear,
+								   255);								// overall alpha
+
+			return bigPixbuf0;
+
+/*			
+			double scaleFactor;
+			if (height > width)
+			{
+				if (bigHeight > bigWidth)
+				{
+					scaleFactor = ((double) height / (double) bigHeight);
+				}
+				else
+				{
+					scaleFactor = ((double) height / (double) bigWidth);
+				}
+			}
+			else
+			{
+				if (bigHeight > bigWidth)
+				{
+					scaleFactor = ((double) width / (double) bigHeight);
+				}
+				else
+				{
+					scaleFactor = ((double) width / (double) bigWidth);
+				}
+			}
+Console.WriteLine("scaleFactor: {0}", scaleFactor);
+
+			Gdk.Pixbuf resultPixbuf = new Gdk.Pixbuf(Gdk.Colorspace.Rgb, false, 8, height, width);
+			resultPixbuf.Fill(0xffffffff); // opaque white background
+			
+			bigPixbuf0.Composite(resultPixbuf,
+								 0,0,
+								 width, height,
+								 0,0,
+								 scaleFactor,
+								 scaleFactor,
+								 Gdk.InterpType.Bilinear,
+								 255);
+			
+			return resultPixbuf;
+*/
+		}
+		
+		
+		
+		private Gdk.Pixbuf ScalePixbufToSize(Gdk.Pixbuf pixbuf, int maxWidth, int maxHeight)
+		{
+			double scaleFactor;
+			if (maxHeight > maxWidth)
+			{
+				if (pixbuf.Height > pixbuf.Width)
+				{
+					scaleFactor = ((double) maxHeight / (double) pixbuf.Height);
+				}
+				else
+				{
+					scaleFactor = ((double) maxHeight / (double) pixbuf.Width);
+				}
+			}
+			else
+			{
+				if (pixbuf.Height > pixbuf.Width)
+				{
+					scaleFactor = ((double) maxWidth / (double) pixbuf.Height);
+				}
+				else
+				{
+					scaleFactor = ((double) maxWidth / (double) pixbuf.Width);
+				}
+			}
+			
+			int width = (int) ((double)pixbuf.Width / scaleFactor);
+			int height = (int) ((double)pixbuf.Height / scaleFactor);
+			
+			// Make sure we're not out of our bounds
+			if (width > maxWidth)
+				width = maxWidth;
+			if (height > maxHeight)
+				height = maxHeight;
+				
+			return pixbuf.ScaleSimple(width, height, Gdk.InterpType.Bilinear);
+		}
+		
+		
+		
 		private iFolderNotebook CreateiFolderNotebook()
 		{
 			iFolderNotebook notebook = new iFolderNotebook();
@@ -425,9 +548,16 @@ namespace Novell.iFolder
 			sw.VscrollbarPolicy = PolicyType.Automatic;
 			sw.HscrollbarPolicy = PolicyType.Automatic;
 
-			addNewiFolderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png"));
-			searchRemoteFoldersPixbuf = new Gdk.Pixbuf(Util.ImagesPath("sync24.png"));
-			connectAdditionalServerPixbuf = new Gdk.Pixbuf(Util.ImagesPath("share24.png"));
+//			addNewiFolderPixbuf =
+//				CreateImageWithEmblem(Util.ImagesPath("folder.png"),
+//									  Util.ImagesPath("add-emblem.png"),
+//									  64, 64, .5);
+			addNewiFolderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("add-folder-to-synchronize.png"));
+			addNewiFolderPixbuf = ScalePixbufToSize(addNewiFolderPixbuf, 64, 64);
+			searchRemoteFoldersPixbuf = new Gdk.Pixbuf(Util.ImagesPath("search-folder.png"));
+			searchRemoteFoldersPixbuf = ScalePixbufToSize(searchRemoteFoldersPixbuf, 64, 64);
+			connectAdditionalServerPixbuf = new Gdk.Pixbuf(Util.ImagesPath("add-account.png"));
+			connectAdditionalServerPixbuf = ScalePixbufToSize(connectAdditionalServerPixbuf, 64, 64);
 
 			homeStore = new ListStore(typeof(HomeActionItem), typeof(Gdk.Pixbuf), typeof(string), typeof(string));
 			homeStore.AppendValues(HomeActionItem.AddFolderToSync, addNewiFolderPixbuf,
