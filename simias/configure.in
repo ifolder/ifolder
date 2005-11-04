@@ -5,6 +5,7 @@ let "BUILDNUM=`date +%G%j`-2000000"
 VERSION=$VERSION.$BUILDNUM.1
 AM_MAINTAINER_MODE
 AC_PROG_CC
+m4_pattern_allow(PKG_CONFIG)
 
 #
 # Check for a valid operating system and C# compiler
