@@ -251,18 +251,23 @@ namespace Simias.mDns
 				throw ae;
 			}
 
+            log.Debug( "Store Path: " + Store.StorePath );
+            log.Debug( "Local Port: " + Store.LocalServicePort.ToString() );
+
+            /*
 			// Grab the web service uri simias is listening on
 			//if ( webServiceUri != null )
 			//{
 				XmlElement servicesElement = 
 					Store.GetStore().Config.GetElement( configSection, configWebService );
-				webServiceUri = new Uri( servicesElement.GetAttribute( "value" ) );
+				webServiceUri = new Uri( "http://servicesElement.GetAttribute( "value" ) );
 				if ( webServiceUri == null )
 				{
 					ApplicationException ae = new ApplicationException( "Could not obtain the local web service Uri" );
 					throw ae;
 				}
 			//}
+            */
 
 			registerThread = new Thread( new ThreadStart( RegisterThread ) );
 			registerThread.IsBackground = true;
