@@ -295,13 +295,13 @@ namespace Novell.iFolder
 		private Gdk.Pixbuf			searchRemoteFoldersPixbuf;
 		private Gdk.Pixbuf			connectAdditionalServerPixbuf;
 		private ListStore			homeStore;
-		private TreeView			homeTreeView;
+		private iFolderTreeView		homeTreeView;
 
 		/// <summary>
 		/// Default constructor for iFolderWindow
 		/// </summary>
 		public iFolderWindow(iFolderWebService webService, SimiasWebService SimiasWS, Manager simiasManager)
-			: base (Util.GS("iFolders"))
+			: base (Util.GS("iFolder"))
 		{
 			if(webService == null)
 				throw new ApplicationException("iFolderWebServices was null");
@@ -369,14 +369,14 @@ namespace Novell.iFolder
 			//-----------------------------
 			// Create the Toolbar
 			//-----------------------------
-			toolbar = CreateToolbar();
-			vbox.PackStart (toolbar, false, false, 0);
+//			toolbar = CreateToolbar();
+//			vbox.PackStart (toolbar, false, false, 0);
 
 
 			//-----------------------------
 			// Create the Tree View
 			//-----------------------------
-			vbox.PackStart(SetupTreeView(), true, true, 0);
+//			vbox.PackStart(SetupTreeView(), true, true, 0);
 
 
 			//-----------------------------
@@ -543,7 +543,28 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 			iFolderNotebook notebook = new iFolderNotebook();
 		
 			ToggleToolButton homeButton = new ToggleToolButton(Stock.Home);
+			notebook.AppendPage(CreateHomePage(), homeButton);
 			
+			ToggleToolButton availableButton = new ToggleToolButton(Stock.Open);
+//			availableButton.Label = Util.GS("Synchronized Folders");
+//			notebook.AppendPage(new Label("Not implemented"), availableButton);
+			notebook.AppendPage(CreateSynchronizedFoldersPage(), availableButton);
+			
+			
+			ToggleToolButton remoteButton = new ToggleToolButton(Stock.Network);
+			remoteButton.Label = Util.GS("Remote Folders");
+			notebook.AppendPage(new Label("Not implemented"), remoteButton);
+			
+			notebook.CurrentPage = 0;
+
+			
+			return notebook;
+		}
+		
+		
+		
+		private Widget CreateHomePage()
+		{
 			ScrolledWindow sw = new ScrolledWindow();
 			sw.VscrollbarPolicy = PolicyType.Automatic;
 			sw.HscrollbarPolicy = PolicyType.Automatic;
@@ -573,7 +594,9 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 								   Util.GS("Connect to an additional iFolder Server"), 
 								   Util.GS("Connect to another iFolder server to access additional folders"));
 
-			homeTreeView = new TreeView(homeStore);
+//			homeTreeView = new iFolderTreeView(homeStore);
+			homeTreeView = new iFolderTreeView();
+			homeTreeView.Model = homeStore;
 			homeTreeView.HeadersVisible = false;
 
 
@@ -593,24 +616,20 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 						HomeIconCellTextDataFunc));
 			homeTreeView.AppendColumn(column);
 
-			homeTreeView.Selection.Changed +=
-				new EventHandler(OnHomeItemSelected);
+//			homeTreeView.Selection.Changed +=
+//				new EventHandler(OnHomeItemSelected);
+			
+			homeTreeView.Selection.Mode = SelectionMode.None;
+			
+			homeTreeView.RowActivated +=
+				new RowActivatedHandler(OnHomeTreeViewRowActivated);
+				
+			homeTreeView.ButtonPressEvent +=
+				new ButtonPressEventHandler(OnHomeTreeViewButtonPressed);
 
 			sw.Add(homeTreeView);
-			notebook.AppendPage(sw, homeButton);
 			
-			ToggleToolButton availableButton = new ToggleToolButton(Stock.Open);
-			availableButton.Label = Util.GS("Synchronized Folders");
-			notebook.AppendPage(new Label("Not implemented"), availableButton);
-			
-			ToggleToolButton remoteButton = new ToggleToolButton(Stock.Network);
-			remoteButton.Label = Util.GS("Remote Folders");
-			notebook.AppendPage(new Label("Not implemented"), remoteButton);
-			
-			notebook.CurrentPage = 0;
-
-			
-			return notebook;
+			return sw;
 		}
 		
 		
@@ -634,6 +653,71 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 				string.Format("<span size=\"large\" weight=\"bold\">{0}</span>\n<span size=\"small\" weight=\"normal\">{1}</span>",
 							  primaryText,
 							  secondaryText == null ? "" : secondaryText);
+		}
+		
+		private void LaunchAction(HomeActionItem action)
+		{
+			switch(action)
+			{
+				case HomeActionItem.AddFolderToSync:
+					// FIXME: Implement HomeActionItem.AddFolderToSync
+					Console.WriteLine("AddFolderToSync");
+					break;
+				case HomeActionItem.SearchRemoteFolder:
+					// FIXME: Implement HomeActionItem.SearchRemoteFolder
+					Console.WriteLine("SearchRemoteFolder");
+					break;
+				case HomeActionItem.ConnectToNewServer:
+					// FIXME: Implement HomeActionItem.ConnectToNewServer
+					Console.WriteLine("ConnectToNewServer");
+
+					Util.ShowPrefsPage(1, simiasManager);
+
+					break;
+				default:
+					break;
+			}
+		}
+		
+		private void OnHomeTreeViewRowActivated(object o, RowActivatedArgs args)
+		{
+			TreeModel tModel = homeTreeView.Model;
+			TreeIter iter;
+			if (tModel.GetIter(out iter, args.Path))
+			{
+				HomeActionItem action =
+					(HomeActionItem)tModel.GetValue(iter, 0);
+				
+				LaunchAction(action);
+			}
+		}
+		
+		private void OnHomeTreeViewButtonPressed(object o, ButtonPressEventArgs args)
+		{
+Console.WriteLine("OnHomeTreeViewButtonPressed({0})", args.Event.Button);
+			// Ignore all button presses that aren't left-clicks
+			if (args.Event.Button != 1) return;
+			
+			TreePath tPath = null;
+			TreeViewColumn tColumn = null;
+			
+			if (homeTreeView.GetPathAtPos(
+					(int)args.Event.X,
+					(int)args.Event.Y,
+					out tPath,
+					out tColumn) == true)
+			{
+				TreeModel tModel = homeTreeView.Model;
+
+				TreeIter iter;
+				if (tModel.GetIter(out iter, tPath))
+				{
+					HomeActionItem action =
+						(HomeActionItem)tModel.GetValue(iter, 0);
+					
+					LaunchAction(action);
+				}
+			}
 		}
 		
 		private void OnHomeItemSelected(object o, EventArgs args)
@@ -697,6 +781,27 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 
 
 
+		private Widget CreateSynchronizedFoldersPage()
+		{
+			VBox vbox = new VBox (false, 0);
+			
+			//-----------------------------
+			// Create the Toolbar
+			//-----------------------------
+			toolbar = CreateToolbar();
+			vbox.PackStart (toolbar, false, false, 0);
+
+
+			//-----------------------------
+			// Create the Tree View
+			//-----------------------------
+			vbox.PackStart(SetupTreeView(), true, true, 0);
+			
+			return vbox;
+		}
+
+
+
 		/// <summary>
 		/// Creates the Toolbar for the iFolder Window
 		/// </summary>
@@ -706,6 +811,7 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 		private Toolbar CreateToolbar()
 		{
 			Toolbar tb = new Toolbar();
+			tb.IconSize = IconSize.SmallToolbar;
 
 			ToolbarTooltips = new Tooltips();
 
