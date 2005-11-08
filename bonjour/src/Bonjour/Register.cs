@@ -54,7 +54,8 @@ namespace Simias.mDns
 			SimiasLogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		private readonly string configSection = "ServiceManager";
-		private readonly string configWebService = "WebServiceUri";
+		//private readonly string configWebService = "WebServiceUri";
+        private readonly string virtualPath = "/simias10";
 		private Uri webServiceUri = null;
 
 		private string userID;
@@ -234,6 +235,8 @@ namespace Simias.mDns
 		{
 			log.Debug( "RegisterUser called" );
 
+            string[] myAddresses = null;
+
 			// for register, unregister, re-register case
 			disposing = false;
 
@@ -251,8 +254,15 @@ namespace Simias.mDns
 				throw ae;
 			}
 
-            log.Debug( "Store Path: " + Store.StorePath );
-            log.Debug( "Local Port: " + Store.LocalServicePort.ToString() );
+            myAddresses = Simias.MyDns.GetHostAddresses();
+            //if ( myAddresses.Count == 0 )
+            //{
+            //    throw new ApplicationException( "Could not determine local address" );
+            //}
+
+            string fullPath = "http://" + myAddresses[0] + ":" + Store.LocalServicePort.ToString() + this.virtualPath;
+            log.Debug( "Path: " + fullPath );
+            webServiceUri = new Uri( fullPath );
 
             /*
 			// Grab the web service uri simias is listening on
