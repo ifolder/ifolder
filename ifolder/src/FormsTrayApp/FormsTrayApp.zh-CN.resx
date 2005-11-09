@@ -827,11 +827,11 @@
 	</data>
   
 	<data name="checkingForiFolders">
-		<value>Checking for new iFolders on: {0}</value>
+		<value>正在 {0} 上检查新的 iFolder</value>
 	</data>
   
 	<data name="doneCheckingForiFolders">
-		<value>检查新 iFolder 完成</value>
+		<value>检查新的 iFolder 完成：{0}</value>
 	</data>
   
 	<data name="localSync">
@@ -915,11 +915,11 @@
 	</data>
   
 	<data name="readOnlyFailure">
-		<value>Read-only iFolder prevented synchronization: {0}</value>
+		<value>只读 iFolder 阻止同步：{0}</value>
 	</data>
   
 	<data name="readOnlyFailureInfo">
-		<value>You have Read-only access to this iFolder.  Files that you place in this iFolder will not be synchronized.  Click here to view the Synchronization Log.</value>
+		<value>您对此 iFolder 只具有只读访问权限。将不会同步放置在此 iFolder 中的文件。单击此处查看同步日志。</value>
 	</data>
   
 	<data name="quotaFailure">
@@ -927,11 +927,11 @@
 	</data>
   
 	<data name="quotaFailureTitle">
-		<value>同步不完整</value>
+		<value>同步不完整：{0}</value>
 	</data>
   
 	<data name="quotaFailureInfo">
-		<value>The iFolder is full.  Click here to view the Synchronization Log.</value>
+		<value>该 iFolder 已满。单击此处查看同步日志。</value>
 	</data>
   
 	<data name="policySizeFailure">
@@ -967,10 +967,10 @@
 	</data>
   
 	<data name="createAccount">
-		<value>To begin using iFolder, you must first set up an iFolder account.  Click here to add a new account.</value>
+		<value>要开始使用 iFolder，必须先设置 iFolder 帐户。单击此处添加一个新帐户。</value>
 	</data>
   
 	<data name="createAccountTitle">
-		<value>Welcome to iFolder</value>
+		<value>欢迎使用 iFolder</value>
 	</data>
 </root>
