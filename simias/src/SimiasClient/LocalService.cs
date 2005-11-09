@@ -95,8 +95,11 @@ namespace Simias.Client
 		/// started already.
 		/// </summary>
 		/// <param name="webServiceUri">Uri that references the local web service.</param>
-		static private void Ping( Uri webServiceUri )
+		/// <returns>True if ping was successful, otherwise false is returned.</returns>
+		static private bool Ping( Uri webServiceUri )
 		{
+			bool pingSuccessful = true;
+
 			try
 			{
 				SimiasWebService webService = new SimiasWebService();
@@ -104,7 +107,11 @@ namespace Simias.Client
 				webService.PingSimias();
 			}
 			catch
-			{}
+			{
+				pingSuccessful = false;
+			}
+
+			return pingSuccessful;
 		}
 
 		#endregion
@@ -120,14 +127,27 @@ namespace Simias.Client
 		static public void Start( HttpWebClientProtocol webClient, Uri webServiceUri, string simiasDataPath )
 		{
 			bool ignoreCase = ( MyEnvironment.Platform == MyPlatformID.Windows ) ? true : false;
+			int pingCount = 0;
 
 			// Start the web service so the password file will be created.
 			while ( ( localPassword == null ) || ( String.Compare( dataPath, simiasDataPath, ignoreCase ) != 0 ) )
 			{
-				Ping( webServiceUri );
-				GetLocalPassword( simiasDataPath );
-				if ( localPassword == null )
+				if ( Ping( webServiceUri ) )
 				{
+					pingCount = 0;
+					GetLocalPassword( simiasDataPath );
+					if ( localPassword == null )
+					{
+						Thread.Sleep( 500 );
+					}
+				}
+				else
+				{
+					if ( ++pingCount >= 5 )
+					{
+						throw new ApplicationException( "The local web service is not responding." );
+					}
+
 					Thread.Sleep( 500 );
 				}
 			}

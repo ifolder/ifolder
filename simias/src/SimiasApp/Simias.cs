@@ -1542,8 +1542,17 @@ namespace Mono.ASPNET
 
 					// Wait for the web service uri to be written to the child's stdout descriptor.
 					// Then write it to the parent's stdout descriptor.
-					Console.WriteLine( serverProcess.StandardOutput.ReadLine() );
-					Console.WriteLine( serverProcess.StandardOutput.ReadLine() );
+					string webUriString = serverProcess.StandardOutput.ReadLine();
+					if ( webUriString != null )
+					{
+						Console.WriteLine( webUriString );
+						Console.WriteLine( serverProcess.StandardOutput.ReadLine() );
+					}
+					else
+					{
+						Console.Error.WriteLine( "Error: The Simias process failed to initialize." );
+						Console.Error.WriteLine( "       Use the command line switch --showconsole to view the error." );
+					}
 				}
 				catch
 				{
@@ -1617,24 +1626,30 @@ namespace Mono.ASPNET
 
 					// Wait for the server listener to start.
 					Thread.Sleep( 100 );
-					PingWebService( ub.Uri, simiasDataPath );
+					if ( PingWebService( ub.Uri, simiasDataPath ) )
+					{
+						// Write out the web service uri and data store path to stdout.
+						Console.WriteLine( ub.Uri );
+						Console.WriteLine( simiasDataPath );
 
-					// Write out the web service uri and data store path to stdout.
-					Console.WriteLine( ub.Uri );
-					Console.WriteLine( simiasDataPath );
+						// Increment the reference count for this instance, so that another application
+						// won't shut down this process on us.
+						AddReference( ub.Uri );
 
-					// Increment the reference count for this instance, so that another application
-					// won't shut down this process on us.
-					AddReference( ub.Uri );
+						// Create a temporary file to provide information about this process.
+						CreateProcessFile();
 
-					// Create a temporary file to provide information about this process.
-					CreateProcessFile();
+						// Wait for a message to stop the server.
+						WaitForShutdown();
 
-					// Wait for a message to stop the server.
-					WaitForShutdown();
-
-					// Get rid of the temporary file.
-					DeleteProcessFile();
+						// Get rid of the temporary file.
+						DeleteProcessFile();
+					}
+					else
+					{
+						Console.Error.WriteLine( "Error: Cannot start the local web services." );
+						status = SimiasStatus.ServiceNotAvailable;
+					}
 
 					// Stop the server IPC mechanism.
 					StopServerIpc();
