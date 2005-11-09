@@ -546,14 +546,14 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 			notebook.AppendPage(CreateHomePage(), homeButton);
 			
 			ToggleToolButton availableButton = new ToggleToolButton(Stock.Open);
-//			availableButton.Label = Util.GS("Synchronized Folders");
+			availableButton.Label = Util.GS("Synchronized Folders");
 //			notebook.AppendPage(new Label("Not implemented"), availableButton);
 			notebook.AppendPage(CreateSynchronizedFoldersPage(), availableButton);
 			
 			
 			ToggleToolButton remoteButton = new ToggleToolButton(Stock.Network);
 			remoteButton.Label = Util.GS("Remote Folders");
-			notebook.AppendPage(new Label("Not implemented"), remoteButton);
+			notebook.AppendPage(CreateRemoteFoldersPage(), remoteButton);
 			
 			notebook.CurrentPage = 0;
 
@@ -798,6 +798,33 @@ Console.WriteLine("OnHomeTreeViewButtonPressed({0})", args.Event.Button);
 			vbox.PackStart(SetupTreeView(), true, true, 0);
 			
 			return vbox;
+		}
+		
+		
+		
+		private Widget CreateRemoteFoldersPage()
+		{
+			ScrolledWindow sw = new ScrolledWindow();
+			sw.ShadowType = Gtk.ShadowType.EtchedIn;
+
+			ListStore iconListStore = new ListStore(typeof(Gdk.Pixbuf), typeof(string));
+			iFolderIconView iconView = new iFolderIconView(iconListStore);
+			sw.Add(iconView);
+			
+			Gdk.Pixbuf remoteFolderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("folder.png"));
+			iFolderHolder[] ifolders = ifdata.GetiFolders();
+			if(ifolders != null)
+			{
+				foreach(iFolderHolder holder in ifolders)
+				{
+					if (holder.iFolder.IsSubscription)
+					{
+						TreeIter iter = iconListStore.AppendValues(remoteFolderPixbuf, holder.iFolder.Name);
+					}
+				}
+			}
+
+			return sw;
 		}
 
 

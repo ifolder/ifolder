@@ -28,9 +28,8 @@ using Gtk;
 
 namespace Novell.iFolder
 {
-	public class iFolderIconView : Gtk.Widget
+	public class iFolderIconView : Gnome.IconList
 	{
-		private Gnome.IconList iconList;
 		private TreeModel model;
 		
 		private int columns;
@@ -56,7 +55,7 @@ namespace Novell.iFolder
 		/// <summary>
 		/// The default selction mode is SelectionMode.Single.
 		/// </summary>
-		public SelectionMode SelectionMode
+		public SelectionMode TheSelectionMode
 		{
 			get
 			{
@@ -102,11 +101,9 @@ namespace Novell.iFolder
 		
 		
 		
-		public iFolderIconView(TreeModel model)
+		public iFolderIconView(TreeModel model) :
+					base(48, new Gtk.Adjustment(0,0, 50, 1,1,1), 0)
 		{
-			Adjustment adjustment = new Gtk.Adjustment(0, 0, 50, 1, 1, 1);
-
-			iconList = new Gnome.IconList(48, adjustment, 0);
 		
 			this.model = model;
 			
@@ -115,7 +112,40 @@ namespace Novell.iFolder
 			selectionMode = SelectionMode.Single;
 			pixbufColumn = 0;
 			textColumn = 1;
+			
+			this.IconWidth = 48;
+			this.ColSpacing = 8;
+			
+			this.Realized +=
+				new EventHandler(OnWidgetRealized);
 		}
+		
+		
+		
+		private void OnWidgetRealized(object o, EventArgs args)
+		{
+			Console.WriteLine("iFolderIconView.OnWidgetRealized");
+
+			TreeIter iter;
+			if (model.GetIterFirst(out iter))
+			{
+				do
+				{
+				
+					Gdk.Pixbuf pixbuf =
+						(Gdk.Pixbuf) model.GetValue(iter, pixbufColumn);
+					string name =
+						(string) model.GetValue(iter, textColumn);
+					
+					
+					this.AppendPixbuf(pixbuf, "", name);
+					
+					// Add an icon representing
+				} while (model.IterNext(ref iter));
+			}
+		}
+		
+		
 		
 		
 		
@@ -143,14 +173,6 @@ namespace Novell.iFolder
 		
 		public void UnselectAll()
 		{
-			TreeIter iter;
-			if (model.GetIterFirst(out iter))
-			{
-				do
-				{
-					// Add an icon representing
-				} while (model.IterNext(ref iter));
-			}
 		}
 	}
 }
