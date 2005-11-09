@@ -180,14 +180,13 @@ namespace Simias.DomainService.Web
 			member.IsOwner = true;
 			member.Proxy = true;
 			nodeList.Add( member );
-		
+	
 			// check for a root dir node
 			if (((rootDirID != null) && (rootDirID.Length > 0))
 				&& (rootDirName != null) && (rootDirName.Length > 0))
 			{
 				// files path
-				Configuration config = Configuration.GetConfiguration();
-				string path = Path.Combine(config.StorePath, FilesDirectory);
+				string path = Path.Combine(Store.StorePath, FilesDirectory);
 				path = Path.Combine(path, collectionID);
 				path = Path.Combine(path, rootDirName);
 

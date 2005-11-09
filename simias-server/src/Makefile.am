@@ -6,8 +6,8 @@ SimpleServer_CSFILES_CSC := $(subst /,$(SEP),$(SimpleServer_CSFILES))
 SimpleServer_INCLUDES =
 SimpleServer_RESOURCES =
 SimpleServer_FLAGS = $(CSC_LIBFLAG)
-SimpleServer_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll Simias.dll SimiasClient.dll
-SimpleServer_LIBPATH = ../../simias/src/Simias.dll ../../simias/src/SimiasClient $(DESTDIR)$(webbindir)
+SimpleServer_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll SimiasLib.dll SimiasClient.dll
+SimpleServer_LIBPATH = ../../simias/src/SimiasLib.dll ../../simias/src/SimiasClient $(DESTDIR)$(webbindir)
 
 EXTRA_DIST = ../web-config/win.web.config ../web-config/mono.web.config ../simias-server-boostrap.config.in DomainService.asmx Register.css Register.aspx $(SimpleServer_CSFILES)
 

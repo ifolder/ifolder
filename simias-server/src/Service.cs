@@ -75,10 +75,10 @@ namespace Simias.Server
 		/// Configuration file object for the configured store 
 		/// Store to use.
 		/// </param>
-		public void Start( Configuration config )
+		public void Start()
 		{
 			log.Debug( "Start called" );
-			this.config = config;
+			//this.config = config;
 
 			// Register with the domain provider service.
 			this.authProvider = new Simias.Server.Authentication();

@@ -85,16 +85,6 @@
                     HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.Services.dll"
                 />
                 <Reference
-                    Name = "Simias"
-                    AssemblyName = "Simias"
-                    HintPath = "..\..\stage\web\bin\Simias.dll"
-                />
-                <Reference
-                    Name = "SimiasClient"
-                    AssemblyName = "SimiasClient"
-                    HintPath = "..\..\..\..\final\web\bin\SimiasClient.dll"
-                />
-                <Reference
                     Name = "System.Drawing"
                     AssemblyName = "System.Drawing"
                     HintPath = "..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Drawing.dll"
@@ -103,6 +93,16 @@
                     Name = "System.Data"
                     AssemblyName = "System.Data"
                     HintPath = "..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
+                />
+                <Reference
+                    Name = "SimiasLib"
+                    AssemblyName = "SimiasLib"
+                    HintPath = "..\final\web\bin\SimiasLib.dll"
+                />
+                <Reference
+                    Name = "SimiasClient"
+                    AssemblyName = "SimiasClient"
+                    HintPath = "..\final\web\bin\SimiasClient.dll"
                 />
             </References>
         </Build>

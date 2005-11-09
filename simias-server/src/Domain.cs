@@ -232,6 +232,7 @@ namespace Simias.Server
 
 				if ( ssDomain == null && create == true )
 				{
+					/*
 					// Get the domain name and description from the config file
 					Configuration config =
 						Simias.Configuration.GetConfiguration();
@@ -261,6 +262,7 @@ namespace Simias.Server
 							this.adminPassword = adminPwd;
 						}
 					}
+					*/
 
 					this.id = Guid.NewGuid().ToString();
 					//Uri localUri = new Uri("http://" + MyDns.GetHostName() + "/simias10");

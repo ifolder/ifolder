@@ -1,7 +1,7 @@
 <VisualStudioProject>
     <CSHARP LastOpenVersion = "7.10.3077" >
         <Build>
-            <Settings ReferencePath = "C:\ifolder\simias\stage\web\bin\" >
+            <Settings ReferencePath = "C:\SimiasServer\final\web\bin\;C:\ifolder\simias\stage\web\bin\" >
                 <Config
                     Name = "Debug"
                     EnableASPDebugging = "false"

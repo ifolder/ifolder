@@ -207,7 +207,7 @@ namespace Simias.Server
 		/// <summary>
 		/// The default encoding to use for decoding the basic credential set.
 		/// </summary>
-		private string defaultBasicEncodingName;
+		private string defaultBasicEncodingName = "iso-8859-1";
 		#endregion
 
 		#region Constructor
@@ -217,8 +217,6 @@ namespace Simias.Server
 		/// </summary>
 		public Authentication()
 		{
-			Configuration config = Configuration.GetConfiguration();
-			defaultBasicEncodingName = config.Get( Storage.Domain.SectionName, Storage.Domain.Encoding, "iso-8859-1" );
 		}
 
 		#endregion
