@@ -24,18 +24,31 @@
 
 
 using System;
+using System.Collections;
 using Gtk;
 
 namespace Novell.iFolder
 {
+	public delegate void iFolderItemActivatedHandler(object o, iFolderItemActivatedArgs args);
+
 	public class iFolderIconView : Gnome.IconList
 	{
-		private TreeModel model;
+		private TreeModel 	model;
 		
-		private int columns;
-		private SelectionMode selectionMode;
-		private int pixbufColumn;
-		private int textColumn;
+		private int 		numOfColumns;
+		private int 		pixbufColumn;
+		private int 		textColumn;
+		
+		private int 		columnSpacing;
+		
+		private Hashtable	treePaths;
+		
+		// FIXME: Fix this hack when the ItemSelected & ItemUnselected events don't cause crashes
+		private int			currentSelection;
+		
+		public event iFolderItemActivatedHandler	ItemActivated;
+		public event System.EventHandler			SelectionChanged;
+		
 		
 		/// <summary>
 		/// The default number of columns is 3.
@@ -44,26 +57,11 @@ namespace Novell.iFolder
 		{
 			get
 			{
-				return columns;
+				return numOfColumns;
 			}
 			set
 			{
-				columns = value;
-			}
-		}
-		
-		/// <summary>
-		/// The default selction mode is SelectionMode.Single.
-		/// </summary>
-		public SelectionMode TheSelectionMode
-		{
-			get
-			{
-				return selectionMode;
-			}
-			set
-			{
-				selectionMode = value;
+				numOfColumns = value;
 			}
 		}
 		
@@ -99,6 +97,29 @@ namespace Novell.iFolder
 			}
 		}
 		
+		public TreeModel Model
+		{
+			get
+			{
+				return model;
+			}
+		}
+		
+		public TreePath[] SelectedItems
+		{
+			get
+			{
+				TreePath[] treePathA = new TreePath[this.Selection.Length];
+				
+				for (int i = 0; i < this.Selection.Length; i++)
+				{
+					treePathA[i] = (TreePath)treePaths[this.Selection[i]];
+				}
+				
+				return treePathA;
+			}
+		}
+		
 		
 		
 		public iFolderIconView(TreeModel model) :
@@ -107,14 +128,18 @@ namespace Novell.iFolder
 		
 			this.model = model;
 			
-			// Set up the default values of the IconView's properties
-			columns = 3;
-			selectionMode = SelectionMode.Single;
+			this.columnSpacing = 24;
+			this.ColSpacing = columnSpacing;
+			this.currentSelection = -1;
+			
+			treePaths = new Hashtable();
+			
+			numOfColumns = 3;
 			pixbufColumn = 0;
 			textColumn = 1;
 			
-			this.IconWidth = 48;
-			this.ColSpacing = 8;
+			this.Separators = " ";	// Characters that can be used as
+									// separators in the icon captions.
 			
 			this.Realized +=
 				new EventHandler(OnWidgetRealized);
@@ -126,19 +151,28 @@ namespace Novell.iFolder
 		{
 			Console.WriteLine("iFolderIconView.OnWidgetRealized");
 
+			RefreshIcons();
+		}
+		
+		
+		
+		public void RefreshIcons()
+		{
+			treePaths.Clear();
+			this.Clear();
+
 			TreeIter iter;
 			if (model.GetIterFirst(out iter))
 			{
 				do
 				{
-				
 					Gdk.Pixbuf pixbuf =
 						(Gdk.Pixbuf) model.GetValue(iter, pixbufColumn);
 					string name =
 						(string) model.GetValue(iter, textColumn);
 					
-					
-					this.AppendPixbuf(pixbuf, "", name);
+					int pos = this.AppendPixbuf(pixbuf, "", name);
+					treePaths[pos] = model.GetPath(iter);
 					
 					// Add an icon representing
 				} while (model.IterNext(ref iter));
@@ -151,28 +185,181 @@ namespace Novell.iFolder
 		
 		public void ActivateItem(TreePath path)
 		{
+			if (ItemActivated != null)
+			{
+				ItemActivated(this, new iFolderItemActivatedArgs(path));
+			}
 		}
 		
 		public TreePath GetPathAtPos(int x, int y)
 		{
-			return null;
+			TreePath path = null;
+
+			int pos = this.GetIconAt(x, y);
+			if (pos >= 0 && treePaths.ContainsKey(pos))
+				path = (TreePath) treePaths[pos];
+
+			return path;
 		}
 		
 		public bool PathIsSelected(TreePath path)
 		{
+			for (int i = 0; i < this.Selection.Length; i++)
+			{
+				TreePath tempPath =
+					(TreePath)treePaths[this.Selection[i]];
+				if (tempPath == path)
+					return true;
+			}
+			
 			return false;
-		}
-		
-		public void SelectAll()
-		{
 		}
 		
 		public void SelectPath(TreePath path)
 		{
+			for (int i = 0; i < (int)this.NumIcons; i++)
+			{
+				TreePath tempPath =
+					(TreePath)treePaths[i];
+				if (tempPath == path)
+				{
+					this.SelectIcon(i);
+					break;
+				}
+			}
+		}
+
+
+//		protected override void OnIconSelected(int num, Gdk.Event evnt)
+//		{
+//			base.OnIconSelected(num, evnt);
+
+//			if (SelectionChanged == null) return;
+
+//			SelectionChanged(this, EventArgs.Empty);
+//		}
+
+//		protected override void OnIconUnselected(int num, Gdk.Event evnt)
+//		{
+//			base.OnIconSelected(num, evnt);
+
+//			if (SelectionChanged == null) return;
+			
+//			if (this.Selection.Length == 0)
+//				SelectionChanged(this, EventArgs.Empty);
+//		}
+		
+		protected override void OnSizeAllocated(Gdk.Rectangle sized)
+		{
+			base.OnSizeAllocated(sized);
+			
+			int widthConsumedByColSpacing = ((numOfColumns + 2) * columnSpacing);
+			int availableWidthForIcons = (int)sized.Width - widthConsumedByColSpacing;
+				
+			int columnWidth = availableWidthForIcons / numOfColumns;
+			int totalWidth = (columnWidth * numOfColumns) + widthConsumedByColSpacing;
+				
+			if (totalWidth > sized.Width)
+			{
+				columnWidth--;
+			}
+
+			this.IconWidth = columnWidth;
 		}
 		
-		public void UnselectAll()
+		private bool DidSelectionChange()
 		{
+			bool bSelectionChanged = false;
+
+			if (currentSelection >= 0)
+			{
+				// There was previously a valid selection
+				if (this.Selection.Length == 0)
+				{
+					currentSelection = -1;
+					bSelectionChanged = true;
+				}
+				else
+				{
+					if (this.Selection[0] != currentSelection)
+					{
+						currentSelection = this.Selection[0];
+						bSelectionChanged = true;
+					}
+				}
+			}
+			else
+			{
+				// There was previously no selection
+				if (this.Selection.Length > 0)
+				{
+					currentSelection = this.Selection[0];
+					bSelectionChanged = true;
+				}
+			}
+			
+			return bSelectionChanged;
+		}
+
+		/// <summary>
+		/// This is overridden so that ButtonPressEvent can be listened for by
+		/// the parent of this widget.
+		/// </summary>		
+		protected override bool OnButtonPressEvent(Gdk.EventButton evnt)
+		{
+			base.OnButtonPressEvent(evnt);
+
+			if (this.DidSelectionChange() && SelectionChanged != null)
+				SelectionChanged(this, EventArgs.Empty);
+
+			return false;
+		}
+		
+		protected override bool OnKeyPressEvent(Gdk.EventKey evnt)
+		{
+			base.OnKeyPressEvent(evnt);
+
+			// If the key pressed is on of the arrow keys, check to see
+			// if a SelectionChanged event should be raised.
+			switch(evnt.Key)
+			{
+				case Gdk.Key.Up:
+				case Gdk.Key.Down:
+				case Gdk.Key.Left:
+				case Gdk.Key.Right:
+					if (DidSelectionChange() && SelectionChanged != null)
+						SelectionChanged(this, EventArgs.Empty);
+					break;
+
+				case Gdk.Key.Return:
+					// FIXME: Raise an ItemActivated event if an icon is selected
+					if (this.Selection.Length == 1)
+						this.ActivateItem((TreePath)treePaths[this.Selection[0]]);
+					break;
+
+				default:
+					break;
+			}
+			
+			return false;
+		}
+	}
+	
+	public class iFolderItemActivatedArgs
+	{
+		private TreePath treePath;
+		
+		public TreePath Path
+		{
+			get
+			{
+				return treePath;
+			}
+		}
+		
+		public iFolderItemActivatedArgs(TreePath path)
+		{
+			this.treePath = path;
 		}
 	}
 }

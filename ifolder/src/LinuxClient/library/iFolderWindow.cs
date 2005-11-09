@@ -79,6 +79,13 @@ namespace Novell.iFolder
 		SearchRemoteFolder,
 		ConnectToNewServer
 	}
+	
+	public enum RemoteActionItem
+	{
+		DownloadFolder,
+		DownloadAndSyncFolder,
+		DeleteFolder
+	}
 
 	/// <summary>
 	/// This is a holder class for iFolders so the client can place
@@ -296,6 +303,23 @@ namespace Novell.iFolder
 		private Gdk.Pixbuf			connectAdditionalServerPixbuf;
 		private ListStore			homeStore;
 		private iFolderTreeView		homeTreeView;
+
+		///
+		/// Remote Folders
+		///
+		private ComboBox			remoteDomainsComboBox;
+		private Entry				remoteSearchEntry;
+
+		private Paned				remotePaned;
+
+		private ListStore			remoteActionsStore;
+		private iFolderTreeView		remoteActionsTreeView;
+
+		private ListStore			remoteFoldersListStore;
+		private iFolderIconView		remoteFoldersIconView;
+		
+		private Label				RemoteNameLabel;
+
 
 		/// <summary>
 		/// Default constructor for iFolderWindow
@@ -616,9 +640,6 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 						HomeIconCellTextDataFunc));
 			homeTreeView.AppendColumn(column);
 
-//			homeTreeView.Selection.Changed +=
-//				new EventHandler(OnHomeItemSelected);
-			
 			homeTreeView.Selection.Mode = SelectionMode.None;
 			
 			homeTreeView.RowActivated +=
@@ -655,7 +676,7 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 							  secondaryText == null ? "" : secondaryText);
 		}
 		
-		private void LaunchAction(HomeActionItem action)
+		private void LaunchHomeAction(HomeActionItem action)
 		{
 			switch(action)
 			{
@@ -688,13 +709,12 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 				HomeActionItem action =
 					(HomeActionItem)tModel.GetValue(iter, 0);
 				
-				LaunchAction(action);
+				LaunchHomeAction(action);
 			}
 		}
 		
 		private void OnHomeTreeViewButtonPressed(object o, ButtonPressEventArgs args)
 		{
-Console.WriteLine("OnHomeTreeViewButtonPressed({0})", args.Event.Button);
 			// Ignore all button presses that aren't left-clicks
 			if (args.Event.Button != 1) return;
 			
@@ -715,72 +735,93 @@ Console.WriteLine("OnHomeTreeViewButtonPressed({0})", args.Event.Button);
 					HomeActionItem action =
 						(HomeActionItem)tModel.GetValue(iter, 0);
 					
-					LaunchAction(action);
+					LaunchHomeAction(action);
 				}
 			}
 		}
-		
-		private void OnHomeItemSelected(object o, EventArgs args)
+
+		private void RemoteIconCellPixbufDataFunc (Gtk.TreeViewColumn tree_column,
+				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
+				Gtk.TreeIter iter)
 		{
-			Console.WriteLine("OnHomeItemSelected");
+			Gdk.Pixbuf pixbuf = (Gdk.Pixbuf)tree_model.GetValue(iter, 1);
+			((CellRendererPixbuf) cell).Pixbuf = pixbuf;
+		}
 
-			TreeSelection tSelect = homeTreeView.Selection;
-			if(tSelect.CountSelectedRows() == 1)
+		private void RemoteIconCellTextDataFunc(Gtk.TreeViewColumn tree_column,
+				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
+				Gtk.TreeIter iter)
+		{
+			string primaryText = (string)tree_model.GetValue(iter, 2);
+			string secondaryText = (string)tree_model.GetValue(iter, 3);
+			
+			((CellRendererText) cell).Markup =
+				string.Format("<span size=\"small\">{0}</span>",
+							  primaryText,
+							  secondaryText == null ? "" : secondaryText);
+		}
+		
+		private void LaunchRemoteAction(RemoteActionItem action)
+		{
+			switch(action)
 			{
-				TreeModel tModel;
-				TreeIter iter;
+				case RemoteActionItem.DownloadAndSyncFolder:
+					// FIXME: Implement RemoteActionItem.DownloadAndSyncFolder
+					Console.WriteLine("DownloadAndSyncFolder");
+					break;
+				case RemoteActionItem.DeleteFolder:
+					// FIXME: Implement RemoteActionItem.DeleteFolder
+					Console.WriteLine("DeleteFolder");
+					break;
+				default:
+					break;
+			}
+		}
 
-				tSelect.GetSelected(out tModel, out iter);
-
-				// Unselect it so it doesn't get highlighted
-				homeTreeView.Selection.Changed -= new EventHandler(OnHomeItemSelected);
-				homeTreeView.Selection.UnselectAll();
-				homeTreeView.Selection.Changed += new EventHandler(OnHomeItemSelected);
-
-				HomeActionItem action =
-					(HomeActionItem)tModel.GetValue(iter, 0);
-					
-				switch(action)
-				{
-					case HomeActionItem.AddFolderToSync:
-						// FIXME: Implement HomeActionItem.AddFolderToSync
-						Console.WriteLine("AddFolderToSync");
-						break;
-					case HomeActionItem.SearchRemoteFolder:
-						// FIXME: Implement HomeActionItem.SearchRemoteFolder
-						Console.WriteLine("SearchRemoteFolder");
-						break;
-					case HomeActionItem.ConnectToNewServer:
-						// FIXME: Implement HomeActionItem.ConnectToNewServer
-						Console.WriteLine("ConnectToNewServer");
-
-						Util.ShowPrefsPage(1, simiasManager);
-
-						break;
-					default:
-						break;
-				}
+		private void OnRemoteTreeViewRowActivated(object o, RowActivatedArgs args)
+		{
+			TreeModel tModel = remoteActionsTreeView.Model;
+			TreeIter iter;
+			if (tModel.GetIter(out iter, args.Path))
+			{
+				RemoteActionItem action =
+					(RemoteActionItem)tModel.GetValue(iter, 0);
 				
-				// Unselect the item after 200ms
-//				GLib.Timeout.Add(
-//					200, new GLib.TimeoutHandler(DeselectHomeTreeView));
+				LaunchRemoteAction(action);
+			}
+		}
+		
+		private void OnRemoteTreeViewButtonPressed(object o, ButtonPressEventArgs args)
+		{
+			// Ignore all button presses that aren't left-clicks
+			if (args.Event.Button != 1) return;
+			
+			TreePath tPath = null;
+			TreeViewColumn tColumn = null;
+			
+			if (remoteActionsTreeView.GetPathAtPos(
+					(int)args.Event.X,
+					(int)args.Event.Y,
+					out tPath,
+					out tColumn) == true)
+			{
+				TreeModel tModel = remoteActionsTreeView.Model;
+
+				TreeIter iter;
+				if (tModel.GetIter(out iter, tPath))
+				{
+					RemoteActionItem action =
+						(RemoteActionItem)tModel.GetValue(iter, 0);
+					
+					LaunchRemoteAction(action);
+				}
 			}
 		}
 		
 		
+
+
 		
-//		public bool DeselectHomeTreeView()
-//		{
-//			homeTreeView.Selection.Changed -= new EventHandler(OnHomeItemSelected);
-//			homeTreeView.Selection.UnselectAll();
-//			homeTreeView.Selection.Changed += new EventHandler(OnHomeItemSelected);
-			
-//			return false;
-//		}
-
-
-
-
 		private Widget CreateSynchronizedFoldersPage()
 		{
 			VBox vbox = new VBox (false, 0);
@@ -796,7 +837,68 @@ Console.WriteLine("OnHomeTreeViewButtonPressed({0})", args.Event.Button);
 			// Create the Tree View
 			//-----------------------------
 			vbox.PackStart(SetupTreeView(), true, true, 0);
+/*
+			SetupTreeView();	// FIXME: Remove this eventually
 			
+			HBox hbox = new HBox(false, 4);
+			vbox.PackStart(hbox, false, false, 0);
+			
+			hbox.PackStart(new Label(""), false, false, 0); //spacer
+			
+			Label l = new Label(Util.GS("Filter by Server:"));
+			hbox.PackStart(l, false, false, 0);
+
+			ComboBox domainFilterComboBox = new ComboBox();
+			hbox.PackStart(domainFilterComboBox, false, false, 0);
+
+			domainFilterComboBox.Model = DomainListStore;
+			
+			CellRenderer domainTR = new CellRendererText();
+			domainFilterComboBox.PackStart(domainTR, true);
+
+			domainFilterComboBox.SetCellDataFunc(domainTR,
+				new CellLayoutDataFunc(DomainFilterComboBoxCellTextDataFunc));
+
+			domainFilterComboBox.ShowAll();
+
+
+			hbox.PackStart(new Label(""), true, true, 0); // spacer
+
+			Entry remoteFoldersSearchEntry = new Entry();
+			hbox.PackEnd(remoteFoldersSearchEntry, false, false, 0);
+		
+			l = new Label(Util.GS("Search:"));
+			hbox.PackEnd(l, false, false, 0);
+
+			ScrolledWindow sw = new ScrolledWindow();
+			vbox.PackStart(sw, true, true, 0);
+			sw.ShadowType = Gtk.ShadowType.EtchedIn;
+
+			remoteFoldersListStore = new ListStore(typeof(Gdk.Pixbuf), typeof(string));
+			remoteFoldersIconView = new iFolderIconView(remoteFoldersListStore);
+			remoteFoldersIconView.SelectionMode = SelectionMode.Single;
+
+			remoteFoldersIconView.ButtonPressEvent +=
+				new ButtonPressEventHandler(OnRemoteFoldersButtonPressed);
+			
+			remoteFoldersIconView.SelectionChanged +=
+				new EventHandler(OnRemoteFoldersSelectionChanged);
+
+			sw.Add(remoteFoldersIconView);
+			
+			Gdk.Pixbuf synchronizedFolderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("synchronized-folder64.png"));
+			iFolderHolder[] ifolders = ifdata.GetiFolders();
+			if(ifolders != null)
+			{
+				foreach(iFolderHolder holder in ifolders)
+				{
+					if (!holder.iFolder.IsSubscription)
+					{
+						remoteFoldersListStore.AppendValues(synchronizedFolderPixbuf, holder.iFolder.Name);
+					}
+				}
+			}
+*/
 			return vbox;
 		}
 		
@@ -804,14 +906,203 @@ Console.WriteLine("OnHomeTreeViewButtonPressed({0})", args.Event.Button);
 		
 		private Widget CreateRemoteFoldersPage()
 		{
-			ScrolledWindow sw = new ScrolledWindow();
-			sw.ShadowType = Gtk.ShadowType.EtchedIn;
+			VBox vbox = new VBox(false, 0);
+			vbox.PackStart(CreateRemoteToolbar(), false, false, 0);
+			vbox.PackStart(CreateRemotePaned(), true, true, 0);
 
-			ListStore iconListStore = new ListStore(typeof(Gdk.Pixbuf), typeof(string));
-			iFolderIconView iconView = new iFolderIconView(iconListStore);
-			sw.Add(iconView);
+			return vbox;
+		}
+		
+		private Widget CreateRemoteToolbar()
+		{
+			Frame toolbarFrame = new Frame();
+//			vbox.PackStart(toolbarFrame, false, false, 0);
+			toolbarFrame.ShadowType = ShadowType.EtchedOut;
 			
-			Gdk.Pixbuf remoteFolderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("folder.png"));
+			HBox hbox = new HBox(false, 4);
+			toolbarFrame.Add(hbox);
+//			vbox.PackStart(hbox, false, false, 0);
+
+			hbox.BorderWidth = 4;
+			
+			hbox.PackStart(new Label(""), false, false, 0); // spacer
+			
+			Label l = new Label(Util.GS("Filter by Server:"));
+			hbox.PackStart(l, false, false, 0);
+
+			remoteDomainsComboBox = new ComboBox();
+			hbox.PackStart(remoteDomainsComboBox, false, false, 0);
+
+			remoteDomainsComboBox.Model = DomainListStore;
+			
+			CellRenderer domainTR = new CellRendererText();
+			remoteDomainsComboBox.PackStart(domainTR, true);
+
+			remoteDomainsComboBox.SetCellDataFunc(domainTR,
+				new CellLayoutDataFunc(RemoteDomainComboBoxCellTextDataFunc));
+
+			remoteDomainsComboBox.ShowAll();
+
+			hbox.PackStart(new Label(""), true, true, 0); // spacer
+
+			remoteSearchEntry = new Entry();
+			hbox.PackEnd(remoteSearchEntry, false, false, 0);
+		
+			l = new Label(Util.GS("Search:"));
+			hbox.PackEnd(l, false, false, 0);
+			
+			return toolbarFrame;
+		}
+		
+		private Widget CreateRemotePaned()
+		{
+			remotePaned = new HPaned();
+			remotePaned.Position = 200;
+			
+			remotePaned.Add1(CreateRemoteActionsPane());
+			remotePaned.Add2(CreateRemoteIconViewPane());
+			
+			return remotePaned;
+		}
+		
+		private Widget CreateRemoteActionsPane()
+		{
+			VBox vbox = new VBox(false, 0);
+			
+			vbox.PackStart(CreateRemoteInfo(), false, false, 0);
+			vbox.PackStart(CreateRemoteActions(), false, false, 0);
+			vbox.PackStart(CreateRemoteDetails(), true, true, 0);
+			
+			return vbox;
+		}
+		
+		private Widget CreateRemoteInfo()
+		{
+			VBox vbox = new VBox(false, 0);
+			
+			// folder128.png
+			Gdk.Pixbuf folderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("folder128.png"));
+			folderPixbuf = folderPixbuf.ScaleSimple(64, 64, Gdk.InterpType.Bilinear);
+			Image folderImage = new Image(folderPixbuf);
+			folderImage.SetAlignment(0.5F, 0);
+			
+			vbox.PackStart(folderImage, false, false, 0);
+
+			RemoteNameLabel = new Label("");
+			RemoteNameLabel.UseMarkup = true;
+			RemoteNameLabel.UseUnderline = false;
+			RemoteNameLabel.Xalign = 0.5F;
+			vbox.PackStart(RemoteNameLabel, false, true, 5);
+
+			Label RemoteSizeLabel = new Label("47 MB");
+			RemoteSizeLabel.UseMarkup = true;
+			RemoteSizeLabel.UseUnderline = false;
+			RemoteSizeLabel.Xalign = 0.5F;
+			vbox.PackStart(RemoteSizeLabel, false, true, 0);
+			
+			Label RemoteOwnerLabel = new Label("Owner: Brady Anderson");
+			RemoteOwnerLabel.UseMarkup = true;
+			RemoteOwnerLabel.UseUnderline = false;
+			RemoteOwnerLabel.Xalign = 0.5F;
+			vbox.PackStart(RemoteOwnerLabel, false, true, 0);
+			
+			return vbox;
+		}
+		
+		private Widget CreateRemoteActions()
+		{
+			VBox vbox = new VBox(false, 0);
+			vbox.PackStart(new Label(""), false, false, 0); // spacer
+			ScrolledWindow sw = new ScrolledWindow();
+			vbox.PackStart(sw, true, true, 0);
+			sw.VscrollbarPolicy = PolicyType.Automatic;
+			sw.HscrollbarPolicy = PolicyType.Automatic;
+
+			Gdk.Pixbuf addRemoteFolderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("add-folder-to-synchronize.png"));
+			addRemoteFolderPixbuf = ScalePixbufToSize(addRemoteFolderPixbuf, 24, 24);
+			
+			Gdk.Pixbuf deleteFolderPixbuf = this.RenderIcon(Stock.Delete, IconSize.Menu, "");
+
+			remoteActionsStore = new ListStore(typeof(RemoteActionItem), typeof(Gdk.Pixbuf), typeof(string), typeof(string));
+			remoteActionsStore.AppendValues(RemoteActionItem.DownloadAndSyncFolder, addRemoteFolderPixbuf,
+								   Util.GS("Download and synchronize"),
+								   null);
+//								   Util.GS("This will download the contents of this folder and keep it synchronized on your computer."));
+			remoteActionsStore.AppendValues(RemoteActionItem.DeleteFolder, deleteFolderPixbuf,
+									Util.GS("Delete from server"),
+									null);
+
+
+			remoteActionsTreeView = new iFolderTreeView();
+			remoteActionsTreeView.Model = remoteActionsStore;
+			remoteActionsTreeView.HeadersVisible = false;
+			
+			// Set the base color to the normal widget background color
+			remoteActionsTreeView.ModifyBase(StateType.Normal, new Gdk.Color(246, 246, 246));
+
+			// Set up Pixbuf and Text Rendering
+			CellRendererPixbuf crp = new CellRendererPixbuf();
+			TreeViewColumn column = new TreeViewColumn();
+			column.PackStart(crp, false);
+			column.SetCellDataFunc(crp, new TreeCellDataFunc(
+						RemoteIconCellPixbufDataFunc));
+			CellRendererText crt = new CellRendererText();
+			crt.Editable = false;
+			crt.Underline = Pango.Underline.None;
+			crt.Xpad = 4;
+			crt.Ypad = 4;
+			column.PackStart(crt, true);
+			column.SetCellDataFunc(crt, new TreeCellDataFunc(
+						RemoteIconCellTextDataFunc));
+			remoteActionsTreeView.AppendColumn(column);
+
+			remoteActionsTreeView.Selection.Mode = SelectionMode.None;
+			
+			remoteActionsTreeView.RowActivated +=
+				new RowActivatedHandler(OnRemoteTreeViewRowActivated);
+				
+			remoteActionsTreeView.ButtonPressEvent +=
+				new ButtonPressEventHandler(OnRemoteTreeViewButtonPressed);
+
+			sw.Add(remoteActionsTreeView);
+			
+			return vbox;
+		}
+		
+		private Widget CreateRemoteDetails()
+		{
+			Expander expander = new Expander(Util.GS("Information"));
+
+			ScrolledWindow sw = new ScrolledWindow();
+			expander.Add(sw);
+			sw.VscrollbarPolicy = PolicyType.Automatic;
+			sw.HscrollbarPolicy = PolicyType.Automatic;
+
+			Label l = new Label("Not implemented");
+			sw.AddWithViewport(l);
+			
+			return expander;
+		}
+		
+		private Widget CreateRemoteIconViewPane()
+		{
+			ScrolledWindow sw = new ScrolledWindow();
+//			sw.ShadowType = Gtk.ShadowType.EtchedIn;
+
+			remoteFoldersListStore = new ListStore(typeof(Gdk.Pixbuf), typeof(string));
+			remoteFoldersIconView = new iFolderIconView(remoteFoldersListStore);
+			remoteFoldersIconView.SelectionMode = SelectionMode.Single;
+
+			remoteFoldersIconView.ButtonPressEvent +=
+				new ButtonPressEventHandler(OnRemoteFoldersButtonPressed);
+			
+			remoteFoldersIconView.SelectionChanged +=
+				new EventHandler(OnRemoteFoldersSelectionChanged);
+
+			sw.Add(remoteFoldersIconView);
+			
+			Gdk.Pixbuf remoteFolderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("folder128.png"));
+			remoteFolderPixbuf = remoteFolderPixbuf.ScaleSimple(64, 64, Gdk.InterpType.Bilinear);
 			iFolderHolder[] ifolders = ifdata.GetiFolders();
 			if(ifolders != null)
 			{
@@ -819,13 +1110,69 @@ Console.WriteLine("OnHomeTreeViewButtonPressed({0})", args.Event.Button);
 				{
 					if (holder.iFolder.IsSubscription)
 					{
-						TreeIter iter = iconListStore.AppendValues(remoteFolderPixbuf, holder.iFolder.Name);
+						remoteFoldersListStore.AppendValues(remoteFolderPixbuf, holder.iFolder.Name);
 					}
 				}
 			}
 
 			return sw;
 		}
+		
+//		private Widget GetRemoteActionPane()
+//		{
+//		}
+		
+//		private Widget GetRemoteIconView()
+//		{
+//		}
+		
+//		private Widget GetRemoteToolbar()
+//		{
+//		}
+
+
+
+		private void OnRemoteFoldersButtonPressed(object o, ButtonPressEventArgs args)
+		{
+			TreePath tPath =
+				remoteFoldersIconView.GetPathAtPos((int)args.Event.X,
+												   (int)args.Event.Y);
+			if (tPath != null)
+			{
+				TreeModel tModel = remoteFoldersIconView.Model;
+				
+				TreeIter iter;
+				if (tModel.GetIter(out iter, tPath))
+				{
+					string folderName =
+						(string)tModel.GetValue(iter, 1);
+					if (folderName != null)
+						Console.WriteLine("Folder clicked: {0}", folderName);
+				}
+			}
+		}
+		
+		private void OnRemoteFoldersSelectionChanged(object o, EventArgs args)
+		{
+Console.WriteLine("iFolderWindow.OnRemoteFoldersSelectionChanged()");
+			TreePath[] selection = remoteFoldersIconView.SelectedItems;
+			TreeModel tModel = remoteFoldersIconView.Model;
+			for (int i = 0; i < selection.Length; i++)
+			{
+				TreeIter iter;
+				if (tModel.GetIter(out iter, selection[i]))
+				{
+					string folderName =
+						(string)tModel.GetValue(iter, 1);
+					if (folderName != null)
+					{
+						RemoteNameLabel.Markup =
+							string.Format("<span size=\"large\" weight=\"bold\">{0}</span>", folderName);
+					}
+				}
+			}
+		}
+
 
 
 
@@ -1237,6 +1584,19 @@ Console.WriteLine("OnHomeTreeViewButtonPressed({0})", args.Event.Button);
 				TreeModel tree_model,
 				TreeIter iter)
 		{
+			DomainInformation domain =
+				(DomainInformation)tree_model.GetValue(iter, 0);
+			if (domain != null)
+				((CellRendererText) cell).Text = domain.Name;
+		}
+		
+		private void RemoteDomainComboBoxCellTextDataFunc(
+				CellLayout cell_layout,
+				CellRenderer cell,
+				TreeModel tree_model,
+				TreeIter iter)
+		{
+			// FIXME: Figure out how much space is available and truncate the server text if needed
 			DomainInformation domain =
 				(DomainInformation)tree_model.GetValue(iter, 0);
 			if (domain != null)
@@ -2782,6 +3142,7 @@ Console.WriteLine("OnHomeTreeViewButtonPressed({0})", args.Event.Button);
 			}
 			
 			DomainFilterComboBox.Active = 0;	// Show All
+			remoteDomainsComboBox.Active = 0;	// Show All
 		}
 		
 		// Return true if we were able to determine the exception type.
