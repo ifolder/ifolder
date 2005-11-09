@@ -767,7 +767,7 @@
 	</data>
   
 	<data name="fatalErrorMessage">
-		<value>Softwarová chyba zabraňuje inicializaci aplikace iFolder.  Kontaktujte prosím vašeho správce systému.</value>
+		<value>Softwarová chyba zabraňuje inicializaci aplikace iFolder.  Obraťte se na správce systému.</value>
 	</data>
   
 	<data name="fatalErrorTitle">
@@ -791,7 +791,7 @@
 	</data>
   
 	<data name="clientUpgradeFailure">
-		<value>Inovace klienta aplikace iFolder selhala.  Kontaktujte prosím vašeho správce systému.</value>
+		<value>Inovace klienta aplikace iFolder se nezdařila. Obraťte se na správce systému.</value>
 	</data>
   
 	<data name="clientUpgradePrompt">
@@ -811,15 +811,15 @@
 	</data>
   
 	<data name="accountDisabled">
-		<value>Uživatelský účet je vypnutý.  Podporu získáte kontaktováním vašeho správce sítě. </value>
+		<value>Uživatelský účet je vypnutý. Požádejte o pomoc správce sítě. </value>
 	</data>
   
 	<data name="iFolderAccountDisabled">
-		<value>Účet aplikace iFolder je vypnutý.  Podporu získáte kontaktováním vašeho správce sítě.</value>
+		<value>Účet aplikace iFolder je vypnutý.  Požádejte o pomoc správce sítě.</value>
 	</data>
   
 	<data name="accountLockout">
-		<value>Uživatelský účet byl uzamčen.  Podporu získáte kontaktováním vašeho správce sítě.</value>
+		<value>Uživatelský účet byl uzamčen.  Požádejte o pomoc správce sítě.</value>
 	</data>
   
 	<data name="serverConnectErrorTitle">
@@ -827,7 +827,7 @@
 	</data>
   
 	<data name="checkingForiFolders">
-		<value>Checking for new iFolders on: {0}</value>
+		<value>Kontrola nových složek iFolders na: {0}</value>
 	</data>
   
 	<data name="doneCheckingForiFolders">
@@ -915,11 +915,11 @@
 	</data>
   
 	<data name="readOnlyFailure">
-		<value>Read-only iFolder prevented synchronization: {0}</value>
+		<value>Synchronizaci zabránila složka iFolder s atributem Read-only: {0}</value>
 	</data>
   
 	<data name="readOnlyFailureInfo">
-		<value>You have Read-only access to this iFolder.  Files that you place in this iFolder will not be synchronized.  Click here to view the Synchronization Log.</value>
+		<value>K této složce iFolder máte přístup pouze pro čtení. Soubory, které jste umístili do této složky, nebudou synchronizovány. Klepnutím sem zobrazíte synchronizační protokol.</value>
 	</data>
   
 	<data name="quotaFailure">
@@ -931,7 +931,7 @@
 	</data>
   
 	<data name="quotaFailureInfo">
-		<value>The iFolder is full.  Click here to view the Synchronization Log.</value>
+		<value>Složka iFolder je plná. Klepnutím sem  zobrazíte synchronizační protokol.</value>
 	</data>
   
 	<data name="policySizeFailure">
@@ -959,7 +959,7 @@
 	</data>
   
 	<data name="verifyCert">
-		<value>Aplikace iFolder nemůže ověřit identifikaci serveru iFolder {0}.  Certifikát pro tento server iFolder byl podepsán neznámým certifikačním úřadem.  Můžete se připojovat k serveru, který předstírá, že je {0}, což by mohlo způsobit ohrožení vašich důvěrných informací. Před přijetím tohoto certifikátu byste ho měli ověřit u vašeho správce systému. Chcete přijmout tento certifikát trvale a pokračovat v připojení?</value>
+		<value>Aplikace iFolder nemůže ověřit identifikaci serveru iFolder {0}.  Certifikát pro tento server iFolder byl podepsán neznámým certifikačním úřadem.  Můžete se připojovat k serveru, který předstírá, že je {0}, což by mohlo způsobit ohrožení vašich důvěrných informací. Před přijetím tohoto certifikátu byste ho měli ověřit u správce systému. Chcete přijmout tento certifikát trvale a pokračovat v připojení?</value>
 	</data>
   
 	<data name="verifyCertTitle">
@@ -967,10 +967,10 @@
 	</data>
   
 	<data name="createAccount">
-		<value>To begin using iFolder, you must first set up an iFolder account.  Click here to add a new account.</value>
+		<value>Pokud chcete začít používat složku iFolder, musíte nejprve nastavit účet iFolder. Pro přidání nového účtu klepněte sem.</value>
 	</data>
   
 	<data name="createAccountTitle">
-		<value>Welcome to iFolder</value>
+		<value>Vítejte ve složce iFolder</value>
 	</data>
 </root>
