@@ -857,7 +857,14 @@ namespace Simias.Storage
 			this.masterRev = args.MasterRev;
 			this.slaveRev = args.SlaveRev;
 			this.fileLength = args.FileSize;
-			this.type = ( NodeTypes.NodeTypeEnum )Enum.Parse( typeof( NodeTypes.NodeTypeEnum ), args.Type );
+			try
+			{
+				this.type = ( NodeTypes.NodeTypeEnum )Enum.Parse( typeof( NodeTypes.NodeTypeEnum ), args.Type );
+			}
+			catch
+			{
+				this.type = NodeTypes.NodeTypeEnum.Node;
+			}
 		}
 
 		/// <summary>
