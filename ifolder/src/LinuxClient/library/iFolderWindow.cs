@@ -312,6 +312,7 @@ namespace Novell.iFolder
 		///
 		private ComboBox			remoteDomainsComboBox;
 		private Entry				remoteSearchEntry;
+		private Button				RemoteCancelSearchButton;
 
 		private Paned				remotePaned;
 		
@@ -571,10 +572,8 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 		
 		
 		
-//		private iFolderNotebook CreateiFolderNotebook()
 		private Notebook CreateiFolderNotebook()
 		{
-//			iFolderNotebook notebook = new iFolderNotebook();
 			Notebook notebook = new Notebook();
 		
 			VBox vbox = new VBox(false, 2);
@@ -590,9 +589,6 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 			
 			notebook.AppendPage(CreateHomePage(), vbox);
 			
-//			ToggleToolButton homeButton = new ToggleToolButton(Stock.Home);
-//			notebook.AppendPage(CreateHomePage(), homeButton);
-			
 			vbox = new VBox(false, 2);
 			pixbuf = new Gdk.Pixbuf(Util.ImagesPath("synchronized-folder64.png"));
 			image = new Image(pixbuf);
@@ -605,12 +601,6 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 			vbox.ShowAll();
 			
 			notebook.AppendPage(CreateSynchronizedFoldersPage(), vbox);
-			
-//			ToggleToolButton availableButton = new ToggleToolButton(Stock.Open);
-//			availableButton.Label = Util.GS("Synchronized Folders");
-//			notebook.AppendPage(new Label("Not implemented"), availableButton);
-//			notebook.AppendPage(CreateSynchronizedFoldersPage(), availableButton);
-			
 			
 			vbox = new VBox(false, 2);
 			pixbuf = new Gdk.Pixbuf(Util.ImagesPath("remote-folder64.png"));
@@ -625,14 +615,28 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 			
 			notebook.AppendPage(CreateRemoteFoldersPage(), vbox);
 
-//			ToggleToolButton remoteButton = new ToggleToolButton(Stock.Network);
-//			remoteButton.Label = Util.GS("Remote Folders");
-//			notebook.AppendPage(CreateRemoteFoldersPage(), remoteButton);
-			
 			notebook.CurrentPage = 0;
+			
+			notebook.SwitchPage +=
+				new SwitchPageHandler(OnSwitchPage);
 
 			
 			return notebook;
+		}
+		
+		private void OnSwitchPage(object o, SwitchPageArgs args)
+		{
+			if (args.PageNum == 2)
+			{
+				GLib.Timeout.Add(100, new GLib.TimeoutHandler(
+							GrabRemoteSearchEntryFocus));
+			}
+		}
+		
+		private bool GrabRemoteSearchEntryFocus()
+		{
+			remoteSearchEntry.GrabFocus();
+			return false;
 		}
 		
 		
@@ -904,14 +908,44 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 			remoteDomainsComboBox.ShowAll();
 
 			hbox.PackStart(new Label(""), true, true, 0); // spacer
+			
+			Image stopImage = new Image(Stock.Stop, Gtk.IconSize.Menu);
+			stopImage.SetAlignment(0.5F, 0F);
+			
+			RemoteCancelSearchButton = new Button(stopImage);
+			hbox.PackEnd(RemoteCancelSearchButton, false, false, 0);
+			RemoteCancelSearchButton.Relief = ReliefStyle.None;
+			RemoteCancelSearchButton.Sensitive = false;
+			
+			RemoteCancelSearchButton.Clicked +=
+				new EventHandler(OnRemoteCancelSearchButton);
 
 			remoteSearchEntry = new Entry();
 			hbox.PackEnd(remoteSearchEntry, false, false, 0);
+			remoteSearchEntry.SelectRegion(0, -1);
+			remoteSearchEntry.CanFocus = true;
+			remoteSearchEntry.Changed +=
+				new EventHandler(OnRemoteSearchEntryChanged);
 		
 			l = new Label(Util.GS("Search:"));
 			hbox.PackEnd(l, false, false, 0);
 			
 			return toolbarFrame;
+		}
+		
+		private void OnRemoteCancelSearchButton(object o, EventArgs args)
+		{
+			// FIXME: Implement OnRemoteCancelSearchButton
+			remoteSearchEntry.Text = "";
+			remoteSearchEntry.GrabFocus();
+		}
+		
+		private void OnRemoteSearchEntryChanged(object o, EventArgs args)
+		{
+			if (remoteSearchEntry.Text.Length > 0)
+				RemoteCancelSearchButton.Sensitive = true;
+			else
+				RemoteCancelSearchButton.Sensitive = false;
 		}
 		
 		private Widget CreateRemotePaned()
@@ -2230,7 +2264,7 @@ Console.WriteLine("iFolderWindow.OnRemoteFoldersSelectionChanged()");
 				{
 					try
 					{
-    					iFolderHolder newHolder =
+//    					iFolderHolder newHolder =
 								ifdata.RevertiFolder(ifHolder.iFolder.ID);
 
 //						newHolder.State = iFolderState.Initial;
