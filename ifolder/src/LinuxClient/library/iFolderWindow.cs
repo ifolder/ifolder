@@ -1665,6 +1665,9 @@ Console.WriteLine("iFolderWindow.OnRemoteFoldersSelectionChanged()");
 			{
 				foreach(iFolderHolder holder in ifolders)
 				{
+					// Don't show subscriptions anymore (in this view)
+					if (holder.iFolder.IsSubscription) continue;
+					
 					if (curDomain == null || curDomain.ID == "0")
 					{
 						TreeIter iter = iFolderTreeStore.AppendValues(holder);
@@ -2230,8 +2233,13 @@ Console.WriteLine("iFolderWindow.OnRemoteFoldersSelectionChanged()");
     					iFolderHolder newHolder =
 								ifdata.RevertiFolder(ifHolder.iFolder.ID);
 
-						newHolder.State = iFolderState.Initial;
-						iFolderTreeStore.SetValue(iter, 0, newHolder);
+//						newHolder.State = iFolderState.Initial;
+//						iFolderTreeStore.SetValue(iter, 0, newHolder);
+						if (iFolderTreeStore.Remove(ref iter))
+						{
+							if (curiFolders.ContainsKey(ifHolder.iFolder.ID))
+								curiFolders.Remove(ifHolder.iFolder.ID);
+						}
 					}
 					catch(Exception e)
 					{
@@ -2511,6 +2519,9 @@ Console.WriteLine("iFolderWindow.OnRemoteFoldersSelectionChanged()");
 			{
 				TreeIter iter;
 				iFolderHolder ifHolder = ifdata.GetiFolder(iFolderID);
+				
+				// Ignore subscriptions
+				if (ifHolder.iFolder.IsSubscription) return;
 
 				if( (curDomain != null) &&
 						(curDomain.ID != ifHolder.iFolder.DomainID) )
@@ -2887,23 +2898,26 @@ Console.WriteLine("iFolderWindow.OnRemoteFoldersSelectionChanged()");
 		private void SetupiFolder()
 		{
 			string newPath  = "";
-			iFolderHolder ifHolder = null;
 			TreeModel tModel;
 			TreeIter iter;
 
-			TreeSelection tSelect = iFolderTreeView.Selection;
-			if(tSelect.CountSelectedRows() == 1)
+			TreePath[] selectedPaths = remoteFoldersIconView.SelectedItems;
+			if (selectedPaths.Length != 1) return;
+
+			tModel = remoteFoldersIconView.Model;
+			if (tModel.GetIter(out iter, selectedPaths[0]))
 			{
-				tSelect.GetSelected(out tModel, out iter);
-				ifHolder = (iFolderHolder) tModel.GetValue(iter, 0);
-				if(ifHolder.iFolder == null)
-					return;
+				iFolderHolder holder =
+					(iFolderHolder)tModel.GetValue(iter, 2);
+				if (holder == null) return;
+
 				int rc = 0;
 
 				do
 				{
+					string lastSetupPath = Util.LastSetupPath;
 					iFolderAcceptDialog iad =
-							new iFolderAcceptDialog(ifHolder.iFolder, Util.LastSetupPath);
+							new iFolderAcceptDialog(holder.iFolder, lastSetupPath);
 					iad.TransientFor = this;
 					rc = iad.Run();
 					newPath = ParseAndReplaceTildeInPath(iad.Path);
@@ -2918,11 +2932,11 @@ Console.WriteLine("iFolderWindow.OnRemoteFoldersSelectionChanged()");
 						// Read the updated subscription, and place it back
 						// in the list to show status until the real iFolder
 						// comes along
-	//					curiFolders.Remove(ifHolder.iFolder.ID);
+	//					curiFolders.Remove(holder.iFolder.ID);
 	
 						iFolderHolder newHolder = ifdata.AcceptiFolderInvitation(
-														ifHolder.iFolder.ID,
-														ifHolder.iFolder.DomainID,
+														holder.iFolder.ID,
+														holder.iFolder.DomainID,
 														newPath);
 	
 						tModel.SetValue(iter, 0, newHolder);
