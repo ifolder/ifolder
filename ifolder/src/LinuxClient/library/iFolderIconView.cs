@@ -177,6 +177,9 @@ namespace Novell.iFolder
 					// Add an icon representing
 				} while (model.IterNext(ref iter));
 			}
+			
+			if (SelectionChanged != null)
+				SelectionChanged(this, EventArgs.Empty);
 		}
 		
 		
