@@ -313,11 +313,14 @@ namespace Novell.iFolder
 		private ComboBox			remoteDomainsComboBox;
 		private Entry				remoteSearchEntry;
 		private Button				RemoteCancelSearchButton;
+		private uint				remoteSearchTimeoutID;
 
 		private Paned				remotePaned;
 		
 		private Notebook			RemoteDetailsNotebook;
 		
+		private Gdk.Pixbuf			remoteFolderPixbuf;
+
 		private ListStore			remoteFoldersListStore;
 		private iFolderIconView		remoteFoldersIconView;
 
@@ -349,6 +352,8 @@ namespace Novell.iFolder
 			curDomains = null;
 
 			propDialogs = new Hashtable();
+			
+			remoteSearchTimeoutID = 0;
 			
 			CreateWidgets();
 
@@ -942,10 +947,69 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 		
 		private void OnRemoteSearchEntryChanged(object o, EventArgs args)
 		{
+			if (remoteSearchTimeoutID != 0)
+			{
+				GLib.Source.Remove(remoteSearchTimeoutID);
+				remoteSearchTimeoutID = 0;
+			}
+
 			if (remoteSearchEntry.Text.Length > 0)
 				RemoteCancelSearchButton.Sensitive = true;
 			else
 				RemoteCancelSearchButton.Sensitive = false;
+
+			remoteSearchTimeoutID = GLib.Timeout.Add(
+				500, new GLib.TimeoutHandler(RemoteSearchCallback));
+		}
+		
+		private bool RemoteSearchCallback()
+		{
+			SearchRemoteFolders();
+			return false;
+		}
+		
+		private void SearchRemoteFolders()
+		{
+			remoteFoldersListStore.Clear();
+
+			string searchString = remoteSearchEntry.Text;
+			if (searchString != null)
+			{
+				searchString = searchString.Trim();
+				if (searchString.Length > 0)
+					searchString = searchString.ToLower();
+			}
+
+			iFolderHolder[] ifolders = ifdata.GetiFolders();
+			if(ifolders != null)
+			{
+				foreach(iFolderHolder holder in ifolders)
+				{
+					if (holder.iFolder.IsSubscription)
+					{
+						if (searchString == null || searchString.Trim().Length == 0)
+						{
+							// Add everything in
+							remoteFoldersListStore.AppendValues(remoteFolderPixbuf, holder.iFolder.Name, holder);
+						}
+						else
+						{
+							// Search the iFolder's Name (for now)
+							string name = holder.iFolder.Name;
+							if (name != null)
+							{
+								name = name.ToLower();
+								if (name.IndexOf(searchString) >= 0)
+								{
+									remoteFoldersListStore.AppendValues(remoteFolderPixbuf, holder.iFolder.Name, holder);
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			remoteFoldersIconView.RefreshIcons();
 		}
 		
 		private Widget CreateRemotePaned()
@@ -1142,7 +1206,7 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 
 			sw.Add(remoteFoldersIconView);
 			
-			Gdk.Pixbuf remoteFolderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("folder128.png"));
+			remoteFolderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("folder128.png"));
 			remoteFolderPixbuf = remoteFolderPixbuf.ScaleSimple(64, 64, Gdk.InterpType.Bilinear);
 			iFolderHolder[] ifolders = ifdata.GetiFolders();
 			if(ifolders != null)
