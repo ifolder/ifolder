@@ -326,7 +326,7 @@ namespace Simias.Client
 			simiasProcess.Start();
 
 			// Wait for the process to exit, so we can tell if things started successfully.
-			simiasProcess.WaitForExit( 15000 );
+			simiasProcess.WaitForExit();
 
 			// See if the process is still running.
 			if ( simiasProcess.HasExited )

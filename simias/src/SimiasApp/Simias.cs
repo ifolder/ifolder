@@ -986,7 +986,6 @@ namespace Mono.ASPNET
 			{
 				SimiasWebService svc = new SimiasWebService();
 				svc.Url = uri.ToString() + "/Simias.asmx";
-				Simias.Client.LocalService.Start( svc, uri, dataPath );
 				svc.PingSimias();
 				pingStatus = true;
 			}
