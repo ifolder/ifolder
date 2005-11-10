@@ -819,7 +819,7 @@ msgstr "L'ubicazione selezionata contiene caratteri non validi."
 msgid ""
 "The characters \\:*?\"<>| cannot be used in an iFolder. Please select a "
 "different location and try again."
-msgstr "I caratteri \\:*?"<>| non possono essere utilizzati in una cartella iFolder. Selezionare un'altra ubicazione e riprovare."
+msgstr "I caratteri \\:*?\"<>| non possono essere utilizzati in una cartella iFolder. Selezionare un'altra ubicazione e riprovare."
 #: src/LinuxClient/library/iFolderWindow.cs:2377 
 msgid "The selected location is inside the iFolder data folder."
 msgstr "L'ubicazione selezionata si trova all'interno della cartella di dati di iFolder."
