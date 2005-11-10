@@ -299,11 +299,13 @@ namespace Novell.iFolder
 		
 //		private iFolderNotebook		myiFolderNotebook;
 		private Notebook			myiFolderNotebook;
-		private Gdk.Pixbuf			addNewiFolderPixbuf;
-		private Gdk.Pixbuf			searchRemoteFoldersPixbuf;
-		private Gdk.Pixbuf			connectAdditionalServerPixbuf;
-		private ListStore			homeStore;
-		private iFolderTreeView		homeTreeView;
+		
+		///
+		/// Home Page
+		///
+		private Button				AddFolderToSyncHomeButton;
+		private Button				SearchRemoteFoldersHomeButton;
+		private Button				ConnectToServerHomeButton;
 
 		///
 		/// Remote Folders
@@ -637,156 +639,143 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 		
 		private Widget CreateHomePage()
 		{
-			ScrolledWindow sw = new ScrolledWindow();
-			sw.VscrollbarPolicy = PolicyType.Automatic;
-			sw.HscrollbarPolicy = PolicyType.Automatic;
+			VBox vbox = new VBox(false, 0);
+			vbox.PackStart(new Label(""), false, false, 0); // spacer
 
-//			addNewiFolderPixbuf =
-//				CreateImageWithEmblem(Util.ImagesPath("folder.png"),
-//									  Util.ImagesPath("add-emblem.png"),
-//									  64, 64, .5);
-			addNewiFolderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("add-folder-to-synchronize.png"));
-			addNewiFolderPixbuf = ScalePixbufToSize(addNewiFolderPixbuf, 64, 64);
-			searchRemoteFoldersPixbuf = new Gdk.Pixbuf(Util.ImagesPath("search-folder.png"));
-			searchRemoteFoldersPixbuf = ScalePixbufToSize(searchRemoteFoldersPixbuf, 64, 64);
-			connectAdditionalServerPixbuf = new Gdk.Pixbuf(Util.ImagesPath("add-account.png"));
-			connectAdditionalServerPixbuf = ScalePixbufToSize(connectAdditionalServerPixbuf, 64, 64);
-
-			homeStore = new ListStore(typeof(HomeActionItem), typeof(Gdk.Pixbuf), typeof(string), typeof(string));
-			homeStore.AppendValues(HomeActionItem.AddFolderToSync, addNewiFolderPixbuf,
-								   Util.GS("Add a folder to synchronize"),
-								   Util.GS("Choose a folder on your computer to synchronize with an iFolder Server"));
-//			homeStore.AppendValues(null,
-//								   Util.GS("Share a synchronized folder"), 
-//								   Util.GS("Give other people access to the files of your synchronized folder"));
-			homeStore.AppendValues(HomeActionItem.SearchRemoteFolder, searchRemoteFoldersPixbuf,
-								   Util.GS("Search for remote folders"), 
-								   Util.GS("Search for remote folders to synchronize to your computer"));
-			homeStore.AppendValues(HomeActionItem.ConnectToNewServer, connectAdditionalServerPixbuf,
-								   Util.GS("Connect to an additional iFolder Server"), 
-								   Util.GS("Connect to another iFolder server to access additional folders"));
-
-//			homeTreeView = new iFolderTreeView(homeStore);
-			homeTreeView = new iFolderTreeView();
-			homeTreeView.Model = homeStore;
-			homeTreeView.HeadersVisible = false;
-
-
-			// Set up Pixbuf and Text Rendering for "iFolders" column
-			CellRendererPixbuf crp = new CellRendererPixbuf();
-			TreeViewColumn column = new TreeViewColumn();
-			column.PackStart(crp, false);
-			column.SetCellDataFunc(crp, new TreeCellDataFunc(
-						HomeIconCellPixbufDataFunc));
-			CellRendererText crt = new CellRendererText();
-			crt.Editable = false;
-			crt.Underline = Pango.Underline.None;
-			crt.Xpad = 4;
-			crt.Ypad = 10;
-			column.PackStart(crt, true);
-			column.SetCellDataFunc(crt, new TreeCellDataFunc(
-						HomeIconCellTextDataFunc));
-			homeTreeView.AppendColumn(column);
-
-			homeTreeView.Selection.Mode = SelectionMode.None;
+			///
+			/// AddFolderToSyncHomeButton
+			///
+			HBox hbox = new HBox(false, 0);
+			AddFolderToSyncHomeButton = new Button(hbox);
+			AddFolderToSyncHomeButton.Relief = ReliefStyle.None;
+//			AddFolderToSyncHomeButton.Sensitive = false;
+			vbox.PackStart(AddFolderToSyncHomeButton, false, false, 0);
 			
-			homeTreeView.RowActivated +=
-				new RowActivatedHandler(OnHomeTreeViewRowActivated);
+			// folder128.png
+			Gdk.Pixbuf folderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("add-folder-to-synchronize.png"));
+			folderPixbuf = folderPixbuf.ScaleSimple(64, 64, Gdk.InterpType.Bilinear);
+			Image folderImage = new Image(folderPixbuf);
+			folderImage.SetAlignment(0.5F, 0F);
+			hbox.PackStart(folderImage, false, false, 0);
+			
+			VBox buttonVBox = new VBox(false, 0);
+			hbox.PackStart(buttonVBox, true, true, 4);
+			
+			Label buttonText = new Label(string.Format("<span size=\"large\" weight=\"bold\">{0}</span>", Util.GS("Add a folder to synchronize")));
+			buttonVBox.PackStart(buttonText, false, false, 0);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+			
+			Label buttonMessage = new Label(string.Format("<span size=\"small\">{0}</span>", Util.GS("Choose a folder on your computer to synchronize with an iFolder Server")));
+			buttonVBox.PackStart(buttonMessage, false, false, 0);
+			buttonMessage.UseMarkup = true;
+			buttonMessage.UseUnderline = false;
+			buttonMessage.LineWrap = true;
+			buttonMessage.Justify = Justification.Left;
+			buttonMessage.Xalign = 0;
+			buttonMessage.Yalign = 0;
+			
+			AddFolderToSyncHomeButton.Clicked +=
+				new EventHandler(OnAddFolderToSyncHomeButton);
+
+			///
+			/// SearchRemoteFoldersHomeButton
+			///
+			hbox = new HBox(false, 0);
+			SearchRemoteFoldersHomeButton = new Button(hbox);
+			SearchRemoteFoldersHomeButton.Relief = ReliefStyle.None;
+//			SearchRemoteFoldersHomeButton.Sensitive = false;
+			vbox.PackStart(SearchRemoteFoldersHomeButton, false, false, 0);
+			
+			// folder128.png
+			folderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("search-folder.png"));
+			folderPixbuf = folderPixbuf.ScaleSimple(64, 64, Gdk.InterpType.Bilinear);
+			folderImage = new Image(folderPixbuf);
+			folderImage.SetAlignment(0.5F, 0F);
+			hbox.PackStart(folderImage, false, false, 0);
+			
+			buttonVBox = new VBox(false, 0);
+			hbox.PackStart(buttonVBox, true, true, 4);
+			
+			buttonText = new Label(string.Format("<span size=\"large\" weight=\"bold\">{0}</span>", Util.GS("Search for remote folders")));
+			buttonVBox.PackStart(buttonText, false, false, 0);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+			
+			buttonMessage = new Label(string.Format("<span size=\"small\">{0}</span>", Util.GS("Search for remote folders to synchronize to your computer")));
+			buttonVBox.PackStart(buttonMessage, false, false, 0);
+			buttonMessage.UseMarkup = true;
+			buttonMessage.UseUnderline = false;
+			buttonMessage.LineWrap = true;
+			buttonMessage.Justify = Justification.Left;
+			buttonMessage.Xalign = 0;
+			buttonMessage.Yalign = 0;
+			
+			SearchRemoteFoldersHomeButton.Clicked +=
+				new EventHandler(OnSearchRemoteFoldersHomeButton);
 				
-			homeTreeView.ButtonPressEvent +=
-				new ButtonPressEventHandler(OnHomeTreeViewButtonPressed);
+			///
+			/// Spacer (so that the ConnectToServerHomeButton is at the bottom)
+			///
+			vbox.PackStart(new Label(""), true, true, 0);
 
-			sw.Add(homeTreeView);
+			///
+			/// ConnectToServerHomeButton
+			///
+			hbox = new HBox(false, 0);
+			ConnectToServerHomeButton = new Button(hbox);
+			ConnectToServerHomeButton.Relief = ReliefStyle.None;
+//			ConnectToServerHomeButton.Sensitive = false;
+			vbox.PackStart(ConnectToServerHomeButton, false, false, 0);
 			
-			return sw;
-		}
-		
-		
-		
-		private void HomeIconCellPixbufDataFunc (Gtk.TreeViewColumn tree_column,
-				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
-				Gtk.TreeIter iter)
-		{
-			Gdk.Pixbuf pixbuf = (Gdk.Pixbuf)tree_model.GetValue(iter, 1);
-			((CellRendererPixbuf) cell).Pixbuf = pixbuf;
-		}
-
-		private void HomeIconCellTextDataFunc(Gtk.TreeViewColumn tree_column,
-				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
-				Gtk.TreeIter iter)
-		{
-			string primaryText = (string)tree_model.GetValue(iter, 2);
-			string secondaryText = (string)tree_model.GetValue(iter, 3);
+			// folder128.png
+			folderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("add-account.png"));
+			folderPixbuf = folderPixbuf.ScaleSimple(64, 64, Gdk.InterpType.Bilinear);
+			folderImage = new Image(folderPixbuf);
+			folderImage.SetAlignment(0.5F, 0F);
+			hbox.PackStart(folderImage, false, false, 0);
 			
-			((CellRendererText) cell).Markup =
-				string.Format("<span size=\"large\" weight=\"bold\">{0}</span>\n<span size=\"small\" weight=\"normal\">{1}</span>",
-							  primaryText,
-							  secondaryText == null ? "" : secondaryText);
-		}
-		
-		private void LaunchHomeAction(HomeActionItem action)
-		{
-			switch(action)
-			{
-				case HomeActionItem.AddFolderToSync:
-					// FIXME: Implement HomeActionItem.AddFolderToSync
-					Console.WriteLine("AddFolderToSync");
-					break;
-				case HomeActionItem.SearchRemoteFolder:
-					// FIXME: Implement HomeActionItem.SearchRemoteFolder
-					Console.WriteLine("SearchRemoteFolder");
-					myiFolderNotebook.CurrentPage = 2;
-					break;
-				case HomeActionItem.ConnectToNewServer:
-					// FIXME: Implement HomeActionItem.ConnectToNewServer
-					Console.WriteLine("ConnectToNewServer");
-
-					Util.ShowPrefsPage(1, simiasManager);
-
-					break;
-				default:
-					break;
-			}
-		}
-		
-		private void OnHomeTreeViewRowActivated(object o, RowActivatedArgs args)
-		{
-			TreeModel tModel = homeTreeView.Model;
-			TreeIter iter;
-			if (tModel.GetIter(out iter, args.Path))
-			{
-				HomeActionItem action =
-					(HomeActionItem)tModel.GetValue(iter, 0);
-				
-				LaunchHomeAction(action);
-			}
-		}
-		
-		private void OnHomeTreeViewButtonPressed(object o, ButtonPressEventArgs args)
-		{
-			// Ignore all button presses that aren't left-clicks
-			if (args.Event.Button != 1) return;
+			buttonVBox = new VBox(false, 0);
+			hbox.PackStart(buttonVBox, true, true, 4);
 			
-			TreePath tPath = null;
-			TreeViewColumn tColumn = null;
+			buttonText = new Label(string.Format("<span size=\"large\" weight=\"bold\">{0}</span>", Util.GS("Connect to an additional iFolder Server")));
+			buttonVBox.PackStart(buttonText, false, false, 0);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
 			
-			if (homeTreeView.GetPathAtPos(
-					(int)args.Event.X,
-					(int)args.Event.Y,
-					out tPath,
-					out tColumn) == true)
-			{
-				TreeModel tModel = homeTreeView.Model;
+			buttonMessage = new Label(string.Format("<span size=\"small\">{0}</span>", Util.GS("Connect to another iFolder server to access additional folders")));
+			buttonVBox.PackStart(buttonMessage, false, false, 0);
+			buttonMessage.UseMarkup = true;
+			buttonMessage.UseUnderline = false;
+			buttonMessage.LineWrap = true;
+			buttonMessage.Justify = Justification.Left;
+			buttonMessage.Xalign = 0;
+			buttonMessage.Yalign = 0;
+			
+			ConnectToServerHomeButton.Clicked +=
+				new EventHandler(OnConnectToServerHomeButton);
 
-				TreeIter iter;
-				if (tModel.GetIter(out iter, tPath))
-				{
-					HomeActionItem action =
-						(HomeActionItem)tModel.GetValue(iter, 0);
-					
-					LaunchHomeAction(action);
-				}
-			}
+			return vbox;
+		}
+		
+		
+		
+		private void OnAddFolderToSyncHomeButton(object o, EventArgs args)
+		{
+			Console.WriteLine("OnAddFolderToSyncHomeButton");
+		}
+
+		private void OnSearchRemoteFoldersHomeButton(object o, EventArgs args)
+		{
+			myiFolderNotebook.CurrentPage = 2;
+		}
+
+		private void OnConnectToServerHomeButton(object o, EventArgs args)
+		{
+			Util.ShowPrefsPage(1, simiasManager);
 		}
 
 		
