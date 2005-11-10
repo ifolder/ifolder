@@ -765,7 +765,8 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 		
 		private void OnAddFolderToSyncHomeButton(object o, EventArgs args)
 		{
-			Console.WriteLine("OnAddFolderToSyncHomeButton");
+			myiFolderNotebook.CurrentPage = 1;
+			CreateNewiFolder();
 		}
 
 		private void OnSearchRemoteFoldersHomeButton(object o, EventArgs args)
@@ -1019,6 +1020,9 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 			buttonMessage.Yalign = 0;
 			buttonMessage.WidthRequest = 170;
 			buttonMessage.HeightRequest = 40;
+			
+			DownloadAndSyncButton.Clicked +=
+				new EventHandler(OnDownloadAndSyncButton);
 						
 			
 			///
@@ -1056,6 +1060,12 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 			
 			
 			return vbox;
+		}
+		
+		private void OnDownloadAndSyncButton(object o, EventArgs args)
+		{
+			myiFolderNotebook.CurrentPage = 1;
+			SetupiFolder();
 		}
 		
 		private Widget CreateRemoteDetails()
