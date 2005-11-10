@@ -50,8 +50,8 @@ namespace Simias.Server
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
 
 		private string domainID;
-		private string username;
-		private string password;
+		private string username = "admin";
+		private string password = "simias";
 		private string authType;
 
 		private readonly char[] colonDelimeter = {':'};
