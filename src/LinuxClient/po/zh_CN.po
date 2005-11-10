@@ -819,7 +819,7 @@ msgstr "所选位置包含无效字符。"
 msgid ""
 "The characters \\:*?\"<>| cannot be used in an iFolder. Please select a "
 "different location and try again."
-msgstr "在 iFolder 中不能使用字符 \:*?\"<>|。请选择一个不同的位置并重试。"
+msgstr "在 iFolder 中不能使用字符 \\:*?\"<>|。请选择一个不同的位置并重试。"
 #: src/LinuxClient/library/iFolderWindow.cs:2377 
 msgid "The selected location is inside the iFolder data folder."
 msgstr "所选位置位于 iFolder 数据文件夹内。"
