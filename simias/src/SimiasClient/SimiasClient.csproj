@@ -17,7 +17,7 @@
                 DelaySign = "false"
                 OutputType = "Library"
                 PreBuildEvent = ""
-                PostBuildEvent = "if not exist $(SolutionDir)stage mkdir $(SolutionDir)stage&#xd;&#xa;if not exist $(SolutionDir)stage\web mkdir $(SolutionDir)stage\web&#xd;&#xa;if not exist $(SolutionDir)stage\web\bin mkdir $(SolutionDir)stage\web\bin&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)stage\web\bin&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)stage\web\bin&#xd;&#xa;"
+                PostBuildEvent = "if not exist $(SolutionDir)stage mkdir $(SolutionDir)stage&#xd;&#xa;if not exist $(SolutionDir)stage\web mkdir $(SolutionDir)stage\web&#xd;&#xa;if not exist $(SolutionDir)stage\web\bin mkdir $(SolutionDir)stage\web\bin&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)stage\web\bin&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)stage\web\bin&#xd;&#xa;copy $(SolutionDir)external\NS\net\Novell.Security.Utilities.dll $(SolutionDir)stage\web\bin&#xd;&#xa;"
                 RootNamespace = "SimiasClient"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
@@ -88,11 +88,6 @@
                     Name = "System.Web.Services"
                     AssemblyName = "System.Web.Services"
                     HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.Services.dll"
-                />
-                <Reference
-                    Name = "Novell.Security.ClientPasswordManager.PasswordDialog"
-                    AssemblyName = "Novell.Security.ClientPasswordManager.PasswordDialog"
-                    HintPath = "..\..\external\Novell.Security\net\bin\Novell.Security.ClientPasswordManager.PasswordDialog.dll"
                 />
                 <Reference
                     Name = "Novell.Security.ClientPasswordManager.NetCredential"

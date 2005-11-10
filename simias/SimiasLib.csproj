@@ -105,11 +105,6 @@
                     HintPath = "..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Runtime.Remoting.dll"
                 />
                 <Reference
-                    Name = "Novell.Security.ClientPasswordManager.PasswordDialog"
-                    AssemblyName = "Novell.Security.ClientPasswordManager.PasswordDialog"
-                    HintPath = "external\Novell.Security\net\bin\Novell.Security.ClientPasswordManager.PasswordDialog.dll"
-                />
-                <Reference
                     Name = "Novell.Security.ClientPasswordManager.NetCredential"
                     AssemblyName = "Novell.Security.ClientPasswordManager.NetCredential"
                     HintPath = "external\Novell.Security\net\bin\Novell.Security.ClientPasswordManager.NetCredential.dll"
@@ -428,18 +423,8 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\POBox\POBoxManager.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\POBox\POBoxServiceProxy.cs"
                     SubType = "code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\POBox\POManager.cs"
-                    SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
@@ -464,11 +449,6 @@
                 />
                 <File
                     RelPath = "src\POBox\SubscriptionStatus.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\POBox\SubscriptionThread.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

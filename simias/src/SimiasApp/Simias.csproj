@@ -17,7 +17,7 @@
                 DelaySign = "false"
                 OutputType = "Exe"
                 PreBuildEvent = ""
-                PostBuildEvent = "if not exist $(SolutionDir)stage mkdir $(SolutionDir)stage&#xd;&#xa;if not exist $(SolutionDir)stage\web mkdir $(SolutionDir)stage\web&#xd;&#xa;if not exist $(SolutionDir)stage\web\bin mkdir $(SolutionDir)stage\web\bin&#xd;&#xa;if not exist $(SolutionDir)stage\etc mkdir $(SolutionDir)stage\etc&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)stage\web\bin&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)stage\web\bin&#xd;&#xa;copy $(ProjectDir)..\Common\simias-client-bootstrap.config $(SolutionDir)stage\etc&#xd;&#xa;copy $(SolutionDir)external\Novell.Security\net\bin\*.dll $(SolutionDir)stage\web\bin"
+                PostBuildEvent = "if not exist $(SolutionDir)stage mkdir $(SolutionDir)stage&#xd;&#xa;if not exist $(SolutionDir)stage\web mkdir $(SolutionDir)stage\web&#xd;&#xa;if not exist $(SolutionDir)stage\web\bin mkdir $(SolutionDir)stage\web\bin&#xd;&#xa;if not exist $(SolutionDir)stage\etc mkdir $(SolutionDir)stage\etc&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)stage\web\bin&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)stage\web\bin&#xd;&#xa;copy $(ProjectDir)SimiasDirectoryMapping $(SolutionDir)stage&#xd;&#xa;copy $(ProjectDir)simias.cmd $(SolutionDir)stage&#xd;&#xa;"
                 RootNamespace = "Mono.ASPNET"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""

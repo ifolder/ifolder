@@ -40,52 +40,12 @@ namespace Simias.POBox
 	public enum SubscriptionStates
 	{
 		/// <summary>
-		/// The Subscription has been created but not sent.
-		/// </summary>
-		Invited,
-
-		/// <summary>
-		/// The Subscription has been sent.
-		/// </summary>
-		Posted,
-
-		/// <summary>
-		/// The Subscription has been received.
-		/// </summary>
-		Received,
-
-		/// <summary>
-		/// The Subscription has been replied to.
-		/// </summary>
-		Replied,
-
-		/// <summary>
-		/// The Subscription reply has been delivered.
-		/// </summary>
-		Delivered,
-
-		/// <summary>
-		/// The Subscription is waiting to be accepted/declined by the owner.
-		/// </summary>
-		Pending,
-
-		/// <summary>
-		/// The Subscription has been accepted/declined.
-		/// </summary>
-		Responded,
-
-		/// <summary>
-		/// The Subscription acceptance/denial has been acknowledged.
-		/// </summary>
-		Acknowledged,
-
-		/// <summary>
 		/// The Subscription is ready and can be used to start syncing.
 		/// </summary>
 		Ready,
 
 		/// <summary>
-		/// The subscription state is unknown.
+		/// Unknown subscription state.
 		/// </summary>
 		Unknown
 	};
@@ -285,7 +245,7 @@ namespace Simias.POBox
 		public Subscription(string messageName, string messageType, string fromIdentity, string fromAddress, string toAddress, string toIdentity) :
 			base (messageName, NodeTypes.SubscriptionType, messageType, fromIdentity, fromAddress, toAddress, toIdentity)
 		{
-			SubscriptionState = SubscriptionStates.Invited;
+			SubscriptionState = SubscriptionStates.Ready;
 		}
 
 		/// <summary>
@@ -631,57 +591,6 @@ namespace Simias.POBox
 		#endregion
 
 		#region Public Methods
-/*	DEADCODE - Used by the old invitation wizard and GtkAddrBook.	
-		/// <summary>
-		/// Gets or creates a Subscription object based on a SubscriptionInfo file.
-		/// </summary>
-		/// <param name="store">The store to use when creating/finding the Subscription object.</param>
-		/// <param name="subscriptionInfoFileName">The file used to create/find the Subscription object.</param>
-		/// <returns>A Subscription object constructed from the SubscriptionInfo file.</returns>
-		public static Subscription GetSubscriptionFromSubscriptionInfo(Store store, string subscriptionInfoFileName)
-		{
-			SubscriptionInfo subscriptionInfo = new SubscriptionInfo(subscriptionInfoFileName);
-
-			return GetSubscriptionFromSubscriptionInfo(store, subscriptionInfo);
-		}
-
-		/// <summary>
-		/// Gets or creates a Subscription object based on a SubscriptionInfo object.
-		/// </summary>
-		/// <param name="store">The store to use when creating/finding the Subscription object.</param>
-		/// <param name="subscriptionInfo">The SubscriptionInfo object used to create/find the Subscription object.</param>
-		/// <returns>A Subscription object constructed from the SubscriptionInfo object.</returns>
-		public static Subscription GetSubscriptionFromSubscriptionInfo(Store store, SubscriptionInfo subscriptionInfo)
-		{
-			Subscription subscription;
-
-			// check for existing subscription object in the POBox
-			POBox poBox = POBox.GetPOBox(store, subscriptionInfo.DomainID);
-			
-			ICSList list = poBox.Search(Message.MessageIDProperty, subscriptionInfo.SubscriptionID, SearchOp.Equal);
-			ICSEnumerator e = list.GetEnumerator() as ICSEnumerator;
-			if (e.MoveNext())
-			{
-				// new up the subscription from the existing node.
-				subscription = new Subscription(poBox, e.Current as ShallowNode);
-				e.Dispose();
-			}
-			else
-			{
-				// Create a new subscription object.
-				subscription = new Subscription(subscriptionInfo.SubscriptionCollectionName + " Subscription", subscriptionInfo);
-
-				// Set the state to received.
-				subscription.SubscriptionState = SubscriptionStates.Received;
-
-				// Add the subscription to the POBox.
-				poBox.AddMessage(subscription);
-			}
-
-
-			return subscription;
-		}
-*/
 		/// <summary>
 		/// Generates a SubscriptionInfo object from the Subscription object
 		/// </summary>
@@ -816,56 +725,11 @@ namespace Simias.POBox
 		}
 
 		/// <summary>
-		/// Accept the subscription on the slave side.
-		/// </summary>
-		/// <param name="store">The store that the POBox belongs to.</param>
-		/// <param name="disposition">The disposition to set on the subscription.</param>
-		public void Accept(Store store, SubscriptionDispositions disposition)
-		{
-			Collection c = store.GetCollectionByID(this.Properties.GetSingleProperty(BaseSchema.CollectionId).ToString());
-
-			SubscriptionState = SubscriptionStates.Replied;
-			SubscriptionDisposition = disposition;
-			Member member = c.GetCurrentMember();
-			ToName = member.Name;
-			ToIdentity = member.UserID;
-			ToPublicKey = member.PublicKey;
-			//FromName = member.Name;
-			//FromIdentity = member.UserID;
-		}
-
-		/// <summary>
-		/// Accept the subscription on the master side
-		/// </summary>
-		public Member Accept(Store store, Access.Rights rights)
-		{
-			Collection c = store.GetCollectionByID(this.SubscriptionCollectionID);
-
-			// check collection
-			if (c == null)
-				throw new DoesNotExistException("Collection does not exist.");
-
-			// member
-			Member member = new Member(this.ToName, this.ToIdentity, rights, this.ToPublicKey);
-
-			// commit
-			c.Commit(member);
-
-			// state update
-			this.SubscriptionState = SubscriptionStates.Responded;
-			this.SubscriptionDisposition = SubscriptionDispositions.Accepted;
-			this.ToMemberNodeID = member.ID;
-
-			return member;
-		}
-
-		/// <summary>
 		/// Decline the subscription on the master side
 		/// </summary>
 		public void Decline()
 		{
 			// state update
-			this.SubscriptionState = SubscriptionStates.Responded;
 			this.SubscriptionDisposition = SubscriptionDispositions.Declined;
 		}
 

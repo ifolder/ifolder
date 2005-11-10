@@ -57,15 +57,12 @@ AssemblyInfo.cs
 ../HttpAuthentication/HttpAuth.cs
 ../POBox/Message.cs
 ../POBox/POBox.cs
-../POBox/POBoxManager.cs
 ../POBox/POBoxServiceProxy.cs
-../POBox/POManager.cs
 ../POBox/POService.cs
 ../POBox/Subscription.cs
 ../POBox/SubscriptionDetails.cs
 ../POBox/SubscriptionInfo.cs
 ../POBox/SubscriptionStatus.cs
-../POBox/SubscriptionThread.cs
 ../Policy/DiskSpaceQuota.cs
 ../Policy/FileSizeFilter.cs
 ../Policy/FileTypeFilter.cs

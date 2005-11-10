@@ -1429,24 +1429,10 @@ namespace Novell.iFolder.Web
 			else
 				throw new Exception("Invalid Rights Specified");
 
-
-			// Use the POBox for the domain that this iFolder belongs to.
-			POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
-						domain.ID, 
-						store.GetUserIDFromDomainID(domain.ID));
-
-			Subscription sub = poBox.CreateSubscription(col,
-										col.GetCurrentMember(),
-										"iFolder");
-
-			sub.SubscriptionRights = newRights;
-			sub.ToName = member.Name;
-			sub.ToIdentity = MemberID;
-
-			poBox.AddMessage(sub);
-
-			iFolderUser user = new iFolderUser( sub );
-			return user;
+			// Create the new member in the collection.
+			Member collectionMember = new Member(member.Name, member.UserID, newRights);
+			col.Commit(collectionMember);
+			return new iFolderUser(domain, collectionMember);
 		}
 
 
@@ -1499,24 +1485,10 @@ namespace Novell.iFolder.Web
 			else
 				throw new Exception("Invalid Rights Specified");
 
-
-			// Use the POBox for the domain that this iFolder belongs to.
-			POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
-						domain.ID, 
-						store.GetUserIDFromDomainID(domain.ID));
-
-			Subscription sub = poBox.CreateSubscription(col,
-										col.GetCurrentMember(),
-										"iFolder");
-
-			sub.SubscriptionRights = newRights;
-			sub.ToName = member.Name;
-			sub.ToIdentity = UserID;
-
-			poBox.AddMessage(sub);
-
-			iFolderUser user = new iFolderUser( sub );
-			return user;
+			// Create the new member in the collection.
+			Member collectionMember = new Member(member.Name, member.UserID, newRights);
+			col.Commit(collectionMember);
+			return new iFolderUser(domain, collectionMember);
 		}
 
 
@@ -1593,16 +1565,8 @@ namespace Novell.iFolder.Web
 			}
 
 			sub.CollectionRoot = Path.GetFullPath(LocalPath);
-			if(sub.SubscriptionState == SubscriptionStates.Ready)
-			{
-				poBox.Commit(sub);
-				sub.CreateSlave(store);
-			}
-			else
-			{
-				sub.Accept(store, SubscriptionDispositions.Accepted);
-				poBox.Commit(sub);
-			}
+			poBox.Commit(sub);
+			sub.CreateSlave(store);
 
 			iFolderWeb ifolder = new iFolderWeb(sub);
 			return ifolder;
