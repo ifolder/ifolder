@@ -72,6 +72,20 @@ namespace Novell.iFolder
 		/// </summary>
 		Disconnected
 	}
+	
+	public enum HomeActionItem
+	{
+		AddFolderToSync,
+		SearchRemoteFolder,
+		ConnectToNewServer
+	}
+	
+	public enum RemoteActionItem
+	{
+		DownloadFolder,
+		DownloadAndSyncFolder,
+		DeleteFolder
+	}
 
 	/// <summary>
 	/// This is a holder class for iFolders so the client can place
@@ -282,12 +296,77 @@ namespace Novell.iFolder
 		// to open the properties of an iFolder that is already opened, it
 		// won't open additional properties dialogs for the same iFolder.
 		private Hashtable			propDialogs;
+		
+//		private iFolderNotebook		myiFolderNotebook;
+		private Notebook			myiFolderNotebook;
+		
+		private int					HomePageIndex;
+		private int					OldiFolderPageIndex;
+		private int					SynchronizedFoldersPageIndex;
+		private int					RemoteFoldersPageIndex;
+		
+		///
+		/// Home Page
+		///
+		private Button				AddFolderToSyncHomeButton;
+		private Button				SearchRemoteFoldersHomeButton;
+		private Button				ConnectToServerHomeButton;
+		
+		///
+		/// Synchronized Folders Page
+		///
+		private ComboBox			synchronizedDomainsComboBox;
+		private Entry				synchronizedSearchEntry;
+		private Button				SynchronizedCancelSearchButton;
+		private uint				synchronizedSearchTimeoutID;
+
+		private Paned				synchronizedPaned;
+		
+		private Notebook			SynchronizedDetailsNotebook;
+		
+		private Gdk.Pixbuf			synchronizedFolderPixbuf;
+
+		private ListStore			synchronizedFoldersListStore;
+		private iFolderIconView		synchronizedFoldersIconView;
+
+		private Button				AddFolderToSyncButton;
+		private Button				RemoveSynchronizedFolderButton;
+		private Button				ShareSynchronizedFolderButton;
+		
+		private Label				SynchronizedNameLabel;
+
+		///
+		/// Remote Folders Page
+		///
+		private ComboBox			remoteDomainsComboBox;
+		private Entry				remoteSearchEntry;
+		private Button				RemoteCancelSearchButton;
+		private uint				remoteSearchTimeoutID;
+
+		private Paned				remotePaned;
+		
+		private Notebook			RemoteDetailsNotebook;
+		
+		private Gdk.Pixbuf			remoteFolderPixbuf;
+
+		private ListStore			remoteFoldersListStore;
+		private iFolderIconView		remoteFoldersIconView;
+
+		private Button				DownloadAndSyncButton;
+		private Button				DeleteFromServerButton;
+		
+		private Label				RemoteNameLabel;
+		private Label				RemoteSizeLabel;
+		private Label				RemoteOwnerLabel;
+		private Label				RemoteServerLabel;
+		private TextView			RemoteDescriptionTextView;
+
 
 		/// <summary>
 		/// Default constructor for iFolderWindow
 		/// </summary>
 		public iFolderWindow(iFolderWebService webService, SimiasWebService SimiasWS, Manager simiasManager)
-			: base (Util.GS("iFolders"))
+			: base (Util.GS("iFolder"))
 		{
 			if(webService == null)
 				throw new ApplicationException("iFolderWebServices was null");
@@ -301,6 +380,9 @@ namespace Novell.iFolder
 			curDomains = null;
 
 			propDialogs = new Hashtable();
+			
+			remoteSearchTimeoutID = 0;
+			synchronizedSearchTimeoutID = 0;
 			
 			CreateWidgets();
 
@@ -348,18 +430,21 @@ namespace Novell.iFolder
 			//-----------------------------
 			MenuBar menubar = CreateMenu ();
 			vbox.PackStart (menubar, false, false, 0);
+			
+			myiFolderNotebook = CreateiFolderNotebook();
+			vbox.PackStart (myiFolderNotebook, true, true, 0);
 
 			//-----------------------------
 			// Create the Toolbar
 			//-----------------------------
-			toolbar = CreateToolbar();
-			vbox.PackStart (toolbar, false, false, 0);
+//			toolbar = CreateToolbar();
+//			vbox.PackStart (toolbar, false, false, 0);
 
 
 			//-----------------------------
 			// Create the Tree View
 			//-----------------------------
-			vbox.PackStart(SetupTreeView(), true, true, 0);
+//			vbox.PackStart(SetupTreeView(), true, true, 0);
 
 
 			//-----------------------------
@@ -395,6 +480,1382 @@ namespace Novell.iFolder
 			// being drawn
 			this.Realized += new EventHandler(OnRealizeWidget);
 		}
+		
+		
+		
+		/// <summary>
+		/// </summary>
+		private Gdk.Pixbuf CreateImageWithEmblem(string mainImagePath, string emblemImagePath,
+												 int height, int width, double emblemOverlap)
+		{
+			Gdk.Pixbuf mainPixbuf = new Gdk.Pixbuf(mainImagePath);
+			Gdk.Pixbuf emblemPixbuf = new Gdk.Pixbuf(emblemImagePath);
+			
+			int bigHeight = mainPixbuf.Height + (int)(emblemPixbuf.Height * (1 - emblemOverlap));
+			int bigWidth  = mainPixbuf.Width  + (int)(emblemPixbuf.Width  * (1 - emblemOverlap));
+			
+			Gdk.Pixbuf bigPixbuf0 = new Gdk.Pixbuf(Gdk.Colorspace.Rgb, false, 8, bigHeight, bigWidth);
+			bigPixbuf0.Fill(0xffffffff); // opaque white background
+			
+			mainPixbuf.Composite(bigPixbuf0,
+								 0, 0,	// dest x,y
+//								 mainPixbuf.Width, mainPixbuf.Height, // dest width,height
+								 bigWidth, bigHeight,
+								 0, 0,	// offset x,y
+								 1, 1,	// scale x,y
+								 Gdk.InterpType.Bilinear,
+								 255);	// overall alpha
+			
+//			Gdk.Pixbuf bigPixbuf1 = new Gdk.Pixbuf(Gdk.Colorspace.Rgb, false, 8, bigHeight, bigWidgth);
+//			bigPixbuf1.Fill(0xffffffff); // opaque white background
+			
+			emblemPixbuf.Composite(bigPixbuf0,
+								   bigWidth - emblemPixbuf.Width,		// dest_x
+								   bigHeight - emblemPixbuf.Height,		// dest_y
+//								   emblemPixbuf.Width,					// dest_width
+//								   emblemPixbuf.Height,					// dest_height
+								   bigWidth, bigHeight,
+								   0, 0,								// offset x,y
+								   1, 1,								// scale x,y
+								   Gdk.InterpType.Bilinear,
+								   255);								// overall alpha
+
+			return bigPixbuf0;
+
+/*			
+			double scaleFactor;
+			if (height > width)
+			{
+				if (bigHeight > bigWidth)
+				{
+					scaleFactor = ((double) height / (double) bigHeight);
+				}
+				else
+				{
+					scaleFactor = ((double) height / (double) bigWidth);
+				}
+			}
+			else
+			{
+				if (bigHeight > bigWidth)
+				{
+					scaleFactor = ((double) width / (double) bigHeight);
+				}
+				else
+				{
+					scaleFactor = ((double) width / (double) bigWidth);
+				}
+			}
+Console.WriteLine("scaleFactor: {0}", scaleFactor);
+
+			Gdk.Pixbuf resultPixbuf = new Gdk.Pixbuf(Gdk.Colorspace.Rgb, false, 8, height, width);
+			resultPixbuf.Fill(0xffffffff); // opaque white background
+			
+			bigPixbuf0.Composite(resultPixbuf,
+								 0,0,
+								 width, height,
+								 0,0,
+								 scaleFactor,
+								 scaleFactor,
+								 Gdk.InterpType.Bilinear,
+								 255);
+			
+			return resultPixbuf;
+*/
+		}
+		
+		
+		
+		private Gdk.Pixbuf ScalePixbufToSize(Gdk.Pixbuf pixbuf, int maxWidth, int maxHeight)
+		{
+			double scaleFactor;
+			if (maxHeight > maxWidth)
+			{
+				if (pixbuf.Height > pixbuf.Width)
+				{
+					scaleFactor = ((double) maxHeight / (double) pixbuf.Height);
+				}
+				else
+				{
+					scaleFactor = ((double) maxHeight / (double) pixbuf.Width);
+				}
+			}
+			else
+			{
+				if (pixbuf.Height > pixbuf.Width)
+				{
+					scaleFactor = ((double) maxWidth / (double) pixbuf.Height);
+				}
+				else
+				{
+					scaleFactor = ((double) maxWidth / (double) pixbuf.Width);
+				}
+			}
+			
+			int width = (int) ((double)pixbuf.Width / scaleFactor);
+			int height = (int) ((double)pixbuf.Height / scaleFactor);
+			
+			// Make sure we're not out of our bounds
+			if (width > maxWidth)
+				width = maxWidth;
+			if (height > maxHeight)
+				height = maxHeight;
+				
+			return pixbuf.ScaleSimple(width, height, Gdk.InterpType.Bilinear);
+		}
+		
+		
+		
+		private Notebook CreateiFolderNotebook()
+		{
+			Notebook notebook = new Notebook();
+		
+			VBox vbox = new VBox(false, 2);
+			Gdk.Pixbuf pixbuf = new Gdk.Pixbuf(Util.ImagesPath("home-temp.png"));
+			pixbuf = pixbuf.ScaleSimple(64, 64, Gdk.InterpType.Bilinear);
+			Image image = new Image(pixbuf);
+			vbox.PackStart(image, false, false, 0);
+			image.SetAlignment(0.5F, 0.5F);
+			Label l = new Label(string.Format("<span weight=\"bold\">{0}</span>", Util.GS("Home")));
+			vbox.PackStart(l, false, false, 0);
+			l.UseMarkup = true;
+			vbox.ShowAll();
+			
+			HomePageIndex = notebook.AppendPage(CreateHomePage(), vbox);
+			
+
+			vbox = new VBox(false, 2);
+			pixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder128.png"));
+			pixbuf = pixbuf.ScaleSimple(64, 64, Gdk.InterpType.Bilinear);
+			image = new Image(pixbuf);
+			vbox.PackStart(image, false, false, 0);
+			image.SetAlignment(0.5F, 0.5F);
+			l = new Label(string.Format("<span weight=\"bold\">{0}</span>", Util.GS("Old Interface")));
+			vbox.PackStart(l, false, false, 0);
+			l.UseMarkup = true;
+			l.LineWrap = true;
+			vbox.ShowAll();
+
+			OldiFolderPageIndex = notebook.AppendPage(CreateOldiFolderPage(), vbox);
+
+
+			vbox = new VBox(false, 2);
+			pixbuf = new Gdk.Pixbuf(Util.ImagesPath("synchronized-folder64.png"));
+			image = new Image(pixbuf);
+			vbox.PackStart(image, false, false, 0);
+			image.SetAlignment(0.5F, 0.5F);
+			l = new Label(string.Format("<span weight=\"bold\">{0}</span>", Util.GS("Synchronized Folders")));
+			vbox.PackStart(l, false, false, 0);
+			l.UseMarkup = true;
+			l.LineWrap = true;
+			vbox.ShowAll();
+			
+			SynchronizedFoldersPageIndex = notebook.AppendPage(CreateSynchronizedFoldersPage(), vbox);
+
+			
+			vbox = new VBox(false, 2);
+			pixbuf = new Gdk.Pixbuf(Util.ImagesPath("remote-folder64.png"));
+			image = new Image(pixbuf);
+			vbox.PackStart(image, false, false, 0);
+			image.SetAlignment(0.5F, 0.5F);
+			l = new Label(string.Format("<span weight=\"bold\">{0}</span>", Util.GS("Remote Folders")));
+			vbox.PackStart(l, false, false, 0);
+			l.UseMarkup = true;
+			l.LineWrap = true;
+			vbox.ShowAll();
+			
+			RemoteFoldersPageIndex = notebook.AppendPage(CreateRemoteFoldersPage(), vbox);
+
+			notebook.CurrentPage = HomePageIndex;
+			
+			notebook.SwitchPage +=
+				new SwitchPageHandler(OnSwitchPage);
+
+			
+			return notebook;
+		}
+		
+		private void OnSwitchPage(object o, SwitchPageArgs args)
+		{
+			if (args.PageNum == SynchronizedFoldersPageIndex)
+			{
+				GLib.Timeout.Add(100, new GLib.TimeoutHandler(
+							GrabSynchronizedSearchEntryFocus));
+			}
+			else if (args.PageNum == RemoteFoldersPageIndex)
+			{
+				GLib.Timeout.Add(100, new GLib.TimeoutHandler(
+							GrabRemoteSearchEntryFocus));
+			}
+		}
+		
+		private bool GrabSynchronizedSearchEntryFocus()
+		{
+			synchronizedSearchEntry.GrabFocus();
+			return false;
+		}
+		
+		private bool GrabRemoteSearchEntryFocus()
+		{
+			remoteSearchEntry.GrabFocus();
+			return false;
+		}		
+		
+		
+		private Widget CreateHomePage()
+		{
+			VBox vbox = new VBox(false, 0);
+			vbox.PackStart(new Label(""), false, false, 0); // spacer
+
+			///
+			/// AddFolderToSyncHomeButton
+			///
+			HBox hbox = new HBox(false, 0);
+			AddFolderToSyncHomeButton = new Button(hbox);
+			AddFolderToSyncHomeButton.Relief = ReliefStyle.None;
+//			AddFolderToSyncHomeButton.Sensitive = false;
+			vbox.PackStart(AddFolderToSyncHomeButton, false, false, 0);
+			
+			// folder128.png
+			Gdk.Pixbuf folderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("add-folder-to-synchronize.png"));
+			folderPixbuf = folderPixbuf.ScaleSimple(64, 64, Gdk.InterpType.Bilinear);
+			Image folderImage = new Image(folderPixbuf);
+			folderImage.SetAlignment(0.5F, 0F);
+			hbox.PackStart(folderImage, false, false, 0);
+			
+			VBox buttonVBox = new VBox(false, 0);
+			hbox.PackStart(buttonVBox, true, true, 4);
+			
+			Label buttonText = new Label(string.Format("<span size=\"large\" weight=\"bold\">{0}</span>", Util.GS("Add a folder to synchronize")));
+			buttonVBox.PackStart(buttonText, false, false, 0);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+			
+			Label buttonMessage = new Label(string.Format("<span size=\"small\">{0}</span>", Util.GS("Choose a folder on your computer to synchronize with an iFolder Server")));
+			buttonVBox.PackStart(buttonMessage, false, false, 0);
+			buttonMessage.UseMarkup = true;
+			buttonMessage.UseUnderline = false;
+			buttonMessage.LineWrap = true;
+			buttonMessage.Justify = Justification.Left;
+			buttonMessage.Xalign = 0;
+			buttonMessage.Yalign = 0;
+			
+			AddFolderToSyncHomeButton.Clicked +=
+				new EventHandler(OnAddFolderToSyncHomeButton);
+
+			///
+			/// SearchRemoteFoldersHomeButton
+			///
+			hbox = new HBox(false, 0);
+			SearchRemoteFoldersHomeButton = new Button(hbox);
+			SearchRemoteFoldersHomeButton.Relief = ReliefStyle.None;
+//			SearchRemoteFoldersHomeButton.Sensitive = false;
+			vbox.PackStart(SearchRemoteFoldersHomeButton, false, false, 0);
+			
+			// folder128.png
+			folderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("search-folder.png"));
+			folderPixbuf = folderPixbuf.ScaleSimple(64, 64, Gdk.InterpType.Bilinear);
+			folderImage = new Image(folderPixbuf);
+			folderImage.SetAlignment(0.5F, 0F);
+			hbox.PackStart(folderImage, false, false, 0);
+			
+			buttonVBox = new VBox(false, 0);
+			hbox.PackStart(buttonVBox, true, true, 4);
+			
+			buttonText = new Label(string.Format("<span size=\"large\" weight=\"bold\">{0}</span>", Util.GS("Search for remote folders")));
+			buttonVBox.PackStart(buttonText, false, false, 0);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+			
+			buttonMessage = new Label(string.Format("<span size=\"small\">{0}</span>", Util.GS("Search for remote folders to synchronize to your computer")));
+			buttonVBox.PackStart(buttonMessage, false, false, 0);
+			buttonMessage.UseMarkup = true;
+			buttonMessage.UseUnderline = false;
+			buttonMessage.LineWrap = true;
+			buttonMessage.Justify = Justification.Left;
+			buttonMessage.Xalign = 0;
+			buttonMessage.Yalign = 0;
+			
+			SearchRemoteFoldersHomeButton.Clicked +=
+				new EventHandler(OnSearchRemoteFoldersHomeButton);
+				
+			///
+			/// Spacer (so that the ConnectToServerHomeButton is at the bottom)
+			///
+			vbox.PackStart(new Label(""), true, true, 0);
+
+			///
+			/// ConnectToServerHomeButton
+			///
+			hbox = new HBox(false, 0);
+			ConnectToServerHomeButton = new Button(hbox);
+			ConnectToServerHomeButton.Relief = ReliefStyle.None;
+//			ConnectToServerHomeButton.Sensitive = false;
+			vbox.PackStart(ConnectToServerHomeButton, false, false, 0);
+			
+			// folder128.png
+			folderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("add-account.png"));
+			folderPixbuf = folderPixbuf.ScaleSimple(64, 64, Gdk.InterpType.Bilinear);
+			folderImage = new Image(folderPixbuf);
+			folderImage.SetAlignment(0.5F, 0F);
+			hbox.PackStart(folderImage, false, false, 0);
+			
+			buttonVBox = new VBox(false, 0);
+			hbox.PackStart(buttonVBox, true, true, 4);
+			
+			buttonText = new Label(string.Format("<span size=\"large\" weight=\"bold\">{0}</span>", Util.GS("Connect to an additional iFolder Server")));
+			buttonVBox.PackStart(buttonText, false, false, 0);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+			
+			buttonMessage = new Label(string.Format("<span size=\"small\">{0}</span>", Util.GS("Connect to another iFolder server to access additional folders")));
+			buttonVBox.PackStart(buttonMessage, false, false, 0);
+			buttonMessage.UseMarkup = true;
+			buttonMessage.UseUnderline = false;
+			buttonMessage.LineWrap = true;
+			buttonMessage.Justify = Justification.Left;
+			buttonMessage.Xalign = 0;
+			buttonMessage.Yalign = 0;
+			
+			ConnectToServerHomeButton.Clicked +=
+				new EventHandler(OnConnectToServerHomeButton);
+
+			return vbox;
+		}
+		
+		
+		
+		private void OnAddFolderToSyncHomeButton(object o, EventArgs args)
+		{
+			myiFolderNotebook.CurrentPage = SynchronizedFoldersPageIndex;
+			CreateNewiFolder();
+		}
+
+		private void OnAddFolderToSyncButton(object o, EventArgs args)
+		{
+			CreateNewiFolder();
+		}
+
+		private void OnShareSynchronizedFolder(object o, EventArgs args)
+		{
+			TreePath[] selection = synchronizedFoldersIconView.SelectedItems;
+			if (selection.Length != 1) return;
+
+			TreeModel tModel = synchronizedFoldersIconView.Model;
+			TreeIter iter;
+			if (tModel.GetIter(out iter, selection[0]))
+			{
+				iFolderHolder holder =
+					(iFolderHolder)tModel.GetValue(iter, 2);
+				if (holder != null)
+				{
+					ShowSynchronizedFolderProperties(holder, 1);
+				}
+			}
+		}
+
+		private void ShowSynchronizedFolderProperties(iFolderHolder ifHolder, int currentPage)
+		{
+			if (ifHolder != null)
+			{
+				iFolderPropertiesDialog propsDialog =
+					(iFolderPropertiesDialog) propDialogs[ifHolder.iFolder.ID];
+				if (propsDialog == null)
+				{
+					try
+					{
+						propsDialog = 
+							new iFolderPropertiesDialog(this, ifHolder.iFolder, ifws, simws, simiasManager);
+						propsDialog.SetPosition(WindowPosition.Center);
+						propsDialog.Response += 
+								new ResponseHandler(OnPropertiesDialogResponse);
+						propsDialog.CurrentPage = currentPage;
+						propsDialog.ShowAll();
+	
+						propDialogs[ifHolder.iFolder.ID] = propsDialog;
+					}
+					catch(Exception e)
+					{
+						if(propsDialog != null)
+						{
+							propsDialog.Hide();
+							propsDialog.Destroy();
+							propsDialog = null;
+						}
+	
+						iFolderExceptionDialog ied = 
+							new iFolderExceptionDialog(this, e);
+						ied.Run();
+						ied.Hide();
+						ied.Destroy();
+						ied = null;
+					}
+				}
+				else
+				{
+					propsDialog.Present();
+					propsDialog.CurrentPage = currentPage;
+				}
+			}
+		}
+
+
+
+		private void OnSearchRemoteFoldersHomeButton(object o, EventArgs args)
+		{
+			myiFolderNotebook.CurrentPage = RemoteFoldersPageIndex;
+		}
+
+		private void OnConnectToServerHomeButton(object o, EventArgs args)
+		{
+			Util.ShowPrefsPage(1, simiasManager);
+		}
+
+		
+
+
+		private Widget CreateOldiFolderPage()
+		{
+			VBox vbox = new VBox (false, 0);
+			
+			//-----------------------------
+			// Create the Toolbar
+			//-----------------------------
+			toolbar = CreateToolbar();
+			vbox.PackStart (toolbar, false, false, 0);
+
+
+			//-----------------------------
+			// Create the Tree View
+			//-----------------------------
+			vbox.PackStart(SetupTreeView(), true, true, 0);
+/*
+			SetupTreeView();	// FIXME: Remove this eventually
+			
+			HBox hbox = new HBox(false, 4);
+			vbox.PackStart(hbox, false, false, 0);
+			
+			hbox.PackStart(new Label(""), false, false, 0); //spacer
+			
+			Label l = new Label(Util.GS("Filter by Server:"));
+			hbox.PackStart(l, false, false, 0);
+
+			ComboBox domainFilterComboBox = new ComboBox();
+			hbox.PackStart(domainFilterComboBox, false, false, 0);
+
+			domainFilterComboBox.Model = DomainListStore;
+			
+			CellRenderer domainTR = new CellRendererText();
+			domainFilterComboBox.PackStart(domainTR, true);
+
+			domainFilterComboBox.SetCellDataFunc(domainTR,
+				new CellLayoutDataFunc(DomainFilterComboBoxCellTextDataFunc));
+
+			domainFilterComboBox.ShowAll();
+
+
+			hbox.PackStart(new Label(""), true, true, 0); // spacer
+
+			Entry remoteFoldersSearchEntry = new Entry();
+			hbox.PackEnd(remoteFoldersSearchEntry, false, false, 0);
+		
+			l = new Label(Util.GS("Search:"));
+			hbox.PackEnd(l, false, false, 0);
+
+			ScrolledWindow sw = new ScrolledWindow();
+			vbox.PackStart(sw, true, true, 0);
+			sw.ShadowType = Gtk.ShadowType.EtchedIn;
+
+			remoteFoldersListStore = new ListStore(typeof(Gdk.Pixbuf), typeof(string));
+			remoteFoldersIconView = new iFolderIconView(remoteFoldersListStore);
+			remoteFoldersIconView.SelectionMode = SelectionMode.Single;
+
+			remoteFoldersIconView.ButtonPressEvent +=
+				new ButtonPressEventHandler(OnRemoteFoldersButtonPressed);
+			
+			remoteFoldersIconView.SelectionChanged +=
+				new EventHandler(OnRemoteFoldersSelectionChanged);
+
+			sw.Add(remoteFoldersIconView);
+			
+			Gdk.Pixbuf synchronizedFolderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("synchronized-folder64.png"));
+			iFolderHolder[] ifolders = ifdata.GetiFolders();
+			if(ifolders != null)
+			{
+				foreach(iFolderHolder holder in ifolders)
+				{
+					if (!holder.iFolder.IsSubscription)
+					{
+						remoteFoldersListStore.AppendValues(synchronizedFolderPixbuf, holder.iFolder.Name);
+					}
+				}
+			}
+*/
+			return vbox;
+		}
+		
+		
+		
+		private Widget CreateRemoteFoldersPage()
+		{
+			VBox vbox = new VBox(false, 0);
+			vbox.PackStart(CreateRemoteToolbar(), false, false, 0);
+			vbox.PackStart(CreateRemotePaned(), true, true, 0);
+
+			return vbox;
+		}
+		
+		private Widget CreateRemoteToolbar()
+		{
+			Frame toolbarFrame = new Frame();
+//			vbox.PackStart(toolbarFrame, false, false, 0);
+			toolbarFrame.ShadowType = ShadowType.EtchedOut;
+			
+			HBox hbox = new HBox(false, 4);
+			toolbarFrame.Add(hbox);
+//			vbox.PackStart(hbox, false, false, 0);
+
+			hbox.BorderWidth = 4;
+			
+			hbox.PackStart(new Label(""), false, false, 0); // spacer
+			
+			Label l = new Label(Util.GS("Filter by Server:"));
+			hbox.PackStart(l, false, false, 0);
+
+			remoteDomainsComboBox = new ComboBox();
+			hbox.PackStart(remoteDomainsComboBox, false, false, 0);
+
+			remoteDomainsComboBox.Model = DomainListStore;
+			
+			CellRenderer domainTR = new CellRendererText();
+			remoteDomainsComboBox.PackStart(domainTR, true);
+
+			remoteDomainsComboBox.SetCellDataFunc(domainTR,
+				new CellLayoutDataFunc(RemoteDomainComboBoxCellTextDataFunc));
+
+			remoteDomainsComboBox.ShowAll();
+
+			hbox.PackStart(new Label(""), true, true, 0); // spacer
+			
+			Image stopImage = new Image(Stock.Stop, Gtk.IconSize.Menu);
+			stopImage.SetAlignment(0.5F, 0F);
+			
+			RemoteCancelSearchButton = new Button(stopImage);
+			hbox.PackEnd(RemoteCancelSearchButton, false, false, 0);
+			RemoteCancelSearchButton.Relief = ReliefStyle.None;
+			RemoteCancelSearchButton.Sensitive = false;
+			
+			RemoteCancelSearchButton.Clicked +=
+				new EventHandler(OnRemoteCancelSearchButton);
+
+			remoteSearchEntry = new Entry();
+			hbox.PackEnd(remoteSearchEntry, false, false, 0);
+			remoteSearchEntry.SelectRegion(0, -1);
+			remoteSearchEntry.CanFocus = true;
+			remoteSearchEntry.Changed +=
+				new EventHandler(OnRemoteSearchEntryChanged);
+		
+			l = new Label(Util.GS("Search:"));
+			hbox.PackEnd(l, false, false, 0);
+			
+			return toolbarFrame;
+		}
+		
+		private void OnRemoteCancelSearchButton(object o, EventArgs args)
+		{
+			// FIXME: Implement OnRemoteCancelSearchButton
+			remoteSearchEntry.Text = "";
+			remoteSearchEntry.GrabFocus();
+		}
+		
+		private void OnRemoteSearchEntryChanged(object o, EventArgs args)
+		{
+			if (remoteSearchTimeoutID != 0)
+			{
+				GLib.Source.Remove(remoteSearchTimeoutID);
+				remoteSearchTimeoutID = 0;
+			}
+
+			if (remoteSearchEntry.Text.Length > 0)
+				RemoteCancelSearchButton.Sensitive = true;
+			else
+				RemoteCancelSearchButton.Sensitive = false;
+
+			remoteSearchTimeoutID = GLib.Timeout.Add(
+				500, new GLib.TimeoutHandler(RemoteSearchCallback));
+		}
+		
+		private bool RemoteSearchCallback()
+		{
+			SearchRemoteFolders();
+			return false;
+		}
+		
+		private void SearchRemoteFolders()
+		{
+			remoteFoldersListStore.Clear();
+
+			string searchString = remoteSearchEntry.Text;
+			if (searchString != null)
+			{
+				searchString = searchString.Trim();
+				if (searchString.Length > 0)
+					searchString = searchString.ToLower();
+			}
+
+			iFolderHolder[] ifolders = ifdata.GetiFolders();
+			if(ifolders != null)
+			{
+				foreach(iFolderHolder holder in ifolders)
+				{
+					if (holder.iFolder.IsSubscription)
+					{
+						if (searchString == null || searchString.Trim().Length == 0)
+						{
+							// Add everything in
+							remoteFoldersListStore.AppendValues(remoteFolderPixbuf, holder.iFolder.Name, holder);
+						}
+						else
+						{
+							// Search the iFolder's Name (for now)
+							string name = holder.iFolder.Name;
+							if (name != null)
+							{
+								name = name.ToLower();
+								if (name.IndexOf(searchString) >= 0)
+								{
+									remoteFoldersListStore.AppendValues(remoteFolderPixbuf, holder.iFolder.Name, holder);
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			remoteFoldersIconView.RefreshIcons();
+		}
+		
+		private Widget CreateRemotePaned()
+		{
+			remotePaned = new HPaned();
+			remotePaned.Position = 220;
+			
+			remotePaned.Add1(CreateRemoteActionsPane());
+			remotePaned.Add2(CreateRemoteIconViewPane());
+			
+			return remotePaned;
+		}
+		
+		private Widget CreateRemoteActionsPane()
+		{
+			RemoteDetailsNotebook = new Notebook();
+			RemoteDetailsNotebook.ShowTabs = false;
+			RemoteDetailsNotebook.AppendPage(new Label("Select a folder"), null);
+			
+			
+			VBox vbox = new VBox(false, 0);
+			RemoteDetailsNotebook.AppendPage(vbox, null);
+			vbox.PackStart(CreateRemoteInfo(), false, false, 0);
+			vbox.PackStart(CreateRemoteActions(), false, false, 0);
+			vbox.PackStart(CreateRemoteDetails(), true, true, 0);
+			
+			return RemoteDetailsNotebook;
+		}
+		
+		private Widget CreateRemoteInfo()
+		{
+			VBox vbox = new VBox(false, 0);
+			
+			// folder128.png
+			Gdk.Pixbuf folderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("folder128.png"));
+			folderPixbuf = folderPixbuf.ScaleSimple(64, 64, Gdk.InterpType.Bilinear);
+			Image folderImage = new Image(folderPixbuf);
+			folderImage.SetAlignment(0.5F, 0);
+			
+			vbox.PackStart(folderImage, false, false, 0);
+
+			RemoteNameLabel = new Label("");
+			RemoteNameLabel.UseMarkup = true;
+			RemoteNameLabel.UseUnderline = false;
+			RemoteNameLabel.Xalign = 0.5F;
+			vbox.PackStart(RemoteNameLabel, false, true, 5);
+
+			RemoteSizeLabel = new Label("47 MB");
+			RemoteSizeLabel.UseMarkup = true;
+			RemoteSizeLabel.UseUnderline = false;
+			RemoteSizeLabel.Xalign = 0.5F;
+			vbox.PackStart(RemoteSizeLabel, false, true, 0);
+			
+			RemoteOwnerLabel = new Label("");
+			RemoteOwnerLabel.UseMarkup = true;
+			RemoteOwnerLabel.UseUnderline = false;
+			RemoteOwnerLabel.Xalign = 0.5F;
+			vbox.PackStart(RemoteOwnerLabel, false, true, 0);
+			
+			RemoteServerLabel = new Label("");
+			RemoteServerLabel.UseMarkup = true;
+			RemoteServerLabel.UseUnderline = false;
+			RemoteServerLabel.Xalign = 0.5F;
+			vbox.PackStart(RemoteServerLabel, false, true, 0);
+			
+			return vbox;
+		}
+		
+		private Widget CreateRemoteActions()
+		{
+			VBox vbox = new VBox(false, 0);
+			vbox.PackStart(new Label(""), false, false, 0); // spacer
+
+			///
+			/// DownloadAndSyncButton
+			///
+			HBox hbox = new HBox(false, 0);
+			DownloadAndSyncButton = new Button(hbox);
+			DownloadAndSyncButton.Relief = ReliefStyle.None;
+//			DownloadAndSyncButton.Sensitive = false;
+			vbox.PackStart(DownloadAndSyncButton, false, false, 0);
+			
+			Gdk.Pixbuf folderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("download-folder128.png"));
+			folderPixbuf = folderPixbuf.ScaleSimple(24, 24, Gdk.InterpType.Bilinear);
+			Image folderImage = new Image(folderPixbuf);
+			folderImage.SetAlignment(0.5F, 0F);
+			hbox.PackStart(folderImage, false, false, 0);
+			
+			VBox buttonVBox = new VBox(false, 0);
+			hbox.PackStart(buttonVBox, true, true, 4);
+			
+			Label buttonText = new Label("<span size=\"small\" weight=\"bold\">Download and synchronize</span>");
+			buttonVBox.PackStart(buttonText, false, false, 0);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+			
+			Label buttonMessage = new Label("<span size=\"x-small\">Click here to download and begin synchronizing this folder to your computer</span>");
+			buttonVBox.PackStart(buttonMessage, false, false, 0);
+			buttonMessage.UseMarkup = true;
+			buttonMessage.UseUnderline = false;
+			buttonMessage.LineWrap = true;
+			buttonMessage.Justify = Justification.Left;
+			buttonMessage.Xalign = 0;
+			buttonMessage.Yalign = 0;
+			buttonMessage.WidthRequest = 170;
+			buttonMessage.HeightRequest = 40;
+			
+			DownloadAndSyncButton.Clicked +=
+				new EventHandler(OnDownloadAndSyncButton);
+						
+			
+			///
+			/// DeleteFromServerButton
+			///
+			hbox = new HBox(false, 0);
+			DeleteFromServerButton = new Button(hbox);
+			DeleteFromServerButton.Relief = ReliefStyle.None;
+//			DeleteFromServerButton.Sensitive = false;
+			vbox.PackStart(DeleteFromServerButton, false, false, 0);
+						
+			Image deleteImage = new Image(Stock.Delete, Gtk.IconSize.Menu);
+			deleteImage.SetAlignment(0.5F, 0F);
+			hbox.PackStart(deleteImage, false, false, 0);
+			
+			buttonVBox = new VBox(false, 0);
+			hbox.PackStart(buttonVBox, true, true, 4);
+			
+			buttonText = new Label("<span size=\"small\" weight=\"bold\">Delete from server</span>");
+			buttonVBox.PackStart(buttonText, false, false, 0);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+			
+			buttonMessage = new Label("<span size=\"x-small\">Click here to delete this folder and its files from the server</span>");
+			buttonVBox.PackStart(buttonMessage, false, false, 0);
+			buttonMessage.UseMarkup = true;
+			buttonMessage.UseUnderline = false;
+			buttonMessage.LineWrap = true;
+			buttonMessage.Justify = Justification.Left;
+			buttonMessage.Xalign = 0;
+			buttonMessage.Yalign = 0;
+			buttonMessage.WidthRequest = 170;
+			buttonMessage.HeightRequest = 25;
+			
+			
+			return vbox;
+		}
+		
+		private void OnDownloadAndSyncButton(object o, EventArgs args)
+		{
+			myiFolderNotebook.CurrentPage = SynchronizedFoldersPageIndex;
+			SetupiFolder();
+		}
+		
+		private Widget CreateRemoteDetails()
+		{
+			VBox vbox = new VBox(false, 0);
+			
+			Label l = new Label(Util.GS("Description:"));
+			l.Xalign = 0;
+			vbox.PackStart(l, false, false, 0);
+
+			ScrolledWindow sw = new ScrolledWindow();
+			sw.ShadowType = Gtk.ShadowType.EtchedIn;
+			vbox.PackStart(sw, true, true, 0);
+			sw.VscrollbarPolicy = PolicyType.Automatic;
+			sw.HscrollbarPolicy = PolicyType.Automatic;
+
+			RemoteDescriptionTextView = new TextView();
+			RemoteDescriptionTextView.Editable = false;
+			RemoteDescriptionTextView.Sensitive = false;
+			RemoteDescriptionTextView.WrapMode = WrapMode.Word;
+			sw.Add(RemoteDescriptionTextView);
+			
+			return vbox;
+		}
+		
+		private Widget CreateRemoteIconViewPane()
+		{
+			ScrolledWindow sw = new ScrolledWindow();
+//			sw.ShadowType = Gtk.ShadowType.EtchedIn;
+
+			remoteFoldersListStore = new ListStore(typeof(Gdk.Pixbuf), typeof(string), typeof(iFolderHolder));
+			remoteFoldersIconView = new iFolderIconView(remoteFoldersListStore);
+			remoteFoldersIconView.SelectionMode = SelectionMode.Single;
+
+			remoteFoldersIconView.ButtonPressEvent +=
+				new ButtonPressEventHandler(OnRemoteFoldersButtonPressed);
+			
+			remoteFoldersIconView.SelectionChanged +=
+				new EventHandler(OnRemoteFoldersSelectionChanged);
+
+			sw.Add(remoteFoldersIconView);
+			
+			remoteFolderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("folder128.png"));
+			remoteFolderPixbuf = remoteFolderPixbuf.ScaleSimple(64, 64, Gdk.InterpType.Bilinear);
+			iFolderHolder[] ifolders = ifdata.GetiFolders();
+			if(ifolders != null)
+			{
+				foreach(iFolderHolder holder in ifolders)
+				{
+					if (holder.iFolder.IsSubscription)
+					{
+						remoteFoldersListStore.AppendValues(remoteFolderPixbuf, holder.iFolder.Name, holder);
+					}
+				}
+			}
+
+			return sw;
+		}
+		
+//		private Widget GetRemoteActionPane()
+//		{
+//		}
+		
+//		private Widget GetRemoteIconView()
+//		{
+//		}
+		
+//		private Widget GetRemoteToolbar()
+//		{
+//		}
+
+
+
+		private void OnRemoteFoldersButtonPressed(object o, ButtonPressEventArgs args)
+		{
+			TreePath tPath =
+				remoteFoldersIconView.GetPathAtPos((int)args.Event.X,
+												   (int)args.Event.Y);
+			if (tPath != null)
+			{
+				TreeModel tModel = remoteFoldersIconView.Model;
+				
+				TreeIter iter;
+				if (tModel.GetIter(out iter, tPath))
+				{
+					string folderName =
+						(string)tModel.GetValue(iter, 1);
+					if (folderName != null)
+						Console.WriteLine("Folder clicked: {0}", folderName);
+				}
+			}
+		}
+		
+		private void OnRemoteFoldersSelectionChanged(object o, EventArgs args)
+		{
+Console.WriteLine("iFolderWindow.OnRemoteFoldersSelectionChanged()");
+			TreePath[] selection = remoteFoldersIconView.SelectedItems;
+			if (selection.Length == 0)
+			{
+//				DownloadAndSyncButton.Sensitive = false;
+//				DeleteFromServerButton.Sensitive = false;
+				
+				RemoteDetailsNotebook.CurrentPage = 0;
+			}
+			else
+			{
+				TreeModel tModel = remoteFoldersIconView.Model;
+				for (int i = 0; i < selection.Length; i++)
+				{
+					TreeIter iter;
+					if (tModel.GetIter(out iter, selection[i]))
+					{
+						iFolderHolder holder =
+							(iFolderHolder)tModel.GetValue(iter, 2);
+						if (holder != null)
+						{
+							RemoteNameLabel.Markup =
+								string.Format("<span size=\"large\" weight=\"bold\">{0}</span>", holder.iFolder.Name);
+							RemoteSizeLabel.Markup =
+								string.Format("{0} MB", "47");
+							RemoteOwnerLabel.Markup =
+								string.Format("Owner: {0}", holder.iFolder.Owner);
+							DomainInformation domain = domainController.GetDomain(holder.iFolder.DomainID);
+							if (domain != null)
+								RemoteServerLabel.Markup =
+									string.Format("Server: {0}", domain.Name);
+							else
+								RemoteServerLabel.Text = "";
+							
+							if (holder.iFolder.Description != null)
+								RemoteDescriptionTextView.Buffer.Text = holder.iFolder.Description;
+							else
+								RemoteDescriptionTextView.Buffer.Text = "";
+						}
+					}
+				}
+
+//				DownloadAndSyncButton.Sensitive = true;
+//				DeleteFromServerButton.Sensitive = true;
+
+				RemoteDetailsNotebook.CurrentPage = 1;
+			}
+		}
+
+
+
+///
+/// Synchronized Folders Page
+///
+		private Widget CreateSynchronizedFoldersPage()
+		{
+			VBox vbox = new VBox(false, 0);
+			vbox.PackStart(CreateSynchronizedToolbar(), false, false, 0);
+			vbox.PackStart(CreateSynchronizedPaned(), true, true, 0);
+
+			return vbox;
+		}
+		
+		private Widget CreateSynchronizedToolbar()
+		{
+			Frame toolbarFrame = new Frame();
+//			vbox.PackStart(toolbarFrame, false, false, 0);
+			toolbarFrame.ShadowType = ShadowType.EtchedOut;
+			
+			HBox hbox = new HBox(false, 4);
+			toolbarFrame.Add(hbox);
+//			vbox.PackStart(hbox, false, false, 0);
+
+			hbox.BorderWidth = 4;
+			
+			hbox.PackStart(new Label(""), false, false, 0); // spacer
+			
+			Label l = new Label(Util.GS("Filter by Server:"));
+			hbox.PackStart(l, false, false, 0);
+
+			synchronizedDomainsComboBox = new ComboBox();
+			hbox.PackStart(synchronizedDomainsComboBox, false, false, 0);
+
+			synchronizedDomainsComboBox.Model = DomainListStore;
+			
+			CellRenderer domainTR = new CellRendererText();
+			synchronizedDomainsComboBox.PackStart(domainTR, true);
+
+			synchronizedDomainsComboBox.SetCellDataFunc(domainTR,
+				new CellLayoutDataFunc(SynchronizedDomainComboBoxCellTextDataFunc));
+
+			synchronizedDomainsComboBox.ShowAll();
+
+			hbox.PackStart(new Label(""), true, true, 0); // spacer
+			
+			Image stopImage = new Image(Stock.Stop, Gtk.IconSize.Menu);
+			stopImage.SetAlignment(0.5F, 0F);
+			
+			SynchronizedCancelSearchButton = new Button(stopImage);
+			hbox.PackEnd(SynchronizedCancelSearchButton, false, false, 0);
+			SynchronizedCancelSearchButton.Relief = ReliefStyle.None;
+			SynchronizedCancelSearchButton.Sensitive = false;
+			
+			SynchronizedCancelSearchButton.Clicked +=
+				new EventHandler(OnSynchronizedCancelSearchButton);
+
+			synchronizedSearchEntry = new Entry();
+			hbox.PackEnd(synchronizedSearchEntry, false, false, 0);
+			synchronizedSearchEntry.SelectRegion(0, -1);
+			synchronizedSearchEntry.CanFocus = true;
+			synchronizedSearchEntry.Changed +=
+				new EventHandler(OnSynchronizedSearchEntryChanged);
+		
+			l = new Label(Util.GS("Search:"));
+			hbox.PackEnd(l, false, false, 0);
+			
+			return toolbarFrame;
+		}
+		
+		private void OnSynchronizedCancelSearchButton(object o, EventArgs args)
+		{
+			// FIXME: Implement OnSynchronizedCancelSearchButton
+			synchronizedSearchEntry.Text = "";
+			synchronizedSearchEntry.GrabFocus();
+		}
+		
+		private void OnSynchronizedSearchEntryChanged(object o, EventArgs args)
+		{
+			if (synchronizedSearchTimeoutID != 0)
+			{
+				GLib.Source.Remove(synchronizedSearchTimeoutID);
+				synchronizedSearchTimeoutID = 0;
+			}
+
+			if (synchronizedSearchEntry.Text.Length > 0)
+				SynchronizedCancelSearchButton.Sensitive = true;
+			else
+				SynchronizedCancelSearchButton.Sensitive = false;
+
+			synchronizedSearchTimeoutID = GLib.Timeout.Add(
+				500, new GLib.TimeoutHandler(SynchronizedSearchCallback));
+		}
+		
+		private bool SynchronizedSearchCallback()
+		{
+			SearchSynchronizedFolders();
+			return false;
+		}
+		
+		private void SearchSynchronizedFolders()
+		{
+			synchronizedFoldersListStore.Clear();
+
+			string searchString = synchronizedSearchEntry.Text;
+			if (searchString != null)
+			{
+				searchString = searchString.Trim();
+				if (searchString.Length > 0)
+					searchString = searchString.ToLower();
+			}
+
+			iFolderHolder[] ifolders = ifdata.GetiFolders();
+			if(ifolders != null)
+			{
+				foreach(iFolderHolder holder in ifolders)
+				{
+					if (!holder.iFolder.IsSubscription)
+					{
+						if (searchString == null || searchString.Trim().Length == 0)
+						{
+							// Add everything in
+							synchronizedFoldersListStore.AppendValues(synchronizedFolderPixbuf, holder.iFolder.Name, holder);
+						}
+						else
+						{
+							// Search the iFolder's Name (for now)
+							string name = holder.iFolder.Name;
+							if (name != null)
+							{
+								name = name.ToLower();
+								if (name.IndexOf(searchString) >= 0)
+								{
+									synchronizedFoldersListStore.AppendValues(synchronizedFolderPixbuf, holder.iFolder.Name, holder);
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			synchronizedFoldersIconView.RefreshIcons();
+		}
+		
+		private Widget CreateSynchronizedPaned()
+		{
+			synchronizedPaned = new HPaned();
+			synchronizedPaned.Position = 220;
+			
+			synchronizedPaned.Add1(CreateSynchronizedActionsPane());
+			synchronizedPaned.Add2(CreateSynchronizedIconViewPane());
+			
+			return synchronizedPaned;
+		}
+		
+		private Widget CreateSynchronizedActionsPane()
+		{
+			SynchronizedDetailsNotebook = new Notebook();
+			SynchronizedDetailsNotebook.ShowTabs = false;
+			SynchronizedDetailsNotebook.AppendPage(new Label("Select a folder"), null);
+			
+			
+			VBox vbox = new VBox(false, 0);
+			SynchronizedDetailsNotebook.AppendPage(vbox, null);
+			vbox.PackStart(CreateSynchronizedInfo(), false, false, 0);
+			vbox.PackStart(CreateSynchronizedActions(), false, false, 0);
+			vbox.PackStart(CreateSynchronizedDetails(), true, true, 0);
+			
+			return SynchronizedDetailsNotebook;
+		}
+		
+		private Widget CreateSynchronizedInfo()
+		{
+			VBox vbox = new VBox(false, 0);
+			
+			// folder128.png
+			Gdk.Pixbuf folderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("synchronized-folder64.png"));
+			Image folderImage = new Image(folderPixbuf);
+			folderImage.SetAlignment(0.5F, 0);
+			
+			vbox.PackStart(folderImage, false, false, 0);
+
+			SynchronizedNameLabel = new Label("");
+			SynchronizedNameLabel.UseMarkup = true;
+			SynchronizedNameLabel.UseUnderline = false;
+			SynchronizedNameLabel.Xalign = 0.5F;
+			vbox.PackStart(SynchronizedNameLabel, false, true, 5);
+
+			return vbox;
+		}
+		
+		private Widget CreateSynchronizedActions()
+		{
+			VBox vbox = new VBox(false, 0);
+			vbox.PackStart(new Label(""), false, false, 0); // spacer
+
+			///
+			/// AddFolderToSyncButton
+			///
+			HBox hbox = new HBox(false, 0);
+			AddFolderToSyncButton = new Button(hbox);
+			AddFolderToSyncButton.Relief = ReliefStyle.None;
+//			AddFolderToSyncButton.Sensitive = false;
+			vbox.PackStart(AddFolderToSyncButton, false, false, 0);
+			
+			Gdk.Pixbuf folderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("add-folder-to-synchronize.png"));
+			folderPixbuf = folderPixbuf.ScaleSimple(24, 24, Gdk.InterpType.Bilinear);
+			Image folderImage = new Image(folderPixbuf);
+			folderImage.SetAlignment(0.5F, 0F);
+			hbox.PackStart(folderImage, false, false, 0);
+			
+			VBox buttonVBox = new VBox(false, 0);
+			hbox.PackStart(buttonVBox, true, true, 4);
+			
+			Label buttonText = new Label("<span size=\"small\" weight=\"bold\">Add a new folder</span>");
+			buttonVBox.PackStart(buttonText, false, false, 0);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+			
+			Label buttonMessage = new Label("<span size=\"x-small\">Choose a folder on your computer to synchronize with an iFolder Server</span>");
+			buttonVBox.PackStart(buttonMessage, false, false, 0);
+			buttonMessage.UseMarkup = true;
+			buttonMessage.UseUnderline = false;
+			buttonMessage.LineWrap = true;
+			buttonMessage.Justify = Justification.Left;
+			buttonMessage.Xalign = 0;
+			buttonMessage.Yalign = 0;
+			buttonMessage.WidthRequest = 170;
+			buttonMessage.HeightRequest = 40;
+			
+			AddFolderToSyncButton.Clicked +=
+				new EventHandler(OnAddFolderToSyncButton);
+						
+			
+			///
+			/// RemoveSynchronizedFolderButton
+			///
+			hbox = new HBox(false, 0);
+			RemoveSynchronizedFolderButton = new Button(hbox);
+			RemoveSynchronizedFolderButton.Relief = ReliefStyle.None;
+			vbox.PackStart(RemoveSynchronizedFolderButton, false, false, 0);
+
+			folderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("remove-folder.png"));
+			folderPixbuf = folderPixbuf.ScaleSimple(24, 24, Gdk.InterpType.Bilinear);
+			folderImage = new Image(folderPixbuf);
+			folderImage.SetAlignment(0.5F, 0F);
+			hbox.PackStart(folderImage, false, false, 0);
+			
+			buttonVBox = new VBox(false, 0);
+			hbox.PackStart(buttonVBox, true, true, 4);
+			
+			buttonText = new Label("<span size=\"small\" weight=\"bold\">Stop synchronizing</span>");
+			buttonVBox.PackStart(buttonText, false, false, 0);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+			
+			buttonMessage = new Label("<span size=\"x-small\">Click here to stop synchronizing this folder on your computer</span>");
+			buttonVBox.PackStart(buttonMessage, false, false, 0);
+			buttonMessage.UseMarkup = true;
+			buttonMessage.UseUnderline = false;
+			buttonMessage.LineWrap = true;
+			buttonMessage.Justify = Justification.Left;
+			buttonMessage.Xalign = 0;
+			buttonMessage.Yalign = 0;
+			buttonMessage.WidthRequest = 170;
+			buttonMessage.HeightRequest = 25;
+			
+			
+			///
+			/// ShareSynchronizedFolderButton
+			///
+			hbox = new HBox(false, 0);
+			ShareSynchronizedFolderButton = new Button(hbox);
+			ShareSynchronizedFolderButton.Relief = ReliefStyle.None;
+			vbox.PackStart(ShareSynchronizedFolderButton, false, false, 0);
+
+			folderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("share-emblem.png"));
+			folderPixbuf = folderPixbuf.ScaleSimple(24, 24, Gdk.InterpType.Bilinear);
+			folderImage = new Image(folderPixbuf);
+			folderImage.SetAlignment(0.5F, 0F);
+			hbox.PackStart(folderImage, false, false, 0);
+			
+			buttonVBox = new VBox(false, 0);
+			hbox.PackStart(buttonVBox, true, true, 4);
+			
+			buttonText = new Label("<span size=\"small\" weight=\"bold\">Share this folder</span>");
+			buttonVBox.PackStart(buttonText, false, false, 0);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+			
+			buttonMessage = new Label("<span size=\"x-small\">Give other people access to this synchronized folder</span>");
+			buttonVBox.PackStart(buttonMessage, false, false, 0);
+			buttonMessage.UseMarkup = true;
+			buttonMessage.UseUnderline = false;
+			buttonMessage.LineWrap = true;
+			buttonMessage.Justify = Justification.Left;
+			buttonMessage.Xalign = 0;
+			buttonMessage.Yalign = 0;
+			buttonMessage.WidthRequest = 170;
+			buttonMessage.HeightRequest = 25;
+			
+			ShareSynchronizedFolderButton.Clicked +=
+				new EventHandler(OnShareSynchronizedFolder);
+			
+			
+			return vbox;
+		}
+		
+		private Widget CreateSynchronizedDetails()
+		{
+			VBox vbox = new VBox(false, 0);
+			
+			Label l = new Label(Util.GS("Description:"));
+			l.Xalign = 0;
+			vbox.PackStart(l, false, false, 0);
+
+			ScrolledWindow sw = new ScrolledWindow();
+			sw.ShadowType = Gtk.ShadowType.EtchedIn;
+			vbox.PackStart(sw, true, true, 0);
+			sw.VscrollbarPolicy = PolicyType.Automatic;
+			sw.HscrollbarPolicy = PolicyType.Automatic;
+
+			TextView textView = new TextView();
+			sw.Add(textView);
+			textView.Buffer.Text = "Not implemented yet";
+			textView.Editable = false;
+			textView.Sensitive = false;
+			textView.WrapMode = WrapMode.Word;
+			
+			return vbox;
+		}
+		
+		private Widget CreateSynchronizedIconViewPane()
+		{
+			ScrolledWindow sw = new ScrolledWindow();
+//			sw.ShadowType = Gtk.ShadowType.EtchedIn;
+
+			synchronizedFoldersListStore = new ListStore(typeof(Gdk.Pixbuf), typeof(string), typeof(iFolderHolder));
+			synchronizedFoldersIconView = new iFolderIconView(synchronizedFoldersListStore);
+			synchronizedFoldersIconView.SelectionMode = SelectionMode.Single;
+
+			synchronizedFoldersIconView.ButtonPressEvent +=
+				new ButtonPressEventHandler(OnSynchronizedFoldersButtonPressed);
+			
+			synchronizedFoldersIconView.SelectionChanged +=
+				new EventHandler(OnSynchronizedFoldersSelectionChanged);
+
+			sw.Add(synchronizedFoldersIconView);
+			
+			synchronizedFolderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("synchronized-folder64.png"));
+			iFolderHolder[] ifolders = ifdata.GetiFolders();
+			if(ifolders != null)
+			{
+				foreach(iFolderHolder holder in ifolders)
+				{
+					if (!holder.iFolder.IsSubscription)
+					{
+						synchronizedFoldersListStore.AppendValues(synchronizedFolderPixbuf, holder.iFolder.Name, holder);
+					}
+				}
+			}
+
+			return sw;
+		}
+		
+		private void OnSynchronizedFoldersButtonPressed(object o, ButtonPressEventArgs args)
+		{
+			TreePath tPath =
+				synchronizedFoldersIconView.GetPathAtPos((int)args.Event.X,
+												   (int)args.Event.Y);
+			if (tPath != null)
+			{
+				TreeModel tModel = synchronizedFoldersIconView.Model;
+				
+				TreeIter iter;
+				if (tModel.GetIter(out iter, tPath))
+				{
+					string folderName =
+						(string)tModel.GetValue(iter, 1);
+					if (folderName != null)
+						Console.WriteLine("Folder clicked: {0}", folderName);
+				}
+			}
+		}
+		
+		private void OnSynchronizedFoldersSelectionChanged(object o, EventArgs args)
+		{
+Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
+			TreePath[] selection = synchronizedFoldersIconView.SelectedItems;
+			if (selection.Length == 0)
+			{
+//				AddFolderToSyncButton.Sensitive = false;
+//				RemoveSynchronizedFolderButton.Sensitive = false;
+				
+				SynchronizedDetailsNotebook.CurrentPage = 0;
+			}
+			else
+			{
+				TreeModel tModel = synchronizedFoldersIconView.Model;
+				for (int i = 0; i < selection.Length; i++)
+				{
+					TreeIter iter;
+					if (tModel.GetIter(out iter, selection[i]))
+					{
+						iFolderHolder holder =
+							(iFolderHolder)tModel.GetValue(iter, 2);
+						if (holder != null)
+						{
+							SynchronizedNameLabel.Markup =
+								string.Format("<span size=\"large\" weight=\"bold\">{0}</span>", holder.iFolder.Name);
+						}
+					}
+				}
+
+				SynchronizedDetailsNotebook.CurrentPage = 1;
+			}
+		}
+
+
+
 
 
 
@@ -408,6 +1869,7 @@ namespace Novell.iFolder
 		private Toolbar CreateToolbar()
 		{
 			Toolbar tb = new Toolbar();
+			tb.IconSize = IconSize.SmallToolbar;
 
 			ToolbarTooltips = new Tooltips();
 
@@ -811,6 +2273,38 @@ namespace Novell.iFolder
 			if (domain != null)
 				((CellRendererText) cell).Text = domain.Name;
 		}
+		
+		private void RemoteDomainComboBoxCellTextDataFunc(
+				CellLayout cell_layout,
+				CellRenderer cell,
+				TreeModel tree_model,
+				TreeIter iter)
+		{
+			// FIXME: Figure out how much space is available and truncate the server text if needed
+			DomainInformation domain =
+				(DomainInformation)tree_model.GetValue(iter, 0);
+			if (domain != null)
+				((CellRendererText) cell).Text = domain.Name;
+		}
+
+		private void SynchronizedDomainComboBoxCellTextDataFunc(
+				CellLayout cell_layout,
+				CellRenderer cell,
+				TreeModel tree_model,
+				TreeIter iter)
+		{
+			// FIXME: Figure out how much space is available and truncate the server text if needed
+			DomainInformation domain =
+				(DomainInformation)tree_model.GetValue(iter, 0);
+			if (domain != null)
+				((CellRendererText) cell).Text = domain.Name;
+		}
+
+//		private void OnHomePageLinkClicked(object o, LinkClickedArgs args)
+//		{
+//			// FIXME: Implement OnHomePageLinkClicked
+//			Console.WriteLine("OnHomePageLinkClicked: {0}", args.Url);
+//		}
 
 		private void RefreshiFoldersHandler(object o, EventArgs args)
 		{
@@ -831,6 +2325,9 @@ namespace Novell.iFolder
 			{
 				foreach(iFolderHolder holder in ifolders)
 				{
+					// Don't show subscriptions anymore (in this view)
+					if (holder.iFolder.IsSubscription) continue;
+					
 					if (curDomain == null || curDomain.ID == "0")
 					{
 						TreeIter iter = iFolderTreeStore.AppendValues(holder);
@@ -1393,11 +2890,16 @@ namespace Novell.iFolder
 				{
 					try
 					{
-    					iFolderHolder newHolder =
+//    					iFolderHolder newHolder =
 								ifdata.RevertiFolder(ifHolder.iFolder.ID);
 
-						newHolder.State = iFolderState.Initial;
-						iFolderTreeStore.SetValue(iter, 0, newHolder);
+//						newHolder.State = iFolderState.Initial;
+//						iFolderTreeStore.SetValue(iter, 0, newHolder);
+						if (iFolderTreeStore.Remove(ref iter))
+						{
+							if (curiFolders.ContainsKey(ifHolder.iFolder.ID))
+								curiFolders.Remove(ifHolder.iFolder.ID);
+						}
 					}
 					catch(Exception e)
 					{
@@ -1677,6 +3179,9 @@ namespace Novell.iFolder
 			{
 				TreeIter iter;
 				iFolderHolder ifHolder = ifdata.GetiFolder(iFolderID);
+				
+				// Ignore subscriptions
+				if (ifHolder.iFolder.IsSubscription) return;
 
 				if( (curDomain != null) &&
 						(curDomain.ID != ifHolder.iFolder.DomainID) )
@@ -2053,23 +3558,26 @@ namespace Novell.iFolder
 		private void SetupiFolder()
 		{
 			string newPath  = "";
-			iFolderHolder ifHolder = null;
 			TreeModel tModel;
 			TreeIter iter;
 
-			TreeSelection tSelect = iFolderTreeView.Selection;
-			if(tSelect.CountSelectedRows() == 1)
+			TreePath[] selectedPaths = remoteFoldersIconView.SelectedItems;
+			if (selectedPaths.Length != 1) return;
+
+			tModel = remoteFoldersIconView.Model;
+			if (tModel.GetIter(out iter, selectedPaths[0]))
 			{
-				tSelect.GetSelected(out tModel, out iter);
-				ifHolder = (iFolderHolder) tModel.GetValue(iter, 0);
-				if(ifHolder.iFolder == null)
-					return;
+				iFolderHolder holder =
+					(iFolderHolder)tModel.GetValue(iter, 2);
+				if (holder == null) return;
+
 				int rc = 0;
 
 				do
 				{
+					string lastSetupPath = Util.LastSetupPath;
 					iFolderAcceptDialog iad =
-							new iFolderAcceptDialog(ifHolder.iFolder, Util.LastSetupPath);
+							new iFolderAcceptDialog(holder.iFolder, lastSetupPath);
 					iad.TransientFor = this;
 					rc = iad.Run();
 					newPath = ParseAndReplaceTildeInPath(iad.Path);
@@ -2084,11 +3592,11 @@ namespace Novell.iFolder
 						// Read the updated subscription, and place it back
 						// in the list to show status until the real iFolder
 						// comes along
-	//					curiFolders.Remove(ifHolder.iFolder.ID);
+	//					curiFolders.Remove(holder.iFolder.ID);
 	
 						iFolderHolder newHolder = ifdata.AcceptiFolderInvitation(
-														ifHolder.iFolder.ID,
-														ifHolder.iFolder.DomainID,
+														holder.iFolder.ID,
+														holder.iFolder.DomainID,
 														newPath);
 	
 						tModel.SetValue(iter, 0, newHolder);
@@ -2345,6 +3853,7 @@ namespace Novell.iFolder
 			}
 			
 			DomainFilterComboBox.Active = 0;	// Show All
+			remoteDomainsComboBox.Active = 0;	// Show All
 		}
 		
 		// Return true if we were able to determine the exception type.
