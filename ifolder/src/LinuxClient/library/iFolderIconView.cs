@@ -35,7 +35,6 @@ namespace Novell.iFolder
 	{
 		private TreeModel 	model;
 		
-		private int 		numOfColumns;
 		private int 		pixbufColumn;
 		private int 		textColumn;
 		
@@ -51,17 +50,13 @@ namespace Novell.iFolder
 		
 		
 		/// <summary>
-		/// The default number of columns is 3.
+		/// Read the number of columns currently in the view
 		/// </summary>
 		public int Columns
 		{
 			get
 			{
-				return numOfColumns;
-			}
-			set
-			{
-				numOfColumns = value;
+				return this.ItemsPerLine;
 			}
 		}
 		
@@ -123,7 +118,7 @@ namespace Novell.iFolder
 		
 		
 		public iFolderIconView(TreeModel model) :
-					base(48, new Gtk.Adjustment(0,0, 50, 1,1,1), 0)
+					base(96, new Gtk.Adjustment(0,0, 50, 1,1,1), 0)
 		{
 		
 			this.model = model;
@@ -134,7 +129,6 @@ namespace Novell.iFolder
 			
 			treePaths = new Hashtable();
 			
-			numOfColumns = 3;
 			pixbufColumn = 0;
 			textColumn = 1;
 			
@@ -256,18 +250,18 @@ namespace Novell.iFolder
 		{
 			base.OnSizeAllocated(sized);
 			
-			int widthConsumedByColSpacing = ((numOfColumns + 2) * columnSpacing);
-			int availableWidthForIcons = (int)sized.Width - widthConsumedByColSpacing;
+//			int widthConsumedByColSpacing = ((numOfColumns + 2) * columnSpacing);
+//			int availableWidthForIcons = (int)sized.Width - widthConsumedByColSpacing;
 				
-			int columnWidth = availableWidthForIcons / numOfColumns;
-			int totalWidth = (columnWidth * numOfColumns) + widthConsumedByColSpacing;
+//			int columnWidth = availableWidthForIcons / numOfColumns;
+//			int totalWidth = (columnWidth * numOfColumns) + widthConsumedByColSpacing;
 				
-			if (totalWidth > sized.Width)
-			{
-				columnWidth--;
-			}
+//			if (totalWidth > sized.Width)
+//			{
+//				columnWidth--;
+//			}
 
-			this.IconWidth = columnWidth;
+//			this.IconWidth = columnWidth;
 		}
 		
 		private bool DidSelectionChange()
