@@ -28,7 +28,7 @@ endif
 
 simiasserver.cmd: $(srcdir)/simiasserver.cmd.in
 if WINDOWS
-#	sed -e 's,@_simiasdatadir_@,$(shell cygpath --mixed $(simiasdatadir)),g' $< > $@
+	sed -e 's,@_simiasdatadir_@,$(shell cygpath --mixed $(simiasdatadir)),g' $< > $@
 	chmod +x $@
 endif
 	
