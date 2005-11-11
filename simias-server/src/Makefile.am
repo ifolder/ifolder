@@ -18,7 +18,7 @@ DOC_FILE_CMD = /doc:$(DOC_FILE)
 DOC_FILE_CLEAN = *.doc.xml
 endif
 
-NUNIT_TESTS := Simias.Server.dll
+SERVER_ASSEMBLIES := Simias.Server.dll
 
 simiasserver: $(srcdir)/simiasserver.in
 if !WINDOWS
@@ -39,7 +39,7 @@ Simias.config: $(srcdir)/Simias.config.in
 Simias.Server.dll: $(SimiasServer_CSFILES) $(SimiasServer_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(SimiasServer_FLAGS) $(SimiasServer_LIBPATH:%=/lib:%) $(SimiasServer_LIBS:%=/r:%) $(SimiasServer_RESOURCES:%=$(ICON_FLAG)%) $(SimiasServer_CSFILES_CSC) $(DOC_FILE_CMD)
 	
-all: $(NUNIT_TESTS) Simias.config simiasserver simiasserver.cmd
+all: $(SERVER_ASSEMBLIES) Simias.config simiasserver simiasserver.cmd
 
 if DEBUG
 if WINDOWS
@@ -47,12 +47,12 @@ DEBUG_CHECK_FILES = Simias.Server.pdb
 endif
 endif
 
-install-simiasserver: all
+install-exec-local: all
 	$(mkinstalldirs) $(DESTDIR)$(webbindir) $(simiasdatadir) $(simiasdatadir)/modules
 	$(INSTALL_PROGRAM) Simias.config $(simiasdatadir)
 	$(INSTALL_PROGRAM) DomainService.asmx $(DEBUG_FILES) $(DESTDIR)$(webdir)
 	$(INSTALL_PROGRAM) Register.aspx $(DEBUG_FILES) $(DESTDIR)$(webdir)
-	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(webbindir)
+	$(INSTALL_PROGRAM) $(SERVER_ASSEMBLIES) $(DEBUG_CHECK_FILES) $(DESTDIR)$(webbindir)
 	$(INSTALL_PROGRAM) Simias.Server.conf $(simiasdatadir)/modules
 if WINDOWS	
 	$(INSTALL_PROGRAM) simiasserver.cmd $(DESTDIR)$(bindir)
@@ -60,10 +60,10 @@ else
 	$(INSTALL_PROGRAM) simiasserver $(DESTDIR)$(bindir)
 endif	
 
-uninstall-simiasserver:
+uninstall-local:
 	cd $(DESTDIR)$(webdir); rm -f DomainService.asmx
 	cd $(DESTDIR)$(webdir); rm -f Register.aspx
-	cd $(DESTDIR)$(webbindir); rm -f $(NUNIT_TESTS) $(DEBUG_CHECK_FILES)
+	cd $(DESTDIR)$(webbindir); rm -f $(SERVER_ASSEMBLIES) $(DEBUG_CHECK_FILES)
 	cd $(simiasdatadir); rm -f Simias.config
 	cd $(simiasdatadir)/modules; rm -f Simias.Server.conf
 if WINDOWS	
@@ -77,7 +77,7 @@ installcheck-local: install
 .PHONY: test
 test: installcheck
 
-CLEAN_FILES = $(NUNIT_TESTS) $(DOC_FILE_CLEAN) Simias.config simiasserver simiasserver.cmd
+CLEAN_FILES = $(SERVER_ASSEMBLIES) $(DOC_FILE_CLEAN) Simias.config simiasserver simiasserver.cmd
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

@@ -2,7 +2,7 @@
   <section name="Domain">
     <setting name="ServerName" value="Simias Server" />
     <setting name="AdminName" value="admin" />
-    <setting name="PasswordName" value="simias" />
+    <setting name="AdminPassword" value="simias" />
   </section>
   <section name="Authentication">
 	<setting name="SimiasAuthNotRequired" value="Login.ashx, Simias.asmx:PingSimias, DomainService.asmx:GetDomainID" />
