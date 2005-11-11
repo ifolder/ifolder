@@ -37,8 +37,18 @@ int simias_init_local(SimiasHandle *hSimias);
 int simias_free(SimiasHandle *hSimias);
 
 int simias_ping(SimiasHandle hSimias);
+int simias_commit(SimiasHandle hSimias,
+				  SimiasNode hNode);
 
+/*******************************************
+	Domain Functions
+********************************************/
 int simias_get_domains(SimiasHandle hSimias, SimiasNodeList *hNodeList);
+
+
+/*******************************************
+	Collection Functions
+********************************************/
 int simias_get_collections(SimiasHandle hSimias, SimiasNodeList *hNodeList);
 int simias_get_collections_by_type(SimiasHandle hSimias, 
 								   SimiasNodeList *hNodeList, 
@@ -50,10 +60,16 @@ int simias_get_collections_for_domain_by_type(SimiasHandle hSimias,
 											  SimiasNodeList *hNodeList, 
 											  const char *domainID, 
 											  const char *type);
+int simias_create_collection( SimiasNode *hNode, 
+							  const char *domainID, 
+							  const char *type);
 
 
 
 
+/*******************************************
+	Node Functions
+********************************************/
 int simias_get_nodes(SimiasHandle hSimias, 
 					SimiasNodeList *hNodeList, 
 					const char *collectionID);

@@ -246,7 +246,8 @@ int _simias_nodelist_create(struct _SimiasNodeList **_hNodeList,
 			next_node = cur_node->next;
 			if((cur_node != NULL) && (cur_node->type == XML_ELEMENT_NODE))
 			{
-				rc = _simias_node_create(&(nl->nodeArray[nodeCounter]),
+
+				rc = _simias_node_create_from_xmlnode(&(nl->nodeArray[nodeCounter]),
 												cur_node);	
 				if(rc)
 				{

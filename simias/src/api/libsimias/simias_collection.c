@@ -27,6 +27,20 @@
 #include <stdio.h>
 #include <string.h>
 
+
+
+int simias_create_collection( SimiasNode *hNode, 
+							  const char *domainID, 
+							  const char *type)
+{
+
+
+}
+
+
+
+
+
 int simias_get_collections(SimiasHandle hSimias, SimiasNodeList *hNodeList)
 {
 	int err_code;
@@ -42,6 +56,7 @@ int simias_get_collections(SimiasHandle hSimias, SimiasNodeList *hNodeList)
 			NULL, 
 			&message,
 			&response);
+
 
 	if(err_code != SOAP_OK)
 	{

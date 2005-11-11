@@ -40,7 +40,8 @@ void _simias_init_gsoap(struct _SimiasHandle *hSimias);
 int simias_init_local(SimiasHandle *hSimias)
 {
 	struct _SimiasHandle *_hSimias = NULL;
-	char	*tmpServiceURL;
+	char	*tmpServiceURL = NULL;
+	int		rc = SIMIAS_SUCCESS;
 
 	 /* this initialize the library and check potential ABI mismatches
 	 * between the version it was compiled for and the actual shared
@@ -50,6 +51,7 @@ int simias_init_local(SimiasHandle *hSimias)
 	_hSimias = (struct _SimiasHandle *) malloc(sizeof(struct _SimiasHandle));
 	if(_hSimias != NULL)
 	{
+
 		bzero((char *) _hSimias, sizeof(struct _SimiasHandle));
 
 		_hSimias->connected = false;

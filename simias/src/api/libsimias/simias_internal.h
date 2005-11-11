@@ -17,7 +17,8 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  Author: Boyd Timothy <btimothy@novell.com>
+ *  Authors:Calvin Gaisford <cgaisford@novell.com>
+ *			Boyd Timothy <btimothy@novell.com>
  * 
  ***********************************************************************/
 #ifndef _SIMIAS_INTERNAL_H
@@ -39,6 +40,7 @@
 #define SIMIAS_ERROR_OUT_OF_MEMORY			-105
 #define SIMIAS_ERROR_NO_PASSWORD_FILE		-106
 #define SIMIAS_ERROR_OPENING_PASSWORD_FILE	-107
+#define SIMIAS_ERROR_NO_SIMIAS_PROCESS		-108
 
 #define SIMIAS_ERROR_INVALID_POINTER		-108
 #define SIMIAS_ERROR_INDEX_OUT_OF_RANGE		-109
@@ -118,7 +120,7 @@ int simias_get_local_service_url(char **url);
  */
 static char *parse_local_service_url(FILE *file);
 
-int _simias_node_create(struct _SimiasNode **_hNode, xmlNode *node);
+int _simias_node_create_from_xmlnode(struct _SimiasNode **_hNode, xmlNode *node);
 
 int _simias_nodelist_create(struct _SimiasNodeList **_hNodeList,
 										char *resultXML);

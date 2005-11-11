@@ -12,7 +12,7 @@
 
 #include "simias.h"
 
-#define TEST_LOOP_COUNT 5
+#define TEST_LOOP_COUNT 20
 
 /**
  *	Simias Handle tests
@@ -642,6 +642,7 @@ int main(int argc, char **argv)
 	
 //	struct timeb startTime;
 //	struct timeb stopTime;
+
 	printf("Test: simiasHandleTests()\n");
 	passedTest = simiasHandleTests();
 	if(passedTest)
@@ -652,6 +653,7 @@ int main(int argc, char **argv)
 		allTests = false;
 	}
 
+
 	printf("Test: simiasDomainTests()\n");
 	passedTest = simiasDomainTests();
 	if(passedTest)
@@ -661,6 +663,7 @@ int main(int argc, char **argv)
 		printf("Test: simiasDomainTests() - FAILED\n");
 		allTests = false;
 	}
+
 
 	printf("Test: simiasCollectionTests()\n");
 	passedTest = simiasCollectionTests();

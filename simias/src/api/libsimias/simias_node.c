@@ -203,7 +203,7 @@ int simias_node_free(SimiasNode *hNode)
  * Internal functions
  ******************************************************************/
 
-int _simias_node_create(struct _SimiasNode **_hNode, xmlNode *node)
+int _simias_node_create_from_xmlnode(struct _SimiasNode **_hNode, xmlNode *node)
 {
 	*_hNode = malloc(sizeof(struct _SimiasNode));
 	if(*_hNode == NULL)

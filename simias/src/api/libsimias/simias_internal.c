@@ -164,8 +164,11 @@ simias_get_web_service_credential(char *username, char *password)
 int simias_get_local_service_url(char **url)
 {
 	char user_profile_dir[1024];
-	char simias_config_file_path[1024];
+	char xsp_port_config_file_path[1024];
+	char *xspPort;
 	FILE *simias_conf_file;
+	xmlDoc	*doc;
+	xmlNode *root_element, *cur_node;
 	
 	if (!simias_get_user_profile_dir_path(user_profile_dir)) {
 		return SIMIAS_ERROR_NO_USER_PROFILE;
@@ -173,12 +176,13 @@ int simias_get_local_service_url(char **url)
 
 	SIMIAS_DEBUG((stderr, "User Profile Dir: %s\n", user_profile_dir));
 
+/*
 	sprintf(simias_config_file_path, "%s%sSimias.config",
 			user_profile_dir, DIR_SEP);
 	
 	SIMIAS_DEBUG((stderr, "Simias Config File: %s\n", simias_config_file_path));
 
-	/* Attempt to open the file */
+	// Attempt to open the file 
 	simias_conf_file = fopen(simias_config_file_path, "r");
 	if (!simias_conf_file) {
 		SIMIAS_DEBUG((stderr, "Error opening \"%s\"\n", simias_config_file_path));
@@ -188,10 +192,50 @@ int simias_get_local_service_url(char **url)
 	*url = parse_local_service_url(simias_conf_file);
 
 	fclose(simias_conf_file);
-	
+*/
+
+	/*
+		The xspport.cfg file is formatted like this:
+		
+		<XspPortConfiguration>
+  			<Port>32830</Port>
+  		</XspPortConfiguration>
+	*/
+
+	sprintf(xsp_port_config_file_path, "%s%sxspport.cfg",
+			user_profile_dir, DIR_SEP);
+
+	doc = xmlReadFile(xsp_port_config_file_path, NULL, 0);
+	if(doc == NULL)
+	{
+		return SIMIAS_ERROR_UNKNOWN;
+	}
+
+	root_element = xmlDocGetRootElement(doc);
+    for(cur_node = root_element->children; cur_node; cur_node = cur_node->next)
+    {
+		if (cur_node->type == XML_ELEMENT_NODE)
+        {
+			// once we have found a child element break;
+			break;
+		}
+	}
+
+	if(cur_node == NULL)
+	{
+		xmlFreeDoc(doc);
+		return SIMIAS_ERROR_UNKNOWN;
+	}
+
+	xspPort = (char *)xmlNodeGetContent(cur_node);
+
+	*url = malloc(56);
+	if(*url != NULL)
+		sprintf(*url, "http://127.0.0.1:%s/simias10/", xspPort);
+
 	if (!(*url)) {
 		SIMIAS_DEBUG((stderr, "Couldn't find Local Service URL in \"%s\"\n",
-					 simias_config_file_path));
+					 xsp_port_config_file_path));
 		return SIMIAS_ERROR_UNKNOWN;
 	}
 	

@@ -15,7 +15,7 @@ override CFLAGS =
 endif
 
 libsimias2_la_SOURCES = \
- 	envC.c simiaswebClientLib.c stdsoap2.c simias_internal.c simias_internal.h simias_handle.c simias.h simias_domain.c simias_node.c simias_nodelist.c simias_collection.c simias_property.c
+ 	envC.c simiaswebClientLib.c stdsoap2.c simias_internal.c simias_internal.h simias_handle.c simias.h simias_domain.c simias_node.c simias_nodelist.c simias_collection.c simias_property.c 
  	
 libsimias2_la_CFLAGS = \
 	$(XML2_CFLAGS) -DWITH_NONAMESPACES -DWITH_COOKIES
@@ -23,7 +23,7 @@ libsimias2_la_CFLAGS = \
 libsimias2_la_LDFLAGS = \
 	$(XML2_LIBS)
 
-if DARWIN
+if LINUX
 bin_PROGRAMS = testapi
 testapi_SOURCES = test.c
 LDADD = libsimias2.la
