@@ -6,6 +6,7 @@ AM_INIT_AUTOMAKE(simias-server, 0.1)
 VERSION=$VERSION.`date +%Y%m%d`
 AM_MAINTAINER_MODE
 AC_PROG_CC
+m4_pattern_allow(PKG_CONFIG)
 
 #
 # Check for a valid operating system and C# compiler
@@ -350,7 +351,6 @@ webbindir='${webdir}/bin'
 AC_SUBST(webdir)
 AC_SUBST(webbindir)
 
-
 #
 # Set pkg-config variables
 #
@@ -424,6 +424,22 @@ else
   NUNIT_FLAGS="$NUNITFLAGS_OPTIMIZE $NUNIT_FLAGS"
 fi
 AC_SUBST(DEVENV_CONFIGURATION)
+
+#
+# Handle --with-simiasdatadir
+#
+AC_CHECKING([whether a location for the simias data directory was specified])
+AC_ARG_WITH(simiasdatadir,
+	[AS_HELP_STRING([--with-simiasdatadir=PATH],
+	[configure the directory where the simias data files will be placed. [Default=$HOME/.local/share/SimiasServer/simias]])],
+	[simiasdatadir="$withval"],
+	[case $SIMIAS_OS in
+		windows) simiasdatadir='"$(shell cygpath --unix "$(USERPROFILE)")/Local Settings/Application Data/SimiasServer/simias"' ;;
+		linux) simiasdatadir="$HOME/.local/share/SimiasServer/simias" ;;
+		darwin) simiasdatadir="$HOME/.local/share/SimiasServer/simias" ;;
+	esac]
+	)
+AC_SUBST(simiasdatadir)
 
 #
 # Configure PKG_CONFIG
