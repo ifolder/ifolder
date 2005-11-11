@@ -1,19 +1,16 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH):$(DESTDIR)$(libdir)
 
-SimpleServer_CSFILES = $(srcdir)/Service.cs $(srcdir)/Domain.cs $(srcdir)/DomainInfo.cs $(srcdir)/ProvisionInfo.cs $(srcdir)/DomainService.asmx.cs $(srcdir)/Authentication.cs $(srcdir)/Ajax.cs $(srcdir)/Register.aspx.cs
-SimpleServer_CSFILES_CSC := $(subst /,$(SEP),$(SimpleServer_CSFILES))
-SimpleServer_INCLUDES =
-SimpleServer_RESOURCES =
-SimpleServer_FLAGS = $(CSC_LIBFLAG)
-SimpleServer_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll SimiasLib.dll SimiasClient.dll
-SimpleServer_LIBPATH = ../../simias/src/SimiasLib.dll ../../simias/src/SimiasClient $(DESTDIR)$(webbindir)
+SimiasServer_CSFILES = $(srcdir)/Service.cs $(srcdir)/Ajax.cs $(srcdir)/Domain.cs $(srcdir)/DomainInfo.cs $(srcdir)/ProvisionInfo.cs $(srcdir)/DomainService.asmx.cs $(srcdir)/Authentication.cs $(srcdir)/Register.aspx.cs
+SimiasServer_CSFILES_CSC := $(subst /,$(SEP),$(SimiasServer_CSFILES))
+SimiasServer_INCLUDES =
+SimiasServer_RESOURCES =
+SimiasServer_FLAGS = $(CSC_LIBFLAG)
+SimiasServer_LIBPATH = $(DESTDIR)$(webbindir) ../../simias/src/SimiasLib.dll ../../simias/src/SimiasClient
+SimiasServer_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll SimiasLib.dll SimiasClient.dll
+#SimiasServer_LIBPATH = ../../src/SimiasLib.dll ../../src/SimiasClient $(DESTDIR)$(webbindir)
 
-EXTRA_DIST = ../web-config/win.web.config ../web-config/mono.web.config ../simias-server-boostrap.config.in DomainService.asmx Register.css Register.aspx $(SimpleServer_CSFILES)
-
-simias-server-bootstrap.config: ./simias-server-bootstrap.config.in
-	sed -e 's,@_webdir_@,$(FIXED_WEBDIR),g' -e 's,@_StoreProviderAssembly_@,@StoreProviderAssembly@,g' -e 's,@_StoreProviderType_@,@StoreProviderType@,g' $< > ./simias-server-bootstrap.config
-	chmod +x $@
+EXTRA_DIST = DomainService.asmx Register.aspx $(SimiasServer_CSFILES) Simias.config.in Simias.Server.conf simiasserver.in simiasserver.cmd.in
 
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml
@@ -21,45 +18,66 @@ DOC_FILE_CMD = /doc:$(DOC_FILE)
 DOC_FILE_CLEAN = *.doc.xml
 endif
 
-NUNIT_TESTS := Simias.Server.dll simias-server-bootstrap.config
+NUNIT_TESTS := Simias.Server.dll
 
-all: $(NUNIT_TESTS)
+simiasserver: $(srcdir)/simiasserver.in
+if !WINDOWS
+	sed -e 's,@_simiasdatadir_@,@simiasdatadir@,g' -e 's,@_webbindir_@,@webbindir@,g' -e 's,@_bindir_@,@bindir@,g' $< > $@
+	chmod +x $@
+endif	
 
-Simias.Server.dll: $(SimpleServer_CSFILES) $(SimpleServer_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(SimpleServer_FLAGS) $(SimpleServer_LIBPATH:%=/lib:%) $(SimpleServer_LIBS:%=/r:%) $(SimpleServer_RESOURCES:%=$(ICON_FLAG)%) $(SimpleServer_CSFILES_CSC) $(DOC_FILE_CMD)
+simiasserver.cmd: $(srcdir)/simiasserver.cmd.in
+if WINDOWS
+#	sed -e 's,@_simiasdatadir_@,$(shell cygpath --mixed $(simiasdatadir)),g' $< > $@
+	chmod +x $@
+endif
 	
+Simias.config: $(srcdir)/Simias.config.in
+	sed -e 's,@_StoreProviderAssembly_@,@StoreProviderAssembly@,g' -e 's,@_StoreProviderType_@,@StoreProviderType@,g' $< > $@
+	chmod +x $@
+
+Simias.Server.dll: $(SimiasServer_CSFILES) $(SimiasServer_RESOURCES)
+	$(CSC) /out:$@ $(CSCFLAGS) $(SimiasServer_FLAGS) $(SimiasServer_LIBPATH:%=/lib:%) $(SimiasServer_LIBS:%=/r:%) $(SimiasServer_RESOURCES:%=$(ICON_FLAG)%) $(SimiasServer_CSFILES_CSC) $(DOC_FILE_CMD)
+	
+all: $(NUNIT_TESTS) Simias.config simiasserver simiasserver.cmd
+
 if DEBUG
 if WINDOWS
 DEBUG_CHECK_FILES = Simias.Server.pdb
 endif
 endif
 
-install-exec-local: all
-	$(mkinstalldirs) $(DESTDIR)$(webbindir)
-	$(INSTALL_PROGRAM) ./simias-server-bootstrap.config $(DESTDIR)$(sysconfdir)
+install-simiasserver: all
+	$(mkinstalldirs) $(DESTDIR)$(webbindir) $(simiasdatadir) $(simiasdatadir)/modules
+	$(INSTALL_PROGRAM) Simias.config $(simiasdatadir)
 	$(INSTALL_PROGRAM) DomainService.asmx $(DEBUG_FILES) $(DESTDIR)$(webdir)
 	$(INSTALL_PROGRAM) Register.aspx $(DEBUG_FILES) $(DESTDIR)$(webdir)
-	$(INSTALL_PROGRAM) Register.css $(DEBUG_FILES) $(DESTDIR)$(webdir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(webbindir)
-	
-if WINDOWS
-	$(INSTALL_PROGRAM) ../web-config/win.web.config $(DESTDIR)$(webdir)/web.config
+	$(INSTALL_PROGRAM) Simias.Server.conf $(simiasdatadir)/modules
+if WINDOWS	
+	$(INSTALL_PROGRAM) simiasserver.cmd $(DESTDIR)$(bindir)
 else
-	$(INSTALL_PROGRAM) ../web-config/mono.web.config $(DESTDIR)$(webdir)/web.config
+	$(INSTALL_PROGRAM) simiasserver $(DESTDIR)$(bindir)
 endif	
-	
 
-uninstall-local:
-	cd $(DESTDIR)$(webbindir); $(NUNIT) $(NUNIT_FLAGS) /xml:SimiasTests.test.xml $(NUNIT_TESTS)
-	cd $(DESTDIR)$(webdir); rm -f  web.config DomainService.asmx Register.aspx Register.css	
-	cd $(DESTDIR)$(sysconfdir); rm -f simias-server-bootstrap.config
+uninstall-simiasserver:
+	cd $(DESTDIR)$(webdir); rm -f DomainService.asmx
+	cd $(DESTDIR)$(webdir); rm -f Register.aspx
+	cd $(DESTDIR)$(webbindir); rm -f $(NUNIT_TESTS) $(DEBUG_CHECK_FILES)
+	cd $(simiasdatadir); rm -f Simias.config
+	cd $(simiasdatadir)/modules; rm -f Simias.Server.conf
+if WINDOWS	
+	cd $(DESTDIR)$(bindir); rm -f simiasserver.cmd
+else
+	cd $(DESTDIR)$(bindir); rm -f simiasserver
+endif
 
 installcheck-local: install
 		
 .PHONY: test
 test: installcheck
 
-CLEAN_FILES = $(NUNIT_TESTS) $(DOC_FILE_CLEAN)
+CLEAN_FILES = $(NUNIT_TESTS) $(DOC_FILE_CLEAN) Simias.config simiasserver simiasserver.cmd
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
