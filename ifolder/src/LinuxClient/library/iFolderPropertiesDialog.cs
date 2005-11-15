@@ -106,7 +106,10 @@ namespace Novell.iFolder
 			this.TypeHint = Gdk.WindowTypeHint.Normal;
 			
 			this.HasSeparator = false;
-			this.Title = Util.GS("iFolder Properties");
+			this.Title = 
+				string.Format("{0} {1}",
+							  ifolder.Name,
+							  Util.GS("Properties"));
 
 //			ifHash = new Hashtable();
 

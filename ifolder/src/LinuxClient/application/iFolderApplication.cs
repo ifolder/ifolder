@@ -139,7 +139,7 @@ namespace Novell.iFolder
 
 			// Create the simias manager object and set any command line
 			// configuration in the object.
-			simiasManager = new Manager(args);
+			simiasManager = Util.CreateSimiasManager(args);
 
 //			logwin = new LogWindow();
 //			logwin.Destroyed +=
@@ -334,7 +334,7 @@ namespace Novell.iFolder
 					currentIconAnimationDirection = -1;
 				}
 
-				iFolderWindow ifwin = Util.GetiFolderWindow(simiasManager);
+				iFolderWindow ifwin = Util.GetiFolderWindow();
 				if(ifwin != null)
 					ifwin.HandleFileSyncEvent(args);
 
@@ -496,7 +496,7 @@ namespace Novell.iFolder
 
 			try
 			{
-				iFolderWindow ifwin = Util.GetiFolderWindow(simiasManager);
+				iFolderWindow ifwin = Util.GetiFolderWindow();
 				if(ifwin != null)
 					ifwin.HandleSyncEvent(args);
 	
@@ -541,7 +541,7 @@ namespace Novell.iFolder
 				}
 			}
 
-			iFolderWindow ifwin = Util.GetiFolderWindow(simiasManager);
+			iFolderWindow ifwin = Util.GetiFolderWindow();
 			if(ifwin != null)
 				ifwin.iFolderCreated(args.iFolderID);
 		}
@@ -575,7 +575,7 @@ namespace Novell.iFolder
 
 			if(ifHolder.iFolder.IsSubscription)
 			{
-				iFolderWindow ifwin = Util.GetiFolderWindow(simiasManager);
+				iFolderWindow ifwin = Util.GetiFolderWindow();
 				if(ifwin != null)
 					ifwin.iFolderChanged(args.iFolderID);
 			}
@@ -606,7 +606,7 @@ namespace Novell.iFolder
 						}
 					}
 
-					iFolderWindow ifwin = Util.GetiFolderWindow(simiasManager);
+					iFolderWindow ifwin = Util.GetiFolderWindow();
 					if(ifwin != null)
 						ifwin.iFolderHasConflicts(args.iFolderID);
 				}
@@ -622,7 +622,7 @@ namespace Novell.iFolder
 			if (args == null || args.iFolderID == null)
 				return;	// Prevent an exception
 			
-			iFolderWindow ifwin = Util.GetiFolderWindow(simiasManager);
+			iFolderWindow ifwin = Util.GetiFolderWindow();
 			if(ifwin != null)
 				ifwin.iFolderDeleted(args.iFolderID);
 		}
@@ -710,14 +710,17 @@ namespace Novell.iFolder
 
 					gAppIcon.Pixbuf = RunningPixbuf;
 
-					// Bring up the accounts dialog if there are no domains
-					GLib.Timeout.Add(500, new GLib.TimeoutHandler(PromptIfNoDomains));
-
 					// Make sure the iFolder and Synchronization Windows are
 					// initialized so that they begin receiving events as soon
 					// as possible.
-					iFolderWindow ifwin = Util.GetiFolderWindow(simiasManager);
+					iFolderWindow ifwin = Util.GetiFolderWindow();
 					LogWindow logwin = Util.GetLogWindow(simiasManager);
+
+					// Bring up the accounts dialog if there are no domains
+//					GLib.Timeout.Add(500, new GLib.TimeoutHandler(PromptIfNoDomains));
+					
+					// Load the iFolder Windows in the state they were in last
+					GLib.Timeout.Add(100, new GLib.TimeoutHandler(ShowiFolderWindows));
 
 					break;
 
@@ -753,13 +756,26 @@ namespace Novell.iFolder
 			DomainInformation[] domains = simws.GetDomains(false);
 			if (domains.Length < 1)
 			{
-				NotifyWindow notifyWin = new NotifyWindow(
-					tIcon, Util.GS("Welcome to iFolder"),
-					"To begin using iFolder, you must first set up an iFolder account.\n\nClick <a href=\"ShowAccountsPage\">here</a> to add a new account.",
-					Gtk.MessageType.Info, 10000);
-				notifyWin.LinkClicked +=
-					new LinkClickedEventHandler(OnNotifyWindowLinkClicked);
-				notifyWin.ShowAll();
+//				NotifyWindow notifyWin = new NotifyWindow(
+//					tIcon, Util.GS("Welcome to iFolder"),
+//					"To begin using iFolder, you must first set up an iFolder account.\n\nClick <a href=\"ShowAccountsPage\">here</a> to add a new account.",
+//					Gtk.MessageType.Info, 10000);
+//				notifyWin.LinkClicked +=
+//					new LinkClickedEventHandler(OnNotifyWindowLinkClicked);
+//				notifyWin.ShowAll();
+				Util.ShowiFolderWindow();
+			}
+
+			return false;	// Prevent this from being called over and over by GLib.Timeout
+		}
+		
+		private bool ShowiFolderWindows()
+		{
+			if (!Util.LoadiFolderWindows())
+			{
+				DomainInformation[] domains = domainController.GetDomains();
+				if (domains.Length < 1)
+					Util.ShowiFolderWindow();
 			}
 
 			return false;	// Prevent this from being called over and over by GLib.Timeout
@@ -780,10 +796,10 @@ namespace Novell.iFolder
 						notifyWindow.Hide();
 						notifyWindow.Destroy();
 
-						Util.ShowiFolderWindow(simiasManager);
+						Util.ShowiFolderWindow();
 					
 						string ifolderID = args.LinkID.Substring(colonPos + 1);
-						iFolderWindow ifwin = Util.GetiFolderWindow(simiasManager);
+						iFolderWindow ifwin = Util.GetiFolderWindow();
 						ifwin.SetUpiFolder(ifolderID);
 					}
 				}
@@ -792,10 +808,10 @@ namespace Novell.iFolder
 					int colonPos = args.LinkID.IndexOf(':');
 					if (colonPos > 0)
 					{
-						Util.ShowiFolderWindow(simiasManager);
+						Util.ShowiFolderWindow();
 					
 						string ifolderID = args.LinkID.Substring(colonPos + 1);
-						iFolderWindow ifwin = Util.GetiFolderWindow(simiasManager);
+						iFolderWindow ifwin = Util.GetiFolderWindow();
 						ifwin.ResolveConflicts(ifolderID);
 					}
 				}
@@ -852,9 +868,9 @@ namespace Novell.iFolder
 					// iFolder window if it's not already showing and hide
 					// it if it's not showing.  This behavior is used by
 					// Beagle and Gaim.
-					iFolderWindow ifwin = Util.GetiFolderWindow(simiasManager);
+					iFolderWindow ifwin = Util.GetiFolderWindow();
 					if (ifwin == null || !ifwin.Visible)
-						Util.ShowiFolderWindow(simiasManager);
+						Util.ShowiFolderWindow();
 					else
 						ifwin.Hide();
 					break;
@@ -969,6 +985,7 @@ namespace Novell.iFolder
 
 		private void quit_ifolder(object o, EventArgs args)
 		{
+			Util.SaveiFolderWindows();
 			Util.CloseiFolderWindows();
 
 			if(CurrentState == iFolderState.Stopping)
@@ -1020,7 +1037,7 @@ namespace Novell.iFolder
 
 		private void showiFolderWindow(object o, EventArgs args)
 		{
-			Util.ShowiFolderWindow(simiasManager);
+			Util.ShowiFolderWindow();
 		}
 
 		private void showLogWindow(object o, EventArgs args)

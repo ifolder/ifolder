@@ -60,8 +60,9 @@ namespace Novell.iFolder
 		private static bool biFolderWindowNeverShown	= true;
 		private static bool bLogWinNeverShown			= true;
 
-		private static iFolderWebService	ifws		= null;
-		private static SimiasWebService		simws		= null;
+		private static Manager				simiasManager	= null;
+		private static iFolderWebService	ifws			= null;
+		private static SimiasWebService		simws			= null;
 		
 		private static QuitiFolderDelegate quitiFolderDelegate = null;
 
@@ -277,7 +278,26 @@ namespace Novell.iFolder
 			prefswin = null;
 		}
 		
-		public static iFolderWindow GetiFolderWindow(Manager simiasManager)
+		public static Manager CreateSimiasManager(string[] args)
+		{
+			if (simiasManager == null)
+				simiasManager = new Manager(args);
+			
+			return simiasManager;
+		}
+		
+		public static Manager GetSimiasManager()
+		{
+			if (simiasManager == null)
+			{
+Console.WriteLine("SimiasManager created without arguments.  We don't want this to happen!");
+				simiasManager = new Manager();
+			}
+			
+			return simiasManager;
+		}
+		
+		public static iFolderWindow GetiFolderWindow()
 		{
 			if(ifwin == null && CheckWebService(simiasManager))
 			{
@@ -291,7 +311,7 @@ namespace Novell.iFolder
 			return ifwin;
 		}
 		
-		public static void ShowiFolderWindow(Manager simiasManager)
+		public static void ShowiFolderWindow()
 		{
 			if(CheckWebService(simiasManager))
 			{
@@ -599,6 +619,84 @@ namespace Novell.iFolder
 					}
 				}
 			}
+		}
+		
+		/// <summary>
+		/// Saves the positions and sizes of the iFolder windows.  Returns
+		/// true if successful.
+		/// </summary>
+		public static bool SaveiFolderWindows()
+		{
+//			iFolderWindow ifwin = Util.GetiFolderWindow()
+			if (ifwin != null)
+			{
+				if (ifwin.Visible)
+				{
+					// Save the iFolder Window's position and size
+					int x;
+					int y;
+					int width;
+					int height;
+					
+					ifwin.GetPosition(out x, out y);
+					ifwin.GetSize(out width, out height);
+
+Console.WriteLine("Saving the window attributes:");
+Console.WriteLine("\tX: {0}", x);
+Console.WriteLine("\tY: {0}", y);
+Console.WriteLine("\tWidth: {0}", width);
+Console.WriteLine("\tHeight: {0}", height);
+					
+					ClientConfig.Set(ClientConfig.KEY_IFOLDER_WINDOW_X_POS, x.ToString());
+					ClientConfig.Set(ClientConfig.KEY_IFOLDER_WINDOW_Y_POS, y.ToString());
+					ClientConfig.Set(ClientConfig.KEY_IFOLDER_WINDOW_WIDTH, width.ToString());
+					ClientConfig.Set(ClientConfig.KEY_IFOLDER_WINDOW_HEIGHT, height.ToString());
+					ClientConfig.Set(ClientConfig.KEY_IFOLDER_WINDOW_VISIBLE, "true");
+				}
+				else
+				{
+Console.WriteLine("The main iFolder window was NOT open when shutting down");
+					// Save the fact that the iFolder Window was NOT open
+					ClientConfig.Set(ClientConfig.KEY_IFOLDER_WINDOW_VISIBLE, "false");
+				}
+			}
+			
+			return true;
+		}
+		
+		/// <summary>
+		/// Saves the positions and sizes of the iFolder windows.  Returns
+		/// true if successful.
+		/// </summary>
+		public static bool LoadiFolderWindows()
+		{
+			if (ifwin != null)
+			{
+				if (ClientConfig.Exists(ClientConfig.KEY_IFOLDER_WINDOW_X_POS)
+					&& ClientConfig.Exists(ClientConfig.KEY_IFOLDER_WINDOW_WIDTH))
+				{
+					int x = Int32.Parse(ClientConfig.Get(ClientConfig.KEY_IFOLDER_WINDOW_X_POS, "0"));
+					int y = Int32.Parse(ClientConfig.Get(ClientConfig.KEY_IFOLDER_WINDOW_Y_POS, "0"));
+					int width = Int32.Parse(ClientConfig.Get(ClientConfig.KEY_IFOLDER_WINDOW_WIDTH, "600"));
+					int height = Int32.Parse(ClientConfig.Get(ClientConfig.KEY_IFOLDER_WINDOW_HEIGHT, "480"));
+					
+					ifwin.DefaultWidth = width;
+					ifwin.DefaultHeight = height;
+				}
+
+				if (ClientConfig.Exists(ClientConfig.KEY_IFOLDER_WINDOW_VISIBLE))
+				{
+					bool showiFolderWindow = 
+						Boolean.Parse(ClientConfig.Get(ClientConfig.KEY_IFOLDER_WINDOW_VISIBLE, "false"));
+					
+					if (showiFolderWindow)
+						Util.ShowiFolderWindow();
+					
+					return true;
+				}
+			}
+			
+			return false;
 		}
 
 		/// <summary>

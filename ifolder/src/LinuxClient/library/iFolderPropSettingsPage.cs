@@ -312,7 +312,7 @@ namespace Novell.iFolder
 			this.PackStart(basicBox, false, true, 0);
 			
 			// ifolder48.png
-			Gdk.Pixbuf iFolderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png"));
+			Gdk.Pixbuf iFolderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("synchronized-folder64.png"));
 			Image iFolderImage = new Image(iFolderPixbuf);
 			iFolderImage.SetAlignment(0.5F, 0);
 			

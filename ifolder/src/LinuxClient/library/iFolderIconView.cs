@@ -40,7 +40,7 @@ namespace Novell.iFolder
 		
 		private int 		columnSpacing;
 		
-		private Hashtable	treePaths;
+		private ArrayList	treePaths;
 		
 		// FIXME: Fix this hack when the ItemSelected & ItemUnselected events don't cause crashes
 		private int			currentSelection;
@@ -127,7 +127,7 @@ namespace Novell.iFolder
 			this.ColSpacing = columnSpacing;
 			this.currentSelection = -1;
 			
-			treePaths = new Hashtable();
+			treePaths = new ArrayList();
 			
 			pixbufColumn = 0;
 			textColumn = 1;
@@ -146,6 +146,16 @@ namespace Novell.iFolder
 			Console.WriteLine("iFolderIconView.OnWidgetRealized");
 
 			RefreshIcons();
+
+			///
+			/// Register for TreeModel events
+			///
+			model.RowChanged +=
+				new RowChangedHandler(OnTreeModelRowChanged);
+			model.RowDeleted +=
+				new RowDeletedHandler(OnTreeModelRowDeleted);
+			model.RowInserted +=
+				new RowInsertedHandler(OnTreeModelRowInserted);
 		}
 		
 		
@@ -165,8 +175,8 @@ namespace Novell.iFolder
 					string name =
 						(string) model.GetValue(iter, textColumn);
 					
-					int pos = this.AppendPixbuf(pixbuf, "", name);
-					treePaths[pos] = model.GetPath(iter);
+					this.AppendPixbuf(pixbuf, "", name);
+					treePaths.Add(model.GetPath(iter));
 					
 					// Add an icon representing
 				} while (model.IterNext(ref iter));
@@ -193,7 +203,7 @@ namespace Novell.iFolder
 			TreePath path = null;
 
 			int pos = this.GetIconAt(x, y);
-			if (pos >= 0 && treePaths.ContainsKey(pos))
+			if (pos >= 0 && pos < treePaths.Count)
 				path = (TreePath) treePaths[pos];
 
 			return path;
@@ -205,7 +215,7 @@ namespace Novell.iFolder
 			{
 				TreePath tempPath =
 					(TreePath)treePaths[this.Selection[i]];
-				if (tempPath == path)
+				if (tempPath.Compare(path) == 0)
 					return true;
 			}
 			
@@ -214,16 +224,29 @@ namespace Novell.iFolder
 		
 		public void SelectPath(TreePath path)
 		{
+			int pos = GetPathPosition(path);
+			if (pos >= 0)
+			{
+				this.SelectIcon(pos);
+			}
+		}
+		
+		private int GetPathPosition(TreePath path)
+		{
+			int pos = -1;
+
 			for (int i = 0; i < (int)this.NumIcons; i++)
 			{
 				TreePath tempPath =
 					(TreePath)treePaths[i];
-				if (tempPath == path)
+				if (tempPath.Compare(path) == 0)
 				{
-					this.SelectIcon(i);
+					pos = i;
 					break;
 				}
 			}
+			
+			return pos;
 		}
 
 
@@ -339,6 +362,96 @@ namespace Novell.iFolder
 			}
 			
 			return false;
+		}
+
+
+		///
+		/// TreeModel Event Handlers
+		///
+		private void OnTreeModelRowChanged(object o, RowChangedArgs args)
+		{
+Console.WriteLine("iFolderIconView.OnTreeModelRowChanged()");
+			int pos = GetPathPosition(args.Path);
+			if (pos < 0) return;
+			bool bWasSelected = PathIsSelected(args.Path);
+
+			// Remove the old item
+			this.Remove(pos);
+			
+			// Insert the new item
+			Gdk.Pixbuf pixbuf =
+				(Gdk.Pixbuf) model.GetValue(args.Iter, pixbufColumn);
+			string name =
+				(string) model.GetValue(args.Iter, textColumn);
+
+			this.InsertPixbuf(pos, pixbuf, "", name);
+			
+			if (bWasSelected)
+			{
+				this.SelectIcon(pos);
+				if (SelectionChanged != null)
+					SelectionChanged(this, EventArgs.Empty);
+			}
+		}
+		
+		private void OnTreeModelRowDeleted(object o, RowDeletedArgs args)
+		{
+Console.WriteLine("iFolderIconView.OnTreeModelRowDeleted()");
+			int pos = GetPathPosition(args.Path);
+			if (pos < 0) return;
+
+			bool bWasSelected = PathIsSelected(args.Path);
+
+			// Remove the old item
+			this.Remove(pos);
+			
+			if (bWasSelected && SelectionChanged != null)
+				SelectionChanged(this, EventArgs.Empty);
+		}
+
+		private void OnTreeModelRowInserted(object o, RowInsertedArgs args)
+		{
+Console.WriteLine("iFolderIconView.OnTreeModelRowInserted()");
+//			TreeIter iter;
+
+//			int insertPos = 0;
+			// Determine where this should be placed and then insert it
+//			if (model.GetIterFirst(out iter))
+//			{
+//Console.WriteLine("\tInserted: 1");
+//				do
+//				{
+//Console.WriteLine("\tInserted: 2");
+//					TreePath tempPath = model.GetPath(iter);
+//					if (tempPath.Compare(args.Path) == 0)
+//					{
+//Console.WriteLine("\tInserted: 3");
+						TreeIter iter;
+						
+						if (model.GetIter(out iter, args.Path))
+						{
+						Gdk.Pixbuf pixbuf =
+							(Gdk.Pixbuf) model.GetValue(args.Iter, pixbufColumn);
+if (pixbuf == null)
+	Console.WriteLine("\tInserted: PIXBUF IS NULL!");
+						string name =
+							(string) model.GetValue(args.Iter, textColumn);
+if (name == null)
+	Console.WriteLine("\tInserted: NAME IS NULL!");
+						
+Console.WriteLine("\tInserted: 4");
+//						this.Freeze();
+						int pos = this.AppendPixbuf(pixbuf, "", name);
+						treePaths.Add(args.Path);
+//						this.Thaw();
+//						break;
+						}
+//					}
+
+//					insertPos++;					
+//				} while (model.IterNext(ref iter));
+Console.WriteLine("\tInserted: 5");
+//			}
 		}
 	}
 	
