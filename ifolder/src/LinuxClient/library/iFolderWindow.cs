@@ -790,22 +790,7 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 			
 
 			hbox = new HBox(false, 2);
-			Gdk.Pixbuf pixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder128.png"));
-			pixbuf = pixbuf.ScaleSimple(24, 24, Gdk.InterpType.Bilinear);
-			image = new Image(pixbuf);
-			hbox.PackStart(image, false, false, 0);
-			image.SetAlignment(0.5F, 0.5F);
-			l = new Label(string.Format("<span weight=\"bold\">{0}</span>", Util.GS("Old Interface")));
-			hbox.PackStart(l, true, true, 0);
-			l.UseMarkup = true;
-			l.LineWrap = true;
-			hbox.ShowAll();
-
-			OldiFolderPageIndex = notebook.AppendPage(CreateOldiFolderPage(), hbox);
-
-
-			hbox = new HBox(false, 2);
-			pixbuf = new Gdk.Pixbuf(Util.ImagesPath("synchronized-folder64.png"));
+			Gdk.Pixbuf pixbuf = new Gdk.Pixbuf(Util.ImagesPath("synchronized-folder64.png"));
 			pixbuf = pixbuf.ScaleSimple(24, 24, Gdk.InterpType.Bilinear);
 			image = new Image(pixbuf);
 			hbox.PackStart(image, false, false, 0);
@@ -818,7 +803,11 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 			
 			SynchronizedFoldersPageIndex = notebook.AppendPage(CreateSynchronizedFoldersPage(), hbox);
 
-			
+			l = new Label("<span size=\"x-small\">Old Interface (for debug only)</span>");
+			l.UseMarkup = true;
+			OldiFolderPageIndex = notebook.AppendPage(CreateOldiFolderPage(), l);
+
+
 //			hbox = new HBox(false, 2);
 //			pixbuf = new Gdk.Pixbuf(Util.ImagesPath("remote-folder64.png"));
 //			pixbuf = pixbuf.ScaleSimple(24, 24, Gdk.InterpType.Bilinear);
