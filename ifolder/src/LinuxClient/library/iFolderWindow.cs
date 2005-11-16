@@ -1819,15 +1819,13 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 							try
 							{
 								ifdata.RevertiFolder(holder.iFolder.ID);
-								
-Console.WriteLine("\tAbout to remove the folder from the store");
 								if (synchronizedFoldersListStore.Remove(ref iter))
 								{
-Console.WriteLine("\tRemoved the folder from the list store");
 									if (curSynchronizedFolders.ContainsKey(holder.iFolder.ID))
 										curSynchronizedFolders.Remove(holder.iFolder.ID);
 								}
-Console.WriteLine("\tDone doing stuff");
+								
+								synchronizedFoldersIconView.RefreshIcons();
 							}
 							catch(Exception e)
 							{
@@ -4413,31 +4411,25 @@ Console.WriteLine("\t4");
 		{
 			if (holder == null) return;
 			
-Console.WriteLine("DownloadFolder: 1");
 			try
 			{
-Console.WriteLine("DownloadFolder: 2");
 				string lastSetupPath = Util.LastSetupPath;
-Console.WriteLine("DownloadFolder: 2.5");
 				iFolderHolder newHolder = ifdata.AcceptiFolderInvitation(
 													holder.iFolder.ID,
 													holder.iFolder.DomainID,
 													lastSetupPath);
 
-Console.WriteLine("DownloadFolder: 3");
-				TreeIter iter;
-Console.WriteLine("DownloadFolder: 4");
-				iter = synchronizedFoldersListStore.AppendValues(synchronizedFolderPixbuf, holder.iFolder.Name, holder);
-Console.WriteLine("DownloadFolder: 5");
-				curSynchronizedFolders[holder.iFolder.ID] = iter;
-
-Console.WriteLine("DownloadFolder: 6");
-				synchronizedFoldersIconView.RefreshIcons();
-Console.WriteLine("DownloadFolder: 7");
+				if (newHolder != null)
+				{
+					TreeIter iter;
+					iter = synchronizedFoldersListStore.AppendValues(synchronizedFolderPixbuf, newHolder.iFolder.Name, newHolder);
+					curSynchronizedFolders[holder.iFolder.ID] = iter;
+	
+					synchronizedFoldersIconView.RefreshIcons();
+				}
 			}
 			catch(Exception e)
 			{
-Console.WriteLine("DownloadFolder: 8");
 				DisplayCreateOrSetupException(e);
 			}
 		}
