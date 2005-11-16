@@ -78,7 +78,7 @@ namespace Novell.iFolder
 		/// filtering the list of domains, this parameter is used to allow this
 		/// dialog to respect the currently selected domain.
 		public CreateDialog(Gtk.Window parentWindow, DomainInformation[] domainArray, string filteredDomainID, string initialPath, iFolderWebService ifws)
-				: base("", Util.GS("New iFolder..."), parentWindow, FileChooserAction.CreateFolder, Stock.Cancel, ResponseType.Cancel,
+				: base("", Util.GS("Add a folder..."), parentWindow, FileChooserAction.CreateFolder, Stock.Cancel, ResponseType.Cancel,
                 Stock.Ok, ResponseType.Ok)
 		{
 			domains = domainArray;

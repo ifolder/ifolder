@@ -776,36 +776,40 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 		private Notebook CreateiFolderNotebook()
 		{
 			Notebook notebook = new Notebook();
+			notebook.ShowTabs = false;
 
-			HBox hbox = new HBox(false, 2);
-			Image image = new Image(Stock.Home, IconSize.Menu);
-			hbox.PackStart(image, false, false, 0);
-			image.SetAlignment(0.5F, 0.5F);
-			Label l = new Label(string.Format("<span weight=\"bold\">{0}</span>", Util.GS("Home")));
-			hbox.PackStart(l, true, true, 0);
-			l.UseMarkup = true;
-			hbox.ShowAll();
+//			HBox hbox = new HBox(false, 2);
+//			Image image = new Image(Stock.Home, IconSize.Menu);
+//			hbox.PackStart(image, false, false, 0);
+//			image.SetAlignment(0.5F, 0.5F);
+//			Label l = new Label(string.Format("<span weight=\"bold\">{0}</span>", Util.GS("Home")));
+//			hbox.PackStart(l, true, true, 0);
+//			l.UseMarkup = true;
+//			hbox.ShowAll();
 			
-			HomePageIndex = notebook.AppendPage(CreateHomePage(), hbox);
+//			HomePageIndex = notebook.AppendPage(CreateHomePage(), hbox);
 			
 
-			hbox = new HBox(false, 2);
-			Gdk.Pixbuf pixbuf = new Gdk.Pixbuf(Util.ImagesPath("synchronized-folder64.png"));
-			pixbuf = pixbuf.ScaleSimple(24, 24, Gdk.InterpType.Bilinear);
-			image = new Image(pixbuf);
-			hbox.PackStart(image, false, false, 0);
-			image.SetAlignment(0.5F, 0.5F);
-			l = new Label(string.Format("<span weight=\"bold\">{0}</span>", Util.GS("Synchronized Folders")));
-			hbox.PackStart(l, true, true, 0);
-			l.UseMarkup = true;
-			l.LineWrap = true;
-			hbox.ShowAll();
+//			hbox = new HBox(false, 2);
+//			Gdk.Pixbuf pixbuf = new Gdk.Pixbuf(Util.ImagesPath("synchronized-folder64.png"));
+//			pixbuf = pixbuf.ScaleSimple(24, 24, Gdk.InterpType.Bilinear);
+//			image = new Image(pixbuf);
+//			hbox.PackStart(image, false, false, 0);
+//			image.SetAlignment(0.5F, 0.5F);
+//			l = new Label(string.Format("<span weight=\"bold\">{0}</span>", Util.GS("Synchronized Folders")));
+//			hbox.PackStart(l, true, true, 0);
+//			l.UseMarkup = true;
+//			l.LineWrap = true;
+//			hbox.ShowAll();
 			
-			SynchronizedFoldersPageIndex = notebook.AppendPage(CreateSynchronizedFoldersPage(), hbox);
+//			SynchronizedFoldersPageIndex = notebook.AppendPage(CreateSynchronizedFoldersPage(), hbox);
+			SynchronizedFoldersPageIndex =
+				notebook.AppendPage(CreateSynchronizedFoldersPage(),
+									new Label("New Interface"));
 
-			l = new Label("<span size=\"x-small\">Old Interface (for debug only)</span>");
-			l.UseMarkup = true;
-			OldiFolderPageIndex = notebook.AppendPage(CreateOldiFolderPage(), l);
+			OldiFolderPageIndex =
+				notebook.AppendPage(CreateOldiFolderPage(),
+									new Label("Old Interface (for debugging only)"));
 
 
 //			hbox = new HBox(false, 2);
@@ -882,7 +886,7 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 			VBox buttonVBox = new VBox(false, 0);
 			hbox.PackStart(buttonVBox, true, true, 4);
 			
-			Label buttonText = new Label(string.Format("<span size=\"large\" weight=\"bold\">{0}</span>", Util.GS("Add a local folder")));
+			Label buttonText = new Label(string.Format("<span size=\"large\" weight=\"bold\">{0}</span>", Util.GS("Add a folder")));
 			buttonVBox.PackStart(buttonText, false, false, 0);
 			buttonText.UseMarkup = true;
 			buttonText.UseUnderline = false;
@@ -1764,11 +1768,21 @@ Console.WriteLine("AddSynchronizedFolderHandler");
 		
 		private void DownloadRemoteFolderHandler(object o, EventArgs args)
 		{
-Console.WriteLine("DownloadRemoteFolderHandler");
+Console.WriteLine("DownloadRemoteFolderHandler...calling ChooseRemoteFolderDialog...");
 
+			ChooseRemoteFolderDialog cd =
+				new ChooseRemoteFolderDialog(ifws, simws);
+			cd.TransientFor = this;
+			int response = cd.Run();
+			cd.Hide();
+			
+			if (response == (int)ResponseType.Ok)
+			{
+				Console.WriteLine("Folder selected: {0}", cd.SelectedFolder.iFolder.Name);
+				DownloadFolder(cd.SelectedFolder);
+			}
 
-ResolveConflictsButton.Visible = !ResolveConflictsButton.Visible;
-
+			cd.Destroy();
 		}
 
 //		private void RefreshSynchronizedFoldersHandler(object o, EventArgs args)
@@ -1779,7 +1793,56 @@ ResolveConflictsButton.Visible = !ResolveConflictsButton.Visible;
 		private void RemoveSynchronizedFolderHandler(object o,  EventArgs args)
 		{
 Console.WriteLine("RemoveSynchronizedFolderHandler");
-
+			TreePath[] selection = synchronizedFoldersIconView.SelectedItems;
+			if (selection.Length == 1)	// FIMXE: Support multiple seleciton eventually
+			{
+				TreeModel tModel = synchronizedFoldersIconView.Model;
+				TreeIter iter;
+				if (tModel.GetIter(out iter, selection[0]))
+				{
+					iFolderHolder holder =
+						(iFolderHolder)tModel.GetValue(iter, 2);
+					if (holder != null)
+					{
+						iFolderMsgDialog dialog = new iFolderMsgDialog(
+							this,
+							iFolderMsgDialog.DialogType.Question,
+							iFolderMsgDialog.ButtonSet.YesNo,
+							"",
+							Util.GS("Stop synchronizing this folder with the server?"),
+							"");
+						int rc = dialog.Run();
+						dialog.Hide();
+						dialog.Destroy();
+						if(rc == -8)
+						{
+							try
+							{
+								ifdata.RevertiFolder(holder.iFolder.ID);
+								
+Console.WriteLine("\tAbout to remove the folder from the store");
+								if (synchronizedFoldersListStore.Remove(ref iter))
+								{
+Console.WriteLine("\tRemoved the folder from the list store");
+									if (curSynchronizedFolders.ContainsKey(holder.iFolder.ID))
+										curSynchronizedFolders.Remove(holder.iFolder.ID);
+								}
+Console.WriteLine("\tDone doing stuff");
+							}
+							catch(Exception e)
+							{
+								iFolderExceptionDialog ied =
+									new iFolderExceptionDialog(
+										this,
+										e);
+								ied.Run();
+								ied.Hide();
+								ied.Destroy();
+							}
+						}
+					}
+				}
+			}
 		}
 		
 		private Widget CreateSynchronizedToolbarOld()
@@ -1974,7 +2037,7 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 			
 			Label buttonText = new Label(
 				string.Format("<span size=\"small\" weight=\"normal\">{0}</span>",
-							  Util.GS("Add a local folder")));
+							  Util.GS("Add a folder")));
 			hbox.PackStart(buttonText, false, false, 4);
 			buttonText.UseMarkup = true;
 			buttonText.UseUnderline = false;
@@ -2000,7 +2063,7 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 
 			buttonText = new Label(
 				string.Format("<span size=\"small\" weight=\"normal\">{0}</span>",
-							  Util.GS("Download a remote folder")));
+							  Util.GS("Download a folder")));
 			hbox.PackStart(buttonText, false, false, 4);
 			buttonText.UseMarkup = true;
 			buttonText.UseUnderline = false;
@@ -4343,6 +4406,39 @@ Console.WriteLine("\t4");
 				TreeSelection tSelect = iFolderTreeView.Selection;
 				tSelect.SelectIter(iter);
 				SetupiFolder();
+			}
+		}
+		
+		private void DownloadFolder(iFolderHolder holder)
+		{
+			if (holder == null) return;
+			
+Console.WriteLine("DownloadFolder: 1");
+			try
+			{
+Console.WriteLine("DownloadFolder: 2");
+				string lastSetupPath = Util.LastSetupPath;
+Console.WriteLine("DownloadFolder: 2.5");
+				iFolderHolder newHolder = ifdata.AcceptiFolderInvitation(
+													holder.iFolder.ID,
+													holder.iFolder.DomainID,
+													lastSetupPath);
+
+Console.WriteLine("DownloadFolder: 3");
+				TreeIter iter;
+Console.WriteLine("DownloadFolder: 4");
+				iter = synchronizedFoldersListStore.AppendValues(synchronizedFolderPixbuf, holder.iFolder.Name, holder);
+Console.WriteLine("DownloadFolder: 5");
+				curSynchronizedFolders[holder.iFolder.ID] = iter;
+
+Console.WriteLine("DownloadFolder: 6");
+				synchronizedFoldersIconView.RefreshIcons();
+Console.WriteLine("DownloadFolder: 7");
+			}
+			catch(Exception e)
+			{
+Console.WriteLine("DownloadFolder: 8");
+				DisplayCreateOrSetupException(e);
 			}
 		}
 

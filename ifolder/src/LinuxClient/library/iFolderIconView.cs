@@ -455,7 +455,7 @@ Console.WriteLine("\tInserted: 5");
 		}
 	}
 	
-	public class iFolderItemActivatedArgs
+	public class iFolderItemActivatedArgs : EventArgs
 	{
 		private TreePath treePath;
 		
