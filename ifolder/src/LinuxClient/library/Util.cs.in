@@ -675,13 +675,16 @@ Console.WriteLine("The main iFolder window was NOT open when shutting down");
 				if (ClientConfig.Exists(ClientConfig.KEY_IFOLDER_WINDOW_X_POS)
 					&& ClientConfig.Exists(ClientConfig.KEY_IFOLDER_WINDOW_WIDTH))
 				{
-					int x = Int32.Parse(ClientConfig.Get(ClientConfig.KEY_IFOLDER_WINDOW_X_POS, "0"));
-					int y = Int32.Parse(ClientConfig.Get(ClientConfig.KEY_IFOLDER_WINDOW_Y_POS, "0"));
 					int width = Int32.Parse(ClientConfig.Get(ClientConfig.KEY_IFOLDER_WINDOW_WIDTH, "600"));
 					int height = Int32.Parse(ClientConfig.Get(ClientConfig.KEY_IFOLDER_WINDOW_HEIGHT, "480"));
 					
 					ifwin.DefaultWidth = width;
 					ifwin.DefaultHeight = height;
+
+					int x = Int32.Parse(ClientConfig.Get(ClientConfig.KEY_IFOLDER_WINDOW_X_POS, "0"));
+					int y = Int32.Parse(ClientConfig.Get(ClientConfig.KEY_IFOLDER_WINDOW_Y_POS, "0"));
+
+					ifwin.Move(x, y);
 				}
 
 				if (ClientConfig.Exists(ClientConfig.KEY_IFOLDER_WINDOW_VISIBLE))
