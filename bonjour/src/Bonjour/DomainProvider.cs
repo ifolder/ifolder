@@ -42,11 +42,11 @@ using RUsers = Simias.mDns.BonjourUsers;
 namespace Simias
 {
 	/// <summary>
-	/// Rendezvous implementation of the DomainProvider Interface
+	/// Bonjour implementation of the DomainProvider Interface
 	/// </summary>
 	public class mDnsProvider : IDomainProvider
 	{
-		private string providerName = "Rendezvous Domain Provider";
+		private string providerName = "P2P Domain Provider";
 		private string description = "Simias Location provider which uses the mDns protocol to resolve objects";
 		private static readonly ISimiasLog log = 
 			SimiasLogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
@@ -201,7 +201,7 @@ namespace Simias
 			Simias.Authentication.Status status = 
 				new Simias.Authentication.Status( SCodes.InvalidCredentials );
 
-			// Rendezvous domain requires session support
+			// P2P domain requires session support
 			if ( ctx.Session != null )
 			{
 				MDnsSession mdnsSession;
