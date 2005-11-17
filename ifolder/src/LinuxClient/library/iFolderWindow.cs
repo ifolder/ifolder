@@ -2628,25 +2628,26 @@ Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
 		
 		private void OnIconViewDragMotion(object o, DragMotionArgs args)
 		{
-			Widget source = Gtk.Drag.GetSourceWidget(args.Context);
-			Console.WriteLine("OnIconViewDragMotion: {0}", source == null ? "null" : source.Name);
+//			Widget source = Gtk.Drag.GetSourceWidget(args.Context);
+//			Console.WriteLine("OnIconViewDragMotion: {0}", source == null ? "null" : source.Name);
 			
 			Gdk.Drag.Status(args.Context, args.Context.SuggestedAction, args.Time);
 			
-			args.RetVal = false;
+			args.RetVal = true;
 		}
 		
 		private void OnIconViewDragDrop(object o, DragDropArgs args)
 		{
-			Widget source = Gtk.Drag.GetSourceWidget(args.Context);
-			Console.WriteLine("OnIconViewDragDrop: {0}", source == null ? "null" : source.Name);
+//			Widget source = Gtk.Drag.GetSourceWidget(args.Context);
+//			Console.WriteLine("OnIconViewDragDrop: {0}", source == null ? "null" : source.Name);
 			
-			args.RetVal = false;
+			args.RetVal = true;
 		}
 		
 		private void OnIconViewDragDataReceived(object o, DragDataReceivedArgs args)
 		{
-			Console.WriteLine("OnIconViewDragDataReceived: {0}", args.Info);
+			Console.WriteLine("OnIconViewDragDataReceived: {0}", (TargetType)args.Info);
+			bool bFolderCreated = false;
 			
 			switch (args.Info)
 			{
@@ -2654,7 +2655,6 @@ Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
 					DomainInformation defaultDomain = domainController.GetDefaultDomain();
 					if (defaultDomain == null) return;
 	
-					bool bFolderCreated = false;
 					UriList uriList = new UriList(args.SelectionData);
 					foreach (string path in uriList.ToLocalPaths())
 					{
@@ -2685,6 +2685,8 @@ Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
 				default:
 					break;
 			}
+
+			Gtk.Drag.Finish (args.Context, bFolderCreated, false, args.Time);
 		}
 
 
@@ -2904,6 +2906,13 @@ Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
 				new MenuItem (Util.GS("Synchronization _Log"));
 			ViewMenu.Append(SyncLogMenuItem);
 			SyncLogMenuItem.Activated += new EventHandler(SyncLogMenuItemHandler);
+
+			ViewMenu.Append(new SeparatorMenuItem());
+			
+			MenuItem toggleDebugMenuItem =		// FIXME: Remove this debug menu
+				new MenuItem(Util.GS("_Toggle Debug Interface"));
+			ViewMenu.Append(toggleDebugMenuItem);
+			toggleDebugMenuItem.Activated += new EventHandler(ToggleDebugInterface);
 
 			MenuItem ViewMenuItem = new MenuItem(Util.GS("_View"));
 			ViewMenuItem.Submenu = ViewMenu;
@@ -3205,6 +3214,12 @@ Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
 		private void SyncLogMenuItemHandler(object o, EventArgs args)
 		{
 			Util.ShowLogWindow(simiasManager);
+		}
+		
+		
+		private void ToggleDebugInterface(object o, EventArgs args)
+		{
+			myiFolderNotebook.ShowTabs = !myiFolderNotebook.ShowTabs;
 		}
 
 
