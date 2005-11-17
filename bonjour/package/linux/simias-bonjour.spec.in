@@ -23,7 +23,7 @@
 
 %define prefix /opt/novell/ifolder3
 
-Summary      : simias-bonjour 1.0
+Summary      : simias-bonjour
 Name         : @PACKAGE@
 Version      : @VERSION@
 Release      : 1
@@ -36,7 +36,7 @@ Vendor       : www.ifolder.com
 Packager     : Calvin Gaisford <cgaisford@novell.com>
 BuildRoot    : %{_tmppath}/%{name}-%{version}
 
-Requires     : simias >= 1.1
+Requires     : simias >= @VERSION@ 
 Requires	 : mDNSResponder
 PreReq		 : nscd
 Obsoletes    : %{name} <= %{version}
