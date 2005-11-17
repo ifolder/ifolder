@@ -27,6 +27,7 @@
 using System;
 using System.IO;
 using System.Collections;
+using System.Text;
 using Gtk;
 
 using Simias.Client;
@@ -367,6 +368,13 @@ namespace Novell.iFolder
 		private Label				RemoteOwnerLabel;
 		private Label				RemoteServerLabel;
 		private TextView			RemoteDescriptionTextView;
+
+        // Drag and Drop
+        enum TargetType
+        {
+        	UriList,
+        	RootWindow
+        };
 
 		/// <summary>
 		/// Default constructor for iFolderWindow
@@ -2070,7 +2078,6 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 			DownloadRemoteFolderButton.Clicked +=
 				new EventHandler(DownloadRemoteFolderHandler);
 
-
 			///
 			/// RefreshSynchronizedFoldersButton
 			///
@@ -2411,6 +2418,37 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 			synchronizedFoldersIconView.SelectionChanged +=
 				new EventHandler(OnSynchronizedFoldersSelectionChanged);
 
+			TargetEntry[] targets =
+				new TargetEntry[]
+				{
+	                new TargetEntry ("text/uri-list", 0, (uint) TargetType.UriList),
+	                new TargetEntry ("application/x-root-window-drop", 0, (uint) TargetType.RootWindow)
+				};
+
+			Drag.DestSet(synchronizedFoldersIconView,
+						 //Gdk.ModifierType.Button1Mask | Gdk.ModifierType.Button3Mask,
+						 DestDefaults.All,
+						 targets,
+						 Gdk.DragAction.Copy | Gdk.DragAction.Move);
+
+			synchronizedFoldersIconView.DragMotion +=
+				new DragMotionHandler(OnIconViewDragMotion);
+				
+			synchronizedFoldersIconView.DragDrop +=
+				new DragDropHandler(OnIconViewDragDrop);
+			
+			synchronizedFoldersIconView.DragDataReceived +=
+				new DragDataReceivedHandler(OnIconViewDragDataReceived);
+			
+//			TargetEntry[] targetEntry =
+//				new TargetEntry[]{
+//					new TargetEntry("STRING", 0, 0),
+//					new TargetEntry("text/plain", 0, 0),
+//					new TargetEntry("text/uri-list", 0, 0),
+//					new TargetEntry("application/x-rootwindow-drop", 0, 0)
+//				};
+
+			
 			sw.Add(synchronizedFoldersIconView);
 			
 			synchronizedFolderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("synchronized-folder64.png"));
@@ -2587,11 +2625,67 @@ Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
 				RemoveSynchronizedFolderButton.Sensitive = true;
 			}
 		}
+		
+		private void OnIconViewDragMotion(object o, DragMotionArgs args)
+		{
+			Widget source = Gtk.Drag.GetSourceWidget(args.Context);
+			Console.WriteLine("OnIconViewDragMotion: {0}", source == null ? "null" : source.Name);
+			
+			Gdk.Drag.Status(args.Context, args.Context.SuggestedAction, args.Time);
+			
+			args.RetVal = false;
+		}
+		
+		private void OnIconViewDragDrop(object o, DragDropArgs args)
+		{
+			Widget source = Gtk.Drag.GetSourceWidget(args.Context);
+			Console.WriteLine("OnIconViewDragDrop: {0}", source == null ? "null" : source.Name);
+			
+			args.RetVal = false;
+		}
+		
+		private void OnIconViewDragDataReceived(object o, DragDataReceivedArgs args)
+		{
+			Console.WriteLine("OnIconViewDragDataReceived: {0}", args.Info);
+			
+			switch (args.Info)
+			{
+				case (uint) TargetType.UriList:
+					DomainInformation defaultDomain = domainController.GetDefaultDomain();
+					if (defaultDomain == null) return;
+	
+					bool bFolderCreated = false;
+					UriList uriList = new UriList(args.SelectionData);
+					foreach (string path in uriList.ToLocalPaths())
+					{
+//						Console.WriteLine("\t{0}", path);
+						if (ifws.CanBeiFolder(path))
+						{
+							try
+							{
+								iFolderHolder holder = ifdata.CreateiFolder(path, defaultDomain.ID);
 
+								TreeIter iter =
+									synchronizedFoldersListStore.AppendValues(synchronizedFolderPixbuf,
+																			  holder.iFolder.Name,
+																			  holder);
+								curSynchronizedFolders[holder.iFolder.ID] = iter;
+								bFolderCreated = true;
+							}
+							catch
+							{
+								Console.WriteLine("Error creating folder on drag-and-drop");
+							}
+						}
+					}
 
-
-
-
+					if (bFolderCreated)
+						synchronizedFoldersIconView.RefreshIcons();
+					break;
+				default:
+					break;
+			}
+		}
 
 
 		/// <summary>
@@ -4940,4 +5034,116 @@ Console.WriteLine("\t4");
 
 
 	}
+
+
+
+///
+/// This UrlList class comes directly from F-Spot written by Miguel de Icaza
+///
+public class UriList : ArrayList {
+	private void LoadFromString (string data) {
+		//string [] items = System.Text.RegularExpressions.Regex.Split ("\n", data);
+		string [] items = data.Split ('\n');
+		
+		foreach (String i in items) {
+			if (!i.StartsWith ("#")) {
+				Uri uri;
+				String s = i;
+
+				if (i.EndsWith ("\r")) {
+					s = i.Substring (0, i.Length - 1);
+					Console.WriteLine ("uri = {0}", s);
+				}
+				
+				try {
+					uri = new Uri (s);
+				} catch {
+					continue;
+				}
+				Add (uri);
+			}
+		}
+	}
+
+	static char[] CharsToQuote = { ';', '?', ':', '@', '&', '=', '$', ',', '#' };
+
+	public static Uri PathToFileUri (string path)
+	{
+		path = Path.GetFullPath (path);
+
+		StringBuilder builder = new StringBuilder ();
+		builder.Append (Uri.UriSchemeFile);
+		builder.Append (Uri.SchemeDelimiter);
+
+		int i;
+		while ((i = path.IndexOfAny (CharsToQuote)) != -1) {
+			if (i > 0)
+				builder.Append (path.Substring (0, i));
+			builder.Append (Uri.HexEscape (path [i]));
+			path = path.Substring (i+1);
+		}
+		builder.Append (path);
+
+		return new Uri (builder.ToString (), true);
+	}
+
+	public UriList (string [] uris)
+	{	
+		// FIXME this is so lame do real chacking at some point
+		foreach (string str in uris) {
+			Uri uri;
+
+			if (File.Exists (str) || Directory.Exists (str))
+				uri = PathToFileUri (str);
+			else 
+				uri = new Uri (str);
+			
+			Add (uri);
+		}
+	}
+
+	public UriList (string data) {
+		LoadFromString (data);
+	}
+	
+	public UriList (Gtk.SelectionData selection) 
+	{
+		// FIXME this should check the atom etc.
+		LoadFromString (System.Text.Encoding.UTF8.GetString (selection.Data));
+	}
+
+	public override string ToString () {
+		StringBuilder list = new StringBuilder ();
+
+		foreach (Uri uri in this) {
+			if (uri == null)
+				break;
+
+			list.Append (uri.ToString () + "\r\n");
+		}
+
+		return list.ToString ();
+	}
+
+	public string [] ToLocalPaths () {
+		int count = 0;
+		foreach (Uri uri in this) {
+			if (uri.IsFile)
+				count++;
+		}
+		
+		String [] paths = new String [count];
+		count = 0;
+		foreach (Uri uri in this) {
+			if (uri.IsFile)
+				paths[count++] = uri.LocalPath;
+		}
+		return paths;
+	}
+}
+
+
+
+
+
 }
