@@ -52,7 +52,7 @@ namespace Novell.iFolder
 
 		public ChooseRemoteFolderDialog(iFolderWebService ifws, SimiasWebService simws) : base()
 		{
-			this.Title = "Download a folder...";
+			this.Title = Util.GS("Download a folder...");
 			this.SetDefaultSize (600, 500);
 			this.Resizable = true;
 			this.HasSeparator = false;

@@ -3833,6 +3833,7 @@ Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
 
 		private void SetupiFolderHandler(object o, EventArgs args)
 		{
+Console.WriteLine("SetupiFolderHandler()");
 			SetupiFolder();
 		}
 
@@ -4503,6 +4504,7 @@ Console.WriteLine("\t4");
 
 		public void SetUpiFolder(string ifolderID)
 		{
+Console.WriteLine("SetUpiFolder({0})", ifolderID);
 			// Guarantee that the iFolderWindow is showing
 			Util.ShowiFolderWindow();
 
@@ -4545,6 +4547,8 @@ Console.WriteLine("\t4");
 
 		private void SetupiFolder()
 		{
+Console.WriteLine("SetupiFolder() not implemented");
+return;
 			string newPath  = "";
 			TreeModel tModel;
 			TreeIter iter;
@@ -4552,17 +4556,21 @@ Console.WriteLine("\t4");
 			TreePath[] selectedPaths = remoteFoldersIconView.SelectedItems;
 			if (selectedPaths.Length != 1) return;
 
+Console.WriteLine("\t1");
 			tModel = remoteFoldersIconView.Model;
 			if (tModel.GetIter(out iter, selectedPaths[0]))
 			{
+Console.WriteLine("\t2");
 				iFolderHolder holder =
 					(iFolderHolder)tModel.GetValue(iter, 2);
 				if (holder == null) return;
+Console.WriteLine("\t3");
 
 				int rc = 0;
 
 				do
 				{
+Console.WriteLine("\t4");
 					string lastSetupPath = Util.LastSetupPath;
 					iFolderAcceptDialog iad =
 							new iFolderAcceptDialog(holder.iFolder, lastSetupPath);
@@ -4574,6 +4582,7 @@ Console.WriteLine("\t4");
 					if(rc != -5)
 						return;
 
+Console.WriteLine("\t5");
 					try
 					{
 						// This will remove the current subscription
@@ -4587,11 +4596,13 @@ Console.WriteLine("\t4");
 														holder.iFolder.DomainID,
 														newPath);
 	
+Console.WriteLine("\t6");
 						tModel.SetValue(iter, 0, newHolder);
 	//					curiFolders.Add(newiFolder.ID, iter);
 
 						rc = 0;
 
+Console.WriteLine("\t7");
 						// Save off the path so that the next time the user
 						// opens the setup dialog, we'll open to the same
 						// directory
@@ -4600,11 +4611,13 @@ Console.WriteLine("\t4");
 					}
 					catch(Exception e)
 					{
+Console.WriteLine("\t8");
 						DisplayCreateOrSetupException(e);
 					}
 				}
 				while(rc == -5);
 			}
+Console.WriteLine("\t9");
 		}
 
 
