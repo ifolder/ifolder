@@ -1572,114 +1572,118 @@ namespace Novell.iFolderCom
 		/// <returns>The name of the language directory.</returns>
 		static public string GetLanguageDirectory()
 		{
-			string languageDirectory;
-
-			switch (CultureInfo.CurrentCulture.Name)
+			// Create/open the iFolder key.
+			RegistryKey regKey = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Novell\iFolder");
+			string languageDirectory = regKey.GetValue("language") as String;
+			if (languageDirectory == null)
 			{
-				case "cs":
-				case "cs-CZ":
-					languageDirectory = "cs";
-					break;
-
-				case "de":
-				case "de-AT":
-				case "de-DE":
-				case "de-LI":
-				case "de-LU":
-				case "de-CH":
-					languageDirectory = "de";
-					break;
-
-				case "es":
-				case "es-AR":
-				case "es-BO":
-				case "es-CL":
-				case "es-CO":
-				case "es-CR":
-				case "es-DO":
-				case "es-EC":
-				case "es-SV":
-				case "es-GT":
-				case "es-HN":
-				case "es-MX":
-				case "es-NI":
-				case "es-PA":
-				case "es-PY":
-				case "es-PE":
-				case "es-PR":
-				case "es-ES":
-				case "es-UY":
-				case "es-VE":
-					languageDirectory = "es";
-					break;
-
-				case "fr":
-				case "fr-BE":
-				case "fr-CA":
-				case "fr-FR":
-				case "fr-LU":
-				case "fr-MC":
-				case "fr-CH":
-					languageDirectory = "fr";
-					break;
-
-				case "hu":
-				case "hu-HU":
-					languageDirectory = "hu";
-					break;
-
-				case "it":
-				case "it-IT":
-				case "it-CH":
-					languageDirectory = "it";
-					break;
-
-				case "ja":
-				case "ja-JP":
-					languageDirectory = "ja";
-					break;
-
-				case "pl":
-				case "pl-PL":
-					languageDirectory = "pl";
-					break;
-
-				case "pt":
-				case "pt-BR":
-				case "pt-PT":
-					languageDirectory = "pt";
-					break;
-
-				case "ru":
-				case "ru-RU":
-					languageDirectory = "ru";
-					break;
-
-				case "sk":
-				case "sk-SK":
-					languageDirectory = "sk";
-					break;
-
-				/* TODO: Where do these belong? Traditional or simplified?
-				zh-MO 0x1404 Chinese - Macau SAR
-				zh-SG 0x1004 Chinese - Singapore
-				*/
-
-				case "zh-TW": // 0x0404 Chinese - Taiwan
-				case "zh-CHS": // 0x0004 Chinese (Simplified)
-					languageDirectory = "zh_TW";
-					break;
-
-				case "zh-HK": // 0x0C04 Chinese - Hong Kong SAR
-				case "zh-CN": // 0x0804 Chinese - China
-				case "zh-CHT": // 0x7C04 Chinese (Traditional)
-					languageDirectory = "zh_CN";
-					break;
-
-				default:
+				switch (CultureInfo.CurrentCulture.Name)
 				{
-					languageDirectory = "en";
-					break;
+					case "cs":
+					case "cs-CZ":
+						languageDirectory = "cs";
+						break;
+
+					case "de":
+					case "de-AT":
+					case "de-DE":
+					case "de-LI":
+					case "de-LU":
+					case "de-CH":
+						languageDirectory = "de";
+						break;
+
+					case "es":
+					case "es-AR":
+					case "es-BO":
+					case "es-CL":
+					case "es-CO":
+					case "es-CR":
+					case "es-DO":
+					case "es-EC":
+					case "es-SV":
+					case "es-GT":
+					case "es-HN":
+					case "es-MX":
+					case "es-NI":
+					case "es-PA":
+					case "es-PY":
+					case "es-PE":
+					case "es-PR":
+					case "es-ES":
+					case "es-UY":
+					case "es-VE":
+						languageDirectory = "es";
+						break;
+
+					case "fr":
+					case "fr-BE":
+					case "fr-CA":
+					case "fr-FR":
+					case "fr-LU":
+					case "fr-MC":
+					case "fr-CH":
+						languageDirectory = "fr";
+						break;
+
+					case "hu":
+					case "hu-HU":
+						languageDirectory = "hu";
+						break;
+
+					case "it":
+					case "it-IT":
+					case "it-CH":
+						languageDirectory = "it";
+						break;
+
+					case "ja":
+					case "ja-JP":
+						languageDirectory = "ja";
+						break;
+
+					case "pl":
+					case "pl-PL":
+						languageDirectory = "pl";
+						break;
+
+					case "pt":
+					case "pt-BR":
+					case "pt-PT":
+						languageDirectory = "pt";
+						break;
+
+					case "ru":
+					case "ru-RU":
+						languageDirectory = "ru";
+						break;
+
+					case "sk":
+					case "sk-SK":
+						languageDirectory = "sk";
+						break;
+
+						/* TODO: Where do these belong? Traditional or simplified?
+						zh-MO 0x1404 Chinese - Macau SAR
+						zh-SG 0x1004 Chinese - Singapore
+						*/
+
+					case "zh-TW": // 0x0404 Chinese - Taiwan
+					case "zh-CHS": // 0x0004 Chinese (Simplified)
+						languageDirectory = "zh-TW";
+						break;
+
+					case "zh-HK": // 0x0C04 Chinese - Hong Kong SAR
+					case "zh-CN": // 0x0804 Chinese - China
+					case "zh-CHT": // 0x7C04 Chinese (Traditional)
+						languageDirectory = "zh-CN";
+						break;
+
+					default:
+					{
+						languageDirectory = "en";
+						break;
+					}
 				}
 			}
 
