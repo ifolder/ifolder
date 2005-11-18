@@ -31,6 +31,7 @@ iFolderShell_LIBS = comctl32.lib
 iFolderShell_LIBPATH = iFolderShell
 iFolderShell_LIBFLAGS = $(SHARED_LIB_FLAG)
 iFolderShell_DEF = $(srcdir)/iFolderShell/iFolderShell.Def
+iFolderShell_RESOURCES_DLLS = $(srcdir)/cs/iFolderShellRes.dll $(srcdir)/de/iFolderShellRes.dll $(srcdir)/es/iFolderShellRes.dll $(srcdir)/fr/iFolderShellRes.dll $(srcdir)/hu/iFolderShellRes.dll $(srcdir)/it/iFolderShellRes.dll $(srcdir)/ja/iFolderShellRes.dll $(srcdir)/pl/iFolderShellRes.dll $(srcdir)/pt/iFolderShellRes.dll $(srcdir)/ru/iFolderShellRes.dll $(srcdir)/sk/iFolderShellRes.dll $(srcdir)/zh-CN/iFolderShellRes.dll $(srcdir)/zh-TW/iFolderShellRes.dll
 
 iFolderShellRes_SRCFILES = $(srcdir)/iFolderShell/iFolderShellRes/iFolderShellRes.cpp $(srcdir)/iFolderShell/iFolderShellRes/iFolderShell.rc $(srcdir)/iFolderShell/iFolderShellRes/iFolderShell.rc2 $(srcdir)/iFolderShell/iFolderShellRes/version.h $(srcdir)/iFolderShell/nifver.h
 iFolderShellRes_OBJFILES = iFolderShell/iFolderShellRes/iFolderShellRes.obj iFolderShell/iFolderShellRes/iFolderShell$(RES_EXT)
@@ -40,7 +41,7 @@ WINDOWS_FILES = $(srcdir)/explorer.exe.manifest $(srcdir)/explorer.exe.config
 
 PROJECT_FILES = $(srcdir)/iFolderComponent.csproj $(srcdir)/iFolderComponent.sln
 
-EXTRA_DIST = $(iFolderComponent_CSFILES) $(iFolderShell_SRCFILES) $(iFolderShellRes_SRCFILES) $(iFolderShell_DEF) $(DATA_FILES) $(iFolderComponent_RESX_FILES) $(WINDOWS_FILES) $(srcdir)/iFolderShell.reg $(PROJECT_FILES) AssemblyInfo.cs.in iFolderShell/nifver.h.in 
+EXTRA_DIST = $(iFolderShell_RESOURCES_DLLS) $(iFolderComponent_CSFILES) $(iFolderShell_SRCFILES) $(iFolderShellRes_SRCFILES) $(iFolderShell_DEF) $(DATA_FILES) $(iFolderComponent_RESX_FILES) $(WINDOWS_FILES) $(srcdir)/iFolderShell.reg $(PROJECT_FILES) AssemblyInfo.cs.in iFolderShell/nifver.h.in 
 
 AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
 	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
