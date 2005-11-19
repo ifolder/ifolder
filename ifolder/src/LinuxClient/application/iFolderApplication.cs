@@ -70,7 +70,7 @@ namespace Novell.iFolder
 
 		private iFolderState 		CurrentState;
 		private Gtk.ThreadNotify	iFolderStateChanged;
-		private SimiasEventBroker	EventBroker;
+		private SimiasEventBroker	simiasEventBroker;
 		private	iFolderLoginDialog	LoginDialog;
 //		private bool				logwinShown;
 
@@ -95,6 +95,22 @@ namespace Novell.iFolder
 
 		private NotifyWindow		startingUpNotifyWindow = null;
 		private NotifyWindow		shuttingDownNotifyWindow = null;
+		
+		public SimiasEventBroker	EventBroker
+		{
+			get
+			{
+				return this.EventBroker;
+			}
+		}
+		
+		public Manager				SimiasManager
+		{
+			get
+			{
+				return this.simiasManager;
+			}
+		}
 
 		public iFolderApplication(string[] args)
 			: base("ifolder", "1.0", Modules.UI, args)
@@ -208,7 +224,7 @@ namespace Novell.iFolder
 					// Set up to have data ready for events
 					ifdata = iFolderData.GetData(simiasManager);
 
-					EventBroker = SimiasEventBroker.GetSimiasEventBroker(simiasManager);
+					simiasEventBroker = SimiasEventBroker.GetSimiasEventBroker(simiasManager);
 					domainController = DomainController.GetDomainController(simiasManager);
 				}
 				catch(Exception e)
@@ -232,8 +248,8 @@ namespace Novell.iFolder
 
 			try
 			{
-				if(EventBroker != null)
-					EventBroker.Deregister();
+				if(simiasEventBroker != null)
+					simiasEventBroker.Deregister();
 				simiasManager.Stop();
 			}
 			catch(Exception e)
@@ -673,24 +689,24 @@ namespace Novell.iFolder
 					break;
 
 				case iFolderState.Running:
-					if(EventBroker != null)
+					if(simiasEventBroker != null)
 					{
-						EventBroker.iFolderAdded +=
+						simiasEventBroker.iFolderAdded +=
 							new iFolderAddedEventHandler(
 												OniFolderAddedEvent);
-						EventBroker.iFolderChanged +=
+						simiasEventBroker.iFolderChanged +=
 							new iFolderChangedEventHandler(
 												OniFolderChangedEvent);
-						EventBroker.iFolderDeleted +=
+						simiasEventBroker.iFolderDeleted +=
 							new iFolderDeletedEventHandler(
 												OniFolderDeletedEvent);
-						EventBroker.iFolderUserAdded +=
+						simiasEventBroker.iFolderUserAdded +=
 							new iFolderUserAddedEventHandler(
 												OniFolderUserAddedEvent);
-						EventBroker.CollectionSyncEventFired +=
+						simiasEventBroker.CollectionSyncEventFired +=
 							new CollectionSyncEventHandler(
 												OniFolderSyncEvent);
-						EventBroker.FileSyncEventFired +=
+						simiasEventBroker.FileSyncEventFired +=
 							new FileSyncEventHandler(
 												OniFolderFileSyncEvent);
 					}
@@ -1063,6 +1079,11 @@ namespace Novell.iFolder
 			}
 			catch(Exception bigException)
 			{
+				// Stop Simias (dereference iFolder's handle at least)
+				if(application.EventBroker != null)
+					application.EventBroker.Deregister();
+				application.SimiasManager.Stop();
+
 				Console.WriteLine(bigException);
 				iFolderCrashDialog cd = new iFolderCrashDialog(bigException);
 				cd.Run();
