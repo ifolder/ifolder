@@ -2047,7 +2047,7 @@
 	</data>
   
 	<data name="menuViewLog.Text">
-		<value>Synchronizační protokol</value>
+		<value>Synchronizační protoko&amp;l</value>
 	</data>
   
 	<data name="menuViewLog.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2103,7 +2103,7 @@
 	</data>
   
 	<data name="menuEditPrefs.Text">
-		<value>Předvolby</value>
+		<value>&amp;Předvolby</value>
 	</data>
   
 	<data name="menuEditPrefs.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2647,11 +2647,11 @@
 	</data>
   
 	<data name="iFolderRevertError">
-		<value>Během navracení složky iFolder se vyskytla chyba.</value>
+		<value>Během změny složky iFolder na normální složku došlo k chybě.</value>
 	</data>
   
 	<data name="revertErrorTitle">
-		<value>Chyba při navracení složky iFolder</value>
+		<value>Chyba při změně složky iFolder</value>
 	</data>
   
 	<data name="logEntriesCleared">
@@ -2759,11 +2759,11 @@
 	</data>
   
 	<data name="revertTitle">
-		<value>Změnit složku iFolder</value>
+		<value>Změnit zpět složku iFolder</value>
 	</data>
   
 	<data name="revertPrompt">
-		<value>Chcete opravdu vrátit složku iFolder na normální složku?</value>
+		<value>Chcete opravdu změnit složku iFolder zpět na normální složku?</value>
 	</data>
   
 	<data name="removeTitle">

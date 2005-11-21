@@ -955,7 +955,7 @@
 	</data>
   
 	<data name="iFolderCreateError">
-		<value>Pri vytváraní priečinku iFolder nastala chyba.</value>
+		<value>Pri vytváraní priečinka iFolder nastala chyba.</value>
 	</data>
   
 	<data name="createPrompt">
@@ -975,11 +975,11 @@
 	</data>
   
 	<data name="createAccount">
-		<value>Ak chcete začať používať priečinok iFolder, je najprv nutné nastaviť konto priečinku iFolder. Chcete teraz nastaviť konto priečinku iFolder?</value>
+		<value>Ak chcete začať používať priečinok iFolder, je najprv nutné nastaviť konto priečinka iFolder. Chcete teraz nastaviť konto priečinka iFolder?</value>
 	</data>
   
 	<data name="createAccountTitle">
-		<value>Nastaviť konto priečinku iFolder</value>
+		<value>Nastaviť konto priečinka iFolder</value>
 	</data>
   
 	<data name="pathInvalidErrorTitle">
@@ -1007,7 +1007,7 @@
 	</data>
   
 	<data name="winDirError">
-		<value>Vybraté umiestnenie zahŕňa priečinok systému Windows. Priečinok systému Windows nemôže obsahovať priečinok iFolder. Vyberte iné umiestnenie a skúste to znova.</value>
+		<value>Vybraté umiestnenie zahŕňa priečinok Windows. Priečinok Windows nemôže obsahovať priečinok iFolder. Vyberte iné umiestnenie a skúste to znova.</value>
 	</data>
   
 	<data name="progFilesDirError">

@@ -2047,7 +2047,7 @@
 	</data>
   
 	<data name="menuViewLog.Text">
-		<value>Журнал синхронизации</value>
+		<value>Журнал &amp;синхронизации</value>
 	</data>
   
 	<data name="menuViewLog.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2075,7 +2075,7 @@
 	</data>
   
 	<data name="menuEdit.Text">
-		<value>&amp;Изменить...</value>
+		<value>&amp;Изменить</value>
 	</data>
   
 	<data name="menuEdit.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2103,7 +2103,7 @@
 	</data>
   
 	<data name="menuEditPrefs.Text">
-		<value>Настройки</value>
+		<value>Н&amp;астройки</value>
 	</data>
   
 	<data name="menuEditPrefs.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">

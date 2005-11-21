@@ -1183,7 +1183,7 @@
 	</data>
   
 	<data name="pathIncludesWinDirError">
-		<value>Vybraté umiestnenie zahŕňa priečinok systému Windows. Priečinok systému Windows nemôže obsahovať priečinok iFolder. Vyberte iné umiestnenie a skúste to znova.</value>
+		<value>Vybraté umiestnenie zahŕňa priečinok Windows. Priečinok Windows nemôže obsahovať priečinok iFolder. Vyberte iné umiestnenie a skúste to znova.</value>
 	</data>
   
 	<data name="pathIncludesProgFilesDirError">
@@ -1191,7 +1191,7 @@
 	</data>
   
 	<data name="acceptError">
-		<value>V priebehu nastavovania priečinku iFolder sa vyskytla výnimka.</value>
+		<value>V priebehu nastavovania priečinka iFolder sa vyskytla výnimka.</value>
 	</data>
   
 	<data name="networkPath">
@@ -1199,7 +1199,7 @@
 	</data>
   
 	<data name="selectLocation">
-		<value>Vyberte umiestnenie priečinku iFolder.</value>
+		<value>Vyberte umiestnenie priečinka iFolder.</value>
 	</data>
   
 	<data name="iFolderName">

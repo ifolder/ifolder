@@ -4509,23 +4509,23 @@
 	</data>
   
 	<data name="serverConnectError">
-		<value>Během připojování k serveru iFolder se vyskytla chyba.  Ověřte prosím zadané informace a zkuste to znovu.  Pokud problém přetrvává, kontaktujte prosím vašeho správce sítě.</value>
+		<value>Během připojování k serveru iFolder došlo k chybě. Ověřte prosím zadané informace a zkuste to znovu. Pokud problém přetrvává, obraťte se na správce sítě.</value>
 	</data>
   
 	<data name="unknownDomain">
-		<value>Nelze navázat kontakt s určeným serverem.  Ověřte prosím zadané informace a zkuste to znovu.  Pokud problém přetrvává, kontaktujte prosím vašeho správce sítě.</value>
+		<value>Nelze navázat kontakt s určeným serverem.  Ověřte prosím zadané informace a zkuste to znovu.  Pokud problém přetrvává, obraťte se na správce sítě.</value>
 	</data>
   
 	<data name="accountDisabled">
-		<value>Uživatelský účet je vypnut.  Pokud chcete získat pomoc, kontaktujte vašeho správce sítě.</value>
+		<value>Uživatelský účet je vypnut. Požádejte o pomoc správce sítě.</value>
 	</data>
   
 	<data name="iFolderAccountDisabled">
-		<value>Účet aplikace iFolder je vypnutý.  Podporu získáte kontaktováním vašeho správce sítě.</value>
+		<value>Účet aplikace iFolder je vypnutý. Požádejte o pomoc správce sítě.</value>
 	</data>
   
 	<data name="accountLockout">
-		<value>Uživatelský účet byl uzamčen.  Podporu získáte kontaktováním vašeho správce sítě.</value>
+		<value>Uživatelský účet byl uzamčen. Požádejte o pomoc správce sítě.</value>
 	</data>
   
 	<data name="graceLogin">
@@ -4625,7 +4625,7 @@
 	</data>
   
 	<data name="verifyCert">
-		<value>Aplikace iFolder nemůže ověřit identifikaci serveru iFolder {0}.  Certifikát pro tento server iFolder byl podepsán neznámým certifikačním úřadem.  Můžete se připojovat k serveru, který předstírá, že je {0}, což by mohlo způsobit ohrožení vašich důvěrných informací. Před přijetím tohoto certifikátu byste ho měli ověřit u vašeho správce systému. Chcete přijmout tento certifikát trvale a pokračovat v připojení?</value>
+		<value>Aplikace iFolder nemůže ověřit identifikaci serveru iFolder {0}.  Certifikát pro tento server iFolder byl podepsán neznámým certifikačním úřadem.  Můžete se připojovat k serveru, který předstírá, že je {0}, což by mohlo způsobit ohrožení vašich důvěrných informací. Před přijetím tohoto certifikátu byste ho měli ověřit u správce systému. Chcete přijmout tento certifikát trvale a pokračovat v připojení?</value>
 	</data>
   
 	<data name="verifyCertTitle">

@@ -827,11 +827,11 @@
 	</data>
   
 	<data name="checkingForiFolders">
-		<value>Checking for new iFolders on: {0}</value>
+		<value>Recherche de nouveaux dossiers iFolder sur : {0}</value>
 	</data>
   
 	<data name="doneCheckingForiFolders">
-		<value>Recherche des nouveaux dossiers iFolder terminée</value>
+		<value>Recherche des nouveaux dossiers iFolder terminée : {0}</value>
 	</data>
   
 	<data name="localSync">
@@ -915,11 +915,11 @@
 	</data>
   
 	<data name="readOnlyFailure">
-		<value>Read-only iFolder prevented synchronization: {0}</value>
+		<value>Le dossier iFolder en lecture seule a empêché la synchronisation : {0}</value>
 	</data>
   
 	<data name="readOnlyFailureInfo">
-		<value>You have Read-only access to this iFolder.  Files that you place in this iFolder will not be synchronized.  Click here to view the Synchronization Log.</value>
+		<value>Vous disposez d'un accès en lecture seule sur ce dossier iFolder. Les fichiers qu'il contient ne seront pas synchronisés. Cliquez ici pour afficher le journal de synchronisation.</value>
 	</data>
   
 	<data name="quotaFailure">
@@ -927,11 +927,11 @@
 	</data>
   
 	<data name="quotaFailureTitle">
-		<value>Synchronisation incomplète</value>
+		<value>Synchronisation incomplète : {0}</value>
 	</data>
   
 	<data name="quotaFailureInfo">
-		<value>The iFolder is full.  Click here to view the Synchronization Log.</value>
+		<value>Le dossier iFolder est plein. Cliquez ici pour afficher le journal de synchronisation.</value>
 	</data>
   
 	<data name="policySizeFailure">
@@ -967,10 +967,10 @@
 	</data>
   
 	<data name="createAccount">
-		<value>To begin using iFolder, you must first set up an iFolder account.  Click here to add a new account.</value>
+		<value>Pour pouvoir utiliser un dossier iFolder, vous devez au préalable configurer un compte iFolder. Cliquez ici pour ajouter un nouveau compte.</value>
 	</data>
   
 	<data name="createAccountTitle">
-		<value>Welcome to iFolder</value>
+		<value>Bienvenue dans iFolder</value>
 	</data>
 </root>

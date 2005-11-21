@@ -827,11 +827,11 @@
 	</data>
   
 	<data name="checkingForiFolders">
-		<value>Checking for new iFolders on: {0}</value>
+		<value>新しいiFolderをチェックしています: {0}</value>
 	</data>
   
 	<data name="doneCheckingForiFolders">
-		<value>新しいiFolder の確認を終了しました</value>
+		<value>新しいiFolderのチェックが終了しました: {0}</value>
 	</data>
   
 	<data name="localSync">
@@ -915,11 +915,11 @@
 	</data>
   
 	<data name="readOnlyFailure">
-		<value>Read-only iFolder prevented synchronization: {0}</value>
+		<value>読み込み専用のiFolderは同期されません: {0}</value>
 	</data>
   
 	<data name="readOnlyFailureInfo">
-		<value>You have Read-only access to this iFolder.  Files that you place in this iFolder will not be synchronized.  Click here to view the Synchronization Log.</value>
+		<value>このiFolderへのアクセス権は読み込み専用です。このiFolder内のファイルは同期されません。同期ログを表示するにはここをクリックしてください。</value>
 	</data>
   
 	<data name="quotaFailure">
@@ -927,11 +927,11 @@
 	</data>
   
 	<data name="quotaFailureTitle">
-		<value>不完全な同期</value>
+		<value>不完全な同期: {0}</value>
 	</data>
   
 	<data name="quotaFailureInfo">
-		<value>The iFolder is full.  Click here to view the Synchronization Log.</value>
+		<value>iFolderがいっぱいです。同期ログを表示するにはここをクリックしてください。</value>
 	</data>
   
 	<data name="policySizeFailure">
@@ -967,10 +967,10 @@
 	</data>
   
 	<data name="createAccount">
-		<value>To begin using iFolder, you must first set up an iFolder account.  Click here to add a new account.</value>
+		<value>iFolderの使用を開始するには、最初にiFolderアカウントをセットアップする必要があります。ここをクリックして新しいアカウントを追加してください。</value>
 	</data>
   
 	<data name="createAccountTitle">
-		<value>Welcome to iFolder</value>
+		<value>iFolderへようこそ</value>
 	</data>
 </root>

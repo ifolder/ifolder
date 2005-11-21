@@ -2019,7 +2019,7 @@
 	</data>
   
 	<data name="menuViewAccounts.Text">
-		<value>帐户(&amp;N)</value>
+		<value>帐户(&amp;A)</value>
 	</data>
   
 	<data name="menuViewAccounts.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2047,7 +2047,7 @@
 	</data>
   
 	<data name="menuViewLog.Text">
-		<value>同步日志</value>
+		<value>同步日志(&amp;L)</value>
 	</data>
   
 	<data name="menuViewLog.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2075,7 +2075,7 @@
 	</data>
   
 	<data name="menuEdit.Text">
-		<value>编辑</value>
+		<value>编辑(&amp;E)</value>
 	</data>
   
 	<data name="menuEdit.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2103,7 +2103,7 @@
 	</data>
   
 	<data name="menuEditPrefs.Text">
-		<value>自选设置</value>
+		<value>自选设置(&amp;P)</value>
 	</data>
   
 	<data name="menuEditPrefs.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">

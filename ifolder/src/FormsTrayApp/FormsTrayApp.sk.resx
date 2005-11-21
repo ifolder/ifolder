@@ -735,11 +735,11 @@
 	</data>
   
 	<data name="iFolderServicesStarting">
-		<value>Spúšťajú sa služby priečinku iFolder...</value>
+		<value>Spúšťajú sa služby priečinka iFolder...</value>
 	</data>
   
 	<data name="iFolderServicesStopping">
-		<value>Ukončujú sa služby priečinku iFolder...</value>
+		<value>Ukončujú sa služby priečinka iFolder...</value>
 	</data>
   
 	<data name="collisionMessage">
@@ -755,23 +755,23 @@
 	</data>
   
 	<data name="subscriptionMessage">
-		<value>{0} vás pozval do tohto zdieľaného priečinku iFolder. Nastaviť priečinok iFolder môžete kliknutím na toto miesto.</value>
+		<value>{0} vás pozval do tohto zdieľaného priečinka iFolder. Nastaviť priečinok iFolder môžete kliknutím na toto miesto.</value>
 	</data>
   
 	<data name="newMemberTitle">
-		<value>Nový používateľ priečinku iFolder</value>
+		<value>Nový používateľ priečinka iFolder</value>
 	</data>
   
 	<data name="newMemberMessage">
-		<value>{0} sa pridal k priečinku iFolder "{1}". Zoznam členov priečinku iFolder môžete zobraziť kliknutím na toto miesto.</value>
+		<value>{0} sa pridal k priečinku iFolder "{1}". Zoznam členov priečinka iFolder môžete zobraziť kliknutím na toto miesto.</value>
 	</data>
   
 	<data name="fatalErrorMessage">
-		<value>Chyba softvéru zabraňuje inicializácii priečinku iFolder. Obráťte sa na správcu systému.</value>
+		<value>Chyba softvéru zabraňuje inicializácii priečinka iFolder. Obráťte sa na správcu systému.</value>
 	</data>
   
 	<data name="fatalErrorTitle">
-		<value>Chyba softvéru zabraňuje inicializácii priečinku iFolder. Obráťte sa na správcu systému.</value>
+		<value>Služby priečinka iFolder sa nedajú spustiť</value>
 	</data>
   
 	<data name="downloading">
@@ -783,7 +783,7 @@
 	</data>
   
 	<data name="clientUpgradeTitle">
-		<value>Aktualizácia klienta priečinku iFolder</value>
+		<value>Aktualizácia klienta priečinka iFolder</value>
 	</data>
   
 	<data name="upgradeErrorTitle">
@@ -791,11 +791,11 @@
 	</data>
   
 	<data name="clientUpgradeFailure">
-		<value>Aktualizácia klienta priečinku iFolder zlyhala. Obráťte sa na správcu systému.</value>
+		<value>Aktualizácia klienta priečinka iFolder zlyhala. Obráťte sa na správcu systému.</value>
 	</data>
   
 	<data name="clientUpgradePrompt">
-		<value>K dispozícii je novšia verzia "{0}" klienta priečinku iFolder. Chcete aktualizovať teraz?</value>
+		<value>K dispozícii je novšia verzia "{0}" klienta priečinka iFolder. Chcete vykonať aktualizáciu?</value>
 	</data>
   
 	<data name="failedAuth">
@@ -815,7 +815,7 @@
 	</data>
   
 	<data name="iFolderAccountDisabled">
-		<value>Toto konto priečinku iFolder je zakázané. Požiadajte o pomoc správcu siete.</value>
+		<value>Toto konto priečinka iFolder je zakázané. Požiadajte o pomoc správcu siete.</value>
 	</data>
   
 	<data name="accountLockout">
@@ -827,11 +827,11 @@
 	</data>
   
 	<data name="checkingForiFolders">
-		<value>Checking for new iFolders on: {0}</value>
+		<value>Zisťujú sa nové priečinky iFolder v umiestnení: {0}</value>
 	</data>
   
 	<data name="doneCheckingForiFolders">
-		<value>Zisťovanie nových priečinkov iFolder je dokončené</value>
+		<value>Zisťovanie nových priečinkov iFolder je dokončené: {0}</value>
 	</data>
   
 	<data name="localSync">
@@ -915,11 +915,11 @@
 	</data>
   
 	<data name="readOnlyFailure">
-		<value>Read-only iFolder prevented synchronization: {0}</value>
+		<value>Synchronizácii zabránil priečinok iFolder určený iba na čítanie: {0}</value>
 	</data>
   
 	<data name="readOnlyFailureInfo">
-		<value>You have Read-only access to this iFolder.  Files that you place in this iFolder will not be synchronized.  Click here to view the Synchronization Log.</value>
+		<value>K tomuto priečinku iFolder máte iba prístup na čítanie. Súbory, ktoré umiestnite do tohto priečinka, nebude možné synchronizovať. Kliknutím sem zobrazíte denník synchronizácie.</value>
 	</data>
   
 	<data name="quotaFailure">
@@ -927,11 +927,11 @@
 	</data>
   
 	<data name="quotaFailureTitle">
-		<value>Neukončená synchronizácia</value>
+		<value>Nedokončená synchronizácia: {0}</value>
 	</data>
   
 	<data name="quotaFailureInfo">
-		<value>The iFolder is full.  Click here to view the Synchronization Log.</value>
+		<value>Priečinok iFolder je plný. Kliknutím sem zobrazíte denník synchronizácie.</value>
 	</data>
   
 	<data name="policySizeFailure">
@@ -943,7 +943,7 @@
 	</data>
   
 	<data name="genericFailure">
-		<value>Zlyhala synchronizácia priečinku iFolder: {0}</value>
+		<value>Zlyhala synchronizácia priečinka iFolder: {0}</value>
 	</data>
   
 	<data name="serverDiskFullFailure">
@@ -967,10 +967,10 @@
 	</data>
   
 	<data name="createAccount">
-		<value>To begin using iFolder, you must first set up an iFolder account.  Click here to add a new account.</value>
+		<value>Ak chcete začať používať aplikáciu iFolder, musíte najprv vytvoriť konto služby iFolder. Nové konto vytvoríte kliknutím sem.</value>
 	</data>
   
 	<data name="createAccountTitle">
-		<value>Welcome to iFolder</value>
+		<value>Víta vás aplikácia iFolder</value>
 	</data>
 </root>

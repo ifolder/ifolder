@@ -827,7 +827,7 @@
 	</data>
   
 	<data name="checkingForiFolders">
-		<value>Checking for new iFolders on: {0}</value>
+		<value>Új iFolder mappák keresése a következőn: {0}</value>
 	</data>
   
 	<data name="doneCheckingForiFolders">
@@ -915,11 +915,11 @@
 	</data>
   
 	<data name="readOnlyFailure">
-		<value>Read-only iFolder prevented synchronization: {0}</value>
+		<value>Egy írásvédett iFolder megakadályozta a szinkronizálást: {0}</value>
 	</data>
   
 	<data name="readOnlyFailureInfo">
-		<value>You have Read-only access to this iFolder.  Files that you place in this iFolder will not be synchronized.  Click here to view the Synchronization Log.</value>
+		<value>Ehhez az iFolder mappához Olvasásra hozzáférése van. Az ebben az iFolder mappában elhelyezett fájlok nem szinkronizálódnak. Ha meg szeretné tekinteni a szinkronizálási naplót, kattintson ide.</value>
 	</data>
   
 	<data name="quotaFailure">
@@ -931,7 +931,7 @@
 	</data>
   
 	<data name="quotaFailureInfo">
-		<value>The iFolder is full.  Click here to view the Synchronization Log.</value>
+		<value>Az iFolder megtelt. Ha meg szeretné tekinteni a szinkronizálási naplót, kattintson ide.</value>
 	</data>
   
 	<data name="policySizeFailure">
@@ -967,10 +967,10 @@
 	</data>
   
 	<data name="createAccount">
-		<value>To begin using iFolder, you must first set up an iFolder account.  Click here to add a new account.</value>
+		<value>Az iFolder használatának elkezdéséhez először létre kell hoznia egy iFolder-fiókot. Ha létre szeretné hozni az új fiókot, kattintson ide.</value>
 	</data>
   
 	<data name="createAccountTitle">
-		<value>Welcome to iFolder</value>
+		<value>iFolder – köszönti a program</value>
 	</data>
 </root>

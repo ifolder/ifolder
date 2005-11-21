@@ -143,7 +143,7 @@
 	</data>
   
 	<data name="defaultInterval.HelpString">
-		<value>Začiarknite, ak chcete pri vytváraní nového priečinku iFolder zobraziť potvrdzovacie dialógové okno</value>
+		<value>Určuje interval synchronizácie priečinkov iFolder.</value>
 	</data>
   
 	<data name="defaultInterval.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -3743,7 +3743,7 @@
 	</data>
   
 	<data name="removeAccount.HelpString">
-		<value>Kliknutím odstránite vybraté konto priečinku iFolder.</value>
+		<value>Kliknutím odstránite vybraté konto priečinka iFolder.</value>
 	</data>
   
 	<data name="removeAccount.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -3863,7 +3863,7 @@
 	</data>
   
 	<data name="addAccount.HelpString">
-		<value>Kliknutím vytvoríte nové konto priečinku iFolder.</value>
+		<value>Kliknutím vytvoríte nové konto priečinka iFolder.</value>
 	</data>
   
 	<data name="addAccount.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -4519,7 +4519,7 @@
 	</data>
   
 	<data name="iFolderAccountDisabled">
-		<value>Toto konto priečinku iFolder je zakázané. Požiadajte o pomoc správcu siete.</value>
+		<value>Toto konto priečinka iFolder je zakázané. Požiadajte o pomoc správcu siete.</value>
 	</data>
   
 	<data name="accountLockout">
@@ -4543,7 +4543,7 @@
 	</data>
   
 	<data name="PreferencesErrorTitle">
-		<value>Chyba preferencií priečinku iFolder.</value>
+		<value>Chyba preferencií priečinka iFolder</value>
 	</data>
   
 	<data name="saveSyncError">
@@ -4559,7 +4559,7 @@
 	</data>
   
 	<data name="accountErrorTitle">
-		<value>Chyba konta priečinku iFolder</value>
+		<value>Chyba konta priečinka iFolder</value>
 	</data>
   
 	<data name="saveAccountPrompt">
@@ -4575,7 +4575,7 @@
 	</data>
   
 	<data name="passwordErrorTitle">
-		<value>Chyba hesla priečinku iFolder</value>
+		<value>Chyba hesla priečinka iFolder</value>
 	</data>
   
 	<data name="updatePrompt">
@@ -4591,7 +4591,7 @@
 	</data>
   
 	<data name="iFolderMessageTitle">
-		<value>Správa priečinku iFolder</value>
+		<value>Správa priečinka iFolder</value>
 	</data>
   
 	<data name="statusLoggedIn">

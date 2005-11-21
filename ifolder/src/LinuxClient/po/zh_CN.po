@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ifolder-build 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-11-08 09:24-0700\n"
-"PO-Revision-Date: 2005-11-08 09:24-0700\n"
+"POT-Creation-Date: 2005-11-21 10:59-0700\n"
+"PO-Revision-Date: 2005-11-21 10:59-0700\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -20,14 +20,14 @@ msgid ""
 "The iFolder is full.\n"
 "\n"
 "Click <a href=\"ShowSyncLog\">here</a> to view the Synchronization Log."
-msgstr "The iFolder is full.\n\nClick <a href=\"ShowSyncLog\">here</a> to view the Synchronization Log."
+msgstr "iFolder 已满。\n\n单击<a href=\"ShowSyncLog\">此处</a>查看同步日志。"
 #: src/LinuxClient/application/iFolderApplication.cs:392 
 msgid ""
 "You have Read-only access to this iFolder.  Files that you place in this "
 "iFolder will not be synchronized.\n"
 "\n"
 "Click <a href=\"ShowSyncLog\">here</a> to view the Synchronization Log."
-msgstr "You have Read-only access to this iFolder.  Files that you place in this iFolder will not be synchronized.\n\nClick <a href=\"ShowSyncLog\">here</a> to view the Synchronization Log."
+msgstr "您对此 iFolder 只具有只读访问权限。将不会同步放置在此 iFolder 中的文件。\n\n单击<a href=\"ShowSyncLog\">此处</a>查看同步日志。"
 #: src/LinuxClient/application/iFolderApplication.cs:462 
 #, csharp-format
 msgid "Incomplete Synchronization: {0}"
@@ -42,7 +42,7 @@ msgid ""
 "{0} has invited you to participate in this shared iFolder.\n"
 "\n"
 "Click <a href=\"SetUpiFolder:{1}\">here</a> to set up this iFolder."
-msgstr "{0} has invited you to participate in this shared iFolder.\n\nClick <a href=\"SetUpiFolder:{1}\">here</a> to set up this iFolder."
+msgstr "{0} 已邀请您加入此共享 iFolder。\n\n单击<a href=\"SetUpiFolder:{1}\">此处</a>设置此 iFolder。"
 #: src/LinuxClient/application/iFolderApplication.cs:587 
 #, csharp-format
 msgid ""
@@ -51,7 +51,7 @@ msgid ""
 "Click <a href=\"ResolveiFolderConflicts:{0}\">here</a> to resolve the "
 "conflicts.\n"
 "What is a <a href=\"ShowConflictHelp\">conflict</a>?"
-msgstr "A conflict has been detected in this iFolder.\n\nClick <a href=\"ResolveiFolderConflicts:{0}\">here</a> to resolve the conflicts.\nWhat is a <a href=\"ShowConflictHelp\">conflict</a>?"
+msgstr "在此 iFolder 中检测到冲突。\n\n单击<a href=\"ResolveiFolderConflicts:{0}\">此处</a>解决冲突。\n什么是<a href=\"ShowConflictHelp\">冲突</a>？"
 #: src/LinuxClient/application/iFolderApplication.cs:646 
 msgid "New iFolder User"
 msgstr "新建 iFolder 用户"
@@ -61,13 +61,13 @@ msgid "{0} has joined the iFolder \"{1}\""
 msgstr "{0} 已加入 iFolder“{1}”"
 #: src/LinuxClient/application/iFolderApplication.cs:753 
 msgid "Welcome to iFolder"
-msgstr "Welcome to iFolder"
+msgstr "欢迎使用 iFolder"
 #: src/LinuxClient/application/iFolderApplication.cs:822 
 msgid "iFolder is starting"
-msgstr "iFolder is starting"
+msgstr "iFolder 正在启动"
 #: src/LinuxClient/application/iFolderApplication.cs:835 
 msgid "iFolder is shutting down"
-msgstr "iFolder is shutting down"
+msgstr "iFolder 正在关闭"
 #: src/LinuxClient/application/iFolderApplication.cs:875 
 #: src/LinuxClient/library/iFolderWindow.cs:285
 msgid "iFolders"
@@ -157,7 +157,7 @@ msgid "N/A"
 msgstr "无"
 #: src/LinuxClient/library/CreateDialog.cs:82 
 msgid "New iFolder</span>"
-msgstr "新建 iFolder</span>"
+msgstr "New iFolder</span>"
 #: src/LinuxClient/library/CreateDialog.cs:93 
 #: src/LinuxClient/library/iFolderWindow.cs:441
 #: src/LinuxClient/library/iFolderWindow.cs:2275
@@ -174,11 +174,11 @@ msgstr "位置"
 #: src/LinuxClient/library/CreateDialog.cs:138 
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:117
 msgid "Browse"
-msgstr "浏览..."
+msgstr "Browse"
 #: src/LinuxClient/library/CreateDialog.cs:158 
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:137
 msgid "Choose a folder..."
-msgstr "选择文件夹..."
+msgstr "Choose a folder..."
 #: src/LinuxClient/library/CreateDialog.cs:195 
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:173
 #: src/LinuxClient/library/iFolderAccessDialog.cs:114
@@ -216,7 +216,7 @@ msgid "File name:"
 msgstr "文件名"
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:60 
 msgid "Set Up iFolder: "
-msgstr "设置 iFolder："
+msgstr "设置 iFolder: "
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:73 
 msgid "Details:"
 msgstr "细节"
@@ -229,7 +229,7 @@ msgid ""
 msgstr "名称：{0}\n共享对象：{1}\n访问：{2}"
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:91 
 msgid "Choose a location on this computer for the iFolder."
-msgstr "在此计算机上为 iFolder 选择位置。"
+msgstr "Choose a location on this computer for the iFolder."
 #: src/LinuxClient/library/iFolderAccessDialog.cs:75 
 msgid "Access for Multiple Users"
 msgstr "多个用户访问"
@@ -376,7 +376,7 @@ msgstr "iFolder 服务器："
 #: src/LinuxClient/library/iFolderLoginDialog.cs:189 
 #: src/LinuxClient/library/iFolderLoginDialog.cs:235
 msgid "_Remember password"
-msgstr "记住口令"
+msgstr "保存口令"
 #: src/LinuxClient/library/iFolderLoginDialog.cs:245 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:324
 #: src/LinuxClient/library/PrefsAccountsPage.cs:630
@@ -418,7 +418,7 @@ msgid "minute(s)"
 msgstr "分钟"
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:158 
 msgid "Set _Quota:"
-msgstr "_设置额度："
+msgstr "设置定额："
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:337 
 msgid "Owner:"
 msgstr "拥有者"
@@ -585,13 +585,13 @@ msgid "Share _with..."
 msgstr "共享对象..."
 #: src/LinuxClient/library/iFolderWindow.cs:517 
 msgid "Resolve conflic_ts"
-msgstr "Resolve conflic_ts"
+msgstr "解决冲突"
 #: src/LinuxClient/library/iFolderWindow.cs:522 
 msgid "S_ynchronize now"
-msgstr "S_ynchronize now"
+msgstr "立即同步"
 #: src/LinuxClient/library/iFolderWindow.cs:527 
 msgid "_Revert to a Normal Folder"
-msgstr "恢复到常规文件夹"
+msgstr "恢复为常规文件夹"
 #: src/LinuxClient/library/iFolderWindow.cs:545 
 msgid "i_Folder"
 msgstr "iFolder"
@@ -637,7 +637,7 @@ msgid "Synchronize Now"
 msgstr "立即同步"
 #: src/LinuxClient/library/iFolderWindow.cs:1038 
 msgid "Revert to a Normal Folder"
-msgstr "恢复到常规文件夹"
+msgstr "恢复为常规文件夹"
 #: src/LinuxClient/library/iFolderWindow.cs:1048 
 #: src/LinuxClient/library/iFolderWindow.cs:1083
 msgid "Delete"
@@ -809,7 +809,7 @@ msgid ""
 msgstr "已指定的文件夹不存在。请选择现有的文件夹并重试。"
 #: src/LinuxClient/library/iFolderWindow.cs:2303 
 msgid "A folder with the same name already exists."
-msgstr "A folder with the same name already exists."
+msgstr "已存在同名文件夹。"
 #: src/LinuxClient/library/iFolderWindow.cs:2304 
 msgid ""
 "The location you selected already contains a folder with the same name as "
@@ -817,121 +817,121 @@ msgid ""
 msgstr "所选的位置已包含与此 iFolder 同名的文件夹。请选择一个不同的位置并重试。"
 #: src/LinuxClient/library/iFolderWindow.cs:2308 
 msgid "iFolders cannot exist at the drive level."
-msgstr "iFolders cannot exist at the drive level."
+msgstr "iFolder 不能存在于驱动器级别上。"
 #: src/LinuxClient/library/iFolderWindow.cs:2309 
 msgid ""
 "The location you selected is at the root of the drive.  Please select a "
 "location that is not at the root of a drive and try again."
-msgstr "The location you selected is at the root of the drive.  Please select a location that is not at the root of a drive and try again."
+msgstr "所选位置位于驱动器的根。请选择一个不在驱动器根的位置并重试。"
 #: src/LinuxClient/library/iFolderWindow.cs:2313 
 msgid "The selected location contains invalid characters."
-msgstr "The selected location contains invalid characters."
+msgstr "所选位置包含无效字符。"
 #: src/LinuxClient/library/iFolderWindow.cs:2314 
 msgid ""
 "The characters \\:*?\"<>| cannot be used in an iFolder. Please select a "
 "different location and try again."
-msgstr "The characters \\:*?\"<>| cannot be used in an iFolder. Please select a different location and try again."
+msgstr "在 iFolder 中不能使用字符 \\:*?\"<>|。请选择一个不同的位置并重试。"
 #: src/LinuxClient/library/iFolderWindow.cs:2318 
 msgid "The selected location is inside the iFolder data folder."
-msgstr "The selected location is inside the iFolder data folder."
+msgstr "所选位置位于 iFolder 数据文件夹内。"
 #: src/LinuxClient/library/iFolderWindow.cs:2319 
 msgid ""
 "The iFolder data folder is normally located in your home folder in the "
 "folder \".local/share\".  Please select a different location and try again."
-msgstr "The iFolder data folder is normally located in your home folder in the folder \".local/share\".  Please select a different location and try again."
+msgstr "iFolder 数据文件夹通常位于文件夹“.local/share”的主目录中。请选择一个不同的位置并重试。"
 #: src/LinuxClient/library/iFolderWindow.cs:2323 
 msgid "The selected location contains the iFolder data files."
-msgstr "The selected location contains the iFolder data files."
+msgstr "所选位置包含 iFolder 数据文件。"
 #: src/LinuxClient/library/iFolderWindow.cs:2324 
 msgid ""
 "The location you have selected contains the iFolder data files.  These are "
 "normally located in your home folder in the folder \".local/share\".  Please "
 "select a different location and try again."
-msgstr "The location you have selected contains the iFolder data files.  These are normally located in your home folder in the folder \".local/share\".  Please select a different location and try again."
+msgstr "所选位置包含 iFolder 数据文件。这些文件通常位于文件夹“.local/share”的主目录中。请选择一个不同的位置并重试。"
 #: src/LinuxClient/library/iFolderWindow.cs:2328 
 msgid "The selected location is on a network or non-physical drive."
-msgstr "The selected location is on a network or non-physical drive."
+msgstr "所选位置位于网络驱动器或非物理驱动器上"
 #: src/LinuxClient/library/iFolderWindow.cs:2329 
 msgid ""
 "iFolders must reside on a physical drive.  Please select a different "
 "location and try again."
-msgstr "iFolders must reside on a physical drive.  Please select a different location and try again."
+msgstr "iFolder 必须驻留在物理驱动器上。请选择一个不同的位置并重试。"
 #: src/LinuxClient/library/iFolderWindow.cs:2333 
 msgid "The selected location contains a system folder."
-msgstr "The selected location contains a system folder."
+msgstr "所选位置包含系统文件夹。"
 #: src/LinuxClient/library/iFolderWindow.cs:2334 
 msgid ""
 "System folders cannot be contained in an iFolder.  Please select a different "
 "location and try again."
-msgstr "System folders cannot be contained in an iFolder.  Please select a different location and try again."
+msgstr "系统文件夹不能包含在 iFolder 中。请选择一个不同的位置并重试。"
 #: src/LinuxClient/library/iFolderWindow.cs:2338 
 msgid "The selected location is a system drive."
-msgstr "The selected location is a system drive."
+msgstr "所选位置是系统驱动器。"
 #: src/LinuxClient/library/iFolderWindow.cs:2339 
 msgid ""
 "System drives cannot be contained in an iFolder.  Please select a different "
 "location and try again."
-msgstr "System drives cannot be contained in an iFolder.  Please select a different location and try again."
+msgstr "系统驱动器不能包含在 iFolder 中。请选择一个不同的位置并重试。"
 #: src/LinuxClient/library/iFolderWindow.cs:2343 
 msgid "The selected location includes the Windows folder."
-msgstr "The selected location includes the Windows folder."
+msgstr "所选位置包含 Windows 文件夹。"
 #: src/LinuxClient/library/iFolderWindow.cs:2344 
 msgid ""
 "The Windows folder cannot be contained in an iFolder.  Please select a "
 "different location and try again."
-msgstr "The Windows folder cannot be contained in an iFolder.  Please select a different location and try again."
+msgstr "Windows 文件夹不能包含在 iFolder 中。请选择一个不同的位置，然后重试。"
 #: src/LinuxClient/library/iFolderWindow.cs:2348 
 msgid "The selected location includes the Program Files folder."
-msgstr "The selected location includes the Program Files folder."
+msgstr "所选位置包含 Program Files 文件夹。"
 #: src/LinuxClient/library/iFolderWindow.cs:2349 
 msgid ""
 "The Program Files folder cannot be contained in an iFolder.  Please select a "
 "different location and try again."
-msgstr "The Program Files folder cannot be contained in an iFolder.  Please select a different location and try again."
+msgstr "Program Files 文件夹不能包含在 iFolder 中。请选择一个不同的位置并重试。"
 #: src/LinuxClient/library/iFolderWindow.cs:2353 
 msgid "The selected location does not exist."
-msgstr "The selected location does not exist."
+msgstr "所选位置不存在。"
 #: src/LinuxClient/library/iFolderWindow.cs:2354 
 msgid ""
 "iFolders can only be created from folders that exist.  Please select a "
 "different location and try again."
-msgstr "iFolders can only be created from folders that exist.  Please select a different location and try again."
+msgstr "只能从存在的文件夹创建 iFolder。请选择一个不同的位置并重试。"
 #: src/LinuxClient/library/iFolderWindow.cs:2358 
 msgid "You do not have access to read files in the selected location."
-msgstr "You do not have access to read files in the selected location."
+msgstr "您没有在所选位置读取文件的访问权限。"
 #: src/LinuxClient/library/iFolderWindow.cs:2359 
 #: src/LinuxClient/library/iFolderWindow.cs:2364
 msgid ""
 "iFolders can only be created from folders where you have access to read and "
 "write files.  Please select a different location and try again."
-msgstr "iFolders can only be created from folders where you have access to read and write files.  Please select a different location and try again."
+msgstr "只能在您具有读写文件访问权限的文件夹中创建 iFolder。请选择一个不同的位置并重试。"
 #: src/LinuxClient/library/iFolderWindow.cs:2363 
 msgid "You do not have access to write files in the selected location."
-msgstr "You do not have access to write files in the selected location."
+msgstr "您没有在所选位置写入文件的访问权限。"
 #: src/LinuxClient/library/iFolderWindow.cs:2368 
 msgid "The selected location already contains an iFolder."
-msgstr "The selected location already contains an iFolder."
+msgstr "所选位置已包含 iFolder。"
 #: src/LinuxClient/library/iFolderWindow.cs:2369 
 #: src/LinuxClient/library/iFolderWindow.cs:2374
 msgid ""
 "iFolders cannot exist inside other iFolders.  Please select a different "
 "location and try again."
-msgstr "iFolders cannot exist inside other iFolders.  Please select a different location and try again."
+msgstr "iFolder 不能存在于其它 iFolder 中。请选择一个不同的位置并重试。"
 #: src/LinuxClient/library/iFolderWindow.cs:2373 
 msgid "The selected location is inside another iFolder."
-msgstr "The selected location is inside another iFolder."
+msgstr "所选位置在另一个 iFolder 中。"
 #: src/LinuxClient/library/LogWindow.cs:58 
 msgid "iFolder Synchronization Log"
 msgstr "iFolder 同步日志"
 #: src/LinuxClient/library/LogWindow.cs:152 
 msgid "Save"
-msgstr "保存"
+msgstr "Save"
 #: src/LinuxClient/library/LogWindow.cs:153 
 msgid "Save the synchronization log"
 msgstr "保存同步日志"
 #: src/LinuxClient/library/LogWindow.cs:157 
 msgid "Clear"
-msgstr "清除"
+msgstr "Clear"
 #: src/LinuxClient/library/LogWindow.cs:158 
 msgid "Clear the synchronization log"
 msgstr "清除同步日志。"
@@ -1000,7 +1000,7 @@ msgstr "此计算机上的磁盘空间不足阻止同步：{0}"
 #: src/LinuxClient/library/LogWindow.cs:427 
 #, csharp-format
 msgid "Read-only iFolder prevented synchronization: {0}"
-msgstr "Read-only iFolder prevented synchronization: {0}"
+msgstr "只读 iFolder 阻止同步：{0}"
 #: src/LinuxClient/library/LogWindow.cs:432 
 #, csharp-format
 msgid "iFolder failed synchronization: {0}"
@@ -1042,7 +1042,7 @@ msgid "iFolder Preferences"
 msgstr "iFolder 自选设置"
 #: src/LinuxClient/library/PreferencesWindow.cs:111 
 msgid "Accou_nts"
-msgstr "Accou_nts"
+msgstr "帐户"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:173 
 msgid "System Name"
 msgstr "系统名"
@@ -1060,7 +1060,7 @@ msgid "User Name:"
 msgstr "用户名"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:292 
 msgid "Remember _password"
-msgstr "记住口令"
+msgstr "保存口令"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:300 
 msgid "_Enable account"
 msgstr "启用帐户"
@@ -1084,7 +1084,7 @@ msgstr "是否丢失当前设置？"
 msgid ""
 "You are currently creating a new account.  By selecting a different account "
 "you cancel the operation."
-msgstr "You are currently creating a new account.  By selecting a different account you cancel the operation."
+msgstr "您当前正在创建一个新帐户。可通过选择其它帐户来取消该操作。"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:671 
 msgid "Unable to log out of the iFolder Server"
 msgstr "无法注销 iFolder 服务器"
@@ -1142,7 +1142,7 @@ msgstr "您还能登录 {0} 次。"
 msgid ""
 "You are currently creating a new account.  By closing the window or changing "
 "to a different page you cancel the operation."
-msgstr "You are currently creating a new account.  By closing the window or changing to a different page you cancel the operation."
+msgstr "您当前正在创建一个新帐户。可通过关闭窗口或更改为其它页面来取消该操作。"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:102 
 msgid "Application"
 msgstr "应用程序"
@@ -1159,7 +1159,7 @@ msgid "Notification"
 msgstr "通知"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:163 
 msgid "Notify of share_d iFolders"
-msgstr "Notify of share_d iFolders"
+msgstr "共享 iFolder 通知"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:170 
 msgid "Notify of conflic_ts"
 msgstr "冲突通知"
@@ -1168,7 +1168,7 @@ msgid "Notify when a _user joins"
 msgstr "用户加入时通知"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:219 
 msgid "Automatically S_ynchronize iFolders"
-msgstr "Automatically S_ynchronize iFolders"
+msgstr "自动同步 iFolder"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:229 
 msgid "Synchronize iFolders Every"
 msgstr "同步 iFolder 间隔"
@@ -1186,12 +1186,12 @@ msgid "days"
 msgstr "天"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:503 
 msgid "Synchronization Interval Limit"
-msgstr "Synchronization Interval Limit"
+msgstr "同步间隔限制"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:504 
 msgid ""
 "The synchronization interval cannot be set to less than one minute.  It was "
 "automatically changed to 60 seconds."
-msgstr "The synchronization interval cannot be set to less than one minute.  It was automatically changed to 60 seconds."
+msgstr "不能将同步间隔设置为小于 1 分钟。已将其自动更改为 60 秒。"
 #: src/LinuxClient/library/RemoveAccountDialog.cs:61 
 msgid "Remove this iFolder account?"
 msgstr "是否去除此 iFolder 帐户？"
@@ -1216,10 +1216,10 @@ msgstr "从服务器中去除 iFolder 将删除服务器中储存的文件。您
 #: src/LinuxClient/library/Util.cs:167 
 #, csharp-format
 msgid "Error displaying help file \"{0}\""
-msgstr "Error displaying help file \"{0}\""
+msgstr "显示帮助文件“{0}”时出错"
 #: src/LinuxClient/library/Util.cs:168 
 msgid "iFolder could not open the default web browser to show the help file."
-msgstr "iFolder could not open the default web browser to show the help file."
+msgstr "iFolder 无法打开默认万维网浏览器以显示帮助文件。"
 #: src/LinuxClient/library/Util.cs:180 
 msgid "iFolder 3 Team"
 msgstr "iFolder 3 小组"

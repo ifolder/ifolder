@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ifolder-build 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-11-08 09:24-0700\n"
-"PO-Revision-Date: 2005-11-08 09:24-0700\n"
+"POT-Creation-Date: 2005-11-21 10:59-0700\n"
+"PO-Revision-Date: 2005-11-21 10:59-0700\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -20,14 +20,14 @@ msgid ""
 "The iFolder is full.\n"
 "\n"
 "Click <a href=\"ShowSyncLog\">here</a> to view the Synchronization Log."
-msgstr "The iFolder is full.\n\nClick <a href=\"ShowSyncLog\">here</a> to view the Synchronization Log."
+msgstr "La iFolder está llena.\n\nHaga clic <a href=\"ShowSyncLog\">aquí</a> para ver el registro de sincronizaciones."
 #: src/LinuxClient/application/iFolderApplication.cs:392 
 msgid ""
 "You have Read-only access to this iFolder.  Files that you place in this "
 "iFolder will not be synchronized.\n"
 "\n"
 "Click <a href=\"ShowSyncLog\">here</a> to view the Synchronization Log."
-msgstr "You have Read-only access to this iFolder.  Files that you place in this iFolder will not be synchronized.\n\nClick <a href=\"ShowSyncLog\">here</a> to view the Synchronization Log."
+msgstr "Tiene acceso de sólo lectura a la iFolder.  Los archivos que coloque en esta iFolder no se sincronizarán.\n\nHaga clic <a href=\"ShowSyncLog\">aquí/a> para ver el registro de sincronizaciones."
 #: src/LinuxClient/application/iFolderApplication.cs:462 
 #, csharp-format
 msgid "Incomplete Synchronization: {0}"
@@ -42,7 +42,7 @@ msgid ""
 "{0} has invited you to participate in this shared iFolder.\n"
 "\n"
 "Click <a href=\"SetUpiFolder:{1}\">here</a> to set up this iFolder."
-msgstr "{0} has invited you to participate in this shared iFolder.\n\nClick <a href=\"SetUpiFolder:{1}\">here</a> to set up this iFolder."
+msgstr "{0} le ha invitado a participar en la iFolder compartida.\n\nHaga clic <a href=\"SetUpiFolder:{1}\">aquí</a> para configurarla."
 #: src/LinuxClient/application/iFolderApplication.cs:587 
 #, csharp-format
 msgid ""
@@ -51,7 +51,7 @@ msgid ""
 "Click <a href=\"ResolveiFolderConflicts:{0}\">here</a> to resolve the "
 "conflicts.\n"
 "What is a <a href=\"ShowConflictHelp\">conflict</a>?"
-msgstr "A conflict has been detected in this iFolder.\n\nClick <a href=\"ResolveiFolderConflicts:{0}\">here</a> to resolve the conflicts.\nWhat is a <a href=\"ShowConflictHelp\">conflict</a>?"
+msgstr "Se ha detectado un conflicto en la iFolder.\n\nHaga clic <a href=\"ResolveiFolderConflicts:{0}\">aquí</a> para resolverlo.\n¿Qué es un <a href=\"ShowConflictHelp\">conflicto</a>?"
 #: src/LinuxClient/application/iFolderApplication.cs:646 
 msgid "New iFolder User"
 msgstr "Nuevo usuario de la carpeta de iFolder"
@@ -61,13 +61,13 @@ msgid "{0} has joined the iFolder \"{1}\""
 msgstr "{0} se ha unido a la iFolder \"{1}\""
 #: src/LinuxClient/application/iFolderApplication.cs:753 
 msgid "Welcome to iFolder"
-msgstr "Welcome to iFolder"
+msgstr "Bienvenido a iFolder"
 #: src/LinuxClient/application/iFolderApplication.cs:822 
 msgid "iFolder is starting"
-msgstr "iFolder is starting"
+msgstr "iFolder se está iniciando"
 #: src/LinuxClient/application/iFolderApplication.cs:835 
 msgid "iFolder is shutting down"
-msgstr "iFolder is shutting down"
+msgstr "iFolder se está apagando"
 #: src/LinuxClient/application/iFolderApplication.cs:875 
 #: src/LinuxClient/library/iFolderWindow.cs:285
 msgid "iFolders"
@@ -157,7 +157,7 @@ msgid "N/A"
 msgstr "N/D"
 #: src/LinuxClient/library/CreateDialog.cs:82 
 msgid "New iFolder</span>"
-msgstr "Nueva iFolder</span>"
+msgstr "New iFolder</span>"
 #: src/LinuxClient/library/CreateDialog.cs:93 
 #: src/LinuxClient/library/iFolderWindow.cs:441
 #: src/LinuxClient/library/iFolderWindow.cs:2275
@@ -174,11 +174,11 @@ msgstr "Ubicación:"
 #: src/LinuxClient/library/CreateDialog.cs:138 
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:117
 msgid "Browse"
-msgstr "Examinar"
+msgstr "Browse"
 #: src/LinuxClient/library/CreateDialog.cs:158 
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:137
 msgid "Choose a folder..."
-msgstr "Seleccione una carpeta..."
+msgstr "Choose a folder..."
 #: src/LinuxClient/library/CreateDialog.cs:195 
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:173
 #: src/LinuxClient/library/iFolderAccessDialog.cs:114
@@ -229,7 +229,7 @@ msgid ""
 msgstr "Nombre: {0}\nCompartida por: {1}\nAcceso: {2}"
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:91 
 msgid "Choose a location on this computer for the iFolder."
-msgstr "Seleccione una ubicación en el equipo para iFolder."
+msgstr "Choose a location on this computer for the iFolder."
 #: src/LinuxClient/library/iFolderAccessDialog.cs:75 
 msgid "Access for Multiple Users"
 msgstr "Acceso para varios usuarios"
@@ -418,7 +418,7 @@ msgid "minute(s)"
 msgstr "minuto(s)"
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:158 
 msgid "Set _Quota:"
-msgstr "Definir cuota:"
+msgstr "Definir _cuota:"
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:337 
 msgid "Owner:"
 msgstr "Propietario:"
@@ -585,13 +585,13 @@ msgid "Share _with..."
 msgstr "Compartir con..."
 #: src/LinuxClient/library/iFolderWindow.cs:517 
 msgid "Resolve conflic_ts"
-msgstr "Resolve conflic_ts"
+msgstr "Resolver conflic_tos"
 #: src/LinuxClient/library/iFolderWindow.cs:522 
 msgid "S_ynchronize now"
-msgstr "S_ynchronize now"
+msgstr "S_incronizar ahora"
 #: src/LinuxClient/library/iFolderWindow.cs:527 
 msgid "_Revert to a Normal Folder"
-msgstr "Revertir a una carpeta normal"
+msgstr "_Revertir a una carpeta normal"
 #: src/LinuxClient/library/iFolderWindow.cs:545 
 msgid "i_Folder"
 msgstr "i_Folder"
@@ -809,7 +809,7 @@ msgid ""
 msgstr "La carpeta que se ha especificado no existe. Seleccione una carpeta existente e inténtelo de nuevo."
 #: src/LinuxClient/library/iFolderWindow.cs:2303 
 msgid "A folder with the same name already exists."
-msgstr "A folder with the same name already exists."
+msgstr "Ya existe una carpeta con el mismo nombre."
 #: src/LinuxClient/library/iFolderWindow.cs:2304 
 msgid ""
 "The location you selected already contains a folder with the same name as "
@@ -817,121 +817,121 @@ msgid ""
 msgstr "La ubicación seleccionada ya contiene una carpeta con el mismo nombre que esta iFolder. Seleccione una ubicación diferente e inténtelo de nuevo."
 #: src/LinuxClient/library/iFolderWindow.cs:2308 
 msgid "iFolders cannot exist at the drive level."
-msgstr "iFolders cannot exist at the drive level."
+msgstr "No es posible que haya carpetas iFolder en el nivel de la unidad."
 #: src/LinuxClient/library/iFolderWindow.cs:2309 
 msgid ""
 "The location you selected is at the root of the drive.  Please select a "
 "location that is not at the root of a drive and try again."
-msgstr "The location you selected is at the root of the drive.  Please select a location that is not at the root of a drive and try again."
+msgstr "La ubicación seleccionada está en la raíz de la unidad. Seleccione una ubicación que no se encuentre en la raíz de la unidad e inténtelo de nuevo."
 #: src/LinuxClient/library/iFolderWindow.cs:2313 
 msgid "The selected location contains invalid characters."
-msgstr "The selected location contains invalid characters."
+msgstr "La ubicación seleccionada contiene caracteres no válidos."
 #: src/LinuxClient/library/iFolderWindow.cs:2314 
 msgid ""
 "The characters \\:*?\"<>| cannot be used in an iFolder. Please select a "
 "different location and try again."
-msgstr "The characters \\:*?\"<>| cannot be used in an iFolder. Please select a different location and try again."
+msgstr "Los caracteres \\:*?\"<>| no pueden utilizarse en una carpeta iFolder. Seleccione una ubicación diferente e inténtelo de nuevo."
 #: src/LinuxClient/library/iFolderWindow.cs:2318 
 msgid "The selected location is inside the iFolder data folder."
-msgstr "The selected location is inside the iFolder data folder."
+msgstr "La ubicación seleccionada se encuentra en la carpeta de datos iFolder."
 #: src/LinuxClient/library/iFolderWindow.cs:2319 
 msgid ""
 "The iFolder data folder is normally located in your home folder in the "
 "folder \".local/share\".  Please select a different location and try again."
-msgstr "The iFolder data folder is normally located in your home folder in the folder \".local/share\".  Please select a different location and try again."
+msgstr "La carpeta de datos iFolder se encuentra normalmente en su carpeta personal en la carpeta \".local/share\". Seleccione una ubicación diferente e inténtelo de nuevo."
 #: src/LinuxClient/library/iFolderWindow.cs:2323 
 msgid "The selected location contains the iFolder data files."
-msgstr "The selected location contains the iFolder data files."
+msgstr "La ubicación seleccionada contiene los archivos de datos iFolder."
 #: src/LinuxClient/library/iFolderWindow.cs:2324 
 msgid ""
 "The location you have selected contains the iFolder data files.  These are "
 "normally located in your home folder in the folder \".local/share\".  Please "
 "select a different location and try again."
-msgstr "The location you have selected contains the iFolder data files.  These are normally located in your home folder in the folder \".local/share\".  Please select a different location and try again."
+msgstr "La ubicación seleccionada contiene los archivos de datos iFolder. Estos archivos se encuentran normalmente en la carpeta personal en la carpeta \".local/share\". Seleccione una ubicación diferente e inténtelo de nuevo."
 #: src/LinuxClient/library/iFolderWindow.cs:2328 
 msgid "The selected location is on a network or non-physical drive."
-msgstr "The selected location is on a network or non-physical drive."
+msgstr "La ubicación seleccionada está en una red o en una unidad no física."
 #: src/LinuxClient/library/iFolderWindow.cs:2329 
 msgid ""
 "iFolders must reside on a physical drive.  Please select a different "
 "location and try again."
-msgstr "iFolders must reside on a physical drive.  Please select a different location and try again."
+msgstr "Las carpetas iFolder deben residir en una unidad física. Seleccione una ubicación diferente e inténtelo de nuevo."
 #: src/LinuxClient/library/iFolderWindow.cs:2333 
 msgid "The selected location contains a system folder."
-msgstr "The selected location contains a system folder."
+msgstr "La ubicación seleccionada contiene una carpeta del sistema."
 #: src/LinuxClient/library/iFolderWindow.cs:2334 
 msgid ""
 "System folders cannot be contained in an iFolder.  Please select a different "
 "location and try again."
-msgstr "System folders cannot be contained in an iFolder.  Please select a different location and try again."
+msgstr "Una carpeta iFolder no puede contener carpetas del sistema. Seleccione una ubicación diferente e inténtelo de nuevo."
 #: src/LinuxClient/library/iFolderWindow.cs:2338 
 msgid "The selected location is a system drive."
-msgstr "The selected location is a system drive."
+msgstr "La ubicación seleccionada es una unidad del sistema."
 #: src/LinuxClient/library/iFolderWindow.cs:2339 
 msgid ""
 "System drives cannot be contained in an iFolder.  Please select a different "
 "location and try again."
-msgstr "System drives cannot be contained in an iFolder.  Please select a different location and try again."
+msgstr "Una carpeta iFolder no puede contener unidades del sistema. Seleccione una ubicación diferente e inténtelo de nuevo."
 #: src/LinuxClient/library/iFolderWindow.cs:2343 
 msgid "The selected location includes the Windows folder."
-msgstr "The selected location includes the Windows folder."
+msgstr "La ubicación seleccionada incluye la carpeta de Windows."
 #: src/LinuxClient/library/iFolderWindow.cs:2344 
 msgid ""
 "The Windows folder cannot be contained in an iFolder.  Please select a "
 "different location and try again."
-msgstr "The Windows folder cannot be contained in an iFolder.  Please select a different location and try again."
+msgstr "Una carpeta iFolder no puede contener la carpeta de Windows. Seleccione una ubicación diferente e inténtelo de nuevo."
 #: src/LinuxClient/library/iFolderWindow.cs:2348 
 msgid "The selected location includes the Program Files folder."
-msgstr "The selected location includes the Program Files folder."
+msgstr "La ubicación seleccionada incluye la carpeta Archivos de programa."
 #: src/LinuxClient/library/iFolderWindow.cs:2349 
 msgid ""
 "The Program Files folder cannot be contained in an iFolder.  Please select a "
 "different location and try again."
-msgstr "The Program Files folder cannot be contained in an iFolder.  Please select a different location and try again."
+msgstr "Una carpeta iFolder no puede contener la carpeta Archivos de programa. Seleccione una ubicación diferente e inténtelo de nuevo."
 #: src/LinuxClient/library/iFolderWindow.cs:2353 
 msgid "The selected location does not exist."
-msgstr "The selected location does not exist."
+msgstr "La ubicación seleccionada no existe."
 #: src/LinuxClient/library/iFolderWindow.cs:2354 
 msgid ""
 "iFolders can only be created from folders that exist.  Please select a "
 "different location and try again."
-msgstr "iFolders can only be created from folders that exist.  Please select a different location and try again."
+msgstr "Las carpetas iFolder sólo se pueden crear a partir de carpetas ya existentes. Seleccione una ubicación diferente e inténtelo de nuevo."
 #: src/LinuxClient/library/iFolderWindow.cs:2358 
 msgid "You do not have access to read files in the selected location."
-msgstr "You do not have access to read files in the selected location."
+msgstr "No dispone de acceso para leer archivos en la ubicación seleccionada."
 #: src/LinuxClient/library/iFolderWindow.cs:2359 
 #: src/LinuxClient/library/iFolderWindow.cs:2364
 msgid ""
 "iFolders can only be created from folders where you have access to read and "
 "write files.  Please select a different location and try again."
-msgstr "iFolders can only be created from folders where you have access to read and write files.  Please select a different location and try again."
+msgstr "Las carpetas iFolder sólo se pueden crear a partir de carpetas en las que tenga acceso para leer y escribir archivos. Seleccione una ubicación diferente e inténtelo de nuevo."
 #: src/LinuxClient/library/iFolderWindow.cs:2363 
 msgid "You do not have access to write files in the selected location."
-msgstr "You do not have access to write files in the selected location."
+msgstr "No dispone de acceso para escribir archivos en la ubicación seleccionada."
 #: src/LinuxClient/library/iFolderWindow.cs:2368 
 msgid "The selected location already contains an iFolder."
-msgstr "The selected location already contains an iFolder."
+msgstr "La ubicación seleccionada ya contiene una carpeta iFolder."
 #: src/LinuxClient/library/iFolderWindow.cs:2369 
 #: src/LinuxClient/library/iFolderWindow.cs:2374
 msgid ""
 "iFolders cannot exist inside other iFolders.  Please select a different "
 "location and try again."
-msgstr "iFolders cannot exist inside other iFolders.  Please select a different location and try again."
+msgstr "Una carpeta iFolder no puede contener otras carpetas iFolder. Seleccione una ubicación diferente e inténtelo de nuevo."
 #: src/LinuxClient/library/iFolderWindow.cs:2373 
 msgid "The selected location is inside another iFolder."
-msgstr "The selected location is inside another iFolder."
+msgstr "La ubicación seleccionada está dentro de otra iFolder."
 #: src/LinuxClient/library/LogWindow.cs:58 
 msgid "iFolder Synchronization Log"
 msgstr "Registro de sincronizaciones iFolder"
 #: src/LinuxClient/library/LogWindow.cs:152 
 msgid "Save"
-msgstr "Guardar"
+msgstr "Save"
 #: src/LinuxClient/library/LogWindow.cs:153 
 msgid "Save the synchronization log"
 msgstr "Guardar el registro de sincronización"
 #: src/LinuxClient/library/LogWindow.cs:157 
 msgid "Clear"
-msgstr "Borrar"
+msgstr "Clear"
 #: src/LinuxClient/library/LogWindow.cs:158 
 msgid "Clear the synchronization log"
 msgstr "Borrar el registro de sincronización"
@@ -1000,7 +1000,7 @@ msgstr "La falta de espacio en disco en este equipo no ha permitido la sincroniz
 #: src/LinuxClient/library/LogWindow.cs:427 
 #, csharp-format
 msgid "Read-only iFolder prevented synchronization: {0}"
-msgstr "Read-only iFolder prevented synchronization: {0}"
+msgstr "La iFolder de sólo lectura no ha permitido la sincronización: {0}"
 #: src/LinuxClient/library/LogWindow.cs:432 
 #, csharp-format
 msgid "iFolder failed synchronization: {0}"
@@ -1042,7 +1042,7 @@ msgid "iFolder Preferences"
 msgstr "Preferencias de iFolder"
 #: src/LinuxClient/library/PreferencesWindow.cs:111 
 msgid "Accou_nts"
-msgstr "Accou_nts"
+msgstr "Cuen_tas"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:173 
 msgid "System Name"
 msgstr "Nombre del sistema"
@@ -1060,7 +1060,7 @@ msgid "User Name:"
 msgstr "Usuario"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:292 
 msgid "Remember _password"
-msgstr "Recordar contraseña"
+msgstr "Recordar _contraseña"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:300 
 msgid "_Enable account"
 msgstr "Habilitar la cuenta"
@@ -1084,7 +1084,7 @@ msgstr "¿Desea ignorar los ajustes actuales?"
 msgid ""
 "You are currently creating a new account.  By selecting a different account "
 "you cancel the operation."
-msgstr "You are currently creating a new account.  By selecting a different account you cancel the operation."
+msgstr "En estos momentos está creando una nueva cuenta. Para cancelar la operación, seleccione una cuenta diferente."
 #: src/LinuxClient/library/PrefsAccountsPage.cs:671 
 msgid "Unable to log out of the iFolder Server"
 msgstr "No es posible salir del servidor iFolder"
@@ -1142,7 +1142,7 @@ msgstr "Dispone de {0} entradas de gracia."
 msgid ""
 "You are currently creating a new account.  By closing the window or changing "
 "to a different page you cancel the operation."
-msgstr "You are currently creating a new account.  By closing the window or changing to a different page you cancel the operation."
+msgstr "En estos momentos está creando una nueva cuenta. Para cancelar la operación, cierre la ventana o cambie a una página diferente."
 #: src/LinuxClient/library/PrefsGeneralPage.cs:102 
 msgid "Application"
 msgstr "Aplicación"
@@ -1159,7 +1159,7 @@ msgid "Notification"
 msgstr "Notificación"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:163 
 msgid "Notify of share_d iFolders"
-msgstr "Notify of share_d iFolders"
+msgstr "Notificar carpetas iFolder compartida_s"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:170 
 msgid "Notify of conflic_ts"
 msgstr "Notificación de conflictos"
@@ -1168,7 +1168,7 @@ msgid "Notify when a _user joins"
 msgstr "Notificar cuando se una un usuario"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:219 
 msgid "Automatically S_ynchronize iFolders"
-msgstr "Automatically S_ynchronize iFolders"
+msgstr "S_incronizar automáticamente carpetas iFolder"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:229 
 msgid "Synchronize iFolders Every"
 msgstr "Sincronizar carpetas iFolder cada"
@@ -1186,12 +1186,12 @@ msgid "days"
 msgstr "días"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:503 
 msgid "Synchronization Interval Limit"
-msgstr "Synchronization Interval Limit"
+msgstr "Límite de intervalo de sincronización"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:504 
 msgid ""
 "The synchronization interval cannot be set to less than one minute.  It was "
 "automatically changed to 60 seconds."
-msgstr "The synchronization interval cannot be set to less than one minute.  It was automatically changed to 60 seconds."
+msgstr "El intervalo de sincronización no puede ser inferior a un minuto. Se ha cambiado automáticamente a 60 segundos."
 #: src/LinuxClient/library/RemoveAccountDialog.cs:61 
 msgid "Remove this iFolder account?"
 msgstr "¿Desea eliminar esta cuenta iFolder?"
@@ -1216,10 +1216,10 @@ msgstr "Si elimina carpetas iFolder del servidor, se borrarán los archivos alma
 #: src/LinuxClient/library/Util.cs:167 
 #, csharp-format
 msgid "Error displaying help file \"{0}\""
-msgstr "Error displaying help file \"{0}\""
+msgstr "Error al mostrar el archivo de ayuda \"{0}\""
 #: src/LinuxClient/library/Util.cs:168 
 msgid "iFolder could not open the default web browser to show the help file."
-msgstr "iFolder could not open the default web browser to show the help file."
+msgstr "iFolder no ha podido abrir el navegador Web por defecto para mostrar el archivo de ayuda."
 #: src/LinuxClient/library/Util.cs:180 
 msgid "iFolder 3 Team"
 msgstr "Equipo de iFolder 3"

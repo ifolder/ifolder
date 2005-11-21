@@ -1175,7 +1175,7 @@
 	</data>
   
 	<data name="pathExistsError">
-		<value>Umístění, které jste vybrali, již obsahuje složku se stejným názvem jako je tato složka iFolder.  Vyberte prosím jiné umístění a zkuste to znovu.</value>
+		<value>Umístění, které jste vybrali, již obsahuje složku se stejným názvem, jako má tato složka iFolder.  Vyberte prosím jiné umístění a zkuste to znovu.</value>
 	</data>
   
 	<data name="pathInStoreError">
@@ -1195,7 +1195,7 @@
 	</data>
   
 	<data name="networkPath">
-		<value>Vybrané umístění je na síti nebo na jiné než fyzické jednotce.  Složky iFolder musí být umístěny na fyzické jednotce.  Vyberte prosím jiné umístění a zkuste to znovu.</value>
+		<value>Vybrané umístění je v síti nebo na jiné než fyzické jednotce.  Složky iFolder musí být umístěny na fyzické jednotce.  Vyberte prosím jiné umístění a zkuste to znovu.</value>
 	</data>
   
 	<data name="selectLocation">

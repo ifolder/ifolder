@@ -987,7 +987,7 @@
 	</data>
   
 	<data name="invalidCharsError">
-		<value>Vybrané umístění obsahuje neplatné znaky.  Znaky \:*?"&lt;&gt;| nelze použít v aplikaci iFolder.  Vyberte prosím jiné umístění a zkuste to znovu.</value>
+		<value>Vybrané umístění obsahuje neplatné znaky.  Znaky \:*?"&lt;&gt;| nelze v umístění složky iFolder použít.  Vyberte jiné umístění a zkuste to znovu.</value>
 	</data>
   
 	<data name="pathInStoreError">
@@ -1027,6 +1027,6 @@
 	</data>
   
 	<data name="networkPathError">
-		<value>Vybrané umístění je na síti nebo na jiné než fyzické jednotce.  Složky iFolder musí být umístěny na fyzické jednotce.  Vyberte prosím jiné umístění a zkuste to znovu.</value>
+		<value>Vybrané umístění je v síti nebo na jiné než fyzické jednotce.  Složky iFolder musí být umístěny na fyzické jednotce.  Vyberte prosím jiné umístění a zkuste to znovu.</value>
 	</data>
 </root>

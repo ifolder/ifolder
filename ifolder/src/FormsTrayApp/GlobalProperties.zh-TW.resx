@@ -2019,7 +2019,7 @@
 	</data>
   
 	<data name="menuViewAccounts.Text">
-		<value>帳戶(&amp;N)</value>
+		<value>帳戶(&amp;A)</value>
 	</data>
   
 	<data name="menuViewAccounts.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2047,7 +2047,7 @@
 	</data>
   
 	<data name="menuViewLog.Text">
-		<value>同步化記錄</value>
+		<value>同步化記錄(&amp;L)</value>
 	</data>
   
 	<data name="menuViewLog.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2075,7 +2075,7 @@
 	</data>
   
 	<data name="menuEdit.Text">
-		<value>編輯</value>
+		<value>編輯(&amp;E)</value>
 	</data>
   
 	<data name="menuEdit.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2103,7 +2103,7 @@
 	</data>
   
 	<data name="menuEditPrefs.Text">
-		<value>優先設定</value>
+		<value>優先設定(&amp;P)</value>
 	</data>
   
 	<data name="menuEditPrefs.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
