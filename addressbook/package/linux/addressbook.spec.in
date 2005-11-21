@@ -36,7 +36,7 @@ Vendor       : <unknown>
 Packager     : <unknown>
 BuildRoot    : %{_tmppath}/%{name}-%{version}
 
-Requires     : simias >= 1.0
+Requires     : simias >= @VERSION@
 Requires     : mono-core >= 1.0
 Requires     : mono-data >= 1.0
 Requires     : mono-remoting >= 1.0
