@@ -225,7 +225,7 @@ namespace Novell.iFolder
 					ifdata = iFolderData.GetData(simiasManager);
 
 					simiasEventBroker = SimiasEventBroker.GetSimiasEventBroker(simiasManager);
-					domainController = DomainController.GetDomainController(simiasManager);
+					domainController = DomainController.GetDomainController();
 				}
 				catch(Exception e)
 				{
@@ -269,6 +269,8 @@ namespace Novell.iFolder
 
 		private void ReLogin(string domainID)
 		{
+			if (LoginDialog != Util.CurrentModalWindow) return;
+
 			if (LoginDialog == null)
 			{
 				DomainInformation dom = domainController.GetDomain(domainID);
@@ -276,6 +278,13 @@ namespace Novell.iFolder
 				{
 					LoginDialog =
 						new iFolderLoginDialog(dom.ID, dom.Name, dom.MemberName);
+					
+					if (!Util.RegisterModalWindow(LoginDialog))
+					{
+						LoginDialog.Destroy();
+						LoginDialog = null;
+						return;
+					}
 
 					LoginDialog.Response +=
 						new ResponseHandler(OnReLoginDialogResponse);
@@ -875,6 +884,23 @@ namespace Novell.iFolder
 				}
 
 				return;
+			}
+			
+			// If a modal window is active in the client, don't allow anything
+			// else to be shown.  When the user clicks on the tray app icon,
+			// just force the modal window to be presented to the user.
+			if (Util.CurrentModalWindow != null)
+			{
+Console.WriteLine("Modal present");
+				// Put a try/catch around this just in case the window was
+				// suddenly closed and we end up with a object reference
+				// exception.
+				try
+				{
+					Util.CurrentModalWindow.Present();
+					return;
+				}
+				catch{}
 			}
 
 			switch(args.Event.Button)

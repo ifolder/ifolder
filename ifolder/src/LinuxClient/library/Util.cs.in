@@ -65,6 +65,106 @@ namespace Novell.iFolder
 		private static SimiasWebService		simws			= null;
 		
 		private static QuitiFolderDelegate quitiFolderDelegate = null;
+		
+		///
+		/// The following variables/properties are needed to keep track of the
+		/// application modal dialogs.  This allows us to coordinate the modal
+		/// dialogs between the main application and the TrayIcon running in
+		/// the Notification Area.  Without this, the user can end up feeling
+		/// "stuck" without knowing why.
+		///
+		private static Gtk.Window currentModalWindow = null;
+		private static object modalWindowLockObject = new object();
+		
+		public static Gtk.Window CurrentModalWindow
+		{
+			get
+			{
+				return currentModalWindow;
+			}
+		}
+
+		/// <summary>
+		/// This should be called by any process in the iFolder Client
+		/// immediately after creating a Dialog/Window that should be made
+		/// modal.
+		///
+		/// It will return 'true' if the window was successfully registered
+		/// and allowed to be modal.  If 'false' is returned the caller should
+		/// call Util.CurrentModalWindow.Present() if appropriate.
+		/// </summary>
+		public static bool RegisterModalWindow(Gtk.Window potentialModalWindow)
+		{
+			lock(modalWindowLockObject)
+			{
+				if (currentModalWindow != null)
+				{
+Console.WriteLine("Util.RegisterModalWindow() returning false");
+					return false;
+				}
+				
+				currentModalWindow = potentialModalWindow;
+				
+				// Register an event listener for when the Dialog/Window is
+				// closed so we can clean up our reference and allow other
+				// modal dialogs to exist.
+				if (potentialModalWindow is Gtk.Dialog)
+				{
+Console.WriteLine("Util.RegisterModalWindow: Registering a dialog");
+					((Gtk.Dialog)potentialModalWindow).Close +=
+						new EventHandler(OnModalDialogClosed);
+					((Gtk.Dialog)potentialModalWindow).Response +=
+						new ResponseHandler(OnModalDialogResponse);
+				}		
+				else
+				{
+Console.WriteLine("Util.RegisterModalWindow: Registering a window");
+					potentialModalWindow.DeleteEvent +=
+						new DeleteEventHandler(OnModalWindowDeleted);
+				}
+
+				potentialModalWindow.Destroyed +=
+					new EventHandler(OnModalWindowDestroyed);
+			}
+			
+			return true;
+		}
+		
+		private static void OnModalDialogClosed(object o, EventArgs args)
+		{
+Console.WriteLine("Modal dialog closed");
+			lock(modalWindowLockObject)
+			{
+				currentModalWindow = null;
+			}
+		}
+		
+		private static void OnModalDialogResponse(object o, ResponseArgs args)
+		{
+Console.WriteLine("Modal dialog responded: {0}", args.ResponseId);
+			lock(modalWindowLockObject)
+			{
+				currentModalWindow = null;
+			}
+		}
+		
+		private static void OnModalWindowDeleted(object o, DeleteEventArgs args)
+		{
+Console.WriteLine("Modal window deleted");
+			lock(modalWindowLockObject)
+			{
+				currentModalWindow = null;
+			}
+		}
+		
+		private static void OnModalWindowDestroyed(object o, EventArgs args)
+		{
+Console.WriteLine("Modal window destroyed");
+			lock(modalWindowLockObject)
+			{
+				currentModalWindow = null;
+			}
+		}
 
 		public static void InitCatalog()
 		{

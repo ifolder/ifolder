@@ -257,6 +257,7 @@ namespace Novell.iFolder
 		private ImageMenuItem		PreferencesMenuItem;
 		private Gtk.MenuItem		AccountsMenuItem;
 		private Gtk.MenuItem		SyncLogMenuItem;
+		private CheckMenuItem		RemoteFoldersCheckMenuItem;
 
 		private iFolderConflictDialog ConflictDialog;
 
@@ -406,7 +407,7 @@ namespace Novell.iFolder
 			RefreshDomains(true);
 			RefreshiFolders(true);
 			
-			domainController = DomainController.GetDomainController(simiasManager);
+			domainController = DomainController.GetDomainController();
 			if (domainController != null)
 			{
 				domainController.DomainAdded +=
@@ -1140,7 +1141,20 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 
 		private void OnConnectToServerHomeButton(object o, EventArgs args)
 		{
-			Util.ShowPrefsPage(1, simiasManager);
+			// Launch the Add Account Wizard
+			AddAccountWizard aaw = new AddAccountWizard(simws);
+			aaw.TransientFor = this;
+			if (!Util.RegisterModalWindow(aaw))
+			{
+				try
+				{
+					Util.CurrentModalWindow.Present();
+				}
+				catch{}
+				aaw.Destroy();
+				return;
+			}
+			aaw.ShowAll();
 		}
 
 		
@@ -1781,6 +1795,17 @@ Console.WriteLine("DownloadRemoteFolderHandler...calling ChooseRemoteFolderDialo
 			ChooseRemoteFolderDialog cd =
 				new ChooseRemoteFolderDialog(ifws, simws);
 			cd.TransientFor = this;
+			if (!Util.RegisterModalWindow(cd))
+			{
+				try
+				{
+					Util.CurrentModalWindow.Present();
+				}
+				catch{}
+				cd.Destroy();
+				return;
+			}
+
 			int response = cd.Run();
 			cd.Hide();
 			
@@ -2909,6 +2934,22 @@ Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
 
 			ViewMenu.Append(new SeparatorMenuItem());
 			
+			RemoteFoldersCheckMenuItem =
+				new CheckMenuItem(Util.GS("Show _Remote Folders"));
+			ViewMenu.Append(RemoteFoldersCheckMenuItem);
+
+			// Load in the user preference for whether this is Active or not
+			if (ClientConfig.Get(ClientConfig.KEY_SHOW_SERVER_IFOLDERS, "false")
+					== "true")
+				RemoteFoldersCheckMenuItem.Active = true;
+			else
+				RemoteFoldersCheckMenuItem.Active = false;
+
+			RemoteFoldersCheckMenuItem.Toggled +=
+				new EventHandler(RemoteFoldersCheckMenuItemToggled);
+
+			ViewMenu.Append(new SeparatorMenuItem());
+			
 			MenuItem toggleDebugMenuItem =		// FIXME: Remove this debug menu
 				new MenuItem(Util.GS("_Toggle Debug Interface"));
 			ViewMenu.Append(toggleDebugMenuItem);
@@ -3214,6 +3255,18 @@ Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
 		private void SyncLogMenuItemHandler(object o, EventArgs args)
 		{
 			Util.ShowLogWindow(simiasManager);
+		}
+		
+		private void RemoteFoldersCheckMenuItemToggled(object o, EventArgs args)
+		{
+			Console.WriteLine("RemoteFoldersCheckMenuItemToggled: {0}",
+							  RemoteFoldersCheckMenuItem.Active);
+			
+			// Save off this user preference
+			if (RemoteFoldersCheckMenuItem.Active)
+				ClientConfig.Set(ClientConfig.KEY_SHOW_SERVER_IFOLDERS, "true");
+			else
+				ClientConfig.Set(ClientConfig.KEY_SHOW_SERVER_IFOLDERS, "false");
 		}
 		
 		
@@ -4575,6 +4628,17 @@ Console.WriteLine("\t4");
 					iFolderAcceptDialog iad =
 							new iFolderAcceptDialog(holder.iFolder, lastSetupPath);
 					iad.TransientFor = this;
+					if (!Util.RegisterModalWindow(iad))
+					{
+						try
+						{
+							Util.CurrentModalWindow.Present();
+						}
+						catch{}
+						iad.Destroy();
+						return;
+					}
+
 					rc = iad.Run();
 					newPath = ParseAndReplaceTildeInPath(iad.Path);
 					iad.Hide();

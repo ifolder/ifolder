@@ -74,10 +74,10 @@ namespace Novell.iFolder
 				
 			this.VBox.ShowAll();
 			
-			Button cancelButton = new Button(Stock.Cancel);
-			cancelButton.CanFocus = true;
-			cancelButton.CanDefault = false;
-			cancelButton.ShowAll();
+//			Button cancelButton = new Button(Stock.Cancel);
+//			cancelButton.CanFocus = true;
+//			cancelButton.CanDefault = false;
+//			cancelButton.ShowAll();
 			
 			this.AddButton(Stock.Cancel, ResponseType.Cancel);
 			

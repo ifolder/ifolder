@@ -32,7 +32,8 @@ namespace Novell.iFolder
 
 public class iFolderMsgDialog : Dialog
 {
-	private Button showDetailsButton;
+//	private Button showDetailsButton;
+	private Expander detailsExpander;
 	private ScrolledWindow showDetailsScrolledWindow;
 
 	public enum DialogType : int
@@ -139,13 +140,15 @@ public class iFolderMsgDialog : Dialog
 		
 		if (details != null)
 		{
-			showDetailsButton = new Button(Util.GS("Show _Details"));
-			showDetailsButton.Clicked += new EventHandler(ShowDetailsButtonPressed);
+			detailsExpander = new Expander(Util.GS("_Details"));
+			v.PackStart(detailsExpander, false, false, 0);
+//			showDetailsButton = new Button(Util.GS("Show _Details"));
+//			showDetailsButton.Clicked += new EventHandler(ShowDetailsButtonPressed);
 			
-			HBox detailsButtonBox = new HBox();
-			detailsButtonBox.PackEnd(showDetailsButton, false, false, 0);
+//			HBox detailsButtonBox = new HBox();
+//			detailsButtonBox.PackEnd(showDetailsButton, false, false, 0);
 
-			v.PackStart(detailsButtonBox, false, false, 4);
+//			v.PackStart(detailsButtonBox, false, false, 4);
 
 			TextView textView = new TextView();
 			textView.Editable = false;
@@ -155,23 +158,24 @@ public class iFolderMsgDialog : Dialog
 			textBuffer.Text = details;
 			
 			showDetailsScrolledWindow = new ScrolledWindow();
+			detailsExpander.Add(showDetailsScrolledWindow);
 			showDetailsScrolledWindow.AddWithViewport(textView);
 			
 			showDetailsScrolledWindow.Visible = false;
 			
-			v.PackEnd(showDetailsScrolledWindow, false, false, 4);
+//			v.PackEnd(showDetailsScrolledWindow, false, false, 4);
 		}
-		else
-		{
-			showDetailsButton = null;
-			showDetailsScrolledWindow = null;
-		}
+//		else
+//		{
+//			showDetailsButton = null;
+//			showDetailsScrolledWindow = null;
+//		}
 
 		h.PackEnd(v);
 		h.ShowAll();
 		
-		if (details != null)
-			showDetailsScrolledWindow.Visible = false;
+//		if (details != null)
+//			showDetailsScrolledWindow.Visible = false;
 
 		this.VBox.Add(h);
 		
@@ -192,19 +196,19 @@ public class iFolderMsgDialog : Dialog
 		}
 	}
 	
-	private void ShowDetailsButtonPressed(object o, EventArgs args)
-	{
-		if (showDetailsButton.Label == Util.GS("Show _Details"))
-		{
-			showDetailsButton.Label = Util.GS("Hide _Details");
-			showDetailsScrolledWindow.Visible = true;
-		}
-		else
-		{
-			showDetailsButton.Label = Util.GS("Show _Details");
-			showDetailsScrolledWindow.Visible = false;
-		}
-	}
+//	private void ShowDetailsButtonPressed(object o, EventArgs args)
+//	{
+//		if (showDetailsButton.Label == Util.GS("Show _Details"))
+//		{
+//			showDetailsButton.Label = Util.GS("Hide _Details");
+//			showDetailsScrolledWindow.Visible = true;
+//		}
+//		else
+//		{
+//			showDetailsButton.Label = Util.GS("Show _Details");
+//			showDetailsScrolledWindow.Visible = false;
+//		}
+//	}
 }
 
 }

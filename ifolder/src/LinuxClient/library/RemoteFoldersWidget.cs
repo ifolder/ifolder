@@ -128,7 +128,7 @@ namespace Novell.iFolder
 			RefreshDomains(true);
 			RefreshFolders(true);
 			
-			domainController = DomainController.GetDomainController(simiasManager);
+			domainController = DomainController.GetDomainController();
 			if (domainController != null)
 			{
 				domainController.DomainAdded +=

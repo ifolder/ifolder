@@ -58,6 +58,8 @@ namespace Novell.iFolder
 		public static string KEY_IFOLDER_WINDOW_WIDTH	= "iFolderWindowWidth";
 		public static string KEY_IFOLDER_WINDOW_HEIGHT	= "iFolderWindowHeight";
 		public static string KEY_IFOLDER_WINDOW_VISIBLE = "iFolderWindowVisible";
+		
+		public static string KEY_SHOW_SERVER_IFOLDERS	= "ShowServeriFolders";
 
 
 		private static XmlDocument configDoc;

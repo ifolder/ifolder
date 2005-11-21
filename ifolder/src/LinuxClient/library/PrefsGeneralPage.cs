@@ -290,7 +290,7 @@ namespace Novell.iFolder
 			try
 			{
 				lastSyncInterval = ifws.GetDefaultSyncInterval();
-				if(lastSyncInterval == -1)
+				if(lastSyncInterval <= 0)
 					SyncSpinButton.Value = 0;
 				else
 				{
@@ -331,7 +331,7 @@ namespace Novell.iFolder
 				SyncSpinButton.Value = 0;
 			}
 
-			if(SyncSpinButton.Value == 0)
+			if (lastSyncInterval <= 0)
 			{
 				AutoSyncCheckButton.Active = false;
 				SyncSpinButton.Sensitive = false;
@@ -429,10 +429,24 @@ namespace Novell.iFolder
 					oneMinuteLimitNotifyWindow.Destroy();
 					oneMinuteLimitNotifyWindow = null;
 				}
+				
+				try
+				{
+					ifws.SetDefaultSyncInterval(-1);
+				}
+				catch(Exception e)
+				{
+					iFolderExceptionDialog ied = new iFolderExceptionDialog(
+														topLevelWindow, e);
+					ied.Run();
+					ied.Hide();
+					ied.Destroy();
+					return;
+				}
 	
+				SyncSpinButton.Value = 0;
 				SyncSpinButton.Sensitive = false;
 				SyncUnitsComboBox.Sensitive = false;
-				SyncSpinButton.Value = 0;
 			}
 		}
 
@@ -455,7 +469,7 @@ namespace Novell.iFolder
 			try
 			{
 				lastSyncInterval = syncSpinValue;
-				if(lastSyncInterval == 0)
+				if(lastSyncInterval <= 0)
 				{
 					ifws.SetDefaultSyncInterval(-1);
 				}
@@ -523,7 +537,7 @@ namespace Novell.iFolder
 			try
 			{
 				lastSyncInterval = syncInterval;
-				if(lastSyncInterval == 0)
+				if(lastSyncInterval <= 0)
 				{
 					ifws.SetDefaultSyncInterval(-1);
 				}

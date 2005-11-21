@@ -96,7 +96,7 @@ namespace Novell.iFolder
 
 			InitializeWidgets();
 
-			domainController = DomainController.GetDomainController(simiasManager);
+			domainController = DomainController.GetDomainController();
 			if (domainController != null)
 			{
 				domainController.DomainAdded +=
@@ -447,7 +447,21 @@ namespace Novell.iFolder
 
 		private void OnAddAccount(object o, EventArgs args)
 		{
-			EnterNewAccountMode();
+			AddAccountWizard aaw = new AddAccountWizard(simws);
+			aaw.TransientFor = topLevelWindow;
+			if (!Util.RegisterModalWindow(aaw))
+			{
+				try
+				{
+					Util.CurrentModalWindow.Present();
+				}
+				catch{}
+				aaw.Destroy();
+				return;
+			}
+			aaw.ShowAll();
+
+//			EnterNewAccountMode();
 		}
 
 		private void OnRemoveAccount(object o, EventArgs args)

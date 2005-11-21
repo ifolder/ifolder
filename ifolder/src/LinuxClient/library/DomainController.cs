@@ -75,9 +75,9 @@ namespace Novell.iFolder.Controller
 		public event DomainNewDefaultEventHandler NewDefaultDomain;
 		public event DomainInGraceLoginPeriodEventHandler DomainInGraceLoginPeriod;
 		
-		private DomainController(Manager simiasManager)
+		private DomainController()
 		{
-			this.simiasManager = simiasManager;
+			this.simiasManager = Util.GetSimiasManager();
 			string localServiceUrl = simiasManager.WebServiceUri.ToString();
 			try
 			{
@@ -132,13 +132,13 @@ namespace Novell.iFolder.Controller
 			}
 		}
 		
-		public static DomainController GetDomainController(Manager simiasManager)
+		public static DomainController GetDomainController()
 		{
 			lock (typeof(DomainController))
 			{
 				if (instance == null)
 				{
-					instance = new DomainController(simiasManager);
+					instance = new DomainController();
 				}
 				
 				return instance;

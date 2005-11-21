@@ -101,7 +101,7 @@ namespace Novell.iFolder.Controller
 			keyediFolders = new Hashtable();
 			keyedSubscriptions = new Hashtable();
 
-			domainController = DomainController.GetDomainController(simiasManager);
+			domainController = DomainController.GetDomainController();
 			if (domainController != null)
 			{
 				domainController.DomainLoggedIn +=

@@ -245,7 +245,7 @@ namespace Novell.iFolder
 				case Simias.Client.Event.Action.StartLocalSync:
 					if (args.Name != null && args.Name.StartsWith("POBox:"))
 					{
-						DomainController domainController = DomainController.GetDomainController(simiasManager);
+						DomainController domainController = DomainController.GetDomainController();
 						DomainInformation domain = domainController.GetPOBoxDomain(args.ID);
 						if (domain != null)
 							LogMessage(string.Format(Util.GS("Checking for new iFolders: {0}"), domain.Name));
@@ -273,7 +273,7 @@ namespace Novell.iFolder
 				{
 					if (args.Name != null && args.Name.StartsWith("POBox:"))
 					{
-						DomainController domainController = DomainController.GetDomainController(simiasManager);
+						DomainController domainController = DomainController.GetDomainController();
 						DomainInformation domain = domainController.GetPOBoxDomain(args.ID);
 						if (domain != null)
 							LogMessage(string.Format(Util.GS("Done checking for new iFolders: {0}"), domain.Name));
