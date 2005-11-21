@@ -209,11 +209,11 @@ public:
 	virtual ~CSPDB();
 	void AddRef();
 	void Release();
-	void CSPDB::SetupNameTable(HFDB hFlaim);
+	void SetupNameTable(HFDB hFlaim);
 	RCODE initializeDB(HFDB hFlaim, FLMBOOL created);
 	RCODE RegisterField(HFDB hFlaim, FLMUNICODE *pFieldName, FLMUINT type, FLMUINT* pFieldId);
 	RCODE AddIndex(HFDB hFlaim, FLMUNICODE *pFieldName, FLMUINT fieldId);
-	RCODE CSPDB::GetIndexId(FLMUNICODE *pFieldName, FLMUINT fieldID, FLMUINT *pId);
+	RCODE GetIndexId(FLMUNICODE *pFieldName, FLMUINT fieldID, FLMUINT *pId);
 
 private:
 	RCODE registerFieldArray(HFDB hFlaim, CS_FIELD_DEF *fieldTable, FLMINT count);
@@ -260,7 +260,7 @@ public:
 private:
 	RCODE CreateStore(char *pStorePath);
 	RCODE OpenStore( char *pStorePath);
-	char* CSPStore::setupDbPath(char *pDbPath);
+	char* setupDbPath(char *pDbPath);
 
 	HFDB			m_hFlaim;
 	FLMBOOL			m_connected;
