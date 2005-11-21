@@ -37,7 +37,7 @@ Vendor       : www.ifolder.com
 Packager     : <unknown>
 BuildRoot    : %{_tmppath}/%{name}-%{version}
 
-Requires     : simias >= 1.3
+Requires     : simias >= @SIMIASVER@ 
 Requires     : gtk-sharp2 >= 1.9.5
 #Requires     : libgdiplus >= 1.1.7
 Obsoletes    : %{name} <= %{version}
