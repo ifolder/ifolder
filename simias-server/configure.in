@@ -2,7 +2,7 @@ AC_INIT(src/Service.cs)
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
 
-AM_INIT_AUTOMAKE(simias-server, 0.1)
+AM_INIT_AUTOMAKE(simias-server, 0.3)
 VERSION=$VERSION.`date +%Y%m%d`
 AM_MAINTAINER_MODE
 AC_PROG_CC

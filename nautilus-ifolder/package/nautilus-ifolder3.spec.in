@@ -38,7 +38,7 @@ Packager     : <unknown>
 BuildRoot    : %{_tmppath}/%{name}-%{version}
 
 Requires     : nautilus >= 2.5
-Requires     : simias >= 1.1
+Requires     : simias >= @SIMIASVER@ 
 Requires     : ifolder3 >= @VERSION@ 
 Obsoletes    : nautilus-ifolder
 

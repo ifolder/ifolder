@@ -36,7 +36,7 @@ Vendor       : <unknown>
 Packager     : <unknown>
 BuildRoot    : %{_tmppath}/%{name}-%{version}
 
-Requires     : simias >= 1.0
+Requires     : simias >= @SIMIASVER@
 Obsoletes    : %{name} < %{version}
 
 #=============================================================================
