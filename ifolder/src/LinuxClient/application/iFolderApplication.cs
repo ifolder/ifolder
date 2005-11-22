@@ -849,7 +849,7 @@ namespace Novell.iFolder
 					// it if it's not showing.  This behavior is used by
 					// Beagle and Gaim.
 					iFolderWindow ifwin = Util.GetiFolderWindow();
-					if (ifwin == null || !ifwin.Visible)
+					if (ifwin == null || !ifwin.IsActive)
 						Util.ShowiFolderWindow();
 					else
 						ifwin.Hide();
