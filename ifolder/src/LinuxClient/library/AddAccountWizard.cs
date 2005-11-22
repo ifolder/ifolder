@@ -32,35 +32,17 @@ namespace Novell.iFolder
 {
 	public class AddAccountWizard : Window
 	{
-		private Notebook			WizardNotebook;
-		private DomainController	domainController;
-		private SimiasWebService	simws;
-		private bool				ControlKeyPressed;
+		private Gnome.Druid				AccountDruid;
+		private Gnome.DruidPageEdge		IntroductoryPage;
+		private Gnome.DruidPageStandard	ServerInformationPage;
+		private Gnome.DruidPageStandard	UserInformationPage;
+		private DruidConnectPage		ConnectPage;
+		private Gnome.DruidPageEdge		SummaryPage;
+		private DomainController		domainController;
+		private SimiasWebService		simws;
+		private bool					ControlKeyPressed;
 		
-		///
-		/// Indexes for the WizardNotebook to assist in navigating.
-		///
-		public enum AccountWizardPageIndex
-		{
-			IntroductoryPageIndex = 0,
-			ServerInformationPageIndex,
-			UserInformationPageIndex,
-			ConnectPageIndex,
-			SummaryPageIndex
-		}
-
-		///
-		/// Navigation Buttons
-		///
-		private Button		NextButton;
-		private Button		BackButton;
-		private Button		CancelButton;
-		private Button		ConnectButton;
-		private Button		FinishButton;
-		
-		///
-		/// Introductory Page Widgets
-		///
+		private Gdk.Pixbuf				AddAccountPixbuf;
 		
 		///
 		/// Server Information Page Widgets
@@ -89,17 +71,13 @@ namespace Novell.iFolder
 		/// Summary Page Widgets
 		///
 		DomainInformation	ConnectedDomain;
-		private Label		SummaryMessageLabel;
-
 
 		public AddAccountWizard(SimiasWebService simws) : base(WindowType.Toplevel)
 		{
-			this.Title = Util.GS("Account Wizard");
-			this.SetDefaultSize(500, 450);
+			this.Title = Util.GS("iFolder Account Assistant");
 			this.Resizable = false;
 			this.Modal = true;
 			this.WindowPosition = Gtk.WindowPosition.Center;
-//			this.HasSeparator = false;
 
 			this.simws = simws;
 
@@ -118,152 +96,72 @@ namespace Novell.iFolder
 		private Widget CreateWidgets()
 		{
 			VBox vbox = new VBox(false, 0);
-			WizardNotebook = new Notebook();
-			vbox.PackStart(WizardNotebook, true, true, 0);
-			WizardNotebook.ShowTabs = false;
 			
-			WizardNotebook.AppendPage(CreateIntroductoryPage(), null);
-			WizardNotebook.AppendPage(CreateServerInformationPage(), null);
-			WizardNotebook.AppendPage(CreateUserInformationPage(), null);
-			WizardNotebook.AppendPage(CreateConnectPage(), null);
-			WizardNotebook.AppendPage(CreateSummaryPage(), null);
-
-			WizardNotebook.SwitchPage +=
-				new SwitchPageHandler(OnWizardSwitchedPage);
-
-			vbox.PackEnd(CreateActionButtons(), false, false, 0);
+			AddAccountPixbuf = new Gdk.Pixbuf(Util.ImagesPath("add-account.png"));
+			AddAccountPixbuf = AddAccountPixbuf.ScaleSimple(48, 48, Gdk.InterpType.Bilinear);
+			
+			AccountDruid = new Gnome.Druid();
+			vbox.PackStart(AccountDruid, true, true, 0);
+			
+			AccountDruid.ShowHelp = false;
+			
+			AccountDruid.AppendPage(CreateIntroductoryPage());
+			AccountDruid.AppendPage(CreateServerInformationPage());
+			AccountDruid.AppendPage(CreateUserInformationPage());
+			AccountDruid.AppendPage(CreateConnectPage());
+			AccountDruid.AppendPage(CreateSummaryPage());
 			
 			return vbox;
-		}
-		
-		private Widget CreateActionButtons()
-		{
-			HButtonBox hButtonBox = new HButtonBox();
-			hButtonBox.Layout = ButtonBoxStyle.End;
-
-			// Set up the response buttons
-			// FIXME: Add the correct icons onto these buttons
-			CancelButton = new Button(Stock.Cancel);
-			hButtonBox.PackStart(CancelButton, false, false, 0);
-			CancelButton.Clicked += new EventHandler(OnCancelButton);
-
-			BackButton = new Button(Util.GS("_Back"));
-			hButtonBox.PackStart(BackButton, false, false, 0);
-			BackButton.Visible = false;
-			BackButton.NoShowAll = true;
-			BackButton.Clicked += new EventHandler(OnBackButton);
-
-			NextButton = new Button(Util.GS("_Next"));
-			hButtonBox.PackStart(NextButton, false, false, 0);
-			NextButton.Clicked += new EventHandler(OnNextButton);
-
-			ConnectButton = new Button(Util.GS("Co_nnect"));
-			hButtonBox.PackStart(ConnectButton, false, false, 0);
-			ConnectButton.Visible = false;
-			ConnectButton.NoShowAll = true;
-			ConnectButton.Clicked += new EventHandler(OnConnectButton);
-
-			FinishButton = new Button(Util.GS("_Finish"));
-			hButtonBox.PackStart(FinishButton, false, false, 0);
-			FinishButton.Visible = false;
-			FinishButton.NoShowAll = true;
-			FinishButton.Clicked += new EventHandler(OnFinishButton);
-			
-			return hButtonBox;
 		}
 		
 		///
 		/// Introductory Page
 		///
-		private Widget CreateIntroductoryPage()
+		private Gnome.DruidPage CreateIntroductoryPage()
 		{
-			VBox vbox = new VBox(false, 6);
+			IntroductoryPage = new Gnome.DruidPageEdge(Gnome.EdgePosition.Start,
+				true,	// use an antialiased canvas
+				Util.GS("Configure an iFolder Account"),
+				Util.GS("Welcome to the iFolder Account Assistant.\n\nClick \"Forward\" to begin."),
+				AddAccountPixbuf, null, null);
 			
-			///
-			/// Header
-			///
-			HBox headerHBox = new HBox(false, 0);
-			vbox.PackStart(headerHBox, false, false, 0);
+			IntroductoryPage.CancelClicked +=
+				new Gnome.CancelClickedHandler(OnCancelClicked);
 			
-			Label l = new Label(string.Format(
-				"<span size=\"xx-large\">{0}</span>",
-				Util.GS("Creating a New iFolder Account")));
-			headerHBox.PackStart(l, true, true, 0);
-			l.UseMarkup = true;
-			l.UseUnderline = false;
-			l.Xalign = 0.0F;
-			l.Yalign = 0.5F;
-			l.Xpad = 12;
-			l.Ypad = 12;
-			
-			Image img = new Image(Util.ImagesPath("add-account.png"));
-			headerHBox.PackStart(img, false, false, 0);
-			img.SetAlignment(0.5F, 0.5F);
-			img.Xpad = 12;
-			img.Ypad = 12;
-			
-			HSeparator hsep = new HSeparator();
-			vbox.PackStart(hsep, false, false, 0);
-			
-			///
-			/// Content area
-			///
-			l = new Label(Util.GS("This wizard will guide you through the creation of a new iFolder account.\n\nIt will require some information, such as an iFolder Server address, user name, and password."));
-			vbox.PackStart(l, true, true, 0);
+			IntroductoryPage.Prepared +=
+				new Gnome.PreparedHandler(OnIntroductoryPagePrepared);
 
-			l.LineWrap = true;
-			l.Xpad = 12;
-			l.Ypad = 6;
-			l.Xalign = 0.0F;
-			l.Yalign = 0.0F;
-			
-			return vbox;
+			return IntroductoryPage;
 		}
-		
+
 		///
 		/// Server Information Page (1 of 3)
 		///
-		private Widget CreateServerInformationPage()
+		private Gnome.DruidPage CreateServerInformationPage()
 		{
-			VBox vbox = new VBox(false, 6);
-			
-			///
-			/// Header
-			///
-			HBox headerHBox = new HBox(false, 6);
-			vbox.PackStart(headerHBox, false, false, 0);
-			
-			Label l = new Label(string.Format(
-				"<span size=\"xx-large\">{0}</span>",
-				Util.GS("Server Information")));
-			headerHBox.PackStart(l, true, true, 0);
-			l.UseMarkup = true;
-			l.UseUnderline = false;
-			l.Xalign = 0.0F;
-			l.Yalign = 0.5F;
-			l.Xpad = 12;
-			l.Ypad = 12;
-			
-			Image img = new Image(Util.ImagesPath("add-account.png"));
-			headerHBox.PackStart(img, false, false, 0);
-			img.SetAlignment(0.5F, 0.5F);
-			img.Xpad = 12;
-			img.Ypad = 12;
+			ServerInformationPage =
+				new Gnome.DruidPageStandard(
+					Util.GS("iFolder Server"),
+					AddAccountPixbuf,
+					null);
 
-			HSeparator hsep = new HSeparator();
-			vbox.PackStart(hsep, false, false, 0);
-			
+			ServerInformationPage.CancelClicked +=
+				new Gnome.CancelClickedHandler(OnCancelClicked);
+
+			ServerInformationPage.Prepared +=
+				new Gnome.PreparedHandler(OnServerInformationPagePrepared);
+
 			///
 			/// Content
 			///
 			Table table = new Table(4, 3, false);
-			vbox.PackStart(table, false, false, 0);
+			ServerInformationPage.VBox.PackStart(table, true, true, 0);
 			table.ColumnSpacing = 6;
 			table.RowSpacing = 6;
 			table.BorderWidth = 12;
 
 			// Row 1
-			l = new Label(Util.GS("Enter the name of your iFolder Server (for example, \"ifolder.example.net\")."));
+			Label l = new Label(Util.GS("Enter the name of your iFolder Server (for example, \"ifolder.example.net\")."));
 			table.Attach(l, 0,3, 0,1,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			l.LineWrap = true;
@@ -280,7 +178,7 @@ namespace Novell.iFolder
 			table.Attach(ServerNameEntry, 2,3, 1,2,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			l.MnemonicWidget = ServerNameEntry;
-			ServerNameEntry.Changed += new EventHandler(OnFieldChanged);
+			ServerNameEntry.Changed += new EventHandler(UpdateServerInformationPageSensitivity);
 			
 			// Row 3
 			MakeDefaultLabel = new Label(Util.GS("Setting this iFolder Server as your default server will allow iFolder to automatically select this server when adding new folders."));
@@ -294,53 +192,37 @@ namespace Novell.iFolder
 			table.Attach(DefaultServerCheckButton, 1,3, 3,4,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			
-			return vbox;
+			return ServerInformationPage;
 		}
 		
 		///
 		/// User Information Page (2 of 3)
 		///
-		private Widget CreateUserInformationPage()
+		private Gnome.DruidPage CreateUserInformationPage()
 		{
-			VBox vbox = new VBox(false, 6);
-			
-			///
-			/// Header
-			///
-			HBox headerHBox = new HBox(false, 6);
-			vbox.PackStart(headerHBox, false, false, 0);
-			
-			Label l = new Label(string.Format(
-				"<span size=\"xx-large\">{0}</span>",
-				Util.GS("User Information")));
-			headerHBox.PackStart(l, true, true, 0);
-			l.UseMarkup = true;
-			l.UseUnderline = false;
-			l.Xalign = 0.0F;
-			l.Yalign = 0.5F;
-			l.Xpad = 12;
-			l.Ypad = 12;
-			
-			Image img = new Image(Util.ImagesPath("add-account.png"));
-			headerHBox.PackStart(img, false, false, 0);
-			img.SetAlignment(0.5F, 0.5F);
-			img.Xpad = 12;
-			img.Ypad = 12;
+			UserInformationPage =
+				new Gnome.DruidPageStandard(
+					Util.GS("Identity"),
+					AddAccountPixbuf,
+					null);
 
-			HSeparator hsep = new HSeparator();
-			vbox.PackStart(hsep, false, false, 0);
+			UserInformationPage.CancelClicked +=
+				new Gnome.CancelClickedHandler(OnCancelClicked);
+
+			UserInformationPage.Prepared +=
+				new Gnome.PreparedHandler(OnUserInformationPagePrepared);
 			
 			///
 			/// Content
 			///
 			Table table = new Table(6, 3, false);
-			vbox.PackStart(table, false, false, 0);
+			UserInformationPage.VBox.PackStart(table, false, false, 0);
 			table.ColumnSpacing = 6;
 			table.RowSpacing = 6;
 			table.BorderWidth = 12;
 
 			// Row 1
-			l = new Label(Util.GS("Enter your iFolder user name (for example, \"jsmith\")."));
+			Label l = new Label(Util.GS("Enter your iFolder user name (for example, \"jsmith\")."));
 			table.Attach(l, 0,3, 0,1,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			l.LineWrap = true;
@@ -357,7 +239,7 @@ namespace Novell.iFolder
 			table.Attach(UserNameEntry, 2,3, 1,2,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			l.MnemonicWidget = UserNameEntry;
-			UserNameEntry.Changed += new EventHandler(OnFieldChanged);
+			UserNameEntry.Changed += new EventHandler(UpdateUserInformationPageSensitivity);
 
 			// Row 3
 			l = new Label(Util.GS("Enter your password."));
@@ -375,7 +257,7 @@ namespace Novell.iFolder
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			l.MnemonicWidget = PasswordEntry;
 			PasswordEntry.Visibility = false;
-			PasswordEntry.Changed += new EventHandler(OnFieldChanged);
+			PasswordEntry.Changed += new EventHandler(UpdateUserInformationPageSensitivity);
 
 			// Row 5
 			l = new Label(Util.GS("Allow iFolder to remember your password so you are not asked for it each time you start iFolder."));
@@ -389,53 +271,40 @@ namespace Novell.iFolder
 			table.Attach(RememberPasswordCheckButton, 1,3, 5,6,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			
-			return vbox;
+			return UserInformationPage;
 		}
 		
 		///
 		/// Connect Page (3 of 3)
 		///
-		private Widget CreateConnectPage()
+		private Gnome.DruidPage CreateConnectPage()
 		{
-			VBox vbox = new VBox(false, 6);
-			
-			///
-			/// Header
-			///
-			HBox headerHBox = new HBox(false, 6);
-			vbox.PackStart(headerHBox, false, false, 0);
-			
-			Label l = new Label(string.Format(
-				"<span size=\"xx-large\">{0}</span>",
-				Util.GS("Verify and Connect")));
-			headerHBox.PackStart(l, true, true, 0);
-			l.UseMarkup = true;
-			l.UseUnderline = false;
-			l.Xalign = 0.0F;
-			l.Yalign = 0.5F;
-			l.Xpad = 12;
-			l.Ypad = 12;
-			
-			Image img = new Image(Util.ImagesPath("add-account.png"));
-			headerHBox.PackStart(img, false, false, 0);
-			img.SetAlignment(0.5F, 0.5F);
-			img.Xpad = 12;
-			img.Ypad = 12;
+			ConnectPage =
+				new DruidConnectPage(
+					Util.GS("Verify and Connect"),
+					AddAccountPixbuf,
+					null);
 
-			HSeparator hsep = new HSeparator();
-			vbox.PackStart(hsep, false, false, 0);
+			ConnectPage.CancelClicked +=
+				new Gnome.CancelClickedHandler(OnCancelClicked);
+			
+			ConnectPage.ConnectClicked +=
+				new ConnectClickedHandler(OnConnectClicked);
+
+			ConnectPage.Prepared +=
+				new Gnome.PreparedHandler(OnConnectPagePrepared);
 			
 			///
 			/// Content
 			///
 			Table table = new Table(6, 3, false);
-			vbox.PackStart(table, false, false, 0);
+			ConnectPage.VBox.PackStart(table, false, false, 0);
 			table.ColumnSpacing = 6;
 			table.RowSpacing = 6;
 			table.BorderWidth = 12;
 
 			// Row 1
-			l = new Label(Util.GS("Please verify that the information you've entered is correct."));
+			Label l = new Label(Util.GS("Please verify that the information you've entered is correct."));
 			table.Attach(l, 0,3, 0,1,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			l.LineWrap = true;
@@ -484,256 +353,166 @@ namespace Novell.iFolder
 			MakeDefaultVerifyLabel.Xalign = 0.0F;
 			
 			// Row 6
-//			l = new Label(Util.GS("When you press the Connect button, iFolder will attempt to verify your account and connect you to the server."));
-//			table.Attach(l, 0,3, 5,6,
-//				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
-//			l.LineWrap = true;
-//			l.Xalign = 0.0F;
+			l = new Label(
+				string.Format(
+					"\n\n{0}",
+					Util.GS("Click \"Forward\" to attempt to connect to the iFolder Server.")));
+			table.Attach(l, 0,3, 5,6,
+				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+			l.LineWrap = true;
+			l.Xalign = 0.0F;
 			
-			return vbox;
+			return ConnectPage;
 		}
 		
 		///
 		/// Summary Page
 		///
-		private Widget CreateSummaryPage()
+		private Gnome.DruidPage CreateSummaryPage()
 		{
-			VBox vbox = new VBox(false, 6);
+			SummaryPage = new Gnome.DruidPageEdge(Gnome.EdgePosition.Finish,
+				true,	// use an antialiased canvas
+				Util.GS("Congratulations!"),
+				"",
+				AddAccountPixbuf,
+				null, null);
 			
-			///
-			/// Header
-			///
-			HBox headerHBox = new HBox(false, 6);
-			vbox.PackStart(headerHBox, false, false, 0);
-			
-			Label l = new Label(string.Format(
-				"<span size=\"xx-large\">{0}</span>",
-				Util.GS("Verify and Connect")));
-			headerHBox.PackStart(l, true, true, 0);
-			l.UseMarkup = true;
-			l.UseUnderline = false;
-			l.Xalign = 0.0F;
-			l.Yalign = 0.5F;
-			l.Xpad = 12;
-			l.Ypad = 12;
-			
-			Image img = new Image(Util.ImagesPath("add-account.png"));
-			headerHBox.PackStart(img, false, false, 0);
-			img.SetAlignment(0.5F, 0.5F);
-			img.Xpad = 12;
-			img.Ypad = 12;
+			SummaryPage.FinishClicked +=
+				new Gnome.FinishClickedHandler(OnFinishClicked);
 
-			HSeparator hsep = new HSeparator();
-			vbox.PackStart(hsep, false, false, 0);
-			
-			///
-			/// Content
-			///
-			SummaryMessageLabel = new Label("Summary Page not implemented yet.\n\nLet's just say, if you made it this far, your account was successfully added.");
-			vbox.PackStart(SummaryMessageLabel, true, true, 0);
-			SummaryMessageLabel.LineWrap = true;
+			SummaryPage.Prepared +=
+				new Gnome.PreparedHandler(OnSummaryPagePrepared);
 
-			return vbox;
+			return SummaryPage;
 		}
-		
+
 		///
 		/// Sensitivity Methods
 		///
-		private void UpdateWidgetSensitivity()
+		private void UpdateServerInformationPageSensitivity(object o, EventArgs args)
 		{
-			switch(WizardNotebook.CurrentPage)
+			string currentServerName = ServerNameEntry.Text;
+			if (currentServerName != null)
 			{
-				case (int)AccountWizardPageIndex.IntroductoryPageIndex:
-					NextButton.Sensitive = true;
-					NextButton.Visible = true;
-					BackButton.Visible = false;
-					CancelButton.Visible = true;
-					ConnectButton.Visible = false;
-					FinishButton.Visible = false;
-					break;
-				case (int)AccountWizardPageIndex.ServerInformationPageIndex:
-					string currentServerName = ServerNameEntry.Text;
-					if (currentServerName != null)
-					{
-						currentServerName = currentServerName.Trim();
-						if (currentServerName.Length > 0)
-							NextButton.Sensitive = true;
-						else
-							NextButton.Sensitive = false;
-					}
-					else
-						NextButton.Sensitive = false;
-					NextButton.Visible = true;
-					
-					BackButton.Visible = true;
-					CancelButton.Visible = true;
-					ConnectButton.Visible = false;
-					FinishButton.Visible = false;
-					break;
-				case (int)AccountWizardPageIndex.UserInformationPageIndex:
-					string currentUserName = UserNameEntry.Text;
-					string currentPassword = PasswordEntry.Text;
-					if (currentUserName != null && currentPassword != null)
-					{
-						currentUserName = currentUserName.Trim();
-						currentPassword = currentPassword.Trim();
-						if (currentUserName.Length > 0 && currentPassword.Length > 0)
-							NextButton.Sensitive = true;
-						else
-							NextButton.Sensitive = false;
-					}
-					else
-						NextButton.Sensitive = false;
-					NextButton.Visible = true;
-
-					BackButton.Visible = true;
-					CancelButton.Visible = true;
-					ConnectButton.Visible = false;
-					FinishButton.Visible = false;
-					break;
-				case (int)AccountWizardPageIndex.ConnectPageIndex:
-					NextButton.Visible = false;
-					BackButton.Visible = true;
-					CancelButton.Visible = true;
-					ConnectButton.Visible = true;
-					FinishButton.Visible = false;
-					break;
-				case (int)AccountWizardPageIndex.SummaryPageIndex:
-					NextButton.Visible = false;
-					BackButton.Visible = false;
-					CancelButton.Visible = false;
-					ConnectButton.Visible = false;
-					FinishButton.Visible = true;
-					break;
-				default:
-					break;
+				currentServerName = currentServerName.Trim();
+				if (currentServerName.Length > 0)
+					AccountDruid.SetButtonsSensitive(true, true, true, false);
+				else
+					AccountDruid.SetButtonsSensitive(true, false, true, false);
 			}
+			else
+				AccountDruid.SetButtonsSensitive(true, false, true, false);
 		}
 		
+		private void UpdateUserInformationPageSensitivity(object o, EventArgs args)
+		{
+			string currentUserName = UserNameEntry.Text;
+			string currentPassword = PasswordEntry.Text;
+			if (currentUserName != null && currentPassword != null)
+			{
+				currentUserName = currentUserName.Trim();
+				currentPassword = currentPassword.Trim();
+				if (currentUserName.Length > 0 && currentPassword.Length > 0)
+					AccountDruid.SetButtonsSensitive(true, true, true, false);
+				else
+					AccountDruid.SetButtonsSensitive(true, false, true, false);
+			}
+			else
+				AccountDruid.SetButtonsSensitive(true, false, true, false);
+		}
 
 		///
 		/// Event Handlers
 		///
-
-		private void OnWizardSwitchedPage(object o, SwitchPageArgs args)
+		private void OnIntroductoryPagePrepared(object o, Gnome.PreparedArgs args)
 		{
-Console.WriteLine("OnWizardSwitchedPage");
-			UpdateWidgetSensitivity();
+			this.Title = Util.GS("iFolder Account Assistant");
+			AccountDruid.SetButtonsSensitive(false, true, true, false);
+		}
+		
+		private void OnServerInformationPagePrepared(object o, Gnome.PreparedArgs args)
+		{
+			this.Title = Util.GS("iFolder Account Assistant - (1 of 3)");
+			UpdateServerInformationPageSensitivity(null, null);
 			
-			DomainInformation[] domains;
-
-			switch(WizardNotebook.CurrentPage)
+			DomainInformation[] domains = domainController.GetDomains();
+			if (domains != null && domains.Length > 0)
 			{
-				case (int)AccountWizardPageIndex.IntroductoryPageIndex:
-					this.Title = Util.GS("Account Wizard");
-					break;
-				case (int)AccountWizardPageIndex.ServerInformationPageIndex:
-					this.Title = Util.GS("Account Wizard - (1 of 3)");
+				MakeDefaultLabel.Visible = true;
+				DefaultServerCheckButton.Visible = true;
+			}
+			else
+			{
+				DefaultServerCheckButton.Active = true;
+				MakeDefaultLabel.Visible = false;
+				DefaultServerCheckButton.Visible = false;
+			}
+			
+			ServerNameEntry.GrabFocus();
+		}
+		
+		private void OnUserInformationPagePrepared(object o, Gnome.PreparedArgs args)
+		{
+			this.Title = Util.GS("iFolder Account Assistant - (2 of 3)");
+			UpdateUserInformationPageSensitivity(null, null);
+			UserNameEntry.GrabFocus();
+		}
+		
+		private void OnConnectPagePrepared(object o, Gnome.PreparedArgs args)
+		{
+			this.Title = Util.GS("iFolder Account Assistant - (3 of 3)");
 
-					domains = domainController.GetDomains();
-					if (domains != null && domains.Length > 0)
-					{
-						MakeDefaultLabel.Visible = true;
-						DefaultServerCheckButton.Visible = true;
-					}
-					else
-					{
-						DefaultServerCheckButton.Active = true;
-						MakeDefaultLabel.Visible = false;
-						DefaultServerCheckButton.Visible = false;
-					}
+			ServerNameVerifyLabel.Text = ServerNameEntry.Text;
+			UserNameVerifyLabel.Text = UserNameEntry.Text;
 
-					ServerNameEntry.GrabFocus();
-					break;
-				case (int)AccountWizardPageIndex.UserInformationPageIndex:
-					this.Title = Util.GS("Account Wizard - (2 of 3)");
-					UserNameEntry.GrabFocus();
-					break;
-				case (int)AccountWizardPageIndex.ConnectPageIndex:
-Console.WriteLine("\tConnect Page");
-					this.Title = Util.GS("Account Wizard - (3 of 3)");
+			RememberPasswordVerifyLabel.Text =
+				RememberPasswordCheckButton.Active ?
+					Util.GS("Yes") :
+					Util.GS("No");
 
-Console.WriteLine("\tServer Name: {0}", ServerNameEntry.Text);
-					ServerNameVerifyLabel.Text = ServerNameEntry.Text;
-					UserNameVerifyLabel.Text = UserNameEntry.Text;
+			MakeDefaultVerifyLabel.Text =
+				DefaultServerCheckButton.Active ?
+					Util.GS("Yes") :
+					Util.GS("No");
 
-					RememberPasswordVerifyLabel.Text =
-						RememberPasswordCheckButton.Active ?
-							Util.GS("Yes") :
-							Util.GS("No");
-
-					MakeDefaultVerifyLabel.Text =
-						DefaultServerCheckButton.Active ?
-							Util.GS("Yes") :
-							Util.GS("No");
-
-					domains = domainController.GetDomains();
-					if (domains != null && domains.Length > 0)
-					{
-						MakeDefaultPromptLabel.Visible = true;
-						MakeDefaultVerifyLabel.Visible = true;
-					}
-					else
-					{
-						MakeDefaultPromptLabel.Visible = false;
-						MakeDefaultVerifyLabel.Visible = false;
-					}
-
-					ConnectButton.GrabFocus();
-					break;
-				case (int)AccountWizardPageIndex.SummaryPageIndex:
-					this.Title = Util.GS("Account Wizard");
-
-					if (ConnectedDomain != null && ConnectedDomain.Name != null && ConnectedDomain.Host != null)
-					{
-						SummaryMessageLabel.Text = 
-							string.Format(
-								"Dude, you're connected to:\n{0} ({1})\n\nSummary Page not implemented yet.\n\nLet's just say, if you made it this far, your account was successfully added.",
-								ConnectedDomain.Name,
-								ConnectedDomain.Host);
-					}
-
-					FinishButton.GrabFocus();
-					break;
-				default:
-					break;
+			DomainInformation[] domains = domainController.GetDomains();
+			if (domains != null && domains.Length > 0)
+			{
+				MakeDefaultPromptLabel.Visible = true;
+				MakeDefaultVerifyLabel.Visible = true;
+			}
+			else
+			{
+				MakeDefaultPromptLabel.Visible = false;
+				MakeDefaultVerifyLabel.Visible = false;
 			}
 		}
 		
-		private void OnFieldChanged(object o, EventArgs args)
+		private void OnSummaryPagePrepared(object o, Gnome.PreparedArgs args)
 		{
-			UpdateWidgetSensitivity();
-		}
-		
-		private void OnCancelButton(object o, EventArgs args)
-		{
-Console.WriteLine("OnCancelButton");
-			CloseDialog();
-		}
-		
-		private void OnBackButton(object o, EventArgs args)
-		{
-Console.WriteLine("OnBackButton");
-			try
+			this.Title = Util.GS("iFolder Account Assistant");
+
+			if (ConnectedDomain != null && ConnectedDomain.Name != null && ConnectedDomain.Host != null)
 			{
-				WizardNotebook.CurrentPage = WizardNotebook.CurrentPage - 1;
+				SummaryPage.Text = 
+					string.Format(
+						"Congratulations!  You are now connected to:\n\n{0}\n({1})\n\nYou can now add folders to be synchronized to the server.  You may also download folders from the server and have them be synchronized to your computer.\n\nClick \"Finish\" to close this window.",
+						ConnectedDomain.Name,
+						ConnectedDomain.Host);
 			}
-			catch{}
+			
+			// Hack to modify the "Apply" button to be a "Finish" button
+			AccountDruid.Forall(EnableFinishButtonCallback);
+			
+			AccountDruid.SetButtonsSensitive(false, true, false, false);
 		}
 		
-		private void OnNextButton(object o, EventArgs args)
+		/// <summary>
+		/// Return true if the connect was successful, otherwise, return false.
+		/// Returning true will allow the druid to advance one page.
+		/// </summary>		
+		private bool OnConnectClicked(DruidConnectPage connectPage)
 		{
-Console.WriteLine("OnNextButton");
-			try
-			{
-				WizardNotebook.CurrentPage = WizardNotebook.CurrentPage + 1;
-			}
-			catch{}
-		}
-		
-		private void OnConnectButton(object o, EventArgs args)
-		{
-Console.WriteLine("OnConnectButton");
 			string serverName	= ServerNameEntry.Text.Trim();
 			string userName		= UserNameEntry.Text.Trim();
 			string password		= PasswordEntry.Text;
@@ -760,7 +539,7 @@ Console.WriteLine("OnConnectButton");
 				dg.Run();
 				dg.Hide();
 				dg.Destroy();
-				return;
+				return false;
 			}
 			catch(Exception e2)
 			{
@@ -775,12 +554,10 @@ Console.WriteLine("OnConnectButton");
 				dg2.Run();
 				dg2.Hide();
 				dg2.Destroy();
-				return;
+				return false;
 			}
 			
-			if (dom == null) return;	// This shouldn't happen, but just in case...
-
-			Console.WriteLine(dom.StatusCode);
+			if (dom == null) return false;	// This shouldn't happen, but just in case...
 
 			switch(dom.StatusCode)
 			{
@@ -802,8 +579,7 @@ Console.WriteLine("OnConnectButton");
 					if(rc == -8) // User clicked the Yes button
 					{
 						simws.StoreCertificate(byteArray, serverName);
-						OnConnectButton(o, args);
-						return;
+						return OnConnectClicked(connectPage);
 					}
 					break;
 				case StatusCodes.Success:
@@ -815,8 +591,9 @@ Console.WriteLine("OnConnectButton");
 						if (authStatus.statusCode == StatusCodes.Success ||
 							authStatus.statusCode == StatusCodes.SuccessInGrace)
 						{
+							// We connected successfully!
 							ConnectedDomain = dom;
-							WizardNotebook.CurrentPage = (int)AccountWizardPageIndex.SummaryPageIndex;
+							return true;
 							break;
 						}
 						else
@@ -833,12 +610,18 @@ Console.WriteLine("OnConnectButton");
 					// Failed to connect
 					Util.ShowLoginError(this, dom.StatusCode);
 					break;
-			}			
+			}
+			
+			return false;	// Failed to connect
 		}
 		
-		private void OnFinishButton(object o, EventArgs args)
+		private void OnCancelClicked(object o, Gnome.CancelClickedArgs args)
 		{
-Console.WriteLine("OnFinishButton");
+			CloseDialog();
+		}
+		
+		private void OnFinishClicked(object o, Gnome.FinishClickedArgs args)
+		{
 			CloseDialog();
 		}
 
@@ -883,16 +666,61 @@ Console.WriteLine("OnFinishButton");
 					break;
 			}
 		}
-		
+
+		///
+		/// Utility/Helper Methods
+		///
+		private void EnableFinishButtonCallback(Widget w)
+		{
+			if (w is HButtonBox)
+			{
+				HButtonBox hButtonBox = w as HButtonBox;
+				foreach(Widget buttonWidget in hButtonBox)
+				{
+					if (buttonWidget is Button)
+					{
+						Button button = buttonWidget as Button;
+						if (button.Label == "gtk-apply")
+							button.Label = Util.GS("_Finish");
+					}
+				}
+			}
+		}
+
 		public void CloseDialog()
 		{
 			this.Hide();
 			this.Destroy();
 		}
-
-		///
-		/// Widget Overrides
-		///
-
 	}
+	
+	///
+	/// Override Gnome.DruidPageStandard for our Connect Page so that we can
+	/// override the behavior of the Next button
+	///
+	public class DruidConnectPage : Gnome.DruidPageStandard
+	{
+		public event ConnectClickedHandler ConnectClicked;
+
+		public DruidConnectPage(string title, Gdk.Pixbuf logo, Gdk.Pixbuf top_watermark)
+			: base (title, logo, top_watermark)
+		{
+		}
+		
+		protected override bool OnNextClicked(Widget druid)
+		{
+			if (ConnectClicked != null)
+			{
+				if (!ConnectClicked(this))
+					return true;	// Prevent the default event handler (from advancing to the next druid page
+			}
+
+			return false;	// Allow the default event handler (to advance to the next druid page)
+		}
+	}
+	
+	/// <summary>
+	/// Return true if the connect was successful, otherwise return false.
+	/// </summary>
+	public delegate bool ConnectClickedHandler(DruidConnectPage connectPage);
 } 
