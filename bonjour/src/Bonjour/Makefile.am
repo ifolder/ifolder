@@ -9,7 +9,7 @@ Bonjour_FLAGS = $(CSC_LIBFLAG)
 Bonjour_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll Simias.dll SimiasClient.dll log4net.dll Novell.Security.ClientPasswordManager.NetCredential.dll
 Bonjour_LIBPATH = ../SimiasClient ../Simias.dll ./external $(NOVELL_SECURITY_DIR) $(LOG4NET_DIR)
 
-EXTRA_DIST = $(Bonjour_CSFILES)
+EXTRA_DIST = $(Bonjour_CSFILES) Simias.Bonjour.conf
 
 #if MAKE_DOC_FILE
 #DOC_FILE = $(basename $@).doc.xml
@@ -36,9 +36,12 @@ install-exec-local: Simias.Bonjour.dll $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(webdir)
 	$(mkinstalldirs) $(DESTDIR)$(webbindir)
 	$(INSTALL_PROGRAM) Simias.Bonjour.dll $(OTHER_FILES) $(DEBUG_FILES) $(DESTDIR)$(webbindir)
+	$(INSTALL_PROGRAM) Simias.Bonjour.conf $(DESTDIR)$(webdir)/modules
+	
 	
 uninstall-local:
 	cd $(DESTDIR)$(webbindir); rm -f Simias.Bonjour.dll $(OTHER_FILES) $(DEBUG_FILES)
+	cd $(DESTDIR)$(webdir)/modules; rm -f Simias.Bonjour.conf
 
 installcheck-local: install
 	
