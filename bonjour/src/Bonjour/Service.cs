@@ -121,7 +121,7 @@ namespace Simias.mDns
 
 				// Load up all Bonjour iFolder users that are persisted
 				// in the Bonjour (p2p) domain
-				browser.LoadMembersFromDomain( false );
+				//browser.LoadMembersFromDomain( false );
 
 				// Start browsing which manages the coming and going of
 				// iFolder Bonjour users.

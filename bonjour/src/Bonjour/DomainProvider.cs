@@ -51,7 +51,7 @@ namespace Simias
 			SimiasLogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
 		private Hashtable searchContexts;
-		private mDnsProviderLock mdnsLock;
+		//private mDnsProviderLock mdnsLock;
 		private Simias.mDns.Browser browser = null;
 
 		#region Properties
@@ -77,7 +77,7 @@ namespace Simias
 		public mDnsProvider()
 		{
 			searchContexts = new Hashtable();
-			mdnsLock = new mDnsProviderLock();
+			//mdnsLock = new mDnsProviderLock();
 			browser = new Simias.mDns.Browser();
 		}
 		#endregion
@@ -94,21 +94,27 @@ namespace Simias
 			public int lastCount = 0;
 		}
 
+		/*
 		private class mDnsProviderLock
 		{
 			string lockit = "mdns-lock";
 		}
-
+		*/
+		
 		private Uri MemberIDToUri( string memberID )
 		{
 			Uri locationUri = null;
 			Member member = null;
+			
+			log.Debug( "MemberIDToUri called" );
+			log.Debug( "  finding the URI for: " + memberID );
 
 			// Have we seen this member??
 			lock( Simias.mDns.Browser.MemberListLock )
 			{
 				foreach( Member cMember in Simias.mDns.Browser.MemberList )
 				{
+					log.Debug( "  checking member: " + cMember.Name );
 					if ( cMember.UserID == memberID )
 					{
 						member = cMember;
@@ -121,9 +127,10 @@ namespace Simias
 			{
 				try
 				{
+					log.Debug( "  getting the host property " );
 					string hostName =
 						member.Properties.GetSingleProperty( browser.HostProperty ).Value as string;
-					log.Debug( "Resolving host: " + hostName );
+					log.Debug( "  resolving host: " + hostName );
 
 					IPHostEntry host = Dns.GetHostByName( hostName );
 					long addr = host.AddressList[0].Address;
@@ -137,16 +144,19 @@ namespace Simias
 					string port = member.Properties.GetSingleProperty( browser.PortProperty ).Value as string;
 					string path = member.Properties.GetSingleProperty( browser.PathProperty ).Value as string;
 					string fullPath = "http://" + ipAddr + ":" + port + path;
-					log.Debug( "fullPath: " + fullPath );
+					log.Debug( "  fullPath: " + fullPath );
 					locationUri = new Uri( fullPath );
 				}
 				catch( Exception e )
 				{
+					log.Debug( "  " );
 					log.Error( e.Message );
+					log.Debug( "  " );
 					log.Error( e.StackTrace );
 				}
 			}
 
+			log.Debug( "MemberIDToUri exit" );
 			return locationUri;
 		}
 
@@ -305,7 +315,7 @@ namespace Simias
 		public void FindCloseDomainMembers( string ctx )
 		{
 			log.Debug( "FindCloseDomainMembers called" );
-			lock( this.mdnsLock )
+			lock( typeof( Simias.mDnsProvider ) )
 			{
 				if ( searchContexts.Contains( ctx ) )
 				{
@@ -391,7 +401,7 @@ namespace Simias
 
 			searchCtx.lastCount = searchCtx.index;
 			searchContext = searchCtx.id;
-			lock( this.mdnsLock )
+			lock( typeof( Simias.mDnsProvider ) )
 			{
 				searchContexts.Add( searchCtx.id, searchCtx );
 			}
@@ -438,7 +448,7 @@ namespace Simias
 			ArrayList results = new ArrayList();
 
 			memberList = null;
-			lock( this.mdnsLock )
+			lock( typeof( Simias.mDnsProvider ) )
 			{
 				if ( searchContexts.Contains( searchContext ) )
 				{
@@ -485,7 +495,7 @@ namespace Simias
 
 			log.Debug( "FindPreviousDomainMembers called" );
 
-			lock( this.mdnsLock )
+			lock( typeof( Simias.mDnsProvider ) )
 			{
 				if ( searchContexts.Contains( searchContext ) )
 				{
@@ -542,7 +552,7 @@ namespace Simias
 
 			log.Debug( "FindSeekDomainMembers called" );
 
-			lock( this.mdnsLock )
+			lock( typeof( Simias.mDnsProvider ) )
 			{
 				if ( searchContexts.Contains( searchContext ) )
 				{

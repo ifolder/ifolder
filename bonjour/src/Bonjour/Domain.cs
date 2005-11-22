@@ -420,7 +420,7 @@ namespace Simias.mDns
 				mdnsDomain = store.GetDomain( ID );
 				if ( mdnsDomain != null )
 				{
-					Member owner = mdnsDomain.Owner;
+					//Member owner = mdnsDomain.Owner;
 					mDnsUserID = mdnsDomain.Owner.UserID; //mdnsDomain.GetMemberByName( mDnsUserName ).ID;
 					mDnsUserName = mdnsDomain.Owner.Name;
 					Simias.POBox.POBox pobox = 

@@ -179,7 +179,7 @@ namespace Simias.mDns
 				{
 					log.Debug( "RegisterLocalMember" );
 					log.Debug( "  UserID:	" + userID );
-					log.Debug( "  Username: " + memberName );
+					log.Debug( "  Username:   " + memberName );
 					log.Debug( "  ServicePath: " + webServiceUri.AbsolutePath );
 					log.Debug( "  Public Key:  " + publicKey.ToXmlString( false ) );
 					//log.Debug( "  calling RegisterWithCallback" );
@@ -255,10 +255,10 @@ namespace Simias.mDns
 			}
 
             myAddresses = Simias.MyDns.GetHostAddresses();
-            //if ( myAddresses.Count == 0 )
-            //{
-            //    throw new ApplicationException( "Could not determine local address" );
-            //}
+            if ( myAddresses.Length == 0 )
+            {
+                throw new ApplicationException( "Could not determine local address" );
+            }
 
             string fullPath = "http://" + myAddresses[0] + ":" + Store.LocalServicePort.ToString() + this.virtualPath;
             log.Debug( "Path: " + fullPath );
