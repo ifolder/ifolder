@@ -311,6 +311,10 @@ namespace Novell.iFolder
 		private ComboBox			synchronizedDomainsComboBox;
 
 		private Gtk.Tooltips		SynchronizedFoldersTooltips;
+
+		private EventBox			ContentEventBox;
+//		private EventBox			SynchronizedActionsPane;
+
 		private Button				AddSynchronizedFolderButton;
 		private Button				DownloadRemoteFolderButton;
 //		private Button				RefreshSynchronizedFoldersButton;
@@ -320,7 +324,7 @@ namespace Novell.iFolder
 		private Button				SynchronizedCancelSearchButton;
 		private uint				synchronizedSearchTimeoutID;
 
-		private Paned				synchronizedPaned;
+//		private Paned				synchronizedPaned;
 		
 //		private Notebook			SynchronizedDetailsNotebook;
 		
@@ -330,7 +334,7 @@ namespace Novell.iFolder
 		private iFolderIconView		synchronizedFoldersIconView;
 
 		private Expander			generalTasksExpander;
-		private Expander			synchronizedFolderTasks;
+		private VBox				SynchronizedFolderTasks;
 		private Expander			detailsExpander;
 
 //		private Button				AddFolderToSyncButton;
@@ -1742,11 +1746,15 @@ Console.WriteLine("iFolderWindow.OnRemoteFoldersSelectionChanged()");
 ///
 		private Widget CreateSynchronizedFoldersPage()
 		{
+			ContentEventBox = new EventBox();
+			ContentEventBox.ModifyBg(StateType.Normal, this.Style.Background(StateType.Active));
+
 			VBox vbox = new VBox(false, 0);
-			vbox.PackStart(CreateSynchronizedToolbar(), false, false, 0);
+			ContentEventBox.Add(vbox);
+//			vbox.PackStart(CreateSynchronizedToolbar(), false, false, 4);
 			vbox.PackStart(CreateSynchronizedPaned(), true, true, 0);
 
-			return vbox;
+			return ContentEventBox;
 		}
 		
 
@@ -2012,62 +2020,93 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 		
 		private Widget CreateSynchronizedPaned()
 		{
-			synchronizedPaned = new HPaned();
-			synchronizedPaned.Position = 220;
-			
-			synchronizedPaned.Add1(CreateSynchronizedActionsPane());
-			synchronizedPaned.Add2(CreateSynchronizedIconViewPane());
-			
-//			Console.WriteLine("ThemeName: {0}", synchronizedPaned.Settings.ThemeName);
-			
-			return synchronizedPaned;
-		}
-		
-		private Widget CreateSynchronizedActionsPane()
-		{
-			ScrolledWindow sw = new ScrolledWindow();
-//			sw.ShadowType = Gtk.ShadowType.EtchedIn;
-			sw.VscrollbarPolicy = PolicyType.Automatic;
-			sw.HscrollbarPolicy = PolicyType.Automatic;
+			HBox hbox = new HBox(false, 0);
 
-			VBox vbox = new VBox(false, 0);
-			sw.AddWithViewport(vbox);
-			vbox.PackStart(CreateSynchronizedActions(), true, true, 0);
+			hbox.PackStart(CreateSynchronizedActions(), false, false, 12);
+			hbox.PackStart(CreateSynchronizedIconViewPane(), true, true, 0);
 			
-			return sw;
+			return hbox;
 		}
 		
 		private Widget CreateSynchronizedActions()
 		{
 			VBox actionsVBox = new VBox(false, 0);
 
-			generalTasksExpander =
-				new Expander(
-					string.Format("<span size=\"small\" weight=\"bold\">{0}</span>",
-					Util.GS("iFolder Tasks:")));
-			actionsVBox.PackStart(generalTasksExpander, false, false, 0);
-			generalTasksExpander.UseMarkup = true;
-			generalTasksExpander.Expanded = true;
+			///
+			/// Spacer
+			///
+			Label l = new Label("<span size=\"small\"></span>");
+			actionsVBox.PackStart(l, false, false, 0);
+			l.UseMarkup = true;
+
+			///
+			/// Search
+			///
+			l = new Label(
+				string.Format(
+					"<span size=\"x-large\">{0}</span>",
+					Util.GS("Filter")));
+			actionsVBox.PackStart(l, false, false, 0);
+			l.UseMarkup = true;
+			l.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+			l.Xalign = 0.0F;
+			
+			HBox searchHBox = new HBox(false, 4);
+			actionsVBox.PackStart(searchHBox, false, false, 0);
+			
+			synchronizedSearchEntry = new Entry();
+			searchHBox.PackStart(synchronizedSearchEntry, false, false, 0);
+			synchronizedSearchEntry.SelectRegion(0, -1);
+			synchronizedSearchEntry.CanFocus = true;
+			synchronizedSearchEntry.Changed +=
+				new EventHandler(OnSynchronizedSearchEntryChanged);
+
+			Image stopImage = new Image(Stock.Stop, Gtk.IconSize.Menu);
+			stopImage.SetAlignment(0.5F, 0F);
+			
+			SynchronizedCancelSearchButton = new Button(stopImage);
+			searchHBox.PackEnd(SynchronizedCancelSearchButton, false, false, 0);
+			SynchronizedCancelSearchButton.Relief = ReliefStyle.None;
+			SynchronizedCancelSearchButton.Sensitive = false;
+			
+			SynchronizedCancelSearchButton.Clicked +=
+				new EventHandler(OnSynchronizedCancelSearchButton);
+
+			///
+			/// Spacer
+			///
+			l = new Label("<span size=\"small\"></span>");
+			actionsVBox.PackStart(l, false, false, 0);
+			l.UseMarkup = true;
+
+			///
+			/// iFolder Actions
+			///
+			l = new Label(
+				string.Format(
+					"<span size=\"x-large\">{0}</span>",
+					Util.GS("iFolder Actions")));
+			actionsVBox.PackStart(l, false, false, 0);
+			l.UseMarkup = true;
+			l.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+			l.Xalign = 0.0F;
+
 			HBox spacerHBox = new HBox(false, 0);
-			generalTasksExpander.Add(spacerHBox);
+			actionsVBox.PackStart(spacerHBox, false, false, 0);
 			spacerHBox.PackStart(new Label(""), false, false, 4);
 			VBox vbox = new VBox(false, 0);
 			spacerHBox.PackStart(vbox, true, true, 0);
 
 			///
-			/// AddSynchronizedFolderButton
+			/// Add a folder Button
 			///
 			HBox hbox = new HBox(false, 0);
 			AddSynchronizedFolderButton = new Button(hbox);
 			vbox.PackStart(AddSynchronizedFolderButton, false, false, 0);
 			AddSynchronizedFolderButton.Relief = ReliefStyle.None;
 
-			Image buttonImage = new Image(Stock.Add, IconSize.SmallToolbar);
-			buttonImage.SetAlignment(0.5F, 0F);
-			hbox.PackStart(buttonImage, false, false, 0);
-			
 			Label buttonText = new Label(
-				string.Format("<span size=\"small\" weight=\"normal\">{0}</span>",
+				string.Format("<span size=\"large\">{0}</span>",
 							  Util.GS("Add a folder")));
 			hbox.PackStart(buttonText, false, false, 4);
 			buttonText.UseMarkup = true;
@@ -2077,23 +2116,16 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 			AddSynchronizedFolderButton.Clicked +=
 				new EventHandler(AddSynchronizedFolderHandler);
 
-
 			///
-			/// AddSynchronizedFolderButton
+			/// DownloadRemoteFolderButton
 			///
 			hbox = new HBox(false, 0);
 			DownloadRemoteFolderButton = new Button(hbox);
 			vbox.PackStart(DownloadRemoteFolderButton, false, false, 0);
 			DownloadRemoteFolderButton.Relief = ReliefStyle.None;
 
-			Gdk.Pixbuf buttonPixbuf = new Gdk.Pixbuf(Util.ImagesPath("download-folder64.png"));
-			buttonPixbuf = buttonPixbuf.ScaleSimple(24, 24, Gdk.InterpType.Bilinear);
-			buttonImage = new Image(buttonPixbuf);
-			hbox.PackStart(buttonImage, false, false, 0);
-			buttonImage.SetAlignment(0.5F, 0F);
-
 			buttonText = new Label(
-				string.Format("<span size=\"small\" weight=\"normal\">{0}</span>",
+				string.Format("<span size=\"large\">{0}</span>",
 							  Util.GS("Download a folder")));
 			hbox.PackStart(buttonText, false, false, 4);
 			buttonText.UseMarkup = true;
@@ -2104,117 +2136,31 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 				new EventHandler(DownloadRemoteFolderHandler);
 
 			///
-			/// RefreshSynchronizedFoldersButton
+			/// Spacer
 			///
-//			hbox = new HBox(false, 0);
-//			RefreshSynchronizedFoldersButton = new Button(hbox);
-//			vbox.PackStart(RefreshSynchronizedFoldersButton, false, false, 0);
-//			RefreshSynchronizedFoldersButton.Relief = ReliefStyle.None;
+			l = new Label("<span size=\"small\"></span>");
+			actionsVBox.PackStart(l, false, false, 0);
+			l.UseMarkup = true;
 
-//			buttonImage = new Image(Stock.Refresh, IconSize.SmallToolbar);
-//			buttonImage.SetAlignment(0.5F, 0F);
-//			hbox.PackStart(buttonImage, false, false, 0);
-			
-//			buttonText = new Label(
-//				string.Format("<span size=\"small\" weight=\"normal\">{0}</span>",
-//							  Util.GS("Refresh the list of folders")));
-//			hbox.PackStart(buttonText, false, false, 4);
-//			buttonText.UseMarkup = true;
-//			buttonText.UseUnderline = false;
-//			buttonText.Xalign = 0;
-			
-//			RefreshSynchronizedFoldersButton.Clicked +=
-//				new EventHandler(RefreshSynchronizedFoldersHandler);
+			///
+			/// Folder Actions
+			///
+			SynchronizedFolderTasks = new VBox(false, 0);
+			actionsVBox.PackStart(SynchronizedFolderTasks, false, false, 0);
+			l = new Label(
+				string.Format(
+					"<span size=\"x-large\">{0}</span>",
+					Util.GS("Folder Actions")));
+			SynchronizedFolderTasks.PackStart(l, false, false, 0);
+			l.UseMarkup = true;
+			l.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+			l.Xalign = 0.0F;
 
-
-
-			synchronizedFolderTasks =
-				new Expander(
-					string.Format("<span size=\"small\" weight=\"bold\">{0}</span>",
-					Util.GS("Synchronized Folder Tasks:")));
-			actionsVBox.PackStart(synchronizedFolderTasks, false, false, 0);
-			synchronizedFolderTasks.UseMarkup = true;
-			synchronizedFolderTasks.Expanded = true;
 			spacerHBox = new HBox(false, 0);
-			synchronizedFolderTasks.Add(spacerHBox);
+			SynchronizedFolderTasks.PackStart(spacerHBox, false, false, 0);
 			spacerHBox.PackStart(new Label(""), false, false, 4);
 			vbox = new VBox(false, 0);
 			spacerHBox.PackStart(vbox, true, true, 0);
-//			synchronizedFolderTasks.Add(vbox);
-
-
-
-			///
-			/// AddFolderToSyncButton
-			///
-//			HBox hbox = new HBox(false, 0);
-//			AddFolderToSyncButton = new Button(hbox);
-//			AddFolderToSyncButton.Relief = ReliefStyle.None;
-//			vbox.PackStart(AddFolderToSyncButton, false, false, 0);
-			
-//			Gdk.Pixbuf folderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("add-folder-to-synchronize.png"));
-//			folderPixbuf = folderPixbuf.ScaleSimple(24, 24, Gdk.InterpType.Bilinear);
-//			Image folderImage = new Image(folderPixbuf);
-//			folderImage.SetAlignment(0.5F, 0F);
-//			hbox.PackStart(folderImage, false, false, 0);
-			
-//			VBox buttonVBox = new VBox(false, 0);
-//			hbox.PackStart(buttonVBox, true, true, 4);
-			
-//			Label buttonText = new Label("<span size=\"small\" weight=\"bold\">Add a new folder</span>");
-//			buttonVBox.PackStart(buttonText, false, false, 0);
-//			buttonText.UseMarkup = true;
-//			buttonText.UseUnderline = false;
-//			buttonText.Xalign = 0;
-			
-//			Label buttonMessage = new Label("<span size=\"x-small\">Choose a folder on your computer to synchronize with an iFolder Server</span>");
-//			buttonVBox.PackStart(buttonMessage, false, false, 0);
-//			buttonMessage.UseMarkup = true;
-//			buttonMessage.UseUnderline = false;
-//			buttonMessage.LineWrap = true;
-//			buttonMessage.Justify = Justification.Left;
-//			buttonMessage.Xalign = 0;
-//			buttonMessage.Yalign = 0;
-//			buttonMessage.WidthRequest = 170;
-//			buttonMessage.HeightRequest = 40;
-			
-//			AddFolderToSyncButton.Clicked +=
-//				new EventHandler(OnAddFolderToSyncButton);
-						
-			
-			///
-			/// RemoveSynchronizedFolderButton
-			///
-//			hbox = new HBox(false, 0);
-//			RemoveSynchronizedFolderButton = new Button(hbox);
-//			RemoveSynchronizedFolderButton.Relief = ReliefStyle.None;
-//			vbox.PackStart(RemoveSynchronizedFolderButton, false, false, 0);
-
-//			folderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("remove-folder.png"));
-//			folderPixbuf = folderPixbuf.ScaleSimple(24, 24, Gdk.InterpType.Bilinear);
-//			folderImage = new Image(folderPixbuf);
-//			folderImage.SetAlignment(0.5F, 0F);
-//			hbox.PackStart(folderImage, false, false, 0);
-			
-//			buttonVBox = new VBox(false, 0);
-//			hbox.PackStart(buttonVBox, true, true, 4);
-			
-//			buttonText = new Label("<span size=\"small\" weight=\"bold\">Stop synchronizing</span>");
-//			buttonVBox.PackStart(buttonText, false, false, 0);
-//			buttonText.UseMarkup = true;
-//			buttonText.UseUnderline = false;
-//			buttonText.Xalign = 0;
-			
-//			buttonMessage = new Label("<span size=\"x-small\">Click here to stop synchronizing this folder on your computer</span>");
-//			buttonVBox.PackStart(buttonMessage, false, false, 0);
-//			buttonMessage.UseMarkup = true;
-//			buttonMessage.UseUnderline = false;
-//			buttonMessage.LineWrap = true;
-//			buttonMessage.Justify = Justification.Left;
-//			buttonMessage.Xalign = 0;
-//			buttonMessage.Yalign = 0;
-//			buttonMessage.WidthRequest = 170;
-//			buttonMessage.HeightRequest = 25;
 
 			///
 			/// OpenSynchronizedFolderButton
@@ -2224,12 +2170,8 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 			vbox.PackStart(OpenSynchronizedFolderButton, false, false, 0);
 			OpenSynchronizedFolderButton.Relief = ReliefStyle.None;
 
-			buttonImage = new Image(Stock.Open, IconSize.SmallToolbar);
-			buttonImage.SetAlignment(0.5F, 0F);
-			hbox.PackStart(buttonImage, false, false, 0);
-			
 			buttonText = new Label(
-				string.Format("<span size=\"small\" weight=\"normal\">{0}</span>",
+				string.Format("<span size=\"large\">{0}</span>",
 							  Util.GS("Open...")));
 			hbox.PackStart(buttonText, false, false, 4);
 			buttonText.UseMarkup = true;
@@ -2249,13 +2191,13 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 			vbox.PackStart(ResolveConflictsButton, false, false, 0);
 			ResolveConflictsButton.Relief = ReliefStyle.None;
 
-			buttonPixbuf = new Gdk.Pixbuf(Util.ImagesPath("conflict24.png"));
-			buttonImage = new Image(buttonPixbuf);
-			hbox.PackStart(buttonImage, false, false, 0);
-			buttonImage.SetAlignment(0.5F, 0F);
+//			Gdk.Pixbuf buttonPixbuf = new Gdk.Pixbuf(Util.ImagesPath("conflict24.png"));
+//			buttonImage = new Image(buttonPixbuf);
+//			hbox.PackStart(buttonImage, false, false, 0);
+//			buttonImage.SetAlignment(0.5F, 0F);
 
 			buttonText = new Label(
-				string.Format("<span size=\"small\" weight=\"normal\">{0}</span>",
+				string.Format("<span size=\"large\">{0}</span>",
 							  Util.GS("Resolve conflicts...")));
 			hbox.PackStart(buttonText, false, false, 4);
 			buttonText.UseMarkup = true;
@@ -2273,13 +2215,13 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 			vbox.PackStart(SynchronizeNowButton, false, false, 0);
 			SynchronizeNowButton.Relief = ReliefStyle.None;
 
-			buttonPixbuf = new Gdk.Pixbuf(Util.ImagesPath("sync24.png"));
-			buttonImage = new Image(buttonPixbuf);
-			hbox.PackStart(buttonImage, false, false, 0);
-			buttonImage.SetAlignment(0.5F, 0F);
+//			buttonPixbuf = new Gdk.Pixbuf(Util.ImagesPath("sync24.png"));
+//			buttonImage = new Image(buttonPixbuf);
+//			hbox.PackStart(buttonImage, false, false, 0);
+//			buttonImage.SetAlignment(0.5F, 0F);
 			
 			buttonText = new Label(
-				string.Format("<span size=\"small\" weight=\"normal\">{0}</span>",
+				string.Format("<span size=\"large\">{0}</span>",
 							  Util.GS("Synchronize now")));
 			hbox.PackStart(buttonText, true, true, 4);
 			buttonText.UseMarkup = true;
@@ -2298,14 +2240,14 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 			vbox.PackStart(ShareSynchronizedFolderButton, false, false, 0);
 			ShareSynchronizedFolderButton.Relief = ReliefStyle.None;
 
-			buttonPixbuf = new Gdk.Pixbuf(Util.ImagesPath("share-emblem.png"));
-			buttonPixbuf = buttonPixbuf.ScaleSimple(24, 24, Gdk.InterpType.Bilinear);
-			buttonImage = new Image(buttonPixbuf);
-			hbox.PackStart(buttonImage, false, false, 0);
-			buttonImage.SetAlignment(0.5F, 0F);
+//			buttonPixbuf = new Gdk.Pixbuf(Util.ImagesPath("share-emblem.png"));
+//			buttonPixbuf = buttonPixbuf.ScaleSimple(24, 24, Gdk.InterpType.Bilinear);
+//			buttonImage = new Image(buttonPixbuf);
+//			hbox.PackStart(buttonImage, false, false, 0);
+//			buttonImage.SetAlignment(0.5F, 0F);
 			
 			buttonText = new Label(
-				string.Format("<span size=\"small\" weight=\"normal\">{0}</span>",
+				string.Format("<span size=\"large\">{0}</span>",
 							  Util.GS("Share with...")));
 			hbox.PackStart(buttonText, true, true, 4);
 			buttonText.UseMarkup = true;
@@ -2324,12 +2266,12 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 			vbox.PackStart(RemoveSynchronizedFolderButton, false, false, 0);
 			RemoveSynchronizedFolderButton.Relief = ReliefStyle.None;
 
-			buttonImage = new Image(Stock.Delete, IconSize.SmallToolbar);
-			hbox.PackStart(buttonImage, false, false, 0);
-			buttonImage.SetAlignment(0.5F, 0F);
+//			buttonImage = new Image(Stock.Delete, IconSize.SmallToolbar);
+//			hbox.PackStart(buttonImage, false, false, 0);
+//			buttonImage.SetAlignment(0.5F, 0F);
 			
 			buttonText = new Label(
-				string.Format("<span size=\"small\" weight=\"normal\">{0}</span>",
+				string.Format("<span size=\"large\">{0}</span>",
 							  Util.GS("Remove")));
 			hbox.PackStart(buttonText, true, true, 4);
 			buttonText.UseMarkup = true;
@@ -2599,7 +2541,7 @@ Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
 //				SynchronizedDetailsNotebook.CurrentPage = 0;
 //				generalTasksExpander.Expanded = true;
 //				synchronizedFolderTasks.Expanded = false;
-				synchronizedFolderTasks.Visible = false;
+				SynchronizedFolderTasks.Visible = false;
 				detailsExpander.Visible = false;
 
 
@@ -2642,7 +2584,7 @@ Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
 
 //				generalTasksExpander.Expanded = true;
 //				synchronizedFolderTasks.Expanded = true;
-				synchronizedFolderTasks.Visible = true;
+				SynchronizedFolderTasks.Visible = true;
 				detailsExpander.Visible = true;
 
 
