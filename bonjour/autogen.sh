@@ -6,7 +6,7 @@ test -z "$srcdir" && srcdir=.
 
 ORIGDIR=`pwd`
 cd $srcdir
-PROJECT=bonjour
+PROJECT=simias-bonjour
 TEST_TYPE=-f
 FILE=src/Bonjour/Domain.cs
 DIE=0

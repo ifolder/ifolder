@@ -2,7 +2,7 @@ AC_INIT(src/Bonjour/Domain.cs)
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
 
-AM_INIT_AUTOMAKE(bonjour, 0.2)
+AM_INIT_AUTOMAKE(simias-bonjour, 1.1)
 VERSION=$VERSION.`date +%Y%m%d`
 AM_MAINTAINER_MODE
 AC_PROG_CC
