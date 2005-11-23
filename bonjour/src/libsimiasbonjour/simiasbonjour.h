@@ -46,6 +46,7 @@ typedef	int	pid_t;
 #define	kDNSMaxID					32
 #define	kSimiasMaxServicePath		128
 #define	kSimiasMaxPublicKey			256
+#define kSimiasMaxDescription		256
 #define	kDNSMaxTextualIP			16
 
 // Note: Bonjour's max domain name is 1005 but for now we're
@@ -64,10 +65,13 @@ typedef	int	pid_t;
 */
 
 static const char memberType[] = "_ifolder_member._tcp";
+static const char collectionType[] = "_simias_collection._tcp";
 static const char domainType[] = "local.";
 
 static const char memberLabel[] = "MemberName=";
 static const char serviceLabel[] = "ServicePath=";
+static const char collectionLabel[] = "Collection=";
+static const char descriptionLabel[] = "Description=";
 static const char keyLabel[] = "PK=";
 static const char key2Label[] = "PK2=";
 
@@ -100,6 +104,29 @@ typedef struct tagMemberInfo
 	int			        Port;
 
 } MemberInfo, *PMemberInfo;
+
+
+typedef struct tagCollections
+{
+	char				ID[kDNSMaxID];
+	char				Name[kSimiasMaxServiceName];
+	char				HostName[kSimiasMaxDomainName];
+	char				IPAddress[kDNSMaxTextualIP];
+	char				ServicePath[kSimiasMaxServicePath];
+	unsigned char		Description[kSimiasMaxDescription];
+	int					Port;
+
+} Collections, *PCollections;
+
+typedef struct tagCollectionInfo
+{
+	char				Name[kSimiasMaxServiceName];
+	char				HostName[kSimiasMaxDomainName];
+	char				ServicePath[kSimiasMaxServicePath];
+	char				Description[kSimiasMaxDescription];
+	int			        Port;
+
+} CollectionInfo, *PCollectionInfo;
 
 extern
 DNSServiceErrorType
