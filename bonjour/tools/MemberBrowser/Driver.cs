@@ -322,6 +322,8 @@ namespace MemberBrowser
 			[MarshalAs(UnmanagedType.LPStr)] string domain,
 			[MarshalAs(UnmanagedType.I4)] int context)
 		{ 
+			Console.WriteLine( "MemberCallback entered" );
+			
 			if ( errorCode == kErrorType.kDNSServiceErr_NoError )
 			{
 				if ( ( flags & (int) kDNSServiceFlags.kDNSServiceFlagsAdd ) == 
@@ -332,6 +334,9 @@ namespace MemberBrowser
 					kErrorType status = GetMemberInfo( serviceName, info );
 					if ( status == kErrorType.kDNSServiceErr_NoError )
 					{
+						Console.WriteLine( "  adding: " + serviceName );
+						Console.WriteLine( "  member: " + info.Name );
+						
 						Member member = new Member();
 						member.ID = serviceName;
 						member.Name = info.Name;
@@ -439,7 +444,7 @@ namespace MemberBrowser
 			m_MainToolbar = new Toolbar();
 			
 			// Toolbar buttons
-			Gtk.ToolButton button1 = new ToolButton("gtk-new");
+			Gtk.Button button1 = new Button("gtk-new");
 			button1.Clicked +=new EventHandler(button1_Clicked);
 
 			// Add the buttons to the toolbar
@@ -481,7 +486,7 @@ namespace MemberBrowser
 			Driver.store = new ListStore( typeof( string ), typeof( string ), typeof( string ) );
 			tv.Model = store;
 
-			TreeIter iter = new TreeIter();
+			//TreeIter iter = new TreeIter();
 
 			/*
 			iter = store.AppendValues( "banderso@BRADY-T41P", "/simias10/banderso", "137.65.58.34" );
@@ -566,7 +571,7 @@ namespace MemberBrowser
 						AuthorStringBuild.ToString() );
             
 			md.Modal = true;
-			int result = md.Run();
+			md.Run();
 			md.Hide();
 			return;
 		}

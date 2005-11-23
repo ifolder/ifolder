@@ -53,7 +53,7 @@ namespace Simias.mDns
 		private readonly ISimiasLog log = 
 			SimiasLogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		private readonly string configSection = "ServiceManager";
+		//private readonly string configSection = "ServiceManager";
 		//private readonly string configWebService = "WebServiceUri";
         private readonly string virtualPath = "/simias10";
 		private Uri webServiceUri = null;
@@ -80,6 +80,7 @@ namespace Simias.mDns
 			string		PublicKey,
 			ref IntPtr	Cookie);
 
+		/*
 		[ DllImport( nativeLib ) ]
 		private 
 		extern 
@@ -93,6 +94,7 @@ namespace Simias.mDns
 			string				servicePath,
 			string				publicKey,
 			ref IntPtr			cookie);
+		*/
 
 		[ DllImport( nativeLib ) ]
 		private 
@@ -138,6 +140,7 @@ namespace Simias.mDns
 		public Register()
 		{
 			userHandle = new IntPtr( 0 );
+			downEvent = new AutoResetEvent( false );
 		}
 
 		/// <summary>
@@ -147,6 +150,7 @@ namespace Simias.mDns
 		public Register( string id, string memberName )
 		{
 			userHandle = new IntPtr( 0 );
+			downEvent = new AutoResetEvent( false );
 
 			this.userID = id;
 			this.memberName = memberName;
@@ -178,8 +182,9 @@ namespace Simias.mDns
 				do
 				{
 					log.Debug( "RegisterLocalMember" );
-					log.Debug( "  UserID:	" + userID );
-					log.Debug( "  Username:   " + memberName );
+					log.Debug( "  UserID:      " + userID );
+					log.Debug( "  Username:    " + memberName );
+					log.Debug( "  Port:        " + sport.ToString() );
 					log.Debug( "  ServicePath: " + webServiceUri.AbsolutePath );
 					log.Debug( "  Public Key:  " + publicKey.ToXmlString( false ) );
 					//log.Debug( "  calling RegisterWithCallback" );

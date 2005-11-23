@@ -1,20 +1,16 @@
-<Combine name="Bonjour" fileversion="2.0">
+<Combine name="MemberBrowser" fileversion="2.0">
   <Configurations active="Debug">
     <Configuration name="Debug" ctype="CombineConfiguration">
-      <Entry configuration="Debug" build="True" name="Bonjour" />
       <Entry configuration="Debug" build="True" name="MemberBrowser" />
     </Configuration>
     <Configuration name="Release" ctype="CombineConfiguration">
-      <Entry configuration="Debug" build="True" name="Bonjour" />
       <Entry configuration="Debug" build="True" name="MemberBrowser" />
     </Configuration>
   </Configurations>
-  <StartMode startupentry="Bonjour" single="True">
-    <Execute type="None" entry="Bonjour" />
+  <StartMode startupentry="MemberBrowser" single="True">
     <Execute type="None" entry="MemberBrowser" />
   </StartMode>
   <Entries>
-    <Entry filename="./Bonjour.mdp" />
-    <Entry filename="../../tools/MemberBrowser/MemberBrowser.mdp" />
+    <Entry filename="./MemberBrowser.mdp" />
   </Entries>
 </Combine>

@@ -254,7 +254,7 @@ RegisterLocalMember(
 			flags,
 			kDNSServiceInterfaceIndexAny, 
 			pID, 
-			"_ifolder_member._tcp.", 
+			"_simias-member._tcp.", 
 			NULL, //"", 
 			NULL, 
 			Port,
@@ -408,7 +408,7 @@ BrowseMembersInit(
 			&client, 
 			0,
 			kDNSServiceInterfaceIndexAny,
-			"_ifolder_member._tcp",
+			"_simias-member._tcp",
 			NULL, //dom,
 			callback, 
 			NULL);

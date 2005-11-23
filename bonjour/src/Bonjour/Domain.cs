@@ -53,7 +53,7 @@ namespace Simias.mDns
 		private string mDnsHostName;
 		private string mDnsUserName;
 		private string mDnsUserID;
-		private string mDnsPOBoxID;
+		//private string mDnsPOBoxID;
 
 		// For saving mdns user info to a xml file
 		private const string configDir = "mdns";
@@ -217,8 +217,9 @@ namespace Simias.mDns
 				// Verify the POBox for the local user
 				//
 
-				Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox( store, rDomain.ID, mDnsUserID );
-				mDnsPOBoxID = poBox.ID;
+				Simias.POBox.POBox.GetPOBox( store, rDomain.ID, mDnsUserID );
+				//Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox( store, rDomain.ID, mDnsUserID );
+				//mDnsPOBoxID = poBox.ID;
 			}
 			catch( Exception e1 )
 			{
@@ -423,9 +424,9 @@ namespace Simias.mDns
 					//Member owner = mdnsDomain.Owner;
 					mDnsUserID = mdnsDomain.Owner.UserID; //mdnsDomain.GetMemberByName( mDnsUserName ).ID;
 					mDnsUserName = mdnsDomain.Owner.Name;
-					Simias.POBox.POBox pobox = 
-						Simias.POBox.POBox.FindPOBox( store, ID, mDnsUserID );
-					mDnsPOBoxID = pobox.ID;
+					Simias.POBox.POBox.FindPOBox( store, ID, mDnsUserID );
+					//Simias.POBox.POBox pobox = Simias.POBox.POBox.FindPOBox( store, ID, mDnsUserID );
+					//mDnsPOBoxID = pobox.ID;
 					exists = true;
 				}
 			}
