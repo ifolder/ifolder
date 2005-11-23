@@ -364,7 +364,7 @@ RegisterLocalMember(
 			flags,
 			kDNSServiceInterfaceIndexAny, 
 			pID, 
-			"_ifolder_member._tcp.", 
+			memberType,
 			NULL, //"", 
 			NULL, 
 			Port,
@@ -616,7 +616,7 @@ BrowseMembersInit(
 			&client, 
 			0,
 			kDNSServiceInterfaceIndexAny,
-			"_ifolder_member._tcp",
+			memberType,
 			NULL, //dom,
 			callback, 
 			NULL);

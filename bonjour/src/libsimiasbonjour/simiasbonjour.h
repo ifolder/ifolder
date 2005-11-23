@@ -64,8 +64,8 @@ typedef	int	pid_t;
 #endif
 */
 
-static const char memberType[] = "_ifolder_member._tcp";
-static const char collectionType[] = "_simias_collection._tcp";
+static const char memberType[] = "_simias-member._tcp";
+static const char collectionType[] = "_simias-collection._tcp";
 static const char domainType[] = "local.";
 
 static const char memberLabel[] = "MemberName=";
