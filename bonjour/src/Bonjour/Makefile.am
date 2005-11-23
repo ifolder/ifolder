@@ -6,8 +6,8 @@ Bonjour_CSFILES_CSC := $(subst /,$(SEP),$(Bonjour_CSFILES))
 Bonjour_INCLUDES =
 Bonjour_RESOURCES =
 Bonjour_FLAGS = $(CSC_LIBFLAG)
-Bonjour_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll Simias.dll SimiasClient.dll log4net.dll Novell.Security.ClientPasswordManager.NetCredential.dll
-Bonjour_LIBPATH = ../SimiasClient ../Simias.dll ./external $(NOVELL_SECURITY_DIR) $(LOG4NET_DIR)
+Bonjour_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll SimiasLib.dll SimiasClient.dll log4net.dll Novell.Security.ClientPasswordManager.NetCredential.dll
+Bonjour_LIBPATH = ../SimiasClient ../SimiasLib.dll ./external $(NOVELL_SECURITY_DIR) $(LOG4NET_DIR)
 
 EXTRA_DIST = $(Bonjour_CSFILES) Simias.Bonjour.conf
 
