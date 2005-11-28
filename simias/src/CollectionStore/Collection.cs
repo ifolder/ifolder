@@ -48,6 +48,11 @@ namespace Simias.Storage
 	{
 		#region Class Members
 		/// <summary>
+		/// Used to log messages.
+		/// </summary>
+		static private readonly ISimiasLog log = SimiasLogManager.GetLogger( typeof( Collection ) );
+
+		/// <summary>
 		/// Table to store in-memory collection locks.
 		/// </summary>
 		static private Hashtable lockTable = new Hashtable();
@@ -435,6 +440,57 @@ namespace Simias.Storage
 
 		#region Private Methods
 		/// <summary>
+		/// A member node object has been added to a collection. Look up the POBox for
+		/// the new member and create a subscription object letting the new member know
+		/// that the collection has been shared with them.
+		/// </summary>
+		/// <param name="args">The member node that was added to this collection.</param>
+		private void AddSubscription( Member member )
+		{
+			log.Debug( "AddSubscription - Member {0} was added to collection {1}.", member.Name, Name );
+
+			// Get the member that represents the from user.
+			Member fromMember = GetMemberByID( GetCurrentPrincipal() );
+			if ( fromMember != null )
+			{
+				// Create a subscription object.
+				Subscription subscription = new Subscription( Name + " subscription", "Subscription", fromMember.UserID );
+				subscription.SubscriptionState = Simias.POBox.SubscriptionStates.Ready;
+				subscription.ToName = member.Name;
+				subscription.ToIdentity = member.UserID;
+				subscription.SubscriptionRights = member.Rights;
+				subscription.FromName = fromMember.Name;
+				subscription.FromIdentity = fromMember.UserID;
+				subscription.MessageID = subscription.ID;
+				subscription.SubscriptionCollectionID = ID;
+				subscription.SubscriptionCollectionType = Type;
+				subscription.SubscriptionCollectionName = Name;
+				subscription.DomainID = Domain;
+				subscription.DomainName = store.GetDomain( Domain ).Name;
+				subscription.SubscriptionKey = Guid.NewGuid().ToString();
+				subscription.MessageType = "Outbound";
+
+				DirNode dirNode = GetRootDirectory();
+				if( dirNode != null )
+				{
+					subscription.DirNodeID = dirNode.ID;
+					subscription.DirNodeName = dirNode.Name;
+				}
+
+				// Add the subscription to the new member's POBox.
+				// Find or create the POBox for the user for this domain.
+				POBox.POBox poBox = POBox.POBox.GetPOBox( store, Domain, member.UserID );
+				poBox.Commit( subscription );
+				log.Debug( "AddSubscription - Successfully invited user {0} to collection {1}.", member.Name, Name );
+			}
+			else
+			{
+				log.Error( "Could not add subscription for collection: {0} to user {1}'s POBox.", ID, member.UserID );
+			}
+		}
+
+
+		/// <summary>
 		/// Changes a Node object into a Tombstone object.
 		/// </summary>
 		/// <param name="node">Node object to change.</param>
@@ -480,7 +536,7 @@ namespace Simias.Storage
 		/// Gets the current/impersonating user.
 		/// </summary>
 		/// <returns>The member ID for the current/impersonating user.</returns>
-		private string GetCreator()
+		private string GetCurrentPrincipal()
 		{
 			string currentUserID;
 
@@ -690,7 +746,7 @@ namespace Simias.Storage
 							node.UpdateTime = commitTime;
 
 							// Set the creator ID on the node.
-							node.Properties.AddNodeProperty( PropertyTags.Creator, GetCreator() );
+							node.Properties.AddNodeProperty( PropertyTags.Creator, GetCurrentPrincipal() );
 
 							// Check so that sync roles can be set on the collection.
 							if ( IsType( node, NodeTypes.CollectionType ) )
@@ -986,6 +1042,16 @@ namespace Simias.Storage
 								{
 									changeLog.CreateChangeLogWriter( node.ID );
 								}
+								else if ( node.CascadeEvents && Store.IsEnterpriseServer && ( node.Properties.State == PropertyList.PropertyListState.Add ) )
+								{
+									// If this is a new node being imported onto a server, check to see if
+									// it is a member node being added to a base-type collection.
+									if ( IsBaseType( node, NodeTypes.MemberType ) && IsBaseType( this, NodeTypes.CollectionType ) )
+									{
+										// Add a subscription for the member for this collection.
+										AddSubscription( new Member( node ) );
+									}
+								}
 
 								// Indicate the event.
 								NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeCreated, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, fileSize );
@@ -999,6 +1065,27 @@ namespace Simias.Storage
 							{
 								// Update the cache before indicating the event.
 								store.Cache.Remove( id, node.ID );
+								
+								// See if processing further invitation events are allowed.
+								if ( node.CascadeEvents )
+								{
+									// Check for subscription removal if this is a collection.
+									if ( IsBaseType( node, NodeTypes.CollectionType ) )
+									{
+										// A collection has been deleted.
+										RemoveSubscriptionsForCollection();
+									}
+									else if ( IsBaseType( node, NodeTypes.SubscriptionType ) )
+									{
+										// A subscription has been removed check to see if the collection needs to be deleted.
+										RemoveCollectionBySubscription( new Subscription( node ) );
+									}
+									else if ( IsBaseType( node, NodeTypes.MemberType ) && IsBaseType( this, NodeTypes.CollectionType ) )
+									{
+										// A member has been removed from a collection.
+										RemoveSubscriptionByMember( new Member( node ) );
+									}
+								}
 
 								// Indicate the event.
 								NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeDeleted, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, fileSize );
@@ -1012,6 +1099,17 @@ namespace Simias.Storage
 							{
 								// Update the cache before indicating the event.
 								store.Cache.Add( this, node );
+
+								// If this is a new node being imported onto a server, check to see if
+								// it is a member node being added to a base-type collection.
+								if ( node.CascadeEvents && Store.IsEnterpriseServer && ( node.DiskNode == null ) )
+								{
+									if ( IsBaseType( node, NodeTypes.MemberType ) && IsBaseType( this, NodeTypes.CollectionType ) )
+									{
+										// Add a subscription for the member for this collection.
+										AddSubscription( new Member( node ) );
+									}
+								}
 
 								// Indicate the event.
 								NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, ( node.DiskNode != null ) ? EventType.NodeChanged : EventType.NodeCreated, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, fileSize );
@@ -1108,6 +1206,122 @@ namespace Simias.Storage
 					node.LocalChanges = false;
 					node.IndicateEvent = true;
 				}
+			}
+		}
+
+		/// <summary>
+		/// Removes the collection from the server if the current user is the owner. Otherwise the
+		/// current user's membership is removed from the collection.
+		/// </summary>
+		/// <param name="subscription">Subscription to the collection.</param>
+		private void RemoveCollectionBySubscription( Subscription subscription )
+		{
+			// Get the collection that this subscription represents.
+			Collection collection = store.GetCollectionByID( subscription.SubscriptionCollectionID );
+			if ( collection != null )
+			{
+				// See if the current user is the owner of this collection.
+				string principal = GetCurrentPrincipal();
+				if ( collection.Owner.UserID == principal )
+				{
+					log.Debug( "RemoveCollectionBySubscription - Principal {0} is owner.", principal );
+					log.Debug( "RemoveCollectionBySubscription - Removing collection {0}.", collection.ID );
+
+					// The current principal is the owner of the collection. Delete the entire collection.
+					collection.Commit( collection.Delete() );
+				}
+				else
+				{
+					log.Debug( "RemoveCollectionBySubscription - Principal {0} is not owner.", principal );
+
+					// The current principal is only a member of the collection. Remove the membership.
+					Member member = collection.GetMemberByID( principal );
+					if ( member != null )
+					{
+						// No need to process further invitation events. The subscription for this member
+						// has already been removed.
+						member.CascadeEvents = false;
+
+						// Remove the member from the collection.
+						collection.Commit( collection.Delete( member ) );
+						log.Debug( "RemoveCollectionBySubscription - Removing membership for {0} from collection {1}.", member.UserID, collection.ID );
+					}
+					else
+					{
+						log.Debug( "RemoveCollectionBySubscription - Cannot find member {0} in collection {1}.", principal, collection.ID );
+					}
+				}
+			}
+			else
+			{
+				log.Debug( "RemoveCollectionBySubscription - Subscription for collection {0} was declined.", subscription.SubscriptionCollectionID );
+			}
+		}
+
+		/// <summary>
+		/// Removes all subscriptions associated with this collection.
+		/// </summary>
+		private void RemoveSubscriptionsForCollection()
+		{
+			ICSList subList = store.GetNodesByProperty( new Property( Subscription.SubscriptionCollectionIDProperty, ID ), SearchOp.Equal );
+			if ( subList.Count > 0 )
+			{
+				foreach( ShallowNode sn in subList )
+				{
+					// The collection for the subscription nodes will be the POBox.
+					Collection collection = store.GetCollectionByID( sn.CollectionID );
+					if ( collection != null )
+					{
+						// No need to process further invitation events. The collection associated with
+						// this subscription has already been removed.
+						Subscription subscription = new Subscription( collection, sn );
+						subscription.CascadeEvents = false;
+						collection.Commit( collection.Delete( subscription ) );
+						log.Debug( "RemoveSubscriptionsForCollection - Removed subscription {0} for collection {1}.", sn.ID, sn.CollectionID );
+					}
+					else
+					{
+						log.Debug( "RemoveSubscriptionsForCollection - Cannot find POBox {0}.", sn.CollectionID );
+					}
+				}
+			}
+			else
+			{
+				log.Debug( "RemoveSubscriptionsForCollection - No subscriptions found for collection {0}.", ID );
+			}
+		}
+
+		/// <summary>
+		/// Removes the subscription for this collection from the specified member.
+		/// </summary>
+		/// <param name="member">Member to remove subscription from.</param>
+		private void RemoveSubscriptionByMember( Member member )
+		{
+			// Get the member's POBox.
+			POBox.POBox poBox = POBox.POBox.FindPOBox( store, Domain, member.UserID );
+			if ( poBox != null )
+			{
+				ICSList subList = poBox.Search( Subscription.SubscriptionCollectionIDProperty, ID, SearchOp.Equal );
+				if ( subList.Count > 0 )
+				{
+					foreach( ShallowNode sn in subList )
+					{
+						// No need to process further invitation events. The collection cannot be deleted
+						// by removing its members, because the owner of the collection can never be deleted.
+						Subscription subscription = new Subscription( poBox, sn );
+						subscription.CascadeEvents = false;
+						poBox.Commit( poBox.Delete( subscription ) );
+						log.Debug( "RemoveSubscriptionByMember - Removed subscription {0} from member {1}.", sn.ID, member.UserID );
+					}
+				}
+				else
+				{
+					log.Debug( "RemoveSubscriptionByMember - No subscriptions found for member {0}.", member.UserID );
+				}
+			}
+			else
+			{
+				log.Debug( "RemoveSubscriptionByMember - Cannot find POBox for member {0}.", member.UserID );
 			}
 		}
 

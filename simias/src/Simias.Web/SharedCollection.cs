@@ -461,10 +461,6 @@ namespace Simias.Web
 
 			// Commit the new collection and the fileNode at the root
 			c.Commit(nodeList.ToArray( typeof( Node) ) as Node[] );
-
-			AddSubscription( store, c, member, 
-					newMember, SubscriptionStates.Ready, Type);
-
 			return c;
 		}
 
@@ -869,8 +865,7 @@ namespace Simias.Web
 
 
 		/// <summary>
-		/// WebMethod that deletes a SharedCollection and removes all
-		/// subscriptions from all members.  Any files that were in place
+		/// WebMethod that deletes a SharedCollection. Any files that were in place
 		/// if there was a DirNode will remain there
 		/// </summary>
 		/// <param name = "CollectionID">
@@ -881,78 +876,11 @@ namespace Simias.Web
 		/// </returns>
 		public static void DeleteSharedCollection(string CollectionID)
 		{
-			DeleteSharedCollection(CollectionID, null);
-		}
-
-		/// <summary>
-		/// WebMethod that deletes a SharedCollection and removes all
-		/// subscriptions from all members.  Any files that were in place
-		/// if there was a DirNode will remain there
-		/// </summary>
-		/// <param name = "CollectionID">
-		/// The ID of the collection representing this iFolder to delete
-		/// </param>
-		/// <param name="accessID">Access User ID</param>
-		/// <returns>
-		/// true if the iFolder was successfully removed
-		/// </returns>
-		public static void DeleteSharedCollection(string CollectionID, string accessID)
-		{
-			Store store = Store.GetStore();
-			Collection collection = store.GetCollectionByID(CollectionID);
-			
-			if(collection != null)
+			Collection collection = Store.GetStore().GetCollectionByID(CollectionID);
+			if (collection != null)
 			{
-				// impersonate
-				if ((accessID != null) && (accessID.Length != 0))
-				{
-					Simias.Storage.Member member = collection.GetMemberByID(accessID);
-				
-					if(member == null)
-						throw new Exception("Invalid UserID");
-				
-					collection.Impersonate(member);
-
-					// admin rights
-					// note: check for admin rights before cleaning subscriptions
-					if (member.Rights != Access.Rights.Admin)
-					{
-						throw new AccessException(collection, member, Access.Rights.Admin);
-					}
-				}
-			
-				// first clean out all subscriptions for this iFolder
-				// if we are the server in a workgroup, then this
-				// will clean out everyone else's subscriptions too
-				RemoveAllSubscriptions(store, collection);
-
-				collection.Delete();
-				collection.Commit();
-				return;
+				collection.Commit(collection.Delete());
 			}
-			else
-			{
-				// TODO: Need to rework for multi-domain ... check if this method is used anywhere.
-				// try to find a subscription with this ID
-				Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(                                             store,
-									store.DefaultDomain);
-
-				// SharedCollections returned in the Web service are also
-				// Subscriptions and it ID will be the subscription ID
-				Node node = poBox.GetNodeByID(CollectionID);
-				if(node == null)
-					throw new Exception("Invalid ID");
-
-				Subscription sub = new Subscription(node);
-				if(sub != null)
-				{
-					poBox.Delete(sub);
-					poBox.Commit(sub);
-					return;
-				}
-			}
-
-			throw new Exception("Invalid CollectionID");
 		}
 
 
@@ -978,25 +906,23 @@ namespace Simias.Web
 			if(collection == null)
 				throw new Exception("Invalid CollectionID");
 
-			
+			// Get the current principal for this collection.
+			Member member = collection.GetCurrentMember();
+			if (member == null)
+				throw new Exception("Cannot get current member");
+
 			// Get the subscription for this iFolder to return.
 			Subscription sub = null;
 
 			// Get the member's POBox
-			Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(store,
-																   collection.Domain);
+			POBox.POBox poBox = POBox.POBox.FindPOBox(store, collection.Domain, member.UserID);
 			if (poBox != null)
 			{
-				Member member = collection.GetCurrentMember();
-
 				// Search for the matching subscription
-				sub = poBox.GetSubscriptionByCollectionID(collection.ID,
-														  member.UserID);
+				sub = poBox.GetSubscriptionByCollectionID(collection.ID, member.UserID);
 			}
 
-			collection.Delete();
-			collection.Commit();
-
+			collection.Commit(collection.Delete());
 			return sub;
 		}
 
@@ -1103,74 +1029,6 @@ namespace Simias.Web
 
 
 		/// <summary>
-		/// WebMethod that adds a member to a Collection granting the Rights
-		/// specified.  Note:  This is not inviting a member, rather it is
-		/// adding them and placing a subscription in the "ready" state in
-		/// their POBox.
-		/// </summary>
-		/// <param name = "CollectionID">
-		/// The ID of the collection representing the Collection to which
-		/// the member is to be added
-		/// </param>
-		/// <param name = "UserID">
-		/// The ID of the member to be added
-		/// </param>
-		/// <param name = "Rights">
-		/// The Rights to be given to the newly added member
-		/// </param>
-		public static void AddMember(	string CollectionID, 
-										string UserID,
-										string Rights,
-										string collectionType)
-		{
-			Store store = Store.GetStore();
-
-			Collection col = store.GetCollectionByID(CollectionID);
-			if(col == null)
-				throw new Simias.NotExistException(CollectionID);
-
-			Domain domain = store.GetDomain(col.Domain);
-			if(domain == null)
-				throw new Simias.NotExistException(col.Domain);
-
-			Simias.Storage.Member member = domain.GetMemberByID(UserID);
-			if(member == null)
-				throw new Simias.NotExistException(UserID);
-
-			Access.Rights newRights;
-
-			if(Rights == "Admin")
-				newRights = Access.Rights.Admin;
-			else if(Rights == "ReadOnly")
-				newRights = Access.Rights.ReadOnly;
-			else if(Rights == "ReadWrite")
-				newRights = Access.Rights.ReadWrite;
-			else
-				throw new Exception("Invalid Rights Specified");
-
-			// Check to see if the user is already a member of the collection.
-			Simias.Storage.Member newMember = col.GetMemberByID(member.UserID);
-			if(newMember != null)
-			{
-				throw new Simias.ExistsException(member.UserID);
-			}
-
-			newMember = 
-				new Simias.Storage.Member(	member.Name,
-				member.UserID,
-				newRights);
-
-			col.Commit(newMember);
-
-			AddSubscription( store, col, 
-				newMember, newMember, SubscriptionStates.Ready,
-				collectionType);
-		}
-
-
-
-
-		/// <summary>
 		/// WebMethod that removes a member from a Collection. The subscription
 		/// is also removed from the member's POBox.
 		/// </summary>
@@ -1187,54 +1045,14 @@ namespace Simias.Web
 		public static void RemoveMember(	string CollectionID, 
 											string UserID)
 		{
-			Store store = Store.GetStore();
-
-			Collection col = store.GetCollectionByID(CollectionID);
+			Collection col = Store.GetStore().GetCollectionByID(CollectionID);
 			if(col == null)
 				throw new Exception("Invalid CollectionID");
 
-			// try to find a subscription with this ID
-			Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(store,
-																   col.Domain);
-
-			if(poBox == null)
+			Member member = col.GetMemberByID(UserID);
+			if(member != null)
 			{
-				throw new Exception("Unable to access POBox");
-			}
-
-
-			ICSList poList = poBox.Search(
-					Subscription.ToIdentityProperty,
-					UserID,
-					SearchOp.Equal);
-
-			Subscription sub = null;
-			foreach(ShallowNode sNode in poList)
-			{
-				sub = new Subscription(poBox, sNode);
-				break;
-			}
-
-			if (sub != null)
-			{
-				poBox.Commit(poBox.Delete(sub));
-			}
-			else
-			{
-				Simias.Storage.Member member = col.GetMemberByID(UserID);
-				if(member != null)
-				{
-					if(member.IsOwner)
-						throw new Exception("UserID is the iFolder owner");
-
-					col.Delete(member);
-					col.Commit(member);
-
-					// even if the member is null, try to clean up the subscription
-					RemoveMemberSubscription(	store, 
-												col,
-												UserID);
-				}
+				col.Commit(col.Delete(member));
 			}
 		}
 
@@ -1257,23 +1075,14 @@ namespace Simias.Web
 											  string SubscriptionID,
 											  string UserID)
 		{
-			Store store = Store.GetStore();
-
 			// Get the current member's POBox
-			Simias.POBox.POBox poBox = Simias.POBox.POBox.FindPOBox(store,
-																   DomainID,
-																   UserID);
+			POBox.POBox poBox = POBox.POBox.FindPOBox(Store.GetStore(), DomainID, UserID);
 			if (poBox != null)
 			{
 				Node node = poBox.GetNodeByID(SubscriptionID);
 				if (node != null)
 				{
-					Subscription sub = new Subscription(node);
-
-					if(sub != null)
-					{
-						poBox.Commit(poBox.Delete(sub));
-					}
+					poBox.Commit(poBox.Delete(node));
 				}
 			}
 		}
@@ -1304,66 +1113,6 @@ namespace Simias.Web
 			SyncClient.ScheduleSync(CollectionID);
 		}
 
-
-
-
-		/// <summary>
-		/// Utility method that should be moved into the POBox class.
-		/// This will create a subscription and place it in the POBox
-		/// of the invited user.
-		/// </summary>
-		/// <param name = "store">
-		/// The store where the POBox and collection for this subscription
-		/// is to be found.
-		/// </param>
-		/// <param name = "collection">
-		/// The Collection for which the subscription is being created
-		/// </param>
-		/// <param name = "inviteMember">
-		/// The Member from which the subscription is being created
-		/// </param>
-		/// <param name = "newMember">
-		/// The Member being invited
-		/// </param>
-		/// <param name = "state">
-		/// The initial state of the subscription when placed in the POBox
-		/// of the invited Member
-		/// </param>
-		private static void AddSubscription(	Store store, 
-											Collection collection, 
-											Simias.Storage.Member inviteMember,
-											Simias.Storage.Member newMember,
-											SubscriptionStates state,
-											string collectionType)
-		{
-			Simias.POBox.POBox poBox = 
-				Simias.POBox.POBox.GetPOBox(store, collection.Domain, 
-												newMember.UserID );
-
-			Subscription sub = poBox.CreateSubscription(collection,
-														inviteMember,
-														collectionType);
-			sub.ToName = newMember.Name;
-			sub.ToIdentity = newMember.UserID;
-			sub.ToMemberNodeID = newMember.ID;
-			sub.ToPublicKey = newMember.PublicKey;
-			sub.SubscriptionRights = newMember.Rights;
-			sub.SubscriptionState = state;
-			//sub.SubscriptionCollectionURL = collection.MasterUrl.ToString();
-
-			DirNode dirNode = collection.GetRootDirectory();
-			if(dirNode != null)
-			{
-				sub.DirNodeID = dirNode.ID;
-				sub.DirNodeName = dirNode.Name;
-			}
-
-			poBox.Commit(sub);
-			if (poBox.Role == Sync.SyncRoles.Slave)
-			{
-				Sync.SyncClient.ScheduleSync(poBox.ID);
-			}
-		}
 
 
 

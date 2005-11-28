@@ -117,19 +117,16 @@ namespace Simias.Client
 			Tombstone
 		};
 
-		/// <summary>
-		/// Arrray of strings used to hold the names of classes used as Node object types.
-		/// </summary>
-		static private string[] classNames;
 		#endregion
 
 		#region Properties
+
 		/// <summary>
 		/// Gets the BaseFileNode class name.
 		/// </summary>
 		static public string BaseFileNodeType
 		{
-			get { return classNames[ 0 ]; }
+			get { return NodeTypeEnum.BaseFileNode.ToString(); }
 		}
 
 		/// <summary>
@@ -137,7 +134,7 @@ namespace Simias.Client
 		/// </summary>
 		static public string CollectionType
 		{
-			get { return classNames[ 1 ]; }
+			get { return NodeTypeEnum.Collection.ToString(); }
 		}
 
 		/// <summary>
@@ -145,7 +142,7 @@ namespace Simias.Client
 		/// </summary>
 		static public string DirNodeType
 		{
-			get { return classNames[ 2 ]; }
+			get { return NodeTypeEnum.DirNode.ToString(); }
 		}
 
 
@@ -154,7 +151,7 @@ namespace Simias.Client
 		/// </summary>
 		static public string DomainType
 		{
-			get { return classNames[ 3 ]; }
+			get { return NodeTypeEnum.Domain.ToString(); }
 		}
 
 		/// <summary>
@@ -162,7 +159,7 @@ namespace Simias.Client
 		/// </summary>
 		static public string FileNodeType
 		{
-			get { return classNames[ 4 ]; }
+			get { return NodeTypeEnum.FileNode.ToString(); }
 		}
 
 		/// <summary>
@@ -170,7 +167,7 @@ namespace Simias.Client
 		/// </summary>
 		static public string IdentityType
 		{
-			get { return classNames[ 5 ]; }
+			get { return NodeTypeEnum.Identity.ToString(); }
 		}
 
 		/// <summary>
@@ -178,7 +175,7 @@ namespace Simias.Client
 		/// </summary>
 		static public string LinkNodeType
 		{
-			get { return classNames[ 6 ]; }
+			get { return NodeTypeEnum.LinkNode.ToString(); }
 		}
 
 		/// <summary>
@@ -186,7 +183,7 @@ namespace Simias.Client
 		/// </summary>
 		static public string LocalDatabaseType
 		{
-			get { return classNames[ 7 ]; }
+			get { return NodeTypeEnum.BaseFileNode.ToString(); }
 		}
 
 		/// <summary>
@@ -194,7 +191,7 @@ namespace Simias.Client
 		/// </summary>
 		static public string MemberType
 		{
-			get { return classNames[ 8 ]; }
+			get { return NodeTypeEnum.Member.ToString(); }
 		}
 
 		/// <summary>
@@ -202,7 +199,7 @@ namespace Simias.Client
 		/// </summary>
 		static public string MessageType
 		{
-			get { return classNames[ 9 ]; }
+			get { return NodeTypeEnum.Message.ToString(); }
 		}
 
 		/// <summary>
@@ -210,7 +207,7 @@ namespace Simias.Client
 		/// </summary>
 		static public string NodeType
 		{
-			get { return classNames[ 10 ]; }
+			get { return NodeTypeEnum.Node.ToString(); }
 		}
 
 		/// <summary>
@@ -218,7 +215,7 @@ namespace Simias.Client
 		/// </summary>
 		static public string POBoxType
 		{
-			get { return classNames[ 11 ]; }
+			get { return NodeTypeEnum.POBox.ToString(); }
 		}
 
 		/// <summary>
@@ -226,7 +223,7 @@ namespace Simias.Client
 		/// </summary>
 		static public string PolicyType
 		{
-			get { return classNames[ 12 ]; }
+			get { return NodeTypeEnum.Policy.ToString(); }
 		}
 
 		/// <summary>
@@ -234,7 +231,7 @@ namespace Simias.Client
 		/// </summary>
 		static public string StoreFileNodeType
 		{
-			get { return classNames[ 13 ]; }
+			get { return NodeTypeEnum.StoreFileNode.ToString(); }
 		}
 
 		/// <summary>
@@ -242,7 +239,7 @@ namespace Simias.Client
 		/// </summary>
 		static public string SubscriptionType
 		{
-			get { return classNames[ 14 ]; }
+			get { return NodeTypeEnum.Subscription.ToString(); }
 		}
 
 		/// <summary>
@@ -250,33 +247,9 @@ namespace Simias.Client
 		/// </summary>
 		static public string TombstoneType
 		{
-			get { return classNames[ 15 ]; }
+			get { return NodeTypeEnum.Tombstone.ToString(); }
 		}
-		#endregion
 
-		#region Constructor
-		/// <summary>
-		/// Static constructor to do one-time initialization.
-		/// </summary>
-		static NodeTypes()
-		{
-			classNames = new string[] {	  "BaseFileNode",
-										  "Collection",
-										  "DirNode",
-										  "Domain",
-										  "FileNode",
-										  "Identity",
-										  "LinkNode",
-										  "LocalDatabase",
-										  "Member",
-										  "Message",
-										  "Node",
-										  "POBox",
-										  "Policy",
-										  "StoreFileNode",
-										  "Subscription",
-										  "Tombstone" };
-		}
 		#endregion
 
 		#region Public Methods
@@ -289,14 +262,13 @@ namespace Simias.Client
 		{
 			bool isType = false;
 
-			foreach ( string s in classNames )
+			try
 			{
-				if ( s == type )
-				{
-					isType = true;
-					break;
-				}
+				Enum.Parse( typeof( NodeTypeEnum ), type, true );
+				isType = true;
 			}
+			catch
+			{}
 
 			return isType;
 		}

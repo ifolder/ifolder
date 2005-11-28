@@ -90,14 +90,14 @@
                     HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.Services.dll"
                 />
                 <Reference
-                    Name = "Simias"
-                    Project = "{7839E703-0177-4162-B083-BCFD4ED1CC1B}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                    Name = "SimiasLib"
+                    AssemblyName = "SimiasLib"
+                    HintPath = "..\..\stage\web\bin\SimiasLib.dll"
                 />
                 <Reference
                     Name = "SimiasClient"
-                    Project = "{E38BAF80-9B31-4D15-A002-E775B96FAFA6}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                    AssemblyName = "SimiasClient"
+                    HintPath = "..\..\stage\web\bin\SimiasClient.dll"
                 />
             </References>
         </Build>

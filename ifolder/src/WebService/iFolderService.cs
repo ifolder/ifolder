@@ -1567,9 +1567,7 @@ namespace Novell.iFolder.Web
 			sub.CollectionRoot = Path.GetFullPath(LocalPath);
 			poBox.Commit(sub);
 			sub.CreateSlave(store);
-
-			iFolderWeb ifolder = new iFolderWeb(sub);
-			return ifolder;
+			return new iFolderWeb(sub);
 		}
 
 
@@ -1588,7 +1586,9 @@ namespace Novell.iFolder.Web
 			Store store = Store.GetStore();
 
 			Simias.POBox.POBox poBox = 
-				Simias.POBox.POBox.GetPOBox( store, DomainID );
+				Simias.POBox.POBox.FindPOBox(store, DomainID, store.GetUserIDFromDomainID(DomainID));
+			if (poBox == null)
+				throw new Exception("Cannot find POBox");
 
 			// iFolders returned in the Web service are also
 			// Subscriptions and it ID will be the subscription ID
@@ -1596,13 +1596,7 @@ namespace Novell.iFolder.Web
 			if(node == null)
 				throw new Exception("Invalid iFolderID");
 
-			Subscription sub = new Subscription(node);
-
-			// Change the local subscription
-			sub.SubscriptionState = SubscriptionStates.Replied;
-			sub.SubscriptionDisposition = SubscriptionDispositions.Declined;
-
-			poBox.Commit(sub);
+			poBox.Commit(poBox.Delete(node));
 		}
 
 

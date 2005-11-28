@@ -17,7 +17,7 @@
                 DelaySign = "false"
                 OutputType = "Library"
                 PreBuildEvent = ""
-                PostBuildEvent = "if not exist $(SolutionDir)stage mkdir $(SolutionDir)stage&#xd;&#xa;if not exist $(SolutionDir)stage\web mkdir $(SolutionDir)stage\web&#xd;&#xa;if not exist $(SolutionDir)stage\web\bin mkdir $(SolutionDir)stage\web\bin&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)stage\web\bin&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)stage\web\bin&#xd;&#xa;copy $(ProjectDir)POService.asmx $(SolutionDir)stage\web&#xd;&#xa;"
+                PostBuildEvent = "if not exist $(SolutionDir)stage mkdir $(SolutionDir)stage41if not exist $(SolutionDir)stage\web mkdir $(SolutionDir)stage\web41if not exist $(SolutionDir)stage\web\bin mkdir $(SolutionDir)stage\web\bin41copy $(TargetFileName) $(SolutionDir)stage\web\bin41if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)stage\web\bin41copy $(ProjectDir)POService.asmx $(SolutionDir)stage\web41"
                 RootNamespace = "POBoxWS"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
@@ -85,9 +85,9 @@
                     HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "Simias"
-                    Project = "{7839E703-0177-4162-B083-BCFD4ED1CC1B}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                    Name = "SimiasLib"
+                    AssemblyName = "SimiasLib"
+                    HintPath = "..\..\stage\web\bin\SimiasLib.dll"
                 />
             </References>
         </Build>

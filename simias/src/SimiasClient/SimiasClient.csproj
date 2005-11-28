@@ -90,14 +90,14 @@
                     HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.Services.dll"
                 />
                 <Reference
-                    Name = "Novell.Security.ClientPasswordManager.NetCredential"
-                    AssemblyName = "Novell.Security.ClientPasswordManager.NetCredential"
-                    HintPath = "..\..\external\Novell.Security\net\bin\Novell.Security.ClientPasswordManager.NetCredential.dll"
-                />
-                <Reference
                     Name = "System.Security"
                     AssemblyName = "System.Security"
                     HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Security.dll"
+                />
+                <Reference
+                    Name = "Novell.Security.ClientPasswordManager.NetCredential"
+                    AssemblyName = "Novell.Security.ClientPasswordManager.NetCredential"
+                    HintPath = "..\..\external\NS\net\Novell.Security.ClientPasswordManager.NetCredential.dll"
                 />
             </References>
         </Build>

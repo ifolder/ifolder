@@ -90,24 +90,28 @@
                     HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "Novell.Security.ClientPasswordManager.NetCredential"
-                    AssemblyName = "Novell.Security.ClientPasswordManager.NetCredential"
-                    HintPath = "..\..\external\Novell.Security\net\bin\Novell.Security.ClientPasswordManager.NetCredential.dll"
-                />
-                <Reference
-                    Name = "Simias"
+                    Name = "SimiasLib"
                     AssemblyName = "SimiasLib"
                     HintPath = "..\..\stage\web\bin\SimiasLib.dll"
                 />
                 <Reference
                     Name = "SimiasClient"
                     AssemblyName = "SimiasClient"
-                    HintPath = "..\..\..\..\final\web\bin\SimiasClient.dll"
+                    HintPath = "..\..\stage\web\bin\SimiasClient.dll"
+                />
+                <Reference
+                    Name = "Novell.Security.ClientPasswordManager.NetCredential"
+                    AssemblyName = "Novell.Security.ClientPasswordManager.NetCredential"
+                    HintPath = "..\..\external\NS\net\Novell.Security.ClientPasswordManager.NetCredential.dll"
                 />
             </References>
         </Build>
         <Files>
             <Include>
+                <File
+                    RelPath = "AssemblyInfo.cs"
+                    BuildAction = "Compile"
+                />
                 <File
                     RelPath = "Global.asax"
                     BuildAction = "Content"

@@ -108,6 +108,13 @@ namespace Simias.Storage
 		/// </summary>
 		[ NonSerialized() ]
 		protected bool indicateEvent = true;
+
+		/// <summary>
+		/// Indicates to commit code whether this node change was a result of a previous
+		/// invitation event and whether to allow further invitation events to happen.
+		/// </summary>
+		[ NonSerialized() ]
+		protected bool cascadeEvents = true;
 		#endregion
 
 		#region Properties
@@ -355,6 +362,16 @@ namespace Simias.Storage
 				Property p = properties.FindSingleValue( PropertyTags.Creator );
 				return ( p != null ) ? p.ToString() : null;
 			}
+		}
+
+		/// <summary>
+		/// Gets or sets whether the commit code should continue to process invitation
+		/// events for this node.
+		/// </summary>
+		public bool CascadeEvents
+		{
+			get { return cascadeEvents; }
+			set { cascadeEvents = value; }
 		}
 		#endregion
 

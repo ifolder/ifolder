@@ -45,8 +45,8 @@ namespace Simias.POBox
 		/// <summary>
 		/// Subscribers used to watch for important POBox events.
 		/// </summary>
-		private EventSubscriber subscriber;
-		private EventSubscriber invitationSubscriber;
+		private EventSubscriber poBoxSubscriber;
+		private EventSubscriber noAccessSubscriber;
 
 		/// <summary>
 		/// Hashtable used to map from a POBox ID to its domain.
@@ -68,15 +68,15 @@ namespace Simias.POBox
 		public POService()
 		{
 			// events
-			subscriber = new EventSubscriber();
-			subscriber.NodeTypeFilter = NodeTypes.POBoxType;
-			subscriber.NodeCreated += new NodeEventHandler(OnPOBoxCreated);
-			subscriber.NodeDeleted += new NodeEventHandler(OnPOBoxDeleted);
+			poBoxSubscriber = new EventSubscriber();
+			poBoxSubscriber.NodeTypeFilter = NodeTypes.POBoxType;
+			poBoxSubscriber.NodeCreated += new NodeEventHandler(OnPOBoxCreated);
+			poBoxSubscriber.NodeDeleted += new NodeEventHandler(OnPOBoxDeleted);
 
 			// Removes invitations from POBoxes.
-			invitationSubscriber = new EventSubscriber();
-			invitationSubscriber.Enabled = true;
-			invitationSubscriber.NoAccess += new NodeEventHandler(OnCollectionNoAccess);
+			noAccessSubscriber = new EventSubscriber();
+			noAccessSubscriber.Enabled = true;
+			noAccessSubscriber.NoAccess += new NodeEventHandler(OnCollectionNoAccess);
 
 			store = Store.GetStore();
 		}
@@ -157,7 +157,7 @@ namespace Simias.POBox
 				poBoxTable[ poBox.ID ] = poBox.Domain;
 			}
 
-			subscriber.Enabled = true;
+			poBoxSubscriber.Enabled = true;
 		}
 
 		/// <summary>
@@ -165,7 +165,7 @@ namespace Simias.POBox
 		/// </summary>
 		public void Stop()
 		{
-			subscriber.Enabled = false;
+			poBoxSubscriber.Enabled = false;
 		}
 
 		/// <summary>
@@ -173,7 +173,7 @@ namespace Simias.POBox
 		/// </summary>
 		public void Resume()
 		{
-			subscriber.Enabled = true;
+			poBoxSubscriber.Enabled = true;
 		}
 
 		/// <summary>
@@ -181,7 +181,7 @@ namespace Simias.POBox
 		/// </summary>
 		public void Pause()
 		{
-			subscriber.Enabled = false;
+			poBoxSubscriber.Enabled = false;
 		}
 
 		/// <summary>
