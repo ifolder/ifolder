@@ -25,7 +25,8 @@ namespace MemberBrowser
 		private	static ListStore store = null;
 		private static IntPtr browseHandle;
 		private static System.Threading.Thread browseThread = null;
-		static internal ArrayList memberList = new ArrayList();
+		//static internal ArrayList memberList = new ArrayList();
+		static internal Hashtable memberList = new Hashtable();
 
 #if DARWIN
 		private const string nativeLib = "libsimiasbonjour.dylib";
@@ -230,7 +231,7 @@ namespace MemberBrowser
 					{
 						Console.WriteLine( "  removing member: " + member.Name );
 						store.Remove( ref iter );
-						Driver.memberList.Remove( member );
+						Driver.memberList.Remove( member.ID );
 						memberEnum = Driver.memberList.GetEnumerator();
 					}
 					else
@@ -351,21 +352,24 @@ namespace MemberBrowser
 
 						lock( Driver.memberList )
 						{
-							Driver.memberList.Add( member );
+							Driver.memberList.Add( member.ID, member );
 						}
 						//store.AppendValues( info.Name, info.ServicePath, "137.65.58.34" );
 					}
 				}
 				else
 				{
-					foreach( Member member in Driver.memberList )
+					lock( Driver.memberList )
 					{
-						if ( member.ID == serviceName )
+						if ( Driver.memberList.ContainsKey( serviceName ) == true )
 						{
-							Console.WriteLine( "  scheduling member: " + member.Name + " for removal." );
-							member.Status = MemberStatus.Down;
-							member.TouchedBy = 1;
-							break;
+							Member member = Driver.memberList.get_Item( serviceName) as Member ;
+							if ( member.ID == serviceName )
+							{
+								Console.WriteLine( "  scheduling member: " + member.Name + " for removal." );
+								member.Status = MemberStatus.Down;
+								member.TouchedBy = 1;
+							}
 						}
 					}
 				}
