@@ -206,12 +206,15 @@ namespace MemberBrowser
 			lock( Driver.memberList )
 			{
 				TreeIter iter;
+				DictionaryEntry entry;
 				Member member;
 				IEnumerator memberEnum = Driver.memberList.GetEnumerator();
 				while( memberEnum.MoveNext() )
 				{
 					foundMember = false;
-					member = memberEnum.Current as Member;
+					entry = ( DictionaryEntry ) memberEnum.Current;
+					member = entry.Value as Member;
+					//member = memberEnum.Current as Member;
 
 					// First see if the member is in the list
 					bool results = store.GetIterFirst( out iter );
@@ -328,10 +331,17 @@ namespace MemberBrowser
 			
 			if ( errorCode == kErrorType.kDNSServiceErr_NoError )
 			{
+				Member member = null;
+				
 				if ( ( flags & (int) kDNSServiceFlags.kDNSServiceFlagsAdd ) == 
 					(int) kDNSServiceFlags.kDNSServiceFlagsAdd )
 				{
 					MemberInfo info = new MemberInfo();
+
+					Console.WriteLine( "  service name: " + serviceName );
+					Console.WriteLine( "  regType: " + regType );
+					Console.WriteLine( "  domain: " + domain );
+					Console.WriteLine( "  ifIndex: " + ifIndex.ToString() );
 
 					kErrorType status = GetMemberInfo( serviceName, info );
 					if ( status == kErrorType.kDNSServiceErr_NoError )
@@ -339,20 +349,35 @@ namespace MemberBrowser
 						Console.WriteLine( "  adding: " + serviceName );
 						Console.WriteLine( "  member: " + info.Name );
 						
-						Member member = new Member();
-						member.ID = serviceName;
-						member.Name = info.Name;
-						member.ServicePath = info.ServicePath;
-						member.PublicKey = info.PublicKey;
-						member.Host = info.Host;
-						member.LastUpdate = DateTime.Now;
-						member.TouchedBy = 1;
-						member.Status = MemberStatus.Up;
-						member.Port = info.Port;
-
 						lock( Driver.memberList )
 						{
-							Driver.memberList.Add( member.ID, member );
+							if( Driver.memberList.ContainsKey( serviceName ) == true )
+							{
+								Console.WriteLine( "  member exists in the list" );
+								member = Driver.memberList.get_Item( serviceName ) as Member;
+								member.Name = info.Name;
+								member.ServicePath = info.ServicePath;
+								member.PublicKey = info.PublicKey;
+								member.Host = info.Host;
+								member.LastUpdate = DateTime.Now;
+								member.TouchedBy = 1;
+								member.Status = MemberStatus.Up;
+								member.Port = info.Port;
+							}
+							else
+							{
+								member = new Member();
+								member.ID = serviceName;
+								member.Name = info.Name;
+								member.ServicePath = info.ServicePath;
+								member.PublicKey = info.PublicKey;
+								member.Host = info.Host;
+								member.LastUpdate = DateTime.Now;
+								member.TouchedBy = 1;
+								member.Status = MemberStatus.Up;
+								member.Port = info.Port;
+								Driver.memberList.Add( member.ID, member );
+							}
 						}
 						//store.AppendValues( info.Name, info.ServicePath, "137.65.58.34" );
 					}
@@ -363,7 +388,7 @@ namespace MemberBrowser
 					{
 						if ( Driver.memberList.ContainsKey( serviceName ) == true )
 						{
-							Member member = Driver.memberList.get_Item( serviceName) as Member ;
+							member = Driver.memberList.get_Item( serviceName) as Member ;
 							if ( member.ID == serviceName )
 							{
 								Console.WriteLine( "  scheduling member: " + member.Name + " for removal." );
