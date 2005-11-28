@@ -228,6 +228,7 @@ namespace MemberBrowser
 
 					if ( member.Status == MemberStatus.Down && foundMember == true )
 					{
+						Console.WriteLine( "  removing member: " + member.Name );
 						store.Remove( ref iter );
 						Driver.memberList.Remove( member );
 						memberEnum = Driver.memberList.GetEnumerator();
@@ -361,6 +362,7 @@ namespace MemberBrowser
 					{
 						if ( member.ID == serviceName )
 						{
+							Console.WriteLine( "  scheduling member: " + member.Name + " for removal." );
 							member.Status = MemberStatus.Down;
 							member.TouchedBy = 1;
 							break;
