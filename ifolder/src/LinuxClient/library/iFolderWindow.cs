@@ -39,177 +39,6 @@ using Novell.iFolder.Controller;
 namespace Novell.iFolder
 {
 	/// <summary>
-	/// iFolder states.
-	/// </summary>
-	public enum iFolderState
-	{
-		/// <summary>
-		/// Initial state before anything has happened
-		/// </summary>
-		Initial,
-
-		/// <summary>
-		/// The Normal state.
-		/// </summary>
-		Normal,
-
-		/// <summary>
-		/// The Synchronizing state.
-		/// </summary>
-		Synchronizing,
-
-		/// <summary>
-		/// The FailedSync state.
-		/// </summary>
-		FailedSync,
-
-		/// <summary>
-		/// Synchronizing with the local store.
-		/// </summary>
-		SynchronizingLocal,
-
-		/// <summary>
-		/// Unable to connect to the server.
-		/// </summary>
-		Disconnected
-	}
-	
-	/// <summary>
-	/// This is a holder class for iFolders so the client can place
-	/// extra data with an iFolder about it's status and such.
-	/// </summary>
-	public class iFolderHolder
-	{
-		private iFolderWeb		ifolder;
-		private iFolderState	state;
-		private string			stateString;
-		private string			path;
-		private uint			objectsToSync;
-
-		public iFolderHolder(iFolderWeb ifolder)
-		{
-			this.ifolder	= ifolder;
-			state			= iFolderState.Initial;
-			objectsToSync	= 0;
-			UpdateDisplayData();
-		}
-
-		public iFolderWeb iFolder
-		{
-			get{ return ifolder; }
-
-			set
-			{
-				this.ifolder = value;
-				UpdateDisplayData();
-			}
-		}
-
-		public string Path
-		{
-			get{ return path; }
-		}
-
-		public string StateString
-		{
-			get{ return stateString; }
-		}
-
-		public iFolderState State
-		{
-			get{ return state; }
-			set
-			{
-				this.state = value;
-				UpdateDisplayData();
-			}
-		}
-		
-		public uint ObjectsToSync
-		{
-			get
-			{
-				return objectsToSync;
-			}
-			set
-			{
-				objectsToSync = value;
-				UpdateDisplayData();
-			}
-		}
-
-		private void UpdateDisplayData()
-		{
-			if (iFolder.HasConflicts)
-			{
-				stateString = Util.GS("Has conflicts");
-			}
-			else
-			{
-				switch (state)
-				{
-					case iFolderState.Initial:
-						switch (iFolder.State)
-						{
-							case "Available":
-								stateString = Util.GS("Not set up");
-								break;
-							case "WaitConnect":
-								stateString = Util.GS("Waiting to connect");
-								break;
-							case "WaitSync":
-								stateString = Util.GS("Waiting to synchronize");
-								break;
-							case "Local":
-								stateString = Util.GS("OK");
-								break;
-							default:
-								stateString = Util.GS("Unknown");
-								break;
-						}
-						break;
-					case iFolderState.Normal:
-						if (objectsToSync > 0)
-							stateString = string.Format(Util.GS("{0} items not synchronized"), objectsToSync);
-						else
-							stateString = Util.GS("OK");
-						break;
-					case iFolderState.Synchronizing:
-						if (objectsToSync > 0)
-							stateString = string.Format(Util.GS("{0} items to synchronize"), objectsToSync);
-						else
-							stateString = Util.GS("Synchronizing");
-						break;
-					case iFolderState.FailedSync:
-						stateString = Util.GS("Incomplete synchronization");
-						break;
-					case iFolderState.SynchronizingLocal:
-						stateString = Util.GS("Checking for changes");
-						break;
-					case iFolderState.Disconnected:
-						stateString = Util.GS("Server unavailable");
-						break;
-					default:
-						stateString = Util.GS("Unknown");
-						break;
-				}
-			}
-
-			if(iFolder.IsSubscription)
-			{
-				if(iFolder.State == "Available")
-					path = iFolder.Owner;
-			}
-			else
-			{
-				path = iFolder.UnManagedPath;
-			}
-		}
-	}
-
-
-
-	/// <summary>
 	/// This is the main iFolder Window.  This window implements all of the
 	/// client code for iFolder.
 	/// </summary>
@@ -262,8 +91,7 @@ namespace Novell.iFolder
 		private iFolderConflictDialog ConflictDialog;
 
 		private Hashtable			curiFolders;
-		private Hashtable			curSynchronizedFolders;
-		private Hashtable			curRemoteFolders;
+//		private Hashtable			curSynchronizedFolders;
 
 		// curDomain should be set to the domain selected in the
 		// Domain Filter or if "all" domains are selected, this should be
@@ -315,10 +143,15 @@ namespace Novell.iFolder
 		private EventBox			ContentEventBox;
 //		private EventBox			SynchronizedActionsPane;
 
+		///
+		/// General Actions
+		///
 		private Button				AddSynchronizedFolderButton;
-		private Button				DownloadRemoteFolderButton;
+		private Button				ShowHideAllFoldersButton;
+		private Label				ShowHideAllFoldersButtonText;
+		
+		private bool				bAvailableFoldersShowing;
 //		private Button				RefreshSynchronizedFoldersButton;
-		private Button				RemoveSynchronizedFolderButton;
 
 		private Entry				synchronizedSearchEntry;
 		private Button				SynchronizedCancelSearchButton;
@@ -330,8 +163,13 @@ namespace Novell.iFolder
 		
 		private Gdk.Pixbuf			synchronizedFolderPixbuf;
 
-		private ListStore			synchronizedFoldersListStore;
 		private iFolderIconView		synchronizedFoldersIconView;
+		private iFolderViewGroup	localGroup;
+		private iFolderViewGroup	myAvailableGroup;
+		private iFolderViewGroup	otherAvailableGroup;
+		private TreeModelFilter		myiFoldersFilter;
+		private TreeModelFilter		myAvailableFoldersFilter;
+		private TreeModelFilter		otherAvailableFoldersFilter;
 
 		private Expander			generalTasksExpander;
 		private VBox				SynchronizedFolderTasks;
@@ -339,40 +177,24 @@ namespace Novell.iFolder
 
 //		private Button				AddFolderToSyncButton;
 //		private Button				RemoveSynchronizedFolderButton;
+
+		///
+		/// Buttons for local iFolders
+		///
 		private Button				OpenSynchronizedFolderButton;
 		private Button				SynchronizeNowButton;
 		private Button				ShareSynchronizedFolderButton;
 		private Button				ResolveConflictsButton;
+		private Button				RemoveSynchronizedFolderButton;
+		
+		///
+		/// Buttons for Available iFolders
+		///
+		private Button				DownloadAvailableiFolderButton;
 		
 		private Label				SynchronizedNameLabel;
 		private Label				OwnerLabel;
 		private Label				ServerLabel;
-
-		///
-		/// Remote Folders Page
-		///
-		private ComboBox			remoteDomainsComboBox;
-		private Entry				remoteSearchEntry;
-		private Button				RemoteCancelSearchButton;
-		private uint				remoteSearchTimeoutID;
-
-		private Paned				remotePaned;
-		
-		private Notebook			RemoteDetailsNotebook;
-		
-		private Gdk.Pixbuf			remoteFolderPixbuf;
-
-		private ListStore			remoteFoldersListStore;
-		private iFolderIconView		remoteFoldersIconView;
-
-		private Button				DownloadAndSyncButton;
-		private Button				DeleteFromServerButton;
-		
-		private Label				RemoteNameLabel;
-		private Label				RemoteSizeLabel;
-		private Label				RemoteOwnerLabel;
-		private Label				RemoteServerLabel;
-		private TextView			RemoteDescriptionTextView;
 
         // Drag and Drop
         enum TargetType
@@ -394,24 +216,26 @@ namespace Novell.iFolder
 			simws = SimiasWS;
 			this.simiasManager = simiasManager;
 			ifdata = iFolderData.GetData(simiasManager);
+
 			curiFolders = new Hashtable();
-			curSynchronizedFolders = new Hashtable();;
-			curRemoteFolders = new Hashtable();;
+//			curSynchronizedFolders = new Hashtable();;
 
 			curDomain = null;
 			curDomains = null;
 
 			propDialogs = new Hashtable();
 			
-			remoteSearchTimeoutID = 0;
 			synchronizedSearchTimeoutID = 0;
 			
+			domainController = DomainController.GetDomainController();
+
+			bAvailableFoldersShowing = false;
+
 			CreateWidgets();
 
 			RefreshDomains(true);
 			RefreshiFolders(true);
 			
-			domainController = DomainController.GetDomainController();
 			if (domainController != null)
 			{
 				domainController.DomainAdded +=
@@ -869,13 +693,6 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 			return false;
 		}
 		
-		private bool GrabRemoteSearchEntryFocus()
-		{
-			remoteSearchEntry.GrabFocus();
-			return false;
-		}		
-		
-		
 		private Widget CreateHomePage()
 		{
 			VBox vbox = new VBox(false, 0);
@@ -1019,15 +836,16 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 		
 		private void OnResolveConflicts(object o, EventArgs args)
 		{
-			TreePath[] selection = synchronizedFoldersIconView.SelectedItems;
-			if (selection.Length != 1) return;
-
-			TreeModel tModel = synchronizedFoldersIconView.Model;
-			TreeIter iter;
-			if (tModel.GetIter(out iter, selection[0]))
+			TreeSelection tSelect = synchronizedFoldersIconView.Selection;
+			if (tSelect != null && tSelect.CountSelectedRows() == 1)
 			{
+				TreeModel tModel;
+				TreeIter iter;
+				
+				tSelect.GetSelected(out tModel, out iter);
+
 				iFolderHolder holder =
-					(iFolderHolder)tModel.GetValue(iter, 2);
+					(iFolderHolder)tModel.GetValue(iter, 0);
 				if (holder != null)
 				{
 					ConflictDialog = new iFolderConflictDialog(
@@ -1044,15 +862,16 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 		
 		private void OnSynchronizeNow(object o, EventArgs args)
 		{
-			TreePath[] selection = synchronizedFoldersIconView.SelectedItems;
-			if (selection.Length != 1) return;
-
-			TreeModel tModel = synchronizedFoldersIconView.Model;
-			TreeIter iter;
-			if (tModel.GetIter(out iter, selection[0]))
+			TreeSelection tSelect = synchronizedFoldersIconView.Selection;
+			if (tSelect != null && tSelect.CountSelectedRows() == 1)
 			{
+				TreeModel tModel;
+				TreeIter iter;
+				
+				tSelect.GetSelected(out tModel, out iter);
+
 				iFolderHolder holder =
-					(iFolderHolder)tModel.GetValue(iter, 2);
+					(iFolderHolder)tModel.GetValue(iter, 0);
 				if (holder != null)
 				{
 					try
@@ -1075,15 +894,16 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 
 		private void OnShareSynchronizedFolder(object o, EventArgs args)
 		{
-			TreePath[] selection = synchronizedFoldersIconView.SelectedItems;
-			if (selection.Length != 1) return;
-
-			TreeModel tModel = synchronizedFoldersIconView.Model;
-			TreeIter iter;
-			if (tModel.GetIter(out iter, selection[0]))
+			TreeSelection tSelect = synchronizedFoldersIconView.Selection;
+			if (tSelect != null && tSelect.CountSelectedRows() == 1)
 			{
+				TreeModel tModel;
+				TreeIter iter;
+				
+				tSelect.GetSelected(out tModel, out iter);
+
 				iFolderHolder holder =
-					(iFolderHolder)tModel.GetValue(iter, 2);
+					(iFolderHolder)tModel.GetValue(iter, 0);
 				if (holder != null)
 				{
 					ShowSynchronizedFolderProperties(holder, 1);
@@ -1244,502 +1064,6 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 			return vbox;
 		}
 		
-		
-		
-		private Widget CreateRemoteFoldersPage()
-		{
-			VBox vbox = new VBox(false, 0);
-			vbox.PackStart(CreateRemoteToolbar(), false, false, 0);
-			vbox.PackStart(CreateRemotePaned(), true, true, 0);
-
-			return vbox;
-		}
-		
-		private Widget CreateRemoteToolbar()
-		{
-			Frame toolbarFrame = new Frame();
-//			vbox.PackStart(toolbarFrame, false, false, 0);
-			toolbarFrame.ShadowType = ShadowType.EtchedOut;
-			
-			HBox hbox = new HBox(false, 4);
-			toolbarFrame.Add(hbox);
-//			vbox.PackStart(hbox, false, false, 0);
-
-			hbox.BorderWidth = 4;
-			
-			hbox.PackStart(new Label(""), false, false, 0); // spacer
-			
-			Label l = new Label(Util.GS("Filter by Server:"));
-			hbox.PackStart(l, false, false, 0);
-
-			remoteDomainsComboBox = new ComboBox();
-			hbox.PackStart(remoteDomainsComboBox, false, false, 0);
-
-			remoteDomainsComboBox.Model = DomainListStore;
-			
-			CellRenderer domainTR = new CellRendererText();
-			remoteDomainsComboBox.PackStart(domainTR, true);
-
-			remoteDomainsComboBox.SetCellDataFunc(domainTR,
-				new CellLayoutDataFunc(RemoteDomainComboBoxCellTextDataFunc));
-
-			remoteDomainsComboBox.ShowAll();
-
-			hbox.PackStart(new Label(""), true, true, 0); // spacer
-			
-			Image stopImage = new Image(Stock.Stop, Gtk.IconSize.Menu);
-			stopImage.SetAlignment(0.5F, 0F);
-			
-			RemoteCancelSearchButton = new Button(stopImage);
-			hbox.PackEnd(RemoteCancelSearchButton, false, false, 0);
-			RemoteCancelSearchButton.Relief = ReliefStyle.None;
-			RemoteCancelSearchButton.Sensitive = false;
-			
-			RemoteCancelSearchButton.Clicked +=
-				new EventHandler(OnRemoteCancelSearchButton);
-
-			remoteSearchEntry = new Entry();
-			hbox.PackEnd(remoteSearchEntry, false, false, 0);
-			remoteSearchEntry.SelectRegion(0, -1);
-			remoteSearchEntry.CanFocus = true;
-			remoteSearchEntry.Changed +=
-				new EventHandler(OnRemoteSearchEntryChanged);
-		
-			l = new Label(Util.GS("Search:"));
-			hbox.PackEnd(l, false, false, 0);
-			
-			return toolbarFrame;
-		}
-		
-		private void OnRemoteCancelSearchButton(object o, EventArgs args)
-		{
-			// FIXME: Implement OnRemoteCancelSearchButton
-			remoteSearchEntry.Text = "";
-			remoteSearchEntry.GrabFocus();
-		}
-		
-		private void OnRemoteSearchEntryChanged(object o, EventArgs args)
-		{
-			if (remoteSearchTimeoutID != 0)
-			{
-				GLib.Source.Remove(remoteSearchTimeoutID);
-				remoteSearchTimeoutID = 0;
-			}
-
-			if (remoteSearchEntry.Text.Length > 0)
-				RemoteCancelSearchButton.Sensitive = true;
-			else
-				RemoteCancelSearchButton.Sensitive = false;
-
-			remoteSearchTimeoutID = GLib.Timeout.Add(
-				500, new GLib.TimeoutHandler(RemoteSearchCallback));
-		}
-		
-		private bool RemoteSearchCallback()
-		{
-			SearchRemoteFolders();
-			return false;
-		}
-		
-		private void SearchRemoteFolders()
-		{
-			remoteFoldersListStore.Clear();
-			curRemoteFolders.Clear();
-
-			string searchString = remoteSearchEntry.Text;
-			if (searchString != null)
-			{
-				searchString = searchString.Trim();
-				if (searchString.Length > 0)
-					searchString = searchString.ToLower();
-			}
-
-			iFolderHolder[] ifolders = ifdata.GetiFolders();
-			if(ifolders != null)
-			{
-				foreach(iFolderHolder holder in ifolders)
-				{
-					if (holder.iFolder.IsSubscription)
-					{
-						TreeIter iter;
-						if (searchString == null || searchString.Trim().Length == 0)
-						{
-							// Add everything in
-							iter = remoteFoldersListStore.AppendValues(remoteFolderPixbuf, holder.iFolder.Name, holder);
-							curRemoteFolders[holder.iFolder.CollectionID] = iter;
-						}
-						else
-						{
-							// Search the iFolder's Name (for now)
-							string name = holder.iFolder.Name;
-							if (name != null)
-							{
-								name = name.ToLower();
-								if (name.IndexOf(searchString) >= 0)
-								{
-									iter = remoteFoldersListStore.AppendValues(remoteFolderPixbuf, holder.iFolder.Name, holder);
-									curRemoteFolders[holder.iFolder.CollectionID] = iter;
-								}
-							}
-						}
-					}
-				}
-			}
-			
-			remoteFoldersIconView.RefreshIcons();
-		}
-		
-		private Widget CreateRemotePaned()
-		{
-			remotePaned = new HPaned();
-			remotePaned.Position = 220;
-			
-			remotePaned.Add1(CreateRemoteActionsPane());
-			remotePaned.Add2(CreateRemoteIconViewPane());
-			
-			return remotePaned;
-		}
-		
-		private Widget CreateRemoteActionsPane()
-		{
-			RemoteDetailsNotebook = new Notebook();
-			RemoteDetailsNotebook.ShowTabs = false;
-			RemoteDetailsNotebook.AppendPage(new Label("Select a folder"), null);
-			
-			
-			VBox vbox = new VBox(false, 0);
-			RemoteDetailsNotebook.AppendPage(vbox, null);
-			vbox.PackStart(CreateRemoteInfo(), false, false, 0);
-			vbox.PackStart(CreateRemoteActions(), false, false, 0);
-			vbox.PackStart(CreateRemoteDetails(), true, true, 0);
-			
-			return RemoteDetailsNotebook;
-		}
-		
-		private Widget CreateRemoteInfo()
-		{
-			VBox vbox = new VBox(false, 0);
-			
-			// folder128.png
-			Gdk.Pixbuf folderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("folder128.png"));
-			folderPixbuf = folderPixbuf.ScaleSimple(64, 64, Gdk.InterpType.Bilinear);
-			Image folderImage = new Image(folderPixbuf);
-			folderImage.SetAlignment(0.5F, 0);
-			
-			vbox.PackStart(folderImage, false, false, 0);
-
-			RemoteNameLabel = new Label("");
-			RemoteNameLabel.UseMarkup = true;
-			RemoteNameLabel.UseUnderline = false;
-			RemoteNameLabel.Xalign = 0.5F;
-			vbox.PackStart(RemoteNameLabel, false, true, 5);
-
-			RemoteSizeLabel = new Label("47 MB");
-			RemoteSizeLabel.UseMarkup = true;
-			RemoteSizeLabel.UseUnderline = false;
-			RemoteSizeLabel.Xalign = 0.5F;
-			vbox.PackStart(RemoteSizeLabel, false, true, 0);
-			
-			RemoteOwnerLabel = new Label("");
-			RemoteOwnerLabel.UseMarkup = true;
-			RemoteOwnerLabel.UseUnderline = false;
-			RemoteOwnerLabel.Xalign = 0.5F;
-			vbox.PackStart(RemoteOwnerLabel, false, true, 0);
-			
-			RemoteServerLabel = new Label("");
-			RemoteServerLabel.UseMarkup = true;
-			RemoteServerLabel.UseUnderline = false;
-			RemoteServerLabel.Xalign = 0.5F;
-			vbox.PackStart(RemoteServerLabel, false, true, 0);
-			
-			return vbox;
-		}
-		
-		private Widget CreateRemoteActions()
-		{
-			VBox vbox = new VBox(false, 0);
-			vbox.PackStart(new Label(""), false, false, 0); // spacer
-
-			///
-			/// DownloadAndSyncButton
-			///
-			HBox hbox = new HBox(false, 0);
-			DownloadAndSyncButton = new Button(hbox);
-			DownloadAndSyncButton.Relief = ReliefStyle.None;
-//			DownloadAndSyncButton.Sensitive = false;
-			vbox.PackStart(DownloadAndSyncButton, false, false, 0);
-			
-			Gdk.Pixbuf folderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("download-folder128.png"));
-			folderPixbuf = folderPixbuf.ScaleSimple(24, 24, Gdk.InterpType.Bilinear);
-			Image folderImage = new Image(folderPixbuf);
-			folderImage.SetAlignment(0.5F, 0F);
-			hbox.PackStart(folderImage, false, false, 0);
-			
-			VBox buttonVBox = new VBox(false, 0);
-			hbox.PackStart(buttonVBox, true, true, 4);
-			
-			Label buttonText = new Label("<span size=\"small\" weight=\"bold\">Download and synchronize</span>");
-			buttonVBox.PackStart(buttonText, false, false, 0);
-			buttonText.UseMarkup = true;
-			buttonText.UseUnderline = false;
-			buttonText.Xalign = 0;
-			
-			Label buttonMessage = new Label("<span size=\"x-small\">Click here to download and begin synchronizing this folder to your computer</span>");
-			buttonVBox.PackStart(buttonMessage, false, false, 0);
-			buttonMessage.UseMarkup = true;
-			buttonMessage.UseUnderline = false;
-			buttonMessage.LineWrap = true;
-			buttonMessage.Justify = Justification.Left;
-			buttonMessage.Xalign = 0;
-			buttonMessage.Yalign = 0;
-			buttonMessage.WidthRequest = 170;
-			buttonMessage.HeightRequest = 40;
-			
-			DownloadAndSyncButton.Clicked +=
-				new EventHandler(OnDownloadAndSyncButton);
-						
-			
-			///
-			/// DeleteFromServerButton
-			///
-			hbox = new HBox(false, 0);
-			DeleteFromServerButton = new Button(hbox);
-			DeleteFromServerButton.Relief = ReliefStyle.None;
-//			DeleteFromServerButton.Sensitive = false;
-			vbox.PackStart(DeleteFromServerButton, false, false, 0);
-						
-			Image deleteImage = new Image(Stock.Delete, Gtk.IconSize.Menu);
-			deleteImage.SetAlignment(0.5F, 0F);
-			hbox.PackStart(deleteImage, false, false, 0);
-			
-			buttonVBox = new VBox(false, 0);
-			hbox.PackStart(buttonVBox, true, true, 4);
-			
-			buttonText = new Label("<span size=\"small\" weight=\"bold\">Delete from server</span>");
-			buttonVBox.PackStart(buttonText, false, false, 0);
-			buttonText.UseMarkup = true;
-			buttonText.UseUnderline = false;
-			buttonText.Xalign = 0;
-			
-			buttonMessage = new Label("<span size=\"x-small\">Click here to delete this folder and its files from the server</span>");
-			buttonVBox.PackStart(buttonMessage, false, false, 0);
-			buttonMessage.UseMarkup = true;
-			buttonMessage.UseUnderline = false;
-			buttonMessage.LineWrap = true;
-			buttonMessage.Justify = Justification.Left;
-			buttonMessage.Xalign = 0;
-			buttonMessage.Yalign = 0;
-			buttonMessage.WidthRequest = 170;
-			buttonMessage.HeightRequest = 25;
-			
-			DeleteFromServerButton.Clicked +=
-				new EventHandler(OnDeleteFromServerButton);
-			
-			
-			return vbox;
-		}
-		
-		private void OnDownloadAndSyncButton(object o, EventArgs args)
-		{
-			myiFolderNotebook.CurrentPage = SynchronizedFoldersPageIndex;
-			SetupiFolder();
-		}
-		
-		private void OnDeleteFromServerButton(object o, EventArgs args)
-		{
-Console.WriteLine("OnDeleteFromServerButton()");
-			TreeIter iter;
-
-			TreePath[] selectedPaths = remoteFoldersIconView.SelectedItems;
-			if (selectedPaths.Length != 1) return;
-
-			if (remoteFoldersListStore.GetIter(out iter, selectedPaths[0]))
-			{
-				iFolderHolder holder =
-					(iFolderHolder)remoteFoldersListStore.GetValue(iter, 2);
-				if (holder == null) return;
-
-				int rc = 0;
-
-				rc = AskRemoveiFolder(holder);
-
-				// User pressed OK?
-				if(rc != -8)
-					return;
-
-				try
-				{
-					remoteFoldersListStore.Remove(ref iter);
-
-					curiFolders.Remove(holder.iFolder.CollectionID);
-					curRemoteFolders.Remove(holder.iFolder.CollectionID);
-
-
-					// use the ID here because it could be a subscription
-					ifdata.DeleteiFolder(holder.iFolder.ID);
-
-//					UpdateButtonSensitivity();
-				}
-				catch(Exception e)
-				{
-					iFolderExceptionDialog ied =
-						new iFolderExceptionDialog(
-							this,
-							e);
-					ied.Run();
-					ied.Hide();
-					ied.Destroy();
-					return;
-				}
-			}
-		}
-
-		
-		private Widget CreateRemoteDetails()
-		{
-			VBox vbox = new VBox(false, 0);
-			
-			Label l = new Label(Util.GS("Description:"));
-			l.Xalign = 0;
-			vbox.PackStart(l, false, false, 0);
-
-			ScrolledWindow sw = new ScrolledWindow();
-			sw.ShadowType = Gtk.ShadowType.EtchedIn;
-			vbox.PackStart(sw, true, true, 0);
-			sw.VscrollbarPolicy = PolicyType.Automatic;
-			sw.HscrollbarPolicy = PolicyType.Automatic;
-
-			RemoteDescriptionTextView = new TextView();
-			RemoteDescriptionTextView.Editable = false;
-			RemoteDescriptionTextView.Sensitive = false;
-			RemoteDescriptionTextView.WrapMode = WrapMode.Word;
-			sw.Add(RemoteDescriptionTextView);
-			
-			return vbox;
-		}
-		
-		private Widget CreateRemoteIconViewPane()
-		{
-			ScrolledWindow sw = new ScrolledWindow();
-//			sw.ShadowType = Gtk.ShadowType.EtchedIn;
-
-			remoteFoldersListStore = new ListStore(typeof(Gdk.Pixbuf), typeof(string), typeof(iFolderHolder));
-			remoteFoldersIconView = new iFolderIconView(remoteFoldersListStore);
-			remoteFoldersIconView.SelectionMode = SelectionMode.Single;
-
-			remoteFoldersIconView.ButtonPressEvent +=
-				new ButtonPressEventHandler(OnRemoteFoldersButtonPressed);
-			
-			remoteFoldersIconView.SelectionChanged +=
-				new EventHandler(OnRemoteFoldersSelectionChanged);
-
-			sw.Add(remoteFoldersIconView);
-			
-			remoteFolderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("folder128.png"));
-			remoteFolderPixbuf = remoteFolderPixbuf.ScaleSimple(64, 64, Gdk.InterpType.Bilinear);
-			iFolderHolder[] ifolders = ifdata.GetiFolders();
-			if(ifolders != null)
-			{
-				foreach(iFolderHolder holder in ifolders)
-				{
-					if (holder.iFolder.IsSubscription)
-					{
-						TreeIter iter;
-						iter = remoteFoldersListStore.AppendValues(remoteFolderPixbuf, holder.iFolder.Name, holder);
-						curRemoteFolders[holder.iFolder.CollectionID] = iter;
-					}
-				}
-			}
-
-			return sw;
-		}
-		
-//		private Widget GetRemoteActionPane()
-//		{
-//		}
-		
-//		private Widget GetRemoteIconView()
-//		{
-//		}
-		
-//		private Widget GetRemoteToolbar()
-//		{
-//		}
-
-
-
-		private void OnRemoteFoldersButtonPressed(object o, ButtonPressEventArgs args)
-		{
-			TreePath tPath =
-				remoteFoldersIconView.GetPathAtPos((int)args.Event.X,
-												   (int)args.Event.Y);
-			if (tPath != null)
-			{
-				TreeModel tModel = remoteFoldersIconView.Model;
-				
-				TreeIter iter;
-				if (tModel.GetIter(out iter, tPath))
-				{
-					string folderName =
-						(string)tModel.GetValue(iter, 1);
-					if (folderName != null)
-						Console.WriteLine("Folder clicked: {0}", folderName);
-				}
-			}
-		}
-		
-		private void OnRemoteFoldersSelectionChanged(object o, EventArgs args)
-		{
-Console.WriteLine("iFolderWindow.OnRemoteFoldersSelectionChanged()");
-			TreePath[] selection = remoteFoldersIconView.SelectedItems;
-			if (selection.Length == 0)
-			{
-//				DownloadAndSyncButton.Sensitive = false;
-//				DeleteFromServerButton.Sensitive = false;
-				
-				RemoteDetailsNotebook.CurrentPage = 0;
-			}
-			else
-			{
-				TreeModel tModel = remoteFoldersIconView.Model;
-				for (int i = 0; i < selection.Length; i++)
-				{
-					TreeIter iter;
-					if (tModel.GetIter(out iter, selection[i]))
-					{
-						iFolderHolder holder =
-							(iFolderHolder)tModel.GetValue(iter, 2);
-						if (holder != null)
-						{
-							RemoteNameLabel.Markup =
-								string.Format("<span size=\"large\" weight=\"bold\">{0}</span>", holder.iFolder.Name);
-							RemoteSizeLabel.Markup =
-								string.Format("{0} MB", "47");
-							RemoteOwnerLabel.Markup =
-								string.Format("Owner: {0}", holder.iFolder.Owner);
-							DomainInformation domain = domainController.GetDomain(holder.iFolder.DomainID);
-							if (domain != null)
-								RemoteServerLabel.Markup =
-									string.Format("Server: {0}", domain.Name);
-							else
-								RemoteServerLabel.Text = "";
-							
-							if (holder.iFolder.Description != null)
-								RemoteDescriptionTextView.Buffer.Text = holder.iFolder.Description;
-							else
-								RemoteDescriptionTextView.Buffer.Text = "";
-						}
-					}
-				}
-
-//				DownloadAndSyncButton.Sensitive = true;
-//				DeleteFromServerButton.Sensitive = true;
-
-				RemoteDetailsNotebook.CurrentPage = 1;
-			}
-		}
-
-
 
 ///
 /// Synchronized Folders Page
@@ -1751,7 +1075,6 @@ Console.WriteLine("iFolderWindow.OnRemoteFoldersSelectionChanged()");
 
 			VBox vbox = new VBox(false, 0);
 			ContentEventBox.Add(vbox);
-//			vbox.PackStart(CreateSynchronizedToolbar(), false, false, 4);
 			vbox.PackStart(CreateSynchronizedPaned(), true, true, 0);
 
 			return ContentEventBox;
@@ -1796,90 +1119,119 @@ Console.WriteLine("AddSynchronizedFolderHandler");
 			CreateNewiFolder();
 		}
 		
-		private void DownloadRemoteFolderHandler(object o, EventArgs args)
+		private void ShowHideAllFoldersHandler(object o, EventArgs args)
 		{
-Console.WriteLine("DownloadRemoteFolderHandler...calling ChooseRemoteFolderDialog...");
-
-			ChooseRemoteFolderDialog cd =
-				new ChooseRemoteFolderDialog(ifws, simws);
-			cd.TransientFor = this;
-			if (!Util.RegisterModalWindow(cd))
-			{
-				try
-				{
-					Util.CurrentModalWindow.Present();
-				}
-				catch{}
-				cd.Destroy();
-				return;
-			}
-
-			int response = cd.Run();
-			cd.Hide();
-			
-			if (response == (int)ResponseType.Ok)
-			{
-				Console.WriteLine("Folder selected: {0}", cd.SelectedFolder.iFolder.Name);
-				DownloadFolder(cd.SelectedFolder);
-			}
-
-			cd.Destroy();
+			if (bAvailableFoldersShowing)
+				HideAvailableiFolders();
+			else
+				ShowAvailableiFolders();
 		}
+		
+		private void ShowAvailableiFolders()
+		{
+			synchronizedFoldersIconView.AddGroup(myAvailableGroup);
+			synchronizedFoldersIconView.AddGroup(otherAvailableGroup);
 
-//		private void RefreshSynchronizedFoldersHandler(object o, EventArgs args)
-//		{
-//Console.WriteLine("RefreshSynchronizedFoldersHandler");
-//		}
+			ShowHideAllFoldersButtonText.Markup =
+				string.Format("<span size=\"large\">{0}</span>",
+							  Util.GS("Hide available iFolders"));
+			bAvailableFoldersShowing = true;
+		}
+		
+		private void HideAvailableiFolders()
+		{
+			synchronizedFoldersIconView.RemoveGroup(myAvailableGroup);
+			synchronizedFoldersIconView.RemoveGroup(otherAvailableGroup);
+
+			ShowHideAllFoldersButtonText.Markup =
+				string.Format("<span size=\"large\">{0}</span>",
+							  Util.GS("Show available iFolders"));
+			bAvailableFoldersShowing = false;
+		}
 		
 		private void RemoveSynchronizedFolderHandler(object o,  EventArgs args)
 		{
 Console.WriteLine("RemoveSynchronizedFolderHandler");
-			TreePath[] selection = synchronizedFoldersIconView.SelectedItems;
-			if (selection.Length == 1)	// FIMXE: Support multiple seleciton eventually
+			TreeSelection tSelect = synchronizedFoldersIconView.Selection;
+			if (tSelect != null && tSelect.CountSelectedRows() == 1)
 			{
-				TreeModel tModel = synchronizedFoldersIconView.Model;
+				TreeModel tModel;
 				TreeIter iter;
-				if (tModel.GetIter(out iter, selection[0]))
+				
+				tSelect.GetSelected(out tModel, out iter);
+
+				iFolderHolder holder =
+					(iFolderHolder)tModel.GetValue(iter, 0);
+				if (holder != null)
 				{
-					iFolderHolder holder =
-						(iFolderHolder)tModel.GetValue(iter, 2);
-					if (holder != null)
+					iFolderMsgDialog dialog = new iFolderMsgDialog(
+						this,
+						iFolderMsgDialog.DialogType.Question,
+						iFolderMsgDialog.ButtonSet.YesNo,
+						"",
+						Util.GS("Stop synchronizing this folder with the server?"),
+						"");
+					int rc = dialog.Run();
+					dialog.Hide();
+					dialog.Destroy();
+					if(rc == -8)
 					{
-						iFolderMsgDialog dialog = new iFolderMsgDialog(
-							this,
-							iFolderMsgDialog.DialogType.Question,
-							iFolderMsgDialog.ButtonSet.YesNo,
-							"",
-							Util.GS("Stop synchronizing this folder with the server?"),
-							"");
-						int rc = dialog.Run();
-						dialog.Hide();
-						dialog.Destroy();
-						if(rc == -8)
+						try
 						{
-							try
-							{
-								ifdata.RevertiFolder(holder.iFolder.ID);
-								if (synchronizedFoldersListStore.Remove(ref iter))
-								{
-									if (curSynchronizedFolders.ContainsKey(holder.iFolder.ID))
-										curSynchronizedFolders.Remove(holder.iFolder.ID);
-								}
+							ifdata.RevertiFolder(holder.iFolder.ID);
+//								if (myiFoldersFilter.Remove(ref iter))
+//								{
+//									if (curSynchronizedFolders.ContainsKey(holder.iFolder.ID))
+//										curSynchronizedFolders.Remove(holder.iFolder.ID);
+//								}
 								
-								synchronizedFoldersIconView.RefreshIcons();
-							}
-							catch(Exception e)
-							{
-								iFolderExceptionDialog ied =
-									new iFolderExceptionDialog(
-										this,
-										e);
-								ied.Run();
-								ied.Hide();
-								ied.Destroy();
-							}
+//								synchronizedFoldersIconView.RefreshIcons();
+						}
+						catch(Exception e)
+						{
+							iFolderExceptionDialog ied =
+								new iFolderExceptionDialog(
+									this,
+									e);
+							ied.Run();
+							ied.Hide();
+							ied.Destroy();
 						}
 					}
+				}
+			}
+		}
+		
+		private void DownloadAvailableiFolderHandler(object o, EventArgs args)
+		{
+			DownloadSelectedFolder();
+		}
+		
+		private void DownloadSelectedFolder()
+		{
+			iFolderHolder holder = synchronizedFoldersIconView.SelectedFolder;
+			if (holder != null && holder.iFolder.IsSubscription)
+			{
+				try
+				{
+					string lastSetupPath = Util.LastSetupPath;
+					iFolderHolder newHolder = ifdata.AcceptiFolderInvitation(
+														holder.iFolder.ID,
+														holder.iFolder.DomainID,
+														lastSetupPath);
+	
+					if (newHolder != null)
+					{
+	//					TreeIter iter;
+	//					iter = myiFoldersFilter.AppendValues(synchronizedFolderPixbuf, newHolder.iFolder.Name, newHolder);
+	//					curSynchronizedFolders[holder.iFolder.ID] = iter;
+		
+	//					synchronizedFoldersIconView.RefreshIcons();
+					}
+				}
+				catch(Exception e)
+				{
+					DisplayCreateOrSetupException(e);
 				}
 			}
 		}
@@ -1966,14 +1318,22 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 		
 		private bool SynchronizedSearchCallback()
 		{
-			SearchSynchronizedFolders();
+			SearchFolders();
 			return false;
 		}
-		
-		private void SearchSynchronizedFolders()
+
+		private void SearchFolders()
 		{
-			synchronizedFoldersListStore.Clear();
-			curSynchronizedFolders.Clear();
+			myiFoldersFilter.Refilter();
+			myAvailableFoldersFilter.Refilter();
+			otherAvailableFoldersFilter.Refilter();
+//			synchronizedFoldersIconView.RefreshIcons();
+		}
+		
+		private void SearchFoldersOld()
+		{
+//			myiFoldersFilter.Clear();
+//			curSynchronizedFolders.Clear();
 
 			string searchString = synchronizedSearchEntry.Text;
 			if (searchString != null)
@@ -1994,8 +1354,8 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 						if (searchString == null || searchString.Trim().Length == 0)
 						{
 							// Add everything in
-							iter = synchronizedFoldersListStore.AppendValues(synchronizedFolderPixbuf, holder.iFolder.Name, holder);
-							curSynchronizedFolders[holder.iFolder.ID] = iter;
+//							iter = myiFoldersFilter.AppendValues(synchronizedFolderPixbuf, holder.iFolder.Name, holder);
+//							curSynchronizedFolders[holder.iFolder.ID] = iter;
 						}
 						else
 						{
@@ -2006,8 +1366,8 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 								name = name.ToLower();
 								if (name.IndexOf(searchString) >= 0)
 								{
-									iter = synchronizedFoldersListStore.AppendValues(synchronizedFolderPixbuf, holder.iFolder.Name, holder);
-									curSynchronizedFolders[holder.iFolder.ID] = iter;
+//									iter = myiFoldersFilter.AppendValues(synchronizedFolderPixbuf, holder.iFolder.Name, holder);
+//									curSynchronizedFolders[holder.iFolder.ID] = iter;
 								}
 							}
 						}
@@ -2015,7 +1375,7 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 				}
 			}
 			
-			synchronizedFoldersIconView.RefreshIcons();
+//			synchronizedFoldersIconView.RefreshIcons();
 		}
 		
 		private Widget CreateSynchronizedPaned()
@@ -2024,8 +1384,69 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 
 			hbox.PackStart(CreateSynchronizedActions(), false, false, 12);
 			hbox.PackStart(CreateSynchronizedIconViewPane(), true, true, 0);
+//			hbox.PackStart(CreateSynchronizedIconViewPane(), false, false, 0);
+//			hbox.PackStart(CreateItemCanvas(), true, true, 0);
 			
 			return hbox;
+		}
+		
+		private Widget CreateItemCanvas()
+		{
+			ScrolledWindow sw = new ScrolledWindow();
+			sw.VscrollbarPolicy = PolicyType.Automatic;
+			sw.HscrollbarPolicy = PolicyType.Automatic;
+			
+			Gnome.Canvas canvas = Gnome.Canvas.NewAa();
+			sw.Add(canvas);
+			
+//			Gnome.CanvasGroup group = new Gnome.CanvasGroup(canvas.Root());
+			
+//			Gnome.CanvasText hello = new Gnome.CanvasText(canvas.Root());
+//			hello.X = 0;
+//			hello.Y = 0;
+//			hello.FillColor = "#000000";
+//			hello.Text = "Hello World!";
+//			hello.Show();
+
+			Gnome.CanvasGroup synchronizedGroup = new Gnome.CanvasGroup(canvas.Root());
+			double[] translate = new double[6];
+			Art.Affine.Translate(translate, 0, 7);
+			synchronizedGroup.AffineAbsolute(translate);
+//			synchronizedGroup.X = 0;
+//			synchronizedGroup.Y = 0;
+//			synchronizedGroup.Move(0, 7);
+
+			Gnome.CanvasText categoryTitle = new Gnome.CanvasText(synchronizedGroup);
+			categoryTitle.X = 0;
+			categoryTitle.Y = 0;
+			categoryTitle.FillColor = "#000000";
+			categoryTitle.Text = Util.GS("Synchronized Folders");
+			categoryTitle.Markup =
+				string.Format(
+					"<span size=\"x-large\" weight=\"bold\">{0}</span>",
+					categoryTitle.Text);
+			categoryTitle.Anchor = AnchorType.NorthWest;
+			categoryTitle.Show();
+			synchronizedGroup.Show();
+
+			Gnome.CanvasWidget cWidget = new Gnome.CanvasWidget(synchronizedGroup);
+			HBox hbox = new HBox(false, 0);
+			cWidget.Width = 1600;
+			cWidget.Height = 40;
+//			cWidget.Anchor = AnchorType.SouthEast;
+			cWidget.X = 0;
+			cWidget.Y = 40;
+			cWidget.Widget = hbox;
+			cWidget.Show();
+			for (int i = 0; i < 50; i++)
+			{
+				Button button = new Button(string.Format("{0}: Click me", i));
+				hbox.PackStart(button, false, false, 0);
+			}
+
+			canvas.Show();
+			
+			return sw;
 		}
 		
 		private Widget CreateSynchronizedActions()
@@ -2115,25 +1536,26 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 			
 			AddSynchronizedFolderButton.Clicked +=
 				new EventHandler(AddSynchronizedFolderHandler);
-
+			
 			///
-			/// DownloadRemoteFolderButton
+			/// ShowHideAllFoldersButton
 			///
 			hbox = new HBox(false, 0);
-			DownloadRemoteFolderButton = new Button(hbox);
-			vbox.PackStart(DownloadRemoteFolderButton, false, false, 0);
-			DownloadRemoteFolderButton.Relief = ReliefStyle.None;
+			ShowHideAllFoldersButton = new Button(hbox);
+			vbox.PackStart(ShowHideAllFoldersButton, false, false, 0);
+			ShowHideAllFoldersButton.Relief = ReliefStyle.None;
 
-			buttonText = new Label(
+			ShowHideAllFoldersButtonText = new Label(
 				string.Format("<span size=\"large\">{0}</span>",
-							  Util.GS("Download a folder")));
-			hbox.PackStart(buttonText, false, false, 4);
-			buttonText.UseMarkup = true;
-			buttonText.UseUnderline = false;
-			buttonText.Xalign = 0;
+							  Util.GS("Show available iFolders")));
+			hbox.PackStart(ShowHideAllFoldersButtonText, false, false, 4);
+			ShowHideAllFoldersButtonText.UseMarkup = true;
+			ShowHideAllFoldersButtonText.UseUnderline = false;
+			ShowHideAllFoldersButtonText.Xalign = 0;
 			
-			DownloadRemoteFolderButton.Clicked +=
-				new EventHandler(DownloadRemoteFolderHandler);
+			ShowHideAllFoldersButton.Clicked +=
+				new EventHandler(ShowHideAllFoldersHandler);
+			
 
 			///
 			/// Spacer
@@ -2281,6 +1703,25 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 			RemoveSynchronizedFolderButton.Clicked +=
 				new EventHandler(RemoveSynchronizedFolderHandler);
 
+			
+			///
+			/// DownloadAvailableiFolderButton
+			///
+			hbox = new HBox(false, 0);
+			DownloadAvailableiFolderButton = new Button(hbox);
+			vbox.PackStart(DownloadAvailableiFolderButton, false, false, 0);
+			DownloadAvailableiFolderButton.Relief = ReliefStyle.None;
+
+			buttonText = new Label(
+				string.Format("<span size=\"large\">{0}</span>",
+							  Util.GS("Download")));
+			hbox.PackStart(buttonText, true, true, 4);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+
+			DownloadAvailableiFolderButton.Clicked +=
+				new EventHandler(DownloadAvailableiFolderHandler);
 
 
 			///
@@ -2375,9 +1816,39 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 			ScrolledWindow sw = new ScrolledWindow();
 //			sw.ShadowType = Gtk.ShadowType.EtchedIn;
 
-			synchronizedFoldersListStore = new ListStore(typeof(Gdk.Pixbuf), typeof(string), typeof(iFolderHolder));
-			synchronizedFoldersIconView = new iFolderIconView(synchronizedFoldersListStore);
-			synchronizedFoldersIconView.SelectionMode = SelectionMode.Single;
+//			myiFoldersFilter = new ListStore(typeof(Gdk.Pixbuf), typeof(string), typeof(iFolderHolder));
+//			synchronizedFoldersIconView = new iFolderIconView(myiFoldersFilter);
+			synchronizedFoldersIconView = new iFolderIconView();
+
+			///
+			/// Synchronized iFolders
+			///			
+			myiFoldersFilter = new TreeModelFilter(ifdata.iFolders, null);
+			myiFoldersFilter.VisibleFunc = SynchronizedFoldersFilterFunc;
+			
+			localGroup = new iFolderViewGroup(Util.GS("My iFolders"), myiFoldersFilter);
+			synchronizedFoldersIconView.AddGroup(localGroup);
+//			synchronizedFoldersIconView.SelectionMode = SelectionMode.Single;
+			
+			///
+			/// My Available iFolders
+			///
+			myAvailableFoldersFilter = new TreeModelFilter(ifdata.iFolders, null);
+			myAvailableFoldersFilter.VisibleFunc = MyAvailableFoldersFilterFunc;
+			myAvailableGroup =
+				new iFolderViewGroup(Util.GS("My Available iFolders"),
+									 myAvailableFoldersFilter);
+//			synchronizedFoldersIconView.AddGroup(myAvailableGroup);
+			
+			///
+			/// Other Available iFolders
+			///
+			otherAvailableFoldersFilter = new TreeModelFilter(ifdata.iFolders, null);
+			otherAvailableFoldersFilter.VisibleFunc = OtherAvailableFoldersFilterFunc;
+			otherAvailableGroup =
+				new iFolderViewGroup(Util.GS("Other Available iFolders"),
+									 otherAvailableFoldersFilter);
+//			synchronizedFoldersIconView.AddGroup(otherAvailableGroup);
 
 			synchronizedFoldersIconView.ButtonPressEvent +=
 				new ButtonPressEventHandler(OnSynchronizedFoldersButtonPressed);
@@ -2418,22 +1889,106 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 			
 			sw.Add(synchronizedFoldersIconView);
 			
-			synchronizedFolderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("synchronized-folder64.png"));
-			iFolderHolder[] ifolders = ifdata.GetiFolders();
-			if(ifolders != null)
+//			synchronizedFolderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("synchronized-folder64.png"));
+//			iFolderHolder[] ifolders = ifdata.GetiFolders();
+//			if(ifolders != null)
+//			{
+//				foreach(iFolderHolder holder in ifolders)
+//				{
+//					if (!holder.iFolder.IsSubscription)
+//					{
+//						TreeIter iter;
+//						iter = myiFoldersFilter.AppendValues(synchronizedFolderPixbuf, holder.iFolder.Name, holder);
+//						curSynchronizedFolders[holder.iFolder.ID] = iter;
+//					}
+//				}
+//			}
+
+			return sw;
+		}
+
+		private bool SynchronizedFoldersFilterFunc(TreeModel model, TreeIter iter)
+		{
+			iFolderHolder ifHolder = (iFolderHolder)model.GetValue(iter, 0);
+			if (ifHolder != null && !ifHolder.iFolder.IsSubscription)
 			{
-				foreach(iFolderHolder holder in ifolders)
+				string searchString = synchronizedSearchEntry.Text;
+				if (searchString != null)
 				{
-					if (!holder.iFolder.IsSubscription)
+					searchString = searchString.Trim();
+					if (searchString.Length > 0)
+						searchString = searchString.ToLower();
+				}
+	
+				if (searchString == null || searchString.Trim().Length == 0)
+					return true;	// Include this
+				else
+				{
+					// Search the iFolder's Name (for now)
+					string name = ifHolder.iFolder.Name;
+					if (name != null)
 					{
-						TreeIter iter;
-						iter = synchronizedFoldersListStore.AppendValues(synchronizedFolderPixbuf, holder.iFolder.Name, holder);
-						curSynchronizedFolders[holder.iFolder.ID] = iter;
+						name = name.ToLower();
+						if (name.IndexOf(searchString) >= 0)
+							return true;
 					}
 				}
 			}
+			
+			return false;
+		}
+		
+		private bool MyAvailableFoldersFilterFunc(TreeModel model, TreeIter iter)
+		{
+			iFolderHolder ifHolder = (iFolderHolder)model.GetValue(iter, 0);
+			return IsAvailableFolder(ifHolder, true);
+		}
+		
+		private bool OtherAvailableFoldersFilterFunc(TreeModel model, TreeIter iter)
+		{
+			iFolderHolder ifHolder = (iFolderHolder)model.GetValue(iter, 0);
+			return IsAvailableFolder(ifHolder, false);
+		}
+		
+		private bool IsAvailableFolder(iFolderHolder ifHolder, bool owner)
+		{
+			if (ifHolder == null || ifHolder.iFolder == null || ifHolder.iFolder.DomainID == null) return false;
 
-			return sw;
+			DomainInformation domain = domainController.GetDomain(ifHolder.iFolder.DomainID);
+			if (domain == null) return false;
+			
+			string myDomainUserID = domain.MemberUserID;
+
+			if (ifHolder != null && ifHolder.iFolder.IsSubscription)
+			{
+				if ((owner && ifHolder.iFolder.OwnerID == myDomainUserID)
+					|| (!owner && ifHolder.iFolder.OwnerID != myDomainUserID))
+				{
+					string searchString = synchronizedSearchEntry.Text;
+					if (searchString != null)
+					{
+						searchString = searchString.Trim();
+						if (searchString.Length > 0)
+							searchString = searchString.ToLower();
+					}
+		
+					if (searchString == null || searchString.Trim().Length == 0)
+						return true;	// Include this
+					else
+					{
+						// Search the iFolder's Name (for now)
+						string name = ifHolder.iFolder.Name;
+						if (name != null)
+						{
+							name = name.ToLower();
+							if (name.IndexOf(searchString) >= 0)
+								return true;
+						}
+					}
+				}
+			}
+			
+			return false;
 		}
 		
 		private void OnSynchronizedFoldersButtonPressed(object o, ButtonPressEventArgs args)
@@ -2445,6 +2000,7 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 				case 2:
 					break;
 				case 3: // right-click
+/*
 					TreePath tPath =
 						synchronizedFoldersIconView.GetPathAtPos((int)args.Event.X,
 														   (int)args.Event.Y);
@@ -2456,7 +2012,7 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 						if (tModel.GetIter(out iter, tPath))
 						{
 							iFolderHolder holder =
-								(iFolderHolder)tModel.GetValue(iter, 2);
+								(iFolderHolder)tModel.GetValue(iter, 0);
 							if (holder == null) return;
 
 							Menu menu = new Menu();
@@ -2525,15 +2081,18 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 								Gtk.Global.CurrentEventTime);
 						}
 					}
+*/
 					break;
 			}
 		}
 		
 		private void OnSynchronizedFoldersSelectionChanged(object o, EventArgs args)
 		{
+			iFolderHolder holder = (iFolderHolder)o;
 Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
-			TreePath[] selection = synchronizedFoldersIconView.SelectedItems;
-			if (selection.Length == 0)
+//			TreeSelection tSelect = synchronizedFoldersIconView.Selection;
+//			if (tSelect == null || tSelect.CountSelectedRows() != 1)
+			if (holder == null)
 			{
 //				AddFolderToSyncButton.Sensitive = false;
 //				RemoveSynchronizedFolderButton.Sensitive = false;
@@ -2552,42 +2111,57 @@ Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
 			}
 			else
 			{
-				TreeModel tModel = synchronizedFoldersIconView.Model;
-				for (int i = 0; i < selection.Length; i++)
+//				TreeModel tModel;
+//				TreeIter iter;
+				
+//				tSelect.GetSelected(out tModel, out iter);
+
+//				iFolderHolder holder =
+//					(iFolderHolder)tModel.GetValue(iter, 0);
+//				if (holder != null)
+//				{
+				SynchronizedNameLabel.Markup =
+					string.Format("<span size=\"small\" weight=\"bold\">{0}</span>", holder.iFolder.Name);
+				OwnerLabel.Markup =
+					string.Format("<span size=\"small\">{0}</span>", holder.iFolder.Owner);
+				DomainInformation domain = domainController.GetDomain(holder.iFolder.DomainID);
+				if (domain != null)
+					ServerLabel.Markup =
+						string.Format("<span size=\"small\">{0}</span>", domain.Name);
+
+				if (holder.iFolder.IsSubscription)
 				{
-					TreeIter iter;
-					if (tModel.GetIter(out iter, selection[i]))
-					{
-						iFolderHolder holder =
-							(iFolderHolder)tModel.GetValue(iter, 2);
-						if (holder != null)
-						{
-							SynchronizedNameLabel.Markup =
-								string.Format("<span size=\"small\" weight=\"bold\">{0}</span>", holder.iFolder.Name);
-							OwnerLabel.Markup =
-								string.Format("<span size=\"small\">{0}</span>", holder.iFolder.Owner);
-							DomainInformation domain = domainController.GetDomain(holder.iFolder.DomainID);
-							if (domain != null)
-								ServerLabel.Markup =
-									string.Format("<span size=\"small\">{0}</span>", domain.Name);
+					// Hide the Local iFolder Buttons
+					OpenSynchronizedFolderButton.Visible	= false;
+					SynchronizeNowButton.Visible			= false;
+					ShareSynchronizedFolderButton.Visible	= false;
+					ResolveConflictsButton.Visible			= false;
+					RemoveSynchronizedFolderButton.Visible	= false;
 
-							if (holder.iFolder.HasConflicts)
-								ResolveConflictsButton.Visible = true;
-							else
-								ResolveConflictsButton.Visible = false;
-								
-						}
-					}
+					// Show the Available iFolder Buttons
+					DownloadAvailableiFolderButton.Visible	= true;
 				}
+				else
+				{
+					// Hide the Available iFolders Buttons
+					DownloadAvailableiFolderButton.Visible	= false;
+					
+					// Show the Local iFolder Buttons
+					OpenSynchronizedFolderButton.Visible	= true;
+					SynchronizeNowButton.Visible			= true;
+					ShareSynchronizedFolderButton.Visible	= true;
+					RemoveSynchronizedFolderButton.Visible	= true;
 
-//				SynchronizedDetailsNotebook.CurrentPage = 1;
+					if (holder.iFolder.HasConflicts)
+						ResolveConflictsButton.Visible = true;
+					else
+						ResolveConflictsButton.Visible = false;
+				}
+								
+//				}
 
-//				generalTasksExpander.Expanded = true;
-//				synchronizedFolderTasks.Expanded = true;
 				SynchronizedFolderTasks.Visible = true;
 				detailsExpander.Visible = true;
-
-
 
 				RemoveSynchronizedFolderButton.Sensitive = true;
 			}
@@ -2632,11 +2206,11 @@ Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
 							{
 								iFolderHolder holder = ifdata.CreateiFolder(path, defaultDomain.ID);
 
-								TreeIter iter =
-									synchronizedFoldersListStore.AppendValues(synchronizedFolderPixbuf,
-																			  holder.iFolder.Name,
-																			  holder);
-								curSynchronizedFolders[holder.iFolder.ID] = iter;
+//								TreeIter iter =
+//									myiFoldersFilter.AppendValues(synchronizedFolderPixbuf,
+//																			  holder.iFolder.Name,
+//																			  holder);
+//								curSynchronizedFolders[holder.iFolder.ID] = iter;
 								bFolderCreated = true;
 							}
 							catch
@@ -2646,8 +2220,8 @@ Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
 						}
 					}
 
-					if (bFolderCreated)
-						synchronizedFoldersIconView.RefreshIcons();
+//					if (bFolderCreated)
+//						synchronizedFoldersIconView.RefreshIcons();
 					break;
 				default:
 					break;
@@ -2955,7 +2529,8 @@ Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
 
 			// Set up the iFolder TreeView
 			iFolderTreeStore = new ListStore(typeof(iFolderHolder));
-			iFolderTreeView.Model = iFolderTreeStore;
+//			iFolderTreeView.Model = iFolderTreeStore;
+			iFolderTreeView.Model = myiFoldersFilter;
 
 			// Set up Pixbuf and Text Rendering for "iFolders" column
 			CellRendererPixbuf ifcrp = new CellRendererPixbuf();
@@ -3549,15 +3124,17 @@ Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
 		
 		private void OpenSelectedFolder()
 		{
-			TreePath[] selection = synchronizedFoldersIconView.SelectedItems;
-			if (selection.Length != 1) return;
+//			TreeSelection tSelect = synchronizedFoldersIconView.Selection;
+//			if (tSelect != null && tSelect.CountSelectedRows() == 1)
+//			{
+//				TreeModel tModel;
+//				TreeIter iter;
+				
+//				tSelect.GetSelected(out tModel, out iter);
 
-			TreeModel tModel = synchronizedFoldersIconView.Model;
-			TreeIter iter;
-			if (tModel.GetIter(out iter, selection[0]))
-			{
-				iFolderHolder holder =
-					(iFolderHolder)tModel.GetValue(iter, 2);
+//				iFolderHolder holder =
+//					(iFolderHolder)tModel.GetValue(iter, 0);
+				iFolderHolder holder = synchronizedFoldersIconView.SelectedFolder;
 				if (holder != null)
 				{
 					try
@@ -3578,7 +3155,7 @@ Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
 						dg.Destroy();
 					}
 				}
-			}
+//			}
 		}
 
 
@@ -3632,15 +3209,16 @@ Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
 
 		public void OnShowFolderProperties(object o, EventArgs args)
 		{
-			TreePath[] selection = synchronizedFoldersIconView.SelectedItems;
-			if (selection.Length != 1) return;
-
-			TreeModel tModel = synchronizedFoldersIconView.Model;
-			TreeIter iter;
-			if (tModel.GetIter(out iter, selection[0]))
+			TreeSelection tSelect = synchronizedFoldersIconView.Selection;
+			if (tSelect != null && tSelect.CountSelectedRows() == 1)
 			{
+				TreeModel tModel;
+				TreeIter iter;
+				
+				tSelect.GetSelected(out tModel, out iter);
+
 				iFolderHolder holder =
-					(iFolderHolder)tModel.GetValue(iter, 2);
+					(iFolderHolder)tModel.GetValue(iter, 0);
 				if (holder != null)
 				{
 					ShowSynchronizedFolderProperties(holder, 0);
@@ -3830,6 +3408,12 @@ Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
 		{
 Console.WriteLine("SetupiFolderHandler()");
 			SetupiFolder();
+		}
+		
+		private void SetupiFolder()
+		{
+Console.WriteLine("SetupiFolder() not implemented");
+			// FIXME: Implement SetupiFolder()
 		}
 
 		private void OnRemoveiFolder(object o, EventArgs args)
@@ -4056,19 +3640,12 @@ Console.WriteLine("SetupiFolderHandler()");
 				iFolderTreeStore.SetValue(iter, 0, ifHolder);
 			}
 			
-			if (curSynchronizedFolders.ContainsKey(iFolderID))
-			{
+//			if (curSynchronizedFolders.ContainsKey(iFolderID))
+//			{
 				// FIXME: Determine if the state has changed to know if we should update the pixbuf
-				iter = (TreeIter)curSynchronizedFolders[iFolderID];
-				synchronizedFoldersListStore.SetValue(iter, 2, ifHolder);
-			}
-			
-			if (curRemoteFolders.ContainsKey(iFolderID))
-			{
-				// FIXME: Determine if the state has changed to know if we should update the pixbuf
-				iter = (TreeIter)curRemoteFolders[iFolderID];
-				remoteFoldersListStore.SetValue(iter, 2, ifHolder);
-			}
+//				iter = (TreeIter)curSynchronizedFolders[iFolderID];
+//				myiFoldersFilter.SetValue(iter, 2, ifHolder);
+//			}
 			
 
 			UpdateButtonSensitivity();
@@ -4087,19 +3664,12 @@ Console.WriteLine("SetupiFolderHandler()");
 				curiFolders.Remove(iFolderID);
 			}
 
-			if (curSynchronizedFolders.ContainsKey(iFolderID))
-			{
+//			if (curSynchronizedFolders.ContainsKey(iFolderID))
+//			{
 				// FIXME: Determine if the state has changed to know if we should update the pixbuf
-				iter = (TreeIter)curSynchronizedFolders[iFolderID];
-				synchronizedFoldersListStore.Remove(ref iter);
-			}
-			
-			if (curRemoteFolders.ContainsKey(iFolderID))
-			{
-				// FIXME: Determine if the state has changed to know if we should update the pixbuf
-				iter = (TreeIter)curRemoteFolders[iFolderID];
-				remoteFoldersListStore.Remove(ref iter);
-			}
+//				iter = (TreeIter)curSynchronizedFolders[iFolderID];
+//				myiFoldersFilter.Remove(ref iter);
+//			}
 		}
 
 
@@ -4137,29 +3707,17 @@ Console.WriteLine("\t1");
 			}
 
 Console.WriteLine("\t2");
-			if (!curSynchronizedFolders.ContainsKey(iFolderID))
-			{
-Console.WriteLine("\t3");
-				if (!ifHolder.iFolder.IsSubscription)
-				{
-Console.WriteLine("\t4");
-					iter = synchronizedFoldersListStore.AppendValues(synchronizedFolderPixbuf, ifHolder.iFolder.Name, ifHolder);
-					curSynchronizedFolders[iFolderID] = iter;
-				}
-			}
-			
-//			if (!curRemoteFolders.ContainsKey(iFolderID))
+//			if (!curSynchronizedFolders.ContainsKey(iFolderID))
 //			{
-//Console.WriteLine("\t5");
-//				if (ifHolder.iFolder.IsSubscription)
+//Console.WriteLine("\t3");
+//				if (!ifHolder.iFolder.IsSubscription)
 //				{
-//Console.WriteLine("\t6");
-//					iter = remoteFoldersListStore.AppendValues(remoteFolderPixbuf, ifHolder.iFolder.Name, ifHolder);
-//					curRemoteFolders[iFolderID] = iter;
+//Console.WriteLine("\t4");
+//					iter = myiFoldersFilter.AppendValues(synchronizedFolderPixbuf, ifHolder.iFolder.Name, ifHolder);
+//					curSynchronizedFolders[iFolderID] = iter;
 //				}
 //			}
-//Console.WriteLine("\t7");
-
+			
 
 			UpdateButtonSensitivity();
 		}
@@ -4359,6 +3917,8 @@ Console.WriteLine("\t4");
 						ifHolder.ObjectsToSync = objectsToSync;
 						TreeIter iter = (TreeIter)curiFolders[args.CollectionID];
 						iFolderTreeStore.SetValue(iter, 0, ifHolder);
+
+//						myiFoldersFilter.Refilter();
 					}
 				}
 
@@ -4527,11 +4087,11 @@ Console.WriteLine("SetUpiFolder({0})", ifolderID);
 
 				if (newHolder != null)
 				{
-					TreeIter iter;
-					iter = synchronizedFoldersListStore.AppendValues(synchronizedFolderPixbuf, newHolder.iFolder.Name, newHolder);
-					curSynchronizedFolders[holder.iFolder.ID] = iter;
+//					TreeIter iter;
+//					iter = myiFoldersFilter.AppendValues(synchronizedFolderPixbuf, newHolder.iFolder.Name, newHolder);
+//					curSynchronizedFolders[holder.iFolder.ID] = iter;
 	
-					synchronizedFoldersIconView.RefreshIcons();
+//					synchronizedFoldersIconView.RefreshIcons();
 				}
 			}
 			catch(Exception e)
@@ -4539,95 +4099,6 @@ Console.WriteLine("SetUpiFolder({0})", ifolderID);
 				DisplayCreateOrSetupException(e);
 			}
 		}
-
-		private void SetupiFolder()
-		{
-Console.WriteLine("SetupiFolder() not implemented");
-return;
-			string newPath  = "";
-			TreeModel tModel;
-			TreeIter iter;
-
-			TreePath[] selectedPaths = remoteFoldersIconView.SelectedItems;
-			if (selectedPaths.Length != 1) return;
-
-Console.WriteLine("\t1");
-			tModel = remoteFoldersIconView.Model;
-			if (tModel.GetIter(out iter, selectedPaths[0]))
-			{
-Console.WriteLine("\t2");
-				iFolderHolder holder =
-					(iFolderHolder)tModel.GetValue(iter, 2);
-				if (holder == null) return;
-Console.WriteLine("\t3");
-
-				int rc = 0;
-
-				do
-				{
-Console.WriteLine("\t4");
-					string lastSetupPath = Util.LastSetupPath;
-					iFolderAcceptDialog iad =
-							new iFolderAcceptDialog(holder.iFolder, lastSetupPath);
-					iad.TransientFor = this;
-					if (!Util.RegisterModalWindow(iad))
-					{
-						try
-						{
-							Util.CurrentModalWindow.Present();
-						}
-						catch{}
-						iad.Destroy();
-						return;
-					}
-
-					rc = iad.Run();
-					newPath = ParseAndReplaceTildeInPath(iad.Path);
-					iad.Hide();
-					iad.Destroy();
-					if(rc != -5)
-						return;
-
-Console.WriteLine("\t5");
-					try
-					{
-						// This will remove the current subscription
-						// Read the updated subscription, and place it back
-						// in the list to show status until the real iFolder
-						// comes along
-	//					curiFolders.Remove(holder.iFolder.ID);
-	
-						iFolderHolder newHolder = ifdata.AcceptiFolderInvitation(
-														holder.iFolder.ID,
-														holder.iFolder.DomainID,
-														newPath);
-	
-Console.WriteLine("\t6");
-						tModel.SetValue(iter, 0, newHolder);
-	//					curiFolders.Add(newiFolder.ID, iter);
-
-						rc = 0;
-
-Console.WriteLine("\t7");
-						// Save off the path so that the next time the user
-						// opens the setup dialog, we'll open to the same
-						// directory
-						Util.LastSetupPath = newPath;
-
-					}
-					catch(Exception e)
-					{
-Console.WriteLine("\t8");
-						DisplayCreateOrSetupException(e);
-					}
-				}
-				while(rc == -5);
-			}
-Console.WriteLine("\t9");
-		}
-
-
-
 
 		private void CreateNewiFolder()
 		{

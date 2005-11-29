@@ -32,6 +32,10 @@ using System.Xml;
 using System.Threading;
 
 using Simias.Client;
+using Simias.Client.Event;
+using Novell.iFolder.Events;
+
+using Gtk;
 
 namespace Novell.iFolder
 {
@@ -56,12 +60,13 @@ namespace Novell.iFolder
 		/// Web Service to access the simias data
 		/// </summary>
 		private SimiasWebService simws = null;
-
-
+		
+		
 		/// <summary>
-		/// Hashtable to hold the ifolders
+		/// Handle to the SimiasEventBroker
 		/// </summary>
-		private Hashtable		keyediFolders = null;
+		private SimiasEventBroker eventBroker;
+
 
 		/// <summary>
 		/// Hashtable to hold the domains
@@ -69,15 +74,33 @@ namespace Novell.iFolder
 		private Hashtable		keyedDomains = null;
 
 		/// <summary>
-		/// Hashtable to hold the subscription to ifolder map
-		/// </summary>
-		private Hashtable		keyedSubscriptions = null;
-
-
-		/// <summary>
 		/// Hashtable to hold the domains
 		/// </summary>
 		private DomainInformation	defDomain = null;
+		
+		private Hashtable		ifolderIters = null;
+		private Hashtable		subToiFolderMap = null;
+		
+		/// <summary>
+		/// TreeModel to hold all of the iFolders/Subscriptions.  All classes
+		/// wanting to know about new/changed/deleted iFolders should add
+		/// event handlers onto this TreeModel.
+		/// </summary>
+		private ListStore iFolderListStore;
+
+		// These variables are used to keep track of how many
+		// outstanding objects there are during a sync so that we don't
+		// have to call CalculateSyncSize() over and over needlessly.
+		private uint objectsToSync = 0;
+		private bool startingSync  = false;
+
+		public TreeModel iFolders
+		{
+			get
+			{
+				return iFolderListStore;
+			}
+		}
 
 
 		/// <summary>
@@ -112,10 +135,22 @@ namespace Novell.iFolder
 				throw new Exception("Unable to create simias web service");
 			}
 
-
-			keyediFolders = new Hashtable();
 			keyedDomains = new Hashtable();
-			keyedSubscriptions = new Hashtable();
+			
+			iFolderListStore = new ListStore(typeof(iFolderHolder));
+			ifolderIters = new Hashtable();
+			subToiFolderMap = new Hashtable();
+
+			// Register with the SimiasEventBroker to get Simias Events
+			eventBroker = SimiasEventBroker.GetSimiasEventBroker();
+			if (eventBroker != null)
+			{
+//				eventBroker.iFolderAdded				+= OniFolderAddedEvent;
+//				eventBroker.iFolderChanged				+= OniFolderChangedEvent;
+				eventBroker.iFolderDeleted				+= OniFolderDeletedEvent;
+				eventBroker.CollectionSyncEventFired 	+= OniFolderSyncEvent;
+				eventBroker.FileSyncEventFired			+= OniFolderFileSyncEvent;
+			}
 
 			Refresh();
 		}
@@ -149,6 +184,7 @@ namespace Novell.iFolder
 		//===================================================================
 		public void Refresh()
 		{
+Console.WriteLine("Refresh()");
 			lock (typeof(iFolderData) )
 			{
 				// Refresh the current iFolders
@@ -164,56 +200,44 @@ namespace Novell.iFolder
 
 				if(ifolders != null)
 				{
-					// Save off the state of the current iFolders so we can
-					// restore the properties after we've received the new list.
-					// Doing this fixes Bug 82690 - Status loses sync count when
-					// user forces refresh:
-					//     https://bugzilla.novell.com/show_bug.cgi?id=82690
-					Hashtable oldiFolders = new Hashtable(keyediFolders.Count);
-					foreach (string iFolderID in keyediFolders.Keys)
+					// Populate/update iFolderListStore
+					foreach (iFolderWeb ifolder in ifolders)
 					{
-						oldiFolders[iFolderID] = keyediFolders[iFolderID];
-					}
-
-					// clear out the map from subscription to iFolder
-					keyediFolders.Clear();
-					keyedSubscriptions.Clear();
-
-					foreach(iFolderWeb ifolder in ifolders)
-					{
+						// Check to see if an iFolder already exists and if so
+						// update the current one.  Otherwise, add a new one to
+						// the iFolderListStore.  We can't just replace or
+						// recreate an iFolderHolder object because we lose
+						// count of the number of objects that are left to
+						// synchronize (Bug #82690).
 						string ifolderID =
-							ifolder.IsSubscription ? 
+							ifolder.IsSubscription ?
 								ifolder.CollectionID :
 								ifolder.ID;
-						iFolderHolder oldHolder =
-							(iFolderHolder)oldiFolders[ifolderID];
-					
-						if (oldHolder != null)
+						if (ifolderIters.ContainsKey(ifolderID))
 						{
-							// Add the old iFolderHolder object back into our
-							// hashtables.
-							if(ifolder.IsSubscription)
-							{
-								keyediFolders[ifolderID] = oldHolder;
-								keyedSubscriptions[ifolder.ID] = ifolder.CollectionID;
-							}
-							else
-							{
-								keyediFolders[ifolderID] = oldHolder;
-							}
+							// We already have this iFolder in the ListStore so
+							// just update the iFolderWeb object in the
+							// iFolderHolder.
+							TreeIter iter = (TreeIter)ifolderIters[ifolderID];
+							iFolderHolder existingHolder = (iFolderHolder)
+								iFolderListStore.GetValue(iter, 0);
+							existingHolder.iFolder = ifolder;
 
-							// Update the iFolderWeb object in our iFolderHolder
-							oldHolder.iFolder = ifolder;
+							TreePath path = iFolderListStore.GetPath(iter);
+							iFolderListStore.EmitRowChanged(path, iter);
 						}
 						else
 						{
-							// This is a new iFolder we haven't seen before
+							// This is a new one we haven't seen before
 							AddiFolder(ifolder);
 						}
 					}
 				}
+
+Console.WriteLine("\tRefresh: calling RefreshDomains");
 				// Refresh the Domains
 				RefreshDomains();
+Console.WriteLine("\tRefresh: exiting");
 			}
 		}
 
@@ -280,20 +304,23 @@ namespace Novell.iFolder
 		//===================================================================
 		private iFolderHolder AddiFolder(iFolderWeb ifolder)
 		{
+Console.WriteLine("AddiFolder()");
 			lock (typeof(iFolderData) )
 			{
-				iFolderHolder ifHolder = null;
-				if(ifolder.IsSubscription)
+				iFolderHolder ifHolder = new iFolderHolder(ifolder);
+				TreeIter iter = iFolderListStore.AppendValues(ifHolder);
+				if (ifolder.IsSubscription)
 				{
-					ifHolder = new iFolderHolder(ifolder);
-					keyediFolders[ifolder.CollectionID] = ifHolder;
-					keyedSubscriptions[ifolder.ID] = ifolder.CollectionID;
+Console.WriteLine("\tSubscription");
+					ifolderIters[ifolder.CollectionID] = iter;
+					subToiFolderMap[ifolder.ID] = ifolder.CollectionID;
 				}
 				else
 				{
-					ifHolder = new iFolderHolder(ifolder);
-					keyediFolders[ifolder.ID] = ifHolder;
+Console.WriteLine("\tiFolder");
+					ifolderIters[ifolder.ID] = iter;
 				}
+				
 				return ifHolder;
 			}
 		}
@@ -317,10 +344,15 @@ namespace Novell.iFolder
 					if( (realID == null) || (!IsiFolder(realID)) )
 						return;
 
-					keyedSubscriptions.Remove(ifolderID);
+					subToiFolderMap.Remove(ifolderID);
 				}
 
-				keyediFolders.Remove(realID);
+				if (ifolderIters.ContainsKey(realID))
+				{
+					TreeIter iter = (TreeIter)ifolderIters[realID];
+					iFolderListStore.Remove(ref iter);
+					ifolderIters.Remove(realID);
+				}
 			}
 		}
 
@@ -350,7 +382,7 @@ namespace Novell.iFolder
 		{
 			lock(typeof(iFolderWeb))
 			{
-				return keyediFolders.ContainsKey(ifolderID);
+				return ifolderIters.ContainsKey(ifolderID);
 			}
 		}
 
@@ -386,7 +418,7 @@ namespace Novell.iFolder
 		{
 			lock(typeof(iFolderWeb))
 			{
-				return (string)keyedSubscriptions[subscriptionID];
+				return (string)subToiFolderMap[subscriptionID];
 			}
 		}
 
@@ -403,10 +435,13 @@ namespace Novell.iFolder
 			{
 				iFolderHolder ifHolder = null;
 
-				if(keyediFolders.ContainsKey(ifolderID))
+				if (ifolderIters.ContainsKey(ifolderID))
 				{
-					ifHolder = (iFolderHolder)keyediFolders[ifolderID];
+					TreeIter iter = (TreeIter)ifolderIters[ifolderID];
+					ifHolder = (iFolderHolder)
+						iFolderListStore.GetValue(iter, 0);
 				}
+
 				return ifHolder;
 			}
 		}
@@ -424,24 +459,37 @@ namespace Novell.iFolder
 			{
 				iFolderHolder ifHolder = null;
 
-				if(keyediFolders.ContainsKey(ifolderID))
-					ifHolder = (iFolderHolder)keyediFolders[ifolderID];
-
-				// at this point if we had the iFolder, we'll have the
-				// original iFolderHolder that we can update
+				if (ifolderIters.ContainsKey(ifolderID))
+				{
+					TreeIter iter = (TreeIter)ifolderIters[ifolderID];
+					ifHolder = (iFolderHolder)
+						iFolderListStore.GetValue(iter, 0);
+				}
+				
+				// at this point, if we had the iFolder, we'll have the
+				// original iFolderHolder to update
 				try
 				{
-					iFolderWeb ifolder = 
-							ifws.GetiFolder(ifolderID);
-					if(ifolder != null)
+					iFolderWeb ifolder =
+						ifws.GetiFolder(ifolderID);
+					if (ifolder != null)
 					{
-						if(ifHolder != null)
+						if (ifHolder != null)
+						{
 							ifHolder.iFolder = ifolder;
+
+							if (ifolderIters.ContainsKey(ifolder.ID))
+							{
+								// Emit a TreeModel RowChanged Event
+								TreeIter iter = (TreeIter)
+									ifolderIters[ifolder.ID];
+								TreePath path = iFolderListStore.GetPath(iter);
+								iFolderListStore.EmitRowChanged(path, iter);
+							}
+						}
 						else
 						{
-							ifHolder = new iFolderHolder(ifolder);
-							keyediFolders[ifolder.ID] = ifHolder;
-//							keyediFolders.Add(ifolder.ID, ifHolder);
+							ifHolder = AddiFolder(ifolder);
 						}
 					}
 				}
@@ -449,7 +497,7 @@ namespace Novell.iFolder
 				{
 					ifHolder = null;
 				}
-			
+				
 				return ifHolder;
 			}
 		}
@@ -465,13 +513,27 @@ namespace Novell.iFolder
 		{
 			lock(typeof(iFolderWeb))
 			{
-				iFolderHolder[] ifolders = 
-					new iFolderHolder[keyediFolders.Count];
+				ArrayList arrayList = new ArrayList();
+				TreeIter iter;
+				
+				if (iFolderListStore.GetIterFirst(out iter))
+				{
+					do
+					{
+						iFolderHolder ifHolder =
+							(iFolderHolder)iFolderListStore.GetValue(iter, 0);
+						if (ifHolder != null)
+							arrayList.Add(ifHolder);
+					} while (iFolderListStore.IterNext(ref iter));
+				}
 
-				ICollection icol = keyediFolders.Values;
-				icol.CopyTo(ifolders, 0);
+				iFolderHolder[] ifolderA = (iFolderHolder[])arrayList.ToArray(typeof(iFolderHolder));
+//				foreach (iFolderHolder ifHolder in ifolderA)
+//				{
+//Console.WriteLine("\t{0}", ifHolder.iFolder.Name);
+//				}
 
-				return ifolders;
+				return ifolderA;
 			}
 		}
 
@@ -492,11 +554,14 @@ namespace Novell.iFolder
 				realID = GetiFolderID(ifolderID);
 				if(realID != null)
 				{
-					if(keyediFolders.ContainsKey(realID))
+					if (ifolderIters.ContainsKey(realID))
 					{
-						ifHolder = (iFolderHolder)keyediFolders[realID];
+						TreeIter iter = (TreeIter)ifolderIters[realID];
+						ifHolder =
+							(iFolderHolder)iFolderListStore.GetValue(iter, 0);
 					}
 				}
+
 				return ifHolder;
 			}
 		}
@@ -523,25 +588,30 @@ namespace Novell.iFolder
 					if(ifHolder != null)
 					{
 						if(!IsiFolder(ifolder.CollectionID))
+						{
 							ifHolder.iFolder = ifolder;
+							
+							if (ifolderIters.ContainsKey(ifolder.CollectionID))
+							{
+								// Emit a TreeModel RowChanged Event
+								TreeIter iter = (TreeIter)
+									ifolderIters[ifolder.CollectionID];
+								TreePath path = iFolderListStore.GetPath(iter);
+								iFolderListStore.EmitRowChanged(path, iter);
+							}
+						}
 					}
 					else
 					{
 						if(!IsiFolder(ifolder.CollectionID))
-						{
-							ifHolder = new iFolderHolder(ifolder);
-
-							keyediFolders[ifolder.CollectionID] = ifHolder;
-//							keyediFolders.Add(ifolder.CollectionID, ifHolder);
-							keyedSubscriptions.Add(ifolder.ID, 
-														ifolder.CollectionID);
-						}
+							ifHolder = AddiFolder(ifolder);
 					}
 				}
 				catch(Exception e)
 				{
 					ifHolder = null;
 				}
+
 				return ifHolder;
 			}
 		}
@@ -587,16 +657,25 @@ namespace Novell.iFolder
 											localPath);
 				if(newifolder.ID != ifolderID)
 				{
-					keyedSubscriptions.Remove(ifolderID);
-					if(newifolder.IsSubscription)
-						keyedSubscriptions[newifolder.ID] = 
-													newifolder.CollectionID;
+					subToiFolderMap.Remove(ifolderID);
+					if (newifolder.IsSubscription)
+						subToiFolderMap[newifolder.ID]
+							= newifolder.CollectionID;
 				}
 
 				ifHolder = GetiFolder(collectionID);
 				ifHolder.iFolder = newifolder;
+
+				if (ifolderIters.ContainsKey(newifolder.ID))
+				{
+					TreeIter iter =
+						(TreeIter)ifolderIters[newifolder.ID];
+					TreePath path = iFolderListStore.GetPath(iter);
+					iFolderListStore.EmitRowChanged(path, iter);
+				}
+
 				return ifHolder;
-			}	
+			}
 		}
 
 
@@ -624,8 +703,16 @@ namespace Novell.iFolder
 				ifHolder.iFolder = reviFolder;
 				if(reviFolder.IsSubscription)
 				{
-					keyedSubscriptions[reviFolder.ID] = reviFolder.CollectionID;
+					subToiFolderMap[reviFolder.ID] = reviFolder.CollectionID;
+					if (ifolderIters.ContainsKey(reviFolder.CollectionID))
+					{
+						TreeIter iter =
+							(TreeIter)ifolderIters[reviFolder.CollectionID];
+						TreePath path = iFolderListStore.GetPath(iter);
+						iFolderListStore.EmitRowChanged(path, iter);
+					}
 				}
+
 				return ifHolder;
 			}
 		}
@@ -844,7 +931,129 @@ namespace Novell.iFolder
 				return keyedDomains.Count;
 			}
 		}
+		
+		///
+		/// Event Handlers
+		///
+		private void OniFolderDeletedEvent(object o, iFolderDeletedEventArgs args)
+		{
+			if (args == null || args.iFolderID == null)
+				return;	// Prevent an exception
 
+			DeliFolder(args.iFolderID);
+		}
+
+		private void OniFolderSyncEvent(object o, CollectionSyncEventArgs args)
+		{
+			if (args == null || args.ID == null || args.Name == null)
+				return;	// Prevent an exception
+
+			TreeIter iter = TreeIter.Zero;
+			iFolderHolder ifHolder = null;
+
+			if (ifolderIters.ContainsKey(args.ID))
+			{
+				iter = (TreeIter)ifolderIters[args.ID];
+				ifHolder = (iFolderHolder)iFolderListStore.GetValue(iter, 0);
+			}
+			
+			if (ifHolder == null) return;
+
+			switch(args.Action)
+			{
+				case Simias.Client.Event.Action.StartLocalSync:
+					ifHolder.State = iFolderState.SynchronizingLocal;
+					break;
+				case Simias.Client.Event.Action.StartSync:
+					// Keep track of when a sync starts
+					startingSync = true;
+
+					ifHolder.State = iFolderState.Synchronizing;
+					break;
+				case Simias.Client.Event.Action.StopSync:
+					try
+					{
+						SyncSize syncSize = ifws.CalculateSyncSize(args.ID);
+						objectsToSync = syncSize.SyncNodeCount;
+						ifHolder.ObjectsToSync = objectsToSync;
+					}
+					catch
+					{}
+
+					if (ifHolder.ObjectsToSync > 0)
+						ifHolder.State = iFolderState.Normal;
+					else
+					{
+						if (args.Connected)
+							ifHolder.State = iFolderState.Normal;
+						else
+							ifHolder.State = iFolderState.Disconnected;
+					}
+
+					objectsToSync = 0;
+					break;
+				default:
+					break;
+			}
+			
+			// Emit a TreeModel RowChanged Event
+			TreePath path = iFolderListStore.GetPath(iter);
+			iFolderListStore.EmitRowChanged(path, iter);
+		}
+
+		private void OniFolderFileSyncEvent(object o, FileSyncEventArgs args)
+		{
+			if (args == null || args.CollectionID == null || args.Name == null)
+				return;	// Prevent an exception
+
+			if (args.SizeRemaining == args.SizeToSync)
+			{
+				if (startingSync || (objectsToSync <= 0))
+				{
+					startingSync = false;
+					try
+					{
+						SyncSize syncSize = ifws.CalculateSyncSize(args.CollectionID);
+						objectsToSync = syncSize.SyncNodeCount;
+					}
+					catch(Exception e)
+					{
+						objectsToSync = 1;
+					}
+				}
+
+				if (!args.Direction.Equals(Simias.Client.Event.Direction.Local))
+				{
+					// Decrement the count whether we're showing the iFolder
+					// in the current list or not.  We'll need this if the
+					// user switches back to the list that contains the iFolder
+					// that is actually synchronizing.
+					if (objectsToSync <= 0)
+						objectsToSync = 0;
+					else
+						objectsToSync--;
+	
+
+					// Get the iFolderHolder and set the objectsToSync
+					TreeIter iter = TreeIter.Zero;
+					iFolderHolder ifHolder = null;
+					if (ifolderIters.ContainsKey(args.CollectionID))
+					{
+						iter = (TreeIter)ifolderIters[args.CollectionID];
+						ifHolder = (iFolderHolder)iFolderListStore.GetValue(iter, 0);
+					}
+					
+					if (ifHolder != null)
+					{
+						ifHolder.ObjectsToSync = objectsToSync;
+
+						// Emit a TreeModel RowChanged Event
+						TreePath path = iFolderListStore.GetPath(iter);
+						iFolderListStore.EmitRowChanged(path, iter);
+					}
+				}
+			}
+		}
 	}
 }
 

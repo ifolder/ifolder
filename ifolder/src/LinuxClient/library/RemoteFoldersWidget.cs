@@ -71,7 +71,8 @@ namespace Novell.iFolder
 		
 		private Gdk.Pixbuf			remoteFolderPixbuf;
 
-		private ListStore			remoteFoldersListStore;
+//		private ListStore			remoteFoldersListStore;
+		private TreeModelFilter		remoteFoldersTreeModelFilter;
 		private iFolderIconView		remoteFoldersIconView;
 
 		private Button				DownloadAndSyncButton;
@@ -97,7 +98,7 @@ namespace Novell.iFolder
 					TreeModel tModel = remoteFoldersIconView.Model;
 					TreeIter iter;
 					if (tModel.GetIter(out iter, selection[0]))
-						holder = (iFolderHolder)tModel.GetValue(iter, 2);
+						holder = (iFolderHolder)tModel.GetValue(iter, 0);
 				}
 
 				return holder;
@@ -126,7 +127,7 @@ namespace Novell.iFolder
 			CreateWidgets();
 
 			RefreshDomains(true);
-			RefreshFolders(true);
+//			RefreshFolders(true);
 			
 			domainController = DomainController.GetDomainController();
 			if (domainController != null)
@@ -263,8 +264,13 @@ namespace Novell.iFolder
 		
 		private void SearchRemoteFolders()
 		{
-			remoteFoldersListStore.Clear();
-			curRemoteFolders.Clear();
+			remoteFoldersTreeModelFilter.Refilter();
+		}
+		
+		private void SearchRemoteFoldersOld()
+		{
+//			remoteFoldersListStore.Clear();
+//			curRemoteFolders.Clear();
 
 			string searchString = remoteSearchEntry.Text;
 			if (searchString != null)
@@ -285,8 +291,8 @@ namespace Novell.iFolder
 						if (searchString == null || searchString.Trim().Length == 0)
 						{
 							// Add everything in
-							iter = remoteFoldersListStore.AppendValues(remoteFolderPixbuf, holder.iFolder.Name, holder);
-							curRemoteFolders[holder.iFolder.CollectionID] = iter;
+//							iter = remoteFoldersListStore.AppendValues(remoteFolderPixbuf, holder.iFolder.Name, holder);
+//							curRemoteFolders[holder.iFolder.CollectionID] = iter;
 						}
 						else
 						{
@@ -297,8 +303,8 @@ namespace Novell.iFolder
 								name = name.ToLower();
 								if (name.IndexOf(searchString) >= 0)
 								{
-									iter = remoteFoldersListStore.AppendValues(remoteFolderPixbuf, holder.iFolder.Name, holder);
-									curRemoteFolders[holder.iFolder.CollectionID] = iter;
+//									iter = remoteFoldersListStore.AppendValues(remoteFolderPixbuf, holder.iFolder.Name, holder);
+//									curRemoteFolders[holder.iFolder.CollectionID] = iter;
 								}
 							}
 						}
@@ -306,7 +312,7 @@ namespace Novell.iFolder
 				}
 			}
 			
-			remoteFoldersIconView.RefreshIcons();
+//			remoteFoldersIconView.RefreshIcons();
 		}
 		
 		private Widget CreateContentArea()
@@ -402,35 +408,82 @@ namespace Novell.iFolder
 			ScrolledWindow sw = new ScrolledWindow();
 //			sw.ShadowType = Gtk.ShadowType.EtchedIn;
 
-			remoteFoldersListStore = new ListStore(typeof(Gdk.Pixbuf), typeof(string), typeof(iFolderHolder));
-			remoteFoldersIconView = new iFolderIconView(remoteFoldersListStore);
-			remoteFoldersIconView.SelectionMode = SelectionMode.Single;
+//			remoteFoldersListStore = new ListStore(typeof(Gdk.Pixbuf), typeof(string), typeof(iFolderHolder));
+			remoteFoldersTreeModelFilter = new TreeModelFilter(ifdata.iFolders, null);
+			remoteFoldersTreeModelFilter.VisibleFunc = RemoteFoldersFilterFunc;
 
-			remoteFoldersIconView.ButtonPressEvent +=
-				new ButtonPressEventHandler(OnRemoteFoldersButtonPressed);
+//			remoteFoldersIconView = new iFolderIconView(remoteFoldersListStore);
+			remoteFoldersIconView = new iFolderIconView(remoteFoldersTreeModelFilter);
+//			remoteFoldersIconView.SelectionMode = SelectionMode.Single;
+
+//			remoteFoldersIconView.ButtonPressEvent +=
+//				new ButtonPressEventHandler(OnRemoteFoldersButtonPressed);
 			
 			remoteFoldersIconView.SelectionChanged +=
 				new EventHandler(OnRemoteFoldersSelectionChanged);
 
-			sw.Add(remoteFoldersIconView);
+			sw.AddWithViewport(remoteFoldersIconView);
 			
-			remoteFolderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("folder128.png"));
-			remoteFolderPixbuf = remoteFolderPixbuf.ScaleSimple(64, 64, Gdk.InterpType.Bilinear);
-			iFolderHolder[] ifolders = ifdata.GetiFolders();
-			if(ifolders != null)
+//			remoteFolderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("folder128.png"));
+//			remoteFolderPixbuf = remoteFolderPixbuf.ScaleSimple(64, 64, Gdk.InterpType.Bilinear);
+//			iFolderHolder[] ifolders = ifdata.GetiFolders();
+//			if(ifolders != null)
+//			{
+//				foreach(iFolderHolder holder in ifolders)
+//				{
+//					if (holder.iFolder.IsSubscription)
+//					{
+//						TreeIter iter;
+//						iter = remoteFoldersListStore.AppendValues(remoteFolderPixbuf, holder.iFolder.Name, holder);
+//						curRemoteFolders[holder.iFolder.CollectionID] = iter;
+//					}
+//				}
+//			}
+
+			return sw;
+		}
+
+		private bool RemoteFoldersFilterFunc(TreeModel model, TreeIter iter)
+		{
+Console.WriteLine("RemoteFoldersFilterFunc()");
+			iFolderHolder ifHolder = (iFolderHolder)model.GetValue(iter, 0);
+			if (ifHolder != null)
 			{
-				foreach(iFolderHolder holder in ifolders)
+				// Only show remote folders (Subscriptions)
+				if (ifHolder.iFolder.IsSubscription)
 				{
-					if (holder.iFolder.IsSubscription)
+					string searchString = remoteSearchEntry.Text;
+					if (searchString != null)
 					{
-						TreeIter iter;
-						iter = remoteFoldersListStore.AppendValues(remoteFolderPixbuf, holder.iFolder.Name, holder);
-						curRemoteFolders[holder.iFolder.CollectionID] = iter;
+						searchString = searchString.Trim();
+						if (searchString.Length > 0)
+							searchString = searchString.ToLower();
+					}
+		
+					if (searchString == null || searchString.Trim().Length == 0)
+					{
+Console.WriteLine("\treturning true");
+						return true;	// Include this
+					}
+					else
+					{
+						// Search the iFolder's Name (for now)
+						string name = ifHolder.iFolder.Name;
+						if (name != null)
+						{
+							name = name.ToLower();
+							if (name.IndexOf(searchString) >= 0)
+							{
+Console.WriteLine("\treturning true");
+								return true;
+							}
+						}
 					}
 				}
 			}
-
-			return sw;
+			
+Console.WriteLine("\treturning false");
+			return false;
 		}
 		
 		private void OnRemoteFoldersButtonPressed(object o, ButtonPressEventArgs args)
@@ -445,21 +498,21 @@ namespace Novell.iFolder
 				TreeIter iter;
 				if (tModel.GetIter(out iter, tPath))
 				{
-					string folderName =
-						(string)tModel.GetValue(iter, 1);
-					if (folderName != null)
-						Console.WriteLine("Folder clicked: {0}", folderName);
+					iFolderHolder ifHolder =
+						(iFolderHolder)tModel.GetValue(iter, 0);
+					if (ifHolder != null)
+						Console.WriteLine("Folder clicked: {0}", ifHolder.iFolder.Name);
 				}
 			}
 		}
 		
 		private void OnRemoteFoldersSelectionChanged(object o, EventArgs args)
 		{
-Console.WriteLine("iFolderWindow.OnRemoteFoldersSelectionChanged()");
+Console.WriteLine("RemoteFoldersWidget.OnRemoteFoldersSelectionChanged()");
 			iFolderHolder holder = null;
 			
 			TreePath[] selection = remoteFoldersIconView.SelectedItems;
-			if (selection.Length == 0)
+			if (selection == null || selection.Length == 0)
 			{
 //				DownloadAndSyncButton.Sensitive = false;
 //				DeleteFromServerButton.Sensitive = false;
@@ -475,7 +528,7 @@ Console.WriteLine("iFolderWindow.OnRemoteFoldersSelectionChanged()");
 					if (tModel.GetIter(out iter, selection[i]))
 					{
 						holder =
-							(iFolderHolder)tModel.GetValue(iter, 2);
+							(iFolderHolder)tModel.GetValue(iter, 0);
 						if (holder != null)
 						{
 							RemoteNameLabel.Markup =
@@ -520,12 +573,13 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 				100, new GLib.TimeoutHandler(GrabRemoteSearchEntryFocus));
 		}
 
-		private void RefreshFoldersHandler(object o, EventArgs args)
-		{
-			RefreshFolders(true);
-		}
+//		private void RefreshFoldersHandler(object o, EventArgs args)
+//		{
+//			RefreshFolders(true);
+//		}
 
 
+/*
 		public void RefreshFolders(bool readFromSimias)
 		{
 			curRemoteFolders.Clear();
@@ -550,7 +604,9 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 				}
 			}
 		}
+*/
 
+/*
 		public void iFolderChanged(string iFolderID)
 		{
 			iFolderHolder ifHolder = ifdata.GetiFolder(iFolderID);
@@ -563,7 +619,8 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 				remoteFoldersListStore.SetValue(iter, 2, ifHolder);
 			}
 		}
-
+*/
+/*
 		public void iFolderDeleted(string iFolderID)
 		{
 			TreeIter iter;
@@ -575,6 +632,7 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 				remoteFoldersListStore.Remove(ref iter);
 			}
 		}
+*/
 
 		private void RemoteDomainComboBoxCellTextDataFunc(
 				CellLayout cell_layout,
@@ -589,6 +647,7 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 				((CellRendererText) cell).Text = domain.Name;
 		}
 
+/*
 		public void iFolderCreated(string iFolderID)
 		{
 			iFolderHolder ifHolder = ifdata.GetiFolder(iFolderID);
@@ -603,6 +662,7 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 				}
 			}
 		}
+*/
 
 		public void RefreshDomains(bool readFromSimias)
 		{
@@ -631,13 +691,13 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 		private void OnDomainAddedEvent(object sender, DomainEventArgs args)
 		{
 			RefreshDomains(true);
-			RefreshFolders(true);
+//			RefreshFolders(true);
 		}
 		
 		private void OnDomainDeletedEvent(object sender, DomainEventArgs args)
 		{
 			RefreshDomains(true);
-			RefreshFolders(true);
+//			RefreshFolders(true);
 		}
 	}
 	

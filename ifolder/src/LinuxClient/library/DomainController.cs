@@ -107,7 +107,7 @@ namespace Novell.iFolder.Controller
 			Refresh();
 
 			// Register with the SimiasEventBroker to get Simias Events
-			eventBroker = SimiasEventBroker.GetSimiasEventBroker(simiasManager);
+			eventBroker = SimiasEventBroker.GetSimiasEventBroker();
 			if (eventBroker != null)
 			{
 				eventBroker.DomainUpEventFired +=

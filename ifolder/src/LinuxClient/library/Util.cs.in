@@ -165,7 +165,7 @@ Console.WriteLine("Modal window destroyed");
 				currentModalWindow = null;
 			}
 		}
-
+		
 		public static void InitCatalog()
 		{
 			Mono.Posix.Catalog.Init("@_PACKAGE_@", "@_prefix_@/share/locale");

@@ -154,9 +154,9 @@ namespace Novell.iFolder
 		public event DomainDeletedEventHandler DomainDeleted;
 		public event DomainUpEventHandler DomainUpEventFired;
 
-		private SimiasEventBroker(Manager simiasManager)
+		private SimiasEventBroker()
 		{
-			this.simiasManager = simiasManager;
+			this.simiasManager = Util.GetSimiasManager();
 			string localServiceUrl =
 				simiasManager.WebServiceUri.ToString();
 			ifws = new iFolderWebService();
@@ -183,13 +183,13 @@ namespace Novell.iFolder
 			SEEvent = new ManualResetEvent(false);
 		}
 
-		public static SimiasEventBroker GetSimiasEventBroker(Manager simiasManager)
+		public static SimiasEventBroker GetSimiasEventBroker()
 		{
 			lock (typeof(SimiasEventBroker))
 			{
 				if (instance == null)
 				{
-					instance = new SimiasEventBroker(simiasManager);
+					instance = new SimiasEventBroker();
 
 					instance.Register();
 				}
