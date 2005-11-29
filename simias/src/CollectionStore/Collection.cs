@@ -459,22 +459,36 @@ namespace Simias.Storage
 				subscription.ToName = member.Name;
 				subscription.ToIdentity = member.UserID;
 				subscription.SubscriptionRights = member.Rights;
+				subscription.ToMemberNodeID = member.ID;
+				subscription.ToPublicKey = member.PublicKey;
 				subscription.FromName = fromMember.Name;
 				subscription.FromIdentity = fromMember.UserID;
 				subscription.MessageID = subscription.ID;
 				subscription.SubscriptionCollectionID = ID;
-				subscription.SubscriptionCollectionType = Type;
 				subscription.SubscriptionCollectionName = Name;
 				subscription.DomainID = Domain;
 				subscription.DomainName = store.GetDomain( Domain ).Name;
 				subscription.SubscriptionKey = Guid.NewGuid().ToString();
 				subscription.MessageType = "Outbound";
+				subscription.SetSubscriptionTypes( this );
 
 				DirNode dirNode = GetRootDirectory();
 				if( dirNode != null )
 				{
 					subscription.DirNodeID = dirNode.ID;
 					subscription.DirNodeName = dirNode.Name;
+				}
+
+				// For backwards compatiblity with clients that use the old invitation methods,
+				// add the first non-built in type to the subscription as the type.
+				MultiValuedList mvl = properties.FindValues( PropertyTags.Types );
+				foreach( Property p in mvl )
+				{
+					if ( !NodeTypes.IsNodeType( p.ValueString ) )
+					{
+						subscription.SubscriptionCollectionType = p.ValueString;
+						break;
+					}
 				}
 
 				// Add the subscription to the new member's POBox.
@@ -1032,7 +1046,6 @@ namespace Simias.Storage
 						switch ( node.Properties.State )
 						{
 							case PropertyList.PropertyListState.Add:
-							case PropertyList.PropertyListState.Proxy:
 							{
 								// Update the cache before indicating the event.
 								store.Cache.Add( this, node );
@@ -1042,15 +1055,41 @@ namespace Simias.Storage
 								{
 									changeLog.CreateChangeLogWriter( node.ID );
 								}
-								else if ( node.CascadeEvents && Store.IsEnterpriseServer && ( node.Properties.State == PropertyList.PropertyListState.Add ) )
+								else if ( IsBaseType( node, NodeTypes.MemberType ) )
 								{
-									// If this is a new node being imported onto a server, check to see if
-									// it is a member node being added to a base-type collection.
-									if ( IsBaseType( node, NodeTypes.MemberType ) && IsBaseType( this, NodeTypes.CollectionType ) )
+									// See if the invitation event is to be processed.
+									if ( node.CascadeEvents && IsBaseType( this, NodeTypes.CollectionType ) )
 									{
-										// Add a subscription for the member for this collection.
-										AddSubscription( new Member( node ) );
+										// If this is a new node being imported onto a server, check to see if
+										// it is a member node being added to a base-type collection. If this
+										// member is being added as an owner, then create a subscription so
+										// the ifolder can be put on other machines owned by the creator.
+										Member member = new Member( node );
+										if ( Store.IsEnterpriseServer || member.IsOwner )
+										{
+											// Add a subscription for the member for this collection.
+											AddSubscription( member );
+										}
 									}
+								}
+
+								// Indicate the event.
+								NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeCreated, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, fileSize );
+								args.LocalOnly = node.LocalChanges;
+								store.EventPublisher.RaiseEvent( args );
+								node.Properties.State = PropertyList.PropertyListState.Update;
+								break;
+							}
+
+							case PropertyList.PropertyListState.Proxy:
+							{
+								// Update the cache before indicating the event.
+								store.Cache.Add( this, node );
+
+								// If this is a collection being created, create a change log for it.
+								if ( IsType( node, NodeTypes.CollectionType ) )
+								{
+									changeLog.CreateChangeLogWriter( node.ID );
 								}
 
 								// Indicate the event.
@@ -1205,6 +1244,7 @@ namespace Simias.Storage
 					node.DiskNode = null;
 					node.LocalChanges = false;
 					node.IndicateEvent = true;
+					node.CascadeEvents = true;
 				}
 			}
 		}

@@ -573,7 +573,8 @@ namespace StoreBrowser
 		{
 			tView.BeginUpdate();
 			TreeNode tn = tView.SelectedNode;
-			if ( tn.Tag.GetType().Equals( typeof( DisplayNode ) ) )
+			if ( tn.Tag.GetType().Equals( typeof( DisplayNode ) ) ||
+				 tn.Tag.GetType().Equals( typeof( DisplayShallowNode ) ) )
 			{
 				DisplayNode dspNode = (DisplayNode)tn.Tag;
 				if (dspNode != null)

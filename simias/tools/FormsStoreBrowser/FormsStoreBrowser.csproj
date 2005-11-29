@@ -99,6 +99,11 @@
                     AssemblyName = "SimiasClient"
                     HintPath = "..\..\..\..\final.enterprise\web\bin\SimiasClient.dll"
                 />
+                <Reference
+                    Name = "Novell.Security.ClientPasswordManager.NetCredential"
+                    AssemblyName = "Novell.Security.ClientPasswordManager.NetCredential"
+                    HintPath = "..\..\external\NS\net\Novell.Security.ClientPasswordManager.NetCredential.dll"
+                />
             </References>
         </Build>
         <Files>

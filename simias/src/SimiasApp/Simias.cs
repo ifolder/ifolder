@@ -89,6 +89,7 @@ namespace Mono.ASPNET
 		/// </summary>
 		private enum SimiasStatus
 		{
+			ConfigurationMismatch = -8,
 			InvalidSimiasDataPath = -7,
 			InvalidSimiasApplicationPath = -6,
 			ServiceNotAvailable = -5,
@@ -1437,33 +1438,42 @@ namespace Mono.ASPNET
 
 					// There has been a port configured previously. Check to see if the Simias services 
 					// are already running on this port or range.
-					if ( PingWebService( ub.Uri, simiasDataPath ) && CanShareSimiasService( ub.Uri ) )
+					if ( PingWebService( ub.Uri, simiasDataPath ) )
 					{
-						// There is already services running on this port. If there was a port specified
-						// on the command line, see if it is the same port or in the same port range.
-						if ( IsPortInRange( port ) )
+						if ( CanShareSimiasService( ub.Uri ) )
 						{
-							// Increment the reference count for this instance, so that another application
-							// won't shut down this process on us.
-							AddReference( ub.Uri );
+							// There is already services running on this port. If there was a port specified
+							// on the command line, see if it is the same port or in the same port range.
+							if ( IsPortInRange( port ) )
+							{
+								// Increment the reference count for this instance, so that another application
+								// won't shut down this process on us.
+								AddReference( ub.Uri );
 
-							// The service is already running, don't start a new one, just use the old one.
-							Console.WriteLine( ub.Uri );
-							Console.WriteLine( simiasDataPath );
+								// The service is already running, don't start a new one, just use the old one.
+								Console.WriteLine( ub.Uri );
+								Console.WriteLine( simiasDataPath );
+							}
+							else
+							{
+								// The service is already running in the specified data area, but the ports are
+								// in conflict. Return an error.
+								Console.Error.WriteLine( "Error: The service is not available on the specified port or range." );
+								status = SimiasStatus.ServiceNotAvailable;
+							}
 						}
-		
+						else
 						{
-							// The service is already running in the specified data area, but the ports are
-							// in conflict. Return an error.
-							Console.Error.WriteLine( "Error: The service is not available on the specified port or range." );
-							status = SimiasStatus.ServiceNotAvailable;
+							// The database paths point to different directories or the service is running in the 
+							// wrong configuration ( client vs. server ).
+							Console.Error.WriteLine( "Error: A client and server cannot share the same database." );
+							status = SimiasStatus.ConfigurationMismatch;
 						}
 					}
 					else
 					{
-						// There either is no service running, the database paths point to different directories or
-						// The service is running in the wrong configuration ( client vs. server ). See if the port
-						// read from the file is available and start a new service.
+						// There either is no service running. See if the port read from the file is available and 
+						// start a new service.
 						port = GetXspPort( portRangeString );
 						if ( port != -1 )
 						{

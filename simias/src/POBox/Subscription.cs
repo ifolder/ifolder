@@ -42,7 +42,7 @@ namespace Simias.POBox
 		/// <summary>
 		/// The Subscription is ready and can be used to start syncing.
 		/// </summary>
-		Ready,
+		Ready = 8,
 
 		/// <summary>
 		/// Unknown subscription state.
@@ -166,6 +166,11 @@ namespace Simias.POBox
 		/// The To member's node ID in the collection.
 		/// </summary>
 		public static readonly string ToMemberNodeIDProperty = "SbMemberNode";
+
+		/// <summary>
+		/// The type of collection that this subscription represents.
+		/// </summary>
+		public static readonly string SubscriptionTypes = "SbTypes";
 		
 		#endregion
 
@@ -588,99 +593,37 @@ namespace Simias.POBox
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the collection types for this subscription.
+		/// </summary>
+		public string[] SbTypes
+		{
+			get 
+			{ 
+				ArrayList sbtypes = new ArrayList();
+				MultiValuedList mvl = properties.FindValues( SubscriptionTypes ); 
+				foreach ( Property p in mvl )
+				{
+					sbtypes.Add( p.ValueString );
+				}
+
+				return sbtypes.ToArray( typeof( string ) ) as string[];
+			}
+
+			set
+			{
+				// Clear off all of the current types.
+				properties.DeleteNodeProperties( SubscriptionTypes );
+				foreach( string s in value )
+				{
+					properties.AddNodeProperty( SubscriptionTypes, s );
+				}
+			}
+		}
+
 		#endregion
 
 		#region Public Methods
-		/// <summary>
-		/// Generates a SubscriptionInfo object from the Subscription object
-		/// </summary>
-		/// <returns>A SubscriptionInfo object</returns>
-		public SubscriptionInfo GenerateInfo(Store store)
-		{
-			SubscriptionInfo si = new SubscriptionInfo();
-
-			si.DomainID = DomainID;
-			si.DomainName = DomainName;
-			
-			si.SubscriptionCollectionID = SubscriptionCollectionID;
-			si.SubscriptionCollectionName = SubscriptionCollectionName;
-			si.SubscriptionCollectionType = SubscriptionCollectionType;
-			si.SubscriptionID = MessageID;
-
-			// dir node ?
-			Collection c = store.GetCollectionByID(SubscriptionCollectionID);
-
-			si.SubscriptionCollectionHasDirNode = 
-				(c != null) ? (c.GetRootDirectory() != null) : false;
-			
-			return si;
-		}
-
-		/// <summary>
-		/// Generates a SubscriptionInfo object from the Subscription object
-		/// </summary>
-		/// <returns>A SubscriptionInfo object</returns>
-		public SubscriptionMsg GenerateSubscriptionMessage()
-		{
-
-			SubscriptionMsg subMsg = new SubscriptionMsg();
-			subMsg.DomainID = this.DomainID;
-			subMsg.FromID = this.FromIdentity;
-			subMsg.FromName = this.FromName;
-			subMsg.ToID = this.ToIdentity;
-			subMsg.SharedCollectionID = this.SubscriptionCollectionID;
-			subMsg.SharedCollectionType = this.SubscriptionCollectionType;
-			subMsg.SharedCollectionName = this.SubscriptionCollectionName;
-			subMsg.AccessRights = (int) this.SubscriptionRights;
-			subMsg.SubscriptionID = this.MessageID;
-
-			Collection collection = Store.GetStore().GetCollectionByID( subMsg.SharedCollectionID );
-			if ( collection != null )
-			{
-				DirNode dirNode = collection.GetRootDirectory();
-				if( dirNode != null )
-				{
-					subMsg.DirNodeID = dirNode.ID;
-					subMsg.DirNodeName = dirNode.Name;
-				}
-			}
-
-			return subMsg;
-		}
-		
-		/// <summary>
-		/// Generates a SubscriptionStatus object from the Subscription object
-		/// </summary>
-		/// <returns>A SubscriptionStatus object</returns>
-		public SubscriptionStatus GenerateStatus()
-		{
-			SubscriptionStatus status = new SubscriptionStatus();
-
-			status.State = this.SubscriptionState;
-			status.Disposition = this.SubscriptionDisposition;
-
-			return status;
-		}
-
-		/// <summary>
-		/// Add the details to the subscription
-		/// </summary>
-		/// <param name="details">The details object</param>
-		public void AddDetails(SubscriptionDetails details)
-		{
-			if (details != null)
-			{
-				if ((details.DirNodeID != null) && (details.DirNodeID.Length > 0))
-				{
-					this.DirNodeID = details.DirNodeID;
-				}
-
-				if ((details.DirNodeName != null) && (details.DirNodeName.Length > 0))
-				{
-					this.DirNodeName = details.DirNodeName;
-				}
-			}
-		}
 
 		/// <summary>
 		/// Create the slave collection (stub for syncing)
@@ -691,12 +634,26 @@ namespace Simias.POBox
 
 			Collection c = new Collection(store, this.SubscriptionCollectionName,
 				this.SubscriptionCollectionID, this.DomainID);
-
-			commitList.Add(c);
 			
-			// collection type
-			// TODO: sc.SetType(this, this.SubscriptionCollectionTypes);
-			c.SetType(c, this.SubscriptionCollectionType);
+			commitList.Add(c);
+
+			// Check if this is an old type of subscription and add the collection type
+			// specified. If it is a new type of subscription, then add all of the
+			// specified types.
+			if ( c.Properties.HasProperty( SubscriptionTypes ) )
+			{
+				// Remove all types and add the ones specified by the subscription.
+				c.Properties.DeleteNodeProperties( PropertyTags.Types );
+				foreach( string s in SbTypes )
+				{
+					c.SetType( c, s );
+				}
+			}
+			else
+			{
+				// For backwards compatibility with older clients.
+				c.SetType( c, SubscriptionCollectionType );
+			}
 			
 			// Create the member as well
 			if (this.ToMemberNodeID != null && this.ToMemberNodeID != "")
@@ -725,12 +682,20 @@ namespace Simias.POBox
 		}
 
 		/// <summary>
-		/// Decline the subscription on the master side
+		/// Sets all of the Types tags specified on the collection as SubscriptionTypes.
 		/// </summary>
-		public void Decline()
+		/// <param name="collection">Collection to get types from.</param>
+		public void SetSubscriptionTypes( Collection collection )
 		{
-			// state update
-			this.SubscriptionDisposition = SubscriptionDispositions.Declined;
+			// Clear off all of the current types.
+			properties.DeleteNodeProperties( SubscriptionTypes );
+
+			// Set each node type as subscription types.
+			MultiValuedList mvl = collection.Properties.FindValues( PropertyTags.Types );
+			foreach( Property p in mvl )
+			{
+				properties.AddNodeProperty( SubscriptionTypes, p.ValueString );
+			}
 		}
 
 		#endregion

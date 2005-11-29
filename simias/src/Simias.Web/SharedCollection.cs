@@ -1029,6 +1029,70 @@ namespace Simias.Web
 
 
 		/// <summary>
+		/// WebMethod that adds a member to a Collection granting the Rights
+		/// specified.  Note:  This is not inviting a member, rather it is
+		/// adding them and placing a subscription in the "ready" state in
+		/// their POBox.
+		/// </summary>
+		/// <param name = "CollectionID">
+		/// The ID of the collection representing the Collection to which
+		/// the member is to be added
+		/// </param>
+		/// <param name = "UserID">
+		/// The ID of the member to be added
+		/// </param>
+		/// <param name = "Rights">
+		/// The Rights to be given to the newly added member
+		/// </param>
+		public static void AddMember(	string CollectionID, 
+			string UserID,
+			string Rights,
+			string collectionType)
+		{
+			Store store = Store.GetStore();
+
+			Collection col = store.GetCollectionByID(CollectionID);
+			if(col == null)
+				throw new Simias.NotExistException(CollectionID);
+
+			Domain domain = store.GetDomain(col.Domain);
+			if(domain == null)
+				throw new Simias.NotExistException(col.Domain);
+
+			Simias.Storage.Member member = domain.GetMemberByID(UserID);
+			if(member == null)
+				throw new Simias.NotExistException(UserID);
+
+			Access.Rights newRights;
+
+			if(Rights == "Admin")
+				newRights = Access.Rights.Admin;
+			else if(Rights == "ReadOnly")
+				newRights = Access.Rights.ReadOnly;
+			else if(Rights == "ReadWrite")
+				newRights = Access.Rights.ReadWrite;
+			else
+				throw new Exception("Invalid Rights Specified");
+
+			// Check to see if the user is already a member of the collection.
+			Simias.Storage.Member newMember = col.GetMemberByID(member.UserID);
+			if(newMember != null)
+			{
+				throw new Simias.ExistsException(member.UserID);
+			}
+
+			newMember = 
+				new Simias.Storage.Member(	member.Name,
+				member.UserID,
+				newRights);
+
+			col.Commit(newMember);
+		}
+
+
+
+
+		/// <summary>
 		/// WebMethod that removes a member from a Collection. The subscription
 		/// is also removed from the member's POBox.
 		/// </summary>

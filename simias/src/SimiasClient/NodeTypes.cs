@@ -183,7 +183,7 @@ namespace Simias.Client
 		/// </summary>
 		static public string LocalDatabaseType
 		{
-			get { return NodeTypeEnum.BaseFileNode.ToString(); }
+			get { return NodeTypeEnum.LocalDatabase.ToString(); }
 		}
 
 		/// <summary>

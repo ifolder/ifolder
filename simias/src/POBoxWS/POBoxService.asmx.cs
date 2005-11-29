@@ -320,9 +320,10 @@ namespace Simias.POBoxService.Web
 						Collection collection = store.GetCollectionByID( subMsg.SharedCollectionID ); 
 						if ( collection != null )
 						{
-							// Verify that the from user exists. Use the current principal because the
+							// Verify that the from user exists in the collection which will also verify
+							// them as being in the domain. Use the current principal because the
 							// FromID can be spoofed.
-							Member fromMember = domain.GetMemberByID( Thread.CurrentPrincipal.Identity.Name );
+							Member fromMember = collection.GetMemberByID( Thread.CurrentPrincipal.Identity.Name );
 							if ( fromMember != null )
 							{
 								// Impersonate the caller so we obtain their access rights.
