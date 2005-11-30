@@ -170,10 +170,13 @@ namespace Novell.iFolder
 		private TreeModelFilter		myiFoldersFilter;
 		private TreeModelFilter		myAvailableFoldersFilter;
 		private TreeModelFilter		otherAvailableFoldersFilter;
+		
+//		private Button				ShowAvailableiFoldersButton;
+//		private Label				ShowAvailableiFoldersButtonText;
 
 		private Expander			generalTasksExpander;
 		private VBox				SynchronizedFolderTasks;
-		private Expander			detailsExpander;
+//		private Expander			detailsExpander;
 
 //		private Button				AddFolderToSyncButton;
 //		private Button				RemoveSynchronizedFolderButton;
@@ -184,6 +187,7 @@ namespace Novell.iFolder
 		private Button				OpenSynchronizedFolderButton;
 		private Button				SynchronizeNowButton;
 		private Button				ShareSynchronizedFolderButton;
+		private Button				ViewFolderPropertiesButton;
 		private Button				ResolveConflictsButton;
 		private Button				RemoveSynchronizedFolderButton;
 		
@@ -191,10 +195,11 @@ namespace Novell.iFolder
 		/// Buttons for Available iFolders
 		///
 		private Button				DownloadAvailableiFolderButton;
+		private Button				DeleteFromServerButton;
 		
-		private Label				SynchronizedNameLabel;
-		private Label				OwnerLabel;
-		private Label				ServerLabel;
+//		private Label				SynchronizedNameLabel;
+//		private Label				OwnerLabel;
+//		private Label				ServerLabel;
 
         // Drag and Drop
         enum TargetType
@@ -862,6 +867,11 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 		
 		private void OnSynchronizeNow(object o, EventArgs args)
 		{
+			SyncSelectedFolder();
+		}
+		
+		private void OnSynchronizeNowOld(object o, EventArgs args)
+		{
 			TreeSelection tSelect = synchronizedFoldersIconView.Selection;
 			if (tSelect != null && tSelect.CountSelectedRows() == 1)
 			{
@@ -893,6 +903,11 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 		}
 
 		private void OnShareSynchronizedFolder(object o, EventArgs args)
+		{
+			ShareSelectedFolder();
+		}
+
+		private void OnShareSynchronizedFolderOld(object o, EventArgs args)
 		{
 			TreeSelection tSelect = synchronizedFoldersIconView.Selection;
 			if (tSelect != null && tSelect.CountSelectedRows() == 1)
@@ -1093,7 +1108,7 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 			l.Xalign = 1F;
 			
 			synchronizedSearchEntry = new Entry();
-			searchHBox.PackStart(synchronizedSearchEntry, false, false, 0);
+			searchHBox.PackStart(synchronizedSearchEntry, true, true, 0);
 			synchronizedSearchEntry.SelectRegion(0, -1);
 			synchronizedSearchEntry.CanFocus = true;
 			synchronizedSearchEntry.Changed +=
@@ -1134,7 +1149,10 @@ Console.WriteLine("AddSynchronizedFolderHandler");
 
 			ShowHideAllFoldersButtonText.Markup =
 				string.Format("<span size=\"large\">{0}</span>",
-							  Util.GS("Hide available iFolders"));
+							  Util.GS("Hide downloadable iFolders"));
+
+//			ShowAvailableiFoldersButton.Hide();
+
 			bAvailableFoldersShowing = true;
 		}
 		
@@ -1145,11 +1163,19 @@ Console.WriteLine("AddSynchronizedFolderHandler");
 
 			ShowHideAllFoldersButtonText.Markup =
 				string.Format("<span size=\"large\">{0}</span>",
-							  Util.GS("Show available iFolders"));
+							  Util.GS("Show downloadable iFolders"));
+
+//			ShowAvailableiFoldersButton.Show();
+
 			bAvailableFoldersShowing = false;
 		}
 		
 		private void RemoveSynchronizedFolderHandler(object o,  EventArgs args)
+		{
+			RemoveSelectedFolderHandler();
+		}
+
+		private void RemoveSynchronizedFolderHandlerOld(object o,  EventArgs args)
 		{
 Console.WriteLine("RemoveSynchronizedFolderHandler");
 			TreeSelection tSelect = synchronizedFoldersIconView.Selection;
@@ -1169,7 +1195,7 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 						iFolderMsgDialog.DialogType.Question,
 						iFolderMsgDialog.ButtonSet.YesNo,
 						"",
-						Util.GS("Stop synchronizing this folder with the server?"),
+						Util.GS("Revert this iFolder to a normal folder?"),
 						"");
 					int rc = dialog.Run();
 					dialog.Hide();
@@ -1207,6 +1233,11 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 			DownloadSelectedFolder();
 		}
 		
+		private void DeleteFromServerHandler(object o, EventArgs args)
+		{
+			DeleteSelectedFolderFromServer();
+		}
+		
 		private void DownloadSelectedFolder()
 		{
 			iFolderHolder holder = synchronizedFoldersIconView.SelectedFolder;
@@ -1232,6 +1263,37 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 				catch(Exception e)
 				{
 					DisplayCreateOrSetupException(e);
+				}
+			}
+		}
+		
+		private void DeleteSelectedFolderFromServer()
+		{
+			iFolderHolder holder = synchronizedFoldersIconView.SelectedFolder;
+			if (holder != null && holder.iFolder.IsSubscription)
+			{
+				int rc = 0;
+
+				rc = AskRemoveiFolder(holder);
+
+				// User pressed OK?
+				if(rc != -8)
+					return;
+
+				try
+				{
+					ifdata.DeleteiFolder(holder.iFolder.ID);
+				}
+				catch(Exception e)
+				{
+					iFolderExceptionDialog ied =
+						new iFolderExceptionDialog(
+							this,
+							e);
+					ied.Run();
+					ied.Hide();
+					ied.Destroy();
+					return;
 				}
 			}
 		}
@@ -1384,6 +1446,8 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 
 			hbox.PackStart(CreateSynchronizedActions(), false, false, 12);
 			hbox.PackStart(CreateSynchronizedIconViewPane(), true, true, 0);
+			
+			
 //			hbox.PackStart(CreateSynchronizedIconViewPane(), false, false, 0);
 //			hbox.PackStart(CreateItemCanvas(), true, true, 0);
 			
@@ -1476,7 +1540,7 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 			actionsVBox.PackStart(searchHBox, false, false, 0);
 			
 			synchronizedSearchEntry = new Entry();
-			searchHBox.PackStart(synchronizedSearchEntry, false, false, 0);
+			searchHBox.PackStart(synchronizedSearchEntry, true, true, 0);
 			synchronizedSearchEntry.SelectRegion(0, -1);
 			synchronizedSearchEntry.CanFocus = true;
 			synchronizedSearchEntry.Changed +=
@@ -1506,7 +1570,7 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 			l = new Label(
 				string.Format(
 					"<span size=\"x-large\">{0}</span>",
-					Util.GS("iFolder Actions")));
+					Util.GS("General Actions")));
 			actionsVBox.PackStart(l, false, false, 0);
 			l.UseMarkup = true;
 			l.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
@@ -1528,7 +1592,7 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 
 			Label buttonText = new Label(
 				string.Format("<span size=\"large\">{0}</span>",
-							  Util.GS("Add a folder")));
+							  Util.GS("Upload a folder")));
 			hbox.PackStart(buttonText, false, false, 4);
 			buttonText.UseMarkup = true;
 			buttonText.UseUnderline = false;
@@ -1547,7 +1611,7 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 
 			ShowHideAllFoldersButtonText = new Label(
 				string.Format("<span size=\"large\">{0}</span>",
-							  Util.GS("Show available iFolders")));
+							  Util.GS("Show downloadable iFolders")));
 			hbox.PackStart(ShowHideAllFoldersButtonText, false, false, 4);
 			ShowHideAllFoldersButtonText.UseMarkup = true;
 			ShowHideAllFoldersButtonText.UseUnderline = false;
@@ -1572,7 +1636,7 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 			l = new Label(
 				string.Format(
 					"<span size=\"x-large\">{0}</span>",
-					Util.GS("Folder Actions")));
+					Util.GS("iFolder Actions")));
 			SynchronizedFolderTasks.PackStart(l, false, false, 0);
 			l.UseMarkup = true;
 			l.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
@@ -1637,11 +1701,6 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 			vbox.PackStart(SynchronizeNowButton, false, false, 0);
 			SynchronizeNowButton.Relief = ReliefStyle.None;
 
-//			buttonPixbuf = new Gdk.Pixbuf(Util.ImagesPath("sync24.png"));
-//			buttonImage = new Image(buttonPixbuf);
-//			hbox.PackStart(buttonImage, false, false, 0);
-//			buttonImage.SetAlignment(0.5F, 0F);
-			
 			buttonText = new Label(
 				string.Format("<span size=\"large\">{0}</span>",
 							  Util.GS("Synchronize now")));
@@ -1662,12 +1721,6 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 			vbox.PackStart(ShareSynchronizedFolderButton, false, false, 0);
 			ShareSynchronizedFolderButton.Relief = ReliefStyle.None;
 
-//			buttonPixbuf = new Gdk.Pixbuf(Util.ImagesPath("share-emblem.png"));
-//			buttonPixbuf = buttonPixbuf.ScaleSimple(24, 24, Gdk.InterpType.Bilinear);
-//			buttonImage = new Image(buttonPixbuf);
-//			hbox.PackStart(buttonImage, false, false, 0);
-//			buttonImage.SetAlignment(0.5F, 0F);
-			
 			buttonText = new Label(
 				string.Format("<span size=\"large\">{0}</span>",
 							  Util.GS("Share with...")));
@@ -1681,6 +1734,26 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 
 
 			///
+			/// ViewFolderPropertiesButton
+			///
+			hbox = new HBox(false, 0);
+			ViewFolderPropertiesButton = new Button(hbox);
+			vbox.PackStart(ViewFolderPropertiesButton, false, false, 0);
+			ViewFolderPropertiesButton.Relief = ReliefStyle.None;
+
+			buttonText = new Label(
+				string.Format("<span size=\"large\">{0}</span>",
+							  Util.GS("View properties...")));
+			hbox.PackStart(buttonText, true, true, 4);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+
+			ViewFolderPropertiesButton.Clicked +=
+				new EventHandler(OnShowFolderProperties);
+
+
+			///
 			/// RemoveSynchronizedFolderButton
 			///
 			hbox = new HBox(false, 0);
@@ -1688,13 +1761,9 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 			vbox.PackStart(RemoveSynchronizedFolderButton, false, false, 0);
 			RemoveSynchronizedFolderButton.Relief = ReliefStyle.None;
 
-//			buttonImage = new Image(Stock.Delete, IconSize.SmallToolbar);
-//			hbox.PackStart(buttonImage, false, false, 0);
-//			buttonImage.SetAlignment(0.5F, 0F);
-			
 			buttonText = new Label(
 				string.Format("<span size=\"large\">{0}</span>",
-							  Util.GS("Remove")));
+							  Util.GS("Revert to a normal folder")));
 			hbox.PackStart(buttonText, true, true, 4);
 			buttonText.UseMarkup = true;
 			buttonText.UseUnderline = false;
@@ -1703,7 +1772,6 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 			RemoveSynchronizedFolderButton.Clicked +=
 				new EventHandler(RemoveSynchronizedFolderHandler);
 
-			
 			///
 			/// DownloadAvailableiFolderButton
 			///
@@ -1725,8 +1793,29 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 
 
 			///
+			/// DeleteFromServerButton
+			///
+			hbox = new HBox(false, 0);
+			DeleteFromServerButton = new Button(hbox);
+			vbox.PackStart(DeleteFromServerButton, false, false, 0);
+			DeleteFromServerButton.Relief = ReliefStyle.None;
+
+			buttonText = new Label(
+				string.Format("<span size=\"large\">{0}</span>",
+							  Util.GS("Delete from server")));
+			hbox.PackStart(buttonText, true, true, 4);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+
+			DeleteFromServerButton.Clicked +=
+				new EventHandler(DeleteFromServerHandler);
+
+
+			///
 			/// Details Expander
 			///
+/*
 			detailsExpander =
 				new Expander(
 					string.Format("<span size=\"small\" weight=\"bold\">{0}</span>",
@@ -1777,13 +1866,7 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 			ServerLabel.Xalign = 0;
 			detailsTable.Attach(ServerLabel, 1, 2, 1, 2,
 					AttachOptions.Expand | AttachOptions.Fill, 0, 0, 0);
-
-
-
-
-
-
-//			return vbox;
+*/
 			return actionsVBox;
 		}
 		
@@ -1826,9 +1909,36 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 			myiFoldersFilter = new TreeModelFilter(ifdata.iFolders, null);
 			myiFoldersFilter.VisibleFunc = SynchronizedFoldersFilterFunc;
 			
-			localGroup = new iFolderViewGroup(Util.GS("My iFolders"), myiFoldersFilter);
+			localGroup = new iFolderViewGroup(Util.GS("My Synchronized iFolders"), myiFoldersFilter);
 			synchronizedFoldersIconView.AddGroup(localGroup);
 //			synchronizedFoldersIconView.SelectionMode = SelectionMode.Single;
+
+
+			///
+			/// ShowAvailableiFoldersButton
+			///
+/*
+			HBox hbox = new HBox(false, 0);
+			hbox.PackStart(new Label(""), true, true, 0);	// spacer
+			HBox hbox2 = new HBox(false, 0);
+			ShowAvailableiFoldersButton = new Button(hbox2);
+			hbox.PackStart(ShowAvailableiFoldersButton, false, false, 0);
+			ShowAvailableiFoldersButton.Xalign = 1.0F;
+			ShowAvailableiFoldersButton.Relief = ReliefStyle.None;
+
+			ShowAvailableiFoldersButtonText = new Label(
+				string.Format("<span size=\"large\" underline=\"single\">{0}</span>",
+							  Util.GS("Show downloadable iFolders...")));
+			hbox2.PackStart(ShowAvailableiFoldersButtonText, true, true, 4);
+			ShowAvailableiFoldersButtonText.UseMarkup = true;
+			ShowAvailableiFoldersButtonText.UseUnderline = false;
+			ShowAvailableiFoldersButtonText.Xalign = 0;
+
+			ShowAvailableiFoldersButton.Clicked += ShowHideAllFoldersHandler;
+			
+			synchronizedFoldersIconView.AddWidget(hbox);
+*/
+
 			
 			///
 			/// My Available iFolders
@@ -1836,7 +1946,7 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 			myAvailableFoldersFilter = new TreeModelFilter(ifdata.iFolders, null);
 			myAvailableFoldersFilter.VisibleFunc = MyAvailableFoldersFilterFunc;
 			myAvailableGroup =
-				new iFolderViewGroup(Util.GS("My Available iFolders"),
+				new iFolderViewGroup(Util.GS("My iFolders on the Server"),
 									 myAvailableFoldersFilter);
 //			synchronizedFoldersIconView.AddGroup(myAvailableGroup);
 			
@@ -1846,7 +1956,7 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 			otherAvailableFoldersFilter = new TreeModelFilter(ifdata.iFolders, null);
 			otherAvailableFoldersFilter.VisibleFunc = OtherAvailableFoldersFilterFunc;
 			otherAvailableGroup =
-				new iFolderViewGroup(Util.GS("Other Available iFolders"),
+				new iFolderViewGroup(Util.GS("iFolders Shared With Me"),
 									 otherAvailableFoldersFilter);
 //			synchronizedFoldersIconView.AddGroup(otherAvailableGroup);
 
@@ -2050,7 +2160,7 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 							if (!holder.iFolder.Role.Equals("Master"))
 							{
 								MenuItem item_revert = new MenuItem (
-										Util.GS("Remove"));
+										Util.GS("Revert to a normal folder"));
 								menu.Append (item_revert);
 								item_revert.Activated += new EventHandler(
 										RemoveSynchronizedFolderHandler);
@@ -2059,7 +2169,7 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 											holder.iFolder.CurrentUserID)
 							{
 								MenuItem item_delete = new MenuItem (
-										Util.GS("Remove"));
+										Util.GS("Revert to a normal folder"));
 								menu.Append (item_delete);
 								item_delete.Activated += new EventHandler(
 										RemoveSynchronizedFolderHandler);
@@ -2090,36 +2200,14 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 		{
 			iFolderHolder holder = (iFolderHolder)o;
 Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
-//			TreeSelection tSelect = synchronizedFoldersIconView.Selection;
-//			if (tSelect == null || tSelect.CountSelectedRows() != 1)
 			if (holder == null)
 			{
-//				AddFolderToSyncButton.Sensitive = false;
-//				RemoveSynchronizedFolderButton.Sensitive = false;
-				
-//				SynchronizedDetailsNotebook.CurrentPage = 0;
-//				generalTasksExpander.Expanded = true;
-//				synchronizedFolderTasks.Expanded = false;
 				SynchronizedFolderTasks.Visible = false;
-				detailsExpander.Visible = false;
-
-
-
-				RemoveSynchronizedFolderButton.Sensitive = false;
-
-
+//				detailsExpander.Visible = false;
 			}
 			else
 			{
-//				TreeModel tModel;
-//				TreeIter iter;
-				
-//				tSelect.GetSelected(out tModel, out iter);
-
-//				iFolderHolder holder =
-//					(iFolderHolder)tModel.GetValue(iter, 0);
-//				if (holder != null)
-//				{
+/*
 				SynchronizedNameLabel.Markup =
 					string.Format("<span size=\"small\" weight=\"bold\">{0}</span>", holder.iFolder.Name);
 				OwnerLabel.Markup =
@@ -2128,28 +2216,32 @@ Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
 				if (domain != null)
 					ServerLabel.Markup =
 						string.Format("<span size=\"small\">{0}</span>", domain.Name);
-
+*/
 				if (holder.iFolder.IsSubscription)
 				{
 					// Hide the Local iFolder Buttons
 					OpenSynchronizedFolderButton.Visible	= false;
 					SynchronizeNowButton.Visible			= false;
 					ShareSynchronizedFolderButton.Visible	= false;
+					ViewFolderPropertiesButton.Visible		= false;
 					ResolveConflictsButton.Visible			= false;
 					RemoveSynchronizedFolderButton.Visible	= false;
 
 					// Show the Available iFolder Buttons
 					DownloadAvailableiFolderButton.Visible	= true;
+					DeleteFromServerButton.Visible			= true;
 				}
 				else
 				{
 					// Hide the Available iFolders Buttons
 					DownloadAvailableiFolderButton.Visible	= false;
+					DeleteFromServerButton.Visible			= false;
 					
 					// Show the Local iFolder Buttons
 					OpenSynchronizedFolderButton.Visible	= true;
 					SynchronizeNowButton.Visible			= true;
 					ShareSynchronizedFolderButton.Visible	= true;
+					ViewFolderPropertiesButton.Visible		= true;
 					RemoveSynchronizedFolderButton.Visible	= true;
 
 					if (holder.iFolder.HasConflicts)
@@ -2157,11 +2249,10 @@ Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
 					else
 						ResolveConflictsButton.Visible = false;
 				}
-								
-//				}
 
 				SynchronizedFolderTasks.Visible = true;
-				detailsExpander.Visible = true;
+				
+//				detailsExpander.Visible = true;
 
 				RemoveSynchronizedFolderButton.Sensitive = true;
 			}
@@ -2604,6 +2695,8 @@ Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
 				WindowNotebook.CurrentPage = 0;
 			else
 				WindowNotebook.CurrentPage = 1;
+			
+			OnSynchronizedFoldersSelectionChanged(null, EventArgs.Empty);
 		}
 
 
@@ -3158,6 +3251,89 @@ Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
 //			}
 		}
 
+		private void SyncSelectedFolder()
+		{
+			iFolderHolder holder = synchronizedFoldersIconView.SelectedFolder;
+			if (holder != null)
+			{
+				try
+				{
+    				ifws.SynciFolderNow(holder.iFolder.ID);
+				}
+				catch(Exception e)
+				{
+					iFolderExceptionDialog ied =
+						new iFolderExceptionDialog(
+							this,
+							e);
+					ied.Run();
+					ied.Hide();
+					ied.Destroy();
+				}
+			}
+		}
+
+
+		private void ShareSelectedFolder()
+		{
+			iFolderHolder holder = synchronizedFoldersIconView.SelectedFolder;
+			if (holder != null)
+			{
+				ShowSynchronizedFolderProperties(holder, 1);
+			}
+		}
+
+		private void ShowSelectedFolderProperties()
+		{
+			iFolderHolder holder = synchronizedFoldersIconView.SelectedFolder;
+			if (holder != null)
+			{
+				ShowSynchronizedFolderProperties(holder, 0);
+			}
+		}
+
+		private void RemoveSelectedFolderHandler()
+		{
+			iFolderHolder holder = synchronizedFoldersIconView.SelectedFolder;
+			if (holder != null)
+			{
+				iFolderMsgDialog dialog = new iFolderMsgDialog(
+					this,
+					iFolderMsgDialog.DialogType.Question,
+					iFolderMsgDialog.ButtonSet.YesNo,
+					"",
+					Util.GS("Revert this iFolder to a normal folder?"),
+					Util.GS("The folder will still be on your computer, but it will no longer synchronize with the iFolder Server."));
+				int rc = dialog.Run();
+				dialog.Hide();
+				dialog.Destroy();
+				if(rc == -8)
+				{
+					try
+					{
+						ifdata.RevertiFolder(holder.iFolder.ID);
+//								if (myiFoldersFilter.Remove(ref iter))
+//								{
+//									if (curSynchronizedFolders.ContainsKey(holder.iFolder.ID))
+//										curSynchronizedFolders.Remove(holder.iFolder.ID);
+//								}
+								
+//								synchronizedFoldersIconView.RefreshIcons();
+					}
+					catch(Exception e)
+					{
+						iFolderExceptionDialog ied =
+							new iFolderExceptionDialog(
+								this,
+								e);
+						ied.Run();
+						ied.Hide();
+						ied.Destroy();
+					}
+				}
+			}
+		}
+
 
 		private void OpenSelectediFolder()
 		{
@@ -3208,6 +3384,11 @@ Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
 
 
 		public void OnShowFolderProperties(object o, EventArgs args)
+		{
+			ShowSelectedFolderProperties();
+		}
+
+		public void OnShowFolderPropertiesOld(object o, EventArgs args)
 		{
 			TreeSelection tSelect = synchronizedFoldersIconView.Selection;
 			if (tSelect != null && tSelect.CountSelectedRows() == 1)

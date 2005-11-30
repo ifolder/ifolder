@@ -77,6 +77,24 @@ namespace Novell.iFolder
 			this.SizeAllocated += OnSizeAllocated;
 		}
 		
+		public void AddWidget(Widget w)
+		{
+			vbox.PackStart(w, false, false, 0);
+			vbox.ShowAll();
+		}
+		
+		public void RemoveWidget(Widget w)
+		{
+			if (w != null)
+			{
+				try
+				{
+					vbox.Remove(w);
+				}
+				catch{}
+			}
+		}
+		
 		public void AddGroup(iFolderViewGroup group)
 		{
 			viewGroups.Add(group);
@@ -84,6 +102,8 @@ namespace Novell.iFolder
 			group.Selection.SelectionChanged += SelectionChangedHandler;
 			
 			vbox.PackStart(group, false, false, 0);
+
+			group.RebuildTable();
 
 			vbox.ShowAll();
 		}
@@ -123,6 +143,14 @@ namespace Novell.iFolder
 		
 		public void SelectPath(TreePath path)
 		{
+		}
+		
+		public void UnselectAll()
+		{
+			foreach(iFolderViewGroup group in viewGroups)
+			{
+				group.Selection.UnselectAll();
+			}
 		}
 		
 		private void SelectionChangedHandler(object o, EventArgs args)

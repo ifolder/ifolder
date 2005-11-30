@@ -211,9 +211,9 @@ Console.WriteLine("\tNumber of columns hasn't changed: {0}", numOfColumns);
 			}
 		}
 		
-		private void RebuildTable()
+		public void RebuildTable()
 		{
-Console.WriteLine("iFolderViewGroup.ResizeTable({0})", name);
+Console.WriteLine("iFolderViewGroup.RebuildTable({0})", name);
 			int numOfItems = model.IterNChildren();
 Console.WriteLine("\tNum of Items: {0}", numOfItems);
 

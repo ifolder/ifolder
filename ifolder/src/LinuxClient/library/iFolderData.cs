@@ -646,6 +646,8 @@ Console.WriteLine("\tiFolder");
 														string domainID,
 														string localPath)
 		{
+Console.WriteLine("iFolderData.AcceptiFolderInvitation()");
+
 			lock(typeof(iFolderWeb))
 			{
 				iFolderHolder ifHolder = null;
@@ -655,24 +657,22 @@ Console.WriteLine("\tiFolder");
 											domainID,
 											ifolderID,
 											localPath);
+
 				if(newifolder.ID != ifolderID)
 				{
 					subToiFolderMap.Remove(ifolderID);
 					if (newifolder.IsSubscription)
+					{
 						subToiFolderMap[newifolder.ID]
 							= newifolder.CollectionID;
+					}
 				}
 
 				ifHolder = GetiFolder(collectionID);
 				ifHolder.iFolder = newifolder;
 
-				if (ifolderIters.ContainsKey(newifolder.ID))
-				{
-					TreeIter iter =
-						(TreeIter)ifolderIters[newifolder.ID];
-					TreePath path = iFolderListStore.GetPath(iter);
-					iFolderListStore.EmitRowChanged(path, iter);
-				}
+				// FIXME: Figure out if there's a better way to cause the UI to update besides causing a Refresh
+				Refresh();
 
 				return ifHolder;
 			}
@@ -685,7 +685,7 @@ Console.WriteLine("\tiFolder");
 		// RevertiFolder
 		// reverts an iFolder to an invitation
 		//===================================================================
-		public iFolderHolder RevertiFolder(	string ifolderID)
+		public iFolderHolder RevertiFolder(string ifolderID)
 		{
 			lock(typeof(iFolderWeb))
 			{
@@ -697,21 +697,30 @@ Console.WriteLine("\tiFolder");
 					throw new Exception("iFolder did not exist");
 				}
 
-    			iFolderWeb reviFolder = 
-								ifws.RevertiFolder(ifHolder.iFolder.ID);
-
-				ifHolder.iFolder = reviFolder;
-				if(reviFolder.IsSubscription)
+				try
 				{
-					subToiFolderMap[reviFolder.ID] = reviFolder.CollectionID;
-					if (ifolderIters.ContainsKey(reviFolder.CollectionID))
+	    			iFolderWeb reviFolder = 
+						ifws.RevertiFolder(ifHolder.iFolder.ID);
+
+					ifHolder.iFolder = reviFolder;
+					if(reviFolder.IsSubscription)
 					{
-						TreeIter iter =
-							(TreeIter)ifolderIters[reviFolder.CollectionID];
-						TreePath path = iFolderListStore.GetPath(iter);
-						iFolderListStore.EmitRowChanged(path, iter);
+						subToiFolderMap[reviFolder.ID] = reviFolder.CollectionID;
+						
+						ifHolder = ReadAvailableiFolder(reviFolder.ID, reviFolder.CollectionID);
+//						if (ifolderIters.ContainsKey(reviFolder.CollectionID))
+//						{
+//							TreeIter iter =
+//								(TreeIter)ifolderIters[reviFolder.CollectionID];
+//							TreePath path = iFolderListStore.GetPath(iter);
+//							iFolderListStore.EmitRowChanged(path, iter);
+//						}
 					}
+					
+					// FIXME: Figure out if there's a better way to cause the UI to update besides causing a Refresh
+					Refresh();
 				}
+				catch{}
 
 				return ifHolder;
 			}
@@ -940,7 +949,7 @@ Console.WriteLine("\tiFolder");
 			if (args == null || args.iFolderID == null)
 				return;	// Prevent an exception
 
-			DeliFolder(args.iFolderID);
+//			DeliFolder(args.iFolderID);
 		}
 
 		private void OniFolderSyncEvent(object o, CollectionSyncEventArgs args)
