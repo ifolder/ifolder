@@ -556,6 +556,10 @@ namespace Simias.Storage
 					rNode = new Subscription( document );
 					break;
 
+				case "HostNode":
+					rNode = new HostNode( document );
+					break;
+
 				default:
 					rNode = new Node( document );
 					break;
@@ -652,6 +656,10 @@ namespace Simias.Storage
 
 				case "Subscription":
 					rNode = new Subscription( collection, shallowNode );
+					break;
+
+				case "HostNode":
+					rNode = new HostNode( collection, shallowNode );
 					break;
 
 				default:

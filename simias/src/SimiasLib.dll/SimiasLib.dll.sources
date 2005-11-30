@@ -15,6 +15,7 @@ AssemblyInfo.cs
 ../CollectionStore/Domain.cs
 ../CollectionStore/Exception.cs
 ../CollectionStore/FileNode.cs
+../CollectionStore/HostNode.cs
 ../CollectionStore/ICSEnumerator.cs
 ../CollectionStore/Identity.cs
 ../CollectionStore/LinkNode.cs
