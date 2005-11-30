@@ -57,11 +57,13 @@ namespace Novell.iFolder
 		
 		private Table				table;
 
-		public Image				image;
+		private Image				image;
 
-		public Label				nameLabel;
-		public Label				locationLabel;
-		public Label				statusLabel;
+		private Label				nameLabel;
+		private Label				locationLabel;
+		private Label				statusLabel;
+		
+		private bool				bMouseIsHovering;
 		
 		///
 		/// Events
@@ -116,6 +118,7 @@ namespace Novell.iFolder
 			this.maxWidth = maxWidth;
 			
 			this.bSelected = false;
+			this.bMouseIsHovering = false;
 
 			LoadImages();
 			SetPixbufs();
@@ -194,8 +197,10 @@ namespace Novell.iFolder
 			// Update the normalPixbuf and spotlightPixbuf to show proper state
 			SetPixbufs();
 
-			// FIXME: Determine whether EventNotify is on or off to know which pixbuf to use
-			image.Pixbuf = normalPixbuf;
+			if (bMouseIsHovering)
+				image.Pixbuf = spotlightPixbuf;
+			else
+				image.Pixbuf = normalPixbuf;
 
 			// Update the labels
 			EllipseNameLabel(holder.iFolder.Name);
@@ -272,6 +277,8 @@ namespace Novell.iFolder
 		///		
 		protected override bool OnEnterNotifyEvent(Gdk.EventCrossing evnt)
 		{
+			bMouseIsHovering = true;
+
 			image.Pixbuf = spotlightPixbuf;
 			
 			// Reset to the normal color
@@ -287,6 +294,8 @@ namespace Novell.iFolder
 		
 		protected override bool OnLeaveNotifyEvent(Gdk.EventCrossing evnt)
 		{
+			bMouseIsHovering = false;
+
 			image.Pixbuf = normalPixbuf;
 			
 			locationLabel.ModifyFg(StateType.Normal, this.Style.Base(StateType.Active));
