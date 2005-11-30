@@ -51,6 +51,9 @@ namespace Novell.iFolder
 		
 		private static Gdk.Pixbuf	SyncFolder					= null;
 		private static Gdk.Pixbuf	SyncFolderSpotlight			= null;
+		
+		private static Gdk.Pixbuf	SyncWaitFolder				= null;
+		private static Gdk.Pixbuf	SyncWaitFolderSpotlight		= null;
 
 		private Gdk.Pixbuf			normalPixbuf;
 		private Gdk.Pixbuf			spotlightPixbuf;
@@ -120,6 +123,10 @@ namespace Novell.iFolder
 			this.bSelected = false;
 			this.bMouseIsHovering = false;
 
+			this.ModifyBg(StateType.Normal, this.Style.Base(StateType.Normal));
+			this.ModifyBase(StateType.Normal, this.Style.Base(StateType.Normal));
+
+
 			LoadImages();
 			SetPixbufs();
 			
@@ -172,7 +179,6 @@ namespace Novell.iFolder
 						Util.ImagesPath("conflict-folder-spotlight64.png"));
 			}
 
-
 			if (SyncFolder == null)
 			{
 				SyncFolder =
@@ -185,6 +191,20 @@ namespace Novell.iFolder
 				SyncFolderSpotlight =
 					new Gdk.Pixbuf(
 						Util.ImagesPath("sync-folder-spotlight64.png"));
+			}
+
+			if (SyncWaitFolder == null)
+			{
+				SyncWaitFolder =
+					new Gdk.Pixbuf(
+						Util.ImagesPath("sync-wait-folder64.png"));
+			}
+
+			if (SyncWaitFolderSpotlight == null)
+			{
+				SyncWaitFolderSpotlight =
+					new Gdk.Pixbuf(
+						Util.ImagesPath("sync-wait-folder-spotlight64.png"));
 			}
 		}
 		
@@ -353,6 +373,12 @@ namespace Novell.iFolder
 					normalPixbuf = SyncFolder;
 					spotlightPixbuf = SyncFolderSpotlight;
 				}
+				else if (holder.State == iFolderState.SynchronizingLocal)
+				{
+Console.WriteLine("SyncWait #1: {0}", holder.iFolder.Name);
+					normalPixbuf = SyncWaitFolder;
+					spotlightPixbuf = SyncWaitFolderSpotlight;
+				}
 				else
 				{
 					// Set the pixbufs based on current state
@@ -371,11 +397,23 @@ namespace Novell.iFolder
 								spotlightPixbuf = ConflictFolderSpotlight;
 								break;
 							case iFolderState.Initial:
+Console.WriteLine("SyncWait #2: {0}", holder.iFolder.Name);
+								normalPixbuf = SyncWaitFolder;
+								spotlightPixbuf = SyncWaitFolderSpotlight;
+								break;
 							case iFolderState.Normal:
-							case iFolderState.SynchronizingLocal:
 							default:
-								normalPixbuf = OKFolder;
-								spotlightPixbuf = OKFolderSpotlight;
+								if (holder.ObjectsToSync > 0)
+								{
+Console.WriteLine("SyncWait #3: {0}", holder.iFolder.Name);
+									normalPixbuf = SyncWaitFolder;
+									spotlightPixbuf = SyncWaitFolderSpotlight;
+								}
+								else
+								{
+									normalPixbuf = OKFolder;
+									spotlightPixbuf = OKFolderSpotlight;
+								}
 								break;
 						}
 					}

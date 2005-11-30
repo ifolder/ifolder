@@ -171,21 +171,14 @@ namespace Novell.iFolder
 									stateString = Util.GS("Waiting to connect");
 									break;
 								case "WaitSync":
-									stateString = Util.GS("Waiting to synchronize");
-									break;
 								case "Local":
-									stateString = Util.GS("OK");
+									stateString = Util.GS("Waiting to synchronize");
+//									stateString = Util.GS("OK");
 									break;
 								default:
 									stateString = Util.GS("Unknown");
 									break;
 							}
-							break;
-						case iFolderState.Normal:
-							if (objectsToSync > 0)
-								stateString = string.Format(Util.GS("{0} items not synchronized"), objectsToSync);
-							else
-								stateString = Util.GS("OK");
 							break;
 						case iFolderState.FailedSync:
 							stateString = Util.GS("Incomplete synchronization");
@@ -193,8 +186,12 @@ namespace Novell.iFolder
 						case iFolderState.Disconnected:
 							stateString = Util.GS("Server unavailable");
 							break;
+						case iFolderState.Normal:
 						default:
-							stateString = Util.GS("Unknown");
+							if (objectsToSync > 0)
+								stateString = string.Format(Util.GS("{0} items not synchronized"), objectsToSync);
+							else
+								stateString = Util.GS("OK");
 							break;
 					}
 				}

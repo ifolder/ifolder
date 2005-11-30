@@ -2640,6 +2640,11 @@ Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
 				new MenuItem(Util.GS("_Toggle Debug Interface"));
 			ViewMenu.Append(toggleDebugMenuItem);
 			toggleDebugMenuItem.Activated += new EventHandler(ToggleDebugInterface);
+			
+			MenuItem showColorPaletteMenuItem =
+				new MenuItem(Util.GS("Show _Color Palette..."));
+			ViewMenu.Append(showColorPaletteMenuItem);
+			showColorPaletteMenuItem.Activated += ShowColorPalette;
 
 			MenuItem ViewMenuItem = new MenuItem(Util.GS("_View"));
 			ViewMenuItem.Submenu = ViewMenu;
@@ -2962,6 +2967,14 @@ Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
 		private void ToggleDebugInterface(object o, EventArgs args)
 		{
 			myiFolderNotebook.ShowTabs = !myiFolderNotebook.ShowTabs;
+		}
+		
+		private void ShowColorPalette(object o, EventArgs args)
+		{
+			ColorPaletteDialog palette = new ColorPaletteDialog();
+			palette.Run();
+			palette.Hide();
+			palette.Destroy();
 		}
 
 
@@ -4958,8 +4971,84 @@ public class UriList : ArrayList {
 		}
 		return paths;
 	}
+	
 }
 
+	///
+	/// Debug: ColorPaletteDialog
+	///
+	public class ColorPaletteDialog : Dialog
+	{
+		public ColorPaletteDialog() : base()
+		{
+			this.VBox.Add(CreateWidgets());
+			
+			this.AddButton("_Close", ResponseType.Close);
+		}
+		
+		private Widget CreateWidgets()
+		{
+			VBox vbox = new VBox(false, 0);
+			
+			///
+			/// Base
+			///
+			Label l = new Label("<span size=\"large\">Base Colors</span>");
+			vbox.PackStart(l, false, false, 0);
+			l.UseMarkup = true;
+			l.Xalign = 0;
+			
+			vbox.PackStart(CreateColorBox("Normal", this.Style.Base(StateType.Normal)));
+			vbox.PackStart(CreateColorBox("Active", this.Style.Base(StateType.Active)));
+			vbox.PackStart(CreateColorBox("Prelight", this.Style.Base(StateType.Prelight)));
+			vbox.PackStart(CreateColorBox("Selected", this.Style.Base(StateType.Selected)));
+			vbox.PackStart(CreateColorBox("Insensitive", this.Style.Base(StateType.Insensitive)));
+
+			///
+			/// Background
+			///
+			l = new Label("<span size=\"large\">Background Colors</span>");
+			vbox.PackStart(l, false, false, 0);
+			l.UseMarkup = true;
+			l.Xalign = 0;
+			
+			vbox.PackStart(CreateColorBox("Normal", this.Style.Background(StateType.Normal)));
+			vbox.PackStart(CreateColorBox("Active", this.Style.Background(StateType.Active)));
+			vbox.PackStart(CreateColorBox("Prelight", this.Style.Background(StateType.Prelight)));
+			vbox.PackStart(CreateColorBox("Selected", this.Style.Background(StateType.Selected)));
+			vbox.PackStart(CreateColorBox("Insensitive", this.Style.Background(StateType.Insensitive)));
+
+			///
+			/// Foreground
+			///
+			l = new Label("<span size=\"large\">Foreground Colors</span>");
+			vbox.PackStart(l, false, false, 0);
+			l.UseMarkup = true;
+			l.Xalign = 0;
+			
+			vbox.PackStart(CreateColorBox("Normal", this.Style.Foreground(StateType.Normal)));
+			vbox.PackStart(CreateColorBox("Active", this.Style.Foreground(StateType.Active)));
+			vbox.PackStart(CreateColorBox("Prelight", this.Style.Foreground(StateType.Prelight)));
+			vbox.PackStart(CreateColorBox("Selected", this.Style.Foreground(StateType.Selected)));
+			vbox.PackStart(CreateColorBox("Insensitive", this.Style.Foreground(StateType.Insensitive)));
+
+			vbox.ShowAll();
+			
+			return vbox;
+		}
+		
+		private Widget CreateColorBox(string name, Gdk.Color color)
+		{
+			EventBox eb = new EventBox();
+			eb.ModifyBg(StateType.Normal, color);
+			
+			Label l = new Label(name);
+			eb.Add(l);
+			l.Show();
+			
+			return eb;
+		}
+	}
 
 
 

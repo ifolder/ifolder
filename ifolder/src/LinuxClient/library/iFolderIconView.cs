@@ -64,13 +64,19 @@ namespace Novell.iFolder
 			this.Add(sw);
 			sw.ShadowType = ShadowType.None;
 			
+			EventBox eb = new EventBox();
+			sw.AddWithViewport(eb);
+			eb.ModifyBg(StateType.Normal, this.Style.Base(StateType.Normal));
+			eb.ModifyBase(StateType.Normal, this.Style.Base(StateType.Normal));
+			
 			vbox = new VBox(false, 0);
-			sw.AddWithViewport(vbox);
+//			sw.AddWithViewport(vbox);
+			eb.Add(vbox);
 
 			currentSelection = null;
 			
 			viewGroups = new ArrayList();
-			
+
 			this.Realized +=
 				new EventHandler(OnWidgetRealized);
 			
