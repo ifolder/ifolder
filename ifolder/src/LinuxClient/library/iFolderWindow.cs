@@ -196,6 +196,7 @@ namespace Novell.iFolder
 		///
 		private Button				DownloadAvailableiFolderButton;
 		private Button				DeleteFromServerButton;
+		private Button				RemoveMembershipButton;
 		
 //		private Label				SynchronizedNameLabel;
 //		private Label				OwnerLabel;
@@ -1238,6 +1239,12 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 			DeleteSelectedFolderFromServer();
 		}
 		
+		private void RemoveMembershipHandler(object o, EventArgs args)
+		{
+			RemoveMembershipFromSelectedFolder();
+		}
+		
+		
 		private void DownloadSelectedFolder()
 		{
 			iFolderHolder holder = synchronizedFoldersIconView.SelectedFolder;
@@ -1274,7 +1281,38 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 			{
 				int rc = 0;
 
-				rc = AskRemoveiFolder(holder);
+				rc = AskDeleteiFolder(holder);
+
+				// User pressed OK?
+				if(rc != -8)
+					return;
+
+				try
+				{
+					ifdata.DeleteiFolder(holder.iFolder.ID);
+				}
+				catch(Exception e)
+				{
+					iFolderExceptionDialog ied =
+						new iFolderExceptionDialog(
+							this,
+							e);
+					ied.Run();
+					ied.Hide();
+					ied.Destroy();
+					return;
+				}
+			}
+		}
+		
+		private void RemoveMembershipFromSelectedFolder()
+		{
+			iFolderHolder holder = synchronizedFoldersIconView.SelectedFolder;
+			if (holder != null && holder.iFolder.IsSubscription)
+			{
+				int rc = 0;
+
+				rc = AskRemoveMembership(holder);
 
 				// User pressed OK?
 				if(rc != -8)
@@ -1813,6 +1851,26 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 
 
 			///
+			/// RemoveMembershipButton
+			///
+			hbox = new HBox(false, 0);
+			RemoveMembershipButton = new Button(hbox);
+			vbox.PackStart(RemoveMembershipButton, false, false, 0);
+			RemoveMembershipButton.Relief = ReliefStyle.None;
+
+			buttonText = new Label(
+				string.Format("<span size=\"large\">{0}</span>",
+							  Util.GS("Remove membership")));
+			hbox.PackStart(buttonText, true, true, 4);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+
+			RemoveMembershipButton.Clicked +=
+				new EventHandler(RemoveMembershipHandler);
+
+
+			///
 			/// Details Expander
 			///
 /*
@@ -2229,13 +2287,29 @@ Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
 
 					// Show the Available iFolder Buttons
 					DownloadAvailableiFolderButton.Visible	= true;
-					DeleteFromServerButton.Visible			= true;
+
+					DomainInformation domain =
+						domainController.GetDomain(holder.iFolder.DomainID);
+					if (domain == null || 
+						domain.MemberUserID == holder.iFolder.OwnerID)
+					{
+						// The current user is the owner
+						DeleteFromServerButton.Visible			= true;
+						RemoveMembershipButton.Visible			= false;
+					}
+					else
+					{
+						// The current user is not the owner
+						DeleteFromServerButton.Visible			= false;
+						RemoveMembershipButton.Visible			= true;
+					}
 				}
 				else
 				{
 					// Hide the Available iFolders Buttons
 					DownloadAvailableiFolderButton.Visible	= false;
 					DeleteFromServerButton.Visible			= false;
+					RemoveMembershipButton.Visible			= false;
 					
 					// Show the Local iFolder Buttons
 					OpenSynchronizedFolderButton.Visible	= true;
@@ -3645,7 +3719,44 @@ Console.WriteLine("SetupiFolder() not implemented");
 			}
 		}
 
+		private int AskDeleteiFolder(iFolderHolder holder)
+		{
+			int rc = 0;
 
+			iFolderMsgDialog dialog = new iFolderMsgDialog(
+				this,
+				iFolderMsgDialog.DialogType.Question,
+				iFolderMsgDialog.ButtonSet.YesNo,
+				"",
+				string.Format(Util.GS("Delete \"{0}\" from the server?"),
+							  holder.iFolder.Name),
+				Util.GS("This deletes the iFolder and its files from the server."));
+			rc = dialog.Run();
+			dialog.Hide();
+			dialog.Destroy();
+			
+			return rc;
+		}
+
+		private int AskRemoveMembership(iFolderHolder holder)
+		{
+			int rc = 0;
+
+			iFolderMsgDialog dialog = new iFolderMsgDialog(
+				this,
+				iFolderMsgDialog.DialogType.Question,
+				iFolderMsgDialog.ButtonSet.YesNo,
+				"",
+				string.Format(Util.GS("Remove your membership from \"{0}\"?"),
+							  holder.iFolder.Name),
+				Util.GS("This removes your membership from the iFolder and removes the iFolder from your list."));
+			rc = dialog.Run();
+			dialog.Hide();
+			dialog.Destroy();
+			
+			return rc;
+		}
+		
 
 
 		private int AskRemoveiFolder(iFolderHolder ifHolder)
