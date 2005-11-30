@@ -131,14 +131,14 @@ namespace Novell.iFolder
 			{
 				OKFolder = 
 					new Gdk.Pixbuf(
-						Util.ImagesPath("synchronized-folder64.png"));
+						Util.ImagesPath("ok-folder64.png"));
 			}
 			
 			if (OKFolderSpotlight == null)
 			{
 				OKFolderSpotlight = 
 					new Gdk.Pixbuf(
-						Util.ImagesPath("synchronized-folder-spotlight64.png"));
+						Util.ImagesPath("ok-folder-spotlight64.png"));
 			}
 			
 			if (AvailableFolder == null)
@@ -153,7 +153,36 @@ namespace Novell.iFolder
 				AvailableFolderSpotlight =
 					new Gdk.Pixbuf(
 						Util.ImagesPath("available-folder-spotlight64.png"));
-			}			
+			}
+
+			if (ConflictFolder == null)
+			{
+				ConflictFolder =
+					new Gdk.Pixbuf(
+						Util.ImagesPath("conflict-folder64.png"));
+			}
+
+			if (ConflictFolderSpotlight == null)
+			{
+				ConflictFolderSpotlight =
+					new Gdk.Pixbuf(
+						Util.ImagesPath("conflict-folder-spotlight64.png"));
+			}
+
+
+			if (SyncFolder == null)
+			{
+				SyncFolder =
+					new Gdk.Pixbuf(
+						Util.ImagesPath("sync-folder64.png"));
+			}
+
+			if (SyncFolderSpotlight == null)
+			{
+				SyncFolderSpotlight =
+					new Gdk.Pixbuf(
+						Util.ImagesPath("sync-folder-spotlight64.png"));
+			}
 		}
 		
 		public void Refresh()
@@ -164,6 +193,9 @@ namespace Novell.iFolder
 
 			// Update the normalPixbuf and spotlightPixbuf to show proper state
 			SetPixbufs();
+
+			// FIXME: Determine whether EventNotify is on or off to know which pixbuf to use
+			image.Pixbuf = normalPixbuf;
 
 			// Update the labels
 			EllipseNameLabel(holder.iFolder.Name);
@@ -299,7 +331,7 @@ namespace Novell.iFolder
 		
 		private void SetPixbufs()
 		{
-Console.WriteLine("SetPixbufs()");
+//Console.WriteLine("SetPixbufs()");
 			if (holder.iFolder.IsSubscription)
 			{
 				normalPixbuf = AvailableFolder;
@@ -307,11 +339,36 @@ Console.WriteLine("SetPixbufs()");
 			}
 			else
 			{
-				// FIXME: Set the pixbufs based on current state
-				normalPixbuf = OKFolder;
-				spotlightPixbuf = OKFolderSpotlight;
+				// Set the pixbufs based on current state
+				if (holder.iFolder.HasConflicts)
+				{
+					normalPixbuf = ConflictFolder;
+					spotlightPixbuf = ConflictFolderSpotlight;
+				}
+				else
+				{
+					switch (holder.State)
+					{
+						case iFolderState.Synchronizing:
+							normalPixbuf = SyncFolder;
+							spotlightPixbuf = SyncFolderSpotlight;
+							break;
+						case iFolderState.Disconnected:
+						case iFolderState.FailedSync:
+							normalPixbuf = ConflictFolder;
+							spotlightPixbuf = ConflictFolderSpotlight;
+							break;
+						case iFolderState.Initial:
+						case iFolderState.Normal:
+						case iFolderState.SynchronizingLocal:
+						default:
+							normalPixbuf = OKFolder;
+							spotlightPixbuf = OKFolderSpotlight;
+							break;
+					}
+				}
 			}
-Console.WriteLine("\tSetPixbufs exiting");
+//Console.WriteLine("\tSetPixbufs exiting");
 		}
 		
 		private void EllipseNameLabel(string text)
