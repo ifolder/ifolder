@@ -27,6 +27,8 @@ using System;
 using System.Collections;
 using Gtk;
 
+using Novell.iFolder.Controller;
+
 namespace Novell.iFolder
 {
 	public class iFolderViewItem : EventBox
@@ -40,20 +42,23 @@ namespace Novell.iFolder
 		
 		private bool				bSelected;
 		
-		private static Gdk.Pixbuf	OKFolder					= null;
-		private static Gdk.Pixbuf	OKFolderSpotlight			= null;
+		private static Gdk.Pixbuf	OKFolder						= null;
+		private static Gdk.Pixbuf	OKFolderSpotlight				= null;
 		
-		private static Gdk.Pixbuf	AvailableFolder				= null;
-		private static Gdk.Pixbuf	AvailableFolderSpotlight	= null;
+		private static Gdk.Pixbuf	MyAvailableFolder				= null;
+		private static Gdk.Pixbuf	MyAvailableFolderSpotlight		= null;
 		
-		private static Gdk.Pixbuf	ConflictFolder				= null;
-		private static Gdk.Pixbuf	ConflictFolderSpotlight		= null;
+		private static Gdk.Pixbuf	SharedAvailableFolder			= null;
+		private static Gdk.Pixbuf	SharedAvailableFolderSpotlight	= null;
 		
-		private static Gdk.Pixbuf	SyncFolder					= null;
-		private static Gdk.Pixbuf	SyncFolderSpotlight			= null;
+		private static Gdk.Pixbuf	ConflictFolder					= null;
+		private static Gdk.Pixbuf	ConflictFolderSpotlight			= null;
 		
-		private static Gdk.Pixbuf	SyncWaitFolder				= null;
-		private static Gdk.Pixbuf	SyncWaitFolderSpotlight		= null;
+		private static Gdk.Pixbuf	SyncFolder						= null;
+		private static Gdk.Pixbuf	SyncFolderSpotlight				= null;
+		
+		private static Gdk.Pixbuf	SyncWaitFolder					= null;
+		private static Gdk.Pixbuf	SyncWaitFolderSpotlight			= null;
 
 		private Gdk.Pixbuf			normalPixbuf;
 		private Gdk.Pixbuf			spotlightPixbuf;
@@ -67,6 +72,8 @@ namespace Novell.iFolder
 		private Label				statusLabel;
 		
 		private bool				bMouseIsHovering;
+
+		private DomainController	domainController;
 		
 		///
 		/// Events
@@ -126,6 +133,7 @@ namespace Novell.iFolder
 			this.ModifyBg(StateType.Normal, this.Style.Base(StateType.Normal));
 			this.ModifyBase(StateType.Normal, this.Style.Base(StateType.Normal));
 
+			domainController = DomainController.GetDomainController();
 
 			LoadImages();
 			SetPixbufs();
@@ -151,18 +159,32 @@ namespace Novell.iFolder
 						Util.ImagesPath("ok-folder-spotlight64.png"));
 			}
 			
-			if (AvailableFolder == null)
+			if (MyAvailableFolder == null)
 			{
-				AvailableFolder =
+				MyAvailableFolder =
 					new Gdk.Pixbuf(
-						Util.ImagesPath("available-folder64.png"));
+						Util.ImagesPath("my-available-folder64.png"));
 			}
 
-			if (AvailableFolderSpotlight == null)
+			if (MyAvailableFolderSpotlight == null)
 			{
-				AvailableFolderSpotlight =
+				MyAvailableFolderSpotlight =
 					new Gdk.Pixbuf(
-						Util.ImagesPath("available-folder-spotlight64.png"));
+						Util.ImagesPath("my-available-folder-spotlight64.png"));
+			}
+
+			if (SharedAvailableFolder == null)
+			{
+				SharedAvailableFolder =
+					new Gdk.Pixbuf(
+						Util.ImagesPath("shared-available-folder64.png"));
+			}
+
+			if (SharedAvailableFolderSpotlight == null)
+			{
+				SharedAvailableFolderSpotlight =
+					new Gdk.Pixbuf(
+						Util.ImagesPath("shared-available-folder-spotlight64.png"));
 			}
 
 			if (ConflictFolder == null)
@@ -363,8 +385,18 @@ namespace Novell.iFolder
 //Console.WriteLine("SetPixbufs()");
 			if (holder.iFolder.IsSubscription)
 			{
-				normalPixbuf = AvailableFolder;
-				spotlightPixbuf = AvailableFolderSpotlight;
+				// Determine whether this owned by the current user or not
+				DomainInformation domain = domainController.GetDomain(holder.iFolder.DomainID);
+				if (domain != null && domain.MemberUserID != holder.iFolder.OwnerID)
+				{
+					normalPixbuf = SharedAvailableFolder;
+					spotlightPixbuf = SharedAvailableFolderSpotlight;
+				}
+				else
+				{
+					normalPixbuf = MyAvailableFolder;
+					spotlightPixbuf = MyAvailableFolderSpotlight;
+				}
 			}
 			else
 			{
