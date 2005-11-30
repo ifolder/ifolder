@@ -453,8 +453,12 @@ namespace Simias.Storage
 			Member fromMember = GetMemberByID( GetCurrentPrincipal() );
 			if ( fromMember != null )
 			{
+				// Refresh the collection as the current instance may still be a proxy or not be the
+				// latest copy. And we don't want to change the state of the current collection object.
+				Collection collection = Refresh( new Collection( this ) ) as Collection;
+
 				// Create a subscription object.
-				Subscription subscription = new Subscription( Name + " subscription", "Subscription", fromMember.UserID );
+				Subscription subscription = new Subscription( collection.Name + " subscription", "Subscription", fromMember.UserID );
 				subscription.SubscriptionState = Simias.POBox.SubscriptionStates.Ready;
 				subscription.ToName = member.Name;
 				subscription.ToIdentity = member.UserID;
@@ -464,13 +468,13 @@ namespace Simias.Storage
 				subscription.FromName = fromMember.Name;
 				subscription.FromIdentity = fromMember.UserID;
 				subscription.MessageID = subscription.ID;
-				subscription.SubscriptionCollectionID = ID;
-				subscription.SubscriptionCollectionName = Name;
-				subscription.DomainID = Domain;
-				subscription.DomainName = store.GetDomain( Domain ).Name;
+				subscription.SubscriptionCollectionID = collection.ID;
+				subscription.SubscriptionCollectionName = collection.Name;
+				subscription.DomainID = collection.Domain;
+				subscription.DomainName = store.GetDomain( collection.Domain ).Name;
 				subscription.SubscriptionKey = Guid.NewGuid().ToString();
 				subscription.MessageType = "Outbound";
-				subscription.SetSubscriptionTypes( this );
+				subscription.SetSubscriptionTypes( collection );
 
 				DirNode dirNode = GetRootDirectory();
 				if( dirNode != null )
@@ -481,7 +485,7 @@ namespace Simias.Storage
 
 				// For backwards compatiblity with clients that use the old invitation methods,
 				// add the first non-built in type to the subscription as the type.
-				MultiValuedList mvl = properties.FindValues( PropertyTags.Types );
+				MultiValuedList mvl = collection.Properties.FindValues( PropertyTags.Types );
 				foreach( Property p in mvl )
 				{
 					if ( !NodeTypes.IsNodeType( p.ValueString ) )
@@ -493,7 +497,7 @@ namespace Simias.Storage
 
 				// Add the subscription to the new member's POBox.
 				// Find or create the POBox for the user for this domain.
-				POBox.POBox poBox = POBox.POBox.GetPOBox( store, Domain, member.UserID );
+				POBox.POBox poBox = POBox.POBox.GetPOBox( store, collection.Domain, member.UserID );
 				poBox.Commit( subscription );
 				log.Debug( "AddSubscription - Successfully invited user {0} to collection {1}.", member.Name, Name );
 			}
@@ -1106,7 +1110,7 @@ namespace Simias.Storage
 								store.Cache.Remove( id, node.ID );
 								
 								// See if processing further invitation events are allowed.
-								if ( node.CascadeEvents )
+								if ( node.CascadeEvents && Store.IsEnterpriseServer )
 								{
 									// Check for subscription removal if this is a collection.
 									if ( IsBaseType( node, NodeTypes.CollectionType ) )
@@ -1260,11 +1264,10 @@ namespace Simias.Storage
 			Collection collection = store.GetCollectionByID( subscription.SubscriptionCollectionID );
 			if ( collection != null )
 			{
-				// See if the current user is the owner of this collection.
-				string principal = GetCurrentPrincipal();
-				if ( collection.Owner.UserID == principal )
+				// See if the invitee is the owner of this collection.
+				if ( collection.Owner.UserID == subscription.ToIdentity )
 				{
-					log.Debug( "RemoveCollectionBySubscription - Principal {0} is owner.", principal );
+					log.Debug( "RemoveCollectionBySubscription - Invitee {0} is owner.", subscription.ToIdentity );
 					log.Debug( "RemoveCollectionBySubscription - Removing collection {0}.", collection.ID );
 
 					// The current principal is the owner of the collection. Delete the entire collection.
@@ -1272,10 +1275,10 @@ namespace Simias.Storage
 				}
 				else
 				{
-					log.Debug( "RemoveCollectionBySubscription - Principal {0} is not owner.", principal );
+					log.Debug( "RemoveCollectionBySubscription - Invitee {0} is not owner.", subscription.ToIdentity );
 
-					// The current principal is only a member of the collection. Remove the membership.
-					Member member = collection.GetMemberByID( principal );
+					// The invitee is only a member of the collection. Remove the membership.
+					Member member = collection.GetMemberByID( subscription.ToIdentity );
 					if ( member != null )
 					{
 						// No need to process further invitation events. The subscription for this member
@@ -1288,7 +1291,7 @@ namespace Simias.Storage
 					}
 					else
 					{
-						log.Debug( "RemoveCollectionBySubscription - Cannot find member {0} in collection {1}.", principal, collection.ID );
+						log.Debug( "RemoveCollectionBySubscription - Cannot find member {0} in collection {1}.", subscription.ToIdentity, collection.ID );
 					}
 				}
 			}

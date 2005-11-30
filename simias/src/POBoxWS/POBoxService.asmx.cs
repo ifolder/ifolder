@@ -210,6 +210,7 @@ namespace Simias.POBoxService.Web
 			log.Debug( "  subscription ID: " + subMsg.SubscriptionID );
 			log.Debug( "  current Principal: " + Thread.CurrentPrincipal.Identity.Name );
 
+			// Only the invitee can delete their own subscriptions.
 			if ( subMsg.ToID != Thread.CurrentPrincipal.Identity.Name )
 			{
 				log.Error( "  specified \"toIdentity\" is not the caller" );
