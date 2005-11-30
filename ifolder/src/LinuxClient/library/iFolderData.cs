@@ -982,6 +982,8 @@ Console.WriteLine("iFolderData.AcceptiFolderInvitation()");
 				case Simias.Client.Event.Action.StopSync:
 					try
 					{
+						ReadiFolder(args.ID);	// Update our copy of the iFolder
+					
 						SyncSize syncSize = ifws.CalculateSyncSize(args.ID);
 						objectsToSync = syncSize.SyncNodeCount;
 						ifHolder.ObjectsToSync = objectsToSync;

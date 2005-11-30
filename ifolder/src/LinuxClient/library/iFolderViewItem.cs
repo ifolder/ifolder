@@ -348,32 +348,36 @@ namespace Novell.iFolder
 			}
 			else
 			{
-				// Set the pixbufs based on current state
-				if (holder.iFolder.HasConflicts)
+				if (holder.State == iFolderState.Synchronizing)
 				{
-					normalPixbuf = ConflictFolder;
-					spotlightPixbuf = ConflictFolderSpotlight;
+					normalPixbuf = SyncFolder;
+					spotlightPixbuf = SyncFolderSpotlight;
 				}
 				else
 				{
-					switch (holder.State)
+					// Set the pixbufs based on current state
+					if (holder.iFolder.HasConflicts)
 					{
-						case iFolderState.Synchronizing:
-							normalPixbuf = SyncFolder;
-							spotlightPixbuf = SyncFolderSpotlight;
-							break;
-						case iFolderState.Disconnected:
-						case iFolderState.FailedSync:
-							normalPixbuf = ConflictFolder;
-							spotlightPixbuf = ConflictFolderSpotlight;
-							break;
-						case iFolderState.Initial:
-						case iFolderState.Normal:
-						case iFolderState.SynchronizingLocal:
-						default:
-							normalPixbuf = OKFolder;
-							spotlightPixbuf = OKFolderSpotlight;
-							break;
+						normalPixbuf = ConflictFolder;
+						spotlightPixbuf = ConflictFolderSpotlight;
+					}
+					else
+					{
+						switch (holder.State)
+						{
+							case iFolderState.Disconnected:
+							case iFolderState.FailedSync:
+								normalPixbuf = ConflictFolder;
+								spotlightPixbuf = ConflictFolderSpotlight;
+								break;
+							case iFolderState.Initial:
+							case iFolderState.Normal:
+							case iFolderState.SynchronizingLocal:
+							default:
+								normalPixbuf = OKFolder;
+								spotlightPixbuf = OKFolderSpotlight;
+								break;
+						}
 					}
 				}
 			}

@@ -842,6 +842,11 @@ Console.WriteLine("scaleFactor: {0}", scaleFactor);
 		
 		private void OnResolveConflicts(object o, EventArgs args)
 		{
+			ResolveSelectedFolderConflicts();
+		}
+
+		private void OnResolveConflictsOld(object o, EventArgs args)
+		{
 			TreeSelection tSelect = synchronizedFoldersIconView.Selection;
 			if (tSelect != null && tSelect.CountSelectedRows() == 1)
 			{
@@ -3323,6 +3328,22 @@ Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
 					}
 				}
 //			}
+		}
+
+		private void ResolveSelectedFolderConflicts()
+		{
+			iFolderHolder holder = synchronizedFoldersIconView.SelectedFolder;
+			if (holder != null)
+			{
+				ConflictDialog = new iFolderConflictDialog(
+										this,
+										holder.iFolder,
+										ifws,
+										simws);
+				ConflictDialog.Response +=
+							new ResponseHandler(OnConflictDialogResponse);
+				ConflictDialog.ShowAll();
+			}
 		}
 
 		private void SyncSelectedFolder()
