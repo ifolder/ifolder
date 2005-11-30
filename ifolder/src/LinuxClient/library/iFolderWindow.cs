@@ -165,11 +165,11 @@ namespace Novell.iFolder
 
 		private iFolderIconView		synchronizedFoldersIconView;
 		private iFolderViewGroup	localGroup;
-		private iFolderViewGroup	myAvailableGroup;
-		private iFolderViewGroup	otherAvailableGroup;
+//		private iFolderViewGroup	myAvailableGroup;
+//		private iFolderViewGroup	otherAvailableGroup;
 		private TreeModelFilter		myiFoldersFilter;
-		private TreeModelFilter		myAvailableFoldersFilter;
-		private TreeModelFilter		otherAvailableFoldersFilter;
+//		private TreeModelFilter		myAvailableFoldersFilter;
+//		private TreeModelFilter		otherAvailableFoldersFilter;
 		
 //		private Button				ShowAvailableiFoldersButton;
 //		private Label				ShowAvailableiFoldersButtonText;
@@ -202,6 +202,9 @@ namespace Novell.iFolder
 //		private Label				OwnerLabel;
 //		private Label				ServerLabel;
 
+		private Hashtable			serverGroups;
+		private Hashtable			serverGroupFilters;
+
         // Drag and Drop
         enum TargetType
         {
@@ -224,7 +227,10 @@ namespace Novell.iFolder
 			ifdata = iFolderData.GetData(simiasManager);
 
 			curiFolders = new Hashtable();
-//			curSynchronizedFolders = new Hashtable();;
+//			curSynchronizedFolders = new Hashtable();
+
+			serverGroups = new Hashtable();
+			serverGroupFilters = new Hashtable();
 
 			curDomain = null;
 			curDomains = null;
@@ -1150,26 +1156,34 @@ Console.WriteLine("AddSynchronizedFolderHandler");
 		
 		private void ShowAvailableiFolders()
 		{
-			synchronizedFoldersIconView.AddGroup(myAvailableGroup);
-			synchronizedFoldersIconView.AddGroup(otherAvailableGroup);
+			foreach(iFolderViewGroup group in serverGroups.Values)
+			{
+				synchronizedFoldersIconView.AddGroup(group);
+			}
+
+//			synchronizedFoldersIconView.AddGroup(myAvailableGroup);
+//			synchronizedFoldersIconView.AddGroup(otherAvailableGroup);
 
 			ShowHideAllFoldersButtonText.Markup =
 				string.Format("<span size=\"large\">{0}</span>",
-							  Util.GS("Hide downloadable iFolders"));
-
-//			ShowAvailableiFoldersButton.Hide();
+							  Util.GS("Hide unsynchronized iFolders"));
 
 			bAvailableFoldersShowing = true;
 		}
 		
 		private void HideAvailableiFolders()
 		{
-			synchronizedFoldersIconView.RemoveGroup(myAvailableGroup);
-			synchronizedFoldersIconView.RemoveGroup(otherAvailableGroup);
+			foreach(iFolderViewGroup group in serverGroups.Values)
+			{
+				synchronizedFoldersIconView.RemoveGroup(group);
+			}
+
+//			synchronizedFoldersIconView.RemoveGroup(myAvailableGroup);
+//			synchronizedFoldersIconView.RemoveGroup(otherAvailableGroup);
 
 			ShowHideAllFoldersButtonText.Markup =
 				string.Format("<span size=\"large\">{0}</span>",
-							  Util.GS("Show downloadable iFolders"));
+							  Util.GS("Show unsynchronized iFolders"));
 
 //			ShowAvailableiFoldersButton.Show();
 
@@ -1430,9 +1444,13 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 		private void SearchFolders()
 		{
 			myiFoldersFilter.Refilter();
-			myAvailableFoldersFilter.Refilter();
-			otherAvailableFoldersFilter.Refilter();
+//			myAvailableFoldersFilter.Refilter();
+//			otherAvailableFoldersFilter.Refilter();
 //			synchronizedFoldersIconView.RefreshIcons();
+			foreach(iFolderViewGroup group in serverGroups.Values)
+			{
+				group.Model.Refilter();
+			}
 		}
 		
 		private void SearchFoldersOld()
@@ -1654,7 +1672,7 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 
 			ShowHideAllFoldersButtonText = new Label(
 				string.Format("<span size=\"large\">{0}</span>",
-							  Util.GS("Show downloadable iFolders")));
+							  Util.GS("Show unsynchronized iFolders")));
 			hbox.PackStart(ShowHideAllFoldersButtonText, false, false, 4);
 			ShowHideAllFoldersButtonText.UseMarkup = true;
 			ShowHideAllFoldersButtonText.UseUnderline = false;
@@ -1977,6 +1995,12 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 //			synchronizedFoldersIconView.SelectionMode = SelectionMode.Single;
 
 
+			DomainInformation[] domains = domainController.GetDomains();
+			foreach (DomainInformation domain in domains)
+			{
+				AddServerGroup(domain.ID);
+			}
+
 			///
 			/// ShowAvailableiFoldersButton
 			///
@@ -2006,22 +2030,20 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 			///
 			/// My Available iFolders
 			///
-			myAvailableFoldersFilter = new TreeModelFilter(ifdata.iFolders, null);
-			myAvailableFoldersFilter.VisibleFunc = MyAvailableFoldersFilterFunc;
-			myAvailableGroup =
-				new iFolderViewGroup(Util.GS("My iFolders on the Server"),
-									 myAvailableFoldersFilter);
-//			synchronizedFoldersIconView.AddGroup(myAvailableGroup);
+//			myAvailableFoldersFilter = new TreeModelFilter(ifdata.iFolders, null);
+//			myAvailableFoldersFilter.VisibleFunc = MyAvailableFoldersFilterFunc;
+//			myAvailableGroup =
+//				new iFolderViewGroup(Util.GS("My iFolders on the Server"),
+//									 myAvailableFoldersFilter);
 			
 			///
 			/// Other Available iFolders
 			///
-			otherAvailableFoldersFilter = new TreeModelFilter(ifdata.iFolders, null);
-			otherAvailableFoldersFilter.VisibleFunc = OtherAvailableFoldersFilterFunc;
-			otherAvailableGroup =
-				new iFolderViewGroup(Util.GS("iFolders Shared With Me"),
-									 otherAvailableFoldersFilter);
-//			synchronizedFoldersIconView.AddGroup(otherAvailableGroup);
+//			otherAvailableFoldersFilter = new TreeModelFilter(ifdata.iFolders, null);
+//			otherAvailableFoldersFilter.VisibleFunc = OtherAvailableFoldersFilterFunc;
+//			otherAvailableGroup =
+//				new iFolderViewGroup(Util.GS("iFolders Shared With Me"),
+//									 otherAvailableFoldersFilter);
 
 			synchronizedFoldersIconView.ButtonPressEvent +=
 				new ButtonPressEventHandler(OnSynchronizedFoldersButtonPressed);
@@ -2079,6 +2101,32 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 
 			return sw;
 		}
+		
+		private void AddServerGroup(string domainID)
+		{
+			// Don't add it if it already exists
+			if (serverGroups.ContainsKey(domainID)) return;
+		
+			DomainInformation domain = domainController.GetDomain(domainID);
+			if (domain == null) return;
+			
+			iFolderServerFilter serverFilter =
+				new iFolderServerFilter(domainID, synchronizedSearchEntry);
+			TreeModelFilter treeModelFilter = new TreeModelFilter(ifdata.iFolders, null);
+			treeModelFilter.VisibleFunc = serverFilter.FilterFunc;
+
+			iFolderViewGroup group =
+				new iFolderViewGroup(
+					string.Format(
+						Util.GS("iFolders on {0}"),
+						domain.Name),
+					treeModelFilter);
+			serverGroups[domainID] = group;
+			serverGroupFilters[domainID] = serverFilter;
+			
+			if (bAvailableFoldersShowing)
+				synchronizedFoldersIconView.AddGroup(group);
+		}
 
 		private bool SynchronizedFoldersFilterFunc(TreeModel model, TreeIter iter)
 		{
@@ -2111,17 +2159,17 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 			return false;
 		}
 		
-		private bool MyAvailableFoldersFilterFunc(TreeModel model, TreeIter iter)
-		{
-			iFolderHolder ifHolder = (iFolderHolder)model.GetValue(iter, 0);
-			return IsAvailableFolder(ifHolder, true);
-		}
+//		private bool MyAvailableFoldersFilterFunc(TreeModel model, TreeIter iter)
+//		{
+//			iFolderHolder ifHolder = (iFolderHolder)model.GetValue(iter, 0);
+//			return IsAvailableFolder(ifHolder, true);
+//		}
 		
-		private bool OtherAvailableFoldersFilterFunc(TreeModel model, TreeIter iter)
-		{
-			iFolderHolder ifHolder = (iFolderHolder)model.GetValue(iter, 0);
-			return IsAvailableFolder(ifHolder, false);
-		}
+//		private bool OtherAvailableFoldersFilterFunc(TreeModel model, TreeIter iter)
+//		{
+//			iFolderHolder ifHolder = (iFolderHolder)model.GetValue(iter, 0);
+//			return IsAvailableFolder(ifHolder, false);
+//		}
 		
 		private bool IsAvailableFolder(iFolderHolder ifHolder, bool owner)
 		{
@@ -4800,6 +4848,8 @@ Console.WriteLine("SetUpiFolder({0})", ifolderID);
 				WindowNotebook.CurrentPage = 0;
 			else
 				WindowNotebook.CurrentPage = 1;
+			
+			AddServerGroup(args.DomainID);
 		}
 		
 		private void OnDomainDeletedEvent(object sender, DomainEventArgs args)
@@ -4811,6 +4861,12 @@ Console.WriteLine("SetUpiFolder({0})", ifolderID);
 				WindowNotebook.CurrentPage = 0;
 			else
 				WindowNotebook.CurrentPage = 1;
+			
+			if (serverGroups.ContainsKey(args.DomainID))
+				serverGroups.Remove(args.DomainID);
+			
+			if (serverGroupFilters.ContainsKey(args.DomainID))
+				serverGroupFilters.Remove(args.DomainID);
 		}
 
 /*
@@ -5050,7 +5106,49 @@ public class UriList : ArrayList {
 		}
 	}
 
+	public class iFolderServerFilter
+	{
+		private string	domainID;
+		private Entry	searchEntry;
 
+		public iFolderServerFilter(string domainID, Entry searchEntry)
+		{
+			this.domainID = domainID;
+			this.searchEntry = searchEntry;
+		}
+		
+		public bool FilterFunc(TreeModel model, TreeIter iter)
+		{
+			iFolderHolder ifHolder = (iFolderHolder)model.GetValue(iter, 0);
+			if (ifHolder == null || ifHolder.iFolder == null || ifHolder.iFolder.DomainID == null) return false;
 
-
+			if (ifHolder.iFolder.IsSubscription
+				&& ifHolder.iFolder.DomainID == domainID)
+			{
+				string searchString = searchEntry.Text;
+				if (searchString != null)
+				{
+					searchString = searchString.Trim();
+					if (searchString.Length > 0)
+						searchString = searchString.ToLower();
+				}
+	
+				if (searchString == null || searchString.Trim().Length == 0)
+					return true;	// Include this
+				else
+				{
+					// Search the iFolder's Name (for now)
+					string name = ifHolder.iFolder.Name;
+					if (name != null)
+					{
+						name = name.ToLower();
+						if (name.IndexOf(searchString) >= 0)
+							return true;
+					}
+				}
+			}
+			
+			return false;
+		}
+	}
 }

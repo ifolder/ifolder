@@ -34,7 +34,7 @@ namespace Novell.iFolder
 		private VBox						contentVBox;
 
 		private string						name;
-		private TreeModel					model;
+		private TreeModelFilter				model;
 
 		private Hashtable					items;
 
@@ -62,7 +62,7 @@ namespace Novell.iFolder
 			get{ return name; }
 		}
 		
-		public TreeModel Model
+		public TreeModelFilter Model
 		{
 			get{ return model; }
 		}
@@ -92,7 +92,7 @@ Console.WriteLine("iFolderViewGroup.Items returning {0} items", itemsA.Length);
 			}
 		}
 	
-		public iFolderViewGroup(string name, TreeModel model)
+		public iFolderViewGroup(string name, TreeModelFilter model)
 		{
 			this.name = name;
 			this.model = model;
