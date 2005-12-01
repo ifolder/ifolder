@@ -126,9 +126,14 @@ namespace Simias.Web
 	/// </summary>
 	public class SharedCollection
 	{
+		/// <summary>
+		/// Used to log messages.
+		/// </summary>
+		private static readonly ISimiasLog log = 
+			SimiasLogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
+
 		public static readonly string FilesDirName = "SimiasFiles";
-
-
+		
 		/// <summary>
 		/// Creates a new collection of the type specified
 		/// </summary>
@@ -252,7 +257,7 @@ namespace Simias.Web
 
 			Domain domain = store.GetDomain(DomainID);
 			if(domain == null)
-				throw new Exception("Unable to obtain default domain");
+				throw new Exception("Unable to obtain specified domain");
 
 			Simias.Storage.Member member = domain.GetCurrentMember();
 			if(member == null)
@@ -323,7 +328,7 @@ namespace Simias.Web
 			string Name, string DomainID, string UserID, string Type,
 			bool UnmanagedFiles, string CollectionPath)
 		{
-			return (CreateSharedCollection(Name, null, UserID, Type,
+			return (CreateSharedCollection(Name, DomainID, UserID, Type,
 				UnmanagedFiles, CollectionPath, null));
 		}
 
@@ -349,6 +354,16 @@ namespace Simias.Web
 			bool UnmanagedFiles, string CollectionPath, string Description)
 		{
 			ArrayList nodeList = new ArrayList();
+			
+			log.Debug( "CreateSharedCollection entered" );
+			log.Debug( "  DomainID:    " + DomainID );
+			log.Debug( "  UserID:      " + UserID );
+			log.Debug( "  Collection:  " + Name );
+			log.Debug( "  Type:        " + Type );
+			if ( Description != null && Description != "" )
+			{
+				log.Debug( "  Description: " + Description );
+			}
 
 			// check DomainID and default
 			if (DomainID == null)
