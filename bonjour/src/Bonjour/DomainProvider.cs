@@ -143,6 +143,9 @@ namespace Simias
 
 					string port = member.Properties.GetSingleProperty( browser.PortProperty ).Value as string;
 					string path = member.Properties.GetSingleProperty( browser.PathProperty ).Value as string;
+					
+					log.Debug( "  path: " + path );
+					log.Debug( "  port: " + port );
 					string fullPath = "http://" + ipAddr + ":" + port + path;
 					log.Debug( "  fullPath: " + fullPath );
 					locationUri = new Uri( fullPath );

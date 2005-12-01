@@ -404,6 +404,9 @@ namespace Simias.mDns
 					if ( status == Types.kErrorType.kDNSServiceErr_NoError )
 					{
 						log.Debug( "  user: " + info.Name );
+						log.Debug( "  host: " + info.Host );
+						log.Debug( "  port: " + info.Port.ToString() );
+						
 						Simias.Storage.Member member =
 							new Member( info.Name, serviceName, Simias.Storage.Access.Rights.ReadWrite );
 						if ( member != null )
@@ -419,7 +422,7 @@ namespace Simias.mDns
 							path.LocalProperty = true;
 							member.Properties.AddProperty( path );
 
-							Property rport = new Property( browser.PortProperty, info.Port );
+							Property rport = new Property( browser.PortProperty, info.Port.ToString() );
 							rport.LocalProperty = true;
 							member.Properties.AddProperty( rport );
 
