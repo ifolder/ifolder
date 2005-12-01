@@ -1,8 +1,0 @@
-#!/bin/sh
-if [ "$OSTYPE" == "darwin7.0" ]
-then
-	/sbin/ifconfig | grep 'inet ' | cut -f2 -d' ' | cut -f1 -d' '
-else
-	/sbin/ifconfig | grep 'inet addr' | cut -f2 -d':' | cut -f1 -d' '
-fi
-

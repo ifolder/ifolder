@@ -1,8 +1,0 @@
-2005-08-23  Calvin Gaisford  <cgaisford@novell.com>
-
-	Fixed up the build system to build
-
-	* Makefile.am: removed packages (didn't exist)
-	* NEWS:	required so I added no news
-	* aclocal.m4: should not be checked in so I removed it
-
