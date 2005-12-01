@@ -2124,6 +2124,8 @@ Console.WriteLine("RemoveSynchronizedFolderHandler");
 			serverGroups[domainID] = group;
 			serverGroupFilters[domainID] = serverFilter;
 			
+			group.VisibleWhenEmpty = false;
+			
 			if (bAvailableFoldersShowing)
 				synchronizedFoldersIconView.AddGroup(group);
 		}
@@ -2417,18 +2419,12 @@ Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
 					UriList uriList = new UriList(args.SelectionData);
 					foreach (string path in uriList.ToLocalPaths())
 					{
-//						Console.WriteLine("\t{0}", path);
 						if (ifws.CanBeiFolder(path))
 						{
 							try
 							{
 								iFolderHolder holder = ifdata.CreateiFolder(path, defaultDomain.ID);
 
-//								TreeIter iter =
-//									myiFoldersFilter.AppendValues(synchronizedFolderPixbuf,
-//																			  holder.iFolder.Name,
-//																			  holder);
-//								curSynchronizedFolders[holder.iFolder.ID] = iter;
 								bFolderCreated = true;
 							}
 							catch
@@ -2438,8 +2434,6 @@ Console.WriteLine("iFolderWindow.OnSynchronizedFoldersSelectionChanged()");
 						}
 					}
 
-//					if (bFolderCreated)
-//						synchronizedFoldersIconView.RefreshIcons();
 					break;
 				default:
 					break;
@@ -4476,41 +4470,12 @@ Console.WriteLine("SetUpiFolder({0})", ifolderID);
 
 		private void CreateNewiFolder()
 		{
-			// Re-read the data in case a new domain has been created
-			ifdata.RefreshDomains();
-
-			if(ifdata.GetDomainCount() < 1)
-			{
-				// Prompt the user about there not being any domains
-				iFolderWindow ifwin = Util.GetiFolderWindow();
-				iFolderMsgDialog dg = new iFolderMsgDialog(
-					ifwin,
-					iFolderMsgDialog.DialogType.Question,
-					iFolderMsgDialog.ButtonSet.YesNo,
-					"",
-					Util.GS("Set up an iFolder account?"),
-					Util.GS("To begin using iFolder, you must first set up an iFolder account."));
-				int response = dg.Run();
-				dg.Hide();
-				dg.Destroy();
-				if (response == -8)
-				{
-					Util.ShowPrefsPage(1, simiasManager);
-				}
-				
-				return;
-			}
-
 			DomainInformation[] domains = ifdata.GetDomains();
-			string domainID = null;
-			if (curDomain == null)
-			{
-				DomainInformation defaultDomain = ifdata.GetDefaultDomain();
-				if (defaultDomain != null)
-					domainID = defaultDomain.ID;
-			}
-			else
-				domainID = curDomain.ID;
+			if (domains.Length <= 0) return;	// FIXME: This should never happen.  Maybe alert the user?
+			string domainID = domains[0].ID;	// Default to the first in the list
+			DomainInformation defaultDomain = ifdata.GetDefaultDomain();
+			if (defaultDomain != null)
+				domainID = defaultDomain.ID;
 
 			CreateDialog cd = new CreateDialog(this, domains, domainID, Util.LastCreatedPath, ifws);
 			cd.TransientFor = this;
@@ -4522,7 +4487,6 @@ Console.WriteLine("SetUpiFolder({0})", ifolderID);
 				cd.Hide();
 
 				if (rc == (int)ResponseType.Ok)
-//				if(rc == -5)
 				{
 					try
 					{
@@ -4582,8 +4546,8 @@ Console.WriteLine("SetUpiFolder({0})", ifolderID);
 						try
 						{
 							ifHolder = 
-								ifdata.CreateiFolder(	selectedFolder,
-														selectedDomain);
+								ifdata.CreateiFolder(selectedFolder,
+													 selectedDomain);
 						}
 						catch(Exception e)
 						{
@@ -4601,17 +4565,6 @@ Console.WriteLine("SetUpiFolder({0})", ifolderID);
 						// If we make it this far, we've succeeded and we don't
 						// need to keep looping.
 						rc = 0;
-	
-						// Reset the domain filter so the new iFolder will show
-						// up in the list regardless of what was selected previously.
-						// DomainFilterOptionMenu.SetHistory(0);
-	
-						TreeIter iter = 
-							iFolderTreeStore.AppendValues(ifHolder);
-	
-						curiFolders[ifHolder.iFolder.ID] = iter;
-		
-						UpdateButtonSensitivity();
 	
 						// Save off the path so that the next time the user
 						// creates an iFolder, we'll open it to the directory
@@ -4654,7 +4607,6 @@ Console.WriteLine("SetUpiFolder({0})", ifolderID);
 				}
 			}
 			while(rc == (int)ResponseType.Ok);
-//			while(rc == -5);
 		}
 
 		public void DomainFilterChangedHandler(object o, EventArgs args)

@@ -57,6 +57,9 @@ namespace Novell.iFolder
 		
 		private bool						bFirstTableBuild;
 		
+		private bool						bVisibleWhenEmpty;
+		private Widget						emptyWidget;
+		
 		public new string Name
 		{
 			get{ return name; }
@@ -65,6 +68,35 @@ namespace Novell.iFolder
 		public TreeModelFilter Model
 		{
 			get{ return model; }
+		}
+		
+		public bool VisibleWhenEmpty
+		{
+			get{ return bVisibleWhenEmpty; }
+			set
+			{
+				bVisibleWhenEmpty = value;
+				
+				UpdateVisibility();
+			}
+		}
+		
+		public Widget EmptyWidget
+		{
+			get{ return emptyWidget; }
+			set
+			{
+				bool bIsCurrentlyEmpty = model.IterNChildren() > 0 ?
+											false :
+											true;
+				
+				if (bIsCurrentlyEmpty)
+				{
+					// FIXME: Implement iFolderViewGroup.EmptyWidget
+				}
+				
+				emptyWidget = value;
+			}
 		}
 		
 		public iFolderViewGroupSelection	Selection
@@ -106,6 +138,9 @@ Console.WriteLine("iFolderViewGroup.Items returning {0} items", itemsA.Length);
 			
 			currentWidth = 1;
 			bFirstTableBuild = true;
+			
+			bVisibleWhenEmpty = true;
+			emptyWidget = null;
 			
 			this.PackStart(CreateWidgets(), true, true, 0);
 			
@@ -168,6 +203,8 @@ Console.WriteLine("iFolderViewGroup.OnSizeAllocated: Width: {0}", args.Allocatio
 		
 		private void OnWidgetRealized(object o, EventArgs args)
 		{
+			UpdateVisibility();
+		
 			///
 			/// Register for TreeModel events
 			///
@@ -177,6 +214,23 @@ Console.WriteLine("iFolderViewGroup.OnSizeAllocated: Width: {0}", args.Allocatio
 				new RowDeletedHandler(OnRowDeleted);
 			model.RowInserted +=
 				new RowInsertedHandler(OnRowInserted);
+		}
+		
+		private void UpdateVisibility()
+		{
+			bool bCurrentlyEmpty = model.IterNChildren() > 0 ?
+										false :
+										true;
+			if (bCurrentlyEmpty)
+			{
+				if (this.Visible != bVisibleWhenEmpty)
+					this.Visible = bVisibleWhenEmpty;
+			}
+			else
+			{
+				if (!this.Visible)
+					this.Visible = true;
+			}
 		}
 		
 		private void ResizeTable()
@@ -325,6 +379,8 @@ Console.WriteLine("iFolderViewGroup.OnRowDeleted: {0}", item.Holder.iFolder.Name
 			
 			rebuildTableTimeoutID = GLib.Timeout.Add(
 				rebuildTimeout, new GLib.TimeoutHandler(RebuildTableCallback));
+			
+			UpdateVisibility();
 		}
 		
 		private void OnRowInserted(object o, RowInsertedArgs args)
@@ -353,6 +409,8 @@ Console.WriteLine("iFolderViewGroup.OnRowInserted: {0}", ifHolder.iFolder.Name);
 			
 			rebuildTableTimeoutID = GLib.Timeout.Add(
 				rebuildTimeout, new GLib.TimeoutHandler(RebuildTableCallback));
+
+			UpdateVisibility();
 		}
 
 		private bool ResizeTableCallback()
