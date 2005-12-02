@@ -1,4 +1,4 @@
-function syncToc()
+﻿function syncToc()
 {     
    if ((self != top) && (parent.theMenu)) {   
               self.document.writeln('<sc'+'ript language="javaScript">\n'); 

@@ -1,4 +1,4 @@
-var hn = document.location.hostname;
+﻿var hn = document.location.hostname;
 if(hn == "developer.novell.com" || hn == "novell.com")
 {
   var key = document.location.pathname.replace(/\\/g,'/');
@@ -16,12 +16,12 @@ if(hn == "developer.novell.com" || hn == "novell.com")
 self.document.writeln('<table border="0" align="center" width="90%">\n<tr>\n<td width="33%">&nbsp;</td>\n<td align="center" width="33%">');
 if (typeof prev_link != 'undefined')
 {
-self.document.writeln('  <a href="'+ prev_link + '" class="navigation"><img src="../../../docui2002/images/prev.gif" border=0 alt="Previous"></a>');
+self.document.writeln('  <a href="'+ prev_link + '" class="navigation"><img src="../../../docui2002/images/prev.gif" border=0 alt="Anterior"></a>');
 self.document.writeln('  <img src="../../../docui2002/images/virt_dot-line.gif" border="0" alt="">');
 }
 if (typeof next_link != 'undefined')
 {
-self.document.writeln('  <a href="'+ next_link + '" class="navigation"><img src="../../../docui2002/images/next.gif" border=0 alt="Next"></a>');
+self.document.writeln('  <a href="'+ next_link + '" class="navigation"><img src="../../../docui2002/images/next.gif" border=0 alt="Siguiente"></a>');
 
 }
 self.document.writeln('  </td>\n');
