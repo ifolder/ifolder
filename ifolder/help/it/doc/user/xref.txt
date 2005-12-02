@@ -1,42 +1,42 @@
-front.html                  iFolder Help
-overview.html               Overview of iFolder
-bx3aueg.html                iFolder Sharing
-bq1r10z.html                Benefits of iFolder
-bq1r110.html                Key Features of iFolder
-bq1r110.html#bq1r111        The iFolder Client
-bq1r110.html#bx3bipv        iFolder Account
-bq1r110.html#bq1r112        Shared iFolders
-bq1r110.html#bq1r113        iFolder Access Rights
-bq1r110.html#bq1r118        File Synchronization and Data Management
-bq1r110.html#bq63xvh        Synchronization Log
-bwcku86.html                Cross-Platform Considerations
-accountsprefs.html          Managing iFolder Accounts and Preferences
-bw08fxi.html                Starting the iFolder Client
-accounts.html               Configuring an iFolder Account
-login.html                  Logging In to an iFolder Account
-accountdetails.html         Viewing and Modifying iFolder Account Settings
-bvwsp7c.html                Deleting an iFolder Account
-preferences.html            Configuring iFolder Preferences for the Client
-bvwppw5.html                Configuring Local Firewall Settings for iFolder Traffic
-bwbirb9.html                Configuring Local Virus Scanner Settings for iFolder Traffic
-myifolders.html             Managing iFolders
-bx08x4y.html                Guidelines for Locating iFolders
-bwensdb.html                Guidelines for File Types and Sizes to Not Synchronize
-bwagrrn.html                Naming Conventions for an iFolder and Its Folders and Files
-createifolder.html          Creating an iFolder
-createifolder.html#bwembx5   Creating iFolders in a File Manager
-createifolder.html#bwemc36   Creating iFolders in the iFolders Browser
-createifolder.html#fat32mtpt   Creating iFolders on a FAT32 Mount Point (Linux)
-sharewith.html              Sharing an iFolder
-sharewith.html#bv2hnvt      Understanding User Access Rights
-sharewith.html#bq6lwm0      Adding a User to an iFolder
-sharewith.html#bq6lwma      Modifying User Access Rights
-sharewith.html#bq6lwmr      Removing a User from an iFolder
-setupifolder.html           Setting Up an Available iFolder
-propifolders.html           Viewing and Configuring Properties of an iFolder
-sync.html                   Synchronizing Files
-conflicts.html              Resolving File Conflicts
-reverting.html              Reverting an iFolder to a Normal Folder
-movelocation.html           Moving an iFolder
-deleting.html               Deleting an iFolder
-legal.html                  Legal Notices
+﻿front.html                  Guida di iFolder
+overview.html               Panoramica su iFolder
+bx3aueg.html                Condivisione con iFolder
+bq1r10z.html                Vantaggi di iFolder
+bq1r110.html                Funzioni principali di iFolder
+bq1r110.html#bq1r111        Client iFolder
+bq1r110.html#bx3bipv        Conto iFolder
+bq1r110.html#bq1r112        Cartelle iFolder condivise
+bq1r110.html#bq1r113        Diritti di accesso a una cartella iFolder
+bq1r110.html#bq1r118        Sincronizzazione dei file e gestione dei dati
+bq1r110.html#bq63xvh        Log di sincronizzazione
+bwcku86.html                Considerazioni sul supporto multipiattaforma
+accountsprefs.html          Gestione dei conti e delle preferenze di iFolder
+bw08fxi.html                Avvio di una sessione del client iFolder
+accounts.html               Configurazione di un conto iFolder
+login.html                  Login a un conto iFolder
+accountdetails.html         Visualizzazione e modifica delle impostazioni del conto iFolder
+bvwsp7c.html                Cancellazione di un conto iFolder
+preferences.html            Configurazione delle Preferenze di iFolder per il client
+bvwppw5.html                Configurazione delle impostazioni del firewall locale per il traffico iFolder
+bwbirb9.html                Configurazione delle impostazioni del software antivirus locale per il traffico iFolder
+myifolders.html             Gestione delle cartelle iFolder
+bx08x4y.html                Indicazioni per l'ubicazione delle cartelle iFolder
+bwensdb.html                Indicazioni relative a tipi e dimensioni dei file da non sincronizzare
+bwagrrn.html                Convenzioni di denominazione per le cartelle iFolder e i relativi file e cartelle
+createifolder.html          Creazione di una cartella iFolder
+createifolder.html#bwembx5   Creazione di cartelle iFolder in un manager di file
+createifolder.html#bwemc36   Creazione di cartelle iFolder nel browser delle cartelle iFolder
+createifolder.html#fat32mtpt   Creazione di cartelle iFolder in un punto di montaggio FAT32 (Linux)
+sharewith.html              Condivisione di una cartella iFolder
+sharewith.html#bv2hnvt      Informazioni sui diritti di accesso utente
+sharewith.html#bq6lwm0      Aggiunta di un utente a una cartella iFolder
+sharewith.html#bq6lwma      Modifica dei diritti di accesso utente
+sharewith.html#bq6lwmr      Rimozione di un utente da una cartella iFolder
+setupifolder.html           Configurazione di una cartella iFolder disponibile
+propifolders.html           Visualizzazione e configurazione delle proprietà di una cartella iFolder
+sync.html                   Sincronizzazione dei file
+conflicts.html              Risoluzione dei conflitti di file
+reverting.html              Annullamento della conversione di una cartella normale in cartella iFolder
+movelocation.html           Spostamento di una cartella iFolder
+deleting.html               Cancellazione di una cartella iFolder
+legal.html                  Note legali
