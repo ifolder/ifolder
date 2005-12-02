@@ -80,6 +80,10 @@ namespace Novell.iFolderCom
 		private bool eventError = false;
 		private int initTabTop;
 		private Size initMinSize;
+		private int leftDelta;
+		private int bottomDelta;
+		private int lvbDelta;
+		private int bbDelta;
 		private bool accessClick;
 		private iFolderWeb currentiFolder;
 		private iFolderUser currentUser;
@@ -176,6 +180,13 @@ namespace Novell.iFolderCom
 			int temp = ifolders.Left;
 			ifolders.Left = ifolderLabel.Left + ifolderLabel.Width;
 			ifolders.Width -= ifolders.Left - temp;
+
+			// Calculate the delta sizes for repositioning controls (this is necessary because
+			// anchor doesn't work properly on Chinese Windows XP
+			leftDelta = tabControl1.Width - shareWith.Right;
+			bottomDelta = tabControl1.Height - shareWith.Bottom;
+			lvbDelta = access.Top - (shareWith.Top + shareWith.Height);
+			bbDelta = remove.Left - (add.Left + add.Width);
 
 			this.StartPosition = FormStartPosition.CenterParent;
 		}
@@ -1552,6 +1563,7 @@ namespace Novell.iFolderCom
 			this.Text = resources.GetString("$this.Text");
 			this.toolTip1.SetToolTip(this, resources.GetString("$this.ToolTip"));
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tabControl1_KeyDown);
+			this.Resize += new System.EventHandler(this.iFolderAdvanced_Resize);
 			this.Load += new System.EventHandler(this.iFolderAdvanced_Load);
 			this.Paint += new System.Windows.Forms.PaintEventHandler(this.iFolderAdvanced_Paint);
 			this.tabControl1.ResumeLayout(false);
@@ -1663,19 +1675,16 @@ namespace Novell.iFolderCom
 						languageDirectory = "sk";
 						break;
 
-						/* TODO: Where do these belong? Traditional or simplified?
-						zh-MO 0x1404 Chinese - Macau SAR
-						zh-SG 0x1004 Chinese - Singapore
-						*/
-
+					case "zh-CHT": // 0x7C04 Chinese (Traditional)
 					case "zh-TW": // 0x0404 Chinese - Taiwan
-					case "zh-CHS": // 0x0004 Chinese (Simplified)
+					case "zh-HK": // 0x0C04 Chinese - Hong Kong SAR
 						languageDirectory = "zh-TW";
 						break;
 
-					case "zh-HK": // 0x0C04 Chinese - Hong Kong SAR
+					case "zh-CHS": // 0x0004 Chinese (Simplified)
 					case "zh-CN": // 0x0804 Chinese - China
-					case "zh-CHT": // 0x7C04 Chinese (Traditional)
+					case "zh-MO": // 0x1404 Chinese - Macau SAR
+					case "zh-SG": // 0x1004 Chinese - Singapore
 						languageDirectory = "zh-CN";
 						break;
 
@@ -2023,6 +2032,8 @@ namespace Novell.iFolderCom
 					tabControl1.Top = conflicts.Top;
 				}
 			}
+
+			iFolderAdvanced_Resize(this, new EventArgs());
 		}
 
 		private void updateDiskQuotaDisplay()
@@ -3450,6 +3461,15 @@ namespace Novell.iFolderCom
 				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("syncError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 			}
+		}
+
+		private void iFolderAdvanced_Resize(object sender, System.EventArgs e)
+		{
+			shareWith.Width = tabControl1.Width - shareWith.Left - leftDelta;
+			shareWith.Height = tabControl1.Height - shareWith.Top - bottomDelta;
+			access.Top = add.Top = remove.Top = shareWith.Top + shareWith.Height + lvbDelta;
+			remove.Left = shareWith.Left + shareWith.Width - remove.Width;
+			add.Left = remove.Left - add.Width - bbDelta;
 		}
 		#endregion
 	}
