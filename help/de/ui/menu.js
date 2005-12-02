@@ -1,4 +1,4 @@
-var theMenuRef = "parent.theMenu";
+﻿var theMenuRef = "parent.theMenu";
 var theMenu = eval(theMenuRef);
 var theBrowser = parent.theBrowser;
 var belowMenu = null;
@@ -236,12 +236,12 @@ function printSelectedTopics()
     }
     else 
     {   
-       alert("There are no items checked!");
+       alert("Es sind keine Einträge ausgewählt.");
     }
  }  
  else
  {
-    alert("There is no book to print.");
+    alert("Es steht kein Buch zum Drucken zur Verfügung.");
  }  
 }
 
@@ -269,7 +269,7 @@ function searchSelectedTopics()
 
 		if (query == "")
 		{
-		   alert("No search parameter entered!");   
+		   alert("Keine Suchparameter eingegeben!");   
 		}
 		else
 		{
@@ -306,13 +306,13 @@ function searchSelectedTopics()
 					}
 				}
 
-			    alert("There are no items checked!");
+			    alert("Es sind keine Einträge ausgewählt.");
 			}
 		}
 	 }  
 	 else
 	 {
-	    alert("There is no book to search.");
+	    alert("Es steht kein Buch zum Durchsuchen zur Verfügung.");
 	 }  
 }
  
