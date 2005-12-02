@@ -71,6 +71,7 @@ install-exec-local: all $(DATA_FILES)
 	$(INSTALL_PROGRAM) $(RES_FILES) $(DESTDIR)$(bindir)/res
 	$(mkinstalldirs) $(iFolderApp_LANGUAGES:%=$(DESTDIR)$(bindir)/%)
 	cp -r $(iFolderApp_LANGUAGES) $(DESTDIR)$(bindir)
+	find $(DESTDIR)$(bindir) -name ".svn" | xargs rm -rf
 if DEBUG	
 	$(INSTALL_PROGRAM) $(PROJECT_FILES) $(DESTDIR)$(bindir)
 endif
