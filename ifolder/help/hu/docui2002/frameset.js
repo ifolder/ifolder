@@ -1,4 +1,4 @@
-if (self.name == 'menu') {
+﻿if (self.name == 'menu') {
 	self.location.href = "menu.htm";
 } else {
 	initialise();
