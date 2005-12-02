@@ -1,11 +1,13 @@
 <script language="JavaScript1.2" type="text/javascript">
-	top.PREVIOUS_PAGE 	= 'Previous Page: ';
-	top.NEXT_PAGE 		= 'Next Page: ';
-	top.JS_ERROR_MSG	= 'A JavaScript error has occurred on this page!  Please note down the following information and pass it on to the Webmaster.';
-	top.NO_FLOAT_MSG	= 'Sorry, your browser does not support this feature!';
-	top.COOKIE_MSG		= 'You must have Cookies enabled to change the display mode!';
-	top.SECURITY_MSG	= 'Due to security restrictions imposed by your browser, I cannot change modes while a page from another server is being displayed. The default home page for this site will be displayed instead.';
-	top.FEEDBACK_MSG	= 'Please press CTRL-D to bookmark this page';
-	top.FEEDBACK_ALT	= 'Feedback';
-	top.BOOKMARK_ALT	= 'Bookmark this page';
+	top.PREVIOUS_PAGE 	= 'Poprzednia strona: ';
+	top.NEXT_PAGE 		= 'Nast&#281;pna strona: ';
+	top.JS_ERROR_MSG	= 'Na stronie wyst&#261;pi&#322; b&#322;&#261;d skryptu JavaScript! Skopiuj poni&#380;sze informacje i przeka&#380; je webmasterowi.';
+	top.NO_FLOAT_MSG	= 'Niestety Twoja przegl&#261;darka nie obs&#322;uguje tej funkcji!';
+	top.COOKIE_MSG		= 'Aby zmieni&#263; tryb wy&#347;wietlania, nale&#380;y w&#322;&#261;czy&#263; obs&#322;ug&#281; plik&#243;w cookie!';
+	top.SECURITY_MSG	= 'Ze wzgl&#281;du na &#347;rodki bezpiecze&#324;stwa zastosowane w u&#380;ywanej przegl&#261;darce nie mo&#380;na zmieni&#263; tryb&#243;w, gdy wy&#347;wietlana jest strona z innego serwera. Zostanie wy&#347;wietlona domy&#347;lna strona domowa tej witryny.';
+	top.FEEDBACK_MSG	= 'Naci&#347;nij klawisze CTRL+D, aby doda&#263; t&#281; stron&#281; do zak&#322;adek';
+	top.FEEDBACK_ALT	= 'Opinie';
+	top.BOOKMARK_ALT	= 'Dodaj t&#281; stron&#281; do zak&#322;adek';
 </script>
+
+
