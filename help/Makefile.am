@@ -5,7 +5,7 @@ if WINDOWS
 install-exec-local:
 	$(mkinstalldirs) $(DESTDIR)$(prefix)/help
 	cp -r $(EXTRA_DIST) $(DESTDIR)$(prefix)/help
-	find $(DESTDIR)$(prefix)/help -name "CVS" | xargs rm -rf
+	find $(DESTDIR)$(prefix)/help -name ".svn" | xargs rm -rf
 
 uninstall-local:
 	cd $(DESTDIR)$(prefix)/help; rm -rf $(EXTRA_DIST)
@@ -15,7 +15,7 @@ else
 install-exec-local:
 	$(mkinstalldirs) $(DESTDIR)$(datadir)/ifolder3/help
 	cp -r $(EXTRA_DIST) $(DESTDIR)$(datadir)/ifolder3/help
-	find $(DESTDIR)$(datadir)/ifolder3/help -name "CVS" | xargs rm -rf
+	find $(DESTDIR)$(datadir)/ifolder3/help -name ".svn" | xargs rm -rf
 
 uninstall-local:
 	cd $(DESTDIR)$(datadir)/ifolder3/help; rm -rf $(EXTRA_DIST)

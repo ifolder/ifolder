@@ -12,9 +12,9 @@ endif
 
 DIST_SUBDIRS = iFolder TrayIcon LinuxClient iFolderShell FormsTrayApp WebService libifolder OSXClient
 
-# remove all of the CVS directories
+# remove all of the .svn directories
 dist-hook:
-	rm -rf `find $(distdir) -name CVS`
+	rm -rf `find $(distdir) -name .svn`
 
 EXTRA_DIST = $(srcdir)/ifolder-snakeoil.keys images
 
