@@ -110,7 +110,7 @@ function drawLimitMarker() {
 		    {}
 		}
 
-		document.writeln('<DIV ID="limitMarker">&nbsp;</DIV>');
+		document.writeln('<DIV ID="limitMarker">&#160;</DIV>');
 	}
 }
 function setTop() {
@@ -236,12 +236,12 @@ function printSelectedTopics()
     }
     else 
     {   
-       alert("There are no items checked!");
+       alert("Nie zaznaczono &#380;adnych element&#243;w!");
     }
  }  
  else
  {
-    alert("There is no book to print.");
+    alert("Brak ksi&#261;&#380;ek do wydrukowania.");
  }  
 }
 
@@ -269,7 +269,7 @@ function searchSelectedTopics()
 
 		if (query == "")
 		{
-		   alert("No search parameter entered!");   
+		   alert("Nie wprowadzono &#380;adnego parametru wyszukiwania!");   
 		}
 		else
 		{
@@ -306,13 +306,13 @@ function searchSelectedTopics()
 					}
 				}
 
-			    alert("There are no items checked!");
+			    alert("Nie zaznaczono &#380;adnych element&#243;w!");
 			}
 		}
 	 }  
 	 else
 	 {
-	    alert("There is no book to search.");
+	    alert("Brak ksi&#261;&#380;ek do wyszukania.");
 	 }  
 }
  
@@ -328,3 +328,4 @@ function checkEnter(event)
 	if (code==13)
 	searchSelectedTopics();
 }
+
