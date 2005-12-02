@@ -2,12 +2,12 @@
 
 <head>
 
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<meta http-equiv="Content-Language" content="en">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=utf-8">
+<meta http-equiv="Content-Language" content="cs">
 
-<meta name="Generator" content="Novell HTML Conversion 10 March 2004">
-<meta name="Generation-Date" content="Sunday, October 23, 2005 15:54">
-<meta name="Content-Date" content="Mon, 22 Oct 2005 12:00:00 GMT">
+<meta name="Generator" content="Konverze HTML společnosti Novell, 10. března 2004">
+<meta name="Generation-Date" content="neděle, 23. října 2005, 15:54">
+<meta name="Content-Date" content="Po, 22. října 2004, 12:00:00 GMT">
 <meta name="Robots" content="INDEX, FOLLOW">
 <meta name="Document_Number" content="zHTML xD.0000.0000.0002.0007.">
 <meta name="Author" content="zHTML xD.0000.0000.0002.0007.">
@@ -18,7 +18,7 @@
 <link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
 
 
-<title>iFolder Help</title>
+<title>Nápověda aplikace iFolder</title>
 <script type="text/javascript" language="javascript">
 function loadMenu()
 {
@@ -43,20 +43,20 @@ loadMenu();
 
 <a name="bvwppw5"></a>
 
-<div class="Topic" title="Configuring Local Firewall Settings for iFolder Traffic">
+<div class="Topic" title="Konfigurace místní brány firewall pro provoz aplikace iFolder">
 
-<h2 class="TOPIC-TITLE"><br />Configuring Local Firewall Settings for iFolder Traffic</h2>
-<p class="TOPIC">If you use a local firewall, you must set your firewall to allow iFolder to choose a local dynamic port or configure a local static port for the iFolder client to communicate locally (the same computer) with Mono XSP Server. iFolder uses Mono XSP Web services to communicate via HTTP or HTTPS (SSL, default) with the Novell iFolder enterprise servers where you have iFolder accounts. The iFolder administrator configures iFolder services that determine whether communications use HTTP or HTTPS in your environment.</p>
-<p class="TOPIC">Your firewall does not block traffic between Mono XSP and the Novell iFolder enterprise server because Mono XSP uses the standard HTTP or HTTPS ports for traffic. However, if you block the traffic between the client and Mono-XSP, the client has no way to communicate with the server. You would not be able to log in to your iFolder account and synchronize iFolder data.</p>
-<p class="TOPIC">Initially, the iFolder configuration does not specify a particular port to use for client-to-Mono XSP communications. When iFolder first runs, it opens an available local port to listen for requests from the Mono XSP and to send data to the server via Mono XSP. It writes the port number to a configuration file and uses this port thereafter unless the port is not available whenever iFolder starts. If the port is in use by another application, iFolder selects a different available port, reconfigures the port in the configuration file, and uses the new port thereafter. For example, if iFolder is down and another application takes the port, when you restart iFolder, iFolder must select and configure a different port to use.</p>
-<h4 class="BRIDGEHEAD"><br />Using a Local Dynamic Port</h4>
-<p class="TOPIC">If you use a local firewall on your computer, the firewall should detect the local traffic between the iFolder and Mono XSP server whenever iFolder contacts the server to synchronize its list of users and iFolder data. Allow the traffic to avoid receiving the pop-up alert whenever the client starts. If you allow the traffic permanently, your firewall should not remind you again.</p>
-<h4 class="BRIDGEHEAD"><br />Using a Local Static Port</h4>
-<p class="TOPIC">You can optionally add the Web Service Port Range parameter in the Service Manager section of the Simias.config file to allow Mono-XSP Server to use a static port or a range of ports for this local traffic. This port or range of ports can then be opened in the firewall to allow communications for Mono-XSP. </p>
-<p class="TOPIC">You can find Simias.config in the following locations:</p>
+<h2 class="TOPIC-TITLE"><br />Konfigurace místní brány firewall pro provoz aplikace iFolder</h2>
+<p class="TOPIC">Pokud používáte místní bránu firewall, musíte ji nastavit tak, aby povolila aplikaci iFolder zvolit místní dynamický port, nebo musíte nakonfigurovat místní statický port pro klienta aplikace iFolder, který bude komunikovat lokálně (na stejném počítači) se serverem Mono XSP. Aplikace iFolder používá webové služby Mono XSP ke komunikaci přes protokoly HTTP nebo HTTPS (SSL jako výchozí) s podnikovými servery Novell iFolder, na nichž máte založeny účty iFolder. Správce služeb iFolder konfiguruje služby, které určují, zda se ve vašem prostředí použije protokol HTTP nebo HTTPS.</p>
+<p class="TOPIC">Vaše brána firewall neblokuje provoz mezi serverem Mono XSPa podnikovým serverem Novell iFolder, protože Mono XSP používá pro provoz standardní porty protokolu HTTP nebo HTTPS. Pokud však blokujete provoz mezi klientem a serverem Mono XSP, klient nemá možnost se serverem komunikovat. Nebude se moci přihlásit ke svému účtu iFolder a synchronizovat data ve složkách iFolder.</p>
+<p class="TOPIC">Na začátku není v konfiguraci aplikace iFolder uveden konkrétní port, který má být použit pro komunikaci klienta a serveru Mono XSP. Při prvním spuštění aplikace iFolder se otevře dostupný místní port, který bude přijímat žádosti ze serveru Mono XSP a odesílat data na server přes Mono XSP. Zapíše číslo portu do konfiguračního souboru a poté daný port používá, ledaže by port při spuštění aplikace iFolder nebyl k dispozici. Pokud daný port používá jiná aplikace, aplikace iFolder vybere jiný dostupný port, znovu nakonfiguruje port v konfiguračním souboru a tento nový port poté používá. Pokud např. aplikace iFolder není spuštěná a daný port zabere jiná aplikace, při dalším spuštění si aplikace iFolder musí vybrat a nakonfigurovat pro použití jiný port.</p>
+<h4 class="BRIDGEHEAD"><br />Použití místního dynamického portu</h4>
+<p class="TOPIC">Pokud na vašem počítači používáte místní bránu firewall, měla by tato brána detekovat místní provoz mezi aplikací iFolder a serverem Mono XSP pokaždé, když aplikace iFolder kontaktuje server, aby proběhla synchronizace seznamu uživatelů a dat ve složkách iFolder. Pokud povolíte provoz, nebude se při každém spuštění klienta zobrazovat místní upozornění. Pokud povolíte provoz trvale, brána firewall by vás již nadále neměla upozorňovat.</p>
+<h4 class="BRIDGEHEAD"><br />Použití místního statického portu</h4>
+<p class="TOPIC">V části Správce služby souboru Simias.config můžete volitelně přidat parametr Rozsah portů webové služby a povolit pro server Mono XSP používání statického portu nebo rozsahu portů pro tento místní provoz. Tento port nebo rozsah portů lze poté otevřít v bráně firewall a povolit tak komunikaci pro server Mono XSP. </p>
+<p class="TOPIC">Soubor Simias.config lze nalézt v těchto umístěních:</p>
 <table class="TABLENOTITLE" border="0" cellpadding="5" cellspacing="0">
-<tr class="HEADERROW"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bwejkc4"></a><em class="TBLHEAD">Operating System</em></th>
-<th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">Location of the Simias.config File</em></th>
+<tr class="HEADERROW"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bwejkc4"></a><em class="TBLHEAD">Operační systém</em></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">Umístění souboru Simias.config</em></th>
 </tr>
 <tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bwejkc5"></a><p class="ENTRY">Linux</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">/home/<em class="VARIABLE">username</em>/.local/share/simias/Simias.config</p></td>
@@ -64,48 +64,46 @@ loadMenu();
 <tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bwejlap"></a><p class="ENTRY">Windows</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">C:\Documents and Settings\<em class="VARIABLE">username</em>\Local Settings\Application Data\simias\Simias.config</p></td>
 </tr>
-<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bwejkc6"></a><p class="ENTRY">Macintosh</p></td>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bwejkc6"></a><p class="ENTRY">
+Macintosh
+</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">/Users/<em class="VARIABLE">username</em>/.local/share/simias/Simias.config</p></td>
 </tr></table>
 
-<p class="TOPIC">Add the Web Service Port Range Setting to the Service Manager section of the Simias.config file. For example:</p>
-<pre class="CODESAMPLENARROW">&lt;configuration&gt;</pre>
+<p class="TOPIC">Přidejte nastavení rozsahu portů webové služby do části Správce služby v souboru Simias.config. Příklad:</p> <pre class="CODESAMPLENARROW">&lt;konfigurace&gt;</pre>
 
-<pre class="CODESAMPLENARROW">  &lt;section name=&quot;ServiceManager&quot;&gt;</pre>
+<pre class="CODESAMPLENARROW">  &lt;název části="SpravceSluzby"&gt;</pre>
 
-<pre class="CODESAMPLENARROW">    &lt;setting name=&quot;WebServicePortRange&quot; value=&quot;<em class="VARIABLE">monoxsp_port</em>&quot; /&gt;   </pre>
+<pre class="CODESAMPLENARROW">    &lt;název nastavení="RozsahPortuWeboveSluzby" hodnota="<em class="VARIABLE">monoxsp_port</em>" /&gt;   </pre>
 
-<pre class="CODESAMPLENARROW">  &lt;/section&gt;</pre>
+<pre class="CODESAMPLENARROW">  &lt;/sekce&gt;</pre>
 
-<pre class="CODESAMPLENARROW">&lt;/configuration&gt;</pre>
+<pre class="CODESAMPLENARROW">&lt;/konfigurace&gt;</pre>
 
-<p class="TOPIC">Replace <em class="VARIABLE">monoxsp_port</em> with a port number or range of port numbers:</p>
+<p class="TOPIC">Nahraďte parametr <em class="VARIABLE">monoxsp_port</em> číslem portu nebo rozsahem čísel portů:</p>
 <ul class="LISTBULLET">
-<li class="BULLETITEM">Specify a value of a single four-digit port number (such as 1234) to use a single static port. For example:
-<pre class="CODESAMPLENARROW">&lt;setting name=&quot;WebServicePortRange&quot; value=&quot;<em class="VARIABLE">1234</em>&quot; /&gt;</pre>
+<li class="BULLETITEM">Chcete-li použít jeden statický port, zadejte hodnotu čtyřmístného čísla portu (jako např. 1234). Příklad: <pre class="CODESAMPLENARROW">&lt;název nastavení="RozsahPortuWeboveSluzby" hodnota="<em class="VARIABLE">1234</em>" /&gt;</pre>
 </li>
 
-<li class="BULLETITEM">Specify a range of ports (such as "1234-1236") to use any available port in the specified range of ports. For example:
-<pre class="CODESAMPLENARROW">&lt;setting name=&quot;WebServicePortRange&quot; value=&quot;<em class="VARIABLE">1234-1236</em>&quot; /&gt;</pre>
+<li class="BULLETITEM">Chcete-li použít jakýkoli dostupný port v rámci uvedeného rozsahu portů, zadejte rozsah portů (jako např. 1234-1236). Příklad: <pre class="CODESAMPLENARROW">&lt;název nastavení="RozsahPortuWeboveSluzby" hodnota="<em class="VARIABLE">1234-1236</em>" /&gt;</pre>
 </li>
 </ul>
-<p class="TOPIC">To configure your system to use a specific port or range of ports:</p>
+<p class="TOPIC">Konfigurace systému pro použití specifického portu nebo rozsahu portů:</p>
 <ol class="STEPLIST">
 <li class="STEP"><a name="bw4v93e"></a>
-<p class="STEP">Configure your firewall to allow traffic for the port or range of ports you want to use for iFolder traffic.</p>
-<p class="STEP">See your firewall's documentation for information on how to open a port in the firewall.</p></li>
+<p class="STEP">Nastavte ve své bráně firewall, aby povolovala provoz na portu nebo rozsahu portů, které chcete používat pro provoz aplikace iFolder.</p>
+<p class="STEP">Informace o tom, jak otevřít port v bráně firewall, naleznete v příslušné dokumentaci k této bráně firewall.</p></li>
 
 <li class="STEP"><a name="bw4v6ou"></a>
-<p class="STEP">Stop the iFolder client by right-clicking the iFolder icon <img src="../graphics/ifolder16.png" alt="iFolder Application Icon" />, then selecting Exit.</p></li>
+<p class="STEP">Pokud chcete ukončit klienta aplikace iFolder, klepněte pravým tlačítkem myši na ikonu aplikace iFolder <img src="../graphics/ifolder16.png" alt="Ikona aplikace iFolder" /> a vyberte položku Konec.</p></li>
 
 <li class="STEP"><a name="bw4v6r7"></a>
-<p class="STEP">Modify the Simias.config file by adding the Web Service Port Range parameter to the Service Manager section.</p></li>
+<p class="STEP">Přidáním parametru Rozsah portů webové služby v části Správce služby změňte soubor Simias.config. </p></li>
 
 <li class="STEP"><a name="bw4vbz4"></a>
-<p class="STEP">Start the iFolder client.</p>
-<p class="STEP">For information, see <a href="bw08fxi.html#bw08fxi">Starting the iFolder Client</a>.</p></li>
-</ol>
-</div>
+<p class="STEP">Spusťte klienta aplikace iFolder.</p>
+<p class="STEP">Více informací naleznete v části <a href="bw08fxi.html#bw08fxi">Spuštění klienta aplikace iFolder</a>.</p></li>
+</ol> </div>
 
 <script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
 
