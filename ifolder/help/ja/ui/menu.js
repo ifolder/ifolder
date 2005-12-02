@@ -1,4 +1,4 @@
-var theMenuRef = "parent.theMenu";
+﻿var theMenuRef = "parent.theMenu";
 var theMenu = eval(theMenuRef);
 var theBrowser = parent.theBrowser;
 var belowMenu = null;
@@ -236,12 +236,12 @@ function printSelectedTopics()
     }
     else 
     {   
-       alert("There are no items checked!");
+       alert("チェックされた項目はありません。");
     }
  }  
  else
  {
-    alert("There is no book to print.");
+    alert("印刷するブックはありません。");
  }  
 }
 
@@ -269,7 +269,7 @@ function searchSelectedTopics()
 
 		if (query == "")
 		{
-		   alert("No search parameter entered!");   
+		   alert("検索パラメータが入力されていません!");   
 		}
 		else
 		{
@@ -306,13 +306,13 @@ function searchSelectedTopics()
 					}
 				}
 
-			    alert("There are no items checked!");
+			    alert("チェックされた項目はありません。");
 			}
 		}
 	 }  
 	 else
 	 {
-	    alert("There is no book to search.");
+	    alert("検索するブックはありません。");
 	 }  
 }
  
