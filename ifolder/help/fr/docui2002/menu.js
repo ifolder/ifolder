@@ -236,12 +236,12 @@ function printSelectedTopics()
     }
     else 
     {   
-       alert("There are no items checked!");
+       alert("Aucun élément n'est sélectionné !");
     }
  }  
  else
  {
-    alert("There is no book to print.");
+    alert("Aucun livre n'est à imprimer.");
  }  
 }
 
@@ -269,7 +269,7 @@ function searchSelectedTopics()
 
 		if (query == "")
 		{
-		   alert("No search parameter entered!");   
+		   alert("Aucun paramètre de recherche n'est entré!");   
 		}
 		else
 		{
@@ -306,13 +306,13 @@ function searchSelectedTopics()
 					}
 				}
 
-			    alert("There are no items checked!");
+			    alert("Aucun élément n'est sélectionné !");
 			}
 		}
 	 }  
 	 else
 	 {
-	    alert("There is no book to search.");
+	    alert("Aucun livre n'est à rechercher.");
 	 }  
 }
  

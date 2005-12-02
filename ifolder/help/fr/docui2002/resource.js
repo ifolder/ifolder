@@ -1,11 +1,11 @@
 <script language="JavaScript1.2" type="text/javascript">
-	top.PREVIOUS_PAGE 	= 'Previous Page: ';
-	top.NEXT_PAGE 		= 'Next Page: ';
-	top.JS_ERROR_MSG	= 'A JavaScript error has occurred on this page!  Please note down the following information and pass it on to the Webmaster.';
-	top.NO_FLOAT_MSG	= 'Sorry, your browser does not support this feature!';
-	top.COOKIE_MSG		= 'You must have Cookies enabled to change the display mode!';
-	top.SECURITY_MSG	= 'Due to security restrictions imposed by your browser, I cannot change modes while a page from another server is being displayed. The default home page for this site will be displayed instead.';
-	top.FEEDBACK_MSG	= 'Please press CTRL-D to bookmark this page';
-	top.FEEDBACK_ALT	= 'Feedback';
-	top.BOOKMARK_ALT	= 'Bookmark this page';
+	top.PREVIOUS_PAGE 	= 'Page précédente : ';
+	top.NEXT_PAGE 		= 'Page suivante : ';
+	top.JS_ERROR_MSG	= 'Une erreur JavaScript s'est produite sur cette page !  Veuillez noter les informations suivantes pour les transmettre au webmaster.';
+	top.NO_FLOAT_MSG	= 'Nous sommes désolés, votre navigateur ne prend pas en charge cette fonction !';
+	top.COOKIE_MSG		= 'Les cookies doivent être activés pour modifier le mode d'affichage !';
+	top.SECURITY_MSG	= 'En raison des restrictions de sécurité imposées par votre navigateur, je ne peux pas changer de mode lorsqu'une page provenant d'un autre serveur est en cours d'affichage. La page d'accueil par défaut de ce site s'affiche à la place.';
+	top.FEEDBACK_MSG	= 'Appuyez sur CTRL-D pour ajouter un signet à cette page';
+	top.FEEDBACK_ALT	= 'Commentaires';
+	top.BOOKMARK_ALT	= 'Ajouter un signet à cette page';
 </script>
