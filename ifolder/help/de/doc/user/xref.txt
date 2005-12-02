@@ -1,42 +1,42 @@
-front.html                  iFolder Help
-overview.html               Overview of iFolder
-bx3aueg.html                iFolder Sharing
-bq1r10z.html                Benefits of iFolder
-bq1r110.html                Key Features of iFolder
-bq1r110.html#bq1r111        The iFolder Client
-bq1r110.html#bx3bipv        iFolder Account
-bq1r110.html#bq1r112        Shared iFolders
-bq1r110.html#bq1r113        iFolder Access Rights
-bq1r110.html#bq1r118        File Synchronization and Data Management
-bq1r110.html#bq63xvh        Synchronization Log
-bwcku86.html                Cross-Platform Considerations
-accountsprefs.html          Managing iFolder Accounts and Preferences
-bw08fxi.html                Starting the iFolder Client
-accounts.html               Configuring an iFolder Account
-login.html                  Logging In to an iFolder Account
-accountdetails.html         Viewing and Modifying iFolder Account Settings
-bvwsp7c.html                Deleting an iFolder Account
-preferences.html            Configuring iFolder Preferences for the Client
-bvwppw5.html                Configuring Local Firewall Settings for iFolder Traffic
-bwbirb9.html                Configuring Local Virus Scanner Settings for iFolder Traffic
-myifolders.html             Managing iFolders
-bx08x4y.html                Guidelines for Locating iFolders
-bwensdb.html                Guidelines for File Types and Sizes to Not Synchronize
-bwagrrn.html                Naming Conventions for an iFolder and Its Folders and Files
-createifolder.html          Creating an iFolder
-createifolder.html#bwembx5   Creating iFolders in a File Manager
-createifolder.html#bwemc36   Creating iFolders in the iFolders Browser
-createifolder.html#fat32mtpt   Creating iFolders on a FAT32 Mount Point (Linux)
-sharewith.html              Sharing an iFolder
-sharewith.html#bv2hnvt      Understanding User Access Rights
-sharewith.html#bq6lwm0      Adding a User to an iFolder
-sharewith.html#bq6lwma      Modifying User Access Rights
-sharewith.html#bq6lwmr      Removing a User from an iFolder
-setupifolder.html           Setting Up an Available iFolder
-propifolders.html           Viewing and Configuring Properties of an iFolder
-sync.html                   Synchronizing Files
-conflicts.html              Resolving File Conflicts
-reverting.html              Reverting an iFolder to a Normal Folder
-movelocation.html           Moving an iFolder
-deleting.html               Deleting an iFolder
-legal.html                  Legal Notices
+﻿front.html                  Hilfe zu iFolder
+overview.html               Übersicht über iFolder
+bx3aueg.html                iFolder-Freigabe
+bq1r10z.html                Vorteile von iFolder
+bq1r110.html                Wichtigste Funktionen von iFolder
+bq1r110.html#bq1r111        iFolder-Client
+bq1r110.html#bx3bipv        iFolder-Konto
+bq1r110.html#bq1r112        Freigegebene iFolder-Ordner
+bq1r110.html#bq1r113        iFolder-Zugriffsrechte
+bq1r110.html#bq1r118        Dateisynchronisierung und Datenverwaltung
+bq1r110.html#bq63xvh        Synchronisierungsprotokoll
+bwcku86.html                Plattformübergreifende Überlegungen
+accountsprefs.html          Verwalten von iFolder-Konten und Benutzerkonten und -einstellungen
+bw08fxi.html                Starten des iFolder-Client
+accounts.html               Konfigurieren von iFolder-Konten
+login.html                  Anmelden bei iFolder-Konten
+accountdetails.html         Anzeigen und Bearbeiten von iFolder-Konto-Einstellungen
+bvwsp7c.html                Löschen von iFolder-Konten
+preferences.html            Konfigurieren von iFolder-Einstellungen für den Client
+bvwppw5.html                Konfigurieren der lokalen Firewall-Einstellungen für den Datenverkehr mit iFolder
+bwbirb9.html                Konfigurieren der lokalen Virenprüfprogramm-Einstellungen für den Datenverkehr mit iFolder
+myifolders.html             Verwalten von iFolder-Ordnern
+bx08x4y.html                Richtlinien für das Suchen nach iFolder-Ordnern
+bwensdb.html                Richtlinien für nicht zu synchronisierende Dateitypen und -größen
+bwagrrn.html                Benennungskonventionen für einen iFolder-Ordner sowie die entsprechenden Ordner und Dateien
+createifolder.html          Erstellen eines iFolder-Ordners
+createifolder.html#bwembx5   Erstellen von iFolder-Ordnern in einem Datei-Manager
+createifolder.html#bwemc36   Erstellen von iFolder-Ordnern im Browser für iFolder-Ordner
+createifolder.html#fat32mtpt   Erstellen von iFolder-Ordnern auf einem FAT32-Mountpunkt (Linux)
+sharewith.html              Freigeben eines iFolder-Ordners
+sharewith.html#bv2hnvt      Grundlagen der Benutzerzugriffsrechte
+sharewith.html#bq6lwm0      Hinzufügen eines Benutzers zu einem iFolder-Ordner
+sharewith.html#bq6lwma      Ändern von Benutzerzugriffsrechten
+sharewith.html#bq6lwmr      Entfernen eines Benutzers aus einem iFolder-Ordner
+setupifolder.html           Einrichten eines verfügbaren iFolder-Ordners
+propifolders.html           Anzeigen und Konfigurieren von Eigenschaften eines iFolder-Ordners
+sync.html                   Synchronisieren von Dateien
+conflicts.html              Auflösen von Dateikonflikten
+reverting.html              Zurücksetzen von iFolder-Ordnern auf normale Ordner
+movelocation.html           Verschieben von iFolder-Ordnern
+deleting.html               Löschen von iFolder-Ordnern
+legal.html                  Rechtliche Hinweise

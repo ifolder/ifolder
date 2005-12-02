@@ -1,24 +1,18 @@
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-
+﻿<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <head>
-
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<meta http-equiv="Content-Language" content="en">
-
-<meta name="Generator" content="Novell HTML Conversion 10 March 2004">
-<meta name="Generation-Date" content="Sunday, October 23, 2005 15:54">
-<meta name="Content-Date" content="Mon, 22 Oct 2005 12:00:00 GMT">
-<meta name="Robots" content="INDEX, FOLLOW">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Language" content="de">
+<meta name="Generator" content="Novell HTML-Konvertierung 10. M&auml;rz 2004">
+<meta name="Generation-Date" content="Sonntag, 23. Oktober 2005 15:54 Uhr">
+<meta name="Content-Date" content="Montag, 22. Okt. 2005 12:00:00 Uhr MEZ">
+<meta name="Robots" content="Index, Follow">
 <meta name="Document_Number" content="zHTML xD.0000.0000.0003.0002.">
 <meta name="Author" content="zHTML xD.0000.0000.0003.0002.">
 <meta name="Product_Class" content="">
 <meta name="Product_and_Version" content="iFolder(TM)">
 <meta name="Copyright" content="Copyright Novell, Inc. 1983-2004">
-
 <link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
-
-
-<title>iFolder Help</title>
+<title>Hilfe zu iFolder</title>
 <script type="text/javascript" language="javascript">
 function loadMenu()
 {
@@ -32,33 +26,25 @@ loadMenu();
 </script>
 <script type="text/javascript" language="javascript" src="../../../ui/jsglobal.js"></script>
 </head>
-
 <body onload="">
 <script type="text/javascript" language="javascript">
   var prev_link="bx08x4y.html";
   var next_link="bwagrrn.html";
 </script>
-
 <script type="text/javascript" language="javascript" src="../../../ui/topnav.js"></script>
-
 <a name="bwensdb"></a>
-
 <div class="Topic" title="Guidelines for File Types and Sizes to Not Synchronize">
-
-<h2 class="TOPIC-TITLE"><br />Guidelines for File Types and Sizes to Not Synchronize</h2>
-<p class="TOPIC">When the iFolder client is used with Novell iFolder 3.<em class="VERSIONVARIABLE">x</em>, your iFolder administrator might specify file type restrictions and maximum file size restrictions at the system, user, or iFolder level. Your account might also be restricted in the amount of space you can use for the data in the iFolders you own. When you participate in other iFolders, the space consumed on the server is counted against the owner of that iFolder.</p>
-<p class="TOPIC">Some file types are not good candidates for synchronization, such as operating system files, hidden files created by a file manager, or databases that are implemented as a collection of linked files. You might include only key file types used for your business, or exclude files that are likely unrelated to business, such as .mp3 files. </p>
-<h4 class="BRIDGEHEAD"><br />Operating System Files</h4>
-<p class="TOPIC">You should not convert system directories to iFolders. Most system files change infrequently and it is better to keep an image file of your basic system and key software than to attempt to synchronize those files to the server.</p>
-<h4 class="BRIDGEHEAD"><br />Hidden Files</h4>
-<p class="TOPIC">If your file system uses hidden files to track display preferences, your administrator might restrict those file types to exclude them from being synchronized on your system. Usually, hidden files are relevant only to the particular computer where they were created, and they change every time the file or directory is accessed. You do not need to keep these files, and synchronizing them results in repeated file conflict errors. </p>
-<p class="TOPIC">For example, iFolder automatically excludes two hidden file manager files called thumbs.db and .DS_Store.</p>
-<h4 class="BRIDGEHEAD"><br />Database Files</h4>
-<p class="TOPIC">iFolder synchronizes individual files or the changed portions of individual files; it does not synchronize files as a set. If you have a database file that is implemented as a collection of linked files, do not try to synchronize them in an iFolder.</p>
-<p class="TOPIC">Do not try to synchronize your GroupWise<sup>&reg;</sup> data by making the GroupWise archive, cache, or remote directories into iFolders. If you do this, the GroupWise data files become corrupted after synchronizing the file a few times. GroupWise needs the files in the archive to be maintained as a set of files.</p>
-</div>
-
+<h2 class="TOPIC-TITLE"><br />Richtlinien f&uuml;r nicht zu synchronisierende Dateitypen und -gr&ouml;&szlig;en</h2>
+<p class="TOPIC">Wenn der iFolder-Client mit Novell iFolder 3.<em class="VERSIONVARIABLE">x</em> verwendet wird, kann der iFolder-Administrator Einschr&auml;nkungen f&uuml;r den Dateityp und die maximale Dateigr&ouml;&szlig;e auf System-, Benutzer- und iFolder-Ebene angegeben. F&uuml;r Ihr Konto k&ouml;nnen auch Einschr&auml;nkungen bez&uuml;glich des Speicherplatzes angegeben werden, den Sie f&uuml;r die Daten in den iFolder-Ordnern verwenden k&ouml;nnen, deren Eigent&uuml;mer Sie sind. Wenn Sie andere iFolder-Ordner benutzen, z&auml;hlt der auf dem Server verwendete Speicher f&uuml;r den Eigent&uuml;mer des betreffenden iFolder-Ordners.</p>
+<p class="TOPIC">Einige Dateitypen eignen sich nicht besonders gut f&uuml;r die Synchronisierung, beispielsweise Dateien von Betriebssystemen, verborgene Dateien, die von einem Datei-Manager erstellt wurden, oder Datenbanken, die als Sammlung verbundener Dateien implementiert werden. Sie k&ouml;nnen festlegen, dass nur wichtige Dateien aufgenommen werden sollen, die Sie gesch&auml;ftlich verwenden, oder Dateien ausschlie&szlig;en, die mit hoher Wahrscheinlichkeit nichts mit Ihrer Arbeit zu tun haben, wie beispielsweise .mp3-Dateien. </p>
+<h4 class="BRIDGEHEAD"><br />Betriebssystemdateien</h4>
+<p class="TOPIC">Systemverzeichnisse sollten nicht in iFolder-Ordner umgewandelt werden. Die meisten Systemdateien &auml;ndern sich in unregelm&auml;&szlig;igen Abst&auml;nden, sodass es besser ist, eine Image-Datei Ihres Basissystems und der wichtigsten Software zu speichern, als zu versuchen, diese Dateien auf dem Server zu synchronisieren.</p>
+<h4 class="BRIDGEHEAD"><br />Verborgene Dateien</h4>
+<p class="TOPIC">Wenn Ihr Dateisystem verborgene Dateien zur Aufzeichnung der Anzeigeeinstellungen verwendet, kann Ihr Administrator Beschr&auml;nkungen f&uuml;r diese Dateitypen verh&auml;ngen, sodass diese von der Synchronisierung auf Ihrem System ausgenommen werden. Normalerweise sind verborgene Dateien nur f&uuml;r den Computer relevant, auf dem sie erstellt wurden, und sie &auml;ndern sich bei jedem Zugriff auf die Datei bzw. das Verzeichnis. Sie m&uuml;ssen diese Dateien nicht behalten und Ihre Synchronisierung f&uuml;hrt zu wiederholten Fehlern aufgrund von Dateikonflikten. </p>
+<p class="TOPIC">So schlie&szlig;t iFolder automatisch zwei verborgene Datei-Manager-Dateien (thumbs.db und .DS_Store) aus.</p>
+<h4 class="BRIDGEHEAD"><br />Datenbankdateien</h4>
+<p class="TOPIC">iFolder synchronisiert einzelne Dateien bzw. die ge&auml;nderten Teile einzelner Dateien. Dateien werden nicht als Gruppe synchronisiert. Wenn Sie eine Datenbankdatei verwenden, die als Sammlung verbundener Dateien implementiert ist, sollten Sie nicht versuchen, diese Dateien in einem iFolder-Ordner zu synchronisieren.</p>
+<p class="TOPIC">Versuchen Sie nicht, Ihre GroupWise<sup>&reg;</sup>-Daten zu synchronisieren, indem Sie das GroupWise-Archiv, den Cache oder Remote-Verzeichnisse in iFolder-Ordner umwandeln. Wenn Sie dies tun, werden die GroupWise-Datendateien fehlerhaft, nachdem die Datei einige Male synchronisiert wird. F&uuml;r GroupWise m&uuml;ssen die Dateien im Archiv als Gruppe von Dateien beibehalten werden.</p> </div>
 <script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
-
 </body>
 </html>

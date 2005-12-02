@@ -1,11 +1,11 @@
-<script language="JavaScript1.2" type="text/javascript">
-	top.PREVIOUS_PAGE 	= 'Previous Page: ';
-	top.NEXT_PAGE 		= 'Next Page: ';
-	top.JS_ERROR_MSG	= 'A JavaScript error has occurred on this page!  Please note down the following information and pass it on to the Webmaster.';
-	top.NO_FLOAT_MSG	= 'Sorry, your browser does not support this feature!';
-	top.COOKIE_MSG		= 'You must have Cookies enabled to change the display mode!';
-	top.SECURITY_MSG	= 'Due to security restrictions imposed by your browser, I cannot change modes while a page from another server is being displayed. The default home page for this site will be displayed instead.';
-	top.FEEDBACK_MSG	= 'Please press CTRL-D to bookmark this page';
+﻿<script language="JavaScript1.2" type="text/javascript">
+	top.PREVIOUS_PAGE 	= 'Vorherige Seite: ';
+	top.NEXT_PAGE 		= 'Nächste Seite: ';
+	top.JS_ERROR_MSG	= 'Auf dieser Seite ist ein JavaScript-Fehler aufgetreten! Notieren Sie sich folgende Informationen und geben Sie sie an den Webmaster weiter.';
+	top.NO_FLOAT_MSG	= 'Ihr Browser unterstützt leider diese Funktion nicht.';
+	top.COOKIE_MSG		= 'Zum Ändern des Anzeigemodus müssen Cookies aktiviert sein.';
+	top.SECURITY_MSG	= 'Aufgrund von in Ihrem Browser geltenenden Sicherheitbeschränkungen ist das Wechseln in einen anderen Modus nicht möglich, während eine Seite von einem anderen Server angezeigt wird. Stattdessen wird die standardmäßige Startseite für diese Site angezeigt.';
+	top.FEEDBACK_MSG	= 'Drücken Sie STRG-D, um ein Lesezeichen für diese Seite zu erstellen';
 	top.FEEDBACK_ALT	= 'Feedback';
-	top.BOOKMARK_ALT	= 'Bookmark this page';
+	top.BOOKMARK_ALT	= 'Lesezeichen für diese Seite erstellen';
 </script>
