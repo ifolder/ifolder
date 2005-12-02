@@ -1,11 +1,11 @@
 <script language="JavaScript1.2" type="text/javascript">
-	top.PREVIOUS_PAGE 	= 'Previous Page: ';
-	top.NEXT_PAGE 		= 'Next Page: ';
-	top.JS_ERROR_MSG	= 'A JavaScript error has occurred on this page!  Please note down the following information and pass it on to the Webmaster.';
-	top.NO_FLOAT_MSG	= 'Sorry, your browser does not support this feature!';
-	top.COOKIE_MSG		= 'You must have Cookies enabled to change the display mode!';
-	top.SECURITY_MSG	= 'Due to security restrictions imposed by your browser, I cannot change modes while a page from another server is being displayed. The default home page for this site will be displayed instead.';
-	top.FEEDBACK_MSG	= 'Please press CTRL-D to bookmark this page';
-	top.FEEDBACK_ALT	= 'Feedback';
-	top.BOOKMARK_ALT	= 'Bookmark this page';
+	top.PREVIOUS_PAGE 	= 'Predchádzajúca strana: ';
+	top.NEXT_PAGE 		= 'Nasledujúca strana: ';
+	top.JS_ERROR_MSG	= 'Na tejto stránke sa vyskytla chyba skriptu JavaScript. Poznačte si nasledujúce informácie a odovzdajte ich správcovi webovej lokality.';
+	top.NO_FLOAT_MSG	= 'Tento prehľadávač nepodporuje túto funkciu.';
+	top.COOKIE_MSG		= 'Ak chcete zmeniť režim zobrazenia, musíte povoliť súbory cookie.';
+	top.SECURITY_MSG	= 'Z dôvodu obmedzenia zabezpečenia vynúteného prehľadávačom nie je možné meniť režimy, keď je zobrazená stránka z iného servera. Namiesto toho sa zobrazí predvolená domovská stránka tejto lokality.';
+	top.FEEDBACK_MSG	= 'Stlačením klávesov CTRL+D vytvoríte záložku tejto stránky.';
+	top.FEEDBACK_ALT	= 'Pripomienky';
+	top.BOOKMARK_ALT	= 'Vytvoriť záložku tejto stránky';
 </script>
