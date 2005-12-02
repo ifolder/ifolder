@@ -1,24 +1,18 @@
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-
+﻿<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <head>
-
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<meta http-equiv="Content-Language" content="en">
-
-<meta name="Generator" content="Novell HTML Conversion 10 March 2004">
-<meta name="Generation-Date" content="Sunday, October 23, 2005 15:54">
-<meta name="Content-Date" content="Mon, 22 Oct 2005 12:00:00 GMT">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Language" content="pt">
+<meta name="Generator" content="Novell HTML Conversion, 10 de mar&ccedil;o de 2004">
+<meta name="Generation-Date" content="Domingo, 23 de outubro de 2005 15:54">
+<meta name="Content-Date" content="Seg., 22 de outubro de 2005 12:00:00 GMT">
 <meta name="Robots" content="INDEX, FOLLOW">
 <meta name="Document_Number" content="zHTML xD.0000.0000.0002.0007.">
 <meta name="Author" content="zHTML xD.0000.0000.0002.0007.">
 <meta name="Product_Class" content="">
 <meta name="Product_and_Version" content="iFolder(TM)">
 <meta name="Copyright" content="Copyright Novell, Inc. 1983-2004">
-
 <link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
-
-
-<title>iFolder Help</title>
+<title>Ajuda do iFolder</title>
 <script type="text/javascript" language="javascript">
 function loadMenu()
 {
@@ -32,31 +26,26 @@ loadMenu();
 </script>
 <script type="text/javascript" language="javascript" src="../../../ui/jsglobal.js"></script>
 </head>
-
 <body onload="">
 <script type="text/javascript" language="javascript">
   var prev_link="preferences.html";
   var next_link="bwbirb9.html";
 </script>
-
 <script type="text/javascript" language="javascript" src="../../../ui/topnav.js"></script>
-
 <a name="bvwppw5"></a>
-
 <div class="Topic" title="Configuring Local Firewall Settings for iFolder Traffic">
-
-<h2 class="TOPIC-TITLE"><br />Configuring Local Firewall Settings for iFolder Traffic</h2>
-<p class="TOPIC">If you use a local firewall, you must set your firewall to allow iFolder to choose a local dynamic port or configure a local static port for the iFolder client to communicate locally (the same computer) with Mono XSP Server. iFolder uses Mono XSP Web services to communicate via HTTP or HTTPS (SSL, default) with the Novell iFolder enterprise servers where you have iFolder accounts. The iFolder administrator configures iFolder services that determine whether communications use HTTP or HTTPS in your environment.</p>
-<p class="TOPIC">Your firewall does not block traffic between Mono XSP and the Novell iFolder enterprise server because Mono XSP uses the standard HTTP or HTTPS ports for traffic. However, if you block the traffic between the client and Mono-XSP, the client has no way to communicate with the server. You would not be able to log in to your iFolder account and synchronize iFolder data.</p>
-<p class="TOPIC">Initially, the iFolder configuration does not specify a particular port to use for client-to-Mono XSP communications. When iFolder first runs, it opens an available local port to listen for requests from the Mono XSP and to send data to the server via Mono XSP. It writes the port number to a configuration file and uses this port thereafter unless the port is not available whenever iFolder starts. If the port is in use by another application, iFolder selects a different available port, reconfigures the port in the configuration file, and uses the new port thereafter. For example, if iFolder is down and another application takes the port, when you restart iFolder, iFolder must select and configure a different port to use.</p>
-<h4 class="BRIDGEHEAD"><br />Using a Local Dynamic Port</h4>
-<p class="TOPIC">If you use a local firewall on your computer, the firewall should detect the local traffic between the iFolder and Mono XSP server whenever iFolder contacts the server to synchronize its list of users and iFolder data. Allow the traffic to avoid receiving the pop-up alert whenever the client starts. If you allow the traffic permanently, your firewall should not remind you again.</p>
-<h4 class="BRIDGEHEAD"><br />Using a Local Static Port</h4>
-<p class="TOPIC">You can optionally add the Web Service Port Range parameter in the Service Manager section of the Simias.config file to allow Mono-XSP Server to use a static port or a range of ports for this local traffic. This port or range of ports can then be opened in the firewall to allow communications for Mono-XSP. </p>
-<p class="TOPIC">You can find Simias.config in the following locations:</p>
+<h2 class="TOPIC-TITLE"><br />Configurando as defini&ccedil;&otilde;es de firewall local para o tr&aacute;fego do iFolder</h2>
+<p class="TOPIC">Se usar um firewall local, voc&ecirc; dever&aacute; definir o seu firewall para permitir que o iFolder escolha uma porta din&acirc;mica local ou configure uma porta est&aacute;tica local para que o cliente do iFolder se comunique localmente (o mesmo computador) com o Servidor Mono XSP. O iFolder utiliza os servi&ccedil;os Web do Mono XSP para se comunicar via HTTP ou HTTPS (SSL, padr&atilde;o) com os servidores empresariais Novell iFolder onde voc&ecirc; tem as suas contas do iFolder. O administrador do iFolder configura os servi&ccedil;os iFolder que determinam se as comunica&ccedil;&otilde;es utilizam HTTP ou HTTPS em seu ambiente.</p>
+<p class="TOPIC">O seu firewall n&atilde;o bloqueia o tr&aacute;fego entre o Mono XSP e o servidor empresarial Novell iFolder porque o Mono XSP utiliza as portas HTTP ou HTTPS padr&atilde;o para o tr&aacute;fego. Por&eacute;m, se voc&ecirc; bloquear o tr&aacute;fego entre o cliente e o Mono-XSP, o cliente n&atilde;o poder&aacute; se comunicar com o servidor. Voc&ecirc; n&atilde;o conseguiria efetuar login em sua conta do iFolder e sincronizar dados do iFolder.</p>
+<p class="TOPIC">Inicialmente, a configura&ccedil;&atilde;o do iFolder n&atilde;o especifica uma porta particular a ser usada para as comunica&ccedil;&otilde;es cliente-a-Mono XSP. Quando o iFolder &eacute; executado pela primeira vez, ele abre uma porta local dispon&iacute;vel para escutar as solicita&ccedil;&otilde;es do Mono XSP e enviar dados para o servidor via Mono XSP. Ele grava o n&uacute;mero da porta em um arquivo de configura&ccedil;&atilde;o e utiliza essa porta posteriormente, a n&atilde;o ser que ela n&atilde;o esteja dispon&iacute;vel quando o iFolder for iniciado. Se a porta estiver sendo usada por outro aplicativo, o iFolder seleciona uma porta diferente dispon&iacute;vel, reconfigura a porta no arquivo de configura&ccedil;&atilde;o e utiliza a nova porta posteriormente. Por exemplo, se o iFolder estiver desativado e outro aplicativo utilizar a porta, quando voc&ecirc; reiniciar o iFolder, o iFolder dever&aacute; selecionar e configurar uma porta diferente a ser usada.</p>
+<h4 class="BRIDGEHEAD"><br />Utilizando uma porta din&acirc;mica local</h4>
+<p class="TOPIC">Se voc&ecirc; usar um firewall local no computador, o firewall dever&aacute; detectar o tr&aacute;fego local entre o iFolder e o servidor Mono XSP sempre que o iFolder entrar em contato com o servidor para sincronizar suas listas de usu&aacute;rios e dados do iFolder. Permita que o tr&aacute;fego evite o recebimento do alerta pop-up sempre que o cliente for iniciado. Se voc&ecirc; permitir o tr&aacute;fego permanentemente, o firewall n&atilde;o dever&aacute; lembr&aacute;-lo novamente.</p>
+<h4 class="BRIDGEHEAD"><br />Utilizando uma porta est&aacute;tica local</h4>
+<p class="TOPIC">Voc&ecirc; pode adicionar opcionalmente o par&acirc;metro Faixa de Porta de Servi&ccedil;o Web na se&ccedil;&atilde;o Gerenciador de Servi&ccedil;os do arquivo Simias.config para permitir que o servidor Mono-XSP utilize uma porta est&aacute;tica ou uma faixa de portas para este tr&aacute;fego local. Essa porta ou faixa de portas pode ser aberta no firewall para permitir as comunica&ccedil;&otilde;es para o Mono-XSP. </p>
+<p class="TOPIC">Voc&ecirc; pode encontrar o arquivo Simias.config nos seguintes locais:</p>
 <table class="TABLENOTITLE" border="0" cellpadding="5" cellspacing="0">
-<tr class="HEADERROW"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bwejkc4"></a><em class="TBLHEAD">Operating System</em></th>
-<th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">Location of the Simias.config File</em></th>
+<tr class="HEADERROW"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bwejkc4"></a><em class="TBLHEAD">Sistema Operacional</em></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">Localiza&ccedil;&atilde;o do arquivo Simias.config</em></th>
 </tr>
 <tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bwejkc5"></a><p class="ENTRY">Linux</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">/home/<em class="VARIABLE">username</em>/.local/share/simias/Simias.config</p></td>
@@ -67,47 +56,31 @@ loadMenu();
 <tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bwejkc6"></a><p class="ENTRY">Macintosh</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">/Users/<em class="VARIABLE">username</em>/.local/share/simias/Simias.config</p></td>
 </tr></table>
-
-<p class="TOPIC">Add the Web Service Port Range Setting to the Service Manager section of the Simias.config file. For example:</p>
-<pre class="CODESAMPLENARROW">&lt;configuration&gt;</pre>
-
-<pre class="CODESAMPLENARROW">  &lt;section name=&quot;ServiceManager&quot;&gt;</pre>
-
-<pre class="CODESAMPLENARROW">    &lt;setting name=&quot;WebServicePortRange&quot; value=&quot;<em class="VARIABLE">monoxsp_port</em>&quot; /&gt;   </pre>
-
+<p class="TOPIC">Adicione a Configura&ccedil;&atilde;o Web Service Port Range (Faixa de Porta de Servi&ccedil;o Web) &agrave; se&ccedil;&atilde;o Service Manager (Gerenciador de Servi&ccedil;os) do arquivo Simias.config. Por exemplo:</p> <pre class="CODESAMPLENARROW">&lt;configuration&gt;</pre>
+<pre class="CODESAMPLENARROW">  &lt;section name="ServiceManager"&gt;</pre>
+<pre class="CODESAMPLENARROW">    &lt;setting name="WebServicePortRange" value="<em class="VARIABLE">monoxsp_port</em>" /&gt;   </pre>
 <pre class="CODESAMPLENARROW">  &lt;/section&gt;</pre>
-
 <pre class="CODESAMPLENARROW">&lt;/configuration&gt;</pre>
-
-<p class="TOPIC">Replace <em class="VARIABLE">monoxsp_port</em> with a port number or range of port numbers:</p>
+<p class="TOPIC">Substitua <em class="VARIABLE">monoxsp_port</em> por um n&uacute;mero de porta ou faixa de n&uacute;meros de porta:</p>
 <ul class="LISTBULLET">
-<li class="BULLETITEM">Specify a value of a single four-digit port number (such as 1234) to use a single static port. For example:
-<pre class="CODESAMPLENARROW">&lt;setting name=&quot;WebServicePortRange&quot; value=&quot;<em class="VARIABLE">1234</em>&quot; /&gt;</pre>
+<li class="BULLETITEM">Especifique um valor de um &uacute;nico n&uacute;mero de quatro d&iacute;gitos (como 1234) para utilizar uma &uacute;nica porta est&aacute;tica. Por exemplo: <pre class="CODESAMPLENARROW">&lt;setting name="WebServicePortRange" value="<em class="VARIABLE">1234</em>" /&gt;</pre> <BulletItem>
 </li>
-
-<li class="BULLETITEM">Specify a range of ports (such as "1234-1236") to use any available port in the specified range of ports. For example:
-<pre class="CODESAMPLENARROW">&lt;setting name=&quot;WebServicePortRange&quot; value=&quot;<em class="VARIABLE">1234-1236</em>&quot; /&gt;</pre>
+<li class="BULLETITEM">Especifique uma faixa de portas (como &quot;1234-1236&quot;) para usar qualquer porta dispon&iacute;vel na faixa especificada de portas. Por exemplo: <pre class="CODESAMPLENARROW">&lt;setting name="WebServicePortRange" value="<em class="VARIABLE">1234-1236</em>" /&gt;</pre>
 </li>
 </ul>
-<p class="TOPIC">To configure your system to use a specific port or range of ports:</p>
+<p class="TOPIC">Para configurar o seu sistema para usar uma porta espec&iacute;fica ou uma faixa de portas:</p>
 <ol class="STEPLIST">
 <li class="STEP"><a name="bw4v93e"></a>
-<p class="STEP">Configure your firewall to allow traffic for the port or range of ports you want to use for iFolder traffic.</p>
-<p class="STEP">See your firewall's documentation for information on how to open a port in the firewall.</p></li>
-
+<p class="STEP">Configure seu firewall para permitir tr&aacute;fego para a porta ou faixa de portas que deseja usar para o tr&aacute;fego do iFolder.</p>
+<p class="STEP">Consulte a documenta&ccedil;&atilde;o do seu firewall para obter informa&ccedil;&otilde;es sobre como abrir uma porta no firewall.</p></li>
 <li class="STEP"><a name="bw4v6ou"></a>
-<p class="STEP">Stop the iFolder client by right-clicking the iFolder icon <img src="../graphics/ifolder16.png" alt="iFolder Application Icon" />, then selecting Exit.</p></li>
-
+<p class="STEP">Interrompa o cliente iFolder clicando o bot&atilde;o direito do mouse no &iacute;cone do iFolder <img src="../graphics/ifolder16.png" alt="&Iacute;cone do aplicativo iFolder" /> e, em seguida, selecione Sair.</p></li>
 <li class="STEP"><a name="bw4v6r7"></a>
-<p class="STEP">Modify the Simias.config file by adding the Web Service Port Range parameter to the Service Manager section.</p></li>
-
+<p class="STEP">Modifique o arquivo Simias.config adicionando o par&acirc;metro Web Service Port Range &agrave; se&ccedil;&atilde;o Service Manager.</p></li>
 <li class="STEP"><a name="bw4vbz4"></a>
-<p class="STEP">Start the iFolder client.</p>
-<p class="STEP">For information, see <a href="bw08fxi.html#bw08fxi">Starting the iFolder Client</a>.</p></li>
-</ol>
-</div>
-
+<p class="STEP">Inicie o cliente iFolder.</p>
+<p class="STEP">Para obter informa&ccedil;&otilde;es, consulte <a href="bw08fxi.html#bw08fxi">Iniciando o Cliente iFolder</a>.</p></li>
+</ol> </div>
 <script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
-
 </body>
 </html>
