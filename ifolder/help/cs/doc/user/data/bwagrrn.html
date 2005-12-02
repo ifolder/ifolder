@@ -1,13 +1,14 @@
+
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 
 <head>
 
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<meta http-equiv="Content-Language" content="en">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=utf-8">
+<meta http-equiv="Content-Language" content="cs">
 
-<meta name="Generator" content="Novell HTML Conversion 10 March 2004">
-<meta name="Generation-Date" content="Sunday, October 23, 2005 15:54">
-<meta name="Content-Date" content="Mon, 22 Oct 2005 12:00:00 GMT">
+<meta name="Generator" content="Konverze HTML společnosti Novell, 10. března 2004">
+<meta name="Generation-Date" content="neděle, 23. října 2005, 15:54">
+<meta name="Content-Date" content="Po, 22. října 2004, 12:00:00 GMT">
 <meta name="Robots" content="INDEX, FOLLOW">
 <meta name="Document_Number" content="zHTML xD.0000.0000.0003.0003.">
 <meta name="Author" content="zHTML xD.0000.0000.0003.0003.">
@@ -18,7 +19,7 @@
 <link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
 
 
-<title>iFolder Help</title>
+<title>Nápověda aplikace iFolder</title>
 <script type="text/javascript" language="javascript">
 function loadMenu()
 {
@@ -43,26 +44,24 @@ loadMenu();
 
 <a name="bwagrrn"></a>
 
-<div class="Topic" title="Naming Conventions for an iFolder and Its Folders and Files">
+<div class="Topic" title="Zásady pro pojmenování pro složku iFolder a její složky a soubory">
 
-<h2 class="TOPIC-TITLE"><br />Naming Conventions for an iFolder and Its Folders and Files</h2>
-<p class="TOPIC">The iFolder client imposes naming conventions that consider the collective restrictions of the Linux, Windows, and Macintosh file systems. An iFolder, folder, or file must have a valid name that complies with the naming conventions before it can be synchronized.</p>
-<p class="TOPIC">Use the following naming conventions for your iFolders and the folders and files in them:</p>
+<h2 class="TOPIC-TITLE"><br />Zásady pro pojmenování pro složku iFolder a její složky a soubory</h2>
+<p class="TOPIC">Klient iFolder využívá zásad pro pojmenování, které zohledňují souhrnná omezení systémů souborů Linux, Windows a Macintosh. Složka iFolder, složka nebo soubor musejí mít platný název, který vyhovuje zásadám pro pojmenování, teprve pak mohou být synchronizovány.</p>
+<p class="TOPIC">Pro složky iFolder a v nich obsažené složky a soubory použijte následující zásady pro pojmenování:</p>
 <ul class="LISTBULLET">
-<li class="BULLETITEM">iFolder supports the <a href="http://www.unicode.org" target="_blank" class="ULINK">Unicode*</a> character set with UTF-8 encoding. </li>
+<li class="BULLETITEM">iFolder podporuje znakovou sadu <a href="http://www.unicode.org" target="_blank" class="ULINK">Unicode</a> s kódováním UTF-8. </li>
 
-<li class="BULLETITEM">Do not use the following invalid characters in the names of iFolders or in the names of folders and files in them:
-<pre class="CODESAMPLENARROW">\/:*?&quot;&lt;&gt;|;</pre>
+<li class="BULLETITEM">Nepoužívejte následující neplatné znaky pro pojmenovávání složek iFolder nebo složek a souborů v nich obsažených: <pre class="CODESAMPLENARROW">\/:*?"&lt;&gt;|;</pre>
 
-<p class="BULLETITEM">iFolder creates a name conflict if you use the invalid characters in a file or folder name. The conflict must be resolved before the file or folder can be synchronized.</p></li>
+<p class="BULLETITEM">Použijete-li v názvu souboru nebo složky neplatné znaky, iFolder vytvoří konflikt názvu. Před synchronizací souboru nebo složky musí být konflikt vyřešen.</p></li>
 
-<li class="BULLETITEM">The maximum name length for a single path component is 255 bytes. For filenames, the maximum length includes the dot (.) and file extension.</li>
+<li class="BULLETITEM">Maximální délka názvu jedné komponenty cesty je 255 bajtů. V případě názvů souborů zahrnuje maximální délka názvu i tečku (.) a příponu souboru.</li>
 
-<li class="BULLETITEM">Names of iFolders, folders, and files are case insensitive; however, case is preserved. If filenames differ only by case, iFolder creates a name conflict. The conflict must be resolved before the file or folder can be synchronized.</li>
+<li class="BULLETITEM">Názvy složek iFolder, složek a souborů nerozlišují velikost písma, ta však zůstává zachována. Pokud se názvy souborů liší pouze velikostí písma, aplikace iFolder vytvoří konflikt názvu. Před synchronizací souboru nebo složky musí být konflikt vyřešen.</li>
 
-<li class="BULLETITEM">If you create iFolders on a FAT32 file system on Linux, avoid naming files in all uppercase characters. The VFAT or FAT32 file handling on Linux automatically changes the filenames that are all uppercase characters and meet the MS-DOS 8.3 file format from all uppercase characters to all lowercase characters. This creates synchronization problems for those files if the iFolder is set with the Read Only access right.</li>
-</ul>
-</div>
+<li class="BULLETITEM">Vytváříte-li složky iFolder na systému souborů FAT32 v operačním systému Linux, vyhněte se názvům souborů s velkými písmeny. Popisovač souboru VFAT nebo FAT32 v operačním systému Linux automaticky změní názvy souborů, které jsou tvořeny velkými písmeny a vyhovují formátu souboru MS-DOS 8.3 tak, že všechna velká písmena nahradí malými. Pokud má složka iFolder nastavena přístupové právo Pouze pro čtení, dojde u těchto souborů k potížím se synchronizací.</li>
+</ul> </div>
 
 <script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
 
