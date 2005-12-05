@@ -12,10 +12,6 @@ endif
 
 DIST_SUBDIRS = iFolder TrayIcon LinuxClient iFolderShell FormsTrayApp WebService libifolder OSXClient
 
-# remove all of the CVS directories
-dist-hook:
-	rm -rf `find $(distdir) -name CVS`
-
 EXTRA_DIST = $(srcdir)/ifolder-snakeoil.keys images
 
 install-util uninstall-util:

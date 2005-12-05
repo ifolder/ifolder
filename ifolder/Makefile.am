@@ -2,6 +2,11 @@ SUBDIRS = src help po
 
 DIST_SUBDIRS = $(SUBDIRS) doc package test
 
+# remove all of the CVS directories
+dist-hook:
+	rm -rf `find $(distdir) -name CVS`
+	rm -rf `find $(distdir) -name ".svn"`
+
 if WINDOWS
 if DEBUG	
 ADDITIONAL_LIB_FILES = msvcr71d.dll
