@@ -1,11 +1,11 @@
-<script language="JavaScript1.2" type="text/javascript">
-	top.PREVIOUS_PAGE 	= 'Previous Page: ';
-	top.NEXT_PAGE 		= 'Next Page: ';
-	top.JS_ERROR_MSG	= 'A JavaScript error has occurred on this page!  Please note down the following information and pass it on to the Webmaster.';
-	top.NO_FLOAT_MSG	= 'Sorry, your browser does not support this feature!';
-	top.COOKIE_MSG		= 'You must have Cookies enabled to change the display mode!';
-	top.SECURITY_MSG	= 'Due to security restrictions imposed by your browser, I cannot change modes while a page from another server is being displayed. The default home page for this site will be displayed instead.';
-	top.FEEDBACK_MSG	= 'Please press CTRL-D to bookmark this page';
-	top.FEEDBACK_ALT	= 'Feedback';
-	top.BOOKMARK_ALT	= 'Bookmark this page';
+﻿<script language="JavaScript1.2" type="text/javascript">
+	top.PREVIOUS_PAGE 	= '上一页： ';
+	top.NEXT_PAGE 		= '下一页： ';
+	top.JS_ERROR_MSG	= '本页出现 JavaScript 错误！请记录以下信息并将其交给网站管理员。';
+	top.NO_FLOAT_MSG	= '对不起，您的浏览器不支持此功能！';
+	top.COOKIE_MSG		= '必须启用 Cookie 才可更改显示模式！';
+	top.SECURITY_MSG	= '由于您的浏览器所实行的安全限制，在显示另一服务器上的页面的过程中，我无法更改模式。屏幕上将代之以显示此站点的默认主页。';
+	top.FEEDBACK_MSG	= '请按 CTRL-D 将当前页加入书签';
+	top.FEEDBACK_ALT	= '反馈';
+	top.BOOKMARK_ALT	= '将当前页加入书签';
 </script>

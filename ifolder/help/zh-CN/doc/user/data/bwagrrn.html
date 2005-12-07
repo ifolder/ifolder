@@ -2,8 +2,8 @@
 
 <head>
 
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<meta http-equiv="Content-Language" content="en">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Language" content="zh">
 
 <meta name="Generator" content="Novell HTML Conversion 10 March 2004">
 <meta name="Generation-Date" content="Sunday, October 23, 2005 15:54">
@@ -18,7 +18,7 @@
 <link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
 
 
-<title>iFolder Help</title>
+<title>iFolder 帮助</title>
 <script type="text/javascript" language="javascript">
 function loadMenu()
 {
@@ -43,26 +43,24 @@ loadMenu();
 
 <a name="bwagrrn"></a>
 
-<div class="Topic" title="Naming Conventions for an iFolder and Its Folders and Files">
+<div class="Topic" title="iFolder 及其文件夹和文件的命名约定">
 
-<h2 class="TOPIC-TITLE"><br />Naming Conventions for an iFolder and Its Folders and Files</h2>
-<p class="TOPIC">The iFolder client imposes naming conventions that consider the collective restrictions of the Linux, Windows, and Macintosh file systems. An iFolder, folder, or file must have a valid name that complies with the naming conventions before it can be synchronized.</p>
-<p class="TOPIC">Use the following naming conventions for your iFolders and the folders and files in them:</p>
+<h2 class="TOPIC-TITLE"><br />iFolder 及其文件夹和文件的命名约定</h2>
+<p class="TOPIC">iFolder 客户程序规定的命名约定综合考虑了 Linux、Windows 和 Macintosh 文件系统的限制。iFolder、文件夹或文件必须具有符合这些命名约定的有效名称方可进行同步。</p>
+<p class="TOPIC">请为 iFolder 和其中的文件夹和文件使用以下命名约定：</p>
 <ul class="LISTBULLET">
-<li class="BULLETITEM">iFolder supports the <a href="http://www.unicode.org" target="_blank" class="ULINK">Unicode*</a> character set with UTF-8 encoding. </li>
+<li class="BULLETITEM">iFolder 支持具有 UTF-8 编码的 <a href="http://www.unicode.org" target="_blank" class="ULINK">Unicode*</a> 字符集。 </li>
 
-<li class="BULLETITEM">Do not use the following invalid characters in the names of iFolders or in the names of folders and files in them:
-<pre class="CODESAMPLENARROW">\/:*?&quot;&lt;&gt;|;</pre>
+<li class="BULLETITEM">不要在 iFolder 的名称以及 iFolder 中文件夹和文件的名称中使用以下无效字符： <pre class="CODESAMPLENARROW">\/:*?"&lt;&gt;|;</pre>
 
-<p class="BULLETITEM">iFolder creates a name conflict if you use the invalid characters in a file or folder name. The conflict must be resolved before the file or folder can be synchronized.</p></li>
+<p class="BULLETITEM">如果在文件或文件夹名称中使用了无效字符，则 iFolder 将出现名称冲突。必须先解决该冲突才能同步文件或文件夹。</p></li>
 
-<li class="BULLETITEM">The maximum name length for a single path component is 255 bytes. For filenames, the maximum length includes the dot (.) and file extension.</li>
+<li class="BULLETITEM">单个路径组成部分的最大名称长度是 255 个字节。对于文件名，该最大长度包括句点 (.) 和文件扩展名。</li>
 
-<li class="BULLETITEM">Names of iFolders, folders, and files are case insensitive; however, case is preserved. If filenames differ only by case, iFolder creates a name conflict. The conflict must be resolved before the file or folder can be synchronized.</li>
+<li class="BULLETITEM">iFolder、文件夹和文件的名称是不区分大小写的；但是将保留原有的大小写。如果文件名只是大小写不同，则 iFolder 将出现名称冲突。必须先解决该冲突才能同步文件或文件夹。</li>
 
-<li class="BULLETITEM">If you create iFolders on a FAT32 file system on Linux, avoid naming files in all uppercase characters. The VFAT or FAT32 file handling on Linux automatically changes the filenames that are all uppercase characters and meet the MS-DOS 8.3 file format from all uppercase characters to all lowercase characters. This creates synchronization problems for those files if the iFolder is set with the Read Only access right.</li>
-</ul>
-</div>
+<li class="BULLETITEM">如果在 Linux 中的 FAT32 文件系统上创建 iFolder，请避免使用全大写字符命名文件。对于由全大写字符组成的文件名，如果它符合 MS-DOS 8.3 文件格式，Linux 上的 VFAT 或 FAT32 文件处理会自动将其更改为全小写字符。如果 iFolder 是用“只读”访问权限设置的，则对于这些文件，上面的情况会引发同步问题。</li>
+</ul> </div>
 
 <script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
 

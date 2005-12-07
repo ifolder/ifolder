@@ -2,8 +2,8 @@
 
 <head>
 
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<meta http-equiv="Content-Language" content="en">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Language" content="zh">
 
 <meta name="Generator" content="Novell HTML Conversion 10 March 2004">
 <meta name="Generation-Date" content="Sunday, October 23, 2005 15:54">
@@ -18,7 +18,7 @@
 <link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
 
 
-<title>iFolder Help</title>
+<title>iFolder 帮助</title>
 <script type="text/javascript" language="javascript">
 function loadMenu()
 {
@@ -43,20 +43,20 @@ loadMenu();
 
 <a name="bvwppw5"></a>
 
-<div class="Topic" title="Configuring Local Firewall Settings for iFolder Traffic">
+<div class="Topic" title="为 iFolder 交通配置本地防火墙设置">
 
-<h2 class="TOPIC-TITLE"><br />Configuring Local Firewall Settings for iFolder Traffic</h2>
-<p class="TOPIC">If you use a local firewall, you must set your firewall to allow iFolder to choose a local dynamic port or configure a local static port for the iFolder client to communicate locally (the same computer) with Mono XSP Server. iFolder uses Mono XSP Web services to communicate via HTTP or HTTPS (SSL, default) with the Novell iFolder enterprise servers where you have iFolder accounts. The iFolder administrator configures iFolder services that determine whether communications use HTTP or HTTPS in your environment.</p>
-<p class="TOPIC">Your firewall does not block traffic between Mono XSP and the Novell iFolder enterprise server because Mono XSP uses the standard HTTP or HTTPS ports for traffic. However, if you block the traffic between the client and Mono-XSP, the client has no way to communicate with the server. You would not be able to log in to your iFolder account and synchronize iFolder data.</p>
-<p class="TOPIC">Initially, the iFolder configuration does not specify a particular port to use for client-to-Mono XSP communications. When iFolder first runs, it opens an available local port to listen for requests from the Mono XSP and to send data to the server via Mono XSP. It writes the port number to a configuration file and uses this port thereafter unless the port is not available whenever iFolder starts. If the port is in use by another application, iFolder selects a different available port, reconfigures the port in the configuration file, and uses the new port thereafter. For example, if iFolder is down and another application takes the port, when you restart iFolder, iFolder must select and configure a different port to use.</p>
-<h4 class="BRIDGEHEAD"><br />Using a Local Dynamic Port</h4>
-<p class="TOPIC">If you use a local firewall on your computer, the firewall should detect the local traffic between the iFolder and Mono XSP server whenever iFolder contacts the server to synchronize its list of users and iFolder data. Allow the traffic to avoid receiving the pop-up alert whenever the client starts. If you allow the traffic permanently, your firewall should not remind you again.</p>
-<h4 class="BRIDGEHEAD"><br />Using a Local Static Port</h4>
-<p class="TOPIC">You can optionally add the Web Service Port Range parameter in the Service Manager section of the Simias.config file to allow Mono-XSP Server to use a static port or a range of ports for this local traffic. This port or range of ports can then be opened in the firewall to allow communications for Mono-XSP. </p>
-<p class="TOPIC">You can find Simias.config in the following locations:</p>
+<h2 class="TOPIC-TITLE"><br />为 iFolder 交通配置本地防火墙设置</h2>
+<p class="TOPIC">如果您使用本地防火墙，则必须设置您的防火墙，以便允许 iFolder 选择本地动态端口；或配置本地静态端口，以便允许 iFolder 客户程序使用 Mono XSP 服务器进行本地（同一台计算机）通讯。iFolder 使用 Mono XSP 万维网服务通过 HTTP 或 HTTPS（SSL，默认设置）与您在其上拥有 iFolder 帐户的 Novell iFolder Enterprise Server 进行通讯。iFolder 管理员配置 iFolder 服务，这些服务确定在您的环境中是使用 HTTP 还是 HTTPS 进行通讯。</p>
+<p class="TOPIC">由于 Mono XSP 为交通使用标准的 HTTP 或 HTTPS 端口，所以您的防火墙不会阻止 Mono XSP 和 Novell iFolder Enterprise Server 之间的交通。但是，如果您阻止了客户程序和 Mono-XSP 之间的交通，客户程序将无法与服务器进行通讯。您将无法登录到您的 iFolder 帐户并同步 iFolder 数据。</p>
+<p class="TOPIC">最初，iFolder 配置不会为客户程序与 Mono XSP 之间的交通指定特定的端口。当 iFolder 第一次运行时，它打开一个可用的本地端口，监听来自 Mono XSP 的请求并通过 Mono XSP 将数据发送到服务器。它将端口号写入配置文件并且在此后一直使用此端口（除非某一次 iFolder 启动时该端口不可用）。如果该端口被另一个应用程序使用，则 iFolder 选择其它可用端口，在配置文件中重新配置端口，并在以后一直使用那个新端口。例如，如果 iFolder 关闭而另一个应用程序占用了端口，当您重启动 iFolder 时，iFolder 必须选择并配置另一个端口来使用。</p>
+<h4 class="BRIDGEHEAD"><br />使用本地动态端口</h4>
+<p class="TOPIC">如果在计算机上使用本地防火墙，每当 iFolder 联系服务器以同步其用户列表和 iFolder 数据时，防火墙会检测到 iFolder 和 Mono XSP 服务器之间的本地交通。如果允许该交通，就不会在客户程序启动时收到弹出警报。如果永久性地允许交通，则防火墙不会再发出提醒。</p>
+<h4 class="BRIDGEHEAD"><br />使用本地静态端口</h4>
+<p class="TOPIC">您可以选择在 Simias.config 文件的 Service Manager（服务管理器）节添加 Web Service Port Range（万维网服务端口范围）参数，以允许 Mono-XSP 服务器为该本地交通使用静态端口或某一范围的端口。然后在防火墙中打开此端口或端口范围，以允许 Mono-XSP 的通讯。 </p>
+<p class="TOPIC">可以在以下位置找到 Simias.config：</p>
 <table class="TABLENOTITLE" border="0" cellpadding="5" cellspacing="0">
-<tr class="HEADERROW"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bwejkc4"></a><em class="TBLHEAD">Operating System</em></th>
-<th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">Location of the Simias.config File</em></th>
+<tr class="HEADERROW"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bwejkc4"></a><em class="TBLHEAD">操作系统</em></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">Simias.config 文件的位置</em></th>
 </tr>
 <tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bwejkc5"></a><p class="ENTRY">Linux</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">/home/<em class="VARIABLE">username</em>/.local/share/simias/Simias.config</p></td>
@@ -68,44 +68,40 @@ loadMenu();
 <td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">/Users/<em class="VARIABLE">username</em>/.local/share/simias/Simias.config</p></td>
 </tr></table>
 
-<p class="TOPIC">Add the Web Service Port Range Setting to the Service Manager section of the Simias.config file. For example:</p>
-<pre class="CODESAMPLENARROW">&lt;configuration&gt;</pre>
+<p class="TOPIC">将 Web Service Port Range 设置添加到 Simias.config 文件的 Service Manager 节。例如：</p> <pre class="CODESAMPLENARROW">&lt;configuration&gt;</pre>
 
-<pre class="CODESAMPLENARROW">  &lt;section name=&quot;ServiceManager&quot;&gt;</pre>
+<pre class="CODESAMPLENARROW">  &lt;section name="ServiceManager"&gt;</pre>
 
-<pre class="CODESAMPLENARROW">    &lt;setting name=&quot;WebServicePortRange&quot; value=&quot;<em class="VARIABLE">monoxsp_port</em>&quot; /&gt;   </pre>
+<pre class="CODESAMPLENARROW">    &lt;setting name="WebServicePortRange" value="<em class="VARIABLE">monoxsp_port</em>" /&gt;   </pre>
 
 <pre class="CODESAMPLENARROW">  &lt;/section&gt;</pre>
 
 <pre class="CODESAMPLENARROW">&lt;/configuration&gt;</pre>
 
-<p class="TOPIC">Replace <em class="VARIABLE">monoxsp_port</em> with a port number or range of port numbers:</p>
+<p class="TOPIC">将 <em class="VARIABLE">monoxsp_port</em> 替换为某个端口号或端口范围：</p>
 <ul class="LISTBULLET">
-<li class="BULLETITEM">Specify a value of a single four-digit port number (such as 1234) to use a single static port. For example:
-<pre class="CODESAMPLENARROW">&lt;setting name=&quot;WebServicePortRange&quot; value=&quot;<em class="VARIABLE">1234</em>&quot; /&gt;</pre>
+<li class="BULLETITEM">若要使用单个静态端口，应指定一个四位端口号（如 1234）。例如：<pre class="CODESAMPLENARROW">&lt;setting name="WebServicePortRange" value="<em class="VARIABLE">1234</em>" /&gt;</pre>
 </li>
 
-<li class="BULLETITEM">Specify a range of ports (such as "1234-1236") to use any available port in the specified range of ports. For example:
-<pre class="CODESAMPLENARROW">&lt;setting name=&quot;WebServicePortRange&quot; value=&quot;<em class="VARIABLE">1234-1236</em>&quot; /&gt;</pre>
+<li class="BULLETITEM">若要使用指定端口范围内的任何可用端口，应指定一个端口范围（如“1234-1236”）。例如：<pre class="CODESAMPLENARROW">&lt;setting name="WebServicePortRange" value="<em class="VARIABLE">1234-1236</em>" /&gt;</pre>
 </li>
 </ul>
-<p class="TOPIC">To configure your system to use a specific port or range of ports:</p>
+<p class="TOPIC">要配置系统，使之使用特定的端口或端口范围，请执行以下操作：</p>
 <ol class="STEPLIST">
 <li class="STEP"><a name="bw4v93e"></a>
-<p class="STEP">Configure your firewall to allow traffic for the port or range of ports you want to use for iFolder traffic.</p>
-<p class="STEP">See your firewall's documentation for information on how to open a port in the firewall.</p></li>
+<p class="STEP">配置防火墙，以便允许在用于 iFolder 交通的端口或端口范围上进行通讯。</p>
+<p class="STEP">有关如何在防火墙中打开端口的信息，请参见防火墙的说明文档。</p></li>
 
 <li class="STEP"><a name="bw4v6ou"></a>
-<p class="STEP">Stop the iFolder client by right-clicking the iFolder icon <img src="../graphics/ifolder16.png" alt="iFolder Application Icon" />, then selecting Exit.</p></li>
+<p class="STEP">通过右击 iFolder 图标 <img src="../graphics/ifolder16.png" alt="iFolder 应用程序图标" /> 停止 iFolder 客户程序，然后选择“退出”。</p></li>
 
 <li class="STEP"><a name="bw4v6r7"></a>
-<p class="STEP">Modify the Simias.config file by adding the Web Service Port Range parameter to the Service Manager section.</p></li>
+<p class="STEP">通过将 Web Service Port Range 参数添加到  Service Manager 节来修改 Simias.config 文件。</p></li>
 
 <li class="STEP"><a name="bw4vbz4"></a>
-<p class="STEP">Start the iFolder client.</p>
-<p class="STEP">For information, see <a href="bw08fxi.html#bw08fxi">Starting the iFolder Client</a>.</p></li>
-</ol>
-</div>
+<p class="STEP">启动 iFolder 客户程序。</p>
+<p class="STEP">有关信息，请参见<a href="bw08fxi.html#bw08fxi">启动 iFolder 客户程序</a>。</p></li>
+</ol> </div>
 
 <script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
 
