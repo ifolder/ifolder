@@ -1,42 +1,42 @@
-front.html                  iFolder Help
-overview.html               Overview of iFolder
-bx3aueg.html                iFolder Sharing
-bq1r10z.html                Benefits of iFolder
-bq1r110.html                Key Features of iFolder
-bq1r110.html#bq1r111        The iFolder Client
-bq1r110.html#bx3bipv        iFolder Account
-bq1r110.html#bq1r112        Shared iFolders
-bq1r110.html#bq1r113        iFolder Access Rights
-bq1r110.html#bq1r118        File Synchronization and Data Management
-bq1r110.html#bq63xvh        Synchronization Log
-bwcku86.html                Cross-Platform Considerations
-accountsprefs.html          Managing iFolder Accounts and Preferences
-bw08fxi.html                Starting the iFolder Client
-accounts.html               Configuring an iFolder Account
-login.html                  Logging In to an iFolder Account
-accountdetails.html         Viewing and Modifying iFolder Account Settings
-bvwsp7c.html                Deleting an iFolder Account
-preferences.html            Configuring iFolder Preferences for the Client
-bvwppw5.html                Configuring Local Firewall Settings for iFolder Traffic
-bwbirb9.html                Configuring Local Virus Scanner Settings for iFolder Traffic
-myifolders.html             Managing iFolders
-bx08x4y.html                Guidelines for Locating iFolders
-bwensdb.html                Guidelines for File Types and Sizes to Not Synchronize
-bwagrrn.html                Naming Conventions for an iFolder and Its Folders and Files
-createifolder.html          Creating an iFolder
-createifolder.html#bwembx5   Creating iFolders in a File Manager
-createifolder.html#bwemc36   Creating iFolders in the iFolders Browser
-createifolder.html#fat32mtpt   Creating iFolders on a FAT32 Mount Point (Linux)
-sharewith.html              Sharing an iFolder
-sharewith.html#bv2hnvt      Understanding User Access Rights
-sharewith.html#bq6lwm0      Adding a User to an iFolder
-sharewith.html#bq6lwma      Modifying User Access Rights
-sharewith.html#bq6lwmr      Removing a User from an iFolder
-setupifolder.html           Setting Up an Available iFolder
-propifolders.html           Viewing and Configuring Properties of an iFolder
-sync.html                   Synchronizing Files
-conflicts.html              Resolving File Conflicts
-reverting.html              Reverting an iFolder to a Normal Folder
-movelocation.html           Moving an iFolder
-deleting.html               Deleting an iFolder
-legal.html                  Legal Notices
+Nápověda aplikace iFolder
+               Přehled aplikace iFolder
+                Sdílení složky iFolder 
+                Výhody aplikace iFolder
+                Klíčové vlastnosti aplikace iFolder
+bq1r110.html        Klient aplikace iFolder 
+bq1r110.html        Účet aplikace iFolder
+bq1r110.html        Sdílené složky iFolder
+bq1r110.html        Přístupová práva aplikace iFolder
+bq1r110.html        Synchronizace souborů a správa dat
+bq1r110.html        Synchronizační protokol
+                Pokyny pro různé platformy
+          Správa účtů aplikace iFolder a předvoleb
+                Spuštění klienta aplikace iFolder
+               Konfigurace účtu aplikace iFolder
+                  Přihlášení k účtu aplikace iFolder
+         Zobrazení a změna nastavení účtu aplikace iFolder
+                Odstranění účtu aplikace iFolder
+            Konfigurace předvoleb aplikace iFolder pro klienta
+                Konfigurace místní brány firewall pro provoz aplikace iFolder
+                Konfigurace místního antivirového programu pro provoz aplikace iFolder
+             Správa složek iFolder
+                Pravidla pro umístění složek iFolder
+                Pravidla pro typy a velikost souborů, které nemají být synchronizovány
+                Zásady pojmenování pro složku iFolder a její složky a soubory
+          Vytvoření složky iFolder
+createifolder.html   Vytvoření složek iFolder ve správci souborů
+createifolder.html   Vytvoření složek iFolder v prohlížeči složek iFolder
+createifolder.html   Vytvoření složek iFolder na přípojném bodu FAT32 Mount Point (Linux)
+              Sdílení složky iFolder
+sharewith.html      Popis uživatelských přístupových práv
+sharewith.html      Přidání uživatele do složky iFolder
+sharewith.html      Změna uživatelských přístupových práv
+sharewith.html      Odebrání uživatele ze složky iFolder
+           Nastavení dostupné složky iFolder
+           Zobrazení a konfigurace vlastností složky iFolder
+                   Synchronizace souborů
+              Vyřešení konfliktů souborů
+              Změna složky iFolder na normální složku
+           Přesunutí složky iFolder
+               Odstranění složky iFolder
+                  Právní upozornění

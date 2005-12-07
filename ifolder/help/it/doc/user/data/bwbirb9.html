@@ -1,9 +1,10 @@
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+﻿
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"><!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 
 <head>
 
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<meta http-equiv="Content-Language" content="en">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Language" content="it">
 
 <meta name="Generator" content="Novell HTML Conversion 10 March 2004">
 <meta name="Generation-Date" content="Sunday, October 23, 2005 15:54">
@@ -18,7 +19,7 @@
 <link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
 
 
-<title>iFolder Help</title>
+<title>Guida di iFolder</title>
 <script type="text/javascript" language="javascript">
 function loadMenu()
 {
@@ -45,12 +46,11 @@ loadMenu();
 
 <div class="Topic" title="Configuring Local Virus Scanner Settings for iFolder Traffic">
 
-<h2 class="TOPIC-TITLE"><br />Configuring Local Virus Scanner Settings for iFolder Traffic</h2>
-<p class="TOPIC">If you use virus scanning software on your computer, exclude the ..\simias\WorkArea\ directory from the virus scan. For example, the location of the ..\simias\WorkArea\ directory on Windows is c:\documents and settings\<em class="VARIABLE">username</em>\local settings\application data\simias\WorkArea\.simias.wf.<em class="VARIABLE">guid</em>. </p>
-<p class="TOPIC">The ..\simias\WorkArea\ directory is where iFolder stages files for download from the server. If an iFolder file has a virus attached and your virus scanning software scans that virus while the file is in the ..\simias\WorkArea directory, the virus scanner pops up with a message a virus has been found, moves the file to quarantine, then iFolder again tries to synchronize the file. </p>
-<p class="TOPIC">Not scanning the WorkArea allows the synchronization to complete; the infected file is successfully downloaded and moved to the local iFolder. The virus scanner then detects the infected file in the iFolder and moves it from that folder to quarantine, protecting the computer from infection. iFolder detects the deletion of the file and when the next synchronization begins, iFolder removes the file from the server and member computers. </p>
-<p class="TOPIC">However, if the iFolder where the file is downloaded is Read-Only, the local deletion is not enforced to the server and other member computers. The virus must be detected elsewhere where permissions allow changes to be synchronized. The user's virus scanner probably alerts the user of the virus, so the user should alert other iFolder members about the virus.</p>
-</div>
+<h2 class="TOPIC-TITLE"><br />Configurazione delle impostazioni del software antivirus locale per il traffico iFolder</h2>
+<p class="TOPIC">Se nel computer viene utilizzato un software antivirus, escludere la directory ..\simias\WorkArea\ dal controllo antivirus. Ad esempio, l’ubicazione della directory ..\simias\WorkArea\ in Windows è c:\Documents and Settings\<em class="VARIABLE">nomeutente</em>\Impostazioni locali\Dati applicazioni\simias\WorkArea\.simias.wf.<em class="VARIABLE">guid</em>. </p>
+<p class="TOPIC">La directory ..\simias\WorkArea\ è l’ubicazione in cui iFolder memorizza provvisoriamente i file per lo scaricamento dal server. Se un file iFolder contiene un virus e il software antivirus effettua la scansione del virus mentre il file si trova nella directory ..\simias\WorkArea, verrà visualizzato un messaggio di rilevamento virus, il file verrà messo in quarantena, quindi iFolder tenterà nuovamente di sincronizzare il file. </p>
+<p class="TOPIC">Se la directory WorkArea non viene sottoposta a scansione, sarà possibile completare la sincronizzazione e il file infetto verrà scaricato e spostato nella cartella iFolder locale. Il software antivirus rileverà quindi la presenza del file infetto nella cartella iFolder e lo metterà in quarantena, proteggendo così il computer dall’infezione. iFolder rileverà la cancellazione del file e alla successiva sincronizzazione rimuoverà il file dal server e dai computer membri. </p>
+<p class="TOPIC">Tuttavia, se la cartella iFolder in cui il file viene scaricato è di sola lettura, la cancellazione locale non verrà eseguita sul server e sugli altri computer membri. Il virus dovrà essere rilevato in un’altra postazione in cui le autorizzazioni consentono la sincronizzazione delle modifiche. Probabilmente il software antivirus dell’utente visualizzerà un avviso di presenza di virus e quindi l’utente ne potrà informare gli altri membri.</p> </div>
 
 <script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
 

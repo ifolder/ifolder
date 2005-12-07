@@ -1,4 +1,4 @@
-
+﻿
 // Joust Outliner Version 2.5.4
 // (c) Copyright 1996-2001, MITEM (Europe) Ltd. All rights reserved.
 // This code may be freely copied and distributed provided that it is accompanied by this 

@@ -1,24 +1,18 @@
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-
+﻿<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <head>
-
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<meta http-equiv="Content-Language" content="en">
-
-<meta name="Generator" content="Novell HTML Conversion 10 March 2004">
-<meta name="Generation-Date" content="Sunday, October 23, 2005 15:54">
-<meta name="Content-Date" content="Mon, 22 Oct 2005 12:00:00 GMT">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Language" content="es">
+<meta name="Generator" content="Novell HTML Conversion 10 de marzo de 2004">
+<meta name="Generation-Date" content="Domingo, 23 de octubre de 2005 15:54">
+<meta name="Content-Date" content="Lunes, 22 de octubre de 2005 12:00:00 GMT">
 <meta name="Robots" content="INDEX, FOLLOW">
 <meta name="Document_Number" content="zHTML xD.0000.0000.0003.0003.">
 <meta name="Author" content="zHTML xD.0000.0000.0003.0003.">
 <meta name="Product_Class" content="">
 <meta name="Product_and_Version" content="iFolder(TM)">
 <meta name="Copyright" content="Copyright Novell, Inc. 1983-2004">
-
 <link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
-
-
-<title>iFolder Help</title>
+<title>Ayuda de iFolder</title>
 <script type="text/javascript" language="javascript">
 function loadMenu()
 {
@@ -32,39 +26,25 @@ loadMenu();
 </script>
 <script type="text/javascript" language="javascript" src="../../../ui/jsglobal.js"></script>
 </head>
-
 <body onload="">
 <script type="text/javascript" language="javascript">
   var prev_link="bwensdb.html";
   var next_link="createifolder.html";
 </script>
-
 <script type="text/javascript" language="javascript" src="../../../ui/topnav.js"></script>
-
 <a name="bwagrrn"></a>
-
 <div class="Topic" title="Naming Conventions for an iFolder and Its Folders and Files">
-
-<h2 class="TOPIC-TITLE"><br />Naming Conventions for an iFolder and Its Folders and Files</h2>
-<p class="TOPIC">The iFolder client imposes naming conventions that consider the collective restrictions of the Linux, Windows, and Macintosh file systems. An iFolder, folder, or file must have a valid name that complies with the naming conventions before it can be synchronized.</p>
-<p class="TOPIC">Use the following naming conventions for your iFolders and the folders and files in them:</p>
+<h2 class="TOPIC-TITLE"><br />Convenciones de denominaci&oacute;n de una carpeta iFolder y de las carpetas y archivos que contiene</h2>
+<p class="TOPIC">El Cliente iFolder impone convenciones de denominaci&oacute;n que abarcan las restricciones colectivas de los sistemas de archivos Linux, Windows y Macintosh. Para poder sincronizar una carpeta iFolder, una carpeta o un archivo, &eacute;stos deben tener un nombre v&aacute;lido que cumpla con las convenciones de denominaci&oacute;n.</p>
+<p class="TOPIC">Utilice las convenciones de denominaci&oacute;n siguientes para las carpetas iFolder, as&iacute; como para las carpetas y archivos que contienen:</p>
 <ul class="LISTBULLET">
-<li class="BULLETITEM">iFolder supports the <a href="http://www.unicode.org" target="_blank" class="ULINK">Unicode*</a> character set with UTF-8 encoding. </li>
-
-<li class="BULLETITEM">Do not use the following invalid characters in the names of iFolders or in the names of folders and files in them:
-<pre class="CODESAMPLENARROW">\/:*?&quot;&lt;&gt;|;</pre>
-
-<p class="BULLETITEM">iFolder creates a name conflict if you use the invalid characters in a file or folder name. The conflict must be resolved before the file or folder can be synchronized.</p></li>
-
-<li class="BULLETITEM">The maximum name length for a single path component is 255 bytes. For filenames, the maximum length includes the dot (.) and file extension.</li>
-
-<li class="BULLETITEM">Names of iFolders, folders, and files are case insensitive; however, case is preserved. If filenames differ only by case, iFolder creates a name conflict. The conflict must be resolved before the file or folder can be synchronized.</li>
-
-<li class="BULLETITEM">If you create iFolders on a FAT32 file system on Linux, avoid naming files in all uppercase characters. The VFAT or FAT32 file handling on Linux automatically changes the filenames that are all uppercase characters and meet the MS-DOS 8.3 file format from all uppercase characters to all lowercase characters. This creates synchronization problems for those files if the iFolder is set with the Read Only access right.</li>
-</ul>
-</div>
-
+<li class="BULLETITEM">iFolder es compatible con el conjunto de caracteres <a href="http://www.unicode.org" target="_blank" class="ULINK">Unicode*</a> con la codificaci&oacute;n UTF-8. </li>
+<li class="BULLETITEM">No utilice los siguientes caracteres no v&aacute;lidos en los nombres de carpetas iFolder ni en las carpetas y archivos que contienen: <pre class="CODESAMPLENARROW">\/:*?"&lt;&gt;|;</pre>
+<p class="BULLETITEM">iFolder crea un conflicto de nombres si se utilizan caracteres no v&aacute;lidos en un nombre de archivo o carpeta. Para poder sincronizar el archivo o la carpeta, el conflicto debe resolverse.</p></li>
+<li class="BULLETITEM">La longitud m&aacute;xima del nombre para un componente de una sola v&iacute;a es de 255 bytes. En cuanto a los nombres de archivo, la longitud m&aacute;xima incluye el punto (.) y la extensi&oacute;n de archivo.</li>
+<li class="BULLETITEM">A pesar de que los nombres de carpetas iFolder, carpetas y archivos no distinguen entre may&uacute;sculas y min&uacute;sculas, &eacute;stas se conservar&aacute;n. Si los nombres de archivos s&oacute;lo var&iacute;an en las may&uacute;sculas y min&uacute;sculas, iFolder generar&aacute; un conflicto de nombres. Para poder sincronizar el archivo o la carpeta, el conflicto debe resolverse.</li>
+<li class="BULLETITEM">Si crea carpetas iFolder en un sistema de archivos FAT32 en Linux, evite la denominaci&oacute;n de archivos con todos los caracteres en may&uacute;scula. La gesti&oacute;n de archivos VFAT o FAT32 en Linux cambia autom&aacute;ticamente los nombres de archivo con todos los caracteres en may&uacute;scula y cumple el formato de archivo de MS-DOS 8.3 seg&uacute;n el cual los nombres con todos los caracteres en may&uacute;scula cambian a min&uacute;scula. Esto crea problemas de sincronizaci&oacute;n en los archivos si iFolder se establece con derecho de acceso de s&oacute;lo lectura.</li>
+</ul> </div>
 <script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
-
 </body>
 </html>

@@ -1,24 +1,18 @@
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-
+﻿<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <head>
-
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<meta http-equiv="Content-Language" content="en">
-
-<meta name="Generator" content="Novell HTML Conversion 10 March 2004">
-<meta name="Generation-Date" content="Sunday, October 23, 2005 15:54">
-<meta name="Content-Date" content="Mon, 22 Oct 2005 12:00:00 GMT">
-<meta name="Robots" content="INDEX, FOLLOW">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Language" content="de">
+<meta name="Generator" content="Novell HTML-Konvertierung 10. M&auml;rz 2004">
+<meta name="Generation-Date" content="Sonntag, 23. Oktober 2005 15:54 Uhr">
+<meta name="Content-Date" content="Montag, 22. Okt. 2005 12:00:00 Uhr MEZ">
+<meta name="Robots" content="Index, Follow">
 <meta name="Document_Number" content="zHTML xD.0000.0000.0003.0003.">
 <meta name="Author" content="zHTML xD.0000.0000.0003.0003.">
 <meta name="Product_Class" content="">
 <meta name="Product_and_Version" content="iFolder(TM)">
 <meta name="Copyright" content="Copyright Novell, Inc. 1983-2004">
-
 <link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
-
-
-<title>iFolder Help</title>
+<title>Hilfe zu iFolder</title>
 <script type="text/javascript" language="javascript">
 function loadMenu()
 {
@@ -32,39 +26,25 @@ loadMenu();
 </script>
 <script type="text/javascript" language="javascript" src="../../../ui/jsglobal.js"></script>
 </head>
-
 <body onload="">
 <script type="text/javascript" language="javascript">
   var prev_link="bwensdb.html";
   var next_link="createifolder.html";
 </script>
-
 <script type="text/javascript" language="javascript" src="../../../ui/topnav.js"></script>
-
 <a name="bwagrrn"></a>
-
 <div class="Topic" title="Naming Conventions for an iFolder and Its Folders and Files">
-
-<h2 class="TOPIC-TITLE"><br />Naming Conventions for an iFolder and Its Folders and Files</h2>
-<p class="TOPIC">The iFolder client imposes naming conventions that consider the collective restrictions of the Linux, Windows, and Macintosh file systems. An iFolder, folder, or file must have a valid name that complies with the naming conventions before it can be synchronized.</p>
-<p class="TOPIC">Use the following naming conventions for your iFolders and the folders and files in them:</p>
+<h2 class="TOPIC-TITLE"><br />Benennungskonventionen f&uuml;r iFolder-Ordner und zugeh&ouml;rige Ordner und Dateien</h2>
+<p class="TOPIC">Der iFolder-Client erfordert Benennungskonventionen, f&uuml;r die die Einschr&auml;nkungen der Dateisysteme von Linux, Windows und Macintosh insgesamt gelten. Ein iFolder-Ordner, ein Ordner bzw. eine Datei muss einen g&uuml;ltigen, den Benennungskonventionen entsprechenden Namen besitzen, damit die Synchronisierung erfolgen kann.</p>
+<p class="TOPIC">Verwenden Sie die folgenden Benennungskonventionen f&uuml;r Ihre iFolder-Ordner und die darin enthaltenen Ordner und Dateien:</p>
 <ul class="LISTBULLET">
-<li class="BULLETITEM">iFolder supports the <a href="http://www.unicode.org" target="_blank" class="ULINK">Unicode*</a> character set with UTF-8 encoding. </li>
-
-<li class="BULLETITEM">Do not use the following invalid characters in the names of iFolders or in the names of folders and files in them:
-<pre class="CODESAMPLENARROW">\/:*?&quot;&lt;&gt;|;</pre>
-
-<p class="BULLETITEM">iFolder creates a name conflict if you use the invalid characters in a file or folder name. The conflict must be resolved before the file or folder can be synchronized.</p></li>
-
-<li class="BULLETITEM">The maximum name length for a single path component is 255 bytes. For filenames, the maximum length includes the dot (.) and file extension.</li>
-
-<li class="BULLETITEM">Names of iFolders, folders, and files are case insensitive; however, case is preserved. If filenames differ only by case, iFolder creates a name conflict. The conflict must be resolved before the file or folder can be synchronized.</li>
-
-<li class="BULLETITEM">If you create iFolders on a FAT32 file system on Linux, avoid naming files in all uppercase characters. The VFAT or FAT32 file handling on Linux automatically changes the filenames that are all uppercase characters and meet the MS-DOS 8.3 file format from all uppercase characters to all lowercase characters. This creates synchronization problems for those files if the iFolder is set with the Read Only access right.</li>
-</ul>
-</div>
-
+<li class="BULLETITEM">iFolder unterst&uuml;tzt den <a href="http://www.unicode.org" target="_blank" class="ULINK">Unicode*</a>-Zeichensatz mit UTF-8-Codierung. </li>
+<li class="BULLETITEM">Verwenden Sie die folgenden ung&uuml;ltigen Zeichen nicht f&uuml;r die Namen von iFolder-Ordnern oder f&uuml;r die Namen von darin enthaltenen Ordnern und Dateien: <pre class="CODESAMPLENARROW">\/:*?"&lt;&gt;|;</pre>
+<p class="BULLETITEM">iFolder generiert einen Namenskonflikt, wenn Sie die ung&uuml;ltigen Zeichen in einem Datei- oder Ordnernamen verwenden. Der Konflikt muss gel&ouml;st werden, damit die Datei bzw. der Ordner synchronisiert werden kann.</p></li>
+<li class="BULLETITEM">Die maximale L&auml;nge des Namens f&uuml;r eine einzelne Pfadkomponente betr&auml;gt 255 Byte. Bei Dateinamen z&auml;hlen Punkt (.) und Dateierweiterung zur maximalen L&auml;nge.</li>
+<li class="BULLETITEM">Bei Namen von iFolder-Ordnern, Ordnern und Dateien wird nicht zwischen Gro&szlig;- und Kleinschreibung unterschieden. Die Gro&szlig;-/Kleinschreibung wird jedoch beibehalten. Wenn sich Dateinamen nur durch Gro&szlig;-/Kleinschreibung unterscheiden, erzeugt iFolder einen Namenskonflikt. Der Konflikt muss gel&ouml;st werden, damit die Datei bzw. der Ordner synchronisiert werden kann.</li>
+<li class="BULLETITEM">Wenn Sie iFolder-Ordner in einem FAT32-Dateisystem unter Linux erstellen, sollten Sie Dateien nicht ausschlie&szlig;lich mit Gro&szlig;buchstaben benennen. Mit der VFAT- und FAT32-Dateibehandlung unter Linux werden die Dateinamen, die ausschlie&szlig;lich Gro&szlig;buchstaben enthalten und dem Dateiformat von MS-DOS 8.3 entsprechen, automatisch von Gro&szlig;buchstaben in Kleinbuchstaben ge&auml;ndert. Dadurch werden Synchronisierungsprobleme f&uuml;r diese Dateien generiert, wenn der iFolder-Ordner auf das Zugriffsrecht "Nur Lesen" festgelegt ist.</li>
+</ul> </div>
 <script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
-
 </body>
 </html>

@@ -1,11 +1,12 @@
 <script language="JavaScript1.2" type="text/javascript">
-	top.PREVIOUS_PAGE 	= 'Previous Page: ';
-	top.NEXT_PAGE 		= 'Next Page: ';
-	top.JS_ERROR_MSG	= 'A JavaScript error has occurred on this page!  Please note down the following information and pass it on to the Webmaster.';
-	top.NO_FLOAT_MSG	= 'Sorry, your browser does not support this feature!';
-	top.COOKIE_MSG		= 'You must have Cookies enabled to change the display mode!';
-	top.SECURITY_MSG	= 'Due to security restrictions imposed by your browser, I cannot change modes while a page from another server is being displayed. The default home page for this site will be displayed instead.';
-	top.FEEDBACK_MSG	= 'Please press CTRL-D to bookmark this page';
-	top.FEEDBACK_ALT	= 'Feedback';
-	top.BOOKMARK_ALT	= 'Bookmark this page';
+	top.PREVIOUS_PAGE 	= 'Předchozí stránka: ';
+	top.NEXT_PAGE 		= 'Další stránka: ';
+	top.JS_ERROR_MSG	= 'Na této stránce došlo k chybě aplikace JavaScript!  Zapište si následující informace a předejte je správci sítě.';
+	top.NO_FLOAT_MSG	= 'Bohužel, váš prohlížeč nepodporuje tuto funkci!';
+	top.COOKIE_MSG		= 'Pro změnu režimu zobrazení musíte mít zapnuté cookies!';
+	top.SECURITY_MSG	= 'Vzhledem k bezpečnostním omezením vašeho prohlížeče nelze měnit režimy, když je zobrazena stránka z jiného serveru. Místo toho se zobrazí výchozí domovská stránka tohoto serveru.';
+	top.FEEDBACK_MSG	= 'Stisknutím kláves CTRL-D přidáte tuto stránku k oblíbeným položkám';
+	top.FEEDBACK_ALT	= 'Připomínky';
+	top.BOOKMARK_ALT	= 'Přidat tuto stránku k oblíbeným položkám';
 </script>
+

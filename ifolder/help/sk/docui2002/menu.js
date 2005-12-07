@@ -236,12 +236,12 @@ function printSelectedTopics()
     }
     else 
     {   
-       alert("There are no items checked!");
+       alert("Nie sú začiarknuté žiadne položky.");
     }
  }  
  else
  {
-    alert("There is no book to print.");
+    alert("Nie je k dispozícii žiadna kniha na vytlačenie.");
  }  
 }
 
@@ -269,7 +269,7 @@ function searchSelectedTopics()
 
 		if (query == "")
 		{
-		   alert("No search parameter entered!");   
+		   alert("Nie je zadaný žiadny parameter hľadania!");   
 		}
 		else
 		{
@@ -306,13 +306,13 @@ function searchSelectedTopics()
 					}
 				}
 
-			    alert("There are no items checked!");
+			    alert("Nie sú začiarknuté žiadne položky.");
 			}
 		}
 	 }  
 	 else
 	 {
-	    alert("There is no book to search.");
+	    alert("Nie je k dispozícii žiadna kniha na vyhľadanie.");
 	 }  
 }
  

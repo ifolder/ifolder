@@ -1,4 +1,4 @@
-var theMenuRef = "parent.theMenu";
+﻿var theMenuRef = "parent.theMenu";
 var theMenu = eval(theMenuRef);
 var theBrowser = parent.theBrowser;
 var belowMenu = null;
@@ -236,12 +236,12 @@ function printSelectedTopics()
     }
     else 
     {   
-       alert("There are no items checked!");
+       alert("Nincsenek bejelölt elemek!");
     }
  }  
  else
  {
-    alert("There is no book to print.");
+    alert("Nincs kinyomtatandó könyv.");
  }  
 }
 
@@ -269,7 +269,7 @@ function searchSelectedTopics()
 
 		if (query == "")
 		{
-		   alert("No search parameter entered!");   
+		   alert("Nincs megadva keresési paraméter!");   
 		}
 		else
 		{
@@ -306,13 +306,13 @@ function searchSelectedTopics()
 					}
 				}
 
-			    alert("There are no items checked!");
+			    alert("Nincsenek bejelölt elemek!");
 			}
 		}
 	 }  
 	 else
 	 {
-	    alert("There is no book to search.");
+	    alert("Nincs megadva könyv a kereséshez.");
 	 }  
 }
  

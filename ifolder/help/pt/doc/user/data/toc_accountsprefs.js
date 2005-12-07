@@ -1,4 +1,4 @@
-function updateMenu_accountsprefs() {
+﻿function updateMenu_accountsprefs() {
 
    if ((parent.theMenu) && (parent.theMenu.amBusy == false))
    {
@@ -10,14 +10,14 @@ function updateMenu_accountsprefs() {
      level2ID = parent.theMenu.findEntry('data/accountsprefs.html', 'url', 'right');
      if ((level2ID != -1) && (parent.theMenu.entry[level2ID].FirstChild < 0))
       {
-      level3ID = parent.theMenu.addChild(level2ID, "Document", "Starting the iFolder Client", "../doc/user/data/bw08fxi.html", "zHTML xD.0000.0000.0002.0001.", "Starting the iFolder Client");
-      level3ID = parent.theMenu.addChild(level2ID, "Document", "Configuring an iFolder Account", "../doc/user/data/accounts.html", "zHTML xD.0000.0000.0002.0002.", "Configuring an iFolder Account");
-      level3ID = parent.theMenu.addChild(level2ID, "Document", "Logging In to an iFolder Account", "../doc/user/data/login.html", "zHTML xD.0000.0000.0002.0003.", "Logging In to an iFolder Account");
-      level3ID = parent.theMenu.addChild(level2ID, "Document", "Viewing and Modifying iFolder Account Settings", "../doc/user/data/accountdetails.html", "zHTML xD.0000.0000.0002.0004.", "Viewing and Modifying iFolder Account Settings");
-      level3ID = parent.theMenu.addChild(level2ID, "Document", "Deleting an iFolder Account", "../doc/user/data/bvwsp7c.html", "zHTML xD.0000.0000.0002.0005.", "Deleting an iFolder Account");
-      level3ID = parent.theMenu.addChild(level2ID, "Document", "Configuring iFolder Preferences for the Client", "../doc/user/data/preferences.html", "zHTML xD.0000.0000.0002.0006.", "Configuring iFolder Preferences for the Client");
-      level3ID = parent.theMenu.addChild(level2ID, "Document", "Configuring Local Firewall Settings for iFolder Traffic", "../doc/user/data/bvwppw5.html", "zHTML xD.0000.0000.0002.0007.", "Configuring Local Firewall Settings for iFolder Traffic");
-      level3ID = parent.theMenu.addChild(level2ID, "Document", "Configuring Local Virus Scanner Settings for iFolder Traffic", "../doc/user/data/bwbirb9.html", "zHTML xD.0000.0000.0002.0008.", "Configuring Local Virus Scanner Settings for iFolder Traffic");
+      level3ID = parent.theMenu.addChild(level2ID, "Document", "Iniciando o Cliente iFolder", "../doc/user/data/bw08fxi.html", "zHTML xD.0000.0000.0002.0001.", "Iniciando o Cliente iFolder");
+      level3ID = parent.theMenu.addChild(level2ID, "Document", "Configurando uma conta do iFolder", "../doc/user/data/accounts.html", "zHTML xD.0000.0000.0002.0002.", "Configurando uma conta do iFolder");
+      level3ID = parent.theMenu.addChild(level2ID, "Document", "Efetuando login em uma conta do iFolder", "../doc/user/data/login.html", "zHTML xD.0000.0000.0002.0003.", "Efetuando login em uma conta do iFolder");
+      level3ID = parent.theMenu.addChild(level2ID, "Document", "Visualizando e modificando configurações da conta do iFolder", "../doc/user/data/accountdetails.html", "zHTML xD.0000.0000.0002.0004.", "Visualizando e modificando configurações da conta do iFolder");
+      level3ID = parent.theMenu.addChild(level2ID, "Document", "Apagando uma conta do iFolder", "../doc/user/data/bvwsp7c.html", "zHTML xD.0000.0000.0002.0005.", "Apagando uma conta do iFolder");
+      level3ID = parent.theMenu.addChild(level2ID, "Document", "Configurando preferências do iFolder para o cliente", "../doc/user/data/preferences.html", "zHTML xD.0000.0000.0002.0006.", "Configurando preferências do iFolder para o cliente");
+      level3ID = parent.theMenu.addChild(level2ID, "Document", "Definindo configurações de firewall local para o tráfego do iFolder", "../doc/user/data/bvwppw5.html", "zHTML xD.0000.0000.0002.0007.", "Definindo configurações de firewall local para o tráfego do iFolder");
+      level3ID = parent.theMenu.addChild(level2ID, "Document", "Definindo configurações do programa de varredura de vírus local para o tráfego do iFolder", "../doc/user/data/bwbirb9.html", "zHTML xD.0000.0000.0002.0008.", "Definindo configurações do programa de varredura de vírus local para o tráfego do iFolder");
       parent.theMenu.reload();
 
       }

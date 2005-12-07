@@ -4798,28 +4798,28 @@
 		<row><td>help_sk_ui_files</td><td/><td>1051</td><td>_8D418A5A_EAD7_4D38_AF3A_87D657A11932_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>help_sk_ui_images_files</td><td/><td>1051</td><td>_091E81DA_7594_4CBE_8340_74085020D183_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>help_sk_ui_images_menu_files</td><td/><td>1051</td><td>_1DFF2EA5_2E66_43D3_9A76_973B4ACCF933_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>help_zh_CN_doc_files</td><td/><td>2052</td><td>_8CA454E4_D82D_495F_90F4_9C2E5E142151_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>help_zh_CN_doc_user_data_files</td><td/><td>2052</td><td>_FA0E7492_87EA_44C4_95D9_02F38071FC23_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>help_zh_CN_doc_user_files</td><td/><td>2052</td><td>_3621BBB1_871D_422D_AFE5_86F4863DB3A6_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>help_zh_CN_doc_user_graphics_files</td><td/><td>2052</td><td>_FC1EE4D8_3402_45D4_90BE_E6C368D641DB_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>help_zh_CN_docui2002_files</td><td/><td>2052</td><td>_A0D1F493_EE6B_4738_AAA7_219092B5D3DF_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>help_zh_CN_docui2002_images_files</td><td/><td>2052</td><td>_FDCFA0D5_8D50_4952_A391_B14C957381E9_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>help_zh_CN_docui2002_images_menu_files</td><td/><td>2052</td><td>_1CCAB1AF_0273_4B4B_8E44_AD3EE9EBF9EE_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>help_zh_CN_files</td><td/><td>2052</td><td>_FC816AC8_B58D_4027_88B7_B6E24B249A5B_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>help_zh_CN_ui_files</td><td/><td>2052</td><td>_9BB3AC0C_F044_4240_81F9_5C1E3DFA3E52_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>help_zh_CN_ui_images_files</td><td/><td>2052</td><td>_C137219C_9920_463D_867F_A8F2B6AED7F0_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>help_zh_CN_ui_images_menu_files</td><td/><td>2052</td><td>_E405A531_60F9_43C4_8EC2_044BF168BF41_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>help_zh_TW_doc_files</td><td/><td>1028</td><td>_6A655D1A_35DD_4257_9236_A6A8F6700154_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>help_zh_TW_doc_user_data_files</td><td/><td>1028</td><td>_B1317589_4BAE_4A3F_ACE0_193C1BF0CA69_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>help_zh_TW_doc_user_files</td><td/><td>1028</td><td>_2A44735D_10C3_4BF8_ADC3_A5C841A72666_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>help_zh_TW_doc_user_graphics_files</td><td/><td>1028</td><td>_B7B0FA45_66C6_4FDD_A892_E468EAC56996_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>help_zh_TW_docui2002_files</td><td/><td>1028</td><td>_F4B22520_2371_4869_829A_BC70C824C82F_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>help_zh_TW_docui2002_images_files</td><td/><td>1028</td><td>_886EE5D6_7B3A_44EA_98D6_DB6CB80791B3_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>help_zh_TW_docui2002_images_menu_files</td><td/><td>1028</td><td>_7ED94E84_D05B_476E_A90A_AE6221E36BE7_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>help_zh_TW_files</td><td/><td>1028</td><td>_22584C1F_0377_4C90_AF7F_10BE447C1477_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>help_zh_TW_ui_files</td><td/><td>1028</td><td>_7982CD5A_C3AE_4D59_9FA0_C3FB9569DC5F_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>help_zh_TW_ui_images_files</td><td/><td>1028</td><td>_D3F4A561_6BF7_4061_A9EA_400C1BE49145_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>help_zh_TW_ui_images_menu_files</td><td/><td>1028</td><td>_2002B2B3_2890_45C7_A278_01FD9FF602A8_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>help_zh_CN_doc_files</td><td/><td>2052,1028</td><td>_8CA454E4_D82D_495F_90F4_9C2E5E142151_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>help_zh_CN_doc_user_data_files</td><td/><td>2052,1028</td><td>_FA0E7492_87EA_44C4_95D9_02F38071FC23_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>help_zh_CN_doc_user_files</td><td/><td>2052,1028</td><td>_3621BBB1_871D_422D_AFE5_86F4863DB3A6_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>help_zh_CN_doc_user_graphics_files</td><td/><td>2052,1028</td><td>_FC1EE4D8_3402_45D4_90BE_E6C368D641DB_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>help_zh_CN_docui2002_files</td><td/><td>2052,1028</td><td>_A0D1F493_EE6B_4738_AAA7_219092B5D3DF_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>help_zh_CN_docui2002_images_files</td><td/><td>2052,1028</td><td>_FDCFA0D5_8D50_4952_A391_B14C957381E9_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>help_zh_CN_docui2002_images_menu_files</td><td/><td>2052,1028</td><td>_1CCAB1AF_0273_4B4B_8E44_AD3EE9EBF9EE_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>help_zh_CN_files</td><td/><td>2052,1028</td><td>_FC816AC8_B58D_4027_88B7_B6E24B249A5B_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>help_zh_CN_ui_files</td><td/><td>2052,1028</td><td>_9BB3AC0C_F044_4240_81F9_5C1E3DFA3E52_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>help_zh_CN_ui_images_files</td><td/><td>2052,1028</td><td>_C137219C_9920_463D_867F_A8F2B6AED7F0_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>help_zh_CN_ui_images_menu_files</td><td/><td>2052,1028</td><td>_E405A531_60F9_43C4_8EC2_044BF168BF41_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>help_zh_TW_doc_files</td><td/><td>1028,2052</td><td>_6A655D1A_35DD_4257_9236_A6A8F6700154_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>help_zh_TW_doc_user_data_files</td><td/><td>1028,2052</td><td>_B1317589_4BAE_4A3F_ACE0_193C1BF0CA69_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>help_zh_TW_doc_user_files</td><td/><td>1028,2052</td><td>_2A44735D_10C3_4BF8_ADC3_A5C841A72666_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>help_zh_TW_doc_user_graphics_files</td><td/><td>1028,2052</td><td>_B7B0FA45_66C6_4FDD_A892_E468EAC56996_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>help_zh_TW_docui2002_files</td><td/><td>1028,2052</td><td>_F4B22520_2371_4869_829A_BC70C824C82F_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>help_zh_TW_docui2002_images_files</td><td/><td>1028,2052</td><td>_886EE5D6_7B3A_44EA_98D6_DB6CB80791B3_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>help_zh_TW_docui2002_images_menu_files</td><td/><td>1028,2052</td><td>_7ED94E84_D05B_476E_A90A_AE6221E36BE7_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>help_zh_TW_files</td><td/><td>1028,2052</td><td>_22584C1F_0377_4C90_AF7F_10BE447C1477_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>help_zh_TW_ui_files</td><td/><td>1028,2052</td><td>_7982CD5A_C3AE_4D59_9FA0_C3FB9569DC5F_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>help_zh_TW_ui_images_files</td><td/><td>1028,2052</td><td>_D3F4A561_6BF7_4061_A9EA_400C1BE49145_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>help_zh_TW_ui_images_menu_files</td><td/><td>1028,2052</td><td>_2002B2B3_2890_45C7_A278_01FD9FF602A8_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>hu</td><td/><td>1038</td><td>_7F6D4C03_0856_4F82_96B1_8BDE5577864B_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>iFolderApp.exe</td><td/><td/><td>_8740065F_2344_4690_B202_75B36C5A52E4_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>iFolderComponent.dll</td><td/><td/><td>_9675B3FA_82B9_4221_B61E_27079F3AF5C8_FILTER</td><td/><td/><td/><td/></row>
@@ -4834,8 +4834,8 @@
 		<row><td>ru</td><td/><td>1049</td><td>_9242AC77_3C6F_4D8B_BCA2_2A297595C5AD_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>sk</td><td/><td>1051</td><td>_C0C86482_945F_47A4_9836_A31CF3A79B80_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>v1.1.4322_files</td><td/><td/><td>_F8FFFA86_203D_47EA_AFEE_7B22AC96B0BA_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>zh_CN</td><td/><td>2052</td><td>_63CEAE52_2DEE_400E_A38F_784617A1A17A_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>zh_TW</td><td/><td>1028</td><td>_908E09B6_6ABF_4D77_B5ED_4F768B2EDD40_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>zh_CN</td><td/><td>2052,1028</td><td>_63CEAE52_2DEE_400E_A38F_784617A1A17A_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>zh_TW</td><td/><td>1028,2052</td><td>_908E09B6_6ABF_4D77_B5ED_4F768B2EDD40_FILTER</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISDLLWrapper">

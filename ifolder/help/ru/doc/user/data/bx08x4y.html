@@ -2,8 +2,8 @@
 
 <head>
 
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<meta http-equiv="Content-Language" content="en">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Language" content="ru">
 
 <meta name="Generator" content="Novell HTML Conversion 10 March 2004">
 <meta name="Generation-Date" content="Sunday, October 23, 2005 15:54">
@@ -13,12 +13,12 @@
 <meta name="Author" content="zHTML xD.0000.0000.0003.0001.">
 <meta name="Product_Class" content="">
 <meta name="Product_and_Version" content="iFolder(TM)">
-<meta name="Copyright" content="Copyright Novell, Inc. 1983-2004">
+<meta name="Copyright" content="Авторские права Novell, Inc. 1983-2004">
 
 <link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
 
 
-<title>iFolder Help</title>
+<title>Справка iFolder</title>
 <script type="text/javascript" language="javascript">
 function loadMenu()
 {
@@ -43,42 +43,40 @@ loadMenu();
 
 <a name="bx08x4y"></a>
 
-<div class="Topic" title="Guidelines for Locating iFolders">
+<div class="Topic" title="Рекомендации по расположению папок iFolder">
 
-<h2 class="TOPIC-TITLE"><br />Guidelines for Locating iFolders</h2>
-<p class="TOPIC">Generally, you can locate iFolders anywhere on your local hard drive whenever you create an iFolder or set up an iFolder that is shared with  you. However, there are some practical and specific limitations. Consider the following guidelines in locating iFolders on your computer:</p>
+<h2 class="TOPIC-TITLE"><br />Рекомендации по расположению папок iFolder</h2>
+<p class="TOPIC">Как правило, папки iFolder могут располагаться в любом месте локального жесткого диска как при создании папки iFolder, так и при установке такой папки для совместного использования. Однако существует несколько особых ограничений. При размещении папок iFolder на компьютере примите во внимание следующие рекомендации:</p>
 <ul class="LISTBULLET">
-<li class="BULLETITEM">An iFolder's name must be a unique folder name in the directory where you locate the iFolder.</li>
+<li class="BULLETITEM">Папка iFolder должна иметь уникальное имя в каталоге, где она будет расположена.</li>
 
-<li class="BULLETITEM">An iFolder's name cannot contain the following invalid characters:
-<pre class="CODESAMPLENARROW">\/:*?&quot;&lt;&gt;|;</pre>
+<li class="BULLETITEM">В имени папки iFolder запрещено использовать следующие недопустимые символы: <pre class="CODESAMPLENARROW">\/:*?"&lt;&gt;|;</pre>
 
-<p class="BULLETITEM">For other naming conventions, see <a href="bwagrrn.html#bwagrrn">Naming Conventions for an iFolder and Its Folders and Files</a>.</p></li>
+<p class="BULLETITEM">Информацию о других соглашениях об именовании см. в разделе <a href="bwagrrn.html#bwagrrn">Соглашения об именовании папки iFolder, содержащихся в ней папок и файлов</a>.</p></li>
 
-<li class="BULLETITEM">The iFolder must reside on a local hard drive; the location cannot be on a network drive or non-physical drive.</li>
+<li class="BULLETITEM">Папка iFolder должна находиться на локальном жестком диске, она не может располагаться на сетевом диске или на логическом (не физическом) диске.</li>
 
-<li class="BULLETITEM">An iFolder cannot exist at the root of the drive. </li>
+<li class="BULLETITEM">Нельзя указывать в качестве папки iFolder корень диска. </li>
 
-<li class="BULLETITEM">An iFolder can be created only from an existing folder. </li>
+<li class="BULLETITEM">Папку iFolder можно создать только на основе существующей папки. </li>
 
-<li class="BULLETITEM">An iFolder can be created only from a folder where you have the file system access rights to read and write files. When you set up a shared iFolder on a computer you must have the file system access rights to the folder where you are locating the iFolder.</li>
+<li class="BULLETITEM">Папку iFolder можно создать только на основе папки, в которой у Вас есть права доступа файловой системы на чтение и запись файлов. При установке совместно используемой папки на компьютере у Вас должны быть права доступа файловой системы на папку, в которой будет расположена папка iFolder.</li>
 
-<li class="BULLETITEM">An iFolder cannot contain or reside in a system folder such as the Windows folder or a Linux or Mac system drive.</li>
+<li class="BULLETITEM">Папка iFolder не может содержать системную папку или находиться в ней. Такой папкой, в частности, считается папка Windows или системный диск Linux либо Mac.</li>
 
-<li class="BULLETITEM">An iFolder cannot contain or reside in an applications folder such as the Program Files folder.</li>
+<li class="BULLETITEM">Папка iFolder не может содержать папку приложений, например, папку "Program Files", или находиться в ней.</li>
 
-<li class="BULLETITEM">The iFolder cannot contain or reside in the iFolder metadata folder. The default location of the data folder is as follows:
+<li class="BULLETITEM">Папка iFolder не может содержать папку метаданных iFolder или находиться в ней. Местоположением по умолчанию папки данных является:
 <ul class="LISTBULLET">
-<li class="BULLETITEM"><p class="PARAWITHTITLE"><a name="bx09dxu"></a><em class="PARAWITHTITLE">Linux: </em> In your home folder in the .local\share subdirectory</p></li>
+<li class="BULLETITEM"><p class="PARAWITHTITLE"><a name="bx09dxu"></a><em class="PARAWITHTITLE">Linux: </em>Личная папка в подкаталоге .local\share</p></li>
 
-<li class="BULLETITEM"><p class="PARAWITHTITLE"><a name="bx09ffv"></a><em class="PARAWITHTITLE">Windows: </em> In the C:\Documents and Settings\<em class="VARIABLE">WindowsLogonUsername</em>\Local Settings\Application Data\simias directory</p></li>
+<li class="BULLETITEM"><p class="PARAWITHTITLE"><a name="bx09ffv"></a><em class="PARAWITHTITLE">Windows: </em> Каталог C:\Documents and Settings\<em class="VARIABLE">WindowsLogonUsername</em>\Local Settings\Application Data\simias</p></li>
 
-<li class="BULLETITEM"><p class="PARAWITHTITLE"><a name="bx09ffw"></a><em class="PARAWITHTITLE">Macintosh: </em> In your home folder in the .local\share subdirectory</p></li>
+<li class="BULLETITEM"><p class="PARAWITHTITLE"><a name="bx09ffw"></a><em class="PARAWITHTITLE">Macintosh: </em>Личная папка в подкаталоге .local\share</p></li>
 </ul></li>
 
-<li class="BULLETITEM">An iFolder cannot contain or reside in other iFolders, including your Novell<sup>&reg;</sup> iFolder<sup>&reg;</sup> 2.1x iFolder.</li>
-</ul>
-</div>
+<li class="BULLETITEM">Папка iFolder не может содержать другие папки iFolder или находиться в них, включая Novell<sup>®</sup> iFolder<sup>®</sup> 2.1x iFolder.</li>
+</ul> </div>
 
 <script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
 

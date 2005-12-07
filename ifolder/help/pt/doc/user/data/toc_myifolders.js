@@ -1,4 +1,4 @@
-function updateMenu_myifolders() {
+﻿function updateMenu_myifolders() {
 
    if ((parent.theMenu) && (parent.theMenu.amBusy == false))
    {
@@ -10,18 +10,18 @@ function updateMenu_myifolders() {
      level2ID = parent.theMenu.findEntry('data/myifolders.html', 'url', 'right');
      if ((level2ID != -1) && (parent.theMenu.entry[level2ID].FirstChild < 0))
       {
-      level3ID = parent.theMenu.addChild(level2ID, "Document", "Guidelines for Locating iFolders", "../doc/user/data/bx08x4y.html", "zHTML xD.0000.0000.0003.0001.", "Guidelines for Locating iFolders");
-      level3ID = parent.theMenu.addChild(level2ID, "Document", "Guidelines for File Types and Sizes to Not Synchronize", "../doc/user/data/bwensdb.html", "zHTML xD.0000.0000.0003.0002.", "Guidelines for File Types and Sizes to Not Synchronize");
-      level3ID = parent.theMenu.addChild(level2ID, "Document", "Naming Conventions for an iFolder and Its Folders and Files", "../doc/user/data/bwagrrn.html", "zHTML xD.0000.0000.0003.0003.", "Naming Conventions for an iFolder and Its Folders and Files");
-      level3ID = parent.theMenu.addChild(level2ID, "Document", "Creating an iFolder", "../doc/user/data/createifolder.html", "zHTML xD.0000.0000.0003.0004.", "Creating an iFolder");
-      level3ID = parent.theMenu.addChild(level2ID, "Document", "Sharing an iFolder", "../doc/user/data/sharewith.html", "zHTML xD.0000.0000.0003.0005.", "Sharing an iFolder");
-      level3ID = parent.theMenu.addChild(level2ID, "Document", "Setting Up an Available iFolder", "../doc/user/data/setupifolder.html", "zHTML xD.0000.0000.0003.0006.", "Setting Up an Available iFolder");
-      level3ID = parent.theMenu.addChild(level2ID, "Document", "Viewing and Configuring Properties of an iFolder", "../doc/user/data/propifolders.html", "zHTML xD.0000.0000.0003.0007.", "Viewing and Configuring Properties of an iFolder");
-      level3ID = parent.theMenu.addChild(level2ID, "Document", "Synchronizing Files", "../doc/user/data/sync.html", "zHTML xD.0000.0000.0003.0008.", "Synchronizing Files");
-      level3ID = parent.theMenu.addChild(level2ID, "Document", "Resolving File Conflicts", "../doc/user/data/conflicts.html", "zHTML xD.0000.0000.0003.0009.", "Resolving File Conflicts");
-      level3ID = parent.theMenu.addChild(level2ID, "Document", "Reverting an iFolder to a Normal Folder", "../doc/user/data/reverting.html", "zHTML xD.0000.0000.0003.0010.", "Reverting an iFolder to a Normal Folder");
-      level3ID = parent.theMenu.addChild(level2ID, "Document", "Moving an iFolder", "../doc/user/data/movelocation.html", "zHTML xD.0000.0000.0003.0011.", "Moving an iFolder");
-      level3ID = parent.theMenu.addChild(level2ID, "Document", "Deleting an iFolder", "../doc/user/data/deleting.html", "zHTML xD.0000.0000.0003.0012.", "Deleting an iFolder");
+      level3ID = parent.theMenu.addChild(level2ID, "Document", "Diretrizes para localização de pastas iFolder", "../doc/user/data/bx08x4y.html", "zHTML xD.0000.0000.0003.0001.", "Diretrizes para localização de pastas iFolder");
+      level3ID = parent.theMenu.addChild(level2ID, "Document", "Diretrizes para tipos e tamanhos de arquivos não sincronizados", "../doc/user/data/bwensdb.html", "zHTML xD.0000.0000.0003.0002.", "Diretrizes para tipos e tamanhos de arquivos não sincronizados");
+      level3ID = parent.theMenu.addChild(level2ID, "Document", "Convenções de nomeação para um iFolder e suas pastas e arquivos", "../doc/user/data/bwagrrn.html", "zHTML xD.0000.0000.0003.0003.", "Convenções de nomeação para um iFolder e suas pastas e arquivos");
+      level3ID = parent.theMenu.addChild(level2ID, "Document", "Criando uma pasta iFolder", "../doc/user/data/createifolder.html", "zHTML xD.0000.0000.0003.0004.", "Criando uma pasta iFolder");
+      level3ID = parent.theMenu.addChild(level2ID, "Document", "Compartilhando uma pasta do iFolder", "../doc/user/data/sharewith.html", "zHTML xD.0000.0000.0003.0005.", "Compartilhando uma pasta do iFolder");
+      level3ID = parent.theMenu.addChild(level2ID, "Document", "Configurando uma pasta iFolder disponível", "../doc/user/data/setupifolder.html", "zHTML xD.0000.0000.0003.0006.", "Configurando uma pasta iFolder disponível");
+      level3ID = parent.theMenu.addChild(level2ID, "Document", "Visualizando e configurando propriedades de uma pasta iFolder", "../doc/user/data/propifolders.html", "zHTML xD.0000.0000.0003.0007.", "Visualizando e configurando propriedades de uma pasta iFolder");
+      level3ID = parent.theMenu.addChild(level2ID, "Document", "Sincronizando arquivos", "../doc/user/data/sync.html", "zHTML xD.0000.0000.0003.0008.", "Sincronizando arquivos");
+      level3ID = parent.theMenu.addChild(level2ID, "Document", "Resolvendo conflitos de arquivos", "../doc/user/data/conflicts.html", "zHTML xD.0000.0000.0003.0009.", "Resolvendo conflitos de arquivos");
+      level3ID = parent.theMenu.addChild(level2ID, "Document", "Revertendo uma pasta iFolder para uma pasta normal", "../doc/user/data/reverting.html", "zHTML xD.0000.0000.0003.0010.", "Revertendo uma pasta iFolder para uma pasta normal");
+      level3ID = parent.theMenu.addChild(level2ID, "Document", "Movendo uma pasta iFolder", "../doc/user/data/movelocation.html", "zHTML xD.0000.0000.0003.0011.", "Movendo uma pasta iFolder");
+      level3ID = parent.theMenu.addChild(level2ID, "Document", "Apagando uma pasta iFolder", "../doc/user/data/deleting.html", "zHTML xD.0000.0000.0003.0012.", "Apagando uma pasta iFolder");
       parent.theMenu.reload();
 
       }

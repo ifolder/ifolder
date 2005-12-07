@@ -1,4 +1,4 @@
-function updateMenu_overview() {
+﻿function updateMenu_overview() {
 
    if ((parent.theMenu) && (parent.theMenu.amBusy == false))
    {
@@ -10,10 +10,10 @@ function updateMenu_overview() {
      level2ID = parent.theMenu.findEntry('data/overview.html', 'url', 'right');
      if ((level2ID != -1) && (parent.theMenu.entry[level2ID].FirstChild < 0))
       {
-      level3ID = parent.theMenu.addChild(level2ID, "Document", "iFolder Sharing", "../doc/user/data/bx3aueg.html", "zHTML xD.0000.0000.0001.0001.", "iFolder Sharing");
-      level3ID = parent.theMenu.addChild(level2ID, "Document", "Benefits of iFolder", "../doc/user/data/bq1r10z.html", "zHTML xD.0000.0000.0001.0002.", "Benefits of iFolder");
-      level3ID = parent.theMenu.addChild(level2ID, "Document", "Key Features of iFolder", "../doc/user/data/bq1r110.html", "zHTML xD.0000.0000.0001.0003.", "Key Features of iFolder");
-      level3ID = parent.theMenu.addChild(level2ID, "Document", "Cross-Platform Considerations", "../doc/user/data/bwcku86.html", "zHTML xD.0000.0000.0001.0004.", "Cross-Platform Considerations");
+      level3ID = parent.theMenu.addChild(level2ID, "Document", "iFolder-Freigabe", "../doc/user/data/bx3aueg.html", "zHTML xD.0000.0000.0001.0001.", "iFolder-Freigabe");
+      level3ID = parent.theMenu.addChild(level2ID, "Document", "Vorteile von iFolder", "../doc/user/data/bq1r10z.html", "zHTML xD.0000.0000.0001.0002.", "Vorteile von iFolder");
+      level3ID = parent.theMenu.addChild(level2ID, "Document", "Wichtigste Funktionen von iFolder", "../doc/user/data/bq1r110.html", "zHTML xD.0000.0000.0001.0003.", "Wichtigste Funktionen von iFolder");
+      level3ID = parent.theMenu.addChild(level2ID, "Document", "Plattformübergreifende Überlegungen", "../doc/user/data/bwcku86.html", "zHTML xD.0000.0000.0001.0004.", "Plattformübergreifende Überlegungen");
       parent.theMenu.reload();
 
       }

@@ -1,42 +1,42 @@
-front.html                  iFolder Help
-overview.html               Overview of iFolder
-bx3aueg.html                iFolder Sharing
-bq1r10z.html                Benefits of iFolder
-bq1r110.html                Key Features of iFolder
-bq1r110.html#bq1r111        The iFolder Client
-bq1r110.html#bx3bipv        iFolder Account
-bq1r110.html#bq1r112        Shared iFolders
-bq1r110.html#bq1r113        iFolder Access Rights
-bq1r110.html#bq1r118        File Synchronization and Data Management
-bq1r110.html#bq63xvh        Synchronization Log
-bwcku86.html                Cross-Platform Considerations
-accountsprefs.html          Managing iFolder Accounts and Preferences
-bw08fxi.html                Starting the iFolder Client
-accounts.html               Configuring an iFolder Account
-login.html                  Logging In to an iFolder Account
-accountdetails.html         Viewing and Modifying iFolder Account Settings
-bvwsp7c.html                Deleting an iFolder Account
-preferences.html            Configuring iFolder Preferences for the Client
-bvwppw5.html                Configuring Local Firewall Settings for iFolder Traffic
-bwbirb9.html                Configuring Local Virus Scanner Settings for iFolder Traffic
-myifolders.html             Managing iFolders
-bx08x4y.html                Guidelines for Locating iFolders
-bwensdb.html                Guidelines for File Types and Sizes to Not Synchronize
-bwagrrn.html                Naming Conventions for an iFolder and Its Folders and Files
-createifolder.html          Creating an iFolder
-createifolder.html#bwembx5   Creating iFolders in a File Manager
-createifolder.html#bwemc36   Creating iFolders in the iFolders Browser
-createifolder.html#fat32mtpt   Creating iFolders on a FAT32 Mount Point (Linux)
-sharewith.html              Sharing an iFolder
-sharewith.html#bv2hnvt      Understanding User Access Rights
-sharewith.html#bq6lwm0      Adding a User to an iFolder
-sharewith.html#bq6lwma      Modifying User Access Rights
-sharewith.html#bq6lwmr      Removing a User from an iFolder
-setupifolder.html           Setting Up an Available iFolder
-propifolders.html           Viewing and Configuring Properties of an iFolder
-sync.html                   Synchronizing Files
-conflicts.html              Resolving File Conflicts
-reverting.html              Reverting an iFolder to a Normal Folder
-movelocation.html           Moving an iFolder
-deleting.html               Deleting an iFolder
-legal.html                  Legal Notices
+﻿front.html                  iFolderヘルプ
+overview.html               iFolderの概要
+bx3aueg.html                iFolderの共有
+bq1r10z.html                iFolderのメリット
+bq1r110.html                iFolderの主要機能
+bq1r110.html#bq1r111        iFolderクライアント
+bq1r110.html#bx3bipv        iFolderアカウント
+bq1r110.html#bq1r112        共有iFolder
+bq1r110.html#bq1r113        iFolderのアクセス権
+bq1r110.html#bq1r118        ファイル同期とデータ管理
+bq1r110.html#bq63xvh        同期ログ
+bwcku86.html                クロスプラットフォームの注意事項
+accountsprefs.html          iFolderアカウントと初期設定の管理
+bw08fxi.html                iFolderクライアントの起動
+accounts.html               iFolderアカウントの設定
+login.html                  iFolderアカウントへのログイン
+accountdetails.html         iFolderアカウント設定の表示と変更
+bvwsp7c.html                iFolderアカウントの削除
+preferences.html            クライアントのiFolder初期設定を行う
+bvwppw5.html                iFolderトラフィックにローカルファイアウォールを設定する
+bwbirb9.html                iFolderトラフィックにローカルウィルススキャナを設定する
+myifolders.html             iFolderの管理
+bx08x4y.html                iFolderの配置に関するガイドライン
+bwensdb.html                同期を行わないファイルのタイプとサイズに関するガイドライン
+bwagrrn.html                iFolderとそのフォルダおよびファイルの命名規則
+createifolder.html          iFolderの作成
+createifolder.html#bwembx5   File ManagerでiFolderを作成する
+createifolder.html#bwemc36   iFolderブラウザでiFolderを作成する
+createifolder.html#fat32mtpt   FAT32マウントポイント(Linux)上にiFolderを作成する
+sharewith.html              iFolderの共有
+sharewith.html#bv2hnvt      ユーザのアクセス権について
+sharewith.html#bq6lwm0      iFolderにユーザを追加する
+sharewith.html#bq6lwma      ユーザのアクセス権を変更する
+sharewith.html#bq6lwmr      iFolderからユーザを削除する
+setupifolder.html           使用可能なiFolderのセットアップ
+propifolders.html           iFolderのプロパティの表示と設定
+sync.html                   ファイルの同期
+conflicts.html              ファイルの競合の解決
+reverting.html              iFolderを標準フォルダに戻す
+movelocation.html           iFolderの移動
+deleting.html               iFolderの削除
+legal.html                  保証と著作権

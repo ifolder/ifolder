@@ -1,11 +1,12 @@
-<script language="JavaScript1.2" type="text/javascript">
-	top.PREVIOUS_PAGE 	= 'Previous Page: ';
-	top.NEXT_PAGE 		= 'Next Page: ';
-	top.JS_ERROR_MSG	= 'A JavaScript error has occurred on this page!  Please note down the following information and pass it on to the Webmaster.';
-	top.NO_FLOAT_MSG	= 'Sorry, your browser does not support this feature!';
-	top.COOKIE_MSG		= 'You must have Cookies enabled to change the display mode!';
-	top.SECURITY_MSG	= 'Due to security restrictions imposed by your browser, I cannot change modes while a page from another server is being displayed. The default home page for this site will be displayed instead.';
-	top.FEEDBACK_MSG	= 'Please press CTRL-D to bookmark this page';
-	top.FEEDBACK_ALT	= 'Feedback';
-	top.BOOKMARK_ALT	= 'Bookmark this page';
+﻿<script language="JavaScript1.2" type="text/javascript">
+	top.PREVIOUS_PAGE 	= 'Página anterior: ';
+	top.NEXT_PAGE 		= 'Página siguiente: ';
+	top.JS_ERROR_MSG	= 'Se ha producido un error de JavaScript en esta página.  Anote la información siguiente y transmítala al Webmaster.';
+	top.NO_FLOAT_MSG	= 'Lo sentimos, el navegador no admite esta función.';
+	top.COOKIE_MSG		= 'Debe tener las cookies activadas para cambiar el modo de visualización.';
+	top.SECURITY_MSG	= 'Debido a las restricciones de seguridad que impone el navegador, al visualizar una página de otro servidor no se pueden cambiar de modo. En su lugar, se mostrará la página de inicio por defecto de este sitio.';
+	top.FEEDBACK_MSG	= 'Pulse CTRL + D para marcar esta página';
+	top.FEEDBACK_ALT	= 'Comentarios';
+	top.BOOKMARK_ALT	= 'Marque esta página';
 </script>
+

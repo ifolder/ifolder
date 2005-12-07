@@ -1,4 +1,4 @@
-function initialise() {
+﻿function initialise() {
 	// Tell joust where to find the various index files it needs
 	index1 = 'index.htm';
 	
