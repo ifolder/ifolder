@@ -1,5 +1,5 @@
 /***********************************************************************
- *  $RCSfile$
+ *  $RCSfile: DomainController.cs,v $
  * 
  *  Copyright (C) 2004 Novell, Inc.
  *
@@ -58,6 +58,7 @@ namespace Novell.iFolder.Controller
 		private string defDomainID = null;
 		
 		private SimiasEventBroker eventBroker = null;
+		private Manager simiasManager;
 		
 		///
 		/// Events
@@ -76,28 +77,37 @@ namespace Novell.iFolder.Controller
 		
 		private DomainController()
 		{
+Console.WriteLine("=====> DomainController being constructed! <=====");
+Console.WriteLine("=====> DomainController HashCode: {0} <=====", this.GetHashCode());
+Console.WriteLine("Current Thread: {0}", System.Threading.Thread.CurrentThread.GetHashCode());
+Console.WriteLine("Stack Trace:");
+Console.WriteLine(Environment.StackTrace);
+			this.simiasManager = Util.GetSimiasManager();
 			string localServiceUrl = Simias.Client.Manager.LocalServiceUrl.ToString();
+//			string localServiceUrl = simiasManager.WebServiceUri.ToString();
 			try
 			{
 				ifws = new iFolderWebService();
 				ifws.Url = localServiceUrl + "/iFolder.asmx";
 				LocalService.Start(ifws);
+//				LocalService.Start(ifws, simiasManager.WebServiceUri, simiasManager.DataPath);
 			}
 			catch(Exception e)
 			{
 				ifws = null;
-				throw new Exception("Unable to create ifolder web service in iFolderController");
+				throw new Exception("Unable to create ifolder web service in DomainController");
 			}
 			try
 			{
 				simws = new SimiasWebService();
 				simws.Url = localServiceUrl + "/Simias.asmx";
 				LocalService.Start(simws);
+//				LocalService.Start(simws, simiasManager.WebServiceUri, simiasManager.DataPath);
 			}
 			catch(Exception e)
 			{
 				simws = null;
-				throw new Exception("Unable to create simias web service in iFolderController");
+				throw new Exception("Unable to create simias web service in DomainController");
 			}
 
 			keyedDomains = new Hashtable();
@@ -254,6 +264,7 @@ namespace Novell.iFolder.Controller
 		/// </summary>
 		public DomainInformation GetDomain(string domainID)
 		{
+Console.WriteLine("DomainController.GetDomain(\"{0}\")", domainID);
 			lock(typeof(DomainController))
 			{
 				if (keyedDomains.Contains(domainID))
@@ -391,6 +402,7 @@ namespace Novell.iFolder.Controller
 			try
 			{
 				status = domainAuth.Authenticate();
+//				status = domainAuth.Authenticate(simiasManager.WebServiceUri, simiasManager.DataPath);
 				if (status.statusCode == StatusCodes.Success ||
 					status.statusCode == StatusCodes.SuccessInGrace)
 				{
@@ -418,6 +430,49 @@ namespace Novell.iFolder.Controller
 			}
 
 			return status;
+		}
+		
+		/// <summary>
+		/// Call this to log out of the specified domain
+		/// </summary>
+		public void LogoutDomain(string domainID)
+		{
+			DomainAuthentication domainAuth =
+				new DomainAuthentication(
+					"iFolder",
+					domainID,
+					null);
+			domainAuth.Logout();
+//			domainAuth.Logout(simiasManager.WebServiceUri, simiasManager.DataPath);
+
+			// Update our cache of the DomainInformation object
+			try
+			{
+				DomainInformation dom =
+					simws.GetDomainInformation(domainID);
+				if (dom != null)
+				{
+					dom.Authenticated = false;
+				
+					if (keyedDomains.Contains(dom.ID))
+						keyedDomains[dom.ID] = dom;
+					else
+					{
+						// For whatever reason, we don't already have
+						// record of this domain, so add it now.
+						AddDomainToHashtable(dom);
+
+						// Notify DomainAddedEventHandlers
+						if (DomainAdded != null)
+							DomainAdded(this, new DomainEventArgs(domainID));
+					}
+				}
+			}
+			catch{}
+				
+			// Notify DomainLoggedInEventHandlers
+			if (DomainLoggedOut != null)
+				DomainLoggedOut(this, new DomainEventArgs(domainID));
 		}
 		
 		/// <summary>
@@ -541,6 +596,22 @@ namespace Novell.iFolder.Controller
 				return null;
 			}
 		}
+		
+		public void CheckForNewiFolders()
+		{
+			// Update the POBox for every domain so that the user can get
+			// notification of new iFolder subscriptions.
+			foreach(DomainInformation domain in keyedDomains.Values)
+			{
+				try
+				{
+					ifws.SynciFolderNow(domain.POBoxID);
+				}
+				catch
+				{
+				}
+			}
+		}
 
 		/// <summary>
 		/// Adds the domain to the keyedDomains hashtable
@@ -558,6 +629,7 @@ namespace Novell.iFolder.Controller
 
 		private void RemoveDomainFromHashtable(string domainID)
 		{
+Console.WriteLine("DomainController.RemoveDomainFromHashtable({0})", domainID);
 			lock (typeof(DomainController) )
 			{
 				if(keyedDomains.ContainsKey(domainID))
@@ -565,11 +637,13 @@ namespace Novell.iFolder.Controller
 					DomainInformation dom = (DomainInformation)keyedDomains[domainID];
 					keyedDomains.Remove(domainID);
 
+Console.WriteLine("\tJust removed the domain");
 					// If the domain we just removed was the default, ask
 					// simias for the new default domain (if any domains still
 					// exist).
 					if (dom.IsDefault)
 					{
+Console.WriteLine("\tthe removed domain was the default...setting new default");
 						try
 						{
 							string newDefaultDomainID = simws.GetDefaultDomainID();
@@ -602,6 +676,10 @@ namespace Novell.iFolder.Controller
 								defDomainID = null;
 						}
 						catch {}
+					}
+					else
+					{
+Console.WriteLine("\tthe removed domain was NOT the default");
 					}
 				}
 			}
@@ -702,6 +780,7 @@ namespace Novell.iFolder.Controller
 			try
 			{
 				return domainAuth.Authenticate();
+//				return domainAuth.Authenticate(simiasManager.WebServiceUri, simiasManager.DataPath);
 			}
 			catch {}
 			
@@ -741,6 +820,7 @@ namespace Novell.iFolder.Controller
 							credentials);
 							
 					Status status = domainAuth.Authenticate();
+//					Status status = domainAuth.Authenticate(simiasManager.WebServiceUri, simiasManager.DataPath);
 	
 					if (status.statusCode == StatusCodes.InvalidCredentials)
 					{
@@ -799,8 +879,10 @@ namespace Novell.iFolder.Controller
 			}
 		}
 
+		[GLib.ConnectBefore]
 		private void OnDomainAddedEvent(object o, DomainEventArgs args)
 		{
+Console.WriteLine("DomainController.OnDomainAddedEvent()");
 			DomainInformation domain = (DomainInformation)keyedDomains[args.DomainID];
 			if (domain != null)
 			{
@@ -827,8 +909,10 @@ namespace Novell.iFolder.Controller
 				DomainAdded(this, args);
 		}
 
+		[GLib.ConnectBefore]
 		private void OnDomainDeletedEvent(object o, DomainEventArgs args)
 		{
+Console.WriteLine("DomainController.OnDomainDeletedEvent()");
 			DomainInformation domain = (DomainInformation)keyedDomains[args.DomainID];
 			if (domain == null)
 			{

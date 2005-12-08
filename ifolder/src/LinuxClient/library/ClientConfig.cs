@@ -1,5 +1,5 @@
 /***********************************************************************
- *  $RCSfile$
+ *  $RCSfile: ClientConfig.cs,v $
  *
  *  Copyright (C) 2004 Novell, Inc.
  *
@@ -52,6 +52,14 @@ namespace Novell.iFolder
 		public static string KEY_NOTIFY_USERS = "NotifyUsers";
 //		public static string KEY_NOTIFY_SYNC_ERRORS = "NotifySyncErrors";
 		public static string KEY_SYNC_UNIT = "SyncUnit";
+		
+		public static string KEY_IFOLDER_WINDOW_X_POS	= "iFolderWindowXPos";
+		public static string KEY_IFOLDER_WINDOW_Y_POS	= "iFolderWindowYPos";
+		public static string KEY_IFOLDER_WINDOW_WIDTH	= "iFolderWindowWidth";
+		public static string KEY_IFOLDER_WINDOW_HEIGHT	= "iFolderWindowHeight";
+		public static string KEY_IFOLDER_WINDOW_VISIBLE = "iFolderWindowVisible";
+		
+		public static string KEY_SHOW_SERVER_IFOLDERS	= "ShowServeriFolders";
 
 
 		private static XmlDocument configDoc;

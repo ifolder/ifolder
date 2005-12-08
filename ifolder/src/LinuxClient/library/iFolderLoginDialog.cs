@@ -1,5 +1,5 @@
 /***********************************************************************
- *  $RCSfile$
+ *  $RCSfile: iFolderLoginDialog.cs,v $
  * 
  *  Copyright (C) 2004 Novell, Inc.
  *
@@ -113,7 +113,7 @@ namespace Novell.iFolder
 
 		private void SetupDialog()
 		{
-			this.Title = Util.GS("iFolder Login");
+			this.Title = Util.GS("Connect iFolder Account");
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
 			this.HasSeparator = false;
 //			this.BorderWidth = 10;
@@ -242,7 +242,7 @@ namespace Novell.iFolder
 			this.VBox.ShowAll();
 
 			this.AddButton(Stock.Cancel, ResponseType.Cancel);
-			this.AddButton(Util.GS("_Log In"), ResponseType.Ok);
+			this.AddButton(Util.GS("Co_nnect"), ResponseType.Ok);
 			this.SetResponseSensitive(ResponseType.Ok, false);
 			this.DefaultResponse = ResponseType.Ok;
 		}

@@ -1,6 +1,6 @@
 /***********************************************************************
- *  $RCSfile$
- * 
+ *  $RCSfile: iFolderApplication.cs,v $
+ *
  *  Copyright (C) 2004 Novell, Inc.
  *
  *  This program is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
  *  Authors:
  *		Calvin Gaisford <cgaisford@novell.com>
  *		Boyd Timothy <btimothy@novell.com>
- * 
+ *
  ***********************************************************************/
 
 using System;
@@ -70,7 +70,7 @@ namespace Novell.iFolder
 
 		private iFolderState 		CurrentState;
 		private Gtk.ThreadNotify	iFolderStateChanged;
-		private SimiasEventBroker	EventBroker;
+		private SimiasEventBroker	simiasEventBroker;
 		private	iFolderLoginDialog	LoginDialog;
 //		private bool				logwinShown;
 
@@ -91,9 +91,26 @@ namespace Novell.iFolder
 		private Hashtable			synchronizationErrors;
 
 		private DomainController	domainController;
+		private Manager				simiasManager;
 
 		private NotifyWindow		startingUpNotifyWindow = null;
 		private NotifyWindow		shuttingDownNotifyWindow = null;
+		
+		public SimiasEventBroker	EventBroker
+		{
+			get
+			{
+				return this.EventBroker;
+			}
+		}
+		
+		public Manager				SimiasManager
+		{
+			get
+			{
+				return this.simiasManager;
+			}
+		}
 
 		public iFolderApplication(string[] args)
 			: base("ifolder", "1.0", Modules.UI, args)
@@ -108,14 +125,14 @@ namespace Novell.iFolder
 			currentIconAnimationDirection = 0;
 
 			eBox = new EventBox();
-			eBox.ButtonPressEvent += 
+			eBox.ButtonPressEvent +=
 				new ButtonPressEventHandler(trayapp_clicked);
 
-			RunningPixbuf = 
+			RunningPixbuf =
 					new Pixbuf(Util.ImagesPath("ifolder24.png"));
-			StartingPixbuf = 
+			StartingPixbuf =
 					new Pixbuf(Util.ImagesPath("ifolder-startup.png"));
-			StoppingPixbuf = 
+			StoppingPixbuf =
 					new Pixbuf(Util.ImagesPath("ifolder-shutdown.png"));
 			DownloadingPixbuf =
 					new Gdk.PixbufAnimation(Util.ImagesPath("ifolder24.gif"));
@@ -136,8 +153,12 @@ namespace Novell.iFolder
 			iFolderStateChanged = new Gtk.ThreadNotify(
 							new Gtk.ReadyEvent(OniFolderStateChanged));
 
+			// Create the simias manager object and set any command line
+			// configuration in the object.
+			simiasManager = Util.CreateSimiasManager(args);
+
 //			logwin = new LogWindow();
-//			logwin.Destroyed += 
+//			logwin.Destroyed +=
 //					new EventHandler(LogWindowDestroyedHandler);
 //			logwinShown = false;
 		}
@@ -151,7 +172,7 @@ namespace Novell.iFolder
 
 		public new void Run()
 		{
-			System.Threading.Thread startupThread = 
+			System.Threading.Thread startupThread =
 					new System.Threading.Thread(new ThreadStart(StartiFolder));
 			startupThread.Start();
 
@@ -171,16 +192,20 @@ namespace Novell.iFolder
 			if(ifws == null)
 			{
 				Simias.Client.Manager.Start();
+//				simiasManager.Start();
 
 				string localServiceUrl =
 					Simias.Client.Manager.LocalServiceUrl.ToString();
+//				string localServiceUrl = simiasManager.WebServiceUri.ToString();
 				ifws = new iFolderWebService();
 				ifws.Url = localServiceUrl + "/iFolder.asmx";
 				LocalService.Start(ifws);
+//				LocalService.Start(ifws, simiasManager.WebServiceUri, simiasManager.DataPath);
 				
 				simws = new SimiasWebService();
 				simws.Url = localServiceUrl + "/Simias.asmx";
 				LocalService.Start(simws);
+//				LocalService.Start(simws, simiasManager.WebServiceUri, simiasManager.DataPath);
 
 				// wait for simias to start up
 				while(!simiasRunning)
@@ -201,10 +226,11 @@ namespace Novell.iFolder
 
 				try
 				{
-					// Set up to have data ready for events
-					ifdata = iFolderData.GetData();
+					simiasEventBroker = SimiasEventBroker.GetSimiasEventBroker();
 
-					EventBroker = SimiasEventBroker.GetSimiasEventBroker();
+					// Set up to have data ready for events
+					ifdata = iFolderData.GetData(simiasManager);
+
 					domainController = DomainController.GetDomainController();
 				}
 				catch(Exception e)
@@ -228,9 +254,10 @@ namespace Novell.iFolder
 
 			try
 			{
-				if(EventBroker != null)
-					EventBroker.Deregister();
+				if(simiasEventBroker != null)
+					simiasEventBroker.Deregister();
 				Simias.Client.Manager.Stop();
+//				simiasManager.Stop();
 			}
 			catch(Exception e)
 			{
@@ -249,6 +276,8 @@ namespace Novell.iFolder
 
 		private void ReLogin(string domainID)
 		{
+			if (LoginDialog != Util.CurrentModalWindow) return;
+
 			if (LoginDialog == null)
 			{
 				DomainInformation dom = domainController.GetDomain(domainID);
@@ -256,6 +285,13 @@ namespace Novell.iFolder
 				{
 					LoginDialog =
 						new iFolderLoginDialog(dom.ID, dom.Name, dom.MemberName);
+					
+					if (!Util.RegisterModalWindow(LoginDialog))
+					{
+						LoginDialog.Destroy();
+						LoginDialog = null;
+						return;
+					}
 
 					LoginDialog.Response +=
 						new ResponseHandler(OnReLoginDialogResponse);
@@ -274,7 +310,7 @@ namespace Novell.iFolder
 			switch (args.ResponseId)
 			{
 				case Gtk.ResponseType.Ok:
-					Status status = 
+					Status status =
 						domainController.AuthenticateDomain(
 							LoginDialog.Domain,
 							LoginDialog.Password,
@@ -334,7 +370,7 @@ namespace Novell.iFolder
 				if(ifwin != null)
 					ifwin.HandleFileSyncEvent(args);
 
-				LogWindow logwin = Util.GetLogWindow();
+				LogWindow logwin = Util.GetLogWindow(simiasManager);
 				if(logwin != null)
 					logwin.HandleFileSyncEvent(args);
 			}
@@ -427,14 +463,14 @@ namespace Novell.iFolder
 
 			switch(args.Action)
 			{
-				case Action.StartSync:
+				case Simias.Client.Event.Action.StartSync:
 				{
 					bCollectionIsSynchronizing = true;
 
 					collectionSynchronizing = args.ID;
 					break;
 				}
-				case Action.StopSync:
+				case Simias.Client.Event.Action.StopSync:
 				{
 					bCollectionIsSynchronizing = false;
 					currentIconAnimationDirection = 0;
@@ -496,7 +532,7 @@ namespace Novell.iFolder
 				if(ifwin != null)
 					ifwin.HandleSyncEvent(args);
 	
-				LogWindow logwin = Util.GetLogWindow();
+				LogWindow logwin = Util.GetLogWindow(simiasManager);
 				if(logwin != null)
 					logwin.HandleSyncEvent(args);
 			}
@@ -521,12 +557,12 @@ namespace Novell.iFolder
 			if(!ifdata.IsCurrentUser(ifHolder.iFolder.OwnerID))
 			{
 				if(ifHolder.iFolder.IsSubscription &&
-					(ClientConfig.Get(ClientConfig.KEY_NOTIFY_IFOLDERS, "true") 
+					(ClientConfig.Get(ClientConfig.KEY_NOTIFY_IFOLDERS, "true")
 						 == "true"))
 				{
 					NotifyWindow notifyWin = new NotifyWindow(
-							tIcon, 
-							string.Format(Util.GS("New iFolder \"{0}\""), 
+							tIcon,
+							string.Format(Util.GS("New iFolder \"{0}\""),
 								ifHolder.iFolder.Name),
 							string.Format(Util.GS("{0} has invited you to participate in this shared iFolder.\n\nClick <a href=\"SetUpiFolder:{1}\">here</a> to set up this iFolder."),
 										  ifHolder.iFolder.Owner, ifHolder.iFolder.CollectionID),
@@ -537,15 +573,15 @@ namespace Novell.iFolder
 				}
 			}
 
-			iFolderWindow ifwin = Util.GetiFolderWindow();
-			if(ifwin != null)
-				ifwin.iFolderCreated(args.iFolderID);
+//			iFolderWindow ifwin = Util.GetiFolderWindow();
+//			if(ifwin != null)
+//				ifwin.iFolderCreated(args.iFolderID);
 		}
 
 
 
 
-		private void OniFolderChangedEvent(object o, 
+		private void OniFolderChangedEvent(object o,
 									iFolderChangedEventArgs args)
 		{
 			if (args == null || args.iFolderID == null)
@@ -571,16 +607,16 @@ namespace Novell.iFolder
 
 			if(ifHolder.iFolder.IsSubscription)
 			{
-				iFolderWindow ifwin = Util.GetiFolderWindow();
-				if(ifwin != null)
-					ifwin.iFolderChanged(args.iFolderID);
+//				iFolderWindow ifwin = Util.GetiFolderWindow();
+//				if(ifwin != null)
+//					ifwin.iFolderChanged(args.iFolderID);
 			}
 			else
 			{
 				// this may be called when a subscription gets updated
 				if(ifHolder.iFolder.HasConflicts)
 				{
-					if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_COLLISIONS, 
+					if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_COLLISIONS,
 							"true") == "true")
 					{
 						string message = string.Format(
@@ -602,9 +638,9 @@ namespace Novell.iFolder
 						}
 					}
 
-					iFolderWindow ifwin = Util.GetiFolderWindow();
-					if(ifwin != null)
-						ifwin.iFolderHasConflicts(args.iFolderID);
+//					iFolderWindow ifwin = Util.GetiFolderWindow();
+//					if(ifwin != null)
+//						ifwin.iFolderHasConflicts(args.iFolderID);
 				}
 			}
 		}
@@ -612,15 +648,15 @@ namespace Novell.iFolder
 
 
 
-		private void OniFolderDeletedEvent(object o, 
+		private void OniFolderDeletedEvent(object o,
 									iFolderDeletedEventArgs args)
 		{
 			if (args == null || args.iFolderID == null)
 				return;	// Prevent an exception
 			
-			iFolderWindow ifwin = Util.GetiFolderWindow();
-			if(ifwin != null)
-				ifwin.iFolderDeleted(args.iFolderID);
+//			iFolderWindow ifwin = Util.GetiFolderWindow();
+//			if(ifwin != null)
+//				ifwin.iFolderDeleted(args.iFolderID);
 		}
 
 
@@ -630,7 +666,7 @@ namespace Novell.iFolder
 			if (args == null || args.iFolderID == null || args.iFolderUser == null)
 				return;	// Prevent an exception
 			
-			if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_USERS, "true") 
+			if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_USERS, "true")
 							== "true")
 			{
 				string username;
@@ -643,7 +679,7 @@ namespace Novell.iFolder
 					username = args.iFolderUser.Name;
 
 				NotifyWindow notifyWin = new NotifyWindow(
-					tIcon, Util.GS("New iFolder User"), 
+					tIcon, Util.GS("New iFolder User"),
 					string.Format(Util.GS("{0} has joined the iFolder \"{1}\""), username, ifHolder.iFolder.Name),
 					Gtk.MessageType.Info, 10000);
 				notifyWin.LinkClicked +=
@@ -669,24 +705,24 @@ namespace Novell.iFolder
 					break;
 
 				case iFolderState.Running:
-					if(EventBroker != null)
+					if(simiasEventBroker != null)
 					{
-						EventBroker.iFolderAdded +=
+						simiasEventBroker.iFolderAdded +=
 							new iFolderAddedEventHandler(
 												OniFolderAddedEvent);
-						EventBroker.iFolderChanged +=
+						simiasEventBroker.iFolderChanged +=
 							new iFolderChangedEventHandler(
 												OniFolderChangedEvent);
-						EventBroker.iFolderDeleted +=
+						simiasEventBroker.iFolderDeleted +=
 							new iFolderDeletedEventHandler(
 												OniFolderDeletedEvent);
-						EventBroker.iFolderUserAdded +=
+						simiasEventBroker.iFolderUserAdded +=
 							new iFolderUserAddedEventHandler(
 												OniFolderUserAddedEvent);
-						EventBroker.CollectionSyncEventFired +=
+						simiasEventBroker.CollectionSyncEventFired +=
 							new CollectionSyncEventHandler(
 												OniFolderSyncEvent);
-						EventBroker.FileSyncEventFired +=
+						simiasEventBroker.FileSyncEventFired +=
 							new FileSyncEventHandler(
 												OniFolderFileSyncEvent);
 					}
@@ -706,14 +742,17 @@ namespace Novell.iFolder
 
 					gAppIcon.Pixbuf = RunningPixbuf;
 
-					// Bring up the accounts dialog if there are no domains
-					Gtk.Timeout.Add(500, new Gtk.Function(PromptIfNoDomains));
-
 					// Make sure the iFolder and Synchronization Windows are
 					// initialized so that they begin receiving events as soon
 					// as possible.
 					iFolderWindow ifwin = Util.GetiFolderWindow();
-					LogWindow logwin = Util.GetLogWindow();
+					LogWindow logwin = Util.GetLogWindow(simiasManager);
+
+					// Bring up the accounts dialog if there are no domains
+//					GLib.Timeout.Add(500, new GLib.TimeoutHandler(PromptIfNoDomains));
+					
+					// Load the iFolder Windows in the state they were in last
+					GLib.Timeout.Add(100, new GLib.TimeoutHandler(ShowiFolderWindows));
 
 					break;
 
@@ -749,16 +788,29 @@ namespace Novell.iFolder
 			DomainInformation[] domains = simws.GetDomains(false);
 			if (domains.Length < 1)
 			{
-				NotifyWindow notifyWin = new NotifyWindow(
-					tIcon, Util.GS("Welcome to iFolder"),
-					"To begin using iFolder, you must first set up an iFolder account.\n\nClick <a href=\"ShowAccountsPage\">here</a> to add a new account.",
-					Gtk.MessageType.Info, 10000);
-				notifyWin.LinkClicked +=
-					new LinkClickedEventHandler(OnNotifyWindowLinkClicked);
-				notifyWin.ShowAll();
+//				NotifyWindow notifyWin = new NotifyWindow(
+//					tIcon, Util.GS("Welcome to iFolder"),
+//					"To begin using iFolder, you must first set up an iFolder account.\n\nClick <a href=\"ShowAccountsPage\">here</a> to add a new account.",
+//					Gtk.MessageType.Info, 10000);
+//				notifyWin.LinkClicked +=
+//					new LinkClickedEventHandler(OnNotifyWindowLinkClicked);
+//				notifyWin.ShowAll();
+				Util.ShowiFolderWindow();
 			}
 
-			return false;	// Prevent this from being called over and over by Gtk.Timeout
+			return false;	// Prevent this from being called over and over by GLib.Timeout
+		}
+		
+		private bool ShowiFolderWindows()
+		{
+			if (!Util.LoadiFolderWindows())
+			{
+				DomainInformation[] domains = domainController.GetDomains();
+				if (domains.Length < 1)
+					Util.ShowiFolderWindow();
+			}
+
+			return false;	// Prevent this from being called over and over by GLib.Timeout
 		}
 
 		private void OnNotifyWindowLinkClicked(object sender, LinkClickedEventArgs args)
@@ -766,21 +818,15 @@ namespace Novell.iFolder
 			if (args.LinkID != null)
 			{
 				if (args.LinkID.Equals("ShowSyncLog"))
-					Util.ShowLogWindow();
+					Util.ShowLogWindow(simiasManager);
 				else if (args.LinkID.StartsWith("SetUpiFolder"))
 				{
 					int colonPos = args.LinkID.IndexOf(':');
 					if (colonPos > 0)
 					{
-						NotifyWindow notifyWindow = sender as NotifyWindow;
-						notifyWindow.Hide();
-						notifyWindow.Destroy();
-
-						Util.ShowiFolderWindow();
-					
 						string ifolderID = args.LinkID.Substring(colonPos + 1);
 						iFolderWindow ifwin = Util.GetiFolderWindow();
-						ifwin.SetUpiFolder(ifolderID);
+						ifwin.DownloadiFolder(ifolderID);
 					}
 				}
 				else if (args.LinkID.StartsWith("ResolveiFolderConflicts"))
@@ -788,8 +834,6 @@ namespace Novell.iFolder
 					int colonPos = args.LinkID.IndexOf(':');
 					if (colonPos > 0)
 					{
-						Util.ShowiFolderWindow();
-					
 						string ifolderID = args.LinkID.Substring(colonPos + 1);
 						iFolderWindow ifwin = Util.GetiFolderWindow();
 						ifwin.ResolveConflicts(ifolderID);
@@ -797,10 +841,6 @@ namespace Novell.iFolder
 				}
 				else if (args.LinkID.Equals("ShowAccountsPage"))
 				{
-					NotifyWindow notifyWindow = sender as NotifyWindow;
-					notifyWindow.Hide();
-					notifyWindow.Destroy();
-
 					showPrefsPage(1);
 				}
 				else if (args.LinkID.Equals("ShowConflictHelp"))
@@ -808,6 +848,10 @@ namespace Novell.iFolder
 					Util.ShowHelp("conflicts.html", null);
 				}
 			}
+
+			NotifyWindow notifyWindow = sender as NotifyWindow;
+			notifyWindow.Hide();
+			notifyWindow.Destroy();
 		}
 
 		private void trayapp_clicked(object obj, ButtonPressEventArgs args)
@@ -840,6 +884,23 @@ namespace Novell.iFolder
 
 				return;
 			}
+			
+			// If a modal window is active in the client, don't allow anything
+			// else to be shown.  When the user clicks on the tray app icon,
+			// just force the modal window to be presented to the user.
+			if (Util.CurrentModalWindow != null)
+			{
+Console.WriteLine("Modal present");
+				// Put a try/catch around this just in case the window was
+				// suddenly closed and we end up with a object reference
+				// exception.
+				try
+				{
+					Util.CurrentModalWindow.Present();
+					return;
+				}
+				catch{}
+			}
 
 			switch(args.Event.Button)
 			{
@@ -871,24 +932,24 @@ namespace Novell.iFolder
 			Menu trayMenu = new Menu();
 
 
-			MenuItem iFolders_item = 
+			MenuItem iFolders_item =
 					new MenuItem (Util.GS("iFolders"));
 			trayMenu.Append (iFolders_item);
-			iFolders_item.Activated += 
+			iFolders_item.Activated +=
 					new EventHandler(showiFolderWindow);
 
 
-			MenuItem accounts_item = 
-					new MenuItem (Util.GS("Accounts"));
+			MenuItem accounts_item =
+					new MenuItem (Util.GS("Account Settings..."));
 			trayMenu.Append (accounts_item);
-			accounts_item.Activated += 
+			accounts_item.Activated +=
 					new EventHandler(show_accounts);
 
 
-			MenuItem logview_item = 
+			MenuItem logview_item =
 					new MenuItem (Util.GS("Synchronization Log"));
 			trayMenu.Append (logview_item);
-			logview_item.Activated += 
+			logview_item.Activated +=
 					new EventHandler(showLogWindow);
 
 			trayMenu.Append(new SeparatorMenuItem());
@@ -900,7 +961,7 @@ namespace Novell.iFolder
 			prefs_item.Image = new Gtk.Image(Gtk.Stock.Preferences,
 											Gtk.IconSize.Menu);
 			trayMenu.Append(prefs_item);
-			prefs_item.Activated += 
+			prefs_item.Activated +=
 					new EventHandler(show_preferences);
 
 
@@ -909,7 +970,7 @@ namespace Novell.iFolder
 			help_item.Image = new Gtk.Image(Gtk.Stock.Help,
 											Gtk.IconSize.Menu);
 			trayMenu.Append(help_item);
-			help_item.Activated += 
+			help_item.Activated +=
 					new EventHandler(show_help);
 
 
@@ -918,13 +979,13 @@ namespace Novell.iFolder
 			about_item.Image = new Gtk.Image(Gnome.Stock.About,
 											Gtk.IconSize.Menu);
 			trayMenu.Append(about_item);
-			about_item.Activated += 
+			about_item.Activated +=
 					new EventHandler(show_about);
 
 			
 /*			if( (ifSettings != null) && (!ifSettings.HaveEnterprise) )
 			{
-				MenuItem connect_item = 
+				MenuItem connect_item =
 						new MenuItem (Util.GS("Join Enterprise Server"));
 				trayMenu.Append (connect_item);
 				connect_item.Activated += new EventHandler(OnJoinEnterprise);
@@ -946,13 +1007,13 @@ namespace Novell.iFolder
 			quit_item.Image = new Gtk.Image(Gtk.Stock.Quit,
 											Gtk.IconSize.Menu);
 			trayMenu.Append(quit_item);
-			quit_item.Activated += 
+			quit_item.Activated +=
 					new EventHandler(quit_ifolder);
 
 
 			trayMenu.ShowAll();
 
-			trayMenu.Popup(null, null, null, IntPtr.Zero, 3, 
+			trayMenu.Popup(null, null, null, IntPtr.Zero, 3,
 					Gtk.Global.CurrentEventTime);
 		}
 
@@ -965,6 +1026,7 @@ namespace Novell.iFolder
 
 		private void quit_ifolder(object o, EventArgs args)
 		{
+			Util.SaveiFolderWindows();
 			Util.CloseiFolderWindows();
 
 			if(CurrentState == iFolderState.Stopping)
@@ -973,7 +1035,7 @@ namespace Novell.iFolder
 			}
 			else
 			{
-				System.Threading.Thread stopThread = 
+				System.Threading.Thread stopThread =
 					new System.Threading.Thread(new ThreadStart(StopiFolder));
 				stopThread.Start();
 			}
@@ -1011,7 +1073,7 @@ namespace Novell.iFolder
 
 		private void showPrefsPage(int page)
 		{
-			Util.ShowPrefsPage(page);
+			Util.ShowPrefsPage(page, simiasManager);
 		}
 
 		private void showiFolderWindow(object o, EventArgs args)
@@ -1021,12 +1083,12 @@ namespace Novell.iFolder
 
 		private void showLogWindow(object o, EventArgs args)
 		{
-			Util.ShowLogWindow();
+			Util.ShowLogWindow(simiasManager);
 		}
 
 		public static void Main (string[] args)
 		{
-			Process[] processes = 
+			Process[] processes =
 				System.Diagnostics.Process.GetProcessesByName("iFolderClient");
 
 			if(processes.Length > 1)
@@ -1048,10 +1110,14 @@ namespace Novell.iFolder
 				cd.Hide();
 				cd.Destroy();
 				cd = null;
+
+				// Stop Simias (dereference iFolder's handle at least)
+				if(application.EventBroker != null)
+					application.EventBroker.Deregister();
+//				application.SimiasManager.Stop();
+
 				Application.Quit();
 			}
 		}
-
-
 	}
 }

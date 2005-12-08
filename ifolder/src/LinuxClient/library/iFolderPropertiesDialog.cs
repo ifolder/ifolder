@@ -1,5 +1,5 @@
 /***********************************************************************
- *  $RCSfile$
+ *  $RCSfile: iFolderPropertiesDialog.cs,v $
  * 
  *  Copyright (C) 2004 Novell, Inc.
  *
@@ -47,6 +47,7 @@ namespace Novell.iFolder
 		private iFolderPropSharingPage 	SharingPage;
 		private iFolderPropSettingsPage SettingsPage; 
 		private bool				ControlKeyPressed;
+		private Manager			simiasManager;
 
 		public int CurrentPage
 		{
@@ -77,7 +78,8 @@ namespace Novell.iFolder
 		public iFolderPropertiesDialog(	Gtk.Window parent,
 										iFolderWeb ifolder, 
 										iFolderWebService iFolderWS,
-										SimiasWebService SimiasWS)
+										SimiasWebService SimiasWS,
+										Manager simiasManager)
 			: base()
 		{
 			if(iFolderWS == null)
@@ -86,6 +88,7 @@ namespace Novell.iFolder
 			if(SimiasWS == null)
 				throw new ApplicationException("SimiasWebService was null");
 			this.simws = SimiasWS;
+			this.simiasManager = simiasManager;
 
 			// Make sure that we have the latest information by forcing this
 			// a reread from the server.
@@ -103,7 +106,10 @@ namespace Novell.iFolder
 			this.TypeHint = Gdk.WindowTypeHint.Normal;
 			
 			this.HasSeparator = false;
-			this.Title = Util.GS("iFolder Properties");
+			this.Title = 
+				string.Format("{0} {1}",
+							  ifolder.Name,
+							  Util.GS("Properties"));
 
 //			ifHash = new Hashtable();
 
@@ -127,13 +133,15 @@ namespace Novell.iFolder
 		{
 			String localServiceUrl =
 				Simias.Client.Manager.LocalServiceUrl.ToString();
-
+//			String localServiceUrl = simiasManager.WebServiceUri.ToString();
+				
 			this.ifws = new iFolderWebService();
 			if(this.ifws == null)
 				throw new ApplicationException(
 							"Unable to obtain iFolderWebService");
 			this.ifws.Url = localServiceUrl + "/iFolder.asmx";
 			LocalService.Start(this.ifws);
+//			LocalService.Start(this.ifws, simiasManager.WebServiceUri, simiasManager.DataPath);
 			
 			this.simws = new SimiasWebService();
 			if (this.simws == null)
@@ -141,6 +149,7 @@ namespace Novell.iFolder
 							"Unable to obtain SimiasWebService");
 			this.simws.Url = localServiceUrl + "/Simias.asmx";
 			LocalService.Start(this.simws);
+//			LocalService.Start(this.simws, simiasManager.WebServiceUri, simiasManager.DataPath);
 
 			try
 			{
@@ -203,12 +212,12 @@ namespace Novell.iFolder
 			SettingsPage = new iFolderPropSettingsPage(this, ifws);
 
 			propNoteBook.AppendPage(SettingsPage, 
-								new Label(Util.GS("_General")));
+								new Label(Util.GS("General")));
 
 			SharingPage = new iFolderPropSharingPage(this, ifws, simws);
 
 			propNoteBook.AppendPage(SharingPage, 
-								new Label(Util.GS("_Sharing")));
+								new Label(Util.GS("Sharing")));
 
 			dialogBox.PackStart(propNoteBook);
 

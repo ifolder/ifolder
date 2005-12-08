@@ -1,5 +1,5 @@
 /***********************************************************************
- *  $RCSfile$
+ *  $RCSfile: Util.cs.in,v $
  *
  *  Copyright (C) 2004 Novell, Inc.
  *
@@ -53,18 +53,119 @@ namespace Novell.iFolder
 		// the sync log.
 		internal static string lastSavedSyncLogPath = null;
 
-		internal static iFolderWindow		ifwin		= null;
-		internal static LogWindow			logwin		= null;
-		internal static PreferencesWindow	prefswin	= null;
+		internal static iFolderWindow		ifwin		  = null;
+		internal static LogWindow			logwin		  = null;
+		internal static PreferencesWindow	prefswin	  = null;
 		
 		private static bool biFolderWindowNeverShown	= true;
 		private static bool bLogWinNeverShown			= true;
 
-		private static iFolderWebService	ifws		= null;
-		private static SimiasWebService		simws		= null;
+		private static Manager				simiasManager	= null;
+		private static iFolderWebService	ifws			= null;
+		private static SimiasWebService		simws			= null;
 		
 		private static QuitiFolderDelegate quitiFolderDelegate = null;
+		
+		///
+		/// The following variables/properties are needed to keep track of the
+		/// application modal dialogs.  This allows us to coordinate the modal
+		/// dialogs between the main application and the TrayIcon running in
+		/// the Notification Area.  Without this, the user can end up feeling
+		/// "stuck" without knowing why.
+		///
+		private static Gtk.Window currentModalWindow = null;
+		private static object modalWindowLockObject = new object();
+		
+		public static Gtk.Window CurrentModalWindow
+		{
+			get
+			{
+				return currentModalWindow;
+			}
+		}
 
+		/// <summary>
+		/// This should be called by any process in the iFolder Client
+		/// immediately after creating a Dialog/Window that should be made
+		/// modal.
+		///
+		/// It will return 'true' if the window was successfully registered
+		/// and allowed to be modal.  If 'false' is returned the caller should
+		/// call Util.CurrentModalWindow.Present() if appropriate.
+		/// </summary>
+		public static bool RegisterModalWindow(Gtk.Window potentialModalWindow)
+		{
+			lock(modalWindowLockObject)
+			{
+				if (currentModalWindow != null)
+				{
+Console.WriteLine("Util.RegisterModalWindow() returning false");
+					return false;
+				}
+				
+				currentModalWindow = potentialModalWindow;
+				
+				// Register an event listener for when the Dialog/Window is
+				// closed so we can clean up our reference and allow other
+				// modal dialogs to exist.
+				if (potentialModalWindow is Gtk.Dialog)
+				{
+Console.WriteLine("Util.RegisterModalWindow: Registering a dialog");
+					((Gtk.Dialog)potentialModalWindow).Close +=
+						new EventHandler(OnModalDialogClosed);
+					((Gtk.Dialog)potentialModalWindow).Response +=
+						new ResponseHandler(OnModalDialogResponse);
+				}		
+				else
+				{
+Console.WriteLine("Util.RegisterModalWindow: Registering a window");
+					potentialModalWindow.DeleteEvent +=
+						new DeleteEventHandler(OnModalWindowDeleted);
+				}
+
+				potentialModalWindow.Destroyed +=
+					new EventHandler(OnModalWindowDestroyed);
+			}
+			
+			return true;
+		}
+		
+		private static void OnModalDialogClosed(object o, EventArgs args)
+		{
+Console.WriteLine("Modal dialog closed");
+			lock(modalWindowLockObject)
+			{
+				currentModalWindow = null;
+			}
+		}
+		
+		private static void OnModalDialogResponse(object o, ResponseArgs args)
+		{
+Console.WriteLine("Modal dialog responded: {0}", args.ResponseId);
+			lock(modalWindowLockObject)
+			{
+				currentModalWindow = null;
+			}
+		}
+		
+		private static void OnModalWindowDeleted(object o, DeleteEventArgs args)
+		{
+Console.WriteLine("Modal window deleted");
+			lock(modalWindowLockObject)
+			{
+				currentModalWindow = null;
+			}
+		}
+		
+		private static void OnModalWindowDestroyed(object o, EventArgs args)
+		{
+Console.WriteLine("Modal window destroyed");
+			lock(modalWindowLockObject)
+			{
+				currentModalWindow = null;
+			}
+		}
+		
 		public static void InitCatalog()
 		{
 			Mono.Posix.Catalog.Init("@_PACKAGE_@", "@_prefix_@/share/locale");
@@ -251,13 +352,13 @@ namespace Novell.iFolder
 		/// Specify page = 0 to open the preferences to the General tab
 		/// Specify page = 1 to open the preferences to the Accounts tab
 		///
-		public static void ShowPrefsPage(int page)
+		public static void ShowPrefsPage(int page, Manager simiasManager)
 		{
-			if (CheckWebService())
+			if (CheckWebService(simiasManager))
 			{
 				if (prefswin == null)
 				{
-					prefswin = new PreferencesWindow(ifws);
+					prefswin = new PreferencesWindow(ifws, simiasManager);
 					
 					prefswin.Destroyed +=
 						new EventHandler(PrefsWinDestroyedHandler);
@@ -277,14 +378,34 @@ namespace Novell.iFolder
 			prefswin = null;
 		}
 		
+		public static Manager CreateSimiasManager(string[] args)
+		{
+			if (simiasManager == null)
+				simiasManager = new Manager();
+//				simiasManager = new Manager(args);
+			
+			return simiasManager;
+		}
+		
+		public static Manager GetSimiasManager()
+		{
+			if (simiasManager == null)
+			{
+Console.WriteLine("SimiasManager created without arguments.  We don't want this to happen!");
+				simiasManager = new Manager();
+			}
+			
+			return simiasManager;
+		}
+		
 		public static iFolderWindow GetiFolderWindow()
 		{
-			if(ifwin == null && CheckWebService())
+			if(ifwin == null && CheckWebService(simiasManager))
 			{
-				ifwin = new iFolderWindow(ifws, simws);
+				ifwin = new iFolderWindow(ifws, simws, simiasManager);
 				ifwin.DeleteEvent +=
 						new DeleteEventHandler(OniFolderWindowDeleteEvent);
-				ifwin.Destroyed += 
+				ifwin.Destroyed +=
 						new EventHandler(OniFolderWindowDestroyed);
 			}
 
@@ -293,14 +414,14 @@ namespace Novell.iFolder
 		
 		public static void ShowiFolderWindow()
 		{
-			if (CheckWebService())
+			if(CheckWebService(simiasManager))
 			{
 				if (ifwin == null)
 				{
-					ifwin = new iFolderWindow(ifws, simws);
+					ifwin = new iFolderWindow(ifws, simws, simiasManager);
 					ifwin.DeleteEvent +=
 							new DeleteEventHandler(OniFolderWindowDeleteEvent);
-					ifwin.Destroyed += 
+					ifwin.Destroyed +=
 							new EventHandler(OniFolderWindowDestroyed);
 					ifwin.ShowAll();
 					biFolderWindowNeverShown = false;
@@ -390,11 +511,11 @@ namespace Novell.iFolder
 			ifwin = null;
 		}
 
-		public static LogWindow GetLogWindow()
+		public static LogWindow GetLogWindow(Manager simiasManager)
 		{
 			if (logwin == null)
 			{
-				logwin = new LogWindow();
+				logwin = new LogWindow(simiasManager);
 				logwin.Destroyed +=
 					new EventHandler(LogWindowDestroyedHandler);
 			}
@@ -402,12 +523,12 @@ namespace Novell.iFolder
 			return logwin;
 		}
 		
-		public static void ShowLogWindow()
+		public static void ShowLogWindow(Manager simiasManager)
 		{
 			if (logwin == null)
 			{
-				logwin = new LogWindow();
-				logwin.Destroyed += 
+				logwin = new LogWindow(simiasManager);
+				logwin.Destroyed +=
 						new EventHandler(LogWindowDestroyedHandler);
 				logwin.ShowAll();
 				bLogWinNeverShown = false;
@@ -429,7 +550,7 @@ namespace Novell.iFolder
 			logwin = null;
 		}
 
-		private static bool CheckWebService()
+		private static bool CheckWebService(Manager simiasManager)
 		{
 			if(ifws == null)
 			{
@@ -437,13 +558,16 @@ namespace Novell.iFolder
 				{
 					string localServiceUrl =
 						Simias.Client.Manager.LocalServiceUrl.ToString();
+//					string localServiceUrl = simiasManager.WebServiceUri.ToString();
 					ifws = new iFolderWebService();
 					ifws.Url = localServiceUrl + "/iFolder.asmx";
 					LocalService.Start(ifws);
+//					LocalService.Start(ifws, simiasManager.WebServiceUri, simiasManager.DataPath);
 					
 					simws = new SimiasWebService();
 					simws.Url = localServiceUrl + "/Simias.asmx";
 					LocalService.Start(simws);
+//					LocalService.Start(simws, simiasManager.WebServiceUri, simiasManager.DataPath);
 					
 					ifws.Ping();
 				}
@@ -601,6 +725,87 @@ namespace Novell.iFolder
 				}
 			}
 		}
+		
+		/// <summary>
+		/// Saves the positions and sizes of the iFolder windows.  Returns
+		/// true if successful.
+		/// </summary>
+		public static bool SaveiFolderWindows()
+		{
+//			iFolderWindow ifwin = Util.GetiFolderWindow()
+			if (ifwin != null)
+			{
+				if (ifwin.Visible)
+				{
+					// Save the iFolder Window's position and size
+					int x;
+					int y;
+					int width;
+					int height;
+					
+					ifwin.GetPosition(out x, out y);
+					ifwin.GetSize(out width, out height);
+
+Console.WriteLine("Saving the window attributes:");
+Console.WriteLine("\tX: {0}", x);
+Console.WriteLine("\tY: {0}", y);
+Console.WriteLine("\tWidth: {0}", width);
+Console.WriteLine("\tHeight: {0}", height);
+					
+					ClientConfig.Set(ClientConfig.KEY_IFOLDER_WINDOW_X_POS, x.ToString());
+					ClientConfig.Set(ClientConfig.KEY_IFOLDER_WINDOW_Y_POS, y.ToString());
+					ClientConfig.Set(ClientConfig.KEY_IFOLDER_WINDOW_WIDTH, width.ToString());
+					ClientConfig.Set(ClientConfig.KEY_IFOLDER_WINDOW_HEIGHT, height.ToString());
+					ClientConfig.Set(ClientConfig.KEY_IFOLDER_WINDOW_VISIBLE, "true");
+				}
+				else
+				{
+Console.WriteLine("The main iFolder window was NOT open when shutting down");
+					// Save the fact that the iFolder Window was NOT open
+					ClientConfig.Set(ClientConfig.KEY_IFOLDER_WINDOW_VISIBLE, "false");
+				}
+			}
+			
+			return true;
+		}
+		
+		/// <summary>
+		/// Saves the positions and sizes of the iFolder windows.  Returns
+		/// true if successful.
+		/// </summary>
+		public static bool LoadiFolderWindows()
+		{
+			if (ifwin != null)
+			{
+				if (ClientConfig.Exists(ClientConfig.KEY_IFOLDER_WINDOW_X_POS)
+					&& ClientConfig.Exists(ClientConfig.KEY_IFOLDER_WINDOW_WIDTH))
+				{
+					int width = Int32.Parse(ClientConfig.Get(ClientConfig.KEY_IFOLDER_WINDOW_WIDTH, "640"));
+					int height = Int32.Parse(ClientConfig.Get(ClientConfig.KEY_IFOLDER_WINDOW_HEIGHT, "480"));
+					
+					ifwin.DefaultWidth = width;
+					ifwin.DefaultHeight = height;
+
+					int x = Int32.Parse(ClientConfig.Get(ClientConfig.KEY_IFOLDER_WINDOW_X_POS, "0"));
+					int y = Int32.Parse(ClientConfig.Get(ClientConfig.KEY_IFOLDER_WINDOW_Y_POS, "0"));
+
+					ifwin.Move(x, y);
+				}
+
+				if (ClientConfig.Exists(ClientConfig.KEY_IFOLDER_WINDOW_VISIBLE))
+				{
+					bool showiFolderWindow = 
+						Boolean.Parse(ClientConfig.Get(ClientConfig.KEY_IFOLDER_WINDOW_VISIBLE, "false"));
+					
+					if (showiFolderWindow)
+						Util.ShowiFolderWindow();
+					
+					return true;
+				}
+			}
+			
+			return false;
+		}
 
 		/// <summary>
 		/// Returns the path to the user's Desktop if it exists or the user's
@@ -623,6 +828,7 @@ namespace Novell.iFolder
 		/// prevents Gnome.Url.Show() from working correctly.  When we have
 		/// more time to figure out exactly what's going on, we can take care
 		/// of this.
+		/// FIXME: Re-implement this to what Jim Norman sent me in an email so that we use kde-open when we're running in KDE
 		/// </summary>
 		private static bool GnomeUrlShowExternal(string url)
 		{
