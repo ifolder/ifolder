@@ -2,11 +2,14 @@ AC_INIT(src/WebService/iFolder.cs)
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
 
-AM_INIT_AUTOMAKE(ifolder3, 3.2)
-# ASSEMBLY_INFO_VERSION=$VERSION.`date +%Y.%m%d`
-let "BUILDNUM=`date +%G%j`-2000000"
+AM_INIT_AUTOMAKE(ifolder3, 3.4)
+# Check to see if the BUILDNUM is set by global build
+if test "$BUILDNUM" = ""; then
+	let "BUILDNUM=`date +%G%j`-2000000"
+fi
+
 VERSION=$VERSION.$BUILDNUM.1
-SIMIASVER=1.2.$BUILDNUM.1
+SIMIASVER=1.4.$BUILDNUM.1
 AM_MAINTAINER_MODE
 AC_PROG_CC
 
