@@ -325,13 +325,75 @@ Console.WriteLine("\tRemoving: {0}", holder.iFolder.Name);
 		private iFolderHolder AddiFolder(iFolderWeb ifolder)
 		{
 Console.WriteLine("AddiFolder()");
+Console.WriteLine(Environment.StackTrace);
 			lock (instanceLock)
 			{
-				iFolderHolder ifHolder = new iFolderHolder(ifolder);
-				iFolderAddHandler addHandler =
-					new iFolderAddHandler(ifHolder, this);
-				GLib.Idle.Add(addHandler.IdleHandler);
+				iFolderHolder ifHolder = null;
+
+if (ifolder.CollectionID == null)
+{
+	Console.WriteLine("**** CollectionID is null ****");
+}
+else if (ifolder.ID == null)
+{
+	Console.WriteLine("**** ID is null ****");
+}
+Console.WriteLine("\t1");
 				
+				string ifolderID =
+					ifolder.IsSubscription ?
+						ifolder.CollectionID :
+						ifolder.ID;
+Console.WriteLine("\t{0}", ifolderID);
+				if (ifolderIters.ContainsKey(ifolderID))
+				{
+Console.WriteLine("\t3");
+					// This condition got hit most likely because CreateiFolder
+					// was called and now the SimiasEventBroker is calling
+					// AddiFolder on the Added Event.
+
+					// We already have this iFolder in the ListStore so
+					// just update the iFolderWeb object in the
+					// iFolderHolder.
+					TreeIter iter = (TreeIter)ifolderIters[ifolderID];
+Console.WriteLine("\t4");
+					ifHolder = (iFolderHolder)
+						iFolderListStore.GetValue(iter, 0);
+Console.WriteLine("\t5");
+					if (ifHolder != null)
+					{
+Console.WriteLine("\t6");
+						ifHolder.iFolder = ifolder;
+
+						TreePath path = iFolderListStore.GetPath(iter);
+Console.WriteLine("\t7");
+						if (path != null)
+						{
+Console.WriteLine("\t8");
+							iFolderChangedHandler changedHandler =
+								new iFolderChangedHandler(
+									path, iter, iFolderListStore);
+Console.WriteLine("\t9");
+							GLib.Idle.Add(changedHandler.IdleHandler);
+						}
+					}
+					else
+					{
+Console.WriteLine("*** SOMETHING WENT BAD IN iFolderData.AddiFolder() ***");
+					}
+				}
+				else
+				{
+Console.WriteLine("\t10");
+					ifHolder = new iFolderHolder(ifolder);
+Console.WriteLine("\t11");
+					iFolderAddHandler addHandler =
+						new iFolderAddHandler(ifHolder, this);
+Console.WriteLine("\t12");
+					GLib.Idle.Add(addHandler.IdleHandler);
+				}
+				
+Console.WriteLine("\t13");
 				return ifHolder;
 			}
 		}
@@ -339,23 +401,32 @@ Console.WriteLine("AddiFolder()");
 		private void ProtectedAddiFolder(iFolderHolder holder)
 		{
 Console.WriteLine("ProtectedAddiFolder()");
+Console.WriteLine(Environment.StackTrace);
 			if (holder == null) return;
 
 			lock(instanceLock)
 			{
 				iFolderWeb ifolder = holder.iFolder;
 
-				TreeIter iter = iFolderListStore.AppendValues(holder);
-				if (ifolder.IsSubscription)
+				string ifolderID =
+					ifolder.IsSubscription ?
+						ifolder.CollectionID :
+						ifolder.ID;
+Console.WriteLine("\t{0}", ifolderID);
+				if (!ifolderIters.ContainsKey(ifolderID))
 				{
+					TreeIter iter = iFolderListStore.AppendValues(holder);
+					if (ifolder.IsSubscription)
+					{
 Console.WriteLine("\tSubscription: {0}", ifolder.Name);
-					ifolderIters[ifolder.CollectionID] = iter;
-					subToiFolderMap[ifolder.ID] = ifolder.CollectionID;
-				}
-				else
-				{
+						ifolderIters[ifolder.CollectionID] = iter;
+						subToiFolderMap[ifolder.ID] = ifolder.CollectionID;
+					}
+					else
+					{
 Console.WriteLine("\tiFolder: {0}", ifolder.Name);
-					ifolderIters[ifolder.ID] = iter;
+						ifolderIters[ifolder.ID] = iter;
+					}
 				}
 			}
 		}
