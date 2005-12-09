@@ -1,6 +1,6 @@
-INSTALL_EXTENSION_PATH = $(extension_install_dir)
-INSTALL_EMBLEM_PATH = $(emblems_dir)
-INSTALL_ICONS_PATH = $(pixmaps_dir)
+INSTALL_EXTENSION_PATH = $(DESTDIR)$(extension_install_dir)
+INSTALL_EMBLEM_PATH = $(DESTDIR)$(emblems_dir)
+INSTALL_ICONS_PATH = $(DESTDIR)$(pixmaps_dir)
 INSTALL_EXE_PATH = $(DESTDIR)$(libdir)
 
 INCLUDES =						\
