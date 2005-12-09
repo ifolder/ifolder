@@ -943,8 +943,10 @@ namespace Novell.iFolder
 				new iFolderClickedHandler(OniFolderIconViewBackgroundClicked);
 			iFoldersIconView.iFolderClicked +=
 				new iFolderClickedHandler(OniFolderClicked);
-			iFoldersIconView.iFolderDoubleClicked +=
-				new iFolderClickedHandler(OniFolderDoubleClicked);
+//			iFoldersIconView.iFolderDoubleClicked +=
+//				new iFolderClickedHandler(OniFolderDoubleClicked);
+			iFoldersIconView.iFolderActivated +=
+				new iFolderActivatedHandler(OniFolderActivated);
 		
 			// FIXME: Attach the drag and drop receiver to the synchronized iFolders only
 			TargetEntry[] targets =
@@ -1153,22 +1155,32 @@ namespace Novell.iFolder
 			}
 		}
 		
-		private void OniFolderDoubleClicked(object o, iFolderClickedArgs args)
+//		private void OniFolderDoubleClicked(object o, iFolderClickedArgs args)
+//		{
+//			iFolderHolder holder = args.Holder;
+//			if (holder == null) return;	// Just in case
+//
+//			switch(args.Button)
+//			{
+//				case 1:	// left-click
+//					if (holder.iFolder.IsSubscription)
+//						DownloadSelectedFolder();
+//					else
+//						OpenSelectedFolder();
+//					break;
+//				default:
+//					break;
+//			}
+//		}
+		
+		private void OniFolderActivated(object o, iFolderActivatedArgs args)
 		{
-			iFolderHolder holder = args.Holder;
-			if (holder == null) return;	// Just in case
-
-			switch(args.Button)
-			{
-				case 1:	// left-click
-					if (holder.iFolder.IsSubscription)
-						DownloadSelectedFolder();
-					else
-						OpenSelectedFolder();
-					break;
-				default:
-					break;
-			}
+			if (args.Holder == null || args.Holder.iFolder == null) return;
+			
+			if (args.Holder.iFolder.IsSubscription)
+				DownloadSelectedFolder();
+			else
+				OpenSelectedFolder();
 		}
 		
 		private void OniFolderClicked(object o, iFolderClickedArgs args)

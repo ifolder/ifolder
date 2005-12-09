@@ -42,6 +42,7 @@ namespace Novell.iFolder
 		public event iFolderClickedHandler		iFolderClicked;
 		public event iFolderClickedHandler		iFolderDoubleClicked;
 		public event iFolderClickedHandler		BackgroundClicked;
+		public event iFolderActivatedHandler	iFolderActivated;
 		
 		// FIXME: Remove this thread-checking debug code
 		// The purpose of this code is to make sure that we're not attempting to
@@ -94,6 +95,7 @@ namespace Novell.iFolder
 			iFolderIconView.CheckThread();
 			this.ModifyBg(StateType.Normal, this.Style.Base(StateType.Normal));
 			this.ModifyBase(StateType.Normal, this.Style.Base(StateType.Normal));
+			this.CanFocus = true;
 			
 			vbox = new VBox(false, 0);
 			this.Add(vbox);
@@ -263,6 +265,8 @@ Console.WriteLine("iFolderIconView.SelectionChangedHandler()");
 		{
 			iFolderIconView.CheckThread();
 			iFolderHolder holder;
+
+			this.GrabFocus();
 			
 			Gdk.Window win = evnt.Window;
 			int winXPos = 0;
@@ -300,10 +304,57 @@ Console.WriteLine("iFolderIconView.SelectionChangedHandler()");
 					if (iFolderDoubleClicked != null)
 						iFolderDoubleClicked(this,
 							new iFolderClickedArgs(holder, evnt.Button));
+					if (iFolderActivated != null)
+						iFolderActivated(this,
+							new iFolderActivatedArgs(holder));
 				}
 			}
 		
 			return false;
+		}
+		
+		protected override bool OnKeyPressEvent(Gdk.EventKey evnt)
+		{
+			// FIXME: Implement iFolderIconView.OnKeyPressEvent
+			// Control which item has keyboard focus, activating an item,
+			// providing a context menu, etc..
+	
+			Console.WriteLine("iFolderIconView.OnKeyPressEvent(): {0}", evnt.Key);
+			
+			switch(evnt.Key)
+			{
+				case Gdk.Key.Return:
+					if (currentSelection != null && iFolderActivated != null)
+						iFolderActivated(this,
+							new iFolderActivatedArgs(currentSelection));
+					break;
+				case Gdk.Key.Delete:
+					// FIXME: Implement delete or remove action by keyboard
+					break;
+				case Gdk.Key.Home:
+					// FIXME: Change the scroll to the very top and highlight the first item
+					break;
+				case Gdk.Key.End:
+					break;
+				case Gdk.Key.Left:
+					break;
+				case Gdk.Key.Right:
+					break;
+				case Gdk.Key.Up:
+					break;
+				case Gdk.Key.Down:
+					break;
+				case Gdk.Key.Page_Up:
+//				case Gdk.Key.Prior:		// This is the exact same key (int) as Page_Up
+					break;
+				case Gdk.Key.Page_Down:
+//				case Gdk.Key.Next:		// This is the exact same key (int) as Page_Down
+					break;
+				default:
+					break;
+			}
+			
+			return false;	// Allow this to continue on to other event handlers		
 		}
 	}
 
@@ -327,6 +378,22 @@ Console.WriteLine("iFolderIconView.SelectionChangedHandler()");
 		{
 			this.holder = holder;
 			this.button = button;
+		}
+	}
+	
+	public delegate void iFolderActivatedHandler(object o, iFolderActivatedArgs args);
+	public class iFolderActivatedArgs
+	{
+		private iFolderHolder	holder;
+		
+		public iFolderHolder	Holder
+		{
+			get{ return holder; }
+		}
+		
+		public iFolderActivatedArgs(iFolderHolder holder)
+		{
+			this.holder = holder;
 		}
 	}
 }
