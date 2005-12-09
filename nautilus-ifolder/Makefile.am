@@ -12,6 +12,11 @@ EXTRA_DIST = \
 
 DISTCLEANFILES = intl-extract intltool-update intltool-merge
 
+# remove all of the CVS directories
+dist-hook:
+	rm -rf `find $(distdir) -name CVS`
+	rm -rf `find $(distdir) -name ".svn"`
+
 installcheck-summary:
 	$(MAKE) -C src $@
 
