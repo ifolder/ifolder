@@ -647,7 +647,7 @@ namespace Novell.iFolderCom
 					domainID,
 					attribute,
 					searchText,
-					SearchType.Begins,
+					iFolderSearchType.Begins,
 					15, // about 15 can fit in the default size of the listview.
 					out searchContext,
 					out ifolderUsers,
