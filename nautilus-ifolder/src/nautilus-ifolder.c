@@ -53,11 +53,11 @@
 #include "../config.h"
 
 /* Turn this on to see debug messages */
-//#if DEBUG
+#if DEBUG
 #define DEBUG_IFOLDER(args) (g_print("nautilus-ifolder: "), g_printf args)
-//#else
-//#define DEBUG_IFOLDER
-//#endif
+#else
+#define DEBUG_IFOLDER
+#endif
 
 #ifdef _
 #undef _
