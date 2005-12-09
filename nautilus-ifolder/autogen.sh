@@ -1,21 +1,32 @@
-#! /bin/sh
-# Run this to generate all the initial makefiles, etc.
+#!/bin/bash
 
-srcdir=`dirname $0`
-test -z "$srcdir" && srcdir=.
+run_versioned() {
+    local P
+    type -p "$1-$2" &> /dev/null && P="$1-$2" || local P="$1"
 
-PKG_NAME="nautilus-ifolder"
-
-(test -f $srcdir/configure.in \
-  && test -f $srcdir/README) || {
-    echo -n "**Error**: Directory "\`$srcdir\'" does not look like the"
-    echo " top-level $PKG_NAME directory"
-    exit 1
+    shift 2
+    "$P" "$@"
 }
 
-which gnome-autogen.sh || {
-	echo "You need to install gnome-common from the GNOME CVS"
-	exit 1
-}
+if [ "x$1" = "xam" ] ; then
+    set -ex
+    run_versioned automake 1.7 -a -c --foreign
+    ./config.status
+else 
+    set -ex
 
-REQUIRED_AUTOMAKE_VERSION=1.7 . gnome-autogen.sh
+    rm -rf autom4te.cache
+    rm -f config.cache
+
+    run_versioned aclocal 1.7
+    libtoolize -c --force
+    intltoolize -c --force
+    aclocal
+    autoheader
+    run_versioned automake 1.7 -a -c --foreign
+    autoconf -Wall
+
+    CFLAGS="-g -O0" ./configure --prefix=/usr --sysconfdir=/etc "$@"
+
+    make clean
+fi

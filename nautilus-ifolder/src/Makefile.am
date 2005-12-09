@@ -1,6 +1,6 @@
-INSTALL_EXTENSION_PATH = $(gnome_root)/lib/nautilus/extensions-1.0
-INSTALL_EMBLEM_PATH = $(DESTDIR)$(gnome_root)/share/icons/gnome/48x48/emblems
-INSTALL_ICONS_PATH = $(DESTDIR)$(gnome_root)/share/icons/gnome/24x24/apps
+INSTALL_EXTENSION_PATH = $(extension_install_dir)
+INSTALL_EMBLEM_PATH = $(emblems_dir)
+INSTALL_ICONS_PATH = $(pixmaps_dir)
 INSTALL_EXE_PATH = $(DESTDIR)$(libdir)
 
 INCLUDES =						\
@@ -16,7 +16,7 @@ INCLUDES =						\
 	$(IFOLDER_C_CFLAGS)	\
 	$(XML2_CFLAGS)
 
-EXTRA_DIST = nautilus-ifolder.h nautilus-ifolder.cs emblem-ifolder.png ifolder-folder.png
+EXTRA_DIST = nautilus-ifolder.h nautilus-ifolder.cs emblem-ifolder.png emblem-ifolder.icon ifolder-folder.png
 
 # Make sure the following files are not included in the dist
 dist-hook:
@@ -42,6 +42,7 @@ nautilus-ifolder.exe: nautilus-ifolder.cs
 install-exec-local: libnautilus-ifolder.la
 	$(mkinstalldirs) $(INSTALL_EMBLEM_PATH)
 	$(INSTALL_PROGRAM) emblem-ifolder.png $(INSTALL_EMBLEM_PATH)
+	$(INSTALL_PROGRAM) emblem-ifolder.icon $(INSTALL_EMBLEM_PATH)
 	$(mkinstalldirs) $(INSTALL_ICONS_PATH)
 	$(INSTALL_PROGRAM) ifolder-folder.png $(INSTALL_ICONS_PATH)
 	$(mkinstalldirs) $(INSTALL_EXE_PATH)

@@ -53,11 +53,11 @@
 #include "../config.h"
 
 /* Turn this on to see debug messages */
-#if DEBUG
+//#if DEBUG
 #define DEBUG_IFOLDER(args) (g_print("nautilus-ifolder: "), g_printf args)
-#else
-#define DEBUG_IFOLDER
-#endif
+//#else
+//#define DEBUG_IFOLDER
+//#endif
 
 #ifdef _
 #undef _
@@ -803,6 +803,7 @@ ifolder_nautilus_update_file_info (NautilusInfoProvider 	*provider,
 			ifolder_id = get_ifolder_id_by_local_path (file_path);
 			g_free (file_path);
 			if (ifolder_id) {
+g_printf("** Here\n");
 				nautilus_file_info_add_emblem (file, "ifolder");
 
 				file_uri = nautilus_file_info_get_uri (file);
@@ -1462,10 +1463,10 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 	dialog = gtk_dialog_new_with_buttons(_("Convert to an iFolder"),
 			GTK_WINDOW(parent_window),
 			GTK_DIALOG_DESTROY_WITH_PARENT,
-			GTK_STOCK_OK,
-			GTK_RESPONSE_ACCEPT,
 			GTK_STOCK_CANCEL,
 			GTK_RESPONSE_CANCEL,
+			GTK_STOCK_OK,
+			GTK_RESPONSE_ACCEPT,
 			NULL);
 
 	gtk_dialog_set_has_separator(GTK_DIALOG(dialog), FALSE);
@@ -1838,7 +1839,8 @@ ifolder_nautilus_get_file_items (NautilusMenuProvider *provider,
 		item = nautilus_menu_item_new ("NautilusiFolder::create_ifolder",
 					_("Convert to an iFolder"),
 					_("Convert the selected folder to an iFolder"),
-					"ifolder-folder");
+					IFOLDER_IMAGE_IFOLDER);
+//					"ifolder-folder");
 		g_signal_connect (item, "activate",
 					G_CALLBACK (create_ifolder_callback),
 					provider);
