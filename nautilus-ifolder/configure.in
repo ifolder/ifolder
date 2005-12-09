@@ -41,6 +41,24 @@ if test "x$HAVE_PKGCONFIG" = "xno"; then
   AC_MSG_ERROR(you need to have pkgconfig installed !)
 fi
 
+#
+# We add $prefix to PKG_CONFIG_PATH so pkg-config will find any other
+# packages 'make install'-ed to the same prefix.
+#
+# The default value of $prefix is not set until later in the script.
+# We set the default here, if needed.
+#
+test "x$prefix" = xNONE && prefix=$ac_default_prefix
+test "x$exec_prefix" = xNONE && exec_prefix="${prefix}"
+
+if test -z "$PKG_CONFIG_PATH"; then
+    export PKG_CONFIG_PATH="$prefix/lib/pkgconfig"
+else
+    export PKG_CONFIG_PATH="$prefix/lib/pkgconfig:$PKG_CONFIG_PATH"
+fi
+echo PKG_CONFIG_PATH=$PKG_CONFIG_PATH
+AC_SUBST(PKG_CONFIG_PATH)
+
 dnl ==========================================================================
 
 PKG_CHECK_MODULES(NAUTILUS, libnautilus-extension >= $NAUTILUS_REQUIRED eel-2.0 >= $EEL_REQUIRED glib-2.0 >= $GLIB_REQUIRED)
@@ -114,16 +132,6 @@ AC_CHECK_PROG(CSC, mcs, mcs)
 test -z "$CSC" && AC_MSG_ERROR([no C Sharp compiler: mcs not found in \$PATH])
 
 #
-# We add $prefix to PKG_CONFIG_PATH so pkg-config will find any other
-# packages 'make install'-ed to the same prefix.
-#
-# The default value of $prefix is not set until later in the script.
-# We set the default here, if needed.
-#
-test "x$prefix" = xNONE && prefix=$ac_default_prefix
-test "x$exec_prefix" = xNONE && exec_prefix="${prefix}"
-
-#
 # Installation directory options.
 #
 # These are normally left unexpanded so users can "make install exec_prefix=/foo".
@@ -143,14 +151,6 @@ infodir="${prefix}/info"
 mandir="${prefix}/man"
 webdir="${exec_prefix}/web"
 webbindir="${exec_prefix}/web/bin"
-
-if test -z "$PKG_CONFIG_PATH"; then
-    export PKG_CONFIG_PATH="$prefix/lib/pkgconfig"
-else
-    export PKG_CONFIG_PATH="$prefix/lib/pkgconfig:$PKG_CONFIG_PATH"
-fi
-echo PKG_CONFIG_PATH=$PKG_CONFIG_PATH
-AC_SUBST(PKG_CONFIG_PATH)
 
 dnl ========================================================
 dnl Configure XML2_CONFIG

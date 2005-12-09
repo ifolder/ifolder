@@ -43,6 +43,7 @@ install-exec-local: libnautilus-ifolder.la
 	$(mkinstalldirs) $(INSTALL_EMBLEM_PATH)
 	$(INSTALL_PROGRAM) emblem-ifolder.png $(INSTALL_EMBLEM_PATH)
 	$(INSTALL_PROGRAM) emblem-ifolder.icon $(INSTALL_EMBLEM_PATH)
+	$(gnome_root)/bin/gtk-update-icon-cache $(gnome_root)/share/icons/gnome
 	$(mkinstalldirs) $(INSTALL_ICONS_PATH)
 	$(INSTALL_PROGRAM) ifolder-folder.png $(INSTALL_ICONS_PATH)
 	$(mkinstalldirs) $(INSTALL_EXE_PATH)
@@ -51,7 +52,8 @@ install-exec-local: libnautilus-ifolder.la
 
 uninstall-local:
 	cd $(INSTALL_EXTENSION_PATH); rm -f libnautilus-ifolder*
-	cd $(INSTALL_EMBLEM_PATH); rm -f emblem-ifolder.png
+	cd $(INSTALL_EMBLEM_PATH); rm -f emblem-ifolder.*
+	$(gnome_root)/bin/gtk-update-icon-cache $(gnome_root)/share/icons/gnome
 	cd $(INSTALL_ICONS_PATH); rm -f ifolder-folder.png
 	cd $(INSTALL_EXE_PATH); rm -f nautilus-ifolder*
 
