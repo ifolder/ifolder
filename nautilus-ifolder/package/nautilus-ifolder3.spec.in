@@ -83,6 +83,7 @@ $(gnome_root)/bin/gtk-update-icon-cache $(gnome_root)/share/icons/gnome
 %Files
 %defattr(-,root,root)
 %{prefix}/*
-@gnome_root@/lib/nautilus/extensions-1.0/libnautilus-ifolder*
+@gnome_root@/share/nautilus-ifolder3/pixmaps/ifolder-folder.png
 @gnome_root@/share/icons/gnome/48x48/emblems/emblem-ifolder.png
-@gnome_root@/share/icons/gnome/24x24/apps/ifolder-folder.png
+@gnome_root@/share/icons/gnome/48x48/emblems/emblem-ifolder.icon
+@gnome_root@/lib/nautilus/extensions-1.0/libnautilus-ifolder.*

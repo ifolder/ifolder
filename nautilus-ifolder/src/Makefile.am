@@ -1,7 +1,6 @@
-INSTALL_EXTENSION_PATH = $(DESTDIR)$(extension_install_dir)
-INSTALL_EMBLEM_PATH = $(DESTDIR)$(emblems_dir)
-INSTALL_ICONS_PATH = $(DESTDIR)$(pixmaps_dir)
-INSTALL_EXE_PATH = $(DESTDIR)$(libdir)
+INSTALL_EXTENSION_PATH = $(extension_install_dir)
+INSTALL_EMBLEM_PATH = $(emblems_dir)
+INSTALL_ICONS_PATH = $(pixmaps_dir)
 
 INCLUDES =						\
 	-DG_LOG_DOMAIN=\"Nautilus-iFolder\"		        \
@@ -40,22 +39,24 @@ nautilus-ifolder.exe: nautilus-ifolder.cs
 	$(CSC) /out:$@ $(CSCFLAGS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(SIMIAS_CLIENT_LIBS) $(IFOLDER_LIBS) nautilus-ifolder.cs
 
 install-exec-local: libnautilus-ifolder.la
-	$(mkinstalldirs) $(INSTALL_EMBLEM_PATH)
-	$(INSTALL_PROGRAM) emblem-ifolder.png $(INSTALL_EMBLEM_PATH)
-	$(INSTALL_PROGRAM) emblem-ifolder.icon $(INSTALL_EMBLEM_PATH)
-	$(gnome_root)/bin/gtk-update-icon-cache $(gnome_root)/share/icons/gnome
-	$(mkinstalldirs) $(INSTALL_ICONS_PATH)
-	$(INSTALL_PROGRAM) ifolder-folder.png $(INSTALL_ICONS_PATH)
-	$(mkinstalldirs) $(INSTALL_EXE_PATH)
-	$(INSTALL_PROGRAM) $(INSTALL_BIN_OPTS) nautilus-ifolder.exe $(INSTALL_EXE_PATH)
-	$(INSTALL_PROGRAM) $(INSTALL_BIN_OPTS) nautilus-ifolder $(INSTALL_EXE_PATH)
+	$(mkinstalldirs) $(DESTDIR)$(INSTALL_EMBLEM_PATH)
+	$(INSTALL_PROGRAM) emblem-ifolder.png $(DESTDIR)$(INSTALL_EMBLEM_PATH)
+	$(INSTALL_PROGRAM) emblem-ifolder.icon $(DESTDIR)$(INSTALL_EMBLEM_PATH)
+	$(mkinstalldirs) $(DESTDIR)$(INSTALL_ICONS_PATH)
+	$(INSTALL_PROGRAM) ifolder-folder.png $(DESTDIR)$(INSTALL_ICONS_PATH)
+	$(mkinstalldirs) $(DESTDIR)$(libdir)
+	$(INSTALL_PROGRAM) $(INSTALL_BIN_OPTS) nautilus-ifolder.exe $(DESTDIR)$(libdir)
+	$(INSTALL_PROGRAM) $(INSTALL_BIN_OPTS) nautilus-ifolder $(DESTDIR)$(libdir)
+
+#	This is not possible to do during a make install
+#	$(DESTDIR)$(gnome_root)/bin/gtk-update-icon-cache $(gnome_root)/share/icons/gnome
 
 uninstall-local:
-	cd $(INSTALL_EXTENSION_PATH); rm -f libnautilus-ifolder*
-	cd $(INSTALL_EMBLEM_PATH); rm -f emblem-ifolder.*
-	$(gnome_root)/bin/gtk-update-icon-cache $(gnome_root)/share/icons/gnome
-	cd $(INSTALL_ICONS_PATH); rm -f ifolder-folder.png
-	cd $(INSTALL_EXE_PATH); rm -f nautilus-ifolder*
+	cd $(DESTDIR)$(INSTALL_EXTENSION_PATH); rm -f libnautilus-ifolder*
+	cd $(DESTDIR)$(INSTALL_EMBLEM_PATH); rm -f emblem-ifolder.*
+	cd $(DESTDIR)$(INSTALL_ICONS_PATH); rm -f ifolder-folder.png
+	cd $(DESTDIR)$(libdir); rm -f nautilus-ifolder*
+#	$(gnome_root)/bin/gtk-update-icon-cache $(gnome_root)/share/icons/gnome
 
 clean-local:
 	rm -f nautilus-ifolder.exe
