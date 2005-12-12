@@ -1,5 +1,5 @@
 /***********************************************************************
- *  $RCSfile$
+ *  $RCSfile: iFolderPropertiesDialog.cs,v $
  * 
  *  Copyright (C) 2004 Novell, Inc.
  *
@@ -106,7 +106,10 @@ namespace Novell.iFolder
 			this.TypeHint = Gdk.WindowTypeHint.Normal;
 			
 			this.HasSeparator = false;
-			this.Title = Util.GS("iFolder Properties");
+			this.Title = 
+				string.Format("{0} {1}",
+							  ifolder.Name,
+							  Util.GS("Properties"));
 
 //			ifHash = new Hashtable();
 
@@ -205,12 +208,12 @@ namespace Novell.iFolder
 			SettingsPage = new iFolderPropSettingsPage(this, ifws);
 
 			propNoteBook.AppendPage(SettingsPage, 
-								new Label(Util.GS("_General")));
+								new Label(Util.GS("General")));
 
 			SharingPage = new iFolderPropSharingPage(this, ifws, simws);
 
 			propNoteBook.AppendPage(SharingPage, 
-								new Label(Util.GS("_Sharing")));
+								new Label(Util.GS("Sharing")));
 
 			dialogBox.PackStart(propNoteBook);
 

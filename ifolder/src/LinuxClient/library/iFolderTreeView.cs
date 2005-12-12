@@ -1,5 +1,5 @@
 /***********************************************************************
- *  $RCSfile$
+ *  $RCSfile: iFolderTreeView.cs,v $
  * 
  *  Copyright (C) 2004 Novell, Inc.
  *

@@ -1,5 +1,5 @@
 /***********************************************************************
- *  $RCSfile$
+ *  $RCSfile: iFolderConflictDialog.cs,v $
  * 
  *  Copyright (C) 2004 Novell, Inc.
  *
@@ -262,6 +262,14 @@ namespace Novell.iFolder
 		private Button				nameEntrySaveButton;
 
 		private Hashtable			conflictTable;
+
+		public iFolderWeb iFolder
+		{
+			get
+			{
+				return ifolder;
+			}
+		}
 
 		/// <summary>
 		/// Default constructor for iFolderConflictResolver

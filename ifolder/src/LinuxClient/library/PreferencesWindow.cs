@@ -1,5 +1,5 @@
 /***********************************************************************
- *  $RCSfile$
+ *  $RCSfile: PreferencesWindow.cs,v $
  * 
  *  Copyright (C) 2004 Novell, Inc.
  *
@@ -104,11 +104,11 @@ namespace Novell.iFolder
 
 			generalPage = new PrefsGeneralPage(this, ifws);
 			PrefNoteBook.AppendPage( generalPage,
-										new Label(Util.GS("_General")));
+										new Label(Util.GS("General")));
 
-			accountsPage = new PrefsAccountsPage(this, simiasManager);
+			accountsPage = new PrefsAccountsPage(this);
 			PrefNoteBook.AppendPage( accountsPage,
-										new Label(Util.GS("Accou_nts")));
+										new Label(Util.GS("Accounts")));
 
 			PrefNoteBook.SwitchPage +=
 				new SwitchPageHandler(OnSwitchPageEvent);
@@ -176,6 +176,7 @@ namespace Novell.iFolder
 		{
 			if (args.PageNum != 0)
 				generalPage.LeavingGeneralPage();
+/*
 			else
 			{
 				PrefNoteBook.SwitchPage -=
@@ -189,6 +190,7 @@ namespace Novell.iFolder
 				PrefNoteBook.SwitchPage +=
 					new SwitchPageHandler(OnSwitchPageEvent);
 			}
+*/
 		}
 
 
@@ -210,9 +212,9 @@ namespace Novell.iFolder
 
 		private void CloseEventHandler(object o, EventArgs args)
 		{
-			if (CurrentPage == 1)
-				if (!accountsPage.AllowLeavingAccountsPage())
-					return;
+//			if (CurrentPage == 1)
+//				if (!accountsPage.AllowLeavingAccountsPage())
+//					return;
 
 			CloseWindow();
 		}

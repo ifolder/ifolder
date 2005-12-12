@@ -1,5 +1,5 @@
 /***********************************************************************
- *  $RCSfile$
+ *  $RCSfile: AccountDialog.cs,v $
  * 
  *  Copyright (C) 2004 Novell, Inc.
  *
@@ -26,13 +26,47 @@ using Gtk;
 using System;
 using Simias.Client;
 
+using Novell.iFolder.Events;
+using Novell.iFolder.Controller;
+
 namespace Novell.iFolder
 {
 	public class AccountDialog : Dialog
 	{
 		private iFolderData			ifdata;
 		private DomainInformation	domain;
+		private DomainController	domainController;
+		private Manager				simiasManager;
+		
 		private bool				ControlKeyPressed;
+		
+		///
+		/// Global Widgets
+		///
+		private CheckButton			EnableAccountButton;
+		private CheckButton			DefaultAccountButton;
+
+		///
+		/// Widgets for the Server Page
+		///
+		private Entry				ServerAddressEntry;
+		private TextView			ServerDescriptionTextView;
+		private bool				bServerAddressChanged;
+		
+		///
+		/// Widgets for the Identity Page
+		///
+		private Entry				PasswordEntry;
+		private CheckButton			RememberPasswordButton;
+		private bool				bPasswordChanged;
+		
+		///
+		/// Widgets for the Disk Space Page
+		///
+		private Label				QuotaTotalLabel;
+		private Label				QuotaUsedLabel;
+		private Label				QuotaAvailableLabel;
+		private ProgressBar			QuotaGraph;
 
 		public string DomainID
 		{
@@ -40,18 +74,50 @@ namespace Novell.iFolder
 		}
 
 
-		public AccountDialog(DomainInformation curDomain, Manager simiasManager)
+		public AccountDialog(DomainInformation curDomain)
 			: base()
 		{
 			domain = curDomain;
-			ifdata = iFolderData.GetData(simiasManager);
+			ifdata = iFolderData.GetData();
+			this.simiasManager = Util.GetSimiasManager();
+			
+			domainController = DomainController.GetDomainController();
+			
+			bServerAddressChanged	= false;
+			bPasswordChanged		= false;
+
 			SetupDialog();
+			
+			// FIXME: Figure out if we need to register for when the window closes so that fields will be saved.
+			// I believe that the FocusOutEventHandlers should already take care of it, but you never know
+		}
+		
+		~AccountDialog()
+		{
+			// Unregister fr domain events
+			if (domainController != null)
+			{
+				domainController.DomainHostModified -=
+					new DomainHostModifiedEventHandler(OnDomainHostModified);
+				domainController.DomainLoggedIn -=
+					new DomainLoggedInEventHandler(OnDomainLoggedIn);
+				domainController.DomainLoggedOut -=
+					new DomainLoggedOutEventHandler(OnDomainLoggedOut);
+				domainController.DomainActivated -=
+					new DomainActivatedEventHandler(OnDomainActivated);
+				domainController.DomainInactivated -=
+					new DomainInactivatedEventHandler(OnDomainInactivated);
+				domainController.NewDefaultDomain -=
+					new DomainNewDefaultEventHandler(OnNewDefaultDomain);
+				domainController.DomainDeleted -=
+					new DomainDeletedEventHandler(OnDomainDeleted);
+			}
 		}
 		
 
 		private void SetupDialog()
 		{
-			this.Title = Util.GS("Details");
+			this.Title = string.Format("{0} {1}", domain.Name, Util.GS("Properties"));
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
 			this.HasSeparator = false;
 
@@ -60,18 +126,25 @@ namespace Novell.iFolder
 			this.TypeHint = Gdk.WindowTypeHint.Normal;
 			this.DefaultResponse = ResponseType.Ok;
 
-			CreateWidgets();
+			VBox vbox = new VBox(false, 12);
+			this.VBox.PackStart(vbox, true, true, 0);
+			vbox.BorderWidth = Util.DefaultBorderWidth;
+			
+			vbox.PackStart(CreateNotebook(), true, true, 0);
+			vbox.PackStart(CreateGlobalCheckButtons(), false, false, 0);
 
-			this.AddButton(Util.GS("Close"), ResponseType.Ok);
+			this.AddButton(Gtk.Stock.Close, ResponseType.Ok);
 			
 			this.DefaultResponse = ResponseType.Ok;
 			
 			this.Response += new ResponseHandler(OnAccountDialogResponse);
-
+			
 			// Bind ESC and C-w to close the window
 			ControlKeyPressed = false;
 			KeyPressEvent += new KeyPressEventHandler(KeyPressHandler);
 			KeyReleaseEvent += new KeyReleaseEventHandler(KeyReleaseHandler);
+			
+			this.Realized += new EventHandler(OnRealizeWidget);
 		}
 		
 		private void OnAccountDialogResponse(object o, ResponseArgs args)
@@ -85,172 +158,259 @@ namespace Novell.iFolder
 
 
 		/// <summary>
-		/// Creates the Enterprise Page
+		/// Creates the tabbed notebook
 		/// </summary>
 		/// <returns>
 		/// Widget to display
 		/// </returns>
-		private void CreateWidgets()
+		private Widget CreateNotebook()
 		{
-			VBox vbox = new VBox();
-			vbox.Spacing = Util.SectionSpacing;
-			vbox.BorderWidth = Util.DefaultBorderWidth;
-			this.VBox.PackStart(vbox, true, true, 0);
+			Notebook notebook = new Notebook();
+			
+			notebook.AppendPage(CreateServerPage(), new Label(Util.GS("Server")));
+			notebook.AppendPage(CreateIdentityPage(), new Label(Util.GS("Identity")));
+			notebook.AppendPage(CreateDiskSpacePage(), new Label(Util.GS("Disk Space")));
+			
+			notebook.ShowAll();
+			return notebook;
+		}
+		
+		private Widget CreateGlobalCheckButtons()
+		{
+			VBox vbox = new VBox(false, 0);
 
-			//------------------------------
-			// Server Information
-			//------------------------------
-			// create a section box
-			VBox srvSectionBox = new VBox();
-			srvSectionBox.Spacing = Util.SectionTitleSpacing;
-			vbox.PackStart(srvSectionBox, false, true, 0);
-			Label srvSectionLabel = new Label("<span weight=\"bold\">" +
-												Util.GS("System Information") +
-												"</span>");
-			srvSectionLabel.UseMarkup = true;
-			srvSectionLabel.Xalign = 0;
-			srvSectionBox.PackStart(srvSectionLabel, false, true, 0);
+			EnableAccountButton = new CheckButton(Util.GS("_Automatically connect when iFolder starts"));
+			vbox.PackStart(EnableAccountButton, false, false, 0);
 
-			// create a hbox to provide spacing
-			HBox srvSpacerBox = new HBox();
-			srvSpacerBox.Spacing = 10;
-			srvSectionBox.PackStart(srvSpacerBox, false, true, 0);
-			Label srvSpaceLabel = new Label("");
-			srvSpacerBox.PackStart(srvSpaceLabel, false, true, 0);
+			DefaultAccountButton = new CheckButton(Util.GS("Account is _default"));
+			vbox.PackStart(DefaultAccountButton, false, false, 0);
+			
+			return vbox;
+		}
+		
+		private Widget CreateServerPage()
+		{
+			VBox vbox = new VBox(false, 0);
+			
+			Table table = new Table(6, 2, false);
+			vbox.PackStart(table, true, true, 0);
+			table.ColumnSpacing = 12;
+			table.RowSpacing = 6;
+			table.BorderWidth = 12;
+			
+			///
+			/// Row 1 (Server Name)
+			///
+			Label l = new Label(Util.GS("Name:"));
+			table.Attach(l,
+						 0,1, 0,1,
+						 AttachOptions.Shrink | AttachOptions.Fill,
+						 0,0,0);
+			l.Xalign = 0;
+			
+			l = new Label(domain.Name);
+			table.Attach(l,
+						 1,2, 0,1,
+						 AttachOptions.Expand | AttachOptions.Fill,
+						 0,0,0);
+			l.Xalign = 0;
+			
+			///
+			/// Row 2 (Server Address)
+			///
+			l = new Label(Util.GS("Address:"));
+			table.Attach(l,
+						 0,1, 1,2,
+						 AttachOptions.Expand | AttachOptions.Fill,
+						 0,0,0);
+			l.Xalign = 0;
+			l.Yalign = 0;
 
-			// create a vbox to actually place the widgets in for section
-			VBox srvWidgetBox = new VBox();
-			srvSpacerBox.PackStart(srvWidgetBox, true, true, 0);
+			ServerAddressEntry = new Entry();
+			table.Attach(ServerAddressEntry,
+						 1,2, 1,2,
+						 AttachOptions.Shrink | AttachOptions.Fill,
+						 0,0,0);
+			l.MnemonicWidget = ServerAddressEntry;
+			
+			///
+			/// Row 3 (Hint about changing the server address)
+			///
+			l = new Label(Util.GS("(You can change the address if you are offline)"));
+			table.Attach(l,
+						 1,2, 2,3,
+						 AttachOptions.Shrink | AttachOptions.Fill,
+						 0,0,0);
+			l.LineWrap = true;
+			l.Wrap = true;
+			l.Xalign = 0;
+			l.Sensitive = false;
+			Requisition req = ServerAddressEntry.SizeRequest();
+			l.WidthRequest = req.Width;
 
-			// create a table to hold the values
-			Table srvTable = new Table(2,2,false);
-			srvWidgetBox.PackStart(srvTable, true, true, 0);
-			srvTable.ColumnSpacing = 20;
-			srvTable.RowSpacing = 5;
-
-//			Label usrNameLabel = new Label(Util.GS("Username:"));
-//			usrNameLabel.Xalign = 0;
-//			srvTable.Attach(usrNameLabel, 0,1,0,1,
-//					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-//			Label usrNameValue = new Label(domain.MemberName);
-//			usrNameValue.Xalign = 0;
-//			srvTable.Attach(usrNameValue, 1,2,0,1);
-
-
-			Label srvNameLabel = new Label(Util.GS("Name:"));
-			srvNameLabel.Xalign = 0;
-			srvTable.Attach(srvNameLabel, 0,1,0,1,
-					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-
-			Label srvNameValue = new Label(domain.Name);
-			srvNameValue.UseUnderline = false;
-			srvNameValue.Xalign = 0;
-			srvTable.Attach(srvNameValue, 1,2,0,1);
-
-			Label srvDescLabel = new Label(Util.GS("Description:"));
-			srvDescLabel.Xalign = 0;
-			srvDescLabel.Yalign = 0;
-			srvTable.Attach(srvDescLabel, 0,1,1,2,
-					AttachOptions.Shrink | AttachOptions.Fill, 
-					AttachOptions.Fill,0,0);
-
+			///
+			/// Row 4 (Description TextView)
+			///
 			ScrolledWindow sw = new ScrolledWindow();
+			table.Attach(sw,
+						 0,2, 3,4,
+						 AttachOptions.Expand | AttachOptions.Fill,
+						 0,0,0);
 			sw.ShadowType = Gtk.ShadowType.EtchedIn;
-			TextView srvDescValue = new TextView();
+			TextView ServerDescriptionTextView = new TextView();
 			if(domain.Description != null)
-				srvDescValue.Buffer.Text = domain.Description;
-			srvDescValue.WrapMode = Gtk.WrapMode.Word;
-			srvDescValue.Editable = false;
-			srvDescValue.CursorVisible = false;
-			srvDescValue.RightMargin = 5;
-			srvDescValue.LeftMargin = 5;
-			sw.Add(srvDescValue);
-			srvTable.Attach(sw, 1,2,1,2,
-					AttachOptions.Expand | AttachOptions.Fill , 0,0,0);
+				ServerDescriptionTextView.Buffer.Text = domain.Description;
+			ServerDescriptionTextView.WrapMode = Gtk.WrapMode.Word;
+			ServerDescriptionTextView.Editable = false;
+			ServerDescriptionTextView.Sensitive = false;
+			ServerDescriptionTextView.CursorVisible = false;
+			ServerDescriptionTextView.RightMargin = 5;
+			ServerDescriptionTextView.LeftMargin = 5;
+			sw.Add(ServerDescriptionTextView);
 
+			return vbox;
+		}
+		
+		private Widget CreateIdentityPage()
+		{
+			VBox vbox = new VBox(false, 0);
+			
+			Table table = new Table(3, 2, false);
+			vbox.PackStart(table, true, true, 0);
+			table.ColumnSpacing = 12;
+			table.RowSpacing = 6;
+			table.BorderWidth = 12;
+			
+			///
+			/// Row 1 (User Name)
+			///
+			Label l = new Label(Util.GS("User Name:"));
+			table.Attach(l,
+						 0,1, 0,1,
+						 AttachOptions.Shrink | AttachOptions.Fill,
+						 0,0,0);
+			l.Xalign = 0;
+			
+			l = new Label(domain.MemberName);
+			table.Attach(l,
+						 1,2, 0,1,
+						 AttachOptions.Expand | AttachOptions.Fill,
+						 0,0,0);
+			l.Xalign = 0;
+			
+			///
+			/// Row 2 (User Password)
+			///
+			l = new Label(Util.GS("_Password:"));
+			table.Attach(l,
+						 0,1, 1,2,
+						 AttachOptions.Shrink | AttachOptions.Fill,
+						 0,0,0);
+			l.Xalign = 0;
 
+			PasswordEntry = new Entry();
+			table.Attach(PasswordEntry,
+						 1,2, 1,2,
+						 AttachOptions.Shrink | AttachOptions.Fill,
+						 0,0,0);
+			PasswordEntry.Visibility = false;
+			l.MnemonicWidget = PasswordEntry;
 
-			//------------------------------
-			// Disk Space
-			//------------------------------
-			// create a section box
-			VBox diskSectionBox = new VBox();
-			diskSectionBox.Spacing = Util.SectionTitleSpacing;
-			vbox.PackStart(diskSectionBox, false, true, 0);
-			Label diskSectionLabel = new Label("<span weight=\"bold\">" +
-												Util.GS("Disk Space on Server") +
-												"</span>");
-			diskSectionLabel.UseMarkup = true;
-			diskSectionLabel.Xalign = 0;
-			diskSectionBox.PackStart(diskSectionLabel, false, true, 0);
+			///
+			/// Row 3 (Remember Password CheckButton)
+			///
+			RememberPasswordButton =
+				new CheckButton(Util.GS("_Remember password"));
+			table.Attach(RememberPasswordButton,
+						 1,2, 2,3,
+						 AttachOptions.Expand | AttachOptions.Fill,
+						 0,0,0);
+			
+			return vbox;
+		}
+		
+		private Widget CreateDiskSpacePage()
+		{
+			VBox vbox = new VBox(false, 0);
+			
+			Table table = new Table(3, 3, false);
+			vbox.PackStart(table, true, true, 0);
+			table.ColumnSpacing = 12;
+			table.RowSpacing = 6;
+			table.BorderWidth = 12;
+			
+			///
+			/// Row 1 (Quota)
+			///
+			Label l = new Label(Util.GS("Quota:"));
+			table.Attach(l,
+						 0,1, 0,1,
+						 AttachOptions.Expand | AttachOptions.Fill,
+						 0,0,0);
+			l.Xalign = 0;
 
-			// create a hbox to provide spacing
-			HBox diskSpacerBox = new HBox();
-			diskSpacerBox.Spacing = 10;
-			diskSectionBox.PackStart(diskSpacerBox, true, true, 0);
-			Label diskSpaceLabel = new Label("");
-			diskSpacerBox.PackStart(diskSpaceLabel, false, true, 0);
+			QuotaTotalLabel = new Label("");
+			table.Attach(QuotaTotalLabel,
+						 1,2, 0,1,
+						 AttachOptions.Shrink | AttachOptions.Fill,
+						 0,0,0);
+			QuotaTotalLabel.Xalign = 0;
+			
+			///
+			/// Row 2 (Used)
+			///
+			l = new Label(Util.GS("Used:"));
+			table.Attach(l,
+						 0,1, 1,2,
+						 AttachOptions.Expand | AttachOptions.Fill,
+						 0,0,0);
+			l.Xalign = 0;
 
+			QuotaUsedLabel = new Label("");
+			table.Attach(QuotaUsedLabel,
+						 1,2, 1,2,
+						 AttachOptions.Shrink | AttachOptions.Fill,
+						 0,0,0);
+			QuotaUsedLabel.Xalign = 0;
 
-			// create a table to hold the values
-			Table diskTable = new Table(3,3,false);
-			diskSpacerBox.PackStart(diskTable, true, true, 0);
-			diskTable.ColumnSpacing = 20;
-			diskTable.RowSpacing = 5;
+			///			
+			/// Row 3 (Available)
+			///
+			l = new Label(Util.GS("Available:"));
+			table.Attach(l,
+						 0,1, 2,3,
+						 AttachOptions.Expand | AttachOptions.Fill,
+						 0,0,0);
+			l.Xalign = 0;
 
-			Label totalLabel = new Label(Util.GS("Quota:"));
-			totalLabel.Xalign = 0;
-			diskTable.Attach(totalLabel, 0,1,0,1,
-					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
-			Label totalValue = new Label("0");
-			totalValue.Xalign = 1;
-			diskTable.Attach(totalValue, 1,2,0,1,
-					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-			Label totalUnit = new Label(Util.GS("MB"));
-			diskTable.Attach(totalUnit, 2,3,0,1,
-					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+			QuotaAvailableLabel = new Label("");
+			table.Attach(QuotaAvailableLabel,
+						 1,2, 2,3,
+						 AttachOptions.Shrink | AttachOptions.Fill,
+						 0,0,0);
+			QuotaAvailableLabel.Xalign = 0;
 
-			Label usedLabel = new Label(Util.GS("Used:"));
-			usedLabel.Xalign = 0;
-			diskTable.Attach(usedLabel, 0,1,1,2,
-					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
-			Label usedValue = new Label("0");
-			usedValue.Xalign = 1;
-			diskTable.Attach(usedValue, 1,2,1,2,
-					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-			Label usedUnit = new Label(Util.GS("MB"));
-			diskTable.Attach(usedUnit, 2,3,1,2,
-					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-
-			Label availLabel = new Label(Util.GS("Available:"));
-			availLabel.Xalign = 0;
-			diskTable.Attach(availLabel, 0,1,2,3,
-					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
-			Label availValue = new Label("0");
-			availValue.Xalign = 1;
-			diskTable.Attach(availValue, 1,2,2,3,
-					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-			Label availUnit = new Label(Util.GS("MB"));
-			diskTable.Attach(availUnit, 2,3,2,3,
-					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-
-
+			///
+			/// Disk Space Graph
+			///
 			Frame graphFrame = new Frame();
+			table.Attach(graphFrame,
+						 2,3, 0,3,
+						 AttachOptions.Shrink | AttachOptions.Fill,
+						 0,0,0);
 			graphFrame.Shadow = Gtk.ShadowType.EtchedOut;
 			graphFrame.ShadowType = Gtk.ShadowType.EtchedOut;
-			diskSpacerBox.PackStart(graphFrame, false, true, 0);
 			HBox graphBox = new HBox();
 			graphBox.Spacing = 5;
 			graphBox.BorderWidth = 5;
 			graphFrame.Add(graphBox);
 
-			ProgressBar diskGraph = new ProgressBar();
-			graphBox.PackStart(diskGraph, false, true, 0);
+			QuotaGraph = new ProgressBar();
+			graphBox.PackStart(QuotaGraph, false, true, 0);
 
-			diskGraph.Orientation = Gtk.ProgressBarOrientation.BottomToTop;
-//			diskGraph.Text = "%3";
-			diskGraph.PulseStep = .10;
-			diskGraph.Fraction = 0;
+			QuotaGraph.Orientation = Gtk.ProgressBarOrientation.BottomToTop;
+			QuotaGraph.PulseStep = .10;
+			QuotaGraph.Fraction = 0;
 
 			VBox graphLabelBox = new VBox();
 			graphBox.PackStart(graphLabelBox, false, true, 0);
@@ -265,18 +425,106 @@ namespace Novell.iFolder
 			emptyLabel.Yalign = 1;
 			graphLabelBox.PackStart(emptyLabel, true, true, 0);
 
+			return vbox;
+		}
+		
+		private void OnRealizeWidget(object o, EventArgs args)
+		{
+			InitGlobalCheckButtons();
+			InitServerPage();
+			InitIdentityPage();
+			InitDiskSpacePage();
 
+			// Register for the domain events that could affect this dialog
+			if (domainController != null)
+			{
+				domainController.DomainHostModified +=
+					new DomainHostModifiedEventHandler(OnDomainHostModified);
+				domainController.DomainLoggedIn +=
+					new DomainLoggedInEventHandler(OnDomainLoggedIn);
+				domainController.DomainLoggedOut +=
+					new DomainLoggedOutEventHandler(OnDomainLoggedOut);
+				domainController.DomainActivated +=
+					new DomainActivatedEventHandler(OnDomainActivated);
+				domainController.DomainInactivated +=
+					new DomainInactivatedEventHandler(OnDomainInactivated);
+				domainController.NewDefaultDomain +=
+					new DomainNewDefaultEventHandler(OnNewDefaultDomain);
+				domainController.DomainDeleted +=
+					new DomainDeletedEventHandler(OnDomainDeleted);
+			}
+			
+			// Register Widget EventHandlers
+			EnableAccountButton.Toggled +=
+				new EventHandler(OnEnableAccountToggled);
+			DefaultAccountButton.Toggled +=
+				new EventHandler(OnDefaultAccountToggled);
+
+			ServerAddressEntry.Changed +=
+				new EventHandler(OnServerAddressChanged);
+			ServerAddressEntry.FocusOutEvent +=
+				new FocusOutEventHandler(OnServerAddressFocusOut);
+
+			PasswordEntry.Changed +=
+				new EventHandler(OnPasswordChanged);
+			PasswordEntry.FocusOutEvent +=
+				new FocusOutEventHandler(OnPasswordFocusOut);
+			RememberPasswordButton.Toggled +=
+				new EventHandler(OnRememberPasswordToggled);
+			
+		}
+		
+		private void InitGlobalCheckButtons()
+		{
+			EnableAccountButton.Active = domain.Active;
+			
+			DefaultAccountButton.Active = domain.IsDefault;
+			DefaultAccountButton.Sensitive = !domain.IsDefault;
+		}
+		
+		private void InitServerPage()
+		{
+			ServerAddressEntry.Text = domain.Host;
+			if (domain.Authenticated)
+			{
+				ServerAddressEntry.Sensitive = false;
+				ServerAddressEntry.Editable = false;
+			}
+			else
+			{
+				ServerAddressEntry.Sensitive = true;
+				ServerAddressEntry.Editable = true;
+			}
+		}
+		
+		private void InitIdentityPage()
+		{
+			try
+			{
+				string password = domainController.GetDomainPassword(domain.ID);
+				if (password != null)
+				{
+					PasswordEntry.Text = password;
+					RememberPasswordButton.Active = true;
+				}
+				else
+				{
+					RememberPasswordButton.Active = false;
+				}
+			}
+			catch{}
+		}
+		
+		private void InitDiskSpacePage()
+		{
 			DiskSpace ds = ifdata.GetUserDiskSpace(domain.MemberUserID);
 
 			if(ds == null)
 			{
-				totalValue.Text = Util.GS("N/A");
-				totalUnit.Text = "";
-				availValue.Text = Util.GS("N/A");
-				availUnit.Text = "";
-				usedValue.Text = Util.GS("N/A");
-				usedUnit.Text = "";
-				diskGraph.Fraction = 0;
+				QuotaTotalLabel.Text = Util.GS("N/A");
+				QuotaUsedLabel.Text = Util.GS("N/A");
+				QuotaAvailableLabel.Text = Util.GS("N/A");
+				QuotaGraph.Fraction = 0;
 			}
 			else
 			{
@@ -284,57 +532,397 @@ namespace Novell.iFolder
 
 				if(ds.Limit == 0)
 				{
-					totalValue.Text = Util.GS("N/A");
-					totalUnit.Text = "";
+					QuotaTotalLabel.Text = Util.GS("N/A");
 				}
 				else
 				{
 					tmpValue = (int)(ds.Limit / (1024 * 1024));
-					totalValue.Text = string.Format("{0}", tmpValue);
-					totalUnit.Text = Util.GS("MB");
-				}
-
-				if(ds.AvailableSpace == 0)
-				{
-					availValue.Text = Util.GS("N/A");
-					availUnit.Text = "";
-				}
-				else
-				{
-					tmpValue = (int)(ds.AvailableSpace / (1024 * 1024));
-					availValue.Text = string.Format("{0}",tmpValue);
-					availUnit.Text = Util.GS("MB");
+					QuotaTotalLabel.Text =
+						string.Format("{0} {1}", tmpValue, Util.GS("MB"));
 				}
 
 				if(ds.UsedSpace == 0)
 				{
-					usedValue.Text = Util.GS("N/A");
-					usedUnit.Text = "";
+					QuotaUsedLabel.Text = Util.GS("N/A");
 				}
 				else
 				{
 					tmpValue = (int)(ds.UsedSpace / (1024 * 1024)) + 1;
-					usedValue.Text = string.Format("{0}", tmpValue);
-					usedUnit.Text = Util.GS("MB");
+					QuotaUsedLabel.Text =
+						string.Format("{0} {1}", tmpValue, Util.GS("MB"));
+				}
+
+				if(ds.AvailableSpace == 0)
+				{
+					QuotaAvailableLabel.Text = Util.GS("N/A");
+				}
+				else
+				{
+					tmpValue = (int)(ds.AvailableSpace / (1024 * 1024));
+					QuotaAvailableLabel.Text =
+						string.Format("{0} {1}",tmpValue, Util.GS("MB"));
 				}
 
 				if(ds.Limit == 0)
 				{
-					diskGraph.Fraction = 0;
+					QuotaGraph.Fraction = 0;
 				}
 				else
 				{
 					if(ds.Limit < ds.UsedSpace)
-						diskGraph.Fraction = 1;
+						QuotaGraph.Fraction = 1;
 					else
-						diskGraph.Fraction = ((double)ds.UsedSpace) / 
+						QuotaGraph.Fraction = ((double)ds.UsedSpace) / 
 												((double)ds.Limit);
 				}
 			}
-			vbox.ShowAll();
+		}
+		
+		///
+		/// Utility Methods
+		///
+		private bool SaveServerAddress()
+		{
+			string serverAddress = ServerAddressEntry.Text;
+			bServerAddressChanged = false;
 
+			if (serverAddress == null || serverAddress.Trim().Length == 0)
+			{
+				// FIXME: Register this window with the Modal Controller
+				iFolderMsgDialog dg =
+					new iFolderMsgDialog(
+						this,
+						iFolderMsgDialog.DialogType.Error,
+						iFolderMsgDialog.ButtonSet.Ok,
+						"",
+						Util.GS("Server address cannot be empty"),
+						Util.GS("Please enter an address for the server."));
+				dg.Run();
+				dg.Hide();
+				dg.Destroy();
+				
+				// Set the ServerAddressEntry back to the original value
+				ServerAddressEntry.Changed -= new EventHandler(OnServerAddressChanged);
+				ServerAddressEntry.Text = domain.Host;
+				ServerAddressEntry.Changed += new EventHandler(OnServerAddressChanged);
+				
+				return false;
+			}
+			
+			serverAddress = serverAddress.Trim();
+			
+			try
+			{
+				domainController.UpdateDomainHostAddress(domain.ID, serverAddress);
+			}
+			catch(Exception e)
+			{
+				// FIXME: Register this as a modal window
+				iFolderMsgDialog dg = new iFolderMsgDialog(
+					this,
+					iFolderMsgDialog.DialogType.Error,
+					iFolderMsgDialog.ButtonSet.Ok,
+					"",
+					Util.GS("Unable to modify the server address"),
+					Util.GS("An error was encountered while attempting to modify the server address."),
+					e.Message);
+				dg.Run();
+				dg.Hide();
+				dg.Destroy();
+				
+				// Set the ServerAddressEntry back to the original value
+				ServerAddressEntry.Changed -= new EventHandler(OnServerAddressChanged);
+				ServerAddressEntry.Text = domain.Host;
+				ServerAddressEntry.Changed += new EventHandler(OnServerAddressChanged);
+				
+				return false;
+			}
+			
+			return true;
+		}
+		
+		private bool SavePassword()
+		{
+			string password = PasswordEntry.Text;
+			bPasswordChanged = false;
+			
+			password = password.Trim();
+			
+			try
+			{
+				if (password.Length > 0)
+				{
+					domainController.SetDomainPassword(domain.ID, password);
+				}
+				else
+				{
+					domainController.ClearDomainPassword(domain.ID);
+				}
+			}
+			catch(Exception e)
+			{
+				// FIXME: Register this as a modal window
+				iFolderMsgDialog dg = new iFolderMsgDialog(
+					this,
+					iFolderMsgDialog.DialogType.Error,
+					iFolderMsgDialog.ButtonSet.Ok,
+					"",
+					Util.GS("Unable to modify the password"),
+					Util.GS("An error was encountered while attempting to modify the password."),
+					e.Message);
+				dg.Run();
+				dg.Hide();
+				dg.Destroy();
+				
+				// Reset the password to its original value
+				PasswordEntry.Changed -= new EventHandler(OnPasswordChanged);
+				PasswordEntry.Text = domainController.GetDomainPassword(domain.ID);
+				PasswordEntry.Changed += new EventHandler(OnPasswordChanged);
+				
+				return false;
+			}
+
+			return true;
+		}
+		
+		///
+		/// Event Handlers
+		///
+		public void OnDomainHostModified(object sender, DomainEventArgs args)
+		{
+			// Make sure that the domain event is for the domain this dialog is showing
+			if (args.DomainID == domain.ID)
+			{
+				DomainInformation updatedDomain =
+					domainController.GetDomain(args.DomainID);
+				if (updatedDomain != null)
+				{
+					domain = updatedDomain;
+					
+					ServerAddressEntry.Changed -= new EventHandler(OnServerAddressChanged);
+					ServerAddressEntry.Text = domain.Host;
+					bServerAddressChanged = false;
+					ServerAddressEntry.Changed += new EventHandler(OnServerAddressChanged);
+				}
+			}
 		}
 
+		public void OnDomainLoggedIn(object sender, DomainEventArgs args)
+		{
+			// Make sure that the domain event is for the domain this dialog is showing
+			if (args.DomainID == domain.ID)
+			{
+				// Reset the values to the original
+				ServerAddressEntry.Changed -= new EventHandler(OnServerAddressChanged);
+				ServerAddressEntry.Text = domain.Host;
+				bServerAddressChanged = false;
+				ServerAddressEntry.Changed += new EventHandler(OnServerAddressChanged);
+
+				// Prevent the uesr from modifying the address
+				ServerAddressEntry.Sensitive = false;
+				ServerAddressEntry.Editable = false;
+			}
+		}
+		
+		public void OnDomainLoggedOut(object sender, DomainEventArgs args)
+		{
+			// Make sure that the domain event is for the domain this dialog is showing
+			if (args.DomainID == domain.ID)
+			{
+				// Reset the values to the original
+				ServerAddressEntry.Changed -= new EventHandler(OnServerAddressChanged);
+				ServerAddressEntry.Text = domain.Host;
+				bServerAddressChanged = false;
+				ServerAddressEntry.Changed += new EventHandler(OnServerAddressChanged);
+
+				// Allow the user to modify the address
+				ServerAddressEntry.Sensitive = true;
+				ServerAddressEntry.Editable = true;
+			}
+		}
+		
+		public void OnDomainActivated(object sender, DomainEventArgs args)
+		{
+			// Make sure that the domain event is for the domain this dialog is showing
+			if (args.DomainID == domain.ID)
+			{
+				EnableAccountButton.Toggled -= new EventHandler(OnEnableAccountToggled);
+				EnableAccountButton.Active = true;
+				EnableAccountButton.Toggled += new EventHandler(OnEnableAccountToggled);
+			}
+		}
+
+		public void OnDomainInactivated(object sender, DomainEventArgs args)
+		{
+			// Make sure that the domain event is for the domain this dialog is showing
+			if (args.DomainID == domain.ID)
+			{
+				EnableAccountButton.Toggled -= new EventHandler(OnEnableAccountToggled);
+				EnableAccountButton.Active = false;
+				EnableAccountButton.Toggled += new EventHandler(OnEnableAccountToggled);
+			}
+		}
+
+		public void OnNewDefaultDomain(object sender, NewDefaultDomainEventArgs args)
+		{
+			if (args.NewDomainID == domain.ID)
+			{
+				// This domain was just made the new default
+				DefaultAccountButton.Toggled -= new EventHandler(OnDefaultAccountToggled);
+
+				DefaultAccountButton.Active = true;
+				DefaultAccountButton.Sensitive = false;
+
+				DefaultAccountButton.Toggled += new EventHandler(OnDefaultAccountToggled);
+			}
+			else if (args.OldDomainID == domain.ID)
+			{
+				// This domain is no longer the default
+				DefaultAccountButton.Toggled -= new EventHandler(OnDefaultAccountToggled);
+
+				DefaultAccountButton.Active = false;
+				DefaultAccountButton.Sensitive = true;
+
+				DefaultAccountButton.Toggled += new EventHandler(OnDefaultAccountToggled);
+			}
+		}
+		
+		private void OnDomainDeleted(object sender, DomainEventArgs args)
+		{
+			// Make sure that the domain event is for the domain this dialog is showing
+			if (args.DomainID == domain.ID)
+			{
+				// Close and destroy this window since this domain is no longer valid
+				this.Hide();
+				this.Destroy();
+			}
+		}
+
+		public void OnEnableAccountToggled(object o, EventArgs args)
+		{
+			if (EnableAccountButton.HasFocus)
+			{
+				if (EnableAccountButton.Active != domain.Active)
+				{
+					try
+					{
+						if (EnableAccountButton.Active)
+						{
+							domainController.ActivateDomain(domain.ID);
+						}
+						else
+						{
+							domainController.InactivateDomain(domain.ID);
+							
+							// Also cause this account to be logged out
+//							domainController.LogoutDomain(domain.ID);
+//							domain.Authenticated = false;
+						}
+					}
+					catch(Exception e)
+					{
+						string header;
+						string message;
+						
+						if (EnableAccountButton.Active)
+						{
+							header = Util.GS("Could not enable this account");
+							message = Util.GS("There was an error enabling this account.");
+						}
+						else
+						{
+							header = Util.GS("Could not disable this account");
+							message = Util.GS("There was an error disabling this account.");
+						}
+						
+						// FIXME: Register this as a modal window
+						iFolderMsgDialog dg = new iFolderMsgDialog(
+							this,
+							iFolderMsgDialog.DialogType.Error,
+							iFolderMsgDialog.ButtonSet.Ok,
+							"",
+							header,
+							message,
+							e.Message);
+						dg.Run();
+						dg.Hide();
+						dg.Destroy();
+						
+						// Change the toggle button back to its original value
+						EnableAccountButton.Toggled -= new EventHandler(OnEnableAccountToggled);
+						EnableAccountButton.Active = !EnableAccountButton.Active;
+						EnableAccountButton.Toggled -= new EventHandler(OnEnableAccountToggled);
+					}
+				}
+			}
+		}
+
+		public void OnDefaultAccountToggled(object o, EventArgs args)
+		{
+			if (DefaultAccountButton.HasFocus)
+			{
+				// The DefaultAccountButton is not sensitive (enabled) if this
+				// is the default account, so the only state that needs to be
+				// handled here is when a user activates the check button.
+				if (!DefaultAccountButton.Active) return;	// This condition should never be hit
+
+				try
+				{
+					domainController.SetDefaultDomain(domain.ID);
+				}
+				catch (Exception e)
+				{
+					// FIXME: Register this as a modal window
+					iFolderMsgDialog dg = new iFolderMsgDialog(
+						this,
+						iFolderMsgDialog.DialogType.Error,
+						iFolderMsgDialog.ButtonSet.Ok,
+						"",
+						Util.GS("Could not make this account the default"),
+						Util.GS("There was an error making this account the default."),
+						e.Message);
+					dg.Run();
+					dg.Hide();
+					dg.Destroy();
+					
+					// Change the toggle button back to its original value
+					DefaultAccountButton.Toggled -= new EventHandler(OnDefaultAccountToggled);
+					DefaultAccountButton.Active = !DefaultAccountButton.Active;
+					DefaultAccountButton.Toggled -= new EventHandler(OnDefaultAccountToggled);
+				}
+			}
+		}
+		
+		private void OnServerAddressChanged(object o, EventArgs args)
+		{
+			// FIXME: Add in code to check this against the original value
+			bServerAddressChanged = true;
+		}
+		
+		private void OnServerAddressFocusOut(object o, FocusOutEventArgs args)
+		{
+			if (bServerAddressChanged)
+				SaveServerAddress();
+		}
+		
+		private void OnPasswordChanged(object o, EventArgs args)
+		{
+			// FIXME: Add in code to check this against the original value
+			bPasswordChanged = true;
+		}
+
+		private void OnPasswordFocusOut(object o, FocusOutEventArgs args)
+		{
+			if (bPasswordChanged)
+				SavePassword();
+		}
+		
+		private void OnRememberPasswordToggled(object o, EventArgs args)
+		{
+			if (RememberPasswordButton.HasFocus)
+				SavePassword();
+		}
+		
 		void KeyPressHandler(object o, KeyPressEventArgs args)
 		{
 			args.RetVal = true;
@@ -379,6 +967,14 @@ namespace Novell.iFolder
 		
 		public void CloseDialog()
 		{
+			if (bServerAddressChanged)
+				if (!SaveServerAddress())
+					return;
+				
+			if (bPasswordChanged)
+				if (!SavePassword())
+					return;
+
 			this.Hide();
 			this.Destroy();
 		}
