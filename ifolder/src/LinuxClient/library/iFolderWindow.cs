@@ -947,6 +947,9 @@ namespace Novell.iFolder
 //				new iFolderClickedHandler(OniFolderDoubleClicked);
 			iFoldersIconView.iFolderActivated +=
 				new iFolderActivatedHandler(OniFolderActivated);
+				
+			iFoldersIconView.KeyPressEvent +=
+				new KeyPressEventHandler(OniFolderIconViewKeyPress);
 		
 			// FIXME: Attach the drag and drop receiver to the synchronized iFolders only
 			TargetEntry[] targets =
@@ -1181,6 +1184,40 @@ namespace Novell.iFolder
 				DownloadSelectedFolder();
 			else
 				OpenSelectedFolder();
+		}
+		
+		private void OniFolderIconViewKeyPress(object o, KeyPressEventArgs args)
+		{
+			switch(args.Event.Key)
+			{
+				case Gdk.Key.Delete:
+					iFolderHolder holder = iFoldersIconView.SelectedFolder;
+					if (holder != null)
+					{
+						if (holder.iFolder.IsSubscription)
+						{
+							DomainInformation domain =
+								domainController.GetDomain(holder.iFolder.DomainID);
+							if (domain == null || 
+								domain.MemberUserID == holder.iFolder.OwnerID)
+							{
+								// The current user is the owner
+								DeleteSelectedFolderFromServer();
+							}
+							else
+							{
+								RemoveMembershipFromSelectedFolder();
+							}
+						}
+						else
+						{
+							RemoveSelectedFolderHandler();
+						}
+					}
+					break;
+				default:
+					break;
+			}
 		}
 		
 		private void OniFolderClicked(object o, iFolderClickedArgs args)
