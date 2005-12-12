@@ -328,9 +328,6 @@ Console.WriteLine("iFolderIconView.SelectionChangedHandler()");
 						iFolderActivated(this,
 							new iFolderActivatedArgs(currentSelection));
 					break;
-				case Gdk.Key.Delete:
-					// FIXME: Implement delete or remove action by keyboard
-					break;
 				case Gdk.Key.Home:
 					// FIXME: Change the scroll to the very top and highlight the first item
 					break;
