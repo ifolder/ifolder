@@ -1,5 +1,5 @@
 /***********************************************************************
- *  $RCSfile$
+ *  $RCSfile: iFolderAcceptDialog.cs,v $
  * 
  *  Copyright (C) 2004 Novell, Inc.
  *
@@ -45,7 +45,8 @@ namespace Novell.iFolder
 
 		public iFolderAcceptDialog(iFolderWeb ifolder, string initialPath) : base()
 		{
-			this.Title = "";
+			this.Title =
+				string.Format(Util.GS("Download \"{0}\"..."), ifolder.Name);
 			this.SetDefaultSize (600, 500);
 
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
@@ -61,21 +62,21 @@ namespace Novell.iFolder
 			this.VBox.PackStart(dialogBox, true, true, 0);
 
 
-			Label l = new Label("<span weight=\"bold\" size=\"larger\">" +
-						Util.GS("Set Up iFolder: ") + ifolder.Name + "</span>");
+//			Label l = new Label("<span weight=\"bold\" size=\"larger\">" +
+//						Util.GS("Choose a folder to download: ") + ifolder.Name + "</span>");
 
-			l.LineWrap = false;
-			l.UseMarkup = true;
-			l.UseUnderline = false;
-			l.Selectable = false;
-			l.Xalign = 0; l.Yalign = 0;
-			dialogBox.PackStart(l, false, false, 0);
+//			l.LineWrap = false;
+//			l.UseMarkup = true;
+//			l.UseUnderline = false;
+//			l.Selectable = false;
+//			l.Xalign = 0; l.Yalign = 0;
+//			dialogBox.PackStart(l, false, false, 0);
 
 
 			VBox detailBox = new VBox();
 			dialogBox.PackStart(detailBox, false, false, 0);
 
-			l = new Label(Util.GS("Details:"));
+			Label l = new Label(Util.GS("Details:"));
 			l.Xalign = 0;
 			detailBox.PackStart(l, false, false, 0);
 
@@ -93,7 +94,7 @@ namespace Novell.iFolder
 			detailBox.PackStart(sw, false, false, 0);
 
 
-			l = new Label(Util.GS("The iFolder will be set up here:"));
+			l = new Label(Util.GS("The iFolder will be downloaded into this folder:"));
 
 			l.LineWrap = false;
 			l.Xalign = 0; l.Yalign = 1;

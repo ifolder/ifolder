@@ -1,5 +1,5 @@
 /***********************************************************************
- *  $RCSfile$
+ *  $RCSfile: iFolderCreationDialog.cs,v $
  * 
  *  Copyright (C) 2004 Novell, Inc.
  *
