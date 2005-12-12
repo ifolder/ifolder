@@ -39,23 +39,23 @@ namespace Novell.iFolder.Controller
 		/// <summary>
 		/// Member that provides acces to the iFolder Web Service
 		/// </summary>
-		private iFolderWebService ifws = null;
+		private iFolderWebService	ifws;
 
 
 		/// <summary>
 		/// Member that provides acces to the Simias Web Service
 		/// </summary>
-		private SimiasWebService simws = null;
+		private SimiasWebService	simws;
 
 		/// <summary>
 		/// Hashtable to hold the domains
 		/// </summary>
-		private Hashtable keyedDomains;
+		private Hashtable			keyedDomains;
 
 		/// <summary>
 		/// Member to keep track of the default domain
 		/// </summary>
-		private string defDomainID = null;
+		private string				defDomainID;
 		
 		private SimiasEventBroker eventBroker = null;
 		private Manager simiasManager;
@@ -108,6 +108,7 @@ Console.WriteLine(Environment.StackTrace);
 			}
 
 			keyedDomains = new Hashtable();
+			defDomainID = "0";
 			
 			Refresh();
 
