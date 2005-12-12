@@ -251,7 +251,6 @@ namespace Novell.iFolder
 			{
 				if(simiasEventBroker != null)
 					simiasEventBroker.Deregister();
-				simiasManager.Stop();
 			}
 			catch(Exception e)
 			{
@@ -259,6 +258,19 @@ namespace Novell.iFolder
 				Console.WriteLine(e);
 			}
 
+/*			
+			try
+			{
+Console.Write("iFolderApplication.StopiFolder() calling SimiasManager.Stop()...");
+				simiasManager.Stop();
+Console.WriteLine("done calling simiasManager.Stop()");
+			}
+			catch(Exception e)
+			{
+				// ignore
+				Console.WriteLine(e);
+			}
+*/
 			CurrentState = iFolderState.Stopped;
 			iFolderStateChanged.WakeupMain();
 		}
@@ -756,11 +768,23 @@ namespace Novell.iFolder
 
 				case iFolderState.Stopped:
 					// Start up a thread that will guarantee we completely
-					// exit after 2 seconds.
+					// exit after 10 seconds.
 					//ThreadPool.QueueUserWorkItem(new WaitCallback(GuaranteeShutdown));
 					System.Threading.Thread th = new System.Threading.Thread (new System.Threading.ThreadStart (GuaranteeShutdown));
 					th.IsBackground = true;
 					th.Start ();
+
+					try
+					{
+Console.WriteLine("iFolderApplication.OniFolderStateChanged:Stopped calling SimiasManager.Stop()...");
+						simiasManager.Stop();
+Console.WriteLine("\tdone calling SimiasManager.Stop()");
+					}
+					catch(Exception e)
+					{
+						// ignore
+						Console.WriteLine(e);
+					}
 
 					Application.Quit();
 					break;
@@ -769,11 +793,13 @@ namespace Novell.iFolder
 		
 		static private void GuaranteeShutdown()
 		{
-			// Sleep for 2 seconds and if the process is still
+Console.WriteLine("GuaranteeShutdown(): Waiting 10 seconds before calling System.Environment.Exit(1)");
+			// Sleep for 10 seconds and if the process is still
 			// running, we'll kill it.  If the process stops appropriately
 			// before this is finished sleeping, this thread will terminate
 			// before forcing a shutdown anyway.
-			System.Threading.Thread.Sleep(2000);
+			System.Threading.Thread.Sleep(10000);
+Console.WriteLine("GuaranteeShutdown(): Calling System.Environment.Exit(1) now");
 			System.Environment.Exit(1);
 		}
 
@@ -1090,7 +1116,9 @@ Console.WriteLine("Modal present");
 				// Stop Simias (dereference iFolder's handle at least)
 				if(application.EventBroker != null)
 					application.EventBroker.Deregister();
+Console.Write("iFolderApplication: Inside catch and calling SimiasManager.Stop()...");
 				application.SimiasManager.Stop();
+Console.WriteLine("\tdone calling SimiasManager.Stop()");
 
 				Application.Quit();
 			}
