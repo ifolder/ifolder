@@ -429,7 +429,7 @@ namespace Novell.iFolder
 			//----------------------------
 			Menu iFolderMenu = new Menu();
 
-			NewMenuItem = new ImageMenuItem (Util.GS("_New"));
+			NewMenuItem = new ImageMenuItem (Util.GS("Create a _new iFolder..."));
 			NewMenuItem.Image = new Image(
 					new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png")));
 			iFolderMenu.Append(NewMenuItem);
@@ -439,21 +439,21 @@ namespace Novell.iFolder
 			NewMenuItem.Activated += new EventHandler(AddiFolderHandler);
 
 			DownloadMenuItem =
-				new MenuItem (Util.GS("_Download..."));
+				new MenuItem (Util.GS("_Download and synchronize..."));
 			iFolderMenu.Append(DownloadMenuItem);
 			DownloadMenuItem.Activated += new EventHandler(DownloadAvailableiFolderHandler);
 
 			DeleteMenuItem =
-				new ImageMenuItem (Util.GS("_Delete"));
+				new ImageMenuItem (Util.GS("Dele_te from server"));
 			DeleteMenuItem.Image = new Image(Stock.Delete, Gtk.IconSize.Menu);
 			iFolderMenu.Append(DeleteMenuItem);
-//			DeleteMenuItem.Activated += new EventHandler(OnRemoveiFolder);
+			DeleteMenuItem.Activated += new EventHandler(DeleteFromServerHandler);
 
 			RemoveMenuItem =
-				new ImageMenuItem (Util.GS("Re_move"));
+				new ImageMenuItem (Util.GS("Re_move membership"));
 			RemoveMenuItem.Image = new Image(Stock.Delete, Gtk.IconSize.Menu);
 			iFolderMenu.Append(RemoveMenuItem);
-//			RemoveMenuItem.Activated += new EventHandler(OnRemoveiFolder);
+			RemoveMenuItem.Activated += new EventHandler(RemoveMembershipHandler);
 
 			iFolderMenu.Append(new SeparatorMenuItem());
 			OpenMenuItem = new ImageMenuItem ( Stock.Open, agrp );
@@ -1863,9 +1863,8 @@ Console.WriteLine("iFolderWindow.AddServerGroup(DomainID: {0})", domainID);
 						RevertMenuItem.Sensitive = true;
 					PropMenuItem.Sensitive = true;
 
-//					SetupButton.Sensitive = false;
-//					SyncButton.Sensitive = true;
-//					ShareButton.Sensitive = true;
+					DeleteMenuItem.Sensitive = false;
+					RemoveMenuItem.Sensitive = false;
 				}
 				else
 				{
@@ -1875,26 +1874,25 @@ Console.WriteLine("iFolderWindow.AddServerGroup(DomainID: {0})", domainID);
 					SyncNowMenuItem.Sensitive = false;
 					RevertMenuItem.Sensitive = false;
 					PropMenuItem.Sensitive = false;
-
-//					SetupButton.Sensitive = true;
-//					SyncButton.Sensitive = false;
-//					ShareButton.Sensitive = false;
-				}
-
-				if(holder.iFolder.OwnerID ==
-						holder.iFolder.CurrentUserID)
-				{
-					DeleteMenuItem.Sensitive = true;
-					DeleteMenuItem.Visible = true;
-					RemoveMenuItem.Sensitive = false;
-					RemoveMenuItem.Visible = false;
-				}
-				else
-				{
-					DeleteMenuItem.Sensitive = false;
-					DeleteMenuItem.Visible = false;
-					RemoveMenuItem.Sensitive = true;
-					RemoveMenuItem.Visible = true;
+	
+					DomainInformation domain =
+						domainController.GetDomain(holder.iFolder.DomainID);
+					if (domain == null || 
+						domain.MemberUserID == holder.iFolder.OwnerID)
+					{
+						// The current user is the owner
+						DeleteMenuItem.Sensitive = true;
+						DeleteMenuItem.Visible = true;
+						RemoveMenuItem.Sensitive = false;
+						RemoveMenuItem.Visible = false;
+					}
+					else
+					{
+						DeleteMenuItem.Sensitive = false;
+						DeleteMenuItem.Visible = false;
+						RemoveMenuItem.Sensitive = true;
+						RemoveMenuItem.Visible = true;
+					}
 				}
 			}
 			else
@@ -1909,11 +1907,6 @@ Console.WriteLine("iFolderWindow.AddServerGroup(DomainID: {0})", domainID);
 				RemoveMenuItem.Visible = false;
 				PropMenuItem.Sensitive = false;
 				DownloadMenuItem.Sensitive = false;
-
-//				SetupButton.Sensitive = false;
-//				SyncButton.Sensitive = false;
-//				ShareButton.Sensitive = false;
-//				ConflictButton.Sensitive = false;
 			}
 		}
 		
