@@ -456,6 +456,7 @@ Console.WriteLine("\tResizing table to {0} rows and {1} columns", numOfRows, num
 		private void OnRowChanged(object o, RowChangedArgs args)
 		{
 			iFolderViewGroup.CheckThread();
+			if (args == null || args.Path == null) return;  // prevent a null pointer exception
 			iFolderViewItem item = (iFolderViewItem)items[args.Path.ToString()];
 			if (item != null)
 			{
@@ -468,6 +469,7 @@ Console.WriteLine("iFolderViewGroup.OnRowChanged: {0} exiting", item.Holder.iFol
 		private void OnRowDeleted(object o, RowDeletedArgs args)
 		{
 			iFolderViewGroup.CheckThread();
+			if (args == null || args.Path == null) return;  // prevent a null pointer exception
 			iFolderViewItem item = (iFolderViewItem)items[args.Path.ToString()];
 			if (item != null)
 			{
@@ -490,6 +492,7 @@ Console.WriteLine("iFolderViewGroup.OnRowDeleted: {0}", item.Holder.iFolder.Name
 		private void OnRowInserted(object o, RowInsertedArgs args)
 		{
 			iFolderViewGroup.CheckThread();
+			if (args == null) return;  // prevent a null pointer exception
 Console.WriteLine("iFolderViewGroup.OnRowInserted...");
 			iFolderHolder ifHolder = (iFolderHolder)model.GetValue(args.Iter, 0);
 			if (ifHolder != null)
