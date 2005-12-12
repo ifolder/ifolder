@@ -537,7 +537,7 @@ namespace Novell.iFolder
 			
 			// FIXME: Eventually save off the View server iFolders state so it comes up how the user left it when iFolder is restarted
 			ViewServeriFoldersMenuItem =
-				new CheckMenuItem(Util.GS("View _server iFolders"));
+				new CheckMenuItem(Util.GS("View _available iFolders"));
 			ViewMenu.Append(ViewServeriFoldersMenuItem);
 			ViewServeriFoldersMenuItem.Toggled +=
 				new EventHandler(OnToggleViewServeriFoldersMenuItem);
@@ -695,7 +695,7 @@ namespace Novell.iFolder
 
 			ShowHideAllFoldersButtonText = new Label(
 				string.Format("<span size=\"large\">{0}</span>",
-							  Util.GS("Download an iFolder")));
+							  Util.GS("View available iFolders")));
 			hbox.PackStart(ShowHideAllFoldersButtonText, false, false, 4);
 			ShowHideAllFoldersButtonText.UseMarkup = true;
 			ShowHideAllFoldersButtonText.UseUnderline = false;
@@ -1541,7 +1541,7 @@ Console.WriteLine("\tremoving the group from the serverGroupFilters Hashtable");
 
 			ShowHideAllFoldersButtonText.Markup =
 				string.Format("<span size=\"large\">{0}</span>",
-							  Util.GS("Hide server iFolders"));
+							  Util.GS("Hide available iFolders"));
 
 			bAvailableFoldersShowing = true;
 			ViewServeriFoldersMenuItem.Toggled -= new EventHandler(OnToggleViewServeriFoldersMenuItem);
@@ -1565,7 +1565,7 @@ Console.WriteLine("\tremoving the group from the serverGroupFilters Hashtable");
 
 			ShowHideAllFoldersButtonText.Markup =
 				string.Format("<span size=\"large\">{0}</span>",
-							  Util.GS("Download an iFolder"));
+							  Util.GS("View available iFolders"));
 
 			bAvailableFoldersShowing = false;
 			ViewServeriFoldersMenuItem.Toggled -= new EventHandler(OnToggleViewServeriFoldersMenuItem);
