@@ -861,7 +861,7 @@ namespace Novell.iFolder
 
 			buttonText = new Label(
 				string.Format("<span size=\"large\">{0}</span>",
-							  Util.GS("Download")));
+							  Util.GS("Download and synchronize")));
 			hbox.PackStart(buttonText, true, true, 4);
 			buttonText.UseMarkup = true;
 			buttonText.UseUnderline = false;
@@ -1196,7 +1196,7 @@ namespace Novell.iFolder
 					if (holder.iFolder.IsSubscription)
 					{
 						MenuItem item_download =
-							new MenuItem(Util.GS("Download"));
+							new MenuItem(Util.GS("Download and synchronize"));
 						menu.Append(item_download);
 						item_download.Activated += new EventHandler(
 								DownloadAvailableiFolderHandler);
