@@ -450,7 +450,7 @@ namespace Novell.iFolder
 			DeleteMenuItem.Activated += new EventHandler(DeleteFromServerHandler);
 
 			RemoveMenuItem =
-				new ImageMenuItem (Util.GS("Re_move membership"));
+				new ImageMenuItem (Util.GS("Re_move my membership"));
 			RemoveMenuItem.Image = new Image(Stock.Delete, Gtk.IconSize.Menu);
 			iFolderMenu.Append(RemoveMenuItem);
 			RemoveMenuItem.Activated += new EventHandler(RemoveMembershipHandler);
@@ -901,7 +901,7 @@ namespace Novell.iFolder
 
 			buttonText = new Label(
 				string.Format("<span size=\"large\">{0}</span>",
-							  Util.GS("Remove membership")));
+							  Util.GS("Remove my membership")));
 			hbox.PackStart(buttonText, true, true, 4);
 			buttonText.UseMarkup = true;
 			buttonText.UseUnderline = false;
@@ -1256,7 +1256,7 @@ namespace Novell.iFolder
 						{
 							// The current user is not the owner
 							MenuItem item_remove_membership = new MenuItem (
-									Util.GS("Remove membership"));
+									Util.GS("Remove my membership"));
 							menu.Append (item_remove_membership);
 							item_remove_membership.Activated +=
 								new EventHandler(
