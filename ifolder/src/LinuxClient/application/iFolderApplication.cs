@@ -849,6 +849,19 @@ Console.WriteLine("GuaranteeShutdown(): Calling System.Environment.Exit(1) now")
 				{
 					Util.ShowHelp("conflicts.html", null);
 				}
+				else if (args.LinkID.Equals("CancelStartup"))
+				{
+					Console.WriteLine("CancelStartup");
+
+					QuitiFolder();
+
+				}
+				else if (args.LinkID.Equals("ForceShutdown"))
+				{
+					Console.WriteLine("ForceShutdown");
+
+					QuitiFolder();
+				}
 			}
 
 			NotifyWindow notifyWindow = sender as NotifyWindow;
@@ -866,7 +879,7 @@ Console.WriteLine("GuaranteeShutdown(): Calling System.Environment.Exit(1) now")
 				{
 					startingUpNotifyWindow = new NotifyWindow(
 						tIcon, Util.GS("iFolder is starting"),
-						"Please wait for iFolder to start...",
+						Util.GS("Please wait for iFolder to start...\n\nPress <a href=\"CancelStartup\">here</a> to cancel."),
 						Gtk.MessageType.Info, 0);
 					startingUpNotifyWindow.ShowAll();
 				}
@@ -879,7 +892,7 @@ Console.WriteLine("GuaranteeShutdown(): Calling System.Environment.Exit(1) now")
 				{
 					shuttingDownNotifyWindow = new NotifyWindow(
 						tIcon, Util.GS("iFolder is shutting down"),
-						"",
+						Util.GS("Press <a href=\"ForceShutdown\">here</a> to force iFolder to shut down now."),
 						Gtk.MessageType.Info, 0);
 					shuttingDownNotifyWindow.ShowAll();
 				}
@@ -1033,6 +1046,12 @@ Console.WriteLine("Modal present");
 
 			if(CurrentState == iFolderState.Stopping)
 			{
+				try
+				{
+					simiasManager.Stop();
+				}
+				catch{}
+
 				System.Environment.Exit(1);
 			}
 			else
