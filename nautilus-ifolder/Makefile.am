@@ -4,6 +4,11 @@ SUBDIRS = po src
 
 DIST_SUBDIRS = $(SUBDIRS) package
 
+# remove all of the CVS directories
+dist-hook:
+	rm -rf `find $(distdir) -name CVS`
+	rm -rf `find $(distdir) -name ".svn"`
+
 EXTRA_DIST = \
 	external \
 	intltool-extract.in \
