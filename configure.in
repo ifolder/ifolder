@@ -3,10 +3,14 @@ AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
 m4_pattern_allow(PKG_CONFIG)
 
-AM_INIT_AUTOMAKE(ifolder3, 3.3)
-let "BUILDNUM=`date +%G%j`-2000000"
+AM_INIT_AUTOMAKE(ifolder3, 3.5)
+# Check to see if the BUILDNUM is set by global build
+if test "$BUILDNUM" = ""; then
+	let "BUILDNUM=`date +%G%j`-2000000"
+fi
+
 VERSION=$VERSION.$BUILDNUM.1
-SIMIASVER=1.3.$BUILDNUM.1
+SIMIASVER=1.5.$BUILDNUM.1
 AM_MAINTAINER_MODE
 AC_PROG_CC
 
