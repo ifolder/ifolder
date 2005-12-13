@@ -64,6 +64,8 @@ namespace Novell.iFolder
 		private Hashtable			detailsDialogs;
 		
 		private Manager				simiasManager;
+		
+		private iFolderWaitDialog	WaitDialog;
 
 		/// <summary>
 		/// Default constructor for iFolderAccountsPage
@@ -165,7 +167,7 @@ namespace Novell.iFolder
 			onlineColumn.SetCellDataFunc(onlineToggleButton,
 				new TreeCellDataFunc(OnlineCellToggleDataFunc));
 			
-			onlineToggleButton.Toggled += OnlineToggled;
+			onlineToggleButton.Toggled += new ToggledHandler(OnlineToggled);
 			AccTreeView.AppendColumn(onlineColumn);
 
 			// Server Column
@@ -476,37 +478,89 @@ namespace Novell.iFolder
 					dialog.Destroy();
 				}
 
-				Status authStatus =
-					domainController.AuthenticateDomain(
-						dom.ID, password, bSavePassword);
-	
-				if (authStatus != null)
+				if (WaitDialog != null)
 				{
-					if (authStatus.statusCode == StatusCodes.Success ||
-						authStatus.statusCode == StatusCodes.SuccessInGrace)
-					{
-
-						UpdateWidgetSensitivity();
-					}
-					else
-					{
-						Util.ShowLoginError(topLevelWindow, authStatus.statusCode);
-
-						UpdateDomainStatus(dom.ID);
-					}
+					WaitDialog.Hide();
+					WaitDialog.Destroy();
+					WaitDialog = null;
 				}
-				else
-				{
-					Util.ShowLoginError(topLevelWindow, StatusCodes.Unknown);
-
-					UpdateDomainStatus(dom.ID);
-				}
+				
+				// FIXME: Replace this with an animated "connecting" icon
+				VBox vbox = new VBox(false, 0);
+				Image connectingImage = new Image(Util.ImagesPath("ifolder48.png"));
+				vbox.PackStart(connectingImage, false, false, 0);
+				Label l = new Label("<span size=\"xx-small\">FIXME: This will be\nreplaced with an\nanimated image</span>");
+				vbox.PackStart(l);
+				l.UseMarkup = true;
+				l.LineWrap = true;
+				
+				WaitDialog = 
+					new iFolderWaitDialog(
+						topLevelWindow,
+						vbox,
+						iFolderWaitDialog.ButtonSet.None,
+						Util.GS("Connecting..."),
+						Util.GS("Connecting..."),
+						Util.GS("Please wait while your iFolder account is connecting."));
+//					new iFolderMsgDialog(
+//						topLevelWindow,
+//						iFolderMsgDialog.DialogType.Info,
+//						iFolderMsgDialog.ButtonSet.None,
+//						Util.GS("Connecting..."),
+//						Util.GS("Please wait while iFolder connects your account"),
+//						"");
+				// FIXME: Register this dialog with the modal dialog controller
+				WaitDialog.Show();
+				
+				DomainLoginThread domainLoginThread =
+					new DomainLoginThread(
+						domainController, dom.ID, password, bSavePassword);
+				
+				domainLoginThread.Completed +=
+					new EventHandler(OnDomainLoginCompleted);
+					
+				domainLoginThread.Login();
 			}
 			catch
 			{
 				Util.ShowLoginError(topLevelWindow, StatusCodes.Unknown);
 
 				UpdateDomainStatus(dom.ID);
+			}
+		}
+		
+		private void OnDomainLoginCompleted(object o, EventArgs args)
+		{
+Console.WriteLine("PrefsAccountPage.OnDomainLoginCompleted");
+			if (WaitDialog != null)
+			{
+				WaitDialog.Hide();
+				WaitDialog.Destroy();
+				WaitDialog = null;
+			}
+
+			DomainLoginThread domainLoginThread = (DomainLoginThread)o;
+			Status authStatus = domainLoginThread.AuthenticationStatus;
+	
+			if (authStatus != null)
+			{
+				if (authStatus.statusCode == StatusCodes.Success ||
+					authStatus.statusCode == StatusCodes.SuccessInGrace)
+				{
+					UpdateWidgetSensitivity();
+				}
+				else
+				{
+					Util.ShowLoginError(topLevelWindow, authStatus.statusCode);
+
+					UpdateDomainStatus(domainLoginThread.DomainID);
+				}
+			}
+			else
+			{
+				Util.ShowLoginError(topLevelWindow, StatusCodes.Unknown);
+
+				UpdateDomainStatus(domainLoginThread.DomainID);
 			}
 		}
 		

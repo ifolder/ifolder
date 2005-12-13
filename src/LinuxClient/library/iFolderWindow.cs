@@ -919,12 +919,12 @@ namespace Novell.iFolder
 			iFoldersIconView = new iFolderIconView(iFoldersScrolledWindow);
 
 			///
-			/// My Synchronized iFolders
+			/// iFolders on This Computer
 			///			
 			myiFoldersFilter = new TreeModelFilter(ifdata.iFolders, null);
 			myiFoldersFilter.VisibleFunc = SynchronizedFoldersFilterFunc;
 			
-			localGroup = new iFolderViewGroup(Util.GS("My Synchronized iFolders"), myiFoldersFilter);
+			localGroup = new iFolderViewGroup(Util.GS("iFolders on This Computer"), myiFoldersFilter);
 			iFoldersIconView.AddGroup(localGroup);
 
 			///

@@ -71,6 +71,11 @@ namespace Novell.iFolder
 		/// Summary Page Widgets
 		///
 		DomainInformation	ConnectedDomain;
+		
+		///
+		/// Wait Message
+		///
+		iFolderWaitDialog	WaitDialog;
 
 		public AddAccountWizard(SimiasWebService simws) : base(WindowType.Toplevel)
 		{
@@ -84,6 +89,8 @@ namespace Novell.iFolder
 			domainController = DomainController.GetDomainController();
 			
 			ConnectedDomain = null;
+			
+			WaitDialog = null;
 			
 			this.Add(CreateWidgets());
 
@@ -511,57 +518,120 @@ namespace Novell.iFolder
 		/// Return true if the connect was successful, otherwise, return false.
 		/// Returning true will allow the druid to advance one page.
 		/// </summary>		
-		private bool OnConnectClicked(DruidConnectPage connectPage)
+		private bool OnConnectClicked(object o, EventArgs args)
 		{
 			string serverName	= ServerNameEntry.Text.Trim();
 			string userName		= UserNameEntry.Text.Trim();
 			string password		= PasswordEntry.Text;
 			
-			DomainInformation dom = null;
-			try
+			if (WaitDialog == null)
 			{
-				dom = domainController.AddDomain(
-						serverName,
-						userName,
-						password,
-						RememberPasswordCheckButton.Active,
-						DefaultServerCheckButton.Active);
-			}
-			catch(DomainAccountAlreadyExistsException e1)
-			{
-				iFolderMsgDialog dg = new iFolderMsgDialog(
-					this,
-					iFolderMsgDialog.DialogType.Error,
-					iFolderMsgDialog.ButtonSet.Ok,
-					"",
-					Util.GS("An account already exists"),
-					Util.GS("An account for this server already exists on the local machine.  Only one account per server is allowed."));
-				dg.Run();
-				dg.Hide();
-				dg.Destroy();
-				return false;
-			}
-			catch(Exception e2)
-			{
-				iFolderMsgDialog dg2 = new iFolderMsgDialog(
-					this,
-					iFolderMsgDialog.DialogType.Error,
-					iFolderMsgDialog.ButtonSet.Ok,
-					"",
-					Util.GS("Unable to connect to the iFolder Server"),
-					Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."),
-					Util.GS(e2.Message));
-				dg2.Run();
-				dg2.Hide();
-				dg2.Destroy();
-				return false;
+				// FIXME: Replace this with an animated "connecting" icon
+				VBox vbox = new VBox(false, 0);
+				Image connectingImage = new Image(Util.ImagesPath("ifolder48.png"));
+				vbox.PackStart(connectingImage, false, false, 0);
+				Label l = new Label("<span size=\"xx-small\">FIXME: This will be\nreplaced with an\nanimated image</span>");
+				vbox.PackStart(l);
+				l.UseMarkup = true;
+				l.LineWrap = true;
+	
+				WaitDialog = 
+					new iFolderWaitDialog(
+						this,
+						vbox,
+						iFolderWaitDialog.ButtonSet.None,
+						Util.GS("Connecting..."),
+						Util.GS("Connecting..."),
+						Util.GS("Please wait while your iFolder account is connecting."));
+	
+				// FIXME: Register this dialog with the modal dialog controller
+				WaitDialog.Show();
 			}
 			
-			if (dom == null) return false;	// This shouldn't happen, but just in case...
+			AddDomainThread addDomainThread =
+				new AddDomainThread(
+					domainController,
+					serverName,
+					userName,
+					password,
+					RememberPasswordCheckButton.Active,
+					DefaultServerCheckButton.Active);
+			
+			addDomainThread.Completed +=
+				new EventHandler(OnAddDomainCompleted);
+			
+			addDomainThread.AddDomain();
+			
+			return false;
+		}
+		
+		private void OnAddDomainCompleted(object o, EventArgs args)
+		{
+			AddDomainThread addDomainThread = (AddDomainThread)o;
+			DomainInformation dom = addDomainThread.Domain;
+			Exception e = addDomainThread.Exception;
+			if (dom == null && e != null)
+			{
+				if (e is DomainAccountAlreadyExistsException)
+				{
+					iFolderMsgDialog dg = new iFolderMsgDialog(
+						this,
+						iFolderMsgDialog.DialogType.Error,
+						iFolderMsgDialog.ButtonSet.Ok,
+						"",
+						Util.GS("An account already exists"),
+						Util.GS("An account for this server already exists on the local machine.  Only one account per server is allowed."));
+					dg.Run();
+					dg.Hide();
+					dg.Destroy();
+				}
+				else
+				{
+					iFolderMsgDialog dg2 = new iFolderMsgDialog(
+						this,
+						iFolderMsgDialog.DialogType.Error,
+						iFolderMsgDialog.ButtonSet.Ok,
+						"",
+						Util.GS("Unable to connect to the iFolder Server"),
+						Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."),
+						Util.GS(e.Message));
+					dg2.Run();
+					dg2.Hide();
+					dg2.Destroy();
+				}
+
+				if (WaitDialog != null)
+				{
+					WaitDialog.Hide();
+					WaitDialog.Destroy();
+					WaitDialog = null;
+				}
+			}
+			
+			if (dom == null) // This shouldn't happen, but just in case...
+			{
+				if (WaitDialog != null)
+				{
+					WaitDialog.Hide();
+					WaitDialog.Destroy();
+					WaitDialog = null;
+				}
+
+				return;
+			}
 
 			switch(dom.StatusCode)
 			{
 				case StatusCodes.InvalidCertificate:
+					if (WaitDialog != null)
+					{
+						WaitDialog.Hide();
+						WaitDialog.Destroy();
+						WaitDialog = null;
+					}
+
+					string serverName = addDomainThread.ServerName;
+
 					byte[] byteArray = simws.GetCertificate(serverName);
 					System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(byteArray);
 
@@ -579,12 +649,24 @@ namespace Novell.iFolder
 					if(rc == -8) // User clicked the Yes button
 					{
 						simws.StoreCertificate(byteArray, serverName);
-						return OnConnectClicked(connectPage);
+						OnConnectClicked(o, args);
 					}
 					break;
 				case StatusCodes.Success:
 				case StatusCodes.SuccessInGrace:
-					Status authStatus = domainController.AuthenticateDomain(dom.ID, password, RememberPasswordCheckButton.Active);
+					if (WaitDialog != null)
+					{
+						WaitDialog.Hide();
+						WaitDialog.Destroy();
+						WaitDialog = null;
+					}
+
+					string	password = addDomainThread.Password;
+					bool	bRememberPassword = addDomainThread.RememberPassword;
+
+					Status authStatus =
+						domainController.AuthenticateDomain(
+							dom.ID, password, bRememberPassword);
 
 					if (authStatus != null)
 					{
@@ -593,7 +675,8 @@ namespace Novell.iFolder
 						{
 							// We connected successfully!
 							ConnectedDomain = dom;
-							return true;
+							
+							AccountDruid.Page = SummaryPage;
 							break;
 						}
 						else
@@ -607,12 +690,17 @@ namespace Novell.iFolder
 					}
 					break;
 				default:
+					if (WaitDialog != null)
+					{
+						WaitDialog.Hide();
+						WaitDialog.Destroy();
+						WaitDialog = null;
+					}
+
 					// Failed to connect
 					Util.ShowLoginError(this, dom.StatusCode);
 					break;
 			}
-			
-			return false;	// Failed to connect
 		}
 		
 		private void OnCancelClicked(object o, Gnome.CancelClickedArgs args)
@@ -711,7 +799,7 @@ namespace Novell.iFolder
 		{
 			if (ConnectClicked != null)
 			{
-				if (!ConnectClicked(this))
+				if (!ConnectClicked(this, EventArgs.Empty))
 					return true;	// Prevent the default event handler (from advancing to the next druid page
 			}
 
@@ -722,5 +810,5 @@ namespace Novell.iFolder
 	/// <summary>
 	/// Return true if the connect was successful, otherwise return false.
 	/// </summary>
-	public delegate bool ConnectClickedHandler(DruidConnectPage connectPage);
+	public delegate bool ConnectClickedHandler(object o, EventArgs args);
 } 
