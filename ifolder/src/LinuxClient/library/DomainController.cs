@@ -939,4 +939,233 @@ Console.WriteLine("DomainController.OnDomainDeletedEvent()");
 		{
 		}
 	}
+	
+	public class AddDomainThread
+	{
+		private DomainController	domainController;
+		private string				serverName;
+		private string				userName;
+		private string				password;
+		private bool				bRememberPassword;
+		private bool				bSetAsDefault;
+		
+		private DomainInformation	domain;
+		private Exception			e;
+		
+		public string ServerName
+		{
+			get
+			{
+				return serverName;
+			}
+		}
+		
+		public string Password
+		{
+			get
+			{
+				return password;
+			}
+		}
+		
+		public bool RememberPassword
+		{
+			get
+			{
+				return bRememberPassword;
+			}
+		}
+		
+		public DomainInformation Domain
+		{
+			get
+			{
+				return domain;
+			}
+		}
+		
+		public Exception Exception
+		{
+			get
+			{
+				return e;
+			}
+		}
+		
+		public event EventHandler Completed;
+		
+		public AddDomainThread(
+					DomainController domainController,
+					string serverName,
+					string userName,
+					string password,
+					bool bRememberPassword,
+					bool bSetAsDefault)
+		{
+			this.domainController = domainController;
+			this.serverName = serverName;
+			this.userName = userName;
+			this.password = password;
+			this.bRememberPassword = bRememberPassword;
+			this.bSetAsDefault = bSetAsDefault;
+			
+			this.domain = null;
+			this.e = null;
+		}
+		
+		public void AddDomain()
+		{
+			System.Threading.Thread thread =
+				new System.Threading.Thread(
+					new System.Threading.ThreadStart(AddThread));
+			thread.Start();
+		}
+		
+		private void AddThread()
+		{
+			try
+			{
+				domain = domainController.AddDomain(
+					serverName,
+					userName,
+					password,
+					bRememberPassword,
+					bSetAsDefault);
+			}
+			catch (Exception e)
+			{
+				this.e = e;
+			}
+
+			if (Completed != null)
+			{
+				AddDomainCompletedHandler completedHandler =
+					new AddDomainCompletedHandler(this);
+				GLib.Idle.Add(completedHandler.IdleHandler);
+			}
+		}
+		
+		private void AddCompleted()
+		{
+			if (Completed != null)
+				Completed(this, EventArgs.Empty);
+		}
+		
+		private class AddDomainCompletedHandler
+		{
+			public AddDomainThread thread;
+			
+			public AddDomainCompletedHandler(AddDomainThread thread)
+			{
+				this.thread = thread;
+			}
+			
+			public bool IdleHandler()
+			{
+				thread.AddCompleted();
+				
+				return false;
+			}
+		}
+	}
+	
+	public class DomainLoginThread
+	{
+		private DomainController	domainController;
+		private string				domainID;
+		private string				password;
+		private bool				bSavePassword;
+		private Status				authStatus;
+		
+		public Status AuthenticationStatus
+		{
+			get
+			{
+				return authStatus;
+			}
+		}
+		
+		public string DomainID
+		{
+			get
+			{
+				return domainID;
+			}
+		}
+		
+		public event EventHandler Completed;
+
+		public DomainLoginThread(DomainController domainController,
+								 string domainID,
+								 string password,
+								 bool bSavePassword)
+		{
+			this.domainController	= domainController;
+			this.domainID			= domainID;
+			this.password			= password;
+			this.bSavePassword		= bSavePassword;
+			
+			this.authStatus			= null;
+		}
+		
+		public void Login()
+		{
+Console.WriteLine("DomainController.Login()");
+			System.Threading.Thread thread =
+				new System.Threading.Thread(
+					new System.Threading.ThreadStart(LoginThread));
+			thread.Start();
+		}
+		
+		private void LoginThread()
+		{
+Console.WriteLine("DomainController.LoginThread()");
+			try
+			{
+Console.WriteLine("FIXME: Remove this temporary delay");
+System.Threading.Thread.Sleep(10000);
+				authStatus = domainController.AuthenticateDomain(
+					domainID, password, bSavePassword);
+Console.WriteLine("\tDone logging in");
+			}
+			catch(Exception e)
+			{
+Console.WriteLine("\tException logging in: {0}", e.Message);
+				// FIXME: Figure out whether we should do anything with this
+			}
+
+			if (Completed != null)
+			{
+				LoginThreadCompletedHandler completedHandler =
+					new LoginThreadCompletedHandler(this);
+				GLib.Idle.Add(completedHandler.IdleHandler);
+			}
+		}
+		
+		private void LoginCompleted()
+		{
+Console.WriteLine("DomainController.LoginCompleted()");
+			if (Completed != null)
+				Completed(this, EventArgs.Empty);
+		}
+		
+		private class LoginThreadCompletedHandler
+		{
+			public DomainLoginThread thread;
+			
+			public LoginThreadCompletedHandler(DomainLoginThread thread)
+			{
+Console.WriteLine("LoginThreadCompletedHandler()");
+				this.thread = thread;
+			}
+			
+			public bool IdleHandler()
+			{
+Console.WriteLine("LoginThreadCompletedHandler.IdleHandler()");
+				thread.LoginCompleted();
+				
+				return false;
+			}
+		}
+	}
 }

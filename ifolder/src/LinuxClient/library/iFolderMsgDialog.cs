@@ -48,7 +48,8 @@ public class iFolderMsgDialog : Dialog
 	{
 		Ok = 1,
 		OkCancel,
-		YesNo
+		YesNo,
+		None
 	}
 
 	
