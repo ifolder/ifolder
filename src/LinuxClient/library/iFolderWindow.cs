@@ -474,7 +474,7 @@ namespace Novell.iFolder
 			SyncNowMenuItem.Activated += new EventHandler(OnSynchronizeNow);
 
 			RevertMenuItem = 
-				new ImageMenuItem (Util.GS("_Revert to a Normal Folder"));
+				new ImageMenuItem (Util.GS("C_hange to a normal folder"));
 			RevertMenuItem.Image = new Image(Stock.Undo, Gtk.IconSize.Menu);
 			iFolderMenu.Append(RevertMenuItem);
 			RevertMenuItem.Activated += new EventHandler(RemoveiFolderHandler);
@@ -822,7 +822,7 @@ namespace Novell.iFolder
 
 			buttonText = new Label(
 				string.Format("<span size=\"large\">{0}</span>",
-							  Util.GS("Revert to a normal folder")));
+							  Util.GS("Change to a normal folder")));
 			hbox.PackStart(buttonText, true, true, 4);
 			buttonText.UseMarkup = true;
 			buttonText.UseUnderline = false;
@@ -1299,7 +1299,7 @@ namespace Novell.iFolder
 						if (!holder.iFolder.Role.Equals("Master"))
 						{
 							MenuItem item_revert = new MenuItem (
-									Util.GS("Revert to a normal folder"));
+									Util.GS("Change to a normal folder"));
 							menu.Append (item_revert);
 							item_revert.Activated += new EventHandler(
 									RemoveiFolderHandler);
@@ -1308,7 +1308,7 @@ namespace Novell.iFolder
 										holder.iFolder.CurrentUserID)
 						{
 							MenuItem item_delete = new MenuItem (
-									Util.GS("Revert to a normal folder"));
+									Util.GS("Change to a normal folder"));
 							menu.Append (item_delete);
 							item_delete.Activated += new EventHandler(
 									RemoveiFolderHandler);
@@ -2091,7 +2091,7 @@ Console.WriteLine("iFolderWindow.AddServerGroup(DomainID: {0})", domainID);
 					iFolderMsgDialog.DialogType.Question,
 					iFolderMsgDialog.ButtonSet.YesNo,
 					"",
-					Util.GS("Revert this iFolder to a normal folder?"),
+					Util.GS("Change this iFolder back to a normal folder?"),
 					Util.GS("The folder will still be on your computer, but it will no longer synchronize with the iFolder Server."));
 				int rc = dialog.Run();
 				dialog.Hide();
