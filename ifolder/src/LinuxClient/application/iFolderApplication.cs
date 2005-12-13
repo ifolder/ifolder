@@ -881,6 +881,8 @@ Console.WriteLine("GuaranteeShutdown(): Calling System.Environment.Exit(1) now")
 						tIcon, Util.GS("iFolder is starting"),
 						Util.GS("Please wait for iFolder to start...\n\nPress <a href=\"CancelStartup\">here</a> to cancel."),
 						Gtk.MessageType.Info, 0);
+					startingUpNotifyWindow.LinkClicked +=
+						new LinkClickedEventHandler(OnNotifyWindowLinkClicked);
 					startingUpNotifyWindow.ShowAll();
 				}
 
@@ -894,6 +896,8 @@ Console.WriteLine("GuaranteeShutdown(): Calling System.Environment.Exit(1) now")
 						tIcon, Util.GS("iFolder is shutting down"),
 						Util.GS("Press <a href=\"ForceShutdown\">here</a> to force iFolder to shut down now."),
 						Gtk.MessageType.Info, 0);
+					shuttingDownNotifyWindow.LinkClicked +=
+						new LinkClickedEventHandler(OnNotifyWindowLinkClicked);
 					shuttingDownNotifyWindow.ShowAll();
 				}
 
