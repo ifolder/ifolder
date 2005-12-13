@@ -43,7 +43,7 @@ using System.Xml;
 using System.Xml.Serialization;
 //using Novell.AddressBook;
 
-using Novell.Security.ClientPasswordManager;
+//using Novell.Security.ClientPasswordManager;
 
 namespace Novell.iFolder.Web
 {
@@ -1826,11 +1826,13 @@ namespace Novell.iFolder.Web
 				// authentication to occurr
 				domainSvc.GetDomainInfo(member.UserID);
 
+				/*
 				NetCredential cCreds =
 					new NetCredential("iFolder", DomainID, true, member.Name,
 								Password);
 				if(cCreds == null)
 					throw new Exception("ERROR: Updating NetCredentials");
+				*/
 			}
 			catch(WebException webEx)
 			{
