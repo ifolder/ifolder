@@ -82,7 +82,7 @@ do
       done
 		case $OSTYPE in
 			darwin*)
-				aclocalinclude="$aclocalinclude -I tools/aclocal"
+				aclocalinclude="$aclocalinclude -I $ORIGDIR/tools/aclocal"
 			;;
 		esac
       if grep "^AM_GNU_GETTEXT" configure.in >/dev/null; then
