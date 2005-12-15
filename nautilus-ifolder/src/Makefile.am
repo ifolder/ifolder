@@ -16,7 +16,7 @@ INCLUDES =						\
 	$(IFOLDER_C_CFLAGS)	\
 	$(XML2_CFLAGS)
 
-EXTRA_DIST = nautilus-ifolder.h nautilus-ifolder.cs emblem-ifolder.png ifolder-folder.png
+EXTRA_DIST = nautilus-ifolder.h nautilus-ifolder.cs emblem-ifolder.icon emblem-ifolder.png ifolder-folder.png
 
 # Make sure the following files are not included in the dist
 dist-hook:
@@ -41,6 +41,7 @@ nautilus-ifolder.exe: nautilus-ifolder.cs
 
 install-exec-local: libnautilus-ifolder.la
 	$(mkinstalldirs) $(INSTALL_EMBLEM_PATH)
+	$(INSTALL_PROGRAM) emblem-ifolder.icon $(INSTALL_EMBLEM_PATH)
 	$(INSTALL_PROGRAM) emblem-ifolder.png $(INSTALL_EMBLEM_PATH)
 	$(mkinstalldirs) $(INSTALL_ICONS_PATH)
 	$(INSTALL_PROGRAM) ifolder-folder.png $(INSTALL_ICONS_PATH)
@@ -50,7 +51,7 @@ install-exec-local: libnautilus-ifolder.la
 
 uninstall-local:
 	cd $(INSTALL_EXTENSION_PATH); rm -f libnautilus-ifolder*
-	cd $(INSTALL_EMBLEM_PATH); rm -f emblem-ifolder.png
+	cd $(INSTALL_EMBLEM_PATH); rm -f emblem-ifolder.icon; rm -f emblem-ifolder.png
 	cd $(INSTALL_ICONS_PATH); rm -f ifolder-folder.png
 	cd $(INSTALL_EXE_PATH); rm -f nautilus-ifolder*
 
