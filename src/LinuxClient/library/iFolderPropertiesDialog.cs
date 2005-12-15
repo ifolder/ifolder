@@ -128,10 +128,14 @@ namespace Novell.iFolder
 		/// <summary>
 		/// Default constructor for iFolderPropertiesDialog
 		/// </summary>
-		public iFolderPropertiesDialog(	string ifolderID )
+		public iFolderPropertiesDialog(	string ifolderID, Manager manager )
 			: base()
 		{
+			if (manager == null) return;
+			this.simiasManager = manager;
+
 			String localServiceUrl = simiasManager.WebServiceUri.ToString();
+			if (localServiceUrl == null) return;
 				
 			this.ifws = new iFolderWebService();
 			if(this.ifws == null)
