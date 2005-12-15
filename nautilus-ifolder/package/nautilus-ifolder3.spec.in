@@ -37,9 +37,9 @@ Vendor       : <unknown>
 Packager     : <unknown>
 BuildRoot    : %{_tmppath}/%{name}-%{version}
 
-Requires     : nautilus >= 2.5
-Requires     : simias >= @SIMIASVER@ 
-Requires     : ifolder3 >= @VERSION@ 
+Requires     : nautilus >= @NAUTILUS_REQUIRED@
+Requires     : simias >= @SIMIAS_CLIENT_REQUIRED@
+Requires     : ifolder3 >= @IFOLDER_REQUIRED@
 Obsoletes    : nautilus-ifolder
 
 #=============================================================================
@@ -70,6 +70,7 @@ make DESTDIR=$RPM_BUILD_ROOT install
 
 #=============================================================================
 %Post
+@gnome_root@/bin/gtk-update-icon-cache
 
 #=============================================================================
 %Preun
@@ -82,5 +83,6 @@ make DESTDIR=$RPM_BUILD_ROOT install
 %defattr(-,root,root)
 %{prefix}/*
 @gnome_root@/lib/nautilus/extensions-1.0/libnautilus-ifolder*
+@gnome_root@/share/icons/gnome/48x48/emblems/emblem-ifolder.icon
 @gnome_root@/share/icons/gnome/48x48/emblems/emblem-ifolder.png
 @gnome_root@/share/icons/gnome/24x24/apps/ifolder-folder.png
