@@ -45,8 +45,6 @@ namespace Novell.iFolder.Nautilus
 			Util.InitCatalog();
 			
 			switch (args [0]) {
-				case "WebServiceURL":
-					return getWebServiceURL (args);
 				case "share":
 					return showShareDialog (args);
 				case "properties":
@@ -64,17 +62,6 @@ namespace Novell.iFolder.Nautilus
 			Application.Quit ();
 		}
 		
-		private static int getWebServiceURL (string[] args)
-		{
-			Uri localServiceUri = Manager.LocalServiceUrl;
-			if (localServiceUri == null)
-				return -1;
-				
-			System.Console.Write (localServiceUri.ToString ());
-			
-			return 0;
-		}
-		
 		private static int showShareDialog (string[] args)
 		{
 			if (args.Length < 2) {
@@ -82,12 +69,18 @@ namespace Novell.iFolder.Nautilus
 				return -1;
 			}
 			
+			Manager manager = new Manager();
+			manager.Start();
+			
 			iFolderPropertiesDialog propsDialog;
-			propsDialog = new iFolderPropertiesDialog (args [1]);
+			propsDialog = new iFolderPropertiesDialog (args [1], manager);
 			propsDialog.CurrentPage = 1;
 			propsDialog.Run ();
 			propsDialog.Hide ();
 			propsDialog.Destroy ();
+
+			manager.Stop();
+
 			return 0;
 		}
 		
@@ -98,12 +91,18 @@ namespace Novell.iFolder.Nautilus
 				return -1;
 			}
 			
+			Manager manager = new Manager();
+			manager.Start();
+			
 			iFolderPropertiesDialog propsDialog;
-			propsDialog = new iFolderPropertiesDialog (args [1]);
+			propsDialog = new iFolderPropertiesDialog (args [1], manager);
 			propsDialog.CurrentPage = 0;
 			propsDialog.Run ();
 			propsDialog.Hide ();
 			propsDialog.Destroy ();
+
+			manager.Stop();
+
 			return 0;
 		}
 		

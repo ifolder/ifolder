@@ -44,6 +44,7 @@
 
 #include <simias-event-client.h>
 #include <simiasweb.h>
+//#include "simias-internal.h"
 
 #include <ifolder.h>
 #include <iFolderStub.h>
@@ -84,6 +85,14 @@ typedef struct {
 	gchar		*message;
 	gchar		*detail;
 } iFolderErrorMessage;
+
+typedef struct {
+	GClosure *update_complete;
+	NautilusInfoProvider *provider;
+	NautilusFileInfo *file;
+	int operation_handle;
+	gboolean cancelled;
+} UpdateHandle;
 
 static GType provider_types[1];
 
@@ -132,6 +141,11 @@ static gchar * get_ifolder_id_by_local_path (gchar *path);
 static gint revert_ifolder (NautilusFileInfo *file);
 static gchar * get_unmanaged_path (gchar *ifolder_id);
 static GSList *get_all_ifolder_paths ();
+static int ifolder_call_when_ready (UpdateHandle *handle);
+static void * is_ifolder_thread (gpointer user_data);
+static void file_data_ready_cb (gboolean bIsiFolder, UpdateHandle *handle);
+static void ifolder_cancel_update (NautilusInfoProvider *provider,
+								   NautilusOperationHandle *handle);
 
 /* Functions for seen_ifolders_ht (GHashTable) */
 static void seen_ifolders_ht_destroy_key (gpointer key);
@@ -788,24 +802,73 @@ ifolder_nautilus_update_file_info (NautilusInfoProvider 	*provider,
 								   GClosure					*update_complete,
 								   NautilusOperationHandle	**handle)
 {
-	gchar *ifolder_id;
-	gchar *file_uri;
-	gchar *file_path;
-	DEBUG_IFOLDER (("ifolder_nautilus_update_file_info called\n"));
+	DEBUG_IFOLDER (("ifolder_nautilus_update_file_info called: %s\n", nautilus_file_info_get_name(file)));
 	
 	/* Don't do anything if the specified file is not a directory. */
 	if (!nautilus_file_info_is_directory (file))
 		return NAUTILUS_OPERATION_COMPLETE;
-	
+
+	/**
+	 * Since we don't want to slow down Nautilus at all by calling our
+	 * WebService, figure out everything asynchronously.
+	 * FIXME: Eventually cache all the information on what folders are iFolders so we can just check our cache instead of call the WebService all the time.  Register for event handlers to keep our cache up-to-date.
+	 */
+	UpdateHandle *update_handle = g_new0 (UpdateHandle, 1);
+	 
+	update_handle->update_complete =
+		g_closure_ref (update_complete);
+	 
+	update_handle->provider = provider;
+	update_handle->file = g_object_ref (file);
+	 
+	/**
+	 * ifolder_call_when_ready() reads information about the file
+	 * asynchronously.
+	 */
+	update_handle->operation_handle =
+	 	ifolder_call_when_ready (update_handle);
+	 
+	*handle = (NautilusOperationHandle*)update_handle;
+	 
+	return NAUTILUS_OPERATION_IN_PROGRESS;
+}
+
+static int
+ifolder_call_when_ready (UpdateHandle *handle)
+{
+	pthread_t thread;
+	int rc;
+
+	rc = pthread_create (&thread,
+						 NULL,
+						 is_ifolder_thread,
+						 handle);
+
+	return rc;
+}
+
+static void *
+is_ifolder_thread (gpointer user_data)
+{
+	UpdateHandle *handle = (UpdateHandle*)user_data;
+	gchar *ifolder_id;
+	gchar *file_uri;
+	gchar *file_path;
+	gboolean bIsiFolder = FALSE;
+
+	/**
+	 * Make an anynchronous call to the WebService to find out whether the
+	 * specified file is an iFolder or not.
+	 */
 	if (is_ifolder_running ()) {
-		file_path = get_file_path (file);
+		file_path = get_file_path (handle->file);
 		if (file_path) {
 			ifolder_id = get_ifolder_id_by_local_path (file_path);
 			g_free (file_path);
 			if (ifolder_id) {
-				nautilus_file_info_add_emblem (file, "ifolder");
+				bIsiFolder = TRUE;
 
-				file_uri = nautilus_file_info_get_uri (file);
+				file_uri = nautilus_file_info_get_uri (handle->file);
 				if (file_uri) {
 					/**
 					 * Store the file_uri into a hashtable with the key being
@@ -840,14 +903,51 @@ ifolder_nautilus_update_file_info (NautilusInfoProvider 	*provider,
 	} else {
 		DEBUG_IFOLDER (("*** iFolder is NOT running\n"));
 	}
+	
+	file_data_ready_cb (bIsiFolder, handle);
+	
+	return NULL;
+}
 
-	return NAUTILUS_OPERATION_COMPLETE;
+static void
+file_data_ready_cb (gboolean bIsiFolder, UpdateHandle *handle)
+{
+	if (!handle->cancelled && bIsiFolder)
+	{
+		nautilus_file_info_add_emblem (handle->file, "ifolder");
+	}
+	
+	nautilus_info_provider_update_complete_invoke(
+		handle->update_complete,
+		handle->provider,
+		(NautilusOperationHandle*)handle,
+		NAUTILUS_OPERATION_COMPLETE);
+
+	/* FIXME: Cache the data so that we don't have to read it again */
+/*	g_object_set_data_full (G_OBJECT (handle->file),
+		"ifolder_extension_data",
+		g_strdup (data),
+		g_free);
+*/
+	/* We're now done with the handle */
+	g_closure_unref (handle->update_complete);
+	g_object_unref (handle->file);
+	g_free (handle);
+}
+
+static void
+ifolder_cancel_update (NautilusInfoProvider *provider, NautilusOperationHandle *handle)
+{
+	UpdateHandle *update_handle = (UpdateHandle*)handle;
+	
+	update_handle->cancelled = TRUE;
 }
 
 static void
 ifolder_nautilus_info_provider_iface_init (NautilusInfoProviderIface *iface)
 {
 	iface->update_file_info	= ifolder_nautilus_update_file_info;
+	iface->cancel_update = ifolder_cancel_update;
 }
 
 /**
@@ -1462,10 +1562,10 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 	dialog = gtk_dialog_new_with_buttons(_("Convert to an iFolder"),
 			GTK_WINDOW(parent_window),
 			GTK_DIALOG_DESTROY_WITH_PARENT,
-			GTK_STOCK_OK,
-			GTK_RESPONSE_ACCEPT,
 			GTK_STOCK_CANCEL,
 			GTK_RESPONSE_CANCEL,
+			GTK_STOCK_OK,
+			GTK_RESPONSE_ACCEPT,
 			NULL);
 
 	gtk_dialog_set_has_separator(GTK_DIALOG(dialog), FALSE);
@@ -1838,7 +1938,8 @@ ifolder_nautilus_get_file_items (NautilusMenuProvider *provider,
 		item = nautilus_menu_item_new ("NautilusiFolder::create_ifolder",
 					_("Convert to an iFolder"),
 					_("Convert the selected folder to an iFolder"),
-					"ifolder-folder");
+					IFOLDER_IMAGE_IFOLDER);
+//					"ifolder-folder");
 		g_signal_connect (item, "activate",
 					G_CALLBACK (create_ifolder_callback),
 					provider);
