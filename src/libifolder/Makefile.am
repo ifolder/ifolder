@@ -37,6 +37,12 @@ $(srcdir)/iFolderClient.h: $(srcdir)/stdsoap2.c $(IFOLDER_CLIENT_WSDL)
 $(srcdir)/iFolderClientLib.c: $(srcdir)/iFolderClient.h
 	$(GSOAP_PATH)/soapcpp2 -c -n -piFolder $(srcdir)/iFolderClient.h
 
+install-exec-hook:
+if !WINDOWS
+	rm -f $(DESTDIR)$(libdir)/libifolderclient.a
+	rm -f $(DESTDIR)$(libdir)/libifolderclient.la
+endif
+
 install-exec-local:
 	$(mkinstalldirs) $(DESTDIR)$(includedir)/ifolder3
 	$(INSTALL_PROGRAM) iFolderStub.h $(DESTDIR)$(includedir)/ifolder3
