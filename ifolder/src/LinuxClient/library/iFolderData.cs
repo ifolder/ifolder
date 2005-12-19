@@ -282,11 +282,14 @@ Console.WriteLine("iFolderData.ClearOrphanediFolders()");
 					// after iterating the list so that we don't modify the list
 					// while iterating through it.
 					ArrayList itersToRemove = new ArrayList();
+
+					iFolderHolder holder;
 					
-					iFolderHolder holder =
-						(iFolderHolder)iFolderListStore.GetValue(iter, 0);
 					do
 					{
+						holder =
+							(iFolderHolder)iFolderListStore.GetValue(iter, 0);
+
 						DomainInformation domain =
 							domainController.GetDomain(holder.iFolder.DomainID);
 //						if (domain == null)
