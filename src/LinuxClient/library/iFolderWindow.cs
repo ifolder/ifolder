@@ -48,10 +48,10 @@ namespace Novell.iFolder
 		const int ctx = 1;
 		private iFolderWebService	ifws;
 		private SimiasWebService	simws;
-		private iFolderData			ifdata;
+		private iFolderData		ifdata;
 
 		private Statusbar			MainStatusBar;
-		private ProgressBar			SyncBar;
+		private ProgressBar		SyncBar;
 
 		private ImageMenuItem		NewMenuItem;
 		private Gtk.MenuItem		ShareMenuItem;
@@ -77,7 +77,7 @@ namespace Novell.iFolder
 		private DomainController	domainController;
 
 		// Manager object that knows about simias resources.
-		private Manager				simiasManager;
+		private Manager			simiasManager;
 
 		///
 		/// Keep track of open windows so that if we're called again for one
@@ -114,9 +114,9 @@ namespace Novell.iFolder
 		private bool				bAvailableFoldersShowing;
 
 		private ScrolledWindow		iFoldersScrolledWindow;
-		private iFolderIconView		iFoldersIconView;
+		private iFolderIconView	iFoldersIconView;
 		private iFolderViewGroup	localGroup;
-		private TreeModelFilter		myiFoldersFilter;
+		private TreeModelFilter	myiFoldersFilter;
 
 		private VBox				SynchronizedFolderTasks;
 
