@@ -320,7 +320,12 @@ Console.WriteLine("DomainController.GetDomain(\"{0}\")", domainID);
 
 					// Notify DomainAddedEventHandlers
 					if (DomainAdded != null)
-						DomainAdded(this, new DomainEventArgs(dom.ID));
+					{
+						DomainAddedIdleHandler addedHandler =
+							new DomainAddedIdleHandler(dom.ID, this);
+						GLib.Idle.Add(addedHandler.IdleHandler);
+//						DomainAdded(this, new DomainEventArgs(dom.ID));
+					}
 				}
 			}
 			catch (Exception e)
@@ -337,6 +342,32 @@ Console.WriteLine("DomainController.GetDomain(\"{0}\")", domainID);
 			}
 			
 			return dom;
+		}
+		
+		private void EmitDomainAdded(string domainID)
+		{
+			if (DomainAdded != null)
+				DomainAdded(this, new DomainEventArgs(domainID));
+		}
+		
+		public class DomainAddedIdleHandler
+		{
+			string domainID;
+			DomainController domainController;
+			
+			public DomainAddedIdleHandler(string domainID,
+										   DomainController domainController)
+			{
+				this.domainID = domainID;
+				this.domainController = domainController;
+			}
+			
+			public bool IdleHandler()
+			{
+				domainController.EmitDomainAdded(domainID);
+				
+				return false; // Don't keep calling this function
+			}
 		}
 		
 		public DomainInformation UpdateDomainHostAddress(string domainID, string host)
