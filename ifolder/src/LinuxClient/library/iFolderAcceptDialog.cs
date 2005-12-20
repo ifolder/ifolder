@@ -17,7 +17,9 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  Author: Calvin Gaisford <cgaisford@novell.com>
+ *  Authors:
+ *		Calvin Gaisford <cgaisford@novell.com>
+ *		Boyd Timothy <btimothy@novell.com>
  * 
  ***********************************************************************/
 
@@ -26,128 +28,96 @@ using System;
 
 namespace Novell.iFolder
 {
-	public class iFolderAcceptDialog : Dialog
+	public class iFolderAcceptDialog : FileChooserDialog
 	{
 		private iFolderWeb	ifolder;
-		private string		initialPath;
-		private Label		previewPath;
-		FileChooserWidget	fileChooserWidget;
+		private string	initialPath;
+		private Entry		nameEntry;
 		
-
 		public new string Path
 		{
 			get
 			{
-				return fileChooserWidget.CurrentFolder;
-				// FIXME: Replace the above line with fileChooserWidget.Filename once iFolder allows users to name their local iFolder
+				return this.CurrentFolder;
 			}
 		}
-
-		public iFolderAcceptDialog(iFolderWeb ifolder, string initialPath) : base()
-		{
+		
+		public iFolderAcceptDialog(iFolderWeb ifolder, string initialPath)
+				: base("", "", null, FileChooserAction.Save, Stock.Cancel, ResponseType.Cancel)
+        {
 			this.Title =
 				string.Format(Util.GS("Download \"{0}\"..."), ifolder.Name);
-			this.SetDefaultSize (600, 500);
+        	this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
 
-			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
+        	this.ifolder = ifolder;
+        	this.initialPath = initialPath;
 
-			this.ifolder = ifolder;
-			this.initialPath = initialPath;
+        	this.SelectMultiple = false;
+        	this.LocalOnly = true;
+        	this.CurrentName = ifolder.Name;
+        	
+        	if (this.initialPath != null && this.initialPath.Length > 0)
+        		this.SetCurrentFolder(this.initialPath);
+        		
+			DisableNameEntry();
 
-//			this.BorderWidth = 10;
-			VBox dialogBox = new VBox();
-			dialogBox.Spacing = 10;
-			dialogBox.BorderWidth = 10;
-			dialogBox.Homogeneous = false;
-			this.VBox.PackStart(dialogBox, true, true, 0);
+			this.Realized += new EventHandler(OnWidgetRealized);
 
-
-//			Label l = new Label("<span weight=\"bold\" size=\"larger\">" +
-//						Util.GS("Choose a folder to download: ") + ifolder.Name + "</span>");
-
-//			l.LineWrap = false;
-//			l.UseMarkup = true;
-//			l.UseUnderline = false;
-//			l.Selectable = false;
-//			l.Xalign = 0; l.Yalign = 0;
-//			dialogBox.PackStart(l, false, false, 0);
-
-
-			VBox detailBox = new VBox();
-			dialogBox.PackStart(detailBox, false, false, 0);
-
-			Label l = new Label(Util.GS("Details:"));
-			l.Xalign = 0;
-			detailBox.PackStart(l, false, false, 0);
-
-			TextView tv = new TextView();
-			tv.LeftMargin = 10;
-			tv.RightMargin = 10;
-			tv.Editable = false;
-			tv.CursorVisible = false;
-			TextBuffer buffer = tv.Buffer;
-			buffer.Text = string.Format(Util.GS("Name: {0}\nShared by: {1}\nAccess: {2}"), ifolder.Name, ifolder.Owner, GetDisplayRights(ifolder.CurrentUserRights));
-
-			ScrolledWindow sw = new ScrolledWindow();
-			sw.ShadowType = Gtk.ShadowType.EtchedIn;
-			sw.Add(tv);
-			detailBox.PackStart(sw, false, false, 0);
-
-
-			l = new Label(Util.GS("The iFolder will be downloaded into this folder:"));
-
-			l.LineWrap = false;
-			l.Xalign = 0; l.Yalign = 1;
-			dialogBox.PackStart(l, false, false, 0);
-
-			previewPath = new Label();
-			previewPath.Xalign = 0; previewPath.Yalign = 0;
-			previewPath.Wrap = true;
-			dialogBox.PackStart(previewPath, false, false, 0);
-
-			fileChooserWidget =
-				new FileChooserWidget(FileChooserAction.SelectFolder, "");
-// FIXME: Remove the above line and replace it with the line below once iFolder allows users to name their local iFolders
-//				new FileChooserWidget(FileChooserAction.CreateFolder, "");
-			fileChooserWidget.SelectMultiple = false;
-			fileChooserWidget.LocalOnly = true;
-			fileChooserWidget.CurrentName = ifolder.Name;
-			
-			if (this.initialPath != null && this.initialPath.Length > 0)
-				fileChooserWidget.SetCurrentFolder(this.initialPath);
-			
-			fileChooserWidget.SelectionChanged +=
-				new EventHandler(OnFileChooserSelectionChanged);
-			
-			dialogBox.PackStart(fileChooserWidget, true, true, 0);
-
-			this.VBox.ShowAll();
-
-			this.AddButton(Stock.Cancel, ResponseType.Cancel);
-			this.AddButton(Stock.Ok, ResponseType.Ok);
-			if (this.initialPath != null && this.initialPath.Length > 0)
-				this.SetResponseSensitive(ResponseType.Ok, true);
-			else
-				this.SetResponseSensitive(ResponseType.Ok, false);
+			this.AddButton(Util.GS("_Download"), ResponseType.Ok);
+        }
+        
+		private void OnWidgetRealized(object o, EventArgs args)
+		{
+			if (nameEntry != null)
+			{
+				nameEntry.SelectRegion(-1, -1);
+				nameEntry.Position = 0;
+			}
 		}
 		
+		private void DisableNameEntry()
+		{
+			nameEntry = GetNameEntry();
+			if (nameEntry != null)
+			{
+				// FIXME: This is not clearing the selection.  Figure out what would.
+				nameEntry.SelectRegion(-1, -1);
+				nameEntry.Position = 0;
+				nameEntry.Editable = false;
+				nameEntry.Sensitive = false;
+				nameEntry.HasFrame = false;
+			}
+		}
 		
-		private void OnFileChooserSelectionChanged(object sender, EventArgs args)
+		// Search for and return the Gtk.Entry that contains the name of
+		// the iFolder.
+		private Entry GetNameEntry()
 		{
-			previewPath.Text = System.IO.Path.Combine(fileChooserWidget.Filename, ifolder.Name);
+			return GetNameEntryRecursive(this);
 		}
-
-		private string GetDisplayRights(string rights)
+		
+		private Entry GetNameEntryRecursive(Gtk.Container container)
 		{
-			if(rights == "ReadWrite")
-				return Util.GS("Read/Write");
-			else if(rights == "Admin")
-				return Util.GS("Full Control");
-			else if(rights == "ReadOnly")
-				return Util.GS("Read Only");
-			else
-				return Util.GS("Unknown");
-		}
+			Entry entry = null;
 
+			foreach(Widget child in container.AllChildren)
+			{
+				if (child is Container)
+					entry = GetNameEntryRecursive((Gtk.Container)child);
+				else if (child is Entry)
+				{
+					entry = (Entry)child;
+					string text = entry.Text;
+					if (text != null && text == ifolder.Name)
+						return entry;	// We've got it!
+					else
+						entry = null;
+				}
+				
+				if (entry != null) break;
+			}
+			
+			return entry;
+		}
 	}
 }
