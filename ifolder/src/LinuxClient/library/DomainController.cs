@@ -206,7 +206,7 @@ Console.WriteLine(Environment.StackTrace);
 		{
 			lock(typeof(DomainController))
 			{
-				if (keyedDomains.Contains(defDomainID))
+				if (defDomainID != null && keyedDomains.Contains(defDomainID))
 					return (DomainInformation)keyedDomains[defDomainID];
 				else
 				{
