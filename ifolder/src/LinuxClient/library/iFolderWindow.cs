@@ -822,7 +822,7 @@ namespace Novell.iFolder
 
 			buttonText = new Label(
 				string.Format("<span size=\"large\">{0}</span>",
-							  Util.GS("Change to a normal folder")));
+							  Util.GS("Revert to a normal folder")));
 			hbox.PackStart(buttonText, true, true, 4);
 			buttonText.UseMarkup = true;
 			buttonText.UseUnderline = false;
@@ -927,6 +927,30 @@ namespace Novell.iFolder
 			localGroup = new iFolderViewGroup(Util.GS("iFolders on This Computer"), myiFoldersFilter);
 			iFoldersIconView.AddGroup(localGroup);
 
+			// FIXME: Attach the drag and drop receiver to the synchronized iFolders only
+			TargetEntry[] targets =
+				new TargetEntry[]
+				{
+	                new TargetEntry ("text/uri-list", 0, (uint) TargetType.UriList),
+	                new TargetEntry ("application/x-root-window-drop", 0, (uint) TargetType.RootWindow)
+				};
+
+			Drag.DestSet(localGroup,
+						 //Gdk.ModifierType.Button1Mask | Gdk.ModifierType.Button3Mask,
+						 DestDefaults.All,
+						 targets,
+						 Gdk.DragAction.Copy | Gdk.DragAction.Move);
+
+			localGroup.DragMotion +=
+				new DragMotionHandler(OnIconViewDragMotion);
+				
+			localGroup.DragDrop +=
+				new DragDropHandler(OnIconViewDragDrop);
+			
+			localGroup.DragDataReceived +=
+				new DragDataReceivedHandler(OnIconViewDragDataReceived);
+			
+
 			///
 			/// My Available iFolders
 			///
@@ -950,7 +974,8 @@ namespace Novell.iFolder
 				
 			iFoldersIconView.KeyPressEvent +=
 				new KeyPressEventHandler(OniFolderIconViewKeyPress);
-		
+
+/*		
 			// FIXME: Attach the drag and drop receiver to the synchronized iFolders only
 			TargetEntry[] targets =
 				new TargetEntry[]
@@ -974,6 +999,7 @@ namespace Novell.iFolder
 			iFoldersIconView.DragDataReceived +=
 				new DragDataReceivedHandler(OnIconViewDragDataReceived);
 			
+*/
 			iFoldersScrolledWindow.AddWithViewport(iFoldersIconView);
 			
 			return iFoldersScrolledWindow;
@@ -1299,7 +1325,7 @@ namespace Novell.iFolder
 						if (!holder.iFolder.Role.Equals("Master"))
 						{
 							MenuItem item_revert = new MenuItem (
-									Util.GS("Change to a normal folder"));
+									Util.GS("Revert to a normal folder"));
 							menu.Append (item_revert);
 							item_revert.Activated += new EventHandler(
 									RemoveiFolderHandler);
@@ -1308,7 +1334,7 @@ namespace Novell.iFolder
 										holder.iFolder.CurrentUserID)
 						{
 							MenuItem item_delete = new MenuItem (
-									Util.GS("Change to a normal folder"));
+									Util.GS("Revert to a normal folder"));
 							menu.Append (item_delete);
 							item_delete.Activated += new EventHandler(
 									RemoveiFolderHandler);
@@ -1343,6 +1369,7 @@ Console.WriteLine("iFolderWindow.OniFolderIconViewSelectionChanged()");
 		
 		private void OnIconViewDragMotion(object o, DragMotionArgs args)
 		{
+Console.WriteLine("iFolderWindow.OnIconViewDragMotion()");
 			Gdk.Drag.Status(args.Context, args.Context.SuggestedAction, args.Time);
 			
 			args.RetVal = true;
@@ -1350,6 +1377,7 @@ Console.WriteLine("iFolderWindow.OniFolderIconViewSelectionChanged()");
 		
 		private void OnIconViewDragDrop(object o, DragDropArgs args)
 		{
+Console.WriteLine("iFolderWindow.OnIconViewDragDrop()");
 			args.RetVal = true;
 		}
 		
@@ -2091,7 +2119,7 @@ Console.WriteLine("iFolderWindow.AddServerGroup(DomainID: {0})", domainID);
 					iFolderMsgDialog.DialogType.Question,
 					iFolderMsgDialog.ButtonSet.YesNo,
 					"",
-					Util.GS("Change this iFolder back to a normal folder?"),
+					Util.GS("Revert this iFolder back to a normal folder?"),
 					Util.GS("The folder will still be on your computer, but it will no longer synchronize with the iFolder Server."));
 				int rc = dialog.Run();
 				dialog.Hide();
