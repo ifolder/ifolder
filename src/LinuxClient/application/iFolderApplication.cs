@@ -853,14 +853,16 @@ Console.WriteLine("GuaranteeShutdown(): Calling System.Environment.Exit(1) now")
 				{
 					Console.WriteLine("CancelStartup");
 
-					QuitiFolder();
+					// FIXME: Need to figure out a way to gracefully cancel startup
+//					QuitiFolder();
 
 				}
 				else if (args.LinkID.Equals("ForceShutdown"))
 				{
 					Console.WriteLine("ForceShutdown");
-
-					QuitiFolder();
+					
+					// FIXME: Need to find a way to gracefully force complete shutdown if a user selects this
+//					QuitiFolder();
 				}
 			}
 
