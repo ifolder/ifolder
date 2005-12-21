@@ -549,6 +549,7 @@ namespace Novell.iFolder
 							{
 								try
 								{
+									/*
 									try
 									{
 										// Add the member to the domain.  If the member is
@@ -565,11 +566,17 @@ namespace Novell.iFolder
 																member.FamilyName);
 									}
 									catch {}
+									*/
 									
-    								iFolderUser newUser = ifws.InviteUser(
-															ifolder.ID,
-															member.UserID,
-															"ReadWrite");
+    								iFolderUser newUser = 
+    									ifws.AddAndInviteUser(
+    										ifolder.ID,
+    										member.Name,
+    										member.GivenName,
+    										member.FamilyName,
+    										member.UserID,
+    										null,
+    										"ReadWrite" );
 	
 									TreeIter iter = 
 										UserTreeStore.AppendValues(newUser);
