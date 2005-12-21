@@ -11,6 +11,8 @@ DOMAINUILIB_FLAGS = $(CSC_LIBFLAG)
 DOMAINUILIB_LIBS = System.dll System.Drawing.dll System.Data.dll Novell.iFolder.dll Novell.iFolder.UI.gtk.dll Mono.Posix.dll
 DOMAINUILIB_LIBPATH = $(srcdir)/../library
 
+EXTRA_DIST = $(DOMAINUILIB_CSFILES)
+
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml
 DOC_FILE_CMD = /doc:$(DOC_FILE)
