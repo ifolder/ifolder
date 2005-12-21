@@ -241,8 +241,18 @@ Console.WriteLine(Environment.StackTrace);
 							// just update the iFolderWeb object in the
 							// iFolderHolder.
 							TreeIter iter = (TreeIter)ifolderIters[ifolderID];
-							iFolderHolder existingHolder = (iFolderHolder)
-								iFolderListStore.GetValue(iter, 0);
+							iFolderHolder existingHolder = null;
+
+							try
+							{
+								existingHolder = (iFolderHolder)
+									iFolderListStore.GetValue(iter, 0);
+							}
+							catch(Exception e)
+							{
+								Console.WriteLine(e.Message);
+							}
+
 							if (existingHolder != null)
 							{
 								existingHolder.iFolder = ifolder;
@@ -676,8 +686,15 @@ Console.WriteLine("*** SOMETHING WENT BAD IN iFolderData.ReadiFolder() ***");
 					if (ifolderIters.ContainsKey(realID))
 					{
 						TreeIter iter = (TreeIter)ifolderIters[realID];
-						ifHolder =
-							(iFolderHolder)iFolderListStore.GetValue(iter, 0);
+						try
+						{
+							ifHolder =
+								(iFolderHolder)iFolderListStore.GetValue(iter, 0);
+						}
+						catch(Exception e)
+						{
+							Console.WriteLine(e.Message);
+						}
 					}
 				}
 
