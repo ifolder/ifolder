@@ -1,7 +1,7 @@
 /***********************************************************************
- *  $RCSfile: AccountDialog.cs,v $
- * 
- *  Copyright (C) 2004 Novell, Inc.
+ *  $RCSfile: IDomainProviderUI.cs,v $
+ *
+ *  Copyright (C) 2005 Novell, Inc.
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public
@@ -17,36 +17,41 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  Author: Calvin Gaisford <cgaisford@novell.com>
- * 
+ *  Authors:
+ *		Boyd Timothy <btimothy@novell.com>
+ *
  ***********************************************************************/
 
-
-using Gtk;
 using System;
 
-namespace Novell.iFolder
+using Gtk;
+
+using Simias.Client;
+
+using Novell.iFolder;
+ 
+namespace Novell.iFolder.DomainProvider
 {
-	public abstract class AccountDialog : Dialog
+	public interface IDomainProviderUI
 	{
-		protected Window parentWindow;
-		protected DomainInformation domain;
-
-		public string DomainID
-		{
-			get { return domain.ID; }
-		}
-
-
-		public AccountDialog(Window parent, DomainInformation curDomain)
-			: base()
-		{
-			parentWindow = parent;
-			domain = curDomain;
-		}
+		#region Properties
 		
-		~AccountDialog()
-		{
-		}
+		string ID { get; }
+		
+		string Name { get; }
+		
+		string Description { get; }
+		
+		bool CanDelete { get; }
+		
+		bool HasDetails { get; }
+		
+		#endregion
+		
+		#region Public Methods
+		
+		AccountDialog CreateAccountDialog(Window parent, DomainInformation domain);
+		
+		#endregion
 	}
 }

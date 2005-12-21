@@ -41,7 +41,7 @@ namespace Novell.iFolder
 		internal static string helpdir = "@_prefix_@/share/ifolder3/help";
 		internal static int SectionSpacing = 20;
 		internal static int SectionTitleSpacing = 5;
-		internal static uint DefaultBorderWidth = 10;
+		static public uint DefaultBorderWidth = 10;
 		
 		// The purpose of these variable is to allow us to keep track of
 		// last place the user created/setup an iFolder so that we can open
@@ -182,7 +182,15 @@ Console.WriteLine("Modal window destroyed");
 		{
 			return string.Format("{0}/{1}", imagesdir, imgStr);
 		}
-
+		
+		public static string PluginsPath
+		{
+			get
+			{
+				return "@_prefix_@/lib";
+			}
+		}
+		
 		public static string HelpURL(string helpFile)
 		{
 			return string.Format("file://{0}/en/doc/user/data/{1}", helpdir, helpFile);

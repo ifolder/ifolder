@@ -33,10 +33,10 @@ using Simias.Client.Authentication;
 
 using Novell.iFolder.Events;
 using Novell.iFolder.Controller;
+using Novell.iFolder.DomainProvider;
 
 namespace Novell.iFolder
 {
-
 	/// <summary>
 	/// A VBox with the ability to create and manage ifolder accounts
 	/// </summary>
@@ -66,6 +66,8 @@ namespace Novell.iFolder
 		private Manager				simiasManager;
 		
 		private iFolderWaitDialog	WaitDialog;
+		
+		private DomainProviderUI domainProviderUI;
 
 		/// <summary>
 		/// Default constructor for iFolderAccountsPage
@@ -83,6 +85,8 @@ namespace Novell.iFolder
 			curDomains = new Hashtable();
 
 			InitializeWidgets();
+			
+			domainProviderUI = DomainProviderUI.GetDomainProviderUI();
 
 			domainController = DomainController.GetDomainController();
 			if (domainController != null)
@@ -172,7 +176,7 @@ namespace Novell.iFolder
 
 			// Server Column
 			TreeViewColumn serverColumn = new TreeViewColumn();
-			serverColumn.Title = Util.GS("Server Name");
+			serverColumn.Title = Util.GS("Name");
 			CellRendererText servercr = new CellRendererText();
 			servercr.Xpad = 5;
 			serverColumn.PackStart(servercr, false);
@@ -238,11 +242,15 @@ namespace Novell.iFolder
 
 			foreach(DomainInformation dom in domains)
 			{
-				// only show Domains that are slaves (not on this machine)
-				if(dom.IsSlave)
+				string domainID = dom.ID;
+
+				// only show Domains that are slaves (not on this machine) and
+				// those for which an IDomainProviderUI has been written
+				if(dom.IsSlave ||
+					domainProviderUI.GetProviderForID(domainID) != null)
 				{
-					TreeIter iter = AccTreeStore.AppendValues(dom.ID);
-					curDomains[dom.ID] = iter;
+					TreeIter iter = AccTreeStore.AppendValues(domainID);
+					curDomains[domainID] = iter;
 				}
 			}
 		}
@@ -265,10 +273,21 @@ namespace Novell.iFolder
 			string domainID = (string) tree_model.GetValue(iter, 0);
 			DomainInformation dom = domainController.GetDomain(domainID);
 			
-			if (dom != null && dom.Authenticated)
-				((CellRendererToggle) cell).Active = true;
+			IDomainProviderUI provider = domainProviderUI.GetProviderForID(domainID);
+			if (provider != null)
+			{
+				if (dom.Active)
+					((CellRendererToggle) cell).Active = true;
+				else
+					((CellRendererToggle) cell).Active = false;
+			}
 			else
-				((CellRendererToggle) cell).Active = false;
+			{
+				if (dom != null && dom.Authenticated)
+					((CellRendererToggle) cell).Active = true;
+				else
+					((CellRendererToggle) cell).Active = false;
+			}
 		}
 
 
@@ -332,7 +351,7 @@ namespace Novell.iFolder
 				tSelect.GetSelected(out tModel, out iter);
 				string domainID = (string) tModel.GetValue(iter, 0);
 				DomainInformation dom = domainController.GetDomain(domainID);
-
+				
 				RemoveAccountDialog rad = new RemoveAccountDialog(dom);
 				rad.TransientFor = topLevelWindow;
 				int rc = rad.Run();
@@ -391,13 +410,21 @@ namespace Novell.iFolder
 				}
 				else
 				{
-					accDialog = new AccountDialog(dom);
-					detailsDialogs[domainID] = accDialog;
-					accDialog.SetPosition(WindowPosition.Center);
-					accDialog.Destroyed += 
-							new EventHandler(OnAccountDialogDestroyedEvent);
-
-					accDialog.ShowAll();
+					IDomainProviderUI provider = domainProviderUI.GetProviderForID(domainID);
+					if (provider != null)
+						accDialog = provider.CreateAccountDialog(topLevelWindow, dom);
+					else
+						accDialog = new EnterpriseAccountDialog(topLevelWindow, dom);
+					
+					if (accDialog != null)
+					{
+						detailsDialogs[domainID] = accDialog;
+						accDialog.SetPosition(WindowPosition.Center);
+						accDialog.Destroyed += 
+								new EventHandler(OnAccountDialogDestroyedEvent);
+	
+						accDialog.ShowAll();
+					}
 				}
 			}
 		}
@@ -435,12 +462,24 @@ namespace Novell.iFolder
 			{
 				string domainID = (string)AccTreeStore.GetValue(iter, 0);
 				DomainInformation dom = domainController.GetDomain(domainID);
-				if (dom != null)
+				IDomainProviderUI provider = domainProviderUI.GetProviderForID(domainID);
+				if (provider != null)
 				{
-					if (!dom.Authenticated)
-						LoginDomain(dom, iter);
+					// FIXME: Add some functionality into the provider interface so we know what to do instead of just inactivating the account
+					if (dom.Active)
+						domainController.InactivateDomain(dom.ID);
 					else
-						LogoutDomain(dom, iter);
+						domainController.ActivateDomain(dom.ID);
+				}
+				else
+				{
+					if (dom != null)
+					{
+						if (!dom.Authenticated)
+							LoginDomain(dom, iter);
+						else
+							LogoutDomain(dom, iter);
+					}
 				}
 			}
 			
@@ -611,11 +650,28 @@ Console.WriteLine("PrefsAccountPage.OnDomainLoginCompleted");
 				string domainID = (string) tModel.GetValue(iter, 0);
 				DomainInformation dom = domainController.GetDomain(domainID);
 				if (dom == null) return;	// Prevent null pointer
+				
+				IDomainProviderUI provider = domainProviderUI.GetProviderForID(domainID);
+				if (provider != null)
+				{
+					if (provider.CanDelete)
+						RemoveButton.Sensitive = true;
+					else
+						RemoveButton.Sensitive = false;
 					
+					if (provider.HasDetails)
+						DetailsButton.Sensitive = true;
+					else
+						DetailsButton.Sensitive = false;
+				}
+				else
+				{
+					RemoveButton.Sensitive			= true;
+					DetailsButton.Sensitive			= true;
+				}
+
 				// Set the control states
 				AddButton.Sensitive				= true;
-				RemoveButton.Sensitive			= true;
-				DetailsButton.Sensitive			= true;
 			}
 			else
 			{
