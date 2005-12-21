@@ -1,4 +1,4 @@
-SUBDIRS = library application po
+SUBDIRS = library application bonjour-ui po
 
 DIST_SUBDIRS = $(SUBDIRS)
 
