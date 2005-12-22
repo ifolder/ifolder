@@ -61,6 +61,8 @@ namespace Novell.iFolder
 		
 		private static Gdk.Pixbuf	SyncWaitFolder					= null;
 		private static Gdk.Pixbuf	SyncWaitFolderSpotlight			= null;
+		
+		private static bool registeredForThemeChangeEvent			= false;
 
 		private Gdk.Pixbuf			normalPixbuf;
 		private Gdk.Pixbuf			spotlightPixbuf;
@@ -183,22 +185,101 @@ namespace Novell.iFolder
 			
 			this.Realized +=
 				new EventHandler(OnWidgetRealized);
+				
+// FIXME: Fix things up so that if the user changes the theme, our icons will refresh too
+//			if (!registeredForThemeChangeEvent)
+//			{
+//				IconTheme.Changed += new EventHandler(OnGtkIconThemeChanged);
+//			}
+		}
+		
+//		public static void OnGtkIconThemeChanged(object o, EventArgs args)
+//		{
+//			lock(typeof(iFolderViewItem))
+//			{
+//				// FIXME: Refresh the icons.
+//			}
+//		}
+
+		public static Gdk.Pixbuf CreateEmblemedPixbuf(Gdk.Pixbuf icon, Gdk.Pixbuf emblem)
+		{
+			if (icon == null || emblem == null) return null;
+			
+			if (icon.Width <= emblem.Width || icon.Height <= emblem.Height) return null;
+
+			Gdk.Pixbuf dest = new Gdk.Pixbuf(icon.Colorspace, true, icon.BitsPerSample, icon.Width, icon.Height);
+			dest.Fill(0xffffffff);	// transparent black
+
+			try			
+			{
+				icon.Composite(dest,
+								0,
+								0,
+								dest.Width,
+								dest.Height,
+								0,
+								0,
+								1.0,
+								1.0,
+								Gdk.InterpType.Hyper,
+								0xff);
+				emblem.Composite(dest,
+								0,
+								0,
+								dest.Width,
+								dest.Height,
+								icon.Width - emblem.Width - 1,
+								icon.Height - emblem.Height - 1,
+								1.0,
+								1.0,
+								Gdk.InterpType.Hyper,
+								0xff);
+			}
+			catch(Exception e)
+			{
+				dest = null;
+			}
+			
+			return dest;
 		}
 		
 		public void LoadImages()
 		{
+			lock(typeof(iFolderViewItem))
+			{
 			if (OKFolder == null)
 			{
-				OKFolder = 
-					new Gdk.Pixbuf(
-						Util.ImagesPath("ok-folder64.png"));
+				OKFolder =
+					iFolderViewItem.LoadIcon("gnome-fs-directory", 48);
+				if (OKFolder == null)
+					OKFolder = 
+						new Gdk.Pixbuf(
+							Util.ImagesPath("ok-folder64.png"));
+				
+				Gdk.Pixbuf okEmblem =
+					new Gdk.Pixbuf(Util.ImagesPath("emblem-ok.png"));
+				if (okEmblem == null || OKFolder == null)
+					Console.WriteLine("     =========== HUH?");
+				else
+				{
+					Gdk.Pixbuf okFolder = CreateEmblemedPixbuf(OKFolder, okEmblem);
+					if (okFolder != null)
+						OKFolder = okFolder;
+				}
+				
+				if (OKFolder == null)
+					Console.WriteLine("******* GRRRR ********");
 			}
 			
 			if (OKFolderSpotlight == null)
 			{
-				OKFolderSpotlight = 
-					new Gdk.Pixbuf(
-						Util.ImagesPath("ok-folder-spotlight64.png"));
+				OKFolderSpotlight = OKFolder.Copy();
+//				OKFolderSpotlight =
+//					iFolderViewItem.LoadIcon("gnome-fs-directory", 48);
+//				if (OKFolderSpotlight == null)
+//					OKFolderSpotlight = 
+//						new Gdk.Pixbuf(
+//							Util.ImagesPath("ok-folder-spotlight64.png"));
 			}
 			
 			if (MyAvailableFolder == null)
@@ -221,6 +302,9 @@ namespace Novell.iFolder
 Console.WriteLine("IconFactory.LookupDefault(\"gtk-directory\") returned null");
 				}
 */				
+				MyAvailableFolder =
+					iFolderViewItem.LoadIcon("gnome-fs-share", 48);
+
 				// If for some reason, we weren't able to find a themed icon,
 				// fall back to the one we already have.
 				if (MyAvailableFolder == null)
@@ -251,6 +335,9 @@ Console.WriteLine("IconFactory.LookupDefault(\"gtk-directory\") returned null");
 Console.WriteLine("IconFactory.LookupDefault(\"gtk-directory\") returned null");
 				}
 */				
+				MyAvailableFolderSpotlight =
+					iFolderViewItem.LoadIcon("gnome-fs-share", 48);
+
 				// If for some reason, we weren't able to find a themed icon,
 				// fall back to the one we already have.
 				if (MyAvailableFolderSpotlight == null)
@@ -264,57 +351,118 @@ Console.WriteLine("IconFactory.LookupDefault(\"gtk-directory\") returned null");
 			if (SharedAvailableFolder == null)
 			{
 				SharedAvailableFolder =
-					new Gdk.Pixbuf(
-						Util.ImagesPath("shared-available-folder64.png"));
+					iFolderViewItem.LoadIcon("gnome-fs-share", 48);
+				if (SharedAvailableFolder == null)
+					SharedAvailableFolder =
+						new Gdk.Pixbuf(
+							Util.ImagesPath("shared-available-folder64.png"));
 			}
 
 			if (SharedAvailableFolderSpotlight == null)
 			{
 				SharedAvailableFolderSpotlight =
-					new Gdk.Pixbuf(
-						Util.ImagesPath("shared-available-folder-spotlight64.png"));
+					iFolderViewItem.LoadIcon("gnome-fs-share", 48);
+				if (SharedAvailableFolderSpotlight == null)
+					SharedAvailableFolderSpotlight =
+						new Gdk.Pixbuf(
+							Util.ImagesPath("shared-available-folder-spotlight64.png"));
 			}
 
 			if (ConflictFolder == null)
 			{
 				ConflictFolder =
-					new Gdk.Pixbuf(
-						Util.ImagesPath("conflict-folder64.png"));
+					iFolderViewItem.LoadIcon("gnome-fs-directory", 48);
+				if (ConflictFolder == null)
+					ConflictFolder =
+						new Gdk.Pixbuf(
+							Util.ImagesPath("conflict-folder64.png"));
+
+				Gdk.Pixbuf emblem =
+					new Gdk.Pixbuf(Util.ImagesPath("emblem-conflict.png"));
+				if (emblem == null || ConflictFolder == null)
+					Console.WriteLine("     =========== HUH?");
+				else
+				{
+					Gdk.Pixbuf tmpPixbuf = CreateEmblemedPixbuf(ConflictFolder, emblem);
+					if (tmpPixbuf != null)
+						ConflictFolder = tmpPixbuf;
+				}
 			}
 
 			if (ConflictFolderSpotlight == null)
 			{
-				ConflictFolderSpotlight =
-					new Gdk.Pixbuf(
-						Util.ImagesPath("conflict-folder-spotlight64.png"));
+				ConflictFolderSpotlight = ConflictFolder.Copy();
+//				ConflictFolderSpotlight =
+//					iFolderViewItem.LoadIcon("gnome-fs-directory", 48);
+//				if (ConflictFolderSpotlight == null)
+//					ConflictFolderSpotlight =
+//						new Gdk.Pixbuf(
+//							Util.ImagesPath("conflict-folder-spotlight64.png"));
 			}
 
 			if (SyncFolder == null)
 			{
 				SyncFolder =
-					new Gdk.Pixbuf(
-						Util.ImagesPath("sync-folder64.png"));
+					iFolderViewItem.LoadIcon("gnome-fs-directory", 48);
+				if (SyncFolder == null)
+					SyncFolder =
+						new Gdk.Pixbuf(
+							Util.ImagesPath("sync-folder64.png"));
+
+				Gdk.Pixbuf emblem =
+					new Gdk.Pixbuf(Util.ImagesPath("emblem-sync.png"));
+				if (emblem == null || SyncFolder == null)
+					Console.WriteLine("     =========== HUH?");
+				else
+				{
+					Gdk.Pixbuf tmpPixbuf = CreateEmblemedPixbuf(SyncFolder, emblem);
+					if (tmpPixbuf != null)
+						SyncFolder = tmpPixbuf;
+				}
 			}
 
 			if (SyncFolderSpotlight == null)
 			{
-				SyncFolderSpotlight =
-					new Gdk.Pixbuf(
-						Util.ImagesPath("sync-folder-spotlight64.png"));
+				SyncFolderSpotlight = SyncFolder.Copy();
+//				SyncFolderSpotlight =
+//					iFolderViewItem.LoadIcon("gnome-fs-directory", 48);
+//				if (SyncFolderSpotlight == null)
+//					SyncFolderSpotlight =
+//						new Gdk.Pixbuf(
+//							Util.ImagesPath("sync-folder-spotlight64.png"));
 			}
 
 			if (SyncWaitFolder == null)
 			{
 				SyncWaitFolder =
-					new Gdk.Pixbuf(
-						Util.ImagesPath("sync-wait-folder64.png"));
+					iFolderViewItem.LoadIcon("gnome-fs-directory", 48);
+				if (SyncWaitFolder == null)
+					SyncWaitFolder =
+						new Gdk.Pixbuf(
+							Util.ImagesPath("sync-wait-folder64.png"));
+
+				Gdk.Pixbuf emblem =
+					new Gdk.Pixbuf(Util.ImagesPath("emblem-sync-wait.png"));
+				if (emblem == null || SyncWaitFolder == null)
+					Console.WriteLine("     =========== HUH?");
+				else
+				{
+					Gdk.Pixbuf tmpPixbuf = CreateEmblemedPixbuf(SyncWaitFolder, emblem);
+					if (tmpPixbuf != null)
+						SyncWaitFolder = tmpPixbuf;
+				}
 			}
 
 			if (SyncWaitFolderSpotlight == null)
 			{
-				SyncWaitFolderSpotlight =
-					new Gdk.Pixbuf(
-						Util.ImagesPath("sync-wait-folder-spotlight64.png"));
+				SyncWaitFolderSpotlight = SyncWaitFolder.Copy();
+//				SyncWaitFolderSpotlight =
+//					iFolderViewItem.LoadIcon("gnome-fs-directory", 48);
+//				if (SyncWaitFolderSpotlight == null)
+//					SyncWaitFolderSpotlight =
+//						new Gdk.Pixbuf(
+//							Util.ImagesPath("sync-wait-folder-spotlight64.png"));
+			}
 			}
 		}
 		
@@ -634,6 +782,48 @@ Console.WriteLine("iFolderViewItem.Refresh({0}) exiting", holder.iFolder.Name);
 				gtk_label_set_ellipsize(label.Handle, 3);
 			else
 				gtk_label_set_ellipsize(label.Handle, 0);
+		}
+		
+		///
+		/// Functions to deal with loading themed folder icons taken gratefully
+		/// from the banshee project (IconThemeUtils.cs).
+		///
+		[DllImport("libgtk-x11-2.0.so.0")]
+        private extern static IntPtr gtk_icon_theme_get_default();
+
+		[DllImport("libgtk-x11-2.0.so.0")]
+        private extern static IntPtr gtk_icon_theme_load_icon(IntPtr theme, string name, int size, 
+            int flags, IntPtr error);
+            
+		public static Gdk.Pixbuf LoadIcon(string name, int size)
+		{
+			return LoadIcon(name, size, true);
+		}
+		
+		public static Gdk.Pixbuf LoadIcon(string name, int size, bool fallBackOnResource)
+		{
+			try
+			{
+				IntPtr native = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), name, size, 0, IntPtr.Zero);
+				if (native != IntPtr.Zero)
+				{
+					Gdk.Pixbuf ret = (Gdk.Pixbuf)GLib.Object.GetObject(native, true);
+					if (ret != null)
+						return ret;
+				}
+			}
+			catch{}
+			
+			if (!fallBackOnResource)
+				return null;
+			
+			try
+			{
+				return new Gdk.Pixbuf(System.Reflection.Assembly.GetEntryAssembly(), name + ".png");
+			}
+			catch{}
+			
+			return null;
 		}
 	}
 }
