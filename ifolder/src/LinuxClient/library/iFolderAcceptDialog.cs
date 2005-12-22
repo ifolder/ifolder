@@ -85,7 +85,7 @@ namespace Novell.iFolder
 				nameEntry.Position = 0;
 				nameEntry.Editable = false;
 				nameEntry.Sensitive = false;
-				nameEntry.HasFrame = false;
+//				nameEntry.HasFrame = false;
 			}
 		}
 		
