@@ -41,6 +41,8 @@ namespace Novell.iFolder
 		private DomainController		domainController;
 		private SimiasWebService		simws;
 		private bool					ControlKeyPressed;
+		private Button						ForwardButton;
+		private Button						FinishButton;
 		
 		private Gdk.Pixbuf				AddAccountPixbuf;
 		
@@ -98,6 +100,8 @@ namespace Novell.iFolder
 			ControlKeyPressed = false;
 			KeyPressEvent += new KeyPressEventHandler(KeyPressHandler);
 			KeyReleaseEvent += new KeyReleaseEventHandler(KeyReleaseHandler);
+			
+			SetUpButtons();
 		}
 		
 		private Widget CreateWidgets()
@@ -351,7 +355,7 @@ namespace Novell.iFolder
 			l = new Label(
 				string.Format(
 					"\n\n{0}",
-					Util.GS("Click \"Forward\" to attempt to connect to the iFolder Server.")));
+					Util.GS("Click \"Connect\" to validate your connection with the server.")));
 			table.Attach(l, 0,3, 5,6,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			l.LineWrap = true;
@@ -456,6 +460,9 @@ namespace Novell.iFolder
 			this.Title = Util.GS("iFolder Account Assistant - (2 of 3)");
 			UpdateUserInformationPageSensitivity(null, null);
 			UserNameEntry.GrabFocus();
+
+			// Hack to make sure the "Forward" button has the right text.
+			ForwardButton.Label = "gtk-go-forward";
 		}
 		
 		private void OnConnectPagePrepared(object o, Gnome.PreparedArgs args)
@@ -486,6 +493,10 @@ namespace Novell.iFolder
 				MakeDefaultPromptLabel.Visible = false;
 				MakeDefaultVerifyLabel.Visible = false;
 			}
+			
+			// Hack to modify the "Forward" button to be a "Connect" button
+			ForwardButton.Label = Util.GS("Co_nnect");
+//			AccountDruid.Forall(EnableConnectButtonCallback);
 		}
 		
 		private void OnSummaryPagePrepared(object o, Gnome.PreparedArgs args)
@@ -502,7 +513,8 @@ namespace Novell.iFolder
 			}
 			
 			// Hack to modify the "Apply" button to be a "Finish" button
-			AccountDruid.Forall(EnableFinishButtonCallback);
+//			AccountDruid.Forall(EnableFinishButtonCallback);
+			FinishButton.Label = Util.GS("_Finish");
 			
 			AccountDruid.SetButtonsSensitive(false, true, false, true);
 		}
@@ -751,7 +763,12 @@ namespace Novell.iFolder
 		///
 		/// Utility/Helper Methods
 		///
-		private void EnableFinishButtonCallback(Widget w)
+		private void SetUpButtons()
+		{
+			AccountDruid.Forall(SetUpButtonsCallback);
+		}
+		
+		private void SetUpButtonsCallback(Widget w)
 		{
 			if (w is HButtonBox)
 			{
@@ -761,13 +778,15 @@ namespace Novell.iFolder
 					if (buttonWidget is Button)
 					{
 						Button button = buttonWidget as Button;
-						if (button.Label == "gtk-apply")
-							button.Label = Util.GS("_Finish");
+						if (button.Label == "gtk-go-forward")
+							ForwardButton = button;
+						else if (button.Label == "gtk-apply")
+							FinishButton = button;
 					}
 				}
 			}
 		}
-
+		
 		public void CloseDialog()
 		{
 			this.Hide();
