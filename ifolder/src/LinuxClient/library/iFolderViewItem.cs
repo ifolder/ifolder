@@ -29,8 +29,6 @@ using Gtk;
 
 using Novell.iFolder.Controller;
 
-using System.Runtime.InteropServices;
-
 namespace Novell.iFolder
 {
 	public class iFolderViewItem : EventBox
@@ -250,7 +248,7 @@ namespace Novell.iFolder
 			if (OKFolder == null)
 			{
 				OKFolder =
-					iFolderViewItem.LoadIcon("gnome-fs-directory", 48);
+					Util.LoadIcon("gnome-fs-directory", 48);
 				if (OKFolder == null)
 					OKFolder = 
 						new Gdk.Pixbuf(
@@ -275,7 +273,7 @@ namespace Novell.iFolder
 			{
 				OKFolderSpotlight = OKFolder.Copy();
 //				OKFolderSpotlight =
-//					iFolderViewItem.LoadIcon("gnome-fs-directory", 48);
+//					Util.LoadIcon("gnome-fs-directory", 48);
 //				if (OKFolderSpotlight == null)
 //					OKFolderSpotlight = 
 //						new Gdk.Pixbuf(
@@ -303,7 +301,7 @@ Console.WriteLine("IconFactory.LookupDefault(\"gtk-directory\") returned null");
 				}
 */				
 				MyAvailableFolder =
-					iFolderViewItem.LoadIcon("gnome-fs-share", 48);
+					Util.LoadIcon("gnome-fs-share", 48);
 
 				// If for some reason, we weren't able to find a themed icon,
 				// fall back to the one we already have.
@@ -336,7 +334,7 @@ Console.WriteLine("IconFactory.LookupDefault(\"gtk-directory\") returned null");
 				}
 */				
 				MyAvailableFolderSpotlight =
-					iFolderViewItem.LoadIcon("gnome-fs-share", 48);
+					Util.LoadIcon("gnome-fs-share", 48);
 
 				// If for some reason, we weren't able to find a themed icon,
 				// fall back to the one we already have.
@@ -351,7 +349,7 @@ Console.WriteLine("IconFactory.LookupDefault(\"gtk-directory\") returned null");
 			if (SharedAvailableFolder == null)
 			{
 				SharedAvailableFolder =
-					iFolderViewItem.LoadIcon("gnome-fs-share", 48);
+					Util.LoadIcon("gnome-fs-share", 48);
 				if (SharedAvailableFolder == null)
 					SharedAvailableFolder =
 						new Gdk.Pixbuf(
@@ -361,7 +359,7 @@ Console.WriteLine("IconFactory.LookupDefault(\"gtk-directory\") returned null");
 			if (SharedAvailableFolderSpotlight == null)
 			{
 				SharedAvailableFolderSpotlight =
-					iFolderViewItem.LoadIcon("gnome-fs-share", 48);
+					Util.LoadIcon("gnome-fs-share", 48);
 				if (SharedAvailableFolderSpotlight == null)
 					SharedAvailableFolderSpotlight =
 						new Gdk.Pixbuf(
@@ -371,7 +369,7 @@ Console.WriteLine("IconFactory.LookupDefault(\"gtk-directory\") returned null");
 			if (ConflictFolder == null)
 			{
 				ConflictFolder =
-					iFolderViewItem.LoadIcon("gnome-fs-directory", 48);
+					Util.LoadIcon("gnome-fs-directory", 48);
 				if (ConflictFolder == null)
 					ConflictFolder =
 						new Gdk.Pixbuf(
@@ -393,7 +391,7 @@ Console.WriteLine("IconFactory.LookupDefault(\"gtk-directory\") returned null");
 			{
 				ConflictFolderSpotlight = ConflictFolder.Copy();
 //				ConflictFolderSpotlight =
-//					iFolderViewItem.LoadIcon("gnome-fs-directory", 48);
+//					Util.LoadIcon("gnome-fs-directory", 48);
 //				if (ConflictFolderSpotlight == null)
 //					ConflictFolderSpotlight =
 //						new Gdk.Pixbuf(
@@ -403,7 +401,7 @@ Console.WriteLine("IconFactory.LookupDefault(\"gtk-directory\") returned null");
 			if (SyncFolder == null)
 			{
 				SyncFolder =
-					iFolderViewItem.LoadIcon("gnome-fs-directory", 48);
+					Util.LoadIcon("gnome-fs-directory", 48);
 				if (SyncFolder == null)
 					SyncFolder =
 						new Gdk.Pixbuf(
@@ -425,7 +423,7 @@ Console.WriteLine("IconFactory.LookupDefault(\"gtk-directory\") returned null");
 			{
 				SyncFolderSpotlight = SyncFolder.Copy();
 //				SyncFolderSpotlight =
-//					iFolderViewItem.LoadIcon("gnome-fs-directory", 48);
+//					Util.LoadIcon("gnome-fs-directory", 48);
 //				if (SyncFolderSpotlight == null)
 //					SyncFolderSpotlight =
 //						new Gdk.Pixbuf(
@@ -435,7 +433,7 @@ Console.WriteLine("IconFactory.LookupDefault(\"gtk-directory\") returned null");
 			if (SyncWaitFolder == null)
 			{
 				SyncWaitFolder =
-					iFolderViewItem.LoadIcon("gnome-fs-directory", 48);
+					Util.LoadIcon("gnome-fs-directory", 48);
 				if (SyncWaitFolder == null)
 					SyncWaitFolder =
 						new Gdk.Pixbuf(
@@ -457,7 +455,7 @@ Console.WriteLine("IconFactory.LookupDefault(\"gtk-directory\") returned null");
 			{
 				SyncWaitFolderSpotlight = SyncWaitFolder.Copy();
 //				SyncWaitFolderSpotlight =
-//					iFolderViewItem.LoadIcon("gnome-fs-directory", 48);
+//					Util.LoadIcon("gnome-fs-directory", 48);
 //				if (SyncWaitFolderSpotlight == null)
 //					SyncWaitFolderSpotlight =
 //						new Gdk.Pixbuf(
@@ -526,8 +524,8 @@ Console.WriteLine("iFolderViewItem.Refresh({0}) exiting", holder.iFolder.Name);
 			nameLabel.Xalign = 0;
 			Requisition req = nameLabel.SizeRequest();
 			nameLabel.SetSizeRequest(widthForLabels, req.Height);
-			GtkLabelSetMaxWidthChars(nameLabel, widthForLabels);
-			GtkLabelSetEllipsize(nameLabel, true);
+			Util.GtkLabelSetMaxWidthChars(nameLabel, widthForLabels);
+			Util.GtkLabelSetEllipsize(nameLabel, true);
 			
 			locationLabel = new Label("<span size=\"small\"></span>");
 			vbox.PackStart(locationLabel, false, false, 0);
@@ -537,8 +535,8 @@ Console.WriteLine("iFolderViewItem.Refresh({0}) exiting", holder.iFolder.Name);
 			locationLabel.Xalign = 0;
 			req = locationLabel.SizeRequest();
 			locationLabel.SetSizeRequest(widthForLabels, req.Height);
-			GtkLabelSetMaxWidthChars(locationLabel, widthForLabels);
-			GtkLabelSetEllipsize(locationLabel, true);
+			Util.GtkLabelSetMaxWidthChars(locationLabel, widthForLabels);
+			Util.GtkLabelSetEllipsize(locationLabel, true);
 
 			statusLabel = new Label("<span size=\"small\"></span>");
 			vbox.PackStart(statusLabel, false, false, 0);
@@ -548,8 +546,8 @@ Console.WriteLine("iFolderViewItem.Refresh({0}) exiting", holder.iFolder.Name);
 			statusLabel.Xalign = 0;
 			req = statusLabel.SizeRequest();
 			statusLabel.SetSizeRequest(widthForLabels, req.Height);
-			GtkLabelSetMaxWidthChars(statusLabel, widthForLabels);
-			GtkLabelSetEllipsize(statusLabel, true);
+			Util.GtkLabelSetMaxWidthChars(statusLabel, widthForLabels);
+			Util.GtkLabelSetEllipsize(statusLabel, true);
 			
 			return table;
 		}
@@ -760,70 +758,6 @@ Console.WriteLine("iFolderViewItem.Refresh({0}) exiting", holder.iFolder.Name);
 
 				statusLabel.Markup = potentialMarkup;
 			}
-		}
-		
-		// FIXME: Remove these two functions when we change our minimum requirement to gtk-sharp2-2.6		
-		[DllImport("libgtk-x11-2.0.so.0")]
-		static extern void gtk_label_set_max_width_chars(IntPtr label,
-														 int n_chars);
-
-		public void GtkLabelSetMaxWidthChars(Gtk.Label label, int n_chars)
-		{
-			gtk_label_set_max_width_chars(label.Handle, n_chars);
-		}
-		
-		[DllImport("libgtk-x11-2.0.so.0")]
-		static extern void gtk_label_set_ellipsize(IntPtr label,
-												   uint mode);
-		
-		public void GtkLabelSetEllipsize(Gtk.Label label, bool bUseEllipsis)
-		{
-			if (bUseEllipsis)
-				gtk_label_set_ellipsize(label.Handle, 3);
-			else
-				gtk_label_set_ellipsize(label.Handle, 0);
-		}
-		
-		///
-		/// Functions to deal with loading themed folder icons taken gratefully
-		/// from the banshee project (IconThemeUtils.cs).
-		///
-		[DllImport("libgtk-x11-2.0.so.0")]
-        private extern static IntPtr gtk_icon_theme_get_default();
-
-		[DllImport("libgtk-x11-2.0.so.0")]
-        private extern static IntPtr gtk_icon_theme_load_icon(IntPtr theme, string name, int size, 
-            int flags, IntPtr error);
-            
-		public static Gdk.Pixbuf LoadIcon(string name, int size)
-		{
-			return LoadIcon(name, size, true);
-		}
-		
-		public static Gdk.Pixbuf LoadIcon(string name, int size, bool fallBackOnResource)
-		{
-			try
-			{
-				IntPtr native = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), name, size, 0, IntPtr.Zero);
-				if (native != IntPtr.Zero)
-				{
-					Gdk.Pixbuf ret = (Gdk.Pixbuf)GLib.Object.GetObject(native, true);
-					if (ret != null)
-						return ret;
-				}
-			}
-			catch{}
-			
-			if (!fallBackOnResource)
-				return null;
-			
-			try
-			{
-				return new Gdk.Pixbuf(System.Reflection.Assembly.GetEntryAssembly(), name + ".png");
-			}
-			catch{}
-			
-			return null;
 		}
 	}
 }

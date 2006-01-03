@@ -648,6 +648,11 @@ namespace Novell.iFolder
 						string.Format(Util.GS("iFolder cannot verify the identity of the iFolder Server \"{0}\"."), serverName),
 						string.Format(Util.GS("The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be \"{0}\" which could put your confidential information at risk.   Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?"), serverName),
 						cert.ToString(true));
+
+					Gdk.Pixbuf certPixbuf = Util.LoadIcon("gnome-mime-application-x-x509-ca-cert", 48);
+					if (certPixbuf != null && dialog.Image != null)
+						dialog.Image.Pixbuf = certPixbuf;
+
 					int rc = dialog.Run();
 					dialog.Hide();
 					dialog.Destroy();
