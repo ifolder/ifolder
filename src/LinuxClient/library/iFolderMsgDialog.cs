@@ -33,8 +33,17 @@ namespace Novell.iFolder
 public class iFolderMsgDialog : Dialog
 {
 //	private Button showDetailsButton;
-	private Expander detailsExpander;
-	private ScrolledWindow showDetailsScrolledWindow;
+	private Image			dialogImage;
+	private Expander		detailsExpander;
+	private ScrolledWindow	showDetailsScrolledWindow;
+	
+	public Image Image
+	{
+		get
+		{
+			return dialogImage;
+		}
+	}
 
 	public enum DialogType : int
 	{
@@ -101,25 +110,25 @@ public class iFolderMsgDialog : Dialog
 		h.BorderWidth = 10;
 		h.Spacing = 10;
 
-		Image i = new Image();
+		dialogImage = new Image();
 		switch(type)
 		{
 			case DialogType.Error:
-				i.SetFromStock(Gtk.Stock.DialogError, IconSize.Dialog);
+				dialogImage.SetFromStock(Gtk.Stock.DialogError, IconSize.Dialog);
 				break;
 			case DialogType.Question:
-				i.SetFromStock(Gtk.Stock.DialogQuestion, IconSize.Dialog);
+				dialogImage.SetFromStock(Gtk.Stock.DialogQuestion, IconSize.Dialog);
 				break;
 			case DialogType.Warning:
-				i.SetFromStock(Gtk.Stock.DialogWarning, IconSize.Dialog);
+				dialogImage.SetFromStock(Gtk.Stock.DialogWarning, IconSize.Dialog);
 				break;
 			default:
 			case DialogType.Info:
-				i.SetFromStock(Gtk.Stock.DialogInfo, IconSize.Dialog);
+				dialogImage.SetFromStock(Gtk.Stock.DialogInfo, IconSize.Dialog);
 				break;
 		}
-		i.SetAlignment(0.5F, 0);
-		h.PackStart(i, false, false, 0);
+		dialogImage.SetAlignment(0.5F, 0);
+		h.PackStart(dialogImage, false, false, 0);
 
 		VBox v = new VBox();
 		v.Spacing = 10;
