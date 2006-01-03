@@ -1389,26 +1389,120 @@ Console.WriteLine("iFolderWindow.OnIconViewDragDrop()");
 			switch (args.Info)
 			{
 				case (uint) TargetType.UriList:
-					DomainInformation defaultDomain = domainController.GetDefaultDomain();
-					if (defaultDomain == null) return;
+//					DomainInformation defaultDomain = domainController.GetDefaultDomain();
+//					if (defaultDomain == null) return;
 	
 					UriList uriList = new UriList(args.SelectionData);
-					foreach (string path in uriList.ToLocalPaths())
+					if (uriList.Count == 1)
 					{
-						if (ifws.CanBeiFolder(path))
-						{
-							try
-							{
-//								iFolderHolder holder = ifdata.CreateiFolder(path, defaultDomain.ID);
-								ifdata.CreateiFolder(path, defaultDomain.ID);
+						string path = uriList.ToLocalPaths()[0];
 
-								bFolderCreated = true;
-							}
-							catch
+			DomainInformation[] domains = domainController.GetDomains();
+			if (domains.Length <= 0) return;	// FIXME: This should never happen.  Maybe alert the user?
+			string domainID = domains[0].ID;	// Default to the first in the list
+			DomainInformation defaultDomain = domainController.GetDefaultDomain();
+			if (defaultDomain != null)
+				domainID = defaultDomain.ID;
+
+			DragCreateDialog cd = new DragCreateDialog(this, domains, domainID, path);
+			cd.TransientFor = this;
+	
+			int rc = 0;
+			do
+			{
+				rc = cd.Run();
+				cd.Hide();
+
+				if (rc == (int)ResponseType.Ok)
+				{
+					try
+					{
+						string selectedFolder = cd.iFolderPath.Trim();
+						string selectedDomain = cd.DomainID;
+	
+						string parentDir = System.IO.Path.GetDirectoryName( selectedFolder );
+						if ( ( parentDir == null ) || ( parentDir == String.Empty ) )
+						{
+							iFolderMsgDialog dg = new iFolderMsgDialog(
+								this,
+								iFolderMsgDialog.DialogType.Warning,
+								iFolderMsgDialog.ButtonSet.Ok,
+								"",
+								Util.GS("Invalid folder specified"),
+								Util.GS("An invalid folder was specified"));
+							dg.Run();
+							dg.Hide();
+							dg.Destroy();
+							continue;
+						}
+						
+						iFolderHolder ifHolder = null;
+						try
+						{
+							ifHolder = 
+								ifdata.CreateiFolder(selectedFolder,
+													 selectedDomain);
+						}
+						catch(Exception e)
+						{
+							if (DisplayCreateOrSetupException(e))
 							{
-								Console.WriteLine("Error creating folder on drag-and-drop");
+								// Update the selectedFolder path
+								continue;	// The function handled the exception
 							}
 						}
+	
+						if(ifHolder == null)
+							throw new Exception("Simias returned null");
+	
+						// If we make it this far, we've succeeded and we don't
+						// need to keep looping.
+						rc = 0;
+	
+						// Save off the path so that the next time the user
+						// creates an iFolder, we'll open it to the directory
+						// they used last.
+						Util.LastCreatedPath = ifHolder.iFolder.UnManagedPath;
+	
+						if(ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION, 
+										"true") == "true")
+						{
+							iFolderCreationDialog dlg = 
+								new iFolderCreationDialog(ifHolder.iFolder);
+							dlg.TransientFor = this;
+							int createRC;
+							do
+							{
+								createRC = dlg.Run();
+								if(createRC == (int)Gtk.ResponseType.Help)
+								{
+									Util.ShowHelp("myifolders.html", this);
+								}
+							}while(createRC != (int)Gtk.ResponseType.Ok);
+	
+							dlg.Hide();
+		
+							if(dlg.HideDialog)
+							{
+								ClientConfig.Set(
+									ClientConfig.KEY_SHOW_CREATION, "false");
+							}
+		
+							cd.Destroy();
+							cd = null;
+						}
+					}
+					catch (Exception e)
+					{
+						Console.WriteLine(e.Message);
+						continue;
+					}
+				}
+			}
+			while(rc == (int)ResponseType.Ok);
+
+
+
 					}
 
 					break;
