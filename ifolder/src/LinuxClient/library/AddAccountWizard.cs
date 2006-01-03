@@ -110,7 +110,8 @@ namespace Novell.iFolder
 			AccountDruid = new Gnome.Druid();
 			vbox.PackStart(AccountDruid, true, true, 0);
 			
-			AccountDruid.ShowHelp = false;
+			AccountDruid.ShowHelp = true;
+			AccountDruid.Help += new EventHandler(OnAccountWizardHelp);
 			
 			AccountDruid.AppendPage(CreateIntroductoryPage());
 			AccountDruid.AppendPage(CreateServerInformationPage());
@@ -403,12 +404,12 @@ namespace Novell.iFolder
 			{
 				currentServerName = currentServerName.Trim();
 				if (currentServerName.Length > 0)
-					AccountDruid.SetButtonsSensitive(true, true, true, false);
+					AccountDruid.SetButtonsSensitive(true, true, true, true);
 				else
-					AccountDruid.SetButtonsSensitive(true, false, true, false);
+					AccountDruid.SetButtonsSensitive(true, false, true, true);
 			}
 			else
-				AccountDruid.SetButtonsSensitive(true, false, true, false);
+				AccountDruid.SetButtonsSensitive(true, false, true, true);
 		}
 		
 		private void UpdateUserInformationPageSensitivity(object o, EventArgs args)
@@ -420,21 +421,26 @@ namespace Novell.iFolder
 				currentUserName = currentUserName.Trim();
 				currentPassword = currentPassword.Trim();
 				if (currentUserName.Length > 0 && currentPassword.Length > 0)
-					AccountDruid.SetButtonsSensitive(true, true, true, false);
+					AccountDruid.SetButtonsSensitive(true, true, true, true);
 				else
-					AccountDruid.SetButtonsSensitive(true, false, true, false);
+					AccountDruid.SetButtonsSensitive(true, false, true, true);
 			}
 			else
-				AccountDruid.SetButtonsSensitive(true, false, true, false);
+				AccountDruid.SetButtonsSensitive(true, false, true, true);
 		}
 
 		///
 		/// Event Handlers
 		///
+		private void OnAccountWizardHelp(object o, EventArgs args)
+		{
+			Util.ShowHelp("accounts.html", this);
+		}
+
 		private void OnIntroductoryPagePrepared(object o, Gnome.PreparedArgs args)
 		{
 			this.Title = Util.GS("iFolder Account Assistant");
-			AccountDruid.SetButtonsSensitive(false, true, true, false);
+			AccountDruid.SetButtonsSensitive(false, true, true, true);
 		}
 		
 		private void OnServerInformationPagePrepared(object o, Gnome.PreparedArgs args)
@@ -511,7 +517,7 @@ namespace Novell.iFolder
 			// Hack to modify the "Apply" button to be a "Finish" button
 			AccountDruid.Forall(EnableFinishButtonCallback);
 			
-			AccountDruid.SetButtonsSensitive(false, true, false, false);
+			AccountDruid.SetButtonsSensitive(false, true, false, true);
 		}
 		
 		/// <summary>
