@@ -223,14 +223,14 @@ namespace Novell.iFolder
 			///
 			/// Content
 			///
-			Table table = new Table(6, 3, false);
+			Table table = new Table(4, 3, false);
 			UserInformationPage.VBox.PackStart(table, false, false, 0);
 			table.ColumnSpacing = 6;
 			table.RowSpacing = 6;
 			table.BorderWidth = 12;
 
 			// Row 1
-			Label l = new Label(Util.GS("Enter your iFolder user name (for example, \"jsmith\")."));
+			Label l = new Label(Util.GS("Enter your iFolder user name and password (for example, \"jsmith\")."));
 			table.Attach(l, 0,3, 0,1,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			l.LineWrap = true;
@@ -250,33 +250,20 @@ namespace Novell.iFolder
 			UserNameEntry.Changed += new EventHandler(UpdateUserInformationPageSensitivity);
 
 			// Row 3
-			l = new Label(Util.GS("Enter your password."));
-			table.Attach(l, 0,3, 2,3,
-				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
-			l.Xalign = 0.0F;
-			
-			// Row 4
 			l = new Label(Util.GS("_Password:"));
-			table.Attach(l, 1,2, 3,4,
+			table.Attach(l, 1,2, 2,3,
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			l.Xalign = 0.0F;
 			PasswordEntry = new Entry();
-			table.Attach(PasswordEntry, 2,3, 3,4,
+			table.Attach(PasswordEntry, 2,3, 2,3,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			l.MnemonicWidget = PasswordEntry;
 			PasswordEntry.Visibility = false;
 			PasswordEntry.Changed += new EventHandler(UpdateUserInformationPageSensitivity);
 
-			// Row 5
-			l = new Label(Util.GS("Allow iFolder to remember your password so you are not asked for it each time you start iFolder."));
-			table.Attach(l, 0,3, 4,5,
-				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
-			l.LineWrap = true;
-			l.Xalign = 0.0F;
-			
-			// Row 6
+			// Row 4
 			RememberPasswordCheckButton = new CheckButton(Util.GS("_Remember my password"));
-			table.Attach(RememberPasswordCheckButton, 1,3, 5,6,
+			table.Attach(RememberPasswordCheckButton, 2,3, 3,4,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			
 			return UserInformationPage;
