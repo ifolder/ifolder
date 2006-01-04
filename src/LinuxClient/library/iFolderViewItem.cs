@@ -189,6 +189,17 @@ namespace Novell.iFolder
 //			{
 //				IconTheme.Changed += new EventHandler(OnGtkIconThemeChanged);
 //			}
+			///
+			/// Set up drag and drop
+			///
+			TargetEntry[] targets =
+				new TargetEntry[]
+				{
+					new TargetEntry ("text/ifolder-id", 0, (uint)iFolderWindow.DragTargetType.iFolderID)
+				};
+			
+			this.DragDataGet += new DragDataGetHandler(HandleDragDataGet);
+			Drag.SourceSet(this, Gdk.ModifierType.Button1Mask, targets, Gdk.DragAction.Move);
 		}
 		
 //		public static void OnGtkIconThemeChanged(object o, EventArgs args)
@@ -757,6 +768,29 @@ Console.WriteLine("iFolderViewItem.Refresh({0}) exiting", holder.iFolder.Name);
 									  text);
 
 				statusLabel.Markup = potentialMarkup;
+			}
+		}
+		
+		///
+		/// Event Handlers
+		///
+		private void HandleDragDataGet(object o, DragDataGetArgs args)
+		{
+Console.WriteLine("iFolderViewItem.HandleDragDataGet()");
+			if (holder == null || holder.iFolder == null) return;
+
+			string ifolderID = this.holder.iFolder.ID;
+			if (ifolderID == null) return;
+			
+Console.WriteLine("\t{0}", args.Info);
+			switch (args.Info)
+			{
+				case (uint) iFolderWindow.DragTargetType.iFolderID:
+					Byte[] data = System.Text.Encoding.UTF8.GetBytes(ifolderID);
+					Gdk.Atom[] targets = args.Context.Targets;
+					
+					args.SelectionData.Set(targets[0], 8, data, data.Length);
+					break;
 			}
 		}
 	}

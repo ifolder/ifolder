@@ -141,10 +141,11 @@ namespace Novell.iFolder
 		private Hashtable			serverGroupFilters;
 
         // Drag and Drop
-        enum TargetType
+        public enum DragTargetType
         {
         	UriList,
-        	RootWindow
+        	RootWindow,
+        	iFolderID
         };
 
 		/// <summary>
@@ -931,8 +932,9 @@ namespace Novell.iFolder
 			TargetEntry[] targets =
 				new TargetEntry[]
 				{
-	                new TargetEntry ("text/uri-list", 0, (uint) TargetType.UriList),
-	                new TargetEntry ("application/x-root-window-drop", 0, (uint) TargetType.RootWindow)
+	                new TargetEntry ("text/uri-list", 0, (uint) DragTargetType.UriList),
+	                new TargetEntry ("application/x-root-window-drop", 0, (uint) DragTargetType.RootWindow),
+	                new TargetEntry ("text/ifolder-id", 0, (uint) DragTargetType.iFolderID)
 				};
 
 			Drag.DestSet(localGroup,
@@ -980,8 +982,8 @@ namespace Novell.iFolder
 			TargetEntry[] targets =
 				new TargetEntry[]
 				{
-	                new TargetEntry ("text/uri-list", 0, (uint) TargetType.UriList),
-	                new TargetEntry ("application/x-root-window-drop", 0, (uint) TargetType.RootWindow)
+	                new TargetEntry ("text/uri-list", 0, (uint) DragTargetType.UriList),
+	                new TargetEntry ("application/x-root-window-drop", 0, (uint) DragTargetType.RootWindow)
 				};
 
 			Drag.DestSet(iFoldersIconView,
@@ -1383,12 +1385,19 @@ Console.WriteLine("iFolderWindow.OnIconViewDragDrop()");
 		
 		private void OnIconViewDragDataReceived(object o, DragDataReceivedArgs args)
 		{
-			Console.WriteLine("OnIconViewDragDataReceived: {0}", (TargetType)args.Info);
+			Console.WriteLine("OnIconViewDragDataReceived: {0}", (DragTargetType)args.Info);
 			bool bFolderCreated = false;
 			
 			switch (args.Info)
 			{
-				case (uint) TargetType.UriList:
+				case (uint) DragTargetType.iFolderID:
+					string ifolderID =
+						System.Text.Encoding.UTF8.GetString(args.SelectionData.Data);
+					iFolderHolder holder = ifdata.GetAvailableiFolder(ifolderID);
+					if (holder != null)
+						DownloadiFolder(holder);
+					break;
+				case (uint) DragTargetType.UriList:
 //					DomainInformation defaultDomain = domainController.GetDefaultDomain();
 //					if (defaultDomain == null) return;
 	
