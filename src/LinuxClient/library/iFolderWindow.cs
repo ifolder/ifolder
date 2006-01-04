@@ -1518,7 +1518,10 @@ Console.WriteLine("iFolderWindow.OnIconViewDragDrop()");
 			if (domainController.GetDomains().Length == 0)
 				WindowNotebook.CurrentPage = 0;
 			else
+			{
 				WindowNotebook.CurrentPage = 1;
+				ShowAvailableiFolders();	// FIXME: Make this an automatic config setting that is remembered (i.e., if a user hides this and restarts iFolder, it is not shown)
+			}
 			
 			OniFolderIconViewSelectionChanged(null, EventArgs.Empty);
 		}
@@ -1650,8 +1653,11 @@ Console.WriteLine("iFolderWindow.OnIconViewDragDrop()");
 
 			if (domainController.GetDomains().Length == 0)
 				WindowNotebook.CurrentPage = 0;
-			else
+			else if (WindowNotebook.CurrentPage != 1)
+			{
 				WindowNotebook.CurrentPage = 1;
+				ShowAvailableiFolders();
+			}
 			
 			AddServerGroup(args.DomainID);
 			
