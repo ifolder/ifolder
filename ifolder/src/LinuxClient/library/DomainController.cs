@@ -626,16 +626,19 @@ Console.WriteLine("DomainController.GetDomain(\"{0}\")", domainID);
 		
 		public void CheckForNewiFolders()
 		{
-			// Update the POBox for every domain so that the user can get
-			// notification of new iFolder subscriptions.
-			foreach(DomainInformation domain in keyedDomains.Values)
+			lock(typeof(DomainController))
 			{
-				try
+				// Update the POBox for every domain so that the user can get
+				// notification of new iFolder subscriptions.
+				foreach(DomainInformation domain in keyedDomains.Values)
 				{
-					ifws.SynciFolderNow(domain.POBoxID);
-				}
-				catch
-				{
+					try
+					{
+						ifws.SynciFolderNow(domain.POBoxID);
+					}
+					catch
+					{
+					}
 				}
 			}
 		}
