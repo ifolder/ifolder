@@ -217,7 +217,7 @@ namespace Novell.iFolder
 			if (icon.Width <= emblem.Width || icon.Height <= emblem.Height) return null;
 
 			Gdk.Pixbuf dest = new Gdk.Pixbuf(icon.Colorspace, true, icon.BitsPerSample, icon.Width, icon.Height);
-			dest.Fill(0xffffffff);	// transparent black
+			dest.Fill(0x00000000);	// transparent
 
 			try			
 			{
@@ -230,19 +230,19 @@ namespace Novell.iFolder
 								0,
 								1.0,
 								1.0,
-								Gdk.InterpType.Hyper,
-								0xff);
+								Gdk.InterpType.Bilinear,
+								255);
 				emblem.Composite(dest,
-								0,
-								0,
-								dest.Width,
-								dest.Height,
+								icon.Width - emblem.Width - 1,
+								icon.Height - emblem.Height - 1,
+								emblem.Width,
+								emblem.Height,
 								icon.Width - emblem.Width - 1,
 								icon.Height - emblem.Height - 1,
 								1.0,
 								1.0,
-								Gdk.InterpType.Hyper,
-								0xff);
+								Gdk.InterpType.Bilinear,
+								255);
 			}
 			catch(Exception e)
 			{
@@ -365,6 +365,16 @@ Console.WriteLine("IconFactory.LookupDefault(\"gtk-directory\") returned null");
 					SharedAvailableFolder =
 						new Gdk.Pixbuf(
 							Util.ImagesPath("shared-available-folder64.png"));
+				Gdk.Pixbuf emblem =
+					new Gdk.Pixbuf(Util.ImagesPath("emblem-shared.png"));
+				if (emblem == null || SharedAvailableFolder == null)
+					Console.WriteLine("     =========== HUH?");
+				else
+				{
+					Gdk.Pixbuf tmpPixbuf = CreateEmblemedPixbuf(SharedAvailableFolder, emblem);
+					if (tmpPixbuf != null)
+						SharedAvailableFolder = tmpPixbuf;
+				}
 			}
 
 			if (SharedAvailableFolderSpotlight == null)
@@ -375,6 +385,16 @@ Console.WriteLine("IconFactory.LookupDefault(\"gtk-directory\") returned null");
 					SharedAvailableFolderSpotlight =
 						new Gdk.Pixbuf(
 							Util.ImagesPath("shared-available-folder-spotlight64.png"));
+				Gdk.Pixbuf emblem =
+					new Gdk.Pixbuf(Util.ImagesPath("emblem-shared.png"));
+				if (emblem == null || SharedAvailableFolderSpotlight == null)
+					Console.WriteLine("     =========== HUH?");
+				else
+				{
+					Gdk.Pixbuf tmpPixbuf = CreateEmblemedPixbuf(SharedAvailableFolderSpotlight, emblem);
+					if (tmpPixbuf != null)
+						SharedAvailableFolderSpotlight = tmpPixbuf;
+				}
 			}
 
 			if (ConflictFolder == null)
