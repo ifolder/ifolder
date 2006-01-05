@@ -33,8 +33,8 @@ namespace Novell.iFolder
 	{
 		private VBox						contentVBox;
 
-		private string						name;
-		private TreeModelFilter				model;
+		private string					name;
+		private TreeModelFilter			model;
 
 		private Hashtable					items;
 
@@ -44,21 +44,23 @@ namespace Novell.iFolder
 		private iFolderViewGroupSelection	selection;
 
 		// Resize Table Functionality
-		private static uint					resizeTimeout = 20;
+		private static uint				resizeTimeout = 20;
 		private uint						resizeTableTimeoutID;
 		
 		// Rebuild Table Functionality (add/remove items without resizing)
-		private static uint					rebuildTimeout = 20;
+		private static uint				rebuildTimeout = 20;
 		private uint						rebuildTableTimeoutID;
 		
-		private static int					ItemMaxWidth = 300;
+		private static int				ItemMaxWidth = 300;
 		
-		private int							currentWidth;
+		private int						currentWidth;
 		
 		private bool						bFirstTableBuild;
 		
 		private bool						bVisibleWhenEmpty;
 		private Widget						emptyWidget;
+		private Widget						emptySearchWidget;
+		private Entry						searchEntry;
 
 		// FIXME: Remove this thread-checking debug code
 		// The purpose of this code is to make sure that we're not attempting to
@@ -119,6 +121,17 @@ namespace Novell.iFolder
 			}
 		}
 		
+		public bool IsEmpty
+		{
+			get
+			{
+				bool bIsCurrentlyEmpty =
+					model.IterNChildren() > 0 ? false : true;
+				
+				return bIsCurrentlyEmpty;
+			}
+		}
+		
 		public Widget EmptyWidget
 		{
 			get
@@ -128,17 +141,30 @@ namespace Novell.iFolder
 			}
 			set
 			{
-				iFolderViewGroup.CheckThread();
-				bool bIsCurrentlyEmpty = model.IterNChildren() > 0 ?
-											false :
-											true;
-				
-				if (bIsCurrentlyEmpty)
-				{
-					// FIXME: Implement iFolderViewGroup.EmptyWidget
-				}
+//				iFolderViewGroup.CheckThread();
+//				if (this.IsEmpty)
+//				{
+//					// FIXME: Implement iFolderViewGroup.EmptyWidget
+//				}
 				
 				emptyWidget = value;
+			}
+		}
+		
+		public Widget EmptySearchWidget
+		{
+			get
+			{
+				return emptySearchWidget;
+			}
+			set
+			{
+//				if (this.IsEmpty)
+//				{
+//					// FIXME: Implement iFolderViewGroup.EmptySearchWidget
+//				}
+				
+				emptySearchWidget = value;
 			}
 		}
 		
