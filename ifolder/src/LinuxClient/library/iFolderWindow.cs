@@ -1699,6 +1699,7 @@ Console.WriteLine("\tremoving the group from the serverGroupFilters Hashtable");
 				serverGroupFilters.Remove(args.DomainID);
 			}
 
+			iFoldersIconView.UnselectAll();
 			RefilterServerGroups();
 		}
 
@@ -1779,6 +1780,8 @@ Console.WriteLine("\tremoving the group from the serverGroupFilters Hashtable");
 													   holder.iFolder.DomainID,
 													   newPath);
 
+						iFoldersIconView.UnselectAll();
+
                         rc = 0;
 
                         // Save off the path so that the next time the user
@@ -1812,6 +1815,7 @@ Console.WriteLine("\tremoving the group from the serverGroupFilters Hashtable");
 				try
 				{
 					ifdata.DeleteiFolder(holder.iFolder.ID);
+					iFoldersIconView.UnselectAll();
 				}
 				catch(Exception e)
 				{
@@ -1843,6 +1847,7 @@ Console.WriteLine("\tremoving the group from the serverGroupFilters Hashtable");
 				try
 				{
 					ifdata.DeleteiFolder(holder.iFolder.ID);
+					iFoldersIconView.UnselectAll();
 				}
 				catch(Exception e)
 				{
@@ -2238,6 +2243,7 @@ Console.WriteLine("iFolderWindow.AddServerGroup(DomainID: {0})", domainID);
 					try
 					{
 						ifdata.RevertiFolder(holder.iFolder.ID);
+						iFoldersIconView.UnselectAll();
 					}
 					catch(Exception e)
 					{
