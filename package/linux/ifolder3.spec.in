@@ -28,7 +28,7 @@ Summary      : iFolder 3
 Name         : @PACKAGE@
 Version      : @VERSION@
 Release      : 1
-Copyright    : GPL
+License      : GPL
 Group        : Applications/Productivity
 Source       : %{name}-%{version}.tar.gz
 URL          : http://forge.novell.com/modules/xfmod/project/?ifolder
