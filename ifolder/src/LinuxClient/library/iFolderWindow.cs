@@ -1678,9 +1678,9 @@ Console.WriteLine("iFolderWindow.OnIconViewDragDrop()");
 Console.WriteLine("iFolderWindow.DomainDeletedEvent()");
 //			RefreshiFolders(true);
 			
-			if (domainController.GetDomains().Length == 0)
-				WindowNotebook.CurrentPage = 0;
-			else
+//			if (domainController.GetDomains().Length == 0)
+//				WindowNotebook.CurrentPage = 0;
+//			else
 				WindowNotebook.CurrentPage = 1;
 			
 			if (serverGroups.ContainsKey(args.DomainID))
