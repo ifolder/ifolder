@@ -721,6 +721,7 @@ namespace Novell.iFolder
 		private void OnFinishClicked(object o, Gnome.FinishClickedArgs args)
 		{
 			CloseDialog();
+			Util.ShowiFolderWindow();
 		}
 
 		void KeyPressHandler(object o, KeyPressEventArgs args)

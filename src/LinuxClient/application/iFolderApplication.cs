@@ -805,16 +805,34 @@ Console.WriteLine("GuaranteeShutdown(): Calling System.Environment.Exit(1) now")
 
 		private bool ShowiFolderWindows()
 		{
-			if (!Util.LoadiFolderWindows())
+			DomainInformation[] domains = domainController.GetDomains();
+			if (domains.Length < 1)
 			{
-				DomainInformation[] domains = domainController.GetDomains();
-				if (domains.Length < 1)
-					Util.ShowiFolderWindow();
+				// Launch the Add Account Wizard
+				ShowAddAccountWizard();
 			}
+			else
+				Util.LoadiFolderWindows();
 
 			return false;	// Prevent this from being called over and over by GLib.Timeout
 		}
-
+		
+		private void ShowAddAccountWizard()
+		{
+			AddAccountWizard aaw = new AddAccountWizard(simws);
+			if (!Util.RegisterModalWindow(aaw))
+			{
+				try
+				{
+					Util.CurrentModalWindow.Present();
+				}
+				catch{}
+				aaw.Destroy();
+				return;
+			}
+			aaw.ShowAll();
+		}
+		
 		private void OnNotifyWindowLinkClicked(object sender, LinkClickedEventArgs args)
 		{
 			if (args.LinkID != null)
@@ -956,6 +974,9 @@ Console.WriteLine("Modal present");
 			MenuItem iFolders_item =
 					new MenuItem (Util.GS("iFolders"));
 			trayMenu.Append (iFolders_item);
+			DomainInformation[] domains = domainController.GetDomains();
+			if (domains.Length < 1)
+				iFolders_item.Sensitive = false;
 			iFolders_item.Activated +=
 					new EventHandler(showiFolderWindow);
 
@@ -970,6 +991,8 @@ Console.WriteLine("Modal present");
 			MenuItem logview_item =
 					new MenuItem (Util.GS("Synchronization Log"));
 			trayMenu.Append (logview_item);
+			if (domains.Length < 1)
+				logview_item.Sensitive = false;
 			logview_item.Activated +=
 					new EventHandler(showLogWindow);
 
