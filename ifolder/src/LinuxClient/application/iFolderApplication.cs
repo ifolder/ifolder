@@ -1186,6 +1186,12 @@ Console.WriteLine(Environment.StackTrace);
 		
 		private static void RegisterWithDBus(iFolderApplication theApp)
 		{
+			if (theApp == null)
+			{
+				Console.WriteLine("RegisterWithDBus() called with a null application.");
+				return;
+			}
+
 			try
 			{
 				connection = Bus.GetSessionBus();
