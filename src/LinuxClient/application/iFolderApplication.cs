@@ -1189,14 +1189,25 @@ Console.WriteLine(Environment.StackTrace);
 			try
 			{
 				connection = Bus.GetSessionBus();
+				if (connection == null)
+				{
+					Console.WriteLine("Could not get a connection to the D-Bus session");
+					return;
+				}
+				
 				service = new Service(connection, "com.novell.iFolder");
 				
-				if (service == null) return;
+				if (service == null)
+				{
+					Console.WriteLine("Could not create a D-Bus service instance.");
+					return;
+				}
 				
 				service.RegisterObject(application, "/com/novell/iFolder/Application");
 			}
 			catch(Exception e)
 			{
+				Console.WriteLine(e);
 				Console.WriteLine("Could not connect to D-Bus.  D-Bus support will be disabled for this instance: " + e.Message);
 			}
 		}
