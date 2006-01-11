@@ -797,7 +797,69 @@ get_all_ifolder_paths ()
  * Nautilus Info Provider Implementation
  */
 static NautilusOperationResult
-ifolder_nautilus_update_file_info (NautilusInfoProvider 	*provider,
+ifolder_nautilus_update_file_info (NautilusInfoProvider		*provider,
+								   NautilusFileInfo			*file,
+								   GClosure					*update_complete,
+								   NautilusOperationHandler	**handle)
+{
+	gchar *ifolder_id;
+	gchar *file_uri;
+	gchar *file_path;
+	DEBUG_IFOLDER (("ifolder_nautilus_update_file_info called\n"));
+	
+	/* Don't do anything if the specified file is not a directory. */
+	if (!nautilus_file_info_is_directory (file))
+		return NAUTILUS_OPERATION_COMPLETE;
+	
+	if (is_ifolder_running ()) {
+		file_path = get_file_path (file);
+		if (file_path) {
+			ifolder_id = get_ifolder_id_by_local_path (file_path);
+			g_free (file_path);
+			if (ifolder_id) {
+				nautilus_file_info_add_emblem (file, "ifolder");
+
+				file_uri = nautilus_file_info_get_uri (file);
+				if (file_uri) {
+					/**
+					 * Store the file_uri into a hashtable with the key being
+					 * the iFolder Simias Node ID.  This is needed because when
+					 * we get a SimiasNodeDeleted event, the iFolder in Simias
+					 * no longer has any path information.  This hash table is
+					 * the only way we'll be able to cause Nautilus to
+					 * invalidate our information so that the iFolder emblem
+					 * will be removed.
+					 */
+					DEBUG_IFOLDER (("Adding iFolder to Hashtable: %s = %s\n", ifolder_id, file_uri));
+					
+					/**
+					 * g_hash_table_insert () does not cleanup memory if a hash
+					 * table entry is replaced by an insertion, so to make sure
+					 * that we don't lose memory, call remove before the insert.
+					 */
+					g_hash_table_remove (seen_ifolders_ht, ifolder_id);
+					
+					/**
+					 * The memory for ifolder_id and file_uri are freed when the
+					 * hashtable item is removed from the hashtable.
+					 */
+					g_hash_table_insert (seen_ifolders_ht,
+										 ifolder_id,	/* key */
+										 file_uri);		/* value */
+				} else {
+					free (ifolder_id);
+				}
+			}
+		}
+	} else {
+		DEBUG_IFOLDER (("*** iFolder is NOT running\n"));
+	}
+
+	return NAUTILUS_OPERATION_COMPLETE;
+}
+
+static NautilusOperationResult
+ifolder_nautilus_update_file_info_async (NautilusInfoProvider 	*provider,
 								   NautilusFileInfo			*file,
 								   GClosure					*update_complete,
 								   NautilusOperationHandle	**handle)
