@@ -28,7 +28,7 @@ endif
 all: iFolderClient.exe ifolder ifolder.desktop
 
 iFolderClient.exe: $(iFolderClient_CSFILES) $(iFolderClient_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(SIMIAS_CLIENT_LIBS) $(iFolderClient_FLAGS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(iFolderClient_LIBS:%=/r:%) $(iFolderClient_LIBPATH:%=/lib:%) $(iFolderClient_RESOURCES:%=$(ICON_FLAG)%) $(iFolderClient_CSFILES_CSC) $(DOC_FILE_CMD)
+	$(CSC) /out:$@ $(CSCFLAGS) $(SIMIAS_CLIENT_LIBS) $(iFolderClient_FLAGS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(DBUS_SHARP_LIBS) $(iFolderClient_LIBS:%=/r:%) $(iFolderClient_LIBPATH:%=/lib:%) $(iFolderClient_RESOURCES:%=$(ICON_FLAG)%) $(iFolderClient_CSFILES_CSC) $(DOC_FILE_CMD)
 
 install-exec-local: all
 	$(mkinstalldirs) $(DESTDIR)$(bindir) $(DESTDIR)$(datadir)/applications
