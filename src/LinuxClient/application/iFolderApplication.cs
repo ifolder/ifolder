@@ -34,6 +34,7 @@ using Gnome;
 using GtkSharp;
 using GLib;
 using Egg;
+using DBus;
 using Simias.Client.Event;
 using Simias.Client;
 using Simias.Client.Authentication;
@@ -51,7 +52,7 @@ namespace Novell.iFolder
 		Stopped			= 0x0004
 	}
 
-
+	[Interface("com.novell.iFolder")]
 	public class iFolderApplication : Gnome.Program
 	{
 		private static iFolderApplication	application = null;
@@ -96,6 +97,12 @@ namespace Novell.iFolder
 		private NotifyWindow		startingUpNotifyWindow = null;
 		private NotifyWindow		shuttingDownNotifyWindow = null;
 		
+		///
+		/// D-Bus variables
+		///
+        private static Service service;
+        private static Connection connection;
+		
 		public SimiasEventBroker	EventBroker
 		{
 			get
@@ -115,6 +122,8 @@ namespace Novell.iFolder
 		public iFolderApplication(string[] args)
 			: base("ifolder", "1.0", Modules.UI, args)
 		{
+Console.WriteLine("iFolderApplication Hash Code: " + this.GetHashCode());
+
 			Util.InitCatalog();
 			
 			Util.SetQuitiFolderDelegate(new QuitiFolderDelegate(QuitiFolder));
@@ -805,14 +814,22 @@ Console.WriteLine("GuaranteeShutdown(): Calling System.Environment.Exit(1) now")
 
 		private bool ShowiFolderWindows()
 		{
-			DomainInformation[] domains = domainController.GetDomains();
-			if (domains.Length < 1)
+			if (domainController == null)
+				domainController = DomainController.GetDomainController();
+			
+			if (domainController != null)
 			{
-				// Launch the Add Account Wizard
-				ShowAddAccountWizard();
+				DomainInformation[] domains = domainController.GetDomains();
+				if (domains.Length < 1)
+				{
+					// Launch the Add Account Wizard
+					ShowAddAccountWizard();
+				}
+				else
+					Util.LoadiFolderWindows();
 			}
 			else
-				Util.LoadiFolderWindows();
+				Console.WriteLine("DomainController instance is null");
 
 			return false;	// Prevent this from being called over and over by GLib.Timeout
 		}
@@ -944,15 +961,27 @@ Console.WriteLine("Modal present");
 			switch(args.Event.Button)
 			{
 				case 1: // first mouse button
-					// When the user clicks on the iFolder icon, show the
-					// iFolder window if it's not already showing and hide
-					// it if it's not showing.  This behavior is used by
-					// Beagle and Gaim.
-					iFolderWindow ifwin = Util.GetiFolderWindow();
-					if (ifwin == null || !ifwin.IsActive)
-						Util.ShowiFolderWindow();
+					// If there are no accounts set up, launch the account
+					// wizard.
+					DomainInformation[] domains = domainController.GetDomains();
+					if (domains.Length < 1)
+					{
+						// Launch the Add Account Wizard
+						ShowAddAccountWizard();
+					}
 					else
-						ifwin.Hide();
+					{
+						// When the user clicks on the iFolder icon, show the
+						// iFolder window if it's not already showing and hide
+						// it if it's not showing.  This behavior is used by
+						// Beagle and Gaim.
+						iFolderWindow ifwin = Util.GetiFolderWindow();
+						if (ifwin == null || !ifwin.IsActive)
+							Util.ShowiFolderWindow();
+						else
+							ifwin.Hide();
+					}
+					
 					break;
 				case 2: // second mouse button
 					break;
@@ -1060,6 +1089,15 @@ Console.WriteLine("Modal present");
 			trayMenu.Popup(null, null, null, IntPtr.Zero, 3,
 					Gtk.Global.CurrentEventTime);
 		}
+		
+		[Method]
+		public virtual void ShowWindow()
+		{
+Console.WriteLine("iFolderApplication.ShowWindow()");
+Console.WriteLine("Hash Code: " + this.GetHashCode());
+Console.WriteLine(Environment.StackTrace);
+			ShowiFolderWindows();
+		}
 
 
 		public void QuitiFolder()
@@ -1135,22 +1173,98 @@ Console.WriteLine("Modal present");
 		{
 			Util.ShowLogWindow(simiasManager);
 		}
+		
+		public static iFolderApplication FindInstance()
+		{
+			Connection connection = Bus.GetSessionBus();
+			Service service = Service.Get(connection, "com.novell.iFolder");
+			return service.GetObject(
+						typeof(iFolderApplication),
+						"/com/novell/iFolder/Application")
+							as iFolderApplication;
+		}
+		
+		private static void RegisterWithDBus()
+		{
+			try
+			{
+				connection = Bus.GetSessionBus();
+				service = new Service(connection, "com.novell.iFolder");
+				
+				if (service == null) return;
+				
+				service.RegisterObject(application, "/com/novell/iFolder/Application");
+			}
+			catch(Exception e)
+			{
+				Console.WriteLine("Could not connect to D-Bus.  D-Bus support will be disabled for this instance: " + e.Message);
+			}
+		}
+		
+		private static void UnregisterWithDBus()
+		{
+			if (application != null && service != null)
+				service.UnregisterObject(application);
+		}
 
 		public static void Main (string[] args)
 		{
-			Process[] processes =
-				System.Diagnostics.Process.GetProcessesByName("iFolderClient");
+//			Process[] processes =
+//				System.Diagnostics.Process.GetProcessesByName("iFolderClient");
 
-			if(processes.Length > 1)
+//			if(processes.Length > 1)
+//			{
+				// Send a message to the first instance to show its main window
+//				Connection connection = Bus.GetSessionBus();
+//				Service service = Service.Get(connection, "com.novell.iFolder");
+//				iFolderApplication initialApp = service.GetObject(typeof(iFolderApplication), "/opt/novell/iFolder/Application") as iFolderApplication
+//				Console.WriteLine("iFolder is already running!");
+//				return;
+//			}
+
+			///
+			/// Attempt to use D-Bus to prevent the user from running multiple
+			/// copies of iFolder.  Instead, just present the main iFolder
+			/// window to them.
+			///
+			try
 			{
-				Console.WriteLine("iFolder is already running!");
-				return;
+				iFolderApplication existingApp = iFolderApplication.FindInstance();
+				if (existingApp != null)
+				{
+					try
+					{
+						existingApp.ShowWindow();
+					}
+					catch(DBus.DBusException)
+					{
+						return;
+					}
+					return;
+				}
+			}
+			catch(Exception e)
+			{
+			Console.WriteLine(e);
+				Process[] processes =
+					System.Diagnostics.Process.GetProcessesByName("iFolderClient");
+				if (processes.Length > 1)
+				{
+					Console.WriteLine("iFolder is already running.  If you were trying " +
+									  "to control the already running instance of iFolder, D-Bus must be enabled.  " +
+									  "iFolder could not connect to your D-Bus Session Bus.");
+//					return;
+				}
 			}
 
 			try
 			{
 				application = new iFolderApplication(args);
+				RegisterWithDBus();
+
 				application.Run();
+
+				UnregisterWithDBus();
 			}
 			catch(Exception bigException)
 			{
@@ -1168,6 +1282,7 @@ Console.Write("iFolderApplication: Inside catch and calling SimiasManager.Stop()
 				application.SimiasManager.Stop();
 Console.WriteLine("\tdone calling SimiasManager.Stop()");
 
+				UnregisterWithDBus();
 				Application.Quit();
 			}
 		}
