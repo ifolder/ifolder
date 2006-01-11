@@ -1245,7 +1245,7 @@ Console.WriteLine(Environment.StackTrace);
 			}
 			catch(Exception e)
 			{
-			Console.WriteLine(e);
+				Console.WriteLine(e);
 				Process[] processes =
 					System.Diagnostics.Process.GetProcessesByName("iFolderClient");
 				if (processes.Length > 1)
@@ -1253,7 +1253,7 @@ Console.WriteLine(Environment.StackTrace);
 					Console.WriteLine("iFolder is already running.  If you were trying " +
 									  "to control the already running instance of iFolder, D-Bus must be enabled.  " +
 									  "iFolder could not connect to your D-Bus Session Bus.");
-//					return;
+					return;
 				}
 			}
 
