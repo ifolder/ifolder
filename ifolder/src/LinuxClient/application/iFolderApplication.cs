@@ -1184,7 +1184,7 @@ Console.WriteLine(Environment.StackTrace);
 							as iFolderApplication;
 		}
 		
-		private static void RegisterWithDBus()
+		private static void RegisterWithDBus(iFolderApplication theApp)
 		{
 			try
 			{
@@ -1203,7 +1203,7 @@ Console.WriteLine(Environment.StackTrace);
 					return;
 				}
 				
-				service.RegisterObject(application, "/com/novell/iFolder/Application");
+				service.RegisterObject(theApp, "/com/novell/iFolder/Application");
 			}
 			catch(Exception e)
 			{
@@ -1271,7 +1271,7 @@ Console.WriteLine(Environment.StackTrace);
 			try
 			{
 				application = new iFolderApplication(args);
-				RegisterWithDBus();
+				RegisterWithDBus(application);
 
 				application.Run();
 
