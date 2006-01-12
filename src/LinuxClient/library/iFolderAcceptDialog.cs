@@ -59,64 +59,7 @@ namespace Novell.iFolder
         	if (this.initialPath != null && this.initialPath.Length > 0)
         		this.SetCurrentFolder(this.initialPath);
         		
-//			DisableNameEntry();
-
-//			this.Realized += new EventHandler(OnWidgetRealized);
-
 			this.AddButton(Util.GS("_Download"), ResponseType.Ok);
         }
-        
-//		private void OnWidgetRealized(object o, EventArgs args)
-//		{
-//			if (nameEntry != null)
-//			{
-//				nameEntry.SelectRegion(-1, -1);
-//				nameEntry.Position = 0;
-//			}
-//		}
-		
-//		private void DisableNameEntry()
-//		{
-//			nameEntry = GetNameEntry();
-//			if (nameEntry != null)
-//			{
-				// FIXME: This is not clearing the selection.  Figure out what would.
-//				nameEntry.SelectRegion(-1, -1);
-//				nameEntry.Position = 0;
-//				nameEntry.Editable = false;
-//				nameEntry.Sensitive = false;
-//			}
-//		}
-		
-		// Search for and return the Gtk.Entry that contains the name of
-		// the iFolder.
-//		private Entry GetNameEntry()
-//		{
-//			return GetNameEntryRecursive(this);
-//		}
-		
-//		private Entry GetNameEntryRecursive(Gtk.Container container)
-//		{
-//			Entry entry = null;
-
-//			foreach(Widget child in container.AllChildren)
-//			{
-//				if (child is Container)
-//					entry = GetNameEntryRecursive((Gtk.Container)child);
-//				else if (child is Entry)
-//				{
-//					entry = (Entry)child;
-//					string text = entry.Text;
-//					if (text != null && text == ifolder.Name)
-//						return entry;	// We've got it!
-//					else
-//						entry = null;
-//				}
-				
-//				if (entry != null) break;
-//			}
-			
-//			return entry;
-//		}
 	}
 }
