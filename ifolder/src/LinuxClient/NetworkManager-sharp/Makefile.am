@@ -6,7 +6,7 @@ NM_CSFILES_CSC := $(subst /,$(SEP),$(NM_CSFILES))
 NM_INCLUDES =
 NM_RESOURCES =
 NM_FLAGS = $(CSC_LIBFLAG)
-NM_LIBS = System.dll System.Drawing.dll System.Data.dll Novell.iFolder.dll Mono.Posix.dll
+NM_LIBS = System.dll System.Drawing.dll System.Data.dll Mono.Posix.dll
 NM_LIBPATH = $(srcdir)/../../TrayIcon $(srcdir)/../../iFolder $(srcdir)/../library
 
 if MAKE_DOC_FILE
@@ -14,6 +14,8 @@ DOC_FILE = $(basename $@).doc.xml
 DOC_FILE_CMD = /doc:$(DOC_FILE)
 DOC_FILE_CLEAN = *.doc.xml
 endif
+
+EXTRA_DIST = $(NM_CSFILES)
 
 all: NetworkManager-sharp.dll
 
