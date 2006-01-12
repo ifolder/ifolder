@@ -813,11 +813,14 @@ Console.WriteLine("The main iFolder window was NOT open when shutting down");
 		}
 
 		/// <summary>
-		/// Returns the user's home directory
+		/// Returns the path to the user's Desktop if it exists or the user's
+		/// home directory if the Desktop directory is not found.
 		/// </summary>
 		private static string GetDefaultUserPath()
 		{
-			string path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+			string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+			if (path == null)
+				path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 					
 			return path;
 		}
