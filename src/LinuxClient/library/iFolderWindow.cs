@@ -937,19 +937,19 @@ namespace Novell.iFolder
 	                new TargetEntry ("text/ifolder-id", 0, (uint) DragTargetType.iFolderID)
 				};
 
-			Drag.DestSet(localGroup,
+			Drag.DestSet(iFoldersIconView,
 						 //Gdk.ModifierType.Button1Mask | Gdk.ModifierType.Button3Mask,
 						 DestDefaults.All,
 						 targets,
 						 Gdk.DragAction.Copy | Gdk.DragAction.Move);
 
-			localGroup.DragMotion +=
+			iFoldersIconView.DragMotion +=
 				new DragMotionHandler(OnIconViewDragMotion);
 				
-			localGroup.DragDrop +=
+			iFoldersIconView.DragDrop +=
 				new DragDropHandler(OnIconViewDragDrop);
 			
-			localGroup.DragDataReceived +=
+			iFoldersIconView.DragDataReceived +=
 				new DragDataReceivedHandler(OnIconViewDragDataReceived);
 			
 
