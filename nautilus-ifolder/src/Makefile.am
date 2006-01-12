@@ -1,6 +1,6 @@
 INSTALL_EXTENSION_PATH = $(gnome_root)/lib/nautilus/extensions-1.0
 INSTALL_EMBLEM_PATH = $(DESTDIR)$(gnome_root)/share/icons/gnome/48x48/emblems
-INSTALL_ICONS_PATH = $(pixmaps_dir)
+INSTALL_ICONS_PATH = $(DESTDIR)$(pixmaps_dir)
 INSTALL_EXE_PATH = $(DESTDIR)$(libdir)
 
 INCLUDES =						\
