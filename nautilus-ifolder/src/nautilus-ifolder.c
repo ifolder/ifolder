@@ -800,7 +800,7 @@ static NautilusOperationResult
 ifolder_nautilus_update_file_info (NautilusInfoProvider		*provider,
 								   NautilusFileInfo			*file,
 								   GClosure					*update_complete,
-								   NautilusOperationHandler	**handle)
+								   NautilusOperationHandle	**handle)
 {
 	gchar *ifolder_id;
 	gchar *file_uri;
