@@ -1,4 +1,4 @@
-SUBDIRS = library application bonjour-ui po
+SUBDIRS = NetworkManager-sharp library application bonjour-ui po
 
 DIST_SUBDIRS = $(SUBDIRS)
 
