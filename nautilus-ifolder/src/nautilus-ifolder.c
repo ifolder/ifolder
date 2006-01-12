@@ -1639,7 +1639,7 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 
 	/* Domain drop-down list */
 	domain_label = gtk_label_new(NULL);
-	gtk_label_set_markup_with_mnemonic(GTK_LABEL(domain_label), _("<b>_Server:</b>"));
+	gtk_label_set_markup_with_mnemonic(GTK_LABEL(domain_label), _("<b>_Account:</b>"));
 	gtk_misc_set_alignment(GTK_MISC(domain_label), 0, 0.5);
 	gtk_box_pack_start(GTK_BOX(vbox), domain_label, FALSE, FALSE, 0);
 	
@@ -1998,7 +1998,7 @@ ifolder_nautilus_get_file_items (NautilusMenuProvider *provider,
 
 		/* Menu item: Convert to an iFolder */
 		item = nautilus_menu_item_new ("NautilusiFolder::create_ifolder",
-					_("Convert to an iFolder"),
+					_("Convert to an iFolder..."),
 					_("Convert the selected folder to an iFolder"),
 					IFOLDER_IMAGE_IFOLDER);
 //					"ifolder-folder");
