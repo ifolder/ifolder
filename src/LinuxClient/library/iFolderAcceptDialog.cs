@@ -46,7 +46,7 @@ namespace Novell.iFolder
 				: base("", "", null, FileChooserAction.SelectFolder, Stock.Cancel, ResponseType.Cancel)
         {
 			this.Title =
-				string.Format(Util.GS("Download \"{0}\"..."), ifolder.Name);
+				string.Format(Util.GS("Download \"{0}\" to..."), ifolder.Name);
         	this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
 
         	this.ifolder = ifolder;
@@ -59,65 +59,64 @@ namespace Novell.iFolder
         	if (this.initialPath != null && this.initialPath.Length > 0)
         		this.SetCurrentFolder(this.initialPath);
         		
-			DisableNameEntry();
+//			DisableNameEntry();
 
-			this.Realized += new EventHandler(OnWidgetRealized);
+//			this.Realized += new EventHandler(OnWidgetRealized);
 
 			this.AddButton(Util.GS("_Download"), ResponseType.Ok);
         }
         
-		private void OnWidgetRealized(object o, EventArgs args)
-		{
-			if (nameEntry != null)
-			{
-				nameEntry.SelectRegion(-1, -1);
-				nameEntry.Position = 0;
-			}
-		}
+//		private void OnWidgetRealized(object o, EventArgs args)
+//		{
+//			if (nameEntry != null)
+//			{
+//				nameEntry.SelectRegion(-1, -1);
+//				nameEntry.Position = 0;
+//			}
+//		}
 		
-		private void DisableNameEntry()
-		{
-			nameEntry = GetNameEntry();
-			if (nameEntry != null)
-			{
+//		private void DisableNameEntry()
+//		{
+//			nameEntry = GetNameEntry();
+//			if (nameEntry != null)
+//			{
 				// FIXME: This is not clearing the selection.  Figure out what would.
-				nameEntry.SelectRegion(-1, -1);
-				nameEntry.Position = 0;
-				nameEntry.Editable = false;
-				nameEntry.Sensitive = false;
-//				nameEntry.HasFrame = false;
-			}
-		}
+//				nameEntry.SelectRegion(-1, -1);
+//				nameEntry.Position = 0;
+//				nameEntry.Editable = false;
+//				nameEntry.Sensitive = false;
+//			}
+//		}
 		
 		// Search for and return the Gtk.Entry that contains the name of
 		// the iFolder.
-		private Entry GetNameEntry()
-		{
-			return GetNameEntryRecursive(this);
-		}
+//		private Entry GetNameEntry()
+//		{
+//			return GetNameEntryRecursive(this);
+//		}
 		
-		private Entry GetNameEntryRecursive(Gtk.Container container)
-		{
-			Entry entry = null;
+//		private Entry GetNameEntryRecursive(Gtk.Container container)
+//		{
+//			Entry entry = null;
 
-			foreach(Widget child in container.AllChildren)
-			{
-				if (child is Container)
-					entry = GetNameEntryRecursive((Gtk.Container)child);
-				else if (child is Entry)
-				{
-					entry = (Entry)child;
-					string text = entry.Text;
-					if (text != null && text == ifolder.Name)
-						return entry;	// We've got it!
-					else
-						entry = null;
-				}
+//			foreach(Widget child in container.AllChildren)
+//			{
+//				if (child is Container)
+//					entry = GetNameEntryRecursive((Gtk.Container)child);
+//				else if (child is Entry)
+//				{
+//					entry = (Entry)child;
+//					string text = entry.Text;
+//					if (text != null && text == ifolder.Name)
+//						return entry;	// We've got it!
+//					else
+//						entry = null;
+//				}
 				
-				if (entry != null) break;
-			}
+//				if (entry != null) break;
+//			}
 			
-			return entry;
-		}
+//			return entry;
+//		}
 	}
 }

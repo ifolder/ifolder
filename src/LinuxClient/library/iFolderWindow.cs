@@ -430,7 +430,7 @@ namespace Novell.iFolder
 			//----------------------------
 			Menu iFolderMenu = new Menu();
 
-			NewMenuItem = new ImageMenuItem (Util.GS("Create a _new iFolder..."));
+			NewMenuItem = new ImageMenuItem (Util.GS("_New iFolder..."));
 			NewMenuItem.Image = new Image(
 					new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png")));
 			iFolderMenu.Append(NewMenuItem);
@@ -440,7 +440,7 @@ namespace Novell.iFolder
 			NewMenuItem.Activated += new EventHandler(AddiFolderHandler);
 
 			DownloadMenuItem =
-				new MenuItem (Util.GS("_Download and synchronize..."));
+				new MenuItem (Util.GS("_Download..."));
 			iFolderMenu.Append(DownloadMenuItem);
 			DownloadMenuItem.Activated += new EventHandler(DownloadAvailableiFolderHandler);
 
@@ -676,7 +676,7 @@ namespace Novell.iFolder
 
 			Label buttonText = new Label(
 				string.Format("<span size=\"large\">{0}</span>",
-							  Util.GS("Create a new iFolder")));
+							  Util.GS("New iFolder...")));
 //							  Util.GS("Upload a folder")));
 			hbox.PackStart(buttonText, false, false, 4);
 			buttonText.UseMarkup = true;
@@ -842,7 +842,7 @@ namespace Novell.iFolder
 
 			buttonText = new Label(
 				string.Format("<span size=\"large\">{0}</span>",
-							  Util.GS("View properties...")));
+							  Util.GS("Properties...")));
 			hbox.PackStart(buttonText, true, true, 4);
 			buttonText.UseMarkup = true;
 			buttonText.UseUnderline = false;
@@ -862,7 +862,7 @@ namespace Novell.iFolder
 
 			buttonText = new Label(
 				string.Format("<span size=\"large\">{0}</span>",
-							  Util.GS("Download and synchronize")));
+							  Util.GS("Download...")));
 			hbox.PackStart(buttonText, true, true, 4);
 			buttonText.UseMarkup = true;
 			buttonText.UseUnderline = false;
@@ -1261,7 +1261,7 @@ namespace Novell.iFolder
 					if (holder.iFolder.IsSubscription)
 					{
 						MenuItem item_download =
-							new MenuItem(Util.GS("Download and synchronize"));
+							new MenuItem(Util.GS("Download..."));
 						menu.Append(item_download);
 						item_download.Activated += new EventHandler(
 								DownloadAvailableiFolderHandler);
