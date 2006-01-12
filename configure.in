@@ -505,6 +505,7 @@ Makefile
 src/Makefile
 src/iFolder/Makefile
 src/LinuxClient/Makefile
+src/LinuxClient/NetworkManager-sharp/Makefile
 src/LinuxClient/library/Makefile
 src/LinuxClient/application/Makefile
 src/LinuxClient/bonjour-ui/Makefile
