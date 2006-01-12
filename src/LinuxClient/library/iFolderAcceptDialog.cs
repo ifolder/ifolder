@@ -43,7 +43,7 @@ namespace Novell.iFolder
 		}
 		
 		public iFolderAcceptDialog(iFolderWeb ifolder, string initialPath)
-				: base("", "", null, FileChooserAction.Save, Stock.Cancel, ResponseType.Cancel)
+				: base("", "", null, FileChooserAction.SelectFolder, Stock.Cancel, ResponseType.Cancel)
         {
 			this.Title =
 				string.Format(Util.GS("Download \"{0}\"..."), ifolder.Name);
