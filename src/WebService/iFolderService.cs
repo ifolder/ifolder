@@ -217,7 +217,7 @@ namespace Novell.iFolder.Web
 			Collection col = SharedCollection.GetCollectionByPath(LocalPath);
 			if(col != null)
 			{
-				if(col.IsType(col, iFolderWeb.iFolderType))
+				if(col.IsType(iFolderWeb.iFolderType))
 					return true;
 			}
 			return false;
@@ -338,7 +338,7 @@ namespace Novell.iFolder.Web
 			{
 				// CRG: Removed the code that checked for a Subscription
 				// USE: GetiFolderInvitation to be safe in multi-domain
-				if(col.IsType(col, iFolderWeb.iFolderType))
+				if(col.IsType(iFolderWeb.iFolderType))
 					ifolder = new iFolderWeb(col);
 				else
 					ifolder = null;
@@ -568,7 +568,7 @@ namespace Novell.iFolder.Web
 				if (sn.Type.Equals(NodeTypes.CollectionType))
 				{
 					Collection col = store.GetCollectionByID(sn.ID);
-					if (col.IsType(col, iFolderWeb.iFolderType))
+					if (col.IsType(iFolderWeb.iFolderType))
 					{
 						list.Add(new iFolderWeb(col));
 					}
@@ -653,7 +653,7 @@ namespace Novell.iFolder.Web
 			foreach(ShallowNode sn in iFolderList)
 			{
 				Collection col = store.GetCollectionByID(sn.ID);
-				if(col.IsType(col, iFolderWeb.iFolderType))
+				if(col.IsType(iFolderWeb.iFolderType))
 					list.Add(new iFolderWeb(col));
 			}
 
@@ -1335,11 +1335,11 @@ namespace Novell.iFolder.Web
 				if(node != null)
 				{
 					Domain domain = store.GetDomain( col.Domain );
-					if (col.IsBaseType(node, NodeTypes.MemberType))
+					if (node.IsBaseType(NodeTypes.MemberType))
 					{
 						ifolderUser = new iFolderUser( domain, new Member( node ) );
 					}
-					else if (col.IsType(node, typeof( Subscription ).Name))
+					else if (node.IsType(typeof( Subscription ).Name))
 					{
 						ifolderUser = new iFolderUser( new Subscription( node ) );
 					}
@@ -1429,24 +1429,36 @@ namespace Novell.iFolder.Web
 			else
 				throw new Exception("Invalid Rights Specified");
 
+#if ( !REMOVE_OLD_INVITATION )
+			if (domain.SupportsNewInvitation)
+			{			
+#endif
+				// Create the new member in the collection.
+				Member collectionMember = new Member(member.Name, member.UserID, newRights);
+				col.Commit(collectionMember);
+				return new iFolderUser(domain, collectionMember);
+#if ( !REMOVE_OLD_INVITATION )
+			}
+			else
+			{
+				// Use the POBox for the domain that this iFolder belongs to.
+				POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
+					domain.ID, 
+					store.GetUserIDFromDomainID(domain.ID));
 
-			// Use the POBox for the domain that this iFolder belongs to.
-			POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
-						domain.ID, 
-						store.GetUserIDFromDomainID(domain.ID));
+				Subscription sub = poBox.CreateSubscription(col,
+					col.GetCurrentMember(),
+					"iFolder");
 
-			Subscription sub = poBox.CreateSubscription(col,
-										col.GetCurrentMember(),
-										"iFolder");
+				sub.SubscriptionRights = newRights;
+				sub.ToName = member.Name;
+				sub.ToIdentity = MemberID;
 
-			sub.SubscriptionRights = newRights;
-			sub.ToName = member.Name;
-			sub.ToIdentity = MemberID;
+				poBox.AddMessage(sub);
 
-			poBox.AddMessage(sub);
-
-			iFolderUser user = new iFolderUser( sub );
-			return user;
+				return new iFolderUser( sub );
+			}
+#endif
 		}
 
 
@@ -1499,24 +1511,35 @@ namespace Novell.iFolder.Web
 			else
 				throw new Exception("Invalid Rights Specified");
 
+#if ( !REMOVE_OLD_INVITATION )
+			if (domain.SupportsNewInvitation)
+			{
+#endif
+				// Create the new member in the collection.
+				Member collectionMember = new Member(member.Name, member.UserID, newRights);
+				col.Commit(collectionMember);
+				return new iFolderUser(domain, collectionMember);
+#if ( !REMOVE_OLD_INVITATION )
+			}
+			else
+			{
+				// Use the POBox for the domain that this iFolder belongs to.
+				POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
+					domain.ID, 
+					store.GetUserIDFromDomainID(domain.ID));
 
-			// Use the POBox for the domain that this iFolder belongs to.
-			POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
-						domain.ID, 
-						store.GetUserIDFromDomainID(domain.ID));
+				Subscription sub = poBox.CreateSubscription(col,
+					col.GetCurrentMember(),
+					"iFolder");
 
-			Subscription sub = poBox.CreateSubscription(col,
-										col.GetCurrentMember(),
-										"iFolder");
+				sub.SubscriptionRights = newRights;
+				sub.ToName = member.Name;
+				sub.ToIdentity = UserID;
 
-			sub.SubscriptionRights = newRights;
-			sub.ToName = member.Name;
-			sub.ToIdentity = UserID;
-
-			poBox.AddMessage(sub);
-
-			iFolderUser user = new iFolderUser( sub );
-			return user;
+				poBox.AddMessage(sub);
+				return new iFolderUser( sub );
+			}
+#endif
 		}
 
 
@@ -1593,19 +1616,26 @@ namespace Novell.iFolder.Web
 			}
 
 			sub.CollectionRoot = Path.GetFullPath(LocalPath);
-			if(sub.SubscriptionState == SubscriptionStates.Ready)
+
+#if ( !REMOVE_OLD_INVITATION )
+			Domain domain = store.GetDomain(DomainID);
+			if(domain == null)
+				throw new Exception("Unable to access the domain");
+
+			if(domain.SupportsNewInvitation || (sub.SubscriptionState == SubscriptionStates.Ready))
 			{
+#endif
 				poBox.Commit(sub);
 				sub.CreateSlave(store);
+#if ( !REMOVE_OLD_INVITATION )
 			}
 			else
 			{
 				sub.Accept(store, SubscriptionDispositions.Accepted);
 				poBox.Commit(sub);
 			}
-
-			iFolderWeb ifolder = new iFolderWeb(sub);
-			return ifolder;
+#endif
+			return new iFolderWeb(sub);
 		}
 
 
@@ -1624,7 +1654,9 @@ namespace Novell.iFolder.Web
 			Store store = Store.GetStore();
 
 			Simias.POBox.POBox poBox = 
-				Simias.POBox.POBox.GetPOBox( store, DomainID );
+				Simias.POBox.POBox.FindPOBox(store, DomainID, store.GetUserIDFromDomainID(DomainID));
+			if (poBox == null)
+				throw new Exception("Cannot find POBox");
 
 			// iFolders returned in the Web service are also
 			// Subscriptions and it ID will be the subscription ID
@@ -1632,13 +1664,26 @@ namespace Novell.iFolder.Web
 			if(node == null)
 				throw new Exception("Invalid iFolderID");
 
-			Subscription sub = new Subscription(node);
+#if ( !REMOVE_OLD_INVITATION )
+			Domain domain = store.GetDomain(DomainID);
+			if(domain == null)
+				throw new Exception("Unable to access domain");
 
-			// Change the local subscription
-			sub.SubscriptionState = SubscriptionStates.Replied;
-			sub.SubscriptionDisposition = SubscriptionDispositions.Declined;
-
-			poBox.Commit(sub);
+			if(domain.SupportsNewInvitation)
+			{
+#endif
+				poBox.Commit(poBox.Delete(node));
+#if ( !REMOVE_OLD_INVITATION )
+			}
+			else
+			{
+				// Change the local subscription
+				Subscription sub = new Subscription(node);
+				sub.SubscriptionState = SubscriptionStates.Replied;
+				sub.SubscriptionDisposition = SubscriptionDispositions.Declined;
+				poBox.Commit(sub);
+			}
+#endif
 		}
 
 
