@@ -430,7 +430,7 @@ namespace Novell.iFolder
 			//----------------------------
 			Menu iFolderMenu = new Menu();
 
-			NewMenuItem = new ImageMenuItem (Util.GS("_New iFolder..."));
+			NewMenuItem = new ImageMenuItem (Util.GS("_Upload a folder..."));
 			NewMenuItem.Image = new Image(
 					new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png")));
 			iFolderMenu.Append(NewMenuItem);
@@ -676,7 +676,7 @@ namespace Novell.iFolder
 
 			Label buttonText = new Label(
 				string.Format("<span size=\"large\">{0}</span>",
-							  Util.GS("New iFolder...")));
+							  Util.GS("Upload a folder...")));
 //							  Util.GS("Upload a folder")));
 			hbox.PackStart(buttonText, false, false, 4);
 			buttonText.UseMarkup = true;
