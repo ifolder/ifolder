@@ -86,6 +86,8 @@ namespace Novell.iFolder
 			this.Modal = true;
 			this.WindowPosition = Gtk.WindowPosition.Center;
 
+			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
+
 			this.simws = simws;
 
 			domainController = DomainController.GetDomainController();
@@ -191,6 +193,8 @@ namespace Novell.iFolder
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			l.MnemonicWidget = ServerNameEntry;
 			ServerNameEntry.Changed += new EventHandler(UpdateServerInformationPageSensitivity);
+			ServerNameEntry.KeyPressEvent
+				+= new KeyPressEventHandler(OnServerNameEntryKeyPress);
 			
 			// Row 3
 			MakeDefaultLabel = new Label(Util.GS("Setting this iFolder Server as your default server will allow iFolder to automatically select this server when adding new folders."));
@@ -312,7 +316,7 @@ namespace Novell.iFolder
 			// Row 2
 			table.Attach(new Label(""), 0,1, 1,2,
 				AttachOptions.Fill, 0,12,0); // spacer
-			l = new Label(Util.GS("iFolder Server:"));
+			l = new Label(Util.GS("Server Address:"));
 			table.Attach(l, 1,2, 1,2,
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			l.Xalign = 0.0F;
@@ -722,6 +726,23 @@ namespace Novell.iFolder
 		{
 			CloseDialog();
 			Util.ShowiFolderWindow();
+		}
+		
+		private void OnServerNameEntryKeyPress(object o, KeyPressEventArgs args)
+		{
+			args.RetVal = true;
+			
+			Console.WriteLine(args.Event.Key);
+			
+			// Advance to the next page if the user presses return
+			switch(args.Event.Key)
+			{
+				case Gdk.Key.KP_Enter:
+				case Gdk.Key.Return:
+					if (ForwardButton.Sensitive)
+						AccountDruid.Page = UserInformationPage;
+					break;
+			}
 		}
 
 		void KeyPressHandler(object o, KeyPressEventArgs args)
