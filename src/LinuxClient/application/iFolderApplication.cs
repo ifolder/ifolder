@@ -1237,8 +1237,12 @@ Console.WriteLine(Environment.StackTrace);
 		
 		private static void UnregisterWithDBus()
 		{
-			if (application != null && service != null)
-				service.UnregisterObject(application);
+			try
+			{
+				if (application != null && service != null)
+					service.UnregisterObject(application);
+			}
+			catch{}
 		}
 
 		public static void Main (string[] args)
