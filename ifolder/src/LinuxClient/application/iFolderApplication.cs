@@ -124,6 +124,14 @@ namespace Novell.iFolder
 				return this.simiasManager;
 			}
 		}
+		
+		public iFolderState State
+		{
+			get
+			{
+				return this.CurrentState;
+			}
+		}
 
 		public iFolderApplication(string[] args)
 			: base("ifolder", "1.0", Modules.UI, args)
@@ -1108,7 +1116,29 @@ Console.WriteLine("Modal present");
 Console.WriteLine("iFolderApplication.ShowWindow()");
 Console.WriteLine("Hash Code: " + this.GetHashCode());
 Console.WriteLine(Environment.StackTrace);
-			ShowiFolderWindows();
+
+			// If a modal window is active in the client, don't allow anything
+			// else to be shown.  When the user clicks on the tray app icon,
+			// just force the modal window to be presented to the user.
+			if (Util.CurrentModalWindow != null)
+			{
+Console.WriteLine("Modal present");
+				// Put a try/catch around this just in case the window was
+				// suddenly closed and we end up with a object reference
+				// exception.
+				try
+				{
+					Util.CurrentModalWindow.Present();
+					return;
+				}
+				catch{}
+			}
+
+			DomainInformation[] domains = domainController.GetDomains();
+			if (domains.Length < 1)
+				ShowAddAccountWizard(); // Launch the Add Account Wizard
+			else
+				ShowiFolderWindows();
 		}
 
 
