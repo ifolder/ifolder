@@ -227,7 +227,6 @@
 		<col key="yes" def="s72">Signature_</col>
 		<row><td>LOCATION_OF_INSTALLUTIL</td><td>NewSignature1</td></row>
 		<row><td>LOCATION_OF_REGASM</td><td>NewSignature11</td></row>
-		<row><td>SIMIAS_INSTALL_LOCATION</td><td>NewSignature14</td></row>
 	</table>
 
 	<table name="BBControl">
@@ -508,8 +507,8 @@
 		<row><td>iFolderApp.exe</td><td>{EA8A7500-4D83-4A90-8635-F14D590AA839}</td><td>INSTALLDIR</td><td>0</td><td/><td>ifolderapp.exe</td><td>9</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>iFolderComponent.dll</td><td>{7CFA7C41-C502-4C7E-B1D7-8C0C346E8F28}</td><td>INSTALLDIR</td><td>0</td><td/><td>ifoldercomponent.dll</td><td>9</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>iFolderShell.dll</td><td>{94EFDE99-0257-4D25-9EE4-2DC0FB9DFF48}</td><td>INSTALLDIR</td><td>0</td><td/><td>ifoldershell.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>ifolder_web_bin_files</td><td>{7A15F7EE-FCFB-477C-B8CB-5950BC6C895A}</td><td>BIN1</td><td>8</td><td/><td>novell.ifolder.web.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>ifolder_web_files</td><td>{8990ED4E-10BB-426F-AF7D-AE63F7BFD06F}</td><td>WEB1</td><td>0</td><td/><td>ifolder.asmx</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>ifolder_web_bin_files</td><td>{7A15F7EE-FCFB-477C-B8CB-5950BC6C895A}</td><td>BIN</td><td>8</td><td/><td>novell.ifolder.web.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>ifolder_web_files</td><td>{8990ED4E-10BB-426F-AF7D-AE63F7BFD06F}</td><td>WEB</td><td>0</td><td/><td>ifolder.asmx</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>it</td><td>{5A333164-538E-456C-A335-233A7C63996A}</td><td>IT</td><td>0</td><td>ProductLanguage=1040</td><td>ifolderapp.resources.dll4</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ja</td><td>{A02C9B45-CA75-447A-A914-3FA1F3F52648}</td><td>JA</td><td>0</td><td>ProductLanguage=1041</td><td>ifolderapp.resources.dll5</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>pl</td><td>{48C5E0DC-341D-4D2C-AA84-2A2DD6452F9A}</td><td>PL</td><td>0</td><td>ProductLanguage=1045</td><td>ifolderapp.resources.dll6</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
@@ -1206,6 +1205,8 @@
 		<row><td>ISSelfRegisterFinalize</td><td>1</td><td>ISSELFREG.DLL</td><td>ISSelfRegisterFinalize</td><td/></row>
 		<row><td>ISSetAllUsers</td><td>257</td><td>SetAllUsers.dll</td><td>SetAllUsers</td><td/></row>
 		<row><td>ISUnSelfRegisterFiles</td><td>1025</td><td>ISSELFREG.DLL</td><td>ISUnSelfRegisterFiles</td><td/></row>
+		<row><td>InstallUtil_Simias</td><td>114</td><td>LOCATION_OF_INSTALLUTIL</td><td>/ShowCallStack /LogToConsole=false /LogFile=Simias.InstallLog "[INSTALLDIR]\web\bin\Simias.exe"</td><td>Runs InstallUtil on Simias.exe to install it.</td></row>
+		<row><td>InstallUtil_Simias_uninstall</td><td>114</td><td>LOCATION_OF_INSTALLUTIL</td><td>/uninstall /ShowCallStack /LogToConsole=false /LogFile=Simias.UninstallLog "[INSTALLDIR]web\bin\Simias.exe"</td><td>Runs InstallUtil on Simias.exe to uninstall it.</td></row>
 		<row><td>InstallUtil_iFolderApp</td><td>114</td><td>LOCATION_OF_INSTALLUTIL</td><td>/ShowCallStack /LogFile=iFolderApp.InstallLog "[INSTALLDIR]iFolderApp.exe"</td><td>Runs InstallUtil on iFolderApp.exe to install it</td></row>
 		<row><td>InstallUtil_iFolderApp_uninstall</td><td>114</td><td>LOCATION_OF_INSTALLUTIL</td><td>/uninstall /ShowCallStack /LogFile=iFolderApp.UninstallLog "[INSTALLDIR]iFolderApp.exe"</td><td>Runs InstallUtil on iFolderApp.exe to uninstall it</td></row>
 		<row><td>RegAsm_iFolderComponent</td><td>50</td><td>LOCATION_OF_REGASM</td><td>"[INSTALLDIR]iFolderComponent.dll" /codebase /silent /nologo</td><td>Registers iFolderComponent.dll using RegAsm.exe on target machine</td></row>
@@ -1276,7 +1277,6 @@
 		<row><td>AdminToolsFolder</td><td>TARGETDIR</td><td>.:Admint~1|AdminTools</td><td/><td>0</td><td/></row>
 		<row><td>AppDataFolder</td><td>TARGETDIR</td><td>.:APPLIC~1|Application Data</td><td/><td>0</td><td/></row>
 		<row><td>BIN</td><td>WEB</td><td>bin</td><td/><td>0</td><td/></row>
-		<row><td>BIN1</td><td>WEB1</td><td>bin</td><td/><td>0</td><td/></row>
 		<row><td>CS</td><td>INSTALLDIR</td><td>cs</td><td/><td>0</td><td/></row>
 		<row><td>CS1</td><td>HELP</td><td>cs</td><td/><td>0</td><td/></row>
 		<row><td>CommonAppDataFolder</td><td>TARGETDIR</td><td>.:Common~1|CommonAppData</td><td/><td>0</td><td/></row>
@@ -1439,10 +1439,6 @@
 		<row><td>RES</td><td>INSTALLDIR</td><td>res</td><td/><td>0</td><td/></row>
 		<row><td>RU</td><td>INSTALLDIR</td><td>ru</td><td/><td>0</td><td/></row>
 		<row><td>RU1</td><td>HELP</td><td>ru</td><td/><td>0</td><td/></row>
-		<row><td>SIMIAS_INSTALL_LOCATION</td><td>TARGETDIR</td><td>SIMIAS~1|SIMIAS_INSTALL_LOCATION</td><td/><td>0</td><td/></row>
-		<row><td>SIMIAS_INSTALL_LOCATION_WEB_BIN</td><td>TARGETDIR</td><td>SIMIAS_INSTALL_LOCATION_WEB_BIN</td><td/><td>0</td><td/></row>
-		<row><td>SIMIAS_WEB_BIN_FILES_LOCATION</td><td>TARGETDIR</td><td>SIMIAS_WEB_BIN_FILES_LOCATION</td><td/><td>0</td><td/></row>
-		<row><td>SIMIAS_WEB_FILES_LOCATION</td><td>TARGETDIR</td><td>SIMIAS_WEB_FILES_LOCATION</td><td/><td>0</td><td/></row>
 		<row><td>SK</td><td>INSTALLDIR</td><td>sk</td><td/><td>0</td><td/></row>
 		<row><td>SK1</td><td>HELP</td><td>sk</td><td/><td>0</td><td/></row>
 		<row><td>SendToFolder</td><td>TARGETDIR</td><td>.:SendTo</td><td/><td>3</td><td/></row>
@@ -1485,7 +1481,7 @@
 		<row><td>USERPROFILE</td><td>TARGETDIR</td><td>.:USERPR~1|UserProfile</td><td/><td>0</td><td/></row>
 		<row><td>V1.1.4322</td><td>FRAMEWORK</td><td>V1_1_4~1|v1.1.4322</td><td/><td>0</td><td/></row>
 		<row><td>WEB</td><td>INSTALLDIR</td><td>web</td><td/><td>0</td><td/></row>
-		<row><td>WEB1</td><td>SIMIAS_INSTALL_LOCATION</td><td>web</td><td/><td>0</td><td/></row>
+		<row><td>WEB1</td><td>TARGETDIR</td><td>WEB1</td><td/><td>0</td><td/></row>
 		<row><td>WindowsFolder</td><td>TARGETDIR</td><td>.:Windows</td><td/><td>0</td><td/></row>
 		<row><td>WindowsVolume</td><td>TARGETDIR</td><td>.:WinRoot</td><td/><td>0</td><td/></row>
 		<row><td>ZH_CN1</td><td>INSTALLDIR</td><td>zh-CN</td><td/><td>0</td><td/></row>
@@ -4906,6 +4902,7 @@
 		<col key="yes" def="i2">Language_</col>
 		<row><td>iFolder_Files</td><td>VC_User_CRT71.07D8793C_DC93_47EF_8FDA_3517BC941A0F</td><td>0</td></row>
 		<row><td>iFolder_Files</td><td>VC_User_STL71.09528776_2EA8_4A65_AA88_693146381D7D</td><td>0</td></row>
+		<row><td>iFolder_Files</td><td>simias.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>0</td></row>
 	</table>
 
 	<table name="ISIISAppPool">
@@ -5055,6 +5052,7 @@
 		<col def="I4">ISAttributes</col>
 		<row><td>VC_User_CRT71.07D8793C_DC93_47EF_8FDA_3517BC941A0F</td><td>0</td><td>VC User CRT71 RTL X86 ---</td><td>[SystemFolder]</td><td/></row>
 		<row><td>VC_User_STL71.09528776_2EA8_4A65_AA88_693146381D7D</td><td>0</td><td>VC User STL71 RTL X86 ---</td><td>[SystemFolder]</td><td/></row>
+		<row><td>simias.B290460E_BC60_4D53_8B2E_9B6E7FE9D8EF</td><td>0</td><td>Simias Merge Module</td><td>[INSTALLDIR]</td><td/></row>
 	</table>
 
 	<table name="ISMergeModuleCfgValues">
@@ -5381,7 +5379,6 @@
 		<col key="yes" def="s72">ISSetupPrerequisites</col>
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I2">Order</col>
-		<row><td>_B66583C7_C31F_4253_</td><td>&lt;ISProductFolder&gt;\SetupPrerequisites\SimiasSetupPrerequisite.prq</td><td/></row>
 	</table>
 
 	<table name="ISSetupType">
@@ -14685,6 +14682,8 @@
 		<row><td>InstallInitialize</td><td/><td>1501</td><td>InstallInitialize</td><td/></row>
 		<row><td>InstallODBC</td><td/><td>5400</td><td>InstallODBC</td><td/></row>
 		<row><td>InstallServices</td><td>VersionNT</td><td>5800</td><td>InstallServices</td><td/></row>
+		<row><td>InstallUtil_Simias</td><td>(NOT REMOVE) AND LOCATION_OF_INSTALLUTIL</td><td>6651</td><td/><td/></row>
+		<row><td>InstallUtil_Simias_uninstall</td><td>REMOVE="ALL" AND (NOT UPGRADINGPRODUCTCODE)</td><td>1402</td><td/><td/></row>
 		<row><td>InstallUtil_iFolderApp</td><td>(NOT REMOVE) AND LOCATION_OF_INSTALLUTIL</td><td>6701</td><td/><td/></row>
 		<row><td>InstallUtil_iFolderApp_uninstall</td><td>REMOVE="ALL" AND (NOT UPGRADINGPRODUCTCODE)</td><td>1408</td><td/><td/></row>
 		<row><td>InstallValidate</td><td/><td>1400</td><td>InstallValidate</td><td/></row>
@@ -15122,7 +15121,6 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<col def="s255">Key</col>
 		<col def="S255">Name</col>
 		<col def="I2">Type</col>
-		<row><td>NewSignature14</td><td>2</td><td>Software\Novell\Simias</td><td>InstallDir</td><td>2</td></row>
 	</table>
 
 	<table name="Registry">
