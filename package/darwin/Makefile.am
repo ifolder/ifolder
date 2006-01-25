@@ -20,7 +20,7 @@
 #  Author: Calvin Gaisford <cgaisford@novell.com>
 #
 #######################################################################
-EXTRA_DIST = $(srcdir)/Makefile.am $(srcdir)/client-pkg
+EXTRA_DIST = $(srcdir)/mkpkg $(srcdir)/Makefile.am $(srcdir)/client-pkg
 
 PACKAGE_DIR = `pwd`
 CLIENT_PKG_DIR = $(PACKAGE_DIR)/client-pkg
@@ -41,7 +41,7 @@ iFolder-dist.tmp:
 	touch iFolder-dist.tmp
 
 iFolderClient.pkg: iFolder-dist.tmp
-	/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker -build -p $(PACKAGE_DIR)/iFolderClient.pkg -f $(TMPDIR)/$(PACKAGE)-$(VERSION)/temp/iFolder.dst/opt/novell/ifolder3 -r $(CLIENT_PKG_DIR)/Install_Resources -i $(CLIENT_PKG_DIR)/Info.plist -d $(CLIENT_PKG_DIR)/Description.plist
+	./mkpkg -build -p $(PACKAGE_DIR)/iFolderClient.pkg -f $(TMPDIR)/$(PACKAGE)-$(VERSION)/temp/iFolder.dst/opt/novell/ifolder3 -r $(CLIENT_PKG_DIR)/Install_Resources -i $(CLIENT_PKG_DIR)/Info.plist -d $(CLIENT_PKG_DIR)/Description.plist
 
 
 $(PACKAGE)-$(VERSION).dmg: iFolderClient.pkg $(SIMIAS_PKG)
