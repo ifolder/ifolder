@@ -1134,11 +1134,26 @@ Console.WriteLine("Modal present");
 				catch{}
 			}
 
+			// If there are no accounts set up, launch the account
+			// wizard.
 			DomainInformation[] domains = domainController.GetDomains();
 			if (domains.Length < 1)
-				ShowAddAccountWizard(); // Launch the Add Account Wizard
+			{
+				// Launch the Add Account Wizard
+				ShowAddAccountWizard();
+			}
 			else
-				ShowiFolderWindows();
+			{
+				// When the user clicks on the iFolder icon, show the
+				// iFolder window if it's not already showing and hide
+				// it if it's not showing.  This behavior is used by
+				// Beagle and Gaim.
+				iFolderWindow ifwin = Util.GetiFolderWindow();
+				if (ifwin == null || !ifwin.IsActive)
+					Util.ShowiFolderWindow();
+				else
+					ifwin.Present();
+			}
 		}
 
 
