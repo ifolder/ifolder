@@ -81,6 +81,13 @@ namespace Novell.iFolder
 		private Hashtable		ifolderIters = null;
 		private Hashtable		subToiFolderMap = null;
 		
+		/// Keep a hashtable around to keep track of when a user deletes an
+		/// iFolder.  By doing this, the client can immediately give
+		/// feedback to the user by removing the deleted iFolder from the UI
+		/// and add it onto the list of iFolders we eventually expect to get
+		/// a delete event for.
+		private Hashtable		deletediFolders = null;
+		
 		/// <summary>
 		/// TreeModel to hold all of the iFolders/Subscriptions.  All classes
 		/// wanting to know about new/changed/deleted iFolders should add
@@ -151,6 +158,7 @@ Console.WriteLine(Environment.StackTrace);
 			
 			ifolderIters = new Hashtable();
 			subToiFolderMap = new Hashtable();
+			deletediFolders = new Hashtable();
 
 			// Register for domain events
 			if (domainController != null)
@@ -461,12 +469,19 @@ Console.WriteLine(Environment.StackTrace);
 			}
 		}
 		
-		private void ProtectedDeliFolder(string ifolderID)
+		private void RealDelete(string ifolderID, bool deleteImmediately)
 		{
-Console.WriteLine("iFolderData.ProtectedDeliFolder()");
+Console.WriteLine("iFolderData.RealDelete()");
 Console.WriteLine(Environment.StackTrace);
 			lock (instanceLock)
 			{
+				if (!deleteImmediately && deletediFolders.Contains(ifolderID))
+				{
+					// This has already been deleted by the user
+					deletediFolders.Remove(ifolderID);
+					return;
+				}
+			
 				string realID = ifolderID;
 
 				if(!IsiFolder(realID))
@@ -484,7 +499,22 @@ Console.WriteLine(Environment.StackTrace);
 					iFolderListStore.Remove(ref iter);
 					ifolderIters.Remove(realID);
 				}
+				
+				// Keep track of this so that when an external
+				// delete comes in we will ignore it.
+				if (deleteImmediately)
+					deletediFolders[realID] = realID;
 			}
+		}
+		
+		private void QuickDelete(string ifolderID)
+		{
+			RealDelete(ifolderID, true);
+		}
+		
+		private void ProtectedDeliFolder(string ifolderID)
+		{
+			RealDelete(ifolderID, false);
 		}
 
 		
@@ -753,8 +783,13 @@ Console.WriteLine("*** SOMETHING WENT BAD IN iFolderData.ReadAvailableiFolder() 
 					}
 					else
 					{
-						if(!IsiFolder(ifolder.CollectionID))
-							ifHolder = AddiFolder(ifolder);
+						// Prevent this subscription from being added if it's
+						// waiting to really been deleted.
+						if (!deletediFolders.Contains(ifolder.CollectionID)
+							&& !IsiFolder(ifolder.CollectionID))
+						{
+								ifHolder = AddiFolder(ifolder);
+						}
 					}
 				}
 				catch(Exception e)
@@ -910,7 +945,7 @@ Console.WriteLine(Environment.StackTrace);
 					{
 						string realID = ifolder.ID;
 						ifws.DeleteiFolder(realID);
-//						DeliFolder(realID);
+						QuickDelete(realID);
 						return;
 					}
 
@@ -933,7 +968,7 @@ Console.WriteLine(Environment.StackTrace);
 						string realID = ifolder.ID;
 						ifws.DeclineiFolderInvitation(
 							ifolder.DomainID, realID);
-//						DeliFolder(realID);
+						QuickDelete(realID);
 					}
 				}
 			}	
