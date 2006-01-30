@@ -413,7 +413,24 @@ Console.WriteLine("DomainController.GetDomain(\"{0}\")", domainID);
 		/// </summary>
 		public void RemoveDomain(string domainID, bool deleteiFoldersOnServer)
 		{
-			simws.LeaveDomain(domainID, !deleteiFoldersOnServer);
+			try
+			{
+				simws.LeaveDomain(domainID, !deleteiFoldersOnServer);
+			}
+			catch(Exception e)
+			{
+				iFolderMsgDialog dg = new iFolderMsgDialog(
+					null,
+					iFolderMsgDialog.DialogType.Error,
+					iFolderMsgDialog.ButtonSet.Ok,
+					"",
+					Util.GS("Unable to remove the account"),
+					Util.GS("iFolder encountered a problem removing the account.  Please restart iFolder and try again."),
+					e.Message);
+				dg.Run();
+				dg.Hide();
+				dg.Destroy();
+			}
 		}
 
 		/// <summary>
