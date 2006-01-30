@@ -52,7 +52,7 @@ namespace Novell.iFolder
 			{
 				int activeIndex = domainComboBox.Active;
 				if (activeIndex >= 0)
-					return domains[0].ID;
+					return domains[activeIndex].ID;
 				else
 					return "0";
 			}
