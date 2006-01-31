@@ -925,8 +925,79 @@ namespace Novell.iFolder
 			myiFoldersFilter = new TreeModelFilter(ifdata.iFolders, null);
 			myiFoldersFilter.VisibleFunc = SynchronizedFoldersFilterFunc;
 			
-			localGroup = new iFolderViewGroup(Util.GS("iFolders on This Computer"), myiFoldersFilter);
+			localGroup = new iFolderViewGroup(Util.GS("iFolders on This Computer"), myiFoldersFilter, SearchEntry);
 			iFoldersIconView.AddGroup(localGroup);
+			VBox emptyVBox = new VBox(false, 0);
+			emptyVBox.BorderWidth = 12;
+
+			Table table = new Table(3, 2, false);
+			emptyVBox.PackStart(table, true, true, 0);
+			table.RowSpacing = 12;
+			table.ColumnSpacing = 12;
+			
+			// Row 1: Header
+			Label l = new Label(
+				string.Format("<span size=\"large\">{0}</span>",
+							   Util.GS("There are no iFolders on this computer.  To set up an iFolder, do one of the following:")));
+			table.Attach(l,
+						 0, 2,
+						 0, 1,
+						 AttachOptions.Expand | AttachOptions.Fill,
+						 0, 0, 0);
+			l.UseMarkup = true;
+			l.LineWrap = true;
+			l.Xalign = 0;
+			
+			// Row 2: Upload
+			Image uploadImg = new Image(Util.ImagesPath("upload48.png"));
+			table.Attach(uploadImg,
+						 0, 1,
+						 1, 2,
+						 AttachOptions.Shrink | AttachOptions.Fill,
+						 0, 0, 0);
+			l = new Label(
+				string.Format("<span>{0}</span>",
+							   Util.GS("Select an existing folder on this computer to upload to an iFolder Server")));
+			table.Attach(l,
+						 1, 2,
+						 1, 2,
+						 AttachOptions.Expand | AttachOptions.Fill,
+						 0, 0, 0);
+			l.UseMarkup = true;
+			l.LineWrap = true;
+			l.Xalign = 0;
+			
+			// Row 3: Download
+			Image downloadImg = new Image(Util.ImagesPath("download48.png"));
+			table.Attach(downloadImg,
+						 0, 1,
+						 2, 3,
+						 AttachOptions.Shrink | AttachOptions.Fill,
+						 0, 0, 0);
+			l = new Label(
+				string.Format("<span>{0}</span>",
+							   Util.GS("Select an iFolder on the server to download to this computer")));
+			table.Attach(l,
+						 1, 2,
+						 2, 3,
+						 AttachOptions.Expand | AttachOptions.Fill,
+						 0, 0, 0);
+			l.UseMarkup = true;
+			l.LineWrap = true;
+			l.Xalign = 0;
+			
+			localGroup.EmptyWidget = emptyVBox;
+			
+			VBox emptySearchVBox = new VBox(false, 0);
+			emptySearchVBox.BorderWidth = 12;
+			l = new Label(
+				string.Format("<span size=\"large\">{0}</span>",
+							   Util.GS("No matches found")));
+			emptySearchVBox.PackStart(l, true, true, 0);
+			l.UseMarkup = true;
+			l.LineWrap = true;
+
+			localGroup.EmptySearchWidget = emptySearchVBox;
 
 			// FIXME: Attach the drag and drop receiver to the synchronized iFolders only
 			TargetEntry[] targets =
@@ -1902,7 +1973,8 @@ Console.WriteLine("iFolderWindow.AddServerGroup(DomainID: {0})", domainID);
 					string.Format(
 						Util.GS("iFolders on {0}"),
 						domain.Name),
-					treeModelFilter);
+					treeModelFilter,
+					SearchEntry);
 			serverGroups[domainID] = group;
 			serverGroupFilters[domainID] = serverFilter;
 			
