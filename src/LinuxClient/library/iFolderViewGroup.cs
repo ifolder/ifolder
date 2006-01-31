@@ -32,6 +32,11 @@ namespace Novell.iFolder
 	public class iFolderViewGroup : VBox
 	{
 		private VBox						contentVBox;
+		
+		private Notebook					groupNotebook;
+		private VBox						mainPage;
+		private VBox						emptyPage;
+		private VBox						emptySearchPage;
 
 		private string					name;
 		private TreeModelFilter			model;
@@ -61,6 +66,7 @@ namespace Novell.iFolder
 		private Widget						emptyWidget;
 		private Widget						emptySearchWidget;
 		private Entry						searchEntry;
+		private uint						searchTimeoutID;
 
 		// FIXME: Remove this thread-checking debug code
 		// The purpose of this code is to make sure that we're not attempting to
@@ -141,13 +147,18 @@ namespace Novell.iFolder
 			}
 			set
 			{
-//				iFolderViewGroup.CheckThread();
-//				if (this.IsEmpty)
-//				{
-//					// FIXME: Implement iFolderViewGroup.EmptyWidget
-//				}
-				
-				emptyWidget = value;
+				if (value != null)
+				{
+					if (emptyWidget != null)
+						emptyPage.Remove(emptyWidget);
+					
+					emptyWidget = value;
+					
+					emptyPage.PackStart(emptyWidget, true, true, 0);
+					emptyPage.ShowAll();
+					
+					UpdateVisibility();
+				}
 			}
 		}
 		
@@ -159,12 +170,18 @@ namespace Novell.iFolder
 			}
 			set
 			{
-//				if (this.IsEmpty)
-//				{
-//					// FIXME: Implement iFolderViewGroup.EmptySearchWidget
-//				}
-				
-				emptySearchWidget = value;
+				if (value != null)
+				{
+					if (emptySearchWidget != null)
+						emptySearchPage.Remove(emptySearchWidget);
+					
+					emptySearchWidget = value;
+					
+					emptySearchPage.PackStart(emptySearchWidget, true, true, 0);
+					emptySearchPage.ShowAll();
+					
+					UpdateVisibility();
+				}
 			}
 		}
 		
@@ -195,11 +212,12 @@ namespace Novell.iFolder
 			}
 		}
 	
-		public iFolderViewGroup(string name, TreeModelFilter model)
+		public iFolderViewGroup(string name, TreeModelFilter model, Entry searchEntry)
 		{
 			iFolderViewGroup.CheckThread();
 			this.name = name;
 			this.model = model;
+			this.searchEntry = searchEntry;
 
 			items = new Hashtable();
 			
@@ -213,6 +231,11 @@ namespace Novell.iFolder
 			
 			bVisibleWhenEmpty = true;
 			emptyWidget = null;
+			emptySearchWidget = null;
+
+			searchTimeoutID = 0;
+			searchEntry.Changed +=
+				new EventHandler(OnSearchEntryChanged);
 			
 			this.PackStart(CreateWidgets(), true, true, 0);
 			
@@ -222,6 +245,9 @@ namespace Novell.iFolder
 		
 		~iFolderViewGroup()
 		{
+			searchEntry.Changed -=
+				new EventHandler(OnSearchEntryChanged);
+
 			if (items != null)
 			{
 				ArrayList itemsToRemove = new ArrayList(items.Count);
@@ -241,6 +267,7 @@ namespace Novell.iFolder
 		private Widget CreateWidgets()
 		{
 			iFolderViewGroup.CheckThread();
+			
 			contentVBox = new VBox(false, 0);
 			contentVBox.BorderWidth = 12;
 			
@@ -254,13 +281,18 @@ namespace Novell.iFolder
 			nameLabel.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
 			nameLabel.Xalign = 0;
 			
-			table = new Table(1, 1, true);
-			contentVBox.PackStart(table, true, true, 0);
-			table.ColumnSpacing = 12;
-			table.RowSpacing = 12;
-			table.BorderWidth = 12;
-			table.ModifyBase(StateType.Normal, this.Style.Base(StateType.Prelight));
-
+			groupNotebook = new Notebook();
+			contentVBox.PackStart(groupNotebook, true, true, 0);
+			groupNotebook.ShowTabs = false;
+			groupNotebook.ShowBorder = false;
+			groupNotebook.Homogeneous = false;
+			
+			groupNotebook.AppendPage(CreateMainPage(), null);
+			groupNotebook.AppendPage(CreateEmptyPage(), null);
+			groupNotebook.AppendPage(CreateEmptySearchPage(), null);
+			
+			groupNotebook.Page = 0;
+			
 			///
 			/// Register for TreeModel events
 			///
@@ -272,6 +304,34 @@ namespace Novell.iFolder
 				new RowInsertedHandler(OnRowInserted);
 			
 			return contentVBox;
+		}
+		
+		private Widget CreateMainPage()
+		{
+			mainPage = new VBox(false, 0);
+			
+			table = new Table(1, 1, true);
+			mainPage.PackStart(table, true, true, 0);
+			table.ColumnSpacing = 12;
+			table.RowSpacing = 12;
+			table.BorderWidth = 12;
+			table.ModifyBase(StateType.Normal, this.Style.Base(StateType.Prelight));
+
+			return mainPage;
+		}
+		
+		private Widget CreateEmptyPage()
+		{
+			emptyPage = new VBox(false, 0);
+			
+			return emptyPage;
+		}
+		
+		private Widget CreateEmptySearchPage()
+		{
+			emptySearchPage = new VBox(false, 0);
+			
+			return emptySearchPage;
 		}
 		
 		public void OnSizeAllocated(object o, SizeAllocatedArgs args)
@@ -351,12 +411,41 @@ namespace Novell.iFolder
 			{
 				if (this.Visible != bVisibleWhenEmpty)
 					this.Visible = bVisibleWhenEmpty;
+				
+				if (this.Visible)
+				{
+					string searchText = searchEntry.Text;
+					if (searchText.Length > 0)
+						groupNotebook.Page = 2;
+					else
+						groupNotebook.Page = 1;
+				}
 			}
 			else
 			{
+				groupNotebook.Page = 0;
+
 				if (!this.Visible)
 					this.Visible = true;
 			}
+		}
+		
+		private void OnSearchEntryChanged(object o, EventArgs args)
+		{
+			if (searchTimeoutID != 0)
+			{
+				GLib.Source.Remove(searchTimeoutID);
+				searchTimeoutID = 0;
+			}
+
+			searchTimeoutID = GLib.Timeout.Add(
+				500, new GLib.TimeoutHandler(SearchCallback));
+		}
+		
+		private bool SearchCallback()
+		{
+			UpdateVisibility();
+			return false;
 		}
 		
 		private void ResizeTable()
