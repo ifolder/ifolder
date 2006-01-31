@@ -712,6 +712,14 @@ Console.WriteLine("PrefsAccountPage.OnDomainLoginCompleted");
 				AccTreeStore.Remove(ref iter);
 				curDomains.Remove(args.DomainID);
 			}
+			
+			if (curDomains.Count == 0)
+			{
+				// Hide the iFolder Window if it's visible
+				iFolderWindow ifwin = Util.GetiFolderWindow();
+				if (ifwin.Visible)
+					ifwin.Hide();
+			}
 		}
 		
 		public void OnDomainLoggedInEvent(object sender, DomainEventArgs args)
