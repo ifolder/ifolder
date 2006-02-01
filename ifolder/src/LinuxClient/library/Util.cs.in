@@ -338,7 +338,7 @@ Console.WriteLine("Modal window destroyed");
 				};
 				
 				About about = new About("iFolder", "@_VERSION_@",
-										Util.GS("Copyright (C) 2004-2005 Novell, Inc."),
+										Util.GS("Copyright (C) 2004-2006 Novell, Inc."),
 										Util.GS("The iFolder Project is a file sharing solution that allows people to easily share folders or files of any type with other users, whether they use the same or different operating system.  This project is built on the mono/.NET framework to integrate seamlessly into existing desktop environments."),
 										authors,
 										null,
@@ -443,7 +443,18 @@ Console.WriteLine("SimiasManager created without arguments.  We don't want this 
 						biFolderWindowNeverShown = false;
 					}
 					else
+					{
+						if (!ifwin.Visible)
+						{
+							int x = ifwin.LastXPos;
+							int y = ifwin.LastYPos;
+							
+							if (x >= 0 && y >= 0)
+								ifwin.Move(x, y);
+						}
+
 						ifwin.Present();
+					}
 				}
 			}
 		}
@@ -511,7 +522,7 @@ Console.WriteLine("SimiasManager created without arguments.  We don't want this 
 		
 		private static void OniFolderWindowDeleteEvent(object o, DeleteEventArgs args)
 		{
-			ifwin.Hide();
+			ifwin.CloseWindow();
 			args.RetVal = true;
 		}
 

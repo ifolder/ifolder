@@ -139,6 +139,30 @@ namespace Novell.iFolder
 		
 		private Hashtable			serverGroups;
 		private Hashtable			serverGroupFilters;
+		
+		///
+		/// Variables to keep track of the last position of the main window.
+		/// This is needed because somehow it's forgotton sometimes.
+		/// Util.ShowiFolderWindow will use this.
+		///
+		private int lastXPos;
+		private int lastYPos;
+		
+		public int LastXPos
+		{
+			get
+			{
+				return lastXPos;
+			}
+		}
+		
+		public int LastYPos
+		{
+			get
+			{
+				return lastYPos;
+			}
+		}
 
         // Drag and Drop
         public enum DragTargetType
@@ -167,6 +191,9 @@ namespace Novell.iFolder
 
 			PropDialogs = new Hashtable();
 			ConflictDialogs = new Hashtable();
+			
+			lastXPos = -1;
+			lastYPos = -1;
 			
 			searchTimeoutID = 0;
 			
@@ -2167,8 +2194,16 @@ Console.WriteLine("iFolderWindow.AddServerGroup(DomainID: {0})", domainID);
 			domainController.CheckForNewiFolders();
 		}
 
-		private void CloseWindow()
+		public void CloseWindow()
 		{
+			int x;
+			int y;
+
+			this.GetPosition(out x, out y);
+			
+			lastXPos = x;
+			lastYPos = y;
+			
 			this.Hide();
 		}
 		

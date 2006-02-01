@@ -718,7 +718,7 @@ Console.WriteLine("PrefsAccountPage.OnDomainLoginCompleted");
 				// Hide the iFolder Window if it's visible
 				iFolderWindow ifwin = Util.GetiFolderWindow();
 				if (ifwin.Visible)
-					ifwin.Hide();
+					ifwin.CloseWindow();
 			}
 		}
 		
