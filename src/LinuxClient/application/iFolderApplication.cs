@@ -999,7 +999,7 @@ Console.WriteLine("Modal present");
 						if (ifwin == null || !ifwin.IsActive)
 							Util.ShowiFolderWindow();
 						else
-							ifwin.Hide();
+							ifwin.CloseWindow();
 					}
 					
 					break;
