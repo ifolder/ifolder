@@ -56,6 +56,11 @@ namespace Novell.iFolder
 
 		private Hashtable			curDomains;
 		
+		// Keep track of which domains have been removed so that we can
+		// remove them from the UI immediately and not wait until we
+		// receive an event from simias.
+		private Hashtable			removedDomains;
+		
 		private DomainController	domainController;
 		
 		// Hashtable used to keep track of the details
@@ -83,6 +88,8 @@ namespace Novell.iFolder
 			LocalService.Start(simws, simiasManager.WebServiceUri, simiasManager.DataPath);
 
 			curDomains = new Hashtable();
+			
+			removedDomains = new Hashtable();
 
 			InitializeWidgets();
 			
@@ -360,10 +367,17 @@ namespace Novell.iFolder
 				{
 					try
 					{
+						removedDomains[dom.ID] = dom.ID;
+
 						domainController.RemoveDomain(dom.ID, rad.RemoveiFoldersFromServer);
+
+						RemoveDomain(dom.ID);
 					}
 					catch(Exception e)
 					{
+						if (removedDomains.ContainsKey(dom.ID))
+							removedDomains.Remove(dom.ID);
+
 						iFolderExceptionDialog ied = 
 							new iFolderExceptionDialog( topLevelWindow, e);
 						ied.Run();
@@ -373,7 +387,7 @@ namespace Novell.iFolder
 						return;
 					}
 
-					AddButton.Sensitive = false;
+					AddButton.Sensitive = true;
 					RemoveButton.Sensitive = false;
 					DetailsButton.Sensitive = false;
 				}
@@ -684,6 +698,9 @@ Console.WriteLine("PrefsAccountPage.OnDomainLoginCompleted");
 		
 		public void OnDomainAddedEvent(object sender, DomainEventArgs args)
 		{
+			if (removedDomains.ContainsKey(args.DomainID))
+				removedDomains.Remove(args.DomainID);
+		
 			if (curDomains.ContainsKey(args.DomainID))
 			{
 				// Somehow we've already got this domain in our list, so
@@ -704,13 +721,13 @@ Console.WriteLine("PrefsAccountPage.OnDomainLoginCompleted");
 			}
 		}
 		
-		public void OnDomainDeletedEvent(object sender, DomainEventArgs args)
+		private void RemoveDomain(string domainID)
 		{
-			if (curDomains.ContainsKey(args.DomainID))
+			if (curDomains.ContainsKey(domainID))
 			{
-				TreeIter iter = (TreeIter)curDomains[args.DomainID];
+				TreeIter iter = (TreeIter)curDomains[domainID];
 				AccTreeStore.Remove(ref iter);
-				curDomains.Remove(args.DomainID);
+				curDomains.Remove(domainID);
 			}
 			
 			if (curDomains.Count == 0)
@@ -719,6 +736,19 @@ Console.WriteLine("PrefsAccountPage.OnDomainLoginCompleted");
 				iFolderWindow ifwin = Util.GetiFolderWindow();
 				if (ifwin.Visible)
 					ifwin.CloseWindow();
+			}
+		}
+		
+		public void OnDomainDeletedEvent(object sender, DomainEventArgs args)
+		{
+			if (removedDomains.ContainsKey(args.DomainID))
+			{
+				removedDomains.Remove(args.DomainID);
+				return;
+			}
+			else
+			{
+				RemoveDomain(args.DomainID);
 			}
 		}
 		
