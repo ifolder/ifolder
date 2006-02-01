@@ -103,6 +103,7 @@ namespace Novell.iFolder
 		// have to call CalculateSyncSize() over and over needlessly.
 		private uint objectsToSync = 0;
 		private bool startingSync  = false;
+		private bool bFileSyncFailed = false;
 
 		public ListStore iFolders
 		{
@@ -1069,6 +1070,9 @@ Console.WriteLine("iFolderData.OnDomainDeletedEvent()");
 				case Simias.Client.Event.Action.StartSync:
 					// Keep track of when a sync starts
 					startingSync = true;
+					
+					// Keep track of if any files failed to sync
+					bFileSyncFailed = false;
 
 					ifHolder.State = iFolderState.Synchronizing;
 					break;
@@ -1085,7 +1089,15 @@ Console.WriteLine("iFolderData.OnDomainDeletedEvent()");
 					{}
 
 					if (ifHolder.ObjectsToSync > 0)
-						ifHolder.State = iFolderState.Normal;
+					{
+						// Check to see if there were any errors synchronizing
+						// any files.  If there were, change the state to
+						// FailedSync.
+						if (bFileSyncFailed)
+							ifHolder.State = iFolderState.FailedSync;
+						else
+							ifHolder.State = iFolderState.Normal;
+					}
 					else
 					{
 						if (args.Connected)
@@ -1165,6 +1177,9 @@ Console.WriteLine("*** SOMETHING WENT BAD IN iFolderData.OniFolderFileSyncEvent(
 					}
 				}
 			}
+			
+			if (args.Status != SyncStatus.Success)
+				bFileSyncFailed = true;
 		}
 		
 		private class iFolderAddHandler
