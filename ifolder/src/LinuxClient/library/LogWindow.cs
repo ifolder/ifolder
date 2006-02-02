@@ -457,23 +457,28 @@ namespace Novell.iFolder
 			string filename = null;
 			
 			string initialPath = Util.LastSavedSyncLogPath;
+			
+			FileChooserDialog fcd = new FileChooserDialog(
+				Util.GS("Save as..."), this,
+				FileChooserAction.Save,
+				Stock.Cancel, ResponseType.Cancel,
+                Stock.Save, ResponseType.Ok);
 
-			// Switched out to use the compatible file selector
-			CompatFileChooserDialog cfcd = new CompatFileChooserDialog(
-				Util.GS("Save iFolder Log..."), this, 
-				CompatFileChooserDialog.Action.Save);
-
-			if (initialPath != null)
-				cfcd.CurrentFolder = initialPath;
+            fcd.SelectMultiple = false;
+            
+            fcd.CurrentName = Util.GS("Untitled iFolder Synchronization Log.txt");
+            
+            if (initialPath != null)
+            	fcd.SetCurrentFolder(initialPath);
 
 			while (saveFile)
 			{
-				rc = cfcd.Run();
-				cfcd.Hide();
+				rc = fcd.Run();
+				fcd.Hide();
 	
-				if(rc == -5)
+				if(rc == (int)ResponseType.Ok)
 				{
-					filename = cfcd.Selections[0];
+					filename = fcd.Filename;
 					
 					if(File.Exists(filename))
 					{
@@ -576,7 +581,7 @@ namespace Novell.iFolder
 				}
 			}
 
-			cfcd.Destroy();
+			fcd.Destroy();
 		}
 
 
