@@ -928,48 +928,54 @@ Console.WriteLine("\tthe removed domain was NOT the default");
 		private void OnDomainAddedEvent(object o, DomainEventArgs args)
 		{
 Console.WriteLine("DomainController.OnDomainAddedEvent()");
-			DomainInformation domain = (DomainInformation)keyedDomains[args.DomainID];
-			if (domain != null)
+			lock (typeof(DomainController) )
 			{
-				// We (and others) already know about this
-				// domain so do nothing about this event.
-				return;
+				DomainInformation domain = (DomainInformation)keyedDomains[args.DomainID];
+				if (domain != null)
+				{
+					// We (and others) already know about this
+					// domain so do nothing about this event.
+					return;
+				}
+	
+				try
+				{
+					domain = simws.GetDomainInformation(args.DomainID);
+				}
+				catch (Exception e)
+				{
+					// FIXME: Add in some type of error logging to show that we
+					// weren't able to get information about a newly added domain
+					return;
+				}
+	
+				AddDomainToHashtable(domain);
+	
+				// Notify DomainAddedEventHandlers
+				if (DomainAdded != null)
+					DomainAdded(this, args);
 			}
-
-			try
-			{
-				domain = simws.GetDomainInformation(args.DomainID);
-			}
-			catch (Exception e)
-			{
-				// FIXME: Add in some type of error logging to show that we
-				// weren't able to get information about a newly added domain
-				return;
-			}
-
-			AddDomainToHashtable(domain);
-
-			// Notify DomainAddedEventHandlers
-			if (DomainAdded != null)
-				DomainAdded(this, args);
 		}
 
 		[GLib.ConnectBefore]
 		private void OnDomainDeletedEvent(object o, DomainEventArgs args)
 		{
 Console.WriteLine("DomainController.OnDomainDeletedEvent()");
-			DomainInformation domain = (DomainInformation)keyedDomains[args.DomainID];
-			if (domain == null)
+			lock (typeof(DomainController) )
 			{
-				// We don't know about this domain so don't do anything.
-				return;
+				DomainInformation domain = (DomainInformation)keyedDomains[args.DomainID];
+				if (domain == null)
+				{
+					// We don't know about this domain so don't do anything.
+					return;
+				}
+				
+				RemoveDomainFromHashtable(args.DomainID);
+				
+				// Notify DomainDeletedEventHandlers
+				if (DomainDeleted != null)
+					DomainDeleted(this, args);
 			}
-			
-			RemoveDomainFromHashtable(args.DomainID);
-			
-			// Notify DomainDeletedEventHandlers
-			if (DomainDeleted != null)
-				DomainDeleted(this, args);
 		}
 	}
 
