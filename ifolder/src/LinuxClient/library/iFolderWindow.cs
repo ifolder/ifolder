@@ -2344,7 +2344,15 @@ Console.WriteLine("iFolderWindow.AddServerGroup(DomainID: {0})", domainID);
 					Util.GS("Revert this iFolder back to a normal folder?"),
 					Util.GS("The folder will still be on your computer, but it will no longer synchronize with the iFolder Server."));
 
-				CheckButton deleteFromServerCB = new CheckButton(Util.GS("Also _delete this iFolder from the server"));
+				CheckButton deleteFromServerCB;
+
+				DomainInformation domain =
+					domainController.GetDomain(holder.iFolder.DomainID);
+				if (domain == null || domain.MemberUserID == holder.iFolder.OwnerID)
+					deleteFromServerCB = new CheckButton(Util.GS("Also _delete this iFolder from the server"));
+				else
+					deleteFromServerCB = new CheckButton(Util.GS("Also _remove my membership from this iFolder"));
+				
 				dialog.ExtraWidget = deleteFromServerCB;
 
 				int rc = dialog.Run();
