@@ -67,6 +67,8 @@ namespace Novell.iFolder
 		private Widget						emptySearchWidget;
 		private Entry						searchEntry;
 		private uint						searchTimeoutID;
+		
+		private bool						alreadyDisposed;
 
 		// FIXME: Remove this thread-checking debug code
 		// The purpose of this code is to make sure that we're not attempting to
@@ -218,6 +220,7 @@ namespace Novell.iFolder
 			this.name = name;
 			this.model = model;
 			this.searchEntry = searchEntry;
+			alreadyDisposed = false;
 
 			items = new Hashtable();
 			
@@ -245,23 +248,62 @@ namespace Novell.iFolder
 		
 		~iFolderViewGroup()
 		{
-			searchEntry.Changed -=
-				new EventHandler(OnSearchEntryChanged);
-
-			if (items != null)
+Console.WriteLine("\n\n***\nDestructor:iFolderViewGroup\n");
+			Dispose(true);
+		}
+		
+		private void Dispose(bool calledFromFinalizer)
+		{
+Console.WriteLine("\n\n***\niFolderViewGroup.Dispose({0})\n***\n\n", calledFromFinalizer);
+			try
 			{
-				ArrayList itemsToRemove = new ArrayList(items.Count);
-				foreach (iFolderViewItem item in items.Values)
+				if (!alreadyDisposed)
 				{
-					itemsToRemove.Add(item);
-				}
-				
-				foreach(iFolderViewItem item in itemsToRemove)
-				{
-					items.Remove(item);
-					item.Destroy();
+					alreadyDisposed = true;
+					
+					// Clean up and deregister event handlers
+					searchEntry.Changed -=
+						new EventHandler(OnSearchEntryChanged);
+		
+					model.RowChanged -=
+						new RowChangedHandler(OnRowChanged);
+					model.RowDeleted -=
+						new RowDeletedHandler(OnRowDeleted);
+					model.RowInserted -=
+						new RowInsertedHandler(OnRowInserted);
+		
+					if (items != null)
+					{
+						ArrayList itemsToRemove = new ArrayList(items.Count);
+						foreach (iFolderViewItem item in items.Values)
+						{
+							itemsToRemove.Add(item);
+						}
+						
+						foreach(iFolderViewItem item in itemsToRemove)
+						{
+							item.LeftClicked -=
+								new EventHandler(OnItemLeftClicked);
+							item.RightClicked -=
+								new EventHandler(OnItemRightClicked);
+							item.DoubleClicked -=
+								new EventHandler(OnItemDoubleClicked);
+
+							items.Remove(item);
+							item.Destroy();
+						}
+					}
+					
+					if (!calledFromFinalizer)
+						GC.SuppressFinalize(this);
 				}
 			}
+			catch{}
+		}
+		
+		public override void Dispose()
+		{
+			Dispose(false);
 		}
 		
 		private Widget CreateWidgets()
