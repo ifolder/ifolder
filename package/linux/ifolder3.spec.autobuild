@@ -1,0 +1,138 @@
+#
+# spec file for package ifolder3 (Version 3.4.@@BUILDNUM@@.1)
+#
+# Copyright (c) 2006 SUSE LINUX Products GmbH, Nuernberg, Germany.
+# This file and all modifications and additions to the pristine
+# package are under the same license as the package itself.
+#
+# Please submit bugfixes or comments via http://bugs.opensuse.org
+#
+
+# norootforbuild
+#neededforbuild compat-libstdc++ dbus-1-mono gdk-pixbuf gnutls-devel gtk-sharp2-complete libglade2-devel libgnomeprintui-devel libgnomeui-devel libwnck-devel mDNSResponder-devel log4net simias 
+
+BuildRequires: compat-libstdc++ dbus-1-mono gdk-pixbuf gnutls-devel gtk-sharp2-complete libglade2-devel libgnomeprintui-devel libgnomeui-devel libwnck-devel mDNSResponder-devel log4net simias
+
+Name:         ifolder3
+%define buildnum @@BUILDNUM@@
+URL:          http://www.ifolder.com
+%define prefix /opt/novell/ifolder3
+%define sysconfdir /etc
+License:      GPL, LGPL
+Group:        System/GUI/Other
+Autoreqprov:  on
+Requires:     simias >= 1.4
+Requires:     gtk-sharp2-complete
+Requires:     dbus-1-mono
+Obsoletes:    %{name} <= %{version}
+Version:      3.4.@@BUILDNUM@@.1
+Release:      1
+Summary:      File Sharing and Collaboration Tool
+Source:       ifolder3-3.4.%{buildnum}.1.tar.gz
+BuildRoot:    %{_tmppath}/%{name}-%{version}-build
+#=============================================================================
+
+%description
+The iFolder Project is a project focused on file sharing and
+collaboration, released under the GPL and supporting the iFolder 3
+protocol from Novell.
+
+
+
+%prep
+export BUILDNUM=%{buildnum}
+%setup -n %{name}-%{version}
+#=============================================================================
+
+%build
+export BUILDNUM=%{buildnum}
+export CFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing"
+export CXXFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing"
+./autogen.sh --prefix=%{prefix}
+make
+make dist
+#=============================================================================
+
+%install
+export BUILDNUM=%{buildnum}
+%{__rm} -rf $RPM_BUILD_ROOT
+make DESTDIR=$RPM_BUILD_ROOT install
+#
+# Set up iFolder in the menu for Gnome
+#
+    if test "%{prefix}" != "/usr"; then
+		if ! [ -d  $RPM_BUILD_ROOT/usr/share/applications]; then
+			mkdir -p $RPM_BUILD_ROOT/usr/share/applications
+		fi
+        cp -f $RPM_BUILD_ROOT%{prefix}/share/applications/ifolder.desktop $RPM_BUILD_ROOT/usr/share/applications
+    fi
+#
+# Set up a sym link to /usr/bin so iFolder will run
+#
+if ! [ -d  $RPM_BUILD_ROOT/usr/bin ]; then
+	mkdir -p $RPM_BUILD_ROOT/usr/bin
+fi
+ln -s %{prefix}/bin/ifolder $RPM_BUILD_ROOT/usr/bin/ifolder
+#=============================================================================
+
+%files
+%defattr(755,root,root)
+%dir /opt/novell
+%{prefix}/*
+/usr/bin/ifolder
+/usr/share/applications/ifolder.desktop
+
+%changelog -n ifolder3
+* Wed Jan 25 2006 - mls@suse.de
+- converted neededforbuild to BuildRequires
+* Wed Jan 18 2006 - cgaisford@suse.de
+- updated source from iFolder_3_4 branch
+- changed requirements to gtk-sharp2-complete
+- also added dbus-1-mono as a requirement
+* Thu Dec 15 2005 - calvin@novell.com
+- updated source from iFolder_3_4 branch and removed patches that
+- were included into the source
+* Mon Nov 28 2005 - ro@suse.de
+- rename SearchType to ISearchType as SearchType is already
+  defined in simias
+* Mon Nov 28 2005 - ro@suse.de
+- update to ifolder3-3.1.5250.1
+* Thu Sep 29 2005 - dmueller@suse.de
+- add norootforbuild
+* Sun Sep 04 2005 - meissner@suse.de
+- Use rpm optflags and -fno-strict-aliasing.
+* Fri Sep 02 2005 - jbell@novell.com
+- took out post, preun, and postun from the .spec file
+* Thu Sep 01 2005 - jbell@novell.com
+- completely re-worked the .spec file and updated the source to include all ifolder3.1 functionality
+* Mon Aug 22 2005 - aj@suse.de
+- Add check-build.sh script.
+- Add Mono xsp package as requires (#105639).
+* Tue Aug 16 2005 - nadvornik@suse.cz
+- changed prefix to /usr/lib/ifolder3 [#104474]
+* Fri Aug 05 2005 - nadvornik@suse.cz
+- updated to 3.0.20050608
+* Wed May 18 2005 - ro@suse.de
+- hack configure.in to build with new pkgconfig
+* Tue Feb 15 2005 - nadvornik@suse.cz
+- renamed to ifolder3
+- update to snapshot 3.0.20050208
+* Wed Feb 09 2005 - ro@suse.de
+- update to cvs
+* Wed Dec 15 2004 - hvogel@suse.de
+- fix desktop file
+* Tue Sep 07 2004 - sbrabec@suse.cz
+- Fixed mime info and application registry install paths.
+- Generated shared mime info.
+* Wed Jul 14 2004 - clahey@suse.de
+- Updated to 0.10.20040708.
+* Tue Jun 29 2004 - ro@suse.de
+- use rpm scripts for find requires/provides
+* Tue Jun 22 2004 - clahey@suse.de
+- Upgraded to new snapshot.
+* Fri Jun 04 2004 - clahey@suse.de
+- Updated to new version.
+* Thu May 27 2004 - ro@suse.de
+- added libicu26 to neededforbuild
+* Wed May 26 2004 - clahey@suse.de
+- Initial import.
