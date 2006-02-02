@@ -36,6 +36,8 @@ public class iFolderMsgDialog : Dialog
 	private Image			dialogImage;
 	private Expander		detailsExpander;
 	private ScrolledWindow	showDetailsScrolledWindow;
+	private VBox			extraWidgetVBox;
+	private Widget			extraWidget;
 	
 	public Image Image
 	{
@@ -59,6 +61,35 @@ public class iFolderMsgDialog : Dialog
 		OkCancel,
 		YesNo,
 		None
+	}
+	
+	public Widget ExtraWidget
+	{
+		get
+		{
+			return extraWidget;
+		}
+		set
+		{
+			if (extraWidget != null)
+			{
+				extraWidgetVBox.Remove(extraWidget);
+				extraWidget.Destroy();
+				extraWidget = null;
+			}
+
+			if (value == null)
+			{
+				extraWidgetVBox.Hide();
+			}
+			else
+			{
+				extraWidget = value;
+				extraWidgetVBox.PackStart(extraWidget, false, false, 0);
+				extraWidgetVBox.Show();
+				extraWidget.Show();
+			}
+		}
 	}
 
 	
@@ -181,6 +212,14 @@ public class iFolderMsgDialog : Dialog
 //			showDetailsScrolledWindow = null;
 //		}
 
+		///
+		/// Extra Widget
+		///
+		extraWidgetVBox = new VBox(false, 0);
+		v.PackStart(extraWidgetVBox, false, false, 0);
+		extraWidgetVBox.NoShowAll = true;
+		extraWidget = null;
+
 		h.PackEnd(v);
 		h.ShowAll();
 		
@@ -189,21 +228,25 @@ public class iFolderMsgDialog : Dialog
 
 		this.VBox.Add(h);
 		
+		Widget defaultButton;
 		switch(buttonSet)
 		{
 			default:
 			case ButtonSet.Ok:
-				this.AddButton(Stock.Ok, ResponseType.Ok);
+				defaultButton = this.AddButton(Stock.Ok, ResponseType.Ok);
 				break;
 			case ButtonSet.OkCancel:
 				this.AddButton(Stock.Cancel, ResponseType.Cancel);
-				this.AddButton(Stock.Ok, ResponseType.Ok);
+				defaultButton = this.AddButton(Stock.Ok, ResponseType.Ok);
 				break;
 			case ButtonSet.YesNo:
 				this.AddButton(Stock.No, ResponseType.No);
-				this.AddButton(Stock.Yes, ResponseType.Yes);
+				defaultButton = this.AddButton(Stock.Yes, ResponseType.Yes);
 				break;
 		}
+		
+		defaultButton.CanDefault = true;
+		defaultButton.GrabFocus();
 	}
 	
 //	private void ShowDetailsButtonPressed(object o, EventArgs args)
