@@ -1075,7 +1075,14 @@ Console.WriteLine("Modal present");
 			about_item.Activated +=
 					new EventHandler(show_about);
 
-			
+			// FIXME: Remove these debug features or move them to be configurable
+			trayMenu.Append(new SeparatorMenuItem());
+			MenuItem ifolderDataDebug =
+					new MenuItem ("Print iFolderData Debug Information");
+			trayMenu.Append (ifolderDataDebug);
+			ifolderDataDebug.Activated +=
+					new EventHandler(PrintiFolderDataDebugState);
+
 /*			if( (ifSettings != null) && (!ifSettings.HaveEnterprise) )
 			{
 				MenuItem connect_item =
@@ -1156,6 +1163,10 @@ Console.WriteLine("Modal present");
 			}
 		}
 
+		private void PrintiFolderDataDebugState(object o, EventArgs args)
+		{
+			ifdata.PrintDebugState();
+		}
 
 		public void QuitiFolder()
 		{

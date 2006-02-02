@@ -571,10 +571,10 @@ namespace Novell.iFolder
 				new EventHandler(OnToggleViewServeriFoldersMenuItem);
 					
 			MenuItem showColorPaletteMenuItem =	// FIXME: Remove this before shipping
-				new MenuItem(Util.GS("Show _Color Palette (FIXME: Remove this before shipping)..."));
+				new MenuItem("Show _Color Palette (FIXME: Remove this before shipping)...");
 			ViewMenu.Append(showColorPaletteMenuItem);
 			showColorPaletteMenuItem.Activated += ShowColorPalette;
-
+			
 			MenuItem ViewMenuItem = new MenuItem(Util.GS("_View"));
 			ViewMenuItem.Submenu = ViewMenu;
 			menubar.Append(ViewMenuItem);
@@ -1788,7 +1788,8 @@ Console.WriteLine("\tremoving the group from the iFolderIconView");
 					(iFolderViewGroup)serverGroups[args.DomainID];
 				iFoldersIconView.RemoveGroup(group);
 				serverGroups.Remove(args.DomainID);
-				group.Destroy();
+				group.Dispose();
+				group = null;
 			}
 			
 			if (serverGroupFilters.ContainsKey(args.DomainID))
