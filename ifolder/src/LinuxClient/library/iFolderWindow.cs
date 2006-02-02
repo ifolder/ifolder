@@ -2343,6 +2343,10 @@ Console.WriteLine("iFolderWindow.AddServerGroup(DomainID: {0})", domainID);
 					"",
 					Util.GS("Revert this iFolder back to a normal folder?"),
 					Util.GS("The folder will still be on your computer, but it will no longer synchronize with the iFolder Server."));
+
+				CheckButton deleteFromServerCB = new CheckButton(Util.GS("Also _delete this iFolder from the server"));
+				dialog.ExtraWidget = deleteFromServerCB;
+
 				int rc = dialog.Run();
 				dialog.Hide();
 				dialog.Destroy();
@@ -2350,7 +2354,17 @@ Console.WriteLine("iFolderWindow.AddServerGroup(DomainID: {0})", domainID);
 				{
 					try
 					{
-						ifdata.RevertiFolder(holder.iFolder.ID);
+						iFolderHolder subHolder =
+							ifdata.RevertiFolder(holder.iFolder.ID);
+						
+						if (deleteFromServerCB.Active)
+						{
+							if (subHolder == null)
+								ifdata.DeleteiFolder(holder.iFolder.ID);
+							else
+								ifdata.DeleteiFolder(subHolder.iFolder.ID);
+						}
+						
 						iFoldersIconView.UnselectAll();
 					}
 					catch(Exception e)
