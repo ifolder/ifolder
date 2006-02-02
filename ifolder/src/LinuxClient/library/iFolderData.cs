@@ -723,7 +723,7 @@ Console.WriteLine(Environment.StackTrace);
 				{
 					iFolderWeb ifolder = ifws.GetiFolderInvitation(
 								collectionID, ifolderID);
-					if (ifolder == null)
+					if (ifolder == null || !ifolder.State.Equals("Available"))
 						return null;
 
 					if(ifHolder != null)
