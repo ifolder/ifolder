@@ -316,7 +316,7 @@ Console.WriteLine("\n\n***\niFolderViewGroup.Dispose({0})\n***\n\n", calledFromF
 			nameLabel = new Label(
 				string.Format(
 					"<span size=\"xx-large\">{0}</span>",
-					name));
+					GLib.Markup.EscapeText(name)));
 			contentVBox.PackStart(nameLabel, false, false, 0);
 			nameLabel.UseMarkup = true;
 			nameLabel.UseUnderline = false;

@@ -728,7 +728,8 @@ Console.WriteLine("iFolderViewItem.Refresh({0}) exiting", holder.iFolder.Name);
 			{
 				currentName = text;
 				string potentialMarkup =
-					string.Format("<span size=\"large\">{0}</span>", text);
+					string.Format("<span size=\"large\">{0}</span>",
+						GLib.Markup.EscapeText(text));
 				
 				nameLabel.Markup = potentialMarkup;
 			}
@@ -752,11 +753,11 @@ Console.WriteLine("iFolderViewItem.Refresh({0}) exiting", holder.iFolder.Name);
 					potentialMarkup =
 						string.Format("<span size=\"small\">{0}: {1}</span>",
 									  Util.GS("Owner"),
-									  text);
+									  GLib.Markup.EscapeText(text));
 				else
 					potentialMarkup =
 						string.Format("<span size=\"small\">{0}</span>",
-									  text);
+									  GLib.Markup.EscapeText(text));
 
 				locationLabel.Markup = potentialMarkup;
 			}
@@ -779,13 +780,13 @@ Console.WriteLine("iFolderViewItem.Refresh({0}) exiting", holder.iFolder.Name);
 				if (holder.iFolder.IsSubscription)
 					potentialMarkup =
 						string.Format("<span size=\"small\">{0} {1}</span>",
-									  text,
+									  GLib.Markup.EscapeText(text),
 									  Util.GS("MB"));
 				else
 					potentialMarkup =
 						string.Format("<span size=\"small\">{0}: {1}</span>",
 									  Util.GS("Status"),
-									  text);
+									  GLib.Markup.EscapeText(text));
 
 				statusLabel.Markup = potentialMarkup;
 			}
