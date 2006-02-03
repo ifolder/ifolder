@@ -737,37 +737,52 @@ Console.WriteLine("\tthe removed domain was NOT the default");
 		///
 		private void OnDomainUpEvent(object o, DomainEventArgs args)
 		{
+Console.WriteLine("DomainController.OnDomainUpEvent()");
 			// Nofity DomainUpEventHandlers
 			if (DomainUp != null)
 				DomainUp(this, args);
-				
-			Status authenticationStatus = AuthenticateDomain(args.DomainID);
-			
-			if (authenticationStatus == null ||
-				((authenticationStatus.statusCode != StatusCodes.Success) &&
-				(authenticationStatus.statusCode != StatusCodes.SuccessInGrace)))
-			{
-				// The authentication failed for whatever reason so retry by
-				// setting an Http Proxy first.
-				authenticationStatus = AuthenticateDomainWithProxy(args.DomainID);
-			}
 
-			if (authenticationStatus != null &&
-				((authenticationStatus.statusCode == StatusCodes.Success) ||
-				(authenticationStatus.statusCode == StatusCodes.SuccessInGrace)))
+			DomainLoginThread domainLoginThread =
+				new DomainLoginThread(this);
+			
+			domainLoginThread.Completed +=
+				new DomainLoginCompletedHandler(OnDomainLoginCompleted);
+			
+			domainLoginThread.Login(args.DomainID);
+		}
+		
+		private void OnDomainLoginCompleted(object o, DomainLoginCompletedArgs args)
+		{
+Console.WriteLine("DomainController.OnDomainLoginCompleted()");
+			string domainID = args.DomainID;
+			Status authStatus = args.AuthenticationStatus;
+
+if (authStatus == null)
+{
+	Console.WriteLine("DomainController.OnDomainLoginCompleted: authStatus is null!");
+}
+else
+{
+	Console.WriteLine("DomainController.OnDomainLoginCompleted: authStatus: {0}", authStatus.statusCode);
+}
+
+			if (authStatus != null &&
+				((authStatus.statusCode == StatusCodes.Success) ||
+				 (authStatus.statusCode == StatusCodes.SuccessInGrace)))
 			{
-				HandleDomainLoggedIn(args.DomainID, authenticationStatus);
+				HandleDomainLoggedIn(domainID, authStatus);
 			}
 			else
 			{
 				// Notify DomainNeedsCredentialsEventHandlers
 				if (DomainNeedsCredentials != null)
-					DomainNeedsCredentials(this, args);
+					DomainNeedsCredentials(this, new DomainEventArgs(domainID));
 			}
 		}
 		
 		private void HandleDomainLoggedIn(string domainID, Status status)
 		{
+Console.WriteLine("DomainController.HandleDomainLoggedIn()");
 			// Update our cache of the DomainInformation object
 			try
 			{
@@ -814,7 +829,7 @@ Console.WriteLine("\tthe removed domain was NOT the default");
 			}
 		}
 		
-		private Status AuthenticateDomain(string domainID)
+		public Status AuthenticateDomain(string domainID)
 		{
 			// Attempt to authenticate.  If the authentication is successful,
 			// the credentials were previously saved.
@@ -833,7 +848,7 @@ Console.WriteLine("\tthe removed domain was NOT the default");
 			return null;
 		}
 		
-		private Status AuthenticateDomainWithProxy(string domainID)
+		public Status AuthenticateDomainWithProxy(string domainID)
 		{
 			string userID;
 			string credentials;
@@ -1126,6 +1141,8 @@ Console.WriteLine("DomainController.OnDomainDeletedEvent()");
 		}
 	}
 	
+	public delegate void DomainLoginCompletedHandler(object sender, DomainLoginCompletedArgs args);
+	
 	public class DomainLoginThread
 	{
 		private DomainController	domainController;
@@ -1150,45 +1167,94 @@ Console.WriteLine("DomainController.OnDomainDeletedEvent()");
 			}
 		}
 		
-		public event EventHandler Completed;
+		public event DomainLoginCompletedHandler Completed;
+//		public event EventHandler Completed;
 
-		public DomainLoginThread(DomainController domainController,
-								 string domainID,
-								 string password,
-								 bool bSavePassword)
+		public DomainLoginThread(DomainController domainController)
 		{
 			this.domainController	= domainController;
-			this.domainID			= domainID;
-			this.password			= password;
-			this.bSavePassword		= bSavePassword;
+			this.domainID			= null;
+			this.password			= null;
+			this.bSavePassword		= false;
 			
 			this.authStatus			= null;
 		}
 		
-		public void Login()
+		/// <summary>
+		/// This method should only be used during the DomainUp process when no
+		/// user intervention is needed.  If the authentication fails, this
+		/// will eventually cause the user to be prompted for more information
+		/// but it is possible that if everything works, the user will never be
+		/// interrupted.
+		/// </summary>
+		public void Login(string domainID)
 		{
-Console.WriteLine("DomainController.Login()");
-			System.Threading.Thread thread =
+			this.domainID = domainID;
+			
+			System.Threading.Thread thread = 
 				new System.Threading.Thread(
 					new System.Threading.ThreadStart(LoginThread));
 			thread.Start();
 		}
 		
+		/// <summary>
+		/// This method should only be called when the user actively kicks off
+		/// a login from the accounts dialog or from the account wizard.
+		/// </summary>
+		public void Login(string domainID, string password, bool bSavePassword)
+		{
+			this.domainID			= domainID;
+			this.password			= password;
+			this.bSavePassword		= bSavePassword;
+			
+			System.Threading.Thread thread = 
+				new System.Threading.Thread(
+					new System.Threading.ThreadStart(LoginThreadWithArgs));
+			thread.Start();
+		}
+		
 		private void LoginThread()
+		{
+			try
+			{
+				authStatus = domainController.AuthenticateDomain(domainID);
+				
+				if (authStatus == null ||
+					((authStatus.statusCode != StatusCodes.Success) &&
+					 (authStatus.statusCode != StatusCodes.SuccessInGrace)))
+				{
+					authStatus =
+						domainController.AuthenticateDomainWithProxy(
+							domainID);
+				}
+			}
+			catch(Exception e)
+			{
+				Console.WriteLine("Exception attempting a login: {0}", e.Message);
+				authStatus = new Status();	// Default is UnknownStatus
+			}
+
+			if (Completed != null)
+			{
+				LoginThreadCompletedHandler completedHandler =
+					new LoginThreadCompletedHandler(this);
+				GLib.Idle.Add(completedHandler.IdleHandler);
+			}
+		}
+		
+		private void LoginThreadWithArgs()
 		{
 Console.WriteLine("DomainController.LoginThread()");
 			try
 			{
-Console.WriteLine("FIXME: Remove this temporary delay");
-System.Threading.Thread.Sleep(10000);
 				authStatus = domainController.AuthenticateDomain(
 					domainID, password, bSavePassword);
 Console.WriteLine("\tDone logging in");
 			}
 			catch(Exception e)
 			{
-Console.WriteLine("\tException logging in: {0}", e.Message);
-				// FIXME: Figure out whether we should do anything with this
+				Console.WriteLine("Exception attempting a login: {0}", e.Message);
+				authStatus = new Status();	// Default is UnknownStatus
 			}
 
 			if (Completed != null)
@@ -1203,7 +1269,7 @@ Console.WriteLine("\tException logging in: {0}", e.Message);
 		{
 Console.WriteLine("DomainController.LoginCompleted()");
 			if (Completed != null)
-				Completed(this, EventArgs.Empty);
+				Completed(this, new DomainLoginCompletedArgs(domainID, authStatus));
 		}
 		
 		private class LoginThreadCompletedHandler
@@ -1223,6 +1289,28 @@ Console.WriteLine("LoginThreadCompletedHandler.IdleHandler()");
 				
 				return false;
 			}
+		}
+	}
+	
+	public class DomainLoginCompletedArgs : EventArgs
+	{
+		private string domainID;
+		private Status authStatus;
+		
+		public string DomainID
+		{
+			get{ return domainID; }
+		}
+		
+		public Status AuthenticationStatus
+		{
+			get{ return authStatus; }
+		}
+		
+		public DomainLoginCompletedArgs(string domainID, Status authStatus)
+		{
+			this.domainID = domainID;
+			this.authStatus = authStatus;
 		}
 	}
 }

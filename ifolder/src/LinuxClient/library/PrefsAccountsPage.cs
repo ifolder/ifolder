@@ -566,13 +566,12 @@ namespace Novell.iFolder
 				WaitDialog.Show();
 				
 				DomainLoginThread domainLoginThread =
-					new DomainLoginThread(
-						domainController, dom.ID, password, bSavePassword);
+					new DomainLoginThread(domainController);
 				
 				domainLoginThread.Completed +=
-					new EventHandler(OnDomainLoginCompleted);
+					new DomainLoginCompletedHandler(OnDomainLoginCompleted);
 					
-				domainLoginThread.Login();
+				domainLoginThread.Login(dom.ID, password, bSavePassword);
 			}
 			catch
 			{
@@ -582,7 +581,7 @@ namespace Novell.iFolder
 			}
 		}
 		
-		private void OnDomainLoginCompleted(object o, EventArgs args)
+		private void OnDomainLoginCompleted(object o, DomainLoginCompletedArgs args)
 		{
 Console.WriteLine("PrefsAccountPage.OnDomainLoginCompleted");
 			if (WaitDialog != null)
@@ -592,9 +591,8 @@ Console.WriteLine("PrefsAccountPage.OnDomainLoginCompleted");
 				WaitDialog = null;
 			}
 
-			DomainLoginThread domainLoginThread = (DomainLoginThread)o;
-			Status authStatus = domainLoginThread.AuthenticationStatus;
-	
+			Status authStatus = args.AuthenticationStatus;
+
 			if (authStatus != null)
 			{
 				if (authStatus.statusCode == StatusCodes.Success ||
@@ -606,14 +604,14 @@ Console.WriteLine("PrefsAccountPage.OnDomainLoginCompleted");
 				{
 					Util.ShowLoginError(topLevelWindow, authStatus.statusCode);
 
-					UpdateDomainStatus(domainLoginThread.DomainID);
+					UpdateDomainStatus(args.DomainID);
 				}
 			}
 			else
 			{
 				Util.ShowLoginError(topLevelWindow, StatusCodes.Unknown);
 
-				UpdateDomainStatus(domainLoginThread.DomainID);
+				UpdateDomainStatus(args.DomainID);
 			}
 		}
 		
