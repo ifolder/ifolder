@@ -114,9 +114,9 @@ namespace Novell.iFolder
 
 			SyncIntervalValue.Text = syncInterval + " " + Util.GS("minute(s)");
 			
-			NameLabel.Markup = string.Format("<span weight=\"bold\">{0}</span>", ifolder.Name);
-			OwnerLabel.Markup = string.Format("<span size=\"small\">{0}</span>", ifolder.Owner);
-			LocationLabel.Markup = string.Format("<span size=\"small\">{0}</span>", ifolder.UnManagedPath);
+			NameLabel.Markup = string.Format("<span weight=\"bold\">{0}</span>", GLib.Markup.EscapeText(ifolder.Name));
+			OwnerLabel.Markup = string.Format("<span size=\"small\">{0}</span>", GLib.Markup.EscapeText(ifolder.Owner));
+			LocationLabel.Markup = string.Format("<span size=\"small\">{0}</span>", GLib.Markup.EscapeText(ifolder.UnManagedPath));
 			
 			try
 			{
@@ -334,7 +334,7 @@ namespace Novell.iFolder
 			BasicTable.ColumnSpacing = 5;
 			BasicTable.RowSpacing = 5;
 			
-			Label label = new Label(string.Format("<span size=\"small\">{0}</span>", Util.GS("Owner:")));
+			Label label = new Label(string.Format("<span size=\"small\">{0}</span>", GLib.Markup.EscapeText(Util.GS("Owner:"))));
 			label.UseMarkup = true;
 			label.Xalign = 0;
 			BasicTable.Attach(label, 0, 1, 0, 1,
@@ -347,7 +347,7 @@ namespace Novell.iFolder
 			BasicTable.Attach(OwnerLabel, 1, 2, 0, 1,
 					AttachOptions.Expand | AttachOptions.Fill, 0, 0, 0);
 			
-			label = new Label(string.Format("<span size=\"small\">{0}</span>", Util.GS("Location:")));
+			label = new Label(string.Format("<span size=\"small\">{0}</span>", GLib.Markup.EscapeText(Util.GS("Location:"))));
 			label.UseMarkup = true;
 			label.Xalign = 0;
 			BasicTable.Attach(label, 0, 1, 1, 2,
