@@ -84,7 +84,7 @@ public class iFolderWaitDialog : Dialog
 		l.Selectable = false;
 		l.CanFocus = false;
 		l.Xalign = 0; l.Yalign = 0;
-		l.Markup = "<span weight=\"bold\" size=\"larger\">" + statement + "</span>";
+		l.Markup = "<span weight=\"bold\" size=\"larger\">" + GLib.Markup.EscapeText(statement) + "</span>";
 		v.PackStart(l);
 
 		l = new Label(secondaryStatement);

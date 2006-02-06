@@ -204,13 +204,19 @@ namespace Novell.iFolder
     		iFolderUser[] userlist =  ifws.GetiFolderUsers(ifolder.ID);
 			foreach(iFolderUser user in userlist)
 			{
-				if (memberFullNames.Contains(user.FN))
+				string name = user.FN;
+				if (name == null || name.Length <= 0)
+					name = user.Name;
+				if (name == null || name.Length <= 0)
+					continue;	// Skip this user since it is not complete
+
+				if (memberFullNames.Contains(name))
 				{
 					// This is a duplicate
-					duplicateMembers[user.FN] = 0;
+					duplicateMembers[name] = 0;
 				}
 				else
-					memberFullNames[user.FN] = 0;
+					memberFullNames[name] = 0;
 			
 				if(!curUsers.ContainsKey(user.UserID))
 				{
@@ -549,6 +555,7 @@ namespace Novell.iFolder
 							{
 								try
 								{
+									/*
 									try
 									{
 										// Add the member to the domain.  If the member is
@@ -565,11 +572,17 @@ namespace Novell.iFolder
 																member.FamilyName);
 									}
 									catch {}
+									*/
 									
-    								iFolderUser newUser = ifws.InviteUser(
-															ifolder.ID,
-															member.UserID,
-															"ReadWrite");
+    								iFolderUser newUser = 
+    									ifws.AddAndInviteUser(
+    										ifolder.ID,
+    										member.Name,
+    										member.GivenName,
+    										member.FamilyName,
+    										member.UserID,
+    										null,
+    										"ReadWrite" );
 	
 									TreeIter iter = 
 										UserTreeStore.AppendValues(newUser);

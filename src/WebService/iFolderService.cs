@@ -217,7 +217,7 @@ namespace Novell.iFolder.Web
 			Collection col = SharedCollection.GetCollectionByPath(LocalPath);
 			if(col != null)
 			{
-				if(col.IsType(iFolderWeb.iFolderType))
+				if(col.IsType(col, iFolderWeb.iFolderType))
 					return true;
 			}
 			return false;
@@ -338,7 +338,7 @@ namespace Novell.iFolder.Web
 			{
 				// CRG: Removed the code that checked for a Subscription
 				// USE: GetiFolderInvitation to be safe in multi-domain
-				if(col.IsType(iFolderWeb.iFolderType))
+				if(col.IsType(col, iFolderWeb.iFolderType))
 					ifolder = new iFolderWeb(col);
 				else
 					ifolder = null;
@@ -568,7 +568,7 @@ namespace Novell.iFolder.Web
 				if (sn.Type.Equals(NodeTypes.CollectionType))
 				{
 					Collection col = store.GetCollectionByID(sn.ID);
-					if (col.IsType(iFolderWeb.iFolderType))
+					if (col.IsType(col, iFolderWeb.iFolderType))
 					{
 						list.Add(new iFolderWeb(col));
 					}
@@ -653,7 +653,7 @@ namespace Novell.iFolder.Web
 			foreach(ShallowNode sn in iFolderList)
 			{
 				Collection col = store.GetCollectionByID(sn.ID);
-				if(col.IsType(iFolderWeb.iFolderType))
+				if(col.IsType(col, iFolderWeb.iFolderType))
 					list.Add(new iFolderWeb(col));
 			}
 
@@ -1335,11 +1335,11 @@ namespace Novell.iFolder.Web
 				if(node != null)
 				{
 					Domain domain = store.GetDomain( col.Domain );
-					if (node.IsBaseType(NodeTypes.MemberType))
+					if (col.IsBaseType(node, NodeTypes.MemberType))
 					{
 						ifolderUser = new iFolderUser( domain, new Member( node ) );
 					}
-					else if (node.IsType(typeof( Subscription ).Name))
+					else if (col.IsType(node, typeof( Subscription ).Name))
 					{
 						ifolderUser = new iFolderUser( new Subscription( node ) );
 					}

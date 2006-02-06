@@ -145,7 +145,7 @@ namespace Novell.iFolder
 			hbox.PackStart(messageVBox, true, true, 0);
 
 			Label l = new Label();
-			l.Markup = "<span size=\"small\" weight=\"bold\">" + message + "</span>";
+			l.Markup = "<span size=\"small\" weight=\"bold\">" + GLib.Markup.EscapeText(message) + "</span>";
 			l.LineWrap = false;
 			l.UseMarkup = true;
 			l.Selectable = false;

@@ -55,7 +55,7 @@ namespace Novell.iFolder
 			{
 				int activeIndex = domainComboBox.Active;
 				if (activeIndex >= 0)
-					return domains[0].ID;
+					return domains[activeIndex].ID;
 				else
 					return "0";
 			}
@@ -78,7 +78,7 @@ namespace Novell.iFolder
 		/// filtering the list of domains, this parameter is used to allow this
 		/// dialog to respect the currently selected domain.
 		public CreateDialog(Gtk.Window parentWindow, DomainInformation[] domainArray, string filteredDomainID, string initialPath, iFolderWebService ifws)
-				: base("", Util.GS("Create a new iFolder..."), parentWindow, FileChooserAction.CreateFolder, Stock.Cancel, ResponseType.Cancel,
+				: base("", Util.GS("Select a folder..."), parentWindow, FileChooserAction.SelectFolder, Stock.Cancel, ResponseType.Cancel,
                 Stock.Ok, ResponseType.Ok)
 		{
 			domains = domainArray;
@@ -111,7 +111,7 @@ namespace Novell.iFolder
 			optionsTable.RowSpacing = 10;
 			optionsTable.SetColSpacing(0, 30);
 			
-			Label l = new Label(Util.GS("iFolder Server:"));
+			Label l = new Label(Util.GS("iFolder Account:"));
 			l.Xalign = 0;
 			optionsTable.Attach(l, 1,2,0,1,
 								AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);

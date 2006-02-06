@@ -28,7 +28,7 @@ Summary      : iFolder 3
 Name         : @PACKAGE@
 Version      : @VERSION@
 Release      : 1
-Copyright    : GPL
+License      : GPL
 Group        : Applications/Productivity
 Source       : %{name}-%{version}.tar.gz
 URL          : http://forge.novell.com/modules/xfmod/project/?ifolder
@@ -40,6 +40,7 @@ BuildRoot    : %{_tmppath}/%{name}-%{version}
 Requires     : simias >= @SIMIASVER@ 
 Requires     : gtk-sharp2 >= 1.9.5
 #Requires     : libgdiplus >= 1.1.7
+Requires     : dbus-1-mono >= 0.35.0
 Obsoletes    : %{name} <= %{version}
 
 #=============================================================================

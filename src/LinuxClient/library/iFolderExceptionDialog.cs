@@ -59,7 +59,7 @@ namespace Novell.iFolder
 			v.BorderWidth = 10;
 			v.Spacing = 10;
 			Label l = new Label("<span weight=\"bold\" size=\"larger\">" +
-				exception.Message + "</span>");
+				GLib.Markup.EscapeText(exception.Message) + "</span>");
 			l.LineWrap = true;
 			l.UseMarkup = true;
 			l.UseUnderline = false;

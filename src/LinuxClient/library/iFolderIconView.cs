@@ -33,6 +33,10 @@ namespace Novell.iFolder
 	{
 		private VBox							vbox;
 		
+		private Widget							parentWidget;
+		
+		private bool							alreadyDisposed;
+		
 		private ArrayList						viewGroups;
 		
 		private iFolderHolder					currentSelection;
@@ -96,6 +100,8 @@ namespace Novell.iFolder
 			this.ModifyBg(StateType.Normal, this.Style.Base(StateType.Normal));
 			this.ModifyBase(StateType.Normal, this.Style.Base(StateType.Normal));
 			this.CanFocus = true;
+			this.parentWidget = parentWidget;
+			this.alreadyDisposed = false;
 			
 			vbox = new VBox(false, 0);
 			this.Add(vbox);
@@ -107,7 +113,31 @@ namespace Novell.iFolder
 			this.Realized +=
 				new EventHandler(OnWidgetRealized);
 			
-			parentWidget.SizeAllocated += OnSizeAllocated;
+			parentWidget.SizeAllocated +=
+				new SizeAllocatedHandler(OnSizeAllocated);
+		}
+		
+		~iFolderIconView()
+		{
+			Dispose(true);
+		}
+		
+		private void Dispose(bool calledFromFinalizer)
+		{
+			if (!alreadyDisposed)
+			{
+				alreadyDisposed = true;
+				parentWidget.SizeAllocated -=
+					new SizeAllocatedHandler(OnSizeAllocated);
+				
+				if (!calledFromFinalizer)
+					GC.SuppressFinalize(this);
+			}
+		}
+		
+		public override void Dispose()
+		{
+			Dispose(false);
 		}
 		
 		public void AddWidget(Widget w)
@@ -135,7 +165,8 @@ namespace Novell.iFolder
 			iFolderIconView.CheckThread();
 			viewGroups.Add(group);
 
-			group.Selection.SelectionChanged += SelectionChangedHandler;
+			group.Selection.SelectionChanged += 
+				new EventHandler(SelectionChangedHandler);
 			
 			vbox.PackStart(group, false, false, 0);
 
@@ -149,8 +180,10 @@ namespace Novell.iFolder
 			iFolderIconView.CheckThread();
 			if (viewGroups.Contains(group))
 			{
+Console.WriteLine("\n\n***\niFolderIconView.RemoveGroup()\n");
 				viewGroups.Remove(group);
-				group.Selection.SelectionChanged -= SelectionChangedHandler;
+				group.Selection.SelectionChanged -=
+					new EventHandler(SelectionChangedHandler);
 				vbox.Remove(group);
 			}
 		}
@@ -192,9 +225,9 @@ namespace Novell.iFolder
 			iFolderIconView.CheckThread();
 			foreach(iFolderViewGroup group in viewGroups)
 			{
-				group.Selection.SelectionChanged -= SelectionChangedHandler;
+				group.Selection.SelectionChanged -= new EventHandler(SelectionChangedHandler);
 				group.Selection.UnselectAll();
-				group.Selection.SelectionChanged += SelectionChangedHandler;
+				group.Selection.SelectionChanged += new EventHandler(SelectionChangedHandler);
 			}
 			
 			if (SelectionChanged != null)
@@ -236,9 +269,9 @@ Console.WriteLine("iFolderIconView.SelectionChangedHandler()");
 			{
 				if (group != tempGroup)
 				{
-					tempGroup.Selection.SelectionChanged -= SelectionChangedHandler;
+					tempGroup.Selection.SelectionChanged -= new EventHandler(SelectionChangedHandler);
 					tempGroup.Selection.UnselectAll();
-					tempGroup.Selection.SelectionChanged += SelectionChangedHandler;
+					tempGroup.Selection.SelectionChanged += new EventHandler(SelectionChangedHandler);
 				}
 			}
 		

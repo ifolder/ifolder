@@ -206,7 +206,7 @@ Console.WriteLine(Environment.StackTrace);
 		{
 			lock(typeof(DomainController))
 			{
-				if (keyedDomains.Contains(defDomainID))
+				if (defDomainID != null && keyedDomains.Contains(defDomainID))
 					return (DomainInformation)keyedDomains[defDomainID];
 				else
 				{
@@ -320,7 +320,12 @@ Console.WriteLine("DomainController.GetDomain(\"{0}\")", domainID);
 
 					// Notify DomainAddedEventHandlers
 					if (DomainAdded != null)
-						DomainAdded(this, new DomainEventArgs(dom.ID));
+					{
+						DomainAddedIdleHandler addedHandler =
+							new DomainAddedIdleHandler(dom.ID, this);
+						GLib.Idle.Add(addedHandler.IdleHandler);
+//						DomainAdded(this, new DomainEventArgs(dom.ID));
+					}
 				}
 			}
 			catch (Exception e)
@@ -337,6 +342,32 @@ Console.WriteLine("DomainController.GetDomain(\"{0}\")", domainID);
 			}
 			
 			return dom;
+		}
+		
+		private void EmitDomainAdded(string domainID)
+		{
+			if (DomainAdded != null)
+				DomainAdded(this, new DomainEventArgs(domainID));
+		}
+		
+		public class DomainAddedIdleHandler
+		{
+			string domainID;
+			DomainController domainController;
+			
+			public DomainAddedIdleHandler(string domainID,
+										   DomainController domainController)
+			{
+				this.domainID = domainID;
+				this.domainController = domainController;
+			}
+			
+			public bool IdleHandler()
+			{
+				domainController.EmitDomainAdded(domainID);
+				
+				return false; // Don't keep calling this function
+			}
 		}
 		
 		public DomainInformation UpdateDomainHostAddress(string domainID, string host)
@@ -382,7 +413,24 @@ Console.WriteLine("DomainController.GetDomain(\"{0}\")", domainID);
 		/// </summary>
 		public void RemoveDomain(string domainID, bool deleteiFoldersOnServer)
 		{
-			simws.LeaveDomain(domainID, !deleteiFoldersOnServer);
+			try
+			{
+				simws.LeaveDomain(domainID, !deleteiFoldersOnServer);
+			}
+			catch(Exception e)
+			{
+				iFolderMsgDialog dg = new iFolderMsgDialog(
+					null,
+					iFolderMsgDialog.DialogType.Error,
+					iFolderMsgDialog.ButtonSet.Ok,
+					"",
+					Util.GS("Unable to remove the account"),
+					Util.GS("iFolder encountered a problem removing the account.  Please restart iFolder and try again."),
+					e.Message);
+				dg.Run();
+				dg.Hide();
+				dg.Destroy();
+			}
 		}
 
 		/// <summary>
@@ -595,16 +643,19 @@ Console.WriteLine("DomainController.GetDomain(\"{0}\")", domainID);
 		
 		public void CheckForNewiFolders()
 		{
-			// Update the POBox for every domain so that the user can get
-			// notification of new iFolder subscriptions.
-			foreach(DomainInformation domain in keyedDomains.Values)
+			lock(typeof(DomainController))
 			{
-				try
+				// Update the POBox for every domain so that the user can get
+				// notification of new iFolder subscriptions.
+				foreach(DomainInformation domain in keyedDomains.Values)
 				{
-					ifws.SynciFolderNow(domain.POBoxID);
-				}
-				catch
-				{
+					try
+					{
+						ifws.SynciFolderNow(domain.POBoxID);
+					}
+					catch
+					{
+					}
 				}
 			}
 		}
@@ -686,37 +737,52 @@ Console.WriteLine("\tthe removed domain was NOT the default");
 		///
 		private void OnDomainUpEvent(object o, DomainEventArgs args)
 		{
+Console.WriteLine("DomainController.OnDomainUpEvent()");
 			// Nofity DomainUpEventHandlers
 			if (DomainUp != null)
 				DomainUp(this, args);
-				
-			Status authenticationStatus = AuthenticateDomain(args.DomainID);
-			
-			if (authenticationStatus == null ||
-				((authenticationStatus.statusCode != StatusCodes.Success) &&
-				(authenticationStatus.statusCode != StatusCodes.SuccessInGrace)))
-			{
-				// The authentication failed for whatever reason so retry by
-				// setting an Http Proxy first.
-				authenticationStatus = AuthenticateDomainWithProxy(args.DomainID);
-			}
 
-			if (authenticationStatus != null &&
-				((authenticationStatus.statusCode == StatusCodes.Success) ||
-				(authenticationStatus.statusCode == StatusCodes.SuccessInGrace)))
+			DomainLoginThread domainLoginThread =
+				new DomainLoginThread(this);
+			
+			domainLoginThread.Completed +=
+				new DomainLoginCompletedHandler(OnDomainLoginCompleted);
+			
+			domainLoginThread.Login(args.DomainID);
+		}
+		
+		private void OnDomainLoginCompleted(object o, DomainLoginCompletedArgs args)
+		{
+Console.WriteLine("DomainController.OnDomainLoginCompleted()");
+			string domainID = args.DomainID;
+			Status authStatus = args.AuthenticationStatus;
+
+if (authStatus == null)
+{
+	Console.WriteLine("DomainController.OnDomainLoginCompleted: authStatus is null!");
+}
+else
+{
+	Console.WriteLine("DomainController.OnDomainLoginCompleted: authStatus: {0}", authStatus.statusCode);
+}
+
+			if (authStatus != null &&
+				((authStatus.statusCode == StatusCodes.Success) ||
+				 (authStatus.statusCode == StatusCodes.SuccessInGrace)))
 			{
-				HandleDomainLoggedIn(args.DomainID, authenticationStatus);
+				HandleDomainLoggedIn(domainID, authStatus);
 			}
 			else
 			{
 				// Notify DomainNeedsCredentialsEventHandlers
 				if (DomainNeedsCredentials != null)
-					DomainNeedsCredentials(this, args);
+					DomainNeedsCredentials(this, new DomainEventArgs(domainID));
 			}
 		}
 		
 		private void HandleDomainLoggedIn(string domainID, Status status)
 		{
+Console.WriteLine("DomainController.HandleDomainLoggedIn()");
 			// Update our cache of the DomainInformation object
 			try
 			{
@@ -763,7 +829,7 @@ Console.WriteLine("\tthe removed domain was NOT the default");
 			}
 		}
 		
-		private Status AuthenticateDomain(string domainID)
+		public Status AuthenticateDomain(string domainID)
 		{
 			// Attempt to authenticate.  If the authentication is successful,
 			// the credentials were previously saved.
@@ -782,7 +848,7 @@ Console.WriteLine("\tthe removed domain was NOT the default");
 			return null;
 		}
 		
-		private Status AuthenticateDomainWithProxy(string domainID)
+		public Status AuthenticateDomainWithProxy(string domainID)
 		{
 			string userID;
 			string credentials;
@@ -877,48 +943,54 @@ Console.WriteLine("\tthe removed domain was NOT the default");
 		private void OnDomainAddedEvent(object o, DomainEventArgs args)
 		{
 Console.WriteLine("DomainController.OnDomainAddedEvent()");
-			DomainInformation domain = (DomainInformation)keyedDomains[args.DomainID];
-			if (domain != null)
+			lock (typeof(DomainController) )
 			{
-				// We (and others) already know about this
-				// domain so do nothing about this event.
-				return;
+				DomainInformation domain = (DomainInformation)keyedDomains[args.DomainID];
+				if (domain != null)
+				{
+					// We (and others) already know about this
+					// domain so do nothing about this event.
+					return;
+				}
+	
+				try
+				{
+					domain = simws.GetDomainInformation(args.DomainID);
+				}
+				catch (Exception e)
+				{
+					// FIXME: Add in some type of error logging to show that we
+					// weren't able to get information about a newly added domain
+					return;
+				}
+	
+				AddDomainToHashtable(domain);
+	
+				// Notify DomainAddedEventHandlers
+				if (DomainAdded != null)
+					DomainAdded(this, args);
 			}
-
-			try
-			{
-				domain = simws.GetDomainInformation(args.DomainID);
-			}
-			catch (Exception e)
-			{
-				// FIXME: Add in some type of error logging to show that we
-				// weren't able to get information about a newly added domain
-				return;
-			}
-
-			AddDomainToHashtable(domain);
-
-			// Notify DomainAddedEventHandlers
-			if (DomainAdded != null)
-				DomainAdded(this, args);
 		}
 
 		[GLib.ConnectBefore]
 		private void OnDomainDeletedEvent(object o, DomainEventArgs args)
 		{
 Console.WriteLine("DomainController.OnDomainDeletedEvent()");
-			DomainInformation domain = (DomainInformation)keyedDomains[args.DomainID];
-			if (domain == null)
+			lock (typeof(DomainController) )
 			{
-				// We don't know about this domain so don't do anything.
-				return;
+				DomainInformation domain = (DomainInformation)keyedDomains[args.DomainID];
+				if (domain == null)
+				{
+					// We don't know about this domain so don't do anything.
+					return;
+				}
+				
+				RemoveDomainFromHashtable(args.DomainID);
+				
+				// Notify DomainDeletedEventHandlers
+				if (DomainDeleted != null)
+					DomainDeleted(this, args);
 			}
-			
-			RemoveDomainFromHashtable(args.DomainID);
-			
-			// Notify DomainDeletedEventHandlers
-			if (DomainDeleted != null)
-				DomainDeleted(this, args);
 		}
 	}
 
@@ -1069,6 +1141,8 @@ Console.WriteLine("DomainController.OnDomainDeletedEvent()");
 		}
 	}
 	
+	public delegate void DomainLoginCompletedHandler(object sender, DomainLoginCompletedArgs args);
+	
 	public class DomainLoginThread
 	{
 		private DomainController	domainController;
@@ -1093,45 +1167,94 @@ Console.WriteLine("DomainController.OnDomainDeletedEvent()");
 			}
 		}
 		
-		public event EventHandler Completed;
+		public event DomainLoginCompletedHandler Completed;
+//		public event EventHandler Completed;
 
-		public DomainLoginThread(DomainController domainController,
-								 string domainID,
-								 string password,
-								 bool bSavePassword)
+		public DomainLoginThread(DomainController domainController)
 		{
 			this.domainController	= domainController;
-			this.domainID			= domainID;
-			this.password			= password;
-			this.bSavePassword		= bSavePassword;
+			this.domainID			= null;
+			this.password			= null;
+			this.bSavePassword		= false;
 			
 			this.authStatus			= null;
 		}
 		
-		public void Login()
+		/// <summary>
+		/// This method should only be used during the DomainUp process when no
+		/// user intervention is needed.  If the authentication fails, this
+		/// will eventually cause the user to be prompted for more information
+		/// but it is possible that if everything works, the user will never be
+		/// interrupted.
+		/// </summary>
+		public void Login(string domainID)
 		{
-Console.WriteLine("DomainController.Login()");
-			System.Threading.Thread thread =
+			this.domainID = domainID;
+			
+			System.Threading.Thread thread = 
 				new System.Threading.Thread(
 					new System.Threading.ThreadStart(LoginThread));
 			thread.Start();
 		}
 		
+		/// <summary>
+		/// This method should only be called when the user actively kicks off
+		/// a login from the accounts dialog or from the account wizard.
+		/// </summary>
+		public void Login(string domainID, string password, bool bSavePassword)
+		{
+			this.domainID			= domainID;
+			this.password			= password;
+			this.bSavePassword		= bSavePassword;
+			
+			System.Threading.Thread thread = 
+				new System.Threading.Thread(
+					new System.Threading.ThreadStart(LoginThreadWithArgs));
+			thread.Start();
+		}
+		
 		private void LoginThread()
+		{
+			try
+			{
+				authStatus = domainController.AuthenticateDomain(domainID);
+				
+				if (authStatus == null ||
+					((authStatus.statusCode != StatusCodes.Success) &&
+					 (authStatus.statusCode != StatusCodes.SuccessInGrace)))
+				{
+					authStatus =
+						domainController.AuthenticateDomainWithProxy(
+							domainID);
+				}
+			}
+			catch(Exception e)
+			{
+				Console.WriteLine("Exception attempting a login: {0}", e.Message);
+				authStatus = new Status();	// Default is UnknownStatus
+			}
+
+			if (Completed != null)
+			{
+				LoginThreadCompletedHandler completedHandler =
+					new LoginThreadCompletedHandler(this);
+				GLib.Idle.Add(completedHandler.IdleHandler);
+			}
+		}
+		
+		private void LoginThreadWithArgs()
 		{
 Console.WriteLine("DomainController.LoginThread()");
 			try
 			{
-Console.WriteLine("FIXME: Remove this temporary delay");
-System.Threading.Thread.Sleep(10000);
 				authStatus = domainController.AuthenticateDomain(
 					domainID, password, bSavePassword);
 Console.WriteLine("\tDone logging in");
 			}
 			catch(Exception e)
 			{
-Console.WriteLine("\tException logging in: {0}", e.Message);
-				// FIXME: Figure out whether we should do anything with this
+				Console.WriteLine("Exception attempting a login: {0}", e.Message);
+				authStatus = new Status();	// Default is UnknownStatus
 			}
 
 			if (Completed != null)
@@ -1146,7 +1269,7 @@ Console.WriteLine("\tException logging in: {0}", e.Message);
 		{
 Console.WriteLine("DomainController.LoginCompleted()");
 			if (Completed != null)
-				Completed(this, EventArgs.Empty);
+				Completed(this, new DomainLoginCompletedArgs(domainID, authStatus));
 		}
 		
 		private class LoginThreadCompletedHandler
@@ -1166,6 +1289,28 @@ Console.WriteLine("LoginThreadCompletedHandler.IdleHandler()");
 				
 				return false;
 			}
+		}
+	}
+	
+	public class DomainLoginCompletedArgs : EventArgs
+	{
+		private string domainID;
+		private Status authStatus;
+		
+		public string DomainID
+		{
+			get{ return domainID; }
+		}
+		
+		public Status AuthenticationStatus
+		{
+			get{ return authStatus; }
+		}
+		
+		public DomainLoginCompletedArgs(string domainID, Status authStatus)
+		{
+			this.domainID = domainID;
+			this.authStatus = authStatus;
 		}
 	}
 }
