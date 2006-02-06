@@ -29,7 +29,7 @@ Summary      : nautilus-ifolder3
 Name         : @PACKAGE@
 Version      : @VERSION@
 Release      : 1
-Copyright    : GPL
+License      : GPL
 Group        : Applications/Productivity
 Source       : %{name}-%{version}.tar.gz
 URL          : http://forge.novell.com/modules/xfmod/project/?ifolder
@@ -85,4 +85,4 @@ make DESTDIR=$RPM_BUILD_ROOT install
 @gnome_root@/lib/nautilus/extensions-1.0/libnautilus-ifolder*
 @gnome_root@/share/icons/gnome/48x48/emblems/emblem-ifolder.icon
 @gnome_root@/share/icons/gnome/48x48/emblems/emblem-ifolder.png
-@gnome_root@/share/icons/gnome/24x24/apps/ifolder-folder.png
+@gnome_root@/share/nautilus-ifolder3/pixmaps/ifolder-folder.png
