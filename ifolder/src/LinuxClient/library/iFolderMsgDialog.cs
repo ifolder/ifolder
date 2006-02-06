@@ -33,8 +33,19 @@ namespace Novell.iFolder
 public class iFolderMsgDialog : Dialog
 {
 //	private Button showDetailsButton;
-	private Expander detailsExpander;
-	private ScrolledWindow showDetailsScrolledWindow;
+	private Image			dialogImage;
+	private Expander		detailsExpander;
+	private ScrolledWindow	showDetailsScrolledWindow;
+	private VBox			extraWidgetVBox;
+	private Widget			extraWidget;
+	
+	public Image Image
+	{
+		get
+		{
+			return dialogImage;
+		}
+	}
 
 	public enum DialogType : int
 	{
@@ -50,6 +61,35 @@ public class iFolderMsgDialog : Dialog
 		OkCancel,
 		YesNo,
 		None
+	}
+	
+	public Widget ExtraWidget
+	{
+		get
+		{
+			return extraWidget;
+		}
+		set
+		{
+			if (extraWidget != null)
+			{
+				extraWidgetVBox.Remove(extraWidget);
+				extraWidget.Destroy();
+				extraWidget = null;
+			}
+
+			if (value == null)
+			{
+				extraWidgetVBox.Hide();
+			}
+			else
+			{
+				extraWidget = value;
+				extraWidgetVBox.PackStart(extraWidget, false, false, 0);
+				extraWidgetVBox.Show();
+				extraWidget.Show();
+			}
+		}
 	}
 
 	
@@ -101,25 +141,25 @@ public class iFolderMsgDialog : Dialog
 		h.BorderWidth = 10;
 		h.Spacing = 10;
 
-		Image i = new Image();
+		dialogImage = new Image();
 		switch(type)
 		{
 			case DialogType.Error:
-				i.SetFromStock(Gtk.Stock.DialogError, IconSize.Dialog);
+				dialogImage.SetFromStock(Gtk.Stock.DialogError, IconSize.Dialog);
 				break;
 			case DialogType.Question:
-				i.SetFromStock(Gtk.Stock.DialogQuestion, IconSize.Dialog);
+				dialogImage.SetFromStock(Gtk.Stock.DialogQuestion, IconSize.Dialog);
 				break;
 			case DialogType.Warning:
-				i.SetFromStock(Gtk.Stock.DialogWarning, IconSize.Dialog);
+				dialogImage.SetFromStock(Gtk.Stock.DialogWarning, IconSize.Dialog);
 				break;
 			default:
 			case DialogType.Info:
-				i.SetFromStock(Gtk.Stock.DialogInfo, IconSize.Dialog);
+				dialogImage.SetFromStock(Gtk.Stock.DialogInfo, IconSize.Dialog);
 				break;
 		}
-		i.SetAlignment(0.5F, 0);
-		h.PackStart(i, false, false, 0);
+		dialogImage.SetAlignment(0.5F, 0);
+		h.PackStart(dialogImage, false, false, 0);
 
 		VBox v = new VBox();
 		v.Spacing = 10;
@@ -129,7 +169,7 @@ public class iFolderMsgDialog : Dialog
 		l.Selectable = false;
 		l.CanFocus = false;
 		l.Xalign = 0; l.Yalign = 0;
-		l.Markup = "<span weight=\"bold\" size=\"larger\">" + statement + "</span>";
+		l.Markup = "<span weight=\"bold\" size=\"larger\">" + GLib.Markup.EscapeText(statement) + "</span>";
 		v.PackStart(l);
 
 		l = new Label(secondaryStatement);
@@ -172,6 +212,14 @@ public class iFolderMsgDialog : Dialog
 //			showDetailsScrolledWindow = null;
 //		}
 
+		///
+		/// Extra Widget
+		///
+		extraWidgetVBox = new VBox(false, 0);
+		v.PackStart(extraWidgetVBox, false, false, 0);
+		extraWidgetVBox.NoShowAll = true;
+		extraWidget = null;
+
 		h.PackEnd(v);
 		h.ShowAll();
 		
@@ -180,21 +228,25 @@ public class iFolderMsgDialog : Dialog
 
 		this.VBox.Add(h);
 		
+		Widget defaultButton;
 		switch(buttonSet)
 		{
 			default:
 			case ButtonSet.Ok:
-				this.AddButton(Stock.Ok, ResponseType.Ok);
+				defaultButton = this.AddButton(Stock.Ok, ResponseType.Ok);
 				break;
 			case ButtonSet.OkCancel:
 				this.AddButton(Stock.Cancel, ResponseType.Cancel);
-				this.AddButton(Stock.Ok, ResponseType.Ok);
+				defaultButton = this.AddButton(Stock.Ok, ResponseType.Ok);
 				break;
 			case ButtonSet.YesNo:
 				this.AddButton(Stock.No, ResponseType.No);
-				this.AddButton(Stock.Yes, ResponseType.Yes);
+				defaultButton = this.AddButton(Stock.Yes, ResponseType.Yes);
 				break;
 		}
+		
+		defaultButton.CanDefault = true;
+		defaultButton.GrabFocus();
 	}
 	
 //	private void ShowDetailsButtonPressed(object o, EventArgs args)

@@ -48,10 +48,10 @@ namespace Novell.iFolder
 		const int ctx = 1;
 		private iFolderWebService	ifws;
 		private SimiasWebService	simws;
-		private iFolderData			ifdata;
+		private iFolderData		ifdata;
 
 		private Statusbar			MainStatusBar;
-		private ProgressBar			SyncBar;
+		private ProgressBar		SyncBar;
 
 		private ImageMenuItem		NewMenuItem;
 		private Gtk.MenuItem		ShareMenuItem;
@@ -77,7 +77,7 @@ namespace Novell.iFolder
 		private DomainController	domainController;
 
 		// Manager object that knows about simias resources.
-		private Manager				simiasManager;
+		private Manager			simiasManager;
 
 		///
 		/// Keep track of open windows so that if we're called again for one
@@ -114,9 +114,9 @@ namespace Novell.iFolder
 		private bool				bAvailableFoldersShowing;
 
 		private ScrolledWindow		iFoldersScrolledWindow;
-		private iFolderIconView		iFoldersIconView;
+		private iFolderIconView	iFoldersIconView;
 		private iFolderViewGroup	localGroup;
-		private TreeModelFilter		myiFoldersFilter;
+		private TreeModelFilter	myiFoldersFilter;
 
 		private VBox				SynchronizedFolderTasks;
 
@@ -139,12 +139,37 @@ namespace Novell.iFolder
 		
 		private Hashtable			serverGroups;
 		private Hashtable			serverGroupFilters;
+		
+		///
+		/// Variables to keep track of the last position of the main window.
+		/// This is needed because somehow it's forgotton sometimes.
+		/// Util.ShowiFolderWindow will use this.
+		///
+		private int lastXPos;
+		private int lastYPos;
+		
+		public int LastXPos
+		{
+			get
+			{
+				return lastXPos;
+			}
+		}
+		
+		public int LastYPos
+		{
+			get
+			{
+				return lastYPos;
+			}
+		}
 
         // Drag and Drop
-        enum TargetType
+        public enum DragTargetType
         {
         	UriList,
-        	RootWindow
+        	RootWindow,
+        	iFolderID
         };
 
 		/// <summary>
@@ -166,6 +191,9 @@ namespace Novell.iFolder
 
 			PropDialogs = new Hashtable();
 			ConflictDialogs = new Hashtable();
+			
+			lastXPos = -1;
+			lastYPos = -1;
 			
 			searchTimeoutID = 0;
 			
@@ -429,7 +457,7 @@ namespace Novell.iFolder
 			//----------------------------
 			Menu iFolderMenu = new Menu();
 
-			NewMenuItem = new ImageMenuItem (Util.GS("Create a _new iFolder..."));
+			NewMenuItem = new ImageMenuItem (Util.GS("_Upload a folder..."));
 			NewMenuItem.Image = new Image(
 					new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png")));
 			iFolderMenu.Append(NewMenuItem);
@@ -439,7 +467,7 @@ namespace Novell.iFolder
 			NewMenuItem.Activated += new EventHandler(AddiFolderHandler);
 
 			DownloadMenuItem =
-				new MenuItem (Util.GS("_Download and synchronize..."));
+				new MenuItem (Util.GS("_Download..."));
 			iFolderMenu.Append(DownloadMenuItem);
 			DownloadMenuItem.Activated += new EventHandler(DownloadAvailableiFolderHandler);
 
@@ -543,10 +571,10 @@ namespace Novell.iFolder
 				new EventHandler(OnToggleViewServeriFoldersMenuItem);
 					
 			MenuItem showColorPaletteMenuItem =	// FIXME: Remove this before shipping
-				new MenuItem(Util.GS("Show _Color Palette (FIXME: Remove this before shipping)..."));
+				new MenuItem("Show _Color Palette (FIXME: Remove this before shipping)...");
 			ViewMenu.Append(showColorPaletteMenuItem);
 			showColorPaletteMenuItem.Activated += ShowColorPalette;
-
+			
 			MenuItem ViewMenuItem = new MenuItem(Util.GS("_View"));
 			ViewMenuItem.Submenu = ViewMenu;
 			menubar.Append(ViewMenuItem);
@@ -675,7 +703,7 @@ namespace Novell.iFolder
 
 			Label buttonText = new Label(
 				string.Format("<span size=\"large\">{0}</span>",
-							  Util.GS("Create a new iFolder")));
+							  Util.GS("Upload a folder...")));
 //							  Util.GS("Upload a folder")));
 			hbox.PackStart(buttonText, false, false, 4);
 			buttonText.UseMarkup = true;
@@ -822,7 +850,7 @@ namespace Novell.iFolder
 
 			buttonText = new Label(
 				string.Format("<span size=\"large\">{0}</span>",
-							  Util.GS("Change to a normal folder")));
+							  Util.GS("Revert to a normal folder")));
 			hbox.PackStart(buttonText, true, true, 4);
 			buttonText.UseMarkup = true;
 			buttonText.UseUnderline = false;
@@ -841,7 +869,7 @@ namespace Novell.iFolder
 
 			buttonText = new Label(
 				string.Format("<span size=\"large\">{0}</span>",
-							  Util.GS("View properties...")));
+							  Util.GS("Properties...")));
 			hbox.PackStart(buttonText, true, true, 4);
 			buttonText.UseMarkup = true;
 			buttonText.UseUnderline = false;
@@ -861,7 +889,7 @@ namespace Novell.iFolder
 
 			buttonText = new Label(
 				string.Format("<span size=\"large\">{0}</span>",
-							  Util.GS("Download and synchronize")));
+							  Util.GS("Download...")));
 			hbox.PackStart(buttonText, true, true, 4);
 			buttonText.UseMarkup = true;
 			buttonText.UseUnderline = false;
@@ -924,8 +952,104 @@ namespace Novell.iFolder
 			myiFoldersFilter = new TreeModelFilter(ifdata.iFolders, null);
 			myiFoldersFilter.VisibleFunc = SynchronizedFoldersFilterFunc;
 			
-			localGroup = new iFolderViewGroup(Util.GS("iFolders on This Computer"), myiFoldersFilter);
+			localGroup = new iFolderViewGroup(Util.GS("iFolders on This Computer"), myiFoldersFilter, SearchEntry);
 			iFoldersIconView.AddGroup(localGroup);
+			VBox emptyVBox = new VBox(false, 0);
+			emptyVBox.BorderWidth = 12;
+
+			Table table = new Table(3, 2, false);
+			emptyVBox.PackStart(table, true, true, 0);
+			table.RowSpacing = 12;
+			table.ColumnSpacing = 12;
+			
+			// Row 1: Header
+			Label l = new Label(
+				string.Format("<span size=\"large\">{0}</span>",
+							   Util.GS("There are no iFolders on this computer.  To set up an iFolder, do one of the following:")));
+			table.Attach(l,
+						 0, 2,
+						 0, 1,
+						 AttachOptions.Expand | AttachOptions.Fill,
+						 0, 0, 0);
+			l.UseMarkup = true;
+			l.LineWrap = true;
+			l.Xalign = 0;
+			
+			// Row 2: Upload
+			Image uploadImg = new Image(Util.ImagesPath("upload48.png"));
+			table.Attach(uploadImg,
+						 0, 1,
+						 1, 2,
+						 AttachOptions.Shrink | AttachOptions.Fill,
+						 0, 0, 0);
+			l = new Label(
+				string.Format("<span>{0}</span>",
+							   Util.GS("Select an existing folder on this computer to upload to an iFolder Server")));
+			table.Attach(l,
+						 1, 2,
+						 1, 2,
+						 AttachOptions.Expand | AttachOptions.Fill,
+						 0, 0, 0);
+			l.UseMarkup = true;
+			l.LineWrap = true;
+			l.Xalign = 0;
+			
+			// Row 3: Download
+			Image downloadImg = new Image(Util.ImagesPath("download48.png"));
+			table.Attach(downloadImg,
+						 0, 1,
+						 2, 3,
+						 AttachOptions.Shrink | AttachOptions.Fill,
+						 0, 0, 0);
+			l = new Label(
+				string.Format("<span>{0}</span>",
+							   Util.GS("Select an iFolder on the server to download to this computer")));
+			table.Attach(l,
+						 1, 2,
+						 2, 3,
+						 AttachOptions.Expand | AttachOptions.Fill,
+						 0, 0, 0);
+			l.UseMarkup = true;
+			l.LineWrap = true;
+			l.Xalign = 0;
+			
+			localGroup.EmptyWidget = emptyVBox;
+			
+			VBox emptySearchVBox = new VBox(false, 0);
+			emptySearchVBox.BorderWidth = 12;
+			l = new Label(
+				string.Format("<span size=\"large\">{0}</span>",
+							   Util.GS("No matches found")));
+			emptySearchVBox.PackStart(l, true, true, 0);
+			l.UseMarkup = true;
+			l.LineWrap = true;
+
+			localGroup.EmptySearchWidget = emptySearchVBox;
+
+			// FIXME: Attach the drag and drop receiver to the synchronized iFolders only
+			TargetEntry[] targets =
+				new TargetEntry[]
+				{
+	                new TargetEntry ("text/uri-list", 0, (uint) DragTargetType.UriList),
+	                new TargetEntry ("application/x-root-window-drop", 0, (uint) DragTargetType.RootWindow),
+	                new TargetEntry ("text/ifolder-id", 0, (uint) DragTargetType.iFolderID)
+				};
+
+			Drag.DestSet(iFoldersIconView,
+						 //Gdk.ModifierType.Button1Mask | Gdk.ModifierType.Button3Mask,
+						 DestDefaults.All,
+						 targets,
+						 Gdk.DragAction.Copy | Gdk.DragAction.Move);
+
+			iFoldersIconView.DragMotion +=
+				new DragMotionHandler(OnIconViewDragMotion);
+				
+			iFoldersIconView.DragDrop +=
+				new DragDropHandler(OnIconViewDragDrop);
+			
+			iFoldersIconView.DragDataReceived +=
+				new DragDataReceivedHandler(OnIconViewDragDataReceived);
+			
 
 			///
 			/// My Available iFolders
@@ -950,13 +1074,14 @@ namespace Novell.iFolder
 				
 			iFoldersIconView.KeyPressEvent +=
 				new KeyPressEventHandler(OniFolderIconViewKeyPress);
-		
+
+/*		
 			// FIXME: Attach the drag and drop receiver to the synchronized iFolders only
 			TargetEntry[] targets =
 				new TargetEntry[]
 				{
-	                new TargetEntry ("text/uri-list", 0, (uint) TargetType.UriList),
-	                new TargetEntry ("application/x-root-window-drop", 0, (uint) TargetType.RootWindow)
+	                new TargetEntry ("text/uri-list", 0, (uint) DragTargetType.UriList),
+	                new TargetEntry ("application/x-root-window-drop", 0, (uint) DragTargetType.RootWindow)
 				};
 
 			Drag.DestSet(iFoldersIconView,
@@ -974,6 +1099,7 @@ namespace Novell.iFolder
 			iFoldersIconView.DragDataReceived +=
 				new DragDataReceivedHandler(OnIconViewDragDataReceived);
 			
+*/
 			iFoldersScrolledWindow.AddWithViewport(iFoldersIconView);
 			
 			return iFoldersScrolledWindow;
@@ -1233,7 +1359,7 @@ namespace Novell.iFolder
 					if (holder.iFolder.IsSubscription)
 					{
 						MenuItem item_download =
-							new MenuItem(Util.GS("Download and synchronize"));
+							new MenuItem(Util.GS("Download..."));
 						menu.Append(item_download);
 						item_download.Activated += new EventHandler(
 								DownloadAvailableiFolderHandler);
@@ -1299,7 +1425,7 @@ namespace Novell.iFolder
 						if (!holder.iFolder.Role.Equals("Master"))
 						{
 							MenuItem item_revert = new MenuItem (
-									Util.GS("Change to a normal folder"));
+									Util.GS("Revert to a normal folder"));
 							menu.Append (item_revert);
 							item_revert.Activated += new EventHandler(
 									RemoveiFolderHandler);
@@ -1308,7 +1434,7 @@ namespace Novell.iFolder
 										holder.iFolder.CurrentUserID)
 						{
 							MenuItem item_delete = new MenuItem (
-									Util.GS("Change to a normal folder"));
+									Util.GS("Revert to a normal folder"));
 							menu.Append (item_delete);
 							item_delete.Activated += new EventHandler(
 									RemoveiFolderHandler);
@@ -1343,6 +1469,7 @@ Console.WriteLine("iFolderWindow.OniFolderIconViewSelectionChanged()");
 		
 		private void OnIconViewDragMotion(object o, DragMotionArgs args)
 		{
+Console.WriteLine("iFolderWindow.OnIconViewDragMotion()");
 			Gdk.Drag.Status(args.Context, args.Context.SuggestedAction, args.Time);
 			
 			args.RetVal = true;
@@ -1350,37 +1477,139 @@ Console.WriteLine("iFolderWindow.OniFolderIconViewSelectionChanged()");
 		
 		private void OnIconViewDragDrop(object o, DragDropArgs args)
 		{
+Console.WriteLine("iFolderWindow.OnIconViewDragDrop()");
 			args.RetVal = true;
 		}
 		
 		private void OnIconViewDragDataReceived(object o, DragDataReceivedArgs args)
 		{
-			Console.WriteLine("OnIconViewDragDataReceived: {0}", (TargetType)args.Info);
+			Console.WriteLine("OnIconViewDragDataReceived: {0}", (DragTargetType)args.Info);
 			bool bFolderCreated = false;
 			
 			switch (args.Info)
 			{
-				case (uint) TargetType.UriList:
-					DomainInformation defaultDomain = domainController.GetDefaultDomain();
-					if (defaultDomain == null) return;
+				case (uint) DragTargetType.iFolderID:
+					string ifolderID =
+						System.Text.Encoding.UTF8.GetString(args.SelectionData.Data);
+					iFolderHolder holder = ifdata.GetAvailableiFolder(ifolderID);
+					if (holder != null)
+						DownloadiFolder(holder);
+					break;
+				case (uint) DragTargetType.UriList:
+//					DomainInformation defaultDomain = domainController.GetDefaultDomain();
+//					if (defaultDomain == null) return;
 	
 					UriList uriList = new UriList(args.SelectionData);
-					foreach (string path in uriList.ToLocalPaths())
+					if (uriList.Count == 1)
 					{
-						if (ifws.CanBeiFolder(path))
-						{
-							try
-							{
-//								iFolderHolder holder = ifdata.CreateiFolder(path, defaultDomain.ID);
-								ifdata.CreateiFolder(path, defaultDomain.ID);
+						string path = uriList.ToLocalPaths()[0];
 
-								bFolderCreated = true;
-							}
-							catch
+			DomainInformation[] domains = domainController.GetDomains();
+			if (domains.Length <= 0) return;	// FIXME: This should never happen.  Maybe alert the user?
+			string domainID = domains[0].ID;	// Default to the first in the list
+			DomainInformation defaultDomain = domainController.GetDefaultDomain();
+			if (defaultDomain != null)
+				domainID = defaultDomain.ID;
+
+			DragCreateDialog cd = new DragCreateDialog(this, domains, domainID, path);
+			cd.TransientFor = this;
+	
+			int rc = 0;
+			do
+			{
+				rc = cd.Run();
+				cd.Hide();
+
+				if (rc == (int)ResponseType.Ok)
+				{
+					try
+					{
+						string selectedFolder = cd.iFolderPath.Trim();
+						string selectedDomain = cd.DomainID;
+	
+						string parentDir = System.IO.Path.GetDirectoryName( selectedFolder );
+						if ( ( parentDir == null ) || ( parentDir == String.Empty ) )
+						{
+							iFolderMsgDialog dg = new iFolderMsgDialog(
+								this,
+								iFolderMsgDialog.DialogType.Warning,
+								iFolderMsgDialog.ButtonSet.Ok,
+								"",
+								Util.GS("Invalid folder specified"),
+								Util.GS("An invalid folder was specified"));
+							dg.Run();
+							dg.Hide();
+							dg.Destroy();
+							continue;
+						}
+						
+						iFolderHolder ifHolder = null;
+						try
+						{
+							ifHolder = 
+								ifdata.CreateiFolder(selectedFolder,
+													 selectedDomain);
+						}
+						catch(Exception e)
+						{
+							if (DisplayCreateOrSetupException(e))
 							{
-								Console.WriteLine("Error creating folder on drag-and-drop");
+								// Update the selectedFolder path
+								continue;	// The function handled the exception
 							}
 						}
+	
+						if(ifHolder == null)
+							throw new Exception("Simias returned null");
+	
+						// If we make it this far, we've succeeded and we don't
+						// need to keep looping.
+						rc = 0;
+	
+						// Save off the path so that the next time the user
+						// creates an iFolder, we'll open it to the directory
+						// they used last.
+						Util.LastCreatedPath = ifHolder.iFolder.UnManagedPath;
+	
+						if(ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION, 
+										"true") == "true")
+						{
+							iFolderCreationDialog dlg = 
+								new iFolderCreationDialog(ifHolder.iFolder);
+							dlg.TransientFor = this;
+							int createRC;
+							do
+							{
+								createRC = dlg.Run();
+								if(createRC == (int)Gtk.ResponseType.Help)
+								{
+									Util.ShowHelp("myifolders.html", this);
+								}
+							}while(createRC != (int)Gtk.ResponseType.Ok);
+	
+							dlg.Hide();
+		
+							if(dlg.HideDialog)
+							{
+								ClientConfig.Set(
+									ClientConfig.KEY_SHOW_CREATION, "false");
+							}
+		
+							cd.Destroy();
+							cd = null;
+						}
+					}
+					catch (Exception e)
+					{
+						Console.WriteLine(e.Message);
+						continue;
+					}
+				}
+			}
+			while(rc == (int)ResponseType.Ok);
+
+
+
 					}
 
 					break;
@@ -1396,7 +1625,10 @@ Console.WriteLine("iFolderWindow.OniFolderIconViewSelectionChanged()");
 			if (domainController.GetDomains().Length == 0)
 				WindowNotebook.CurrentPage = 0;
 			else
+			{
 				WindowNotebook.CurrentPage = 1;
+				ShowAvailableiFolders();	// FIXME: Make this an automatic config setting that is remembered (i.e., if a user hides this and restarts iFolder, it is not shown)
+			}
 			
 			OniFolderIconViewSelectionChanged(null, EventArgs.Empty);
 		}
@@ -1528,8 +1760,11 @@ Console.WriteLine("iFolderWindow.OniFolderIconViewSelectionChanged()");
 
 			if (domainController.GetDomains().Length == 0)
 				WindowNotebook.CurrentPage = 0;
-			else
+			else if (WindowNotebook.CurrentPage != 1)
+			{
 				WindowNotebook.CurrentPage = 1;
+				ShowAvailableiFolders();
+			}
 			
 			AddServerGroup(args.DomainID);
 			
@@ -1541,9 +1776,9 @@ Console.WriteLine("iFolderWindow.OniFolderIconViewSelectionChanged()");
 Console.WriteLine("iFolderWindow.DomainDeletedEvent()");
 //			RefreshiFolders(true);
 			
-			if (domainController.GetDomains().Length == 0)
-				WindowNotebook.CurrentPage = 0;
-			else
+//			if (domainController.GetDomains().Length == 0)
+//				WindowNotebook.CurrentPage = 0;
+//			else
 				WindowNotebook.CurrentPage = 1;
 			
 			if (serverGroups.ContainsKey(args.DomainID))
@@ -1553,7 +1788,8 @@ Console.WriteLine("\tremoving the group from the iFolderIconView");
 					(iFolderViewGroup)serverGroups[args.DomainID];
 				iFoldersIconView.RemoveGroup(group);
 				serverGroups.Remove(args.DomainID);
-				group.Destroy();
+				group.Dispose();
+				group = null;
 			}
 			
 			if (serverGroupFilters.ContainsKey(args.DomainID))
@@ -1562,6 +1798,7 @@ Console.WriteLine("\tremoving the group from the serverGroupFilters Hashtable");
 				serverGroupFilters.Remove(args.DomainID);
 			}
 
+			iFoldersIconView.UnselectAll();
 			RefilterServerGroups();
 		}
 
@@ -1642,6 +1879,8 @@ Console.WriteLine("\tremoving the group from the serverGroupFilters Hashtable");
 													   holder.iFolder.DomainID,
 													   newPath);
 
+						iFoldersIconView.UnselectAll();
+
                         rc = 0;
 
                         // Save off the path so that the next time the user
@@ -1675,6 +1914,7 @@ Console.WriteLine("\tremoving the group from the serverGroupFilters Hashtable");
 				try
 				{
 					ifdata.DeleteiFolder(holder.iFolder.ID);
+					iFoldersIconView.UnselectAll();
 				}
 				catch(Exception e)
 				{
@@ -1706,6 +1946,7 @@ Console.WriteLine("\tremoving the group from the serverGroupFilters Hashtable");
 				try
 				{
 					ifdata.DeleteiFolder(holder.iFolder.ID);
+					iFoldersIconView.UnselectAll();
 				}
 				catch(Exception e)
 				{
@@ -1760,7 +2001,8 @@ Console.WriteLine("iFolderWindow.AddServerGroup(DomainID: {0})", domainID);
 					string.Format(
 						Util.GS("iFolders on {0}"),
 						domain.Name),
-					treeModelFilter);
+					treeModelFilter,
+					SearchEntry);
 			serverGroups[domainID] = group;
 			serverGroupFilters[domainID] = serverFilter;
 			
@@ -1953,8 +2195,16 @@ Console.WriteLine("iFolderWindow.AddServerGroup(DomainID: {0})", domainID);
 			domainController.CheckForNewiFolders();
 		}
 
-		private void CloseWindow()
+		public void CloseWindow()
 		{
+			int x;
+			int y;
+
+			this.GetPosition(out x, out y);
+			
+			lastXPos = x;
+			lastYPos = y;
+			
 			this.Hide();
 		}
 		
@@ -2091,8 +2341,20 @@ Console.WriteLine("iFolderWindow.AddServerGroup(DomainID: {0})", domainID);
 					iFolderMsgDialog.DialogType.Question,
 					iFolderMsgDialog.ButtonSet.YesNo,
 					"",
-					Util.GS("Change this iFolder back to a normal folder?"),
+					Util.GS("Revert this iFolder back to a normal folder?"),
 					Util.GS("The folder will still be on your computer, but it will no longer synchronize with the iFolder Server."));
+
+				CheckButton deleteFromServerCB;
+
+				DomainInformation domain =
+					domainController.GetDomain(holder.iFolder.DomainID);
+				if (domain == null || domain.MemberUserID == holder.iFolder.OwnerID)
+					deleteFromServerCB = new CheckButton(Util.GS("Also _delete this iFolder from the server"));
+				else
+					deleteFromServerCB = new CheckButton(Util.GS("Also _remove my membership from this iFolder"));
+				
+				dialog.ExtraWidget = deleteFromServerCB;
+
 				int rc = dialog.Run();
 				dialog.Hide();
 				dialog.Destroy();
@@ -2100,7 +2362,18 @@ Console.WriteLine("iFolderWindow.AddServerGroup(DomainID: {0})", domainID);
 				{
 					try
 					{
-						ifdata.RevertiFolder(holder.iFolder.ID);
+						iFolderHolder subHolder =
+							ifdata.RevertiFolder(holder.iFolder.ID);
+						
+						if (deleteFromServerCB.Active)
+						{
+							if (subHolder == null)
+								ifdata.DeleteiFolder(holder.iFolder.ID);
+							else
+								ifdata.DeleteiFolder(subHolder.iFolder.ID);
+						}
+						
+						iFoldersIconView.UnselectAll();
 					}
 					catch(Exception e)
 					{

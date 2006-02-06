@@ -145,11 +145,13 @@ GNOME_SHARP2_MINIMUM_VERSION=1.9.5
 GCONF_SHARP2_MINIMUM_VERSION=1.9.0
 GTK20_MINIMUM_VERSION=2.6.0
 ATK_MINIMUM_VERSION=1.2.4
+DBUS_SHARP_MINIMUM_VERSION=0.35.0
 AC_SUBST(GTK_SHARP2_MINIMUM_VERSION)
 AC_SUBST(GNOME_SHARP2_MINIMUM_VERSION)
 AC_SUBST(GCONF_SHARP2_MINIMUM_VERSION)
 AC_SUBST(GTK20_MINIMUM_VERSION)
 AC_SUBST(ATK_MINIMUM_VERSION)
+AC_SUBST(DBUS_SHARP_MINIMUM_VERSION)
 
 #
 # Set platform-specific variables
@@ -480,6 +482,10 @@ case $IFOLDER_OS in
 		PKG_CHECK_MODULES(GCONF_SHARP, gconf-sharp-2.0 > $GCONF_SHARP2_MINIMUM_VERSION)
 		AC_SUBST(GCONF_SHARP_PREFIX)
 		AC_SUBST(GCONF_SHARP_LIBS)
+		
+		PKG_CHECK_MODULES(DBUS_SHARP, dbus-sharp > $DBUS_SHARP_MINIMUM_VERSION)
+		AC_SUBST(DBUS_SHARP_CFLAGS)
+		AC_SUBST(DBUS_SHARP_LIBS)
         
     ;;
     darwin)
@@ -499,8 +505,10 @@ Makefile
 src/Makefile
 src/iFolder/Makefile
 src/LinuxClient/Makefile
+src/LinuxClient/NetworkManager-sharp/Makefile
 src/LinuxClient/library/Makefile
 src/LinuxClient/application/Makefile
+src/LinuxClient/bonjour-ui/Makefile
 src/LinuxClient/po/Makefile
 src/LinuxClient/po/POTFILES
 src/FormsTrayApp/Makefile

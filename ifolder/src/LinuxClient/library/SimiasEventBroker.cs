@@ -598,6 +598,7 @@ namespace Novell.iFolder
 						if( (ifHolder != null) &&
 							(!ifHolder.iFolder.IsSubscription) )
 						{
+							ifdata.DeliFolder(nargs.ID);
 							NodeEventQueue.Enqueue(new SimiasEvent(
 								nargs.Collection, null, null,
 								SimiasEventType.DeliFolder));

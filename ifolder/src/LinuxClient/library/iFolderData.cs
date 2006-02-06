@@ -81,6 +81,13 @@ namespace Novell.iFolder
 		private Hashtable		ifolderIters = null;
 		private Hashtable		subToiFolderMap = null;
 		
+		/// Keep a hashtable around to keep track of when a user deletes an
+		/// iFolder.  By doing this, the client can immediately give
+		/// feedback to the user by removing the deleted iFolder from the UI
+		/// and add it onto the list of iFolders we eventually expect to get
+		/// a delete event for.
+		private Hashtable		deletediFolders = null;
+		
 		/// <summary>
 		/// TreeModel to hold all of the iFolders/Subscriptions.  All classes
 		/// wanting to know about new/changed/deleted iFolders should add
@@ -96,6 +103,7 @@ namespace Novell.iFolder
 		// have to call CalculateSyncSize() over and over needlessly.
 		private uint objectsToSync = 0;
 		private bool startingSync  = false;
+		private bool bFileSyncFailed = false;
 
 		public ListStore iFolders
 		{
@@ -151,6 +159,7 @@ Console.WriteLine(Environment.StackTrace);
 			
 			ifolderIters = new Hashtable();
 			subToiFolderMap = new Hashtable();
+			deletediFolders = new Hashtable();
 
 			// Register for domain events
 			if (domainController != null)
@@ -241,8 +250,18 @@ Console.WriteLine(Environment.StackTrace);
 							// just update the iFolderWeb object in the
 							// iFolderHolder.
 							TreeIter iter = (TreeIter)ifolderIters[ifolderID];
-							iFolderHolder existingHolder = (iFolderHolder)
-								iFolderListStore.GetValue(iter, 0);
+							iFolderHolder existingHolder = null;
+
+							try
+							{
+								existingHolder = (iFolderHolder)
+									iFolderListStore.GetValue(iter, 0);
+							}
+							catch(Exception e)
+							{
+								Console.WriteLine(e.Message);
+							}
+
 							if (existingHolder != null)
 							{
 								existingHolder.iFolder = ifolder;
@@ -282,20 +301,21 @@ Console.WriteLine("iFolderData.ClearOrphanediFolders()");
 					// after iterating the list so that we don't modify the list
 					// while iterating through it.
 					ArrayList itersToRemove = new ArrayList();
+
+					iFolderHolder holder;
 					
-					iFolderHolder holder =
-						(iFolderHolder)iFolderListStore.GetValue(iter, 0);
 					do
 					{
+						holder =
+							(iFolderHolder)iFolderListStore.GetValue(iter, 0);
+
 						DomainInformation domain =
 							domainController.GetDomain(holder.iFolder.DomainID);
-//						if (domain == null)
-//							domain = domainController.GetPOBoxDomain(holder.iFolder.DomainID);
 						
 						if (domain == null)
 						{
 Console.WriteLine("\tQueuing removal of: {0}", holder.iFolder.Name);
-							itersToRemove.Add(iter);
+							itersToRemove.Add(holder.iFolder.ID);
 						}
 						else
 						{
@@ -303,12 +323,9 @@ Console.WriteLine("\tdomain is NOT null");
 						}
 					} while (iFolderListStore.IterNext(ref iter));
 					
-					foreach(TreeIter tmpIter in itersToRemove)
+					foreach(string ifolderID in itersToRemove)
 					{
-						holder = (iFolderHolder)iFolderListStore.GetValue(tmpIter, 0);
-Console.WriteLine("\tRemoving: {0}", holder.iFolder.Name);
-						TreeIter iterToRemove = tmpIter;
-						iFolderListStore.Remove(ref iterToRemove);
+						RealDelete(ifolderID, false);
 					}
 				}
 			}
@@ -322,30 +339,17 @@ Console.WriteLine("\tRemoving: {0}", holder.iFolder.Name);
 		//===================================================================
 		private iFolderHolder AddiFolder(iFolderWeb ifolder)
 		{
-Console.WriteLine("AddiFolder()");
-Console.WriteLine(Environment.StackTrace);
 			lock (instanceLock)
 			{
 				iFolderHolder ifHolder = null;
 
-if (ifolder.CollectionID == null)
-{
-	Console.WriteLine("**** CollectionID is null ****");
-}
-else if (ifolder.ID == null)
-{
-	Console.WriteLine("**** ID is null ****");
-}
-Console.WriteLine("\t1");
-				
 				string ifolderID =
 					ifolder.IsSubscription ?
 						ifolder.CollectionID :
 						ifolder.ID;
-Console.WriteLine("\t{0}", ifolderID);
+
 				if (ifolderIters.ContainsKey(ifolderID))
 				{
-Console.WriteLine("\t3");
 					// This condition got hit most likely because CreateiFolder
 					// was called and now the SimiasEventBroker is calling
 					// AddiFolder on the Added Event.
@@ -354,24 +358,21 @@ Console.WriteLine("\t3");
 					// just update the iFolderWeb object in the
 					// iFolderHolder.
 					TreeIter iter = (TreeIter)ifolderIters[ifolderID];
-Console.WriteLine("\t4");
+
 					ifHolder = (iFolderHolder)
 						iFolderListStore.GetValue(iter, 0);
-Console.WriteLine("\t5");
+
 					if (ifHolder != null)
 					{
-Console.WriteLine("\t6");
 						ifHolder.iFolder = ifolder;
 
 						TreePath path = iFolderListStore.GetPath(iter);
-Console.WriteLine("\t7");
 						if (path != null)
 						{
-Console.WriteLine("\t8");
 							iFolderChangedHandler changedHandler =
 								new iFolderChangedHandler(
 									path, iter, iFolderListStore);
-Console.WriteLine("\t9");
+
 							GLib.Idle.Add(changedHandler.IdleHandler);
 						}
 					}
@@ -382,24 +383,18 @@ Console.WriteLine("*** SOMETHING WENT BAD IN iFolderData.AddiFolder() ***");
 				}
 				else
 				{
-Console.WriteLine("\t10");
 					ifHolder = new iFolderHolder(ifolder);
-Console.WriteLine("\t11");
 					iFolderAddHandler addHandler =
 						new iFolderAddHandler(ifHolder, this);
-Console.WriteLine("\t12");
 					GLib.Idle.Add(addHandler.IdleHandler);
 				}
 				
-Console.WriteLine("\t13");
 				return ifHolder;
 			}
 		}
 		
 		private void ProtectedAddiFolder(iFolderHolder holder)
 		{
-Console.WriteLine("ProtectedAddiFolder()");
-Console.WriteLine(Environment.StackTrace);
 			if (holder == null) return;
 
 			lock(instanceLock)
@@ -410,19 +405,17 @@ Console.WriteLine(Environment.StackTrace);
 					ifolder.IsSubscription ?
 						ifolder.CollectionID :
 						ifolder.ID;
-Console.WriteLine("\t{0}", ifolderID);
+
 				if (!ifolderIters.ContainsKey(ifolderID))
 				{
 					TreeIter iter = iFolderListStore.AppendValues(holder);
 					if (ifolder.IsSubscription)
 					{
-Console.WriteLine("\tSubscription: {0}", ifolder.Name);
 						ifolderIters[ifolder.CollectionID] = iter;
 						subToiFolderMap[ifolder.ID] = ifolder.CollectionID;
 					}
 					else
 					{
-Console.WriteLine("\tiFolder: {0}", ifolder.Name);
 						ifolderIters[ifolder.ID] = iter;
 					}
 				}
@@ -448,12 +441,19 @@ Console.WriteLine(Environment.StackTrace);
 			}
 		}
 		
-		private void ProtectedDeliFolder(string ifolderID)
+		private void RealDelete(string ifolderID, bool deleteImmediately)
 		{
-Console.WriteLine("iFolderData.ProtectedDeliFolder()");
+Console.WriteLine("iFolderData.RealDelete()");
 Console.WriteLine(Environment.StackTrace);
 			lock (instanceLock)
 			{
+				if (!deleteImmediately && deletediFolders.Contains(ifolderID))
+				{
+					// This has already been deleted by the user
+					deletediFolders.Remove(ifolderID);
+					return;
+				}
+			
 				string realID = ifolderID;
 
 				if(!IsiFolder(realID))
@@ -471,7 +471,22 @@ Console.WriteLine(Environment.StackTrace);
 					iFolderListStore.Remove(ref iter);
 					ifolderIters.Remove(realID);
 				}
+				
+				// Keep track of this so that when an external
+				// delete comes in we will ignore it.
+				if (deleteImmediately)
+					deletediFolders[realID] = realID;
 			}
+		}
+		
+		private void QuickDelete(string ifolderID)
+		{
+			RealDelete(ifolderID, true);
+		}
+		
+		private void ProtectedDeliFolder(string ifolderID)
+		{
+			RealDelete(ifolderID, false);
 		}
 
 		
@@ -673,8 +688,15 @@ Console.WriteLine("*** SOMETHING WENT BAD IN iFolderData.ReadiFolder() ***");
 					if (ifolderIters.ContainsKey(realID))
 					{
 						TreeIter iter = (TreeIter)ifolderIters[realID];
-						ifHolder =
-							(iFolderHolder)iFolderListStore.GetValue(iter, 0);
+						try
+						{
+							ifHolder =
+								(iFolderHolder)iFolderListStore.GetValue(iter, 0);
+						}
+						catch(Exception e)
+						{
+							Console.WriteLine(e.Message);
+						}
 					}
 				}
 
@@ -701,7 +723,7 @@ Console.WriteLine(Environment.StackTrace);
 				{
 					iFolderWeb ifolder = ifws.GetiFolderInvitation(
 								collectionID, ifolderID);
-					if (ifolder == null)
+					if (ifolder == null || !ifolder.State.Equals("Available"))
 						return null;
 
 					if(ifHolder != null)
@@ -733,8 +755,17 @@ Console.WriteLine("*** SOMETHING WENT BAD IN iFolderData.ReadAvailableiFolder() 
 					}
 					else
 					{
-						if(!IsiFolder(ifolder.CollectionID))
-							ifHolder = AddiFolder(ifolder);
+if (deletediFolders.Contains(ifolder.CollectionID))
+{
+Console.WriteLine(" ---> This iFolder is in the deletediFolders Hashtable <--- ");
+}
+						// Prevent this subscription from being added if it's
+						// waiting to really been deleted.
+						if (!deletediFolders.Contains(ifolder.CollectionID)
+							&& !IsiFolder(ifolder.CollectionID))
+						{
+								ifHolder = AddiFolder(ifolder);
+						}
 					}
 				}
 				catch(Exception e)
@@ -890,7 +921,7 @@ Console.WriteLine(Environment.StackTrace);
 					{
 						string realID = ifolder.ID;
 						ifws.DeleteiFolder(realID);
-//						DeliFolder(realID);
+						QuickDelete(realID);
 						return;
 					}
 
@@ -913,7 +944,7 @@ Console.WriteLine(Environment.StackTrace);
 						string realID = ifolder.ID;
 						ifws.DeclineiFolderInvitation(
 							ifolder.DomainID, realID);
-//						DeliFolder(realID);
+						QuickDelete(realID);
 					}
 				}
 			}	
@@ -1014,6 +1045,9 @@ Console.WriteLine("iFolderData.OnDomainDeletedEvent()");
 				case Simias.Client.Event.Action.StartSync:
 					// Keep track of when a sync starts
 					startingSync = true;
+					
+					// Keep track of if any files failed to sync
+					bFileSyncFailed = false;
 
 					ifHolder.State = iFolderState.Synchronizing;
 					break;
@@ -1030,7 +1064,15 @@ Console.WriteLine("iFolderData.OnDomainDeletedEvent()");
 					{}
 
 					if (ifHolder.ObjectsToSync > 0)
-						ifHolder.State = iFolderState.Normal;
+					{
+						// Check to see if there were any errors synchronizing
+						// any files.  If there were, change the state to
+						// FailedSync.
+						if (bFileSyncFailed)
+							ifHolder.State = iFolderState.FailedSync;
+						else
+							ifHolder.State = iFolderState.Normal;
+					}
 					else
 					{
 						if (args.Connected)
@@ -1108,6 +1150,61 @@ Console.WriteLine("*** SOMETHING WENT BAD IN iFolderData.OniFolderSyncEvent() **
 						else
 Console.WriteLine("*** SOMETHING WENT BAD IN iFolderData.OniFolderFileSyncEvent() ***");
 					}
+				}
+			}
+			
+			if (args.Status != SyncStatus.Success)
+				bFileSyncFailed = true;
+		}
+		
+		public void PrintDebugState()
+		{
+			lock(instanceLock)
+			{
+				Console.WriteLine("************************** iFolderData Data Inspection **************************");
+				Console.WriteLine("ifolderIters Hashtable (All items in iFolderListStore, {0}):", ifolderIters.Count);
+				foreach(TreeIter treeIter in ifolderIters.Values)
+				{
+					iFolderHolder ifHolder = null;
+					try
+					{
+						ifHolder = (iFolderHolder)iFolderListStore.GetValue(treeIter, 0);
+					}
+					catch{}
+					
+					if (ifHolder == null)
+						Console.WriteLine("\tIter does not exist in iFolderListStore");
+					else
+						Console.WriteLine("\t{0}, {1}", ifHolder.iFolder.ID, ifHolder.iFolder.Name);
+				}
+				
+				Console.WriteLine("subToiFolderMap Hashtable (All subscriptions, {0})", subToiFolderMap.Count);
+				foreach(string key in subToiFolderMap.Keys)
+				{
+					string ifolderID = (string)subToiFolderMap[key];
+					Console.WriteLine("\t{0}, {1}", key, ifolderID);
+				}
+				
+				Console.WriteLine("iFolderListStore Contents ({0}):", iFolderListStore.IterNChildren());
+				TreeIter iter;
+				if (iFolderListStore.GetIterFirst(out iter))
+				{
+
+					iFolderHolder holder;
+					
+					do
+					{
+						holder =
+							(iFolderHolder)iFolderListStore.GetValue(iter, 0);
+						
+						Console.WriteLine("\t{0}, {1}", holder.iFolder.ID, holder.iFolder.Name);
+					} while (iFolderListStore.IterNext(ref iter));
+				}
+				
+				Console.WriteLine("deletediFolders ({0})", deletediFolders.Count);
+				foreach (string id in deletediFolders.Values)
+				{
+					Console.WriteLine("\t{0}", id);
 				}
 			}
 		}

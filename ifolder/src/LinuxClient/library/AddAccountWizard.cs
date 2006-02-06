@@ -41,6 +41,8 @@ namespace Novell.iFolder
 		private DomainController		domainController;
 		private SimiasWebService		simws;
 		private bool					ControlKeyPressed;
+		private Button						ForwardButton;
+		private Button						FinishButton;
 		
 		private Gdk.Pixbuf				AddAccountPixbuf;
 		
@@ -84,6 +86,8 @@ namespace Novell.iFolder
 			this.Modal = true;
 			this.WindowPosition = Gtk.WindowPosition.Center;
 
+			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
+
 			this.simws = simws;
 
 			domainController = DomainController.GetDomainController();
@@ -98,6 +102,8 @@ namespace Novell.iFolder
 			ControlKeyPressed = false;
 			KeyPressEvent += new KeyPressEventHandler(KeyPressHandler);
 			KeyReleaseEvent += new KeyReleaseEventHandler(KeyReleaseHandler);
+			
+			SetUpButtons();
 		}
 		
 		private Widget CreateWidgets()
@@ -110,7 +116,8 @@ namespace Novell.iFolder
 			AccountDruid = new Gnome.Druid();
 			vbox.PackStart(AccountDruid, true, true, 0);
 			
-			AccountDruid.ShowHelp = false;
+			AccountDruid.ShowHelp = true;
+			AccountDruid.Help += new EventHandler(OnAccountWizardHelp);
 			
 			AccountDruid.AppendPage(CreateIntroductoryPage());
 			AccountDruid.AppendPage(CreateServerInformationPage());
@@ -186,6 +193,8 @@ namespace Novell.iFolder
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			l.MnemonicWidget = ServerNameEntry;
 			ServerNameEntry.Changed += new EventHandler(UpdateServerInformationPageSensitivity);
+			ServerNameEntry.KeyPressEvent
+				+= new KeyPressEventHandler(OnServerNameEntryKeyPress);
 			
 			// Row 3
 			MakeDefaultLabel = new Label(Util.GS("Setting this iFolder Server as your default server will allow iFolder to automatically select this server when adding new folders."));
@@ -222,14 +231,14 @@ namespace Novell.iFolder
 			///
 			/// Content
 			///
-			Table table = new Table(6, 3, false);
+			Table table = new Table(4, 3, false);
 			UserInformationPage.VBox.PackStart(table, false, false, 0);
 			table.ColumnSpacing = 6;
 			table.RowSpacing = 6;
 			table.BorderWidth = 12;
 
 			// Row 1
-			Label l = new Label(Util.GS("Enter your iFolder user name (for example, \"jsmith\")."));
+			Label l = new Label(Util.GS("Enter your iFolder user name and password (for example, \"jsmith\")."));
 			table.Attach(l, 0,3, 0,1,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			l.LineWrap = true;
@@ -249,33 +258,20 @@ namespace Novell.iFolder
 			UserNameEntry.Changed += new EventHandler(UpdateUserInformationPageSensitivity);
 
 			// Row 3
-			l = new Label(Util.GS("Enter your password."));
-			table.Attach(l, 0,3, 2,3,
-				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
-			l.Xalign = 0.0F;
-			
-			// Row 4
 			l = new Label(Util.GS("_Password:"));
-			table.Attach(l, 1,2, 3,4,
+			table.Attach(l, 1,2, 2,3,
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			l.Xalign = 0.0F;
 			PasswordEntry = new Entry();
-			table.Attach(PasswordEntry, 2,3, 3,4,
+			table.Attach(PasswordEntry, 2,3, 2,3,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			l.MnemonicWidget = PasswordEntry;
 			PasswordEntry.Visibility = false;
 			PasswordEntry.Changed += new EventHandler(UpdateUserInformationPageSensitivity);
 
-			// Row 5
-			l = new Label(Util.GS("Allow iFolder to remember your password so you are not asked for it each time you start iFolder."));
-			table.Attach(l, 0,3, 4,5,
-				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
-			l.LineWrap = true;
-			l.Xalign = 0.0F;
-			
-			// Row 6
+			// Row 4
 			RememberPasswordCheckButton = new CheckButton(Util.GS("_Remember my password"));
-			table.Attach(RememberPasswordCheckButton, 1,3, 5,6,
+			table.Attach(RememberPasswordCheckButton, 2,3, 3,4,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			
 			return UserInformationPage;
@@ -320,7 +316,7 @@ namespace Novell.iFolder
 			// Row 2
 			table.Attach(new Label(""), 0,1, 1,2,
 				AttachOptions.Fill, 0,12,0); // spacer
-			l = new Label(Util.GS("iFolder Server:"));
+			l = new Label(Util.GS("Server Address:"));
 			table.Attach(l, 1,2, 1,2,
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			l.Xalign = 0.0F;
@@ -363,7 +359,7 @@ namespace Novell.iFolder
 			l = new Label(
 				string.Format(
 					"\n\n{0}",
-					Util.GS("Click \"Forward\" to attempt to connect to the iFolder Server.")));
+					Util.GS("Click \"Connect\" to validate your connection with the server.")));
 			table.Attach(l, 0,3, 5,6,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			l.LineWrap = true;
@@ -403,12 +399,12 @@ namespace Novell.iFolder
 			{
 				currentServerName = currentServerName.Trim();
 				if (currentServerName.Length > 0)
-					AccountDruid.SetButtonsSensitive(true, true, true, false);
+					AccountDruid.SetButtonsSensitive(true, true, true, true);
 				else
-					AccountDruid.SetButtonsSensitive(true, false, true, false);
+					AccountDruid.SetButtonsSensitive(true, false, true, true);
 			}
 			else
-				AccountDruid.SetButtonsSensitive(true, false, true, false);
+				AccountDruid.SetButtonsSensitive(true, false, true, true);
 		}
 		
 		private void UpdateUserInformationPageSensitivity(object o, EventArgs args)
@@ -420,21 +416,26 @@ namespace Novell.iFolder
 				currentUserName = currentUserName.Trim();
 				currentPassword = currentPassword.Trim();
 				if (currentUserName.Length > 0 && currentPassword.Length > 0)
-					AccountDruid.SetButtonsSensitive(true, true, true, false);
+					AccountDruid.SetButtonsSensitive(true, true, true, true);
 				else
-					AccountDruid.SetButtonsSensitive(true, false, true, false);
+					AccountDruid.SetButtonsSensitive(true, false, true, true);
 			}
 			else
-				AccountDruid.SetButtonsSensitive(true, false, true, false);
+				AccountDruid.SetButtonsSensitive(true, false, true, true);
 		}
 
 		///
 		/// Event Handlers
 		///
+		private void OnAccountWizardHelp(object o, EventArgs args)
+		{
+			Util.ShowHelp("accounts.html", this);
+		}
+
 		private void OnIntroductoryPagePrepared(object o, Gnome.PreparedArgs args)
 		{
 			this.Title = Util.GS("iFolder Account Assistant");
-			AccountDruid.SetButtonsSensitive(false, true, true, false);
+			AccountDruid.SetButtonsSensitive(false, true, true, true);
 		}
 		
 		private void OnServerInformationPagePrepared(object o, Gnome.PreparedArgs args)
@@ -463,6 +464,9 @@ namespace Novell.iFolder
 			this.Title = Util.GS("iFolder Account Assistant - (2 of 3)");
 			UpdateUserInformationPageSensitivity(null, null);
 			UserNameEntry.GrabFocus();
+
+			// Hack to make sure the "Forward" button has the right text.
+			ForwardButton.Label = "gtk-go-forward";
 		}
 		
 		private void OnConnectPagePrepared(object o, Gnome.PreparedArgs args)
@@ -493,6 +497,10 @@ namespace Novell.iFolder
 				MakeDefaultPromptLabel.Visible = false;
 				MakeDefaultVerifyLabel.Visible = false;
 			}
+			
+			// Hack to modify the "Forward" button to be a "Connect" button
+			ForwardButton.Label = Util.GS("Co_nnect");
+//			AccountDruid.Forall(EnableConnectButtonCallback);
 		}
 		
 		private void OnSummaryPagePrepared(object o, Gnome.PreparedArgs args)
@@ -509,9 +517,10 @@ namespace Novell.iFolder
 			}
 			
 			// Hack to modify the "Apply" button to be a "Finish" button
-			AccountDruid.Forall(EnableFinishButtonCallback);
+//			AccountDruid.Forall(EnableFinishButtonCallback);
+			FinishButton.Label = Util.GS("_Finish");
 			
-			AccountDruid.SetButtonsSensitive(false, true, false, false);
+			AccountDruid.SetButtonsSensitive(false, true, false, true);
 		}
 		
 		/// <summary>
@@ -640,9 +649,14 @@ namespace Novell.iFolder
 						iFolderMsgDialog.DialogType.Question,
 						iFolderMsgDialog.ButtonSet.YesNo,
 						"",
-						string.Format(Util.GS("iFolder cannot verify the identity of the iFolder Server \"{0}\"."), serverName),
-						string.Format(Util.GS("The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be \"{0}\" which could put your confidential information at risk.   Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?"), serverName),
+						Util.GS("Accept the certificate of this server?"),
+						string.Format(Util.GS("iFolder is unable to verify \"{0}\" as a trusted server.  You should examine this server's identity certificate carefully."), serverName),
 						cert.ToString(true));
+
+					Gdk.Pixbuf certPixbuf = Util.LoadIcon("gnome-mime-application-x-x509-ca-cert", 48);
+					if (certPixbuf != null && dialog.Image != null)
+						dialog.Image.Pixbuf = certPixbuf;
+
 					int rc = dialog.Run();
 					dialog.Hide();
 					dialog.Destroy();
@@ -711,6 +725,24 @@ namespace Novell.iFolder
 		private void OnFinishClicked(object o, Gnome.FinishClickedArgs args)
 		{
 			CloseDialog();
+			Util.ShowiFolderWindow();
+		}
+		
+		private void OnServerNameEntryKeyPress(object o, KeyPressEventArgs args)
+		{
+			args.RetVal = true;
+			
+			Console.WriteLine(args.Event.Key);
+			
+			// Advance to the next page if the user presses return
+			switch(args.Event.Key)
+			{
+				case Gdk.Key.KP_Enter:
+				case Gdk.Key.Return:
+					if (ForwardButton.Sensitive)
+						AccountDruid.Page = UserInformationPage;
+					break;
+			}
 		}
 
 		void KeyPressHandler(object o, KeyPressEventArgs args)
@@ -758,7 +790,12 @@ namespace Novell.iFolder
 		///
 		/// Utility/Helper Methods
 		///
-		private void EnableFinishButtonCallback(Widget w)
+		private void SetUpButtons()
+		{
+			AccountDruid.Forall(SetUpButtonsCallback);
+		}
+		
+		private void SetUpButtonsCallback(Widget w)
 		{
 			if (w is HButtonBox)
 			{
@@ -768,13 +805,15 @@ namespace Novell.iFolder
 					if (buttonWidget is Button)
 					{
 						Button button = buttonWidget as Button;
-						if (button.Label == "gtk-apply")
-							button.Label = Util.GS("_Finish");
+						if (button.Label == "gtk-go-forward")
+							ForwardButton = button;
+						else if (button.Label == "gtk-apply")
+							FinishButton = button;
 					}
 				}
 			}
 		}
-
+		
 		public void CloseDialog()
 		{
 			this.Hide();
