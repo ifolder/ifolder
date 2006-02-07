@@ -28,8 +28,10 @@ nautilus_extensiondir=$(INSTALL_EXTENSION_PATH)
 
 nautilus_extension_LTLIBRARIES=libnautilus-ifolder.la
 
-libnautilus_ifolder_la_SOURCES =     \
-	nautilus-ifolder.c
+libnautilus_ifolder_la_SOURCES =	\
+	nautilus-ifolder.c				\
+	nautilus-ifolder-holder.c		\
+	nautilus-ifolder-holder.h
 
 libnautilus_ifolder_la_LDFLAGS = -module -export-dynamic -avoid-version $(SIMIAS_CLIENT_C_LIBS) $(IFOLDER_C_LIBS) $(XML2_LIBS)
 libnautilus_ifolder_la_LIBADD  = $(NAUTILUS_LIBS)
