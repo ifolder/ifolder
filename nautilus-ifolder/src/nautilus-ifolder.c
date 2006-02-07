@@ -899,11 +899,6 @@ refresh_ifolders_ht ()
 												 holder->unmanaged_path,
 												 holder);
 							DEBUG_IFOLDER (("refresh_ifolders_ht: added new iFolder=%s", holder->name));
-g_print ("Name:     %s\n", holder->name);
-g_print ("ID:       %s\n", holder->id);
-g_print ("DomainID: %s\n", holder->domain_id);
-g_print ("UPath:    %s\n", holder->unmanaged_path);
-
 						} else {
 							DEBUG_IFOLDER (("ifolder_holder_new returned NULL"));
 						}
