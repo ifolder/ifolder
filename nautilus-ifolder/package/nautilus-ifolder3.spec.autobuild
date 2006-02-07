@@ -9,9 +9,11 @@
 #
 
 # norootforbuild
+#neededforbuild aspell-en compat-libstdc++ eel-devel gdk-pixbuf gnutls-devel ifolder3 intltool libgnomeprintui-devel libwnck-devel nautilus-devel perl-XML-Parser update-desktop-files
+
+BuildRequires: aspell-en compat-libstdc++ eel-devel gdk-pixbuf gnutls-devel ifolder3 intltool libgnomeprintui-devel libwnck-devel nautilus-devel perl-XML-Parser update-desktop-files
 
 Name:         nautilus-ifolder3
-BuildRequires: compat-libstdc++ eel-devel gdk-pixbuf gnutls-devel ifolder3 intltool libgnomeprintui-devel libwnck-devel nautilus-devel perl-XML-Parser update-desktop-files
 %define buildnum @@BUILDNUM@@
 URL:          http://forge.novell.com/modules/xfmod/project/?ifolder
 %define prefix /opt/novell/ifolder3
