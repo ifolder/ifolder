@@ -9,9 +9,9 @@
 #
 
 # norootforbuild
-#neededforbuild compat-libstdc++ dbus-1-mono gdk-pixbuf gnutls-devel gtk-sharp2-complete libglade2-devel libgnomeprintui-devel libgnomeui-devel libwnck-devel mDNSResponder-devel log4net simias 
+#neededforbuild aspell-en compat-libstdc++ dbus-1-mono gdk-pixbuf gnutls-devel gtk-sharp2-complete libglade2-devel libgnomeprintui-devel libgnomeui-devel libwnck-devel mDNSResponder-devel log4net simias 
 
-BuildRequires: compat-libstdc++ dbus-1-mono gdk-pixbuf gnutls-devel gtk-sharp2-complete libglade2-devel libgnomeprintui-devel libgnomeui-devel libwnck-devel mDNSResponder-devel log4net simias
+BuildRequires: aspell-en compat-libstdc++ dbus-1-mono gdk-pixbuf gnutls-devel gtk-sharp2-complete libglade2-devel libgnomeprintui-devel libgnomeui-devel libwnck-devel mDNSResponder-devel log4net simias
 
 Name:         ifolder3
 %define buildnum @@BUILDNUM@@
