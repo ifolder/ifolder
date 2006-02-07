@@ -54,7 +54,12 @@
 #include "nautilus-ifolder-holder.h"
 #include "../config.h"
 
-#define DEBUG_IFOLDER(args) (g_debug args)
+/* Turn this on to see debug messages */
+#if DEBUG
+#define DEBUG_IFOLDER(args) (g_print("nautilus-ifolder: "), g_printf args)
+#else
+#define DEBUG_IFOLDER
+#endif
 
 #ifdef _
 #undef _
