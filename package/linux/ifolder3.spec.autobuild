@@ -1,5 +1,5 @@
 #
-# spec file for package ifolder3 (Version 3.4.6031.1)
+# spec file for package ifolder3 (Version 3.5.@@BUILDNUM@@.1)
 #
 # Copyright (c) 2006 SUSE LINUX Products GmbH, Nuernberg, Germany.
 # This file and all modifications and additions to the pristine
@@ -9,9 +9,9 @@
 #
 
 # norootforbuild
-#neededforbuild aspell-en compat-libstdc++ dbus-1-mono gdk-pixbuf gnutls-devel gtk-sharp2-complete libglade2-devel libgnomeprintui-devel libgnomeui-devel libwnck-devel mDNSResponder-devel log4net simias 
+# neededforbuild  cairo cairo-devel compat-libstdc++ gdk-pixbuf glitz-devel gnome2-devel-packages gtk-sharp2 gtk2 gtk2-devel libpng-devel mono-core mono-data mono-devel mono-web pango pango-devel dbus-1-mono log4net simias
 
-BuildRequires: aspell-en compat-libstdc++ dbus-1-mono gdk-pixbuf gnutls-devel gtk-sharp2-complete libglade2-devel libgnomeprintui-devel libgnomeui-devel libwnck-devel mDNSResponder-devel log4net simias
+BuildRequires: aspell-en compat-libstdc++ dbus-1-mono gdk-pixbuf gnutls-devel gtk-sharp2-complete libglade2-devel libgnomeprintui-devel libgnomeui-devel libwnck-devel log4net simias
 
 Name:         ifolder3
 %define buildnum @@BUILDNUM@@
