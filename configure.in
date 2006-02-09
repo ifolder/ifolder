@@ -41,6 +41,7 @@ case $host_os in
         AC_MSG_ERROR([Unknown host_os: $host_os])
     ;;
 esac
+AC_SUBST(BUILDNUM)
 AC_SUBST(IFOLDER_OS)
 AC_SUBST(SIMIASVER)
 AM_CONDITIONAL(LINUX, test "$IFOLDER_OS" = "linux")
@@ -234,6 +235,12 @@ case $IFOLDER_OS in
 		#AM_GNU_GETTEXT_VERSION(0.10.40)
 		AM_GNU_GETTEXT(external)
     	libexecdir='${exec_prefix}'
+
+		#
+		# Find gconftool-2
+		#
+		AC_PATH_PROG(GCONFTOOL, gconftool-2)
+		AM_GCONF_SOURCE_2
     ;;
     #
     # Windows-specific configuration
@@ -368,7 +375,6 @@ AM_PROG_CC_STDC
 AC_PROG_INSTALL
 AC_HEADER_STDC
 AM_PROG_LIBTOOL
-#AC_PROG_INTLTOOL([0.25])
 
 #
 # Handle --with-ndoc-path
@@ -461,6 +467,8 @@ esac
 
 case $IFOLDER_OS in
     linux)
+		AC_PROG_INTLTOOL([0.25])
+
         PKG_CHECK_MODULES(GTK_SHARP, gtk-sharp-2.0 >= $GTK_SHARP2_MINIMUM_VERSION)
         GTK_SHARP_PREFIX=`pkg-config --variable=prefix gtk-sharp`
         GTK_SHARP_VERSION=`pkg-config --modversion gtk-sharp`
@@ -526,7 +534,6 @@ test/iFolderComponent/Makefile
 package/Makefile
 package/windows/Makefile
 package/linux/Makefile
-package/linux/ifolder3.spec
 package/darwin/Makefile
 doc/Makefile
 help/Makefile

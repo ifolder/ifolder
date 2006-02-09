@@ -64,6 +64,9 @@ namespace Novell.iFolder
 			this.ifws = webService;
 			InitializeWidgets();
 			this.Realized += new EventHandler(OnRealizeWidget);
+			
+//			ClientConfig.SettingChanged += 
+//				new GConf.NotifyEventHandler(OnClientConfigChanged);
 		}
 		
 		
@@ -257,32 +260,27 @@ namespace Novell.iFolder
 			//------------------------------
 			// Set up all of the default values
 			//------------------------------
-			if(ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION, "true")
-										== "true")
+			if((bool)ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION))
 				ShowConfirmationButton.Active = true;
 			else
 				ShowConfirmationButton.Active = false;
 
-			if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_USERS, "true")
-										== "true")
+			if((bool)ClientConfig.Get(ClientConfig.KEY_NOTIFY_USERS))
 				NotifyUsersButton.Active = true;
 			else
 				NotifyUsersButton.Active = false;
 
-			if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_COLLISIONS, "true")
-										== "true")
+			if((bool)ClientConfig.Get(ClientConfig.KEY_NOTIFY_COLLISIONS))
 				NotifyCollisionsButton.Active = true;
 			else
 				NotifyCollisionsButton.Active = false;
 
-			if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_IFOLDERS, "true")
-										== "true")
+			if((bool)ClientConfig.Get(ClientConfig.KEY_NOTIFY_IFOLDERS))
 				NotifyiFoldersButton.Active = true;
 			else
 				NotifyiFoldersButton.Active = false;
 
-//			if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_SYNC_ERRORS, "true")
-//										== "true")
+//			if((bool)ClientConfig.Get(ClientConfig.KEY_NOTIFY_SYNC_ERRORS))
 //				NotifySyncErrorsButton.Active = true;
 //			else
 //				NotifySyncErrorsButton.Active = false;
@@ -294,8 +292,8 @@ namespace Novell.iFolder
 					SyncSpinButton.Value = 0;
 				else
 				{
-					string syncUnitString =
-						ClientConfig.Get(ClientConfig.KEY_SYNC_UNIT, "Minutes");
+					string syncUnitString = (string)
+						ClientConfig.Get(ClientConfig.KEY_SYNC_UNIT);
 					switch (syncUnitString)
 					{
 						case "Seconds":
@@ -365,42 +363,42 @@ namespace Novell.iFolder
 		private void OnNotifyUsersButton(object o, EventArgs args)
 		{
 			if(NotifyUsersButton.Active)
-				ClientConfig.Set(ClientConfig.KEY_NOTIFY_USERS, "true");
+				ClientConfig.Set(ClientConfig.KEY_NOTIFY_USERS, true);
 			else
-				ClientConfig.Set(ClientConfig.KEY_NOTIFY_USERS, "false");
+				ClientConfig.Set(ClientConfig.KEY_NOTIFY_USERS, false);
 		}
 
 		private void OnNotifyCollisionsButton(object o, EventArgs args)
 		{
 			if(NotifyCollisionsButton.Active)
-				ClientConfig.Set(ClientConfig.KEY_NOTIFY_COLLISIONS, "true");
+				ClientConfig.Set(ClientConfig.KEY_NOTIFY_COLLISIONS, true);
 			else
-				ClientConfig.Set(ClientConfig.KEY_NOTIFY_COLLISIONS, "false");
+				ClientConfig.Set(ClientConfig.KEY_NOTIFY_COLLISIONS, false);
 		}
 
 		private void OnNotifyiFoldersButton(object o, EventArgs args)
 		{
 			if(NotifyiFoldersButton.Active)
-				ClientConfig.Set(ClientConfig.KEY_NOTIFY_IFOLDERS, "true");
+				ClientConfig.Set(ClientConfig.KEY_NOTIFY_IFOLDERS, true);
 			else
-				ClientConfig.Set(ClientConfig.KEY_NOTIFY_IFOLDERS, "false");
+				ClientConfig.Set(ClientConfig.KEY_NOTIFY_IFOLDERS, false);
 		}
 
 
 //		private void OnNotifySyncErrorsButton(object o, EventArgs args)
 //		{
 //			if (NotifySyncErrorsButton.Active)
-//				ClientConfig.Set(ClientConfig.KEY_NOTIFY_SYNC_ERRORS, "true");
+//				ClientConfig.Set(ClientConfig.KEY_NOTIFY_SYNC_ERRORS, true);
 //			else
-//				ClientConfig.Set(ClientConfig.KEY_NOTIFY_SYNC_ERRORS, "false");
+//				ClientConfig.Set(ClientConfig.KEY_NOTIFY_SYNC_ERRORS, false);
 //		}
 
 		private void OnShowConfButton(object o, EventArgs args)
 		{
 			if(ShowConfirmationButton.Active)
-				ClientConfig.Set(ClientConfig.KEY_SHOW_CREATION, "true");
+				ClientConfig.Set(ClientConfig.KEY_SHOW_CREATION, true);
 			else
-				ClientConfig.Set(ClientConfig.KEY_SHOW_CREATION, "false");
+				ClientConfig.Set(ClientConfig.KEY_SHOW_CREATION, false);
 		}
 
 
@@ -633,6 +631,45 @@ namespace Novell.iFolder
 			
 			ClientConfig.Set(ClientConfig.KEY_SYNC_UNIT, syncUnitString);
 		}
+		
+/*
+		private void OnClientConfigChanged(object sender,
+											 GConf.NotifyEventArgs args)
+		{
+			switch (args.Key)
+			{
+				case ClientConfig.KEY_SYNC_UNIT:
+					Console.WriteLine("GConf: New sync unit: {0}",
+									  (string) args.Value);
+					
+					switch ((string) args.Value)
+					{
+						case "Seconds":
+							currentSyncUnit = SyncUnit.Seconds;
+							SyncUnitsComboBox.Active = (int)SyncUnit.Seconds;
+
+							// Prevent the user from setting a sync interval less than
+							// one minute.
+							SyncSpinButton.Adjustment.Lower = 60;
+							break;
+						case "Minutes":
+							currentSyncUnit = SyncUnit.Minutes;
+							SyncUnitsComboBox.Active = (int)SyncUnit.Minutes;
+							break;
+						case "Hours":
+							currentSyncUnit = SyncUnit.Hours;
+							SyncUnitsComboBox.Active = (int)SyncUnit.Hours;
+							break;
+						case "Days":
+							currentSyncUnit = SyncUnit.Days;
+							SyncUnitsComboBox.Active = (int)SyncUnit.Days;
+							break;
+					}
+					
+					break;
+			}
+		}
+*/
 	}
 	
 	public enum SyncUnit
