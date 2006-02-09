@@ -40,29 +40,29 @@ namespace Novell.iFolder
 	{
 		#region Class Members
 		///
-		/// /apps/ifolder/notification
+		/// /apps/ifolder3/notification
 		///
-		public const string KEY_SHOW_CREATION = "/apps/ifolder/notification/show_created_dialog";
-		public const string KEY_NOTIFY_IFOLDERS = "/apps/ifolder/notification/new_ifolders";
-		public const string KEY_NOTIFY_COLLISIONS = "/apps/ifolder/notification/collisions";
-		public const string KEY_NOTIFY_USERS = "/apps/ifolder/notification/new_users";
-//		public static string KEY_NOTIFY_SYNC_ERRORS = "/apps/ifolder/notification/sync_errors";
+		public const string KEY_SHOW_CREATION = "/apps/ifolder3/notification/show_created_dialog";
+		public const string KEY_NOTIFY_IFOLDERS = "/apps/ifolder3/notification/new_ifolders";
+		public const string KEY_NOTIFY_COLLISIONS = "/apps/ifolder3/notification/collisions";
+		public const string KEY_NOTIFY_USERS = "/apps/ifolder3/notification/new_users";
+//		public static string KEY_NOTIFY_SYNC_ERRORS = "/apps/ifolder3/notification/sync_errors";
 
 		///
-		/// /apps/ifolder/synchronization
+		/// /apps/ifolder3/synchronization
 		///
 		// Valid values are "Seconds", "Minutes", "Hours", and "Days"
-		public const string KEY_SYNC_UNIT = "/apps/ifolder/synchronization/unit";
+		public const string KEY_SYNC_UNIT = "/apps/ifolder3/synchronization/unit";
 
 		///
-		/// /apps/ifolder/ui/main_window
+		/// /apps/ifolder3/ui/main_window
 		///		
-		public const string KEY_IFOLDER_WINDOW_X_POS	= "/apps/ifolder/ui/main_window/left";
-		public const string KEY_IFOLDER_WINDOW_Y_POS	= "/apps/ifolder/ui/main_window/top";
-		public const string KEY_IFOLDER_WINDOW_WIDTH	= "/apps/ifolder/ui/main_window/width";
-		public const string KEY_IFOLDER_WINDOW_HEIGHT	= "/apps/ifolder/ui/main_window/height";
-		public const string KEY_IFOLDER_WINDOW_VISIBLE = "/apps/ifolder/ui/main_window/visible";
-		public const string KEY_SHOW_SERVER_IFOLDERS	= "/apps/ifolder/ui/main_window/show_available_ifolders";
+		public const string KEY_IFOLDER_WINDOW_X_POS	= "/apps/ifolder3/ui/main_window/left";
+		public const string KEY_IFOLDER_WINDOW_Y_POS	= "/apps/ifolder3/ui/main_window/top";
+		public const string KEY_IFOLDER_WINDOW_WIDTH	= "/apps/ifolder3/ui/main_window/width";
+		public const string KEY_IFOLDER_WINDOW_HEIGHT	= "/apps/ifolder3/ui/main_window/height";
+		public const string KEY_IFOLDER_WINDOW_VISIBLE = "/apps/ifolder3/ui/main_window/visible";
+		public const string KEY_SHOW_SERVER_IFOLDERS	= "/apps/ifolder3/ui/main_window/show_available_ifolders";
 
 		private static GConf.Client				client = null;
 		private static GConf.NotifyEventHandler	SettingChangedHandler;

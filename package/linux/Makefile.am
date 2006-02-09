@@ -49,7 +49,7 @@ all: ifolder3.spec ifolder-dist clean
 		echo $$CMD; \
 		eval $$CMD
 
-ifolder3.spec:
+ifolder3.spec: ifolder3.spec.autobuild
 	sed -e "s/$(BUILDNUM_PART_1)$(BUILDNUM_PART_2)/$G$(BUILDNUM)/" ifolder3.spec.autobuild | \
 	sed -e "s/autogen\.sh/configure/" | \
 	sed -e "/^BuildRequires/d" | \
