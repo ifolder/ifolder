@@ -56,7 +56,9 @@ make dist
 %install
 export BUILDNUM=%{buildnum}
 %{__rm} -rf $RPM_BUILD_ROOT
+export GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1
 make DESTDIR=$RPM_BUILD_ROOT install
+unset GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL
 #
 # Set up iFolder in the menu for Gnome
 #
@@ -75,6 +77,21 @@ fi
 ln -s %{prefix}/bin/ifolder $RPM_BUILD_ROOT/usr/bin/ifolder
 #=============================================================================
 
+%post
+export GCONF_CONFIG_SOURCE=`opt/gnome/bin/gconftool-2 --get-default-source`
+opt/gnome/bin/gconftool-2 --makefile-install-rule \
+    %{prefix}/etc/gconf/schemas/ifolder3.schemas > /dev/null
+opt/gnome/bin/gconftool-rebuild
+
+%preun
+export GCONF_CONFIG_SOURCE=`opt/gnome/bin/gconftool-2 --get-default-source`
+opt/gnome/bin/gconftool-2 --makefile-uninstall-rule \
+    %{prefix}/etc/gconf/schemas/ifolder3.schemas > /dev/null
+opt/gnome/bin/gconftool-rebuild
+
+
+#=============================================================================
+
 %files
 %defattr(755,root,root)
 %dir /opt/novell
@@ -83,6 +100,8 @@ ln -s %{prefix}/bin/ifolder $RPM_BUILD_ROOT/usr/bin/ifolder
 /usr/share/applications/ifolder.desktop
 
 %changelog -n ifolder3
+* Thu Feb 09 2006 - btimothy@novell.com
+- added lines to install ifolder3.schemas (for GConf)
 * Wed Jan 25 2006 - mls@suse.de
 - converted neededforbuild to BuildRequires
 * Wed Jan 18 2006 - cgaisford@suse.de

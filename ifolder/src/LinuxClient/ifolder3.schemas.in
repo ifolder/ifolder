@@ -1,9 +1,8 @@
-
 <gconfschemafile>
   <schemalist>
     <schema>
-      <key>/schemas/apps/ifolder/notification/show_created_dialog</key>
-      <applyto>/apps/ifolder/notification/show_created_dialog</applyto>
+      <key>/schemas/apps/ifolder3/notification/show_created_dialog</key>
+      <applyto>/apps/ifolder3/notification/show_created_dialog</applyto>
       <owner>ifolder</owner>
       <type>bool</type>
       <default>true</default>
@@ -17,8 +16,8 @@
     </schema>
 
     <schema>
-      <key>/schemas/apps/ifolder/notification/new_ifolders</key>
-      <applyto>/apps/ifolder/notification/new_ifolders</applyto>
+      <key>/schemas/apps/ifolder3/notification/new_ifolders</key>
+      <applyto>/apps/ifolder3/notification/new_ifolders</applyto>
       <owner>ifolder</owner>
       <type>bool</type>
       <default>true</default>
@@ -32,8 +31,8 @@
     </schema>
 
     <schema>
-      <key>/schemas/apps/ifolder/notification/collisions</key>
-      <applyto>/apps/ifolder/notification/collisions</applyto>
+      <key>/schemas/apps/ifolder3/notification/collisions</key>
+      <applyto>/apps/ifolder3/notification/collisions</applyto>
       <owner>ifolder</owner>
       <type>bool</type>
       <default>true</default>
@@ -47,8 +46,8 @@
     </schema>
 
     <schema>
-      <key>/schemas/apps/ifolder/notification/new_users</key>
-      <applyto>/apps/ifolder/notification/new_users</applyto>
+      <key>/schemas/apps/ifolder3/notification/new_users</key>
+      <applyto>/apps/ifolder3/notification/new_users</applyto>
       <owner>ifolder</owner>
       <type>bool</type>
       <default>true</default>
@@ -62,8 +61,8 @@
     </schema>
 
     <schema>
-      <key>/schemas/apps/ifolder/notification/sync_errors</key>
-      <applyto>/apps/ifolder/notification/sync_errors</applyto>
+      <key>/schemas/apps/ifolder3/notification/sync_errors</key>
+      <applyto>/apps/ifolder3/notification/sync_errors</applyto>
       <owner>ifolder</owner>
       <type>bool</type>
       <default>false</default>
@@ -77,8 +76,8 @@
     </schema>
 
     <schema>
-      <key>/schemas/apps/ifolder/synchronization/unit</key>
-      <applyto>/apps/ifolder/synchronization/unit</applyto>
+      <key>/schemas/apps/ifolder3/synchronization/unit</key>
+      <applyto>/apps/ifolder3/synchronization/unit</applyto>
       <owner>ifolder</owner>
       <type>string</type>
       <default>Minutes</default>
@@ -91,8 +90,8 @@
     </schema>
 
     <schema>
-      <key>/schemas/apps/ifolder/ui/main_window/left</key>
-      <applyto>/apps/ifolder/ui/main_window/left</applyto>
+      <key>/schemas/apps/ifolder3/ui/main_window/left</key>
+      <applyto>/apps/ifolder3/ui/main_window/left</applyto>
       <owner>ifolder</owner>
       <type>int</type>
       <default>0</default>
@@ -106,8 +105,8 @@
     </schema>
 
     <schema>
-      <key>/schemas/apps/ifolder/ui/main_window/top</key>
-      <applyto>/apps/ifolder/ui/main_window/top</applyto>
+      <key>/schemas/apps/ifolder3/ui/main_window/top</key>
+      <applyto>/apps/ifolder3/ui/main_window/top</applyto>
       <owner>ifolder</owner>
       <type>int</type>
       <default>0</default>
@@ -121,8 +120,8 @@
     </schema>
 
     <schema>
-      <key>/schemas/apps/ifolder/ui/main_window/width</key>
-      <applyto>/apps/ifolder/ui/main_window/width</applyto>
+      <key>/schemas/apps/ifolder3/ui/main_window/width</key>
+      <applyto>/apps/ifolder3/ui/main_window/width</applyto>
       <owner>ifolder</owner>
       <type>int</type>
       <default>640</default>
@@ -136,8 +135,8 @@
     </schema>
 
     <schema>
-      <key>/schemas/apps/ifolder/ui/main_window/height</key>
-      <applyto>/apps/ifolder/ui/main_window/height</applyto>
+      <key>/schemas/apps/ifolder3/ui/main_window/height</key>
+      <applyto>/apps/ifolder3/ui/main_window/height</applyto>
       <owner>ifolder</owner>
       <type>int</type>
       <default>480</default>
@@ -151,8 +150,8 @@
     </schema>
 
     <schema>
-      <key>/schemas/apps/ifolder/ui/main_window/visible</key>
-      <applyto>/apps/ifolder/ui/main_window/visible</applyto>
+      <key>/schemas/apps/ifolder3/ui/main_window/visible</key>
+      <applyto>/apps/ifolder3/ui/main_window/visible</applyto>
       <owner>ifolder</owner>
       <type>bool</type>
       <default>true</default>
@@ -166,8 +165,8 @@
     </schema>
 
     <schema>
-      <key>/schemas/apps/ifolder/ui/main_window/show_available_ifolders</key>
-      <applyto>/apps/ifolder/ui/main_window/show_available_ifolders</applyto>
+      <key>/schemas/apps/ifolder3/ui/main_window/show_available_ifolders</key>
+      <applyto>/apps/ifolder3/ui/main_window/show_available_ifolders</applyto>
       <owner>ifolder</owner>
       <type>bool</type>
       <default>true</default>
