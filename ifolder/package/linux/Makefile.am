@@ -51,6 +51,7 @@ all: ifolder3.spec ifolder-dist clean
 
 ifolder3.spec:
 	sed -e "s/$(BUILDNUM_PART_1)$(BUILDNUM_PART_2)/$G$(BUILDNUM)/" ifolder3.spec.autobuild | \
+	sed -e "s/autogen\.sh/configure/" | \
 	sed -e "/^BuildRequires/d" | \
 	sed -e "/gtk-sharp2-complete/d" > ifolder3.spec
 	
