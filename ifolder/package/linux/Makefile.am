@@ -20,11 +20,14 @@
 #  Author: Paul Thomas <pthomas@novell.com>
 #
 #######################################################################
-EXTRA_DIST = $(srcdir)/Makefile.am $(srcdir)/ifolder3.spec.in
+EXTRA_DIST = $(srcdir)/Makefile.am $(srcdir)/ifolder3.spec.autobuild
 
 RELEASE = 1
 SRPM_FILE   = $(PACKAGE)-$(VERSION)-$(RELEASE).src.rpm
 RPM_FILE    = $(PACKAGE)-$(VERSION)-$(RELEASE).*.rpm
+
+BUILDNUM_PART_1 = @@BUILD
+BUILDNUM_PART_2 = NUM@@
 
 .PHONY: ifolder-dist
 
@@ -45,6 +48,9 @@ all: ifolder3.spec ifolder-dist clean
 		CMD='cp -f $(SRPM_FILE) $(RPM_FILE) "$(INSTALL_PKGS)"'; \
 		echo $$CMD; \
 		eval $$CMD
+
+ifolder3.spec:
+	sed -e "s/$(BUILDNUM_PART_1)$(BUILDNUM_PART_2)/$G$(BUILDNUM)/" ifolder3.spec.autobuild > ifolder3.spec
 	
 ifolder-dist:
 	cd $(top_srcdir); make dist
