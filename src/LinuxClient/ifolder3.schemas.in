@@ -1,0 +1,264 @@
+<gconfschemafile>
+  <schemalist>
+    <schema>
+      <key>/schemas/apps/ifolder3/notification/show_created_dialog</key>
+      <applyto>/apps/ifolder3/notification/show_created_dialog</applyto>
+      <owner>ifolder</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+         <short>Show iFolder Created Confirmation Dialog</short>
+         <long>
+       If true, a dialog will be shown after an iFolder is manually created
+       on this computer.
+         </long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/ifolder3/notification/new_ifolders</key>
+      <applyto>/apps/ifolder3/notification/new_ifolders</applyto>
+      <owner>ifolder</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+         <short>Notify of new iFolders</short>
+         <long>
+       If true, a notification bubble will appear when a new iFolder is shared
+       with the current user.
+         </long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/ifolder3/notification/collisions</key>
+      <applyto>/apps/ifolder3/notification/collisions</applyto>
+      <owner>ifolder</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+         <short>Notify of new iFolders</short>
+         <long>
+       If true, a notification bubble will appear when a file conflict is
+       detected in an iFolder (during a synchronization).
+         </long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/ifolder3/notification/new_users</key>
+      <applyto>/apps/ifolder3/notification/new_users</applyto>
+      <owner>ifolder</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+         <short>Notify of new users in an iFolder</short>
+         <long>
+       If true, a notification bubble will appear when a new user is added by
+       someone else as a member of an iFolder.
+         </long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/ifolder3/notification/sync_errors</key>
+      <applyto>/apps/ifolder3/notification/sync_errors</applyto>
+      <owner>ifolder</owner>
+      <type>bool</type>
+      <default>false</default>
+      <locale name="C">
+         <short>Notify of all synchronization errors</short>
+         <long>
+       If true, a notification bubble will appear when any problem occurs
+       when an iFolder is synchronized.  NOTE: This is not implemented yet.
+         </long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/ifolder3/synchronization/unit</key>
+      <applyto>/apps/ifolder3/synchronization/unit</applyto>
+      <owner>ifolder</owner>
+      <type>string</type>
+      <default>Minutes</default>
+      <locale name="C">
+         <short>Unit for synchronization interval</short>
+         <long>
+       Valid values are "Seconds", "Minutes", "Hours", and "Days".
+         </long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/ifolder3/ui/main_window/left</key>
+      <applyto>/apps/ifolder3/ui/main_window/left</applyto>
+      <owner>ifolder</owner>
+      <type>int</type>
+      <default>0</default>
+      <locale name="C">
+         <short>Left Position of Main iFolder Window</short>
+         <long>
+       This value is used to save the last-opened position of the main iFolder
+       window.
+         </long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/ifolder3/ui/main_window/top</key>
+      <applyto>/apps/ifolder3/ui/main_window/top</applyto>
+      <owner>ifolder</owner>
+      <type>int</type>
+      <default>0</default>
+      <locale name="C">
+         <short>Top Position of Main iFolder Window</short>
+         <long>
+       This value is used to save the last-opened position of the main iFolder
+       window.
+         </long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/ifolder3/ui/main_window/width</key>
+      <applyto>/apps/ifolder3/ui/main_window/width</applyto>
+      <owner>ifolder</owner>
+      <type>int</type>
+      <default>640</default>
+      <locale name="C">
+         <short>Width of Main iFolder Window</short>
+         <long>
+       This value is used to save the last-opened position of the main iFolder
+       window.
+         </long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/ifolder3/ui/main_window/height</key>
+      <applyto>/apps/ifolder3/ui/main_window/height</applyto>
+      <owner>ifolder</owner>
+      <type>int</type>
+      <default>480</default>
+      <locale name="C">
+         <short>Height of Main iFolder Window</short>
+         <long>
+       This value is used to save the last-opened position of the main iFolder
+       window.
+         </long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/ifolder3/ui/main_window/visible</key>
+      <applyto>/apps/ifolder3/ui/main_window/visible</applyto>
+      <owner>ifolder</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+         <short>Show Main iFolder Window at Startup</short>
+         <long>
+       If true, the main iFolder Window will be opened when the iFolder Client
+       initially starts up.
+         </long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/ifolder3/ui/main_window/show_available_ifolders</key>
+      <applyto>/apps/ifolder3/ui/main_window/show_available_ifolders</applyto>
+      <owner>ifolder</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+         <short>Show Available iFolders</short>
+         <long>
+       If true, all the iFolders from all accounts will initially be shown in
+       the main iFolder Window when iFolder is first started.
+         </long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/ifolder3/account/prefill</key>
+      <applyto>/apps/ifolder3/account/prefill</applyto>
+      <owner>ifolder</owner>
+      <type>bool</type>
+      <default>false</default>
+      <locale name="C">
+         <short>Prefill Account Information in Account Wizard</short>
+         <long>
+       If true, the Account Wizard will prefill the fields with the values
+       specified inside /apps/ifolder3/account/*.
+         </long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/ifolder3/account/server_address</key>
+      <applyto>/apps/ifolder3/account/server_address</applyto>
+      <owner>ifolder</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+         <short>iFolder Server Address</short>
+         <long>
+       If /apps/ifolder3/account/prefill is set to "True", the server address
+       specified here will be pre-populated when the user launches the Account
+       Wizard.
+         </long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/ifolder3/account/user_name</key>
+      <applyto>/apps/ifolder3/account/user_name</applyto>
+      <owner>ifolder</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+         <short>User Name</short>
+         <long>
+       If /apps/ifolder3/account/prefill is set to "True", the user name
+       specified here will be pre-populated when the user launches the Account
+       Wizard.
+         </long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/ifolder3/account/clear_text_password_for_testing_only</key>
+      <applyto>/apps/ifolder3/account/clear_text_password_for_testing_only</applyto>
+      <owner>ifolder</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+         <short>Clear Text Password (WARNING: This is for testing purposes only)</short>
+         <long>
+       If /apps/ifolder3/account/prefill is set to "True", the password
+       specified here will be pre-populated when the user launches the Account
+       Wizard.  WARNING: You should NOT use this in a production environment
+       because the password specified here should be clear text (not encrypted)
+       and may be readable by others.
+         </long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/ifolder3/account/remember_password</key>
+      <applyto>/apps/ifolder3/account/remember_password</applyto>
+      <owner>ifolder</owner>
+      <type>bool</type>
+      <default>false</default>
+      <locale name="C">
+         <short>Remember Password</short>
+         <long>
+       If /apps/ifolder3/account/prefill is set to "True", and this setting
+       is true, the Account Wizard will automatically check the "Remember
+       Password" checkbox.
+         </long>
+      </locale>
+    </schema>
+
+  </schemalist>
+</gconfschemafile>
