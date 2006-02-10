@@ -179,5 +179,86 @@
       </locale>
     </schema>
 
+    <schema>
+      <key>/schemas/apps/ifolder3/account/prefill</key>
+      <applyto>/apps/ifolder3/account/prefill</applyto>
+      <owner>ifolder</owner>
+      <type>bool</type>
+      <default>false</default>
+      <locale name="C">
+         <short>Prefill Account Information in Account Wizard</short>
+         <long>
+       If true, the Account Wizard will prefill the fields with the values
+       specified inside /apps/ifolder3/account/*.
+         </long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/ifolder3/account/server_address</key>
+      <applyto>/apps/ifolder3/account/server_address</applyto>
+      <owner>ifolder</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+         <short>iFolder Server Address</short>
+         <long>
+       If /apps/ifolder3/account/prefill is set to "True", the server address
+       specified here will be pre-populated when the user launches the Account
+       Wizard.
+         </long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/ifolder3/account/user_name</key>
+      <applyto>/apps/ifolder3/account/user_name</applyto>
+      <owner>ifolder</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+         <short>User Name</short>
+         <long>
+       If /apps/ifolder3/account/prefill is set to "True", the user name
+       specified here will be pre-populated when the user launches the Account
+       Wizard.
+         </long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/ifolder3/account/clear_text_password_for_testing_only</key>
+      <applyto>/apps/ifolder3/account/clear_text_password_for_testing_only</applyto>
+      <owner>ifolder</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+         <short>Clear Text Password (WARNING: This is for testing purposes only)</short>
+         <long>
+       If /apps/ifolder3/account/prefill is set to "True", the password
+       specified here will be pre-populated when the user launches the Account
+       Wizard.  WARNING: You should NOT use this in a production environment
+       because the password specified here should be clear text (not encrypted)
+       and may be readable by others.
+         </long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/ifolder3/account/remember_password</key>
+      <applyto>/apps/ifolder3/account/remember_password</applyto>
+      <owner>ifolder</owner>
+      <type>bool</type>
+      <default>false</default>
+      <locale name="C">
+         <short>Remember Password</short>
+         <long>
+       If /apps/ifolder3/account/prefill is set to "True", and this setting
+       is true, the Account Wizard will automatically check the "Remember
+       Password" checkbox.
+         </long>
+      </locale>
+    </schema>
+
   </schemalist>
 </gconfschemafile>

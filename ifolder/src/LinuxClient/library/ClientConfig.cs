@@ -57,12 +57,21 @@ namespace Novell.iFolder
 		///
 		/// /apps/ifolder3/ui/main_window
 		///		
-		public const string KEY_IFOLDER_WINDOW_X_POS	= "/apps/ifolder3/ui/main_window/left";
-		public const string KEY_IFOLDER_WINDOW_Y_POS	= "/apps/ifolder3/ui/main_window/top";
-		public const string KEY_IFOLDER_WINDOW_WIDTH	= "/apps/ifolder3/ui/main_window/width";
-		public const string KEY_IFOLDER_WINDOW_HEIGHT	= "/apps/ifolder3/ui/main_window/height";
-		public const string KEY_IFOLDER_WINDOW_VISIBLE = "/apps/ifolder3/ui/main_window/visible";
-		public const string KEY_SHOW_SERVER_IFOLDERS	= "/apps/ifolder3/ui/main_window/show_available_ifolders";
+		public const string KEY_IFOLDER_WINDOW_X_POS		= "/apps/ifolder3/ui/main_window/left";
+		public const string KEY_IFOLDER_WINDOW_Y_POS		= "/apps/ifolder3/ui/main_window/top";
+		public const string KEY_IFOLDER_WINDOW_WIDTH		= "/apps/ifolder3/ui/main_window/width";
+		public const string KEY_IFOLDER_WINDOW_HEIGHT		= "/apps/ifolder3/ui/main_window/height";
+		public const string KEY_IFOLDER_WINDOW_VISIBLE	= "/apps/ifolder3/ui/main_window/visible";
+		public const string KEY_SHOW_SERVER_IFOLDERS		= "/apps/ifolder3/ui/main_window/show_available_ifolders";
+		
+		///
+		/// /apps/ifolder3/account
+		///
+		public const string KEY_IFOLDER_ACCOUNT_PREFILL			= "/apps/ifolder3/account/prefill";
+		public const string KEY_IFOLDER_ACCOUNT_SERVER_ADDRESS	= "/apps/ifolder3/account/server_address";
+		public const string KEY_IFOLDER_ACCOUNT_USER_NAME			= "/apps/ifolder3/account/user_name";
+		public const string KEY_IFOLDER_ACCOUNT_PASSWORD			= "/apps/ifolder3/account/clear_text_password_for_testing_only";
+		public const string KEY_IFOLDER_ACCOUNT_REMEMBER_PASSWORD= "/apps/ifolder3/account/remember_password";
 
 		private static GConf.Client				client = null;
 		private static GConf.NotifyEventHandler	SettingChangedHandler;
@@ -126,6 +135,15 @@ namespace Novell.iFolder
 					return 640;
 				case KEY_IFOLDER_WINDOW_HEIGHT:
 					return 480;
+
+				case KEY_IFOLDER_ACCOUNT_SERVER_ADDRESS:
+				case KEY_IFOLDER_ACCOUNT_USER_NAME:
+				case KEY_IFOLDER_ACCOUNT_PASSWORD:
+					return "";
+
+				case KEY_IFOLDER_ACCOUNT_PREFILL:
+				case KEY_IFOLDER_ACCOUNT_REMEMBER_PASSWORD:
+					return false;
 			}
 			
 			return null;
