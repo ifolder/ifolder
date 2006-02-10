@@ -631,45 +631,6 @@ namespace Novell.iFolder
 			
 			ClientConfig.Set(ClientConfig.KEY_SYNC_UNIT, syncUnitString);
 		}
-		
-/*
-		private void OnClientConfigChanged(object sender,
-											 GConf.NotifyEventArgs args)
-		{
-			switch (args.Key)
-			{
-				case ClientConfig.KEY_SYNC_UNIT:
-					Console.WriteLine("GConf: New sync unit: {0}",
-									  (string) args.Value);
-					
-					switch ((string) args.Value)
-					{
-						case "Seconds":
-							currentSyncUnit = SyncUnit.Seconds;
-							SyncUnitsComboBox.Active = (int)SyncUnit.Seconds;
-
-							// Prevent the user from setting a sync interval less than
-							// one minute.
-							SyncSpinButton.Adjustment.Lower = 60;
-							break;
-						case "Minutes":
-							currentSyncUnit = SyncUnit.Minutes;
-							SyncUnitsComboBox.Active = (int)SyncUnit.Minutes;
-							break;
-						case "Hours":
-							currentSyncUnit = SyncUnit.Hours;
-							SyncUnitsComboBox.Active = (int)SyncUnit.Hours;
-							break;
-						case "Days":
-							currentSyncUnit = SyncUnit.Days;
-							SyncUnitsComboBox.Active = (int)SyncUnit.Days;
-							break;
-					}
-					
-					break;
-			}
-		}
-*/
 	}
 	
 	public enum SyncUnit
