@@ -467,7 +467,7 @@ esac
 
 case $IFOLDER_OS in
     linux)
-		AC_PROG_INTLTOOL([0.25])
+		AC_PROG_INTLTOOL
 
         PKG_CHECK_MODULES(GTK_SHARP, gtk-sharp-2.0 >= $GTK_SHARP2_MINIMUM_VERSION)
         GTK_SHARP_PREFIX=`pkg-config --variable=prefix gtk-sharp`
