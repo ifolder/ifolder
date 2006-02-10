@@ -9,22 +9,26 @@ IMAGE_DIR = $(srcdir)/../images
 
 IMAGE_FILES = $(IMAGE_DIR)/ifolder128.png $(IMAGE_DIR)/inviteduser.png $(IMAGE_DIR)/currentuser.png $(IMAGE_DIR)/ifolderuser.png $(IMAGE_DIR)/serverifolder24.png $(IMAGE_DIR)/ifolder24.png $(IMAGE_DIR)/ifolder-banner-scaler.png $(IMAGE_DIR)/ifolder-banner.png $(IMAGE_DIR)/conflict32.png $(IMAGE_DIR)/ifolder-shutdown.png $(IMAGE_DIR)/ifolder-startup.png $(IMAGE_DIR)/ifolder24.gif $(IMAGE_DIR)/ifolder24-upload.gif $(IMAGE_DIR)/ifolder-crash.png $(IMAGE_DIR)/ifolder-crash.gif $(IMAGE_DIR)/newifolder32.png $(IMAGE_DIR)/newifolder24.png $(IMAGE_DIR)/setup24.png $(IMAGE_DIR)/share24.png $(IMAGE_DIR)/conflict24.png $(IMAGE_DIR)/sync24.png $(IMAGE_DIR)/ifolder48.png $(IMAGE_DIR)/add-account.png $(IMAGE_DIR)/add-emblem.png $(IMAGE_DIR)/add-folder-to-synchronize.png $(IMAGE_DIR)/folder.png $(IMAGE_DIR)/remove-emblem.png $(IMAGE_DIR)/remove-folder.png $(IMAGE_DIR)/search-folder.png $(IMAGE_DIR)/share-emblem.png $(IMAGE_DIR)/share-folder.png $(IMAGE_DIR)/sync-emblem.png $(IMAGE_DIR)/sync-folder.png $(IMAGE_DIR)/folder128.png $(IMAGE_DIR)/synchronized-folder64.png $(IMAGE_DIR)/home-temp.png $(IMAGE_DIR)/remote-folder64.png $(IMAGE_DIR)/download-folder128.png $(IMAGE_DIR)/download-folder64.png $(IMAGE_DIR)/synchronized-folder-spotlight64.png $(IMAGE_DIR)/available-folder64.png $(IMAGE_DIR)/available-folder-spotlight64.png $(IMAGE_DIR)/ok-folder64.png $(IMAGE_DIR)/ok-folder-spotlight64.png $(IMAGE_DIR)/sync-folder64.png $(IMAGE_DIR)/sync-folder-spotlight64.png $(IMAGE_DIR)/conflict-folder64.png $(IMAGE_DIR)/conflict-folder-spotlight64.png $(IMAGE_DIR)/sync-wait-folder64.png $(IMAGE_DIR)/sync-wait-folder-spotlight64.png $(IMAGE_DIR)/my-available-folder64.png $(IMAGE_DIR)/my-available-folder-spotlight64.png $(IMAGE_DIR)/shared-available-folder64.png $(IMAGE_DIR)/shared-available-folder-spotlight64.png $(IMAGE_DIR)/emblem-ok.png $(IMAGE_DIR)/emblem-sync-wait.png $(IMAGE_DIR)/emblem-sync.png $(IMAGE_DIR)/emblem-conflict.png $(IMAGE_DIR)/emblem-shared.png $(IMAGE_DIR)/upload48.png $(IMAGE_DIR)/download48.png
 
-schema_in_files		= ifolder3.schemas.in
 schemasdir			= $(GCONF_SCHEMA_FILE_DIR)
-schemas_DATA		= $(schema_in_files:.schemas.in=.schemas)
+schemas_DATA		= ifolder3.schemas
+
+#schemas_in_files	= ifolder3.schemas.in
+#schemas_DATA		= $(schemas_in_files:.schemas.in=.schemas)
+
+$(schemas_DATA): $(schemas_DATA).in
+	sed -e "s|\@DATADIR\@|$(datadir)|g" $< > $@
 
 @INTLTOOL_SCHEMAS_RULE@
 
-EXTRA_DIST = $(schema_in_files)
-
-DISTCLEANFILES = $(schemas_DATA)
-
 if GCONF_SCHEMAS_INSTALL
 install-data-local:
-	if [ -z "$(DESTDIR)" ]; then \
-		GCONF_CONFIG_SOURCE="" $(GCONFTOOL) --makefile-install-rule $(builddir)$(schema_DATA); \
-	fi
+	GCONF_CONFIG_SOURCE="" \
+	$(GCONFTOOL) --makefile-install-rule $(schemas_DATA)
 endif
+
+EXTRA_DIST = $(schemas_DATA).in
+
+CLEANFILES = $(schemas_DATA)
 
 install-exec-local: $(IMAGE_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(datadir)/ifolder3/images $(DESTDIR)$(datadir)/pixmaps
