@@ -192,6 +192,13 @@ namespace Novell.iFolder
 			table.Attach(ServerNameEntry, 2,3, 1,2,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			l.MnemonicWidget = ServerNameEntry;
+			if ((bool)ClientConfig.Get(
+				ClientConfig.KEY_IFOLDER_ACCOUNT_PREFILL))
+			{
+				ServerNameEntry.Text = (string)
+					ClientConfig.Get(
+						ClientConfig.KEY_IFOLDER_ACCOUNT_SERVER_ADDRESS);
+			}
 			ServerNameEntry.Changed += new EventHandler(UpdateServerInformationPageSensitivity);
 			ServerNameEntry.KeyPressEvent
 				+= new KeyPressEventHandler(OnServerNameEntryKeyPress);
@@ -255,6 +262,13 @@ namespace Novell.iFolder
 			table.Attach(UserNameEntry, 2,3, 1,2,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			l.MnemonicWidget = UserNameEntry;
+			if ((bool)ClientConfig.Get(
+				ClientConfig.KEY_IFOLDER_ACCOUNT_PREFILL))
+			{
+				UserNameEntry.Text = (string)
+					ClientConfig.Get(
+						ClientConfig.KEY_IFOLDER_ACCOUNT_USER_NAME);
+			}
 			UserNameEntry.Changed += new EventHandler(UpdateUserInformationPageSensitivity);
 
 			// Row 3
@@ -267,12 +281,28 @@ namespace Novell.iFolder
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			l.MnemonicWidget = PasswordEntry;
 			PasswordEntry.Visibility = false;
+			if ((bool)ClientConfig.Get(
+				ClientConfig.KEY_IFOLDER_ACCOUNT_PREFILL))
+			{
+				PasswordEntry.Text = (string)
+					ClientConfig.Get(
+						ClientConfig.KEY_IFOLDER_ACCOUNT_PASSWORD);
+			}
 			PasswordEntry.Changed += new EventHandler(UpdateUserInformationPageSensitivity);
 
 			// Row 4
 			RememberPasswordCheckButton = new CheckButton(Util.GS("_Remember my password"));
 			table.Attach(RememberPasswordCheckButton, 2,3, 3,4,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+			if ((bool)ClientConfig.Get(
+				ClientConfig.KEY_IFOLDER_ACCOUNT_PREFILL) &&
+				(bool)ClientConfig.Get(
+				ClientConfig.KEY_IFOLDER_ACCOUNT_REMEMBER_PASSWORD))
+			{
+				RememberPasswordCheckButton.Active = (bool)
+					ClientConfig.Get(
+						ClientConfig.KEY_IFOLDER_ACCOUNT_REMEMBER_PASSWORD);
+			}
 			
 			return UserInformationPage;
 		}
