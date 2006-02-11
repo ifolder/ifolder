@@ -81,13 +81,11 @@ ln -s %{prefix}/bin/ifolder $RPM_BUILD_ROOT/usr/bin/ifolder
 export GCONF_CONFIG_SOURCE=`opt/gnome/bin/gconftool-2 --get-default-source`
 opt/gnome/bin/gconftool-2 --makefile-install-rule \
     %{prefix}/etc/gconf/schemas/ifolder3.schemas > /dev/null
-opt/gnome/bin/gconftool-rebuild > /dev/null
 
 %preun
 export GCONF_CONFIG_SOURCE=`opt/gnome/bin/gconftool-2 --get-default-source`
 opt/gnome/bin/gconftool-2 --makefile-uninstall-rule \
     %{prefix}/etc/gconf/schemas/ifolder3.schemas > /dev/null
-opt/gnome/bin/gconftool-rebuild > /dev/null
 
 
 #=============================================================================
