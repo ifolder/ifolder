@@ -362,7 +362,6 @@ AC_SUBST(webdir)
 AC_SUBST(webbindir)
 AC_SUBST(GSOAP_PATH)
 
-
 #
 # We have our own "standard" directories for web services.
 #
