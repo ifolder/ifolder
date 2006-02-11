@@ -237,9 +237,12 @@ case $IFOLDER_OS in
     	libexecdir='${exec_prefix}'
 
 		#
-		# Find gconftool-2
+		# Find gconftool-2 (taken from gnumeric)
 		#
 		AC_PATH_PROG(GCONFTOOL, gconftool-2)
+		if test x"$GCONFTOOL" = x; then
+			AC_MSG_ERROR([gconftool-2 executable not found in your path - should be installed with GConf])
+		fi
 		AM_GCONF_SOURCE_2
     ;;
     #
@@ -351,6 +354,14 @@ AC_SUBST(TLBX)
 AC_SUBST(webdir)
 AC_SUBST(webbindir)
 AC_SUBST(GSOAP_PATH)
+
+dnl ==========================================================
+dnl GNOME Specific extensions
+
+dnl (taken from gnumeric)
+dnl The following conditional is set in AM_GCONF_SOURCE_2.
+dnl Because we may skip its execution, we have to set a default here.
+AM_CONDITIONAL([GCONF_SCHEMAS_INSTALL], [false])
 
 #
 # We have our own "standard" directories for web services.
@@ -467,7 +478,7 @@ esac
 
 case $IFOLDER_OS in
     linux)
-		AC_PROG_INTLTOOL
+#		AC_PROG_INTLTOOL
 
         PKG_CHECK_MODULES(GTK_SHARP, gtk-sharp-2.0 >= $GTK_SHARP2_MINIMUM_VERSION)
         GTK_SHARP_PREFIX=`pkg-config --variable=prefix gtk-sharp`
