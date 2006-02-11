@@ -1571,8 +1571,7 @@ Console.WriteLine("iFolderWindow.OnIconViewDragDrop()");
 						// they used last.
 						Util.LastCreatedPath = ifHolder.iFolder.UnManagedPath;
 	
-						if(ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION, 
-										"true") == "true")
+						if ((bool)ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION))
 						{
 							iFolderCreationDialog dlg = 
 								new iFolderCreationDialog(ifHolder.iFolder);
@@ -1592,7 +1591,7 @@ Console.WriteLine("iFolderWindow.OnIconViewDragDrop()");
 							if(dlg.HideDialog)
 							{
 								ClientConfig.Set(
-									ClientConfig.KEY_SHOW_CREATION, "false");
+									ClientConfig.KEY_SHOW_CREATION, false);
 							}
 		
 							cd.Destroy();
@@ -2551,8 +2550,7 @@ Console.WriteLine("iFolderWindow.AddServerGroup(DomainID: {0})", domainID);
 						// they used last.
 						Util.LastCreatedPath = ifHolder.iFolder.UnManagedPath;
 	
-						if(ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION, 
-										"true") == "true")
+						if((bool)ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION))
 						{
 							iFolderCreationDialog dlg = 
 								new iFolderCreationDialog(ifHolder.iFolder);
@@ -2572,7 +2570,7 @@ Console.WriteLine("iFolderWindow.AddServerGroup(DomainID: {0})", domainID);
 							if(dlg.HideDialog)
 							{
 								ClientConfig.Set(
-									ClientConfig.KEY_SHOW_CREATION, "false");
+									ClientConfig.KEY_SHOW_CREATION, false);
 							}
 		
 							cd.Destroy();

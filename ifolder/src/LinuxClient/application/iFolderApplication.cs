@@ -511,8 +511,7 @@ Console.WriteLine("done calling simiasManager.Stop()");
 					currentIconAnimationDirection = 0;
 					gAppIcon.Pixbuf = RunningPixbuf;
 
-//					if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_SYNC_ERRORS, 
-//							"true") == "true")
+//					if((bool)ClientConfig.Get(ClientConfig.KEY_NOTIFY_SYNC_ERRORS))
 //					{
 						if (collectionSynchronizing != null)
 						{
@@ -592,8 +591,7 @@ Console.WriteLine("done calling simiasManager.Stop()");
 			if(!ifdata.IsCurrentUser(ifHolder.iFolder.OwnerID))
 			{
 				if(ifHolder.iFolder.IsSubscription &&
-					(ClientConfig.Get(ClientConfig.KEY_NOTIFY_IFOLDERS, "true")
-						 == "true"))
+					((bool)ClientConfig.Get(ClientConfig.KEY_NOTIFY_IFOLDERS)))
 				{
 					NotifyWindow notifyWin = new NotifyWindow(
 							tIcon,
@@ -651,8 +649,7 @@ Console.WriteLine("done calling simiasManager.Stop()");
 				// this may be called when a subscription gets updated
 				if(ifHolder.iFolder.HasConflicts)
 				{
-					if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_COLLISIONS,
-							"true") == "true")
+					if((bool)ClientConfig.Get(ClientConfig.KEY_NOTIFY_COLLISIONS))
 					{
 						string message = string.Format(
 							Util.GS("A conflict has been detected in this iFolder.\n\nClick <a href=\"ResolveiFolderConflicts:{0}\">here</a> to resolve the conflicts.\nWhat is a <a href=\"ShowConflictHelp\">conflict</a>?"),
@@ -701,8 +698,7 @@ Console.WriteLine("done calling simiasManager.Stop()");
 			if (args == null || args.iFolderID == null || args.iFolderUser == null)
 				return;	// Prevent an exception
 			
-			if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_USERS, "true")
-							== "true")
+			if((bool)ClientConfig.Get(ClientConfig.KEY_NOTIFY_USERS))
 			{
 				string username;
 				iFolderHolder ifHolder = ifdata.GetiFolder(args.iFolderID);

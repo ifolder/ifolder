@@ -15,7 +15,11 @@ MSVCR_DEBUG_DLL = $(shell find $(MSVCR_DEBUG_DLL_PATH) -name msvcr71d.dll)
 endif
 endif
 
-EXTRA_DIST = tools $(srcdir)/$(PACKAGE)*.pc.in $(ADDITIONAL_LIB_FILES)
+EXTRA_DIST =						\
+	tools							\
+	$(srcdir)/$(PACKAGE)*.pc.in		\
+	$(ADDITIONAL_LIB_FILES)			\
+	$(srcdir)/intltool-*.in
 
 all: ifolder3.pc ifolder3-c.pc
 

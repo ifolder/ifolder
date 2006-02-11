@@ -17,8 +17,10 @@
  *  License along with this program; if not, write to the Free
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- *  Author: Calvin Gaisford <cgaisford@novell.com>
- *			Bruce Getter <bgetter@novell.com>
+ *  Authors:
+ *		Calvin Gaisford <cgaisford@novell.com>
+ *		Bruce Getter <bgetter@novell.com>
+ *		Boyd Timothy <btimothy@novell.com>
  *
  ***********************************************************************/
 	 
@@ -27,7 +29,6 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.IO;
 using System.Text;
-using System.Xml;
 using System.Threading;
 
 namespace Novell.iFolder
@@ -38,305 +39,146 @@ namespace Novell.iFolder
 	public class ClientConfig
 	{
 		#region Class Members
-		private static string RootElementTag = "configuration";
-		private static string SectionTag = "section";
-		private static string SettingTag = "setting";
-		private static string NameAttr = "name";
-		private static string ValueAttr = "value";
-		private static string DefaultSection = "iFolderClientConfig";
-		private static string DefaultFileName = "ifolder3.config";
+		///
+		/// /apps/ifolder3/notification
+		///
+		public const string KEY_SHOW_CREATION = "/apps/ifolder3/notification/show_created_dialog";
+		public const string KEY_NOTIFY_IFOLDERS = "/apps/ifolder3/notification/new_ifolders";
+		public const string KEY_NOTIFY_COLLISIONS = "/apps/ifolder3/notification/collisions";
+		public const string KEY_NOTIFY_USERS = "/apps/ifolder3/notification/new_users";
+//		public static string KEY_NOTIFY_SYNC_ERRORS = "/apps/ifolder3/notification/sync_errors";
 
-		public static string KEY_SHOW_CREATION = "ShowCreationDialog";
-		public static string KEY_NOTIFY_IFOLDERS = "NotifyiFolders";
-		public static string KEY_NOTIFY_COLLISIONS = "NotifyCollisions";
-		public static string KEY_NOTIFY_USERS = "NotifyUsers";
-//		public static string KEY_NOTIFY_SYNC_ERRORS = "NotifySyncErrors";
-		public static string KEY_SYNC_UNIT = "SyncUnit";
+		///
+		/// /apps/ifolder3/synchronization
+		///
+		// Valid values are "Seconds", "Minutes", "Hours", and "Days"
+		public const string KEY_SYNC_UNIT = "/apps/ifolder3/synchronization/unit";
+
+		///
+		/// /apps/ifolder3/ui/main_window
+		///		
+		public const string KEY_IFOLDER_WINDOW_X_POS		= "/apps/ifolder3/ui/main_window/left";
+		public const string KEY_IFOLDER_WINDOW_Y_POS		= "/apps/ifolder3/ui/main_window/top";
+		public const string KEY_IFOLDER_WINDOW_WIDTH		= "/apps/ifolder3/ui/main_window/width";
+		public const string KEY_IFOLDER_WINDOW_HEIGHT		= "/apps/ifolder3/ui/main_window/height";
+		public const string KEY_IFOLDER_WINDOW_VISIBLE	= "/apps/ifolder3/ui/main_window/visible";
+		public const string KEY_SHOW_SERVER_IFOLDERS		= "/apps/ifolder3/ui/main_window/show_available_ifolders";
 		
-		public static string KEY_IFOLDER_WINDOW_X_POS	= "iFolderWindowXPos";
-		public static string KEY_IFOLDER_WINDOW_Y_POS	= "iFolderWindowYPos";
-		public static string KEY_IFOLDER_WINDOW_WIDTH	= "iFolderWindowWidth";
-		public static string KEY_IFOLDER_WINDOW_HEIGHT	= "iFolderWindowHeight";
-		public static string KEY_IFOLDER_WINDOW_VISIBLE = "iFolderWindowVisible";
+		///
+		/// /apps/ifolder3/account
+		///
+		public const string KEY_IFOLDER_ACCOUNT_PREFILL			= "/apps/ifolder3/account/prefill";
+		public const string KEY_IFOLDER_ACCOUNT_SERVER_ADDRESS	= "/apps/ifolder3/account/server_address";
+		public const string KEY_IFOLDER_ACCOUNT_USER_NAME			= "/apps/ifolder3/account/user_name";
+		public const string KEY_IFOLDER_ACCOUNT_PASSWORD			= "/apps/ifolder3/account/clear_text_password_for_testing_only";
+		public const string KEY_IFOLDER_ACCOUNT_REMEMBER_PASSWORD= "/apps/ifolder3/account/remember_password";
+
+		private static GConf.Client				client = null;
+		private static GConf.NotifyEventHandler	SettingChangedHandler;
 		
-		public static string KEY_SHOW_SERVER_IFOLDERS	= "ShowServeriFolders";
-
-
-		private static XmlDocument configDoc;
 		#endregion
 
 		#region Properties
-		/// <summary>
-		/// Called to get the file path of the default Simias.config file
-		/// </summary>
-		private static string DefaultFilePath
-		{
-			get { return Path.Combine(DefaultPath, DefaultFileName); }
-		}
-
-		private static string DefaultPath
+		public static GConf.Client Client
 		{
 			get
 			{
-				string path = Environment.GetFolderPath(
-							Environment.SpecialFolder.LocalApplicationData);
-
-				if ((path == null) || (path.Length == 0))
+				if (client == null)
 				{
-					path = Environment.GetFolderPath(
-								Environment.SpecialFolder.ApplicationData);
+					client = new GConf.Client();
+					
+					SettingChangedHandler =
+						new GConf.NotifyEventHandler(OnSettingChanged);
+					client.AddNotify("/apps/ifolder", SettingChangedHandler);
 				}
-
-				return fixupPath(path);
+				
+				return client;
 			}
 		}
+		
+		#endregion
+
+		#region Events		
+		public static event GConf.NotifyEventHandler SettingChanged;
 		#endregion
 		
 		#region Constructor
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		/// <param name="path">A hard path to a configuration file.</param>
 		static ClientConfig()
 		{
-			// load a configuration file, if it exists
-			if (!File.Exists(DefaultFilePath))
-			{
-				XmlDocument document = new XmlDocument();
-				document.AppendChild(document.CreateElement(RootElementTag));
-				document.Save(DefaultFilePath);
-			}
-
-			// create the configuration document
-			configDoc = new XmlDocument();
-			configDoc.Load(DefaultFilePath);
 		}
 		#endregion
 
 		#region Private Methods
-		private static XmlElement GetSection(string section, ref bool changed)
+		private static object GetDefault(string key)
 		{
-			string str = string.Format("//section[@name='{0}']", section);
-			XmlElement sectionElement = 
-				(XmlElement)configDoc.DocumentElement.SelectSingleNode(str);
-			if(sectionElement == null)
+			switch(key)
 			{
-				// Create the Section node
-				sectionElement = configDoc.CreateElement(SectionTag);
-				sectionElement.SetAttribute(NameAttr, section);
-				configDoc.DocumentElement.AppendChild(sectionElement);
-				changed = true;
+				case KEY_SHOW_CREATION:
+				case KEY_NOTIFY_IFOLDERS:
+				case KEY_NOTIFY_COLLISIONS:
+				case KEY_NOTIFY_USERS:
+//				case KEY_NOTIFY_SYNC_ERRORS:
+				case KEY_SHOW_SERVER_IFOLDERS:
+				case KEY_IFOLDER_WINDOW_VISIBLE:
+					return true;
+
+				case KEY_SYNC_UNIT:
+					return "Minutes";
+
+				case KEY_IFOLDER_WINDOW_X_POS:
+				case KEY_IFOLDER_WINDOW_Y_POS:
+					return 0;
+				case KEY_IFOLDER_WINDOW_WIDTH:
+					return 640;
+				case KEY_IFOLDER_WINDOW_HEIGHT:
+					return 480;
+
+				case KEY_IFOLDER_ACCOUNT_SERVER_ADDRESS:
+				case KEY_IFOLDER_ACCOUNT_USER_NAME:
+				case KEY_IFOLDER_ACCOUNT_PASSWORD:
+					return "";
+
+				case KEY_IFOLDER_ACCOUNT_PREFILL:
+				case KEY_IFOLDER_ACCOUNT_REMEMBER_PASSWORD:
+					return false;
 			}
-
-			return sectionElement;
-		}
-
-		private static XmlElement GetKey(string section, string key, 
-					ref bool changed)
-		{
-			// Get the section that the key belongs to.
-			XmlElement sectionElement = GetSection(section, ref changed);
-
-			string str = string.Format("//{0}[@{1}='{2}']/{3}[@{1}='{4}']", 
-						SectionTag, NameAttr, section, SettingTag, key);
-			XmlElement keyElement = 
-				(XmlElement)sectionElement.SelectSingleNode(str);
-			if (keyElement == null)
-			{				
-				// Create the key.
-				keyElement = configDoc.CreateElement(SettingTag);
-				keyElement.SetAttribute(NameAttr, key);
-				sectionElement.AppendChild(keyElement);
-				changed = true;
-			}
-
-			return keyElement;
-		}
-
-		private static void UpdateConfigFile()
-		{
-			XmlTextWriter xtw = new XmlTextWriter(DefaultFilePath, 
-						Encoding.ASCII);
-			try
-			{
-				xtw.Formatting = Formatting.Indented;
-				configDoc.WriteTo(xtw);
-			}
-			finally
-			{
-				xtw.Close();
-			}
+			
+			return null;
 		}
 		
-		private static string fixupPath(string path)
+		private static void OnSettingChanged(object sender, GConf.NotifyEventArgs args)
 		{
-			if ((path.EndsWith("ifolder") == false) &&
-				(path.EndsWith("ifolder/") == false) &&
-				(path.EndsWith(@"ifolder\") == false))
-			{
-				path = Path.Combine(path, "ifolder");
-			}
-
-			if (!Directory.Exists(path))
-			{
-				Directory.CreateDirectory(path);
-			}
-			return path;
+			if (SettingChanged != null)
+				SettingChanged(sender, args);
 		}
-
-
-		private static bool KeyExists(string section, string key)
-		{
-			bool foundKey = false;
-		
-			string str = string.Format("//{0}[@{1}='{2}']", 
-								SectionTag, NameAttr, section);
-			XmlElement sectionElement = 
-				(XmlElement)configDoc.DocumentElement.SelectSingleNode(str);
-			if(sectionElement != null)
-			{
-				str = string.Format("//{0}[@{1}='{2}']/{3}[@{1}='{4}']", 
-						SectionTag, NameAttr, section, SettingTag, key);
-				if(sectionElement.SelectSingleNode(str) != null)
-				{
-					foundKey = true;
-				}
-			}
-
-			return foundKey;
-		}
-
 		#endregion
 
 		#region Public Methods
-		/// <summary>
-		/// Returns the XmlElement for the specified key.  
-		/// Creates the key if does not exist.
-		/// </summary>
-		/// <param name="key">The key to return.</param>
-		/// <returns>The key as an XmlElement.</returns>
-		public static XmlElement GetElement(string key)
+		public static object Get(string key)
 		{
-			return GetElement(DefaultSection, key);
-		}
-
-		/// <summary>
-		/// Returns the XmlElement for the specified key.  
-		/// Creates the key if does not exist.
-		/// </summary>
-		/// <param name="section">The section where the key is stored.</param>
-		/// <param name="key">The key to return.</param>
-		/// <returns>The key as an XmlElement.</returns>
-		public static XmlElement GetElement(string section, string key)
-		{
-			lock(typeof(ClientConfig))
+			try
 			{
-				bool changed = false;
-				XmlElement element = GetKey(section, key, ref changed);
-				if (changed)
-				{
-					UpdateConfigFile();
-				}
-
-				return element.Clone() as XmlElement;
+				return Client.Get(key);
+			}
+			catch (GConf.NoSuchKeyException)
+			{
+				object defaultValue = GetDefault(key);
+				
+				if (defaultValue != null)
+					Client.Set(key, defaultValue);
+				
+				return defaultValue;
 			}
 		}
-
-		/// <summary>
-		/// Sets the modified element.  
-		/// The element must have been retrieved from GetElement.
-		/// </summary>
-		/// <param name="section">Section that the key belongs in.</param>
-		/// <param name="key">Key to set new element into.</param>
-		/// <param name="newElement">The element to save.</param>
-		public static void SetElement(string section, string key, 
-				XmlElement newElement)
+		
+		public static void Set(string key, object value)
 		{
-			lock(typeof(ClientConfig))
-			{
-				bool changed = false;
-				XmlElement keyElement = GetKey(section, key, ref changed);
-				keyElement.InnerXml = newElement.InnerXml;
-				UpdateConfigFile();
-			}
+			Client.Set(key, value);
 		}
-		/// <summary>
-		/// Returns the value for the specified key.
-		/// </summary>
-		/// <param name="key">The key to get the value for.</param>
-		/// <param name="defaultValue">The default value if none.</param>
-		/// <returns>The value as a string.</returns>
-		public static string Get(string key, string defaultValue)
-		{
-			return Get(DefaultSection, key, defaultValue);
-		}
-
-
-		/// <summary>
-		/// Returns the value for the specified key.
-		/// </summary>
-		/// <param name="section">The section where the key exists.</param>
-		/// <param name="key">The key to get the value for.</param>
-		/// <param name="defaultValue">The default value if none.</param>
-		/// <returns>The value as a string.</returns>
-		public static string Get(string section, string key, 
-				string defaultValue)
-		{
-			lock(typeof(ClientConfig))
-			{
-				bool changed = false;
-				XmlElement keyElement = GetKey(section, key, ref changed);
-				string keyValue = keyElement.GetAttribute(ValueAttr);
-				if (keyValue == string.Empty)
-				{
-					if (defaultValue != null )
-					{
-						keyElement.SetAttribute(ValueAttr, defaultValue);
-						keyValue = defaultValue;
-						changed = true;
-					}
-					else
-					{
-						keyValue = null;
-					}
-				}
-
-				if (changed)
-				{
-					UpdateConfigFile();
-				}
-
-				return keyValue;
-			}
-		}
-
-		/// <summary>
-		/// Set a Key and value pair.
-		/// </summary>
-		/// <param name="key">The key to set.</param>
-		/// <param name="keyValue">The value of the key.</param>
-		public static void Set(string key, string keyValue)
-		{
-			Set(DefaultSection, key, keyValue);
-		}
-
-		/// <summary>
-		/// Set a key and value pair.
-		/// </summary>
-		/// <param name="section">The section for the tuple</param>
-		/// <param name="key">The key to set.</param>
-		/// <param name="keyValue">The value of the key.</param>
-		public static void Set(string section, string key, string keyValue)
-		{
-			lock(typeof(ClientConfig))
-			{
-				bool changed = false;
-				XmlElement keyElement = GetKey(section, key, ref changed);
-				keyElement.SetAttribute(ValueAttr, keyValue);
-				UpdateConfigFile();
-			}
-		}
-
+		
 		/// <summary>
 		/// Checks for existence of a specified key.
 		/// </summary>
@@ -344,21 +186,16 @@ namespace Novell.iFolder
 		/// <returns>True if the key exists, otherwise false.</returns>
 		public static bool Exists(string key)
 		{
-			return Exists(DefaultSection, key);
-		}
-
-		/// <summary>
-		/// Checks for existence of a specified section and key.
-		/// </summary>
-		/// <param name="section">The section for the tuple</param>
-		/// <param name="key">The key to set.</param>
-		/// <returns>True if section and key exists, otherwise false.</returns>
-		public static bool Exists(string section, string key)
-		{
-			lock(typeof(ClientConfig))
+			try
 			{
-				return KeyExists(section, key);
+				Client.Get(key);
 			}
+			catch (GConf.NoSuchKeyException)
+			{
+				return false;
+			}
+			
+			return true;
 		}
 
 		/// <summary>
@@ -367,30 +204,13 @@ namespace Novell.iFolder
 		/// <param name="key">Key to delete.</param>
 		public static void DeleteKey(string key)
 		{
-			DeleteKey(DefaultSection, key);
+			try
+			{
+				Client.Set(key, null);
+			}
+			catch{}
 		}
 
-		/// <summary>
-		/// Deletes the specified key from the specified section.
-		/// </summary>
-		/// <param name="section">Section to delete key from.</param>
-		/// <param name="key">Key to delete.</param>
-		public static void DeleteKey(string section, string key)
-		{
-			lock(typeof(ClientConfig))
-			{
-				// Check if the key exists.
-				if (KeyExists(section, key))
-				{
-					bool changed = false;
-					XmlElement sectionElement = 
-								GetSection(section, ref changed);
-					XmlElement keyElement = GetKey(section, key, ref changed);
-					sectionElement.RemoveChild(keyElement);
-					UpdateConfigFile();
-				}
-			}
-		}
 		#endregion
 	}
 }
