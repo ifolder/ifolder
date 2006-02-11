@@ -168,6 +168,8 @@ case $IFOLDER_OS in
         CSCFLAGS="/d:DARWIN $CSCFLAGS"
         EMPTY=
         EXE_EXT=''
+		GCONF_SCHEMA_CONFIG_SOURCE=''
+		GCONF_SCHEMA_FILE_DIR=''
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
         INSTALL_EXE_OPTS='-m 644'
@@ -198,12 +200,22 @@ case $IFOLDER_OS in
     # Linux-specific configuration
     #
     linux)
+		#
+		# Find gconftool-2
+		#
+		AC_PATH_PROG(GCONFTOOL, gconftool-2)
+		if test x"$GCONFTOOL" = x; then
+			AC_MSG_ERROR([gconftool-2 executable not found in your path - should be installed with GConf])
+		fi
+
         #
         # Set variables
         #
         CSCFLAGS="/d:LINUX $CSCFLAGS"
         EMPTY=
         EXE_EXT=''
+		GCONF_SCHEMA_CONFIG_SOURCE=`gconftool-2 --get-default-source`
+		GCONF_SCHEMA_FILE_DIR='$(sysconfdir)/gconf/schemas'
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
         INSTALL_EXE_OPTS='--mode=644'
@@ -235,15 +247,6 @@ case $IFOLDER_OS in
 		#AM_GNU_GETTEXT_VERSION(0.10.40)
 		AM_GNU_GETTEXT(external)
     	libexecdir='${exec_prefix}'
-
-		#
-		# Find gconftool-2 (taken from gnumeric)
-		#
-		AC_PATH_PROG(GCONFTOOL, gconftool-2)
-		if test x"$GCONFTOOL" = x; then
-			AC_MSG_ERROR([gconftool-2 executable not found in your path - should be installed with GConf])
-		fi
-		AM_GCONF_SOURCE_2
     ;;
     #
     # Windows-specific configuration
@@ -276,6 +279,8 @@ case $IFOLDER_OS in
         DEF='-def:'
         EMPTY=
         EXE_EXT='.exe'
+		GCONF_SCHEMA_CONFIG_SOURCE=''
+		GCONF_SCHEMA_FILE_DIR=''
         ICON_EXT='.ico'
         ICON_FLAG='/win32icon:'
         INSTALL_EXE_OPTS=''
@@ -298,7 +303,7 @@ case $IFOLDER_OS in
         REPORT_DIR='$(shell cygpath --windows $(DESTDIR)$(bindir) | sed ''s,\\\\,/,g'')'
         REPORT_EXE='$(top_srcdir)/tools/Report/Report.exe'
         RES_EXT='.res'
-	RESG='resgen'
+		RESG='resgen'
         SEP='$(EMPTY)\\$(EMPTY)'
         SHARED_LIB_EXT='.dll'
         SHARED_LIB_FLAG='-dll'
@@ -330,6 +335,8 @@ AC_SUBST(CXX)
 AC_SUBST(CXXFLAGS)
 AC_SUBST(DEF)
 AC_SUBST(DOCDIR)
+AC_SUBST(GCONF_SCHEMA_CONFIG_SOURCE)
+AC_SUBST(GCONF_SCHEMA_FILE_DIR)
 AC_SUBST(ICON_EXT)
 AC_SUBST(ICON_FLAG)
 AC_SUBST(INSTALL_EXE_OPTS)
@@ -355,13 +362,6 @@ AC_SUBST(webdir)
 AC_SUBST(webbindir)
 AC_SUBST(GSOAP_PATH)
 
-dnl ==========================================================
-dnl GNOME Specific extensions
-
-dnl (taken from gnumeric)
-dnl The following conditional is set in AM_GCONF_SOURCE_2.
-dnl Because we may skip its execution, we have to set a default here.
-AM_CONDITIONAL([GCONF_SCHEMAS_INSTALL], [false])
 
 #
 # We have our own "standard" directories for web services.
