@@ -18,13 +18,13 @@ schemas_DATA		= ifolder3.schemas
 $(schemas_DATA): $(schemas_DATA).in
 	sed -e "s|\@DATADIR\@|$(datadir)|g" $< > $@
 
-@INTLTOOL_SCHEMAS_RULE@
+#@INTLTOOL_SCHEMAS_RULE@
 
-if GCONF_SCHEMAS_INSTALL
+#if GCONF_SCHEMAS_INSTALL
 install-data-local:
 	GCONF_CONFIG_SOURCE="" \
 	$(GCONFTOOL) --makefile-install-rule $(schemas_DATA)
-endif
+#endif
 
 EXTRA_DIST = $(schemas_DATA).in
 
