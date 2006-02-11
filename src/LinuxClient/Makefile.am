@@ -18,6 +18,10 @@ schemas_DATA		= ifolder3.schemas
 $(schemas_DATA): $(schemas_DATA).in
 	sed -e "s|\@DATADIR\@|$(datadir)|g" $< > $@
 
+# INTLTOOL_SCHEMAS_RULE comes from intltool and merges in the localized strings
+# from the *.po files for ifolder3.schemas.in.
+# FIXME: We need to figure out how to include INTLTOOL without causing Windows
+# and Mac from failing during autogen.sh.
 #@INTLTOOL_SCHEMAS_RULE@
 
 #if GCONF_SCHEMAS_INSTALL
