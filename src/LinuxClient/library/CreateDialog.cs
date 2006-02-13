@@ -83,7 +83,7 @@ namespace Novell.iFolder
 		{
 			domains = domainArray;
 
-			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
+			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png"));
 
 			this.initialPath = initialPath;
 			

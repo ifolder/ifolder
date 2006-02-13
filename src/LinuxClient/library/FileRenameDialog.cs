@@ -55,7 +55,7 @@ namespace Novell.iFolder
 		private void SetupDialog()
 		{
 			this.Title = Util.GS("Rename file");
-			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
+			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png"));
 			this.HasSeparator = false;
 //			this.BorderWidth = 10;
 			this.SetDefaultSize (450, 100);
