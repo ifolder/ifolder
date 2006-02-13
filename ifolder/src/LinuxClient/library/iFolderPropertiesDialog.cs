@@ -45,7 +45,8 @@ namespace Novell.iFolder
 		private HBox			ConflictHolder;
 		private iFolderConflictDialog 	ConflictDialog;
 		private iFolderPropSharingPage 	SharingPage;
-		private iFolderPropSettingsPage SettingsPage; 
+		private iFolderPropSettingsPage SettingsPage;
+		private iFolderPropFiltersPage FiltersPage;
 		private bool				ControlKeyPressed;
 		private Manager			simiasManager;
 
@@ -218,6 +219,11 @@ namespace Novell.iFolder
 
 			propNoteBook.AppendPage(SharingPage, 
 								new Label(Util.GS("Sharing")));
+			
+			FiltersPage = new iFolderPropFiltersPage(this, ifws, ifolder);
+			
+			propNoteBook.AppendPage(FiltersPage,
+								new Label(Util.GS("File Filters")));
 
 			dialogBox.PackStart(propNoteBook);
 
