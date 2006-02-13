@@ -39,7 +39,7 @@ namespace Novell.iFolder
 	{
 		private SimiasWebService 	simws;
 		private string				domainID;
-		private Gdk.Pixbuf			UserPixBuf;
+//		private Gdk.Pixbuf			UserPixBuf;
 
 		private Gtk.TreeView		SelTreeView;
 		private Gtk.ListStore		SelTreeStore;
@@ -129,7 +129,7 @@ namespace Novell.iFolder
 		private void InitializeWidgets()
 		{
 			this.SetDefaultSize (500, 400);
-			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolderuser.png"));
+			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png"));
 
 			VBox dialogBox = new VBox();
 			dialogBox.Spacing = 10;
@@ -244,8 +244,8 @@ namespace Novell.iFolder
 			SelTreeView.Selection.Changed += new EventHandler(
 						OnSelUserSelectionChanged);
 
-			UserPixBuf = 
-				new Gdk.Pixbuf(Util.ImagesPath("ifolderuser.png"));
+//			UserPixBuf = 
+//				new Gdk.Pixbuf(Util.ImagesPath("ifolderuser.png"));
 
 			this.AddButton(Stock.Cancel, ResponseType.Cancel);
 			this.AddButton(Stock.Ok, ResponseType.Ok);
@@ -288,7 +288,7 @@ namespace Novell.iFolder
 				Gtk.TreeIter iter)
 		{
 //			iFolderUser user = (iFolderUser) tree_model.GetValue(iter,0);
-			((CellRendererPixbuf) cell).Pixbuf = UserPixBuf;
+//			((CellRendererPixbuf) cell).Pixbuf = UserPixBuf;
 		}
 
 

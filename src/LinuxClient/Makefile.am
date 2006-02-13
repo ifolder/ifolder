@@ -7,7 +7,34 @@ export MONO_PATH := $(MONO_PATH)
 
 IMAGE_DIR = $(srcdir)/../images
 
-IMAGE_FILES = $(IMAGE_DIR)/ifolder128.png $(IMAGE_DIR)/inviteduser.png $(IMAGE_DIR)/currentuser.png $(IMAGE_DIR)/ifolderuser.png $(IMAGE_DIR)/serverifolder24.png $(IMAGE_DIR)/ifolder24.png $(IMAGE_DIR)/ifolder-banner-scaler.png $(IMAGE_DIR)/ifolder-banner.png $(IMAGE_DIR)/conflict32.png $(IMAGE_DIR)/ifolder-shutdown.png $(IMAGE_DIR)/ifolder-startup.png $(IMAGE_DIR)/ifolder24.gif $(IMAGE_DIR)/ifolder24-upload.gif $(IMAGE_DIR)/ifolder-crash.png $(IMAGE_DIR)/ifolder-crash.gif $(IMAGE_DIR)/newifolder32.png $(IMAGE_DIR)/newifolder24.png $(IMAGE_DIR)/setup24.png $(IMAGE_DIR)/share24.png $(IMAGE_DIR)/conflict24.png $(IMAGE_DIR)/sync24.png $(IMAGE_DIR)/ifolder48.png $(IMAGE_DIR)/add-account.png $(IMAGE_DIR)/add-emblem.png $(IMAGE_DIR)/add-folder-to-synchronize.png $(IMAGE_DIR)/folder.png $(IMAGE_DIR)/remove-emblem.png $(IMAGE_DIR)/remove-folder.png $(IMAGE_DIR)/search-folder.png $(IMAGE_DIR)/share-emblem.png $(IMAGE_DIR)/share-folder.png $(IMAGE_DIR)/sync-emblem.png $(IMAGE_DIR)/sync-folder.png $(IMAGE_DIR)/folder128.png $(IMAGE_DIR)/synchronized-folder64.png $(IMAGE_DIR)/home-temp.png $(IMAGE_DIR)/remote-folder64.png $(IMAGE_DIR)/download-folder128.png $(IMAGE_DIR)/download-folder64.png $(IMAGE_DIR)/synchronized-folder-spotlight64.png $(IMAGE_DIR)/available-folder64.png $(IMAGE_DIR)/available-folder-spotlight64.png $(IMAGE_DIR)/ok-folder64.png $(IMAGE_DIR)/ok-folder-spotlight64.png $(IMAGE_DIR)/sync-folder64.png $(IMAGE_DIR)/sync-folder-spotlight64.png $(IMAGE_DIR)/conflict-folder64.png $(IMAGE_DIR)/conflict-folder-spotlight64.png $(IMAGE_DIR)/sync-wait-folder64.png $(IMAGE_DIR)/sync-wait-folder-spotlight64.png $(IMAGE_DIR)/my-available-folder64.png $(IMAGE_DIR)/my-available-folder-spotlight64.png $(IMAGE_DIR)/shared-available-folder64.png $(IMAGE_DIR)/shared-available-folder-spotlight64.png $(IMAGE_DIR)/emblem-ok.png $(IMAGE_DIR)/emblem-sync-wait.png $(IMAGE_DIR)/emblem-sync.png $(IMAGE_DIR)/emblem-conflict.png $(IMAGE_DIR)/emblem-shared.png $(IMAGE_DIR)/upload48.png $(IMAGE_DIR)/download48.png
+IMAGE_FILES =								\
+	$(IMAGE_DIR)/ifolder16.png				\
+	$(IMAGE_DIR)/ifolder22.png				\
+	$(IMAGE_DIR)/ifolder48.png				\
+	$(IMAGE_DIR)/ifolder128.png				\
+	$(IMAGE_DIR)/ifolder-add-account48.png	\
+	$(IMAGE_DIR)/ifolder-banner.png			\
+	$(IMAGE_DIR)/ifolder-banner-scaler.png	\
+	$(IMAGE_DIR)/ifolder-download16.png		\
+	$(IMAGE_DIR)/ifolder-download22.png		\
+	$(IMAGE_DIR)/ifolder-download48.png		\
+	$(IMAGE_DIR)/ifolder-error16.png		\
+	$(IMAGE_DIR)/ifolder-error22.png		\
+	$(IMAGE_DIR)/ifolder-error48.png		\
+	$(IMAGE_DIR)/ifolder-sync16.png			\
+	$(IMAGE_DIR)/ifolder-sync22.png			\
+	$(IMAGE_DIR)/ifolder-sync48.png			\
+	$(IMAGE_DIR)/ifolder-upload16.png		\
+	$(IMAGE_DIR)/ifolder-upload22.png		\
+	$(IMAGE_DIR)/ifolder-upload48.png		\
+	$(IMAGE_DIR)/ifolder-user-current16.png	\
+	$(IMAGE_DIR)/ifolder-user-owner16.png	\
+	$(IMAGE_DIR)/ifolder-waiting16.png		\
+	$(IMAGE_DIR)/ifolder-waiting22.png		\
+	$(IMAGE_DIR)/ifolder-waiting48.png		\
+	$(IMAGE_DIR)/ifolder-warning16.png		\
+	$(IMAGE_DIR)/ifolder-warning22.png		\
+	$(IMAGE_DIR)/ifolder-warning48.png
 
 schemasdir			= $(GCONF_SCHEMA_FILE_DIR)
 schemas_DATA		= ifolder3.schemas

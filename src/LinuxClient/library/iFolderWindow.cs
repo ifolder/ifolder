@@ -61,7 +61,7 @@ namespace Novell.iFolder
 		private ImageMenuItem		RevertMenuItem;
 		private ImageMenuItem		DeleteMenuItem;
 		private ImageMenuItem		RemoveMenuItem;
-		private Gtk.MenuItem		DownloadMenuItem;
+		private ImageMenuItem		DownloadMenuItem;
 		private ImageMenuItem		PropMenuItem;
 		private ImageMenuItem		CloseMenuItem;
 		private ImageMenuItem		QuitMenuItem;
@@ -87,14 +87,6 @@ namespace Novell.iFolder
 		private Hashtable			PropDialogs;
 		private Hashtable			ConflictDialogs;
 
-		
-		private Notebook			WindowNotebook;
-		
-		///
-		/// Welcome Page
-		///
-		private Button				ConnectToServerButton;
-		
 		///
 		/// iFolder Content Area
 		///
@@ -231,15 +223,10 @@ namespace Novell.iFolder
 		private void CreateWidgets()
 		{
 			this.SetDefaultSize (600, 480);
-			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
+			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png"));
 			this.WindowPosition = Gtk.WindowPosition.Center;
 
-			WindowNotebook = new Notebook();
-			this.Add(WindowNotebook);
-			WindowNotebook.ShowTabs = false;
-			
-			WindowNotebook.AppendPage(CreateWelcomePage(), null);
-			WindowNotebook.AppendPage(CreateNormalPage(), null);
+			this.Add(CreateContentArea());
 
 			// Set up an event to refresh when the window is
 			// being drawn
@@ -247,158 +234,10 @@ namespace Novell.iFolder
 		}
 		
 		///
-		/// Welcome Page
-		///
-		
-		private Widget CreateWelcomePage()
-		{
-			VBox vbox = new VBox(false, 0);
-
-			//-----------------------------
-			// Create the menubar
-			//-----------------------------
-			MenuBar menubar = CreateWelcomeMenuBar();
-			vbox.PackStart (menubar, false, false, 0);
-			
-			Frame frame = new Frame();
-			vbox.PackStart(frame, true, true, 0);
-			vbox.ModifyBase(StateType.Normal, new Gdk.Color(255, 255, 255));
-			
-			VBox welcomeVBox = new VBox(false, 0);
-			frame.Add(welcomeVBox);
-			
-			Gdk.Pixbuf pixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder128.png"));
-			Image image = new Image(pixbuf);
-			image.SetAlignment(0.5F, 0.5F);
-			welcomeVBox.PackStart(image, false, false, 0);
-			
-			Label l = new Label(
-				string.Format("<span size=\"x-large\" weight=\"bold\">{0}</span>",
-				Util.GS("Welcome to iFolder")));
-			welcomeVBox.PackStart(l, false, false, 0);
-			l.UseMarkup = true;
-			
-			l = new Label(
-				string.Format("<span>{0}</span>",
-				Util.GS("iFolder is a file sharing solution for workgroup and enterprise environments.")));
-			welcomeVBox.PackStart(l, false, false, 0);
-			l.UseMarkup = true;
-
-			///
-			/// ConnectToServerButton
-			///
-			HBox hbox = new HBox(false, 0);
-			ConnectToServerButton = new Button(hbox);
-			ConnectToServerButton.Relief = ReliefStyle.None;
-			vbox.PackStart(ConnectToServerButton, false, false, 0);
-			
-			// folder128.png
-			Gdk.Pixbuf folderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("add-account.png"));
-			folderPixbuf = folderPixbuf.ScaleSimple(64, 64, Gdk.InterpType.Bilinear);
-			Image folderImage = new Image(folderPixbuf);
-			folderImage.SetAlignment(0.5F, 0F);
-			hbox.PackStart(folderImage, false, false, 0);
-			
-			VBox buttonVBox = new VBox(false, 0);
-			hbox.PackStart(buttonVBox, true, true, 4);
-			
-			Label buttonText = new Label(string.Format("<span size=\"large\" weight=\"bold\">{0}</span>", Util.GS("Connect to an iFolder Server")));
-			buttonVBox.PackStart(buttonText, false, false, 0);
-			buttonText.UseMarkup = true;
-			buttonText.UseUnderline = false;
-			buttonText.Xalign = 0;
-			
-			Label buttonMessage = new Label(string.Format("<span size=\"small\">{0}</span>", Util.GS("Start synchronizing files by connecting to an iFolder server")));
-			buttonVBox.PackStart(buttonMessage, false, false, 0);
-			buttonMessage.UseMarkup = true;
-			buttonMessage.UseUnderline = false;
-			buttonMessage.LineWrap = true;
-			buttonMessage.Justify = Justification.Left;
-			buttonMessage.Xalign = 0;
-			buttonMessage.Yalign = 0;
-			
-			ConnectToServerButton.Clicked +=
-				new EventHandler(OnConnectToServerButton);
-			
-			return vbox;
-		}
-		
-		
-		private MenuBar CreateWelcomeMenuBar()
-		{
-			MenuBar menubar = new MenuBar ();
-			AccelGroup agrp = new AccelGroup();
-			this.AddAccelGroup(agrp);
-
-			//----------------------------
-			// iFolder Menu
-			//----------------------------
-			Menu menu = new Menu();
-
-			ImageMenuItem imageMenuItem = new ImageMenuItem (Util.GS("Connect to a _server"));
-			Gdk.Pixbuf pixbuf = new Gdk.Pixbuf(Util.ImagesPath("add-account.png"));
-			pixbuf = pixbuf.ScaleSimple(24, 24, Gdk.InterpType.Bilinear);
-			imageMenuItem.Image = new Image(pixbuf);
-			menu.Append(imageMenuItem);
-			imageMenuItem.AddAccelerator("activate", agrp,
-				new AccelKey(Gdk.Key.S, Gdk.ModifierType.ControlMask,
-								AccelFlags.Visible));
-			imageMenuItem.Activated += new EventHandler(OnAddNewAccount);
-
-			menu.Append(new SeparatorMenuItem());
-
-			imageMenuItem = new ImageMenuItem (Stock.Close, agrp);
-			menu.Append(imageMenuItem);
-			imageMenuItem.Activated += new EventHandler(CloseEventHandler);
-			
-			imageMenuItem = new ImageMenuItem(Stock.Quit, agrp);
-			menu.Append(imageMenuItem);
-			imageMenuItem.Activated += new EventHandler(QuitEventHandler);
-
-			MenuItem menuItem = new MenuItem(Util.GS("i_Folder"));
-			menuItem.Submenu = menu;
-			menubar.Append (menuItem);
-
-			//----------------------------
-			// Edit Menu
-			//----------------------------
-			menu = new Menu();
-			imageMenuItem = new ImageMenuItem(Util.GS("_Preferences"));
-			imageMenuItem.Image = new Image(Stock.Preferences, Gtk.IconSize.Menu);
-			menu.Append(imageMenuItem);
-			imageMenuItem.Activated += new EventHandler(ShowPreferencesHandler);
-			
-			menuItem = new MenuItem(Util.GS("_Edit"));
-			menuItem.Submenu = menu;
-			menubar.Append(menuItem);
-
-			//----------------------------
-			// Help Menu
-			//----------------------------
-			menu = new Menu();
-
-			imageMenuItem = new ImageMenuItem(Stock.Help, agrp);
-			menu.Append(imageMenuItem);
-			imageMenuItem.Activated += new EventHandler(OnHelpMenuItem);
-
-			imageMenuItem = new ImageMenuItem(Util.GS("A_bout"));
-			imageMenuItem.Image = new Image(Gnome.Stock.About,
-							Gtk.IconSize.Menu);
-			menu.Append(imageMenuItem);
-			imageMenuItem.Activated += new EventHandler(OnAbout);
-
-			menuItem = new MenuItem(Util.GS("_Help"));
-			menuItem.Submenu = menu;
-			menubar.Append(menuItem);
-
-			return menubar;
-		}
-		
-		///
 		/// Normal Page
 		///
 		
-		private Widget CreateNormalPage()
+		private Widget CreateContentArea()
 		{
 			VBox vbox = new VBox (false, 0);
 
@@ -459,7 +298,7 @@ namespace Novell.iFolder
 
 			NewMenuItem = new ImageMenuItem (Util.GS("_Upload a folder..."));
 			NewMenuItem.Image = new Image(
-					new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png")));
+					new Gdk.Pixbuf(Util.ImagesPath("ifolder-upload16.png")));
 			iFolderMenu.Append(NewMenuItem);
 			NewMenuItem.AddAccelerator("activate", agrp,
 				new AccelKey(Gdk.Key.N, Gdk.ModifierType.ControlMask,
@@ -467,7 +306,9 @@ namespace Novell.iFolder
 			NewMenuItem.Activated += new EventHandler(AddiFolderHandler);
 
 			DownloadMenuItem =
-				new MenuItem (Util.GS("_Download..."));
+				new ImageMenuItem (Util.GS("_Download..."));
+			DownloadMenuItem.Image = new Image(
+				new Gdk.Pixbuf(Util.ImagesPath("ifolder-download16.png")));
 			iFolderMenu.Append(DownloadMenuItem);
 			DownloadMenuItem.Activated += new EventHandler(DownloadAvailableiFolderHandler);
 
@@ -594,7 +435,7 @@ namespace Novell.iFolder
 			AboutMenuItem.Image = new Image(Gnome.Stock.About,
 							Gtk.IconSize.Menu);
 //			AboutMenuItem.Image = new Image(
-//					new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png")));
+//					new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png")));
 			HelpMenu.Append(AboutMenuItem);
 			AboutMenuItem.Activated += new EventHandler(OnAbout);
 
@@ -976,7 +817,7 @@ namespace Novell.iFolder
 			l.Xalign = 0;
 			
 			// Row 2: Upload
-			Image uploadImg = new Image(Util.ImagesPath("upload48.png"));
+			Image uploadImg = new Image(Util.ImagesPath("ifolder-upload48.png"));
 			table.Attach(uploadImg,
 						 0, 1,
 						 1, 2,
@@ -995,7 +836,7 @@ namespace Novell.iFolder
 			l.Xalign = 0;
 			
 			// Row 3: Download
-			Image downloadImg = new Image(Util.ImagesPath("download48.png"));
+			Image downloadImg = new Image(Util.ImagesPath("ifolder-download48.png"));
 			table.Attach(downloadImg,
 						 0, 1,
 						 2, 3,
@@ -1177,24 +1018,6 @@ namespace Novell.iFolder
 					propsDialog.CurrentPage = desiredPage;
 				}
 			}
-		}
-
-		private void OnConnectToServerButton(object o, EventArgs args)
-		{
-			// Launch the Add Account Wizard
-			AddAccountWizard aaw = new AddAccountWizard(simws);
-			aaw.TransientFor = this;
-			if (!Util.RegisterModalWindow(aaw))
-			{
-				try
-				{
-					Util.CurrentModalWindow.Present();
-				}
-				catch{}
-				aaw.Destroy();
-				return;
-			}
-			aaw.ShowAll();
 		}
 
 		private void AddiFolderHandler(object o,  EventArgs args)
@@ -1623,13 +1446,13 @@ Console.WriteLine("iFolderWindow.OnIconViewDragDrop()");
 
 		private void OnRealizeWidget(object o, EventArgs args)
 		{
-			if (domainController.GetDomains().Length == 0)
-				WindowNotebook.CurrentPage = 0;
-			else
-			{
-				WindowNotebook.CurrentPage = 1;
+//			if (domainController.GetDomains().Length == 0)
+//				WindowNotebook.CurrentPage = 0;
+//			else
+//			{
+//				WindowNotebook.CurrentPage = 1;
 				ShowAvailableiFolders();	// FIXME: Make this an automatic config setting that is remembered (i.e., if a user hides this and restarts iFolder, it is not shown)
-			}
+//			}
 			
 			OniFolderIconViewSelectionChanged(null, EventArgs.Empty);
 		}
@@ -1759,13 +1582,13 @@ Console.WriteLine("iFolderWindow.OnIconViewDragDrop()");
 		{
 //			RefreshiFolders(true);
 
-			if (domainController.GetDomains().Length == 0)
-				WindowNotebook.CurrentPage = 0;
-			else if (WindowNotebook.CurrentPage != 1)
-			{
-				WindowNotebook.CurrentPage = 1;
+//			if (domainController.GetDomains().Length == 0)
+//				WindowNotebook.CurrentPage = 0;
+//			else if (WindowNotebook.CurrentPage != 1)
+//			{
+//				WindowNotebook.CurrentPage = 1;
 				ShowAvailableiFolders();
-			}
+//			}
 			
 			AddServerGroup(args.DomainID);
 			
@@ -1780,7 +1603,7 @@ Console.WriteLine("iFolderWindow.DomainDeletedEvent()");
 //			if (domainController.GetDomains().Length == 0)
 //				WindowNotebook.CurrentPage = 0;
 //			else
-				WindowNotebook.CurrentPage = 1;
+//				WindowNotebook.CurrentPage = 1;
 			
 			if (serverGroups.ContainsKey(args.DomainID))
 			{

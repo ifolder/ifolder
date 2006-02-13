@@ -47,7 +47,7 @@ namespace Novell.iFolder
         {
 			this.Title =
 				string.Format(Util.GS("Download \"{0}\" to..."), ifolder.Name);
-        	this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
+        	this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png"));
 
         	this.ifolder = ifolder;
         	this.initialPath = initialPath;
