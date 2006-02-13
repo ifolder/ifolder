@@ -43,9 +43,9 @@ namespace Novell.iFolder
 
 		private iFolderTreeView		UserTreeView;
 		private ListStore			UserTreeStore;
-		private Gdk.Pixbuf			UserPixBuf;
-		private Gdk.Pixbuf			CurrentUserPixBuf;
-		private Gdk.Pixbuf			InvitedPixBuf;
+		private Gdk.Pixbuf			OwnerUserPixbuf;
+		private Gdk.Pixbuf			NormalUserPixbuf;
+		private Gdk.Pixbuf			CurrentUserPixbuf;
 		private Gtk.Window			topLevelWindow;
 
 		private Button 				AddButton;
@@ -156,12 +156,19 @@ namespace Novell.iFolder
 			UserTreeView.RowActivated += new RowActivatedHandler(
 						OnUserTreeViewRowActivated);
 
-			UserPixBuf = 
-					new Gdk.Pixbuf(Util.ImagesPath("ifolderuser.png"));
-			InvitedPixBuf = 
-					new Gdk.Pixbuf(Util.ImagesPath("inviteduser.png"));
-			CurrentUserPixBuf = 
-					new Gdk.Pixbuf(Util.ImagesPath("currentuser.png"));
+				
+
+			OwnerUserPixbuf =
+				new Gdk.Pixbuf(Util.ImagesPath("ifolder-user-owner16.png"));
+			CurrentUserPixbuf = 
+				new Gdk.Pixbuf(Util.ImagesPath("ifolder-user-current16.png"));
+			// Use an empty pixbuf to represent a normal user
+			NormalUserPixbuf =
+				new Gdk.Pixbuf(OwnerUserPixbuf.Colorspace, true,
+								OwnerUserPixbuf.BitsPerSample,
+								OwnerUserPixbuf.Width,
+								OwnerUserPixbuf.Height);
+			NormalUserPixbuf.Fill(0x00000000);	// transparent
 
 			// Set up buttons for add/remove/accept/decline
 			HBox buttonBox = new HBox();
@@ -258,12 +265,12 @@ namespace Novell.iFolder
 				Gtk.TreeIter iter)
 		{
 			iFolderUser user = (iFolderUser) tree_model.GetValue(iter,0);
-			if(user.UserID == ifolder.CurrentUserID)
-				((CellRendererPixbuf) cell).Pixbuf = CurrentUserPixBuf;
-			else if(user.State != "Member")
-				((CellRendererPixbuf) cell).Pixbuf = InvitedPixBuf;
+			if (user.UserID == ifolder.OwnerID)
+				((CellRendererPixbuf) cell).Pixbuf = OwnerUserPixbuf;
+			else if (user.UserID == ifolder.CurrentUserID)
+				((CellRendererPixbuf) cell).Pixbuf = CurrentUserPixbuf;
 			else
-				((CellRendererPixbuf) cell).Pixbuf = UserPixBuf;
+				((CellRendererPixbuf) cell).Pixbuf = NormalUserPixbuf;
 		}
 
 

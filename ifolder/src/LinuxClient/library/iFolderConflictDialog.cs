@@ -313,7 +313,7 @@ namespace Novell.iFolder
 		{
 			this.SetDefaultSize (600, 480);
 			this.Icon = 
-				new Gdk.Pixbuf(Util.ImagesPath("conflict24.png"));
+				new Gdk.Pixbuf(Util.ImagesPath("ifolder-warning16.png"));
 			VBox vbox = new VBox();
 			vbox.Spacing = 10;
 			vbox.BorderWidth = 10;
@@ -323,7 +323,7 @@ namespace Novell.iFolder
 			topbox.Spacing = 10;
 
 			Gdk.Pixbuf bigConflict =
-				new Gdk.Pixbuf(Util.ImagesPath("conflict32.png"));
+				new Gdk.Pixbuf(Util.ImagesPath("ifolder-warning48.png"));
 			Image conflictImage = new Image(bigConflict);
 			conflictImage.Yalign = 0;
 			topbox.PackStart(conflictImage, false, false, 0);

@@ -47,9 +47,9 @@ namespace Novell.iFolder
 //			this.BorderWidth = 10;
 			this.Resizable = false;
 
-			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
+			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png"));
 			Gdk.Pixbuf bigiFolder = 
-				new Gdk.Pixbuf(Util.ImagesPath("newifolder32.png"));
+				new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png"));
 			Image folderImage = new Image(bigiFolder);
 
 			VBox vbox = new VBox();
