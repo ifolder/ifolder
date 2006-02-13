@@ -1524,8 +1524,9 @@ Console.WriteLine("iFolderWindow.OnIconViewDragDrop()");
 				{
 					try
 					{
-						string selectedFolder = cd.iFolderPath.Trim();
-						string selectedDomain = cd.DomainID;
+						string selectedFolder	= cd.iFolderPath.Trim();
+						string selectedDomain	= cd.DomainID;
+						string description		= cd.Description;
 	
 						string parentDir = System.IO.Path.GetDirectoryName( selectedFolder );
 						if ( ( parentDir == null ) || ( parentDir == String.Empty ) )
@@ -1548,7 +1549,8 @@ Console.WriteLine("iFolderWindow.OnIconViewDragDrop()");
 						{
 							ifHolder = 
 								ifdata.CreateiFolder(selectedFolder,
-													 selectedDomain);
+													 selectedDomain,
+													 description);
 						}
 						catch(Exception e)
 						{
@@ -2469,8 +2471,9 @@ Console.WriteLine("iFolderWindow.AddServerGroup(DomainID: {0})", domainID);
 				{
 					try
 					{
-						string selectedFolder = cd.iFolderPath.Trim();
-						string selectedDomain = cd.DomainID;
+						string selectedFolder	= cd.iFolderPath.Trim();
+						string selectedDomain	= cd.DomainID;
+						string description		= cd.Description;
 	
 						if (selectedFolder == String.Empty)
 						{
@@ -2526,7 +2529,8 @@ Console.WriteLine("iFolderWindow.AddServerGroup(DomainID: {0})", domainID);
 						{
 							ifHolder = 
 								ifdata.CreateiFolder(selectedFolder,
-													 selectedDomain);
+													 selectedDomain,
+													 description);
 						}
 						catch(Exception e)
 						{

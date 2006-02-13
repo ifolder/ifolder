@@ -782,17 +782,23 @@ Console.WriteLine(" ---> This iFolder is in the deletediFolders Hashtable <--- "
 
 		//===================================================================
 		// CreateiFolder
-		// creates an iFolder in the domain at the path specified
+		// creates an iFolder in the domain at the path specified with the
+		// specified description property.
 		//===================================================================
-		public iFolderHolder CreateiFolder(string path, string domainID)
+		public iFolderHolder CreateiFolder(string path,
+											string domainID,
+											string desc)
 		{
 			lock(instanceLock)
 			{
    				iFolderWeb newiFolder = 
-								ifws.CreateiFolderInDomain(path, domainID);
+					ifws.CreateiFolderInDomain(
+						path, domainID);
+//					ifws.CreateiFolderInDomainWithDescription(
+//						path, domainID, desc);
 				if (newiFolder == null)
 				{
-Console.WriteLine("ifws.CreateiFolderInDomain(\"{0}\") returned null", path);
+Console.WriteLine("ifws.CreateiFolderInDomainWithDescription(\"{0}\") returned null", path);
 					return null;
 				}
 
