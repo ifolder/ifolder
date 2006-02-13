@@ -86,7 +86,7 @@ namespace Novell.iFolder
 			this.Modal = true;
 			this.WindowPosition = Gtk.WindowPosition.Center;
 
-			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
+			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png"));
 
 			this.simws = simws;
 
@@ -110,7 +110,7 @@ namespace Novell.iFolder
 		{
 			VBox vbox = new VBox(false, 0);
 			
-			AddAccountPixbuf = new Gdk.Pixbuf(Util.ImagesPath("add-account.png"));
+			AddAccountPixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder-add-account48.png"));
 			AddAccountPixbuf = AddAccountPixbuf.ScaleSimple(48, 48, Gdk.InterpType.Bilinear);
 			
 			AccountDruid = new Gnome.Druid();
@@ -567,12 +567,8 @@ namespace Novell.iFolder
 			{
 				// FIXME: Replace this with an animated "connecting" icon
 				VBox vbox = new VBox(false, 0);
-				Image connectingImage = new Image(Util.ImagesPath("ifolder48.png"));
+				Image connectingImage = new Image(Util.ImagesPath("ifolder-add-account48.png"));
 				vbox.PackStart(connectingImage, false, false, 0);
-				Label l = new Label("<span size=\"xx-small\">FIXME: This will be\nreplaced with an\nanimated image</span>");
-				vbox.PackStart(l);
-				l.UseMarkup = true;
-				l.LineWrap = true;
 	
 				WaitDialog = 
 					new iFolderWaitDialog(

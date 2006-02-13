@@ -81,7 +81,7 @@ namespace Novell.iFolder
 		private void SetupDialog()
 		{
 			this.Title = string.Format("{0} {1}", domain.Name, Util.GS("Properties"));
-			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
+			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png"));
 			this.HasSeparator = false;
 
 			this.Resizable = false;

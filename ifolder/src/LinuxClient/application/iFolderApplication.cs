@@ -62,8 +62,8 @@ namespace Novell.iFolder
 		private Gdk.Pixbuf			RunningPixbuf;
 		private Gdk.Pixbuf			StartingPixbuf;
 		private Gdk.Pixbuf			StoppingPixbuf;
-		private Gdk.PixbufAnimation	DownloadingPixbuf;
-		private Gdk.PixbufAnimation	UploadingPixbuf;
+		private Gdk.Pixbuf			DownloadingPixbuf;
+		private Gdk.Pixbuf			UploadingPixbuf;
 		private Gtk.EventBox		eBox;
 		private TrayIcon			tIcon;
 		private iFolderWebService	ifws;
@@ -152,15 +152,15 @@ Console.WriteLine("iFolderApplication Hash Code: " + this.GetHashCode());
 				new ButtonPressEventHandler(trayapp_clicked);
 
 			RunningPixbuf =
-					new Pixbuf(Util.ImagesPath("ifolder24.png"));
+					new Pixbuf(Util.ImagesPath("ifolder16.png"));
 			StartingPixbuf =
-					new Pixbuf(Util.ImagesPath("ifolder-startup.png"));
+					new Pixbuf(Util.ImagesPath("ifolder-waiting16.png"));
 			StoppingPixbuf =
-					new Pixbuf(Util.ImagesPath("ifolder-shutdown.png"));
+					new Pixbuf(Util.ImagesPath("ifolder-waiting16.png"));
 			DownloadingPixbuf =
-					new Gdk.PixbufAnimation(Util.ImagesPath("ifolder24.gif"));
+					new Pixbuf(Util.ImagesPath("ifolder-download16.png"));
 			UploadingPixbuf =
-					new Gdk.PixbufAnimation(Util.ImagesPath("ifolder24-upload.gif"));
+					new Pixbuf(Util.ImagesPath("ifolder-upload16.png"));
 
 			gAppIcon = new Gtk.Image(RunningPixbuf);
 
@@ -390,14 +390,14 @@ Console.WriteLine("done calling simiasManager.Stop()");
 				if (args.Direction == Simias.Client.Event.Direction.Uploading
 					&& bCollectionIsSynchronizing && currentIconAnimationDirection != 1)
 				{
-					gAppIcon.FromAnimation = UploadingPixbuf;
+					gAppIcon.Pixbuf = UploadingPixbuf;
 					currentIconAnimationDirection = 1;
 				}
 				else if (args.Direction == Simias.Client.Event.Direction.Downloading
 						 && bCollectionIsSynchronizing
 						 && currentIconAnimationDirection != -1)
 				{
-					gAppIcon.FromAnimation = DownloadingPixbuf;
+					gAppIcon.Pixbuf = DownloadingPixbuf;
 					currentIconAnimationDirection = -1;
 				}
 

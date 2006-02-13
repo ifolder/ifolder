@@ -94,7 +94,7 @@ namespace Novell.iFolder
 			winBox.BorderWidth = 7;
 			winBox.Spacing = 7;
 
-			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
+			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png"));
 			this.WindowPosition = Gtk.WindowPosition.Center;
 
 			//-----------------------------

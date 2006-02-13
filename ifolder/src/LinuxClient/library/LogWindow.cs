@@ -122,7 +122,7 @@ namespace Novell.iFolder
 		{
 			this.SetDefaultSize (500, 400);
 			this.DeleteEvent += new DeleteEventHandler(WindowDeleteHandler);
-			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
+			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png"));
 			this.WindowPosition = Gtk.WindowPosition.Center;
 
 			VBox vbox = new VBox (false, 0);
