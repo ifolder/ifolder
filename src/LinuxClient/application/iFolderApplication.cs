@@ -95,8 +95,10 @@ namespace Novell.iFolder
 		private DomainController	domainController;
 		private Simias.Client.Manager				simiasManager;
 
-		private NotifyWindow		startingUpNotifyWindow = null;
-		private NotifyWindow		shuttingDownNotifyWindow = null;
+		private NotifyWindow		startingUpNotifyWindow;
+		private NotifyWindow		shuttingDownNotifyWindow;
+		
+		private bool				forceShutdown;
 		
 		///
 		/// D-Bus variables
@@ -186,6 +188,11 @@ Console.WriteLine("iFolderApplication Hash Code: " + this.GetHashCode());
 				networkDetect.StateChanged +=
 					new NetworkStateChangedHandler(OnNetworkStateChanged);
 
+			startingUpNotifyWindow = null;
+			shuttingDownNotifyWindow = null;
+			
+			forceShutdown = false;
+
 //			logwin = new LogWindow();
 //			logwin.Destroyed +=
 //					new EventHandler(LogWindowDestroyedHandler);
@@ -214,7 +221,7 @@ Console.WriteLine("iFolderApplication Hash Code: " + this.GetHashCode());
 		private void StartiFolder()
 		{
 			bool simiasRunning = false;
-
+			
 			CurrentState = iFolderState.Starting;
 			iFolderStateChanged.WakeupMain();
 
@@ -243,24 +250,36 @@ Console.WriteLine("iFolderApplication Hash Code: " + this.GetHashCode());
 					{
 						simiasRunning = false;
 					}
+					
+					if (forceShutdown)
+					{
+						// the user is canceling startup
+						QuitiFolder();
+						return;
+					}
 
 					// Wait and ping it again
 					System.Threading.Thread.Sleep(10);
 				}
-
-				try
+				
+				if (forceShutdown)
+					QuitiFolder();
+				else
 				{
-					simiasEventBroker = SimiasEventBroker.GetSimiasEventBroker();
-
-					// Set up to have data ready for events
-					ifdata = iFolderData.GetData();
-
-					domainController = DomainController.GetDomainController();
-				}
-				catch(Exception e)
-				{
-					Console.WriteLine(e);
-					ifws = null;
+					try
+					{
+						simiasEventBroker = SimiasEventBroker.GetSimiasEventBroker();
+	
+						// Set up to have data ready for events
+						ifdata = iFolderData.GetData();
+	
+						domainController = DomainController.GetDomainController();
+					}
+					catch(Exception e)
+					{
+						Console.WriteLine(e);
+						ifws = null;
+					}
 				}
 			}
 
@@ -287,19 +306,6 @@ Console.WriteLine("iFolderApplication Hash Code: " + this.GetHashCode());
 				Console.WriteLine(e);
 			}
 
-/*			
-			try
-			{
-Console.Write("iFolderApplication.StopiFolder() calling SimiasManager.Stop()...");
-				simiasManager.Stop();
-Console.WriteLine("done calling simiasManager.Stop()");
-			}
-			catch(Exception e)
-			{
-				// ignore
-				Console.WriteLine(e);
-			}
-*/
 			CurrentState = iFolderState.Stopped;
 			iFolderStateChanged.WakeupMain();
 		}
@@ -766,9 +772,9 @@ Console.WriteLine("done calling simiasManager.Stop()");
 
 					if (startingUpNotifyWindow != null)
 					{
-						startingUpNotifyWindow.Hide();
-						startingUpNotifyWindow.Destroy();
-						startingUpNotifyWindow = null;
+						NotifyWindow notifyWin = startingUpNotifyWindow;
+						notifyWin.Hide();
+						notifyWin.Destroy();
 					}
 
 					gAppIcon.Pixbuf = RunningPixbuf;
@@ -802,8 +808,8 @@ Console.WriteLine("done calling simiasManager.Stop()");
 					try
 					{
 Console.WriteLine("iFolderApplication.OniFolderStateChanged:Stopped calling SimiasManager.Stop()...");
-						simiasManager.Stop();
-Console.WriteLine("\tdone calling SimiasManager.Stop()");
+						bool stopped = simiasManager.Stop();
+						Console.WriteLine("SimiasClient.Manager.Stop() returned: {0}", stopped);
 					}
 					catch(Exception e)
 					{
@@ -902,24 +908,23 @@ Console.WriteLine("GuaranteeShutdown(): Calling System.Environment.Exit(1) now")
 				}
 				else if (args.LinkID.Equals("CancelStartup"))
 				{
-					Console.WriteLine("CancelStartup");
-
-					// FIXME: Need to figure out a way to gracefully cancel startup
-//					QuitiFolder();
-
-				}
-				else if (args.LinkID.Equals("ForceShutdown"))
-				{
-					Console.WriteLine("ForceShutdown");
-					
-					// FIXME: Need to find a way to gracefully force complete shutdown if a user selects this
-//					QuitiFolder();
+					ForceShutdown();
 				}
 			}
 
 			NotifyWindow notifyWindow = sender as NotifyWindow;
 			notifyWindow.Hide();
 			notifyWindow.Destroy();
+		}
+		
+		private void OnStartingUpNotifyWindowHidden(object o, EventArgs args)
+		{
+			startingUpNotifyWindow = null;
+		}
+
+		private void OnShuttingDownNotifyWindowHidden(object o, EventArgs args)
+		{
+			shuttingDownNotifyWindow = null;
 		}
 
 		private void trayapp_clicked(object obj, ButtonPressEventArgs args)
@@ -936,6 +941,8 @@ Console.WriteLine("GuaranteeShutdown(): Calling System.Environment.Exit(1) now")
 						Gtk.MessageType.Info, 0);
 					startingUpNotifyWindow.LinkClicked +=
 						new LinkClickedEventHandler(OnNotifyWindowLinkClicked);
+					startingUpNotifyWindow.Hidden +=
+						new EventHandler(OnStartingUpNotifyWindowHidden);
 					startingUpNotifyWindow.ShowAll();
 				}
 
@@ -947,10 +954,10 @@ Console.WriteLine("GuaranteeShutdown(): Calling System.Environment.Exit(1) now")
 				{
 					shuttingDownNotifyWindow = new NotifyWindow(
 						tIcon, Util.GS("iFolder is shutting down"),
-						Util.GS("Press <a href=\"ForceShutdown\">here</a> to force iFolder to shut down now."),
+						"",
 						Gtk.MessageType.Info, 0);
-					shuttingDownNotifyWindow.LinkClicked +=
-						new LinkClickedEventHandler(OnNotifyWindowLinkClicked);
+					shuttingDownNotifyWindow.Hidden +=
+						new EventHandler(OnShuttingDownNotifyWindowHidden);
 					shuttingDownNotifyWindow.ShowAll();
 				}
 
@@ -1172,16 +1179,23 @@ Console.WriteLine("Modal present");
 
 		private void quit_ifolder(object o, EventArgs args)
 		{
-			Util.SaveiFolderWindows();
-			Util.CloseiFolderWindows();
+			if (!forceShutdown)
+			{
+				Util.SaveiFolderWindows();
+				Util.CloseiFolderWindows();
+			}
 
 			if(CurrentState == iFolderState.Stopping)
 			{
 				try
 				{
-					simiasManager.Stop();
+					bool stopped = simiasManager.Stop();
+					Console.WriteLine("SimiasClient.Manager.Stop() returned: {0}", stopped);
 				}
-				catch{}
+				catch(Exception e)
+				{
+					Console.WriteLine(e.Message);
+				}
 
 				System.Environment.Exit(1);
 			}
@@ -1191,6 +1205,11 @@ Console.WriteLine("Modal present");
 					new System.Threading.Thread(new ThreadStart(StopiFolder));
 				stopThread.Start();
 			}
+		}
+		
+		private void ForceShutdown()
+		{
+			forceShutdown = true;
 		}
 
 
@@ -1369,8 +1388,8 @@ Console.WriteLine("Modal present");
 				if(application.EventBroker != null)
 					application.EventBroker.Deregister();
 Console.Write("iFolderApplication: Inside catch and calling SimiasManager.Stop()...");
-				application.SimiasManager.Stop();
-Console.WriteLine("\tdone calling SimiasManager.Stop()");
+				bool stopped = application.SimiasManager.Stop();
+				Console.WriteLine("SimiasClient.Manager.Stop() returned: {0}", stopped);
 
 				UnregisterWithDBus();
 				Application.Quit();
