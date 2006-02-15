@@ -24,6 +24,9 @@
 using System;
 using Gtk;
 
+using Simias.Client;
+using Novell.iFolder.Controller;
+
 namespace Novell.iFolder
 {
 
@@ -34,6 +37,7 @@ namespace Novell.iFolder
 	{
 		private Gtk.Window			topLevelWindow;
 		private iFolderWebService	ifws;
+		private DomainInformation	domain;
 		private iFolderWeb			ifolder;
 		private DiskSpace			ds;
 		
@@ -41,6 +45,7 @@ namespace Novell.iFolder
 		private Label				NameLabel;
 		private Label				OwnerLabel;
 		private Label				LocationLabel;
+		private Label				AccountLabel;
 
 		private	Label				LastSuccessfulSync;
 		private Label				FFSyncValue;
@@ -83,6 +88,9 @@ namespace Novell.iFolder
 
 		public void UpdateiFolder(iFolderWeb ifolder)
 		{
+			DomainController domainController = DomainController.GetDomainController();
+			this.domain = domainController.GetDomain(ifolder.DomainID);
+
 			this.ifolder = ifolder;
 
 			if (ifolder.LastSyncTime == null || ifolder.LastSyncTime == "")
@@ -117,6 +125,7 @@ namespace Novell.iFolder
 			NameLabel.Markup = string.Format("<span weight=\"bold\">{0}</span>", GLib.Markup.EscapeText(ifolder.Name));
 			OwnerLabel.Markup = string.Format("<span size=\"small\">{0}</span>", GLib.Markup.EscapeText(ifolder.Owner));
 			LocationLabel.Markup = string.Format("<span size=\"small\">{0}</span>", GLib.Markup.EscapeText(ifolder.UnManagedPath));
+			AccountLabel.Markup = string.Format("<span size=\"small\">{0}</span>", GLib.Markup.EscapeText(domain.Name));
 			
 			try
 			{
@@ -329,7 +338,7 @@ namespace Novell.iFolder
 			basicLabelsBox.PackStart(NameLabel, false, true, 5);
 
 			// create a table to hold the values
-			BasicTable = new Table(2, 2, false);
+			BasicTable = new Table(3, 2, false);
 			basicLabelsBox.PackStart(BasicTable, true, true, 0);
 			BasicTable.ColumnSpacing = 5;
 			BasicTable.RowSpacing = 5;
@@ -358,6 +367,19 @@ namespace Novell.iFolder
 			LocationLabel.UseUnderline = false;
 			LocationLabel.Xalign = 0;
 			BasicTable.Attach(LocationLabel, 1, 2, 1, 2,
+					AttachOptions.Expand | AttachOptions.Fill, 0, 0, 0);
+			
+			label = new Label(string.Format("<span size=\"small\">{0}</span>", GLib.Markup.EscapeText(Util.GS("Account:"))));
+			label.UseMarkup = true;
+			label.Xalign = 0;
+			BasicTable.Attach(label, 0, 1, 2, 3,
+					AttachOptions.Shrink | AttachOptions.Fill, 0, 0, 0);
+			
+			AccountLabel = new Label("");
+			AccountLabel.UseMarkup = true;
+			AccountLabel.UseUnderline = false;
+			AccountLabel.Xalign = 0;
+			BasicTable.Attach(AccountLabel, 1, 2, 2, 3,
 					AttachOptions.Expand | AttachOptions.Fill, 0, 0, 0);
 			
 
