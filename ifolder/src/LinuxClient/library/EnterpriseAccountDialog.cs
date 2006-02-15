@@ -170,7 +170,7 @@ namespace Novell.iFolder
 		{
 			VBox vbox = new VBox(false, 0);
 
-			EnableAccountButton = new CheckButton(Util.GS("_Automatically connect when iFolder starts"));
+			EnableAccountButton = new CheckButton(Util.GS("_Automatically connect"));
 			vbox.PackStart(EnableAccountButton, false, false, 0);
 
 			DefaultAccountButton = new CheckButton(Util.GS("Account is _default"));
