@@ -33,7 +33,7 @@ namespace Novell.iFolder
 		private DomainInformation[]	domains;
 		private ComboBox			domainComboBox;
 		private string				initialPath;
-		TextView					descriptionTextView;
+//		TextView					descriptionTextView;
 		iFolderWebService			ifws;
 		private uint				keyReleasedTimeoutID;
 
@@ -65,12 +65,13 @@ namespace Novell.iFolder
 		{
 			get
 			{
-				return descriptionTextView.Buffer.Text;
+//				return descriptionTextView.Buffer.Text;
+				return "";
 			}
-			set
-			{
-				descriptionTextView.Buffer.Text = value;
-			}
+//			set
+//			{
+//				descriptionTextView.Buffer.Text = value;
+//			}
 		}
 
 		///
@@ -136,6 +137,7 @@ namespace Novell.iFolder
 			
 			domainComboBox.Active = defaultDomain;
 
+/*
 			l = new Label(Util.GS("Description:"));
 			l.Xalign = 0;
 			optionsTable.Attach(l, 1,2,1,2,
@@ -154,6 +156,7 @@ namespace Novell.iFolder
 			sw.Add(descriptionTextView);
 			optionsTable.Attach(sw, 2,3,1,2,
 								AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
+*/
 			
 			optionsTable.ShowAll();
 			
@@ -179,8 +182,8 @@ namespace Novell.iFolder
 		
 		protected override bool OnKeyReleaseEvent(Gdk.EventKey evnt)
 		{
-			if (descriptionTextView.HasFocus)
-				return true;  // Don't do anything here
+//			if (descriptionTextView.HasFocus)
+//				return true;  // Don't do anything here
 			
 			if (keyReleasedTimeoutID != 0)
 			{
