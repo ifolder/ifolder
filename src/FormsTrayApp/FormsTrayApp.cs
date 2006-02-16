@@ -34,6 +34,7 @@ using System.Collections;
 using Novell.iFolderCom;
 using Novell.Win32Util;
 using Novell.CustomUIControls;
+using Novell.Wizard;
 using Simias.Client;
 using Simias.Client.Authentication;
 using Simias.Client.Event;
@@ -91,6 +92,7 @@ namespace Novell.FormsTrayApp
 		static private System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(FormsTrayApp));
 		private bool shutdown = false;
 		private bool simiasRunning = false;
+		private bool wizardRunning = false;
 		private Icon trayIcon;
 		private Icon startupIcon;
 		private Icon shutdownIcon;
@@ -348,13 +350,16 @@ namespace Novell.FormsTrayApp
 
 		private void menuProperties_Click(object sender, System.EventArgs e)
 		{
-			if (globalProperties.Visible)
+			if (!wizardRunning)
 			{
-				globalProperties.Activate();
-			}
-			else
-			{
-				globalProperties.Show();
+				if (globalProperties.Visible)
+				{
+					globalProperties.Activate();
+				}
+				else
+				{
+					globalProperties.Show();
+				}
 			}
 		}
 
@@ -451,17 +456,6 @@ namespace Novell.FormsTrayApp
 				case NotifyType.SyncError:
 					syncLog.Show();
 					break;
-				case NotifyType.CreateAccount:
-					if (preferences.Visible)
-					{
-						preferences.Activate();
-					}
-					else
-					{
-						preferences.Show();
-					}
-					preferences.SelectAccounts(true);
-					break;
 			}
 		}
 
@@ -469,10 +463,10 @@ namespace Novell.FormsTrayApp
 		{
 			foreach (MenuItem item in this.contextMenu1.MenuItems)
 			{
-				item.Visible = simiasRunning;
+				item.Visible = simiasRunning && !wizardRunning;
 			}
 
-			if (simiasRunning)
+			if (simiasRunning && !wizardRunning)
 			{
 				// Show/hide store browser menu item based on whether or not the file is installed.
 				menuStoreBrowser.Visible = File.Exists(Path.Combine(Application.StartupPath, "StoreBrowser.exe"));
@@ -534,6 +528,7 @@ namespace Novell.FormsTrayApp
 					preferences.RemoveDomain += new Novell.FormsTrayApp.Preferences.RemoveDomainDelegate(preferences_RemoveDomain);
 					preferences.ShutdownTrayApp += new Novell.FormsTrayApp.Preferences.ShutdownTrayAppDelegate(preferences_ShutdownTrayApp);
 					preferences.UpdateDomain += new Novell.FormsTrayApp.Preferences.UpdateDomainDelegate(preferences_UpdateDomain);
+					preferences.DisplayiFolderDialog += new Novell.FormsTrayApp.Preferences.DisplayiFolderDialogDelegate(preferences_DisplayiFolderDialog);
 					preferences.CreateControl();
 					IntPtr handle = preferences.Handle;
 
@@ -603,8 +598,16 @@ namespace Novell.FormsTrayApp
 
 					if (accountPrompt)
 					{
-						notifyType = NotifyType.CreateAccount;
-						shellNotifyIcon.DisplayBalloonTooltip(resourceManager.GetString("createAccountTitle"), resourceManager.GetString("createAccount"), BalloonType.Info);
+						AccountWizard accountWizard = new AccountWizard( simiasWebService, simiasManager, true );
+						accountWizard.EnterpriseConnect += new Novell.Wizard.AccountWizard.EnterpriseConnectDelegate(preferences_EnterpriseConnect);
+						wizardRunning = true;
+						DialogResult result = accountWizard.ShowDialog();
+						wizardRunning = false;
+						if ( result == DialogResult.OK )
+						{
+							// Display the iFolders dialog.
+							preferences_DisplayiFolderDialog( this, new EventArgs() );
+						}
 					}
 				}
 				catch (Exception ex)
@@ -710,6 +713,11 @@ namespace Novell.FormsTrayApp
 		private void preferences_UpdateDomain(object sender, DomainConnectEventArgs e)
 		{
 			globalProperties.UpdateDomain(e.DomainInfo);
+		}
+
+		private void preferences_DisplayiFolderDialog(object sender, EventArgs e)
+		{
+			menuProperties_Click( sender, e );
 		}
 
 		private void syncAnimateTimer_Tick(object sender, System.EventArgs e)

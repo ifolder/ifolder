@@ -33,6 +33,7 @@ using System.Net;
 using Microsoft.Win32;
 using Novell.iFolderCom;
 using Novell.Win32Util;
+using Novell.Wizard;
 using Simias.Client;
 using Simias.Client.Authentication;
 using Simias.Client.Event;
@@ -1511,6 +1512,12 @@ namespace Novell.FormsTrayApp
 					}
 
 					currentDefaultDomain = domain;
+
+					// Fire the event telling that the default domain has changed.
+					if (ChangeDefaultDomain != null)
+					{
+						ChangeDefaultDomain(this, new DomainConnectEventArgs(currentDefaultDomain.DomainInfo));
+					}
 				}
 
 				ListViewItem lvi = new ListViewItem(
@@ -2318,9 +2325,29 @@ namespace Novell.FormsTrayApp
 		/// Occurs when a domain has changed.
 		/// </summary>
 		public event UpdateDomainDelegate UpdateDomain;
+
+		/// <summary>
+		/// Delegate used to display the iFolders Dialog.
+		/// </summary>
+		public delegate void DisplayiFolderDialogDelegate(object sender, EventArgs e);
+		/// <summary>
+		/// Occurs after a new account has been created.
+		/// </summary>
+		public event DisplayiFolderDialogDelegate DisplayiFolderDialog;
 		#endregion
 
 		#region Event Handlers
+		private void accountWizard_EnterpriseConnect(object sender, DomainConnectEventArgs e)
+		{
+			AddDomainToList( e.DomainInfo );
+
+			if (EnterpriseConnect != null)
+			{
+				// Fire the event telling that a new domain has been added.
+				EnterpriseConnect( this, new DomainConnectEventArgs( e.DomainInfo ) );
+			}
+		}
+
 		private void Preferences_Load(object sender, System.EventArgs e)
 		{
 			// Reference the help using locale-specific path.
@@ -2634,13 +2661,24 @@ namespace Novell.FormsTrayApp
 
 		private void addAccount_Click(object sender, System.EventArgs e)
 		{
-			// Only allow one-at-a-time account creation.
+/*			// Only allow one-at-a-time account creation.
 			addAccount.Enabled = false;
 
 			ListViewItem lvi = new ListViewItem(new string[] {string.Empty, string.Empty, string.Empty});
 			accounts.Items.Add(lvi);
 			accounts.SelectedItems.Clear();
-			lvi.Selected = true;
+			lvi.Selected = true;*/
+
+			AccountWizard accountWizard = new AccountWizard( simiasWebService, simiasManager, accounts.Items.Count == 0 );
+			accountWizard.EnterpriseConnect += new Novell.Wizard.AccountWizard.EnterpriseConnectDelegate(accountWizard_EnterpriseConnect);
+			if ( accountWizard.ShowDialog() == DialogResult.OK )
+			{
+				// Display the iFolders dialog.
+				if ( DisplayiFolderDialog != null )
+				{
+					DisplayiFolderDialog( this, new EventArgs() );
+				}
+			}
 		}
 
 		private void userName_TextChanged(object sender, System.EventArgs e)
