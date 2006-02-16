@@ -42,24 +42,45 @@ namespace Novell.iFolder
 		
 		private bool				bSelected;
 		
-		private static Gdk.Pixbuf	OKFolder						= null;
-		private static Gdk.Pixbuf	OKFolderSpotlight				= null;
+		// OKPixbuf is used to show when an iFolder completely synchronized
+		// during the last time it synchronized
+		private static Gdk.Pixbuf OKPixbuf					= null;
+		private static Gdk.Pixbuf OKPixbufSpotlight			= null;
 		
-		private static Gdk.Pixbuf	MyAvailableFolder				= null;
-		private static Gdk.Pixbuf	MyAvailableFolderSpotlight		= null;
+		///
+		/// WaitPixbuf is used:
+		///     1. When the client is first started, all iFolders are waiting
+		///        to be synchronized.
+		///     2. If an iFolder gets interrupted from synchronizing and still
+		///        has items to be synchronized.
+		private static Gdk.Pixbuf WaitPixbuf					= null;
+		private static Gdk.Pixbuf WaitPixbufSpotlight			= null;
 		
-		private static Gdk.Pixbuf	SharedAvailableFolder			= null;
-		private static Gdk.Pixbuf	SharedAvailableFolderSpotlight	= null;
+		///
+		/// SubscriptionPixbuf is used for subscriptions
+		private static Gdk.Pixbuf SubscriptionPixbuf			= null;
+		private static Gdk.Pixbuf SubscriptionPixbufSpotlight	= null;
 		
-		private static Gdk.Pixbuf	ConflictFolder					= null;
-		private static Gdk.Pixbuf	ConflictFolderSpotlight			= null;
+		///
+		/// SyncPixbuf is used when an iFolder is checking for local changes
+		/// and when uploading/downloading files.
+		private static Gdk.Pixbuf SyncPixbuf					= null;
+		private static Gdk.Pixbuf SyncPixbufSpotlight			= null;
 		
-		private static Gdk.Pixbuf	SyncFolder						= null;
-		private static Gdk.Pixbuf	SyncFolderSpotlight				= null;
+		///
+		/// WarningPixbuf is used when:
+		///     1. The account is disconnected
+		private static Gdk.Pixbuf WarningPixbuf				= null;
+		private static Gdk.Pixbuf WarningPixbufSpotlight		= null;
 		
-		private static Gdk.Pixbuf	SyncWaitFolder					= null;
-		private static Gdk.Pixbuf	SyncWaitFolderSpotlight			= null;
-		
+		///
+		/// ErrorPixbuf is used when:
+		///     1. Conflicts in an iFolder exist
+		///     2. An iFolder failed to synchronize
+		private static Gdk.Pixbuf ErrorPixbuf					= null;
+		private static Gdk.Pixbuf ErrorPixbufSpotlight		= null;
+
+
 		private static bool registeredForThemeChangeEvent			= false;
 
 		private Gdk.Pixbuf			normalPixbuf;
@@ -256,91 +277,52 @@ namespace Novell.iFolder
 		{
 			lock(typeof(iFolderViewItem))
 			{
-			if (OKFolder == null)
-				OKFolder = new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png"));
-			
-			if (OKFolderSpotlight == null)
-			{
-				OKFolderSpotlight = OKFolder.Copy();
-//				OKFolderSpotlight =
-//					Util.LoadIcon("gnome-fs-directory", 48);
-//				if (OKFolderSpotlight == null)
-//					OKFolderSpotlight = 
-//						new Gdk.Pixbuf(
-//							Util.ImagesPath("ok-folder-spotlight64.png"));
-			}
-			
-			if (MyAvailableFolder == null)
-			{
-/*
-				IconSet iconSet = IconFactory.LookupDefault("gtk-directory");
-				if (iconSet != null)
+				if (OKPixbuf == null)
 				{
-					MyAvailableFolder =
-						iconSet.RenderIcon(
-							this.Style,
-							TextDirection.None,	// Widget.DefaultDirection will be used
-							StateType.Normal,
-							IconSize.LargeToolbar,
-							null,				// Widget that will display the icon
-							null);				// detail to send to the theme engine
+					OKPixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png"));
+					OKPixbufSpotlight =
+						Util.EelCreateSpotlightPixbuf(OKPixbuf);
 				}
-				else
+				
+				if (SubscriptionPixbuf == null)
 				{
-Console.WriteLine("IconFactory.LookupDefault(\"gtk-directory\") returned null");
+					SubscriptionPixbuf =
+						new Gdk.Pixbuf(Util.ImagesPath("ifolder-download48.png"));
+					SubscriptionPixbufSpotlight =
+						Util.EelCreateSpotlightPixbuf(SubscriptionPixbuf);
 				}
-*/				
-				MyAvailableFolder =
-					new Gdk.Pixbuf(Util.ImagesPath("ifolder-download48.png"));
-			}
-
-			if (MyAvailableFolderSpotlight == null)
-			{
-				MyAvailableFolderSpotlight = MyAvailableFolder.Copy();
-			}
-
-			if (SharedAvailableFolder == null)
-			{
-				SharedAvailableFolder = MyAvailableFolder.Copy();
-			}
-
-			if (SharedAvailableFolderSpotlight == null)
-			{
-				SharedAvailableFolderSpotlight = MyAvailableFolder.Copy();
-			}
-
-			if (ConflictFolder == null)
-			{
-				ConflictFolder =
-					new Gdk.Pixbuf(Util.ImagesPath("ifolder-warning48.png"));
-			}
-
-			if (ConflictFolderSpotlight == null)
-			{
-				ConflictFolderSpotlight = ConflictFolder.Copy();
-			}
-
-			if (SyncFolder == null)
-			{
-				SyncFolder =
-					new Gdk.Pixbuf(Util.ImagesPath("ifolder-sync48.png"));
-			}
-
-			if (SyncFolderSpotlight == null)
-			{
-				SyncFolderSpotlight = SyncFolder.Copy();
-			}
-
-			if (SyncWaitFolder == null)
-			{
-				SyncWaitFolder =
-					new Gdk.Pixbuf(Util.ImagesPath("ifolder-waiting48.png"));
-			}
-
-			if (SyncWaitFolderSpotlight == null)
-			{
-				SyncWaitFolderSpotlight = SyncWaitFolder.Copy();
-			}
+				
+				if (WarningPixbuf == null)
+				{
+					WarningPixbuf =
+						new Gdk.Pixbuf(Util.ImagesPath("ifolder-warning48.png"));
+					WarningPixbufSpotlight =
+						Util.EelCreateSpotlightPixbuf(WarningPixbuf);
+				}
+	
+				if (ErrorPixbuf == null)
+				{
+					ErrorPixbuf =
+						new Gdk.Pixbuf(Util.ImagesPath("ifolder-error48.png"));
+					ErrorPixbufSpotlight =
+						Util.EelCreateSpotlightPixbuf(ErrorPixbuf);
+				}
+	
+				if (SyncPixbuf == null)
+				{
+					SyncPixbuf =
+						new Gdk.Pixbuf(Util.ImagesPath("ifolder-sync48.png"));
+					SyncPixbufSpotlight =
+						Util.EelCreateSpotlightPixbuf(SyncPixbuf);
+				}
+	
+				if (WaitPixbuf == null)
+				{
+					WaitPixbuf =
+						new Gdk.Pixbuf(Util.ImagesPath("ifolder-waiting48.png"));
+					WaitPixbufSpotlight =
+						Util.EelCreateSpotlightPixbuf(WaitPixbuf);
+				}
 			}
 		}
 		
@@ -496,63 +478,62 @@ Console.WriteLine("iFolderViewItem.Refresh({0}) exiting", holder.iFolder.Name);
 
 			if (holder.iFolder.IsSubscription)
 			{
-				// Determine whether this owned by the current user or not
-				DomainInformation domain = domainController.GetDomain(holder.iFolder.DomainID);
-				if (domain != null && domain.MemberUserID != holder.iFolder.OwnerID)
-				{
-					newNormalPixbuf = SharedAvailableFolder;
-					newSpotlightPixbuf = SharedAvailableFolderSpotlight;
-				}
-				else
-				{
-					newNormalPixbuf = MyAvailableFolder;
-					newSpotlightPixbuf = MyAvailableFolderSpotlight;
-				}
+//				// Determine whether this owned by the current user or not
+//				DomainInformation domain = domainController.GetDomain(holder.iFolder.DomainID);
+//				if (domain != null && domain.MemberUserID != holder.iFolder.OwnerID)
+//				{
+					newNormalPixbuf = SubscriptionPixbuf;
+					newSpotlightPixbuf = SubscriptionPixbufSpotlight;
+//				}
+//				else
+//				{
+//					newNormalPixbuf = SubscriptionPixbuf;
+//					newSpotlightPixbuf = SubscriptionPixbufSpotlight;
+//				}
 			}
 			else
 			{
-				if (holder.State == iFolderState.Synchronizing)
+				if (holder.State == iFolderState.Synchronizing ||
+					holder.State == iFolderState.SynchronizingLocal)
 				{
-					newNormalPixbuf = SyncFolder;
-					newSpotlightPixbuf = SyncFolderSpotlight;
-				}
-				else if (holder.State == iFolderState.SynchronizingLocal)
-				{
-					newNormalPixbuf = SyncWaitFolder;
-					newSpotlightPixbuf = SyncWaitFolderSpotlight;
+					newNormalPixbuf = SyncPixbuf;
+					newSpotlightPixbuf = SyncPixbufSpotlight;
 				}
 				else
 				{
 					// Set the pixbufs based on current state
 					if (holder.iFolder.HasConflicts)
 					{
-						newNormalPixbuf = ConflictFolder;
-						newSpotlightPixbuf = ConflictFolderSpotlight;
+						newNormalPixbuf = ErrorPixbuf;
+						newSpotlightPixbuf = ErrorPixbufSpotlight;
 					}
 					else
 					{
 						switch (holder.State)
 						{
 							case iFolderState.Disconnected:
+								newNormalPixbuf = WarningPixbuf;
+								newSpotlightPixbuf = WarningPixbufSpotlight;
+								break;
 							case iFolderState.FailedSync:
-								newNormalPixbuf = ConflictFolder;
-								newSpotlightPixbuf = ConflictFolderSpotlight;
+								newNormalPixbuf = ErrorPixbuf;
+								newSpotlightPixbuf = ErrorPixbufSpotlight;
 								break;
 							case iFolderState.Initial:
-								newNormalPixbuf = SyncWaitFolder;
-								newSpotlightPixbuf = SyncWaitFolderSpotlight;
+								newNormalPixbuf = WaitPixbuf;
+								newSpotlightPixbuf = WaitPixbufSpotlight;
 								break;
 							case iFolderState.Normal:
 							default:
 								if (holder.ObjectsToSync > 0)
 								{
-									newNormalPixbuf = SyncWaitFolder;
-									newSpotlightPixbuf = SyncWaitFolderSpotlight;
+									newNormalPixbuf = WaitPixbuf;
+									newSpotlightPixbuf = WaitPixbufSpotlight;
 								}
 								else
 								{
-									newNormalPixbuf = OKFolder;
-									newSpotlightPixbuf = OKFolderSpotlight;
+									newNormalPixbuf = OKPixbuf;
+									newSpotlightPixbuf = OKPixbufSpotlight;
 								}
 								break;
 						}
