@@ -939,6 +939,27 @@ Console.WriteLine("The main iFolder window was NOT open when shutting down");
 			
 			return null;
 		}
+		
+		///
+		/// Function to be able to create a lightened version of a Gdk.Pixbuf.
+		///
+		[DllImport("libeel-2.so")]
+		private static extern IntPtr eel_create_spotlight_pixbuf(IntPtr src);
+		
+		public static Gdk.Pixbuf EelCreateSpotlightPixbuf(Gdk.Pixbuf src)
+		{
+			IntPtr destPtr;
+			Gdk.Pixbuf dest;
+			
+			destPtr = eel_create_spotlight_pixbuf(src.Handle);
+			
+			if (destPtr == IntPtr.Zero)
+				dest = src.Copy();
+			else
+				dest = new Gdk.Pixbuf(destPtr);
+			
+			return dest;
+		}
 	}
 	
 	public delegate void QuitiFolderDelegate();
