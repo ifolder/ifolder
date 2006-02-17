@@ -385,7 +385,7 @@ Console.WriteLine("iFolderViewItem.Refresh({0}) exiting", holder.iFolder.Name);
 			nameLabel.UseUnderline = false;
 			nameLabel.Xalign = 0;
 			Requisition req = nameLabel.SizeRequest();
-			nameLabel.SetSizeRequest(widthForLabels, req.Height);
+			nameLabel.SetSizeRequest(widthForLabels, -1);
 			Util.GtkLabelSetMaxWidthChars(nameLabel, widthForLabels);
 			Util.GtkLabelSetEllipsize(nameLabel, true);
 			
