@@ -28,6 +28,7 @@ using System;
 using System.IO;
 using System.Collections;
 using System.Text;
+using System.Threading;
 using Gtk;
 
 using Simias.Client;
@@ -109,6 +110,7 @@ namespace Novell.iFolder
 		private iFolderIconView	iFoldersIconView;
 		private iFolderViewGroup	localGroup;
 		private TreeModelFilter	myiFoldersFilter;
+		private Timer				updateStatusTimer;
 
 		private VBox				SynchronizedFolderTasks;
 
@@ -793,6 +795,15 @@ namespace Novell.iFolder
 			myiFoldersFilter = new TreeModelFilter(ifdata.iFolders, null);
 			myiFoldersFilter.VisibleFunc = SynchronizedFoldersFilterFunc;
 			
+			///
+			/// Create a timer that calls UpdateLocalViewItems every 30 seconds
+			/// beginning in 30 seconds from now.
+			updateStatusTimer =
+				new Timer(new TimerCallback(UpdateLocalViewItems),
+						  myiFoldersFilter,
+						  30000,
+						  30000);
+			
 			localGroup = new iFolderViewGroup(Util.GS("iFolders on This Computer"), myiFoldersFilter, SearchEntry);
 			iFoldersIconView.AddGroup(localGroup);
 			VBox emptyVBox = new VBox(false, 0);
@@ -949,7 +960,25 @@ namespace Novell.iFolder
 		///
 		/// Event Handlers
 		///
-
+		
+		private void UpdateLocalViewItems(object state)
+		{
+			// Do the work on the main UI thread so that stuff isn't corrupted.
+			GLib.Idle.Add(UpdateLocalViewItemsMainThread);
+		}
+		
+		private bool UpdateLocalViewItemsMainThread()
+		{
+			iFolderViewItem[] viewItems = localGroup.Items;
+			
+			foreach(iFolderViewItem item in viewItems)
+			{
+				item.Refresh();
+			}
+		
+			return false;	// Prevent GLib.Idle from calling this again automatically
+		}
+		
 		private void OnAddNewAccount(object o, EventArgs args)
 		{
 			Util.ShowPrefsPage(1, simiasManager);
