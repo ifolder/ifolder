@@ -85,6 +85,8 @@ namespace Novell.iFolder
 		private string			stateString;
 		private string			path;
 		private uint			objectsToSync;
+		
+//		private static bool unitTested = false;
 
 		public iFolderHolder(iFolderWeb ifolder)
 		{
@@ -92,7 +94,89 @@ namespace Novell.iFolder
 			this.state			= iFolderState.Initial;
 			this.objectsToSync	= 0;
 			UpdateDisplayData();
+			
+//			if (!unitTested)
+//			{
+//				UnitTest();
+//				unitTested = true;
+//			}
 		}
+		
+/*
+		private static void UnitTest()
+		{
+			Console.WriteLine("============= Unit Testing GetFriendlyTime() ==============");
+			Console.WriteLine("\tDateTime.Now: {0}", GetFriendlyTime(DateTime.Now));
+			
+			DateTime dateTime = DateTime.Now.Subtract(TimeSpan.FromSeconds(30));
+			string friendlyTime = GetFriendlyTime(dateTime);
+			Console.WriteLine("\t30 Seconds Ago: {0}", friendlyTime);
+			
+			dateTime = DateTime.Now.Subtract(TimeSpan.FromSeconds(59));
+			friendlyTime = GetFriendlyTime(dateTime);
+			Console.WriteLine("\t59 Seconds Ago: {0}", friendlyTime);
+			
+			dateTime = DateTime.Now.Subtract(TimeSpan.FromSeconds(60));
+			friendlyTime = GetFriendlyTime(dateTime);
+			Console.WriteLine("\t60 Seconds Ago: {0}", friendlyTime);
+			
+			dateTime = DateTime.Now.Subtract(TimeSpan.FromSeconds(61));
+			friendlyTime = GetFriendlyTime(dateTime);
+			Console.WriteLine("\t61 Seconds Ago: {0}", friendlyTime);
+			
+			dateTime = DateTime.Now.Subtract(TimeSpan.FromMinutes(1));
+			friendlyTime = GetFriendlyTime(dateTime);
+			Console.WriteLine("\t1 Minute Ago: {0}", friendlyTime);
+			
+			dateTime = DateTime.Now.Subtract(TimeSpan.FromMinutes(2));
+			friendlyTime = GetFriendlyTime(dateTime);
+			Console.WriteLine("\t2 Minutes Ago: {0}", friendlyTime);
+			
+			dateTime = DateTime.Now.Subtract(TimeSpan.FromMinutes(30));
+			friendlyTime = GetFriendlyTime(dateTime);
+			Console.WriteLine("\t30 Minutes Ago: {0}", friendlyTime);
+			
+			dateTime = DateTime.Now.Subtract(TimeSpan.FromMinutes(59));
+			friendlyTime = GetFriendlyTime(dateTime);
+			Console.WriteLine("\t59 Minutes Ago: {0}", friendlyTime);
+			
+			dateTime = DateTime.Now.Subtract(TimeSpan.FromMinutes(60));
+			friendlyTime = GetFriendlyTime(dateTime);
+			Console.WriteLine("\t60 Minutes Ago: {0}", friendlyTime);
+			
+			dateTime = DateTime.Now.Subtract(TimeSpan.FromMinutes(61));
+			friendlyTime = GetFriendlyTime(dateTime);
+			Console.WriteLine("\t61 Minutes Ago: {0}", friendlyTime);
+			
+			dateTime = DateTime.Now.Subtract(TimeSpan.FromMinutes(62));
+			friendlyTime = GetFriendlyTime(dateTime);
+			Console.WriteLine("\t62 Minutes Ago: {0}", friendlyTime);
+			
+			dateTime = DateTime.Now.Subtract(TimeSpan.FromMinutes(120));
+			friendlyTime = GetFriendlyTime(dateTime);
+			Console.WriteLine("\t120 Minutes Ago: {0}", friendlyTime);
+			
+			dateTime = DateTime.Now.Subtract(TimeSpan.FromMinutes(121));
+			friendlyTime = GetFriendlyTime(dateTime);
+			Console.WriteLine("\t121 Minutes Ago: {0}", friendlyTime);
+			
+			dateTime = DateTime.Now.Subtract(TimeSpan.FromMinutes(122));
+			friendlyTime = GetFriendlyTime(dateTime);
+			Console.WriteLine("\t122 Minutes Ago: {0}", friendlyTime);
+			
+			dateTime = DateTime.Now.Subtract(TimeSpan.FromDays(1));
+			friendlyTime = GetFriendlyTime(dateTime);
+			Console.WriteLine("\t1 Day Ago: {0}", friendlyTime);
+			
+			dateTime = DateTime.Now.Subtract(TimeSpan.FromDays(2));
+			friendlyTime = GetFriendlyTime(dateTime);
+			Console.WriteLine("\t2 Days Ago: {0}", friendlyTime);
+			
+			dateTime = DateTime.Now.Subtract(TimeSpan.FromDays(5));
+			friendlyTime = GetFriendlyTime(dateTime);
+			Console.WriteLine("\t5 Days Ago: {0}", friendlyTime);
+		}
+*/
 		
 		protected iFolderHolder()
 		{
@@ -119,7 +203,11 @@ namespace Novell.iFolder
 
 		public string StateString
 		{
-			get{ return stateString; }
+			get
+			{
+				UpdateDisplayData();
+				return stateString;
+			}
 		}
 
 		public iFolderState State
@@ -198,7 +286,34 @@ namespace Novell.iFolder
 							if (objectsToSync > 0)
 								stateString = string.Format(Util.GS("{0} items not synchronized"), objectsToSync);
 							else
-								stateString = Util.GS("OK");
+							{
+								string lastSyncTime = iFolder.LastSyncTime;
+								if (lastSyncTime == null || lastSyncTime.Length == 0)
+									stateString = Util.GS("OK");
+								else
+								{
+									try
+									{
+										DateTime dateTime = 
+											DateTime.Parse(lastSyncTime);
+										
+										string friendlyTime =
+											GetFriendlyTime(dateTime);
+
+										stateString =
+											string.Format(
+												Util.GS("Synchronized: {0}"),
+												friendlyTime);
+									}
+									catch
+									{
+										stateString =
+											string.Format(
+												Util.GS("Synchronized: {0}"),
+												lastSyncTime);
+									}
+								}
+							}
 							break;
 					}
 				}
@@ -213,6 +328,70 @@ namespace Novell.iFolder
 			{
 				path = iFolder.UnManagedPath;
 			}
+		}
+		
+		private static string GetFriendlyTime(DateTime dateTime)
+		{
+			DateTime now = DateTime.Now;
+			
+			TimeSpan span = now.Subtract(dateTime);
+			
+			// FIXME: Once we move into hours, fix this up so we know when to say, "Yesterday"/etc.
+			if (span.TotalSeconds < 60)
+				return Util.GS("Less than a minute ago");
+			
+			int totalMinutes = (int)span.TotalMinutes;
+			if (totalMinutes == 1)
+				return Util.GS("1 minute ago");
+			
+			if (totalMinutes < 60)
+				return string.Format(Util.GS("{0} minutes ago"),
+									   totalMinutes);
+
+			int lastSyncDay		= dateTime.DayOfYear;
+			int nowDay			= now.DayOfYear;
+			
+			if (lastSyncDay == nowDay)
+			{
+				// The last synchronization happened TODAY!
+				if (span.Minutes == 0)
+				{
+					if (span.Hours == 1)
+						return Util.GS("1 hour ago");
+					else
+						return string.Format(
+							Util.GS("{0} hours ago"),
+							span.Hours);
+				}
+				else if (span.Minutes == 1)
+				{
+					if (span.Hours == 1)
+						return Util.GS("1 hour, 1 minute ago");
+					else
+						return string.Format(
+							Util.GS("{0} hours, 1 minute ago"),
+							span.Hours);
+				}
+				else
+				{
+					if (span.Hours == 1)
+						return string.Format(
+							Util.GS("1 hour, {0} minutes ago"),
+							span.Minutes);
+					else
+						return string.Format(
+							Util.GS("{0} hour, {1} minutes ago"),
+							span.Hours,
+							span.Minutes);
+				}
+			}
+			else if ((nowDay - lastSyncDay) == 1)
+			{
+				// The last sync happened YESTERDAY!
+				return Util.GS("Yesterday");
+			}
+			else
+				return dateTime.ToShortDateString();
 		}
 	}
 	

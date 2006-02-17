@@ -606,6 +606,8 @@ Console.WriteLine("iFolderViewItem.Refresh({0}) exiting", holder.iFolder.Name);
 			
 			if (currentStatus != text)
 			{
+				currentStatus = text;
+
 				string potentialMarkup;
 				if (holder.iFolder.IsSubscription)
 					potentialMarkup =
@@ -614,9 +616,8 @@ Console.WriteLine("iFolderViewItem.Refresh({0}) exiting", holder.iFolder.Name);
 									  Util.GS("MB"));
 				else
 					potentialMarkup =
-						string.Format("<span size=\"small\">{0}: {1}</span>",
-									  Util.GS("Status"),
-									  GLib.Markup.EscapeText(text));
+						string.Format("<span size=\"small\">{0}</span>",
+									   GLib.Markup.EscapeText(text));
 
 				statusLabel.Markup = potentialMarkup;
 			}
