@@ -100,7 +100,7 @@ namespace Novell.iFolder
 			FFSyncValue.Text = "0";
 			
 			int syncInterval = 0;
-			if (ifolder.SyncInterval <= 0)
+			if (ifolder.EffectiveSyncInterval <= 0)
 			{
 				try
 				{
@@ -111,7 +111,7 @@ namespace Novell.iFolder
 			}
 			else
 			{
-				syncInterval = ifolder.SyncInterval;
+				syncInterval = ifolder.EffectiveSyncInterval;
 			}
 			
 			// Make sure it's shown in minutes
