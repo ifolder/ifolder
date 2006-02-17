@@ -156,6 +156,10 @@ Console.WriteLine(Environment.StackTrace);
 			domainController = DomainController.GetDomainController();
 
 			iFolderListStore = new ListStore(typeof(iFolderHolder));
+			iFolderListStore.SetSortFunc(
+				0,
+				new TreeIterCompareFunc(TreeModelSortFunction));
+			iFolderListStore.SetSortColumnId(0, SortType.Ascending);
 			
 			ifolderIters = new Hashtable();
 			subToiFolderMap = new Hashtable();
@@ -182,6 +186,29 @@ Console.WriteLine(Environment.StackTrace);
 			}
 
 			Refresh();
+		}
+		
+		private int TreeModelSortFunction(TreeModel model, TreeIter a, TreeIter b)
+		{
+			iFolderHolder holderA = (iFolderHolder)model.GetValue(a, 0);
+			iFolderHolder holderB = (iFolderHolder)model.GetValue(b, 0);
+			
+			if (holderA == null || holderB == null)
+				return 0;
+			
+			iFolderWeb ifolderA = holderA.iFolder;
+			iFolderWeb ifolderB = holderB.iFolder;
+			
+			if (ifolderA == null || ifolderB == null)
+				return 0;
+			
+			string nameA = ifolderA.Name;
+			string nameB = ifolderB.Name;
+			
+			if (nameA == null || nameB == null)
+				return 0;
+
+			return string.Compare(nameA, nameB, true);
 		}
 
 
