@@ -58,7 +58,7 @@ namespace Novell.iFolder
 
 			VBox v = new VBox();
 			Label l = new Label("<span weight=\"bold\" size=\"larger\">" +
-					Util.GS("Remove this iFolder account?") + "</span>");
+					Util.GS("Remove this account?") + "</span>");
 			l.LineWrap = true;
 			l.UseMarkup = true;
 			l.Selectable = false;
@@ -74,7 +74,7 @@ namespace Novell.iFolder
 			//
 			// Row: Server
 			//
-			l = new Label(Util.GS("System Name:"));
+			l = new Label(Util.GS("Account Name:"));
 			l.Xalign = 1;
 			table.Attach(l, 0,1, 0,1,
 						 AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -101,7 +101,7 @@ namespace Novell.iFolder
 			//
 			// Row: Username
 			//
-			l = new Label(Util.GS("Username:"));
+			l = new Label(Util.GS("User Name:"));
 			l.Xalign = 1;
 			table.Attach(l, 0,1, 2,3,
 						 AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
