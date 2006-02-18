@@ -159,6 +159,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Connecting.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Connecting.resx"
+                    DependentUpon = "Connecting.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Credits.cs"
                     SubType = "Form"
                     BuildAction = "Compile"
@@ -325,16 +335,6 @@
                 <File
                     RelPath = "AccountWizard\CompletionPage.resx"
                     DependentUpon = "CompletionPage.cs"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "AccountWizard\Connecting.cs"
-                    SubType = "Form"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "AccountWizard\Connecting.resx"
-                    DependentUpon = "Connecting.cs"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
