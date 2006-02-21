@@ -43,7 +43,9 @@ namespace Novell.FormsTrayApp
 		private SimiasWebService simiasWebService;
 		private Domain domain;
 		private bool updatePassword = false;
-		private bool domainUpdated = false;
+		private bool enableChanged = false;
+		private bool defaultChanged = false;
+		private bool addressChanged = false;
 		private System.Windows.Forms.Label label18;
 		private System.Windows.Forms.Label label17;
 		private Novell.iFolderCom.GaugeChart gaugeChart1;
@@ -989,7 +991,7 @@ namespace Novell.FormsTrayApp
 			// Update the account enabled setting.
 			if ( accountEnabled.Checked != domain.DomainInfo.Active )
 			{
-				bool domainUpdated = true;
+				enableChanged = true;
 
 				try
 				{
@@ -1014,7 +1016,7 @@ namespace Novell.FormsTrayApp
 			// Update the default setting.
 			if ( defaultServer.Enabled && defaultServer.Checked )
 			{
-				bool domainUpdated = true;
+				defaultChanged = true;
 
 				try
 				{
@@ -1032,7 +1034,7 @@ namespace Novell.FormsTrayApp
 			// Update the host address.
 			if ( !address.Text.Equals( domain.DomainInfo.Host ) )
 			{
-				bool domainUpdated = true;
+				addressChanged = true;
 
 				try
 				{
@@ -1160,6 +1162,22 @@ namespace Novell.FormsTrayApp
 		#region Properties
 
 		/// <summary>
+		/// Gets a value indicating if the server address was changed.
+		/// </summary>
+		public bool AddressChanged
+		{
+			get { return addressChanged; }
+		}
+
+		/// <summary>
+		/// Gets a value indicating if the default domain was changed.
+		/// </summary>
+		public bool DefaultChanged
+		{
+			get { return defaultChanged; }
+		}
+
+		/// <summary>
 		/// Gets the Domain that was displayed/modified.
 		/// </summary>
 		public Domain Domain
@@ -1168,11 +1186,11 @@ namespace Novell.FormsTrayApp
 		}
 
 		/// <summary>
-		/// Gets a value indicating if the domain was updated.
+		/// Gets a value indicating if the account enabled state was changed.
 		/// </summary>
-		public bool DomainUpdated
+		public bool EnableChanged
 		{
-			get { return domainUpdated; }
+			get { return enableChanged; }
 		}
 
 		#endregion

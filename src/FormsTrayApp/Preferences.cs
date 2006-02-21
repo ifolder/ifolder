@@ -1130,7 +1130,7 @@ namespace Novell.FormsTrayApp
 				// Reset the current default domain if the added domain is set to be the default.
 				if (domainInfo.IsDefault)
 				{
-					if (currentDefaultDomain != null)
+					if ((currentDefaultDomain != null) && !currentDefaultDomain.ID.Equals( domainInfo.ID ))
 					{
 						currentDefaultDomain.DomainInfo.IsDefault = false;
 					}
@@ -2022,34 +2022,28 @@ namespace Novell.FormsTrayApp
 				if ( serverDetails.ShowDialog() == DialogResult.OK )
 				{
 					// Check if the server was updated.
-					if ( serverDetails.DomainUpdated )
+					if ( serverDetails.EnableChanged || serverDetails.AddressChanged )
 					{
-						if ( ( serverDetails.Domain.DomainInfo.Active && !domain.DomainInfo.Active ) ||
-							( !serverDetails.Domain.DomainInfo.Host.Equals( domain.DomainInfo.Host ) && serverDetails.Domain.DomainInfo.Active ) )
+						// TODO: need to check the behavior of "Automatically Connect".
+						// Need to login
+					}
+
+					if ( serverDetails.DefaultChanged )
+					{
+						// Reset the current default.
+						if (currentDefaultDomain != null)
 						{
-							// TODO: need to check the behavior of "Automatically Connect".
-							// Need to login
+							currentDefaultDomain.DomainInfo.IsDefault = false;
 						}
 
-						if ( serverDetails.Domain.DomainInfo.IsDefault && !domain.DomainInfo.IsDefault )
+						// Save the new default.
+						currentDefaultDomain = domain;
+
+						// Fire the event telling that the default domain has changed.
+						if (ChangeDefaultDomain != null)
 						{
-							// Reset the current default.
-							if (currentDefaultDomain != null)
-							{
-								currentDefaultDomain.DomainInfo.IsDefault = false;
-							}
-
-							// Save the new default.
-							currentDefaultDomain = serverDetails.Domain;
-
-							// Fire the event telling that the default domain has changed.
-							if (ChangeDefaultDomain != null)
-							{
-								ChangeDefaultDomain(this, new DomainConnectEventArgs(currentDefaultDomain.DomainInfo));
-							}
+							ChangeDefaultDomain(this, new DomainConnectEventArgs(currentDefaultDomain.DomainInfo));
 						}
-
-						lvi.Tag = serverDetails.Domain;
 					}
 				}
 			}

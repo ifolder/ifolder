@@ -1051,7 +1051,7 @@ namespace Novell.FormsTrayApp
 			// Reset the current default domain if the added domain is set to be the default.
 			if (domainInfo.IsDefault)
 			{
-				if (defaultDomain != null)
+				if ((defaultDomain != null) && !defaultDomain.ID.Equals(domainInfo.ID))
 				{
 					defaultDomain.DomainInfo.IsDefault = false;
 				}

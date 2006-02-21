@@ -73,7 +73,7 @@ namespace Novell.Wizard
 	public class AccountWizard : System.Windows.Forms.Form
 	{
 		#region Class Members
-//		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(InvitationWizard));
+		DomainInformation domainInfo;
 		private System.Windows.Forms.Button cancel;
 		private System.Windows.Forms.Button next;
 		private System.Windows.Forms.Button back;
@@ -418,7 +418,7 @@ namespace Novell.Wizard
 				// TODO: Localize
 				StringBuilder sb = new StringBuilder("Congratulations, you are now connected to:\n\n");
 
-				sb.AppendFormat( "{0}\n", "Server name" );
+				sb.AppendFormat( "{0}\n", domainInfo.Name );
 				sb.AppendFormat( "({0})\n\n", serverPage.ServerAddress );
 				sb.Append( "You can now add folders to be synchronized to the server.  You may also download folders from the server and have them be synchronized to your computer." );
 
@@ -460,6 +460,7 @@ namespace Novell.Wizard
 			connecting.EnterpriseConnect += new Novell.FormsTrayApp.Connecting.EnterpriseConnectDelegate(connecting_EnterpriseConnect);
 			if ( connecting.ShowDialog() == DialogResult.OK )
 			{
+				domainInfo = connecting.DomainInformation;
 				result = true;
 			}
 

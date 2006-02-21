@@ -406,7 +406,7 @@ namespace Novell.FormsTrayApp
 				SetProxyForDomain( server, true );
 
 				// Connect to the domain now that the proxy is set.
-				DomainInformation domainInfo = simiasWebService.ConnectToDomain( user, password, server );
+				domainInfo = simiasWebService.ConnectToDomain( user, password, server );
 
 				switch (domainInfo.StatusCode)
 				{
@@ -701,6 +701,17 @@ namespace Novell.FormsTrayApp
 
 		#region Properties
 
+		/// <summary>
+		/// Gets the domain information.
+		/// </summary>
+		public DomainInformation DomainInformation
+		{
+			get { return this.domainInfo; }
+		}
+
+		/// <summary>
+		/// Gets the password for the user.
+		/// </summary>
 		public string Password
 		{
 			get { return password; }
