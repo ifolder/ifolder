@@ -165,10 +165,8 @@ namespace Novell.Wizard
 		{
 			base.ActivatePage (previousIndex);
 
-			// TODO:
-
-			// Enable the buttons
-			((AccountWizard)(this.Parent)).WizardButtons = WizardButtons.Next | WizardButtons.Back | WizardButtons.Cancel;
+			// Enable/disable the buttons
+			username_TextChanged( this, null );
 			username.Focus();
 		}
 

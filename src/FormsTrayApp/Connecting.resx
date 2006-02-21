@@ -371,7 +371,7 @@
     <value>An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.</value>
   </data>
   <data name="alreadyJoined">
-    <value>An account for this server already exists for your current local login identity on this computer.  Only one account per server is allowed.</value>
+    <value>An account for this server already exists on the local machine.  Only one account per server is allowed.</value>
   </data>
   <data name="alreadyJoinedTitle">
     <value>Account Already Exists</value>

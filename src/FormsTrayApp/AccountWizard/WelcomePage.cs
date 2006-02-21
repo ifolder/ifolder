@@ -59,6 +59,7 @@ namespace Novell.Wizard
 			// 
 			// WelcomePage
 			// 
+			// TODO: Localize
 			this.DescriptionText = "Description...";
 			this.Name = "WelcomePage";
 			this.WelcomeTitle = "Welcome to the iFolder Invitation Wizard";

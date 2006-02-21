@@ -118,6 +118,7 @@ namespace Novell.Wizard
 			//
 			// welcomePage
 			// 
+			// TODO: Localize
 			this.welcomePage.DescriptionText = "This wizard will guide you through setting up your iFolder account.";
 			this.welcomePage.ActionText = "To continue, click Next.";
 			this.welcomePage.Location = new System.Drawing.Point(0, 0);
@@ -128,6 +129,7 @@ namespace Novell.Wizard
 			// 
 			// serverPage
 			// 
+			// TODO: Localize
 			this.serverPage.HeaderSubTitle = "Enter the name of your iFolder server.";
 			this.serverPage.HeaderTitle = "Choose an iFolder Server";
 			this.serverPage.Location = new System.Drawing.Point(0, 0);
@@ -137,6 +139,7 @@ namespace Novell.Wizard
 			// 
 			// identityPage
 			// 
+			// TODO: Localize
 			this.identityPage.HeaderSubTitle = "Enter your iFolder username and password.";
 			this.identityPage.HeaderTitle = "iFolder Account Information";
 			this.identityPage.Location = new System.Drawing.Point(0, 0);
@@ -146,6 +149,7 @@ namespace Novell.Wizard
 			// 
 			// verifyPage
 			// 
+			// TODO: Localize
 			this.verifyPage.HeaderSubTitle = "Verify the iFolder account information.";
 			this.verifyPage.HeaderTitle = "Verify iFolder Account Information";
 			this.verifyPage.Location = new System.Drawing.Point(0, 0);
@@ -155,6 +159,7 @@ namespace Novell.Wizard
 			//
 			// completionPage
 			//
+			// TODO: Localize
 			this.completionPage.DescriptionText = "Description...";
 			this.completionPage.Location = new System.Drawing.Point(0, 0);
 			this.completionPage.Name = "completionPage";
@@ -186,10 +191,12 @@ namespace Novell.Wizard
 			try
 			{
 				// Load the watermark.
+				// TODO:
 				Image image = Image.FromFile(Path.Combine(Application.StartupPath, "invitewiz.png"));
 				this.welcomePage.Watermark = image;
 				this.completionPage.Watermark = image;
 
+				// TODO:
 				image = Image.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder_invite_32.png"));
 				this.serverPage.Thumbnail = image;
 				this.verifyPage.Thumbnail = image;
@@ -308,9 +315,11 @@ namespace Novell.Wizard
 		private void back_Click(object sender, System.EventArgs e)
 		{
 			// Check if we're on the completion page.
-			if (currentIndex == (maxPages - 1))
+			if ((currentIndex == (maxPages - 1)) ||
+				(currentIndex == (maxPages - 2)))
 			{
-				this.next.Text = "Next >";
+				// TODO: Localize
+				this.next.Text = "&Next >";
 			}
 
 			int previousIndex = this.pages[currentIndex].DeactivatePage();
@@ -347,6 +356,7 @@ namespace Novell.Wizard
 
 				if (currentIndex == (maxPages - 2))
 				{
+					// TODO: Localize
 					next.Text = "&Connect";
 				}
 				else if (currentIndex == (maxPages - 1))
@@ -354,6 +364,7 @@ namespace Novell.Wizard
 					// We're on the completion page ... change the Next 
 					// button to a Finish button.
 					next.DialogResult = DialogResult.OK;
+					// TODO: Localize
 					next.Text = "&Finish";
 				}
 			}

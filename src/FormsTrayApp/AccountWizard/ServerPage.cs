@@ -163,7 +163,7 @@ namespace Novell.Wizard
 		{
 			base.ActivatePage (previousIndex);
 
-			// Enable the buttons.
+			// Enable/disable the buttons.
 			serverAddress_TextChanged(this, null);
 
 			serverAddress.Focus();
