@@ -30,10 +30,12 @@ public class BigList : Gtk.DrawingArea {
 	Widget style_widget;
 	Pango.Layout layout;
 	IListModel provider;
+	string column_header;
 	const string ellipsis = "...";
 	Hashtable ellipses = new Hashtable ();
 	int old_width;
 	int ellipsis_width, en_width, line_height;
+	int header_height;
 	int selected_line = -1;
 	int rows = 1;
 	bool is_dragging = false;
@@ -43,9 +45,10 @@ public class BigList : Gtk.DrawingArea {
 	
 	int currentWidth = 50; // pixels
 	
-	public BigList (IListModel provider)
+	public BigList (IListModel provider, string column_header)
 	{
 		this.provider = provider;
+		this.column_header = column_header;
 
 		//Accessibility
 		RefAccessible ().Role = Atk.Role.List;
@@ -86,6 +89,8 @@ public class BigList : Gtk.DrawingArea {
 		
 		layout.SetMarkup ("W");
 		layout.GetPixelSize (out en_width, out line_height);
+		
+		header_height = line_height + 10;
 
 		old_width = Allocation.Width;
 	}
@@ -106,7 +111,7 @@ public class BigList : Gtk.DrawingArea {
                 if (rect.Equals (Gdk.Rectangle.Zero))
                         Console.WriteLine ("ERROR: Allocation is null!");
 
-		int nrows = Allocation.Height / line_height;
+		int nrows = (Allocation.Height - header_height) / line_height;
 		if (nrows != rows){
 			rows = nrows;
 			Reload ();
@@ -151,7 +156,8 @@ public class BigList : Gtk.DrawingArea {
 
 	void RedrawLine (int line)
 	{
-		QueueDrawArea (0, line * line_height, Allocation.Width, (line+1) * line_height);
+//		QueueDrawArea (0, (line * line_height) + header_height, Allocation.Width, (line+1) * line_height);
+		QueueDrawArea (0, header_height, Allocation.Width, (line+1) * line_height);
 	}
 
 	public void Reload ()
@@ -259,9 +265,13 @@ public class BigList : Gtk.DrawingArea {
 
 	int HitTest (double y)
 	{
-		int line = (int) y / line_height;
+		if (((int) y) < header_height)
+			return -2;	// column header hit
+
+		int line = ((int) y - header_height) / line_height;
 		if (line + top_displayed > provider.Rows - 1)
 			return -2;
+		
 		return (line + top_displayed);
 	}
 
@@ -318,12 +328,38 @@ public class BigList : Gtk.DrawingArea {
 	
         void ExposeHandler (object obj, ExposeEventArgs args)
         {
-                Gdk.Window win = args.Event.Window;
-                Gdk.Rectangle area = args.Event.Area;
+			Gdk.Window win = args.Event.Window;
+			Gdk.Rectangle area = args.Event.Area;
+                
+			win.DrawRectangle (Style.BaseGC (StateType.Normal), true, area);
+				
+			if (area.Y == 0)
+			{
+				// Draw the column header
+				Gdk.Rectangle headerArea =
+					new Gdk.Rectangle(area.X, area.Y,
+										area.Width,
+										header_height);
+				area.Y = area.Y + header_height;
+				area.Height = area.Height - header_height;
+				
+				// Draw a column header
+				win.DrawRectangle (Style.BackgroundGC(StateType.Normal), true, headerArea); // fill
+				win.DrawLine (Style.DarkGC(StateType.Normal), 0, header_height - 1, Allocation.Width - 1, header_height - 1);	// underline
+				win.DrawLine (Style.LightGC(StateType.Normal), 0, 0, 0, header_height - 2);	// left highlight
+				win.DrawLine (Style.LightGC(StateType.Normal), 0, 0, Allocation.Width - 1, 0); // top highlight
+				string header_text = "";
+				if (column_header != null)
+					header_text = column_header;
+				
+				header_text = ELabel.Ellipsize (layout, header_text, Allocation.Width - 2 * 2, ellipsis_width, en_width);
+				layout.SetText (header_text);
+				Gdk.GC headerGC = Style.TextGC (StateType.Normal);
+				win.DrawLayout(headerGC, 2, headerArea.Y + 5, layout);
+			}
 
-		win.DrawRectangle (Style.BaseGC (StateType.Normal), true, area);
-
-		for (int y = 0, row = top_displayed; y < area.Y + area.Height; y += line_height, row++){
+		for (int y = area.Y, row = top_displayed; y < area.Y + area.Height; y += line_height, row++)
+		{
 
 			Gdk.GC gc;
 			Gdk.Rectangle region_area = new Gdk.Rectangle (0, y, Allocation.Width, line_height);
