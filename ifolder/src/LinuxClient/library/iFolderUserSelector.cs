@@ -39,16 +39,15 @@ namespace Novell.iFolder
 	{
 		private SimiasWebService 	simws;
 		private string				domainID;
-//		private Gdk.Pixbuf			UserPixBuf;
 
 		private Gtk.TreeView		SelTreeView;
 		private Gtk.ListStore		SelTreeStore;
 		private BigList				memberList;
 		private MemberListModel		memberListModel;
 		
-		private Gtk.ComboBox		SearchAttribComboBox;
-
 		private Gtk.Entry			SearchEntry;
+		private Gtk.Button			CancelSearchButton;
+
 		private Gtk.Button			UserAddButton;
 		private Gtk.Button			UserDelButton;
 		private uint				searchTimeoutID;
@@ -88,7 +87,7 @@ namespace Novell.iFolder
 									string domainID)
 			: base()
 		{
-			this.Title = Util.GS("Select Users");
+			this.Title = Util.GS("Add Users");
 			if (SimiasWS == null)
 				throw new ApplicationException("SimiasWebService was null");
 			this.simws = SimiasWS;
@@ -136,63 +135,66 @@ namespace Novell.iFolder
 			dialogBox.BorderWidth = 10;
 			this.VBox.PackStart(dialogBox, true, true, 0);
 
+			Label l = new Label(
+				string.Format("<span size=\"large\" weight=\"bold\">{0}</span>",
+								Util.GS("Add users to this iFolder")));
+			l.Xalign = 0;
+			l.UseMarkup = true;
+			dialogBox.PackStart(l, false, false, 0);
 
-			//------------------------------
-			// Find Entry
-			//------------------------------
-			Table findTable = new Table(2, 3, false);
-			dialogBox.PackStart(findTable, false, false, 0);
-			findTable.ColumnSpacing = 20;
-			findTable.RowSpacing = 5;
-
-			Label findLabel = new Label(Util.GS("Find:"));
-			findLabel.Xalign = 0;
-			findTable.Attach(findLabel, 0, 1, 0, 1,
-				AttachOptions.Shrink, 0, 0, 0);
-
-			SearchAttribComboBox = ComboBox.NewText();
-			SearchAttribComboBox.AppendText(Util.GS("First Name"));
-			SearchAttribComboBox.AppendText(Util.GS("Last Name"));
-			SearchAttribComboBox.AppendText(Util.GS("Full Name"));
-			SearchAttribComboBox.Active = 2;
-			SearchAttribComboBox.Changed += new EventHandler(OnSearchAttribComboBoxChanged);
-			findTable.Attach(SearchAttribComboBox, 1, 2, 0, 1,
-				AttachOptions.Shrink, 0, 0, 0);
-
-			SearchEntry = new Gtk.Entry(Util.GS("<Enter text to find a user>"));
-			SearchEntry.SelectRegion(0, -1);
-			SearchEntry.CanFocus = true;
-			SearchEntry.Changed += new EventHandler(OnSearchEntryChanged);
-			findTable.Attach(SearchEntry, 2, 3, 0, 1,
-				AttachOptions.Expand | AttachOptions.Fill, 0, 0, 0);
-				
-			Label findHelpTextLabel = new Label(Util.GS("(Full or partial name)"));
-			findHelpTextLabel.Xalign = 0;
-			findTable.Attach(findHelpTextLabel, 2,3,1,2,
-				AttachOptions.Expand | AttachOptions.Fill, 0, 0, 0);
 			
 
 
 			//------------------------------
 			// Selection Area
 			//------------------------------
-			HBox selBox = new HBox();
-			selBox.Spacing = 10;
+			HBox selBox = new HBox(false, 10);
 			dialogBox.PackStart(selBox, true, true, 0);
-
 
 			//------------------------------
 			// All Users tree
 			//------------------------------
+			VBox vbox = new VBox(false, 0);
+			selBox.PackStart(vbox, false, false, 0);
+			
+			//------------------------------
+			// Find Entry
+			//------------------------------
+			HBox searchHBox = new HBox(false, 4);
+			vbox.PackStart(searchHBox, false, false, 0);
+			
+			Label findLabel = new Label(Util.GS("_Find:"));
+			searchHBox.PackStart(findLabel, false, false, 0);
+			findLabel.Xalign = 0;
+			
+			SearchEntry = new Entry();
+			searchHBox.PackStart(SearchEntry, true, true, 0);
+			findLabel.MnemonicWidget = SearchEntry;
+			SearchEntry.SelectRegion(0, -1);
+			SearchEntry.CanFocus = true;
+			SearchEntry.Changed +=
+				new EventHandler(OnSearchEntryChanged);
+
+			Image stopImage = new Image(Stock.Stop, Gtk.IconSize.Menu);
+			stopImage.SetAlignment(0.5F, 0F);
+			
+			CancelSearchButton = new Button(stopImage);
+			searchHBox.PackEnd(CancelSearchButton, false, false, 0);
+			CancelSearchButton.Relief = ReliefStyle.None;
+			CancelSearchButton.Sensitive = false;
+			
+			CancelSearchButton.Clicked +=
+				new EventHandler(OnCancelSearchButton);
+
 			memberListModel = new MemberListModel(domainID, simws);
 			
 			memberList = new BigList(memberListModel);
-//			memberList.SetSizeRequest(100, 400);
+
 			// FIXME: Fix up the BigList class to support both horizontal and vertical scrolling and then use the scroll adjustments to construct the ScrolledWindow
 			ScrolledWindow sw = new ScrolledWindow(memberList.HAdjustment, memberList.VAdjustment);
 			sw.ShadowType = Gtk.ShadowType.EtchedIn;
 			sw.Add(memberList);
-			selBox.PackStart(sw, true, true, 0);
+			vbox.PackStart(sw, true, true, 0);
 			memberList.ItemSelected += new ItemSelected(OnMemberIndexSelected);
 			memberList.ItemActivated += new ItemActivated(OnMemberIndexActivated);
 
@@ -202,54 +204,85 @@ namespace Novell.iFolder
 			//------------------------------
 			VBox btnBox = new VBox();
 			btnBox.Spacing = 10;
-			selBox.PackStart(btnBox, false, true, 0);
+			selBox.PackStart(btnBox, false, false, 0);
+			
+			Label spacer = new Label("");
+			btnBox.PackStart(spacer, true, true, 0);
 
-			UserAddButton = new Button(Util.GS("_Add >>"));
+			HBox buttonHBox = new HBox(false, 4);
+			spacer = new Label("");
+			buttonHBox.PackStart(spacer, true, true, 0);
+			Label buttonLabel = new Label(Util.GS("_Add"));
+			buttonHBox.PackStart(buttonLabel, false, false, 0);
+			Image buttonImage = new Image(Stock.GoForward, IconSize.Button);
+			buttonHBox.PackStart(buttonImage, false, false, 0);
+			spacer = new Label("");
+			buttonHBox.PackStart(spacer, true, true, 0);
+			UserAddButton = new Button(buttonHBox);
 			btnBox.PackStart(UserAddButton, false, true, 0);
 			UserAddButton.Clicked += new EventHandler(OnAddButtonClicked);
 
-			UserDelButton = new Button(Util.GS("_Remove"));
+			buttonHBox = new HBox(false, 4);
+			spacer = new Label("");
+			buttonHBox.PackStart(spacer, true, true, 0);
+			buttonImage = new Image(Stock.GoBack, IconSize.Button);
+			buttonHBox.PackStart(buttonImage, false, false, 0);
+			buttonLabel = new Label(Util.GS("_Remove"));
+			buttonHBox.PackStart(buttonLabel, false, false, 0);
+			spacer = new Label("");
+			buttonHBox.PackStart(spacer, true, true, 0);
+			UserDelButton = new Button(buttonHBox);
 			btnBox.PackStart(UserDelButton, false, true, 0);
 			UserDelButton.Clicked += new EventHandler(OnRemoveButtonClicked);
 
+			spacer = new Label("");
+			btnBox.PackStart(spacer, true, true, 0);
 
 			//------------------------------
 			// Selected Users tree
 			//------------------------------
+			vbox = new VBox(false, 0);
+			selBox.PackStart(vbox, true, true, 0);
+
+			l = new Label(Util.GS("_Users to add:"));
+			l.Xalign = 0;
+			vbox.PackStart(l, false, false, 0);
+
 			SelTreeView = new TreeView();
 			ScrolledWindow ssw = new ScrolledWindow();
 			ssw.ShadowType = Gtk.ShadowType.EtchedIn;
 			ssw.Add(SelTreeView);
-			selBox.PackStart(ssw, true, true, 0);
+			vbox.PackStart(ssw, true, true, 0);
+			ssw.WidthRequest = 200;
+			l.MnemonicWidget = SelTreeView;
 
 			// Set up the iFolder TreeView
 			SelTreeStore = new ListStore(typeof(MemberInfo));
+			SelTreeStore.SetSortFunc(
+				0,
+				new TreeIterCompareFunc(SelTreeStoreSortFunction));
+			SelTreeStore.SetSortColumnId(0, SortType.Ascending);
 			SelTreeView.Model = SelTreeStore;
+			SelTreeView.HeadersVisible = false;
 
 			// Set up Pixbuf and Text Rendering for "iFolder Users" column
-			CellRendererPixbuf smcrp = new CellRendererPixbuf();
 			TreeViewColumn selmemberColumn = new TreeViewColumn();
-			selmemberColumn.PackStart(smcrp, false);
-			selmemberColumn.SetCellDataFunc(smcrp, new TreeCellDataFunc(
-						UserCellPixbufDataFunc));
 			CellRendererText smcrt = new CellRendererText();
 			selmemberColumn.PackStart(smcrt, false);
 			selmemberColumn.SetCellDataFunc(smcrt, new TreeCellDataFunc(
 						UserCellTextDataFunc));
-			selmemberColumn.Title = Util.GS("Selected Users");
-			selmemberColumn.Resizable = true;
+			selmemberColumn.Title = Util.GS("Users to Add...");
 			SelTreeView.AppendColumn(selmemberColumn);
 			SelTreeView.Selection.Mode = SelectionMode.Multiple;
 
 			SelTreeView.Selection.Changed += new EventHandler(
 						OnSelUserSelectionChanged);
 
-//			UserPixBuf = 
-//				new Gdk.Pixbuf(Util.ImagesPath("ifolderuser.png"));
-
 			this.AddButton(Stock.Cancel, ResponseType.Cancel);
 			this.AddButton(Stock.Ok, ResponseType.Ok);
 			this.AddButton(Stock.Help, ResponseType.Help);
+			
+			SetResponseSensitive(ResponseType.Ok, false);
 
 			SearchiFolderUsers();
 		}
@@ -283,12 +316,23 @@ namespace Novell.iFolder
 
 
 
-		private void UserCellPixbufDataFunc (Gtk.TreeViewColumn tree_column,
-				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
-				Gtk.TreeIter iter)
+		private int SelTreeStoreSortFunction(TreeModel model, TreeIter a, TreeIter b)
 		{
-//			iFolderUser user = (iFolderUser) tree_model.GetValue(iter,0);
-//			((CellRendererPixbuf) cell).Pixbuf = UserPixBuf;
+			MemberInfo memberA = (MemberInfo) SelTreeStore.GetValue(a, 0);
+			MemberInfo memberB = (MemberInfo) SelTreeStore.GetValue(b, 0);
+			
+			if (memberA == null || memberB == null)
+				return 0;
+			
+			string nameA = memberA.FullName;
+			string nameB = memberB.FullName;
+			
+			if (nameA == null || nameA.Length < 1)
+				nameA = memberA.Name;
+			if (nameB == null || nameB.Length < 1)
+				nameB = memberB.Name;
+			
+			return string.Compare(nameA, nameB, true);
 		}
 
 
@@ -333,29 +377,6 @@ namespace Novell.iFolder
 
 
 
-
-		public void OnSearchAttribComboBoxChanged(object o, EventArgs args)
-		{
-			// Prevent a call to SearchCallback if a timeout call has been added
-			if (searchTimeoutID != 0)
-			{
-				GLib.Source.Remove(searchTimeoutID);
-				searchTimeoutID = 0;
-			}
-				
-//			// If there's existing text in the search entry, restart
-//			// the search with the new search type.
-//			if (SearchEntry.Text.Length > 0 && SearchEntry.Text != Util.GS("<Enter text to find a user>"))
-//			{
-				// No need to wait for the user to type anything else.
-				// Perform the search right now.
-				SearchiFolderUsers();
-//			}
-		}
-
-
-
-
 		public void OnSearchEntryChanged(object o, EventArgs args)
 		{
 			if(searchTimeoutID != 0)
@@ -363,12 +384,26 @@ namespace Novell.iFolder
 				GLib.Source.Remove(searchTimeoutID);
 				searchTimeoutID = 0;
 			}
+			
+			if (SearchEntry.Text.Length > 0)
+				CancelSearchButton.Sensitive = true;
+			else
+				CancelSearchButton.Sensitive = false;
 
 			searchTimeoutID = GLib.Timeout.Add(500, new GLib.TimeoutHandler(
 						SearchCallback));
 		}
 
 
+
+
+		private void OnCancelSearchButton(object o, EventArgs args)
+		{
+			// Set the text empty.  The Changed event handler will do the rest.
+			SearchEntry.Text = "";
+			SearchEntry.GrabFocus();
+		}
+		
 
 
 		private bool SearchCallback()
@@ -390,25 +425,10 @@ namespace Novell.iFolder
 			UserAddButton.Sensitive = false;
 			UserDelButton.Sensitive = false;
 
-			if(SearchEntry.Text.Length > 0 && SearchEntry.Text != Util.GS("<Enter text to find a user>"))
+			if(SearchEntry.Text.Length > 0)
 			{
-				int searchAttribIndex = SearchAttribComboBox.Active;
-				string searchAttribute;
-				switch(searchAttribIndex)
-				{
-					case 1:
-						searchAttribute = "Family";
-						break;
-					case 2:
-						searchAttribute = "FN";
-						break;
-					case 0:
-					default:
-						searchAttribute = "Given";
-						break;
-				}
-				
-				PerformInitialSearch(searchAttribute, SearchEntry.Text);
+				// Always search on Full Name
+				PerformInitialSearch("FN", SearchEntry.Text);
 			}
 			else
 			{
@@ -449,7 +469,7 @@ namespace Novell.iFolder
 					domainID,
 					searchAttribute,
 					SearchEntry.Text,
-					SearchType.Begins,
+					SearchType.Contains,
 					NumOfMembersToReturnDefault,
 					out searchContext,
 					out memberInfoA,
@@ -491,6 +511,8 @@ namespace Novell.iFolder
 					{
 						selectedUsers.Add(memberInfo.UserID, memberInfo);
 						SelTreeStore.AppendValues(memberInfo);
+						
+						SetResponseSensitive(ResponseType.Ok, true);
 					}
 				}
 			}
@@ -532,6 +554,9 @@ namespace Novell.iFolder
 				selectedUsers.Remove(member.UserID);
 				SelTreeStore.Remove(ref iter);
 			}
+			
+			if (SelTreeStore.IterNChildren() == 0)
+				SetResponseSensitive(ResponseType.Ok, false);
 		}
 	}
 	

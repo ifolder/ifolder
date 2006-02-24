@@ -118,6 +118,7 @@ namespace Novell.iFolder
 			CellRendererPixbuf mcrp = new CellRendererPixbuf();
 			TreeViewColumn UserColumn = new TreeViewColumn();
 			UserColumn.PackStart(mcrp, false);
+			UserColumn.Spacing = 2;
 			UserColumn.SetCellDataFunc(mcrp,
 					new TreeCellDataFunc(UserCellPixbufDataFunc));
 
@@ -308,6 +309,16 @@ namespace Novell.iFolder
 			UserSelector = new iFolderUserSelector( topLevelWindow, 
 													simws,
 													ifolder.DomainID);
+			if (!Util.RegisterModalWindow(UserSelector))
+			{
+				try
+				{
+					Util.CurrentModalWindow.Present();
+				}
+				catch{}
+				UserSelector.Destroy();
+				return;
+			}
 
 			UserSelector.Response += 
 						new ResponseHandler(OnUserSelectorResponse);
