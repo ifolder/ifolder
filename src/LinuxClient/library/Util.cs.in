@@ -169,13 +169,13 @@ Console.WriteLine("Modal window destroyed");
 		
 		public static void InitCatalog()
 		{
-			Mono.Posix.Catalog.Init("@_PACKAGE_@", "@_prefix_@/share/locale");
+			Mono.Unix.Catalog.Init("@_PACKAGE_@", "@_prefix_@/share/locale");
 		}
 
 
 		public static string GS(string msgid)
 		{
-			return Mono.Posix.Catalog.GetString(msgid);
+			return Mono.Unix.Catalog.GetString(msgid);
 		}
 
 
@@ -943,7 +943,7 @@ Console.WriteLine("The main iFolder window was NOT open when shutting down");
 		///
 		/// Function to be able to create a lightened version of a Gdk.Pixbuf.
 		///
-		[DllImport("libeel-2.so")]
+		[DllImport("libeel-2.so.2")]
 		private static extern IntPtr eel_create_spotlight_pixbuf(IntPtr src);
 		
 		public static Gdk.Pixbuf EelCreateSpotlightPixbuf(Gdk.Pixbuf src)
