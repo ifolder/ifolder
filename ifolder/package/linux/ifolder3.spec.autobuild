@@ -24,6 +24,7 @@ Autoreqprov:  on
 Requires:     simias >= 1.4
 Requires:     gtk-sharp2-complete
 Requires:     dbus-1-mono
+Requires:     eel
 Obsoletes:    %{name} <= %{version}
 Version:      3.4.@@BUILDNUM@@.1
 Release:      1
