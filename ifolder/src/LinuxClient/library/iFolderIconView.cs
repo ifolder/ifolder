@@ -48,36 +48,10 @@ namespace Novell.iFolder
 		public event iFolderClickedHandler		BackgroundClicked;
 		public event iFolderActivatedHandler	iFolderActivated;
 		
-		// FIXME: Remove this thread-checking debug code
-		// The purpose of this code is to make sure that we're not attempting to
-		// update the UI on a non-GUI thread.
-		private static object threadCheckLockObject = new object();
-		private static int CurrentThreadID = 0;
-		private static void CheckThread()
-		{
-			lock(threadCheckLockObject)
-			{
-				int newThreadID = System.Threading.Thread.CurrentThread.GetHashCode();
-				if (newThreadID != CurrentThreadID)
-				{
-					if (CurrentThreadID == 0)	// Assume that the first thread in is the GUI thread
-						CurrentThreadID = newThreadID;
-					else
-					{
-						Console.WriteLine("****** WARNING: iFolderIconView called from different thread: {0}", newThreadID);
-						Console.WriteLine("\tOld Thread: {0}", CurrentThreadID);
-						Console.WriteLine("\tNew Thread: {0}", newThreadID);
-						Console.WriteLine(Environment.StackTrace);
-					}
-				}
-			}
-		}
-		
 		public iFolderHolder		SelectedFolder
 		{
 			get
 			{
-				iFolderIconView.CheckThread();
 				return currentSelection;
 			}
 		}
@@ -86,7 +60,6 @@ namespace Novell.iFolder
 		{
 			get
 			{
-				iFolderIconView.CheckThread();
 				// FIXME: Implement iFolderIconView.Selection
 				return null;
 			}
@@ -96,7 +69,6 @@ namespace Novell.iFolder
 		
 		public iFolderIconView(Widget parentWidget)
 		{
-			iFolderIconView.CheckThread();
 			this.ModifyBg(StateType.Normal, this.Style.Base(StateType.Normal));
 			this.ModifyBase(StateType.Normal, this.Style.Base(StateType.Normal));
 			this.CanFocus = true;
@@ -142,14 +114,12 @@ namespace Novell.iFolder
 		
 		public void AddWidget(Widget w)
 		{
-			iFolderIconView.CheckThread();
 			vbox.PackStart(w, false, false, 0);
 			vbox.ShowAll();
 		}
 		
 		public void RemoveWidget(Widget w)
 		{
-			iFolderIconView.CheckThread();
 			if (w != null)
 			{
 				try
@@ -162,7 +132,6 @@ namespace Novell.iFolder
 		
 		public void AddGroup(iFolderViewGroup group)
 		{
-			iFolderIconView.CheckThread();
 			viewGroups.Add(group);
 
 			group.Selection.SelectionChanged += 
@@ -177,10 +146,8 @@ namespace Novell.iFolder
 		
 		public void RemoveGroup(iFolderViewGroup group)
 		{
-			iFolderIconView.CheckThread();
 			if (viewGroups.Contains(group))
 			{
-Console.WriteLine("\n\n***\niFolderIconView.RemoveGroup()\n");
 				viewGroups.Remove(group);
 				group.Selection.SelectionChanged -=
 					new EventHandler(SelectionChangedHandler);
@@ -190,13 +157,11 @@ Console.WriteLine("\n\n***\niFolderIconView.RemoveGroup()\n");
 		
 		private void OnWidgetRealized(object o, EventArgs args)
 		{
-			iFolderIconView.CheckThread();
-			Console.WriteLine("iFolderIconView.OnWidgetRealized");
+//			Console.WriteLine("iFolderIconView.OnWidgetRealized");
 		}
 		
 		private void OnSizeAllocated(object o, SizeAllocatedArgs args)
 		{
-			iFolderIconView.CheckThread();
 			foreach(iFolderViewGroup group in viewGroups)
 			{
 				group.OnSizeAllocated(o, args);
@@ -205,24 +170,20 @@ Console.WriteLine("\n\n***\niFolderIconView.RemoveGroup()\n");
 
 		public TreePath GetPathAtPos(int x, int y)
 		{
-			iFolderIconView.CheckThread();
 			return null;
 		}
 		
 		public bool PathIsSelected(TreePath path)
 		{
-			iFolderIconView.CheckThread();
 			return false;
 		}
 		
 		public void SelectPath(TreePath path)
 		{
-			iFolderIconView.CheckThread();
 		}
 		
 		public void UnselectAll()
 		{
-			iFolderIconView.CheckThread();
 			foreach(iFolderViewGroup group in viewGroups)
 			{
 				group.Selection.SelectionChanged -= new EventHandler(SelectionChangedHandler);
@@ -239,8 +200,7 @@ Console.WriteLine("\n\n***\niFolderIconView.RemoveGroup()\n");
 		
 		public iFolderHolder GetiFolderAtPos(int x, int y)
 		{
-			iFolderIconView.CheckThread();
-			Console.WriteLine("iFolderIconView.GetiFolderAtPos({0}, {1}", x, y);
+//			Console.WriteLine("iFolderIconView.GetiFolderAtPos({0}, {1}", x, y);
 
 			foreach(iFolderViewGroup group in viewGroups)
 			{
@@ -259,8 +219,7 @@ Console.WriteLine("\n\n***\niFolderIconView.RemoveGroup()\n");
 		
 		private void SelectionChangedHandler(object o, EventArgs args)
 		{
-			iFolderIconView.CheckThread();
-Console.WriteLine("iFolderIconView.SelectionChangedHandler()");
+//Console.WriteLine("iFolderIconView.SelectionChangedHandler()");
 			iFolderViewGroupSelection gSelect = (iFolderViewGroupSelection)o;
 			iFolderViewGroup group = gSelect.ViewGroup;
 		
@@ -296,7 +255,6 @@ Console.WriteLine("iFolderIconView.SelectionChangedHandler()");
 		///
 		protected override bool OnButtonPressEvent(Gdk.EventButton evnt)
 		{
-			iFolderIconView.CheckThread();
 			iFolderHolder holder;
 
 			this.GrabFocus();
@@ -352,7 +310,7 @@ Console.WriteLine("iFolderIconView.SelectionChangedHandler()");
 			// Control which item has keyboard focus, activating an item,
 			// providing a context menu, etc..
 	
-			Console.WriteLine("iFolderIconView.OnKeyPressEvent(): {0}", evnt.Key);
+//			Console.WriteLine("iFolderIconView.OnKeyPressEvent(): {0}", evnt.Key);
 			
 			switch(evnt.Key)
 			{

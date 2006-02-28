@@ -979,11 +979,6 @@ namespace Novell.iFolder
 			return false;	// Prevent GLib.Idle from calling this again automatically
 		}
 		
-		private void OnAddNewAccount(object o, EventArgs args)
-		{
-			Util.ShowPrefsPage(1, simiasManager);
-		}
-		
 		private void OnOpenSynchronizedFolder(object o, EventArgs args)
 		{
 			OpenSelectedFolder();
@@ -1314,14 +1309,11 @@ namespace Novell.iFolder
 		
 		private void OniFolderIconViewSelectionChanged(object o, EventArgs args)
 		{
-//			iFolderHolder holder = (iFolderHolder)o;
-Console.WriteLine("iFolderWindow.OniFolderIconViewSelectionChanged()");
 			UpdateSensitivity();
 		}
 		
 		private void OnIconViewDragMotion(object o, DragMotionArgs args)
 		{
-Console.WriteLine("iFolderWindow.OnIconViewDragMotion()");
 			Gdk.Drag.Status(args.Context, args.Context.SuggestedAction, args.Time);
 			
 			args.RetVal = true;
@@ -1329,13 +1321,11 @@ Console.WriteLine("iFolderWindow.OnIconViewDragMotion()");
 		
 		private void OnIconViewDragDrop(object o, DragDropArgs args)
 		{
-Console.WriteLine("iFolderWindow.OnIconViewDragDrop()");
 			args.RetVal = true;
 		}
 		
 		private void OnIconViewDragDataReceived(object o, DragDataReceivedArgs args)
 		{
-			Console.WriteLine("OnIconViewDragDataReceived: {0}", (DragTargetType)args.Info);
 			bool bFolderCreated = false;
 			
 			switch (args.Info)
@@ -1626,7 +1616,6 @@ Console.WriteLine("iFolderWindow.OnIconViewDragDrop()");
 		
 		private void OnDomainDeletedEvent(object sender, DomainEventArgs args)
 		{
-Console.WriteLine("iFolderWindow.DomainDeletedEvent()");
 //			RefreshiFolders(true);
 			
 //			if (domainController.GetDomains().Length == 0)
@@ -1636,7 +1625,6 @@ Console.WriteLine("iFolderWindow.DomainDeletedEvent()");
 			
 			if (serverGroups.ContainsKey(args.DomainID))
 			{
-Console.WriteLine("\tremoving the group from the iFolderIconView");
 				iFolderViewGroup group =
 					(iFolderViewGroup)serverGroups[args.DomainID];
 				iFoldersIconView.RemoveGroup(group);
@@ -1647,7 +1635,6 @@ Console.WriteLine("\tremoving the group from the iFolderIconView");
 			
 			if (serverGroupFilters.ContainsKey(args.DomainID))
 			{
-Console.WriteLine("\tremoving the group from the serverGroupFilters Hashtable");
 				serverGroupFilters.Remove(args.DomainID);
 			}
 
@@ -1837,7 +1824,6 @@ Console.WriteLine("\tremoving the group from the serverGroupFilters Hashtable");
 		
 		private void AddServerGroup(string domainID)
 		{
-Console.WriteLine("iFolderWindow.AddServerGroup(DomainID: {0})", domainID);
 			// Don't add it if it already exists
 			if (serverGroups.ContainsKey(domainID)) return;
 		
@@ -2777,7 +2763,7 @@ public class UriList : ArrayList {
 
 				if (i.EndsWith ("\r")) {
 					s = i.Substring (0, i.Length - 1);
-					Console.WriteLine ("uri = {0}", s);
+//					Console.WriteLine ("uri = {0}", s);
 				}
 				
 				try {

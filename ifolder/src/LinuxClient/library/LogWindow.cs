@@ -50,7 +50,7 @@ namespace Novell.iFolder
 		private ToolButton			SaveButton;
 		private ToolButton			ClearButton;
 		private bool				ControlKeyPressed;
-		private Manager				simiasManager;
+//		private Manager				simiasManager;
 		
 
 		/// <summary>
@@ -59,7 +59,7 @@ namespace Novell.iFolder
 		public LogWindow(Manager simiasManager)
 			: base (Util.GS("iFolder Synchronization Log"))
 		{
-			this.simiasManager = simiasManager;
+//			this.simiasManager = simiasManager;
 
 			CreateWidgets();
 

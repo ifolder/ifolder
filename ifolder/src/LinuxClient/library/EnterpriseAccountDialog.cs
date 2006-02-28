@@ -35,7 +35,7 @@ namespace Novell.iFolder
 	{
 		private iFolderData			ifdata;
 		private DomainController	domainController;
-		private Manager				simiasManager;
+//		private Manager				simiasManager;
 		
 		private bool				ControlKeyPressed;
 		
@@ -71,7 +71,7 @@ namespace Novell.iFolder
 			: base(parent, curDomain)
 		{
 			ifdata = iFolderData.GetData();
-			this.simiasManager = Util.GetSimiasManager();
+//			this.simiasManager = Util.GetSimiasManager();
 			
 			domainController = DomainController.GetDomainController();
 			
