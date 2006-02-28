@@ -233,6 +233,31 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "iFoldersListView.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "iFoldersListView.resx"
+                    DependentUpon = "iFoldersListView.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "ItemSelectedEventArgs.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NoiFolderMessage.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NoiFolderMessage.resx"
+                    DependentUpon = "NoiFolderMessage.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Preferences.cs"
                     SubType = "Form"
                     BuildAction = "Compile"

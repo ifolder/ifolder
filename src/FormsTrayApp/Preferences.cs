@@ -1,7 +1,7 @@
 /***********************************************************************
  *  $RCSfile$
  *
- *  Copyright (C) 2004 Novell, Inc.
+ *  Copyright (C) 2004-2006 Novell, Inc.
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public
@@ -1401,7 +1401,10 @@ namespace Novell.FormsTrayApp
 					ServerInfo serverInfo = new ServerInfo( simiasManager, domain.DomainInfo, connecting.Password );
 					serverInfo.ShowDialog();
 					result = serverInfo.DomainInfo.Authenticated;
+					serverInfo.Dispose();
 				}
+
+				connecting.Dispose();
 			}
 
 			if ( result )
@@ -1496,6 +1499,7 @@ namespace Novell.FormsTrayApp
 
 						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("saveSyncError"), resourceManager.GetString("PreferencesErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 						mmb.ShowDialog();
+						mmb.Dispose();
 					}
 				}
 			}
@@ -1505,6 +1509,7 @@ namespace Novell.FormsTrayApp
 
 				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readSyncError"), resourceManager.GetString("PreferencesErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
+				mmb.Dispose();
 			}
 
 			Cursor.Current = Cursors.Default;
@@ -1684,6 +1689,7 @@ namespace Novell.FormsTrayApp
 				{
 					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readAccountsError"), resourceManager.GetString("accountErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
+					mmb.Dispose();
 				}
 
 				apply.Enabled = false;
@@ -1711,6 +1717,7 @@ namespace Novell.FormsTrayApp
 				{
 					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readSyncError"), resourceManager.GetString("PreferencesErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
+					mmb.Dispose();
 				}
 
 				Activate();
@@ -1902,6 +1909,8 @@ namespace Novell.FormsTrayApp
 					DisplayiFolderDialog( this, new EventArgs() );
 				}
 			}
+
+			accountWizard.Dispose();
 		}
 
 		private void removeAccount_Click(object sender, System.EventArgs e)
@@ -1962,8 +1971,11 @@ namespace Novell.FormsTrayApp
 					{
 						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("removeAccountError"), resourceManager.GetString("accountErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 						mmb.ShowDialog();
+						mmb.Dispose();
 					}
 				}
+
+				removeAccount.Dispose();
 			}
 		}
 
@@ -2046,6 +2058,8 @@ namespace Novell.FormsTrayApp
 						}
 					}
 				}
+
+				serverDetails.Dispose();
 			}
 		}
 

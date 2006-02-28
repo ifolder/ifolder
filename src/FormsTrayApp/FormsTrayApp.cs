@@ -569,7 +569,7 @@ namespace Novell.FormsTrayApp
 									preferences.AddDomainToList(dw);
 								}
 
-								globalProperties.AddDomainToList(dw);
+								BeginInvoke( globalProperties.addDomainToListDelegate, new object[] {dw} );
 
 								// Set the proxy for this domain.
 								preferences.SetProxyForDomain( dw.HostUrl, false );
@@ -687,7 +687,7 @@ namespace Novell.FormsTrayApp
 
 		private void serverInfo_EnterpriseConnect(object sender, DomainConnectEventArgs e)
 		{
-			globalProperties.AddDomainToList(e.DomainInfo);
+			BeginInvoke( globalProperties.addDomainToListDelegate, new object[] {e.DomainInfo} );
 		}
 
 		private void globalProperties_RemoveDomain(object sender, DomainRemoveEventArgs e)
@@ -697,7 +697,7 @@ namespace Novell.FormsTrayApp
 
 		private void preferences_EnterpriseConnect(object sender, DomainConnectEventArgs e)
 		{
-			globalProperties.AddDomainToList(e.DomainInfo);
+			BeginInvoke( globalProperties.addDomainToListDelegate, new object[] {e.DomainInfo} );
 		}
 
 		private void preferences_RemoveDomain(object sender, DomainRemoveEventArgs e)
