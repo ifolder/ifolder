@@ -137,7 +137,6 @@ namespace Novell.iFolder.DomainProvider
 					foreach(IDomainProviderUI provider in providers)
 					{
 						registeredProviders[provider.ID] = provider;
-Console.WriteLine("DomainProviderUI: Added {0}", provider.Name);
 					}
 				}
 			}

@@ -758,8 +758,6 @@ namespace Novell.iFolder
 		{
 			args.RetVal = true;
 			
-			Console.WriteLine(args.Event.Key);
-			
 			// Advance to the next page if the user presses return
 			switch(args.Event.Key)
 			{
