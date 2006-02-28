@@ -204,6 +204,7 @@ namespace Novell.iFolder
 						 1,2, 0,1,
 						 AttachOptions.Expand | AttachOptions.Fill,
 						 0,0,0);
+			l.UseUnderline = false;
 			l.Xalign = 0;
 			
 			///
@@ -222,6 +223,7 @@ namespace Novell.iFolder
 						 1,2, 1,2,
 						 AttachOptions.Shrink | AttachOptions.Fill,
 						 0,0,0);
+			l.UseUnderline = false;
 			l.MnemonicWidget = ServerAddressEntry;
 			
 			///
@@ -248,7 +250,7 @@ namespace Novell.iFolder
 						 AttachOptions.Expand | AttachOptions.Fill,
 						 0,0,0);
 			sw.ShadowType = Gtk.ShadowType.EtchedIn;
-			TextView ServerDescriptionTextView = new TextView();
+			ServerDescriptionTextView = new TextView();
 			if(domain.Description != null)
 				ServerDescriptionTextView.Buffer.Text = domain.Description;
 			ServerDescriptionTextView.WrapMode = Gtk.WrapMode.Word;
@@ -287,6 +289,7 @@ namespace Novell.iFolder
 						 1,2, 0,1,
 						 AttachOptions.Expand | AttachOptions.Fill,
 						 0,0,0);
+			l.UseUnderline = false;
 			l.Xalign = 0;
 			
 			///
