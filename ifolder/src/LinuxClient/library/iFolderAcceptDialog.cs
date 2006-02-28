@@ -30,9 +30,7 @@ namespace Novell.iFolder
 {
 	public class iFolderAcceptDialog : FileChooserDialog
 	{
-		private iFolderWeb	ifolder;
 		private string	initialPath;
-		private Entry		nameEntry;
 		
 		public new string Path
 		{
@@ -49,7 +47,6 @@ namespace Novell.iFolder
 				string.Format(Util.GS("Download \"{0}\" to..."), ifolder.Name);
         	this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png"));
 
-        	this.ifolder = ifolder;
         	this.initialPath = initialPath;
 
         	this.SelectMultiple = false;

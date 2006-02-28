@@ -6,8 +6,10 @@ iFolderClient_CSFILES_CSC := $(subst /,$(SEP),$(iFolderClient_CSFILES))
 iFolderClient_INCLUDES =
 iFolderClient_RESOURCES =
 iFolderClient_FLAGS = $(CSC_EXEFLAG)
-iFolderClient_LIBS = System.dll System.Drawing.dll System.Data.dll Novell.iFolder.dll TrayIcon.dll Novell.iFolder.UI.gtk.dll Mono.Posix.dll NetworkManager-sharp.dll
-iFolderClient_LIBPATH = $(srcdir)/../../TrayIcon $(srcdir)/../../iFolder $(srcdir)/../library $(srcdir)/../NetworkManager-sharp
+iFolderClient_LIBS = System.dll System.Drawing.dll System.Data.dll Novell.iFolder.dll TrayIcon.dll Novell.iFolder.UI.gtk.dll Mono.Posix.dll
+iFolderClient_LIBPATH = $(srcdir)/../../TrayIcon $(srcdir)/../../iFolder $(srcdir)/../library
+#iFolderClient_LIBS = System.dll System.Drawing.dll System.Data.dll Novell.iFolder.dll TrayIcon.dll Novell.iFolder.UI.gtk.dll Mono.Posix.dll NetworkManager-sharp.dll
+#iFolderClient_LIBPATH = $(srcdir)/../../TrayIcon $(srcdir)/../../iFolder $(srcdir)/../library $(srcdir)/../NetworkManager-sharp
 
 EXTRA_DIST = $(iFolderClient_CSFILES) ifolder.in ifolder.desktop.in
 
@@ -28,7 +30,9 @@ endif
 all: iFolderClient.exe ifolder ifolder.desktop
 
 iFolderClient.exe: $(iFolderClient_CSFILES) $(iFolderClient_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(SIMIAS_CLIENT_LIBS) $(iFolderClient_FLAGS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(DBUS_SHARP_LIBS) $(iFolderClient_LIBS:%=/r:%) $(iFolderClient_LIBPATH:%=/lib:%) $(iFolderClient_RESOURCES:%=$(ICON_FLAG)%) $(iFolderClient_CSFILES_CSC) $(DOC_FILE_CMD)
+	$(CSC) /out:$@ $(CSCFLAGS) $(SIMIAS_CLIENT_LIBS) $(iFolderClient_FLAGS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(iFolderClient_LIBS:%=/r:%) $(iFolderClient_LIBPATH:%=/lib:%) $(iFolderClient_RESOURCES:%=$(ICON_FLAG)%) $(iFolderClient_CSFILES_CSC) $(DOC_FILE_CMD)
+
+# 	$(CSC) /out:$@ $(CSCFLAGS) $(SIMIAS_CLIENT_LIBS) $(iFolderClient_FLAGS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(DBUS_SHARP_LIBS) $(iFolderClient_LIBS:%=/r:%) $(iFolderClient_LIBPATH:%=/lib:%) $(iFolderClient_RESOURCES:%=$(ICON_FLAG)%) $(iFolderClient_CSFILES_CSC) $(DOC_FILE_CMD)
 
 install-exec-local: all
 	$(mkinstalldirs) $(DESTDIR)$(bindir) $(DESTDIR)$(datadir)/applications

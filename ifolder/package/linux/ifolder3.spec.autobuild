@@ -9,9 +9,9 @@
 #
 
 # norootforbuild
-# neededforbuild  cairo cairo-devel compat-libstdc++ gdk-pixbuf glitz-devel gnome2-devel-packages gtk-sharp2 gtk2 gtk2-devel libpng-devel mono-core mono-data mono-devel mono-web pango pango-devel dbus-1-mono log4net simias 
+# neededforbuild  cairo cairo-devel compat-libstdc++ gdk-pixbuf glitz-devel gnome2-devel-packages gtk-sharp2 gtk2 gtk2-devel libpng-devel mono-core mono-data mono-devel mono-web pango pango-devel log4net simias 
 
-BuildRequires: aspell-en compat-libstdc++ dbus-1-mono gdk-pixbuf gnutls-devel gtk-sharp2-complete libglade2-devel libgnomeprintui-devel libgnomeui-devel libwnck-devel mDNSResponder log4net simias
+BuildRequires: aspell-en compat-libstdc++ gdk-pixbuf gnutls-devel gtk-sharp2-complete libglade2-devel libgnomeprintui-devel libgnomeui-devel libwnck-devel mDNSResponder log4net simias
 
 Name:         ifolder3
 %define buildnum @@BUILDNUM@@
@@ -23,7 +23,6 @@ Group:        System/GUI/Other
 Autoreqprov:  on
 Requires:     simias >= 1.4
 Requires:     gtk-sharp2-complete
-Requires:     dbus-1-mono
 Requires:     eel
 Obsoletes:    %{name} <= %{version}
 Version:      3.4.@@BUILDNUM@@.1
@@ -99,6 +98,9 @@ opt/gnome/bin/gconftool-2 --makefile-uninstall-rule \
 /usr/share/applications/ifolder.desktop
 
 %changelog -n ifolder3
+* Tue Feb 28 2006 - btimothy@novell.com
+- removed dbus-1-mono as a requirement.  dbus support
+- may be re-added in post 3.4.
 * Thu Feb 09 2006 - btimothy@novell.com
 - added lines to install ifolder3.schemas (for GConf)
 * Wed Jan 25 2006 - mls@suse.de
