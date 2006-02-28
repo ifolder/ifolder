@@ -501,9 +501,9 @@ case $IFOLDER_OS in
 		AC_SUBST(GCONF_SHARP_PREFIX)
 		AC_SUBST(GCONF_SHARP_LIBS)
 		
-		PKG_CHECK_MODULES(DBUS_SHARP, dbus-sharp > $DBUS_SHARP_MINIMUM_VERSION)
-		AC_SUBST(DBUS_SHARP_CFLAGS)
-		AC_SUBST(DBUS_SHARP_LIBS)
+#		PKG_CHECK_MODULES(DBUS_SHARP, dbus-sharp > $DBUS_SHARP_MINIMUM_VERSION)
+#		AC_SUBST(DBUS_SHARP_CFLAGS)
+#		AC_SUBST(DBUS_SHARP_LIBS)
         
     ;;
     darwin)
@@ -523,7 +523,6 @@ Makefile
 src/Makefile
 src/iFolder/Makefile
 src/LinuxClient/Makefile
-src/LinuxClient/NetworkManager-sharp/Makefile
 src/LinuxClient/library/Makefile
 src/LinuxClient/application/Makefile
 src/LinuxClient/bonjour-ui/Makefile
@@ -552,3 +551,4 @@ po/Makefile
 
 # src/LinuxClient/po/Makefile
 # src/LinuxClient/po/POTFILES
+#src/LinuxClient/NetworkManager-sharp/Makefile
