@@ -70,36 +70,10 @@ namespace Novell.iFolder
 		
 		private bool						alreadyDisposed;
 
-		// FIXME: Remove this thread-checking debug code
-		// The purpose of this code is to make sure that we're not attempting to
-		// update the UI on a non-GUI thread.
-		private static object threadCheckLockObject = new object();
-		private static int CurrentThreadID = 0;
-		private static void CheckThread()
-		{
-			lock(threadCheckLockObject)
-			{
-				int newThreadID = System.Threading.Thread.CurrentThread.GetHashCode();
-				if (newThreadID != CurrentThreadID)
-				{
-					if (CurrentThreadID == 0)	// Assume that the first thread in is the GUI thread
-						CurrentThreadID = newThreadID;
-					else
-					{
-						Console.WriteLine("****** WARNING: iFolderViewGroup called from different thread: {0}", newThreadID);
-						Console.WriteLine("\tOld Thread: {0}", CurrentThreadID);
-						Console.WriteLine("\tNew Thread: {0}", newThreadID);
-						Console.WriteLine(Environment.StackTrace);
-					}
-				}
-			}
-		}
-		
 		public new string Name
 		{
 			get
 			{
-				iFolderViewGroup.CheckThread();
 				return name;
 			}
 		}
@@ -108,7 +82,6 @@ namespace Novell.iFolder
 		{
 			get
 			{
-				iFolderViewGroup.CheckThread();
 				return model;
 			}
 		}
@@ -117,12 +90,10 @@ namespace Novell.iFolder
 		{
 			get
 			{
-				iFolderViewGroup.CheckThread();
 				return bVisibleWhenEmpty;
 			}
 			set
 			{
-				iFolderViewGroup.CheckThread();
 				bVisibleWhenEmpty = value;
 				
 				UpdateVisibility();
@@ -144,7 +115,6 @@ namespace Novell.iFolder
 		{
 			get
 			{
-				iFolderViewGroup.CheckThread();
 				return emptyWidget;
 			}
 			set
@@ -191,7 +161,6 @@ namespace Novell.iFolder
 		{
 			get
 			{
-				iFolderViewGroup.CheckThread();
 				return selection;
 			}
 		}
@@ -200,7 +169,6 @@ namespace Novell.iFolder
 		{
 			get
 			{
-				iFolderViewGroup.CheckThread();
 				int i = 0;
 				iFolderViewItem[] itemsA = new iFolderViewItem[items.Count];
 				foreach(iFolderViewItem item in items.Values)
@@ -216,7 +184,6 @@ namespace Novell.iFolder
 	
 		public iFolderViewGroup(string name, TreeModelFilter model, Entry searchEntry)
 		{
-			iFolderViewGroup.CheckThread();
 			this.name = name;
 			this.model = model;
 			this.searchEntry = searchEntry;
@@ -248,13 +215,11 @@ namespace Novell.iFolder
 		
 		~iFolderViewGroup()
 		{
-Console.WriteLine("\n\n***\nDestructor:iFolderViewGroup\n");
 			Dispose(true);
 		}
 		
 		private void Dispose(bool calledFromFinalizer)
 		{
-Console.WriteLine("\n\n***\niFolderViewGroup.Dispose({0})\n***\n\n", calledFromFinalizer);
 			try
 			{
 				if (!alreadyDisposed)
@@ -308,8 +273,6 @@ Console.WriteLine("\n\n***\niFolderViewGroup.Dispose({0})\n***\n\n", calledFromF
 		
 		private Widget CreateWidgets()
 		{
-			iFolderViewGroup.CheckThread();
-			
 			contentVBox = new VBox(false, 0);
 			contentVBox.BorderWidth = 12;
 			
@@ -378,7 +341,6 @@ Console.WriteLine("\n\n***\niFolderViewGroup.Dispose({0})\n***\n\n", calledFromF
 		
 		public void OnSizeAllocated(object o, SizeAllocatedArgs args)
 		{
-			iFolderViewGroup.CheckThread();
 			if (currentWidth != args.Allocation.Width)
 			{
 				// Don't delay the rebuild the first time up
@@ -404,21 +366,12 @@ Console.WriteLine("\n\n***\niFolderViewGroup.Dispose({0})\n***\n\n", calledFromF
 		
 		public iFolderHolder GetiFolderAtPos(int x, int y)
 		{
-			iFolderViewGroup.CheckThread();
-			Console.WriteLine("iFolderViewGroup.GetiFolderAtPos({0}, {1}", x, y);
-
 			// Iterate through the items and figure out if x,y are inside
 			// the bounds of the item.  If not, return null.  If so, return
 			// that item's iFolderHolder.
 			foreach(iFolderViewItem item in items.Values)
 			{
 				Gdk.Rectangle allocation = item.Allocation;
-				Console.WriteLine("Item {0}: x={1}, y={2}, w={3}, h={4}",
-								  item.Holder.iFolder.Name,
-								  allocation.X,
-								  allocation.Y,
-								  allocation.Width,
-								  allocation.Height);
 
 				int xLowerBound = allocation.X;
 				int xUpperBound = allocation.X + allocation.Width;
@@ -439,13 +392,11 @@ Console.WriteLine("\n\n***\niFolderViewGroup.Dispose({0})\n***\n\n", calledFromF
 		
 		private void OnWidgetRealized(object o, EventArgs args)
 		{
-			iFolderViewGroup.CheckThread();
 			UpdateVisibility();
 		}
 		
 		private void UpdateVisibility()
 		{
-			iFolderViewGroup.CheckThread();
 			bool bCurrentlyEmpty = model.IterNChildren() > 0 ?
 										false :
 										true;
@@ -492,17 +443,13 @@ Console.WriteLine("\n\n***\niFolderViewGroup.Dispose({0})\n***\n\n", calledFromF
 		
 		private void ResizeTable()
 		{
-			iFolderViewGroup.CheckThread();
-Console.WriteLine("iFolderViewGroup.ResizeTable({0})", name);
 			int numOfItems = model.IterNChildren();
-Console.WriteLine("\tNum of Items: {0}", numOfItems);
 
 			if (numOfItems > 0)
 			{
 				int availableWidth = currentWidth
 									 - (int)(contentVBox.BorderWidth * 2)
 									 - (int)(table.BorderWidth * 2);
-Console.WriteLine("\tWidth Available: {0}", availableWidth);
 				int numOfColumns = availableWidth / ItemMaxWidth;
 				if (numOfColumns < 1)
 					numOfColumns = 1;	// Force at least one column
@@ -513,7 +460,6 @@ Console.WriteLine("\tWidth Available: {0}", availableWidth);
 				// Only resize the table if the number of columns is different
 				if (!bFirstTableBuild && numOfColumns == (int)table.NColumns)
 				{
-Console.WriteLine("\tNumber of columns hasn't changed: {0}", numOfColumns);
 					return;
 				}
 				else
@@ -525,17 +471,14 @@ Console.WriteLine("\tNumber of columns hasn't changed: {0}", numOfColumns);
 		
 		public void RebuildTable()
 		{
-			iFolderViewGroup.CheckThread();
-Console.WriteLine("iFolderViewGroup.RebuildTable({0})", name);
 			int numOfItems = model.IterNChildren();
-Console.WriteLine("\tNum of Items: {0}", numOfItems);
 
 			if (numOfItems > 0)
 			{
 				int availableWidth = currentWidth
 									 - (int)(contentVBox.BorderWidth * 2)
 									 - (int)(table.BorderWidth * 2);
-Console.WriteLine("\tWidth Available: {0}", availableWidth);
+
 				int numOfColumns = availableWidth / ItemMaxWidth;
 				if (numOfColumns < 1)
 					numOfColumns = 1;	// Force at least one column
@@ -555,8 +498,6 @@ Console.WriteLine("\tWidth Available: {0}", availableWidth);
 					table.Remove(w);
 					w.Destroy();
 				}
-
-Console.WriteLine("\tResizing table to {0} rows and {1} columns", numOfRows, numOfColumns);
 
 				table.Resize((uint)numOfRows, (uint)numOfColumns);
 	
@@ -612,27 +553,18 @@ Console.WriteLine("\tResizing table to {0} rows and {1} columns", numOfRows, num
 		
 		private void OnRowChanged(object o, RowChangedArgs args)
 		{
-			iFolderViewGroup.CheckThread();
 			if (args == null || args.Path == null) return;  // prevent a null pointer exception
 			iFolderViewItem item = (iFolderViewItem)items[args.Path.ToString()];
 			if (item != null)
 			{
-Console.WriteLine("iFolderViewGroup.OnRowChanged: {0}", item.Holder.iFolder.Name);
 				item.Refresh();
-Console.WriteLine("iFolderViewGroup.OnRowChanged: {0} exiting", item.Holder.iFolder.Name);
 			}
 		}
 		
 		private void OnRowDeleted(object o, RowDeletedArgs args)
 		{
-			iFolderViewGroup.CheckThread();
 			if (args == null || args.Path == null) return;  // prevent a null pointer exception
-			iFolderViewItem item = (iFolderViewItem)items[args.Path.ToString()];
-			if (item != null)
-			{
-Console.WriteLine("iFolderViewGroup.OnRowDeleted: {0}", item.Holder.iFolder.Name);
-//				items.Remove(args.Path.ToString());
-			}
+//			iFolderViewItem item = (iFolderViewItem)items[args.Path.ToString()];
 
 			if (rebuildTableTimeoutID != 0)
 			{
@@ -648,24 +580,9 @@ Console.WriteLine("iFolderViewGroup.OnRowDeleted: {0}", item.Holder.iFolder.Name
 		
 		private void OnRowInserted(object o, RowInsertedArgs args)
 		{
-			iFolderViewGroup.CheckThread();
 			if (args == null) return;  // prevent a null pointer exception
-Console.WriteLine("iFolderViewGroup.OnRowInserted...");
-			iFolderHolder ifHolder = (iFolderHolder)model.GetValue(args.Iter, 0);
-			if (ifHolder != null)
-			{
-Console.WriteLine("iFolderViewGroup.OnRowInserted: {0}", ifHolder.iFolder.Name);
-//				iFolderViewItem item = new iFolderViewItem(ifHolder, this, args.Iter, ItemMaxWidth);
-//				items[args.Path.ToString()] = item;
 
-				// Register for the click events
-//				item.LeftClicked +=
-//					new EventHandler(OnItemLeftClicked);
-//				item.RightClicked +=
-//					new EventHandler(OnItemRightClicked);
-//				item.DoubleClicked +=
-//					new EventHandler(OnItemDoubleClicked);
-			}
+//			iFolderHolder ifHolder = (iFolderHolder)model.GetValue(args.Iter, 0);
 
 			if (rebuildTableTimeoutID != 0)
 			{
@@ -681,35 +598,30 @@ Console.WriteLine("iFolderViewGroup.OnRowInserted: {0}", ifHolder.iFolder.Name);
 
 		private bool ResizeTableCallback()
 		{
-			iFolderViewGroup.CheckThread();
 			ResizeTable();
 			return false;
 		}
 		
 		private bool RebuildTableCallback()
 		{
-			iFolderViewGroup.CheckThread();
 			RebuildTable();
 			return false;
 		}
 		
 		private void OnItemLeftClicked(object o, EventArgs args)
 		{
-			iFolderViewGroup.CheckThread();
 			iFolderViewItem item = (iFolderViewItem)o;
 			selection.SelectItem(item);
 		}
 		
 		private void OnItemRightClicked(object o, EventArgs args)
 		{
-			iFolderViewGroup.CheckThread();
 			iFolderViewItem item = (iFolderViewItem)o;
 			selection.SelectItem(item);
 		}
 		
 		private void OnItemDoubleClicked(object o, EventArgs args)
 		{
-			iFolderViewGroup.CheckThread();
 		}
 	}
 	
@@ -740,7 +652,6 @@ Console.WriteLine("iFolderViewGroup.OnRowInserted: {0}", ifHolder.iFolder.Name);
 		
 		public iFolderViewGroupSelection(iFolderViewGroup group) : base()
 		{
-Console.WriteLine("iFolderViewGroupSelection.iFolderViewGroupSelection");
 			this.group = group;
 			
 			// Set up the defaults
@@ -749,7 +660,6 @@ Console.WriteLine("iFolderViewGroupSelection.iFolderViewGroupSelection");
 		
 		public int CountSelectedRows()
 		{
-Console.WriteLine("iFolderViewGroupSelection.CountSelectedRows");
 			int count = 0;
 			
 			foreach(iFolderViewItem item in group.Items)
@@ -763,7 +673,6 @@ Console.WriteLine("iFolderViewGroupSelection.CountSelectedRows");
 		
 		public iFolderViewItem[] GetSelectedItems()
 		{
-Console.WriteLine("iFolderViewGroupSelection.GetSelectedItems");
 			ArrayList arrayList = new ArrayList();
 			foreach(iFolderViewItem item in group.Items)
 			{
@@ -781,7 +690,6 @@ Console.WriteLine("iFolderViewGroupSelection.GetSelectedItems");
 		
 		public void SelectAll()
 		{
-Console.WriteLine("iFolderViewGroupSelection.SelectAll");
 			bool bSelectionChanged = false;
 
 			foreach(iFolderViewItem item in group.Items)
@@ -799,12 +707,10 @@ Console.WriteLine("iFolderViewGroupSelection.SelectAll");
 		
 		public void UnselectAll()
 		{
-Console.WriteLine("iFolderViewGroupSelection.UnselectAll");
 			bool bSelectionChanged = false;
 
 			foreach(iFolderViewItem item in group.Items)
 			{
-Console.WriteLine("\t{0}", item.Holder.iFolder.Name);
 				if (item.Selected)
 				{
 					item.Selected = false;
@@ -814,7 +720,6 @@ Console.WriteLine("\t{0}", item.Holder.iFolder.Name);
 			
 			if (bSelectionChanged && SelectionChanged != null)
 				SelectionChanged(this, EventArgs.Empty);
-Console.WriteLine("\tUnselectAll returning");
 		}
 		
 		public void SelectItem(iFolderViewItem item)
@@ -841,7 +746,6 @@ Console.WriteLine("\tUnselectAll returning");
 		
 		public bool GetSelected(out iFolderViewItem itemOut)
 		{
-Console.WriteLine("iFolderViewGroupSelection.GetSelected");
 			itemOut = null;
 
 			// Look for the first selection
@@ -859,7 +763,6 @@ Console.WriteLine("iFolderViewGroupSelection.GetSelected");
 		
 		public bool GetSelected(out TreeModel modelOut, out iFolderViewItem itemOut)
 		{
-Console.WriteLine("iFolderViewGroupSelection.GetSelected2");
 			modelOut = group.Model;
 			
 			return GetSelected(out itemOut);

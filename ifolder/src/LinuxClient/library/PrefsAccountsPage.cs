@@ -583,7 +583,6 @@ namespace Novell.iFolder
 		
 		private void OnDomainLoginCompleted(object o, DomainLoginCompletedArgs args)
 		{
-Console.WriteLine("PrefsAccountPage.OnDomainLoginCompleted");
 			if (WaitDialog != null)
 			{
 				WaitDialog.Hide();
