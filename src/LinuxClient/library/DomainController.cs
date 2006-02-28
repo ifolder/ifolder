@@ -77,11 +77,6 @@ namespace Novell.iFolder.Controller
 		
 		private DomainController()
 		{
-Console.WriteLine("=====> DomainController being constructed! <=====");
-Console.WriteLine("=====> DomainController HashCode: {0} <=====", this.GetHashCode());
-Console.WriteLine("Current Thread: {0}", System.Threading.Thread.CurrentThread.GetHashCode());
-Console.WriteLine("Stack Trace:");
-Console.WriteLine(Environment.StackTrace);
 			this.simiasManager = Util.GetSimiasManager();
 			string localServiceUrl = simiasManager.WebServiceUri.ToString();
 			try
@@ -262,7 +257,6 @@ Console.WriteLine(Environment.StackTrace);
 		/// </summary>
 		public DomainInformation GetDomain(string domainID)
 		{
-Console.WriteLine("DomainController.GetDomain(\"{0}\")", domainID);
 			lock(typeof(DomainController))
 			{
 				if (keyedDomains.Contains(domainID))
@@ -676,7 +670,6 @@ Console.WriteLine("DomainController.GetDomain(\"{0}\")", domainID);
 
 		private void RemoveDomainFromHashtable(string domainID)
 		{
-Console.WriteLine("DomainController.RemoveDomainFromHashtable({0})", domainID);
 			lock (typeof(DomainController) )
 			{
 				if(keyedDomains.ContainsKey(domainID))
@@ -684,13 +677,11 @@ Console.WriteLine("DomainController.RemoveDomainFromHashtable({0})", domainID);
 					DomainInformation dom = (DomainInformation)keyedDomains[domainID];
 					keyedDomains.Remove(domainID);
 
-Console.WriteLine("\tJust removed the domain");
 					// If the domain we just removed was the default, ask
 					// simias for the new default domain (if any domains still
 					// exist).
 					if (dom.IsDefault)
 					{
-Console.WriteLine("\tthe removed domain was the default...setting new default");
 						try
 						{
 							string newDefaultDomainID = simws.GetDefaultDomainID();
@@ -726,7 +717,6 @@ Console.WriteLine("\tthe removed domain was the default...setting new default");
 					}
 					else
 					{
-Console.WriteLine("\tthe removed domain was NOT the default");
 					}
 				}
 			}
@@ -737,7 +727,6 @@ Console.WriteLine("\tthe removed domain was NOT the default");
 		///
 		private void OnDomainUpEvent(object o, DomainEventArgs args)
 		{
-Console.WriteLine("DomainController.OnDomainUpEvent()");
 			// Nofity DomainUpEventHandlers
 			if (DomainUp != null)
 				DomainUp(this, args);
@@ -753,18 +742,8 @@ Console.WriteLine("DomainController.OnDomainUpEvent()");
 		
 		private void OnDomainLoginCompleted(object o, DomainLoginCompletedArgs args)
 		{
-Console.WriteLine("DomainController.OnDomainLoginCompleted()");
 			string domainID = args.DomainID;
 			Status authStatus = args.AuthenticationStatus;
-
-if (authStatus == null)
-{
-	Console.WriteLine("DomainController.OnDomainLoginCompleted: authStatus is null!");
-}
-else
-{
-	Console.WriteLine("DomainController.OnDomainLoginCompleted: authStatus: {0}", authStatus.statusCode);
-}
 
 			if (authStatus != null &&
 				((authStatus.statusCode == StatusCodes.Success) ||
@@ -782,7 +761,6 @@ else
 		
 		private void HandleDomainLoggedIn(string domainID, Status status)
 		{
-Console.WriteLine("DomainController.HandleDomainLoggedIn()");
 			// Update our cache of the DomainInformation object
 			try
 			{
@@ -942,7 +920,6 @@ Console.WriteLine("DomainController.HandleDomainLoggedIn()");
 		[GLib.ConnectBefore]
 		private void OnDomainAddedEvent(object o, DomainEventArgs args)
 		{
-Console.WriteLine("DomainController.OnDomainAddedEvent()");
 			lock (typeof(DomainController) )
 			{
 				DomainInformation domain = (DomainInformation)keyedDomains[args.DomainID];
@@ -975,7 +952,6 @@ Console.WriteLine("DomainController.OnDomainAddedEvent()");
 		[GLib.ConnectBefore]
 		private void OnDomainDeletedEvent(object o, DomainEventArgs args)
 		{
-Console.WriteLine("DomainController.OnDomainDeletedEvent()");
 			lock (typeof(DomainController) )
 			{
 				DomainInformation domain = (DomainInformation)keyedDomains[args.DomainID];
@@ -1244,12 +1220,10 @@ Console.WriteLine("DomainController.OnDomainDeletedEvent()");
 		
 		private void LoginThreadWithArgs()
 		{
-Console.WriteLine("DomainController.LoginThread()");
 			try
 			{
 				authStatus = domainController.AuthenticateDomain(
 					domainID, password, bSavePassword);
-Console.WriteLine("\tDone logging in");
 			}
 			catch(Exception e)
 			{
@@ -1267,7 +1241,6 @@ Console.WriteLine("\tDone logging in");
 		
 		private void LoginCompleted()
 		{
-Console.WriteLine("DomainController.LoginCompleted()");
 			if (Completed != null)
 				Completed(this, new DomainLoginCompletedArgs(domainID, authStatus));
 		}
@@ -1278,13 +1251,11 @@ Console.WriteLine("DomainController.LoginCompleted()");
 			
 			public LoginThreadCompletedHandler(DomainLoginThread thread)
 			{
-Console.WriteLine("LoginThreadCompletedHandler()");
 				this.thread = thread;
 			}
 			
 			public bool IdleHandler()
 			{
-Console.WriteLine("LoginThreadCompletedHandler.IdleHandler()");
 				thread.LoginCompleted();
 				
 				return false;

@@ -126,12 +126,12 @@ namespace Novell.iFolder.Controller
 		
 		private void OnDomainLoggedInEvent(object sender, DomainEventArgs args)
 		{
-Console.WriteLine("iFolderController.OnDomainLoggedInEvent() entered");
+//Console.WriteLine("iFolderController.OnDomainLoggedInEvent() entered");
 		}
 
 		private void OnDomainLoggedOutEvent(object sender, DomainEventArgs args)
 		{
-Console.WriteLine("iFolderController.OnDomainLoggedOutEvent() entered");
+//Console.WriteLine("iFolderController.OnDomainLoggedOutEvent() entered");
 		}
 	}
 }

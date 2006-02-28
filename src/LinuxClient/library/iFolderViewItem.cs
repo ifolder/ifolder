@@ -81,7 +81,7 @@ namespace Novell.iFolder
 		private static Gdk.Pixbuf ErrorPixbufSpotlight		= null;
 
 
-		private static bool registeredForThemeChangeEvent			= false;
+//		private static bool registeredForThemeChangeEvent			= false;
 
 		private Gdk.Pixbuf			normalPixbuf;
 		private Gdk.Pixbuf			spotlightPixbuf;
@@ -104,7 +104,7 @@ namespace Novell.iFolder
 		private string				currentLocation;
 		private string				currentStatus;
 
-		private DomainController	domainController;
+//		private DomainController	domainController;
 		
 		///
 		/// Events
@@ -118,29 +118,6 @@ namespace Novell.iFolder
 		/// </summary>
 		public event EventHandler	DoubleClicked;
 		
-/*
-		// FIXME: Remove this thread-checking debug code
-		// The purpose of this code is to make sure that we're not attempting to
-		// update the UI on a non-GUI thread.
-		private static object threadCheckLockObject = new object();
-		private static int CurrentThreadID = 0;
-		private static void CheckThread()
-		{
-			lock(threadCheckLockObject)
-			{
-				int newThreadID = System.Threading.Thread.CurrentThread.GetHashCode();
-				if (newThreadID != CurrentThreadID)
-				{
-					Console.WriteLine("****** WARNING: iFolderViewItem called from different thread: {0}", newThreadID);
-					Console.WriteLine("\tOld Thread: {0}", CurrentThreadID);
-					Console.WriteLine("\tNew Thread: {0}", newThreadID);
-					Console.WriteLine(Environment.StackTrace);
-					if (CurrentThread == 0)	// Assume that the first thread in is the GUI thread
-						CurrentThreadID = newThreadID;
-				}
-			}
-		}
-*/		
 		public iFolderHolder Holder
 		{
 			get{ return holder; }
@@ -193,7 +170,7 @@ namespace Novell.iFolder
 			currentLocation = "";
 			currentStatus = "";
 
-			domainController = DomainController.GetDomainController();
+//			domainController = DomainController.GetDomainController();
 
 			LoadImages();
 			SetPixbufs();
@@ -333,8 +310,6 @@ namespace Novell.iFolder
 		
 		public void Refresh()
 		{
-Console.WriteLine("iFolderViewItem.Refresh({0})", holder.iFolder.Name);
-
 			// Update the normalPixbuf and spotlightPixbuf to show proper state
 			SetPixbufs();
 
@@ -353,7 +328,6 @@ Console.WriteLine("iFolderViewItem.Refresh({0})", holder.iFolder.Name);
 			UpdateNameLabel();
 			UpdateLocationLabel();
 			UpdateStatusLabel();
-Console.WriteLine("iFolderViewItem.Refresh({0}) exiting", holder.iFolder.Name);
 		}
 		
 		private Widget CreateWidgets()
@@ -628,13 +602,11 @@ Console.WriteLine("iFolderViewItem.Refresh({0}) exiting", holder.iFolder.Name);
 		///
 		private void HandleDragDataGet(object o, DragDataGetArgs args)
 		{
-Console.WriteLine("iFolderViewItem.HandleDragDataGet()");
 			if (holder == null || holder.iFolder == null) return;
 
 			string ifolderID = this.holder.iFolder.ID;
 			if (ifolderID == null) return;
 			
-Console.WriteLine("\t{0}", args.Info);
 			switch (args.Info)
 			{
 				case (uint) iFolderWindow.DragTargetType.iFolderID:

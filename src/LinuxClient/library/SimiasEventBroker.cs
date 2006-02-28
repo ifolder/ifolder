@@ -660,7 +660,6 @@ namespace Novell.iFolder
 				switch (args.EventData)
 				{
 					case "Domain-Up":
-Console.WriteLine("SimiasEventBroker.OnGenericEventFired: Domain-Up");
 						if (DomainUpEventFired != null)
 						{
 							string domainID = args.Message;
@@ -696,7 +695,6 @@ Console.WriteLine("SimiasEventBroker.OnGenericEventFired: Domain-Up");
 					args = (FileSyncEventArgs)FileEventQueue.Dequeue();
 				}
 
-Console.WriteLine("SimiasEventBroker.OnFileEventFired");
 				if(FileSyncEventFired != null)
 					FileSyncEventFired(this, args);
 
@@ -726,7 +724,6 @@ Console.WriteLine("SimiasEventBroker.OnFileEventFired");
 					args = (CollectionSyncEventArgs)SyncEventQueue.Dequeue();
 				}
 
-Console.WriteLine("SimiasEventBroker.OnSyncEventFired");
 				if(CollectionSyncEventFired != null)
 					CollectionSyncEventFired(this, args);
 
@@ -761,7 +758,6 @@ Console.WriteLine("SimiasEventBroker.OnSyncEventFired");
 				switch(sEvent.EventType)
 				{
 					case SimiasEventType.NewUser:
-Console.WriteLine("SimiasEventBroker.OnSimiasEventFired: NewUser");
 						if(iFolderUserAdded != null)
 							iFolderUserAdded(this,
 								new iFolderUserAddedEventArgs(
@@ -769,13 +765,11 @@ Console.WriteLine("SimiasEventBroker.OnSimiasEventFired: NewUser");
 										sEvent.iFolderID));
 						break;
 					case SimiasEventType.NewiFolder:
-Console.WriteLine("SimiasEventBroker.OnSimiasEventFired: NewiFolder");
 						if(iFolderAdded != null)
 							iFolderAdded(this,
 								new iFolderAddedEventArgs(sEvent.iFolderID));
 						break;
 					case SimiasEventType.ChangedUser:
-Console.WriteLine("SimiasEventBroker.OnSimiasEventFired: ChangedUser");
 						if(iFolderUserChanged != null)
 							iFolderUserChanged(this,
 								new iFolderUserChangedEventArgs(
@@ -783,13 +777,11 @@ Console.WriteLine("SimiasEventBroker.OnSimiasEventFired: ChangedUser");
 										sEvent.iFolderID));
 						break;
 					case SimiasEventType.ChangediFolder:
-Console.WriteLine("SimiasEventBroker.OnSimiasEventFired: ChangediFolder");
 						if(iFolderChanged != null)
 							iFolderChanged(this,
 								new iFolderChangedEventArgs(sEvent.iFolderID));
 						break;
 					case SimiasEventType.DelUser:
-Console.WriteLine("SimiasEventBroker.OnSimiasEventFired: DelUser");
 						if(iFolderUserDeleted != null)
 							iFolderUserDeleted(this,
 								new iFolderUserDeletedEventArgs(
@@ -797,19 +789,16 @@ Console.WriteLine("SimiasEventBroker.OnSimiasEventFired: DelUser");
 										sEvent.iFolderID));
 						break;
 					case SimiasEventType.DeliFolder:
-Console.WriteLine("SimiasEventBroker.OnSimiasEventFired: DeliFolder");
 						if(iFolderDeleted != null)
 							iFolderDeleted(this,
 								new iFolderDeletedEventArgs(sEvent.iFolderID));
 						break;
 					case SimiasEventType.NewDomain:
-Console.WriteLine("SimiasEventBroker.OnSimiasEventFired: NewDomain");
 						if(DomainAdded != null)
 							DomainAdded(this,
 								new DomainEventArgs(sEvent.DomainID));
 						break;
 					case SimiasEventType.DelDomain:
-Console.WriteLine("SimiasEventBroker.OnSimiasEventFired: DelDomain");
 						if(DomainDeleted != null)
 							DomainDeleted(this,
 								new DomainEventArgs(sEvent.DomainID));

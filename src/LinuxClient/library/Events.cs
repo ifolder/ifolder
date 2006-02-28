@@ -130,7 +130,9 @@ namespace Novell.iFolder.Events
 
 		public iFolderInvitationEventArgs(string domainID, string subscriptionID, string ifolderID)
 		{
+			this.domainID = domainID;
 			this.subscriptionID = subscriptionID;
+			this.ifolderID = ifolderID;
 		}
 
 		public string DomainID
