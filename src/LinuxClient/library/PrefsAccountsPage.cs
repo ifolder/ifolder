@@ -26,6 +26,7 @@
 using System;
 using System.IO;
 using System.Collections;
+
 using Gtk;
 using Simias.Client.Event;
 using Simias.Client;
@@ -538,15 +539,10 @@ namespace Novell.iFolder
 					WaitDialog = null;
 				}
 				
-				// FIXME: Replace this with an animated "connecting" icon
 				VBox vbox = new VBox(false, 0);
-				Image connectingImage = new Image(Util.ImagesPath("ifolder48.png"));
+				Image connectingImage = new Image(Util.ImagesPath("ifolder-add-account48.png"));
 				vbox.PackStart(connectingImage, false, false, 0);
-				Label l = new Label("<span size=\"xx-small\">FIXME: This will be\nreplaced with an\nanimated image</span>");
-				vbox.PackStart(l);
-				l.UseMarkup = true;
-				l.LineWrap = true;
-				
+	
 				WaitDialog = 
 					new iFolderWaitDialog(
 						topLevelWindow,
@@ -555,14 +551,17 @@ namespace Novell.iFolder
 						Util.GS("Connecting..."),
 						Util.GS("Connecting..."),
 						Util.GS("Please wait while your iFolder account is connecting."));
-//					new iFolderMsgDialog(
-//						topLevelWindow,
-//						iFolderMsgDialog.DialogType.Info,
-//						iFolderMsgDialog.ButtonSet.None,
-//						Util.GS("Connecting..."),
-//						Util.GS("Please wait while iFolder connects your account"),
-//						"");
-				// FIXME: Register this dialog with the modal dialog controller
+
+				if (!Util.RegisterModalWindow(WaitDialog))
+				{
+					try
+					{
+						Util.CurrentModalWindow.Present();
+					}
+					catch{}
+					WaitDialog.Destroy();
+					return;
+				}
 				WaitDialog.Show();
 				
 				DomainLoginThread domainLoginThread =
