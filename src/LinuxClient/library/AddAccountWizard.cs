@@ -541,9 +541,10 @@ namespace Novell.iFolder
 			{
 				SummaryPage.Text = 
 					string.Format(
-						"Congratulations!  You are now connected to:\n\n{0}\n({1})\n\nYou can now add folders to be synchronized to the server.  You may also download folders from the server and have them be synchronized to your computer.\n\nClick \"Finish\" to close this window.",
+						Util.GS("Congratulations!  You are now\nconnected to:\n\nAccount Name: {0}\nServer Address: {1}\nUser Name: {2}\n\nClick \"Finish\" to close this window."),
 						ConnectedDomain.Name,
-						ConnectedDomain.Host);
+						ConnectedDomain.Host,
+						UserNameEntry.Text.Trim());
 			}
 			
 			// Hack to modify the "Apply" button to be a "Finish" button
