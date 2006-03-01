@@ -565,7 +565,6 @@ namespace Novell.iFolder
 			
 			if (WaitDialog == null)
 			{
-				// FIXME: Replace this with an animated "connecting" icon
 				VBox vbox = new VBox(false, 0);
 				Image connectingImage = new Image(Util.ImagesPath("ifolder-add-account48.png"));
 				vbox.PackStart(connectingImage, false, false, 0);
@@ -578,8 +577,7 @@ namespace Novell.iFolder
 						Util.GS("Connecting..."),
 						Util.GS("Connecting..."),
 						Util.GS("Please wait while your iFolder account is connecting."));
-	
-				// FIXME: Register this dialog with the modal dialog controller
+				
 				WaitDialog.Show();
 			}
 			
