@@ -205,6 +205,10 @@ namespace Novell.iFolder
 					new DomainAddedEventHandler(OnDomainAddedEvent);
 				domainController.DomainDeleted +=
 					new DomainDeletedEventHandler(OnDomainDeletedEvent);
+				domainController.DomainLoggedIn +=
+					new DomainLoggedInEventHandler(OnDomainLoggedInEvent);
+				domainController.DomainLoggedOut +=
+					new DomainLoggedOutEventHandler(OnDomainLoggedOutEvent);
 			}
 		}
 		
@@ -216,6 +220,10 @@ namespace Novell.iFolder
 					new DomainAddedEventHandler(OnDomainAddedEvent);
 				domainController.DomainDeleted -=
 					new DomainDeletedEventHandler(OnDomainDeletedEvent);
+				domainController.DomainLoggedIn -=
+					new DomainLoggedInEventHandler(OnDomainLoggedInEvent);
+				domainController.DomainLoggedOut -=
+					new DomainLoggedOutEventHandler(OnDomainLoggedOutEvent);
 			}
 		}
 
@@ -1639,7 +1647,37 @@ namespace Novell.iFolder
 			iFoldersIconView.UnselectAll();
 			RefilterServerGroups();
 		}
+		
+		private void OnDomainLoggedInEvent(object sender, DomainEventArgs args)
+		{
+			iFolderViewItem[] viewItems = localGroup.Items;
+			
+			foreach(iFolderViewItem item in viewItems)
+			{
+				iFolderHolder holder = item.Holder;
+				if (args.DomainID == holder.iFolder.DomainID)
+					holder.State = iFolderState.Initial;
+			}
 
+			// Update the item on the main thread
+			GLib.Idle.Add(UpdateLocalViewItemsMainThread);
+		}
+		
+		private void OnDomainLoggedOutEvent(object sender, DomainEventArgs args)
+		{
+			iFolderViewItem[] viewItems = localGroup.Items;
+			
+			foreach(iFolderViewItem item in viewItems)
+			{
+				iFolderHolder holder = item.Holder;
+				if (args.DomainID == holder.iFolder.DomainID)
+					holder.State = iFolderState.Disconnected;
+			}
+
+			// Update the item on the main thread
+			GLib.Idle.Add(UpdateLocalViewItemsMainThread);
+		}
+		
 		///
 		/// Utility Methods
 		///
