@@ -421,10 +421,13 @@ namespace Novell.iFolder
 			ViewServeriFoldersMenuItem.Toggled +=
 				new EventHandler(OnToggleViewServeriFoldersMenuItem);
 					
-			MenuItem showColorPaletteMenuItem =	// FIXME: Remove this before shipping
-				new MenuItem("Show _Color Palette (FIXME: Remove this before shipping)...");
-			ViewMenu.Append(showColorPaletteMenuItem);
-			showColorPaletteMenuItem.Activated += ShowColorPalette;
+			if((bool)ClientConfig.Get(ClientConfig.KEY_IFOLDER_DEBUG_COLOR_PALETTE))
+			{
+				MenuItem showColorPaletteMenuItem =	// FIXME: Remove this before shipping
+					new MenuItem("Show _Color Palette (FIXME: Remove this before shipping)...");
+				ViewMenu.Append(showColorPaletteMenuItem);
+				showColorPaletteMenuItem.Activated += ShowColorPalette;
+			}
 			
 			MenuItem ViewMenuItem = new MenuItem(Util.GS("_View"));
 			ViewMenuItem.Submenu = ViewMenu;

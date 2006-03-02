@@ -260,5 +260,37 @@
       </locale>
     </schema>
 
+    <schema>
+      <key>/schemas/apps/ifolder3/debug/color_palette</key>
+      <applyto>/apps/ifolder3/debug/color_palette</applyto>
+      <owner>ifolder</owner>
+      <type>bool</type>
+      <default>false</default>
+      <locale name="C">
+         <short>Color Palette Menu</short>
+         <long>
+       Setting this to true will add a menu item to the "View" menu of the
+       main iFolder window that will show the colors used in Gtk.
+         </long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/ifolder3/debug/ifolder_data</key>
+      <applyto>/apps/ifolder3/debug/ifolder_data</applyto>
+      <owner>ifolder</owner>
+      <type>bool</type>
+      <default>false</default>
+      <locale name="C">
+         <short>iFolderData</short>
+         <long>
+       Setting this to true will add a "Print iFolderData Debug Information"
+       menu option to the notification area icon.  Selecting this will
+       print out the contents of the iFolderData object (the main cache of
+       iFolder information held by the client.
+         </long>
+      </locale>
+    </schema>
+
   </schemalist>
 </gconfschemafile>
