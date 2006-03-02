@@ -24,7 +24,7 @@ Autoreqprov:  on
 Requires:     nautilus >= 2.10.0
 Requires:     simias >= 1.5
 Requires:     ifolder3 >= 3.5
-Obsoletes:    %{name} <= %{version}
+Obsoletes:    %{name} < %{version}
 Provides:     nautilus-ifolder
 Obsoletes:    nautilus-ifolder
 Version:      3.5.@@BUILDNUM@@.1
