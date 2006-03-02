@@ -78,6 +78,9 @@ make DESTDIR=$RPM_BUILD_ROOT install
 /opt/gnome/share/nautilus-ifolder3/pixmaps/ifolder-folder.png
 
 %changelog -n nautilus-ifolder3
+* Thu Mar 02 2006 - btimothy@novell.com
+- changed Obsoletes line so the package doesn't
+- obsolete itself [#143297]
 * Wed Jan 25 2006 - mls@suse.de
 - converted neededforbuild to BuildRequires
 * Wed Jan 18 2006 - cgaisford@suse.de
