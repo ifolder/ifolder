@@ -1373,14 +1373,25 @@ namespace Novell.iFolder
 			{
 				Console.WriteLine(bigException);
 				iFolderCrashDialog cd = new iFolderCrashDialog(bigException);
+				if (!Util.RegisterModalWindow(cd))
+				{
+					// Since we're exiting, destroy the existing modal window
+					try
+					{
+						Util.CurrentModalWindow.Destroy();
+						Util.RegisterModalWindow(cd);
+					}
+					catch{}
+				}
 				cd.Run();
-				cd.Hide();
 				cd.Destroy();
 				cd = null;
 
-				// Stop Simias (dereference iFolder's handle at least)
-				if(application.EventBroker != null)
-					application.EventBroker.Deregister();
+				// FIXME: For some reason, the simias process will runaway if
+				// the a call to Deregister the event broker is made here.
+//				// Stop Simias (dereference iFolder's handle at least)
+//				if(application.EventBroker != null)
+//					application.EventBroker.Deregister();
 
 				bool stopped = application.SimiasManager.Stop();
 
