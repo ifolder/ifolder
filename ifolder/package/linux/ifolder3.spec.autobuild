@@ -23,6 +23,8 @@ Group:        System/GUI/Other
 Autoreqprov:  on
 Requires:     simias >= 1.4
 Requires:     gtk-sharp2
+Requires:     gconf-sharp2
+Requires:     gnome-sharp2
 Requires:     eel
 Obsoletes:    %{name} <= %{version}
 Version:      3.4.@@BUILDNUM@@.1
@@ -98,6 +100,8 @@ opt/gnome/bin/gconftool-2 --makefile-uninstall-rule \
 /usr/share/applications/ifolder.desktop
 
 %changelog -n ifolder3
+* Thu Mar 02 2006 - btimothy@novell.com
+- added gconf-sharp2 and gnome-sharp2 as Requires
 * Wed Mar 01 2006 - btimothy@novell.com
 - changed the Requires gtk-sharp2-complete to just
 - gtk-sharp2 since this was causing the -devel
