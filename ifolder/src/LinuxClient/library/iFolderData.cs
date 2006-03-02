@@ -405,6 +405,7 @@ namespace Novell.iFolder
 				else
 				{
 					ifHolder = new iFolderHolder(ifolder);
+					ifHolder.State = iFolderState.Initial;
 					iFolderAddHandler addHandler =
 						new iFolderAddHandler(ifHolder, this);
 					GLib.Idle.Add(addHandler.IdleHandler);
