@@ -125,6 +125,7 @@ namespace Novell.iFolder
 			ownerSectionBox.PackStart(OwnerButton, false, true, 0);
 			if(!enableOwner)
 				OwnerButton.Sensitive = false;
+			OwnerButton.Toggled += new EventHandler(OwnerButtonToggled);
 
 			this.VBox.ShowAll();
 
@@ -138,6 +139,21 @@ namespace Novell.iFolder
 				ROButton.Active = true;
 			else
 				RWButton.Active = true;
+		}
+		
+		private void OwnerButtonToggled(object o, EventArgs args)
+		{
+			if (OwnerButton.Active)
+			{
+				FCButton.Active = true;
+				RWButton.Sensitive = false;
+				ROButton.Sensitive = false;
+			}
+			else
+			{
+				RWButton.Sensitive = true;
+				ROButton.Sensitive = true;
+			}
 		}
 
 	}

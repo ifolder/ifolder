@@ -719,8 +719,7 @@ namespace Novell.iFolder
 					{
 						TreeSelection tSelect = UserTreeView.Selection;
 
-						if( (ifolder.CurrentUserRights == "Admin") &&
-							(tSelect.CountSelectedRows() > 0) )
+						if (tSelect.CountSelectedRows() > 0)
 						{
 							Menu rightsMenu = new Menu();
 			
@@ -738,7 +737,8 @@ namespace Novell.iFolder
 													Util.GS("Read Only"));
 							rightsMenu.Append(roItem);
 
-							if(SelectionHasOwnerOrCurrent())
+							if (ifolder.CurrentUserRights != "Admin"
+								|| SelectionHasOwnerOrCurrent())
 							{
 								adminItem.Sensitive = false;
 								rwItem.Sensitive = false;
@@ -784,7 +784,11 @@ namespace Novell.iFolder
 			TreeSelection tSelect = UserTreeView.Selection;
 			if (tSelect.CountSelectedRows() == 1)
 			{
-				OnAccessClicked(null, null);
+				if (ifolder.CurrentUserRights == "Admin"
+					&& !SelectionHasOwnerOrCurrent())
+				{
+					OnAccessClicked(null, null);
+				}
 			}
 		}
 
