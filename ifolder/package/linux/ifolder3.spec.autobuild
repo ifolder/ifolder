@@ -23,6 +23,11 @@ Group:        System/GUI/Other
 Autoreqprov:  on
 Requires:     simias >= 1.5
 Requires:     gtk-sharp2
+Requires:     art-sharp2
+Requires:     gconf-sharp2
+Requires:     glade-sharp2
+Requires:     glib-sharp2
+Requires:     gnome-sharp2
 Requires:     eel
 Obsoletes:    %{name} < %{version}
 Version:      3.5.@@BUILDNUM@@.1
@@ -101,6 +106,9 @@ opt/gnome/bin/gconftool-2 --makefile-uninstall-rule \
 * Thu Mar 02 2006 - btimothy@novell.com
 - changed Obsoletes line so the package doesn't
 - obsolete itself [#143297]
+* Thu Mar 02 2006 - btimothy@novell.com
+- added art-sharp2, gconf-sharp2, glade-sharp2,
+- glib-sharp2, and gnome-sharp2 as Requires
 * Wed Mar 01 2006 - btimothy@novell.com
 - changed the Requires gtk-sharp2-complete to just
 - gtk-sharp2 since this was causing the -devel
