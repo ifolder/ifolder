@@ -24,7 +24,7 @@ Autoreqprov:  on
 Requires:     simias >= 1.5
 Requires:     gtk-sharp2
 Requires:     eel
-Obsoletes:    %{name} <= %{version}
+Obsoletes:    %{name} < %{version}
 Version:      3.5.@@BUILDNUM@@.1
 Release:      1
 Summary:      File Sharing and Collaboration Tool
