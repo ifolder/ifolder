@@ -255,7 +255,10 @@ namespace Novell.iFolder
 								new EventHandler(OnItemDoubleClicked);
 
 							items.Remove(item);
-							item.Destroy();
+// FIXME: Determine if we need to try to clean up any memory.  If the following
+// call is left in, the client does not shut down properly when catching a bad
+// exception (a SIGSEGV is generated).
+//							item.Destroy();
 						}
 					}
 					
