@@ -1071,13 +1071,15 @@ namespace Novell.iFolder
 			about_item.Activated +=
 					new EventHandler(show_about);
 
-			// FIXME: Remove these debug features or move them to be configurable
-			trayMenu.Append(new SeparatorMenuItem());
-			MenuItem ifolderDataDebug =
-					new MenuItem ("Print iFolderData Debug Information");
-			trayMenu.Append (ifolderDataDebug);
-			ifolderDataDebug.Activated +=
-					new EventHandler(PrintiFolderDataDebugState);
+			if((bool)ClientConfig.Get(ClientConfig.KEY_IFOLDER_DEBUG_IFOLDER_DATA))
+			{
+				trayMenu.Append(new SeparatorMenuItem());
+				MenuItem ifolderDataDebug =
+						new MenuItem ("Print iFolderData Debug Information");
+				trayMenu.Append (ifolderDataDebug);
+				ifolderDataDebug.Activated +=
+						new EventHandler(PrintiFolderDataDebugState);
+			}
 
 /*			if( (ifSettings != null) && (!ifSettings.HaveEnterprise) )
 			{
