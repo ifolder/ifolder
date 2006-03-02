@@ -72,6 +72,12 @@ namespace Novell.iFolder
 		public const string KEY_IFOLDER_ACCOUNT_USER_NAME			= "/apps/ifolder3/account/user_name";
 		public const string KEY_IFOLDER_ACCOUNT_PASSWORD			= "/apps/ifolder3/account/clear_text_password_for_testing_only";
 		public const string KEY_IFOLDER_ACCOUNT_REMEMBER_PASSWORD= "/apps/ifolder3/account/remember_password";
+		
+		///
+		/// /apps/ifolder3/debug
+		///
+		public const string KEY_IFOLDER_DEBUG_COLOR_PALETTE		= "/apps/ifolder3/debug/color_palette";
+		public const string KEY_IFOLDER_DEBUG_IFOLDER_DATA		= "/apps/ifolder3/debug/ifolder_data";
 
 		private static GConf.Client				client = null;
 		private static GConf.NotifyEventHandler	SettingChangedHandler;
@@ -143,6 +149,10 @@ namespace Novell.iFolder
 
 				case KEY_IFOLDER_ACCOUNT_PREFILL:
 				case KEY_IFOLDER_ACCOUNT_REMEMBER_PASSWORD:
+					return false;
+				
+				case KEY_IFOLDER_DEBUG_COLOR_PALETTE:
+				case KEY_IFOLDER_DEBUG_IFOLDER_DATA:
 					return false;
 			}
 			
