@@ -104,6 +104,9 @@ opt/gnome/bin/gconftool-2 --makefile-uninstall-rule \
 
 %changelog -n ifolder3
 * Thu Mar 02 2006 - btimothy@novell.com
+- changed Obsoletes line so the package doesn't
+- obsolete itself [#143297]
+* Thu Mar 02 2006 - btimothy@novell.com
 - added art-sharp2, gconf-sharp2, glade-sharp2,
 - glib-sharp2, and gnome-sharp2 as Requires
 * Wed Mar 01 2006 - btimothy@novell.com
