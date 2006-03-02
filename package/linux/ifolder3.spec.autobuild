@@ -29,7 +29,7 @@ Requires:     glade-sharp2
 Requires:     glib-sharp2
 Requires:     gnome-sharp2
 Requires:     eel
-Obsoletes:    %{name} <= %{version}
+Obsoletes:    %{name} < %{version}
 Version:      3.4.@@BUILDNUM@@.1
 Release:      1
 Summary:      File Sharing and Collaboration Tool
