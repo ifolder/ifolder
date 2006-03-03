@@ -165,6 +165,8 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.MenuItem menuRefresh;
 		private System.Windows.Forms.MenuItem menuItem6;
 		private System.Windows.Forms.MenuItem menuItem7;
+		private System.Windows.Forms.Button accept;
+		private System.Windows.Forms.Button remove;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -288,16 +290,19 @@ namespace Novell.FormsTrayApp
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(GlobalProperties));
 			this.iFolderContextMenu = new System.Windows.Forms.ContextMenu();
 			this.menuOpen = new System.Windows.Forms.MenuItem();
-			this.menuShare = new System.Windows.Forms.MenuItem();
-			this.menuResolve = new System.Windows.Forms.MenuItem();
+			this.menuItem6 = new System.Windows.Forms.MenuItem();
 			this.menuSyncNow = new System.Windows.Forms.MenuItem();
+			this.menuShare = new System.Windows.Forms.MenuItem();
 			this.menuRevert = new System.Windows.Forms.MenuItem();
+			this.menuItem2 = new System.Windows.Forms.MenuItem();
 			this.menuProperties = new System.Windows.Forms.MenuItem();
+			this.menuResolve = new System.Windows.Forms.MenuItem();
 			this.mainMenu1 = new System.Windows.Forms.MainMenu();
 			this.menuAction = new System.Windows.Forms.MenuItem();
 			this.menuActionCreate = new System.Windows.Forms.MenuItem();
 			this.menuActionAccept = new System.Windows.Forms.MenuItem();
 			this.menuActionRemove = new System.Windows.Forms.MenuItem();
+			this.menuItem7 = new System.Windows.Forms.MenuItem();
 			this.menuActionOpen = new System.Windows.Forms.MenuItem();
 			this.menuActionShare = new System.Windows.Forms.MenuItem();
 			this.menuActionResolve = new System.Windows.Forms.MenuItem();
@@ -305,14 +310,17 @@ namespace Novell.FormsTrayApp
 			this.menuActionRevert = new System.Windows.Forms.MenuItem();
 			this.menuActionProperties = new System.Windows.Forms.MenuItem();
 			this.menuItem4 = new System.Windows.Forms.MenuItem();
+			this.menuClose = new System.Windows.Forms.MenuItem();
 			this.menuExit = new System.Windows.Forms.MenuItem();
 			this.menuEdit = new System.Windows.Forms.MenuItem();
+			this.menuViewAccounts = new System.Windows.Forms.MenuItem();
 			this.menuEditPrefs = new System.Windows.Forms.MenuItem();
 			this.menuView = new System.Windows.Forms.MenuItem();
 			this.menuViewRefresh = new System.Windows.Forms.MenuItem();
 			this.menuItem1 = new System.Windows.Forms.MenuItem();
-			this.menuViewAccounts = new System.Windows.Forms.MenuItem();
 			this.menuViewLog = new System.Windows.Forms.MenuItem();
+			this.menuItem3 = new System.Windows.Forms.MenuItem();
+			this.menuViewAvailable = new System.Windows.Forms.MenuItem();
 			this.menuHelp = new System.Windows.Forms.MenuItem();
 			this.menuHelpHelp = new System.Windows.Forms.MenuItem();
 			this.menuHelpAbout = new System.Windows.Forms.MenuItem();
@@ -335,18 +343,14 @@ namespace Novell.FormsTrayApp
 			this.panel2 = new System.Windows.Forms.Panel();
 			this.iFolderView = new Novell.FormsTrayApp.TileListView();
 			this.localiFoldersHeading = new System.Windows.Forms.RichTextBox();
-			this.menuClose = new System.Windows.Forms.MenuItem();
-			this.menuItem3 = new System.Windows.Forms.MenuItem();
-			this.menuViewAvailable = new System.Windows.Forms.MenuItem();
-			this.menuItem2 = new System.Windows.Forms.MenuItem();
 			this.availableiFolderContextMenu = new System.Windows.Forms.ContextMenu();
 			this.menuAccept = new System.Windows.Forms.MenuItem();
-			this.menuRemove = new System.Windows.Forms.MenuItem();
 			this.menuItem5 = new System.Windows.Forms.MenuItem();
+			this.menuRemove = new System.Windows.Forms.MenuItem();
 			this.refreshContextMenu = new System.Windows.Forms.ContextMenu();
 			this.menuRefresh = new System.Windows.Forms.MenuItem();
-			this.menuItem6 = new System.Windows.Forms.MenuItem();
-			this.menuItem7 = new System.Windows.Forms.MenuItem();
+			this.accept = new System.Windows.Forms.Button();
+			this.remove = new System.Windows.Forms.Button();
 			this.panel1.SuspendLayout();
 			this.iFolderActions.SuspendLayout();
 			this.panel2.SuspendLayout();
@@ -376,25 +380,14 @@ namespace Novell.FormsTrayApp
 			this.menuOpen.Visible = ((bool)(resources.GetObject("menuOpen.Visible")));
 			this.menuOpen.Click += new System.EventHandler(this.menuOpen_Click);
 			// 
-			// menuShare
+			// menuItem6
 			// 
-			this.menuShare.Enabled = ((bool)(resources.GetObject("menuShare.Enabled")));
-			this.menuShare.Index = 3;
-			this.menuShare.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuShare.Shortcut")));
-			this.menuShare.ShowShortcut = ((bool)(resources.GetObject("menuShare.ShowShortcut")));
-			this.menuShare.Text = resources.GetString("menuShare.Text");
-			this.menuShare.Visible = ((bool)(resources.GetObject("menuShare.Visible")));
-			this.menuShare.Click += new System.EventHandler(this.menuShare_Click);
-			// 
-			// menuResolve
-			// 
-			this.menuResolve.Enabled = ((bool)(resources.GetObject("menuResolve.Enabled")));
-			this.menuResolve.Index = 7;
-			this.menuResolve.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuResolve.Shortcut")));
-			this.menuResolve.ShowShortcut = ((bool)(resources.GetObject("menuResolve.ShowShortcut")));
-			this.menuResolve.Text = resources.GetString("menuResolve.Text");
-			this.menuResolve.Visible = ((bool)(resources.GetObject("menuResolve.Visible")));
-			this.menuResolve.Click += new System.EventHandler(this.menuResolve_Click);
+			this.menuItem6.Enabled = ((bool)(resources.GetObject("menuItem6.Enabled")));
+			this.menuItem6.Index = 1;
+			this.menuItem6.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuItem6.Shortcut")));
+			this.menuItem6.ShowShortcut = ((bool)(resources.GetObject("menuItem6.ShowShortcut")));
+			this.menuItem6.Text = resources.GetString("menuItem6.Text");
+			this.menuItem6.Visible = ((bool)(resources.GetObject("menuItem6.Visible")));
 			// 
 			// menuSyncNow
 			// 
@@ -406,6 +399,16 @@ namespace Novell.FormsTrayApp
 			this.menuSyncNow.Visible = ((bool)(resources.GetObject("menuSyncNow.Visible")));
 			this.menuSyncNow.Click += new System.EventHandler(this.menuSyncNow_Click);
 			// 
+			// menuShare
+			// 
+			this.menuShare.Enabled = ((bool)(resources.GetObject("menuShare.Enabled")));
+			this.menuShare.Index = 3;
+			this.menuShare.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuShare.Shortcut")));
+			this.menuShare.ShowShortcut = ((bool)(resources.GetObject("menuShare.ShowShortcut")));
+			this.menuShare.Text = resources.GetString("menuShare.Text");
+			this.menuShare.Visible = ((bool)(resources.GetObject("menuShare.Visible")));
+			this.menuShare.Click += new System.EventHandler(this.menuShare_Click);
+			// 
 			// menuRevert
 			// 
 			this.menuRevert.Enabled = ((bool)(resources.GetObject("menuRevert.Enabled")));
@@ -416,6 +419,15 @@ namespace Novell.FormsTrayApp
 			this.menuRevert.Visible = ((bool)(resources.GetObject("menuRevert.Visible")));
 			this.menuRevert.Click += new System.EventHandler(this.menuRevert_Click);
 			// 
+			// menuItem2
+			// 
+			this.menuItem2.Enabled = ((bool)(resources.GetObject("menuItem2.Enabled")));
+			this.menuItem2.Index = 5;
+			this.menuItem2.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuItem2.Shortcut")));
+			this.menuItem2.ShowShortcut = ((bool)(resources.GetObject("menuItem2.ShowShortcut")));
+			this.menuItem2.Text = resources.GetString("menuItem2.Text");
+			this.menuItem2.Visible = ((bool)(resources.GetObject("menuItem2.Visible")));
+			// 
 			// menuProperties
 			// 
 			this.menuProperties.Enabled = ((bool)(resources.GetObject("menuProperties.Enabled")));
@@ -425,6 +437,16 @@ namespace Novell.FormsTrayApp
 			this.menuProperties.Text = resources.GetString("menuProperties.Text");
 			this.menuProperties.Visible = ((bool)(resources.GetObject("menuProperties.Visible")));
 			this.menuProperties.Click += new System.EventHandler(this.menuProperties_Click);
+			// 
+			// menuResolve
+			// 
+			this.menuResolve.Enabled = ((bool)(resources.GetObject("menuResolve.Enabled")));
+			this.menuResolve.Index = 7;
+			this.menuResolve.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuResolve.Shortcut")));
+			this.menuResolve.ShowShortcut = ((bool)(resources.GetObject("menuResolve.ShowShortcut")));
+			this.menuResolve.Text = resources.GetString("menuResolve.Text");
+			this.menuResolve.Visible = ((bool)(resources.GetObject("menuResolve.Visible")));
+			this.menuResolve.Click += new System.EventHandler(this.menuResolve_Click);
 			// 
 			// mainMenu1
 			// 
@@ -487,6 +509,15 @@ namespace Novell.FormsTrayApp
 			this.menuActionRemove.Text = resources.GetString("menuActionRemove.Text");
 			this.menuActionRemove.Visible = ((bool)(resources.GetObject("menuActionRemove.Visible")));
 			this.menuActionRemove.Click += new System.EventHandler(this.menuRemove_Click);
+			// 
+			// menuItem7
+			// 
+			this.menuItem7.Enabled = ((bool)(resources.GetObject("menuItem7.Enabled")));
+			this.menuItem7.Index = 3;
+			this.menuItem7.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuItem7.Shortcut")));
+			this.menuItem7.ShowShortcut = ((bool)(resources.GetObject("menuItem7.ShowShortcut")));
+			this.menuItem7.Text = resources.GetString("menuItem7.Text");
+			this.menuItem7.Visible = ((bool)(resources.GetObject("menuItem7.Visible")));
 			// 
 			// menuActionOpen
 			// 
@@ -557,6 +588,15 @@ namespace Novell.FormsTrayApp
 			this.menuItem4.Text = resources.GetString("menuItem4.Text");
 			this.menuItem4.Visible = ((bool)(resources.GetObject("menuItem4.Visible")));
 			// 
+			// menuClose
+			// 
+			this.menuClose.Enabled = ((bool)(resources.GetObject("menuClose.Enabled")));
+			this.menuClose.Index = 11;
+			this.menuClose.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuClose.Shortcut")));
+			this.menuClose.ShowShortcut = ((bool)(resources.GetObject("menuClose.ShowShortcut")));
+			this.menuClose.Text = resources.GetString("menuClose.Text");
+			this.menuClose.Visible = ((bool)(resources.GetObject("menuClose.Visible")));
+			// 
 			// menuExit
 			// 
 			this.menuExit.Enabled = ((bool)(resources.GetObject("menuExit.Enabled")));
@@ -578,6 +618,16 @@ namespace Novell.FormsTrayApp
 			this.menuEdit.ShowShortcut = ((bool)(resources.GetObject("menuEdit.ShowShortcut")));
 			this.menuEdit.Text = resources.GetString("menuEdit.Text");
 			this.menuEdit.Visible = ((bool)(resources.GetObject("menuEdit.Visible")));
+			// 
+			// menuViewAccounts
+			// 
+			this.menuViewAccounts.Enabled = ((bool)(resources.GetObject("menuViewAccounts.Enabled")));
+			this.menuViewAccounts.Index = 0;
+			this.menuViewAccounts.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuViewAccounts.Shortcut")));
+			this.menuViewAccounts.ShowShortcut = ((bool)(resources.GetObject("menuViewAccounts.ShowShortcut")));
+			this.menuViewAccounts.Text = resources.GetString("menuViewAccounts.Text");
+			this.menuViewAccounts.Visible = ((bool)(resources.GetObject("menuViewAccounts.Visible")));
+			this.menuViewAccounts.Click += new System.EventHandler(this.menuViewAccounts_Click);
 			// 
 			// menuEditPrefs
 			// 
@@ -623,16 +673,6 @@ namespace Novell.FormsTrayApp
 			this.menuItem1.Text = resources.GetString("menuItem1.Text");
 			this.menuItem1.Visible = ((bool)(resources.GetObject("menuItem1.Visible")));
 			// 
-			// menuViewAccounts
-			// 
-			this.menuViewAccounts.Enabled = ((bool)(resources.GetObject("menuViewAccounts.Enabled")));
-			this.menuViewAccounts.Index = 0;
-			this.menuViewAccounts.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuViewAccounts.Shortcut")));
-			this.menuViewAccounts.ShowShortcut = ((bool)(resources.GetObject("menuViewAccounts.ShowShortcut")));
-			this.menuViewAccounts.Text = resources.GetString("menuViewAccounts.Text");
-			this.menuViewAccounts.Visible = ((bool)(resources.GetObject("menuViewAccounts.Visible")));
-			this.menuViewAccounts.Click += new System.EventHandler(this.menuViewAccounts_Click);
-			// 
 			// menuViewLog
 			// 
 			this.menuViewLog.Enabled = ((bool)(resources.GetObject("menuViewLog.Enabled")));
@@ -642,6 +682,26 @@ namespace Novell.FormsTrayApp
 			this.menuViewLog.Text = resources.GetString("menuViewLog.Text");
 			this.menuViewLog.Visible = ((bool)(resources.GetObject("menuViewLog.Visible")));
 			this.menuViewLog.Click += new System.EventHandler(this.menuViewLog_Click);
+			// 
+			// menuItem3
+			// 
+			this.menuItem3.Enabled = ((bool)(resources.GetObject("menuItem3.Enabled")));
+			this.menuItem3.Index = 3;
+			this.menuItem3.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuItem3.Shortcut")));
+			this.menuItem3.ShowShortcut = ((bool)(resources.GetObject("menuItem3.ShowShortcut")));
+			this.menuItem3.Text = resources.GetString("menuItem3.Text");
+			this.menuItem3.Visible = ((bool)(resources.GetObject("menuItem3.Visible")));
+			// 
+			// menuViewAvailable
+			// 
+			this.menuViewAvailable.Checked = true;
+			this.menuViewAvailable.Enabled = ((bool)(resources.GetObject("menuViewAvailable.Enabled")));
+			this.menuViewAvailable.Index = 4;
+			this.menuViewAvailable.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuViewAvailable.Shortcut")));
+			this.menuViewAvailable.ShowShortcut = ((bool)(resources.GetObject("menuViewAvailable.ShowShortcut")));
+			this.menuViewAvailable.Text = resources.GetString("menuViewAvailable.Text");
+			this.menuViewAvailable.Visible = ((bool)(resources.GetObject("menuViewAvailable.Visible")));
+			this.menuViewAvailable.Click += new System.EventHandler(this.showiFolders_Click);
 			// 
 			// menuHelp
 			// 
@@ -766,6 +826,8 @@ namespace Novell.FormsTrayApp
 			this.iFolderActions.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("iFolderActions.AutoScrollMargin")));
 			this.iFolderActions.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("iFolderActions.AutoScrollMinSize")));
 			this.iFolderActions.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("iFolderActions.BackgroundImage")));
+			this.iFolderActions.Controls.Add(this.remove);
+			this.iFolderActions.Controls.Add(this.accept);
 			this.iFolderActions.Controls.Add(this.properties);
 			this.iFolderActions.Controls.Add(this.revert);
 			this.iFolderActions.Controls.Add(this.share);
@@ -806,6 +868,7 @@ namespace Novell.FormsTrayApp
 			this.properties.Text = resources.GetString("properties.Text");
 			this.properties.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("properties.TextAlign")));
 			this.properties.Visible = ((bool)(resources.GetObject("properties.Visible")));
+			this.properties.Click += new System.EventHandler(this.menuProperties_Click);
 			// 
 			// revert
 			// 
@@ -829,6 +892,7 @@ namespace Novell.FormsTrayApp
 			this.revert.Text = resources.GetString("revert.Text");
 			this.revert.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("revert.TextAlign")));
 			this.revert.Visible = ((bool)(resources.GetObject("revert.Visible")));
+			this.revert.Click += new System.EventHandler(this.menuRevert_Click);
 			// 
 			// share
 			// 
@@ -852,6 +916,7 @@ namespace Novell.FormsTrayApp
 			this.share.Text = resources.GetString("share.Text");
 			this.share.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("share.TextAlign")));
 			this.share.Visible = ((bool)(resources.GetObject("share.Visible")));
+			this.share.Click += new System.EventHandler(this.menuShare_Click);
 			// 
 			// syncNow
 			// 
@@ -875,6 +940,7 @@ namespace Novell.FormsTrayApp
 			this.syncNow.Text = resources.GetString("syncNow.Text");
 			this.syncNow.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("syncNow.TextAlign")));
 			this.syncNow.Visible = ((bool)(resources.GetObject("syncNow.Visible")));
+			this.syncNow.Click += new System.EventHandler(this.menuSyncNow_Click);
 			// 
 			// open
 			// 
@@ -898,6 +964,7 @@ namespace Novell.FormsTrayApp
 			this.open.Text = resources.GetString("open.Text");
 			this.open.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("open.TextAlign")));
 			this.open.Visible = ((bool)(resources.GetObject("open.Visible")));
+			this.open.Click += new System.EventHandler(this.menuOpen_Click);
 			// 
 			// label3
 			// 
@@ -1125,44 +1192,6 @@ namespace Novell.FormsTrayApp
 			this.localiFoldersHeading.WordWrap = ((bool)(resources.GetObject("localiFoldersHeading.WordWrap")));
 			this.localiFoldersHeading.ZoomFactor = ((System.Single)(resources.GetObject("localiFoldersHeading.ZoomFactor")));
 			// 
-			// menuClose
-			// 
-			this.menuClose.Enabled = ((bool)(resources.GetObject("menuClose.Enabled")));
-			this.menuClose.Index = 11;
-			this.menuClose.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuClose.Shortcut")));
-			this.menuClose.ShowShortcut = ((bool)(resources.GetObject("menuClose.ShowShortcut")));
-			this.menuClose.Text = resources.GetString("menuClose.Text");
-			this.menuClose.Visible = ((bool)(resources.GetObject("menuClose.Visible")));
-			// 
-			// menuItem3
-			// 
-			this.menuItem3.Enabled = ((bool)(resources.GetObject("menuItem3.Enabled")));
-			this.menuItem3.Index = 3;
-			this.menuItem3.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuItem3.Shortcut")));
-			this.menuItem3.ShowShortcut = ((bool)(resources.GetObject("menuItem3.ShowShortcut")));
-			this.menuItem3.Text = resources.GetString("menuItem3.Text");
-			this.menuItem3.Visible = ((bool)(resources.GetObject("menuItem3.Visible")));
-			// 
-			// menuViewAvailable
-			// 
-			this.menuViewAvailable.Checked = true;
-			this.menuViewAvailable.Enabled = ((bool)(resources.GetObject("menuViewAvailable.Enabled")));
-			this.menuViewAvailable.Index = 4;
-			this.menuViewAvailable.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuViewAvailable.Shortcut")));
-			this.menuViewAvailable.ShowShortcut = ((bool)(resources.GetObject("menuViewAvailable.ShowShortcut")));
-			this.menuViewAvailable.Text = resources.GetString("menuViewAvailable.Text");
-			this.menuViewAvailable.Visible = ((bool)(resources.GetObject("menuViewAvailable.Visible")));
-			this.menuViewAvailable.Click += new System.EventHandler(this.showiFolders_Click);
-			// 
-			// menuItem2
-			// 
-			this.menuItem2.Enabled = ((bool)(resources.GetObject("menuItem2.Enabled")));
-			this.menuItem2.Index = 5;
-			this.menuItem2.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuItem2.Shortcut")));
-			this.menuItem2.ShowShortcut = ((bool)(resources.GetObject("menuItem2.ShowShortcut")));
-			this.menuItem2.Text = resources.GetString("menuItem2.Text");
-			this.menuItem2.Visible = ((bool)(resources.GetObject("menuItem2.Visible")));
-			// 
 			// availableiFolderContextMenu
 			// 
 			this.availableiFolderContextMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
@@ -1179,15 +1208,7 @@ namespace Novell.FormsTrayApp
 			this.menuAccept.ShowShortcut = ((bool)(resources.GetObject("menuAccept.ShowShortcut")));
 			this.menuAccept.Text = resources.GetString("menuAccept.Text");
 			this.menuAccept.Visible = ((bool)(resources.GetObject("menuAccept.Visible")));
-			// 
-			// menuRemove
-			// 
-			this.menuRemove.Enabled = ((bool)(resources.GetObject("menuRemove.Enabled")));
-			this.menuRemove.Index = 2;
-			this.menuRemove.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuRemove.Shortcut")));
-			this.menuRemove.ShowShortcut = ((bool)(resources.GetObject("menuRemove.ShowShortcut")));
-			this.menuRemove.Text = resources.GetString("menuRemove.Text");
-			this.menuRemove.Visible = ((bool)(resources.GetObject("menuRemove.Visible")));
+			this.menuAccept.Click += new System.EventHandler(this.menuAccept_Click);
 			// 
 			// menuItem5
 			// 
@@ -1197,6 +1218,16 @@ namespace Novell.FormsTrayApp
 			this.menuItem5.ShowShortcut = ((bool)(resources.GetObject("menuItem5.ShowShortcut")));
 			this.menuItem5.Text = resources.GetString("menuItem5.Text");
 			this.menuItem5.Visible = ((bool)(resources.GetObject("menuItem5.Visible")));
+			// 
+			// menuRemove
+			// 
+			this.menuRemove.Enabled = ((bool)(resources.GetObject("menuRemove.Enabled")));
+			this.menuRemove.Index = 2;
+			this.menuRemove.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuRemove.Shortcut")));
+			this.menuRemove.ShowShortcut = ((bool)(resources.GetObject("menuRemove.ShowShortcut")));
+			this.menuRemove.Text = resources.GetString("menuRemove.Text");
+			this.menuRemove.Visible = ((bool)(resources.GetObject("menuRemove.Visible")));
+			this.menuRemove.Click += new System.EventHandler(this.menuRemove_Click);
 			// 
 			// refreshContextMenu
 			// 
@@ -1212,24 +1243,55 @@ namespace Novell.FormsTrayApp
 			this.menuRefresh.ShowShortcut = ((bool)(resources.GetObject("menuRefresh.ShowShortcut")));
 			this.menuRefresh.Text = resources.GetString("menuRefresh.Text");
 			this.menuRefresh.Visible = ((bool)(resources.GetObject("menuRefresh.Visible")));
+			this.menuRefresh.Click += new System.EventHandler(this.menuRefresh_Click);
 			// 
-			// menuItem6
+			// accept
 			// 
-			this.menuItem6.Enabled = ((bool)(resources.GetObject("menuItem6.Enabled")));
-			this.menuItem6.Index = 1;
-			this.menuItem6.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuItem6.Shortcut")));
-			this.menuItem6.ShowShortcut = ((bool)(resources.GetObject("menuItem6.ShowShortcut")));
-			this.menuItem6.Text = resources.GetString("menuItem6.Text");
-			this.menuItem6.Visible = ((bool)(resources.GetObject("menuItem6.Visible")));
+			this.accept.AccessibleDescription = resources.GetString("accept.AccessibleDescription");
+			this.accept.AccessibleName = resources.GetString("accept.AccessibleName");
+			this.accept.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("accept.Anchor")));
+			this.accept.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("accept.BackgroundImage")));
+			this.accept.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("accept.Dock")));
+			this.accept.Enabled = ((bool)(resources.GetObject("accept.Enabled")));
+			this.accept.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("accept.FlatStyle")));
+			this.accept.Font = ((System.Drawing.Font)(resources.GetObject("accept.Font")));
+			this.accept.Image = ((System.Drawing.Image)(resources.GetObject("accept.Image")));
+			this.accept.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("accept.ImageAlign")));
+			this.accept.ImageIndex = ((int)(resources.GetObject("accept.ImageIndex")));
+			this.accept.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("accept.ImeMode")));
+			this.accept.Location = ((System.Drawing.Point)(resources.GetObject("accept.Location")));
+			this.accept.Name = "accept";
+			this.accept.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("accept.RightToLeft")));
+			this.accept.Size = ((System.Drawing.Size)(resources.GetObject("accept.Size")));
+			this.accept.TabIndex = ((int)(resources.GetObject("accept.TabIndex")));
+			this.accept.Text = resources.GetString("accept.Text");
+			this.accept.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("accept.TextAlign")));
+			this.accept.Visible = ((bool)(resources.GetObject("accept.Visible")));
+			this.accept.Click += new System.EventHandler(this.menuAccept_Click);
 			// 
-			// menuItem7
+			// remove
 			// 
-			this.menuItem7.Enabled = ((bool)(resources.GetObject("menuItem7.Enabled")));
-			this.menuItem7.Index = 3;
-			this.menuItem7.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuItem7.Shortcut")));
-			this.menuItem7.ShowShortcut = ((bool)(resources.GetObject("menuItem7.ShowShortcut")));
-			this.menuItem7.Text = resources.GetString("menuItem7.Text");
-			this.menuItem7.Visible = ((bool)(resources.GetObject("menuItem7.Visible")));
+			this.remove.AccessibleDescription = resources.GetString("remove.AccessibleDescription");
+			this.remove.AccessibleName = resources.GetString("remove.AccessibleName");
+			this.remove.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("remove.Anchor")));
+			this.remove.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("remove.BackgroundImage")));
+			this.remove.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("remove.Dock")));
+			this.remove.Enabled = ((bool)(resources.GetObject("remove.Enabled")));
+			this.remove.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("remove.FlatStyle")));
+			this.remove.Font = ((System.Drawing.Font)(resources.GetObject("remove.Font")));
+			this.remove.Image = ((System.Drawing.Image)(resources.GetObject("remove.Image")));
+			this.remove.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("remove.ImageAlign")));
+			this.remove.ImageIndex = ((int)(resources.GetObject("remove.ImageIndex")));
+			this.remove.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("remove.ImeMode")));
+			this.remove.Location = ((System.Drawing.Point)(resources.GetObject("remove.Location")));
+			this.remove.Name = "remove";
+			this.remove.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("remove.RightToLeft")));
+			this.remove.Size = ((System.Drawing.Size)(resources.GetObject("remove.Size")));
+			this.remove.TabIndex = ((int)(resources.GetObject("remove.TabIndex")));
+			this.remove.Text = resources.GetString("remove.Text");
+			this.remove.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("remove.TextAlign")));
+			this.remove.Visible = ((bool)(resources.GetObject("remove.Visible")));
+			this.remove.Click += new System.EventHandler(this.menuRemove_Click);
 			// 
 			// GlobalProperties
 			// 
@@ -2296,7 +2358,6 @@ namespace Novell.FormsTrayApp
 			if ( ifolderObject == null )
 			{
 				// Hide the button panels.
-				// TODO: Hide availableiFolderActions panel.
 				iFolderActions.Visible = false;
 
 				// Disable all of the item-related menu items.
@@ -2307,31 +2368,32 @@ namespace Novell.FormsTrayApp
 			else
 			{
 				iFolderWeb ifolderWeb = ifolderObject.iFolderWeb;
+				iFolderActions.Visible = true;
 
 				if ( ifolderWeb.IsSubscription )
 				{
-					//TODO: show availableiFolderActions panel.
-
-					// Hide iFolder actions panel.
-					iFolderActions.Visible = false;
-
 					// Disable the iFolder related menu items.
 					this.menuActionOpen.Enabled = this.menuActionProperties.Enabled =
 						this.menuActionRevert.Enabled = this.menuActionShare.Enabled =
 						this.menuActionSync.Enabled = this.menuActionResolve.Enabled = false;
 
+					// Hide the local iFolder buttons
+					this.open.Visible = this.syncNow.Visible = this.share.Visible =
+						this.revert.Visible = this.properties.Visible = false;
+
 					// Enable the available iFolder related menu items.
 					this.menuActionRemove.Enabled = this.menuActionAccept.Enabled = true;
+
+					// Show the available iFolder buttons
+					this.accept.Visible = this.remove.Visible = true;
 				}
 				else
 				{
-					// Show the iFolder actions panel.
-					this.iFolderActions.Visible = true;
-
-					// TODO: Hide availableiFolderActions panel.
-
 					// Disable the available iFolder related menu items.
 					this.menuActionRemove.Enabled = this.menuActionAccept.Enabled = false;
+
+					// Hide the available iFolder buttons
+					this.accept.Visible = this.remove.Visible = false;
 
 					// Enable the iFolder related menu items.
 					this.menuActionOpen.Enabled = this.menuActionProperties.Enabled =
@@ -2339,6 +2401,11 @@ namespace Novell.FormsTrayApp
 						this.menuActionSync.Enabled = true;
 
 					this.menuActionResolve.Enabled = ifolderWeb.HasConflicts;
+
+					// Show the local iFolder buttons
+					this.open.Visible = this.syncNow.Visible = this.share.Visible =
+						this.revert.Visible = this.properties.Visible = true;
+
 				}
 			}
 
@@ -2687,6 +2754,8 @@ namespace Novell.FormsTrayApp
 
 		private void menuCreate_Click(object sender, System.EventArgs e)
 		{
+			// TODO: Need to update the CreateiFolder dialog.
+
 			// Build the list of domains to pass in to the create dialog.
 			ArrayList domains = new ArrayList();
 			DomainItem selectedDomainItem = new DomainItem( defaultDomain.Name, defaultDomain.ID );
@@ -2755,13 +2824,12 @@ namespace Novell.FormsTrayApp
 
 		private void menuAccept_Click(object sender, System.EventArgs e)
 		{
-/*			ListViewItem lvi = iFolderView.SelectedItems[0];
-			iFolderWeb ifolder = ((iFolderObject)lvi.Tag).iFolderWeb;
-
-			AcceptInvitation acceptInvitation = new AcceptInvitation(ifWebService, ifolder);
-			// TODO: get iFolder from acceptInvitation and update the listviewitem with it.
+			// TODO: Need to update the AcceptInvitation dialog.
+			iFolderWeb ifolder = ((iFolderObject)selectedItem.Tag).iFolderWeb;
+			AcceptInvitation acceptInvitation = new AcceptInvitation( ifWebService, ifolder );
 			acceptInvitation.ShowDialog();
-*/		}
+			acceptInvitation.Dispose();
+		}
 
 		private void menuRemove_Click(object sender, System.EventArgs e)
 		{
