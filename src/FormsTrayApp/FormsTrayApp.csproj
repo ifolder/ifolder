@@ -318,6 +318,31 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "TileListView.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TileListView.resx"
+                    DependentUpon = "TileListView.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "TileListViewItem.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TileListViewItem.resx"
+                    DependentUpon = "TileListViewItem.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "TileListViewItemCollection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "ToolBarEx.cs"
                     SubType = "Component"
                     BuildAction = "Compile"
