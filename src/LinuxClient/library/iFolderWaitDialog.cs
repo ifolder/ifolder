@@ -147,7 +147,11 @@ public class iFolderWaitDialog : Dialog
 	
 	protected override bool OnDeleteEvent(Gdk.Event evnt)
 	{
-		progressBarTimer.Dispose();
+		if (progressBarTimer != null)
+		{
+			progressBarTimer.Dispose();
+			progressBarTimer = null;
+		}
 
 		if (buttonSet == ButtonSet.None)
 			return true; // Do nothing and don't let this be seen elsewhere
@@ -157,12 +161,25 @@ public class iFolderWaitDialog : Dialog
 	
 	protected override bool OnDestroyEvent(Gdk.Event evnt)
 	{
-		progressBarTimer.Dispose();
+		if (progressBarTimer != null)
+		{
+			progressBarTimer.Dispose();
+			progressBarTimer = null;
+		}
 
 		if (buttonSet == ButtonSet.None)
 			return true; // Do nothing and don't let this be seen elsewhere
 		else
 			return false;	// Allow this to send the cancel
+	}
+	
+	protected override void OnHidden()
+	{
+		if (progressBarTimer != null)
+		{
+			progressBarTimer.Dispose();
+			progressBarTimer = null;
+		}
 	}
 
 //	private void ShowDetailsButtonPressed(object o, EventArgs args)
