@@ -132,6 +132,7 @@ namespace Novell.iFolder
 			
 			label = new Label(folderName);
 			label.Xalign = 0;
+			label.UseUnderline = false;
 			table.Attach(label, 1, 2, 0, 1,
 						 AttachOptions.Shrink | AttachOptions.Fill, 0, 0, 0);
 			
@@ -146,6 +147,7 @@ namespace Novell.iFolder
 			
 			label = new Label(folderPath);
 			label.Xalign = 0;
+			label.UseUnderline = false;
 			table.Attach(label, 1, 2, 1, 2,
 						 AttachOptions.Shrink | AttachOptions.Fill, 0, 0, 0);
 			
