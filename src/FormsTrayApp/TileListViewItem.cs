@@ -310,15 +310,12 @@ namespace Novell.FormsTrayApp
 					{
 						ItemSelected(this, new EventArgs());
 					}
-
-//					owner.SelectedItem = this;
 				}
 				else
 				{
 					BackColor = normalColor;
 					name.ForeColor = activeTextColor;
 					location.ForeColor = status.ForeColor = inactiveTextColor;
-//					owner.SelectedItem = null;
 				}
 			}
 		}
@@ -327,6 +324,13 @@ namespace Novell.FormsTrayApp
 
 		#region Public Methods
 
+		/// <summary>
+		/// Removes the item from its associated list view control.
+		/// </summary>
+		public void Remove()
+		{
+			owner.Items.Remove( this );
+		}
 
 		#endregion
 	}

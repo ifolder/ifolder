@@ -278,6 +278,16 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "RevertiFolder.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "RevertiFolder.resx"
+                    DependentUpon = "RevertiFolder.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Security.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

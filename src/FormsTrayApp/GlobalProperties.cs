@@ -329,6 +329,8 @@ namespace Novell.FormsTrayApp
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.iFolderActions = new System.Windows.Forms.Panel();
+			this.remove = new System.Windows.Forms.Button();
+			this.accept = new System.Windows.Forms.Button();
 			this.properties = new System.Windows.Forms.Button();
 			this.revert = new System.Windows.Forms.Button();
 			this.share = new System.Windows.Forms.Button();
@@ -349,8 +351,6 @@ namespace Novell.FormsTrayApp
 			this.menuRemove = new System.Windows.Forms.MenuItem();
 			this.refreshContextMenu = new System.Windows.Forms.ContextMenu();
 			this.menuRefresh = new System.Windows.Forms.MenuItem();
-			this.accept = new System.Windows.Forms.Button();
-			this.remove = new System.Windows.Forms.Button();
 			this.panel1.SuspendLayout();
 			this.iFolderActions.SuspendLayout();
 			this.panel2.SuspendLayout();
@@ -846,6 +846,54 @@ namespace Novell.FormsTrayApp
 			this.iFolderActions.Text = resources.GetString("iFolderActions.Text");
 			this.iFolderActions.Visible = ((bool)(resources.GetObject("iFolderActions.Visible")));
 			// 
+			// remove
+			// 
+			this.remove.AccessibleDescription = resources.GetString("remove.AccessibleDescription");
+			this.remove.AccessibleName = resources.GetString("remove.AccessibleName");
+			this.remove.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("remove.Anchor")));
+			this.remove.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("remove.BackgroundImage")));
+			this.remove.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("remove.Dock")));
+			this.remove.Enabled = ((bool)(resources.GetObject("remove.Enabled")));
+			this.remove.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("remove.FlatStyle")));
+			this.remove.Font = ((System.Drawing.Font)(resources.GetObject("remove.Font")));
+			this.remove.Image = ((System.Drawing.Image)(resources.GetObject("remove.Image")));
+			this.remove.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("remove.ImageAlign")));
+			this.remove.ImageIndex = ((int)(resources.GetObject("remove.ImageIndex")));
+			this.remove.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("remove.ImeMode")));
+			this.remove.Location = ((System.Drawing.Point)(resources.GetObject("remove.Location")));
+			this.remove.Name = "remove";
+			this.remove.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("remove.RightToLeft")));
+			this.remove.Size = ((System.Drawing.Size)(resources.GetObject("remove.Size")));
+			this.remove.TabIndex = ((int)(resources.GetObject("remove.TabIndex")));
+			this.remove.Text = resources.GetString("remove.Text");
+			this.remove.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("remove.TextAlign")));
+			this.remove.Visible = ((bool)(resources.GetObject("remove.Visible")));
+			this.remove.Click += new System.EventHandler(this.menuRemove_Click);
+			// 
+			// accept
+			// 
+			this.accept.AccessibleDescription = resources.GetString("accept.AccessibleDescription");
+			this.accept.AccessibleName = resources.GetString("accept.AccessibleName");
+			this.accept.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("accept.Anchor")));
+			this.accept.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("accept.BackgroundImage")));
+			this.accept.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("accept.Dock")));
+			this.accept.Enabled = ((bool)(resources.GetObject("accept.Enabled")));
+			this.accept.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("accept.FlatStyle")));
+			this.accept.Font = ((System.Drawing.Font)(resources.GetObject("accept.Font")));
+			this.accept.Image = ((System.Drawing.Image)(resources.GetObject("accept.Image")));
+			this.accept.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("accept.ImageAlign")));
+			this.accept.ImageIndex = ((int)(resources.GetObject("accept.ImageIndex")));
+			this.accept.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("accept.ImeMode")));
+			this.accept.Location = ((System.Drawing.Point)(resources.GetObject("accept.Location")));
+			this.accept.Name = "accept";
+			this.accept.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("accept.RightToLeft")));
+			this.accept.Size = ((System.Drawing.Size)(resources.GetObject("accept.Size")));
+			this.accept.TabIndex = ((int)(resources.GetObject("accept.TabIndex")));
+			this.accept.Text = resources.GetString("accept.Text");
+			this.accept.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("accept.TextAlign")));
+			this.accept.Visible = ((bool)(resources.GetObject("accept.Visible")));
+			this.accept.Click += new System.EventHandler(this.menuAccept_Click);
+			// 
 			// properties
 			// 
 			this.properties.AccessibleDescription = resources.GetString("properties.AccessibleDescription");
@@ -1245,54 +1293,6 @@ namespace Novell.FormsTrayApp
 			this.menuRefresh.Visible = ((bool)(resources.GetObject("menuRefresh.Visible")));
 			this.menuRefresh.Click += new System.EventHandler(this.menuRefresh_Click);
 			// 
-			// accept
-			// 
-			this.accept.AccessibleDescription = resources.GetString("accept.AccessibleDescription");
-			this.accept.AccessibleName = resources.GetString("accept.AccessibleName");
-			this.accept.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("accept.Anchor")));
-			this.accept.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("accept.BackgroundImage")));
-			this.accept.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("accept.Dock")));
-			this.accept.Enabled = ((bool)(resources.GetObject("accept.Enabled")));
-			this.accept.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("accept.FlatStyle")));
-			this.accept.Font = ((System.Drawing.Font)(resources.GetObject("accept.Font")));
-			this.accept.Image = ((System.Drawing.Image)(resources.GetObject("accept.Image")));
-			this.accept.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("accept.ImageAlign")));
-			this.accept.ImageIndex = ((int)(resources.GetObject("accept.ImageIndex")));
-			this.accept.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("accept.ImeMode")));
-			this.accept.Location = ((System.Drawing.Point)(resources.GetObject("accept.Location")));
-			this.accept.Name = "accept";
-			this.accept.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("accept.RightToLeft")));
-			this.accept.Size = ((System.Drawing.Size)(resources.GetObject("accept.Size")));
-			this.accept.TabIndex = ((int)(resources.GetObject("accept.TabIndex")));
-			this.accept.Text = resources.GetString("accept.Text");
-			this.accept.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("accept.TextAlign")));
-			this.accept.Visible = ((bool)(resources.GetObject("accept.Visible")));
-			this.accept.Click += new System.EventHandler(this.menuAccept_Click);
-			// 
-			// remove
-			// 
-			this.remove.AccessibleDescription = resources.GetString("remove.AccessibleDescription");
-			this.remove.AccessibleName = resources.GetString("remove.AccessibleName");
-			this.remove.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("remove.Anchor")));
-			this.remove.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("remove.BackgroundImage")));
-			this.remove.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("remove.Dock")));
-			this.remove.Enabled = ((bool)(resources.GetObject("remove.Enabled")));
-			this.remove.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("remove.FlatStyle")));
-			this.remove.Font = ((System.Drawing.Font)(resources.GetObject("remove.Font")));
-			this.remove.Image = ((System.Drawing.Image)(resources.GetObject("remove.Image")));
-			this.remove.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("remove.ImageAlign")));
-			this.remove.ImageIndex = ((int)(resources.GetObject("remove.ImageIndex")));
-			this.remove.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("remove.ImeMode")));
-			this.remove.Location = ((System.Drawing.Point)(resources.GetObject("remove.Location")));
-			this.remove.Name = "remove";
-			this.remove.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("remove.RightToLeft")));
-			this.remove.Size = ((System.Drawing.Size)(resources.GetObject("remove.Size")));
-			this.remove.TabIndex = ((int)(resources.GetObject("remove.TabIndex")));
-			this.remove.Text = resources.GetString("remove.Text");
-			this.remove.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("remove.TextAlign")));
-			this.remove.Visible = ((bool)(resources.GetObject("remove.Visible")));
-			this.remove.Click += new System.EventHandler(this.menuRemove_Click);
-			// 
 			// GlobalProperties
 			// 
 			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
@@ -1323,6 +1323,7 @@ namespace Novell.FormsTrayApp
 			this.Text = resources.GetString("$this.Text");
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GlobalProperties_KeyDown);
 			this.Closing += new System.ComponentModel.CancelEventHandler(this.GlobalProperties_Closing);
+			this.SizeChanged += new System.EventHandler(this.GlobalProperties_SizeChanged);
 			this.Load += new System.EventHandler(this.GlobalProperties_Load);
 			this.Move += new System.EventHandler(this.GlobalProperties_Move);
 			this.VisibleChanged += new System.EventHandler(this.GlobalProperties_VisibleChanged);
@@ -2009,11 +2010,11 @@ namespace Novell.FormsTrayApp
 					{
 						addiFolderToListView(new iFolderObject(ifolder, iFolderState.Normal));
 
-//						if (ifolder.State.Equals("Local"))
-//						{
-//							// Notify the shell.
-//							Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
-//						}
+						if ( !ifolder.IsSubscription )//ifolder.State.Equals("Local"))
+						{
+							// Notify the shell.
+							Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
+						}
 
 						// Check for existing subscriptions when an iFolder gets created and remove them
 						// from the list.
@@ -2063,7 +2064,7 @@ namespace Novell.FormsTrayApp
 		{
 			iFolderWeb ifolder = ifolderObject.iFolderWeb;
 
-			if (ifolder.State.Equals("Local"))
+			if ( !ifolder.IsSubscription )
 			{
 				lock (ht)
 				{
@@ -2091,14 +2092,22 @@ namespace Novell.FormsTrayApp
 			}
 			else
 			{
-				lock ( iFolderListViews )
-				{
-					iFoldersListView ifListView = (iFoldersListView)iFolderListViews[ ifolder.DomainID ];
-					// TODO: what if the listview isn't in the list?
-
-					ifListView.AddiFolderToListView( ifolderObject );
-				}
+				addiFolderToAvailableListView( ifolderObject );
 			}
+		}
+
+		private void addiFolderToAvailableListView( iFolderObject ifolderObject )
+		{
+			lock ( iFolderListViews )
+			{
+				iFoldersListView ifListView = (iFoldersListView)iFolderListViews[ ifolderObject.iFolderWeb.DomainID ];
+				// TODO: what if the listview isn't in the list?
+
+				ifListView.AddiFolderToListView( ifolderObject );
+			}
+
+			// TODO: Do we need to add these to the hashtable ... if a subscription gets removed we need a 
+			// quick way of deleting it from the list.
 		}
 
 		private void updateView()
@@ -2262,6 +2271,7 @@ namespace Novell.FormsTrayApp
 //			iFolderView.SelectedItems.Clear();
 			iFolderView.SelectedItem = null;
 
+			// TODO: Update the available iFolder views.
 			foreach (iFoldersListView ifListView in iFolderListViews.Values)
 			{
 //				ifListView.InitializeUpdate();
@@ -2281,12 +2291,16 @@ namespace Novell.FormsTrayApp
 				menuActionSeparator2.Visible = false;
 */
 
-			Hashtable oldHt;
+			Hashtable oldHt = new Hashtable();
 			lock(ht)
 			{
-				// Save the old items so that the state can be preserved between refreshes.
-				oldHt = (Hashtable)deepClone( ht );
-
+				// Save the state of the old items so state can be preserved between refreshes.
+				foreach ( TileListViewItem tlvi in ht.Values )
+				{
+					iFolderObject ifolderObject = (iFolderObject)tlvi.Tag;
+					oldHt.Add( ifolderObject.ID, ifolderObject.iFolderState );
+				}
+					
 				ht.Clear();
 			}
 
@@ -2300,11 +2314,9 @@ namespace Novell.FormsTrayApp
 					iFolderState state = iFolderState.Normal;
 					if (!ifolder.IsSubscription)
 					{
-						ListViewItem lvi = (ListViewItem)oldHt[ ifolder.ID ];
-						if ( lvi != null )
+						if ( oldHt.Contains( ifolder.ID ) )
 						{
-							iFolderObject oldiFolder = (iFolderObject)lvi.Tag;
-							state = oldiFolder.iFolderState;
+							state = (iFolderState)oldHt[ ifolder.ID ];
 						}
 					}
 
@@ -2315,6 +2327,7 @@ namespace Novell.FormsTrayApp
 			{
 				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("iFolderError"), resourceManager.GetString("iFolderErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
 				mmb.ShowDialog();
+				mmb.Dispose();
 			}
 
 //			iFolderView.EndUpdate();
@@ -2350,6 +2363,7 @@ namespace Novell.FormsTrayApp
 			{
 				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("syncError"), resourceManager.GetString("syncErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
+				mmb.Dispose();
 			}
 		}
 
@@ -2505,6 +2519,34 @@ namespace Novell.FormsTrayApp
 		#endregion
 
 		#region Event Handlers
+
+		private void GlobalProperties_SizeChanged(object sender, System.EventArgs e)
+		{
+			// Calculate the size that we can use.
+			int width = this.ClientSize.Width - panel2.Left;
+			int height = this.ClientSize.Height - panel2.Top;
+
+			Size clientSize = panel2.ClientSize;
+			Size size = panel2.Size;
+			if ( width < panel2.Width )
+			{
+				clientSize.Width = width;
+			}
+			else
+			{
+				size.Width = width;
+			}
+
+			if ( height < panel2.Height )
+			{
+				clientSize.Height = height;
+			}
+			else
+			{
+				size.Height = height;
+			}
+		}
+
 		private void GlobalProperties_Move(object sender, System.EventArgs e)
 		{
 			if (initialPositionSet)
@@ -2657,39 +2699,33 @@ namespace Novell.FormsTrayApp
 
 		private void menuOpen_Click(object sender, System.EventArgs e)
 		{
-/*			ListViewItem lvi = iFolderView.SelectedItems[0];
-			iFolderWeb ifolder = ((iFolderObject)lvi.Tag).iFolderWeb;
+			if ( selectedItem != null )
+			{
+				iFolderWeb ifolder = ((iFolderObject)selectedItem.Tag).iFolderWeb;
 
-			try
-			{
-				Process.Start(ifolder.UnManagedPath);
+				try
+				{
+					Process.Start(ifolder.UnManagedPath);
+				}
+				catch (Exception ex)
+				{
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(string.Format(resourceManager.GetString("iFolderOpenError"), ifolder.Name), resourceManager.GetString("openErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					mmb.ShowDialog();
+					mmb.Dispose();
+				}
 			}
-			catch (Exception ex)
-			{
-				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(string.Format(resourceManager.GetString("iFolderOpenError"), ifolder.Name), resourceManager.GetString("openErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-				mmb.ShowDialog();
-			}*/
 		}
 
 		private void menuRevert_Click(object sender, System.EventArgs e)
 		{
-/*			ListViewItem lvi = iFolderView.SelectedItems[0];
-
 			Cursor.Current = Cursors.WaitCursor;
 
 			try
 			{
-				iFolderWeb ifolder = ((iFolderObject)lvi.Tag).iFolderWeb;
+				iFolderWeb ifolder = ((iFolderObject)selectedItem.Tag).iFolderWeb;
 
-				MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(
-					resourceManager.GetString("revertiFolder") + "\n\n" +
-					resourceManager.GetString("revertPrompt"), 
-					resourceManager.GetString("revertTitle"),
-					string.Empty,
-					MyMessageBoxButtons.YesNo,
-					MyMessageBoxIcon.Question,
-					MyMessageBoxDefaultButton.Button2);
-				if (mmb.ShowDialog() == DialogResult.Yes)
+				RevertiFolder revertiFolder = new RevertiFolder();
+				if ( revertiFolder.ShowDialog() == DialogResult.Yes )
 				{
 					// Delete the iFolder.
 					iFolderWeb newiFolder = ifWebService.RevertiFolder(ifolder.ID);
@@ -2697,20 +2733,23 @@ namespace Novell.FormsTrayApp
 					// Notify the shell.
 					Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
 
+					// TODO: Remove the item from the listview.
+					selectedItem.Remove();
+					selectedItem = null;
+					updateMenus( null );
+
 					if (newiFolder != null)
 					{
-						lvi.Tag = new iFolderObject(newiFolder, iFolderState.Normal);
-
-						lock (ht)
+						if ( revertiFolder.RemoveFromServer )
 						{
-							ht.Add(newiFolder.ID, lvi);
+							// Remove the iFolder from the server.
+							ifWebService.DeclineiFolderInvitation( newiFolder.DomainID, newiFolder.ID );
 						}
-
-						updateListViewItem(lvi);
-					}
-					else
-					{
-						lvi.Remove();
+						else
+						{
+							// Add the item to the available iFolders list.
+							addiFolderToAvailableListView( new iFolderObject( newiFolder, iFolderState.Normal ) );
+						}
 					}
 
 					lock (ht)
@@ -2721,35 +2760,37 @@ namespace Novell.FormsTrayApp
 			}
 			catch (Exception ex)
 			{		
+				Cursor.Current = Cursors.Default;
 				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("iFolderRevertError"), resourceManager.GetString("revertErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
+				mmb.Dispose();
 			}
 
-			Cursor.Current = Cursors.Default;*/
+			Cursor.Current = Cursors.Default;
 		}
 
 		private void menuResolve_Click(object sender, System.EventArgs e)
 		{
-/*			ConflictResolver conflictResolver = new ConflictResolver();
-			conflictResolver.iFolder = ((iFolderObject)iFolderView.SelectedItems[0].Tag).iFolderWeb;
+			ConflictResolver conflictResolver = new ConflictResolver();
+			conflictResolver.iFolder = ((iFolderObject)selectedItem.Tag).iFolderWeb;
 			conflictResolver.iFolderWebService = ifWebService;
 			conflictResolver.LoadPath = Application.StartupPath;
 			conflictResolver.Show();
-*/		}
+		}
 
 		private void menuShare_Click(object sender, System.EventArgs e)
 		{
-			invokeiFolderProperties(iFolderView.SelectedItem, 1);
+			invokeiFolderProperties( selectedItem, 1 );
 		}
 
 		private void menuSyncNow_Click(object sender, System.EventArgs e)
 		{
-//			synciFolder(((iFolderObject)iFolderView.SelectedItems[0].Tag).iFolderWeb.ID);
+			synciFolder(((iFolderObject)selectedItem.Tag).iFolderWeb.ID);
 		}
 
 		private void menuProperties_Click(object sender, System.EventArgs e)
 		{
-//			invokeiFolderProperties(iFolderView.SelectedItems[0], 0);
+			invokeiFolderProperties( selectedItem, 0 );
 		}
 
 		private void menuCreate_Click(object sender, System.EventArgs e)
@@ -2824,11 +2865,14 @@ namespace Novell.FormsTrayApp
 
 		private void menuAccept_Click(object sender, System.EventArgs e)
 		{
-			// TODO: Need to update the AcceptInvitation dialog.
-			iFolderWeb ifolder = ((iFolderObject)selectedItem.Tag).iFolderWeb;
-			AcceptInvitation acceptInvitation = new AcceptInvitation( ifWebService, ifolder );
-			acceptInvitation.ShowDialog();
-			acceptInvitation.Dispose();
+			if ( selectedItem != null )
+			{
+				// TODO: Need to update the AcceptInvitation dialog.
+				iFolderWeb ifolder = ((iFolderObject)selectedItem.Tag).iFolderWeb;
+				AcceptInvitation acceptInvitation = new AcceptInvitation( ifWebService, ifolder );
+				acceptInvitation.ShowDialog();
+				acceptInvitation.Dispose();
+			}
 		}
 
 		private void menuRemove_Click(object sender, System.EventArgs e)
