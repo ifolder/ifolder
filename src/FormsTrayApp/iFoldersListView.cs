@@ -77,16 +77,16 @@ namespace Novell.FormsTrayApp
 
 		#region Events
 
+		public delegate void LastItemRemovedDelegate( object sender, EventArgs e);
+		public event LastItemRemovedDelegate LastItemRemoved;
+
 		/// <summary>
 		/// Delegate used when an item is selected.
 		/// </summary>
-		public delegate void ItemSelectedDelegate(object sender, ItemSelectedEventArgs e);
+		public delegate void SelectedIndexChangedDelegate( object sender, EventArgs e );
 		/// <summary>
 		/// Occurs when an item is selected.
 		/// </summary>
-		public event ItemSelectedDelegate ItemSelected;
-
-		public delegate void SelectedIndexChangedDelegate( object sender, EventArgs e );
 		public event SelectedIndexChangedDelegate SelectedIndexChanged;
 
 		#endregion
@@ -103,6 +103,14 @@ namespace Novell.FormsTrayApp
 			if ( SelectedIndexChanged != null )
 			{
 				SelectedIndexChanged( sender, e );
+			}
+		}
+
+		private void tileListView1_LastItemRemoved(object sender, System.EventArgs e)
+		{
+			if ( LastItemRemoved != null )
+			{
+				LastItemRemoved( sender, e );
 			}
 		}
 
@@ -178,6 +186,7 @@ namespace Novell.FormsTrayApp
 			this.tileListView1.Size = new System.Drawing.Size(288, 32);
 			this.tileListView1.TabIndex = 1;
 			this.tileListView1.VerticleSpacing = 5;
+			this.tileListView1.LastItemRemoved += new Novell.FormsTrayApp.TileListView.LastItemRemovedDelegate(this.tileListView1_LastItemRemoved);
 			this.tileListView1.SizeChanged += new System.EventHandler(this.tileListView1_SizeChanged);
 			this.tileListView1.SelectedIndexChanged += new Novell.FormsTrayApp.TileListView.SelectedIndexChangedDelegate(this.tileListView1_SelectedIndexChanged);
 			// 
@@ -207,14 +216,6 @@ namespace Novell.FormsTrayApp
 			get { return tileListView1.SelectedItem; }
 			set { tileListView1.SelectedItem = value; }
 		}
-
-//		public ListView ListView
-//		{
-//			get
-//			{
-//				return listView1;
-//			}
-//		}
 
 		#endregion
 

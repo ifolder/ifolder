@@ -1206,6 +1206,7 @@ namespace Novell.FormsTrayApp
 			this.iFolderView.TabIndex = ((int)(resources.GetObject("iFolderView.TabIndex")));
 			this.iFolderView.VerticleSpacing = 5;
 			this.iFolderView.Visible = ((bool)(resources.GetObject("iFolderView.Visible")));
+			this.iFolderView.LastItemRemoved += new Novell.FormsTrayApp.TileListView.LastItemRemovedDelegate(this.iFolderView_LastItemRemoved);
 			this.iFolderView.SizeChanged += new System.EventHandler(this.iFolderView_SizeChanged);
 			this.iFolderView.SelectedIndexChanged += new Novell.FormsTrayApp.TileListView.SelectedIndexChangedDelegate(this.ifListView_SelectedIndexChanged);
 			// 
@@ -3020,6 +3021,11 @@ namespace Novell.FormsTrayApp
 		private void iFolderView_SizeChanged(object sender, System.EventArgs e)
 		{
 
+		}
+
+		private void iFolderView_LastItemRemoved(object sender, System.EventArgs e)
+		{
+			updateView();
 		}
 
 /*		private void iFolderView_SelectedIndexChanged(object sender, System.EventArgs e)

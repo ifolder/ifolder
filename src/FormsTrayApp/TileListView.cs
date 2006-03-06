@@ -108,16 +108,16 @@ namespace Novell.FormsTrayApp
 
 		#region Events
 
+		public delegate void LastItemRemovedDelegate( object sender, EventArgs e);
+		public event LastItemRemovedDelegate LastItemRemoved;
+
 		/// <summary>
 		/// Delegate used when an item is selected.
 		/// </summary>
-		public delegate void ItemSelectedDelegate(object sender, ItemSelectedEventArgs e);
+		public delegate void SelectedIndexChangedDelegate( object sender, EventArgs e );
 		/// <summary>
 		/// Occurs when an item is selected.
 		/// </summary>
-		public event ItemSelectedDelegate ItemSelected;
-
-		public delegate void SelectedIndexChangedDelegate( object sender, EventArgs e );
 		public event SelectedIndexChangedDelegate SelectedIndexChanged;
 
 		#endregion
@@ -161,11 +161,6 @@ namespace Novell.FormsTrayApp
 			}
 			selectedItem = tlvi;
 
-//			if (ItemSelected != null)
-//			{
-//				ItemSelected(this, new ItemSelectedEventArgs( tlvi ));
-//			}
-
 			if ( SelectedIndexChanged != null )
 			{
 				SelectedIndexChanged( this, e );
@@ -180,6 +175,11 @@ namespace Novell.FormsTrayApp
 		{
 			if (items.Count == 0)
 			{
+				if ( LastItemRemoved != null )
+				{
+					LastItemRemoved( this, new EventArgs() );
+				}
+
 				Height = 50;
 			}
 			else
