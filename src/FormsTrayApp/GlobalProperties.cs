@@ -1207,7 +1207,6 @@ namespace Novell.FormsTrayApp
 			this.iFolderView.VerticleSpacing = 5;
 			this.iFolderView.Visible = ((bool)(resources.GetObject("iFolderView.Visible")));
 			this.iFolderView.LastItemRemoved += new Novell.FormsTrayApp.TileListView.LastItemRemovedDelegate(this.iFolderView_LastItemRemoved);
-			this.iFolderView.SizeChanged += new System.EventHandler(this.iFolderView_SizeChanged);
 			this.iFolderView.SelectedIndexChanged += new Novell.FormsTrayApp.TileListView.SelectedIndexChangedDelegate(this.ifListView_SelectedIndexChanged);
 			// 
 			// localiFoldersHeading
@@ -1379,7 +1378,6 @@ namespace Novell.FormsTrayApp
 					// Add the domain.
 					domain = new Domain( domainInfo );
 					ifListView = new iFoldersListView( domainInfo, largeImageList );
-					//				ifListView.ItemSelected += new Novell.FormsTrayApp.iFoldersListView.ItemSelectedDelegate(ifListView_ItemSelected);
 					ifListView.SelectedIndexChanged += new Novell.FormsTrayApp.iFoldersListView.SelectedIndexChangedDelegate(ifListView_SelectedIndexChanged);
 
 					iFolderListViews.Add( domainInfo.ID, ifListView );
@@ -1400,22 +1398,6 @@ namespace Novell.FormsTrayApp
 				}
 			}
 
-/*			foreach (Domain d in servers.Items)
-			{
-				if (d.ID.Equals(domainInfo.ID))
-				{
-					// The domain is already in the list.
-					domain = d;
-				}
-			}
-
-			if (domain == null)
-			{
-				// The domain isn't in the list ... add it.
-				domain = new Domain(domainInfo);
-				servers.Items.Add(domain);
-			}
-*/
 			// Reset the current default domain if the added domain is set to be the default.
 			if (domainInfo.IsDefault)
 			{
@@ -1436,48 +1418,10 @@ namespace Novell.FormsTrayApp
 		/// Remove the specified domain from the dropdown list.
 		/// </summary>
 		/// <param name="domainInfo">The DomainInformation object representing the domain to remove.</param>
+		/// <param name="defaultDomainID">The identifier of the default domain.</param>
 		public void RemoveDomainFromList(DomainInformation domainInfo, string defaultDomainID)
 		{
-			Domain domain = null;
-			Domain showAllDomain = null;
-			
-/*			foreach (Domain d in servers.Items)
-			{
-				if (d.ID.Equals(domainInfo.ID))
-				{
-					domain = d;
-				}
-
-				if (d.ShowAll)
-				{
-					showAllDomain = d;
-				}
-
-				// Reset the default domain.
-				if ((defaultDomainID != null) && d.ID.Equals(defaultDomainID))
-				{
-					d.DomainInfo.IsDefault = true;                    
-				}
-			}
-
-			if (domain != null)
-			{
-				if (servers.SelectedItem.Equals(domain))
-				{
-					// If this was the selected domain, select the "show all" domain.
-					servers.SelectedItem = showAllDomain;
-				}
-				else if (((Domain)servers.SelectedItem).ShowAll)
-				{
-					// If the wildcard domain is selected, refresh the list.
-					refreshiFolders((Domain)servers.SelectedItem);
-				}
-
-				servers.Items.Remove(domain);
-			}
-*/
-			// Update the domain list file.
-			removeDomainFromFile(domainInfo, defaultDomainID);
+			RemoveDomainFromList( domainInfo.ID, defaultDomainID );
 		}
 
 		/// <summary>
@@ -1486,46 +1430,46 @@ namespace Novell.FormsTrayApp
 		/// <param name="domainID">The ID of the domain to remove.</param>
 		public void RemoveDomainFromList(string domainID)
 		{
-			Domain domain = null;
-			Domain showAllDomain = null;
-			
-/*			foreach (Domain d in servers.Items)
+			RemoveDomainFromList( domainID, simiasWebService.GetDefaultDomainID() );
+		}
+
+		public void RemoveDomainFromList( string domainID, string defaultDomainID )
+		{
+			DomainInformation domainInfo = null;
+
+			lock ( iFolderListViews )
 			{
-				if (d.ID.Equals(domainID))
+				iFoldersListView ifListView = (iFoldersListView)iFolderListViews[ domainID ];
+				if ( ifListView != null )
 				{
-					domain = d;
+					domainInfo = ifListView.DomainInfo;
+
+					// Remove the domain.
+					iFolderListViews.Remove( domainID );
+
+					updateView2();
+
+					if ( !hide )
+					{
+						panel2.Controls.Remove( ifListView );
+					}
 				}
 
-				if (d.ShowAll)
+				// Reset the default domain.
+				ifListView = (iFoldersListView)iFolderListViews[ defaultDomainID ];
+				if ( ifListView != null )
 				{
-					showAllDomain = d;
+					ifListView.DomainInfo.IsDefault = true;
 				}
 			}
 
-			if (domain != null)
+			// Update the domain list file.
+			removeDomainFromFile(domainInfo, defaultDomainID);
+
+			if (RemoveDomain != null)
 			{
-				if (servers.SelectedItem.Equals(domain))
-				{
-					// If this was the selected domain, select the "show all" domain.
-					servers.SelectedItem = showAllDomain;
-				}
-				else if (((Domain)servers.SelectedItem).ShowAll)
-				{
-					// If the wildcard domain is selected, refresh the list.
-					refreshiFolders((Domain)servers.SelectedItem);
-				}
-
-				servers.Items.Remove(domain);
-
-				// Update the domain list file.
-				string defaultDomainID = simiasWebService.GetDefaultDomainID();
-				removeDomainFromFile(domain.DomainInfo, defaultDomainID);
-
-				if (RemoveDomain != null)
-				{
-					RemoveDomain(this, new DomainRemoveEventArgs(domain.DomainInfo, defaultDomainID));
-				}
-			}*/
+				RemoveDomain(this, new DomainRemoveEventArgs(domainInfo, defaultDomainID));
+			}
 		}
 
 		/// <summary>
@@ -1533,13 +1477,6 @@ namespace Novell.FormsTrayApp
 		/// </summary>
 		public void InitializeServerList()
 		{
-/*			servers.Items.Clear();
-
-			// Add the wild-card domain.
-			Domain domain = new Domain(resourceManager.GetString("showAll"));
-			servers.Items.Add(domain);
-			servers.SelectedItem = domain;
-*/
 			// Initialize the domain list file.
 			domainList = Path.Combine(
 				Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), 
@@ -1644,27 +1581,6 @@ namespace Novell.FormsTrayApp
 		#endregion
 
 		#region Private Methods
-		private Object deepClone(Object original) 
-		{
-			MemoryStream stream = new MemoryStream();
-
-			System.Runtime.Serialization.Formatters.Binary.BinaryFormatter formatter = 
-				new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-
-			formatter.Context = new System.Runtime.Serialization.StreamingContext(
-				System.Runtime.Serialization.StreamingContextStates.Clone);
-
-			// Serialize the object graph into the stream
-			formatter.Serialize(stream, original);
-
-			// Seek to the start of the stream before deserializing
-			stream.Position = 0;
-
-			// Deserialize into a new set of objects
-			// and return the root of the graph (deep copy) to the caller
-			return(formatter.Deserialize(stream));
-		}
-
 		private void addDomainToFile(DomainInformation domainInfo)
 		{
 			XmlDocument domainsDoc;
@@ -1769,6 +1685,19 @@ namespace Novell.FormsTrayApp
 			}
 
 			saveXmlFile(domainsDoc);
+		}
+
+		private void removeTileListViewItem( TileListViewItem tlvi )
+		{
+			if ( tlvi.Equals( selectedItem ) )
+			{
+				selectedItem = null;
+				updateMenus( null );
+			}
+
+			tlvi.Remove();
+			updateView();
+			ht.Remove( ((iFolderObject)tlvi.Tag).ID );
 		}
 
 		private void saveXmlFile(XmlDocument doc)
@@ -1989,14 +1918,17 @@ namespace Novell.FormsTrayApp
 				case "Subscription"://NodeTypes.SubscriptionType:
 					lock (ht)
 					{
-						ListViewItem lvi = (ListViewItem)ht[args.Node];
-						if (lvi != null)
+						TileListViewItem tlvi = (TileListViewItem)ht[args.Node];
+						if (tlvi != null)
 						{
-							// Notify the shell.
-							Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ((iFolderObject)lvi.Tag).iFolderWeb.UnManagedPath, IntPtr.Zero);
+							iFolderWeb ifolder = ((iFolderObject)tlvi.Tag).iFolderWeb;
+							if ( !ifolder.IsSubscription )
+							{
+								// Notify the shell.
+								Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
+							}
 
-							lvi.Remove();
-							ht.Remove(args.Node);
+							removeTileListViewItem( tlvi );
 						}
 					}
 					break;
@@ -2077,14 +2009,6 @@ namespace Novell.FormsTrayApp
 					// Add only if it isn't already in the list.
 					if (ht[ifolder.ID] == null)
 					{
-						/*					string[] items = new string[3];
-											int imageIndex;
-
-											items[0] = ifolder.Name;
-											items[1] = ifolder.IsSubscription ? ifolder.Owner : ifolder.UnManagedPath;
-											items[2] = stateToString(ifolderObject, out imageIndex);
-						*/
-						// TODO: use proper image index.
 						TileListViewItem tlvi = new TileListViewItem( ifolderObject );
 						iFolderView.Items.Add(tlvi);
 
@@ -2098,24 +2022,29 @@ namespace Novell.FormsTrayApp
 			}
 			else
 			{
-				addiFolderToAvailableListView( ifolderObject );
+				lock( ht )
+				{
+					TileListViewItem tlvi = addiFolderToAvailableListView( ifolderObject );
+					ht.Add( ifolder.ID, tlvi );
+				}
 			}
 
 			updateView();
 		}
 
-		private void addiFolderToAvailableListView( iFolderObject ifolderObject )
+		private TileListViewItem addiFolderToAvailableListView( iFolderObject ifolderObject )
 		{
+			TileListViewItem tlvi;
+
 			lock ( iFolderListViews )
 			{
 				iFoldersListView ifListView = (iFoldersListView)iFolderListViews[ ifolderObject.iFolderWeb.DomainID ];
 				// TODO: what if the listview isn't in the list?
 
-				ifListView.AddiFolderToListView( ifolderObject );
+				tlvi = ifListView.AddiFolderToListView( ifolderObject );
 			}
 
-			// TODO: Do we need to add these to the hashtable ... if a subscription gets removed we need a 
-			// quick way of deleting it from the list.
+			return tlvi;
 		}
 
 		private void updateView2()
@@ -2310,28 +2239,14 @@ namespace Novell.FormsTrayApp
 			Cursor.Current = Cursors.WaitCursor;
 
 			iFolderView.Items.Clear();
-//			iFolderView.SelectedItems.Clear();
-			iFolderView.SelectedItem = null;
+			selectedItem = null;
+			updateMenus( null );
 
-			// TODO: Update the available iFolder views.
+			// Clear the available iFolder views.
 			foreach (iFoldersListView ifListView in iFolderListViews.Values)
 			{
 				ifListView.InitializeUpdate();
 			}
-
-			// Disable/hide the menu items and toolbar buttons.
-/*			menuShare.Visible = menuActionShare.Enabled = toolBarShare.Enabled =
-				menuProperties.Visible = menuActionProperties.Enabled = 
-				menuRevert.Visible = menuActionRevert.Enabled = 
-				menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled =
-				menuOpen.Visible = menuActionOpen.Enabled = 
-				menuSeparator1.Visible = menuSeparator2.Visible =
-				menuResolve.Visible = menuActionResolve.Visible = toolBarResolve.Enabled =
-				menuAccept.Visible = menuActionAccept.Visible = toolBarSetup.Enabled =
-				menuActionSeparator2.Visible =
-				menuRemove.Visible = menuActionRemove.Visible = 
-				menuActionSeparator2.Visible = false;
-*/
 
 			Hashtable oldHt = new Hashtable();
 			lock(ht)
@@ -2345,8 +2260,6 @@ namespace Novell.FormsTrayApp
 					
 				ht.Clear();
 			}
-
-//			iFolderView.BeginUpdate();
 
 			try
 			{
@@ -2371,8 +2284,6 @@ namespace Novell.FormsTrayApp
 				mmb.ShowDialog();
 				mmb.Dispose();
 			}
-
-//			iFolderView.EndUpdate();
 
 			foreach (iFoldersListView ifListView in iFolderListViews.Values)
 			{
@@ -2464,86 +2375,10 @@ namespace Novell.FormsTrayApp
 
 				}
 			}
-
-/*			if (ifolderWeb == null)
-			{
-				menuShare.Visible = menuActionShare.Enabled = //toolBarShare.Enabled =
-					menuProperties.Visible = menuActionProperties.Enabled = 
-					menuRevert.Visible = menuActionRevert.Enabled = 
-					menuOpen.Visible = menuActionOpen.Enabled = 
-					menuSyncNow.Visible = menuActionSync.Enabled = //toolBarSync.Enabled = 
-					menuSeparator1.Visible = menuSeparator2.Visible = 				
-					menuResolve.Visible = menuActionResolve.Visible = //toolBarResolve.Enabled =
-					menuAccept.Visible = menuActionAccept.Visible = //toolBarSetup.Enabled =
-					menuActionSeparator2.Visible =
-					menuRemove.Visible = menuActionRemove.Visible = 
-					menuActionSeparator2.Visible = false;
-
-			}
-			else
-			{
-				menuShare.Visible = menuActionShare.Enabled = //toolBarShare.Enabled =
-					menuProperties.Visible = menuActionProperties.Enabled = 
-					menuOpen.Visible = menuActionOpen.Enabled = 
-					menuSeparator1.Visible = menuSeparator2.Visible = 
-					!ifolderWeb.IsSubscription;
-				menuRevert.Visible = menuActionRevert.Enabled = 
-					!ifolderWeb.IsSubscription && !ifolderWeb.Role.Equals("Master");
-				if (ifolderWeb.IsSubscription)
-				{
-					menuSyncNow.Visible = menuActionSync.Enabled = false;//toolBarSync.Enabled = false;
-				}
-				else
-				{
-					Domain selectedDomain = (Domain)servers.SelectedItem
-					if (!selectedDomain.ShowAll)
-					{
-						menuSyncNow.Visible = menuActionSync.Enabled = true;//toolBarSync.Enabled = selectedDomain.DomainInfo.Active;
-					}
-					else
-					{
-						foreach (Domain d in servers.Items)
-						{
-							if (d.ID.Equals(ifolderWeb.DomainID))
-							{
-								menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled = d.DomainInfo.Active;
-								break;
-							}
-						}
-					}
-				}
-
-				menuResolve.Visible = menuActionResolve.Visible = toolBarResolve.Enabled = ifolderWeb.HasConflicts;
-
-				// Display the accept menu item if the selected item is a subscription with state "Available"
-				menuAccept.Visible = menuActionAccept.Visible = toolBarSetup.Enabled =
-					menuActionSeparator2.Visible = ifolderWeb.IsSubscription &&	ifolderWeb.State.Equals("Available");
-
-				// Display the decline menu item if the selected item is a subscription with state "Available" and from someone else.
-				menuRemove.Visible = menuActionRemove.Visible = 
-					menuActionSeparator2.Visible = (!ifolderWeb.IsSubscription || ifolderWeb.State.Equals("Available"));
-
-				if (menuRemove.Visible)
-				{
-					if (IsCurrentUser(ifolderWeb.OwnerID))
-					{
-						menuRemove.Text = menuActionRemove.Text = 
-							resourceManager.GetString("deleteAction");
-					}
-					else
-					{
-						menuRemove.Text = resourceManager.GetString("menuRemove.Text");
-						menuActionRemove.Text = resourceManager.GetString("menuActionRemove.Text");
-					}
-				}
-			}
-
-			menuRefresh.Visible = menuCreate.Visible = iFolderView.SelectedItems.Count == 0;*/
 		}
 
 		private void updateEnterpriseData()
 		{
-//			servers.Items.Clear();
 			DomainInformation[] domains;
 			try
 			{
@@ -2685,14 +2520,6 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
-//		private void ifListView_ItemSelected(object sender, ItemSelectedEventArgs e)
-//		{
-//			if ( selectedItem != null && !selectedItem.Equals( e.Item ) )
-//				selectedItem.Selected = false;
-//
-//			selectedItem = e.Item;
-//		}
-
 		private void ifListView_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			TileListView tileListView = ( TileListView )sender;
@@ -2735,14 +2562,9 @@ namespace Novell.FormsTrayApp
 			// Pressing the F5 key will cause a refresh to occur.
 			if (e.KeyCode == Keys.F5)
 			{
-//				refreshAll((Domain)servers.SelectedItem);
+				refreshAll(/*(Domain)servers.SelectedItem*/);
 			}
 		}
-
-/*		private void servers_SelectedIndexChanged(object sender, System.EventArgs e)
-		{
-			refreshiFolders((Domain)servers.SelectedItem);
-		}*/
 
 		private void menuOpen_Click(object sender, System.EventArgs e)
 		{
@@ -2780,11 +2602,6 @@ namespace Novell.FormsTrayApp
 					// Notify the shell.
 					Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
 
-					// TODO: Remove the item from the listview.
-					selectedItem.Remove();
-					selectedItem = null;
-					updateMenus( null );
-
 					if (newiFolder != null)
 					{
 						if ( revertiFolder.RemoveFromServer )
@@ -2795,15 +2612,23 @@ namespace Novell.FormsTrayApp
 						else
 						{
 							// Add the item to the available iFolders list.
-							addiFolderToAvailableListView( new iFolderObject( newiFolder, iFolderState.Normal ) );
+							TileListViewItem tlvi = addiFolderToAvailableListView( new iFolderObject( newiFolder, iFolderState.Normal ) );
+
+							lock ( ht )
+							{
+								ht.Add( newiFolder.ID, tlvi );
+							}
 						}
 					}
 
 					lock (ht)
 					{
-						ht.Remove(ifolder.ID);
+						removeTileListViewItem( selectedItem );
 					}
 				}
+
+				updateView();
+				revertiFolder.Dispose();
 			}
 			catch (Exception ex)
 			{		
@@ -2917,128 +2742,85 @@ namespace Novell.FormsTrayApp
 				// TODO: Need to update the AcceptInvitation dialog.
 				iFolderWeb ifolder = ((iFolderObject)selectedItem.Tag).iFolderWeb;
 				AcceptInvitation acceptInvitation = new AcceptInvitation( ifWebService, ifolder );
-				acceptInvitation.ShowDialog();
+				if ( acceptInvitation.ShowDialog() == DialogResult.OK )
+				{
+					lock (ht)
+					{
+						removeTileListViewItem( selectedItem );
+					}
+				}
 				acceptInvitation.Dispose();
 			}
 		}
 
 		private void menuRemove_Click(object sender, System.EventArgs e)
 		{
-/*			ListViewItem lvi = iFolderView.SelectedItems[0];
-			iFolderWeb ifolder = ((iFolderObject)lvi.Tag).iFolderWeb;
-			try
+			if ( selectedItem != null )
 			{
-				string message;
-				string caption = resourceManager.GetString("removeTitle");
-
-				if (ifolder.IsSubscription)
+				iFolderWeb ifolder = ((iFolderObject)selectedItem.Tag).iFolderWeb;
+				MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(
+					string.Format( resourceManager.GetString("deleteiFolder"), ifolder.Name ),
+					resourceManager.GetString("removeTitle"),
+					string.Empty,
+					MyMessageBoxButtons.YesNo,
+					MyMessageBoxIcon.Question,
+					MyMessageBoxDefaultButton.Button2);
+				if (mmb.ShowDialog() == DialogResult.Yes)
 				{
-					message = resourceManager.GetString("removeiFolder2") + "\n\n" +
-						resourceManager.GetString("removePrompt");
-
-					MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(
-						message,
-						caption,
-						string.Empty,
-						MyMessageBoxButtons.YesNo,
-						MyMessageBoxIcon.Question,
-						MyMessageBoxDefaultButton.Button2);
-					if (mmb.ShowDialog() == DialogResult.Yes)
+					try
 					{
 						ifWebService.DeclineiFolderInvitation(ifolder.DomainID, ifolder.ID);
-					}
-				}
-				else
-				{
-					if (IsCurrentUser(ifolder.OwnerID))
-					{
-						message = resourceManager.GetString("deleteiFolder") + "\n\n" + 
-							resourceManager.GetString("removePrompt");
-					}
-					else
-					{
-						message = resourceManager.GetString("removeiFolder")  + "\n\n" + 
-							resourceManager.GetString("removePrompt");
-					}
-
-					MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(
-						message,
-						caption,
-						string.Empty,
-						MyMessageBoxButtons.YesNo,
-						MyMessageBoxIcon.Question,
-						MyMessageBoxDefaultButton.Button2);
-					if (mmb.ShowDialog() == DialogResult.Yes)
-					{
-						if (ifolder.Role.Equals("Master"))
-						{
-							ifWebService.DeleteiFolder(ifolder.ID);
-							lvi.Remove();
-						}
-						else
-						{
-							// Revert the iFolder.
-							iFolderWeb newiFolder = ifWebService.RevertiFolder(ifolder.ID);
-
-							// Notify the shell.
-							Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
-
-							if (newiFolder != null)
-							{
-								// Update the listview item.
-								lvi.Tag = new iFolderObject(newiFolder, iFolderState.Normal);
-
-								lock (ht)
-								{
-									ht.Add(newiFolder.ID, lvi);
-								}
-
-								updateListViewItem(lvi);
-
-								// Decline the invitation.
-								ifWebService.DeclineiFolderInvitation(newiFolder.DomainID, newiFolder.ID);
-							}
-							else
-							{
-								lvi.Remove();
-							}
-						}
 
 						lock (ht)
 						{
-							ht.Remove(ifolder.ID);
+							removeTileListViewItem( selectedItem );
 						}
 					}
+					catch (Exception ex)
+					{
+						mmb = new MyMessageBox(resourceManager.GetString("declineError"), resourceManager.GetString("errorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						mmb.ShowDialog();
+					}
+				}
+
+				mmb.Dispose();
+			}
+		}
+
+		private void showiFolders_Click(object sender, System.EventArgs e)
+		{
+			hide = !hide;
+
+			if ( hide )
+			{
+				showiFolders.Text = resourceManager.GetString("viewAvailableiFolders");
+				menuViewAvailable.Checked = false;
+
+				// Remove the server listview controls.
+				foreach ( iFoldersListView ifListView in iFolderListViews.Values )
+				{
+					panel2.Controls.Remove( ifListView );
 				}
 			}
-			catch (Exception ex)
+			else
 			{
-				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("declineError"), resourceManager.GetString("errorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-				mmb.ShowDialog();
+				showiFolders.Text = resourceManager.GetString("showiFolders.Text");
+				menuViewAvailable.Checked = true;
+
+				// Add the server listview controls.
+				foreach ( iFoldersListView ifListView in iFolderListViews.Values )
+				{
+					panel2.Controls.Add( ifListView );
+				}
 			}
-*/		}
 
-		private void iFolderView_SizeChanged(object sender, System.EventArgs e)
-		{
-
+			updateView();
 		}
 
 		private void iFolderView_LastItemRemoved(object sender, System.EventArgs e)
 		{
 			updateView();
 		}
-
-/*		private void iFolderView_SelectedIndexChanged(object sender, System.EventArgs e)
-		{
-			iFolderWeb ifolderWeb = null;
-
-			if (iFolderView.SelectedItems.Count == 1)
-			{
-				ifolderWeb = ((iFolderObject)iFolderView.SelectedItems[0].Tag).iFolderWeb;
-			}
-
-			updateMenus(ifolderWeb);
-		}*/
 
 		private void iFolderView_DoubleClick(object sender, System.EventArgs e)
 		{
@@ -3059,43 +2841,6 @@ namespace Novell.FormsTrayApp
 				}
 			}
 */		}
-
-		private void toolBar1_ButtonClick(object sender, System.Windows.Forms.ToolBarButtonClickEventArgs e)
-		{
-/*			switch (toolBar1.Buttons.IndexOf(e.Button))
-			{
-				case 0: // Create
-					menuCreate_Click(this, new EventArgs());
-					break;
-				case 1: // Setup
-					menuAccept_Click(this, new EventArgs());
-					break;
-				case 2: // Share
-					invokeiFolderProperties(iFolderView.SelectedItems[0], 1);
-					break;
-				case 3: // Resolve
-					menuResolve_Click(this, new EventArgs());
-					break;
-				case 4: // Sync
-					synciFolder(((iFolderObject)iFolderView.SelectedItems[0].Tag).iFolderWeb.ID);
-					break;
-//				case 1: // Open
-//					menuOpen_Click(this, new EventArgs());
-//					break;
-//				case 3: // Properties
-//					invokeiFolderProperties(iFolderView.SelectedItems[0], 0);
-//					break;
-//				case 6: // Revert
-//					menuRevert_Click(this, new EventArgs());
-//					break;
-//				case 7: // Remove
-//					menuRemove_Click(this, new EventArgs());
-//					break;
-//				case 12: // Refresh
-//					refreshiFolders((Domain)servers.SelectedItem);
-//					break;
-			}*/
-		}
 
 		#region Sync Event Handlers
 		private void global_collectionSyncHandler(SimiasEventArgs args)
@@ -3138,36 +2883,6 @@ namespace Novell.FormsTrayApp
 			}
 
 			base.WndProc (ref m);
-		}
-
-		private void showiFolders_Click(object sender, System.EventArgs e)
-		{
-			hide = !hide;
-
-			if ( hide )
-			{
-				showiFolders.Text = resourceManager.GetString("viewAvailableiFolders");
-				menuViewAvailable.Checked = false;
-
-				// Remove the server listview controls.
-				foreach ( iFoldersListView ifListView in iFolderListViews.Values )
-				{
-					panel2.Controls.Remove( ifListView );
-				}
-			}
-			else
-			{
-				showiFolders.Text = resourceManager.GetString("showiFolders.Text");
-				menuViewAvailable.Checked = true;
-
-				// Add the server listview controls.
-				foreach ( iFoldersListView ifListView in iFolderListViews.Values )
-				{
-					panel2.Controls.Add( ifListView );
-				}
-			}
-
-			updateView();
 		}
 	}
 }

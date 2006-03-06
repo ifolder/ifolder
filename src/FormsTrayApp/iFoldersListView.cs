@@ -40,7 +40,6 @@ namespace Novell.FormsTrayApp
 		#region Class Members
 
 		private DomainInformation domainInfo;
-		private Hashtable iFolderHT = new Hashtable();
 		private System.Windows.Forms.RichTextBox richTextBox1;
 		private Novell.FormsTrayApp.TileListView tileListView1;
 		/// <summary> 
@@ -221,23 +220,15 @@ namespace Novell.FormsTrayApp
 
 		#region Public Methods
 
-		public void AddiFolderToListView( iFolderObject ifolderObject )
+		public TileListViewItem AddiFolderToListView( iFolderObject ifolderObject )
 		{
-			// Make sure the iFolder isn't already in the list.
-			lock ( iFolderHT )
-			{
-				if ( !iFolderHT.Contains( ifolderObject.ID ) )
-				{
-					// TODO: Need to set image index based on state.
-					TileListViewItem tlvi = new TileListViewItem( ifolderObject );
+			TileListViewItem tlvi = null;
 
-					tileListView1.Items.Add( tlvi );
-					iFolderHT.Add( ifolderObject.ID, tlvi );
+			// TODO: Need to set image index based on state.
+			tlvi = new TileListViewItem( ifolderObject );
+			tlvi = tileListView1.Items.Add( tlvi );
 
-					// Resize the control.
-//					Height += listView1.Items[ listView1.Items.Count - 1 ].Bounds.Bottom - listView1.Height + 5;
-				}
-			}
+			return tlvi;
 		}
 
 		public void FinalizeUpdate()
@@ -248,11 +239,6 @@ namespace Novell.FormsTrayApp
 		public void InitializeUpdate()
 		{
 			tileListView1.Items.Clear();
-
-			lock ( iFolderHT )
-			{
-				iFolderHT.Clear();
-			}
 
 			this.SuspendLayout();
 		}
