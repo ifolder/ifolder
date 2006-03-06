@@ -1370,28 +1370,33 @@ namespace Novell.FormsTrayApp
 		{
 			Domain domain = null;
 
-			iFoldersListView ifListView = (iFoldersListView)iFolderListViews[ domainInfo.ID ];
-			if ( ifListView == null )
+			lock ( iFolderListViews )
 			{
-				// Add the domain.
-				domain = new Domain( domainInfo );
-				ifListView = new iFoldersListView( domainInfo, largeImageList );
-//				ifListView.ItemSelected += new Novell.FormsTrayApp.iFoldersListView.ItemSelectedDelegate(ifListView_ItemSelected);
-				ifListView.SelectedIndexChanged += new Novell.FormsTrayApp.iFoldersListView.SelectedIndexChangedDelegate(ifListView_SelectedIndexChanged);
-				ifListView.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
-				iFolderListViews.Add( domainInfo.ID, ifListView );
-
-				if ( !hide )
+				iFoldersListView ifListView = (iFoldersListView)iFolderListViews[ domainInfo.ID ];
+				if ( ifListView == null )
 				{
-					Point point = new Point( 8, panel2.Controls[ panel2.Controls.Count - 1 ].Bottom );
-					ifListView.Location = point;
-					panel2.Controls.Add( ifListView );
+					// Add the domain.
+					domain = new Domain( domainInfo );
+					ifListView = new iFoldersListView( domainInfo, largeImageList );
+					//				ifListView.ItemSelected += new Novell.FormsTrayApp.iFoldersListView.ItemSelectedDelegate(ifListView_ItemSelected);
+					ifListView.SelectedIndexChanged += new Novell.FormsTrayApp.iFoldersListView.SelectedIndexChangedDelegate(ifListView_SelectedIndexChanged);
+
+					iFolderListViews.Add( domainInfo.ID, ifListView );
+
+					updateView2();
+
+					if ( !hide )
+					{
+						Point point = new Point( 8, panel2.Controls[ panel2.Controls.Count - 1 ].Bottom );
+						ifListView.Location = point;
+						panel2.Controls.Add( ifListView );
+					}
 				}
-			}
-			else
-			{
-				// TODO: Need to rework this to use domainInfo and not Domain
-				domain = new Domain( ifListView.DomainInfo );
+				else
+				{
+					// TODO: Need to rework this to use domainInfo and not Domain
+					domain = new Domain( ifListView.DomainInfo );
+				}
 			}
 
 /*			foreach (Domain d in servers.Items)
@@ -2094,6 +2099,8 @@ namespace Novell.FormsTrayApp
 			{
 				addiFolderToAvailableListView( ifolderObject );
 			}
+
+			updateView();
 		}
 
 		private void addiFolderToAvailableListView( iFolderObject ifolderObject )
@@ -2108,6 +2115,40 @@ namespace Novell.FormsTrayApp
 
 			// TODO: Do we need to add these to the hashtable ... if a subscription gets removed we need a 
 			// quick way of deleting it from the list.
+		}
+
+		private void updateView2()
+		{
+			int maxWidth;
+
+			if ( infoMessage.Visible )
+			{
+				maxWidth = infoMessage.Left + infoMessage.Width;
+			}
+			else
+			{
+				maxWidth = localiFoldersHeading.Left + localiFoldersHeading.Width;
+			}
+
+			foreach ( iFoldersListView ifListView in iFolderListViews.Values )
+			{
+				ifListView.Anchor = AnchorStyles.Left | AnchorStyles.Top;
+				if ( maxWidth < ifListView.Width )
+				{
+					maxWidth = ifListView.Width;
+				}
+			}
+
+			iFolderView.Anchor = AnchorStyles.Left | AnchorStyles.Top;
+
+			foreach ( iFoldersListView ifListView in iFolderListViews.Values )
+			{
+				ifListView.Width = maxWidth;
+				ifListView.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+			}
+
+			iFolderView.Width = maxWidth - iFolderView.Left;
+			iFolderView.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
 		}
 
 		private void updateView()
@@ -2274,7 +2315,7 @@ namespace Novell.FormsTrayApp
 			// TODO: Update the available iFolder views.
 			foreach (iFoldersListView ifListView in iFolderListViews.Values)
 			{
-//				ifListView.InitializeUpdate();
+				ifListView.InitializeUpdate();
 			}
 
 			// Disable/hide the menu items and toolbar buttons.
@@ -2334,7 +2375,7 @@ namespace Novell.FormsTrayApp
 
 			foreach (iFoldersListView ifListView in iFolderListViews.Values)
 			{
-//				ifListView.FinalizeUpdate();
+				ifListView.FinalizeUpdate();
 			}
 
 			updateView();
@@ -2545,6 +2586,11 @@ namespace Novell.FormsTrayApp
 			{
 				size.Height = height;
 			}
+
+			updateView();
+
+//			panel2.ClientSize = clientSize;
+//			panel2.Size = size;
 		}
 
 		private void GlobalProperties_Move(object sender, System.EventArgs e)

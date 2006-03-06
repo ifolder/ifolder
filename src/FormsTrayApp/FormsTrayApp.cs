@@ -115,6 +115,7 @@ namespace Novell.FormsTrayApp
 		/// </summary>
 		protected AutoResetEvent workEvent = null;
 
+		private bool isConnecting = false;
 		private ServerInfo serverInfo = null;
 		private ShellNotifyIcon shellNotifyIcon;
 		private iFolderWeb ifolderFromNotify;
@@ -1232,8 +1233,10 @@ namespace Novell.FormsTrayApp
 				case "Domain-Up":
 				{
 					// Only display one dialog.
-					if (serverInfo == null)
+					if ( !isConnecting && serverInfo == null )
 					{
+						isConnecting = true;
+
 						try
 						{
 							DomainInformation domainInfo = simiasWebService.GetDomainInformation(notifyEventArgs.Message);
@@ -1269,6 +1272,8 @@ namespace Novell.FormsTrayApp
 						{
 							//						MessageBox.Show(ex.Message);
 						}
+
+						isConnecting = false;
 					}
 					break;
 				}

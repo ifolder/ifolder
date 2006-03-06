@@ -241,19 +241,19 @@ namespace Novell.FormsTrayApp
 
 		public void FinalizeUpdate()
 		{
-//			listView1.EndUpdate();
+			this.ResumeLayout();
 		}
 
 		public void InitializeUpdate()
 		{
-//			listView1.Items.Clear();
-//			listView1.SelectedItems.Clear();
-//			listView1.BeginUpdate();
+			tileListView1.Items.Clear();
 
 			lock ( iFolderHT )
 			{
 				iFolderHT.Clear();
 			}
+
+			this.SuspendLayout();
 		}
 
 		public void UpdateiFolderStatus( string iFolderID, iFolderState state )
