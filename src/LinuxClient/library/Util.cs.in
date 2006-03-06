@@ -187,7 +187,18 @@ namespace Novell.iFolder
 		public static string HelpURL(string helpFile)
 		{
 			string langCode = System.Globalization.CultureInfo.CurrentCulture.Name;
-			if (!langCode.StartsWith("zh"))
+			if (langCode == null || langCode.Length < 2 || langCode.Length > 4)
+			{
+				if (langCode == null)
+					Console.WriteLine("System.Globalization.CultureInfo.CurrentCulture.Name returned null.");
+				else
+					Console.WriteLine("System.Globalization.CultureInfo.CurrentCulture.Name returned: {0}", langCode);
+				
+				Console.WriteLine("Defaulting to \"en\" for help files.");
+
+				langCode = "en";
+			}
+			else if (!langCode.StartsWith("zh"))
 				langCode = langCode.Substring(0, 2); // Only use the first two letters if NOT Chinese
 
 			return string.Format("file://{0}/{1}/doc/user/data/{2}", helpdir, langCode, helpFile);
