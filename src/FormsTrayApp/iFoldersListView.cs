@@ -224,7 +224,6 @@ namespace Novell.FormsTrayApp
 		{
 			TileListViewItem tlvi = null;
 
-			// TODO: Need to set image index based on state.
 			tlvi = new TileListViewItem( ifolderObject );
 			tlvi = tileListView1.Items.Add( tlvi );
 

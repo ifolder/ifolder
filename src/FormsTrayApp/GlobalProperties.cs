@@ -102,7 +102,7 @@ namespace Novell.FormsTrayApp
 		private bool initialConnect = false;
 		private bool shutdown = false;
 		private bool initialPositionSet = false;
-		private Domain defaultDomain = null;
+		private DomainInformation defaultDomainInfo = null;
 		private string domainList;
 		private System.Windows.Forms.MenuItem menuOpen;
 		private System.Windows.Forms.MenuItem menuShare;
@@ -212,7 +212,7 @@ namespace Novell.FormsTrayApp
 			{
 				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"ifolder_app.ico"));
 
-				// TODO: need to add the other icons.
+				// TODO: update icons.
 				largeImageList = new ImageList();
 				largeImageList.ImageSize = new Size( 48, 48 );
 				largeImageList.Images.Add( Bitmap.FromFile( Path.Combine( Application.StartupPath, @"res\ifolder48.png" ) ) );
@@ -223,43 +223,10 @@ namespace Novell.FormsTrayApp
 				largeImageList.Images.Add( Bitmap.FromFile( Path.Combine( Application.StartupPath, @"res\ifolder-warning48.png" ) ) );
 				largeImageList.Images.Add( Bitmap.FromFile( Path.Combine( Application.StartupPath, @"res\ifolder-error48.png" ) ) );
 
-				// TODO: Are there different icons for local iFolders vs. server iFolders?
 				iFolderView.LargeImageList = largeImageList;
 
-				// TODO: need icons for the different states.
-				//	- iFolder with conflicts.
-				//	- iFolder that is available.
-				//	- iFolder that has been requested.
-				//	- iFolder that has been invited. (Invitation.ico?)
-/*				this.iFolderView.SmallImageList = new ImageList();
-				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico")));
-				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\serverifolder.ico")));
-				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolderconflict.ico")));
-*/
-				// Add the normal image list to the toolbar.
-/*				toolBar1.ImageList = new ImageList();
-				toolBar1.ImageList.ImageSize = new Size(24, 24);
-				toolBar1.ImageList.TransparentColor = Color.White;
-				toolBar1.ImageList.Images.AddStrip(Image.FromFile(Path.Combine(Application.StartupPath, @"res\mtoolbar_nor.bmp")));
-
-				// Add the disabled image list to the toolbar.
-				toolBar1.DisabledImageList = new ImageList();
-				toolBar1.DisabledImageList.ImageSize = new Size(24, 24);
-				toolBar1.DisabledImageList.TransparentColor = Color.White;
-				toolBar1.DisabledImageList.Images.AddStrip(Image.FromFile(Path.Combine(Application.StartupPath, @"res\mtoolbar_dis.bmp")));
-
-				// Add the hot image list to the toolbar.
-				toolBar1.HotImageList = new ImageList();
-				toolBar1.HotImageList.ImageSize = new Size(24, 24);
-				toolBar1.HotImageList.TransparentColor = Color.White;
-				toolBar1.HotImageList.Images.AddStrip(Image.FromFile(Path.Combine(Application.StartupPath, @"res\mtoolbar_hot.bmp")));
-
-				toolBarCreate.ImageIndex = 0;
-				toolBarSetup.ImageIndex = 1;
-				toolBarShare.ImageIndex = 2;
-				toolBarResolve.ImageIndex = 3;
-				toolBarSync.ImageIndex = 4;
-*/			}
+				// TODO: load hot icons.
+			}
 			catch {} // Non-fatal ... just missing some graphics.
 
 			this.MinimumSize = this.Size;
@@ -1368,15 +1335,12 @@ namespace Novell.FormsTrayApp
 		/// <param name="domainInfo">The DomainInformation object to add to the list.</param>
 		public void AddDomainToList(DomainInformation domainInfo)
 		{
-			Domain domain = null;
-
 			lock ( iFolderListViews )
 			{
 				iFoldersListView ifListView = (iFoldersListView)iFolderListViews[ domainInfo.ID ];
 				if ( ifListView == null )
 				{
 					// Add the domain.
-					domain = new Domain( domainInfo );
 					ifListView = new iFoldersListView( domainInfo, largeImageList );
 					ifListView.SelectedIndexChanged += new Novell.FormsTrayApp.iFoldersListView.SelectedIndexChangedDelegate(ifListView_SelectedIndexChanged);
 
@@ -1391,23 +1355,18 @@ namespace Novell.FormsTrayApp
 						panel2.Controls.Add( ifListView );
 					}
 				}
-				else
-				{
-					// TODO: Need to rework this to use domainInfo and not Domain
-					domain = new Domain( ifListView.DomainInfo );
-				}
 			}
 
 			// Reset the current default domain if the added domain is set to be the default.
 			if (domainInfo.IsDefault)
 			{
-				if ((defaultDomain != null) && !defaultDomain.ID.Equals(domainInfo.ID))
+				if ((defaultDomainInfo != null) && !defaultDomainInfo.ID.Equals(domainInfo.ID))
 				{
-					defaultDomain.DomainInfo.IsDefault = false;
+					defaultDomainInfo.IsDefault = false;
 				}
 
 				// Keep track of the default domain.
-				defaultDomain = domain;
+				defaultDomainInfo = domainInfo;
 			}
 
 			// Update the domain list file.
@@ -1731,11 +1690,14 @@ namespace Novell.FormsTrayApp
 							statusBar1.Text = string.Format(resourceManager.GetString("localSync"), syncEventArgs.Name);
 							lock (ht)
 							{
-								ListViewItem lvi = (ListViewItem)ht[syncEventArgs.ID];
-								if (lvi != null)
+								TileListViewItem tlvi = (TileListViewItem)ht[syncEventArgs.ID];
+								if (tlvi != null)
 								{
-									((iFolderObject)lvi.Tag).iFolderState = iFolderState.SynchronizingLocal;
-									lvi.SubItems[2].Text = resourceManager.GetString("preSync");
+									iFolderObject ifolderObject = (iFolderObject)tlvi.Tag;
+									ifolderObject.iFolderState = iFolderState.SynchronizingLocal;
+									int imageIndex;
+									tlvi.Status = getItemState( ifolderObject, 0, out imageIndex );
+									tlvi.ImageIndex = imageIndex;
 								}
 							}
 						}
@@ -1752,12 +1714,15 @@ namespace Novell.FormsTrayApp
 							statusBar1.Text = string.Format(resourceManager.GetString("synciFolder"), syncEventArgs.Name);
 							lock (ht)
 							{
-								ListViewItem lvi = (ListViewItem)ht[syncEventArgs.ID];
-								if (lvi != null)
+								TileListViewItem tlvi = (TileListViewItem)ht[syncEventArgs.ID];
+								if (tlvi != null)
 								{
 									startSync = true;
-									((iFolderObject)lvi.Tag).iFolderState = iFolderState.Synchronizing;
-									lvi.SubItems[2].Text = resourceManager.GetString("statusSyncing");
+									iFolderObject ifolderObject = (iFolderObject)tlvi.Tag;
+									ifolderObject.iFolderState = iFolderState.Synchronizing;
+									int imageIndex;
+									tlvi.Status = getItemState( ifolderObject, 0, out imageIndex );
+									tlvi.ImageIndex = imageIndex;
 								}
 							}
 						}
@@ -1767,38 +1732,35 @@ namespace Novell.FormsTrayApp
 					{
 						lock(ht)
 						{
-							ListViewItem lvi = (ListViewItem)ht[syncEventArgs.ID];
+							TileListViewItem tlvi = (TileListViewItem)ht[syncEventArgs.ID];
 
-							if (lvi != null)
+							if (tlvi != null)
 							{
+								iFolderObject ifolderObject = (iFolderObject)tlvi.Tag;
+
+								uint objectsToSync2 = 0;
 								try
 								{
 									SyncSize syncSize = ifWebService.CalculateSyncSize(syncEventArgs.ID);
-									objectsToSync = syncSize.SyncNodeCount;
+									objectsToSync2 = syncSize.SyncNodeCount;
 								}
 								catch {}
 
-								if (objectsToSync == 0)
+								if (objectsToSync2 == 0)
 								{
-									iFolderObject ifolderObject = (iFolderObject)lvi.Tag;
-
-									if (syncEventArgs.Connected)
-									{
-										ifolderObject.iFolderState = iFolderState.Normal;
-									}
-									else
-									{
-										ifolderObject.iFolderState = iFolderState.Disconnected;
-									}
-
-									int imageIndex;
-									lvi.SubItems[2].Text = stateToString(ifolderObject, out imageIndex);
+									ifolderObject.iFolderState = syncEventArgs.Connected ? 
+										iFolderState.Normal : 
+										iFolderState.Disconnected;
 								}
 								else
 								{
-									lvi.SubItems[2].Text = string.Format(resourceManager.GetString("statusSyncItemsFailed"), objectsToSync);
-									((iFolderObject)lvi.Tag).iFolderState = iFolderState.FailedSync;
+									ifolderObject.iFolderState = iFolderState.FailedSync;
 								}
+
+								int imageIndex;
+								tlvi.Status = getItemState( ifolderObject, objectsToSync2, out imageIndex );
+								tlvi.ImageIndex = imageIndex;
+								tlvi.Tag = ifolderObject;
 							}
 
 							objectsToSync = 0;
@@ -1838,10 +1800,10 @@ namespace Novell.FormsTrayApp
 					{
 						lock (ht)
 						{
-							ListViewItem lvi = (ListViewItem)ht[syncEventArgs.CollectionID];
-							if (lvi != null)
+							TileListViewItem tlvi = (TileListViewItem)ht[syncEventArgs.CollectionID];
+							if (tlvi != null)
 							{
-								lvi.SubItems[2].Text = string.Format(resourceManager.GetString("statusSyncingItems"), objectsToSync--);
+								tlvi.Status = string.Format(resourceManager.GetString("statusSyncingItems"), objectsToSync--);
 							}
 						}
 					}
@@ -1948,7 +1910,7 @@ namespace Novell.FormsTrayApp
 					{
 						addiFolderToListView(new iFolderObject(ifolder, iFolderState.Normal));
 
-						if ( !ifolder.IsSubscription )//ifolder.State.Equals("Local"))
+						if ( !ifolder.IsSubscription )
 						{
 							// Notify the shell.
 							Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
@@ -1981,19 +1943,19 @@ namespace Novell.FormsTrayApp
 				}
 				else
 				{
-/*TODO:					ListViewItem lvi;
+					TileListViewItem tlvi;
 					lock (ht)
 					{
 						// Get the corresponding listview item.
-						lvi = (ListViewItem)ht[ifolder.ID];
+						tlvi = (TileListViewItem)ht[ifolder.ID];
 					}
 
-					if (lvi != null)
+					if (tlvi != null)
 					{
 						// Update the tag data.
-						((iFolderObject)lvi.Tag).iFolderWeb = ifolder;
-						updateListViewItem(lvi);
-					}*/
+						((iFolderObject)tlvi.Tag).iFolderWeb = ifolder;
+						updateListViewItem(tlvi);
+					}
 				}
 			}
 		}
@@ -2010,6 +1972,9 @@ namespace Novell.FormsTrayApp
 					if (ht[ifolder.ID] == null)
 					{
 						TileListViewItem tlvi = new TileListViewItem( ifolderObject );
+						int imageIndex;
+						tlvi.Status = getItemState( ifolderObject, 0, out imageIndex );
+						tlvi.ImageIndex = imageIndex;
 						iFolderView.Items.Add(tlvi);
 
 						// Add the listviewitem to the hashtable.
@@ -2042,6 +2007,9 @@ namespace Novell.FormsTrayApp
 				// TODO: what if the listview isn't in the list?
 
 				tlvi = ifListView.AddiFolderToListView( ifolderObject );
+				int imageIndex;
+				tlvi.Status = getItemState( ifolderObject, 0, out imageIndex );
+				tlvi.ImageIndex = imageIndex;
 			}
 
 			return tlvi;
@@ -2074,6 +2042,7 @@ namespace Novell.FormsTrayApp
 			foreach ( iFoldersListView ifListView in iFolderListViews.Values )
 			{
 				ifListView.Width = maxWidth;
+				// TODO: Fix this ... cannot anchor this way.
 				ifListView.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
 			}
 
@@ -2115,9 +2084,9 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
-		private void updateListViewItem(ListViewItem lvi)
+		private void updateListViewItem(TileListViewItem tlvi)
 		{
-			iFolderObject ifolderObject = (iFolderObject)lvi.Tag;
+			iFolderObject ifolderObject = (iFolderObject)tlvi.Tag;
 			iFolderWeb ifolder = ifolderObject.iFolderWeb;
 
 			if (ifolder.State.Equals("Available") &&
@@ -2126,35 +2095,25 @@ namespace Novell.FormsTrayApp
 				// The iFolder already exists locally ... remove it from the list.
 				lock (ht)
 				{
-					ht.Remove(ifolder.ID);
+					removeTileListViewItem( tlvi );
 				}
-
-				lvi.Remove();
 			}
 			else
 			{
 				int imageIndex;
-				lvi.SubItems[0].Text = ifolder.Name;
-//				lvi.SubItems[1].Text = ifolder.IsSubscription ? "" : ifolder.UnManagedPath;
-//				lvi.SubItems[2].Text = stateToString(ifolderObject, out imageIndex);
-//				lvi.ImageIndex = imageIndex;
-
-				// If this item is the only one selected, update the menus.
-/*				if (lvi.Selected && (iFolderView.SelectedItems.Count == 1))
-				{
-					updateMenus(ifolder);
-				}
-*/			}
+				tlvi.Status = getItemState( ifolderObject, objectsToSync, out imageIndex );
+				tlvi.ImageIndex = imageIndex;
+			}
 		}
 
-		private string stateToString(iFolderObject ifolderObject, out int imageIndex)
+		private string getItemState( iFolderObject ifolderObject, uint objectsToSync, out int imageIndex )
 		{
 			string status;
 			imageIndex = 0;
 
 			if (ifolderObject.iFolderWeb.HasConflicts)
 			{
-				imageIndex = 2;
+				imageIndex = 6;
 				status = resourceManager.GetString("statusConflicts");
 			}
 			else
@@ -2166,37 +2125,55 @@ namespace Novell.FormsTrayApp
 						switch (ifolderObject.iFolderWeb.State)
 						{
 							case "Local":
-								status = resourceManager.GetString("statusOK");
+								imageIndex = 0;
+								status = string.Format( resourceManager.GetString("statusSynced"), ifolderObject.iFolderWeb.LastSyncTime );
 								break;
 							case "Available":
 							case "WaitConnect":
 							case "WaitSync":
-								imageIndex = ifolderObject.iFolderWeb.IsSubscription ? 1 : 0;
-								status = resourceManager.GetString(ifolderObject.iFolderWeb.State);
+								if ( ifolderObject.iFolderWeb.IsSubscription )
+								{
+									imageIndex = 2;
+									// TODO: return the size?
+									status = "";
+								}
+								else
+								{
+									imageIndex = 4;
+									status = resourceManager.GetString(ifolderObject.iFolderWeb.State);
+								}
 								break;
 							default:
 								// TODO: what icon to use for unknown status?
-								imageIndex = 1;
+								imageIndex = 0;
 								status = resourceManager.GetString("statusUnknown");
 								break;
 						}
 						break;
 					}
 					case iFolderState.Disconnected:
+						imageIndex = 5;
 						status = resourceManager.GetString("disconnected");
 						break;
 					case iFolderState.FailedSync:
+						imageIndex = 6;
 						status = objectsToSync == 0 ?
-							status = resourceManager.GetString("statusSyncFailure") :
+							resourceManager.GetString("statusSyncFailure") :
 							string.Format(resourceManager.GetString("statusSyncItemsFailed"), objectsToSync);
 						break;
 					case iFolderState.Synchronizing:
-						status = string.Format(resourceManager.GetString("statusSyncingItems"), objectsToSync);
+						imageIndex = 1;
+						status = objectsToSync == 0 ?
+							resourceManager.GetString("statusSyncing") :
+							string.Format(resourceManager.GetString("statusSyncingItems"), objectsToSync);
 						break;
 					case iFolderState.SynchronizingLocal:
+						imageIndex = 1;
 						status = resourceManager.GetString("preSync");
 						break;
 					default:
+						// TODO: what icon to use for unknown status?
+						imageIndex = 0;
 						status = resourceManager.GetString("statusUnknown");
 						break;
 				}
@@ -2671,7 +2648,7 @@ namespace Novell.FormsTrayApp
 
 			// Build the list of domains to pass in to the create dialog.
 			ArrayList domains = new ArrayList();
-			DomainItem selectedDomainItem = new DomainItem( defaultDomain.Name, defaultDomain.ID );
+			DomainItem selectedDomainItem = new DomainItem( defaultDomainInfo.Name, defaultDomainInfo.ID );
 			foreach ( iFoldersListView ifListView in iFolderListViews.Values )
 			{
 				DomainItem domainItem = new DomainItem(ifListView.DomainInfo.Name, ifListView.DomainInfo.ID);

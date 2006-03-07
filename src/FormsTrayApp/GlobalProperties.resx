@@ -2896,8 +2896,8 @@
   <data name="statusConflicts">
     <value>Has conflicts</value>
   </data>
-  <data name="statusOK">
-    <value>OK</value>
+  <data name="statusSynced">
+    <value>Synchronized: {0}</value>
   </data>
   <data name="Available">
     <value>Not set up</value>

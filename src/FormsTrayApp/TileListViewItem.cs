@@ -38,9 +38,10 @@ namespace Novell.FormsTrayApp
 	{
 		#region Class Members
 
-		public event EventHandler ItemSelected=null;
-		private bool selected=false;
-		private Color selectionColor = Color.FromKnownColor( KnownColor.InactiveCaption );
+		public event EventHandler ItemSelected;
+		private bool selected = false;
+//		private bool success = false;
+		private Color selectionColor = Color.FromKnownColor( KnownColor.InactiveCaptionText );
 		private Color normalColor = Color.White;
 		private TileListView owner;
 		private int imageIndex;
@@ -50,36 +51,28 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.PictureBox icon;
 		private System.Windows.Forms.Label location;
 		private System.Windows.Forms.Label status;
-		/// <summary> 
-		/// Required designer variable.
-		/// </summary>
-		private System.ComponentModel.Container components = null;
 
 		#endregion
+		private System.Windows.Forms.Timer timer1;
+		private System.ComponentModel.IContainer components;
 
 		#region Constructor
 
 		public TileListViewItem( iFolderObject ifolderObject ) :
 			this()
 		{
+			Tag = ifolderObject;
 			ItemName = ifolderObject.iFolderWeb.Name;
-			
+
 			if ( ifolderObject.iFolderWeb.IsSubscription )
 			{
 				// TODO: Localize.
-				ItemLocation = string.Format("Owner: {0}", ifolderObject.iFolderWeb.Owner);
-				ImageIndex = 2;
+				ItemLocation = string.Format( "Owner: {0}", ifolderObject.iFolderWeb.Owner );
 			}
 			else
 			{
 				ItemLocation = ifolderObject.iFolderWeb.UnManagedPath;
-				ImageIndex = 0;
 			}
-
-			// TODO: set status.
-			Tag = ifolderObject;
-
-			// TODO: set correct image index.
 		}
 
 		public TileListViewItem( string[] items, int imageIndex ) :
@@ -88,7 +81,7 @@ namespace Novell.FormsTrayApp
 			ImageIndex = imageIndex;
 			ItemName = items.Length > 0 ? items[0] : string.Empty;
 			ItemLocation = items.Length > 1 ? items[1] : string.Empty;
-			ItemStatus = items.Length > 2 ? items[2] : string.Empty;
+			Status = items.Length > 2 ? items[2] : string.Empty;
 		}
 
 		private TileListViewItem()
@@ -124,10 +117,12 @@ namespace Novell.FormsTrayApp
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.icon = new System.Windows.Forms.PictureBox();
 			this.name = new System.Windows.Forms.Label();
 			this.location = new System.Windows.Forms.Label();
 			this.status = new System.Windows.Forms.Label();
+			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.SuspendLayout();
 			// 
 			// icon
@@ -159,7 +154,8 @@ namespace Novell.FormsTrayApp
 			// 
 			this.location.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
-			this.location.ForeColor = System.Drawing.SystemColors.InactiveCaption;
+			this.location.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
+			this.location.ForeColor = System.Drawing.SystemColors.InactiveCaptionText;
 			this.location.Location = new System.Drawing.Point(64, 32);
 			this.location.Name = "location";
 			this.location.Size = new System.Drawing.Size(206, 16);
@@ -173,7 +169,8 @@ namespace Novell.FormsTrayApp
 			// 
 			this.status.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
-			this.status.ForeColor = System.Drawing.SystemColors.InactiveCaption;
+			this.status.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
+			this.status.ForeColor = System.Drawing.SystemColors.InactiveCaptionText;
 			this.status.Location = new System.Drawing.Point(64, 48);
 			this.status.Name = "status";
 			this.status.Size = new System.Drawing.Size(206, 16);
@@ -182,6 +179,11 @@ namespace Novell.FormsTrayApp
 			this.status.MouseEnter += new System.EventHandler(this.TileListViewItem_MouseEnter);
 			this.status.MouseLeave += new System.EventHandler(this.TileListViewItem_MouseLeave);
 			this.status.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TileListViewItem_MouseDown);
+			// 
+			// timer1
+			// 
+			this.timer1.Interval = 60000;
+			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
 			// 
 			// TileListViewItem
 			// 
@@ -237,6 +239,16 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
+		private void timer1_Tick(object sender, System.EventArgs e)
+		{
+			// TODO: if we want to show the fancy sync times.
+/*			if ( success )
+			{
+				iFolderWeb ifolder = ((iFolderObject)Tag).iFolderWeb;
+				status.Text = "Synchronized: less than a minute ago";
+			}*/
+		}
+
 		#endregion
 
 		#region Properties
@@ -245,6 +257,45 @@ namespace Novell.FormsTrayApp
 		{
 			get { return owner; }
 		}
+
+/*		public iFolderState iFolderState
+		{
+			get { return ((iFolderObject)Tag).iFolderState; }
+			set
+			{
+				iFolderObject ifolder = (iFolderObject)Tag;
+				ifolder.iFolderState = value;
+				switch ( value )
+				{
+					case iFolderState.SynchronizingLocal:
+					case iFolderState.Synchronizing:
+						ImageIndex = 1;
+						break;
+					case iFolderState.Normal:
+						if ( ifolder.iFolderWeb.IsSubscription )
+						{
+							ImageIndex = 2;
+						}
+						else
+						{
+							switch ( ifolder.iFolderWeb.State )
+							{
+								case "Local":
+									ImageIndex = 0;
+									break;
+								default:
+									ImageIndex = 4;
+									break;
+							}
+						}
+						break;
+					case iFolderState.FailedSync:
+					case iFolderState.Disconnected:
+						ImageIndex = 5;
+						break;
+				}
+			}
+		}*/
 
 		public int ImageIndex
 		{
@@ -276,10 +327,24 @@ namespace Novell.FormsTrayApp
 			set { name.Text = value; }
 		}
 
-		public string ItemStatus
+		public string Status
 		{
 			get { return status.Text; }
-			set { status.Text = value; }
+			set 
+			{
+/*				if ( value.Equals( "success" ) )
+				{
+					timer1.Start();
+					success = true;
+					status.Text = "Synchronized: less than a minute ago";
+				}
+				else*/
+				{
+//					timer1.Stop();
+//					success = false;
+					status.Text = value;
+				}
+			}
 		}
 
 		internal TileListView Owner
