@@ -102,11 +102,12 @@ namespace Novell.FormsTrayApp
 			this.Size = new System.Drawing.Size(288, 72);
 			this.Click += new System.EventHandler(this.TileListView_Click);
 			this.SizeChanged += new System.EventHandler(this.TileListView_SizeChanged);
-
 		}
 		#endregion
 
 		#region Events
+
+		public new event EventHandler DoubleClick;
 
 		public delegate void LastItemRemovedDelegate( object sender, EventArgs e);
 		public event LastItemRemovedDelegate LastItemRemoved;
@@ -138,6 +139,14 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
+		private void TileListView_DoubleClick(object sender, System.EventArgs e)
+		{
+			if ( DoubleClick != null )
+			{
+				DoubleClick( sender, e );
+			}
+		}
+
 		private void TileListView_SizeChanged(object sender, System.EventArgs e)
 		{
 			if ( isReCalculateNeeded )
@@ -148,7 +157,15 @@ namespace Novell.FormsTrayApp
 			oldSize = Size;
 		}
 		
-		internal void value_ItemSelected(object sender, EventArgs e)
+		internal void item_DoubleClick(object sender, EventArgs e)
+		{
+			if ( DoubleClick != null )
+			{
+				DoubleClick( sender, e );
+			}
+		}
+
+		internal void item_Selected(object sender, EventArgs e)
 		{
 			TileListViewItem tlvi = (TileListViewItem)sender;
 			

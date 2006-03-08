@@ -69,7 +69,8 @@ namespace Novell.FormsTrayApp
 		public void Insert(int index, TileListViewItem value)
 		{
 			value.Owner = this.owner;
-			value.ItemSelected += new EventHandler(owner.value_ItemSelected);
+			value.ItemSelected += new EventHandler(owner.item_Selected);
+			value.DoubleClick += new EventHandler(owner.item_DoubleClick);
 			owner.Controls.Add( value );
 			owner.ReCalculateItems();
 			list.Insert( index, value );
@@ -103,7 +104,8 @@ namespace Novell.FormsTrayApp
 		{
 			list.Add( value );
 			value.Owner = this.owner;
-			value.ItemSelected += new EventHandler(owner.value_ItemSelected);
+			value.ItemSelected += new EventHandler(owner.item_Selected);
+			value.DoubleClick += new EventHandler(owner.item_DoubleClick);
 			owner.Controls.Add( value );
 			owner.ReCalculateItems();
 			return value;

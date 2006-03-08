@@ -39,6 +39,8 @@ namespace Novell.FormsTrayApp
 		#region Class Members
 
 		public event EventHandler ItemSelected;
+		public new event EventHandler DoubleClick;
+
 		private bool selected = false;
 //		private bool success = false;
 		private Color selectionColor = Color.FromKnownColor( KnownColor.InactiveCaption );
@@ -73,6 +75,8 @@ namespace Novell.FormsTrayApp
 			{
 				ItemLocation = ifolderObject.iFolderWeb.UnManagedPath;
 			}
+
+			base.DoubleClick += new EventHandler(TileListViewItem_DoubleClick);
 		}
 
 		public TileListViewItem( string[] items, int imageIndex ) :
@@ -133,6 +137,7 @@ namespace Novell.FormsTrayApp
 			this.icon.TabIndex = 0;
 			this.icon.TabStop = false;
 			this.icon.MouseEnter += new System.EventHandler(this.TileListViewItem_MouseEnter);
+			this.icon.DoubleClick += new System.EventHandler(this.TileListViewItem_DoubleClick);
 			this.icon.MouseLeave += new System.EventHandler(this.TileListViewItem_MouseLeave);
 			this.icon.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TileListViewItem_MouseDown);
 			// 
@@ -147,6 +152,7 @@ namespace Novell.FormsTrayApp
 			this.name.TabIndex = 1;
 			this.name.Text = "Name";
 			this.name.MouseEnter += new System.EventHandler(this.TileListViewItem_MouseEnter);
+			this.name.DoubleClick += new System.EventHandler(this.TileListViewItem_DoubleClick);
 			this.name.MouseLeave += new System.EventHandler(this.TileListViewItem_MouseLeave);
 			this.name.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TileListViewItem_MouseDown);
 			// 
@@ -162,6 +168,7 @@ namespace Novell.FormsTrayApp
 			this.location.TabIndex = 2;
 			this.location.Text = "location";
 			this.location.MouseEnter += new System.EventHandler(this.TileListViewItem_MouseEnter);
+			this.location.DoubleClick += new System.EventHandler(this.TileListViewItem_DoubleClick);
 			this.location.MouseLeave += new System.EventHandler(this.TileListViewItem_MouseLeave);
 			this.location.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TileListViewItem_MouseDown);
 			// 
@@ -177,6 +184,7 @@ namespace Novell.FormsTrayApp
 			this.status.TabIndex = 3;
 			this.status.Text = "status";
 			this.status.MouseEnter += new System.EventHandler(this.TileListViewItem_MouseEnter);
+			this.status.DoubleClick += new System.EventHandler(this.TileListViewItem_DoubleClick);
 			this.status.MouseLeave += new System.EventHandler(this.TileListViewItem_MouseLeave);
 			this.status.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TileListViewItem_MouseDown);
 			// 
@@ -204,6 +212,14 @@ namespace Novell.FormsTrayApp
 		#endregion
 
 		#region Event Handlers
+
+		private void TileListViewItem_DoubleClick(object sender, System.EventArgs e)
+		{
+			if ( DoubleClick != null )
+			{
+				DoubleClick( this, e );
+			}
+		}
 
 		private void TileListViewItem_MouseEnter(object sender, System.EventArgs e)
 		{

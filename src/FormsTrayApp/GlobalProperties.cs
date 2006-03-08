@@ -1253,6 +1253,7 @@ namespace Novell.FormsTrayApp
 			this.iFolderView.VerticleSpacing = 5;
 			this.iFolderView.Visible = ((bool)(resources.GetObject("iFolderView.Visible")));
 			this.iFolderView.LastItemRemoved += new Novell.FormsTrayApp.TileListView.LastItemRemovedDelegate(this.iFolderView_LastItemRemoved);
+			this.iFolderView.DoubleClick += new System.EventHandler(this.iFolderView_DoubleClick);
 			this.iFolderView.SelectedIndexChanged += new Novell.FormsTrayApp.TileListView.SelectedIndexChangedDelegate(this.ifListView_SelectedIndexChanged);
 			// 
 			// localiFoldersHeading
@@ -1451,6 +1452,7 @@ namespace Novell.FormsTrayApp
 					// Add the domain.
 					ifListView = new iFoldersListView( domainInfo, largeImageList );
 					ifListView.SelectedIndexChanged += new Novell.FormsTrayApp.iFoldersListView.SelectedIndexChangedDelegate(ifListView_SelectedIndexChanged);
+					ifListView.DoubleClick += new EventHandler(iFolderView_DoubleClick);
 
 					iFolderListViews.Add( domainInfo.ID, ifListView );
 
@@ -3032,10 +3034,9 @@ namespace Novell.FormsTrayApp
 
 		private void iFolderView_DoubleClick(object sender, System.EventArgs e)
 		{
-/*			if (iFolderView.SelectedItems.Count == 1)
+			if ( selectedItem != null )
 			{
-				ListViewItem lvi = iFolderView.SelectedItems[0];
-				iFolderWeb ifolder = ((iFolderObject)lvi.Tag).iFolderWeb;
+				iFolderWeb ifolder = ((iFolderObject)selectedItem.Tag).iFolderWeb;
 				if (ifolder.IsSubscription)
 				{
 					if (ifolder.State.Equals("Available"))
@@ -3048,7 +3049,7 @@ namespace Novell.FormsTrayApp
 					menuOpen_Click(sender, e);
 				}
 			}
-*/		}
+		}
 
 		#region Sync Event Handlers
 		private void global_collectionSyncHandler(SimiasEventArgs args)

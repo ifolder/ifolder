@@ -70,11 +70,15 @@ namespace Novell.FormsTrayApp
 			{
 				g.Dispose();
 			}
+
+			base.DoubleClick += new EventHandler(iFoldersListView_DoubleClick);
 		}
 
 		#endregion
 
 		#region Events
+
+		public new event EventHandler DoubleClick;
 
 		public delegate void LastItemRemovedDelegate( object sender, EventArgs e);
 		public event LastItemRemovedDelegate LastItemRemoved;
@@ -91,6 +95,22 @@ namespace Novell.FormsTrayApp
 		#endregion
 
 		#region Event Handlers
+
+		private void iFoldersListView_DoubleClick(object sender, EventArgs e)
+		{
+			if ( DoubleClick != null )
+			{
+				DoubleClick( sender, e );
+			}
+		}
+
+		private void tileListView1_DoubleClick(object sender, System.EventArgs e)
+		{
+			if ( DoubleClick != null )
+			{
+				DoubleClick( sender, e );
+			}
+		}
 
 		private void tileListView1_SizeChanged(object sender, System.EventArgs e)
 		{
@@ -187,6 +207,7 @@ namespace Novell.FormsTrayApp
 			this.tileListView1.VerticleSpacing = 5;
 			this.tileListView1.LastItemRemoved += new Novell.FormsTrayApp.TileListView.LastItemRemovedDelegate(this.tileListView1_LastItemRemoved);
 			this.tileListView1.SizeChanged += new System.EventHandler(this.tileListView1_SizeChanged);
+			this.tileListView1.DoubleClick += new System.EventHandler(this.tileListView1_DoubleClick);
 			this.tileListView1.SelectedIndexChanged += new Novell.FormsTrayApp.TileListView.SelectedIndexChangedDelegate(this.tileListView1_SelectedIndexChanged);
 			// 
 			// iFoldersListView
