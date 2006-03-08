@@ -102,6 +102,8 @@ namespace Novell.FormsTrayApp
 			this.Size = new System.Drawing.Size(288, 72);
 			this.Click += new System.EventHandler(this.TileListView_Click);
 			this.SizeChanged += new System.EventHandler(this.TileListView_SizeChanged);
+			this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TileListView_MouseDown);
+
 		}
 		#endregion
 
@@ -144,6 +146,20 @@ namespace Novell.FormsTrayApp
 			if ( DoubleClick != null )
 			{
 				DoubleClick( sender, e );
+			}
+		}
+
+		private void TileListView_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+		{
+			if ( selectedItem != null )
+			{
+				selectedItem.Selected = false;
+				selectedItem = null;
+			}
+
+			if ( SelectedIndexChanged != null )
+			{
+				SelectedIndexChanged( this, new EventArgs() );
 			}
 		}
 
