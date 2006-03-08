@@ -446,13 +446,7 @@ namespace Novell.FormsTrayApp
 					ifolderAdvanced.Dispose();
 					break;
 				case NotifyType.Subscription:
-					AcceptInvitation acceptInvitation = new AcceptInvitation(ifWebService, ifolderFromNotify);
-					acceptInvitation.StartPosition = FormStartPosition.CenterScreen;
-					acceptInvitation.Visible = false;
-					acceptInvitation.CreateControl();
-					ShellNotifyIcon.SetForegroundWindow(acceptInvitation.Handle);
-					acceptInvitation.ShowDialog();
-					acceptInvitation.Dispose();
+					globalProperties.AcceptiFolder( ifolderFromNotify );
 					break;
 				case NotifyType.SyncError:
 					syncLog.Show();

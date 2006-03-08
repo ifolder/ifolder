@@ -1329,6 +1329,35 @@ namespace Novell.FormsTrayApp
 		#endregion
 
 		#region Public Methods
+		public bool AcceptiFolder( iFolderWeb ifolder )
+		{
+			bool result = false;
+
+			string selectedPath = string.Empty;
+			FolderBrowserDialog browserDialog = new FolderBrowserDialog();
+			while (true)
+			{
+				browserDialog.ShowNewFolderButton = true;
+				browserDialog.SelectedPath = selectedPath;
+				browserDialog.Description = string.Format( resourceManager.GetString("acceptDescription"), ifolder.Name );
+				DialogResult dialogResult = browserDialog.ShowDialog();
+				if ( dialogResult == DialogResult.OK )
+				{
+					result = acceptiFolder( ifolder, browserDialog.SelectedPath );
+					if ( result )
+						break;
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			browserDialog.Dispose();
+
+			return result;
+		}
+
 		/// <summary>
 		/// Adds the specified domain to the dropdown list.
 		/// </summary>
@@ -2370,6 +2399,79 @@ namespace Novell.FormsTrayApp
 				// TODO: Message?
 			}
 		}
+
+		private bool acceptiFolder( iFolderWeb ifolder, string path )
+		{
+			bool result = true;
+
+			if (GetDriveType(Path.GetPathRoot(path)) == DRIVE_FIXED)
+			{
+				// Check to make sure the user has rights to this directory.
+				if (Win32Security.AccessAllowed(path))
+				{
+					try
+					{
+						// Display wait cursor.
+						Cursor = Cursors.WaitCursor;
+
+						// Accept the invitation.
+						ifWebService.AcceptiFolderInvitation(ifolder.DomainID, ifolder.ID, path);
+						Cursor = Cursors.Default;
+					}
+					catch (Exception ex)
+					{
+						Cursor = Cursors.Default;
+						MyMessageBox mmb;
+
+						if (ex.Message.IndexOf("PathExists") != -1)
+						{
+							mmb = new MyMessageBox(resourceManager.GetString("pathExistsError"), resourceManager.GetString("pathInvalidErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+							mmb.ShowDialog();
+						}
+						else if (ex.Message.IndexOf("AtOrInsideStorePath") != -1)
+						{
+							mmb = new MyMessageBox(resourceManager.GetString("pathInStoreError"), resourceManager.GetString("pathInvalidErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+							mmb.ShowDialog();
+						}
+						else if (ex.Message.IndexOf("AtOrInsideCollectionPath") != -1)
+						{
+							mmb = new MyMessageBox(resourceManager.GetString("pathIniFolderError"), resourceManager.GetString("pathInvalidErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+							mmb.ShowDialog();
+						}
+						else if (ex.Message.IndexOf("IncludesWinDirPath") != -1)
+						{
+							mmb = new MyMessageBox(resourceManager.GetString("pathIncludesWinDirError"), resourceManager.GetString("pathInvalidErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+							mmb.ShowDialog();
+						}
+						else if (ex.Message.IndexOf("IncludesProgFilesPath") != -1)
+						{
+							mmb = new MyMessageBox(resourceManager.GetString("pathIncludesProgFilesDirError"), resourceManager.GetString("pathInvalidErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+							mmb.ShowDialog();
+						}
+						else
+						{
+							mmb = new MyMessageBox(resourceManager.GetString("acceptError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+							mmb.ShowDialog();
+						}
+
+						result = false;
+					}
+				}
+				else
+				{
+					result = false;
+					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("accessDenied"), string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					mmb.ShowDialog();
+				}
+			}
+			else
+			{
+				MessageBox.Show(resourceManager.GetString("networkPath"), resourceManager.GetString("pathInvalidErrorTitle"));
+				result = false;
+			}
+
+			return result;
+		}
 		#endregion
 
 		#region Event Handlers
@@ -2716,17 +2818,16 @@ namespace Novell.FormsTrayApp
 		{
 			if ( selectedItem != null )
 			{
-				// TODO: Need to update the AcceptInvitation dialog.
 				iFolderWeb ifolder = ((iFolderObject)selectedItem.Tag).iFolderWeb;
-				AcceptInvitation acceptInvitation = new AcceptInvitation( ifWebService, ifolder );
-				if ( acceptInvitation.ShowDialog() == DialogResult.OK )
+
+				// Accept the iFolder.
+				if ( AcceptiFolder( ifolder ) )
 				{
 					lock (ht)
 					{
 						removeTileListViewItem( selectedItem );
 					}
 				}
-				acceptInvitation.Dispose();
 			}
 		}
 
@@ -2861,5 +2962,15 @@ namespace Novell.FormsTrayApp
 
 			base.WndProc (ref m);
 		}
+
+		#region Win32
+
+		private const uint DRIVE_REMOVABLE = 2;
+		private const uint DRIVE_FIXED = 3;
+
+		[System.Runtime.InteropServices.DllImport("kernel32.dll")]
+		private static extern uint GetDriveType(string rootPathName);
+
+		#endregion
 	}
 }

@@ -41,12 +41,12 @@ namespace Novell.FormsTrayApp
 		public event EventHandler ItemSelected;
 		private bool selected = false;
 //		private bool success = false;
-		private Color selectionColor = Color.FromKnownColor( KnownColor.InactiveCaptionText );
+		private Color selectionColor = Color.FromKnownColor( KnownColor.InactiveCaption );
 		private Color normalColor = Color.White;
 		private TileListView owner;
 		private int imageIndex;
 		private Color activeTextColor = Color.FromKnownColor( KnownColor.ControlText );
-		private Color inactiveTextColor = Color.FromKnownColor( KnownColor.InactiveCaption );
+		private Color inactiveTextColor = Color.FromKnownColor( KnownColor.InactiveCaptionText );
 		private System.Windows.Forms.Label name;
 		private System.Windows.Forms.PictureBox icon;
 		private System.Windows.Forms.Label location;
