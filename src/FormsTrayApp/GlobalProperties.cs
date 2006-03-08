@@ -836,6 +836,10 @@ namespace Novell.FormsTrayApp
 			this.remove.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("remove.TextAlign")));
 			this.remove.Visible = ((bool)(resources.GetObject("remove.Visible")));
 			this.remove.Click += new System.EventHandler(this.menuRemove_Click);
+			this.remove.MouseEnter += new System.EventHandler(this.button_MouseEnter);
+			this.remove.MouseMove += new System.Windows.Forms.MouseEventHandler(this.button_MouseMove);
+			this.remove.MouseLeave += new System.EventHandler(this.button_MouseLeave);
+			this.remove.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button_MouseDown);
 			// 
 			// accept
 			// 
@@ -860,6 +864,10 @@ namespace Novell.FormsTrayApp
 			this.accept.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("accept.TextAlign")));
 			this.accept.Visible = ((bool)(resources.GetObject("accept.Visible")));
 			this.accept.Click += new System.EventHandler(this.menuAccept_Click);
+			this.accept.MouseEnter += new System.EventHandler(this.button_MouseEnter);
+			this.accept.MouseMove += new System.Windows.Forms.MouseEventHandler(this.button_MouseMove);
+			this.accept.MouseLeave += new System.EventHandler(this.button_MouseLeave);
+			this.accept.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button_MouseDown);
 			// 
 			// properties
 			// 
@@ -884,6 +892,10 @@ namespace Novell.FormsTrayApp
 			this.properties.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("properties.TextAlign")));
 			this.properties.Visible = ((bool)(resources.GetObject("properties.Visible")));
 			this.properties.Click += new System.EventHandler(this.menuProperties_Click);
+			this.properties.MouseEnter += new System.EventHandler(this.button_MouseEnter);
+			this.properties.MouseMove += new System.Windows.Forms.MouseEventHandler(this.button_MouseMove);
+			this.properties.MouseLeave += new System.EventHandler(this.button_MouseLeave);
+			this.properties.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button_MouseDown);
 			// 
 			// revert
 			// 
@@ -908,6 +920,10 @@ namespace Novell.FormsTrayApp
 			this.revert.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("revert.TextAlign")));
 			this.revert.Visible = ((bool)(resources.GetObject("revert.Visible")));
 			this.revert.Click += new System.EventHandler(this.menuRevert_Click);
+			this.revert.MouseEnter += new System.EventHandler(this.button_MouseEnter);
+			this.revert.MouseMove += new System.Windows.Forms.MouseEventHandler(this.button_MouseMove);
+			this.revert.MouseLeave += new System.EventHandler(this.button_MouseLeave);
+			this.revert.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button_MouseDown);
 			// 
 			// share
 			// 
@@ -932,6 +948,10 @@ namespace Novell.FormsTrayApp
 			this.share.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("share.TextAlign")));
 			this.share.Visible = ((bool)(resources.GetObject("share.Visible")));
 			this.share.Click += new System.EventHandler(this.menuShare_Click);
+			this.share.MouseEnter += new System.EventHandler(this.button_MouseEnter);
+			this.share.MouseMove += new System.Windows.Forms.MouseEventHandler(this.button_MouseMove);
+			this.share.MouseLeave += new System.EventHandler(this.button_MouseLeave);
+			this.share.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button_MouseDown);
 			// 
 			// syncNow
 			// 
@@ -956,6 +976,10 @@ namespace Novell.FormsTrayApp
 			this.syncNow.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("syncNow.TextAlign")));
 			this.syncNow.Visible = ((bool)(resources.GetObject("syncNow.Visible")));
 			this.syncNow.Click += new System.EventHandler(this.menuSyncNow_Click);
+			this.syncNow.MouseEnter += new System.EventHandler(this.button_MouseEnter);
+			this.syncNow.MouseMove += new System.Windows.Forms.MouseEventHandler(this.button_MouseMove);
+			this.syncNow.MouseLeave += new System.EventHandler(this.button_MouseLeave);
+			this.syncNow.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button_MouseDown);
 			// 
 			// open
 			// 
@@ -980,6 +1004,10 @@ namespace Novell.FormsTrayApp
 			this.open.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("open.TextAlign")));
 			this.open.Visible = ((bool)(resources.GetObject("open.Visible")));
 			this.open.Click += new System.EventHandler(this.menuOpen_Click);
+			this.open.MouseEnter += new System.EventHandler(this.button_MouseEnter);
+			this.open.MouseMove += new System.Windows.Forms.MouseEventHandler(this.button_MouseMove);
+			this.open.MouseLeave += new System.EventHandler(this.button_MouseLeave);
+			this.open.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button_MouseDown);
 			// 
 			// label3
 			// 
@@ -1027,6 +1055,10 @@ namespace Novell.FormsTrayApp
 			this.create.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("create.TextAlign")));
 			this.create.Visible = ((bool)(resources.GetObject("create.Visible")));
 			this.create.Click += new System.EventHandler(this.menuCreate_Click);
+			this.create.MouseEnter += new System.EventHandler(this.button_MouseEnter);
+			this.create.MouseMove += new System.Windows.Forms.MouseEventHandler(this.button_MouseMove);
+			this.create.MouseLeave += new System.EventHandler(this.button_MouseLeave);
+			this.create.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button_MouseDown);
 			// 
 			// label2
 			// 
@@ -1122,6 +1154,10 @@ namespace Novell.FormsTrayApp
 			this.showiFolders.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("showiFolders.TextAlign")));
 			this.showiFolders.Visible = ((bool)(resources.GetObject("showiFolders.Visible")));
 			this.showiFolders.Click += new System.EventHandler(this.showiFolders_Click);
+			this.showiFolders.MouseEnter += new System.EventHandler(this.button_MouseEnter);
+			this.showiFolders.MouseMove += new System.Windows.Forms.MouseEventHandler(this.button_MouseMove);
+			this.showiFolders.MouseLeave += new System.EventHandler(this.button_MouseLeave);
+			this.showiFolders.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button_MouseDown);
 			// 
 			// panel2
 			// 
@@ -2475,6 +2511,36 @@ namespace Novell.FormsTrayApp
 		#endregion
 
 		#region Event Handlers
+
+		private void button_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+		{
+			((Button)sender).BackColor = Color.FromKnownColor( KnownColor.ControlLight );
+		}
+
+		private void button_MouseEnter(object sender, System.EventArgs e)
+		{
+			((Button)sender).BackColor = Color.White;
+		}
+
+		private void button_MouseLeave(object sender, System.EventArgs e)
+		{
+			((Button)sender).BackColor = Button.DefaultBackColor;
+		}
+
+		private void button_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+		{
+			if ( e.Button.Equals( MouseButtons.Left ) )
+			{
+				if ( e.X < 0 || e.Y < 0 || e.X > create.Width || e.Y > create.Height )
+				{
+					((Button)sender).BackColor = Button.DefaultBackColor;
+				}
+				else
+				{
+					((Button)sender).BackColor = Color.FromKnownColor( KnownColor.ControlLight );
+				}
+			}
+		}
 
 		private void GlobalProperties_SizeChanged(object sender, System.EventArgs e)
 		{
