@@ -88,6 +88,7 @@ namespace Novell.FormsTrayApp
 		private TileListViewItem selectedItem;
 		private bool hide = true;
 		private NoiFolderMessage infoMessage;
+		private int minWidth;
 
 		System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(GlobalProperties));
 		private Preferences preferences;
@@ -258,12 +259,15 @@ namespace Novell.FormsTrayApp
 			this.menuOpen = new System.Windows.Forms.MenuItem();
 			this.menuResolveSeparator = new System.Windows.Forms.MenuItem();
 			this.menuResolve = new System.Windows.Forms.MenuItem();
+			this.menuAccept = new System.Windows.Forms.MenuItem();
 			this.menuSeparator1 = new System.Windows.Forms.MenuItem();
+			this.menuRemove = new System.Windows.Forms.MenuItem();
 			this.menuSyncNow = new System.Windows.Forms.MenuItem();
 			this.menuShare = new System.Windows.Forms.MenuItem();
 			this.menuRevert = new System.Windows.Forms.MenuItem();
 			this.menuSeparator2 = new System.Windows.Forms.MenuItem();
 			this.menuProperties = new System.Windows.Forms.MenuItem();
+			this.menuRefresh = new System.Windows.Forms.MenuItem();
 			this.mainMenu1 = new System.Windows.Forms.MainMenu();
 			this.menuAction = new System.Windows.Forms.MenuItem();
 			this.menuActionCreate = new System.Windows.Forms.MenuItem();
@@ -313,9 +317,6 @@ namespace Novell.FormsTrayApp
 			this.panel2 = new System.Windows.Forms.Panel();
 			this.iFolderView = new Novell.FormsTrayApp.TileListView();
 			this.localiFoldersHeading = new System.Windows.Forms.RichTextBox();
-			this.menuAccept = new System.Windows.Forms.MenuItem();
-			this.menuRemove = new System.Windows.Forms.MenuItem();
-			this.menuRefresh = new System.Windows.Forms.MenuItem();
 			this.panel1.SuspendLayout();
 			this.iFolderActions.SuspendLayout();
 			this.panel2.SuspendLayout();
@@ -369,6 +370,17 @@ namespace Novell.FormsTrayApp
 			this.menuResolve.Visible = ((bool)(resources.GetObject("menuResolve.Visible")));
 			this.menuResolve.Click += new System.EventHandler(this.menuResolve_Click);
 			// 
+			// menuAccept
+			// 
+			this.menuAccept.DefaultItem = true;
+			this.menuAccept.Enabled = ((bool)(resources.GetObject("menuAccept.Enabled")));
+			this.menuAccept.Index = 3;
+			this.menuAccept.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuAccept.Shortcut")));
+			this.menuAccept.ShowShortcut = ((bool)(resources.GetObject("menuAccept.ShowShortcut")));
+			this.menuAccept.Text = resources.GetString("menuAccept.Text");
+			this.menuAccept.Visible = ((bool)(resources.GetObject("menuAccept.Visible")));
+			this.menuAccept.Click += new System.EventHandler(this.menuAccept_Click);
+			// 
 			// menuSeparator1
 			// 
 			this.menuSeparator1.Enabled = ((bool)(resources.GetObject("menuSeparator1.Enabled")));
@@ -377,6 +389,16 @@ namespace Novell.FormsTrayApp
 			this.menuSeparator1.ShowShortcut = ((bool)(resources.GetObject("menuSeparator1.ShowShortcut")));
 			this.menuSeparator1.Text = resources.GetString("menuSeparator1.Text");
 			this.menuSeparator1.Visible = ((bool)(resources.GetObject("menuSeparator1.Visible")));
+			// 
+			// menuRemove
+			// 
+			this.menuRemove.Enabled = ((bool)(resources.GetObject("menuRemove.Enabled")));
+			this.menuRemove.Index = 5;
+			this.menuRemove.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuRemove.Shortcut")));
+			this.menuRemove.ShowShortcut = ((bool)(resources.GetObject("menuRemove.ShowShortcut")));
+			this.menuRemove.Text = resources.GetString("menuRemove.Text");
+			this.menuRemove.Visible = ((bool)(resources.GetObject("menuRemove.Visible")));
+			this.menuRemove.Click += new System.EventHandler(this.menuRemove_Click);
 			// 
 			// menuSyncNow
 			// 
@@ -426,6 +448,16 @@ namespace Novell.FormsTrayApp
 			this.menuProperties.Text = resources.GetString("menuProperties.Text");
 			this.menuProperties.Visible = ((bool)(resources.GetObject("menuProperties.Visible")));
 			this.menuProperties.Click += new System.EventHandler(this.menuProperties_Click);
+			// 
+			// menuRefresh
+			// 
+			this.menuRefresh.Enabled = ((bool)(resources.GetObject("menuRefresh.Enabled")));
+			this.menuRefresh.Index = 11;
+			this.menuRefresh.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuRefresh.Shortcut")));
+			this.menuRefresh.ShowShortcut = ((bool)(resources.GetObject("menuRefresh.ShowShortcut")));
+			this.menuRefresh.Text = resources.GetString("menuRefresh.Text");
+			this.menuRefresh.Visible = ((bool)(resources.GetObject("menuRefresh.Visible")));
+			this.menuRefresh.Click += new System.EventHandler(this.menuRefresh_Click);
 			// 
 			// mainMenu1
 			// 
@@ -1287,37 +1319,6 @@ namespace Novell.FormsTrayApp
 			this.localiFoldersHeading.WordWrap = ((bool)(resources.GetObject("localiFoldersHeading.WordWrap")));
 			this.localiFoldersHeading.ZoomFactor = ((System.Single)(resources.GetObject("localiFoldersHeading.ZoomFactor")));
 			// 
-			// menuAccept
-			// 
-			this.menuAccept.DefaultItem = true;
-			this.menuAccept.Enabled = ((bool)(resources.GetObject("menuAccept.Enabled")));
-			this.menuAccept.Index = 3;
-			this.menuAccept.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuAccept.Shortcut")));
-			this.menuAccept.ShowShortcut = ((bool)(resources.GetObject("menuAccept.ShowShortcut")));
-			this.menuAccept.Text = resources.GetString("menuAccept.Text");
-			this.menuAccept.Visible = ((bool)(resources.GetObject("menuAccept.Visible")));
-			this.menuAccept.Click += new System.EventHandler(this.menuAccept_Click);
-			// 
-			// menuRemove
-			// 
-			this.menuRemove.Enabled = ((bool)(resources.GetObject("menuRemove.Enabled")));
-			this.menuRemove.Index = 5;
-			this.menuRemove.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuRemove.Shortcut")));
-			this.menuRemove.ShowShortcut = ((bool)(resources.GetObject("menuRemove.ShowShortcut")));
-			this.menuRemove.Text = resources.GetString("menuRemove.Text");
-			this.menuRemove.Visible = ((bool)(resources.GetObject("menuRemove.Visible")));
-			this.menuRemove.Click += new System.EventHandler(this.menuRemove_Click);
-			// 
-			// menuRefresh
-			// 
-			this.menuRefresh.Enabled = ((bool)(resources.GetObject("menuRefresh.Enabled")));
-			this.menuRefresh.Index = 11;
-			this.menuRefresh.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuRefresh.Shortcut")));
-			this.menuRefresh.ShowShortcut = ((bool)(resources.GetObject("menuRefresh.ShowShortcut")));
-			this.menuRefresh.Text = resources.GetString("menuRefresh.Text");
-			this.menuRefresh.Visible = ((bool)(resources.GetObject("menuRefresh.Visible")));
-			this.menuRefresh.Click += new System.EventHandler(this.menuRefresh_Click);
-			// 
 			// GlobalProperties
 			// 
 			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
@@ -1431,15 +1432,14 @@ namespace Novell.FormsTrayApp
 					ifListView = new iFoldersListView( domainInfo, largeImageList );
 					ifListView.SelectedIndexChanged += new Novell.FormsTrayApp.iFoldersListView.SelectedIndexChangedDelegate(ifListView_SelectedIndexChanged);
 					ifListView.DoubleClick += new EventHandler(iFolderView_DoubleClick);
+					ifListView.Location = new Point( 8, panel2.Controls[ panel2.Controls.Count - 1 ].Bottom );
 
 					iFolderListViews.Add( domainInfo.ID, ifListView );
 
-					updateView2();
+					updateWidth();
 
 					if ( !hide )
 					{
-						Point point = new Point( 8, panel2.Controls[ panel2.Controls.Count - 1 ].Bottom );
-						ifListView.Location = point;
 						panel2.Controls.Add( ifListView );
 					}
 				}
@@ -1494,7 +1494,7 @@ namespace Novell.FormsTrayApp
 					// Remove the domain.
 					iFolderListViews.Remove( domainID );
 
-					updateView2();
+					updateWidth();
 
 					if ( !hide )
 					{
@@ -2103,39 +2103,34 @@ namespace Novell.FormsTrayApp
 			return tlvi;
 		}
 
-		private void updateView2()
+		private void updateWidth()
 		{
-			int maxWidth;
-
 			if ( infoMessage.Visible )
 			{
-				maxWidth = infoMessage.Left + infoMessage.Width;
+				minWidth = infoMessage.Left + infoMessage.Width;
 			}
 			else
 			{
-				maxWidth = localiFoldersHeading.Left + localiFoldersHeading.Width;
+				minWidth = localiFoldersHeading.Left + localiFoldersHeading.Width;
 			}
 
 			foreach ( iFoldersListView ifListView in iFolderListViews.Values )
 			{
 				ifListView.Anchor = AnchorStyles.Left | AnchorStyles.Top;
-				if ( maxWidth < ifListView.Width )
+				if ( minWidth < ifListView.Width )
 				{
-					maxWidth = ifListView.Width;
+					minWidth = ifListView.Width;
 				}
 			}
 
-			iFolderView.Anchor = AnchorStyles.Left | AnchorStyles.Top;
+			minWidth += 20;
 
 			foreach ( iFoldersListView ifListView in iFolderListViews.Values )
 			{
-				ifListView.Width = maxWidth;
-				// TODO: Fix this ... cannot anchor this way.
-				ifListView.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+				ifListView.Width = minWidth;
 			}
 
-			iFolderView.Width = maxWidth - iFolderView.Left;
-			iFolderView.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+			iFolderView.Width = minWidth - iFolderView.Left;
 		}
 
 		private void updateView()
@@ -2162,11 +2157,9 @@ namespace Novell.FormsTrayApp
 			// Adjust positions of ifolder views
 			if ( !hide )
 			{
-				//TODO: Adjust for no iFolders - noiFolderMessage1.Top + noiFolderMessage1.Height;
 				foreach ( iFoldersListView ifListView in iFolderListViews.Values )
 				{
-					Point point = new Point( 8, nextY );
-					ifListView.Location = point;
+					ifListView.Top = nextY;
 					nextY = nextY + ifListView.Height;
 				}
 			}
@@ -2303,6 +2296,7 @@ namespace Novell.FormsTrayApp
 		{
 			Cursor.Current = Cursors.WaitCursor;
 
+			panel2.SuspendLayout();
 			iFolderView.Items.Clear();
 			selectedItem = null;
 			updateMenus( null );
@@ -2356,6 +2350,7 @@ namespace Novell.FormsTrayApp
 			}
 
 			updateView();
+			panel2.ResumeLayout();
 
 			Cursor.Current = Cursors.Default;
 		}
@@ -2644,33 +2639,25 @@ namespace Novell.FormsTrayApp
 		private void GlobalProperties_SizeChanged(object sender, System.EventArgs e)
 		{
 			// Calculate the size that we can use.
-			int width = this.ClientSize.Width - panel2.Left;
-			int height = this.ClientSize.Height - panel2.Top;
+			int width;
 
-			Size clientSize = panel2.ClientSize;
-			Size size = panel2.Size;
-			if ( width < panel2.Width )
+			if ( panel2.Width > minWidth + 8 )
 			{
-				clientSize.Width = width;
+				width = panel2.Width - 8;
 			}
 			else
 			{
-				size.Width = width;
+				width = minWidth - 8;
 			}
 
-			if ( height < panel2.Height )
+			iFolderView.Width = width;
+
+			foreach ( iFoldersListView ifListView in iFolderListViews.Values )
 			{
-				clientSize.Height = height;
-			}
-			else
-			{
-				size.Height = height;
+				ifListView.Width = width;
 			}
 
 			updateView();
-
-//			panel2.ClientSize = clientSize;
-//			panel2.Size = size;
 		}
 
 		private void GlobalProperties_Move(object sender, System.EventArgs e)
