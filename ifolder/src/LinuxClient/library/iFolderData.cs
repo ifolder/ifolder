@@ -1081,7 +1081,7 @@ namespace Novell.iFolder
 					}
 					else
 					{
-						if (args.Connected)
+						if (args.Connected || ifHolder.iFolder.Role == "Master")
 							ifHolder.State = iFolderState.Normal;
 						else
 							ifHolder.State = iFolderState.Disconnected;
