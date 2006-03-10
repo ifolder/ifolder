@@ -450,8 +450,7 @@ namespace Novell.iFolder
 		public static Manager CreateSimiasManager(string[] args)
 		{
 			if (simiasManager == null)
-				simiasManager = new Manager();
-//				simiasManager = new Manager(args);
+				simiasManager = new Manager(args);
 			
 			return simiasManager;
 		}
