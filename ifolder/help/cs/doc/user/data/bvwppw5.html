@@ -1,0 +1,111 @@
+<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<head>
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=utf-8">
+<meta http-equiv="Content-Language" content="cs">
+
+<meta name="Generator" content="Konverze HTML společnosti Novell, 10. března 2004">
+<meta name="Generation-Date" content="neděle, 23. října 2005, 15:54">
+<meta name="Content-Date" content="Po, 22. října 2004, 12:00:00 GMT">
+<meta name="Robots" content="INDEX, FOLLOW">
+<meta name="Document_Number" content="zHTML xD.0000.0000.0002.0007.">
+<meta name="Author" content="zHTML xD.0000.0000.0002.0007.">
+<meta name="Product_Class" content="">
+<meta name="Product_and_Version" content="iFolder(TM)">
+<meta name="Copyright" content="Copyright Novell, Inc. 1983-2004">
+
+<link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
+
+
+<title>Nápověda aplikace iFolder</title>
+<script type="text/javascript" language="javascript">
+function loadMenu()
+{
+	if ((parent.theMenu) && (parent.theMenu.amBusy == false) && parent.frames[2])
+	{
+	   parent.theMenu.loadScript("../doc/user/data/accountsprefs.html","../doc/user/data/toc_accountsprefs.html");
+	}
+	else{ setTimeout("loadMenu()",200);}
+}
+loadMenu();
+</script>
+<script type="text/javascript" language="javascript" src="../../../ui/jsglobal.js"></script>
+</head>
+
+<body onload="">
+<script type="text/javascript" language="javascript">
+  var prev_link="preferences.html";
+  var next_link="bwbirb9.html";
+</script>
+
+<script type="text/javascript" language="javascript" src="../../../ui/topnav.js"></script>
+
+<a name="bvwppw5"></a>
+
+<div class="Topic" title="Konfigurace místní brány firewall pro provoz aplikace iFolder">
+
+<h2 class="TOPIC-TITLE"><br />Konfigurace místní brány firewall pro provoz aplikace iFolder</h2>
+<p class="TOPIC">Pokud používáte místní bránu firewall, musíte ji nastavit tak, aby povolila aplikaci iFolder zvolit místní dynamický port, nebo musíte nakonfigurovat místní statický port pro klienta aplikace iFolder, který bude komunikovat lokálně (na stejném počítači) se serverem Mono XSP. Aplikace iFolder používá webové služby Mono XSP ke komunikaci přes protokoly HTTP nebo HTTPS (SSL jako výchozí) s podnikovými servery Novell iFolder, na nichž máte založeny účty iFolder. Správce služeb iFolder konfiguruje služby, které určují, zda se ve vašem prostředí použije protokol HTTP nebo HTTPS.</p>
+<p class="TOPIC">Vaše brána firewall neblokuje provoz mezi serverem Mono XSPa podnikovým serverem Novell iFolder, protože Mono XSP používá pro provoz standardní porty protokolu HTTP nebo HTTPS. Pokud však blokujete provoz mezi klientem a serverem Mono XSP, klient nemá možnost se serverem komunikovat. Nebude se moci přihlásit ke svému účtu iFolder a synchronizovat data ve složkách iFolder.</p>
+<p class="TOPIC">Na začátku není v konfiguraci aplikace iFolder uveden konkrétní port, který má být použit pro komunikaci klienta a serveru Mono XSP. Při prvním spuštění aplikace iFolder se otevře dostupný místní port, který bude přijímat žádosti ze serveru Mono XSP a odesílat data na server přes Mono XSP. Zapíše číslo portu do konfiguračního souboru a poté daný port používá, ledaže by port při spuštění aplikace iFolder nebyl k dispozici. Pokud daný port používá jiná aplikace, aplikace iFolder vybere jiný dostupný port, znovu nakonfiguruje port v konfiguračním souboru a tento nový port poté používá. Pokud např. aplikace iFolder není spuštěná a daný port zabere jiná aplikace, při dalším spuštění si aplikace iFolder musí vybrat a nakonfigurovat pro použití jiný port.</p>
+<h4 class="BRIDGEHEAD"><br />Použití místního dynamického portu</h4>
+<p class="TOPIC">Pokud na vašem počítači používáte místní bránu firewall, měla by tato brána detekovat místní provoz mezi aplikací iFolder a serverem Mono XSP pokaždé, když aplikace iFolder kontaktuje server, aby proběhla synchronizace seznamu uživatelů a dat ve složkách iFolder. Pokud povolíte provoz, nebude se při každém spuštění klienta zobrazovat místní upozornění. Pokud povolíte provoz trvale, brána firewall by vás již nadále neměla upozorňovat.</p>
+<h4 class="BRIDGEHEAD"><br />Použití místního statického portu</h4>
+<p class="TOPIC">V části Správce služby souboru Simias.config můžete volitelně přidat parametr Rozsah portů webové služby a povolit pro server Mono XSP používání statického portu nebo rozsahu portů pro tento místní provoz. Tento port nebo rozsah portů lze poté otevřít v bráně firewall a povolit tak komunikaci pro server Mono XSP. </p>
+<p class="TOPIC">Soubor Simias.config lze nalézt v těchto umístěních:</p>
+<table class="TABLENOTITLE" border="0" cellpadding="5" cellspacing="0">
+<tr class="HEADERROW"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bwejkc4"></a><em class="TBLHEAD">Operační systém</em></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">Umístění souboru Simias.config</em></th>
+</tr>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bwejkc5"></a><p class="ENTRY">Linux</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">/home/<em class="VARIABLE">username</em>/.local/share/simias/Simias.config</p></td>
+</tr>
+<tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bwejlap"></a><p class="ENTRY">Windows</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">C:\Documents and Settings\<em class="VARIABLE">username</em>\Local Settings\Application Data\simias\Simias.config</p></td>
+</tr>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bwejkc6"></a><p class="ENTRY">
+Macintosh
+</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">/Users/<em class="VARIABLE">username</em>/.local/share/simias/Simias.config</p></td>
+</tr></table>
+
+<p class="TOPIC">Přidejte nastavení rozsahu portů webové služby do části Správce služby v souboru Simias.config. Příklad:</p> <pre class="CODESAMPLENARROW">&lt;konfigurace&gt;</pre>
+
+<pre class="CODESAMPLENARROW">  &lt;název části="SpravceSluzby"&gt;</pre>
+
+<pre class="CODESAMPLENARROW">    &lt;název nastavení="RozsahPortuWeboveSluzby" hodnota="<em class="VARIABLE">monoxsp_port</em>" /&gt;   </pre>
+
+<pre class="CODESAMPLENARROW">  &lt;/sekce&gt;</pre>
+
+<pre class="CODESAMPLENARROW">&lt;/konfigurace&gt;</pre>
+
+<p class="TOPIC">Nahraďte parametr <em class="VARIABLE">monoxsp_port</em> číslem portu nebo rozsahem čísel portů:</p>
+<ul class="LISTBULLET">
+<li class="BULLETITEM">Chcete-li použít jeden statický port, zadejte hodnotu čtyřmístného čísla portu (jako např. 1234). Příklad: <pre class="CODESAMPLENARROW">&lt;název nastavení="RozsahPortuWeboveSluzby" hodnota="<em class="VARIABLE">1234</em>" /&gt;</pre>
+</li>
+
+<li class="BULLETITEM">Chcete-li použít jakýkoli dostupný port v rámci uvedeného rozsahu portů, zadejte rozsah portů (jako např. 1234-1236). Příklad: <pre class="CODESAMPLENARROW">&lt;název nastavení="RozsahPortuWeboveSluzby" hodnota="<em class="VARIABLE">1234-1236</em>" /&gt;</pre>
+</li>
+</ul>
+<p class="TOPIC">Konfigurace systému pro použití specifického portu nebo rozsahu portů:</p>
+<ol class="STEPLIST">
+<li class="STEP"><a name="bw4v93e"></a>
+<p class="STEP">Nastavte ve své bráně firewall, aby povolovala provoz na portu nebo rozsahu portů, které chcete používat pro provoz aplikace iFolder.</p>
+<p class="STEP">Informace o tom, jak otevřít port v bráně firewall, naleznete v příslušné dokumentaci k této bráně firewall.</p></li>
+
+<li class="STEP"><a name="bw4v6ou"></a>
+<p class="STEP">Pokud chcete ukončit klienta aplikace iFolder, klepněte pravým tlačítkem myši na ikonu aplikace iFolder <img src="../graphics/ifolder16.png" alt="Ikona aplikace iFolder" /> a vyberte položku Konec.</p></li>
+
+<li class="STEP"><a name="bw4v6r7"></a>
+<p class="STEP">Přidáním parametru Rozsah portů webové služby v části Správce služby změňte soubor Simias.config. </p></li>
+
+<li class="STEP"><a name="bw4vbz4"></a>
+<p class="STEP">Spusťte klienta aplikace iFolder.</p>
+<p class="STEP">Více informací naleznete v části <a href="bw08fxi.html#bw08fxi">Spuštění klienta aplikace iFolder</a>.</p></li>
+</ol> </div>
+
+<script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
+
+</body>
+</html>

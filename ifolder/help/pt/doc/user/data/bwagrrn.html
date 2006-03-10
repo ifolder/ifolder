@@ -1,0 +1,50 @@
+﻿<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Language" content="pt">
+<meta name="Generator" content="Novell HTML Conversion, 10 de mar&ccedil;o de 2004">
+<meta name="Generation-Date" content="Domingo, 23 de outubro de 2005 15:54">
+<meta name="Content-Date" content="Seg., 22 de outubro de 2005 12:00:00 GMT">
+<meta name="Robots" content="INDEX, FOLLOW">
+<meta name="Document_Number" content="zHTML xD.0000.0000.0003.0003.">
+<meta name="Author" content="zHTML xD.0000.0000.0003.0003.">
+<meta name="Product_Class" content="">
+<meta name="Product_and_Version" content="iFolder(TM)">
+<meta name="Copyright" content="Copyright Novell, Inc. 1983-2004">
+<link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
+<title>Ajuda do iFolder</title>
+<script type="text/javascript" language="javascript">
+function loadMenu()
+{
+	if ((parent.theMenu) && (parent.theMenu.amBusy == false) && parent.frames[2])
+	{
+	   parent.theMenu.loadScript("../doc/user/data/myifolders.html","../doc/user/data/toc_myifolders.html");
+	}
+	else{ setTimeout("loadMenu()",200);}
+}
+loadMenu();
+</script>
+<script type="text/javascript" language="javascript" src="../../../ui/jsglobal.js"></script>
+</head>
+<body onload="">
+<script type="text/javascript" language="javascript">
+  var prev_link="bwensdb.html";
+  var next_link="createifolder.html";
+</script>
+<script type="text/javascript" language="javascript" src="../../../ui/topnav.js"></script>
+<a name="bwagrrn"></a>
+<div class="Topic" title="Naming Conventions for an iFolder and Its Folders and Files">
+<h2 class="TOPIC-TITLE"><br />Conven&ccedil;&otilde;es de nomea&ccedil;&atilde;o para um iFolder e suas pastas e arquivos</h2>
+<p class="TOPIC">O cliente do iFolder imp&otilde;e conven&ccedil;&otilde;es de nomea&ccedil;&atilde;o que considera restri&ccedil;&otilde;es coletivas dos sistemas de arquivos do Linux, Windows e Macintosh. Um iFolder, pasta ou arquivo, deve ter um nome v&aacute;lido que esteja de acordo com as conven&ccedil;&otilde;es de nomea&ccedil;&atilde;o antes que possa ser sincronizada.</p>
+<p class="TOPIC">Use as seguintes conven&ccedil;&otilde;es de nomea&ccedil;&atilde;o para as suas pastas iFolder e para as pastas e arquivos contidos nelas:</p>
+<ul class="LISTBULLET">
+<li class="BULLETITEM">O iFolder suporta o conjunto de caracteres <a href="http://www.unicode.org" target="_blank" class="ULINK">Unicode*</a> com codifica&ccedil;&atilde;o UTF-8. </li>
+<li class="BULLETITEM">N&atilde;o use os seguintes caracteres inv&aacute;lidos nos nomes das pastas iFolder ou nos nomes das pastas e arquivos contidos nela: <pre class="CODESAMPLENARROW">\/:*?"&lt;&gt;|;</pre>
+<p class="BULLETITEM">O iFolder criar&aacute; um conflito de nome se voc&ecirc; utilizar caracteres inv&aacute;lidos em um nome de arquivo ou pasta. Este conflito deve ser resolvido antes que o arquivo ou a pasta possa ser sincronizado.</p></li>
+<li class="BULLETITEM">A extens&atilde;o m&aacute;xima para um &uacute;nico componente de caminho &eacute; 255 bytes. Para nomes de arquivos, a extens&atilde;o m&aacute;xima inclui o ponto (.) e a extens&atilde;o de arquivo.</li>
+<li class="BULLETITEM">Nomes de pastas iFolder, pastas e arquivos fazem distin&ccedil;&atilde;o entre mai&uacute;sculas e min&uacute;sculas; por&eacute;m a capitaliza&ccedil;&atilde;o &eacute; preservada. Se os nomes de arquivos diferirem apenas por capitaliza&ccedil;&atilde;o, o iFolder criar&aacute; um conflito de nome. Este conflito deve ser resolvido antes que o arquivo ou a pasta possa ser sincronizado.</li>
+<li class="BULLETITEM">Se voc&ecirc; criar pastas iFolder em um sistema de arquivos FAT32 no Linux, evite nomear arquivos com todos os caracteres em letra mai&uacute;scula. O tratamento de arquivo VFAT ou FAT32 no Linux muda automaticamente os nomes de arquivos que est&atilde;o com todos os caracteres em letra mai&uacute;scula e satisfaz o formato de arquivo MS-DOS 8.3 de todos os caracteres em letra mai&uacute;scula para todos os caracteres em letra min&uacute;scula. Isto cria problemas de sincroniza&ccedil;&atilde;o para aqueles arquivos se o iFolder for definido com o direito de acesso Apenas Leitura.</li>
+</ul> </div>
+<script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
+</body>
+</html>

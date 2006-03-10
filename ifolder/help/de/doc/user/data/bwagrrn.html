@@ -1,0 +1,50 @@
+﻿<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Language" content="de">
+<meta name="Generator" content="Novell HTML-Konvertierung 10. M&auml;rz 2004">
+<meta name="Generation-Date" content="Sonntag, 23. Oktober 2005 15:54 Uhr">
+<meta name="Content-Date" content="Montag, 22. Okt. 2005 12:00:00 Uhr MEZ">
+<meta name="Robots" content="Index, Follow">
+<meta name="Document_Number" content="zHTML xD.0000.0000.0003.0003.">
+<meta name="Author" content="zHTML xD.0000.0000.0003.0003.">
+<meta name="Product_Class" content="">
+<meta name="Product_and_Version" content="iFolder(TM)">
+<meta name="Copyright" content="Copyright Novell, Inc. 1983-2004">
+<link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
+<title>Hilfe zu iFolder</title>
+<script type="text/javascript" language="javascript">
+function loadMenu()
+{
+	if ((parent.theMenu) && (parent.theMenu.amBusy == false) && parent.frames[2])
+	{
+	   parent.theMenu.loadScript("../doc/user/data/myifolders.html","../doc/user/data/toc_myifolders.html");
+	}
+	else{ setTimeout("loadMenu()",200);}
+}
+loadMenu();
+</script>
+<script type="text/javascript" language="javascript" src="../../../ui/jsglobal.js"></script>
+</head>
+<body onload="">
+<script type="text/javascript" language="javascript">
+  var prev_link="bwensdb.html";
+  var next_link="createifolder.html";
+</script>
+<script type="text/javascript" language="javascript" src="../../../ui/topnav.js"></script>
+<a name="bwagrrn"></a>
+<div class="Topic" title="Naming Conventions for an iFolder and Its Folders and Files">
+<h2 class="TOPIC-TITLE"><br />Benennungskonventionen f&uuml;r iFolder-Ordner und zugeh&ouml;rige Ordner und Dateien</h2>
+<p class="TOPIC">Der iFolder-Client erfordert Benennungskonventionen, f&uuml;r die die Einschr&auml;nkungen der Dateisysteme von Linux, Windows und Macintosh insgesamt gelten. Ein iFolder-Ordner, ein Ordner bzw. eine Datei muss einen g&uuml;ltigen, den Benennungskonventionen entsprechenden Namen besitzen, damit die Synchronisierung erfolgen kann.</p>
+<p class="TOPIC">Verwenden Sie die folgenden Benennungskonventionen f&uuml;r Ihre iFolder-Ordner und die darin enthaltenen Ordner und Dateien:</p>
+<ul class="LISTBULLET">
+<li class="BULLETITEM">iFolder unterst&uuml;tzt den <a href="http://www.unicode.org" target="_blank" class="ULINK">Unicode*</a>-Zeichensatz mit UTF-8-Codierung. </li>
+<li class="BULLETITEM">Verwenden Sie die folgenden ung&uuml;ltigen Zeichen nicht f&uuml;r die Namen von iFolder-Ordnern oder f&uuml;r die Namen von darin enthaltenen Ordnern und Dateien: <pre class="CODESAMPLENARROW">\/:*?"&lt;&gt;|;</pre>
+<p class="BULLETITEM">iFolder generiert einen Namenskonflikt, wenn Sie die ung&uuml;ltigen Zeichen in einem Datei- oder Ordnernamen verwenden. Der Konflikt muss gel&ouml;st werden, damit die Datei bzw. der Ordner synchronisiert werden kann.</p></li>
+<li class="BULLETITEM">Die maximale L&auml;nge des Namens f&uuml;r eine einzelne Pfadkomponente betr&auml;gt 255 Byte. Bei Dateinamen z&auml;hlen Punkt (.) und Dateierweiterung zur maximalen L&auml;nge.</li>
+<li class="BULLETITEM">Bei Namen von iFolder-Ordnern, Ordnern und Dateien wird nicht zwischen Gro&szlig;- und Kleinschreibung unterschieden. Die Gro&szlig;-/Kleinschreibung wird jedoch beibehalten. Wenn sich Dateinamen nur durch Gro&szlig;-/Kleinschreibung unterscheiden, erzeugt iFolder einen Namenskonflikt. Der Konflikt muss gel&ouml;st werden, damit die Datei bzw. der Ordner synchronisiert werden kann.</li>
+<li class="BULLETITEM">Wenn Sie iFolder-Ordner in einem FAT32-Dateisystem unter Linux erstellen, sollten Sie Dateien nicht ausschlie&szlig;lich mit Gro&szlig;buchstaben benennen. Mit der VFAT- und FAT32-Dateibehandlung unter Linux werden die Dateinamen, die ausschlie&szlig;lich Gro&szlig;buchstaben enthalten und dem Dateiformat von MS-DOS 8.3 entsprechen, automatisch von Gro&szlig;buchstaben in Kleinbuchstaben ge&auml;ndert. Dadurch werden Synchronisierungsprobleme f&uuml;r diese Dateien generiert, wenn der iFolder-Ordner auf das Zugriffsrecht "Nur Lesen" festgelegt ist.</li>
+</ul> </div>
+<script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
+</body>
+</html>
