@@ -38,10 +38,11 @@ namespace Novell.FormsTrayApp
 	{
 		#region Class Members
 
-		public event EventHandler ItemSelected;
-		public new event EventHandler DoubleClick;
-
+//		private ToolTip toolTip;
 		private bool selected = false;
+		private string completeName;
+		private string completeLocation;
+		private string completeStatus;
 //		private bool success = false;
 		private Color selectionColor = Color.FromKnownColor( KnownColor.InactiveCaption );
 		private Color normalColor = Color.White;
@@ -53,10 +54,10 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.PictureBox icon;
 		private System.Windows.Forms.Label location;
 		private System.Windows.Forms.Label status;
-
-		#endregion
 		private System.Windows.Forms.Timer timer1;
 		private System.ComponentModel.IContainer components;
+
+		#endregion
 
 		#region Constructor
 
@@ -75,8 +76,6 @@ namespace Novell.FormsTrayApp
 			{
 				ItemLocation = ifolderObject.iFolderWeb.UnManagedPath;
 			}
-
-			base.DoubleClick += new EventHandler(TileListViewItem_DoubleClick);
 		}
 
 		public TileListViewItem( string[] items, int imageIndex ) :
@@ -91,6 +90,11 @@ namespace Novell.FormsTrayApp
 		private TileListViewItem()
 		{
 			InitializeComponent();
+
+			base.DoubleClick += new EventHandler(TileListViewItem_DoubleClick);
+//			toolTip = new ToolTip();
+//			toolTip.Active = true;
+//			toolTip.SetToolTip(this, "Test tooltip");
 		}
 
 		#endregion
@@ -196,19 +200,25 @@ namespace Novell.FormsTrayApp
 			// TileListViewItem
 			// 
 			this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-			this.Controls.Add(this.status);
-			this.Controls.Add(this.location);
 			this.Controls.Add(this.name);
+			this.Controls.Add(this.location);
+			this.Controls.Add(this.status);
 			this.Controls.Add(this.icon);
 			this.Name = "TileListViewItem";
 			this.Size = new System.Drawing.Size(280, 72);
 			this.MouseEnter += new System.EventHandler(this.TileListViewItem_MouseEnter);
-			this.MouseHover += new System.EventHandler(this.TileListViewItem_MouseHover);
 			this.MouseLeave += new System.EventHandler(this.TileListViewItem_MouseLeave);
 			this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TileListViewItem_MouseDown);
 			this.ResumeLayout(false);
 
 		}
+		#endregion
+
+		#region Events
+
+		public event EventHandler ItemSelected;
+		public new event EventHandler DoubleClick;
+
 		#endregion
 
 		#region Event Handlers
@@ -333,19 +343,27 @@ namespace Novell.FormsTrayApp
 
 		public string ItemLocation
 		{
-			get { return location.Text; }
-			set { location.Text = value; }
+			get { return completeLocation; }
+			set 
+			{
+				completeLocation = value;
+				formatLabelString( location, value );
+			}
 		}
 
 		public string ItemName
 		{
-			get { return name.Text; }
-			set { name.Text = value; }
+			get { return completeName; }
+			set 
+			{
+				completeName = value;
+				formatLabelString( name, value );
+			}
 		}
 
 		public string Status
 		{
-			get { return status.Text; }
+			get { return completeStatus; }
 			set 
 			{
 /*				if ( value.Equals( "success" ) )
@@ -354,12 +372,15 @@ namespace Novell.FormsTrayApp
 					success = true;
 					status.Text = "Synchronized: less than a minute ago";
 				}
-				else*/
+				else
 				{
-//					timer1.Stop();
-//					success = false;
+					timer1.Stop();
+					success = false;
 					status.Text = value;
-				}
+				}*/
+
+				completeStatus = value;
+				formatLabelString( status, value );
 			}
 		}
 
@@ -398,6 +419,52 @@ namespace Novell.FormsTrayApp
 					name.ForeColor = activeTextColor;
 					location.ForeColor = status.ForeColor = inactiveTextColor;
 				}
+			}
+		}
+
+		#endregion
+
+		#region Private Methods
+
+		private void formatLabelString(Label label, string name)
+		{
+			Graphics g = label.CreateGraphics();
+
+			try
+			{
+				// Measure the string.
+				SizeF stringSize = g.MeasureString(name, label.Font);
+				if (stringSize.Width > label.Width)
+				{
+					// Calculate the length of the string that can be displayed ... this will get us in the
+					// ballpark.
+					int length = (int)(label.Width * name.Length / stringSize.Width);
+					string tmp = String.Empty;
+
+					// Remove one character at a time until we fit in the box.  This should only loop 3 or 4 times at most.
+					while (stringSize.Width > label.Width)
+					{
+						tmp = name.Substring(0, length) + "...";
+						stringSize = g.MeasureString(tmp, label.Font);
+						length -= 1;
+					}
+
+					// Set the truncated string in the display.
+					label.Text = tmp;
+
+					// Set up a tooltip to display the complete path.
+//					toolTip1.SetToolTip(label, name);
+				}
+				else
+				{
+					// The path fits ... no truncation needed.
+					label.Text = name;
+//					toolTip1.SetToolTip(label, string.Empty);
+				}
+			}
+			finally
+			{
+				g.Dispose();
 			}
 		}
 
