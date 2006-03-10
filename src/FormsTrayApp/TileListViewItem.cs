@@ -38,22 +38,27 @@ namespace Novell.FormsTrayApp
 	{
 		#region Class Members
 
-//		private ToolTip toolTip;
+		private ToolTip toolTip;
 		private bool selected = false;
-		private string completeName;
-		private string completeLocation;
-		private string completeStatus;
+		private Image icon;
+		private Rectangle iconRect;
+		private SolidBrush nameBrush;
+		private Font nameFont;
+		private string completeName = string.Empty;
+		private Rectangle nameRect;
+		private SolidBrush descriptionBrush;
+		private Font descriptionFont;
+		private string completeLocation = string.Empty;
+		private Rectangle locationRect;
+		private string completeStatus = string.Empty;
+		private Rectangle statusRect;
 //		private bool success = false;
 		private Color selectionColor = Color.FromKnownColor( KnownColor.InactiveCaption );
 		private Color normalColor = Color.White;
-		private TileListView owner;
-		private int imageIndex;
 		private Color activeTextColor = Color.FromKnownColor( KnownColor.ControlText );
 		private Color inactiveTextColor = Color.FromKnownColor( KnownColor.InactiveCaptionText );
-		private System.Windows.Forms.Label name;
-		private System.Windows.Forms.PictureBox icon;
-		private System.Windows.Forms.Label location;
-		private System.Windows.Forms.Label status;
+		private TileListView owner;
+		private int imageIndex;
 		private System.Windows.Forms.Timer timer1;
 		private System.ComponentModel.IContainer components;
 
@@ -91,10 +96,21 @@ namespace Novell.FormsTrayApp
 		{
 			InitializeComponent();
 
-			base.DoubleClick += new EventHandler(TileListViewItem_DoubleClick);
-//			toolTip = new ToolTip();
-//			toolTip.Active = true;
-//			toolTip.SetToolTip(this, "Test tooltip");
+			iconRect = new Rectangle( 8, 12, 48, 48 );
+			nameRect = new Rectangle( 64, 12, 206, 20 );
+			locationRect = new Rectangle( 64, 32, 206, 16 );
+			statusRect = new Rectangle( 64, 48, 206, 16 );
+
+			nameBrush = new SolidBrush( activeTextColor );
+			nameFont = new Font( "Microsoft Sans Serif", 11, FontStyle.Bold );
+			descriptionBrush = new SolidBrush( inactiveTextColor );
+			descriptionFont = new Font( "Microsoft Sans Serif", 8, FontStyle.Regular );
+
+			// Minimize flicker during repainting.
+			SetStyle( ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.UserPaint, true );
+
+			toolTip = new ToolTip();
+			toolTip.Active = true;
 		}
 
 		#endregion
@@ -126,71 +142,7 @@ namespace Novell.FormsTrayApp
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			this.icon = new System.Windows.Forms.PictureBox();
-			this.name = new System.Windows.Forms.Label();
-			this.location = new System.Windows.Forms.Label();
-			this.status = new System.Windows.Forms.Label();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
-			this.SuspendLayout();
-			// 
-			// icon
-			// 
-			this.icon.Location = new System.Drawing.Point(8, 12);
-			this.icon.Name = "icon";
-			this.icon.Size = new System.Drawing.Size(48, 48);
-			this.icon.TabIndex = 0;
-			this.icon.TabStop = false;
-			this.icon.MouseEnter += new System.EventHandler(this.TileListViewItem_MouseEnter);
-			this.icon.DoubleClick += new System.EventHandler(this.TileListViewItem_DoubleClick);
-			this.icon.MouseLeave += new System.EventHandler(this.TileListViewItem_MouseLeave);
-			this.icon.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TileListViewItem_MouseDown);
-			// 
-			// name
-			// 
-			this.name.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-				| System.Windows.Forms.AnchorStyles.Right)));
-			this.name.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
-			this.name.Location = new System.Drawing.Point(64, 12);
-			this.name.Name = "name";
-			this.name.Size = new System.Drawing.Size(206, 20);
-			this.name.TabIndex = 1;
-			this.name.Text = "Name";
-			this.name.MouseEnter += new System.EventHandler(this.TileListViewItem_MouseEnter);
-			this.name.DoubleClick += new System.EventHandler(this.TileListViewItem_DoubleClick);
-			this.name.MouseLeave += new System.EventHandler(this.TileListViewItem_MouseLeave);
-			this.name.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TileListViewItem_MouseDown);
-			// 
-			// location
-			// 
-			this.location.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-				| System.Windows.Forms.AnchorStyles.Right)));
-			this.location.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
-			this.location.ForeColor = System.Drawing.SystemColors.InactiveCaptionText;
-			this.location.Location = new System.Drawing.Point(64, 32);
-			this.location.Name = "location";
-			this.location.Size = new System.Drawing.Size(206, 16);
-			this.location.TabIndex = 2;
-			this.location.Text = "location";
-			this.location.MouseEnter += new System.EventHandler(this.TileListViewItem_MouseEnter);
-			this.location.DoubleClick += new System.EventHandler(this.TileListViewItem_DoubleClick);
-			this.location.MouseLeave += new System.EventHandler(this.TileListViewItem_MouseLeave);
-			this.location.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TileListViewItem_MouseDown);
-			// 
-			// status
-			// 
-			this.status.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-				| System.Windows.Forms.AnchorStyles.Right)));
-			this.status.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
-			this.status.ForeColor = System.Drawing.SystemColors.InactiveCaptionText;
-			this.status.Location = new System.Drawing.Point(64, 48);
-			this.status.Name = "status";
-			this.status.Size = new System.Drawing.Size(206, 16);
-			this.status.TabIndex = 3;
-			this.status.Text = "status";
-			this.status.MouseEnter += new System.EventHandler(this.TileListViewItem_MouseEnter);
-			this.status.DoubleClick += new System.EventHandler(this.TileListViewItem_DoubleClick);
-			this.status.MouseLeave += new System.EventHandler(this.TileListViewItem_MouseLeave);
-			this.status.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TileListViewItem_MouseDown);
 			// 
 			// timer1
 			// 
@@ -200,16 +152,12 @@ namespace Novell.FormsTrayApp
 			// TileListViewItem
 			// 
 			this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-			this.Controls.Add(this.name);
-			this.Controls.Add(this.location);
-			this.Controls.Add(this.status);
-			this.Controls.Add(this.icon);
 			this.Name = "TileListViewItem";
 			this.Size = new System.Drawing.Size(280, 72);
+			this.Paint += new System.Windows.Forms.PaintEventHandler(this.TileListViewItem_Paint);
 			this.MouseEnter += new System.EventHandler(this.TileListViewItem_MouseEnter);
 			this.MouseLeave += new System.EventHandler(this.TileListViewItem_MouseLeave);
 			this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TileListViewItem_MouseDown);
-			this.ResumeLayout(false);
 
 		}
 		#endregion
@@ -217,25 +165,17 @@ namespace Novell.FormsTrayApp
 		#region Events
 
 		public event EventHandler ItemSelected;
-		public new event EventHandler DoubleClick;
 
 		#endregion
 
 		#region Event Handlers
 
-		private void TileListViewItem_DoubleClick(object sender, System.EventArgs e)
-		{
-			if ( DoubleClick != null )
-			{
-				DoubleClick( this, e );
-			}
-		}
-
 		private void TileListViewItem_MouseEnter(object sender, System.EventArgs e)
 		{
 			if ( !selected )
 			{
-				location.ForeColor = status.ForeColor = activeTextColor;
+				descriptionBrush = new SolidBrush( activeTextColor );
+				Invalidate();
 			}
 
 			// TODO: Change the icon.
@@ -245,7 +185,8 @@ namespace Novell.FormsTrayApp
 		{
 			if ( !selected )
 			{
-				location.ForeColor = status.ForeColor = inactiveTextColor;
+				descriptionBrush = new SolidBrush( inactiveTextColor );
+				Invalidate();
 			}
 
 			// TODO: Change the icon.
@@ -263,6 +204,21 @@ namespace Novell.FormsTrayApp
 			{
 				Selected = true;
 			}
+		}
+
+		private void TileListViewItem_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
+		{
+			// Draw the icon.
+			e.Graphics.DrawImage( icon, iconRect );
+
+			// Draw the name string.
+			drawFormattedString( e.Graphics, completeName, nameFont, nameBrush, nameRect );
+
+			// Draw the location string.
+			drawFormattedString( e.Graphics, completeLocation, descriptionFont, descriptionBrush, locationRect );
+
+			// Draw the status string.
+			drawFormattedString( e.Graphics, completeStatus, descriptionFont, descriptionBrush, statusRect );
 		}
 
 		private void timer1_Tick(object sender, System.EventArgs e)
@@ -331,7 +287,8 @@ namespace Novell.FormsTrayApp
 				imageIndex = value;
 				if ( owner != null )
 				{
-					icon.Image = ImageList.Images[ imageIndex ];
+					icon = ImageList.Images[ imageIndex ];
+					Invalidate();
 				}
 			}
 		}
@@ -347,7 +304,8 @@ namespace Novell.FormsTrayApp
 			set 
 			{
 				completeLocation = value;
-				formatLabelString( location, value );
+				setToolTipText();
+				Invalidate();
 			}
 		}
 
@@ -357,7 +315,8 @@ namespace Novell.FormsTrayApp
 			set 
 			{
 				completeName = value;
-				formatLabelString( name, value );
+				setToolTipText();
+				Invalidate();
 			}
 		}
 
@@ -380,7 +339,8 @@ namespace Novell.FormsTrayApp
 				}*/
 
 				completeStatus = value;
-				formatLabelString( status, value );
+				setToolTipText();
+				Invalidate();
 			}
 		}
 
@@ -405,8 +365,8 @@ namespace Novell.FormsTrayApp
 				if ( selected )
 				{
 					BackColor = selectionColor;
-					name.ForeColor = location.ForeColor = status.ForeColor =  normalColor;
-
+					nameBrush = descriptionBrush = new SolidBrush( normalColor );
+					Invalidate();
 					
 					if (ItemSelected != null)
 					{
@@ -416,8 +376,9 @@ namespace Novell.FormsTrayApp
 				else
 				{
 					BackColor = normalColor;
-					name.ForeColor = activeTextColor;
-					location.ForeColor = status.ForeColor = inactiveTextColor;
+					nameBrush = new SolidBrush( activeTextColor );
+					descriptionBrush = new SolidBrush( inactiveTextColor );
+					Invalidate();
 				}
 			}
 		}
@@ -426,46 +387,63 @@ namespace Novell.FormsTrayApp
 
 		#region Private Methods
 
-		private void formatLabelString(Label label, string name)
+		private void drawFormattedString( Graphics graphics, string s, Font font, SolidBrush brush, Rectangle rectangle )
 		{
-			Graphics g = label.CreateGraphics();
+			string formattedString = s;
 
-			try
+			// Measure the string.
+			SizeF stringSize = graphics.MeasureString(s, font);
+			if (stringSize.Width > rectangle.Width)
 			{
-				// Measure the string.
-				SizeF stringSize = g.MeasureString(name, label.Font);
-				if (stringSize.Width > label.Width)
+				// Calculate the length of the string that can be displayed ... this will get us in the
+				// ballpark.
+				int length = (int)(rectangle.Width * s.Length / stringSize.Width);
+				string tmp = String.Empty;
+
+				// Remove one character at a time until we fit in the box.  This should only loop 3 or 4 times at most.
+				while (stringSize.Width > rectangle.Width)
 				{
-					// Calculate the length of the string that can be displayed ... this will get us in the
-					// ballpark.
-					int length = (int)(label.Width * name.Length / stringSize.Width);
-					string tmp = String.Empty;
+					tmp = s.Substring(0, length) + "...";
+					stringSize = graphics.MeasureString(tmp, font);
+					length -= 1;
+				}
 
-					// Remove one character at a time until we fit in the box.  This should only loop 3 or 4 times at most.
-					while (stringSize.Width > label.Width)
-					{
-						tmp = name.Substring(0, length) + "...";
-						stringSize = g.MeasureString(tmp, label.Font);
-						length -= 1;
-					}
+				formattedString = tmp;
+			}
 
-					// Set the truncated string in the display.
-					label.Text = tmp;
+			graphics.DrawString( formattedString, font, brush, rectangle );
+		}
 
-					// Set up a tooltip to display the complete path.
-//					toolTip1.SetToolTip(label, name);
+		private void setToolTipText()
+		{
+			// TODO: Localize.
+			string text = "Name: " + completeName + "\n";
+
+			iFolderObject ifolderObject = (iFolderObject)Tag;
+
+			if ( ifolderObject.iFolderWeb.IsSubscription )
+			{
+				// TODO: Localize.
+				text += completeLocation + "\n" + 
+					"Size: " + completeStatus + "\n";
+			}
+			else
+			{
+				// TODO: Localize.
+				text += "Location: " + completeLocation + "\n";
+
+				if ( ifolderObject.iFolderState.Equals( iFolderState.Normal ) )
+				{
+					text += completeStatus + "\n";
 				}
 				else
 				{
-					// The path fits ... no truncation needed.
-					label.Text = name;
-//					toolTip1.SetToolTip(label, string.Empty);
+					// TODO: Localize.
+					text += "Status: " + completeStatus + "\n";
 				}
 			}
-			finally
-			{
-				g.Dispose();
-			}
+            
+			toolTip.SetToolTip( this, text );
 		}
 
 		#endregion
