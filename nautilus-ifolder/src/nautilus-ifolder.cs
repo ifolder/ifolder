@@ -26,11 +26,20 @@ using Gtk;
 using Gnome;
 using Novell.iFolder;
 using Simias.Client;
+using Novell.iFolder.Controller;
 
 namespace Novell.iFolder.Nautilus
 {
 	public class NautilusiFolder
 	{
+		private static SimiasEventBroker	simiasEventBroker;
+		private static iFolderWebService	ifws;
+		private static SimiasWebService	simws;
+		private static iFolderData		ifdata;
+		private static Manager			simiasManager;
+		private static DomainController	domainController;
+		private static bool				forceShutdown = false;
+		
 		public static int Main (string[] args)
 		{
 			// Don't do anything if nothing was specified to do
@@ -57,53 +66,129 @@ namespace Novell.iFolder.Nautilus
 			return 0;
 		}
 		
-		public static void on_dialog_closed (object o, EventArgs args)
+		public static void StartSimias(string[] args)
 		{
-			Application.Quit ();
+			bool simiasRunning = false;
+
+			simiasManager = Util.CreateSimiasManager(args);
+			
+			simiasManager.Start();
+			
+			string localServiceUrl = simiasManager.WebServiceUri.ToString();
+			ifws = new iFolderWebService();
+			ifws.Url = localServiceUrl + "/iFolder.asmx";
+			LocalService.Start(ifws, simiasManager.WebServiceUri, simiasManager.DataPath);
+			
+			simws = new SimiasWebService();
+			simws.Url = localServiceUrl + "/Simias.asmx";
+			LocalService.Start(simws, simiasManager.WebServiceUri, simiasManager.DataPath);
+			
+			while (!simiasRunning)
+			{
+				try
+				{
+					ifws.Ping();
+					simiasRunning = true;
+				}
+				catch(Exception e)
+				{
+					Console.WriteLine(e.Message);
+				}
+				
+				if (forceShutdown)
+					ForceQuit();
+				
+				// Wait and ping again
+				System.Threading.Thread.Sleep(10);
+			}
+			
+			if (forceShutdown)
+				ForceQuit();
+			else
+			{
+				try
+				{
+					simiasEventBroker = SimiasEventBroker.GetSimiasEventBroker();
+					
+					// set up to have data ready for events
+					ifdata = iFolderData.GetData();
+					
+					domainController = DomainController.GetDomainController();
+				}
+				catch(Exception e)
+				{
+					Console.WriteLine(e);
+					ifws = null;
+					ForceQuit();
+				}
+			}
+		}
+		
+		public static void ForceQuit()
+		{
+			try
+			{
+				simiasManager.Stop();
+			}
+			catch(Exception e)
+			{
+				Console.WriteLine(e.Message);
+			}
+			
+			System.Environment.Exit(-1);
+		}
+		
+		public static int StopSimias()
+		{
+			try
+			{
+				simiasManager.Stop();
+			}
+			catch(Exception e)
+			{
+				Console.WriteLine(e.Message);
+				return -1;
+			}
+
+			return 0;
 		}
 		
 		private static int showShareDialog (string[] args)
 		{
 			if (args.Length < 2) {
-				System.Console.Write ("ERROR: iFolder ID not specified\n");
+				Console.Write ("ERROR: iFolder ID not specified\n");
 				return -1;
 			}
-			
-			Manager manager = new Manager();
-			manager.Start();
+
+			StartSimias(args);
 			
 			iFolderPropertiesDialog propsDialog;
-			propsDialog = new iFolderPropertiesDialog (args [1], manager);
+			propsDialog = new iFolderPropertiesDialog (args [1], simiasManager);
 			propsDialog.CurrentPage = 1;
 			propsDialog.Run ();
 			propsDialog.Hide ();
 			propsDialog.Destroy ();
 
-			manager.Stop();
-
-			return 0;
+			return StopSimias();
 		}
 		
 		private static int showPropertiesDialog (string[] args)
 		{
 			if (args.Length < 2) {
-				System.Console.Write ("ERROR: iFolder ID not specified\n");
+				Console.Write ("ERROR: iFolder ID not specified\n");
 				return -1;
 			}
 			
-			Manager manager = new Manager();
-			manager.Start();
+			StartSimias(args);
 			
 			iFolderPropertiesDialog propsDialog;
-			propsDialog = new iFolderPropertiesDialog (args [1], manager);
+			propsDialog = new iFolderPropertiesDialog (args [1], simiasManager);
 			propsDialog.CurrentPage = 0;
 			propsDialog.Run ();
 			propsDialog.Hide ();
 			propsDialog.Destroy ();
 
-			manager.Stop();
-
-			return 0;
+			return StopSimias();
 		}
 		
 		private static int showHelp (string[] args)
