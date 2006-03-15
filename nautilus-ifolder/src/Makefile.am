@@ -13,8 +13,7 @@ INCLUDES =						\
 	$(DISABLE_DEPRECATED_CFLAGS)			\
 	$(NAUTILUS_CFLAGS)						\
 	$(SIMIAS_CLIENT_C_CFLAGS)	\
-	$(IFOLDER_C_CFLAGS)	\
-	$(XML2_CFLAGS)
+	$(IFOLDER_C_CFLAGS)
 
 EXTRA_DIST = nautilus-ifolder.h nautilus-ifolder.cs emblem-ifolder.icon emblem-ifolder.png ifolder-folder.png
 

@@ -71,7 +71,7 @@ PKG_CHECK_MODULES(GNOME_SHARP, gnome-sharp-2.0 >= $GNOME_SHARP_REQUIRED)
 PKG_CHECK_MODULES(SIMIAS_CLIENT, simias-client >= $SIMIAS_CLIENT_REQUIRED)
 PKG_CHECK_MODULES(SIMIAS_CLIENT_C, simias-client-c >= $SIMIAS_CLIENT_REQUIRED)
 PKG_CHECK_MODULES(IFOLDER, ifolder3 >= $IFOLDER_REQUIRED)
-PKG_CHECK_MODULES(IFOLDER_C, ifolder3-c >= $IFOLDER_REQUIRED)
+PKG_CHECK_MODULES(IFOLDER_C, ifolder3-c >= $IFOLDER_REQUIRED gconf-2.0)
 
 AC_SUBST(NAUTILUS_CFLAGS)
 AC_SUBST(NAUTILUS_LIBS)
@@ -155,19 +155,6 @@ infodir="${prefix}/info"
 mandir="${prefix}/man"
 webdir="${exec_prefix}/web"
 webbindir="${exec_prefix}/web/bin"
-
-dnl ========================================================
-dnl Configure XML2_CONFIG
-dnl ========================================================
-AC_PATH_PROG(XML2_CONFIG, xml2-config, no)
-if test "x$XML2_CONFIG" = "xno"; then
-    AC_MSG_ERROR([You need to install libxml2 and libxml2-devel])
-fi
-
-XML2_CFLAGS='`xml2-config --cflags`'
-XML2_LIBS='`xml2-config --libs`'
-AC_SUBST(XML2_CFLAGS)
-AC_SUBST(XML2_LIBS)
 
 dnl ========================================================
 dnl Configure C# compiler settings

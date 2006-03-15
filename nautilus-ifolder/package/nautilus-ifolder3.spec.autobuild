@@ -9,9 +9,9 @@
 #
 
 # norootforbuild
-# neededforbuild  cairo cairo-devel compat-libstdc++ eel eel-devel gail gail-devel gdk-pixbuf glib2-devel glitz glitz-devel gnome-desktop-devel gnome-menus-devel gnome-vfs2 gnome-vfs2-devel gnome2-devel-packages gtk-sharp gtk-sharp2 gtk2 gtk2-devel ifolder3 intltool libpng-devel libtool mono-core mono-data mono-devel mono-web nautilus nautilus-devel pango pango-devel simias startup-notification-devel
+# neededforbuild  cairo cairo-devel compat-libstdc++ eel eel-devel gail gail-devel gdk-pixbuf glib2-devel glitz glitz-devel gnome-desktop-devel gnome-menus-devel gnome-vfs2 gnome-vfs2-devel gnome2-devel-packages gtk-sharp gtk-sharp2 gtk2 gtk2-devel ifolder3 intltool libpng-devel libtool mono-core mono-data mono-devel mono-web nautilus nautilus-devel pango pango-devel simias startup-notification-devel gconf2 gconf2-devel
 
-BuildRequires: aspell-en compat-libstdc++ eel-devel gdk-pixbuf gnutls-devel gtk-sharp2-complete ifolder3 intltool libgnomeprintui-devel libwnck-devel nautilus-devel perl-XML-Parser mDNSResponder update-desktop-files
+BuildRequires: aspell-en compat-libstdc++ eel-devel gdk-pixbuf gnutls-devel gtk-sharp2-complete ifolder3 intltool libgnomeprintui-devel libwnck-devel nautilus-devel perl-XML-Parser mDNSResponder update-desktop-files gconf2 gconf2-devel
 
 Name:         nautilus-ifolder3
 %define buildnum @@BUILDNUM@@
