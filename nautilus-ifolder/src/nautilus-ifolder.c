@@ -29,6 +29,7 @@
 
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
+#include <gconf/gconf-client.h>
 #include <libintl.h>
 #include <string.h>
 #include <stdio.h>
@@ -36,11 +37,6 @@
 #include <time.h>
 
 #include <libgnomevfs/gnome-vfs-utils.h>
-
-#include <libxml/tree.h>
-#include <libxml/parser.h>
-#include <libxml/xpath.h>
-#include <libxml/xpathInternals.h>
 
 #include <simias-event-client.h>
 #include <simiasweb.h>
@@ -166,15 +162,8 @@ static void seen_ifolders_ht_destroy_key (gpointer key);
 static void seen_ifolders_ht_destroy_value (gpointer value);
 static void seen_ifolders_ht_invalidate_ifolder (gpointer key, gpointer value, gpointer user_data);
 
-/* Functions and defines used to read user config files */
-#define XPATH_SHOW_CREATION_DIALOG	"//setting[@name='ShowCreationDialog']/@value"
+#define KEY_SHOW_CREATION "/apps/ifolder3/notification/show_created_dialog"
 
-static char * get_user_profile_dir_path (char *dest_path);
-static char * get_ifolder_config_file_path (char *dest_path);
-static int ifolder_get_config_setting (char *setting_xpath,
-									   char *setting_value_return);
-static int ifolder_set_config_setting (char *setting_xpath,
-									   char *setting_value);
 static gboolean show_created_dialog ();
 
 static gboolean sec_reconnected (gpointer user_data);
@@ -1047,235 +1036,21 @@ seen_ifolders_ht_invalidate_ifolder (gpointer key, gpointer value, gpointer user
 	}
 }
 
-static char *
-get_user_profile_dir_path (char *dest_path)
-{
-	char *home_dir;
-	char dot_local_path [512];
-	char dot_local_share_path [512];
-	
-	home_dir = getenv ("HOME");
-	if (home_dir == NULL || strlen (home_dir) <= 0) {
-		DEBUG_IFOLDER (("Could not get the HOME directory\n"));
-		return NULL;
-	}
-	
-	/**
-	 * Create the directories if they don't already exist.  Ignore any errors if
-	 * they already do exist.
-	 */
-	sprintf (dot_local_path, "%s%s", home_dir, "/.local");
-	sprintf (dot_local_share_path, "%s%s", home_dir, "/.local/share");
-	if (((mkdir(dot_local_path, 0777) == -1) && (errno != EEXIST)) ||
-		 ((mkdir(dot_local_share_path, 0777) == -1) && (errno != EEXIST )))
-	{
-		perror ("Cannot create '~/.local/share' directory");
-		return NULL;
-	}
-	
-	sprintf (dest_path, dot_local_share_path);
-
-	return dest_path;
-}
-
-static char *
-get_ifolder_config_file_path (char *dest_path)
-{
-	char user_profile_dir [1024];
-	if (get_user_profile_dir_path (user_profile_dir) == NULL) {
-		DEBUG_IFOLDER (("Could not get base dir for config file\n"));
-		return NULL;
-	}
-
-	sprintf (dest_path, "%s/ifolder/ifolder3.config", user_profile_dir);
-
-	return dest_path;
-}
-
-static int
-ifolder_get_config_setting (char *setting_xpath, char *setting_value_return)
-{
-	char config_file [1024];
-	xmlDoc *doc;
-	xmlXPathContext *xpath_ctx;
-	xmlXPathObject *xpath_obj;
-	xmlNodeSet *node_set;
-	xmlChar *setting_value;
-	xmlNode *cur_node;
-	xmlChar *cur_node_val;
-	gboolean b_value_found;
-	
-	b_value_found = FALSE;
-	
-	if (get_ifolder_config_file_path (config_file) == NULL) {
-		DEBUG_IFOLDER (("Could not get path to ifolder3.config\n"));
-		return -1;
-	}
-	
-	xmlInitParser ();
-	doc = xmlReadFile (config_file, NULL, 0);
-	if (doc == NULL) {
-		DEBUG_IFOLDER (("Failed to open/parse %s\n", config_file));
-		return -1;
-	}
-	
-	/* Create xpath evaluation context */
-	xpath_ctx = xmlXPathNewContext (doc);
-	if (xpath_ctx == NULL) {
-		DEBUG_IFOLDER (("Unable to create a new XPath context for %s\n", config_file));
-		return -1;
-	}
-	
-	/* Evaluate the XPath expression */
-	xpath_obj = xmlXPathEvalExpression (setting_xpath, xpath_ctx);
-	if (xpath_obj != NULL) {
-		node_set = xpath_obj->nodesetval;
-		if (node_set && node_set->nodeNr > 0) {
-			cur_node = node_set->nodeTab [0];
-			
-			if (cur_node->type == XML_ATTRIBUTE_NODE) {
-				cur_node_val = xmlNodeGetContent (cur_node);
-				if (cur_node_val != NULL) {
-					strcpy (setting_value_return, cur_node_val);
-					b_value_found = TRUE;
-					xmlFree (cur_node_val);
-				} else {
-					DEBUG_IFOLDER (("xmlNodeGetContent returned NULL\n"));
-				}
-			} else {
-				DEBUG_IFOLDER (("XPath expression didn't return an attribute node: %s\n", setting_xpath));
-			}
-		} else {
-			DEBUG_IFOLDER (("Nothing returned from XPath expression: %s\n", setting_xpath));
-		}
-		
-		xmlFree (xpath_obj);
-	} else {
-		DEBUG_IFOLDER (("Unable to evaluate XPath expression: %s\n", setting_xpath));
-	}
-	
-	xmlXPathFreeContext (xpath_ctx);
-	xmlFreeDoc (doc);
-	xmlCleanupParser ();
-	
-	if (b_value_found) {
-		return 0;
-	} else {
-		return -1;
-	}
-}
-
-/**
- * update_xpath_nodes:
- * @nodes: the nodes set.
- * @value: the new value for the node(s)
- * 
- * Updates the @nodes content in document.
- */
-static void
-update_xpath_nodes (xmlNodeSetPtr nodes, char *value)
-{
-	int size;
-	int i;
-	
-	size = (nodes) ? nodes->nodeNr : 0;
-	
-	for (i = size -1; i >= 0; i--) {
-		xmlNodeSetContent (nodes->nodeTab [i], BAD_CAST value);
-		if (nodes->nodeTab [i]->type != XML_NAMESPACE_DECL)
-			nodes->nodeTab [i] = NULL;
-	}
-}
-
-static int
-ifolder_set_config_setting (char *setting_xpath,
-							char *setting_value)
-{
-	char config_file [1024];
-	xmlDoc *doc;
-	xmlXPathContext *xpath_ctx;
-	xmlXPathObject *xpath_obj;
-	xmlNodeSet *node_set;
-	xmlNode *cur_node;
-	gboolean b_setting_written;
-	FILE *cfg_file;
-	
-	b_setting_written = FALSE;
-	if (get_ifolder_config_file_path (config_file) == NULL) {
-		DEBUG_IFOLDER (("Could not get path to ifolder3.config\n"));
-		return -1;
-	}
-	
-	xmlInitParser ();
-	doc = xmlReadFile (config_file, NULL, 0);
-	if (doc == NULL) {
-		DEBUG_IFOLDER (("Failed to open/parse %s\n", config_file));
-		return -1;
-	}
-	
-	/* Create xpath evaluation context */
-	xpath_ctx = xmlXPathNewContext (doc);
-	if (xpath_ctx == NULL) {
-		DEBUG_IFOLDER (("Unable to create a new XPath context for %s\n", config_file));
-		return -1;
-	}
-	
-	/* Evaluate the XPath expression */
-	xpath_obj = xmlXPathEvalExpression (setting_xpath, xpath_ctx);
-	if (xpath_obj != NULL) {
-		node_set = xpath_obj->nodesetval;
-		if (node_set && node_set->nodeNr > 0) {
-			cur_node = node_set->nodeTab [0];
-			
-			if (cur_node->type == XML_ATTRIBUTE_NODE) {
-				update_xpath_nodes (xpath_obj->nodesetval, setting_value);
-				
-				/* Save the resulting document */
-				if ((cfg_file = fopen (config_file, "w")) != NULL) {
-					xmlDocDump (cfg_file, doc);
-					b_setting_written = TRUE;
-					fclose (cfg_file);
-				} else {
-					perror ("Could not open ifolder3.config to write ShowCreationDialog setting.");
-				}
-			} else {
-				DEBUG_IFOLDER (("XPath expression didn't return an attribute node: %s\n", setting_xpath));
-			}
-		} else {
-			DEBUG_IFOLDER (("Nothing returned from XPath expression: %s\n", setting_xpath));
-		}
-		
-		xmlFree (xpath_obj);
-	} else {
-		DEBUG_IFOLDER (("Unable to evaluate XPath expression: %s\n", setting_xpath));
-	}
-	
-	xmlXPathFreeContext (xpath_ctx);
-	xmlFreeDoc (doc);
-	xmlCleanupParser ();
-	
-	if (b_setting_written) {
-		return 0;
-	} else {
-		return -1;
-	}
-}
-
 static
 gboolean show_created_dialog ()
 {
-	char value [32];
+	GConfClient *client;
+	gboolean b_show_created_dialog;
 	
-	if (ifolder_get_config_setting (XPATH_SHOW_CREATION_DIALOG, value) != 0) {
-		DEBUG_IFOLDER (("Could not determine the config setting of whether to show creation dialog.  Showing the dialog by default.\n"));
+	client = gconf_client_get_default();
+	if (client == NULL)
 		return TRUE;
-	} else {
-		if (strcasecmp ("true", value) == 0) {
-			return TRUE;
-		}
-	}
 	
-	return FALSE;
+	b_show_created_dialog = gconf_client_get_bool(client, KEY_SHOW_CREATION, NULL);
+	
+	g_object_unref(G_OBJECT(client));
+	
+	return b_show_created_dialog;
 }
 
 /**
@@ -1307,6 +1082,8 @@ creation_dialog_button_callback (GtkDialog *dialog,
 								 gint response_type,
 								 gpointer data)
 {
+	GConfClient *client;
+
 	switch (response_type) {
 		case GTK_RESPONSE_HELP:
 			/* Launch the iFolder Help. */
@@ -1321,9 +1098,11 @@ creation_dialog_button_callback (GtkDialog *dialog,
 		case GTK_RESPONSE_CLOSE:
 			if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data))) {
 				/* Save off the setting to NOT show this dialog again */
-				if (ifolder_set_config_setting (XPATH_SHOW_CREATION_DIALOG,
-												"false") != 0) {
-					DEBUG_IFOLDER (("Error saving show creation dialog setting\n"));
+				client = gconf_client_get_default();
+				if (client != NULL)
+				{
+					gconf_client_set_bool(client, KEY_SHOW_CREATION, FALSE, NULL);
+					g_object_unref(G_OBJECT(client));
 				}
 			}
 			
