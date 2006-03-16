@@ -107,6 +107,8 @@ static gboolean b_nautilus_ifolder_running;
 
 static gint reconnected_id = 0;
 static gint disconnected_id = 0;
+static GStaticMutex reconnected_mutex = G_STATIC_MUTEX_INIT;
+static GStaticMutex disconnected_mutex = G_STATIC_MUTEX_INIT;
 
 /**
  * This hashtable is used to keep a list of all iFolders on the computer and it
@@ -189,10 +191,13 @@ sec_reconnected (gpointer user_data)
 	 * sec_reconnected shouldn't run because it would start working on
 	 * structures that aren't initialized/cleaned up.
 	 */
+	g_static_mutex_lock (&disconnected_mutex);
 	if (disconnected_id != 0) {
+		g_static_mutex_unlock (&disconnected_mutex);
 		DEBUG_IFOLDER (("sec_reconnected() called and disconnected_id != 0"));
 		return TRUE; /* This function will be called again soon. */
 	}
+	g_static_mutex_unlock (&disconnected_mutex);
 	
 	/* Rebuild ifolders_ht (GHashTable) to get the latest list */
 	refresh_ifolders_ht ();
@@ -210,7 +215,9 @@ static void
 sec_reconnected_idle_removed (gpointer data)
 {
 	DEBUG_IFOLDER (("sec_reconnected_idle_removed()"));
+	g_static_mutex_lock (&reconnected_mutex);
 	reconnected_id = 0;
+	g_static_mutex_unlock (&reconnected_mutex);
 }
 
 static gboolean
@@ -221,10 +228,14 @@ sec_disconnected (gpointer user_data)
 	 * sec_disconnected shouldn't run because it would free memory on data
 	 * structures that are currently being allocated.
 	 */
+	g_static_mutex_lock (&reconnected_mutex);
 	if (reconnected_id != 0) {
+		g_static_mutex_unlock (&reconnected_mutex);
 		DEBUG_IFOLDER (("sec_disconnected() called and reconnected_id != 0"));
 		return TRUE; /* This function will be called again soon. */
 	}
+	g_static_mutex_unlock (&reconnected_mutex);
+	
 
 	/**
 	 * Recreate ifolders_ht.  Since we use g_hash_table_new_full() freeing
@@ -261,7 +272,9 @@ static void
 sec_disconnected_idle_removed (gpointer data)
 {
 	DEBUG_IFOLDER (("sec_disconnected_idle_removed()"));
+	g_static_mutex_lock (&disconnected_mutex);
 	disconnected_id = 0;
+	g_static_mutex_unlock (&disconnected_mutex);
 }
 
 /**
@@ -439,11 +452,13 @@ ec_state_event_cb (SEC_STATE_EVENT state_event, const char *message, void *data)
 			 * Build ifolders_ht to contain the most up-to-date list of
 			 * iFolders in Simias.
 			 */
+			g_static_mutex_lock (&reconnected_mutex);
 			reconnected_id =
 				g_idle_add_full (G_PRIORITY_HIGH_IDLE,
 								 sec_reconnected,
 								 NULL,
 								 sec_reconnected_idle_removed);
+			g_static_mutex_unlock (&reconnected_mutex);
 			
 			break;
 		case SEC_STATE_EVENT_DISCONNECTED:
@@ -453,11 +468,13 @@ ec_state_event_cb (SEC_STATE_EVENT state_event, const char *message, void *data)
 			 * Clear out all cached information since we've disconnected from
 			 * the Event Server.
 			 */
+			g_static_mutex_lock (&disconnected_mutex);
 			disconnected_id =
 				g_idle_add_full (G_PRIORITY_HIGH_IDLE,
 								 sec_disconnected,
 								 NULL,
 								 sec_disconnected_idle_removed);
+			g_static_mutex_unlock (&disconnected_mutex);
 
 			break;
 		case SEC_STATE_EVENT_ERROR:
