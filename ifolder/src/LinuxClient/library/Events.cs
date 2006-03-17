@@ -70,6 +70,7 @@ namespace Novell.iFolder.Events
 	public delegate void DomainInactivatedEventHandler(object sender, DomainEventArgs args);
 	public delegate void DomainNewDefaultEventHandler(object sender, NewDefaultDomainEventArgs args);
 	public delegate void DomainInGraceLoginPeriodEventHandler(object sender, DomainInGraceLoginPeriodEventArgs args);
+	public delegate void DomainClientUpgradeAvailableEventHandler(object sender, DomainClientUpgradeAvailableEventArgs args);
 	
 
 
@@ -279,6 +280,29 @@ namespace Novell.iFolder.Events
 		public int RemainingGraceLogins
 		{
 			get{ return this.remainingGraceLogins; }
+		}
+	}
+	
+	public class DomainClientUpgradeAvailableEventArgs : EventArgs
+	{
+		private string domainID;
+		private string newClientVersion;
+		
+		public DomainClientUpgradeAvailableEventArgs(
+			string domainID, string newClientVersion)
+		{
+			this.domainID = domainID;
+			this.newClientVersion = newClientVersion;
+		}
+		
+		public string DomainID
+		{
+			get{ return this.domainID; }
+		}
+		
+		public string NewClientVersion
+		{
+			get{ return this.newClientVersion; }
 		}
 	}
 }
