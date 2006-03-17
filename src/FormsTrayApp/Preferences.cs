@@ -1325,17 +1325,8 @@ namespace Novell.FormsTrayApp
 				Domain d = (Domain)lvi.Tag;
 				if (d.ID.Equals(domain.ID))
 				{
-					lvi.SubItems[2].Text = domain.DomainInfo.Active ? 
-						(domain.DomainInfo.Authenticated ? resourceManager.GetString("statusLoggedIn") : resourceManager.GetString("statusLoggedOut"))
-						: resourceManager.GetString("statusDisabled");
-
-					if (lvi.Selected)
-					{
-//						login.Enabled = logout.Enabled = enableAccount.Checked = 
-//							domain.DomainInfo.Active;
-//						login.Visible = !domain.DomainInfo.Authenticated;
-//						logout.Visible = domain.DomainInfo.Authenticated;
-					}
+					lvi.Tag = domain;
+					lvi.Checked = domain.DomainInfo.Authenticated;
 					break;
 				}
 			}

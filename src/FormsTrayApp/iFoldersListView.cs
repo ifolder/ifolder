@@ -80,6 +80,9 @@ namespace Novell.FormsTrayApp
 
 		public new event EventHandler DoubleClick;
 
+		public delegate bool NavigateItemDelegate( object sender, NavigateItemEventArgs e );
+		public event NavigateItemDelegate NavigateItem;
+
 		public delegate void LastItemRemovedDelegate( object sender, EventArgs e);
 		public event LastItemRemovedDelegate LastItemRemoved;
 
@@ -131,6 +134,16 @@ namespace Novell.FormsTrayApp
 			{
 				LastItemRemoved( sender, e );
 			}
+		}
+
+		private bool tileListView1_NavigateItem(object sender, Novell.FormsTrayApp.NavigateItemEventArgs e)
+		{
+			if ( NavigateItem != null )
+			{
+				return NavigateItem( this, e );
+			}
+
+			return false;
 		}
 
 		private void listView1_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -206,6 +219,7 @@ namespace Novell.FormsTrayApp
 			this.tileListView1.TabIndex = 1;
 			this.tileListView1.VerticleSpacing = 5;
 			this.tileListView1.LastItemRemoved += new Novell.FormsTrayApp.TileListView.LastItemRemovedDelegate(this.tileListView1_LastItemRemoved);
+			this.tileListView1.NavigateItem += new Novell.FormsTrayApp.TileListView.NavigateItemDelegate(this.tileListView1_NavigateItem);
 			this.tileListView1.SizeChanged += new System.EventHandler(this.tileListView1_SizeChanged);
 			this.tileListView1.DoubleClick += new System.EventHandler(this.tileListView1_DoubleClick);
 			this.tileListView1.SelectedIndexChanged += new Novell.FormsTrayApp.TileListView.SelectedIndexChangedDelegate(this.tileListView1_SelectedIndexChanged);
@@ -261,6 +275,11 @@ namespace Novell.FormsTrayApp
 			tileListView1.Items.Clear();
 
 			this.SuspendLayout();
+		}
+
+		public bool MoveToItem( int row, int column )
+		{
+			return tileListView1.MoveToItem( row, column );
 		}
 
 		public void UpdateiFolderStatus( string iFolderID, iFolderState state )

@@ -39,10 +39,11 @@ namespace Novell.FormsTrayApp
 	{
 		#region Class Members
 
-		private int horizontalSpacing=5;
-		private int verticleSpacing=5;
-		private int itemWidth=280;
-		private int itemHeight=72;
+		private int itemsPerRow;
+		private int horizontalSpacing = 5;
+		private int verticleSpacing = 5;
+		private int itemWidth = 280;
+		private int itemHeight = 72;
 		private TileListViewItemCollection items;
 		private TileListViewItem selectedItem = null;
 		private ImageList largeImageList;
@@ -110,6 +111,9 @@ namespace Novell.FormsTrayApp
 		#region Events
 
 		public new event EventHandler DoubleClick;
+
+		public delegate bool NavigateItemDelegate( object sender, NavigateItemEventArgs e );
+		public event NavigateItemDelegate NavigateItem;
 
 		public delegate void LastItemRemovedDelegate( object sender, EventArgs e);
 		public event LastItemRemovedDelegate LastItemRemoved;
@@ -189,7 +193,7 @@ namespace Novell.FormsTrayApp
 			{
 				if ( !tlvi.Equals(selectedItem) )
 				{
-					selectedItem.Selected=false;
+					selectedItem.Selected = false;
 				}
 			}
 			selectedItem = tlvi;
@@ -224,14 +228,9 @@ namespace Novell.FormsTrayApp
 			}
 		}
 		
-		private System.Drawing.Point GetItemLocation(int index)
+		private System.Drawing.Point getItemLocation(int index)
 		{
-			int itemsPerRow = (Width - 20)/ItemWidth;
-			if ( itemsPerRow == 0 )
-			{
-				itemsPerRow = 1;
-			}
-			int rowIndex = index/itemsPerRow;
+			int rowIndex = index / itemsPerRow;
 			int colIndex = index - rowIndex * itemsPerRow;
 			Point p = new Point(
 				colIndex * ( ItemWidth + verticleSpacing ) + 10,
@@ -247,7 +246,7 @@ namespace Novell.FormsTrayApp
 		{
 			get
 			{
-				System.Drawing.Point p = GetItemLocation(items.Count - 1);
+				System.Drawing.Point p = getItemLocation(items.Count - 1);
 				return p.Y + ItemHeight + horizontalSpacing;
 			}
 		}
@@ -260,7 +259,7 @@ namespace Novell.FormsTrayApp
 			}
 			set
 			{
-				horizontalSpacing=value;
+				horizontalSpacing = value;
 			}
 		}
 
@@ -268,8 +267,7 @@ namespace Novell.FormsTrayApp
 		{
 			get
 			{
-				int itemsPerRow = (Width - 20)/ItemWidth;
-				int oldItemsPerRow = (oldSize.Width - 20)/ItemWidth;
+				int oldItemsPerRow = (oldSize.Width - 20) / ItemWidth;
 				if ( itemsPerRow == oldItemsPerRow)
 				{
 					return false;
@@ -287,7 +285,7 @@ namespace Novell.FormsTrayApp
 			}
 			set
 			{
-				itemHeight=value;
+				itemHeight = value;
 			}
 		}
 
@@ -304,7 +302,7 @@ namespace Novell.FormsTrayApp
 			}
 			set
 			{
-				itemWidth=value;
+				itemWidth = value;
 			}
 		}
 		
@@ -328,7 +326,7 @@ namespace Novell.FormsTrayApp
 			}
 			set
 			{
-				verticleSpacing=value;
+				verticleSpacing = value;
 			}
 		}
 
@@ -336,15 +334,119 @@ namespace Novell.FormsTrayApp
 
 		#region Public Methods
 
+		public bool MoveToItem( int row, int column )
+		{
+			bool result = false;
+
+			if ( column < itemsPerRow )
+			{
+				int index = row * itemsPerRow + column;
+				if ( index < Items.Count )
+				{
+					TileListViewItem tlvi = Items[ index ];
+					tlvi.Selected = true;
+					tlvi.Focus();
+
+					result = true;
+				}
+			}
+
+			return result;
+		}
+
+		private void getItemPosition( TileListViewItem tlvi, out int row, out int column )
+		{
+			int index = Items.IndexOf( tlvi );
+			if ( itemsPerRow == 0 )
+				itemsPerRow = 1;
+
+			row = index / itemsPerRow;
+			column = index - row * itemsPerRow;
+		}
+
+		internal void MoveDown( TileListViewItem tlvi )
+		{
+			int row;
+			int column;
+			getItemPosition( tlvi, out row, out column );
+
+			if ( !MoveToItem( ++row, column ) && NavigateItem != null )
+			{
+				NavigateItem( this, new NavigateItemEventArgs( 0, column, MoveDirection.Down ) );
+			}
+		}
+
+		internal void MoveLeft( TileListViewItem tlvi )
+		{
+			int row;
+			int column;
+			getItemPosition( tlvi, out row, out column );
+
+			if ( column > 0 )
+				column--;
+
+			MoveToItem( row, column );
+		}
+
+		internal void MoveRight( TileListViewItem tlvi )
+		{
+			int row;
+			int column;
+			getItemPosition( tlvi, out row, out column );
+
+			if ( column < itemsPerRow - 1 )
+				column++;
+
+			if ( !MoveToItem( row, column ) )
+			{
+				if ( NavigateItem == null || 
+					!NavigateItem( this, new NavigateItemEventArgs( 0, column, MoveDirection.Right ) ) )
+				{
+					row--;
+					if ( row >= 0 )
+					{
+						MoveToItem( row, column );
+					}
+				}
+			}
+		}
+
+		internal void MoveUp( TileListViewItem tlvi )
+		{
+			int row;
+			int column;
+			getItemPosition( tlvi, out row, out column );
+
+			row--;
+
+			if ( row < 0 )
+			{
+				if ( NavigateItem != null )
+				{
+					NavigateItem( this, new NavigateItemEventArgs( row, column, MoveDirection.Up ) );
+				}
+			}
+			else
+			{
+				MoveToItem( row, column );
+			}
+		}
+
 		public void ReCalculateItems()
 		{
 			SuspendLayout();
 			
+			itemsPerRow = (Width - 20) / ItemWidth;
+			if ( itemsPerRow == 0 )
+			{
+				itemsPerRow = 1;
+			}
+
 			TileListViewItem tlvi;
 			for (int i = 0; i < items.Count; i++)
 			{
 				tlvi = items[i];
-				tlvi.Location = GetItemLocation(i);
+				tlvi.Location = getItemLocation(i);
 			}
 			adjustHeight();
 			

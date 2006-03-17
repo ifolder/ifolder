@@ -1262,9 +1262,9 @@ namespace Novell.FormsTrayApp
 								preferences.UpdateDomainStatus(new Domain(domainInfo));
 							}
 						}
-						catch //(Exception ex)
+						catch (Exception ex)
 						{
-							//						MessageBox.Show(ex.Message);
+							MessageBox.Show(ex.Message);
 						}
 
 						isConnecting = false;

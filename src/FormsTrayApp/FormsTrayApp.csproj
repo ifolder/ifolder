@@ -238,6 +238,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "NavigateItemEventArgs.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "NoiFolderMessage.cs"
                     SubType = "UserControl"
                     BuildAction = "Compile"

@@ -1285,6 +1285,7 @@ namespace Novell.FormsTrayApp
 			this.iFolderView.VerticleSpacing = 5;
 			this.iFolderView.Visible = ((bool)(resources.GetObject("iFolderView.Visible")));
 			this.iFolderView.LastItemRemoved += new Novell.FormsTrayApp.TileListView.LastItemRemovedDelegate(this.iFolderView_LastItemRemoved);
+			this.iFolderView.NavigateItem += new Novell.FormsTrayApp.TileListView.NavigateItemDelegate(this.iFolderView_NavigateItem);
 			this.iFolderView.DoubleClick += new System.EventHandler(this.iFolderView_DoubleClick);
 			this.iFolderView.SelectedIndexChanged += new Novell.FormsTrayApp.TileListView.SelectedIndexChangedDelegate(this.ifListView_SelectedIndexChanged);
 			// 
@@ -1432,6 +1433,7 @@ namespace Novell.FormsTrayApp
 					ifListView = new iFoldersListView( domainInfo, largeImageList );
 					ifListView.SelectedIndexChanged += new Novell.FormsTrayApp.iFoldersListView.SelectedIndexChangedDelegate(ifListView_SelectedIndexChanged);
 					ifListView.DoubleClick += new EventHandler(iFolderView_DoubleClick);
+					ifListView.NavigateItem += new Novell.FormsTrayApp.iFoldersListView.NavigateItemDelegate(iFolderView_NavigateItem);
 					ifListView.Location = new Point( 8, panel2.Controls[ panel2.Controls.Count - 1 ].Bottom );
 
 					iFolderListViews.Add( domainInfo.ID, ifListView );
@@ -2296,17 +2298,6 @@ namespace Novell.FormsTrayApp
 		{
 			Cursor.Current = Cursors.WaitCursor;
 
-			panel2.SuspendLayout();
-			iFolderView.Items.Clear();
-			selectedItem = null;
-			updateMenus( null );
-
-			// Clear the available iFolder views.
-			foreach (iFoldersListView ifListView in iFolderListViews.Values)
-			{
-				ifListView.InitializeUpdate();
-			}
-
 			Hashtable oldHt = new Hashtable();
 			lock(ht)
 			{
@@ -2322,7 +2313,22 @@ namespace Novell.FormsTrayApp
 
 			try
 			{
+				// Get the list of iFolders
 				iFolderWeb[] ifolderArray = ifWebService.GetAlliFolders();
+
+				// Clear the listviews
+				panel2.SuspendLayout();
+				iFolderView.Items.Clear();
+				selectedItem = null;
+				updateMenus( null );
+
+				// Clear the available iFolder views.
+				foreach (iFoldersListView ifListView in iFolderListViews.Values)
+				{
+					ifListView.InitializeUpdate();
+				}
+				
+				// Walk the list of iFolders and add them to the listviews.
 				foreach (iFolderWeb ifolder in ifolderArray)
 				{
 					iFolderState state = iFolderState.Normal;
@@ -3050,6 +3056,39 @@ namespace Novell.FormsTrayApp
 		private void iFolderView_LastItemRemoved(object sender, System.EventArgs e)
 		{
 			updateView();
+		}
+
+		private bool iFolderView_NavigateItem(object sender, Novell.FormsTrayApp.NavigateItemEventArgs e)
+		{
+			bool result = false;
+
+			// This needs to be coded to select the appropriate TileListViewItem object in the listview
+			// above or below the current listview.
+/*			if ( !hide && iFolderListViews.Count > 0 )
+			{
+				bool senderLocalView = false;
+				if ( sender.GetType().Equals( typeof( TileListView ) ) )
+				{
+					senderLocalView = true;
+				}
+
+				foreach ( iFoldersListView ifListView in iFolderListViews.Values )
+				{
+				}
+
+				switch ( e.Direction )
+				{
+					case MoveDirection.Right:
+						if ( senderLocalView )
+						{
+							((iFoldersListView)).MoveToItem( e.Row, e.Column );
+						}
+						break;
+
+				}
+			}*/
+
+			return result;
 		}
 
 		private void iFolderView_DoubleClick(object sender, System.EventArgs e)

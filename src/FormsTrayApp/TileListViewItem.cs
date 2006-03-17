@@ -132,6 +132,22 @@ namespace Novell.FormsTrayApp
 			base.Dispose( disposing );
 		}
 
+		protected override bool IsInputKey(Keys keyData)
+		{
+			switch (keyData)
+			{
+				case Keys.Up:
+				case Keys.Down:
+				case Keys.Right:
+				case Keys.Left:
+				case Keys.PageUp:
+				case Keys.PageDown:
+					return true;
+				default:
+					return base.IsInputKey (keyData);
+			}
+		}
+
 		#endregion
 
 		#region Component Designer generated code
@@ -156,6 +172,7 @@ namespace Novell.FormsTrayApp
 			this.Size = new System.Drawing.Size(280, 72);
 			this.Paint += new System.Windows.Forms.PaintEventHandler(this.TileListViewItem_Paint);
 			this.MouseEnter += new System.EventHandler(this.TileListViewItem_MouseEnter);
+			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TileListViewItem_KeyDown);
 			this.MouseLeave += new System.EventHandler(this.TileListViewItem_MouseLeave);
 			this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TileListViewItem_MouseDown);
 
@@ -459,5 +476,28 @@ namespace Novell.FormsTrayApp
 		}
 
 		#endregion
+
+		private void TileListViewItem_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+		{
+			switch ( e.KeyCode )
+			{
+				case Keys.Up:
+					owner.MoveUp( this );
+					break;
+				case Keys.Down:
+					owner.MoveDown( this );
+					break;
+				case Keys.Right:
+					owner.MoveRight( this );
+					break;
+				case Keys.Left:
+					owner.MoveLeft( this );
+					break;
+				case Keys.PageDown:
+					break;
+				case Keys.PageUp:
+					break;
+			}
+		}
 	}
 }
