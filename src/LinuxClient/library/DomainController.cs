@@ -74,6 +74,7 @@ namespace Novell.iFolder.Controller
 		public event DomainInactivatedEventHandler DomainInactivated;
 		public event DomainNewDefaultEventHandler NewDefaultDomain;
 		public event DomainInGraceLoginPeriodEventHandler DomainInGraceLoginPeriod;
+		public event DomainClientUpgradeAvailableEventHandler DomainClientUpgradeAvailable;
 		
 		private DomainController()
 		{
@@ -805,6 +806,41 @@ namespace Novell.iFolder.Controller
 					}
 				}
 			}
+			
+			// Check to see if there's a new version of the client available
+			string newClientVersion = GetNewClientVersion(domainID);
+			if (newClientVersion != null)
+			{
+				// Notify DomainClientUpgradeAvailable listeners
+				if (DomainClientUpgradeAvailable != null)
+				{
+					DomainClientUpgradeAvailableEventArgs args =
+						new DomainClientUpgradeAvailableEventArgs(
+							domainID, newClientVersion);
+					DomainClientUpgradeAvailable(this, args);
+				}
+			}
+		}
+
+		/// <returns>Returns the version of a newer client or null if no new version exists.</returns>		
+		private string GetNewClientVersion(string domainID)
+		{
+			string newClientVersion = null;
+
+			try
+			{
+				newClientVersion = ifws.CheckForUpdatedClient(domainID);
+			}
+			catch(Exception e)
+			{
+				string domainName = domainID;
+				DomainInformation dom = (DomainInformation) keyedDomains[domainID];
+				if (dom != null)
+					domainName = dom.Name;
+				Console.WriteLine("Error checking for new version of iFolder Client on {0}: {1}", domainName, e.Message);
+			}
+
+			return newClientVersion;
 		}
 		
 		public Status AuthenticateDomain(string domainID)
