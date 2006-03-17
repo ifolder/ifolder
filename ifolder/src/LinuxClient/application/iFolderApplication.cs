@@ -100,6 +100,8 @@ namespace Novell.iFolder
 		
 		private bool				forceShutdown;
 		
+		private iFolderMsgDialog	ClientUpgradeDialog;
+		
 		///
 		/// D-Bus variables
 		///
@@ -190,6 +192,8 @@ namespace Novell.iFolder
 			shuttingDownNotifyWindow = null;
 			
 			forceShutdown = false;
+
+			ClientUpgradeDialog = null;
 
 //			logwin = new LogWindow();
 //			logwin.Destroyed +=
@@ -311,6 +315,57 @@ namespace Novell.iFolder
 		private void OnDomainNeedsCredentialsEvent(object sender, DomainEventArgs args)
 		{
 			ReLogin(args.DomainID);
+		}
+		
+		private void OnClientUpgradeAvailableEvent(object sender, DomainClientUpgradeAvailableEventArgs args)
+		{
+			if (ClientUpgradeDialog != null)
+				return;	// This dialog is already showing
+
+			ClientUpgradeDialog = new iFolderMsgDialog(
+				null,
+				iFolderMsgDialog.DialogType.Info,
+				iFolderMsgDialog.ButtonSet.YesNo,
+				Util.GS("iFolder Client Upgrade"),
+				Util.GS("Would you like to upgrade your iFolder Client?"),
+				string.Format(Util.GS("A newer version \"{0}\" of the iFolder Client is available."), args.NewClientVersion));
+			int rc = ClientUpgradeDialog.Run();
+			ClientUpgradeDialog.Hide();
+			ClientUpgradeDialog.Destroy();
+			if (rc == -8)
+			{
+				bool bUpdateRunning = false;
+				
+				try
+				{
+					bUpdateRunning = ifws.RunClientUpdate(args.DomainID);
+				}
+				catch(Exception e)
+				{
+					Console.WriteLine("Error starting iFolder Upgrade: {0}", e.Message);
+					ClientUpgradeDialog = null;
+					return;
+				}
+				
+				if (bUpdateRunning)
+					QuitiFolder();
+				else
+				{
+					iFolderMsgDialog dialog = new iFolderMsgDialog(
+						null,
+						iFolderMsgDialog.DialogType.Error,
+						iFolderMsgDialog.ButtonSet.None,
+						Util.GS("Upgrade Failure"),
+						Util.GS("The iFolder client upgrade failed."),
+						Util.GS("Please contact your system administrator."));
+					dialog.Run();
+					dialog.Hide();
+					dialog.Destroy();
+					dialog = null;
+				}
+			}
+
+			ClientUpgradeDialog = null;
 		}
 
 		private void ReLogin(string domainID)
@@ -766,6 +821,8 @@ namespace Novell.iFolder
 					{
 						domainController.DomainNeedsCredentials +=
 							new DomainNeedsCredentialsEventHandler(OnDomainNeedsCredentialsEvent);
+						domainController.DomainClientUpgradeAvailable +=
+							new DomainClientUpgradeAvailableEventHandler(OnClientUpgradeAvailableEvent);
 					}
 
 					if (startingUpNotifyWindow != null)

@@ -131,11 +131,17 @@ public class iFolderMsgDialog : Dialog
 	{
 		this.Title = title;
 		this.HasSeparator = false;
+		this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png"));
 //		this.BorderWidth = 10;
 		this.Resizable = false;
 		this.Modal = true;
 		if(parent != null)
+		{
 			this.TransientFor = parent;
+			this.WindowPosition = WindowPosition.CenterOnParent;
+		}
+		else
+			this.WindowPosition = WindowPosition.Center;
 
 		HBox h = new HBox();
 		h.BorderWidth = 10;
