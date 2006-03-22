@@ -35,6 +35,8 @@
         <s:sequence>
           <s:element minOccurs="0" maxOccurs="1" name="ID" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Version" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
         </s:sequence>
       </s:complexType>
       <s:element name="CreateiFolder">
@@ -437,13 +439,21 @@
       <s:complexType name="ChangeEntry">
         <s:sequence>
           <s:element minOccurs="1" maxOccurs="1" name="Time" type="s:dateTime" />
-          <s:element minOccurs="0" maxOccurs="1" name="Type" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Type" type="tns:ChangeType" />
           <s:element minOccurs="0" maxOccurs="1" name="EntryID" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="EntryName" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="UserID" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="UserFullName" type="s:string" />
         </s:sequence>
       </s:complexType>
+      <s:simpleType name="ChangeType">
+        <s:restriction base="s:string">
+          <s:enumeration value="Add" />
+          <s:enumeration value="Modify" />
+          <s:enumeration value="Delete" />
+          <s:enumeration value="Unknown" />
+        </s:restriction>
+      </s:simpleType>
       <s:element name="OpenFileRead">
         <s:complexType>
           <s:sequence>
