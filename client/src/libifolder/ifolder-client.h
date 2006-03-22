@@ -18,10 +18,26 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  *  Author(s): Boyd Timothy <btimothy@novell.com>
+ *
+ *  \mainpage iFolder 3 Client API Documentation
+ *  \section intro_sec Introduction
+ *
+ *  This header file contains all the includes you need to write to
+ *  libifolder.
+ *
+ *  \section rules_sec Rules
+ *
+ *  In general you should follow these rules:
+ *  - Release/free items returned from a function.
+ *      - For example, if a function returns a iFolderAccount, you should
+ *     release the iFolderAccount object when you are finished with it
+ *     by calling ifolder_account_release(&ifolder_account).
  * 
-***********************************************************************/
+ ***********************************************************************/
 #ifndef _IFOLDER_CLIENT_H
+/* @cond */
 #define _IFOLDER_CLIENT_H 1
+/* @endcond */
 
 #include "errors.h"
 #include "account.h"

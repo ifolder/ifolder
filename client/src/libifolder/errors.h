@@ -21,11 +21,18 @@
  * 
 ***********************************************************************/
 #ifndef _IFOLDER_CLIENT_ERRORS_H
+/* @cond */
 #define _IFOLDER_CLIENT_ERRORS_H 1
+/* @endcond */
 
+/**
+ * Indicates a function succeeded.
+ */
 #define IFOLDER_SUCCESS		0
-#define IFOLDER_ERROR			-1
 
-#define IFOLDER_ERROR_UNKNOWN	-100
+/**
+ * Indicates a general error.
+ */
+#define IFOLDER_ERROR		-1
 
 #endif
