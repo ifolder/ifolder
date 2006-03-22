@@ -30,7 +30,7 @@ libifsoap_sources =					\
 
 all: $(libifsoap_sources)
 
-libifsoap_la_LDFLAGS =
+#libifsoap_la_LDFLAGS =
 
 envC.c: $(srcdir)/stdsoap2.c
 	> $(srcdir)/env.h

@@ -40,9 +40,10 @@ typedef void * iFolderChangeEntry;
  */
 typedef enum
 {
-	IFOLDER_CHANGE_ENTRY_CREATED,	/*!< FIXME: Add documentation for IFOLDER_CHANGE_ENTRY_CREATED */
-	IFOLDER_CHANGE_ENTRY_DELETED,	/*!< FIXME: Add documentation for IFOLDER_CHANGE_ENTRY_DELETED */
-	IFOLDER_CHANGE_ENTRY_MODIFIED	/*!< FIXME: Add documentation for IFOLDER_CHANGE_ENTRY_MODIFIED */
+	IFOLDER_CHANGE_ENTRY_TYPE_ADD,		/*!< FIXME: Add documentation for IFOLDER_CHANGE_ENTRY_TYPE_ADD */
+	IFOLDER_CHANGE_ENTRY_TYPE_MODIFY,	/*!< FIXME: Add documentation for IFOLDER_CHANGE_ENTRY_TYPE_MODIFY */
+	IFOLDER_CHANGE_ENTRY_TYPE_DELETE,	/*!< FIXME: Add documentation for IFOLDER_CHANGE_ENTRY_TYPE_DELETE */
+	IFOLDER_CHANGE_ENTRY_TYPE_UNKNOWN	/*!< FIXME: Add documentation for IFOLDER_CHANGE_ENTRY_TYPE_UNKNOWN */
 } iFolderChangeEntryType;
 
 //! Release/free the memory used by an @a iFolderChangeEntry object.

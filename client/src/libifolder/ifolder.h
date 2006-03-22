@@ -41,13 +41,13 @@ typedef void * iFolder;
 /**
  * FIXME: Add iFolderMemberRights documentation
  */
-enum iFolderMemberRights
+typedef enum
 {
 	IFOLDER_RIGHTS_DENY,		/*< FIXME: Add IFOLDER_RIGHTS_DENY documentation */
 	IFOLDER_RIGHTS_READ_ONLY,	/*< FIXME: Add IFOLDER_RIGHTS_READ_ONLY documentation */
 	IFOLDER_RIGHTS_READ_WRITE,	/*< FIXME: Add IFOLDER_RIGHTS_READ_WRITE documentation */
 	IFOLDER_RIGHTS_ADMIN		/*< FIXME: Add IFOLDER_RIGHTS_ADMIN documentation */
-};
+} iFolderMemberRights;
 
 /**
  * Release/free the memory used by an @a iFolder object.
