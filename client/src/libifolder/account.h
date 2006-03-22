@@ -28,12 +28,38 @@
 #define _IFOLDER_ACCOUNTS_H 1
 /* @endcond */
 
-/*!
- * This represents an iFolder Account.
- *
- * How about a detailed description of the typedef?
+#include "user.h"
+#include "enumeration.h"
+
+//! An object that represents an iFolder Account.
+/**
+ * FIXME: Add detailed documentation for iFolderAccount.
  */
 typedef void * iFolderAccount;
+
+//! An enum used by ifolder_account_get_users_by_search().
+/**
+ * View the ifolder_account_get_users_by_search() documentation for more details.
+ */
+typedef enum
+{
+	IFOLDER_SEARCH_PROPERTY_USER_NAME,	/*!< Search on the user name property. */
+	IFOLDER_SEARCH_PROPERTY_NAME,		/*!< Search on the full name property. */
+	IFOLDER_SEARCH_PROPERTY_FIRST_NAME,	/*!< Search on the first name property. */
+	IFOLDER_SEARCH_PROPERTY_LAST_NAME	/*!< Search on the last name property. */
+} iFolderSearchProperty;
+
+//! An enum used by ifolder_account_get_users_by_search().
+/**
+ * View the ifolder_account_get_users_by_search() documentation for more details.
+ */
+typedef enum
+{
+	IFOLDER_SEARCH_OP_BEGINS_WITH,	/*!< Match the beginning of the specified property. */
+	IFOLDER_SEARCH_OP_ENDS_WITH,	/*!< Match the end of the specified property. */
+	IFOLDER_SEARCH_OP_CONTAINS,		/*!< Match any part of the specified property. */
+	IFOLDER_SEARCH_OP_EQUALS		/*!< Match the entire specified property. */
+} iFolderSearchOperation;
 
 /**
  * Use this function to create a new iFolderAccount object in memory.
@@ -157,10 +183,57 @@ int ifolder_account_leave(iFolderAccount account);
 int ifolder_account_login(iFolderAccount account, const char *user_name, const char *password);
 int ifolder_account_logout(iFolderAccount account);
 
-int ifolder_account_get_users(iFolderAccount account, iFolderEnumeration *user_enum);
-int ifolder_account_get_users_by_search(iFolderAccount,
-										enum iFolderSearchProperty search_property,
-										enum iFolderSearchOperation search_operation,
+int ifolder_account_get_authenticated_user(iFolderAccount account, iFolderUser *user);
+
+/**
+ * Get an @a iFolderUser object from a specified @a user_id.
+ *
+ * @param account FIXME: Add documentation.
+ * @param user_id A user id (usually the user's login name).
+ * @param ifolder_user If successful, this variable is set to the
+ * @a iFolderUser object that represents the specified user.
+ * @returns Returns IFOLDER_SUCESS if there were no errors.
+ */
+int ifolder_get_user(iFolderAccount account, const char *user_id, iFolderUser *ifolder_user);
+
+//! Get an enumeration of users for the specified iFolderAccount.
+/**
+ * FIXME: Add detailed documentation on ifolder_account_get_users.
+ *
+ * @param account The iFolderAccount to search for users on.
+ * @param index The index of the first iFolderChangeEntry to return.
+ * @param count The maximum number of iFolderChangeEntry objects
+ * @param user_enum If successful, this will contain an enumeration of
+ * iFolderUser objects.  Make sure to call ifolder_enumeration_release()
+ * when you are finished using the data in the enumeration.  You don't
+ * need to call ifolder_user_release on each item in the enumeration.
+ * This is done automatically in ifolder_enumeration_release().
+ * @returns IFOLDER_SUCCESS if the call was successful.
+ * @see ifolder_account_get_users_by_search
+ */
+int ifolder_account_get_users(iFolderAccount account, int index, int count, iFolderEnumeration *user_enum);
+
+//! Get an enumeration of users for the specified iFolderAccount.
+/**
+ * FIXME: Add detailed documentation on ifolder_account_get_users.
+ *
+ * @param account The iFolderAccount to search for users on.
+ * @param search_prop The user property to search.
+ * @param search_op The type of search operation to use.
+ * @param pattern The pattern to match in the search.
+ * @param index The index of the first iFolderChangeEntry to return.
+ * @param count The maximum number of iFolderChangeEntry objects
+ * @param user_enum If successful, this will contain an enumeration of
+ * iFolderUser objects.  Make sure to call ifolder_enumeration_release()
+ * when you are finished using the data in the enumeration.  You don't
+ * need to call ifolder_user_release on each item in the enumeration.
+ * This is done automatically in ifolder_enumeration_release().
+ * @returns IFOLDER_SUCCESS if the call was successful.
+ * @see ifolder_account_get_users
+ */
+int ifolder_account_get_users_by_search(iFolderAccount account,
+										iFolderSearchProperty search_prop,
+										iFolderSearchOperation search_op,
 										const char *pattern,
 										int index,
 										int count,

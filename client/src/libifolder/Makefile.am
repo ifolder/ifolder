@@ -22,20 +22,65 @@ SUBDIRS = libifsoap
 
 DIST_SUBDIRS = $(SUBDIRS)
 
+ifolder_internal_headers =
+
+ifolder_internal_sources =				\
+	internal/account-internal.c			\
+	internal/change-entry-internal.c	\
+	internal/enumeration-internal.c		\
+	internal/ifolder-client-internal.c	\
+	internal/ifolder-internal.c			\
+	internal/user-internal.c
+
+EXTRA_DIST =							\
+	$(ifolder_internal_headers)			\
+	$(ifolder_internal_sources)
+
+INCLUDES =					\
+	-I$(top_srcdir)			\
+	-I$(top_builddir)		\
+	-I$(srcdir)/internal	\
+	-I$(srcdir)/libifsoap
+
 lib_LTLIBRARIES = libifolder.la
 
-libifolder_la_SOURCES = \
-	ifolder-client.c	\
-	ifolder-client.h	\
-	errors.h			\
+ifolder_api_headers =	\
 	account.h			\
+	change-entry.h		\
+	enumeration.h		\
+	errors.h			\
+	events.h			\
+	ifolder-client.h	\
 	ifolder.h			\
-	user.h				\
-	events.h
+	user.h
+
+ifolder_soap_headers =
+
+ifolder_soap_sources =					\
+	libifsoap/envC.c					\
+	libifsoap/iFolderClientLib.c		\
+	libifsoap/stdsoap2.c
+
+include_HEADERS =						\
+	$(ifolder_api_headers)				\
+	$(ifolder_internal_headers)			\
+	$(ifolder_soap_headers)
+
+libifolder_la_SOURCES =					\
+	$(ifolder_internal_sources)			\
+	$(ifolder_soap_sources)
 
 if DARWIN
-libifolder_la_CFLAGS =	\
-	-DDARWIN
+libifolder_la_CFLAGS =					\
+	-DDARWIN							\
+	-DWITH_NONAMESPACES					\
+	-DWITH_COOKIES
+endif
+
+if !DARWIN
+libifolder_la_CFLAGS =					\
+	-DWITH_NONAMESPACES					\
+	-DWITH_COOKIES
 endif
 
 #if !WINDOWS
