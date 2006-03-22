@@ -1,6 +1,9 @@
 /***********************************************************************
  *  $RCSfile$
  * 
+ * @file account.h Account API
+ * @ingroup core
+ *
  *  Copyright (C) 2006 Novell, Inc.
  *
  *  This program is free software; you can redistribute it and/or
@@ -20,11 +23,13 @@
  *  Author(s): Boyd Timothy <btimothy@novell.com>
  * 
 ***********************************************************************/
-#ifndef _ACCOUNTS_H
-#define _ACCOUNTS_H 1
+#ifndef _IFOLDER_ACCOUNTS_H
+#define _IFOLDER_ACCOUNTS_H 1
 
-/**
+/*!
  * This represents an iFolder Account.
+ *
+ * How about a detailed description of the typedef?
  */
 typedef void * iFolderAccount;
 
@@ -35,6 +40,8 @@ typedef void * ArrayOfiFolderAccount;
 
 /**
  * Use this function to create a new iFolderAccount object in memory.
+ *
+ * Detailed description of ifolder_account_new.
  */
 int ifolder_account_new(const char *server_address, iFolderAccount **account);
 /**
@@ -44,6 +51,16 @@ int ifolder_account_free(iFolderAccount **account);
 
 int ifolder_account_join(iFolderAccount *account);
 int ifolder_account_leave(iFolderAccount *account);
+
+/**
+ * Attempt to log in to the specified account with the specified user_name and password.
+ * @param account the iFolderAccount to log in to.
+ * @param user_name the user name for this account.
+ * @param password the password for this account.
+ * @see IFOLDER_SUCCESS
+ * @see ifolder_account_logout
+ * @return Returns IFOLDER_SUCCESS if the login was successful, otherwise it returns an IFOLDER_ERROR_*.
+ */
 int ifolder_account_login(iFolderAccount *account, const char *user_name, const char *password);
 int ifolder_account_logout(iFolderAccount *account);
 
