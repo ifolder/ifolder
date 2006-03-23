@@ -344,6 +344,7 @@ namespace Novell.iFolder
 					"",
 					Util.GS("Other Contributors:"),
 					"  Jakub Steiner",
+					"  Ron Randquist",
 					"  Ryan Collier"
 				};
 
