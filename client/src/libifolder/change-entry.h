@@ -19,8 +19,15 @@
  *
  *  Author(s): Boyd Timothy <btimothy@novell.com>
  *
- *  @file change-entry.h User API
  ***********************************************************************/
+
+//! ChangeEntry API
+/**
+ *  @file change-entry.h
+ *
+ *  FIXME: Add documentation for change-entry.h
+ */
+
 #ifndef _IFOLDER_CHANGE_ENTRY_H
 /* @cond */
 #define _IFOLDER_CHANGE_ENTRY_H 1

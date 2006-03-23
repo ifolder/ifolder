@@ -21,26 +21,16 @@
  *
  ***********************************************************************/
 
-//! iFolder Errors
+//! User Preferences API
 /**
- *  @file errors.h
+ *  @file prefs.h
  *
- *  FIXME: Add documentation for errors.h
+ *  The APIs found here are used to access user preferences.
  */
 
-#ifndef _IFOLDER_CLIENT_ERRORS_H
+#ifndef _IFOLDER_PREFS_H
 /* @cond */
-#define _IFOLDER_CLIENT_ERRORS_H 1
+#define _IFOLDER_PREFS_H 1
 /* @endcond */
-
-/**
- * Indicates a function succeeded.
- */
-#define IFOLDER_SUCCESS		0
-
-/**
- * Indicates a general error.
- */
-#define IFOLDER_ERROR		-1
 
 #endif

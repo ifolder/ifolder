@@ -1,9 +1,6 @@
 /***********************************************************************
  *  $RCSfile$
  * 
- * @file account.h Account API
- * @ingroup core
- *
  *  Copyright (C) 2006 Novell, Inc.
  *
  *  This program is free software; you can redistribute it and/or
@@ -21,8 +18,16 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  *  Author(s): Boyd Timothy <btimothy@novell.com>
- * 
-***********************************************************************/
+ *
+ ***********************************************************************/
+
+//! Accounts API
+/**
+ *  @file account.h
+ *
+ *  FIXME: Add documentation for account.h
+ */
+
 #ifndef _IFOLDER_ACCOUNTS_H
 /* @cond */
 #define _IFOLDER_ACCOUNTS_H 1

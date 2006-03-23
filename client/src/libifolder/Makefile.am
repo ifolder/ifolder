@@ -52,6 +52,7 @@ ifolder_api_headers =	\
 	events.h			\
 	ifolder-client.h	\
 	ifolder.h			\
+	prefs.h				\
 	user.h
 
 ifolder_soap_headers =

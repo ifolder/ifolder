@@ -19,8 +19,15 @@
  *
  *  Author(s): Boyd Timothy <btimothy@novell.com>
  *
- *  @file user.h User API
  ***********************************************************************/
+
+//! User API
+/**
+ *  @file user.h
+ *
+ *  FIXME: Add detailed documentation for user.h
+ */
+
 #ifndef _IFOLDER_USER_H
 /* @cond */
 #define _IFOLDER_USER_H 1

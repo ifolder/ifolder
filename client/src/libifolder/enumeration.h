@@ -19,8 +19,15 @@
  *
  *  Author(s): Boyd Timothy <btimothy@novell.com>
  *
- *  @file enumeration.h Enumeration API
  ***********************************************************************/
+
+//! Enumeration API
+/**
+ *  @file enumeration.h
+ *
+ *  FIXME: Add documentation for enumeration.h
+ */
+ 
 #ifndef _IFOLDER_ENUMERATION_H
 /* @cond */
 #define _IFOLDER_ENUMERATION_H 1

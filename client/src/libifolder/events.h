@@ -19,8 +19,14 @@
  *
  *  Author(s): Boyd Timothy <btimothy@novell.com>
  *
- *  @file events.h Events API
  ***********************************************************************/
+
+//! Events API
+/**
+ *  @file events.h
+ *
+ *  FIXME: Add documentation for events.h
+ */
 #ifndef _IFOLDER_EVENTS_H
 /* @cond */
 #define _IFOLDER_EVENTS_H 1

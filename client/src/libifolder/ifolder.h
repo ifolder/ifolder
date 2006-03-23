@@ -19,8 +19,15 @@
  *
  *  Author(s): Boyd Timothy <btimothy@novell.com>
  *
- *  @file ifolder.h iFolder API
  ***********************************************************************/
+
+//! iFolder API
+/**
+ *  @file ifolder.h
+ *
+ *  FIXME: Add detailed documentation for ifolder.h
+ */
+
 #ifndef _IFOLDER_IFOLDER_H
 /* @cond */
 #define _IFOLDER_IFOLDER_H 1
