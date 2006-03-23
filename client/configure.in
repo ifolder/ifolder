@@ -323,6 +323,7 @@ AC_CONFIG_FILES([
   src/qt-client/Makefile
   src/trayapp/Makefile
   src/trayapp/darwin/Makefile
+  src/trayapp/darwin/Info.plist
   src/trayapp/linux/Makefile
   src/trayapp/windows/Makefile
 ])
