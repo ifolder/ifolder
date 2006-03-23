@@ -75,7 +75,7 @@ int ifolder_account_new(const char *server_address, iFolderAccount *account);
 /**
  * Use this function to free an iFolderAccount object from memory.
  */
-int ifolder_account_free(iFolderAccount *account);
+int ifolder_account_release(iFolderAccount *account);
 
 /**
  * Get the ID of the @a account.

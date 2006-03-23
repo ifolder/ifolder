@@ -28,7 +28,6 @@ ifolder_internal_sources =				\
 	internal/account-internal.c			\
 	internal/change-entry-internal.c	\
 	internal/enumeration-internal.c		\
-	internal/ifolder-client-internal.c	\
 	internal/ifolder-internal.c			\
 	internal/user-internal.c
 
@@ -55,6 +54,16 @@ ifolder_api_headers =	\
 	prefs.h				\
 	user.h
 
+ifolder_api_sources =			\
+	account.c			\
+	change-entry.c			\
+	enumeration.c			\
+	events.c			\
+	ifolder-client.c		\
+	ifolder.c			\
+	prefs.c				\
+	user.c
+
 ifolder_soap_headers =
 
 ifolder_soap_sources =					\
@@ -63,11 +72,13 @@ ifolder_soap_sources =					\
 	libifsoap/stdsoap2.c
 
 include_HEADERS =						\
+	$(srcdir)/ifolder-client-private.h	\
 	$(ifolder_api_headers)				\
 	$(ifolder_internal_headers)			\
 	$(ifolder_soap_headers)
 
 libifolder_la_SOURCES =					\
+	$(ifolder_api_sources)				\
 	$(ifolder_internal_sources)			\
 	$(ifolder_soap_sources)
 

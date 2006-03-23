@@ -40,10 +40,57 @@
 #define _IFOLDER_CLIENT_H 1
 /* @endcond */
 
-#include "errors.h"
 #include "account.h"
-#include "ifolder.h"
-#include "user.h"
+#include "errors.h"
 #include "events.h"
+#include "ifolder.h"
+#include "prefs.h"
+#include "user.h"
+
+#include <stdbool.h>
+
+//! Initialize libifolder for consumption.
+/**
+ * This function MUST be called before using any other
+ * function in this API.  It initializes structures and
+ * environments correctly.
+ *
+ * The only process that should register as the "TrayApp"
+ * is, obviously, the TrayApp.  All other processes that
+ * wish to use the library should pass in @a FALSE in
+ * the @a is_tray_app field.
+ *
+ * @param is_tray_app If you are writing the main TrayApp
+ * you should pass in TRUE.  All other processes should
+ * pass in TRUE.
+ * @returns Returns IFOLDER_SUCCESS if the library was
+ * initialized correctly.  If you are not the TrayApp and
+ * the TrayApp is not running, IFOLDER_TRAYAPP_NOT_RUNNING
+ * will be returned.
+ */
+int ifolder_client_initialize(bool is_tray_app);
+
+//! Uninitialize the library before your process quits
+/**
+ * Although libifolder will periodically check all the
+ * registered processes and attempt to clean up memory used,
+ * you should call this before your process exits.
+ *
+ * @returns Returns IFOLDER_SUCCESS if libifolder was
+ * uninitialized successfully.
+ */
+int ifolder_client_uninitialize();
+
+//! Start the TrayApp.
+/**
+ * This function is provided as a convenience for consumers of
+ * this API that are NOT the TrayApp.
+ *
+ * @param trayapp_exe_path The path to the TrayApp's executable.
+ * @returns Returns IFOLDER_SUCCESS if the TrayApp process
+ * started successfully.  IFOLDER_TRAYAPP_ALREADY_RUNNING will
+ * be returned if the TrayApp is ... yeah, already running.
+ */
+int ifolder_client_start_tray_app(const char *trayapp_exe_path);
 
 #endif

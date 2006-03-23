@@ -21,34 +21,22 @@
  *
  ***********************************************************************/
 
-//! iFolder Errors
-/**
- *  @file errors.h
- *
- *  FIXME: Add documentation for errors.h
- */
+#ifndef _IFOLDER_CLIENT_PRIVATE_H
+#define _IFOLDER_CLIENT_PRIVATE_H 1
 
-#ifndef _IFOLDER_CLIENT_ERRORS_H
-/* @cond */
-#define _IFOLDER_CLIENT_ERRORS_H 1
-/* @endcond */
+#include <stdlib.h>
 
-//! Indicates a function succeeded.
-#define IFOLDER_SUCCESS					0
+#include "ifolder-client.h"
 
-//! Indicates a general error.
-#define IFOLDER_ERROR					-1
+typedef struct _iFolderClient iFolderClient;
 
-//! Indicates the TrayApp (main iFolder client process) is not running.
-#define IFOLDER_TRAYAPP_NOT_RUNNING		-100
-
-//! Returned when a second process attempts to register as the TrayApp when one is already running.
-#define IFOLDER_TRAYAPP_ALREADY_RUNNING	-101
-
-//! A function was called with libifolder being in an invalid state.
-#define IFOLDER_INVALID_STATE			-102
-
-//! A function was called before libifolder was initialized.
-#define IFOLDER_UNINITIALIZED			-103
+struct _iFolderClient
+{
+	bool is_tray_app;
+	
+	/* account.h */
+	int (*ifolder_account_new)(const char *server_address, iFolderAccount *account);
+	int (*ifolder_account_release)(iFolderAccount *account);
+};
 
 #endif

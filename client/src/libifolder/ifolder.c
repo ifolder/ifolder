@@ -18,37 +18,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  *  Author(s): Boyd Timothy <btimothy@novell.com>
- *
+ * 
  ***********************************************************************/
 
-//! iFolder Errors
-/**
- *  @file errors.h
- *
- *  FIXME: Add documentation for errors.h
- */
+#include "ifolder-client-private.h"
 
-#ifndef _IFOLDER_CLIENT_ERRORS_H
-/* @cond */
-#define _IFOLDER_CLIENT_ERRORS_H 1
-/* @endcond */
-
-//! Indicates a function succeeded.
-#define IFOLDER_SUCCESS					0
-
-//! Indicates a general error.
-#define IFOLDER_ERROR					-1
-
-//! Indicates the TrayApp (main iFolder client process) is not running.
-#define IFOLDER_TRAYAPP_NOT_RUNNING		-100
-
-//! Returned when a second process attempts to register as the TrayApp when one is already running.
-#define IFOLDER_TRAYAPP_ALREADY_RUNNING	-101
-
-//! A function was called with libifolder being in an invalid state.
-#define IFOLDER_INVALID_STATE			-102
-
-//! A function was called before libifolder was initialized.
-#define IFOLDER_UNINITIALIZED			-103
-
-#endif
+extern iFolderClient *the_ifolder_client;

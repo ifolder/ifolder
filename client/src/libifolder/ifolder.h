@@ -154,8 +154,8 @@ int ifolder_set_description(iFolder ifolder, const char *new_description);
  */
 int ifolder_get_members(iFolder ifolder, int index, int count, iFolderEnumeration *user_enum);
 
-int ifolder_set_member_rights(iFolder ifolder, iFolderUser member, enum iFolderMemberRights rights);
-int ifolder_add_member(iFolder ifolder, iFolderUser member, enum iFolderMemberRights rights);
+int ifolder_set_member_rights(iFolder ifolder, iFolderUser member, iFolderMemberRights rights);
+int ifolder_add_member(iFolder ifolder, iFolderUser member, iFolderMemberRights rights);
 int ifolder_remove_member(iFolder ifolder, iFolderUser member);
 int ifolder_set_owner(iFolder ifolder, iFolderUser new_owner);
 
