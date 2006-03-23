@@ -326,5 +326,7 @@ AC_CONFIG_FILES([
   src/trayapp/darwin/Info.plist
   src/trayapp/linux/Makefile
   src/trayapp/windows/Makefile
+  test/Makefile
+  test/libifolder/Makefile
 ])
 AC_OUTPUT

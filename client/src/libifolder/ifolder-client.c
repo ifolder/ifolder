@@ -85,8 +85,8 @@ initialize_as_trayapp(void)
 	
 	/* FIXME: Set up all of the_ifolder_client's variables/functions */
 	the_ifolder_client->is_tray_app = true;
-//	the_ifolder_client->ifolder_account_new = internal_ifolder_account_new;
-//	the_ifolder_client->ifolder_account_release = internal_ifolder_account_release;
+	the_ifolder_client->ifolder_account_new = internal_ifolder_account_new;
+	the_ifolder_client->ifolder_account_release = internal_ifolder_account_release;
 	
 	/* FIXME: Start the services (event server, ipc server, etc.) */
 	
@@ -96,7 +96,8 @@ initialize_as_trayapp(void)
 int
 uninitialize_trayapp(void)
 {
-	return IFOLDER_UNIMPLEMENTED;
+	/* FIXME: Shut down the services (event server, ipc server, etc.) */
+	return IFOLDER_SUCCESS;
 }
 
 int
@@ -120,5 +121,6 @@ initialize_as_ipc_client(void)
 int
 uninitialize_ipc_client(void)
 {
-	return IFOLDER_UNIMPLEMENTED;
+	/* FIXME: Shut down the services (ipc client, etc.) */
+	return IFOLDER_SUCCESS;
 }

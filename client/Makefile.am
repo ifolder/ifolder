@@ -1,6 +1,6 @@
 SUBDIRS = src
 
-DIST_SUBDIRS = $(SUBDIRS) doc package
+DIST_SUBDIRS = $(SUBDIRS) doc package test
 
 # remove all of the CVS directories
 dist-hook:
@@ -30,7 +30,7 @@ maintainer-clean-local:
 	rm -f missing missing.lnk mkinstalldirs mkinstalldir.lnk
 	rm -rf autom4te.cache
 
-.PHONY: doc doc-clean package package-clean
+.PHONY: doc doc-clean package package-clean test test-clean
 
 doc:
 	$(MAKE) -C doc all
@@ -43,3 +43,9 @@ package:
 
 package-clean:
 	$(MAKE) -C package clean
+
+test:
+	$(MAKE) -C test all
+
+test-clean:
+	$(MAKE) -C test clean

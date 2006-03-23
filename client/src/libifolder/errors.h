@@ -60,6 +60,6 @@
 #define IFOLDER_OUT_OF_MEMORY			-105
 
 //! Used for development to indicate an unimplemented function
-#define IFOLDER_UNIMPLEMENTED;
+#define IFOLDER_UNIMPLEMENTED			-106
 
 #endif

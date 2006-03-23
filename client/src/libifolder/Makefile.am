@@ -90,11 +90,13 @@ include_HEADERS =						\
 	$(srcdir)/ifolder-client-private.h	\
 	$(ifolder_api_headers)				\
 	$(ifolder_internal_headers)			\
+	$(ifolder_ipc_headers)				\
 	$(ifolder_soap_headers)
 
 libifolder_la_SOURCES =					\
 	$(ifolder_api_sources)				\
 	$(ifolder_internal_sources)			\
+	$(ifolder_ipc_sources)				\
 	$(ifolder_soap_sources)
 
 if DARWIN
