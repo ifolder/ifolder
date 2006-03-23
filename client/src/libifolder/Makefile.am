@@ -22,7 +22,8 @@ SUBDIRS = libifsoap
 
 DIST_SUBDIRS = $(SUBDIRS)
 
-ifolder_internal_headers =
+ifolder_internal_headers =				\
+	internal/ifolder-client-internal.h
 
 ifolder_internal_sources =				\
 	internal/account-internal.c			\
@@ -31,14 +32,28 @@ ifolder_internal_sources =				\
 	internal/ifolder-internal.c			\
 	internal/user-internal.c
 
-EXTRA_DIST =							\
-	$(ifolder_internal_headers)			\
-	$(ifolder_internal_sources)
+ifolder_ipc_headers =					\
+	ipc-client/ifolder-client-ipc-client.h
 
-INCLUDES =					\
-	-I$(top_srcdir)			\
-	-I$(top_builddir)		\
+ifolder_ipc_sources =					\
+	ipc-client/account-ipc-client.c			\
+	ipc-client/change-entry-ipc-client.c		\
+	ipc-client/enumeration-ipc-client.c		\
+	ipc-client/ifolder-client-ipc-client.c		\
+	ipc-client/ifolder-ipc-client.c			\
+	ipc-client/user-ipc-client.c
+
+EXTRA_DIST =						\
+	$(ifolder_internal_headers)			\
+	$(ifolder_internal_sources)			\
+	$(ifolder_ipc_headers)				\
+	$(ifolder_ipc_sources)
+
+INCLUDES =			\
+	-I$(top_srcdir)		\
+	-I$(top_builddir)	\
 	-I$(srcdir)/internal	\
+	-I$(srcdir)/ipc-client	\
 	-I$(srcdir)/libifsoap
 
 lib_LTLIBRARIES = libifolder.la

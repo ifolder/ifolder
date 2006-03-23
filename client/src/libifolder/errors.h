@@ -33,6 +33,8 @@
 #define _IFOLDER_CLIENT_ERRORS_H 1
 /* @endcond */
 
+/* FIXME: Before we release this code, need to organize the errors in errors.h in a logical fashion. */
+
 //! Indicates a function succeeded.
 #define IFOLDER_SUCCESS					0
 
@@ -50,5 +52,14 @@
 
 //! A function was called before libifolder was initialized.
 #define IFOLDER_UNINITIALIZED			-103
+
+//! A process attempted to call ifolder_client_initialized multiple times
+#define IFOLDER_ALREADY_INITIALIZED		-104
+
+//! Got an out of memory error when trying to allocate memory
+#define IFOLDER_OUT_OF_MEMORY			-105
+
+//! Used for development to indicate an unimplemented function
+#define IFOLDER_UNIMPLEMENTED;
 
 #endif
