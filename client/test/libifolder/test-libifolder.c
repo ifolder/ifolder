@@ -122,6 +122,39 @@ run_ipc_test(void)
 void
 run_api_tests(void)
 {
-	printf("FIXME: Implement run_api_tests\n");
-	passes++;
+	int err;
+	iFolderAccount account;
+	
+	/* Add an account */
+	printf("Adding an account...");
+	err = ifolder_account_add("192.168.1.123", "btimothy", "mypassword", true, &account);
+	if (err != IFOLDER_SUCCESS)
+	{
+		fails++;
+		printf("Failed! %d\n", err);
+	}
+	else
+	{
+		passes++;
+		printf("Done!\n");
+		printf("Account: %s\n", ifolder_account_get_id(account));
+		printf("            Name: %s\n", ifolder_account_get_name(account));
+		printf("     Description: %s\n", ifolder_account_get_description(account));
+		printf("         Version: %s\n", ifolder_account_get_version(account));
+		printf("    Host Address: %s\n", ifolder_account_get_host_address(account));
+		printf("    Machine Name: %s\n", ifolder_account_get_machine_name(account));
+		printf("       OS Version: %s\n", ifolder_account_get_os_version(account));
+		printf("        User Name: %s\n", ifolder_account_get_user_name(account));
+		printf("       Is Default: %s\n", ifolder_account_is_default(account) ? "Yes" : "No");
+		printf("        Is Active: %s\n", ifolder_account_is_active(account) ? "Yes" : "No");
+		
+		err = ifolder_account_release(&account);
+		if (err == IFOLDER_SUCCESS)
+			passes++;
+		else
+		{
+			fails++;
+			printf("Failed to release memory used by iFolderAccount: %d\n", err);
+		}
+	}
 }

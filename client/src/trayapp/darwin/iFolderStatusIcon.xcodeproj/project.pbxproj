@@ -36,17 +36,17 @@
 		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
-		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		29B97319FDCFA39411CA2CEA /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = "<group>"; };
+		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = SOURCE_ROOT; };
+		29B97319FDCFA39411CA2CEA /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = SOURCE_ROOT; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		32CA4F630368D1EE00C91783 /* iFolderStatusIcon_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iFolderStatusIcon_Prefix.pch; sourceTree = "<group>"; };
-		3E7A997A09B6A6DE00F4D4E3 /* iFolderStatusIconApp.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = iFolderStatusIconApp.h; sourceTree = "<group>"; };
-		3E7A997B09B6A6DE00F4D4E3 /* iFolderStatusIconApp.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = iFolderStatusIconApp.m; sourceTree = "<group>"; };
-		3E86171309B6B2C500FCDC01 /* ifolderbw22.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ifolderbw22.png; sourceTree = "<group>"; };
-		3E86171509B6B2CA00FCDC01 /* ifolder.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = ifolder.icns; sourceTree = "<group>"; };
-		3EA95F6909B752B100383A8A /* syncbw22.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = syncbw22.png; sourceTree = "<group>"; };
-		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		32CA4F630368D1EE00C91783 /* iFolderStatusIcon_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iFolderStatusIcon_Prefix.pch; sourceTree = SOURCE_ROOT; };
+		3E7A997A09B6A6DE00F4D4E3 /* iFolderStatusIconApp.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = iFolderStatusIconApp.h; sourceTree = SOURCE_ROOT; };
+		3E7A997B09B6A6DE00F4D4E3 /* iFolderStatusIconApp.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = iFolderStatusIconApp.m; sourceTree = SOURCE_ROOT; };
+		3E86171309B6B2C500FCDC01 /* ifolderbw22.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ifolderbw22.png; sourceTree = SOURCE_ROOT; };
+		3E86171509B6B2CA00FCDC01 /* ifolder.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = ifolder.icns; sourceTree = SOURCE_ROOT; };
+		3EA95F6909B752B100383A8A /* syncbw22.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = syncbw22.png; sourceTree = SOURCE_ROOT; };
+		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 		8D1107320486CEB800E47090 /* iFolderStatusIcon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iFolderStatusIcon.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -218,7 +218,7 @@
 				089C165DFE840E0CC02AAC07 /* English */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
+			sourceTree = SOURCE_ROOT;
 		};
 		29B97318FDCFA39411CA2CEA /* MainMenu.nib */ = {
 			isa = PBXVariantGroup;
@@ -226,7 +226,7 @@
 				29B97319FDCFA39411CA2CEA /* English */,
 			);
 			name = MainMenu.nib;
-			sourceTree = "<group>";
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXVariantGroup section */
 

@@ -30,13 +30,66 @@
 
 typedef struct _iFolderClient iFolderClient;
 
+/**
+ * This variable is set when ifolder_client_initialize() is called.
+ */
+//static iFolderClient *the_ifolder_client = NULL;
+
+#define CHECK_IFOLDER_CLIENT	if (the_ifolder_client == NULL) return IFOLDER_UNINITIALIZED;
+
 struct _iFolderClient
 {
 	bool is_tray_app;
 	
 	/* account.h */
-	int (*ifolder_account_new)(const char *server_address, iFolderAccount *account);
+	int (*ifolder_accounts_get_all)(iFolderEnumeration *account_enum);
+	int (*ifolder_accounts_get_all_active)(iFolderEnumeration *account_enum);
+	int (*ifolder_accounts_get_default)(iFolderAccount *default_account);
+	int (*ifolder_account_add)(const char *host_address, const char *user_name, const char *password, bool make_default, iFolderAccount *account);
+	int (*ifolder_account_remove)(iFolderAccount account, bool delete_ifolders_on_server);
+	int (*ifolder_account_login)(iFolderAccount account, const char *password);
+	int (*ifolder_account_logout)(iFolderAccount account);
+	int (*ifolder_account_activate)(iFolderAccount account);
+	int (*ifolder_account_inactivate)(iFolderAccount account);
+	int (*ifolder_account_change_host_address)(iFolderAccount account, const char *new_host_address);
+	int (*ifolder_account_set_credentials)(iFolderAccount account, const char *password, iFolderCredentialType credential_type);
+	int (*ifolder_account_set_default)(iFolderAccount *new_default_account);
 	int (*ifolder_account_release)(iFolderAccount *account);
+	int (*ifolder_account_get_authenticated_user)(iFolderAccount account, iFolderUser *user);
+	int (*ifolder_account_get_user)(iFolderAccount account, const char *user_id, iFolderUser *ifolder_user);
+	int (*ifolder_account_get_users)(iFolderAccount account, int index, int count, iFolderEnumeration *user_enum);
+	int (*ifolder_account_get_users_by_search)(iFolderAccount account, iFolderSearchProperty search_prop, iFolderSearchOperation search_op, const char *pattern, int index, int count, iFolderEnumeration *user_enum);
+	const char * (*ifolder_account_get_id)(iFolderAccount account);
+	const char * (*ifolder_account_get_name)(iFolderAccount account);
+	const char * (*ifolder_account_get_description)(iFolderAccount account);
+	const char * (*ifolder_account_get_version)(iFolderAccount account);
+	const char * (*ifolder_account_get_host_address)(iFolderAccount account);
+	const char * (*ifolder_account_get_machine_name)(iFolderAccount account);
+	const char * (*ifolder_account_get_os_version)(iFolderAccount account);
+	const char * (*ifolder_account_get_user_name)(iFolderAccount account);
+	bool (*ifolder_account_is_default)(iFolderAccount account);
+	bool (*ifolder_account_is_active)(iFolderAccount account);
 };
+
+typedef struct _iFolderAccount iFolderAccountObj;
+
+struct _iFolderAccount
+{
+	char *id;
+	char *name;
+	char *description;
+	char *version;
+	char *host_address;
+	char *machine_name;
+	char *os_version;
+	char *user_name;
+	bool is_default;
+	bool is_active;
+	
+	int reference_count;
+	void *user_data;
+};
+
+iFolderClient * ifolder_get_client(void);
 
 #endif

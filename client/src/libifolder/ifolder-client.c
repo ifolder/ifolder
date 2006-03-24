@@ -85,8 +85,33 @@ initialize_as_trayapp(void)
 	
 	/* FIXME: Set up all of the_ifolder_client's variables/functions */
 	the_ifolder_client->is_tray_app = true;
-	the_ifolder_client->ifolder_account_new = internal_ifolder_account_new;
-	the_ifolder_client->ifolder_account_release = internal_ifolder_account_release;
+	
+	/* account.h APIs */
+	the_ifolder_client->ifolder_accounts_get_all				= internal_ifolder_accounts_get_all;
+	the_ifolder_client->ifolder_accounts_get_default			= internal_ifolder_accounts_get_default;
+	the_ifolder_client->ifolder_account_add						= internal_ifolder_account_add;
+	the_ifolder_client->ifolder_account_remove					= internal_ifolder_account_remove;
+	the_ifolder_client->ifolder_account_login					= internal_ifolder_account_login;
+	the_ifolder_client->ifolder_account_logout					= internal_ifolder_account_logout;
+	the_ifolder_client->ifolder_account_activate				= internal_ifolder_account_activate;
+	the_ifolder_client->ifolder_account_inactivate				= internal_ifolder_account_inactivate;
+	the_ifolder_client->ifolder_account_change_host_address		= internal_ifolder_account_change_host_address;
+	the_ifolder_client->ifolder_account_set_default				= internal_ifolder_account_set_default;
+	the_ifolder_client->ifolder_account_release					= internal_ifolder_account_release;
+	the_ifolder_client->ifolder_account_get_authenticated_user	= internal_ifolder_account_get_authenticated_user;
+	the_ifolder_client->ifolder_account_get_user				= internal_ifolder_account_get_user;
+	the_ifolder_client->ifolder_account_get_users				= internal_ifolder_account_get_users;
+	the_ifolder_client->ifolder_account_get_users_by_search		= internal_ifolder_account_get_users_by_search;
+	the_ifolder_client->ifolder_account_get_id					= internal_ifolder_account_get_id;
+	the_ifolder_client->ifolder_account_get_name				= internal_ifolder_account_get_name;
+	the_ifolder_client->ifolder_account_get_description			= internal_ifolder_account_get_description;
+	the_ifolder_client->ifolder_account_get_version				= internal_ifolder_account_get_version;
+	the_ifolder_client->ifolder_account_get_host_address		= internal_ifolder_account_get_host_address;
+	the_ifolder_client->ifolder_account_get_machine_name		= internal_ifolder_account_get_machine_name;
+	the_ifolder_client->ifolder_account_get_os_version			= internal_ifolder_account_get_os_version;
+	the_ifolder_client->ifolder_account_get_user_name			= internal_ifolder_account_get_user_name;
+	the_ifolder_client->ifolder_account_is_default				= internal_ifolder_account_is_default;
+	the_ifolder_client->ifolder_account_is_active				= internal_ifolder_account_is_active;
 	
 	/* FIXME: Start the services (event server, ipc server, etc.) */
 	
@@ -110,8 +135,33 @@ initialize_as_ipc_client(void)
 
 	/* FIXME: Set up all of the_ifolder_client's variables/functions */
 	the_ifolder_client->is_tray_app = false;
-	the_ifolder_client->ifolder_account_new = ipc_ifolder_account_new;
-	the_ifolder_client->ifolder_account_release = ipc_ifolder_account_release;
+
+	/* account.h APIs */
+	the_ifolder_client->ifolder_accounts_get_all				= ipc_ifolder_accounts_get_all;
+	the_ifolder_client->ifolder_accounts_get_default			= ipc_ifolder_accounts_get_default;
+	the_ifolder_client->ifolder_account_add						= ipc_ifolder_account_add;
+	the_ifolder_client->ifolder_account_remove					= ipc_ifolder_account_remove;
+	the_ifolder_client->ifolder_account_login					= ipc_ifolder_account_login;
+	the_ifolder_client->ifolder_account_logout					= ipc_ifolder_account_logout;
+	the_ifolder_client->ifolder_account_activate				= ipc_ifolder_account_activate;
+	the_ifolder_client->ifolder_account_inactivate				= ipc_ifolder_account_inactivate;
+	the_ifolder_client->ifolder_account_change_host_address		= ipc_ifolder_account_change_host_address;
+	the_ifolder_client->ifolder_account_set_default				= ipc_ifolder_account_set_default;
+	the_ifolder_client->ifolder_account_release					= ipc_ifolder_account_release;
+	the_ifolder_client->ifolder_account_get_authenticated_user	= ipc_ifolder_account_get_authenticated_user;
+	the_ifolder_client->ifolder_account_get_user				= ipc_ifolder_account_get_user;
+	the_ifolder_client->ifolder_account_get_users				= ipc_ifolder_account_get_users;
+	the_ifolder_client->ifolder_account_get_users_by_search		= ipc_ifolder_account_get_users_by_search;
+	the_ifolder_client->ifolder_account_get_id					= ipc_ifolder_account_get_id;
+	the_ifolder_client->ifolder_account_get_name				= ipc_ifolder_account_get_name;
+	the_ifolder_client->ifolder_account_get_description			= ipc_ifolder_account_get_description;
+	the_ifolder_client->ifolder_account_get_version				= ipc_ifolder_account_get_version;
+	the_ifolder_client->ifolder_account_get_host_address		= ipc_ifolder_account_get_host_address;
+	the_ifolder_client->ifolder_account_get_machine_name		= ipc_ifolder_account_get_machine_name;
+	the_ifolder_client->ifolder_account_get_os_version			= ipc_ifolder_account_get_os_version;
+	the_ifolder_client->ifolder_account_get_user_name			= ipc_ifolder_account_get_user_name;
+	the_ifolder_client->ifolder_account_is_default				= ipc_ifolder_account_is_default;
+	the_ifolder_client->ifolder_account_is_active				= ipc_ifolder_account_is_active;
 
 	/* FIXME: Start the services (register ipc client with ipc server, etc.) */
 	
@@ -123,4 +173,10 @@ uninitialize_ipc_client(void)
 {
 	/* FIXME: Shut down the services (ipc client, etc.) */
 	return IFOLDER_SUCCESS;
+}
+
+iFolderClient *
+ifolder_get_client(void)
+{
+	return the_ifolder_client;
 }

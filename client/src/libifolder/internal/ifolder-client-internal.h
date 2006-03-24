@@ -28,7 +28,32 @@
 
 /* account.h */
 
-int internal_ifolder_account_new(const char *server_address, iFolderAccount *account);
+int internal_ifolder_accounts_get_all(iFolderEnumeration *account_enum);
+int internal_ifolder_accounts_get_all_active(iFolderEnumeration *account_enum);
+int internal_ifolder_accounts_get_default(iFolderAccount *default_account);
+int internal_ifolder_account_add(const char *host_address, const char *user_name, const char *password, bool make_default, iFolderAccount *account);
+int internal_ifolder_account_remove(iFolderAccount account, bool delete_ifolders_on_server);
+int internal_ifolder_account_login(iFolderAccount account, const char *password);
+int internal_ifolder_account_logout(iFolderAccount account);
+int internal_ifolder_account_activate(iFolderAccount account);
+int internal_ifolder_account_inactivate(iFolderAccount account);
+int internal_ifolder_account_change_host_address(iFolderAccount account, const char *new_host_address);
+int internal_ifolder_account_set_credentials(iFolderAccount account, const char *password, iFolderCredentialType credential_type);
+int internal_ifolder_account_set_default(iFolderAccount *new_default_account);
 int internal_ifolder_account_release(iFolderAccount *account);
+int internal_ifolder_account_get_authenticated_user(iFolderAccount account, iFolderUser *user);
+int internal_ifolder_account_get_user(iFolderAccount account, const char *user_id, iFolderUser *ifolder_user);
+int internal_ifolder_account_get_users(iFolderAccount account, int index, int count, iFolderEnumeration *user_enum);
+int internal_ifolder_account_get_users_by_search(iFolderAccount account, iFolderSearchProperty search_prop, iFolderSearchOperation search_op, const char *pattern, int index, int count, iFolderEnumeration *user_enum);
+const char * internal_ifolder_account_get_id(iFolderAccount account);
+const char * internal_ifolder_account_get_name(iFolderAccount account);
+const char * internal_ifolder_account_get_description(iFolderAccount account);
+const char * internal_ifolder_account_get_version(iFolderAccount account);
+const char * internal_ifolder_account_get_host_address(iFolderAccount account);
+const char * internal_ifolder_account_get_machine_name(iFolderAccount account);
+const char * internal_ifolder_account_get_os_version(iFolderAccount account);
+const char * internal_ifolder_account_get_user_name(iFolderAccount account);
+bool internal_ifolder_account_is_default(iFolderAccount account);
+bool internal_ifolder_account_is_active(iFolderAccount account);
 
 #endif

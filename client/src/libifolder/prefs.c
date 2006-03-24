@@ -23,4 +23,3 @@
 
 #include "ifolder-client-private.h"
 
-extern iFolderClient *the_ifolder_client;

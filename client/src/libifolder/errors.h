@@ -62,4 +62,7 @@
 //! Used for development to indicate an unimplemented function
 #define IFOLDER_UNIMPLEMENTED			-106
 
+//! A NULL parameter was passed into a function where it wasn't expected
+#define IFOLDER_NULL_PARAMETER			-107
+
 #endif
