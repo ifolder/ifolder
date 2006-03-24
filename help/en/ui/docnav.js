@@ -1133,4 +1133,11 @@ function initOutlineIcons(imgStore) {
 	imgStore.add('DocumentSelected', ip + 'doc_sel.gif', 18, 18);
 }  
 
-
+function loadMenu()
+{
+	if ((theMenu) && (theMenu.amBusy == false) && frames[2])
+	{
+	   theMenu.loadScript(text.parentfile,text.parenttoc);
+	}
+	else{ setTimeout("loadMenu()",200);}
+}
