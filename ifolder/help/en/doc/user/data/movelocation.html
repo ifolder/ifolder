@@ -1,83 +1,89 @@
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
+<html>
 <head>
 
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<meta http-equiv="Content-Language" content="en">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="en" />
+<meta name="Generator" content="Novell Documentation  8 June 2005" />
+<meta name="Generation-Date" content="Thursday, March 23, 2006 14:21" />
+<meta name="Content-Date" content="Mon, 24 Mar 2006 12:00:00 GMT" />
+<meta name="Robots" content="INDEX, FOLLOW" />
+<meta name="Document_Number" content="zHTML xD.0000.0000.0003.0013." />
+<meta name="Author" content="zHTML xD.0000.0000.0003.0013." />
+<meta name="Product_Class" content="" />
+<meta name="Product_and_Version" content="iFolder™" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2005" />
 
-<meta name="Generator" content="Novell HTML Conversion 10 March 2004">
-<meta name="Generation-Date" content="Sunday, October 23, 2005 15:54">
-<meta name="Content-Date" content="Mon, 22 Oct 2005 12:00:00 GMT">
-<meta name="Robots" content="INDEX, FOLLOW">
-<meta name="Document_Number" content="zHTML xD.0000.0000.0003.0011.">
-<meta name="Author" content="zHTML xD.0000.0000.0003.0011.">
-<meta name="Product_Class" content="">
-<meta name="Product_and_Version" content="iFolder(TM)">
-<meta name="Copyright" content="Copyright Novell, Inc. 1983-2004">
-
-<link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
-
+<style type="text/css">
+  @import url(../../../ui/novdocmain.css);
+</style>
 
 <title>iFolder Help</title>
-<script type="text/javascript" language="javascript">
-function loadMenu()
-{
-	if ((parent.theMenu) && (parent.theMenu.amBusy == false) && parent.frames[2])
-	{
-	   parent.theMenu.loadScript("../doc/user/data/myifolders.html","../doc/user/data/toc_myifolders.html");
-	}
-	else{ setTimeout("loadMenu()",200);}
-}
-loadMenu();
+<script type="text/javascript">
+  var prev_link="reverting.html";
+  var next_link="deleting.html";
+  var parentfile = "../doc/user/data/myifolders.html";
+  var parenttoc = "../doc/user/data/toc_myifolders.html";
+  parent.loadMenu();
 </script>
-<script type="text/javascript" language="javascript" src="../../../ui/jsglobal.js"></script>
+<script type="text/javascript" src="../../../ui/jsglobal.js"></script>
 </head>
 
 <body onload="">
-<script type="text/javascript" language="javascript">
-  var prev_link="reverting.html";
-  var next_link="deleting.html";
-</script>
+<script type="text/javascript" src="../../../ui/topnav.js"></script>
 
-<script type="text/javascript" language="javascript" src="../../../ui/topnav.js"></script>
+<div class="sect1" title="Moving an iFolder" id="movelocation">
 
-<a name="movelocation"></a>
+<h2 class="title"><span class="number">3.13</span> Moving an iFolder</h2>
 
-<div class="Topic" title="Moving an iFolder">
-
-<h2 class="TOPIC-TITLE"><br />Moving an iFolder</h2>
-<p class="TOPIC">After you create an iFolder, the path to the iFolder is static. You cannot move an iFolder from its original location to another location on your local computer and have it remain an iFolder. Moving the iFolder breaks the link between the synchronization database and the folder you converted to an iFolder. </p>
-<p class="TOPIC">To move an iFolder on the computer where you created it:</p>
-<ol class="STEPLIST">
-<li class="STEP"><a name="bv5cbfn"></a>
-<p class="STEP">Convert the iFolder to a normal folder.</p></li>
-
-<li class="STEP"><a name="bv5cbj9"></a>
-<p class="STEP">Move the folder.</p></li>
-
-<li class="STEP"><a name="bv5ccu2"></a>
-<p class="STEP">Convert the folder to an iFolder.</p></li>
-
-<li class="STEP"><a name="bv5ccwu"></a>
-<p class="STEP">(Optional) Share the iFolder.</p></li>
-</ol>
-<p class="TOPIC">To move an iFolder on a participating computer:</p>
-<ol class="STEPLIST">
-<li class="STEP"><a name="bv5chii"></a>
-<p class="STEP">In iFolders, revert the iFolder to stop participating in the iFolder, but leave it available to you.</p></li>
-
-<li class="STEP"><a name="bv5chij"></a>
-<p class="STEP">Select the available iFolder, then click Setup.</p></li>
-
-<li class="STEP"><a name="bv5cgpu"></a>
-<p class="STEP">Specify a new local path where you want to place the iFolder.</p></li>
-
-<li class="STEP"><a name="bv5cgpv"></a>
-<p class="STEP">Allow the iFolder to synchronize files with the enterprise server.</p></li>
-</ol>
+<p class="para">After you create an iFolder, the path to the iFolder is static.
+You cannot move an iFolder from its original location to another
+location on your local computer and have it remain an iFolder. Moving the
+iFolder breaks the link between the synchronization database and
+the folder you converted to an iFolder. </p>
+<p class="para">To move an iFolder on the computer where you created it:</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bv5cbfn">
+<p class="para">In a file manager
+or the iFolder browser, select the iFolder you want to move.</p></li>
+<li class="step" id="b403aa8">
+<p class="para">Revert the iFolder to a normal folder.</p></li>
+<li class="step" id="bv5cbj9">
+<p class="para">In a file manager, move the folder to
+another location on the computer.</p></li>
+<li class="step" id="bv5ccu2">
+<p class="para">Convert the folder back to an iFolder
+and upload the iFolder to the server.</p></li>
+<li class="step" id="bv5ccwu">
+<p class="para">(Optional) Share the iFolder.</p></li>
+<li class="step" id="b41ty8l">
+<p class="para">Allow the iFolder to synchronize files
+with the iFolder server.</p></li></ol>
 </div>
 
-<script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
+<p class="para">To move an iFolder on a participating computer:</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bv5chii">
+<p class="para">In iFolders,
+revert the iFolder to stop participating in the iFolder on the current
+computer.</p></li>
+<li class="step" id="bv5chij">
+<p class="para">Select the available iFolder, then click <span class="guimenu">Download
+an iFolder</span>.</p></li>
+<li class="step" id="bv5cgpu">
+<p class="para">Specify a new local path where you want
+to place the iFolder.</p></li>
+<li class="step" id="bv5cgpv">
+<p class="para">Allow the iFolder to synchronize files
+with the iFolder server.</p></li></ol>
+</div>
 
+</div>
+
+
+<script type="text/javascript" src="../../../ui/bottomnav.js"></script>
 </body>
 </html>
