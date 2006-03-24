@@ -58,7 +58,6 @@ ifolder_client_uninitialize()
 	if (the_ifolder_client == NULL)
 		return IFOLDER_UNINITIALIZED;
 
-	/* FIXME: Shutdown all the services */
 	if (the_ifolder_client->is_tray_app)
 		err = uninitialize_trayapp();
 	else

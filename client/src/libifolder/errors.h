@@ -65,4 +65,12 @@
 //! A NULL parameter was passed into a function where it wasn't expected
 #define IFOLDER_NULL_PARAMETER			-107
 
+
+#define IFOLDER_ERROR_PIPE					-200
+#define IFOLDER_ERROR_PIPE_READ				-201
+#define IFOLDER_ERROR_PIPE_WRITE			-202
+#define IFOLDER_ERROR_PIPE_INVALID			-203
+#define IFOLDER_ERROR_IPC_SRV_NOT_RUNNING	-204
+
+
 #endif

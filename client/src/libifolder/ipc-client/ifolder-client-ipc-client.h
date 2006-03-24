@@ -25,6 +25,7 @@
 #define _IFOLDER_CLIENT_IPC_CLIENT_H 1
 
 #include "ifolder-client-private.h"
+#include "ifolder-ipc-common.h"
 
 /* account.h */
 
