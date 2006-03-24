@@ -1,0 +1,487 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		219ABA9C09D39DF300A5C91F /* account.h in Sources */ = {isa = PBXBuildFile; fileRef = 219AB22409D1A7E400A5C91F /* account.h */; };
+		219ABA9D09D39DF300A5C91F /* account.c in Sources */ = {isa = PBXBuildFile; fileRef = 219AB66B09D2E86B00A5C91F /* account.c */; };
+		219ABA9E09D39DF300A5C91F /* change-entry.h in Sources */ = {isa = PBXBuildFile; fileRef = 219AB36109D1EDAD00A5C91F /* change-entry.h */; };
+		219ABA9F09D39DF300A5C91F /* change-entry.c in Sources */ = {isa = PBXBuildFile; fileRef = 219AB66C09D2E86B00A5C91F /* change-entry.c */; };
+		219ABAA009D39DF300A5C91F /* enumeration.h in Sources */ = {isa = PBXBuildFile; fileRef = 219AB34A09D1EAB800A5C91F /* enumeration.h */; };
+		219ABAA109D39DF300A5C91F /* enumeration.c in Sources */ = {isa = PBXBuildFile; fileRef = 219AB66D09D2E86B00A5C91F /* enumeration.c */; };
+		219ABAA209D39DF300A5C91F /* errors.h in Sources */ = {isa = PBXBuildFile; fileRef = 219AB22509D1A7E500A5C91F /* errors.h */; };
+		219ABAA309D39DF300A5C91F /* events.h in Sources */ = {isa = PBXBuildFile; fileRef = 219AB44E09D203C000A5C91F /* events.h */; };
+		219ABAA409D39DF300A5C91F /* events.c in Sources */ = {isa = PBXBuildFile; fileRef = 219AB66E09D2E86B00A5C91F /* events.c */; };
+		219ABAA509D39DF300A5C91F /* ifolder-client-private.h in Sources */ = {isa = PBXBuildFile; fileRef = 219AB6A109D2EBA500A5C91F /* ifolder-client-private.h */; };
+		219ABAA609D39DF300A5C91F /* ifolder-client.h in Sources */ = {isa = PBXBuildFile; fileRef = 219AB22609D1A7E500A5C91F /* ifolder-client.h */; };
+		219ABAA709D39DF300A5C91F /* ifolder-client.c in Sources */ = {isa = PBXBuildFile; fileRef = 219AB66F09D2E86B00A5C91F /* ifolder-client.c */; };
+		219ABAA809D39DF300A5C91F /* ifolder.h in Sources */ = {isa = PBXBuildFile; fileRef = 219AB26E09D1B1DF00A5C91F /* ifolder.h */; };
+		219ABAA909D39DF300A5C91F /* ifolder.c in Sources */ = {isa = PBXBuildFile; fileRef = 219AB67009D2E86B00A5C91F /* ifolder.c */; };
+		219ABAAA09D39DF300A5C91F /* prefs.h in Sources */ = {isa = PBXBuildFile; fileRef = 219AB5DE09D257A100A5C91F /* prefs.h */; };
+		219ABAAB09D39DF300A5C91F /* prefs.c in Sources */ = {isa = PBXBuildFile; fileRef = 219AB67109D2E86B00A5C91F /* prefs.c */; };
+		219ABAAC09D39DF300A5C91F /* user.h in Sources */ = {isa = PBXBuildFile; fileRef = 219AB24209D1AC6900A5C91F /* user.h */; };
+		219ABAAD09D39DF300A5C91F /* user.c in Sources */ = {isa = PBXBuildFile; fileRef = 219AB67209D2E86B00A5C91F /* user.c */; };
+		219ABAAE09D39E0C00A5C91F /* account-internal.c in Sources */ = {isa = PBXBuildFile; fileRef = 219AB3D809D1FA0400A5C91F /* account-internal.c */; };
+		219ABAAF09D39E0C00A5C91F /* change-entry-internal.c in Sources */ = {isa = PBXBuildFile; fileRef = 219AB3D909D1FA0400A5C91F /* change-entry-internal.c */; };
+		219ABAB009D39E0C00A5C91F /* enumeration-internal.c in Sources */ = {isa = PBXBuildFile; fileRef = 219AB3DA09D1FA0400A5C91F /* enumeration-internal.c */; };
+		219ABAB109D39E0C00A5C91F /* ifolder-client-internal.h in Sources */ = {isa = PBXBuildFile; fileRef = 219AB76A09D2FE1B00A5C91F /* ifolder-client-internal.h */; };
+		219ABAB209D39E0C00A5C91F /* ifolder-internal.c in Sources */ = {isa = PBXBuildFile; fileRef = 219AB3DC09D1FA0400A5C91F /* ifolder-internal.c */; };
+		219ABAB309D39E0C00A5C91F /* user-internal.c in Sources */ = {isa = PBXBuildFile; fileRef = 219AB3D609D1F97900A5C91F /* user-internal.c */; };
+		219ABAB409D39E0C00A5C91F /* account-ipc-client.c in Sources */ = {isa = PBXBuildFile; fileRef = 219AB75D09D2FCA200A5C91F /* account-ipc-client.c */; };
+		219ABAB509D39E0C00A5C91F /* change-entry-ipc-client.c in Sources */ = {isa = PBXBuildFile; fileRef = 219AB75E09D2FCA200A5C91F /* change-entry-ipc-client.c */; };
+		219ABAB609D39E0C00A5C91F /* enumeration-ipc-client.c in Sources */ = {isa = PBXBuildFile; fileRef = 219AB75F09D2FCA200A5C91F /* enumeration-ipc-client.c */; };
+		219ABAB709D39E0C00A5C91F /* ifolder-client-ipc-client.c in Sources */ = {isa = PBXBuildFile; fileRef = 219AB76009D2FCA200A5C91F /* ifolder-client-ipc-client.c */; };
+		219ABAB809D39E0C00A5C91F /* ifolder-client-ipc-client.h in Sources */ = {isa = PBXBuildFile; fileRef = 219AB76109D2FCA200A5C91F /* ifolder-client-ipc-client.h */; };
+		219ABAB909D39E0C00A5C91F /* ifolder-ipc-client.c in Sources */ = {isa = PBXBuildFile; fileRef = 219AB76209D2FCA200A5C91F /* ifolder-ipc-client.c */; };
+		219ABABA09D39E0C00A5C91F /* user-ipc-client.c in Sources */ = {isa = PBXBuildFile; fileRef = 219AB76309D2FCA200A5C91F /* user-ipc-client.c */; };
+		219ABABB09D39E1A00A5C91F /* test-libifolder.c in Sources */ = {isa = PBXBuildFile; fileRef = 219AB7BF09D305DB00A5C91F /* test-libifolder.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXBuildStyle section */
+		219AB32409D1E7F900A5C91F /* Development */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Development;
+		};
+		219AB32509D1E7F900A5C91F /* Deployment */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+			};
+			name = Deployment;
+		};
+/* End PBXBuildStyle section */
+
+/* Begin PBXFileReference section */
+		219AB22409D1A7E400A5C91F /* account.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = account.h; path = src/libifolder/account.h; sourceTree = SOURCE_ROOT; };
+		219AB22509D1A7E500A5C91F /* errors.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = errors.h; path = src/libifolder/errors.h; sourceTree = SOURCE_ROOT; };
+		219AB22609D1A7E500A5C91F /* ifolder-client.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = "ifolder-client.h"; path = "src/libifolder/ifolder-client.h"; sourceTree = SOURCE_ROOT; };
+		219AB22809D1A7E500A5C91F /* iFolderWeb.wsdl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = iFolderWeb.wsdl; sourceTree = "<group>"; };
+		219AB22909D1A7E500A5C91F /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		219AB22B09D1A7E500A5C91F /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		219AB22D09D1A7E500A5C91F /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		219AB23009D1A7E500A5C91F /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		219AB23109D1A7E500A5C91F /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
+		219AB23409D1A7E500A5C91F /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		219AB23509D1A7E500A5C91F /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
+		219AB23709D1A7E500A5C91F /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		219AB23809D1A7E500A5C91F /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
+		219AB23909D1A7E500A5C91F /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		219AB23A09D1A7E500A5C91F /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
+		219AB23C09D1A7E500A5C91F /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		219AB23D09D1A7E500A5C91F /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
+		219AB24209D1AC6900A5C91F /* user.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = user.h; path = src/libifolder/user.h; sourceTree = SOURCE_ROOT; };
+		219AB26E09D1B1DF00A5C91F /* ifolder.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ifolder.h; path = src/libifolder/ifolder.h; sourceTree = SOURCE_ROOT; };
+		219AB34A09D1EAB800A5C91F /* enumeration.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = enumeration.h; path = src/libifolder/enumeration.h; sourceTree = SOURCE_ROOT; };
+		219AB36109D1EDAD00A5C91F /* change-entry.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = "change-entry.h"; path = "src/libifolder/change-entry.h"; sourceTree = SOURCE_ROOT; };
+		219AB3D609D1F97900A5C91F /* user-internal.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = "user-internal.c"; path = "src/libifolder/internal/user-internal.c"; sourceTree = SOURCE_ROOT; };
+		219AB3D809D1FA0400A5C91F /* account-internal.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = "account-internal.c"; path = "src/libifolder/internal/account-internal.c"; sourceTree = SOURCE_ROOT; };
+		219AB3D909D1FA0400A5C91F /* change-entry-internal.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = "change-entry-internal.c"; path = "src/libifolder/internal/change-entry-internal.c"; sourceTree = SOURCE_ROOT; };
+		219AB3DA09D1FA0400A5C91F /* enumeration-internal.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = "enumeration-internal.c"; path = "src/libifolder/internal/enumeration-internal.c"; sourceTree = SOURCE_ROOT; };
+		219AB3DC09D1FA0400A5C91F /* ifolder-internal.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = "ifolder-internal.c"; path = "src/libifolder/internal/ifolder-internal.c"; sourceTree = SOURCE_ROOT; };
+		219AB44E09D203C000A5C91F /* events.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = events.h; path = src/libifolder/events.h; sourceTree = SOURCE_ROOT; };
+		219AB4EA09D20E8800A5C91F /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = English; path = InfoPlist.strings; sourceTree = "<group>"; };
+		219AB4EC09D20E8800A5C91F /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = MainMenu.nib; sourceTree = "<group>"; };
+		219AB4F009D20E8800A5C91F /* main.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		219AB4F609D20EDC00A5C91F /* Info.plist.in */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = Info.plist.in; sourceTree = "<group>"; };
+		219AB56609D2146D00A5C91F /* iFolderStatusIconApp.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = iFolderStatusIconApp.h; sourceTree = "<group>"; };
+		219AB56709D2146D00A5C91F /* iFolderStatusIconApp.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = iFolderStatusIconApp.m; sourceTree = "<group>"; };
+		219AB5DE09D257A100A5C91F /* prefs.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = prefs.h; path = src/libifolder/prefs.h; sourceTree = SOURCE_ROOT; };
+		219AB66B09D2E86B00A5C91F /* account.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = account.c; path = src/libifolder/account.c; sourceTree = SOURCE_ROOT; };
+		219AB66C09D2E86B00A5C91F /* change-entry.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = "change-entry.c"; path = "src/libifolder/change-entry.c"; sourceTree = SOURCE_ROOT; };
+		219AB66D09D2E86B00A5C91F /* enumeration.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = enumeration.c; path = src/libifolder/enumeration.c; sourceTree = SOURCE_ROOT; };
+		219AB66E09D2E86B00A5C91F /* events.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = events.c; path = src/libifolder/events.c; sourceTree = SOURCE_ROOT; };
+		219AB66F09D2E86B00A5C91F /* ifolder-client.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = "ifolder-client.c"; path = "src/libifolder/ifolder-client.c"; sourceTree = SOURCE_ROOT; };
+		219AB67009D2E86B00A5C91F /* ifolder.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = ifolder.c; path = src/libifolder/ifolder.c; sourceTree = SOURCE_ROOT; };
+		219AB67109D2E86B00A5C91F /* prefs.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = prefs.c; path = src/libifolder/prefs.c; sourceTree = SOURCE_ROOT; };
+		219AB67209D2E86B00A5C91F /* user.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = user.c; path = src/libifolder/user.c; sourceTree = SOURCE_ROOT; };
+		219AB6A109D2EBA500A5C91F /* ifolder-client-private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "ifolder-client-private.h"; path = "src/libifolder/ifolder-client-private.h"; sourceTree = SOURCE_ROOT; };
+		219AB75D09D2FCA200A5C91F /* account-ipc-client.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = "account-ipc-client.c"; path = "src/libifolder/ipc-client/account-ipc-client.c"; sourceTree = SOURCE_ROOT; };
+		219AB75E09D2FCA200A5C91F /* change-entry-ipc-client.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = "change-entry-ipc-client.c"; path = "src/libifolder/ipc-client/change-entry-ipc-client.c"; sourceTree = SOURCE_ROOT; };
+		219AB75F09D2FCA200A5C91F /* enumeration-ipc-client.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = "enumeration-ipc-client.c"; path = "src/libifolder/ipc-client/enumeration-ipc-client.c"; sourceTree = SOURCE_ROOT; };
+		219AB76009D2FCA200A5C91F /* ifolder-client-ipc-client.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = "ifolder-client-ipc-client.c"; path = "src/libifolder/ipc-client/ifolder-client-ipc-client.c"; sourceTree = SOURCE_ROOT; };
+		219AB76109D2FCA200A5C91F /* ifolder-client-ipc-client.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = "ifolder-client-ipc-client.h"; path = "src/libifolder/ipc-client/ifolder-client-ipc-client.h"; sourceTree = SOURCE_ROOT; };
+		219AB76209D2FCA200A5C91F /* ifolder-ipc-client.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = "ifolder-ipc-client.c"; path = "src/libifolder/ipc-client/ifolder-ipc-client.c"; sourceTree = SOURCE_ROOT; };
+		219AB76309D2FCA200A5C91F /* user-ipc-client.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = "user-ipc-client.c"; path = "src/libifolder/ipc-client/user-ipc-client.c"; sourceTree = SOURCE_ROOT; };
+		219AB76A09D2FE1B00A5C91F /* ifolder-client-internal.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = "ifolder-client-internal.h"; path = "src/libifolder/internal/ifolder-client-internal.h"; sourceTree = SOURCE_ROOT; };
+		219AB7BD09D305DB00A5C91F /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = Makefile.am; path = test/libifolder/Makefile.am; sourceTree = SOURCE_ROOT; };
+		219AB7BF09D305DB00A5C91F /* test-libifolder.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = "test-libifolder.c"; path = "test/libifolder/test-libifolder.c"; sourceTree = SOURCE_ROOT; };
+		219AB7C009D305DB00A5C91F /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = Makefile.am; path = test/Makefile.am; sourceTree = SOURCE_ROOT; };
+		219ABA8509D39D2300A5C91F /* testlibifolder */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = testlibifolder; path = build/Debug/testlibifolder; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		219ABA8309D39D2300A5C91F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		219AB21009D1A7A600A5C91F = {
+			isa = PBXGroup;
+			children = (
+				219AB22209D1A7E400A5C91F /* src */,
+				219AB7BB09D305DB00A5C91F /* test */,
+				219ABA8609D39D2300A5C91F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		219AB22209D1A7E400A5C91F /* src */ = {
+			isa = PBXGroup;
+			children = (
+				219AB22D09D1A7E500A5C91F /* Makefile.am */,
+				219AB22309D1A7E400A5C91F /* libifolder */,
+				219AB22F09D1A7E500A5C91F /* qt-client */,
+				219AB23209D1A7E500A5C91F /* trayapp */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		219AB22309D1A7E400A5C91F /* libifolder */ = {
+			isa = PBXGroup;
+			children = (
+				219AB22B09D1A7E500A5C91F /* Makefile.am */,
+				219AB22409D1A7E400A5C91F /* account.h */,
+				219AB66B09D2E86B00A5C91F /* account.c */,
+				219AB36109D1EDAD00A5C91F /* change-entry.h */,
+				219AB66C09D2E86B00A5C91F /* change-entry.c */,
+				219AB34A09D1EAB800A5C91F /* enumeration.h */,
+				219AB66D09D2E86B00A5C91F /* enumeration.c */,
+				219AB22509D1A7E500A5C91F /* errors.h */,
+				219AB44E09D203C000A5C91F /* events.h */,
+				219AB66E09D2E86B00A5C91F /* events.c */,
+				219AB6A109D2EBA500A5C91F /* ifolder-client-private.h */,
+				219AB22609D1A7E500A5C91F /* ifolder-client.h */,
+				219AB66F09D2E86B00A5C91F /* ifolder-client.c */,
+				219AB26E09D1B1DF00A5C91F /* ifolder.h */,
+				219AB67009D2E86B00A5C91F /* ifolder.c */,
+				219AB5DE09D257A100A5C91F /* prefs.h */,
+				219AB67109D2E86B00A5C91F /* prefs.c */,
+				219AB24209D1AC6900A5C91F /* user.h */,
+				219AB67209D2E86B00A5C91F /* user.c */,
+				219AB24709D1AD8900A5C91F /* internal */,
+				219AB75C09D2FCA200A5C91F /* ipc-client */,
+				219AB22709D1A7E500A5C91F /* libifsoap */,
+			);
+			name = libifolder;
+			path = src/libifolder;
+			sourceTree = SOURCE_ROOT;
+		};
+		219AB22709D1A7E500A5C91F /* libifsoap */ = {
+			isa = PBXGroup;
+			children = (
+				219AB22809D1A7E500A5C91F /* iFolderWeb.wsdl */,
+				219AB22909D1A7E500A5C91F /* Makefile.am */,
+			);
+			name = libifsoap;
+			path = src/libifolder/libifsoap;
+			sourceTree = SOURCE_ROOT;
+		};
+		219AB22F09D1A7E500A5C91F /* qt-client */ = {
+			isa = PBXGroup;
+			children = (
+				219AB23009D1A7E500A5C91F /* Makefile.am */,
+				219AB23109D1A7E500A5C91F /* Makefile.in */,
+			);
+			path = "qt-client";
+			sourceTree = "<group>";
+		};
+		219AB23209D1A7E500A5C91F /* trayapp */ = {
+			isa = PBXGroup;
+			children = (
+				219AB23309D1A7E500A5C91F /* darwin */,
+				219AB23609D1A7E500A5C91F /* linux */,
+				219AB23909D1A7E500A5C91F /* Makefile.am */,
+				219AB23A09D1A7E500A5C91F /* Makefile.in */,
+				219AB23B09D1A7E500A5C91F /* windows */,
+			);
+			path = trayapp;
+			sourceTree = "<group>";
+		};
+		219AB23309D1A7E500A5C91F /* darwin */ = {
+			isa = PBXGroup;
+			children = (
+				219AB56609D2146D00A5C91F /* iFolderStatusIconApp.h */,
+				219AB56709D2146D00A5C91F /* iFolderStatusIconApp.m */,
+				219AB4E809D20E8800A5C91F /* English.lproj */,
+				219AB4F609D20EDC00A5C91F /* Info.plist.in */,
+				219AB4F009D20E8800A5C91F /* main.m */,
+				219AB23409D1A7E500A5C91F /* Makefile.am */,
+				219AB23509D1A7E500A5C91F /* Makefile.in */,
+			);
+			path = darwin;
+			sourceTree = "<group>";
+		};
+		219AB23609D1A7E500A5C91F /* linux */ = {
+			isa = PBXGroup;
+			children = (
+				219AB23709D1A7E500A5C91F /* Makefile.am */,
+				219AB23809D1A7E500A5C91F /* Makefile.in */,
+			);
+			path = linux;
+			sourceTree = "<group>";
+		};
+		219AB23B09D1A7E500A5C91F /* windows */ = {
+			isa = PBXGroup;
+			children = (
+				219AB23C09D1A7E500A5C91F /* Makefile.am */,
+				219AB23D09D1A7E500A5C91F /* Makefile.in */,
+			);
+			path = windows;
+			sourceTree = "<group>";
+		};
+		219AB24709D1AD8900A5C91F /* internal */ = {
+			isa = PBXGroup;
+			children = (
+				219AB3D809D1FA0400A5C91F /* account-internal.c */,
+				219AB3D909D1FA0400A5C91F /* change-entry-internal.c */,
+				219AB3DA09D1FA0400A5C91F /* enumeration-internal.c */,
+				219AB76A09D2FE1B00A5C91F /* ifolder-client-internal.h */,
+				219AB3DC09D1FA0400A5C91F /* ifolder-internal.c */,
+				219AB3D609D1F97900A5C91F /* user-internal.c */,
+			);
+			name = internal;
+			path = src/libifolder;
+			sourceTree = SOURCE_ROOT;
+		};
+		219AB4E809D20E8800A5C91F /* English.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				219AB4E909D20E8800A5C91F /* InfoPlist.strings */,
+				219AB4EB09D20E8800A5C91F /* MainMenu.nib */,
+			);
+			path = English.lproj;
+			sourceTree = "<group>";
+		};
+		219AB75C09D2FCA200A5C91F /* ipc-client */ = {
+			isa = PBXGroup;
+			children = (
+				219AB75D09D2FCA200A5C91F /* account-ipc-client.c */,
+				219AB75E09D2FCA200A5C91F /* change-entry-ipc-client.c */,
+				219AB75F09D2FCA200A5C91F /* enumeration-ipc-client.c */,
+				219AB76009D2FCA200A5C91F /* ifolder-client-ipc-client.c */,
+				219AB76109D2FCA200A5C91F /* ifolder-client-ipc-client.h */,
+				219AB76209D2FCA200A5C91F /* ifolder-ipc-client.c */,
+				219AB76309D2FCA200A5C91F /* user-ipc-client.c */,
+			);
+			name = "ipc-client";
+			path = "src/libifolder/ipc-client";
+			sourceTree = SOURCE_ROOT;
+		};
+		219AB7BB09D305DB00A5C91F /* test */ = {
+			isa = PBXGroup;
+			children = (
+				219AB7BC09D305DB00A5C91F /* libifolder */,
+				219AB7C009D305DB00A5C91F /* Makefile.am */,
+			);
+			path = test;
+			sourceTree = SOURCE_ROOT;
+		};
+		219AB7BC09D305DB00A5C91F /* libifolder */ = {
+			isa = PBXGroup;
+			children = (
+				219AB7BD09D305DB00A5C91F /* Makefile.am */,
+				219AB7BF09D305DB00A5C91F /* test-libifolder.c */,
+			);
+			name = libifolder;
+			path = test/libifolder;
+			sourceTree = SOURCE_ROOT;
+		};
+		219ABA8609D39D2300A5C91F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				219ABA8509D39D2300A5C91F /* testlibifolder */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		219ABA8409D39D2300A5C91F /* testlibifolder */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 219ABA8809D39D2400A5C91F /* Build configuration list for PBXNativeTarget "testlibifolder" */;
+			buildPhases = (
+				219ABA8209D39D2300A5C91F /* Sources */,
+				219ABA8309D39D2300A5C91F /* Frameworks */,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = "$(HOME)/bin";
+				PREBINDING = NO;
+				PRODUCT_NAME = testlibifolder;
+				ZERO_LINK = YES;
+			};
+			dependencies = (
+			);
+			name = testlibifolder;
+			productName = testlibifolder;
+			productReference = 219ABA8509D39D2300A5C91F /* testlibifolder */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		219AB21209D1A7A600A5C91F /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 219AB21309D1A7A600A5C91F /* Build configuration list for PBXProject "ifolder-3.6" */;
+			buildSettings = {
+			};
+			buildStyles = (
+				219AB32409D1E7F900A5C91F /* Development */,
+				219AB32509D1E7F900A5C91F /* Deployment */,
+			);
+			hasScannedForEncodings = 0;
+			mainGroup = 219AB21009D1A7A600A5C91F;
+			productRefGroup = 219ABA8609D39D2300A5C91F /* Products */;
+			projectDirPath = "";
+			targets = (
+				219ABA8409D39D2300A5C91F /* testlibifolder */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		219ABA8209D39D2300A5C91F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				219ABA9C09D39DF300A5C91F /* account.h in Sources */,
+				219ABA9D09D39DF300A5C91F /* account.c in Sources */,
+				219ABA9E09D39DF300A5C91F /* change-entry.h in Sources */,
+				219ABA9F09D39DF300A5C91F /* change-entry.c in Sources */,
+				219ABAA009D39DF300A5C91F /* enumeration.h in Sources */,
+				219ABAA109D39DF300A5C91F /* enumeration.c in Sources */,
+				219ABAA209D39DF300A5C91F /* errors.h in Sources */,
+				219ABAA309D39DF300A5C91F /* events.h in Sources */,
+				219ABAA409D39DF300A5C91F /* events.c in Sources */,
+				219ABAA509D39DF300A5C91F /* ifolder-client-private.h in Sources */,
+				219ABAA609D39DF300A5C91F /* ifolder-client.h in Sources */,
+				219ABAA709D39DF300A5C91F /* ifolder-client.c in Sources */,
+				219ABAA809D39DF300A5C91F /* ifolder.h in Sources */,
+				219ABAA909D39DF300A5C91F /* ifolder.c in Sources */,
+				219ABAAA09D39DF300A5C91F /* prefs.h in Sources */,
+				219ABAAB09D39DF300A5C91F /* prefs.c in Sources */,
+				219ABAAC09D39DF300A5C91F /* user.h in Sources */,
+				219ABAAD09D39DF300A5C91F /* user.c in Sources */,
+				219ABAAE09D39E0C00A5C91F /* account-internal.c in Sources */,
+				219ABAAF09D39E0C00A5C91F /* change-entry-internal.c in Sources */,
+				219ABAB009D39E0C00A5C91F /* enumeration-internal.c in Sources */,
+				219ABAB109D39E0C00A5C91F /* ifolder-client-internal.h in Sources */,
+				219ABAB209D39E0C00A5C91F /* ifolder-internal.c in Sources */,
+				219ABAB309D39E0C00A5C91F /* user-internal.c in Sources */,
+				219ABAB409D39E0C00A5C91F /* account-ipc-client.c in Sources */,
+				219ABAB509D39E0C00A5C91F /* change-entry-ipc-client.c in Sources */,
+				219ABAB609D39E0C00A5C91F /* enumeration-ipc-client.c in Sources */,
+				219ABAB709D39E0C00A5C91F /* ifolder-client-ipc-client.c in Sources */,
+				219ABAB809D39E0C00A5C91F /* ifolder-client-ipc-client.h in Sources */,
+				219ABAB909D39E0C00A5C91F /* ifolder-ipc-client.c in Sources */,
+				219ABABA09D39E0C00A5C91F /* user-ipc-client.c in Sources */,
+				219ABABB09D39E1A00A5C91F /* test-libifolder.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		219AB4E909D20E8800A5C91F /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				219AB4EA09D20E8800A5C91F /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		219AB4EB09D20E8800A5C91F /* MainMenu.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				219AB4EC09D20E8800A5C91F /* English */,
+			);
+			name = MainMenu.nib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		219AB21409D1A7A600A5C91F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Debug;
+		};
+		219AB21509D1A7A600A5C91F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+			};
+			name = Release;
+		};
+		219ABA8909D39D2400A5C91F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = "$(HOME)/bin";
+				PREBINDING = NO;
+				PRODUCT_NAME = testlibifolder;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		219ABA8A09D39D2400A5C91F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = "$(HOME)/bin";
+				PREBINDING = NO;
+				PRODUCT_NAME = testlibifolder;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		219AB21309D1A7A600A5C91F /* Build configuration list for PBXProject "ifolder-3.6" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				219AB21409D1A7A600A5C91F /* Debug */,
+				219AB21509D1A7A600A5C91F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		219ABA8809D39D2400A5C91F /* Build configuration list for PBXNativeTarget "testlibifolder" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				219ABA8909D39D2400A5C91F /* Debug */,
+				219ABA8A09D39D2400A5C91F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 219AB21209D1A7A600A5C91F /* Project object */;
+}
