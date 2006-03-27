@@ -1,0 +1,10 @@
+ifolder-client
+================
+
+This is a client that will allow users to create and access iFolders on an
+iFolder Server.  More information can be found at:
+
+http://www.ifolder.com/
+
+Patches should be sent to ifolder-dev@forge.provo.novell.com.
+
