@@ -269,8 +269,6 @@
 					"$(LIBRARY_SEARCH_PATHS)",
 					"$(SRCROOT)/../../libifolder/ipc-server",
 					"$(SRCROOT)/../../libifolder/ipc-server/libsoap",
-					"$(SRCROOT)/../../libifolder/ipc-client/.libs",
-					"$(SRCROOT)/../../libifolder/ipc-server/.libs",
 					"$(SRCROOT)/../../libifolder/ipc-server/libipcserver",
 					"$(SRCROOT)/../../libifolder/ipc-server/libsync",
 				);
@@ -295,8 +293,6 @@
 					"$(LIBRARY_SEARCH_PATHS)",
 					"$(SRCROOT)/../../libifolder/ipc-server",
 					"$(SRCROOT)/../../libifolder/ipc-server/libsoap",
-					"$(SRCROOT)/../../libifolder/ipc-client/.libs",
-					"$(SRCROOT)/../../libifolder/ipc-server/.libs",
 					"$(SRCROOT)/../../libifolder/ipc-server/libipcserver",
 					"$(SRCROOT)/../../libifolder/ipc-server/libsync",
 				);
@@ -308,10 +304,7 @@
 		C01FCF4F08A954540054247B /* debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
+				ARCHS = ppc;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = ../../libifolder;
@@ -323,10 +316,7 @@
 		C01FCF5008A954540054247B /* release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
+				ARCHS = ppc;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = ../../libifolder;
