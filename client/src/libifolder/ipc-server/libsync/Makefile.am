@@ -2,17 +2,20 @@ noinst_LIBRARIES = libsync.a
 
 #override CFLAGS =
 
-if DARWIN
-libsync_a_CFLAGS =	\
-	-arch ppc		\
-	-arch i386
-libsync_a_CXXFLAGS =	\
-	-arch ppc		\
-	-arch i386
+#if DARWIN
+#libsync_a_CFLAGS =	\
+#	-arch ppc		\
+#	-arch i386		\
+#	-Wall -W -isysroot /Developer/SDKs/MacOSX10.4u.sdk
+#libsync_a_CXXFLAGS =	\
+#	-arch ppc		\
+#	-arch i386		\
+#	-Wall -W -isysroot /Developer/SDKs/MacOSX10.4u.sdk
 #libsync_a_LDFLAGS =	\
 #	-arch ppc		\
-#	-arch i386
-endif
+#	-arch i386		\
+#	-Wall -W -isysroot /Developer/SDKs/MacOSX10.4u.sdk
+#endif
 
 libsync_a_SOURCES = \
 	placeholder.c
