@@ -1,10 +1,12 @@
-lib_LTLIBRARIES=libsync.la
+noinst_LIBRARIES = libsync.a
+#lib_LTLIBRARIES=libsync.la
 
 #override CFLAGS =
 
-libsync_la_SOURCES =
-libsync_la_CFLAGS =
-libsync_la_LDFLAGS =
+libsync_a_SOURCES = \
+	placeholder.c
+#libsync_a_CXXFLAGS =
+#libsync_a_LIBADD =
 
 #install-exec-local:
 #	$(mkinstalldirs) $(DESTDIR)$(includedir)/ifolder3

@@ -24,6 +24,13 @@
 #ifndef IFOLDER_H_
 #define IFOLDER_H_
 
+#include <QObject>
+#include <QString>
+#include <QList>
+
+#include "IFUser.h"
+#include "IFChangeEntry.h"
+
 class iFolder : public QObject
 {
 	Q_OBJECT
@@ -36,16 +43,18 @@ class iFolder : public QObject
 		void publish();
 		void unPublish();
 		void setDescription(QString *newDescription);
-		QList getMembers(int index, int count);
+		QList<iFolderUser> getMembers(int index, int count);
 		void setMemberRights(iFolderUser member, MemberRights rights);
 		void addMember(iFolderUser member, MemberRights rights);
 		void removeMember(iFolderUser member);
 		void setOwner(iFolderUser member);
-		QList getChanges(int index, int count);
-		QList getFileChanges(QString *relativePath, int index, int count);
+		QList<iFolderChangeEntry> getChanges(int index, int count);
+		QList<iFolderChangeEntry> getFileChanges(QString *relativePath, int index, int count);
 		
 	private:
 		iFolder(QObject *parent = 0);	
+
+		friend class iFolderAccount;
 };
 
 #endif /*IFOLDER_H_*/

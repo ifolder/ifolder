@@ -1,8 +1,7 @@
 AC_INIT
 AC_CANONICAL_SYSTEM
-AC_CONFIG_HEADERS([config.h])
+AM_CONFIG_HEADER(config.h)
 m4_pattern_allow(PKG_CONFIG)
-AM_MAINTAINER_MODE
 
 #AC_PROG_INTLTOOL
 
@@ -19,9 +18,18 @@ VERSION=$VERSION.$BUILDNUM.1
 AC_SUBST(VERSION)
 AC_SUBST(BUILDNUM)
 
+AM_MAINTAINER_MODE
+
 DATADIRNAME=share
 
 AC_PROG_CC
+
+##
+## Run standard macros
+##
+#AM_PROG_CC_STD
+#AC_PROG_INSTALL
+#AC_HEADER_STDC
 AM_PROG_LIBTOOL
 
 dnl ========================================================
@@ -142,6 +150,19 @@ oldincludedir="/usr/include"
 infodir="${prefix}/info"
 mandir="${prefix}/man"
 
+dnl FIXME: For now, make --with-qt4-path REQUIRED!
+dnl ========================================================
+dnl Handle --with-qt4-path
+dnl ========================================================
+AC_ARG_WITH(qt4-path,
+        [  --with-qt4-path=PATH  set default --qt4-path to PATH (default: unknown)],
+        [ QT4_PATH="$with_qt4_path" ],
+        [ QT4_PATH="unknown" ])
+AC_DEFINE_UNQUOTED(QT4_PATH, "$QT4_PATH", [Path to Qt 4 Installed Prefix])
+AC_SUBST(QT4_PATH)
+echo QT4_PATH=$QT4_PATH
+
+
 dnl ========================================================
 dnl Set platform-specific variables
 dnl ========================================================
@@ -149,21 +170,27 @@ case $IFOLDER_OS in
     #
     # MAC OS X configuration
     #
-    darwin)
-        #
-        # Set variables
-        #
-        EMPTY=
-        EXE_EXT=''
-        ICON_EXT='.ico'
-        ICON_FLAG='/resource:'
-        INSTALL_EXE_OPTS='-m 644'
-        OBJ_EXT='.o'
-        SEP='/'
-        SHARED_LIB_EXT='.dylib'
-        SHARED_LIB_FLAG='-shared'
+	darwin)
+		#
+		# Set variables
+		#
+		EMPTY=
+		EXE_EXT=''
+		ICON_EXT='.ico'
+		ICON_FLAG='/resource:'
+		INSTALL_EXE_OPTS='-m 644'
+		OBJ_EXT='.o'
+		SEP='/'
+		SHARED_LIB_EXT='.dylib'
+		SHARED_LIB_FLAG='-shared'
 		GSOAP_PATH="$TOOLDIR/gsoap/macosx-2.7"
-    	libexecdir='${exec_prefix}'
+		libexecdir='${exec_prefix}'
+		QT4_INCLUDES="-I${QT4_PATH}/mkspecs/macx-g++ -I${QT4_PATH}/include"
+		QT4_CORE_INCLUDES="-I${QT4_PATH}/lib/QtCore.framework/Headers"
+		QT4_GUI_INCLUDES="-I${QT4_PATH}/lib/QtGui.framework/Headers"
+		QT4_NETWORK_INCLUDES="-I${QT4_PATH}/lib/QtNetwork.framework/Headers"
+		QT4_XML_INCLUDES="-I${QT4_PATH}/lib/QtXml.framework/Headers/"
+		QT4_FRAMEWORK_FLAG="-F${QT4_PATH}/lib"
     ;;
     #
     # Linux-specific configuration
@@ -280,7 +307,18 @@ AC_SUBST(SEP)
 AC_SUBST(SHARED_LIB_FLAG)
 AC_SUBST(TLBX)
 AC_SUBST(GSOAP_PATH)
+AC_SUBST(QT4_INCLUDES)
+AC_SUBST(QT4_CORE_INCLUDES)
+AC_SUBST(QT4_GUI_INCLUDES)
+AC_SUBST(QT4_NETWORK_INCLUDES)
+AC_SUBST(QT4_XML_INCLUDES)
+AC_SUBST(QT4_FRAMEWORK_FLAG)
 
+echo QT4_INCLUDES=$QT4_INCLUDES
+echo QT4_CORE_INCLUDES=$QT4_CORE_INCLUES
+echo QT4_NETWORK_INCLUES=$QT4_NETWORK_INCLUDES
+echo QT4_XML_INCLUDES=$QT4_XML_INCLUDES
+echo QT4_FRAMEWORK_FLAG=$QT4_FRAMEWORK_FLAG
 
 dnl ========================================================
 dnl Handle --enable-debug
@@ -319,7 +357,11 @@ AC_CONFIG_FILES([
   package/windows/Makefile
   src/Makefile
   src/libifolder/Makefile
-  src/libifolder/libifsoap/Makefile
+  src/libifolder/ipc-client/Makefile
+  src/libifolder/ipc-server/Makefile
+  src/libifolder/ipc-server/libipcserver/Makefile
+  src/libifolder/ipc-server/libsoap/Makefile
+  src/libifolder/ipc-server/libsync/Makefile
   src/qt-client/Makefile
   src/trayapp/Makefile
   src/trayapp/darwin/Makefile

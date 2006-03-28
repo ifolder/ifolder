@@ -28,11 +28,12 @@ INCLUDES =			\
 
 lib_LTLIBRARIES = libifolder.la
 
-libifolder_LDFLAGS =
+#libifolder_LDFLAGS =
 
-#libifolder_SOURCES =
+libifolder_la_SOURCES = \
+	placeholder.c
 
-#libifolder_HEADERS = \
+#libifolder_HEADERS =
 
 #if !WINDOWS
 #install-exec-hook:

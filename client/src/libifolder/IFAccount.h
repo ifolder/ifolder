@@ -24,9 +24,16 @@
 #ifndef IFOLDERACCOUNT_H_
 #define IFOLDERACCOUNT_H_
 
+#include <QObject>
+#include <QString>
+
+#include "IFAccount.h"
+#include "IFiFolder.h"
+#include "IFUser.h"
+
 class iFolderAccount : public QObject
 {
-	QOBJECT
+	Q_OBJECT
 	
 	Q_ENUMS(CredentialType)
 	Q_ENUMS(SearchProperty)
@@ -86,13 +93,13 @@ class iFolderAccount : public QObject
 		void setDefault();
 		iFolderUser getAuthenticatedUser();
 		iFolderUser getUser(const char *userID);
-		QList getUsers(int index, int count);
-		QList getUsersBySearch(SearchProperty searchProp, SearchOperation searchOp, const char *pattern, int index, int count);
+		QList<iFolderUser> getUsers(int index, int count);
+		QList<iFolderUser> getUsersBySearch(SearchProperty searchProp, SearchOperation searchOp, const char *pattern, int index, int count);
 
 		iFolder createiFolder(const char *localPath, const char *description);
 		void deleteiFolder(iFolder ifolder);
-		QList getLocaliFolders(int index, int count);
-		QList getRemoteiFolders(int index, int count);
+		QList<iFolder> getLocaliFolders(int index, int count);
+		QList<iFolder> getRemoteiFolders(int index, int count);
 		iFolder getiFolderByID(const char *id);
 		iFolder getiFolderByName(const char *name);
 		
@@ -100,8 +107,8 @@ class iFolderAccount : public QObject
 		/**
 		 * Static Methods
 		 */
-		static QList getAll();
-		static QList getAllActive();
+		static QList<iFolderAccount> getAll();
+		static QList<iFolderAccount> getAllActive();
 		static iFolderAccount getDefault();
 		static iFolderAccount add(const char *hostAddress, const char *userName, const char *password, bool makeDefault);
 	

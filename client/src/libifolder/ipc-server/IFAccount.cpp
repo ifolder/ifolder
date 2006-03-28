@@ -21,23 +21,10 @@
  *
  ***********************************************************************/
 
-#ifndef IFOLDERUSER_H_
-#define IFOLDERUSER_H_
+#include <IFAccount.h>
+#include <IFUser.h>
+#include <IFiFolder.h>
 
-#include "IFAccount.h"
-
-class iFolderUser : public QObject
+iFolderAccount::iFolderAccount(QObject *parent)
 {
-	Q_OBJECT
-	
-	public:
-		~iFolderUser();
-	
-	private:
-		iFolderUser(QObject *parent = 0);
-		
-		friend class iFolderAccount;
-		friend class iFolder;
-};
-
-#endif /*IFOLDERUSER_H_*/
+}

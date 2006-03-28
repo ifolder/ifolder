@@ -1,10 +1,12 @@
-lib_LTLIBRARIES=libipcserver.la
+noinst_LIBRARIES = libipcserver.a
+#lib_LTLIBRARIES=libipcserver.la
 
 #override CFLAGS =
 
-libipcserver_la_SOURCES =
-libipcserver_la_CFLAGS =
-libipcserver_la_LDFLAGS =
+libipcserver_a_SOURCES = \
+	placeholder.c
+#libipcserver_a_CXXFLAGS =
+#libipcserver_a_LIBADD =
 
 #install-exec-local:
 #	$(mkinstalldirs) $(DESTDIR)$(includedir)/ifolder3

@@ -22,20 +22,35 @@ SUBDIRS = libsync libsoap libipcserver
 
 DIST_SUBDIRS = $(SUBDIRS)
 
-INCLUDES =			\
+INCLUDES = \
 	-I$(top_srcdir)		\
-	-I$(top_builddir)
+	-I$(srcdir)/..		\
+	-I$(top_builddir)	\
+	$(QT4_INCLUDES)		\
+	$(QT4_CORE_INCLUDES)	\
+	$(QT4_NETWORK_INCLUDES)
 
-lib_LTLIBRARIES = libifolder-trayapp.la
+noinst_LIBRARIES = libifolder-trayapp.a
+#lib_LTLIBRARIES = libifolder-trayapp.la
 
-libifolder_trayapp_LDFLAGS =	\
-	$(srcdir)/libsync/.libs/libsync.a		\
-	$(srcdir)/libsoap/.libs/libsoap.a		\
-	$(srcdir)/libipcserver/.libs/libipcserver.a
+libifolder_trayapp_a_LIBADD =	\
+	libsync/libsync.a		\
+	libsoap/libsoap.a		\
+	libipcserver/libipcserver.a	
 
-#libifolder_trayapp_SOURCES =
+DEFINES = \
+	-DQT_NETWORK					\
+	-DQT_CORE_LIB				\
+	-DQT_SHARED
 
-#libifolder_trayapp_HEADERS = \
+libifolder_trayapp_a_CXXFLAGS = \
+	$(DEFINES)					\
+	$(QT4_FRAMEWORK_FLAG)
+	
+libifolder_trayapp_a_SOURCES = \
+	IFAccount.cpp
+
+#libifolder_trayapp_a_HEADERS =
 
 #if !WINDOWS
 #install-exec-hook:

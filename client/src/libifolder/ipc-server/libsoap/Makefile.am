@@ -8,43 +8,49 @@ EXTRA_DIST = $(IFOLDER_CLIENT_WSDL)
 
 # Make sure the following files are not included in the dist
 dist-hook:
-	rm -rf `find $(distdir) |grep iFolderClientLib.c`
-	rm -rf `find $(distdir) |grep envC.c`
-	rm -rf `find $(distdir) |grep stdsoap2.c`
+	rm -rf `find $(distdir) |grep iFolderClientLib.cpp`
+	rm -rf `find $(distdir) |grep envC.cpp`
+	rm -rf `find $(distdir) |grep stdsoap2.cpp`
 
-lib_LTLIBRARIES=libsoap.la
+noinst_LIBRARIES = libsoap.a
+#lib_LTLIBRARIES=libsoap.la
 
 #override CFLAGS =
 
-libsoap_la_SOURCES =				\
-	envC.c iFolderClientLib.c stdsoap2.c
+libsoap_a_SOURCES =				\
+	envC.cpp iFolderClientLib.cpp stdsoap2.cpp
 
-libsoap_la_CFLAGS =				\
+libsoap_a_CXXFLAGS = \
 	-DWITH_NONAMESPACES				\
-#	-DWITH_COOKIES
+	-DWITH_COOKIES
 
-libsoap_sources =					\
-	envC.c							\
-	iFolderClientLib.c				\
-	stdsoap2.c
+#libsoap_sources =					\
+#	envC.cpp					\
+#	iFolderClientLib.cpp				\
+#	stdsoap2.cpp
 
-all: $(libifsoap_sources)
+#all: $(libsoap_sources)
 
-libsoap_la_LDFLAGS =
+#libsoap_a_LIBADD =
 
-envC.c: $(srcdir)/stdsoap2.c
+envC.cpp: $(srcdir)/stdsoap2.cpp
 	> $(srcdir)/env.h
-	$(GSOAP_PATH)/soapcpp2 -c -penv $(srcdir)/env.h
+	$(GSOAP_PATH)/soapcpp2 -penv $(srcdir)/env.h
 
-$(srcdir)/stdsoap2.c:
+$(srcdir)/stdsoap2.cpp:
 	cp $(GSOAP_PATH)/stdsoap2.h $(srcdir)
-	cp $(GSOAP_PATH)/stdsoap2.c $(srcdir)
+	cp $(GSOAP_PATH)/stdsoap2.cpp $(srcdir)
+	cp $(GSOAP_PATH)/stl.h $(srcdir)
+	cp $(GSOAP_PATH)/stldeque.h $(srcdir)
+	cp $(GSOAP_PATH)/stllist.h $(srcdir)
+	cp $(GSOAP_PATH)/stlvector.h $(srcdir)
+	cp $(GSOAP_PATH)/stlset.h $(srcdir)
 
-$(srcdir)/iFolderClient.h: $(srcdir)/stdsoap2.c $(IFOLDER_CLIENT_WSDL)
-	$(GSOAP_PATH)/wsdl2h -c -o $@ $(IFOLDER_CLIENT_WSDL)
+$(srcdir)/iFolderWebClient.h: $(srcdir)/stdsoap2.cpp $(IFOLDER_CLIENT_WSDL)
+	$(GSOAP_PATH)/wsdl2h -o $@ $(IFOLDER_CLIENT_WSDL)
 
-$(srcdir)/iFolderClientLib.c: $(srcdir)/iFolderClient.h
-	$(GSOAP_PATH)/soapcpp2 -c -n -piFolder $(srcdir)/iFolderClient.h
+$(srcdir)/iFolderClientLib.cpp: $(srcdir)/iFolderWebClient.h
+	$(GSOAP_PATH)/soapcpp2 -n -piFolder $(srcdir)/iFolderWebClient.h
 
 #install-exec-local:
 #	$(mkinstalldirs) $(DESTDIR)$(includedir)/ifolder3
@@ -62,7 +68,7 @@ $(srcdir)/iFolderClientLib.c: $(srcdir)/iFolderClient.h
 #	rm -f $(DESTDIR)$(includedir)/ifolder3/libifsoap.h
 
 clean-local:
-	rm -f stdsoap2.* *.xml iFolderiFolder* *.nsmap env* soap* *.c *.h
+	rm -f stdsoap2.* *.xml iFolderiFolder* *.nsmap env* soap* *.c *.cpp *.h iFolderWebClient*
 	rm -rf $(COMMON_CLEAN_FILES)
 	
 distclean-local:

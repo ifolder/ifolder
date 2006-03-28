@@ -24,11 +24,15 @@
 #ifndef IFOLDERCHANGEENTRY_H_
 #define IFOLDERCHANGEENTRY_H_
 
+#include <QObject>
+#include <QString>
+//#include <QTime>
+
 class iFolderChangeEntry : public QObject
 {
 	Q_OBJECT
 	
-	Q_PROPERTY(time_t time READ time)
+//	Q_PROPERTY(QTime time READ time)
 	Q_PROPERTY(ChangeEntryType type READ type)
 	Q_PROPERTY(QString id READ id)
 	Q_PROPERTY(QString name READ name)
@@ -40,7 +44,7 @@ class iFolderChangeEntry : public QObject
 		
 		enum ChangeEntryType {Add, Modify, Delete, Unknown};
 		
-		time_t id();
+//		QTime time();
 		ChangeEntryType type();
 		QString id();
 		QString name();
@@ -49,6 +53,8 @@ class iFolderChangeEntry : public QObject
 	
 	private:
 		iFolderChangeEntry(QObject *parent = 0);
+
+		friend class iFolder;
 };
 
 #endif /*IFOLDERCHANGEENTRY_H_*/
