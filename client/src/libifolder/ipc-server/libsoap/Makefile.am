@@ -12,25 +12,25 @@ dist-hook:
 	rm -rf `find $(distdir) |grep envC.c`
 	rm -rf `find $(distdir) |grep stdsoap2.c`
 
-#lib_LTLIBRARIES=libifsoap.la
+lib_LTLIBRARIES=libsoap.la
 
 #override CFLAGS =
 
-#libifsoap_la_SOURCES =				\
-#	envC.c iFolderClientLib.c stdsoap2.c
+libsoap_la_SOURCES =				\
+	envC.c iFolderClientLib.c stdsoap2.c
 
-#libifsoap_la_CFLAGS =				\
-#	-DWITH_NONAMESPACES				\
+libsoap_la_CFLAGS =				\
+	-DWITH_NONAMESPACES				\
 #	-DWITH_COOKIES
 
-libifsoap_sources =					\
+libsoap_sources =					\
 	envC.c							\
 	iFolderClientLib.c				\
 	stdsoap2.c
 
 all: $(libifsoap_sources)
 
-#libifsoap_la_LDFLAGS =
+libsoap_la_LDFLAGS =
 
 envC.c: $(srcdir)/stdsoap2.c
 	> $(srcdir)/env.h

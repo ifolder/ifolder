@@ -18,9 +18,30 @@
 #  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
 #######################################################################
-SUBDIRS = ipc-server ipc-client
+SUBDIRS = 
 
-DIST_SUBDIRS = $(SUBDIRS) common
+DIST_SUBDIRS = $(SUBDIRS)
+
+INCLUDES =			\
+	-I$(top_srcdir)		\
+	-I$(top_builddir)
+
+lib_LTLIBRARIES = libifolder.la
+
+libifolder_LDFLAGS =
+
+#libifolder_SOURCES =
+
+#libifolder_HEADERS = \
+
+#if !WINDOWS
+#install-exec-hook:
+#	rm -f $(DESTDIR)$(libdir)/libifolder.a
+#	rm -f $(DESTDIR)$(libdir)/libifolder.la
+#fi
+
+#sdk:	
+#	$(MAKE) -C $(IFOLDER_OS) sdk
 
 maintainer-clean-local:
 	rm -f Makefile.in
