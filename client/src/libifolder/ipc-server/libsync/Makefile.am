@@ -1,10 +1,22 @@
 noinst_LIBRARIES = libsync.a
-#lib_LTLIBRARIES=libsync.la
 
 #override CFLAGS =
 
+if DARWIN
+libsync_a_CFLAGS =	\
+	-arch ppc		\
+	-arch i386
+libsync_a_CXXFLAGS =	\
+	-arch ppc		\
+	-arch i386
+#libsync_a_LDFLAGS =	\
+#	-arch ppc		\
+#	-arch i386
+endif
+
 libsync_a_SOURCES = \
 	placeholder.c
+
 #libsync_a_CXXFLAGS =
 #libsync_a_LIBADD =
 

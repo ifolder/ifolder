@@ -23,6 +23,8 @@
 
 #import "iFolderStatusIconApp.h"
 
+#include <ifolder-client.h>
+
 @implementation iFolderStatusIconApp
 
 //===================================================================
@@ -52,6 +54,7 @@
 - (IBAction)startSync:(id)sender
 {
 	[appStatusItem setImage:[NSImage imageNamed:@"syncbw22"]];
+	ifolder_client_initialize();
 }
 
 //===================================================================
@@ -61,6 +64,7 @@
 - (IBAction)stopSync:(id)sender
 {
 	[appStatusItem setImage:[NSImage imageNamed:@"ifolderbw22"]];
+	ifolder_client_uninitialize();
 }
 
 

@@ -6,6 +6,7 @@ noinst_LIBRARIES = libipcserver.a
 libipcserver_a_SOURCES = \
 	placeholder.c
 #libipcserver_a_CXXFLAGS =
+
 #libipcserver_a_LIBADD =
 
 #install-exec-local:

@@ -24,6 +24,9 @@ libsoap_a_CXXFLAGS = \
 	-DWITH_NONAMESPACES				\
 	-DWITH_COOKIES
 
+if DARWIN
+endif
+
 #libsoap_sources =					\
 #	envC.cpp					\
 #	iFolderClientLib.cpp				\

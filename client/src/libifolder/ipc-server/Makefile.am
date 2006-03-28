@@ -30,13 +30,12 @@ INCLUDES = \
 	$(QT4_CORE_INCLUDES)	\
 	$(QT4_NETWORK_INCLUDES)
 
-noinst_LIBRARIES = libifolder-trayapp.a
-#lib_LTLIBRARIES = libifolder-trayapp.la
+lib_LIBRARIES = libifolder-trayapp.a
 
-libifolder_trayapp_a_LIBADD =	\
-	libsync/libsync.a		\
-	libsoap/libsoap.a		\
-	libipcserver/libipcserver.a	
+#libifolder_trayapp_a_LIBADD =	\
+#	libsync/libsync.a		\
+#	libsoap/libsoap.a		\
+#	libipcserver/libipcserver.a	
 
 DEFINES = \
 	-DQT_NETWORK					\
@@ -47,10 +46,15 @@ libifolder_trayapp_a_CXXFLAGS = \
 	$(DEFINES)					\
 	$(QT4_FRAMEWORK_FLAG)
 	
-libifolder_trayapp_a_SOURCES = \
-	IFAccount.cpp
+c_api_sources = \
+	../common/ifolder-client.c
 
-#libifolder_trayapp_a_HEADERS =
+cpp_api_sources = \
+	IFAccount.cpp
+	
+libifolder_trayapp_a_SOURCES = \
+	$(c_api_sources)				\
+	$(cpp_api_sources)
 
 #if !WINDOWS
 #install-exec-hook:

@@ -58,6 +58,10 @@ AM_CONDITIONAL(LINUX, test "$IFOLDER_OS" = "linux")
 AM_CONDITIONAL(WINDOWS, test "$IFOLDER_OS" = "windows")
 AM_CONDITIONAL(DARWIN, test "$IFOLDER_OS" = "darwin")
 
+AC_SUBST(LINUX)
+AC_SUBST(WINDOWS)
+AC_SUBST(DARWIN)
+
 SRCDIR='$(top_srcdir)/src'
 TOOLDIR='$(top_srcdir)/tools'
 EMPTY=

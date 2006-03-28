@@ -21,17 +21,25 @@
  *
  ***********************************************************************/
 
-#ifndef IFOLDERCLIENT_H_
-#define IFOLDERCLIENT_H_
+#include <stdio.h>
+#include "ifolder-client.h"
 
-#include <QString>
-
-class iFolderClient : public QObject
+int
+ifolder_client_initialize(void)
 {
-	public:
-		initialize();
-		uninitialize();
-		startTrayApp(QString trayAppExePath);
-};
+	printf("ifolder_client_initialize()\n");
+	return 0;
+}
 
-#endif /*IFOLDERCLIENT_H_*/
+int
+ifolder_client_uninitialize(void)
+{
+	printf("ifolder_client_uninitialize()\n");
+	return 0;
+}
+
+int
+ifolder_start_tray_app(const char *tray_app_exe_path)
+{
+	return 0;
+}

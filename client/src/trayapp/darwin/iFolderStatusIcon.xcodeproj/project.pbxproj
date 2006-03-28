@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		216E646A09D99C3000EC53FD /* libifolder-trayapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 216E646909D99C3000EC53FD /* libifolder-trayapp.a */; };
+		216E647609D99DA200EC53FD /* libipcserver.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 216E647509D99DA200EC53FD /* libipcserver.a */; };
+		216E647A09D99DCC00EC53FD /* libsoap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 216E647909D99DCC00EC53FD /* libsoap.a */; };
+		216E647C09D99DE800EC53FD /* libsync.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 216E647B09D99DE800EC53FD /* libsync.a */; };
 		3E7A997C09B6A6DE00F4D4E3 /* iFolderStatusIconApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E7A997B09B6A6DE00F4D4E3 /* iFolderStatusIconApp.m */; };
 		3E86171409B6B2C500FCDC01 /* ifolderbw22.png in Resources */ = {isa = PBXBuildFile; fileRef = 3E86171309B6B2C500FCDC01 /* ifolderbw22.png */; };
 		3E86171609B6B2CA00FCDC01 /* ifolder.icns in Resources */ = {isa = PBXBuildFile; fileRef = 3E86171509B6B2CA00FCDC01 /* ifolder.icns */; };
@@ -36,6 +40,10 @@
 		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+		216E646909D99C3000EC53FD /* libifolder-trayapp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libifolder-trayapp.a"; path = "../../libifolder/ipc-server/libifolder-trayapp.a"; sourceTree = SOURCE_ROOT; };
+		216E647509D99DA200EC53FD /* libipcserver.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libipcserver.a; path = "../../libifolder/ipc-server/libipcserver/libipcserver.a"; sourceTree = SOURCE_ROOT; };
+		216E647909D99DCC00EC53FD /* libsoap.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsoap.a; path = "../../libifolder/ipc-server/libsoap/libsoap.a"; sourceTree = SOURCE_ROOT; };
+		216E647B09D99DE800EC53FD /* libsync.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsync.a; path = "../../libifolder/ipc-server/libsync/libsync.a"; sourceTree = SOURCE_ROOT; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = SOURCE_ROOT; };
 		29B97319FDCFA39411CA2CEA /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = SOURCE_ROOT; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
@@ -56,6 +64,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+				216E646A09D99C3000EC53FD /* libifolder-trayapp.a in Frameworks */,
+				216E647609D99DA200EC53FD /* libipcserver.a in Frameworks */,
+				216E647A09D99DCC00EC53FD /* libsoap.a in Frameworks */,
+				216E647C09D99DE800EC53FD /* libsync.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -97,9 +109,21 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		216E643509D92EF400EC53FD /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				216E647B09D99DE800EC53FD /* libsync.a */,
+				216E647909D99DCC00EC53FD /* libsoap.a */,
+				216E647509D99DA200EC53FD /* libipcserver.a */,
+				216E646909D99C3000EC53FD /* libifolder-trayapp.a */,
+			);
+			name = Libraries;
+			sourceTree = "<group>";
+		};
 		29B97314FDCFA39411CA2CEA /* iFolderStatusIcon */ = {
 			isa = PBXGroup;
 			children = (
+				216E643509D92EF400EC53FD /* Libraries */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -241,6 +265,15 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = (
+					"$(LIBRARY_SEARCH_PATHS)",
+					"$(SRCROOT)/../../libifolder/ipc-server",
+					"$(SRCROOT)/../../libifolder/ipc-server/libsoap",
+					"$(SRCROOT)/../../libifolder/ipc-client/.libs",
+					"$(SRCROOT)/../../libifolder/ipc-server/.libs",
+					"$(SRCROOT)/../../libifolder/ipc-server/libipcserver",
+					"$(SRCROOT)/../../libifolder/ipc-server/libsync",
+				);
 				PRODUCT_NAME = iFolderStatusIcon;
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = YES;
@@ -258,6 +291,15 @@
 				GCC_MODEL_TUNING = G5;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = (
+					"$(LIBRARY_SEARCH_PATHS)",
+					"$(SRCROOT)/../../libifolder/ipc-server",
+					"$(SRCROOT)/../../libifolder/ipc-server/libsoap",
+					"$(SRCROOT)/../../libifolder/ipc-client/.libs",
+					"$(SRCROOT)/../../libifolder/ipc-server/.libs",
+					"$(SRCROOT)/../../libifolder/ipc-server/libipcserver",
+					"$(SRCROOT)/../../libifolder/ipc-server/libsync",
+				);
 				PRODUCT_NAME = iFolderStatusIcon;
 				WRAPPER_EXTENSION = app;
 			};
@@ -272,6 +314,7 @@
 				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../../libifolder;
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 			};
@@ -286,6 +329,7 @@
 				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../../libifolder;
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 			};
