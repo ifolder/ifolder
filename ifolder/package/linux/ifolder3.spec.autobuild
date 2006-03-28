@@ -22,6 +22,8 @@ License:      GPL, LGPL
 Group:        System/GUI/Other
 Autoreqprov:  on
 Requires:     simias >= 1.4
+Requires:     gconf-sharp2
+Requires:     gnome-sharp2
 Requires:     gtk-sharp2
 Requires:     eel
 Obsoletes:    %{name} < %{version}
