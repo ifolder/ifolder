@@ -154,18 +154,31 @@ oldincludedir="/usr/include"
 infodir="${prefix}/info"
 mandir="${prefix}/man"
 
-dnl FIXME: For now, make --with-qt4-path REQUIRED!
 dnl ========================================================
 dnl Handle --with-qt4-path
 dnl ========================================================
+
 AC_ARG_WITH(qt4-path,
-        [  --with-qt4-path=PATH  set default --qt4-path to PATH (default: unknown)],
+        [  --with-qt4-path=PATH  set default --qt4-path to PATH (required on W32 and OSX)],
         [ QT4_PATH="$with_qt4_path" ],
-        [ QT4_PATH="unknown" ])
+        [ QT4_PATH="" ])
 AC_DEFINE_UNQUOTED(QT4_PATH, "$QT4_PATH", [Path to Qt 4 Installed Prefix])
 AC_SUBST(QT4_PATH)
-echo QT4_PATH=$QT4_PATH
 
+case $host_os in
+    linux*)
+    	if test "x$QT4_PATH" = "x"; then
+    		QT4_PATH=$(pkg-config --variable=prefix QtCore)
+    	fi
+    ;;
+esac
+
+dnl Make sure that QT4_PATH is set.  Bail if it's not!
+if test "x$QT4_PATH" = "x"; then
+  AC_MSG_ERROR(Cannot determine Qt 4.x install path.  You must specify --with-qt4-path=PATH !)
+fi
+
+echo QT4_PATH=$QT4_PATH
 
 dnl ========================================================
 dnl Set platform-specific variables
@@ -189,12 +202,21 @@ case $IFOLDER_OS in
 		SHARED_LIB_FLAG='-shared'
 		GSOAP_PATH="$TOOLDIR/gsoap/macosx-2.7"
 		libexecdir='${exec_prefix}'
-		QT4_INCLUDES="-I${QT4_PATH}/mkspecs/macx-g++ -I${QT4_PATH}/include"
-		QT4_CORE_INCLUDES="-I${QT4_PATH}/lib/QtCore.framework/Headers"
-		QT4_GUI_INCLUDES="-I${QT4_PATH}/lib/QtGui.framework/Headers"
-		QT4_NETWORK_INCLUDES="-I${QT4_PATH}/lib/QtNetwork.framework/Headers"
-		QT4_XML_INCLUDES="-I${QT4_PATH}/lib/QtXml.framework/Headers/"
-		QT4_FRAMEWORK_FLAG="-F${QT4_PATH}/lib"
+
+		QT4_CFLAGS="-I${QT4_PATH}/mkspecs/macx-g++ -I${QT4_PATH}/include -F${QT4_PATH}/lib"
+		QT4_LDFLAGS=""
+		
+		QT4_CORE_CFLAGS="-I${QT4_PATH}/lib/QtCore.framework/Headers"
+		QT4_CORE_LDFLAGS=""
+		
+		QT4_GUI_CFLAGS="-I${QT4_PATH}/lib/QtGui.framework/Headers"
+		QT4_GUI_LDFLAGS=""
+		
+		QT4_NETWORK_CFLAGS="-I${QT4_PATH}/lib/QtNetwork.framework/Headers"
+		QT4_NETWORK_LDFLAGS=""
+		
+		QT4_XML_CFLAGS="-I${QT4_PATH}/lib/QtXml.framework/Headers"
+		QT4_XML_LDFLAGS=""
     ;;
     #
     # Linux-specific configuration
@@ -223,6 +245,21 @@ case $IFOLDER_OS in
 		#AM_GNU_GETTEXT_VERSION(0.10.40)
 		#AM_GNU_GETTEXT(external)
     	libexecdir='${exec_prefix}'
+
+		QT4_CFLAGS="-I${QT4_PATH}/include/Qt"
+		QT4_LDFLAGS="-L${QT4_PATH}/lib -lz -lpthread -ldl"
+		
+		QT4_CORE_CFLAGS=""
+		QT4_CORE_LDFLAGS="-lQtCore"
+		
+		QT4_GUI_CFLAGS=""
+		QT4_GUI_LDFLAGS="-lQtGui"
+		
+		QT4_NETWORK_CFLAGS=""
+		QT4_NETWORK_LDFLAGS="-lQtNetwork"
+		
+		QT4_XML_CFLAGS=""
+		QT4_XML_LDFLAGS="-lQtXml"
     ;;
     #
     # Windows-specific configuration
@@ -286,6 +323,22 @@ case $IFOLDER_OS in
     	sbindir='${exec_prefix}'
     	libexecdir='${exec_prefix}'
     	libdir='${exec_prefix}'
+
+		# FIXME: Need to figure out what the correct QT4_* flags are for Windows
+		QT4_CFLAGS=""
+		QT4_LDFLAGS=""
+		
+		QT4_CORE_CFLAGS=""
+		QT4_CORE_LDFLAGS=""
+		
+		QT4_GUI_CFLAGS=""
+		QT4_GUI_LDFLAGS=""
+		
+		QT4_NETWORK_CFLAGS=""
+		QT4_NETWORK_LDFLAGS=""
+		
+		QT4_XML_CFLAGS=""
+		QT4_XML_LDFLAGS=""
     ;;
 esac
 AC_SUBST(CDEF)
@@ -311,18 +364,31 @@ AC_SUBST(SEP)
 AC_SUBST(SHARED_LIB_FLAG)
 AC_SUBST(TLBX)
 AC_SUBST(GSOAP_PATH)
-AC_SUBST(QT4_INCLUDES)
-AC_SUBST(QT4_CORE_INCLUDES)
-AC_SUBST(QT4_GUI_INCLUDES)
-AC_SUBST(QT4_NETWORK_INCLUDES)
-AC_SUBST(QT4_XML_INCLUDES)
-AC_SUBST(QT4_FRAMEWORK_FLAG)
 
-echo QT4_INCLUDES=$QT4_INCLUDES
-echo QT4_CORE_INCLUDES=$QT4_CORE_INCLUES
-echo QT4_NETWORK_INCLUES=$QT4_NETWORK_INCLUDES
-echo QT4_XML_INCLUDES=$QT4_XML_INCLUDES
-echo QT4_FRAMEWORK_FLAG=$QT4_FRAMEWORK_FLAG
+AC_SUBST(QT4_CFLAGS)
+AC_SUBST(QT4_LDFLAGS)
+AC_SUBST(QT4_CORE_CFLAGS)
+AC_SUBST(QT4_CORE_LDFLAGS)
+AC_SUBST(QT4_GUI_CFLAGS)
+AC_SUBST(QT4_GUI_LDFLAGS)
+AC_SUBST(QT4_NETWORK_CFLAGS)
+AC_SUBST(QT4_NETWORK_LDFLAGS)
+AC_SUBST(QT4_XML_CFLAGS)
+AC_SUBST(QT4_XML_LDFLAGS)
+
+dnl FIXME: remove these echo lines once we verify this works on all three platforms
+echo
+echo QT4_CFLAGS=$QT4_CFLAGS
+echo QT4_LDFLAGS=$QT4_LDFLAGS
+echo QT4_CORE_CFLAGS=$QT4_CORE_CFLAGS
+echo QT4_CORE_LDFLAGS=$QT4_CORE_LDFLAGS
+echo QT4_GUI_CFLAGS=$QT4_GUI_CFLAGS
+echo QT4_GUI_LDFLAGS=$QT4_GUI_LDFLAGS
+echo QT4_NETWORK_CFLAGS=$QT4_NETWORK_CFLAGS
+echo QT4_NETWORK_LDFLAGS=$QT4_NETWORK_LDFLAGS
+echo QT4_XML_CFLAGS=$QT4_XML_CFLAGS
+echo QT4_XML_LDFLAGS=$QT4_XML_LDFLAGS
+echo
 
 dnl ========================================================
 dnl Handle --enable-debug

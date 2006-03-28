@@ -25,10 +25,7 @@ DIST_SUBDIRS = $(SUBDIRS)
 INCLUDES = \
 	-I$(top_srcdir)		\
 	-I$(srcdir)/..		\
-	-I$(top_builddir)	\
-	$(QT4_INCLUDES)		\
-	$(QT4_CORE_INCLUDES)	\
-	$(QT4_NETWORK_INCLUDES)
+	-I$(top_builddir)
 
 lib_LIBRARIES = libifolder-trayapp.a
 
@@ -44,7 +41,14 @@ DEFINES = \
 
 libifolder_trayapp_a_CXXFLAGS = \
 	$(DEFINES)					\
-	$(QT4_FRAMEWORK_FLAG)
+	$(QT4_CFLAGS)				\
+	$(QT4_CORE_CFLAGS)			\
+	$(QT4_NETWORK_CFLAGS)
+
+libifolder_trayapp_a_LDFLAGS = \
+	$(QT4_LDFLAGS)				\
+	$(QT4_CORE_LDFLAGS)			\
+	$(QT4_NETWORK_LDFLAGS)
 	
 c_api_sources = \
 	../common/ifolder-client.c
