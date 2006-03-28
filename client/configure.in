@@ -440,5 +440,6 @@ AC_CONFIG_FILES([
   src/trayapp/windows/Makefile
   test/Makefile
   test/libifolder/Makefile
+  test/libifolder/ipc-server/Makefile
 ])
 AC_OUTPUT

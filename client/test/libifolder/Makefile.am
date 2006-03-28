@@ -1,8 +1,8 @@
-INCLUDES = -I$(top_srcdir)/src/libifolder
+SUBDIRS = ipc-server
 
-bin_PROGRAMS = testlibifolder
+DIST_SUBDIRS = $(SUBDIRS)
 
-testlibifolder_LDFLAGS = $(top_srcdir)/src/libifolder/.libs/libifolder.a
+.PHONY: test
 
-testlibifolder_SOURCES = \
-	test-libifolder.c
+test:
+	echo "FIXME: Add code here to run the unit tests"
