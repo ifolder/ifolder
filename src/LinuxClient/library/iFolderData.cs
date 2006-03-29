@@ -289,12 +289,9 @@ namespace Novell.iFolder
 								existingHolder.iFolder = ifolder;
 	
 								TreePath path = iFolderListStore.GetPath(iter);
-								iFolderListStore.EmitRowChanged(path, iter);
+								if (path != null)
+									iFolderListStore.EmitRowChanged(path, iter);
 							}
-//							else
-//							{
-//Console.WriteLine("*** SOMETHING WENT BAD IN iFolderData.Refresh() ***");
-//							}
 						}
 						else
 						{
@@ -629,12 +626,7 @@ namespace Novell.iFolder
 										new iFolderChangedHandler(
 											path, iter, iFolderListStore);
 									GLib.Idle.Add(changedHandler.IdleHandler);
-//									iFolderListStore.EmitRowChanged(path, iter);
 								}
-//								else
-//								{
-//Console.WriteLine("*** SOMETHING WENT BAD IN iFolderData.ReadiFolder() ***");
-//								}
 							}
 						}
 						else
@@ -758,12 +750,7 @@ namespace Novell.iFolder
 										new iFolderChangedHandler(
 											path, iter, iFolderListStore);
 									GLib.Idle.Add(changedHandler.IdleHandler);
-//									iFolderListStore.EmitRowChanged(path, iter);
 								}
-//								else
-//								{
-//Console.WriteLine("*** SOMETHING WENT BAD IN iFolderData.ReadAvailableiFolder() ***");
-//								}
 							}
 						}
 					}
@@ -879,9 +866,7 @@ namespace Novell.iFolder
 	    			iFolderWeb reviFolder = 
 						ifws.RevertiFolder(ifHolder.iFolder.ID);
 					if (reviFolder == null)
-					{
-						return null;
-					}
+						throw new Exception(Util.GS("The iFolder Web Service returned a null object when calling RevertiFolder().  You may want to restart your iFolder Client and attempt this operation again."));
 
 					ifHolder.iFolder = reviFolder;
 					if(reviFolder.IsSubscription)
@@ -894,7 +879,10 @@ namespace Novell.iFolder
 					// FIXME: Figure out if there's a better way to cause the UI to update besides causing a Refresh
 					Refresh();
 				}
-				catch{}
+				catch(Exception e)
+				{
+					throw new Exception(Util.GS("An exception occurred while attempting to revert the iFolder to a normal folder.  Exception message: ") + e.Message);
+				}
 
 				return ifHolder;
 			}
@@ -1091,10 +1079,6 @@ namespace Novell.iFolder
 			TreePath path = iFolderListStore.GetPath(iter);
 			if (path != null)
 				iFolderListStore.EmitRowChanged(path, iter);
-//			else
-//			{
-//Console.WriteLine("*** SOMETHING WENT BAD IN iFolderData.OniFolderSyncEvent() ***");
-//			}
 		}
 
 		private void OniFolderFileSyncEvent(object o, FileSyncEventArgs args)
@@ -1147,8 +1131,6 @@ namespace Novell.iFolder
 						TreePath path = iFolderListStore.GetPath(iter);
 						if (path != null)
 							iFolderListStore.EmitRowChanged(path, iter);
-//						else
-//Console.WriteLine("*** SOMETHING WENT BAD IN iFolderData.OniFolderFileSyncEvent() ***");
 					}
 				}
 			}
@@ -1265,10 +1247,8 @@ namespace Novell.iFolder
 		
 		public bool IdleHandler()
 		{
-			if (list != null && path != null)
-			{
+			if (list != null && path != null && list.IterIsValid(iter))
 				list.EmitRowChanged(path, iter);
-			}
 
 			return false;	// Don't keep calling this
 		}

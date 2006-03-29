@@ -292,5 +292,20 @@
       </locale>
     </schema>
 
+    <schema>
+      <key>/schemas/apps/ifolder3/debug/print_simias_event_errors</key>
+      <applyto>/apps/ifolder3/debug/print_simias_event_errors</applyto>
+      <owner>ifolder</owner>
+      <type>bool</type>
+      <default>false</default>
+      <locale name="C">
+         <short>Print Simias Event Errors</short>
+         <long>
+       Setting this to true will print errors that occur in SimiasEventBroker
+       to the console using System.Console.WriteLine.
+         </long>
+      </locale>
+    </schema>
+
   </schemalist>
 </gconfschemafile>
