@@ -50,6 +50,7 @@ namespace Novell.iFolder
 		private iFolderWebService	ifws;
 		private SimiasWebService	simws;
 		private iFolderData		ifdata;
+		private SimiasEventBroker	simiasEventBroker;
 
 		private Statusbar			MainStatusBar;
 		private ProgressBar		SyncBar;
@@ -210,6 +211,15 @@ namespace Novell.iFolder
 				domainController.DomainLoggedOut +=
 					new DomainLoggedOutEventHandler(OnDomainLoggedOutEvent);
 			}
+			
+			simiasEventBroker = SimiasEventBroker.GetSimiasEventBroker();
+			if (simiasEventBroker != null)
+			{
+				simiasEventBroker.CollectionSyncEventFired +=
+					new CollectionSyncEventHandler(OniFolderSyncEvent);
+				simiasEventBroker.FileSyncEventFired +=
+					new FileSyncEventHandler(OniFolderFileSyncEvent);
+			}
 		}
 		
 		~iFolderWindow()
@@ -224,6 +234,14 @@ namespace Novell.iFolder
 					new DomainLoggedInEventHandler(OnDomainLoggedInEvent);
 				domainController.DomainLoggedOut -=
 					new DomainLoggedOutEventHandler(OnDomainLoggedOutEvent);
+			}
+			
+			if (simiasEventBroker != null)
+			{
+				simiasEventBroker.CollectionSyncEventFired -=
+					new CollectionSyncEventHandler(OniFolderSyncEvent);
+				simiasEventBroker.FileSyncEventFired -=
+					new FileSyncEventHandler(OniFolderFileSyncEvent);
 			}
 		}
 
@@ -2615,8 +2633,11 @@ namespace Novell.iFolder
 				ResolveConflicts(holder);
 		}
 		
-		public void HandleSyncEvent(CollectionSyncEventArgs args)
+		private void OniFolderSyncEvent(object o, CollectionSyncEventArgs args)
 		{
+			if (args == null || args.ID == null || args.Name == null)
+				return;	// Prevent a null object exception
+
 			switch(args.Action)
 			{
 				case Simias.Client.Event.Action.StartLocalSync:
@@ -2671,8 +2692,11 @@ namespace Novell.iFolder
 			// Maybe emit a NewConflictEvent here?
 		}
 
-		public void HandleFileSyncEvent(FileSyncEventArgs args)
+		private void OniFolderFileSyncEvent(object o, FileSyncEventArgs args)
 		{
+			if (args == null || args.CollectionID == null || args.Name == null)
+				return;	// Prevent a null object exception
+
 			if (args.SizeRemaining == args.SizeToSync)
 			{
 				if (!args.Direction.Equals(Simias.Client.Event.Direction.Local))

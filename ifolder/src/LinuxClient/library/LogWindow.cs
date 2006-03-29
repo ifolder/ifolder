@@ -30,6 +30,7 @@ using System.Collections;
 using Gtk;
 using Simias.Client;
 using Simias.Client.Event;
+using Novell.iFolder.Events;
 using Novell.iFolder.Controller;
 
 namespace Novell.iFolder
@@ -51,6 +52,7 @@ namespace Novell.iFolder
 		private ToolButton			ClearButton;
 		private bool				ControlKeyPressed;
 //		private Manager				simiasManager;
+		private SimiasEventBroker	simiasEventBroker;
 		
 
 		/// <summary>
@@ -67,6 +69,26 @@ namespace Novell.iFolder
 			ControlKeyPressed = false;
 			KeyPressEvent += new KeyPressEventHandler(KeyPressHandler);
 			KeyReleaseEvent += new KeyReleaseEventHandler(KeyReleaseHandler);
+			
+			simiasEventBroker = SimiasEventBroker.GetSimiasEventBroker();
+			if (simiasEventBroker != null)
+			{
+				simiasEventBroker.CollectionSyncEventFired +=
+					new CollectionSyncEventHandler(OniFolderSyncEvent);
+				simiasEventBroker.FileSyncEventFired +=
+					new FileSyncEventHandler(OniFolderFileSyncEvent);
+			}
+		}
+
+		~LogWindow()
+		{
+			if (simiasEventBroker != null)
+			{
+				simiasEventBroker.CollectionSyncEventFired -=
+					new CollectionSyncEventHandler(OniFolderSyncEvent);
+				simiasEventBroker.FileSyncEventFired -=
+					new FileSyncEventHandler(OniFolderFileSyncEvent);
+			}
 		}
 
 		void KeyPressHandler(object o, KeyPressEventArgs args)
@@ -238,8 +260,11 @@ namespace Novell.iFolder
 
 
 
-		public void HandleSyncEvent(CollectionSyncEventArgs args)
+		private void OniFolderSyncEvent(object o, CollectionSyncEventArgs args)
 		{
+			if (args == null || args.ID == null || args.Name == null)
+				return;	// Prevent a null object exception
+
 			switch(args.Action)
 			{
 				case Simias.Client.Event.Action.StartLocalSync:
@@ -291,8 +316,11 @@ namespace Novell.iFolder
 		}
 
 
-		public void HandleFileSyncEvent(FileSyncEventArgs args)
+		private void OniFolderFileSyncEvent(object o, FileSyncEventArgs args)
 		{
+			if (args == null || args.CollectionID == null || args.Name == null)
+				return;	// Prevent a null object exception
+
 			try
 			{
 				string message = null;

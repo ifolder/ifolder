@@ -194,11 +194,6 @@ namespace Novell.iFolder
 			forceShutdown = false;
 
 			ClientUpgradeDialog = null;
-
-//			logwin = new LogWindow();
-//			logwin.Destroyed +=
-//					new EventHandler(LogWindowDestroyedHandler);
-//			logwinShown = false;
 		}
 
 
@@ -459,14 +454,6 @@ namespace Novell.iFolder
 					gAppIcon.Pixbuf = DownloadingPixbuf;
 					currentIconAnimationDirection = -1;
 				}
-
-				iFolderWindow ifwin = Util.GetiFolderWindow();
-				if(ifwin != null)
-					ifwin.HandleFileSyncEvent(args);
-
-				LogWindow logwin = Util.GetLogWindow(simiasManager);
-				if(logwin != null)
-					logwin.HandleFileSyncEvent(args);
 			}
 			catch {}
 
@@ -618,18 +605,6 @@ namespace Novell.iFolder
 					break;
 				}
 			}
-
-			try
-			{
-				iFolderWindow ifwin = Util.GetiFolderWindow();
-				if(ifwin != null)
-					ifwin.HandleSyncEvent(args);
-	
-				LogWindow logwin = Util.GetLogWindow(simiasManager);
-				if(logwin != null)
-					logwin.HandleSyncEvent(args);
-			}
-			catch {}
 		}
 
 
