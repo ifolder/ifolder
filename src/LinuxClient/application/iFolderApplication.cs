@@ -395,23 +395,62 @@ namespace Novell.iFolder
 			switch (args.ResponseId)
 			{
 				case Gtk.ResponseType.Ok:
-					Status status =
-						domainController.AuthenticateDomain(
-							LoginDialog.Domain,
-							LoginDialog.Password,
-							LoginDialog.ShouldSavePassword);
-					if (status == null ||
-						(status.statusCode != StatusCodes.Success &&
-						 status.statusCode != StatusCodes.SuccessInGrace))
+					DomainInformation dom = domainController.GetDomain(LoginDialog.Domain);
+					if (dom == null)
 					{
-						Util.ShowLoginError(LoginDialog, status.statusCode);
-					}
-					else
-					{
-						// Login was successful so close the Login dialog
+						iFolderMsgDialog dialog = new iFolderMsgDialog(
+							null,
+							iFolderMsgDialog.DialogType.Error,
+							iFolderMsgDialog.ButtonSet.None,
+							Util.GS("Account Error"),
+							Util.GS("This account has been removed from your computer."),
+							Util.GS("If you wish to connect to this account again, please add it in the Account Settings Dialog."));
+						dialog.Run();
+						dialog.Hide();
+						dialog.Destroy();
+						dialog = null;
+						
 						LoginDialog.Hide();
 						LoginDialog.Destroy();
 						LoginDialog = null;
+						break;
+					}
+
+					try
+					{
+						Status status =
+							domainController.AuthenticateDomain(
+								LoginDialog.Domain,
+								LoginDialog.Password,
+								LoginDialog.ShouldSavePassword);
+						if (status == null ||
+							(status.statusCode != StatusCodes.Success &&
+							 status.statusCode != StatusCodes.SuccessInGrace))
+						{
+							Util.ShowLoginError(LoginDialog, status.statusCode);
+						}
+						else
+						{
+							// Login was successful so close the Login dialog
+							LoginDialog.Hide();
+							LoginDialog.Destroy();
+							LoginDialog = null;
+						}
+					}
+					catch(Exception e)
+					{
+						iFolderMsgDialog dialog = new iFolderMsgDialog(
+							null,
+							iFolderMsgDialog.DialogType.Error,
+							iFolderMsgDialog.ButtonSet.None,
+							Util.GS("Account Error"),
+							Util.GS("Unable to connect to the iFolder Server"),
+							Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."),
+							e.Message);
+						dialog.Run();
+						dialog.Hide();
+						dialog.Destroy();
+						dialog = null;
 					}
 
 					break;
