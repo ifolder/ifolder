@@ -74,13 +74,10 @@ namespace Novell.iFolder
 		private Gtk.ThreadNotify	iFolderAppStateChanged;
 		private SimiasEventBroker	simiasEventBroker;
 		private	iFolderLoginDialog	LoginDialog;
-//		private bool				logwinShown;
 
-		/// These variables are used to track when to animate the
-		/// iFolder Icon in the notification panel.  The animation
-		/// should only occur when files/folders are actually
-		/// being uploaded/downloaded.
-		private bool				bCollectionIsSynchronizing;
+		/// This variables is used to track the state of the iFolder
+		/// Icon in the notification panel.  The animation should
+		/// only occur when files/folders are being uploaded/downloaded.
 		// 0 = Not animating, 1 = uploading, -1 = downloading
 		private int					currentIconAnimationDirection;
 		
@@ -146,7 +143,6 @@ namespace Novell.iFolder
 
 			tIcon = new TrayIcon("iFolder");
 
-			bCollectionIsSynchronizing = false;
 			currentIconAnimationDirection = 0;
 
 			eBox = new EventBox();
@@ -441,18 +437,20 @@ namespace Novell.iFolder
 			{
 				// Animate the iFolder Icon only when we're actually uploading
 				// or downloading a file/directory.
-				if (args.Direction == Simias.Client.Event.Direction.Uploading
-					&& bCollectionIsSynchronizing && currentIconAnimationDirection != 1)
+				if (args.ObjectType == ObjectType.File || args.ObjectType == ObjectType.Directory)
 				{
-					gAppIcon.Pixbuf = UploadingPixbuf;
-					currentIconAnimationDirection = 1;
-				}
-				else if (args.Direction == Simias.Client.Event.Direction.Downloading
-						 && bCollectionIsSynchronizing
-						 && currentIconAnimationDirection != -1)
-				{
-					gAppIcon.Pixbuf = DownloadingPixbuf;
-					currentIconAnimationDirection = -1;
+					if (args.Direction == Simias.Client.Event.Direction.Uploading
+						&& currentIconAnimationDirection != 1)
+					{
+						gAppIcon.Pixbuf = UploadingPixbuf;
+						currentIconAnimationDirection = 1;
+					}
+					else if (args.Direction == Simias.Client.Event.Direction.Downloading
+								&& currentIconAnimationDirection != -1)
+					{
+						gAppIcon.Pixbuf = DownloadingPixbuf;
+						currentIconAnimationDirection = -1;
+					}
 				}
 			}
 			catch {}
@@ -546,14 +544,11 @@ namespace Novell.iFolder
 			{
 				case Simias.Client.Event.Action.StartSync:
 				{
-					bCollectionIsSynchronizing = true;
-
 					collectionSynchronizing = args.ID;
 					break;
 				}
 				case Simias.Client.Event.Action.StopSync:
 				{
-					bCollectionIsSynchronizing = false;
 					currentIconAnimationDirection = 0;
 					gAppIcon.Pixbuf = RunningPixbuf;
 
