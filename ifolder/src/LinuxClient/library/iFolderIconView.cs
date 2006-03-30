@@ -132,15 +132,18 @@ namespace Novell.iFolder
 		
 		public void AddGroup(iFolderViewGroup group)
 		{
+			if (viewGroups.Contains(group))
+				return;	// Don't add something that's already there
+
 			viewGroups.Add(group);
 
-			group.Selection.SelectionChanged += 
-				new EventHandler(SelectionChangedHandler);
-			
 			vbox.PackStart(group, false, false, 0);
 
 			group.RebuildTable();
 
+			group.Selection.SelectionChanged += 
+				new EventHandler(SelectionChangedHandler);
+			
 			vbox.ShowAll();
 		}
 		

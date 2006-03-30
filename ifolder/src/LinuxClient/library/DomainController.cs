@@ -319,7 +319,6 @@ namespace Novell.iFolder.Controller
 						DomainAddedIdleHandler addedHandler =
 							new DomainAddedIdleHandler(dom.ID, this);
 						GLib.Idle.Add(addedHandler.IdleHandler);
-//						DomainAdded(this, new DomainEventArgs(dom.ID));
 					}
 				}
 			}
@@ -503,7 +502,11 @@ namespace Novell.iFolder.Controller
 
 						// Notify DomainAddedEventHandlers
 						if (DomainAdded != null)
-							DomainAdded(this, new DomainEventArgs(domainID));
+						{
+							DomainAddedIdleHandler addedHandler =
+								new DomainAddedIdleHandler(domainID, this);
+							GLib.Idle.Add(addedHandler.IdleHandler);
+						}
 					}
 				}
 			}
@@ -781,7 +784,11 @@ namespace Novell.iFolder.Controller
 
 						// Notify DomainAddedEventHandlers
 						if (DomainAdded != null)
-							DomainAdded(this, new DomainEventArgs(domainID));
+						{
+							DomainAddedIdleHandler addedHandler =
+								new DomainAddedIdleHandler(domainID, this);
+							GLib.Idle.Add(addedHandler.IdleHandler);
+						}
 					}
 				}
 			}
@@ -958,6 +965,9 @@ namespace Novell.iFolder.Controller
 		{
 			lock (typeof(DomainController) )
 			{
+				if (args == null || args.DomainID == null)
+					return;	// Prevent null object reference exception
+					
 				DomainInformation domain = (DomainInformation)keyedDomains[args.DomainID];
 				if (domain != null)
 				{
@@ -981,7 +991,11 @@ namespace Novell.iFolder.Controller
 	
 				// Notify DomainAddedEventHandlers
 				if (DomainAdded != null)
-					DomainAdded(this, args);
+				{
+					DomainAddedIdleHandler addedHandler =
+						new DomainAddedIdleHandler(args.DomainID, this);
+					GLib.Idle.Add(addedHandler.IdleHandler);
+				}
 			}
 		}
 
