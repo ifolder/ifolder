@@ -1198,6 +1198,9 @@ namespace Novell.iFolder
 
 		private void quit_ifolder(object o, EventArgs args)
 		{
+			if (simiasEventBroker != null)
+				simiasEventBroker.AbortEventProcessing();
+
 			if (!forceShutdown)
 			{
 				Util.SaveiFolderWindows();
