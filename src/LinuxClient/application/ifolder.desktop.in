@@ -1,9 +1,9 @@
 [Desktop Entry]
 X-SuSE-translate=false
-Categories=Application;Development;Application;Documentation;
+Categories=Application;Utility;Filesystem;
 Name=iFolder 3
 GenericName=Collaborative File Sharing
-Comment=iFolder Collaborative File Sharing Tool
+Comment=Backup, synchronize, and share files with others
 Exec=@_bindir_@/ifolder
 Icon=@_datadir_@/ifolder3/images/ifolder24.png
 StartupNotify=false
