@@ -1125,6 +1125,9 @@ namespace Novell.iFolder
 					
 					if (ifHolder != null)
 					{
+						if (ifHolder.State != iFolderState.Synchronizing)
+							ifHolder.State = iFolderState.Synchronizing;
+
 						ifHolder.ObjectsToSync = objectsToSync;
 
 						// Emit a TreeModel RowChanged Event
