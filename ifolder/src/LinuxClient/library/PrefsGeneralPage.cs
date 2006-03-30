@@ -442,9 +442,11 @@ namespace Novell.iFolder
 					return;
 				}
 	
+				SyncSpinButton.ValueChanged -= new EventHandler(OnSyncIntervalChanged);
 				SyncSpinButton.Value = 0;
 				SyncSpinButton.Sensitive = false;
 				SyncUnitsComboBox.Sensitive = false;
+				SyncSpinButton.ValueChanged += new EventHandler(OnSyncIntervalChanged);
 			}
 		}
 
