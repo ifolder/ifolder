@@ -1,111 +1,53 @@
-/* format body element */	
-	body { background-color:#FFFFFF; color:#333; margin: .2in; padding:0; font-family: Arial, Helvetica, sans-serif; line-height: 14pt; font-size: 10pt; font-weight: normal;}
-
 /* setting font size for major headings */
-	div.book h1.title {font-family: Arial, Helvetica, sans-serif; font-size: 17pt; font-weight: bold; text-decoration: none; color: #CC0000; margin-bottom: 4pt;}
-	div.part h1.title {font-family: Arial, Helvetica, sans-serif; font-size: 14pt; font-weight: bold; text-decoration: none; color: #CC0000; margin-bottom: 4pt;}
-	div.part h1.title span.number {font-family: Times, serif; font-size: 17pt; font-weight: bold; text-decoration: none; color: #000000; margin-right: 6pt; margin-bottom: 4pt;}
-	h1.book {font-family: Arial, Helvetica, sans-serif; font-size: 14pt; font-weight: bold; text-decoration: none; color: #CC0000; margin-bottom: 4pt;}
-	div.chapter h1.title {font-family: Arial, Helvetica, sans-serif; font-size: 14pt; font-weight: bold; text-decoration: none; color: #CC0000; margin-bottom: 4pt;}
-	div.appendix h1.title {font-family: Arial, Helvetica, sans-serif; font-size: 14pt; font-weight: bold; text-decoration: none; color: #CC0000; margin-bottom: 4pt;}
-	div.chapter h1.title span.number {font-family: Arial, Helvetica, sans-serif; font-size: 14pt; font-weight: bold; text-decoration: none; color: #000000; margin-right: 6pt; margin-bottom: 4pt;}
-	div.appendix h1.title span.number {font-family: Arial, Helvetica, sans-serif; font-size: 14pt; font-weight: bold; text-decoration: none; color: #000000; margin-right: 6pt; margin-bottom: 4pt;}
-	h2.title {font-family: Arial, Helvetica, sans-serif; font-size: 12pt; font-weight: bold; text-decoration: none; color: #000000;}
-	h3.title {font-family: Arial, Helvetica, sans-serif; font-size: 11pt; font-weight: bold; color: #000000; margin-top: 20pt; margin-bottom: -4pt;}
-	h4.title { font:bold 10pt; arial,helvetica,sans-serif; color:#333; margin-top: 20pt; margin-bottom: -6pt;}
-	h4.bridgehead { font:bold 10pt; arial,helvetica,sans-serif; color:#333; margin-top: 20pt; margin-bottom: -6pt;}
-	h5 { font:bold 0.8em verdana,arial,helvetica,sans-serif; }
-	div.sect1 margin-bottom: {margin-bottom: 10pt;}
-	div.refentry p.refname {font-family: Arial, Helvetica, sans-serif; font-size: 13pt; font-weight: bold; text-decoration: none; color: #000000;}
-	div.refsect1 h2.title {font-family: Arial, Helvetica, sans-serif; font-size: 12pt; font-weight: bold; color: #000000; margin-top: 20pt; margin-bottom: -4pt;}
-	div.msgexplan {margin: 0px 0px 7px 0px;}
-	div.msgexplan span.title {margin: 0px 7px 0px 0px; font-family: Arial, Helvetica, sans-serif; font-size: 9pt; font-weight: bold; color: #000000;}
-	div.msgtext p.para {margin: 4px 0px 16px 0px; font-family: Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: bold; color: #B00000;}
-	
-/*H1 {font-family: Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: bold; text-decoration: none; color: #CC0000;}*/
-	H2 {font-family: Arial, Helvetica, sans-serif; font-size: 13pt; font-weight: bold; text-decoration: none; color: #000000;}
-	H3 {font-family: Arial, Helvetica, sans-serif; font-size: 11pt; font-weight: bold; color: #000000;}
-	H4 {font-family: Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: bold; color: #000000;}
-	H5 {font-family: Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: bold; color: #000000;} 
-	H1.TSHOOTENTRY-TITLE {font-family: Arial, Helvetica, sans-serif; font-size: 13pt; font-weight: bold; text-decoration: none; color: #000000;}
+	H1 {font:22px/26px trebuchet ms,arial,helvetica,sans-serif; color:#C00}
+	H2 {font:bold 14px verdana,arial,helvetica,sans-serif; color:#C00}
+	H3 {font:bold 13px verdana,arial,helvetica,sans-serif; color:#000}
+	H4 {font:bold 14px/18px trebuchet ms,arial,helvetica,sans-serif; color:#C00}
+	H1.TSHOOTENTRY-TITLE {font:bold 14px verdana,arial,helvetica,sans-serif; color:#C00}
 
-/* format link elements */
-	a {text-decoration:none; color:#0000CC;}
-	a:hover {color:#3366FF;}
-	a:visited {color:#993333;}
-/*	li.listitem a {text-decoration:none; #0000FF}*/
-	li.listitem a:hover {color:#3366FF;}
-	a.ulink a:hover {text-decoration:none; color:#3366FF;}
+/* format body element */	
+BODY {font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: normal; color: #000000; background-color: #FFFFFF; margin: .2in}
+
+/* format link elements 	
+	A:link {color:#666666;}
+	A:active {color:#FF9933;}
+	A:visited {color:#CC0000;} */
 
 /* format paragraph elements */	
-	p.para {font-family: Arial, Helvetica, sans-serif; line-height: 14pt; font-size: 10pt; font-weight: normal; color: #000000; background-color: #FFFFFF;}
-	p.refpurpose {font-family: Arial, Helvetica, sans-serif; line-height: 14pt; font-size: 10pt; font-weight: normal; color: #000000; background-color: #FFFFFF;}
+	P {font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: normal; color: #000000;}
 	P.TABLEWITHTITLE {font-weight: bold; color: #000000; font-style: normal}
 	P.MSGTEXT {font-style: italic; font-weight: normal}
 	P.SOURCEREG {font-style: italic; font-weight: normal}
+	P.NOTE {font-style: normal;}
+	P.NOTE-HINT {font-style: normal;}
+	P.NOTE-IMPORTANT {font-style: normal;}
+	P.NOTE-WARNING {font-style: normal;}
 	P.PROBLEM {font-style: normal;}
 	P.POSSCAUSE {font-style: normal;}
-	P.HEAD {font-family: Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: normal; color: #000000;}
-	P.Trademark {font-family: Arial, Helvetica, sans-serif; font-size: 9pt; font-weight: normal; color: #000000;}
-	P.STRING {font-family: Arial, Helvetica, sans-serif; font-size: 13pt; font-weight: bold; text-decoration: none; color: #000000;}
-	P.ENTRY {font-family: Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: normal; color: #000000; margin-top: -5px;}
-	p.table {font-weight: bold;}
-	.replaceable {font-style: italic;}
-	pre.screen {font-family: monospace; font-size: 10pt; margin: 10px 0px 0px 0px; padding: 0px 0px 0px 5px;}
-	li.listitem pre.screen {font-family: monospace; font-size: 10pt; margin: 10px 0px 0px 0px; padding: 0px 0px 4px 0px;}
-	.citetitle {font-style: italic;}
-	.guimenu {font-style: italic;}
-	p.glossterm {font-family: Arial, Helvetica, sans-serif; font-weight: bold;}
-	div.glossdef {margin:-10pt 0 0 0;}
-	
-/* format single file toc elements */
-	div.toc {line-height: 11.5pt; background-color: #EEEEEE;  margin: 20px 0px 24px 0px; padding: 1px 0px 5px 0px}
-	div.toc a {text-decoration:underline}
-	div.toc h2 {margin-left: 5px}
-	div.toc div.toc1 {font-weight: normal; margin: 10px 10px 6px 5px}
-	div.toc div.toc2 {font-weight: normal; margin: 0px 10px 5px 25px}
-	div.toc div.toc3 {font-weight: normal; margin: 0px 10px 2px 50px}
-	div.toc div.toc4 {font-weight: normal; margin: 0px 10px 2px 75px}
-	div.note {margin: 12px 0px 5px 0px; padding-bottom: 0px; border-bottom: 1px solid #999999; color: #999999; padding-top: 0px; border-top: 1px solid #999999; color: #999999;}
-	div.note p.para {margin:2px 0 3px 8px;}
-	div.note p.para em.title {margin: 0px 7px 0px 0px; font-weight: bold; font-style: normal;}
-	div.tip {margin: 12px 0px 10px 0px; padding-bottom: 0px; border-bottom: 1px solid #999999; color: #999999; padding-top: 0px; border-top: 1px solid #999999; color: #999999;}
-	div.tip p.para {margin:3px 0 5px 8px;}
-	div.tip p.para em.title {margin: 0px 7px 0px 0px; font-weight: bold; font-style: normal;}
-	div.important {margin: 12px 0px 5px 0px; padding-bottom: 0px; border-bottom: 1px solid #999999; color: #999999; padding-top: 0px; border-top: 1px solid #999999; color: #999999;}
-	div.important p.para {margin:3px 0 5px 8px;}
-	div.important p.para em.title {margin: 0px 7px 0px 0px; font-weight: bold; font-style: normal;}
-	div.warning {margin: 12px 0px 5px 0px; padding-bottom: 0px; border-bottom: 1px solid #999999; color: #999999; padding-top: 0px; border-top: 1px solid #999999; color: #999999;}
-	div.warning p.para {margin:3px 0 5px 8px;}
-	div.warning p.para em.title {margin: 0px 7px 0px 0px; font-weight: bold; font-style: normal; color: #CC0000}
-	div.figure em.figure {font-family: Arial, Helvetica, sans-serif; font-size: 9pt; font-style: normal; font-weight: bold; color: #000000; margin:5px 5px 0 0;}
-	div.figure em.title {font-family: Times, serif; font-size: 10pt; font-style: italic; font-weight: normal; color: #000000;}
-	div.figure p.title em.num {font-family: Arial, Helvetica, sans-serif; font-size: 9pt; font-style: normal; font-weight: bold; color: #000000; margin:0 5px 0px 0;}
-	div.figure p.title {font-family: Arial, Helvetica, sans-serif; font-size: 9pt; font-style: normal; font-weight: normal; color: #000000;}
-	div.table p.title em.num {font-family: Arial, Helvetica, sans-serif; font-size: 9pt; font-style: normal; font-weight: bold; color: #000000; margin:0 5px 0px 0;}
-	p.title {margin:10px 0 4px 0;}
-	div.table p.title {font-family: Arial, Helvetica, sans-serif; font-size: 9pt; font-style: normal; font-weight: normal; color: #000000;}
-	div.formalpara table.topbot-lines {margin:0px 0 16px 0;}
-	div.formalpara em.title {font-family: Arial, Helvetica, sans-serif; font-size: 10pt; font-style: normal; font-weight: bold; color: #000000; margin:0 5px 0 0;}
-	div.formalpara p.title {font-family: Arial, Helvetica, sans-serif; font-size: 10pt; font-style: normal; font-weight: normal; color: #000000;}
-	div.procedure ol.steps li.step {list-style-type: decimal; font-weight: bold;}
-	div.procedure h1.title {font-family: Arial, Helvetica, sans-serif; font-size: 11pt; font-weight: bold; color: #000000; margin-top: 20pt; margin-bottom: -4pt;}
-	div.informalpara table.topbot-lines {margin:0px 0 16px 0;}
-	div.informaltable table.topbot-lines {margin:10px 0 7px 0;}
+	P.HEAD {font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: normal; color: #000000;}
+	P.Trademark {font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif; font-size: 9pt; font-weight: normal; color: #000000;}
+	P.STRING {font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif; font-size: 13pt; font-weight: bold; text-decoration: none; color: #000000;}
 
-	
+/* format Readme Toc elements */
+	DIV.READMETOC0 {font-style: normal; margin: 0px 10px 6px 0px; margin-top: 14px}
+	DIV.READMETOC1 {font-style: normal; margin: 0px 10px 5px 25px}
+	DIV.READMETOC2 {font-style: normal; margin: 0px 10px 2px 54px}
+	DIV.READMETOC3 {font-style: normal; margin: 0px 10px 2px 89px}
+	DIV.RELEASEDATE {font-style: normal;margin-top: -12px}
+
 /* set weight and style for these elements */	
-	tt.command {font-weight: bold; font-style: normal}
+	TT.COMMAND {font-weight: bold; font-style: normal}
 	TT.PARAMETER {font-style: italic; font-weight: normal}
 	TT.USERINPUT {font-weight: bold; font-style: normal}
 
 /* apply bold emphasis */	
-	EM.PARAWITHTITLE {font-weight: bold; font-style: normal; margin-top: -25px;}
+	EM.FIGURE {font-weight: bold; font-style: normal}
+	EM.PARAWITHTITLE {font-weight: bold; font-style: normal}
 	EM.REFCLASS {font-weight: bold; font-style: normal}
 	EM.FUNCTION {font-weight: bold; font-style: normal}
 	EM.GLOSSTERM {font-weight: bold; font-style: normal}
 	EM.OPTION {font-weight: bold; font-style: normal}
-	EM.STRING {font-family: Arial, Helvetica, sans-serif; font-size: 13pt; font-weight: bold; font-style: normal; text-decoration: none; color: #000000;}
+	EM.STRING {font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif; font-size: 13pt; font-weight: bold; font-style: normal; text-decoration: none; color: #000000;}
 	EM.TSUBHEAD {font-weight: bold; font-style: normal; color: #000000}
 	EM.TBLHEAD {font-size: 10pt; font-weight: font-size: 10pt; bold; font-style: normal; color: #edeeec}
 	EM.PROBLEM {font-weight: bold; font-style: normal}
@@ -113,43 +55,33 @@
 	EM.ACTION {font-weight: bold; font-style: normal}
 	EM.SOURCE {font-weight: bold; font-style: normal}
 	EM.POSSCAUSE {font-weight: bold; font-style: normal}
-
+	EM.NOTE {font-weight: bold; font-style: normal}
+	EM.NOTE-HINT {font-weight: bold; font-style: normal}
+	EM.NOTE-IMPORTANT {font-weight: bold; font-style: normal}
+	EM.NOTE-WARNING {font-weight: bold; color: red; font-style: normal}
 	
 /* apply italic emphasis */	
 	EM.DISKNAME {font-style: italic; font-weight: normal}
 	EM.EMPHASIS {font-style: italic; font-weight: normal}
-	/*EM.MANUALTITLE {font-style: italic; font-weight: normal}*/
+	EM.MANUALTITLE {font-style: italic; font-weight: normal}
 	EM.VARIABLE {font-style: italic; font-weight: normal}
 	EM.VARNAME {font-style: italic;}
 	EM.VERSIONVARIABLE {font-style: italic; font-weight: normal}
 
 /* apply bold and italic emphasis */	
 	EM.MSGTEXT {font-weight: bold; font-style: italic}
-	
 
 
 /* table formating styles */
-	td {font-family: Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: normal; color: #000000;}
-	table.topbot-lines {border-spacing: 0px; border-top:2px solid #000000; border-bottom:1px solid #606060;}
-	table.topbot-lines tr.headerrow th {border-bottom:1px solid #000000; border-top:none; padding: 4px 4px 4px 4px; background-color: #D8D8D8}
-	table.topbot-lines tr.headerrow th p.para {font-family: Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: bold; color: #404040; margin:1pt 0 0 0; background-color: #D8D8D8}
-	table.topbot-lines tr.evenrow td p.para {font-family: Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: normal; color: #000000; margin:1pt 0 2pt 0; padding: 4px 8px 4px 6px; background-color: #E8E8E8}
-	table.topbot-lines tr.evenrow {background-color: #E8E8E8}
-	table.topbot-lines tr.oddrow {background-color: #F8F8F8}
-	table.topbot-lines tr.oddrow td p.para {font-family: Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: normal; color: #000000; margin:1pt 0 2pt 0; padding: 4px 8px 4px 6px; background-color: #F8F8F8}
-	table.all-lines tr.oddrow {background-color: #F8F8F8}
-	table.all-lines tr.oddrow td p.para {font-family: Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: normal; color: #000000; margin:1pt 0 2pt 0; padding: 4px 8px 4px 6px; background-color: #F8F8F8}
-	table.all-lines tr.evenrow td p.para {font-family: Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: normal; color: #000000; margin:1pt 0 2pt 0; padding: 4px 8px 4px 6px; background-color: #E8E8E8}
-	table.all-lines {border-spacing: 0px; border-top:2px solid #000000; border-bottom:1px solid #606060;}
-	table.all-lines tr.evenrow {background-color: #E8E8E8}
-	table.no-lines tr.headerrow {background-color: none}
-	table.no-lines tr.headerrow th p.para {font-family: Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: bold; color: #404040; margin:1pt 0 0 0; background-color: none}
-	table.no-lines tr.evenrow td p.para {font-family: Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: normal; color: #000000; margin:1pt 0 2pt 0; padding: 4px 8px 4px 6px; background-color: none}
-	table.no-lines tr.evenrow td {background-color: none}
-	table.no-lines tr.oddrow td p.para {font-family: Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: normal; color: #000000; margin:1pt 0 2pt 0; padding: 4px 8px 4px 6px; background-color: none}
-	table.no-lines tr.oddrow td {background-color: none}
+	TABLE {background-color: white; font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: normal; color: #000000;}
+	TABLE.TABLENOTITLE TR.HEADERROW {background-color: #263329}
+	TABLE.TABLENOTITLE TR.ODDROW {background-color: #edeeec}
+	TABLE.TABLENOTITLE TR.EVENROW {background-color: #babdb6}
+	TABLE.TABLEWITHTITLE TR.HEADERROW {background-color: #263329}
+	TABLE.TABLEWITHTITLE TR.ODDROW {font-size: 10pt; background-color: #edeeec}
+	TABLE.TABLEWITHTITLE TR.EVENROW {font-size: 10pt; background-color: #babdb6}
+	td {font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: normal; color: #000000;}
 
-	
 /* step list formating styles */	
 	OL.LISTNUMBER {list-style-type: decimal}
 	OL.LISTNUMBERT {list-style-type: decimal}
@@ -159,35 +91,16 @@
 	OL.LISTNUMBERTSUB {list-style-type: lower-alpha}
 	OL.STEPLISTSUB {list-style-type: lower-alpha}
 	OL.LISTALPHASUB {list-style-type: lower-alpha}
-	li.step {font-family: Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: normal; color: #000000; background-color: #FFFFFF;}
-	div.orderedlist ol.orderedlist li.listitem {list-style-type: decimal; margin:3pt 0 0pt 0;}
-	div.orderedlist ol.orderedlist li.listitem div.orderedlist ol.orderedlist li.listitem {list-style-type: lower-alpha; margin:3pt 0 0 4pt;}
-	div.orderedlist ol.orderedlist li.listitem div.itemizedlist ul.listbullet li.listitem {list-style-type: square; margin:3pt 0 0 20pt;}
-	div.substeps ol.steps li.step {list-style-type: lower-alpha}
-	dt.term {margin: 0px 0px -4px 0px;}
-	dl.variablelist dt.term {font-family: Arial, Helvetica, sans-serif; font-size: 9pt; font-style: normal; font-weight: bold; color: #000000; padding: 0px 0px 2px 0px;}
-	dl.variablelist dd.listitem {font-family: Arial, Helvetica, sans-serif; font-size: 9pt; font-style: normal; font-weight: normal; color: #000000; padding: 0px 5px 10px 0px;}
-	dt.refclass .application {font-family: Arial, Helvetica, sans-serif; font-size: 9pt; font-style: normal; font-weight: bold; color: #000000; padding: 0px 20px 2px 0px;}
-	div.itemizedlist ul.listbullet ul.listbullet li.listitem {list-style-type: square; margin:8pt 0 0 20pt;}
-		
+
 /* bulleted list formatting styles */
 	UL {list-style-type: disc;}
 	UL.LISTBULLET {list-style-type: disc; list-style-image : none;}
 	UL.LISTBULLETT {list-style-type: disc; list-style-image : none;}
 	UL.LISTCHECKBOX {list-style-image : url("images/checkbox.gif"); list-style-type: square;}
-	li.listitem {font-family: Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: normal; color: #000000; margin:0 0 0 -10pt;}
-	ul.simplelist li.member {list-style-type: none; margin:3px 0px 0px 0px;}
-	td div.itemizedlist {margin: 3pt 0 0 0;}
-	div.itemizedlist {margin: -7pt 0 0 0;}
-	div.itemizedlist div.itemizedlist {margin: 0pt;} 
-	div.itemizedlist ul.listbullet li.listitem {list-style-type: disc; margin:3px 0px 7px 0px;}
-	div.itemizedlist ul.listbox li.listitem {margin:0 0 0 2pt; list-style-image: url("images/checkbox.gif")}
-	li.member {font-family: Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: normal; color: #000000; margin:0 0 0 -10pt;}
 
 /* superscript and subscript formating styles */	
 	SPAN.SUBSCRIPT {font-size: 8pt;}
 	SPAN.SUPERSCRIPT {font-size: 8pt;}
-	span.emphasis {font-weight: bold;}
 	
 /* graphic formatting styles */	
 	img {line-height: normal}
