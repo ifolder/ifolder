@@ -1,119 +1,90 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 
-<html>
 <head>
 
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
-<meta name="Generator" content="Novell Documentation  8 June 2005" />
-<meta name="Generation-Date" content="Thursday, March 23, 2006 14:21" />
-<meta name="Content-Date" content="Mon, 24 Mar 2006 12:00:00 GMT" />
-<meta name="Robots" content="INDEX, FOLLOW" />
-<meta name="Document_Number" content="zHTML xD.0000.0000.0003.0014." />
-<meta name="Author" content="zHTML xD.0000.0000.0003.0014." />
-<meta name="Product_Class" content="" />
-<meta name="Product_and_Version" content="iFolder™" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2005" />
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Language" content="en">
 
-<style type="text/css">
-  @import url(../../../ui/novdocmain.css);
-</style>
+<meta name="Generator" content="Novell HTML Conversion 10 March 2004">
+<meta name="Generation-Date" content="Sunday, October 23, 2005 15:54">
+<meta name="Content-Date" content="Mon, 22 Oct 2005 12:00:00 GMT">
+<meta name="Robots" content="INDEX, FOLLOW">
+<meta name="Document_Number" content="zHTML xD.0000.0000.0003.0012.">
+<meta name="Author" content="zHTML xD.0000.0000.0003.0012.">
+<meta name="Product_Class" content="">
+<meta name="Product_and_Version" content="iFolder(TM)">
+<meta name="Copyright" content="Copyright Novell, Inc. 1983-2004">
+
+<link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
+
 
 <title>iFolder Help</title>
-<script type="text/javascript">
-  var prev_link="movelocation.html";
-  var next_link="legal.html";
-  var parentfile = "../doc/user/data/myifolders.html";
-  var parenttoc = "../doc/user/data/toc_myifolders.html";
-  parent.loadMenu();
+<script type="text/javascript" language="javascript">
+function loadMenu()
+{
+	if ((parent.theMenu) && (parent.theMenu.amBusy == false) && parent.frames[2])
+	{
+	   parent.theMenu.loadScript("../doc/user/data/myifolders.html","../doc/user/data/toc_myifolders.html");
+	}
+	else{ setTimeout("loadMenu()",200);}
+}
+loadMenu();
 </script>
-<script type="text/javascript" src="../../../ui/jsglobal.js"></script>
+<script type="text/javascript" language="javascript" src="../../../ui/jsglobal.js"></script>
 </head>
 
 <body onload="">
-<script type="text/javascript" src="../../../ui/topnav.js"></script>
+<script type="text/javascript" language="javascript">
+  var prev_link="movelocation.html";
+  var next_link="legal.html";
+</script>
 
-<div class="sect1" title="Deleting an iFolder" id="deleting">
+<script type="text/javascript" language="javascript" src="../../../ui/topnav.js"></script>
 
-<h2 class="title"><span class="number">3.14</span> Deleting an iFolder</h2>
+<a name="deleting"></a>
 
-<p class="para">If you delete an iFolder from your collection, it deletes
-the local copy of the iFolder and its contents. It also can affect
-the share relationship for the iFolder, depending on the Access
-right you hold for it. The following table outlines the effect on
-the share relationship and the member iFolders based on the Access
-right of the user who deletes the iFolder.</p>
-<div class="table" id="b403b0h"><p class="title"><em class="num">Table 3-5 </em>What to Expect When You Delete an iFolder</p>
-<table class="topbot-lines">
+<div class="Topic" title="Deleting an iFolder">
 
-<tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="b403cby"></a>
-<p class="para">Access Right of the User Who Deletes
-the iFolder</p></th>
-<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
-<p class="para">Share Relationship</p></th>
-<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
-<p class="para">Server Copy of the iFolder</p></th>
-<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
-<p class="para">Member Copies of the iFolder</p></th>
+<h2 class="TOPIC-TITLE"><br />Deleting an iFolder</h2>
+<p class="TOPIC">If you delete an iFolder from your collection, it deletes the local copy of the iFolder and its contents. It also can affect the share relationship for the iFolder, depending on the Access right you hold for it. The following table outlines the effect on the share relationship and the member iFolders based on the Access right of the user who deletes the iFolder.</p>
+<table class="TABLENOTITLE" border="0" cellpadding="5" cellspacing="0">
+<tr class="HEADERROW"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="brzc2fh"></a><em class="TBLHEAD">Access Right of the User Who Deletes the iFolder</em></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">Share Relationship</em></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">Server Copy of the iFolder</em></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">Member Copies of the iFolder</em></th>
 </tr>
-
-<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b403cbz"></a>
-<p class="para">Owner</p></td>
-<td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Ends the share relationship for the iFolder</p></td>
-<td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Deletes the iFolder metadata and contents from
-the server </p></td>
-<td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Reverts the iFolder to a normal folder
-for all users </p></td>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="brzc2fi"></a><p class="ENTRY">Owner</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Ends the share relationship for the iFolder</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Deletes the iFolder metadata and contents from the server </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Reverts the iFolder to a normal folder for all users </p></td>
 </tr>
-<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b403cc0"></a>
-<p class="para">Full Control User</p></td>
-<td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Unsubscribes the user from the share</p></td>
-<td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No effect</p></td>
-<td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Reverts the local copy of the iFolder
-to a normal folder</p></td>
+<tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="brzc2fj"></a><p class="ENTRY">Full Control User</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Unsubscribes the user from the share</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">No effect</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Reverts the local copy of the iFolder to a normal folder</p></td>
 </tr>
-<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b403cc1"></a>
-<p class="para">Read/Write User</p></td>
-<td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Unsubscribes the user from the share</p></td>
-<td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No effect</p></td>
-<td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Reverts the local copy of the iFolder
-to a normal folder</p></td>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="brzc2fk"></a><p class="ENTRY">Read/Write User</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Unsubscribes the user from the share</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">No effect</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Reverts the local copy of the iFolder to a normal folder</p></td>
 </tr>
-<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b403cc2"></a>
-<p class="para">Read Only User</p></td>
-<td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Unsubscribes the user from the share</p></td>
-<td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No effect</p></td>
-<td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Reverts the local copy of the iFolder
-to a normal folder</p></td>
+<tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="brzc2fl"></a><p class="ENTRY">Read Only User</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Unsubscribes the user from the share</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">No effect</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Reverts the local copy of the iFolder to a normal folder</p></td>
 </tr></table>
+
+<p class="TOPIC">Deleting an iFolder does not uninstall the iFolder client from your workstation.</p>
+<ol class="STEPLIST">
+<li class="STEP"><a name="bq8ubrz"></a>
+<p class="STEP">In a file manager or iFolders browser, locate the iFolder that you want to delete.</p></li>
+
+<li class="STEP"><a name="bq8u9b1"></a>
+<p class="STEP">Right-click the iFolder, then click Delete.</p></li>
+</ol>
 </div>
 
-<p class="para">Deleting an iFolder does not uninstall the iFolder client
-from your workstation.</p>
-<div class="procedure">
-<ol class="steps">
-<li class="step" id="bq8ubrz">
-<p class="para">In a file manager
-or iFolder browser, locate the iFolder that you want to delete.</p></li>
-<li class="step" id="bq8u9b1">
-<p class="para">Right-click the iFolder, then click <span class="guimenu">Delete</span>.</p></li></ol>
-</div>
+<script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
 
-</div>
-
-
-<script type="text/javascript" src="../../../ui/bottomnav.js"></script>
 </body>
 </html>

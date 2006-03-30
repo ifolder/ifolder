@@ -1,14 +1,3 @@
-function ulinks() {
- if (!document.getElementsByTagName) return;
- var anchors = document.getElementsByTagName("a");
- for (var i=0; i<anchors.length; i++) {
-   var anchor = anchors[i];
-   if (anchor.getAttribute("href") && anchor.className == "ulink")
-     	anchor.target = "_blank";
- }
-}
-window.onload = ulinks;
-
 self.document.writeln('<table width="100%" border="0" align="center">\n<tr>\n<td align="left" width="33%">');
 if (typeof prev_link != 'undefined')
 {
