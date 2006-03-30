@@ -253,6 +253,19 @@ namespace Novell.iFolder
 			runEventThread = false;
 		}
 
+		public void AbortEventProcessing()
+		{
+			// Allow the main application to tell the EventBroker to no longer
+			// dispatch events immediately after iFolder starts shutting down.
+			runEventThread = false;
+			try
+			{
+				SEThread.Interrupt();
+				SEThread.Abort();
+			}
+			catch{}
+		}
+
 		private void SimiasEventHandler(SimiasEventArgs args)
 		{
 			try
@@ -287,6 +300,8 @@ namespace Novell.iFolder
 
 				while(hasmore && runEventThread)
 				{
+					if (!runEventThread) break;
+
 					SimiasEventArgs args;
 
 					lock(NodeEventQueue)
@@ -743,6 +758,8 @@ namespace Novell.iFolder
 
 		private void OnGenericEventFired()
 		{
+			if (!runEventThread) return;
+
 			bool hasmore = false;
 
 			lock(NotifyEventQueue)
@@ -784,6 +801,8 @@ namespace Novell.iFolder
 
 		private void OnFileEventFired()
 		{
+			if (!runEventThread) return;
+
 			bool hasmore = false;
 
 			lock(FileEventQueue)
@@ -813,6 +832,8 @@ namespace Novell.iFolder
 
 		private void OnSyncEventFired()
 		{
+			if (!runEventThread) return;
+
 			bool hasmore = false;
 
 			lock(SyncEventQueue)
@@ -842,6 +863,8 @@ namespace Novell.iFolder
 
 		private void OnSimiasEventFired()
 		{
+			if (!runEventThread) return;
+
 			bool hasmore = false;
 			// at this point, we are running in the same thread
 			// so we can safely show events
