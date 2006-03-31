@@ -371,7 +371,7 @@ namespace Novell.iFolder
 			SyncNowMenuItem.Activated += new EventHandler(OnSynchronizeNow);
 
 			RevertMenuItem = 
-				new ImageMenuItem (Util.GS("C_hange to a normal folder"));
+				new ImageMenuItem (Util.GS("_Revert to a normal folder"));
 			RevertMenuItem.Image = new Image(Stock.Undo, Gtk.IconSize.Menu);
 			iFolderMenu.Append(RevertMenuItem);
 			RevertMenuItem.Activated += new EventHandler(RemoveiFolderHandler);
