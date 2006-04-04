@@ -20,31 +20,29 @@
  *  Author(s): Boyd Timothy <btimothy@novell.com>
  *
  ***********************************************************************/
-#ifndef _IFOLDER_CLIENT_TEST_H_
-#define _IFOLDER_CLIENT_TEST_H_
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/TestPath.h>
-#include <cppunit/TestCase.h>
+#include "IFiFolderClientTest.h"
 
-class iFolderClientTest : public CPPUNIT_NS::TestFixture {
+IFiFolderClientTest::IFiFolderClientTest()
+{
+}
 
-CPPUNIT_TEST_SUITE( iFolderClientTest );
-CPPUNIT_TEST( testHelloWorld );
-CPPUNIT_TEST_SUITE_END();
+IFiFolderClientTest::~IFiFolderClientTest()
+{
+}
 
-public:
-	// Constructor
-	iFolderClientTest();
+void
+IFiFolderClientTest::setUp()
+{
+}
 
-	// Destructor
-	virtual ~iFolderClientTest();
+void
+IFiFolderClientTest::tearDown()
+{
+}
 
-	void setUp();
-	void tearDown();
-
-	void testHelloWorld();
-};
-
-#endif // _IFOLDER_CLIENT_TEST_H_
-
+void
+IFiFolderClientTest::testHelloWorld()
+{
+	CPPUNIT_ASSERT( 1 == 2 );
+}

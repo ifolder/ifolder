@@ -22,13 +22,13 @@
  ***********************************************************************/
 
 #include <cppunit/ui/text/TestRunner.h>
-#include "iFolderClientTest.h"
+#include "IFiFolderClientTest.h"
 
 int
 main(int argc, char *argv[])
 {
 	CppUnit::TextUi::TestRunner runner;
-	runner.addTest( iFolderClientTest::suite() );
+	runner.addTest( IFiFolderClientTest::suite() );
 	runner.run();
 	return 0;
 }
