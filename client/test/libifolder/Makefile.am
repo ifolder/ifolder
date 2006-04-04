@@ -1,8 +1,22 @@
-SUBDIRS = ipc-server
+#.PHONY: test
 
-DIST_SUBDIRS = $(SUBDIRS)
+#test:
+#	echo "FIXME: Add code here to run the unit tests"
 
-.PHONY: test
+INCLUDES = \
+	-I$(top_srcdir)/src/libifolder \
+	$(CPPUNIT_CFLAGS)
 
-test:
-	echo "FIXME: Add code here to run the unit tests"
+bin_PROGRAMS = test-libifolder
+
+test_libifolder_SOURCES = \
+	Main.cpp					\
+	iFolderClientTest.h		\
+	iFolderClientTest.cpp
+
+test_libifolder_LDFLAGS = \
+	$(top_srcdir)/src/libifolder/ipc-server/libipcserver/libipcserver.a \
+	$(top_srcdir)/src/libifolder/ipc-server/libsoap/libsoap.a \
+	$(top_srcdir)/src/libifolder/ipc-server/libsync/libsync.a \
+	$(top_srcdir)/src/libifolder/ipc-server/libifolder-trayapp.a \
+	$(CPPUNIT_LIBS)

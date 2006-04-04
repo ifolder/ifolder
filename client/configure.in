@@ -181,6 +181,30 @@ fi
 echo QT4_PATH=$QT4_PATH
 
 dnl ========================================================
+dnl Handle --with-cppunit-path
+dnl ========================================================
+
+AC_ARG_WITH(cppunit-path,
+	[  --with-cppunit-path=PATH  set default --cppunit-path to PATH (required for running unit tests)],
+	[ CPPUNIT_PATH="$with_cppunit_path" ],
+	[ CPPUNIT_PATH="" ])
+AC_DEFINE_UNQUOTED(CPPUNIT_PATH, "$CPPUNIT_PATH", [Install prefix to CppUnit])
+AC_SUBST(CPPUNIT_PATH)
+
+if test "x$CPPUNIT_PATH" = "x"; then
+  CPPUNIT_CFLAGS=
+  CPPUNIT_LIBS=
+else
+  CPPUNIT_CFLAGS="-I$CPPUNIT_PATH/include"
+  CPPUNIT_LIBS="-L$CPPUNIT_PATH/lib -lcppunit"
+fi
+AC_SUBST(CPPUNIT_CFLAGS)
+AC_SUBST(CPPUNIT_LIBS)
+
+echo CPPUNIT_CFLAGS=$CPPUNIT_CFLAGS
+echo CPPUNIT_LIBS=$CPPUNIT_LIBS
+
+dnl ========================================================
 dnl Set platform-specific variables
 dnl ========================================================
 case $IFOLDER_OS in
@@ -440,6 +464,5 @@ AC_CONFIG_FILES([
   src/trayapp/windows/Makefile
   test/Makefile
   test/libifolder/Makefile
-  test/libifolder/ipc-server/Makefile
 ])
 AC_OUTPUT
