@@ -12,7 +12,9 @@ bin_PROGRAMS = test-libifolder
 test_libifolder_SOURCES = \
 	Main.cpp					\
 	IFiFolderClientTest.h		\
-	IFiFolderClientTest.cpp
+	IFiFolderClientTest.cpp	\
+	IFAccountTest.h			\
+	IFAccountTest.cpp
 
 test_libifolder_LDFLAGS = \
 	$(top_srcdir)/src/libifolder/ipc-server/libipcserver/libipcserver.a \

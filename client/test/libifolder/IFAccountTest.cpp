@@ -21,17 +21,28 @@
  *
  ***********************************************************************/
 
-#include <cppunit/ui/text/TestRunner.h>
-#include "IFiFolderClientTest.h"
 #include "IFAccountTest.h"
 
-int
-main(int argc, char *argv[])
+IFAccountTest::IFAccountTest()
 {
-	CppUnit::TextUi::TestRunner runner;
-	runner.addTest( IFiFolderClientTest::suite() );
-	runner.addTest( IFAccountTest::suite() );
-	runner.run();
-	return 0;
 }
 
+IFAccountTest::~IFAccountTest()
+{
+}
+
+void
+IFAccountTest::setUp()
+{
+}
+
+void
+IFAccountTest::tearDown()
+{
+}
+
+void
+IFAccountTest::testHelloWorld()
+{
+	CPPUNIT_ASSERT( 1 == 2 );
+}

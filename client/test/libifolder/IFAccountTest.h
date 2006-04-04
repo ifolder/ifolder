@@ -20,18 +20,31 @@
  *  Author(s): Boyd Timothy <btimothy@novell.com>
  *
  ***********************************************************************/
+#ifndef _IFOLDER_ACCOUNT_TEST_H_
+#define _IFOLDER_ACCOUNT_TEST_H_
 
-#include <cppunit/ui/text/TestRunner.h>
-#include "IFiFolderClientTest.h"
-#include "IFAccountTest.h"
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/TestPath.h>
+#include <cppunit/TestCase.h>
 
-int
-main(int argc, char *argv[])
-{
-	CppUnit::TextUi::TestRunner runner;
-	runner.addTest( IFiFolderClientTest::suite() );
-	runner.addTest( IFAccountTest::suite() );
-	runner.run();
-	return 0;
-}
+class IFAccountTest : public CPPUNIT_NS::TestFixture {
+
+CPPUNIT_TEST_SUITE( IFAccountTest );
+CPPUNIT_TEST( testHelloWorld );
+CPPUNIT_TEST_SUITE_END();
+
+public:
+	// Constructor
+	IFAccountTest();
+
+	// Destructor
+	virtual ~IFAccountTest();
+
+	void setUp();
+	void tearDown();
+
+	void testHelloWorld();
+};
+
+#endif // _IFOLDER_ACCOUNT_TEST_H_
 
