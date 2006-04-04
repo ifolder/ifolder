@@ -21,17 +21,18 @@
  *
  ***********************************************************************/
 
-#ifndef IFOLDERCLIENT_H_
-#define IFOLDERCLIENT_H_
+#ifndef _IFOLDER_CLIENT_H_
+#define _IFOLDER_CLIENT_H_
 
+#include <QObject>
 #include <QString>
 
 class iFolderClient : public QObject
 {
 	public:
-		initialize();
-		uninitialize();
-		startTrayApp(QString trayAppExePath);
+		int initialize();
+		int uninitialize();
+		int startTrayApp(QString trayAppExePath);
 };
 
-#endif /*IFOLDERCLIENT_H_*/
+#endif /*_IFOLDER_CLIENT_H_*/

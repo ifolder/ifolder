@@ -22,24 +22,41 @@
  ***********************************************************************/
 
 #include <stdio.h>
+#include "errors.h"
 #include "ifolder-client.h"
+#include "IFiFolderClient.h"
+
+static iFolderClient *ifolderClient = NULL;
 
 int
 ifolder_client_initialize(void)
 {
-	printf("ifolder_client_initialize()\n");
-	return 0;
+	if (ifolderClient != NULL)
+		return ifolderClient->initialize();
+	
+	// It is null, so new one up.
+	ifolderClient = new iFolderClient();
+	if (ifolderClient == NULL)
+		return IFOLDER_ERROR_OUT_OF_MEMORY;
+
+	return ifolderClient->initialize();
 }
 
 int
 ifolder_client_uninitialize(void)
 {
-	printf("ifolder_client_uninitialize()\n");
-	return 0;
+	if (ifolderClient != NULL)
+		return ifolderClient->uninitialize();
+	
+	return IFOLDER_ERROR_UNINITIALIZED;
 }
 
 int
 ifolder_start_tray_app(const char *tray_app_exe_path)
 {
-	return 0;
+	QString trayAppExePath(tray_app_exe_path);
+	if (ifolderClient != NULL)
+		return ifolderClient->startTrayApp(trayAppExePath);
+	
+	return IFOLDER_ERROR_UNINITIALIZED;
 }

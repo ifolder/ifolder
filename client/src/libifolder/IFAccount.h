@@ -21,8 +21,8 @@
  *
  ***********************************************************************/
 
-#ifndef IFOLDERACCOUNT_H_
-#define IFOLDERACCOUNT_H_
+#ifndef _IFOLDER_ACCOUNT_H_
+#define _IFOLDER_ACCOUNT_H_
 
 #include <QObject>
 #include <QString>
@@ -83,37 +83,36 @@ class iFolderAccount : public QObject
 		/**
 		 * Methods/Actions
 		 */
-		void remove(bool deleteiFoldersOnServer);
-		void login(const char *password);
-		void logout();
-		void activate();
-		void inactivate();
-		void changeHostAddress(const char *newHostAddress);
-		void setCredentials(const char *password, CredentialType credentialType);
-		void setDefault();
-		iFolderUser getAuthenticatedUser();
-		iFolderUser getUser(const char *userID);
-		QList<iFolderUser> getUsers(int index, int count);
-		QList<iFolderUser> getUsersBySearch(SearchProperty searchProp, SearchOperation searchOp, const char *pattern, int index, int count);
+		int remove(bool deleteiFoldersOnServer);
+		int login(const char *password);
+		int logout();
+		int activate();
+		int inactivate();
+		int changeHostAddress(const char *newHostAddress);
+		int setCredentials(const char *password, CredentialType credentialType);
+		int setDefault();
+		int getAuthenticatedUser(iFolderUser *retVal);
+		int getUser(const char *userID, iFolderUser *retVal);
+		int getUsers(int index, int count, QList<iFolderUser> *retVal);
+		int getUsersBySearch(SearchProperty searchProp, SearchOperation searchOp, const char *pattern, int index, int count, QList<iFolderUser> *retVal);
 
-		iFolder createiFolder(const char *localPath, const char *description);
-		void deleteiFolder(iFolder ifolder);
-		QList<iFolder> getLocaliFolders(int index, int count);
-		QList<iFolder> getRemoteiFolders(int index, int count);
-		iFolder getiFolderByID(const char *id);
-		iFolder getiFolderByName(const char *name);
-		
+		int createiFolder(const char *localPath, const char *description, iFolder *retVal);
+		int deleteiFolder(iFolder ifolder);
+		int getLocaliFolders(int index, int count, QList<iFolder> *retVal);
+		int getRemoteiFolders(int index, int count, QList<iFolder> *retVal);
+		int getiFolderByID(const char *id, iFolder *retVal);
+		int getiFolderByName(const char *name, iFolder *retVal);
 		
 		/**
 		 * Static Methods
 		 */
-		static QList<iFolderAccount> getAll();
-		static QList<iFolderAccount> getAllActive();
-		static iFolderAccount getDefault();
-		static iFolderAccount add(const char *hostAddress, const char *userName, const char *password, bool makeDefault);
+		static int getAll(QList<iFolderAccount> *retVal);
+		static int getAllActive(QList<iFolderAccount> *retVal);
+		static int getDefault(iFolderAccount *retVal);
+		static int add(const char *hostAddress, const char *userName, const char *password, bool makeDefault, iFolderAccount *retVal);
 	
 	private:
 		iFolderAccount(QObject *parent = 0);
 };
 
-#endif /*IFOLDERACCOUNT_H_*/
+#endif /*_IFOLDER_ACCOUNT_H_*/

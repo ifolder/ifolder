@@ -21,8 +21,8 @@
  *
  ***********************************************************************/
 
-#ifndef IFOLDERUSER_H_
-#define IFOLDERUSER_H_
+#ifndef _IFOLDER_USER_H_
+#define _IFOLDER_USER_H_
 
 #include "IFAccount.h"
 
@@ -40,4 +40,4 @@ class iFolderUser : public QObject
 		friend class iFolder;
 };
 
-#endif /*IFOLDERUSER_H_*/
+#endif /*_IFOLDER_USER_H_*/

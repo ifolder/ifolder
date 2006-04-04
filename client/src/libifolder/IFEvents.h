@@ -21,7 +21,7 @@
  *
  ***********************************************************************/
 
-#ifndef IFOLDEREVENTS_H_
-#define IFOLDEREVENTS_H_
+#ifndef _IFOLDER_EVENTS_H_
+#define _IFOLDER_EVENTS_H_
 
-#endif /*IFOLDEREVENTS_H_*/
+#endif /*_IFOLDER_EVENTS_H_*/

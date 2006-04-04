@@ -45,13 +45,13 @@ libifolder_trayapp_a_CXXFLAGS = \
 	$(QT4_CORE_CFLAGS)			\
 	$(QT4_NETWORK_CFLAGS)
 
-libifolder_trayapp_a_LDFLAGS = \
-	$(QT4_LDFLAGS)				\
-	$(QT4_CORE_LDFLAGS)			\
-	$(QT4_NETWORK_LDFLAGS)
+#libifolder_trayapp_a_LDFLAGS = \
+#	$(QT4_LDFLAGS)				\
+#	$(QT4_CORE_LDFLAGS)			\
+#	$(QT4_NETWORK_LDFLAGS)
 	
 c_api_sources = \
-	../common/ifolder-client.c
+	../common/ifolder-client.cpp
 
 cpp_api_sources = \
 	IFAccount.cpp

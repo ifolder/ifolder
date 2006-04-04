@@ -21,8 +21,8 @@
  *
  ***********************************************************************/
 
-#ifndef _IFOLDER_CLIENT_H_
-#define _IFOLDER_CLIENT_H_
+#ifndef _IFOLDER_C_CLIENT_H_
+#define _IFOLDER_C_CLIENT_H_
 
 #include "errors.h"
 
@@ -30,4 +30,4 @@ int ifolder_client_initialize(void);
 int ifolder_client_uninitialize(void);
 int ifolder_client_start_tray_app(const char *tray_app_exe_path);
 
-#endif /*_IFOLDER_CLIENT_H_*/
+#endif /*_IFOLDER_C_CLIENT_H_*/

@@ -21,8 +21,8 @@
  *
  ***********************************************************************/
 
-#ifndef IFOLDERCHANGEENTRY_H_
-#define IFOLDERCHANGEENTRY_H_
+#ifndef _IFOLDER_CHANGE_ENTRY_H_
+#define _IFOLDER_CHANGE_ENTRY_H_
 
 #include <QObject>
 #include <QString>
@@ -57,4 +57,4 @@ class iFolderChangeEntry : public QObject
 		friend class iFolder;
 };
 
-#endif /*IFOLDERCHANGEENTRY_H_*/
+#endif /*_IFOLDER_CHANGE_ENTRY_H_*/

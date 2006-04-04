@@ -21,8 +21,8 @@
  *
  ***********************************************************************/
 
-#ifndef IFOLDER_H_
-#define IFOLDER_H_
+#ifndef _IFOLDER_H_
+#define _IFOLDER_H_
 
 #include <QObject>
 #include <QString>
@@ -57,4 +57,4 @@ class iFolder : public QObject
 		friend class iFolderAccount;
 };
 
-#endif /*IFOLDER_H_*/
+#endif /*_IFOLDER_H_*/
