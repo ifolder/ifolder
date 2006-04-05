@@ -79,6 +79,9 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 		memset(pSoap->password, 0, 1024);
 	}
 
+	[self readCredentials];
+
+
 /*
 	if( (pSoap->username != NULL) && (pSoap->password != NULL) && (pSoap->soap != NULL) )
 	{

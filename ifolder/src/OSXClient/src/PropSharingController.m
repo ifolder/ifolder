@@ -292,9 +292,16 @@
 				[searchResults release];
 				searchResults = nil;
 			}
-			// valid search attributes: "Given" "Family" "FN"
-			searchResults = [[iFolderData sharedInstance] InitMemberSearchResults];
-			[searchResults searchMembers:[curiFolder DomainID] onAttribute:searchAttribute usingValue:[userSearch stringValue]];
+			@try
+			{
+				// valid search attributes: "Given" "Family" "FN"
+				searchResults = [[iFolderData sharedInstance] InitMemberSearchResults];
+				[searchResults searchMembers:[curiFolder DomainID] onAttribute:searchAttribute usingValue:[userSearch stringValue]];
+			}
+			@catch (NSException *e)
+			{
+				NSLog(@"Exception in searchMembers: %@", [e name] );
+			}				
 		}
 		else
 		{
@@ -303,8 +310,15 @@
 				[searchResults release];
 				searchResults = nil;
 			}
-			searchResults = [[iFolderData sharedInstance] InitMemberSearchResults];
-			[searchResults getAllMembers:[curiFolder DomainID]];
+			@try
+			{
+				searchResults = [[iFolderData sharedInstance] InitMemberSearchResults];
+				[searchResults getAllMembers:[curiFolder DomainID]];
+			}
+			@catch (NSException *e)
+			{
+				NSLog(@"Exception in searchMembers: %@", [e name] );
+			}				
 		}
 
 		if(searchResults != nil)

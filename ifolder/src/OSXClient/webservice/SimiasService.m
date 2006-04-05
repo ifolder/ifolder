@@ -86,6 +86,8 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 		}
 	}
 	
+	[self readCredentials];
+	
 	pSoap->instanceLock = [[NSRecursiveLock alloc] init];
 	
     return self;
