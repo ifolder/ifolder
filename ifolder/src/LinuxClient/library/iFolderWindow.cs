@@ -1910,7 +1910,11 @@ namespace Novell.iFolder
 
 		private bool SynchronizedFoldersFilterFunc(TreeModel model, TreeIter iter)
 		{
-			iFolderHolder ifHolder = (iFolderHolder)model.GetValue(iter, 0);
+			ListStore ifolderListStore = model as ListStore;
+			if (!ifolderListStore.IterIsValid(iter))
+				return false;	// Prevent a bad TreeIter from causing problems
+
+			iFolderHolder ifHolder = (iFolderHolder)ifolderListStore.GetValue(iter, 0);
 			if (ifHolder != null && ifHolder.iFolder != null && !ifHolder.iFolder.IsSubscription)
 			{
 				string searchString = SearchEntry.Text;
