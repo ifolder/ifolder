@@ -460,6 +460,26 @@ namespace Novell.iFolder
 							Util.GS("Read-only iFolder prevented synchronization: {0}"),
 							args.Name);
 						break;
+					case SyncStatus.Busy:
+						message = string.Format(
+							Util.GS("Could not synchronize because the server is busy: {0}"),
+							args.Name);
+						break;
+					case SyncStatus.ClientError:
+						message = string.Format(
+							Util.GS("Client sent bad data and could not synchronize: {0}"),
+							args.Name);
+						break;
+					case SyncStatus.InUse:
+						message = string.Format(
+							Util.GS("Could not synchronize because this file is in use: {0}"),
+							args.Name);
+						break;
+					case SyncStatus.ServerFailure:
+						message = string.Format(
+							Util.GS("Updating the metadata for this file failed: {0}"),
+							args.Name);
+						break;
 					default:
 						message = string.Format(
 							Util.GS("iFolder failed synchronization: {0}"),
