@@ -22,7 +22,7 @@
  ***********************************************************************/
 
 #include <stdio.h>
-#include "errors.h"
+#include "ifolder-errors.h"
 #include "ifolder-client.h"
 #include "IFiFolderClient.h"
 
