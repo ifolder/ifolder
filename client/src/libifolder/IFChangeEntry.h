@@ -24,21 +24,11 @@
 #ifndef _IFOLDER_CHANGE_ENTRY_H_
 #define _IFOLDER_CHANGE_ENTRY_H_
 
-#include <QObject>
 #include <QString>
 //#include <QTime>
 
-class iFolderChangeEntry : public QObject
+class iFolderChangeEntry
 {
-	Q_OBJECT
-	
-//	Q_PROPERTY(QTime time READ time)
-	Q_PROPERTY(ChangeEntryType type READ type)
-	Q_PROPERTY(QString id READ id)
-	Q_PROPERTY(QString name READ name)
-	Q_PROPERTY(QString userID READ userID)
-	Q_PROPERTY(QString userFullName READ userFullName)
-	
 	public:
 		~iFolderChangeEntry();
 		
@@ -52,7 +42,7 @@ class iFolderChangeEntry : public QObject
 		QString userFullName();
 	
 	private:
-		iFolderChangeEntry(QObject *parent = 0);
+		iFolderChangeEntry();
 
 		friend class iFolder;
 };

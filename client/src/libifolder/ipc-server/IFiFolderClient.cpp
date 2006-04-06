@@ -24,7 +24,7 @@
 #include "ifolder-errors.h"
 #include "IFiFolderClient.h"
 
-iFolderClient::iFolderClient(QObject *parent)
+iFolderClient::iFolderClient()
 {
 }
 

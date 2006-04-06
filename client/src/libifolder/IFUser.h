@@ -26,15 +26,13 @@
 
 #include "IFAccount.h"
 
-class iFolderUser : public QObject
+class iFolderUser
 {
-	Q_OBJECT
-	
 	public:
 		~iFolderUser();
 	
 	private:
-		iFolderUser(QObject *parent = 0);
+		iFolderUser();
 		
 		friend class iFolderAccount;
 		friend class iFolder;

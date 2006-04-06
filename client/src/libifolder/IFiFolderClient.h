@@ -30,7 +30,7 @@
 class iFolderClient
 {
 	public:
-		iFolderClient(QObject *parent = 0);
+		iFolderClient();
 		virtual ~iFolderClient();
 
 		int initialize();

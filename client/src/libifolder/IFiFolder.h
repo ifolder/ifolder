@@ -24,17 +24,14 @@
 #ifndef _IFOLDER_H_
 #define _IFOLDER_H_
 
-#include <QObject>
 #include <QString>
 #include <QList>
 
 #include "IFUser.h"
 #include "IFChangeEntry.h"
 
-class iFolder : public QObject
+class iFolder
 {
-	Q_OBJECT
-
 	public:
 		~iFolder();
 
@@ -52,7 +49,7 @@ class iFolder : public QObject
 		QList<iFolderChangeEntry> getFileChanges(QString *relativePath, int index, int count);
 		
 	private:
-		iFolder(QObject *parent = 0);	
+		iFolder();	
 
 		friend class iFolderAccount;
 };
