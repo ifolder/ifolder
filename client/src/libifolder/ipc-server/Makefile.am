@@ -35,6 +35,7 @@ lib_LIBRARIES = libifolder-trayapp.a
 #	libipcserver/libipcserver.a	
 
 DEFINES = \
+	$(QT4_DEFINES)				\
 	-DQT_NETWORK					\
 	-DQT_CORE_LIB				\
 	-DQT_SHARED
@@ -45,10 +46,10 @@ libifolder_trayapp_a_CXXFLAGS = \
 	$(QT4_CORE_CFLAGS)			\
 	$(QT4_NETWORK_CFLAGS)
 
-#libifolder_trayapp_a_LDFLAGS = \
-#	$(QT4_LDFLAGS)				\
-#	$(QT4_CORE_LDFLAGS)			\
-#	$(QT4_NETWORK_LDFLAGS)
+libifolder_trayapp_a_LDFLAGS = \
+	$(QT4_LIBS)				\
+	$(QT4_CORE_LIBS)			\
+	$(QT4_NETWORK_LIBS)
 	
 c_api_sources = \
 	../common/ifolder-client.cpp

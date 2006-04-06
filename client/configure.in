@@ -1,9 +1,9 @@
 AC_INIT
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
+AC_PROG_CC
+AC_PROG_CXX
 m4_pattern_allow(PKG_CONFIG)
-
-#AC_PROG_INTLTOOL
 
 PACKAGE=ifolder3
 AC_SUBST(PACKAGE)
@@ -21,8 +21,6 @@ AC_SUBST(BUILDNUM)
 AM_MAINTAINER_MODE
 
 DATADIRNAME=share
-
-AC_PROG_CC
 
 ##
 ## Run standard macros
@@ -155,30 +153,48 @@ infodir="${prefix}/info"
 mandir="${prefix}/man"
 
 dnl ========================================================
-dnl Handle --with-qt4-path
+dnl Handle --enable-debug
 dnl ========================================================
 
+AC_ARG_ENABLE(debug, [
+  --enable-debug          configure the Makefiles to build in DEBUG mode],
+    [case "${enableval}" in
+        yes) enable_debug=true ;;
+        no)  enable_debug=false ;;
+        *) AC_MSG_ERROR(bad value ${enableval} for --enable-debug) ;;
+    esac],[enable_debug=false])
+AM_CONDITIONAL(DEBUG, test x$enable_debug = xtrue)
+
+dnl ========================================================
+dnl Handle --with-qt4-path
+dnl ========================================================
+AC_MSG_CHECKING(QT4 path)
 AC_ARG_WITH(qt4-path,
         [  --with-qt4-path=PATH  set default --qt4-path to PATH (required on W32 and OSX)],
         [ QT4_PATH="$with_qt4_path" ],
         [ QT4_PATH="" ])
-AC_DEFINE_UNQUOTED(QT4_PATH, "$QT4_PATH", [Path to Qt 4 Installed Prefix])
-AC_SUBST(QT4_PATH)
 
 case $host_os in
+	darwin*)
+	;;
     linux*)
     	if test "x$QT4_PATH" = "x"; then
     		QT4_PATH=$(pkg-config --variable=prefix QtCore)
     	fi
     ;;
+	cygwin*)
+		QT4_PATH=`cygpath --unix "$QTDIR"`
+	;;
 esac
+
+AC_DEFINE_UNQUOTED(QT4_PATH, "$QT4_PATH", [Path to Qt 4 Installed Prefix])
+AC_SUBST(QT4_PATH)
 
 dnl Make sure that QT4_PATH is set.  Bail if it's not!
 if test "x$QT4_PATH" = "x"; then
   AC_MSG_ERROR(Cannot determine Qt 4.x install path.  You must specify --with-qt4-path=PATH !)
 fi
 
-echo QT4_PATH=$QT4_PATH
 
 dnl ========================================================
 dnl Handle --with-cppunit-path
@@ -215,49 +231,40 @@ case $IFOLDER_OS in
 		#
 		# Set variables
 		#
-		EMPTY=
-		EXE_EXT=''
-		ICON_EXT='.ico'
-		ICON_FLAG='/resource:'
-		INSTALL_EXE_OPTS='-m 644'
-		OBJ_EXT='.o'
-		SEP='/'
-		SHARED_LIB_EXT='.dylib'
-		SHARED_LIB_FLAG='-shared'
 		GSOAP_PATH="$TOOLDIR/gsoap/macosx-2.7"
-		libexecdir='${exec_prefix}'
-
-		QT4_CFLAGS="-I${QT4_PATH}/mkspecs/macx-g++ -I${QT4_PATH}/include -F${QT4_PATH}/lib"
-		QT4_LDFLAGS=""
 		
-		QT4_CORE_CFLAGS="-I${QT4_PATH}/lib/QtCore.framework/Headers"
-		QT4_CORE_LDFLAGS=""
-		
-		QT4_GUI_CFLAGS="-I${QT4_PATH}/lib/QtGui.framework/Headers"
-		QT4_GUI_LDFLAGS=""
-		
-		QT4_NETWORK_CFLAGS="-I${QT4_PATH}/lib/QtNetwork.framework/Headers"
-		QT4_NETWORK_LDFLAGS=""
-		
-		QT4_XML_CFLAGS="-I${QT4_PATH}/lib/QtXml.framework/Headers"
-		QT4_XML_LDFLAGS=""
-    ;;
+		if test "$enable_debug" = "true"
+		then
+			QT4_CFLAGS="-I${QT4_PATH}/mkspecs/macx-g++ -I${QT4_PATH}/include -F${QT4_PATH}/lib"
+			QT4_LIBS=""
+			QT4_CORE_CFLAGS="-I${QT4_PATH}/lib/QtCore.framework/Headers"
+			QT4_CORE_LIBS=""
+			QT4_GUI_CFLAGS="-I${QT4_PATH}/lib/QtGui.framework/Headers"
+			QT4_GUI_LIBS=""
+			QT4_NETWORK_CFLAGS="-I${QT4_PATH}/lib/QtNetwork.framework/Headers"
+			QT4_NETWORK_LIBS=""
+			QT4_XML_CFLAGS="-I${QT4_PATH}/lib/QtXml.framework/Headers"
+			QT4_XML_LIBS=""
+		else
+			QT4_CFLAGS="-I${QT4_PATH}/mkspecs/macx-g++ -I${QT4_PATH}/include -F${QT4_PATH}/lib"
+			QT4_LIBS=""
+			QT4_CORE_CFLAGS="-I${QT4_PATH}/lib/QtCore.framework/Headers"
+			QT4_CORE_LIBS=""
+			QT4_GUI_CFLAGS="-I${QT4_PATH}/lib/QtGui.framework/Headers"
+			QT4_GUI_LIBS=""
+			QT4_NETWORK_CFLAGS="-I${QT4_PATH}/lib/QtNetwork.framework/Headers"
+			QT4_NETWORK_LIBS=""
+			QT4_XML_CFLAGS="-I${QT4_PATH}/lib/QtXml.framework/Headers"
+			QT4_XML_LIBS=""
+		fi
+	;;
     #
     # Linux-specific configuration
     #
     linux)
-        #
+		#
         # Set variables
         #
-        EMPTY=
-        EXE_EXT=''
-        ICON_EXT='.ico'
-        ICON_FLAG='/resource:'
-        INSTALL_EXE_OPTS='--mode=644'
-        OBJ_EXT='.o'
-        SEP='/'
-        SHARED_LIB_EXT='.so'
-        SHARED_LIB_FLAG='-shared'
 		GSOAP_PATH="$TOOLDIR/gsoap/linux-2.7"
         #
         # Set pkg-config variables
@@ -268,22 +275,31 @@ case $IFOLDER_OS in
 		#ALL_LINGUAS="pt_BR fr it de es ru ja"
 		#AM_GNU_GETTEXT_VERSION(0.10.40)
 		#AM_GNU_GETTEXT(external)
-    	libexecdir='${exec_prefix}'
-
-		QT4_CFLAGS="-I${QT4_PATH}/include/Qt"
-		QT4_LDFLAGS="-L${QT4_PATH}/lib -lz -lpthread -ldl"
 		
-		QT4_CORE_CFLAGS=""
-		QT4_CORE_LDFLAGS="-lQtCore"
-		
-		QT4_GUI_CFLAGS=""
-		QT4_GUI_LDFLAGS="-lQtGui"
-		
-		QT4_NETWORK_CFLAGS=""
-		QT4_NETWORK_LDFLAGS="-lQtNetwork"
-		
-		QT4_XML_CFLAGS=""
-		QT4_XML_LDFLAGS="-lQtXml"
+		if test "$enable_debug" = "true"
+		then
+			QT4_CFLAGS="-I${QT4_PATH}/include/Qt"
+			QT4_LIBS="-L${QT4_PATH}/lib"
+			QT4_CORE_CFLAGS=$(pkg-config --cflags QtCore)
+			QT4_CORE_LIBS=$(pkg-config --libs QtCore_debug)
+			QT4_GUI_CFLAGS=$(pkg-config --cflags QtGui)
+			QT4_GUI_LIBS=$(pkg-config --libs QtGui_debug)
+			QT4_NETWORK_CFLAGS=$(pkg-config --cflags QtNetwork)
+			QT4_NETWORK_LIBS=$(pkg-config --libs QtNetwork_debug)
+			QT4_XML_CFLAGS=$(pkg-config --cflags QtXml)
+			QT4_XML_LIBS=$(pkg-config --libs QtXml_debug)
+		else
+			QT4_CFLAGS="-I${QT4_PATH}/include/Qt"
+			QT4_LIBS="-L${QT4_PATH}/lib"
+			QT4_CORE_CFLAGS=$(pkg-config --cflags QtCore)
+			QT4_CORE_LIBS=$(pkg-config --libs QtCore)
+			QT4_GUI_CFLAGS=$(pkg-config --cflags QtGui)
+			QT4_GUI_LIBS=$(pkg-config --libs QtGui)
+			QT4_NETWORK_CFLAGS=$(pkg-config --cflags QtNetwork)
+			QT4_NETWORK_LIBS=$(pkg-config --libs QtNetwork)
+			QT4_XML_CFLAGS=$(pkg-config --cflags QtXml)
+			QT4_XML_LIBS=$(pkg-config --libs QtXml)
+		fi
 
 		PKG_CHECK_MODULES(TRAYAPP, gtk+-2.0 glib-2.0 atk libgnomeui-2.0 libpanelapplet-2.0)
 		AC_SUBST(TRAYAPP_CFLAGS)
@@ -298,53 +314,11 @@ case $IFOLDER_OS in
     #
     windows)
         #
-        # Check for valid compilers
-        #
-        AC_CHECK_PROG(CC, cl, cl)
-        test -z "$CC" && AC_MSG_ERROR([no acceptable C compiler found in \$PATH])
-        AC_CHECK_PROG(CXX, cl, cl)
-        test -z "$CXX" && AC_MSG_ERROR([no acceptable C++ compiler found in \$PATH])
-        AC_CHECK_PROG(LD, link, link)
-        test -z "$LD" && AC_MSG_ERROR([no acceptable linker found in \$PATH])
-        #
         # Set variables
         #
-        CC='cl -c'
-        CXX='cl -c'
-        CDEF='-D'
-        CFLAGS="-nologo -W3 -DWIN32 -D_WINDOWS -DWINDOWS -DPACKAGE=\$(PACKAGE) -DVERSION=\$(VERSION)";
-        CFLAGS_DEBUG="-MDd -Od -Zi -RTC1 -DDEBUG -D_DEBUG"
-        CFLAGS_OPTIMIZE="-MD -O2 -DNDEBUG"
-        CINC='-I'
-        COUT='-Fo'
-        CXXFLAGS="-nologo -GX -W3 -DWIN32 -D_WINDOWS -DWINDOWS -DPACKAGE=\$(PACKAGE) -DVERSION=\$(VERSION)";
-        CXXFLAGS_DEBUG="-MDd -Od -Zi -RTC1 -DDEBUG -D_DEBUG"
-        CXXFLAGS_OPTIMIZE="-MD -O2 -DNDEBUG"
-        DEF='-def:'
-        EMPTY=
-        EXE_EXT='.exe'
-        ICON_EXT='.ico'
-        ICON_FLAG='/win32icon:'
-        INSTALL_EXE_OPTS=''
-        LDFLAGS='-nologo -machine:X86'
-        LDFLAGS_DEBUG="-DEBUG"
-        LDINC='-libpath:'
-        LDOUT='-out:'
-        LIB_EXT='.lib'
-        LIB_PRE=''
-        LIBFLAG=''
-        LIBS='kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib rpcrt4.lib ws2_32.lib imagehlp.lib'
-        OBJ_EXT='.obj'
-        RC='rc'
-        RC_FLAGS='-r'
-        RES_EXT='.res'
-		RESG='resgen'
-        SEP='$(EMPTY)\\$(EMPTY)'
-        SHARED_LIB_EXT='.dll'
-        SHARED_LIB_FLAG='-dll'
-        TLBX='tlbexp'
-        TYPE_LIB_EXT='.tlb'
-		GSOAP_PATH="$TOOLDIR/gsoap/win32-2.7"
+        LIBS='qtmain QtGui4 QtCore4'
+        GSOAP_PATH="$TOOLDIR/gsoap/win32-2.7"
+        QT4_DEFINES="-DUNICODE -DQT_LARGEFILE_SUPPORT"
         #
         # Set pkg-config variables
         #
@@ -357,21 +331,35 @@ case $IFOLDER_OS in
     	libdir='${exec_prefix}'
 
 		# FIXME: Need to figure out what the correct QT4_* flags are for Windows
-		QT4_CFLAGS=""
-		QT4_LDFLAGS=""
-		
-		QT4_CORE_CFLAGS=""
-		QT4_CORE_LDFLAGS=""
-		
-		QT4_GUI_CFLAGS=""
-		QT4_GUI_LDFLAGS=""
-		
-		QT4_NETWORK_CFLAGS=""
-		QT4_NETWORK_LDFLAGS=""
-		
-		QT4_XML_CFLAGS=""
-		QT4_XML_LDFLAGS=""
-    ;;
+		if test "$enable_debug" = "true"
+		then
+			CFLAGS="-g -Wall"
+			CXXFLAGS="-g -frtti -WALL"
+			QT4_CFLAGS="-I${QT4_PATH}/include -I${QT4_PATH}/include/Qt"
+			QT4_LIBS="-L${QT4_PATH}/lib -lpthreads -ldl "
+			QT4_CORE_CFLAGS="-I${QT4_PATH}/include/QtCore"
+			QT4_CORE_LIBS="-lQtCore_debug"
+			QT4_GUI_CFLAGS="-I${QT4_PATH}/include/QtGui"
+			QT4_GUI_LIBS="-lQtGui_debug"
+			QT4_NETWORK_CFLAGS="-I${QT4_PATH}/include/QtNetwork"
+			QT4_NETWORK_LIBS="-lQtNetwork_debug"
+			QT4_XML_CFLAGS="-I${QT4_PATH}/include/QtXml"
+			QT4_XML_LIBS="-lQtXml_debug"
+		else
+			CFLAGS="-O2 -Wall"
+			CXXFLAGS="-O2 -frtti -Wall"
+        	QT4_CFLAGS="-I${QT4_PATH}/include -I${QT4_PATH}/include/Qt"
+			QT4_LIBS="-L${QT4_PATH}/lib -lpthreads -ldl "
+			QT4_CORE_CFLAGS="-I${QT4_PATH}/include/QtCore"
+			QT4_CORE_LIBS="-lQtCore"
+			QT4_GUI_CFLAGS="-I${QT4_PATH}/include/QtGui"
+			QT4_GUI_LIBS="-lQtGui"
+			QT4_NETWORK_CFLAGS="-I${QT4_PATH}/include/QtNetwork"
+			QT4_NETWORK_LIBS="-lQtNetwork"
+			QT4_XML_CFLAGS="-I${QT4_PATH}/include/QtXml"
+			QT4_XML_LIBS="-lQtXml"
+		fi
+	;;
 esac
 AC_SUBST(CDEF)
 AC_SUBST(CINC)
@@ -387,53 +375,23 @@ AC_SUBST(LDFLAGS)
 AC_SUBST(LDINC)
 AC_SUBST(LDOUT)
 AC_SUBST(LIBS)
-AC_SUBST(OBJ_EXT)
-AC_SUBST(RC)
-AC_SUBST(RCFLAGS)
-AC_SUBST(RES_EXT)
-AC_SUBST(RESG)
 AC_SUBST(SEP)
 AC_SUBST(SHARED_LIB_FLAG)
 AC_SUBST(TLBX)
 AC_SUBST(GSOAP_PATH)
 
+AC_SUBST(QT4_DEFINES)
 AC_SUBST(QT4_CFLAGS)
-AC_SUBST(QT4_LDFLAGS)
+AC_SUBST(QT4_LIBS)
 AC_SUBST(QT4_CORE_CFLAGS)
-AC_SUBST(QT4_CORE_LDFLAGS)
+AC_SUBST(QT4_CORE_LIBS)
 AC_SUBST(QT4_GUI_CFLAGS)
-AC_SUBST(QT4_GUI_LDFLAGS)
+AC_SUBST(QT4_GUI_LIBS)
 AC_SUBST(QT4_NETWORK_CFLAGS)
-AC_SUBST(QT4_NETWORK_LDFLAGS)
+AC_SUBST(QT4_NETWORK_LIBS)
 AC_SUBST(QT4_XML_CFLAGS)
-AC_SUBST(QT4_XML_LDFLAGS)
+AC_SUBST(QT4_XML_LIBS)
 
-dnl FIXME: remove these echo lines once we verify this works on all three platforms
-echo
-echo QT4_CFLAGS=$QT4_CFLAGS
-echo QT4_LDFLAGS=$QT4_LDFLAGS
-echo QT4_CORE_CFLAGS=$QT4_CORE_CFLAGS
-echo QT4_CORE_LDFLAGS=$QT4_CORE_LDFLAGS
-echo QT4_GUI_CFLAGS=$QT4_GUI_CFLAGS
-echo QT4_GUI_LDFLAGS=$QT4_GUI_LDFLAGS
-echo QT4_NETWORK_CFLAGS=$QT4_NETWORK_CFLAGS
-echo QT4_NETWORK_LDFLAGS=$QT4_NETWORK_LDFLAGS
-echo QT4_XML_CFLAGS=$QT4_XML_CFLAGS
-echo QT4_XML_LDFLAGS=$QT4_XML_LDFLAGS
-echo
-
-dnl ========================================================
-dnl Handle --enable-debug
-dnl ========================================================
-
-AC_ARG_ENABLE(debug, [
-  --enable-debug          configure the Makefiles to build in DEBUG mode],
-    [case "${enableval}" in
-        yes) enable_debug=true ;;
-        no)  enable_debug=false ;;
-        *) AC_MSG_ERROR(bad value ${enableval} for --enable-debug) ;;
-    esac],[enable_debug=false])
-AM_CONDITIONAL(DEBUG, test x$enable_debug = xtrue)
 if test "$enable_debug" = "true"
 then
   # Build debug version.
