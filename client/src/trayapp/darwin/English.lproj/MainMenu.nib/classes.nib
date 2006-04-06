@@ -2,7 +2,14 @@
     IBClasses = (
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {showPreferences = id; startSync = id; stopSync = id; }; 
+            ACTIONS = {
+                showAbout = id; 
+                showHelp = id; 
+                showPreferences = id; 
+                showiFolders = id; 
+                startFullSync = id; 
+                stopSync = id; 
+            }; 
             CLASS = iFolderStatusIconApp; 
             LANGUAGE = ObjC; 
             OUTLETS = {appMenu = NSMenu; }; 

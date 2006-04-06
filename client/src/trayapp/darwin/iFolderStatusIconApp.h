@@ -33,9 +33,12 @@
 //==========================================
 // IBAction Methods
 //==========================================
-- (IBAction)showPreferences:(id)sender;
-- (IBAction)startSync:(id)sender;
+- (IBAction)showiFolders:(id)sender;
+- (IBAction)startFullSync:(id)sender;
 - (IBAction)stopSync:(id)sender;
+- (IBAction)showPreferences:(id)sender;
+- (IBAction)showHelp:(id)sender;
+- (IBAction)showAbout:(id)sender;
 
 
 //==========================================

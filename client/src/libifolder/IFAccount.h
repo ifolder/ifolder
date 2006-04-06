@@ -24,34 +24,16 @@
 #ifndef _IFOLDER_ACCOUNT_H_
 #define _IFOLDER_ACCOUNT_H_
 
-#include <QObject>
 #include <QString>
 
 #include "IFAccount.h"
 #include "IFiFolder.h"
 #include "IFUser.h"
 
-class iFolderAccount : public QObject
+class iFolderAccount
 {
-	Q_OBJECT
-	
-	Q_ENUMS(CredentialType)
-	Q_ENUMS(SearchProperty)
-	Q_ENUMS(SearchOperation)
-	
-	Q_PROPERTY(QString id READ id)
-	Q_PROPERTY(QString name READ name)
-	Q_PROPERTY(QString description READ description)
-	Q_PROPERTY(QString version READ version)
-	Q_PROPERTY(QString hostAddress READ hostAddress)
-	Q_PROPERTY(QString machineName READ machineName)
-	Q_PROPERTY(QString osVersion READ osVersion)
-	Q_PROPERTY(QString userName READ userName)
-	Q_PROPERTY(bool isDefault READ isDefault)
-	Q_PROPERTY(bool isActive READ isActive)
-
 	public:
-		~iFolderAccount();
+		virtual ~iFolderAccount();
 		
 		/**
 		 * Enumerations
@@ -112,7 +94,7 @@ class iFolderAccount : public QObject
 		static int add(const char *hostAddress, const char *userName, const char *password, bool makeDefault, iFolderAccount *retVal);
 	
 	private:
-		iFolderAccount(QObject *parent = 0);
+		iFolderAccount();
 };
 
 #endif /*_IFOLDER_ACCOUNT_H_*/

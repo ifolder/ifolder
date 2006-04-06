@@ -40,6 +40,33 @@
 }
 
 //===================================================================
+// showiFolders
+// bring up the main iFolder window
+//===================================================================
+- (IBAction)showiFolders:(id)sender
+{
+}
+
+//===================================================================
+// startFullSync
+// start a synchronization for every iFolder (one by one)
+//===================================================================
+- (IBAction)startFullSync:(id)sender
+{
+	[appStatusItem setImage:[NSImage imageNamed:@"syncbw22"]];
+	ifolder_client_initialize();
+}
+
+//===================================================================
+// stopSync
+// halt all synchronization activity
+//===================================================================
+- (IBAction)stopSync:(id)sender
+{
+	[appStatusItem setImage:[NSImage imageNamed:@"ifolderbw22"]];
+}
+
+//===================================================================
 // showPreferences
 // bring up the preferences window
 //===================================================================
@@ -48,24 +75,21 @@
 }
 
 //===================================================================
-// startSync
-// bring up the preferences window
+// showHelp
+// bring up the user documentation
 //===================================================================
-- (IBAction)startSync:(id)sender
+- (IBAction)showHelp:(id)sender
 {
-	[appStatusItem setImage:[NSImage imageNamed:@"syncbw22"]];
-	ifolder_client_initialize();
 }
 
 //===================================================================
-// stopSync
-// bring up the preferences window
+// showAbout
+// bring up the about screen
 //===================================================================
-- (IBAction)stopSync:(id)sender
+- (IBAction)showAbout:(id)sender
 {
-	[appStatusItem setImage:[NSImage imageNamed:@"ifolderbw22"]];
-	ifolder_client_uninitialize();
 }
+
 
 
 //===================================================================
@@ -87,6 +111,11 @@
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
 	// for later stuff
+	int err = ifolder_client_uninitialize();
+	if (err != IFOLDER_SUCCESS)
+		NSLog(@"There was an error uninitializing the iFolder Client: %d", err);
+	else
+		NSLog(@"The iFolder Client uninitialized successfully.");
 }
 
 

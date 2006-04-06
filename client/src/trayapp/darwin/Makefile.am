@@ -35,7 +35,7 @@ CUR_DIR := $(shell pwd)
 all: "$(srcdir)/build/$(BUILDCONF)/iFolderStatusIcon.app"
 
 "$(srcdir)/build/$(BUILDCONF)/iFolderStatusIcon.app": iFolderStatusIcon.xcodeproj
-	xcodebuild -configuration $(BUILDCONF) HEADER_SEARCH_PATHS="../../libifolder" LIBRARY_SEARCH_PATHS="../../libifolder/.libs"
+	xcodebuild -configuration $(BUILDCONF)
 
 install-exec-local: "$(srcdir)/build/$(BUILDCONF)/iFolderStatusIcon.app"
 	$(mkinstalldirs) $(DESTDIR)$(prefix)/Applications
