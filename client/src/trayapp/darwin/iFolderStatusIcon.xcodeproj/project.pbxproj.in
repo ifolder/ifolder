@@ -45,7 +45,7 @@
 		216E647509D99DA200EC53FD /* libipcserver.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libipcserver.a; path = "../../libifolder/ipc-server/libipcserver/libipcserver.a"; sourceTree = SOURCE_ROOT; };
 		216E647909D99DCC00EC53FD /* libsoap.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsoap.a; path = "../../libifolder/ipc-server/libsoap/libsoap.a"; sourceTree = SOURCE_ROOT; };
 		216E647B09D99DE800EC53FD /* libsync.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsync.a; path = "../../libifolder/ipc-server/libsync/libsync.a"; sourceTree = SOURCE_ROOT; };
-		2183642709E58529000733D8 /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = "/usr/local/qt-4.1.0/lib/QtCore.framework"; sourceTree = "<absolute>"; };
+		2183642709E58529000733D8 /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = "@QT4_PATH@/lib/QtCore.framework"; sourceTree = "<absolute>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = SOURCE_ROOT; };
 		29B97319FDCFA39411CA2CEA /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = SOURCE_ROOT; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
@@ -265,7 +265,7 @@
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(FRAMEWORK_SEARCH_PATHS)",
-					"/usr/local/qt-4.1.0/lib",
+					"@QT4_PATH@/lib",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -295,7 +295,7 @@
 				);
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(FRAMEWORK_SEARCH_PATHS)",
-					"/usr/local/qt-4.1.0/lib",
+					"@QT4_PATH@/lib",
 				);
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
