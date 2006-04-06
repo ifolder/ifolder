@@ -27,9 +27,12 @@
 #include <QObject>
 #include <QString>
 
-class iFolderClient : public QObject
+class iFolderClient
 {
 	public:
+		iFolderClient(QObject *parent = 0);
+		virtual ~iFolderClient();
+
 		int initialize();
 		int uninitialize();
 		int startTrayApp(QString trayAppExePath);

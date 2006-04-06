@@ -34,6 +34,8 @@
 #include <string.h>
 #include <gtk/gtk.h>
 
+#include "ifolder-client.h"
+
 //#if !GTK_CHECK_VERSION(2,6,0)
 //#include <gnome.h>
 //#endif
@@ -57,6 +59,7 @@ G_DEFINE_TYPE(IFApplet, ifa, EGG_TYPE_TRAY_ICON)
 
 static void ifa_init (IFApplet *applet)
 {
+	int err;
 //	applet->animation_id = 0;
 //	applet->animation_step = 0;
 
@@ -65,6 +68,16 @@ static void ifa_init (IFApplet *applet)
 	
 /*	gtk_window_set_default_icon_from_file (ICONDIR"/IFApplet/wireless-applet.png", NULL); */
 	gtk_widget_show (ifa_get_instance (applet));
+	ifa_set_icon(applet, applet->starting_up_icon);
+	
+	err = ifolder_client_initialize();
+	if (err != IFOLDER_SUCCESS)
+	{
+		/* FIXME: Show the user the error */
+		ifa_destroy(applet);
+		return;
+	}
+	
 	ifa_set_icon(applet, applet->idle_icon);
 }
 
@@ -514,7 +527,17 @@ ifa_help_cb(GtkMenuItem *mi, IFApplet *applet)
 static void
 ifa_quit_cb(GtkMenuItem *mi, IFApplet *applet)
 {
+	int err;
+
+	ifa_set_icon(applet, applet->shutting_down_icon);
+
 	/* FIXME: Add code to stop all the services and quit the program */
+//	err = ifolder_client_uninitialize();
+//	if (err != IFOLDER_SUCCESS)
+//	{
+//		/* FIXME: Let the user there was an error uninitializing */
+//	}
+
 	ifa_destroy(applet);
 }
 

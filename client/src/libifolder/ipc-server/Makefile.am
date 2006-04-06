@@ -55,7 +55,8 @@ c_api_sources = \
 	../common/ifolder-client.cpp
 
 cpp_api_sources = \
-	IFAccount.cpp
+	IFAccount.cpp				\
+	IFiFolderClient.cpp
 	
 libifolder_trayapp_a_SOURCES = \
 	$(c_api_sources)				\

@@ -24,6 +24,11 @@
 #ifndef _IFOLDER_ERRORS_H_
 #define _IFOLDER_ERRORS_H_
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif		/* __cplusplus */
+
 #define IFOLDER_SUCCESS	0
 #define IFOLDER_ERROR		-1
 
@@ -31,6 +36,10 @@
 #define IFOLDER_ERROR_UNINITIALIZED		-102
 
 #define IFOLDER_ERROR_OUT_OF_MEMORY	-201
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /*_IFOLDER_ERRORS_H_*/
 

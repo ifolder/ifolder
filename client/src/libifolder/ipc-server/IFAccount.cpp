@@ -28,3 +28,7 @@
 iFolderAccount::iFolderAccount(QObject *parent)
 {
 }
+
+iFolderAccount::~iFolderAccount()
+{
+}

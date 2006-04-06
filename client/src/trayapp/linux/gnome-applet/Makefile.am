@@ -19,12 +19,13 @@ ifolder3_applet_SOURCES = \
 	eggtrayicon.c			\
 	eggtrayicon.h
 
-ifolder3_applet_LDADD = \
+ifolder3_applet_LDFLAGS = \
 	$(top_srcdir)/src/libifolder/ipc-server/libipcserver/libipcserver.a \
 	$(top_srcdir)/src/libifolder/ipc-server/libsoap/libsoap.a \
 	$(top_srcdir)/src/libifolder/ipc-server/libsync/libsync.a \
 	$(top_srcdir)/src/libifolder/ipc-server/libifolder-trayapp.a \
-	$(TRAYAPP_LIBS)
+	$(TRAYAPP_LIBS) \
+	$(QT4_CORE_LIBS)
 
 install-exec-local:
 	$(mkinstalldirs) $(IMAGE_INSTALL_DIR)

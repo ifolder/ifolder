@@ -21,22 +21,31 @@
  *
  ***********************************************************************/
 
-#ifndef _IFOLDER_C_CLIENT_H_
-#define _IFOLDER_C_CLIENT_H_
-
 #include "ifolder-errors.h"
+#include "IFiFolderClient.h"
 
-#ifdef __cplusplus
-extern "C"
+iFolderClient::iFolderClient(QObject *parent)
 {
-#endif		/* __cplusplus */
-
-int ifolder_client_initialize(void);
-int ifolder_client_uninitialize(void);
-int ifolder_client_start_tray_app(const char *tray_app_exe_path);
-
-#ifdef __cplusplus
 }
-#endif		/* __cplusplus */
 
-#endif /*_IFOLDER_C_CLIENT_H_*/
+iFolderClient::~iFolderClient()
+{
+}
+
+int
+iFolderClient::initialize()
+{
+	return IFOLDER_SUCCESS;
+}
+
+int
+iFolderClient::uninitialize()
+{
+	return IFOLDER_SUCCESS;
+}
+
+int
+iFolderClient::startTrayApp(QString trayAppExePath)
+{
+	return IFOLDER_SUCCESS;
+}

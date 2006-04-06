@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include "ifolder-errors.h"
 #include "ifolder-client.h"
+
 #include "IFiFolderClient.h"
 
 static iFolderClient *ifolderClient = NULL;
