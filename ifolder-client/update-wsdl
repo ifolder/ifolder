@@ -1,7 +1,0 @@
-#!/bin/sh
-
-CMD="cp ../../simias-server/server/src/iFolder.WebService/iFolderWeb.wsdl ./src/libifolder/libifsoap/iFolderWeb.wsdl"
-
-echo $CMD
-
-$CMD
