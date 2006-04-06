@@ -220,8 +220,6 @@
 			<key>Layout</key>
 			<array>
 				<dict>
-					<key>BecomeActive</key>
-					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -304,12 +302,14 @@
 					<key>Dock</key>
 					<array>
 						<dict>
+							<key>BecomeActive</key>
+							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
 								<string>1CE0B20306471E060097A5F4</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>iFolderStatusIconApp.h</string>
+								<string>iFolderStatusIconApp.m</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -317,17 +317,17 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CE0B20406471E060097A5F4</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>iFolderStatusIconApp.h</string>
+										<string>iFolderStatusIconApp.m</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>21F6BEE209E5930900CD4F71</string>
+										<string>21F6BEF309E5945500CD4F71</string>
 										<key>history</key>
 										<array>
 											<string>219AB86109D33BD200A5C91F</string>
 											<string>216E646F09D99C3A00EC53FD</string>
+											<string>21F6BEEC09E593E900CD4F71</string>
 											<string>2183640E09E58325000733D8</string>
-											<string>2175B6E609E58B910002A016</string>
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -335,6 +335,7 @@
 											<string>219AB86509D33BD200A5C91F</string>
 											<string>216E647009D99C3A00EC53FD</string>
 											<string>2183641009E58325000733D8</string>
+											<string>21F6BEED09E593E900CD4F71</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -373,7 +374,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>21F6BEE309E5930900CD4F71</string>
+										<string>21F6BEF409E5945500CD4F71</string>
 										<key>history</key>
 										<array>
 											<string>219AB86109D33BD200A5C91F</string>

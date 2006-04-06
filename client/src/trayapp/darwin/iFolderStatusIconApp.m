@@ -33,10 +33,27 @@
 //===================================================================
 -(void)awakeFromNib
 {
+	int err;
 	appStatusItem = [[[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength] retain];
 	[appStatusItem setMenu:appMenu];
 	[appStatusItem setHighlightMode:YES];	// if this is not set, your menu will not highlight when clicked
+	
+	// FIXME: Change the icon to ifolder-starting-up.png
 	[appStatusItem setImage:[NSImage imageNamed:@"ifolderbw22"]];		// you do have an icon, right?
+
+	err = ifolder_client_initialize();
+	if (err == IFOLDER_SUCCESS)
+	{
+		NSLog(@"The iFolder Client initialized successfully!");
+
+		// FIXME: Change the icon to ifolder-idle.png
+		[appStatusItem setImage:[NSImage imageNamed:@"ifolderbw22"]];		// you do have an icon, right?
+	}
+	else
+	{
+		NSLog(@"The iFolder Client failed to initialize: %d", err);
+		// FIXME: popup an error and don't let the app continue
+	}
 }
 
 //===================================================================
@@ -54,7 +71,6 @@
 - (IBAction)startFullSync:(id)sender
 {
 	[appStatusItem setImage:[NSImage imageNamed:@"syncbw22"]];
-	ifolder_client_initialize();
 }
 
 //===================================================================
