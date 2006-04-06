@@ -24,7 +24,7 @@
 #ifndef _IFOLDER_USER_H_
 #define _IFOLDER_USER_H_
 
-#include "IFAccount.h"
+#include "IFDomain.h"
 
 class iFolderUser
 {
@@ -34,7 +34,7 @@ class iFolderUser
 	private:
 		iFolderUser();
 		
-		friend class iFolderAccount;
+		friend class iFolderDomain;
 		friend class iFolder;
 };
 

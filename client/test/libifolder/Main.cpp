@@ -23,14 +23,14 @@
 
 #include <cppunit/ui/text/TestRunner.h>
 #include "IFiFolderClientTest.h"
-#include "IFAccountTest.h"
+#include "IFDomainTest.h"
 
 int
 main(int argc, char *argv[])
 {
 	CppUnit::TextUi::TestRunner runner;
 	runner.addTest( IFiFolderClientTest::suite() );
-	runner.addTest( IFAccountTest::suite() );
+	runner.addTest( IFDomainTest::suite() );
 	runner.run();
 	return 0;
 }

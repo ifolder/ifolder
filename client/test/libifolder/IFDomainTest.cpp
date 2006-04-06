@@ -21,28 +21,28 @@
  *
  ***********************************************************************/
 
-#include "IFAccountTest.h"
+#include "IFDomainTest.h"
 
-IFAccountTest::IFAccountTest()
+IFDomainTest::IFDomainTest()
 {
 }
 
-IFAccountTest::~IFAccountTest()
-{
-}
-
-void
-IFAccountTest::setUp()
+IFDomainTest::~IFDomainTest()
 {
 }
 
 void
-IFAccountTest::tearDown()
+IFDomainTest::setUp()
 {
 }
 
 void
-IFAccountTest::testHelloWorld()
+IFDomainTest::tearDown()
+{
+}
+
+void
+IFDomainTest::testHelloWorld()
 {
 	CPPUNIT_ASSERT( 1 == 2 );
 }

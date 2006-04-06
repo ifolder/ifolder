@@ -21,19 +21,19 @@
  *
  ***********************************************************************/
 
-#ifndef _IFOLDER_ACCOUNT_H_
-#define _IFOLDER_ACCOUNT_H_
+#ifndef _IFOLDER_DOMAIN_H_
+#define _IFOLDER_DOMAIN_H_
 
 #include <QString>
 
-#include "IFAccount.h"
+#include "IFDomain.h"
 #include "IFiFolder.h"
 #include "IFUser.h"
 
-class iFolderAccount
+class iFolderDomain
 {
 	public:
-		virtual ~iFolderAccount();
+		virtual ~iFolderDomain();
 		
 		/**
 		 * Enumerations
@@ -88,13 +88,13 @@ class iFolderAccount
 		/**
 		 * Static Methods
 		 */
-		static int getAll(QList<iFolderAccount> *retVal);
-		static int getAllActive(QList<iFolderAccount> *retVal);
-		static int getDefault(iFolderAccount *retVal);
-		static int add(const char *hostAddress, const char *userName, const char *password, bool makeDefault, iFolderAccount *retVal);
+		static int getAll(QList<iFolderDomain> *retVal);
+		static int getAllActive(QList<iFolderDomain> *retVal);
+		static int getDefault(iFolderDomain *retVal);
+		static int add(const char *hostAddress, const char *userName, const char *password, bool makeDefault, iFolderDomain *retVal);
 	
 	private:
-		iFolderAccount();
+		iFolderDomain();
 };
 
-#endif /*_IFOLDER_ACCOUNT_H_*/
+#endif /*_IFOLDER_DOMAIN_H_*/

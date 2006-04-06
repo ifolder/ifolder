@@ -20,25 +20,25 @@
  *  Author(s): Boyd Timothy <btimothy@novell.com>
  *
  ***********************************************************************/
-#ifndef _IFOLDER_ACCOUNT_TEST_H_
-#define _IFOLDER_ACCOUNT_TEST_H_
+#ifndef _IFOLDER_DOMAIN_TEST_H_
+#define _IFOLDER_DOMAIN_TEST_H_
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestPath.h>
 #include <cppunit/TestCase.h>
 
-class IFAccountTest : public CPPUNIT_NS::TestFixture {
+class IFDomainTest : public CPPUNIT_NS::TestFixture {
 
-CPPUNIT_TEST_SUITE( IFAccountTest );
+CPPUNIT_TEST_SUITE( IFDomainTest );
 CPPUNIT_TEST( testHelloWorld );
 CPPUNIT_TEST_SUITE_END();
 
 public:
 	// Constructor
-	IFAccountTest();
+	IFDomainTest();
 
 	// Destructor
-	virtual ~IFAccountTest();
+	virtual ~IFDomainTest();
 
 	void setUp();
 	void tearDown();
@@ -46,5 +46,5 @@ public:
 	void testHelloWorld();
 };
 
-#endif // _IFOLDER_ACCOUNT_TEST_H_
+#endif // _IFOLDER_DOMAIN_TEST_H_
 

@@ -51,7 +51,7 @@ class iFolder
 	private:
 		iFolder();	
 
-		friend class iFolderAccount;
+		friend class iFolderDomain;
 };
 
 #endif /*_IFOLDER_H_*/
