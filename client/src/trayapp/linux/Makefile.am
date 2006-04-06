@@ -18,7 +18,7 @@
 #  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
 #######################################################################
-SUBDIRS = 
+SUBDIRS = gnome-applet
 
 DIST_SUBDIRS = $(SUBDIRS)
 
