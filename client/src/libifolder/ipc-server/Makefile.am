@@ -43,17 +43,15 @@ DEFINES = \
 libifolder_trayapp_a_CXXFLAGS = \
 	$(DEFINES)					\
 	$(QT4_CFLAGS)				\
-	$(QT4_CORE_CFLAGS)			\
-	$(QT4_NETWORK_CFLAGS)
+	$(QT4_CORE_CFLAGS)
 
-libifolder_trayapp_a_LDFLAGS = \
+libifolder_trayapp_a_LIBADD = \
 	$(QT4_LIBS)				\
-	$(QT4_CORE_LIBS)			\
-	$(QT4_NETWORK_LIBS)
+	$(QT4_CORE_LIBS)
 	
 libifolder_trayapp_a_SOURCES = \
-	IFDomain.cpp				\
-	IFiFolderClient.cpp
+	IFDomainServer.cpp				\
+	IFiFolderClientServer.cpp
 
 #if !WINDOWS
 #install-exec-hook:

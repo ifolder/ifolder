@@ -24,6 +24,7 @@ DIST_SUBDIRS = $(SUBDIRS)
 
 INCLUDES =			\
 	-I$(top_srcdir)		\
+	-I$(srcdir)/..		\
 	-I$(top_builddir)
 
 lib_LTLIBRARIES = libifolder.la
@@ -31,7 +32,24 @@ lib_LTLIBRARIES = libifolder.la
 #libifolder_LDFLAGS =
 
 libifolder_la_SOURCES = \
-	placeholder.c
+	IFiFolderClientClient.cpp	\
+	IFDomainClient.cpp
+
+DEFINES = \
+	$(QT4_DEFINES)				\
+	-DQT_NETWORK					\
+	-DQT_CORE_LIB				\
+	-DQT_SHARED
+
+libifolder_la_CXXFLAGS = \
+	$(DEFINES)					\
+	$(QT4_CFLAGS)				\
+	$(QT4_CORE_CFLAGS)			\
+	$(QT4_NETWORK_CFLAGS)
+
+libifolder_la_LDFLAGS = \
+	$(QT4_LIBS)				\
+	$(QT4_CORE_LIBS)
 
 #libifolder_HEADERS =
 

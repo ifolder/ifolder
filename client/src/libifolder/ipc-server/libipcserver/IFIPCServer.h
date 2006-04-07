@@ -21,34 +21,30 @@
  *
  ***********************************************************************/
 
-#ifndef _IFOLDER_ERRORS_H_
-#define _IFOLDER_ERRORS_H_
+#ifndef _IFOLDER_IPC_SERVER_H_
+#define _IFOLDER_IPC_SERVER_H_
 
-#ifdef __cplusplus
-extern "C"
+//#include <QObject>
+#include <QThread>
+
+#include <common/IFNamedPipe.h>
+
+class iFolderIPCServer : public QThread
 {
-#endif		/* __cplusplus */
+//	Q_OBJECT
+	
+	public:
+		iFolderIPCServer(/*QObject *parent*/);
+		virtual ~iFolderIPCServer();
+		
+		void run();
+		void gracefullyExit();
+	
+	private:
+		int processMessage(int messageType, void *message);
+	
+		iFolderNamedPipe *serverNamedPipe;
+		bool bExit;
+};
 
-#define IFOLDER_SUCCESS	0
-#define IFOLDER_ERROR		-1
-
-#define IFOLDER_ERROR_ALREADY_INITIALIZED	-101
-#define IFOLDER_ERROR_NOT_INITIALIZED		-102
-
-#define IFOLDER_ERROR_OUT_OF_MEMORY	-201
-
-/* IPC ERROR CODES */
-#define IFOLDER_ERROR_IPC_CREATE			-301
-#define IFOLDER_ERROR_IPC_READ			-302
-#define IFOLDER_ERROR_IPC_WRITE			-302
-#define IFOLDER_ERROR_IPC_INVALID			-303
-#define IFOLDER_ERROR_IPC_NO_SERVER		-304
-#define IFOLDER_ERROR_IPC_CLOSE			-305
-#define IFOLDER_ERROR_IPC_INVALID_MESSAGE	-306
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /*_IFOLDER_ERRORS_H_*/
-
+#endif /*_IFOLDER_IPC_SERVER_H_*/

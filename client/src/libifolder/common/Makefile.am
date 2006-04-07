@@ -52,7 +52,10 @@ libifolder_common_a_LIBADD = \
 	$(QT4_NETWORK_LIBS)
 	
 libifolder_common_a_SOURCES = 			\
-	ifolder-client.cpp
+	ifolder-client.cpp					\
+	IFNamedPipe.cpp						\
+	IFNamedPipe.h						\
+	IFMessages.h
 
 #if !WINDOWS
 #install-exec-hook:

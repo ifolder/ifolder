@@ -24,7 +24,6 @@
 #ifndef _IFOLDER_CLIENT_H_
 #define _IFOLDER_CLIENT_H_
 
-#include <QObject>
 #include <QString>
 
 class iFolderClient
@@ -38,6 +37,7 @@ class iFolderClient
 		int startTrayApp(QString trayAppExePath);
 	private:
 		bool bInitialized;
+		void *ipcClass;
 };
 
 #endif /*_IFOLDER_CLIENT_H_*/
