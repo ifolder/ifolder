@@ -12,6 +12,7 @@
 		216E647A09D99DCC00EC53FD /* libsoap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 216E647909D99DCC00EC53FD /* libsoap.a */; };
 		216E647C09D99DE800EC53FD /* libsync.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 216E647B09D99DE800EC53FD /* libsync.a */; };
 		2183642809E58529000733D8 /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2183642709E58529000733D8 /* QtCore.framework */; };
+		219976F109E6B91B00D738CA /* libifolder-common.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 219976F009E6B91B00D738CA /* libifolder-common.a */; };
 		3E7A997C09B6A6DE00F4D4E3 /* iFolderStatusIconApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E7A997B09B6A6DE00F4D4E3 /* iFolderStatusIconApp.m */; };
 		3E86171409B6B2C500FCDC01 /* ifolderbw22.png in Resources */ = {isa = PBXBuildFile; fileRef = 3E86171309B6B2C500FCDC01 /* ifolderbw22.png */; };
 		3E86171609B6B2CA00FCDC01 /* ifolder.icns in Resources */ = {isa = PBXBuildFile; fileRef = 3E86171509B6B2CA00FCDC01 /* ifolder.icns */; };
@@ -46,6 +47,7 @@
 		216E647909D99DCC00EC53FD /* libsoap.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsoap.a; path = "../../libifolder/ipc-server/libsoap/libsoap.a"; sourceTree = SOURCE_ROOT; };
 		216E647B09D99DE800EC53FD /* libsync.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsync.a; path = "../../libifolder/ipc-server/libsync/libsync.a"; sourceTree = SOURCE_ROOT; };
 		2183642709E58529000733D8 /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = "@QT4_PATH@/lib/QtCore.framework"; sourceTree = "<absolute>"; };
+		219976F009E6B91B00D738CA /* libifolder-common.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libifolder-common.a"; path = "../../libifolder/common/libifolder-common.a"; sourceTree = SOURCE_ROOT; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = SOURCE_ROOT; };
 		29B97319FDCFA39411CA2CEA /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = SOURCE_ROOT; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
@@ -71,6 +73,7 @@
 				216E647A09D99DCC00EC53FD /* libsoap.a in Frameworks */,
 				216E647C09D99DE800EC53FD /* libsync.a in Frameworks */,
 				2183642809E58529000733D8 /* QtCore.framework in Frameworks */,
+				219976F109E6B91B00D738CA /* libifolder-common.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,6 +122,7 @@
 				216E647B09D99DE800EC53FD /* libsync.a */,
 				216E647909D99DCC00EC53FD /* libsoap.a */,
 				216E647509D99DA200EC53FD /* libipcserver.a */,
+				219976F009E6B91B00D738CA /* libifolder-common.a */,
 				216E646909D99C3000EC53FD /* libifolder-trayapp.a */,
 			);
 			name = Libraries;
@@ -279,6 +283,7 @@
 					"$(SRCROOT)/../../libifolder/ipc-server/libsoap",
 					"$(SRCROOT)/../../libifolder/ipc-server/libipcserver",
 					"$(SRCROOT)/../../libifolder/ipc-server/libsync",
+					"$(SRCROOT)/../../libifolder/common",
 				);
 				PRODUCT_NAME = iFolderStatusIcon;
 				WRAPPER_EXTENSION = app;
@@ -307,6 +312,7 @@
 					"$(SRCROOT)/../../libifolder/ipc-server/libsoap",
 					"$(SRCROOT)/../../libifolder/ipc-server/libipcserver",
 					"$(SRCROOT)/../../libifolder/ipc-server/libsync",
+					"$(SRCROOT)/../../libifolder/common",
 				);
 				PRODUCT_NAME = iFolderStatusIcon;
 				WRAPPER_EXTENSION = app;

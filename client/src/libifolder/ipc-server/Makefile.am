@@ -51,16 +51,9 @@ libifolder_trayapp_a_LDFLAGS = \
 	$(QT4_CORE_LIBS)			\
 	$(QT4_NETWORK_LIBS)
 	
-c_api_sources = \
-	../common/ifolder-client.cpp
-
-cpp_api_sources = \
+libifolder_trayapp_a_SOURCES = \
 	IFDomain.cpp				\
 	IFiFolderClient.cpp
-	
-libifolder_trayapp_a_SOURCES = \
-	$(c_api_sources)				\
-	$(cpp_api_sources)
 
 #if !WINDOWS
 #install-exec-hook:

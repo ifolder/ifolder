@@ -20,6 +20,7 @@ ifolder3_applet_SOURCES = \
 	eggtrayicon.h
 
 ifolder3_applet_LDFLAGS = \
+	$(top_srcdir)/src/libifolder/common/libifolder-common.a \
 	$(top_srcdir)/src/libifolder/ipc-server/libipcserver/libipcserver.a \
 	$(top_srcdir)/src/libifolder/ipc-server/libsoap/libsoap.a \
 	$(top_srcdir)/src/libifolder/ipc-server/libsync/libsync.a \

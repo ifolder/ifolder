@@ -417,6 +417,7 @@ AC_CONFIG_FILES([
   package/windows/Makefile
   src/Makefile
   src/libifolder/Makefile
+  src/libifolder/common/Makefile
   src/libifolder/ipc-client/Makefile
   src/libifolder/ipc-server/Makefile
   src/libifolder/ipc-server/libipcserver/Makefile

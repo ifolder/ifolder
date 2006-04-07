@@ -17,6 +17,7 @@ test_libifolder_SOURCES = \
 	IFDomainTest.cpp
 
 test_libifolder_LDFLAGS = \
+	$(top_srcdir)/src/libifolder/common/libifolder-common.a \
 	$(top_srcdir)/src/libifolder/ipc-server/libipcserver/libipcserver.a \
 	$(top_srcdir)/src/libifolder/ipc-server/libsoap/libsoap.a \
 	$(top_srcdir)/src/libifolder/ipc-server/libsync/libsync.a \
