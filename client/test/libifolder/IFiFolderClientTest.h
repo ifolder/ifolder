@@ -30,7 +30,8 @@
 class IFiFolderClientTest : public CPPUNIT_NS::TestFixture {
 
 CPPUNIT_TEST_SUITE( IFiFolderClientTest );
-CPPUNIT_TEST( testHelloWorld );
+CPPUNIT_TEST( testInitialize );
+CPPUNIT_TEST( testUninitialize );
 CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -43,7 +44,8 @@ public:
 	void setUp();
 	void tearDown();
 
-	void testHelloWorld();
+	void testInitialize();
+	void testUninitialize();
 };
 
 #endif // _IFOLDER_CLIENT_TEST_H_

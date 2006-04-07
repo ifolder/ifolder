@@ -21,4 +21,6 @@ test_libifolder_LDFLAGS = \
 	$(top_srcdir)/src/libifolder/ipc-server/libsoap/libsoap.a \
 	$(top_srcdir)/src/libifolder/ipc-server/libsync/libsync.a \
 	$(top_srcdir)/src/libifolder/ipc-server/libifolder-trayapp.a \
-	$(CPPUNIT_LIBS)
+	$(CPPUNIT_LIBS) \
+	-F$(QT4_PATH)/lib \
+	-framework QtCore

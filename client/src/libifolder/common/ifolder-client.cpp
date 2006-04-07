@@ -46,10 +46,21 @@ ifolder_client_initialize(void)
 int
 ifolder_client_uninitialize(void)
 {
+	int err;
+
 	if (ifolderClient != NULL)
-		return ifolderClient->uninitialize();
+	{
+		err = ifolderClient->uninitialize();
+		if (err == IFOLDER_SUCCESS)
+		{
+			delete ifolderClient;
+			ifolderClient = NULL;
+		}
+
+		return err;
+	}
 	
-	return IFOLDER_ERROR_UNINITIALIZED;
+	return IFOLDER_ERROR_NOT_INITIALIZED;
 }
 
 int
@@ -59,5 +70,5 @@ ifolder_start_tray_app(const char *tray_app_exe_path)
 	if (ifolderClient != NULL)
 		return ifolderClient->startTrayApp(trayAppExePath);
 	
-	return IFOLDER_ERROR_UNINITIALIZED;
+	return IFOLDER_ERROR_NOT_INITIALIZED;
 }

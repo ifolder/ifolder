@@ -24,7 +24,8 @@
 #include "ifolder-errors.h"
 #include "IFiFolderClient.h"
 
-iFolderClient::iFolderClient()
+iFolderClient::iFolderClient() :
+	bInitialized(false)
 {
 }
 
@@ -35,12 +36,24 @@ iFolderClient::~iFolderClient()
 int
 iFolderClient::initialize()
 {
+	if (bInitialized)
+		return IFOLDER_ERROR_ALREADY_INITIALIZED;
+
+	// FIXME: Initialize the client (i.e., start up the IPC server, etc.)
+
+	bInitialized = true;
 	return IFOLDER_SUCCESS;
 }
 
 int
 iFolderClient::uninitialize()
 {
+	if (!bInitialized)
+		return IFOLDER_ERROR_NOT_INITIALIZED;
+
+	// FIXME: Uninitialize the client (i.e., stop the IPC server, etc.)
+
+	bInitialized = false;
 	return IFOLDER_SUCCESS;
 }
 

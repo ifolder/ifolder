@@ -36,6 +36,8 @@ class iFolderClient
 		int initialize();
 		int uninitialize();
 		int startTrayApp(QString trayAppExePath);
+	private:
+		bool bInitialized;
 };
 
 #endif /*_IFOLDER_CLIENT_H_*/
