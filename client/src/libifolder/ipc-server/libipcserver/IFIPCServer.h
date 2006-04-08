@@ -48,3 +48,4 @@ class iFolderIPCServer : public QThread
 };
 
 #endif /*_IFOLDER_IPC_SERVER_H_*/
+

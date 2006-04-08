@@ -103,3 +103,4 @@ iFolderIPCServer::gracefullyExit()
 {
 	bExit = true;
 }
+

@@ -73,3 +73,4 @@ typedef iFolderSimpleMessageRequest iFolderMessageUnregisterClientRequest;
 typedef iFolderSimpleMessageResponse iFolderMessageUnregisterClientResponse;
 
 #endif /*_IFOLDER_MESSAGES_H_*/
+
