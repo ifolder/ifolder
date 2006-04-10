@@ -63,7 +63,8 @@ iFolderClient::initialize()
 		return IFOLDER_ERROR_ALREADY_INITIALIZED;
 
 	// FIXME: Initialize the client (i.e., start up the IPC server, etc.)
-	ipcServer = new iFolderIPCServer(/*NULL*/);
+	ipcServer = new iFolderIPCServer();
+//	ipcServer = new iFolderIPCServer(NULL);
 	if (!ipcServer)
 		return IFOLDER_ERROR_OUT_OF_MEMORY;
 

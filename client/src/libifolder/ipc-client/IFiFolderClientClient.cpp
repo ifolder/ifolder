@@ -22,6 +22,7 @@
  ***********************************************************************/
 
 #include "ifolder-errors.h"
+#include "IFIPCClient.h"
 #include "IFiFolderClient.h"
 
 iFolderClient::iFolderClient() :
@@ -31,15 +32,68 @@ iFolderClient::iFolderClient() :
 
 iFolderClient::~iFolderClient()
 {
+	int err;
+	iFolderIPCClient *ipcClient;
+
+	if (ipcClass != NULL)
+	{
+		ipcClient = (iFolderIPCClient *)ipcClass;
+		if (ipcClient->isRunning())
+		{
+			ipcClient->gracefullyExit();
+			if (ipcClient->wait(5000) != true)
+			{
+				// KILL the thread
+				ipcClient->exit(-1);
+			}
+		}
+		
+		delete ipcClient;
+		ipcClass = NULL;
+	}
 }
 
 int
 iFolderClient::initialize()
 {
+	int err;
+	iFolderIPCClient *ipcClient;
+
 	if (bInitialized)
 		return IFOLDER_ERROR_ALREADY_INITIALIZED;
 
 	// FIXME: Initialize the client (i.e., start up the IPC server, etc.)
+	ipcClient = new iFolderIPCClient();
+	if (!ipcClient)
+		return IFOLDER_ERROR_OUT_OF_MEMORY;
+	
+	ipcClass = ipcClient;	// hold onto the pointer
+	
+	err = ipcClient->init();
+	if (err != IFOLDER_SUCCESS)
+	{
+		printf("ipcClient->init() failed: %d\n", err);
+		return err;
+	}
+
+	printf("iFolderClient::initialize(): ipcClient->init() succeeded\n");
+
+	// Start the client thread to listen for events from the IPC server.
+	ipcClient->start();
+	
+	printf("iFolderClient::initialize(): ipcClient->start() called\n");
+
+	err = ipcClient->registerClient();
+	if (err != IFOLDER_SUCCESS)
+	{
+		printf("iFolderClient::initialize(): Error calling ipcClient->registerClient(): %d\n", err);
+		delete ipcClient;
+		printf("deleted ipcClient\n");
+		ipcClass = NULL;
+		return err;
+	}
+
+	printf("iFolderClient::initialize(): ipcClient->register() succeeded\n");
 
 	bInitialized = true;
 	return IFOLDER_SUCCESS;
@@ -48,11 +102,28 @@ iFolderClient::initialize()
 int
 iFolderClient::uninitialize()
 {
+	int err;
+	iFolderIPCClient *ipcClient;
+	
 	if (!bInitialized)
 		return IFOLDER_ERROR_NOT_INITIALIZED;
 
 	// FIXME: Uninitialize the client (i.e., stop the IPC server, etc.)
-
+	ipcClient = (iFolderIPCClient *)ipcClass;
+	if (ipcClient->isRunning())
+	{
+		ipcClient->gracefullyExit();
+		printf("Waiting 5 seconds for the client thread to finish\n");
+		if (ipcClient->wait(5000) != true)
+		{
+			// kill the thread
+			ipcClient->exit(-1);
+		}
+	}
+	
+	delete ipcClient;
+	ipcClass = NULL;
+	
 	bInitialized = false;
 	return IFOLDER_SUCCESS;
 }

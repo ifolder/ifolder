@@ -18,7 +18,7 @@
 #  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
 #######################################################################
-SUBDIRS = libsync libsoap libipcserver
+SUBDIRS = libsync libsoap
 
 DIST_SUBDIRS = $(SUBDIRS)
 
@@ -27,7 +27,7 @@ INCLUDES = \
 	-I$(srcdir)/..		\
 	-I$(top_builddir)
 
-lib_LIBRARIES = libifolder-trayapp.a
+noinst_LIBRARIES = libifolder-trayapp.a
 
 #libifolder_trayapp_a_LIBADD =	\
 #	libsync/libsync.a		\
@@ -36,7 +36,6 @@ lib_LIBRARIES = libifolder-trayapp.a
 
 DEFINES = \
 	$(QT4_DEFINES)				\
-	-DQT_NETWORK					\
 	-DQT_CORE_LIB				\
 	-DQT_SHARED
 
@@ -45,11 +44,23 @@ libifolder_trayapp_a_CXXFLAGS = \
 	$(QT4_CFLAGS)				\
 	$(QT4_CORE_CFLAGS)
 
-libifolder_trayapp_a_LIBADD = \
+libifolder_trayapp_a_LIBFLAGS = \
 	$(QT4_LIBS)				\
 	$(QT4_CORE_LIBS)
+
+common_sources = \
+	../common/ifolder-client.cpp		\
+	../common/IFNamedPipe.cpp		\
+	../common/IFNamedPipe.h			\
+	../common/IFMessages.h
+
+ipcserver_sources = \
+	libipcserver/IFIPCServer.cpp		\
+	libipcserver/IPIPCServer.h
 	
 libifolder_trayapp_a_SOURCES = \
+	$(common_sources)				\
+	$(ipcserver_sources)				\
 	IFDomainServer.cpp				\
 	IFiFolderClientServer.cpp
 

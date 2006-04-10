@@ -275,20 +275,22 @@ case $IFOLDER_OS in
 		#ALL_LINGUAS="pt_BR fr it de es ru ja"
 		#AM_GNU_GETTEXT_VERSION(0.10.40)
 		#AM_GNU_GETTEXT(external)
-		
-		if test "$enable_debug" = "true"
-		then
-			QT4_CFLAGS="-I${QT4_PATH}/include/Qt"
-			QT4_LIBS="-L${QT4_PATH}/lib"
-			QT4_CORE_CFLAGS=$(pkg-config --cflags QtCore)
-			QT4_CORE_LIBS=$(pkg-config --libs QtCore_debug)
-			QT4_GUI_CFLAGS=$(pkg-config --cflags QtGui)
-			QT4_GUI_LIBS=$(pkg-config --libs QtGui_debug)
-			QT4_NETWORK_CFLAGS=$(pkg-config --cflags QtNetwork)
-			QT4_NETWORK_LIBS=$(pkg-config --libs QtNetwork_debug)
-			QT4_XML_CFLAGS=$(pkg-config --cflags QtXml)
-			QT4_XML_LIBS=$(pkg-config --libs QtXml_debug)
-		else
+
+# btimothy: I'm not sure that we want to force debugging Qt to build in debug
+# mode so I'm commenting out this section.		
+#		if test "$enable_debug" = "true"
+#		then
+#			QT4_CFLAGS="-I${QT4_PATH}/include/Qt"
+#			QT4_LIBS="-L${QT4_PATH}/lib"
+#			QT4_CORE_CFLAGS=$(pkg-config --cflags QtCore)
+#			QT4_CORE_LIBS=$(pkg-config --libs QtCore_debug)
+#			QT4_GUI_CFLAGS=$(pkg-config --cflags QtGui)
+#			QT4_GUI_LIBS=$(pkg-config --libs QtGui_debug)
+#			QT4_NETWORK_CFLAGS=$(pkg-config --cflags QtNetwork)
+#			QT4_NETWORK_LIBS=$(pkg-config --libs QtNetwork_debug)
+#			QT4_XML_CFLAGS=$(pkg-config --cflags QtXml)
+#			QT4_XML_LIBS=$(pkg-config --libs QtXml_debug)
+#		else
 			QT4_CFLAGS="-I${QT4_PATH}/include/Qt"
 			QT4_LIBS="-L${QT4_PATH}/lib"
 			QT4_CORE_CFLAGS=$(pkg-config --cflags QtCore)
@@ -299,7 +301,7 @@ case $IFOLDER_OS in
 			QT4_NETWORK_LIBS=$(pkg-config --libs QtNetwork)
 			QT4_XML_CFLAGS=$(pkg-config --cflags QtXml)
 			QT4_XML_LIBS=$(pkg-config --libs QtXml)
-		fi
+#		fi
 
 		PKG_CHECK_MODULES(TRAYAPP, gtk+-2.0 glib-2.0 atk libgnomeui-2.0 libpanelapplet-2.0)
 		AC_SUBST(TRAYAPP_CFLAGS)
@@ -417,10 +419,8 @@ AC_CONFIG_FILES([
   package/windows/Makefile
   src/Makefile
   src/libifolder/Makefile
-  src/libifolder/common/Makefile
   src/libifolder/ipc-client/Makefile
   src/libifolder/ipc-server/Makefile
-  src/libifolder/ipc-server/libipcserver/Makefile
   src/libifolder/ipc-server/libsoap/Makefile
   src/libifolder/ipc-server/libsync/Makefile
   src/qt-client/Makefile

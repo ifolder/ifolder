@@ -27,7 +27,7 @@ INCLUDES = \
 	-I$(srcdir)/..		\
 	-I$(top_builddir)
 
-lib_LIBRARIES = libifolder-common.a
+noinst_LIBRARIES = libifolder-common.a
 
 #libifolder_trayapp_a_LIBADD =	\
 #	libsync/libsync.a		\
@@ -36,7 +36,6 @@ lib_LIBRARIES = libifolder-common.a
 
 DEFINES = \
 	$(QT4_DEFINES)				\
-	-DQT_NETWORK					\
 	-DQT_CORE_LIB				\
 	-DQT_SHARED
 
@@ -44,12 +43,10 @@ libifolder_common_a_CXXFLAGS = \
 	$(DEFINES)					\
 	$(QT4_CFLAGS)				\
 	$(QT4_CORE_CFLAGS)			\
-	$(QT4_NETWORK_CFLAGS)
 
-libifolder_common_a_LIBADD = \
+libifolder_common_a_LIBFLAGS = \
 	$(QT4_LIBS)				\
 	$(QT4_CORE_LIBS)			\
-	$(QT4_NETWORK_LIBS)
 	
 libifolder_common_a_SOURCES = 			\
 	ifolder-client.cpp					\

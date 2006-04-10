@@ -30,14 +30,20 @@
 /**
  * %s should be set to the current user name (login name)
  */
-#define IFOLDER_SERVER_NAMED_PIPE	"/tmp/ifolder3_%s_server_pipe"
+#define IFOLDER_SERVER_NAMED_PIPE	"/tmp/ifolder3_server_pipe_%s"
+
+//! Name for the IPC Client's Named Pipe
+/**
+ * %d should be set to the process id of the client
+ */
+#define IFOLDER_CLIENT_NAMED_PIPE	"/tmp/ifolder3_client_pipe_%d"
 
 //! Name for all other IPC Named Pipes
 /**
  * You should use this name and generate a dynamic int for %d for pipes to
  * open anywhere else.
  */
-#define IFOLDER_GENERIC_NAMED_PIPE "/tmp/ifolder3_%d_pipe"
+#define IFOLDER_GENERIC_NAMED_PIPE "/tmp/ifolder3_pipe_%s"
 
 //! An abstraction for named pipes
 /**
@@ -64,6 +70,9 @@ class iFolderNamedPipe
 		 */
 		iFolderNamedPipe(QString pathName, PermissionType permissionType);
 		virtual ~iFolderNamedPipe();
+		
+		//! Get the path of the named pipe
+		QString path();
 		
 		//! Open up the named pipe for reading or writing
 		/**
@@ -102,11 +111,22 @@ class iFolderNamedPipe
 		 * @return IFOLDER_SUCCESS if a message was successfully read,
 		 * or an error from ifolder-errors.h.
 		 */
-		int readMessage(int *messageTypeReturn, void **messageReturn);
+		int readMessage(uint *messageTypeReturn, void **messageReturn);
+
+		static iFolderNamedPipe *createServerNamedPipeForWriting();
+		//! Create a named pipe by process id
+		static iFolderNamedPipe *createNamedPipeByPid(PermissionType permissionType);
+		static iFolderNamedPipe *createUniqueNamedPipe(PermissionType permissionType);
+
+		//! Close and reopen the pipe to clear out a bad message
+		int reset();
 		
-	private:
 		//! Used by open() to create a named pipe when needed.
+		/**
+		 * This can also be called explicitly to force a create.
+		 */
 		int create();
+	private:
 		
 		//! Read data from the named pipe
 		/**

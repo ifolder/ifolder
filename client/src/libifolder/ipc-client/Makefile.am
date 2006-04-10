@@ -31,10 +31,6 @@ lib_LTLIBRARIES = libifolder.la
 
 #libifolder_LDFLAGS =
 
-libifolder_la_SOURCES = \
-	IFiFolderClientClient.cpp	\
-	IFDomainClient.cpp
-
 DEFINES = \
 	$(QT4_DEFINES)				\
 	-DQT_NETWORK					\
@@ -50,6 +46,19 @@ libifolder_la_CXXFLAGS = \
 libifolder_la_LDFLAGS = \
 	$(QT4_LIBS)				\
 	$(QT4_CORE_LIBS)
+
+common_sources = \
+	../common/ifolder-client.cpp		\
+	../common/IFNamedPipe.cpp		\
+	../common/IFNamedPipe.h			\
+	../common/IFMessages.h
+
+libifolder_la_SOURCES = \
+	$(common_sources)			\
+	IFiFolderClientClient.cpp	\
+	IFDomainClient.cpp			\
+	IFIPCClient.cpp				\
+	IFIPCClient.h
 
 #libifolder_HEADERS =
 

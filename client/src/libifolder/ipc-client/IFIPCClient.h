@@ -21,8 +21,8 @@
  *
  ***********************************************************************/
 
-#ifndef _IFOLDER_IPC_SERVER_H_
-#define _IFOLDER_IPC_SERVER_H_
+#ifndef _IFOLDER_IPC_CLIENT_H_
+#define _IFOLDER_IPC_CLIENT_H_
 
 //#include <QObject>
 #include <QThread>
@@ -30,33 +30,45 @@
 #include <common/IFNamedPipe.h>
 #include <common/IFMessages.h>
 
-class iFolderIPCServer : public QThread
+class iFolderIPCClient : public QThread
 {
 //	Q_OBJECT
 	
 	public:
-		iFolderIPCServer();
+		iFolderIPCClient();
 //		iFolderIPCServer(QObject *parent = NULL);
-		virtual ~iFolderIPCServer();
+		virtual ~iFolderIPCClient();
 		
+		//! This must be called before the thread is started
+		/**
+		 * If this call does not return IFOLDER_SUCCESS, the
+		 * QThread.run() will do nothing.
+		 */
+//		int registerClient();
+		int init();
+		int registerClient();
 		void run();
 		void gracefullyExit();
-	
+
 		//! Initialize an iFolderMessageHeader before making an IPC request
 		void initHeader(iFolderMessageHeader *header, uint messageType);
 		
 	private:
 		//! Make an ipcCall to the server
-		int ipcRespond(QString repsonseNamedPipePath, void *response);
+		int ipcCall(void *request, void *response);
 
-		int processMessage(uint messageType, void *message);
+		int processMessage(int messageType, void *message);
+
+		int ipcCallRegisterClient(iFolderNamedPipe *serverNamedPipe, iFolderNamedPipe *tempNamedPipe, iFolderMessageRegisterClientRequest *request, iFolderMessageRegisterClientResponse *response);
 		
-		int handleRegisterClientRequest(iFolderMessageRegisterClientRequest *message);
-		int handleUnregisterClientRequest(iFolderMessageUnregisterClientRequest *message);
+		int unregisterClient();
+		int ipcCallUnregisterClient(iFolderNamedPipe *serverNamedPipe, iFolderNamedPipe *tempNamedPipe, iFolderMessageUnregisterClientRequest *request, iFolderMessageUnregisterClientResponse *response);
 	
-		iFolderNamedPipe *serverNamedPipe;
+		iFolderNamedPipe *clientNamedPipe;
+		char clientNamedPipePath[NAMED_PIPE_PATH_MAX];
 		bool bExit;
+		bool bInitialized;
 };
 
-#endif /*_IFOLDER_IPC_SERVER_H_*/
+#endif /*_IFOLDER_IPC_CLIENT_H_*/
 

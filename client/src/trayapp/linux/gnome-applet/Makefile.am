@@ -7,6 +7,7 @@ bin_PROGRAMS = ifolder3-applet
 
 ifolder3_applet_CPPFLAGS = \
  	$(TRAYAPP_CFLAGS) \
+	$(QT4_CORE_CFLAGS) \
 	-DEGG_COMPILATION \
 	-DG_DISABLE_DEPRECATED								\
 	-DGDK_DISABLE_DEPRECATED								\
@@ -20,13 +21,14 @@ ifolder3_applet_SOURCES = \
 	eggtrayicon.h
 
 ifolder3_applet_LDFLAGS = \
-	$(top_srcdir)/src/libifolder/common/libifolder-common.a \
-	$(top_srcdir)/src/libifolder/ipc-server/libipcserver/libipcserver.a \
-	$(top_srcdir)/src/libifolder/ipc-server/libsoap/libsoap.a \
-	$(top_srcdir)/src/libifolder/ipc-server/libsync/libsync.a \
-	$(top_srcdir)/src/libifolder/ipc-server/libifolder-trayapp.a \
 	$(TRAYAPP_LIBS) \
 	$(QT4_CORE_LIBS)
+
+ifolder3_applet_LDADD = \
+	$(top_srcdir)/src/libifolder/ipc-server/libipcserver/libipcserver.a \
+	$(top_srcdir)/src/libifolder/ipc-server/libifolder-trayapp.a \
+	$(top_srcdir)/src/libifolder/ipc-server/libsoap/libsoap.a \
+	$(top_srcdir)/src/libifolder/ipc-server/libsync/libsync.a
 
 install-exec-local:
 	$(mkinstalldirs) $(IMAGE_INSTALL_DIR)

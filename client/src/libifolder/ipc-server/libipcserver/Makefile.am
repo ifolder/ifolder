@@ -1,31 +1,29 @@
-noinst_LIBRARIES = libipcserver.a
-#lib_LTLIBRARIES=libipcserver.la
-
-#override CFLAGS =
-
 INCLUDES =			\
 	-I$(srcdir)/../..	\
 	-I$(top_srcdir)		\
 	-I$(top_builddir)
 
+noinst_LIBRARIES = libipcserver.a
+
+#override CFLAGS =
+
 DEFINES = \
 	$(QT4_DEFINES)				\
-	-DQT_NETWORK					\
 	-DQT_CORE_LIB				\
 	-DQT_SHARED
-
-libipcserver_a_SOURCES = \
-	IFIPCServer.cpp			\
-	IFIPCServer.h
 
 libipcserver_a_CXXFLAGS =	\
 	$(DEFINES)					\
 	$(QT4_CFLAGS)				\
 	$(QT4_CORE_CFLAGS)
 
-libipcserver_a_LIBADD =	\
+libipcserver_a_LIBFLAGS =	\
 	$(QT4_LIBS)				\
 	$(QT4_CORE_LIBS)
+
+libipcserver_a_SOURCES = \
+	IFIPCServer.cpp			\
+	IFIPCServer.h
 
 #install-exec-local:
 #	$(mkinstalldirs) $(DESTDIR)$(includedir)/ifolder3

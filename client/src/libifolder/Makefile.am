@@ -18,9 +18,9 @@
 #  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
 #######################################################################
-SUBDIRS = ipc-server ipc-client common
+SUBDIRS = ipc-server ipc-client
 
-DIST_SUBDIRS = $(SUBDIRS)
+DIST_SUBDIRS = $(SUBDIRS) common
 
 maintainer-clean-local:
 	rm -f Makefile.in

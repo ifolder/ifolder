@@ -33,9 +33,8 @@
 typedef struct
 {
 	uint		senderPID;
-	uint		requestID;
-	uint		responseID;
 	uint		messageType;
+	char		messageNamedPipePath[NAMED_PIPE_PATH_MAX];
 } iFolderMessageHeader;
 
 //! This is used for simple messages which do not contain any data.
@@ -63,7 +62,7 @@ typedef struct
 typedef struct
 {
 	iFolderMessageHeader header;
-	char client_named_pipe[NAMED_PIPE_PATH_MAX];
+	char clientNamedPipe[NAMED_PIPE_PATH_MAX];
 } iFolderMessageRegisterClientRequest;
 typedef iFolderSimpleMessageResponse iFolderMessageRegisterClientResponse;
 
