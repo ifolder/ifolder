@@ -79,15 +79,15 @@ int Directory::DetectChanges()
 	if (m_DontDetect)
 		return 0;
 	// Get the current list of files
-	Sync::SyncFileInfoList fileList = entryInfoList(QDir::Files | QDir::Hidden, QDir::Name);
+	SyncFileInfoList fileList = entryInfoList(QDir::Files | QDir::Hidden, QDir::Name);
 	// Get the current list of directories
-	Sync::SyncFileInfoList dirList = entryInfoList(QDir::Dirs | QDir::Hidden,  QDir::Name);
+	SyncFileInfoList dirList = entryInfoList(QDir::Dirs | QDir::Hidden,  QDir::Name);
 
 	// Get the old list of files.
-	Sync::SyncFileInfoList oldFiles;
+	SyncFileInfoList oldFiles;
 	oldFiles.Restore(m_OldFileListFile);
 	// Get the old list of Dirs
-	Sync::SyncFileInfoList oldDirs;
+	SyncFileInfoList oldDirs;
 	oldDirs.Restore(m_OldDirListFile);
 
 	GetEntryChanges(oldFiles, fileList);
@@ -103,7 +103,7 @@ int Directory::DetectChanges()
 	cout << "DirCount = " << dirCount << endl;
 	while(i < dirCount)
 	{
-		Sync::SyncFileInfo info = dirList.at(i++);
+		SyncFileInfo info = dirList.at(i++);
 		
 		if (info.Name() == "." || info.Name() == "..")
 			continue;
@@ -116,15 +116,15 @@ int Directory::DetectChanges()
 	}
 }
 
-int Directory::GetEntryChanges(Sync::SyncFileInfoList& oldList, Sync::SyncFileInfoList& newList)
+int Directory::GetEntryChanges(SyncFileInfoList& oldList, SyncFileInfoList& newList)
 {
 	// We need to look for new, deleted and modifed files.
 	int i = 0, j = 0;
 	int listSize = newList.size(), oldSize = oldList.size();
 	while(i < listSize && j < oldSize)
 	{
-		Sync::SyncFileInfo info = newList.at(i);
-		Sync::SyncFileInfo oldInfo = oldList.at(j);
+		SyncFileInfo info = newList.at(i);
+		SyncFileInfo oldInfo = oldList.at(j);
 //		cout << info.Name().toStdString() << " == " << oldInfo.Name().toStdString() << endl;
 		int cmpResults = info.Compare(oldInfo);
 		if (cmpResults == 0)
@@ -164,17 +164,17 @@ int Directory::GetEntryChanges(Sync::SyncFileInfoList& oldList, Sync::SyncFileIn
 	return 0;
 }
 
-Sync::SyncFileInfoList Directory::GetChanges()
+SyncFileInfoList Directory::GetChanges()
 {
 	return m_FileChangeList;
 	/*
 	SyncFileInfoList changes;
 	// Recurse
 	// Get the current list of directories
-	Sync::SyncFileInfoList dirList = entryInfoList(QDir::Dirs | QDir::Hidden,  QDir::Name);
+	SyncFileInfoList dirList = entryInfoList(QDir::Dirs | QDir::Hidden,  QDir::Name);
 
 	// Get the old list of Dirs
-	Sync::SyncFileInfoList oldDirs;
+	SyncFileInfoList oldDirs;
 	oldDirs.Restore(m_OldDirListFile);
 
 	GetEntryChanges(oldFiles, fileList);
@@ -190,7 +190,7 @@ Sync::SyncFileInfoList Directory::GetChanges()
 	cout << "DirCount = " << dirCount << endl;
 	while(i < dirCount)
 	{
-		Sync::SyncFileInfo info = dirList.at(i++);
+		SyncFileInfo info = dirList.at(i++);
 		
 		if (info.Name() == "." || info.Name() == "..")
 			continue;

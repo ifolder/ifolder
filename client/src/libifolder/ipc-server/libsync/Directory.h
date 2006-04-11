@@ -49,18 +49,18 @@ public:
 	virtual ~Directory();
 	
 	int DetectChanges();
-	Sync::SyncFileInfoList GetChanges();
+	SyncFileInfoList GetChanges();
 	int SetInSync();
 	
 private:
-	int GetEntryChanges(Sync::SyncFileInfoList& oldList, Sync::SyncFileInfoList& newList);
+	int GetEntryChanges(SyncFileInfoList& oldList, SyncFileInfoList& newList);
 		
 private:
 	
 	bool					m_DontDetect;
-	Sync::SyncFileInfoList	m_FileChangeList;
-	Sync::SyncFileInfoList	m_DirChangeList;
-	Sync::SyncFileInfoList	m_NewFileList;
+	SyncFileInfoList		m_FileChangeList;
+	SyncFileInfoList		m_DirChangeList;
+	SyncFileInfoList		m_NewFileList;
 	QFile					m_OldFileListFile;
 	QFile					m_OldDirListFile;
 	QFile					m_ChangesFile;
