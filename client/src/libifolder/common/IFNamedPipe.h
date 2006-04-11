@@ -83,7 +83,7 @@ class iFolderNamedPipe
 		 * @return a file descriptor to read or write to or -1 if an error
 		 * occurs.
 		 */
-		int openPipe(bool createIfNeeded = false);
+		int openPipe(bool block, bool createIfNeeded);
 		
 		//! Force the named pipe to be closed
 		/**

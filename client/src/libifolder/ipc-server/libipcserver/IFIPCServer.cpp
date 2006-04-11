@@ -66,7 +66,7 @@ iFolderIPCServer::run()
 	
 	serverNamedPipe = new iFolderNamedPipe(QString(serverNamedPipePath), iFolderNamedPipe::ReadOnly);
 
-	err = serverNamedPipe->openPipe(true);
+	err = serverNamedPipe->openPipe(true, true);
 	if (err != IFOLDER_SUCCESS)
 	{
 		// FIXME: Log this to the error log
@@ -139,7 +139,7 @@ iFolderIPCServer::ipcRespond(QString repsonseNamedPipePath, void *response)
 
 printf("iFolderIPCServer::ipcRespond(): created a pipe to write the response\n");
 	
-	err = responseNamedPipe->openPipe();
+	err = responseNamedPipe->openPipe(true, false);
 	if (err != IFOLDER_SUCCESS)
 	{
 		delete responseNamedPipe;

@@ -55,14 +55,14 @@ class iFolderIPCClient : public QThread
 		
 	private:
 		//! Make an ipcCall to the server
-		int ipcCall(void *request, void *response);
+		int ipcCall(void *request, void **response);
 
 		int processMessage(int messageType, void *message);
 
-		int ipcCallRegisterClient(iFolderNamedPipe *serverNamedPipe, iFolderNamedPipe *tempNamedPipe, iFolderMessageRegisterClientRequest *request, iFolderMessageRegisterClientResponse *response);
+		int ipcCallRegisterClient(iFolderNamedPipe *serverNamedPipe, iFolderNamedPipe *tempNamedPipe, iFolderMessageRegisterClientRequest *request, iFolderMessageRegisterClientResponse **response);
 		
 		int unregisterClient();
-		int ipcCallUnregisterClient(iFolderNamedPipe *serverNamedPipe, iFolderNamedPipe *tempNamedPipe, iFolderMessageUnregisterClientRequest *request, iFolderMessageUnregisterClientResponse *response);
+		int ipcCallUnregisterClient(iFolderNamedPipe *serverNamedPipe, iFolderNamedPipe *tempNamedPipe, iFolderMessageUnregisterClientRequest *request, iFolderMessageUnregisterClientResponse **response);
 	
 		iFolderNamedPipe *clientNamedPipe;
 		char clientNamedPipePath[NAMED_PIPE_PATH_MAX];

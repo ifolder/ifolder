@@ -47,7 +47,7 @@ iFolderNamedPipe::iFolderNamedPipe(QString pathName, PermissionType permissionTy
 iFolderNamedPipe::~iFolderNamedPipe()
 {
 	int err;
-printf("iFolderNamedPipe::~iFolderNamedPipe()\n");
+printf("iFolderNamedPipe::~iFolderNamedPipe(): %s\n", qPrintable(myPathName));
 	if (myFileDescriptor != -1)
 	{
 		err = close(myFileDescriptor);
@@ -66,7 +66,7 @@ iFolderNamedPipe::path()
 }
 
 int
-iFolderNamedPipe::openPipe(bool createIfNeeded)
+iFolderNamedPipe::openPipe(bool block, bool createIfNeeded)
 {
 	int err;
 
@@ -80,7 +80,10 @@ iFolderNamedPipe::openPipe(bool createIfNeeded)
 		}
 		
 printf("iFolderNamedPipe::openingPipe in write only mode\n");
-		err = open(qPrintable(myPathName), O_WRONLY | O_NONBLOCK);
+		if (block)
+			err = open(qPrintable(myPathName), O_WRONLY);
+		else
+			err = open(qPrintable(myPathName), O_WRONLY | O_NONBLOCK);
 		if (err == -1)
 		{
 			printf("iFolderNamedPipe::openPipe(): open() returned errno: %d\n", errno);
@@ -313,7 +316,7 @@ iFolderNamedPipe::reset()
 		return err;
 	}
 	
-	err = openPipe(true);
+	err = openPipe(true, true);
 	if (err != IFOLDER_SUCCESS)
 	{
 		printf("iFolderNamedPipe::reset(): could NOT reopen pipe: %d\n", err);
@@ -328,7 +331,7 @@ iFolderNamedPipe::create()
 {
 	int err;
 
-printf("iFolderNamedPipe::create()\n");
+printf("iFolderNamedPipe::create(): %s\n", qPrintable(myPathName));
 
 	err = unlink(qPrintable(myPathName));
 	if (err != 0)

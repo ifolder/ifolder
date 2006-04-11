@@ -40,12 +40,9 @@ iFolderClient::~iFolderClient()
 		ipcClient = (iFolderIPCClient *)ipcClass;
 		if (ipcClient->isRunning())
 		{
-			ipcClient->gracefullyExit();
-			if (ipcClient->wait(5000) != true)
-			{
-				// KILL the thread
-				ipcClient->exit(-1);
-			}
+printf("Terminating the client thread\n");
+			ipcClient->terminate();
+			ipcClient->wait();
 		}
 		
 		delete ipcClient;
@@ -87,6 +84,12 @@ iFolderClient::initialize()
 	if (err != IFOLDER_SUCCESS)
 	{
 		printf("iFolderClient::initialize(): Error calling ipcClient->registerClient(): %d\n", err);
+		if (ipcClient->isRunning())
+		{
+printf("Terminating the client thread\n");
+			ipcClient->terminate();
+			ipcClient->wait();
+		}
 		delete ipcClient;
 		printf("deleted ipcClient\n");
 		ipcClass = NULL;
@@ -112,13 +115,9 @@ iFolderClient::uninitialize()
 	ipcClient = (iFolderIPCClient *)ipcClass;
 	if (ipcClient->isRunning())
 	{
-		ipcClient->gracefullyExit();
-		printf("Waiting 5 seconds for the client thread to finish\n");
-		if (ipcClient->wait(5000) != true)
-		{
-			// kill the thread
-			ipcClient->exit(-1);
-		}
+printf("Terminating the client thread\n");
+		ipcClient->terminate(); // kill the thread
+		ipcClient->wait();
 	}
 	
 	delete ipcClient;

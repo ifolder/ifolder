@@ -81,7 +81,7 @@ iFolderIPCClient::registerClient()
 {
 	int err;
 	iFolderMessageRegisterClientRequest request;
-	iFolderMessageRegisterClientResponse response;
+	iFolderMessageRegisterClientResponse *response;
 	
 	if (!bInitialized || !isRunning())
 		return IFOLDER_ERROR_IPC_INVALID_STATE;
@@ -92,7 +92,10 @@ iFolderIPCClient::registerClient()
 	
 	sprintf(request.clientNamedPipe, qPrintable(clientNamedPipe->path()));
 	
-	err = ipcCall(&request, &response);
+	err = ipcCall(&request, (void **)&response);
+	
+	if (err == IFOLDER_SUCCESS)
+		free(response);
 	
 	return err;
 }
@@ -113,16 +116,17 @@ iFolderIPCClient::run()
 		return;
 	}
 
-	err = clientNamedPipe->openPipe(true);
+	err = clientNamedPipe->openPipe(true, true);
 	if (err != IFOLDER_SUCCESS)
 	{
 		delete clientNamedPipe;
+		clientNamedPipe = NULL;
 		// FIXME: Log this to the error log
-		printf("iFolderIPCClient::init(): clientNamedPipe->openPipe(true) returned: %d\n", err);
+		printf("iFolderIPCClient::run(): clientNamedPipe->openPipe(true) returned: %d\n", err);
 		return;
 	}
 	
-	printf("iFolderIPCClient::init(): openPipe succeeded\n");
+	printf("iFolderIPCClient::run(): openPipe succeeded\n");
 	
 	while (!bExit)
 	{
@@ -174,7 +178,7 @@ iFolderIPCClient::initHeader(iFolderMessageHeader *header, uint messageType)
 }
 
 int
-iFolderIPCClient::ipcCall(void *request, void *response)
+iFolderIPCClient::ipcCall(void *request, void **response)
 {
 	int err;
 	iFolderMessageHeader *header;
@@ -190,7 +194,7 @@ iFolderIPCClient::ipcCall(void *request, void *response)
 
 printf("iFolderIPCClient::ipcCall(): created server pipe and now will open it\n");
 	
-	err = serverNamedPipe->openPipe();
+	err = serverNamedPipe->openPipe(false, false);
 	if (err != IFOLDER_SUCCESS)
 	{
 		delete serverNamedPipe;
@@ -220,10 +224,10 @@ printf("iFolderIPCClient::ipcCall(): opened server's named pipe for writing\n");
 	switch(header->messageType)
 	{
 		case IFOLDER_MSG_REGISTER_CLIENT_REQUEST:
-			err = ipcCallRegisterClient(serverNamedPipe, tempNamedPipe, (iFolderMessageRegisterClientRequest *)request, (iFolderMessageRegisterClientResponse *)response);
+			err = ipcCallRegisterClient(serverNamedPipe, tempNamedPipe, (iFolderMessageRegisterClientRequest *)request, (iFolderMessageRegisterClientResponse **)response);
 			break;
 		case IFOLDER_MSG_UNREGISTER_CLIENT_REQUEST:
-			err = ipcCallUnregisterClient(serverNamedPipe, tempNamedPipe, (iFolderMessageUnregisterClientRequest *)request, (iFolderMessageUnregisterClientResponse *)response);
+			err = ipcCallUnregisterClient(serverNamedPipe, tempNamedPipe, (iFolderMessageUnregisterClientRequest *)request, (iFolderMessageUnregisterClientResponse **)response);
 			break;
 		default:
 			delete serverNamedPipe;
@@ -249,7 +253,7 @@ iFolderIPCClient::processMessage(int messageType, void *message)
 }
 
 int
-iFolderIPCClient::ipcCallRegisterClient(iFolderNamedPipe *serverNamedPipe, iFolderNamedPipe *tempNamedPipe, iFolderMessageRegisterClientRequest *request, iFolderMessageRegisterClientResponse *response)
+iFolderIPCClient::ipcCallRegisterClient(iFolderNamedPipe *serverNamedPipe, iFolderNamedPipe *tempNamedPipe, iFolderMessageRegisterClientRequest *request, iFolderMessageRegisterClientResponse **response)
 {
 	int err;
 	uint messageType;
@@ -258,6 +262,7 @@ iFolderIPCClient::ipcCallRegisterClient(iFolderNamedPipe *serverNamedPipe, iFold
 	
 //	printf("Press any key to send ipc message to server...");
 //	getchar();
+printf("iFolderIPCClient::ipcCallRegisterClient()\n");
 
 	err = serverNamedPipe->writeMessage(request, sizeof(iFolderMessageRegisterClientRequest));
 	if (err != IFOLDER_SUCCESS)
@@ -266,12 +271,16 @@ iFolderIPCClient::ipcCallRegisterClient(iFolderNamedPipe *serverNamedPipe, iFold
 		return err;
 	}
 	
-	err = tempNamedPipe->openPipe(true);
+printf("serverNamedPipe->writeMessage() called\n");
+
+	err = tempNamedPipe->openPipe(true, false);
 	if (err != IFOLDER_SUCCESS)
 	{
 		printf("Error opening temporary named pipe for iFolderIPCClient::ipcCall(): %d\n", err);
 		return err;
 	}
+
+printf("tempNamedPipe->openPipe() called\n");
 	
 	err = tempNamedPipe->readMessage(&messageType, &tempResponse);
 	if (err != IFOLDER_SUCCESS)
@@ -279,6 +288,8 @@ iFolderIPCClient::ipcCallRegisterClient(iFolderNamedPipe *serverNamedPipe, iFold
 		printf("iFolderIPCClient::ipcCallRegisterClient(): error reading response: %d\n", err);
 		return err;
 	}
+
+printf("tempNamedPipe->readMessage() called\n");
 	
 	if (messageType != IFOLDER_MSG_REGISTER_CLIENT_RESPONSE)
 	{
@@ -286,7 +297,7 @@ iFolderIPCClient::ipcCallRegisterClient(iFolderNamedPipe *serverNamedPipe, iFold
 		return IFOLDER_ERROR_IPC_INVALID_MESSAGE;
 	}
 	
-	memcpy(response, tempResponse, sizeof(iFolderMessageRegisterClientResponse));
+	*response = (iFolderMessageRegisterClientResponse *)tempResponse;
 	
 	return IFOLDER_SUCCESS;
 }
@@ -296,17 +307,20 @@ iFolderIPCClient::unregisterClient()
 {
 	int err;
 	iFolderMessageUnregisterClientRequest request;
-	iFolderMessageUnregisterClientResponse response;
+	iFolderMessageUnregisterClientResponse *response;
 	
 	initHeader((iFolderMessageHeader *)&request, IFOLDER_MSG_UNREGISTER_CLIENT_REQUEST);
 	
-	err = ipcCall(&request, &response);
+	err = ipcCall(&request, (void **)&response);
+	
+	if (err == IFOLDER_SUCCESS)
+		free(response);
 	
 	return err;
 }
 
 int
-iFolderIPCClient::ipcCallUnregisterClient(iFolderNamedPipe *serverNamedPipe, iFolderNamedPipe *tempNamedPipe, iFolderMessageUnregisterClientRequest *request, iFolderMessageUnregisterClientResponse *response)
+iFolderIPCClient::ipcCallUnregisterClient(iFolderNamedPipe *serverNamedPipe, iFolderNamedPipe *tempNamedPipe, iFolderMessageUnregisterClientRequest *request, iFolderMessageUnregisterClientResponse **response)
 {
 	int err;
 	uint messageType;
@@ -320,7 +334,7 @@ iFolderIPCClient::ipcCallUnregisterClient(iFolderNamedPipe *serverNamedPipe, iFo
 		return err;
 	}
 	
-	err = tempNamedPipe->openPipe(true);
+	err = tempNamedPipe->openPipe(true, false);
 	if (err != IFOLDER_SUCCESS)
 	{
 		delete serverNamedPipe;
@@ -342,7 +356,7 @@ iFolderIPCClient::ipcCallUnregisterClient(iFolderNamedPipe *serverNamedPipe, iFo
 		return IFOLDER_ERROR_IPC_INVALID_MESSAGE;
 	}
 	
-	memcpy(response, tempResponse, sizeof(iFolderMessageUnregisterClientResponse));
+	*response = (iFolderMessageUnregisterClientResponse *)tempResponse;
 	
 	return IFOLDER_SUCCESS;
 }
