@@ -53,7 +53,7 @@ printf("IFNamedPipe::~IFNamedPipe(): %s\n", qPrintable(myPathName));
 		err = closePipe();
 		if (err != IFOLDER_SUCCESS)
 		{
-			// FIXME: Figure a way to log this error to a log file
+			// @todo Figure a way to log this error to a log file
 printf("IFNamedPipe::~IFNamedPipe(): Error closing pipe\n");
 		}
 	}
@@ -88,7 +88,7 @@ printf("IFNamedPipe::openingPipe in write only mode\n");
 		{
 			printf("IFNamedPipe::openPipe(): open() returned errno: %d\n", errno);
 			perror(qPrintable(myPathName));
-			return IFOLDER_ERROR_IPC_CREATE;	// FIXME: Read errno and return a less generic error
+			return IFOLDER_ERROR_IPC_CREATE;	// @todo Read errno and return a less generic error
 		}
 		
 		myFileDescriptor = err;
@@ -108,7 +108,7 @@ printf("IFNamedPipe::openingPipe in read only mode\n");
 		{
 			printf("IFNamedPipe::openPipe(): open() returned errno: %d\n", errno);
 			perror(qPrintable(myPathName));
-			return IFOLDER_ERROR_IPC_CREATE;	// FIXME: Read errno and return a less generic error
+			return IFOLDER_ERROR_IPC_CREATE;	// @todo Read errno and return a less generic error
 		}
 		
 		myFileDescriptor = err;
@@ -127,7 +127,7 @@ IFNamedPipe::closePipe()
 	
 	err = close(myFileDescriptor);
 	if (err != 0)
-		return IFOLDER_ERROR_IPC_CLOSE;	// FIXME: Read errno and return a less generic error
+		return IFOLDER_ERROR_IPC_CLOSE;	// @todo Read errno and return a less generic error
 	
 	if (myPermissionType == ReadOnly)
 	{
@@ -156,7 +156,7 @@ IFNamedPipe::writeMessage(const void *message, size_t messageSize)
 	{
 		printf("write returned -1\n");
 		perror(qPrintable(myPathName));
-		return IFOLDER_ERROR_IPC_WRITE; // FIXME: Read errno for a non-generic error
+		return IFOLDER_ERROR_IPC_WRITE; // @todo Read errno for a non-generic error
 	}
 
 	if (bytesWritten != messageSize)
@@ -203,7 +203,7 @@ IFNamedPipe::readMessage(uint *messageTypeReturn, void **messageReturn)
 	message = malloc(messageSize);
 	if (!message)
 	{
-		// FIXME: Determine whether we need to read off the remaining bytes before returning the error value
+		// @todo Determine whether we need to read off the remaining bytes before returning the error value
 		return IFOLDER_ERROR_OUT_OF_MEMORY;
 	}
 	
@@ -245,7 +245,7 @@ IFNamedPipe::readPipe(void *buffer, size_t bytesToRead)
 	if (bytesRead == -1)
 	{
 		perror(qPrintable(myPathName));
-		return IFOLDER_ERROR_IPC_READ; // FIXME: Read errno for a non-generic error
+		return IFOLDER_ERROR_IPC_READ; // @todo Read errno for a non-generic error
 	}
 	
 	return (int) bytesRead;
@@ -257,7 +257,7 @@ IFNamedPipe::createServerNamedPipeForWriting()
 	char serverNamedPipePath[NAMED_PIPE_PATH_MAX];
 	IFNamedPipe *namedPipe;
 
-	sprintf(serverNamedPipePath, IFOLDER_SERVER_NAMED_PIPE, "boyd");	// FIXME: Determine the user name programmatically
+	sprintf(serverNamedPipePath, IFOLDER_SERVER_NAMED_PIPE, "boyd");	// @todo Determine the user name programmatically
 	
 	namedPipe = new IFNamedPipe(QString(serverNamedPipePath), WriteOnly);
 	
@@ -340,7 +340,7 @@ printf("IFNamedPipe::create(): %s\n", qPrintable(myPathName));
 	if (err != 0)
 	{
 		printf("unlink() didn't work\n");//: %d\n", errno);
-		// FIXME: Add in a complete listing of errors instead of a generic one
+		// @todo Add in a complete listing of errors instead of a generic one
 		/*
 		switch(errno)
 		{
@@ -378,7 +378,7 @@ printf("IFNamedPipe::create(): %s\n", qPrintable(myPathName));
 		printf("mkfifo() didn't work\n");//: %d\n", errno);
 		perror(qPrintable(myPathName));
 		
-		// FIXME: Once again, change this error to not be a generic one
+		// @todo Once again, change this error to not be a generic one
 		return IFOLDER_ERROR_IPC_CREATE;
 	}
 	

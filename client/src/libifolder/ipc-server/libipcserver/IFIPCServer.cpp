@@ -45,7 +45,7 @@ IFIPCServer::~IFIPCServer()
 	{
 		err = serverNamedPipe->closePipe();
 		if (err != IFOLDER_SUCCESS)
-			printf("serverNamedPipe->closePipe() returned %d\n", err); // FIXME: log this to an error log
+			printf("serverNamedPipe->closePipe() returned %d\n", err); // @todo log this to an error log
 		
 		delete serverNamedPipe;
 		serverNamedPipe = NULL;
@@ -62,14 +62,14 @@ IFIPCServer::run()
 
 	printf("IFIPCServer::run()\n");
 
-	sprintf(serverNamedPipePath, IFOLDER_SERVER_NAMED_PIPE, "boyd");	// FIXME: Determine the user name programmatically
+	sprintf(serverNamedPipePath, IFOLDER_SERVER_NAMED_PIPE, "boyd");	// @todo Determine the user name programmatically
 	
 	serverNamedPipe = new IFNamedPipe(QString(serverNamedPipePath), IFNamedPipe::ReadOnly);
 
 	err = serverNamedPipe->openPipe(true, true);
 	if (err != IFOLDER_SUCCESS)
 	{
-		// FIXME: Log this to the error log
+		// @todo Log this to the error log
 		printf("serverNamedPipe->openPipe(true) returned: %d\n", err);
 		return;
 	}
@@ -79,13 +79,13 @@ IFIPCServer::run()
 		err = serverNamedPipe->readMessage(&messageType, &message);
 		if (err != IFOLDER_SUCCESS)
 		{
-			// FIXME: Add the following line to the error log
+			// @todo Add the following line to the error log
 			printf("serverNamedPipe->readMessage() returned %d\n", err);
 			err = serverNamedPipe->reset();
 			if (err != IFOLDER_SUCCESS)
 			{
 				printf("IFIPCServer::run(): error resetting server pipe: %d\n", err);
-				return;	// FIXME: Send a message via libifolder to the API consumer so they know there was a bad IPC error
+				return;	// @todo Send a message via libifolder to the API consumer so they know there was a bad IPC error
 			}
 
 			continue;
@@ -98,12 +98,12 @@ IFIPCServer::run()
 		if (err != IFOLDER_SUCCESS)
 		{
 			// Close and reopen the pipe to clear the bad out!
-			printf("IFIPCServer::run(): processMessage() returned %d\nClosing and re-opening the server pipe...\n", err); // FIXME: log this to an error log
+			printf("IFIPCServer::run(): processMessage() returned %d\nClosing and re-opening the server pipe...\n", err); // @todo log this to an error log
 			err = serverNamedPipe->reset();
 			if (err != IFOLDER_SUCCESS)
 			{
 				printf("IFIPCServer::run(): error resetting server pipe: %d\n", err);
-				return;	// FIXME: Send a message via libifolder to the API consumer so they know there was a bad IPC error
+				return;	// @todo Send a message via libifolder to the API consumer so they know there was a bad IPC error
 			}
 		}
 	}
@@ -118,7 +118,7 @@ IFIPCServer::gracefullyExit()
 void
 IFIPCServer::initHeader(iFolderMessageHeader *header, uint messageType)
 {
-	header->senderPID = 0; // FIXME: Get the PID of this process
+	header->senderPID = 0; // @todo Get the PID of this process
 	header->messageType = messageType;
 	memset(header->messageNamedPipePath, '\0', NAMED_PIPE_PATH_MAX);
 }
@@ -206,7 +206,7 @@ IFIPCServer::handleRegisterClientRequest(iFolderMessageRegisterClientRequest *me
 	printf("IFIPCServer::handleRegisterClientRequest()\n");
 	printf("\t%s\n", message->clientNamedPipe);
 
-	err = IFOLDER_SUCCESS; // FIXME: Really register the client so that messages/events can be sent back to it to its named pipe
+	err = IFOLDER_SUCCESS; // @todo Really register the client so that messages/events can be sent back to it to its named pipe
 
 	initHeader((iFolderMessageHeader *)&response, IFOLDER_MSG_REGISTER_CLIENT_RESPONSE);
 	response.returnCode = err;
@@ -226,7 +226,7 @@ IFIPCServer::handleUnregisterClientRequest(iFolderMessageUnregisterClientRequest
 
 	printf("IFIPCServer::handleUnregisterClientRequest()\n");
 
-	err = IFOLDER_SUCCESS; // FIXME: Really unregister the client so that messages/events can be sent back to it to its named pipe
+	err = IFOLDER_SUCCESS; // @todo Really unregister the client so that messages/events can be sent back to it to its named pipe
 
 	initHeader((iFolderMessageHeader *)&response, IFOLDER_MSG_UNREGISTER_CLIENT_RESPONSE);
 	response.returnCode = err;
@@ -250,7 +250,7 @@ IFIPCServer::handleDomainAddRequest(iFolderMessageDomainAddRequest *message)
 			message->userName,
 			message->makeDefault ? "true" : "false");
 
-	err = IFOLDER_SUCCESS; // FIXME: Add a new domain and collect the return value
+	err = IFOLDER_SUCCESS; // @todo Add a new domain and collect the return value
 
 	initHeader((iFolderMessageHeader *)&response, IFOLDER_MSG_DOMAIN_ADD_RESPONSE);
 	response.returnCode = err;

@@ -59,7 +59,7 @@ IFClient::initialize()
 	if (bInitialized)
 		return IFOLDER_ERROR_ALREADY_INITIALIZED;
 
-	// FIXME: Initialize the client (i.e., start up the IPC server, etc.)
+	// @todo Initialize the client (i.e., start up the IPC server, etc.)
 	ipcClient = new IFIPCClient();
 	if (!ipcClient)
 		return IFOLDER_ERROR_OUT_OF_MEMORY;
@@ -111,7 +111,7 @@ IFClient::uninitialize()
 	if (!bInitialized)
 		return IFOLDER_ERROR_NOT_INITIALIZED;
 
-	// FIXME: Uninitialize the client (i.e., stop the IPC server, etc.)
+	// @todo Uninitialize the client (i.e., stop the IPC server, etc.)
 	ipcClient = (IFIPCClient *)ipcClass;
 	if (ipcClient->isRunning())
 	{

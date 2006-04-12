@@ -18,17 +18,21 @@
 #  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
 #######################################################################
-EXTRA_DIST = $(srcdir)/DoxyfileC.in $(srcdir)/DoxyfileCpp.in
+EXTRA_DIST = $(srcdir)/DoxyfileC.in $(srcdir)/DoxyfileCpp.in $(srcdir)/DoxyfileDev.in
 
-all: DoxyfileC DoxyfileCpp clean
+all: DoxyfileC DoxyfileCpp DoxyfileDev clean
 	doxygen DoxyfileC
 	doxygen DoxyfileCpp
+	doxygen DoxyfileDev
 
 DoxyfileC: DoxyfileC.in
 	sed -e "s/@_VERSION_@/$G$(VERSION)/" DoxyfileC.in > DoxyfileC
 	
 DoxyfileCpp: DoxyfileCpp.in
 	sed -e "s/@_VERSION_@/$G$(VERSION)/" DoxyfileCpp.in > DoxyfileCpp
+	
+DoxyfileDev: DoxyfileDev.in
+	sed -e "s/@_VERSION_@/$G$(VERSION)/" DoxyfileDev.in > DoxyfileDev
 	
 #install: $(RPM_FILE) 
 #	sudo rpm -Uvh $(RPM_FILE) 
@@ -39,9 +43,10 @@ DoxyfileCpp: DoxyfileCpp.in
 clean-local:
 	rm -rf $(srcdir)/doxygen-c
 	rm -rf $(srcdir)/doxygen-cpp
+	rm -rf $(srcdir)/doxygen-dev
 
 distclean-local:
-	rm -f DoxyfileC DoxyfileCpp
+	rm -f DoxyfileC DoxyfileCpp DoxyfileDev
 
 maintainer-clean-local:
 	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)

@@ -42,7 +42,7 @@
 
 #include "applet.h"
 
-/*FIXME: Remove this when gettext is added */
+/*@todo Remove this when gettext is added */
 #define _
 
 static GObject *			ifa_constructor (GType type, guint n_props, GObjectConstructParam *construct_props);
@@ -73,7 +73,7 @@ static void ifa_init (IFApplet *applet)
 	err = ifolder_client_initialize();
 	if (err != IFOLDER_SUCCESS)
 	{
-		/* FIXME: Show the user the error */
+		/* @todo Show the user the error */
 		ifa_destroy(applet);
 		return;
 	}
@@ -133,7 +133,7 @@ static void ifa_about_cb (GtkMenuItem *mi, IFApplet *applet)
 //	GtkWidget	*about_dialog;
 
 //	/* GTK 2.4 and earlier, have to use libgnome for about dialog */
-//	file = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_PIXMAP, "gnome-networktool.png", FALSE, NULL); /* FIXME: Change this icon */
+//	file = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_PIXMAP, "gnome-networktool.png", FALSE, NULL); /* @todo Change this icon */
 //	pixbuf = gdk_pixbuf_new_from_file (file, NULL);
 //	g_free (file);
 
@@ -171,7 +171,7 @@ static void ifa_about_cb (GtkMenuItem *mi, IFApplet *applet)
 	                       "artists", artists,
 	                       "documenters", documenters,
 	                       "translator-credits", _("translator-credits"),
-	                       "logo-icon-name", GTK_STOCK_NETWORK, /* FIXME: Change this to an iFolder icon */
+	                       "logo-icon-name", GTK_STOCK_NETWORK, /* @todo Change this to an iFolder icon */
 	                       NULL);
 //#endif
 }
@@ -192,7 +192,7 @@ static GdkPixbuf *ifa_get_status_icon (IFApplet *applet)
 
 	g_return_val_if_fail (applet != NULL, NULL);
 
-	/* FIXME: Determine which iFolder icon to show */
+	/* @todo Determine which iFolder icon to show */
 	/*
 	applet->starting_up_icon;
 	applet->shutting_down_icon;
@@ -210,7 +210,7 @@ static GdkPixbuf *ifa_get_status_icon (IFApplet *applet)
 /*
  * ifa_update_state
  *
- * FIXME: Determine if we need ifa_update_state for iFolder
+ * @todo Determine if we need ifa_update_state for iFolder
  */
 static void ifa_update_state (IFApplet *applet)
 {
@@ -497,31 +497,31 @@ static GtkWidget *ifa_dropdown_menu_create (GtkMenuItem *parent, IFApplet *apple
 static void
 ifa_show_ifolders_cb(GtkMenuItem *mi, IFApplet *applet)
 {
-	/* FIXME: Add code to show the main iFolder GUI window */
+	/* @todo Add code to show the main iFolder GUI window */
 }
 
 static void
 ifa_start_full_sync_cb(GtkMenuItem *mi, IFApplet *applet)
 {
-	/* FIXME: Add code to start a full synchronization */
+	/* @todo Add code to start a full synchronization */
 }
 
 static void
 ifa_stop_sync_cb(GtkMenuItem *mi, IFApplet *applet)
 {
-	/* FIXME: Add code to stop a synchronization */
+	/* @todo Add code to stop a synchronization */
 }
 
 static void
 ifa_preferences_cb(GtkMenuItem *mi, IFApplet *applet)
 {
-	/* FIXME: Add code to show the preferences */
+	/* @todo Add code to show the preferences */
 }
 
 static void
 ifa_help_cb(GtkMenuItem *mi, IFApplet *applet)
 {
-	/* FIXME: Add code to open the help documentation */
+	/* @todo Add code to open the help documentation */
 }
 
 static void
@@ -531,11 +531,11 @@ ifa_quit_cb(GtkMenuItem *mi, IFApplet *applet)
 
 	ifa_set_icon(applet, applet->shutting_down_icon);
 
-	/* FIXME: Add code to stop all the services and quit the program */
+	/* @todo Add code to stop all the services and quit the program */
 //	err = ifolder_client_uninitialize();
 //	if (err != IFOLDER_SUCCESS)
 //	{
-//		/* FIXME: Let the user there was an error uninitializing */
+//		/* @todo Let the user there was an error uninitializing */
 //	}
 
 	ifa_destroy(applet);
@@ -891,7 +891,7 @@ static void ifa_icon_theme_changed (GtkIconTheme *icon_theme, IFApplet *applet)
 {
 	ifa_icons_free (applet);
 	ifa_icons_load_from_disk (applet, icon_theme);
-	/* FIXME: force redraw */
+	/* @todo force redraw */
 }
 
 static gboolean ifa_icons_init (IFApplet *applet)
@@ -912,7 +912,7 @@ static gboolean ifa_icons_init (IFApplet *applet)
 		widget \"*ToplevelMenu*\" style \"MenuItem\"\
 		";	
 
-	/* FIXME: Do we need to worry about other screens? */
+	/* @todo Do we need to worry about other screens? */
 	gtk_rc_parse_string (style);
 
 	icon_theme = gtk_icon_theme_get_default ();

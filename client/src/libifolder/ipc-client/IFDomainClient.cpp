@@ -124,7 +124,7 @@ IFDomain::add(QString hostAddress, QString userName, QString password, bool make
 
 	printf("IFDomain::add(%s, %s, ********, %s)\n", qPrintable(hostAddress), qPrintable(userName), makeDefault ? "true" : "false");
 	
-	// FIXME: Check to see if the client is in a valid state for this call
+	// @todo Check to see if the client is in a valid state for this call
 	
 	IFIPCClient::initHeader((iFolderMessageHeader *)&request, IFOLDER_MSG_DOMAIN_ADD_REQUEST);
 	

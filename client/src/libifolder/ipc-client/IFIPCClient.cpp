@@ -43,7 +43,7 @@ IFIPCClient::~IFIPCClient()
 	{
 		err = clientNamedPipe->closePipe();
 		if (err != IFOLDER_SUCCESS)
-			printf("clientNamedPipe->closePipe() returned %d\n", err); // FIXME: log this to an error log
+			printf("clientNamedPipe->closePipe() returned %d\n", err); // @todo log this to an error log
 		
 		delete clientNamedPipe;
 		clientNamedPipe = NULL;
@@ -121,7 +121,7 @@ IFIPCClient::run()
 	{
 		delete clientNamedPipe;
 		clientNamedPipe = NULL;
-		// FIXME: Log this to the error log
+		// @todo Log this to the error log
 		printf("IFIPCClient::run(): clientNamedPipe->openPipe(true) returned: %d\n", err);
 		return;
 	}
@@ -133,13 +133,13 @@ IFIPCClient::run()
 		err = clientNamedPipe->readMessage(&messageType, &message);
 		if (err != IFOLDER_SUCCESS)
 		{
-			// FIXME: Add the following line to the error log
+			// @todo Add the following line to the error log
 			printf("clientNamedPipe->readMessage() returned %d\n", err);
 			err = clientNamedPipe->reset();
 			if (err != IFOLDER_SUCCESS)
 			{
 				printf("IFIPCClient::run(): error resetting client pipe: %d\n", err);
-				return;	// FIXME: Send a message via libifolder to the API consumer so they know there was a bad IPC error
+				return;	// @todo Send a message via libifolder to the API consumer so they know there was a bad IPC error
 			}
 
 			continue;
@@ -152,12 +152,12 @@ IFIPCClient::run()
 		if (err != IFOLDER_SUCCESS)
 		{
 			// Close and reopen the pipe to clear the bad out!
-			printf("IFIPCClient::run(): processMessage() returned %d\nClosing and re-opening the client pipe...\n", err); // FIXME: log this to an error log
+			printf("IFIPCClient::run(): processMessage() returned %d\nClosing and re-opening the client pipe...\n", err); // @todo log this to an error log
 			err = clientNamedPipe->reset();
 			if (err != IFOLDER_SUCCESS)
 			{
 				printf("IFIPCClient::run(): error resetting client pipe: %d\n", err);
-				return;	// FIXME: Send a message via libifolder to the API consumer so they know there was a bad IPC error
+				return;	// @todo Send a message via libifolder to the API consumer so they know there was a bad IPC error
 			}
 		}
 	}
@@ -172,7 +172,7 @@ IFIPCClient::gracefullyExit()
 void
 IFIPCClient::initHeader(iFolderMessageHeader *header, uint messageType)
 {
-	header->senderPID = 0; // FIXME: Get the PID of this process
+	header->senderPID = 0; // @todo Get the PID of this process
 	header->messageType = messageType;
 	memset(header->messageNamedPipePath, '\0', NAMED_PIPE_PATH_MAX);
 }
@@ -250,7 +250,7 @@ IFIPCClient::processMessage(int messageType, void *message)
 {
 	printf("IFIPCClient::processMessage() called with message type: %d\n", messageType);
 	
-	// FIXME: Process the message and delete the memory used by it
+	// @todo Process the message and delete the memory used by it
 
 	return IFOLDER_SUCCESS;
 }
