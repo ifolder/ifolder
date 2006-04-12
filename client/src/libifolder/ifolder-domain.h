@@ -281,6 +281,9 @@ int ifolder_domain_set_default(const iFolderDomain domain);
  */
 int ifolder_domain_get_authenticated_user(const iFolderDomain domain, iFolderUser *user);
 
+
+int ifolder_domain_get_authenticated_user_policy(const iFolderDomain domain, const iFolderUser *user, iFolderUserPolicy *user_policy);
+
 //! Returns an iFolderUser object for a given user ID.
 /**
  * @param domain The domain.
@@ -406,12 +409,33 @@ int ifolder_domain_get_disconnected_ifolders(const iFolderDomain domain, const i
 
 //! Returns an iFolder for the specified iFolder ID.
 /**
+ * This call may return either a connected or disconnected iFolder.
+ * 
  * @param domain The domain.
  * @param id The ID of an iFolder.
  * @param ifolder Invalid if the call is unsuccessful.
  * @return IFOLDER_SUCCESS if the call was successful.
+ * @see ifolder_get_type()
  */
 int ifolder_domain_get_ifolder_by_id(const iFolderDomain domain, const char *id, iFolder *ifolder);
+
+//! Returns a subset of iFolders for a domain by searching, beginning at the specified index.
+/**
+ * This call may return both connected and disconnected iFolders.
+ * 
+ * @param domain The domain.
+ * @param search_op The iFolderSearchOperation to use in the search.
+ * @param pattern The pattern to use in the search.
+ * @param index The index of where the iFolderEnumeration should begin.  This
+ * must be greater than 0.  An empty list will be returned if the index is
+ * greater than the total number of iFolders available.
+ * @param count The maximum number of iFolder objects to return.  This must be
+ * at least 1 or greater.
+ * @param ifolder_enum Invalid if the call is unsuccessful.
+ * @return IFOLDER_SUCCESS if the call was successful.
+ * @see ifolder_get_type()
+ */
+int ifolder_domain_get_ifolders_by_name(const iFolderDomain domain, const iFolderSearchOperation search_op, const char *pattern, const int index, const int count, iFolderEnumeration *ifolder_enum);
 
 //! Returns all domains configured on the client.
 /**

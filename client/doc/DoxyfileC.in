@@ -460,7 +460,8 @@ INPUT                  = \
 	../src/libifolder/ifolder-enumeration.h		\
 	../src/libifolder/ifolder-errors.h			\
 	../src/libifolder/ifolder-event.h			\
-	../src/libifolder/ifolder-user.h	
+	../src/libifolder/ifolder-user.h				\
+	../src/libifolder/ifolder-user-policy.h	
 
 # If the value of the INPUT tag contains directories, you can use the 
 # FILE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp 

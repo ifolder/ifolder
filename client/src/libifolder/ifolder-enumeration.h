@@ -36,7 +36,36 @@ extern "C"
 
 typedef void *iFolderEnumeration;
 
-void ifolder_enumeration_free(iFolderEnumeration enumeration);
+//! Returns whether there are more items available in the enumeration.
+/**
+ * @param enumeration The iFolderEnumeration.
+ * @return true if there are more items available in the enumeration.
+ */
+bool		ifolder_enumeration_has_more(iFolderEnumeration enumeration);
+
+//! Return the next item in the enumeration
+/**
+ * This increments the iterator to the next item in the enumeration.
+ * 
+ * @param enumeration The iFolderEnumeration.
+ * @return This must be cast to the expected object type.  Returns NULL if
+ * there was an error or if there are no more objects in the enumeration.
+ */
+void *	ifolder_enumeration_get_next(iFolderEnumeration enumeration);
+
+//! Reset the enumeration to point to the first item.
+/**
+ * @param enumeration The iFolderEnumeration.
+ */
+void		ifolder_enumeration_reset(iFolderEnumeration enumeration);
+
+//! Free the memory used by an iFolderEnumration.
+/**
+ * The memory used by the objects contained inside of the enumeration is also
+ * freed.
+ * @param enumeration The iFolderEnumeration.
+ */
+void		ifolder_enumeration_free(iFolderEnumeration enumeration);
 
 #ifdef __cplusplus
 }
