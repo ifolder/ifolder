@@ -30,14 +30,14 @@
 #include <common/IFNamedPipe.h>
 #include <common/IFMessages.h>
 
-class iFolderIPCClient : public QThread
+class IFIPCClient : public QThread
 {
 //	Q_OBJECT
 	
 	public:
-		iFolderIPCClient();
-//		iFolderIPCServer(QObject *parent = NULL);
-		virtual ~iFolderIPCClient();
+		IFIPCClient();
+//		IFIPCServer(QObject *parent = NULL);
+		virtual ~IFIPCClient();
 		
 		//! This must be called before the thread is started
 		/**
@@ -51,20 +51,22 @@ class iFolderIPCClient : public QThread
 		void gracefullyExit();
 
 		//! Initialize an iFolderMessageHeader before making an IPC request
-		void initHeader(iFolderMessageHeader *header, uint messageType);
+		static void initHeader(iFolderMessageHeader *header, uint messageType);
 		
-	private:
 		//! Make an ipcCall to the server
-		int ipcCall(void *request, void **response);
+		static int ipcCall(void *request, void **response);
+	private:
 
 		int processMessage(int messageType, void *message);
 
-		int ipcCallRegisterClient(iFolderNamedPipe *serverNamedPipe, iFolderNamedPipe *tempNamedPipe, iFolderMessageRegisterClientRequest *request, iFolderMessageRegisterClientResponse **response);
-		
 		int unregisterClient();
-		int ipcCallUnregisterClient(iFolderNamedPipe *serverNamedPipe, iFolderNamedPipe *tempNamedPipe, iFolderMessageUnregisterClientRequest *request, iFolderMessageUnregisterClientResponse **response);
+
+		static int ipcCallRegisterClient(IFNamedPipe *serverNamedPipe, IFNamedPipe *tempNamedPipe, iFolderMessageRegisterClientRequest *request, iFolderMessageRegisterClientResponse **response);
+		static int ipcCallUnregisterClient(IFNamedPipe *serverNamedPipe, IFNamedPipe *tempNamedPipe, iFolderMessageUnregisterClientRequest *request, iFolderMessageUnregisterClientResponse **response);
+		
+		static int ipcCallDomainAdd(IFNamedPipe *serverNamedPipe, IFNamedPipe *tempNamedPipe, iFolderMessageDomainAddRequest *request, iFolderMessageDomainAddResponse **response);
 	
-		iFolderNamedPipe *clientNamedPipe;
+		IFNamedPipe *clientNamedPipe;
 		char clientNamedPipePath[NAMED_PIPE_PATH_MAX];
 		bool bExit;
 		bool bInitialized;

@@ -30,14 +30,14 @@
 
 #include "IFIPCServer.h"
 
-iFolderIPCServer::iFolderIPCServer() :
+IFIPCServer::IFIPCServer() :
 	serverNamedPipe(NULL), bExit(false)
-//iFolderIPCServer::iFolderIPCServer(QObject *parent) :
+//IFIPCServer::IFIPCServer(QObject *parent) :
 //	QThread(parent), serverNamedPipe(NULL), bExit(false)
 {
 }
 
-iFolderIPCServer::~iFolderIPCServer()
+IFIPCServer::~IFIPCServer()
 {
 	int err;
 
@@ -53,18 +53,18 @@ iFolderIPCServer::~iFolderIPCServer()
 }
 
 void
-iFolderIPCServer::run()
+IFIPCServer::run()
 {
 	int err;
 	char serverNamedPipePath[NAMED_PIPE_PATH_MAX];
 	void *message;
 	uint messageType;
 
-	printf("iFolderIPCServer::run()\n");
+	printf("IFIPCServer::run()\n");
 
 	sprintf(serverNamedPipePath, IFOLDER_SERVER_NAMED_PIPE, "boyd");	// FIXME: Determine the user name programmatically
 	
-	serverNamedPipe = new iFolderNamedPipe(QString(serverNamedPipePath), iFolderNamedPipe::ReadOnly);
+	serverNamedPipe = new IFNamedPipe(QString(serverNamedPipePath), IFNamedPipe::ReadOnly);
 
 	err = serverNamedPipe->openPipe(true, true);
 	if (err != IFOLDER_SUCCESS)
@@ -84,7 +84,7 @@ iFolderIPCServer::run()
 			err = serverNamedPipe->reset();
 			if (err != IFOLDER_SUCCESS)
 			{
-				printf("iFolderIPCServer::run(): error resetting server pipe: %d\n", err);
+				printf("IFIPCServer::run(): error resetting server pipe: %d\n", err);
 				return;	// FIXME: Send a message via libifolder to the API consumer so they know there was a bad IPC error
 			}
 
@@ -98,11 +98,11 @@ iFolderIPCServer::run()
 		if (err != IFOLDER_SUCCESS)
 		{
 			// Close and reopen the pipe to clear the bad out!
-			printf("iFolderIPCServer::run(): processMessage() returned %d\nClosing and re-opening the server pipe...\n", err); // FIXME: log this to an error log
+			printf("IFIPCServer::run(): processMessage() returned %d\nClosing and re-opening the server pipe...\n", err); // FIXME: log this to an error log
 			err = serverNamedPipe->reset();
 			if (err != IFOLDER_SUCCESS)
 			{
-				printf("iFolderIPCServer::run(): error resetting server pipe: %d\n", err);
+				printf("IFIPCServer::run(): error resetting server pipe: %d\n", err);
 				return;	// FIXME: Send a message via libifolder to the API consumer so they know there was a bad IPC error
 			}
 		}
@@ -110,13 +110,13 @@ iFolderIPCServer::run()
 }
 
 void
-iFolderIPCServer::gracefullyExit()
+IFIPCServer::gracefullyExit()
 {
 	bExit = true;
 }
 
 void
-iFolderIPCServer::initHeader(iFolderMessageHeader *header, uint messageType)
+IFIPCServer::initHeader(iFolderMessageHeader *header, uint messageType)
 {
 	header->senderPID = 0; // FIXME: Get the PID of this process
 	header->messageType = messageType;
@@ -124,30 +124,30 @@ iFolderIPCServer::initHeader(iFolderMessageHeader *header, uint messageType)
 }
 
 int
-iFolderIPCServer::ipcRespond(QString repsonseNamedPipePath, void *response)
+IFIPCServer::ipcRespond(QString repsonseNamedPipePath, void *response)
 {
 	int err;
 	iFolderMessageHeader *header;
-	iFolderNamedPipe *responseNamedPipe;
+	IFNamedPipe *responseNamedPipe;
 
 	header = (iFolderMessageHeader *)response;
 
 	// Open the client's named pipe to write the response
-	responseNamedPipe = new iFolderNamedPipe(repsonseNamedPipePath, iFolderNamedPipe::WriteOnly);
+	responseNamedPipe = new IFNamedPipe(repsonseNamedPipePath, IFNamedPipe::WriteOnly);
 	if (!responseNamedPipe)
 		return IFOLDER_ERROR_OUT_OF_MEMORY;
 
-printf("iFolderIPCServer::ipcRespond(): created a pipe to write the response\n");
+printf("IFIPCServer::ipcRespond(): created a pipe to write the response\n");
 	
 	err = responseNamedPipe->openPipe(true, false);
 	if (err != IFOLDER_SUCCESS)
 	{
 		delete responseNamedPipe;
-		printf("iFolderIPCServer::ipcRespond(): Error opening client's named pipe: %d\n", err);
+		printf("IFIPCServer::ipcRespond(): Error opening client's named pipe: %d\n", err);
 		return err;
 	}
 	
-printf("iFolderIPCServer::ipcRespond(): opened client's named pipe for writing\n");
+printf("IFIPCServer::ipcRespond(): opened client's named pipe for writing\n");
 
 	switch(header->messageType)
 	{
@@ -156,6 +156,9 @@ printf("iFolderIPCServer::ipcRespond(): opened client's named pipe for writing\n
 			break;
 		case IFOLDER_MSG_UNREGISTER_CLIENT_RESPONSE:
 			err = responseNamedPipe->writeMessage(response, sizeof(iFolderMessageUnregisterClientResponse));
+			break;
+		case IFOLDER_MSG_DOMAIN_ADD_RESPONSE:
+			err = responseNamedPipe->writeMessage(response, sizeof(iFolderMessageDomainAddResponse));
 			break;
 		default:
 			delete responseNamedPipe;
@@ -169,11 +172,11 @@ printf("iFolderIPCServer::ipcRespond(): opened client's named pipe for writing\n
 }
 
 int
-iFolderIPCServer::processMessage(uint messageType, void *message)
+IFIPCServer::processMessage(uint messageType, void *message)
 {
 	int err;
 
-	printf("iFolderIPCServer::processMessage() called with message type: %d\n", messageType);
+	printf("IFIPCServer::processMessage() called with message type: %d\n", messageType);
 	
 	// The message handlers should delete the memory used by the message
 	switch(messageType)
@@ -184,6 +187,9 @@ iFolderIPCServer::processMessage(uint messageType, void *message)
 		case IFOLDER_MSG_UNREGISTER_CLIENT_REQUEST:
 			err = handleUnregisterClientRequest((iFolderMessageUnregisterClientRequest *)message);
 			break;
+		case IFOLDER_MSG_DOMAIN_ADD_REQUEST:
+			err = handleDomainAddRequest((iFolderMessageDomainAddRequest *)message);
+			break;
 		default:
 			break;
 	}
@@ -192,12 +198,12 @@ iFolderIPCServer::processMessage(uint messageType, void *message)
 }
 
 int
-iFolderIPCServer::handleRegisterClientRequest(iFolderMessageRegisterClientRequest *message)
+IFIPCServer::handleRegisterClientRequest(iFolderMessageRegisterClientRequest *message)
 {
 	int err;
 	iFolderMessageRegisterClientResponse response;
 
-	printf("iFolderIPCServer::handleRegisterClientRequest()\n");
+	printf("IFIPCServer::handleRegisterClientRequest()\n");
 	printf("\t%s\n", message->clientNamedPipe);
 
 	err = IFOLDER_SUCCESS; // FIXME: Really register the client so that messages/events can be sent back to it to its named pipe
@@ -213,17 +219,52 @@ iFolderIPCServer::handleRegisterClientRequest(iFolderMessageRegisterClientReques
 }
 
 int
-iFolderIPCServer::handleUnregisterClientRequest(iFolderMessageUnregisterClientRequest *message)
+IFIPCServer::handleUnregisterClientRequest(iFolderMessageUnregisterClientRequest *message)
 {
 	int err;
 	iFolderMessageUnregisterClientResponse response;
 
-	printf("iFolderIPCServer::handleUnregisterClientRequest()\n");
+	printf("IFIPCServer::handleUnregisterClientRequest()\n");
 
 	err = IFOLDER_SUCCESS; // FIXME: Really unregister the client so that messages/events can be sent back to it to its named pipe
 
 	initHeader((iFolderMessageHeader *)&response, IFOLDER_MSG_UNREGISTER_CLIENT_RESPONSE);
 	response.returnCode = err;
+	
+	err = ipcRespond(QString(message->header.messageNamedPipePath), &response);
+	
+	free(message);
+
+	return err;
+}
+
+int
+IFIPCServer::handleDomainAddRequest(iFolderMessageDomainAddRequest *message)
+{
+	int err;
+	iFolderMessageDomainAddResponse response;
+
+	printf("IFIPCServer::handleDomainAddRequest()\n");
+	printf("\t%s, %s, ********, %s\n",
+			message->hostAddress,
+			message->userName,
+			message->makeDefault ? "true" : "false");
+
+	err = IFOLDER_SUCCESS; // FIXME: Add a new domain and collect the return value
+
+	initHeader((iFolderMessageHeader *)&response, IFOLDER_MSG_DOMAIN_ADD_RESPONSE);
+	response.returnCode = err;
+	
+	sprintf(response.id, "<myid>");
+	sprintf(response.name, "The Domain Name");
+	sprintf(response.description, "The Domain Description");
+	sprintf(response.version, "The Domain Version");
+	sprintf(response.hostAddress, message->hostAddress);
+	sprintf(response.machineName, "The Machine Name");
+	sprintf(response.osVersion, "Linux, DUH!");
+	sprintf(response.userName, message->userName);
+	response.isDefault = true;
+	response.isActive = true;
 	
 	err = ipcRespond(QString(message->header.messageNamedPipePath), &response);
 	

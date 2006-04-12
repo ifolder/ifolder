@@ -29,6 +29,7 @@
 #endif
 
 #define NAMED_PIPE_PATH_MAX PATH_MAX + 1
+#define CONST_CHAR_LEN_MAX NAMED_PIPE_PATH_MAX	/* Determine the correct max length of char arrays to use in messages */
 
 typedef struct
 {
@@ -70,6 +71,43 @@ typedef iFolderSimpleMessageResponse iFolderMessageRegisterClientResponse;
 #define IFOLDER_MSG_UNREGISTER_CLIENT_RESPONSE			4
 typedef iFolderSimpleMessageRequest iFolderMessageUnregisterClientRequest;
 typedef iFolderSimpleMessageResponse iFolderMessageUnregisterClientResponse;
+
+#define IFOLDER_MSG_DOMAIN_ADD_REQUEST					5
+#define IFOLDER_MSG_DOMAIN_ADD_RESPONSE					6
+typedef struct
+{
+	iFolderMessageHeader header;
+	
+	char hostAddress[CONST_CHAR_LEN_MAX];
+	char userName[CONST_CHAR_LEN_MAX];
+	char password[CONST_CHAR_LEN_MAX];
+	bool makeDefault;
+} iFolderMessageDomainAddRequest;
+typedef struct
+{
+	iFolderMessageHeader header;
+	int returnCode;
+	
+	char id[CONST_CHAR_LEN_MAX];
+	char name[CONST_CHAR_LEN_MAX];
+	char description[CONST_CHAR_LEN_MAX];
+	char version[CONST_CHAR_LEN_MAX];
+	char hostAddress[CONST_CHAR_LEN_MAX];
+	char machineName[CONST_CHAR_LEN_MAX];
+	char osVersion[CONST_CHAR_LEN_MAX];
+	char userName[CONST_CHAR_LEN_MAX];
+	bool isDefault;
+	bool isActive;
+} iFolderMessageDomainAddResponse;
+
+#define IFOLDER_MSG_DOMAIN_REMOVE_REQUEST				7
+#define IFOLDER_MSG_DOMAIN_REMOVE_RESPONSE				8
+typedef struct
+{
+	iFolderMessageHeader header;
+	char domainId[CONST_CHAR_LEN_MAX];
+} iFolderMessageDomainRemoveRequest;
+typedef iFolderSimpleMessageResponse iFolderMessageDomainRemoveResponse;
 
 #endif /*_IFOLDER_MESSAGES_H_*/
 

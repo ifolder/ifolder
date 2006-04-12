@@ -26,16 +26,21 @@
 
 #include "IFDomain.h"
 
-class iFolderUser
+/**
+ * @file IFUser.h
+ * @brief User API
+ */
+
+class IFUser
 {
 	public:
-		~iFolderUser();
+		~IFUser();
 	
 	private:
-		iFolderUser();
+		IFUser();
 		
-		friend class iFolderDomain;
-		friend class iFolder;
+		friend class IFDomain;
+		friend class IFiFolder;
 };
 
 #endif /*_IFOLDER_USER_H_*/

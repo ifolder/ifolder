@@ -27,10 +27,15 @@
 #include <QString>
 //#include <QTime>
 
-class iFolderChangeEntry
+/**
+ * @file IFChangeEntry.h
+ * @brief Change Entry API
+ */
+
+class IFChangeEntry
 {
 	public:
-		~iFolderChangeEntry();
+		~IFChangeEntry();
 		
 		enum ChangeEntryType {Add, Modify, Delete, Unknown};
 		
@@ -42,9 +47,7 @@ class iFolderChangeEntry
 		QString userFullName();
 	
 	private:
-		iFolderChangeEntry();
-
-		friend class iFolder;
+		IFChangeEntry();
 };
 
 #endif /*_IFOLDER_CHANGE_ENTRY_H_*/

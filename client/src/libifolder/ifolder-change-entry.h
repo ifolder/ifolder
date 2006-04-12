@@ -21,23 +21,25 @@
  *
  ***********************************************************************/
 
-#ifndef _IFOLDER_CLIENT_H_
-#define _IFOLDER_CLIENT_H_
+#ifndef _IFOLDER_C_CHANGE_ENTRY_H_
+#define _IFOLDER_C_CHANGE_ENTRY_H_
 
-#include <QString>
-
-class iFolderClient
+#ifdef __cplusplus
+extern "C"
 {
-	public:
-		iFolderClient();
-		virtual ~iFolderClient();
+#endif		/* __cplusplus */
 
-		int initialize();
-		int uninitialize();
-		int startTrayApp(QString trayAppExePath);
-	private:
-		bool bInitialized;
-		void *ipcClass;
-};
+/**
+ * @file ifolder-change-entry.h
+ * @brief Change Entry API
+ */
 
-#endif /*_IFOLDER_CLIENT_H_*/
+typedef void *iFolderChangeEntry;
+
+void ifolder_change_entry_free(iFolderChangeEntry change_entry);
+
+#ifdef __cplusplus
+}
+#endif		/* __cplusplus */
+
+#endif /*_IFOLDER_C_CHANGE_ENTRY_H_*/

@@ -21,45 +21,25 @@
  *
  ***********************************************************************/
 
-#include <stdio.h>
-#include "ifolder-errors.h"
-#include "ifolder-client.h"
+#ifndef _IFOLDER_C_ENUMERATION_H_
+#define _IFOLDER_C_ENUMERATION_H_
 
-#include "IFClient.h"
-
-static IFClient *ifolderClient = NULL;
-
-int
-ifolder_client_initialize(void)
+#ifdef __cplusplus
+extern "C"
 {
-	if (ifolderClient != NULL)
-		return ifolderClient->initialize();
-	
-	// It is null, so new one up.
-	ifolderClient = new IFClient();
-	if (ifolderClient == NULL)
-		return IFOLDER_ERROR_OUT_OF_MEMORY;
+#endif		/* __cplusplus */
 
-	return ifolderClient->initialize();
+/**
+ * @file ifolder-enumeration.h
+ * @brief Enumeration API
+ */
+
+typedef void *iFolderEnumeration;
+
+void ifolder_enumeration_free(iFolderEnumeration enumeration);
+
+#ifdef __cplusplus
 }
+#endif		/* __cplusplus */
 
-int
-ifolder_client_uninitialize(void)
-{
-	int err;
-
-	if (ifolderClient != NULL)
-	{
-		err = ifolderClient->uninitialize();
-		if (err == IFOLDER_SUCCESS)
-		{
-			delete ifolderClient;
-			ifolderClient = NULL;
-		}
-
-		return err;
-	}
-	
-	return IFOLDER_ERROR_NOT_INITIALIZED;
-}
-
+#endif /*_IFOLDER_C_ENUMERATION_H_*/

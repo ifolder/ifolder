@@ -29,6 +29,11 @@ extern "C"
 {
 #endif		/* __cplusplus */
 
+/**
+ * @file ifolder-errors.h
+ * @brief Error Codes
+ */
+
 #define IFOLDER_SUCCESS	0
 #define IFOLDER_ERROR		-1
 

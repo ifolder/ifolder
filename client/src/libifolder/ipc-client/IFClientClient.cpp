@@ -23,21 +23,21 @@
 
 #include "ifolder-errors.h"
 #include "IFIPCClient.h"
-#include "IFiFolderClient.h"
+#include "IFClient.h"
 
-iFolderClient::iFolderClient() :
+IFClient::IFClient() :
 	bInitialized(false)
 {
 }
 
-iFolderClient::~iFolderClient()
+IFClient::~IFClient()
 {
 	int err;
-	iFolderIPCClient *ipcClient;
+	IFIPCClient *ipcClient;
 
 	if (ipcClass != NULL)
 	{
-		ipcClient = (iFolderIPCClient *)ipcClass;
+		ipcClient = (IFIPCClient *)ipcClass;
 		if (ipcClient->isRunning())
 		{
 printf("Terminating the client thread\n");
@@ -51,16 +51,16 @@ printf("Terminating the client thread\n");
 }
 
 int
-iFolderClient::initialize()
+IFClient::initialize()
 {
 	int err;
-	iFolderIPCClient *ipcClient;
+	IFIPCClient *ipcClient;
 
 	if (bInitialized)
 		return IFOLDER_ERROR_ALREADY_INITIALIZED;
 
 	// FIXME: Initialize the client (i.e., start up the IPC server, etc.)
-	ipcClient = new iFolderIPCClient();
+	ipcClient = new IFIPCClient();
 	if (!ipcClient)
 		return IFOLDER_ERROR_OUT_OF_MEMORY;
 	
@@ -73,17 +73,17 @@ iFolderClient::initialize()
 		return err;
 	}
 
-	printf("iFolderClient::initialize(): ipcClient->init() succeeded\n");
+	printf("IFClient::initialize(): ipcClient->init() succeeded\n");
 
 	// Start the client thread to listen for events from the IPC server.
 	ipcClient->start();
 	
-	printf("iFolderClient::initialize(): ipcClient->start() called\n");
+	printf("IFClient::initialize(): ipcClient->start() called\n");
 
 	err = ipcClient->registerClient();
 	if (err != IFOLDER_SUCCESS)
 	{
-		printf("iFolderClient::initialize(): Error calling ipcClient->registerClient(): %d\n", err);
+		printf("IFClient::initialize(): Error calling ipcClient->registerClient(): %d\n", err);
 		if (ipcClient->isRunning())
 		{
 printf("Terminating the client thread\n");
@@ -96,23 +96,23 @@ printf("Terminating the client thread\n");
 		return err;
 	}
 
-	printf("iFolderClient::initialize(): ipcClient->register() succeeded\n");
+	printf("IFClient::initialize(): ipcClient->register() succeeded\n");
 
 	bInitialized = true;
 	return IFOLDER_SUCCESS;
 }
 
 int
-iFolderClient::uninitialize()
+IFClient::uninitialize()
 {
 	int err;
-	iFolderIPCClient *ipcClient;
+	IFIPCClient *ipcClient;
 	
 	if (!bInitialized)
 		return IFOLDER_ERROR_NOT_INITIALIZED;
 
 	// FIXME: Uninitialize the client (i.e., stop the IPC server, etc.)
-	ipcClient = (iFolderIPCClient *)ipcClass;
+	ipcClient = (IFIPCClient *)ipcClass;
 	if (ipcClient->isRunning())
 	{
 printf("Terminating the client thread\n");
@@ -127,8 +127,3 @@ printf("Terminating the client thread\n");
 	return IFOLDER_SUCCESS;
 }
 
-int
-iFolderClient::startTrayApp(QString trayAppExePath)
-{
-	return IFOLDER_SUCCESS;
-}

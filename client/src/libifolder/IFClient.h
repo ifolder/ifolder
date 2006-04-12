@@ -21,22 +21,17 @@
  *
  ***********************************************************************/
 
-#ifndef _IFOLDER_C_CLIENT_H_
-#define _IFOLDER_C_CLIENT_H_
+#ifndef _IFOLDER_CLIENT_H_
+#define _IFOLDER_CLIENT_H_
 
-#include "ifolder-errors.h"
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif		/* __cplusplus */
+#include <QString>
 
 /**
- * @mainpage iFolder 3.6 Client API for C
+ * @mainpage iFolder 3.6 Client API for C++
  * 
  * @section intro_sec Introduction
  * 
- * FIXME: Add main page documentation for the C API
+ * FIXME: Add main page documentation for the C++ API
  * 
  * iFolder is a simple and secure storage solution that can increase your
  * productivity by enabling you to back up, access and manage your personal
@@ -58,33 +53,27 @@ extern "C"
  */
 
 /**
- * @file ifolder-client.h
- * @brief Main Client API (start here)
- * 
+ * @file IFClient.h
+ * @brief Contains a definition for the IFClient class.
+ */
+
+//! Main Client API to get things rolling.
+/**
  * A process can only control only ONE instance of the iFolder Client.  When
  * your program loads, call ifolder_client_initialize().  Before you exit,
  * make sure you call ifolder_client_uninitialize() before your program exits.
  */
+class IFClient
+{
+	public:
+		IFClient();
+		virtual ~IFClient();
 
-//! Initialize the iFolder Client.
-/**
- * This must be called before using the iFolder Client API.
- * 
- * @return IFOLDER_SUCCESS if the call was successful.
- */
-int ifolder_client_initialize(void);
+		int initialize();
+		int uninitialize();
+	private:
+		bool bInitialized;
+		void *ipcClass;
+};
 
-//! Uninitialize the iFolder Client
-/**
- * This must be called when you are finished using the iFolder Client (usually
- * just before your process exits).
- * 
- * @return IFOLDER_SUCCESS if the call was successful.
- */
-int ifolder_client_uninitialize(void);
-
-#ifdef __cplusplus
-}
-#endif		/* __cplusplus */
-
-#endif /*_IFOLDER_C_CLIENT_H_*/
+#endif /*_IFOLDER_CLIENT_H_*/

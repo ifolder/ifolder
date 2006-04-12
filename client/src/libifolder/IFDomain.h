@@ -30,10 +30,15 @@
 #include "IFiFolder.h"
 #include "IFUser.h"
 
-class iFolderDomain
+/**
+ * @file IFDomain.h
+ * @brief Domain API
+ */
+
+class IFDomain
 {
 	public:
-		virtual ~iFolderDomain();
+		virtual ~IFDomain();
 		
 		/**
 		 * Enumerations
@@ -45,56 +50,73 @@ class iFolderDomain
 		/**
 		 * Properties
 		 */
-		QString id();
-		QString name();
-		QString description();
-		QString version();
-		QString hostAddress();
-		QString machineName();
-		QString osVersion();
-		QString userName();
-		bool isDefault();
-		bool isActive();
+		QString getId();
+		QString getName();
+		QString getDescription();
+		QString getVersion();
+		QString getHostAddress();
+		QString getMachineName();
+		QString getOsVersion();
+		QString getUserName();
+		bool getIsDefault();
+		bool getIsActive();
 		
 		/**
 		 * User Data
 		 */
-		void *userData();
+		void *getUserData();
 		void setUserData(void *userData);
 		
 		/**
 		 * Methods/Actions
 		 */
+		static int add(QString hostAddress, QString userName, QString password, bool makeDefault, IFDomain **retVal);
 		int remove(bool deleteiFoldersOnServer);
-		int login(const char *password);
-		int logout();
+		int logIn(QString password);
+		int logOut();
+
 		int activate();
 		int inactivate();
-		int changeHostAddress(const char *newHostAddress);
-		int setCredentials(const char *password, CredentialType credentialType);
+		int changeHostAddress(QString newHostAddress);
+		int setCredentials(QString password, CredentialType credentialType);
 		int setDefault();
-		int getAuthenticatedUser(iFolderUser *retVal);
-		int getUser(const char *userID, iFolderUser *retVal);
-		int getUsers(int index, int count, QList<iFolderUser> *retVal);
-		int getUsersBySearch(SearchProperty searchProp, SearchOperation searchOp, const char *pattern, int index, int count, QList<iFolderUser> *retVal);
+		int getAuthenticatedUser(IFUser *retVal);
+		int getUser(QString userID, IFUser *retVal);
+		int getUsers(int index, int count, QList<IFUser> *retVal);
+		int getUsersBySearch(SearchProperty searchProp, SearchOperation searchOp, QString pattern, int index, int count, QList<IFUser> *retVal);
 
-		int createiFolder(const char *localPath, const char *description, iFolder *retVal);
-		int deleteiFolder(iFolder ifolder);
-		int getLocaliFolders(int index, int count, QList<iFolder> *retVal);
-		int getRemoteiFolders(int index, int count, QList<iFolder> *retVal);
-		int getiFolderByID(const char *id, iFolder *retVal);
-		int getiFolderByName(const char *name, iFolder *retVal);
+		int createiFolder(QString localPath, QString description, IFiFolder *retVal);
+		int deleteiFolder(IFiFolder ifolder);
+		int getLocaliFolders(int index, int count, QList<IFiFolder> *retVal);
+		int getRemoteiFolders(int index, int count, QList<IFiFolder> *retVal);
+		int getiFolderByID(QString id, IFiFolder *retVal);
+		int getiFolderByName(QString name, IFiFolder *retVal);
 		
 		/**
 		 * Static Methods
 		 */
-		static int getAll(QList<iFolderDomain> *retVal);
-		static int getAllActive(QList<iFolderDomain> *retVal);
-		static int getDefault(iFolderDomain *retVal);
-		static int add(const char *hostAddress, const char *userName, const char *password, bool makeDefault, iFolderDomain *retVal);
+		static int getAll(QList<IFDomain> *retVal);
+		static int getAllActive(QList<IFDomain> *retVal);
+		static int getDefault(IFDomain *retVal);
 	
 	private:
-		iFolderDomain();
+		IFDomain(QString id, QString name, QString description,
+					  QString version, QString hostAddress,
+					  QString machineName, QString osVersion,
+					  QString userName, bool isDefault, bool isActive,
+					  void *userData);
+
+		QString id;
+		QString name;
+		QString description;
+		QString version;
+		QString hostAddress;
+		QString machineName;
+		QString osVersion;
+		QString userName;
+		bool isDefault;
+		bool isActive;
+		void *userData;
 };
 
 #endif /*_IFOLDER_DOMAIN_H_*/

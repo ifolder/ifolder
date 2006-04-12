@@ -30,14 +30,14 @@
 #include <common/IFNamedPipe.h>
 #include <common/IFMessages.h>
 
-class iFolderIPCServer : public QThread
+class IFIPCServer : public QThread
 {
 //	Q_OBJECT
 	
 	public:
-		iFolderIPCServer();
-//		iFolderIPCServer(QObject *parent = NULL);
-		virtual ~iFolderIPCServer();
+		IFIPCServer();
+//		IFIPCServer(QObject *parent = NULL);
+		virtual ~IFIPCServer();
 		
 		void run();
 		void gracefullyExit();
@@ -53,8 +53,10 @@ class iFolderIPCServer : public QThread
 		
 		int handleRegisterClientRequest(iFolderMessageRegisterClientRequest *message);
 		int handleUnregisterClientRequest(iFolderMessageUnregisterClientRequest *message);
+		
+		int handleDomainAddRequest(iFolderMessageDomainAddRequest *message);
 	
-		iFolderNamedPipe *serverNamedPipe;
+		IFNamedPipe *serverNamedPipe;
 		bool bExit;
 };
 

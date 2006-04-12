@@ -49,13 +49,14 @@ libifolder_la_LDFLAGS = \
 
 common_sources = \
 	../common/ifolder-client.cpp		\
+	../common/ifolder-domain.cpp		\
 	../common/IFNamedPipe.cpp		\
 	../common/IFNamedPipe.h			\
 	../common/IFMessages.h
 
 libifolder_la_SOURCES = \
 	$(common_sources)			\
-	IFiFolderClientClient.cpp	\
+	IFClientClient.cpp	\
 	IFDomainClient.cpp			\
 	IFIPCClient.cpp				\
 	IFIPCClient.h

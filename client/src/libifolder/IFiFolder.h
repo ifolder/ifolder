@@ -30,28 +30,33 @@
 #include "IFUser.h"
 #include "IFChangeEntry.h"
 
-class iFolder
+/**
+ * @file IFiFolder.h
+ * @brief iFolder API (API for individual iFolders)
+ */
+
+class IFiFolder
 {
 	public:
-		~iFolder();
+		~IFiFolder();
 
 		enum MemberRights {Deny, ReadOnly, ReadWrite, Admin};
 
 		void publish();
 		void unPublish();
 		void setDescription(QString *newDescription);
-		QList<iFolderUser> getMembers(int index, int count);
-		void setMemberRights(iFolderUser member, MemberRights rights);
-		void addMember(iFolderUser member, MemberRights rights);
-		void removeMember(iFolderUser member);
-		void setOwner(iFolderUser member);
-		QList<iFolderChangeEntry> getChanges(int index, int count);
-		QList<iFolderChangeEntry> getFileChanges(QString *relativePath, int index, int count);
+		QList<IFUser> getMembers(int index, int count);
+		void setMemberRights(IFUser member, MemberRights rights);
+		void addMember(IFUser member, MemberRights rights);
+		void removeMember(IFUser member);
+		void setOwner(IFUser member);
+		QList<IFChangeEntry> getChanges(int index, int count);
+		QList<IFChangeEntry> getFileChanges(QString *relativePath, int index, int count);
 		
 	private:
-		iFolder();	
+		IFiFolder();	
 
-		friend class iFolderDomain;
+		friend class IFDomain;
 };
 
 #endif /*_IFOLDER_H_*/

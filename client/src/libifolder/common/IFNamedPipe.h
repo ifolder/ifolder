@@ -51,12 +51,12 @@
  * class provides an abstraction to the innards of how they work since they are
  * different on the three platforms we need to support.
  */
-class iFolderNamedPipe
+class IFNamedPipe
 {
 	public:
 		//! Specifies the type of named pipe to use
 		/**
-		 * Used by the iFolderNamedPipe construtor to specify which kind of
+		 * Used by the IFNamedPipe construtor to specify which kind of
 		 * named pipe to use.  It is, by design, a one-way pipe.
 		 */
 		enum PermissionType
@@ -68,8 +68,8 @@ class iFolderNamedPipe
 		/**
 		 * @param pathName the absolute path to the named pipe
 		 */
-		iFolderNamedPipe(QString pathName, PermissionType permissionType);
-		virtual ~iFolderNamedPipe();
+		IFNamedPipe(QString pathName, PermissionType permissionType);
+		virtual ~IFNamedPipe();
 		
 		//! Get the path of the named pipe
 		QString path();
@@ -113,10 +113,10 @@ class iFolderNamedPipe
 		 */
 		int readMessage(uint *messageTypeReturn, void **messageReturn);
 
-		static iFolderNamedPipe *createServerNamedPipeForWriting();
+		static IFNamedPipe *createServerNamedPipeForWriting();
 		//! Create a named pipe by process id
-		static iFolderNamedPipe *createNamedPipeByPid(PermissionType permissionType);
-		static iFolderNamedPipe *createUniqueNamedPipe(PermissionType permissionType);
+		static IFNamedPipe *createNamedPipeByPid(PermissionType permissionType);
+		static IFNamedPipe *createUniqueNamedPipe(PermissionType permissionType);
 
 		//! Close and reopen the pipe to clear out a bad message
 		int reset();

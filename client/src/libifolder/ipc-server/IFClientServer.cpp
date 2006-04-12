@@ -23,21 +23,21 @@
 
 #include "ifolder-errors.h"
 #include "libipcserver/IFIPCServer.h"
-#include "IFiFolderClient.h"
+#include "IFClient.h"
 
-iFolderClient::iFolderClient() :
+IFClient::IFClient() :
 	bInitialized(false), ipcClass(NULL)
 {
 }
 
-iFolderClient::~iFolderClient()
+IFClient::~IFClient()
 {
 	int err;
-	iFolderIPCServer *ipcServer;
+	IFIPCServer *ipcServer;
 
 	if (ipcClass != NULL)
 	{
-		ipcServer = (iFolderIPCServer *)ipcClass;
+		ipcServer = (IFIPCServer *)ipcClass;
 		if (ipcServer->isRunning())
 		{
 			ipcServer->gracefullyExit();
@@ -54,17 +54,17 @@ iFolderClient::~iFolderClient()
 }
 
 int
-iFolderClient::initialize()
+IFClient::initialize()
 {
 	int err;
-	iFolderIPCServer *ipcServer;
+	IFIPCServer *ipcServer;
 
 	if (bInitialized)
 		return IFOLDER_ERROR_ALREADY_INITIALIZED;
 
 	// FIXME: Initialize the client (i.e., start up the IPC server, etc.)
-	ipcServer = new iFolderIPCServer();
-//	ipcServer = new iFolderIPCServer(NULL);
+	ipcServer = new IFIPCServer();
+//	ipcServer = new IFIPCServer(NULL);
 	if (!ipcServer)
 		return IFOLDER_ERROR_OUT_OF_MEMORY;
 
@@ -78,16 +78,16 @@ iFolderClient::initialize()
 }
 
 int
-iFolderClient::uninitialize()
+IFClient::uninitialize()
 {
 	int err;
-	iFolderIPCServer *ipcServer;
+	IFIPCServer *ipcServer;
 
 	if (!bInitialized)
 		return IFOLDER_ERROR_NOT_INITIALIZED;
 
 	// FIXME: Uninitialize the client (i.e., stop the IPC server, etc.)
-	ipcServer = (iFolderIPCServer *)ipcClass;
+	ipcServer = (IFIPCServer *)ipcClass;
 	if (ipcServer->isRunning())
 	{
 		ipcServer->gracefullyExit();
@@ -105,8 +105,3 @@ iFolderClient::uninitialize()
 	return IFOLDER_SUCCESS;
 }
 
-int
-iFolderClient::startTrayApp(QString trayAppExePath)
-{
-	return IFOLDER_SUCCESS;
-}

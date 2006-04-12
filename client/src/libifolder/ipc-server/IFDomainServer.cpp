@@ -26,221 +26,222 @@
 #include <IFUser.h>
 #include <IFiFolder.h>
 
-iFolderDomain::iFolderDomain()
+IFDomain::IFDomain(QString id, QString name, QString description,
+					  QString version, QString hostAddress,
+					  QString machineName, QString osVersion,
+					  QString userName, bool isDefault, bool isActive,
+					  void *userData) :
+	id(""), name(""), description(""), version(""), hostAddress(""),
+	machineName(""), osVersion(""), userName(""), isDefault(false),
+	isActive(false), userData(NULL)
 {
 }
 
-iFolderDomain::~iFolderDomain()
+IFDomain::~IFDomain()
 {
-}
-
-QString
-iFolderDomain::id()
-{
-	QString x("Not Implemented");
-	return x;
-}
-
-QString
-iFolderDomain::name()
-{
-	QString x("Not Implemented");
-	return x;
 }
 
 QString
-iFolderDomain::description()
+IFDomain::getId()
 {
-	QString x("Not Implemented");
-	return x;
+	return id;
 }
 
 QString
-iFolderDomain::version()
+IFDomain::getName()
 {
-	QString x("Not Implemented");
-	return x;
+	return name;
 }
 
 QString
-iFolderDomain::hostAddress()
+IFDomain::getDescription()
 {
-	QString x("Not Implemented");
-	return x;
+	return description;
 }
 
 QString
-iFolderDomain::machineName()
+IFDomain::getVersion()
 {
-	QString x("Not Implemented");
-	return x;
+	return version;
 }
 
 QString
-iFolderDomain::osVersion()
+IFDomain::getHostAddress()
 {
-	QString x("Not Implemented");
-	return x;
+	return hostAddress;
 }
 
 QString
-iFolderDomain::userName()
+IFDomain::getMachineName()
 {
-	QString x("Not Implemented");
-	return x;
+	return machineName;
+}
+
+QString
+IFDomain::getOsVersion()
+{
+	return osVersion;
+}
+
+QString
+IFDomain::getUserName()
+{
+	return userName;
 }
 
 bool
-iFolderDomain::isDefault()
+IFDomain::getIsDefault()
 {
-	return false;
+	return isDefault;
 }
 
 bool
-iFolderDomain::isActive()
+IFDomain::getIsActive()
 {
-	return false;
+	return isActive;
 }
 		
 void *
-iFolderDomain::userData()
+IFDomain::getUserData()
 {
-	return NULL;
+	return userData;
 }
 
 void
-iFolderDomain::setUserData(void *userData)
+IFDomain::setUserData(void *userData)
 {
+	this->userData = userData;
 }
 
 int
-iFolderDomain::remove(bool deleteiFoldersOnServer)
+IFDomain::add(QString hostAddress, QString userName, QString password, bool makeDefault, IFDomain **retVal)
+{
+	printf("IFDomain::add()\n");
+	return IFOLDER_ERROR;
+}
+
+int
+IFDomain::remove(bool deleteiFoldersOnServer)
 {
 	return IFOLDER_ERROR;
 }
 
 int
-iFolderDomain::login(const char *password)
+IFDomain::logIn(QString password)
 {
 	return IFOLDER_ERROR;
 }
 
 int
-iFolderDomain::logout()
+IFDomain::logOut()
 {
 	return IFOLDER_ERROR;
 }
 
 int
-iFolderDomain::activate()
+IFDomain::activate()
 {
 	return IFOLDER_ERROR;
 }
 
 int
-iFolderDomain::inactivate()
+IFDomain::inactivate()
 {
 	return IFOLDER_ERROR;
 }
 
 int
-iFolderDomain::changeHostAddress(const char *newHostAddress)
+IFDomain::changeHostAddress(QString newHostAddress)
 {
 	return IFOLDER_ERROR;
 }
 
 int
-iFolderDomain::setCredentials(const char *password, CredentialType credentialType)
+IFDomain::setCredentials(QString password, CredentialType credentialType)
 {
 	return IFOLDER_ERROR;
 }
 
 int
-iFolderDomain::setDefault()
+IFDomain::setDefault()
 {
 	return IFOLDER_ERROR;
 }
 
 int
-iFolderDomain::getAuthenticatedUser(iFolderUser *retVal)
+IFDomain::getAuthenticatedUser(IFUser *retVal)
 {
 	return IFOLDER_ERROR;
 }
 
 int
-iFolderDomain::getUser(const char *userID, iFolderUser *retVal)
+IFDomain::getUser(QString userID, IFUser *retVal)
 {
 	return IFOLDER_ERROR;
 }
 
 int
-iFolderDomain::getUsers(int index, int count, QList<iFolderUser> *retVal)
+IFDomain::getUsers(int index, int count, QList<IFUser> *retVal)
 {
 	return IFOLDER_ERROR;
 }
 
 int
-iFolderDomain::getUsersBySearch(SearchProperty searchProp, SearchOperation searchOp, const char *pattern, int index, int count, QList<iFolderUser> *retVal)
+IFDomain::getUsersBySearch(SearchProperty searchProp, SearchOperation searchOp, QString pattern, int index, int count, QList<IFUser> *retVal)
 {
 	return IFOLDER_ERROR;
 }
 
 int
-iFolderDomain::createiFolder(const char *localPath, const char *description, iFolder *retVal)
+IFDomain::createiFolder(QString localPath, QString description, IFiFolder *retVal)
 {
 	return IFOLDER_ERROR;
 }
 
 int
-iFolderDomain::deleteiFolder(iFolder ifolder)
+IFDomain::deleteiFolder(IFiFolder ifolder)
 {
 	return IFOLDER_ERROR;
 }
 
 int
-iFolderDomain::getLocaliFolders(int index, int count, QList<iFolder> *retVal)
+IFDomain::getLocaliFolders(int index, int count, QList<IFiFolder> *retVal)
 {
 	return IFOLDER_ERROR;
 }
 
 int
-iFolderDomain::getRemoteiFolders(int index, int count, QList<iFolder> *retVal)
+IFDomain::getRemoteiFolders(int index, int count, QList<IFiFolder> *retVal)
 {
 	return IFOLDER_ERROR;
 }
 
 int
-iFolderDomain::getiFolderByID(const char *id, iFolder *retVal)
+IFDomain::getiFolderByID(QString id, IFiFolder *retVal)
 {
 	return IFOLDER_ERROR;
 }
 
 int
-iFolderDomain::getiFolderByName(const char *name, iFolder *retVal)
+IFDomain::getiFolderByName(QString name, IFiFolder *retVal)
 {
 	return IFOLDER_ERROR;
 }
 
 int
-iFolderDomain::getAll(QList<iFolderDomain> *retVal)
+IFDomain::getAll(QList<IFDomain> *retVal)
 {
 	return IFOLDER_ERROR;
 }
 
 int
-iFolderDomain::getAllActive(QList<iFolderDomain> *retVal)
+IFDomain::getAllActive(QList<IFDomain> *retVal)
 {
 	return IFOLDER_ERROR;
 }
 
 int
-iFolderDomain::getDefault(iFolderDomain *retVal)
-{
-	return IFOLDER_ERROR;
-}
-
-int
-iFolderDomain::add(const char *hostAddress, const char *userName, const char *password, bool makeDefault, iFolderDomain *retVal)
+IFDomain::getDefault(IFDomain *retVal)
 {
 	return IFOLDER_ERROR;
 }

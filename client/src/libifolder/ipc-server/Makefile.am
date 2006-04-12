@@ -50,6 +50,7 @@ libifolder_trayapp_a_LIBFLAGS = \
 
 common_sources = \
 	../common/ifolder-client.cpp		\
+	../common/ifolder-domain.cpp		\
 	../common/IFNamedPipe.cpp		\
 	../common/IFNamedPipe.h			\
 	../common/IFMessages.h
@@ -62,7 +63,7 @@ libifolder_trayapp_a_SOURCES = \
 	$(common_sources)				\
 	$(ipcserver_sources)				\
 	IFDomainServer.cpp				\
-	IFiFolderClientServer.cpp
+	IFClientServer.cpp
 
 #if !WINDOWS
 #install-exec-hook:

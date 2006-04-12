@@ -38,35 +38,35 @@
 
 #include "IFNamedPipe.h"
 
-iFolderNamedPipe::iFolderNamedPipe(QString pathName, PermissionType permissionType) :
+IFNamedPipe::IFNamedPipe(QString pathName, PermissionType permissionType) :
 	myPathName(pathName), myPermissionType(permissionType), myFileDescriptor(-1)
 {
-	printf("iFolderNamedPipe::iFolderNamedPipe(%s, %d)\n", qPrintable(pathName), permissionType);
+	printf("IFNamedPipe::IFNamedPipe(%s, %d)\n", qPrintable(pathName), permissionType);
 }
 
-iFolderNamedPipe::~iFolderNamedPipe()
+IFNamedPipe::~IFNamedPipe()
 {
 	int err;
-printf("iFolderNamedPipe::~iFolderNamedPipe(): %s\n", qPrintable(myPathName));
+printf("IFNamedPipe::~IFNamedPipe(): %s\n", qPrintable(myPathName));
 	if (myFileDescriptor != -1)
 	{
-		err = close(myFileDescriptor);
+		err = closePipe();
 		if (err != IFOLDER_SUCCESS)
 		{
 			// FIXME: Figure a way to log this error to a log file
-printf("iFolderNamedPipe::~iFolderNamedPipe(): Error closing pipe\n");
+printf("IFNamedPipe::~IFNamedPipe(): Error closing pipe\n");
 		}
 	}
 }
 
 QString
-iFolderNamedPipe::path()
+IFNamedPipe::path()
 {
 	return myPathName;
 }
 
 int
-iFolderNamedPipe::openPipe(bool block, bool createIfNeeded)
+IFNamedPipe::openPipe(bool block, bool createIfNeeded)
 {
 	int err;
 
@@ -79,14 +79,14 @@ iFolderNamedPipe::openPipe(bool block, bool createIfNeeded)
 				return err;
 		}
 		
-printf("iFolderNamedPipe::openingPipe in write only mode\n");
+printf("IFNamedPipe::openingPipe in write only mode\n");
 		if (block)
 			err = open(qPrintable(myPathName), O_WRONLY);
 		else
 			err = open(qPrintable(myPathName), O_WRONLY | O_NONBLOCK);
 		if (err == -1)
 		{
-			printf("iFolderNamedPipe::openPipe(): open() returned errno: %d\n", errno);
+			printf("IFNamedPipe::openPipe(): open() returned errno: %d\n", errno);
 			perror(qPrintable(myPathName));
 			return IFOLDER_ERROR_IPC_CREATE;	// FIXME: Read errno and return a less generic error
 		}
@@ -102,11 +102,11 @@ printf("iFolderNamedPipe::openingPipe in write only mode\n");
 				return err;
 		}
 		
-printf("iFolderNamedPipe::openingPipe in read only mode\n");
+printf("IFNamedPipe::openingPipe in read only mode\n");
 		err = open(qPrintable(myPathName), O_RDONLY);
 		if (err == -1)
 		{
-			printf("iFolderNamedPipe::openPipe(): open() returned errno: %d\n", errno);
+			printf("IFNamedPipe::openPipe(): open() returned errno: %d\n", errno);
 			perror(qPrintable(myPathName));
 			return IFOLDER_ERROR_IPC_CREATE;	// FIXME: Read errno and return a less generic error
 		}
@@ -118,7 +118,7 @@ printf("iFolderNamedPipe::openingPipe in read only mode\n");
 }
 
 int
-iFolderNamedPipe::closePipe()
+IFNamedPipe::closePipe()
 {
 	int err;
 
@@ -132,16 +132,19 @@ iFolderNamedPipe::closePipe()
 	if (myPermissionType == ReadOnly)
 	{
 		// Delete the file
-		err = unlink(qPrintable(myPathName));
-		if (err != 0)
-			printf("unlink() didn't work in iFolderNamedPipe::close()\n");//: %d\n", errno);
+		do
+		{
+			err = unlink(qPrintable(myPathName));
+			if (err != 0)
+				printf("unlink() returned -1 in IFNamedPipe::close()\n");//: %d\n", errno);
+		} while (err != -1);
 	}
 	
 	return IFOLDER_SUCCESS;
 }
 
 int
-iFolderNamedPipe::writeMessage(const void *message, size_t messageSize)
+IFNamedPipe::writeMessage(const void *message, size_t messageSize)
 {
 	ssize_t bytesWritten;
 	
@@ -166,7 +169,7 @@ iFolderNamedPipe::writeMessage(const void *message, size_t messageSize)
 }
 
 int
-iFolderNamedPipe::readMessage(uint *messageTypeReturn, void **messageReturn)
+IFNamedPipe::readMessage(uint *messageTypeReturn, void **messageReturn)
 {
 	int bytesRead;
 	int messageSize;
@@ -184,14 +187,14 @@ iFolderNamedPipe::readMessage(uint *messageTypeReturn, void **messageReturn)
 		{
 //			printf("Read 0 bytes...jumping back to earlier in the function\n");
 //			goto readAgain;	// For some reason, the server ends up reading 0 bytes once after each message
-			printf("iFolderNamedPipe::readMessage(header): 0 bytes read\n");
+			printf("IFNamedPipe::readMessage(header): 0 bytes read\n");
 			return IFOLDER_ERROR_IPC_READ;
 		}
 
 		return bytesRead;	// Error occurred
 	}
 
-	messageSize = iFolderNamedPipe::calculateMessageSize(header.messageType);
+	messageSize = IFNamedPipe::calculateMessageSize(header.messageType);
 	if (messageSize < sizeof(iFolderMessageHeader))
 		return IFOLDER_ERROR_IPC_INVALID_MESSAGE;
 	
@@ -216,7 +219,7 @@ iFolderNamedPipe::readMessage(uint *messageTypeReturn, void **messageReturn)
 			free(message);
 			if (bytesRead == 0)
 			{
-				printf("iFolderNamedPipe::readMessage(extra message): 0 bytes read\n");
+				printf("IFNamedPipe::readMessage(extra message): 0 bytes read\n");
 				return IFOLDER_ERROR_IPC_READ;
 			}
 
@@ -231,7 +234,7 @@ iFolderNamedPipe::readMessage(uint *messageTypeReturn, void **messageReturn)
 }
 
 int
-iFolderNamedPipe::readPipe(void *buffer, size_t bytesToRead)
+IFNamedPipe::readPipe(void *buffer, size_t bytesToRead)
 {
 	ssize_t bytesRead;
 	
@@ -248,44 +251,44 @@ iFolderNamedPipe::readPipe(void *buffer, size_t bytesToRead)
 	return (int) bytesRead;
 }
 
-iFolderNamedPipe *
-iFolderNamedPipe::createServerNamedPipeForWriting()
+IFNamedPipe *
+IFNamedPipe::createServerNamedPipeForWriting()
 {
 	char serverNamedPipePath[NAMED_PIPE_PATH_MAX];
-	iFolderNamedPipe *namedPipe;
+	IFNamedPipe *namedPipe;
 
 	sprintf(serverNamedPipePath, IFOLDER_SERVER_NAMED_PIPE, "boyd");	// FIXME: Determine the user name programmatically
 	
-	namedPipe = new iFolderNamedPipe(QString(serverNamedPipePath), WriteOnly);
+	namedPipe = new IFNamedPipe(QString(serverNamedPipePath), WriteOnly);
 	
 	return namedPipe;
 }
 
-iFolderNamedPipe *
-iFolderNamedPipe::createNamedPipeByPid(PermissionType permissionType)
+IFNamedPipe *
+IFNamedPipe::createNamedPipeByPid(PermissionType permissionType)
 {
 	pid_t mypid;
 
-	iFolderNamedPipe *namedPipe;
+	IFNamedPipe *namedPipe;
 	char namedPipePath[NAMED_PIPE_PATH_MAX];
 	
-	printf("iFolderNamedPipe::createNamedPipeByPid()\n");
+	printf("IFNamedPipe::createNamedPipeByPid()\n");
 	
 	mypid = getpid();
 	sprintf(namedPipePath, IFOLDER_CLIENT_NAMED_PIPE, mypid);
 
-	namedPipe = new iFolderNamedPipe(QString(namedPipePath), permissionType);
+	namedPipe = new IFNamedPipe(QString(namedPipePath), permissionType);
 	
 	return namedPipe;	
 }
 
-iFolderNamedPipe *
-iFolderNamedPipe::createUniqueNamedPipe(PermissionType permissionType)
+IFNamedPipe *
+IFNamedPipe::createUniqueNamedPipe(PermissionType permissionType)
 {
-	iFolderNamedPipe *namedPipe;
+	IFNamedPipe *namedPipe;
 	char namedPipePath[NAMED_PIPE_PATH_MAX];
 
-	printf("iFolderNamedPipe::createUniqueNamedPipe()\n");
+	printf("IFNamedPipe::createUniqueNamedPipe()\n");
 //	QString namedPipePath;
 	QUuid uuid;
 	
@@ -297,29 +300,29 @@ iFolderNamedPipe::createUniqueNamedPipe(PermissionType permissionType)
 
 	sprintf(namedPipePath, IFOLDER_GENERIC_NAMED_PIPE, qPrintable(trimmedUuid));
 	
-	namedPipe = new iFolderNamedPipe(QString(namedPipePath), permissionType);
+	namedPipe = new IFNamedPipe(QString(namedPipePath), permissionType);
 	
 	return namedPipe;
 }
 
 int
-iFolderNamedPipe::reset()
+IFNamedPipe::reset()
 {
 	int err;
 
-	printf("iFolderNamedPipe::reset()\n");
+	printf("IFNamedPipe::reset()\n");
 
 	err = closePipe();
 	if (err != IFOLDER_SUCCESS)
 	{
-		printf("iFolderNamedPipe::reset(): could NOT close pipe: %d\n", err);
+		printf("IFNamedPipe::reset(): could NOT close pipe: %d\n", err);
 		return err;
 	}
 	
 	err = openPipe(true, true);
 	if (err != IFOLDER_SUCCESS)
 	{
-		printf("iFolderNamedPipe::reset(): could NOT reopen pipe: %d\n", err);
+		printf("IFNamedPipe::reset(): could NOT reopen pipe: %d\n", err);
 		return err;
 	}
 	
@@ -327,11 +330,11 @@ iFolderNamedPipe::reset()
 }
 
 int
-iFolderNamedPipe::create()
+IFNamedPipe::create()
 {
 	int err;
 
-printf("iFolderNamedPipe::create(): %s\n", qPrintable(myPathName));
+printf("IFNamedPipe::create(): %s\n", qPrintable(myPathName));
 
 	err = unlink(qPrintable(myPathName));
 	if (err != 0)
@@ -383,7 +386,7 @@ printf("iFolderNamedPipe::create(): %s\n", qPrintable(myPathName));
 }
 
 int
-iFolderNamedPipe::calculateMessageSize(int messageType)
+IFNamedPipe::calculateMessageSize(int messageType)
 {
 	int bytesToRead = 0;
 	switch (messageType)
@@ -397,6 +400,18 @@ iFolderNamedPipe::calculateMessageSize(int messageType)
 		case IFOLDER_MSG_REGISTER_CLIENT_RESPONSE:
 		case IFOLDER_MSG_UNREGISTER_CLIENT_RESPONSE:
 			bytesToRead = sizeof(iFolderSimpleMessageResponse);
+			break;
+		case IFOLDER_MSG_DOMAIN_ADD_REQUEST:
+			bytesToRead = sizeof(iFolderMessageDomainAddRequest);
+			break;
+		case IFOLDER_MSG_DOMAIN_ADD_RESPONSE:
+			bytesToRead = sizeof(iFolderMessageDomainAddResponse);
+			break;
+		case IFOLDER_MSG_DOMAIN_REMOVE_REQUEST:
+			bytesToRead = sizeof(iFolderMessageDomainRemoveRequest);
+			break;
+		case IFOLDER_MSG_DOMAIN_REMOVE_RESPONSE:
+			bytesToRead = sizeof(iFolderMessageDomainRemoveResponse);
 			break;
 		default:
 			break;

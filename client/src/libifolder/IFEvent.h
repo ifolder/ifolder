@@ -21,7 +21,12 @@
  *
  ***********************************************************************/
 
-#ifndef _IFOLDER_EVENTS_H_
-#define _IFOLDER_EVENTS_H_
+#ifndef _IFOLDER_EVENT_H_
+#define _IFOLDER_EVENT_H_
 
-#endif /*_IFOLDER_EVENTS_H_*/
+/**
+ * @file IFEvent.h
+ * @brief Event API
+ */
+
+#endif /*_IFOLDER_EVENT_H_*/

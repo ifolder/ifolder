@@ -27,10 +27,14 @@
 #include <cppunit/TestPath.h>
 #include <cppunit/TestCase.h>
 
+#include "ifolder-domain.h"
+
 class IFDomainTest : public CPPUNIT_NS::TestFixture {
 
 CPPUNIT_TEST_SUITE( IFDomainTest );
-CPPUNIT_TEST( testHelloWorld );
+CPPUNIT_TEST( testAdd );
+CPPUNIT_TEST( testRemove );
+CPPUNIT_TEST( testUserData );
 CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -43,7 +47,23 @@ public:
 	void setUp();
 	void tearDown();
 
-	void testHelloWorld();
+	void testAdd();
+	void testRemove();
+	void testUserData();
+
+private:
+
+	// testRemove
+	iFolderDomain testRemoveAndKeepiFoldersDomain;
+	iFolder testiFolder1;
+	iFolder testiFolder2;
+	
+	iFolderDomain testRemoveAndDeleteiFoldersDomain;
+	iFolder testiFolder3;
+	iFolder testiFolder4;
+
+	// testUserData
+	iFolderDomain testUserDataDomain;
 };
 
 #endif // _IFOLDER_DOMAIN_TEST_H_
