@@ -27,7 +27,7 @@
 #include "IFDomain.h"
 
 /**
- * @file IFUser.h
+ * @file IFUserPolicy.h
  * @brief User API
  */
 

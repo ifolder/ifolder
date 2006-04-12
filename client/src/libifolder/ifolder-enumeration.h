@@ -36,12 +36,17 @@ extern "C"
 
 typedef void *iFolderEnumeration;
 
+/**
+ * @name Enumeration API
+ */
+/*@{*/
+
 //! Returns whether there are more items available in the enumeration.
 /**
  * @param enumeration The iFolderEnumeration.
  * @return true if there are more items available in the enumeration.
  */
-bool		ifolder_enumeration_has_more(iFolderEnumeration enumeration);
+bool		ifolder_enumeration_has_more(const iFolderEnumeration enumeration);
 
 //! Return the next item in the enumeration
 /**
@@ -51,7 +56,7 @@ bool		ifolder_enumeration_has_more(iFolderEnumeration enumeration);
  * @return This must be cast to the expected object type.  Returns NULL if
  * there was an error or if there are no more objects in the enumeration.
  */
-void *	ifolder_enumeration_get_next(iFolderEnumeration enumeration);
+void *	ifolder_enumeration_get_next(const iFolderEnumeration enumeration);
 
 //! Reset the enumeration to point to the first item.
 /**
@@ -66,6 +71,8 @@ void		ifolder_enumeration_reset(iFolderEnumeration enumeration);
  * @param enumeration The iFolderEnumeration.
  */
 void		ifolder_enumeration_free(iFolderEnumeration enumeration);
+
+/*@}*/
 
 #ifdef __cplusplus
 }

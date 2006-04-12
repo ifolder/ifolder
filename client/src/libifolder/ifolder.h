@@ -30,6 +30,7 @@ extern "C"
 #endif		/* __cplusplus */
 
 #include <time.h>
+#include "ifolder-change-entry.h"
 #include "ifolder-user.h"
 
 /**
@@ -284,6 +285,25 @@ int ifolder_set_owner(const iFolder ifolder, const iFolderUser member);
  */
 /*@{*/
 
+//! Returns an iFolderChangeEntry enumeration for an iFolder.
+/**
+ * @param ifolder The iFolder.
+ * @param index The index of where the change entry enumeration should begin.
+ * This must be greater than or equal to 0.  An empty list will be returned if
+ * the index is greater than the total number of change entries available.
+ * @param count The maximum number of iFolderChangeEntry objects to return.
+ * This must be at least 1.
+ * @param change_entry_enum Invalid if the call is unsuccessful.
+ * @return IFOLDER_SUCCESS if the call was successful.
+ */
+int ifolder_get_change_entries(const iFolder ifolder, const int index, const int count, iFolderEnumeration *change_entry_enum);
+
+/*@}*/
+/**
+ * @name Other Functions
+ */
+/*@{*/
+
 //! Publish an iFolder
 /**
  * @param ifolder The iFolder.
@@ -300,6 +320,10 @@ int ifolder_publish(const iFolder ifolder);
  */
 int ifolder_unpublish(const iFolder ifolder);
 
+//! Free the memory used by an iFolder.
+/**
+ * @param ifolder The iFolder.
+ */
 void ifolder_free(iFolder ifolder);
 
 /*@}*/

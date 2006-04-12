@@ -29,6 +29,8 @@ extern "C"
 {
 #endif		/* __cplusplus */
 
+#include <time.h>
+
 /**
  * @file ifolder-change-entry.h
  * @brief Change Entry API
@@ -38,11 +40,68 @@ typedef void *iFolderChangeEntry;
 
 typedef enum
 {
-	IFOLDER_CHANGE_ENTRY_TYPE_DIR,	/*!< Directory change */
-	IFOLDER_CHANGE_ENTRY_TYPE_FILE	/*!< File change */
+	IFOLDER_CHANGE_ENTRY_TYPE_ADD,		/*!< An item was added */
+	IFOLDER_CHANGE_ENTRY_TYPE_MODIFY,	/*!< An item was modified */
+	IFOLDER_CHANGE_ENTRY_TYPE_DELETE,	/*!< An item was deleted */
+	IFOLDER_CHANGE_ENTRY_TYPE_UNKNOWN	/*!< Unknown type */
 } iFolderChangeEntryType;
 
+
+/**
+ * @name Enumeration API
+ */
+/*@{*/
+
+//! Returns the change time of an iFolderChangeEntry.
+/**
+ * @param change_entry The iFolderChangeEntry.
+ * @return The change time of an iFolderChangeEntry.
+ */
+time_t ifolder_change_entry_get_change_time(const iFolderChangeEntry change_entry);
+
+//! Returns the change type of an iFolderChangeEntry.
+/**
+ * @param change_entry The iFolderChangeEntry.
+ * @return The change type of an iFolderChangeEntry.
+ */
+iFolderChangeType ifolder_change_entry_get_change_type(const iFolderChangeEntry change_entry);
+
+//! Returns the ID of an iFolderChangeEntry.
+/**
+ * @param change_entry The iFolderChangeEntry.
+ * @return The ID of the iFolderChangeEntry.
+ */
+const char * ifolder_change_entry_get_id(const iFolderChangeEntry change_entry);
+
+//! Returns the name of an iFolderChangeEntry.
+/**
+ * @param change_entry The iFolderChangeEntry.
+ * @return The name of the iFolderChangeEntry.
+ */
+const char * ifolder_change_entry_get_name(const iFolderChangeEntry change_entry);
+
+//! Returns the iFolderUser associated with the iFolderChangeEntry.
+/**
+ * @param change_entry The iFolderChangeEntry.
+ * @param user Invalid if the call is unsuccessful.
+ * @return IFOLDER_SUCCESS if the call was successful.
+ */
+int ifolder_change_entry_get_user(const iFolderChangeEntry change_entry, iFolderUser *user);
+
+//! Returns true if the type of entry is a directory.
+/**
+ * @param change_entry The iFolderChangeEntry.
+ * @return true if the type of entry is a directory.
+ */
+bool ifolder_change_entry_is_directory(const iFolderChangeEntry change_entry);
+
+//! Free the memory used by an iFolderChangeEntry.
+/**
+ * @param change_entry The iFolderChangeEntry.
+ */
 void ifolder_change_entry_free(iFolderChangeEntry change_entry);
+
+/*@}*/
 
 #ifdef __cplusplus
 }
