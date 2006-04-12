@@ -30,6 +30,7 @@ extern "C"
 #endif		/* __cplusplus */
 
 #include <time.h>
+#include "ifolder-user.h"
 
 /**
  * @file ifolder.h
@@ -138,11 +139,14 @@ const char *ifolder_get_description(const iFolder ifolder);
  * @param new_description The new description.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_set_description(const iFolder ifolder, const char *new_description)
+int ifolder_set_description(const iFolder ifolder, const char *new_description);
 
 int ifolder_get_owner(const iFolder ifolder, iFolderUser *owner);
 int ifolder_get_domain(const iFolder ifolder, iFolderDomain *domain);
 int ifolder_get_size(const iFolder ifolder, long *size);
+
+int ifolder_get_file_count(const iFolder ifolder, int *file_count);
+int ifolder_get_directory_count(const iFolder ifolder, int *directory_count);
 
 //! Returns the current user's member rights of an iFolder
 /**
@@ -153,15 +157,34 @@ int ifolder_get_size(const iFolder ifolder, long *size);
 int ifolder_get_rights(const iFolder ifolder, iFolderMemberRights *rights);
 int ifolder_get_last_modified(const iFolder ifolder, time_t *last_modified);
 
-//! Returns true if an iFolder is published
+//! Returns true if an iFolder is published.
 /**
  * @todo Add documentation here to specify what it means to have an iFolder be
  * published.
  * 
  * @param ifolder The iFolder.
+ * @return true if the iFolder is published.
  */
 
 bool ifolder_is_published(const iFolder ifolder);
+
+//! Returns true if the iFolder is enabled.
+/**
+ * @todo Add documentation here to specify what it means to have an iFolder be
+ * enabled.  Maybe this should be named "Locked" if it means
+ * 
+ * @param ifolder The iFolder.
+ * @return true if the iFolder is enabled.
+ */
+bool ifolder_is_enabled(const iFolder ifolder);
+
+//! Return the number of members an iFolder has.
+/**
+ * @param ifolder The iFolder.
+ * @param member_count Invalid if the call is unsuccessful.
+ * @return IFOLDER_SUCCESS if the call was successful.
+ */
+int ifolder_get_member_count(const iFolder ifolder, int *member_count);
 
 //! Return the current state of an iFolder.
 /**
@@ -182,7 +205,7 @@ int ifolder_get_state(const iFolder ifolder, iFolderState *state);
  * needed?
  * 
  * @param ifolder The iFolder.
- * @param user Invalid if the call is unsuccessful.
+ * @param items_to_sync Invalid if the call is unsuccessful.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
 int ifolder_get_items_to_sync(const iFolder ifolder, int *items_to_sync);

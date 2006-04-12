@@ -36,6 +36,12 @@ extern "C"
 
 typedef void *iFolderChangeEntry;
 
+typedef enum
+{
+	IFOLDER_CHANGE_ENTRY_TYPE_DIR,	/*!< Directory change */
+	IFOLDER_CHANGE_ENTRY_TYPE_FILE	/*!< File change */
+} iFolderChangeEntryType;
+
 void ifolder_change_entry_free(iFolderChangeEntry change_entry);
 
 #ifdef __cplusplus
