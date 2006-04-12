@@ -458,6 +458,7 @@ INPUT                  = \
 	../src/libifolder/ifolder-client.h			\
 	../src/libifolder/ifolder-domain.h			\
 	../src/libifolder/ifolder-enumeration.h		\
+	../src/libifolder/ifolder-errors.h			\
 	../src/libifolder/ifolder-event.h			\
 	../src/libifolder/ifolder-user.h	
 

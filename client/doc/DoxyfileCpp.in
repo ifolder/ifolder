@@ -458,6 +458,7 @@ INPUT                  = \
 	../src/libifolder/IFDomain.h				\
 	../src/libifolder/IFEvent.h				\
 	../src/libifolder/IFiFolder.h			\
+	../src/libifolder/IFUser.h				\
 	../src/libifolder/ifolder-errors.h
 
 # If the value of the INPUT tag contains directories, you can use the 
