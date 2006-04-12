@@ -53,6 +53,9 @@ extern "C"
 #define IFOLDER_ERROR_IPC_UNKNOWN_MESSAGE	-307
 #define IFOLDER_ERROR_IPC_INVALID_STATE	-308
 
+//! The current user did not have sufficient rights to perform an operation.
+#define IFOLDER_ERR_INSUFFICIENT_RIGHTS		-401
+
 #ifdef __cplusplus
 }
 #endif

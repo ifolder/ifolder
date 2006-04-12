@@ -29,6 +29,8 @@ extern "C"
 {
 #endif		/* __cplusplus */
 
+#include <time.h>
+
 /**
  * @file ifolder.h
  * @brief iFolder API (API for individual iFolders)
@@ -96,18 +98,188 @@ typedef enum
 	IFOLDER_STATE_UNKNOWN				/*!< The state of the iFolder could not be determined */
 } iFolderState;
 
+/**
+ * Users that are added as members of an iFolder are assigned one of these
+ * rights.  The owner/creator of the iFolder is set up automatically with
+ * #IFOLDER_MEMBER_RIGHTS_ADMIN.
+ * 
+ * @todo Make sure all the capabilities of #IFOLDER_MEMBER_RIGHTS_ADMIN are
+ * documented.
+ * @todo Find out what #IFOLDER_MEMBER_RIGHTS_DENY is even for.  Can a user be
+ * added as a member of an iFolder with deny rights or should the user just be
+ * deleted as a member of the iFolder?
+ */
+typedef enum
+{
+	IFOLDER_MEMBER_RIGHTS_DENY,			/*!< No access */
+	IFOLDER_MEMBER_RIGHTS_READ_ONLY,		/*!< Read only access */
+	IFOLDER_MEMBER_RIGHTS_READ_WRITE,	/*!< Read and write access */
+	IFOLDER_MEMBER_RIGHTS_ADMIN			/*!< Administrator access (can add other users, change ownership, modify user rights) */
+} iFolderMemberRights;
+
+/**
+ * @name Properties (Getters and Setters)
+ */
+/*@{*/
+
+//! Returns the type of an iFolder
+/**
+ * @param ifolder The iFolder.
+ * @return The iFolder type.
+ */
 iFolderType ifolder_get_type(const iFolder ifolder);
 const char *ifolder_get_id(const iFolder ifolder);
 const char *ifolder_get_name(const iFolder ifolder);
 const char *ifolder_get_description(const iFolder ifolder);
 
-
+//! Set the description of an iFolder
+/**
+ * @param ifolder The iFolder.
+ * @param new_description The new description.
+ * @return IFOLDER_SUCCESS if the call was successful.
+ */
 int ifolder_set_description(const iFolder ifolder, const char *new_description)
 
-int ifolder_get_state(iFolder ifolder, iFolderState *state);
-int ifolder_get_items_to_synchronize(iFolder ifolder, int *items);
+int ifolder_get_owner(const iFolder ifolder, iFolderUser *owner);
+int ifolder_get_domain(const iFolder ifolder, iFolderDomain *domain);
+int ifolder_get_size(const iFolder ifolder, long *size);
+
+//! Returns the current user's member rights of an iFolder
+/**
+ * @param ifolder The iFolder.
+ * @param rights Invalid if the call is unsuccessful.
+ * @return IFOLDER_SUCCESS if the call was successful.
+ */
+int ifolder_get_rights(const iFolder ifolder, iFolderMemberRights *rights);
+int ifolder_get_last_modified(const iFolder ifolder, time_t *last_modified);
+
+//! Returns true if an iFolder is published
+/**
+ * @todo Add documentation here to specify what it means to have an iFolder be
+ * published.
+ * 
+ * @param ifolder The iFolder.
+ */
+
+bool ifolder_is_published(const iFolder ifolder);
+
+//! Return the current state of an iFolder.
+/**
+ * @param ifolder The iFolder.
+ * @param state Invalid if the call is unsuccessful.
+ * @return IFOLDER_SUCCESS if the call was successful.
+ */
+int ifolder_get_state(const iFolder ifolder, iFolderState *state);
+
+//! Return the number of items an iFolder has left to synchronize.
+/**
+ * @todo If an iFolder has never synchronized, we don't have a snapshot of the
+ * number of files left to synchronize.  When this is the case, do we want to
+ * return some sort of an error, like IFOLDER_ERR_NEVER_SYNCHRONIZED, which
+ * would let the user know they've got to call a ifolder_check_local_changes()
+ * or ifolder_sync_now().  Or, do we want to add a parameter on this function
+ * "bool force_local_dredge" that will dredge the ifolder for changes if
+ * needed?
+ * 
+ * @param ifolder The iFolder.
+ * @param user Invalid if the call is unsuccessful.
+ * @return IFOLDER_SUCCESS if the call was successful.
+ */
+int ifolder_get_items_to_sync(const iFolder ifolder, int *items_to_sync);
+
+/*@}*/
+
+/**
+ * @name Member Management
+ */
+/*@{*/
+
+//! Returns a subset of members of an iFolder beginning at the specified index.
+/**
+ * @param ifolder The iFolder.
+ * @param index The index of where the user enumeration should begin.  This
+ * must be greater than 0.  An empty list will be returned if the index is
+ * greater than the total number of users available.
+ * @param count The number of iFolderUser objects to return.  This must be
+ * at least 1 or greater.
+ * @param user_enum Invalid if the call is unsuccessful.
+ * @return IFOLDER_SUCCESS if the call was successful.
+ */
+int ifolder_get_members(const iFolder ifolder, const int index, const int count, iFolderEnumeration *user_enum);
+
+//! Set a member's rights to an iFolder.
+/**
+ * The current user can only call this function on an iFolder to which they are
+ * an owner or administrator.
+ * 
+ * @param ifolder The iFolder.
+ * @param member The member of the iFolder.
+ * @param rights The rights to assign to the member.
+ * @return IFOLDER_SUCCESS if the call was successful.
+ */
+int ifolder_set_member_rights(const iFolder ifolder, const iFolderUser member, const iFolderMemberRights rights);
+
+//! Add a new member to an iFolder.
+/**
+ * The current user can only call this function on an iFolder to which they are
+ * an owner or administrator.
+ * 
+ * @param ifolder The iFolder.
+ * @param member The member to add to the iFolder.
+ * @param rights The rights to assign to the member.
+ * @return IFOLDER_SUCCESS if the call was successful.
+ */
+int ifolder_add_member(const iFolder ifolder, const iFolderUser member, const iFolderMemberRights rights);
+
+//! Remove a member from an iFolder.
+/**
+ * The current user can only call this function on an iFolder to which they are
+ * an owner or administrator.
+ * 
+ * @param ifolder The iFolder.
+ * @param member The member to remove from the iFolder.
+ * @return IFOLDER_SUCCESS if the call was successful.
+ */
+int ifolder_remove_member(const iFolder ifolder, const iFolderUser member);
+
+//! Set a new owner of an iFolder.
+/**
+ * @todo Document the conditions for being able to set a new owner of an
+ * iFolder.  Can the owner choose ANY member as the new owner?  Can a member
+ * with admin rights choose any member as the new owner?
+ * 
+ * @param ifolder The iFolder.
+ * @param member The member to set as the new owner of the iFolder.
+ * @return IFOLDER_SUCCESS if the call was successful.
+ */
+int ifolder_set_owner(const iFolder ifolder, const iFolderUser member);
+
+/*@}*/
+
+/**
+ * @name Other Functions
+ */
+/*@{*/
+
+//! Publish an iFolder
+/**
+ * @param ifolder The iFolder.
+ * @return IFOLDER_SUCCESS if the call was successful.
+ * @see ifolder_is_published()
+ */
+int ifolder_publish(const iFolder ifolder);
+
+//! Un-publish an iFolder
+/**
+ * @param ifolder The iFolder.
+ * @return IFOLDER_SUCCESS if the call was successful.
+ * @see ifolder_is_published()
+ */
+int ifolder_unpublish(const iFolder ifolder);
 
 void ifolder_free(iFolder ifolder);
+
+/*@}*/
 
 #ifdef __cplusplus
 }

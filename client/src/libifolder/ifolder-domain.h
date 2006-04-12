@@ -358,7 +358,8 @@ int ifolder_domain_delete_ifolder(const iFolderDomain domain, const iFolder ifol
 //! Connects an iFolder to a local file system path for synchronization.
 /**
  * @param domain The domain.
- * @param ifolder The iFolder to connect to a local path.
+ * @param ifolder The iFolder to connect to a local path.  If successful, the
+ * iFolder's type will be changed to #IFOLDER_TYPE_CONNECTED.
  * @param local_path The local file system path where the iFolder should be
  * synchronized.  If this is an existing folder/directory, the contents of the
  * local folder will be synchronized and merged into the iFolder.  If the
@@ -366,15 +367,16 @@ int ifolder_domain_delete_ifolder(const iFolderDomain domain, const iFolder ifol
  * of the iFolder will be synchronized to this folder.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_domain_connect_ifolder(const iFolderDomain domain, const iFolder ifolder, const char *local_path);
+int ifolder_domain_connect_ifolder(const iFolderDomain domain, iFolder ifolder, const char *local_path);
 
 //! Disconnects an iFolder from its local file system path and from syncrhonization.
 /**
  * @param domain The domain.
- * @param ifolder The iFolder to connect to a local path.
+ * @param ifolder The iFolder to connect to a local path.  If successful, the
+ * iFolder's type will be changed to #IFOLDER_TYPE_DISCONNECTED.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_domain_disconnect_ifolder(const iFolderDomain domain, const iFolder ifolder);
+int ifolder_domain_disconnect_ifolder(const iFolderDomain domain, iFolder ifolder);
 
 //! Returns a domain's connected iFolders (iFolders configured to synchronize locally).
 /**
