@@ -329,7 +329,8 @@ int ifolder_domain_get_users_by_search(const iFolderDomain domain, const iFolder
  * 
  * @param domain The domain.
  * @param local_path The local file system path to a folder/directory.  This
- * must be a path where the user has read/write access and FIXME: List the requirements of a path being able to be converted to an iFolder
+ * must be a path where the user has read/write access and ...
+ * @todo List the requirements of a local file system path being able to be converted to an iFolder
  * @param description The description of the iFolder to be created.
  * @param ifolder Invalid if the call is unsuccessful.
  * @return IFOLDER_SUCCESS if the call was successful.

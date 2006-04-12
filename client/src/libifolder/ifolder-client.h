@@ -36,7 +36,7 @@ extern "C"
  * 
  * @section intro_sec Introduction
  * 
- * FIXME: Add main page documentation for the C API
+ * @todo Add main page documentation for the C API
  * 
  * iFolder is a simple and secure storage solution that can increase your
  * productivity by enabling you to back up, access and manage your personal
