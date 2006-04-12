@@ -60,14 +60,15 @@
           <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="OwnerID" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="OwnerName" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="Domain" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="ManagedPath" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="UnManagedPath" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="OwnerUserName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="OwnerFullName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DomainID" type="s:string" />
           <s:element minOccurs="1" maxOccurs="1" name="Size" type="s:long" />
           <s:element minOccurs="1" maxOccurs="1" name="Rights" type="tns:Rights" />
           <s:element minOccurs="1" maxOccurs="1" name="LastModified" type="s:dateTime" />
           <s:element minOccurs="1" maxOccurs="1" name="Published" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="Enabled" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="MemberCount" type="s:int" />
         </s:sequence>
       </s:complexType>
       <s:simpleType name="Rights">
@@ -102,6 +103,32 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="GetiFolderDetails">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ifolderID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetiFolderDetailsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetiFolderDetailsResult" type="tns:iFolderDetails" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="iFolderDetails">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:iFolder">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="FileCount" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="DirectoryCount" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="ManagedPath" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="UnManagedPath" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
       <s:element name="SetiFolderDescription">
         <s:complexType>
           <s:sequence>
@@ -148,6 +175,32 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="GetiFoldersByName">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="operation" type="tns:SearchOperation" />
+            <s:element minOccurs="0" maxOccurs="1" name="pattern" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="index" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="count" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:simpleType name="SearchOperation">
+        <s:restriction base="s:string">
+          <s:enumeration value="BeginsWith" />
+          <s:enumeration value="EndsWith" />
+          <s:enumeration value="Contains" />
+          <s:enumeration value="Equals" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="GetiFoldersByNameResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetiFoldersByNameResult" type="tns:ArrayOfIFolder" />
+            <s:element minOccurs="1" maxOccurs="1" name="total" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="PublishiFolder">
         <s:complexType>
           <s:sequence>
@@ -171,12 +224,12 @@
       </s:element>
       <s:complexType name="iFolderUser">
         <s:sequence>
-          <s:element minOccurs="0" maxOccurs="1" name="UserID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ID" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="FullName" type="s:string" />
           <s:element minOccurs="1" maxOccurs="1" name="Rights" type="tns:Rights" />
           <s:element minOccurs="1" maxOccurs="1" name="Enabled" type="s:boolean" />
-          <s:element minOccurs="1" maxOccurs="1" name="IsAdmin" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsOwner" type="s:boolean" />
         </s:sequence>
       </s:complexType>
       <s:element name="GetUser">
@@ -296,14 +349,6 @@
           <s:enumeration value="FirstName" />
         </s:restriction>
       </s:simpleType>
-      <s:simpleType name="SearchOperation">
-        <s:restriction base="s:string">
-          <s:enumeration value="BeginsWith" />
-          <s:enumeration value="EndsWith" />
-          <s:enumeration value="Contains" />
-          <s:enumeration value="Equals" />
-        </s:restriction>
-      </s:simpleType>
       <s:element name="GetUsersBySearchResponse">
         <s:complexType>
           <s:sequence>
@@ -312,6 +357,39 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="GetAuthenticatedUserPolicy">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetAuthenticatedUserPolicyResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAuthenticatedUserPolicyResult" type="tns:UserPolicy" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="UserPolicy">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="UserID" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="LoginEnabled" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="SpaceLimit" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="SpaceLimitEffective" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="FileSizeLimit" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="FileSizeLimitEffective" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="SpaceUsed" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="SpaceAvailable" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="SyncInterval" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="SyncIntervalEffective" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="FileTypesIncludes" type="tns:ArrayOfString" />
+          <s:element minOccurs="0" maxOccurs="1" name="FileTypesIncludesEffective" type="tns:ArrayOfString" />
+          <s:element minOccurs="0" maxOccurs="1" name="FileTypesExcludes" type="tns:ArrayOfString" />
+          <s:element minOccurs="0" maxOccurs="1" name="FileTypesExcludesEffective" type="tns:ArrayOfString" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
       <s:element name="CreateEntry">
         <s:complexType>
           <s:sequence>
@@ -413,6 +491,26 @@
           <s:element minOccurs="0" maxOccurs="unbounded" name="iFolderEntry" nillable="true" type="tns:iFolderEntry" />
         </s:sequence>
       </s:complexType>
+      <s:element name="GetEntriesByName">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ifolderID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="parentID" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="operation" type="tns:SearchOperation" />
+            <s:element minOccurs="0" maxOccurs="1" name="pattern" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="index" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="count" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetEntriesByNameResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetEntriesByNameResult" type="tns:ArrayOfIFolderEntry" />
+            <s:element minOccurs="1" maxOccurs="1" name="total" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="GetChanges">
         <s:complexType>
           <s:sequence>
@@ -444,6 +542,7 @@
           <s:element minOccurs="0" maxOccurs="1" name="EntryName" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="UserID" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="UserFullName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsDirectory" type="s:boolean" />
         </s:sequence>
       </s:complexType>
       <s:simpleType name="ChangeType">
@@ -553,6 +652,12 @@
   <wsdl:message name="GetiFolderSoapOut">
     <wsdl:part name="parameters" element="tns:GetiFolderResponse" />
   </wsdl:message>
+  <wsdl:message name="GetiFolderDetailsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetiFolderDetails" />
+  </wsdl:message>
+  <wsdl:message name="GetiFolderDetailsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetiFolderDetailsResponse" />
+  </wsdl:message>
   <wsdl:message name="SetiFolderDescriptionSoapIn">
     <wsdl:part name="parameters" element="tns:SetiFolderDescription" />
   </wsdl:message>
@@ -570,6 +675,12 @@
   </wsdl:message>
   <wsdl:message name="GetiFolderByNameSoapOut">
     <wsdl:part name="parameters" element="tns:GetiFolderByNameResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetiFoldersByNameSoapIn">
+    <wsdl:part name="parameters" element="tns:GetiFoldersByName" />
+  </wsdl:message>
+  <wsdl:message name="GetiFoldersByNameSoapOut">
+    <wsdl:part name="parameters" element="tns:GetiFoldersByNameResponse" />
   </wsdl:message>
   <wsdl:message name="PublishiFolderSoapIn">
     <wsdl:part name="parameters" element="tns:PublishiFolder" />
@@ -631,6 +742,12 @@
   <wsdl:message name="GetUsersBySearchSoapOut">
     <wsdl:part name="parameters" element="tns:GetUsersBySearchResponse" />
   </wsdl:message>
+  <wsdl:message name="GetAuthenticatedUserPolicySoapIn">
+    <wsdl:part name="parameters" element="tns:GetAuthenticatedUserPolicy" />
+  </wsdl:message>
+  <wsdl:message name="GetAuthenticatedUserPolicySoapOut">
+    <wsdl:part name="parameters" element="tns:GetAuthenticatedUserPolicyResponse" />
+  </wsdl:message>
   <wsdl:message name="CreateEntrySoapIn">
     <wsdl:part name="parameters" element="tns:CreateEntry" />
   </wsdl:message>
@@ -660,6 +777,12 @@
   </wsdl:message>
   <wsdl:message name="GetEntriesSoapOut">
     <wsdl:part name="parameters" element="tns:GetEntriesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetEntriesByNameSoapIn">
+    <wsdl:part name="parameters" element="tns:GetEntriesByName" />
+  </wsdl:message>
+  <wsdl:message name="GetEntriesByNameSoapOut">
+    <wsdl:part name="parameters" element="tns:GetEntriesByNameResponse" />
   </wsdl:message>
   <wsdl:message name="GetChangesSoapIn">
     <wsdl:part name="parameters" element="tns:GetChanges" />
@@ -723,6 +846,11 @@
       <wsdl:input message="tns:GetiFolderSoapIn" />
       <wsdl:output message="tns:GetiFolderSoapOut" />
     </wsdl:operation>
+    <wsdl:operation name="GetiFolderDetails">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Get iFolder Details</documentation>
+      <wsdl:input message="tns:GetiFolderDetailsSoapIn" />
+      <wsdl:output message="tns:GetiFolderDetailsSoapOut" />
+    </wsdl:operation>
     <wsdl:operation name="SetiFolderDescription">
       <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Set the Description of an iFolder</documentation>
       <wsdl:input message="tns:SetiFolderDescriptionSoapIn" />
@@ -737,6 +865,11 @@
       <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Get an iFolder by Name</documentation>
       <wsdl:input message="tns:GetiFolderByNameSoapIn" />
       <wsdl:output message="tns:GetiFolderByNameSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetiFoldersByName">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Get iFolders by Name</documentation>
+      <wsdl:input message="tns:GetiFoldersByNameSoapIn" />
+      <wsdl:output message="tns:GetiFoldersByNameSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="PublishiFolder">
       <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Publish an iFolder</documentation>
@@ -788,6 +921,11 @@
       <wsdl:input message="tns:GetUsersBySearchSoapIn" />
       <wsdl:output message="tns:GetUsersBySearchSoapOut" />
     </wsdl:operation>
+    <wsdl:operation name="GetAuthenticatedUserPolicy">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Get the Authenticated User Policy</documentation>
+      <wsdl:input message="tns:GetAuthenticatedUserPolicySoapIn" />
+      <wsdl:output message="tns:GetAuthenticatedUserPolicySoapOut" />
+    </wsdl:operation>
     <wsdl:operation name="CreateEntry">
       <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Create An iFolder File or Directory Entry</documentation>
       <wsdl:input message="tns:CreateEntrySoapIn" />
@@ -812,6 +950,11 @@
       <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Get iFolders Entries</documentation>
       <wsdl:input message="tns:GetEntriesSoapIn" />
       <wsdl:output message="tns:GetEntriesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetEntriesByName">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Get iFolders Entries</documentation>
+      <wsdl:input message="tns:GetEntriesByNameSoapIn" />
+      <wsdl:output message="tns:GetEntriesByNameSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetChanges">
       <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Get Changes</documentation>
@@ -891,6 +1034,15 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetiFolderDetails">
+      <soap:operation soapAction="http://novell.com/ifolder/webservice/GetiFolderDetails" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="SetiFolderDescription">
       <soap:operation soapAction="http://novell.com/ifolder/webservice/SetiFolderDescription" style="document" />
       <wsdl:input>
@@ -911,6 +1063,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetiFolderByName">
       <soap:operation soapAction="http://novell.com/ifolder/webservice/GetiFolderByName" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetiFoldersByName">
+      <soap:operation soapAction="http://novell.com/ifolder/webservice/GetiFoldersByName" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1008,6 +1169,15 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetAuthenticatedUserPolicy">
+      <soap:operation soapAction="http://novell.com/ifolder/webservice/GetAuthenticatedUserPolicy" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="CreateEntry">
       <soap:operation soapAction="http://novell.com/ifolder/webservice/CreateEntry" style="document" />
       <wsdl:input>
@@ -1046,6 +1216,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetEntries">
       <soap:operation soapAction="http://novell.com/ifolder/webservice/GetEntries" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEntriesByName">
+      <soap:operation soapAction="http://novell.com/ifolder/webservice/GetEntriesByName" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
