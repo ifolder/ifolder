@@ -95,7 +95,7 @@ int ifolder_user_pref_set_long(const char *key, long value);
 /*@}*/
 
 /**
- * @name Boolean settings
+ * @name boolean settings
  * @{
  */
 int ifolder_user_pref_add_bool(const char *key, const char *default_value);
