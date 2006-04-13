@@ -137,11 +137,7 @@ iFolderClientState ifolder_client_get_state(void);
  * If this function is called again before a full synchronization completes,
  * one of the following will be returned:
  * 
- * @li IFOLDER_ERR_FULL_SYNC_ALREADY_QUEUED
- * 
- * If this function is called when the client is in the
- * #IFOLDER_CLIENT_STATE_PAUSED state, the previous synchronization process
- * will be aborted and a new one will begin.
+ * @li IFOLDER_ERR_FULL_SYNC_ALREADY_RUNNING
  * 
  * @return IFOLDER_SUCCESS if the call was successful.
  */
@@ -152,27 +148,18 @@ int ifolder_client_start_synchronization(void);
  * @todo Determine if a call to ifolder_start_sync(x, true) would be allowed
  * when the client is stopped.
  * 
- * Immediately aborts any synchronization process that is running and clears
- * out the queue of iFolders to synchronize.
+ * Immediately stops all synchronization processes that are running.
  * 
  * @return IFOLDER_SUCCESS if the call was successful.
  */
 int ifolder_client_stop_synchronization(void);
 
-//! Pause all synchronization
-/**
- * @todo Determine if a call to ifolder_start_sync(x, true) would be allowed
- * once the client is paused.
- * 
- * @return IFOLDER_SUCCESS if the call was successful.
- */
-int ifolder_client_pause_synchronization(void);
-
 //! Resume synchronization after being paused
 /**
- * This will resume synchronization in the exact place where the client was
- * paused.  It can only be called if the client is in the
- * #IFOLDER_CLIENT_STATE_PAUSED state.
+ * This will resume synchronization without causing the iFolder that was
+ * synchronizing to check for local changes again.  It also does not re-
+ * synchronize iFolders that had already synchronized in the previous
+ * synchronization cycle.
  * 
  * @return IFOLDER_SUCCESS if the call was successful.
  */

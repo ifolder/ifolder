@@ -85,7 +85,6 @@ typedef enum
 typedef enum
 {
 	IFOLDER_STATE_SYNC_WAIT,				/*!< The iFolder has never synchronized since the client has been started */
-	IFOLDER_STATE_SYNC_PAUSED,			/*!< The iFolder began synchronizing but was paused during the middle of a synchronization */
 	IFOLDER_STATE_SYNC_PREPARE,			/*!< The iFolder is preparing to synchronize by checking for changes in the local file system */
 	IFOLDER_STATE_SYNC_UPLOADING,		/*!< The iFolder is actively uploading files */
 	IFOLDER_STATE_SYNC_DOWNLOADING,		/*!< The iFolder is actively downloading files */
@@ -228,36 +227,37 @@ int ifolder_get_items_to_sync(const iFolder ifolder, int *items_to_sync);
  * @param ifolder The iFolder.
  * @param sync_now Set to true if the synchronization of the iFolder should
  * begin immediately.  If false, the iFolder will be added to the standard
- * synchronization queue (iFolders normally synchronize one at a time).
+ * synchronization queue.  libifolder will only synchronize one iFolder at a
+ * time.  If another iFolder is currently being synchronized, it will be
+ * paused until this iFolder has synchronized.
+ * 
  * @return IFOLDER_SUCCESS if the call was successful.
  */
 int ifolder_start_sync(const iFolder ifolder, bool sync_now = false);
 
 //! Stop synchronizing an iFolder.
 /**
- * Immediately abort the synchronization process for the iFolder.  If there are
- * additional iFolders on the synchronization queue, they will not be stopped.
- * If all synchronization should be stopped, you should call
- * ifolder_client_stop_synchronization().
+ * Immediately abort the synchronization process for the iFolder.  Other
+ * iFolders on the synchronization queue will not be stopped.
  * 
  * @param ifolder The iFolder.
  * @return IFOLDER_SUCCESS if the call was successful.
+ * 
+ * @see ifolder_client_stop_synchronization()
  */
 int ifolder_stop_sync(const iFolder ifolder);
 
-//! Pause the synchronization of an iFolder.
-/**
- * @param ifolder The iFolder.
- * @return IFOLDER_SUCCESS if the call was successful.
- */
-int ifolder_pause_sync(const iFolder ifolder);
-
 //! Resume the synchronization of a paused iFolder.
 /**
+ * This can only be called on iFolders that are in the
+ * #IFOLDER_STATE_SYNC_INCOMPLETE state.  libifolder will not recheck for new
+ * files on the local machine to synchronize.  If you want to force a recheck
+ * of files, you should call ifolder_start_sync().
+ * 
  * @param ifolder The iFolder.
  * @param sync_now Set to true if the synchronization of the iFolder should
  * begin immediately.  If false, the iFolder will be added to the standard
- * synchronization queue (iFolders normally synchronize one at a time).
+ * synchronization queue.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
 int ifolder_resume_sync(const iFolder ifolder, bool sync_now = false);
