@@ -546,6 +546,7 @@ package/linux/Makefile
 package/darwin/Makefile
 doc/Makefile
 help/Makefile
+help-linux/Makefile
 po/Makefile
 ])
 
