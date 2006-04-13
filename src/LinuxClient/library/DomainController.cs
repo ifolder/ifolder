@@ -369,20 +369,31 @@ namespace Novell.iFolder.Controller
 			lock (typeof(DomainController))
 			{
 				DomainInformation dom = (DomainInformation)keyedDomains[domainID];
+				DomainInformation updatedDomain = null;
 				if (dom != null)
 				{
 					if (String.Compare(dom.Host, host, true) != 0)
 					{
 						try
 						{
-							simws.SetDomainHostAddress(domainID, host);
-							
-							dom = simws.GetDomainInformation(domainID);
-							keyedDomains[domainID] = dom;
+							if (simws.SetDomainHostAddress(domainID, host))
+							{
+								updatedDomain = simws.GetDomainInformation(domainID);
+								if (String.Compare(dom.Host, updatedDomain.Host, true) == 0)
+									return null;		// The simws.SetDomainHostAddress() actually failed
 	
-							// Notify DomainHostModifiedEventHandlers
-							if (DomainHostModified != null)
-								DomainHostModified(this, new DomainEventArgs(domainID));
+								updatedDomain.StatusCode = StatusCodes.Success;
+
+								keyedDomains[domainID] = updatedDomain;
+	
+								// Notify DomainHostModifiedEventHandlers
+								if (DomainHostModified != null)
+									DomainHostModified(this, new DomainEventArgs(domainID));
+							}
+							else
+							{
+								return null;
+							}
 						}
 						catch (Exception e)
 						{
@@ -390,15 +401,13 @@ namespace Novell.iFolder.Controller
 							throw e;
 						}
 					}
-	
-					dom.StatusCode = StatusCodes.Success;
 				}
 				else
 				{
 					// FIXME: Throw DomainDoesNotExistException
 				}
 				
-				return dom;
+				return updatedDomain;
 			}
 		}
 
