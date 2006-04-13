@@ -75,6 +75,12 @@ typedef enum
 	IFOLDER_SEARCH_OP_EQUALS			/*!< Match strings that exactly equal the search pattern */
 } iFolderSearchOperation;
 
+/**
+ * @name Properties (Getters and Setters)
+ * 
+ * @{
+ */
+
 //! Returns the domain's unique ID.
 /**
  * @param domain The domain.
@@ -168,6 +174,13 @@ void *ifolder_domain_get_user_data(const iFolderDomain domain);
  * @see ifolder_domain_get_user_data
  */
 void ifolder_domain_set_user_data(const iFolderDomain domain, void *user_data);
+
+/*@}*/
+
+/**
+ * @name Domain API
+ * @{
+ */
 
 //! Add and connect to a new domain.
 /**
@@ -281,8 +294,67 @@ int ifolder_domain_set_default(const iFolderDomain domain);
  */
 int ifolder_domain_get_authenticated_user(const iFolderDomain domain, iFolderUser *user);
 
+//! Returns the iFolderUserPolicy associated with a domain.
+/**
+ * @param domain The domain.
+ * @param user_policy Invalid if the call is unsuccessful.
+ * @return IFOLDER_SUCCESS if the call was successful.
+ */
+int ifolder_domain_get_authenticated_user_policy(const iFolderDomain domain, iFolderUserPolicy *user_policy);
 
-int ifolder_domain_get_authenticated_user_policy(const iFolderDomain domain, const iFolderUser *user, iFolderUserPolicy *user_policy);
+//! Free the memory used by an iFolderDomain
+/**
+ * This should be called any time you get an iFolderDomain as a returned
+ * item from a function.  You do NOT need to call this when an
+ * iFolderDomain is part of an iFolderEnumeration.
+ */
+void ifolder_domain_free(iFolderDomain domain);
+
+/*@}*/
+
+/**
+ * @name Domains API
+ * @{
+ */
+
+//! Returns all domains configured on the client.
+/**
+ * If no domains exist, an empty enumeration will be returned.
+ * 
+ * @param domain_enum An enumeration of iFolderDomain objects.  Invalid if the
+ * call is unsuccessful.
+ * @return IFOLDER_SUCCESS if the call was successful.
+ */
+int ifolder_domain_get_all(iFolderEnumeration *domain_enum);
+
+//! Returns all active domains configured on the client.
+/**
+ * This function returns a subset of the ifolder_domain_get_all() call.
+ * 
+ * If no domains exist, an empty enumeration will be returned.
+ * 
+ * @param domain_enum An enumeration of iFolderDomain objects.  Invalid if the
+ * call is unsuccessful.
+ * @return IFOLDER_SUCCESS if the call was successful.
+ */
+int ifolder_domain_get_all_active(iFolderEnumeration *domain_enum);
+
+//! Returns the default domain.
+/**
+ * If a no domain exists, domain will be set to NULL.
+ * 
+ * @param domain The default domain or NULL if no domain exists.  Invalid if
+ * the call is unsuccessful.
+ * @return IFOLDER_SUCCESS if the call was successful.
+ */
+int ifolder_domain_get_default(iFolderDomain *domain);
+
+/*@}*/
+
+/**
+ * @name User Management
+ * @{
+ */
 
 //! Returns an iFolderUser object for a given user ID.
 /**
@@ -321,6 +393,13 @@ int ifolder_domain_get_users(const iFolderDomain domain, const int index, const 
  * @return IFOLDER_SUCCESS if the call was successful.
  */
 int ifolder_domain_get_users_by_search(const iFolderDomain domain, const iFolderSearchProperty search_prop, const iFolderSearchOperation search_op, const char *pattern, const int index, const int count, iFolderEnumeration *user_enum);
+
+/*@}*/
+
+/**
+ * @name iFolder Management
+ * @{
+ */
 
 //! Create a new iFolder from a local file system path
 /**
@@ -437,45 +516,7 @@ int ifolder_domain_get_ifolder_by_id(const iFolderDomain domain, const char *id,
  */
 int ifolder_domain_get_ifolders_by_name(const iFolderDomain domain, const iFolderSearchOperation search_op, const char *pattern, const int index, const int count, iFolderEnumeration *ifolder_enum);
 
-//! Returns all domains configured on the client.
-/**
- * If no domains exist, an empty enumeration will be returned.
- * 
- * @param domain_enum An enumeration of iFolderDomain objects.  Invalid if the
- * call is unsuccessful.
- * @return IFOLDER_SUCCESS if the call was successful.
- */
-int ifolder_domain_get_all(iFolderEnumeration *domain_enum);
-
-//! Returns all active domains configured on the client.
-/**
- * This function returns a subset of the ifolder_domain_get_all() call.
- * 
- * If no domains exist, an empty enumeration will be returned.
- * 
- * @param domain_enum An enumeration of iFolderDomain objects.  Invalid if the
- * call is unsuccessful.
- * @return IFOLDER_SUCCESS if the call was successful.
- */
-int ifolder_domain_get_all_active(iFolderEnumeration *domain_enum);
-
-//! Returns the default domain.
-/**
- * If a no domain exists, domain will be set to NULL.
- * 
- * @param domain The default domain or NULL if no domain exists.  Invalid if
- * the call is unsuccessful.
- * @return IFOLDER_SUCCESS if the call was successful.
- */
-int ifolder_domain_get_default(iFolderDomain *domain);
-
-//! Free the memory used by an iFolderDomain
-/**
- * This should be called any time you get an iFolderDomain as a returned
- * item from a function.  You do NOT need to call this when an
- * iFolderDomain is part of an iFolderEnumeration.
- */
-void ifolder_domain_free(iFolderDomain domain);
+/*@}*/
 
 #ifdef __cplusplus
 }

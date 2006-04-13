@@ -34,23 +34,74 @@ extern "C"
  * @brief User Preferences API
  */
 
+/**
+ * @name User Preferences API
+ * @{
+ */
+
 //! Returns true if a setting exists for key.
 bool ifolder_user_pref_exists(const char *key);
 
+//! Deletes a user preference
+/**
+ * @return IFOLDER_SUCCESS if the call was successful.
+ */
+int ifolder_user_pref_delete(const char *key);
+
+//! Reset a user preference to its default value
+/**
+ * If no default value was set, an error is returned.
+ * 
+ * @return IFOLDER_SUCCESS if the call was successful.
+ */
+int ifolder_user_pref_reset(const char *key);
+
+/*@}*/
+
+/**
+ * @name string settings
+ * @{
+ */
+int ifolder_user_pref_add_string(const char *key, const char *default_value);
 const char * ifolder_user_pref_get_string(const char *key, const char *default_value = NULL);
-void ifolder_user_pref_set_string(const char *key, const char *value);
+int ifolder_user_pref_set_string(const char *key, const char *value);
+/*@}*/
 
+/**
+ * @name int settings
+ * @{
+ */
+int ifolder_user_pref_add_int(const char *key, const char *default_value);
 int ifolder_user_pref_get_int(const char *key, int default_value = 0);
-void ifolder_user_pref_set_int(const char *key, int value);
+int ifolder_user_pref_set_int(const char *key, int value);
+/*@}*/
 
+/**
+ * @name float settings
+ * @{
+ */
+int ifolder_user_pref_add_float(const char *key, const char *default_value);
 float ifolder_user_pref_get_float(const char *key, float default_value = 0.0);
-void ifolder_user_pref_set_float(const char *key, float value);
+int ifolder_user_pref_set_float(const char *key, float value);
+/*@}*/
 
-int ifolder_user_pref_get_long(const char *key, long default_value = 0);
-void ifolder_user_pref_set_long(const char *key, long value);
+/**
+ * @name long settings
+ * @{
+ */
+int ifolder_user_pref_add_long(const char *key, const char *default_value);
+long ifolder_user_pref_get_long(const char *key, long default_value = 0);
+int ifolder_user_pref_set_long(const char *key, long value);
+/*@}*/
 
+/**
+ * @name Boolean settings
+ * @{
+ */
+int ifolder_user_pref_add_bool(const char *key, const char *default_value);
 bool ifolder_user_pref_get_bool(const char *key, bool default_value = false);
-void ifolder_user_pref_set_bool(const char *key, bool value);
+int ifolder_user_pref_set_bool(const char *key, bool value);
+/*@}*/
 
 #ifdef __cplusplus
 }

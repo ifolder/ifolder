@@ -29,14 +29,79 @@ extern "C"
 {
 #endif		/* __cplusplus */
 
+#include "ifolder.h"
+
 /**
  * @file ifolder-user.h
  * @brief User API
  */
 
+//! An object that represents a user.
+/**
+ * You must call ifolder_user_free() to clean up the memory used by an iFolderUser.
+ */
 typedef void *iFolderUser;
 
+/*@}*/
+/**
+ * @name User API
+ */
+/*@{*/
+
+//! Returns a user's unique ID.
+/**
+ * @param user The iFolderUser.
+ * @return a user's unique ID.
+ */
+const char *ifolder_user_get_id(iFolderUser user);
+
+//! Returns a user's login name.
+/**
+ * @param user The iFolderUser.
+ * @return a user's login name.
+ */
+const char *ifolder_user_get_user_name(iFolderUser user);
+
+//! Returns a user's full name.
+/**
+ * @param user The iFolderUser.
+ * @return a user's full name.
+ */
+const char *ifolder_user_get_full_name(iFolderUser user);
+
+//! Returns a user's iFolderMemberRights.
+/**
+ * @param user The iFolderUser.
+ * @return a user's iFolderMemberRights.
+ */
+iFolderMemberRights ifolder_user_get_rights(iFolderUser user);
+
+//! Returns true if a user's login is enabled.
+/**
+ * @todo Should we have this call in the Client API?
+ * 
+ * @param user The iFolderUser.
+ * @return true if a user's login is enabled.
+ */
+bool ifolder_user_is_login_enabled(iFolderUser user);
+
+//! Returns true if a user is an owner in an iFolder/Domain.
+/**
+ * @todo Should we have this call in the Client API?  What exactly would it
+ * mean to the client if the user was the owner of a domain?
+ * 
+ * @param user The iFolderUser.
+ * @return true if a user is an owner in an iFolder/Domain.
+ */
+bool ifolder_user_is_owner(iFolderUser user);
+
+//! Free the memory used by an iFolderUser.
+/**
+ * @param user The iFolderUser.
+ */
 void ifolder_user_free(iFolderUser user);
+
+/*@}*/
 
 #ifdef __cplusplus
 }

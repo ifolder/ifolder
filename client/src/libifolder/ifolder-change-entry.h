@@ -48,7 +48,7 @@ typedef enum
 
 
 /**
- * @name Enumeration API
+ * @name Change Entry API
  */
 /*@{*/
 
