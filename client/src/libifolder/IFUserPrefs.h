@@ -21,23 +21,23 @@
  *
  ***********************************************************************/
 
-#ifndef _IFOLDER_USER_H_
-#define _IFOLDER_USER_H_
+#ifndef _IFOLDER_USER_PREFS_H_
+#define _IFOLDER_USER_PREFS_H_
 
 #include "IFDomain.h"
 
 /**
- * @file IFUserPolicy.h
- * @brief User Policy API
+ * @file IFUserPrefs.h
+ * @brief User Preferences API
  */
 
-class IFUserPolicy
+class IFUserPrefs
 {
 	public:
-		~IFUserPolicy();
+		~IFUserPrefs();
 	
 	private:
-		IFUserPolicy();
+		IFUserPrefs();
 };
 
-#endif /*_IFOLDER_USER_H_*/
+#endif /*_IFOLDER_USER_PREFS_H_*/

@@ -459,6 +459,7 @@ INPUT                  = \
 	../src/libifolder/IFEvent.h				\
 	../src/libifolder/IFiFolder.h			\
 	../src/libifolder/IFUser.h				\
+	../src/libifolder/IFUserPrefs.h			\
 	../src/libifolder/IFUserPolicy.h			\
 	../src/libifolder/ifolder-errors.h
 
