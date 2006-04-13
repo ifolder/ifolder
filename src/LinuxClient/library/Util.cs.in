@@ -382,7 +382,8 @@ namespace Novell.iFolder
 				aboutDialog.WrapLicense = false;
 */
 				Gnome.About aboutDialog =
-					new Gnome.About(
+//					new Gnome.About(
+					GnomeAboutNew(
 						"iFolder",
 						"@_VERSION_@",
 						Util.GS("Copyright (C) 2004-2006 Novell, Inc.  All rights reserved."),
@@ -1011,6 +1012,32 @@ namespace Novell.iFolder
 				dest = new Gdk.Pixbuf(destPtr);
 			
 			return dest;
+		}
+		
+		///
+		/// C# Binding to gnome_about_new() which seems to be broken in SuSE Linux 10.0
+		///
+		[DllImport("libgnomeui-2.so.0")]
+		private static extern IntPtr gnome_about_new(string name, string version, string copyright,
+													 string comments, string[] authors, string[] documenters,
+													 string translator_credits,
+													 IntPtr logo_pixbuf);
+		
+		public static Gnome.About GnomeAboutNew(string name, string version, string copyright,
+											   string comments, string[] authors, string[] documenters,
+											   string translator_credits, Gdk.Pixbuf logo_pixbuf)
+		{
+			IntPtr aboutPtr;
+			Gnome.About about = null;
+			
+			aboutPtr = gnome_about_new(name, version, copyright,
+										comments, authors, documenters,
+										translator_credits, logo_pixbuf.Handle);
+			
+			if (aboutPtr != IntPtr.Zero)
+				about = new Gnome.About(aboutPtr);
+			
+			return about;
 		}
 	}
 	
