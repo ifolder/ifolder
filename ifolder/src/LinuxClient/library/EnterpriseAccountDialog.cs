@@ -585,6 +585,8 @@ namespace Novell.iFolder
 		private bool SaveServerAddress()
 		{
 			string serverAddress = ServerAddressEntry.Text;
+			string username = domain.MemberName;
+			string password = domainController.GetDomainPassword(domain.ID);
 			bServerAddressChanged = false;
 			bool bHostAddressUpdated = false;
 
@@ -611,12 +613,55 @@ namespace Novell.iFolder
 				return bHostAddressUpdated;
 			}
 			
+			// Make sure that we have a password for calling UpdateDomainHostAddress
+			if (password == null || password.Trim().Length == 0)
+			{
+				Entry tempPasswordEntry = new Entry();
+				tempPasswordEntry.Visibility = false;
+				iFolderMsgDialog dg =
+					new iFolderMsgDialog(
+						this,
+						iFolderMsgDialog.DialogType.Info,
+						iFolderMsgDialog.ButtonSet.OkCancel,
+						"",
+						Util.GS("Please enter your password"),
+						Util.GS("Your password is required to change the address of the server."));
+				dg.ExtraWidget = tempPasswordEntry;
+				tempPasswordEntry.GrabFocus();
+				dg.TransientFor = this;
+				int rc = dg.Run();
+				password = tempPasswordEntry.Text;
+				dg.Hide();
+				dg.Destroy();
+				if ((ResponseType)rc == ResponseType.Cancel)
+				{
+					// Set the ServerAddressEntry back to the original value
+					ServerAddressEntry.Changed -= new EventHandler(OnServerAddressChanged);
+					ServerAddressEntry.Text = domain.Host;
+					ServerAddressEntry.Changed += new EventHandler(OnServerAddressChanged);
+
+					return bHostAddressUpdated;
+				}
+
+				
+				
+				if (password == null || password.Trim().Length == 0)
+				{
+					// Set the ServerAddressEntry back to the original value
+					ServerAddressEntry.Changed -= new EventHandler(OnServerAddressChanged);
+					ServerAddressEntry.Text = domain.Host;
+					ServerAddressEntry.Changed += new EventHandler(OnServerAddressChanged);
+
+					return bHostAddressUpdated;
+				}
+			}
+			
 			serverAddress = serverAddress.Trim();
 			
 			Exception hostAddressUpdateException = null;
 			try
 			{
-				if (domainController.UpdateDomainHostAddress(domain.ID, serverAddress) != null)
+				if (domainController.UpdateDomainHostAddress(domain.ID, serverAddress, username, password) != null)
 				{
 					bHostAddressUpdated = true;
 				}
@@ -635,7 +680,7 @@ namespace Novell.iFolder
 					iFolderMsgDialog.ButtonSet.Ok,
 					"",
 					Util.GS("Unable to modify the server address"),
-					Util.GS("An error was encountered while attempting to modify the server address."),
+					Util.GS("An error was encountered while attempting to modify the server address.  Please verify the address and your password are correct."),
 					hostAddressUpdateException == null ? null : hostAddressUpdateException.Message);
 				dg.Run();
 				dg.Hide();

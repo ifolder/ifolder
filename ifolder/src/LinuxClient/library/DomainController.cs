@@ -364,7 +364,7 @@ namespace Novell.iFolder.Controller
 			}
 		}
 		
-		public DomainInformation UpdateDomainHostAddress(string domainID, string host)
+		public DomainInformation UpdateDomainHostAddress(string domainID, string host, string user, string password)
 		{
 			lock (typeof(DomainController))
 			{
@@ -376,7 +376,7 @@ namespace Novell.iFolder.Controller
 					{
 						try
 						{
-							if (simws.SetDomainHostAddress(domainID, host))
+							if (simws.SetDomainHostAddress(domainID, host, user, password))
 							{
 								updatedDomain = simws.GetDomainInformation(domainID);
 								if (String.Compare(dom.Host, updatedDomain.Host, true) == 0)
