@@ -1,6 +1,10 @@
+if BUILD_DOXYGEN
+SUBDIRS = doc src
+DIST_SUBDIRS = $(SUBDIRS) package test
+else
 SUBDIRS = src
-
 DIST_SUBDIRS = $(SUBDIRS) doc package test
+endif
 
 # remove all of the CVS directories
 dist-hook:

@@ -82,13 +82,28 @@ if test "x$HAVE_PKGCONFIG" = "xno"; then
 fi
 
 dnl ========================================================
-dnl Check for doxygen
+dnl Handle --enable-doxygen
 dnl ========================================================
 
-AC_CHECK_PROG(HAVE_DOXYGEN, doxygen, yes, no)
+AC_ARG_ENABLE(doxygen, [
+  --enable-doxygen          enable the option to build API Documentation with Doxygen (make doc)],
+    [case "${enableval}" in
+        yes) enable_doxygen=true ;;
+        no)  enable_doxygen=false ;;
+        *) AC_MSG_ERROR(bad value ${enableval} for --enable-doxygen) ;;
+    esac],[enable_doxygen=false])
+AM_CONDITIONAL(BUILD_DOXYGEN, test x$enable_doxygen = xtrue)
 
-if test "x$HAVE_DOXYGEN" == "xno"; then
-	AC_MSG_ERROR(you need to have doxygen installed !)
+if test "x$enable_doxygen" == "xtrue"; then
+	dnl ========================================================
+	dnl Check for doxygen
+	dnl ========================================================
+
+	AC_CHECK_PROG(HAVE_DOXYGEN, doxygen, yes, no)
+
+	if test "x$HAVE_DOXYGEN" == "xno"; then
+		AC_MSG_ERROR(doxygen not found on your path !)
+	fi
 fi
 
 #
