@@ -34,27 +34,97 @@ extern "C"
  * @brief Error Codes
  */
 
-#define IFOLDER_SUCCESS	0
-#define IFOLDER_ERROR		-1
+/**
+ * @name General Client Errors
+ * @{
+ */
 
+//! An operation succeeded.
+#define IFOLDER_SUCCESS					0
+
+//! An unknown error occurred.
+/**
+ * If this is returned, the API implementors did not do a very good job of
+ * implementing the API.  Please refrain from using this.
+ */
+#define IFOLDER_ERROR						-1
+
+//! Returned if the client is attempted to be initialized multiple times.
 #define IFOLDER_ERROR_ALREADY_INITIALIZED	-101
+
+//! Returned if an operation is attempted on the library without initializing the client.
 #define IFOLDER_ERROR_NOT_INITIALIZED		-102
 
-#define IFOLDER_ERROR_OUT_OF_MEMORY	-201
+//! Failed to allocate memory.
+#define IFOLDER_ERROR_OUT_OF_MEMORY		-103
 
-/* IPC ERROR CODES */
-#define IFOLDER_ERROR_IPC_CREATE			-301
-#define IFOLDER_ERROR_IPC_READ			-302
-#define IFOLDER_ERROR_IPC_WRITE			-302
-#define IFOLDER_ERROR_IPC_INVALID			-303
-#define IFOLDER_ERROR_IPC_NO_SERVER		-304
-#define IFOLDER_ERROR_IPC_CLOSE			-305
-#define IFOLDER_ERROR_IPC_INVALID_MESSAGE	-306
-#define IFOLDER_ERROR_IPC_UNKNOWN_MESSAGE	-307
-#define IFOLDER_ERROR_IPC_INVALID_STATE	-308
+//! A required function parameter was invalid.
+#define IFOLDER_ERR_INVALID_PARAMETER		-104
+
+/*@}*/
+
+/**
+ * @name User Management Errors
+ * @{
+ */
 
 //! The current user did not have sufficient rights to perform an operation.
-#define IFOLDER_ERR_INSUFFICIENT_RIGHTS		-401
+#define IFOLDER_ERR_INSUFFICIENT_RIGHTS	-201
+
+/*@}*/
+
+/* IPC ERROR CODES */
+/**
+ * @name IPC Errors
+ * 
+ * libifolder uses IPC to allow multiple processes to communicate with the main
+ * synchronization process (usually run inside of a TrayApp).  The following
+ * errors may occur inside of the IPC mechanism.
+ * 
+ * @{
+ */
+
+//! Could not create a named pipe.
+#define IFOLDER_ERROR_IPC_CREATE			-301
+
+//! Could not read from a named pipe.
+#define IFOLDER_ERROR_IPC_READ			-302
+
+//! Could not write to a named pipe.
+#define IFOLDER_ERROR_IPC_WRITE			-302
+
+//! @todo Determine what IFOLDER_ERROR_IPC_INVALID means.
+#define IFOLDER_ERROR_IPC_INVALID			-303
+
+//! The main iFolder Client/Process (IPC Server) is not running.
+#define IFOLDER_ERROR_IPC_NO_SERVER		-304
+
+//! Could not close a named pipe.
+#define IFOLDER_ERROR_IPC_CLOSE			-305
+
+//! An IPC message was formatted incorrectly.
+#define IFOLDER_ERROR_IPC_INVALID_MESSAGE	-306
+
+//! An unknown message was read from a named pipe.
+#define IFOLDER_ERROR_IPC_UNKNOWN_MESSAGE	-307
+
+//! An operation was attempted with the IPC mechanism not ready.
+#define IFOLDER_ERROR_IPC_INVALID_STATE	-308
+
+/*@}*/
+
+/**
+ * @name Event Errors
+ * @{
+ */
+
+//! An event operation was attempted on an event that has not been added into the event system.
+#define IFOLDER_ERR_EVENT_DOES_NOT_EXIST	-401
+
+//! Returned if you attempt to modify a built-in libifolder event.
+#define IFOLDER_ERR_EVENT_INVALID_ACCESS	-402
+
+/*@}*/
 
 #ifdef __cplusplus
 }
