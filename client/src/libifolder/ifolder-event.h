@@ -43,35 +43,63 @@ extern "C"
  * These are the built-in names of the events the iFolder Client will emit.
  * 
  * @subsection client_events Client Events
- * @li client-shutting-down
- * @li client-upgrade-available
+ * @li @link client_events_page client-starting @endlink
+ * @li @link client_events_page client-started @endlink
+ * @li @link client_events_page client-stopping @endlink
+ * @li @link client_events_page client-stopped @endlink
+ * @li @link client_events_page client-upgrade-available @endlink
+ * 
+ * @subsection sync_events Synchronization Events
+ * @li @link sync_events_page ifolder-dredge-started @endlink
+ * 
+ * @li @link sync_events_page file-add-detected @endlink
+ * @li @link sync_events_page file-delete-detected @endlink
+ * @li @link sync_events_page file-modified-detected @endlink
+ * 
+ * @li @link sync_events_page ifolder-sync-started @endlink
+ * @li @link sync_events_page ifolder-sync-paused @endlink
+ * @li @link sync_events_page ifolder-sync-succeeded @endlink
+ * @li @link sync_events_page ifolder-sync-failed @endlink
+ * 
+ * @li @link sync_events_page file-deleted @endlink
+ * @li @link sync_events_page file-added @endlink
+ * @li @link sync_events_page file-modified @endlink
+ * 
+ * @li @link sync_events_page file-sync-started @endlink
+ * @li @link sync_events_page file-sync-paused @endlink
+ * @li @link sync_events_page file-sync-succeeded @endlink
+ * @li @link sync_events_page file-sync-failed @endlink
  * 
  * @subsection domain_events Domain Events
- * @li domain-added
- * @li domain-removed
- * @li domain-host-modified
- * @li domain-logged-in
- * @li domain-logged-out
- * @li domain-needs-credentials
- * @li domain-activated
- * @li domain-inactivated
- * @li domain-new-default
- * @li domain-in-grace-login-period
- * @li domain-client-upgrade-available
+ * @li @link domain_events_page domain-added @endlink
+ * @li @link domain_events_page domain-removed @endlink
+ * @li @link domain_events_page domain-host-modified @endlink
+ * @li @link domain_events_page domain-logged-in @endlink
+ * @li @link domain_events_page domain-logged-out @endlink
+ * @li @link domain_events_page domain-needs-credentials @endlink
+ * @li @link domain_events_page domain-activated @endlink
+ * @li @link domain_events_page domain-inactivated @endlink
+ * @li @link domain_events_page domain-new-default @endlink
+ * @li @link domain_events_page domain-in-grace-login-period @endlink
  * 
  * @subsection ifolder_events iFolder Events
- * @li ifolder-connected
- * @li ifolder-disconnected
+ * @li @link ifolder_events_page ifolder-connected @endlink
+ * @li @link ifolder_events_page ifolder-disconnected @endlink
+ * @li @link ifolder_events_page ifolder-created @endlink
+ * @li @link ifolder_events_page ifolder-deleted @endlink
+ * @li @link ifolder_events_page ifolder-state-changed @endlink
+ * @li @link ifolder_events_page ifolder-owner-changed @endlink
+ * @li @link ifolder_events_page ifolder-published @endlink
+ * @li @link ifolder_events_page ifolder-unpublished @endlink
+ * @li @link ifolder_events_page ifolder-member-added @endlink
+ * @li @link ifolder_events_page ifolder-member-removed @endlink
+ * @li @link ifolder_events_page ifolder-member-rights-modified @endlink
  * 
- * @subsection ifolder_events Connected iFolder Events
- * @li connected-ifolder-added
- * @li connected-ifolder-removed
- * @li connected-ifolder-modified
- * 
- * @subsection ifolder_events Disconnected iFolder Events
- * @li disconnected-ifolder-added
- * @li disconnected-ifolder-removed
- * @li disconnected-ifolder-modified
+ * @subsection user_prefs_events User Preferences Events
+ * @li @link user_prefs_events_page user-pref-added @endlink
+ * @li @link user_prefs_events_page user-pref-deleted @endlink
+ * @li @link user_prefs_events_page user-pref-reset @endlink
+ * @li @link user_prefs_events_page user-pref-modified @endlink
  * 
  * @section custom_events Custom Events
  * 

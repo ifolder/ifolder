@@ -32,6 +32,8 @@ extern "C"
 /**
  * @file ifolder-user-prefs.h
  * @brief User Preferences API
+ * 
+ * @link user_prefs_events_page User Preferences Events @endlink
  */
 
 /**
@@ -102,6 +104,57 @@ int ifolder_user_pref_add_bool(const char *key, const char *default_value);
 bool ifolder_user_pref_get_bool(const char *key, bool default_value = false);
 int ifolder_user_pref_set_bool(const char *key, bool value);
 /*@}*/
+
+/** @page user_prefs_events_page User Preferences Events
+
+@events
+ @event user-pref-added
+ @event user-pref-deleted
+ @event user-pref-reset
+ @event user-pref-modified
+@endevents
+
+<hr>
+
+@eventdef user-pref-added
+ @eventproto
+void (*user_pref_added)(const char *key, const void *default_value);
+ @endeventproto
+ @eventdesc
+  Emitted when a new user preference is added.
+ @param key The user preference key (its name).
+ @param default_value The default value of the key if one exists, or NULL otherwise.
+@endeventdef
+
+@eventdef user-pref-deleted
+ @eventproto
+void (*user_pref_deleted)(const char *key);
+ @endeventproto
+ @eventdesc
+  Emitted when a user preference is deleted.
+ @param key The user preference key (its name).
+@endeventdef
+
+@eventdef user-pref-reset
+ @eventproto
+void (*user_pref_reset)(const char *key);
+ @endeventproto
+ @eventdesc
+  Emitted when a user preference is reset.
+ @param key The user preference key (its name).
+@endeventdef
+
+@eventdef user-pref-modified
+ @eventproto
+void (*user_pref_modified)(const char *key, const void *new_value);
+ @endeventproto
+ @eventdesc
+  Emitted when a user preference is modified.
+ @param key The user preference key (its name).
+ @param new_value The new value of the preference.
+@endeventdef
+
+*/
 
 #ifdef __cplusplus
 }

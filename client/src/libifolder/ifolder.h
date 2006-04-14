@@ -37,6 +37,8 @@ extern "C"
  * @file ifolder.h
  * @brief iFolder API (API for individual iFolders)
  * 
+ * @link ifolder_events_page iFolder Events @endlink
+ * 
  * @section creating Creating New iFolders
  * 
  * @li ifolder_domain_create_ifolder_from_path()
@@ -118,6 +120,37 @@ typedef enum
 	IFOLDER_MEMBER_RIGHTS_READ_WRITE,	/*!< Read and write access */
 	IFOLDER_MEMBER_RIGHTS_ADMIN			/*!< Administrator access (can add other users, change ownership, modify user rights) */
 } iFolderMemberRights;
+
+typedef enum
+{
+	IFOLDER_SYNC_DIRECTION_UPLOAD,			/*!< Uploading */
+	IFOLDER_SYNC_DIRECTION_DOWNLOAD			/*!< Downloading */
+} iFolderSyncDirection;
+
+typedef enum
+{
+	IFOLDER_FILE_TYPE_FILE,					/*!< A file */
+	IFOLDER_FILE_TYPE_DIRECTORY				/*!< A directory */
+} iFolderFileType;
+
+typedef enum
+{
+	IFOLDER_SYNC_FAILURE_UPDATE_CONFLICT,		/*!< Update conflict */
+	IFOLDER_SYNC_FAILURE_FILE_NAME_CONFLICT,	/*!< File name conflict */
+	IFOLDER_SYNC_FAILURE_POLICY,				/*!< Policy prevented synchronization */
+	IFOLDER_SYNC_FAILURE_ACCESS,				/*!< Insufficient rights prevented synchronization */
+	IFOLDER_SYNC_FAILURE_LOCKED,				/*!< Locked iFolder prevented synchronization */
+	IFOLDER_SYNC_FAILURE_POLICY_QUOTA,		/*!< Full iFolder prevented synchronization */
+	IFOLDER_SYNC_FAILURE_POLICY_SIZE,			/*!< File size restriction prevented synchronization */
+	IFOLDER_SYNC_FAILURE_POLICY_TYPE,			/*!< File type restriction prevented synchronization */
+	IFOLDER_SYNC_FAILURE_DISK_FULL,			/*!< Server/Client has insufficient disk space */
+	IFOLDER_SYNC_FAILURE_READ_ONLY,			/*!< Read-only ifolder prevented synchronization */
+	IFOLDER_SYNC_FAILURE_SERVER_BUSY,			/*!< Server is busy */
+	IFOLDER_SYNC_FAILURE_CLIENT_ERROR,		/*!< Client sent bad data to the server that prevented synchronization */
+	IFOLDER_SYNC_FAILURE_IN_USE,				/*!< A file is in use and could not be synchronized */
+	IFOLDER_SYNC_FAILURE_SERVER_FAILURE,		/*!< Updating the metadata for a file failed */
+	IFOLDER_SYNC_FAILURE_UNKNOWN				/*!< Unknown sync failure */
+} iFolderSyncFailureType;
 
 /**
  * @name Properties (Getters and Setters)
@@ -379,6 +412,134 @@ int ifolder_unpublish(const iFolder ifolder);
 void ifolder_free(iFolder ifolder);
 
 /*@}*/
+
+/** @page ifolder_events_page iFolder Events
+
+@events
+ @event ifolder-connected
+ @event ifolder-disconnected
+ @event ifolder-created
+ @event ifolder-deleted
+ @event ifolder-state-changed
+ @event ifolder-owner-changed
+ @event ifolder-published
+ @event ifolder-unpublished
+ @event ifolder-member-added
+ @event ifolder-member-removed
+ @event ifolder-member-rights-modified
+@endevents
+
+<hr>
+
+@eventdef ifolder-connected
+ @eventproto
+void (*ifolder_connected)(const iFolder ifolder);
+ @endeventproto
+ @eventdesc
+  Emitted when an iFolder is connected to a local file system path.
+ @param ifolder The iFolder that was connected.
+@endeventdef
+
+@eventdef ifolder-disconnected
+ @eventproto
+void (*ifolder_disconnected)(const iFolder ifolder);
+ @endeventproto
+ @eventdesc
+  Emitted when an iFolder is disconnected from a local file system path.
+ @param ifolder The iFolder that was disconnected.
+@endeventdef
+
+@eventdef ifolder-created
+ @eventproto
+void (*ifolder_created)(const iFolderDomain domain, const iFolder ifolder);
+ @endeventproto
+ @eventdesc
+  Emitted when an iFolder is created on a server.
+ @param domain The domain that the iFolder belongs to.
+ @param ifolder The iFolder that was created.
+@endeventdef
+
+@eventdef ifolder-deleted
+ @eventproto
+void (*ifolder_deleted)(const iFolderDomain domain, const iFolder ifolder);
+ @endeventproto
+ @eventdesc
+  Emitted when an iFolder is deleted from a server.
+ @param domain The domain that the iFolder belongs to.
+ @param ifolder The iFolder that was deleted.
+@endeventdef
+
+@eventdef ifolder-state-changed
+ @eventproto
+void (*ifolder_state_changed)(const iFolder ifolder, const iFolderState new_state);
+ @endeventproto
+ @eventdesc
+  Emitted when the state of an iFolder changes.
+ @param ifolder The iFolder whose state was changed.
+ @param new_state The new state of the iFolder.
+@endeventdef
+
+@eventdef ifolder-owner-changed
+ @eventproto
+void (*ifolder_owner_changed)(const iFolder ifolder, const iFolderUser old_owner, const iFolderUser new_owner);
+ @endeventproto
+ @eventdesc
+  Emitted when an iFolder's owner changes.
+ @param ifolder The iFolder whose owner was changed.
+ @param old_owner The old owner.
+ @param new_owner The new owner.
+@endeventdef
+
+@eventdef ifolder-published
+ @eventproto
+void (*ifolder_published)(const iFolder ifolder);
+ @endeventproto
+ @eventdesc
+  Emitted when an iFolder is published.
+ @param ifolder The iFolder that was published.
+@endeventdef
+
+@eventdef ifolder-unpublished
+ @eventproto
+void (*ifolder_unpublished)(const iFolder ifolder);
+ @endeventproto
+ @eventdesc
+  Emitted when an iFolder is unpublished.
+ @param ifolder The iFolder that was unpublished.
+@endeventdef
+
+@eventdef ifolder-member-added
+ @eventproto
+void (*ifolder_member_added)(const iFolder ifolder, const iFolderUser member);
+ @endeventproto
+ @eventdesc
+  Emitted when a new member is added to an iFolder.
+ @param ifolder The iFolder.
+ @param member The member that was added.
+@endeventdef
+
+@eventdef ifolder-member-removed
+ @eventproto
+void (*ifolder_member_removed)(const iFolder ifolder, const iFolderUser member);
+ @endeventproto
+ @eventdesc
+  Emitted when a member is removed from an iFolder.
+ @param ifolder The iFolder.
+ @param member The member that was removed.
+@endeventdef
+
+@eventdef ifolder-member-rights-modified
+ @eventproto
+void (*ifolder_member_rights_modified)(const iFolder ifolder, const iFolderUser member, const iFolderMemberRights rights);
+ @endeventproto
+ @eventdesc
+  Emitted when a member is removed from an iFolder.
+ @param ifolder The iFolder.
+ @param member The member whose rights were modified.
+ @param rights The member's new rights.
+@endeventdef
+
+*/
 
 #ifdef __cplusplus
 }

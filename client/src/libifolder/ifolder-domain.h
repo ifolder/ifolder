@@ -38,6 +38,8 @@ extern "C"
 /**
  * @file ifolder-domain.h
  * @brief Domain API
+ * 
+ * @link domain_events_page Domain Events @endlink
  */
 
 //! An object that represents an iFolder Domain.
@@ -517,6 +519,117 @@ int ifolder_domain_get_ifolder_by_id(const iFolderDomain domain, const char *id,
 int ifolder_domain_get_ifolders_by_name(const iFolderDomain domain, const iFolderSearchOperation search_op, const char *pattern, const int index, const int count, iFolderEnumeration *ifolder_enum);
 
 /*@}*/
+
+/** @page domain_events_page Domain Events
+
+@events
+ @event domain-added
+ @event domain-removed
+ @event domain-host-modified
+ @event domain-logged-in
+ @event domain-logged-out
+ @event domain-needs-credentials
+ @event domain-activated
+ @event domain-inactivated
+ @event domain-new-default
+ @event domain-in-grace-login-period
+@endevents
+
+<hr>
+
+@eventdef domain-added
+ @eventproto
+void (*domain_added)(const iFolderDomain domain);
+ @endeventproto
+ @eventdesc
+  Emitted when an domain is added to the client.
+ @param domain The domain that was added.
+@endeventdef
+
+@eventdef domain-removed
+ @eventproto
+void (*domain_removed)(const iFolderDomain domain);
+ @endeventproto
+ @eventdesc
+  Emitted when an domain is removed from the client.
+ @param domain The domain that was removed.
+@endeventdef
+
+@eventdef domain-host-modified
+ @eventproto
+void (*domain_host_modified)(const iFolderDomain domain);
+ @endeventproto
+ @eventdesc
+  Emitted when the host address of a domain is modified.
+ @param domain The domain that was modified.
+@endeventdef
+
+@eventdef domain-logged-in
+ @eventproto
+void (*domain_logged_in)(const iFolderDomain domain);
+ @endeventproto
+ @eventdesc
+  Emitted when a domain just logged in.
+ @param domain The domain that logged in.
+@endeventdef
+
+@eventdef domain-logged-out
+ @eventproto
+void (*domain_logged_out)(const iFolderDomain domain);
+ @endeventproto
+ @eventdesc
+  Emitted when a domain just logged out.
+ @param domain The domain that logged out.
+@endeventdef
+
+@eventdef domain-needs-credentials
+ @eventproto
+void (*domain_needs_credentials)(const iFolderDomain domain);
+ @endeventproto
+ @eventdesc
+  Emitted when the client needs credentials for a domain.
+ @param domain The domain that needs credentials.
+@endeventdef
+
+@eventdef domain-activated
+ @eventproto
+void (*domain_activated)(const iFolderDomain domain);
+ @endeventproto
+ @eventdesc
+  Emitted when a domain is activated.
+ @param domain The domain that was activated.
+@endeventdef
+
+@eventdef domain-inactivated
+ @eventproto
+void (*domain_inactivated)(const iFolderDomain domain);
+ @endeventproto
+ @eventdesc
+  Emitted when a domain is inactivated.
+ @param domain The domain that was inactivated.
+@endeventdef
+
+@eventdef domain-new-default
+ @eventproto
+void (*domain_new_default)(const iFolderDomain old_default, const iFolderDomain new_default);
+ @endeventproto
+ @eventdesc
+  Emitted when a domain is marked as the new default.
+ @param old_default The old default domain or NULL if the the domain is not available (got deleted or new_default is the first domain to be added).
+ @param new_default The new default domain.
+@endeventdef
+
+@eventdef domain-in-grace-login-period
+ @eventproto
+void (*domain_in_grace_login_period)(const iFolderDomain domain, const int remaining);
+ @endeventproto
+ @eventdesc
+  Emitted when a user's account on the domain is in its grace login period.
+ @param domain The domain which is in the grace login period.
+ @param remaining The number of grace logins remaining.
+@endeventdef
+
+*/
 
 #ifdef __cplusplus
 }

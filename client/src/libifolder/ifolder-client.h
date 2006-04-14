@@ -61,6 +61,9 @@ extern "C"
  * @file ifolder-client.h
  * @brief Main Client API (start here)
  * 
+ * @link client_events_page Client Events @endlink
+ * @link sync_events_page Synchronization Events @endlink
+ * 
  * A process can only control only ONE instance of the iFolder Client.  When
  * your program loads, call ifolder_client_initialize().  Before you exit,
  * make sure you call ifolder_client_uninitialize() before your program exits.
@@ -166,6 +169,251 @@ int ifolder_client_stop_synchronization(void);
 int ifolder_client_resume_synchronization(void);
 
 /*@}*/
+
+/** @page client_events_page Client Events
+
+@events
+ @event client-starting
+ @event client-started
+ @event client-stopping
+ @event client-stopped
+ @event client-upgrade-available
+@endevents
+
+<hr>
+
+@eventdef client-starting
+ @eventproto
+void (*client_starting)(void);
+ @endeventproto
+ @eventdesc
+  Emitted when the main client process is starting up.
+@endeventdef
+
+@eventdef client-started
+ @eventproto
+void (*client_started)(void);
+ @endeventproto
+ @eventdesc
+  Emitted when the main client process has started.
+  
+  @todo Note: Make sure that the implementation of the API automatically
+  reconnects all event handlers that were already registered with the
+  new client process.  This should be completely transparent to the consumer
+  of the API.
+@endeventdef
+
+@eventdef client-stopping
+ @eventproto
+void (*client_stopping)(void);
+ @endeventproto
+ @eventdesc
+  Emitted when the main client process is shutting down.  You should clean up
+  memory as needed.
+@endeventdef
+
+@eventdef client-stopped
+ @eventproto
+void (*client_stopped)(void);
+ @endeventproto
+ @eventdesc
+  Emitted just before the client shuts down entirely.
+@endeventdef
+
+@eventdef client-upgrade-available
+ @eventproto
+void (*client_upgrade_available)(const iFolderDomain domain, const char *version);
+ @endeventproto
+ @eventdesc
+  Emitted when a client upgrade is detected after logging in to a domain.
+ @param domain The domain which has a new client available for download.
+ @param version The version of the new client.
+@endeventdef
+
+*/
+
+/** @page sync_events_page Synchronization Events
+
+@events
+ @event ifolder-dredge-started
+
+ @event file-add-detected
+ @event file-delete-detected
+ @event file-modified-detected
+
+ @event ifolder-sync-started
+ @event ifolder-sync-paused
+ @event ifolder-sync-succeeded
+ @event ifolder-sync-failed
+
+ @event file-added
+ @event file-deleted
+ @event file-modified
+
+ @event file-sync-started
+ @event file-sync-paused
+ @event file-sync-succeeded
+ @event file-sync-failed
+@endevents
+
+<hr>
+
+@eventdef ifolder-dredge-started
+ @eventproto
+void (*ifolder_dredge_started)(const iFolder ifolder);
+ @endeventproto
+ @eventdesc
+  Emitted at the beginning of a synchronization cycle when the client checks an iFolder for local changes.
+ @param ifolder The iFolder that is being synchronized.
+@endeventdef
+
+@eventdef file-add-detected
+ @eventproto
+void (*file_add_detected)(const iFolder ifolder, const char *file_name);
+ @endeventproto
+ @eventdesc
+  Emitted during an iFolder dredge when a new file is detected.
+ @param ifolder The iFolder that is being synchronized.
+ @param file_name The name of the file that was added.
+@endeventdef
+
+@eventdef file-delete-detected
+ @eventproto
+void (*file_delete_detected)(const iFolder ifolder, const char *file_name);
+ @endeventproto
+ @eventdesc
+  Emitted during an iFolder dredge when a known file no longer exists locally.
+ @param ifolder The iFolder that is being synchronized.
+ @param file_name The name of the file that was deleted.
+@endeventdef
+
+@eventdef file-modified-detected
+ @eventproto
+void (*file_modified_detected)(const iFolder ifolder, const char *file_name);
+ @endeventproto
+ @eventdesc
+  Emitted during an iFolder dredge when a known file is detected to be modified.
+ @param ifolder The iFolder that is being synchronized.
+ @param file_name The name of the file that was modified.
+@endeventdef
+
+@eventdef ifolder-sync-started
+ @eventproto
+void (*ifolder_sync_started)(const iFolder ifolder);
+ @endeventproto
+ @eventdesc
+  Emitted when an iFolder synchronization has begun.
+ @param ifolder The iFolder that is being synchronized.
+@endeventdef
+
+@eventdef ifolder-sync-paused
+ @eventproto
+void (*ifolder_sync_paused)(const iFolder ifolder);
+ @endeventproto
+ @eventdesc
+  Emitted when an iFolder synchronization is paused.
+ @param ifolder The iFolder that is being synchronized.
+@endeventdef
+
+@eventdef ifolder-sync-succeeded
+ @eventproto
+void (*ifolder_sync_succeeded)(const iFolder ifolder);
+ @endeventproto
+ @eventdesc
+  Emitted when an iFolder synchronization completed successfully.
+ @param ifolder The iFolder that is being synchronized.
+@endeventdef
+
+@eventdef ifolder-sync-failed
+ @eventproto
+void (*ifolder_sync_failed)(const iFolder ifolder, const iFolderSyncFailureType failure);
+ @endeventproto
+ @eventdesc
+  Emitted when an iFolder synchronization failed.
+ @param ifolder The iFolder that is being synchronized.
+ @param failure The reason the synchronization failed.
+@endeventdef
+
+@eventdef file-added
+ @eventproto
+void (*file_added)(const iFolder ifolder, const iFolderSyncDirection direction, const char *file_name);
+ @endeventproto
+ @eventdesc
+  Emitted when a file in an iFolder is added.
+ @param ifolder The iFolder that is being synchronized.
+ @param direction The direction of the current synchronization.
+ @param file_name The name of the file that was added.
+@endeventdef
+
+@eventdef file-deleted
+ @eventproto
+void (*file_deleted)(const iFolder ifolder, const iFolderSyncDirection direction, const char *file_name);
+ @endeventproto
+ @eventdesc
+  Emitted when a file in an iFolder is deleted.
+ @param ifolder The iFolder that is being synchronized.
+ @param direction The direction of the current synchronization.
+ @param file_name The name of the file that was deleted.
+@endeventdef
+
+@eventdef file-modified
+ @eventproto
+void (*file_modified)(const iFolder ifolder, const iFolderSyncDirection direction, const char *file_name);
+ @endeventproto
+ @eventdesc
+  Emitted when a file in an iFolder is modified.
+ @param ifolder The iFolder that is being synchronized.
+ @param direction The direction of the current synchronization.
+ @param file_name The name of the file that was modified.
+@endeventdef
+
+@eventdef file-sync-started
+ @eventproto
+void (*file_sync_started)(const iFolder ifolder, const iFolderSyncDirection direction, const char *file_name);
+ @endeventproto
+ @eventdesc
+  Emitted when a file synchronization is started.
+ @param ifolder The iFolder that is being synchronized.
+ @param direction The direction of the current synchronization.
+ @param file_name The name of the file.
+@endeventdef
+
+@eventdef file-sync-paused
+ @eventproto
+void (*file_sync_paused)(const iFolder ifolder, const iFolderSyncDirection direction, const char *file_name);
+ @endeventproto
+ @eventdesc
+  Emitted when a file synchronization is paused.
+ @param ifolder The iFolder that is being synchronized.
+ @param direction The direction of the current synchronization.
+ @param file_name The name of the file.
+@endeventdef
+
+@eventdef file-sync-succeeded
+ @eventproto
+void (*file_sync_succeeded)(const iFolder ifolder, const iFolderSyncDirection direction, const char *file_name);
+ @endeventproto
+ @eventdesc
+  Emitted when a file synchronization succeeded.
+ @param ifolder The iFolder that is being synchronized.
+ @param direction The direction of the current synchronization.
+ @param file_name The name of the file.
+@endeventdef
+
+@eventdef file-sync-failed
+ @eventproto
+void (*file_sync_failed)(const iFolder ifolder, const iFolderSyncDirection direction, const char *file_name, const iFolderSyncFailureType failure);
+ @endeventproto
+ @eventdesc
+  Emitted when a file synchronization failed.
+ @param ifolder The iFolder that is being synchronized.
+ @param direction The direction of the current synchronization.
+ @param file_name The name of the file.
+ @param failure The reason the synchronization failed.
+@endeventdef
+
+*/
+
 
 #ifdef __cplusplus
 }
