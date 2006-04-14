@@ -114,6 +114,21 @@ int ifolder_client_uninitialize(void);
  */
 iFolderClientState ifolder_client_get_state(void);
 
+//! Download and run a client update.
+/**
+ * Downloads the updated client application and runs the installation program.
+ * If this call is successful, you should shut down your process if possible.
+ * 
+ * Note: This call will return before the client is updated.
+ * 
+ * @param domain The domain where the client update is available and where the
+ * update will be downloaded from.
+ * @return IFOLDER_SUCCESS if the call was successful.
+ * @see ifolder_domain_check_for_updated_client()
+ * @see @link client_events_page client-upgrade-available @endlink
+ */
+int ifolder_client_run_client_update(const iFolderDomain domain);
+
 /*@}*/
 
 /**

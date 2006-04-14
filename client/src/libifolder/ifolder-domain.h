@@ -304,6 +304,18 @@ int ifolder_domain_get_authenticated_user(const iFolderDomain domain, iFolderUse
  */
 int ifolder_domain_get_authenticated_user_policy(const iFolderDomain domain, iFolderUserPolicy *user_policy);
 
+//! Checks for a newer version of the iFolder Client on the domain.
+/**
+ * @param domain The domain.
+ * @param new_version Invalid if the call is unsuccessful.  If successful, this
+ * will be the version of the newer client.  If no upgrade is available, this
+ * will be NULL.
+ * @param version_override If not specified or NULL, the version of libifolder
+ * will be used.
+ * @return IFOLDER_SUCCESS if the call was successful.
+ */
+int ifolder_domain_check_for_updated_client(const iFolderDomain domain, char **new_version, const char *version_override = NULL);
+
 //! Free the memory used by an iFolderDomain
 /**
  * This should be called any time you get an iFolderDomain as a returned
