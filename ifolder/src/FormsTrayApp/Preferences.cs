@@ -2252,7 +2252,7 @@ namespace Novell.FormsTrayApp
 		{
 			try
 			{
-				if (simiasWebService.SetDomainHostAddress(domain.ID, server.Text))
+				if (simiasWebService.SetDomainHostAddress(domain.ID, server.Text, userName.Text, password.Text))
 				{
 					foreach (ListViewItem lvi in accounts.Items)
 					{
@@ -2264,11 +2264,18 @@ namespace Novell.FormsTrayApp
 						}
 					}
 				}
+				else
+				{
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("updateHostError"), resourceManager.GetString("accountErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					mmb.ShowDialog();
+					mmb.Dispose();
+				}
 			}
 			catch (Exception ex)
 			{
 				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("updateHostError"), resourceManager.GetString("accountErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
+				mmb.Dispose();
 			}
 		}
 		#endregion
