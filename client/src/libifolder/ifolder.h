@@ -46,6 +46,7 @@ extern "C"
  * 
  * @section existing_ifolders Accessing Existing iFolders
  * 
+ * @li ifolder_domain_get_all_ifolders()
  * @li ifolder_domain_get_connected_ifolders()
  * @li ifolder_domain_get_disconnected_ifolders()
  * @li ifolder_domain_get_ifolder_by_id()
@@ -243,7 +244,7 @@ int ifolder_get_state(const iFolder ifolder, iFolderState *state);
  * @param items_to_sync Invalid if the call is unsuccessful.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_get_items_to_sync(const iFolder ifolder, int *items_to_sync);
+int ifolder_get_items_to_synchronize(const iFolder ifolder, int *items_to_sync);
 
 /*@}*/
 
@@ -266,7 +267,7 @@ int ifolder_get_items_to_sync(const iFolder ifolder, int *items_to_sync);
  * 
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_start_sync(const iFolder ifolder, bool sync_now = false);
+int ifolder_start_synchronization(const iFolder ifolder, bool sync_now = false);
 
 //! Stop synchronizing an iFolder.
 /**
@@ -278,7 +279,7 @@ int ifolder_start_sync(const iFolder ifolder, bool sync_now = false);
  * 
  * @see ifolder_client_stop_synchronization()
  */
-int ifolder_stop_sync(const iFolder ifolder);
+int ifolder_stop_synchronization(const iFolder ifolder);
 
 //! Resume the synchronization of a paused iFolder.
 /**
@@ -293,7 +294,7 @@ int ifolder_stop_sync(const iFolder ifolder);
  * synchronization queue.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_resume_sync(const iFolder ifolder, bool sync_now = false);
+int ifolder_resume_synchronization(const iFolder ifolder, bool sync_now = false);
 
 /*@}*/
 
