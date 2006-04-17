@@ -147,7 +147,7 @@ IFDomain::add(QString hostAddress, QString userName, QString password, bool make
 		free(response);
 
 		if (!domain)
-			return IFOLDER_ERROR_OUT_OF_MEMORY;
+			return IFOLDER_ERR_OUT_OF_MEMORY;
 		
 		*retVal = domain;
 	}

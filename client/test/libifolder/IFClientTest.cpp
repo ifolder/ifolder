@@ -53,7 +53,7 @@ IFClientTest::testInitializeDefaultDataPath()
 	CPPUNIT_ASSERT( err == IFOLDER_SUCCESS );
 
 	err = ifolder_client_initialize();
-	CPPUNIT_ASSERT( err == IFOLDER_ERROR_ALREADY_INITIALIZED );
+	CPPUNIT_ASSERT( err == IFOLDER_ERR_ALREADY_INITIALIZED );
 }
 
 void
@@ -75,6 +75,6 @@ IFClientTest::testUninitialize()
 	CPPUNIT_ASSERT( err == IFOLDER_SUCCESS );
 
 	err = ifolder_client_uninitialize();
-	CPPUNIT_ASSERT( err == IFOLDER_ERROR_NOT_INITIALIZED );
+	CPPUNIT_ASSERT( err == IFOLDER_ERR_NOT_INITIALIZED );
 }
 

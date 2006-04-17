@@ -88,7 +88,7 @@ printf("IFNamedPipe::openingPipe in write only mode\n");
 		{
 			printf("IFNamedPipe::openPipe(): open() returned errno: %d\n", errno);
 			perror(qPrintable(myPathName));
-			return IFOLDER_ERROR_IPC_CREATE;	// @todo Read errno and return a less generic error
+			return IFOLDER_ERR_IPC_CREATE;	// @todo Read errno and return a less generic error
 		}
 		
 		myFileDescriptor = err;
@@ -108,7 +108,7 @@ printf("IFNamedPipe::openingPipe in read only mode\n");
 		{
 			printf("IFNamedPipe::openPipe(): open() returned errno: %d\n", errno);
 			perror(qPrintable(myPathName));
-			return IFOLDER_ERROR_IPC_CREATE;	// @todo Read errno and return a less generic error
+			return IFOLDER_ERR_IPC_CREATE;	// @todo Read errno and return a less generic error
 		}
 		
 		myFileDescriptor = err;
@@ -127,7 +127,7 @@ IFNamedPipe::closePipe()
 	
 	err = close(myFileDescriptor);
 	if (err != 0)
-		return IFOLDER_ERROR_IPC_CLOSE;	// @todo Read errno and return a less generic error
+		return IFOLDER_ERR_IPC_CLOSE;	// @todo Read errno and return a less generic error
 	
 	if (myPermissionType == ReadOnly)
 	{
@@ -149,20 +149,20 @@ IFNamedPipe::writeMessage(const void *message, size_t messageSize)
 	ssize_t bytesWritten;
 	
 	if (myFileDescriptor == -1)
-		return IFOLDER_ERROR_IPC_INVALID;
+		return IFOLDER_ERR_IPC_INVALID;
 	
 	bytesWritten = write(myFileDescriptor, message, messageSize);
 	if (bytesWritten == -1)
 	{
 		printf("write returned -1\n");
 		perror(qPrintable(myPathName));
-		return IFOLDER_ERROR_IPC_WRITE; // @todo Read errno for a non-generic error
+		return IFOLDER_ERR_IPC_WRITE; // @todo Read errno for a non-generic error
 	}
 
 	if (bytesWritten != messageSize)
 	{
 		printf("Entire message not sent!\n");
-		return IFOLDER_ERROR_IPC_WRITE;
+		return IFOLDER_ERR_IPC_WRITE;
 	}
 	
 	return IFOLDER_SUCCESS;
@@ -188,7 +188,7 @@ IFNamedPipe::readMessage(uint *messageTypeReturn, void **messageReturn)
 //			printf("Read 0 bytes...jumping back to earlier in the function\n");
 //			goto readAgain;	// For some reason, the server ends up reading 0 bytes once after each message
 			printf("IFNamedPipe::readMessage(header): 0 bytes read\n");
-			return IFOLDER_ERROR_IPC_READ;
+			return IFOLDER_ERR_IPC_READ;
 		}
 
 		return bytesRead;	// Error occurred
@@ -196,7 +196,7 @@ IFNamedPipe::readMessage(uint *messageTypeReturn, void **messageReturn)
 
 	messageSize = IFNamedPipe::calculateMessageSize(header.messageType);
 	if (messageSize < sizeof(iFolderMessageHeader))
-		return IFOLDER_ERROR_IPC_INVALID_MESSAGE;
+		return IFOLDER_ERR_IPC_INVALID_MESSAGE;
 	
 	extraMessageSize = messageSize - sizeof(iFolderMessageHeader);
 	
@@ -204,7 +204,7 @@ IFNamedPipe::readMessage(uint *messageTypeReturn, void **messageReturn)
 	if (!message)
 	{
 		// @todo Determine whether we need to read off the remaining bytes before returning the error value
-		return IFOLDER_ERROR_OUT_OF_MEMORY;
+		return IFOLDER_ERR_OUT_OF_MEMORY;
 	}
 	
 	// Copy the iFolderMessageHeader into the message buffer
@@ -220,7 +220,7 @@ IFNamedPipe::readMessage(uint *messageTypeReturn, void **messageReturn)
 			if (bytesRead == 0)
 			{
 				printf("IFNamedPipe::readMessage(extra message): 0 bytes read\n");
-				return IFOLDER_ERROR_IPC_READ;
+				return IFOLDER_ERR_IPC_READ;
 			}
 
 			return bytesRead;	// Error occurred
@@ -239,13 +239,13 @@ IFNamedPipe::readPipe(void *buffer, size_t bytesToRead)
 	ssize_t bytesRead;
 	
 	if (myFileDescriptor == -1)
-		return IFOLDER_ERROR_IPC_INVALID;
+		return IFOLDER_ERR_IPC_INVALID;
 	
 	bytesRead = read(myFileDescriptor, buffer, bytesToRead);
 	if (bytesRead == -1)
 	{
 		perror(qPrintable(myPathName));
-		return IFOLDER_ERROR_IPC_READ; // @todo Read errno for a non-generic error
+		return IFOLDER_ERR_IPC_READ; // @todo Read errno for a non-generic error
 	}
 	
 	return (int) bytesRead;
@@ -369,7 +369,7 @@ printf("IFNamedPipe::create(): %s\n", qPrintable(myPathName));
 		}
 		*/
 		
-//		return IFOLDER_ERROR_IPC_CREATE;
+//		return IFOLDER_ERR_IPC_CREATE;
 	}
 	
 	err = mkfifo(qPrintable(myPathName), 0700);
@@ -379,7 +379,7 @@ printf("IFNamedPipe::create(): %s\n", qPrintable(myPathName));
 		perror(qPrintable(myPathName));
 		
 		// @todo Once again, change this error to not be a generic one
-		return IFOLDER_ERROR_IPC_CREATE;
+		return IFOLDER_ERR_IPC_CREATE;
 	}
 	
 	return IFOLDER_SUCCESS;

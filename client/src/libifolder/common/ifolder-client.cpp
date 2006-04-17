@@ -38,7 +38,7 @@ ifolder_client_initialize(void)
 	// It is null, so new one up.
 	ifolderClient = new IFClient();
 	if (ifolderClient == NULL)
-		return IFOLDER_ERROR_OUT_OF_MEMORY;
+		return IFOLDER_ERR_OUT_OF_MEMORY;
 
 	return ifolderClient->initialize();
 }
@@ -60,6 +60,6 @@ ifolder_client_uninitialize(void)
 		return err;
 	}
 	
-	return IFOLDER_ERROR_NOT_INITIALIZED;
+	return IFOLDER_ERR_NOT_INITIALIZED;
 }
 

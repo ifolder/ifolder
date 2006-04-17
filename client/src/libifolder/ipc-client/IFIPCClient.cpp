@@ -60,7 +60,7 @@ IFIPCClient::init()
 	int err;
 	clientNamedPipe = IFNamedPipe::createNamedPipeByPid(IFNamedPipe::ReadOnly);
 	if (!clientNamedPipe)
-		return IFOLDER_ERROR_OUT_OF_MEMORY;
+		return IFOLDER_ERR_OUT_OF_MEMORY;
 	
 	err = clientNamedPipe->create();
 	if (err != IFOLDER_SUCCESS)
@@ -84,7 +84,7 @@ IFIPCClient::registerClient()
 	iFolderMessageRegisterClientResponse *response;
 	
 	if (!bInitialized || !isRunning())
-		return IFOLDER_ERROR_IPC_INVALID_STATE;
+		return IFOLDER_ERR_IPC_INVALID_STATE;
 
 	printf("IFIPCClient::registerClient(%s)\n", qPrintable(clientNamedPipe->path()));
 	
@@ -190,7 +190,7 @@ IFIPCClient::ipcCall(void *request, void **response)
 	// Open the server's named pipe to write the request
 	serverNamedPipe = IFNamedPipe::createServerNamedPipeForWriting();
 	if (!serverNamedPipe)
-		return IFOLDER_ERROR_OUT_OF_MEMORY;
+		return IFOLDER_ERR_OUT_OF_MEMORY;
 
 printf("IFIPCClient::ipcCall(): created server pipe and now will open it\n");
 	
@@ -209,7 +209,7 @@ printf("IFIPCClient::ipcCall(): opened server's named pipe for writing\n");
 	if (!tempNamedPipe)
 	{
 		delete serverNamedPipe;
-		return IFOLDER_ERROR_OUT_OF_MEMORY;
+		return IFOLDER_ERR_OUT_OF_MEMORY;
 	}
 
 	err = tempNamedPipe->create();
@@ -235,7 +235,7 @@ printf("IFIPCClient::ipcCall(): opened server's named pipe for writing\n");
 		default:
 			delete serverNamedPipe;
 			delete tempNamedPipe;
-			return IFOLDER_ERROR_IPC_UNKNOWN_MESSAGE;
+			return IFOLDER_ERR_IPC_UNKNOWN_MESSAGE;
 			break;
 	}
 	
@@ -297,7 +297,7 @@ printf("tempNamedPipe->readMessage() called\n");
 	if (messageType != IFOLDER_MSG_REGISTER_CLIENT_RESPONSE)
 	{
 		printf("IFIPCClient::ipcCallRegisterClient(): received bad message type: %d\n", messageType);
-		return IFOLDER_ERROR_IPC_INVALID_MESSAGE;
+		return IFOLDER_ERR_IPC_INVALID_MESSAGE;
 	}
 	
 	*response = (iFolderMessageRegisterClientResponse *)tempResponse;
@@ -356,7 +356,7 @@ IFIPCClient::ipcCallUnregisterClient(IFNamedPipe *serverNamedPipe, IFNamedPipe *
 	if (messageType != IFOLDER_MSG_UNREGISTER_CLIENT_RESPONSE)
 	{
 		printf("IFIPCClient::ipcCallUnregisterClient(): received bad message type: %d\n", messageType);
-		return IFOLDER_ERROR_IPC_INVALID_MESSAGE;
+		return IFOLDER_ERR_IPC_INVALID_MESSAGE;
 	}
 	
 	*response = (iFolderMessageUnregisterClientResponse *)tempResponse;
@@ -398,7 +398,7 @@ IFIPCClient::ipcCallDomainAdd(IFNamedPipe *serverNamedPipe, IFNamedPipe *tempNam
 	if (messageType != IFOLDER_MSG_DOMAIN_ADD_RESPONSE)
 	{
 		printf("IFIPCClient::ipcCallDomainAdd(): received bad message type: %d\n", messageType);
-		return IFOLDER_ERROR_IPC_INVALID_MESSAGE;
+		return IFOLDER_ERR_IPC_INVALID_MESSAGE;
 	}
 	
 	*response = (iFolderMessageDomainAddResponse *)tempResponse;

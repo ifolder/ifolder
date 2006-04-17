@@ -97,7 +97,7 @@ class IFNamedPipe
 		 * @param messageSize the size of the buffer to message
 		 * @return IFOLDER_SUCCESS if a message was successfully written or
 		 * an error from ifolder-errors.h. If the named pipe hasn't been
-		 * initialized (you haven't called open()), IFOLDER_ERROR_IPC_INVALID
+		 * initialized (you haven't called open()), IFOLDER_ERR_IPC_INVALID
 		 * will be returned.
 		 */
 		int writeMessage(const void *message, size_t messageSize);
@@ -135,7 +135,7 @@ class IFNamedPipe
 		 * buffer is large enough to store this many bytes.
 		 * @return the number of bytes read or an ERROR message (negative
 		 * number).  If the named pipe hasn't been initialized (you haven't
-		 * called open()), IFOLDER_ERROR_IPC_INVALID will be returned.
+		 * called open()), IFOLDER_ERR_IPC_INVALID will be returned.
 		 */
 		int readPipe(void *buffer, size_t bytesToRead);
 

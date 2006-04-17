@@ -135,7 +135,7 @@ IFIPCServer::ipcRespond(QString repsonseNamedPipePath, void *response)
 	// Open the client's named pipe to write the response
 	responseNamedPipe = new IFNamedPipe(repsonseNamedPipePath, IFNamedPipe::WriteOnly);
 	if (!responseNamedPipe)
-		return IFOLDER_ERROR_OUT_OF_MEMORY;
+		return IFOLDER_ERR_OUT_OF_MEMORY;
 
 printf("IFIPCServer::ipcRespond(): created a pipe to write the response\n");
 	
@@ -162,7 +162,7 @@ printf("IFIPCServer::ipcRespond(): opened client's named pipe for writing\n");
 			break;
 		default:
 			delete responseNamedPipe;
-			return IFOLDER_ERROR_IPC_UNKNOWN_MESSAGE;
+			return IFOLDER_ERR_IPC_UNKNOWN_MESSAGE;
 			break;
 	}
 	

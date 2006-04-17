@@ -60,13 +60,13 @@ IFClient::initialize()
 	IFIPCServer *ipcServer;
 
 	if (bInitialized)
-		return IFOLDER_ERROR_ALREADY_INITIALIZED;
+		return IFOLDER_ERR_ALREADY_INITIALIZED;
 
 	// @todo Initialize the client (i.e., start up the IPC server, etc.)
 	ipcServer = new IFIPCServer();
 //	ipcServer = new IFIPCServer(NULL);
 	if (!ipcServer)
-		return IFOLDER_ERROR_OUT_OF_MEMORY;
+		return IFOLDER_ERR_OUT_OF_MEMORY;
 
 	ipcClass = ipcServer; // Hold onto this pointer
 
@@ -84,7 +84,7 @@ IFClient::uninitialize()
 	IFIPCServer *ipcServer;
 
 	if (!bInitialized)
-		return IFOLDER_ERROR_NOT_INITIALIZED;
+		return IFOLDER_ERR_NOT_INITIALIZED;
 
 	// @todo Uninitialize the client (i.e., stop the IPC server, etc.)
 	ipcServer = (IFIPCServer *)ipcClass;
