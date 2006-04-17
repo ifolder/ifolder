@@ -30,17 +30,17 @@
 static IFClient *ifolderClient = NULL;
 
 int
-ifolder_client_initialize(void)
+ifolder_client_initialize(const char *data_path)
 {
 	if (ifolderClient != NULL)
-		return ifolderClient->initialize();
+		return ifolderClient->initialize(data_path);
 	
 	// It is null, so new one up.
 	ifolderClient = new IFClient();
 	if (ifolderClient == NULL)
 		return IFOLDER_ERR_OUT_OF_MEMORY;
 
-	return ifolderClient->initialize();
+	return ifolderClient->initialize(data_path);
 }
 
 int
@@ -63,3 +63,51 @@ ifolder_client_uninitialize(void)
 	return IFOLDER_ERR_NOT_INITIALIZED;
 }
 
+iFolderClientState
+ifolder_client_get_state(void)
+{
+	if (ifolderClient == NULL)
+		return IFOLDER_ERR_NOT_INITIALIZED;
+	
+	return ifolderClient->getState();
+}
+
+int
+ifolder_client_run_client_update(const iFolderDomain domain)
+{
+	IFDomain *ifDomain;
+
+	if (ifolderClient == NULL)
+		return IFOLDER_ERR_NOT_INITIALIZED;
+		
+	ifDomain = (IFDomain *)domain;
+	
+	return ifolderClient->runClientUpdate(ifDomain);
+}
+
+int
+ifolder_client_start_synchronization(void)
+{
+	if (ifolderClient == NULL)
+		return IFOLDER_ERR_NOT_INITIALIZED;
+	
+	return ifolderClient->startSynchronization();
+}
+
+int
+ifolder_client_stop_synchronization(void)
+{
+	if (ifolderClient == NULL)
+		return IFOLDER_ERR_NOT_INITIALIZED;
+
+	return ifolderClient->stopSynchronization();
+}
+
+int
+ifolder_client_resume_synchronization(void)
+{
+	if (ifolderClient == NULL)
+		return IFOLDER_ERR_NOT_INITIALIZED;
+
+	return ifolderClient->resumeSynchronization();
+}
