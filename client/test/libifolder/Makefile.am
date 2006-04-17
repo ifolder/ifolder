@@ -13,8 +13,8 @@ bin_PROGRAMS = test-libifolder
 
 test_libifolder_SOURCES = \
 	Main.cpp					\
-	IFiFolderClientTest.h		\
-	IFiFolderClientTest.cpp	\
+	IFClientTest.h		\
+	IFClientTest.cpp	\
 	IFDomainTest.h			\
 	IFDomainTest.cpp
 

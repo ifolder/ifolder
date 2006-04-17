@@ -20,49 +20,37 @@
  *  Author(s): Boyd Timothy <btimothy@novell.com>
  *
  ***********************************************************************/
+#ifndef _IFOLDER_CLIENT_TEST_H_
+#define _IFOLDER_CLIENT_TEST_H_
 
-#include "IFiFolderClientTest.h"
-#include "ifolder-client.h"
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/TestPath.h>
+#include <cppunit/TestCase.h>
 
-IFiFolderClientTest::IFiFolderClientTest()
-{
-}
+class IFClientTest : public CPPUNIT_NS::TestFixture {
 
-IFiFolderClientTest::~IFiFolderClientTest()
-{
-}
+CPPUNIT_TEST_SUITE( IFClientTest );
+CPPUNIT_TEST( testInitializeDefaultDataPath );
+CPPUNIT_TEST( testInitializeCustomDataPath );
+CPPUNIT_TEST( testInitializeInvalidDataPath );
+CPPUNIT_TEST( testUninitialize );
+CPPUNIT_TEST_SUITE_END();
 
-void
-IFiFolderClientTest::setUp()
-{
-}
+public:
+	// Constructor
+	IFClientTest();
 
-void
-IFiFolderClientTest::tearDown()
-{
-}
+	// Destructor
+	virtual ~IFClientTest();
 
-void
-IFiFolderClientTest::testInitialize()
-{
-	int err;
+	void setUp();
+	void tearDown();
 
-	err = ifolder_client_initialize();
-	CPPUNIT_ASSERT( err == IFOLDER_SUCCESS );
+	void testInitializeDefaultDataPath();
+	void testInitializeCustomDataPath();
+	void testInitializeInvalidDataPath();
+	void testUninitialize();
+};
 
-	err = ifolder_client_initialize();
-	CPPUNIT_ASSERT( err == IFOLDER_ERROR_ALREADY_INITIALIZED );
-}
-
-void
-IFiFolderClientTest::testUninitialize()
-{
-	int err;
-
-	err = ifolder_client_uninitialize();
-	CPPUNIT_ASSERT( err == IFOLDER_SUCCESS );
-
-	err = ifolder_client_uninitialize();
-	CPPUNIT_ASSERT( err == IFOLDER_ERROR_NOT_INITIALIZED );
-}
+#endif // _IFOLDER_CLIENT_TEST_H_
 

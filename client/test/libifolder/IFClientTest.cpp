@@ -20,33 +20,61 @@
  *  Author(s): Boyd Timothy <btimothy@novell.com>
  *
  ***********************************************************************/
-#ifndef _IFOLDER_CLIENT_TEST_H_
-#define _IFOLDER_CLIENT_TEST_H_
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/TestPath.h>
-#include <cppunit/TestCase.h>
+#include "IFClientTest.h"
+#include "ifolder-client.h"
 
-class IFiFolderClientTest : public CPPUNIT_NS::TestFixture {
+IFClientTest::IFClientTest()
+{
+	printf("IFClientTest::IFClientTest()\n");
+}
 
-CPPUNIT_TEST_SUITE( IFiFolderClientTest );
-CPPUNIT_TEST( testInitialize );
-CPPUNIT_TEST( testUninitialize );
-CPPUNIT_TEST_SUITE_END();
+IFClientTest::~IFClientTest()
+{
+	printf("IFClientTest::~IFClientTest()\n");
+}
 
-public:
-	// Constructor
-	IFiFolderClientTest();
+void
+IFClientTest::setUp()
+{
+}
 
-	// Destructor
-	virtual ~IFiFolderClientTest();
+void
+IFClientTest::tearDown()
+{
+}
 
-	void setUp();
-	void tearDown();
+void
+IFClientTest::testInitializeDefaultDataPath()
+{
+	int err;
 
-	void testInitialize();
-	void testUninitialize();
-};
+	err = ifolder_client_initialize();
+	CPPUNIT_ASSERT( err == IFOLDER_SUCCESS );
 
-#endif // _IFOLDER_CLIENT_TEST_H_
+	err = ifolder_client_initialize();
+	CPPUNIT_ASSERT( err == IFOLDER_ERROR_ALREADY_INITIALIZED );
+}
+
+void
+IFClientTest::testInitializeCustomDataPath()
+{
+}
+
+void
+IFClientTest::testInitializeInvalidDataPath()
+{
+}
+
+void
+IFClientTest::testUninitialize()
+{
+	int err;
+
+	err = ifolder_client_uninitialize();
+	CPPUNIT_ASSERT( err == IFOLDER_SUCCESS );
+
+	err = ifolder_client_uninitialize();
+	CPPUNIT_ASSERT( err == IFOLDER_ERROR_NOT_INITIALIZED );
+}
 
