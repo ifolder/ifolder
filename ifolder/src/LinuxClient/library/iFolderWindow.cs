@@ -498,7 +498,7 @@ namespace Novell.iFolder
 		private Widget CreateActions()
 		{
 			VBox actionsVBox = new VBox(false, 0);
-			actionsVBox.WidthRequest = 250;
+			actionsVBox.WidthRequest = 175;
 
 			///
 			/// Spacer
@@ -512,7 +512,7 @@ namespace Novell.iFolder
 			///
 			l = new Label(
 				string.Format(
-					"<span size=\"x-large\">{0}</span>",
+					"<span size=\"large\">{0}</span>",
 					Util.GS("Filter")));
 			actionsVBox.PackStart(l, false, false, 0);
 			l.UseMarkup = true;
@@ -552,7 +552,7 @@ namespace Novell.iFolder
 			///
 			l = new Label(
 				string.Format(
-					"<span size=\"x-large\">{0}</span>",
+					"<span size=\"large\">{0}</span>",
 					Util.GS("General Actions")));
 			actionsVBox.PackStart(l, false, false, 0);
 			l.UseMarkup = true;
@@ -574,7 +574,7 @@ namespace Novell.iFolder
 			AddiFolderButton.Relief = ReliefStyle.None;
 
 			Label buttonText = new Label(
-				string.Format("<span size=\"large\">{0}</span>",
+				string.Format("<span>{0}</span>",
 							  Util.GS("Upload a folder...")));
 //							  Util.GS("Upload a folder")));
 			hbox.PackStart(buttonText, false, false, 4);
@@ -594,7 +594,7 @@ namespace Novell.iFolder
 			ShowHideAllFoldersButton.Relief = ReliefStyle.None;
 
 			ShowHideAllFoldersButtonText = new Label(
-				string.Format("<span size=\"large\">{0}</span>",
+				string.Format("<span>{0}</span>",
 							  Util.GS("View available iFolders")));
 			hbox.PackStart(ShowHideAllFoldersButtonText, false, false, 4);
 			ShowHideAllFoldersButtonText.UseMarkup = true;
@@ -619,7 +619,7 @@ namespace Novell.iFolder
 			actionsVBox.PackStart(SynchronizedFolderTasks, false, false, 0);
 			l = new Label(
 				string.Format(
-					"<span size=\"x-large\">{0}</span>",
+					"<span size=\"large\">{0}</span>",
 					Util.GS("iFolder Actions")));
 			SynchronizedFolderTasks.PackStart(l, false, false, 0);
 			l.UseMarkup = true;
@@ -641,7 +641,7 @@ namespace Novell.iFolder
 			OpenSynchronizedFolderButton.Relief = ReliefStyle.None;
 
 			buttonText = new Label(
-				string.Format("<span size=\"large\">{0}</span>",
+				string.Format("<span>{0}</span>",
 							  Util.GS("Open...")));
 			hbox.PackStart(buttonText, false, false, 4);
 			buttonText.UseMarkup = true;
@@ -662,7 +662,7 @@ namespace Novell.iFolder
 			ResolveConflictsButton.Relief = ReliefStyle.None;
 
 			buttonText = new Label(
-				string.Format("<span size=\"large\">{0}</span>",
+				string.Format("<span>{0}</span>",
 							  Util.GS("Resolve conflicts...")));
 			hbox.PackStart(buttonText, false, false, 4);
 			buttonText.UseMarkup = true;
@@ -681,7 +681,7 @@ namespace Novell.iFolder
 			SynchronizeNowButton.Relief = ReliefStyle.None;
 
 			buttonText = new Label(
-				string.Format("<span size=\"large\">{0}</span>",
+				string.Format("<span>{0}</span>",
 							  Util.GS("Synchronize now")));
 			hbox.PackStart(buttonText, true, true, 4);
 			buttonText.UseMarkup = true;
@@ -701,7 +701,7 @@ namespace Novell.iFolder
 			ShareSynchronizedFolderButton.Relief = ReliefStyle.None;
 
 			buttonText = new Label(
-				string.Format("<span size=\"large\">{0}</span>",
+				string.Format("<span>{0}</span>",
 							  Util.GS("Share with...")));
 			hbox.PackStart(buttonText, true, true, 4);
 			buttonText.UseMarkup = true;
@@ -721,7 +721,7 @@ namespace Novell.iFolder
 			RemoveiFolderButton.Relief = ReliefStyle.None;
 
 			buttonText = new Label(
-				string.Format("<span size=\"large\">{0}</span>",
+				string.Format("<span>{0}</span>",
 							  Util.GS("Revert to a normal folder")));
 			hbox.PackStart(buttonText, true, true, 4);
 			buttonText.UseMarkup = true;
@@ -740,7 +740,7 @@ namespace Novell.iFolder
 			ViewFolderPropertiesButton.Relief = ReliefStyle.None;
 
 			buttonText = new Label(
-				string.Format("<span size=\"large\">{0}</span>",
+				string.Format("<span>{0}</span>",
 							  Util.GS("Properties...")));
 			hbox.PackStart(buttonText, true, true, 4);
 			buttonText.UseMarkup = true;
@@ -760,7 +760,7 @@ namespace Novell.iFolder
 			DownloadAvailableiFolderButton.Relief = ReliefStyle.None;
 
 			buttonText = new Label(
-				string.Format("<span size=\"large\">{0}</span>",
+				string.Format("<span>{0}</span>",
 							  Util.GS("Download...")));
 			hbox.PackStart(buttonText, true, true, 4);
 			buttonText.UseMarkup = true;
@@ -780,7 +780,7 @@ namespace Novell.iFolder
 			DeleteFromServerButton.Relief = ReliefStyle.None;
 
 			buttonText = new Label(
-				string.Format("<span size=\"large\">{0}</span>",
+				string.Format("<span>{0}</span>",
 							  Util.GS("Delete from server")));
 			hbox.PackStart(buttonText, true, true, 4);
 			buttonText.UseMarkup = true;
@@ -800,7 +800,7 @@ namespace Novell.iFolder
 			RemoveMembershipButton.Relief = ReliefStyle.None;
 
 			buttonText = new Label(
-				string.Format("<span size=\"large\">{0}</span>",
+				string.Format("<span>{0}</span>",
 							  Util.GS("Remove my membership")));
 			hbox.PackStart(buttonText, true, true, 4);
 			buttonText.UseMarkup = true;
@@ -845,7 +845,7 @@ namespace Novell.iFolder
 			
 			// Row 1: Header
 			Label l = new Label(
-				string.Format("<span size=\"large\">{0}</span>",
+				string.Format("<span>{0}</span>",
 							   Util.GS("There are no iFolders on this computer.  To set up an iFolder, do one of the following:")));
 			table.Attach(l,
 						 0, 2,
@@ -1711,7 +1711,7 @@ namespace Novell.iFolder
 			}
 
 			ShowHideAllFoldersButtonText.Markup =
-				string.Format("<span size=\"large\">{0}</span>",
+				string.Format("<span>{0}</span>",
 							  Util.GS("Hide available iFolders"));
 
 			bAvailableFoldersShowing = true;
@@ -1735,7 +1735,7 @@ namespace Novell.iFolder
 			}
 
 			ShowHideAllFoldersButtonText.Markup =
-				string.Format("<span size=\"large\">{0}</span>",
+				string.Format("<span>{0}</span>",
 							  Util.GS("View available iFolders"));
 
 			bAvailableFoldersShowing = false;
