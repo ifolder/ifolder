@@ -384,12 +384,6 @@ int ifolder_set_owner(const iFolder ifolder, const iFolderUser member);
  */
 int ifolder_get_change_entries(const iFolder ifolder, const int index, const int count, iFolderEnumeration *change_entry_enum);
 
-/*@}*/
-/**
- * @name Other Functions
- */
-/*@{*/
-
 //! Publish an iFolder
 /**
  * @param ifolder The iFolder.
