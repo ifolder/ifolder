@@ -64,7 +64,7 @@ time_t ifolder_change_entry_get_change_time(const iFolderChangeEntry change_entr
  * @param change_entry The iFolderChangeEntry.
  * @return The change type of an iFolderChangeEntry.
  */
-iFolderChangeType ifolder_change_entry_get_change_type(const iFolderChangeEntry change_entry);
+iFolderChangeEntryType ifolder_change_entry_get_change_type(const iFolderChangeEntry change_entry);
 
 //! Returns the ID of an iFolderChangeEntry.
 /**
