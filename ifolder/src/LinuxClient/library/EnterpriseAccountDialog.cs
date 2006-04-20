@@ -628,6 +628,7 @@ namespace Novell.iFolder
 						Util.GS("Your password is required to change the address of the server."));
 				dg.ExtraWidget = tempPasswordEntry;
 				tempPasswordEntry.GrabFocus();
+				tempPasswordEntry.ActivatesDefault = true;
 				dg.TransientFor = this;
 				int rc = dg.Run();
 				password = tempPasswordEntry.Text;

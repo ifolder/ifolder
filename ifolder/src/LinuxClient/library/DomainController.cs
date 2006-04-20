@@ -379,8 +379,6 @@ namespace Novell.iFolder.Controller
 							if (simws.SetDomainHostAddress(domainID, host, user, password))
 							{
 								updatedDomain = simws.GetDomainInformation(domainID);
-								if (String.Compare(dom.Host, updatedDomain.Host, true) == 0)
-									return null;		// The simws.SetDomainHostAddress() actually failed
 	
 								updatedDomain.StatusCode = StatusCodes.Success;
 
