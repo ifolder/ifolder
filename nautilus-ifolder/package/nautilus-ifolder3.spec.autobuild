@@ -21,13 +21,13 @@ URL:          http://forge.novell.com/modules/xfmod/project/?ifolder
 License:      GPL
 Group:        System/GUI/Other
 Autoreqprov:  on
+Version:      3.4.@@BUILDNUM@@.1
 Requires:     nautilus >= 2.10.0
 Requires:     simias >= 1.4
-Requires:     ifolder3 == %{version}
+Requires:     ifolder3 = %{version}
 Obsoletes:    %{name} < %{version}
 Provides:     nautilus-ifolder
 Obsoletes:    nautilus-ifolder
-Version:      3.4.@@BUILDNUM@@.1
 Release:      1
 Summary:      Nautilus plugin to add iFolder support
 Source:       nautilus-ifolder3-3.4.%{buildnum}.1.tar.gz
