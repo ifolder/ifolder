@@ -206,7 +206,7 @@ namespace Novell.iFolder
 			}
 			else
 			{
-				Util.ShowHelp("front.html", this);
+				Util.ShowHelp(Util.HelpMainPage, this);
 			}
 		}
 

@@ -42,6 +42,7 @@ namespace Novell.iFolder
 		internal static int SectionSpacing = 20;
 		internal static int SectionTitleSpacing = 5;
 		static public uint DefaultBorderWidth = 10;
+		static public string HelpMainPage = "bookinfo.html";
 		
 		// The purpose of these variable is to allow us to keep track of
 		// last place the user created/setup an iFolder so that we can open

@@ -1573,7 +1573,7 @@ namespace Novell.iFolder
 						}
 						else
 						{
-							Util.ShowHelp("front.html", this);
+							Util.ShowHelp(Util.HelpMainPage, this);
 						}
 					}
 					break;
@@ -1616,7 +1616,7 @@ namespace Novell.iFolder
 
 		private void OnHelpMenuItem(object o, EventArgs args)
 		{
-			Util.ShowHelp("front.html", this);
+			Util.ShowHelp(Util.HelpMainPage, this);
 		}
 
 		private void OnAbout(object o, EventArgs args)

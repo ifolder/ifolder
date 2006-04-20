@@ -193,7 +193,7 @@ namespace Novell.iFolder.Nautilus
 		
 		private static int showHelp (string[] args)
 		{
-			Util.ShowHelp("front.html", null);
+			Util.ShowHelp(Util.HelpMainPage, null);
 			return 0;
 		}
 	}

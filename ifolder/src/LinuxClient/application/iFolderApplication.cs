@@ -1277,7 +1277,7 @@ namespace Novell.iFolder
 
 		private void show_help(object o, EventArgs args)
 		{
-			Util.ShowHelp("front.html", null);
+			Util.ShowHelp(Util.HelpMainPage, null);
 		}
 
 
