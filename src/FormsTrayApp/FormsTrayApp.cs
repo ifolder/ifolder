@@ -90,6 +90,7 @@ namespace Novell.FormsTrayApp
 		private System.ComponentModel.IContainer components;
 		static private System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(FormsTrayApp));
 		private bool shutdown = false;
+		private bool winShutDown = false;
 		private bool simiasRunning = false;
 		private Icon trayIcon;
 		private Icon startupIcon;
@@ -1405,8 +1406,20 @@ namespace Novell.FormsTrayApp
 					eventClient.Deregister();
 				}
 
-				// Shut down the web server.
-				simiasManager.Stop();
+				if ( winShutDown )
+				{
+					// If Windows is shutting down, we need to call through the web
+					// service to shutdown simias.
+					simiasWebService.StopSimiasProcess();
+
+					// Wait 1 second to give Simias a chance to shutdown.
+					Thread.Sleep( 1000 );
+				}
+				else
+				{
+					// Shut down the web server.
+					simiasManager.Stop();
+				}
 
 				if ((worker != null) && worker.IsAlive)
 				{
@@ -1544,5 +1557,24 @@ namespace Novell.FormsTrayApp
 			catch {}
 		}
 		#endregion
+
+		private const int WM_QUERYENDSESSION = 0x0011;
+
+		/// <summary>
+		/// Override of WndProc method.
+		/// </summary>
+		/// <param name="m">The message to process.</param>
+		protected override void WndProc(ref Message m)
+		{
+			// Keep track if we receive a shutdown message.
+			switch (m.Msg)
+			{
+				case WM_QUERYENDSESSION:
+					this.winShutDown = true;
+					break;
+			}
+
+			base.WndProc (ref m);
+		}
 	}
 }
