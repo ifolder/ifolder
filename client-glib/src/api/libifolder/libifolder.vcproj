@@ -45,7 +45,8 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copying $(TargetName).dll"
-				CommandLine="copy &quot;$(TargetPath)&quot; ..\..\..\test\api-test\$(OutDir)\&quot;$(TargetName)&quot;.dll
+				CommandLine="IF NOT EXIST ..\..\..\test\api-test\$(OutDir) mkdir ..\..\..\test\api-test\$(OutDir)
+copy &quot;$(TargetPath)&quot; ..\..\..\test\api-test\$(OutDir)\&quot;$(TargetName)&quot;.dll
 "/>
 			<Tool
 				Name="VCPreBuildEventTool"/>
