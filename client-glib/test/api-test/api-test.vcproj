@@ -20,7 +20,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\..\src\api&quot;;&quot;$(ProjectDir)..\..\external\win32\cppunit\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\..\src\api&quot;;&quot;$(ProjectDir)..\..\external\win32\cppunit\include&quot;;&quot;$(ProjectDir)..\..\external\win32\glib\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -34,10 +34,10 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="FALSE"
-				AdditionalDependencies="cppunit.lib"
+				AdditionalDependencies="cppunit.lib glib-2.0.lib"
 				OutputFile="$(OutDir)/api-test.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(ProjectDir)..\..\external\win32\cppunit\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(ProjectDir)..\..\external\win32\cppunit\lib&quot;;&quot;$(ProjectDir)..\..\external\win32\glib\lib&quot;"
 				IgnoreAllDefaultLibraries="FALSE"
 				IgnoreDefaultLibraryNames="MSVCRT"
 				GenerateDebugInformation="TRUE"
@@ -47,7 +47,13 @@
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCPostBuildEventTool"
+				Description="Copying external DLL files for running"
+				CommandLine="copy $(ProjectDir)..\..\external\win32\glib\lib\libglib-2.0-0.dll $(ProjectDir)$(OutDir)
+copy $(ProjectDir)..\..\external\win32\glib\lib\libgmodule-2.0-0.dll $(ProjectDir)$(OutDir)
+copy $(ProjectDir)..\..\external\win32\glib\lib\libgobject-2.0-0.dll $(ProjectDir)$(OutDir)
+copy $(ProjectDir)..\..\external\win32\glib\lib\libgthread-2.0-0.dll $(ProjectDir)$(OutDir)
+"/>
 			<Tool
 				Name="VCPreBuildEventTool"/>
 			<Tool
