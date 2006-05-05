@@ -1,0 +1,37 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libifolder-trayapp", "src\api\libifolder-trayapp\libifolder-trayapp.vcproj", "{D3CF21D4-7F60-4C1F-8612-E8680EAE06B1}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libifolder", "src\api\libifolder\libifolder.vcproj", "{0B98B39E-E442-4210-B990-423B3007FE80}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "api-test", "test\api-test\api-test.vcproj", "{B427FC73-91FA-4AB1-9056-39B9928F82D8}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{D3CF21D4-7F60-4C1F-8612-E8680EAE06B1}.Debug.ActiveCfg = Debug|Win32
+		{D3CF21D4-7F60-4C1F-8612-E8680EAE06B1}.Debug.Build.0 = Debug|Win32
+		{D3CF21D4-7F60-4C1F-8612-E8680EAE06B1}.Release.ActiveCfg = Release|Win32
+		{D3CF21D4-7F60-4C1F-8612-E8680EAE06B1}.Release.Build.0 = Release|Win32
+		{0B98B39E-E442-4210-B990-423B3007FE80}.Debug.ActiveCfg = Debug|Win32
+		{0B98B39E-E442-4210-B990-423B3007FE80}.Debug.Build.0 = Debug|Win32
+		{0B98B39E-E442-4210-B990-423B3007FE80}.Release.ActiveCfg = Release|Win32
+		{0B98B39E-E442-4210-B990-423B3007FE80}.Release.Build.0 = Release|Win32
+		{B427FC73-91FA-4AB1-9056-39B9928F82D8}.Debug.ActiveCfg = Debug|Win32
+		{B427FC73-91FA-4AB1-9056-39B9928F82D8}.Debug.Build.0 = Debug|Win32
+		{B427FC73-91FA-4AB1-9056-39B9928F82D8}.Release.ActiveCfg = Release|Win32
+		{B427FC73-91FA-4AB1-9056-39B9928F82D8}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
