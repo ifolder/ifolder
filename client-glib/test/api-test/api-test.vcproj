@@ -20,7 +20,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\..\src\api&quot;;&quot;$(ProjectDir)..\..\..\client-glib-external-src\cppunit-1.10.2\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\..\src\api&quot;;&quot;$(ProjectDir)..\..\external\win32\cppunit\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -37,7 +37,7 @@
 				AdditionalDependencies="cppunit.lib"
 				OutputFile="$(OutDir)/api-test.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(ProjectDir)..\..\external\win32\cppunit&quot;"
+				AdditionalLibraryDirectories="&quot;$(ProjectDir)..\..\external\win32\cppunit\lib&quot;"
 				IgnoreAllDefaultLibraries="FALSE"
 				IgnoreDefaultLibraryNames="MSVCRT"
 				GenerateDebugInformation="TRUE"
