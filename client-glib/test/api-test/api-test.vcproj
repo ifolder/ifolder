@@ -137,6 +137,9 @@ copy $(ProjectDir)..\..\external\win32\glib\lib\libgthread-2.0-0.dll $(ProjectDi
 			<File
 				RelativePath=".\Main.cpp">
 			</File>
+			<File
+				RelativePath=".\TestConfig.cpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -148,12 +151,18 @@ copy $(ProjectDir)..\..\external\win32\glib\lib\libgthread-2.0-0.dll $(ProjectDi
 			<File
 				RelativePath=".\IFDomainTest.h">
 			</File>
+			<File
+				RelativePath=".\TestConfig.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
 		</Filter>
+		<File
+			RelativePath=".\TestConfig.ini">
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

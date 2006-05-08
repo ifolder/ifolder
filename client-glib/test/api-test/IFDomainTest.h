@@ -27,14 +27,46 @@
 #include <cppunit/TestPath.h>
 #include <cppunit/TestCase.h>
 
+#include "TestConfig.h"
 #include "ifolder-domain.h"
 
 class IFDomainTest : public CPPUNIT_NS::TestFixture {
 
 CPPUNIT_TEST_SUITE( IFDomainTest );
-CPPUNIT_TEST( testAdd );
-CPPUNIT_TEST( testRemove );
+CPPUNIT_TEST( testAddRemove );
+CPPUNIT_TEST( testRemoveAndDeleteiFolders );
 CPPUNIT_TEST( testUserData );
+
+CPPUNIT_TEST( testLogInAndOut );
+CPPUNIT_TEST( testActivateAndInactivate );
+
+CPPUNIT_TEST( testChangeHostAddress );
+
+CPPUNIT_TEST( testDefault );
+CPPUNIT_TEST( testGetAuthenticatedUser );
+
+// Domains API
+CPPUNIT_TEST( testGetAll );
+CPPUNIT_TEST( testGetAllActive );
+
+// User Management
+CPPUNIT_TEST( testGetUser );
+CPPUNIT_TEST( testGetUsers );
+CPPUNIT_TEST( testGetUsersBySearch );
+
+// iFolder Management
+CPPUNIT_TEST( testCreateAndDeleteiFolderFromPath );
+CPPUNIT_TEST( testCreateAndDeleteiFolder );
+CPPUNIT_TEST( testConnectAndDisconnectiFolder );
+CPPUNIT_TEST( testGetAlliFolders );
+CPPUNIT_TEST( testGetConnectediFolders );
+CPPUNIT_TEST( testGetDisconnectediFolders );
+CPPUNIT_TEST( testGetiFolderById );
+CPPUNIT_TEST( testGetiFoldersByName );
+
+// Other
+CPPUNIT_TEST( testValidDomains );
+CPPUNIT_TEST( testInvalidDomains );
 CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -47,23 +79,55 @@ public:
 	void setUp();
 	void tearDown();
 
-	void testAdd();
-	void testRemove();
+	void testAddRemove();
+	void testRemoveAndDeleteiFolders();
 	void testUserData();
+
+	void testLogInAndOut();
+	void testActivateAndInactivate();
+
+	void testChangeHostAddress();
+
+//	void testSetCredentials(); // FIXME: Figure out how to test this
+
+	void testDefault();
+	void testGetAuthenticatedUser();
+
+	// Domains API
+	void testGetAll();
+	void testGetAllActive();
+
+	// User Management
+	void testGetUser();
+	void testGetUsers();
+	void testGetUsersBySearch();
+
+	// iFolder Management
+	void testCreateAndDeleteiFolderFromPath();
+	void testCreateAndDeleteiFolder();
+	void testConnectAndDisconnectiFolder();
+	void testGetAlliFolders();
+	void testGetConnectediFolders();
+	void testGetDisconnectediFolders();
+	void testGetiFolderById();
+	void testGetiFoldersByName();
+
+	// Other
+	void testValidDomains();
+	void testInvalidDomains();
 
 private:
 
-	// testRemove
-	iFolderDomain testRemoveAndKeepiFoldersDomain;
-	iFolder testiFolder1;
-	iFolder testiFolder2;
-	
-	iFolderDomain testRemoveAndDeleteiFoldersDomain;
-	iFolder testiFolder3;
-	iFolder testiFolder4;
+	static GString *customDataPath;
+	static TestConfig *testConfig;
 
-	// testUserData
-	iFolderDomain testUserDataDomain;
+	static TestConfigDomain *validDomain;
+	static TestConfigDomain *invalidDomain;
+	static TestConfigUser *validUser;
+	static TestConfigUser *invalidUser;
+
+	static TestConfigDomain *validDomain1;
+	static TestConfigUser *validUser1;
 };
 
 #endif // _IFOLDER_DOMAIN_TEST_H_

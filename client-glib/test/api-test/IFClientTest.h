@@ -27,6 +27,8 @@
 #include <cppunit/TestPath.h>
 #include <cppunit/TestCase.h>
 
+#include <glib.h>
+
 class IFClientTest : public CPPUNIT_NS::TestFixture {
 
 CPPUNIT_TEST_SUITE( IFClientTest );
@@ -50,6 +52,9 @@ public:
 	void testInitializeCustomDataPath();
 	void testInitializeInvalidDataPath();
 	void testUninitialize();
+private:
+	static GString *customDataPath;
+	static GString *invalidDataPath;
 };
 
 #endif // _IFOLDER_CLIENT_TEST_H_

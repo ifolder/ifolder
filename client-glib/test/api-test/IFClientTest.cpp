@@ -24,9 +24,45 @@
 #include "IFClientTest.h"
 #include "ifolder-client.h"
 
+GString * IFClientTest::customDataPath = NULL;
+GString * IFClientTest::invalidDataPath = NULL;
+
 IFClientTest::IFClientTest()
 {
+	const gchar * tmpDir;
 	printf("IFClientTest::IFClientTest()\n");
+
+	// Initialize things ONCE so that every test doesn't have to
+	// redo this over and over.
+	tmpDir = g_get_tmp_dir();
+
+	///
+	/// customDataPath
+	///
+	if (customDataPath == NULL)
+	{
+		customDataPath = g_string_new(tmpDir);
+
+		#ifdef WIN32
+			g_string_append_printf(customDataPath, "\\ifolder-client-api-test-custom-data-path");
+		#else
+			g_string_append_printf(customDataPath, "/ifolder-client-api-test-custom-data-path");
+		#endif
+	}
+
+	///
+	/// invalidDataPath
+	///
+	if (invalidDataPath == NULL)
+	{
+		invalidDataPath = g_string_new(tmpDir);
+
+		#ifdef WIN32
+			g_string_append_printf(invalidDataPath, "\\Invalid:Data:Path");
+		#else
+			g_string_append_printf(invalidDataPath, "/Invalid:Data:Path");
+		#endif
+	}
 }
 
 IFClientTest::~IFClientTest()
@@ -59,11 +95,25 @@ IFClientTest::testInitializeDefaultDataPath()
 void
 IFClientTest::testInitializeCustomDataPath()
 {
+	int err;
+
+	err = ifolder_client_initialize((char *)customDataPath->str);
+	CPPUNIT_ASSERT( err == IFOLDER_SUCCESS );
+
+	err = ifolder_client_initialize();
+	CPPUNIT_ASSERT( err == IFOLDER_ERR_ALREADY_INITIALIZED );
 }
 
 void
 IFClientTest::testInitializeInvalidDataPath()
 {
+	int err;
+
+	err = ifolder_client_initialize((char *)invalidDataPath->str);
+	CPPUNIT_ASSERT( err == IFOLDER_SUCCESS );
+
+	err = ifolder_client_initialize();
+	CPPUNIT_ASSERT( err == IFOLDER_ERR_ALREADY_INITIALIZED );
 }
 
 void

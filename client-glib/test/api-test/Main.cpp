@@ -21,13 +21,32 @@
  *
  ***********************************************************************/
 
+#include <stdio.h>
 #include <cppunit/ui/text/TestRunner.h>
 #include "IFClientTest.h"
 #include "IFDomainTest.h"
 
+void printSyntax();
+
 int
 main(int argc, char *argv[])
 {
+	char *testConfigFileName = NULL;
+	TestConfig *testConfig;
+
+	if (argc > 1)
+		testConfigFileName = argv[1];
+	else
+		testConfigFileName = DEFAULT_CONFIG_FILE;
+
+	testConfig = TestConfig::getTestConfig(testConfigFileName);
+	if (testConfig == NULL)
+	{
+		printf("Could not load config file \"%s\"\n\n", testConfigFileName);
+		printSyntax();
+		return -1;
+	}
+
 	CppUnit::TextUi::TestRunner runner;
 	runner.addTest( IFClientTest::suite() );
 	runner.addTest( IFDomainTest::suite() );
@@ -35,3 +54,7 @@ main(int argc, char *argv[])
 	return 0;
 }
 
+void printSyntax()
+{
+	printf("Syntax: api-test [Test Config INI file]\n");
+}
