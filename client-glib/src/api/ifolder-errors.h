@@ -129,6 +129,19 @@ extern "C"
 
 /*@}*/
 
+/**
+ * @name Domain Errors
+ * @{
+ */
+
+//! An account is already configured for the specified domain.
+#define IFOLDER_ERR_DOMAIN_ALREADY_EXISTS	-501
+
+//! Could not find the specified server.
+#define IFOLDER_ERR_DOMAIN_NOT_FOUND		-502
+
+/*@}*/
+
 #ifdef __cplusplus
 }
 #endif

@@ -47,28 +47,28 @@ extern "C"
  * @param user The iFolderUser.
  * @return a user's unique ID.
  */
-const char *ifolder_user_get_id(iFolderUser user);
+IFOLDER_API const char *ifolder_user_get_id(iFolderUser user);
 
 //! Returns a user's login name.
 /**
  * @param user The iFolderUser.
  * @return a user's login name.
  */
-const char *ifolder_user_get_user_name(iFolderUser user);
+IFOLDER_API const char *ifolder_user_get_user_name(iFolderUser user);
 
 //! Returns a user's full name.
 /**
  * @param user The iFolderUser.
  * @return a user's full name.
  */
-const char *ifolder_user_get_full_name(iFolderUser user);
+IFOLDER_API const char *ifolder_user_get_full_name(iFolderUser user);
 
 //! Returns a user's iFolderMemberRights.
 /**
  * @param user The iFolderUser.
  * @return a user's iFolderMemberRights.
  */
-iFolderMemberRights ifolder_user_get_rights(iFolderUser user);
+IFOLDER_API iFolderMemberRights ifolder_user_get_rights(iFolderUser user);
 
 //! Returns true if a user's login is enabled.
 /**
@@ -77,7 +77,7 @@ iFolderMemberRights ifolder_user_get_rights(iFolderUser user);
  * @param user The iFolderUser.
  * @return true if a user's login is enabled.
  */
-bool ifolder_user_is_login_enabled(iFolderUser user);
+IFOLDER_API bool ifolder_user_is_login_enabled(iFolderUser user);
 
 //! Returns true if a user is an owner in an iFolder/Domain.
 /**
@@ -87,13 +87,13 @@ bool ifolder_user_is_login_enabled(iFolderUser user);
  * @param user The iFolderUser.
  * @return true if a user is an owner in an iFolder/Domain.
  */
-bool ifolder_user_is_owner(iFolderUser user);
+IFOLDER_API bool ifolder_user_is_owner(iFolderUser user);
 
 //! Free the memory used by an iFolderUser.
 /**
  * @param user The iFolderUser.
  */
-void ifolder_user_free(iFolderUser user);
+IFOLDER_API void ifolder_user_free(iFolderUser user);
 
 /*@}*/
 

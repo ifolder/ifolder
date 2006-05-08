@@ -46,7 +46,7 @@ extern "C"
  * @param enumeration The iFolderEnumeration.
  * @return true if there are more items available in the enumeration.
  */
-bool		ifolder_enumeration_has_more(const iFolderEnumeration enumeration);
+IFOLDER_API bool		ifolder_enumeration_has_more(const iFolderEnumeration enumeration);
 
 //! Return the next item in the enumeration
 /**
@@ -56,13 +56,13 @@ bool		ifolder_enumeration_has_more(const iFolderEnumeration enumeration);
  * @return This must be cast to the expected object type.  Returns NULL if
  * there was an error or if there are no more objects in the enumeration.
  */
-void *	ifolder_enumeration_get_next(const iFolderEnumeration enumeration);
+IFOLDER_API void *	ifolder_enumeration_get_next(const iFolderEnumeration enumeration);
 
 //! Reset the enumeration to point to the first item.
 /**
  * @param enumeration The iFolderEnumeration.
  */
-void		ifolder_enumeration_reset(iFolderEnumeration enumeration);
+IFOLDER_API void		ifolder_enumeration_reset(iFolderEnumeration enumeration);
 
 //! Free the memory used by an iFolderEnumration.
 /**
@@ -70,7 +70,7 @@ void		ifolder_enumeration_reset(iFolderEnumeration enumeration);
  * freed.
  * @param enumeration The iFolderEnumeration.
  */
-void		ifolder_enumeration_free(iFolderEnumeration enumeration);
+IFOLDER_API void		ifolder_enumeration_free(iFolderEnumeration enumeration);
 
 /*@}*/
 
