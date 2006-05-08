@@ -141,6 +141,12 @@ copy &quot;$(TargetPath)&quot; ..\..\..\test\api-test\$(OutDir)\&quot;$(TargetNa
 				RelativePath="..\common\ifolder-domain.cpp">
 			</File>
 			<File
+				RelativePath="..\common\ifolder-enumeration.cpp">
+			</File>
+			<File
+				RelativePath="..\common\ifolder-user.cpp">
+			</File>
+			<File
 				RelativePath="..\common\ifolder.cpp">
 			</File>
 		</Filter>
