@@ -22,6 +22,7 @@
  ***********************************************************************/
 
 #include <string.h>
+#include <glib/gstdio.h>
 
 #include <ifolder-client.h>
 
@@ -717,7 +718,6 @@ IFDomainTest::testGetUsersBySearch()
 void
 IFDomainTest::testCreateAndDeleteiFolderFromPath()
 {
-/*
 	int err;
 	iFolderDomain domain;
 	const gchar * tmpDir;
@@ -730,27 +730,45 @@ IFDomainTest::testCreateAndDeleteiFolderFromPath()
 	///
 	tmpDir = g_get_tmp_dir();
 	validPath = g_string_new(tmpDir);
+	invalidPath = g_string_new(tmpDir);
 #ifdef WIN32
 	g_string_append_printf(validPath, "\\ifolder-client-api-test-create-and-delete-test");
-
+	g_string_append_printf(invalidPath, "\\ifolder-client-api-test-create-and-delete-test-invalid:path");
 #else
 	g_string_append_printf(validPath, "/ifolder-client-api-test-create-and-delete-test");
-	CPPUNIT_ASSERT( g_mkdir(validPath, 0700) == 0 );
+	g_string_append_printf(invalidPath, "/ifolder-client-api-test-create-and-delete-test-invalid:path");
 #endif
+	CPPUNIT_ASSERT( g_mkdir(validPath->str, 0700) == 0 );
+
 	CPPUNIT_ASSERT( err = ifolder_domain_add(validDomain->getHostAddress(), validUser->getUserName(), validUser->getPassword(), true, &domain) == IFOLDER_SUCCESS );
 
-	// Test: Test invalid parameters
+	// Test: Test invalid parameters during create
 	CPPUNIT_ASSERT( ifolder_domain_create_ifolder_from_path(NULL, validPath->str, "test description", &ifolder) == IFOLDER_ERR_INVALID_PARAMETER );
 	CPPUNIT_ASSERT( ifolder_domain_create_ifolder_from_path(domain, NULL, "test description", &ifolder) == IFOLDER_ERR_INVALID_PARAMETER );
 	CPPUNIT_ASSERT( ifolder_domain_create_ifolder_from_path(domain, validPath->str, NULL, &ifolder) == IFOLDER_ERR_INVALID_PARAMETER );
 	CPPUNIT_ASSERT( ifolder_domain_create_ifolder_from_path(domain, validPath->str, "test description", NULL) == IFOLDER_ERR_INVALID_PARAMETER );
 
+	// Test: Make sure we can create a new iFolder
+	CPPUNIT_ASSERT( err = ifolder_domain_create_ifolder_from_path(domain, validPath->str, "Created from the testCreateAndDeleteiFolderFromPath() unit test.", &ifolder) == IFOLDER_SUCCESS );
+
+	// Test: Attempt to delete the newly created iFolder (cannot delete a connected iFolder.  It must be disconnected first.)
+	CPPUNIT_ASSERT( err = ifolder_domain_delete_ifolder(domain, ifolder) != IFOLDER_SUCCESS );
+
+	// Test: Test invalid parameters during delete
+	CPPUNIT_ASSERT( err = ifolder_domain_delete_ifolder(NULL, ifolder) == IFOLDER_ERR_INVALID_PARAMETER );
+	CPPUNIT_ASSERT( err = ifolder_domain_delete_ifolder(domain, NULL) == IFOLDER_ERR_INVALID_PARAMETER );
+	ifolder_free(ifolder);
+
+	// Test: Make sure we get an error when attempting to create an iFolder with a bad character in it
+	CPPUNIT_ASSERT( err = ifolder_domain_create_ifolder_from_path(domain, invalidPath->str, "Created from the testCreateAndDeleteiFolderFromPath() unit test.", &ifolder) != IFOLDER_SUCCESS ); // FIXME: Figure out what the error code should be and change this to reflect the right one
+
 	///
 	/// Cleanup
 	///
-	CPPUNIT_ASSERT( err = ifolder_domain_remove(domain, false) == IFOLDER_SUCCESS );
+	g_string_free(validPath, true);
+	g_string_free(invalidPath, true);
+	CPPUNIT_ASSERT( err = ifolder_domain_remove(domain, true) == IFOLDER_SUCCESS );
 	ifolder_domain_free(domain);
-*/
 }
 
 void
@@ -758,37 +776,94 @@ IFDomainTest::testCreateAndDeleteiFolder()
 {
 	int err;
 	iFolderDomain domain;
+	iFolder ifolder;
 
 	///
 	/// Setup
 	///
 	CPPUNIT_ASSERT( err = ifolder_domain_add(validDomain->getHostAddress(), validUser->getUserName(), validUser->getPassword(), true, &domain) == IFOLDER_SUCCESS );
 
+	// Test: Test invalid parameters during create
+	CPPUNIT_ASSERT( ifolder_domain_create_ifolder(NULL, "testCreateAndDeleteiFolder", "testCreateAndDeleteiFolder description", &ifolder) == IFOLDER_ERR_INVALID_PARAMETER );
+	CPPUNIT_ASSERT( ifolder_domain_create_ifolder(domain, NULL, "testCreateAndDeleteiFolder description", &ifolder) == IFOLDER_ERR_INVALID_PARAMETER );
+	CPPUNIT_ASSERT( ifolder_domain_create_ifolder(domain, "", "testCreateAndDeleteiFolder description", &ifolder) == IFOLDER_ERR_INVALID_PARAMETER );
+	CPPUNIT_ASSERT( ifolder_domain_create_ifolder(domain, "invalid:name", "testCreateAndDeleteiFolder description", &ifolder) != IFOLDER_SUCCESS );	// FIXME: Figure out what error code should really be returned
+	CPPUNIT_ASSERT( ifolder_domain_create_ifolder(domain, "testCreateAndDeleteiFolder", "testCreateAndDeleteiFolder description", NULL) == IFOLDER_ERR_INVALID_PARAMETER );
+
+	// Test: Should be able to create an iFolder without specifying a description
+	CPPUNIT_ASSERT( ifolder_domain_create_ifolder(domain, "testCreateAndDeleteiFolder", NULL, &ifolder) == IFOLDER_SUCCESS );
+	CPPUNIT_ASSERT( ifolder_domain_delete_ifolder(domain, ifolder) == IFOLDER_SUCCESS );
+	CPPUNIT_ASSERT( strcmp("", ifolder_get_description(ifolder)) == 0 );
+	ifolder_free(ifolder);
+
+	// Test: Should be able to create an iFolder with an empty string used as the description
+	CPPUNIT_ASSERT( ifolder_domain_create_ifolder(domain, "testCreateAndDeleteiFolder", "", &ifolder) == IFOLDER_SUCCESS );
+	CPPUNIT_ASSERT( strcmp("", ifolder_get_description(ifolder)) == 0 );
+	CPPUNIT_ASSERT( ifolder_domain_delete_ifolder(domain, ifolder) == IFOLDER_SUCCESS );
+	ifolder_free(ifolder);
+
+	// Test: Should be able to create an iFolder with a custom description
+	CPPUNIT_ASSERT( ifolder_domain_create_ifolder(domain, "testCreateAndDeleteiFolder", "testCreateAndDeleteiFolder description", &ifolder) == IFOLDER_ERR_INVALID_PARAMETER );
+	CPPUNIT_ASSERT( strcmp("testCreateAndDeleteiFolder description", ifolder_get_description(ifolder)) == 0 );
+	CPPUNIT_ASSERT( ifolder_domain_delete_ifolder(domain, ifolder) == IFOLDER_SUCCESS );
+	ifolder_free(ifolder);
 
 	///
 	/// Cleanup
 	///
-	CPPUNIT_ASSERT( err = ifolder_domain_remove(domain, false) == IFOLDER_SUCCESS );
+	CPPUNIT_ASSERT( err = ifolder_domain_remove(domain, true) == IFOLDER_SUCCESS );
 	ifolder_domain_free(domain);
 }
 
 void
 IFDomainTest::testConnectAndDisconnectiFolder()
 {
+/*
 	int err;
 	iFolderDomain domain;
+	iFolder ifolder;
 
 	///
 	/// Setup
 	///
 	CPPUNIT_ASSERT( err = ifolder_domain_add(validDomain->getHostAddress(), validUser->getUserName(), validUser->getPassword(), true, &domain) == IFOLDER_SUCCESS );
+	CPPUNIT_ASSERT( err = ifolder_domain_create_ifolder(domain, "testConnectAndDisconnectiFolder", "iFolder used for unit testing", &ifolder) == IFOLDER_SUCCESS );
+	// Make sure there's no existing directories
+	
+	// FIXME: THIS IS NOT IMPLEMENTED YET
 
+	// Test: Make sure we fail gracefully with invalid parameters
+	CPPUNIT_ASSERT( ifolder_domain_connect_ifolder(NULL, ifolder, tmpDir) == IFOLDER_ERR_INVALID_PARAMETER );
+	CPPUNIT_ASSERT( ifolder_domain_connect_ifolder(domain, NULL, tmpDir) == IFOLDER_ERR_INVALID_PARAMETER );
+	CPPUNIT_ASSERT( ifolder_domain_connect_ifolder(domain, ifolder, NULL) == IFOLDER_ERR_INVALID_PARAMETER );
+
+	// Test: Connect a remote iFolder to a valid local directory
+	CPPUNIT_ASSERT( ifolder_domain_connect_ifolder(domain, ifolder, tmpDir) == IFOLDER_SUCCESS );
+
+	// Test: Attempt to connect an already connected iFolder
+	CPPUNIT_ASSERT( ifolder_domain_connect_ifolder(domain, ifolder, tmpDir) != IFOLDER_SUCCESS );	// FIXME: Figure out the best error message to return here
+
+	// Test: Disconnect the iFolder from the local path
+	CPPUNIT_ASSERT( ifolder_domain_disconnect_ifolder(domain, ifolder) == IFOLDER_SUCCESS );
+
+#ifndef WIN32
+	// Test: Attempt to connect the iFolder to a path where we don't have rights
+	CPPUNIT_ASSERT( ifolder_domain_connect_ifolder(domain, ifolder, "/") != IFOLDER_SUCCESS );
+#endif
+
+	// Test: Fail gracefully with invalid params on disconnect
+	CPPUNIT_ASSERT( ifolder_domain_disconnect_ifolder(NULL, ifolder) == IFOLDER_ERR_INVALID_PARAMETER );
+	CPPUNIT_ASSERT( ifolder_domain_disconnect_ifolder(domain, NULL) == IFOLDER_ERR_INVALID_PARAMETER );
 
 	///
 	/// Cleanup
 	///
+	CPPUNIT_ASSERT( ifolder_domain_delete_ifolder(domain, ifolder) == IFOLDER_SUCCESS );
+	ifolder_free(ifolder);
+
 	CPPUNIT_ASSERT( err = ifolder_domain_remove(domain, false) == IFOLDER_SUCCESS );
 	ifolder_domain_free(domain);
+*/
 }
 
 void
