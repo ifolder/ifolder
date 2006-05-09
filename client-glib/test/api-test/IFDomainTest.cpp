@@ -41,7 +41,6 @@ TestConfigUser * IFDomainTest::validUser1 = NULL;
 IFDomainTest::IFDomainTest()
 {
 	const gchar * tmpDir;
-	printf("IFDomainTest::IFDomainTest()\n");
 
 	// Initialize things ONCE so that every test doesn't have to
 	// redo this over and over.
@@ -454,66 +453,437 @@ IFDomainTest::testGetAuthenticatedUser()
 void
 IFDomainTest::testGetAll()
 {
+	int err;
+	iFolderDomain domain0;
+	iFolderDomain domain1;
+	iFolderDomain tmpDomain;
+	iFolderEnumeration domain_enum;
+
+	// Test: Call with NULL parameter should fail
+	CPPUNIT_ASSERT( err = ifolder_domain_get_all(NULL) == IFOLDER_ERR_INVALID_PARAMETER );
+
+	// Test: The enumeration should be empty before we add any domains
+	CPPUNIT_ASSERT( err = ifolder_domain_get_all(&domain_enum) == IFOLDER_SUCCESS );
+	CPPUNIT_ASSERT( ifolder_enumeration_has_more(domain_enum) == false );
+	ifolder_enumeration_free(domain_enum);
+
+	// Test: Add a couple domains and make sure they are returned by get_all()
+	CPPUNIT_ASSERT( err = ifolder_domain_add(validDomain->getHostAddress(), validUser->getUserName(), validUser->getPassword(), true, &domain0) == IFOLDER_SUCCESS );
+	CPPUNIT_ASSERT( err = ifolder_domain_add(validDomain1->getHostAddress(), validUser1->getUserName(), validUser1->getPassword(), true, &domain1) == IFOLDER_SUCCESS );
+	CPPUNIT_ASSERT( err = ifolder_domain_get_all(&domain_enum) == IFOLDER_SUCCESS );
+	CPPUNIT_ASSERT( (tmpDomain = (iFolderDomain *)ifolder_enumeration_get_next(domain_enum)) != NULL );
+	CPPUNIT_ASSERT( strcmp(ifolder_domain_get_id(tmpDomain), ifolder_domain_get_id(domain0)) == 0 ||
+					strcmp(ifolder_domain_get_id(tmpDomain), ifolder_domain_get_id(domain1)) == 0 );
+	CPPUNIT_ASSERT( (tmpDomain = (iFolderDomain *)ifolder_enumeration_get_next(domain_enum)) != NULL );
+	CPPUNIT_ASSERT( strcmp(ifolder_domain_get_id(tmpDomain), ifolder_domain_get_id(domain0)) == 0 ||
+					strcmp(ifolder_domain_get_id(tmpDomain), ifolder_domain_get_id(domain1)) == 0 );
+
+	///
+	/// Cleanup
+	///
+	CPPUNIT_ASSERT( err = ifolder_domain_remove(domain0, false) == IFOLDER_SUCCESS );
+	ifolder_domain_free(domain0);
+	CPPUNIT_ASSERT( err = ifolder_domain_remove(domain1, false) == IFOLDER_SUCCESS );
+	ifolder_domain_free(domain1);
 }
 
 void
 IFDomainTest::testGetAllActive()
 {
+	int err;
+	iFolderDomain domain0;
+	iFolderDomain domain1;
+	iFolderDomain tmpDomain;
+	iFolderEnumeration domain_enum;
+
+	// Test: Call with NULL parameter should fail
+	CPPUNIT_ASSERT( err = ifolder_domain_get_all_active(NULL) == IFOLDER_ERR_INVALID_PARAMETER );
+
+	// Test: The enumeration should be empty before we add any domains
+	CPPUNIT_ASSERT( err = ifolder_domain_get_all_active(&domain_enum) == IFOLDER_SUCCESS );
+	CPPUNIT_ASSERT( ifolder_enumeration_has_more(domain_enum) == false );
+	ifolder_enumeration_free(domain_enum);
+
+	// Test: Add a couple domains and set domain0 to be inactive; make sure that
+	// ifolder_domain_get_all_active() only returns active domains.
+	CPPUNIT_ASSERT( err = ifolder_domain_add(validDomain->getHostAddress(), validUser->getUserName(), validUser->getPassword(), true, &domain0) == IFOLDER_SUCCESS );
+	CPPUNIT_ASSERT( err = ifolder_domain_inactivate(domain0) == IFOLDER_SUCCESS );
+	CPPUNIT_ASSERT( err = ifolder_domain_add(validDomain1->getHostAddress(), validUser1->getUserName(), validUser1->getPassword(), true, &domain1) == IFOLDER_SUCCESS );
+
+	CPPUNIT_ASSERT( err = ifolder_domain_get_all_active(&domain_enum) == IFOLDER_SUCCESS );
+	CPPUNIT_ASSERT( (tmpDomain = (iFolderDomain *)ifolder_enumeration_get_next(domain_enum)) != NULL );
+	CPPUNIT_ASSERT( strcmp(ifolder_domain_get_id(tmpDomain), ifolder_domain_get_id(domain0)) != 0 &&
+					strcmp(ifolder_domain_get_id(tmpDomain), ifolder_domain_get_id(domain1)) == 0 );
+	CPPUNIT_ASSERT( ifolder_enumeration_has_more(domain_enum) == false );
+	ifolder_enumeration_free(domain_enum);
+
+	///
+	/// Cleanup
+	///
+	CPPUNIT_ASSERT( err = ifolder_domain_remove(domain0, false) == IFOLDER_SUCCESS );
+	ifolder_domain_free(domain0);
+	CPPUNIT_ASSERT( err = ifolder_domain_remove(domain1, false) == IFOLDER_SUCCESS );
+	ifolder_domain_free(domain1);
 }
 
 void
 IFDomainTest::testGetUser()
 {
+	int err;
+	iFolderDomain domain;
+	iFolderUser user;
+	TestConfigUser *testConfigUser;
+
+	///
+	/// Setup
+	///
+	CPPUNIT_ASSERT( (testConfigUser = validDomain->getValidUser(1)) != NULL );
+	CPPUNIT_ASSERT( err = ifolder_domain_add(validDomain->getHostAddress(), validUser->getUserName(), validUser->getPassword(), true, &domain) == IFOLDER_SUCCESS );
+
+	// Test: Call with NULL parameters
+	CPPUNIT_ASSERT( err = ifolder_domain_get_user(NULL, testConfigUser->getUserName(), &user) == IFOLDER_ERR_INVALID_PARAMETER );
+	CPPUNIT_ASSERT( err = ifolder_domain_get_user(domain, NULL, &user) == IFOLDER_ERR_INVALID_PARAMETER );
+	CPPUNIT_ASSERT( err = ifolder_domain_get_user(domain, testConfigUser->getUserName(), NULL) == IFOLDER_ERR_INVALID_PARAMETER );
+
+	// Test: Make sure we can retrieve a user
+	CPPUNIT_ASSERT( err = ifolder_domain_get_user(domain, testConfigUser->getUserName(), &user) == IFOLDER_SUCCESS );
+	CPPUNIT_ASSERT( strcmp(ifolder_user_get_user_name(user), testConfigUser->getUserName()) == 0 );
+	ifolder_user_free(user);
+
+	///
+	/// Cleanup
+	///
+	CPPUNIT_ASSERT( err = ifolder_domain_remove(domain, false) == IFOLDER_SUCCESS );
+	ifolder_domain_free(domain);
 }
 
 void
 IFDomainTest::testGetUsers()
 {
+	int err;
+	iFolderDomain domain;
+	iFolderEnumeration user_enum;
+	iFolderUser user;
+
+	///
+	/// Setup
+	///
+	CPPUNIT_ASSERT( err = ifolder_domain_add(validDomain->getHostAddress(), validUser->getUserName(), validUser->getPassword(), true, &domain) == IFOLDER_SUCCESS );
+
+	// Test: Test with NULL domain
+	CPPUNIT_ASSERT( err = ifolder_domain_get_users(NULL, 0, 10, &user_enum) == IFOLDER_ERR_INVALID_PARAMETER );
+
+	// Test: Test with invalid index
+	CPPUNIT_ASSERT( err = ifolder_domain_get_users(domain, -1, 10, &user_enum) == IFOLDER_ERR_INVALID_PARAMETER );
+
+	// Test: Test with an invalid count
+	CPPUNIT_ASSERT( err = ifolder_domain_get_users(domain, 0, 0, &user_enum) == IFOLDER_ERR_INVALID_PARAMETER );
+	CPPUNIT_ASSERT( err = ifolder_domain_get_users(domain, 0, -1, &user_enum) == IFOLDER_ERR_INVALID_PARAMETER );
+
+	// Test: Test with normal parameters (there should be at least two users)
+	CPPUNIT_ASSERT( err = ifolder_domain_get_users(domain, 0, 10, &user_enum) == IFOLDER_SUCCESS );
+	CPPUNIT_ASSERT( ifolder_enumeration_has_more(user_enum) == true );
+	CPPUNIT_ASSERT( (user = (iFolderUser *)ifolder_enumeration_get_next(user_enum)) != NULL );
+	user = NULL;
+	CPPUNIT_ASSERT( ifolder_enumeration_has_more(user_enum) == true );
+	CPPUNIT_ASSERT( (user = (iFolderUser *)ifolder_enumeration_get_next(user_enum)) != NULL );
+	ifolder_enumeration_free(user_enum);
+
+	///
+	/// Cleanup
+	///
+	CPPUNIT_ASSERT( err = ifolder_domain_remove(domain, false) == IFOLDER_SUCCESS );
+	ifolder_domain_free(domain);
 }
 
 void
 IFDomainTest::testGetUsersBySearch()
 {
+	int err;
+	iFolderDomain domain;
+	iFolderEnumeration user_enum;
+	TestConfigUser *testConfigUser;
+
+	///
+	/// Setup
+	///
+	CPPUNIT_ASSERT( (testConfigUser = validDomain->getValidUser(1)) != NULL );
+	CPPUNIT_ASSERT( err = ifolder_domain_add(validDomain->getHostAddress(), validUser->getUserName(), validUser->getPassword(), true, &domain) == IFOLDER_SUCCESS );
+
+	// Test: Test with NULL domain
+	CPPUNIT_ASSERT(
+		err = ifolder_domain_get_users_by_search(NULL,
+												 IFOLDER_SEARCH_PROP_USER_NAME,
+												 IFOLDER_SEARCH_OP_BEGINS_WITH, 
+												 "xyz",
+												 0,
+												 10,
+												 &user_enum) == IFOLDER_ERR_INVALID_PARAMETER );
+
+	// Test: Test with a NULL pattern
+	CPPUNIT_ASSERT(
+		err = ifolder_domain_get_users_by_search(domain,
+												 IFOLDER_SEARCH_PROP_USER_NAME,
+												 IFOLDER_SEARCH_OP_BEGINS_WITH, 
+												 NULL,
+												 0,
+												 10,
+												 &user_enum) == IFOLDER_ERR_INVALID_PARAMETER );
+
+	// Test: Test with a zero-length pattern
+	CPPUNIT_ASSERT(
+		err = ifolder_domain_get_users_by_search(domain,
+												 IFOLDER_SEARCH_PROP_USER_NAME,
+												 IFOLDER_SEARCH_OP_BEGINS_WITH, 
+												 "",
+												 0,
+												 10,
+												 &user_enum) == IFOLDER_ERR_INVALID_PARAMETER );
+
+	// Test: Test with invalid index
+	CPPUNIT_ASSERT(
+		err = ifolder_domain_get_users_by_search(domain,
+												 IFOLDER_SEARCH_PROP_USER_NAME,
+												 IFOLDER_SEARCH_OP_BEGINS_WITH, 
+												 testConfigUser->getUserName(),
+												 -1,
+												 10,
+												 &user_enum) == IFOLDER_ERR_INVALID_PARAMETER );
+
+	// Test: Test with an invalid count
+	CPPUNIT_ASSERT(
+		err = ifolder_domain_get_users_by_search(domain,
+												 IFOLDER_SEARCH_PROP_USER_NAME,
+												 IFOLDER_SEARCH_OP_BEGINS_WITH, 
+												 testConfigUser->getUserName(),
+												 0,
+												 0,
+												 &user_enum) == IFOLDER_ERR_INVALID_PARAMETER );
+	CPPUNIT_ASSERT(
+		err = ifolder_domain_get_users_by_search(domain,
+												 IFOLDER_SEARCH_PROP_USER_NAME,
+												 IFOLDER_SEARCH_OP_BEGINS_WITH, 
+												 testConfigUser->getUserName(),
+												 0,
+												 -1,
+												 &user_enum) == IFOLDER_ERR_INVALID_PARAMETER );
+
+	// Test: Search for a user that came from the config file.  At least one
+	// user should be returned in the enumeration.
+	CPPUNIT_ASSERT(
+		err = ifolder_domain_get_users_by_search(domain,
+												 IFOLDER_SEARCH_PROP_USER_NAME,
+												 IFOLDER_SEARCH_OP_BEGINS_WITH, 
+												 testConfigUser->getUserName(),
+												 0,
+												 10,
+												 &user_enum) == IFOLDER_ERR_INVALID_PARAMETER );
+	CPPUNIT_ASSERT( ifolder_enumeration_has_more(user_enum) == true );
+	ifolder_enumeration_free(user_enum);
+
+	// Test: Use IFOLDER_SEARCH_OP_EQUALS
+	CPPUNIT_ASSERT(
+		err = ifolder_domain_get_users_by_search(domain,
+												 IFOLDER_SEARCH_PROP_USER_NAME,
+												 IFOLDER_SEARCH_OP_EQUALS, 
+												 testConfigUser->getUserName(),
+												 0,
+												 10,
+												 &user_enum) == IFOLDER_ERR_INVALID_PARAMETER );
+	CPPUNIT_ASSERT( ifolder_enumeration_has_more(user_enum) == true );
+	ifolder_enumeration_free(user_enum);
+
+	// Test: Use IFOLDER_SEARCH_OP_CONTAINS
+	CPPUNIT_ASSERT(
+		err = ifolder_domain_get_users_by_search(domain,
+												 IFOLDER_SEARCH_PROP_USER_NAME,
+												 IFOLDER_SEARCH_OP_CONTAINS, 
+												 testConfigUser->getUserName(),
+												 0,
+												 10,
+												 &user_enum) == IFOLDER_ERR_INVALID_PARAMETER );
+	CPPUNIT_ASSERT( ifolder_enumeration_has_more(user_enum) == true );
+	ifolder_enumeration_free(user_enum);
+
+	// FIXME: Find better ways to test ifolder_domain_get_users_by_search().  The difficulty comes with the environment setup.
+
+	///
+	/// Cleanup
+	///
+	CPPUNIT_ASSERT( err = ifolder_domain_remove(domain, false) == IFOLDER_SUCCESS );
+	ifolder_domain_free(domain);
 }
 
 void
 IFDomainTest::testCreateAndDeleteiFolderFromPath()
 {
+/*
+	int err;
+	iFolderDomain domain;
+	const gchar * tmpDir;
+	GString *validPath;
+	GString *invalidPath;
+	iFolder ifolder;
+
+	///
+	/// Setup
+	///
+	tmpDir = g_get_tmp_dir();
+	validPath = g_string_new(tmpDir);
+#ifdef WIN32
+	g_string_append_printf(validPath, "\\ifolder-client-api-test-create-and-delete-test");
+
+#else
+	g_string_append_printf(validPath, "/ifolder-client-api-test-create-and-delete-test");
+	CPPUNIT_ASSERT( g_mkdir(validPath, 0700) == 0 );
+#endif
+	CPPUNIT_ASSERT( err = ifolder_domain_add(validDomain->getHostAddress(), validUser->getUserName(), validUser->getPassword(), true, &domain) == IFOLDER_SUCCESS );
+
+	// Test: Test invalid parameters
+	CPPUNIT_ASSERT( ifolder_domain_create_ifolder_from_path(NULL, validPath->str, "test description", &ifolder) == IFOLDER_ERR_INVALID_PARAMETER );
+	CPPUNIT_ASSERT( ifolder_domain_create_ifolder_from_path(domain, NULL, "test description", &ifolder) == IFOLDER_ERR_INVALID_PARAMETER );
+	CPPUNIT_ASSERT( ifolder_domain_create_ifolder_from_path(domain, validPath->str, NULL, &ifolder) == IFOLDER_ERR_INVALID_PARAMETER );
+	CPPUNIT_ASSERT( ifolder_domain_create_ifolder_from_path(domain, validPath->str, "test description", NULL) == IFOLDER_ERR_INVALID_PARAMETER );
+
+	///
+	/// Cleanup
+	///
+	CPPUNIT_ASSERT( err = ifolder_domain_remove(domain, false) == IFOLDER_SUCCESS );
+	ifolder_domain_free(domain);
+*/
 }
 
 void
 IFDomainTest::testCreateAndDeleteiFolder()
 {
+	int err;
+	iFolderDomain domain;
+
+	///
+	/// Setup
+	///
+	CPPUNIT_ASSERT( err = ifolder_domain_add(validDomain->getHostAddress(), validUser->getUserName(), validUser->getPassword(), true, &domain) == IFOLDER_SUCCESS );
+
+
+	///
+	/// Cleanup
+	///
+	CPPUNIT_ASSERT( err = ifolder_domain_remove(domain, false) == IFOLDER_SUCCESS );
+	ifolder_domain_free(domain);
 }
 
 void
 IFDomainTest::testConnectAndDisconnectiFolder()
 {
+	int err;
+	iFolderDomain domain;
+
+	///
+	/// Setup
+	///
+	CPPUNIT_ASSERT( err = ifolder_domain_add(validDomain->getHostAddress(), validUser->getUserName(), validUser->getPassword(), true, &domain) == IFOLDER_SUCCESS );
+
+
+	///
+	/// Cleanup
+	///
+	CPPUNIT_ASSERT( err = ifolder_domain_remove(domain, false) == IFOLDER_SUCCESS );
+	ifolder_domain_free(domain);
 }
 
 void
 IFDomainTest::testGetAlliFolders()
 {
+	int err;
+	iFolderDomain domain;
+
+	///
+	/// Setup
+	///
+	CPPUNIT_ASSERT( err = ifolder_domain_add(validDomain->getHostAddress(), validUser->getUserName(), validUser->getPassword(), true, &domain) == IFOLDER_SUCCESS );
+
+
+	///
+	/// Cleanup
+	///
+	CPPUNIT_ASSERT( err = ifolder_domain_remove(domain, false) == IFOLDER_SUCCESS );
+	ifolder_domain_free(domain);
 }
 
 void
 IFDomainTest::testGetConnectediFolders()
 {
+	int err;
+	iFolderDomain domain;
+
+	///
+	/// Setup
+	///
+	CPPUNIT_ASSERT( err = ifolder_domain_add(validDomain->getHostAddress(), validUser->getUserName(), validUser->getPassword(), true, &domain) == IFOLDER_SUCCESS );
+
+
+	///
+	/// Cleanup
+	///
+	CPPUNIT_ASSERT( err = ifolder_domain_remove(domain, false) == IFOLDER_SUCCESS );
+	ifolder_domain_free(domain);
 }
 
 void
 IFDomainTest::testGetDisconnectediFolders()
 {
+	int err;
+	iFolderDomain domain;
+
+	///
+	/// Setup
+	///
+	CPPUNIT_ASSERT( err = ifolder_domain_add(validDomain->getHostAddress(), validUser->getUserName(), validUser->getPassword(), true, &domain) == IFOLDER_SUCCESS );
+
+
+	///
+	/// Cleanup
+	///
+	CPPUNIT_ASSERT( err = ifolder_domain_remove(domain, false) == IFOLDER_SUCCESS );
+	ifolder_domain_free(domain);
 }
 
 void
 IFDomainTest::testGetiFolderById()
 {
+	int err;
+	iFolderDomain domain;
+
+	///
+	/// Setup
+	///
+	CPPUNIT_ASSERT( err = ifolder_domain_add(validDomain->getHostAddress(), validUser->getUserName(), validUser->getPassword(), true, &domain) == IFOLDER_SUCCESS );
+
+
+	///
+	/// Cleanup
+	///
+	CPPUNIT_ASSERT( err = ifolder_domain_remove(domain, false) == IFOLDER_SUCCESS );
+	ifolder_domain_free(domain);
 }
 
 void
 IFDomainTest::testGetiFoldersByName()
 {
+	int err;
+	iFolderDomain domain;
+
+	///
+	/// Setup
+	///
+	CPPUNIT_ASSERT( err = ifolder_domain_add(validDomain->getHostAddress(), validUser->getUserName(), validUser->getPassword(), true, &domain) == IFOLDER_SUCCESS );
+
+
+	///
+	/// Cleanup
+	///
+	CPPUNIT_ASSERT( err = ifolder_domain_remove(domain, false) == IFOLDER_SUCCESS );
+	ifolder_domain_free(domain);
 }
 
 /**

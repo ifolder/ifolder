@@ -366,7 +366,7 @@ IFOLDER_API int ifolder_domain_get_user(const iFolderDomain domain, const char *
 /**
  * @param domain The domain.
  * @param index The index of where the user enumeration should begin.  This
- * must be greater than 0.  An empty list will be returned if the index is
+ * must be greater or equal to 0.  An empty list will be returned if the index is
  * greater than the total number of users available.
  * @param count The number of iFolderUser objects to return.  This must be
  * at least 1 or greater.
@@ -382,7 +382,7 @@ IFOLDER_API int ifolder_domain_get_users(const iFolderDomain domain, const int i
  * @param search_op The iFolderSearchOperation to use in the search.
  * @param pattern The pattern to use in the search.
  * @param index The index of where the user enumeration should begin.  This
- * must be greater than 0.  An empty list will be returned if the index is
+ * must be greater or equal to 0.  An empty list will be returned if the index is
  * greater than the total number of users available.
  * @param count The number of iFolderUser objects to return.  This must be
  * at least 1 or greater.
