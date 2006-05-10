@@ -11,27 +11,27 @@
 		<title>Overview of iFolder</title>
 
 			<topic type="File" elemtype="SECT1">
-			<filename>data\bx3aueg.html</filename>
+			<filename>data\ovwsharing.html</filename>
 			<title>iFolder Sharing</title>
 			</topic>
 
 			<topic type="File" elemtype="SECT1">
-			<filename>data\bq1r10z.html</filename>
+			<filename>data\ovwbenefits.html</filename>
 			<title>Benefits of iFolder</title>
 			</topic>
 
 			<topic type="File" elemtype="SECT1">
-			<filename>data\bq1r110.html</filename>
+			<filename>data\ovwfeatures.html</filename>
 			<title>Key Features of iFolder</title>
 			</topic>
 
 			<topic type="File" elemtype="SECT1">
-			<filename>data\bwcku86.html</filename>
+			<filename>data\ovwxplat.html</filename>
 			<title>Cross-Platform Considerations</title>
 			</topic>
 
 			<topic type="File" elemtype="SECT1">
-			<filename>data\bq1r11b.html</filename>
+			<filename>data\ovwnext.html</filename>
 			<title>What’s Next</title>
 			</topic>
 		</topic>
@@ -41,12 +41,12 @@
 		<title>Managing iFolder Accounts and Preferences</title>
 
 			<topic type="File" elemtype="SECT1">
-			<filename>data\bw08fxi.html</filename>
+			<filename>data\startclient.html</filename>
 			<title>Starting the iFolder Client</title>
 			</topic>
 
 			<topic type="File" elemtype="SECT1">
-			<filename>data\b41jzxm.html</filename>
+			<filename>data\stopclient.html</filename>
 			<title>Stopping the iFolder Client</title>
 			</topic>
 
@@ -61,7 +61,7 @@
 			</topic>
 
 			<topic type="File" elemtype="SECT1">
-			<filename>data\b41lzuy.html</filename>
+			<filename>data\logout.html</filename>
 			<title>Logging Out of an iFolder Account</title>
 			</topic>
 
@@ -71,7 +71,7 @@
 			</topic>
 
 			<topic type="File" elemtype="SECT1">
-			<filename>data\bvwsp7c.html</filename>
+			<filename>data\delacct.html</filename>
 			<title>Deleting an iFolder Account</title>
 			</topic>
 
@@ -81,12 +81,12 @@
 			</topic>
 
 			<topic type="File" elemtype="SECT1">
-			<filename>data\bvwppw5.html</filename>
+			<filename>data\firewall.html</filename>
 			<title>Configuring Local Firewall Settings for iFolder Traffic</title>
 			</topic>
 
 			<topic type="File" elemtype="SECT1">
-			<filename>data\bwbirb9.html</filename>
+			<filename>data\virusscan.html</filename>
 			<title>Configuring Local Virus Scanner Settings for iFolder Traffic</title>
 			</topic>
 		</topic>
@@ -96,22 +96,22 @@
 		<title>Managing iFolders</title>
 
 			<topic type="File" elemtype="SECT1">
-			<filename>data\bx08x4y.html</filename>
+			<filename>data\locguide.html</filename>
 			<title>Guidelines for Locating and Using iFolders</title>
 			</topic>
 
 			<topic type="File" elemtype="SECT1">
-			<filename>data\bwensdb.html</filename>
+			<filename>data\typeguide.html</filename>
 			<title>Guidelines for File Types and Sizes to Not Synchronize</title>
 			</topic>
 
 			<topic type="File" elemtype="SECT1">
-			<filename>data\bwagrrn.html</filename>
+			<filename>data\nameconv.html</filename>
 			<title>Naming Conventions for an iFolder and Its Folders and Files</title>
 			</topic>
 
 			<topic type="File" elemtype="SECT1">
-			<filename>data\b40i3xl.html</filename>
+			<filename>data\ificons.html</filename>
 			<title>Understanding iFolder Icons</title>
 			</topic>
 
@@ -126,7 +126,7 @@
 			</topic>
 
 			<topic type="File" elemtype="SECT1">
-			<filename>data\b422rvn.html</filename>
+			<filename>data\viewhide.html</filename>
 			<title>Viewing and Hiding Available iFolders</title>
 			</topic>
 
@@ -138,6 +138,11 @@
 			<topic type="File" elemtype="SECT1">
 			<filename>data\propifolders.html</filename>
 			<title>Viewing and Configuring Properties of an iFolder</title>
+			</topic>
+
+			<topic type="File" elemtype="SECT1">
+			<filename>data\ifquota.html</filename>
+			<title>Setting an iFolder Quota</title>
 			</topic>
 
 			<topic type="File" elemtype="SECT1">
