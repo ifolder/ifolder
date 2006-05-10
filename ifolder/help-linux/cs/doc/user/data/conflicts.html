@@ -6,11 +6,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="en" />
 <meta name="Generator" content="Novell Documentation  8 June 2005" />
-<meta name="Generation-Date" content="Thursday, March 23, 2006 14:21" />
-<meta name="Content-Date" content="Mon, 24 Mar 2006 12:00:00 GMT" />
+<meta name="Generation-Date" content="Tuesday, April 25, 2006 21:14" />
+<meta name="Content-Date" content="Mon, 26 Apr 2006 12:00:00 GMT" />
 <meta name="Robots" content="INDEX, FOLLOW" />
-<meta name="Document_Number" content="zHTML xD.0000.0000.0003.0011." />
-<meta name="Author" content="zHTML xD.0000.0000.0003.0011." />
+<meta name="Document_Number" content="zHTML xD.0000.0000.0003.0012." />
+<meta name="Author" content="zHTML xD.0000.0000.0003.0012." />
 <meta name="Product_Class" content="" />
 <meta name="Product_and_Version" content="iFolder™" />
 <meta name="Copyright" content="Copyright Novell, Inc. 2005" />
@@ -35,13 +35,18 @@
 
 <div class="sect1" title="Resolving File Conflicts" id="conflicts">
 
-<h2 class="title"><span class="number">3.11</span> Resolving File Conflicts</h2>
+<h2 class="title"><span class="number">3.12</span> Resolving File Conflicts</h2>
 
-<p class="para">When conflicts occur between file versions saved at the same
-time or when a filename differs by case only, the file is flagged
-with a status of <tt class="literal">Name Conflict</tt>. The file is stored
-in the conflict area and an alert is sent to flag the file through
-the iFolder client. </p>
+<p class="para">Conflicts can occur between file versions saved at the same
+time on different computers, or when a filename differs by case
+only. When conflicts occur, the file is stored in the conflict area
+and the file is flagged with a status of <span class="guimenu">Name Conflict</span>.
+The iFolder Error icon <img src="../graphics/ifolder-error_16.png" alt="iFolder Application Icon " /> is
+displayed on the iFolder. If the <span class="guimenu">Notify of conflicts</span> option
+is enabled in your iFolder Preferences, an alert is also sent to
+the Notification area. You can control the pop-up behavior of Notifications
+by setting your preference in the <span class="menuchoice"><span class="guimenu">iFolder Preferences</span>
+<span class="guimenu">General</span></span> tab.</p>
 <h4 class="bridgehead" id="bx1b1zs"> Version Conflicts</h4>
 
 <p class="para">Version conflicts should be coordinated with other members
@@ -49,24 +54,21 @@ before resolving the conflict. Then choose the correct version in
 the Conflict Resolution dialog.</p>
 <div class="procedure">
 <ol class="steps">
-<li class="step" id="bvin9s9">
-<p class="para">When a conflict
-occurs, a pop-up message appears in the Notification area. Click
-the <span class="guimenu">X</span> to dismiss the message.</p>
-<p class="para">You can disable the pop-up behavior by setting the preference
-in the <span class="menuchoice"><span class="guimenu">iFolder Preferences</span> > <span class="guimenu">General</span></span> tab.</p></li>
 <li class="step" id="bvin9nq">
-<p class="para">In the Notification area, right-click
-the iFolder icon, then click <span class="guimenu">iFolders</span> to open
-the iFolder browser.</p></li>
+<p class="para">In the Notification
+area, right-click the iFolder application icon <img src="../graphics/ifolder22.png" alt="iFolder Application Icon " />,
+then click <span class="guimenu">iFolders</span> to open the iFolder browser.</p></li>
 <li class="step" id="bvinc1r">
-<p class="para">Select the file in conflict, then click <span class="guimenu">Resolve</span> <img src="../graphics/conflict_resolution.png" alt="Conflicts Resolution Icon" /> to
-view the Resolve Conflicts dialog box.</p></li>
+<p class="para">Select the iFolder in conflict <img src="../graphics/ifolder-error_16.png" alt="iFolder Application Icon " />,
+then click <span class="guimenu">Resolve</span> to open the Resolve Conflicts
+dialog box.</p></li>
 <li class="step" id="bx1anvu">
 <p class="para">View the information for the file on
 your local machine and the file on the server to determine which
-version of the file you want to keep, then click <span class="guimenu">Save This
-Version</span> to keep the correct file version.</p></li>
+version of the file you want to keep.</p></li>
+<li class="step" id="b47rm2p">
+<p class="para">Beneath the version you want to keep,
+click <span class="guimenu">Save This Version</span>.</p></li>
 <li class="step" id="bvincoe">
 <p class="para">When you are done resolving the conflict,
 click <span class="guimenu">OK</span>.</p></li></ol>
@@ -93,19 +95,16 @@ the other, and the content of the other file is destroyed. </li></ul></div>
 
 <div class="procedure">
 <ol class="steps">
-<li class="step" id="bx1b07n">
-<p class="para">When a conflict
-occurs, a pop-up message appears in the Notification area. Click
-the <span class="guimenu">X</span> to dismiss the message.</p></li>
 <li class="step" id="bx1b07o">
-<p class="para">In the Notification area, right-click
-the iFolder icon, then click <span class="guimenu">iFolders</span> to open
-the iFolder browser.</p></li>
+<p class="para">In the Notification
+area, right-click the iFolder application icon <img src="../graphics/ifolder22.png" alt="iFolder Application Icon " />,
+then click <span class="guimenu">iFolders</span> to open the iFolder browser.</p></li>
 <li class="step" id="bx1b07p">
-<p class="para">Select the file in conflict, then click <span class="guimenu">Resolve</span> <img src="../graphics/conflict_resolution.png" alt="Conflicts Resolution Icon" /> to
-view the Resolve Conflicts dialog box.</p></li>
+<p class="para">Select the file in conflict <img src="../graphics/ifolder-error_16.png" alt="iFolder Application Icon " />,
+then click <span class="guimenu">Resolve</span> to open the Resolve Conflicts
+dialog box.</p></li>
 <li class="step" id="bx1atam">
-<p class="para">Confirm that it is a file name conflict
+<p class="para">Confirm that it is a file name conflict,
 and determine whether the content is the same or different.</p></li>
 <li class="step" id="bx1au4u">
 <p class="para">Do one of the following:</p>
@@ -115,7 +114,7 @@ and determine whether the content is the same or different.</p></li>
 one of the files, then click <span class="guimenu">Save This Version</span>,
 then click <span class="guimenu">OK</span> to close the Resolve Conflicts
 dialog box. You are done.</li>
-<li class="listitem">If the content is different, continue with <a href="conflicts.html#bx1au97">Step 6</a>.</li></ul></div>
+<li class="listitem">If the content is different, continue with <a href="conflicts.html#bx1au97">Step 5</a>.</li></ul></div>
 </li>
 <li class="step" id="bx1au97">
 <p class="para">Close the Resolve Conflicts dialog box.</p></li>
