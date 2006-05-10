@@ -14,38 +14,38 @@
  www.novell.com
 
 
- BASELINE PAGE COUNT (based on 200 words per page): 61
+ BASELINE PAGE COUNT (based on 200 words per page): 63
 
 
  WORD COUNT
 
        Count    Doctype    Title
       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-         733    bookinfo   iFolder Help
-         306    preface    iFolder Help
-        1314    chapter    Overview of iFolder
-        4735    chapter    Managing iFolder Accounts and Preferences
-        5185    chapter    Managing iFolders
+         762    bookinfo   iFolder Help
+         251    preface    iFolder Help
+        1313    chapter    Overview of iFolder
+        4813    chapter    Managing iFolder Accounts and Preferences
+        5660    chapter    Managing iFolders
       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-       12273    book       iFolder Help
+       12799    book       iFolder Help
 
 
  GRAPHICS REFERENCED IN BOOK
 
        Count       Filename
       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-           2       ifolderuser.png
            2       ifolder-sync22.png
            2       if_notify_a.png
            2       if_acctasst1_a.png
            2       ifolder-waiting22.png
            2       ifolder24.png
            6       ifolder32.png
+           8       ifolder-error_16.png
            2       if_apbrmenu_a.png
-          32       ifolder22.png
-           4       conflict_resolution.png
+          38       ifolder22.png
            2       ifolder-error22.png
            2       prefs-notification32.png
+           2       if3_ifcr_share-accessro_a.png
            2       if_preferences_a.png
            2       ifolder-user-current16.png
            4       ifolder-download22.png
@@ -63,21 +63,19 @@
 
        Count       Type
       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-          65       xref
+          67       xref
            0       link
            0       ulink-xrefext
            0       ulink-xrefexttext
-           5       ulink
+           3       ulink
 
 
  URLS REFERENCED IN ULINKS
 
        URL
       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-       http://www.novell.com/documentation/ifolder3/
+       http://www.novell.com/documentation/ifolderos/
        http://www.unicode.org
-       http://www.novell.com/documentation/ifolder3/security/data/front.html
-       http://www.novell.com/documentation/ifolder3/readme/data/readme.html
        http://www.novell.com/documentation/ifolder3
 
 ========================================================================-->
@@ -85,12 +83,12 @@
 
 
 
-<book revision = "03/24/06" conformance = "ifolder3,doc,yes,4,80"
+<book revision = "04/26/06" conformance = "ifolder3,doc,yes,4,80"
     lang = "en" id = "user">
 <bookinfo id = "bookinfo"><title>iFolder Help</title>
 <productname>iFolder&trade;</productname>
 <productnumber>3.4</productnumber>
-<date>March 24, 2006</date>
+<date>June 30, 2006</date>
 <titleabbrev>Help</titleabbrev>
 <legalnotice id = "b423epo"><title>Legal Notices</title>
 <para>Novell, Inc., makes no representations or warranties with
@@ -118,10 +116,12 @@ missile, or chemical biological weaponry end uses. Please refer
 to www.novell.com&sol;info&sol;exports&sol; for more
 information on exporting Novell software. Novell assumes no responsibility
 for your failure to obtain any necessary export approvals.</para>
-<para>Copyright © 2004-2006 Novell, Inc. All rights reserved. No
-part of this publication may be reproduced, photocopied, stored
-on a retrieval system, or transmitted without the express written
-consent of the publisher.</para>
+<para>Copyright © 2004-2006 Novell, Inc. All rights reserved. Permission
+is granted to copy, distribute, and&sol;or modify this document
+under the terms of the GNU Free Documentation License (GFDL), Version
+1.2 or any later version, published by the Free Software Foundation
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+Texts. A copy of the GFDL can be found at http:&sol;&sol;www.fsf.org&sol;licenses&sol;fdl.html.</para>
 <para>THIS DOCUMENT AND MODIFIED VERSIONS OF THIS DOCUMENT ARE PROVIDED
 UNDER THE TERMS OF THE GNU FREE DOCUMENTATION LICENSE WITH THE FURTHER
 UNDERSTANDING THAT:</para>
@@ -129,9 +129,9 @@ UNDERSTANDING THAT:</para>
 OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, WITHOUT LIMITATION,
 WARRANTIES THAT THE DOCUMENT OR MODIFIED VERSION OF THE DOCUMENT
 IS FREE OF DEFECTS, MERCHANTABLE, FIT FOR A PARTICULAR PURPOSE,
-OR NON-INFRINGING. THE ENTIRE RISK AS TO THE QUALITY, ACCURACY, AND
-PERFORMANCE OF THE DOCUMENT OR MODIFIED VERSION OF THE DOCUMENT
-IS WITH YOU. SHOULD ANY DOCUMENT OR MODIFIED VERSION PROVE DEFECTIVE
+OR NON-INFRINGING. THE ENTIRE RISK AS TO THE QUALITY, ACCURACY,
+AND PERFORMANCE OF THE DOCUMENT OR MODIFIED VERSION OF THE DOCUMENT IS
+WITH YOU. SHOULD ANY DOCUMENT OR MODIFIED VERSION PROVE DEFECTIVE
 IN ANY RESPECT, YOU (NOT THE INITIAL WRITER, AUTHOR OR ANY CONTRIBUTOR)
 ASSUME THE COST OF ANY NECESSARY SERVICING, REPAIR OR CORRECTION.
 THIS DISCLAIMER OF WARRANTY CONSTITUTES AN ESSENTIAL PART OF THIS
@@ -197,32 +197,18 @@ client. </para>
 <listitem><para><xref linkend = "myifolders"
     xrefstyle = "ChapTitleOnPage"/></para></listitem></itemizedlist>
 <bridgehead id = "b2qz8eu">Audience</bridgehead>
-<para>This guide is intended for users of the iFolder client for
-Novell iFolder 3.<replaceable>x</replaceable>.</para>
-<bridgehead id = "usercomments">Feedback</bridgehead>
-<para>We want to hear your comments and suggestions about this manual
-and the other documentation included with this product. Please use
-the User Comment feature at the bottom of each page of the online
-documentation, or go to www.novell.com&sol;documentation&sol;feedback.html
-and enter your comments there.</para>
-<bridgehead id = "docupdates">Documentation Updates</bridgehead>
-<para>For the most recent version of the <citetitle>iFolder User
-Guide for Novell iFolder 3.x</citetitle>, see the <ulink
-    url = "http://www.novell.com/documentation/ifolder3/">Novell
-iFolder 3.<replaceable>x</replaceable> Documentation Web site</ulink>.</para>
-<para>For emerging issues for the iFolder client and Novell iFolder
-3.<replaceable>x</replaceable>, see the <ulink
-    url = "http://www.novell.com/documentation/ifolder3/readme/data/readme.html"><citetitle>Novell
-iFolder 3.x Readme</citetitle></ulink>.</para>
+<para>This guide is intended for users of the iFolder client.</para>
 <bridgehead id = "additionaldoc">Additional Documentation</bridgehead>
-<para>For information about installing, configuring, and managing
-Novell iFolder 3.<replaceable>x</replaceable> services, see the following: </para>
-<itemizedlist><listitem><para><ulink
-    url = "http://www.novell.com/documentation/ifolder3"><citetitle>Novell
-iFolder 3.x Administration Guide</citetitle></ulink></para></listitem>
-<listitem><para><ulink
-    url = "http://www.novell.com/documentation/ifolder3/security/data/front.html"><citetitle>Novell
-iFolder 3.x Security Administrator Guide</citetitle></ulink></para></listitem></itemizedlist>
+<para>If you are using the iFolder 3.4 or later client with a Novell
+iFolder 3.<replaceable>x</replaceable> enterprise server or Web access
+server, see the <citetitle>iFolder 3.4 User Guide for Novell iFolder
+3.x</citetitle> at the <ulink
+    url = "http://www.novell.com/documentation/ifolder3">Novell
+iFolder 3.x Documentation Web site</ulink>.</para>
+<para>If you are using the iFolder client with an open source server,
+see the <citetitle>iFolder User Guide</citetitle> at the <ulink
+    url = "http://www.novell.com/documentation/ifolderos/">iFolder
+Open Source Documentation Web site</ulink>.</para>
 <bridgehead id = "docconventions">Documentation Conventions</bridgehead>
 <para>In Novell documentation, a greater-than symbol (>) is used
 to separate actions within a step and items in a cross-reference
@@ -232,26 +218,27 @@ a Novell trademark. An asterisk (&ast;) denotes a third-party trademark.</para>
 <para>When a single pathname can be written with a backslash for
 some platforms or a forward slash for other platforms, the pathname
 is presented with a backslash. Users of platforms that require a forward
-slash, such as Linux&ast; or UNIX&ast;, should use forward
-slashes as required by your software.</para></preface>
+slash, such as Linux or UNIX, should use forward slashes as required
+by your software.</para></preface>
 
 <chapter conformance = ",doc,yes,4," lang = "en" id = "overview"
     xml:base = "01_overview.xml"><title>Overview of iFolder</title>
 <para>iFolder&trade; is a file-sharing application for Linux,
-Windows&ast;, and Macintosh&ast; clients. You can share files
-in multiple iFolders, each with a different group of users. You
-control who can participate in an iFolder and the access level for
-each member. You can also participate in iFolders that others share with
-you. </para>
+Windows, and Macintosh clients. You can share files in multiple
+iFolders, each with a different group of users. You control who
+can participate in an iFolder and the access level for each member.
+You can also participate in iFolders that others share with you. </para>
 <para>This section familiarizes you with the various benefits and
 features of iFolder:</para>
-<itemizedlist role="subtoc"><listitem><para><xref linkend = "bx3aueg"
+<itemizedlist role="subtoc"><listitem><para><xref linkend = "ovwsharing"
     xrefstyle = "SectTitleOnPage"/></para></listitem>
-<listitem><para><xref linkend = "bq1r10z" xrefstyle = "SectTitleOnPage"/></para></listitem>
-<listitem><para><xref linkend = "bq1r110" xrefstyle = "SectTitleOnPage"/></para></listitem>
-<listitem><para><xref linkend = "bwcku86" xrefstyle = "SectTitleOnPage"/></para></listitem>
-<listitem><para><xref linkend = "bq1r11b" xrefstyle = "SectTitleOnPage"/></para></listitem></itemizedlist>
-<sect1 role = "General" id = "bx3aueg"><title>iFolder Sharing</title>
+<listitem><para><xref linkend = "ovwbenefits"
+    xrefstyle = "SectTitleOnPage"/></para></listitem>
+<listitem><para><xref linkend = "ovwfeatures"
+    xrefstyle = "SectTitleOnPage"/></para></listitem>
+<listitem><para><xref linkend = "ovwxplat" xrefstyle = "SectTitleOnPage"/></para></listitem>
+<listitem><para><xref linkend = "ovwnext" xrefstyle = "SectTitleOnPage"/></para></listitem></itemizedlist>
+<sect1 role = "General" id = "ovwsharing"><title>iFolder Sharing</title>
 <para>Typically, when you work in multiple locations or in collaboration
 with others, you must conscientiously manage file versions. With
 iFolder, the most recent version of your files can follow you to
@@ -271,7 +258,7 @@ you to do the following:</para>
 share with you</para></listitem>
 <listitem><para>Participate as the owner or a member of iFolders
 in multiple accounts</para></listitem></itemizedlist></sect1>
-<sect1 role = "General" id = "bq1r10z"><title>Benefits of iFolder</title>
+<sect1 role = "General" id = "ovwbenefits"><title>Benefits of iFolder</title>
 <para>iFolder provides the following benefits:</para>
 <itemizedlist><listitem><para>Integrates with your native desktop
 environment, making it easy to create and manage multiple iFolders</para></listitem>
@@ -293,7 +280,8 @@ an iFolder to synchronize its data</para></listitem>
 <listitem><para>Offers an alternative to exchanging files via e-mail,
 which avoids the file-size limits on e-mail attachments and reduces
 your e-mail storage requirements</para></listitem></itemizedlist></sect1>
-<sect1 role = "General" id = "bq1r110"><title>Key Features of iFolder</title>
+<sect1 role = "General" id = "ovwfeatures"><title>Key Features of
+iFolder</title>
 <para>Before you begin to use iFolder, it is important to understand
 the following key features:</para>
 <itemizedlist role="subtoc"><listitem><para><xref linkend = "bq1r111"
@@ -345,7 +333,7 @@ across all member iFolders. When you share an iFolder, member users
 with the Write right can modify the directory structure, and those changes
 apply to all copies of the iFolder. Each user can locate the shared
 iFolder anywhere on his or her own computer that satisfies the <xref
-    linkend = "bx08x4y" xrefstyle = "SectTitleOnPage"/>.</para></sect2>
+    linkend = "locguide" xrefstyle = "SectTitleOnPage"/>.</para></sect2>
 <sect2 id = "bq1r113"><title>iFolder Access Rights</title>
 <para>The iFolder client supports the owner and three levels of
 access for members of an iFolder: </para>
@@ -389,7 +377,7 @@ demand.</para></sect2>
 <para>The synchronization log displays a log of your iFolder background
 activity, such as uploading and downloading files for different
 iFolders. </para></sect2></sect1>
-<sect1 role = "General" id = "bwcku86"><title>Cross-Platform Considerations</title>
+<sect1 role = "General" id = "ovwxplat"><title>Cross-Platform Considerations</title>
 <para>The user interfaces for the Linux, Windows, and Macintosh
 versions of the iFolder client conform to interface conventions
 of their individual platforms. The way you perform common tasks
@@ -469,8 +457,8 @@ when logging In to the desktop</guimenu></para></entry>
 </row>
 </tbody>
 </tgroup></informaltable></sect1>
-<sect1 role = "General" id = "bq1r11b"><title>What&rsquo;s Next</title>
-<para>For information about configuring and using the iFolder client,
+<sect1 role = "General" id = "ovwnext"><title>What&rsquo;s Next</title>
+<para>For information about configuring using the iFolder client,
 see the following:</para>
 <itemizedlist><listitem><para><xref linkend = "accountsprefs"
     xrefstyle = "ChapTitleOnPage"/></para></listitem>
@@ -482,20 +470,22 @@ see the following:</para>
 <title>Managing iFolder Accounts and Preferences</title>
 <para>This section discusses how to configure your iFolder&trade; accounts
 and how to manage preferences for the iFolder 3.4 and later client.</para>
-<itemizedlist role="subtoc"><listitem><para><xref linkend = "bw08fxi"
+<itemizedlist role="subtoc"><listitem><para><xref
+    linkend = "startclient" xrefstyle = "SectTitleOnPage"/></para></listitem>
+<listitem><para><xref linkend = "stopclient"
     xrefstyle = "SectTitleOnPage"/></para></listitem>
-<listitem><para><xref linkend = "b41jzxm" xrefstyle = "SectTitleOnPage"/></para></listitem>
 <listitem><para><xref linkend = "accounts" xrefstyle = "SectTitleOnPage"/></para></listitem>
 <listitem><para><xref linkend = "login" xrefstyle = "SectTitleOnPage"/></para></listitem>
-<listitem><para><xref linkend = "b41lzuy" xrefstyle = "SectTitleOnPage"/></para></listitem>
+<listitem><para><xref linkend = "logout" xrefstyle = "SectTitleOnPage"/></para></listitem>
 <listitem><para><xref linkend = "accountdetails"
     xrefstyle = "SectTitleOnPage"/></para></listitem>
-<listitem><para><xref linkend = "bvwsp7c" xrefstyle = "SectTitleOnPage"/></para></listitem>
+<listitem><para><xref linkend = "delacct" xrefstyle = "SectTitleOnPage"/></para></listitem>
 <listitem><para><xref linkend = "preferences"
     xrefstyle = "SectTitleOnPage"/></para></listitem>
-<listitem><para><xref linkend = "bvwppw5" xrefstyle = "SectTitleOnPage"/></para></listitem>
-<listitem><para><xref linkend = "bwbirb9" xrefstyle = "SectTitleOnPage"/></para></listitem></itemizedlist>
-<sect1 role = "General" id = "bw08fxi"><title>Starting the iFolder
+<listitem><para><xref linkend = "firewall" xrefstyle = "SectTitleOnPage"/></para></listitem>
+<listitem><para><xref linkend = "virusscan"
+    xrefstyle = "SectTitleOnPage"/></para></listitem></itemizedlist>
+<sect1 role = "General" id = "startclient"><title>Starting the iFolder
 Client</title>
 <para>When iFolder is running, the iFolder application icon <inlinemediaobject><textobject
 role="description"><phrase>iFolder Application Icon </phrase></textobject><imageobject
@@ -531,7 +521,7 @@ local copy of an iFolder, but you cannot manage iFolders. In addition,
 you must log in to an account to create an iFolder or synchronize
 its files.</para>
 <para>For information about stopping the iFolder client, see <xref
-    linkend = "b41jzxm" xrefstyle = "SectTitleOnPage"/>.</para>
+    linkend = "stopclient" xrefstyle = "SectTitleOnPage"/>.</para>
 <para></para>
 <sect2 id = "b4064a7"><title>Linux</title>
 <bridgehead id = "b40miua">Starting iFolder Automatically on Login</bridgehead>
@@ -631,7 +621,7 @@ then enter </para>
 <screen>
 &sol;opt&sol;novell&sol;ifolder3&sol;bin&sol;ifolder
 </screen></listitem></itemizedlist></step></procedure></sect2></sect1>
-<sect1 role = "General" id = "b41jzxm"><title>Stopping the iFolder
+<sect1 role = "General" id = "stopclient"><title>Stopping the iFolder
 Client</title>
 <para>To stop the iFolder client:</para>
 <procedure id = "b41k315"><step id = "b41k316"><para>Right-click
@@ -642,13 +632,13 @@ fileref="graphics/ifolder22.png" width="11.00pt" format="PNG"/></imageobject>
 width="11.00pt" format="png"/></imageobject></inlinemediaobject> in
 the Notification area, then select <guimenu>Quit</guimenu>.</para>
 <informalfigure pgwide = "0"><mediaobject><imageobject role="fo"><imagedata
-fileref="graphics/if_menu_a.png" width="80.00pt" format="PNG"/></imageobject>
+fileref="graphics/if_menu_a.png" width="78.5pt" format="PNG"/></imageobject>
 <imageobject role="html"><imagedata fileref="graphics/if_menu_a.png"
-width="80.00pt" format="png"/></imageobject></mediaobject></informalfigure></step></procedure>
+width="78.5pt" format="png"/></imageobject></mediaobject></informalfigure></step></procedure>
 <para>Files are synchronized with your iFolder server account only
 when you are connected to the iFolder server. You can stop synchronization
 by logging out of an account. iFolder continues to run in the background.
-For information, see <xref linkend = "b41lzuy"
+For information, see <xref linkend = "logout"
     xrefstyle = "SectTitleOnPage"/>.</para></sect1>
 <sect1 role = "General" id = "accounts"><title>Configuring an iFolder
 Account</title>
@@ -789,9 +779,9 @@ the iFolder browser. Continue with <xref linkend = "createifolder"
 <informalfigure pgwide = "0"><mediaobject><textobject role="description"><phrase>iFolder
 Client Menu</phrase></textobject>
 <imageobject role="fo"><imagedata fileref="graphics/if_menu_a.png"
-width="83pt" format="PNG"/></imageobject>
+width="78.5pt" format="PNG"/></imageobject>
 <imageobject role="html"><imagedata fileref="graphics/if_menu_a.png"
-width="83pt" format="png"/></imageobject></mediaobject></informalfigure></listitem>
+width="78.5pt" format="png"/></imageobject></mediaobject></informalfigure></listitem>
 <listitem><para>If iFolders for this account are available for download
 from the server, an iFolder Notification message <inlinemediaobject><textobject
 role="description"><phrase>Balloon Notification Icon </phrase></textobject><imageobject
@@ -863,7 +853,7 @@ password has expired. </para>
 password failure. </para></step>
 <step id = "bvws3f9"><para>On successful connection, close the <guimenu>iFolders
 Properties</guimenu> dialog box.</para></step></procedure></sect1>
-<sect1 id = "b41lzuy"><title>Logging Out of an iFolder Account</title>
+<sect1 id = "logout"><title>Logging Out of an iFolder Account</title>
 <para>Log out of an iFolder account whenever you want to work offline. </para>
 <sect2 id = "b41m00c"><title>Linux or Macintosh</title>
 <procedure id = "b41m0dk"><step id = "b41m5bn"><para>Right-click
@@ -1109,7 +1099,7 @@ only if multiple accounts exist)</para></listitem></itemizedlist></step>
 <step id = "b41rjds"><para>When you are done, close the <guimenu>Account
 Properties</guimenu> dialog box, then close the <guimenu>iFolder Preferences</guimenu> dialog
 box.</para></step></procedure></sect1>
-<sect1 role = "General" id = "bvwsp7c"><title>Deleting an iFolder
+<sect1 role = "General" id = "delacct"><title>Deleting an iFolder
 Account</title>
 <para>You can specify whether to remove an account only from the
 current computer, or whether to also remove the iFolders you own
@@ -1177,7 +1167,7 @@ Tab of the iFolder Preferences Dialog Box</phrase></textobject>
 width="180 pt" format="PNG"/></imageobject>
 <imageobject role="html"><imagedata fileref="graphics/if_preferences_a.png"
 width="180 pt" format="png"/></imageobject></mediaobject></informalfigure></step>
-<step id = "bvibeba"><para>Specify the following values:</para>
+<step id = "bvibeba"><para>Specify your preferences the following:</para>
 <informaltable frame = "topbot" rowsep = "0"><tgroup cols = "2">
 <colspec colnum = "1" colname = "1" colwidth = "1.108in"/>
 <colspec colnum = "2" colname = "2" colwidth = "4.433in"/>
@@ -1215,9 +1205,12 @@ to share an iFolder. </para>
 Interval</guimenu> you specify in iFolder Preferences. The interval
 controls the synchronization of files, iFolder share invitations,
 and the list of users. You can also click <guimenu>Refresh</guimenu> to
-update invitations on demand. </para>
+update invitations on demand.</para>
 <para>Deselect this option to disable the pop-up message behavior
-for invitations.</para></entry>
+for invitations.</para>
+<para>You can select <guimenu>Show Available iFolders</guimenu> in
+the iFolder browser whenever iFolder is running to view a list of
+iFolders that are available to download on your current computer.</para></entry>
 </row>
 <row rowsep = "0" id = "bvhdvf8">
 <entry colname = "1"><para><guimenu>Notify of Conflicts</guimenu></para></entry>
@@ -1225,7 +1218,13 @@ for invitations.</para></entry>
 message in the Notification area whenever a conflict occurs when
 synchronizing files. </para>
 <para>Deselect this option to disable the pop-up message behavior
-for synchronization conflicts.</para></entry>
+for synchronization conflicts.</para>
+<para>Whenever conflicts occur, the iFolder Error icon <inlinemediaobject><imageobject
+role="fo"><imagedata fileref="graphics/ifolder-error_16.png" width="11.00pt"
+format="PNG"/></imageobject>
+<imageobject role="html"><imagedata fileref="graphics/ifolder-error_16.png"
+width="11.00pt" format="png"/></imageobject></inlinemediaobject> is
+displayed on the iFolder when iFolder is running.</para></entry>
 </row>
 <row rowsep = "0" id = "bviaxn9">
 <entry colname = "1"><para><guimenu>Notify When a User Joins</guimenu></para></entry>
@@ -1234,7 +1233,11 @@ message in the Notification area whenever a user accepts an invitation
 to share an iFolder. Acceptance is keyed to when the user actually
 sets up the iFolder on his or her own computer. </para>
 <para>Deselect this option to disable the pop-up message behavior
-for user share confirmation.</para></entry>
+for user share confirmation.</para>
+<para>You can view a complete list of iFolder users whenever iFolder
+is running by selecting the iFolder, then clicking <guimenu>Share
+with</guimenu> to open the iFolder Properties dialog box to the
+Sharing tab.</para></entry>
 </row>
 <row rowsep = "0" id = "bviaxna">
 <entry colname = "1"><para><guimenu>Synchronization</guimenu></para></entry>
@@ -1264,7 +1267,7 @@ client machine synchronizing with the server.</para></listitem>
 apply your changes.</para></step>
 <step id = "bvibebj"><para>Click <guimenu>OK</guimenu> to close
 the iFolder Preferences dialog box.</para></step></procedure></sect1>
-<sect1 role = "General" id = "bvwppw5"><title>Configuring Local
+<sect1 role = "General" id = "firewall"><title>Configuring Local
 Firewall Settings for iFolder Traffic</title>
 <para>If you use a local firewall, you must set your firewall to
 allow iFolder to choose a local dynamic port or configure a local
@@ -1379,9 +1382,9 @@ the iFolder icon, then selecting <guimenu>Exit</guimenu>.</para></step>
 by adding the <guimenu>Web Service Port Range</guimenu> parameter
 to the <guimenu>Service Manager</guimenu> section.</para></step>
 <step id = "bw4vbz4"><para>Start the iFolder client.</para>
-<para>For more information, see <xref linkend = "bw08fxi"
+<para>For more information, see <xref linkend = "startclient"
     xrefstyle = "SectTitleOnPage"/>.</para></step></procedure></sect1>
-<sect1 role = "General" id = "bwbirb9"><title>Configuring Local
+<sect1 role = "General" id = "virusscan"><title>Configuring Local
 Virus Scanner Settings for iFolder Traffic</title>
 <para>If you use virus scanning software on your computer, exclude
 the <filename>..&bsol;simias&bsol;WorkArea&bsol;</filename> directory
@@ -1418,20 +1421,22 @@ files are accessible to all members via a host service, such as
 a Novell&reg; iFolder&reg; 3.x server. iFolder files can
 be modified and read by those with privileges to do so. </para>
 <para>This section discusses the following tasks for iFolder:</para>
-<itemizedlist role="subtoc"><listitem><para><xref linkend = "bx08x4y"
+<itemizedlist role="subtoc"><listitem><para><xref linkend = "locguide"
     xrefstyle = "SectTitleOnPage"/></para></listitem>
-<listitem><para><xref linkend = "bwensdb" xrefstyle = "SectTitleOnPage"/></para></listitem>
-<listitem><para><xref linkend = "bwagrrn" xrefstyle = "SectTitleOnPage"/></para></listitem>
-<listitem><para><xref linkend = "b40i3xl" xrefstyle = "SectTitleOnPage"/></para></listitem>
+<listitem><para><xref linkend = "typeguide"
+    xrefstyle = "SectTitleOnPage"/></para></listitem>
+<listitem><para><xref linkend = "nameconv" xrefstyle = "SectTitleOnPage"/></para></listitem>
+<listitem><para><xref linkend = "ificons" xrefstyle = "SectTitleOnPage"/></para></listitem>
 <listitem><para><xref linkend = "createifolder"
     xrefstyle = "SectTitleOnPage"/></para></listitem>
 <listitem><para><xref linkend = "sharewith"
     xrefstyle = "SectTitleOnPage"/></para></listitem>
-<listitem><para><xref linkend = "b422rvn" xrefstyle = "SectTitleOnPage"/></para></listitem>
+<listitem><para><xref linkend = "viewhide" xrefstyle = "SectTitleOnPage"/></para></listitem>
 <listitem><para><xref linkend = "setupifolder"
     xrefstyle = "SectTitleOnPage"/></para></listitem>
 <listitem><para><xref linkend = "propifolders"
     xrefstyle = "SectTitleOnPage"/></para></listitem>
+<listitem><para><xref linkend = "ifquota" xrefstyle = "SectTitleOnPage"/></para></listitem>
 <listitem><para><xref linkend = "sync" xrefstyle = "SectTitleOnPage"/></para></listitem>
 <listitem><para><xref linkend = "conflicts"
     xrefstyle = "SectTitleOnPage"/></para></listitem>
@@ -1440,7 +1445,7 @@ be modified and read by those with privileges to do so. </para>
 <listitem><para><xref linkend = "movelocation"
     xrefstyle = "SectTitleOnPage"/></para></listitem>
 <listitem><para><xref linkend = "deleting" xrefstyle = "SectTitleOnPage"/></para></listitem></itemizedlist>
-<sect1 role = "General" id = "bx08x4y"><title>Guidelines for Locating
+<sect1 role = "General" id = "locguide"><title>Guidelines for Locating
 and Using iFolders</title>
 <para>Generally, you can locate iFolders anywhere on your local
 hard drive whenever you create an iFolder or set up an iFolder that
@@ -1454,7 +1459,7 @@ invalid characters:</para>
 <screen>
 &bsol;&sol;:&ast;?"&lt;>&verbar;;
 </screen>
-<para>For other naming conventions, see <xref linkend = "bwagrrn"
+<para>For other naming conventions, see <xref linkend = "nameconv"
     xrefstyle = "SectTitleOnPage"/>.</para></listitem>
 <listitem><para>The iFolder must reside on a local hard drive; the
 location cannot be on a network drive or non-physical drive.</para></listitem>
@@ -1496,7 +1501,13 @@ your system to use them.</para>
 <para>On Windows, NTFS includes built-in security features such
 as file and folder permissions and the Encrypting File System (EFS),
 which is the technology used to store encrypted files on NTFS volumes.
-These security features are not supported on FAT32 file systems.</para>
+These security features are not supported on FAT32 file systems.
+Make sure the local login identities for users (other than the Administrator
+identity, of course) do not have the Administrator rights or equivalent.
+The Administrator user has access to all files and directories on
+the computer. For shared computers where privacy and security are
+essential for each user, the users can encrypt their local copy
+of iFolder data with EFS or a third-party file system encryption.</para>
 <para>Linux and Macintosh file systems are designed for multi-user
 environments. File permissions allow you to control access for the
 user, groups, and others. A user&rsquo;s personal files are typically set
@@ -1510,7 +1521,7 @@ POSIX compliant. For information, see <xref linkend = "fat32mtpt"
 copies of the iFolder can exist on the device, with a copy for each
 user that downloads it from the server. Different local login identities
 cannot share a single location for the shared iFolders.</para></listitem></itemizedlist></sect1>
-<sect1 role = "General" id = "bwensdb"><title>Guidelines for File
+<sect1 role = "General" id = "typeguide"><title>Guidelines for File
 Types and Sizes to Not Synchronize</title>
 <para>When the iFolder client is used with Novell iFolder 3.<replaceable>x</replaceable>,
 your iFolder administrator might specify file type restrictions
@@ -1549,7 +1560,7 @@ making the GroupWise archive, cache, or remote directories into
 iFolders. If you do this, the GroupWise data files become corrupted
 after synchronizing the file a few times. GroupWise needs the files
 in the archive to be maintained as a set of files.</para></sect1>
-<sect1 role = "General" id = "bwagrrn"><title>Naming Conventions
+<sect1 role = "General" id = "nameconv"><title>Naming Conventions
 for an iFolder and Its Folders and Files</title>
 <para>The iFolder client imposes naming conventions that consider
 the collective restrictions of the Linux, Windows, and Macintosh
@@ -1583,7 +1594,7 @@ from all uppercase characters to all lowercase characters. This
 creates synchronization problems for those files if the iFolder
 is set with the Read Only access right.</para>
 <remark>(Bug 84722, Russ Young, Last updated: July 29, 2005)</remark></listitem></itemizedlist></sect1>
-<sect1 id = "b40i3xl"><title>Understanding iFolder Icons</title>
+<sect1 id = "ificons"><title>Understanding iFolder Icons</title>
 <para>The following table describes iFolder icons and related tasks.</para>
 <table id = "b40i4d6" frame = "topbot" rowsep = "1" pgwide = "0">
 <title>Description of iFolder Icons</title><tgroup cols = "2">
@@ -1640,19 +1651,20 @@ accounts to the local computer. For information, see <xref
 </row>
 <row rowsep = "1" id = "b40i8br">
 <entry colname = "1"><mediaobject><imageobject role="fo"><imagedata
-fileref="graphics/ifolder32.png" width="24.00pt" format="PNG"/></imageobject>
+fileref="graphics/ifolder32.png" width="22.00pt" format="PNG"/></imageobject>
 <imageobject role="html"><imagedata fileref="graphics/ifolder32.png"
-width="24.00pt" format="png"/></imageobject></mediaobject></entry>
+width="22.00pt" format="png"/></imageobject></mediaobject></entry>
 <entry colname = "2"><para>The iFolder emblem (green &ldquo;i&rdquo;)
 appears on iFolders whenever the iFolder application is running
 for iFolders viewed in a file manager, on the desktop, or in the
 iFolder browser.</para>
 <para>When iFolder is not running, iFolders appear as normal folders <inlinemediaobject><imageobject
-role="fo"><imagedata fileref="graphics/folder_16.gif" width="" format="GIF"/></imageobject>
+role="fo"><imagedata fileref="graphics/folder_16.gif" width="11.00pt"
+format="GIF"/></imageobject>
 <imageobject role="html"><imagedata fileref="graphics/folder_16.gif"
-width="" format="gif"/></imageobject></inlinemediaobject> when viewed
-in the file manager or on the desktop. The iFolder browser is not
-available when iFolder is not running. </para>
+width="11.00pt" format="gif"/></imageobject></inlinemediaobject> when
+viewed in the file manager or on the desktop. The iFolder browser
+is not available when iFolder is not running. </para>
 <para>It is a good practice to organize your local collection of
 iFolders in a separate directory that contains only iFolders. This
 makes it easy to remember which folders are iFolders even when iFolder
@@ -1676,16 +1688,16 @@ For information, see <guimenu>Automatically connect</guimenu> in <xref
 <listitem><para>The server is down or your account is disabled on
 the server side. Contact your iFolder administrator for assistance.</para></listitem>
 <listitem><para>Your firewall is blocking iFolder traffic. For information
-to resolve this problem, see <xref linkend = "bvwppw5"
+to resolve this problem, see <xref linkend = "firewall"
     xrefstyle = "SectTitleOnPage"/>.</para></listitem>
 <listitem><para>Your network connection is down. Check your local
 network settings.</para></listitem></itemizedlist></entry>
 </row>
 <row rowsep = "1" id = "b40jpkg">
 <entry colname = "1"><mediaobject><imageobject role="fo"><imagedata
-fileref="graphics/ifolder-waiting22.png" width="24.00pt" format="PNG"/></imageobject>
+fileref="graphics/ifolder-waiting22.png" width="" format="PNG"/></imageobject>
 <imageobject role="html"><imagedata fileref="graphics/ifolder-waiting22.png"
-width="24.00pt" format="png"/></imageobject></mediaobject></entry>
+width="" format="png"/></imageobject></mediaobject></entry>
 <entry colname = "2"><para>The iFolder Waiting to Synchronize icon
 indicates that the iFolder contains files to be synchronized with
 the server, and the synchronization process has not yet begun. </para>
@@ -1697,22 +1709,23 @@ indicated by the changes in the icon.</para></entry>
 </row>
 <row rowsep = "1" id = "b41ph8h">
 <entry colname = "1"><mediaobject><imageobject role="fo"><imagedata
-fileref="graphics/ifolder-sync22.png" width="24.00pt" format="PNG"/></imageobject>
+fileref="graphics/ifolder-sync22.png" width="" format="PNG"/></imageobject>
 <imageobject role="html"><imagedata fileref="graphics/ifolder-sync22.png"
-width="24.00pt" format="png"/></imageobject></mediaobject></entry>
+width="" format="png"/></imageobject></mediaobject></entry>
 <entry colname = "2"><para>The iFolder Synchronizing icon indicates
 that files in the iFolder are currently being synchronized with
 the server.</para></entry>
 </row>
 <row rowsep = "1" id = "b41ph8i">
 <entry colname = "1"><mediaobject><imageobject role="fo"><imagedata
-fileref="graphics/ifolder-error22.png" width="24.00pt" format="PNG"/></imageobject>
+fileref="graphics/ifolder-error22.png" width="" format="PNG"/></imageobject>
 <imageobject role="html"><imagedata fileref="graphics/ifolder-error22.png"
-width="24.00pt" format="png"/></imageobject></mediaobject></entry>
+width="" format="png"/></imageobject></mediaobject></entry>
 <entry colname = "2"><para>The iFolder Error icon indicates that
-files in the iFolder have not been synchronized because there is
-a conflict between the local copy and server copy of a file. Resolve the
-conflict by indicating which version of the file to keep.</para></entry>
+one or more files in the iFolder have not been synchronized because
+there is a conflict between the local copy and server copy of a file.
+Resolve the conflict by indicating which version of the file to
+keep.</para></entry>
 </row>
 <row rowsep = "1" id = "b40jtqi">
 <entry colname = "1"><mediaobject><imageobject role="fo"><imagedata
@@ -1722,7 +1735,7 @@ width="" format="png"/></imageobject></mediaobject></entry>
 <entry colname = "2"><para>In the Sharing dialog box, the iFolder
 Owner User icon indicates that the user owns the shared iFolder. </para></entry>
 </row>
-<row rowsep = "1" id = "b40jxou">
+<row rowsep = "0" id = "b40jxou">
 <entry colname = "1"><mediaobject><imageobject role="fo"><imagedata
 fileref="graphics/ifolder-user-current16.png" width="" format="PNG"/></imageobject>
 <imageobject role="html"><imagedata fileref="graphics/ifolder-user-current16.png"
@@ -1732,24 +1745,15 @@ Current User icon indicates that the user is currently managing
 the iFolder. If the current user is the owner, the Owner User icon
 is displayed instead.</para></entry>
 </row>
-<row rowsep = "0" id = "b40jyro">
-<entry colname = "1"><mediaobject><imageobject role="fo"><imagedata
-fileref="graphics/ifolderuser.png" width="" format="PNG"/></imageobject>
-<imageobject role="html"><imagedata fileref="graphics/ifolderuser.png"
-width="" format="png"/></imageobject></mediaobject></entry>
-<entry colname = "2"><para>In the Sharing dialog box, the iFolder
-User icon indicates that the user is a member of the shared iFolder.
-The user is not the current user and does not own the iFolder.</para></entry>
-</row>
 </tbody>
 </tgroup></table></sect1>
 <sect1 role = "General" id = "createifolder"><title>Creating and
 Uploading an iFolder</title>
 <para>You can create an iFolder by converting an existing folder
 that satisfies the following guidelines: </para>
-<itemizedlist><listitem><para><xref linkend = "bx08x4y"
+<itemizedlist><listitem><para><xref linkend = "locguide"
     xrefstyle = "SectTitleOnPage"/></para></listitem>
-<listitem><para><xref linkend = "bwagrrn" xrefstyle = "SectTitleOnPage"/></para></listitem></itemizedlist>
+<listitem><para><xref linkend = "nameconv" xrefstyle = "SectTitleOnPage"/></para></listitem></itemizedlist>
 <para>If the folder does not exist, you can browse to a location
 and create the new folder as part of the process. </para>
 <para>Within the iFolder, you can set up any subdirectory structure
@@ -1770,15 +1774,15 @@ click <guimenu>Convert to an iFolder.</guimenu></para></listitem>
 <guimenu>Convert to an iFolder</guimenu></menuchoice>.</para></listitem></itemizedlist>
 <para>The folder icon <inlinemediaobject><textobject role="description"><phrase>Folder
 Icon</phrase></textobject><imageobject role="fo"><imagedata fileref="graphics/folder_16.gif"
-width="0.145in" format="GIF"/></imageobject>
+width="11pt" format="GIF"/></imageobject>
 <imageobject role="html"><imagedata fileref="graphics/folder_16.gif"
-width="0.145in" format="gif"/></imageobject></inlinemediaobject> changes
+width="11pt" format="gif"/></imageobject></inlinemediaobject> changes
 to a folder with an overlay of the iFolder emblem (green &ldquo;i&rdquo;) <inlinemediaobject><textobject
 role="description"><phrase>iFolder Icon </phrase></textobject><imageobject
 role="fo"><imagedata fileref="graphics/ifolder32.png" width="11pt"
 format="PNG"/></imageobject>
 <imageobject role="html"><imagedata fileref="graphics/ifolder32.png"
-width="11pt" format="png"/></imageobject></inlinemediaobject> .</para></step>
+width="11pt" format="png"/></imageobject></inlinemediaobject>.</para></step>
 <step id = "bx19z0q"><para>If the <literal>iFolder Created</literal> message
 appears, do one of the following:</para>
 <itemizedlist><listitem><para>Click <guimenu>Close</guimenu> to
@@ -1791,13 +1795,20 @@ go to iFolder Preferences, select <guimenu>Show Confirmation Dialog
 When Creating iFolders</guimenu>, then click <guimenu>OK</guimenu>.</para></listitem></itemizedlist></step></procedure></sect2>
 <sect2 id = "bwemc36"><title>Creating iFolders in the iFolder Browser</title>
 <procedure id = "b25pz8z"><step id = "bv2gxbu"><para>In the Notification
-area, right-click the iFolder application icon <inlinemediaobject><textobject
+area, use one of the following methods to open the iFolder browser:</para>
+<itemizedlist><listitem><para>Click the iFolder application icon <inlinemediaobject><textobject
+role="description"><phrase>iFolder Application Icon </phrase></textobject><imageobject
+role="fo"><imagedata fileref="graphics/ifolder22.png" width="11.00pt"
+format="PNG"/></imageobject>
+<imageobject role="html"><imagedata fileref="graphics/ifolder22.png"
+width="11.00pt" format="png"/></imageobject></inlinemediaobject>.</para></listitem>
+<listitem><para>Right-click the iFolder application icon <inlinemediaobject><textobject
 role="description"><phrase>iFolder Application Icon </phrase></textobject><imageobject
 role="fo"><imagedata fileref="graphics/ifolder22.png" width="11.00pt"
 format="PNG"/></imageobject>
 <imageobject role="html"><imagedata fileref="graphics/ifolder22.png"
 width="11.00pt" format="png"/></imageobject></inlinemediaobject>,
-then click <guimenu>iFolders</guimenu> to open the iFolder browser.</para></step>
+then click <guimenu>iFolders</guimenu>.</para></listitem></itemizedlist></step>
 <step id = "bv2gxbv"><para>Click <guimenu>Upload a folder</guimenu>.</para></step>
 <step id = "bv2gwvt"><para>Specify the iFolder account you want
 to use for this iFolder.</para>
@@ -1901,7 +1912,8 @@ discusses the following tasks:</para>
 <listitem><para><xref linkend = "b41tbcf" xrefstyle = "SectTitleOnPage"/></para></listitem>
 <listitem><para><xref linkend = "bq6lwm0" xrefstyle = "SectTitleOnPage"/></para></listitem>
 <listitem><para><xref linkend = "bq6lwma" xrefstyle = "SectTitleOnPage"/></para></listitem>
-<listitem><para><xref linkend = "bq6lwmr" xrefstyle = "SectTitleOnPage"/></para></listitem></itemizedlist>
+<listitem><para><xref linkend = "bq6lwmr" xrefstyle = "SectTitleOnPage"/></para></listitem>
+<listitem><para><xref linkend = "b47q8t9" xrefstyle = "SectTitleOnPage"/></para></listitem></itemizedlist>
 <sect2 id = "bv2hnvt"><title>Understanding User Access Rights</title>
 <para>The following table describes the capabilities associated
 with each level of access for users.</para>
@@ -1933,7 +1945,8 @@ quota</para></entry>
 <entry colname = "5"><para>No</para></entry>
 </row>
 <row rowsep = "1" id = "b4033q2">
-<entry colname = "1"><para>Reassign ownership to another user</para></entry>
+<entry colname = "1"><para>Transfer ownership to another member whose
+state is iFolder User </para></entry>
 <entry colname = "2"><para>Yes</para></entry>
 <entry colname = "3"><para>No</para></entry>
 <entry colname = "4"><para>No</para></entry>
@@ -2069,15 +2082,26 @@ click <guimenu>OK</guimenu> to close the iFolder Properties window.</para></step
 <para>As the working relationships and status of members of an iFolder
 change, you might need to change a user&rsquo;s access right
 for the iFolder. For example, you might want to give a trusted user
-the File Control right for the iFolder.</para>
+the Full Control right for the iFolder.</para>
 <procedure id = "b25pz93"><step id = "bv2hncw"><para>On the Sharing
-tab, select one or more users who you want to assign the same access
+tab, select one or more users who you want to have the same access
 right.</para></step>
 <step id = "bv2hoj5"><para>Select <guimenu>Access</guimenu>, then
 specify the <guimenu>Full Control</guimenu>, <guimenu>Read&sol;Write</guimenu>,
-or <guimenu>Read Only</guimenu> right.</para></step>
-<step id = "bv2hpae"><para>Click <guimenu>Apply</guimenu>, then
-click <guimenu>OK</guimenu> to close the iFolder Properties window.</para></step></procedure></sect2>
+or <guimenu>Read Only</guimenu> right.</para>
+<para>When you first invite a user to participate, the <guimenu>Make
+this user the owner of the iFolder </guimenu>option is disabled
+(dimmed) in the Access dialog box. If you intend to make the new
+user the owner, you must wait until the user&rsquo;s state changes
+from <guimenu>Invited User</guimenu> to <guimenu>iFolder User</guimenu>,
+then you can transfer ownership.</para>
+<informalfigure pgwide = "0"><mediaobject><imageobject role="fo"><imagedata
+fileref="graphics/if3_ifcr_share-accessro_a.png" width="100.00pt"
+format="PNG"/></imageobject>
+<imageobject role="html"><imagedata fileref="graphics/if3_ifcr_share-accessro_a.png"
+width="100.00pt" format="png"/></imageobject></mediaobject></informalfigure></step>
+<step id = "bv2hpae"><para>Click <guimenu>OK</guimenu>, then click <guimenu>OK</guimenu> to
+close the iFolder Properties window.</para></step></procedure></sect2>
 <sect2 id = "bq6lwmr"><title>Removing a User from an iFolder</title>
 <para>To unshare an iFolder, you must remove a user as a member
 of an iFolder. The iFolder on the user&rsquo;s workstation becomes
@@ -2086,8 +2110,31 @@ but the files are no longer synchronized with the shared iFolder.</para>
 <procedure id = "b25pz95"><step id = "bv2hug0"><para>On the Sharing
 tab, select one or more users from the list.</para></step>
 <step id = "bv2hug1"><para>Click <guimenu>Remove</guimenu>, click <guimenu>Apply</guimenu>,
-then click <guimenu>OK</guimenu>.</para></step></procedure></sect2></sect1>
-<sect1 id = "b422rvn"><title>Viewing and Hiding Available iFolders</title>
+then click <guimenu>OK</guimenu>.</para></step></procedure></sect2>
+<sect2 id = "b47q8t9"><title>Transferring Ownership to an iFolder
+User</title>
+<para>The owner of an iFolder can transfer ownership of the iFolder
+to another member whose state is iFolder User. After the transfer,
+the original owner becomes a member with the Read&sol;Write
+right, and the space consumed by the iFolder is charged against
+the new owner. </para>
+<procedure id = "b47q8ta"><step id = "b47q70j"><para>In a file manager
+or the iFolder browser, right-click the iFolder you want to transfer,
+then select <guimenu>Share With</guimenu> to open the iFolder&rsquo;s
+Properties dialog box to the <guimenu>Sharing</guimenu> tab.</para></step>
+<step id = "b47q8tb"><para>From the list of users, select the iFolder
+User who is to be the new owner, then click <guimenu>Access</guimenu>.</para></step>
+<step id = "b47q70k"><para>Select <guimenu>Make this user the owner
+of this iFolder</guimenu>.</para>
+<para>The <guimenu>Make this user the owner of the iFolder </guimenu>option
+is disabled (dimmed) in the Access dialog box if the user&rsquo;s
+state is <guimenu>Invited User</guimenu>. In this case, exit the
+dialog box, wait until the user&rsquo;s state changes from <guimenu>Invited
+User</guimenu> to <guimenu>iFolder User</guimenu>, then repeat the
+preceding steps to transfer ownership.</para></step>
+<step id = "b47qbju"><para>Click <guimenu>OK</guimenu>, then click <guimenu>OK</guimenu> to
+close the iFolder Properties window.</para></step></procedure></sect2></sect1>
+<sect1 id = "viewhide"><title>Viewing and Hiding Available iFolders</title>
 <para>You can decide which iFolders you want to download to each
 of your computers. If iFolders are available to you on the server
 that you have not downloaded, they are listed in the iFolder browser under
@@ -2113,16 +2160,16 @@ with a balloon pop-up message in the Notification area. You can
 click the balloon to set up the iFolder at that time, or close the
 balloon to download the iFolder later.</para>
 <figure pgwide = "0" id = "b40hlcu"><title>Example Notification
-of Shared iFolders</title>
+of a Shared iFolder</title>
 <mediaobject><imageobject role="fo"><imagedata fileref="graphics/if_notify_a.png"
 width="202.5pt" format="PNG"/></imageobject>
 <imageobject role="html"><imagedata fileref="graphics/if_notify_a.png"
 width="202.5pt" format="png"/></imageobject></mediaobject></figure>
 <bridgehead id = "b422qwt">Guidelines</bridgehead>
 <para>The local iFolder location must satisfy the following guidelines: </para>
-<itemizedlist><listitem><para><xref linkend = "bx08x4y"
+<itemizedlist><listitem><para><xref linkend = "locguide"
     xrefstyle = "SectTitleOnPage"/></para></listitem>
-<listitem><para><xref linkend = "bwagrrn" xrefstyle = "SectTitleOnPage"/></para></listitem></itemizedlist>
+<listitem><para><xref linkend = "nameconv" xrefstyle = "SectTitleOnPage"/></para></listitem></itemizedlist>
 <bridgehead id = "b422r2k">Downloading an iFolder</bridgehead>
 <procedure id = "b25pz97"><step id = "bv2ht17"><para>Right-click
 the iFolder application icon <inlinemediaobject><textobject role="description"><phrase>iFolder
@@ -2241,6 +2288,34 @@ area, right-click the iFolder application icon, then click <guimenu>iFolders</gu
 open the iFolder browser.</para></step>
 <step id = "bv2h0o4"><para>In the list of iFolders, select the iFolder,
 then click <guimenu>Properties</guimenu>.</para></step></procedure></sect1>
+<sect1 id = "ifquota"><title>Setting an iFolder Quota</title>
+<para>Setting a quota for an iFolder helps the owner to manage the
+space allotted for all of the iFolders the user owns. Member users
+of the iFolder can view the quota, but cannot modify it.</para>
+<para>On the server, space for your iFolder data is allocated as
+it is needed; space is not reserved by the quotas you specify for
+each iFolder. It is possible to overbook the quotas so that the
+total allocated space can exceed the quota set for your account.
+However, the iFolders can individually and collectively grow only
+up to the available space for your account. </para>
+<para>To enable or modify the quota for an iFolder:</para>
+<procedure id = "b47s0j0"><step id = "b47s23v"><para>Open the <guimenu>Properties</guimenu> dialog
+box for the iFolder to the <guimenu>General</guimenu> tab.</para></step>
+<step id = "b47s0j1"><para>Select <guimenu>Set Quota</guimenu> to
+enable the quota.</para></step>
+<step id = "b47s54d"><para>Specify the maximum size of the iFolder
+in MB. </para></step>
+<step id = "b47sfjc"><para>Click <guimenu>Apply</guimenu> to accept
+the setting, then click <guimenu>OK</guimenu> to close the Properties
+dialog box.</para></step></procedure>
+<para>To disable the quota for an iFolder:</para>
+<procedure id = "b47sgad"><step id = "b47sgae"><para>Open the <guimenu>Properties</guimenu> dialog
+box for the iFolder to the <guimenu>General</guimenu> tab.</para></step>
+<step id = "b47sgaf"><para>Deselect <guimenu>Set Quota</guimenu> to
+disable the quota.</para></step>
+<step id = "b47sgag"><para>Click <guimenu>Apply</guimenu> to accept
+the setting, then click <guimenu>OK</guimenu> to close the Properties
+dialog box.</para></step></procedure></sect1>
 <sect1 role = "General" id = "sync"><title>Synchronizing Files</title>
 <bridgehead id = "bviejga">Synchronizing Files on Demand</bridgehead>
 <procedure id = "b25pz9a"><step id = "bviejgb"><para>In the Notification
@@ -2276,34 +2351,43 @@ the minimum system Synchronization Interval, typically every 5 minutes,
 is configured by the iFolder administrator. You cannot override
 the system minimum. The absolute system minimum is 1 minute.</para></step></procedure></sect1>
 <sect1 role = "General" id = "conflicts"><title>Resolving File Conflicts</title>
-<para>When conflicts occur between file versions saved at the same
-time or when a filename differs by case only, the file is flagged
-with a status of <literal>Name Conflict</literal>. The file is stored
-in the conflict area and an alert is sent to flag the file through
-the iFolder client. </para>
+<para>Conflicts can occur between file versions saved at the same
+time on different computers, or when a filename differs by case
+only. When conflicts occur, the file is stored in the conflict area
+and the file is flagged with a status of <guimenu>Name Conflict</guimenu>.
+The iFolder Error icon <inlinemediaobject><imageobject role="fo"><imagedata
+fileref="graphics/ifolder-error_16.png" width="11.00pt" format="PNG"/></imageobject>
+<imageobject role="html"><imagedata fileref="graphics/ifolder-error_16.png"
+width="11.00pt" format="png"/></imageobject></inlinemediaobject> is
+displayed on the iFolder. If the <guimenu>Notify of conflicts</guimenu> option
+is enabled in your iFolder Preferences, an alert is also sent to
+the Notification area. You can control the pop-up behavior of Notifications
+by setting your preference in the <menuchoice><guimenu>iFolder Preferences</guimenu>
+<guimenu>General</guimenu></menuchoice> tab.</para>
 <bridgehead id = "bx1b1zs">Version Conflicts</bridgehead>
 <para>Version conflicts should be coordinated with other members
 before resolving the conflict. Then choose the correct version in
 the Conflict Resolution dialog.</para>
-<procedure id = "b25pz9c"><step id = "bvin9s9"><para>When a conflict
-occurs, a pop-up message appears in the Notification area. Click
-the <guimenu>X</guimenu> to dismiss the message.</para>
-<para>You can disable the pop-up behavior by setting the preference
-in the <menuchoice><guimenu>iFolder Preferences</guimenu><guimenu>General</guimenu></menuchoice> tab.</para></step>
-<step id = "bvin9nq"><para>In the Notification area, right-click
-the iFolder icon, then click <guimenu>iFolders</guimenu> to open
-the iFolder browser.</para></step>
-<step id = "bvinc1r"><para>Select the file in conflict, then click <guimenu>Resolve</guimenu> <inlinemediaobject><textobject
-role="description"><phrase>Conflicts Resolution Icon</phrase></textobject><imageobject
-role="fo"><imagedata fileref="graphics/conflict_resolution.png"
-width="0.164in" format="PNG"/></imageobject>
-<imageobject role="html"><imagedata fileref="graphics/conflict_resolution.png"
-width="0.164in" format="png"/></imageobject></inlinemediaobject> to
-view the Resolve Conflicts dialog box.</para></step>
+<procedure id = "b25pz9c"><step id = "bvin9nq"><para>In the Notification
+area, right-click the iFolder application icon <inlinemediaobject><textobject
+role="description"><phrase>iFolder Application Icon </phrase></textobject><imageobject
+role="fo"><imagedata fileref="graphics/ifolder22.png" width="11.00pt"
+format="PNG"/></imageobject>
+<imageobject role="html"><imagedata fileref="graphics/ifolder22.png"
+width="11.00pt" format="png"/></imageobject></inlinemediaobject>,
+then click <guimenu>iFolders</guimenu> to open the iFolder browser.</para></step>
+<step id = "bvinc1r"><para>Select the iFolder in conflict <inlinemediaobject><imageobject
+role="fo"><imagedata fileref="graphics/ifolder-error_16.png" width="11.00pt"
+format="PNG"/></imageobject>
+<imageobject role="html"><imagedata fileref="graphics/ifolder-error_16.png"
+width="11.00pt" format="png"/></imageobject></inlinemediaobject>,
+then click <guimenu>Resolve</guimenu> to open the Resolve Conflicts
+dialog box.</para></step>
 <step id = "bx1anvu"><para>View the information for the file on
 your local machine and the file on the server to determine which
-version of the file you want to keep, then click <guimenu>Save This
-Version</guimenu> to keep the correct file version.</para></step>
+version of the file you want to keep.</para></step>
+<step id = "b47rm2p"><para>Beneath the version you want to keep,
+click <guimenu>Save This Version</guimenu>.</para></step>
 <step id = "bvincoe"><para>When you are done resolving the conflict,
 click <guimenu>OK</guimenu>.</para></step></procedure>
 <bridgehead id = "bx1arx6">Filename Conflicts</bridgehead>
@@ -2321,20 +2405,22 @@ of the file. This allows both versions of the file to exist in the
 iFolder with different filenames. If you rename a file version within
 the Resolve Conflicts dialog box, that version of the file overwrites
 the other, and the content of the other file is destroyed. </para></listitem></itemizedlist>
-<procedure id = "b25pz9d"><step id = "bx1b07n"><para>When a conflict
-occurs, a pop-up message appears in the Notification area. Click
-the <guimenu>X</guimenu> to dismiss the message.</para></step>
-<step id = "bx1b07o"><para>In the Notification area, right-click
-the iFolder icon, then click <guimenu>iFolders</guimenu> to open
-the iFolder browser.</para></step>
-<step id = "bx1b07p"><para>Select the file in conflict, then click <guimenu>Resolve</guimenu> <inlinemediaobject><textobject
-role="description"><phrase>Conflicts Resolution Icon</phrase></textobject><imageobject
-role="fo"><imagedata fileref="graphics/conflict_resolution.png"
-width="0.164in" format="PNG"/></imageobject>
-<imageobject role="html"><imagedata fileref="graphics/conflict_resolution.png"
-width="0.164in" format="png"/></imageobject></inlinemediaobject> to
-view the Resolve Conflicts dialog box.</para></step>
-<step id = "bx1atam"><para>Confirm that it is a file name conflict
+<procedure id = "b25pz9d"><step id = "bx1b07o"><para>In the Notification
+area, right-click the iFolder application icon <inlinemediaobject><textobject
+role="description"><phrase>iFolder Application Icon </phrase></textobject><imageobject
+role="fo"><imagedata fileref="graphics/ifolder22.png" width="11.00pt"
+format="PNG"/></imageobject>
+<imageobject role="html"><imagedata fileref="graphics/ifolder22.png"
+width="11.00pt" format="png"/></imageobject></inlinemediaobject>,
+then click <guimenu>iFolders</guimenu> to open the iFolder browser.</para></step>
+<step id = "bx1b07p"><para>Select the file in conflict <inlinemediaobject><imageobject
+role="fo"><imagedata fileref="graphics/ifolder-error_16.png" width="11.00pt"
+format="PNG"/></imageobject>
+<imageobject role="html"><imagedata fileref="graphics/ifolder-error_16.png"
+width="11.00pt" format="png"/></imageobject></inlinemediaobject>,
+then click <guimenu>Resolve</guimenu> to open the Resolve Conflicts
+dialog box.</para></step>
+<step id = "bx1atam"><para>Confirm that it is a file name conflict,
 and determine whether the content is the same or different.</para></step>
 <step id = "bx1au4u"><para>Do one of the following:</para>
 <itemizedlist><listitem><para>If the content is the same, rename
