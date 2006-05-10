@@ -1,0 +1,2 @@
+# Add entries in this file if user's real names are desired in the ChangeLog
+#username:'Full Name <email@address.com>'

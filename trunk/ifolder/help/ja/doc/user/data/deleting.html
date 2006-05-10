@@ -1,0 +1,89 @@
+﻿<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Language" content="jp">
+
+<meta name="Generator" content="Novell HTML Conversion 10 March 2004">
+<meta name="Generation-Date" content="Sunday, October 23, 2005 15:54">
+<meta name="Content-Date" content="Mon, 22 Oct 2005 12:00:00 GMT">
+<meta name="Robots" content="INDEX, FOLLOW">
+<meta name="Document_Number" content="zHTML xD.0000.0000.0003.0012.">
+<meta name="Author" content="zHTML xD.0000.0000.0003.0012.">
+<meta name="Product_Class" content="">
+<meta name="Product_and_Version" content="iFolder&trade;">
+<meta name="Copyright" content="Copyright Novell, Inc. 1983-2004">
+
+<link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
+
+
+<title>iFolderヘルプ</title>
+<script type="text/javascript" language="javascript">
+function loadMenu()
+{
+	if ((parent.theMenu) && (parent.theMenu.amBusy == false) && parent.frames[2])
+	{
+	   parent.theMenu.loadScript("../doc/user/data/myifolders.html","../doc/user/data/toc_myifolders.html");
+	}
+	else{ setTimeout("loadMenu()",200);}
+}
+loadMenu();
+</script>
+<script type="text/javascript" language="javascript" src="../../../ui/jsglobal.js"></script>
+</head>
+
+<body onload="">
+<script type="text/javascript" language="javascript">
+  var prev_link="movelocation.html";
+  var next_link="legal.html";
+</script>
+
+<script type="text/javascript" language="javascript" src="../../../ui/topnav.js"></script>
+
+<a name="deleting"></a>
+
+<div class="Topic" title="Deleting an iFolder">
+
+<h2 class="TOPIC-TITLE"><br />iFolderの削除</h2>
+<p class="TOPIC">コレクションからiFolderを削除すると、ローカルコピーのiFolderとその内容のが削除されます。また、iFolderのアクセス権に応じて、iFolderの共用関係にも影響します。以下の表では、iFolderを削除するユーザのアクセス権ごとに、共用関係とそのメンバーのiFolderに及ぼす影響について説明しています。</p>
+<table class="TABLENOTITLE" border="0" cellpadding="5" cellspacing="0">
+<tr class="HEADERROW"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="brzc2fh"></a><em class="TBLHEAD">iFolderを削除するユーザのアクセス権</em></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">共用関係</em></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">iFolderのサーバのコピー</em></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">iFolderのメンバーのコピー</em></th>
+</tr>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="brzc2fi"></a><p class="ENTRY">所有者</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">iFolderの共用関係を終了する</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">iFolderのメタデータとサーバからのコンテンツを削除する </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">すべてのユーザのiFolderを標準フォルダに戻す </p></td>
+</tr>
+<tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="brzc2fj"></a><p class="ENTRY">フル制御ユーザ</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">共用からユーザの登録を取り消す</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">影響なし</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">iFolderのローカルコピーを標準フォルダに戻す</p></td>
+</tr>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="brzc2fk"></a><p class="ENTRY">読書き可能ユーザ</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">共用からユーザの登録を取り消す</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">影響なし</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">iFolderのローカルコピーを標準フォルダに戻す</p></td>
+</tr>
+<tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="brzc2fl"></a><p class="ENTRY">読み込み専用ユーザ</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">共用からユーザの登録を取り消す</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">影響なし</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">iFolderのローカルコピーを標準フォルダに戻す</p></td>
+</tr></table>
+
+<p class="TOPIC">iFolderを削除してもiFolderクライアントはワークステーションからアンインストールされません。</p>
+<ol class="STEPLIST">
+<li class="STEP"><a name="bq8ubrz"></a>
+<p class="STEP">ファイルマネージャまたはiFolderブラウザで、削除するiFolderを検索します。</p></li>
+
+<li class="STEP"><a name="bq8u9b1"></a>
+<p class="STEP">iFolderを右クリックして、［削除］をクリックします。</p></li>
+</ol> </div>
+
+<script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
+
+</body>
+</html>

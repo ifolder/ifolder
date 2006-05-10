@@ -1,0 +1,117 @@
+#
+# spec file for package nautilus-ifolder3 (Version 3.4.@@BUILDNUM@@.1)
+#
+# Copyright (c) 2006 SUSE LINUX Products GmbH, Nuernberg, Germany.
+# This file and all modifications and additions to the pristine
+# package are under the same license as the package itself.
+#
+# Please submit bugfixes or comments via http://bugs.opensuse.org
+#
+
+# norootforbuild
+# neededforbuild  cairo cairo-devel compat-libstdc++ eel eel-devel gail gail-devel gdk-pixbuf glib2-devel glitz glitz-devel gnome-desktop-devel gnome-menus-devel gnome-vfs2 gnome-vfs2-devel gnome2-devel-packages gtk-sharp gtk-sharp2 gtk2 gtk2-devel ifolder3 intltool libpng-devel libtool mono-core mono-data mono-devel mono-web nautilus nautilus-devel pango pango-devel simias startup-notification-devel gconf2 gconf2-devel
+
+BuildRequires: aspell-en compat-libstdc++ eel-devel gdk-pixbuf gnutls-devel gtk-sharp2-complete ifolder3 intltool libgnomeprintui-devel libwnck-devel nautilus-devel perl-XML-Parser mDNSResponder update-desktop-files gconf2 gconf2-devel
+
+Name:         nautilus-ifolder3
+%define buildnum @@BUILDNUM@@
+URL:          http://forge.novell.com/modules/xfmod/project/?ifolder
+%define prefix /opt/novell/ifolder3
+%define gnome_root /opt/gnome
+License:      GPL
+Group:        System/GUI/Other
+Autoreqprov:  on
+Requires:     nautilus >= 2.10.0
+Requires:     simias >= 1.5
+Requires:     ifolder3 >= 3.5
+Obsoletes:    %{name} < %{version}
+Provides:     nautilus-ifolder
+Obsoletes:    nautilus-ifolder
+Version:      3.5.@@BUILDNUM@@.1
+Release:      1
+Summary:      Nautilus plugin to add iFolder support
+Source:       nautilus-ifolder3-3.5.%{buildnum}.1.tar.gz
+BuildRoot:    %{_tmppath}/%{name}-%{version}-build
+#=============================================================================
+
+%description
+Provides the iFolder plugin interface to the Nautilus File Manager
+
+
+
+%prep
+export BUILDNUM=%{buildnum}
+%setup -n %{name}-%{version}
+#=============================================================================
+
+%build
+export BUILDNUM=%{buildnum}
+./autogen.sh --prefix=%{prefix}
+make
+make dist
+#=============================================================================
+
+%install
+export BUILDNUM=%{buildnum}
+%{__rm} -rf $RPM_BUILD_ROOT
+make DESTDIR=$RPM_BUILD_ROOT install
+#=============================================================================
+
+%clean
+%{__rm} -rf $RPM_BUILD_ROOT
+#=============================================================================
+
+%post
+/opt/gnome/bin/gtk-update-icon-cache
+#=============================================================================
+
+%files
+%defattr(-,root,root)
+%{prefix}/*
+%dir /opt/gnome/share/nautilus-ifolder3
+%dir /opt/gnome/share/nautilus-ifolder3/pixmaps
+%dir /opt/gnome/share/icons/gnome/48x48
+%dir /opt/gnome/share/icons/gnome/48x48/emblems
+/opt/gnome/lib/nautilus/extensions-1.0/libnautilus-ifolder*
+/opt/gnome/share/icons/gnome/48x48/emblems/emblem-ifolder.icon
+/opt/gnome/share/icons/gnome/48x48/emblems/emblem-ifolder.png
+/opt/gnome/share/nautilus-ifolder3/pixmaps/ifolder-folder.png
+
+%changelog -n nautilus-ifolder3
+* Thu Mar 02 2006 - btimothy@novell.com
+- changed Obsoletes line so the package doesn't
+- obsolete itself [#143297]
+* Wed Jan 25 2006 - mls@suse.de
+- converted neededforbuild to BuildRequires
+* Wed Jan 18 2006 - cgaisford@suse.de
+- updated to sources from ifolder_3_4 branch
+- changed around the location of the pixmaps to match the
+  the developers current whim
+* Thu Dec 15 2005 - calvin@novell.com
+- updated to sources from iFolder_3_4 branch
+* Mon Nov 28 2005 - ro@suse.de
+- update to nautilus-ifolder3-3.1.5250.1
+* Thu Sep 29 2005 - dmueller@suse.de
+- add norootforbuild
+* Sun Sep 04 2005 - aj@suse.de
+- Add check-build.sh.
+* Thu Sep 01 2005 - ro@suse.de
+- complete rename: provide and obsolete old name nautilus-ifolder
+* Thu Sep 01 2005 - jbell@novell.com
+- completely re-worked the .spec file and updated the source to
+  include all nautilus-ifolder3.1 functionality
+* Sun Aug 21 2005 - ro@suse.de
+- added directory to filelist
+* Tue Aug 16 2005 - nadvornik@suse.cz
+- better fix for bug #104474
+* Tue Aug 16 2005 - nadvornik@suse.cz
+- changed ifolder3 prefix to /usr/lib/ifolder3 [#104474]
+- use RPM_OPT_FLAGS
+* Fri Aug 05 2005 - nadvornik@suse.cz
+- updated to 3.0.20050608
+* Tue May 03 2005 - ro@suse.de
+- added compat-libstdc++ to nfb
+* Thu Feb 17 2005 - ro@suse.de
+- fix file list
+* Wed Feb 16 2005 - nadvornik@suse.cz
+- new package

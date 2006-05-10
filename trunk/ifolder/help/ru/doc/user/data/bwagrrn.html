@@ -1,0 +1,68 @@
+<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Language" content="ru">
+
+<meta name="Generator" content="Novell HTML Conversion 10 March 2004">
+<meta name="Generation-Date" content="Sunday, October 23, 2005 15:54">
+<meta name="Content-Date" content="Mon, 22 Oct 2005 12:00:00 GMT">
+<meta name="Robots" content="INDEX, FOLLOW">
+<meta name="Document_Number" content="zHTML xD.0000.0000.0003.0003.">
+<meta name="Author" content="zHTML xD.0000.0000.0003.0003.">
+<meta name="Product_Class" content="">
+<meta name="Product_and_Version" content="iFolder(TM)">
+<meta name="Copyright" content="Авторские права Novell, Inc. 1983-2004">
+
+<link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
+
+
+<title>Справка iFolder</title>
+<script type="text/javascript" language="javascript">
+function loadMenu()
+{
+	if ((parent.theMenu) && (parent.theMenu.amBusy == false) && parent.frames[2])
+	{
+	   parent.theMenu.loadScript("../doc/user/data/myifolders.html","../doc/user/data/toc_myifolders.html");
+	}
+	else{ setTimeout("loadMenu()",200);}
+}
+loadMenu();
+</script>
+<script type="text/javascript" language="javascript" src="../../../ui/jsglobal.js"></script>
+</head>
+
+<body onload="">
+<script type="text/javascript" language="javascript">
+  var prev_link="bwensdb.html";
+  var next_link="createifolder.html";
+</script>
+
+<script type="text/javascript" language="javascript" src="../../../ui/topnav.js"></script>
+
+<a name="bwagrrn"></a>
+
+<div class="Topic" title="Соглашения об именовании папки iFolder, содержащихся в ней папок и файлов">
+
+<h2 class="TOPIC-TITLE"><br />Соглашения об именовании папки iFolder, содержащихся в ней папок и файлов</h2>
+<p class="TOPIC">Клиент iFolder устанавливает соглашения об именовании, в которых учитываются общие ограничения файловых систем Linux, Windows и Macintosh. Папка iFolder, содержащиеся в ней папки или файлы должны иметь допустимые имена в соответствии с соглашениями об именовании, иначе синхронизация выполняться не будет.</p>
+<p class="TOPIC">Для папок iFolder, содержащихся в них папок и файлов используйте следующие соглашения об именовании:</p>
+<ul class="LISTBULLET">
+<li class="BULLETITEM">iFolder поддерживает набор символов <a href="http://www.unicode.org" target="_blank" class="ULINK">Unicode*</a> в кодировке UTF-8. </li>
+
+<li class="BULLETITEM">Не используйте следующие недопустимые символы для именования папок iFolder или входящих в них папок и файлов: <pre class="CODESAMPLENARROW">\/:*?"&lt;&gt;|;</pre>
+
+<p class="BULLETITEM">При использовании недопустимых символов в имени файла или папки в iFolder возникает конфликт имен. Этот конфликт должен быть устранен до начала синхронизации файла или папки.</p></li>
+
+<li class="BULLETITEM">Максимальная длина имени для одного компонента пути – 255 байт. Максимальная длина имен файлов включает точку (.) и расширение файла.</li>
+
+<li class="BULLETITEM">В именах папок iFolder, а также в именах содержащихся папок и файлов значения прописных или строчных букв сохраняются, но не учитываются. Если имена файлов отличаются только регистром букв, в iFolder возникает конфликт имен. Этот конфликт должен быть устранен до начала синхронизации файла или папки.</li>
+
+<li class="BULLETITEM">При создании папок iFolder в файловой системе FAT32 системы Linux не называйте файлы с использованием прописных букв. Файлы VFAT или FAT32 обрабатываются системой Linux, после чего происходит автоматическая замена имен файлов; символы файла, которые указаны прописными буквами и соответствуют формату файлов MS-DOS 8.3, состоящего из всех прописных букв, заменяются строчными символами. Из-за этого происходят проблемы при синхронизации этих файлов, если для папки iFolder установлены права "Только чтение".</li>
+</ul> </div>
+
+<script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,453 @@
+AC_INIT
+AC_CANONICAL_SYSTEM
+AM_CONFIG_HEADER(config.h)
+AC_PROG_CC
+AC_PROG_CXX
+m4_pattern_allow(PKG_CONFIG)
+
+PACKAGE=ifolder3
+AC_SUBST(PACKAGE)
+
+AM_INIT_AUTOMAKE($PACKAGE, 3.5)
+# Check to see if the BUILDNUM is set by global build
+if test "$BUILDNUM" = ""; then
+	let "BUILDNUM=`date +%G%j`-2000000"
+fi
+
+VERSION=$VERSION.$BUILDNUM.1
+AC_SUBST(VERSION)
+AC_SUBST(BUILDNUM)
+
+AM_MAINTAINER_MODE
+
+DATADIRNAME=share
+
+##
+## Run standard macros
+##
+#AM_PROG_CC_STD
+#AC_PROG_INSTALL
+#AC_HEADER_STDC
+AM_PROG_LIBTOOL
+
+dnl ========================================================
+dnl Set the Operating System Variables
+dnl ========================================================
+
+case $host_os in
+    linux*)
+        IFOLDER_OS='linux'
+        PKG_CONFIG_DIR='lib'
+    ;;
+    darwin*)
+        IFOLDER_OS='darwin'
+        PKG_CONFIG_DIR='lib'
+    ;;
+    cygwin*)
+        IFOLDER_OS='windows'
+        PKG_CONFIG_DIR='.'
+    ;;
+    *)
+        AC_MSG_ERROR([Unknown host_os: $host_os])
+    ;;
+esac
+AC_SUBST(IFOLDER_OS)
+AM_CONDITIONAL(LINUX, test "$IFOLDER_OS" = "linux")
+AM_CONDITIONAL(WINDOWS, test "$IFOLDER_OS" = "windows")
+AM_CONDITIONAL(DARWIN, test "$IFOLDER_OS" = "darwin")
+
+AC_SUBST(LINUX)
+AC_SUBST(WINDOWS)
+AC_SUBST(DARWIN)
+
+SRCDIR='$(top_srcdir)/src'
+TOOLDIR='$(top_srcdir)/tools'
+EMPTY=
+SPACE='$(EMPTY) $(EMPTY)'
+AC_SUBST(SRCDIR)
+AC_SUBST(TOOLDIR)
+AC_SUBST(EMPTY)
+AC_SUBST(SPACE)
+
+dnl ========================================================
+dnl PKG_CONFIG and required versions
+dnl ========================================================
+
+dnl Check for pkgconfig first
+AC_CHECK_PROG(HAVE_PKGCONFIG, pkg-config, yes, no)
+
+dnl Give error and exit if we don't have pkgconfig
+if test "x$HAVE_PKGCONFIG" = "xno"; then
+  AC_MSG_ERROR(you need to have pkgconfig installed !)
+fi
+
+dnl ========================================================
+dnl Handle --enable-doxygen
+dnl ========================================================
+
+AC_ARG_ENABLE(doxygen, [
+  --enable-doxygen          enable the option to build API Documentation with Doxygen (make doc)],
+    [case "${enableval}" in
+        yes) enable_doxygen=true ;;
+        no)  enable_doxygen=false ;;
+        *) AC_MSG_ERROR(bad value ${enableval} for --enable-doxygen) ;;
+    esac],[enable_doxygen=false])
+AM_CONDITIONAL(BUILD_DOXYGEN, test x$enable_doxygen = xtrue)
+
+if test "x$enable_doxygen" == "xtrue"; then
+	dnl ========================================================
+	dnl Check for doxygen
+	dnl ========================================================
+
+	AC_CHECK_PROG(HAVE_DOXYGEN, doxygen, yes, no)
+
+	if test "x$HAVE_DOXYGEN" == "xno"; then
+		AC_MSG_ERROR(doxygen not found on your path !)
+	fi
+fi
+
+#
+# We add $prefix to PKG_CONFIG_PATH so pkg-config will find any other
+# packages 'make install'-ed to the same prefix.
+#
+# The default value of $prefix is not set until later in the script.
+# We set the default here, if needed.
+#
+test "x$prefix" = xNONE && prefix=$ac_default_prefix
+test "x$exec_prefix" = xNONE && exec_prefix="${prefix}"
+
+if test -z "$PKG_CONFIG_PATH"; then
+    export PKG_CONFIG_PATH="$prefix/lib/pkgconfig"
+else
+    export PKG_CONFIG_PATH="$prefix/lib/pkgconfig:$PKG_CONFIG_PATH"
+fi
+echo PKG_CONFIG_PATH=$PKG_CONFIG_PATH
+AC_SUBST(PKG_CONFIG_PATH)
+
+dnl ==========================================================================
+
+INSTALL_BIN_OPTS='--mode=755'
+AC_SUBST(INSTALL_BIN_OPTS)
+
+dnl ========================================================
+dnl Translations
+dnl ========================================================
+
+#ALL_LINGUAS="cs de en es fi fr it ja hu pl pt pt_BR ru sk zh_CN zh_TW"
+#GETTEXT_PACKAGE=${PACKAGE}
+#AC_SUBST(GETTEXT_PACKAGE)
+#AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [gettext package name])
+#AM_GLIB_GNU_GETTEXT
+
+# AM_GNOME_GETTEXT above substs $DATADIRNAME
+# this is the directory where the *.{mo,gmo} files are installed
+#gnomelocaledir='${gnome_root}/${DATADIRNAME}/locale'
+#AC_SUBST(gnomelocaledir)
+
+dnl ==========================================================================
+
+#GNOME_COMPILE_WARNINGS(maximum)
+
+#
+# Installation directory options.
+#
+# These are normally left unexpanded so users can "make install exec_prefix=/foo".
+# However, we want them expanded.
+#
+bindir="${exec_prefix}/bin"
+sbindir="${exec_prefix}/sbin"
+libexecdir="${exec_prefix}/libexec"
+datadir="${prefix}/share"
+sysconfdir="${prefix}/etc"
+sharedstatedir="${prefix}/com"
+localstatedir="${prefix}/var"
+libdir="${exec_prefix}/lib"
+includedir="${prefix}/include"
+oldincludedir="/usr/include"
+infodir="${prefix}/info"
+mandir="${prefix}/man"
+
+dnl ========================================================
+dnl Handle --enable-debug
+dnl ========================================================
+
+AC_ARG_ENABLE(debug, [
+  --enable-debug          configure the Makefiles to build in DEBUG mode],
+    [case "${enableval}" in
+        yes) enable_debug=true ;;
+        no)  enable_debug=false ;;
+        *) AC_MSG_ERROR(bad value ${enableval} for --enable-debug) ;;
+    esac],[enable_debug=false])
+AM_CONDITIONAL(DEBUG, test x$enable_debug = xtrue)
+
+dnl ========================================================
+dnl Handle --with-qt4-path
+dnl ========================================================
+AC_MSG_CHECKING(QT4 path)
+AC_ARG_WITH(qt4-path,
+        [  --with-qt4-path=PATH  set default --qt4-path to PATH (required on W32 and OSX)],
+        [ QT4_PATH="$with_qt4_path" ],
+        [ QT4_PATH="" ])
+
+case $host_os in
+	darwin*)
+	;;
+    linux*)
+    	if test "x$QT4_PATH" = "x"; then
+    		QT4_PATH=$(pkg-config --variable=prefix QtCore)
+    	fi
+    ;;
+	cygwin*)
+		QT4_PATH=`cygpath --unix "$QTDIR"`
+	;;
+esac
+
+AC_DEFINE_UNQUOTED(QT4_PATH, "$QT4_PATH", [Path to Qt 4 Installed Prefix])
+AC_SUBST(QT4_PATH)
+
+dnl Make sure that QT4_PATH is set.  Bail if it's not!
+if test "x$QT4_PATH" = "x"; then
+  AC_MSG_ERROR(Cannot determine Qt 4.x install path.  You must specify --with-qt4-path=PATH !)
+fi
+
+
+dnl ========================================================
+dnl Handle --with-cppunit-path
+dnl ========================================================
+
+AC_ARG_WITH(cppunit-path,
+	[  --with-cppunit-path=PATH  set default --cppunit-path to PATH (required for running unit tests)],
+	[ CPPUNIT_PATH="$with_cppunit_path" ],
+	[ CPPUNIT_PATH="" ])
+AC_DEFINE_UNQUOTED(CPPUNIT_PATH, "$CPPUNIT_PATH", [Install prefix to CppUnit])
+AC_SUBST(CPPUNIT_PATH)
+
+if test "x$CPPUNIT_PATH" = "x"; then
+  CPPUNIT_CFLAGS=
+  CPPUNIT_LIBS=
+else
+  CPPUNIT_CFLAGS="-I$CPPUNIT_PATH/include"
+  CPPUNIT_LIBS="-L$CPPUNIT_PATH/lib -lcppunit"
+fi
+AC_SUBST(CPPUNIT_CFLAGS)
+AC_SUBST(CPPUNIT_LIBS)
+
+echo CPPUNIT_CFLAGS=$CPPUNIT_CFLAGS
+echo CPPUNIT_LIBS=$CPPUNIT_LIBS
+
+dnl ========================================================
+dnl Set platform-specific variables
+dnl ========================================================
+case $IFOLDER_OS in
+    #
+    # MAC OS X configuration
+    #
+	darwin)
+		#
+		# Set variables
+		#
+		GSOAP_PATH="$TOOLDIR/gsoap/macosx-2.7"
+		
+		if test "$enable_debug" = "true"
+		then
+			QT4_CFLAGS="-I${QT4_PATH}/mkspecs/macx-g++ -I${QT4_PATH}/include -F${QT4_PATH}/lib"
+			QT4_LIBS=""
+			QT4_CORE_CFLAGS="-I${QT4_PATH}/lib/QtCore.framework/Headers"
+			QT4_CORE_LIBS=""
+			QT4_GUI_CFLAGS="-I${QT4_PATH}/lib/QtGui.framework/Headers"
+			QT4_GUI_LIBS=""
+			QT4_NETWORK_CFLAGS="-I${QT4_PATH}/lib/QtNetwork.framework/Headers"
+			QT4_NETWORK_LIBS=""
+			QT4_XML_CFLAGS="-I${QT4_PATH}/lib/QtXml.framework/Headers"
+			QT4_XML_LIBS=""
+		else
+			QT4_CFLAGS="-I${QT4_PATH}/mkspecs/macx-g++ -I${QT4_PATH}/include -F${QT4_PATH}/lib"
+			QT4_LIBS=""
+			QT4_CORE_CFLAGS="-I${QT4_PATH}/lib/QtCore.framework/Headers"
+			QT4_CORE_LIBS=""
+			QT4_GUI_CFLAGS="-I${QT4_PATH}/lib/QtGui.framework/Headers"
+			QT4_GUI_LIBS=""
+			QT4_NETWORK_CFLAGS="-I${QT4_PATH}/lib/QtNetwork.framework/Headers"
+			QT4_NETWORK_LIBS=""
+			QT4_XML_CFLAGS="-I${QT4_PATH}/lib/QtXml.framework/Headers"
+			QT4_XML_LIBS=""
+		fi
+	;;
+    #
+    # Linux-specific configuration
+    #
+    linux)
+		#
+        # Set variables
+        #
+		GSOAP_PATH="$TOOLDIR/gsoap/linux-2.7"
+        #
+        # Set pkg-config variables
+        #
+
+		dnl Intl
+		#ALL_LINGUAS="pt_BR"
+		#ALL_LINGUAS="pt_BR fr it de es ru ja"
+		#AM_GNU_GETTEXT_VERSION(0.10.40)
+		#AM_GNU_GETTEXT(external)
+
+# btimothy: I'm not sure that we want to force debugging Qt to build in debug
+# mode so I'm commenting out this section.		
+#		if test "$enable_debug" = "true"
+#		then
+#			QT4_CFLAGS="-I${QT4_PATH}/include/Qt"
+#			QT4_LIBS="-L${QT4_PATH}/lib"
+#			QT4_CORE_CFLAGS=$(pkg-config --cflags QtCore)
+#			QT4_CORE_LIBS=$(pkg-config --libs QtCore_debug)
+#			QT4_GUI_CFLAGS=$(pkg-config --cflags QtGui)
+#			QT4_GUI_LIBS=$(pkg-config --libs QtGui_debug)
+#			QT4_NETWORK_CFLAGS=$(pkg-config --cflags QtNetwork)
+#			QT4_NETWORK_LIBS=$(pkg-config --libs QtNetwork_debug)
+#			QT4_XML_CFLAGS=$(pkg-config --cflags QtXml)
+#			QT4_XML_LIBS=$(pkg-config --libs QtXml_debug)
+#		else
+			QT4_CFLAGS="-I${QT4_PATH}/include/Qt"
+			QT4_LIBS="-L${QT4_PATH}/lib"
+			QT4_CORE_CFLAGS=$(pkg-config --cflags QtCore)
+			QT4_CORE_LIBS=$(pkg-config --libs QtCore)
+			QT4_GUI_CFLAGS=$(pkg-config --cflags QtGui)
+			QT4_GUI_LIBS=$(pkg-config --libs QtGui)
+			QT4_NETWORK_CFLAGS=$(pkg-config --cflags QtNetwork)
+			QT4_NETWORK_LIBS=$(pkg-config --libs QtNetwork)
+			QT4_XML_CFLAGS=$(pkg-config --cflags QtXml)
+			QT4_XML_LIBS=$(pkg-config --libs QtXml)
+#		fi
+
+		PKG_CHECK_MODULES(TRAYAPP, gtk+-2.0 glib-2.0 atk libgnomeui-2.0 libpanelapplet-2.0)
+		AC_SUBST(TRAYAPP_CFLAGS)
+		AC_SUBST(TRAYAPP_LIBS)
+		
+		GNOME_ROOT=$(pkg-config --variable=prefix gnome-icon-theme)
+		AC_SUBST(GNOME_ROOT)
+
+    ;;
+    #
+    # Windows-specific configuration
+    #
+    windows)
+        #
+        # Set variables
+        #
+        LIBS='qtmain QtGui4 QtCore4'
+        GSOAP_PATH="$TOOLDIR/gsoap/win32-2.7"
+        QT4_DEFINES="-DUNICODE -DQT_LARGEFILE_SUPPORT"
+        #
+        # Set pkg-config variables
+        #
+        #
+        # Override Linux-like directory structure
+        #
+    	bindir='${exec_prefix}'
+    	sbindir='${exec_prefix}'
+    	libexecdir='${exec_prefix}'
+    	libdir='${exec_prefix}'
+
+		# FIXME: Need to figure out what the correct QT4_* flags are for Windows
+		if test "$enable_debug" = "true"
+		then
+			CFLAGS="-g -Wall"
+			CXXFLAGS="-g -frtti -WALL"
+			QT4_CFLAGS="-I${QT4_PATH}/include -I${QT4_PATH}/include/Qt"
+			QT4_LIBS="-L${QT4_PATH}/lib -lpthreads -ldl "
+			QT4_CORE_CFLAGS="-I${QT4_PATH}/include/QtCore"
+			QT4_CORE_LIBS="-lQtCore_debug"
+			QT4_GUI_CFLAGS="-I${QT4_PATH}/include/QtGui"
+			QT4_GUI_LIBS="-lQtGui_debug"
+			QT4_NETWORK_CFLAGS="-I${QT4_PATH}/include/QtNetwork"
+			QT4_NETWORK_LIBS="-lQtNetwork_debug"
+			QT4_XML_CFLAGS="-I${QT4_PATH}/include/QtXml"
+			QT4_XML_LIBS="-lQtXml_debug"
+		else
+			CFLAGS="-O2 -Wall"
+			CXXFLAGS="-O2 -frtti -Wall"
+        	QT4_CFLAGS="-I${QT4_PATH}/include -I${QT4_PATH}/include/Qt"
+			QT4_LIBS="-L${QT4_PATH}/lib -lpthreads -ldl "
+			QT4_CORE_CFLAGS="-I${QT4_PATH}/include/QtCore"
+			QT4_CORE_LIBS="-lQtCore"
+			QT4_GUI_CFLAGS="-I${QT4_PATH}/include/QtGui"
+			QT4_GUI_LIBS="-lQtGui"
+			QT4_NETWORK_CFLAGS="-I${QT4_PATH}/include/QtNetwork"
+			QT4_NETWORK_LIBS="-lQtNetwork"
+			QT4_XML_CFLAGS="-I${QT4_PATH}/include/QtXml"
+			QT4_XML_LIBS="-lQtXml"
+		fi
+	;;
+esac
+AC_SUBST(CDEF)
+AC_SUBST(CINC)
+AC_SUBST(COUT)
+AC_SUBST(CXX)
+AC_SUBST(CXXFLAGS)
+AC_SUBST(DEF)
+AC_SUBST(DOCDIR)
+AC_SUBST(ICON_EXT)
+AC_SUBST(ICON_FLAG)
+AC_SUBST(INSTALL_EXE_OPTS)
+AC_SUBST(LDFLAGS)
+AC_SUBST(LDINC)
+AC_SUBST(LDOUT)
+AC_SUBST(LIBS)
+AC_SUBST(SEP)
+AC_SUBST(SHARED_LIB_FLAG)
+AC_SUBST(TLBX)
+AC_SUBST(GSOAP_PATH)
+
+AC_SUBST(QT4_DEFINES)
+AC_SUBST(QT4_CFLAGS)
+AC_SUBST(QT4_LIBS)
+AC_SUBST(QT4_CORE_CFLAGS)
+AC_SUBST(QT4_CORE_LIBS)
+AC_SUBST(QT4_GUI_CFLAGS)
+AC_SUBST(QT4_GUI_LIBS)
+AC_SUBST(QT4_NETWORK_CFLAGS)
+AC_SUBST(QT4_NETWORK_LIBS)
+AC_SUBST(QT4_XML_CFLAGS)
+AC_SUBST(QT4_XML_LIBS)
+
+if test "$enable_debug" = "true"
+then
+  # Build debug version.
+  CFLAGS="$CFLAGS_DEBUG $CFLAGS"
+  CXXFLAGS="$CXXFLAGS_DEBUG $CXXFLAGS"
+  DEVENV_CONFIGURATION=Debug
+else
+  # Build optimized version.
+  CFLAGS="$CFLAGS_OPTIMIZE $CFLAGS"
+  CXXFLAGS="$CXXFLAGS_OPTIMIZE $CXXFLAGS"
+  DEVENV_CONFIGURATION=Release
+fi
+AC_SUBST(DEVENV_CONFIGURATION)
+
+dnl ==========================================================================
+
+AC_CONFIG_FILES([
+  Makefile
+  doc/Makefile
+  package/Makefile
+  package/darwin/Makefile
+  package/linux/Makefile
+  package/windows/Makefile
+  src/Makefile
+  src/libifolder/Makefile
+  src/libifolder/ipc-client/Makefile
+  src/libifolder/ipc-server/Makefile
+  src/libifolder/ipc-server/libsoap/Makefile
+  src/libifolder/ipc-server/libsync/Makefile
+  src/qt-client/Makefile
+  src/trayapp/Makefile
+  src/trayapp/darwin/Makefile
+  src/trayapp/darwin/Info.plist
+  src/trayapp/darwin/iFolderStatusIcon.xcodeproj/project.pbxproj
+  src/trayapp/linux/Makefile
+  src/trayapp/linux/gnome-applet/Makefile
+  src/trayapp/windows/Makefile
+  test/Makefile
+  test/libifolder/Makefile
+])
+AC_OUTPUT
+

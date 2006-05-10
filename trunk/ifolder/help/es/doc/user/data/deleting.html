@@ -1,0 +1,74 @@
+﻿<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Language" content="es">
+<meta name="Generator" content="Novell HTML Conversion 10 de marzo de 2004">
+<meta name="Generation-Date" content="Domingo, 23 de octubre de 2005 15:54">
+<meta name="Content-Date" content="Lunes, 22 de octubre de 2005 12:00:00 GMT">
+<meta name="Robots" content="INDEX, FOLLOW">
+<meta name="Document_Number" content="zHTML xD.0000.0000.0003.0012.">
+<meta name="Author" content="zHTML xD.0000.0000.0003.0012.">
+<meta name="Product_Class" content="">
+<meta name="Product_and_Version" content="iFolder(TM)">
+<meta name="Copyright" content="Copyright Novell, Inc. 1983-2004">
+<link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
+<title>Ayuda de iFolder</title>
+<script type="text/javascript" language="javascript">
+function loadMenu()
+{
+	if ((parent.theMenu) && (parent.theMenu.amBusy == false) && parent.frames[2])
+	{
+	   parent.theMenu.loadScript("../doc/user/data/myifolders.html","../doc/user/data/toc_myifolders.html");
+	}
+	else{ setTimeout("loadMenu()",200);}
+}
+loadMenu();
+</script>
+<script type="text/javascript" language="javascript" src="../../../ui/jsglobal.js"></script>
+</head>
+<body onload="">
+<script type="text/javascript" language="javascript">
+  var prev_link="movelocation.html";
+  var next_link="legal.html";
+</script>
+<script type="text/javascript" language="javascript" src="../../../ui/topnav.js"></script>
+<a name="deleting"></a>
+<div class="Topic" title="Deleting an iFolder">
+<h2 class="TOPIC-TITLE"><br />Supresi&oacute;n de una carpeta iFolder</h2>
+<p class="TOPIC">Si suprime una carpeta iFolder de la colecci&oacute;n, se eliminar&aacute; la copia local de dicha carpeta y su contenido. Tambi&eacute;n puede afectar a la relaci&oacute;n de compartimiento de la carpeta iFolder, en funci&oacute;n del derecho de acceso que se le haya otorgado a &eacute;sta. En la tabla siguiente se describe el efecto de la relaci&oacute;n de compartimiento y de las carpetas iFolder miembro basado en el derecho de acceso del usuario que suprime la carpeta iFolder.</p>
+<table class="TABLENOTITLE" border="0" cellpadding="5" cellspacing="0">
+<tr class="HEADERROW"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="brzc2fh"></a><em class="TBLHEAD">Derecho de acceso del usuario que suprime la carpeta iFolder</em></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">Relaci&oacute;n de compartimiento</em></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">Copia de la carpeta iFolder del servidor</em></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">Copias de la carpetas iFolder del miembro</em></th>
+</tr>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="brzc2fi"></a><p class="ENTRY">Propietario</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Finaliza la relaci&oacute;n de compartimiento de la carpeta iFolder</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Suprime los metadatos y el contenido de la carpeta iFolder del servidor </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Revierte la carpeta iFolder a una carpeta normal para todos los usuarios </p></td>
+</tr>
+<tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="brzc2fj"></a><p class="ENTRY">Usuario con control total</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Anula la suscripci&oacute;n del usuario al compartimiento</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Sin efecto</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Revierte la copia local de la carpeta iFolder a una carpeta normal</p></td>
+</tr>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="brzc2fk"></a><p class="ENTRY">Usuario con acceso de lectura/escritura</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Anula la suscripci&oacute;n del usuario al compartimiento</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Sin efecto</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Revierte la copia local de la carpeta iFolder a una carpeta normal</p></td>
+</tr>
+<tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="brzc2fl"></a><p class="ENTRY">Usuario con acceso de s&oacute;lo lectura</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Anula la suscripci&oacute;n del usuario al compartimiento</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Sin efecto</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Revierte la copia local de la carpeta iFolder a una carpeta normal</p></td>
+</tr></table>
+<p class="TOPIC">La supresi&oacute;n de una carpeta iFolder no desinstala el Cliente iFolder de la estaci&oacute;n de trabajo.</p>
+<ol class="STEPLIST">
+<li class="STEP"><a name="bq8ubrz"></a>
+<p class="STEP">En un administrador de archivos o navegador de carpetas iFolder, busque la carpeta iFolder que desea suprimir.</p></li>
+<li class="STEP"><a name="bq8u9b1"></a>
+<p class="STEP">Haga clic con el bot&oacute;n derecho en la carpeta iFolder y, a continuaci&oacute;n, haga clic en Suprimir.</p></li>
+</ol> </div>
+<script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
+</body>
+</html>

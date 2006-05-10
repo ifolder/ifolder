@@ -1,0 +1,235 @@
+﻿<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Language" content="es">
+<meta name="Generator" content="Novell HTML Conversion 10 de marzo de 2004">
+<meta name="Generation-Date" content="Domingo, 23 de octubre de 2005 15:54">
+<meta name="Content-Date" content="Lunes, 22 de octubre de 2005 12:00:00 GMT">
+<meta name="Robots" content="INDEX, FOLLOW">
+<meta name="Document_Number" content="zHTML xD.0000.0000.0003.0005.">
+<meta name="Author" content="zHTML xD.0000.0000.0003.0005.">
+<meta name="Product_Class" content="">
+<meta name="Product_and_Version" content="iFolder(TM)">
+<meta name="Copyright" content="Copyright Novell, Inc. 1983-2004">
+<link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
+<title>Ayuda de iFolder</title>
+<script type="text/javascript" language="javascript">
+function loadMenu()
+{
+	if ((parent.theMenu) && (parent.theMenu.amBusy == false) && parent.frames[2])
+	{
+	   parent.theMenu.loadScript("../doc/user/data/myifolders.html","../doc/user/data/toc_myifolders.html");
+	}
+	else{ setTimeout("loadMenu()",200);}
+}
+loadMenu();
+</script>
+<script type="text/javascript" language="javascript" src="../../../ui/jsglobal.js"></script>
+</head>
+<body onload="">
+<script type="text/javascript" language="javascript">
+  var prev_link="createifolder.html";
+  var next_link="setupifolder.html";
+</script>
+<script type="text/javascript" language="javascript" src="../../../ui/topnav.js"></script>
+<a name="sharewith"></a>
+<div class="Topic" title="Sharing an iFolder">
+<h2 class="TOPIC-TITLE"><br />Compartimiento de una carpeta iFolder</h2>
+<p class="TOPIC">Es posible compartir una carpeta iFolder con varios usuarios. Esta secci&oacute;n trata las tareas siguientes:</p>
+<ul class="LISTBULLET">
+<li class="BULLETITEM"><a href="sharewith.html#bv2hnvt">Comprensi&oacute;n de los derechos de acceso de usuario</a></li>
+<li class="BULLETITEM"><a href="sharewith.html#bq6lwm0">Adici&oacute;n de un usuario a una carpeta iFolder</a></li>
+<li class="BULLETITEM"><a href="sharewith.html#bq6lwma">Modificaci&oacute;n de los derechos de acceso de usuario</a></li>
+<li class="BULLETITEM"><a href="sharewith.html#bq6lwmr">Eliminaci&oacute;n de un usuario de una carpeta iFolder</a></li>
+</ul> <div class="Head" title="Understanding User Access Rights"> <a name="bv2hnvt"></a>
+<h3 class="HEAD-TITLE"><br />Comprensi&oacute;n de los derechos de acceso de usuario</h3>
+<p class="HEAD">En la tabla siguiente se describen las funciones asociadas a cada nivel de acceso de usuario.</p>
+<table class="TABLENOTITLE" border="0" cellpadding="5" cellspacing="0">
+<tr class="HEADERROW"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bv2h594"></a><em class="TBLHEAD">Funciones</em></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">Propietario</em></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">Control total</em></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">Lectura/escritura</em></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">S&oacute;lo lectura</em></th>
+</tr>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bv2h595"></a><p class="ENTRY">Con un servidor empresarial, el espacio que consume la carpeta iFolder en el servidor se carga en la cuota del usuario.</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Ninguna</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Ninguna</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Ninguna</p></td>
+</tr>
+<tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bv2h7n3"></a><p class="ENTRY">Permite volver a asignar la propiedad a otro usuario.</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Ninguna</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Ninguna</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Ninguna</p></td>
+</tr>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bv2hhhd"></a><p class="ENTRY">Permite establecer una cuota para la carpeta iFolder.</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Ninguna</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Ninguna</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Ninguna</p></td>
+</tr>
+<tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bv2h7n4"></a><p class="ENTRY">Permite poner la carpeta iFolder a disposici&oacute;n de otros usuarios (compartir).</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Ninguna</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Ninguna</p></td>
+</tr>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bv2h7n5"></a><p class="ENTRY">Permite hacer que la carpeta iFolder no est&eacute; disponible para otros usuarios (dejar de compartir).</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;, excepto el propietario</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Ninguna</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Ninguna</p></td>
+</tr>
+<tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bv2h7n6"></a><p class="ENTRY">Permite asignar derechos de acceso a iFolder para otros usuarios.</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;, excepto el propietario</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Ninguna</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Ninguna</p></td>
+</tr>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bv2h7n7"></a><p class="ENTRY">Permite leer directorios y archivos de la carpeta iFolder. </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+</tr>
+<tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bv2h7n8"></a><p class="ENTRY">Permite a&ntilde;adir, modificar o suprimir directorios y archivos de la carpeta iFolder.</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Ninguna</p></td>
+</tr>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bv2hhhe"></a><p class="ENTRY">Permite renombrar directorios y archivos de una carpeta iFolder.</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+</tr>
+<tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bv2hhhf"></a><p class="ENTRY">Permite renombrar la carpeta iFolder.</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Ninguna</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Ninguna</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Ninguna</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Ninguna</p></td>
+</tr>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bv2hhhg"></a><p class="ENTRY">Permite configurar una carpeta iFolder en varios equipos.</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+</tr>
+<tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bv2hhhh"></a><p class="ENTRY">Permite revertir una carpeta iFolder (no participar en un equipo local).</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+</tr>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bv2hmyj"></a><p class="ENTRY">Permite suprimir una carpeta iFolder disponible para rechazar la participaci&oacute;n.</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+</tr>
+<tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bv2hhhi"></a><p class="ENTRY">Permite suprimir la carpeta iFolder, as&iacute; como la carpeta iFolder y los archivos que contiene del servidor (volver a convertirla en una carpeta normal y dejar de compartirla con otros usuarios).</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">S&iacute;</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Ninguna</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Ninguna</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Ninguna</p></td>
+</tr></table>
+</div>
+<div class="Head" title="Adding a User to an iFolder"> <a name="bq6lwm0"></a>
+<h3 class="HEAD-TITLE"><br />Adici&oacute;n de un usuario a una carpeta iFolder</h3>
+<h4 class="BRIDGEHEAD"><br />Adici&oacute;n de un usuario con un administrador de archivos</h4>
+<ol class="STEPLIST">
+<li class="STEP"><a name="bv2hql2"></a>
+<p class="STEP">En el administrador de archivos, despl&aacute;cese a la carpeta iFolder y, a continuaci&oacute;n, selecci&oacute;nela.</p></li>
+<li class="STEP"><a name="bv2hql3"></a>
+<p class="STEP">Haga clic con el bot&oacute;n derecho en la carpeta iFolder y, a continuaci&oacute;n, haga clic en iFolder &gt; Propiedades.</p></li>
+<li class="STEP"><a name="bv2hql4"></a>
+<p class="STEP">Haga clic en Share With (Compartir con) <img src="../graphics/share.png" alt="Icono Compartir" />.</p></li>
+<li class="STEP"><a name="bv2hql5"></a>
+<p class="STEP">Seleccione uno o m&aacute;s usuarios de la lista de usuarios.</p></li>
+<li class="STEP"><a name="bv2hql6"></a>
+<p class="STEP">Seleccione el derecho de acceso: Control total, lectura/escritura o s&oacute;lo lectura.</p></li>
+<li class="STEP"><a name="bv2hql7"></a>
+<p class="STEP">Haga clic en Aplicar.</p></li>
+</ol>
+<h4 class="BRIDGEHEAD"><br />Adici&oacute;n de un usuario con el navegador de carpetas iFolder</h4>
+<ol class="STEPLIST">
+<li class="STEP"><a name="bv2hql9"></a>
+<p class="STEP">En el &aacute;rea de notificaciones, haga clic con el bot&oacute;n derecho en el icono iFolder <img src="../graphics/ifolder16.png" alt="Icono de aplicaci&oacute;n iFolder" /> y, a continuaci&oacute;n, haga clic en carpetas iFolder para abrir el navegador de carpetas iFolder.</p></li>
+<li class="STEP"><a name="bv2hqla"></a>
+<p class="STEP">En la lista de carpetas iFolder, seleccione la carpeta iFolder y, a continuaci&oacute;n, haga clic en Compartir <img src="../graphics/share.png" alt="Icono Compartir" /> para abrir la ventana Propiedades de iFolder en la pesta&ntilde;a Compartimiento.</p></li>
+<li class="STEP"><a name="bwb5vu4"></a>
+<p class="STEP">Haga clic en A&ntilde;adir para abrir el recuadro de di&aacute;logo Seleccionar usuario.</p></li>
+<li class="STEP"><a name="bv2hqlb"></a>
+<p class="STEP">Para seleccionar uno o m&aacute;s usuarios de la lista, a&ntilde;&aacute;dalos a la lista Usuarios seleccionados y, a continuaci&oacute;n, haga clic en Aceptar.</p>
+<p class="STEP">Las invitaciones pueden tardar varios segundos en sincronizarse en el servidor.</p></li>
+<li class="STEP"><a name="bv2hqlc"></a>
+<p class="STEP">Seleccione uno o m&aacute;s usuarios, haga clic en Acceso, seleccione el derecho de acceso de control total, lectura/escritura o s&oacute;lo lectura y, a continuaci&oacute;n, haga clic en Aceptar.</p></li>
+<li class="STEP"><a name="bx3vxly"></a>
+<p class="STEP">Repita los pasos 4 y 5 hasta que haya invitado a todos los usuarios deseados para compartir la carpeta iFolder.</p></li>
+<li class="STEP"><a name="bv2hqld"></a>
+<p class="STEP">Haga clic en Aplicar y, a continuaci&oacute;n, en Aceptar para cerrar la ventana Propiedades de iFolder.</p></li>
+</ol> </div>
+<div class="Head" title="Modifying User Access Rights"> <a name="bq6lwma"></a>
+<h3 class="HEAD-TITLE"><br />Modificaci&oacute;n de los derechos de acceso de usuario</h3>
+<p class="HEAD">A medida que las relaciones de trabajo y el estado de los miembros de una carpeta iFolder cambian, es posible que necesite cambiar el derecho de acceso de un usuario de la carpeta iFolder. Por ejemplo, es posible que desee otorgar a un usuario de confianza el derecho de control de los archivos de la carpeta iFolder.</p>
+<h4 class="BRIDGEHEAD"><br />Establecimiento de los derechos de usuario con un administrador de archivos</h4>
+<ol class="STEPLIST">
+<li class="STEP"><a name="bv2hhhk"></a>
+<p class="STEP">En el administrador de archivos, despl&aacute;cese a la carpeta iFolder y, a continuaci&oacute;n, selecci&oacute;nela.</p></li>
+<li class="STEP"><a name="bv2hhhl"></a>
+<p class="STEP">Haga clic con el bot&oacute;n derecho en la carpeta iFolder y, a continuaci&oacute;n, haga clic en iFolder &gt; Propiedades.</p></li>
+<li class="STEP"><a name="bv2hn9w"></a>
+<p class="STEP">Haga clic en Share With (Compartir con) <img src="../graphics/share.png" alt="Icono Compartir" />.</p></li>
+<li class="STEP"><a name="bv2hncw"></a>
+<p class="STEP">Seleccione uno o m&aacute;s usuarios de la lista de usuarios.</p></li>
+<li class="STEP"><a name="bv2hoj5"></a>
+<p class="STEP">Seleccione Acceso y, a continuaci&oacute;n, especifique el derecho de control total, lectura/escritura o s&oacute;lo lectura.</p></li>
+<li class="STEP"><a name="bv2hpae"></a>
+<p class="STEP">Haga clic en Aplicar y, a continuaci&oacute;n, en Aceptar para cerrar la ventana Propiedades de iFolder.</p></li>
+</ol>
+<h4 class="BRIDGEHEAD"><br />Establecimiento de los derechos de usuario con el navegador de carpetas iFolder</h4>
+<ol class="STEPLIST">
+<li class="STEP"><a name="bv2hhhn"></a>
+<p class="STEP">En el &aacute;rea de notificaciones, haga clic con el bot&oacute;n derecho en el icono iFolder <img src="../graphics/ifolder16.png" alt="Icono de aplicaci&oacute;n iFolder" /> y, a continuaci&oacute;n, haga clic en carpetas iFolder para abrir el navegador de carpetas iFolder.</p></li>
+<li class="STEP"><a name="bv2hhho"></a>
+<p class="STEP">En la lista de carpetas iFolder, seleccione la carpeta iFolder y, a continuaci&oacute;n, haga clic en Share With (Compartir con) <img src="../graphics/share.png" alt="Icono Compartir" />.</p></li>
+<li class="STEP"><a name="bv2hozw"></a>
+<p class="STEP">Seleccione uno o m&aacute;s usuarios de la lista de usuarios.</p></li>
+<li class="STEP"><a name="bv2hp7d"></a>
+<p class="STEP">Seleccione Acceso y, a continuaci&oacute;n, especifique el derecho de control total, lectura/escritura o s&oacute;lo lectura.</p></li>
+<li class="STEP"><a name="bv2hpf9"></a>
+<p class="STEP">Haga clic en Aplicar y, a continuaci&oacute;n, en Aceptar para cerrar la ventana Propiedades de iFolder.</p></li>
+</ol> </div>
+<div class="Head" title="Removing a User from an iFolder"> <a name="bq6lwmr"></a>
+<h3 class="HEAD-TITLE"><br />Eliminaci&oacute;n de un usuario de una carpeta iFolder</h3>
+<p class="HEAD">Para dejar de compartir una carpeta iFolder, debe eliminar un usuario como miembro de dicha carpeta iFolder. La carpeta iFolder de la estaci&oacute;n de trabajo del usuario se convertir&aacute; en una carpeta normal. Se conservar&aacute; una copia de los datos en la estaci&oacute;n de trabajo original del miembro, pero los archivos ya no se sincronizar&aacute;n con la carpeta iFolder compartida.</p>
+<h4 class="BRIDGEHEAD"><br />Eliminaci&oacute;n de usuarios con un administrador de archivos</h4>
+<ol class="STEPLIST">
+<li class="STEP"><a name="bv2hufx"></a>
+<p class="STEP">En el administrador de archivos, despl&aacute;cese a la carpeta iFolder y, a continuaci&oacute;n, selecci&oacute;nela.</p></li>
+<li class="STEP"><a name="bv2hufy"></a>
+<p class="STEP">Haga clic con el bot&oacute;n derecho en la carpeta iFolder y, a continuaci&oacute;n, haga clic en iFolder &gt; Propiedades.</p></li>
+<li class="STEP"><a name="bv2hufz"></a>
+<p class="STEP">Haga clic en Share With (Compartir con) <img src="../graphics/share.png" alt="Icono Compartir" />.</p></li>
+<li class="STEP"><a name="bv2hug0"></a>
+<p class="STEP">Seleccione uno o m&aacute;s usuarios de la lista de usuarios.</p></li>
+<li class="STEP"><a name="bv2hug1"></a>
+<p class="STEP">Haga clic en Eliminar, seleccione Aplicar y, a continuaci&oacute;n, haga clic en Aceptar.</p></li>
+</ol>
+<h4 class="BRIDGEHEAD"><br />Eliminaci&oacute;n de usuarios con el navegador de carpetas iFolder</h4>
+<ol class="STEPLIST">
+<li class="STEP"><a name="bv2hug3"></a>
+<p class="STEP">En el &aacute;rea de notificaciones, haga clic con el bot&oacute;n derecho en el icono iFolder <img src="../graphics/ifolder16.png" alt="Icono de aplicaci&oacute;n iFolder" /> y, a continuaci&oacute;n, haga clic en carpetas iFolder para abrir el navegador de carpetas iFolder.</p></li>
+<li class="STEP"><a name="bv2hug4"></a>
+<p class="STEP">En la lista de carpetas iFolder, seleccione la carpeta iFolder y, a continuaci&oacute;n, haga clic en Share With (Compartir con) <img src="../graphics/share.png" alt="Icono Compartir" />.</p></li>
+<li class="STEP"><a name="bv2hug5"></a>
+<p class="STEP">Seleccione uno o m&aacute;s usuarios de la lista de usuarios.</p></li>
+<li class="STEP"><a name="bv2hug6"></a>
+<p class="STEP">Haga clic en Eliminar, seleccione Aplicar y, a continuaci&oacute;n, haga clic en Aceptar.</p></li>
+</ol> </div>
+</div>
+<script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
+</body>
+</html>
