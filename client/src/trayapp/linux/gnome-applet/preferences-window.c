@@ -53,6 +53,7 @@ static GtkWidget *create_accounts_page(IFPreferencesWindow *pw);
 static void help_button_clicked(GtkButton *button, IFPreferencesWindow *pw);
 static void close_button_clicked(GtkButton *button, IFPreferencesWindow *pw);
 static void close_window();
+static void notebook_page_switched(GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, IFPreferencesWindow *pw);
 
 IFPreferencesWindow *
 ifa_get_preferences_window()
@@ -98,6 +99,7 @@ create_preferences_window()
 	gtk_notebook_append_page(GTK_NOTEBOOK(pw->notebook), create_accounts_page(pw), gtk_label_new(_("Accounts")));
 
 	/* FIXME: Hook up the switch page event handler */
+	g_signal_connect(G_OBJECT(pw->notebook), "switch-page", G_CALLBACK(notebook_page_switched), pw);
 
 	gtk_box_pack_start(GTK_BOX(winBox), pw->notebook, true, true, 0);
 
@@ -163,5 +165,11 @@ delete_preferences_window(IFPreferencesWindow **pw)
 	/* FIXME: Free memory used by structure members */
 	free(*pw);
 	prefsWindow = NULL;
+}
+
+static void
+notebook_page_switched(GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, IFPreferencesWindow *pw)
+{
+	/* FIXME: Implement notebook_page_switched() */
 }
 
