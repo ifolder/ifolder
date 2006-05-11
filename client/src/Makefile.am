@@ -18,7 +18,7 @@
 #  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
 #######################################################################
-SUBDIRS = libifolder qt-client trayapp
+SUBDIRS = trayapp
 
 DIST_SUBDIRS = $(SUBDIRS)
 

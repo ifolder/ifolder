@@ -240,8 +240,8 @@ case $IFOLDER_OS in
 		AC_SUBST(TRAYAPP_CFLAGS)
 		AC_SUBST(TRAYAPP_LIBS)
 		
-		GNOME_ROOT=$(pkg-config --variable=prefix gnome-icon-theme)
-		AC_SUBST(GNOME_ROOT)
+		#GNOME_ROOT=$(pkg-config --variable=prefix gnome-icon-theme)
+		#AC_SUBST(GNOME_ROOT)
 
     ;;
     #
@@ -316,11 +316,6 @@ AC_CONFIG_FILES([
   package/linux/Makefile
   package/windows/Makefile
   src/Makefile
-  src/libifolder/Makefile
-  src/libifolder/ipc-client/Makefile
-  src/libifolder/ipc-server/Makefile
-  src/libifolder/ipc-server/libsoap/Makefile
-  src/libifolder/ipc-server/libsync/Makefile
   src/trayapp/Makefile
   src/trayapp/darwin/Makefile
   src/trayapp/darwin/Info.plist
