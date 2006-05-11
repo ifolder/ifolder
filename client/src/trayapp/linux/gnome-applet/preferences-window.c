@@ -94,8 +94,8 @@ create_preferences_window()
 	gtk_container_add(GTK_CONTAINER(pw->window), winBox);
 
 	pw->notebook = gtk_notebook_new();
-	gtk_notebook_append_page(GTK_NOTEBOOK(pw->notebook), create_general_page(pw), NULL);
-	gtk_notebook_append_page(GTK_NOTEBOOK(pw->notebook), create_accounts_page(pw), NULL);
+	gtk_notebook_append_page(GTK_NOTEBOOK(pw->notebook), create_general_page(pw), gtk_label_new(_("General")));
+	gtk_notebook_append_page(GTK_NOTEBOOK(pw->notebook), create_accounts_page(pw), gtk_label_new(_("Accounts")));
 
 	/* FIXME: Hook up the switch page event handler */
 
