@@ -39,6 +39,7 @@
 //#endif
 
 #include "applet.h"
+#include "preferences-window.h"
 
 /*@todo Remove this when gettext is added */
 #define _
@@ -509,6 +510,7 @@ static void
 ifa_preferences_cb(GtkMenuItem *mi, IFApplet *applet)
 {
 	/* @todo Add code to show the preferences */
+	ifa_show_preferences_window();
 }
 
 static void
