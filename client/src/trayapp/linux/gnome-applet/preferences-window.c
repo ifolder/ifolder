@@ -58,6 +58,10 @@ static void on_auto_sync_button(GtkToggleButton *togglebutton, IFAPreferencesWin
 static void on_sync_interval_changed(GtkSpinButton *spinbutton, IFAPreferencesWindow *pw);
 static void on_sync_units_changed(GtkComboBox *widget, IFAPreferencesWindow *pw);
 
+static void accounts_page_realized(GtkWidget *widget, IFAPreferencesWindow *pw);
+static void online_cell_toggle_data_func(GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, IFAPreferencesWindow *pw);
+static void online_toggled(GtkToggleButton *togglebutton, IFAPreferencesWindow *pw);
+
 IFAPreferencesWindow *
 ifa_get_preferences_window()
 {
@@ -287,7 +291,42 @@ create_general_page(IFAPreferencesWindow *pw)
 static GtkWidget *
 create_accounts_page(IFAPreferencesWindow *pw)
 {
-	return gtk_label_new("Accounts");
+	pw->accountsPage = gtk_vbox_new(false, IFA_DEFAULT_SECTION_SPACING);
+	gtk_container_set_border_width(GTK_CONTAINER(pw->accountsPage), IFA_DEFAULT_BORDER_WIDTH);
+	g_signal_connect(G_OBJECT(pw->accountsPage), "realize", G_CALLBACK(accounts_page_realized), pw);
+	
+//	pw->curDomains = g_hash_table_new_full(g_str_hash, g_str_equal);
+//	pw->removedDomains = g_hash_table_new_full(g_str_hash, g_str_equal);
+//	pw->detailsDialogs = g_hash_table_new_full(g_str_hash, g_str_equal);
+
+	/* FIXME: Register for domain events */
+	
+	/* Set up the Accounts Tree View in a scrolled window */
+	pw->accTreeView = gtk_tree_view_new();
+	GtkWidget *sw = gtk_scrolled_window_new(NULL, NULL);
+	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw), GTK_SHADOW_ETCHED_IN);
+	gtk_container_add(GTK_CONTAINER(sw), pw->accTreeView);
+	gtk_box_pack_start(GTK_BOX(pw->accountsPage), sw, true, true, 0);
+	
+	pw->accTreeStore = gtk_list_store_new(1, G_TYPE_OBJECT);
+	gtk_tree_view_set_model(GTK_TREE_VIEW(pw->accTreeView), GTK_TREE_MODEL(pw->accTreeStore));
+	
+	/* Online column */
+	GtkTreeViewColumn *onlineColumn = gtk_tree_view_column_new();
+	gtk_tree_view_column_set_title(onlineColumn, _("Online"));
+	pw->onlineToggleButton = gtk_cell_renderer_combo_new();
+	g_object_set(G_OBJECT(pw->onlineToggleButton), "xpad", 5, "xalign", 0.5F, NULL);
+	gtk_tree_view_column_pack_start(onlineColumn, pw->onlineToggleButton, true);
+	gtk_tree_view_column_set_cell_data_func(onlineColumn,
+											pw->onlineToggleButton,
+											online_cell_toggle_data_func,
+											NULL,
+											NULL);
+	
+	g_signal_connect(G_OBJECT(pw->onlineToggleButton), "toggled", G_CALLBACK(online_toggled), pw);
+	gtk_tree_view_append_column(GTK_TREE_VIEW(pw->accTreeView), onlineColumn);
+	
+	return pw->accountsPage;
 }
 
 static void
@@ -457,3 +496,21 @@ on_sync_units_changed(GtkComboBox *widget, IFAPreferencesWindow *pw)
 	g_message("FIXME: Implement on_sync_units_changed()");
 }
 
+static void
+accounts_page_realized(GtkWidget *widget, IFAPreferencesWindow *pw)
+{
+	int err;
+
+	g_message("Implement general_page_realized()");
+}
+
+static void
+online_cell_toggle_data_func(GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, IFAPreferencesWindow *pw)
+{
+}
+
+static void
+online_toggled(GtkToggleButton *togglebutton, IFAPreferencesWindow *pw)
+{
+	g_message("FIXME: Implement online_toggled");
+}

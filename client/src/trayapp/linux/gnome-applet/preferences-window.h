@@ -62,17 +62,17 @@ typedef struct {
 	/**
 	 * Accounts Page Widgets
 	 */
-	GtkTreeView		*accTreeView;
-	GtkListStore		*accTreeStore;
-	GtkCellRendererCombo	*onlineToggleButton;
-	GtkWidget		*addButton;
-	GtkWidget		*removeButton;
-	GtkWidget		*propertiesButton;
-	GHashTable		*curDomains;
-	GHashTable		*removedDomains;
+	GtkWidget				*accTreeView;
+	GtkListStore			*accTreeStore;
+	GtkCellRenderer			*onlineToggleButton;
+	GtkWidget				*addButton;
+	GtkWidget				*removeButton;
+	GtkWidget				*propertiesButton;
+	GHashTable				*curDomains;
+	GHashTable				*removedDomains;
 
-	GHashTable		*detailsDialogs;
-	GtkWidget		*waitDialog;
+	GHashTable				*detailsDialogs;
+	GtkWidget				*waitDialog;
 } IFAPreferencesWindow;
 
 IFAPreferencesWindow *ifa_get_preferences_window();
