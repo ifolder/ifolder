@@ -60,7 +60,14 @@ static void on_sync_units_changed(GtkComboBox *widget, IFAPreferencesWindow *pw)
 
 static void accounts_page_realized(GtkWidget *widget, IFAPreferencesWindow *pw);
 static void online_cell_toggle_data_func(GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, IFAPreferencesWindow *pw);
-static void online_toggled(GtkToggleButton *togglebutton, IFAPreferencesWindow *pw);
+static void online_toggled(GtkCellRendererToggle *cell_renderer, gchar *path, IFAPreferencesWindow *pw);
+
+static void server_cell_text_data_func(GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, IFAPreferencesWindow *pw);
+static void name_cell_text_data_func(GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, IFAPreferencesWindow *pw);
+
+static void on_add_account(GtkButton *widget, IFAPreferencesWindow *pw);
+static void on_remove_account(GtkButton *widget, IFAPreferencesWindow *pw);
+static void on_properties_clicked(GtkButton *widget, IFAPreferencesWindow *pw);
 
 IFAPreferencesWindow *
 ifa_get_preferences_window()
@@ -305,26 +312,73 @@ create_accounts_page(IFAPreferencesWindow *pw)
 	pw->accTreeView = gtk_tree_view_new();
 	GtkWidget *sw = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw), GTK_SHADOW_ETCHED_IN);
+	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	gtk_container_add(GTK_CONTAINER(sw), pw->accTreeView);
 	gtk_box_pack_start(GTK_BOX(pw->accountsPage), sw, true, true, 0);
 	
 	pw->accTreeStore = gtk_list_store_new(1, G_TYPE_OBJECT);
 	gtk_tree_view_set_model(GTK_TREE_VIEW(pw->accTreeView), GTK_TREE_MODEL(pw->accTreeStore));
 	
-	/* Online column */
+	/* Online Column */
 	GtkTreeViewColumn *onlineColumn = gtk_tree_view_column_new();
 	gtk_tree_view_column_set_title(onlineColumn, _("Online"));
-	pw->onlineToggleButton = gtk_cell_renderer_combo_new();
+	pw->onlineToggleButton = gtk_cell_renderer_toggle_new();
 	g_object_set(G_OBJECT(pw->onlineToggleButton), "xpad", 5, "xalign", 0.5F, NULL);
-	gtk_tree_view_column_pack_start(onlineColumn, pw->onlineToggleButton, true);
+	gtk_tree_view_column_pack_start(onlineColumn, pw->onlineToggleButton, false);
 	gtk_tree_view_column_set_cell_data_func(onlineColumn,
 											pw->onlineToggleButton,
 											online_cell_toggle_data_func,
-											NULL,
+											pw,
 											NULL);
 	
 	g_signal_connect(G_OBJECT(pw->onlineToggleButton), "toggled", G_CALLBACK(online_toggled), pw);
 	gtk_tree_view_append_column(GTK_TREE_VIEW(pw->accTreeView), onlineColumn);
+	
+	/* Server Column */
+	GtkTreeViewColumn *serverColumn = gtk_tree_view_column_new();
+	gtk_tree_view_column_set_title(serverColumn, _("Name"));
+	GtkCellRenderer *servercr = gtk_cell_renderer_text_new();
+	g_object_set(G_OBJECT(servercr), "xpad", 5, NULL);
+	gtk_tree_view_column_pack_start(serverColumn, servercr, true);
+	gtk_tree_view_column_set_cell_data_func(serverColumn,
+											servercr,
+											server_cell_text_data_func,
+											pw,
+											NULL);
+	gtk_tree_view_column_set_resizable(serverColumn, true);
+	gtk_tree_view_column_set_min_width(serverColumn, 150);
+	gtk_tree_view_append_column(GTK_TREE_VIEW(pw->accTreeView), serverColumn);
+	
+	/* User Name Column */
+	GtkTreeViewColumn *nameColumn = gtk_tree_view_column_new();
+	gtk_tree_view_column_set_title(nameColumn, _("User Name"));
+	GtkCellRenderer *ncrt = gtk_cell_renderer_text_new();
+	gtk_tree_view_column_set_cell_data_func(nameColumn,
+											ncrt,
+											name_cell_text_data_func,
+											pw,
+											NULL);
+	gtk_tree_view_column_set_resizable(nameColumn, true);
+	gtk_tree_view_column_set_min_width(nameColumn, 150);
+	gtk_tree_view_append_column(GTK_TREE_VIEW(pw->accTreeView), nameColumn);
+	
+	/* Set up buttons for add/remove/details */
+	GtkWidget *buttonBox = gtk_hbutton_box_new();
+	gtk_box_set_spacing(GTK_BOX(buttonBox), 10); /* FIXME: Add this to not be hard-coded */
+	gtk_button_box_set_layout(GTK_BUTTON_BOX(buttonBox), GTK_BUTTONBOX_END);
+	gtk_box_pack_start(GTK_BOX(pw->accountsPage), buttonBox, false, false, 0);
+	
+	pw->addButton = gtk_button_new_from_stock(GTK_STOCK_ADD);
+	gtk_box_pack_start(GTK_BOX(buttonBox), pw->addButton, false, false, 0);
+	g_signal_connect(G_OBJECT(pw->addButton), "clicked", G_CALLBACK(on_add_account), pw);
+
+	pw->removeButton = gtk_button_new_from_stock(GTK_STOCK_REMOVE);
+	gtk_box_pack_start(GTK_BOX(buttonBox), pw->removeButton, false, false, 0);
+	g_signal_connect(G_OBJECT(pw->removeButton), "clicked", G_CALLBACK(on_remove_account), pw);
+
+	pw->propertiesButton = gtk_button_new_from_stock(GTK_STOCK_PROPERTIES);
+	gtk_box_pack_start(GTK_BOX(buttonBox), pw->propertiesButton, false, false, 0);
+	g_signal_connect(G_OBJECT(pw->propertiesButton), "clicked", G_CALLBACK(on_properties_clicked), pw);
 	
 	return pw->accountsPage;
 }
@@ -501,7 +555,7 @@ accounts_page_realized(GtkWidget *widget, IFAPreferencesWindow *pw)
 {
 	int err;
 
-	g_message("Implement general_page_realized()");
+	g_message("Implement accounts_page_realized()");
 }
 
 static void
@@ -510,7 +564,36 @@ online_cell_toggle_data_func(GtkTreeViewColumn *column, GtkCellRenderer *cell, G
 }
 
 static void
-online_toggled(GtkToggleButton *togglebutton, IFAPreferencesWindow *pw)
+online_toggled(GtkCellRendererToggle *cell_renderer, gchar *path, IFAPreferencesWindow *pw)
 {
 	g_message("FIXME: Implement online_toggled");
 }
+
+static void
+server_cell_text_data_func(GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, IFAPreferencesWindow *pw)
+{
+}
+
+static void
+name_cell_text_data_func(GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, IFAPreferencesWindow *pw)
+{
+}
+
+static void
+on_add_account(GtkButton *widget, IFAPreferencesWindow *pw)
+{
+	g_message("FIXME: Implement on_add_account()");
+}
+
+static void
+on_remove_account(GtkButton *widget, IFAPreferencesWindow *pw)
+{
+	g_message("FIXME: Implement on_remove_account()");
+}
+
+static void
+on_properties_clicked(GtkButton *widget, IFAPreferencesWindow *pw)
+{
+	g_message("FIXME: Implement on_properties_clicked()");
+}
+
