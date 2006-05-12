@@ -29,30 +29,36 @@
 //#include <gnome.h>
 //#endif
 
+#include <ifolder-client.h>
+
 #include "preferences-window.h"
 #include "util.h"
 
 /*@todo Remove this when gettext is added */
 #define _
 
-static IFPreferencesWindow *prefsWindow = NULL;
+static IFAPreferencesWindow *prefsWindow = NULL;
 
-static IFPreferencesWindow *create_preferences_window();
-static void delete_preferences_window(IFPreferencesWindow **pw);
-static gboolean key_press_handler(GtkWidget *widget, GdkEventKey *event, IFPreferencesWindow *pw);
-static gboolean key_release_handler(GtkWidget *widget, GdkEventKey *event, IFPreferencesWindow *pw);
-static GtkWidget *create_general_page(IFPreferencesWindow *pw);
-static GtkWidget *create_accounts_page(IFPreferencesWindow *pw);
-static void help_button_clicked(GtkButton *button, IFPreferencesWindow *pw);
-static void close_button_clicked(GtkButton *button, IFPreferencesWindow *pw);
+static IFAPreferencesWindow *create_preferences_window();
+static void delete_preferences_window(IFAPreferencesWindow **pw);
+static gboolean key_press_handler(GtkWidget *widget, GdkEventKey *event, IFAPreferencesWindow *pw);
+static gboolean key_release_handler(GtkWidget *widget, GdkEventKey *event, IFAPreferencesWindow *pw);
+static GtkWidget *create_general_page(IFAPreferencesWindow *pw);
+static GtkWidget *create_accounts_page(IFAPreferencesWindow *pw);
+static void help_button_clicked(GtkButton *button, IFAPreferencesWindow *pw);
+static void close_button_clicked(GtkButton *button, IFAPreferencesWindow *pw);
 static void close_window();
-static void notebook_page_switched(GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, IFPreferencesWindow *pw);
+static void notebook_page_switched(GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, IFAPreferencesWindow *pw);
 static void leaving_general_page();
-static void general_page_realized(GtkWidget *widget, IFPreferencesWindow *pw);
-static void show_conf_button_toggled(GtkToggleButton *togglebutton, IFPreferencesWindow *pw);
-static void notify_sync_errors_button_toggled(GtkToggleButton *togglebutton, IFPreferencesWindow *pw);
+static void general_page_realized(GtkWidget *widget, IFAPreferencesWindow *pw);
+static void show_conf_button_toggled(GtkToggleButton *togglebutton, IFAPreferencesWindow *pw);
+static void notify_sync_errors_button_toggled(GtkToggleButton *togglebutton, IFAPreferencesWindow *pw);
 
-IFPreferencesWindow *
+static void on_auto_sync_button(GtkToggleButton *togglebutton, IFAPreferencesWindow *pw);
+static void on_sync_interval_changed(GtkSpinButton *spinbutton, IFAPreferencesWindow *pw);
+static void on_sync_units_changed(GtkComboBox *widget, IFAPreferencesWindow *pw);
+
+IFAPreferencesWindow *
 ifa_get_preferences_window()
 {
 	if (prefsWindow == NULL)
@@ -66,17 +72,17 @@ ifa_get_preferences_window()
 void
 ifa_show_preferences_window()
 {
-	IFPreferencesWindow *pw = ifa_get_preferences_window();
+	IFAPreferencesWindow *pw = ifa_get_preferences_window();
 	if (!pw)
 		return;
 
 	gtk_widget_show_all(pw->window);
 }
 
-IFPreferencesWindow *
+IFAPreferencesWindow *
 create_preferences_window()
 {
-	IFPreferencesWindow *pw = malloc(sizeof(IFPreferencesWindow));
+	IFAPreferencesWindow *pw = malloc(sizeof(IFAPreferencesWindow));
 
 	pw->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW(pw->window), _("iFolder Preferences"));
@@ -115,7 +121,7 @@ create_preferences_window()
 }
 
 static gboolean
-key_press_handler(GtkWidget *widget, GdkEventKey *event, IFPreferencesWindow *pw)
+key_press_handler(GtkWidget *widget, GdkEventKey *event, IFAPreferencesWindow *pw)
 {
 	gboolean stop_other_handlers = true;
 	g_message("Key pressed inside the preferences window");
@@ -146,7 +152,7 @@ key_press_handler(GtkWidget *widget, GdkEventKey *event, IFPreferencesWindow *pw
 }
 
 static gboolean
-key_release_handler(GtkWidget *widget, GdkEventKey *event, IFPreferencesWindow *pw)
+key_release_handler(GtkWidget *widget, GdkEventKey *event, IFAPreferencesWindow *pw)
 {
 	gboolean stop_other_handlers = false;
 
@@ -164,7 +170,7 @@ key_release_handler(GtkWidget *widget, GdkEventKey *event, IFPreferencesWindow *
 }
 
 static GtkWidget *
-create_general_page(IFPreferencesWindow *pw)
+create_general_page(IFAPreferencesWindow *pw)
 {
 	pw->generalPage = gtk_vbox_new(false, IFA_DEFAULT_SECTION_SPACING);
 	gtk_container_set_border_width(GTK_CONTAINER(pw->generalPage), IFA_DEFAULT_BORDER_WIDTH);
@@ -187,8 +193,8 @@ create_general_page(IFPreferencesWindow *pw)
 	gtk_box_pack_start(GTK_BOX(appSpacerBox), appSpaceLabel, false, true, 0);
 
 	/* create a vbox to actually place the widgets in for the section */
-	GtkWidget *appWidgetBox = gtk_vbox_new(false, IFA_DEFAULT_SECTION_TITLE_SPACING);
-	gtk_box_pack_start(GTK_BOX(appSectionBox), appWidgetBox, false, true, 0);
+	GtkWidget *appWidgetBox = gtk_vbox_new(false, 5); /* FIXME: Remove hard-coded spacing */
+	gtk_box_pack_start(GTK_BOX(appSpacerBox), appWidgetBox, true, true, 0);
 
 	pw->showConfirmationButton = gtk_check_button_new_with_mnemonic(_("_Show a confirmation dialog when creating iFolders"));
 	gtk_box_pack_start(GTK_BOX(appWidgetBox), pw->showConfirmationButton, false, true, 0);
@@ -223,19 +229,69 @@ create_general_page(IFPreferencesWindow *pw)
 	pw->notifySyncErrorsButton = gtk_check_button_new_with_mnemonic(_("Notify of _synchronization errors"));
 	gtk_box_pack_start(GTK_BOX(notifyWidgetBox), pw->notifySyncErrorsButton, false, true, 0);
 	g_signal_connect(G_OBJECT(pw->notifySyncErrorsButton), "toggled", G_CALLBACK(notify_sync_errors_button_toggled), pw);
+	
+	/**
+	 * Sync Settings
+	 */
+	GtkWidget *syncSectionBox = gtk_vbox_new(false, IFA_DEFAULT_SECTION_TITLE_SPACING);
+	gtk_box_pack_start(GTK_BOX(pw->generalPage), syncSectionBox, false, true, 0);
+	GtkWidget *syncSectionLabel = gtk_label_new(_("<span weight=\"bold\">Synchronization</span>"));
+	gtk_label_set_use_markup(GTK_LABEL(syncSectionLabel), true);
+	gtk_misc_set_alignment(GTK_MISC(syncSectionLabel), 0, 0.5);
+	gtk_box_pack_start(GTK_BOX(syncSectionBox), syncSectionLabel, false, true, 0);
+	
+	/* create an hbox to provide spacing */
+	GtkWidget *syncSpacerBox = gtk_hbox_new(false, 0);
+	gtk_box_pack_start(GTK_BOX(syncSectionBox), syncSpacerBox, false, true, 0);
+	GtkWidget *syncSpaceLabel = gtk_label_new("    "); /* four spaces */
+	gtk_box_pack_start(GTK_BOX(syncSpacerBox), syncSpaceLabel, false, true, 0);
 
+	/* create a vbox to actually place the widgets in for the section */
+	GtkWidget *syncWidgetBox = gtk_vbox_new(false, 10); /* FIXME: un-hard-code this and move the value to a #define in util.h */
+	gtk_box_pack_start(GTK_BOX(syncSpacerBox), syncWidgetBox, true, true, 0);
+
+	GtkWidget *syncHBox0 = gtk_hbox_new(false, 10);
+	gtk_box_pack_start(GTK_BOX(syncWidgetBox), syncHBox0, false, true, 0);
+	pw->autoSyncCheckButton = gtk_check_button_new_with_mnemonic(_("Automatically S_ynchronize iFolders"));
+	gtk_box_pack_start(GTK_BOX(syncHBox0), pw->autoSyncCheckButton, false, false, 0);
+	
+	GtkWidget *syncHBox = gtk_hbox_new(false, 10);
+	gtk_box_pack_start(GTK_BOX(syncWidgetBox), syncHBox, true, true, 0);
+
+	GtkWidget *spacerLabel = gtk_label_new("  ");
+	gtk_box_pack_start(GTK_BOX(syncHBox), spacerLabel, true, true, 0);
+
+	GtkWidget *syncEveryLabel = gtk_label_new(_("Synchronize iFolders Every"));
+	gtk_misc_set_alignment(GTK_MISC(syncEveryLabel), 1, 0.5);
+	gtk_box_pack_start(GTK_BOX(syncHBox), syncEveryLabel, false, false, 0);
+	
+	GtkObject *adjustment = gtk_adjustment_new(1, 1, 5000, 1, 1, 1); /* FIXME: Replace 5000 with Int32.MaxValue */
+	pw->syncSpinButton = gtk_spin_button_new(GTK_ADJUSTMENT(adjustment), 1, 0);
+	
+	gtk_box_pack_start(GTK_BOX(syncHBox), pw->syncSpinButton, false, false, 0);
+
+	pw->syncUnitsComboBox = gtk_combo_box_new_text();
+	gtk_box_pack_start(GTK_BOX(syncHBox), pw->syncUnitsComboBox, false, false, 0);
+	
+	gtk_combo_box_append_text(GTK_COMBO_BOX(pw->syncUnitsComboBox), _("seconds"));
+	gtk_combo_box_append_text(GTK_COMBO_BOX(pw->syncUnitsComboBox), _("minutes"));
+	gtk_combo_box_append_text(GTK_COMBO_BOX(pw->syncUnitsComboBox), _("hours"));
+	gtk_combo_box_append_text(GTK_COMBO_BOX(pw->syncUnitsComboBox), _("days"));
+	
+	gtk_combo_box_set_active(GTK_COMBO_BOX(pw->syncUnitsComboBox), IFA_SYNC_UNIT_MINUTES);
+	pw->currentSyncUnit = IFA_SYNC_UNIT_MINUTES;
 
 	return pw->generalPage;
 }
 
 static GtkWidget *
-create_accounts_page(IFPreferencesWindow *pw)
+create_accounts_page(IFAPreferencesWindow *pw)
 {
 	return gtk_label_new("Accounts");
 }
 
 static void
-help_button_clicked(GtkButton *button, IFPreferencesWindow *pw)
+help_button_clicked(GtkButton *button, IFAPreferencesWindow *pw)
 {
 	switch(gtk_notebook_get_current_page(GTK_NOTEBOOK(pw->notebook)))
 	{
@@ -252,7 +308,7 @@ help_button_clicked(GtkButton *button, IFPreferencesWindow *pw)
 }
 
 static void
-close_button_clicked(GtkButton *button, IFPreferencesWindow *pw)
+close_button_clicked(GtkButton *button, IFAPreferencesWindow *pw)
 {
 	close_window();
 }
@@ -273,7 +329,7 @@ close_window()
 }
 
 static void
-delete_preferences_window(IFPreferencesWindow **pw)
+delete_preferences_window(IFAPreferencesWindow **pw)
 {
 	/* FIXME: Free memory used by structure members */
 	free(*pw);
@@ -281,7 +337,7 @@ delete_preferences_window(IFPreferencesWindow **pw)
 }
 
 static void
-notebook_page_switched(GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, IFPreferencesWindow *pw)
+notebook_page_switched(GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, IFAPreferencesWindow *pw)
 {
 	if (page_num != 0)
 		leaving_general_page();
@@ -296,8 +352,10 @@ leaving_general_page()
  * Set the values of all the widgets
  */
 static void
-general_page_realized(GtkWidget *widget, IFPreferencesWindow *pw)
+general_page_realized(GtkWidget *widget, IFAPreferencesWindow *pw)
 {
+	int err;
+
 	g_message("Implement general_page_realized()");
 /* FIXME: Implement general_page_realized()
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pw->showConfirmationButton)),
@@ -305,12 +363,68 @@ general_page_realized(GtkWidget *widget, IFPreferencesWindow *pw)
 
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pw->notifySyncErrorsButton)),
 				     ifolder_user_pref_get_bool(IFOLDER_PREF_SHOW_CREATION));
-
 */
+//	err = ifolder_client_get_default_sync_interval(&(pw->lastSyncInterval));
+//	if (err == IFOLDER_SUCCESS)
+//	{
+//		if (pw->lastSyncInterval <= 0)
+//			gtk_spin_button_set_value(GTK_SPIN_BUTTON(pw->syncSpinButton), 0);
+//		else
+//		{
+//			char * syncUnitString = ifolder_user_pref_get_string(IFOLDER_PREF_SYNC_UNIT);
+//			if (strcmp(syncUnitString, "Seconds") == 0)
+//			{
+//				pw->currentSyncUnit = IFA_SYNC_UNIT_SECONDS;
+//				
+//				/* prevent the user from setting a sync interval less than one minute */
+//				gtk_combo_box_set_range(GTK_SPIN_BUTTON(pw->syncSpinButton), 60, 5000); /* FIXME: Set max to Int32.MaxValue */
+//			}
+//			else if (strcmp(syncUnitString, "Minutes") == 0)
+//			{
+//				pw->currentSyncUnit = IFA_SYNC_UNIT_MINUTES;
+//			}
+//			else if (strcmp(syncUnitString, "Hours") == 0)
+//			{
+//				pw->currentSyncUnit = IFA_SYNC_UNIT_HOURS;
+//			}
+//			else if (strcmp(syncUnitString, "Days") == 0)
+//			{
+//				pw->currentSyncUnit = IFA_SYNC_UNIT_DAYS;
+//			}
+//	
+//			gtk_combo_box_set_active(GTK_COMBO_BOX(pw->syncUnitsComboBox), pw->currentSyncUnit);
+//			
+//			gtk_spin_button_set_value(GTK_SPIN_BUTTON(pw->syncSpinButton), calculate_sync_spin_value(pw->lastSyncInterval, pw->currentSyncUnit));
+//			
+//			/* FIXME: figure out if we need to free syncUnitString */
+//		}
+//	}
+//	else
+//	{
+//		pw->lastSyncInterval = -1;
+//		gtk_spin_button_set_value(GTK_SPIN_BUTTON(pw->syncSpinButton), 0);
+//	}
+	
+	if (pw->lastSyncInterval <= 0)
+	{
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pw->autoSyncCheckButton), false);
+		gtk_widget_set_sensitive(pw->syncSpinButton, false);
+		gtk_widget_set_sensitive(pw->syncUnitsComboBox, false);
+	}
+	else
+	{
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pw->autoSyncCheckButton), true);
+		gtk_widget_set_sensitive(pw->syncSpinButton, true);
+		gtk_widget_set_sensitive(pw->syncUnitsComboBox, true);
+	}
+	
+	g_signal_connect(G_OBJECT(pw->autoSyncCheckButton), "toggled", G_CALLBACK(on_auto_sync_button), pw);
+	g_signal_connect(G_OBJECT(pw->syncSpinButton), "value-changed", G_CALLBACK(on_sync_interval_changed), pw);
+	g_signal_connect(G_OBJECT(pw->syncUnitsComboBox), "changed", G_CALLBACK(on_sync_units_changed), pw);
 }
 
 static void
-show_conf_button_toggled(GtkToggleButton *togglebutton, IFPreferencesWindow *pw)
+show_conf_button_toggled(GtkToggleButton *togglebutton, IFAPreferencesWindow *pw)
 {
 	g_message("Implement show_conf_button_toggled()");
 /* FIXME: Implement show_conf_button_toggled()
@@ -320,7 +434,26 @@ show_conf_button_toggled(GtkToggleButton *togglebutton, IFPreferencesWindow *pw)
 }
 
 static void
-notify_sync_errors_button_toggled(GtkToggleButton *togglebutton, IFPreferencesWindow *pw)
+notify_sync_errors_button_toggled(GtkToggleButton *togglebutton, IFAPreferencesWindow *pw)
 {
 	g_message("FIXME: Implement notify_sync_errors_button_toggled()");
 }
+
+static void
+on_auto_sync_button(GtkToggleButton *togglebutton, IFAPreferencesWindow *pw)
+{
+	g_message("FIXME: Implement on_auto_sync_button()");
+}
+
+static void
+on_sync_interval_changed(GtkSpinButton *spinbutton, IFAPreferencesWindow *pw)
+{
+	g_message("FIXME: Implement on_sync_interval_changed()");
+}
+
+static void
+on_sync_units_changed(GtkComboBox *widget, IFAPreferencesWindow *pw)
+{
+	g_message("FIXME: Implement on_sync_units_changed()");
+}
+

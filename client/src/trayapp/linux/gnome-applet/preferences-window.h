@@ -30,10 +30,11 @@ G_BEGIN_DECLS
 
 typedef enum
 {
-	IF_SYNC_UNIT_SECONDS,
-	IF_SYNC_UNIT_MINUTES,
-	IF_SYNC_UNIT_HOURS
-} IFSyncUnit;
+	IFA_SYNC_UNIT_SECONDS,
+	IFA_SYNC_UNIT_MINUTES,
+	IFA_SYNC_UNIT_HOURS,
+	IFA_SYNC_UNIT_DAYS
+} IFASyncUnit;
 
 typedef struct {
 	GtkWidget 		*window;
@@ -55,8 +56,8 @@ typedef struct {
 	GtkWidget		*syncUnitsComboBox;
 	GtkWidget		*showConfirmationButton;
 	GtkWidget		*notifySyncErrorsButton;
-	int			lastSyncInterval;
-	IFSyncUnit		currentSyncUnit;
+	int				lastSyncInterval;
+	IFASyncUnit		currentSyncUnit;
 
 	/**
 	 * Accounts Page Widgets
@@ -72,9 +73,9 @@ typedef struct {
 
 	GHashTable		*detailsDialogs;
 	GtkWidget		*waitDialog;
-} IFPreferencesWindow;
+} IFAPreferencesWindow;
 
-IFPreferencesWindow *ifa_get_preferences_window();
+IFAPreferencesWindow *ifa_get_preferences_window();
 void ifa_show_preferences_window();
 
 G_END_DECLS

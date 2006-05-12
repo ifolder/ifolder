@@ -316,6 +316,7 @@ AC_CONFIG_FILES([
   package/linux/Makefile
   package/windows/Makefile
   src/Makefile
+  src/libifolder/Makefile
   src/trayapp/Makefile
   src/trayapp/darwin/Makefile
   src/trayapp/darwin/Info.plist
