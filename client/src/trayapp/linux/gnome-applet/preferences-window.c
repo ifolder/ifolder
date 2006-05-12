@@ -18,21 +18,12 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  *  Author(s): Boyd Timothy <btimothy@novell.com>
- * 
- *  This file was originally developed for the NetworkManager Wireless Appplet
- *  created by Dan Williams <dcbw@redhat.com>.
- * 
- *  GNOME Wireless Applet Authors:
- *		Eskil Heyn Olsen <eskil@eskil.dk>
- *		Bastien Nocera <hadess@hadess.net> (Gnome2 port)
- *
- * (C) Copyright 2004-2005 Red Hat, Inc.
- * (C) Copyright 2001, 2002 Free Software Foundation
  *
  ***********************************************************************/
 
 #include <string.h>
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 
 //#if !GTK_CHECK_VERSION(2,6,0)
 //#include <gnome.h>
@@ -47,7 +38,8 @@ static IFPreferencesWindow *prefsWindow = NULL;
 
 static IFPreferencesWindow *create_preferences_window();
 static void delete_preferences_window(IFPreferencesWindow **pw);
-static void key_press_handler(GtkWidget *widget, GdkEventKey *event, IFPreferencesWindow *pw);
+static gboolean key_press_handler(GtkWidget *widget, GdkEventKey *event, IFPreferencesWindow *pw);
+static gboolean key_release_handler(GtkWidget *widget, GdkEventKey *event, IFPreferencesWindow *pw);
 static GtkWidget *create_general_page(IFPreferencesWindow *pw);
 static GtkWidget *create_accounts_page(IFPreferencesWindow *pw);
 static void help_button_clicked(GtkButton *button, IFPreferencesWindow *pw);
@@ -85,6 +77,7 @@ create_preferences_window()
 	gtk_window_set_title(GTK_WINDOW(pw->window), _("iFolder Preferences"));
 	pw->controlKeyPressed = false;
 	g_signal_connect(G_OBJECT(pw->window), "key-press-event", G_CALLBACK(key_press_handler), pw);
+	g_signal_connect(G_OBJECT(pw->window), "key-release-event", G_CALLBACK(key_release_handler), pw);
 
 	gtk_window_set_default_size(GTK_WINDOW(pw->window), 480, 550);
 
@@ -98,7 +91,6 @@ create_preferences_window()
 	gtk_notebook_append_page(GTK_NOTEBOOK(pw->notebook), create_general_page(pw), gtk_label_new(_("General")));
 	gtk_notebook_append_page(GTK_NOTEBOOK(pw->notebook), create_accounts_page(pw), gtk_label_new(_("Accounts")));
 
-	/* FIXME: Hook up the switch page event handler */
 	g_signal_connect(G_OBJECT(pw->notebook), "switch-page", G_CALLBACK(notebook_page_switched), pw);
 
 	gtk_box_pack_start(GTK_BOX(winBox), pw->notebook, true, true, 0);
@@ -117,10 +109,53 @@ create_preferences_window()
 	return pw;
 }
 
-static void
+static gboolean
 key_press_handler(GtkWidget *widget, GdkEventKey *event, IFPreferencesWindow *pw)
 {
+	gboolean stop_other_handlers = true;
 	g_message("Key pressed inside the preferences window");
+
+	switch(event->keyval)
+	{
+		case GDK_Escape:
+			close_window();
+			break;
+		case GDK_Control_L:
+		case GDK_Control_R:
+			pw->controlKeyPressed = true;
+			stop_other_handlers = false;
+			break;
+		case GDK_W:
+		case GDK_w:
+			if (pw->controlKeyPressed)
+				close_window();
+			else
+				stop_other_handlers = false;
+			break;
+		default:
+			stop_other_handlers = false;
+			break;
+	}
+
+	return stop_other_handlers;
+}
+
+static gboolean
+key_release_handler(GtkWidget *widget, GdkEventKey *event, IFPreferencesWindow *pw)
+{
+	gboolean stop_other_handlers = false;
+
+	switch(event->keyval)
+	{
+		case GDK_Control_L:
+		case GDK_Control_R:
+			pw->controlKeyPressed = false;
+			break;
+		default:
+			break;
+	}
+
+	return stop_other_handlers;
 }
 
 static GtkWidget *

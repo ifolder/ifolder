@@ -18,11 +18,6 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  *  Author(s): Boyd Timothy <btimothy@novell.com>
- * 
- *  This file was originally developed for the NetworkManager Wireless Appplet
- *  created by Dan Williams <dcbw@redhat.com>.
- * 
- * (C) Copyright 2004-2005 Red Hat, Inc.
  *
  ***********************************************************************/
 
