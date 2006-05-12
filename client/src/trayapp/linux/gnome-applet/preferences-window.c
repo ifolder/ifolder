@@ -30,6 +30,7 @@
 //#endif
 
 #include "preferences-window.h"
+#include "util.h"
 
 /*@todo Remove this when gettext is added */
 #define _
@@ -46,6 +47,10 @@ static void help_button_clicked(GtkButton *button, IFPreferencesWindow *pw);
 static void close_button_clicked(GtkButton *button, IFPreferencesWindow *pw);
 static void close_window();
 static void notebook_page_switched(GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, IFPreferencesWindow *pw);
+static void leaving_general_page();
+static void general_page_realized(GtkWidget *widget, IFPreferencesWindow *pw);
+static void show_conf_button_toggled(GtkToggleButton *togglebutton, IFPreferencesWindow *pw);
+static void notify_sync_errors_button_toggled(GtkToggleButton *togglebutton, IFPreferencesWindow *pw);
 
 IFPreferencesWindow *
 ifa_get_preferences_window()
@@ -161,7 +166,66 @@ key_release_handler(GtkWidget *widget, GdkEventKey *event, IFPreferencesWindow *
 static GtkWidget *
 create_general_page(IFPreferencesWindow *pw)
 {
-	return gtk_label_new("General");
+	pw->generalPage = gtk_vbox_new(false, IFA_DEFAULT_SECTION_SPACING);
+	gtk_container_set_border_width(GTK_CONTAINER(pw->generalPage), IFA_DEFAULT_BORDER_WIDTH);
+	g_signal_connect(G_OBJECT(pw->generalPage), "realize", G_CALLBACK(general_page_realized), pw);
+
+	/**
+	 * Application Settings
+	 */
+	GtkWidget *appSectionBox = gtk_vbox_new(false, IFA_DEFAULT_SECTION_TITLE_SPACING);
+	gtk_box_pack_start(GTK_BOX(pw->generalPage), appSectionBox, false, true, 0);
+	GtkWidget *appSectionLabel = gtk_label_new(_("<span weight=\"bold\">Application</span>"));
+	gtk_label_set_use_markup(GTK_LABEL(appSectionLabel), true);
+	gtk_misc_set_alignment(GTK_MISC(appSectionLabel), 0, 0.5);
+	gtk_box_pack_start(GTK_BOX(appSectionBox), appSectionLabel, false, true, 0);
+
+	/* create an hbox to provide spacing */
+	GtkWidget *appSpacerBox = gtk_hbox_new(false, 0);
+	gtk_box_pack_start(GTK_BOX(appSectionBox), appSpacerBox, false, true, 0);
+	GtkWidget *appSpaceLabel = gtk_label_new("    ");	// four spaces
+	gtk_box_pack_start(GTK_BOX(appSpacerBox), appSpaceLabel, false, true, 0);
+
+	/* create a vbox to actually place the widgets in for the section */
+	GtkWidget *appWidgetBox = gtk_vbox_new(false, IFA_DEFAULT_SECTION_TITLE_SPACING);
+	gtk_box_pack_start(GTK_BOX(appSectionBox), appWidgetBox, false, true, 0);
+
+	pw->showConfirmationButton = gtk_check_button_new_with_mnemonic(_("_Show a confirmation dialog when creating iFolders"));
+	gtk_box_pack_start(GTK_BOX(appWidgetBox), pw->showConfirmationButton, false, true, 0);
+	g_signal_connect(G_OBJECT(pw->showConfirmationButton), "toggled", G_CALLBACK(show_conf_button_toggled), pw);
+
+	GtkWidget *startupLabel = gtk_label_new(_("<span style=\"italic\">To start up iFolder at login, leave iFolder running when you log out and save your current setup.</span>"));
+	gtk_label_set_use_markup(GTK_LABEL(startupLabel), true);
+	gtk_label_set_line_wrap(GTK_LABEL(startupLabel), true);
+	gtk_box_pack_start(GTK_BOX(appWidgetBox), startupLabel, false, true, 0);
+
+	/**
+	 * Notifications
+	 */
+	GtkWidget *notifySectionBox = gtk_vbox_new(false, IFA_DEFAULT_SECTION_TITLE_SPACING);
+	gtk_box_pack_start(GTK_BOX(pw->generalPage), notifySectionBox, false, true, 0);
+
+	GtkWidget *notifySectionLabel = gtk_label_new(_("<span weight=\"bold\">Notification</span>"));
+	gtk_label_set_use_markup(GTK_LABEL(notifySectionLabel), true);
+	gtk_misc_set_alignment(GTK_MISC(notifySectionLabel), 0, 0.5);
+	gtk_box_pack_start(GTK_BOX(notifySectionBox), notifySectionLabel, false, true, 0);
+
+	/* create an hbox to provide spacing */
+	GtkWidget *notifySpacerBox = gtk_hbox_new(false, 0);
+	gtk_box_pack_start(GTK_BOX(notifySectionBox), notifySpacerBox, false, true, 0);
+	GtkWidget *notifySpaceLabel = gtk_label_new("    "); /* four spaces */
+	gtk_box_pack_start(GTK_BOX(notifySpacerBox), notifySpaceLabel, false, true, 0);
+
+	/* create a vbox to actually place the widgets in for the section */
+	GtkWidget *notifyWidgetBox = gtk_vbox_new(false, 5); /* FIXME: un-hard-code this and move the value to a #define in util.h */
+	gtk_box_pack_start(GTK_BOX(notifySpacerBox), notifyWidgetBox, true, true, 0);
+
+	pw->notifySyncErrorsButton = gtk_check_button_new_with_mnemonic(_("Notify of _synchronization errors"));
+	gtk_box_pack_start(GTK_BOX(notifyWidgetBox), pw->notifySyncErrorsButton, false, true, 0);
+	g_signal_connect(G_OBJECT(pw->notifySyncErrorsButton), "toggled", G_CALLBACK(notify_sync_errors_button_toggled), pw);
+
+
+	return pw->generalPage;
 }
 
 static GtkWidget *
@@ -173,6 +237,18 @@ create_accounts_page(IFPreferencesWindow *pw)
 static void
 help_button_clicked(GtkButton *button, IFPreferencesWindow *pw)
 {
+	switch(gtk_notebook_get_current_page(GTK_NOTEBOOK(pw->notebook)))
+	{
+		case 0:
+			ifa_show_help(IFA_HELP_PREFERENCES_PAGE);
+			break;
+		case 1:
+			ifa_show_help(IFA_HELP_ACCOUNTS_PAGE);
+			break;
+		default:
+			ifa_show_help(IFA_HELP_MAIN_PAGE);
+			break;
+	}
 }
 
 static void
@@ -187,7 +263,9 @@ close_window()
 	if (!prefsWindow)
 		return;
 
-	/* FIXME: check leaving general page */
+	if (gtk_notebook_get_current_page(GTK_NOTEBOOK(prefsWindow->notebook)) == 0)
+		leaving_general_page();
+
 	gtk_widget_hide(prefsWindow->window);
 	gtk_widget_destroy(prefsWindow->window);
 
@@ -205,6 +283,44 @@ delete_preferences_window(IFPreferencesWindow **pw)
 static void
 notebook_page_switched(GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, IFPreferencesWindow *pw)
 {
-	/* FIXME: Implement notebook_page_switched() */
+	if (page_num != 0)
+		leaving_general_page();
 }
 
+static void
+leaving_general_page()
+{
+}
+
+/**
+ * Set the values of all the widgets
+ */
+static void
+general_page_realized(GtkWidget *widget, IFPreferencesWindow *pw)
+{
+	g_message("Implement general_page_realized()");
+/* FIXME: Implement general_page_realized()
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pw->showConfirmationButton)),
+				     ifolder_user_pref_get_bool(IFOLDER_PREF_SHOW_CREATION));
+
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pw->notifySyncErrorsButton)),
+				     ifolder_user_pref_get_bool(IFOLDER_PREF_SHOW_CREATION));
+
+*/
+}
+
+static void
+show_conf_button_toggled(GtkToggleButton *togglebutton, IFPreferencesWindow *pw)
+{
+	g_message("Implement show_conf_button_toggled()");
+/* FIXME: Implement show_conf_button_toggled()
+	ifolder_user_pref_set_bool(IFOLDER_PREF_SHOW_CREATION,
+				   gtk_toggle_button_get_active(toggleButton));
+*/
+}
+
+static void
+notify_sync_errors_button_toggled(GtkToggleButton *togglebutton, IFPreferencesWindow *pw)
+{
+	g_message("FIXME: Implement notify_sync_errors_button_toggled()");
+}

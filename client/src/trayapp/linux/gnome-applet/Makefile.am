@@ -29,6 +29,8 @@ ifolder3_applet_SOURCES = \
 	applet.h				\
 	preferences-window.c			\
 	preferences-window.h			\
+	util.c					\
+	util.h					\
 	eggtrayicon.c			\
 	eggtrayicon.h
 
