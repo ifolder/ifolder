@@ -69,6 +69,8 @@ static void on_add_account(GtkButton *widget, IFAPreferencesWindow *pw);
 static void on_remove_account(GtkButton *widget, IFAPreferencesWindow *pw);
 static void on_properties_clicked(GtkButton *widget, IFAPreferencesWindow *pw);
 
+static void on_acc_tree_row_activated(GtkTreeView *tree_view, GtkTreePath *path, GtkTreeViewColumn *column, IFAPreferencesWindow *pw);
+
 IFAPreferencesWindow *
 ifa_get_preferences_window()
 {
@@ -380,6 +382,8 @@ create_accounts_page(IFAPreferencesWindow *pw)
 	gtk_box_pack_start(GTK_BOX(buttonBox), pw->propertiesButton, false, false, 0);
 	g_signal_connect(G_OBJECT(pw->propertiesButton), "clicked", G_CALLBACK(on_properties_clicked), pw);
 	
+	g_signal_connect(G_OBJECT(pw->accTreeView), "row-activated", G_CALLBACK(on_acc_tree_row_activated), pw);
+	
 	return pw->accountsPage;
 }
 
@@ -556,6 +560,9 @@ accounts_page_realized(GtkWidget *widget, IFAPreferencesWindow *pw)
 	int err;
 
 	g_message("Implement accounts_page_realized()");
+	
+//	populate_domains();
+//	update_widget_sensitivity();
 }
 
 static void
@@ -595,5 +602,11 @@ static void
 on_properties_clicked(GtkButton *widget, IFAPreferencesWindow *pw)
 {
 	g_message("FIXME: Implement on_properties_clicked()");
+}
+
+static void
+on_acc_tree_row_activated(GtkTreeView *tree_view, GtkTreePath *path, GtkTreeViewColumn *column, IFAPreferencesWindow *pw)
+{
+	g_message("FIXME: Implement on_acc_tree_row_activated()");
 }
 
