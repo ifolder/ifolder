@@ -29,7 +29,7 @@
 //#include <gnome.h>
 //#endif
 
-#include <ifolder-client.h>
+//#include <ifolder-client.h>
 
 #include "preferences-window.h"
 #include "util.h"
@@ -70,6 +70,11 @@ static void on_remove_account(GtkButton *widget, IFAPreferencesWindow *pw);
 static void on_properties_clicked(GtkButton *widget, IFAPreferencesWindow *pw);
 
 static void on_acc_tree_row_activated(GtkTreeView *tree_view, GtkTreePath *path, GtkTreeViewColumn *column, IFAPreferencesWindow *pw);
+
+static void populate_domains(IFAPreferencesWindow *pw);
+static void update_widget_sensitivitiy(IFAPreferencesWindow *pw);
+
+static gboolean g_ifolder_domain_equal(gconstpointer a, gconstpointer b);
 
 IFAPreferencesWindow *
 ifa_get_preferences_window()
@@ -304,6 +309,10 @@ create_accounts_page(IFAPreferencesWindow *pw)
 	gtk_container_set_border_width(GTK_CONTAINER(pw->accountsPage), IFA_DEFAULT_BORDER_WIDTH);
 	g_signal_connect(G_OBJECT(pw->accountsPage), "realize", G_CALLBACK(accounts_page_realized), pw);
 	
+	pw->curDomains = g_hash_table_new(g_direct_hash, g_ifolder_domain_equal);
+	pw->removedDomains = g_hash_table_new(g_str_hash, g_str_equal);
+	pw->detailsDialogs = g_hash_table_new(g_direct_hash, g_str_equal);
+
 //	pw->curDomains = g_hash_table_new_full(g_str_hash, g_str_equal);
 //	pw->removedDomains = g_hash_table_new_full(g_str_hash, g_str_equal);
 //	pw->detailsDialogs = g_hash_table_new_full(g_str_hash, g_str_equal);
@@ -608,5 +617,42 @@ static void
 on_acc_tree_row_activated(GtkTreeView *tree_view, GtkTreePath *path, GtkTreeViewColumn *column, IFAPreferencesWindow *pw)
 {
 	g_message("FIXME: Implement on_acc_tree_row_activated()");
+}
+
+static void
+populate_domains(IFAPreferencesWindow *pw)
+{
+//	int err;
+//	iFolderEnumeration domain_enum;
+//	iFolderDomain domain;
+
+//	err = ifolder_domains_get_all(&domain_enum);
+//	if (err != IFOLDER_SUCCESS)
+//		return;
+
+//	while (ifolder_enumeration_has_more(domain_enum))
+//	{
+//		domain = (iFolderDomain*)ifolder_enumeration_get_next(domain_enum);
+//		if (domain == NULL) continue; /*protect against null*/
+
+//	}
+
+//	ifolder_enumeration_free(domain_enum);
+}
+
+static void
+update_widget_sensitivitiy(IFAPreferencesWindow *pw)
+{
+}
+
+static gboolean
+g_ifolder_domain_equal(gconstpointer a, gconstpointer b)
+{
+/*
+	if (strcmp(ifolder_domain_get_id(a), ifolder_domain_get_id(b)) == 0)
+		return true;
+*/
+
+	return false;
 }
 
