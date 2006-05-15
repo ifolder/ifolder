@@ -41,8 +41,8 @@ ifolder3_applet_LDFLAGS = \
 	$(TRAYAPP_LIBS)
 
 ifolder3_applet_LDADD = \
-	$(top_srcdir)/src/core/libifolder-core.a \
-	$(top_srcdir)/src/libifolder/libifolder-trayapp.a
+	$(top_srcdir)/src/libifolder/libifolder-trayapp.a \
+	$(top_srcdir)/src/core/libifolder-core.a
 
 #install-exec-local:
 #	$(mkinstalldirs) $(IMAGE_INSTALL_DIR)
