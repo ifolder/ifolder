@@ -25,6 +25,7 @@
 #define IFOLDER_CLIENT_H
 
 #include "ifolder-types.h"
+#include "ifolder-errors.h"
 
 /**
  * @mainpage iFolder 3.6 Client API for C
@@ -117,7 +118,7 @@ iFolderClient *ifolder_client_initialize(const char *data_path, GError **error);
  * 
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-void ifolder_client_uninitialize(iFolderClient *client, GError *error);
+void ifolder_client_uninitialize(iFolderClient *client, GError **error);
 
 //! Returns the current state of the iFolder Client.
 /**

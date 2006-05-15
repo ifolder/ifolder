@@ -21,6 +21,8 @@
  *
  ***********************************************************************/
 
+#include <IFApplication.h>
+
 #include "ifolder-client.h"
 #include "ifolder-private.h"
 #include "ifolder-errors.h"
@@ -33,7 +35,7 @@ struct _iFolderClientPrivate
 {
 	gboolean dispose_has_run;
 	
-	GSList *domains;
+	IFApplication *ifolder_core_app;
 };
 
 static GObjectClass *parent_class = NULL;
@@ -77,8 +79,6 @@ static void ifolder_client_init(GTypeInstance *instance, gpointer g_class)
 	 * delay initialization completion until the property is set.
 	 */
 	self->priv->dispose_has_run = FALSE;
-	
-	self->priv->domains = g_slist_alloc();
 }
 
 static void ifolder_client_finalize(GObject *object)
@@ -175,8 +175,10 @@ ifolder_client_initialize(const char *data_path, GError **error)
 }
 
 void
-ifolder_client_uninitialize(iFolderClient *client, GError *error)
+ifolder_client_uninitialize(iFolderClient *client, GError **error)
 {
+	g_message("FIXME: Implement ifolder_client_uninitialize()");
+
 	if (singleton_client == NULL)
 	{
 		g_set_error(error,
