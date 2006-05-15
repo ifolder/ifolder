@@ -179,3 +179,166 @@ ifolder_domain_new (void)
 	return domain;
 }
 
+void
+ifolder_domain_log_in(iFolderDomain *domain, const char *password, GError **error)
+{
+	g_message("FIXME: Implement ifolder_domain_login");
+}
+
+void
+ifolder_domain_log_out(iFolderDomain *domain, GError **error)
+{
+	g_message("FIXME: Implement ifolder_domain_login");
+}
+
+void
+ifolder_domain_activate(iFolderDomain *domain, GError **error)
+{
+	g_message("FIXME: Implement ifolder_domain_login");
+}
+
+void
+ifolder_domain_inactivate(iFolderDomain *domain, GError **error)
+{
+	g_message("FIXME: Implement ifolder_domain_login");
+}
+
+void
+ifolder_domain_change_host_address(iFolderDomain *domain, const char *new_host_address, GError **error)
+{
+	g_message("FIXME: Implement ifolder_domain_login");
+}
+
+void
+ifolder_domain_set_credentials(iFolderDomain *domain, const char *password, const iFolderCredentialType credential_type, GError **error)
+{
+	g_message("FIXME: Implement ifolder_domain_login");
+}
+
+void
+ifolder_domain_set_default(iFolderDomain *domain, GError **error)
+{
+	g_message("FIXME: Implement ifolder_domain_login");
+}
+
+iFolderUser *
+ifolder_domain_get_authenticated_user(iFolderDomain *domain, GError **error)
+{
+	g_message("FIXME: Implement ifolder_domain_login");
+	
+	return NULL;
+}
+
+iFolderUserPolicy *
+ifolder_domain_get_authenticated_user_policy(iFolderDomain *domain, GError **error)
+{
+	g_message("FIXME: Implement ifolder_domain_login");
+	
+	return NULL;
+}
+
+gboolean
+ifolder_domain_check_for_updated_client(iFolderDomain *domain, char **new_version, const char *version_override, GError **error)
+{
+	g_message("FIXME: Implement ifolder_domain_login");
+
+	return FALSE;
+}
+
+iFolderUser *
+ifolder_domain_get_user(iFolderDomain *domain, const char *user_name, GError **error)
+{
+	g_message("FIXME: Implement ifolder_domain_login");
+	
+	return NULL;
+}
+
+GSList *
+ifolder_domain_get_users(iFolderDomain *domain, const int index, const int count, GError **error)
+{
+	g_message("FIXME: Implement ifolder_domain_login");
+	
+	return g_slist_alloc();
+}
+
+GSList *
+ifolder_domain_get_users_by_search(iFolderDomain *domain, const iFolderSearchProperty search_prop, const iFolderSearchOperation search_op, const char *pattern, const int index, const int count, GError **error)
+{
+	g_message("FIXME: Implement ifolder_domain_login");
+	
+	return g_slist_alloc();
+}
+
+iFolder *
+ifolder_domain_create_ifolder_from_path(iFolderDomain *domain, const char *local_path, const char *description, GError **error)
+{
+	g_message("FIXME: Implement ifolder_domain_login");
+	
+	return NULL;
+}
+
+iFolder *
+ifolder_domain_create_ifolder(iFolderDomain *domain, const char *name, const char *description, GError **error)
+{
+	g_message("FIXME: Implement ifolder_domain_login");
+	
+	return NULL;
+}
+
+void
+ifolder_domain_delete_ifolder(iFolderDomain *domain, iFolder *ifolder, GError **error)
+{
+	g_message("FIXME: Implement ifolder_domain_login");
+}
+
+void
+ifolder_domain_connect_ifolder(iFolderDomain *domain, iFolder *ifolder, const char *local_path, GError **error)
+{
+	g_message("FIXME: Implement ifolder_domain_login");
+}
+
+void
+ifolder_domain_disconnect_ifolder(iFolderDomain *domain, iFolder *ifolder, GError **error)
+{
+	g_message("FIXME: Implement ifolder_domain_login");
+}
+
+GSList *
+ifolder_domain_get_all_ifolders(iFolderDomain *domain, const int index, const int count, GError **error)
+{
+	g_message("FIXME: Implement ifolder_domain_login");
+	
+	return g_slist_alloc();
+}
+
+GSList *
+ifolder_domain_get_connected_ifolders(iFolderDomain *domain, const int index, const int count, GError **error)
+{
+	g_message("FIXME: Implement ifolder_domain_login");
+	
+	return g_slist_alloc();
+}
+
+GSList *
+ifolder_domain_get_disconnected_ifolders(iFolderDomain *domain, const int index, const int count, GError **error)
+{
+	g_message("FIXME: Implement ifolder_domain_login");
+	
+	return g_slist_alloc();
+}
+
+iFolder *
+ifolder_domain_get_ifolder_by_id(iFolderDomain *domain, const char *id, GError **error)
+{
+	g_message("FIXME: Implement ifolder_domain_login");
+	
+	return NULL;
+}
+
+GSList *
+ifolder_domain_get_ifolders_by_name(iFolderDomain *domain, const iFolderSearchOperation search_op, const char *pattern, const int index, const int count, GError **error)
+{
+	g_message("FIXME: Implement ifolder_domain_login");
+	
+	return g_slist_alloc();
+}
