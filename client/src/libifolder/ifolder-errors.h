@@ -24,10 +24,7 @@
 #ifndef _IFOLDER_ERRORS_H_
 #define _IFOLDER_ERRORS_H_
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif		/* __cplusplus */
+#include <glib.h>
 
 /**
  * @file ifolder-errors.h
@@ -39,24 +36,23 @@ extern "C"
  * @{
  */
 
-//! An operation succeeded.
-#define IFOLDER_SUCCESS					0
+typedef enum
+{
+	IFOLDER_SUCCESS,					/*!< An operation succeeded */
+	IFOLDER_ERR_UNKNOWN,				/*!< If this is returned, the API implementors did not do a very good job of implementing the API.  Please refrain from using this. */
+	IFOLDER_ERR_OUT_OF_MEMORY			/*!< Failed to allocate memory. */
 
-//! An unknown error occurred.
-/**
- * If this is returned, the API implementors did not do a very good job of
- * implementing the API.  Please refrain from using this.
- */
-#define IFOLDER_ERROR						-1
+} iFolderError;
+#define IFOLDER_ERROR g_markup_error_quark()
 
-//! Returned if the client is attempted to be initialized multiple times.
-#define IFOLDER_ERR_ALREADY_INITIALIZED	-101
 
-//! Returned if an operation is attempted on the library without initializing the client.
-#define IFOLDER_ERR_NOT_INITIALIZED		-102
+typedef enum
+{
+	IFOLDER_ERR_ALREADY_INITIALIZED,	/*!< Returned if the client is attempted to be initialized multiple times. */
+	IFOLDER_ERR_NOT_INITIALIZED,		/*!< Returned if an operation is attempted on the library without initializing the client. */
+} iFolderClientError;
+#define IFOLDER_CLIENT_ERROR g_markup_error_quark()
 
-//! Failed to allocate memory.
-#define IFOLDER_ERR_OUT_OF_MEMORY		-103
 
 //! A required function parameter was invalid.
 #define IFOLDER_ERR_INVALID_PARAMETER		-104
@@ -125,10 +121,6 @@ extern "C"
 #define IFOLDER_ERR_EVENT_INVALID_ACCESS	-402
 
 /*@}*/
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /*_IFOLDER_ERRORS_H_*/
 

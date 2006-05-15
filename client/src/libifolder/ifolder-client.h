@@ -21,15 +21,10 @@
  *
  ***********************************************************************/
 
-#ifndef _IFOLDER_C_CLIENT_H_
-#define _IFOLDER_C_CLIENT_H_
+#ifndef IFOLDER_CLIENT_H
+#define IFOLDER_CLIENT_H
 
-#include "ifolder-errors.h"
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif		/* __cplusplus */
+#include "ifolder-types.h"
 
 /**
  * @mainpage iFolder 3.6 Client API for C
@@ -68,7 +63,19 @@ extern "C"
  * your program loads, call ifolder_client_initialize().  Before you exit,
  * make sure you call ifolder_client_uninitialize() before your program exits.
  */
+#define IFOLDER_CLIENT_TYPE				(ifolder_client_get_type())
+#define IFOLDER_CLIENT(obj)				(G_TYPE_CHECK_INSTANCE_CAST ((obj), IFOLDER_CLIENT_TYPE, iFolderClient))
+#define IFOLDER_CLIENT_CLASS(klass)		(G_TYPE_CHECK_CLASS_CAST ((klass), IFOLDER_CLIENT_TYPE, iFolderClientClass))
+#define IFOLDER_IS_CLIENT(obj)			(G_TYPE_CHECK_INSTANCE_TYPE ((obj), IFOLDER_CLIENT_TYPE))
+#define IFOLDER_IS_CLIENT_CLASS(klass)	(G_TYPE_CHECK_CLASS_TYPE ((klass), IFOLDER_CLIENT_TYPE))
+#define IFOLDER_CLIENT_GET_CLASS(obj)	(G_TYPE_INSTANCE_GET_CLASS ((obj), IFOLDER_CLIENT_TYPE, iFolderClientClass))
 
+/* GObject support */
+GType ifolder_client_get_type (void);
+
+/**
+ * Enumerations
+ */
 /**
  * @todo Do we need any more states than these?
  */
@@ -81,6 +88,10 @@ typedef enum
 	IFOLDER_CLIENT_STATE_SYNCHRONIZING,	/*!< The client is actively synchronizing an iFolder */
 	IFOLDER_CLIENT_STATE_UNINITIALIZING	/*!< The client is uninitializing */
 } iFolderClientState;
+
+/**
+ * Method definitions
+ */
 
 /**
  * @name Main Client API
@@ -97,7 +108,7 @@ typedef enum
  * same user.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_client_initialize(const char *data_path);
+iFolderClient *ifolder_client_initialize(const char *data_path, GError **error);
 
 //! Uninitialize the iFolder Client
 /**
@@ -106,13 +117,13 @@ int ifolder_client_initialize(const char *data_path);
  * 
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_client_uninitialize(void);
+void ifolder_client_uninitialize(iFolderClient *client, GError *error);
 
 //! Returns the current state of the iFolder Client.
 /**
  * @return the current state of the iFolder Client.
  */
-iFolderClientState ifolder_client_get_state(void);
+iFolderClientState ifolder_client_get_state(iFolderClient *client);
 
 /*@}*/
 
@@ -144,7 +155,7 @@ iFolderClientState ifolder_client_get_state(void);
  * 
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_client_start_synchronization(void);
+void ifolder_client_start_synchronization(iFolderClient *client, GError **error);
 
 //! Stop all synchronization
 /**
@@ -155,7 +166,7 @@ int ifolder_client_start_synchronization(void);
  * 
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_client_stop_synchronization(void);
+void ifolder_client_stop_synchronization(iFolderClient *client, GError **error);
 
 //! Resume synchronization after being paused
 /**
@@ -166,7 +177,21 @@ int ifolder_client_stop_synchronization(void);
  * 
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_client_resume_synchronization(void);
+void ifolder_client_resume_synchronization(iFolderClient *client, GError **error);
+
+/*@}*/
+
+/**
+ * @name Domain Access
+ */
+/*@{*/
+
+GSList *ifolder_client_get_all_domains(iFolderClient *client, GError **error);
+GSList *ifolder_client_get_all_active_domains(iFolderClient *client, GError **error);
+iFolderDomain *ifolder_client_get_default_domain(iFolderClient *client, GError **error);
+
+iFolderDomain *ifolder_client_add_domain(iFolderClient *client, const gchar *host_address, const gchar *user_name, const gchar *password, gboolean make_default, GError **error);
+void ifolder_client_remove_domain(iFolderClient *client, iFolderDomain *domain, GError **error);
 
 /*@}*/
 
@@ -414,9 +439,4 @@ void (*file_sync_failed)(const iFolder ifolder, const iFolderSyncDirection direc
 
 */
 
-
-#ifdef __cplusplus
-}
-#endif		/* __cplusplus */
-
-#endif /*_IFOLDER_C_CLIENT_H_*/
+#endif /* IFOLDER_CLIENT_H */

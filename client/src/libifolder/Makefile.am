@@ -35,14 +35,18 @@ noinst_LIBRARIES = libifolder-trayapp.a
 
 DEFINES = 
 
-libifolder_trayapp_a_CXXFLAGS = \
-	$(DEFINES)
+libifolder_trayapp_a_CFLAGS = \
+	$(DEFINES)					\
+	$(GLIB_CFLAGS)
+
+libifolder_trayapp_a_LDFLAGS = \
+	$(GLIB_LIBS)
 
 libifolder_trayapp_a_LIBFLAGS = 
 
 libifolder_trayapp_a_SOURCES = \
-	ifolder-client.cpp				\
-	ifolder-domain.cpp
+	ifolder-client.c			\
+	ifolder-domain.c
 
 maintainer-clean-local:
 	rm -f Makefile.in

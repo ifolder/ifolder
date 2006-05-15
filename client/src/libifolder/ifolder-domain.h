@@ -21,40 +21,22 @@
  *
  ***********************************************************************/
 
-#ifndef _IFOLDER_C_DOMAIN_H_
-#define _IFOLDER_C_DOMAIN_H_
+#ifndef IFOLDER_DOMAIN_H
+#define IFOLDER_DOMAIN_H
 
-#include "ifolder.h"
-#include "ifolder-user.h"
-#include "ifolder-enumeration.h"
+/* Headers that this header depends on. */
+#include "ifolder-types.h"
 
-#include "ifolder-errors.h"
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif		/* __cplusplus */
+#define IFOLDER_DOMAIN_TYPE				(ifolder_domain_get_type())
+#define IFOLDER_DOMAIN(obj)				(G_TYPE_CHECK_INSTANCE_CAST ((obj), IFOLDER_DOMAIN_TYPE, iFolderDomain))
+#define IFOLDER_DOMAIN_CLASS(klass)		(G_TYPE_CHECK_CLASS_CAST ((klass), IFOLDER_DOMAIN_TYPE, iFolderDomainClass))
+#define IFOLDER_IS_DOMAIN(obj)			(G_TYPE_CHECK_INSTANCE_TYPE ((obj), IFOLDER_DOMAIN_TYPE))
+#define IFOLDER_IS_DOMAIN_CLASS(klass)	(G_TYPE_CHECK_CLASS_TYPE ((klass), IFOLDER_DOMAIN_TYPE))
+#define IFOLDER_DOMAIN_GET_CLASS(obj)	(G_TYPE_INSTANCE_GET_CLASS ((obj), IFOLDER_DOMAIN_TYPE, iFolderDomainClass))
 
 /**
- * @file ifolder-domain.h
- * @brief Domain API
- * 
- * @link domain_events_page Domain Events @endlink
+ * Enumerations
  */
-
-//! An object that represents an iFolder Domain.
-/**
- * Most of the functions require an iFolderDomain to be passed-in.
- * 
- * Create a new iFolderDomain by calling ifolder_domain_add().  Get a list of
- * existing iFolderDomain objects by calling ifolder_domain_get_all(),
- * ifolder_domain_get_all_active(), or ifolder_domain_get_default().
- * 
- * You must call ifolder_domain_free() after successfully calling
- * ifolder_domain_add() or ifolder_domain_get_default().
- */
-typedef void *iFolderDomain;
-
 typedef enum
 {
 	IFOLDER_CREDENTIAL_TYPE_NONE,	/*!< Do not use credentials */
@@ -77,105 +59,30 @@ typedef enum
 	IFOLDER_SEARCH_OP_EQUALS			/*!< Match strings that exactly equal the search pattern */
 } iFolderSearchOperation;
 
+/* GObject support */
+GType ifolder_domain_get_type (void);
+
+/**
+ * Method definitions
+ */
+
 /**
  * @name Properties (Getters and Setters)
  * 
  * @{
  */
-
-//! Returns the domain's unique ID.
-/**
- * @param domain The domain.
- * @return The unique ID.
- */
-const char *ifolder_domain_get_id(const iFolderDomain domain);
-
-//! Returns the domain's name.
-/**
- * @param domain The domain.
- * @return The name.
- */
-const char *ifolder_domain_get_name(const iFolderDomain domain);
-
-//! Returns the domain's description.
-/**
- * @param domain The domain.
- * @return The unique description.
- */
-const char *ifolder_domain_get_description(const iFolderDomain domain);
-
-//! Returns the domain's version.
-/**
- * @param domain The domain.
- * @return The version.
- */
-const char *ifolder_domain_get_version(const iFolderDomain domain);
-
-//! Returns the domain's host address.
-/**
- * @param domain The domain.
- * @return The host address.
- */
-const char *ifolder_domain_get_host_address(const iFolderDomain domain);
-
-//! Returns the domain's unique ID.
-/**
- * @param domain The domain.
- * @return The unique ID.
- */
-const char *ifolder_domain_get_machine_name(const iFolderDomain domain);
-
-//! Returns the domain's operating system version.
-/**
- * @param domain The domain.
- * @return The operating system version.
- */
-const char *ifolder_domain_get_os_version(const iFolderDomain domain);
-
-//! Returns the domain's user name.
-/**
- * This is the user name that was used to connect to the domain.
- * 
- * @param domain The domain.
- * @return The user name.
- */
-const char *ifolder_domain_get_user_name(const iFolderDomain domain);
-
-//! Returns whether or not this domain is the default.
-/**
- * @param domain The domain.
- * @return true if this domain is the default.
- */
-bool ifolder_domain_get_is_default(const iFolderDomain domain);
-
-//! Returns whether or not this domain is active.
-/**
- * @param domain The domain.
- * @return true if this domain is active.
- */
-bool ifolder_domain_get_is_active(const iFolderDomain domain);
-
-//! Returns the domain's custom user data.
-/**
- * This is a convenience function for the application developer to attach any
- * type of memory/data to the iFolderDomain.  The user data is not used
- * internally and should not affect the rest of the client.
- * 
- * If this variable is used, ifolder_domain_free() does not free the memory
- * used by user data.  It should be freed by the caller independently.
- * 
- * @param domain The domain.
- * @return The user data.
- */
-void *ifolder_domain_get_user_data(const iFolderDomain domain);
-
-//! Sets the domain's custom user data.
-/**
- * @param domain The domain.
- * @param user_data the user data to set on the domain object.
- * @see ifolder_domain_get_user_data
- */
-void ifolder_domain_set_user_data(const iFolderDomain domain, void *user_data);
+const gchar *ifolder_domain_get_id(iFolderDomain *domain);
+const gchar *ifolder_domain_get_name(iFolderDomain *domain);
+const gchar *ifolder_domain_get_description(iFolderDomain *domain);
+const gchar *ifolder_domain_get_version(iFolderDomain *domain);
+const gchar *ifolder_domain_get_host_address(iFolderDomain *domain);
+const gchar *ifolder_domain_get_machine_name(iFolderDomain *domain);
+const gchar *ifolder_domain_get_os_version(iFolderDomain *domain);
+const gchar *ifolder_domain_get_user_name(iFolderDomain *domain);
+gboolean ifolder_domain_is_default(iFolderDomain *domain);
+gboolean ifolder_domain_is_active(iFolderDomain *domain);
+gpointer *ifolder_domain_get_user_data(iFolderDomain *domain);
+void ifolder_domain_set_user_data(iFolderDomain *domain, gpointer user_data);
 
 /*@}*/
 
@@ -184,48 +91,20 @@ void ifolder_domain_set_user_data(const iFolderDomain domain, void *user_data);
  * @{
  */
 
-//! Add and connect to a new domain.
-/**
- * @param host_address The host address to connect to.
- * @param user_name The user name for the domain.
- * @param password The user's password.
- * @param make_default Set to true if this should be marked as the default
- * account.  If there are no other domains on the client, this parameter will
- * be ignored.  The client will ensure there is always a default account if one
- * or more accounts exist.
- * @param domain The newly created iFolderDomain if this function is
- * successful.  If there are errors calling this function, the value of this
- * parameter will not be valid.
- * @return IFOLDER_SUCCESS if the call was successful.
- */
-int ifolder_domain_add(const char *host_address, const char *user_name, const char *password, const bool make_default, iFolderDomain *domain);
-
-//! Remove and disconnect from a domain.
-/**
- * @param domain The domain.
- * @param delete_ifolders_on_server Set to true if this function should also
- * remove all of the user's iFolders on the server.  If true and the domain
- * cannot communicate with the server, and error will be returned.  If the user
- * still wants to remove the domain, you must call this function again with
- * this parameter set to false.
- * @return IFOLDER_SUCCESS if the call was successful.
- */
-int ifolder_domain_remove(const iFolderDomain domain, const bool delete_ifolders_on_server);
-
 //! Log in to a domain.
 /**
  * @param domain The domain.
  * @param password The user password.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_domain_log_in(const iFolderDomain domain, const char *password);
+void ifolder_domain_log_in(iFolderDomain *domain, const char *password, GError **error);
 
 //! Log out of a domain.
 /**
  * @param domain The domain.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_domain_log_out(const iFolderDomain domain);
+void ifolder_domain_log_out(iFolderDomain *domain, GError **error);
 
 //! Activate a domain.
 /**
@@ -235,7 +114,7 @@ int ifolder_domain_log_out(const iFolderDomain domain);
  * @param domain The domain.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_domain_activate(const iFolderDomain domain);
+void ifolder_domain_activate(iFolderDomain *domain, GError **error);
 
 //! Inactivate a domain.
 /**
@@ -244,7 +123,7 @@ int ifolder_domain_activate(const iFolderDomain domain);
  * @return IFOLDER_SUCCESS if the call was successful.
  * @see ifolder_domain_activate()
  */
-int ifolder_domain_inactivate(const iFolderDomain domain);
+void ifolder_domain_inactivate(iFolderDomain *domain, GError **error);
 
 //! Change the host address of a domain.
 /**
@@ -259,7 +138,7 @@ int ifolder_domain_inactivate(const iFolderDomain domain);
  * @param new_host_address
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_domain_change_host_address(const iFolderDomain domain, const char *new_host_address);
+void ifolder_domain_change_host_address(iFolderDomain *domain, const char *new_host_address, GError **error);
 
 //! Set the credentials for a domain.
 /**
@@ -269,7 +148,7 @@ int ifolder_domain_change_host_address(const iFolderDomain domain, const char *n
  * @return IFOLDER_SUCCESS if the call was successful.
  * @see iFolderCredentialType 
  */
-int ifolder_domain_set_credentials(const iFolderDomain domain, const char *password, const iFolderCredentialType credential_type);
+void ifolder_domain_set_credentials(iFolderDomain *domain, const char *password, const iFolderCredentialType credential_type, GError **error);
 
 //! Set a domain as the default.
 /**
@@ -282,7 +161,7 @@ int ifolder_domain_set_credentials(const iFolderDomain domain, const char *passw
  * @return IFOLDER_SUCCESS if the call was successful.
  * @see ifolder_domain_add()
  */
-int ifolder_domain_set_default(const iFolderDomain domain);
+void ifolder_domain_set_default(iFolderDomain *domain, GError **error);
 
 //! Returns the authenticated iFolderUser object for a domain.
 /**
@@ -294,7 +173,7 @@ int ifolder_domain_set_default(const iFolderDomain domain);
  * @return IFOLDER_SUCCESS if the call was successful.
  * @see ifolder_domain_add()
  */
-int ifolder_domain_get_authenticated_user(const iFolderDomain domain, iFolderUser *user);
+iFolderUser * ifolder_domain_get_authenticated_user(iFolderDomain *domain, GError **error);
 
 //! Returns the iFolderUserPolicy associated with a domain.
 /**
@@ -302,7 +181,7 @@ int ifolder_domain_get_authenticated_user(const iFolderDomain domain, iFolderUse
  * @param user_policy Invalid if the call is unsuccessful.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_domain_get_authenticated_user_policy(const iFolderDomain domain, iFolderUserPolicy *user_policy);
+iFolderUserPolicy * ifolder_domain_get_authenticated_user_policy(iFolderDomain *domain, GError **error);
 
 //! Checks for a newer version of the iFolder Client on the domain.
 /**
@@ -312,71 +191,9 @@ int ifolder_domain_get_authenticated_user_policy(const iFolderDomain domain, iFo
  * will be NULL.
  * @param version_override If not specified or NULL, the version of libifolder
  * will be used.
- * @return IFOLDER_SUCCESS if the call was successful.
+ * @return TRUE if there is a new version of the client available.
  */
-int ifolder_domain_check_for_updated_client(const iFolderDomain domain, char **new_version, const char *version_override = NULL);
-
-//! Free the memory used by an iFolderDomain
-/**
- * This should be called any time you get an iFolderDomain as a returned
- * item from a function.  You do NOT need to call this when an
- * iFolderDomain is part of an iFolderEnumeration.
- */
-void ifolder_domain_free(iFolderDomain domain);
-
-/*@}*/
-
-/**
- * @name Domains API
- * @{
- */
-
-//! Returns all domains configured on the client.
-/**
- * If no domains exist, an empty enumeration will be returned.
- * 
- * @param domain_enum An enumeration of iFolderDomain objects.  Invalid if the
- * call is unsuccessful.
- * @return IFOLDER_SUCCESS if the call was successful.
- */
-int ifolder_domain_get_all(iFolderEnumeration *domain_enum);
-
-//! Returns all active domains configured on the client.
-/**
- * This function returns a subset of the ifolder_domain_get_all() call.
- * 
- * If no domains exist, an empty enumeration will be returned.
- * 
- * @param domain_enum An enumeration of iFolderDomain objects.  Invalid if the
- * call is unsuccessful.
- * @return IFOLDER_SUCCESS if the call was successful.
- */
-int ifolder_domain_get_all_active(iFolderEnumeration *domain_enum);
-
-//! Returns the default domain.
-/**
- * If a no domain exists, domain will be set to NULL.
- * 
- * @param domain The default domain or NULL if no domain exists.  Invalid if
- * the call is unsuccessful.
- * @return IFOLDER_SUCCESS if the call was successful.
- */
-int ifolder_domain_get_default(iFolderDomain *domain);
-
-//! Download and run a client update.
-/**
- * Downloads the updated client application and runs the installation program.
- * If this call is successful, you should shut down your process if possible.
- * 
- * Note: This call will return before the client is updated.
- * 
- * @param domain The domain where the client update is available and where the
- * update will be downloaded from.
- * @return IFOLDER_SUCCESS if the call was successful.
- * @see ifolder_domain_check_for_updated_client()
- * @see @link client_events_page client-upgrade-available @endlink
- */
-int ifolder_domain_run_client_update(const iFolderDomain domain);
+gboolean ifolder_domain_check_for_updated_client(iFolderDomain *domain, char **new_version, const char *version_override, GError **error);
 
 /*@}*/
 
@@ -388,11 +205,11 @@ int ifolder_domain_run_client_update(const iFolderDomain domain);
 //! Returns an iFolderUser object for a given user ID.
 /**
  * @param domain The domain.
- * @param user_id The ID of the desired user.
+ * @param user_id The user name of the desired user.
  * @param user Invalid if the call is unsuccessful.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_domain_get_user(const iFolderDomain domain, const char *user_id, iFolderUser *user);
+iFolderUser * ifolder_domain_get_user(iFolderDomain *domain, const char *user_name, GError **error);
 
 //! Returns a subset of iFolderUser domain members beginning at the specified index.
 /**
@@ -405,7 +222,7 @@ int ifolder_domain_get_user(const iFolderDomain domain, const char *user_id, iFo
  * @param user_enum Invalid if the call is unsuccessful.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_domain_get_users(const iFolderDomain domain, const int index, const int count, iFolderEnumeration *user_enum);
+GSList * ifolder_domain_get_users(iFolderDomain *domain, const int index, const int count, GError **error);
 
 //! Returns a subset of iFolderUser domain members by searching, beginning at the specified index.
 /**
@@ -421,7 +238,7 @@ int ifolder_domain_get_users(const iFolderDomain domain, const int index, const 
  * @param user_enum Invalid if the call is unsuccessful.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_domain_get_users_by_search(const iFolderDomain domain, const iFolderSearchProperty search_prop, const iFolderSearchOperation search_op, const char *pattern, const int index, const int count, iFolderEnumeration *user_enum);
+GSList * ifolder_domain_get_users_by_search(iFolderDomain *domain, const iFolderSearchProperty search_prop, const iFolderSearchOperation search_op, const char *pattern, const int index, const int count, GError **error);
 
 /*@}*/
 
@@ -446,7 +263,7 @@ int ifolder_domain_get_users_by_search(const iFolderDomain domain, const iFolder
  * @param ifolder Invalid if the call is unsuccessful.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_domain_create_ifolder_from_path(const iFolderDomain domain, const char *local_path, const char *description, iFolder *ifolder);
+iFolder * ifolder_domain_create_ifolder_from_path(iFolderDomain *domain, const char *local_path, const char *description, GError **error);
 
 //! Create a new iFolder on the server only.
 /**
@@ -456,7 +273,7 @@ int ifolder_domain_create_ifolder_from_path(const iFolderDomain domain, const ch
  * @param ifolder Invalid if the call is unsuccessful.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_domain_create_ifolder(const iFolderDomain domain, const char *name, const char *description, iFolder *ifolder);
+iFolder * ifolder_domain_create_ifolder(iFolderDomain *domain, const char *name, const char *description, GError **error);
 
 //! Delete an iFolder from a domain (from the server)
 /**
@@ -464,7 +281,7 @@ int ifolder_domain_create_ifolder(const iFolderDomain domain, const char *name, 
  * @param ifolder The iFolder to delete.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_domain_delete_ifolder(const iFolderDomain domain, const iFolder ifolder);
+void ifolder_domain_delete_ifolder(iFolderDomain *domain, iFolder *ifolder, GError **error);
 
 //! Connects an iFolder to a local file system path for synchronization.
 /**
@@ -478,7 +295,7 @@ int ifolder_domain_delete_ifolder(const iFolderDomain domain, const iFolder ifol
  * of the iFolder will be synchronized to this folder.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_domain_connect_ifolder(const iFolderDomain domain, iFolder ifolder, const char *local_path);
+void ifolder_domain_connect_ifolder(iFolderDomain *domain, iFolder *ifolder, const char *local_path, GError **error);
 
 //! Disconnects an iFolder from its local file system path and from syncrhonization.
 /**
@@ -487,7 +304,7 @@ int ifolder_domain_connect_ifolder(const iFolderDomain domain, iFolder ifolder, 
  * iFolder's type will be changed to #IFOLDER_TYPE_DISCONNECTED.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_domain_disconnect_ifolder(const iFolderDomain domain, iFolder ifolder);
+void ifolder_domain_disconnect_ifolder(iFolderDomain *domain, iFolder *ifolder, GError **error);
 
 //! Returns a domain's connected and disconnected iFolders
 /**
@@ -502,7 +319,7 @@ int ifolder_domain_disconnect_ifolder(const iFolderDomain domain, iFolder ifolde
  * @see ifolder_domain_get_connected_ifolders()
  * @see ifolder_domain_get_disconnected_ifolders()
  */
-int ifolder_domain_get_all_ifolders(const iFolderDomain domain, const int index, const int count, iFolderEnumeration *ifolder_enum);
+GSList * ifolder_domain_get_all_ifolders(iFolderDomain *domain, const int index, const int count, GError **error);
 
 //! Returns a domain's connected iFolders (iFolders configured to synchronize locally).
 /**
@@ -515,7 +332,7 @@ int ifolder_domain_get_all_ifolders(const iFolderDomain domain, const int index,
  * @param ifolder_enum Invalid if the call is unsuccessful.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_domain_get_connected_ifolders(const iFolderDomain domain, const int index, const int count, iFolderEnumeration *ifolder_enum);
+GSList * ifolder_domain_get_connected_ifolders(iFolderDomain *domain, const int index, const int count, GError **error);
 
 //! Returns a domain's disconnected iFolders (iFolders on the server).
 /**
@@ -528,7 +345,7 @@ int ifolder_domain_get_connected_ifolders(const iFolderDomain domain, const int 
  * @param ifolder_enum Invalid if the call is unsuccessful.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_domain_get_disconnected_ifolders(const iFolderDomain domain, const int index, const int count, iFolderEnumeration *ifolder_enum);
+GSList * ifolder_domain_get_disconnected_ifolders(iFolderDomain *domain, const int index, const int count, GError **error);
 
 //! Returns an iFolder for the specified iFolder ID.
 /**
@@ -540,7 +357,7 @@ int ifolder_domain_get_disconnected_ifolders(const iFolderDomain domain, const i
  * @return IFOLDER_SUCCESS if the call was successful.
  * @see ifolder_get_type()
  */
-int ifolder_domain_get_ifolder_by_id(const iFolderDomain domain, const char *id, iFolder *ifolder);
+iFolder * ifolder_domain_get_ifolder_by_id(iFolderDomain *domain, const char *id, GError **error);
 
 //! Returns a subset of iFolders for a domain by searching, beginning at the specified index.
 /**
@@ -558,123 +375,10 @@ int ifolder_domain_get_ifolder_by_id(const iFolderDomain domain, const char *id,
  * @return IFOLDER_SUCCESS if the call was successful.
  * @see ifolder_get_type()
  */
-int ifolder_domain_get_ifolders_by_name(const iFolderDomain domain, const iFolderSearchOperation search_op, const char *pattern, const int index, const int count, iFolderEnumeration *ifolder_enum);
+GSList * ifolder_domain_get_ifolders_by_name(iFolderDomain *domain, const iFolderSearchOperation search_op, const char *pattern, const int index, const int count, GError **error);
 
 /*@}*/
 
-/** @page domain_events_page Domain Events
 
-@events
- @event domain-added
- @event domain-removed
- @event domain-host-modified
- @event domain-logged-in
- @event domain-logged-out
- @event domain-needs-credentials
- @event domain-activated
- @event domain-inactivated
- @event domain-new-default
- @event domain-in-grace-login-period
-@endevents
 
-<hr>
-
-@eventdef domain-added
- @eventproto
-void (*domain_added)(const iFolderDomain domain);
- @endeventproto
- @eventdesc
-  Emitted when an domain is added to the client.
- @param domain The domain that was added.
-@endeventdef
-
-@eventdef domain-removed
- @eventproto
-void (*domain_removed)(const iFolderDomain domain);
- @endeventproto
- @eventdesc
-  Emitted when an domain is removed from the client.
- @param domain The domain that was removed.
-@endeventdef
-
-@eventdef domain-host-modified
- @eventproto
-void (*domain_host_modified)(const iFolderDomain domain);
- @endeventproto
- @eventdesc
-  Emitted when the host address of a domain is modified.
- @param domain The domain that was modified.
-@endeventdef
-
-@eventdef domain-logged-in
- @eventproto
-void (*domain_logged_in)(const iFolderDomain domain);
- @endeventproto
- @eventdesc
-  Emitted when a domain just logged in.
- @param domain The domain that logged in.
-@endeventdef
-
-@eventdef domain-logged-out
- @eventproto
-void (*domain_logged_out)(const iFolderDomain domain);
- @endeventproto
- @eventdesc
-  Emitted when a domain just logged out.
- @param domain The domain that logged out.
-@endeventdef
-
-@eventdef domain-needs-credentials
- @eventproto
-void (*domain_needs_credentials)(const iFolderDomain domain);
- @endeventproto
- @eventdesc
-  Emitted when the client needs credentials for a domain.
- @param domain The domain that needs credentials.
-@endeventdef
-
-@eventdef domain-activated
- @eventproto
-void (*domain_activated)(const iFolderDomain domain);
- @endeventproto
- @eventdesc
-  Emitted when a domain is activated.
- @param domain The domain that was activated.
-@endeventdef
-
-@eventdef domain-inactivated
- @eventproto
-void (*domain_inactivated)(const iFolderDomain domain);
- @endeventproto
- @eventdesc
-  Emitted when a domain is inactivated.
- @param domain The domain that was inactivated.
-@endeventdef
-
-@eventdef domain-new-default
- @eventproto
-void (*domain_new_default)(const iFolderDomain old_default, const iFolderDomain new_default);
- @endeventproto
- @eventdesc
-  Emitted when a domain is marked as the new default.
- @param old_default The old default domain or NULL if the the domain is not available (got deleted or new_default is the first domain to be added).
- @param new_default The new default domain.
-@endeventdef
-
-@eventdef domain-in-grace-login-period
- @eventproto
-void (*domain_in_grace_login_period)(const iFolderDomain domain, const int remaining);
- @endeventproto
- @eventdesc
-  Emitted when a user's account on the domain is in its grace login period.
- @param domain The domain which is in the grace login period.
- @param remaining The number of grace logins remaining.
-@endeventdef
-
-*/
-
-#ifdef __cplusplus
-}
-#endif		/* __cplusplus */
-
-#endif /*_IFOLDER_C_DOMAIN_H_*/
+#endif /* IFOLDER_DOMAIN_H */
