@@ -29,10 +29,14 @@
 #ifndef _GLIBCLIENT_H_
 #define _GLIBCLIENT_H_
 
+#ifdef WIN32
 #ifdef GLIBCLIENT_EXPORTS
 #define GLIBCLIENT_API __declspec(dllexport)
 #else
 #define GLIBCLIENT_API __declspec(dllimport)
+#endif
+#else
+#define GLIBCLIENT_API
 #endif
 
 #ifdef _WINDOWS
@@ -42,10 +46,8 @@
 #endif
 
 
-#include <windows.h>
 #include <sys/stat.h>
 #include <stdio.h>
-#include <io.h>
 #include <fcntl.h>
 
 #include <string>
