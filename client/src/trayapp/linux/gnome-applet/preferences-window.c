@@ -21,6 +21,7 @@
  *
  ***********************************************************************/
 
+#include <stdlib.h>
 #include <string.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
@@ -100,7 +101,7 @@ ifa_show_preferences_window()
 IFAPreferencesWindow *
 create_preferences_window()
 {
-	IFAPreferencesWindow *pw = malloc(sizeof(IFAPreferencesWindow));
+	IFAPreferencesWindow *pw = (IFAPreferencesWindow *)malloc(sizeof(IFAPreferencesWindow));
 
 	pw->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW(pw->window), _("iFolder Preferences"));
@@ -338,7 +339,7 @@ create_accounts_page(IFAPreferencesWindow *pw)
 	gtk_tree_view_column_pack_start(onlineColumn, pw->onlineToggleButton, false);
 	gtk_tree_view_column_set_cell_data_func(onlineColumn,
 											pw->onlineToggleButton,
-											online_cell_toggle_data_func,
+											(GtkTreeCellDataFunc)online_cell_toggle_data_func,
 											pw,
 											NULL);
 	
@@ -353,7 +354,7 @@ create_accounts_page(IFAPreferencesWindow *pw)
 	gtk_tree_view_column_pack_start(serverColumn, servercr, true);
 	gtk_tree_view_column_set_cell_data_func(serverColumn,
 											servercr,
-											server_cell_text_data_func,
+											(GtkTreeCellDataFunc)server_cell_text_data_func,
 											pw,
 											NULL);
 	gtk_tree_view_column_set_resizable(serverColumn, true);
@@ -366,7 +367,7 @@ create_accounts_page(IFAPreferencesWindow *pw)
 	GtkCellRenderer *ncrt = gtk_cell_renderer_text_new();
 	gtk_tree_view_column_set_cell_data_func(nameColumn,
 											ncrt,
-											name_cell_text_data_func,
+											(GtkTreeCellDataFunc)name_cell_text_data_func,
 											pw,
 											NULL);
 	gtk_tree_view_column_set_resizable(nameColumn, true);

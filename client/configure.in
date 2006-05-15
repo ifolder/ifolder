@@ -236,6 +236,9 @@ case $IFOLDER_OS in
 		#AM_GNU_GETTEXT_VERSION(0.10.40)
 		#AM_GNU_GETTEXT(external)
 
+		PKG_CHECK_MODULES(GLIB, glib-2.0)
+		AC_SUBST(GLIB_CFLAGS)
+		AC_SUBST(GLIB_LIBS)
 		PKG_CHECK_MODULES(TRAYAPP, gtk+-2.0 glib-2.0 atk libgnomeui-2.0 libpanelapplet-2.0)
 		AC_SUBST(TRAYAPP_CFLAGS)
 		AC_SUBST(TRAYAPP_LIBS)
@@ -316,6 +319,7 @@ AC_CONFIG_FILES([
   package/linux/Makefile
   package/windows/Makefile
   src/Makefile
+  src/core/Makefile
   src/libifolder/Makefile
   src/trayapp/Makefile
   src/trayapp/darwin/Makefile

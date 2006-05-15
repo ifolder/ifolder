@@ -20,7 +20,7 @@
  *  Author: Russ Young
  *
  ***********************************************************************/
-#include ".\ifconflict.h"
+#include "IFConflict.h"
 
 IFConflict::IFConflict(void)
 {

@@ -42,6 +42,6 @@ public:
 	}
 
 	static gboolean Initialize();
-	static gboolean Initialize(gchar *pDataPath);
+	static gboolean Initialize(const gchar *pDataPath);
 };
 #endif //_IFAPPLICATION_H_

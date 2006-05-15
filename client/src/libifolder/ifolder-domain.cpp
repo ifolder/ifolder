@@ -58,7 +58,7 @@ static void
 ifolder_domain_class_init(iFolderDomainClass *klass)
 {
 	GObjectClass *object_class = (GObjectClass *)klass;
-	parent_class = g_type_class_peek_parent(klass);
+	parent_class = G_OBJECT_CLASS(g_type_class_peek_parent(klass));
 	
 	object_class->finalize = ifolder_domain_finalize;
 	object_class->dispose = ifolder_domain_dispose;
@@ -163,7 +163,7 @@ ifolder_domain_get_type(void)
 		
 		type = g_type_register_static(G_TYPE_OBJECT,
 									  "iFolderDomainType",
-									  &info, 0);
+									  &info, (GTypeFlags)0);
 	}
 	
 	return type;
@@ -174,7 +174,7 @@ ifolder_domain_new (void)
 {
 	iFolderDomain *domain;
 	
-	domain = g_object_new (IFOLDER_DOMAIN_TYPE, NULL);
+	domain = IFOLDER_DOMAIN(g_object_new (IFOLDER_DOMAIN_TYPE, NULL));
 	
 	return domain;
 }

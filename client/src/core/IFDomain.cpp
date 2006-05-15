@@ -20,7 +20,7 @@
  *  Author: Russ Young
  *
  ***********************************************************************/
-#include ".\ifdomain.h"
+#include "IFDomain.h"
 
 IFDomain::IFDomain(utf8string name, utf8string id, utf8string url)
 {
@@ -52,4 +52,3 @@ int IFDomain::Logout()
 {
 	return 0;
 }
-	

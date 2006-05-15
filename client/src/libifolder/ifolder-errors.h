@@ -50,6 +50,7 @@ typedef enum
 {
 	IFOLDER_ERR_ALREADY_INITIALIZED,	/*!< Returned if the client is attempted to be initialized multiple times. */
 	IFOLDER_ERR_NOT_INITIALIZED,		/*!< Returned if an operation is attempted on the library without initializing the client. */
+	IFOLDER_ERR_INITIALIZE				/*!< Error initializing the client */
 } iFolderClientError;
 #define IFOLDER_CLIENT_ERROR g_markup_error_quark()
 

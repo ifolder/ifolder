@@ -24,33 +24,31 @@ DIST_SUBDIRS = $(SUBDIRS)
 INCLUDES = \
 	-I$(top_srcdir)		\
 	-I$(srcdir)/..		\
-	-I$(top_srcdir)/src/core \
 	-I$(top_builddir)
 
-noinst_LIBRARIES = libifolder-trayapp.a
-
-#libifolder_trayapp_a_LIBADD =	\
-#	libsync/libsync.a		\
-#	libsoap/libsoap.a		\
-#	libipcserver/libipcserver.a	
+noinst_LIBRARIES = libifolder-core.a
 
 DEFINES = 
 
-libifolder_trayapp_a_CXXFLAGS = \
+libifolder_core_a_CXXFLAGS = \
 	$(DEFINES)					\
 	$(GLIB_CFLAGS)
 
-libifolder_trayapp_a_LDFLAGS = \
+libifolder_core_a_LDFLAGS = \
 	$(GLIB_LIBS)
 
-#libifolder_trayapp_a_LIBDADD = \
-#	$(top_srcdir)/src/core/libifolder-core.a
+libifolder_core_a_LIBFLAGS = 
 
-libifolder_trayapp_a_LIBFLAGS = 
-
-libifolder_trayapp_a_SOURCES = \
-	ifolder-client.cpp			\
-	ifolder-domain.cpp
+libifolder_core_a_SOURCES = \
+	glibclient.cpp				\
+	IFApplication.cpp			\
+	IFChanges.cpp				\
+	IFConflict.cpp				\
+	IFDirectory.cpp				\
+	IFDomain.cpp				\
+	IFFileInfo.cpp				\
+	IFiFolder.cpp				\
+	IFOptions.cpp
 
 maintainer-clean-local:
 	rm -f Makefile.in

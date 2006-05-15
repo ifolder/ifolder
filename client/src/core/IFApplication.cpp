@@ -32,12 +32,12 @@ gboolean IFApplication::Initialize()
 	return Initialize(g_build_filename(g_get_home_dir(), ".ifolder3", NULL));
 }
 
-gboolean IFApplication::Initialize(gchar *pDataPath)
+gboolean IFApplication::Initialize(const gchar *pDataPath)
 {
 	// Check to see if we are already initialized.
 	if (g_atomic_int_compare_and_exchange(&m_Initialized, false, true))
 	{
-		m_pDataPath = pDataPath;
+		m_pDataPath = (gchar *)pDataPath;
 		if (g_mkdir_with_parents(m_pDataPath, 0) == -1)
 		{
 			// There was an error creating the directory.

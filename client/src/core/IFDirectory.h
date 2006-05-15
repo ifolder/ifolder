@@ -42,7 +42,7 @@ class GLIBCLIENT_API IFDirectory
 	IFFileInfoList	*m_pFileList;
 
 private:
-	IFDirectory::IFDirectory(gchar *pPath, gchar *pDataPath, IFDirectory *piFolder);
+	IFDirectory(gchar *pPath, gchar *pDataPath, IFDirectory *piFolder);
 	gboolean Initialize(gchar *pPath, gchar *pDataPath);
 	void DetectFileChanges(IFFileInfoList *pOldList, IFFileInfoList *pNewList);
 	void DetectDirChanges(IFFileInfoList *pOldList, IFFileInfoList *pNewList);

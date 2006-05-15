@@ -46,7 +46,8 @@ int ParseCommand(int argc, char *argv[], int commandCount, PCommand commands)
 		ShowUsage(progName, commandCount, commands, true);
 	else
 		ShowUsage(progName, commandCount, commands, false);
-	return NULL;
+
+	return 0;
 }
 
 void ShowOptionUsage(int count, Option options[])

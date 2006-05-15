@@ -94,4 +94,4 @@ public:
 };
 
 
-#endif _IFFILEINFO_H_
+#endif // _IFFILEINFO_H_

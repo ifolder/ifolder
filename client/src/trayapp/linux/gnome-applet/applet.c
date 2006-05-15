@@ -99,7 +99,7 @@ static void about_dialog_activate_link_cb (GtkAboutDialog *about,
                                            const gchar *url,
                                            gpointer data)
 {
-	gnome_url_show (url, NULL);
+//	gnome_url_show (url, NULL);
 }
 
 static void ifa_about_cb (GtkMenuItem *mi, IFApplet *applet)
@@ -260,7 +260,7 @@ static gboolean show_warning_dialog (char *mesg)
 {
 	GtkWidget	*	dialog;
 
-	dialog = gtk_message_dialog_new (NULL, 0, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, mesg, NULL);
+	dialog = gtk_message_dialog_new (NULL, (GtkDialogFlags)0, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, mesg, NULL);
 
 	/* Bash focus-stealing prevention in the face */
 	gtk_window_set_position (GTK_WINDOW (dialog), GTK_WIN_POS_CENTER_ALWAYS);
@@ -368,25 +368,25 @@ static void ifa_menu_item_data_free (GtkWidget *menu_item, gpointer data)
 	g_return_if_fail (menu_item != NULL);
 	g_return_if_fail (data != NULL);
 
-	if ((tag = g_object_get_data (G_OBJECT (menu_item), "network")))
+	if ((tag = (char *)g_object_get_data (G_OBJECT (menu_item), "network")))
 	{
 		g_object_set_data (G_OBJECT (menu_item), "network", NULL);
 		g_free (tag);
 	}
 
-	if ((tag = g_object_get_data (G_OBJECT (menu_item), "nm-item-data")))
+	if ((tag = (char *)g_object_get_data (G_OBJECT (menu_item), "nm-item-data")))
 	{
 		g_object_set_data (G_OBJECT (menu_item), "nm-item-data", NULL);
 		g_free (tag);
 	}
 
-	if ((tag = g_object_get_data (G_OBJECT (menu_item), "device")))
+	if ((tag = (char *)g_object_get_data (G_OBJECT (menu_item), "device")))
 	{
 		g_object_set_data (G_OBJECT (menu_item), "device", NULL);
 		g_free (tag);
 	}
 
-	if ((tag = g_object_get_data (G_OBJECT (menu_item), "disconnect")))
+	if ((tag = (char *)g_object_get_data (G_OBJECT (menu_item), "disconnect")))
 	{
 		g_object_set_data (G_OBJECT (menu_item), "disconnect", NULL);
 		g_free (tag);
@@ -839,7 +839,7 @@ static void ifa_icons_free (IFApplet *applet)
 #define ICON_LOAD(x, y)	\
 	{		\
 		GError *err = NULL; \
-		x = gtk_icon_theme_load_icon (icon_theme, y, icon_size, 0, &err); \
+		x = gtk_icon_theme_load_icon (icon_theme, y, icon_size, (GtkIconLookupFlags)0, &err); \
 		if (x == NULL) { \
 			success = FALSE; \
 			g_warning ("Icon %s missing: %s", y, err->message); \
@@ -915,6 +915,6 @@ static gboolean ifa_icons_init (IFApplet *applet)
 
 IFApplet *ifa_new ()
 {
-	return g_object_new (IFL_TYPE_APPLET, "title", "iFolder 3", NULL);
+	return IFL_APPLET(g_object_new (IFL_TYPE_APPLET, "title", "iFolder 3", NULL));
 }
 

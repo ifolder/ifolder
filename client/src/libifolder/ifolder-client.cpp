@@ -56,7 +56,7 @@ static void
 ifolder_client_class_init(iFolderClientClass *klass)
 {
 	GObjectClass *object_class = (GObjectClass *)klass;
-	parent_class = g_type_class_peek_parent(klass);
+	parent_class = G_OBJECT_CLASS(g_type_class_peek_parent(klass));
 	
 	object_class->finalize = ifolder_client_finalize;
 	object_class->dispose = ifolder_client_dispose;
@@ -79,6 +79,8 @@ static void ifolder_client_init(GTypeInstance *instance, gpointer g_class)
 	 * delay initialization completion until the property is set.
 	 */
 	self->priv->dispose_has_run = FALSE;
+	
+	self->priv->ifolder_core_app = NULL;
 }
 
 static void ifolder_client_finalize(GObject *object)
@@ -86,8 +88,6 @@ static void ifolder_client_finalize(GObject *object)
 	iFolderClient *self = IFOLDER_CLIENT(object);
 
 	/* custom stuff */
-	g_slist_free(self->priv->domains);
-
 	g_free(self->priv);
 }
 
@@ -134,7 +134,7 @@ ifolder_client_get_type(void)
 		
 		type = g_type_register_static(G_TYPE_OBJECT,
 									  "iFolderClientType",
-									  &info, 0);
+									  &info, (GTypeFlags)0);
 	}
 	
 	return type;
@@ -145,15 +145,16 @@ ifolder_client_new (void)
 {
 	iFolderClient *client;
 	
-	client = g_object_new (IFOLDER_CLIENT_TYPE, NULL);
+	client = IFOLDER_CLIENT(g_object_new (IFOLDER_CLIENT_TYPE, NULL));
 	
 	return client;
 }
 
 iFolderClient *
-ifolder_client_initialize(const char *data_path, GError **error)
+ifolder_client_initialize(const gchar *data_path, GError **error)
 {
 	iFolderClient *client;
+	gboolean b_initialized = FALSE;
 
 	if (singleton_client != NULL)
 	{
@@ -167,6 +168,21 @@ ifolder_client_initialize(const char *data_path, GError **error)
 	client = ifolder_client_new();
 	
 	g_message("FIXME: Implement ifolder_client_initialize()");
+	
+	if (data_path == NULL)
+		b_initialized = IFApplication::Initialize();
+	else
+		b_initialized = IFApplication::Initialize(data_path);
+	
+	if (!b_initialized)
+	{
+		g_object_unref(client);
+		g_set_error(error,
+					IFOLDER_CLIENT_ERROR,
+					IFOLDER_ERR_INITIALIZE,
+					_("Error initializing iFolder Client's core synchronization engine."));
+		return NULL;
+	}
 	
 	/* If everything was initialized correctly, set the singleton instance and return. */
 	singleton_client = client;

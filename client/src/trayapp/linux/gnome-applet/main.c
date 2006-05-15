@@ -33,7 +33,11 @@
 #include <libgnome/libgnome.h>
 /*#include <glib/gi18n-lib.h>*/
 
+#include <ifolder-client.h>
+
 #include "applet.h"
+
+static iFolderClient *ifolder_client = NULL;
 
 /*
 static void session_die (GnomeClient *client, gpointer client_data)
@@ -49,6 +53,7 @@ static gboolean session_save (GnomeClient *client, gpointer client_data)
 
 int main (int argc, char *argv[])
 {
+	GError *err = NULL;
 	IFApplet * ifa;
 //	GnomeClient *	client = NULL;
 
@@ -66,10 +71,36 @@ int main (int argc, char *argv[])
 //	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 //	textdomain (GETTEXT_PACKAGE);
 
+	if (argc < 2)
+	{
+		g_message("FIXME: Determine what the default config directory should be");
+		ifolder_client = ifolder_client_initialize(NULL, &err);
+	}
+	else
+	{
+		g_message("FIXME: Validate that argv[1] is a valid directory...or at least that the syntax is correct.");
+		ifolder_client = ifolder_client_initialize(argv[1], &err);
+	}
+
+	if (err)
+	{
+		fprintf(stderr, "Could not initialize the iFolder Client: %s\n", err->message);
+		g_error_free(err);
+		return -1;
+	}
+
 	if ((ifa = ifa_new ()))
 	{
 		gtk_widget_show_all (GTK_WIDGET (ifa));
 		gtk_main ();
+	}
+	
+	err = NULL;
+	ifolder_client_uninitialize(ifolder_client, &err);
+	if (err)
+	{
+		fprintf(stderr, "Could not uninitialize the iFolder Client: %s\n", err->message);
+		return -2;
 	}
 
 	return 0;

@@ -97,7 +97,7 @@ egg_tray_icon_get_type (void)
 	NULL  /* value_table */
       };
 
-      our_type = g_type_register_static (GTK_TYPE_PLUG, "EggTrayIcon", &our_info, 0);
+      our_type = g_type_register_static (GTK_TYPE_PLUG, "EggTrayIcon", &our_info, (GTypeFlags)0);
     }
 
   return our_type;
@@ -119,7 +119,7 @@ egg_tray_icon_class_init (EggTrayIconClass *klass)
   GtkWidgetClass *widget_class = (GtkWidgetClass *)klass;
   GtkContainerClass *container_class = (GtkContainerClass *)klass;
 
-  parent_class = g_type_class_peek_parent (klass);
+  parent_class = GTK_PLUG_CLASS(g_type_class_peek_parent (klass));
 
   gobject_class->get_property = egg_tray_icon_get_property;
 
@@ -222,7 +222,7 @@ egg_tray_icon_get_orientation_property (EggTrayIcon *icon)
 static GdkFilterReturn
 egg_tray_icon_manager_filter (GdkXEvent *xevent, GdkEvent *event, gpointer user_data)
 {
-  EggTrayIcon *icon = user_data;
+  EggTrayIcon *icon = (EggTrayIcon *)user_data;
   XEvent *xev = (XEvent *)xevent;
 
   if (xev->xany.type == ClientMessage &&
@@ -465,13 +465,13 @@ egg_tray_icon_new_for_screen (GdkScreen *screen, const char *name)
 {
   g_return_val_if_fail (GDK_IS_SCREEN (screen), NULL);
 
-  return g_object_new (EGG_TYPE_TRAY_ICON, "screen", screen, "title", name, NULL);
+  return (EggTrayIcon *)g_object_new (EGG_TYPE_TRAY_ICON, "screen", screen, "title", name, NULL);
 }
 
 EggTrayIcon*
 egg_tray_icon_new (const gchar *name)
 {
-  return g_object_new (EGG_TYPE_TRAY_ICON, "title", name, NULL);
+  return (EggTrayIcon *)g_object_new (EGG_TYPE_TRAY_ICON, "title", name, NULL);
 }
 
 guint

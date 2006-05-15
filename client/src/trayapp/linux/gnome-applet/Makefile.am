@@ -16,6 +16,8 @@ gtk_update_icon_cache = gtk-update-icon-cache -f -t $(datadir)/icons/hicolor
 
 bin_PROGRAMS = ifolder3-applet
 
+CC = g++
+
 ifolder3_applet_CPPFLAGS = \
  	$(TRAYAPP_CFLAGS) \
 	-DEGG_COMPILATION \
@@ -35,9 +37,12 @@ ifolder3_applet_SOURCES = \
 	eggtrayicon.h
 
 ifolder3_applet_LDFLAGS = \
+	-L$(top_srcdir)/src/libifolder \
 	$(TRAYAPP_LIBS)
 
-ifolder3_applet_LDADD =
+ifolder3_applet_LDADD = \
+	$(top_srcdir)/src/core/libifolder-core.a \
+	$(top_srcdir)/src/libifolder/libifolder-trayapp.a
 
 #install-exec-local:
 #	$(mkinstalldirs) $(IMAGE_INSTALL_DIR)

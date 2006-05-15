@@ -27,6 +27,11 @@
 #include "ifolder-types.h"
 #include "ifolder-errors.h"
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif		/* __cplusplus */
+
 /**
  * @mainpage iFolder 3.6 Client API for C
  * 
@@ -109,7 +114,7 @@ typedef enum
  * same user.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-iFolderClient *ifolder_client_initialize(const char *data_path, GError **error);
+iFolderClient *ifolder_client_initialize(const gchar *data_path, GError **error);
 
 //! Uninitialize the iFolder Client
 /**
@@ -439,5 +444,10 @@ void (*file_sync_failed)(const iFolder ifolder, const iFolderSyncDirection direc
 @endeventdef
 
 */
+
+#ifdef __cplusplus
+}
+#endif		/* __cplusplus */
+
 
 #endif /* IFOLDER_CLIENT_H */

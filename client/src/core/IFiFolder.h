@@ -25,7 +25,7 @@
 
 #include <glib.h>
 #include "glibclient.h"
-#include "ifdirectory.h"
+#include "IFDirectory.h"
 
 class GLIBCLIENT_API IFiFolder
 {

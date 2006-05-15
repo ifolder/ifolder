@@ -27,6 +27,11 @@
 /* Headers that this header depends on. */
 #include "ifolder-types.h"
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif		/* __cplusplus */
+
 #define IFOLDER_DOMAIN_TYPE				(ifolder_domain_get_type())
 #define IFOLDER_DOMAIN(obj)				(G_TYPE_CHECK_INSTANCE_CAST ((obj), IFOLDER_DOMAIN_TYPE, iFolderDomain))
 #define IFOLDER_DOMAIN_CLASS(klass)		(G_TYPE_CHECK_CLASS_CAST ((klass), IFOLDER_DOMAIN_TYPE, iFolderDomainClass))
@@ -379,6 +384,8 @@ GSList * ifolder_domain_get_ifolders_by_name(iFolderDomain *domain, const iFolde
 
 /*@}*/
 
-
+#ifdef __cplusplus
+}
+#endif		/* __cplusplus */
 
 #endif /* IFOLDER_DOMAIN_H */
