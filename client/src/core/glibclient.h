@@ -40,6 +40,7 @@
 #endif
 
 #ifdef _WINDOWS
+#include <io.h>
 #define SCANLL "%I64d"
 #else
 #define SCANLL "%Ld"
