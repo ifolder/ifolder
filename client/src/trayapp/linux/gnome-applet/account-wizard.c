@@ -573,6 +573,8 @@ notebook_page_switched(GtkNotebook *notebook, GtkNotebookPage *page, guint page_
 			gtk_widget_show(aw->forwardButton);
 			gtk_widget_hide(aw->connectButton);
 			gtk_widget_hide(aw->finishButton);
+			
+			server_name_changed(GTK_ENTRY(aw->serverNameEntry), aw);
 			break;
 		case USER_PAGE:
 			gtk_window_set_title(GTK_WINDOW(aw->window), _("iFolder Account Assistant - (2 of 3)"));
@@ -583,6 +585,8 @@ notebook_page_switched(GtkNotebook *notebook, GtkNotebookPage *page, guint page_
 			gtk_widget_show(aw->forwardButton);
 			gtk_widget_hide(aw->connectButton);
 			gtk_widget_hide(aw->finishButton);
+			
+			user_info_changed(GTK_ENTRY(aw->userNameEntry), aw);
 			break;
 		case CONNECT_PAGE:
 			gtk_window_set_title(GTK_WINDOW(aw->window), _("iFolder Account Assistant - (3 of 3)"));
