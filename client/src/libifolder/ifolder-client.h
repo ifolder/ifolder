@@ -26,6 +26,7 @@
 
 #include "ifolder-types.h"
 #include "ifolder-errors.h"
+#include "ifolder-domain.h"
 #include "ifolder-user-prefs.h"
 
 #ifdef __cplusplus

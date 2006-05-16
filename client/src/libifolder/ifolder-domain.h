@@ -86,7 +86,7 @@ const gchar *ifolder_domain_get_os_version(iFolderDomain *domain);
 const gchar *ifolder_domain_get_user_name(iFolderDomain *domain);
 gboolean ifolder_domain_is_default(iFolderDomain *domain);
 gboolean ifolder_domain_is_active(iFolderDomain *domain);
-gpointer *ifolder_domain_get_user_data(iFolderDomain *domain);
+gpointer ifolder_domain_get_user_data(iFolderDomain *domain);
 void ifolder_domain_set_user_data(iFolderDomain *domain, gpointer user_data);
 
 /*@}*/

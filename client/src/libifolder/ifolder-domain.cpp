@@ -179,6 +179,150 @@ ifolder_domain_new (void)
 	return domain;
 }
 
+const gchar *
+ifolder_domain_get_id(iFolderDomain *domain)
+{
+	if (domain == NULL)
+	{
+		g_critical("domain is NULL!");
+		return "";
+	}
+
+	return domain->priv->id;
+}
+
+const gchar *
+ifolder_domain_get_name(iFolderDomain *domain)
+{
+	if (domain == NULL)
+	{
+		g_critical("domain is NULL!");
+		return "";
+	}
+
+	return domain->priv->name;
+}
+
+const gchar *
+ifolder_domain_get_description(iFolderDomain *domain)
+{
+	if (domain == NULL)
+	{
+		g_critical("domain is NULL!");
+		return "";
+	}
+
+	return domain->priv->description;
+}
+
+const gchar *
+ifolder_domain_get_version(iFolderDomain *domain)
+{
+	if (domain == NULL)
+	{
+		g_critical("domain is NULL!");
+		return "";
+	}
+
+	return domain->priv->version;
+}
+
+const gchar *
+ifolder_domain_get_host_address(iFolderDomain *domain)
+{
+	if (domain == NULL)
+	{
+		g_critical("domain is NULL!");
+		return "";
+	}
+
+	return domain->priv->host_address;
+}
+
+const gchar *
+ifolder_domain_get_machine_name(iFolderDomain *domain)
+{
+	if (domain == NULL)
+	{
+		g_critical("domain is NULL!");
+		return "";
+	}
+
+	return domain->priv->machine_name;
+}
+
+const gchar *
+ifolder_domain_get_os_version(iFolderDomain *domain)
+{
+	if (domain == NULL)
+	{
+		g_critical("domain is NULL!");
+		return "";
+	}
+
+	return domain->priv->os_version;
+}
+
+const gchar *
+ifolder_domain_get_user_name(iFolderDomain *domain)
+{
+	if (domain == NULL)
+	{
+		g_critical("domain is NULL!");
+		return "";
+	}
+
+	return domain->priv->user_name;
+}
+
+gboolean
+ifolder_domain_is_default(iFolderDomain *domain)
+{
+	if (domain == NULL)
+	{
+		g_critical("domain is NULL!");
+		return false;
+	}
+
+	return domain->priv->is_default;
+}
+
+gboolean
+ifolder_domain_is_active(iFolderDomain *domain)
+{
+	if (domain == NULL)
+	{
+		g_critical("domain is NULL!");
+		return false;
+	}
+
+	return domain->priv->is_active;	
+}
+
+gpointer
+ifolder_domain_get_user_data(iFolderDomain *domain)
+{
+	if (domain == NULL)
+	{
+		g_critical("domain is NULL!");
+		return NULL;
+	}
+
+	return domain->priv->user_data;
+}
+
+void
+ifolder_domain_set_user_data(iFolderDomain *domain, gpointer user_data)
+{
+	if (domain == NULL)
+	{
+		g_critical("domain is NULL!");
+		return;
+	}
+
+	domain->priv->user_data = user_data;
+}
+
 void
 ifolder_domain_log_in(iFolderDomain *domain, const char *password, GError **error)
 {
