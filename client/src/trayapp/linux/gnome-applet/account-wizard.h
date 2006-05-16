@@ -86,6 +86,7 @@ typedef struct {
 	 * Summary Page Widgets
 	 */
 	iFolderDomain	*connectedDomain;
+	GtkWidget		*summaryPageTextLabel;
 	
 	/**
 	 * Wait Message

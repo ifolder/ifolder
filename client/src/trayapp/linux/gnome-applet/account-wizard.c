@@ -74,6 +74,7 @@ static void notebook_page_switched(GtkNotebook *notebook, GtkNotebookPage *page,
 static void help_button_clicked(GtkButton *button, IFAAccountWizard *aw);
 static void cancel_button_clicked(GtkButton *button, IFAAccountWizard *aw);
 static void back_button_clicked(GtkButton *button, IFAAccountWizard *aw);
+static void forward_button_realized(GtkWidget *widget, IFAAccountWizard *aw);
 static void forward_button_clicked(GtkButton *button, IFAAccountWizard *aw);
 static void connect_button_clicked(GtkButton *button, IFAAccountWizard *aw);
 static void finish_button_clicked(GtkButton *button, IFAAccountWizard *aw);
@@ -422,9 +423,22 @@ create_connect_page(IFAAccountWizard *aw)
 static GtkWidget *
 create_summary_page(IFAAccountWizard *aw)
 {
-	GtkWidget *vbox = gtk_vbox_new(false, 0);
+	GtkStyle *default_style;
+	GtkWidget *hbox = gtk_hbox_new(false, 0);
 	
-	return vbox;
+	g_message("FIXME: Figure out how to get the blue bar on the side on the summary page of the account wizard");
+
+	GtkWidget *event_box = gtk_event_box_new();
+	gtk_box_pack_start(GTK_BOX(hbox), event_box, false, true, 0);
+	default_style = gtk_widget_get_style(event_box);
+	gtk_widget_modify_base(event_box, GTK_STATE_NORMAL, &(default_style->dark[GTK_STATE_NORMAL]));
+	gtk_widget_set_size_request(event_box, 100, -1);
+
+	aw->summaryPageTextLabel = gtk_label_new("");
+	gtk_box_pack_start(GTK_BOX(hbox), aw->summaryPageTextLabel, true, true, 0);
+	gtk_misc_set_alignment(GTK_MISC(aw->summaryPageTextLabel), 0, 0.5);
+	
+	return hbox;
 }
 
 static GtkWidget *
@@ -442,20 +456,25 @@ create_buttons(IFAAccountWizard *aw)
 
 	aw->backButton = gtk_button_new_from_stock(GTK_STOCK_GO_BACK);
 	gtk_box_pack_start(GTK_BOX(buttonBox), aw->backButton, false, false, 0);
+	gtk_widget_set_sensitive(aw->backButton, false);
 	g_signal_connect(G_OBJECT(aw->backButton), "clicked", G_CALLBACK(back_button_clicked), aw);
 
 	aw->forwardButton = gtk_button_new_from_stock(GTK_STOCK_GO_FORWARD);
 	gtk_box_pack_start(GTK_BOX(buttonBox), aw->forwardButton, false, false, 0);
+	GTK_WIDGET_SET_FLAGS(aw->forwardButton, GTK_CAN_DEFAULT);
+	g_signal_connect(G_OBJECT(aw->forwardButton), "realize", G_CALLBACK(forward_button_realized), aw);
 	g_signal_connect(G_OBJECT(aw->forwardButton), "clicked", G_CALLBACK(forward_button_clicked), aw);
 
 	aw->connectButton = gtk_button_new_with_mnemonic(_("Co_nnect"));
 	gtk_box_pack_start(GTK_BOX(buttonBox), aw->connectButton, false, false, 0);
 	gtk_widget_set_no_show_all(aw->connectButton, true);
+	GTK_WIDGET_SET_FLAGS(aw->connectButton, GTK_CAN_DEFAULT);
 	g_signal_connect(G_OBJECT(aw->connectButton), "clicked", G_CALLBACK(connect_button_clicked), aw);
 
 	aw->finishButton = gtk_button_new_with_mnemonic(_("_Finish"));
 	gtk_box_pack_start(GTK_BOX(buttonBox), aw->finishButton, false, false, 0);
 	gtk_widget_set_no_show_all(aw->finishButton, true);
+	GTK_WIDGET_SET_FLAGS(aw->finishButton, GTK_CAN_DEFAULT);
 	g_signal_connect(G_OBJECT(aw->finishButton), "clicked", G_CALLBACK(finish_button_clicked), aw);
 	
 	return buttonBox;
@@ -512,8 +531,6 @@ key_release_handler(GtkWidget *widget, GdkEventKey *event, IFAAccountWizard *aw)
 static gboolean
 delete_event_handler(GtkWidget *widget, GdkEvent *event, IFAAccountWizard *aw)
 {
-	g_message("delete_event_handler()");
-	
 	close_window(aw);
 	
 	return TRUE; /* stop other handlers from being invoked */
@@ -534,8 +551,9 @@ close_window(IFAAccountWizard *aw)
 static void
 delete_account_wizard(IFAAccountWizard *aw)
 {
-	g_message("FIXME: Implement delete_account_wizard (free memory of non-Gtk items)");
-
+	if (aw->connectedDomain != NULL)
+		g_object_unref(aw->connectedDomain);
+	
 	free(aw);
 }
 
@@ -549,11 +567,14 @@ notebook_page_switched(GtkNotebook *notebook, GtkNotebookPage *page, guint page_
 		 * notebook is first displayed.  gtk_notebook_get_current_page()
 		 * returns -1 in this case and we can ignore it.
 		 */
+
 		return;
 	}
 
 	switch(page_num)
 	{
+		GString *summary_text;
+		
 		case START_PAGE:
 			gtk_window_set_title(GTK_WINDOW(aw->window), _("iFolder Account Assistant"));
 			gtk_widget_set_sensitive(aw->backButton, false);
@@ -563,6 +584,10 @@ notebook_page_switched(GtkNotebook *notebook, GtkNotebookPage *page, guint page_
 			gtk_widget_show(aw->forwardButton);
 			gtk_widget_hide(aw->connectButton);
 			gtk_widget_hide(aw->finishButton);
+			
+			gtk_widget_grab_default(aw->forwardButton);
+			gtk_widget_grab_focus(aw->forwardButton);
+
 			break;
 		case SERVER_PAGE:
 			gtk_window_set_title(GTK_WINDOW(aw->window), _("iFolder Account Assistant - (1 of 3)"));
@@ -574,7 +599,13 @@ notebook_page_switched(GtkNotebook *notebook, GtkNotebookPage *page, guint page_
 			gtk_widget_hide(aw->connectButton);
 			gtk_widget_hide(aw->finishButton);
 			
+			g_message("FIXME: Disable the 'default account' feature if there aren't any accounts set up");
+			
 			server_name_changed(GTK_ENTRY(aw->serverNameEntry), aw);
+			
+			gtk_widget_grab_default(aw->forwardButton);
+			gtk_widget_grab_focus(aw->serverNameEntry);
+
 			break;
 		case USER_PAGE:
 			gtk_window_set_title(GTK_WINDOW(aw->window), _("iFolder Account Assistant - (2 of 3)"));
@@ -587,6 +618,10 @@ notebook_page_switched(GtkNotebook *notebook, GtkNotebookPage *page, guint page_
 			gtk_widget_hide(aw->finishButton);
 			
 			user_info_changed(GTK_ENTRY(aw->userNameEntry), aw);
+
+			gtk_widget_grab_default(aw->forwardButton);
+			gtk_widget_grab_focus(aw->userNameEntry);
+
 			break;
 		case CONNECT_PAGE:
 			gtk_window_set_title(GTK_WINDOW(aw->window), _("iFolder Account Assistant - (3 of 3)"));
@@ -597,9 +632,48 @@ notebook_page_switched(GtkNotebook *notebook, GtkNotebookPage *page, guint page_
 			gtk_widget_hide(aw->forwardButton);
 			gtk_widget_show(aw->connectButton);
 			gtk_widget_hide(aw->finishButton);
+
+			gtk_label_set_text(GTK_LABEL(aw->serverNameVerifyLabel), gtk_entry_get_text(GTK_ENTRY(aw->serverNameEntry)));
+			gtk_label_set_text(GTK_LABEL(aw->userNameVerifyLabel), gtk_entry_get_text(GTK_ENTRY(aw->userNameEntry)));
+			if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(aw->rememberPasswordCheckButton)))
+				gtk_label_set_text(GTK_LABEL(aw->rememberPasswordVerifyLabel), _("Yes"));
+			else
+				gtk_label_set_text(GTK_LABEL(aw->rememberPasswordVerifyLabel), _("No"));
+			if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(aw->defaultServerCheckButton)))
+				gtk_label_set_text(GTK_LABEL(aw->makeDefaultVerifyLabel), _("Yes"));
+			else
+				gtk_label_set_text(GTK_LABEL(aw->makeDefaultVerifyLabel), _("No"));
+				
+			g_message("FIXME: Determine the number accounts that are set up");
+//			if (domains.Length > 0)
+//			{
+				gtk_widget_show(aw->makeDefaultPromptLabel);
+				gtk_widget_show(aw->makeDefaultVerifyLabel);
+//			}
+//			else
+//			{
+//				gtk_widget_hide(aw->makeDefaultPromptLabel);
+//				gtk_widget_hide(aw->makeDefaultVerifyLabel);
+//			}
+			gtk_widget_grab_default(aw->connectButton);
+			gtk_widget_grab_focus(aw->connectButton);
+			
 			break;
 		case SUMMARY_PAGE:
 			gtk_window_set_title(GTK_WINDOW(aw->window), _("iFolder Account Assistant"));
+
+			if (aw->connectedDomain == NULL)
+				g_critical("domain is NULL!");
+			
+			summary_text = g_string_new("");
+			g_string_printf(summary_text,
+							_("Congratulations!  You are now\nconnected to:\n\nAccount Name: %s\nServer Address: %s\nUser Name: %s\n\nClick \"Finish\" to close this window."),
+							ifolder_domain_get_name(aw->connectedDomain),
+							ifolder_domain_get_host_address(aw->connectedDomain),
+							gtk_entry_get_text(GTK_ENTRY(aw->userNameEntry)));
+			gtk_label_set_text(GTK_LABEL(aw->summaryPageTextLabel), summary_text->str);
+			g_string_free(summary_text, true);
+
 			gtk_widget_set_sensitive(aw->backButton, false);
 			gtk_widget_set_sensitive(aw->finishButton, true);
 			
@@ -607,6 +681,10 @@ notebook_page_switched(GtkNotebook *notebook, GtkNotebookPage *page, guint page_
 			gtk_widget_hide(aw->forwardButton);
 			gtk_widget_hide(aw->connectButton);
 			gtk_widget_show(aw->finishButton);
+
+			gtk_widget_grab_default(aw->finishButton);
+			gtk_widget_grab_focus(aw->finishButton);
+
 			break;
 		default:
 			g_message("Unknown page!");
@@ -630,6 +708,12 @@ static void
 back_button_clicked(GtkButton *button, IFAAccountWizard *aw)
 {
 	gtk_notebook_prev_page(GTK_NOTEBOOK(aw->notebook));
+}
+
+static void
+forward_button_realized(GtkWidget *widget, IFAAccountWizard *aw)
+{
+	gtk_widget_grab_focus(widget);
 }
 
 static void
