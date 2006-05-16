@@ -29,8 +29,13 @@
 void
 ifa_show_help(gchar *page_name)
 {
-	/*FIXME: Implement ifa_show_help() */
-	g_message("Implement ifa_show_help()");
+	g_message("FIXME: Implement ifa_show_help()");
 }
 
+GdkPixbuf *
+ifolder_util_load_pixbuf(const gchar *image_name)
+{
+	g_message("FIXME: Implement ifolder_util_load_pixbuf()");
+	return NULL;
+}
 

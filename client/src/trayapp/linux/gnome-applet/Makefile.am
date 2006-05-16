@@ -29,6 +29,8 @@ ifolder3_applet_SOURCES = \
 	main.c					\
 	applet.c				\
 	applet.h				\
+	account-wizard.c				\
+	account-wizard.h				\
 	preferences-window.c			\
 	preferences-window.h			\
 	util.c					\

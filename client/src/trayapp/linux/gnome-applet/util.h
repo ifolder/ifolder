@@ -44,6 +44,8 @@ G_BEGIN_DECLS
 
 void ifa_show_help(gchar *page_name);
 
+GdkPixbuf *ifolder_util_load_pixbuf(const gchar *image_name);
+
 G_END_DECLS
 
 #endif /*_IFOLDER3_UTIL_H_*/

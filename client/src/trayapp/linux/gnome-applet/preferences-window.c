@@ -32,8 +32,10 @@
 
 //#include <ifolder-client.h>
 
-#include "preferences-window.h"
+#include "account-wizard.h"
 #include "util.h"
+
+#include "preferences-window.h"
 
 /*@todo Remove this when gettext is added */
 #define _
@@ -44,6 +46,7 @@ static IFAPreferencesWindow *create_preferences_window();
 static void delete_preferences_window(IFAPreferencesWindow **pw);
 static gboolean key_press_handler(GtkWidget *widget, GdkEventKey *event, IFAPreferencesWindow *pw);
 static gboolean key_release_handler(GtkWidget *widget, GdkEventKey *event, IFAPreferencesWindow *pw);
+static gboolean delete_event_handler(GtkWidget *widget, GdkEvent *event, IFAPreferencesWindow *pw);
 static GtkWidget *create_general_page(IFAPreferencesWindow *pw);
 static GtkWidget *create_accounts_page(IFAPreferencesWindow *pw);
 static void help_button_clicked(GtkButton *button, IFAPreferencesWindow *pw);
@@ -108,6 +111,7 @@ create_preferences_window()
 	pw->controlKeyPressed = false;
 	g_signal_connect(G_OBJECT(pw->window), "key-press-event", G_CALLBACK(key_press_handler), pw);
 	g_signal_connect(G_OBJECT(pw->window), "key-release-event", G_CALLBACK(key_release_handler), pw);
+	g_signal_connect(G_OBJECT(pw->window), "delete-event", G_CALLBACK(delete_event_handler), pw);
 
 	gtk_window_set_default_size(GTK_WINDOW(pw->window), 480, 550);
 
@@ -420,6 +424,16 @@ close_button_clicked(GtkButton *button, IFAPreferencesWindow *pw)
 	close_window();
 }
 
+static gboolean
+delete_event_handler(GtkWidget *widget, GdkEvent *event, IFAPreferencesWindow *pw)
+{
+	g_message("delete_event_handler()");
+	
+	close_window();
+	
+	return TRUE; /* stop other handlers from being invoked */
+}
+
 static void
 close_window()
 {
@@ -428,6 +442,8 @@ close_window()
 
 	if (gtk_notebook_get_current_page(GTK_NOTEBOOK(prefsWindow->notebook)) == 0)
 		leaving_general_page();
+	
+	g_message("FIXME: Disconnect external signals before destroying prefsWindow->window");
 
 	gtk_widget_hide(prefsWindow->window);
 	gtk_widget_destroy(prefsWindow->window);
@@ -600,6 +616,8 @@ static void
 on_add_account(GtkButton *widget, IFAPreferencesWindow *pw)
 {
 	g_message("FIXME: Implement on_add_account()");
+	IFAAccountWizard *account_wizard = ifa_account_wizard_new();
+	gtk_widget_show_all(account_wizard->window);
 }
 
 static void
