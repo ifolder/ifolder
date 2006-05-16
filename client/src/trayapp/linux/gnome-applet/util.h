@@ -29,7 +29,7 @@
 /**
  * Help files
  */
-#define IFA_HELP_MAIN_PAGE		"index.html"		/* FIXME: I don't think the main page is 'index.html' */
+#define IFA_HELP_MAIN_PAGE			"index.html"		/* FIXME: I don't think the main page is 'index.html' */
 #define IFA_HELP_PREFERENCES_PAGE	"preferences.html"
 #define IFA_HELP_ACCOUNTS_PAGE		"accounts.html"
 

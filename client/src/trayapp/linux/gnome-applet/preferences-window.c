@@ -147,7 +147,6 @@ static gboolean
 key_press_handler(GtkWidget *widget, GdkEventKey *event, IFAPreferencesWindow *pw)
 {
 	gboolean stop_other_handlers = true;
-	g_message("Key pressed inside the preferences window");
 
 	switch(event->keyval)
 	{

@@ -30,7 +30,7 @@
 //#include <gnome.h>
 //#endif
 
-//#include <ifolder-client.h>
+#include <ifolder-client.h>
 
 #include "account-wizard.h"
 #include "util.h"
@@ -77,6 +77,9 @@ static void back_button_clicked(GtkButton *button, IFAAccountWizard *aw);
 static void forward_button_clicked(GtkButton *button, IFAAccountWizard *aw);
 static void connect_button_clicked(GtkButton *button, IFAAccountWizard *aw);
 static void finish_button_clicked(GtkButton *button, IFAAccountWizard *aw);
+
+static void server_name_changed(GtkEntry *entry, IFAAccountWizard *aw);
+static void user_info_changed(GtkEntry *entry, IFAAccountWizard *aw);
 
 IFAAccountWizard *
 ifa_account_wizard_new()
@@ -218,7 +221,34 @@ create_server_information_page(IFAAccountWizard *aw)
 					(GtkAttachOptions)0,
 					0,0);
 	gtk_label_set_mnemonic_widget(GTK_LABEL(l), aw->serverNameEntry);
+	gtk_entry_set_activates_default(GTK_ENTRY(aw->serverNameEntry), true);
+
+	if (ifolder_user_pref_get_bool(KEY_USER_PREF_PREFILL_ACCOUNT))
+		gtk_entry_set_text(GTK_ENTRY(aw->serverNameEntry), ifolder_user_pref_get_string(KEY_USER_PREF_ACCOUNT_SERVER_ADDRESS, ""));
 	
+	g_signal_connect(G_OBJECT(aw->serverNameEntry), "changed", G_CALLBACK(server_name_changed), aw);
+	
+	/**
+	 * Row 3
+	 */
+	aw->makeDefaultLabel = gtk_label_new(_("Setting this iFolder Server as your default server will allow iFolder to automatically select this server when adding new folders."));
+	gtk_table_attach(GTK_TABLE(table), aw->makeDefaultLabel, 0,3, 2,3,
+					(GtkAttachOptions)(GTK_FILL | GTK_EXPAND),
+					(GtkAttachOptions)0,
+					0,0);
+	gtk_label_set_line_wrap(GTK_LABEL(aw->makeDefaultLabel), true);
+	gtk_misc_set_alignment(GTK_MISC(aw->makeDefaultLabel), 0, 0.5);
+	
+	/**
+	 * Row 4
+	 */
+	aw->defaultServerCheckButton = gtk_check_button_new_with_mnemonic(_("Make this my _default server"));
+	gtk_table_attach(GTK_TABLE(table), aw->defaultServerCheckButton, 1,3, 3,4,
+					(GtkAttachOptions)(GTK_FILL | GTK_EXPAND),
+					(GtkAttachOptions)0,
+					0,0);
+	
+	g_message("FIXME: If the number of domains/accounts on the machine is 0, check the checkbutton and disable it");
 
 	return table;
 }
@@ -226,17 +256,167 @@ create_server_information_page(IFAAccountWizard *aw)
 static GtkWidget *
 create_user_information_page(IFAAccountWizard *aw)
 {
-	GtkWidget *vbox = gtk_vbox_new(false, 0);
+	GtkWidget *table = gtk_table_new(4, 3, false);
+	gtk_container_set_border_width(GTK_CONTAINER(table), 12);
+	gtk_table_set_col_spacings(GTK_TABLE(table), 6);
+	gtk_table_set_row_spacings(GTK_TABLE(table), 6);
 	
-	return vbox;
+	/**
+	 * Row 1
+	 */
+	GtkWidget *l = gtk_label_new(_("Enter your iFolder user name and password (for example, \"jsmith\")."));
+	gtk_table_attach(GTK_TABLE(table), l, 0,3, 0,1,
+					(GtkAttachOptions)(GTK_FILL | GTK_EXPAND),
+					(GtkAttachOptions)0,
+					0,0);
+	gtk_label_set_line_wrap(GTK_LABEL(l), true);
+	gtk_misc_set_alignment(GTK_MISC(l), 0, 0.5);
+
+	/**
+	 * Row 2
+	 */
+	gtk_table_attach(GTK_TABLE(table), gtk_label_new(""), 0,1, 1,2,
+					(GtkAttachOptions)GTK_FILL,
+					(GtkAttachOptions)0,
+					12,0);	/* spacer */
+	l = gtk_label_new_with_mnemonic(_("_User Name:"));
+	gtk_table_attach(GTK_TABLE(table), l, 1,2, 1,2,
+					(GtkAttachOptions)(GTK_SHRINK | GTK_FILL),
+					(GtkAttachOptions)0,
+					0,0);
+	gtk_misc_set_alignment(GTK_MISC(l), 0, 0.5);
+	aw->userNameEntry = gtk_entry_new();
+	gtk_table_attach(GTK_TABLE(table), aw->userNameEntry, 2,3, 1,2,
+					(GtkAttachOptions)(GTK_FILL | GTK_EXPAND),
+					(GtkAttachOptions)0,
+					0,0);
+	gtk_label_set_mnemonic_widget(GTK_LABEL(l), aw->userNameEntry);
+	gtk_entry_set_activates_default(GTK_ENTRY(aw->userNameEntry), true);
+
+	if (ifolder_user_pref_get_bool(KEY_USER_PREF_PREFILL_ACCOUNT))
+		gtk_entry_set_text(GTK_ENTRY(aw->userNameEntry), ifolder_user_pref_get_string(KEY_USER_PREF_ACCOUNT_USER_NAME, ""));
+
+	g_signal_connect(G_OBJECT(aw->userNameEntry), "changed", G_CALLBACK(user_info_changed), aw);
+
+	// Row 3
+	l = gtk_label_new_with_mnemonic(_("_Password:"));
+	gtk_table_attach(GTK_TABLE(table), l, 1,2, 2,3,
+					(GtkAttachOptions)(GTK_SHRINK | GTK_FILL),
+					(GtkAttachOptions)0,
+					0,0);
+	gtk_misc_set_alignment(GTK_MISC(l), 0, 0.5);
+	aw->passwordEntry = gtk_entry_new();
+	gtk_table_attach(GTK_TABLE(table), aw->passwordEntry, 2,3, 2,3,
+					(GtkAttachOptions)(GTK_FILL | GTK_EXPAND),
+					(GtkAttachOptions)0,
+					0,0);
+	gtk_label_set_mnemonic_widget(GTK_LABEL(l), aw->passwordEntry);
+	gtk_entry_set_activates_default(GTK_ENTRY(aw->passwordEntry), true);
+	gtk_entry_set_visibility(GTK_ENTRY(aw->passwordEntry), false);
+	if (ifolder_user_pref_get_bool(KEY_USER_PREF_PREFILL_ACCOUNT))
+		gtk_entry_set_text(GTK_ENTRY(aw->passwordEntry), ifolder_user_pref_get_string(KEY_USER_PREF_ACCOUNT_PASSWORD, ""));
+
+	g_signal_connect(G_OBJECT(aw->passwordEntry), "changed", G_CALLBACK(user_info_changed), aw);
+
+	// Row 4
+	aw->rememberPasswordCheckButton = gtk_check_button_new_with_mnemonic(_("_Remember my password"));
+	gtk_table_attach(GTK_TABLE(table), aw->rememberPasswordCheckButton, 2,3, 3,4,
+					(GtkAttachOptions)(GTK_FILL | GTK_EXPAND),
+					(GtkAttachOptions)0,
+					0,0);
+	if (ifolder_user_pref_get_bool(KEY_USER_PREF_PREFILL_ACCOUNT))
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(aw->rememberPasswordCheckButton), ifolder_user_pref_get_bool(KEY_USER_PREF_ACCOUNT_REMEMBER_PASSWORD, false));
+		
+	return table;	
 }
 
 static GtkWidget *
 create_connect_page(IFAAccountWizard *aw)
 {
-	GtkWidget *vbox = gtk_vbox_new(false, 0);
+	GtkWidget *table = gtk_table_new(6, 3, false);
+	gtk_container_set_border_width(GTK_CONTAINER(table), 12);
+	gtk_table_set_col_spacings(GTK_TABLE(table), 6);
+	gtk_table_set_row_spacings(GTK_TABLE(table), 6);
+
+	// Row 1
+	GtkWidget *l = gtk_label_new(_("Please verify that the information you've entered is correct."));
+	gtk_table_attach(GTK_TABLE(table), l, 0,3, 0,1,
+					(GtkAttachOptions)(GTK_FILL | GTK_EXPAND),
+					(GtkAttachOptions)0,
+					0,0);
+	gtk_label_set_line_wrap(GTK_LABEL(l), true);
+	gtk_misc_set_alignment(GTK_MISC(l), 0, 0.5);
+
+	// Row 2
+	gtk_table_attach(GTK_TABLE(table), gtk_label_new(""), 0,1, 1,2,
+					(GtkAttachOptions)GTK_FILL,
+					(GtkAttachOptions)0,
+					12,0);	/* spacer */
+	l = gtk_label_new(_("Server Address:"));
+	gtk_table_attach(GTK_TABLE(table), l, 1,2, 1,2,
+					(GtkAttachOptions)(GTK_SHRINK | GTK_FILL),
+					(GtkAttachOptions)0,
+					0,0);
+	gtk_misc_set_alignment(GTK_MISC(l), 0, 0.5);
+	aw->serverNameVerifyLabel = gtk_label_new("");
+	gtk_table_attach(GTK_TABLE(table), aw->serverNameVerifyLabel, 2,3, 1,2,
+					(GtkAttachOptions)(GTK_FILL | GTK_EXPAND),
+					(GtkAttachOptions)0,
+					0,0);
+	gtk_misc_set_alignment(GTK_MISC(aw->serverNameVerifyLabel), 0, 0.5);
+
+	// Row 3
+	l = gtk_label_new(_("User Name:"));
+	gtk_table_attach(GTK_TABLE(table), l, 1,2, 2,3,
+					(GtkAttachOptions)(GTK_SHRINK | GTK_FILL),
+					(GtkAttachOptions)0,
+					0,0);
+	gtk_misc_set_alignment(GTK_MISC(l), 0, 0.5);
+	aw->userNameVerifyLabel = gtk_label_new("");
+	gtk_table_attach(GTK_TABLE(table), aw->userNameVerifyLabel, 2,3, 2,3,
+					(GtkAttachOptions)(GTK_FILL | GTK_EXPAND),
+					(GtkAttachOptions)0,
+					0,0);
+	gtk_misc_set_alignment(GTK_MISC(aw->userNameVerifyLabel), 0, 0.5);
 	
-	return vbox;
+	// Row 4
+	l = gtk_label_new(_("Remember password:"));
+	gtk_table_attach(GTK_TABLE(table), l, 1,2, 3,4,
+					(GtkAttachOptions)(GTK_SHRINK | GTK_FILL),
+					(GtkAttachOptions)0,
+					0,0);
+	gtk_misc_set_alignment(GTK_MISC(l), 0, 0.5);
+	aw->rememberPasswordVerifyLabel = gtk_label_new("");
+	gtk_table_attach(GTK_TABLE(table), aw->rememberPasswordVerifyLabel, 2,3, 3,4,
+					(GtkAttachOptions)(GTK_FILL | GTK_EXPAND),
+					(GtkAttachOptions)0,
+					0,0);
+	gtk_misc_set_alignment(GTK_MISC(aw->rememberPasswordVerifyLabel), 0, 0.5);
+	
+	// Row 5
+	aw->makeDefaultPromptLabel = gtk_label_new(_("Make default account:"));
+	gtk_table_attach(GTK_TABLE(table), aw->makeDefaultPromptLabel, 1,2, 4,5,
+					(GtkAttachOptions)(GTK_SHRINK | GTK_FILL),
+					(GtkAttachOptions)0,
+					0,0);
+	gtk_misc_set_alignment(GTK_MISC(aw->makeDefaultPromptLabel), 0, 0.5);
+	aw->makeDefaultVerifyLabel = gtk_label_new("");
+	gtk_table_attach(GTK_TABLE(table), aw->makeDefaultVerifyLabel, 2,3, 4,5,
+					(GtkAttachOptions)(GTK_FILL | GTK_EXPAND),
+					(GtkAttachOptions)0,
+					0,0);
+	gtk_misc_set_alignment(GTK_MISC(aw->makeDefaultVerifyLabel), 0, 0.5);
+	
+	// Row 6
+	l = gtk_label_new(_("\n\nClick \"Connect\" to validate your connection with the server."));
+	gtk_table_attach(GTK_TABLE(table), l, 0,3, 5,6,
+					(GtkAttachOptions)(GTK_FILL | GTK_EXPAND),
+					(GtkAttachOptions)0,
+					0,0);
+	gtk_misc_set_alignment(GTK_MISC(l), 0, 0.5);
+	gtk_label_set_line_wrap(GTK_LABEL(l), true);
+
+	return table;	
 }
 
 static GtkWidget *
@@ -285,7 +465,6 @@ static gboolean
 key_press_handler(GtkWidget *widget, GdkEventKey *event, IFAAccountWizard *aw)
 {
 	gboolean stop_other_handlers = true;
-	g_message("Key pressed inside the preferences window");
 
 	switch(event->keyval)
 	{
@@ -376,7 +555,7 @@ notebook_page_switched(GtkNotebook *notebook, GtkNotebookPage *page, guint page_
 	switch(page_num)
 	{
 		case START_PAGE:
-			g_message("Current page: START_PAGE");
+			gtk_window_set_title(GTK_WINDOW(aw->window), _("iFolder Account Assistant"));
 			gtk_widget_set_sensitive(aw->backButton, false);
 			gtk_widget_set_sensitive(aw->forwardButton, true);
 			
@@ -386,7 +565,7 @@ notebook_page_switched(GtkNotebook *notebook, GtkNotebookPage *page, guint page_
 			gtk_widget_hide(aw->finishButton);
 			break;
 		case SERVER_PAGE:
-			g_message("Current page: SERVER_PAGE");
+			gtk_window_set_title(GTK_WINDOW(aw->window), _("iFolder Account Assistant - (1 of 3)"));
 			gtk_widget_set_sensitive(aw->backButton, true);
 			gtk_widget_set_sensitive(aw->forwardButton, false);
 			
@@ -396,7 +575,7 @@ notebook_page_switched(GtkNotebook *notebook, GtkNotebookPage *page, guint page_
 			gtk_widget_hide(aw->finishButton);
 			break;
 		case USER_PAGE:
-			g_message("Current page: USER_PAGE");
+			gtk_window_set_title(GTK_WINDOW(aw->window), _("iFolder Account Assistant - (2 of 3)"));
 			gtk_widget_set_sensitive(aw->backButton, true);
 			gtk_widget_set_sensitive(aw->forwardButton, false);
 			
@@ -406,7 +585,7 @@ notebook_page_switched(GtkNotebook *notebook, GtkNotebookPage *page, guint page_
 			gtk_widget_hide(aw->finishButton);
 			break;
 		case CONNECT_PAGE:
-			g_message("Current page: CONNECT_PAGE");
+			gtk_window_set_title(GTK_WINDOW(aw->window), _("iFolder Account Assistant - (3 of 3)"));
 			gtk_widget_set_sensitive(aw->backButton, true);
 			gtk_widget_set_sensitive(aw->connectButton, true);
 			
@@ -416,7 +595,7 @@ notebook_page_switched(GtkNotebook *notebook, GtkNotebookPage *page, guint page_
 			gtk_widget_hide(aw->finishButton);
 			break;
 		case SUMMARY_PAGE:
-			g_message("Current page: SUMMARY_PAGE");
+			gtk_window_set_title(GTK_WINDOW(aw->window), _("iFolder Account Assistant"));
 			gtk_widget_set_sensitive(aw->backButton, false);
 			gtk_widget_set_sensitive(aw->finishButton, true);
 			
@@ -476,5 +655,40 @@ finish_button_clicked(GtkButton *button, IFAAccountWizard *aw)
 {
 	close_window(aw);
 	g_message("FIXME: Cause the main ifolder window to show");
+}
+
+static void
+server_name_changed(GtkEntry *entry, IFAAccountWizard *aw)
+{
+	const gchar *current_server_name = gtk_entry_get_text(entry);
+	
+	g_message("FIXME: Add in the ability to trim whitespace off the front and end of the server address string to validate it's good.");
+	
+	if (current_server_name != NULL)
+	{
+		if (strlen(current_server_name) > 0)
+			gtk_widget_set_sensitive(aw->forwardButton, true);
+		else
+			gtk_widget_set_sensitive(aw->forwardButton, false);
+	}
+	else
+		gtk_widget_set_sensitive(aw->forwardButton, false);
+}
+
+static void
+user_info_changed(GtkEntry *entry, IFAAccountWizard *aw)
+{
+	const gchar *current_user_name = gtk_entry_get_text(GTK_ENTRY(aw->userNameEntry));
+	const gchar *current_password  = gtk_entry_get_text(GTK_ENTRY(aw->passwordEntry));
+	
+	if (current_user_name != NULL && current_password != NULL)
+	{
+		if (strlen(current_user_name) > 0 && strlen(current_password) > 0)
+			gtk_widget_set_sensitive(aw->forwardButton, true);
+		else
+			gtk_widget_set_sensitive(aw->forwardButton, false);
+	}
+	else
+		gtk_widget_set_sensitive(aw->forwardButton, false);
 }
 

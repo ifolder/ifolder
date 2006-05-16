@@ -27,6 +27,12 @@
 #include <stdbool.h>
 #include <ifolder-client.h>
 
+#define KEY_USER_PREF_PREFILL_ACCOUNT "PrefillAccount"
+#define KEY_USER_PREF_ACCOUNT_SERVER_ADDRESS "ServerAddress"
+#define KEY_USER_PREF_ACCOUNT_USER_NAME "UserName"
+#define KEY_USER_PREF_ACCOUNT_PASSWORD "Password"
+#define KEY_USER_PREF_ACCOUNT_REMEMBER_PASSWORD "RememberPassword"
+
 G_BEGIN_DECLS
 
 typedef struct {
