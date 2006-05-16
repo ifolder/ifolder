@@ -40,8 +40,8 @@ typedef enum
 {
 	IFOLDER_SUCCESS,					/*!< An operation succeeded */
 	IFOLDER_ERR_UNKNOWN,				/*!< If this is returned, the API implementors did not do a very good job of implementing the API.  Please refrain from using this. */
-	IFOLDER_ERR_OUT_OF_MEMORY			/*!< Failed to allocate memory. */
-
+	IFOLDER_ERR_OUT_OF_MEMORY,			/*!< Failed to allocate memory. */
+	IFOLDER_ERR_INVALID_PARAMETER		/*!< A required function parameter was invalid. */
 } iFolderError;
 #define IFOLDER_ERROR g_markup_error_quark()
 
@@ -54,9 +54,6 @@ typedef enum
 } iFolderClientError;
 #define IFOLDER_CLIENT_ERROR g_markup_error_quark()
 
-
-//! A required function parameter was invalid.
-#define IFOLDER_ERR_INVALID_PARAMETER		-104
 
 /*@}*/
 

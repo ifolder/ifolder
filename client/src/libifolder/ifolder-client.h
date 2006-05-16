@@ -69,6 +69,9 @@ extern "C"
  * your program loads, call ifolder_client_initialize().  Before you exit,
  * make sure you call ifolder_client_uninitialize() before your program exits.
  */
+
+#define IFOLDER_DEFAULT_CONFIG_FILE_NAME	"ifolder3.ini"
+
 #define IFOLDER_CLIENT_TYPE				(ifolder_client_get_type())
 #define IFOLDER_CLIENT(obj)				(G_TYPE_CHECK_INSTANCE_CAST ((obj), IFOLDER_CLIENT_TYPE, iFolderClient))
 #define IFOLDER_CLIENT_CLASS(klass)		(G_TYPE_CHECK_CLASS_CAST ((klass), IFOLDER_CLIENT_TYPE, iFolderClientClass))

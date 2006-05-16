@@ -50,7 +50,8 @@ libifolder_trayapp_a_LIBFLAGS =
 
 libifolder_trayapp_a_SOURCES = \
 	ifolder-client.cpp			\
-	ifolder-domain.cpp
+	ifolder-domain.cpp			\
+	ifolder-user-prefs.cpp
 
 maintainer-clean-local:
 	rm -f Makefile.in

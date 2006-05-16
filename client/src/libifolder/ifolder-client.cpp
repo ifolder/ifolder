@@ -35,7 +35,8 @@ struct _iFolderClientPrivate
 {
 	gboolean dispose_has_run;
 	
-	IFApplication *ifolder_core_app;
+	IFApplication	*ifolder_core_app;
+	GKeyFile		*config_key_file;
 };
 
 static GObjectClass *parent_class = NULL;
@@ -81,6 +82,7 @@ static void ifolder_client_init(GTypeInstance *instance, gpointer g_class)
 	self->priv->dispose_has_run = FALSE;
 	
 	self->priv->ifolder_core_app = NULL;
+	self->priv->config_key_file = g_key_file_new();
 }
 
 static void ifolder_client_finalize(GObject *object)
@@ -88,6 +90,8 @@ static void ifolder_client_finalize(GObject *object)
 	iFolderClient *self = IFOLDER_CLIENT(object);
 
 	/* custom stuff */
+	g_key_file_free(self->priv->config_key_file);
+	
 	g_free(self->priv);
 }
 
@@ -141,20 +145,12 @@ ifolder_client_get_type(void)
 }
 
 iFolderClient *
-ifolder_client_new (void)
-{
-	iFolderClient *client;
-	
-	client = IFOLDER_CLIENT(g_object_new (IFOLDER_CLIENT_TYPE, NULL));
-	
-	return client;
-}
-
-iFolderClient *
 ifolder_client_initialize(const gchar *data_path, GError **error)
 {
 	iFolderClient *client;
 	gboolean b_initialized = FALSE;
+	GError *err = NULL;
+	gchar *config_key_file_path = NULL;
 
 	if (singleton_client != NULL)
 	{
@@ -168,6 +164,27 @@ ifolder_client_initialize(const gchar *data_path, GError **error)
 	client = ifolder_client_new();
 	
 	g_message("FIXME: Implement ifolder_client_initialize()");
+	
+	/* Load the configuration file */
+	g_key_file_load_from_data_dirs(client->priv->config_key_file,
+									IFOLDER_DEFAULT_CONFIG_FILE_NAME,
+									&config_key_file_path,
+									(GKeyFileFlags)(G_KEY_FILE_KEEP_COMMENTS | G_KEY_FILE_KEEP_TRANSLATIONS),
+									&err);
+
+	if (!err)
+	{
+		if (config_key_file_path)
+		{
+			g_debug("Loaded config file: %s", config_key_file_path);
+			g_message("FIXME: Figure out if we should free config_key_file_path or if it's freed when GKeyFile is freed.");
+		}
+	}
+	else
+	{
+		fprintf(stderr, "Could not find a user config file.  Using default settings.\n");
+		g_clear_error(&err);
+	}
 	
 	if (data_path == NULL)
 		b_initialized = IFApplication::Initialize();
@@ -183,7 +200,7 @@ ifolder_client_initialize(const gchar *data_path, GError **error)
 					_("Error initializing iFolder Client's core synchronization engine."));
 		return NULL;
 	}
-	
+
 	/* If everything was initialized correctly, set the singleton instance and return. */
 	singleton_client = client;
 	
@@ -268,4 +285,32 @@ void
 ifolder_client_remove_domain(iFolderClient *client, iFolderDomain *domain, GError **error)
 {
 	g_message("FIXME: Implement ifolder_client_remove_domain()");
+}
+
+/**
+ * Private functions
+ */
+iFolderClient *
+ifolder_client_new (void)
+{
+	iFolderClient *client;
+	
+	client = IFOLDER_CLIENT(g_object_new (IFOLDER_CLIENT_TYPE, NULL));
+	
+	return client;
+}
+
+GKeyFile *
+ifolder_client_get_config_key_file (GError **error)
+{
+	if (singleton_client == NULL)
+	{
+		g_set_error(error,
+					IFOLDER_CLIENT_ERROR,
+					IFOLDER_ERR_NOT_INITIALIZED,
+					_("The iFolder Client is not initialized."));
+		return NULL;
+	}
+	
+	return singleton_client->priv->config_key_file;
 }

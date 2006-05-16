@@ -41,22 +41,19 @@ extern "C"
  * @{
  */
 
+#define IFOLDER_USER_PREFS_GROUP_NAME "UserPreferences"
+
 //! Returns true if a setting exists for key.
-bool ifolder_user_pref_exists(const char *key);
+gboolean ifolder_user_pref_exists(const gchar *key, GError **error = NULL);
 
 //! Deletes a user preference
-/**
- * @return IFOLDER_SUCCESS if the call was successful.
- */
-int ifolder_user_pref_delete(const char *key);
+void ifolder_user_pref_delete(const gchar *key, GError **error = NULL);
 
 //! Reset a user preference to its default value
 /**
- * If no default value was set, an error is returned.
- * 
- * @return IFOLDER_SUCCESS if the call was successful.
+ * @param error If no default value was set, an error is returned here.
  */
-int ifolder_user_pref_reset(const char *key);
+void ifolder_user_pref_reset(const gchar *key, GError **error = NULL);
 
 /*@}*/
 
@@ -64,45 +61,45 @@ int ifolder_user_pref_reset(const char *key);
  * @name string settings
  * @{
  */
-int ifolder_user_pref_add_string(const char *key, const char *default_value);
-const char * ifolder_user_pref_get_string(const char *key, const char *default_value = NULL);
-int ifolder_user_pref_set_string(const char *key, const char *value);
+void ifolder_user_pref_add_string(const gchar *key, const gchar *default_value, GError **error = NULL);
+const gchar * ifolder_user_pref_get_string(const gchar *key, const gchar *default_value = NULL, GError **error = NULL);
+void ifolder_user_pref_set_string(const gchar *key, const gchar *value, GError **error = NULL);
 /*@}*/
 
 /**
  * @name int settings
  * @{
  */
-int ifolder_user_pref_add_int(const char *key, const char *default_value);
-int ifolder_user_pref_get_int(const char *key, int default_value = 0);
-int ifolder_user_pref_set_int(const char *key, int value);
+void ifolder_user_pref_add_int(const gchar *key, const gchar *default_value, GError **error = NULL);
+int ifolder_user_pref_get_int(const gchar *key, int default_value = 0, GError **error = NULL);
+void ifolder_user_pref_set_int(const gchar *key, int value, GError **error = NULL);
 /*@}*/
 
 /**
  * @name float settings
  * @{
  */
-int ifolder_user_pref_add_float(const char *key, const char *default_value);
-float ifolder_user_pref_get_float(const char *key, float default_value = 0.0);
-int ifolder_user_pref_set_float(const char *key, float value);
+void ifolder_user_pref_add_float(const gchar *key, const gchar *default_value, GError **error = NULL);
+float ifolder_user_pref_get_float(const gchar *key, float default_value = 0.0, GError **error = NULL);
+void ifolder_user_pref_set_float(const gchar *key, float value, GError **error = NULL);
 /*@}*/
 
 /**
  * @name long settings
  * @{
  */
-int ifolder_user_pref_add_long(const char *key, const char *default_value);
-long ifolder_user_pref_get_long(const char *key, long default_value = 0);
-int ifolder_user_pref_set_long(const char *key, long value);
+void ifolder_user_pref_add_long(const gchar *key, const gchar *default_value, GError **error = NULL);
+long ifolder_user_pref_get_long(const gchar *key, long default_value = 0, GError **error = NULL);
+void ifolder_user_pref_set_long(const gchar *key, long value, GError **error = NULL);
 /*@}*/
 
 /**
  * @name boolean settings
  * @{
  */
-int ifolder_user_pref_add_bool(const char *key, const char *default_value);
-bool ifolder_user_pref_get_bool(const char *key, bool default_value = false);
-int ifolder_user_pref_set_bool(const char *key, bool value);
+void ifolder_user_pref_add_bool(const gchar *key, const gchar *default_value, GError **error = NULL);
+gboolean ifolder_user_pref_get_bool(const gchar *key, gboolean default_value = false, GError **error = NULL);
+void ifolder_user_pref_set_bool(const gchar *key, gboolean value, GError **error = NULL);
 /*@}*/
 
 /** @page user_prefs_events_page User Preferences Events
@@ -118,7 +115,7 @@ int ifolder_user_pref_set_bool(const char *key, bool value);
 
 @eventdef user-pref-added
  @eventproto
-void (*user_pref_added)(const char *key, const void *default_value);
+void (*user_pref_added)(const gchar *key, const void *default_value);
  @endeventproto
  @eventdesc
   Emitted when a new user preference is added.
@@ -128,7 +125,7 @@ void (*user_pref_added)(const char *key, const void *default_value);
 
 @eventdef user-pref-deleted
  @eventproto
-void (*user_pref_deleted)(const char *key);
+void (*user_pref_deleted)(const gchar *key);
  @endeventproto
  @eventdesc
   Emitted when a user preference is deleted.
@@ -137,7 +134,7 @@ void (*user_pref_deleted)(const char *key);
 
 @eventdef user-pref-reset
  @eventproto
-void (*user_pref_reset)(const char *key);
+void (*user_pref_reset)(const gchar *key);
  @endeventproto
  @eventdesc
   Emitted when a user preference is reset.
@@ -146,7 +143,7 @@ void (*user_pref_reset)(const char *key);
 
 @eventdef user-pref-modified
  @eventproto
-void (*user_pref_modified)(const char *key, const void *new_value);
+void (*user_pref_modified)(const gchar *key, const void *new_value);
  @endeventproto
  @eventdesc
   Emitted when a user preference is modified.

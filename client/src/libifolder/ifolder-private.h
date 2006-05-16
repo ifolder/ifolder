@@ -28,3 +28,5 @@ iFolderDomain *ifolder_domain_new (void);
 iFolder *ifolder_new (void);
 iFolderUser *ifolder_user_new (void);
 iFolderUserPolicy *ifolder_user_policy_new (void);
+
+GKeyFile *ifolder_client_get_config_key_file (GError **error = NULL);
