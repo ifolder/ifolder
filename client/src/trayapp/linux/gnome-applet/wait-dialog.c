@@ -50,7 +50,8 @@ struct _IFAWaitDialogPrivate
 #define IFA_WAIT_DIALOG_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), IFA_WAIT_DIALOG_TYPE, IFAWaitDialogPrivate))
 
 static void                 ifa_wait_dialog_finalize       (GObject            *object);
-static void					dialog_realized					(GtkWidget *widget, gpointer user_data);
+static void					dialog_shown (GtkWidget *widget, gpointer user_data);
+static void					dialog_hidden (GtkWidget *widget, gpointer user_data);
 static void                 close_cb                        (IFAWaitDialog     *wait_dialog);
 static gboolean update_progress (IFAWaitDialog *wait_dialog);
 static gboolean pulse_progress_bar (IFAWaitDialog *wait_dialog);
@@ -167,13 +168,6 @@ ifa_wait_dialog_finalize (GObject *object)
 	IFAWaitDialogPrivate *priv = (IFAWaitDialogPrivate *)wait_dialog->private_data;
 	
 	g_message ("ifa_wait_dialog_finalize()");
-
-	priv->bHideCalled = TRUE;
-	if (priv->progressBarTimeout > 0)
-	{
-		g_source_remove (priv->progressBarTimeout);
-		priv->progressBarTimeout = 0;
-	}
 	
 	G_OBJECT_CLASS (ifa_wait_dialog_parent_class)->finalize (object);
 }
@@ -283,16 +277,38 @@ ifa_wait_dialog_new(GtkWindow *parent, GdkPixbuf *icon_pixbuf, IFAWaitDialogButt
 	if (secondaryStatement != NULL)
 		gtk_label_set_text (GTK_LABEL (priv->secondaryStatement), secondaryStatement);
 	
-	g_signal_connect (dialog, "realize", G_CALLBACK(dialog_realized), NULL);
+	g_signal_connect (dialog, "show", G_CALLBACK(dialog_shown), NULL);
+	g_signal_connect (dialog, "hide", G_CALLBACK(dialog_hidden), NULL);
 
 	return GTK_WIDGET (dialog);
 }
 
 static void
-dialog_realized(GtkWidget *widget, gpointer user_data)
+dialog_shown (GtkWidget *widget, gpointer user_data)
 {
+	IFAWaitDialogPrivate *priv = IFA_WAIT_DIALOG_GET_PRIVATE(widget);
+
+	g_message ("dialog_shown()");
+
 	/* start the progress bar moving */
-	g_timeout_add (250, (GSourceFunc)update_progress, IFA_WAIT_DIALOG(widget));
+	priv->bHideCalled = FALSE;
+	priv->progressBarTimeout = g_timeout_add (250, (GSourceFunc)update_progress, IFA_WAIT_DIALOG(widget));
+}
+
+static void
+dialog_hidden (GtkWidget *widget, gpointer user_data)
+{
+	IFAWaitDialogPrivate *priv = IFA_WAIT_DIALOG_GET_PRIVATE(widget);
+
+	g_message ("dialog_hidden()");
+	
+	/* stop the progress bar moving */
+	priv->bHideCalled = TRUE;
+	if (priv->progressBarTimeout > 0)
+	{
+		g_source_remove (priv->progressBarTimeout);
+		priv->progressBarTimeout = 0;
+	}
 }
 
 static void 
@@ -306,6 +322,9 @@ close_cb (IFAWaitDialog *wait_dialog)
 static gboolean
 update_progress (IFAWaitDialog *wait_dialog)
 {
+	if (wait_dialog == NULL)
+		return false;
+
 	IFAWaitDialogPrivate *priv = (IFAWaitDialogPrivate *)wait_dialog->private_data;
 	
 	if (priv->bHideCalled)
@@ -325,3 +344,4 @@ pulse_progress_bar (IFAWaitDialog *wait_dialog)
 	
 	return FALSE; /* prevent GLib from automatically calling this again */
 }
+
