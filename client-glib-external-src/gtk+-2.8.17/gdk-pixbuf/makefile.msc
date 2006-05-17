@@ -3,7 +3,7 @@ PRJ_TOP = ..
 PACKAGE = gdk_pixbuf
 PKG_VER = $(GDK_PIXBUF_VER)
 
-!INCLUDE $(TOP)/glib/build/win32/make.msc
+!INCLUDE $(TOP)/glib-2.10.1/build/win32/make.msc
 
 !IFNDEF PERL
 PERL = perl
@@ -65,10 +65,10 @@ gdk_pixbuf_headers = 	\
 	gdk-pixbuf-transform.h
 
 gdk-pixbuf-marshal.h: gdk-pixbuf-marshal.list
-	..\..\glib\gobject\glib-genmarshal --prefix=_gdk_pixbuf_marshal gdk-pixbuf-marshal.list --header >gdk-pixbuf-marshal.h
+	$(GLIB)\gobject\glib-genmarshal --prefix=_gdk_pixbuf_marshal gdk-pixbuf-marshal.list --header >gdk-pixbuf-marshal.h
 
 gdk-pixbuf-marshal.c: gdk-pixbuf-marshal.h gdk-pixbuf-marshal.list
-	..\..\glib\gobject\glib-genmarshal --prefix=_gdk_pixbuf_marshal gdk-pixbuf-marshal.list --body >gdk-pixbuf-marshal.c
+	$(GLIB)\glib\gobject\glib-genmarshal --prefix=_gdk_pixbuf_marshal gdk-pixbuf-marshal.list --body >gdk-pixbuf-marshal.c
 
 gdk-pixbuf-alias.h: gdk-pixbuf.symbols
 	perl makegdkpixbufalias.pl < gdk-pixbuf.symbols > gdk-pixbuf-alias.h

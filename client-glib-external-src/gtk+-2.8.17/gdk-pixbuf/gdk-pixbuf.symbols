@@ -14,7 +14,7 @@
 #if IN_HEADER(GDK_PIXBUF_CORE_H)
 #if IN_FILE(__GDK_PIXBUF_C__)
 gdk_pixbuf_error_quark
-gdk_pixbuf_get_type G_GNUC_CONST
+gdk_pixbuf_get_type 
 #ifndef GDK_PIXBUF_DISABLE_DEPRECATED
 gdk_pixbuf_ref
 gdk_pixbuf_unref
@@ -56,13 +56,13 @@ gdk_pixbuf_new_from_file_at_scale PRIVATE
 gdk_pixbuf_new_from_file_at_scale_utf8
 #endif
 gdk_pixbuf_new_from_xpm_data
-gdk_pixbuf_save PRIVATE G_GNUC_NULL_TERMINATED
+gdk_pixbuf_save PRIVATE 
 #ifdef G_OS_WIN32
 gdk_pixbuf_save_utf8
 #endif
-gdk_pixbuf_save_to_buffer G_GNUC_NULL_TERMINATED
+gdk_pixbuf_save_to_buffer 
 gdk_pixbuf_save_to_bufferv
-gdk_pixbuf_save_to_callback G_GNUC_NULL_TERMINATED
+gdk_pixbuf_save_to_callback 
 gdk_pixbuf_save_to_callbackv
 gdk_pixbuf_savev PRIVATE
 #ifdef G_OS_WIN32
@@ -102,13 +102,13 @@ gdk_pixbuf_composite_color_simple
 gdk_pixbuf_animation_get_height
 gdk_pixbuf_animation_get_iter
 gdk_pixbuf_animation_get_static_image
-gdk_pixbuf_animation_get_type G_GNUC_CONST
+gdk_pixbuf_animation_get_type 
 gdk_pixbuf_animation_get_width
 gdk_pixbuf_animation_is_static_image
 gdk_pixbuf_animation_iter_advance
 gdk_pixbuf_animation_iter_get_delay_time
 gdk_pixbuf_animation_iter_get_pixbuf
-gdk_pixbuf_animation_iter_get_type G_GNUC_CONST
+gdk_pixbuf_animation_iter_get_type 
 gdk_pixbuf_animation_iter_on_currently_loading_frame
 gdk_pixbuf_animation_new_from_file PRIVATE
 #ifdef G_OS_WIN32
@@ -124,8 +124,8 @@ gdk_pixbuf_non_anim_new
 
 #if IN_HEADER(GDK_PIXBUF_SIMPLE_ANIM_H)
 #if IN_FILE(__GDK_PIXBUF_SIMPLE_ANIM_C__)
-gdk_pixbuf_simple_anim_get_type G_GNUC_CONST
-gdk_pixbuf_simple_anim_iter_get_type G_GNUC_CONST
+gdk_pixbuf_simple_anim_get_type 
+gdk_pixbuf_simple_anim_iter_get_type 
 gdk_pixbuf_simple_anim_new
 gdk_pixbuf_simple_anim_add_frame
 #endif
@@ -159,7 +159,7 @@ gdk_pixbuf_loader_close
 gdk_pixbuf_loader_get_animation
 gdk_pixbuf_loader_get_format
 gdk_pixbuf_loader_get_pixbuf
-gdk_pixbuf_loader_get_type G_GNUC_CONST
+gdk_pixbuf_loader_get_type 
 gdk_pixbuf_loader_new
 gdk_pixbuf_loader_new_with_mime_type
 gdk_pixbuf_loader_new_with_type
@@ -170,10 +170,10 @@ gdk_pixbuf_loader_write
 
 #if IN_HEADER(__GDK_PIXBUF_ENUM_TYPES_H__)
 #if IN_FILE(__GDK_PIXBUF_ENUM_TYPES_C__)
-gdk_colorspace_get_type G_GNUC_CONST
-gdk_interp_type_get_type G_GNUC_CONST
-gdk_pixbuf_alpha_mode_get_type G_GNUC_CONST
-gdk_pixbuf_rotation_get_type G_GNUC_CONST
+gdk_colorspace_get_type 
+gdk_interp_type_get_type 
+gdk_pixbuf_alpha_mode_get_type 
+gdk_pixbuf_rotation_get_type 
 gdk_pixbuf_error_get_type 
 #endif
 #endif

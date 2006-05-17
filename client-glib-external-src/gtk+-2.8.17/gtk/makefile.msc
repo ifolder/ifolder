@@ -5,7 +5,7 @@
 ## how to install for yourself.
 
 TOP = ..\..
-!INCLUDE $(TOP)/glib/build/win32/make.msc
+!INCLUDE $(TOP)/glib-2.10.1/build/win32/make.msc
 
 ################################################################
 
