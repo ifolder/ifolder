@@ -201,7 +201,7 @@ GSList *ifolder_client_get_all_domains(iFolderClient *client, GError **error);
 GSList *ifolder_client_get_all_active_domains(iFolderClient *client, GError **error);
 iFolderDomain *ifolder_client_get_default_domain(iFolderClient *client, GError **error);
 
-iFolderDomain *ifolder_client_add_domain(iFolderClient *client, const gchar *host_address, const gchar *user_name, const gchar *password, gboolean make_default, GError **error);
+iFolderDomain *ifolder_client_add_domain(iFolderClient *client, const gchar *host_address, const gchar *user_name, const gchar *password, gboolean remember_password, gboolean make_default, GError **error);
 void ifolder_client_remove_domain(iFolderClient *client, iFolderDomain *domain, GError **error);
 
 /*@}*/

@@ -275,7 +275,7 @@ ifolder_client_get_default_domain(iFolderClient *client, GError **error)
 }
 
 iFolderDomain *
-ifolder_client_add_domain(iFolderClient *client, const gchar *host_address, const gchar *user_name, const gchar *password, gboolean make_default, GError **error)
+ifolder_client_add_domain(iFolderClient *client, const gchar *host_address, const gchar *user_name, const gchar *password, gboolean remember_password, gboolean make_default, GError **error)
 {
 	g_message("FIXME: Implement ifolder_client_add_domain()");
 	return NULL;
