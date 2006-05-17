@@ -106,8 +106,8 @@ LIBXML2_LIBS = $(LIBXML2)\libxml2.lib
 LIBXSLT_CFLAGS = -I $(LIBXSLT)
 LIBXSLT_LIBS = $(LIBXSLT)\libxslt\libxslt.lib
 
-JPEG_CFLAGS = -I $(JPEG)
-JPEG_LIBS = $(JPEG)\libjpeg.lib
+JPEG_CFLAGS = -I $(JPEG)\include
+JPEG_LIBS = $(JPEG)\lib\jpeg.lib
 
 OPENGL_CFLAGS = # None needed, headers bundled with the compiler
 OPENGL_LIBS = opengl32.lib lglu32.lib
@@ -117,8 +117,8 @@ PANGO_LIBS = $(PANGO)\pango\pango-$(PANGO_VER).lib
 PANGOWIN32_LIBS = $(PANGO_LIBS) $(PANGO)\pango\pangowin32-$(PANGO_VER).lib
 PANGOFT2_LIBS = $(PANGO_LIBS) $(PANGO)\pango\pangoft2-$(PANGO_VER).lib
 
-PNG_CFLAGS = -I $(PNG) $(ZLIB_CFLAGS)
-PNG_LIBS = $(PNG)\png.lib $(ZLIB_LIBS)
+PNG_CFLAGS = -I $(PNG)\include $(ZLIB_CFLAGS)
+PNG_LIBS = $(PNG)\lib\libpng.lib $(ZLIB_LIBS)
 
 RSVG_CFLAGS = -I $(RSVG)\..
 RSVG_LIBS = $(RSVG)\librsvg-$(RSVG_VER).lib
@@ -133,8 +133,8 @@ TIFF_NOLZW_LIBS = $(TIFF)\libtiff\tiff.lib $(JPEG_LIBS) $(ZLIB_LIBS) user32.lib
 TIFF_LZW_LIBS = $(TIFF_NOLZW_LIBS)
 TIFF_LIBS = $(TIFF_NOLZW_LIBS)
 
-ZLIB_CFLAGS = -I $(ZLIB)
-ZLIB_LIBS = $(ZLIB)\zlib.lib
+ZLIB_CFLAGS = -I $(ZLIB)\include
+ZLIB_LIBS = $(ZLIB)\lib\zdll.lib
 
 ################
 # Compiler to use.

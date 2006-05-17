@@ -92,15 +92,15 @@ FREETYPE2 = $(TOP)/freetype2
 GTKEXTRA = $(TOP)/gtk+extra
 GTKGLAREA = $(TOP)/gtkglarea
 INTL = $(TOP)/gettext-0.14.5
-JPEG = $(TOP)/jpeg-6b
+JPEG = $(TOP)/jpeg-6b-4
 LIBART = $(TOP)/libart_lgpl
 LIBICONV = $(TOP)/libiconv-$(LIBICONV_VER)
 LIBXSLT = $(TOP)/libxslt
-PNG = $(TOP)/libpng-1.2.0
+PNG = $(TOP)/libpng-1.2.8
 RSVG = $(TOP)\librsvg
 SVG = $(TOP)\libsvg
 TIFF = $(TOP)/tiff-v3.4
-ZLIB = $(TOP)/zlib-1.1.3
+ZLIB = $(TOP)/zlib123
 
 # Headers from Microsoft's PlatformSDK (that aren't present in
 # mingw) are needed by a just a few packages when compiling with gcc.
