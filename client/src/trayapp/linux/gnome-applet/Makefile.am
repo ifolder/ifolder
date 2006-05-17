@@ -36,7 +36,9 @@ ifolder3_applet_SOURCES = \
 	util.c					\
 	util.h					\
 	eggtrayicon.c			\
-	eggtrayicon.h
+	eggtrayicon.h					\
+	wait-dialog.c					\
+	wait-dialog.h
 
 ifolder3_applet_LDFLAGS = \
 	-L$(top_srcdir)/src/libifolder \

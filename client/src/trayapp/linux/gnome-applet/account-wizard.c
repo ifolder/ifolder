@@ -34,6 +34,7 @@
 
 #include "account-wizard.h"
 #include "util.h"
+#include "wait-dialog.h"
 
 /*@todo Remove this when gettext is added */
 #define _
@@ -730,12 +731,16 @@ forward_button_clicked(GtkButton *button, IFAAccountWizard *aw)
 static void
 connect_button_clicked(GtkButton *button, IFAAccountWizard *aw)
 {
+	GtkWidget *wait_dialog;
 	g_message("FIXME: Implement connect_button_clicked()");
 	
 	/**
 	 * 		if (connect is successful)
 	 * 			gtk_notebook_next_page(GTK_NOTEBOOK(aw->notebook));
 	 */
+	wait_dialog = ifa_wait_dialog_new( GTK_WINDOW (aw->window), NULL, IFA_WAIT_DIALOG_NONE, _("Wait Dialog Test"), _("Please wait..."), _("This is a test that will see if the wait dialog will properly appear on the screen."));
+	
+	gtk_widget_show_all (wait_dialog);
 }
 
 static void
