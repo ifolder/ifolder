@@ -89,9 +89,11 @@ typedef struct {
 	GtkWidget		*summaryPageTextLabel;
 	
 	/**
-	 * Wait Message
+	 * Other variables needed during login
 	 */
-//	iFolderWaitDialog	*waitDialog;
+	GtkWidget		*waitDialog;
+	GThread			*addDomainThread;
+	guint			authStatus;
 } IFAAccountWizard;
 
 IFAAccountWizard *ifa_account_wizard_new();

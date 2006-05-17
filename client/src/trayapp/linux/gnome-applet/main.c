@@ -37,7 +37,7 @@
 
 #include "applet.h"
 
-static iFolderClient *ifolder_client = NULL;
+iFolderClient *ifolder_client = NULL;
 
 /*
 static void session_die (GnomeClient *client, gpointer client_data)
