@@ -885,4 +885,6 @@ add_domain_thread_completed(IFAAccountWizard *aw)
 			
 			break;
 	}
+	
+	return FALSE;
 }

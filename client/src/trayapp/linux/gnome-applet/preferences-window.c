@@ -34,11 +34,20 @@
 
 #include "account-wizard.h"
 #include "util.h"
+#include "wait-dialog.h"
 
 #include "preferences-window.h"
 
 /*@todo Remove this when gettext is added */
 #define _
+
+typedef struct _iFolderPrefsAuthReq iFolderPrefsAuthReq;
+struct _iFolderPrefsAuthReq
+{
+	IFAPreferencesWindow	*prefs_window;
+	iFolderDomain			*domain;
+	guint					status;
+};
 
 static IFAPreferencesWindow *prefsWindow = NULL;
 
@@ -79,6 +88,12 @@ static void populate_domains(IFAPreferencesWindow *pw);
 static void update_widget_sensitivitiy(IFAPreferencesWindow *pw);
 
 static gboolean g_ifolder_domain_equal(gconstpointer a, gconstpointer b);
+
+static gpointer log_in_thread (iFolderPrefsAuthReq *authReq);
+static gboolean log_in_thread_completed(iFolderPrefsAuthReq *authReq);
+
+static gpointer log_out_thread (iFolderPrefsAuthReq *authReq);
+static gboolean log_out_thread_completed(iFolderPrefsAuthReq *authReq);
 
 IFAPreferencesWindow *
 ifa_get_preferences_window()
@@ -139,6 +154,8 @@ create_preferences_window()
 	pw->closeButton = gtk_button_new_from_stock(GTK_STOCK_CLOSE);
 	gtk_box_pack_start(GTK_BOX(pw->buttonBox), pw->closeButton, false, false, 0);
 	g_signal_connect(G_OBJECT(pw->closeButton), "clicked", G_CALLBACK(close_button_clicked), pw);
+	
+	pw->waitDialog = NULL;
 
 	return pw;
 }
@@ -593,22 +610,95 @@ accounts_page_realized(GtkWidget *widget, IFAPreferencesWindow *pw)
 static void
 online_cell_toggle_data_func(GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, IFAPreferencesWindow *pw)
 {
+	iFolderDomain *domain;
+	GValue val;
+	gtk_tree_model_get_value (model, iter, 0, &val);
+	
+	domain = (iFolderDomain *)g_value_get_object (&val);
+	
+	if (ifolder_domain_is_active (domain))
+		gtk_cell_renderer_toggle_set_active (GTK_CELL_RENDERER_TOGGLE (cell), TRUE);
+	else
+		gtk_cell_renderer_toggle_set_active (GTK_CELL_RENDERER_TOGGLE (cell), FALSE);
 }
 
 static void
 online_toggled(GtkCellRendererToggle *cell_renderer, gchar *path, IFAPreferencesWindow *pw)
 {
-	g_message("FIXME: Implement online_toggled");
+	iFolderDomain *domain;
+	GValue val;
+	GtkTreeIter iter;
+	GError *err = NULL;
+	GtkWidget *errDialog;
+	iFolderPrefsAuthReq *authReq;
+	
+	if (!gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL (pw->accTreeStore), &iter, path))
+	{
+		g_debug ("online_toggled() could not get a GtkTreeIter");
+		return;
+	}
+	
+	gtk_tree_model_get_value (GTK_TREE_MODEL (pw->accTreeStore), &iter, 0, &val);
+	
+	domain = (iFolderDomain *)g_value_get_object (&val);
+	
+	// Disable the ability for the user to toggle the checkbox during this operation
+	g_value_set_boolean (&val, FALSE);
+	g_object_set_property (G_OBJECT (cell_renderer), "activatable", &val);
+	
+	authReq = (iFolderPrefsAuthReq *)malloc (sizeof (iFolderPrefsAuthReq));
+	authReq->prefs_window = pw;
+	authReq->domain = domain;
+	authReq->status = 0;
+	
+	if (ifolder_domain_is_authenticated (domain))
+	{
+		if (pw->waitDialog == NULL)
+		{
+			pw->waitDialog = ifa_wait_dialog_new (GTK_WINDOW (pw->window), NULL, IFA_WAIT_DIALOG_NONE, _("Disconnecting..."), _("Disconnecting..."), _("Please wait for your iFolder account to disconnect."));
+			gtk_widget_show_all (pw->waitDialog);
+		}
+	
+		g_thread_create((GThreadFunc)log_out_thread, authReq, TRUE, NULL);
+	}
+	else
+	{
+		if (pw->waitDialog == NULL)
+		{
+			pw->waitDialog = ifa_wait_dialog_new (GTK_WINDOW (pw->window), NULL, IFA_WAIT_DIALOG_NONE, _("Connecting..."), _("Connecting..."), _("Please wait for your iFolder account to connect."));
+			gtk_widget_show_all (pw->waitDialog);
+		}
+	
+		g_thread_create((GThreadFunc)log_in_thread, authReq, TRUE, NULL);
+	}
 }
 
 static void
 server_cell_text_data_func(GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, IFAPreferencesWindow *pw)
 {
+	iFolderDomain *domain;
+	GValue val;
+	gtk_tree_model_get_value (model, iter, 0, &val);
+	
+	domain = (iFolderDomain *)g_value_get_object (&val);
+	
+	g_value_set_string(&val, ifolder_domain_get_name (domain));
+	
+	g_object_set_property (G_OBJECT (cell), "text", &val);
 }
 
 static void
 name_cell_text_data_func(GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, IFAPreferencesWindow *pw)
 {
+	iFolderDomain *domain;
+	GValue val;
+	gtk_tree_model_get_value (model, iter, 0, &val);
+	
+	domain = (iFolderDomain *)g_value_get_object (&val);
+	
+	g_value_set_string(&val, ifolder_domain_get_user_name (domain));
+	
+	g_object_set_property (G_OBJECT (cell), "text", &val);
 }
 
 static void
@@ -672,5 +762,37 @@ g_ifolder_domain_equal(gconstpointer a, gconstpointer b)
 */
 
 	return false;
+}
+
+static gpointer
+log_in_thread (iFolderPrefsAuthReq *authReq)
+{
+	g_message ("FIXME: Implement log_in_thread()");
+	g_idle_add ((GSourceFunc)log_in_thread_completed, authReq);
+	return NULL;
+}
+
+static gboolean
+log_in_thread_completed(iFolderPrefsAuthReq *authReq)
+{
+	g_message ("FIXME: Implement log_in_thread_completed()");
+	free(authReq);
+	return FALSE;
+}
+
+static gpointer
+log_out_thread (iFolderPrefsAuthReq *authReq)
+{
+	g_message ("FIXME: Implement log_out_thread()");
+	g_idle_add ((GSourceFunc)log_in_thread_completed, authReq);
+	return NULL;
+}
+
+static gboolean
+log_out_thread_completed(iFolderPrefsAuthReq *authReq)
+{
+	g_message ("FIXME: Implement log_out_thread_completed()");
+	free(authReq);
+	return FALSE;
 }
 

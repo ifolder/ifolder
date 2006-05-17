@@ -36,6 +36,7 @@ struct _iFolderDomainPrivate
 	gchar *machine_name;
 	gchar *os_version;
 	gchar *user_name;
+	gboolean is_authenticated;
 	gboolean is_default;
 	gboolean is_active;
 	gpointer user_data;
@@ -90,6 +91,7 @@ static void ifolder_domain_init(GTypeInstance *instance, gpointer g_class)
 	self->priv->machine_name = NULL;
 	self->priv->os_version = NULL;
 	self->priv->user_name = NULL;
+	self->priv->is_authenticated = FALSE;
 	self->priv->is_default = FALSE;
 	self->priv->is_active = FALSE;
 	self->priv->user_data = NULL;
@@ -273,6 +275,18 @@ ifolder_domain_get_user_name(iFolderDomain *domain)
 	}
 
 	return domain->priv->user_name;
+}
+
+gboolean
+ifolder_domain_is_authenticated(iFolderDomain *domain)
+{
+	if (domain == NULL)
+	{
+		g_critical("domain is NULL!");
+		return false;
+	}
+
+	return domain->priv->is_authenticated;
 }
 
 gboolean
