@@ -103,7 +103,7 @@ void ifolder_domain_set_user_data(iFolderDomain *domain, gpointer user_data);
  * @param password The user password.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-void ifolder_domain_log_in(iFolderDomain *domain, const char *password, GError **error);
+void ifolder_domain_log_in(iFolderDomain *domain, const char *password, gboolean remember_password, GError **error);
 
 //! Log out of a domain.
 /**

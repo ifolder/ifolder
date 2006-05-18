@@ -21,6 +21,8 @@
  *
  ***********************************************************************/
 
+#include <unistd.h> /* FIXME: Remove this when done spoofing things with sleep() */
+
 #include "ifolder-domain.h"
 #include "ifolder-private.h"
 
@@ -193,6 +195,27 @@ ifolder_domain_get_id(iFolderDomain *domain)
 	return domain->priv->id;
 }
 
+void
+ifolder_domain_set_id (iFolderDomain *domain, const gchar *id)
+{
+	if (domain == NULL)
+	{
+		g_critical("domain is NULL!");
+		return;
+	}
+	
+	if (id == NULL)
+	{
+		if (domain->priv->id != NULL)
+		{
+			g_free (domain->priv->id);
+			domain->priv->id = NULL;
+		}
+	}
+	else
+		domain->priv->id = g_strdup (id);
+}
+
 const gchar *
 ifolder_domain_get_name(iFolderDomain *domain)
 {
@@ -203,6 +226,27 @@ ifolder_domain_get_name(iFolderDomain *domain)
 	}
 
 	return domain->priv->name;
+}
+
+void
+ifolder_domain_set_name (iFolderDomain *domain, const gchar *name)
+{
+	if (domain == NULL)
+	{
+		g_critical("domain is NULL!");
+		return;
+	}
+	
+	if (name == NULL)
+	{
+		if (domain->priv->name != NULL)
+		{
+			g_free (domain->priv->name);
+			domain->priv->name = NULL;
+		}
+	}
+	else
+		domain->priv->name = g_strdup (name);
 }
 
 const gchar *
@@ -217,6 +261,27 @@ ifolder_domain_get_description(iFolderDomain *domain)
 	return domain->priv->description;
 }
 
+void
+ifolder_domain_set_description (iFolderDomain *domain, const gchar *description)
+{
+	if (domain == NULL)
+	{
+		g_critical("domain is NULL!");
+		return;
+	}
+	
+	if (description == NULL)
+	{
+		if (domain->priv->description != NULL)
+		{
+			g_free (domain->priv->description);
+			domain->priv->description = NULL;
+		}
+	}
+	else
+		domain->priv->description = g_strdup (description);
+}
+
 const gchar *
 ifolder_domain_get_version(iFolderDomain *domain)
 {
@@ -227,6 +292,27 @@ ifolder_domain_get_version(iFolderDomain *domain)
 	}
 
 	return domain->priv->version;
+}
+
+void
+ifolder_domain_set_version (iFolderDomain *domain, const gchar *version)
+{
+	if (domain == NULL)
+	{
+		g_critical("domain is NULL!");
+		return;
+	}
+	
+	if (version == NULL)
+	{
+		if (domain->priv->version != NULL)
+		{
+			g_free (domain->priv->version);
+			domain->priv->version = NULL;
+		}
+	}
+	else
+		domain->priv->version = g_strdup (version);
 }
 
 const gchar *
@@ -241,6 +327,27 @@ ifolder_domain_get_host_address(iFolderDomain *domain)
 	return domain->priv->host_address;
 }
 
+void
+ifolder_domain_set_host_address (iFolderDomain *domain, const gchar *host_address)
+{
+	if (domain == NULL)
+	{
+		g_critical("domain is NULL!");
+		return;
+	}
+	
+	if (host_address == NULL)
+	{
+		if (domain->priv->host_address != NULL)
+		{
+			g_free (domain->priv->host_address);
+			domain->priv->host_address = NULL;
+		}
+	}
+	else
+		domain->priv->host_address = g_strdup (host_address);
+}
+
 const gchar *
 ifolder_domain_get_machine_name(iFolderDomain *domain)
 {
@@ -251,6 +358,27 @@ ifolder_domain_get_machine_name(iFolderDomain *domain)
 	}
 
 	return domain->priv->machine_name;
+}
+
+void
+ifolder_domain_set_machine_name (iFolderDomain *domain, const gchar *machine_name)
+{
+	if (domain == NULL)
+	{
+		g_critical("domain is NULL!");
+		return;
+	}
+	
+	if (machine_name == NULL)
+	{
+		if (domain->priv->machine_name != NULL)
+		{
+			g_free (domain->priv->machine_name);
+			domain->priv->machine_name = NULL;
+		}
+	}
+	else
+		domain->priv->machine_name = g_strdup (machine_name);
 }
 
 const gchar *
@@ -265,6 +393,27 @@ ifolder_domain_get_os_version(iFolderDomain *domain)
 	return domain->priv->os_version;
 }
 
+void
+ifolder_domain_set_os_version (iFolderDomain *domain, const gchar *os_version)
+{
+	if (domain == NULL)
+	{
+		g_critical("domain is NULL!");
+		return;
+	}
+	
+	if (os_version == NULL)
+	{
+		if (domain->priv->os_version != NULL)
+		{
+			g_free (domain->priv->os_version);
+			domain->priv->os_version = NULL;
+		}
+	}
+	else
+		domain->priv->os_version = g_strdup (os_version);
+}
+
 const gchar *
 ifolder_domain_get_user_name(iFolderDomain *domain)
 {
@@ -275,6 +424,27 @@ ifolder_domain_get_user_name(iFolderDomain *domain)
 	}
 
 	return domain->priv->user_name;
+}
+
+void
+ifolder_domain_set_user_name (iFolderDomain *domain, const gchar *user_name)
+{
+	if (domain == NULL)
+	{
+		g_critical("domain is NULL!");
+		return;
+	}
+	
+	if (user_name == NULL)
+	{
+		if (domain->priv->user_name != NULL)
+		{
+			g_free (domain->priv->user_name);
+			domain->priv->user_name = NULL;
+		}
+	}
+	else
+		domain->priv->user_name = g_strdup (user_name);
 }
 
 gboolean
@@ -289,6 +459,18 @@ ifolder_domain_is_authenticated(iFolderDomain *domain)
 	return domain->priv->is_authenticated;
 }
 
+void
+ifolder_domain_set_is_authenticated (iFolderDomain *domain, gboolean is_authenticated)
+{
+	if (domain == NULL)
+	{
+		g_critical("domain is NULL!");
+		return;
+	}
+	
+	domain->priv->is_authenticated = is_authenticated;
+}
+
 gboolean
 ifolder_domain_is_default(iFolderDomain *domain)
 {
@@ -301,6 +483,18 @@ ifolder_domain_is_default(iFolderDomain *domain)
 	return domain->priv->is_default;
 }
 
+void
+ifolder_domain_set_is_default (iFolderDomain *domain, gboolean is_default)
+{
+	if (domain == NULL)
+	{
+		g_critical("domain is NULL!");
+		return;
+	}
+	
+	domain->priv->is_default = is_default;
+}
+
 gboolean
 ifolder_domain_is_active(iFolderDomain *domain)
 {
@@ -311,6 +505,18 @@ ifolder_domain_is_active(iFolderDomain *domain)
 	}
 
 	return domain->priv->is_active;	
+}
+
+void
+ifolder_domain_set_is_active (iFolderDomain *domain, gboolean is_active)
+{
+	if (domain == NULL)
+	{
+		g_critical("domain is NULL!");
+		return;
+	}
+	
+	domain->priv->is_active = is_active;
 }
 
 gpointer
@@ -338,15 +544,17 @@ ifolder_domain_set_user_data(iFolderDomain *domain, gpointer user_data)
 }
 
 void
-ifolder_domain_log_in(iFolderDomain *domain, const char *password, GError **error)
+ifolder_domain_log_in(iFolderDomain *domain, const char *password, gboolean remember_password, GError **error)
 {
 	g_message("FIXME: Implement ifolder_domain_login");
+	sleep (3); /* FIXME: Remove this spoofed work */
 }
 
 void
 ifolder_domain_log_out(iFolderDomain *domain, GError **error)
 {
-	g_message("FIXME: Implement ifolder_domain_login");
+	g_message("FIXME: Implement ifolder_domain_log_out");
+	sleep (3); /* FIXME: Remove this spoofed work */
 }
 
 void

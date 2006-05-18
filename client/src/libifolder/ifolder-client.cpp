@@ -21,6 +21,8 @@
  *
  ***********************************************************************/
 
+#include <unistd.h>	/* FIXME: Remove this when finished spoofing work with sleep() */
+
 #include <IFApplication.h>
 
 #include "ifolder-client.h"
@@ -256,15 +258,36 @@ ifolder_client_resume_synchronization(iFolderClient *client, GError **error)
 GSList *
 ifolder_client_get_all_domains(iFolderClient *client, GError **error)
 {
+	iFolderDomain *domain;
+	GSList *domainList = NULL;
 	g_message("FIXME: Implement ifolder_client_get_all_domains()");
-	return g_slist_alloc();
+	
+	g_message("FIXME: Remove spoofing of domain list");
+	
+	domain = ifolder_domain_new ();
+
+	ifolder_domain_set_id (domain, "1234");
+	ifolder_domain_set_name (domain, "Fake iFolder Account");
+	ifolder_domain_set_description (domain, "This is a fake account used just to test the UI");
+	ifolder_domain_set_version (domain, "3.5.1234");
+	ifolder_domain_set_host_address (domain, "192.168.1.1");
+	ifolder_domain_set_machine_name (domain, "spider");
+	ifolder_domain_set_os_version (domain, "Darwin");
+	ifolder_domain_set_user_name (domain, "boyd");
+	ifolder_domain_set_is_authenticated (domain, FALSE);
+	ifolder_domain_set_is_default (domain, TRUE);
+	ifolder_domain_set_is_active (domain, TRUE);
+
+	domainList = g_slist_append (domainList, domain);
+	
+	return domainList;
 }
 
 GSList *
 ifolder_client_get_all_active_domains(iFolderClient *client, GError **error)
 {
 	g_message("FIXME: Implement ifolder_client_get_all_active_domains()");
-	return g_slist_alloc();
+	return NULL;
 }
 
 iFolderDomain *
@@ -278,6 +301,7 @@ iFolderDomain *
 ifolder_client_add_domain(iFolderClient *client, const gchar *host_address, const gchar *user_name, const gchar *password, gboolean remember_password, gboolean make_default, GError **error)
 {
 	g_message("FIXME: Implement ifolder_client_add_domain()");
+	sleep (3);
 	return NULL;
 }
 

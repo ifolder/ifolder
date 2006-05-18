@@ -41,12 +41,17 @@
 /*@todo Remove this when gettext is added */
 #define _
 
+extern iFolderClient *ifolder_client;
+
 typedef struct _iFolderPrefsAuthReq iFolderPrefsAuthReq;
 struct _iFolderPrefsAuthReq
 {
 	IFAPreferencesWindow	*prefs_window;
 	iFolderDomain			*domain;
-	guint					status;
+	gchar					*password;
+	gboolean				rememberPassword;
+	GtkCellRendererToggle	*cell_renderer;
+	GError					*error;
 };
 
 static IFAPreferencesWindow *prefsWindow = NULL;
@@ -78,6 +83,8 @@ static void online_toggled(GtkCellRendererToggle *cell_renderer, gchar *path, IF
 static void server_cell_text_data_func(GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, IFAPreferencesWindow *pw);
 static void name_cell_text_data_func(GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, IFAPreferencesWindow *pw);
 
+static void acc_selection_changed (GtkTreeSelection *treeselection, IFAPreferencesWindow *pw);
+
 static void on_add_account(GtkButton *widget, IFAPreferencesWindow *pw);
 static void on_remove_account(GtkButton *widget, IFAPreferencesWindow *pw);
 static void on_properties_clicked(GtkButton *widget, IFAPreferencesWindow *pw);
@@ -85,7 +92,7 @@ static void on_properties_clicked(GtkButton *widget, IFAPreferencesWindow *pw);
 static void on_acc_tree_row_activated(GtkTreeView *tree_view, GtkTreePath *path, GtkTreeViewColumn *column, IFAPreferencesWindow *pw);
 
 static void populate_domains(IFAPreferencesWindow *pw);
-static void update_widget_sensitivitiy(IFAPreferencesWindow *pw);
+static void update_widget_sensitivity(IFAPreferencesWindow *pw);
 
 static gboolean g_ifolder_domain_equal(gconstpointer a, gconstpointer b);
 
@@ -326,6 +333,8 @@ create_general_page(IFAPreferencesWindow *pw)
 static GtkWidget *
 create_accounts_page(IFAPreferencesWindow *pw)
 {
+	GtkTreeSelection *selection;
+	
 	pw->accountsPage = gtk_vbox_new(false, IFA_DEFAULT_SECTION_SPACING);
 	gtk_container_set_border_width(GTK_CONTAINER(pw->accountsPage), IFA_DEFAULT_BORDER_WIDTH);
 	g_signal_connect(G_OBJECT(pw->accountsPage), "realize", G_CALLBACK(accounts_page_realized), pw);
@@ -342,6 +351,10 @@ create_accounts_page(IFAPreferencesWindow *pw)
 	
 	/* Set up the Accounts Tree View in a scrolled window */
 	pw->accTreeView = gtk_tree_view_new();
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (pw->accTreeView));
+	gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE); /* FIXME: Implement multiple selection at a later point if desired so users can highlight multiple accounts and remove them. */
+	g_signal_connect (selection, "changed", G_CALLBACK (acc_selection_changed), pw);
+	
 	GtkWidget *sw = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw), GTK_SHADOW_ETCHED_IN);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
@@ -599,24 +612,21 @@ on_sync_units_changed(GtkComboBox *widget, IFAPreferencesWindow *pw)
 static void
 accounts_page_realized(GtkWidget *widget, IFAPreferencesWindow *pw)
 {
-	int err;
+	g_message ("accounts_page_realized()");
 
-	g_message("Implement accounts_page_realized()");
-	
-//	populate_domains();
-//	update_widget_sensitivity();
+	populate_domains(pw);
+	update_widget_sensitivity(pw);
 }
 
 static void
 online_cell_toggle_data_func(GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, IFAPreferencesWindow *pw)
 {
+	g_message ("online_cell_toggle_data_func()");
+
 	iFolderDomain *domain;
-	GValue val;
-	gtk_tree_model_get_value (model, iter, 0, &val);
+	gtk_tree_model_get (model, iter, 0, &domain, -1);
 	
-	domain = (iFolderDomain *)g_value_get_object (&val);
-	
-	if (ifolder_domain_is_active (domain))
+	if (ifolder_domain_is_authenticated (domain))
 		gtk_cell_renderer_toggle_set_active (GTK_CELL_RENDERER_TOGGLE (cell), TRUE);
 	else
 		gtk_cell_renderer_toggle_set_active (GTK_CELL_RENDERER_TOGGLE (cell), FALSE);
@@ -626,7 +636,7 @@ static void
 online_toggled(GtkCellRendererToggle *cell_renderer, gchar *path, IFAPreferencesWindow *pw)
 {
 	iFolderDomain *domain;
-	GValue val;
+	GValue val = { 0 };
 	GtkTreeIter iter;
 	GError *err = NULL;
 	GtkWidget *errDialog;
@@ -638,18 +648,20 @@ online_toggled(GtkCellRendererToggle *cell_renderer, gchar *path, IFAPreferences
 		return;
 	}
 	
-	gtk_tree_model_get_value (GTK_TREE_MODEL (pw->accTreeStore), &iter, 0, &val);
-	
-	domain = (iFolderDomain *)g_value_get_object (&val);
+	gtk_tree_model_get (GTK_TREE_MODEL (pw->accTreeStore), &iter, 0, &domain, -1);
 	
 	// Disable the ability for the user to toggle the checkbox during this operation
+	memset (&val, 0, sizeof(GValue));
+	g_value_init (&val, G_TYPE_BOOLEAN);
 	g_value_set_boolean (&val, FALSE);
 	g_object_set_property (G_OBJECT (cell_renderer), "activatable", &val);
 	
 	authReq = (iFolderPrefsAuthReq *)malloc (sizeof (iFolderPrefsAuthReq));
 	authReq->prefs_window = pw;
 	authReq->domain = domain;
-	authReq->status = 0;
+	authReq->password = NULL;
+	authReq->cell_renderer = cell_renderer;
+	authReq->error = NULL;
 	
 	if (ifolder_domain_is_authenticated (domain))
 	{
@@ -668,6 +680,17 @@ online_toggled(GtkCellRendererToggle *cell_renderer, gchar *path, IFAPreferences
 			pw->waitDialog = ifa_wait_dialog_new (GTK_WINDOW (pw->window), NULL, IFA_WAIT_DIALOG_NONE, _("Connecting..."), _("Connecting..."), _("Please wait for your iFolder account to connect."));
 			gtk_widget_show_all (pw->waitDialog);
 		}
+		
+/*
+		g_message("FIXME: Retrieve the password");
+		if (password == NULL)
+		{
+			// Prompt the user for the password
+			// Read the password and the "remember password" value
+		}
+		authReq->password = g_strdup (password);
+		authReq->rememberPassword = FALSE;
+*/
 	
 		g_thread_create((GThreadFunc)log_in_thread, authReq, TRUE, NULL);
 	}
@@ -677,11 +700,11 @@ static void
 server_cell_text_data_func(GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, IFAPreferencesWindow *pw)
 {
 	iFolderDomain *domain;
-	GValue val;
-	gtk_tree_model_get_value (model, iter, 0, &val);
+	GValue val = { 0 };
+	gtk_tree_model_get (model, iter, 0, &domain, -1);
 	
-	domain = (iFolderDomain *)g_value_get_object (&val);
-	
+	memset (&val, 0, sizeof(GValue));
+	g_value_init (&val, G_TYPE_STRING);
 	g_value_set_string(&val, ifolder_domain_get_name (domain));
 	
 	g_object_set_property (G_OBJECT (cell), "text", &val);
@@ -691,14 +714,20 @@ static void
 name_cell_text_data_func(GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, IFAPreferencesWindow *pw)
 {
 	iFolderDomain *domain;
-	GValue val;
-	gtk_tree_model_get_value (model, iter, 0, &val);
+	GValue val = { 0 };
+	gtk_tree_model_get (model, iter, 0, &domain, -1);
 	
-	domain = (iFolderDomain *)g_value_get_object (&val);
-	
+	memset (&val, 0, sizeof(GValue));
+	g_value_init (&val, G_TYPE_STRING);
 	g_value_set_string(&val, ifolder_domain_get_user_name (domain));
 	
 	g_object_set_property (G_OBJECT (cell), "text", &val);
+}
+
+static void
+acc_selection_changed(GtkTreeSelection *treeselection, IFAPreferencesWindow *pw)
+{
+	update_widget_sensitivity (pw);
 }
 
 static void
@@ -706,13 +735,51 @@ on_add_account(GtkButton *widget, IFAPreferencesWindow *pw)
 {
 	g_message("FIXME: Implement on_add_account()");
 	IFAAccountWizard *account_wizard = ifa_account_wizard_new();
+	gtk_window_set_transient_for (GTK_WINDOW (account_wizard->window), GTK_WINDOW (pw->window));
 	gtk_widget_show_all(account_wizard->window);
 }
 
 static void
 on_remove_account(GtkButton *widget, IFAPreferencesWindow *pw)
 {
-	g_message("FIXME: Implement on_remove_account()");
+	GtkTreeSelection *selection;
+	GtkTreeIter iter;
+	iFolderDomain *domain;
+	GtkWidget *dialog;
+	gint rc;
+	GtkWidget *errDialog;
+	GError *err = NULL;
+	
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (pw->accTreeView));
+	if (gtk_tree_selection_count_selected_rows (selection) == 1)
+	{
+		if (gtk_tree_selection_get_selected (selection, NULL, &iter))
+		{
+			gtk_tree_model_get (GTK_TREE_MODEL (pw->accTreeStore), &iter, 0, &domain, -1);
+			
+			dialog =
+				gtk_message_dialog_new_with_markup (GTK_WINDOW (pw->window),
+													(GtkDialogFlags)(GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_MODAL),
+													GTK_MESSAGE_QUESTION,
+													GTK_BUTTONS_YES_NO,
+													_("<span weight=\"bold\" size=\"larger\">Remove this account?</span>\n\nIf you select \"Yes,\" the \"%s\" account will be removed from this computer."),
+													ifolder_domain_get_name (domain));
+			rc = gtk_dialog_run (GTK_DIALOG (dialog));
+			gtk_widget_destroy (dialog);
+			
+			if (rc != GTK_RESPONSE_YES)
+				return;
+			
+			ifolder_client_remove_domain (ifolder_client, domain, &err);
+			if (err)
+			{
+				errDialog = gtk_message_dialog_new (GTK_WINDOW (pw->window), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, err->message);
+				g_clear_error (&err);
+				gtk_dialog_run (GTK_DIALOG (errDialog));
+				gtk_widget_destroy (errDialog);
+			}
+		}
+	}
 }
 
 static void
@@ -725,32 +792,66 @@ static void
 on_acc_tree_row_activated(GtkTreeView *tree_view, GtkTreePath *path, GtkTreeViewColumn *column, IFAPreferencesWindow *pw)
 {
 	g_message("FIXME: Implement on_acc_tree_row_activated()");
+	on_properties_clicked (GTK_BUTTON (pw->propertiesButton), pw);
 }
 
 static void
 populate_domains(IFAPreferencesWindow *pw)
 {
-//	int err;
-//	iFolderEnumeration domain_enum;
-//	iFolderDomain domain;
-
-//	err = ifolder_domains_get_all(&domain_enum);
-//	if (err != IFOLDER_SUCCESS)
-//		return;
-
-//	while (ifolder_enumeration_has_more(domain_enum))
-//	{
-//		domain = (iFolderDomain*)ifolder_enumeration_get_next(domain_enum);
-//		if (domain == NULL) continue; /*protect against null*/
-
-//	}
-
-//	ifolder_enumeration_free(domain_enum);
+	GError *err = NULL;
+	GSList *domains;
+	GSList *domainListPtr;
+	iFolderDomain *domain;
+	GtkWidget *errDialog;
+	gchar *errMessage;
+	GtkTreeIter iter;
+	GValue val = { 0 };
+	
+	domains = ifolder_client_get_all_domains (ifolder_client, &err);
+	if (err)
+	{
+		errDialog = gtk_message_dialog_new (GTK_WINDOW (pw->window), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, err->message);
+		g_clear_error (&err);
+		gtk_dialog_run (GTK_DIALOG (errDialog));
+		gtk_widget_destroy (errDialog);
+		return;
+	}
+	
+	domainListPtr = domains;
+	
+	for (domainListPtr = domains; domainListPtr != NULL; domainListPtr = g_slist_next (domainListPtr))
+	{
+		domain = (iFolderDomain *)domainListPtr->data;
+		g_debug ("id: %s", ifolder_domain_get_id (domain));
+		g_debug ("name: %s", ifolder_domain_get_name (domain));
+		g_debug ("user name: %s", ifolder_domain_get_user_name (domain));
+		g_debug ("authenticated: %s", ifolder_domain_is_authenticated (domain) ? "true" : "false");
+		gtk_list_store_append (pw->accTreeStore, &iter);
+		gtk_list_store_set (pw->accTreeStore, &iter, 0, domain, -1); 
+	}
+	
+	g_slist_free (domains);
 }
 
 static void
-update_widget_sensitivitiy(IFAPreferencesWindow *pw)
+update_widget_sensitivity(IFAPreferencesWindow *pw)
 {
+	GtkTreeSelection *selection;
+	GtkTreeIter iter;
+	
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (pw->accTreeView));
+	if (gtk_tree_selection_count_selected_rows (selection) == 1)
+	{
+//		gtk_widget_set_sensitive (pw->addButton, TRUE);
+		gtk_widget_set_sensitive (pw->removeButton, TRUE);
+		gtk_widget_set_sensitive (pw->propertiesButton, TRUE);
+	}
+	else
+	{
+//		gtk_widget_set_sensitive (pw->addButton, TRUE);
+		gtk_widget_set_sensitive (pw->removeButton, FALSE);
+		gtk_widget_set_sensitive (pw->propertiesButton, FALSE);
+	}
 }
 
 static gboolean
@@ -767,15 +868,51 @@ g_ifolder_domain_equal(gconstpointer a, gconstpointer b)
 static gpointer
 log_in_thread (iFolderPrefsAuthReq *authReq)
 {
-	g_message ("FIXME: Implement log_in_thread()");
+	GError *err = NULL;
+
+	ifolder_domain_log_in (authReq->domain, authReq->password, authReq->rememberPassword, &err);
+	if (err != NULL)
+		authReq->error = err;
+
 	g_idle_add ((GSourceFunc)log_in_thread_completed, authReq);
+
 	return NULL;
 }
 
 static gboolean
 log_in_thread_completed(iFolderPrefsAuthReq *authReq)
 {
+	GtkWidget *errDialog;
+	GValue val = { 0 };
+
 	g_message ("FIXME: Implement log_in_thread_completed()");
+
+	memset (&val, 0, sizeof(GValue));
+	g_value_init (&val, G_TYPE_BOOLEAN);
+	g_value_set_boolean (&val, TRUE);
+	g_object_set_property (G_OBJECT (authReq->cell_renderer), "activatable", &val);
+	
+	if (authReq->prefs_window->waitDialog)
+	{
+		gtk_widget_destroy (authReq->prefs_window->waitDialog);
+		authReq->prefs_window->waitDialog = NULL;
+	}
+	
+	if (authReq->error != NULL)
+	{
+		errDialog = gtk_message_dialog_new (GTK_WINDOW (authReq->prefs_window->window), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, authReq->error->message);
+		g_error_free (authReq->error);
+		gtk_dialog_run (GTK_DIALOG (errDialog));
+		gtk_widget_destroy (errDialog);
+	}
+	else
+	{
+		g_message ("FIXME: Remove the following line.  It should be set on a log-in event.");
+		gtk_cell_renderer_toggle_set_active (GTK_CELL_RENDERER_TOGGLE (authReq->cell_renderer), TRUE);
+	}
+	
+	if (authReq->password != NULL)
+		g_free (authReq->password);
 	free(authReq);
 	return FALSE;
 }
@@ -783,15 +920,48 @@ log_in_thread_completed(iFolderPrefsAuthReq *authReq)
 static gpointer
 log_out_thread (iFolderPrefsAuthReq *authReq)
 {
-	g_message ("FIXME: Implement log_out_thread()");
-	g_idle_add ((GSourceFunc)log_in_thread_completed, authReq);
+	GError *err = NULL;
+
+	ifolder_domain_log_out (authReq->domain, &err);
+	if (err != NULL)
+		authReq->error = err;
+
+	g_idle_add ((GSourceFunc)log_out_thread_completed, authReq);
 	return NULL;
 }
 
 static gboolean
 log_out_thread_completed(iFolderPrefsAuthReq *authReq)
 {
+	GtkWidget *errDialog;
+	GValue val = { 0 };
+
 	g_message ("FIXME: Implement log_out_thread_completed()");
+	
+	memset (&val, 0, sizeof(GValue));
+	g_value_init (&val, G_TYPE_BOOLEAN);
+	g_value_set_boolean (&val, TRUE);
+	g_object_set_property (G_OBJECT (authReq->cell_renderer), "activatable", &val);
+
+	if (authReq->prefs_window->waitDialog)
+	{
+		gtk_widget_destroy (authReq->prefs_window->waitDialog);
+		authReq->prefs_window->waitDialog = NULL;
+	}
+	
+	if (authReq->error != NULL)
+	{
+		errDialog = gtk_message_dialog_new (GTK_WINDOW (authReq->prefs_window->window), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, authReq->error->message);
+		g_error_free (authReq->error);
+		gtk_dialog_run (GTK_DIALOG (errDialog));
+		gtk_widget_destroy (errDialog);
+	}
+	else
+	{
+		g_message ("FIXME: Remove the following line.  It should be set on a log-out event.");
+		gtk_cell_renderer_toggle_set_active (GTK_CELL_RENDERER_TOGGLE (authReq->cell_renderer), FALSE);
+	}
+
 	free(authReq);
 	return FALSE;
 }
