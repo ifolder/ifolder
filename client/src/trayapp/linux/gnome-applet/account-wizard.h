@@ -93,7 +93,6 @@ typedef struct {
 	 */
 	GtkWidget		*waitDialog;
 	GThread			*addDomainThread;
-	guint			authStatus;
 } IFAAccountWizard;
 
 IFAAccountWizard *ifa_account_wizard_new();

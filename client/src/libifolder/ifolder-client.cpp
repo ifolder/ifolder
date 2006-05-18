@@ -39,10 +39,21 @@ struct _iFolderClientPrivate
 	
 	IFApplication	*ifolder_core_app;
 	GKeyFile		*config_key_file;
+	
+	iFolderDomain 	*default_domain;
+	GSList			*domains;
+};
+
+enum {
+	DOMAIN_ADDED,
+	DOMAIN_REMOVED,
+	LAST_SIGNAL
 };
 
 static GObjectClass *parent_class = NULL;
 static iFolderClient *singleton_client = NULL;
+
+static guint ifolder_client_signals[LAST_SIGNAL] = { 0 };
 
 #define IFOLDER_CLIENT_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), IFOLDER_CLIENT_TYPE, iFolderClientPrivate))
 
@@ -51,6 +62,8 @@ static iFolderClient *singleton_client = NULL;
  */
 static void ifolder_client_finalize(GObject *object);
 static void ifolder_client_dispose(GObject *object);
+
+static void load_domains (iFolderClient *client, GError **error);
 
 /**
  * Functions required by GObject
@@ -63,6 +76,28 @@ ifolder_client_class_init(iFolderClientClass *klass)
 	
 	object_class->finalize = ifolder_client_finalize;
 	object_class->dispose = ifolder_client_dispose;
+	
+	ifolder_client_signals[DOMAIN_ADDED] =
+		g_signal_new ("domain-added",
+			G_OBJECT_CLASS_TYPE (object_class),
+			G_SIGNAL_RUN_LAST,
+			G_STRUCT_OFFSET (iFolderClientClass, domain_added),
+			NULL, NULL,
+			g_cclosure_marshal_VOID__POINTER,
+			G_TYPE_NONE,
+			1,
+			G_TYPE_OBJECT);
+
+	ifolder_client_signals[DOMAIN_REMOVED] =
+		g_signal_new ("domain-removed",
+			G_OBJECT_CLASS_TYPE (object_class),
+			G_SIGNAL_RUN_LAST,
+			G_STRUCT_OFFSET (iFolderClientClass, domain_removed),
+			NULL, NULL,
+			g_cclosure_marshal_VOID__POINTER,
+			G_TYPE_NONE,
+			1,
+			G_TYPE_OBJECT);
 
 	g_type_class_add_private(klass, sizeof(iFolderClientPrivate));
 
@@ -85,6 +120,9 @@ static void ifolder_client_init(GTypeInstance *instance, gpointer g_class)
 	
 	self->priv->ifolder_core_app = NULL;
 	self->priv->config_key_file = g_key_file_new();
+
+	self->priv->default_domain = NULL;
+	self->priv->domains = NULL;
 }
 
 static void ifolder_client_finalize(GObject *object)
@@ -202,6 +240,17 @@ ifolder_client_initialize(const gchar *data_path, GError **error)
 					_("Error initializing iFolder Client's core synchronization engine."));
 		return NULL;
 	}
+	
+	load_domains (client, &err);
+	if (err != NULL)
+	{
+//		IFApplication::Uninitialize();
+		g_object_unref (client);
+		if (error != NULL)
+			*error = err;
+		
+		return NULL;
+	}
 
 	/* If everything was initialized correctly, set the singleton instance and return. */
 	singleton_client = client;
@@ -258,57 +307,183 @@ ifolder_client_resume_synchronization(iFolderClient *client, GError **error)
 GSList *
 ifolder_client_get_all_domains(iFolderClient *client, GError **error)
 {
-	iFolderDomain *domain;
-	GSList *domainList = NULL;
-	g_message("FIXME: Implement ifolder_client_get_all_domains()");
+	iFolderClientPrivate *priv;
 	
-	g_message("FIXME: Remove spoofing of domain list");
-	
-	domain = ifolder_domain_new ();
+	if (client == NULL)
+	{
+		g_set_error (error,
+					 IFOLDER_ERROR,
+					 IFOLDER_ERR_INVALID_PARAMETER,
+					 _("ifolder_client_get_all_domains() called with a NULL iFolderClient parameter."));
+		return NULL;
+	}
 
-	ifolder_domain_set_id (domain, "1234");
-	ifolder_domain_set_name (domain, "Fake iFolder Account");
-	ifolder_domain_set_description (domain, "This is a fake account used just to test the UI");
-	ifolder_domain_set_version (domain, "3.5.1234");
-	ifolder_domain_set_host_address (domain, "192.168.1.1");
-	ifolder_domain_set_machine_name (domain, "spider");
-	ifolder_domain_set_os_version (domain, "Darwin");
-	ifolder_domain_set_user_name (domain, "boyd");
-	ifolder_domain_set_is_authenticated (domain, FALSE);
-	ifolder_domain_set_is_default (domain, TRUE);
-	ifolder_domain_set_is_active (domain, TRUE);
-
-	domainList = g_slist_append (domainList, domain);
+	priv = IFOLDER_CLIENT_GET_PRIVATE (client);
 	
-	return domainList;
+	return priv->domains;
 }
 
 GSList *
 ifolder_client_get_all_active_domains(iFolderClient *client, GError **error)
 {
-	g_message("FIXME: Implement ifolder_client_get_all_active_domains()");
-	return NULL;
+	GSList *active_domains = NULL;
+	GSList *domainListPtr;
+	iFolderClientPrivate *priv;
+	
+	if (client == NULL)
+	{
+		g_set_error (error,
+					 IFOLDER_ERROR,
+					 IFOLDER_ERR_INVALID_PARAMETER,
+					 _("ifolder_client_get_all_active_domains() called with a NULL iFolderClient parameter."));
+		return NULL;
+	}
+	
+	priv = IFOLDER_CLIENT_GET_PRIVATE (client);
+
+	for (domainListPtr = priv->domains; domainListPtr != NULL; domainListPtr = g_slist_next (domainListPtr))
+	{
+		if (ifolder_domain_is_active (IFOLDER_DOMAIN (domainListPtr->data)))
+			active_domains = g_slist_prepend (active_domains, domainListPtr->data);
+	}
+
+	return active_domains;
 }
 
 iFolderDomain *
 ifolder_client_get_default_domain(iFolderClient *client, GError **error)
 {
-	g_message("FIXME: Implement ifolder_client_get_default_domain()");
-	return NULL;
+	iFolderClientPrivate *priv;
+	
+	if (client == NULL)
+	{
+		g_set_error (error,
+					 IFOLDER_ERROR,
+					 IFOLDER_ERR_INVALID_PARAMETER,
+					 _("ifolder_client_get_default_domain() called with a NULL iFolderClient parameter."));
+		return NULL;
+	}
+	
+	priv = IFOLDER_CLIENT_GET_PRIVATE (client);
+	
+	return priv->default_domain;
 }
 
 iFolderDomain *
 ifolder_client_add_domain(iFolderClient *client, const gchar *host_address, const gchar *user_name, const gchar *password, gboolean remember_password, gboolean make_default, GError **error)
 {
+	iFolderDomain *domain;
+	GError *err = NULL;
+	gchar *tmpStr;
+	iFolderClientPrivate *priv;
+	
+	if (client == NULL)
+	{
+		g_set_error (error,
+					 IFOLDER_ERROR,
+					 IFOLDER_ERR_INVALID_PARAMETER,
+					 _("ifolder_client_add_domain() called with a NULL iFolderClient parameter."));
+		return NULL;
+	}
+	
+	priv = IFOLDER_CLIENT_GET_PRIVATE (client);
+
 	g_message("FIXME: Implement ifolder_client_add_domain()");
-	sleep (3);
-	return NULL;
+	
+	/* FIXME: Call the core code to add a domain.  If successful, create an iFolderDomain object and add it to the iFolderClientPrivate->domains list */
+
+	domain = ifolder_domain_new ();
+
+	tmpStr = g_strdup_printf ("ID: %s", host_address);
+	ifolder_domain_set_id (domain, tmpStr);
+	g_free (tmpStr);
+
+	tmpStr = g_strdup_printf ("Name: %s", host_address);
+	ifolder_domain_set_name (domain, tmpStr);
+	g_free (tmpStr);
+
+	tmpStr = g_strdup_printf ("Description: %s", host_address);
+	ifolder_domain_set_description (domain, tmpStr);
+	g_free (tmpStr);
+
+	tmpStr = g_strdup_printf ("Version: %s", host_address);
+	ifolder_domain_set_version (domain, tmpStr);
+	g_free (tmpStr);
+
+	ifolder_domain_set_host_address (domain, host_address);
+
+	tmpStr = g_strdup_printf ("Machine Name: %s", host_address);
+	ifolder_domain_set_machine_name (domain, tmpStr);
+	g_free (tmpStr);
+
+	tmpStr = g_strdup_printf ("OS Version: %s", host_address);
+	ifolder_domain_set_os_version (domain, tmpStr);
+	g_free (tmpStr);
+
+	tmpStr = g_strdup_printf ("User Name: %s", host_address);
+	ifolder_domain_set_user_name (domain, tmpStr);
+	g_free (tmpStr);
+
+	ifolder_domain_set_is_authenticated (domain, FALSE);
+
+	ifolder_domain_set_is_default (domain, FALSE);
+
+	ifolder_domain_set_is_active (domain, TRUE);
+	
+	priv->domains = g_slist_prepend (priv->domains, domain);
+	g_object_ref (domain); /* FIXME: Should I be doing this here? */
+
+	sleep (3); /* FIXME: Remove this sleep() call that simulates work */
+	
+	g_signal_emit (client, ifolder_client_signals[DOMAIN_ADDED], 0, domain);
+
+	return domain;
 }
 
 void
 ifolder_client_remove_domain(iFolderClient *client, iFolderDomain *domain, GError **error)
 {
+	iFolderClientPrivate *priv;
+	GSList *foundNode;
+	
+	if (client == NULL)
+	{
+		g_set_error (error,
+					 IFOLDER_ERROR,
+					 IFOLDER_ERR_INVALID_PARAMETER,
+					 _("ifolder_client_remove_domain() called with a NULL iFolderClient parameter."));
+		return;
+	}
+	
+	if (domain == NULL)
+	{
+		g_set_error (error,
+					 IFOLDER_ERROR,
+					 IFOLDER_ERR_INVALID_PARAMETER,
+					 _("ifolder_client_remove_domain() called with a NULL iFolderDomain parameter."));
+		return;
+	}
+	
+	priv = IFOLDER_CLIENT_GET_PRIVATE (client);
+
 	g_message("FIXME: Implement ifolder_client_remove_domain()");
+	
+	foundNode = g_slist_find (priv->domains, domain);
+	if (foundNode == NULL)
+	{
+		g_set_error (error,
+					 IFOLDER_ERROR,
+					 IFOLDER_ERR_INVALID_PARAMETER,
+					 _("ifolder_client_remove_domain() called with an iFolderDomain object that the client does not know about."));
+		return;
+	}
+	
+	/* FIXME: Call the core to remove the domain.  If successful, remove it from iFolderClientPrivate->domains */
+	priv->domains = g_slist_remove (priv->domains, domain);
+	
+	g_signal_emit (client, ifolder_client_signals[DOMAIN_REMOVED], 0, domain);
+	
+	g_object_unref (domain); /* FIXME: Figure out if this will really delete the iFolderDomain object */
 }
 
 /**
@@ -337,4 +512,10 @@ ifolder_client_get_config_key_file (GError **error)
 	}
 	
 	return singleton_client->priv->config_key_file;
+}
+
+static void
+load_domains (iFolderClient *client, GError **error)
+{
+	g_message ("FIXME: Implement load_domains() in ifolder-client.cpp");
 }

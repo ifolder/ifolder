@@ -43,7 +43,7 @@ typedef enum
 	IFOLDER_ERR_OUT_OF_MEMORY,			/*!< Failed to allocate memory. */
 	IFOLDER_ERR_INVALID_PARAMETER		/*!< A required function parameter was invalid. */
 } iFolderError;
-#define IFOLDER_ERROR g_markup_error_quark()
+#define IFOLDER_ERROR g_markup_error_quark ()
 
 
 typedef enum
@@ -52,7 +52,25 @@ typedef enum
 	IFOLDER_ERR_NOT_INITIALIZED,		/*!< Returned if an operation is attempted on the library without initializing the client. */
 	IFOLDER_ERR_INITIALIZE				/*!< Error initializing the client */
 } iFolderClientError;
-#define IFOLDER_CLIENT_ERROR g_markup_error_quark()
+#define IFOLDER_CLIENT_ERROR g_markup_error_quark ()
+
+typedef enum
+{
+	IFOLDER_AUTH_SUCCESS_IN_GRACE,			/*!< Successful authentication but within a grace login period */
+	IFOLDER_AUTH_ERR_INVALID_CERTIFICATE,	/*!< The certificate is invalid */
+	IFOLDER_AUTH_ERR_UNKNOWN_USER,			/*!< Invalid or Unknown user specified */
+	IFOLDER_AUTH_ERR_AMBIGUOUS_USER,		/*!< Ambiguous user - more than one user exists */
+	IFOLDER_AUTH_ERR_INVALID_CREDENTIALS,	/*!< The credentials may have invalid characters, etc. */
+	IFOLDER_AUTH_ERR_INVALID_PASSWORD,		/*!< Invalid password specified */
+	IFOLDER_AUTH_ERR_ACCOUNT_DISABLED,		/*!< The account has been disabled by an administrator */
+	IFOLDER_AUTH_ERR_ACCOUNT_LOCKOUT,		/*!< The account has been locked due to excessive login failure or possibly the grace logins have all been consumed. */
+	IFOLDER_AUTH_ERR_SIMIAS_LOGIN_DISABLED,	/*!< The simias account has been disabled by the administrator. */
+	IFOLDER_AUTH_ERR_UNKNOWN_DOMAIN,		/*!< The specified domain was unknown */
+	IFOLDER_AUTH_ERR_INTERNAL_EXCEPTION,	/*!< Authentication failed due to an internal exception */
+	IFOLDER_AUTH_ERR_TIMEOUT,				/*!< The operation timed out on the client request */
+	IFOLDER_AUTH_ERR_UNKNOWN				/*<! Authentication failed with an unknown reason */
+} iFolderAuthError;
+#define IFOLDER_AUTH_ERROR g_markup_error_quark ()
 
 
 /*@}*/

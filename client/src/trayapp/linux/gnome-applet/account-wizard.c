@@ -42,6 +42,14 @@
 
 extern iFolderClient *ifolder_client;
 
+typedef struct _iFolderAddDomainThreadResults iFolderAddDomainThreadResults;
+struct _iFolderAddDomainThreadResults
+{
+	IFAAccountWizard	*aw;
+	iFolderDomain		*domain;
+	GError				*error;
+};
+
 enum
 {
 	START_PAGE = 0,
@@ -87,7 +95,7 @@ static void server_name_changed(GtkEntry *entry, IFAAccountWizard *aw);
 static void user_info_changed(GtkEntry *entry, IFAAccountWizard *aw);
 
 static gpointer add_domain_thread(IFAAccountWizard *aw);
-static gboolean add_domain_thread_completed(IFAAccountWizard *aw);
+static gboolean add_domain_thread_completed(iFolderAddDomainThreadResults *results);
 
 IFAAccountWizard *
 ifa_account_wizard_new()
@@ -113,7 +121,6 @@ ifa_account_wizard_new()
 	
 	aw->waitDialog = NULL;
 	aw->addDomainThread = NULL;
-	aw->authStatus = 0;
 
 //	gtk_window_set_default_size(GTK_WINDOW(aw->window), 480, 550);
 
@@ -820,6 +827,7 @@ add_domain_thread(IFAAccountWizard *aw)
 	gboolean b_make_default;
 	GError *err = NULL;
 	GtkWidget *errDialog;
+	iFolderAddDomainThreadResults *results;
 	
 	host_address = gtk_entry_get_text (GTK_ENTRY (aw->serverNameEntry));
 	user_name = gtk_entry_get_text (GTK_ENTRY (aw->userNameEntry));
@@ -828,62 +836,95 @@ add_domain_thread(IFAAccountWizard *aw)
 	b_make_default = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (aw->defaultServerCheckButton));
 
 	domain = ifolder_client_add_domain (ifolder_client, host_address, user_name, password, b_remember_password, b_make_default, &err);
-	if (domain == NULL)
-	{
-		g_message("FIXME: Figure out how to get this error message over to the main thread so the user can see it");
-//		errDialog = gtk_message_dialog_new (GTK_WINDOW (aw->window), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, err->message);
-//		gtk_dialog_run (GTK_DIALOG (errDialog));
-//		gtk_widget_destroy (errDialog);
-		g_clear_error(&err);
-	}
-	else
-	{
-		aw->connectedDomain = domain;
-	}
-
-	g_idle_add((GSourceFunc)add_domain_thread_completed, aw);
+	
+	results = (iFolderAddDomainThreadResults *)malloc (sizeof (iFolderAddDomainThreadResults));
+	results->aw = aw;
+	results->domain = domain;
+	results->error = err;
+	
+	g_idle_add((GSourceFunc)add_domain_thread_completed, results);
 
 	return NULL;
 }
 
 static gboolean
-add_domain_thread_completed(IFAAccountWizard *aw)
+add_domain_thread_completed(iFolderAddDomainThreadResults *results)
 {
 	GtkWidget *errDialog;
-	g_message ("FIXME: Implement add_domain_thread_completed(), authStatus: %d", aw->authStatus);
+	gint rc;
 
-	if (aw->waitDialog != NULL)
+	g_message ("FIXME: Implement add_domain_thread_completed()");
+
+	if (results->aw->waitDialog != NULL)
 	{
-		gtk_widget_destroy (aw->waitDialog);
-		aw->waitDialog = NULL;
+		gtk_widget_destroy (results->aw->waitDialog);
+		results->aw->waitDialog = NULL;
 	}
 	
-	g_message ("FIXME: Look for the auth status in the iFolderDomain object");
-	switch (aw->authStatus)
+	if (results->error != NULL)
 	{
-/*
-		case IFA_AUTH_STATUS_SUCCESS_IN_GRACE:
-			gtk_notebook_next_page(GTK_NOTEBOOK(aw->notebook));
-			break;
-		case IFA_AUTH_STATUS_SUCCESS_IN_GRACE:
-			// let the user know about their grace logins and then advance them to the summary page
-			gtk_notebook_next_page(GTK_NOTEBOOK(aw->notebook));
-			break;
-		case IFA_AUTH_STATUS_INVALID_CREDENTIALS:
-			errDialog = gtk_message_dialog_new (GTK_WINDOW (aw->window), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, _("Your username or password is incorrect."));
+		switch (results->error->code)
+		{
+			case IFOLDER_AUTH_SUCCESS_IN_GRACE:
+				// FIXME: let the user know about their grace logins and then advance them to the summary page
+				errDialog = gtk_message_dialog_new (GTK_WINDOW (results->aw->window), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_WARNING, GTK_BUTTONS_CLOSE, results->error->message);
+				gtk_dialog_run (GTK_DIALOG (errDialog));
+				gtk_widget_destroy (errDialog);
+				
+				gtk_notebook_next_page(GTK_NOTEBOOK (results->aw->notebook));
+				break;
+			case IFOLDER_AUTH_ERR_INVALID_CERTIFICATE:
+				errDialog =
+					gtk_message_dialog_new_with_markup (GTK_WINDOW (results->aw->window),
+														(GtkDialogFlags)(GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_MODAL),
+														GTK_MESSAGE_QUESTION,
+														GTK_BUTTONS_YES_NO,
+														_("<span weight=\"bold\" size=\"larger\">FIXME: Invalid Certificate.  Accept?</span>"));
+				rc = gtk_dialog_run (GTK_DIALOG (errDialog));
+				gtk_widget_destroy (errDialog);
+				
+				if (rc == GTK_RESPONSE_YES)
+				{
+					g_message ("FIXME: User selected \"Yes\" so store the certificate and cause login to be called again!");
+
+					connect_button_clicked (GTK_BUTTON (results->aw->connectButton), results->aw);
+				}
+
+				break;
+			case IFOLDER_AUTH_ERR_UNKNOWN_USER:
+			case IFOLDER_AUTH_ERR_AMBIGUOUS_USER:
+			case IFOLDER_AUTH_ERR_INVALID_CREDENTIALS:
+			case IFOLDER_AUTH_ERR_INVALID_PASSWORD:
+			case IFOLDER_AUTH_ERR_ACCOUNT_DISABLED:
+			case IFOLDER_AUTH_ERR_ACCOUNT_LOCKOUT:
+			case IFOLDER_AUTH_ERR_SIMIAS_LOGIN_DISABLED:
+			case IFOLDER_AUTH_ERR_UNKNOWN_DOMAIN:
+			case IFOLDER_AUTH_ERR_INTERNAL_EXCEPTION:
+			case IFOLDER_AUTH_ERR_TIMEOUT:
+			case IFOLDER_AUTH_ERR_UNKNOWN:
+			default:
+				errDialog = gtk_message_dialog_new (GTK_WINDOW (results->aw->window), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, results->error->message);
+				gtk_dialog_run (GTK_DIALOG (errDialog));
+				gtk_widget_destroy (errDialog);
+				break;
+		}
+		
+		g_error_free (results->error);
+	}
+	else
+	{
+		if (results->domain == NULL)
+		{
+			errDialog = gtk_message_dialog_new (GTK_WINDOW (results->aw->window), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, _("An unknown problem occurred (domain is NULL without an error being reported)."));
 			gtk_dialog_run (GTK_DIALOG (errDialog));
 			gtk_widget_destroy (errDialog);
-			break;
-		case IFA_AUTH_STATUS_INVALID_CERTIFICATE:
-			// Prompt the user to accept the certificate.  If yes, call connect_button_clicked again.
-			break;
-*/
-		default:
-			errDialog = gtk_message_dialog_new (GTK_WINDOW (aw->window), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, _("An unknown error occurred while connecting to the account."));
-			gtk_dialog_run (GTK_DIALOG (errDialog));
-			gtk_widget_destroy (errDialog);
+		}
+		else
+		{
+			results->aw->connectedDomain = results->domain;
 			
-			break;
+			gtk_notebook_next_page(GTK_NOTEBOOK(results->aw->notebook));
+		}
 	}
 	
 	return FALSE;

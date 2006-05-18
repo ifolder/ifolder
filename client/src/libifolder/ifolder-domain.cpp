@@ -101,6 +101,8 @@ static void ifolder_domain_init(GTypeInstance *instance, gpointer g_class)
 
 static void ifolder_domain_finalize(GObject *object)
 {
+	g_debug ("ifolder_domain_finalize()");
+	
 	iFolderDomain *self = IFOLDER_DOMAIN(object);
 
 	/* custom stuff */
@@ -131,6 +133,8 @@ static void ifolder_domain_dispose(GObject *object)
 	/* if dispose already ran, return */
 	if (self->priv->dispose_has_run)
 		return;
+	
+	g_debug ("ifolder_domain_dispose()");
 	
 	/* make sure dispose does not run twice */
 	self->priv->dispose_has_run = TRUE;

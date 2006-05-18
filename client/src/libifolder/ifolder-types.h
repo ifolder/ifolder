@@ -34,6 +34,10 @@ typedef struct _iFolderClient iFolderClient;
 typedef struct _iFolderClientClass iFolderClientClass;
 typedef struct _iFolderClientPrivate iFolderClientPrivate;
 
+typedef struct _iFolderDomain iFolderDomain;
+typedef struct _iFolderDomainClass iFolderDomainClass;
+typedef struct _iFolderDomainPrivate iFolderDomainPrivate;
+
 struct _iFolderClient
 {
 	GObject parent;
@@ -48,12 +52,11 @@ struct _iFolderClientClass
 {
 	GObjectClass parent;
 	
+	void (* domain_added) (iFolderDomain *domain);
+	void (* domain_removed) (iFolderDomain *domain);
+	
 	/* class members */
 };
-
-typedef struct _iFolderDomain iFolderDomain;
-typedef struct _iFolderDomainClass iFolderDomainClass;
-typedef struct _iFolderDomainPrivate iFolderDomainPrivate;
 
 struct _iFolderDomain
 {
