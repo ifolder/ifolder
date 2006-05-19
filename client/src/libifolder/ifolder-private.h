@@ -21,6 +21,8 @@
  *
  ***********************************************************************/
 
+#include <IFDomain.h>
+
 #include "ifolder-types.h"
 
 iFolderClient *ifolder_client_new (void);
@@ -40,6 +42,7 @@ void ifolder_domain_set_user_name (iFolderDomain *domain, const gchar *user_name
 void ifolder_domain_set_is_authenticated (iFolderDomain *domain, gboolean is_authenticated);
 void ifolder_domain_set_is_default (iFolderDomain *domain, gboolean is_default);
 void ifolder_domain_set_is_active (iFolderDomain *domain, gboolean is_active);
+void ifolder_domain_set_core_domain (iFolderDomain *domain, IFDomain *core_domain);
 
 iFolder *ifolder_new (void);
 iFolderUser *ifolder_user_new (void);

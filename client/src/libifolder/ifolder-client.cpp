@@ -356,6 +356,7 @@ ifolder_client_add_domain(iFolderClient *client, const gchar *host_address, cons
 	GError *err = NULL;
 	gchar *tmpStr;
 	iFolderClientPrivate *priv;
+	IFDomain *core_domain;
 	
 	if (client == NULL)
 	{
@@ -370,9 +371,20 @@ ifolder_client_add_domain(iFolderClient *client, const gchar *host_address, cons
 
 	g_message("FIXME: Implement ifolder_client_add_domain()");
 	
-	/* FIXME: Call the core code to add a domain.  If successful, create an iFolderDomain object and add it to the iFolderClientPrivate->domains list */
+	/* Call the core code to add a domain.  If successful, create an iFolderDomain object and add it to the iFolderClientPrivate->domains list */
+	core_domain = IFDomain::Add (user_name, password, host_address);
+	if (core_domain == NULL)
+	{
+		g_set_error (error,
+					 IFOLDER_ERROR,
+					 IFOLDER_ERR_UNKNOWN,
+					 _("FIXME: Russ needs to return a GError from the IFDomain::Add() function.  I don't know what failed."));
+		return NULL;
+	}
 
 	domain = ifolder_domain_new ();
+	
+	ifolder_domain_set_core_domain (domain, core_domain);
 
 	tmpStr = g_strdup_printf ("ID: %s", host_address);
 	ifolder_domain_set_id (domain, tmpStr);
@@ -502,5 +514,43 @@ ifolder_client_get_config_key_file (GError **error)
 static void
 load_domains (iFolderClient *client, GError **error)
 {
-	g_message ("FIXME: Implement load_domains() in ifolder-client.cpp");
+	iFolderClientPrivate *priv;
+	IFDomain *core_domain;
+	iFolderDomain *domain;
+	IFDomainIterator i = IFDomain::GetDomains();
+
+	if (client == NULL)
+	{
+		g_set_error(error,
+					IFOLDER_CLIENT_ERROR,
+					IFOLDER_ERR_NOT_INITIALIZED,
+					_("The iFolder Client is not initialized."));
+		return;
+	}
+	
+	priv = IFOLDER_CLIENT_GET_PRIVATE (client);
+
+	core_domain = i.Next();
+	while (core_domain != NULL)
+	{
+		domain = ifolder_domain_new ();
+
+		ifolder_domain_set_core_domain (domain, core_domain);
+	
+		ifolder_domain_set_id (domain, core_domain->m_ID);
+		ifolder_domain_set_name (domain, core_domain->m_Name);
+		ifolder_domain_set_description (domain, core_domain->m_Description);
+		ifolder_domain_set_version (domain, "FIXME: No Version");
+		ifolder_domain_set_host_address (domain, core_domain->m_MasterUrl);
+		ifolder_domain_set_machine_name (domain, "FIXME: No Machine Name");
+		ifolder_domain_set_os_version (domain, "FIXME: Get OS Version");
+		ifolder_domain_set_user_name (domain, core_domain->m_UserName);
+		
+		/* FIXME: Fix the following code */
+		ifolder_domain_set_is_authenticated (domain, FALSE);
+		ifolder_domain_set_is_default (domain, FALSE);
+		ifolder_domain_set_is_active (domain, TRUE);
+
+		core_domain = i.Next();
+	}
 }

@@ -28,6 +28,8 @@
 
 #include <unistd.h> /* FIXME: Remove this when done spoofing things with sleep() */
 
+#include <IFDomain.h>
+
 #include "ifolder-domain.h"
 #include "ifolder-private.h"
 
@@ -46,6 +48,8 @@ struct _iFolderDomainPrivate
 	gboolean is_default;
 	gboolean is_active;
 	gpointer user_data;
+	
+	IFDomain *core_domain;
 };
 
 #define IFOLDER_DOMAIN_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), IFOLDER_DOMAIN_TYPE, iFolderDomainPrivate))
@@ -99,6 +103,8 @@ static void ifolder_domain_init(iFolderDomain *domain)
 	priv->is_default = FALSE;
 	priv->is_active = FALSE;
 	priv->user_data = NULL;
+	
+	priv->core_domain = NULL;
 }
 
 static void ifolder_domain_finalize(GObject *object)
@@ -559,6 +565,22 @@ ifolder_domain_set_user_data(iFolderDomain *domain, gpointer user_data)
 	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
 	
 	priv->user_data = user_data;
+}
+
+void
+ifolder_domain_set_core_domain (iFolderDomain *domain, IFDomain *core_domain)
+{
+	iFolderDomainPrivate *priv;
+
+	if (domain == NULL)
+	{
+		g_critical("domain is NULL!");
+		return;
+	}
+
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+	
+	priv->core_domain = core_domain;
 }
 
 void
