@@ -1,11 +1,17 @@
 
 #include <gtk/gtk.h>
 
+#include <ifolder-client.h>
+#include "../linux/gnome-applet/preferences-window.h"
+
+iFolderClient *ifolder_client = NULL;
+
 /* This is a callback function. The data arguments are ignored
  * in this example. More on callbacks below. */
 static void hello( GtkWidget *widget,
                    gpointer   data )
 {
+	ifa_show_preferences_window();
     g_print ("Hello World\n");
 }
 
@@ -37,6 +43,8 @@ static void destroy( GtkWidget *widget,
 int main( int   argc,
           char *argv[] )
 {
+	GError *err = NULL;
+
     /* GtkWidget is the storage type for widgets */
     GtkWidget *window;
     GtkWidget *button;
@@ -44,7 +52,18 @@ int main( int   argc,
     /* This is called in all GTK applications. Arguments are parsed
      * from the command line and are returned to the application. */
     gtk_init (&argc, &argv);
-    
+
+	if (argc < 2)
+	{
+		g_message("FIXME: Determine what the default config directory should be");
+		ifolder_client = ifolder_client_initialize(NULL, &err);
+	}
+	else
+	{
+		g_message("FIXME: Validate that argv[1] is a valid directory...or at least that the syntax is correct.");
+		ifolder_client = ifolder_client_initialize(argv[1], &err);
+	}
+
     /* create a new window */
     window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
     
@@ -77,9 +96,9 @@ int main( int   argc,
     /* This will cause the window to be destroyed by calling
      * gtk_widget_destroy(window) when "clicked".  Again, the destroy
      * signal could come from here, or the window manager. */
-    g_signal_connect_swapped (G_OBJECT (button), "clicked",
-			      G_CALLBACK (gtk_widget_destroy),
-                              G_OBJECT (window));
+ //   g_signal_connect_swapped (G_OBJECT (button), "clicked",
+	//		      G_CALLBACK (gtk_widget_destroy),
+      //                        G_OBJECT (window));
     
     /* This packs the button into the window (a gtk container). */
     gtk_container_add (GTK_CONTAINER (window), button);
@@ -94,6 +113,8 @@ int main( int   argc,
      * and waits for an event to occur (like a key press or
      * mouse event). */
     gtk_main ();
-    
+
+	ifolder_client_uninitialize(ifolder_client, &err);
+
     return 0;
 }

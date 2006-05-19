@@ -26,6 +26,7 @@ include ../../../makefiledefs.mingw
 ##
 
 TARGET = iFolder3
+TRAYAPP_SRC := ../linux/gnome-applet
 
 ##
 ## VARIABLE DEFINITIONS
@@ -60,7 +61,7 @@ INCLUDE_PATHS =		-I$(IFOLDER_SRC)/libifolder \
 
 
 
-LIB_PATHS =		-L$(IFOLDER_SRC)/core \
+EXE_LIB_PATHS =		-L$(IFOLDER_SRC)/core \
 			-L$(IFOLDER_SRC)/libifolder \
 			-L$(GTK_TOP)/lib \
 			-L/mingw/lib
@@ -69,7 +70,12 @@ LIB_PATHS =		-L$(IFOLDER_SRC)/core \
 ##  SOURCES, OBJECTS
 ##
 
-EXE_C_SRC = 		main.c
+EXE_C_SRC = 		main.c \
+			$(TRAYAPP_SRC)/account-wizard.c	\
+			$(TRAYAPP_SRC)/preferences-window.c	\
+			$(TRAYAPP_SRC)/util.c			\
+			$(TRAYAPP_SRC)/wait-dialog.c
+
 
 EXE_OBJECTS = $(EXE_C_SRC:%.c=%.o) $(RC_SRC:%.rc=%.o) 
 
@@ -77,19 +83,8 @@ EXE_OBJECTS = $(EXE_C_SRC:%.c=%.o) $(RC_SRC:%.rc=%.o)
 ## LIBRARIES
 ##
 
-EXE_LIBS =	-lglib-2.0 \
-		-lgthread-2.0 \
-		-lgobject-2.0 \
-		-lgtk-win32-2.0 \
-		-lgdk_pixbuf-2.0 \
-		-lgdk-win32-2.0 \
-		-lintl \
-		-lstdc++ \
-		-lwsock32 \
-		-lifolder3-core
 
-
-EXE_LIBS =	-lcairo \
+EXE_LIBS =		-lcairo \
 			-lcharset \
 			-lgdk_pixbuf-2.0 \
 			-lgdk-win32-2.0 \
@@ -119,7 +114,7 @@ EXE_LIBS =	-lcairo \
 
 # How to make a C file
 %.o: %.c
-	$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(DEFINES) -c $< -o $@
+	$(CXX) $(CFLAGS) $(INCLUDE_PATHS) $(DEFINES) -c $< -o $@
 
 # How to make an RC file
 %.o: %.rc
@@ -141,16 +136,14 @@ install: all
 #
 
 $(TARGET).exe: $(EXE_OBJECTS)
-	$(CC) $(LDFLAGS) $(EXE_OBJECTS) $(LIB_PATHS) $(EXE_LIBS) -o $(TARGET).exe
+	$(CXX) $(LDFLAGS) $(EXE_OBJECTS) $(EXE_LIB_PATHS) $(EXE_LIBS) -o $(TARGET).exe
 
 ##
 ## CLEAN RULES
 ##
 
 clean:
-	rm -rf *.o ./win32/*.o
-	rm -rf $(TARGET).dll
-	rm -rf $(TARGET).lib
+	rm -rf *.o $(TRAYAPP_SRC)/*.o
 	rm -rf $(TARGET).exe
 
 
