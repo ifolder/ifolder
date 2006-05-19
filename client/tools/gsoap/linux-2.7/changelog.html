@@ -485,7 +485,7 @@ pointers std::string**). To obtain old behavior, add entry "xsd:string =
 schema attributes.</li>
 <li>Fixed MB char handling.</li>
 </ul>
-<li>Version 2.7.0 (09/10/2004)</li>
+<li>Version 2.7.0a/b/c/d/e/f (09/10/2004, 2/1/2005)</li>
 <ul>
 <li>Added multipart/related support for SOAP with MIME attachments (SwA).</li>
 <li>Added API functions for DIME open and closed layout support.</li>
@@ -494,7 +494,10 @@ schema attributes.</li>
 <li>Added soap.authrealm string attribute to set basic authentication realm.</li>
 <li>Added soap.prolog string attribute to output optional XML prolog with processing instructions and directives.</li>
 <li>Added soapcpp2 option -t.</li>
-<li>Added wsdl2h option -e.</li>
+<li>Added wsdl2h options -e and -i.</li>
+<li>Added Palm OS and Symbian instructions and examples.</li>
+<li>Added xml-rpc support and examples.</li>
+<li>New mod_gsoap directory with modules for Apache 1.x/2.x, IIS, and WinInet</li>
 <li>Improved XML validation with SOAP_XML_STRICT flag.</li>
 <li>Improved memory footprint (reduced code size and reduced serialization overhead).</li>
 <li>Improved runtime id-ref serialization and deserialization.</li>
@@ -503,6 +506,122 @@ schema attributes.</li>
 <li>Updated webserver.c.</li>
 <li>Fixed issues with namespace qualification in doc/lit messages.</li>
 <li>Fixed SOAP_HREF error.</li>
+<li>Fixed proxy+SSL+zlib+chunking.</li>
+<li>Fixed SSL select() polling in frecv().</li>
+<li>Fixed wsdl2h multidimensional SOAP arrays generate problem.</li>
+</ul>
+<li>Version 2.7.1 (03/31/2005)</li>
+<ul>
+<li>Added new style of C++ proxy/object generation (objects derived from
+soap struct), enabled with soapcpp2 option -i.</li>
+<li>Added new features to wsdl2h generation to enable user-defined class/struct extensions such as member data and functions which are declared in typemap.dat.</li>
+<li>Added MIME multipart/form-data parsing to support HTTP POST HTML form handling (example included in samples/webserver).</li>
+<li>Added built-in memory leak detection enabled with -DDEBUG.</li>
+<li>Added UDDI v2 API and examples.</li>
+<li>Added 'WS' directory with WS-* protocols, such as WS-Addressing. This part will mature as more WS-* protocols will be added over time.</li>
+<li>Added fseterror() callback.</li>
+<li>Improved wsdl2h code output.</li>
+<li>Enhanced Web server sample code, and httpget and logging plugins.</li>
+<li>Fixed base64/hexBinary XML attribute serialization.</li>
+<li>Fixed a missing min/maxOccurs check for validation.</li>
+</ul>
+<li>Version 2.7.2 (05/11/2005)</li>
+<ul>
+<li>Added SOAP-over-UDP IPv4/IPv6 support with examples.</li>
+<li>Added UDDI v2 API publish example.</li>
+<li>Improved wsdl2h parser accepting multiple WSDL/XSD files from the command
+line.</li>
+<li>Fixed wsdl2h schema import from included schema bug.</li>
+<li>Fixed SOAP 1.2 Fault Subcode handling.</li>
+</ul>
+<li>Version 2.7.3 (06/27/2005)</li>
+<ul>
+<li>Added MTOM attachment support.</li>
+<li>Added 'plugin' directory with example plug-ins.</li>
+<li>Added 'import' directory for commonly #import-ed files such as stlvector.h.</li>
+<li>Added HTTP digest authentication plug-in 'plugins/httpda.h'.</li>
+<li>Added new import feature to wsdl2h using ns=&lt;uri&gt; convention for
+typemap.dat files, which enables wsdl2h to parse a WSDL that imports known
+WSDLs/schemas such as XOP, XML MIME, and WS-Addressing without actually
+reading the imported WSDL/schemas.</li>
+<li>Added soapcpp2 options -C and -S to generate client- or server-only
+codes.</li>
+<li>Added multi-path support for soappcpp2 option -I.</li>
+<li>Added C and C++ examples to combine multiple clients and services into one
+executable, see the samples/components directory in the package.</li>
+<li>Improved soapcpp2 option -e to generate SOAP RPC encoding style client/server codes by
+default (instead of document/literal by default).</li>
+<li>Fixed wsdl2h circular import of schemas.</li>
+<li>Fixed attributeGroup handling in wsdl2h.</li>
+<li>Fixed soapcpp2 handling of 'invisible' tags, e.g. __any, that should only be
+populated after all else failed to match the delivered XML content.</li>
+<li>Fixed validation of numeric enum constants with SOAP_XML_STRICT validation.</li>
+<li>Fixed engine's spurious log file generation issue.</li>
+</ul>
+<li>Version 2.7.4 (07/24/2005)</li>
+<ul>
+<li>Added union serialization.</li>
+<li>Added '//gsoap ... type-documentation:' directive.</li>
+<li>Added '//gsoap ... method-mime-type:' directive.</li>
+<li>Added wsdl2h option -g for generating global element/attribute declarations for building modular .h files.</li>
+<li>Added wsdl2 option -y for generating typedef synonyms for structs and enums, with improved handling of typedefs by soapcpp2.</li>
+<li>Added wsdl2 option -u to disable union generation for xs:choice.</li>
+<li>Improved wsdl2h documentation generation.</li>
+<li>Improved wsdl2h and soapcpp2 MIME bindings.</li>
+<li>Improved dynamic memory allocation in engine with look-aside buffering.</li>
+<li>Fixed wsdl2h xs:complexContent/extension/attributeGroup translation.</li>
+<li>Fixed wsdl2h xs:choice with min/maxOccurs != 1 translation.</li>
+<li>Fixed wsdl2h soap:body parts attribute.</li>
+</ul>
+<li>Version 2.7.5 (08/01/2005)</li>
+<ul>
+<li>Added xs:redefine support to wsdl2h.</li>
+<li>Added HTML POST application/x-www-form-urlencoded plugin httpform.c
+(demo samples/webserver).</li>
+<li>Improved wsdl2h output.</li>
+<li>Fixed wsdl2h handling of duplicate values in single enum list.</li>
+</ul>
+<li>Version 2.7.6 revision a/b/c/d/e (08/19/2005-02/18/06)</li>
+<ul>
+<li>Added WS-Security authentication, tokens, and signatures with new 'wsse'
+plugin, see documentation in 'doc' directory and 'samples/wsse'.</li>
+<li>Added 'doc' directory for documentation and moved soapdoc2.html and soapdoc2.pdf.</li>
+<li>Added SOAP_XML_INDENT flag.</li>
+<li>Added soap_sender_fault_subcode() and soap_receiver_fault_subcode() for SOAP 1.2 subcodes.</li>
+<li>Added WITH_DOM compile flag to enable flushing serialized and deserialized
+data to DOM (as well as a stream).</li>
+<li>Added soapcpp2 option -L.</li>
+<li>Added soapcpp2 option -a.</li>
+<li>Added wsdl2h option -a (for backward compatibility).</li>
+<li>Added wsdl2h option -d.</li>
+<li>Added WITH_TCPFIN comile flag to enable optional shutdown with how=1 (TCPFIN) after final sends to force EOF on other side (used to be the default behavior).</li>
+<li>Added schema substitutionGroup support.</li>
+<li>Added soap_ssl_init().</li>
+<li>Improved DOM implementation and documentation.</li>
+<li>Improved AS400 portability.</li>
+<li>Improved schema choice support.</li>
+<li>Fixed wsdl2h multiple schema include issue.</li>
+<li>Fixed soaps2dateTime and soap_timegm functions when timegm is not available.</li>
+<li>Fixed exc-c14n formatting.</li>
+<li>Fixed SOAP 1.2 fault handling.</li>
+<li>Fixed missing soap_flag___item2 issue.</li>
+<li>Fixed partial MIME boundary parsing issue.</li>
+<li>Fixed base64 parsing with WITH_FAST.</li>
+<li>Fixed MIME encoding of \r\r sequence.</li>
+<li>Fixed QName normalization issue.</li>
+<li>Fixed relative path schema import.</li>
+<li>Fixed MTOM cid matching with URL encoded IDs.</li>
+<li>Fixed wide-character (wchar_t*) XML attribute handling.</li>
+<li>Fixed std::vector element id-ref ordering in deserializer.</li>
+</ul>
+<li>Version 2.7.7 (04/07/2006)</li>
+<ul>
+<li>Added streaming MTOM support (see also example in samples/mtom-stream).</li>
+<li>Added long double serialization support with custom serializer (custom/long_double.h).</li>
+<li>Improved time_t and struct tm (custom/struct_tm.h) serialization.</li>
+<li>Fixed issue with a wrongly generated namespace map entry.</li>
+<li>Fixed PalmOS socket connection issues.</li>
+<li>Fixed XML attributes with bitmask enumeration (enum*) values.</li>
 </ul>
 </ul>
 
