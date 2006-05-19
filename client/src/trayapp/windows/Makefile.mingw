@@ -1,0 +1,156 @@
+#######################################################################
+#  Makefile.mingw
+#
+#  Copyright (C) 2006 Novell, Inc.
+#
+#  This program is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU General Public
+#  License as published by the Free Software Foundation; either
+#  version 2 of the License, or (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#  General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public
+#  License along with this program; if not, write to the Free
+#  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+#
+#######################################################################
+
+include ../../../makefiledefs.mingw
+
+##
+## VARIABLE DEFINITIONS
+##
+
+TARGET = iFolder3
+
+##
+## VARIABLE DEFINITIONS
+##
+
+# Compiler and Linker Options
+
+CFLAGS = -mms-bitfields
+
+DEFINES =
+
+LDFLAGS = -mwindows
+
+#-mconsole
+#-mwindows
+
+WINDRES := windres
+
+##
+## INCLUDE PATHS
+##
+
+INCLUDE_PATHS =		-I$(IFOLDER_SRC)/libifolder \
+			-I$(GTK_TOP)/include \
+			-I$(GTK_TOP)/include/gtk-2.0 \
+			-I$(GTK_TOP)/include/glib-2.0 \
+			-I$(GTK_TOP)/include/pango-1.0 \
+			-I$(GTK_TOP)/include/atk-1.0 \
+			-I$(GTK_TOP)/lib/glib-2.0/include \
+			-I$(GTK_TOP)/lib/gtk-2.0/include \
+			-I$(GTK_TOP)/include/cairo
+
+
+
+LIB_PATHS =		-L$(IFOLDER_SRC)/core \
+			-L$(IFOLDER_SRC)/libifolder \
+			-L$(GTK_TOP)/lib \
+			-L/mingw/lib
+
+##
+##  SOURCES, OBJECTS
+##
+
+EXE_C_SRC = 		main.c
+
+EXE_OBJECTS = $(EXE_C_SRC:%.c=%.o) $(RC_SRC:%.rc=%.o) 
+
+##
+## LIBRARIES
+##
+
+EXE_LIBS =	-lglib-2.0 \
+		-lgthread-2.0 \
+		-lgobject-2.0 \
+		-lgtk-win32-2.0 \
+		-lgdk_pixbuf-2.0 \
+		-lgdk-win32-2.0 \
+		-lintl \
+		-lstdc++ \
+		-lwsock32 \
+		-lifolder3-core
+
+
+EXE_LIBS =	-lcairo \
+			-lcharset \
+			-lgdk_pixbuf-2.0 \
+			-lgdk-win32-2.0 \
+			-lgettextpo \
+			-lglib-2.0 \
+			-lgmodule-2.0 \
+			-lgobject-2.0 \
+			-lgthread-2.0 \
+			-lgtk-win32-2.0 \
+			-liconv \
+			-lintl \
+			-llibpng \
+			-lpango-1.0 \
+			-lpangocairo-1.0 \
+			-lpangoft2-1.0 \
+			-lpangowin32-1.0 \
+			-lzdll \
+	    		-lstdc++ \
+			-lwsock32 \
+			-lifolder3-core \
+			-lifolder3lib
+			
+
+##
+## RULES
+##
+
+# How to make a C file
+%.o: %.c
+	$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(DEFINES) -c $< -o $@
+
+# How to make an RC file
+%.o: %.rc
+	$(WINDRES) -i $< -o $@
+
+##
+## TARGET DEFINITIONS
+##
+
+.PHONY: all clean
+
+all: $(TARGET).exe
+
+install: all
+	cp $(GAIM_SRC)/gaim.exe $(GAIM_SRC)/gaim.dll $(GAIM_INSTALL_DIR)
+
+#
+# BUILD EXE
+#
+
+$(TARGET).exe: $(EXE_OBJECTS)
+	$(CC) $(LDFLAGS) $(EXE_OBJECTS) $(LIB_PATHS) $(EXE_LIBS) -o $(TARGET).exe
+
+##
+## CLEAN RULES
+##
+
+clean:
+	rm -rf *.o ./win32/*.o
+	rm -rf $(TARGET).dll
+	rm -rf $(TARGET).lib
+	rm -rf $(TARGET).exe
+
+

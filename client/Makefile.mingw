@@ -16,7 +16,7 @@ include makefiledefs.mingw
 all:
 	$(MAKE) -C $(IFOLDER_CORE) -f Makefile.mingw
 	$(MAKE) -C $(IFOLDER_LIB) -f Makefile.mingw
-#	$(MAKE) -C $(IFOLDER_APP) -f Makefile.mingw
+	$(MAKE) -C $(IFOLDER_APP) -f Makefile.mingw
 
 install: all
 	mkdir -p $(IFOLDER_INSTALL_DIR)
@@ -39,5 +39,5 @@ install: all
 clean:
 	$(MAKE) -C $(IFOLDER_CORE) -f Makefile.mingw clean
 	$(MAKE) -C $(IFOLDER_LIB) -f Makefile.mingw clean
-#	$(MAKE) -C $(IFOLDER_APP) -f Makefile.mingw clean
+	$(MAKE) -C $(IFOLDER_APP) -f Makefile.mingw clean
 #	rm -rf config.h $(IFOLDER_INSTALL_DIR)
