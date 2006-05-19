@@ -116,6 +116,9 @@ static void ifolder_domain_finalize(GObject *object)
 	g_free(self->priv->user_name);
 
 	g_free(self->priv);
+	
+	/* Chain up the parent class */
+	G_OBJECT_CLASS (parent_class)->dispose (object);
 }
 
 static void ifolder_domain_dispose(GObject *object)
