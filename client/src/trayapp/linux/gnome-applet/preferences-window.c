@@ -363,7 +363,7 @@ create_accounts_page(IFAPreferencesWindow *pw)
 	gtk_container_add(GTK_CONTAINER(sw), pw->accTreeView);
 	gtk_box_pack_start(GTK_BOX(pw->accountsPage), sw, true, true, 0);
 	
-	pw->accTreeStore = gtk_list_store_new(1, G_TYPE_OBJECT);
+	pw->accTreeStore = gtk_list_store_new(1, G_TYPE_POINTER);
 	gtk_tree_view_set_model(GTK_TREE_VIEW(pw->accTreeView), GTK_TREE_MODEL(pw->accTreeStore));
 	
 	/* Online Column */
@@ -400,6 +400,8 @@ create_accounts_page(IFAPreferencesWindow *pw)
 	GtkTreeViewColumn *nameColumn = gtk_tree_view_column_new();
 	gtk_tree_view_column_set_title(nameColumn, _("User Name"));
 	GtkCellRenderer *ncrt = gtk_cell_renderer_text_new();
+	g_object_set(G_OBJECT(ncrt), "xpad", 5, NULL);
+	gtk_tree_view_column_pack_start(nameColumn, ncrt, true);
 	gtk_tree_view_column_set_cell_data_func(nameColumn,
 											ncrt,
 											(GtkTreeCellDataFunc)name_cell_text_data_func,
@@ -633,6 +635,7 @@ online_cell_toggle_data_func(GtkTreeViewColumn *column, GtkCellRenderer *cell, G
 
 	iFolderDomain *domain;
 	gtk_tree_model_get (model, iter, 0, &domain, -1);
+//	g_object_unref (domain);	/* gtk_tree_model_get() appears to increment the ref count */
 	
 	if (ifolder_domain_is_authenticated (domain))
 		gtk_cell_renderer_toggle_set_active (GTK_CELL_RENDERER_TOGGLE (cell), TRUE);
@@ -657,6 +660,7 @@ online_toggled(GtkCellRendererToggle *cell_renderer, gchar *path, IFAPreferences
 	}
 	
 	gtk_tree_model_get (GTK_TREE_MODEL (pw->accTreeStore), &iter, 0, &domain, -1);
+//	g_object_unref (domain);	/* gtk_tree_model_get() appears to increment the ref count */
 	
 	// Disable the ability for the user to toggle the checkbox during this operation
 	memset (&val, 0, sizeof(GValue));
@@ -710,6 +714,7 @@ server_cell_text_data_func(GtkTreeViewColumn *column, GtkCellRenderer *cell, Gtk
 	iFolderDomain *domain;
 	GValue val = { 0 };
 	gtk_tree_model_get (model, iter, 0, &domain, -1);
+//	g_object_unref (domain);	/* gtk_tree_model_get() appears to increment the ref count */
 	
 	memset (&val, 0, sizeof(GValue));
 	g_value_init (&val, G_TYPE_STRING);
@@ -724,6 +729,7 @@ name_cell_text_data_func(GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTr
 	iFolderDomain *domain;
 	GValue val = { 0 };
 	gtk_tree_model_get (model, iter, 0, &domain, -1);
+//	g_object_unref (domain);	/* gtk_tree_model_get() appears to increment the ref count */
 	
 	memset (&val, 0, sizeof(GValue));
 	g_value_init (&val, G_TYPE_STRING);
@@ -764,6 +770,7 @@ on_remove_account(GtkButton *widget, IFAPreferencesWindow *pw)
 		if (gtk_tree_selection_get_selected (selection, NULL, &iter))
 		{
 			gtk_tree_model_get (GTK_TREE_MODEL (pw->accTreeStore), &iter, 0, &domain, -1);
+//			g_object_unref (domain);	/* gtk_tree_model_get() appears to increment the ref count */
 			
 			dialog =
 				gtk_message_dialog_new_with_markup (GTK_WINDOW (pw->window),
@@ -996,6 +1003,7 @@ domain_removed_cb (iFolderClient *client, iFolderDomain *domain, IFAPreferencesW
 	while (gtk_list_store_iter_is_valid (pw->accTreeStore, &iter))
 	{
 		gtk_tree_model_get (GTK_TREE_MODEL (pw->accTreeStore), &iter, 0, &tmpDomain, -1);
+//		g_object_unref (domain);	/* gtk_tree_model_get() appears to increment the ref count */
 		
 		if (strcmp (ifolder_domain_get_id (tmpDomain), ifolder_domain_get_id (domain)) == 0)
 		{

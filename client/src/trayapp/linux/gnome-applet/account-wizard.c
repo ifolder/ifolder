@@ -694,6 +694,7 @@ notebook_page_switched(GtkNotebook *notebook, GtkNotebookPage *page, guint page_
 			gtk_label_set_text(GTK_LABEL(aw->summaryPageTextLabel), summary_text->str);
 			g_string_free(summary_text, true);
 
+			gtk_widget_set_sensitive(aw->cancelButton, false);
 			gtk_widget_set_sensitive(aw->backButton, false);
 			gtk_widget_set_sensitive(aw->finishButton, true);
 			

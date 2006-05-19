@@ -101,27 +101,19 @@ static void ifolder_domain_init(GTypeInstance *instance, gpointer g_class)
 
 static void ifolder_domain_finalize(GObject *object)
 {
-	g_debug ("ifolder_domain_finalize()");
+	g_message (" ***** ifolder_domain_finalize() ***** ");
 	
 	iFolderDomain *self = IFOLDER_DOMAIN(object);
 
 	/* custom stuff */
-	if (self->priv->id)
-		g_free(self->priv->id);
-	if (self->priv->name)
-		g_free(self->priv->name);
-	if (self->priv->description)
-		g_free(self->priv->description);
-	if (self->priv->version)
-		g_free(self->priv->version);
-	if (self->priv->host_address)
-		g_free(self->priv->host_address);
-	if (self->priv->machine_name)
-		g_free(self->priv->machine_name);
-	if (self->priv->os_version)
-		g_free(self->priv->os_version);
-	if (self->priv->user_name)
-		g_free(self->priv->user_name);
+	g_free(self->priv->id);
+	g_free(self->priv->name);
+	g_free(self->priv->description);
+	g_free(self->priv->version);
+	g_free(self->priv->host_address);
+	g_free(self->priv->machine_name);
+	g_free(self->priv->os_version);
+	g_free(self->priv->user_name);
 
 	g_free(self->priv);
 }
@@ -134,7 +126,7 @@ static void ifolder_domain_dispose(GObject *object)
 	if (self->priv->dispose_has_run)
 		return;
 	
-	g_debug ("ifolder_domain_dispose()");
+	g_message (" ***** ifolder_domain_dispose() ***** ");
 	
 	/* make sure dispose does not run twice */
 	self->priv->dispose_has_run = TRUE;

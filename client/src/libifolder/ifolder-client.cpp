@@ -83,7 +83,7 @@ ifolder_client_class_init(iFolderClientClass *klass)
 			G_SIGNAL_RUN_LAST,
 			G_STRUCT_OFFSET (iFolderClientClass, domain_added),
 			NULL, NULL,
-			g_cclosure_marshal_VOID__OBJECT,
+			g_cclosure_marshal_VOID__POINTER,
 			G_TYPE_NONE,
 			1,
 			G_TYPE_OBJECT);
@@ -94,7 +94,7 @@ ifolder_client_class_init(iFolderClientClass *klass)
 			G_SIGNAL_RUN_LAST,
 			G_STRUCT_OFFSET (iFolderClientClass, domain_removed),
 			NULL, NULL,
-			g_cclosure_marshal_VOID__OBJECT,
+			g_cclosure_marshal_VOID__POINTER,
 			G_TYPE_NONE,
 			1,
 			G_TYPE_OBJECT);
@@ -433,7 +433,6 @@ ifolder_client_add_domain(iFolderClient *client, const gchar *host_address, cons
 	ifolder_domain_set_is_active (domain, TRUE);
 	
 	priv->domains = g_slist_prepend (priv->domains, domain);
-	g_object_ref (domain); /* FIXME: Should I be doing this here? */
 
 	sleep (3); /* FIXME: Remove this sleep() call that simulates work */
 	
