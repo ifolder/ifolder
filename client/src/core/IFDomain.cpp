@@ -52,80 +52,6 @@ IFDomain::IFDomain()
 	m_UserID = NULL;
 }
 	
-IFDomain::IFDomain(const gchar* userName, const gchar* password, const gchar* host)
-{
-	m_DomainService.soap->mode |= SOAP_C_UTFSTRING;
-	m_DomainService.soap->imode |= SOAP_C_UTFSTRING;
-	m_DomainService.soap->omode |= SOAP_C_UTFSTRING;
-	
-	// build the url to the host;
-	gchar** urlparts = g_strsplit(m_DomainService.endpoint, "/", 4);
-	m_MasterUrl = g_strjoin("/", urlparts[0], urlparts[1], host, urlparts[3], NULL);
-	m_HomeUrl = g_strdup(m_MasterUrl);
-	m_DomainService.endpoint = m_MasterUrl;
-	g_strfreev(urlparts);
-	
-	// Make sure that we do not already belong to this domain.
-	_ds__GetDomainID req;
-	_ds__GetDomainIDResponse resp;
-	if (m_DomainService.__ds__GetDomainID(&req, &resp) == 0)
-	{
-		m_ID = g_strdup(resp.GetDomainIDResult);
-	}
-	else
-	{
-		soap_print_fault(m_DomainService.soap, stderr);
-		soap_print_fault_location(m_DomainService.soap, stderr);
-	}
-
-	/*
-	// Get the home server.
-	_ds__GetHomeServer hsReq;
-	_ds__GetHomeServerResponse hsResp;
-	domainService.__ds__GetHomeServer(&hsReq, &hsResp);
-	*/
-
-	// Provision the user;
-	m_DomainService.soap->userid = (char*)userName;
-	m_DomainService.soap->passwd = (char*)password;
-	_ds__ProvisionUser puReq;
-	puReq.user = (char*)userName;
-	puReq.password = (char*)password;
-	_ds__ProvisionUserResponse puResp;
-	ds__ProvisionInfo *pvInfo;
-	if (m_DomainService.__ds__ProvisionUser(&puReq, &puResp) == 0)
-	{
-		pvInfo = puResp.ProvisionUserResult;
-		m_UserID = g_strdup(pvInfo->UserID);
-		m_UserName = g_strdup(userName);
-		m_UserPassword = g_strdup(password);
-		m_POBoxID = g_strdup(pvInfo->POBoxID);
-		printf("provisioned\n");
-	}
-	else
-	{
-		soap_print_fault(m_DomainService.soap, stderr);
-		soap_print_fault_location(m_DomainService.soap, stderr);
-	}
-
-	// Now get the domain Info.
-	_ds__GetDomainInfo diReq;
-	_ds__GetDomainInfoResponse diResp;
-	diReq.userID = pvInfo->UserID;
-	if (m_DomainService.__ds__GetDomainInfo(&diReq, &diResp) == 0)
-	{
-		ds__DomainInfo *dInfo = diResp.GetDomainInfoResult;
-		m_ID = g_strdup(dInfo->ID);
-		m_Description = g_strdup(dInfo->Description);
-		m_Name = g_strdup(dInfo->Name);
-	}
-	else
-	{
-		soap_print_fault(m_DomainService.soap, stderr);
-		soap_print_fault_location(m_DomainService.soap, stderr);
-	}
-}
-
 IFDomain::~IFDomain(void)
 {
 	g_free(m_Name);
@@ -139,11 +65,80 @@ IFDomain::~IFDomain(void)
 	g_free(m_UserID);
 }
 
-IFDomain& IFDomain::Add(const gchar* userName, const gchar* password, const gchar* host)
+IFDomain* IFDomain::Add(const gchar* userName, const gchar* password, const gchar* host)
 {
-	IFDomain *pDomain = new IFDomain(userName, password, host);
-	IFDomainList::Insert(pDomain);
-	return *pDomain;
+	gboolean failed = true;
+	IFDomain *pDomain = new IFDomain();
+	Domain* domainService = &pDomain->m_DomainService;
+	// build the url to the host;
+	gchar** urlparts = g_strsplit(domainService->endpoint, "/", 4);
+	pDomain->m_MasterUrl = g_strjoin("/", urlparts[0], urlparts[1], host, urlparts[3], NULL);
+	pDomain->m_HomeUrl = g_strdup(pDomain->m_MasterUrl);
+	domainService->endpoint = pDomain->m_MasterUrl;
+	g_strfreev(urlparts);
+	
+	// Make sure that we do not already belong to this domain.
+	_ds__GetDomainID req;
+	_ds__GetDomainIDResponse resp;
+	if (domainService->__ds__GetDomainID(&req, &resp) == 0)
+	{
+		pDomain->m_ID = g_strdup(resp.GetDomainIDResult);
+		IFDomain *existingDomain = IFDomain::GetDomainByID(pDomain->m_ID);
+		if (existingDomain != NULL)
+		{
+			// We have already joined this domain.
+			delete pDomain;
+			return existingDomain;
+		}
+		/*
+		// Get the home server.
+		_ds__GetHomeServer hsReq;
+		_ds__GetHomeServerResponse hsResp;
+		domainService->__ds__GetHomeServer(&hsReq, &hsResp);
+		*/
+
+		// Provision the user;
+		domainService->soap->userid = (char*)userName;
+		domainService->soap->passwd = (char*)password;
+		_ds__ProvisionUser puReq;
+		puReq.user = (char*)userName;
+		puReq.password = (char*)password;
+		_ds__ProvisionUserResponse puResp;
+		ds__ProvisionInfo *pvInfo;
+		if (domainService->__ds__ProvisionUser(&puReq, &puResp) == 0)
+		{
+			pvInfo = puResp.ProvisionUserResult;
+			pDomain->m_UserID = g_strdup(pvInfo->UserID);
+			pDomain->m_UserName = g_strdup(userName);
+			pDomain->m_UserPassword = g_strdup(password);
+			pDomain->m_POBoxID = g_strdup(pvInfo->POBoxID);
+			printf("provisioned\n");
+
+			// Now get the domain Info.
+			_ds__GetDomainInfo diReq;
+			_ds__GetDomainInfoResponse diResp;
+			diReq.userID = pvInfo->UserID;
+			if (domainService->__ds__GetDomainInfo(&diReq, &diResp) == 0)
+			{
+				ds__DomainInfo *dInfo = diResp.GetDomainInfoResult;
+				pDomain->m_ID = g_strdup(dInfo->ID);
+				pDomain->m_Description = g_strdup(dInfo->Description);
+				pDomain->m_Name = g_strdup(dInfo->Name);
+
+				// Add the domain to the list and return and set success.
+				IFDomainList::Insert(pDomain);
+				failed = false;
+			}
+		}
+	}
+	if (failed)
+	{
+		soap_print_fault(domainService->soap, stderr);
+		soap_print_fault_location(domainService->soap, stderr);
+		delete pDomain;
+		return NULL;
+	}
+	return pDomain;
 }
 
 int IFDomain::Remove()
@@ -255,12 +250,12 @@ IFDomainIterator IFDomain::GetDomains()
 	return IFDomainList::GetIterator();
 }
 
-IFDomain& IFDomain::GetDomainByID(const gchar *pID)
+IFDomain* IFDomain::GetDomainByID(const gchar *pID)
 {
 	return IFDomainList::GetDomainByID(pID);
 }
 
-IFDomain& IFDomain::GetDomainByName(const gchar *pName)
+IFDomain* IFDomain::GetDomainByName(const gchar *pName)
 {
 	return IFDomainList::GetDomainByName(pName);
 }
@@ -426,7 +421,7 @@ IFDomainIterator IFDomainList::GetIterator()
 	return iterator;
 }
 
-IFDomain& IFDomainList::GetDomainByID(const gchar *pID)
+IFDomain* IFDomainList::GetDomainByID(const gchar *pID)
 {
 	IFDomainIterator dIter = GetIterator();
 	IFDomain *pDomain;
@@ -435,10 +430,10 @@ IFDomain& IFDomainList::GetDomainByID(const gchar *pID)
 		if (strcmp(pDomain->m_ID, pID) == 0)
 			break;
 	}
-	return *pDomain;
+	return pDomain;
 }
 
-IFDomain& IFDomainList::GetDomainByName(const gchar *pName)
+IFDomain* IFDomainList::GetDomainByName(const gchar *pName)
 {
 	IFDomainIterator dIter = GetIterator();
 	IFDomain *pDomain;
@@ -447,7 +442,7 @@ IFDomain& IFDomainList::GetDomainByName(const gchar *pName)
 		if (strcmp(pDomain->m_Name, pName) == 0)
 			break;
 	}
-	return *pDomain;
+	return pDomain;
 }
 
 // DomainParseContext Class
@@ -459,8 +454,17 @@ ParseTree::ParseTree()
 
 ParseTree::~ParseTree()
 {
-	// Free the strings.
+	// Free the XmlNodes.
+	g_node_traverse(m_RootNode, G_IN_ORDER, G_TRAVERSE_ALL, -1, FreeXmlNodes, NULL);
+
 	g_node_destroy(m_RootNode);
+}
+
+gboolean ParseTree::FreeXmlNodes(GNode *pNode, gpointer data)
+{
+	XmlNode *xNode = (XmlNode*)pNode->data;
+	delete xNode;
+	return false;
 }
 
 void ParseTree::StartNode(const gchar *name)

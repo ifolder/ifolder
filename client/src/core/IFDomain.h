@@ -68,19 +68,18 @@ public:
 	
 private:
 	IFDomain();
-	IFDomain(const gchar* userName, const gchar* password, const gchar* host);
+	virtual ~IFDomain(void);
 	gboolean Serialize(FILE *pStream);
 	static IFDomain* DeSerialize(ParseTree *tree, GNode *pDNode);
 	
 public:
-	virtual ~IFDomain(void);
-	static IFDomain& Add(const gchar* userName, const gchar* password, const gchar* host);
+	static IFDomain* Add(const gchar* userName, const gchar* password, const gchar* host);
 	int Remove();
 	int Login();
 	int Logout();
 	static IFDomainIterator GetDomains();
-	static IFDomain& GetDomainByID(const gchar *pID);
-	static IFDomain& GetDomainByName(const gchar *pName);
+	static IFDomain* GetDomainByID(const gchar *pID);
+	static IFDomain* GetDomainByName(const gchar *pName);
 };
 
 class GLIBCLIENT_API IFDomainIterator
@@ -127,8 +126,8 @@ private:
 	static void Insert(IFDomain *pDomain);
 	static gboolean Remove(const gchar *id);
 	static IFDomainIterator IFDomainList::GetIterator();
-	static IFDomain& GetDomainByID(const gchar *pID);
-	static IFDomain& GetDomainByName(const gchar *pName);
+	static IFDomain* GetDomainByID(const gchar *pID);
+	static IFDomain* GetDomainByName(const gchar *pName);
 	void Save();
 	void Restore();
 
@@ -162,6 +161,7 @@ public:
 
 	ParseTree();
 	virtual ~ParseTree();
+	static gboolean FreeXmlNodes(GNode *pNode, gpointer data);
 	void StartNode(const gchar *name);
 	void EndNode();
 	void AddText(const gchar *text, gsize len);

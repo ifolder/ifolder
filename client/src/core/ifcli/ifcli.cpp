@@ -159,9 +159,9 @@ int main(int argc, char* argv[])
 				{
 					printf("Enter Password : ");
 				}
-				IFDomain& pDomain = IFDomain::Add(UserName, Password, HostName);
+				IFDomain* pDomain = IFDomain::Add(UserName, Password, HostName);
 				IFDomainIterator iter = IFDomain::GetDomains();
-				IFDomain *pD;
+				IFDomain *pD = IFDomain::GetDomainByID(pDomain->m_ID);
 				while ((pD = iter.Next()) != NULL)
 				{
 					g_message(pD->m_Name);
