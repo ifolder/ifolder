@@ -198,7 +198,14 @@ void ifolder_client_resume_synchronization(iFolderClient *client, GError **error
  */
 /*@{*/
 
+/**
+ * The returned GSList should be freed by the caller.
+ */
 GSList *ifolder_client_get_all_domains(iFolderClient *client, GError **error);
+
+/**
+ * The returned GSList should be freed by the caller.
+ */
 GSList *ifolder_client_get_all_active_domains(iFolderClient *client, GError **error);
 iFolderDomain *ifolder_client_get_default_domain(iFolderClient *client, GError **error);
 

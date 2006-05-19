@@ -293,7 +293,7 @@ ifolder_client_get_all_domains(iFolderClient *client, GError **error)
 
 	g_debug ("# of domains: %d", g_slist_length (priv->domains));
 	
-	return priv->domains;
+	return g_slist_copy (priv->domains);
 }
 
 GSList *
