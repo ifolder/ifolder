@@ -32,11 +32,9 @@
  */
 typedef struct _iFolderClient iFolderClient;
 typedef struct _iFolderClientClass iFolderClientClass;
-typedef struct _iFolderClientPrivate iFolderClientPrivate;
 
 typedef struct _iFolderDomain iFolderDomain;
 typedef struct _iFolderDomainClass iFolderDomainClass;
-typedef struct _iFolderDomainPrivate iFolderDomainPrivate;
 
 struct _iFolderClient
 {
@@ -45,7 +43,7 @@ struct _iFolderClient
 	/* instance members */
 	
 	/* private */
-	iFolderClientPrivate *priv;
+	gpointer private_data;
 };
 
 struct _iFolderClientClass
@@ -65,7 +63,7 @@ struct _iFolderDomain
 	/* instance members */
 
 	/* private */
-	iFolderDomainPrivate *priv;
+	gpointer private_data;
 };
 
 struct _iFolderDomainClass

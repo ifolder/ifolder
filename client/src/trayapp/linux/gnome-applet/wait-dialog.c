@@ -314,7 +314,7 @@ dialog_hidden (GtkWidget *widget, gpointer user_data)
 static void 
 close_cb (IFAWaitDialog *wait_dialog)
 {
-  IFAWaitDialogPrivate *priv = (IFAWaitDialogPrivate *)wait_dialog->private_data;
+//  IFAWaitDialogPrivate *priv = (IFAWaitDialogPrivate *)wait_dialog->private_data;
 
   gtk_widget_hide (GTK_WIDGET (wait_dialog));
 }

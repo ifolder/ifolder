@@ -71,6 +71,7 @@ extern "C"
  * your program loads, call ifolder_client_initialize().  Before you exit,
  * make sure you call ifolder_client_uninitialize() before your program exits.
  */
+G_BEGIN_DECLS
 
 #define IFOLDER_DEFAULT_CONFIG_FILE_NAME	"ifolder3.ini"
 
@@ -82,7 +83,7 @@ extern "C"
 #define IFOLDER_CLIENT_GET_CLASS(obj)	(G_TYPE_INSTANCE_GET_CLASS ((obj), IFOLDER_CLIENT_TYPE, iFolderClientClass))
 
 /* GObject support */
-GType ifolder_client_get_type (void);
+GType ifolder_client_get_type (void) G_GNUC_CONST;
 
 /**
  * Enumerations
@@ -449,6 +450,8 @@ void (*file_sync_failed)(const iFolder ifolder, const iFolderSyncDirection direc
 @endeventdef
 
 */
+
+G_END_DECLS
 
 #ifdef __cplusplus
 }

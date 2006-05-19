@@ -32,12 +32,17 @@ extern "C"
 {
 #endif		/* __cplusplus */
 
+G_BEGIN_DECLS
+
 #define IFOLDER_DOMAIN_TYPE				(ifolder_domain_get_type())
 #define IFOLDER_DOMAIN(obj)				(G_TYPE_CHECK_INSTANCE_CAST ((obj), IFOLDER_DOMAIN_TYPE, iFolderDomain))
 #define IFOLDER_DOMAIN_CLASS(klass)		(G_TYPE_CHECK_CLASS_CAST ((klass), IFOLDER_DOMAIN_TYPE, iFolderDomainClass))
 #define IFOLDER_IS_DOMAIN(obj)			(G_TYPE_CHECK_INSTANCE_TYPE ((obj), IFOLDER_DOMAIN_TYPE))
 #define IFOLDER_IS_DOMAIN_CLASS(klass)	(G_TYPE_CHECK_CLASS_TYPE ((klass), IFOLDER_DOMAIN_TYPE))
 #define IFOLDER_DOMAIN_GET_CLASS(obj)	(G_TYPE_INSTANCE_GET_CLASS ((obj), IFOLDER_DOMAIN_TYPE, iFolderDomainClass))
+
+/* GObject support */
+GType ifolder_domain_get_type (void) G_GNUC_CONST;
 
 /**
  * Enumerations
@@ -64,8 +69,6 @@ typedef enum
 	IFOLDER_SEARCH_OP_EQUALS			/*!< Match strings that exactly equal the search pattern */
 } iFolderSearchOperation;
 
-/* GObject support */
-GType ifolder_domain_get_type (void);
 
 /**
  * Method definitions
@@ -384,6 +387,8 @@ iFolder * ifolder_domain_get_ifolder_by_id(iFolderDomain *domain, const char *id
 GSList * ifolder_domain_get_ifolders_by_name(iFolderDomain *domain, const iFolderSearchOperation search_op, const char *pattern, const int index, const int count, GError **error);
 
 /*@}*/
+
+G_END_DECLS
 
 #ifdef __cplusplus
 }

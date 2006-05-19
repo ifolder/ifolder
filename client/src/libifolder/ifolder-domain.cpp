@@ -26,10 +26,9 @@
 #include "ifolder-domain.h"
 #include "ifolder-private.h"
 
+typedef struct _iFolderDomainPrivate iFolderDomainPrivate;
 struct _iFolderDomainPrivate
 {
-	gboolean dispose_has_run;
-	
 	gchar *id;
 	gchar *name;
 	gchar *description;
@@ -44,15 +43,14 @@ struct _iFolderDomainPrivate
 	gpointer user_data;
 };
 
-static GObjectClass *parent_class = NULL;
-
 #define IFOLDER_DOMAIN_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), IFOLDER_DOMAIN_TYPE, iFolderDomainPrivate))
 
 /**
  * Forward definitions
  */
 static void ifolder_domain_finalize(GObject *object);
-static void ifolder_domain_dispose(GObject *object);
+
+G_DEFINE_TYPE (iFolderDomain, ifolder_domain, G_TYPE_OBJECT);
 
 /**
  * Functions required by GObject
@@ -60,116 +58,64 @@ static void ifolder_domain_dispose(GObject *object);
 static void
 ifolder_domain_class_init(iFolderDomainClass *klass)
 {
-	GObjectClass *object_class = (GObjectClass *)klass;
-	parent_class = G_OBJECT_CLASS(g_type_class_peek_parent(klass));
+	GObjectClass *object_class;
+	
+	object_class = (GObjectClass *)klass;
 	
 	object_class->finalize = ifolder_domain_finalize;
-	object_class->dispose = ifolder_domain_dispose;
 
 	g_type_class_add_private(klass, sizeof(iFolderDomainPrivate));
 
 	/* custom stuff */
 }
 
-static void ifolder_domain_init(GTypeInstance *instance, gpointer g_class)
+static void ifolder_domain_init(iFolderDomain *domain)
 {
+	iFolderDomainPrivate *priv;
+
 	g_message("ifolder_domain_init() called");
 
-	iFolderDomain *self = IFOLDER_DOMAIN(instance);
-	self->priv = g_new0(iFolderDomainPrivate, 1);
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
 	
 	/**
 	 * Initialize all public and private members to reasonable default values.
 	 * If you need specific construction properties to complete initialization,
 	 * delay initialization completion until the property is set.
 	 */
-	self->priv->dispose_has_run = FALSE;
-	
-	self->priv->id = NULL;
-	self->priv->name = NULL;
-	self->priv->description = NULL;
-	self->priv->version = NULL;
-	self->priv->host_address = NULL;
-	self->priv->machine_name = NULL;
-	self->priv->os_version = NULL;
-	self->priv->user_name = NULL;
-	self->priv->is_authenticated = FALSE;
-	self->priv->is_default = FALSE;
-	self->priv->is_active = FALSE;
-	self->priv->user_data = NULL;
+	priv->id = NULL;
+	priv->name = NULL;
+	priv->description = NULL;
+	priv->version = NULL;
+	priv->host_address = NULL;
+	priv->machine_name = NULL;
+	priv->os_version = NULL;
+	priv->user_name = NULL;
+	priv->is_authenticated = FALSE;
+	priv->is_default = FALSE;
+	priv->is_active = FALSE;
+	priv->user_data = NULL;
 }
 
 static void ifolder_domain_finalize(GObject *object)
 {
+	iFolderDomainPrivate *priv;
+
 	g_message (" ***** ifolder_domain_finalize() ***** ");
 	
-	iFolderDomain *self = IFOLDER_DOMAIN(object);
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (object);
 
 	/* custom stuff */
-	g_free(self->priv->id);
-	g_free(self->priv->name);
-	g_free(self->priv->description);
-	g_free(self->priv->version);
-	g_free(self->priv->host_address);
-	g_free(self->priv->machine_name);
-	g_free(self->priv->os_version);
-	g_free(self->priv->user_name);
+	g_free(priv->id);
+	g_free(priv->name);
+	g_free(priv->description);
+	g_free(priv->version);
+	g_free(priv->host_address);
+	g_free(priv->machine_name);
+	g_free(priv->os_version);
+	g_free(priv->user_name);
 
-	g_free(self->priv);
-	
 	/* Chain up the parent class */
-	G_OBJECT_CLASS (parent_class)->dispose (object);
-}
-
-static void ifolder_domain_dispose(GObject *object)
-{
-	iFolderDomain *self = IFOLDER_DOMAIN(object);
-	
-	/* if dispose already ran, return */
-	if (self->priv->dispose_has_run)
-		return;
-	
-	g_message (" ***** ifolder_domain_dispose() ***** ");
-	
-	/* make sure dispose does not run twice */
-	self->priv->dispose_has_run = TRUE;
-
-	/**
-	 * In dispose, you are supposed to free all types referenced from this
-	 * object which might themselves hold a reference to self.  Generally,
-	 * the most simple solution is to unref all members on which you own a
-	 * reference.
-	 */
-	
-	/* Chain up the parent class */
-	G_OBJECT_CLASS(parent_class)->dispose(object);
-}
-
-GType
-ifolder_domain_get_type(void)
-{
-	static GType type = 0;
-	if (type == 0)
-	{
-		static const GTypeInfo info =
-		{
-			sizeof (iFolderDomainClass),
-			NULL,	/* base_init */
-			NULL,	/* base_finalize */
-			(GClassInitFunc) ifolder_domain_class_init,	/* class_init */
-			NULL,	/* class_finalize */
-			NULL,	/* class_data */
-			sizeof (iFolderDomain),
-			0,		/* n_preallocs */
-			(GInstanceInitFunc) ifolder_domain_init,	/* instance_init */
-		};
-		
-		type = g_type_register_static(G_TYPE_OBJECT,
-									  "iFolderDomainType",
-									  &info, (GTypeFlags)0);
-	}
-	
-	return type;
+	G_OBJECT_CLASS (ifolder_domain_parent_class)->finalize (object);
 }
 
 iFolderDomain *
@@ -191,355 +137,423 @@ ifolder_domain_get_id(iFolderDomain *domain)
 		return "";
 	}
 
-	return domain->priv->id;
+	return IFOLDER_DOMAIN_GET_PRIVATE (domain)->id;
 }
 
 void
 ifolder_domain_set_id (iFolderDomain *domain, const gchar *id)
 {
+	iFolderDomainPrivate *priv;
+
 	if (domain == NULL)
 	{
 		g_critical("domain is NULL!");
 		return;
 	}
 	
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+	
 	if (id == NULL)
 	{
-		if (domain->priv->id != NULL)
-		{
-			g_free (domain->priv->id);
-			domain->priv->id = NULL;
-		}
+		g_free (priv->id);
+		priv->id = NULL;
 	}
 	else
-		domain->priv->id = g_strdup (id);
+		priv->id = g_strdup (id);
 }
 
 const gchar *
 ifolder_domain_get_name(iFolderDomain *domain)
 {
+	iFolderDomainPrivate *priv;
+
 	if (domain == NULL)
 	{
 		g_critical("domain is NULL!");
 		return "";
 	}
 
-	return domain->priv->name;
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+	
+	return priv->name;
 }
 
 void
 ifolder_domain_set_name (iFolderDomain *domain, const gchar *name)
 {
+	iFolderDomainPrivate *priv;
+
 	if (domain == NULL)
 	{
 		g_critical("domain is NULL!");
 		return;
 	}
 	
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+	
 	if (name == NULL)
 	{
-		if (domain->priv->name != NULL)
-		{
-			g_free (domain->priv->name);
-			domain->priv->name = NULL;
-		}
+		g_free (priv->name);
+		priv->name = NULL;
 	}
 	else
-		domain->priv->name = g_strdup (name);
+		priv->name = g_strdup (name);
 }
 
 const gchar *
 ifolder_domain_get_description(iFolderDomain *domain)
 {
+	iFolderDomainPrivate *priv;
+
 	if (domain == NULL)
 	{
 		g_critical("domain is NULL!");
 		return "";
 	}
 
-	return domain->priv->description;
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+	
+	return priv->description;
 }
 
 void
 ifolder_domain_set_description (iFolderDomain *domain, const gchar *description)
 {
+	iFolderDomainPrivate *priv;
+
 	if (domain == NULL)
 	{
 		g_critical("domain is NULL!");
 		return;
 	}
 	
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+	
 	if (description == NULL)
 	{
-		if (domain->priv->description != NULL)
-		{
-			g_free (domain->priv->description);
-			domain->priv->description = NULL;
-		}
+		g_free (priv->description);
+		priv->description = NULL;
 	}
 	else
-		domain->priv->description = g_strdup (description);
+		priv->description = g_strdup (description);
 }
 
 const gchar *
 ifolder_domain_get_version(iFolderDomain *domain)
 {
+	iFolderDomainPrivate *priv;
+
 	if (domain == NULL)
 	{
 		g_critical("domain is NULL!");
 		return "";
 	}
 
-	return domain->priv->version;
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+	
+	return priv->version;
 }
 
 void
 ifolder_domain_set_version (iFolderDomain *domain, const gchar *version)
 {
+	iFolderDomainPrivate *priv;
+
 	if (domain == NULL)
 	{
 		g_critical("domain is NULL!");
 		return;
 	}
 	
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+	
 	if (version == NULL)
 	{
-		if (domain->priv->version != NULL)
-		{
-			g_free (domain->priv->version);
-			domain->priv->version = NULL;
-		}
+		g_free (priv->version);
+		priv->version = NULL;
 	}
 	else
-		domain->priv->version = g_strdup (version);
+		priv->version = g_strdup (version);
 }
 
 const gchar *
 ifolder_domain_get_host_address(iFolderDomain *domain)
 {
+	iFolderDomainPrivate *priv;
+
 	if (domain == NULL)
 	{
 		g_critical("domain is NULL!");
 		return "";
 	}
 
-	return domain->priv->host_address;
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+	
+	return priv->host_address;
 }
 
 void
 ifolder_domain_set_host_address (iFolderDomain *domain, const gchar *host_address)
 {
+	iFolderDomainPrivate *priv;
+
 	if (domain == NULL)
 	{
 		g_critical("domain is NULL!");
 		return;
 	}
 	
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+	
 	if (host_address == NULL)
 	{
-		if (domain->priv->host_address != NULL)
-		{
-			g_free (domain->priv->host_address);
-			domain->priv->host_address = NULL;
-		}
+		g_free (priv->host_address);
+		priv->host_address = NULL;
 	}
 	else
-		domain->priv->host_address = g_strdup (host_address);
+		priv->host_address = g_strdup (host_address);
 }
 
 const gchar *
 ifolder_domain_get_machine_name(iFolderDomain *domain)
 {
+	iFolderDomainPrivate *priv;
+
 	if (domain == NULL)
 	{
 		g_critical("domain is NULL!");
 		return "";
 	}
 
-	return domain->priv->machine_name;
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+	
+	return priv->machine_name;
 }
 
 void
 ifolder_domain_set_machine_name (iFolderDomain *domain, const gchar *machine_name)
 {
+	iFolderDomainPrivate *priv;
+
 	if (domain == NULL)
 	{
 		g_critical("domain is NULL!");
 		return;
 	}
 	
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+	
 	if (machine_name == NULL)
 	{
-		if (domain->priv->machine_name != NULL)
-		{
-			g_free (domain->priv->machine_name);
-			domain->priv->machine_name = NULL;
-		}
+		g_free (priv->machine_name);
+		priv->machine_name = NULL;
 	}
 	else
-		domain->priv->machine_name = g_strdup (machine_name);
+		priv->machine_name = g_strdup (machine_name);
 }
 
 const gchar *
 ifolder_domain_get_os_version(iFolderDomain *domain)
 {
+	iFolderDomainPrivate *priv;
+
 	if (domain == NULL)
 	{
 		g_critical("domain is NULL!");
 		return "";
 	}
 
-	return domain->priv->os_version;
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+	
+	return priv->os_version;
 }
 
 void
 ifolder_domain_set_os_version (iFolderDomain *domain, const gchar *os_version)
 {
+	iFolderDomainPrivate *priv;
+
 	if (domain == NULL)
 	{
 		g_critical("domain is NULL!");
 		return;
 	}
 	
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+	
 	if (os_version == NULL)
 	{
-		if (domain->priv->os_version != NULL)
-		{
-			g_free (domain->priv->os_version);
-			domain->priv->os_version = NULL;
-		}
+		g_free (priv->os_version);
+		priv->os_version = NULL;
 	}
 	else
-		domain->priv->os_version = g_strdup (os_version);
+		priv->os_version = g_strdup (os_version);
 }
 
 const gchar *
 ifolder_domain_get_user_name(iFolderDomain *domain)
 {
+	iFolderDomainPrivate *priv;
+
 	if (domain == NULL)
 	{
 		g_critical("domain is NULL!");
 		return "";
 	}
 
-	return domain->priv->user_name;
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+	
+	return priv->user_name;
 }
 
 void
 ifolder_domain_set_user_name (iFolderDomain *domain, const gchar *user_name)
 {
+	iFolderDomainPrivate *priv;
+
 	if (domain == NULL)
 	{
 		g_critical("domain is NULL!");
 		return;
 	}
 	
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+	
 	if (user_name == NULL)
 	{
-		if (domain->priv->user_name != NULL)
-		{
-			g_free (domain->priv->user_name);
-			domain->priv->user_name = NULL;
-		}
+		g_free (priv->user_name);
+		priv->user_name = NULL;
 	}
 	else
-		domain->priv->user_name = g_strdup (user_name);
+		priv->user_name = g_strdup (user_name);
 }
 
 gboolean
 ifolder_domain_is_authenticated(iFolderDomain *domain)
 {
+	iFolderDomainPrivate *priv;
+
 	if (domain == NULL)
 	{
 		g_critical("domain is NULL!");
 		return false;
 	}
 
-	return domain->priv->is_authenticated;
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+	
+	return priv->is_authenticated;
 }
 
 void
 ifolder_domain_set_is_authenticated (iFolderDomain *domain, gboolean is_authenticated)
 {
+	iFolderDomainPrivate *priv;
+
 	if (domain == NULL)
 	{
 		g_critical("domain is NULL!");
 		return;
 	}
 	
-	domain->priv->is_authenticated = is_authenticated;
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+	
+	priv->is_authenticated = is_authenticated;
 }
 
 gboolean
 ifolder_domain_is_default(iFolderDomain *domain)
 {
+	iFolderDomainPrivate *priv;
+
 	if (domain == NULL)
 	{
 		g_critical("domain is NULL!");
 		return false;
 	}
 
-	return domain->priv->is_default;
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+	
+	return priv->is_default;
 }
 
 void
 ifolder_domain_set_is_default (iFolderDomain *domain, gboolean is_default)
 {
+	iFolderDomainPrivate *priv;
+
 	if (domain == NULL)
 	{
 		g_critical("domain is NULL!");
 		return;
 	}
 	
-	domain->priv->is_default = is_default;
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+	
+	priv->is_default = is_default;
 }
 
 gboolean
 ifolder_domain_is_active(iFolderDomain *domain)
 {
+	iFolderDomainPrivate *priv;
+
 	if (domain == NULL)
 	{
 		g_critical("domain is NULL!");
 		return false;
 	}
 
-	return domain->priv->is_active;	
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+	
+	return priv->is_active;	
 }
 
 void
 ifolder_domain_set_is_active (iFolderDomain *domain, gboolean is_active)
 {
+	iFolderDomainPrivate *priv;
+
 	if (domain == NULL)
 	{
 		g_critical("domain is NULL!");
 		return;
 	}
 	
-	domain->priv->is_active = is_active;
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+	
+	priv->is_active = is_active;
 }
 
 gpointer
 ifolder_domain_get_user_data(iFolderDomain *domain)
 {
+	iFolderDomainPrivate *priv;
+
 	if (domain == NULL)
 	{
 		g_critical("domain is NULL!");
 		return NULL;
 	}
 
-	return domain->priv->user_data;
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+	
+	return priv->user_data;
 }
 
 void
 ifolder_domain_set_user_data(iFolderDomain *domain, gpointer user_data)
 {
+	iFolderDomainPrivate *priv;
+
 	if (domain == NULL)
 	{
 		g_critical("domain is NULL!");
 		return;
 	}
 
-	domain->priv->user_data = user_data;
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+	
+	priv->user_data = user_data;
 }
 
 void

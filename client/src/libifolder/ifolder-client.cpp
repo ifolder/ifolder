@@ -33,9 +33,10 @@
 #define _
 #endif
 
+typedef struct _iFolderClientPrivate iFolderClientPrivate;
 struct _iFolderClientPrivate
 {
-	gboolean dispose_has_run;
+	gboolean		dispose_has_run;
 	
 	IFApplication	*ifolder_core_app;
 	GKeyFile		*config_key_file;
@@ -44,24 +45,24 @@ struct _iFolderClientPrivate
 	GSList			*domains;
 };
 
+#define IFOLDER_CLIENT_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), IFOLDER_CLIENT_TYPE, iFolderClientPrivate))
+
 enum {
 	DOMAIN_ADDED,
 	DOMAIN_REMOVED,
 	LAST_SIGNAL
 };
 
-static GObjectClass *parent_class = NULL;
 static iFolderClient *singleton_client = NULL;
 
 static guint ifolder_client_signals[LAST_SIGNAL] = { 0 };
 
-#define IFOLDER_CLIENT_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), IFOLDER_CLIENT_TYPE, iFolderClientPrivate))
-
 /**
  * Forward definitions
  */
-static void ifolder_client_finalize(GObject *object);
-static void ifolder_client_dispose(GObject *object);
+static void ifolder_client_finalize (GObject *object);
+
+G_DEFINE_TYPE (iFolderClient, ifolder_client, G_TYPE_OBJECT);
 
 static void load_domains (iFolderClient *client, GError **error);
 
@@ -71,11 +72,11 @@ static void load_domains (iFolderClient *client, GError **error);
 static void
 ifolder_client_class_init(iFolderClientClass *klass)
 {
-	GObjectClass *object_class = (GObjectClass *)klass;
-	parent_class = G_OBJECT_CLASS(g_type_class_peek_parent(klass));
+	GObjectClass *object_class;
+
+	object_class = (GObjectClass *)klass;
 	
 	object_class->finalize = ifolder_client_finalize;
-	object_class->dispose = ifolder_client_dispose;
 	
 	ifolder_client_signals[DOMAIN_ADDED] =
 		g_signal_new ("domain-added",
@@ -104,90 +105,58 @@ ifolder_client_class_init(iFolderClientClass *klass)
 	/* custom stuff */
 }
 
-static void ifolder_client_init(GTypeInstance *instance, gpointer g_class)
+static void ifolder_client_init(iFolderClient *client)
 {
-	g_message("ifolder_client_init() called");
+	iFolderClientPrivate *priv;
 
-	iFolderClient *self = IFOLDER_CLIENT(instance);
-	self->priv = g_new0(iFolderClientPrivate, 1);
+	g_message("ifolder_client_init() called");
 	
+	priv = IFOLDER_CLIENT_GET_PRIVATE (client);
+
 	/**
 	 * Initialize all public and private members to reasonable default values.
 	 * If you need specific construction properties to complete initialization,
 	 * delay initialization completion until the property is set.
 	 */
-	self->priv->dispose_has_run = FALSE;
-	
-	self->priv->ifolder_core_app = NULL;
-	self->priv->config_key_file = g_key_file_new();
+	priv->ifolder_core_app = NULL;
+	priv->config_key_file = g_key_file_new();
 
-	self->priv->default_domain = NULL;
-	self->priv->domains = NULL;
+	priv->default_domain = NULL;
+	priv->domains = NULL;
 }
 
 static void ifolder_client_finalize(GObject *object)
 {
-	iFolderClient *self = IFOLDER_CLIENT(object);
+	GSList *domainListPtr;
+	iFolderDomain *domain;
+	
+	iFolderClient *client = IFOLDER_CLIENT(object);
+	iFolderClientPrivate *priv = IFOLDER_CLIENT_GET_PRIVATE (client);
+
+	g_message ("ifolder_client_finalize()");
 
 	/* custom stuff */
-	g_key_file_free(self->priv->config_key_file);
-	
-	g_free(self->priv);
-}
+	g_key_file_free(priv->config_key_file);
 
-static void ifolder_client_dispose(GObject *object)
-{
-	iFolderClient *self = IFOLDER_CLIENT(object);
-	
-	/* if dispose already ran, return */
-	if (self->priv->dispose_has_run)
-		return;
-	
-	/* make sure dispose does not run twice */
-	self->priv->dispose_has_run = TRUE;
-
-	/**
-	 * In dispose, you are supposed to free all types referenced from this
-	 * object which might themselves hold a reference to self.  Generally,
-	 * the most simple solution is to unref all members on which you own a
-	 * reference.
-	 */
-	
-	/* Chain up the parent class */
-	G_OBJECT_CLASS(parent_class)->dispose(object);
-}
-
-GType
-ifolder_client_get_type(void)
-{
-	static GType type = 0;
-	if (type == 0)
+	/* Free up the memory used by the domains */
+	domainListPtr = priv->domains;
+	while (domainListPtr != NULL)
 	{
-		static const GTypeInfo info =
-		{
-			sizeof (iFolderClientClass),
-			NULL,	/* base_init */
-			NULL,	/* base_finalize */
-			(GClassInitFunc) ifolder_client_class_init,	/* class_init */
-			NULL,	/* class_finalize */
-			NULL,	/* class_data */
-			sizeof (iFolderClient),
-			0,		/* n_preallocs */
-			(GInstanceInitFunc) ifolder_client_init,	/* instance_init */
-		};
+		domain = (iFolderDomain *)domainListPtr->data;
+		priv->domains = g_slist_remove (priv->domains, domain);
 		
-		type = g_type_register_static(G_TYPE_OBJECT,
-									  "iFolderClientType",
-									  &info, (GTypeFlags)0);
+		g_object_unref (domain);
+		domainListPtr = priv->domains;
 	}
 	
-	return type;
+	G_OBJECT_CLASS (ifolder_client_parent_class)->finalize (object);
 }
 
 iFolderClient *
 ifolder_client_initialize(const gchar *data_path, GError **error)
 {
 	iFolderClient *client;
+	iFolderClientPrivate *priv;
 	gboolean b_initialized = FALSE;
 	GError *err = NULL;
 	gchar *config_key_file_path = NULL;
@@ -202,11 +171,12 @@ ifolder_client_initialize(const gchar *data_path, GError **error)
 	}
 
 	client = ifolder_client_new();
+	priv = IFOLDER_CLIENT_GET_PRIVATE (client);
 	
 	g_message("FIXME: Implement ifolder_client_initialize()");
 	
 	/* Load the configuration file */
-	g_key_file_load_from_data_dirs(client->priv->config_key_file,
+	g_key_file_load_from_data_dirs(priv->config_key_file,
 									IFOLDER_DEFAULT_CONFIG_FILE_NAME,
 									&config_key_file_path,
 									(GKeyFileFlags)(G_KEY_FILE_KEEP_COMMENTS | G_KEY_FILE_KEEP_TRANSLATIONS),
@@ -273,8 +243,8 @@ ifolder_client_uninitialize(iFolderClient *client, GError **error)
 	}
 	
 	g_message("FIXME: Implement ifolder_client_uninitialize()");
-	
-	g_free(singleton_client);
+
+	g_object_unref (client);
 	
 	singleton_client = NULL;
 }
@@ -503,6 +473,8 @@ ifolder_client_new (void)
 GKeyFile *
 ifolder_client_get_config_key_file (GError **error)
 {
+	iFolderClientPrivate *priv;
+
 	if (singleton_client == NULL)
 	{
 		g_set_error(error,
@@ -512,7 +484,9 @@ ifolder_client_get_config_key_file (GError **error)
 		return NULL;
 	}
 	
-	return singleton_client->priv->config_key_file;
+	priv = IFOLDER_CLIENT_GET_PRIVATE (singleton_client);
+	
+	return priv->config_key_file;
 }
 
 static void
