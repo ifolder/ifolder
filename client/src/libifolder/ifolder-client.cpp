@@ -279,6 +279,7 @@ ifolder_client_get_all_domains(iFolderClient *client, GError **error)
 {
 	iFolderClientPrivate *priv;
 	
+	g_debug ("ifolder_client_get_all_domains()");
 	if (client == NULL)
 	{
 		g_set_error (error,
@@ -289,6 +290,8 @@ ifolder_client_get_all_domains(iFolderClient *client, GError **error)
 	}
 
 	priv = IFOLDER_CLIENT_GET_PRIVATE (client);
+
+	g_debug ("# of domains: %d", g_slist_length (priv->domains));
 	
 	return priv->domains;
 }

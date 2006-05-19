@@ -822,6 +822,7 @@ populate_domains(IFAPreferencesWindow *pw)
 	gchar *errMessage;
 	GtkTreeIter iter;
 	
+	g_debug ("Calling ifolder_client_get_all_domains() from populate_domains() in preferences-window.c");
 	domains = ifolder_client_get_all_domains (ifolder_client, &err);
 	if (err)
 	{
@@ -844,8 +845,6 @@ populate_domains(IFAPreferencesWindow *pw)
 		gtk_list_store_append (pw->accTreeStore, &iter);
 		gtk_list_store_set (pw->accTreeStore, &iter, 0, domain, -1); 
 	}
-	
-	g_slist_free (domains);
 }
 
 static void
