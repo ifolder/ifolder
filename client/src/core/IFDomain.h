@@ -125,7 +125,7 @@ private:
 	static void Destroy(gpointer data);
 	static void Insert(IFDomain *pDomain);
 	static gboolean Remove(const gchar *id);
-	static IFDomainIterator IFDomainList::GetIterator();
+	static IFDomainIterator GetIterator();
 	static IFDomain* GetDomainByID(const gchar *pID);
 	static IFDomain* GetDomainByName(const gchar *pName);
 	void Save();
