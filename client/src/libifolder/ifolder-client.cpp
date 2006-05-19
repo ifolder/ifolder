@@ -386,48 +386,22 @@ ifolder_client_add_domain(iFolderClient *client, const gchar *host_address, cons
 	
 	ifolder_domain_set_core_domain (domain, core_domain);
 
-	tmpStr = g_strdup_printf ("ID: %s", host_address);
-	ifolder_domain_set_id (domain, tmpStr);
-	g_free (tmpStr);
-
-	tmpStr = g_strdup_printf ("Name: %s", host_address);
-	ifolder_domain_set_name (domain, tmpStr);
-	g_free (tmpStr);
-
-	tmpStr = g_strdup_printf ("Description: %s", host_address);
-	ifolder_domain_set_description (domain, tmpStr);
-	g_free (tmpStr);
-
-	tmpStr = g_strdup_printf ("Version: %s", host_address);
-	ifolder_domain_set_version (domain, tmpStr);
-	g_free (tmpStr);
-
-	ifolder_domain_set_host_address (domain, host_address);
-
-	tmpStr = g_strdup_printf ("Machine Name: %s", host_address);
-	ifolder_domain_set_machine_name (domain, tmpStr);
-	g_free (tmpStr);
-
-	tmpStr = g_strdup_printf ("OS Version: %s", host_address);
-	ifolder_domain_set_os_version (domain, tmpStr);
-	g_free (tmpStr);
-
-	tmpStr = g_strdup_printf ("User Name: %s", host_address);
-	ifolder_domain_set_user_name (domain, tmpStr);
-	g_free (tmpStr);
-
-	g_debug ("FIXME: If the core domain_add() call doesn't automatically log the account in, do so now!");
-
+	ifolder_domain_set_id (domain, core_domain->m_ID);
+	ifolder_domain_set_name (domain, core_domain->m_Name);
+	ifolder_domain_set_description (domain, core_domain->m_Description);
+	ifolder_domain_set_version (domain, "FIXME: No Version");
+	ifolder_domain_set_host_address (domain, core_domain->m_MasterUrl);
+	ifolder_domain_set_machine_name (domain, "FIXME: No Machine Name");
+	ifolder_domain_set_os_version (domain, "FIXME: Get OS Version");
+	ifolder_domain_set_user_name (domain, core_domain->m_UserName);
+	
+	/* FIXME: Fix the following code */
 	ifolder_domain_set_is_authenticated (domain, TRUE);
-
 	ifolder_domain_set_is_default (domain, FALSE);
-
 	ifolder_domain_set_is_active (domain, TRUE);
 	
 	priv->domains = g_slist_prepend (priv->domains, domain);
 
-	sleep (3); /* FIXME: Remove this sleep() call that simulates work */
-	
 	g_signal_emit (client, ifolder_client_signals[DOMAIN_ADDED], 0, domain);
 
 	return domain;
