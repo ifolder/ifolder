@@ -136,20 +136,21 @@ public:
 	static int Initialize();
 };
 
+enum IFXNodeType
+{
+	IFXElement,
+	IFXAttribute,
+};
+	
 class XmlNode
 {
 public:
-	enum NodeType
-	{
-		Element,
-		Attribute,
-	};
 	gchar	*m_Name;
 	gchar	*m_Value;
 
-	NodeType m_Type;
-	XmlNode(gchar *name, NodeType type) { m_Name = name; m_Value = NULL; m_Type = type; }
-	XmlNode(gchar *name, gchar *value, NodeType type) { m_Name = name; m_Value = value; m_Type = type; }
+	IFXNodeType m_Type;
+	XmlNode(gchar *name, IFXNodeType type) { m_Name = name; m_Value = NULL; m_Type = type; }
+	XmlNode(gchar *name, gchar *value, IFXNodeType type) { m_Name = name; m_Value = value; m_Type = type; }
 	virtual ~XmlNode() { g_free(m_Name); g_free(m_Value); }
 };
 
@@ -165,8 +166,8 @@ public:
 	void EndNode();
 	void AddText(const gchar *text, gsize len);
 	void AddAttribute(const gchar *name, const gchar *value);
-	GNode* FindChild(GNode *parent, gchar* name, XmlNode::NodeType type);
-	GNode* FindSibling(GNode *sibling, gchar* name, XmlNode::NodeType type);
+	GNode* FindChild(GNode *parent, gchar* name, IFXNodeType type);
+	GNode* FindSibling(GNode *sibling, gchar* name, IFXNodeType type);
 
 };
 

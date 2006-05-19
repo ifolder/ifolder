@@ -208,42 +208,42 @@ IFDomain* IFDomain::DeSerialize(ParseTree *tree, GNode *pDNode)
 	GNode *tnode;
 
 	// id
-	tnode = tree->FindChild(gnode, EID, XmlNode::NodeType::Attribute);
+	tnode = tree->FindChild(gnode, EID, IFXAttribute);
 	if (tnode != NULL)
 		pDomain->m_ID = g_strdup(((XmlNode*)tnode->data)->m_Value);
 	// name
-	tnode = tree->FindChild(gnode, EName, XmlNode::NodeType::Element);
+	tnode = tree->FindChild(gnode, EName, IFXElement);
 	if (tnode != NULL)
 		pDomain->m_Name = g_strdup(((XmlNode*)tnode->data)->m_Value);
 	// description
-	tnode = tree->FindChild(gnode, EDescription, XmlNode::NodeType::Element);
+	tnode = tree->FindChild(gnode, EDescription, IFXElement);
 	if (tnode != NULL)
 		pDomain->m_Description = g_strdup(((XmlNode*)tnode->data)->m_Value);
 	// url
-	tnode = tree->FindChild(gnode, EUrl, XmlNode::NodeType::Element);
+	tnode = tree->FindChild(gnode, EUrl, IFXElement);
 	if (tnode != NULL)
 	{
 		pDomain->m_MasterUrl = g_strdup(((XmlNode*)tnode->data)->m_Value);
 		pDomain->m_DomainService.endpoint = pDomain->m_MasterUrl;
 	}
 	// User
-	gnode = tree->FindChild(gnode, EUser, XmlNode::NodeType::Element);
+	gnode = tree->FindChild(gnode, EUser, IFXElement);
 	if (gnode != NULL)
 	{
 		// id
-		tnode = tree->FindChild(gnode, EID, XmlNode::NodeType::Attribute);
+		tnode = tree->FindChild(gnode, EID, IFXAttribute);
 		if (tnode != NULL)
 			pDomain->m_UserID = g_strdup(((XmlNode*)tnode->data)->m_Value);
 		// name
-		tnode = tree->FindChild(gnode, EName, XmlNode::NodeType::Element);
+		tnode = tree->FindChild(gnode, EName, IFXElement);
 		if (tnode != NULL)
 			pDomain->m_UserName = g_strdup(((XmlNode*)tnode->data)->m_Value);
 		// pw
-		tnode = tree->FindChild(gnode, EPW, XmlNode::NodeType::Element);
+		tnode = tree->FindChild(gnode, EPW, IFXElement);
 		if (tnode != NULL)
 			pDomain->m_UserPassword = g_strdup(((XmlNode*)tnode->data)->m_Value);
 		// pob
-		tnode = tree->FindChild(gnode, EPOB, XmlNode::NodeType::Element);
+		tnode = tree->FindChild(gnode, EPOB, IFXElement);
 		if (tnode != NULL)
 			pDomain->m_POBoxID = g_strdup(((XmlNode*)tnode->data)->m_Value);
 	}
@@ -379,11 +379,11 @@ void IFDomainList::Restore()
 			g_clear_error(&pError);
 		}
 		g_free(pFileData);
-		GNode* dNode = m_ParseTree->FindChild(NULL, IFDomain::EDomain, XmlNode::NodeType::Element);
+		GNode* dNode = m_ParseTree->FindChild(NULL, IFDomain::EDomain, IFXElement);
 		while (dNode != NULL)
 		{
 			Insert(IFDomain::DeSerialize(m_ParseTree, dNode));
-			dNode = m_ParseTree->FindSibling(dNode, IFDomain::EDomain, XmlNode::NodeType::Element);
+			dNode = m_ParseTree->FindSibling(dNode, IFDomain::EDomain, IFXElement);
 		}
 		delete m_ParseTree;
 		m_ParseTree = NULL;
@@ -459,12 +459,13 @@ ParseTree::ParseTree()
 
 ParseTree::~ParseTree()
 {
+	// Free the strings.
 	g_node_destroy(m_RootNode);
 }
 
 void ParseTree::StartNode(const gchar *name)
 {
-	GNode *newNode = g_node_new(new XmlNode(g_strdup(name), XmlNode::NodeType::Element));
+	GNode *newNode = g_node_new(new XmlNode(g_strdup(name), IFXElement));
 	if (m_CurrentNode)
 	{
 		g_node_append(m_CurrentNode, newNode);
@@ -496,12 +497,12 @@ void ParseTree::AddAttribute(const gchar *name, const gchar *value)
 {
 	if (m_CurrentNode)
 	{
-		GNode *newNode = g_node_new(new XmlNode(g_strdup(name), g_strdup(value), XmlNode::NodeType::Attribute));
+		GNode *newNode = g_node_new(new XmlNode(g_strdup(name), g_strdup(value), IFXAttribute));
 		g_node_append(m_CurrentNode, newNode);
 	}
 }
 
-GNode* ParseTree::FindChild(GNode *parent, gchar* name, XmlNode::NodeType type)
+GNode* ParseTree::FindChild(GNode *parent, gchar* name, IFXNodeType type)
 {
 	if (parent == NULL)
 		parent = m_RootNode;
@@ -522,7 +523,7 @@ GNode* ParseTree::FindChild(GNode *parent, gchar* name, XmlNode::NodeType type)
 	return gnode;
 }
 
-GNode* ParseTree::FindSibling(GNode *sibling, gchar* name, XmlNode::NodeType type)
+GNode* ParseTree::FindSibling(GNode *sibling, gchar* name, IFXNodeType type)
 {
 	if (sibling == NULL)
 		return NULL;
