@@ -356,7 +356,6 @@ create_accounts_page(IFAPreferencesWindow *pw)
 	pw->accTreeView = gtk_tree_view_new();
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (pw->accTreeView));
 	gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE); /* FIXME: Implement multiple selection at a later point if desired so users can highlight multiple accounts and remove them. */
-	g_signal_connect (selection, "changed", G_CALLBACK (acc_selection_changed), pw);
 	
 	GtkWidget *sw = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw), GTK_SHADOW_ETCHED_IN);
@@ -428,6 +427,7 @@ create_accounts_page(IFAPreferencesWindow *pw)
 	gtk_box_pack_start(GTK_BOX(buttonBox), pw->propertiesButton, false, false, 0);
 	g_signal_connect(G_OBJECT(pw->propertiesButton), "clicked", G_CALLBACK(on_properties_clicked), pw);
 	
+	g_signal_connect (selection, "changed", G_CALLBACK (acc_selection_changed), pw);
 	g_signal_connect(G_OBJECT(pw->accTreeView), "row-activated", G_CALLBACK(on_acc_tree_row_activated), pw);
 	
 	return pw->accountsPage;
