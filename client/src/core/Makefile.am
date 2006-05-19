@@ -41,7 +41,9 @@ DEFINES =
 
 libifolder_core_a_CXXFLAGS = \
 	$(DEFINES)					\
-	$(GLIB_CFLAGS)
+	$(GLIB_CFLAGS)				\
+	-DWITH_NONAMESPACES			\
+	-DWITH_COOKIES
 
 libifolder_core_a_LDFLAGS = \
 	$(GLIB_LIBS)
