@@ -172,7 +172,7 @@ create_title_bar(IFAAccountWizard *aw)
 	g_message("FIXME: Change the wizard page label to white and add a blue-ish (themed) background");
 	GdkPixbuf *addAccountPixbuf = ifolder_util_load_pixbuf("ifolder-add-account48.png");
 	aw->addAccountImage = gtk_image_new_from_pixbuf(addAccountPixbuf);
-	g_object_unref(G_OBJECT(addAccountPixbuf));
+//	g_object_unref(G_OBJECT(addAccountPixbuf));
 	gtk_box_pack_end(GTK_BOX(pageTitleHBox), aw->addAccountImage, false, false, 0);
 	
 	return pageTitleHBox;
@@ -568,7 +568,11 @@ static void
 delete_account_wizard(IFAAccountWizard *aw)
 {
 	if (aw->connectedDomain != NULL)
+	{
+		g_debug ("FIXME: Should we be calling g_object_unref here?");
+		g_debug ("account-wizard: g_object_unref (domain)");
 		g_object_unref(aw->connectedDomain);
+	}
 	
 	free(aw);
 }
@@ -683,7 +687,7 @@ notebook_page_switched(GtkNotebook *notebook, GtkNotebookPage *page, guint page_
 			
 			summary_text = g_string_new("");
 			g_string_printf(summary_text,
-							_("Congratulations!  You are now\nconnected to:\n\nAccount Name: %s\nServer Address: %s\nUser Name: %s\n\nClick \"Finish\" to close this window."),
+							_("Congratulations!  You are now\nconnected.\n\n\tAccount Name: %s\n\tServer Address: %s\n\tUser Name: %s\n\nClick \"Finish\" to close this window."),
 							ifolder_domain_get_name(aw->connectedDomain),
 							ifolder_domain_get_host_address(aw->connectedDomain),
 							gtk_entry_get_text(GTK_ENTRY(aw->userNameEntry)));
@@ -921,6 +925,8 @@ add_domain_thread_completed(iFolderAddDomainThreadResults *results)
 		}
 		else
 		{
+			g_debug ("account-wizard: g_object_ref (domain)");
+			g_object_ref (results->domain);
 			results->aw->connectedDomain = results->domain;
 			
 			gtk_notebook_next_page(GTK_NOTEBOOK(results->aw->notebook));

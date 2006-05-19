@@ -982,8 +982,7 @@ domain_added_cb (iFolderClient *client, iFolderDomain *domain, IFAPreferencesWin
 	g_debug ("name: %s", ifolder_domain_get_name (domain));
 	g_debug ("user name: %s", ifolder_domain_get_user_name (domain));
 	g_debug ("authenticated: %s", ifolder_domain_is_authenticated (domain) ? "true" : "false");
-	gtk_list_store_append (pw->accTreeStore, &iter);
-	gtk_list_store_set (pw->accTreeStore, &iter, 0, domain, -1);
+	gtk_list_store_insert_with_values (pw->accTreeStore, &iter, 0, 0, domain, -1);
 }
 
 static void
