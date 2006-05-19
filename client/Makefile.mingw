@@ -4,16 +4,7 @@
 # Date 5/19/2006
 # Description: iFolder3 top level makefile for mingw
 
-IFOLDER_TOP = .
-IFOLDER_SRC = ./src
-IFOLDER_CORE = $(IFOLDER_SRC)/core
-IFOLDER_LIB = $(IFOLDER_SRC)/libifolder
-IFOLDER_APP = $(IFOLDER_SRC)/trayapp/windows
-PO = ./po
-
-IFOLDER_INSTALL_DIR = $(IFOLDER_TOP)/stage
-
-#VERSION := $(shell cat ./VERSION)
+include makefiledefs.mingw
 
 ##
 ## Don't forget to change STATIC_PROTO_INIT, in config.h.mingw if you
@@ -24,7 +15,7 @@ IFOLDER_INSTALL_DIR = $(IFOLDER_TOP)/stage
 #	cp config.h.mingw config.h
 all:
 	$(MAKE) -C $(IFOLDER_CORE) -f Makefile.mingw
-#	$(MAKE) -C $(IFOLDER_LIB) -f Makefile.mingw
+	$(MAKE) -C $(IFOLDER_LIB) -f Makefile.mingw
 #	$(MAKE) -C $(IFOLDER_APP) -f Makefile.mingw
 
 install: all
@@ -47,6 +38,6 @@ install: all
 
 clean:
 	$(MAKE) -C $(IFOLDER_CORE) -f Makefile.mingw clean
-#	$(MAKE) -C $(IFOLDER_LIB) -f Makefile.mingw clean
+	$(MAKE) -C $(IFOLDER_LIB) -f Makefile.mingw clean
 #	$(MAKE) -C $(IFOLDER_APP) -f Makefile.mingw clean
 #	rm -rf config.h $(IFOLDER_INSTALL_DIR)

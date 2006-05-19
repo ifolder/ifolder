@@ -20,6 +20,11 @@
  *  Author(s): Boyd Timothy <btimothy@novell.com>
  *
  ***********************************************************************/
+#ifdef WIN32
+	#include <windows.h>
+	#include <fcntl.h>
+	#define sleep(x) Sleep((x)*1000)
+#endif
 
 #include <unistd.h> /* FIXME: Remove this when done spoofing things with sleep() */
 

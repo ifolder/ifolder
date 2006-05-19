@@ -21,15 +21,11 @@
 
 include ../../makefiledefs.mingw
 
-#
-# PATHS
-#
-
 ##
 ## VARIABLE DEFINITIONS
 ##
 
-TARGET = ifolder3-core
+TARGET = ifolder3lib
 
 # Compiler and Linker Options
 
@@ -52,7 +48,8 @@ WINDRES := windres
 ## INCLUDE PATHS
 ##
 
-INCLUDE_PATHS =	-I$(GTK_TOP)/include \
+INCLUDE_PATHS =		-I$(IFOLDER_SRC)/core \
+			-I$(GTK_TOP)/include \
 			-I$(GTK_TOP)/include/gtk-2.0 \
 			-I$(GTK_TOP)/include/glib-2.0 \
 			-I$(GTK_TOP)/include/pango-1.0 \
@@ -60,7 +57,8 @@ INCLUDE_PATHS =	-I$(GTK_TOP)/include \
 			-I$(GTK_TOP)/lib/glib-2.0/include \
 			-I$(GTK_TOP)/lib/gtk-2.0/include
 
-LIB_PATHS =		-L$(GTK_TOP)/lib \
+LIB_PATHS =		-L$(IFOLDER_SRC)/core \
+			-L$(GTK_TOP)/lib \
 			-L/mingw/lib
 
 ##
@@ -68,18 +66,9 @@ LIB_PATHS =		-L$(GTK_TOP)/lib \
 ##
 
 DLL_C_SRC =			\
-	glibclient.cpp		\
-	IFApplication.cpp	\
-	IFChanges.cpp		\
-	IFConflict.cpp		\
-	IFDirectory.cpp		\
-	IFDomain.cpp		\
-	IFFileInfo.cpp		\
-	IFiFolder.cpp		\
-	IFOptions.cpp		\
-	simiasC.cpp		\
-	simiasClient.cpp	\
-	stdsoap2.cpp
+	ifolder-client.cpp	\
+	ifolder-domain.cpp	\
+	ifolder-user-prefs.cpp
 
 
 #RC_SRC =		win32/gaimrc.rc
@@ -92,9 +81,11 @@ DLL_OBJECTS = $(DLL_C_SRC:%.cpp=%.o)
 
 DLL_LIBS =	-lglib-2.0 \
 		-lgthread-2.0 \
+		-lgobject-2.0 \
 		-lintl \
 		-lstdc++ \
-		-lwsock32
+		-lwsock32 \
+		-lifolder3-core
 
 ##
 ## RULES
@@ -130,26 +121,26 @@ $(IDLETRACK_TOP)/idletrack.dll:
 #
 # SOAP Generation
 #
-simiasC.cpp: simias.h
-	$(GSOAP_DIR)/soapcpp2 -LCxn -psimias $(ProjectDir)simias.h
+#simiasC.cpp: simias.h
+#	$(GSOAP_DIR)/soapcpp2 -LCxn -psimias $(ProjectDir)simias.h
 
-simias.h: stdsoap2.h stdsoap2.cpp
-	$(GSOAP_DIR)/wsdl2h -s -o simias.h Simias.wsdl DomainService.wsdl
+#simias.h: stdsoap2.h stdsoap2.cpp
+#	$(GSOAP_DIR)/wsdl2h -s -o simias.h Simias.wsdl DomainService.wsdl
 
-simiasClient.cpp:
-	$(GSOAP_DIR)/soapcpp2 -LCxn -psimias $(ProjectDir)simias.h
+#simiasClient.cpp:
+#	$(GSOAP_DIR)/soapcpp2 -LCxn -psimias $(ProjectDir)simias.h
 
-stdsoap2.cpp:
-	cp $(GSOAP_DIR)/stdsoap2.cpp .
+#stdsoap2.cpp:
+#	cp $(GSOAP_DIR)/stdsoap2.cpp .
 
-stdsoap2.h:
-	cp $(GSOAP_DIR)/stdsoap2.h .
+#stdsoap2.h:
+#	cp $(GSOAP_DIR)/stdsoap2.h .
 
 #
 # BUILD DLL
 #
 
-$(TARGET).lib $(TARGET).dll: simias.h simiasClient.cpp $(DLL_OBJECTS)
+$(TARGET).lib $(TARGET).dll: $(DLL_OBJECTS)
 	$(CXX) -shared $(DLL_OBJECTS) $(LIB_PATHS) $(DLL_LIBS) $(DLL_LD_FLAGS) -Wl,--out-implib,$(TARGET).lib -o $(TARGET).dll
 
 ##
