@@ -23,7 +23,7 @@
 #ifndef _IFDOMAIN_H_
 #define _IFDOMAIN_H_
 
-#include <vector>
+//#include <vector>
 #include "glibclient.h"
 #include "simiasDomain_USCOREx0020_USCOREServiceSoapProxy.h"
 
@@ -34,7 +34,7 @@ class IFDomainList;
 class XmlNode;
 class ParseTree;
 class GLIBCLIENT_API Domain;
-class GLIBCLIENT_API std::vector<IFDomain*>;
+//class GLIBCLIENT_API std::vector<IFDomain*>;
 
 class GLIBCLIENT_API IFDomain
 {
