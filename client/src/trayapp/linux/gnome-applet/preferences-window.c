@@ -102,6 +102,9 @@ static gboolean log_in_thread_completed(iFolderPrefsAuthReq *authReq);
 static gpointer log_out_thread (iFolderPrefsAuthReq *authReq);
 static gboolean log_out_thread_completed(iFolderPrefsAuthReq *authReq);
 
+static void domain_added_cb (iFolderClient *client, iFolderDomain *domain, IFAPreferencesWindow *pw);
+static void domain_removed_cb (iFolderClient *client, iFolderDomain *domain, IFAPreferencesWindow *pw);
+
 IFAPreferencesWindow *
 ifa_get_preferences_window()
 {
@@ -311,7 +314,7 @@ create_general_page(IFAPreferencesWindow *pw)
 	gtk_misc_set_alignment(GTK_MISC(syncEveryLabel), 1, 0.5);
 	gtk_box_pack_start(GTK_BOX(syncHBox), syncEveryLabel, false, false, 0);
 	
-	GtkObject *adjustment = gtk_adjustment_new(1, 1, 5000, 1, 1, 1); /* FIXME: Replace 5000 with Int32.MaxValue */
+	GtkObject *adjustment = gtk_adjustment_new(1, 1, G_MAXINT32, 1, 1, 1);
 	pw->syncSpinButton = gtk_spin_button_new(GTK_ADJUSTMENT(adjustment), 1, 0);
 	
 	gtk_box_pack_start(GTK_BOX(syncHBox), pw->syncSpinButton, false, false, 0);
@@ -472,7 +475,9 @@ close_window()
 	if (gtk_notebook_get_current_page(GTK_NOTEBOOK(prefsWindow->notebook)) == 0)
 		leaving_general_page();
 	
-	g_message("FIXME: Disconnect external signals before destroying prefsWindow->window");
+	/* Disconnect signal handlers */
+	g_signal_handler_disconnect (ifolder_client, prefsWindow->domain_added_cb_id);
+	g_signal_handler_disconnect (ifolder_client, prefsWindow->domain_removed_cb_id);
 
 	gtk_widget_hide(prefsWindow->window);
 	gtk_widget_destroy(prefsWindow->window);
@@ -529,7 +534,7 @@ general_page_realized(GtkWidget *widget, IFAPreferencesWindow *pw)
 //				pw->currentSyncUnit = IFA_SYNC_UNIT_SECONDS;
 //				
 //				/* prevent the user from setting a sync interval less than one minute */
-//				gtk_combo_box_set_range(GTK_SPIN_BUTTON(pw->syncSpinButton), 60, 5000); /* FIXME: Set max to Int32.MaxValue */
+//				gtk_combo_box_set_range(GTK_SPIN_BUTTON(pw->syncSpinButton), 60, G_MAXINT32);
 //			}
 //			else if (strcmp(syncUnitString, "Minutes") == 0)
 //			{
@@ -616,6 +621,9 @@ accounts_page_realized(GtkWidget *widget, IFAPreferencesWindow *pw)
 
 	populate_domains(pw);
 	update_widget_sensitivity(pw);
+	
+	pw->domain_added_cb_id = g_signal_connect (ifolder_client, "domain-added", G_CALLBACK (domain_added_cb), pw);
+	pw->domain_removed_cb_id = g_signal_connect (ifolder_client, "domain-removed", G_CALLBACK (domain_removed_cb), pw);
 }
 
 static void
@@ -805,7 +813,6 @@ populate_domains(IFAPreferencesWindow *pw)
 	GtkWidget *errDialog;
 	gchar *errMessage;
 	GtkTreeIter iter;
-	GValue val = { 0 };
 	
 	domains = ifolder_client_get_all_domains (ifolder_client, &err);
 	if (err)
@@ -964,5 +971,40 @@ log_out_thread_completed(iFolderPrefsAuthReq *authReq)
 
 	free(authReq);
 	return FALSE;
+}
+
+static void
+domain_added_cb (iFolderClient *client, iFolderDomain *domain, IFAPreferencesWindow *pw)
+{
+	GtkTreeIter iter;
+	
+	g_debug ("id: %s", ifolder_domain_get_id (domain));
+	g_debug ("name: %s", ifolder_domain_get_name (domain));
+	g_debug ("user name: %s", ifolder_domain_get_user_name (domain));
+	g_debug ("authenticated: %s", ifolder_domain_is_authenticated (domain) ? "true" : "false");
+	gtk_list_store_append (pw->accTreeStore, &iter);
+	gtk_list_store_set (pw->accTreeStore, &iter, 0, domain, -1);
+}
+
+static void
+domain_removed_cb (iFolderClient *client, iFolderDomain *domain, IFAPreferencesWindow *pw)
+{
+	GtkTreeIter iter;
+	iFolderDomain *tmpDomain;
+	
+	gtk_tree_model_get_iter_first (GTK_TREE_MODEL (pw->accTreeStore), &iter);
+	
+	while (gtk_list_store_iter_is_valid (pw->accTreeStore, &iter))
+	{
+		gtk_tree_model_get (GTK_TREE_MODEL (pw->accTreeStore), &iter, 0, &tmpDomain, -1);
+		
+		if (strcmp (ifolder_domain_get_id (tmpDomain), ifolder_domain_get_id (domain)) == 0)
+		{
+			gtk_list_store_remove (pw->accTreeStore, &iter);
+			break;
+		}
+		
+		gtk_tree_model_iter_next (GTK_TREE_MODEL (pw->accTreeStore), &iter);
+	}
 }
 

@@ -83,7 +83,7 @@ ifolder_client_class_init(iFolderClientClass *klass)
 			G_SIGNAL_RUN_LAST,
 			G_STRUCT_OFFSET (iFolderClientClass, domain_added),
 			NULL, NULL,
-			g_cclosure_marshal_VOID__POINTER,
+			g_cclosure_marshal_VOID__OBJECT,
 			G_TYPE_NONE,
 			1,
 			G_TYPE_OBJECT);
@@ -94,7 +94,7 @@ ifolder_client_class_init(iFolderClientClass *klass)
 			G_SIGNAL_RUN_LAST,
 			G_STRUCT_OFFSET (iFolderClientClass, domain_removed),
 			NULL, NULL,
-			g_cclosure_marshal_VOID__POINTER,
+			g_cclosure_marshal_VOID__OBJECT,
 			G_TYPE_NONE,
 			1,
 			G_TYPE_OBJECT);
@@ -424,7 +424,9 @@ ifolder_client_add_domain(iFolderClient *client, const gchar *host_address, cons
 	ifolder_domain_set_user_name (domain, tmpStr);
 	g_free (tmpStr);
 
-	ifolder_domain_set_is_authenticated (domain, FALSE);
+	g_debug ("FIXME: If the core domain_add() call doesn't automatically log the account in, do so now!");
+
+	ifolder_domain_set_is_authenticated (domain, TRUE);
 
 	ifolder_domain_set_is_default (domain, FALSE);
 

@@ -73,6 +73,9 @@ typedef struct {
 
 	GHashTable				*detailsDialogs;
 	GtkWidget				*waitDialog;
+	
+	gulong					domain_added_cb_id;
+	gulong					domain_removed_cb_id;
 } IFAPreferencesWindow;
 
 IFAPreferencesWindow *ifa_get_preferences_window();

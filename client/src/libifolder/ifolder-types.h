@@ -52,8 +52,8 @@ struct _iFolderClientClass
 {
 	GObjectClass parent;
 	
-	void (* domain_added) (iFolderDomain *domain);
-	void (* domain_removed) (iFolderDomain *domain);
+	void (* domain_added) (iFolderClient *client, iFolderDomain *domain, gpointer user_data);
+	void (* domain_removed) (iFolderClient *client, iFolderDomain *domain, gpointer user_data);
 	
 	/* class members */
 };
