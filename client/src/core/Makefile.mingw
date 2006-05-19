@@ -1,0 +1,170 @@
+#######################################################################
+#  Makefile.mingw
+#
+#  Copyright (C) 2006 Novell, Inc.
+#
+#  This program is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU General Public
+#  License as published by the Free Software Foundation; either
+#  version 2 of the License, or (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#  General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public
+#  License along with this program; if not, write to the Free
+#  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+#
+#######################################################################
+
+#
+# PATHS
+#
+
+GTK_TOP :=		/c/gtk
+IFOLDER_TOP :=	../..
+IFOLDER_SRC :=	..
+IFOLDER_INSTALL_DIR :=	$(IFOLDER_TOP)/stage
+GSOAP_DIR := $(IFOLDER_TOP)/tools/gsoap/win32-2.7
+
+##
+## VARIABLE DEFINITIONS
+##
+
+TARGET = ifolder3-core
+
+# Compiler and Linker Options
+
+CFLAGS = -DGLIBCLIENT_EXPORTS -DWITH_NONAMESPACES -DWITH_COOKIES
+
+DEFINES =
+
+LDFLAGS = -mwindows
+
+#-mconsole
+#-mwindows
+
+WINDRES := windres
+
+##
+## INCLUDE  MAKEFILES
+##
+
+##
+## INCLUDE PATHS
+##
+
+INCLUDE_PATHS =	-I$(GTK_TOP)/include \
+			-I$(GTK_TOP)/include/gtk-2.0 \
+			-I$(GTK_TOP)/include/glib-2.0 \
+			-I$(GTK_TOP)/include/pango-1.0 \
+			-I$(GTK_TOP)/include/atk-1.0 \
+			-I$(GTK_TOP)/lib/glib-2.0/include \
+			-I$(GTK_TOP)/lib/gtk-2.0/include
+
+LIB_PATHS =		-L$(GTK_TOP)/lib \
+			-L/mingw/lib
+
+##
+##  SOURCES, OBJECTS
+##
+
+DLL_C_SRC =			\
+	glibclient.cpp		\
+	IFApplication.cpp	\
+	IFChanges.cpp		\
+	IFConflict.cpp		\
+	IFDirectory.cpp		\
+	IFDomain.cpp		\
+	IFFileInfo.cpp		\
+	IFiFolder.cpp		\
+	IFOptions.cpp		\
+	simiasC.cpp		\
+	simiasClient.cpp	\
+	stdsoap2.cpp
+
+
+#RC_SRC =		win32/gaimrc.rc
+
+DLL_OBJECTS = $(DLL_C_SRC:%.cpp=%.o) 
+
+##
+## LIBRARIES
+##
+
+DLL_LIBS =	-lglib-2.0 \
+		-lgthread-2.0 \
+		-lintl \
+		-lstdc++ \
+		-lwsock32
+
+##
+## RULES
+##
+
+# How to make a C file
+#%.o: %.c
+#	$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(DEFINES) -c $< -o $@
+
+# How to make a C file
+%.o: %.cpp
+	$(CXX) $(CFLAGS) $(INCLUDE_PATHS) $(DEFINES) -c $< -o $@
+
+
+# How to make an RC file
+%.o: %.rc
+	$(WINDRES) -i $< -o $@
+
+##
+## TARGET DEFINITIONS
+##
+
+.PHONY: all clean
+
+all: $(TARGET).dll
+
+install: all
+	cp $(GAIM_SRC)/gaim.exe $(GAIM_SRC)/gaim.dll $(GAIM_INSTALL_DIR)
+
+$(IDLETRACK_TOP)/idletrack.dll:
+	$(MAKE) -C $(IDLETRACK_TOP) -f Makefile.mingw
+
+#
+# SOAP Generation
+#
+simiasC.cpp: simias.h
+	$(GSOAP_DIR)/soapcpp2 -LCxn -psimias $(ProjectDir)simias.h
+
+simias.h: stdsoap2.h stdsoap2.cpp
+	$(GSOAP_DIR)/wsdl2h -s -o simias.h Simias.wsdl DomainService.wsdl
+
+simiasClient.cpp:
+	$(GSOAP_DIR)/soapcpp2 -LCxn -psimias $(ProjectDir)simias.h
+
+stdsoap2.cpp:
+	cp $(GSOAP_DIR)/stdsoap2.cpp .
+
+stdsoap2.h:
+	cp $(GSOAP_DIR)/stdsoap2.h .
+
+#
+# BUILD DLL
+#
+
+$(TARGET).lib $(TARGET).dll: simias.h simiasClient.cpp $(DLL_OBJECTS)
+	$(CXX) -shared $(DLL_OBJECTS) $(LIB_PATHS) $(DLL_LIBS) $(DLL_LD_FLAGS) -Wl,--out-implib,$(TARGET).lib -o $(TARGET).dll
+
+##
+## CLEAN RULES
+##
+
+clean:
+	rm -rf *.o
+	rm -rf $(TARGET).dll
+	rm -rf $(TARGET).lib
+	rm -rf *.xml
+	rm -rf simias*
+	rm -rf stdsoap2.*
+
