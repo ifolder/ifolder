@@ -68,8 +68,8 @@ typedef struct {
 	GtkWidget				*addButton;
 	GtkWidget				*removeButton;
 	GtkWidget				*propertiesButton;
-	GHashTable				*curDomains;
-	GHashTable				*removedDomains;
+//	GHashTable				*curDomains;
+//	GHashTable				*removedDomains;
 
 	GHashTable				*detailsDialogs;
 	GtkWidget				*waitDialog;

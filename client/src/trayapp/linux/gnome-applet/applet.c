@@ -64,14 +64,12 @@ static void ifa_init (IFApplet *applet)
 	if (!ifa_icons_init (applet))
 		return;
 	
+	
 /*	gtk_window_set_default_icon_from_file (ICONDIR"/IFApplet/wireless-applet.png", NULL); */
+
 	gtk_widget_show (ifa_get_instance (applet));
-	ifa_set_icon(applet, applet->starting_up_icon);
-	
-	/**
-	 * FIXME: Initialize the client
-	 */
-	
+
+//	ifa_set_icon(applet, applet->starting_up_icon);
 	ifa_set_icon(applet, applet->idle_icon);
 }
 

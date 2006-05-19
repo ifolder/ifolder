@@ -57,7 +57,7 @@ struct _iFolderPrefsAuthReq
 static IFAPreferencesWindow *prefsWindow = NULL;
 
 static IFAPreferencesWindow *create_preferences_window();
-static void delete_preferences_window(IFAPreferencesWindow **pw);
+static void delete_preferences_window(IFAPreferencesWindow *pw);
 static gboolean key_press_handler(GtkWidget *widget, GdkEventKey *event, IFAPreferencesWindow *pw);
 static gboolean key_release_handler(GtkWidget *widget, GdkEventKey *event, IFAPreferencesWindow *pw);
 static gboolean delete_event_handler(GtkWidget *widget, GdkEvent *event, IFAPreferencesWindow *pw);
@@ -342,8 +342,8 @@ create_accounts_page(IFAPreferencesWindow *pw)
 	gtk_container_set_border_width(GTK_CONTAINER(pw->accountsPage), IFA_DEFAULT_BORDER_WIDTH);
 	g_signal_connect(G_OBJECT(pw->accountsPage), "realize", G_CALLBACK(accounts_page_realized), pw);
 	
-	pw->curDomains = g_hash_table_new(g_direct_hash, g_ifolder_domain_equal);
-	pw->removedDomains = g_hash_table_new(g_str_hash, g_str_equal);
+//	pw->curDomains = g_hash_table_new(g_direct_hash, g_ifolder_domain_equal);
+//	pw->removedDomains = g_hash_table_new(g_str_hash, g_str_equal);
 	pw->detailsDialogs = g_hash_table_new(g_direct_hash, g_str_equal);
 
 //	pw->curDomains = g_hash_table_new_full(g_str_hash, g_str_equal);
@@ -484,14 +484,15 @@ close_window()
 	gtk_widget_hide(prefsWindow->window);
 	gtk_widget_destroy(prefsWindow->window);
 
-	delete_preferences_window(&prefsWindow);
+	delete_preferences_window(prefsWindow);
 }
 
 static void
-delete_preferences_window(IFAPreferencesWindow **pw)
+delete_preferences_window(IFAPreferencesWindow *pw)
 {
-	/* FIXME: Free memory used by structure members */
-	free(*pw);
+	g_hash_table_destroy (pw->detailsDialogs);
+
+	free(pw);
 	prefsWindow = NULL;
 }
 
