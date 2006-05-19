@@ -183,7 +183,12 @@ int InternalParseOptions(int argc, char* argv[], int optionCount, Option options
 						}
 						else
 						{
-							pOption->Value = argIndex < argc ? argv[argIndex++] : NULL;
+							char *pValue = argIndex < argc ? argv[argIndex + 1] : NULL;
+							if (pValue[0] != '-')
+							{
+								pOption->Value = pValue;
+								argIndex++;
+							}
 						}
 					}
 				}

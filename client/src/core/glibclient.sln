@@ -5,6 +5,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glibclient", "glibclient.vc
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ifcli", "ifcli\ifcli.vcproj", "{4DFD04FF-00A6-484D-859B-B44739D064A6}"
 	ProjectSection(ProjectDependencies) = postProject
+		{427CA50F-541B-4FD6-AB91-FB247197D890} = {427CA50F-541B-4FD6-AB91-FB247197D890}
 	EndProjectSection
 EndProject
 Global

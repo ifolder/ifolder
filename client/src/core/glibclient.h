@@ -58,6 +58,7 @@
 
 typedef std::string utf8string;
 
+
 // This class is exported from the glibclient.dll
 class GLIBCLIENT_API Cglibclient {
 public:

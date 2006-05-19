@@ -6,6 +6,7 @@
 
 #include <glib.h>
 #include "IFApplication.h"
+#include "IFDomain.h"
 #include "IFiFolder.h"
 #include "IFOptions.h"
 
@@ -15,30 +16,63 @@ int SyncHandler(PCommand command, char* extra[]);
 int ConflictHandler(PCommand command, char* extra[]);
 int LogHandler(PCommand command, char* extra[]);
 
+static gchar* DomainName = NULL;
+static gboolean iFolderName = NULL;
+static gboolean LogCmd = false;
 
-Option DomainOptions[] = 
+static GOptionEntry AppOptions[] = 
 {
-	{NULL, "login", "DOMAIN_NAME", "Login to domain", NULL, false},
-	{NULL, "logout", "DOMAIN_NAME", "Logout of domain", NULL, false},
-	{"a", "add", "URL", "Connect to domain", NULL, false},
-	{"r", "remove", "DOMAIN_NAME", "Disconnect from domain", NULL, false},
-	{"l", "list", NULL, "List the connected domains", NULL, false},
-	{"u", "user", "NAME", "User Name", NULL, false},
-	{"p", "password", "PASSWORD", "Password", NULL, false},
-	{"v", "view", "NAME", "Get the details of the Domain.", NULL, false},
+	{"domain", 'd', 0, G_OPTION_ARG_STRING, &DomainName, "Domain to operate on.", "DOMAIN_NAME"},
+	{"ifolder", 'i', 0, G_OPTION_ARG_STRING, &iFolderName, "iFolder to operate on", "IFOLDER_NAME"},
+	{"log", 'l', 0, G_OPTION_ARG_NONE, &LogCmd, "Logging Operation", NULL},
+	{ NULL }
 };
-#define DomainOptionsCount sizeof(DomainOptions)/sizeof(Option)
 
-Option iFolderOptions[] = 
+static gboolean doLogin = false;
+static gboolean doLogout = false;
+static gboolean doAdd = false;
+static gboolean doRemove = false;
+static gboolean doList = false;
+static gboolean doView = false;
+static gchar* HostName = NULL;
+static gchar* UserName = NULL;
+static gchar* Password = NULL;
+
+static GOptionEntry DomainOptions[] =
 {
-	{"s", "subscribe", "ID", "Subscribe to the iFolder", NULL, false},
-	{"c", "create", "PATH", "Create an iFolder to the specified path.", NULL, false},
-	{"r", "revert", "PATH", "Revert to a normal iFolder", NULL, false},
-	{"l", "list", NULL, "List the subscribed iFolders", NULL, false},
-	{"d", "domain", "NAME", "The domain for the iFolder", NULL, false},
-	{"v", "view", "PATH", "Get the iFolder details.", NULL, false},
+	{"login", 'i', 0, G_OPTION_ARG_NONE, &doLogin, "Login to the domain", NULL},
+	{"logout", 'o', 0, G_OPTION_ARG_NONE, &doLogout, "Logout of the domain", NULL},
+	{"add", 'a', 0, G_OPTION_ARG_NONE, &doAdd, "Add domain to known domains", NULL},
+	{"remove", 'r', 0, G_OPTION_ARG_NONE, &doRemove, "Remove domain from known domains", NULL},
+	{"list", 'l', 0, G_OPTION_ARG_NONE, &doList, "List the domains that have been added.", NULL},
+	{"view", 'v', 0, G_OPTION_ARG_NONE, &doView, "Get the details of the Domain.", NULL},
+	{"host", 'h', 0, G_OPTION_ARG_STRING, &HostName, "Host | Host:port", "HOST"},
+	{"user", 'u', 0, G_OPTION_ARG_STRING, &UserName, "User Name", "USER_NAME"},
+	{"password", 'p', 0, G_OPTION_ARG_STRING, &Password, "Password", "PASSWORD"},
+	{ NULL }
 };
-#define iFolderOptionsCount sizeof(iFolderOptions)/sizeof(Option)
+
+static gboolean ifoSubscribe = false;
+static gboolean ifoCreate = false;
+static gboolean ifoRemove = false;
+static gboolean ifoList = false;
+static gboolean ifoView = false;
+static gchar* iFolderID = NULL;
+
+static GOptionEntry iFolderOptions[] = 
+{
+	{"subscribe", 's', 0, G_OPTION_ARG_NONE, &ifoSubscribe, "Subscribe to the iFolder", NULL},
+	{"create", 'c', 0, G_OPTION_ARG_NONE, &ifoCreate, "Create an iFolder to the specified path.", NULL},
+	{"revert", 'r', 0, G_OPTION_ARG_NONE, &ifoRemove, "Revert to a normal iFolder", NULL},
+	{"list", 'l', 0, G_OPTION_ARG_NONE, &ifoList, "List the subscribed iFolders", NULL},
+	{"view", 'v', 0, G_OPTION_ARG_NONE, &ifoView, "Get the iFolder details.", NULL},
+	{"domain", 'd', 0, G_OPTION_ARG_STRING, &DomainName, "Domain to which the ifolder belongs.", "DOMAIN_NAME"},
+	{"name", 'n', 0, G_OPTION_ARG_STRING, &iFolderName, "Name of the iFolder.", "IFOLDER_NAME"},
+	{"id", 'i', 0, G_OPTION_ARG_STRING, &iFolderID, "ID of the iFolder.", "IFOLDER_ID"},
+	{ NULL }
+};
+
+/*
 
 Option SyncOptions[] = 
 {
@@ -68,21 +102,90 @@ Option LogOptions[] =
 	{"v", "view", "PATH", "Get the details of the conflict.", NULL, false},
 };
 #define LogOptionsCount sizeof(LogOptions)/sizeof(Option)
-
-Command Commands[] =
-{
-	{"domain", DomainOptionsCount, DomainOptions, &DomainHandler},
-	{"ifolder", iFolderOptionsCount, iFolderOptions, &iFolderHandler},
-	{"sync", SyncOptionsCount, SyncOptions, &SyncHandler},
-	{"conflict", ConflictOptionsCount, ConflictOptions, &ConflictHandler},
-	{"log", LogOptionsCount, LogOptions, &LogHandler},
-};
-#define CommandCount sizeof(Commands)/sizeof(Command)
-
+*/
 
 
 int main(int argc, char* argv[])
 {
+	char c;
+	printf("Hit Enter to continue\n");
+	scanf("%c", &c);
+	
+	GError *error = NULL;
+	GOptionContext* clContext = g_option_context_new(NULL);
+	g_option_context_add_main_entries(clContext, AppOptions, NULL);
+	GOptionGroup* domainGroup = g_option_group_new("domain", "Domain Options", "Options for operating on a domain", NULL, NULL);
+	g_option_group_add_entries(domainGroup, DomainOptions);
+	g_option_context_add_group(clContext, domainGroup);
+	GOptionGroup* iFolderGroup = g_option_group_new("ifolder", "iFolder Options", "Options for operating on an iFolder", NULL, NULL);
+	g_option_group_add_entries(iFolderGroup, iFolderOptions);
+	g_option_context_add_group(clContext, iFolderGroup);
+	if (!g_option_context_parse(clContext, &argc, &argv, &error))
+	{
+		printf("%s\n", error->message);
+		g_clear_error(&error);
+	}
+	else
+	{
+		IFApplication::Initialize();
+		if (iFolderName != NULL)
+		{
+		}
+		else if (DomainName != NULL)
+		{
+			if (doLogin)
+			{
+				if (UserName == NULL)
+				{
+				}
+				if (Password == NULL)
+				{
+				}
+			}
+			if (doLogout)
+			{
+			}
+			if (doAdd)
+			{
+				if (HostName == NULL)
+				{
+					printf("Enter Host : ");
+				}
+				if (UserName == NULL)
+				{
+					printf("Enter User Name : ");
+				}
+				if (Password == NULL)
+				{
+					printf("Enter Password : ");
+				}
+				IFDomain& pDomain = IFDomain::Add(UserName, Password, HostName);
+				IFDomainIterator iter = IFDomain::GetDomains();
+				IFDomain *pD;
+				while ((pD = iter.Next()) != NULL)
+				{
+					g_message(pD->m_Name);
+				}
+			}
+			if (doRemove)
+			{
+			}
+			if (doList)
+			{
+			}
+			if (doView)
+			{
+			}
+		}
+		else if (LogCmd)
+		{
+		}
+	}
+	g_option_context_free(clContext);
+	printf("Hit Enter to continue\n");
+	scanf("%c", &c);
+	
+	/*
 	if (argc == 1)
 	{
 		ShowUsage(argv[0], CommandCount, Commands, false);
@@ -122,6 +225,7 @@ int main(int argc, char* argv[])
 	}
 	printf("Hit Enter to continue\n");
 	scanf("%c", &c);
+	*/
 }
 
 void PrintEnteredOptions(PCommand command, char* extra[])
@@ -144,7 +248,34 @@ void PrintEnteredOptions(PCommand command, char* extra[])
 
 int DomainHandler(PCommand command, char* extra[])
 {
+	/*
+	if (DomainOptions[DO_login].Set)
+	{
+		if (!DomainOptions[DO_user].Set || !DomainOptions[DO_password].Set)
+		{
+		}
+	}
+	else if (DomainOptions[DO_logout].Set)
+	{
+	}
+	else if (DomainOptions[DO_add].Set)
+	{
+		if (!DomainOptions[DO_user].Set || !DomainOptions[DO_password].Set)
+		{
+			printf("UserName or Password is missing\n");
+		}
+	}
+	else if (DomainOptions[DO_remove].Set)
+	{
+	}
+	else if (DomainOptions[DO_list].Set)
+	{
+	}
+	else if (DomainOptions[DO_view].Set)
+	{
+	}
 	PrintEnteredOptions(command, extra);
+	*/
 	return 0;
 }
 

@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://novell.com/simias/domain" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" targetNamespace="http://novell.com/simias/domain" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://novell.com/simias/domain">
+      <s:element name="GetDomainInfo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="userID" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDomainInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetDomainInfoResult" type="tns:DomainInfo"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DomainInfo">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ID" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="MemberNodeID" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="MemberNodeName" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="MemberRights" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetHomeServer">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetHomeServerResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetHomeServerResult" type="tns:HostInfo"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="HostInfo">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ID" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="PublicAddress" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="PrivateAddress" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="PublicKey" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Master" type="s:boolean"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ProvisionUserOnServer">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="ticket" type="s:base64Binary"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ProvisionUserOnServerResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ProvisionUserOnServerResult" type="tns:ProvisionInfo"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ProvisionInfo">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="UserID" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="POBoxID" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="POBoxName" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="MemberNodeID" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="MemberNodeName" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="MemberRights" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ProvisionUser">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ProvisionUserResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ProvisionUserResult" type="tns:ProvisionInfo"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateMaster">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="collectionID" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="collectionName" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="rootDirID" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="rootDirName" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="userID" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="memberName" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="memberID" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="memberRights" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateMasterResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CreateMasterResult" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RemoveServerCollections">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DomainID" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="UserID" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RemoveServerCollectionsResponse">
+        <s:complexType/>
+      </s:element>
+      <s:element name="GetDomainID">
+        <s:complexType/>
+      </s:element>
+      <s:element name="GetDomainIDResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetDomainIDResult" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetDomainInfoSoapIn">
+    <wsdl:part name="parameters" element="tns:GetDomainInfo"/>
+  </wsdl:message>
+  <wsdl:message name="GetDomainInfoSoapOut">
+    <wsdl:part name="parameters" element="tns:GetDomainInfoResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetHomeServerSoapIn">
+    <wsdl:part name="parameters" element="tns:GetHomeServer"/>
+  </wsdl:message>
+  <wsdl:message name="GetHomeServerSoapOut">
+    <wsdl:part name="parameters" element="tns:GetHomeServerResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ProvisionUserOnServerSoapIn">
+    <wsdl:part name="parameters" element="tns:ProvisionUserOnServer"/>
+  </wsdl:message>
+  <wsdl:message name="ProvisionUserOnServerSoapOut">
+    <wsdl:part name="parameters" element="tns:ProvisionUserOnServerResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ProvisionUserSoapIn">
+    <wsdl:part name="parameters" element="tns:ProvisionUser"/>
+  </wsdl:message>
+  <wsdl:message name="ProvisionUserSoapOut">
+    <wsdl:part name="parameters" element="tns:ProvisionUserResponse"/>
+  </wsdl:message>
+  <wsdl:message name="CreateMasterSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateMaster"/>
+  </wsdl:message>
+  <wsdl:message name="CreateMasterSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateMasterResponse"/>
+  </wsdl:message>
+  <wsdl:message name="RemoveServerCollectionsSoapIn">
+    <wsdl:part name="parameters" element="tns:RemoveServerCollections"/>
+  </wsdl:message>
+  <wsdl:message name="RemoveServerCollectionsSoapOut">
+    <wsdl:part name="parameters" element="tns:RemoveServerCollectionsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetDomainIDSoapIn">
+    <wsdl:part name="parameters" element="tns:GetDomainID"/>
+  </wsdl:message>
+  <wsdl:message name="GetDomainIDSoapOut">
+    <wsdl:part name="parameters" element="tns:GetDomainIDResponse"/>
+  </wsdl:message>
+  <wsdl:portType name="Domain_x0020_ServiceSoap">
+    <wsdl:operation name="GetDomainInfo">
+      <wsdl:input message="tns:GetDomainInfoSoapIn"/>
+      <wsdl:output message="tns:GetDomainInfoSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetHomeServer">
+      <wsdl:input message="tns:GetHomeServerSoapIn"/>
+      <wsdl:output message="tns:GetHomeServerSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="ProvisionUserOnServer">
+      <wsdl:input message="tns:ProvisionUserOnServerSoapIn"/>
+      <wsdl:output message="tns:ProvisionUserOnServerSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="ProvisionUser">
+      <wsdl:input message="tns:ProvisionUserSoapIn"/>
+      <wsdl:output message="tns:ProvisionUserSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="CreateMaster">
+      <wsdl:input message="tns:CreateMasterSoapIn"/>
+      <wsdl:output message="tns:CreateMasterSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveServerCollections">
+      <wsdl:input message="tns:RemoveServerCollectionsSoapIn"/>
+      <wsdl:output message="tns:RemoveServerCollectionsSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetDomainID">
+      <wsdl:input message="tns:GetDomainIDSoapIn"/>
+      <wsdl:output message="tns:GetDomainIDSoapOut"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="Domain_x0020_ServiceSoap" type="tns:Domain_x0020_ServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+    <wsdl:operation name="GetDomainInfo">
+      <soap:operation soapAction="http://novell.com/simias/domain/GetDomainInfo" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetHomeServer">
+      <soap:operation soapAction="http://novell.com/simias/domain/GetHomeServer" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ProvisionUserOnServer">
+      <soap:operation soapAction="http://novell.com/simias/domain/ProvisionUserOnServer" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ProvisionUser">
+      <soap:operation soapAction="http://novell.com/simias/domain/ProvisionUser" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateMaster">
+      <soap:operation soapAction="http://novell.com/simias/domain/CreateMaster" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveServerCollections">
+      <soap:operation soapAction="http://novell.com/simias/domain/RemoveServerCollections" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDomainID">
+      <soap:operation soapAction="http://novell.com/simias/domain/GetDomainID" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Domain_x0020_Service">
+    <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Web Service providing access to Simias domain services.</documentation>
+    <wsdl:port name="Domain_x0020_ServiceSoap" binding="tns:Domain_x0020_ServiceSoap">
+      <soap:address location="http://127.0.0.1:8086/simias10/DomainService.asmx"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

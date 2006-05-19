@@ -16,12 +16,13 @@
 			OutputDirectory="Debug"
 			IntermediateDirectory="Debug"
 			ConfigurationType="2"
-			CharacterSet="2">
+			CharacterSet="2"
+			DeleteExtensionsOnClean="*.obj;*.ilk;*.pdb;*.tlb;*.tli;*.tlh;*.tmp;*.rsp;*.bat;..\*.xml;$(TargetPath);..\stdsoap2.cpp;..\stdsoap2.h;..\typemap.dat;..\simias.h;..\soapStub.h;..\soapH.h;..\soapC.c;..\soapClient.c;..\soapServer.c;..\soapClientLib.c;..\soapServerLib.c">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)..\..\external\glib\win32\include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;GLIBCLIENT_EXPORTS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;GLIBCLIENT_EXPORTS;WITH_COOKIES;WITH_NONAMESPACES"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="2"
@@ -33,7 +34,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="glib-2.0.lib"
+				AdditionalDependencies="glib-2.0.lib ws2_32.lib"
 				OutputFile="$(OutDir)/glibclient.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)..\..\external\glib\win32\lib&quot;"
@@ -47,7 +48,17 @@
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCPreBuildEventTool"
+				CommandLine="if not exist $(ProjectDir)stdsoap2.cpp copy $(SolutionDir)..\..\tools\gsoap\win32-2.7\stdsoap2.cpp $(ProjectDir)
+if not exist $(ProjectDir)stdsoap2.h copy $(SolutionDir)..\..\tools\gsoap\win32-2.7\stdsoap2.h $(ProjectDir)
+echo if not exist $(ProjectDir)stl.h copy $(SolutionDir)..\..\tools\gsoap\win32-2.7\stl.h $(ProjectDir)
+echo if not exist $(ProjectDir)stldeque.h copy $(SolutionDir)..\..\tools\gsoap\win32-2.7\stldeque.h $(ProjectDir)
+echo if not exist $(ProjectDir)stllist.h copy $(SolutionDir)..\..\tools\gsoap\win32-2.7\stllist.h $(ProjectDir)
+echo if not exist $(ProjectDir)stvectorl.h copy $(SolutionDir)..\..\tools\gsoap\win32-2.7\stlvector.h $(ProjectDir)
+echo if not exist $(ProjectDir)stlset.h copy $(SolutionDir)..\..\tools\gsoap\win32-2.7\stlset.h $(ProjectDir)
+if not exist $(ProjectDir)simias.h $(SolutionDir)..\..\tools\gsoap\win32-2.7\wsdl2h -s -o $(projectDir)simias.h Simias.wsdl DomainService.wsdl
+if not exist $(ProjectDir)simiasClient.cpp $(SolutionDir)..\..\tools\gsoap\win32-2.7\soapcpp2  -LCxn -psimias $(ProjectDir)simias.h
+"/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
@@ -68,11 +79,12 @@
 			OutputDirectory="Release"
 			IntermediateDirectory="Release"
 			ConfigurationType="2"
-			CharacterSet="2">
+			CharacterSet="2"
+			DeleteExtensionsOnClean="*.obj;*.ilk;*.pdb;*.tlb;*.tli;*.tlh;*.tmp;*.rsp;*.bat;..\*.xml;$(TargetPath);..\stdsoap2.cpp;..\stdsoap2.h;..\typemap.dat;..\simias.h;..\soapStub.h;..\soapH.h;..\soapC.c;..\soapClient.c;..\soapServer.c;..\soapClientLib.c;..\soapServerLib.c">
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)..\..\external\glib\win32\include&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;GLIBCLIENT_EXPORTS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;GLIBCLIENT_EXPORTS;WITH_COOKIES;WITH_NONAMESPACES"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -82,7 +94,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="glib-2.0.lib"
+				AdditionalDependencies="glib-2.0.lib ws2_32.lib"
 				OutputFile="$(OutDir)/glibclient.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)..\..\external\glib\win32\lib&quot;"
@@ -97,7 +109,17 @@
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCPreBuildEventTool"
+				CommandLine="if not exist $(ProjectDir)stdsoap2.cpp copy $(SolutionDir)..\..\tools\gsoap\win32-2.7\stdsoap2.cpp $(ProjectDir)
+if not exist $(ProjectDir)stdsoap2.h copy $(SolutionDir)..\..\tools\gsoap\win32-2.7\stdsoap2.h $(ProjectDir)
+echo if not exist $(ProjectDir)stl.h copy $(SolutionDir)..\..\tools\gsoap\win32-2.7\stl.h $(ProjectDir)
+echo if not exist $(ProjectDir)stldeque.h copy $(SolutionDir)..\..\tools\gsoap\win32-2.7\stldeque.h $(ProjectDir)
+echo if not exist $(ProjectDir)stllist.h copy $(SolutionDir)..\..\tools\gsoap\win32-2.7\stllist.h $(ProjectDir)
+echo if not exist $(ProjectDir)stvectorl.h copy $(SolutionDir)..\..\tools\gsoap\win32-2.7\stlvector.h $(ProjectDir)
+echo if not exist $(ProjectDir)stlset.h copy $(SolutionDir)..\..\tools\gsoap\win32-2.7\stlset.h $(ProjectDir)
+if not exist $(ProjectDir)simias.h $(SolutionDir)..\..\tools\gsoap\win32-2.7\wsdl2h -s -o $(projectDir)simias.h Simias.wsdl DomainService.wsdl
+if not exist $(ProjectDir)simiasClient.cpp $(SolutionDir)..\..\tools\gsoap\win32-2.7\soapcpp2  -LCxn -psimias $(ProjectDir)simias.h
+"/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
@@ -147,6 +169,15 @@
 			</File>
 			<File
 				RelativePath=".\IFOptions.cpp">
+			</File>
+			<File
+				RelativePath=".\simiasC.cpp">
+			</File>
+			<File
+				RelativePath=".\simiasClient.cpp">
+			</File>
+			<File
+				RelativePath=".\stdsoap2.cpp">
 			</File>
 		</Filter>
 		<Filter
