@@ -524,6 +524,8 @@ load_domains (iFolderClient *client, GError **error)
 		ifolder_domain_set_is_authenticated (domain, FALSE);
 		ifolder_domain_set_is_default (domain, FALSE);
 		ifolder_domain_set_is_active (domain, TRUE);
+		
+		priv->domains = g_slist_prepend (priv->domains, domain);
 
 		core_domain = i.Next();
 	}
