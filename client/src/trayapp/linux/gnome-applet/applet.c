@@ -493,22 +493,22 @@ ifa_show_ifolders_cb(GtkMenuItem *mi, IFApplet *applet)
 }
 
 static void
-ifa_start_full_sync_cb(GtkMenuItem *mi, IFApplet *applet)
+ifa_show_account_settings_cb(GtkMenuItem *mi, IFApplet *applet)
 {
-	/* @todo Add code to start a full synchronization */
+	ifa_show_preferences_window (1);
 }
 
 static void
-ifa_stop_sync_cb(GtkMenuItem *mi, IFApplet *applet)
+ifa_show_sync_log_cb(GtkMenuItem *mi, IFApplet *applet)
 {
-	/* @todo Add code to stop a synchronization */
+	g_message ("FIXME: Implement ifa_show_sync_log_cb()");
 }
 
 static void
 ifa_preferences_cb(GtkMenuItem *mi, IFApplet *applet)
 {
 	/* @todo Add code to show the preferences */
-	ifa_show_preferences_window();
+	ifa_show_preferences_window (0);
 }
 
 static void
@@ -547,24 +547,19 @@ static GtkWidget *ifa_context_menu_create (IFApplet *applet)
 	menu = gtk_menu_new ();
 
 	/* 'Show iFolders' item */
-	applet->show_ifolders_item = gtk_menu_item_new_with_mnemonic(_("_Show iFolders"));
+	applet->show_ifolders_item = gtk_menu_item_new_with_mnemonic(_("i_Folders"));
 	g_signal_connect(G_OBJECT(applet->show_ifolders_item), "activate", G_CALLBACK(ifa_show_ifolders_cb), applet);
 	gtk_menu_shell_append(GTK_MENU_SHELL (menu), applet->show_ifolders_item);
 
-	/* Separator */
-	ifa_menu_add_separator_item (menu);
-	
 	/* 'Start Full Synchronization' item */
-	applet->start_full_sync_item = gtk_menu_item_new_with_mnemonic(_("Start _Full Synchronization"));
-	g_signal_connect(G_OBJECT(applet->start_full_sync_item), "activate", G_CALLBACK(ifa_start_full_sync_cb), applet);
-	gtk_menu_shell_append(GTK_MENU_SHELL (menu), applet->start_full_sync_item);
+	applet->account_settings_item = gtk_menu_item_new_with_mnemonic(_("Account _Settings..."));
+	g_signal_connect(G_OBJECT(applet->account_settings_item), "activate", G_CALLBACK(ifa_show_account_settings_cb), applet);
+	gtk_menu_shell_append(GTK_MENU_SHELL (menu), applet->account_settings_item);
 
 	/* 'Stop Synchronization' item */
-	applet->stop_sync_item = gtk_image_menu_item_new_with_mnemonic(_("Sto_p Synchronization"));
-	g_signal_connect(G_OBJECT(applet->stop_sync_item), "activate", G_CALLBACK(ifa_start_full_sync_cb), applet);
-	image = gtk_image_new_from_stock (GTK_STOCK_STOP, GTK_ICON_SIZE_MENU);
-	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (applet->stop_sync_item), image);
-	gtk_menu_shell_append(GTK_MENU_SHELL (menu), applet->stop_sync_item);
+	applet->show_sync_log_item = gtk_image_menu_item_new_with_mnemonic(_("Synchronization _Log"));
+	g_signal_connect(G_OBJECT(applet->show_sync_log_item), "activate", G_CALLBACK(ifa_show_sync_log_cb), applet);
+	gtk_menu_shell_append(GTK_MENU_SHELL (menu), applet->show_sync_log_item);
 
 	/* Separator */
 	ifa_menu_add_separator_item (menu);

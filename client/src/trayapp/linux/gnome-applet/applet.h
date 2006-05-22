@@ -85,8 +85,8 @@ typedef struct
 	GtkWidget *		context_menu;
 	
 	GtkWidget *		show_ifolders_item;
-	GtkWidget *		start_full_sync_item;
-	GtkWidget *		stop_sync_item;
+	GtkWidget *		account_settings_item;
+	GtkWidget *		show_sync_log_item;
 	GtkWidget *		preferences_item;
 	GtkWidget *		help_item;
 	GtkWidget *		about_item;
