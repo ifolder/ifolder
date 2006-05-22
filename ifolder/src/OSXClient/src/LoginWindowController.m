@@ -142,7 +142,7 @@
 				{
 					@try
 					{
-						SecCertificateRef certRef = [simiasService GetCertificate:[serverField stringValue]];
+						SecCertificateRef certRef = [simiasService GetCertificate:authDomainHost];
 
 						AcceptCertSheetController *certSheet = [[AcceptCertSheetController alloc]
 								initWithCert:certRef forHost:authDomainHost];
@@ -255,7 +255,7 @@
 		@try
 		{
 			SimiasService *simiasService = [[SimiasService alloc] init];
-			[simiasService StoreCertificate:certRef forHost:[serverField stringValue]];
+			[simiasService StoreCertificate:certRef forHost:authDomainHost];
 			[self authenticate:self];
 		}
 		@catch(NSException *ex)
