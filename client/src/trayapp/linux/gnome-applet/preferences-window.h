@@ -38,6 +38,7 @@ typedef enum
 
 typedef struct {
 	GtkWidget 		*window;
+	gboolean		realized;
 
 	GtkWidget		*notebook;
 	GtkWidget		*generalPage;
@@ -76,10 +77,12 @@ typedef struct {
 	
 	gulong					domain_added_cb_id;
 	gulong					domain_removed_cb_id;
+	gulong					domain_logged_in_cb_id;
+	gulong					domain_logged_out_cb_id;
 } IFAPreferencesWindow;
 
 IFAPreferencesWindow *ifa_get_preferences_window();
-void ifa_show_preferences_window();
+void ifa_show_preferences_window(gint page_num);
 
 G_END_DECLS
 

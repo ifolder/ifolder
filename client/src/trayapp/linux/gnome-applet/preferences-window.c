@@ -76,6 +76,7 @@ static void on_auto_sync_button(GtkToggleButton *togglebutton, IFAPreferencesWin
 static void on_sync_interval_changed(GtkSpinButton *spinbutton, IFAPreferencesWindow *pw);
 static void on_sync_units_changed(GtkComboBox *widget, IFAPreferencesWindow *pw);
 
+static void preferences_window_realized(GtkWidget *widget, IFAPreferencesWindow *pw);
 static void accounts_page_realized(GtkWidget *widget, IFAPreferencesWindow *pw);
 static void online_cell_toggle_data_func(GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, IFAPreferencesWindow *pw);
 static void online_toggled(GtkCellRendererToggle *cell_renderer, gchar *path, IFAPreferencesWindow *pw);
@@ -104,6 +105,8 @@ static gboolean log_out_thread_completed(iFolderPrefsAuthReq *authReq);
 
 static void domain_added_cb (iFolderClient *client, iFolderDomain *domain, IFAPreferencesWindow *pw);
 static void domain_removed_cb (iFolderClient *client, iFolderDomain *domain, IFAPreferencesWindow *pw);
+static void domain_logged_in_cb (iFolderClient *client, iFolderDomain *domain, IFAPreferencesWindow *pw);
+static void domain_logged_out_cb (iFolderClient *client, iFolderDomain *domain, IFAPreferencesWindow *pw);
 
 IFAPreferencesWindow *
 ifa_get_preferences_window()
@@ -117,13 +120,18 @@ ifa_get_preferences_window()
 }
 
 void
-ifa_show_preferences_window()
+ifa_show_preferences_window(gint page_num)
 {
 	IFAPreferencesWindow *pw = ifa_get_preferences_window();
 	if (!pw)
 		return;
+	
+	if (pw->realized)
+		gtk_window_present (GTK_WINDOW (pw->window));
+	else
+		gtk_widget_show_all(pw->window);
 
-	gtk_widget_show_all(pw->window);
+	gtk_notebook_set_current_page (GTK_NOTEBOOK (pw->notebook), page_num);
 }
 
 IFAPreferencesWindow *
@@ -133,7 +141,9 @@ create_preferences_window()
 
 	pw->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW(pw->window), _("iFolder Preferences"));
-	pw->controlKeyPressed = false;
+	pw->realized = FALSE;
+	pw->controlKeyPressed = FALSE;
+	g_signal_connect(G_OBJECT(pw->window), "realize", G_CALLBACK(preferences_window_realized), pw);
 	g_signal_connect(G_OBJECT(pw->window), "key-press-event", G_CALLBACK(key_press_handler), pw);
 	g_signal_connect(G_OBJECT(pw->window), "key-release-event", G_CALLBACK(key_release_handler), pw);
 	g_signal_connect(G_OBJECT(pw->window), "delete-event", G_CALLBACK(delete_event_handler), pw);
@@ -166,6 +176,11 @@ create_preferences_window()
 	g_signal_connect(G_OBJECT(pw->closeButton), "clicked", G_CALLBACK(close_button_clicked), pw);
 	
 	pw->waitDialog = NULL;
+
+	pw->domain_added_cb_id = 0;
+	pw->domain_removed_cb_id = 0;
+	pw->domain_logged_in_cb_id = 0;
+	pw->domain_logged_out_cb_id = 0;
 
 	return pw;
 }
@@ -478,8 +493,14 @@ close_window()
 		leaving_general_page();
 	
 	/* Disconnect signal handlers */
-	g_signal_handler_disconnect (ifolder_client, prefsWindow->domain_added_cb_id);
-	g_signal_handler_disconnect (ifolder_client, prefsWindow->domain_removed_cb_id);
+	if (prefsWindow->domain_added_cb_id > 0)
+		g_signal_handler_disconnect (ifolder_client, prefsWindow->domain_added_cb_id);
+	if (prefsWindow->domain_removed_cb_id > 0)
+		g_signal_handler_disconnect (ifolder_client, prefsWindow->domain_removed_cb_id);
+	if (prefsWindow->domain_logged_in_cb_id > 0)
+		g_signal_handler_disconnect (ifolder_client, prefsWindow->domain_logged_in_cb_id);
+	if (prefsWindow->domain_logged_out_cb_id > 0)
+		g_signal_handler_disconnect (ifolder_client, prefsWindow->domain_logged_out_cb_id);
 
 	gtk_widget_hide(prefsWindow->window);
 	gtk_widget_destroy(prefsWindow->window);
@@ -618,6 +639,12 @@ on_sync_units_changed(GtkComboBox *widget, IFAPreferencesWindow *pw)
 }
 
 static void
+preferences_window_realized(GtkWidget *widget, IFAPreferencesWindow *pw)
+{
+	pw->realized = true;
+}
+
+static void
 accounts_page_realized(GtkWidget *widget, IFAPreferencesWindow *pw)
 {
 	g_message ("accounts_page_realized()");
@@ -627,6 +654,8 @@ accounts_page_realized(GtkWidget *widget, IFAPreferencesWindow *pw)
 	
 	pw->domain_added_cb_id = g_signal_connect (ifolder_client, "domain-added", G_CALLBACK (domain_added_cb), pw);
 	pw->domain_removed_cb_id = g_signal_connect (ifolder_client, "domain-removed", G_CALLBACK (domain_removed_cb), pw);
+	pw->domain_logged_in_cb_id = g_signal_connect (ifolder_client, "domain-logged-in", G_CALLBACK (domain_logged_in_cb), pw);
+	pw->domain_logged_out_cb_id = g_signal_connect (ifolder_client, "domain-logged-out", G_CALLBACK (domain_logged_out_cb), pw);
 }
 
 static void
@@ -921,11 +950,6 @@ log_in_thread_completed(iFolderPrefsAuthReq *authReq)
 		gtk_dialog_run (GTK_DIALOG (errDialog));
 		gtk_widget_destroy (errDialog);
 	}
-	else
-	{
-		g_message ("FIXME: Remove the following line.  It should be set on a log-in event.");
-		gtk_cell_renderer_toggle_set_active (GTK_CELL_RENDERER_TOGGLE (authReq->cell_renderer), TRUE);
-	}
 	
 	if (authReq->password != NULL)
 		g_free (authReq->password);
@@ -972,11 +996,6 @@ log_out_thread_completed(iFolderPrefsAuthReq *authReq)
 		gtk_dialog_run (GTK_DIALOG (errDialog));
 		gtk_widget_destroy (errDialog);
 	}
-	else
-	{
-		g_message ("FIXME: Remove the following line.  It should be set on a log-out event.");
-		gtk_cell_renderer_toggle_set_active (GTK_CELL_RENDERER_TOGGLE (authReq->cell_renderer), FALSE);
-	}
 
 	free(authReq);
 	return FALSE;
@@ -1000,6 +1019,7 @@ domain_removed_cb (iFolderClient *client, iFolderDomain *domain, IFAPreferencesW
 	GtkTreeIter iter;
 	iFolderDomain *tmpDomain;
 	
+g_message ("domain_removed_cb() in preferences-window.c");
 	gtk_tree_model_get_iter_first (GTK_TREE_MODEL (pw->accTreeStore), &iter);
 	
 	while (gtk_list_store_iter_is_valid (pw->accTreeStore, &iter))
@@ -1017,3 +1037,24 @@ domain_removed_cb (iFolderClient *client, iFolderDomain *domain, IFAPreferencesW
 	}
 }
 
+static void
+domain_logged_in_cb (iFolderClient *client, iFolderDomain *domain, IFAPreferencesWindow *pw)
+{
+	g_message ("FIXME: Implement domain_logged_in_cb() in preferences-window.c");
+//	else
+//	{
+//		g_message ("FIXME: Remove the following line.  It should be set on a log-in event.");
+//		gtk_cell_renderer_toggle_set_active (GTK_CELL_RENDERER_TOGGLE (authReq->cell_renderer), TRUE);
+//	}
+}
+
+static void
+domain_logged_out_cb (iFolderClient *client, iFolderDomain *domain, IFAPreferencesWindow *pw)
+{
+	g_message ("FIXME: Implement domain_logged_out_cb() in preferences-window.c");
+//	else
+//	{
+//		g_message ("FIXME: Remove the following line.  It should be set on a log-out event.");
+//		gtk_cell_renderer_toggle_set_active (GTK_CELL_RENDERER_TOGGLE (authReq->cell_renderer), FALSE);
+//	}
+}
