@@ -467,6 +467,8 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 		
 
 		runThreads = NO;
+		SimiasEventDisconnect();
+				
 		[self addLog:NSLocalizedString(@"Shutting down Simias...", @"Sync Log Message")];
 		ifconlog1(@"Calling to stop Simias");			
 		if([ [Simias getInstance] stop])
@@ -476,7 +478,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 		
 		[self addLog:NSLocalizedString(@"Simias is shut down", @"Sync Log Message")];
 
-		SimiasEventDisconnect();		
+	
 	}
 }
 
@@ -922,13 +924,13 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 				[[iFolderData sharedInstance] readiFolder:[cse ID]];
 				[ifolder setSyncState:SYNC_STATE_PREPARING];
 				[[iFolderData sharedInstance] clearUsersAdded:[cse ID]];
-			}
 
-			NSString *syncMessage = [NSString
+				NSString *syncMessage = [NSString
 							stringWithFormat:NSLocalizedString(@"Checking for changes: %@", @"iFolder Window Status Message"), 
 							[cse name]];
-			[iFolderWindowController updateStatusTS:syncMessage];
-			[self addLogTS:syncMessage];
+				[iFolderWindowController updateStatusTS:syncMessage];
+				[self addLogTS:syncMessage];
+			}
 			break;
 		}
 		case SYNC_ACTION_START:
@@ -945,13 +947,16 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 				totalSyncCount = [ss SyncNodeCount];
 
 				[ss release];
-			}
+
+				if([[ifolder Role] compare:@"Master"] == 0)
+					break;
 		
-			NSString *syncMessage = [NSString
+				NSString *syncMessage = [NSString
 							stringWithFormat:NSLocalizedString(@"Synchronizing: %@", @"iFolder Window Status Message"), 
 							[cse name]];
-			[iFolderWindowController updateStatusTS:syncMessage];
-			[self addLogTS:syncMessage];
+				[iFolderWindowController updateStatusTS:syncMessage];
+				[self addLogTS:syncMessage];
+			}
 			break;
 		}
 		case SYNC_ACTION_STOP:
@@ -973,43 +978,46 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 				{
 					[iFolderNotificationController newUserNotification:ifolder];								
 				}
-			}
-		
-			NSString *syncMessage;
 
-			SyncSize *ss = [[[iFolderData sharedInstance] getSyncSize:[cse ID]] retain];			
-			if([ss SyncNodeCount] == 0)
-			{
-				if([cse connected])
+				if([[ifolder Role] compare:@"Master"] == 0)
+					break;
+		
+				NSString *syncMessage;
+
+				SyncSize *ss = [[[iFolderData sharedInstance] getSyncSize:[cse ID]] retain];			
+				if([ss SyncNodeCount] == 0)
 				{
-					[ifolder setSyncState:SYNC_STATE_OK];
-					syncMessage = [NSString
-						stringWithFormat:NSLocalizedString(@"Finished synchronization: %@", @"Sync Log Message"), 
-						[cse name]];
+					if([cse connected])
+					{
+						[ifolder setSyncState:SYNC_STATE_OK];
+						syncMessage = [NSString
+							stringWithFormat:NSLocalizedString(@"Finished synchronization: %@", @"Sync Log Message"), 
+							[cse name]];
+					}
+					else
+					{
+						[ifolder setSyncState:SYNC_STATE_DISCONNECTED];
+						syncMessage = [NSString
+									stringWithFormat:NSLocalizedString(@"Failed synchronization: %@",  @"Sync Log Message"), 
+									[cse name]];
+					}
 				}
 				else
 				{
-					[ifolder setSyncState:SYNC_STATE_DISCONNECTED];
+					[ifolder setOutOfSyncCount:[ss SyncNodeCount]];
+					[ifolder setSyncState:SYNC_STATE_OUT_OF_SYNC];
 					syncMessage = [NSString
-								stringWithFormat:NSLocalizedString(@"Failed synchronization: %@",  @"Sync Log Message"), 
-								[cse name]];
+									stringWithFormat:NSLocalizedString(@"Not synchronized: %@",  @"Sync Log Message"), 
+									[cse name]];
 				}
-			}
-			else
-			{
-				[ifolder setOutOfSyncCount:[ss SyncNodeCount]];
-				[ifolder setSyncState:SYNC_STATE_OUT_OF_SYNC];
-				syncMessage = [NSString
-								stringWithFormat:NSLocalizedString(@"Not synchronized: %@",  @"Sync Log Message"), 
-								[cse name]];
-			}
-			[ss release];
+				[ss release];
 
-			[iFolderWindowController updateStatusTS:NSLocalizedString(@"Idle...", @"iFolder Window Status Message")];
-			[self addLogTS:syncMessage];
+				[iFolderWindowController updateStatusTS:NSLocalizedString(@"Idle...", @"iFolder Window Status Message")];
+				[self addLogTS:syncMessage];
 
-			// sending current value of -1 hides the control
-			[iFolderWindowController updateProgress:-1 withMin:0 withMax:0];
+				// sending current value of -1 hides the control
+				[iFolderWindowController updateProgress:-1 withMin:0 withMax:0];
+			}
 			break;
 		}
 	}
