@@ -435,7 +435,7 @@ namespace Novell.iFolder
 									LoginDialog = null;
 									break;
 								case StatusCodes.InvalidCertificate:
-									byte[] byteArray = simws.GetCertificate(LoginDialog.Domain);
+									byte[] byteArray = simws.GetCertificate(dom.Host);
 									System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(byteArray);
 
 									iFolderMsgDialog dialog = new iFolderMsgDialog(
@@ -444,7 +444,7 @@ namespace Novell.iFolder
 										iFolderMsgDialog.ButtonSet.YesNo,
 										"",
 										Util.GS("Accept the certificate of this server?"),
-										string.Format(Util.GS("iFolder is unable to verify \"{0}\" as a trusted server.  You should examine this server's identity certificate carefully."), LoginDialog.Domain),
+										string.Format(Util.GS("iFolder is unable to verify \"{0} ({1})\" as a trusted server.  You should examine this server's identity certificate carefully."), dom.Name, dom.Host),
 										cert.ToString(true));
 
 									Gdk.Pixbuf certPixbuf = Util.LoadIcon("gnome-mime-application-x-x509-ca-cert", 48);
@@ -456,7 +456,7 @@ namespace Novell.iFolder
 									dialog.Destroy();
 									if(rc == -8) // User clicked the Yes button
 									{
-										simws.StoreCertificate(byteArray, LoginDialog.Domain);
+										simws.StoreCertificate(byteArray, dom.Host);
 										OnReLoginDialogResponse(o, args);
 									}
 									break;

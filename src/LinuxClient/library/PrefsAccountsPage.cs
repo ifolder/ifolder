@@ -491,9 +491,9 @@ namespace Novell.iFolder
 					if (dom != null)
 					{
 						if (!dom.Authenticated)
-							LoginDomain(dom, iter);
+							LoginDomain(dom);
 						else
-							LogoutDomain(dom, iter);
+							LogoutDomain(dom);
 					}
 				}
 			}
@@ -502,7 +502,7 @@ namespace Novell.iFolder
 			onlineToggleButton.Activatable = true;
 		}
 		
-		private void LoginDomain(DomainInformation dom, TreeIter iter)
+		private void LoginDomain(DomainInformation dom)
 		{
 			try
 			{
@@ -593,16 +593,44 @@ namespace Novell.iFolder
 
 			if (authStatus != null)
 			{
-				if (authStatus.statusCode == StatusCodes.Success ||
-					authStatus.statusCode == StatusCodes.SuccessInGrace)
+				switch (authStatus.statusCode)
 				{
-					UpdateWidgetSensitivity();
-				}
-				else
-				{
-					Util.ShowLoginError(topLevelWindow, authStatus.statusCode);
+					case StatusCodes.Success:
+					case StatusCodes.SuccessInGrace:
+						UpdateWidgetSensitivity();
+						break;
+					case StatusCodes.InvalidCertificate:
+						DomainInformation dom = domainController.GetDomain(args.DomainID);
+						byte[] byteArray = simws.GetCertificate(dom.Host);
+						System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(byteArray);
 
-					UpdateDomainStatus(args.DomainID);
+						iFolderMsgDialog dialog = new iFolderMsgDialog(
+							null,
+							iFolderMsgDialog.DialogType.Question,
+							iFolderMsgDialog.ButtonSet.YesNo,
+							"",
+							Util.GS("Accept the certificate of this server?"),
+							string.Format(Util.GS("iFolder is unable to verify \"{0} ({1})\" as a trusted server.  You should examine this server's identity certificate carefully."), dom.Name, dom.Host),
+							cert.ToString(true));
+
+						Gdk.Pixbuf certPixbuf = Util.LoadIcon("gnome-mime-application-x-x509-ca-cert", 48);
+						if (certPixbuf != null && dialog.Image != null)
+							dialog.Image.Pixbuf = certPixbuf;
+
+						int rc = dialog.Run();
+						dialog.Hide();
+						dialog.Destroy();
+						if(rc == -8) // User clicked the Yes button
+						{
+							simws.StoreCertificate(byteArray, dom.Host);
+							LoginDomain(dom);
+						}
+						break;
+					default:
+						Util.ShowLoginError(topLevelWindow, authStatus.statusCode);
+	
+						UpdateDomainStatus(args.DomainID);
+						break;
 				}
 			}
 			else
@@ -613,7 +641,7 @@ namespace Novell.iFolder
 			}
 		}
 		
-		private void LogoutDomain(DomainInformation dom, TreeIter iter)
+		private void LogoutDomain(DomainInformation dom)
 		{
 			try
 			{
