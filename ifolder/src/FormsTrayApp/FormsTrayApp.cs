@@ -92,6 +92,7 @@ namespace Novell.FormsTrayApp
 		private bool shutdown = false;
 		private bool winShutDown = false;
 		private bool simiasRunning = false;
+		private Hashtable authenticationInProgress = new Hashtable();
 		private Icon trayIcon;
 		private Icon startupIcon;
 		private Icon shutdownIcon;
@@ -737,6 +738,8 @@ namespace Novell.FormsTrayApp
 		{
 			if (serverInfo != null)
 			{
+				authenticationInProgress.Remove( serverInfo.DomainInfo.ID );
+
 				// Keep track of the cancelled state.
 				if (serverInfo.Cancelled)
 				{
@@ -800,6 +803,7 @@ namespace Novell.FormsTrayApp
 						byte[] byteArray = simiasWebService.GetCertificate(domainInfo.Host);
 						System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(byteArray);
 						mmb = new MyMessageBox(string.Format(resourceManager.GetString("verifyCert"), domainInfo.Host), resourceManager.GetString("verifyCertTitle"), cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2);
+						mmb.StartPosition = FormStartPosition.CenterScreen;
 						if (mmb.ShowDialog() == DialogResult.Yes)
 						{
 							simiasWebService.StoreCertificate(byteArray, domainInfo.Host);
@@ -1334,34 +1338,46 @@ namespace Novell.FormsTrayApp
 					{
 						DomainInformation domainInfo = simiasWebService.GetDomainInformation(notifyEventArgs.Message);
 						string credentials;
-						if (!authenticate(domainInfo, out credentials))
+						if ( !authenticationInProgress.Contains( domainInfo.ID ) )
 						{
-							// Only display one dialog.
-							if (serverInfo == null)
+							authenticationInProgress.Add( domainInfo.ID, null );
+							bool removeFromList = true;
+
+							if (!authenticate(domainInfo, out credentials))
 							{
-								serverInfo = new ServerInfo(simiasManager, domainInfo, credentials);
-								serverInfo.Closed += new EventHandler(serverInfo_Closed);
-								serverInfo.Show();
-								ShellNotifyIcon.SetForegroundWindow(serverInfo.Handle);
-							}
-						}
-						else
-						{
-							try
-							{
-								// Check for a client update.
-								bool update = CheckForClientUpdate(domainInfo.ID);
-								if (update)
+								// Only display one dialog.
+								if (serverInfo == null)
 								{
-									ShutdownTrayApp(null);
+									removeFromList = false;
+									serverInfo = new ServerInfo(simiasManager, domainInfo, credentials);
+									serverInfo.Closed += new EventHandler(serverInfo_Closed);
+									serverInfo.Show();
+									ShellNotifyIcon.SetForegroundWindow(serverInfo.Handle);
 								}
 							}
-							catch // Ignore
+							else
 							{
-							}
+								try
+								{
+									// Check for a client update.
+									bool update = CheckForClientUpdate(domainInfo.ID);
+									if (update)
+									{
+										ShutdownTrayApp(null);
+									}
+								}
+								catch // Ignore
+								{
+								}
 
-							domainInfo.Authenticated = true;
-							preferences.UpdateDomainStatus(new Domain(domainInfo));
+								domainInfo.Authenticated = true;
+								preferences.UpdateDomainStatus(new Domain(domainInfo));
+							}
+							
+							if ( removeFromList)
+							{
+								authenticationInProgress.Remove( domainInfo.ID );
+							}
 						}
 					}
 					catch //(Exception ex)
