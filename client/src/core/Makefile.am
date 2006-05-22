@@ -51,9 +51,9 @@ libifolder_core_a_LDFLAGS = \
 #libifolder_core_a_LIBFLAGS = 
 
 libifolder_core_a_SOURCES = \
-	stdsoap2.cpp				\
 	simiasC.cpp					\
 	simiasClient.cpp			\
+	stdsoap2.cpp				\
 	glibclient.cpp				\
 	IFApplication.cpp			\
 	IFChanges.cpp				\
