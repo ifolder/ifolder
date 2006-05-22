@@ -26,12 +26,19 @@
 	#define sleep(x) Sleep((x)*1000)
 #endif
 
-#include <unistd.h> /* FIXME: Remove this when done spoofing things with sleep() */
-
 #include <IFDomain.h>
 
 #include "ifolder-domain.h"
 #include "ifolder-private.h"
+#include "ifolder-errors.h"
+
+/* FIXME: Remove the following 3 lines when we start including gettext */
+#ifndef _
+#define _
+#endif
+
+extern iFolderClient *singleton_client;
+extern guint ifolder_client_signals[LAST_SIGNAL];
 
 typedef struct _iFolderDomainPrivate iFolderDomainPrivate;
 struct _iFolderDomainPrivate
@@ -567,6 +574,22 @@ ifolder_domain_set_user_data(iFolderDomain *domain, gpointer user_data)
 	priv->user_data = user_data;
 }
 
+IFDomain *
+ifolder_domain_get_core_domain (iFolderDomain *domain)
+{
+	iFolderDomainPrivate *priv;
+
+	if (domain == NULL)
+	{
+		g_critical("domain is NULL!");
+		return NULL;
+	}
+
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+	
+	return priv->core_domain;
+}
+
 void
 ifolder_domain_set_core_domain (iFolderDomain *domain, IFDomain *core_domain)
 {
@@ -586,15 +609,57 @@ ifolder_domain_set_core_domain (iFolderDomain *domain, IFDomain *core_domain)
 void
 ifolder_domain_log_in(iFolderDomain *domain, const char *password, gboolean remember_password, GError **error)
 {
-	g_message("FIXME: Implement ifolder_domain_login");
-	sleep (3); /* FIXME: Remove this spoofed work */
+	iFolderDomainPrivate *priv;
+
+	if (domain == NULL)
+	{
+		g_critical("domain is NULL!");
+		return;
+	}
+
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+	
+	g_message ("FIXME: Change the implementation of IFDomain.Login() to return a gboolean, a GError, and take parameters.");
+	if (priv->core_domain->Login () != 0)
+	{
+		g_set_error (error,
+					 IFOLDER_ERROR,
+					 IFOLDER_ERR_UNKNOWN,
+					 _("FIXME: IFDomain.Login() should return a GError so we know what's going on."));
+		return;
+	}
+
+	priv->is_authenticated = TRUE;
+
+	g_signal_emit (singleton_client, ifolder_client_signals[DOMAIN_LOGGED_IN], 0, domain);
 }
 
 void
 ifolder_domain_log_out(iFolderDomain *domain, GError **error)
 {
-	g_message("FIXME: Implement ifolder_domain_log_out");
-	sleep (3); /* FIXME: Remove this spoofed work */
+	iFolderDomainPrivate *priv;
+
+	if (domain == NULL)
+	{
+		g_critical("domain is NULL!");
+		return;
+	}
+
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+	
+	g_message ("FIXME: Change the implementation of IFDomain.Logout() to return a gboolean and a GError.");
+	if (priv->core_domain->Logout () != 0)
+	{
+		g_set_error (error,
+					 IFOLDER_ERROR,
+					 IFOLDER_ERR_UNKNOWN,
+					 _("FIXME: IFDomain.Logout() should return a GError so we know what's going on."));
+		return;
+	}
+	
+	priv->is_authenticated = FALSE;
+
+	g_signal_emit (singleton_client, ifolder_client_signals[DOMAIN_LOGGED_OUT], 0, domain);
 }
 
 void

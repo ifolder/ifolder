@@ -38,7 +38,8 @@
 #define _
 #endif
 
-
+iFolderClient *singleton_client = NULL;
+guint ifolder_client_signals[LAST_SIGNAL] = { 0 };
 
 typedef struct _iFolderClientPrivate iFolderClientPrivate;
 struct _iFolderClientPrivate
@@ -53,16 +54,6 @@ struct _iFolderClientPrivate
 };
 
 #define IFOLDER_CLIENT_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), IFOLDER_CLIENT_TYPE, iFolderClientPrivate))
-
-enum {
-	DOMAIN_ADDED,
-	DOMAIN_REMOVED,
-	LAST_SIGNAL
-};
-
-static iFolderClient *singleton_client = NULL;
-
-static guint ifolder_client_signals[LAST_SIGNAL] = { 0 };
 
 /**
  * Forward definitions
@@ -94,7 +85,7 @@ ifolder_client_class_init(iFolderClientClass *klass)
 			g_cclosure_marshal_VOID__POINTER,
 			G_TYPE_NONE,
 			1,
-			G_TYPE_OBJECT);
+			G_TYPE_POINTER);
 
 	ifolder_client_signals[DOMAIN_REMOVED] =
 		g_signal_new ("domain-removed",
@@ -105,7 +96,29 @@ ifolder_client_class_init(iFolderClientClass *klass)
 			g_cclosure_marshal_VOID__POINTER,
 			G_TYPE_NONE,
 			1,
-			G_TYPE_OBJECT);
+			G_TYPE_POINTER);
+
+	ifolder_client_signals[DOMAIN_LOGGED_IN] =
+		g_signal_new ("domain-logged-in",
+			G_OBJECT_CLASS_TYPE (object_class),
+			G_SIGNAL_RUN_LAST,
+			G_STRUCT_OFFSET (iFolderClientClass, domain_logged_in),
+			NULL, NULL,
+			g_cclosure_marshal_VOID__POINTER,
+			G_TYPE_NONE,
+			1,
+			G_TYPE_POINTER);
+
+	ifolder_client_signals[DOMAIN_LOGGED_OUT] =
+		g_signal_new ("domain-logged-out",
+			G_OBJECT_CLASS_TYPE (object_class),
+			G_SIGNAL_RUN_LAST,
+			G_STRUCT_OFFSET (iFolderClientClass, domain_logged_out),
+			NULL, NULL,
+			g_cclosure_marshal_VOID__POINTER,
+			G_TYPE_NONE,
+			1,
+			G_TYPE_POINTER);
 
 	g_type_class_add_private(klass, sizeof(iFolderClientPrivate));
 
@@ -411,6 +424,7 @@ void
 ifolder_client_remove_domain(iFolderClient *client, iFolderDomain *domain, GError **error)
 {
 	iFolderClientPrivate *priv;
+	IFDomain *core_domain;
 	GSList *foundNode;
 	
 	if (client == NULL)
@@ -446,11 +460,25 @@ ifolder_client_remove_domain(iFolderClient *client, iFolderDomain *domain, GErro
 	}
 	
 	/* FIXME: Call the core to remove the domain.  If successful, remove it from iFolderClientPrivate->domains */
-	priv->domains = g_slist_remove (priv->domains, domain);
+	core_domain = ifolder_domain_get_core_domain (domain);
+	if (core_domain == NULL)
+	{
+		g_set_error (error,
+					 IFOLDER_ERROR,
+					 IFOLDER_ERR_UNKNOWN,
+					 _("The IFDomain (core_domain) was NULL when attempting to remove a domain."));
+		return;
+	}
 	
-	g_signal_emit (client, ifolder_client_signals[DOMAIN_REMOVED], 0, domain);
-	
-	g_object_unref (domain); /* FIXME: Figure out if this will really delete the iFolderDomain object */
+	g_message ("FIXME: Modify the following call once the core api has been modified to return a gboolean");
+	if (core_domain->Remove() == 0)
+	{
+		priv->domains = g_slist_remove (priv->domains, domain);
+		
+		g_signal_emit (client, ifolder_client_signals[DOMAIN_REMOVED], 0, domain);
+		
+		g_object_unref (domain);
+	}
 }
 
 /**
@@ -465,6 +493,13 @@ ifolder_client_new (void)
 	
 	return client;
 }
+
+iFolderClient *
+ifolder_client_get_static (void)
+{
+	return singleton_client;
+}
+
 
 GKeyFile *
 ifolder_client_get_config_key_file (GError **error)

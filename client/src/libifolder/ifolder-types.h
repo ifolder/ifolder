@@ -52,6 +52,8 @@ struct _iFolderClientClass
 	
 	void (* domain_added) (iFolderClient *client, iFolderDomain *domain, gpointer user_data);
 	void (* domain_removed) (iFolderClient *client, iFolderDomain *domain, gpointer user_data);
+	void (* domain_logged_in) (iFolderClient *client, iFolderDomain *domain, gpointer user_data);
+	void (* domain_logged_out) (iFolderClient *client, iFolderDomain *domain, gpointer user_data);
 	
 	/* class members */
 };

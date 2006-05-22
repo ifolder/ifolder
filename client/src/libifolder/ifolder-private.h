@@ -21,11 +21,23 @@
  *
  ***********************************************************************/
 
+#ifndef _IFOLDER_CLIENT_PRIVATE_H_
+#define _IFOLDER_CLIENT_PRIVATE_H_
+
 #include <IFDomain.h>
 
 #include "ifolder-types.h"
 
+typedef enum {
+	DOMAIN_ADDED,
+	DOMAIN_REMOVED,
+	DOMAIN_LOGGED_IN,
+	DOMAIN_LOGGED_OUT,
+	LAST_SIGNAL
+} iFolderClientSignal;
+
 iFolderClient *ifolder_client_new (void);
+iFolderClient *ifolder_client_get_static (void);
 
 /**
  * iFolderDomain Functions
@@ -42,6 +54,7 @@ void ifolder_domain_set_user_name (iFolderDomain *domain, const gchar *user_name
 void ifolder_domain_set_is_authenticated (iFolderDomain *domain, gboolean is_authenticated);
 void ifolder_domain_set_is_default (iFolderDomain *domain, gboolean is_default);
 void ifolder_domain_set_is_active (iFolderDomain *domain, gboolean is_active);
+IFDomain *ifolder_domain_get_core_domain (iFolderDomain *domain);
 void ifolder_domain_set_core_domain (iFolderDomain *domain, IFDomain *core_domain);
 
 iFolder *ifolder_new (void);
@@ -49,3 +62,5 @@ iFolderUser *ifolder_user_new (void);
 iFolderUserPolicy *ifolder_user_policy_new (void);
 
 GKeyFile *ifolder_client_get_config_key_file (GError **error = NULL);
+
+#endif /* _IFOLDER_CLIENT_PRIVATE_H_ */
