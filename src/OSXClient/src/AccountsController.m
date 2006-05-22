@@ -128,13 +128,23 @@
 		(![selectedDomain authenticated]) &&
 		( [[password stringValue] length] > 0 ) )
 	{
-		[[NSApp delegate] setupSimiasProxies:[selectedDomain host]];
 
 		@try
 		{
-			// Set the current host address, I'm not sure what to do if this fails
-			ifconlog1(@"Calling into SetDomainHostAddress");
-			[simiasService SetDomainHostAddress:[selectedDomain ID] NewHostAddress:[host stringValue]];
+			if( [[selectedDomain host] compare:[host stringValue]] != 0 )
+			{
+				// Set the current host address, I'm not sure what to do if this fails
+				ifconlog1(@"Calling into SetDomainHostAddress");
+				[simiasService SetDomainHostAddress:[selectedDomain ID] 
+									withAddress:[host stringValue]
+									forUser:[userName stringValue]
+									withPassword:[password stringValue]];
+
+				[[NSApp delegate] setupSimiasProxies:[host stringValue]];
+			}
+			else
+				[[NSApp delegate] setupSimiasProxies:[selectedDomain host]];
+			
 
 			AuthStatus *authStatus = [[simiasService LoginToRemoteDomain:[selectedDomain ID]
 										usingPassword:[password stringValue]] retain];

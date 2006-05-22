@@ -108,6 +108,13 @@
 
 		@try
 		{
+		
+			//ifconlog1(@"Calling into SetDomainHostAddress");
+//			[simiasService SetDomainHostAddress:authDomainID 
+//									withAddress:authDomainHost
+//									forUser:[userNameField stringValue]
+//									withPassword:[passwordField stringValue]];
+		
 			AuthStatus *authStatus = [[simiasService LoginToRemoteDomain:authDomainID 
 										usingPassword:[passwordField stringValue]] retain];
 
@@ -142,7 +149,7 @@
 				{
 					@try
 					{
-						SecCertificateRef certRef = [simiasService GetCertificate:[serverField stringValue]];
+						SecCertificateRef certRef = [simiasService GetCertificate:authDomainHost];
 
 						AcceptCertSheetController *certSheet = [[AcceptCertSheetController alloc]
 								initWithCert:certRef forHost:authDomainHost];
@@ -255,7 +262,7 @@
 		@try
 		{
 			SimiasService *simiasService = [[SimiasService alloc] init];
-			[simiasService StoreCertificate:certRef forHost:[serverField stringValue]];
+			[simiasService StoreCertificate:certRef forHost:authDomainHost];
 			[self authenticate:self];
 		}
 		@catch(NSException *ex)
