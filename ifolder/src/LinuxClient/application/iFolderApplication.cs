@@ -274,23 +274,85 @@ namespace Novell.iFolder
 			switch (args.ResponseId)
 			{
 				case Gtk.ResponseType.Ok:
-					Status status = 
-						domainController.AuthenticateDomain(
-							LoginDialog.Domain,
-							LoginDialog.Password,
-							LoginDialog.ShouldSavePassword);
-					if (status == null ||
-						(status.statusCode != StatusCodes.Success &&
-						 status.statusCode != StatusCodes.SuccessInGrace))
+					try
 					{
-						Util.ShowLoginError(LoginDialog, status.statusCode);
+						Status status = 
+							domainController.AuthenticateDomain(
+								LoginDialog.Domain,
+								LoginDialog.Password,
+								LoginDialog.ShouldSavePassword);
+						if (status == null ||
+							(status.statusCode != StatusCodes.Success &&
+							 status.statusCode != StatusCodes.SuccessInGrace))
+						{
+							Util.ShowLoginError(LoginDialog, status.statusCode);
+						}
+						else
+						{
+							switch(status.statusCode)
+							{
+								case StatusCodes.Success:
+								case StatusCodes.SuccessInGrace:
+									// Login was successful so close the Login dialog
+									LoginDialog.Hide();
+									LoginDialog.Destroy();
+									LoginDialog = null;
+									break;
+								case StatusCodes.InvalidCertificate:
+									byte[] byteArray = simws.GetCertificate(LoginDialog.Domain);
+									System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(byteArray);
+	
+									iFolderMsgDialog dialog = new iFolderMsgDialog(
+										null,
+										iFolderMsgDialog.DialogType.Question,
+										iFolderMsgDialog.ButtonSet.YesNo,
+										"",
+										Util.GS("Accept the certificate of this server?"),
+										string.Format(Util.GS("iFolder is unable to verify \"{0}\" as a trusted server.  You should examine this server's identity certificate carefully."), LoginDialog.Domain),
+										cert.ToString(true));
+	
+//									Gdk.Pixbuf certPixbuf = Util.LoadIcon("gnome-mime-application-x-x509-ca-cert", 48);
+//									if (certPixbuf != null && dialog.Image != null)
+//									dialog.Image.Pixbuf = certPixbuf;
+	
+									int rc = dialog.Run();
+									dialog.Hide();
+									dialog.Destroy();
+									if(rc == -8) // User clicked the Yes button
+									{
+										simws.StoreCertificate(byteArray, LoginDialog.Domain);
+										OnReLoginDialogResponse(o, args);
+									}
+									else
+									{
+										// Prevent the auto login feature from being called again
+										domainController.DisableDomainAutoLogin(LoginDialog.Domain);
+	
+										LoginDialog.Hide();
+										LoginDialog.Destroy();
+										LoginDialog = null;
+									}
+									break;
+								default:
+									Util.ShowLoginError(LoginDialog, status.statusCode);
+									break;
+							}
+						}
 					}
-					else
+					catch(Exception e)
 					{
-						// Login was successful so close the Login dialog
-						LoginDialog.Hide();
-						LoginDialog.Destroy();
-						LoginDialog = null;
+						iFolderMsgDialog dialog = new iFolderMsgDialog(
+							null,
+							iFolderMsgDialog.DialogType.Error,
+							iFolderMsgDialog.ButtonSet.Ok,
+							Util.GS("Account Error"),
+							Util.GS("Unable to connect to the iFolder Server"),
+							Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."),
+							e.Message);
+						dialog.Run();
+						dialog.Hide();
+						dialog.Destroy();
+						dialog = null;
 					}
 
 					break;
