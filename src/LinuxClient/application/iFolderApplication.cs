@@ -423,7 +423,7 @@ namespace Novell.iFolder
 								LoginDialog.Domain,
 								LoginDialog.Password,
 								LoginDialog.ShouldSavePassword);
-						if (status == null)
+						if (status != null)
 						{
 							switch(status.statusCode)
 							{
@@ -444,7 +444,7 @@ namespace Novell.iFolder
 										iFolderMsgDialog.ButtonSet.YesNo,
 										"",
 										Util.GS("Accept the certificate of this server?"),
-										string.Format(Util.GS("iFolder is unable to verify \"{0} ({1})\" as a trusted server.  You should examine this server's identity certificate carefully."), dom.Name, dom.Host),
+										string.Format(Util.GS("iFolder is unable to verify \"{0}\" as a trusted server.  You should examine this server's identity certificate carefully."), dom.Host),
 										cert.ToString(true));
 
 									Gdk.Pixbuf certPixbuf = Util.LoadIcon("gnome-mime-application-x-x509-ca-cert", 48);
@@ -458,6 +458,15 @@ namespace Novell.iFolder
 									{
 										simws.StoreCertificate(byteArray, dom.Host);
 										OnReLoginDialogResponse(o, args);
+									}
+									else
+									{
+										// Prevent the auto login feature from being called again
+										domainController.DisableDomainAutoLogin(LoginDialog.Domain);
+
+										LoginDialog.Hide();
+										LoginDialog.Destroy();
+										LoginDialog = null;
 									}
 									break;
 								default:
