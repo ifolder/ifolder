@@ -29,16 +29,11 @@ TARGET = ifolder3lib
 
 # Compiler and Linker Options
 
-CFLAGS = -DGLIBCLIENT_EXPORTS -DWITH_NONAMESPACES -DWITH_COOKIES
+CFLAGS =
 
 DEFINES =
 
 LDFLAGS = -mwindows
-
-#-mconsole
-#-mwindows
-
-WINDRES := windres
 
 ##
 ## INCLUDE  MAKEFILES
@@ -99,7 +94,6 @@ DLL_LIBS =	-lglib-2.0 \
 %.o: %.cpp
 	$(CXX) $(CFLAGS) $(INCLUDE_PATHS) $(DEFINES) -c $< -o $@
 
-
 # How to make an RC file
 %.o: %.rc
 	$(WINDRES) -i $< -o $@
@@ -117,27 +111,8 @@ install: all
 	cp $(TARGET).dll $(IFOLDER_INSTALL_DIR)
 
 #
-# SOAP Generation
-#
-#simiasC.cpp: simias.h
-#	$(GSOAP_DIR)/soapcpp2 -LCxn -psimias $(ProjectDir)simias.h
-
-#simias.h: stdsoap2.h stdsoap2.cpp
-#	$(GSOAP_DIR)/wsdl2h -s -o simias.h Simias.wsdl DomainService.wsdl
-
-#simiasClient.cpp:
-#	$(GSOAP_DIR)/soapcpp2 -LCxn -psimias $(ProjectDir)simias.h
-
-#stdsoap2.cpp:
-#	cp $(GSOAP_DIR)/stdsoap2.cpp .
-
-#stdsoap2.h:
-#	cp $(GSOAP_DIR)/stdsoap2.h .
-
-#
 # BUILD DLL
 #
-
 $(TARGET).lib $(TARGET).dll: $(DLL_OBJECTS)
 	$(CXX) -shared $(DLL_OBJECTS) $(LIB_PATHS) $(DLL_LIBS) $(DLL_LD_FLAGS) -Wl,--out-implib,$(TARGET).lib -o $(TARGET).dll
 
@@ -149,7 +124,5 @@ clean:
 	rm -rf *.o
 	rm -rf $(TARGET).dll
 	rm -rf $(TARGET).lib
-	rm -rf *.xml
-	rm -rf simias*
-	rm -rf stdsoap2.*
+
 
