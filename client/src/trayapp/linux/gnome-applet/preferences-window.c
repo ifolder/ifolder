@@ -35,6 +35,7 @@
 #include "account-wizard.h"
 #include "util.h"
 #include "wait-dialog.h"
+#include "account-properties-dialog.h"
 
 #include "preferences-window.h"
 
@@ -107,6 +108,8 @@ static void domain_added_cb (iFolderClient *client, iFolderDomain *domain, IFAPr
 static void domain_removed_cb (iFolderClient *client, iFolderDomain *domain, IFAPreferencesWindow *pw);
 static void domain_logged_in_cb (iFolderClient *client, iFolderDomain *domain, IFAPreferencesWindow *pw);
 static void domain_logged_out_cb (iFolderClient *client, iFolderDomain *domain, IFAPreferencesWindow *pw);
+
+static void on_props_dialog_hide_event (GtkWidget *widget, IFAPreferencesWindow *pw);
 
 IFAPreferencesWindow *
 ifa_get_preferences_window()
@@ -359,7 +362,7 @@ create_accounts_page(IFAPreferencesWindow *pw)
 	
 //	pw->curDomains = g_hash_table_new(g_direct_hash, g_ifolder_domain_equal);
 //	pw->removedDomains = g_hash_table_new(g_str_hash, g_str_equal);
-	pw->detailsDialogs = g_hash_table_new(g_direct_hash, g_str_equal);
+	pw->detailsDialogs = g_hash_table_new(g_str_hash, g_str_equal);
 
 //	pw->curDomains = g_hash_table_new_full(g_str_hash, g_str_equal);
 //	pw->removedDomains = g_hash_table_new_full(g_str_hash, g_str_equal);
@@ -830,7 +833,32 @@ on_remove_account(GtkButton *widget, IFAPreferencesWindow *pw)
 static void
 on_properties_clicked(GtkButton *widget, IFAPreferencesWindow *pw)
 {
-	g_message("FIXME: Implement on_properties_clicked()");
+	GtkTreeSelection *selection;
+	GtkTreeIter iter;
+	iFolderDomain *domain;
+	GtkWidget *propDialog;
+	
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (pw->accTreeView));
+	if (gtk_tree_selection_count_selected_rows (selection) == 1)
+	{
+		if (gtk_tree_selection_get_selected (selection, NULL, &iter))
+		{
+			gtk_tree_model_get (GTK_TREE_MODEL (pw->accTreeStore), &iter, 0, &domain, -1);
+
+			propDialog = (GtkWidget *)
+				g_hash_table_lookup (pw->detailsDialogs, ifolder_domain_get_id (domain));
+			if (propDialog != NULL)
+				gtk_window_present (GTK_WINDOW (propDialog));
+			else
+			{
+				propDialog = ifa_account_props_dialog_new (GTK_WINDOW (pw->window), domain);
+				g_hash_table_insert (pw->detailsDialogs, (gpointer)ifolder_domain_get_id (domain), propDialog);
+				gtk_window_set_position (GTK_WINDOW (propDialog), GTK_WIN_POS_CENTER);
+				g_signal_connect (propDialog, "hide", G_CALLBACK (on_props_dialog_hide_event), pw);
+				gtk_widget_show_all (propDialog);
+			}
+		}
+	}
 }
 
 static void
@@ -1058,3 +1086,22 @@ domain_logged_out_cb (iFolderClient *client, iFolderDomain *domain, IFAPreferenc
 //		gtk_cell_renderer_toggle_set_active (GTK_CELL_RENDERER_TOGGLE (authReq->cell_renderer), FALSE);
 //	}
 }
+
+static void
+on_props_dialog_hide_event (GtkWidget *widget, IFAPreferencesWindow *pw)
+{
+	iFolderDomain *domain;
+	IFAAccountPropsDialog *dialog;
+
+g_message ("on_props_dialog_hide_event() in preferences-window.c");
+	dialog = (IFAAccountPropsDialog *)widget;
+
+	domain = ifa_account_props_dialog_get_domain (dialog);
+
+	if (domain != NULL)
+	{
+		g_debug ("Removing the details dialog from the hash table");
+		g_hash_table_remove (pw->detailsDialogs, (gpointer)ifolder_domain_get_id (domain));
+	}
+}
+
