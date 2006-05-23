@@ -26,7 +26,7 @@ static gboolean delete_event( GtkWidget *widget,
     /* Change TRUE to FALSE and the main window will be destroyed with
      * a "delete_event". */
 
-    return TRUE;
+    return FALSE;
 }
 
 /* Another callback */
@@ -62,8 +62,10 @@ int main( int   argc,
 
     /* create a new window */
     window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+
+	gtk_window_set_title(GTK_WINDOW(window), "iFolder 2.5 Client");
     
-    g_signal_connect (G_OBJECT (window), "delete_event",
+    g_signal_connect (G_OBJECT (window), "delete-event",
 		      G_CALLBACK (delete_event), NULL);
     
     g_signal_connect (G_OBJECT (window), "destroy",
@@ -83,6 +85,7 @@ int main( int   argc,
     
     g_signal_connect (G_OBJECT (quitButton), "clicked",
 					  G_CALLBACK (showPreferences), NULL);
+
 	g_signal_connect_swapped (G_OBJECT (quitButton), "clicked",
 							  G_CALLBACK (gtk_widget_destroy),
 							  G_OBJECT (window));
