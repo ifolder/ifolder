@@ -122,10 +122,8 @@ DLL_LIBS =	-lglib-2.0 \
 all: $(TARGET).dll
 
 install: all
-	cp $(GAIM_SRC)/gaim.exe $(GAIM_SRC)/gaim.dll $(GAIM_INSTALL_DIR)
-
-$(IDLETRACK_TOP)/idletrack.dll:
-	$(MAKE) -C $(IDLETRACK_TOP) -f Makefile.mingw
+	mkdir -p $(IFOLDER_INSTALL_DIR)
+	cp $(TARGET).dll $(IFOLDER_INSTALL_DIR)
 
 #
 # SOAP Generation

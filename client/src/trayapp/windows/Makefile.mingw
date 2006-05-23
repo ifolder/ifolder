@@ -129,7 +129,8 @@ EXE_LIBS =		-lcairo \
 all: $(TARGET).exe
 
 install: all
-	cp $(GAIM_SRC)/gaim.exe $(GAIM_SRC)/gaim.dll $(GAIM_INSTALL_DIR)
+	mkdir -p $(IFOLDER_INSTALL_DIR)
+	cp $(TARGET).exe $(IFOLDER_INSTALL_DIR)
 
 #
 # BUILD EXE

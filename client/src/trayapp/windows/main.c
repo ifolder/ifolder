@@ -11,7 +11,7 @@ iFolderClient *ifolder_client = NULL;
 static void hello( GtkWidget *widget,
                    gpointer   data )
 {
-	ifa_show_preferences_window();
+	ifa_show_preferences_window(1);
     g_print ("Hello World\n");
 }
 
