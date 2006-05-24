@@ -52,6 +52,7 @@ namespace Novell.iFolder
 		private Button				RemoveButton;
 		private Button				DetailsButton;
 		private bool				NewAccountMode;
+		private bool				ServerEntryChanged;
  
  		private Frame		detailsFrame;
 		private Label		nameLabel;
@@ -157,6 +158,7 @@ namespace Novell.iFolder
 			this.BorderWidth = 10;
 			
 			NewAccountMode = false;
+			ServerEntryChanged = false;
 
 			// Set up the Accounts tree view in a scrolled window
 			AccTreeView = new iFolderTreeView();
@@ -249,6 +251,7 @@ namespace Novell.iFolder
 
 			serverEntry = new Entry();
 			serverEntry.Changed += new EventHandler(OnFieldsChanged);
+			serverEntry.Changed += new EventHandler(OnServerEntryChanged);
 			serverEntry.ActivatesDefault = true;
 			loginTable.Attach(serverEntry, 1,2,0,1,
 					AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
@@ -722,23 +725,30 @@ namespace Novell.iFolder
 			else
 			{
 				// Existing account
-				try
+				if (ServerEntryChanged)
 				{
-					dom = domainController.UpdateDomainHostAddress(curDomain, serverEntry.Text);
+					try
+					{
+						dom = domainController.UpdateDomainHostAddress(curDomain, serverEntry.Text);
+					}
+					catch (Exception e)
+					{
+						iFolderMsgDialog dg = new iFolderMsgDialog(
+							topLevelWindow,
+							iFolderMsgDialog.DialogType.Error,
+							iFolderMsgDialog.ButtonSet.Ok,
+							"",
+							Util.GS("Unable to connect to the iFolder Server"),
+							Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."),
+							Util.GS(e.Message));
+						dg.Run();
+						dg.Hide();
+						dg.Destroy();
+					}
 				}
-				catch (Exception e)
+				else
 				{
-					iFolderMsgDialog dg = new iFolderMsgDialog(
-						topLevelWindow,
-						iFolderMsgDialog.DialogType.Error,
-						iFolderMsgDialog.ButtonSet.Ok,
-						"",
-						Util.GS("Unable to connect to the iFolder Server"),
-						Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."),
-						Util.GS(e.Message));
-					dg.Run();
-					dg.Hide();
-					dg.Destroy();
+					dom = domainController.GetDomain(curDomain);
 				}
 			}
 			
@@ -746,55 +756,47 @@ namespace Novell.iFolder
 
 			switch (dom.StatusCode)
 			{
-				case StatusCodes.InvalidCertificate:
-				{
-					byte[] byteArray = simws.GetCertificate(serverEntry.Text);
-					System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(byteArray);
-
-					iFolderMsgDialog dialog = new iFolderMsgDialog(
-						topLevelWindow,
-						iFolderMsgDialog.DialogType.Question,
-						iFolderMsgDialog.ButtonSet.YesNo,
-						"",
-						string.Format(Util.GS("iFolder cannot verify the identity of the iFolder Server \"{0}\"."), serverEntry.Text),
-						string.Format(Util.GS("The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be \"{0}\" which could put your confidential information at risk.   Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?"), serverEntry.Text),
-						cert.ToString(true));
-					int rc = dialog.Run();
-					dialog.Hide();
-					dialog.Destroy();
-					if(rc == -8) // User clicked the Yes button
-					{
-						simws.StoreCertificate(byteArray, serverEntry.Text);
-						OnLoginAccount(o, args);
-					}
-					break;
-				}
 				case StatusCodes.Success:
 				case StatusCodes.SuccessInGrace:
+				case StatusCodes.InvalidCertificate:
 					Status authStatus = domainController.AuthenticateDomain(dom.ID, passEntry.Text, savePasswordButton.Active);
 
-					if (authStatus != null)
+					if (authStatus != null && (authStatus.statusCode == StatusCodes.Success || authStatus.statusCode == StatusCodes.SuccessInGrace))
 					{
-						if (authStatus.statusCode == StatusCodes.Success ||
-							authStatus.statusCode == StatusCodes.SuccessInGrace)
+						if (NewAccountMode)
 						{
-							if (NewAccountMode)
-							{
-								NewAccountMode = false;
-							}
-							else
-							{
-								UpdateWidgetSensitivity();
-							}
+							NewAccountMode = false;
 						}
 						else
 						{
-							Util.ShowLoginError(topLevelWindow, authStatus.statusCode);
+							UpdateWidgetSensitivity();
+						}
+					}
+					else if (dom.StatusCode == StatusCodes.InvalidCertificate || (authStatus != null && authStatus.statusCode == StatusCodes.InvalidCertificate))
+					{
+						byte[] byteArray = simws.GetCertificate(serverEntry.Text);
+						System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(byteArray);
+		
+						iFolderMsgDialog dialog = new iFolderMsgDialog(
+							topLevelWindow,
+							iFolderMsgDialog.DialogType.Question,
+							iFolderMsgDialog.ButtonSet.YesNo,
+							"",
+							string.Format(Util.GS("iFolder cannot verify the identity of the iFolder Server \"{0}\"."), serverEntry.Text),
+							string.Format(Util.GS("The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be \"{0}\" which could put your confidential information at risk.   Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?"), serverEntry.Text),
+							cert.ToString(true));
+						int rc = dialog.Run();
+						dialog.Hide();
+						dialog.Destroy();
+						if(rc == -8) // User clicked the Yes button
+						{
+							simws.StoreCertificate(byteArray, serverEntry.Text);
+							OnLoginAccount(o, args);
 						}
 					}
 					else
 					{
-						Util.ShowLoginError(topLevelWindow, StatusCodes.Unknown);
+						Util.ShowLoginError(topLevelWindow, authStatus.statusCode);
 					}
 					break;
 				default:
@@ -812,6 +814,7 @@ namespace Novell.iFolder
 			// Temporarily disable the OnFieldsChanged handler
 			nameEntry.Changed 	-= new EventHandler(OnFieldsChanged);
 			serverEntry.Changed	-= new EventHandler(OnFieldsChanged);
+			serverEntry.Changed -= new EventHandler(OnServerEntryChanged);
 			passEntry.Changed	-= new EventHandler(OnFieldsChanged);
 
 			TreeSelection tSelect = AccTreeView.Selection;
@@ -846,6 +849,7 @@ namespace Novell.iFolder
 					serverEntry.Text			= dom.Host;
 				else
 					serverEntry.Text			= "";
+				ServerEntryChanged = false;
 
 				EnableEntry(nameEntry, false);
 
@@ -942,6 +946,7 @@ namespace Novell.iFolder
 			// Hook the OnFieldsChanged handlers back up
 			nameEntry.Changed 	+= new EventHandler(OnFieldsChanged);
 			serverEntry.Changed	+= new EventHandler(OnFieldsChanged);
+			serverEntry.Changed += new EventHandler(OnServerEntryChanged);
 			passEntry.Changed	+= new EventHandler(OnFieldsChanged);
 		}
 		
@@ -1049,6 +1054,11 @@ namespace Novell.iFolder
 					}
 				}
 			}
+		}
+		
+		private void OnServerEntryChanged(object obj, EventArgs args)
+		{
+			ServerEntryChanged = true;
 		}
 
 
