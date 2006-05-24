@@ -133,6 +133,7 @@ static void on_dialog_response (GtkDialog *dialog, gint arg1, IFAAccountPropsDia
 static gboolean on_key_press (GtkWidget *widget, GdkEventKey *event, IFAAccountPropsDialog *apd);
 static gboolean on_key_release (GtkWidget *widget, GdkEventKey *event, IFAAccountPropsDialog *apd);
 static void on_realize (GtkWidget *widget, IFAAccountPropsDialog *apd);
+static void on_response (GtkDialog *dialog, gint response_id, IFAAccountPropsDialog *apd);
 
 static void on_server_page_realize (GtkWidget *widget, IFAAccountPropsDialog *apd);
 static void on_identity_page_realize (GtkWidget *widget, IFAAccountPropsDialog *apd);
@@ -154,13 +155,14 @@ static void on_enable_account_toggled (GtkToggleButton *togglebutton, IFAAccount
 static void on_default_account_toggled (GtkToggleButton *togglebutton, IFAAccountPropsDialog *apd);
 
 static void on_server_address_changed (GtkEntry *entry, IFAAccountPropsDialog *apd);
-static void on_server_address_focus_out (GtkWidget *widget, GdkEventFocus *event, IFAAccountPropsDialog *apd);
+static gboolean on_server_address_focus_out (GtkWidget *widget, GdkEventFocus *event, IFAAccountPropsDialog *apd);
 
 static void on_password_entry_changed (GtkEntry *entry, IFAAccountPropsDialog *apd);
-static void on_password_entry_focus_out (GtkWidget *widget, GdkEventFocus *event, IFAAccountPropsDialog *apd);
+static gboolean on_password_entry_focus_out (GtkWidget *widget, GdkEventFocus *event, IFAAccountPropsDialog *apd);
 static void on_remember_password_toggled (GtkToggleButton *togglebutton, IFAAccountPropsDialog *apd);
 
 static gboolean save_server_address (IFAAccountPropsDialog *apd);
+static gboolean save_password (IFAAccountPropsDialog *apd);
 
 static void
 ifa_account_props_dialog_class_init (IFAAccountPropsDialogClass *klass)
@@ -361,6 +363,7 @@ ifa_account_props_dialog_new(GtkWindow *parent, iFolderDomain *domain)
 	g_signal_connect (dialog, "key-press-event", G_CALLBACK (on_key_press), dialog);
 	g_signal_connect (dialog, "key-release-event", G_CALLBACK (on_key_release), dialog);
 	g_signal_connect (dialog, "realize", G_CALLBACK (on_realize), dialog);
+	g_signal_connect (dialog, "response", G_CALLBACK (on_response), dialog);
 	
 	g_signal_connect (priv->serverPage, "realize", G_CALLBACK (on_server_page_realize), dialog);
 	g_signal_connect (priv->identityPage, "realize", G_CALLBACK (on_identity_page_realize), dialog);
@@ -699,6 +702,9 @@ on_key_press (GtkWidget *widget, GdkEventKey *event, IFAAccountPropsDialog *apd)
 
 	switch(event->keyval)
 	{
+		case GDK_Escape:
+			close_window (apd);
+			break;
 		case GDK_Control_L:
 		case GDK_Control_R:
 			priv->controlKeyPressed = true;
@@ -707,7 +713,7 @@ on_key_press (GtkWidget *widget, GdkEventKey *event, IFAAccountPropsDialog *apd)
 		case GDK_W:
 		case GDK_w:
 			if (priv->controlKeyPressed)
-				close_window(apd);
+				close_window (apd);
 			else
 				stop_other_handlers = false;
 			break;
@@ -770,6 +776,13 @@ on_realize (GtkWidget *widget, IFAAccountPropsDialog *apd)
 	priv->on_password_entry_changed_cb_id		= g_signal_connect (priv->passwordEntry, "changed", G_CALLBACK (on_password_entry_changed), apd);
 	priv->on_password_entry_focus_out_cb_id		= g_signal_connect (priv->passwordEntry, "focus-out", G_CALLBACK (on_password_entry_focus_out), apd);
 	priv->on_remember_password_toggled_cb_id	= g_signal_connect (priv->rememberPasswordButton, "toggled", G_CALLBACK (on_remember_password_toggled), apd);
+}
+
+static void
+on_response (GtkDialog *dialog, gint response_id, IFAAccountPropsDialog *apd)
+{
+	/* FIXME: Figure out why this is NOT being called! */
+	g_message ("FIXME: Implement IFAAccountPropsDialog::on_response()");
 }
 
 static void
@@ -905,6 +918,15 @@ static void
 close_window (IFAAccountPropsDialog *apd)
 {
 	IFAAccountPropsDialogPrivate *priv = IFA_ACCOUNT_PROPS_DIALOG_GET_PRIVATE (apd);
+	
+	if (priv->bServerAddressChanged)
+		if (!save_server_address (apd))
+			return;
+	
+	if (priv->bPasswordChanged)
+		if (!save_password (apd))
+			return;
+	
 	gtk_widget_hide (GTK_WIDGET (apd));
 	gtk_widget_destroy (GTK_WIDGET (apd));
 }
@@ -1059,7 +1081,40 @@ g_message ("IFAAccountPropsDialog::on_enable_account_toggled()");
 static void
 on_default_account_toggled (GtkToggleButton *togglebutton, IFAAccountPropsDialog *apd)
 {
-	g_message ("FIXME: Implement IFAAccountPropsDialog::on_default_account_toggled()");
+	GError *err;
+	IFAAccountPropsDialogPrivate *priv;
+	GtkWidget *errDialog;
+	
+g_message ("FIXME: Implement IFAAccountPropsDialog::on_default_account_toggled()");
+	err = NULL;
+	priv = IFA_ACCOUNT_PROPS_DIALOG_GET_PRIVATE (apd);
+
+	if (gtk_widget_is_focus (GTK_WIDGET (togglebutton)))
+	{
+		/**
+		 * The defaultAccountButton is not sensitive (enabled) if this
+		 * is the default account, so the only state that needs to be
+		 * handled here is when a user activates the check button.
+		 */
+		if (!gtk_toggle_button_get_active (togglebutton)) return; /* This condition should never be hit. */
+		
+		ifolder_domain_set_default (priv->domain, &err);
+		if (err)
+		{
+			errDialog = gtk_message_dialog_new (GTK_WINDOW (apd), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_WARNING, GTK_BUTTONS_CLOSE, err->message);
+			g_clear_error (&err);
+			gtk_dialog_run (GTK_DIALOG (errDialog));
+			gtk_widget_destroy (errDialog);
+
+			if (priv->on_default_account_toggled_cb_id > 0)
+				g_signal_handler_disconnect (ifolder_client, priv->on_default_account_toggled_cb_id);
+			
+			gtk_toggle_button_set_active (togglebutton, !(gtk_toggle_button_get_active (togglebutton)));
+			
+			if (priv->on_default_account_toggled_cb_id > 0)
+				priv->on_default_account_toggled_cb_id = g_signal_connect (priv->defaultAccountButton, "toggled", G_CALLBACK (on_default_account_toggled), apd);
+		}
+	}
 }
 
 static void
@@ -1069,12 +1124,10 @@ on_server_address_changed (GtkEntry *entry, IFAAccountPropsDialog *apd)
 	
 	priv = IFA_ACCOUNT_PROPS_DIALOG_GET_PRIVATE (apd);
 
-	g_message ("FIXME: Implement IFAAccountPropsDialog::on_server_address_changed()");
-	
 	priv->bServerAddressChanged = TRUE;
 }
 
-static void
+static gboolean
 on_server_address_focus_out (GtkWidget *widget, GdkEventFocus *event, IFAAccountPropsDialog *apd)
 {
 	IFAAccountPropsDialogPrivate *priv;
@@ -1083,25 +1136,43 @@ on_server_address_focus_out (GtkWidget *widget, GdkEventFocus *event, IFAAccount
 	
 	if (priv->bServerAddressChanged)
 		save_server_address (apd);
+		
+	return FALSE;
 }
 
 
 static void
 on_password_entry_changed (GtkEntry *entry, IFAAccountPropsDialog *apd)
 {
-	g_message ("FIXME: Implement IFAAccountPropsDialog::on_password_entry_changed()");
+	IFAAccountPropsDialogPrivate *priv;
+	
+	priv = IFA_ACCOUNT_PROPS_DIALOG_GET_PRIVATE (apd);
+
+	priv->bPasswordChanged = TRUE;
 }
 
-static void
+static gboolean
 on_password_entry_focus_out (GtkWidget *widget, GdkEventFocus *event, IFAAccountPropsDialog *apd)
 {
-	g_message ("FIXME: Implement IFAAccountPropsDialog::on_password_entry_focus_out()");
+	IFAAccountPropsDialogPrivate *priv;
+	
+	priv = IFA_ACCOUNT_PROPS_DIALOG_GET_PRIVATE (apd);
+	
+	if (priv->bPasswordChanged)
+		save_password (apd);
+		
+	return FALSE;
 }
 
 static void
 on_remember_password_toggled (GtkToggleButton *togglebutton, IFAAccountPropsDialog *apd)
 {
-	g_message ("FIXME: Implement IFAAccountPropsDialog::on_remember_password_toggled()");
+	IFAAccountPropsDialogPrivate *priv;
+	
+	priv = IFA_ACCOUNT_PROPS_DIALOG_GET_PRIVATE (apd);
+	
+	if (gtk_widget_is_focus (GTK_WIDGET (togglebutton)))
+		save_password (apd);
 }
 
 static gboolean
@@ -1111,3 +1182,12 @@ save_server_address (IFAAccountPropsDialog *apd)
 	
 	return FALSE;
 }
+
+static gboolean
+save_password (IFAAccountPropsDialog *apd)
+{
+	g_message ("FIXME: IFAAccountPropsDialog::save_password()");
+	
+	return FALSE;
+}
+
