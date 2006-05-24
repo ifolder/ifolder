@@ -110,8 +110,8 @@ GtkWidget * create_disk_space_page (IFAAccountPropsDialog *apd);
 GtkWidget * create_global_check_buttons (IFAAccountPropsDialog *apd);
 
 static void on_dialog_response (GtkDialog *dialog, gint arg1, IFAAccountPropsDialog *apd);
-static void on_key_press (GtkWidget *widget, GdkEventKey *event, IFAAccountPropsDialog *apd);
-static void on_key_release (GtkWidget *widget, GdkEventKey *event, IFAAccountPropsDialog *apd);
+static gboolean on_key_press (GtkWidget *widget, GdkEventKey *event, IFAAccountPropsDialog *apd);
+static gboolean on_key_release (GtkWidget *widget, GdkEventKey *event, IFAAccountPropsDialog *apd);
 static void on_realize (GtkWidget *widget, IFAAccountPropsDialog *apd);
 
 static void on_server_page_realize (GtkWidget *widget, IFAAccountPropsDialog *apd);
@@ -620,14 +620,16 @@ on_dialog_response (GtkDialog *dialog, gint arg1, IFAAccountPropsDialog *apd)
 	gtk_widget_destroy (GTK_WIDGET (apd));
 }
 
-static void
+static gboolean
 on_key_press (GtkWidget *widget, GdkEventKey *event, IFAAccountPropsDialog *apd)
 {
+	return FALSE;
 }
 
-static void
+static gboolean
 on_key_release (GtkWidget *widget, GdkEventKey *event, IFAAccountPropsDialog *apd)
 {
+	return FALSE;
 }
 
 static void
