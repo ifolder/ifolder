@@ -119,6 +119,50 @@ ifolder_client_class_init(iFolderClientClass *klass)
 			G_TYPE_NONE,
 			1,
 			G_TYPE_POINTER);
+	
+	ifolder_client_signals[DOMAIN_HOST_MODIFIED] =
+		g_signal_new ("domain-host-modified",
+			G_OBJECT_CLASS_TYPE (object_class),
+			G_SIGNAL_RUN_LAST,
+			G_STRUCT_OFFSET (iFolderClientClass, domain_host_modified),
+			NULL, NULL,
+			g_cclosure_marshal_VOID__POINTER,
+			G_TYPE_NONE,
+			1,
+			G_TYPE_POINTER);
+
+	ifolder_client_signals[DOMAIN_ACTIVATED] =
+		g_signal_new ("domain-activated",
+			G_OBJECT_CLASS_TYPE (object_class),
+			G_SIGNAL_RUN_LAST,
+			G_STRUCT_OFFSET (iFolderClientClass, domain_activated),
+			NULL, NULL,
+			g_cclosure_marshal_VOID__POINTER,
+			G_TYPE_NONE,
+			1,
+			G_TYPE_POINTER);
+
+	ifolder_client_signals[DOMAIN_INACTIVATED] =
+		g_signal_new ("domain-inactivated",
+			G_OBJECT_CLASS_TYPE (object_class),
+			G_SIGNAL_RUN_LAST,
+			G_STRUCT_OFFSET (iFolderClientClass, domain_inactivated),
+			NULL, NULL,
+			g_cclosure_marshal_VOID__POINTER,
+			G_TYPE_NONE,
+			1,
+			G_TYPE_POINTER);
+
+	ifolder_client_signals[DOMAIN_NEW_DEFAULT] =
+		g_signal_new ("domain-new-default",
+			G_OBJECT_CLASS_TYPE (object_class),
+			G_SIGNAL_RUN_LAST,
+			G_STRUCT_OFFSET (iFolderClientClass, domain_new_default),
+			NULL, NULL,
+			g_cclosure_marshal_VOID__POINTER,
+			G_TYPE_NONE,
+			1,
+			G_TYPE_POINTER);
 
 	g_type_class_add_private(klass, sizeof(iFolderClientPrivate));
 

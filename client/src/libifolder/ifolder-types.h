@@ -55,6 +55,11 @@ struct _iFolderClientClass
 	void (* domain_logged_in) (iFolderClient *client, iFolderDomain *domain, gpointer user_data);
 	void (* domain_logged_out) (iFolderClient *client, iFolderDomain *domain, gpointer user_data);
 	
+	void (* domain_host_modified) (iFolderClient *client, iFolderDomain *domain, gpointer user_data);
+	void (* domain_activated) (iFolderClient *client, iFolderDomain *domain, gpointer user_data);
+	void (* domain_inactivated) (iFolderClient *client, iFolderDomain *domain, gpointer user_data);
+	void (* domain_new_default) (iFolderClient *client, iFolderDomain *domain, gpointer user_data);
+	
 	/* class members */
 };
 
