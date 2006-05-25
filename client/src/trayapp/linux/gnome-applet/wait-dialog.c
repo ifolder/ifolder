@@ -108,7 +108,7 @@ ifa_wait_dialog_init (IFAWaitDialog *wait_dialog)
 	gtk_dialog_set_has_separator (GTK_DIALOG (wait_dialog), FALSE);
 	gtk_window_set_resizable (GTK_WINDOW (wait_dialog), FALSE);
 	gtk_window_set_modal (GTK_WINDOW (wait_dialog), TRUE);
-	gtk_window_set_decorated (GTK_WINDOW (wait_dialog), FALSE);
+//	gtk_window_set_decorated (GTK_WINDOW (wait_dialog), FALSE);
 //	gtk_window_set_has_frame (GTK_WINDOW (wait_dialog), FALSE);
   
 	/* Widgets */
