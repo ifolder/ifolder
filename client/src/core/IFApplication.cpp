@@ -22,6 +22,10 @@
  ***********************************************************************/
 #include "IFApplication.h"
 
+#ifndef WIN32
+#include <errno.h>
+#endif
+
 gchar		*IFApplication::m_pDataPath = NULL;
 gboolean	IFApplication::m_Initialized = false;
 gchar		IFApplication::SEPARATOR[] = "|";
