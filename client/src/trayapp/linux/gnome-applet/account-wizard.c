@@ -240,8 +240,8 @@ create_server_information_page(IFAAccountWizard *aw)
 	gtk_label_set_mnemonic_widget(GTK_LABEL(l), aw->serverNameEntry);
 	gtk_entry_set_activates_default(GTK_ENTRY(aw->serverNameEntry), true);
 
-	if (ifolder_user_pref_get_bool(KEY_USER_PREF_PREFILL_ACCOUNT))
-		gtk_entry_set_text(GTK_ENTRY(aw->serverNameEntry), ifolder_user_pref_get_string(KEY_USER_PREF_ACCOUNT_SERVER_ADDRESS, ""));
+	if (ifolder_user_pref_get_bool(KEY_USER_PREF_PREFILL_ACCOUNT, FALSE, NULL))
+		gtk_entry_set_text(GTK_ENTRY(aw->serverNameEntry), ifolder_user_pref_get_string(KEY_USER_PREF_ACCOUNT_SERVER_ADDRESS, "", NULL));
 	
 	g_signal_connect(G_OBJECT(aw->serverNameEntry), "changed", G_CALLBACK(server_name_changed), aw);
 	
@@ -310,8 +310,8 @@ create_user_information_page(IFAAccountWizard *aw)
 	gtk_label_set_mnemonic_widget(GTK_LABEL(l), aw->userNameEntry);
 	gtk_entry_set_activates_default(GTK_ENTRY(aw->userNameEntry), true);
 
-	if (ifolder_user_pref_get_bool(KEY_USER_PREF_PREFILL_ACCOUNT))
-		gtk_entry_set_text(GTK_ENTRY(aw->userNameEntry), ifolder_user_pref_get_string(KEY_USER_PREF_ACCOUNT_USER_NAME, ""));
+	if (ifolder_user_pref_get_bool(KEY_USER_PREF_PREFILL_ACCOUNT, FALSE, NULL))
+		gtk_entry_set_text(GTK_ENTRY(aw->userNameEntry), ifolder_user_pref_get_string(KEY_USER_PREF_ACCOUNT_USER_NAME, "", NULL));
 
 	g_signal_connect(G_OBJECT(aw->userNameEntry), "changed", G_CALLBACK(user_info_changed), aw);
 
@@ -330,8 +330,8 @@ create_user_information_page(IFAAccountWizard *aw)
 	gtk_label_set_mnemonic_widget(GTK_LABEL(l), aw->passwordEntry);
 	gtk_entry_set_activates_default(GTK_ENTRY(aw->passwordEntry), true);
 	gtk_entry_set_visibility(GTK_ENTRY(aw->passwordEntry), false);
-	if (ifolder_user_pref_get_bool(KEY_USER_PREF_PREFILL_ACCOUNT))
-		gtk_entry_set_text(GTK_ENTRY(aw->passwordEntry), ifolder_user_pref_get_string(KEY_USER_PREF_ACCOUNT_PASSWORD, ""));
+	if (ifolder_user_pref_get_bool(KEY_USER_PREF_PREFILL_ACCOUNT, FALSE, NULL))
+		gtk_entry_set_text(GTK_ENTRY(aw->passwordEntry), ifolder_user_pref_get_string(KEY_USER_PREF_ACCOUNT_PASSWORD, "", NULL));
 
 	g_signal_connect(G_OBJECT(aw->passwordEntry), "changed", G_CALLBACK(user_info_changed), aw);
 
@@ -341,8 +341,8 @@ create_user_information_page(IFAAccountWizard *aw)
 					(GtkAttachOptions)(GTK_FILL | GTK_EXPAND),
 					(GtkAttachOptions)0,
 					0,0);
-	if (ifolder_user_pref_get_bool(KEY_USER_PREF_PREFILL_ACCOUNT))
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(aw->rememberPasswordCheckButton), ifolder_user_pref_get_bool(KEY_USER_PREF_ACCOUNT_REMEMBER_PASSWORD, false));
+	if (ifolder_user_pref_get_bool(KEY_USER_PREF_PREFILL_ACCOUNT, FALSE, NULL))
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(aw->rememberPasswordCheckButton), ifolder_user_pref_get_bool(KEY_USER_PREF_ACCOUNT_REMEMBER_PASSWORD, false, NULL));
 		
 	return table;	
 }
