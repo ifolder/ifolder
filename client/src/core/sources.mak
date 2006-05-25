@@ -20,6 +20,9 @@
 #######################################################################
 
 libifolder3_core_la_SOURCES =			\
+	simiasC.cpp		\
+	simiasClient.cpp	\
+	stdsoap2.cpp		\
 	glibclient.cpp		\
 	IFApplication.cpp	\
 	IFChanges.cpp		\
@@ -30,8 +33,5 @@ libifolder3_core_la_SOURCES =			\
 	IFFileInfo.cpp		\
 	IFiFolder.cpp		\
 	IFOptions.cpp		\
-	IFServices.cpp		\
-	stdsoap2.cpp		\
-	simiasClient.cpp	\
-	simiasC.cpp
+	IFServices.cpp
 
