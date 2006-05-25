@@ -20,6 +20,7 @@
 #######################################################################
 
 include ../../makefiledefs.mingw
+include sources.mak
 
 #
 # PATHS
@@ -67,24 +68,9 @@ LIB_PATHS =		-L$(GTK_TOP)/lib \
 ##  SOURCES, OBJECTS
 ##
 
-DLL_C_SRC =			\
-	glibclient.cpp		\
-	IFApplication.cpp	\
-	IFChanges.cpp		\
-	IFConflict.cpp		\
-	IFDirectory.cpp		\
-	IFDomain.cpp		\
-	IFFileInfo.cpp		\
-	IFiFolder.cpp		\
-	IFOptions.cpp		\
-	simiasC.cpp		\
-	simiasClient.cpp	\
-	stdsoap2.cpp
-
-
 #RC_SRC =		win32/gaimrc.rc
 
-DLL_OBJECTS = $(DLL_C_SRC:%.cpp=%.o) 
+DLL_OBJECTS = $(libifolder3_core_la_SOURCES:%.cpp=%.o) 
 
 ##
 ## LIBRARIES
@@ -132,7 +118,7 @@ simiasC.cpp: simias.h
 	$(GSOAP_DIR)/soapcpp2 -LCxn -psimias $(ProjectDir)simias.h
 
 simias.h: stdsoap2.h stdsoap2.cpp
-	$(GSOAP_DIR)/wsdl2h -s -o simias.h Simias.wsdl DomainService.wsdl
+	$(GSOAP_DIR)/wsdl2h -s -o simias.h Simias.wsdl DomainService.wsdl iFolderWeb.wsdl
 
 simiasClient.cpp:
 	$(GSOAP_DIR)/soapcpp2 -LCxn -psimias $(ProjectDir)simias.h

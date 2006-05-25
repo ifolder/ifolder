@@ -75,6 +75,7 @@
 
 simias = "http://novell.com/simias/web/"
 ds = "http://novell.com/simias/domain"
+ifolder = "http://novell.com/ifolder/webservice/"
 
 #	For WhiteMesa interoperability testing round 2:
 

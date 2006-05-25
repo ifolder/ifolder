@@ -41,7 +41,8 @@ public:
 		return m_pDataPath;
 	}
 
-	static gboolean Initialize();
-	static gboolean Initialize(const gchar *pDataPath);
+	static gboolean Initialize(GError **error);
+	static gboolean Initialize(const gchar *pDataPath, GError **error);
+	static gchar* BuildUrlToService(const gchar *pHost, const gchar *pSvcUrl);
 };
 #endif //_IFAPPLICATION_H_

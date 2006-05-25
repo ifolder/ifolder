@@ -25,25 +25,28 @@
 gchar		*IFApplication::m_pDataPath = NULL;
 gboolean	IFApplication::m_Initialized = false;
 gchar		IFApplication::SEPARATOR[] = "|";
+
+GQuark	IF_CORE_ERROR_DOMAIN_QUARK = g_quark_from_string(IF_CORE_ERROR_DOMAIN);
 	
 
-gboolean IFApplication::Initialize()
+gboolean IFApplication::Initialize(GError **error)
 {
 	gchar *pPath = g_build_filename(g_get_home_dir(), ".ifolder3", NULL);
-	gboolean status = Initialize(pPath);
+	gboolean status = Initialize(pPath, error);
 	g_free(pPath);
 	return status;
 }
 
-gboolean IFApplication::Initialize(const gchar *pDataPath)
+gboolean IFApplication::Initialize(const gchar *pDataPath, GError **error)
 {
 	// Check to see if we are already initialized.
 	if (g_atomic_int_compare_and_exchange(&m_Initialized, false, true))
 	{
 		m_pDataPath = g_strdup(pDataPath);
-		if (g_mkdir_with_parents(m_pDataPath, 0) == -1)
+		if (g_mkdir_with_parents(m_pDataPath, 0700) == -1)
 		{
 			// There was an error creating the directory.
+			g_set_error(error, g_file_error_quark(), g_file_error_from_errno(errno), "Failed creating path : %s\n", m_pDataPath);
 			return false;
 		}
 		return true;
@@ -53,5 +56,14 @@ gboolean IFApplication::Initialize(const gchar *pDataPath)
 		return true;
 	
 	// Someone tried to initialize to another path return an error.
+	g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_ALREADY_INITIALIZED, "Already initialize to path : %s\n", m_pDataPath);
 	return false;
+}
+
+gchar* IFApplication::BuildUrlToService(const gchar *pHost, const gchar *pSvcUrl)
+{
+	gchar** urlparts = g_strsplit(pSvcUrl, "/", 4);
+	gchar *pUrl = g_strjoin("/", urlparts[0], urlparts[1], pHost, urlparts[3], NULL);
+	g_strfreev(urlparts);
+	return pUrl;
 }

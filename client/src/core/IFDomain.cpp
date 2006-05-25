@@ -22,30 +22,42 @@
  ***********************************************************************/
 #include "IFDomain.h"
 #include "IFApplication.h"
-#include "simiasSimias_x0020Web_x0020ServiceSoapProxy.h"
 #include "simias.nsmap"
+
+// IFDomain class
 
 gchar *IFDomain::EDomain = "Domain";
 gchar *IFDomain::EName = "name";
 gchar *IFDomain::EDescription = "description";
 gchar *IFDomain::EUser = "User";
-gchar *IFDomain::EHost = "Host";
-gchar *IFDomain::EUrl = "url";
+gchar *IFDomain::EHostID = "Host";
+gchar *IFDomain::EMasterHost = "master-host";
 gchar *IFDomain::EID = "id";
 gchar *IFDomain::EPW = "pw";
 gchar *IFDomain::EPOB = "pob";
 
 IFDomain::IFDomain()
 {
-	m_DomainService.soap->mode |= SOAP_C_UTFSTRING;
-	m_DomainService.soap->imode |= SOAP_C_UTFSTRING;
-	m_DomainService.soap->omode |= SOAP_C_UTFSTRING;
-
+	m_DomainService.soap->mode |= SOAP_C_UTFSTRING | SOAP_IO_KEEPALIVE;
+	m_DomainService.soap->imode |= SOAP_C_UTFSTRING | SOAP_IO_KEEPALIVE;
+	m_DomainService.soap->omode |= SOAP_C_UTFSTRING | SOAP_IO_KEEPALIVE;
+	m_DomainService.soap->user = this;
+	
+	m_iFolderService.soap->mode |= SOAP_C_UTFSTRING | SOAP_IO_KEEPALIVE;
+	m_iFolderService.soap->imode |= SOAP_C_UTFSTRING | SOAP_IO_KEEPALIVE;
+	m_iFolderService.soap->omode |= SOAP_C_UTFSTRING | SOAP_IO_KEEPALIVE;
+	m_iFolderService.soap->user = this;
+	
+	// Set the parse_header callback so that we can get the login status.
+	m_Parsehdr = m_iFolderService.soap->fparsehdr;
+	m_DomainService.soap->fparsehdr = ParseLoginHeader;
+	m_iFolderService.soap->fparsehdr = ParseLoginHeader;
+	
 	m_Name = NULL;
 	m_ID = NULL;
 	m_Description = NULL;
-	m_HomeUrl = NULL;
-	m_MasterUrl = NULL;
+	m_HomeHost = NULL;
+	m_MasterHost = NULL;
 	m_POBoxID = NULL;
 	m_UserName = NULL;
 	m_UserPassword = NULL;
@@ -57,25 +69,28 @@ IFDomain::~IFDomain(void)
 	g_free(m_Name);
 	g_free(m_ID);
 	g_free(m_Description);
-	g_free(m_HomeUrl);
-	g_free(m_MasterUrl);
+	g_free(m_HomeHost);
+	g_free(m_MasterHost);
 	g_free(m_POBoxID);
 	g_free(m_UserName);
 	g_free(m_UserPassword);
 	g_free(m_UserID);
+	g_free((gpointer)m_DomainService.endpoint);
+	g_free((gpointer)m_iFolderService.endpoint);
 }
 
-IFDomain* IFDomain::Add(const gchar* userName, const gchar* password, const gchar* host)
+IFDomain* IFDomain::Add(const gchar* userName, const gchar* password, const gchar* host, GError **error)
 {
 	gboolean failed = true;
 	IFDomain *pDomain = new IFDomain();
 	Domain* domainService = &pDomain->m_DomainService;
+	iFolderWebSoap* iFolderService = &pDomain->m_iFolderService;
+
 	// build the url to the host;
-	gchar** urlparts = g_strsplit(domainService->endpoint, "/", 4);
-	pDomain->m_MasterUrl = g_strjoin("/", urlparts[0], urlparts[1], host, urlparts[3], NULL);
-	pDomain->m_HomeUrl = g_strdup(pDomain->m_MasterUrl);
-	domainService->endpoint = pDomain->m_MasterUrl;
-	g_strfreev(urlparts);
+	domainService->endpoint = IFApplication::BuildUrlToService(host, domainService->endpoint);
+	iFolderService->endpoint = IFApplication::BuildUrlToService(host, iFolderService->endpoint);
+	pDomain->m_MasterHost = g_strdup(host);
+	pDomain->m_HomeHost = g_strdup(host);
 	
 	// Make sure that we do not already belong to this domain.
 	_ds__GetDomainID req;
@@ -135,6 +150,7 @@ IFDomain* IFDomain::Add(const gchar* userName, const gchar* password, const gcha
 	{
 		soap_print_fault(domainService->soap, stderr);
 		soap_print_fault_location(domainService->soap, stderr);
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, domainService->soap->error, "Soap Error");
 		delete pDomain;
 		return NULL;
 	}
@@ -147,14 +163,61 @@ int IFDomain::Remove()
 	return 0;
 }
 
-int IFDomain::Login()
+int IFDomain::ParseLoginHeader(struct soap *soap, const char *key, const char*val)
 {
-	return 0;
+	printf("%s : %s\n", key, val);
+	IFDomain *pDomain = (IFDomain*)soap->user;
+	if (strcmp(key, "Simias-Error") == 0)
+	{
+		struct _SimiasError_ sError = SimiasErrorToIFError(val);
+		pDomain->m_lastError = sError.Code;
+		pDomain->m_lastErrorString = sError.pName;
+	}
+	else if (strcmp(key, "Simias-Grace-Remaining") == 0)
+	{
+		// We are in grace save the count.
+		sscanf(val, "%d", &pDomain->m_GraceRemaining);
+	}
+	else if (strcmp(key, "Simias-Grace-Total") == 0)
+	{
+		// Save the grace total count.
+		sscanf(val, "%d", &pDomain->m_GraceTotal);
+	}
+	else
+	{
+		return pDomain->m_Parsehdr(soap, key, val);
+	}
+}
+
+gboolean IFDomain::Login(const gchar *password, GError **error)
+{
+	gboolean bStatus = false;
+	_ifolder__GetSystem req;
+	_ifolder__GetSystemResponse resp;
+	m_iFolderService.soap->userid = m_UserName;
+	m_iFolderService.soap->passwd = (char*)password;
+	if (m_iFolderService.__ifolder__GetSystem(&req, &resp) == 0)
+	{
+		// We are logged in. Make sure we are not in grace.
+		bStatus = true;
+	}
+	else
+	{
+		// We failed to log in. Get the reason for the failure.
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, m_lastError, m_lastErrorString);
+	}
+	return bStatus;
 }
 
 int IFDomain::Logout()
 {
 	return 0;
+}
+
+void IFDomain::GetGraceLimits(gint *pRemaining, gint *pTotal)
+{
+	*pRemaining = m_GraceRemaining;
+	*pTotal = m_GraceTotal;
 }
 
 gboolean IFDomain::Serialize(FILE *pStream)
@@ -171,8 +234,8 @@ gboolean IFDomain::Serialize(FILE *pStream)
 	fprintf(pStream, "<%s>%s</%s>\n", EDescription, value, EDescription);
 	g_free(value);
 	// <url>
-	value = g_markup_escape_text(m_MasterUrl, (gssize)strlen(m_MasterUrl));
-	fprintf(pStream, "<%s>%s</%s>\n", EUrl, value, EUrl);
+	value = g_markup_escape_text(m_MasterHost, (gssize)strlen(m_MasterHost));
+	fprintf(pStream, "<%s>%s</%s>\n", EMasterHost, value, EMasterHost);
 	g_free(value);
 	// <User>
 	fprintf(pStream, "<%s %s=\"%s\">\n", EUser, EID, m_UserID);
@@ -215,11 +278,13 @@ IFDomain* IFDomain::DeSerialize(ParseTree *tree, GNode *pDNode)
 	if (tnode != NULL)
 		pDomain->m_Description = g_strdup(((XmlNode*)tnode->data)->m_Value);
 	// url
-	tnode = tree->FindChild(gnode, EUrl, IFXElement);
+	tnode = tree->FindChild(gnode, EMasterHost, IFXElement);
 	if (tnode != NULL)
 	{
-		pDomain->m_MasterUrl = g_strdup(((XmlNode*)tnode->data)->m_Value);
-		pDomain->m_DomainService.endpoint = pDomain->m_MasterUrl;
+		pDomain->m_MasterHost = g_strdup(((XmlNode*)tnode->data)->m_Value);
+		pDomain->m_DomainService.endpoint = IFApplication::BuildUrlToService(pDomain->m_MasterHost, pDomain->m_DomainService.endpoint);
+		pDomain->m_iFolderService.endpoint = IFApplication::BuildUrlToService(pDomain->m_MasterHost, pDomain->m_iFolderService.endpoint);
+	
 	}
 	// User
 	gnode = tree->FindChild(gnode, EUser, IFXElement);

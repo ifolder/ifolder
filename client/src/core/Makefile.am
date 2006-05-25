@@ -20,6 +20,7 @@
 #######################################################################
 SUBDIRS = 
 DIST_SUBDIRS = $(SUBDIRS)
+include sources.mak
 
 EXTRA_DIST = Simias.wsdl DomainService.wsdl
 
@@ -50,19 +51,6 @@ libifolder3_core_la_LDFLAGS =	\
 
 #libifolder_core_a_LIBFLAGS = 
 
-libifolder3_core_la_SOURCES = \
-	simiasC.cpp					\
-	simiasClient.cpp			\
-	stdsoap2.cpp				\
-	glibclient.cpp				\
-	IFApplication.cpp			\
-	IFChanges.cpp				\
-	IFConflict.cpp				\
-	IFDirectory.cpp				\
-	IFDomain.cpp				\
-	IFFileInfo.cpp				\
-	IFiFolder.cpp				\
-	IFOptions.cpp				
 	
 #
 # SOAP Generation

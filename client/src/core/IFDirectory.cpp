@@ -43,7 +43,7 @@ gboolean IFDirectory::Initialize(gchar *pPath, gchar *pDataPath)
 	g_free(pName);
 
 	// Make sure the data path exists.
-	g_mkdir_with_parents(m_pDataPath, 0);
+	g_mkdir_with_parents(m_pDataPath, 0700);
 
 	// Make sure this is not a recursive link or that we are not in our dataPath.
 	if (g_str_has_prefix(IFApplication::DataPath(), m_pPath) || IsRecursiveLink())

@@ -56,7 +56,7 @@ echo if not exist $(ProjectDir)stldeque.h copy $(SolutionDir)..\..\tools\gsoap\w
 echo if not exist $(ProjectDir)stllist.h copy $(SolutionDir)..\..\tools\gsoap\win32-2.7\stllist.h $(ProjectDir)
 echo if not exist $(ProjectDir)stvectorl.h copy $(SolutionDir)..\..\tools\gsoap\win32-2.7\stlvector.h $(ProjectDir)
 echo if not exist $(ProjectDir)stlset.h copy $(SolutionDir)..\..\tools\gsoap\win32-2.7\stlset.h $(ProjectDir)
-if not exist $(ProjectDir)simias.h $(SolutionDir)..\..\tools\gsoap\win32-2.7\wsdl2h -s -o $(projectDir)simias.h Simias.wsdl DomainService.wsdl
+if not exist $(ProjectDir)simias.h $(SolutionDir)..\..\tools\gsoap\win32-2.7\wsdl2h -s -o $(projectDir)simias.h Simias.wsdl DomainService.wsdl iFolderWeb.wsdl
 if not exist $(ProjectDir)simiasClient.cpp $(SolutionDir)..\..\tools\gsoap\win32-2.7\soapcpp2  -LCxn -psimias $(ProjectDir)simias.h
 "/>
 			<Tool
@@ -117,7 +117,7 @@ echo if not exist $(ProjectDir)stldeque.h copy $(SolutionDir)..\..\tools\gsoap\w
 echo if not exist $(ProjectDir)stllist.h copy $(SolutionDir)..\..\tools\gsoap\win32-2.7\stllist.h $(ProjectDir)
 echo if not exist $(ProjectDir)stvectorl.h copy $(SolutionDir)..\..\tools\gsoap\win32-2.7\stlvector.h $(ProjectDir)
 echo if not exist $(ProjectDir)stlset.h copy $(SolutionDir)..\..\tools\gsoap\win32-2.7\stlset.h $(ProjectDir)
-if not exist $(ProjectDir)simias.h $(SolutionDir)..\..\tools\gsoap\win32-2.7\wsdl2h -s -o $(projectDir)simias.h Simias.wsdl DomainService.wsdl
+if not exist $(ProjectDir)simias.h $(SolutionDir)..\..\tools\gsoap\win32-2.7\wsdl2h -s -o $(projectDir)simias.h Simias.wsdl DomainService.wsdl iFolderWeb.wsdl
 if not exist $(ProjectDir)simiasClient.cpp $(SolutionDir)..\..\tools\gsoap\win32-2.7\soapcpp2  -LCxn -psimias $(ProjectDir)simias.h
 "/>
 			<Tool
@@ -162,6 +162,9 @@ if not exist $(ProjectDir)simiasClient.cpp $(SolutionDir)..\..\tools\gsoap\win32
 				RelativePath=".\IFDomain.cpp">
 			</File>
 			<File
+				RelativePath=".\IFErrors.cpp">
+			</File>
+			<File
 				RelativePath=".\IFFileInfo.cpp">
 			</File>
 			<File
@@ -169,6 +172,9 @@ if not exist $(ProjectDir)simiasClient.cpp $(SolutionDir)..\..\tools\gsoap\win32
 			</File>
 			<File
 				RelativePath=".\IFOptions.cpp">
+			</File>
+			<File
+				RelativePath=".\IFServices.cpp">
 			</File>
 			<File
 				RelativePath=".\simiasC.cpp">
@@ -203,6 +209,9 @@ if not exist $(ProjectDir)simiasClient.cpp $(SolutionDir)..\..\tools\gsoap\win32
 				RelativePath=".\IFDomain.h">
 			</File>
 			<File
+				RelativePath=".\IFErrors.h">
+			</File>
+			<File
 				RelativePath=".\IFFileInfo.h">
 			</File>
 			<File
@@ -212,7 +221,13 @@ if not exist $(ProjectDir)simiasClient.cpp $(SolutionDir)..\..\tools\gsoap\win32
 				RelativePath=".\IFOptions.h">
 			</File>
 			<File
+				RelativePath=".\IFServices.h">
+			</File>
+			<File
 				RelativePath=".\resource.h">
+			</File>
+			<File
+				RelativePath=".\stdsoap2.h">
 			</File>
 		</Filter>
 		<Filter

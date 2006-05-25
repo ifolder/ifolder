@@ -26,6 +26,7 @@
 //#include <vector>
 #include "glibclient.h"
 #include "simiasDomain_USCOREx0020_USCOREServiceSoapProxy.h"
+#include "simiasiFolderWebSoapProxy.h"
 
 // forward declarations
 class IFDomain;
@@ -45,22 +46,28 @@ private:
 	static gchar *EName;
 	static gchar *EDescription;
 	static gchar *EUser;
-	static gchar *EHost;
-	static gchar *EUrl;
+	static gchar *EHostID;
+	static gchar *EMasterHost;
 	static gchar *EID;
 	static gchar *EPW;
 	static gchar *EPOB;
 
 	// Members.
-	Domain		m_DomainService;
+	gint	m_lastError;
+	gchar	*m_lastErrorString;
+	gint	m_GraceRemaining;
+	gint	m_GraceTotal;
+	int (*m_Parsehdr)(struct soap *soap, const char *key, const char *val);
+	Domain				m_DomainService;
+	iFolderWebSoap		m_iFolderService;
 
 public:
 	// Properties
 	gchar*		m_Name;
 	gchar*		m_ID;
 	gchar*		m_Description;
-	gchar*		m_HomeUrl;
-	gchar*		m_MasterUrl;
+	gchar*		m_HomeHost;
+	gchar*		m_MasterHost;
 	gchar*		m_POBoxID;
 	gchar*		m_UserName;
 	gchar*		m_UserPassword;
@@ -71,15 +78,18 @@ private:
 	virtual ~IFDomain(void);
 	gboolean Serialize(FILE *pStream);
 	static IFDomain* DeSerialize(ParseTree *tree, GNode *pDNode);
+	static int ParseLoginHeader(struct soap *soap, const char *key, const char*val);
 	
 public:
-	static IFDomain* Add(const gchar* userName, const gchar* password, const gchar* host);
-	int Remove();
-	int Login();
-	int Logout();
+	static IFDomain* Add(const gchar* userName, const gchar* password, const gchar* host, GError **error);
+	gboolean Remove();
+	gboolean Login(const gchar *password, GError **error);
+	gboolean Logout();
+	void GetGraceLimits(gint *pRemaining, gint *pTotal);
 	static IFDomainIterator GetDomains();
 	static IFDomain* GetDomainByID(const gchar *pID);
 	static IFDomain* GetDomainByName(const gchar *pName);
+
 };
 
 class GLIBCLIENT_API IFDomainIterator
@@ -168,7 +178,6 @@ public:
 	void AddAttribute(const gchar *name, const gchar *value);
 	GNode* FindChild(GNode *parent, gchar* name, IFXNodeType type);
 	GNode* FindSibling(GNode *sibling, gchar* name, IFXNodeType type);
-
 };
 
 #endif //_IFDOMAIN_H_

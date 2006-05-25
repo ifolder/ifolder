@@ -263,9 +263,9 @@ ifolder_client_initialize(const gchar *data_path, GError **error)
 	}
 	
 	if (data_path == NULL)
-		b_initialized = IFApplication::Initialize();
+		b_initialized = IFApplication::Initialize(&err);
 	else
-		b_initialized = IFApplication::Initialize(data_path);
+		b_initialized = IFApplication::Initialize(data_path, &err);
 	
 	if (!b_initialized)
 	{
@@ -431,7 +431,7 @@ ifolder_client_add_domain(iFolderClient *client, const gchar *host_address, cons
 	g_message("FIXME: Implement ifolder_client_add_domain()");
 	
 	/* Call the core code to add a domain.  If successful, create an iFolderDomain object and add it to the iFolderClientPrivate->domains list */
-	core_domain = IFDomain::Add (user_name, password, host_address);
+	core_domain = IFDomain::Add (user_name, password, host_address, &err);
 	if (core_domain == NULL)
 	{
 		g_set_error (error,
@@ -449,7 +449,7 @@ ifolder_client_add_domain(iFolderClient *client, const gchar *host_address, cons
 	ifolder_domain_set_name (domain, core_domain->m_Name);
 	ifolder_domain_set_description (domain, core_domain->m_Description);
 	ifolder_domain_set_version (domain, "FIXME: No Version");
-	ifolder_domain_set_host_address (domain, core_domain->m_MasterUrl);
+	ifolder_domain_set_host_address (domain, core_domain->m_MasterHost);
 	ifolder_domain_set_machine_name (domain, "FIXME: No Machine Name");
 	ifolder_domain_set_os_version (domain, "FIXME: Get OS Version");
 	ifolder_domain_set_user_name (domain, core_domain->m_UserName);
@@ -596,7 +596,7 @@ load_domains (iFolderClient *client, GError **error)
 		ifolder_domain_set_name (domain, core_domain->m_Name);
 		ifolder_domain_set_description (domain, core_domain->m_Description);
 		ifolder_domain_set_version (domain, "FIXME: No Version");
-		ifolder_domain_set_host_address (domain, core_domain->m_MasterUrl);
+		ifolder_domain_set_host_address (domain, core_domain->m_MasterHost);
 		ifolder_domain_set_machine_name (domain, "FIXME: No Machine Name");
 		ifolder_domain_set_os_version (domain, "FIXME: Get OS Version");
 		ifolder_domain_set_user_name (domain, core_domain->m_UserName);

@@ -127,7 +127,11 @@ int main(int argc, char* argv[])
 	}
 	else
 	{
-		IFApplication::Initialize();
+		if (!IFApplication::Initialize(&error))
+		{
+			printf("%s\n", error->message);
+			g_clear_error(&error);
+		}
 		if (iFolderName != NULL)
 		{
 		}
@@ -141,6 +145,24 @@ int main(int argc, char* argv[])
 				if (Password == NULL)
 				{
 				}
+				IFDomain* pDomain = IFDomain::GetDomainByName(DomainName);
+				if (pDomain != NULL)
+				{
+					GError *error = NULL;
+					if (!pDomain->Login(UserName, Password, &error))
+					{
+						if (error != NULL)
+						{
+							g_warning(error->message);
+							g_clear_error(&error);
+						}
+					}
+					else
+					{
+						printf("Login Successful\n");
+					}
+				}
+				
 			}
 			if (doLogout)
 			{
@@ -158,13 +180,22 @@ int main(int argc, char* argv[])
 				if (Password == NULL)
 				{
 					printf("Enter Password : ");
+					fgetc(stdin);
 				}
-				IFDomain* pDomain = IFDomain::Add(UserName, Password, HostName);
-				IFDomainIterator iter = IFDomain::GetDomains();
-				IFDomain *pD = IFDomain::GetDomainByID(pDomain->m_ID);
-				while ((pD = iter.Next()) != NULL)
+				IFDomain* pDomain = IFDomain::Add(UserName, Password, HostName, &error);
+				if (pDomain == NULL)
 				{
-					g_message(pD->m_Name);
+					if (error != NULL)
+					{
+						printf("%s\n", error->message);
+						g_clear_error(&error);
+					}
+				}
+				else
+				{
+					printf("Domain Add Successful\n");
+					printf("Name : %s\n", pDomain->m_Name);
+					printf("ID   : %s\n", pDomain->m_ID);
 				}
 			}
 			if (doRemove)

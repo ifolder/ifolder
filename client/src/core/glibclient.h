@@ -55,6 +55,7 @@
 
 #include <glib.h>
 #include <glib/gstdio.h>
+#include "iferrors.h"
 
 typedef std::string utf8string;
 

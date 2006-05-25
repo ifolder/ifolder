@@ -766,13 +766,14 @@ void
 ifolder_domain_log_in(iFolderDomain *domain, const char *password, gboolean remember_password, GError **error)
 {
 	iFolderDomainPrivate *priv;
+	GError *err;
 
 	g_return_if_fail (IFOLDER_IS_DOMAIN (domain));
 
 	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
 	
 	g_message ("FIXME: Change the implementation of IFDomain.Login() to return a gboolean, a GError, and take parameters.");
-	if (priv->core_domain->Login () != 0)
+	if (priv->core_domain->Login (password, &err) != 0)
 	{
 		g_set_error (error,
 					 IFOLDER_ERROR,
