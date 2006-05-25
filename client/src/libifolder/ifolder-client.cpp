@@ -428,16 +428,11 @@ ifolder_client_add_domain(iFolderClient *client, const gchar *host_address, cons
 	
 	priv = IFOLDER_CLIENT_GET_PRIVATE (client);
 
-	g_message("FIXME: Implement ifolder_client_add_domain()");
-	
 	/* Call the core code to add a domain.  If successful, create an iFolderDomain object and add it to the iFolderClientPrivate->domains list */
 	core_domain = IFDomain::Add (user_name, password, host_address, &err);
 	if (core_domain == NULL)
 	{
-		g_set_error (error,
-					 IFOLDER_ERROR,
-					 IFOLDER_ERR_UNKNOWN,
-					 _("FIXME: Russ needs to return a GError from the IFDomain::Add() function.  I don't know what failed."));
+		g_propagate_error (error, err);
 		return NULL;
 	}
 

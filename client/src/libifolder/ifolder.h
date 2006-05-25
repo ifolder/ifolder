@@ -24,14 +24,26 @@
 #ifndef _IFOLDER_C_H_
 #define _IFOLDER_C_H_
 
+#include <time.h>
+
+#include "ifolder-types.h"
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif		/* __cplusplus */
 
-#include <time.h>
-#include "ifolder-change-entry.h"
-#include "ifolder-user.h"
+G_BEGIN_DECLS
+
+#define IFOLDER_TYPE					(ifolder_get_type())
+#define IFOLDER(obj)					(G_TYPE_CHECK_INSTANCE_CAST ((obj), IFOLDER_TYPE, iFolder))
+#define IFOLDER_CLASS(klass)			(G_TYPE_CHECK_CLASS_CAST ((klass), IFOLDER_TYPE, iFolderClass))
+#define IFOLDER_IS_IFOLDER(obj)			(G_TYPE_CHECK_INSTANCE_TYPE ((obj), IFOLDER_TYPE))
+#define IFOLDER_IS_IFOLDER_CLASS(klass)	(G_TYPE_CHECK_CLASS_TYPE ((klass), IFOLDER_TYPE))
+#define IFOLDER_GET_CLASS(obj)			(G_TYPE_INSTANCE_GET_CLASS ((obj), IFOLDER_TYPE, iFolderClass))
+
+/* GObject support */
+GType ifolder_get_type (void) G_GNUC_CONST;
 
 /**
  * @file ifolder.h
@@ -71,19 +83,6 @@ extern "C"
  * a local file system path and ONLY exist on the server.  To connect an
  * iFolder to a local file system path, call ifolder_domain_connect_ifolder().
  */
-
-//! An object that represents a single iFolder.
-/**
- * You must call ifolder_free() to clean up the memory used by an iFolder.
- */
-typedef void *iFolder;
-
-//! Defines the two types of iFolders
-typedef enum
-{
-	IFOLDER_TYPE_CONNECTED,				/*!< An iFolder that is connected to a local file system path for synchronization */
-	IFOLDER_TYPE_DISCONNECTED			/*!< An iFolder that exists on the server */
-} iFolderType;
 
 typedef enum
 {
@@ -164,10 +163,11 @@ typedef enum
  * @param ifolder The iFolder.
  * @return The iFolder type.
  */
-iFolderType ifolder_get_type(const iFolder ifolder);
-const char *ifolder_get_id(const iFolder ifolder);
-const char *ifolder_get_name(const iFolder ifolder);
-const char *ifolder_get_description(const iFolder ifolder);
+const gchar *ifolder_get_id (iFolder *ifolder);
+const gchar *ifolder_get_name (iFolder *ifolder);
+const gchar *ifolder_get_description (iFolder *ifolder);
+gpointer ifolder_get_user_data (iFolder *ifolder);
+void ifolder_set_user_data (iFolder *ifolder, gpointer user_data);
 
 //! Set the description of an iFolder
 /**
@@ -175,14 +175,16 @@ const char *ifolder_get_description(const iFolder ifolder);
  * @param new_description The new description.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_set_description(const iFolder ifolder, const char *new_description);
+void ifolder_set_description (iFolder *ifolder, const gchar *new_description, GError **error);
 
-int ifolder_get_owner(const iFolder ifolder, iFolderUser *owner);
-int ifolder_get_domain(const iFolder ifolder, iFolderDomain *domain);
-int ifolder_get_size(const iFolder ifolder, long *size);
+gboolean ifolder_is_connected (iFolder *ifolder);
 
-int ifolder_get_file_count(const iFolder ifolder, int *file_count);
-int ifolder_get_directory_count(const iFolder ifolder, int *directory_count);
+iFolderUser * ifolder_get_owner (iFolder *ifolder);
+iFolderDomain * ifolder_get_domain (iFolder *ifolder);
+long ifolder_get_size (iFolder *ifolder, GError **error);
+
+long ifolder_get_file_count (iFolder *ifolder, GError **error);
+long ifolder_get_directory_count (iFolder *ifolder, GError **error);
 
 //! Returns the current user's member rights of an iFolder
 /**
@@ -190,8 +192,8 @@ int ifolder_get_directory_count(const iFolder ifolder, int *directory_count);
  * @param rights Invalid if the call is unsuccessful.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_get_rights(const iFolder ifolder, iFolderMemberRights *rights);
-int ifolder_get_last_modified(const iFolder ifolder, time_t *last_modified);
+iFolderMemberRights * ifolder_get_rights (iFolder *ifolder, GError **error);
+time_t * ifolder_get_last_modified (iFolder *ifolder, GError **error);
 
 //! Returns true if an iFolder is published.
 /**
@@ -202,7 +204,7 @@ int ifolder_get_last_modified(const iFolder ifolder, time_t *last_modified);
  * @return true if the iFolder is published.
  */
 
-bool ifolder_is_published(const iFolder ifolder);
+gboolean ifolder_is_published (iFolder *ifolder, GError **error);
 
 //! Returns true if the iFolder is enabled.
 /**
@@ -212,7 +214,7 @@ bool ifolder_is_published(const iFolder ifolder);
  * @param ifolder The iFolder.
  * @return true if the iFolder is enabled.
  */
-bool ifolder_is_enabled(const iFolder ifolder);
+gboolean ifolder_is_enabled (iFolder *ifolder, GError **error);
 
 //! Return the number of members an iFolder has.
 /**
@@ -220,7 +222,7 @@ bool ifolder_is_enabled(const iFolder ifolder);
  * @param member_count Invalid if the call is unsuccessful.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_get_member_count(const iFolder ifolder, int *member_count);
+long ifolder_get_member_count (iFolder *ifolder, GError **error);
 
 //! Return the current state of an iFolder.
 /**
@@ -228,7 +230,7 @@ int ifolder_get_member_count(const iFolder ifolder, int *member_count);
  * @param state Invalid if the call is unsuccessful.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_get_state(const iFolder ifolder, iFolderState *state);
+iFolderState ifolder_get_state (iFolder *ifolder, GError **error);
 
 //! Return the number of items an iFolder has left to synchronize.
 /**
@@ -244,7 +246,7 @@ int ifolder_get_state(const iFolder ifolder, iFolderState *state);
  * @param items_to_sync Invalid if the call is unsuccessful.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_get_items_to_synchronize(const iFolder ifolder, int *items_to_sync);
+long ifolder_get_items_to_synchronize (iFolder *ifolder, GError **error);
 
 /*@}*/
 
@@ -267,7 +269,7 @@ int ifolder_get_items_to_synchronize(const iFolder ifolder, int *items_to_sync);
  * 
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_start_synchronization(const iFolder ifolder, bool sync_now = false);
+void ifolder_start_synchronization (iFolder *ifolder, bool sync_now, GError **error);
 
 //! Stop synchronizing an iFolder.
 /**
@@ -279,7 +281,7 @@ int ifolder_start_synchronization(const iFolder ifolder, bool sync_now = false);
  * 
  * @see ifolder_client_stop_synchronization()
  */
-int ifolder_stop_synchronization(const iFolder ifolder);
+void ifolder_stop_synchronization (iFolder *ifolder, GError **error);
 
 //! Resume the synchronization of a paused iFolder.
 /**
@@ -294,7 +296,7 @@ int ifolder_stop_synchronization(const iFolder ifolder);
  * synchronization queue.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_resume_synchronization(const iFolder ifolder, bool sync_now = false);
+void ifolder_resume_synchronization (iFolder *ifolder, bool sync_now, GError **error);
 
 /*@}*/
 
@@ -313,9 +315,9 @@ int ifolder_resume_synchronization(const iFolder ifolder, bool sync_now = false)
  * @param count The number of iFolderUser objects to return.  This must be
  * at least 1 or greater.
  * @param user_enum Invalid if the call is unsuccessful.
- * @return IFOLDER_SUCCESS if the call was successful.
+ * @return A list of iFolderUser objects.
  */
-int ifolder_get_members(const iFolder ifolder, const int index, const int count, iFolderEnumeration *user_enum);
+GSList * ifolder_get_members (iFolder *ifolder, int index, int count, GError **error);
 
 //! Set a member's rights to an iFolder.
 /**
@@ -327,7 +329,7 @@ int ifolder_get_members(const iFolder ifolder, const int index, const int count,
  * @param rights The rights to assign to the member.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_set_member_rights(const iFolder ifolder, const iFolderUser member, const iFolderMemberRights rights);
+void ifolder_set_member_rights (iFolder *ifolder, const iFolderUser *member, iFolderMemberRights rights, GError **error);
 
 //! Add a new member to an iFolder.
 /**
@@ -339,7 +341,7 @@ int ifolder_set_member_rights(const iFolder ifolder, const iFolderUser member, c
  * @param rights The rights to assign to the member.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_add_member(const iFolder ifolder, const iFolderUser member, const iFolderMemberRights rights);
+void ifolder_add_member (iFolder *ifolder, const iFolderUser *member, iFolderMemberRights rights, GError **error);
 
 //! Remove a member from an iFolder.
 /**
@@ -350,7 +352,7 @@ int ifolder_add_member(const iFolder ifolder, const iFolderUser member, const iF
  * @param member The member to remove from the iFolder.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_remove_member(const iFolder ifolder, const iFolderUser member);
+void ifolder_remove_member (iFolder *ifolder, const iFolderUser *member, GError **error);
 
 //! Set a new owner of an iFolder.
 /**
@@ -362,7 +364,7 @@ int ifolder_remove_member(const iFolder ifolder, const iFolderUser member);
  * @param member The member to set as the new owner of the iFolder.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_set_owner(const iFolder ifolder, const iFolderUser member);
+void ifolder_set_owner (iFolder *ifolder, const iFolderUser *member, GError **error);
 
 /*@}*/
 
@@ -380,9 +382,9 @@ int ifolder_set_owner(const iFolder ifolder, const iFolderUser member);
  * @param count The maximum number of iFolderChangeEntry objects to return.
  * This must be at least 1.
  * @param change_entry_enum Invalid if the call is unsuccessful.
- * @return IFOLDER_SUCCESS if the call was successful.
+ * @return A GSList of iFolderChangeEntry objects.
  */
-int ifolder_get_change_entries(const iFolder ifolder, const int index, const int count, iFolderEnumeration *change_entry_enum);
+GSList * ifolder_get_change_entries (iFolder *ifolder, int index, int count, GError **error);
 
 //! Publish an iFolder
 /**
@@ -390,7 +392,7 @@ int ifolder_get_change_entries(const iFolder ifolder, const int index, const int
  * @return IFOLDER_SUCCESS if the call was successful.
  * @see ifolder_is_published()
  */
-int ifolder_publish(const iFolder ifolder);
+void ifolder_publish (iFolder *ifolder, GError **error);
 
 //! Un-publish an iFolder
 /**
@@ -398,13 +400,7 @@ int ifolder_publish(const iFolder ifolder);
  * @return IFOLDER_SUCCESS if the call was successful.
  * @see ifolder_is_published()
  */
-int ifolder_unpublish(const iFolder ifolder);
-
-//! Free the memory used by an iFolder.
-/**
- * @param ifolder The iFolder.
- */
-void ifolder_free(iFolder ifolder);
+void ifolder_unpublish (iFolder *ifolder, GError **error);
 
 /*@}*/
 
@@ -428,7 +424,7 @@ void ifolder_free(iFolder ifolder);
 
 @eventdef ifolder-connected
  @eventproto
-void (*ifolder_connected)(const iFolder ifolder);
+void (*ifolder_connected)(iFolder *ifolder);
  @endeventproto
  @eventdesc
   Emitted when an iFolder is connected to a local file system path.
@@ -437,7 +433,7 @@ void (*ifolder_connected)(const iFolder ifolder);
 
 @eventdef ifolder-disconnected
  @eventproto
-void (*ifolder_disconnected)(const iFolder ifolder);
+void (*ifolder_disconnected)(iFolder *ifolder);
  @endeventproto
  @eventdesc
   Emitted when an iFolder is disconnected from a local file system path.
@@ -446,7 +442,7 @@ void (*ifolder_disconnected)(const iFolder ifolder);
 
 @eventdef ifolder-created
  @eventproto
-void (*ifolder_created)(const iFolderDomain domain, const iFolder ifolder);
+void (*ifolder_created)(const iFolderDomain domain, iFolder *ifolder);
  @endeventproto
  @eventdesc
   Emitted when an iFolder is created on a server.
@@ -456,7 +452,7 @@ void (*ifolder_created)(const iFolderDomain domain, const iFolder ifolder);
 
 @eventdef ifolder-deleted
  @eventproto
-void (*ifolder_deleted)(const iFolderDomain domain, const iFolder ifolder);
+void (*ifolder_deleted)(const iFolderDomain domain, iFolder *ifolder);
  @endeventproto
  @eventdesc
   Emitted when an iFolder is deleted from a server.
@@ -466,7 +462,7 @@ void (*ifolder_deleted)(const iFolderDomain domain, const iFolder ifolder);
 
 @eventdef ifolder-state-changed
  @eventproto
-void (*ifolder_state_changed)(const iFolder ifolder, const iFolderState new_state);
+void (*ifolder_state_changed)(iFolder *ifolder, const iFolderState new_state);
  @endeventproto
  @eventdesc
   Emitted when the state of an iFolder changes.
@@ -476,7 +472,7 @@ void (*ifolder_state_changed)(const iFolder ifolder, const iFolderState new_stat
 
 @eventdef ifolder-owner-changed
  @eventproto
-void (*ifolder_owner_changed)(const iFolder ifolder, const iFolderUser old_owner, const iFolderUser new_owner);
+void (*ifolder_owner_changed)(iFolder *ifolder, const iFolderUser old_owner, const iFolderUser new_owner);
  @endeventproto
  @eventdesc
   Emitted when an iFolder's owner changes.
@@ -487,7 +483,7 @@ void (*ifolder_owner_changed)(const iFolder ifolder, const iFolderUser old_owner
 
 @eventdef ifolder-published
  @eventproto
-void (*ifolder_published)(const iFolder ifolder);
+void (*ifolder_published)(iFolder *ifolder);
  @endeventproto
  @eventdesc
   Emitted when an iFolder is published.
@@ -496,7 +492,7 @@ void (*ifolder_published)(const iFolder ifolder);
 
 @eventdef ifolder-unpublished
  @eventproto
-void (*ifolder_unpublished)(const iFolder ifolder);
+void (*ifolder_unpublished)(iFolder *ifolder);
  @endeventproto
  @eventdesc
   Emitted when an iFolder is unpublished.
@@ -505,7 +501,7 @@ void (*ifolder_unpublished)(const iFolder ifolder);
 
 @eventdef ifolder-member-added
  @eventproto
-void (*ifolder_member_added)(const iFolder ifolder, const iFolderUser member);
+void (*ifolder_member_added)(iFolder *ifolder, const iFolderUser member);
  @endeventproto
  @eventdesc
   Emitted when a new member is added to an iFolder.
@@ -515,7 +511,7 @@ void (*ifolder_member_added)(const iFolder ifolder, const iFolderUser member);
 
 @eventdef ifolder-member-removed
  @eventproto
-void (*ifolder_member_removed)(const iFolder ifolder, const iFolderUser member);
+void (*ifolder_member_removed)(iFolder *ifolder, const iFolderUser member);
  @endeventproto
  @eventdesc
   Emitted when a member is removed from an iFolder.
@@ -525,7 +521,7 @@ void (*ifolder_member_removed)(const iFolder ifolder, const iFolderUser member);
 
 @eventdef ifolder-member-rights-modified
  @eventproto
-void (*ifolder_member_rights_modified)(const iFolder ifolder, const iFolderUser member, const iFolderMemberRights rights);
+void (*ifolder_member_rights_modified)(iFolder *ifolder, const iFolderUser member, const iFolderMemberRights rights);
  @endeventproto
  @eventdesc
   Emitted when a member is removed from an iFolder.
@@ -535,6 +531,8 @@ void (*ifolder_member_rights_modified)(const iFolder ifolder, const iFolderUser 
 @endeventdef
 
 */
+
+G_END_DECLS
 
 #ifdef __cplusplus
 }

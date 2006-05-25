@@ -85,7 +85,6 @@ struct _iFolderDomainClass
  */
 typedef struct _iFolder iFolder;
 typedef struct _iFolderClass iFolderClass;
-typedef struct _iFolderPrivate iFolderPrivate;
 
 struct _iFolder
 {
@@ -94,7 +93,7 @@ struct _iFolder
 	/* instance members */
 
 	/* private */
-	iFolderPrivate *priv;
+	gpointer private_data;
 };
 
 struct _iFolderClass

@@ -25,6 +25,7 @@
 #define _IFOLDER_CLIENT_PRIVATE_H_
 
 #include <IFDomain.h>
+#include <IFiFolder.h>
 
 #include "ifolder-types.h"
 
@@ -61,7 +62,16 @@ void ifolder_domain_set_is_active (iFolderDomain *domain, gboolean is_active);
 IFDomain *ifolder_domain_get_core_domain (iFolderDomain *domain);
 void ifolder_domain_set_core_domain (iFolderDomain *domain, IFDomain *core_domain);
 
+/**
+ * iFolder Functions
+ */
 iFolder *ifolder_new (void);
+void ifolder_set_id (iFolder *ifolder, const gchar id);
+void ifolder_set_name (iFolder *ifolder, const gchar *name);
+IFiFolder *ifolder_get_core_ifolder (iFolder *ifolder);
+void ifolder_set_core_ifolder (iFolder *ifolder, IFiFolder *core_ifolder);
+
+
 iFolderUser *ifolder_user_new (void);
 iFolderUserPolicy *ifolder_user_policy_new (void);
 

@@ -43,12 +43,14 @@ ifolder3_applet_SOURCES = \
 	wait-dialog.h
 
 ifolder3_applet_LDFLAGS = \
-	-L$(top_srcdir)/src/libifolder \
+	-L$(top_srcdir)/src/core/.libs \
+	-L$(top_srcdir)/src/libifolder/.libs \
+	-lifolder3-core -lifolder3 \
 	$(TRAYAPP_LIBS)
 
-ifolder3_applet_LDADD = \
-	$(top_srcdir)/src/libifolder/libifolder-trayapp.a \
-	$(top_srcdir)/src/core/libifolder-core.a
+#ifolder3_applet_LDADD = \
+#	$(top_srcdir)/src/libifolder/libifolder-trayapp.a \
+#	$(top_srcdir)/src/core/libifolder3-core.a
 
 #install-exec-local:
 #	$(mkinstalldirs) $(IMAGE_INSTALL_DIR)

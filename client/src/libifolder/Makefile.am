@@ -51,6 +51,7 @@ libifolder3_la_LIBFLAGS =
 libifolder3_la_SOURCES = \
 	ifolder-client.cpp			\
 	ifolder-domain.cpp			\
+	ifolder.cpp					\
 	ifolder-user-prefs.cpp
 
 maintainer-clean-local:

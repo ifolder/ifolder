@@ -275,7 +275,7 @@ static void ifolder_domain_init(iFolderDomain *domain)
 {
 	iFolderDomainPrivate *priv;
 
-	g_message("ifolder_domain_init() called");
+	g_debug ("ifolder_domain_init() called");
 
 	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
 	
@@ -304,7 +304,7 @@ static void ifolder_domain_finalize(GObject *object)
 {
 	iFolderDomainPrivate *priv;
 
-	g_message (" ***** ifolder_domain_finalize() ***** ");
+	g_debug (" ***** ifolder_domain_finalize() ***** ");
 	
 	priv = IFOLDER_DOMAIN_GET_PRIVATE (object);
 
@@ -766,21 +766,13 @@ void
 ifolder_domain_log_in(iFolderDomain *domain, const char *password, gboolean remember_password, GError **error)
 {
 	iFolderDomainPrivate *priv;
-	GError *err;
 
 	g_return_if_fail (IFOLDER_IS_DOMAIN (domain));
 
 	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
 	
-	g_message ("FIXME: Change the implementation of IFDomain.Login() to return a gboolean, a GError, and take parameters.");
-	if (priv->core_domain->Login (password, &err) != 0)
-	{
-		g_set_error (error,
-					 IFOLDER_ERROR,
-					 IFOLDER_ERR_UNKNOWN,
-					 _("FIXME: IFDomain.Login() should return a GError so we know what's going on."));
+	if (priv->core_domain->Login (password, error) != 0)
 		return;
-	}
 
 	priv->is_authenticated = TRUE;
 
@@ -796,7 +788,6 @@ ifolder_domain_log_out(iFolderDomain *domain, GError **error)
 
 	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
 	
-	g_message ("FIXME: Change the implementation of IFDomain.Logout() to return a gboolean and a GError.");
 	if (priv->core_domain->Logout () != 0)
 	{
 		g_set_error (error,
