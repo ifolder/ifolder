@@ -315,21 +315,6 @@ void ifolder_domain_connect_ifolder(iFolderDomain *domain, iFolder *ifolder, con
  */
 void ifolder_domain_disconnect_ifolder(iFolderDomain *domain, iFolder *ifolder, GError **error);
 
-//! Returns a domain's connected and disconnected iFolders
-/**
- * @param domain The domain.
- * @param index The index of where the ifolder enumeration should begin.  This
- * must be greater than 0.  An empty list will be returned if the index is
- * greater than the total number of ifolders.
- * @param count The number of iFolder objects to return.  This must be at least
- * 1 or greater.
- * @param ifolder_enum Invalid if the call is unsuccessful.
- * @return IFOLDER_SUCCESS if the call was successful.
- * @see ifolder_domain_get_connected_ifolders()
- * @see ifolder_domain_get_disconnected_ifolders()
- */
-GSList * ifolder_domain_get_all_ifolders(iFolderDomain *domain, const int index, const int count, GError **error);
-
 //! Returns a domain's connected iFolders (iFolders configured to synchronize locally).
 /**
  * @param domain The domain.

@@ -951,15 +951,6 @@ ifolder_domain_disconnect_ifolder(iFolderDomain *domain, iFolder *ifolder, GErro
 }
 
 GSList *
-ifolder_domain_get_all_ifolders(iFolderDomain *domain, const int index, const int count, GError **error)
-{
-	g_return_val_if_fail (IFOLDER_IS_DOMAIN (domain), NULL);
-	g_message("FIXME: Implement ifolder_domain_get_all_ifolders");
-	
-	return g_slist_alloc();
-}
-
-GSList *
 ifolder_domain_get_connected_ifolders(iFolderDomain *domain, const int index, const int count, GError **error)
 {
 	g_return_val_if_fail (IFOLDER_IS_DOMAIN (domain), NULL);
