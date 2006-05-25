@@ -1,0 +1,103 @@
+// !$*UTF8*$!
+{
+	29B97313FDCFA39411CA2CEA /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeBuildStyle = 4A9504CCFFE6A4B311CA0CBA /* Debug */;
+		activeExecutable = 3E99D48F0A25F6C9004F0559 /* iFolder3 */;
+		activeTarget = 8D1107260486CEB800E47090 /* iFolder3 */;
+		addToTargets = (
+			8D1107260486CEB800E47090 /* iFolder3 */,
+		);
+		codeSenseManager = 3E99D49E0A25F6D9004F0559 /* Code sense */;
+		executables = (
+			3E99D48F0A25F6C9004F0559 /* iFolder3 */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					330,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 170261196;
+			PBXWorkspaceStateSaveDate = 170261196;
+		};
+		sourceControlManager = 3E99D49D0A25F6D9004F0559 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	3E29CB550A25F888005288B9 /* iFolder3App.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {674, 1526}}";
+			sepNavSelRange = "{1276, 0}";
+			sepNavVisRect = "{{0, 376}, {459, 186}}";
+			sepNavWindowFrame = "{{12, 109}, {750, 558}}";
+		};
+	};
+	3E29CB560A25F888005288B9 /* iFolder3App.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {711, 714}}";
+			sepNavSelRange = "{1123, 0}";
+			sepNavVisRect = "{{0, 229}, {711, 429}}";
+			sepNavWindowFrame = "{{703, 319}, {750, 558}}";
+		};
+	};
+	3E99D48F0A25F6C9004F0559 /* iFolder3 */ = {
+		isa = PBXExecutable;
+		activeArgIndex = 2147483647;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = iFolder3;
+		sourceDirectories = (
+		);
+	};
+	3E99D49D0A25F6D9004F0559 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+		};
+		scmType = "";
+	};
+	3E99D49E0A25F6D9004F0559 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	8D1107260486CEB800E47090 /* iFolder3 */ = {
+		activeExec = 0;
+		executables = (
+			3E99D48F0A25F6C9004F0559 /* iFolder3 */,
+		);
+	};
+}
