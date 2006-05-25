@@ -389,3 +389,147 @@ ifolder_set_core_ifolder (iFolder *ifolder, IFiFolder *core_ifolder)
 	priv->core_ifolder = core_ifolder;
 }
 
+gboolean
+ifolder_is_connected (iFolder *ifolder)
+{
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), FALSE);
+}
+
+iFolderUser *
+ifolder_get_owner (iFolder *ifolder)
+{
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), NULL);
+}
+
+iFolderDomain *
+ifolder_get_domain (iFolder *ifolder)
+{
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), NULL);
+}
+
+long
+ifolder_get_size (iFolder *ifolder, GError **error)
+{
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), -1);
+}
+
+long
+ifolder_get_file_count (iFolder *ifolder, GError **error)
+{
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), -1);
+}
+
+long
+ifolder_get_directory_count (iFolder *ifolder, GError **error)
+{
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), -1);
+}
+
+iFolderMemberRights *
+ifolder_get_rights (iFolder *ifolder, GError **error)
+{
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), NULL);
+}
+
+time_t *
+ifolder_get_last_modified (iFolder *ifolder, GError **error)
+{
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), NULL);
+}
+
+gboolean
+ifolder_is_published (iFolder *ifolder, GError **error)
+{
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), FALSE);
+}
+
+gboolean
+ifolder_is_enabled (iFolder *ifolder, GError **error)
+{
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), FALSE);
+}
+
+long
+ifolder_get_member_count (iFolder *ifolder, GError **error)
+{
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), -1);
+}
+
+iFolderState
+ifolder_get_state (iFolder *ifolder, GError **error)
+{
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), IFOLDER_STATE_UNKNOWN);
+}
+
+long
+ifolder_get_items_to_synchronize (iFolder *ifolder, GError **error)
+{
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), -1);
+}
+
+void
+ifolder_start_synchronization (iFolder *ifolder, bool sync_now, GError **error)
+{
+	g_return_if_fail (IFOLDER_IS_IFOLDER (ifolder));
+}
+
+void
+ifolder_stop_synchronization (iFolder *ifolder, GError **error)
+{
+	g_return_if_fail (IFOLDER_IS_IFOLDER (ifolder));
+}
+
+void
+ifolder_resume_synchronization (iFolder *ifolder, bool sync_now, GError **error)
+{
+	g_return_if_fail (IFOLDER_IS_IFOLDER (ifolder));
+}
+
+GSList *
+ifolder_get_members (iFolder *ifolder, int index, int count, GError **error)
+{
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), NULL);
+}
+
+void
+ifolder_set_member_rights (iFolder *ifolder, const iFolderUser *member, iFolderMemberRights rights, GError **error)
+{
+	g_return_if_fail (IFOLDER_IS_IFOLDER (ifolder));
+}
+
+void
+ifolder_add_member (iFolder *ifolder, const iFolderUser *member, iFolderMemberRights rights, GError **error)
+{
+	g_return_if_fail (IFOLDER_IS_IFOLDER (ifolder));
+}
+
+void
+ifolder_remove_member (iFolder *ifolder, const iFolderUser *member, GError **error)
+{
+	g_return_if_fail (IFOLDER_IS_IFOLDER (ifolder));
+}
+
+void
+ifolder_set_owner (iFolder *ifolder, const iFolderUser *member, GError **error)
+{
+	g_return_if_fail (IFOLDER_IS_IFOLDER (ifolder));
+}
+
+GSList *
+ifolder_get_change_entries (iFolder *ifolder, int index, int count, GError **error)
+{
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), NULL);
+}
+
+void
+ifolder_publish (iFolder *ifolder, GError **error)
+{
+	g_return_if_fail (IFOLDER_IS_IFOLDER (ifolder));
+}
+
+void
+ifolder_unpublish (iFolder *ifolder, GError **error)
+{
+	g_return_if_fail (IFOLDER_IS_IFOLDER (ifolder));
+}
+
