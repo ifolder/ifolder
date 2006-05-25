@@ -277,28 +277,22 @@ gboolean iFolderService::RemoveMembership(const gchar *ifolderID, GError **error
 	return true;
 }
 
-void iFolderService::GetAuthenticatedUserPolicy()
+UserPolicy* iFolderService::GetAuthenticatedUserPolicy()
 {
 	_ifolder__GetAuthenticatedUserPolicy req;
 	_ifolder__GetAuthenticatedUserPolicyResponse resp;
 	// Set the input parameters.
 	
-	// Get the output parameters.
-	ifolder__UserPolicy *pP = resp.GetAuthenticatedUserPolicyResult;
-	pP->FileSizeLimit;
-	pP->FileSizeLimitEffective;
-	pP->FileTypesExcludes;
-	pP->FileTypesExcludesEffective;
-	pP->FileTypesIncludes;
-	pP->FileTypesIncludesEffective;
-	pP->LoginEnabled;
-	pP->SpaceAvailable;
-	pP->SpaceLimit;
-	pP->SpaceLimitEffective;
-	pP->SpaceUsed;
-	pP->SyncInterval;
-	pP->SyncIntervalEffective;
-	pP->UserID;
+	if (m_iFolderService.__ifolder__GetAuthenticatedUserPolicy(&req, &resp) == 0)
+	{
+		// Get the output parameters.
+		return new UserPolicy(resp.GetAuthenticatedUserPolicyResult);
+	}
+	else
+	{
+		//g_set_error();
+		return NULL;
+	}
 }
 
 void iFolderService::GetiFolderPolicy()

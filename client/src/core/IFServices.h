@@ -50,6 +50,7 @@ class ChangeEntry;
 class ChangeEntryIterator;
 class DomainInfo;
 class ProvisionInfo;
+class UserPolicy;
 
 class GLIBCLIENT_API IFServiceManager
 {
@@ -97,7 +98,7 @@ public:
 	iFolderIterator* GetiFoldersByName(gint index, gint max, enum ifolder__SearchOperation operation, const gchar* pattern, GError **error);
 	iFolderIterator* GetiFoldersBySearch(time_t after, gint index, gint max, enum ifolder__SearchOperation operation, const gchar* pattern, enum ifolder__MemberRole role, GError **error);
 	gboolean RemoveMembership(const gchar *ifolderID, GError **error);
-	void GetAuthenticatedUserPolicy();
+	UserPolicy* GetAuthenticatedUserPolicy();
 	void GetiFolderPolicy();
 	void SetiFolderPolicy();
 	iFolderEntry* CreateEntry(const gchar *entryName, const gchar *ifolderID, const gchar *parentID, enum ifolder__iFolderEntryType type, GError **error);
@@ -474,11 +475,10 @@ public:
 	gint64		m_SpaceAvailable;	/* required element of type xsd:long */
 	gint		m_SyncInterval;	/* required element of type xsd:int */
 	gint		m_SyncIntervalEffective;	/* required element of type xsd:int */
-
-	class ifolder__ArrayOfString *FileTypesIncludes;	/* optional element of type ifolder:ArrayOfString */
-	ifolder__ArrayOfString *FileTypesIncludesEffective;	/* optional element of type ifolder:ArrayOfString */
-	ifolder__ArrayOfString *FileTypesExcludes;	/* optional element of type ifolder:ArrayOfString */
-	ifolder__ArrayOfString *FileTypesExcludesEffective;	/* optional element of type ifolder:ArrayOfString */
+	GArray		*m_FileTypesIncludes;
+	GArray		*m_FileTypesIncludesEffective;
+	GArray		*m_FileTypesExcludes;
+	GArray		*m_FileTypesExcludesEffective;
 public:
 	UserPolicy(ifolder__UserPolicy *userPolicy)
 	{
@@ -492,11 +492,74 @@ public:
 		m_SpaceAvailable = userPolicy->SpaceAvailable;
 		m_SyncInterval = userPolicy->SyncInterval;
 		m_SyncIntervalEffective = userPolicy->SyncIntervalEffective;
+		int count;
+		int i;
+		count = userPolicy->FileTypesIncludes->__sizestring;
+		m_FileTypesIncludes = g_array_sized_new(true, true, sizeof(gchar*), count);
+		for (i = 0; i < count; ++i)
+		{
+			gchar *ftString = g_strdup(userPolicy->FileTypesIncludes->string[i]);
+			g_array_insert_val(m_FileTypesIncludes, i, ftString);
+		}
+		
+		count = userPolicy->FileTypesIncludesEffective->__sizestring;
+		m_FileTypesIncludesEffective = g_array_sized_new(true, true, sizeof(gchar*), count);
+		for (i = 0; i < count; ++i)
+		{
+			gchar *ftString = g_strdup(userPolicy->FileTypesIncludesEffective->string[i]);
+			g_array_insert_val(m_FileTypesIncludesEffective, i, ftString);
+		}
 
+
+		count = userPolicy->FileTypesExcludes->__sizestring;
+		m_FileTypesExcludes = g_array_sized_new(true, true, sizeof(gchar*), count);
+		for (i = 0; i < count; ++i)
+		{
+			gchar *ftString = g_strdup(userPolicy->FileTypesExcludes->string[i]);
+			g_array_insert_val(m_FileTypesExcludes, i, ftString);
+		}
+
+		count = userPolicy->FileTypesExcludesEffective->__sizestring;
+		m_FileTypesExcludesEffective = g_array_sized_new(true, true, sizeof(gchar*), count);
+		m_FileTypesExcludesEffective = g_array_sized_new(true, true, sizeof(gchar*), count);
+		for (i = 0; i < count; ++i)
+		{
+			gchar *ftString = g_strdup(userPolicy->FileTypesExcludesEffective->string[i]);
+			g_array_insert_val(m_FileTypesExcludesEffective, i, ftString);
+		}
 	}
 	virtual ~UserPolicy()
 	{ 
 		g_free(m_UserID);
+		int i;
+		int count;
+		count = m_FileTypesIncludes->len;
+		for (i = 0; i < count; ++i)
+		{
+			g_free(g_array_index(m_FileTypesIncludes, gchar*, i));
+		}
+		g_array_free(m_FileTypesIncludes, true);
+
+		count = m_FileTypesIncludesEffective->len;
+		for (i = 0; i < count; ++i)
+		{
+			g_free(g_array_index(m_FileTypesIncludesEffective, gchar*, i));
+		}
+		g_array_free(m_FileTypesIncludesEffective, true);
+
+		count = m_FileTypesExcludes->len;
+		for (i = 0; i < count; ++i)
+		{
+			g_free(g_array_index(m_FileTypesExcludes, gchar*, i));
+		}
+		g_array_free(m_FileTypesExcludes, true);
+
+		count = m_FileTypesExcludesEffective->len;
+		for (i = 0; i < count; ++i)
+		{
+			g_free(g_array_index(m_FileTypesExcludesEffective, gchar*, i));
+		}
+		g_array_free(m_FileTypesExcludesEffective, true);
 	}
 };
 

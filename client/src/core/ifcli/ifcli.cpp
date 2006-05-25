@@ -149,7 +149,7 @@ int main(int argc, char* argv[])
 				if (pDomain != NULL)
 				{
 					GError *error = NULL;
-					if (!pDomain->Login(UserName, Password, &error))
+					if (!pDomain->Login(Password, &error))
 					{
 						if (error != NULL)
 						{
