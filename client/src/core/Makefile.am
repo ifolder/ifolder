@@ -35,22 +35,22 @@ INCLUDES = \
 	-I$(srcdir)/..		\
 	-I$(top_builddir)
 
-noinst_LIBRARIES = libifolder-core.a
+lib_LTLIBRARIES = libifolder3-core.la
 
 DEFINES = 
 
-libifolder_core_a_CXXFLAGS = \
+libifolder3_core_la_CXXFLAGS =	\
 	$(DEFINES)					\
 	$(GLIB_CFLAGS)				\
 	-DWITH_NONAMESPACES			\
 	-DWITH_COOKIES
 
-libifolder_core_a_LDFLAGS = \
+libifolder3_core_la_LDFLAGS =	\
 	$(GLIB_LIBS)
 
 #libifolder_core_a_LIBFLAGS = 
 
-libifolder_core_a_SOURCES = \
+libifolder3_core_la_SOURCES = \
 	simiasC.cpp					\
 	simiasClient.cpp			\
 	stdsoap2.cpp				\

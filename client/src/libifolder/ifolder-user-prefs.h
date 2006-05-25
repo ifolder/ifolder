@@ -44,16 +44,16 @@ extern "C"
 #define IFOLDER_USER_PREFS_GROUP_NAME "UserPreferences"
 
 //! Returns true if a setting exists for key.
-gboolean ifolder_user_pref_exists(const gchar *key, GError **error = NULL);
+gboolean ifolder_user_pref_exists(const gchar *key, GError **error);
 
 //! Deletes a user preference
-void ifolder_user_pref_delete(const gchar *key, GError **error = NULL);
+void ifolder_user_pref_delete(const gchar *key, GError **error);
 
 //! Reset a user preference to its default value
 /**
  * @param error If no default value was set, an error is returned here.
  */
-void ifolder_user_pref_reset(const gchar *key, GError **error = NULL);
+void ifolder_user_pref_reset(const gchar *key, GError **error);
 
 /*@}*/
 
@@ -61,45 +61,45 @@ void ifolder_user_pref_reset(const gchar *key, GError **error = NULL);
  * @name string settings
  * @{
  */
-void ifolder_user_pref_add_string(const gchar *key, const gchar *default_value, GError **error = NULL);
-const gchar * ifolder_user_pref_get_string(const gchar *key, const gchar *default_value = NULL, GError **error = NULL);
-void ifolder_user_pref_set_string(const gchar *key, const gchar *value, GError **error = NULL);
+void ifolder_user_pref_add_string(const gchar *key, const gchar *default_value, GError **error);
+const gchar * ifolder_user_pref_get_string(const gchar *key, const gchar *default_value, GError **error);
+void ifolder_user_pref_set_string(const gchar *key, const gchar *value, GError **error);
 /*@}*/
 
 /**
  * @name int settings
  * @{
  */
-void ifolder_user_pref_add_int(const gchar *key, const gchar *default_value, GError **error = NULL);
-int ifolder_user_pref_get_int(const gchar *key, int default_value = 0, GError **error = NULL);
-void ifolder_user_pref_set_int(const gchar *key, int value, GError **error = NULL);
+void ifolder_user_pref_add_int(const gchar *key, const gchar *default_value, GError **error);
+int ifolder_user_pref_get_int(const gchar *key, int default_value, GError **error);
+void ifolder_user_pref_set_int(const gchar *key, int value, GError **error);
 /*@}*/
 
 /**
  * @name float settings
  * @{
  */
-void ifolder_user_pref_add_float(const gchar *key, const gchar *default_value, GError **error = NULL);
-float ifolder_user_pref_get_float(const gchar *key, float default_value = 0.0, GError **error = NULL);
-void ifolder_user_pref_set_float(const gchar *key, float value, GError **error = NULL);
+void ifolder_user_pref_add_float(const gchar *key, const gchar *default_value, GError **error);
+float ifolder_user_pref_get_float(const gchar *key, float default_value, GError **error);
+void ifolder_user_pref_set_float(const gchar *key, float value, GError **error);
 /*@}*/
 
 /**
  * @name long settings
  * @{
  */
-void ifolder_user_pref_add_long(const gchar *key, const gchar *default_value, GError **error = NULL);
-long ifolder_user_pref_get_long(const gchar *key, long default_value = 0, GError **error = NULL);
-void ifolder_user_pref_set_long(const gchar *key, long value, GError **error = NULL);
+void ifolder_user_pref_add_long(const gchar *key, const gchar *default_value, GError **error);
+long ifolder_user_pref_get_long(const gchar *key, long default_value, GError **error);
+void ifolder_user_pref_set_long(const gchar *key, long value, GError **error);
 /*@}*/
 
 /**
  * @name boolean settings
  * @{
  */
-void ifolder_user_pref_add_bool(const gchar *key, const gchar *default_value, GError **error = NULL);
-gboolean ifolder_user_pref_get_bool(const gchar *key, gboolean default_value = false, GError **error = NULL);
-void ifolder_user_pref_set_bool(const gchar *key, gboolean value, GError **error = NULL);
+void ifolder_user_pref_add_bool(const gchar *key, const gchar *default_value, GError **error);
+gboolean ifolder_user_pref_get_bool(const gchar *key, gboolean default_value, GError **error);
+void ifolder_user_pref_set_bool(const gchar *key, gboolean value, GError **error);
 /*@}*/
 
 /** @page user_prefs_events_page User Preferences Events

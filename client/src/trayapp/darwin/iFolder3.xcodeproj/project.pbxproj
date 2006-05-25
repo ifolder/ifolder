@@ -8,6 +8,26 @@
 
 /* Begin PBXBuildFile section */
 		3E29CB570A25F888005288B9 /* iFolder3App.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E29CB550A25F888005288B9 /* iFolder3App.m */; };
+		3E67CD6D0A2605FC00881F54 /* libifolder3-core.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E67CD6C0A2605FC00881F54 /* libifolder3-core.0.dylib */; };
+		3E67CD6E0A2605FE00881F54 /* libifolder3-core.0.dylib in Copy Required Dylibs */ = {isa = PBXBuildFile; fileRef = 3E67CD6C0A2605FC00881F54 /* libifolder3-core.0.dylib */; };
+		3E67CD710A26061500881F54 /* libifolder3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E67CD700A26061500881F54 /* libifolder3.0.dylib */; };
+		3E67CD720A2606D900881F54 /* libifolder3.0.dylib in Copy Required Dylibs */ = {isa = PBXBuildFile; fileRef = 3E67CD700A26061500881F54 /* libifolder3.0.dylib */; };
+		3E67CD7B0A26075A00881F54 /* libglib-2.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E67CD770A26075A00881F54 /* libglib-2.0.dylib */; };
+		3E67CD7C0A26075A00881F54 /* libgmodule-2.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E67CD780A26075A00881F54 /* libgmodule-2.0.dylib */; };
+		3E67CD7D0A26075A00881F54 /* libgobject-2.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E67CD790A26075A00881F54 /* libgobject-2.0.dylib */; };
+		3E67CD7E0A26075A00881F54 /* libgthread-2.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E67CD7A0A26075A00881F54 /* libgthread-2.0.dylib */; };
+		3E67CD7F0A26075E00881F54 /* libglib-2.0.dylib in Copy Required Dylibs */ = {isa = PBXBuildFile; fileRef = 3E67CD770A26075A00881F54 /* libglib-2.0.dylib */; };
+		3E67CD800A26075E00881F54 /* libgmodule-2.0.dylib in Copy Required Dylibs */ = {isa = PBXBuildFile; fileRef = 3E67CD780A26075A00881F54 /* libgmodule-2.0.dylib */; };
+		3E67CD810A26075E00881F54 /* libgobject-2.0.dylib in Copy Required Dylibs */ = {isa = PBXBuildFile; fileRef = 3E67CD790A26075A00881F54 /* libgobject-2.0.dylib */; };
+		3E67CD820A26075E00881F54 /* libgthread-2.0.dylib in Copy Required Dylibs */ = {isa = PBXBuildFile; fileRef = 3E67CD7A0A26075A00881F54 /* libgthread-2.0.dylib */; };
+		3E67CD8B0A26077D00881F54 /* libgettextlib.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E67CD870A26077D00881F54 /* libgettextlib.dylib */; };
+		3E67CD8C0A26077D00881F54 /* libgettextpo.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E67CD880A26077D00881F54 /* libgettextpo.dylib */; };
+		3E67CD8D0A26077D00881F54 /* libgettextsrc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E67CD890A26077D00881F54 /* libgettextsrc.dylib */; };
+		3E67CD8E0A26077D00881F54 /* libintl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E67CD8A0A26077D00881F54 /* libintl.dylib */; };
+		3E67CD8F0A26078000881F54 /* libgettextlib.dylib in Copy Required Dylibs */ = {isa = PBXBuildFile; fileRef = 3E67CD870A26077D00881F54 /* libgettextlib.dylib */; };
+		3E67CD900A26078000881F54 /* libgettextpo.dylib in Copy Required Dylibs */ = {isa = PBXBuildFile; fileRef = 3E67CD880A26077D00881F54 /* libgettextpo.dylib */; };
+		3E67CD910A26078000881F54 /* libgettextsrc.dylib in Copy Required Dylibs */ = {isa = PBXBuildFile; fileRef = 3E67CD890A26077D00881F54 /* libgettextsrc.dylib */; };
+		3E67CD920A26078000881F54 /* libintl.dylib in Copy Required Dylibs */ = {isa = PBXBuildFile; fileRef = 3E67CD8A0A26077D00881F54 /* libintl.dylib */; };
 		3EDCE68B0A25F74800C03C18 /* ifolder.icns in Resources */ = {isa = PBXBuildFile; fileRef = 3EDCE68A0A25F74800C03C18 /* ifolder.icns */; };
 		3EDCE68D0A25F74D00C03C18 /* syncbw22.png in Resources */ = {isa = PBXBuildFile; fileRef = 3EDCE68C0A25F74D00C03C18 /* syncbw22.png */; };
 		3EDCE68F0A25F75700C03C18 /* ifolderbw22.png in Resources */ = {isa = PBXBuildFile; fileRef = 3EDCE68E0A25F75700C03C18 /* ifolderbw22.png */; };
@@ -32,6 +52,29 @@
 		};
 /* End PBXBuildStyle section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		3E67CD680A2604B000881F54 /* Copy Required Dylibs */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				3E67CD8F0A26078000881F54 /* libgettextlib.dylib in Copy Required Dylibs */,
+				3E67CD900A26078000881F54 /* libgettextpo.dylib in Copy Required Dylibs */,
+				3E67CD910A26078000881F54 /* libgettextsrc.dylib in Copy Required Dylibs */,
+				3E67CD920A26078000881F54 /* libintl.dylib in Copy Required Dylibs */,
+				3E67CD7F0A26075E00881F54 /* libglib-2.0.dylib in Copy Required Dylibs */,
+				3E67CD800A26075E00881F54 /* libgmodule-2.0.dylib in Copy Required Dylibs */,
+				3E67CD810A26075E00881F54 /* libgobject-2.0.dylib in Copy Required Dylibs */,
+				3E67CD820A26075E00881F54 /* libgthread-2.0.dylib in Copy Required Dylibs */,
+				3E67CD720A2606D900881F54 /* libifolder3.0.dylib in Copy Required Dylibs */,
+				3E67CD6E0A2605FE00881F54 /* libifolder3-core.0.dylib in Copy Required Dylibs */,
+			);
+			name = "Copy Required Dylibs";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
@@ -43,11 +86,21 @@
 		32CA4F630368D1EE00C91783 /* iFolder3_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iFolder3_Prefix.pch; sourceTree = "<group>"; };
 		3E29CB550A25F888005288B9 /* iFolder3App.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = iFolder3App.m; sourceTree = "<group>"; };
 		3E29CB560A25F888005288B9 /* iFolder3App.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = iFolder3App.h; sourceTree = "<group>"; };
+		3E67CD6C0A2605FC00881F54 /* libifolder3-core.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libifolder3-core.0.dylib"; path = "../../core/.libs/libifolder3-core.0.dylib"; sourceTree = SOURCE_ROOT; };
+		3E67CD700A26061500881F54 /* libifolder3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libifolder3.0.dylib; path = ../../libifolder/.libs/libifolder3.0.dylib; sourceTree = SOURCE_ROOT; };
+		3E67CD770A26075A00881F54 /* libglib-2.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libglib-2.0.dylib"; path = "../../../external/glib/osx/lib/libglib-2.0.dylib"; sourceTree = SOURCE_ROOT; };
+		3E67CD780A26075A00881F54 /* libgmodule-2.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libgmodule-2.0.dylib"; path = "../../../external/glib/osx/lib/libgmodule-2.0.dylib"; sourceTree = SOURCE_ROOT; };
+		3E67CD790A26075A00881F54 /* libgobject-2.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libgobject-2.0.dylib"; path = "../../../external/glib/osx/lib/libgobject-2.0.dylib"; sourceTree = SOURCE_ROOT; };
+		3E67CD7A0A26075A00881F54 /* libgthread-2.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libgthread-2.0.dylib"; path = "../../../external/glib/osx/lib/libgthread-2.0.dylib"; sourceTree = SOURCE_ROOT; };
+		3E67CD870A26077D00881F54 /* libgettextlib.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgettextlib.dylib; path = ../../../external/gettext/osx/lib/libgettextlib.dylib; sourceTree = SOURCE_ROOT; };
+		3E67CD880A26077D00881F54 /* libgettextpo.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgettextpo.dylib; path = ../../../external/gettext/osx/lib/libgettextpo.dylib; sourceTree = SOURCE_ROOT; };
+		3E67CD890A26077D00881F54 /* libgettextsrc.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgettextsrc.dylib; path = ../../../external/gettext/osx/lib/libgettextsrc.dylib; sourceTree = SOURCE_ROOT; };
+		3E67CD8A0A26077D00881F54 /* libintl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libintl.dylib; path = ../../../external/gettext/osx/lib/libintl.dylib; sourceTree = SOURCE_ROOT; };
 		3EDCE68A0A25F74800C03C18 /* ifolder.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = ifolder.icns; sourceTree = "<group>"; };
 		3EDCE68C0A25F74D00C03C18 /* syncbw22.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = syncbw22.png; sourceTree = "<group>"; };
 		3EDCE68E0A25F75700C03C18 /* ifolderbw22.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ifolderbw22.png; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		8D1107320486CEB800E47090 /* iFolder3.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iFolder3.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D1107320486CEB800E47090 /* iFolder3.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = iFolder3.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +109,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+				3E67CD6D0A2605FC00881F54 /* libifolder3-core.0.dylib in Frameworks */,
+				3E67CD710A26061500881F54 /* libifolder3.0.dylib in Frameworks */,
+				3E67CD7B0A26075A00881F54 /* libglib-2.0.dylib in Frameworks */,
+				3E67CD7C0A26075A00881F54 /* libgmodule-2.0.dylib in Frameworks */,
+				3E67CD7D0A26075A00881F54 /* libgobject-2.0.dylib in Frameworks */,
+				3E67CD7E0A26075A00881F54 /* libgthread-2.0.dylib in Frameworks */,
+				3E67CD8B0A26077D00881F54 /* libgettextlib.dylib in Frameworks */,
+				3E67CD8C0A26077D00881F54 /* libgettextpo.dylib in Frameworks */,
+				3E67CD8D0A26077D00881F54 /* libgettextsrc.dylib in Frameworks */,
+				3E67CD8E0A26077D00881F54 /* libintl.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -134,6 +197,16 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3E67CD870A26077D00881F54 /* libgettextlib.dylib */,
+				3E67CD880A26077D00881F54 /* libgettextpo.dylib */,
+				3E67CD890A26077D00881F54 /* libgettextsrc.dylib */,
+				3E67CD8A0A26077D00881F54 /* libintl.dylib */,
+				3E67CD770A26075A00881F54 /* libglib-2.0.dylib */,
+				3E67CD780A26075A00881F54 /* libgmodule-2.0.dylib */,
+				3E67CD790A26075A00881F54 /* libgobject-2.0.dylib */,
+				3E67CD7A0A26075A00881F54 /* libgthread-2.0.dylib */,
+				3E67CD700A26061500881F54 /* libifolder3.0.dylib */,
+				3E67CD6C0A2605FC00881F54 /* libifolder3-core.0.dylib */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
@@ -147,6 +220,8 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "iFolder3" */;
 			buildPhases = (
+				3E85B84B0A261EA800AB51F3 /* Fix up dylib paths */,
+				3E67CD680A2604B000881F54 /* Copy Required Dylibs */,
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
@@ -199,6 +274,23 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		3E85B84B0A261EA800AB51F3 /* Fix up dylib paths */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Fix up dylib paths";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "install_name_tool -id \"@executable_path/../Frameworks/libifolder3-core.0.dylib\" ../../core/.libs/libifolder3-core.0.dylib\ninstall_name_tool -id \"@executable_path/../Frameworks/libifolder3.0.dylib\" ../../libifolder/.libs/libifolder3.0.dylib";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		8D11072C0486CEB800E47090 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -241,6 +333,13 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = (
+					"$(LIBRARY_SEARCH_PATHS)",
+					"$(SRCROOT)/../../core",
+					"$(SRCROOT)/../../libifolder",
+					"$(SRCROOT)/../../../external/glib/osx/lib",
+					"$(SRCROOT)/../../../external/gettext/osx/lib",
+				);
 				PRODUCT_NAME = iFolder3;
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = YES;
@@ -258,6 +357,13 @@
 				GCC_MODEL_TUNING = G5;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = (
+					"$(LIBRARY_SEARCH_PATHS)",
+					"$(SRCROOT)/../../core",
+					"$(SRCROOT)/../../libifolder",
+					"$(SRCROOT)/../../../external/glib/osx/lib",
+					"$(SRCROOT)/../../../external/gettext/osx/lib",
+				);
 				PRODUCT_NAME = iFolder3;
 				WRAPPER_EXTENSION = app;
 			};
@@ -268,8 +374,19 @@
 			buildSettings = {
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					../../libifolder,
+					../../core,
+					../../../external/glib/osx/include,
+					"$(HEADER_SEARCH_PATHS)",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					../../libifolder/.libs,
+					../../core/.libs,
+				);
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				ZERO_LINK = NO;
 			};
 			name = Debug;
 		};
@@ -278,8 +395,19 @@
 			buildSettings = {
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					../../libifolder,
+					../../core,
+					../../../external/glib/osx/include,
+					"$(HEADER_SEARCH_PATHS)",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					../../libifolder/.libs,
+					../../core/.libs,
+				);
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				ZERO_LINK = NO;
 			};
 			name = Release;
 		};

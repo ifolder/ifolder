@@ -23,6 +23,8 @@
 
 #import "iFolder3App.h"
 
+
+
 @implementation iFolder3App
 
 //===================================================================
@@ -31,7 +33,8 @@
 //===================================================================
 -(void)awakeFromNib
 {
-	//int err;
+	GError *err = NULL;
+	
 	appStatusItem = [[[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength] retain];
 	[appStatusItem setMenu:appMenu];
 	[appStatusItem setHighlightMode:YES];	// if this is not set, your menu will not highlight when clicked
@@ -39,21 +42,20 @@
 	// FIXME: Change the icon to ifolder-starting-up.png
 	[appStatusItem setImage:[NSImage imageNamed:@"ifolderbw22"]];		// you do have an icon, right?
 
-/*
-	err = ifolder_client_initialize(NULL, NULL);
-	if (err == IFOLDER_SUCCESS)
+	client = ifolder_client_initialize(NULL, &err);
+	if(err != NULL)
 	{
-		NSLog(@"The iFolder Client initialized successfully!");
+		NSLog(@"The iFolder Client failed to initialize: %s", err->message);
+		g_clear_error(&err);
+	}
+	else
+	{
+		NSLog(@"The iFolder Client initialized");
+		// FIXME: popup an error and don't let the app continue
 
 		// FIXME: Change the icon to ifolder-idle.png
 		[appStatusItem setImage:[NSImage imageNamed:@"ifolderbw22"]];		// you do have an icon, right?
 	}
-	else
-	{
-		NSLog(@"The iFolder Client failed to initialize: %d", err);
-		// FIXME: popup an error and don't let the app continue
-	}
-*/
 }
 
 
@@ -102,7 +104,11 @@
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
 	// for later stuff
-	//ifolder_client_uninitialize(NULL, NULL);
+	if(client != NULL)
+	{
+		NSLog(@"Calling ifolder_client_uninitialize");
+		ifolder_client_uninitialize(client, NULL);
+	}
 }
 
 @end

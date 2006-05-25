@@ -22,7 +22,7 @@
 #LPROJDIRS = es.lproj
 LPROJDIRS =
 
-EXTRA_DIST = $(LPROJDIRS) $(srcdir)/English.lproj $(srcdir)/Info.plist.in $(srcdir)/iFolderStatusIcon.xcodeproj $(srcdir)/iFolderStatusIcon_Prefix.pch $(srcdir)/ifolder.icns $(srcdir)/main.m
+EXTRA_DIST = $(LPROJDIRS) $(srcdir)/English.lproj $(srcdir)/Info.plist.in $(srcdir)/iFolder3.xcodeproj $(srcdir)/iFolder3_Prefix.pch $(srcdir)/ifolder.icns $(srcdir)/main.m
 
 if DEBUG
 BUILDCONF=debug
@@ -32,18 +32,18 @@ endif
 
 CUR_DIR := $(shell pwd)
 
-all: "$(srcdir)/build/$(BUILDCONF)/iFolderStatusIcon.app"
+all: "$(srcdir)/build/$(BUILDCONF)/iFolder3.app"
 
-"$(srcdir)/build/$(BUILDCONF)/iFolderStatusIcon.app": iFolderStatusIcon.xcodeproj
+"$(srcdir)/build/$(BUILDCONF)/iFolder3.app": iFolder3.xcodeproj
 	xcodebuild -configuration $(BUILDCONF)
 
-install-exec-local: "$(srcdir)/build/$(BUILDCONF)/iFolderStatusIcon.app"
+install-exec-local: "$(srcdir)/build/$(BUILDCONF)/iFolder3.app"
 	$(mkinstalldirs) $(DESTDIR)$(prefix)/Applications
-	rm -rf "$(DESTDIR)$(prefix)/Applications/iFolderStatusIcon.app"
-	cp -rf "$(srcdir)/build/$(BUILDCONF)/iFolderStatusIcon.app" $(DESTDIR)$(prefix)/Applications
+	rm -rf "$(DESTDIR)$(prefix)/Applications/iFolder3.app"
+	cp -rf "$(srcdir)/build/$(BUILDCONF)/iFolder3.app" $(DESTDIR)$(prefix)/Applications
 
 uninstall-local:
-	cd $(DESTDIR)$(prefix)/Applications; rm -rf "iFolderStatusIcon.app"
+	cd $(DESTDIR)$(prefix)/Applications; rm -rf "iFolder3.app"
 
 CLEAN_FILES =
 

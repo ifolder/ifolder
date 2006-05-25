@@ -1,8 +1,15 @@
 /*
 
-gSOAP XML Web services tools
-Copyright (C) 2004, Robert van Engelen, Genivia, Inc. All Rights Reserved.
+stlvector.h
 
+Use #import "stlvector.h" in a gSOAP header file to enable STL vectors.
+
+Use soapcpp2 option -Ipath:path:... to specify the path(s) for #import
+
+gSOAP XML Web services tools
+Copyright (C) 2000-2005, Robert van Engelen, Genivia Inc., All Rights Reserved.
+This part of the software is released under one of the following licenses:
+GPL, the gSOAP public license, or Genivia's license for commercial use.
 --------------------------------------------------------------------------------
 gSOAP public license.
 
@@ -15,7 +22,7 @@ WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 for the specific language governing rights and limitations under the License.
 
 The Initial Developer of the Original Code is Robert A. van Engelen.
-Copyright (C) 2000-2004 Robert A. van Engelen, Genivia inc. All Rights Reserved.
+Copyright (C) 2000-2005 Robert A. van Engelen, Genivia inc. All Rights Reserved.
 --------------------------------------------------------------------------------
 GPL license.
 
@@ -34,6 +41,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 Author contact information:
 engelen@genivia.com / engelen@acm.org
+--------------------------------------------------------------------------------
+A commercial use license is available from Genivia, Inc., contact@genivia.com
 --------------------------------------------------------------------------------
 */
 

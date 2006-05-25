@@ -27,7 +27,7 @@ INCLUDES = \
 	-I$(top_srcdir)/src/core \
 	-I$(top_builddir)
 
-noinst_LIBRARIES = libifolder-trayapp.a
+lib_LTLIBRARIES = libifolder3.la
 
 #libifolder_trayapp_a_LIBADD =	\
 #	libsync/libsync.a		\
@@ -36,19 +36,19 @@ noinst_LIBRARIES = libifolder-trayapp.a
 
 DEFINES = 
 
-libifolder_trayapp_a_CXXFLAGS = \
+libifolder3_la_CXXFLAGS = \
 	$(DEFINES)					\
 	$(GLIB_CFLAGS)
 
-libifolder_trayapp_a_LDFLAGS = \
+libifolder3_la_LDFLAGS = \
 	$(GLIB_LIBS)
 
 #libifolder_trayapp_a_LIBDADD = \
 #	$(top_srcdir)/src/core/libifolder-core.a
 
-libifolder_trayapp_a_LIBFLAGS = 
+libifolder3_la_LIBFLAGS = 
 
-libifolder_trayapp_a_SOURCES = \
+libifolder3_la_SOURCES = \
 	ifolder-client.cpp			\
 	ifolder-domain.cpp			\
 	ifolder-user-prefs.cpp

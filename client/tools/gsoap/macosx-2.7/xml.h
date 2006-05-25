@@ -2,15 +2,30 @@
 
 xml.h
 
-Literal XML string.
+Literal XML strings.
 
 A literal XML string contains XML content. This declaration provides a simple
 interface to the literal XML string handler. The XML string contains UTF8
 content when the SOAP_C_UTFSTRING flag is set.
 
-gSOAP XML Web services tools
-Copyright (C) 2004, Robert van Engelen, Genivia, Inc. All Rights Reserved.
+Note: the built-in _XML type provides the same functionality.
 
+Example:
+#import "xml.h"
+struct ns__MyData
+{ int num;
+  XML str; // has XML content
+};
+struct ns__Mixed
+{ int num;
+  XML __any; // __any is not a tag: this allows parsing of mixed content
+};
+
+
+gSOAP XML Web services tools
+Copyright (C) 2000-2005, Robert van Engelen, Genivia Inc., All Rights Reserved.
+This part of the software is released under one of the following licenses:
+GPL, the gSOAP public license, or Genivia's license for commercial use.
 --------------------------------------------------------------------------------
 gSOAP public license.
 
@@ -23,7 +38,7 @@ WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 for the specific language governing rights and limitations under the License.
 
 The Initial Developer of the Original Code is Robert A. van Engelen.
-Copyright (C) 2000-2004 Robert A. van Engelen, Genivia inc. All Rights Reserved.
+Copyright (C) 2000-2005 Robert A. van Engelen, Genivia inc. All Rights Reserved.
 --------------------------------------------------------------------------------
 GPL license.
 
@@ -42,6 +57,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 Author contact information:
 engelen@genivia.com / engelen@acm.org
+--------------------------------------------------------------------------------
+A commercial use license is available from Genivia, Inc., contact@genivia.com
 --------------------------------------------------------------------------------
 */
 

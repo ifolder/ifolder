@@ -8,8 +8,7 @@ client, and peer Web service applications in C and C++.
   version release 2.1.3.
 
 * The gSOAP 'wsdl2h' WSDL parser is stable since wsdl2h version release 1.1.0.
-  The WSDL parser fully supports WSDL 1.1 and XML schemas. See also
-  'PROJECT STATUS' below.
+  The WSDL parser fully supports WSDL 1.1 and XML schemas.
 
 The software is provided "as is", without any warranty.  However, gSOAP
 has received a lot of support from users and has been extensively tested
@@ -37,6 +36,25 @@ INSTALLATION
 
 See NOTES.txt for distribution notes and installation instructions.
 
+See the 'doc' directory doc/index.html for documentation.
+
+See the 'samples' directory for example gSOAP Web service applications.
+
+See the 'uddi2' directory to build UDDI v2 registries.
+
+See the 'WS' directory for WS-* protocol support. This part of the software is
+under development as new WS-* protocols are published.
+
+See the 'import' directory for WS-* protocols you can import.
+
+See the 'plugin' directory for plugins.
+
+See the 'custom' directory for example custom serializers.
+
+See the 'mod_gsoap' directory for Apache mod_gsoap, IIS modules, and WinInet.
+
+See the 'extras' directory with third-party contributions.
+
 GETTING STARTED
 
 The gSOAP WSDL parser converts WSDL into a gSOAP header file for processing
@@ -47,52 +65,45 @@ compiler separately to create XML serialization routines for application data.
 
 For example:
 
-$ wsdl2h -o Amazon.h http://soap.amazon.com/schemas/AmazonWebServices.wsdl
+$ wsdl2h -s -o XMethodsQuery.h http://www.xmethods.net/wsdl/query.wsdl
 
-$ soapcpp2 Amazon.h
+$ soapcpp2 XMethodsQuery.h
 
-This generates the Amazon.h header file.  This file contains a translation of
-the services and XML schemas to C/C++ and other useful information copied from
-the WSDL.  The header file is then processed by the gSOAP stub and skeleton
-compiler to generate the following files:
+The XMethodsQuery.h header file contains a translation of the services and XML
+schemas to C/C++ and other useful information copied from the WSDL.  The
+header file is then processed by the gSOAP stub and skeleton compiler to
+generate the following files:
 
 soapClient.cpp		client-side stub routines for service invocation
 soapServer.cpp		server-side skeleton routines for server development
 soapC.cpp		C/C++ parameter marshalling code
 
 To develop a C++ client application, you can also use the generated
-'soapAmazonSearchBindingProxy.h' class and 'AmazonSearchBinding.nsmap' XML
-namespace table to access the Amazon Web service. Both need to be '#include'-d
-in your source. Then compile and link the soapC.cpp, soapClient.cpp, and
-stdsoap2.cpp sources to complete the build.  More information can be found in
-the gSOAP documentation and the Quick How-To page on the gSOAP Web site.
+'soapXMethodsQuerySoapProxy.h' class and 'XMethodsQuerySoap.nsmap' XML
+namespace table to access the XMethods Web service. Both need to be
+'#include'-d in your source. Then compile and link the soapC.cpp,
+soapClient.cpp, and stdsoap2.cpp sources to complete the build.  More
+information can be found in the gSOAP documentation and the Quick How-To page
+on the gSOAP Web site.
 
 See also the 'wsdl/README.txt' for more details on the WSDL parser and
 installation (in case you don't have the wsdl2h executable).
 
-See the 'samples' directory for example gSOAP Web service applications.
-
-PROJECT STATUS
-
-There are always new things to be desired. Here is a short list of things
-we are currently working on:
-
-* WSDL 2.0 support
-* WS-Security support
-* HTTP/MIME attachment handling
-
 LICENSE
 
-gSOAP is distributed under two licenses:
+gSOAP is distributed under three licenses:
 
 * The gSOAP public open source license (which is based on the Mozilla public
   license 1.1). See license.html or license.pdf for further details.
 
 * GPL (GNU Public License).
 
-Most parts are distributed under both the gSOAP license and GPL.  You can
+* License for commercial use.
+
+Most parts are distributed under the gSOAP public license and GPL.  You can
 choose which license applies best to your use.  Some parts of gSOAP are
-strictly distributed under the GPL.  
+strictly distributed under the GPL.  A commercial use license is available
+from Genivia Inc, see http://genivia.com/Products/gsoap/contract.html
 
 Please refer to the README files and/or header information in source code files
 for the appropriate licensing specific to that part of the source code.  The
@@ -119,13 +130,46 @@ for further details.
 COPYRIGHT
 
 gSOAP is copyrighted by Robert A. van Engelen, Genivia, Inc.
-Copyright (C) 2000-2004 Robert A. van Engelen, Genivia, Inc.
+Copyright (C) 2000-2005 Robert A. van Engelen, Genivia, Inc.
 All Rights Reserved.
 
 USE RESTRICTIONS
 
 You may not: (i) transfer rights to gSOAP or claim authorship; or (ii) remove
 any product identification, copyright, proprietary notices or labels from gSOAP.
+
+WARRANTY 
+
+GENIVIA INC. EXPRESSLY DISCLAIMS ALL WARRANTIES, WHETHER EXPRESS, IMPLIED OR
+STATUTORY, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY, OF FITNESS FOR A PARTICULAR PURPOSE, NONINFRINGEMENT OF THIRD
+PARTY INTELLECTUAL PROPERTY RIGHTS, AND ANY WARRANTY THAT MAY ARISE BY REASON
+OF TRADE USAGE, CUSTOM, OR COURSE OF DEALING.  WITHOUT LIMITING THE
+FOREGOING, YOU ACKNOWLEDGE THAT THE SOFTWARE IS PROVIDED "AS IS" AND THAT
+GENIVIA INC. DO NOT WARRANT THE SOFTWARE WILL RUN UNINTERRUPTED OR ERROR FREE.
+LIMITED LIABILITY: THE ENTIRE RISK AS TO RESULTS AND PERFORMANCE OF THE
+SOFTWARE IS ASSUMED BY YOU.  UNDER NO CIRCUMSTANCES WILL GENIVIA INC. BE LIABLE
+FOR ANY SPECIAL, INDIRECT, INCIDENTAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES OF
+ANY KIND OR NATURE WHATSOEVER, WHETHER BASED ON CONTRACT, WARRANTY, TORT
+(INCLUDING NEGLIGENCE), STRICT LIABILITY OR OTHERWISE, ARISING OUT OF OR IN
+ANY WAY RELATED TO THE SOFTWARE, EVEN IF GENIVIA INC. HAS BEEN ADVISED ON THE
+POSSIBILITY OF SUCH DAMAGE OR IF SUCH DAMAGE COULD HAVE BEEN REASONABLY
+FORESEEN, AND NOTWITHSTANDING ANY FAILURE OF ESSENTIAL PURPOSE OF ANY
+EXCLUSIVE REMEDY PROVIDED.  SUCH LIMITATION ON DAMAGES INCLUDES, BUT IS NOT
+LIMITED TO, DAMAGES FOR LOSS OF GOODWILL, LOST PROFITS, LOSS OF DATA OR
+SOFTWARE, WORK STOPPAGE, COMPUTER FAILURE OR MALFUNCTION OR IMPAIRMENT OF
+OTHER GOODS.  IN NO EVENT WILL GENIVIA INC. BE LIABLE FOR THE COSTS OF
+PROCUREMENT OF SUBSTITUTE SOFTWARE OR SERVICES.  YOU ACKNOWLEDGE THAT THIS
+SOFTWARE IS NOT DESIGNED FOR USE IN ON-LINE EQUIPMENT IN HAZARDOUS
+ENVIRONMENTS SUCH AS OPERATION OF NUCLEAR FACILITIES, AIRCRAFT NAVIGATION OR
+CONTROL, OR LIFE-CRITICAL APPLICATIONS.  GENIVIA INC. EXPRESSLY DISCLAIM ANY
+LIABILITY RESULTING FROM USE OF THE SOFTWARE IN ANY SUCH ON-LINE EQUIPMENT IN
+HAZARDOUS ENVIRONMENTS AND ACCEPTS NO LIABILITY IN RESPECT OF ANY ACTIONS OR
+CLAIMS BASED ON THE USE OF THE SOFTWARE IN ANY SUCH ON-LINE EQUIPMENT IN
+HAZARDOUS ENVIRONMENTS BY YOU.  FOR PURPOSES OF THIS PARAGRAPH, THE TERM
+"LIFE-CRITICAL APPLICATION" MEANS AN APPLICATION IN WHICH THE FUNCTIONING OR
+MALFUNCTIONING OF THE SOFTWARE MAY RESULT DIRECTLY OR INDIRECTLY IN PHYSICAL
+INJURY OR LOSS OF HUMAN LIFE.
 
 LIBRARIES
 

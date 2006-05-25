@@ -8,6 +8,7 @@
 		addToTargets = (
 			8D1107260486CEB800E47090 /* iFolder3 */,
 		);
+		breakpointsGroup = 3E67CD760A26070900881F54 /* XCBreakpointsBucket */;
 		codeSenseManager = 3E99D49E0A25F6D9004F0559 /* Code sense */;
 		executables = (
 			3E99D48F0A25F6C9004F0559 /* iFolder3 */,
@@ -18,7 +19,7 @@
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
-					330,
+					270,
 					20,
 					48,
 					43,
@@ -35,8 +36,30 @@
 					PBXFileDataSource_Target_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 170261196;
-			PBXWorkspaceStateSaveDate = 170261196;
+			PBXConfiguration.PBXTargetDataSource.PBXTargetDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					200,
+					98,
+					20,
+					48,
+					43,
+					43,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXTargetDataSource_PrimaryAttribute,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 170265098;
+			PBXWorkspaceStateSaveDate = 170265098;
 		};
 		sourceControlManager = 3E99D49D0A25F6D9004F0559 /* Source Control */;
 		userBuildSettings = {
@@ -44,19 +67,25 @@
 	};
 	3E29CB550A25F888005288B9 /* iFolder3App.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {674, 1526}}";
-			sepNavSelRange = "{1276, 0}";
-			sepNavVisRect = "{{0, 376}, {459, 186}}";
-			sepNavWindowFrame = "{{12, 109}, {750, 558}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1301, 1610}}";
+			sepNavSelRange = "{1719, 0}";
+			sepNavVisRect = "{{0, 511}, {1301, 225}}";
+			sepNavWindowFrame = "{{446, 103}, {750, 558}}";
 		};
 	};
 	3E29CB560A25F888005288B9 /* iFolder3App.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {711, 714}}";
-			sepNavSelRange = "{1123, 0}";
-			sepNavVisRect = "{{0, 229}, {711, 429}}";
+			sepNavIntBoundsRect = "{{0, 0}, {711, 756}}";
+			sepNavSelRange = "{1177, 0}";
+			sepNavVisRect = "{{0, 327}, {711, 429}}";
 			sepNavWindowFrame = "{{703, 319}, {750, 558}}";
 		};
+	};
+	3E67CD760A26070900881F54 /* XCBreakpointsBucket */ = {
+		isa = XCBreakpointsBucket;
+		name = "Project Breakpoints";
+		objects = (
+		);
 	};
 	3E99D48F0A25F6C9004F0559 /* iFolder3 */ = {
 		isa = PBXExecutable;

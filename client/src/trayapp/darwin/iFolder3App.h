@@ -23,9 +23,12 @@
 
 #import <Cocoa/Cocoa.h>
 
+#include <ifolder-client.h>
+
 @interface iFolder3App : NSObject
 {
 	NSStatusItem		*appStatusItem;
+	iFolderClient		*client;
     IBOutlet NSMenu		*appMenu;
 }
 
