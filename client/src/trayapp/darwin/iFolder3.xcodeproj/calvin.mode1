@@ -256,6 +256,9 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateExpansionKey</key>
 							<array>
 								<string>29B97314FDCFA39411CA2CEA</string>
+								<string>29B97323FDCFA39411CA2CEA</string>
+								<string>1C37FBAC04509CD000000102</string>
+								<string>3E34B9050A2631D4008E954D</string>
 								<string>1C37FABC05509CD000000102</string>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
@@ -284,7 +287,7 @@
 							<real>246</real>
 						</array>
 						<key>RubberWindowFrame</key>
-						<string>550 203 785 638 0 0 1440 878 </string>
+						<string>594 212 785 638 0 0 1440 878 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
@@ -321,7 +324,7 @@
 								<key>Frame</key>
 								<string>{{0, 0}, {517, 0}}</string>
 								<key>RubberWindowFrame</key>
-								<string>550 203 785 638 0 0 1440 878 </string>
+								<string>594 212 785 638 0 0 1440 878 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
@@ -341,7 +344,7 @@
 								<key>Frame</key>
 								<string>{{0, 5}, {517, 592}}</string>
 								<key>RubberWindowFrame</key>
-								<string>550 203 785 638 0 0 1440 878 </string>
+								<string>594 212 785 638 0 0 1440 878 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
@@ -365,9 +368,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>3E85B81F0A260A2100AB51F3</string>
+				<string>3E34B9020A263046008E954D</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>3E85B8200A260A2100AB51F3</string>
+				<string>3E34B9030A263046008E954D</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -501,11 +504,10 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>3E29CB660A25F960005288B9</string>
 		<string>/Users/calvin/code/client/client/src/trayapp/darwin/iFolder3.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
-	<string>550 203 785 638 0 0 1440 878 </string>
+	<string>594 212 785 638 0 0 1440 878 </string>
 	<key>WindowTools</key>
 	<array>
 		<dict>
@@ -526,7 +528,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CD0528F0623707200166675</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>iFolder3App.m</string>
+								<string></string>
 								<key>StatusBarVisibility</key>
 								<true/>
 							</dict>
@@ -548,7 +550,7 @@
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXBuildLogShowsTranscriptDefaultKey</key>
-								<string>{{0, 93}, {1342, 143}}</string>
+								<string>{{0, 30}, {1342, 206}}</string>
 								<key>PBXProjectModuleGUID</key>
 								<string>XCMainBuildResultsModuleGUID</string>
 								<key>PBXProjectModuleLabel</key>
@@ -586,7 +588,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>3E29CB660A25F960005288B9</string>
-				<string>3E85B81E0A260A2000AB51F3</string>
+				<string>3E18E40C0A262B2A00137983</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>

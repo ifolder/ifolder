@@ -1,7 +1,7 @@
 // !$*UTF8*$!
 {
 	29B97313FDCFA39411CA2CEA /* Project object */ = {
-		activeBuildConfigurationName = Debug;
+		activeBuildConfigurationName = Release;
 		activeBuildStyle = 4A9504CCFFE6A4B311CA0CBA /* Debug */;
 		activeExecutable = 3E99D48F0A25F6C9004F0559 /* iFolder3 */;
 		activeTarget = 8D1107260486CEB800E47090 /* iFolder3 */;
@@ -19,7 +19,7 @@
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
-					270,
+					278,
 					20,
 					48,
 					43,
@@ -58,8 +58,8 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 170265098;
-			PBXWorkspaceStateSaveDate = 170265098;
+			PBXPerProjectTemplateStateSaveDate = 170274880;
+			PBXWorkspaceStateSaveDate = 170274880;
 		};
 		sourceControlManager = 3E99D49D0A25F6D9004F0559 /* Source Control */;
 		userBuildSettings = {
