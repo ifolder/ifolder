@@ -346,6 +346,7 @@ ifa_account_props_dialog_new(GtkWindow *parent, iFolderDomain *domain)
 	{
 		gtk_window_set_transient_for (GTK_WINDOW (dialog), parent);
 		gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), TRUE);
+		gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
 	}
 	
 	tmpStr = g_markup_printf_escaped ("%s %s", ifolder_domain_get_name (domain), _("Properties"));
@@ -550,7 +551,7 @@ create_identity_page (IFAAccountPropsDialog *apd)
 	 * Row 3 (Remember Password Checkbox)
 	 */
 	priv->rememberPasswordButton = gtk_check_button_new_with_mnemonic (_("_Remember password"));
-	gtk_table_attach (GTK_TABLE (table), priv->passwordEntry, 1,2, 2,3,
+	gtk_table_attach (GTK_TABLE (table), priv->rememberPasswordButton, 1,2, 2,3,
 					 (GtkAttachOptions)(GTK_EXPAND | GTK_FILL),
 					 (GtkAttachOptions)0,
 					 0,0);
@@ -970,13 +971,57 @@ on_domain_host_modified (iFolderClient *client, iFolderDomain *domain, IFAAccoun
 static void
 on_domain_logged_in (iFolderClient *client, iFolderDomain *domain, IFAAccountPropsDialog *apd)
 {
-	g_message ("FIXME: IFAAccountPropsDialog::on_domain_logged_in()");
+	IFAAccountPropsDialogPrivate *priv;
+
+	g_debug ("IFAAccountPropsDialog::on_domain_logged_in()");
+	
+	priv = IFA_ACCOUNT_PROPS_DIALOG_GET_PRIVATE (apd);
+	
+	/* Make sure that the domain event is for the domain this dialog is showing */
+	if (strcmp (ifolder_domain_get_id (domain), ifolder_domain_get_id (priv->domain)) == 0)
+	{
+		/* Reset the values to the original */
+		if (priv->on_server_address_changed_cb_id > 0)
+			g_signal_handler_disconnect (ifolder_client, priv->on_server_address_changed_cb_id);
+		
+		gtk_entry_set_text (GTK_ENTRY (priv->serverAddressEntry), ifolder_domain_get_host_address (domain));
+		priv->bServerAddressChanged = FALSE;
+		
+		if (priv->on_server_address_changed_cb_id > 0)
+			priv->on_server_address_changed_cb_id = g_signal_connect (ifolder_client, "changed", G_CALLBACK (on_server_address_changed), apd);
+			
+		/* Prevent the user from modifying the address */
+		gtk_widget_set_sensitive (priv->serverAddressEntry, FALSE);
+		gtk_entry_set_editable (GTK_ENTRY (priv->serverAddressEntry), FALSE);
+	}
 }
 
 static void
 on_domain_logged_out (iFolderClient *client, iFolderDomain *domain, IFAAccountPropsDialog *apd)
 {
-	g_message ("FIXME: IFAAccountPropsDialog::on_domain_logged_out()");
+	IFAAccountPropsDialogPrivate *priv;
+
+	g_debug ("IFAAccountPropsDialog::on_domain_logged_out()");
+	
+	priv = IFA_ACCOUNT_PROPS_DIALOG_GET_PRIVATE (apd);
+	
+	/* Make sure that the domain event is for the domain this dialog is showing */
+	if (strcmp (ifolder_domain_get_id (domain), ifolder_domain_get_id (priv->domain)) == 0)
+	{
+		/* Reset the values to the original */
+		if (priv->on_server_address_changed_cb_id > 0)
+			g_signal_handler_disconnect (ifolder_client, priv->on_server_address_changed_cb_id);
+		
+		gtk_entry_set_text (GTK_ENTRY (priv->serverAddressEntry), ifolder_domain_get_host_address (domain));
+		priv->bServerAddressChanged = FALSE;
+		
+		if (priv->on_server_address_changed_cb_id > 0)
+			priv->on_server_address_changed_cb_id = g_signal_connect (ifolder_client, "changed", G_CALLBACK (on_server_address_changed), apd);
+			
+		/* Allow the user to modify the address */
+		gtk_widget_set_sensitive (priv->serverAddressEntry, TRUE);
+		gtk_entry_set_editable (GTK_ENTRY (priv->serverAddressEntry), TRUE);
+	}
 }
 
 static void
@@ -984,7 +1029,7 @@ on_domain_activated (iFolderClient *client, iFolderDomain *domain, IFAAccountPro
 {
 	IFAAccountPropsDialogPrivate *priv = IFA_ACCOUNT_PROPS_DIALOG_GET_PRIVATE (apd);
 	
-	g_message ("FIXME: IFAAccountPropsDialog::on_domain_activated()");
+	g_debug ("FIXME: IFAAccountPropsDialog::on_domain_activated()");
 	if (strcmp (ifolder_domain_get_id (domain), ifolder_domain_get_id (priv->domain)) == 0)
 	{
 		if (!gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->enableAccountButton)))
@@ -1005,7 +1050,7 @@ on_domain_inactivated (iFolderClient *client, iFolderDomain *domain, IFAAccountP
 {
 	IFAAccountPropsDialogPrivate *priv = IFA_ACCOUNT_PROPS_DIALOG_GET_PRIVATE (apd);
 	
-	g_message ("FIXME: IFAAccountPropsDialog::on_domain_inactivated()");
+	g_debug ("FIXME: IFAAccountPropsDialog::on_domain_inactivated()");
 	if (strcmp (ifolder_domain_get_id (domain), ifolder_domain_get_id (priv->domain)) == 0)
 	{
 		if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->enableAccountButton)))
@@ -1024,7 +1069,36 @@ on_domain_inactivated (iFolderClient *client, iFolderDomain *domain, IFAAccountP
 static void
 on_domain_new_default (iFolderClient *client, iFolderDomain *domain, IFAAccountPropsDialog *apd)
 {
-	g_message ("FIXME: IFAAccountPropsDialog::on_domain_new_default()");
+	IFAAccountPropsDialogPrivate *priv;
+
+	g_debug ("IFAAccountPropsDialog::on_domain_new_default()");
+	
+	priv = IFA_ACCOUNT_PROPS_DIALOG_GET_PRIVATE (apd);
+	
+	if (strcmp (ifolder_domain_get_id (domain), ifolder_domain_get_id (priv->domain)) == 0)
+	{
+		/* This domain was just made the new default */
+		if (priv->on_default_account_toggled_cb_id > 0)
+			g_signal_handler_disconnect (ifolder_client, priv->on_default_account_toggled_cb_id);
+			
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->defaultAccountButton), TRUE);
+		gtk_widget_set_sensitive (priv->defaultAccountButton, FALSE);
+		
+		if (priv->on_default_account_toggled_cb_id > 0)
+			priv->on_default_account_toggled_cb_id = g_signal_connect (priv->defaultAccountButton, "toggled", G_CALLBACK (on_default_account_toggled), apd);
+	}
+	else if (ifolder_domain_is_default (priv->domain))
+	{
+		/* This domain is no longer the default */
+		if (priv->on_default_account_toggled_cb_id > 0)
+			g_signal_handler_disconnect (ifolder_client, priv->on_default_account_toggled_cb_id);
+			
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->defaultAccountButton), FALSE);
+		gtk_widget_set_sensitive (priv->defaultAccountButton, TRUE);
+		
+		if (priv->on_default_account_toggled_cb_id > 0)
+			priv->on_default_account_toggled_cb_id = g_signal_connect (priv->defaultAccountButton, "toggled", G_CALLBACK (on_default_account_toggled), apd);
+	}
 }
 
 static void
@@ -1085,7 +1159,7 @@ on_default_account_toggled (GtkToggleButton *togglebutton, IFAAccountPropsDialog
 	IFAAccountPropsDialogPrivate *priv;
 	GtkWidget *errDialog;
 	
-g_message ("FIXME: Implement IFAAccountPropsDialog::on_default_account_toggled()");
+g_debug ("IFAAccountPropsDialog::on_default_account_toggled()");
 	err = NULL;
 	priv = IFA_ACCOUNT_PROPS_DIALOG_GET_PRIVATE (apd);
 
@@ -1122,6 +1196,7 @@ on_server_address_changed (GtkEntry *entry, IFAAccountPropsDialog *apd)
 {
 	IFAAccountPropsDialogPrivate *priv;
 	
+	g_debug ("IFAAccountPropsDialog::on_server_address_changed()");
 	priv = IFA_ACCOUNT_PROPS_DIALOG_GET_PRIVATE (apd);
 
 	priv->bServerAddressChanged = TRUE;
@@ -1132,6 +1207,7 @@ on_server_address_focus_out (GtkWidget *widget, GdkEventFocus *event, IFAAccount
 {
 	IFAAccountPropsDialogPrivate *priv;
 	
+	g_debug ("IFAAccountPropsDialog::on_server_address_focus_out()");
 	priv = IFA_ACCOUNT_PROPS_DIALOG_GET_PRIVATE (apd);
 	
 	if (priv->bServerAddressChanged)
@@ -1140,12 +1216,12 @@ on_server_address_focus_out (GtkWidget *widget, GdkEventFocus *event, IFAAccount
 	return FALSE;
 }
 
-
 static void
 on_password_entry_changed (GtkEntry *entry, IFAAccountPropsDialog *apd)
 {
 	IFAAccountPropsDialogPrivate *priv;
 	
+	g_debug ("IFAAccountPropsDialog::on_password_entry_changed()");
 	priv = IFA_ACCOUNT_PROPS_DIALOG_GET_PRIVATE (apd);
 
 	priv->bPasswordChanged = TRUE;
@@ -1156,6 +1232,7 @@ on_password_entry_focus_out (GtkWidget *widget, GdkEventFocus *event, IFAAccount
 {
 	IFAAccountPropsDialogPrivate *priv;
 	
+	g_debug ("IFAAccountPropsDialog::on_password_entry_focus_out()");
 	priv = IFA_ACCOUNT_PROPS_DIALOG_GET_PRIVATE (apd);
 	
 	if (priv->bPasswordChanged)
@@ -1169,6 +1246,7 @@ on_remember_password_toggled (GtkToggleButton *togglebutton, IFAAccountPropsDial
 {
 	IFAAccountPropsDialogPrivate *priv;
 	
+	g_debug ("IFAAccountPropsDialog::on_remember_password_toggled()");
 	priv = IFA_ACCOUNT_PROPS_DIALOG_GET_PRIVATE (apd);
 	
 	if (gtk_widget_is_focus (GTK_WIDGET (togglebutton)))
@@ -1178,16 +1256,69 @@ on_remember_password_toggled (GtkToggleButton *togglebutton, IFAAccountPropsDial
 static gboolean
 save_server_address (IFAAccountPropsDialog *apd)
 {
-	g_message ("FIXME: IFAAccountPropsDialog::save_server_address()");
+	IFAAccountPropsDialogPrivate *priv;
+	const gchar *serverAddress;
+	GtkWidget *errDialog;
+	GError *err = NULL;
+	gboolean bHostAddressUpdated = FALSE;
 	
-	return FALSE;
+	g_debug ("IFAAccountPropsDialog::save_server_address()");
+	
+	priv = IFA_ACCOUNT_PROPS_DIALOG_GET_PRIVATE (apd);
+	
+	serverAddress = gtk_entry_get_text (GTK_ENTRY (priv->serverAddressEntry));
+	if (serverAddress == NULL || strlen (serverAddress) == 0)
+	{
+		errDialog = gtk_message_dialog_new (GTK_WINDOW (apd), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, _("The server address cannot be empty.  Please enter an address for the server."));
+		gtk_dialog_run (GTK_DIALOG (errDialog));
+		gtk_widget_destroy (errDialog);
+		return FALSE;
+	}
+	
+	ifolder_domain_change_host_address (priv->domain, serverAddress, &err);
+	if (err)
+	{
+		errDialog = gtk_message_dialog_new (GTK_WINDOW (apd), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, err->message);
+		g_clear_error (&err);
+		gtk_dialog_run (GTK_DIALOG (errDialog));
+		gtk_widget_destroy (errDialog);
+		return FALSE;
+	}
+	
+	priv->bServerAddressChanged = FALSE;
+	
+	return TRUE;
 }
 
 static gboolean
 save_password (IFAAccountPropsDialog *apd)
 {
-	g_message ("FIXME: IFAAccountPropsDialog::save_password()");
+	IFAAccountPropsDialogPrivate *priv;
+	const gchar *password;
+	GtkWidget *errDialog;
+	GError *err = NULL;
+	gboolean bHostAddressUpdated = FALSE;
 	
-	return FALSE;
+	g_debug ("IFAAccountPropsDialog::save_password()");
+	
+	priv = IFA_ACCOUNT_PROPS_DIALOG_GET_PRIVATE (apd);
+	
+	password = gtk_entry_get_text (GTK_ENTRY (priv->passwordEntry));
+	if (strlen (password) == 0)
+		ifolder_domain_set_credentials (priv->domain, NULL, IFOLDER_CREDENTIAL_TYPE_NONE, &err);
+	else
+		ifolder_domain_set_credentials (priv->domain, password, IFOLDER_CREDENTIAL_TYPE_BASIC, &err);
+
+	if (err)	
+	{
+		errDialog = gtk_message_dialog_new (GTK_WINDOW (apd), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, err->message);
+		gtk_dialog_run (GTK_DIALOG (errDialog));
+		gtk_widget_destroy (errDialog);
+		return FALSE;
+	}
+	
+	priv->bPasswordChanged = FALSE;
+	
+	return TRUE;
 }
 
