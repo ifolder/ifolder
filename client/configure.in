@@ -331,7 +331,6 @@ AC_CONFIG_FILES([
   src/trayapp/Makefile
   src/trayapp/darwin/Makefile
   src/trayapp/darwin/Info.plist
-  src/trayapp/darwin/iFolderStatusIcon.xcodeproj/project.pbxproj
   src/trayapp/linux/Makefile
   src/trayapp/linux/gnome-applet/Makefile
   src/trayapp/windows/Makefile
