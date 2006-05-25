@@ -71,8 +71,12 @@ void ifolder_set_name (iFolder *ifolder, const gchar *name);
 IFiFolder *ifolder_get_core_ifolder (iFolder *ifolder);
 void ifolder_set_core_ifolder (iFolder *ifolder, IFiFolder *core_ifolder);
 
-
+/**
+ * iFolderUser Functions
+ */
 iFolderUser *ifolder_user_new (void);
+
+
 iFolderUserPolicy *ifolder_user_policy_new (void);
 
 GKeyFile *ifolder_client_get_config_key_file (GError **error = NULL);

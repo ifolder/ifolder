@@ -24,23 +24,29 @@
 #ifndef _IFOLDER_C_USER_H_
 #define _IFOLDER_C_USER_H_
 
+#include "ifolder.h"
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif		/* __cplusplus */
 
-#include "ifolder.h"
+G_BEGIN_DECLS
+
+#define IFOLDER_USER_TYPE						(ifolder_user_get_type())
+#define IFOLDER_USER(obj)						(G_TYPE_CHECK_INSTANCE_CAST ((obj), IFOLDER_USER_TYPE, iFolderUser))
+#define IFOLDER_USER_CLASS(klass)				(G_TYPE_CHECK_CLASS_CAST ((klass), IFOLDER_USER_TYPE, iFolderUserClass))
+#define IFOLDER_IS_IFOLDER_USER(obj)			(G_TYPE_CHECK_INSTANCE_TYPE ((obj), IFOLDER_USER_TYPE))
+#define IFOLDER_IS_IFOLDER_USER_CLASS(klass)	(G_TYPE_CHECK_CLASS_TYPE ((klass), IFOLDER_USER_TYPE))
+#define IFOLDER_USER_GET_CLASS(obj)				(G_TYPE_INSTANCE_GET_CLASS ((obj), IFOLDER_USER_TYPE, iFolderUserClass))
+
+/* GObject support */
+GType ifolder_user_get_type (void) G_GNUC_CONST;
 
 /**
  * @file ifolder-user.h
  * @brief User API
  */
-
-//! An object that represents a user.
-/**
- * You must call ifolder_user_free() to clean up the memory used by an iFolderUser.
- */
-typedef void *iFolderUser;
 
 /*@}*/
 /**
@@ -53,28 +59,28 @@ typedef void *iFolderUser;
  * @param user The iFolderUser.
  * @return a user's unique ID.
  */
-const char *ifolder_user_get_id(iFolderUser user);
+const gchar *ifolder_user_get_id(iFolderUser *user);
 
 //! Returns a user's login name.
 /**
  * @param user The iFolderUser.
  * @return a user's login name.
  */
-const char *ifolder_user_get_user_name(iFolderUser user);
+const gchar *ifolder_user_get_user_name(iFolderUser *user);
 
 //! Returns a user's full name.
 /**
  * @param user The iFolderUser.
  * @return a user's full name.
  */
-const char *ifolder_user_get_full_name(iFolderUser user);
+const gchar *ifolder_user_get_full_name(iFolderUser *user);
 
 //! Returns a user's iFolderMemberRights.
 /**
  * @param user The iFolderUser.
  * @return a user's iFolderMemberRights.
  */
-iFolderMemberRights ifolder_user_get_rights(iFolderUser user);
+iFolderMemberRights ifolder_user_get_rights(iFolderUser *user);
 
 //! Returns true if a user's login is enabled.
 /**
@@ -83,7 +89,7 @@ iFolderMemberRights ifolder_user_get_rights(iFolderUser user);
  * @param user The iFolderUser.
  * @return true if a user's login is enabled.
  */
-bool ifolder_user_is_login_enabled(iFolderUser user);
+gboolean ifolder_user_is_login_enabled(iFolderUser *user);
 
 //! Returns true if a user is an owner in an iFolder/Domain.
 /**
@@ -93,15 +99,11 @@ bool ifolder_user_is_login_enabled(iFolderUser user);
  * @param user The iFolderUser.
  * @return true if a user is an owner in an iFolder/Domain.
  */
-bool ifolder_user_is_owner(iFolderUser user);
-
-//! Free the memory used by an iFolderUser.
-/**
- * @param user The iFolderUser.
- */
-void ifolder_user_free(iFolderUser user);
+gboolean ifolder_user_is_owner(iFolderUser *user);
 
 /*@}*/
+
+G_END_DECLS
 
 #ifdef __cplusplus
 }
