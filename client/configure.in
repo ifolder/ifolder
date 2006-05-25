@@ -216,7 +216,8 @@ case $IFOLDER_OS in
 		# Set variables
 		#
 		GSOAP_PATH="$TOOLDIR/gsoap/macosx-2.7"
-		PKG_CHECK_MODULES(GLIB, glib-2.0)
+		GLIB_CFLAGS="-I../../external/glib/osx/include"
+		GLIB_LIBS="-L../../external/gettext/osx/lib -L../../external/glib/osx/lib -lglib-2.0 -lintl -liconv"
 		AC_SUBST(GLIB_CFLAGS)
 		AC_SUBST(GLIB_LIBS)
 		UNIV_CFLAGS="-O -g -isysroot /Developer/SDKs/MacOSX10.4u.sdk -arch ppc -arch i386"
