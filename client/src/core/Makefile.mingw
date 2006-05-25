@@ -118,7 +118,7 @@ simiasC.cpp: simias.h
 	$(GSOAP_DIR)/soapcpp2 -LCxn -psimias $(ProjectDir)simias.h
 
 simias.h: stdsoap2.h stdsoap2.cpp
-	$(GSOAP_DIR)/wsdl2h -s -o simias.h Simias.wsdl DomainService.wsdl iFolderWeb.wsdl
+	$(GSOAP_DIR)/wsdl2h -s -o simias.h DomainService.wsdl iFolderWeb.wsdl
 
 simiasClient.cpp:
 	$(GSOAP_DIR)/soapcpp2 -LCxn -psimias $(ProjectDir)simias.h

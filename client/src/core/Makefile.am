@@ -22,7 +22,7 @@ SUBDIRS =
 DIST_SUBDIRS = $(SUBDIRS)
 include sources.mak
 
-EXTRA_DIST = Simias.wsdl DomainService.wsdl
+EXTRA_DIST = DomainService.wsdl iFolderWeb.wsdl
 
 # Make sure the following files are not included in the dist
 dist-hook:
@@ -59,7 +59,7 @@ simiasC.cpp: simias.h
 	$(GSOAP_PATH)/soapcpp2 -LCxn -psimias $(ProjectDir)simias.h
 
 simias.h: stdsoap2.h stdsoap2.cpp
-	$(GSOAP_PATH)/wsdl2h -s -o simias.h Simias.wsdl DomainService.wsdl
+	$(GSOAP_PATH)/wsdl2h -s -o simias.h DomainService.wsdl iFolderWeb.wsdl
 
 simiasClient.cpp:
 	$(GSOAP_PATH)/soapcpp2 -LCxn -psimias $(ProjectDir)simias.h
