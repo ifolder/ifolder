@@ -233,6 +233,8 @@ ifolder_client_initialize(const gchar *data_path, GError **error)
 					_("The iFolder Client is already initialized."));
 		return NULL;
 	}
+	
+	g_type_init ();	 /* Required before you use the GType system */
 
 	client = ifolder_client_new();
 	priv = IFOLDER_CLIENT_GET_PRIVATE (client);
