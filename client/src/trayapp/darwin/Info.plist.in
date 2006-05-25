@@ -4,18 +4,16 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
-	<key>NSUIElement</key>
-	<string>1</string>
 	<key>CFBundleExecutable</key>
-	<string>iFolder 3 Status Icon</string>
+	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFile</key>
 	<string>ifolder.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.novell.iFolder</string>
+	<string>com.Novell.iFolder3</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>iFolder 3 Status Icon</string>
+	<string>${PRODUCT_NAME}</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleSignature</key>
@@ -26,5 +24,7 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>NSUIElement</key>
+	<string>1</string>
 </dict>
 </plist>

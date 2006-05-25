@@ -1,0 +1,20 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                showAbout = id; 
+                showHelp = id; 
+                showPreferences = id; 
+                showiFolders = id; 
+                startFullSync = id; 
+                stopSync = id; 
+            }; 
+            CLASS = iFolder3App; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {appMenu = NSMenu; }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}
