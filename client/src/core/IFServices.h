@@ -73,13 +73,13 @@ private:
 	virtual ~DomainService() {};
 
 public:
-	DomainInfo* DomainService::GetDomainInfo(const gchar* userID, GError** error);
-	HostInfo* DomainService::GetHomeServer(const gchar* userID, GError** error);
-	ProvisionInfo* DomainService::ProvisionUserOnServer(const gchar *userName, const gchar *password, const gchar *ticket, GError **error);
-	ProvisionInfo* DomainService::ProvisionUser(const gchar* userName, const gchar* password, GError **error);
+	DomainInfo* GetDomainInfo(const gchar* userID, GError** error);
+	HostInfo* GetHomeServer(const gchar* userID, GError** error);
+	ProvisionInfo* ProvisionUserOnServer(const gchar *userName, const gchar *password, const gchar *ticket, GError **error);
+	ProvisionInfo* ProvisionUser(const gchar* userName, const gchar* password, GError **error);
 	void CreateMaster();
-	gboolean DomainService::RemoveServerCollections(const gchar* domainID, const gchar* userID, GError **error);
-	gchar* DomainService::GetDomainID();
+	gboolean RemoveServerCollections(const gchar* domainID, const gchar* userID, GError **error);
+	gchar* GetDomainID();
 };
 
 class GLIBCLIENT_API iFolderService
