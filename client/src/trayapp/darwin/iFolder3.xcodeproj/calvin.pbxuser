@@ -2,7 +2,6 @@
 {
 	29B97313FDCFA39411CA2CEA /* Project object */ = {
 		activeBuildConfigurationName = Release;
-		activeBuildStyle = 4A9504CCFFE6A4B311CA0CBA /* Debug */;
 		activeExecutable = 3E99D48F0A25F6C9004F0559 /* iFolder3 */;
 		activeTarget = 8D1107260486CEB800E47090 /* iFolder3 */;
 		addToTargets = (
@@ -72,8 +71,8 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 170287208;
-			PBXWorkspaceStateSaveDate = 170287208;
+			PBXPerProjectTemplateStateSaveDate = 170309146;
+			PBXWorkspaceStateSaveDate = 170309146;
 		};
 		sourceControlManager = 3E99D49D0A25F6D9004F0559 /* Source Control */;
 		userBuildSettings = {

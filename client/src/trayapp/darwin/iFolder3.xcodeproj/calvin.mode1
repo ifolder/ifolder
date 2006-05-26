@@ -258,11 +258,14 @@
 								<string>29B97314FDCFA39411CA2CEA</string>
 								<string>29B97323FDCFA39411CA2CEA</string>
 								<string>1C37FBAC04509CD000000102</string>
+								<string>3E26AD800A26B61A00EB899C</string>
 								<string>1C37FABC05509CD000000102</string>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
+									<integer>20</integer>
+									<integer>19</integer>
 									<integer>18</integer>
 								</array>
 							</array>
@@ -286,7 +289,7 @@
 							<real>246</real>
 						</array>
 						<key>RubberWindowFrame</key>
-						<string>594 212 785 638 0 0 1440 878 </string>
+						<string>812 339 785 638 0 0 1680 1028 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
@@ -323,7 +326,7 @@
 								<key>Frame</key>
 								<string>{{0, 0}, {517, 0}}</string>
 								<key>RubberWindowFrame</key>
-								<string>594 212 785 638 0 0 1440 878 </string>
+								<string>812 339 785 638 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
@@ -343,7 +346,7 @@
 								<key>Frame</key>
 								<string>{{0, 5}, {517, 592}}</string>
 								<key>RubberWindowFrame</key>
-								<string>594 212 785 638 0 0 1440 878 </string>
+								<string>812 339 785 638 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
@@ -367,9 +370,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>3EB032D50A26609000CE0814</string>
+				<string>3E26AD810A26B62D00EB899C</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>3EB032D60A26609000CE0814</string>
+				<string>3E26AD820A26B62D00EB899C</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -503,10 +506,10 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>/Users/calvin/code/client/client/src/trayapp/darwin/iFolder3.xcodeproj</string>
+		<string>/Users/calvin/code/Novell/client/src/trayapp/darwin/iFolder3.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
-	<string>594 212 785 638 0 0 1440 878 </string>
+	<string>812 339 785 638 0 0 1680 1028 </string>
 	<key>WindowTools</key>
 	<array>
 		<dict>
