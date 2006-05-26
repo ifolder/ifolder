@@ -24,23 +24,17 @@ LPROJDIRS =
 
 EXTRA_DIST = $(LPROJDIRS) $(srcdir)/English.lproj $(srcdir)/Info.plist.in $(srcdir)/iFolder3.xcodeproj $(srcdir)/iFolder3_Prefix.pch $(srcdir)/ifolder.icns $(srcdir)/main.m
 
-if DEBUG
-BUILDCONF=debug
-else
-BUILDCONF=release
-endif
-
 CUR_DIR := $(shell pwd)
 
-all: "$(srcdir)/build/$(BUILDCONF)/iFolder3.app"
+all: "$(srcdir)/build/$(DEVENV_CONFIGURATION)/iFolder3.app"
 
-"$(srcdir)/build/$(BUILDCONF)/iFolder3.app": iFolder3.xcodeproj
-	xcodebuild -configuration $(BUILDCONF)
+"$(srcdir)/build/$(DEVENV_CONFIGURATION)/iFolder3.app": iFolder3.xcodeproj
+	xcodebuild -configuration $(DEVENV_CONFIGURATION)
 
-install-exec-local: "$(srcdir)/build/$(BUILDCONF)/iFolder3.app"
+install-exec-local: "$(srcdir)/build/$(DEVENV_CONFIGURATION)/iFolder3.app"
 	$(mkinstalldirs) $(DESTDIR)$(prefix)/Applications
 	rm -rf "$(DESTDIR)$(prefix)/Applications/iFolder3.app"
-	cp -rf "$(srcdir)/build/$(BUILDCONF)/iFolder3.app" $(DESTDIR)$(prefix)/Applications
+	cp -rf "$(srcdir)/build/$(DEVENV_CONFIGURATION)/iFolder3.app" $(DESTDIR)$(prefix)/Applications
 
 uninstall-local:
 	cd $(DESTDIR)$(prefix)/Applications; rm -rf "iFolder3.app"
