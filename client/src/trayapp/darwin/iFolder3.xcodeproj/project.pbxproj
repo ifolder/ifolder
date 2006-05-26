@@ -28,6 +28,9 @@
 		3E74E2F40A262F0E000452FC /* libifolder3-core.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E74E2F30A262F0E000452FC /* libifolder3-core.dylib */; };
 		3E74E2F50A262F26000452FC /* libifolder3-core.dylib in Copy Required Dylibs */ = {isa = PBXBuildFile; fileRef = 3E74E2F30A262F0E000452FC /* libifolder3-core.dylib */; };
 		3E74E2F60A262F29000452FC /* libifolder3.dylib in Copy Required Dylibs */ = {isa = PBXBuildFile; fileRef = 3E74E2F10A262F02000452FC /* libifolder3.dylib */; };
+		3EC458980A277033000CE2D4 /* Preferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3EC458960A277033000CE2D4 /* Preferences.nib */; };
+		3EC4589D0A277A8E000CE2D4 /* PreferencesController.h in Copy Required Dylibs */ = {isa = PBXBuildFile; fileRef = 3EC4589B0A277A8E000CE2D4 /* PreferencesController.h */; };
+		3EC4589E0A277A8E000CE2D4 /* PreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EC4589C0A277A8E000CE2D4 /* PreferencesController.m */; };
 		3EDCE68B0A25F74800C03C18 /* ifolder.icns in Resources */ = {isa = PBXBuildFile; fileRef = 3EDCE68A0A25F74800C03C18 /* ifolder.icns */; };
 		3EDCE68D0A25F74D00C03C18 /* syncbw22.png in Resources */ = {isa = PBXBuildFile; fileRef = 3EDCE68C0A25F74D00C03C18 /* syncbw22.png */; };
 		3EDCE68F0A25F75700C03C18 /* ifolderbw22.png in Resources */ = {isa = PBXBuildFile; fileRef = 3EDCE68E0A25F75700C03C18 /* ifolderbw22.png */; };
@@ -54,6 +57,7 @@
 				3E67CD800A26075E00881F54 /* libgmodule-2.0.dylib in Copy Required Dylibs */,
 				3E67CD810A26075E00881F54 /* libgobject-2.0.dylib in Copy Required Dylibs */,
 				3E67CD820A26075E00881F54 /* libgthread-2.0.dylib in Copy Required Dylibs */,
+				3EC4589D0A277A8E000CE2D4 /* PreferencesController.h in Copy Required Dylibs */,
 			);
 			name = "Copy Required Dylibs";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -81,6 +85,9 @@
 		3E67CD8A0A26077D00881F54 /* libintl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libintl.dylib; path = ../../../external/gettext/osx/lib/libintl.dylib; sourceTree = SOURCE_ROOT; };
 		3E74E2F10A262F02000452FC /* libifolder3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libifolder3.dylib; path = ../../libifolder/.libs/libifolder3.dylib; sourceTree = SOURCE_ROOT; };
 		3E74E2F30A262F0E000452FC /* libifolder3-core.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libifolder3-core.dylib"; path = "../../core/.libs/libifolder3-core.dylib"; sourceTree = SOURCE_ROOT; };
+		3EC458970A277033000CE2D4 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/Preferences.nib; sourceTree = "<group>"; };
+		3EC4589B0A277A8E000CE2D4 /* PreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PreferencesController.h; sourceTree = "<group>"; };
+		3EC4589C0A277A8E000CE2D4 /* PreferencesController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = PreferencesController.m; sourceTree = "<group>"; };
 		3EDCE68A0A25F74800C03C18 /* ifolder.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = ifolder.icns; sourceTree = "<group>"; };
 		3EDCE68C0A25F74D00C03C18 /* syncbw22.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = syncbw22.png; sourceTree = "<group>"; };
 		3EDCE68E0A25F75700C03C18 /* ifolderbw22.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ifolderbw22.png; sourceTree = "<group>"; };
@@ -113,6 +120,10 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				3E29CB550A25F888005288B9 /* iFolder3App.m */,
+				3E29CB560A25F888005288B9 /* iFolder3App.h */,
+				3EC4589B0A277A8E000CE2D4 /* PreferencesController.h */,
+				3EC4589C0A277A8E000CE2D4 /* PreferencesController.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -160,8 +171,6 @@
 			children = (
 				32CA4F630368D1EE00C91783 /* iFolder3_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
-				3E29CB550A25F888005288B9 /* iFolder3App.m */,
-				3E29CB560A25F888005288B9 /* iFolder3App.h */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
@@ -175,6 +184,7 @@
 				8D1107310486CEB800E47090 /* Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				29B97318FDCFA39411CA2CEA /* MainMenu.nib */,
+				3EC458960A277033000CE2D4 /* Preferences.nib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -246,6 +256,7 @@
 				3EDCE68B0A25F74800C03C18 /* ifolder.icns in Resources */,
 				3EDCE68D0A25F74D00C03C18 /* syncbw22.png in Resources */,
 				3EDCE68F0A25F75700C03C18 /* ifolderbw22.png in Resources */,
+				3EC458980A277033000CE2D4 /* Preferences.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -275,6 +286,7 @@
 			files = (
 				8D11072D0486CEB800E47090 /* main.m in Sources */,
 				3E29CB570A25F888005288B9 /* iFolder3App.m in Sources */,
+				3EC4589E0A277A8E000CE2D4 /* PreferencesController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -295,6 +307,14 @@
 				29B97319FDCFA39411CA2CEA /* English */,
 			);
 			name = MainMenu.nib;
+			sourceTree = "<group>";
+		};
+		3EC458960A277033000CE2D4 /* Preferences.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3EC458970A277033000CE2D4 /* English */,
+			);
+			name = Preferences.nib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

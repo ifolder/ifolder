@@ -22,8 +22,7 @@
  ***********************************************************************/
 
 #import "iFolder3App.h"
-
-
+#import "PreferencesController.h"
 
 @implementation iFolder3App
 
@@ -73,6 +72,7 @@
 
 - (IBAction)showPreferences:(id)sender
 {
+	[[PreferencesController sharedInstance] showWindow:self];
 }
 
 - (IBAction)startFullSync:(id)sender
