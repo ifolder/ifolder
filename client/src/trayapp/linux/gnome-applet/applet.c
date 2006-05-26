@@ -44,6 +44,8 @@
 /*@todo Remove this when gettext is added */
 #define _
 
+extern iFolderClient *ifolder_client;
+
 static GObject *			ifa_constructor (GType type, guint n_props, GObjectConstructParam *construct_props);
 static gboolean			ifa_icons_init (IFApplet *applet);
 static void				ifa_icons_free (IFApplet *applet);
@@ -53,6 +55,9 @@ static void				ifa_update_state (IFApplet *applet);
 static void				ifa_dropdown_menu_deactivate_cb (GtkWidget *menu, IFApplet *applet);
 static G_GNUC_NORETURN void	ifa_destroy (IFApplet *applet);
 static void 				ifa_set_icon (IFApplet *applet, GdkPixbuf *applet_icon);
+
+static void on_account_wizard_hide (GtkWidget *widget, IFApplet *applet);
+
 
 G_DEFINE_TYPE(IFApplet, ifa, EGG_TYPE_TRAY_ICON)
 
@@ -459,9 +464,14 @@ static void ifa_dropdown_menu_show_cb (GtkWidget *menu, IFApplet *applet)
  */
 static void ifa_context_menu_update (IFApplet *applet)
 {
-	GSList *element;
-
+	guint domain_count;
+	
 	g_return_if_fail (applet != NULL);
+	
+	domain_count = ifolder_client_get_domain_count (ifolder_client);
+	
+	gtk_widget_set_sensitive (applet->show_ifolders_item, domain_count > 0 ? TRUE : FALSE);
+	gtk_widget_set_sensitive (applet->show_sync_log_item, domain_count > 0 ? TRUE : FALSE);
 }
 
 /*
@@ -541,8 +551,11 @@ static GtkWidget *ifa_context_menu_create (IFApplet *applet)
 	GtkWidget	*menu;
 //	GtkWidget	*menu_item;
 	GtkWidget	*image;
+	guint		domain_count;
 
 	g_return_val_if_fail (applet != NULL, NULL);
+	
+	domain_count = ifolder_client_get_domain_count (ifolder_client);
 
 	menu = gtk_menu_new ();
 
@@ -551,12 +564,12 @@ static GtkWidget *ifa_context_menu_create (IFApplet *applet)
 	g_signal_connect(G_OBJECT(applet->show_ifolders_item), "activate", G_CALLBACK(ifa_show_ifolders_cb), applet);
 	gtk_menu_shell_append(GTK_MENU_SHELL (menu), applet->show_ifolders_item);
 
-	/* 'Start Full Synchronization' item */
+	/* 'Account Settings...' item */
 	applet->account_settings_item = gtk_menu_item_new_with_mnemonic(_("Account _Settings..."));
 	g_signal_connect(G_OBJECT(applet->account_settings_item), "activate", G_CALLBACK(ifa_show_account_settings_cb), applet);
 	gtk_menu_shell_append(GTK_MENU_SHELL (menu), applet->account_settings_item);
 
-	/* 'Stop Synchronization' item */
+	/* 'Synchronization Log' item */
 	applet->show_sync_log_item = gtk_image_menu_item_new_with_mnemonic(_("Synchronization _Log"));
 	g_signal_connect(G_OBJECT(applet->show_sync_log_item), "activate", G_CALLBACK(ifa_show_sync_log_cb), applet);
 	gtk_menu_shell_append(GTK_MENU_SHELL (menu), applet->show_sync_log_item);
@@ -655,6 +668,57 @@ static void ifa_menu_position_func (GtkMenu *menu G_GNUC_UNUSED, int *x, int *y,
 	*push_in = TRUE;
 }
 
+/**
+ * Handle left/right-clicks for the iFolder Applet Icon
+ */
+static gboolean ifa_button_press_cb (GtkWidget *widget, GdkEventButton *event, IFApplet *applet)
+{
+	g_return_val_if_fail (applet != NULL, FALSE);
+
+	switch (event->button)
+	{
+		case 1:
+			
+			/**
+			 * If there are 0 domains, pop open the account wizard.
+			 */
+			if (ifolder_client_get_domain_count (ifolder_client) == 0)
+			{
+				/* Pop open the account wizard. */
+				if (applet->account_wizard)
+					gtk_window_present (GTK_WINDOW (applet->account_wizard->window));
+				else
+				{
+					applet->account_wizard = ifa_account_wizard_new ();
+					g_signal_connect (applet->account_wizard->window, "hide", G_CALLBACK (on_account_wizard_hide), applet);
+					gtk_widget_show_all (GTK_WIDGET (applet->account_wizard->window));
+				}
+			}
+			else
+			{
+				g_message ("FIXME: When the main iFolder Window is implemented, pop it open here");
+				/* Open the main iFolder Window. */
+//				ifa_show_ifolders_window ();
+			}
+			
+			return TRUE;
+		case 3:
+			if (applet->account_wizard)
+				gtk_window_present (GTK_WINDOW (applet->account_wizard->window));
+			else
+			{
+				ifa_context_menu_update (applet);
+				gtk_menu_popup (GTK_MENU (applet->context_menu), NULL, NULL, ifa_menu_position_func, applet, event->button, event->time);
+			}
+			return TRUE;
+		default:
+			g_signal_stop_emission_by_name (widget, "button_press_event");
+			return FALSE;
+	}
+
+	return FALSE;
+}
+
 /*
  * ifa_toplevel_menu_button_press_cb
  *
@@ -721,9 +785,11 @@ static void ifa_setup_widgets (IFApplet *applet)
 	gtk_container_add (GTK_CONTAINER (applet), applet->event_box);
  	gtk_widget_show_all (GTK_WIDGET (applet));
  
-	applet->dropdown_menu = ifa_dropdown_menu_create (GTK_MENU_ITEM (applet->top_menu_item), applet);
-	g_signal_connect (applet->event_box, "button_press_event", G_CALLBACK (ifa_toplevel_menu_button_press_cb), applet);
-	g_signal_connect (applet->dropdown_menu, "deactivate", G_CALLBACK (ifa_dropdown_menu_deactivate_cb), applet);
+//	applet->dropdown_menu = ifa_dropdown_menu_create (GTK_MENU_ITEM (applet->top_menu_item), applet);
+//	g_signal_connect (applet->event_box, "button_press_event", G_CALLBACK (ifa_toplevel_menu_button_press_cb), applet);
+	g_signal_connect (applet->event_box, "button_press_event", G_CALLBACK (ifa_button_press_cb), applet);
+	
+//	g_signal_connect (applet->dropdown_menu, "deactivate", G_CALLBACK (ifa_dropdown_menu_deactivate_cb), applet);
 
 	applet->context_menu = ifa_context_menu_create (applet);
 }
@@ -902,6 +968,10 @@ static gboolean ifa_icons_init (IFApplet *applet)
 	if (!ifa_icons_load_from_disk (applet, icon_theme))
 		return FALSE;
 	g_signal_connect (icon_theme, "changed", G_CALLBACK (ifa_icon_theme_changed), applet);
+
+	applet->account_wizard = NULL;
+	applet->ifolders_window = NULL;
+
 	return TRUE;
 }
 
@@ -911,3 +981,11 @@ IFApplet *ifa_new ()
 	return IFL_APPLET(g_object_new (IFL_TYPE_APPLET, "title", "iFolder 3", NULL));
 }
 
+static void
+on_account_wizard_hide (GtkWidget *widget, IFApplet *applet)
+{
+	g_debug ("on_account_wizard_hide()");
+	applet->account_wizard = NULL;
+	
+	/* FIXME: Possibly change the way that the account wizard works so that we can get a Finish response or a cancel response so we know whether to show the main iFolders Window. */
+}

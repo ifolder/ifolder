@@ -35,6 +35,7 @@
 //#include <libgnomeui/libgnomeui>
 
 #include "eggtrayicon.h"
+#include "account-wizard.h"
 
 G_BEGIN_DECLS
 
@@ -91,6 +92,10 @@ typedef struct
 	GtkWidget *		help_item;
 	GtkWidget *		about_item;
 	GtkWidget *		quit_item;
+
+	/* Child Windows */
+	IFAAccountWizard *		account_wizard;
+	GtkWidget *		ifolders_window;
 } IFApplet;
 
 GType ifa_get_type(void);
