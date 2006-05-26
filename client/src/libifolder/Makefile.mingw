@@ -60,11 +60,12 @@ LIB_PATHS =		-L$(IFOLDER_SRC)/core \
 ##  SOURCES, OBJECTS
 ##
 
-DLL_C_SRC =			\
-	ifolder-client.cpp	\
-	ifolder-domain.cpp	\
-	ifolder.cpp			\
-	ifolder-user.cpp	\
+DLL_C_SRC =	\
+	ifolder-client.cpp			\
+	ifolder-domain.cpp			\
+	ifolder.cpp					\
+	ifolder-user.cpp			\
+	ifolder-user-policy.cpp		\
 	ifolder-user-prefs.cpp
 
 

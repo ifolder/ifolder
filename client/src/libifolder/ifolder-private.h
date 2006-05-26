@@ -26,6 +26,7 @@
 
 #include <IFDomain.h>
 #include <IFiFolder.h>
+#include <IFServices.h>
 
 #include "ifolder-types.h"
 
@@ -82,7 +83,10 @@ void ifolder_user_set_rights(iFolderUser *user, iFolderMemberRights rights);
 void ifolder_user_set_is_login_enabled(iFolderUser *user, gboolean is_login_enabled);
 void ifolder_user_set_is_owner(iFolderUser *user, gboolean is_owner);
 
-iFolderUserPolicy *ifolder_user_policy_new (void);
+/**
+ * iFolderUserPolicy Functions
+ */
+iFolderUserPolicy *ifolder_user_policy_new (iFolderUser *user, iFolderSoap::UserPolicy *core_policy);
 
 GKeyFile *ifolder_client_get_config_key_file (GError **error = NULL);
 

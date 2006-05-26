@@ -24,30 +24,38 @@
 #ifndef _IFOLDER_C_USER_POLICY_H_
 #define _IFOLDER_C_USER_POLICY_H_
 
+#include "ifolder-types.h"
+//#include "ifolder-user.h"
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif		/* __cplusplus */
 
-/**
- * @file ifolder-user-policy.h
- * @brief User Policy API
- */
+G_BEGIN_DECLS
 
-typedef void *iFolderUserPolicy;
+#define IFOLDER_USER_POLICY_TYPE				(ifolder_user_policy_get_type())
+#define IFOLDER_USER_POLICY(obj)				(G_TYPE_CHECK_INSTANCE_CAST ((obj), IFOLDER_USER_POLICY_TYPE, iFolderUserPolicy))
+#define IFOLDER_USER_POLICY_CLASS(klass)		(G_TYPE_CHECK_CLASS_CAST ((klass), IFOLDER_USER_POLICY_TYPE, iFolderUserPolicyClass))
+#define IFOLDER_IS_USER_POLICY(obj)				(G_TYPE_CHECK_INSTANCE_TYPE ((obj), IFOLDER_USER_POLICY_TYPE))
+#define IFOLDER_IS_USER_POLICY_CLASS(klass)		(G_TYPE_CHECK_CLASS_TYPE ((klass), IFOLDER_USER_POLICY_TYPE))
+#define IFOLDER_USER_POLICY_GET_CLASS(obj)		(G_TYPE_INSTANCE_GET_CLASS ((obj), IFOLDER_USER_POLICY_TYPE, iFolderUserPolicyClass))
+
+/* GObject support */
+GType ifolder_user_policy_get_type (void) G_GNUC_CONST;
 
 /**
  * @name User Policy API
  */
 /*@{*/
 
-//! Returns the iFolderUser associated with an iFolderUserPolicy.
+//! Returns the iFolderUserPolicy associated with an iFolderUserPolicy.
 /**
  * @param user_policy The iFolderUserPolicy.
  * @param user Invalid if the call is unsuccessful.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_user_policy_get_user(const iFolderUserPolicy user_policy, iFolderUser *user);
+iFolderUser * ifolder_user_policy_get_user(iFolderUserPolicy *user_policy);
 
 //! Returns whether a user's login is enabled.
 /**
@@ -55,7 +63,7 @@ int ifolder_user_policy_get_user(const iFolderUserPolicy user_policy, iFolderUse
  * @param login_enabled Invalid if the call is unsuccessful.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_user_policy_get_login_enabled(const iFolderUserPolicy user_policy, bool *login_enabled);
+gboolean ifolder_user_policy_get_login_enabled(iFolderUserPolicy *user_policy);
 
 //! Returns a user's disk space limit (bytes).
 /**
@@ -65,7 +73,7 @@ int ifolder_user_policy_get_login_enabled(const iFolderUserPolicy user_policy, b
  * @return IFOLDER_SUCCESS if the call was successful.
  * @see ifolder_user_policy_get_effective_space_limit()
  */
-int ifolder_user_policy_get_space_limit(const iFolderUserPolicy user_policy, long *space_limit);
+gint64 ifolder_user_policy_get_space_limit(iFolderUserPolicy *user_policy);
 
 //! Returns a user's effective disk space limit (bytes).
 /**
@@ -77,7 +85,7 @@ int ifolder_user_policy_get_space_limit(const iFolderUserPolicy user_policy, lon
  * @return IFOLDER_SUCCESS if the call was successful.
  * @see ifolder_user_policy_get_space_limit()
  */
-int ifolder_user_policy_get_effective_space_limit(const iFolderUserPolicy user_policy, long *space_limit);
+gint64 ifolder_user_policy_get_effective_space_limit(iFolderUserPolicy *user_policy);
 
 //! Returns a user's file size limit (bytes).
 /**
@@ -86,7 +94,7 @@ int ifolder_user_policy_get_effective_space_limit(const iFolderUserPolicy user_p
  * @return IFOLDER_SUCCESS if the call was successful.
  * @see ifolder_user_policy_get_effective_file_size_limit()
  */
-int ifolder_user_policy_get_file_size_limit(const iFolderUserPolicy user_policy, long *file_size_limit);
+gint64 ifolder_user_policy_get_file_size_limit(iFolderUserPolicy *user_policy);
 
 //! Returns a user's file size limit (bytes).
 /**
@@ -95,7 +103,7 @@ int ifolder_user_policy_get_file_size_limit(const iFolderUserPolicy user_policy,
  * @return IFOLDER_SUCCESS if the call was successful.
  * @see ifolder_user_policy_get_file_size_limit()
  */
-int ifolder_user_policy_get_effective_file_size_limit(const iFolderUserPolicy user_policy, long *file_size_limit);
+gint64 ifolder_user_policy_get_effective_file_size_limit(iFolderUserPolicy *user_policy);
 
 //! Returns the space used (bytes) by a user.
 /**
@@ -103,7 +111,7 @@ int ifolder_user_policy_get_effective_file_size_limit(const iFolderUserPolicy us
  * @param space_used Invalid if the call is unsuccessful.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_user_policy_get_space_used(const iFolderUserPolicy user_policy, long *space_used);
+gint64 ifolder_user_policy_get_space_used(iFolderUserPolicy *user_policy);
 
 //! Returns the space available (bytes) to a user.
 /**
@@ -111,7 +119,7 @@ int ifolder_user_policy_get_space_used(const iFolderUserPolicy user_policy, long
  * @param space_available Invalid if the call is unsuccessful.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_user_policy_get_space_available(const iFolderUserPolicy user_policy, long *space_available);
+gint64 ifolder_user_policy_get_space_available(iFolderUserPolicy *user_policy);
 
 //! Returns the synchronization interval.
 /**
@@ -119,7 +127,7 @@ int ifolder_user_policy_get_space_available(const iFolderUserPolicy user_policy,
  * @param sync_interval Invalid if the call is unsuccessful.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_user_policy_get_sync_interval(const iFolderUserPolicy user_policy, int *sync_interval);
+gint ifolder_user_policy_get_sync_interval(iFolderUserPolicy *user_policy);
 
 //! Returns the effective synchronization interval.
 /**
@@ -127,47 +135,43 @@ int ifolder_user_policy_get_sync_interval(const iFolderUserPolicy user_policy, i
  * @param sync_interval Invalid if the call is unsuccessful.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_user_policy_get_effective_sync_interval(const iFolderUserPolicy user_policy, int *sync_interval);
+gint ifolder_user_policy_get_effective_sync_interval(iFolderUserPolicy *user_policy);
 
 //! Returns an enumeration of file types to be included.
 /**
  * @param user_policy The iFolderUserPolicy.
  * @param char_ptr_enum Invalid if the call is unsuccessful.
- * @return IFOLDER_SUCCESS if the call was successful.
+ * @return A GArray of gchar *
  */
-int ifolder_user_policy_get_file_type_includes(const iFolderUserPolicy user_policy, iFolderEnumeration *char_ptr_enum);
+GArray * ifolder_user_policy_get_file_type_includes(iFolderUserPolicy *user_policy);
 
 //! Returns an enumeration of effective file types to be included.
 /**
  * @param user_policy The iFolderUserPolicy.
  * @param char_ptr_enum Invalid if the call is unsuccessful.
- * @return IFOLDER_SUCCESS if the call was successful.
+ * @return A GArray of gchar *
  */
-int ifolder_user_policy_get_effective_file_type_includes(const iFolderUserPolicy user_policy, iFolderEnumeration *char_ptr_enum);
+GArray * ifolder_user_policy_get_effective_file_type_includes(iFolderUserPolicy *user_policy);
 
 //! Returns an enumeration of file types to be excluded.
 /**
  * @param user_policy The iFolderUserPolicy.
  * @param char_ptr_enum Invalid if the call is unsuccessful.
- * @return IFOLDER_SUCCESS if the call was successful.
+ * @return A GArray of gchar *
  */
-int ifolder_user_policy_get_file_type_excludes(const iFolderUserPolicy user_policy, iFolderEnumeration *char_ptr_enum);
+GArray * ifolder_user_policy_get_file_type_excludes(iFolderUserPolicy *user_policy);
 
 //! Returns an enumeration of effective file types to be excluded.
 /**
  * @param user_policy The iFolderUserPolicy.
  * @param char_ptr_enum Invalid if the call is unsuccessful.
- * @return IFOLDER_SUCCESS if the call was successful.
+ * @return A GArray of gchar *
  */
-int ifolder_user_policy_get_effective_file_type_excludes(const iFolderUserPolicy user_policy, iFolderEnumeration *char_ptr_enum);
-
-//! Free the memory used by an iFolderUserPolicy.
-/**
- * @param user_policy The iFolderUserPolicy.
- */
-void ifolder_user_policy_free(iFolderUserPolicy user_policy);
+GArray * ifolder_user_policy_get_effective_file_type_excludes(iFolderUserPolicy *user_policy);
 
 /*@}*/
+
+G_END_DECLS
 
 #ifdef __cplusplus
 }

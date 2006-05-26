@@ -23,6 +23,8 @@
 #include "IFServices.h"
 #include "IFDomain.h"
 
+using namespace iFolderSoap;
+
 // IFServiceManager class
 DomainService* IFServiceManager::GetDomainService(const gchar* domainID, const gchar *host)
 {

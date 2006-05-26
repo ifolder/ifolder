@@ -30,6 +30,9 @@
 #include "simiasiFolderWebSoapProxy.h"
 #include "IFDomain.h"
 
+namespace iFolderSoap
+{
+
 // Forward declarations
 class IFServiceManager;
 class DomainService;
@@ -780,5 +783,7 @@ public:
 		g_free(m_MemberRights);
 	}
 };
+
+} /* namespace iFolderSoap */
 
 #endif //_IFConnection_H_

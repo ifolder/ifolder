@@ -218,7 +218,7 @@ gboolean ifolder_domain_check_for_updated_client(iFolderDomain *domain, char **n
  * @param user Invalid if the call is unsuccessful.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-iFolderUser * ifolder_domain_get_user(iFolderDomain *domain, const char *user_name, GError **error);
+iFolderUser * ifolder_domain_get_user(iFolderDomain *domain, const gchar *user_name, GError **error);
 
 //! Returns a subset of iFolderUser domain members beginning at the specified index.
 /**
