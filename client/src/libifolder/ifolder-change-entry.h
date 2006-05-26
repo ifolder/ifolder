@@ -24,29 +24,42 @@
 #ifndef _IFOLDER_C_CHANGE_ENTRY_H_
 #define _IFOLDER_C_CHANGE_ENTRY_H_
 
+#include <time.h>
+#include "ifolder-types.h"
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif		/* __cplusplus */
 
-#include <time.h>
-#include "ifolder-user.h"
+G_BEGIN_DECLS
 
-/**
- * @file ifolder-change-entry.h
- * @brief Change Entry API
- */
+#define IFOLDER_CHANGE_ENTRY_TYPE				(ifolder_change_entry_get_type())
+#define IFOLDER_CHANGE_ENTRY(obj)				(G_TYPE_CHECK_INSTANCE_CAST ((obj), IFOLDER_CHANGE_ENTRY_TYPE, iFolderChangeEntry))
+#define IFOLDER_CHANGE_ENTRY_CLASS(klass)		(G_TYPE_CHECK_CLASS_CAST ((klass), IFOLDER_CHANGE_ENTRY_TYPE, iFolderChangeEntryClass))
+#define IFOLDER_IS_CHANGE_ENTRY(obj)			(G_TYPE_CHECK_INSTANCE_TYPE ((obj), IFOLDER_CHANGE_ENTRY_TYPE))
+#define IFOLDER_IS_CHANGE_ENTRY_CLASS(klass)	(G_TYPE_CHECK_CLASS_TYPE ((klass), IFOLDER_CHANGE_ENTRY_TYPE))
+#define IFOLDER_CHANGE_ENTRY_GET_CLASS(obj)		(G_TYPE_INSTANCE_GET_CLASS ((obj), IFOLDER_CHANGE_ENTRY_TYPE, iFolderChangeEntryClass))
 
-typedef void *iFolderChangeEntry;
+/* GObject support */
+GType ifolder_change_entry_get_type (void) G_GNUC_CONST;
 
 typedef enum
 {
-	IFOLDER_CHANGE_ENTRY_TYPE_ADD,		/*!< An item was added */
-	IFOLDER_CHANGE_ENTRY_TYPE_MODIFY,	/*!< An item was modified */
-	IFOLDER_CHANGE_ENTRY_TYPE_DELETE,	/*!< An item was deleted */
-	IFOLDER_CHANGE_ENTRY_TYPE_UNKNOWN	/*!< Unknown type */
+	IFOLDER_CHANGE_ENTRY_TYPE_IFOLDER,
+	IFOLDER_CHANGE_ENTRY_TYPE_FILE,
+	IFOLDER_CHANGE_ENTRY_TYPE_DIRECTORY,
+	IFOLDER_CHANGE_ENTRY_TYPE_MEMBER,
+	IFOLDER_CHANGE_ENTRY_TYPE_UNKNOWN
 } iFolderChangeEntryType;
 
+typedef enum
+{
+	IFOLDER_CHANGE_ENTRY_ACTION_ADD,		/*!< An item was added */
+	IFOLDER_CHANGE_ENTRY_ACTION_MODIFY,		/*!< An item was modified */
+	IFOLDER_CHANGE_ENTRY_ACTION_DELETE,		/*!< An item was deleted */
+	IFOLDER_CHANGE_ENTRY_ACTION_UNKNOWN		/*!< Unknown type */
+} iFolderChangeEntryAction;
 
 /**
  * @name Change Entry API
@@ -58,28 +71,30 @@ typedef enum
  * @param change_entry The iFolderChangeEntry.
  * @return The change time of an iFolderChangeEntry.
  */
-time_t ifolder_change_entry_get_change_time(const iFolderChangeEntry change_entry);
+time_t ifolder_change_entry_get_change_time(iFolderChangeEntry *change_entry);
 
 //! Returns the change type of an iFolderChangeEntry.
 /**
  * @param change_entry The iFolderChangeEntry.
  * @return The change type of an iFolderChangeEntry.
  */
-iFolderChangeEntryType ifolder_change_entry_get_change_type(const iFolderChangeEntry change_entry);
+iFolderChangeEntryType ifolder_change_entry_get_change_type (iFolderChangeEntry *change_entry);
+
+iFolderChangeEntryAction ifolder_change_entry_get_action (iFolderChangeEntry *change_entry);
 
 //! Returns the ID of an iFolderChangeEntry.
 /**
  * @param change_entry The iFolderChangeEntry.
  * @return The ID of the iFolderChangeEntry.
  */
-const char * ifolder_change_entry_get_id(const iFolderChangeEntry change_entry);
+const gchar * ifolder_change_entry_get_id(iFolderChangeEntry *change_entry);
 
 //! Returns the name of an iFolderChangeEntry.
 /**
  * @param change_entry The iFolderChangeEntry.
  * @return The name of the iFolderChangeEntry.
  */
-const char * ifolder_change_entry_get_name(const iFolderChangeEntry change_entry);
+const gchar * ifolder_change_entry_get_name(iFolderChangeEntry *change_entry);
 
 //! Returns the iFolderUser associated with the iFolderChangeEntry.
 /**
@@ -87,22 +102,13 @@ const char * ifolder_change_entry_get_name(const iFolderChangeEntry change_entry
  * @param user Invalid if the call is unsuccessful.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-int ifolder_change_entry_get_user(const iFolderChangeEntry change_entry, iFolderUser *user);
+iFolderUser * ifolder_change_entry_get_user(iFolderChangeEntry *change_entry);
 
-//! Returns true if the type of entry is a directory.
-/**
- * @param change_entry The iFolderChangeEntry.
- * @return true if the type of entry is a directory.
- */
-bool ifolder_change_entry_is_directory(const iFolderChangeEntry change_entry);
-
-//! Free the memory used by an iFolderChangeEntry.
-/**
- * @param change_entry The iFolderChangeEntry.
- */
-void ifolder_change_entry_free(iFolderChangeEntry change_entry);
+const gchar * ifolder_change_entry_get_user_full_name (iFolderChangeEntry *change_entry);
 
 /*@}*/
+
+G_END_DECLS
 
 #ifdef __cplusplus
 }

@@ -56,6 +56,7 @@ libifolder3_la_SOURCES = \
 	ifolder.cpp					\
 	ifolder-user.cpp			\
 	ifolder-user-policy.cpp		\
+	ifolder-change-entry.cpp	\
 	ifolder-user-prefs.cpp
 
 maintainer-clean-local:

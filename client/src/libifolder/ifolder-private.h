@@ -88,6 +88,11 @@ void ifolder_user_set_is_owner(iFolderUser *user, gboolean is_owner);
  */
 iFolderUserPolicy *ifolder_user_policy_new (iFolderUser *user, iFolderSoap::UserPolicy *core_policy);
 
+/**
+ * iFolderChangeEntry Functions
+ */
+iFolderChangeEntry * ifolder_change_entry_new (iFolderUser *user, iFolderSoap::ChangeEntry *entry);
+
 GKeyFile *ifolder_client_get_config_key_file (GError **error = NULL);
 
 #endif /* _IFOLDER_CLIENT_PRIVATE_H_ */

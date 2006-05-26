@@ -108,7 +108,6 @@ struct _iFolderClass
  */
 typedef struct _iFolderUser iFolderUser;
 typedef struct _iFolderUserClass iFolderUserClass;
-typedef struct _iFolderUserPrivate iFolderUserPrivate;
 
 struct _iFolderUser
 {
@@ -117,7 +116,7 @@ struct _iFolderUser
 	/* instance members */
 
 	/* private */
-	iFolderUserPrivate *priv;
+	gpointer private_data;
 };
 
 struct _iFolderUserClass
@@ -151,7 +150,6 @@ typedef enum
  */
 typedef struct _iFolderUserPolicy iFolderUserPolicy;
 typedef struct _iFolderUserPolicyClass iFolderUserPolicyClass;
-typedef struct _iFolderUserPolicyPrivate iFolderUserPolicyPrivate;
 
 struct _iFolderUserPolicy
 {
@@ -160,10 +158,33 @@ struct _iFolderUserPolicy
 	/* instance members */
 
 	/* private */
-	iFolderUserPolicyPrivate *priv;
+	gpointer private_data;
 };
 
 struct _iFolderUserPolicyClass
+{
+	GObjectClass parent;
+
+	/* class members */
+};
+
+/**
+ * iFolderUserPolicy
+ */
+typedef struct _iFolderChangeEntry iFolderChangeEntry;
+typedef struct _iFolderChangeEntryClass iFolderChangeEntryClass;
+
+struct _iFolderChangeEntry
+{
+	GObject parent;
+
+	/* instance members */
+
+	/* private */
+	gpointer private_data;
+};
+
+struct _iFolderChangeEntryClass
 {
 	GObjectClass parent;
 
