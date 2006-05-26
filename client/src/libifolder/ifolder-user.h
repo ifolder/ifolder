@@ -24,7 +24,7 @@
 #ifndef _IFOLDER_C_USER_H_
 #define _IFOLDER_C_USER_H_
 
-#include "ifolder.h"
+#include "ifolder-types.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -33,12 +33,12 @@ extern "C"
 
 G_BEGIN_DECLS
 
-#define IFOLDER_USER_TYPE						(ifolder_user_get_type())
-#define IFOLDER_USER(obj)						(G_TYPE_CHECK_INSTANCE_CAST ((obj), IFOLDER_USER_TYPE, iFolderUser))
-#define IFOLDER_USER_CLASS(klass)				(G_TYPE_CHECK_CLASS_CAST ((klass), IFOLDER_USER_TYPE, iFolderUserClass))
-#define IFOLDER_IS_IFOLDER_USER(obj)			(G_TYPE_CHECK_INSTANCE_TYPE ((obj), IFOLDER_USER_TYPE))
-#define IFOLDER_IS_IFOLDER_USER_CLASS(klass)	(G_TYPE_CHECK_CLASS_TYPE ((klass), IFOLDER_USER_TYPE))
-#define IFOLDER_USER_GET_CLASS(obj)				(G_TYPE_INSTANCE_GET_CLASS ((obj), IFOLDER_USER_TYPE, iFolderUserClass))
+#define IFOLDER_USER_TYPE				(ifolder_user_get_type())
+#define IFOLDER_USER(obj)				(G_TYPE_CHECK_INSTANCE_CAST ((obj), IFOLDER_USER_TYPE, iFolderUser))
+#define IFOLDER_USER_CLASS(klass)		(G_TYPE_CHECK_CLASS_CAST ((klass), IFOLDER_USER_TYPE, iFolderUserClass))
+#define IFOLDER_IS_USER(obj)			(G_TYPE_CHECK_INSTANCE_TYPE ((obj), IFOLDER_USER_TYPE))
+#define IFOLDER_IS_USER_CLASS(klass)	(G_TYPE_CHECK_CLASS_TYPE ((klass), IFOLDER_USER_TYPE))
+#define IFOLDER_USER_GET_CLASS(obj)		(G_TYPE_INSTANCE_GET_CLASS ((obj), IFOLDER_USER_TYPE, iFolderUserClass))
 
 /* GObject support */
 GType ifolder_user_get_type (void) G_GNUC_CONST;
@@ -100,6 +100,9 @@ gboolean ifolder_user_is_login_enabled(iFolderUser *user);
  * @return true if a user is an owner in an iFolder/Domain.
  */
 gboolean ifolder_user_is_owner(iFolderUser *user);
+
+gpointer ifolder_user_get_user_data (iFolderUser *user);
+void ifolder_user_set_user_data (iFolderUser *user, gpointer user_data);
 
 /*@}*/
 

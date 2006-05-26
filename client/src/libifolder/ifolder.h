@@ -102,25 +102,6 @@ typedef enum
 	IFOLDER_STATE_UNKNOWN				/*!< The state of the iFolder could not be determined */
 } iFolderState;
 
-/**
- * Users that are added as members of an iFolder are assigned one of these
- * rights.  The owner/creator of the iFolder is set up automatically with
- * #IFOLDER_MEMBER_RIGHTS_ADMIN.
- * 
- * @todo Make sure all the capabilities of #IFOLDER_MEMBER_RIGHTS_ADMIN are
- * documented.
- * @todo Find out what #IFOLDER_MEMBER_RIGHTS_DENY is even for.  Can a user be
- * added as a member of an iFolder with deny rights or should the user just be
- * deleted as a member of the iFolder?
- */
-typedef enum
-{
-	IFOLDER_MEMBER_RIGHTS_DENY,			/*!< No access */
-	IFOLDER_MEMBER_RIGHTS_READ_ONLY,		/*!< Read only access */
-	IFOLDER_MEMBER_RIGHTS_READ_WRITE,	/*!< Read and write access */
-	IFOLDER_MEMBER_RIGHTS_ADMIN			/*!< Administrator access (can add other users, change ownership, modify user rights) */
-} iFolderMemberRights;
-
 typedef enum
 {
 	IFOLDER_SYNC_DIRECTION_UPLOAD,			/*!< Uploading */

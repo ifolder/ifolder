@@ -64,6 +64,7 @@ DLL_C_SRC =			\
 	ifolder-client.cpp	\
 	ifolder-domain.cpp	\
 	ifolder.cpp			\
+	ifolder-user.cpp	\
 	ifolder-user-prefs.cpp
 
 

@@ -75,7 +75,12 @@ void ifolder_set_core_ifolder (iFolder *ifolder, IFiFolder *core_ifolder);
  * iFolderUser Functions
  */
 iFolderUser *ifolder_user_new (void);
-
+void ifolder_set_id (iFolderUser *user, const gchar *id);
+void ifolder_user_set_user_name(iFolderUser *user, const gchar *user_name);
+void ifolder_user_set_full_name(iFolderUser *user, const gchar *full_name);
+void ifolder_user_set_rights(iFolderUser *user, iFolderMemberRights rights);
+void ifolder_user_set_is_login_enabled(iFolderUser *user, gboolean is_login_enabled);
+void ifolder_user_set_is_owner(iFolderUser *user, gboolean is_owner);
 
 iFolderUserPolicy *ifolder_user_policy_new (void);
 
