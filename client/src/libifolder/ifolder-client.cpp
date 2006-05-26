@@ -340,25 +340,28 @@ ifolder_client_resume_synchronization(iFolderClient *client, GError **error)
 	g_message("FIXME: Implement ifolder_client_resume_synchronization()");
 }
 
+guint
+ifolder_client_get_domain_count (iFolderClient *client)
+{
+	iFolderClientPrivate *priv;
+	GError *err;
+	
+	g_return_val_if_fail (IFOLDER_IS_CLIENT (client), 0);
+
+	priv = IFOLDER_CLIENT_GET_PRIVATE (client);
+
+	return g_slist_length (priv->domains);
+}
+
 GSList *
 ifolder_client_get_all_domains(iFolderClient *client, GError **error)
 {
 	iFolderClientPrivate *priv;
 	
-	g_debug ("ifolder_client_get_all_domains()");
-	if (client == NULL)
-	{
-		g_set_error (error,
-					 IFOLDER_ERROR,
-					 IFOLDER_ERR_INVALID_PARAMETER,
-					 _("ifolder_client_get_all_domains() called with a NULL iFolderClient parameter."));
-		return NULL;
-	}
+	g_return_val_if_fail (IFOLDER_IS_CLIENT (client), NULL);
 
 	priv = IFOLDER_CLIENT_GET_PRIVATE (client);
 
-	g_debug ("# of domains: %d", g_slist_length (priv->domains));
-	
 	return g_slist_copy (priv->domains);
 }
 

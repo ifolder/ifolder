@@ -201,6 +201,12 @@ void ifolder_client_resume_synchronization(iFolderClient *client, GError **error
 /*@{*/
 
 /**
+ * A convenience function to get a count of all the domains configured on the
+ * client.
+ */
+guint ifolder_client_get_domain_count (iFolderClient *client);
+
+/**
  * The returned GSList should be freed by the caller.
  */
 GSList *ifolder_client_get_all_domains(iFolderClient *client, GError **error);
