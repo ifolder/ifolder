@@ -42,11 +42,13 @@ DEFINES =
 
 libifolder3_core_la_CXXFLAGS =	\
 	$(DEFINES)					\
+	$(UNIV_CFLAGS)				\
 	$(GLIB_CFLAGS)				\
 	-DWITH_NONAMESPACES			\
 	-DWITH_COOKIES
 
 libifolder3_core_la_LDFLAGS =	\
+	$(UNIV_LDFLAGS)				\
 	$(GLIB_LIBS)
 
 #libifolder_core_a_LIBFLAGS = 

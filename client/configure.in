@@ -221,7 +221,7 @@ case $IFOLDER_OS in
 		AC_SUBST(GLIB_CFLAGS)
 		AC_SUBST(GLIB_LIBS)
 		UNIV_CFLAGS="-O -g -isysroot /Developer/SDKs/MacOSX10.4u.sdk -arch ppc -arch i386"
-		UNIV_LDFLAGS="-Wl,-syslibroot,/Developer/SDKs/MacOSX10.4u.sdk"
+		UNIV_LDFLAGS="-syslibroot /Developer/SDKs/MacOSX10.4u.sdk -arch ppc -arch i386"
 	;;
     #
     # Linux-specific configuration

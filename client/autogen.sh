@@ -140,6 +140,16 @@ done
 
 conf_flags="--config-cache --enable-maintainer-mode --enable-compile-warnings" #--enable-iso-c
 
+case $OSTYPE in
+	darwin*)
+		# we need to turn off dependency tracking to build universal libs
+		conf_flags="$conf_flags --disable-dependency-tracking"
+	;;
+	*)
+		libtoolize --force --copy
+	;;
+esac
+
 cd "$ORIGDIR"
 
 if test x$NOCONFIGURE = x; then

@@ -36,11 +36,13 @@ lib_LTLIBRARIES = libifolder3.la
 
 DEFINES = 
 
-libifolder3_la_CXXFLAGS = \
-	$(DEFINES)					\
+libifolder3_la_CXXFLAGS =	\
+	$(DEFINES)				\
+	$(UNIV_CFLAGS)			\
 	$(GLIB_CFLAGS)
 
-libifolder3_la_LDFLAGS = \
+libifolder3_la_LDFLAGS =	\
+	$(UNIV_LDFLAGS)			\
 	$(GLIB_LIBS)
 
 #libifolder_trayapp_a_LIBDADD = \
