@@ -726,12 +726,33 @@ ifolder_domain_get_user_by_id (iFolderDomain *domain, const gchar *user_id, GErr
 */
 
 iFolderUser *
-ifolder_domain_get_user(iFolderDomain *domain, const gchar *user_name, GError **error)
+ifolder_domain_get_user (iFolderDomain *domain, const gchar *user_name, GError **error)
 {
+	iFolderDomainPrivate	*priv;
+	iFolderUser				*user;
+	ifweb::iFolderUser		*core_user;
+
 	g_return_val_if_fail (IFOLDER_IS_DOMAIN (domain), NULL);
-	g_message("FIXME: Implement ifolder_domain_get_user()");
+	g_return_val_if_fail (user_name != NULL, NULL);
+
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+
+	core_user = priv->ifolder_service->GetUser (user_name, error);
+	if (core_user == NULL)
+		return NULL;
 	
-	return NULL;
+	user = ifolder_user_new (core_user);
+	if (user == NULL)
+	{
+		delete core_user;
+		g_set_error (error,
+					 IFOLDER_ERROR,
+					 IFOLDER_ERR_UNKNOWN,
+					 _("FIXME: Replace this with a good error message"));
+		return NULL;
+	}
+	
+	return user;
 }
 
 GSList *
