@@ -42,7 +42,7 @@ typedef struct _iFolderChangeEntryPrivate iFolderChangeEntryPrivate;
 struct _iFolderChangeEntryPrivate
 {
 	iFolderUser *user;
-	iFolderSoap::ChangeEntry *change_entry;
+	ifweb::ChangeEntry *change_entry;
 };
 
 #define IFOLDER_CHANGE_ENTRY_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), IFOLDER_CHANGE_ENTRY_TYPE, iFolderChangeEntryPrivate))
@@ -107,7 +107,7 @@ static void ifolder_change_entry_finalize(GObject *object)
 }
 
 iFolderChangeEntry *
-ifolder_change_entry_new (iFolderUser *user, iFolderSoap::ChangeEntry *entry)
+ifolder_change_entry_new (iFolderUser *user, ifweb::ChangeEntry *entry)
 {
 	iFolderChangeEntry *change_entry;
 	iFolderChangeEntryPrivate *priv;

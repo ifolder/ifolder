@@ -20,17 +20,34 @@
  *  Author: Russ Young
  *
  ***********************************************************************/
+#include "IFApplication.h"
 #include "IFServices.h"
 #include "IFDomain.h"
 
-using namespace iFolderSoap;
-
+namespace ifweb
+{
 // IFServiceManager class
 DomainService* IFServiceManager::GetDomainService(const gchar* domainID, const gchar *host)
 {
 	IFDomain *pDomain = IFDomain::GetDomainByID(domainID);
 	if (pDomain != NULL)
 	{
+		// TODO fix host to support multi-server
+		DomainService *pService = new DomainService(pDomain);
+		IFApplication::BuildUrlToService(host, pService->m_DomainService.endpoint);
+		return pService;
+	}
+	return NULL;
+}
+
+DomainService* IFServiceManager::GetDomainService(IFDomain *pDomain, const gchar *host)
+{
+	if (pDomain != NULL)
+	{
+		// TODO fix host to support multi-server
+		DomainService *pService = new DomainService(pDomain);
+		IFApplication::BuildUrlToService(host, pService->m_DomainService.endpoint);
+		return pService;
 	}
 	return NULL;
 }
@@ -40,6 +57,11 @@ iFolderService* IFServiceManager::GetiFolderService(const gchar* domainID, const
 	IFDomain *pDomain = IFDomain::GetDomainByID(domainID);
 	if (pDomain != NULL)
 	{
+		// TODO fix host to support multi-server
+		host = pDomain->m_MasterHost;
+		iFolderService *pService = new iFolderService(pDomain);
+		IFApplication::BuildUrlToService(host, pService->m_iFolderService.endpoint);
+		return pService;
 	}
 	return NULL;
 }
@@ -91,7 +113,9 @@ ProvisionInfo* DomainService::ProvisionUserOnServer(const gchar *userName, const
 	req.user = (gchar*)userName;
 	req.password = (gchar*)password;
 	//req.ticket = ticket;
-
+	m_DomainService.soap->userid = (char*)userName;
+	m_DomainService.soap->passwd = (char*)password;
+	
 	if (m_DomainService.__ds__ProvisionUserOnServer(&req, &resp) == 0)
 	{
 		// Get the output parameters.
@@ -111,7 +135,9 @@ ProvisionInfo* DomainService::ProvisionUser(const gchar* userName, const gchar* 
 	// Set the input parameters.
 	req.user = (gchar*)userName;
 	req.password = (gchar*)password;
-
+	m_DomainService.soap->userid = (char*)userName;
+	m_DomainService.soap->passwd = (char*)password;
+	
 	if (m_DomainService.__ds__ProvisionUser(&req, &resp) == 0)
 	{
 		// Get the output parameters.
@@ -148,7 +174,7 @@ gboolean DomainService::RemoveServerCollections(const gchar* domainID, const gch
 	// Set the input parameters.
 	req.DomainID = (gchar*)domainID;
 	req.UserID = (gchar*)userID;
-	
+			
 	if (m_DomainService.__ds__RemoveServerCollections(&req, &resp) != 0)
 	{
 		// g_set_error();
@@ -157,7 +183,7 @@ gboolean DomainService::RemoveServerCollections(const gchar* domainID, const gch
 	return true;
 }
 
-gchar* DomainService::GetDomainID()
+gchar* DomainService::GetDomainID(GError **error)
 {
 	_ds__GetDomainID req;
 	_ds__GetDomainIDResponse resp;
@@ -297,39 +323,42 @@ UserPolicy* iFolderService::GetAuthenticatedUserPolicy()
 	}
 }
 
-void iFolderService::GetiFolderPolicy()
+iFolderPolicy* iFolderService::GetiFolderPolicy(gchar *ifolderID, GError **error)
 {
 	_ifolder__GetiFolderPolicy req;
 	_ifolder__GetiFolderPolicyResponse resp;
 	// Set the input parameters.
-	req.ifolderID;
-
-	// Get the output parameters.
-	ifolder__iFolderPolicy *pP = resp.GetiFolderPolicyResult;
-	pP->FileSizeLimit;
-	pP->FileSizeLimitEffective;
-	pP->FileTypesExcludes;
-	pP->FileTypesExcludesEffective;
-	pP->FileTypesIncludes;
-	pP->FileTypesIncludesEffective;
-	pP->iFolderID;
-	pP->Locked;
-	pP->SpaceAvailable;
-	pP->SpaceLimit;
-	pP->SpaceLimitEffective;
-	pP->SpaceUsed;
-	pP->SyncInterval;
-	pP->SyncIntervalEffective;
+	req.ifolderID = ifolderID;
+	
+	if (m_iFolderService.__ifolder__GetiFolderPolicy(&req, &resp) == 0)
+	{
+		// Get the output parameters.
+		return new iFolderPolicy(resp.GetiFolderPolicyResult);
+	}
+	else
+	{
+		//g_set_error();
+		return NULL;
+	}
 }
 
-void iFolderService::SetiFolderPolicy()
+gboolean iFolderService::SetiFolderPolicy(iFolderPolicy *pPolicy, GError *error)
 {
+	gboolean bstatus = true;
+
 	_ifolder__SetiFolderPolicy req;
 	_ifolder__SetiFolderPolicyResponse resp;
 	// Set the input parameters.
-	req.props;
-	
-	// Get the output parameters.
+	req.props = pPolicy->To_ifolder__iFolderPolicy();
+
+	// initialize the values.
+	if (m_iFolderService.__ifolder__SetiFolderPolicy(&req, &resp) != 0)
+	{
+		//g_set_error();
+		bstatus = false;
+	}
+	delete req.props;
+	return bstatus;
 }
 
 iFolderEntry* iFolderService::CreateEntry(const gchar *entryName, const gchar *ifolderID, const gchar *parentID, enum ifolder__iFolderEntryType type, GError **error)
@@ -896,4 +925,5 @@ iFolderUserIterator* iFolderService::GetUsersBySearch(gint index, gint max, enum
 		//g_set_error();
 		return NULL;
 	}
+} //namespace ifweb
 }

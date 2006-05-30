@@ -30,9 +30,8 @@
 #include "simiasiFolderWebSoapProxy.h"
 #include "IFDomain.h"
 
-namespace iFolderSoap
+namespace ifweb
 {
-
 // Forward declarations
 class IFServiceManager;
 class DomainService;
@@ -54,6 +53,7 @@ class ChangeEntryIterator;
 class DomainInfo;
 class ProvisionInfo;
 class UserPolicy;
+class iFolderPolicy;
 
 class GLIBCLIENT_API IFServiceManager
 {
@@ -62,6 +62,7 @@ private:
 
 public:
 	static DomainService* GetDomainService(const gchar* domainID, const gchar *host);
+	static DomainService* GetDomainService(IFDomain *pDomain, const gchar *host);
 	static iFolderService* GetiFolderService(const gchar* domainID, const gchar *host);
 };
 
@@ -69,6 +70,7 @@ public:
 class GLIBCLIENT_API DomainService
 {
 	friend class IFServiceManager;
+	friend class IFDomain;
 private:
 	IFDomain	*m_pDomain;
 	Domain		m_DomainService;
@@ -83,7 +85,7 @@ public:
 	ProvisionInfo* ProvisionUser(const gchar* userName, const gchar* password, GError **error);
 	void CreateMaster();
 	gboolean RemoveServerCollections(const gchar* domainID, const gchar* userID, GError **error);
-	gchar* GetDomainID();
+	gchar* GetDomainID(GError **error);
 };
 
 class GLIBCLIENT_API iFolderService
@@ -102,8 +104,8 @@ public:
 	iFolderIterator* GetiFoldersBySearch(time_t after, gint index, gint max, enum ifolder__SearchOperation operation, const gchar* pattern, enum ifolder__MemberRole role, GError **error);
 	gboolean RemoveMembership(const gchar *ifolderID, GError **error);
 	UserPolicy* GetAuthenticatedUserPolicy();
-	void GetiFolderPolicy();
-	void SetiFolderPolicy();
+	iFolderPolicy* GetiFolderPolicy(gchar *ifolderID, GError **error);
+	gboolean SetiFolderPolicy(iFolderPolicy *pPolicy, GError *error);
 	iFolderEntry* CreateEntry(const gchar *entryName, const gchar *ifolderID, const gchar *parentID, enum ifolder__iFolderEntryType type, GError **error);
 	gboolean DeleteEntry(const gchar *entryID, const gchar *ifolderID, GError **error);
 	iFolderEntry* GetEntry(const gchar *entryID, const gchar *ifolderID, GError **error);
@@ -513,7 +515,6 @@ public:
 			g_array_insert_val(m_FileTypesIncludesEffective, i, ftString);
 		}
 
-
 		count = userPolicy->FileTypesExcludes->__sizestring;
 		m_FileTypesExcludes = g_array_sized_new(true, true, sizeof(gchar*), count);
 		for (i = 0; i < count; ++i)
@@ -563,6 +564,147 @@ public:
 			g_free(g_array_index(m_FileTypesExcludesEffective, gchar*, i));
 		}
 		g_array_free(m_FileTypesExcludesEffective, true);
+	}
+};
+
+class GLIBCLIENT_API iFolderPolicy
+{
+private:
+	ifolder__ArrayOfString m_FileTypesIncludesArray;
+	ifolder__ArrayOfString m_FileTypesIncludesEffectiveArray;
+	ifolder__ArrayOfString m_FileTypesExcludesArray;
+	ifolder__ArrayOfString m_FileTypesExcludesEffectiveArray;
+
+public:
+	gchar *m_iFolderID;	/* optional element of type xsd:string */
+	gboolean m_Locked;	/* required element of type xsd:boolean */
+	gint64 m_SpaceLimit;	/* required element of type xsd:long */
+	gint64 m_SpaceLimitEffective;	/* required element of type xsd:long */
+	gint64 m_SpaceUsed;	/* required element of type xsd:long */
+	gint64 m_SpaceAvailable;	/* required element of type xsd:long */
+	gint m_SyncInterval;	/* required element of type xsd:int */
+	gint m_SyncIntervalEffective;	/* required element of type xsd:int */
+	gint64 m_FileSizeLimit;	/* required element of type xsd:long */
+	gint64 m_FileSizeLimitEffective;	/* required element of type xsd:long */
+	GArray *m_FileTypesIncludes;	/* optional element of type ifolder:ArrayOfString */
+	GArray *m_FileTypesIncludesEffective;	/* optional element of type ifolder:ArrayOfString */
+	GArray *m_FileTypesExcludes;	/* optional element of type ifolder:ArrayOfString */
+	GArray *m_FileTypesExcludesEffective;	/* optional element of type ifolder:ArrayOfString */
+	
+public:
+	iFolderPolicy(ifolder__iFolderPolicy *pPolicy)
+	{
+		m_iFolderID = g_strdup(pPolicy->iFolderID);
+		m_Locked = pPolicy->Locked;
+		m_SpaceLimit = pPolicy->SpaceLimit;
+		m_SpaceLimitEffective = pPolicy->SpaceLimitEffective;
+		m_SpaceUsed = pPolicy->SpaceUsed;
+		m_SpaceAvailable = pPolicy->SpaceAvailable;
+		m_SyncInterval = pPolicy->SyncInterval;
+		m_SyncIntervalEffective = pPolicy->SyncIntervalEffective;
+		m_FileSizeLimit = pPolicy->FileSizeLimit;
+		m_FileSizeLimitEffective = pPolicy->FileSizeLimitEffective;
+
+		int count;
+		int i;
+		count = pPolicy->FileTypesIncludes->__sizestring;
+		m_FileTypesIncludes = g_array_sized_new(true, true, sizeof(gchar*), count);
+		for (i = 0; i < count; ++i)
+		{
+			gchar *ftString = g_strdup(pPolicy->FileTypesIncludes->string[i]);
+			g_array_insert_val(m_FileTypesIncludes, i, ftString);
+		}
+		
+		count = pPolicy->FileTypesIncludesEffective->__sizestring;
+		m_FileTypesIncludesEffective = g_array_sized_new(true, true, sizeof(gchar*), count);
+		for (i = 0; i < count; ++i)
+		{
+			gchar *ftString = g_strdup(pPolicy->FileTypesIncludesEffective->string[i]);
+			g_array_insert_val(m_FileTypesIncludesEffective, i, ftString);
+		}
+
+		count = pPolicy->FileTypesExcludes->__sizestring;
+		m_FileTypesExcludes = g_array_sized_new(true, true, sizeof(gchar*), count);
+		for (i = 0; i < count; ++i)
+		{
+			gchar *ftString = g_strdup(pPolicy->FileTypesExcludes->string[i]);
+			g_array_insert_val(m_FileTypesExcludes, i, ftString);
+		}
+
+		count = pPolicy->FileTypesExcludesEffective->__sizestring;
+		m_FileTypesExcludesEffective = g_array_sized_new(true, true, sizeof(gchar*), count);
+		m_FileTypesExcludesEffective = g_array_sized_new(true, true, sizeof(gchar*), count);
+		for (i = 0; i < count; ++i)
+		{
+			gchar *ftString = g_strdup(pPolicy->FileTypesExcludesEffective->string[i]);
+			g_array_insert_val(m_FileTypesExcludesEffective, i, ftString);
+		}
+	}
+	virtual ~iFolderPolicy()
+	{
+		g_free(m_iFolderID);
+	
+		int i;
+		int count;
+		count = m_FileTypesIncludes->len;
+		for (i = 0; i < count; ++i)
+		{
+			g_free(g_array_index(m_FileTypesIncludes, gchar*, i));
+		}
+		g_array_free(m_FileTypesIncludes, true);
+
+		count = m_FileTypesIncludesEffective->len;
+		for (i = 0; i < count; ++i)
+		{
+			g_free(g_array_index(m_FileTypesIncludesEffective, gchar*, i));
+		}
+		g_array_free(m_FileTypesIncludesEffective, true);
+
+		count = m_FileTypesExcludes->len;
+		for (i = 0; i < count; ++i)
+		{
+			g_free(g_array_index(m_FileTypesExcludes, gchar*, i));
+		}
+		g_array_free(m_FileTypesExcludes, true);
+
+		count = m_FileTypesExcludesEffective->len;
+		for (i = 0; i < count; ++i)
+		{
+			g_free(g_array_index(m_FileTypesExcludesEffective, gchar*, i));
+		}
+		g_array_free(m_FileTypesExcludesEffective, true);
+	}
+
+	ifolder__iFolderPolicy* To_ifolder__iFolderPolicy()
+	{
+		ifolder__iFolderPolicy *pPolicy = new ifolder__iFolderPolicy();
+		pPolicy->iFolderID = m_iFolderID;
+		pPolicy->Locked = m_Locked;
+		pPolicy->SpaceLimit = m_SpaceLimit;
+		pPolicy->SpaceLimitEffective = m_SpaceLimitEffective;
+		pPolicy->SpaceUsed = m_SpaceUsed;
+		pPolicy->SpaceAvailable = m_SpaceAvailable;
+		pPolicy->SyncInterval = m_SyncInterval;
+		pPolicy->SyncIntervalEffective = m_SyncIntervalEffective;
+		pPolicy->FileSizeLimit = m_FileSizeLimit;
+		pPolicy->FileSizeLimitEffective = m_FileSizeLimitEffective;
+
+		m_FileTypesIncludesArray.__sizestring = m_FileTypesIncludes->len;
+		m_FileTypesIncludesArray.string = (char**)m_FileTypesIncludes->data;
+		pPolicy->FileTypesIncludes = &m_FileTypesIncludesArray;
+
+		m_FileTypesIncludesEffectiveArray.__sizestring = m_FileTypesIncludesEffective->len;
+		m_FileTypesIncludesEffectiveArray.string = (char**)m_FileTypesIncludesEffective->data;
+		pPolicy->FileTypesExcludesEffective = &m_FileTypesIncludesEffectiveArray;
+
+		m_FileTypesExcludesArray.__sizestring = m_FileTypesExcludes->len;
+		m_FileTypesExcludesArray.string = (char**)m_FileTypesExcludes->data;
+		pPolicy->FileTypesExcludes = &m_FileTypesExcludesArray;
+
+		m_FileTypesExcludesEffectiveArray.__sizestring = m_FileTypesExcludesEffective->len;
+		m_FileTypesExcludesEffectiveArray.string = (char**)m_FileTypesExcludesEffective->data;
+		pPolicy->FileTypesExcludesEffective = &m_FileTypesExcludesEffectiveArray;
+		return pPolicy;
 	}
 };
 
@@ -783,7 +925,6 @@ public:
 		g_free(m_MemberRights);
 	}
 };
-
-} /* namespace iFolderSoap */
+} // namespace ifweb
 
 #endif //_IFConnection_H_

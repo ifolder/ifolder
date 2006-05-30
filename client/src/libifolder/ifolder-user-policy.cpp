@@ -42,7 +42,7 @@ typedef struct _iFolderUserPolicyPrivate iFolderUserPolicyPrivate;
 struct _iFolderUserPolicyPrivate
 {
 	iFolderUser *user;
-	iFolderSoap::UserPolicy *user_policy;
+	ifweb::UserPolicy *user_policy;
 };
 
 #define IFOLDER_USER_POLICY_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), IFOLDER_USER_POLICY_TYPE, iFolderUserPolicyPrivate))
@@ -108,7 +108,7 @@ static void ifolder_user_policy_finalize(GObject *object)
 }
 
 iFolderUserPolicy *
-ifolder_user_policy_new (iFolderUser *user, iFolderSoap::UserPolicy *policy)
+ifolder_user_policy_new (iFolderUser *user, ifweb::UserPolicy *policy)
 {
 	iFolderUserPolicy *user_policy;
 	iFolderUserPolicyPrivate *priv;

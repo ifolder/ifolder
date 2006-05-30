@@ -23,6 +23,7 @@
 #include "IFDomain.h"
 #include "IFApplication.h"
 #include "simias.nsmap"
+#include "IFServices.h"
 
 // IFDomain class
 
@@ -53,6 +54,7 @@ IFDomain::IFDomain()
 	m_DomainService.soap->fparsehdr = ParseLoginHeader;
 	m_iFolderService.soap->fparsehdr = ParseLoginHeader;
 	
+	m_Cookies = NULL;
 	m_Name = NULL;
 	m_ID = NULL;
 	m_Description = NULL;
@@ -66,6 +68,9 @@ IFDomain::IFDomain()
 	
 IFDomain::~IFDomain(void)
 {
+	// TODO free cookies.
+	//if (m_Cookies != NULL)
+	//	soap_free_cookies();
 	g_free(m_Name);
 	g_free(m_ID);
 	g_free(m_Description);
@@ -83,21 +88,26 @@ IFDomain* IFDomain::Add(const gchar* userName, const gchar* password, const gcha
 {
 	gboolean failed = true;
 	IFDomain *pDomain = new IFDomain();
-	Domain* domainService = &pDomain->m_DomainService;
-	iFolderWebSoap* iFolderService = &pDomain->m_iFolderService;
-
-	// build the url to the host;
-	domainService->endpoint = IFApplication::BuildUrlToService(host, domainService->endpoint);
-	iFolderService->endpoint = IFApplication::BuildUrlToService(host, iFolderService->endpoint);
 	pDomain->m_MasterHost = g_strdup(host);
 	pDomain->m_HomeHost = g_strdup(host);
+
+	ifweb::DomainService* domainService = ifweb::IFServiceManager::GetDomainService(pDomain, host);
+	//Domain* domainService = &pDomain->m_DomainService;
+	//iFolderWebSoap* iFolderService = &pDomain->m_iFolderService;
+
+	// build the url to the host;
+	//domainService->endpoint = IFApplication::BuildUrlToService(host, domainService->endpoint);
+	//iFolderService->endpoint = IFApplication::BuildUrlToService(host, iFolderService->endpoint);
 	
 	// Make sure that we do not already belong to this domain.
-	_ds__GetDomainID req;
-	_ds__GetDomainIDResponse resp;
-	if (domainService->__ds__GetDomainID(&req, &resp) == 0)
+	pDomain->m_ID = domainService->GetDomainID(error);
+	if (pDomain->m_ID == NULL && error != NULL)
 	{
-		pDomain->m_ID = g_strdup(resp.GetDomainIDResult);
+		g_warning("Failed to contact host %s", host);
+		g_warning((*error)->message);
+	}
+	else
+	{
 		IFDomain *existingDomain = IFDomain::GetDomainByID(pDomain->m_ID);
 		if (existingDomain != NULL)
 		{
@@ -113,44 +123,38 @@ IFDomain* IFDomain::Add(const gchar* userName, const gchar* password, const gcha
 		*/
 
 		// Provision the user;
-		domainService->soap->userid = (char*)userName;
-		domainService->soap->passwd = (char*)password;
-		_ds__ProvisionUser puReq;
-		puReq.user = (char*)userName;
-		puReq.password = (char*)password;
-		_ds__ProvisionUserResponse puResp;
-		ds__ProvisionInfo *pvInfo;
-		if (domainService->__ds__ProvisionUser(&puReq, &puResp) == 0)
+		ifweb::ProvisionInfo *pvInfo = domainService->ProvisionUser(userName, password, error);
+		if (pvInfo != NULL)
 		{
-			pvInfo = puResp.ProvisionUserResult;
-			pDomain->m_UserID = g_strdup(pvInfo->UserID);
+			pDomain->m_UserID = g_strdup(pvInfo->m_UserID);
 			pDomain->m_UserName = g_strdup(userName);
 			pDomain->m_UserPassword = g_strdup(password);
-			pDomain->m_POBoxID = g_strdup(pvInfo->POBoxID);
-			printf("provisioned\n");
+			pDomain->m_POBoxID = g_strdup(pvInfo->m_POBoxID);
+			g_message("provisioned");
+			delete pvInfo;
 
 			// Now get the domain Info.
-			_ds__GetDomainInfo diReq;
-			_ds__GetDomainInfoResponse diResp;
-			diReq.userID = pvInfo->UserID;
-			if (domainService->__ds__GetDomainInfo(&diReq, &diResp) == 0)
+			ifweb::DomainInfo *dInfo = domainService->GetDomainInfo(pDomain->m_UserID, error);
+			if (dInfo != NULL)
 			{
-				ds__DomainInfo *dInfo = diResp.GetDomainInfoResult;
-				pDomain->m_ID = g_strdup(dInfo->ID);
-				pDomain->m_Description = g_strdup(dInfo->Description);
-				pDomain->m_Name = g_strdup(dInfo->Name);
+				pDomain->m_ID = g_strdup(dInfo->m_ID);
+				pDomain->m_Description = g_strdup(dInfo->m_Description);
+				pDomain->m_Name = g_strdup(dInfo->m_Name);
+				delete dInfo;
 
 				// Add the domain to the list and return and set success.
 				IFDomainList::Insert(pDomain);
 				failed = false;
+				pDomain->m_Cookies = soap_copy_cookies(domainService->m_DomainService.soap);
 			}
 		}
 	}
 	if (failed)
 	{
-		soap_print_fault(domainService->soap, stderr);
-		soap_print_fault_location(domainService->soap, stderr);
-		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, domainService->soap->error, "Soap Error");
+		struct soap* soap = domainService->m_DomainService.soap;
+		soap_print_fault(soap, stderr);
+		soap_print_fault_location(soap, stderr);
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, soap->error, "Soap Error");
 		delete pDomain;
 		return NULL;
 	}

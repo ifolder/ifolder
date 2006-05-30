@@ -24,6 +24,7 @@
 #define _IFDOMAIN_H_
 
 //#include <vector>
+#include "stdsoap2.h"
 #include "glibclient.h"
 #include "simiasDomain_USCOREx0020_USCOREServiceSoapProxy.h"
 #include "simiasiFolderWebSoapProxy.h"
@@ -53,6 +54,8 @@ private:
 	static gchar *EPOB;
 
 	// Members.
+	struct soap_cookie *m_Cookies;
+
 	gint	m_lastError;
 	gchar	*m_lastErrorString;
 	gint	m_GraceRemaining;
