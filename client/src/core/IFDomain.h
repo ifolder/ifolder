@@ -40,6 +40,7 @@ class GLIBCLIENT_API Domain;
 
 class GLIBCLIENT_API IFDomain
 {
+	friend class IFServiceManager;
 	friend class IFDomainList;
 private:
 	// XML elements
@@ -52,10 +53,14 @@ private:
 	static gchar *EID;
 	static gchar *EPW;
 	static gchar *EPOB;
+	static gchar *EVersion;
+	static gchar *EActive;
+	static gchar *EDefault;
 
 	// Members.
+public:
 	struct soap_cookie *m_Cookies;
-
+private:
 	gint	m_lastError;
 	gchar	*m_lastErrorString;
 	gint	m_GraceRemaining;
@@ -64,17 +69,23 @@ private:
 	Domain				m_DomainService;
 	iFolderWebSoap		m_iFolderService;
 
+	// Persist everything below here.
+	gchar*		m_UserPassword;
+	gchar*		m_POBoxID;
+	
 public:
 	// Properties
 	gchar*		m_Name;
 	gchar*		m_ID;
+	gchar*		m_Version;
 	gchar*		m_Description;
 	gchar*		m_HomeHost;
 	gchar*		m_MasterHost;
-	gchar*		m_POBoxID;
 	gchar*		m_UserName;
-	gchar*		m_UserPassword;
 	gchar*		m_UserID;
+	gboolean	m_Authenticated; // Not persisted.
+	gboolean	m_Active;
+	gboolean	m_Default;
 	
 private:
 	IFDomain();
@@ -92,7 +103,9 @@ public:
 	static IFDomainIterator GetDomains();
 	static IFDomain* GetDomainByID(const gchar *pID);
 	static IFDomain* GetDomainByName(const gchar *pName);
-
+	static IFDomain* GetDefault();
+	void SetDefault();
+	void SetActive(gboolean state);
 };
 
 class GLIBCLIENT_API IFDomainIterator
@@ -137,12 +150,14 @@ private:
 	static void XmlError(GMarkupParseContext *pContext, GError *pError, gpointer userData);
 	static void Destroy(gpointer data);
 	static void Insert(IFDomain *pDomain);
+	static gint Count();
 	static gboolean Remove(const gchar *id);
 	static IFDomainIterator GetIterator();
 	static IFDomain* GetDomainByID(const gchar *pID);
 	static IFDomain* GetDomainByName(const gchar *pName);
-	void Save();
-	void Restore();
+	static IFDomain* GetDefault();
+	static void Save();
+	static void Restore();
 
 public:
 	static int Initialize();

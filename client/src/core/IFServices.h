@@ -54,6 +54,7 @@ class DomainInfo;
 class ProvisionInfo;
 class UserPolicy;
 class iFolderPolicy;
+class iFolderSystem;
 
 class GLIBCLIENT_API IFServiceManager
 {
@@ -64,6 +65,7 @@ public:
 	static DomainService* GetDomainService(const gchar* domainID, const gchar *host);
 	static DomainService* GetDomainService(IFDomain *pDomain, const gchar *host);
 	static iFolderService* GetiFolderService(const gchar* domainID, const gchar *host);
+	static iFolderService* GetiFolderService(IFDomain *pDomain, const gchar *host);
 };
 
 
@@ -76,7 +78,7 @@ private:
 	Domain		m_DomainService;
 
 	DomainService(IFDomain *pDomain) : m_pDomain(pDomain) {};
-	virtual ~DomainService() {};
+	virtual ~DomainService() { g_free((gchar*)m_DomainService.endpoint); };
 
 public:
 	DomainInfo* GetDomainInfo(const gchar* userID, GError** error);
@@ -91,12 +93,13 @@ public:
 class GLIBCLIENT_API iFolderService
 {
 	friend class IFServiceManager;
+	friend class IFDomain;
 private:
 	IFDomain		*m_pDomain;
 	iFolderWebSoap	m_iFolderService;
 
 	iFolderService(IFDomain *pDomain) : m_pDomain(pDomain) {};
-	~iFolderService() {};
+	~iFolderService() { g_free((gchar*)m_iFolderService.endpoint); };
 public:
 	iFolderIterator* GetiFolders(gint index, gint max, GError **error);
 	iFolder* CreateiFolder(gchar *description, gchar* name, GError **error);
@@ -119,7 +122,7 @@ public:
 	void ReadFile();
 	void WriteFile();
 	void CloseFile();
-	void GetSystem();
+	iFolderSystem* GetSystem();
 	iFolderServer* GetHomeServer();
 	iFolderServerIterator* GetServers();
 	gboolean DeleteiFolder(const gchar *ifolderID, GError **error);
@@ -925,6 +928,31 @@ public:
 		g_free(m_MemberRights);
 	}
 };
+
+class GLIBCLIENT_API iFolderSystem
+{
+public:
+	gchar *m_ID;	/* optional element of type xsd:string */
+	gchar *m_Name;	/* optional element of type xsd:string */
+	gchar *m_Version;	/* optional element of type xsd:string */
+	gchar *m_Description;	/* optional element of type xsd:string */
+public:
+	iFolderSystem(ifolder__iFolderSystem *pSystem)
+	{
+		m_ID = g_strdup(pSystem->ID);
+		m_Name = g_strdup(pSystem->Name);
+		m_Version = g_strdup(pSystem->Version);
+		m_Description = g_strdup(pSystem->Description);
+	}
+	virtual ~iFolderSystem()
+	{
+		g_free(m_ID);
+		g_free(m_Name);
+		g_free(m_Version);
+		g_free(m_Description);
+	}
+};
+
 } // namespace ifweb
 
 #endif //_IFConnection_H_

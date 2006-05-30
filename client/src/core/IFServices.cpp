@@ -34,7 +34,11 @@ DomainService* IFServiceManager::GetDomainService(const gchar* domainID, const g
 	{
 		// TODO fix host to support multi-server
 		DomainService *pService = new DomainService(pDomain);
-		IFApplication::BuildUrlToService(host, pService->m_DomainService.endpoint);
+		pService->m_DomainService.endpoint = IFApplication::BuildUrlToService(host, pService->m_DomainService.endpoint);
+		// Get the cookies.
+		struct soap soap;
+		soap.cookies = pDomain->m_Cookies;
+		pService->m_DomainService.soap->cookies = soap_copy_cookies(&soap);
 		return pService;
 	}
 	return NULL;
@@ -46,7 +50,10 @@ DomainService* IFServiceManager::GetDomainService(IFDomain *pDomain, const gchar
 	{
 		// TODO fix host to support multi-server
 		DomainService *pService = new DomainService(pDomain);
-		IFApplication::BuildUrlToService(host, pService->m_DomainService.endpoint);
+		pService->m_DomainService.endpoint = IFApplication::BuildUrlToService(host, pService->m_DomainService.endpoint);
+		struct soap soap;
+		soap.cookies = pDomain->m_Cookies;
+		pService->m_DomainService.soap->cookies = soap_copy_cookies(&soap);
 		return pService;
 	}
 	return NULL;
@@ -60,7 +67,25 @@ iFolderService* IFServiceManager::GetiFolderService(const gchar* domainID, const
 		// TODO fix host to support multi-server
 		host = pDomain->m_MasterHost;
 		iFolderService *pService = new iFolderService(pDomain);
-		IFApplication::BuildUrlToService(host, pService->m_iFolderService.endpoint);
+		pService->m_iFolderService.endpoint = IFApplication::BuildUrlToService(host, pService->m_iFolderService.endpoint);
+		struct soap soap;
+		soap.cookies = pDomain->m_Cookies;
+		pService->m_iFolderService.soap->cookies = soap_copy_cookies(&soap);
+		return pService;
+	}
+	return NULL;
+}
+
+iFolderService* IFServiceManager::GetiFolderService(IFDomain *pDomain, const gchar *host)
+{
+	if (pDomain != NULL)
+	{
+		// TODO fix host to support multi-server
+		iFolderService *pService = new iFolderService(pDomain);
+		pService->m_iFolderService.endpoint = IFApplication::BuildUrlToService(host, pService->m_iFolderService.endpoint);
+		struct soap soap;
+		soap.cookies = pDomain->m_Cookies;
+		pService->m_iFolderService.soap->cookies = soap_copy_cookies(&soap);
 		return pService;
 	}
 	return NULL;
@@ -584,18 +609,21 @@ void iFolderService::CloseFile()
 	// Get the output parameters.
 }
 
-void iFolderService::GetSystem()
+iFolderSystem* iFolderService::GetSystem()
 {
 	_ifolder__GetSystem req;
 	_ifolder__GetSystemResponse resp;
 	// Set the input parameters.
 	
-	// Get the output parameters.
-	ifolder__iFolderSystem *pS = resp.GetSystemResult;
-	pS->Description;
-	pS->ID;
-	pS->Name;
-	pS->Version;
+	if (m_iFolderService.__ifolder__GetSystem(&req, &resp) == 0)
+	{
+		return new iFolderSystem(resp.GetSystemResult);
+	}
+	else
+	{
+		//g_set_error();
+		return NULL;
+	}
 }
 
 iFolderServer* iFolderService::GetHomeServer()

@@ -36,6 +36,10 @@ gchar *IFDomain::EMasterHost = "master-host";
 gchar *IFDomain::EID = "id";
 gchar *IFDomain::EPW = "pw";
 gchar *IFDomain::EPOB = "pob";
+gchar *IFDomain::EVersion = "version";
+gchar *IFDomain::EActive = "active";
+gchar *IFDomain::EDefault = "default";
+
 
 IFDomain::IFDomain()
 {
@@ -55,15 +59,20 @@ IFDomain::IFDomain()
 	m_iFolderService.soap->fparsehdr = ParseLoginHeader;
 	
 	m_Cookies = NULL;
+
+	m_UserPassword = NULL;
+	m_POBoxID = NULL;
 	m_Name = NULL;
 	m_ID = NULL;
+	m_Version = NULL;
 	m_Description = NULL;
 	m_HomeHost = NULL;
 	m_MasterHost = NULL;
-	m_POBoxID = NULL;
 	m_UserName = NULL;
-	m_UserPassword = NULL;
 	m_UserID = NULL;
+	m_Authenticated = false;
+	m_Active = true;
+	m_Default = false;
 }
 	
 IFDomain::~IFDomain(void)
@@ -71,14 +80,16 @@ IFDomain::~IFDomain(void)
 	// TODO free cookies.
 	//if (m_Cookies != NULL)
 	//	soap_free_cookies();
+	g_free(m_UserPassword);
+	g_free(m_POBoxID);
+	
 	g_free(m_Name);
 	g_free(m_ID);
+	g_free(m_Version);
 	g_free(m_Description);
 	g_free(m_HomeHost);
 	g_free(m_MasterHost);
-	g_free(m_POBoxID);
 	g_free(m_UserName);
-	g_free(m_UserPassword);
 	g_free(m_UserID);
 	g_free((gpointer)m_DomainService.endpoint);
 	g_free((gpointer)m_iFolderService.endpoint);
@@ -133,19 +144,26 @@ IFDomain* IFDomain::Add(const gchar* userName, const gchar* password, const gcha
 			g_message("provisioned");
 			delete pvInfo;
 
-			// Now get the domain Info.
-			ifweb::DomainInfo *dInfo = domainService->GetDomainInfo(pDomain->m_UserID, error);
-			if (dInfo != NULL)
+			// Save the cookies.
+			pDomain->m_Cookies = soap_copy_cookies(domainService->m_DomainService.soap);
+			pDomain->m_Authenticated = true;
+			
+			// Now get the System Info.
+			ifweb::iFolderService* ifolderService = ifweb::IFServiceManager::GetiFolderService(pDomain, host);
+			ifweb::iFolderSystem *sInfo = ifolderService->GetSystem();
+			if (sInfo != NULL)
 			{
-				pDomain->m_ID = g_strdup(dInfo->m_ID);
-				pDomain->m_Description = g_strdup(dInfo->m_Description);
-				pDomain->m_Name = g_strdup(dInfo->m_Name);
-				delete dInfo;
-
+				pDomain->m_ID = g_strdup(sInfo->m_ID);
+				pDomain->m_Description = g_strdup(sInfo->m_Description);
+				pDomain->m_Name = g_strdup(sInfo->m_Name);
+				pDomain->m_Version = g_strdup(sInfo->m_Version);
+				delete sInfo;
+			
 				// Add the domain to the list and return and set success.
+				if (IFDomainList::Count() == 0)
+					pDomain->m_Default = true;
 				IFDomainList::Insert(pDomain);
 				failed = false;
-				pDomain->m_Cookies = soap_copy_cookies(domainService->m_DomainService.soap);
 			}
 		}
 	}
@@ -228,7 +246,7 @@ gboolean IFDomain::Serialize(FILE *pStream)
 {
 	gchar *value;
 	// <Domain>
-	fprintf(pStream, "<%s %s=\"%s\">\n", EDomain, EID, m_ID);
+	fprintf(pStream, "<%s %s=\"%s\" %s=\"%s\">\n", EDomain, EID, m_ID, EVersion, m_Version);
 	// <name>
 	value = g_markup_escape_text(m_Name, (gssize)strlen(m_Name));
 	fprintf(pStream, "<%s>%s</%s>\n", EName, value, EName);
@@ -237,10 +255,14 @@ gboolean IFDomain::Serialize(FILE *pStream)
 	value = g_markup_escape_text(m_Description, (gssize)strlen(m_Description));
 	fprintf(pStream, "<%s>%s</%s>\n", EDescription, value, EDescription);
 	g_free(value);
-	// <url>
+	// <host>
 	value = g_markup_escape_text(m_MasterHost, (gssize)strlen(m_MasterHost));
 	fprintf(pStream, "<%s>%s</%s>\n", EMasterHost, value, EMasterHost);
 	g_free(value);
+	// <active>
+	fprintf(pStream, "<%s>%d</%s>\n", EActive, m_Active, EActive);
+	// <default>
+	fprintf(pStream, "<%s>%d</%s>\n", EDefault, m_Default, EDefault);
 	// <User>
 	fprintf(pStream, "<%s %s=\"%s\">\n", EUser, EID, m_UserID);
 	// <name>
@@ -273,6 +295,10 @@ IFDomain* IFDomain::DeSerialize(ParseTree *tree, GNode *pDNode)
 	tnode = tree->FindChild(gnode, EID, IFXAttribute);
 	if (tnode != NULL)
 		pDomain->m_ID = g_strdup(((XmlNode*)tnode->data)->m_Value);
+	// version
+	tnode = tree->FindChild(gnode, EVersion, IFXAttribute);
+	if (tnode != NULL)
+		pDomain->m_Version = g_strdup(((XmlNode*)tnode->data)->m_Value);
 	// name
 	tnode = tree->FindChild(gnode, EName, IFXElement);
 	if (tnode != NULL)
@@ -281,7 +307,7 @@ IFDomain* IFDomain::DeSerialize(ParseTree *tree, GNode *pDNode)
 	tnode = tree->FindChild(gnode, EDescription, IFXElement);
 	if (tnode != NULL)
 		pDomain->m_Description = g_strdup(((XmlNode*)tnode->data)->m_Value);
-	// url
+	// host
 	tnode = tree->FindChild(gnode, EMasterHost, IFXElement);
 	if (tnode != NULL)
 	{
@@ -290,6 +316,14 @@ IFDomain* IFDomain::DeSerialize(ParseTree *tree, GNode *pDNode)
 		pDomain->m_iFolderService.endpoint = IFApplication::BuildUrlToService(pDomain->m_MasterHost, pDomain->m_iFolderService.endpoint);
 	
 	}
+	// active
+	tnode = tree->FindChild(gnode, EActive, IFXElement);
+	if (tnode != NULL)
+		sscanf(((XmlNode*)tnode->data)->m_Value, "%d", &pDomain->m_Active);
+	// default
+	tnode = tree->FindChild(gnode, EDefault, IFXElement);
+	if (tnode != NULL)
+		sscanf(((XmlNode*)tnode->data)->m_Value, "%d", &pDomain->m_Default);
 	// User
 	gnode = tree->FindChild(gnode, EUser, IFXElement);
 	if (gnode != NULL)
@@ -327,6 +361,27 @@ IFDomain* IFDomain::GetDomainByID(const gchar *pID)
 IFDomain* IFDomain::GetDomainByName(const gchar *pName)
 {
 	return IFDomainList::GetDomainByName(pName);
+}
+
+IFDomain* IFDomain::GetDefault()
+{
+	return IFDomainList::GetDefault();
+}
+
+void IFDomain::SetDefault()
+{
+	IFDomain *pDefault = GetDefault();
+	if (pDefault != NULL)
+		pDefault->m_Default = false;
+	m_Default = true;
+	// Now persist this change.
+	IFDomainList::Save();
+}
+void IFDomain::SetActive(gboolean state)
+{
+	m_Active = state;
+	// Now persist this change.
+	IFDomainList::Save();
 }
 
 // IFDomainList class
@@ -373,6 +428,12 @@ void IFDomainList::Insert(IFDomain *pDomain)
 	list->Save();
 }
 
+gint IFDomainList::Count()
+{
+	IFDomainList* list = Instance();
+	return list->m_List->len;
+}
+
 gboolean IFDomainList::Remove(const gchar *id)
 {
 	IFDomainList* list = Instance();
@@ -396,17 +457,18 @@ gboolean IFDomainList::Remove(const gchar *id)
 
 void IFDomainList::Save()
 {
-	FILE *pStream = g_fopen(m_pFileName, "w");
+	IFDomainList* list = Instance();
+	FILE *pStream = g_fopen(list->m_pFileName, "w");
 	if (pStream == NULL)
 	{
 		// This is an error.
 		return;
 	}
 	// Write the header
-	fprintf(pStream, "<%s version=\"%f\" count=\"%d\">\n", EDomains, m_Version, m_List->len);
+	fprintf(pStream, "<%s version=\"%f\" count=\"%d\">\n", EDomains, m_Version, list->m_List->len);
 	
 	// Now we need to save each entry.
-	IFDomainIterator dIter = GetIterator();
+	IFDomainIterator dIter = list->GetIterator();
 	IFDomain *pDomain;
 	while ((pDomain = dIter.Next()) != NULL)
 	{
@@ -418,20 +480,21 @@ void IFDomainList::Save()
 
 void IFDomainList::Restore()
 {
+	IFDomainList* list = Instance();
 	const GMarkupParser parser = {XmlStart, XmlEnd, XmlText, NULL, XmlError};
-	GMarkupParseContext *pContext = g_markup_parse_context_new(&parser, (GMarkupParseFlags)0, this, NULL);
+	GMarkupParseContext *pContext = g_markup_parse_context_new(&parser, (GMarkupParseFlags)0, list, NULL);
 
 	gchar *pFileData = NULL;
 	gsize fileLength;
 	GError *pError = NULL;
-	if (!g_file_get_contents(m_pFileName, &pFileData, &fileLength, &pError))
+	if (!g_file_get_contents(list->m_pFileName, &pFileData, &fileLength, &pError))
 	{
 		g_debug(pError->message);
 		g_clear_error(&pError);
 	}
 	if (pFileData != NULL)
 	{
-		m_ParseTree = new ParseTree();
+		list->m_ParseTree = new ParseTree();
 		if (!g_markup_parse_context_parse(pContext, pFileData, fileLength, &pError))
 		{
 			g_debug(pError->message);
@@ -443,14 +506,14 @@ void IFDomainList::Restore()
 			g_clear_error(&pError);
 		}
 		g_free(pFileData);
-		GNode* dNode = m_ParseTree->FindChild(NULL, IFDomain::EDomain, IFXElement);
+		GNode* dNode = list->m_ParseTree->FindChild(NULL, IFDomain::EDomain, IFXElement);
 		while (dNode != NULL)
 		{
-			Insert(IFDomain::DeSerialize(m_ParseTree, dNode));
-			dNode = m_ParseTree->FindSibling(dNode, IFDomain::EDomain, IFXElement);
+			Insert(IFDomain::DeSerialize(list->m_ParseTree, dNode));
+			dNode = list->m_ParseTree->FindSibling(dNode, IFDomain::EDomain, IFXElement);
 		}
-		delete m_ParseTree;
-		m_ParseTree = NULL;
+		delete list->m_ParseTree;
+		list->m_ParseTree = NULL;
 	}
 	g_markup_parse_context_free(pContext);
 }
@@ -509,6 +572,18 @@ IFDomain* IFDomainList::GetDomainByName(const gchar *pName)
 	while ((pDomain = dIter.Next()) != NULL)
 	{
 		if (strcmp(pDomain->m_Name, pName) == 0)
+			break;
+	}
+	return pDomain;
+}
+
+IFDomain* IFDomainList::GetDefault()
+{
+	IFDomainIterator dIter = GetIterator();
+	IFDomain *pDomain;
+	while ((pDomain = dIter.Next()) != NULL)
+	{
+		if (pDomain->m_Default == true)
 			break;
 	}
 	return pDomain;
