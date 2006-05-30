@@ -75,6 +75,7 @@ class GLIBCLIENT_API DomainService
 	friend class IFDomain;
 private:
 	IFDomain	*m_pDomain;
+public:
 	Domain		m_DomainService;
 
 	DomainService(IFDomain *pDomain) : m_pDomain(pDomain) {};
