@@ -662,12 +662,45 @@ ifolder_domain_get_authenticated_user(iFolderDomain *domain, GError **error)
 }
 
 iFolderUserPolicy *
-ifolder_domain_get_authenticated_user_policy(iFolderDomain *domain, GError **error)
+ifolder_domain_get_authenticated_user_policy (iFolderDomain *domain, GError **error)
 {
+	iFolderDomainPrivate	*priv;
+	iFolderUser				*user;
+	iFolderUserPolicy		*user_policy;
+	ifweb::UserPolicy		*core_user_policy;
+
 	g_return_val_if_fail (IFOLDER_IS_DOMAIN (domain), NULL);
-	g_message("FIXME: Implement ifolder_domain_get_authenticated_user_policy");
+
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
 	
-	return NULL;
+	user = ifolder_domain_get_authenticated_user (domain, error);
+	if (user == NULL)
+		return NULL;
+	
+	core_user_policy = priv->ifolder_service->GetAuthenticatedUserPolicy ();
+	if (core_user_policy == NULL)
+	{
+		g_object_unref (user);
+		g_set_error (error,
+					 IFOLDER_ERROR,
+					 IFOLDER_ERR_UNKNOWN,
+					 _("Error getting the authenticated user policy from the iFolder WebService."));
+		return NULL;
+	}
+	
+	user_policy = ifolder_user_policy_new (user, core_user_policy);
+	if (user_policy == NULL)
+	{
+		g_object_unref (user);
+		delete core_user_policy;
+		g_set_error (error,
+					 IFOLDER_ERROR,
+					 IFOLDER_ERR_UNKNOWN,
+					 _("Error creating a new iFolderUserPolicy with ifolder_user_new()"));
+		return NULL;
+	}
+	
+	return user_policy;
 }
 
 gboolean
