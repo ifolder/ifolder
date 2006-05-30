@@ -440,26 +440,6 @@ ifolder_client_add_domain(iFolderClient *client, const gchar *host_address, cons
 	}
 
 	domain = ifolder_domain_new (core_domain);
-
-/*	
-	ifolder_domain_set_core_domain (domain, core_domain);
-
-	ifolder_domain_set_id (domain, core_domain->m_ID);
-	ifolder_domain_set_name (domain, core_domain->m_Name);
-	ifolder_domain_set_description (domain, core_domain->m_Description);
-	ifolder_domain_set_version (domain, "FIXME: No Version");
-	ifolder_domain_set_host_address (domain, core_domain->m_MasterHost);
-	ifolder_domain_set_machine_name (domain, "FIXME: No Machine Name");
-	ifolder_domain_set_os_version (domain, "FIXME: Get OS Version");
-	ifolder_domain_set_user_name (domain, core_domain->m_UserName);
-*/
-	
-	/* FIXME: Fix the following code */
-/*
-	ifolder_domain_set_is_authenticated (domain, TRUE);
-	ifolder_domain_set_is_default (domain, FALSE);
-	ifolder_domain_set_is_active (domain, TRUE);
-*/
 	
 	priv->domains = g_slist_prepend (priv->domains, domain);
 
@@ -592,25 +572,6 @@ load_domains (iFolderClient *client, GError **error)
 	{
 		domain = ifolder_domain_new (core_domain);
 
-/*
-		ifolder_domain_set_core_domain (domain, core_domain);
-	
-		ifolder_domain_set_id (domain, core_domain->m_ID);
-		ifolder_domain_set_name (domain, core_domain->m_Name);
-		ifolder_domain_set_description (domain, core_domain->m_Description);
-		ifolder_domain_set_version (domain, "FIXME: No Version");
-		ifolder_domain_set_host_address (domain, core_domain->m_MasterHost);
-		ifolder_domain_set_machine_name (domain, "FIXME: No Machine Name");
-		ifolder_domain_set_os_version (domain, "FIXME: Get OS Version");
-		ifolder_domain_set_user_name (domain, core_domain->m_UserName);
-*/
-		/* FIXME: Fix the following code */
-/*
-		ifolder_domain_set_is_authenticated (domain, FALSE);
-		ifolder_domain_set_is_default (domain, FALSE);
-		ifolder_domain_set_is_active (domain, TRUE);
-*/
-		
 		priv->domains = g_slist_prepend (priv->domains, domain);
 
 		core_domain = i.Next();
