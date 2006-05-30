@@ -360,7 +360,7 @@ ifolder_domain_new (IFDomain *core_domain)
 	priv->core_domain = core_domain;
 	
 	/* Hook up the iFolderService with this object */
-//	priv->ifolder_service = ifweb::IFServiceManager::GetiFolderService (core_domain->m_ID, core_domain->m_MasterHost);
+	priv->ifolder_service = ifweb::IFServiceManager::GetiFolderService (core_domain->m_ID, core_domain->m_MasterHost);
 	
 	return domain;
 }
@@ -543,7 +543,7 @@ ifolder_domain_log_in(iFolderDomain *domain, const char *password, gboolean reme
 	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
 	
 	g_message ("FIXME: Do something to remember the password.");
-	if (priv->core_domain->Login (password, error) != 0)
+	if (priv->core_domain->Login (password, error) != TRUE)
 		return;
 
 	g_signal_emit (singleton_client, ifolder_client_signals[DOMAIN_LOGGED_IN], 0, domain);
@@ -558,7 +558,7 @@ ifolder_domain_log_out(iFolderDomain *domain, GError **error)
 
 	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
 	
-	if (priv->core_domain->Logout () != 0)
+	if (priv->core_domain->Logout () != TRUE)
 	{
 		g_set_error (error,
 					 IFOLDER_ERROR,
@@ -581,7 +581,7 @@ ifolder_domain_activate(iFolderDomain *domain, GError **error)
 	
 	if (priv->core_domain->m_Active) return; /* Don't do work that you don't need to do */
 
-	g_message("FIXME: Implement ifolder_domain_activate to call IFDomain");
+	priv->core_domain->SetActive (TRUE);
 	
 	g_signal_emit (singleton_client, ifolder_client_signals[DOMAIN_ACTIVATED], 0, domain);
 }
@@ -596,7 +596,7 @@ ifolder_domain_inactivate(iFolderDomain *domain, GError **error)
 	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
 	if (!priv->core_domain->m_Active) return; /* Don't do work that you don't need to do */
 
-	g_message("FIXME: Implement ifolder_domain_inactivate to call IFDomain");
+	priv->core_domain->SetActive (FALSE);
 	
 	g_signal_emit (singleton_client, ifolder_client_signals [DOMAIN_INACTIVATED], 0, domain);
 }
@@ -631,25 +631,34 @@ ifolder_domain_get_authenticated_user(iFolderDomain *domain, GError **error)
 {
 	iFolderDomainPrivate *priv;
 	iFolderUser *user;
+	ifweb::iFolderUser *core_user;
 
 	g_return_val_if_fail (IFOLDER_IS_DOMAIN (domain), NULL);
 
 	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
 	
+	core_user = priv->ifolder_service->GetAuthenticatedUser ();
+	if (core_user == NULL)
+	{
+		g_set_error (error,
+					 IFOLDER_ERROR,
+					 IFOLDER_ERR_UNKNOWN,
+					 _("Error getting the authenticated user from the iFolder WebService."));
+		return NULL;
+	}
 	
+	user = ifolder_user_new (core_user);
+	if (user == NULL)
+	{
+		delete core_user;
+		g_set_error (error,
+					 IFOLDER_ERROR,
+					 IFOLDER_ERR_UNKNOWN,
+					 _("Error creating a new iFolderUser with ifolder_user_new()"));
+		return NULL;
+	}
 	
-	if (priv->core_domain->m_Active) return NULL; /* Don't do work that you don't need to do */
-
-	g_message("FIXME: Implement ifolder_domain_activate to call IFDomain");
-	
-	g_signal_emit (singleton_client, ifolder_client_signals[DOMAIN_ACTIVATED], 0, domain);
-
-
-
-	g_return_val_if_fail (IFOLDER_IS_DOMAIN (domain), NULL);
-	g_message("FIXME: Implement ifolder_domain_get_authenticated_user");
-	
-	return NULL;
+	return user;
 }
 
 iFolderUserPolicy *
