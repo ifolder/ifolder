@@ -66,9 +66,11 @@ private:
 	gint	m_GraceRemaining;
 	gint	m_GraceTotal;
 	int (*m_Parsehdr)(struct soap *soap, const char *key, const char *val);
+public:
 	Domain				m_DomainService;
 	iFolderWebSoap		m_iFolderService;
 
+private:
 	// Persist everything below here.
 	gchar*		m_UserPassword;
 	gchar*		m_POBoxID;
