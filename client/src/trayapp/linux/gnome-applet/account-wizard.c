@@ -689,7 +689,7 @@ notebook_page_switched(GtkNotebook *notebook, GtkNotebookPage *page, guint page_
 			g_string_printf(summary_text,
 							_("Congratulations!  You are now\nconnected.\n\n\tAccount Name: %s\n\tServer Address: %s\n\tUser Name: %s\n\nClick \"Finish\" to close this window."),
 							ifolder_domain_get_name(aw->connectedDomain),
-							ifolder_domain_get_host_address(aw->connectedDomain),
+							ifolder_domain_get_master_host (aw->connectedDomain),
 							gtk_entry_get_text(GTK_ENTRY(aw->userNameEntry)));
 			gtk_label_set_text(GTK_LABEL(aw->summaryPageTextLabel), summary_text->str);
 			g_string_free(summary_text, true);

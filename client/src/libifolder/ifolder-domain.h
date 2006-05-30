@@ -79,19 +79,19 @@ typedef enum
  * 
  * @{
  */
-const gchar *ifolder_domain_get_id(iFolderDomain *domain);
-const gchar *ifolder_domain_get_name(iFolderDomain *domain);
-const gchar *ifolder_domain_get_description(iFolderDomain *domain);
-const gchar *ifolder_domain_get_version(iFolderDomain *domain);
-const gchar *ifolder_domain_get_host_address(iFolderDomain *domain);
-const gchar *ifolder_domain_get_machine_name(iFolderDomain *domain);
-const gchar *ifolder_domain_get_os_version(iFolderDomain *domain);
-const gchar *ifolder_domain_get_user_name(iFolderDomain *domain);
-gboolean ifolder_domain_is_authenticated(iFolderDomain *domain);
-gboolean ifolder_domain_is_default(iFolderDomain *domain);
-gboolean ifolder_domain_is_active(iFolderDomain *domain);
-gpointer ifolder_domain_get_user_data(iFolderDomain *domain);
-void ifolder_domain_set_user_data(iFolderDomain *domain, gpointer user_data);
+const gchar *ifolder_domain_get_id (iFolderDomain *domain);
+const gchar *ifolder_domain_get_name (iFolderDomain *domain);
+const gchar *ifolder_domain_get_description (iFolderDomain *domain);
+const gchar *ifolder_domain_get_version (iFolderDomain *domain);
+const gchar *ifolder_domain_get_master_host (iFolderDomain *domain);
+const gchar *ifolder_domain_get_home_host (iFolderDomain *domain);
+const gchar *ifolder_domain_get_user_name (iFolderDomain *domain);
+const gchar *ifolder_domain_get_user_id (iFolderDomain *domain);
+gboolean ifolder_domain_is_authenticated (iFolderDomain *domain);
+gboolean ifolder_domain_is_default (iFolderDomain *domain);
+gboolean ifolder_domain_is_active (iFolderDomain *domain);
+gpointer ifolder_domain_get_user_data (iFolderDomain *domain);
+void ifolder_domain_set_user_data (iFolderDomain *domain, gpointer user_data);
 
 /*@}*/
 

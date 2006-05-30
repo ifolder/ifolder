@@ -43,20 +43,10 @@ extern guint ifolder_client_signals[LAST_SIGNAL];
 typedef struct _iFolderDomainPrivate iFolderDomainPrivate;
 struct _iFolderDomainPrivate
 {
-	gchar *id;
-	gchar *name;
-	gchar *description;
-	gchar *version;
-	gchar *host_address;
-	gchar *machine_name;
-	gchar *os_version;
-	gchar *user_name;
-	gboolean is_authenticated;
-	gboolean is_default;
-	gboolean is_active;
 	gpointer user_data;
 	
 	IFDomain *core_domain;
+	ifweb::iFolderService *ifolder_service;
 };
 
 #define IFOLDER_DOMAIN_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), IFOLDER_DOMAIN_TYPE, iFolderDomainPrivate))
@@ -67,13 +57,13 @@ enum
 	PROP_NAME,
 	PROP_DESCRIPTION,
 	PROP_VERSION,
-	PROP_HOST_ADDRESS,
-	PROP_MACHINE_NAME,
-	PROP_OS_VERSION,
+	PROP_MASTER_HOST,
+	PROP_HOME_HOST,
 	PROP_USER_NAME,
-	PROP_IS_AUTHENTICATED,
-	PROP_IS_DEFAULT,
-	PROP_IS_ACTIVE
+	PROP_USER_ID,
+	PROP_AUTHENTICATED,
+	PROP_DEFAULT,
+	PROP_ACTIVE
 };
 
 /**
@@ -162,47 +152,32 @@ ifolder_domain_class_init(iFolderDomainClass *klass)
 						G_PARAM_READABLE));
 
 	/**
-	 * iFolderDomain:host-address:
+	 * iFolderDomain:master-host:
 	 * 
-	 * The host address of the domain.
+	 * The master host address of the domain.
 	 * 
 	 * Since: 3.5
 	 */
 	g_object_class_install_property (object_class,
-					PROP_HOST_ADDRESS,
-					g_param_spec_string ("host-address",
-						_("Domain host address"),
-						_("The host address of the domain."),
+					PROP_MASTER_HOST,
+					g_param_spec_string ("master-host",
+						_("Domain master host address"),
+						_("The domain's host address of the domain."),
 						NULL,
 						G_PARAM_READABLE));
 
 	/**
-	 * iFolderDomain:machine-name:
+	 * iFolderDomain:home-host:
 	 * 
-	 * The machine name of the domain.
-	 * 
-	 * Since: 3.5
-	 */
-	g_object_class_install_property (object_class,
-					PROP_MACHINE_NAME,
-					g_param_spec_string ("machine-name",
-						_("Domain machine name"),
-						_("The machine name of the domain."),
-						NULL,
-						G_PARAM_READABLE));
-
-	/**
-	 * iFolderDomain:os-version:
-	 * 
-	 * The operating system version of the domain.
+	 * The home host address of the domain.
 	 * 
 	 * Since: 3.5
 	 */
 	g_object_class_install_property (object_class,
-					PROP_OS_VERSION,
-					g_param_spec_string ("os-version",
-						_("Domain operating system version"),
-						_("The operating system version of the domain."),
+					PROP_HOME_HOST,
+					g_param_spec_string ("home-host",
+						_("Domain home host address"),
+						_("The domain's home address of the domain."),
 						NULL,
 						G_PARAM_READABLE));
 
@@ -222,45 +197,60 @@ ifolder_domain_class_init(iFolderDomainClass *klass)
 						G_PARAM_READABLE));
 
 	/**
-	 * iFolderDomain:is-authenticated:
+	 * iFolderDomain:user-id:
+	 * 
+	 * The internal ID of the user who was used to connect to the domain.
+	 * 
+	 * Since: 3.5
+	 */
+	g_object_class_install_property (object_class,
+					PROP_USER_ID,
+					g_param_spec_string ("user-id",
+						_("Domain user ID"),
+						_("The internal ID of the user who was used to connect to the domain."),
+						NULL,
+						G_PARAM_READABLE));
+
+	/**
+	 * iFolderDomain:authenticated:
 	 * 
 	 * Whether this domain is authenticated.
 	 * 
 	 * Since: 3.5
 	 */
 	g_object_class_install_property (object_class,
-					PROP_IS_AUTHENTICATED,
-					g_param_spec_boolean ("is-authenticated",
+					PROP_AUTHENTICATED,
+					g_param_spec_boolean ("authenticated",
 						_("Authenticated"),
 						_("Whether this domain is authenticated."),
 						FALSE,
 						G_PARAM_READABLE));
 
 	/**
-	 * iFolderDomain:is-default:
+	 * iFolderDomain:default:
 	 * 
 	 * Whether this domain is the default domain.
 	 * 
 	 * Since: 3.5
 	 */
 	g_object_class_install_property (object_class,
-					PROP_IS_DEFAULT,
-					g_param_spec_boolean ("is-default",
+					PROP_DEFAULT,
+					g_param_spec_boolean ("default",
 						_("Default"),
 						_("Whether this domain is the default domain."),
 						FALSE,
 						G_PARAM_READABLE));
 
 	/**
-	 * iFolderDomain:is-active:
+	 * iFolderDomain:active:
 	 * 
 	 * Whether this domain is active.
 	 * 
 	 * Since: 3.5
 	 */
 	g_object_class_install_property (object_class,
-					PROP_IS_ACTIVE,
-					g_param_spec_boolean ("is-active",
+					PROP_ACTIVE,
+					g_param_spec_boolean ("active",
 						_("Active"),
 						_("Whether this domain is active."),
 						FALSE,
@@ -284,20 +274,10 @@ static void ifolder_domain_init(iFolderDomain *domain)
 	 * If you need specific construction properties to complete initialization,
 	 * delay initialization completion until the property is set.
 	 */
-	priv->id = NULL;
-	priv->name = NULL;
-	priv->description = NULL;
-	priv->version = NULL;
-	priv->host_address = NULL;
-	priv->machine_name = NULL;
-	priv->os_version = NULL;
-	priv->user_name = NULL;
-	priv->is_authenticated = FALSE;
-	priv->is_default = FALSE;
-	priv->is_active = FALSE;
 	priv->user_data = NULL;
 	
 	priv->core_domain = NULL;
+	priv->ifolder_service = NULL;
 }
 
 static void ifolder_domain_finalize(GObject *object)
@@ -309,14 +289,6 @@ static void ifolder_domain_finalize(GObject *object)
 	priv = IFOLDER_DOMAIN_GET_PRIVATE (object);
 
 	/* custom stuff */
-	g_free(priv->id);
-	g_free(priv->name);
-	g_free(priv->description);
-	g_free(priv->version);
-	g_free(priv->host_address);
-	g_free(priv->machine_name);
-	g_free(priv->os_version);
-	g_free(priv->user_name);
 
 	/* Chain up the parent class */
 	G_OBJECT_CLASS (ifolder_domain_parent_class)->finalize (object);
@@ -331,37 +303,37 @@ ifolder_domain_get_property (GObject *object, guint prop_id, GValue *value, GPar
 	switch (prop_id)
 	{
 		case PROP_ID:
-			g_value_set_string (value, priv->id);
+			g_value_set_string (value, priv->core_domain->m_ID);
 			break;
 		case PROP_NAME:
-			g_value_set_string (value, priv->name);
+			g_value_set_string (value, priv->core_domain->m_Name);
 			break;
 		case PROP_DESCRIPTION:
-			g_value_set_string (value, priv->description);
+			g_value_set_string (value, priv->core_domain->m_Description);
 			break;
 		case PROP_VERSION:
-			g_value_set_string (value, priv->version);
+			g_value_set_string (value, priv->core_domain->m_Version);
 			break;
-		case PROP_HOST_ADDRESS:
-			g_value_set_string (value, priv->host_address);
+		case PROP_MASTER_HOST:
+			g_value_set_string (value, priv->core_domain->m_MasterHost);
 			break;
-		case PROP_MACHINE_NAME:
-			g_value_set_string (value, priv->machine_name);
-			break;
-		case PROP_OS_VERSION:
-			g_value_set_string (value, priv->os_version);
+		case PROP_HOME_HOST:
+			g_value_set_string (value, priv->core_domain->m_HomeHost);
 			break;
 		case PROP_USER_NAME:
-			g_value_set_string (value, priv->user_name);
+			g_value_set_string (value, priv->core_domain->m_UserName);
 			break;
-		case PROP_IS_AUTHENTICATED:
-			g_value_set_boolean (value, priv->is_authenticated);
+		case PROP_USER_ID:
+			g_value_set_string (value, priv->core_domain->m_UserID);
 			break;
-		case PROP_IS_DEFAULT:
-			g_value_set_boolean (value, priv->is_default);
+		case PROP_AUTHENTICATED:
+			g_value_set_boolean (value, priv->core_domain->m_Authenticated);
 			break;
-		case PROP_IS_ACTIVE:
-			g_value_set_boolean (value, priv->is_active);
+		case PROP_ACTIVE:
+			g_value_set_boolean (value, priv->core_domain->m_Active);
+			break;
+		case PROP_DEFAULT:
+			g_value_set_boolean (value, priv->core_domain->m_Default);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -375,11 +347,20 @@ ifolder_domain_get_property (GObject *object, guint prop_id, GValue *value, GPar
 //}
 
 iFolderDomain *
-ifolder_domain_new (void)
+ifolder_domain_new (IFDomain *core_domain)
 {
 	iFolderDomain *domain;
+	iFolderDomainPrivate *priv;
+	
+	g_return_val_if_fail (core_domain != NULL, NULL);
 	
 	domain = IFOLDER_DOMAIN(g_object_new (IFOLDER_DOMAIN_TYPE, NULL));
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+	
+	priv->core_domain = core_domain;
+	
+	/* Hook up the iFolderService with this object */
+//	priv->ifolder_service = ifweb::IFServiceManager::GetiFolderService (core_domain->m_ID, core_domain->m_MasterHost);
 	
 	return domain;
 }
@@ -387,29 +368,13 @@ ifolder_domain_new (void)
 const gchar *
 ifolder_domain_get_id(iFolderDomain *domain)
 {
-	g_return_val_if_fail (IFOLDER_IS_DOMAIN (domain), "");
-
-	return IFOLDER_DOMAIN_GET_PRIVATE (domain)->id;
-}
-
-void
-ifolder_domain_set_id (iFolderDomain *domain, const gchar *id)
-{
 	iFolderDomainPrivate *priv;
 
-	g_return_if_fail (IFOLDER_IS_DOMAIN (domain));
-	
+	g_return_val_if_fail (IFOLDER_IS_DOMAIN (domain), "");
+
 	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
-	
-	if (id == NULL)
-	{
-		g_free (priv->id);
-		priv->id = NULL;
-	}
-	else
-		priv->id = g_strdup (id);
-	
-	g_object_notify (G_OBJECT (domain), "id");
+
+	return priv->core_domain->m_ID;
 }
 
 const gchar *
@@ -421,27 +386,7 @@ ifolder_domain_get_name(iFolderDomain *domain)
 
 	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
 	
-	return priv->name;
-}
-
-void
-ifolder_domain_set_name (iFolderDomain *domain, const gchar *name)
-{
-	iFolderDomainPrivate *priv;
-
-	g_return_if_fail (IFOLDER_IS_DOMAIN (domain));
-	
-	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
-	
-	if (name == NULL)
-	{
-		g_free (priv->name);
-		priv->name = NULL;
-	}
-	else
-		priv->name = g_strdup (name);
-	
-	g_object_notify (G_OBJECT (domain), "name");
+	return priv->core_domain->m_Name;
 }
 
 const gchar *
@@ -453,27 +398,7 @@ ifolder_domain_get_description(iFolderDomain *domain)
 
 	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
 	
-	return priv->description;
-}
-
-void
-ifolder_domain_set_description (iFolderDomain *domain, const gchar *description)
-{
-	iFolderDomainPrivate *priv;
-
-	g_return_if_fail (IFOLDER_IS_DOMAIN (domain));
-	
-	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
-	
-	if (description == NULL)
-	{
-		g_free (priv->description);
-		priv->description = NULL;
-	}
-	else
-		priv->description = g_strdup (description);
-
-	g_object_notify (G_OBJECT (domain), "description");
+	return priv->core_domain->m_Description;
 }
 
 const gchar *
@@ -485,31 +410,11 @@ ifolder_domain_get_version(iFolderDomain *domain)
 
 	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
 	
-	return priv->version;
-}
-
-void
-ifolder_domain_set_version (iFolderDomain *domain, const gchar *version)
-{
-	iFolderDomainPrivate *priv;
-
-	g_return_if_fail (IFOLDER_IS_DOMAIN (domain));
-	
-	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
-	
-	if (version == NULL)
-	{
-		g_free (priv->version);
-		priv->version = NULL;
-	}
-	else
-		priv->version = g_strdup (version);
-
-	g_object_notify (G_OBJECT (domain), "version");
+	return priv->core_domain->m_Version;
 }
 
 const gchar *
-ifolder_domain_get_host_address(iFolderDomain *domain)
+ifolder_domain_get_master_host (iFolderDomain *domain)
 {
 	iFolderDomainPrivate *priv;
 
@@ -517,31 +422,11 @@ ifolder_domain_get_host_address(iFolderDomain *domain)
 
 	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
 	
-	return priv->host_address;
-}
-
-void
-ifolder_domain_set_host_address (iFolderDomain *domain, const gchar *host_address)
-{
-	iFolderDomainPrivate *priv;
-
-	g_return_if_fail (IFOLDER_IS_DOMAIN (domain));
-	
-	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
-	
-	if (host_address == NULL)
-	{
-		g_free (priv->host_address);
-		priv->host_address = NULL;
-	}
-	else
-		priv->host_address = g_strdup (host_address);
-
-	g_object_notify (G_OBJECT (domain), "host-address");
+	return priv->core_domain->m_MasterHost;
 }
 
 const gchar *
-ifolder_domain_get_machine_name(iFolderDomain *domain)
+ifolder_domain_get_home_host (iFolderDomain *domain)
 {
 	iFolderDomainPrivate *priv;
 
@@ -549,31 +434,11 @@ ifolder_domain_get_machine_name(iFolderDomain *domain)
 
 	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
 	
-	return priv->machine_name;
-}
-
-void
-ifolder_domain_set_machine_name (iFolderDomain *domain, const gchar *machine_name)
-{
-	iFolderDomainPrivate *priv;
-
-	g_return_if_fail (IFOLDER_IS_DOMAIN (domain));
-	
-	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
-	
-	if (machine_name == NULL)
-	{
-		g_free (priv->machine_name);
-		priv->machine_name = NULL;
-	}
-	else
-		priv->machine_name = g_strdup (machine_name);
-
-	g_object_notify (G_OBJECT (domain), "machine-name");
+	return priv->core_domain->m_HomeHost;
 }
 
 const gchar *
-ifolder_domain_get_os_version(iFolderDomain *domain)
+ifolder_domain_get_user_name (iFolderDomain *domain)
 {
 	iFolderDomainPrivate *priv;
 
@@ -581,31 +446,11 @@ ifolder_domain_get_os_version(iFolderDomain *domain)
 
 	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
 	
-	return priv->os_version;
-}
-
-void
-ifolder_domain_set_os_version (iFolderDomain *domain, const gchar *os_version)
-{
-	iFolderDomainPrivate *priv;
-
-	g_return_if_fail (IFOLDER_IS_DOMAIN (domain));
-	
-	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
-	
-	if (os_version == NULL)
-	{
-		g_free (priv->os_version);
-		priv->os_version = NULL;
-	}
-	else
-		priv->os_version = g_strdup (os_version);
-
-	g_object_notify (G_OBJECT (domain), "os-version");
+	return priv->core_domain->m_UserName;
 }
 
 const gchar *
-ifolder_domain_get_user_name(iFolderDomain *domain)
+ifolder_domain_get_user_id (iFolderDomain *domain)
 {
 	iFolderDomainPrivate *priv;
 
@@ -613,31 +458,11 @@ ifolder_domain_get_user_name(iFolderDomain *domain)
 
 	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
 	
-	return priv->user_name;
-}
-
-void
-ifolder_domain_set_user_name (iFolderDomain *domain, const gchar *user_name)
-{
-	iFolderDomainPrivate *priv;
-
-	g_return_if_fail (IFOLDER_IS_DOMAIN (domain));
-	
-	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
-	
-	if (user_name == NULL)
-	{
-		g_free (priv->user_name);
-		priv->user_name = NULL;
-	}
-	else
-		priv->user_name = g_strdup (user_name);
-
-	g_object_notify (G_OBJECT (domain), "user-name");
+	return priv->core_domain->m_UserID;
 }
 
 gboolean
-ifolder_domain_is_authenticated(iFolderDomain *domain)
+ifolder_domain_is_authenticated (iFolderDomain *domain)
 {
 	iFolderDomainPrivate *priv;
 
@@ -645,25 +470,11 @@ ifolder_domain_is_authenticated(iFolderDomain *domain)
 
 	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
 	
-	return priv->is_authenticated;
-}
-
-void
-ifolder_domain_set_is_authenticated (iFolderDomain *domain, gboolean is_authenticated)
-{
-	iFolderDomainPrivate *priv;
-
-	g_return_if_fail (IFOLDER_IS_DOMAIN (domain));
-	
-	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
-	
-	priv->is_authenticated = is_authenticated;
-
-	g_object_notify (G_OBJECT (domain), "is-authenticated");
+	return priv->core_domain->m_Authenticated;
 }
 
 gboolean
-ifolder_domain_is_default(iFolderDomain *domain)
+ifolder_domain_is_default (iFolderDomain *domain)
 {
 	iFolderDomainPrivate *priv;
 
@@ -671,25 +482,11 @@ ifolder_domain_is_default(iFolderDomain *domain)
 
 	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
 	
-	return priv->is_default;
-}
-
-void
-ifolder_domain_set_is_default (iFolderDomain *domain, gboolean is_default)
-{
-	iFolderDomainPrivate *priv;
-
-	g_return_if_fail (IFOLDER_IS_DOMAIN (domain));
-	
-	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
-	
-	priv->is_default = is_default;
-
-	g_object_notify (G_OBJECT (domain), "is-default");
+	return priv->core_domain->m_Default;
 }
 
 gboolean
-ifolder_domain_is_active(iFolderDomain *domain)
+ifolder_domain_is_active (iFolderDomain *domain)
 {
 	iFolderDomainPrivate *priv;
 
@@ -697,21 +494,7 @@ ifolder_domain_is_active(iFolderDomain *domain)
 
 	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
 	
-	return priv->is_active;	
-}
-
-void
-ifolder_domain_set_is_active (iFolderDomain *domain, gboolean is_active)
-{
-	iFolderDomainPrivate *priv;
-
-	g_return_if_fail (IFOLDER_IS_DOMAIN (domain));
-	
-	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
-	
-	priv->is_active = is_active;
-
-	g_object_notify (G_OBJECT (domain), "is-active");
+	return priv->core_domain->m_Active;
 }
 
 gpointer
@@ -751,18 +534,6 @@ ifolder_domain_get_core_domain (iFolderDomain *domain)
 }
 
 void
-ifolder_domain_set_core_domain (iFolderDomain *domain, IFDomain *core_domain)
-{
-	iFolderDomainPrivate *priv;
-
-	g_return_if_fail (IFOLDER_IS_DOMAIN (domain));
-
-	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
-	
-	priv->core_domain = core_domain;
-}
-
-void
 ifolder_domain_log_in(iFolderDomain *domain, const char *password, gboolean remember_password, GError **error)
 {
 	iFolderDomainPrivate *priv;
@@ -771,10 +542,9 @@ ifolder_domain_log_in(iFolderDomain *domain, const char *password, gboolean reme
 
 	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
 	
+	g_message ("FIXME: Do something to remember the password.");
 	if (priv->core_domain->Login (password, error) != 0)
 		return;
-
-	priv->is_authenticated = TRUE;
 
 	g_signal_emit (singleton_client, ifolder_client_signals[DOMAIN_LOGGED_IN], 0, domain);
 }
@@ -797,8 +567,6 @@ ifolder_domain_log_out(iFolderDomain *domain, GError **error)
 		return;
 	}
 	
-	priv->is_authenticated = FALSE;
-
 	g_signal_emit (singleton_client, ifolder_client_signals[DOMAIN_LOGGED_OUT], 0, domain);
 }
 
@@ -810,11 +578,10 @@ ifolder_domain_activate(iFolderDomain *domain, GError **error)
 	g_return_if_fail (IFOLDER_IS_DOMAIN (domain));
 
 	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
-	if (priv->is_active) return; /* Don't do work that you don't need to do */
+	
+	if (priv->core_domain->m_Active) return; /* Don't do work that you don't need to do */
 
 	g_message("FIXME: Implement ifolder_domain_activate to call IFDomain");
-	
-	priv->is_active = TRUE;
 	
 	g_signal_emit (singleton_client, ifolder_client_signals[DOMAIN_ACTIVATED], 0, domain);
 }
@@ -827,13 +594,11 @@ ifolder_domain_inactivate(iFolderDomain *domain, GError **error)
 	g_return_if_fail (IFOLDER_IS_DOMAIN (domain));
 
 	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
-	if (!priv->is_active) return; /* Don't do work that you don't need to do */
+	if (!priv->core_domain->m_Active) return; /* Don't do work that you don't need to do */
 
 	g_message("FIXME: Implement ifolder_domain_inactivate to call IFDomain");
 	
-	priv->is_active = FALSE;
-	
-	g_signal_emit (singleton_client, ifolder_client_signals[DOMAIN_INACTIVATED], 0, domain);
+	g_signal_emit (singleton_client, ifolder_client_signals [DOMAIN_INACTIVATED], 0, domain);
 }
 
 void
@@ -841,6 +606,8 @@ ifolder_domain_change_host_address(iFolderDomain *domain, const char *new_host_a
 {
 	g_return_if_fail (IFOLDER_IS_DOMAIN (domain));
 	g_message("FIXME: Implement ifolder_domain_change_host_address");
+	
+	g_signal_emit (singleton_client, ifolder_client_signals [DOMAIN_HOST_MODIFIED], 0, domain);
 }
 
 void
@@ -855,11 +622,30 @@ ifolder_domain_set_default(iFolderDomain *domain, GError **error)
 {
 	g_return_if_fail (IFOLDER_IS_DOMAIN (domain));
 	g_message("FIXME: Implement ifolder_domain_set_default");
+	
+	g_signal_emit (singleton_client, ifolder_client_signals [DOMAIN_NEW_DEFAULT], 0, domain);
 }
 
 iFolderUser *
 ifolder_domain_get_authenticated_user(iFolderDomain *domain, GError **error)
 {
+	iFolderDomainPrivate *priv;
+	iFolderUser *user;
+
+	g_return_val_if_fail (IFOLDER_IS_DOMAIN (domain), NULL);
+
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+	
+	
+	
+	if (priv->core_domain->m_Active) return NULL; /* Don't do work that you don't need to do */
+
+	g_message("FIXME: Implement ifolder_domain_activate to call IFDomain");
+	
+	g_signal_emit (singleton_client, ifolder_client_signals[DOMAIN_ACTIVATED], 0, domain);
+
+
+
 	g_return_val_if_fail (IFOLDER_IS_DOMAIN (domain), NULL);
 	g_message("FIXME: Implement ifolder_domain_get_authenticated_user");
 	

@@ -59,28 +59,31 @@ GType ifolder_user_get_type (void) G_GNUC_CONST;
  * @param user The iFolderUser.
  * @return a user's unique ID.
  */
-const gchar *ifolder_user_get_id(iFolderUser *user);
+const gchar *ifolder_user_get_id (iFolderUser *user);
 
 //! Returns a user's login name.
 /**
  * @param user The iFolderUser.
  * @return a user's login name.
  */
-const gchar *ifolder_user_get_user_name(iFolderUser *user);
+const gchar *ifolder_user_get_user_name (iFolderUser *user);
 
 //! Returns a user's full name.
 /**
  * @param user The iFolderUser.
  * @return a user's full name.
  */
-const gchar *ifolder_user_get_full_name(iFolderUser *user);
+const gchar *ifolder_user_get_full_name (iFolderUser *user);
+
+const gchar *ifolder_user_get_first_name (iFolderUser *user);
+const gchar *ifolder_user_get_last_name (iFolderUser *user);
 
 //! Returns a user's iFolderMemberRights.
 /**
  * @param user The iFolderUser.
  * @return a user's iFolderMemberRights.
  */
-iFolderMemberRights ifolder_user_get_rights(iFolderUser *user);
+iFolderMemberRights ifolder_user_get_rights (iFolderUser *user);
 
 //! Returns true if a user's login is enabled.
 /**
@@ -89,7 +92,7 @@ iFolderMemberRights ifolder_user_get_rights(iFolderUser *user);
  * @param user The iFolderUser.
  * @return true if a user's login is enabled.
  */
-gboolean ifolder_user_is_login_enabled(iFolderUser *user);
+gboolean ifolder_user_is_login_enabled (iFolderUser *user);
 
 //! Returns true if a user is an owner in an iFolder/Domain.
 /**
@@ -99,7 +102,10 @@ gboolean ifolder_user_is_login_enabled(iFolderUser *user);
  * @param user The iFolderUser.
  * @return true if a user is an owner in an iFolder/Domain.
  */
-gboolean ifolder_user_is_owner(iFolderUser *user);
+gboolean ifolder_user_is_owner (iFolderUser *user);
+
+const gchar * ifolder_user_get_email (iFolderUser *user);
+
 
 gpointer ifolder_user_get_user_data (iFolderUser *user);
 void ifolder_user_set_user_data (iFolderUser *user, gpointer user_data);

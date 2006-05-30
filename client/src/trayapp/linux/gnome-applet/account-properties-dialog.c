@@ -799,8 +799,8 @@ on_server_page_realize (GtkWidget *widget, IFAAccountPropsDialog *apd)
 	if (ifolder_domain_get_name (priv->domain) != NULL)
 		gtk_label_set_text (GTK_LABEL (priv->serverNameLabel), ifolder_domain_get_name (priv->domain));
 		
-	if (ifolder_domain_get_host_address (priv->domain) != NULL)
-		gtk_entry_set_text (GTK_ENTRY (priv->serverAddressEntry), ifolder_domain_get_host_address (priv->domain));
+	if (ifolder_domain_get_master_host (priv->domain) != NULL)
+		gtk_entry_set_text (GTK_ENTRY (priv->serverAddressEntry), ifolder_domain_get_master_host (priv->domain));
 		
 	if (ifolder_domain_is_authenticated (priv->domain))
 	{
@@ -960,7 +960,7 @@ on_domain_host_modified (iFolderClient *client, iFolderDomain *domain, IFAAccoun
 		if (priv->on_server_address_changed_cb_id > 0)
 			g_signal_handler_disconnect (ifolder_client, priv->on_server_address_changed_cb_id);
 		
-		gtk_entry_set_text (GTK_ENTRY (priv->serverAddressEntry), ifolder_domain_get_host_address (domain));
+		gtk_entry_set_text (GTK_ENTRY (priv->serverAddressEntry), ifolder_domain_get_master_host (domain));
 		priv->bServerAddressChanged = FALSE;
 		
 		if (priv->on_server_address_changed_cb_id > 0)
@@ -984,7 +984,7 @@ on_domain_logged_in (iFolderClient *client, iFolderDomain *domain, IFAAccountPro
 		if (priv->on_server_address_changed_cb_id > 0)
 			g_signal_handler_disconnect (ifolder_client, priv->on_server_address_changed_cb_id);
 		
-		gtk_entry_set_text (GTK_ENTRY (priv->serverAddressEntry), ifolder_domain_get_host_address (domain));
+		gtk_entry_set_text (GTK_ENTRY (priv->serverAddressEntry), ifolder_domain_get_master_host (domain));
 		priv->bServerAddressChanged = FALSE;
 		
 		if (priv->on_server_address_changed_cb_id > 0)
@@ -1012,7 +1012,7 @@ on_domain_logged_out (iFolderClient *client, iFolderDomain *domain, IFAAccountPr
 		if (priv->on_server_address_changed_cb_id > 0)
 			g_signal_handler_disconnect (ifolder_client, priv->on_server_address_changed_cb_id);
 		
-		gtk_entry_set_text (GTK_ENTRY (priv->serverAddressEntry), ifolder_domain_get_host_address (domain));
+		gtk_entry_set_text (GTK_ENTRY (priv->serverAddressEntry), ifolder_domain_get_master_host (domain));
 		priv->bServerAddressChanged = FALSE;
 		
 		if (priv->on_server_address_changed_cb_id > 0)

@@ -48,7 +48,8 @@ iFolderClient *ifolder_client_get_static (void);
 /**
  * iFolderDomain Functions
  */
-iFolderDomain *ifolder_domain_new (void);
+iFolderDomain *ifolder_domain_new (IFDomain *core_domain);
+/*
 void ifolder_domain_set_id (iFolderDomain *domain, const gchar *id);
 void ifolder_domain_set_name (iFolderDomain *domain, const gchar *name);
 void ifolder_domain_set_description (iFolderDomain *domain, const gchar *description);
@@ -60,8 +61,9 @@ void ifolder_domain_set_user_name (iFolderDomain *domain, const gchar *user_name
 void ifolder_domain_set_is_authenticated (iFolderDomain *domain, gboolean is_authenticated);
 void ifolder_domain_set_is_default (iFolderDomain *domain, gboolean is_default);
 void ifolder_domain_set_is_active (iFolderDomain *domain, gboolean is_active);
+*/
 IFDomain *ifolder_domain_get_core_domain (iFolderDomain *domain);
-void ifolder_domain_set_core_domain (iFolderDomain *domain, IFDomain *core_domain);
+/*void ifolder_domain_set_core_domain (iFolderDomain *domain, IFDomain *core_domain);*/
 
 /**
  * iFolder Functions
@@ -75,13 +77,15 @@ void ifolder_set_core_ifolder (iFolder *ifolder, IFiFolder *core_ifolder);
 /**
  * iFolderUser Functions
  */
-iFolderUser *ifolder_user_new (void);
+iFolderUser *ifolder_user_new (ifweb::iFolderUser *core_user);
+/*
 void ifolder_set_id (iFolderUser *user, const gchar *id);
 void ifolder_user_set_user_name(iFolderUser *user, const gchar *user_name);
 void ifolder_user_set_full_name(iFolderUser *user, const gchar *full_name);
 void ifolder_user_set_rights(iFolderUser *user, iFolderMemberRights rights);
 void ifolder_user_set_is_login_enabled(iFolderUser *user, gboolean is_login_enabled);
 void ifolder_user_set_is_owner(iFolderUser *user, gboolean is_owner);
+*/
 
 /**
  * iFolderUserPolicy Functions

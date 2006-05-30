@@ -43,16 +43,9 @@ extern guint ifolder_client_signals[LAST_SIGNAL];
 typedef struct _iFolderUserPrivate iFolderUserPrivate;
 struct _iFolderUserPrivate
 {
-	gchar *id;
-	gchar *user_name;
-	gchar *full_name;
-	iFolderMemberRights rights;
-	gboolean login_enabled;
-	gboolean owner;
-	
 	gpointer user_data;
 	
-//	IFiFolder *core_user;
+	ifweb::iFolderUser *core_user;
 };
 
 #define IFOLDER_USER_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), IFOLDER_USER_TYPE, iFolderUserPrivate))
@@ -62,9 +55,12 @@ enum
 	PROP_ID,
 	PROP_USER_NAME,
 	PROP_FULL_NAME,
+	PROP_FIRST_NAME,
+	PROP_LAST_NAME,
 	PROP_RIGHTS,
-	PROP_LOGIN_ENABLED,
-	PROP_OWNER
+	PROP_ENABLED,
+	PROP_OWNER,
+	PROP_EMAIL
 };
 
 /**
@@ -138,6 +134,36 @@ ifolder_user_class_init(iFolderUserClass *klass)
 						G_PARAM_READABLE));
 
 	/**
+	 * iFolderUser:first-name:
+	 * 
+	 * The user's first name.
+	 * 
+	 * Since: 3.5
+	 */
+	g_object_class_install_property (object_class,
+					PROP_FIRST_NAME,
+					g_param_spec_string ("first-name",
+						_("First name"),
+						_("The user's first name."),
+						NULL,
+						G_PARAM_READABLE));
+
+	/**
+	 * iFolderUser:last-name:
+	 * 
+	 * The user's last name.
+	 * 
+	 * Since: 3.5
+	 */
+	g_object_class_install_property (object_class,
+					PROP_LAST_NAME,
+					g_param_spec_string ("last-name",
+						_("Last name"),
+						_("The user's last name."),
+						NULL,
+						G_PARAM_READABLE));
+
+	/**
 	 * iFolderUser:rights:
 	 * 
 	 * The user's rights.
@@ -155,22 +181,22 @@ ifolder_user_class_init(iFolderUserClass *klass)
 						G_PARAM_READABLE));
 
 	/**
-	 * iFolderUser:login-enabled:
+	 * iFolderUser:enabled:
 	 * 
 	 * Whether the user's login is enabled.
 	 * 
 	 * Since: 3.5
 	 */
 	g_object_class_install_property (object_class,
-					PROP_LOGIN_ENABLED,
-					g_param_spec_boolean ("login-enabled",
+					PROP_ENABLED,
+					g_param_spec_boolean ("enabled",
 						_("Login enabled"),
 						_("Whether the user's login is enabled."),
 						TRUE,
 						G_PARAM_READABLE));
 
 	/**
-	 * iFolderUser:login-enabled:
+	 * iFolderUser:owner:
 	 * 
 	 * Whether the user is an owner.
 	 * 
@@ -182,6 +208,21 @@ ifolder_user_class_init(iFolderUserClass *klass)
 						_("Owner"),
 						_("Whether the user is an owner."),
 						FALSE,
+						G_PARAM_READABLE));
+
+	/**
+	 * iFolderUser:email:
+	 * 
+	 * The user's email address.
+	 * 
+	 * Since: 3.5
+	 */
+	g_object_class_install_property (object_class,
+					PROP_EMAIL,
+					g_param_spec_string ("email",
+						_("Email"),
+						_("The user's email address."),
+						NULL,
 						G_PARAM_READABLE));
 
 	g_type_class_add_private(klass, sizeof(iFolderUserPrivate));
@@ -202,15 +243,9 @@ static void ifolder_user_init(iFolderUser *user)
 	 * If you need specific construction properties to complete initialization,
 	 * delay initialization completion until the property is set.
 	 */
-	priv->id = NULL;
-	priv->user_name = NULL;
-	priv->full_name = NULL;
-	priv->rights = IFOLDER_MEMBER_RIGHTS_READ_ONLY;
-	priv->login_enabled = TRUE;
-	priv->owner = FALSE;
+
 	priv->user_data = NULL;
-	
-//	priv->core_ifolder = NULL;
+	priv->core_user = NULL;
 }
 
 static void ifolder_user_finalize(GObject *object)
@@ -222,9 +257,7 @@ static void ifolder_user_finalize(GObject *object)
 	priv = IFOLDER_USER_GET_PRIVATE (object);
 
 	/* custom stuff */
-	g_free(priv->id);
-	g_free(priv->user_name);
-	g_free(priv->full_name);
+	delete (priv->core_user);
 
 	/* Chain up the parent class */
 	G_OBJECT_CLASS (ifolder_user_parent_class)->finalize (object);
@@ -234,27 +267,35 @@ static void
 ifolder_user_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec)
 {
 	iFolderUser *user = IFOLDER_USER (object);
-	iFolderUserPrivate *priv = IFOLDER_USER_GET_PRIVATE (object);
 	
 	switch (prop_id)
 	{
 		case PROP_ID:
-			g_value_set_string (value, priv->id);
+			g_value_set_string (value, ifolder_user_get_id (user));
 			break;
 		case PROP_USER_NAME:
-			g_value_set_string (value, priv->user_name);
+			g_value_set_string (value, ifolder_user_get_user_name (user));
 			break;
 		case PROP_FULL_NAME:
-			g_value_set_string (value, priv->full_name);
+			g_value_set_string (value, ifolder_user_get_full_name (user));
+			break;
+		case PROP_FIRST_NAME:
+			g_value_set_string (value, ifolder_user_get_first_name (user));
+			break;
+		case PROP_LAST_NAME:
+			g_value_set_string (value, ifolder_user_get_last_name (user));
 			break;
 		case PROP_RIGHTS:
-			g_value_set_uint (value, (guint)priv->rights);
+			g_value_set_uint (value, (guint)ifolder_user_get_rights(user));
 			break;
-		case PROP_LOGIN_ENABLED:
-			g_value_set_boolean (value, (guint)priv->login_enabled);
+		case PROP_ENABLED:
+			g_value_set_boolean (value, (guint)ifolder_user_is_login_enabled (user));
 			break;
 		case PROP_OWNER:
-			g_value_set_uint (value, (guint)priv->owner);
+			g_value_set_uint (value, (guint)ifolder_user_is_owner (user));
+			break;
+		case PROP_EMAIL:
+			g_value_set_string (value, ifolder_user_get_email (user));
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -265,9 +306,6 @@ ifolder_user_get_property (GObject *object, guint prop_id, GValue *value, GParam
 static void
 ifolder_user_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec)
 {
-	iFolderUser *user = IFOLDER_USER (object);
-	iFolderUserPrivate *priv = IFOLDER_USER_GET_PRIVATE (object);
-	
 	switch (prop_id)
 	{
 		default:
@@ -277,71 +315,43 @@ ifolder_user_set_property (GObject *object, guint prop_id, const GValue *value, 
 }
 
 iFolderUser *
-ifolder_user_new (void)
+ifolder_user_new (ifweb::iFolderUser *core_user)
 {
 	iFolderUser *user;
+	iFolderUserPrivate *priv;
+	
+	g_return_val_if_fail (core_user != NULL, NULL);
 	
 	user = IFOLDER_USER(g_object_new (IFOLDER_USER_TYPE, NULL));
+	priv = IFOLDER_USER_GET_PRIVATE (user);
+	
+	priv->core_user = core_user;
 	
 	return user;
 }
 
 const gchar *
-ifolder_get_id(iFolderUser *user)
-{
-	g_return_val_if_fail (IFOLDER_IS_USER (user), "");
-
-	return IFOLDER_USER_GET_PRIVATE (user)->id;
-}
-
-void
-ifolder_set_id (iFolderUser *user, const gchar *id)
+ifolder_user_get_id (iFolderUser *user)
 {
 	iFolderUserPrivate *priv;
 
-	g_return_if_fail (IFOLDER_IS_USER (user));
+	g_return_val_if_fail (IFOLDER_IS_USER (user), "");
 	
 	priv = IFOLDER_USER_GET_PRIVATE (user);
 	
-	if (id == NULL)
-	{
-		g_free (priv->id);
-		priv->id = NULL;
-	}
-	else
-		priv->id = g_strdup (id);
-	
-	g_object_notify (G_OBJECT (user), "id");
+	return priv->core_user->ID;
 }
 
 const gchar *
-ifolder_user_get_user_name(iFolderUser *user)
+ifolder_user_get_user_name (iFolderUser *user)
 {
 	iFolderUserPrivate *priv;
 
 	g_return_val_if_fail (IFOLDER_IS_USER (user), "");
 	
-	return IFOLDER_USER_GET_PRIVATE (user)->user_name;
-}
-
-void
-ifolder_user_set_user_name(iFolderUser *user, const gchar *user_name)
-{
-	iFolderUserPrivate *priv;
-
-	g_return_if_fail (IFOLDER_IS_USER (user));
-	
 	priv = IFOLDER_USER_GET_PRIVATE (user);
 	
-	if (user_name == NULL)
-	{
-		g_free (priv->user_name);
-		priv->user_name = NULL;
-	}
-	else
-		priv->user_name = g_strdup (user_name);
-	
-	g_object_notify (G_OBJECT (user), "user-name");
+	return priv->core_user->UserName;
 }
 
 const gchar *
@@ -351,51 +361,63 @@ ifolder_user_get_full_name(iFolderUser *user)
 
 	g_return_val_if_fail (IFOLDER_IS_USER (user), "");
 	
-	return IFOLDER_USER_GET_PRIVATE (user)->full_name;
+	priv = IFOLDER_USER_GET_PRIVATE (user);
+	
+	return priv->core_user->FullName;
 }
 
-void
-ifolder_user_set_full_name(iFolderUser *user, const gchar *full_name)
+const gchar *
+ifolder_user_get_first_name(iFolderUser *user)
 {
 	iFolderUserPrivate *priv;
 
-	g_return_if_fail (IFOLDER_IS_USER (user));
+	g_return_val_if_fail (IFOLDER_IS_USER (user), "");
 	
 	priv = IFOLDER_USER_GET_PRIVATE (user);
 	
-	if (full_name == NULL)
-	{
-		g_free (priv->full_name);
-		priv->full_name = NULL;
-	}
-	else
-		priv->full_name = g_strdup (full_name);
+	return priv->core_user->FirstName;
+}
+
+const gchar *
+ifolder_user_get_last_name(iFolderUser *user)
+{
+	iFolderUserPrivate *priv;
+
+	g_return_val_if_fail (IFOLDER_IS_USER (user), "");
 	
-	g_object_notify (G_OBJECT (user), "full-name");
+	priv = IFOLDER_USER_GET_PRIVATE (user);
+	
+	return priv->core_user->LastName;
 }
 
 iFolderMemberRights
-ifolder_user_get_rights(iFolderUser *user)
+ifolder_user_get_rights (iFolderUser *user)
 {
 	iFolderUserPrivate *priv;
+	iFolderMemberRights rights;
 
 	g_return_val_if_fail (IFOLDER_IS_USER (user), IFOLDER_MEMBER_RIGHTS_DENY);
 	
-	return IFOLDER_USER_GET_PRIVATE (user)->rights;
-}
-
-void
-ifolder_user_set_rights(iFolderUser *user, iFolderMemberRights rights)
-{
-	iFolderUserPrivate *priv;
-
-	g_return_if_fail (IFOLDER_IS_USER (user));
-	
 	priv = IFOLDER_USER_GET_PRIVATE (user);
-	
-	priv->rights = rights;
-	
-	g_object_notify (G_OBJECT (user), "rights");
+
+	switch (priv->core_user->Rights)
+	{
+		case ifolder__Rights__ReadOnly:
+			rights = IFOLDER_MEMBER_RIGHTS_READ_ONLY;
+			break;
+		case ifolder__Rights__ReadWrite:
+			rights = IFOLDER_MEMBER_RIGHTS_READ_WRITE;
+			break;
+		case ifolder__Rights__Admin:
+			rights = IFOLDER_MEMBER_RIGHTS_ADMIN;
+			break;
+		case ifolder__Rights__Deny:
+		default:
+			rights = IFOLDER_MEMBER_RIGHTS_DENY;
+			break;
+	}
+
+	return rights;
 }
 
 gboolean
@@ -405,21 +427,9 @@ ifolder_user_is_login_enabled(iFolderUser *user)
 
 	g_return_val_if_fail (IFOLDER_IS_USER (user), FALSE);
 	
-	return IFOLDER_USER_GET_PRIVATE (user)->login_enabled;
-}
-
-void
-ifolder_user_set_is_login_enabled(iFolderUser *user, gboolean is_login_enabled)
-{
-	iFolderUserPrivate *priv;
-
-	g_return_if_fail (IFOLDER_IS_USER (user));
-	
 	priv = IFOLDER_USER_GET_PRIVATE (user);
 	
-	priv->login_enabled = is_login_enabled;
-	
-	g_object_notify (G_OBJECT (user), "login-enabled");
+	return priv->core_user->Enabled;
 }
 
 gboolean
@@ -429,21 +439,21 @@ ifolder_user_is_owner(iFolderUser *user)
 
 	g_return_val_if_fail (IFOLDER_IS_USER (user), FALSE);
 	
-	return IFOLDER_USER_GET_PRIVATE (user)->owner;
+	priv = IFOLDER_USER_GET_PRIVATE (user);
+	
+	return priv->core_user->IsOwner;
 }
 
-void
-ifolder_user_set_is_owner(iFolderUser *user, gboolean is_owner)
+const gchar *
+ifolder_user_get_email (iFolderUser *user)
 {
 	iFolderUserPrivate *priv;
 
-	g_return_if_fail (IFOLDER_IS_USER (user));
+	g_return_val_if_fail (IFOLDER_IS_USER (user), "");
 	
 	priv = IFOLDER_USER_GET_PRIVATE (user);
 	
-	priv->owner = is_owner;
-	
-	g_object_notify (G_OBJECT (user), "owner");
+	return priv->core_user->Email;
 }
 
 gpointer

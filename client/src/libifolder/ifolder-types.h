@@ -140,7 +140,7 @@ struct _iFolderUserClass
 typedef enum
 {
 	IFOLDER_MEMBER_RIGHTS_DENY,			/*!< No access */
-	IFOLDER_MEMBER_RIGHTS_READ_ONLY,		/*!< Read only access */
+	IFOLDER_MEMBER_RIGHTS_READ_ONLY,	/*!< Read only access */
 	IFOLDER_MEMBER_RIGHTS_READ_WRITE,	/*!< Read and write access */
 	IFOLDER_MEMBER_RIGHTS_ADMIN			/*!< Administrator access (can add other users, change ownership, modify user rights) */
 } iFolderMemberRights;
