@@ -29,6 +29,7 @@
 #include <IFDomain.h>
 
 #include "ifolder-domain.h"
+#include "ifolder-user-iterator.h"
 #include "ifolder-private.h"
 #include "ifolder-errors.h"
 
@@ -748,29 +749,100 @@ ifolder_domain_get_user (iFolderDomain *domain, const gchar *user_name, GError *
 		g_set_error (error,
 					 IFOLDER_ERROR,
 					 IFOLDER_ERR_UNKNOWN,
-					 _("FIXME: Replace this with a good error message"));
+					 _("FIXME: Replace this with a good error message.  ifolder_user_new () returned NULL."));
 		return NULL;
 	}
 	
 	return user;
 }
 
-GSList *
+iFolderUserIterator *
 ifolder_domain_get_users(iFolderDomain *domain, const int index, const int count, GError **error)
 {
+	iFolderDomainPrivate		*priv;
+	iFolderUserIterator			*user_iter;
+	ifweb::iFolderUserIterator	*core_user_iter;
+	GError						*err = NULL;
+
 	g_return_val_if_fail (IFOLDER_IS_DOMAIN (domain), NULL);
-	g_message("FIXME: Implement ifolder_domain_get_users");
+	g_return_val_if_fail (index < 0, NULL);
+	g_return_val_if_fail (count <= 0, NULL);
+
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+
+	core_user_iter = priv->ifolder_service->GetUsers (index, count, &err);
+	if (err)
+	{
+		g_propagate_error (error, err);
+		return NULL;
+	}
 	
-	return g_slist_alloc();
+	user_iter = ifolder_user_iterator_new (core_user_iter);
+
+	return user_iter;
 }
 
-GSList *
-ifolder_domain_get_users_by_search(iFolderDomain *domain, const iFolderSearchProperty search_prop, const iFolderSearchOperation search_op, const char *pattern, const int index, const int count, GError **error)
+iFolderUserIterator *
+ifolder_domain_get_users_by_search(iFolderDomain *domain, const iFolderSearchProperty search_prop, const iFolderSearchOperation search_op, const gchar *pattern, const int index, const int count, GError **error)
 {
+	iFolderDomainPrivate			*priv;
+	iFolderUserIterator				*user_iter;
+	ifweb::iFolderUserIterator		*core_user_iter;
+	ifolder__SearchOperation		core_op;
+	ifolder__SearchProperty			core_prop;
+	GError							*err = NULL;
+
 	g_return_val_if_fail (IFOLDER_IS_DOMAIN (domain), NULL);
-	g_message("FIXME: Implement ifolder_domain_get_users_by_search");
+	g_return_val_if_fail (pattern == NULL, NULL);
+	g_return_val_if_fail (index < 0, NULL);
+	g_return_val_if_fail (count <= 0, NULL);
+
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
 	
-	return g_slist_alloc();
+	switch (search_prop)
+	{
+		case IFOLDER_SEARCH_PROP_USER_NAME:
+			core_prop = ifolder__SearchProperty__UserName;
+			break;
+		case IFOLDER_SEARCH_PROP_FIRST_NAME:
+			core_prop = ifolder__SearchProperty__FirstName;
+			break;
+		case IFOLDER_SEARCH_PROP_LAST_NAME:
+			core_prop = ifolder__SearchProperty__LastName;
+			break;
+		case IFOLDER_SEARCH_PROP_FULL_NAME:
+		default:
+			core_prop = ifolder__SearchProperty__FullName;
+			break;
+	}
+	
+	switch (search_op)
+	{
+		case IFOLDER_SEARCH_OP_ENDS_WITH:
+			core_op = ifolder__SearchOperation__EndsWith;
+			break;
+		case IFOLDER_SEARCH_OP_CONTAINS:
+			core_op = ifolder__SearchOperation__Contains;
+			break;
+		case IFOLDER_SEARCH_OP_EQUALS:
+			core_op = ifolder__SearchOperation__Equals;
+			break;
+		case IFOLDER_SEARCH_OP_BEGINS_WITH:
+		default:
+			core_op = ifolder__SearchOperation__BeginsWith;
+			break;
+	}
+
+	core_user_iter = priv->ifolder_service->GetUsersBySearch(index, count, core_op, pattern, core_prop, &err);
+	if (err)
+	{
+		g_propagate_error (error, err);
+		return NULL;
+	}
+	
+	user_iter = ifolder_user_iterator_new (core_user_iter);
+
+	return user_iter;
 }
 
 iFolder *

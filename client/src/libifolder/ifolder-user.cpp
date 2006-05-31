@@ -43,6 +43,7 @@ extern guint ifolder_client_signals[LAST_SIGNAL];
 typedef struct _iFolderUserPrivate iFolderUserPrivate;
 struct _iFolderUserPrivate
 {
+	gboolean inside_iterator;
 	gpointer user_data;
 	
 	ifweb::iFolderUser *core_user;
@@ -244,6 +245,7 @@ static void ifolder_user_init(iFolderUser *user)
 	 * delay initialization completion until the property is set.
 	 */
 
+	priv->inside_iterator = FALSE;
 	priv->user_data = NULL;
 	priv->core_user = NULL;
 }
@@ -257,7 +259,8 @@ static void ifolder_user_finalize(GObject *object)
 	priv = IFOLDER_USER_GET_PRIVATE (object);
 
 	/* custom stuff */
-	delete (priv->core_user);
+	if (!priv->inside_iterator)	/* Don't delete the core_user if this iFolderUser is part of an iFolderUserIterator. */
+		delete (priv->core_user);
 
 	/* Chain up the parent class */
 	G_OBJECT_CLASS (ifolder_user_parent_class)->finalize (object);
@@ -326,6 +329,22 @@ ifolder_user_new (ifweb::iFolderUser *core_user)
 	priv = IFOLDER_USER_GET_PRIVATE (user);
 	
 	priv->core_user = core_user;
+	
+	return user;
+}
+
+iFolderUser *
+ifolder_user_new_for_iterator (ifweb::iFolderUser *core_user)
+{
+	iFolderUser *user;
+	iFolderUserPrivate *priv;
+	
+	g_return_val_if_fail (core_user != NULL, NULL);
+
+	user = ifolder_user_new (core_user);
+	priv = IFOLDER_USER_GET_PRIVATE (user);
+	
+	priv->inside_iterator = TRUE;
 	
 	return user;
 }

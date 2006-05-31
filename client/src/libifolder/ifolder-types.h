@@ -191,4 +191,21 @@ struct _iFolderChangeEntryClass
 	/* class members */
 };
 
+/**
+ * iFolderUserIterator
+ */
+typedef struct _iFolderUserIterator iFolderUserIterator;
+typedef struct _iFolderUserIteratorClass iFolderUserIteratorClass;
+
+struct _iFolderUserIterator
+{
+	GObject parent;
+	gpointer private_data;
+};
+
+struct _iFolderUserIteratorClass
+{
+	GObjectClass parent;
+};
+
 #endif /* IFOLDER_TYPES_H */

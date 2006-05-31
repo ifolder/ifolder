@@ -231,7 +231,7 @@ iFolderUser * ifolder_domain_get_user(iFolderDomain *domain, const gchar *user_n
  * @param user_enum Invalid if the call is unsuccessful.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-GSList * ifolder_domain_get_users(iFolderDomain *domain, const int index, const int count, GError **error);
+iFolderUserIterator * ifolder_domain_get_users(iFolderDomain *domain, const int index, const int count, GError **error);
 
 //! Returns a subset of iFolderUser domain members by searching, beginning at the specified index.
 /**
@@ -247,7 +247,7 @@ GSList * ifolder_domain_get_users(iFolderDomain *domain, const int index, const 
  * @param user_enum Invalid if the call is unsuccessful.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-GSList * ifolder_domain_get_users_by_search(iFolderDomain *domain, const iFolderSearchProperty search_prop, const iFolderSearchOperation search_op, const char *pattern, const int index, const int count, GError **error);
+iFolderUserIterator * ifolder_domain_get_users_by_search(iFolderDomain *domain, const iFolderSearchProperty search_prop, const iFolderSearchOperation search_op, const gchar *pattern, const int index, const int count, GError **error);
 
 /*@}*/
 

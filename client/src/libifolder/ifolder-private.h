@@ -78,6 +78,7 @@ void ifolder_set_core_ifolder (iFolder *ifolder, IFiFolder *core_ifolder);
  * iFolderUser Functions
  */
 iFolderUser *ifolder_user_new (ifweb::iFolderUser *core_user);
+iFolderUser *ifolder_user_new_for_iterator (ifweb::iFolderUser *core_user);
 /*
 void ifolder_set_id (iFolderUser *user, const gchar *id);
 void ifolder_user_set_user_name(iFolderUser *user, const gchar *user_name);
@@ -96,6 +97,11 @@ iFolderUserPolicy *ifolder_user_policy_new (iFolderUser *user, ifweb::UserPolicy
  * iFolderChangeEntry Functions
  */
 iFolderChangeEntry * ifolder_change_entry_new (iFolderUser *user, ifweb::ChangeEntry *entry);
+
+/**
+ * iFolderUserIterator Functions
+ */
+iFolderUserIterator *ifolder_user_iterator_new (ifweb::iFolderUserIterator *core_user_iterator);
 
 GKeyFile *ifolder_client_get_config_key_file (GError **error = NULL);
 
