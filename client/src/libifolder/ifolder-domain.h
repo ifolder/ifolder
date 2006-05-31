@@ -214,11 +214,11 @@ gboolean ifolder_domain_check_for_updated_client(iFolderDomain *domain, char **n
 //! Returns an iFolderUser object for a given user ID.
 /**
  * @param domain The domain.
- * @param user_id The user name of the desired user.
+ * @param user_id_or_name The ID or user name of a user.
  * @param user Invalid if the call is unsuccessful.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-iFolderUser * ifolder_domain_get_user(iFolderDomain *domain, const gchar *user_name, GError **error);
+iFolderUser * ifolder_domain_get_user(iFolderDomain *domain, const gchar *user_id_or_name, GError **error);
 
 //! Returns a subset of iFolderUser domain members beginning at the specified index.
 /**
@@ -282,7 +282,7 @@ iFolder * ifolder_domain_create_ifolder_from_path(iFolderDomain *domain, const c
  * @param ifolder Invalid if the call is unsuccessful.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-iFolder * ifolder_domain_create_ifolder(iFolderDomain *domain, const char *name, const char *description, GError **error);
+iFolder * ifolder_domain_create_ifolder(iFolderDomain *domain, const gchar *name, const gchar *description, GError **error);
 
 //! Delete an iFolder from a domain (from the server)
 /**

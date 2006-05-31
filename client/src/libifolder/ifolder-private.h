@@ -68,11 +68,9 @@ IFDomain *ifolder_domain_get_core_domain (iFolderDomain *domain);
 /**
  * iFolder Functions
  */
-iFolder *ifolder_new (void);
-void ifolder_set_id (iFolder *ifolder, const gchar id);
-void ifolder_set_name (iFolder *ifolder, const gchar *name);
-IFiFolder *ifolder_get_core_ifolder (iFolder *ifolder);
-void ifolder_set_core_ifolder (iFolder *ifolder, IFiFolder *core_ifolder);
+iFolder *ifolder_new_disconnected (iFolderDomain *domain, ifweb::iFolder *core_ifolder);
+iFolder *ifolder_new_connected (iFolderDomain *domain, IFiFolder *core_ifolder);
+gpointer ifolder_get_core_ifolder (iFolder *ifolder);
 
 /**
  * iFolderUser Functions
@@ -89,6 +87,11 @@ void ifolder_user_set_is_owner(iFolderUser *user, gboolean is_owner);
 */
 
 /**
+ * iFolderUserIterator Functions
+ */
+iFolderUserIterator *ifolder_user_iterator_new (ifweb::iFolderUserIterator *core_user_iterator);
+
+/**
  * iFolderUserPolicy Functions
  */
 iFolderUserPolicy *ifolder_user_policy_new (iFolderUser *user, ifweb::UserPolicy *core_policy);
@@ -96,12 +99,13 @@ iFolderUserPolicy *ifolder_user_policy_new (iFolderUser *user, ifweb::UserPolicy
 /**
  * iFolderChangeEntry Functions
  */
-iFolderChangeEntry * ifolder_change_entry_new (iFolderUser *user, ifweb::ChangeEntry *entry);
+iFolderChangeEntry * ifolder_change_entry_new (ifweb::ChangeEntry *entry);
+
 
 /**
  * iFolderUserIterator Functions
  */
-iFolderUserIterator *ifolder_user_iterator_new (ifweb::iFolderUserIterator *core_user_iterator);
+iFolderChangeEntryIterator *ifolder_change_entry_iterator_new (ifweb::ChangeEntryIterator *core_iterator);
 
 GKeyFile *ifolder_client_get_config_key_file (GError **error = NULL);
 

@@ -102,7 +102,7 @@ const gchar * ifolder_change_entry_get_name(iFolderChangeEntry *change_entry);
  * @param user Invalid if the call is unsuccessful.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-iFolderUser * ifolder_change_entry_get_user(iFolderChangeEntry *change_entry);
+const gchar * ifolder_change_entry_get_user_id (iFolderChangeEntry *change_entry);
 
 const gchar * ifolder_change_entry_get_user_full_name (iFolderChangeEntry *change_entry);
 

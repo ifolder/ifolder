@@ -146,6 +146,23 @@ typedef enum
 } iFolderMemberRights;
 
 /**
+ * iFolderUserIterator
+ */
+typedef struct _iFolderUserIterator iFolderUserIterator;
+typedef struct _iFolderUserIteratorClass iFolderUserIteratorClass;
+
+struct _iFolderUserIterator
+{
+	GObject parent;
+	gpointer private_data;
+};
+
+struct _iFolderUserIteratorClass
+{
+	GObjectClass parent;
+};
+
+/**
  * iFolderUserPolicy
  */
 typedef struct _iFolderUserPolicy iFolderUserPolicy;
@@ -192,18 +209,18 @@ struct _iFolderChangeEntryClass
 };
 
 /**
- * iFolderUserIterator
+ * iFolderChangeEntryIterator
  */
-typedef struct _iFolderUserIterator iFolderUserIterator;
-typedef struct _iFolderUserIteratorClass iFolderUserIteratorClass;
+typedef struct _iFolderChangeEntryIterator iFolderChangeEntryIterator;
+typedef struct _iFolderChangeEntryIteratorClass iFolderChangeEntryIteratorClass;
 
-struct _iFolderUserIterator
+struct _iFolderChangeEntryIterator
 {
 	GObject parent;
 	gpointer private_data;
 };
 
-struct _iFolderUserIteratorClass
+struct _iFolderChangeEntryIteratorClass
 {
 	GObjectClass parent;
 };

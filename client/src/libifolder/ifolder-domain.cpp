@@ -621,8 +621,14 @@ ifolder_domain_set_credentials(iFolderDomain *domain, const char *password, cons
 void
 ifolder_domain_set_default(iFolderDomain *domain, GError **error)
 {
+	iFolderDomainPrivate *priv;
+
 	g_return_if_fail (IFOLDER_IS_DOMAIN (domain));
-	g_message("FIXME: Implement ifolder_domain_set_default");
+
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
+	if (priv->core_domain->m_Default) return; /* Don't do work that you don't need to do */
+
+	priv->core_domain->SetDefault ();
 	
 	g_signal_emit (singleton_client, ifolder_client_signals [DOMAIN_NEW_DEFAULT], 0, domain);
 }
@@ -727,18 +733,18 @@ ifolder_domain_get_user_by_id (iFolderDomain *domain, const gchar *user_id, GErr
 */
 
 iFolderUser *
-ifolder_domain_get_user (iFolderDomain *domain, const gchar *user_name, GError **error)
+ifolder_domain_get_user (iFolderDomain *domain, const gchar *user_id_or_name, GError **error)
 {
 	iFolderDomainPrivate	*priv;
 	iFolderUser				*user;
 	ifweb::iFolderUser		*core_user;
 
 	g_return_val_if_fail (IFOLDER_IS_DOMAIN (domain), NULL);
-	g_return_val_if_fail (user_name != NULL, NULL);
+	g_return_val_if_fail (user_id_or_name != NULL, NULL);
 
 	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
 
-	core_user = priv->ifolder_service->GetUser (user_name, error);
+	core_user = priv->ifolder_service->GetUser (user_id_or_name, error);
 	if (core_user == NULL)
 		return NULL;
 	
@@ -765,8 +771,8 @@ ifolder_domain_get_users(iFolderDomain *domain, const int index, const int count
 	GError						*err = NULL;
 
 	g_return_val_if_fail (IFOLDER_IS_DOMAIN (domain), NULL);
-	g_return_val_if_fail (index < 0, NULL);
-	g_return_val_if_fail (count <= 0, NULL);
+	g_return_val_if_fail (index >= 0, NULL);
+	g_return_val_if_fail (count > 0, NULL);
 
 	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
 
@@ -793,9 +799,9 @@ ifolder_domain_get_users_by_search(iFolderDomain *domain, const iFolderSearchPro
 	GError							*err = NULL;
 
 	g_return_val_if_fail (IFOLDER_IS_DOMAIN (domain), NULL);
-	g_return_val_if_fail (pattern == NULL, NULL);
-	g_return_val_if_fail (index < 0, NULL);
-	g_return_val_if_fail (count <= 0, NULL);
+	g_return_val_if_fail (pattern != NULL, NULL);
+	g_return_val_if_fail (index >= 0, NULL);
+	g_return_val_if_fail (count > 0, NULL);
 
 	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
 	
@@ -855,12 +861,29 @@ ifolder_domain_create_ifolder_from_path(iFolderDomain *domain, const char *local
 }
 
 iFolder *
-ifolder_domain_create_ifolder(iFolderDomain *domain, const char *name, const char *description, GError **error)
+ifolder_domain_create_ifolder(iFolderDomain *domain, const gchar *name, const gchar *description, GError **error)
 {
+	iFolderDomainPrivate			*priv;
+	iFolder							*ifolder;
+	ifweb::iFolder					*core_ifolder;
+	GError							*err = NULL;
+
 	g_return_val_if_fail (IFOLDER_IS_DOMAIN (domain), NULL);
-	g_message("FIXME: Implement ifolder_domain_create_ifolder");
+	g_return_val_if_fail (name != NULL, NULL);
+	g_return_val_if_fail (description != NULL, NULL);
+
+	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
 	
-	return NULL;
+	core_ifolder = priv->ifolder_service->CreateiFolder ((gchar *)description, (gchar *)name, &err);
+	if (err)
+	{
+		g_propagate_error (error, err);
+		return NULL;
+	}
+	
+	ifolder = ifolder_new_disconnected (domain, core_ifolder);
+	
+	return ifolder;
 }
 
 void

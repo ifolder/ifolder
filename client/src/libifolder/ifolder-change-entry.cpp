@@ -27,7 +27,6 @@
 #endif
 
 #include "ifolder-change-entry.h"
-#include "ifolder-user.h"
 #include "ifolder-private.h"
 #include "ifolder-errors.h"
 
@@ -41,7 +40,6 @@ extern iFolderClient *singleton_client;
 typedef struct _iFolderChangeEntryPrivate iFolderChangeEntryPrivate;
 struct _iFolderChangeEntryPrivate
 {
-	iFolderUser *user;
 	ifweb::ChangeEntry *change_entry;
 };
 
@@ -71,20 +69,19 @@ ifolder_change_entry_class_init(iFolderChangeEntryClass *klass)
 	/* custom stuff */
 }
 
-static void ifolder_change_entry_init(iFolderChangeEntry *user_policy)
+static void ifolder_change_entry_init(iFolderChangeEntry *change_entry)
 {
 	iFolderChangeEntryPrivate *priv;
 
 	g_debug("ifolder_change_entry_init()");
 
-	priv = IFOLDER_CHANGE_ENTRY_GET_PRIVATE (user_policy);
+	priv = IFOLDER_CHANGE_ENTRY_GET_PRIVATE (change_entry);
 	
 	/**
 	 * Initialize all public and private members to reasonable default values.
 	 * If you need specific construction properties to complete initialization,
 	 * delay initialization completion until the property is set.
 	 */
-	priv->user = NULL;
 	priv->change_entry = NULL;
 }
 
@@ -97,8 +94,6 @@ static void ifolder_change_entry_finalize(GObject *object)
 	priv = IFOLDER_CHANGE_ENTRY_GET_PRIVATE (object);
 
 	/* custom stuff */
-	if (priv->user)
-		g_object_unref (priv->user);
 	if (priv->change_entry)
 		delete (priv->change_entry);
 
@@ -107,19 +102,16 @@ static void ifolder_change_entry_finalize(GObject *object)
 }
 
 iFolderChangeEntry *
-ifolder_change_entry_new (iFolderUser *user, ifweb::ChangeEntry *entry)
+ifolder_change_entry_new (ifweb::ChangeEntry *entry)
 {
 	iFolderChangeEntry *change_entry;
 	iFolderChangeEntryPrivate *priv;
 
-	g_return_val_if_fail (IFOLDER_IS_USER (user), NULL);
 	g_return_val_if_fail (entry != NULL, NULL);
 	
 	change_entry = IFOLDER_CHANGE_ENTRY (g_object_new (IFOLDER_CHANGE_ENTRY_TYPE, NULL));
 	priv = IFOLDER_CHANGE_ENTRY_GET_PRIVATE (change_entry);
 	
-	g_object_ref (user);
-	priv->user = user;
 	priv->change_entry = entry;
 	
 	return change_entry;
@@ -219,15 +211,15 @@ ifolder_change_entry_get_name(iFolderChangeEntry *change_entry)
 	return priv->change_entry->m_Name;
 }
 
-iFolderUser *
-ifolder_change_entry_get_user(iFolderChangeEntry *change_entry)
+const gchar *
+ifolder_change_entry_get_user_id (iFolderChangeEntry *change_entry)
 {
 	iFolderChangeEntryPrivate *priv;
 	
 	g_return_val_if_fail (IFOLDER_IS_CHANGE_ENTRY (change_entry), NULL);
 	priv = IFOLDER_CHANGE_ENTRY_GET_PRIVATE (change_entry);
 	
-	return priv->user;
+	return priv->change_entry->m_UserID;
 }
 
 const gchar *

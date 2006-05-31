@@ -29,6 +29,8 @@
 #include <IFiFolder.h>
 
 #include "ifolder.h"
+#include "ifolder-user.h"
+#include "ifolder-domain.h"
 #include "ifolder-private.h"
 #include "ifolder-errors.h"
 
@@ -43,15 +45,13 @@ extern guint ifolder_client_signals[LAST_SIGNAL];
 typedef struct _iFolderPrivate iFolderPrivate;
 struct _iFolderPrivate
 {
-	gchar *id;
-	gchar *name;
-	gchar *description;
 	gpointer user_data;
-	
-	gboolean is_connected;
+	iFolderDomain *domain;
+	gboolean connected;
 	iFolderState state;
 	
-	IFiFolder *core_ifolder;
+	gpointer core_ifolder;
+	ifweb::iFolderService *ifolder_service;
 };
 
 #define IFOLDER_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), IFOLDER_TYPE, iFolderPrivate))
@@ -146,7 +146,7 @@ ifolder_class_init(iFolderClass *klass)
 					g_param_spec_uint ("state",
 						_("iFolder state."),
 						_("The state of the iFolder."),
-						(guint) IFOLDER_STATE_SYNC_WAIT,
+						(guint) IFOLDER_STATE_DISCONNECTED,
 						(guint) IFOLDER_STATE_UNKNOWN,
 						(guint) IFOLDER_STATE_UNKNOWN,
 						G_PARAM_READABLE));
@@ -169,13 +169,12 @@ static void ifolder_init(iFolder *ifolder)
 	 * If you need specific construction properties to complete initialization,
 	 * delay initialization completion until the property is set.
 	 */
-	priv->id = NULL;
-	priv->name = NULL;
-	priv->description = NULL;
-	priv->state = IFOLDER_STATE_UNKNOWN;
-	priv->user_data = NULL;
-	
-	priv->core_ifolder = NULL;
+	priv->user_data			= NULL;
+	priv->domain			= NULL;
+	priv->connected			= FALSE;
+	priv->state				= IFOLDER_STATE_UNKNOWN;
+	priv->core_ifolder		= NULL;
+	priv->ifolder_service	= NULL;
 }
 
 static void ifolder_finalize(GObject *object)
@@ -187,10 +186,12 @@ static void ifolder_finalize(GObject *object)
 	priv = IFOLDER_GET_PRIVATE (object);
 
 	/* custom stuff */
-	g_free(priv->id);
-	g_free(priv->name);
-	g_free(priv->description);
-
+	if (priv->connected)
+		delete ((IFiFolder *)priv->core_ifolder);
+	else
+		delete ((ifweb::iFolder *)priv->core_ifolder);
+		
+	
 	/* Chain up the parent class */
 	G_OBJECT_CLASS (ifolder_parent_class)->finalize (object);
 }
@@ -204,16 +205,16 @@ ifolder_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec 
 	switch (prop_id)
 	{
 		case PROP_ID:
-			g_value_set_string (value, priv->id);
+			g_value_set_string (value, ifolder_get_id (ifolder));
 			break;
 		case PROP_NAME:
-			g_value_set_string (value, priv->name);
+			g_value_set_string (value, ifolder_get_name (ifolder));
 			break;
 		case PROP_DESCRIPTION:
-			g_value_set_string (value, priv->description);
+			g_value_set_string (value, ifolder_get_description (ifolder));
 			break;
 		case PROP_STATE:
-			g_value_set_uint (value, (guint)priv->state);
+			g_value_set_uint (value, (guint)ifolder_get_state (ifolder, NULL));
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -224,26 +225,53 @@ ifolder_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec 
 static void
 ifolder_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec)
 {
-	iFolder *ifolder = IFOLDER (object);
-	iFolderPrivate *priv = IFOLDER_GET_PRIVATE (object);
-	
-	switch (prop_id)
-	{
-		case PROP_DESCRIPTION:
-			ifolder_set_description (ifolder, g_value_get_string (value), NULL);
-			break;
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-			break;
-	}
+	G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 }
 
 iFolder *
-ifolder_new (void)
+ifolder_new_disconnected (iFolderDomain *domain, ifweb::iFolder *core_ifolder)
 {
 	iFolder *ifolder;
+	iFolderPrivate *priv;
+	
+	g_return_val_if_fail (IFOLDER_IS_DOMAIN (domain), NULL);
+	g_return_val_if_fail (core_ifolder != NULL, NULL);
 	
 	ifolder = IFOLDER(g_object_new (IFOLDER_TYPE, NULL));
+	
+	priv = IFOLDER_GET_PRIVATE (ifolder);
+
+	priv->domain = domain;
+	priv->connected = FALSE;
+	priv->state = IFOLDER_STATE_DISCONNECTED;
+	priv->core_ifolder = core_ifolder;
+	
+	/* Hook up the iFolderService with this object */
+	priv->ifolder_service = ifweb::IFServiceManager::GetiFolderService (ifolder_domain_get_id (domain), ifolder_domain_get_master_host (domain));
+	
+	return ifolder;
+}
+
+iFolder *
+ifolder_new_connected (iFolderDomain *domain, IFiFolder *core_ifolder)
+{
+	iFolder *ifolder;
+	iFolderPrivate *priv;
+	
+	g_return_val_if_fail (IFOLDER_IS_DOMAIN (domain), NULL);
+	g_return_val_if_fail (core_ifolder != NULL, NULL);
+
+	ifolder = IFOLDER(g_object_new (IFOLDER_TYPE, NULL));
+
+	priv = IFOLDER_GET_PRIVATE (ifolder);
+	
+	priv->domain = domain;
+	priv->connected = TRUE;
+	priv->state = IFOLDER_STATE_SYNC_WAIT;
+	priv->core_ifolder = core_ifolder;
+	
+	/* Hook up the iFolderService with this object */
+	priv->ifolder_service = ifweb::IFServiceManager::GetiFolderService (ifolder_domain_get_id (domain), ifolder_domain_get_master_host (domain));
 	
 	return ifolder;
 }
@@ -251,29 +279,16 @@ ifolder_new (void)
 const gchar *
 ifolder_get_id(iFolder *ifolder)
 {
-	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), "");
-
-	return IFOLDER_GET_PRIVATE (ifolder)->id;
-}
-
-void
-ifolder_set_id (iFolder *ifolder, const gchar *id)
-{
 	iFolderPrivate *priv;
 
-	g_return_if_fail (IFOLDER_IS_IFOLDER (ifolder));
-	
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), "");
+
 	priv = IFOLDER_GET_PRIVATE (ifolder);
 	
-	if (id == NULL)
-	{
-		g_free (priv->id);
-		priv->id = NULL;
-	}
-	else
-		priv->id = g_strdup (id);
+	if (!priv->connected)
+		return ((ifweb::iFolder *)priv->core_ifolder)->ID;
 	
-	g_object_notify (G_OBJECT (ifolder), "id");
+	return NULL;	/* FIXME: Get the ID from IFiFolder */
 }
 
 const gchar *
@@ -285,27 +300,10 @@ ifolder_get_name(iFolder *ifolder)
 
 	priv = IFOLDER_GET_PRIVATE (ifolder);
 	
-	return priv->name;
-}
-
-void
-ifolder_set_name (iFolder *ifolder, const gchar *name)
-{
-	iFolderPrivate *priv;
-
-	g_return_if_fail (IFOLDER_IS_IFOLDER (ifolder));
+	if (!priv->connected)
+		return ((ifweb::iFolder *)priv->core_ifolder)->Name;
 	
-	priv = IFOLDER_GET_PRIVATE (ifolder);
-	
-	if (name == NULL)
-	{
-		g_free (priv->name);
-		priv->name = NULL;
-	}
-	else
-		priv->name = g_strdup (name);
-	
-	g_object_notify (G_OBJECT (ifolder), "name");
+	return NULL;	/* FIXME: Get the Name from IFiFolder */
 }
 
 const gchar *
@@ -317,28 +315,10 @@ ifolder_get_description(iFolder *ifolder)
 
 	priv = IFOLDER_GET_PRIVATE (ifolder);
 	
-	return priv->description;
-}
-
-void
-ifolder_set_description (iFolder *ifolder, const gchar *new_description, GError **error)
-{
-	iFolderPrivate *priv;
-
-	g_return_if_fail (IFOLDER_IS_IFOLDER (ifolder));
+	if (!priv->connected)
+		return ((ifweb::iFolder *)priv->core_ifolder)->Description;
 	
-	priv = IFOLDER_GET_PRIVATE (ifolder);
-	
-	g_debug ("FIXME: Call the core to set the description of an iFolder");
-	if (new_description == NULL)
-	{
-		g_free (priv->description);
-		priv->description = NULL;
-	}
-	else
-		priv->description = g_strdup (new_description);
-
-	g_object_notify (G_OBJECT (ifolder), "description");
+	return NULL;	/* FIXME: Get the Description from IFiFolder */
 }
 
 gpointer
@@ -365,7 +345,7 @@ ifolder_set_user_data(iFolder *ifolder, gpointer user_data)
 	priv->user_data = user_data;
 }
 
-IFiFolder *
+gpointer
 ifolder_get_core_ifolder (iFolder *ifolder)
 {
 	iFolderPrivate *priv;
@@ -377,8 +357,205 @@ ifolder_get_core_ifolder (iFolder *ifolder)
 	return priv->core_ifolder;
 }
 
+gboolean
+ifolder_is_connected (iFolder *ifolder)
+{
+	iFolderPrivate *priv;
+
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), FALSE);
+
+	priv = IFOLDER_GET_PRIVATE (ifolder);
+	
+	return priv->connected;
+}
+
+iFolderUser *
+ifolder_get_owner (iFolder *ifolder)
+{
+	iFolderPrivate *priv;
+	iFolderUser *user = NULL;
+
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), NULL);
+
+	priv = IFOLDER_GET_PRIVATE (ifolder);
+	
+	if (!priv->connected)
+		user = ifolder_domain_get_user (priv->domain, ((ifweb::iFolder *)priv->core_ifolder)->OwnerID, NULL);
+	else
+	{
+		/* FIXME: Get the OwnerID from IFiFolder */
+	}
+	
+	return user;
+}
+
+iFolderDomain *
+ifolder_get_domain (iFolder *ifolder)
+{
+	iFolderPrivate *priv;
+
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), NULL);
+
+	priv = IFOLDER_GET_PRIVATE (ifolder);
+	
+	return priv->domain;
+}
+
+long
+ifolder_get_size (iFolder *ifolder, GError **error)
+{
+	iFolderPrivate *priv;
+
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), -1);
+
+	priv = IFOLDER_GET_PRIVATE (ifolder);
+	
+	if (!priv->connected)
+		return ((ifweb::iFolder *)priv->core_ifolder)->Size;
+	
+	return -1;	/* FIXME: Get the Size from IFiFolder */
+}
+
+iFolderMemberRights
+ifolder_get_rights (iFolder *ifolder, GError **error)
+{
+	iFolderPrivate *priv;
+	iFolderMemberRights rights = IFOLDER_MEMBER_RIGHTS_DENY;
+
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), IFOLDER_MEMBER_RIGHTS_DENY);
+
+	priv = IFOLDER_GET_PRIVATE (ifolder);
+	
+	if (!priv->connected)
+	{
+		switch (((ifweb::iFolder *)priv->core_ifolder)->Rights)
+		{
+			case ifolder__Rights__ReadOnly:
+				rights = IFOLDER_MEMBER_RIGHTS_READ_ONLY;
+				break;
+			case ifolder__Rights__ReadWrite:
+				rights = IFOLDER_MEMBER_RIGHTS_READ_WRITE;
+				break;
+			case ifolder__Rights__Admin:
+				rights = IFOLDER_MEMBER_RIGHTS_ADMIN;
+				break;
+			case ifolder__Rights__Deny:
+			default:
+				rights = IFOLDER_MEMBER_RIGHTS_DENY;
+				break;
+		}
+	}
+	
+	return rights;	/* FIXME: Get the iFolderMemberRights from IFiFolder */
+}
+
+time_t
+ifolder_get_created (iFolder *ifolder, GError **error)
+{
+	iFolderPrivate *priv;
+
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), 0);
+
+	priv = IFOLDER_GET_PRIVATE (ifolder);
+	
+	if (!priv->connected)
+		return ((ifweb::iFolder *)priv->core_ifolder)->Created;
+	
+	return 0;	/* FIXME: Get the Created time from IFiFolder */
+}
+
+time_t
+ifolder_get_last_modified (iFolder *ifolder, GError **error)
+{
+	iFolderPrivate *priv;
+
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), 0);
+
+	priv = IFOLDER_GET_PRIVATE (ifolder);
+	
+	if (!priv->connected)
+		return ((ifweb::iFolder *)priv->core_ifolder)->LastModified;
+	
+	return 0;	/* FIXME: Get the LastModified time from IFiFolder */
+}
+
+gboolean
+ifolder_is_published (iFolder *ifolder, GError **error)
+{
+	iFolderPrivate *priv;
+
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), FALSE);
+
+	priv = IFOLDER_GET_PRIVATE (ifolder);
+	
+	if (!priv->connected)
+		return ((ifweb::iFolder *)priv->core_ifolder)->Published;
+	
+	return FALSE;	/* FIXME: Get the Published value from IFiFolder */
+}
+
+gboolean
+ifolder_is_enabled (iFolder *ifolder, GError **error)
+{
+	iFolderPrivate *priv;
+
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), FALSE);
+
+	priv = IFOLDER_GET_PRIVATE (ifolder);
+	
+	if (!priv->connected)
+		return ((ifweb::iFolder *)priv->core_ifolder)->Enabled;
+	
+	return FALSE;	/* FIXME: Get the Enabled value from IFiFolder */
+}
+
+long
+ifolder_get_member_count (iFolder *ifolder, GError **error)
+{
+	iFolderPrivate *priv;
+
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), -1);
+
+	priv = IFOLDER_GET_PRIVATE (ifolder);
+	
+	if (!priv->connected)
+		return ((ifweb::iFolder *)priv->core_ifolder)->MemberCount;
+	
+	return -1;	/* FIXME: Get the MemberCount from IFiFolder */
+}
+
+iFolderState
+ifolder_get_state (iFolder *ifolder, GError **error)
+{
+	iFolderPrivate *priv;
+
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), IFOLDER_STATE_UNKNOWN);
+
+	priv = IFOLDER_GET_PRIVATE (ifolder);
+	
+	return priv->state;
+}
+
+long
+ifolder_get_items_to_synchronize (iFolder *ifolder, GError **error)
+{
+	iFolderPrivate *priv;
+
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), -1);
+
+	priv = IFOLDER_GET_PRIVATE (ifolder);
+	
+	if (!priv->connected)
+	{
+		g_set_error (error, IFOLDER_ERROR, IFOLDER_ERR_UNKNOWN, "You cannot call ifolder_get_items_to_synchronize() on a disconnected iFolder.");
+		return -1;
+	}
+	
+	return -1; /* FIXME: Get the number of items left to synchronize from IFiFolder */
+}
+
 void
-ifolder_set_core_ifolder (iFolder *ifolder, IFiFolder *core_ifolder)
+ifolder_start_synchronization (iFolder *ifolder, bool sync_now, GError **error)
 {
 	iFolderPrivate *priv;
 
@@ -386,97 +563,33 @@ ifolder_set_core_ifolder (iFolder *ifolder, IFiFolder *core_ifolder)
 
 	priv = IFOLDER_GET_PRIVATE (ifolder);
 	
-	priv->core_ifolder = core_ifolder;
-}
-
-gboolean
-ifolder_is_connected (iFolder *ifolder)
-{
-	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), FALSE);
-}
-
-iFolderUser *
-ifolder_get_owner (iFolder *ifolder)
-{
-	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), NULL);
-}
-
-iFolderDomain *
-ifolder_get_domain (iFolder *ifolder)
-{
-	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), NULL);
-}
-
-long
-ifolder_get_size (iFolder *ifolder, GError **error)
-{
-	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), -1);
-}
-
-long
-ifolder_get_file_count (iFolder *ifolder, GError **error)
-{
-	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), -1);
-}
-
-long
-ifolder_get_directory_count (iFolder *ifolder, GError **error)
-{
-	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), -1);
-}
-
-iFolderMemberRights *
-ifolder_get_rights (iFolder *ifolder, GError **error)
-{
-	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), NULL);
-}
-
-time_t *
-ifolder_get_last_modified (iFolder *ifolder, GError **error)
-{
-	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), NULL);
-}
-
-gboolean
-ifolder_is_published (iFolder *ifolder, GError **error)
-{
-	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), FALSE);
-}
-
-gboolean
-ifolder_is_enabled (iFolder *ifolder, GError **error)
-{
-	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), FALSE);
-}
-
-long
-ifolder_get_member_count (iFolder *ifolder, GError **error)
-{
-	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), -1);
-}
-
-iFolderState
-ifolder_get_state (iFolder *ifolder, GError **error)
-{
-	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), IFOLDER_STATE_UNKNOWN);
-}
-
-long
-ifolder_get_items_to_synchronize (iFolder *ifolder, GError **error)
-{
-	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), -1);
-}
-
-void
-ifolder_start_synchronization (iFolder *ifolder, bool sync_now, GError **error)
-{
-	g_return_if_fail (IFOLDER_IS_IFOLDER (ifolder));
+	if (!priv->connected)
+	{
+		g_set_error (error, IFOLDER_ERROR, IFOLDER_ERR_UNKNOWN, "You cannot call ifolder_start_synchronization() on a disconnected iFolder.");
+		return;
+	}
+	
+	g_message ("FIXME: IFiFolder should change to return a GError on IFiFolder::Sync()");
+	((IFiFolder *)priv->core_ifolder)->Sync ();
 }
 
 void
 ifolder_stop_synchronization (iFolder *ifolder, GError **error)
 {
+	iFolderPrivate *priv;
+
 	g_return_if_fail (IFOLDER_IS_IFOLDER (ifolder));
+
+	priv = IFOLDER_GET_PRIVATE (ifolder);
+	
+	if (!priv->connected)
+	{
+		g_set_error (error, IFOLDER_ERROR, IFOLDER_ERR_UNKNOWN, "You cannot call ifolder_stop_synchronization() on a disconnected iFolder.");
+		return;
+	}
+	
+	g_message ("FIXME: IFiFolder should change to return a GError on IFiFolder::Sync()");
+	((IFiFolder *)priv->core_ifolder)->Stop ();
 }
 
 void
@@ -485,51 +598,294 @@ ifolder_resume_synchronization (iFolder *ifolder, bool sync_now, GError **error)
 	g_return_if_fail (IFOLDER_IS_IFOLDER (ifolder));
 }
 
-GSList *
+iFolderUserIterator *
 ifolder_get_members (iFolder *ifolder, int index, int count, GError **error)
 {
+	iFolderPrivate				*priv;
+	iFolderUserIterator			*user_iter;
+	ifweb::iFolderUserIterator	*core_user_iter;
+	const gchar					*ifolder_id;
+	GError						*err = NULL;
+
 	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), NULL);
+	g_return_val_if_fail (index >= 0, NULL);
+	g_return_val_if_fail (count > 0, NULL);
+
+	priv = IFOLDER_GET_PRIVATE (ifolder);
+	
+	if (priv->connected)
+		ifolder_id = "";
+		/** FIXME: Get the ID from IFiFolder
+		ifolder_id = ((IFiFolder *)priv->core_ifolder)->ID;
+		*/
+	else
+		ifolder_id = ((ifweb::iFolder *)priv->core_ifolder)->ID;
+
+	core_user_iter = priv->ifolder_service->GetMembers (ifolder_id, index, count, &err);
+	if (err)
+	{
+		g_propagate_error (error, err);
+		return NULL;
+	}
+	
+	user_iter = ifolder_user_iterator_new (core_user_iter);
+
+	return user_iter;
 }
 
-void
-ifolder_set_member_rights (iFolder *ifolder, const iFolderUser *member, iFolderMemberRights rights, GError **error)
+gboolean
+ifolder_set_member_rights (iFolder *ifolder, iFolderUser *member, iFolderMemberRights rights, GError **error)
 {
-	g_return_if_fail (IFOLDER_IS_IFOLDER (ifolder));
+	iFolderPrivate				*priv;
+	const gchar					*ifolder_id;
+	ifolder__Rights				core_rights;
+	gboolean					success;
+	GError						*err = NULL;
+
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), FALSE);
+	g_return_val_if_fail (IFOLDER_IS_USER (member), FALSE);
+
+	priv = IFOLDER_GET_PRIVATE (ifolder);
+	
+	if (priv->connected)
+		ifolder_id = "";
+		/** FIXME: Get the ID from IFiFolder
+		ifolder_id = ((IFiFolder *)priv->core_ifolder)->ID;
+		*/
+	else
+		ifolder_id = ((ifweb::iFolder *)priv->core_ifolder)->ID;
+	
+	switch (rights)
+	{
+		case IFOLDER_MEMBER_RIGHTS_READ_ONLY:
+			core_rights = ifolder__Rights__ReadOnly;
+			break;
+		case IFOLDER_MEMBER_RIGHTS_READ_WRITE:
+			core_rights = ifolder__Rights__ReadWrite;
+			break;
+		case IFOLDER_MEMBER_RIGHTS_ADMIN:
+			core_rights = ifolder__Rights__Admin;
+			break;
+		case IFOLDER_MEMBER_RIGHTS_DENY:
+		default:
+			core_rights = ifolder__Rights__Deny;
+			break;
+	}
+
+	success = priv->ifolder_service->SetMemberRights (ifolder_id, ifolder_user_get_id (member), core_rights, &err);
+	if (err)
+	{
+		g_propagate_error (error, err);
+		return FALSE;
+	}
+	
+	return success;
 }
 
-void
-ifolder_add_member (iFolder *ifolder, const iFolderUser *member, iFolderMemberRights rights, GError **error)
+gboolean
+ifolder_add_member (iFolder *ifolder, iFolderUser *member, iFolderMemberRights rights, GError **error)
 {
-	g_return_if_fail (IFOLDER_IS_IFOLDER (ifolder));
+	iFolderPrivate				*priv;
+	const gchar					*ifolder_id;
+	ifolder__Rights				core_rights;
+	gboolean					success;
+	GError						*err = NULL;
+
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), FALSE);
+	g_return_val_if_fail (IFOLDER_IS_USER (member), FALSE);
+
+	priv = IFOLDER_GET_PRIVATE (ifolder);
+	
+	if (priv->connected)
+		ifolder_id = "";
+		/** FIXME: Get the ID from IFiFolder
+		ifolder_id = ((IFiFolder *)priv->core_ifolder)->ID;
+		*/
+	else
+		ifolder_id = ((ifweb::iFolder *)priv->core_ifolder)->ID;
+	
+	switch (rights)
+	{
+		case IFOLDER_MEMBER_RIGHTS_READ_ONLY:
+			core_rights = ifolder__Rights__ReadOnly;
+			break;
+		case IFOLDER_MEMBER_RIGHTS_READ_WRITE:
+			core_rights = ifolder__Rights__ReadWrite;
+			break;
+		case IFOLDER_MEMBER_RIGHTS_ADMIN:
+			core_rights = ifolder__Rights__Admin;
+			break;
+		case IFOLDER_MEMBER_RIGHTS_DENY:
+		default:
+			core_rights = ifolder__Rights__Deny;
+			break;
+	}
+
+	
+	success = priv->ifolder_service->AddMember (ifolder_id, ifolder_user_get_id (member), core_rights, &err);
+	if (err)
+	{
+		g_propagate_error (error, err);
+		return FALSE;
+	}
+	
+	return success;
 }
 
-void
-ifolder_remove_member (iFolder *ifolder, const iFolderUser *member, GError **error)
+gboolean
+ifolder_remove_member (iFolder *ifolder, iFolderUser *member, GError **error)
 {
-	g_return_if_fail (IFOLDER_IS_IFOLDER (ifolder));
+	iFolderPrivate				*priv;
+	const gchar					*ifolder_id;
+	gboolean					success;
+	GError						*err = NULL;
+
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), FALSE);
+	g_return_val_if_fail (IFOLDER_IS_USER (member), FALSE);
+
+	priv = IFOLDER_GET_PRIVATE (ifolder);
+	
+	if (priv->connected)
+		ifolder_id = "";
+		/** FIXME: Get the ID from IFiFolder
+		ifolder_id = ((IFiFolder *)priv->core_ifolder)->ID;
+		*/
+	else
+		ifolder_id = ((ifweb::iFolder *)priv->core_ifolder)->ID;
+	
+	success = priv->ifolder_service->RemoveMember (ifolder_id, ifolder_user_get_id (member), &err);
+	if (err)
+	{
+		g_propagate_error (error, err);
+		return FALSE;
+	}
+	
+	return success;
 }
 
-void
-ifolder_set_owner (iFolder *ifolder, const iFolderUser *member, GError **error)
+gboolean
+ifolder_set_owner (iFolder *ifolder, iFolderUser *member, GError **error)
 {
-	g_return_if_fail (IFOLDER_IS_IFOLDER (ifolder));
+	iFolderPrivate				*priv;
+	const gchar					*ifolder_id;
+	gboolean					success;
+	GError						*err = NULL;
+
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), FALSE);
+	g_return_val_if_fail (IFOLDER_IS_USER (member), FALSE);
+
+	priv = IFOLDER_GET_PRIVATE (ifolder);
+	
+	if (priv->connected)
+		ifolder_id = "";
+		/** FIXME: Get the ID from IFiFolder
+		ifolder_id = ((IFiFolder *)priv->core_ifolder)->ID;
+		*/
+	else
+		ifolder_id = ((ifweb::iFolder *)priv->core_ifolder)->ID;
+	
+	success = priv->ifolder_service->SetiFolderOwner (ifolder_id, ifolder_user_get_id (member), &err);
+	if (err)
+	{
+		g_propagate_error (error, err);
+		return FALSE;
+	}
+	
+	return success;
 }
 
-GSList *
+iFolderChangeEntryIterator *
 ifolder_get_change_entries (iFolder *ifolder, int index, int count, GError **error)
 {
+	iFolderPrivate				*priv;
+	iFolderChangeEntryIterator	*iter;
+	ifweb::ChangeEntryIterator	*core_iter;
+	const gchar					*ifolder_id;
+	GError						*err = NULL;
+
 	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), NULL);
+	g_return_val_if_fail (index >= 0, NULL);
+	g_return_val_if_fail (count > 0, NULL);
+
+	priv = IFOLDER_GET_PRIVATE (ifolder);
+
+	if (priv->connected)
+		ifolder_id = "";
+		/** FIXME: Get the ID from IFiFolder
+		ifolder_id = ((IFiFolder *)priv->core_ifolder)->ID;
+		*/
+	else
+		ifolder_id = ((ifweb::iFolder *)priv->core_ifolder)->ID;
+
+	core_iter = priv->ifolder_service->GetChanges (ifolder_id, ifolder_id, index, count, &err);
+	if (err)
+	{
+		g_propagate_error (error, err);
+		return NULL;
+	}
+	
+	iter = ifolder_change_entry_iterator_new (core_iter);
+
+	return iter;
 }
 
-void
+gboolean
 ifolder_publish (iFolder *ifolder, GError **error)
 {
-	g_return_if_fail (IFOLDER_IS_IFOLDER (ifolder));
+	iFolderPrivate				*priv;
+	const gchar					*ifolder_id;
+	gboolean					success;
+	GError						*err = NULL;
+
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), FALSE);
+
+	priv = IFOLDER_GET_PRIVATE (ifolder);
+	
+	if (priv->connected)
+		ifolder_id = "";
+		/** FIXME: Get the ID from IFiFolder
+		ifolder_id = ((IFiFolder *)priv->core_ifolder)->ID;
+		*/
+	else
+		ifolder_id = ((ifweb::iFolder *)priv->core_ifolder)->ID;
+	
+	success = priv->ifolder_service->PublishiFolder (ifolder_id, TRUE, &err);
+	if (err)
+	{
+		g_propagate_error (error, err);
+		return FALSE;
+	}
+	
+	return success;
 }
 
-void
+gboolean
 ifolder_unpublish (iFolder *ifolder, GError **error)
 {
-	g_return_if_fail (IFOLDER_IS_IFOLDER (ifolder));
+	iFolderPrivate				*priv;
+	const gchar					*ifolder_id;
+	gboolean					success;
+	GError						*err = NULL;
+
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), FALSE);
+
+	priv = IFOLDER_GET_PRIVATE (ifolder);
+	
+	if (priv->connected)
+		ifolder_id = "";
+		/** FIXME: Get the ID from IFiFolder
+		ifolder_id = ((IFiFolder *)priv->core_ifolder)->ID;
+		*/
+	else
+		ifolder_id = ((ifweb::iFolder *)priv->core_ifolder)->ID;
+	
+	success = priv->ifolder_service->PublishiFolder (ifolder_id, FALSE, &err);
+	if (err)
+	{
+		g_propagate_error (error, err);
+		return FALSE;
+	}
+	
+	return success;
 }
 

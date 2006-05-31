@@ -86,6 +86,8 @@ GType ifolder_get_type (void) G_GNUC_CONST;
 
 typedef enum
 {
+	IFOLDER_STATE_DISCONNECTED,			/*!< This iFolder is a disconnected iFolder and is not set up to synchronize to this computer. */
+
 	IFOLDER_STATE_SYNC_WAIT,				/*!< The iFolder has never synchronized since the client has been started */
 	IFOLDER_STATE_SYNC_PREPARE,			/*!< The iFolder is preparing to synchronize by checking for changes in the local file system */
 	IFOLDER_STATE_SYNC_UPLOADING,		/*!< The iFolder is actively uploading files */
@@ -164,17 +166,15 @@ iFolderUser * ifolder_get_owner (iFolder *ifolder);
 iFolderDomain * ifolder_get_domain (iFolder *ifolder);
 long ifolder_get_size (iFolder *ifolder, GError **error);
 
-long ifolder_get_file_count (iFolder *ifolder, GError **error);
-long ifolder_get_directory_count (iFolder *ifolder, GError **error);
-
 //! Returns the current user's member rights of an iFolder
 /**
  * @param ifolder The iFolder.
  * @param rights Invalid if the call is unsuccessful.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-iFolderMemberRights * ifolder_get_rights (iFolder *ifolder, GError **error);
-time_t * ifolder_get_last_modified (iFolder *ifolder, GError **error);
+iFolderMemberRights ifolder_get_rights (iFolder *ifolder, GError **error);
+time_t ifolder_get_created (iFolder *ifolder, GError **error);
+time_t ifolder_get_last_modified (iFolder *ifolder, GError **error);
 
 //! Returns true if an iFolder is published.
 /**
@@ -298,7 +298,7 @@ void ifolder_resume_synchronization (iFolder *ifolder, bool sync_now, GError **e
  * @param user_enum Invalid if the call is unsuccessful.
  * @return A list of iFolderUser objects.
  */
-GSList * ifolder_get_members (iFolder *ifolder, int index, int count, GError **error);
+iFolderUserIterator * ifolder_get_members (iFolder *ifolder, int index, int count, GError **error);
 
 //! Set a member's rights to an iFolder.
 /**
@@ -310,7 +310,7 @@ GSList * ifolder_get_members (iFolder *ifolder, int index, int count, GError **e
  * @param rights The rights to assign to the member.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-void ifolder_set_member_rights (iFolder *ifolder, const iFolderUser *member, iFolderMemberRights rights, GError **error);
+gboolean ifolder_set_member_rights (iFolder *ifolder, iFolderUser *member, iFolderMemberRights rights, GError **error);
 
 //! Add a new member to an iFolder.
 /**
@@ -322,7 +322,7 @@ void ifolder_set_member_rights (iFolder *ifolder, const iFolderUser *member, iFo
  * @param rights The rights to assign to the member.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-void ifolder_add_member (iFolder *ifolder, const iFolderUser *member, iFolderMemberRights rights, GError **error);
+gboolean ifolder_add_member (iFolder *ifolder, iFolderUser *member, iFolderMemberRights rights, GError **error);
 
 //! Remove a member from an iFolder.
 /**
@@ -333,7 +333,7 @@ void ifolder_add_member (iFolder *ifolder, const iFolderUser *member, iFolderMem
  * @param member The member to remove from the iFolder.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-void ifolder_remove_member (iFolder *ifolder, const iFolderUser *member, GError **error);
+gboolean ifolder_remove_member (iFolder *ifolder, iFolderUser *member, GError **error);
 
 //! Set a new owner of an iFolder.
 /**
@@ -345,7 +345,7 @@ void ifolder_remove_member (iFolder *ifolder, const iFolderUser *member, GError 
  * @param member The member to set as the new owner of the iFolder.
  * @return IFOLDER_SUCCESS if the call was successful.
  */
-void ifolder_set_owner (iFolder *ifolder, const iFolderUser *member, GError **error);
+gboolean ifolder_set_owner (iFolder *ifolder, iFolderUser *member, GError **error);
 
 /*@}*/
 
@@ -365,7 +365,7 @@ void ifolder_set_owner (iFolder *ifolder, const iFolderUser *member, GError **er
  * @param change_entry_enum Invalid if the call is unsuccessful.
  * @return A GSList of iFolderChangeEntry objects.
  */
-GSList * ifolder_get_change_entries (iFolder *ifolder, int index, int count, GError **error);
+iFolderChangeEntryIterator * ifolder_get_change_entries (iFolder *ifolder, int index, int count, GError **error);
 
 //! Publish an iFolder
 /**
@@ -373,7 +373,7 @@ GSList * ifolder_get_change_entries (iFolder *ifolder, int index, int count, GEr
  * @return IFOLDER_SUCCESS if the call was successful.
  * @see ifolder_is_published()
  */
-void ifolder_publish (iFolder *ifolder, GError **error);
+gboolean ifolder_publish (iFolder *ifolder, GError **error);
 
 //! Un-publish an iFolder
 /**
@@ -381,7 +381,7 @@ void ifolder_publish (iFolder *ifolder, GError **error);
  * @return IFOLDER_SUCCESS if the call was successful.
  * @see ifolder_is_published()
  */
-void ifolder_unpublish (iFolder *ifolder, GError **error);
+gboolean ifolder_unpublish (iFolder *ifolder, GError **error);
 
 /*@}*/
 
