@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdarg.h>
 
 #include <glib.h>
 #include "IFApplication.h"
@@ -16,13 +17,13 @@ int SyncHandler(PCommand command, char* extra[]);
 int ConflictHandler(PCommand command, char* extra[]);
 int LogHandler(PCommand command, char* extra[]);
 
-static gchar* DomainName = NULL;
+static gboolean DomainCmd = false;
 static gboolean iFolderName = NULL;
 static gboolean LogCmd = false;
 
 static GOptionEntry AppOptions[] = 
 {
-	{"domain", 'd', 0, G_OPTION_ARG_STRING, &DomainName, "Domain to operate on.", "DOMAIN_NAME"},
+	{"domain", 'd', 0, G_OPTION_ARG_NONE, &DomainCmd, "Domain Operation.", NULL},
 	{"ifolder", 'i', 0, G_OPTION_ARG_STRING, &iFolderName, "iFolder to operate on", "IFOLDER_NAME"},
 	{"log", 'l', 0, G_OPTION_ARG_NONE, &LogCmd, "Logging Operation", NULL},
 	{ NULL }
@@ -34,6 +35,7 @@ static gboolean doAdd = false;
 static gboolean doRemove = false;
 static gboolean doList = false;
 static gboolean doView = false;
+static gchar* DomainName = NULL;
 static gchar* HostName = NULL;
 static gchar* UserName = NULL;
 static gchar* Password = NULL;
@@ -46,6 +48,7 @@ static GOptionEntry DomainOptions[] =
 	{"remove", 'r', 0, G_OPTION_ARG_NONE, &doRemove, "Remove domain from known domains", NULL},
 	{"list", 'l', 0, G_OPTION_ARG_NONE, &doList, "List the domains that have been added.", NULL},
 	{"view", 'v', 0, G_OPTION_ARG_NONE, &doView, "Get the details of the Domain.", NULL},
+	{"name", 'n', 0, G_OPTION_ARG_STRING, &DomainName, "Name of the domain", "DOMAIN_NAME"},
 	{"host", 'h', 0, G_OPTION_ARG_STRING, &HostName, "Host | Host:port", "HOST"},
 	{"user", 'u', 0, G_OPTION_ARG_STRING, &UserName, "User Name", "USER_NAME"},
 	{"password", 'p', 0, G_OPTION_ARG_STRING, &Password, "Password", "PASSWORD"},
@@ -104,12 +107,33 @@ Option LogOptions[] =
 #define LogOptionsCount sizeof(LogOptions)/sizeof(Option)
 */
 
+void PrintMissingOptions(GOptionEntry *options, int count, ...)
+{
+	printf("Missing Options\n");
+	printf("The following options are required for this operation.\n");
+	va_list ap;
+	va_start(ap, count);
+	for (int i = 0; i < count; ++i)
+	{
+		int arg = va_arg(ap, int);
+		printf("  ");
+		if (options[arg].short_name != 0)
+			printf("-%c, ", options[arg].short_name);
+		printf("--%s", options[arg].long_name);
+		if (options[arg].arg_description != NULL)
+		{
+			printf("=%s", options[arg].arg_description);
+		}
+		printf("\n");
+	}
+	va_end(ap);
+}
 
 int main(int argc, char* argv[])
 {
-	char c;
-	printf("Hit Enter to continue\n");
-	scanf("%c", &c);
+	//char c;
+	//printf("Hit Enter to continue\n");
+	//scanf("%c", &c);
 	
 	GError *error = NULL;
 	GOptionContext* clContext = g_option_context_new(NULL);
@@ -135,34 +159,34 @@ int main(int argc, char* argv[])
 		if (iFolderName != NULL)
 		{
 		}
-		else if (DomainName != NULL)
+		else if (DomainCmd)
 		{
 			if (doLogin)
 			{
-				if (UserName == NULL)
+				if (DomainName != NULL && UserName != NULL && Password != NULL)
 				{
-				}
-				if (Password == NULL)
-				{
-				}
-				IFDomain* pDomain = IFDomain::GetDomainByName(DomainName);
-				if (pDomain != NULL)
-				{
-					GError *error = NULL;
-					if (!pDomain->Login(Password, &error))
+					IFDomain* pDomain = IFDomain::GetDomainByName(DomainName);
+					if (pDomain != NULL)
 					{
-						if (error != NULL)
+						GError *error = NULL;
+						if (!pDomain->Login(Password, &error))
 						{
-							g_warning(error->message);
-							g_clear_error(&error);
+							if (error != NULL)
+							{
+								g_warning(error->message);
+								g_clear_error(&error);
+							}
+						}
+						else
+						{
+							printf("Login Successful\n");
 						}
 					}
-					else
-					{
-						printf("Login Successful\n");
-					}
 				}
-				
+				else
+				{
+					PrintMissingOptions(DomainOptions, 4, 0, 6, 8, 9);
+				}
 			}
 			if (doLogout)
 			{
@@ -213,8 +237,8 @@ int main(int argc, char* argv[])
 		}
 	}
 	g_option_context_free(clContext);
-	printf("Hit Enter to continue\n");
-	scanf("%c", &c);
+	//printf("Hit Enter to continue\n");
+	//scanf("%c", &c);
 	
 	/*
 	if (argc == 1)

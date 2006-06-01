@@ -41,6 +41,7 @@ extern GQuark	IF_CORE_ERROR_DOMAIN_QUARK;
 #define IF_ERR_ERROR	0xff01ffff	// The operation failed.
 
 #define IF_ERR_ALREADY_INITIALIZED	0xff011000
+#define	IF_ERR_NOT_AUTHENTICATED	0xff011001
 
 // Errors returned from simias.
 #define IF_ERR_SuccessInGrace		0xff011100
@@ -56,5 +57,8 @@ extern GQuark	IF_CORE_ERROR_DOMAIN_QUARK;
 #define IF_ERR_InternalException	0xff01110a
 #define IF_ERR_MethodNotSupported	0xff01110b
 #define IF_ERR_Timeout				0xff01110c
+
+
+
 
 #endif //_IFErrors_H_

@@ -36,7 +36,6 @@ namespace ifweb
 class IFServiceManager;
 class DomainService;
 class iFolderService;
-
 class iFolder;
 class iFolderIterator;
 class iFolderDetails;
@@ -77,6 +76,7 @@ private:
 	IFDomain	*m_pDomain;
 public:
 	Domain		m_DomainService;
+private:
 
 	DomainService(IFDomain *pDomain) : m_pDomain(pDomain) {};
 	virtual ~DomainService() { g_free((gchar*)m_DomainService.endpoint); };
@@ -107,9 +107,9 @@ public:
 	iFolderIterator* GetiFoldersByName(gint index, gint max, enum ifolder__SearchOperation operation, const gchar* pattern, GError **error);
 	iFolderIterator* GetiFoldersBySearch(time_t after, gint index, gint max, enum ifolder__SearchOperation operation, const gchar* pattern, enum ifolder__MemberRole role, GError **error);
 	gboolean RemoveMembership(const gchar *ifolderID, GError **error);
-	UserPolicy* GetAuthenticatedUserPolicy();
+	UserPolicy* GetAuthenticatedUserPolicy(GError **error);
 	iFolderPolicy* GetiFolderPolicy(gchar *ifolderID, GError **error);
-	gboolean SetiFolderPolicy(iFolderPolicy *pPolicy, GError *error);
+	gboolean SetiFolderPolicy(iFolderPolicy *pPolicy, GError **error);
 	iFolderEntry* CreateEntry(const gchar *entryName, const gchar *ifolderID, const gchar *parentID, enum ifolder__iFolderEntryType type, GError **error);
 	gboolean DeleteEntry(const gchar *entryID, const gchar *ifolderID, GError **error);
 	iFolderEntry* GetEntry(const gchar *entryID, const gchar *ifolderID, GError **error);
@@ -123,16 +123,16 @@ public:
 	void ReadFile();
 	void WriteFile();
 	void CloseFile();
-	iFolderSystem* GetSystem();
-	iFolderServer* GetHomeServer();
-	iFolderServerIterator* GetServers();
+	iFolderSystem* GetSystem(GError **error);
+	iFolderServer* GetHomeServer(GError **error);
+	iFolderServerIterator* GetServers(GError **error);
 	gboolean DeleteiFolder(const gchar *ifolderID, GError **error);
 	iFolder* GetiFolder(const gchar *ifolderID, GError **error);
 	iFolderDetails* GetiFolderDetails(const gchar *ifolderID, GError **error);
 	gboolean SetiFolderDescription(const gchar *ifolderID, const gchar *description, GError **error);
 	gboolean PublishiFolder(const gchar *ifolderID, gboolean publish, GError **error);
 	ChangeEntryIterator* GetChanges(const gchar *ifolderID, const gchar *itemID, gint index, gint max, GError **error);
-	iFolderUser* GetAuthenticatedUser();
+	iFolderUser* GetAuthenticatedUser(GError **error);
 	gboolean SetMemberRights(const gchar *ifolderID, const gchar *userID, enum ifolder__Rights rights, GError **error);
 	gboolean AddMember(const gchar *ifolderID, const gchar *userID, enum ifolder__Rights rights, GError **error);
 	gboolean RemoveMember(const gchar *ifolderID, const gchar *userID, GError **error);
@@ -142,6 +142,7 @@ public:
 	iFolderUser* GetUser(const gchar *pUserID, GError **error);
 	iFolderUserDetails* GetUserDetails(const gchar *pUserID, GError **error);
 	iFolderUserIterator* GetUsersBySearch(gint index, gint max, enum ifolder__SearchOperation operation, const gchar* pattern, enum ifolder__SearchProperty property, GError **error);
+	Login(const gchar *user, const gchar *password, GError **error);
 };
 
 

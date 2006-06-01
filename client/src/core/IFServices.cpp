@@ -23,6 +23,9 @@
 #include "IFApplication.h"
 #include "IFServices.h"
 #include "IFDomain.h"
+#include "simiasDomain_USCOREx0020_USCOREServiceSoapProxy.h"
+#include "simiasiFolderWebSoapProxy.h"
+
 
 namespace ifweb
 {
@@ -35,10 +38,21 @@ DomainService* IFServiceManager::GetDomainService(const gchar* domainID, const g
 		// TODO fix host to support multi-server
 		DomainService *pService = new DomainService(pDomain);
 		pService->m_DomainService.endpoint = IFApplication::BuildUrlToService(host, pService->m_DomainService.endpoint);
+		struct soap *pSoap = pService->m_DomainService.soap;
+		pSoap->mode |= SOAP_C_UTFSTRING | SOAP_IO_KEEPALIVE;
+		pSoap->imode |= SOAP_C_UTFSTRING | SOAP_IO_KEEPALIVE;
+		pSoap->omode |= SOAP_C_UTFSTRING | SOAP_IO_KEEPALIVE;
+		pSoap->user = pDomain;
+
+		// Set the parse_header callback so that we can get the login status.
+		pDomain->m_Parsehdr = pSoap->fparsehdr;
+		pSoap->fparsehdr = IFDomain::ParseLoginHeader;
+		pSoap->fparsehdr = IFDomain::ParseLoginHeader;
+
+
 		// Get the cookies.
-		struct soap soap;
-		soap.cookies = pDomain->m_Cookies;
-		pService->m_DomainService.soap->cookies = soap_copy_cookies(&soap);
+		if (pDomain->m_Authenticated)
+			pService->m_DomainService.soap->cookies = soap_copy_cookies(pDomain->m_DS->m_DomainService.soap);
 		return pService;
 	}
 	return NULL;
@@ -51,9 +65,15 @@ DomainService* IFServiceManager::GetDomainService(IFDomain *pDomain, const gchar
 		// TODO fix host to support multi-server
 		DomainService *pService = new DomainService(pDomain);
 		pService->m_DomainService.endpoint = IFApplication::BuildUrlToService(host, pService->m_DomainService.endpoint);
-		struct soap soap;
-		soap.cookies = pDomain->m_Cookies;
-		pService->m_DomainService.soap->cookies = soap_copy_cookies(&soap);
+		struct soap *pSoap = pService->m_DomainService.soap;
+		pSoap->mode |= SOAP_C_UTFSTRING | SOAP_IO_KEEPALIVE;
+		pSoap->imode |= SOAP_C_UTFSTRING | SOAP_IO_KEEPALIVE;
+		pSoap->omode |= SOAP_C_UTFSTRING | SOAP_IO_KEEPALIVE;
+		pSoap->user = pDomain;
+		
+		// Get the cookies.
+		if (pDomain->m_Authenticated)
+			pService->m_DomainService.soap->cookies = soap_copy_cookies(pDomain->m_DS->m_DomainService.soap);
 		return pService;
 	}
 	return NULL;
@@ -68,9 +88,15 @@ iFolderService* IFServiceManager::GetiFolderService(const gchar* domainID, const
 		host = pDomain->m_MasterHost;
 		iFolderService *pService = new iFolderService(pDomain);
 		pService->m_iFolderService.endpoint = IFApplication::BuildUrlToService(host, pService->m_iFolderService.endpoint);
-		struct soap soap;
-		soap.cookies = pDomain->m_Cookies;
-		pService->m_iFolderService.soap->cookies = soap_copy_cookies(&soap);
+		struct soap *pSoap = pService->m_iFolderService.soap;
+		pSoap->mode |= SOAP_C_UTFSTRING | SOAP_IO_KEEPALIVE;
+		pSoap->imode |= SOAP_C_UTFSTRING | SOAP_IO_KEEPALIVE;
+		pSoap->omode |= SOAP_C_UTFSTRING | SOAP_IO_KEEPALIVE;
+		pSoap->user = pDomain;
+		
+		// Get the cookies.
+		if (pDomain->m_Authenticated)
+			pService->m_iFolderService.soap->cookies = soap_copy_cookies(pDomain->m_iFS->m_iFolderService.soap);
 		return pService;
 	}
 	return NULL;
@@ -83,9 +109,15 @@ iFolderService* IFServiceManager::GetiFolderService(IFDomain *pDomain, const gch
 		// TODO fix host to support multi-server
 		iFolderService *pService = new iFolderService(pDomain);
 		pService->m_iFolderService.endpoint = IFApplication::BuildUrlToService(host, pService->m_iFolderService.endpoint);
-		struct soap soap;
-		soap.cookies = pDomain->m_Cookies;
-		pService->m_iFolderService.soap->cookies = soap_copy_cookies(&soap);
+		struct soap *pSoap = pService->m_iFolderService.soap;
+		pSoap->mode |= SOAP_C_UTFSTRING | SOAP_IO_KEEPALIVE;
+		pSoap->imode |= SOAP_C_UTFSTRING | SOAP_IO_KEEPALIVE;
+		pSoap->omode |= SOAP_C_UTFSTRING | SOAP_IO_KEEPALIVE;
+		pSoap->user = pDomain;
+		
+		// Get the cookies.
+		if (pDomain->m_Authenticated)
+			pService->m_iFolderService.soap->cookies = soap_copy_cookies(pDomain->m_iFS->m_iFolderService.soap);
 		return pService;
 	}
 	return NULL;
@@ -95,6 +127,12 @@ iFolderService* IFServiceManager::GetiFolderService(IFDomain *pDomain, const gch
 // DomainService class
 DomainInfo* DomainService::GetDomainInfo(const gchar* userID, GError** error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+
 	_ds__GetDomainInfo req;
 	_ds__GetDomainInfoResponse resp;
 	// Set the input parameters.
@@ -114,6 +152,12 @@ DomainInfo* DomainService::GetDomainInfo(const gchar* userID, GError** error)
 
 HostInfo* DomainService::GetHomeServer(const gchar* userID, GError** error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+
 	_ds__GetHomeServer req;
     _ds__GetHomeServerResponse resp;
 	// Set the input parameters.
@@ -132,6 +176,12 @@ HostInfo* DomainService::GetHomeServer(const gchar* userID, GError** error)
 
 ProvisionInfo* DomainService::ProvisionUserOnServer(const gchar *userName, const gchar *password, const gchar *ticket, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+	
 	_ds__ProvisionUserOnServer req;
 	_ds__ProvisionUserOnServerResponse resp;
 	// Set the input parameters.
@@ -155,6 +205,12 @@ ProvisionInfo* DomainService::ProvisionUserOnServer(const gchar *userName, const
 
 ProvisionInfo* DomainService::ProvisionUser(const gchar* userName, const gchar* password, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+	
 	_ds__ProvisionUser req;
 	_ds__ProvisionUserResponse resp;
 	// Set the input parameters.
@@ -177,6 +233,12 @@ ProvisionInfo* DomainService::ProvisionUser(const gchar* userName, const gchar* 
 
 void DomainService::CreateMaster()
 {
+	//if (!m_pDomain->m_Authenticated)
+	//{
+	//	g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+	//	return;
+	//}
+
 	_ds__CreateMaster req;
 	_ds__CreateMasterResponse resp;
 	// Set the input parameters.
@@ -192,8 +254,15 @@ void DomainService::CreateMaster()
 	// Get the output parameters.
 	char *pStatus = resp.CreateMasterResult;
 }
+
 gboolean DomainService::RemoveServerCollections(const gchar* domainID, const gchar* userID, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return false;
+	}
+	
 	_ds__RemoveServerCollections req;
 	_ds__RemoveServerCollectionsResponse resp;
 	// Set the input parameters.
@@ -210,6 +279,12 @@ gboolean DomainService::RemoveServerCollections(const gchar* domainID, const gch
 
 gchar* DomainService::GetDomainID(GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+
 	_ds__GetDomainID req;
 	_ds__GetDomainIDResponse resp;
 	// Set the input parameters.
@@ -232,6 +307,12 @@ gchar* DomainService::GetDomainID(GError **error)
 
 iFolderIterator* iFolderService::GetiFolders(gint index, gint max, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+
 	_ifolder__GetiFolders req;
 	_ifolder__GetiFoldersResponse resp;
 	// Set the input parameters.
@@ -252,6 +333,12 @@ iFolderIterator* iFolderService::GetiFolders(gint index, gint max, GError **erro
 
 iFolder* iFolderService::CreateiFolder(gchar *description, gchar* name, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+	
 	_ifolder__CreateiFolder req;
 	_ifolder__CreateiFolderResponse resp;
 	// Set the input parameters.
@@ -271,6 +358,12 @@ iFolder* iFolderService::CreateiFolder(gchar *description, gchar* name, GError *
 }
 iFolderIterator* iFolderService::GetiFoldersByName(gint index, gint max, enum ifolder__SearchOperation operation, const gchar* pattern, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+
 	_ifolder__GetiFoldersByName req;
 	_ifolder__GetiFoldersByNameResponse resp;
 	// Set the input parameters.
@@ -293,6 +386,12 @@ iFolderIterator* iFolderService::GetiFoldersByName(gint index, gint max, enum if
 
 iFolderIterator* iFolderService::GetiFoldersBySearch(time_t after, gint index, gint max, enum ifolder__SearchOperation operation, const gchar* pattern, enum ifolder__MemberRole role, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+
 	_ifolder__GetiFoldersBySearch req;
 	_ifolder__GetiFoldersBySearchResponse resp;
 	// Set the input parameters.
@@ -317,6 +416,12 @@ iFolderIterator* iFolderService::GetiFoldersBySearch(time_t after, gint index, g
 
 gboolean iFolderService::RemoveMembership(const gchar *ifolderID, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+
 	_ifolder__RemoveMembership req;
 	_ifolder__RemoveMembershipResponse resp;
 	// Set the input parameters.
@@ -330,8 +435,14 @@ gboolean iFolderService::RemoveMembership(const gchar *ifolderID, GError **error
 	return true;
 }
 
-UserPolicy* iFolderService::GetAuthenticatedUserPolicy()
+UserPolicy* iFolderService::GetAuthenticatedUserPolicy(GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+
 	_ifolder__GetAuthenticatedUserPolicy req;
 	_ifolder__GetAuthenticatedUserPolicyResponse resp;
 	// Set the input parameters.
@@ -350,6 +461,12 @@ UserPolicy* iFolderService::GetAuthenticatedUserPolicy()
 
 iFolderPolicy* iFolderService::GetiFolderPolicy(gchar *ifolderID, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+
 	_ifolder__GetiFolderPolicy req;
 	_ifolder__GetiFolderPolicyResponse resp;
 	// Set the input parameters.
@@ -367,8 +484,14 @@ iFolderPolicy* iFolderService::GetiFolderPolicy(gchar *ifolderID, GError **error
 	}
 }
 
-gboolean iFolderService::SetiFolderPolicy(iFolderPolicy *pPolicy, GError *error)
+gboolean iFolderService::SetiFolderPolicy(iFolderPolicy *pPolicy, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return false;
+	}
+
 	gboolean bstatus = true;
 
 	_ifolder__SetiFolderPolicy req;
@@ -388,6 +511,12 @@ gboolean iFolderService::SetiFolderPolicy(iFolderPolicy *pPolicy, GError *error)
 
 iFolderEntry* iFolderService::CreateEntry(const gchar *entryName, const gchar *ifolderID, const gchar *parentID, enum ifolder__iFolderEntryType type, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+
 	_ifolder__CreateEntry req;
 	_ifolder__CreateEntryResponse resp;
 	// Set the input parameters.
@@ -410,6 +539,12 @@ iFolderEntry* iFolderService::CreateEntry(const gchar *entryName, const gchar *i
 
 gboolean iFolderService::DeleteEntry(const gchar *entryID, const gchar *ifolderID, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return false;
+	}
+
 	_ifolder__DeleteEntry req;
 	_ifolder__DeleteEntryResponse resp;
 	// Set the input parameters.
@@ -426,6 +561,12 @@ gboolean iFolderService::DeleteEntry(const gchar *entryID, const gchar *ifolderI
 
 iFolderEntry* iFolderService::GetEntry(const gchar *entryID, const gchar *ifolderID, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+
 	_ifolder__GetEntry req;
 	_ifolder__GetEntryResponse resp;
 	// Set the input parameters.
@@ -446,6 +587,12 @@ iFolderEntry* iFolderService::GetEntry(const gchar *entryID, const gchar *ifolde
 
 iFolderEntry* iFolderService::GetEntryByPath(const gchar *entryPath, const gchar *ifolderID, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+
 	_ifolder__GetEntryByPath req;
 	_ifolder__GetEntryByPathResponse resp;
 	// Set the input parameters.
@@ -466,6 +613,12 @@ iFolderEntry* iFolderService::GetEntryByPath(const gchar *entryPath, const gchar
 
 iFolderEntryIterator* iFolderService::GetEntries(const gchar *entryID, const gchar *ifolderID, gint index, gint max, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+
 	_ifolder__GetEntries req;
 	_ifolder__GetEntriesResponse resp;
 	// Set the input parameters.
@@ -488,6 +641,12 @@ iFolderEntryIterator* iFolderService::GetEntries(const gchar *entryID, const gch
 
 iFolderEntryIterator* iFolderService::GetEntriesByName(const gchar *ifolderID, gint index, gint max, enum ifolder__SearchOperation operation, const gchar *parentID, const gchar *pattern, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+
 	_ifolder__GetEntriesByName req;
 	_ifolder__GetEntriesByNameResponse resp;
 	// Set the input parameters.
@@ -516,6 +675,12 @@ iFolderEntryIterator* iFolderService::GetEntriesByName(const gchar *ifolderID, g
 
 gchar* iFolderService::GetSetting(gchar *name, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+
 	_ifolder__GetSetting req;
 	_ifolder__GetSettingResponse resp;
 	// Set the input parameters.
@@ -535,6 +700,12 @@ gchar* iFolderService::GetSetting(gchar *name, GError **error)
 
 gboolean iFolderService::SetSetting(gchar *name, gchar *value, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return false;
+	}
+
 	_ifolder__SetSetting req;
 	_ifolder__SetSettingResponse resp;
 	// Set the input parameters.
@@ -551,6 +722,12 @@ gboolean iFolderService::SetSetting(gchar *name, gchar *value, GError **error)
 
 void iFolderService::OpenFileRead()
 {
+	//if (!m_pDomain->m_Authenticated)
+	//{
+	//	g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+	//	return;
+	//}
+
 	_ifolder__OpenFileRead req;
 	_ifolder__OpenFileReadResponse resp;
 	// Set the input parameters.
@@ -563,6 +740,12 @@ void iFolderService::OpenFileRead()
 
 void iFolderService::OpenFileWrite()
 {
+	//if (!m_pDomain->m_Authenticated)
+	//{
+	//	g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+	//	return;
+	//}
+
 	_ifolder__OpenFileWrite req;
 	_ifolder__OpenFileWriteResponse resp;
 	// Set the input parameters.
@@ -576,6 +759,12 @@ void iFolderService::OpenFileWrite()
 
 void iFolderService::ReadFile()
 {
+	//if (!m_pDomain->m_Authenticated)
+	//{
+	//	g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+	//	return;
+	//}
+
 	_ifolder__ReadFile req;
 	_ifolder__ReadFileResponse resp;
 	// Set the input parameters.
@@ -590,6 +779,12 @@ void iFolderService::ReadFile()
 
 void iFolderService::WriteFile()
 {
+	//if (!m_pDomain->m_Authenticated)
+	//{
+	//	g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+	//	return;
+	//}
+
 	_ifolder__WriteFile req;
 	_ifolder__WriteFileResponse resp;
 	// Set the input parameters.
@@ -601,6 +796,12 @@ void iFolderService::WriteFile()
 
 void iFolderService::CloseFile()
 {
+	//if (!m_pDomain->m_Authenticated)
+	//{
+	//	g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+	//	return;
+	//}
+
 	_ifolder__CloseFile req;
 	_ifolder__CloseFileResponse resp;
 	// Set the input parameters.
@@ -609,8 +810,14 @@ void iFolderService::CloseFile()
 	// Get the output parameters.
 }
 
-iFolderSystem* iFolderService::GetSystem()
+iFolderSystem* iFolderService::GetSystem(GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+
 	_ifolder__GetSystem req;
 	_ifolder__GetSystemResponse resp;
 	// Set the input parameters.
@@ -626,8 +833,14 @@ iFolderSystem* iFolderService::GetSystem()
 	}
 }
 
-iFolderServer* iFolderService::GetHomeServer()
+iFolderServer* iFolderService::GetHomeServer(GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+
 	_ifolder__GetHomeServer req;
 	_ifolder__GetHomeServerResponse resp;
 	// Set the input parameters.
@@ -644,8 +857,14 @@ iFolderServer* iFolderService::GetHomeServer()
 	}
 }
 
-iFolderServerIterator* iFolderService::GetServers()
+iFolderServerIterator* iFolderService::GetServers(GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+
 	_ifolder__GetServers req;
 	_ifolder__GetServersResponse resp;
 	// Set the input parameters.
@@ -664,6 +883,12 @@ iFolderServerIterator* iFolderService::GetServers()
 
 gboolean iFolderService::DeleteiFolder(const gchar *ifolderID, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+
 	_ifolder__DeleteiFolder req;
 	_ifolder__DeleteiFolderResponse resp;
 	// Set the input parameters.
@@ -679,6 +904,12 @@ gboolean iFolderService::DeleteiFolder(const gchar *ifolderID, GError **error)
 
 iFolder* iFolderService::GetiFolder(const gchar *ifolderID, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+
 	_ifolder__GetiFolder req;
 	_ifolder__GetiFolderResponse resp;
 	// Set the input parameters.
@@ -698,6 +929,12 @@ iFolder* iFolderService::GetiFolder(const gchar *ifolderID, GError **error)
 
 iFolderDetails* iFolderService::GetiFolderDetails(const gchar *ifolderID, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+
 	_ifolder__GetiFolderDetails req;
 	_ifolder__GetiFolderDetailsResponse resp;
 	// Set the input parameters.
@@ -717,6 +954,12 @@ iFolderDetails* iFolderService::GetiFolderDetails(const gchar *ifolderID, GError
 
 gboolean iFolderService::SetiFolderDescription(const gchar *ifolderID, const gchar *description, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return false;
+	}
+
 	_ifolder__SetiFolderDescription req;
 	_ifolder__SetiFolderDescriptionResponse resp;
 	// Set the input parameters.
@@ -733,6 +976,12 @@ gboolean iFolderService::SetiFolderDescription(const gchar *ifolderID, const gch
 
 gboolean iFolderService::PublishiFolder(const gchar *ifolderID, gboolean publish, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return false;
+	}
+
 	_ifolder__PublishiFolder req;
 	_ifolder__PublishiFolderResponse resp;
 	// Set the input parameters.
@@ -749,6 +998,12 @@ gboolean iFolderService::PublishiFolder(const gchar *ifolderID, gboolean publish
 
 ChangeEntryIterator* iFolderService::GetChanges(const gchar *ifolderID, const gchar *itemID, gint index, gint max, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+
 	_ifolder__GetChanges req;
 	_ifolder__GetChangesResponse resp;
 	// Set the input parameters.
@@ -769,8 +1024,14 @@ ChangeEntryIterator* iFolderService::GetChanges(const gchar *ifolderID, const gc
 	}
 }
 
-iFolderUser* iFolderService::GetAuthenticatedUser()
+iFolderUser* iFolderService::GetAuthenticatedUser(GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+
 	_ifolder__GetAuthenticatedUser req;
 	_ifolder__GetAuthenticatedUserResponse resp;
 	// Set the input parameters.
@@ -789,6 +1050,12 @@ iFolderUser* iFolderService::GetAuthenticatedUser()
 
 gboolean iFolderService::SetMemberRights(const gchar *ifolderID, const gchar *userID, enum ifolder__Rights rights, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return false;
+	}
+
 	_ifolder__SetMemberRights req;
 	_ifolder__SetMemberRightsResponse resp;
 	// Set the input parameters.
@@ -806,6 +1073,12 @@ gboolean iFolderService::SetMemberRights(const gchar *ifolderID, const gchar *us
 
 gboolean iFolderService::AddMember(const gchar *ifolderID, const gchar *userID, enum ifolder__Rights rights, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return false;
+	}
+
 	_ifolder__AddMember req;
 	_ifolder__AddMemberResponse resp;
 	// Set the input parameters.
@@ -823,6 +1096,12 @@ gboolean iFolderService::AddMember(const gchar *ifolderID, const gchar *userID, 
 
 gboolean iFolderService::RemoveMember(const gchar *ifolderID, const gchar *userID, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return false;
+	}
+
 	_ifolder__RemoveMember req;
 	_ifolder__RemoveMemberResponse resp;
 	// Set the input parameters.
@@ -839,6 +1118,12 @@ gboolean iFolderService::RemoveMember(const gchar *ifolderID, const gchar *userI
 
 gboolean iFolderService::SetiFolderOwner(const gchar *ifolderID, const gchar *userID, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return false;
+	}
+
 	_ifolder__SetiFolderOwner req;
 	_ifolder__SetiFolderOwnerResponse resp;
 	// Set the input parameters.
@@ -855,6 +1140,12 @@ gboolean iFolderService::SetiFolderOwner(const gchar *ifolderID, const gchar *us
 
 iFolderUserIterator* iFolderService::GetMembers(const gchar* ifolderID, gint index, gint max, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+
 	_ifolder__GetMembers req;
 	_ifolder__GetMembersResponse resp;
 	// Set the input parameters.
@@ -876,6 +1167,12 @@ iFolderUserIterator* iFolderService::GetMembers(const gchar* ifolderID, gint ind
 
 iFolderUserIterator* iFolderService::GetUsers(gint index, gint max, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+
 	_ifolder__GetUsers req;
 	_ifolder__GetUsersResponse resp;
 	// Set the input parameters.
@@ -896,6 +1193,12 @@ iFolderUserIterator* iFolderService::GetUsers(gint index, gint max, GError **err
 
 iFolderUser* iFolderService::GetUser(const gchar *pUserID, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+
 	_ifolder__GetUser req;
 	_ifolder__GetUserResponse resp;
 	// Set the input parameters.
@@ -915,6 +1218,12 @@ iFolderUser* iFolderService::GetUser(const gchar *pUserID, GError **error)
 
 iFolderUserDetails* iFolderService::GetUserDetails(const gchar *pUserID, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+
 	_ifolder__GetUserDetails req;
 	_ifolder__GetUserDetailsResponse resp;
 	// Set the input parameters.
@@ -934,6 +1243,12 @@ iFolderUserDetails* iFolderService::GetUserDetails(const gchar *pUserID, GError 
 
 iFolderUserIterator* iFolderService::GetUsersBySearch(gint index, gint max, enum ifolder__SearchOperation operation, const gchar* pattern, enum ifolder__SearchProperty property, GError **error)
 {
+	if (!m_pDomain->m_Authenticated)
+	{
+		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_NOT_AUTHENTICATED, "Client is not authenticated");
+		return NULL;
+	}
+
 	_ifolder__GetUsersBySearch req;
 	_ifolder__GetUsersBySearchResponse resp;
 	// Set the input parameters.
@@ -953,5 +1268,26 @@ iFolderUserIterator* iFolderService::GetUsersBySearch(gint index, gint max, enum
 		//g_set_error();
 		return NULL;
 	}
-} //namespace ifweb
 }
+
+gboolean iFolderService::Login(const gchar *user, const gchar *password, GError **error)
+{
+	gboolean bStatus = false;
+	m_iFolderService.soap->userid = (char*)user;
+	m_iFolderService.soap->passwd = (char*)password;
+
+	_ifolder__GetSystem req;
+	_ifolder__GetSystemResponse resp;
+	// Set the input parameters.
+	if (m_iFolderService.__ifolder__GetSystem(&req, &resp) == 0)
+	{
+		return true;
+	}
+	else
+	{
+		//g_set_error();
+		return false;
+	}
+}
+
+} //namespace ifweb

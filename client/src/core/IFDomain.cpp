@@ -41,45 +41,27 @@ gchar *IFDomain::EActive = "active";
 gchar *IFDomain::EDefault = "default";
 
 
-IFDomain::IFDomain()
+IFDomain::IFDomain(const gchar *host)
 {
-	m_DomainService.soap->mode |= SOAP_C_UTFSTRING | SOAP_IO_KEEPALIVE;
-	m_DomainService.soap->imode |= SOAP_C_UTFSTRING | SOAP_IO_KEEPALIVE;
-	m_DomainService.soap->omode |= SOAP_C_UTFSTRING | SOAP_IO_KEEPALIVE;
-	m_DomainService.soap->user = this;
-	
-	m_iFolderService.soap->mode |= SOAP_C_UTFSTRING | SOAP_IO_KEEPALIVE;
-	m_iFolderService.soap->imode |= SOAP_C_UTFSTRING | SOAP_IO_KEEPALIVE;
-	m_iFolderService.soap->omode |= SOAP_C_UTFSTRING | SOAP_IO_KEEPALIVE;
-	m_iFolderService.soap->user = this;
-	
-	// Set the parse_header callback so that we can get the login status.
-	m_Parsehdr = m_iFolderService.soap->fparsehdr;
-	m_DomainService.soap->fparsehdr = ParseLoginHeader;
-	m_iFolderService.soap->fparsehdr = ParseLoginHeader;
-	
-	m_Cookies = NULL;
-
 	m_UserPassword = NULL;
 	m_POBoxID = NULL;
 	m_Name = NULL;
 	m_ID = NULL;
 	m_Version = NULL;
 	m_Description = NULL;
-	m_HomeHost = NULL;
-	m_MasterHost = NULL;
+	m_HomeHost = g_strdup(host);
+	m_MasterHost = g_strdup(host);
 	m_UserName = NULL;
 	m_UserID = NULL;
 	m_Authenticated = false;
 	m_Active = true;
 	m_Default = false;
+	m_DS = ifweb::IFServiceManager::GetDomainService(this, host);
+	m_iFS = ifweb::IFServiceManager::GetiFolderService(this, host);;
 }
 	
 IFDomain::~IFDomain(void)
 {
-	// TODO free cookies.
-	//if (m_Cookies != NULL)
-	//	soap_free_cookies();
 	g_free(m_UserPassword);
 	g_free(m_POBoxID);
 	
@@ -91,31 +73,31 @@ IFDomain::~IFDomain(void)
 	g_free(m_MasterHost);
 	g_free(m_UserName);
 	g_free(m_UserID);
-	g_free((gpointer)m_DomainService.endpoint);
-	g_free((gpointer)m_iFolderService.endpoint);
+	if (m_DS != NULL)
+		delete m_DS;
+	if (m_iFS != NULL)
+		delete m_iFS;
 }
 
 IFDomain* IFDomain::Add(const gchar* userName, const gchar* password, const gchar* host, GError **error)
 {
 	gboolean failed = true;
-	IFDomain *pDomain = new IFDomain();
-	pDomain->m_MasterHost = g_strdup(host);
-	pDomain->m_HomeHost = g_strdup(host);
+	IFDomain *pDomain = new IFDomain(host);
+	pDomain->m_UserName = g_strdup(userName);
+	if (!pDomain->Login(password, error))
+	{
+		// We could not login.
+		delete pDomain;
+		return NULL;
+	}
 
-	ifweb::DomainService* domainService = ifweb::IFServiceManager::GetDomainService(pDomain, host);
-	//Domain* domainService = &pDomain->m_DomainService;
-	//iFolderWebSoap* iFolderService = &pDomain->m_iFolderService;
+	ifweb::DomainService* domainService = pDomain->m_DS;
 
-	// build the url to the host;
-	//domainService->endpoint = IFApplication::BuildUrlToService(host, domainService->endpoint);
-	//iFolderService->endpoint = IFApplication::BuildUrlToService(host, iFolderService->endpoint);
-	
 	// Make sure that we do not already belong to this domain.
 	pDomain->m_ID = domainService->GetDomainID(error);
-	if (pDomain->m_ID == NULL && error != NULL)
+	if (pDomain->m_ID == NULL)
 	{
 		g_warning("Failed to contact host %s", host);
-		g_warning((*error)->message);
 	}
 	else
 	{
@@ -138,19 +120,18 @@ IFDomain* IFDomain::Add(const gchar* userName, const gchar* password, const gcha
 		if (pvInfo != NULL)
 		{
 			pDomain->m_UserID = g_strdup(pvInfo->m_UserID);
-			pDomain->m_UserName = g_strdup(userName);
 			pDomain->m_UserPassword = g_strdup(password);
 			pDomain->m_POBoxID = g_strdup(pvInfo->m_POBoxID);
 			g_message("provisioned");
 			delete pvInfo;
 
 			// Save the cookies.
-			pDomain->m_Cookies = soap_copy_cookies(domainService->m_DomainService.soap);
+			ifweb::iFolderService* ifolderService = pDomain->m_iFS;
+			ifolderService->m_iFolderService.soap->cookies = soap_copy_cookies(domainService->m_DomainService.soap);
 			pDomain->m_Authenticated = true;
 			
 			// Now get the System Info.
-			ifweb::iFolderService* ifolderService = ifweb::IFServiceManager::GetiFolderService(pDomain, host);
-			ifweb::iFolderSystem *sInfo = ifolderService->GetSystem();
+			ifweb::iFolderSystem *sInfo = ifolderService->GetSystem(error);
 			if (sInfo != NULL)
 			{
 				pDomain->m_ID = g_strdup(sInfo->m_ID);
@@ -213,27 +194,22 @@ int IFDomain::ParseLoginHeader(struct soap *soap, const char *key, const char*va
 
 gboolean IFDomain::Login(const gchar *password, GError **error)
 {
-	gboolean bStatus = false;
-	_ifolder__GetSystem req;
-	_ifolder__GetSystemResponse resp;
-	m_iFolderService.soap->userid = m_UserName;
-	m_iFolderService.soap->passwd = (char*)password;
-	if (m_iFolderService.__ifolder__GetSystem(&req, &resp) == 0)
+	if (m_iFS->Login(m_UserName, password, error))
 	{
-		// We are logged in. Make sure we are not in grace.
-		bStatus = true;
+		// Save the cookies.
+		m_DS->m_DomainService.soap->cookies = soap_copy_cookies(m_iFS->m_iFolderService.soap);
+		m_Authenticated = true;
+		return true;
 	}
-	else
-	{
-		// We failed to log in. Get the reason for the failure.
-		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, m_lastError, m_lastErrorString);
-	}
-	return bStatus;
+	return false;
 }
 
-int IFDomain::Logout()
+void IFDomain::Logout()
 {
-	return 0;
+	this->m_Authenticated = false;
+	// Clear the cookies.
+	soap_free_cookies(m_DS->m_DomainService.soap);
+	soap_free_cookies(m_iFS->m_iFolderService.soap);
 }
 
 void IFDomain::GetGraceLimits(gint *pRemaining, gint *pTotal)
@@ -287,10 +263,17 @@ gboolean IFDomain::Serialize(FILE *pStream)
 
 IFDomain* IFDomain::DeSerialize(ParseTree *tree, GNode *pDNode)
 {
-	IFDomain *pDomain = new IFDomain();
+	IFDomain *pDomain; // = new IFDomain();
 	GNode *gnode = pDNode;
 	GNode *tnode;
 
+	// host Get the host so that we can construct the IFDomain object.
+	tnode = tree->FindChild(gnode, EMasterHost, IFXElement);
+	if (tnode != NULL)
+	{
+		gchar *host = ((XmlNode*)tnode->data)->m_Value;
+		pDomain = new IFDomain(host);
+	}
 	// id
 	tnode = tree->FindChild(gnode, EID, IFXAttribute);
 	if (tnode != NULL)
@@ -307,15 +290,7 @@ IFDomain* IFDomain::DeSerialize(ParseTree *tree, GNode *pDNode)
 	tnode = tree->FindChild(gnode, EDescription, IFXElement);
 	if (tnode != NULL)
 		pDomain->m_Description = g_strdup(((XmlNode*)tnode->data)->m_Value);
-	// host
-	tnode = tree->FindChild(gnode, EMasterHost, IFXElement);
-	if (tnode != NULL)
-	{
-		pDomain->m_MasterHost = g_strdup(((XmlNode*)tnode->data)->m_Value);
-		pDomain->m_DomainService.endpoint = IFApplication::BuildUrlToService(pDomain->m_MasterHost, pDomain->m_DomainService.endpoint);
-		pDomain->m_iFolderService.endpoint = IFApplication::BuildUrlToService(pDomain->m_MasterHost, pDomain->m_iFolderService.endpoint);
 	
-	}
 	// active
 	tnode = tree->FindChild(gnode, EActive, IFXElement);
 	if (tnode != NULL)

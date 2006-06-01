@@ -35,12 +35,19 @@ class IFDomainIterator;
 class IFDomainList;
 class XmlNode;
 class ParseTree;
-class GLIBCLIENT_API Domain;
+class Domain;
+namespace ifweb
+{
+	class DomainService;
+	class iFolderService;
+	class IFServiceManager;
+}
+
 //class GLIBCLIENT_API std::vector<IFDomain*>;
 
 class GLIBCLIENT_API IFDomain
 {
-	friend class IFServiceManager;
+	friend class ifweb::IFServiceManager;
 	friend class IFDomainList;
 private:
 	// XML elements
@@ -58,8 +65,6 @@ private:
 	static gchar *EDefault;
 
 	// Members.
-public:
-	struct soap_cookie *m_Cookies;
 private:
 	gint	m_lastError;
 	gchar	*m_lastErrorString;
@@ -67,8 +72,8 @@ private:
 	gint	m_GraceTotal;
 	int (*m_Parsehdr)(struct soap *soap, const char *key, const char *val);
 public:
-	Domain				m_DomainService;
-	iFolderWebSoap		m_iFolderService;
+	ifweb::DomainService		*m_DS;
+	ifweb::iFolderService		*m_iFS;
 
 private:
 	// Persist everything below here.
@@ -90,7 +95,7 @@ public:
 	gboolean	m_Default;
 	
 private:
-	IFDomain();
+	IFDomain(const gchar *host);
 	virtual ~IFDomain(void);
 	gboolean Serialize(FILE *pStream);
 	static IFDomain* DeSerialize(ParseTree *tree, GNode *pDNode);
@@ -100,7 +105,7 @@ public:
 	static IFDomain* Add(const gchar* userName, const gchar* password, const gchar* host, GError **error);
 	gboolean Remove();
 	gboolean Login(const gchar *password, GError **error);
-	gboolean Logout();
+	void Logout();
 	void GetGraceLimits(gint *pRemaining, gint *pTotal);
 	static IFDomainIterator GetDomains();
 	static IFDomain* GetDomainByID(const gchar *pID);
