@@ -719,19 +719,6 @@ ifolder_domain_check_for_updated_client(iFolderDomain *domain, char **new_versio
 	return FALSE;
 }
 
-/*
-iFolderUser *
-ifolder_domain_get_user_by_id (iFolderDomain *domain, const gchar *user_id, GError **error)
-{
-	g_return_val_if_fail (IFOLDER_IS_DOMAIN (domain), NULL);
-	g_return_val_if_fail (user_id != NULL);
-	
-	g_message ("FIXME: Implement ifolder_domain_get_user_by_id()");
-	
-	return NULL;
-}
-*/
-
 iFolderUser *
 ifolder_domain_get_user (iFolderDomain *domain, const gchar *user_id_or_name, GError **error)
 {

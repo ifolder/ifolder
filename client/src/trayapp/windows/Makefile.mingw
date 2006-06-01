@@ -72,6 +72,7 @@ EXE_LIB_PATHS =		-L$(IFOLDER_SRC)/core \
 
 EXE_C_SRC = 		main.c \
 			$(TRAYAPP_SRC)/account-wizard.c	\
+			$(TRAYAPP_SRC)/main-window.c					\
 			$(TRAYAPP_SRC)/account-properties-dialog.c		\
 			$(TRAYAPP_SRC)/preferences-window.c	\
 			$(TRAYAPP_SRC)/util.c			\

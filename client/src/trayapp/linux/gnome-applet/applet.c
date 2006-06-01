@@ -39,6 +39,7 @@
 //#endif
 
 #include "applet.h"
+#include "main-window.h"
 #include "preferences-window.h"
 
 /*@todo Remove this when gettext is added */
@@ -673,6 +674,7 @@ static void ifa_menu_position_func (GtkMenu *menu G_GNUC_UNUSED, int *x, int *y,
  */
 static gboolean ifa_button_press_cb (GtkWidget *widget, GdkEventButton *event, IFApplet *applet)
 {
+	IFAMainWindow *mw;
 	g_return_val_if_fail (applet != NULL, FALSE);
 
 	switch (event->button)
@@ -696,7 +698,17 @@ static gboolean ifa_button_press_cb (GtkWidget *widget, GdkEventButton *event, I
 			}
 			else
 			{
-				g_message ("FIXME: When the main iFolder Window is implemented, pop it open here");
+				mw = ifa_get_main_window ();
+				if (mw == NULL)
+					ifa_show_main_window ();
+				else
+				{
+					if (gtk_window_has_toplevel_focus (GTK_WINDOW (mw)))
+						ifa_hide_main_window ();
+					else
+						ifa_show_main_window ();
+				}
+//				g_message ("FIXME: When the main iFolder Window is implemented, pop it open here");
 				/* Open the main iFolder Window. */
 //				ifa_show_ifolders_window ();
 			}
