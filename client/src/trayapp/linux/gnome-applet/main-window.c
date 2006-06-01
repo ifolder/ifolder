@@ -32,6 +32,7 @@
 #include "util.h"
 
 #include "main-window.h"
+#include "preferences-window.h"
 
 /*@todo Remove this when gettext is added */
 #define _
@@ -59,13 +60,15 @@ struct _IFAMainWindowPrivate
 	GtkWidget		*propMenuItem;
 	GtkWidget		*closeMenuItem;
 	GtkWidget		*quitMenuItem;
+
+	GtkWidget		*accountSettingsMenuItem;
+	GtkWidget		*preferencesMenuItem;
+
 	GtkWidget		*refreshMenuItem;
+	GtkWidget		*syncLogMenuItem;
+	
 	GtkWidget		*helpMenuItem;
 	GtkWidget		*aboutMenuItem;
-	
-	GtkWidget		*preferencesMenuItem;
-	GtkWidget		*accountsMenuItem;
-	GtkWidget		*syncLogMenuItem;
 	
 	/**
 	 * Keep track of open windows so that if we're called again for one that is
@@ -141,6 +144,17 @@ static void on_show_ifolder_properties (GtkMenuItem *menuitem, IFAMainWindow *mw
 static void on_close (GtkMenuItem *menuitem, IFAMainWindow *mw);
 static void on_quit (GtkMenuItem *menuitem, IFAMainWindow *mw);
 
+/* Edit Menu Handlers */
+static void on_account_settings_menu_item (GtkMenuItem *menuitem, IFAMainWindow *mw);
+static void on_preferences_menu_item (GtkMenuItem *menuitem, IFAMainWindow *mw);
+
+/* View Menu Handlers */
+static void on_refresh (GtkMenuItem *menuitem, IFAMainWindow *mw);
+static void on_sync_log_menu_item (GtkMenuItem *menuitem, IFAMainWindow *mw);
+
+/* Help Menu Handlers */
+static void on_help (GtkMenuItem *menuitem, IFAMainWindow *mw);
+static void on_about (GtkMenuItem *menuitem, IFAMainWindow *mw);
 
 static void
 ifa_main_window_class_init (IFAMainWindowClass *klass)
@@ -415,8 +429,17 @@ static GtkWidget *
 create_menu (IFAMainWindow *mw)
 {
 	GtkAccelGroup *accelGroup;
-	GtkWidget *ifolderMenuItem;
 	GtkWidget *ifolderMenu;
+	GtkWidget *ifolderMenuItem;
+	
+	GtkWidget *editMenu;
+	GtkWidget *editMenuItem;
+	
+	GtkWidget *viewMenu;
+	GtkWidget *viewMenuItem;
+	
+	GtkWidget *helpMenu;
+	GtkWidget *helpMenuItem0;
 
 	IFAMainWindowPrivate *priv = IFA_MAIN_WINDOW_GET_PRIVATE (mw);
 	
@@ -490,17 +513,79 @@ create_menu (IFAMainWindow *mw)
 	gtk_menu_shell_append (GTK_MENU_SHELL (ifolderMenu), priv->quitMenuItem);
 	g_signal_connect (priv->quitMenuItem, "activate", G_CALLBACK (on_quit), mw);
 
-	/*
-	GtkWidget		*unsynchronizedMenuItem;
-	GtkWidget		*refreshMenuItem;
-	GtkWidget		*helpMenuItem;
-	GtkWidget		*aboutMenuItem;
-	*/
-	
 	ifolderMenuItem = gtk_menu_item_new_with_mnemonic (_("i_Folder"));
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (ifolderMenuItem), ifolderMenu);
 	gtk_menu_shell_append (GTK_MENU_SHELL (priv->menuBar), ifolderMenuItem);
 
+
+	/**
+	 * Edit Menu
+	 */
+	editMenu = gtk_menu_new ();
+	
+	/* Account Settings... */	
+	priv->accountSettingsMenuItem = gtk_image_menu_item_new_with_mnemonic (_("_Account Settings..."));
+	g_message ("FIXME: call gtk_image_menu_item_set_image (priv->accountSettingsMenuItem, image)");
+	gtk_menu_shell_append (GTK_MENU_SHELL (editMenu), priv->accountSettingsMenuItem);
+	g_signal_connect (priv->accountSettingsMenuItem, "activate", G_CALLBACK (on_account_settings_menu_item), mw);
+	
+	/* Preferences */
+	priv->preferencesMenuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_PREFERENCES, accelGroup);
+	gtk_menu_shell_append (GTK_MENU_SHELL (editMenu), priv->preferencesMenuItem);
+	g_signal_connect (priv->preferencesMenuItem, "activate", G_CALLBACK (on_preferences_menu_item), mw);
+
+	editMenuItem = gtk_menu_item_new_with_mnemonic (_("_Edit"));
+	gtk_menu_item_set_submenu (GTK_MENU_ITEM (editMenuItem), editMenu);
+	gtk_menu_shell_append (GTK_MENU_SHELL (priv->menuBar), editMenuItem);
+
+
+	/**
+	 * View Menu
+	 */
+	viewMenu = gtk_menu_new ();
+	
+	/* Refresh */
+	priv->refreshMenuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_REFRESH, accelGroup);
+	gtk_menu_shell_append (GTK_MENU_SHELL (viewMenu), priv->refreshMenuItem);
+	g_signal_connect (priv->refreshMenuItem, "activate", G_CALLBACK (on_refresh), mw);
+	
+	/* Synchronization Log */
+	priv->syncLogMenuItem = gtk_image_menu_item_new_with_mnemonic (_("Synchronization Log"));
+	g_message ("FIXME: call gtk_image_menu_item_set_image (priv->syncLogMenuItem, image)");
+	gtk_menu_shell_append (GTK_MENU_SHELL (viewMenu), priv->syncLogMenuItem);
+	g_signal_connect (priv->syncLogMenuItem, "activate", G_CALLBACK (on_sync_log_menu_item), mw);
+	
+	viewMenuItem = gtk_menu_item_new_with_mnemonic (_("_View"));
+	gtk_menu_item_set_submenu (GTK_MENU_ITEM (viewMenuItem), viewMenu);
+	gtk_menu_shell_append (GTK_MENU_SHELL (priv->menuBar), viewMenuItem);
+	
+	/**
+	 * Help Menu
+	 */
+	helpMenu = gtk_menu_new ();
+
+	/* Help */
+	priv->helpMenuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_HELP, accelGroup);
+	gtk_menu_shell_append (GTK_MENU_SHELL (helpMenu), priv->helpMenuItem);
+	g_signal_connect (priv->helpMenuItem, "activate", G_CALLBACK (on_help), mw);
+	
+	/* About */
+	priv->helpMenuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_ABOUT, accelGroup);
+	gtk_menu_shell_append (GTK_MENU_SHELL (helpMenu), priv->helpMenuItem);
+	g_signal_connect (priv->helpMenuItem, "activate", G_CALLBACK (on_about), mw);
+	
+	helpMenuItem0 = gtk_menu_item_new_with_mnemonic (_("_Help"));
+	gtk_menu_item_set_submenu (GTK_MENU_ITEM (helpMenuItem0), helpMenu);
+	gtk_menu_shell_append (GTK_MENU_SHELL (priv->menuBar), helpMenuItem0);
+
+
+	/*
+
+	GtkWidget		*;
+	GtkWidget		*helpMenuItem;
+	GtkWidget		*aboutMenuItem;
+	*/
+	
 	return priv->menuBar;
 }
 
@@ -563,3 +648,40 @@ on_quit (GtkMenuItem *menuitem, IFAMainWindow *mw)
 {
 	ifa_quit_ifolder ();
 }
+
+static void
+on_account_settings_menu_item (GtkMenuItem *menuitem, IFAMainWindow *mw)
+{
+	ifa_show_preferences_window(1);
+}
+	
+static void
+on_preferences_menu_item (GtkMenuItem *menuitem, IFAMainWindow *mw)
+{
+	ifa_show_preferences_window(0);
+}
+
+static void
+on_refresh (GtkMenuItem *menuitem, IFAMainWindow *mw)
+{
+	g_message ("FIXME: Implement IFAMainWindow::on_refresh()");
+}
+
+static void
+on_sync_log_menu_item (GtkMenuItem *menuitem, IFAMainWindow *mw)
+{
+	g_message ("FIXME: Implement IFAMainWindow::on_sync_log_menu_item()");
+}
+
+static void
+on_help (GtkMenuItem *menuitem, IFAMainWindow *mw)
+{
+	g_message ("FIXME: Implement IFAMainWindow::on_help()");
+}
+
+static void
+on_about (GtkMenuItem *menuitem, IFAMainWindow *mw)
+{
+	ifa_show_about ();
+}
+
