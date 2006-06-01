@@ -42,6 +42,8 @@
 
 G_BEGIN_DECLS
 
+void ifa_quit_ifolder (); /* This should be implemented by the Operating System's TrayApp */
+
 void ifa_show_help(gchar *page_name);
 
 GdkPixbuf *ifolder_util_load_pixbuf(const gchar *image_name);

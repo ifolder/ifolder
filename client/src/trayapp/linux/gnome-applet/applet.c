@@ -39,6 +39,7 @@
 //#endif
 
 #include "applet.h"
+#include "util.h"
 #include "main-window.h"
 #include "preferences-window.h"
 
@@ -46,6 +47,8 @@
 #define _
 
 extern iFolderClient *ifolder_client;
+
+static IFApplet * singleton_applet_instance = NULL;
 
 static GObject *			ifa_constructor (GType type, guint n_props, GObjectConstructParam *construct_props);
 static gboolean			ifa_icons_init (IFApplet *applet);
@@ -531,13 +534,7 @@ ifa_help_cb(GtkMenuItem *mi, IFApplet *applet)
 static void
 ifa_quit_cb(GtkMenuItem *mi, IFApplet *applet)
 {
-	int err;
-
-	ifa_set_icon(applet, applet->shutting_down_icon);
-
-	/* FIXME: Add code to stop all the services and quit the program */
-
-	ifa_destroy(applet);
+	ifa_quit_ifolder ();
 }
 
 
@@ -990,7 +987,10 @@ static gboolean ifa_icons_init (IFApplet *applet)
 
 IFApplet *ifa_new ()
 {
-	return IFL_APPLET(g_object_new (IFL_TYPE_APPLET, "title", "iFolder 3", NULL));
+	if (singleton_applet_instance == NULL)
+		singleton_applet_instance = IFL_APPLET(g_object_new (IFL_TYPE_APPLET, "title", "iFolder 3", NULL));
+	
+	return singleton_applet_instance;
 }
 
 static void
@@ -1000,4 +1000,16 @@ on_account_wizard_hide (GtkWidget *widget, IFApplet *applet)
 	applet->account_wizard = NULL;
 	
 	/* FIXME: Possibly change the way that the account wizard works so that we can get a Finish response or a cancel response so we know whether to show the main iFolders Window. */
+}
+
+void
+ifa_quit_ifolder ()
+{
+	int err;
+
+	ifa_set_icon(singleton_applet_instance, singleton_applet_instance->shutting_down_icon);
+
+	/* FIXME: Add code to stop all the services and quit the program */
+
+	ifa_destroy(singleton_applet_instance);
 }

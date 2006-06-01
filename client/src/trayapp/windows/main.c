@@ -3,12 +3,13 @@
 
 #include <ifolder-client.h>
 #include "../linux/gnome-applet/preferences-window.h"
+#include "../linux/gnome-applet/util.h"
 
 iFolderClient *ifolder_client = NULL;
 
 static void showPreferences( GtkWidget *widget, gpointer data )
 {
-	ifa_show_preferences_window(1);
+	ifa_show_preferences_window(0);
 }
 
 static gboolean delete_event( GtkWidget *widget,
@@ -106,4 +107,10 @@ int main( int   argc,
 	ifolder_client_uninitialize(ifolder_client, &err);
 
     return 0;
+}
+
+void
+ifa_quit_ifolder ()
+{
+    gtk_main_quit ();
 }

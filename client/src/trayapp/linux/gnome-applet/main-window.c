@@ -41,10 +41,63 @@ extern iFolderClient *ifolder_client;
 typedef struct _IFAMainWindowPrivate IFAMainWindowPrivate;
 struct _IFAMainWindowPrivate 
 {
-	GtkWidget 	*parentWindow;
+	GtkWidget 		*parentWindow;
 
-	gboolean	realized;
-	gboolean	controlKeyPressed;
+	gboolean		realized;
+	gboolean		controlKeyPressed;
+	
+	GtkWidget		*menuBar;
+	
+	GtkWidget		*mainStatusBar;
+	GtkWidget		*syncBar;
+	GtkWidget		*createMenuItem;
+	GtkWidget		*shareMenuItem;
+	GtkWidget		*openMenuItem;
+	GtkWidget		*unsynchronizedMenuItem;
+	GtkWidget		*syncNowMenuItem;
+	GtkWidget		*disconnectMenuItem;
+	GtkWidget		*propMenuItem;
+	GtkWidget		*closeMenuItem;
+	GtkWidget		*quitMenuItem;
+	GtkWidget		*refreshMenuItem;
+	GtkWidget		*helpMenuItem;
+	GtkWidget		*aboutMenuItem;
+	
+	GtkWidget		*preferencesMenuItem;
+	GtkWidget		*accountsMenuItem;
+	GtkWidget		*syncLogMenuItem;
+	
+	/**
+	 * Keep track of open windows so that if we're called again for one that is
+	 * already open, we'll just present it to the user instead of opening an
+	 * additional one.
+	 */
+	GHashTable		*propDialogs;
+	
+	/**
+	 * iFolder Content Area
+	 */
+	GtkWidget		*contentEventBox;
+	
+	/**
+	 * Actions Pane
+	 */
+	GtkWidget		*searchEntry;
+	GtkWidget		*cancelSearchButton;
+	gulong			searchTimeoutID;
+	
+	GtkWidget		*createiFolderButton;
+	
+	/* Buttons for local iFolders */
+	GtkWidget		*openButton;
+	GtkWidget		*synchronizeNowButton;
+	GtkWidget		*shareButton;
+	GtkWidget		*fixUnsynchronizedFilesButton;
+	GtkWidget		*disconnectiFolderButton;
+	GtkWidget		*viewiFolderPropertiesButton;
+	
+	GtkWidget		*ifoldersScrolledWindow;
+	GtkWidget		*ifoldersIconView;
 };
 
 static IFAMainWindow *main_window = NULL;
@@ -73,7 +126,21 @@ static void                 ifa_main_window_style_set      (GtkWidget          *
 static void on_realize (GtkWidget *widget, IFAMainWindow *mw);
 static void on_hide (GtkWidget *widget, IFAMainWindow *mw);
 
-static void close_window (IFAMainWindow *mw);
+static GtkWidget * create_widgets (IFAMainWindow *mw);
+static GtkWidget * create_menu (IFAMainWindow *mw);
+static GtkWidget * create_content_area (IFAMainWindow *mw);
+static GtkWidget * create_status_bar (IFAMainWindow *mw);
+
+/* iFolder Menu Handlers */
+static void on_create_ifolder (GtkMenuItem *menuitem, IFAMainWindow *mw);
+static void on_open_ifolder (GtkMenuItem *menuitem, IFAMainWindow *mw);
+static void on_share_ifolder (GtkMenuItem *menuitem, IFAMainWindow *mw);
+static void on_sync_ifolder_now (GtkMenuItem *menuitem, IFAMainWindow *mw);
+static void on_disconnect_ifolder (GtkMenuItem *menuitem, IFAMainWindow *mw);
+static void on_show_ifolder_properties (GtkMenuItem *menuitem, IFAMainWindow *mw);
+static void on_close (GtkMenuItem *menuitem, IFAMainWindow *mw);
+static void on_quit (GtkMenuItem *menuitem, IFAMainWindow *mw);
+
 
 static void
 ifa_main_window_class_init (IFAMainWindowClass *klass)
@@ -102,6 +169,7 @@ static void
 ifa_main_window_init (IFAMainWindow *mw)
 {
 	IFAMainWindowPrivate *priv;
+	GtkWidget *vbox;
 	
 	g_message ("ifa_main_window_init()");
 
@@ -110,12 +178,23 @@ ifa_main_window_init (IFAMainWindow *mw)
 	mw->private_data = priv;
 	
 	priv->realized = FALSE;
+	
+	priv->propDialogs = g_hash_table_new(g_str_hash, g_str_equal);
+	priv->searchTimeoutID = 0;
+	
+	gtk_window_set_default_size (GTK_WINDOW (mw), 600, 480);
+	g_message ("FIXME: set up the icons so we can call gtk_window_set_icon() on the main window");
+/*	gtk_window_set_icon (GTK_WINDOW (mw), fixme);*/
+	gtk_window_set_position (GTK_WINDOW (mw), GTK_WIN_POS_CENTER);
+
+	vbox = gtk_bin_get_child (GTK_BIN (mw));
 
 	/* Widgets */
-//	gtk_widget_push_composite_child ();
-	
+	gtk_widget_push_composite_child ();
 
-//	gtk_widget_pop_composite_child ();
+	gtk_box_pack_start (GTK_BOX (vbox), create_widgets (mw), TRUE, TRUE, 0);
+	
+	gtk_widget_pop_composite_child ();
 }
 
 static void
@@ -126,6 +205,8 @@ ifa_main_window_finalize (GObject *object)
 
 	g_debug ("IFAMainWindow::ifa_main_window_finalize()");
 
+	g_hash_table_destroy (priv->propDialogs);
+	
 /*
 	if (priv->domain_host_modified_cb_id > 0)
 		g_signal_handler_disconnect (ifolder_client, priv->domain_host_modified_cb_id);
@@ -311,3 +392,174 @@ on_hide (GtkWidget *widget, IFAMainWindow *mw)
 	main_window = NULL;
 }
 
+static GtkWidget *
+create_widgets (IFAMainWindow *mw)
+{
+	GtkWidget *vbox;
+	
+	vbox = gtk_vbox_new (FALSE, 0);
+	
+	/* Create the menu bar */
+	gtk_box_pack_start (GTK_BOX (vbox), create_menu (mw), FALSE, FALSE, 0);
+	
+	/* Create the main content area */
+	gtk_box_pack_start (GTK_BOX (vbox), create_content_area (mw), TRUE, TRUE, 0);
+	
+	/* Create the status bar */
+	gtk_box_pack_start (GTK_BOX (vbox), create_status_bar (mw), FALSE, FALSE, 0);
+	
+	return vbox;
+}
+
+static GtkWidget *
+create_menu (IFAMainWindow *mw)
+{
+	GtkAccelGroup *accelGroup;
+	GtkWidget *ifolderMenuItem;
+	GtkWidget *ifolderMenu;
+
+	IFAMainWindowPrivate *priv = IFA_MAIN_WINDOW_GET_PRIVATE (mw);
+	
+	priv->menuBar = gtk_menu_bar_new ();
+	
+	accelGroup = gtk_accel_group_new ();
+	gtk_window_add_accel_group (GTK_WINDOW (mw), accelGroup);
+	
+	/**
+	 * iFolder Menu
+	 */
+	ifolderMenu = gtk_menu_new ();
+	
+	/* New iFolder */	
+	priv->createMenuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_NEW, accelGroup);
+	gtk_menu_shell_append (GTK_MENU_SHELL (ifolderMenu), priv->createMenuItem);
+	g_signal_connect (priv->createMenuItem, "activate", G_CALLBACK (on_create_ifolder), mw);
+/*
+	priv->createMenuItem = gtk_image_menu_item_new_with_mnemonic (_("_New iFolder"));
+	g_message ("FIXME: call gtk_image_menu_item_set_image (priv->createMenuItem, image)");
+	gtk_menu_shell_append (GTK_MENU_SHELL (ifolderMenu), priv->createMenuItem);
+	gtk_widget_add_accelerator (priv->createMenuItem, "activate", accelGroup, GDK_N, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+	g_signal_connect (priv->createMenuItem, "activate", G_CALLBACK (on_create_ifolder), mw);
+*/
+
+
+	/* Separator */
+	gtk_menu_shell_append (GTK_MENU_SHELL (ifolderMenu), gtk_separator_menu_item_new ());
+
+	
+	/* Open */
+	priv->openMenuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_OPEN, accelGroup);
+	gtk_menu_shell_append (GTK_MENU_SHELL (ifolderMenu), priv->openMenuItem);
+	g_signal_connect (priv->openMenuItem, "activate", G_CALLBACK (on_open_ifolder), mw);
+	
+	/* Share with... */
+	priv->shareMenuItem = gtk_image_menu_item_new_with_mnemonic (_("Share _with..."));
+	g_message ("FIXME: call gtk_image_menu_item_set_image (priv->shareMenuItem, image)");
+	gtk_menu_shell_append (GTK_MENU_SHELL (ifolderMenu), priv->shareMenuItem);
+	g_signal_connect (priv->shareMenuItem, "activate", G_CALLBACK (on_share_ifolder), mw);
+	
+	/* Synchronize now */
+	priv->syncNowMenuItem = gtk_image_menu_item_new_with_mnemonic (_("_Synchronize now"));
+	g_message ("FIXME: call gtk_image_menu_item_set_image (priv->syncNowMenuItem, image)");
+	gtk_menu_shell_append (GTK_MENU_SHELL (ifolderMenu), priv->syncNowMenuItem);
+	g_signal_connect (priv->syncNowMenuItem, "activate", G_CALLBACK (on_sync_ifolder_now), mw);
+	
+	/* Disconnect iFolder */
+	priv->disconnectMenuItem = gtk_image_menu_item_new_with_mnemonic (_("_Disconnect"));
+	g_message ("FIXME: call gtk_image_menu_item_set_image (priv->disconnectMenuItem, image)");
+	gtk_menu_shell_append (GTK_MENU_SHELL (ifolderMenu), priv->disconnectMenuItem);
+	g_signal_connect (priv->disconnectMenuItem, "activate", G_CALLBACK (on_disconnect_ifolder), mw);
+	
+	/* Properties */
+	priv->propMenuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_PROPERTIES, accelGroup);
+	gtk_menu_shell_append (GTK_MENU_SHELL (ifolderMenu), priv->propMenuItem);
+	g_signal_connect (priv->propMenuItem, "activate", G_CALLBACK (on_show_ifolder_properties), mw);
+
+
+	/* Separator */
+	gtk_menu_shell_append (GTK_MENU_SHELL (ifolderMenu), gtk_separator_menu_item_new ());
+
+	
+	/* Close */
+	priv->closeMenuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_CLOSE, accelGroup);
+	gtk_menu_shell_append (GTK_MENU_SHELL (ifolderMenu), priv->closeMenuItem);
+	g_signal_connect (priv->closeMenuItem, "activate", G_CALLBACK (on_close), mw);
+	
+	/* Quit */
+	priv->quitMenuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_QUIT, accelGroup);
+	gtk_menu_shell_append (GTK_MENU_SHELL (ifolderMenu), priv->quitMenuItem);
+	g_signal_connect (priv->quitMenuItem, "activate", G_CALLBACK (on_quit), mw);
+
+	/*
+	GtkWidget		*unsynchronizedMenuItem;
+	GtkWidget		*refreshMenuItem;
+	GtkWidget		*helpMenuItem;
+	GtkWidget		*aboutMenuItem;
+	*/
+	
+	ifolderMenuItem = gtk_menu_item_new_with_mnemonic (_("i_Folder"));
+	gtk_menu_item_set_submenu (GTK_MENU_ITEM (ifolderMenuItem), ifolderMenu);
+	gtk_menu_shell_append (GTK_MENU_SHELL (priv->menuBar), ifolderMenuItem);
+
+	return priv->menuBar;
+}
+
+static GtkWidget *
+create_content_area (IFAMainWindow *mw)
+{
+	return gtk_label_new ("FIXME: Implement IFAMainWindow::create_content_area()");
+}
+
+static GtkWidget *
+create_status_bar (IFAMainWindow *mw)
+{
+	return gtk_label_new ("FIXME: Implement IFAMainWindow::create_status_bar()");
+}
+
+static void
+on_create_ifolder (GtkMenuItem *menuitem, IFAMainWindow *mw)
+{
+	g_message ("FIXME: Implement IFAMainWindow::on_create_ifolder()");
+}
+
+static void
+on_open_ifolder (GtkMenuItem *menuitem, IFAMainWindow *mw)
+{
+	g_message ("FIXME: Implement IFAMainWindow::on_open_ifolder()");
+}
+
+static void
+on_share_ifolder (GtkMenuItem *menuitem, IFAMainWindow *mw)
+{
+	g_message ("FIXME: Implement IFAMainWindow::on_share_ifolder()");
+}
+
+static void
+on_sync_ifolder_now (GtkMenuItem *menuitem, IFAMainWindow *mw)
+{
+	g_message ("FIXME: Implement IFAMainWindow::on_sync_ifolder_now()");
+}
+
+static void
+on_disconnect_ifolder (GtkMenuItem *menuitem, IFAMainWindow *mw)
+{
+	g_message ("FIXME: Implement IFAMainWindow::on_disconnect_ifolder()");
+}
+
+static void
+on_show_ifolder_properties (GtkMenuItem *menuitem, IFAMainWindow *mw)
+{
+	g_message ("FIXME: Implement IFAMainWindow::on_show_ifolder_properties()");
+}
+
+static void
+on_close (GtkMenuItem *menuitem, IFAMainWindow *mw)
+{
+	gtk_widget_hide (GTK_WIDGET (mw));
+}
+
+static void
+on_quit (GtkMenuItem *menuitem, IFAMainWindow *mw)
+{
+	ifa_quit_ifolder ();
+}
