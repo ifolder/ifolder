@@ -50,10 +50,10 @@ struct _IFAMainWindowPrivate
 	GtkWidget		*menuBar;
 	
 	GtkWidget		*syncBar;
+
 	GtkWidget		*createMenuItem;
 	GtkWidget		*shareMenuItem;
 	GtkWidget		*openMenuItem;
-	GtkWidget		*unsynchronizedMenuItem;
 	GtkWidget		*syncNowMenuItem;
 	GtkWidget		*disconnectMenuItem;
 	GtkWidget		*propMenuItem;
@@ -133,7 +133,11 @@ static void on_hide (GtkWidget *widget, IFAMainWindow *mw);
 
 static GtkWidget * create_widgets (IFAMainWindow *mw);
 static GtkWidget * create_menu (IFAMainWindow *mw);
+
 static GtkWidget * create_content_area (IFAMainWindow *mw);
+static GtkWidget * create_actions_pane (IFAMainWindow *mw);
+static GtkWidget * create_icon_view_pane (IFAMainWindow *mw);
+
 static GtkWidget * create_status_bar (IFAMainWindow *mw);
 
 static void update_status (IFAMainWindow *mw, const gchar *message);
@@ -584,13 +588,14 @@ create_menu (IFAMainWindow *mw)
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (helpMenuItem0), helpMenu);
 	gtk_menu_shell_append (GTK_MENU_SHELL (priv->menuBar), helpMenuItem0);
 
-
-	/*
-
-	GtkWidget		*;
-	GtkWidget		*helpMenuItem;
-	GtkWidget		*aboutMenuItem;
-	*/
+	/**
+	 * Disable menu items that aren't valid if nothing is selected.
+	 */
+	gtk_widget_set_sensitive (priv->disconnectMenuItem, FALSE);
+	gtk_widget_set_sensitive (priv->shareMenuItem, FALSE);
+	gtk_widget_set_sensitive (priv->openMenuItem, FALSE);
+	gtk_widget_set_sensitive (priv->syncNowMenuItem, FALSE);
+	gtk_widget_set_sensitive (priv->propMenuItem, FALSE);
 	
 	return priv->menuBar;
 }
@@ -598,7 +603,67 @@ create_menu (IFAMainWindow *mw)
 static GtkWidget *
 create_content_area (IFAMainWindow *mw)
 {
-	return gtk_label_new ("FIXME: Implement IFAMainWindow::create_content_area()");
+	GtkStyle *default_style;
+	GtkWidget *vbox, *hbox;
+	IFAMainWindowPrivate *priv = IFA_MAIN_WINDOW_GET_PRIVATE (mw);
+	
+	priv->contentEventBox = gtk_event_box_new ();
+	default_style = gtk_widget_get_style (priv->contentEventBox);
+	gtk_widget_modify_bg (priv->contentEventBox, GTK_STATE_NORMAL, &(default_style->bg[GTK_STATE_ACTIVE]));
+	
+	vbox = gtk_vbox_new (FALSE, 0);
+	gtk_container_add (GTK_CONTAINER (priv->contentEventBox), vbox);
+	
+	hbox = gtk_hbox_new (FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
+	
+	gtk_box_pack_start (GTK_BOX (hbox), create_actions_pane (mw), FALSE, FALSE, 12);
+	gtk_box_pack_start (GTK_BOX (hbox), create_icon_view_pane (mw), TRUE, TRUE, 0);
+	
+	return priv->contentEventBox;
+}
+
+static GtkWidget *
+create_actions_pane (IFAMainWindow *mw)
+{
+	GtkWidget *vbox, *l, *searchHBox;
+	gchar *tmpStr;
+	GtkStyle *default_style;
+	IFAMainWindowPrivate *priv = IFA_MAIN_WINDOW_GET_PRIVATE (mw);
+	
+	vbox = gtk_vbox_new (FALSE, 0);
+	
+	gtk_widget_set_size_request (vbox, 175, -1);
+	
+	/* Spacer */
+	l = gtk_label_new ("<span size=\"small\"></span>");
+	gtk_box_pack_start (GTK_BOX (vbox), l, FALSE, FALSE, 0);
+	gtk_label_set_use_markup (GTK_LABEL (l), TRUE);
+	
+	/* Filter */
+	tmpStr = g_markup_printf_escaped ("<span size=\"large\">%s</span>", _("Filter"));
+	l = gtk_label_new (tmpStr);
+	g_free (tmpStr);
+	gtk_box_pack_start (GTK_BOX (vbox), l, FALSE, FALSE, 0);
+	gtk_label_set_use_markup (GTK_LABEL (l), TRUE);
+	gtk_misc_set_alignment (GTK_MISC (l), 0, 0.5);
+	default_style = gtk_widget_get_style (l);
+	gtk_widget_modify_fg (l, GTK_STATE_NORMAL, &(default_style->base[GTK_STATE_SELECTED]));
+	
+	searchHBox = gtk_hbox_new (FALSE, 4);
+	gtk_box_pack_start (GTK_BOX (vbox), searchHBox, FALSE, FALSE, 0);
+	
+	priv->searchEntry = gtk_entry_new ();
+	gtk_box_pack_start (GTK_BOX (searchHBox), priv->searchEntry, TRUE, TRUE, 0);
+	gtk_entry_select_region (GTK_ENTRY (priv->searchEntry), 0, -1);
+
+	return vbox;
+}
+
+static GtkWidget *
+create_icon_view_pane (IFAMainWindow *mw)
+{
+	return gtk_label_new ("FIXME: Implement create_icon_view_pane()");
 }
 
 static GtkWidget *
