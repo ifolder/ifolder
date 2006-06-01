@@ -49,7 +49,6 @@ struct _IFAMainWindowPrivate
 	
 	GtkWidget		*menuBar;
 	
-	GtkWidget		*mainStatusBar;
 	GtkWidget		*syncBar;
 	GtkWidget		*createMenuItem;
 	GtkWidget		*shareMenuItem;
@@ -69,7 +68,10 @@ struct _IFAMainWindowPrivate
 	
 	GtkWidget		*helpMenuItem;
 	GtkWidget		*aboutMenuItem;
-	
+
+	guint			mainStatusBarContext;	
+	GtkWidget		*mainStatusBar;
+
 	/**
 	 * Keep track of open windows so that if we're called again for one that is
 	 * already open, we'll just present it to the user instead of opening an
@@ -134,6 +136,8 @@ static GtkWidget * create_menu (IFAMainWindow *mw);
 static GtkWidget * create_content_area (IFAMainWindow *mw);
 static GtkWidget * create_status_bar (IFAMainWindow *mw);
 
+static void update_status (IFAMainWindow *mw, const gchar *message);
+
 /* iFolder Menu Handlers */
 static void on_create_ifolder (GtkMenuItem *menuitem, IFAMainWindow *mw);
 static void on_open_ifolder (GtkMenuItem *menuitem, IFAMainWindow *mw);
@@ -195,6 +199,8 @@ ifa_main_window_init (IFAMainWindow *mw)
 	
 	priv->propDialogs = g_hash_table_new(g_str_hash, g_str_equal);
 	priv->searchTimeoutID = 0;
+	
+	priv->mainStatusBarContext = 1;
 	
 	gtk_window_set_default_size (GTK_WINDOW (mw), 600, 480);
 	g_message ("FIXME: set up the icons so we can call gtk_window_set_icon() on the main window");
@@ -598,7 +604,21 @@ create_content_area (IFAMainWindow *mw)
 static GtkWidget *
 create_status_bar (IFAMainWindow *mw)
 {
-	return gtk_label_new ("FIXME: Implement IFAMainWindow::create_status_bar()");
+	IFAMainWindowPrivate *priv = IFA_MAIN_WINDOW_GET_PRIVATE (mw);
+	
+	priv->mainStatusBar = gtk_statusbar_new ();
+	update_status (mw, _("Idle..."));
+	
+	return priv->mainStatusBar;
+}
+
+static void
+update_status (IFAMainWindow *mw, const gchar *message)
+{
+	IFAMainWindowPrivate *priv = IFA_MAIN_WINDOW_GET_PRIVATE (mw);
+
+	gtk_statusbar_pop (GTK_STATUSBAR (priv->mainStatusBar), priv->mainStatusBarContext);
+	gtk_statusbar_push (GTK_STATUSBAR (priv->mainStatusBar), priv->mainStatusBarContext, message);
 }
 
 static void
