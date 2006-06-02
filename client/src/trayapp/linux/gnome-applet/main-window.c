@@ -249,6 +249,7 @@ ifa_main_window_init (IFAMainWindow *mw)
 	
 	gtk_window_set_default_size (GTK_WINDOW (mw), 600, 480);
 	gtk_widget_set_size_request (GTK_WIDGET (mw), 600, 480);
+	gtk_window_set_resizable (GTK_WINDOW (mw), TRUE);
 	
 	g_message ("FIXME: set up the icons so we can call gtk_window_set_icon() on the main window");
 /*	gtk_window_set_icon (GTK_WINDOW (mw), fixme);*/
@@ -951,7 +952,7 @@ create_status_bar (IFAMainWindow *mw)
 	IFAMainWindowPrivate *priv = IFA_MAIN_WINDOW_GET_PRIVATE (mw);
 	
 	priv->mainStatusBar = gtk_statusbar_new ();
-	gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (priv->mainStatusBar), FALSE);
+	gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (priv->mainStatusBar), TRUE);
 	update_status (mw, _("Idle..."));
 	
 	return priv->mainStatusBar;
@@ -1173,7 +1174,7 @@ g_debug ("# of ifolders in '%s': %d", ifolder_domain_get_name (domain), index);
 			{
 				ifolder = IFOLDER (ifolderPtr->data);
 				
-				tmpStr = g_markup_printf_escaped ("<span size=\"large\" weight=\"bold\">%s</span>\n%s\n%s",
+				tmpStr = g_markup_printf_escaped ("<span size=\"large\">%s</span>\n%s\n%s",
 												  ifolder_get_name (ifolder),
 												  ifolder_get_local_path (ifolder),
 												  "FIXME: need to figure out how to get the status here");
