@@ -211,7 +211,7 @@ int main(int argc, char* argv[])
 				{
 					if (error != NULL)
 					{
-						printf("%s\n", error->message);
+						printf("Error %d : %s\n", error->code, error->message);
 						g_clear_error(&error);
 					}
 				}

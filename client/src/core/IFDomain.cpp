@@ -153,7 +153,7 @@ IFDomain* IFDomain::Add(const gchar* userName, const gchar* password, const gcha
 		struct soap* soap = domainService->m_DomainService.soap;
 		soap_print_fault(soap, stderr);
 		soap_print_fault_location(soap, stderr);
-		g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, soap->error, "Soap Error");
+		g_set_error(error, IF_CORE_ERROR, soap->error, "Soap Error");
 		delete pDomain;
 		return NULL;
 	}
@@ -190,6 +190,7 @@ int IFDomain::ParseLoginHeader(struct soap *soap, const char *key, const char*va
 	{
 		return pDomain->m_Parsehdr(soap, key, val);
 	}
+	return SOAP_OK;
 }
 
 gboolean IFDomain::Login(const gchar *password, GError **error)
@@ -558,7 +559,7 @@ IFDomain* IFDomainList::GetDefault()
 	IFDomain *pDomain;
 	while ((pDomain = dIter.Next()) != NULL)
 	{
-		if (pDomain->m_Default == true)
+		if (pDomain->m_Default != 0)
 			break;
 	}
 	return pDomain;

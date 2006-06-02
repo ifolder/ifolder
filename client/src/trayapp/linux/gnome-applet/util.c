@@ -22,7 +22,9 @@
  ***********************************************************************/
 
 #include "util.h"
+#ifndef WIN32
 #include "config.h"
+#endif // WIN32
 
 /*@todo Remove this when gettext is added */
 #define _

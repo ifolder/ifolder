@@ -559,15 +559,7 @@ ifolder_domain_log_out(iFolderDomain *domain, GError **error)
 
 	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
 	
-	if (priv->core_domain->Logout () != TRUE)
-	{
-		g_set_error (error,
-					 IFOLDER_ERROR,
-					 IFOLDER_ERR_UNKNOWN,
-					 _("FIXME: IFDomain.Logout() should return a GError so we know what's going on."));
-		return;
-	}
-	
+	priv->core_domain->Logout ();
 	g_signal_emit (singleton_client, ifolder_client_signals[DOMAIN_LOGGED_OUT], 0, domain);
 }
 
@@ -644,13 +636,9 @@ ifolder_domain_get_authenticated_user(iFolderDomain *domain, GError **error)
 
 	priv = IFOLDER_DOMAIN_GET_PRIVATE (domain);
 	
-	core_user = priv->ifolder_service->GetAuthenticatedUser ();
+	core_user = priv->ifolder_service->GetAuthenticatedUser (error);
 	if (core_user == NULL)
 	{
-		g_set_error (error,
-					 IFOLDER_ERROR,
-					 IFOLDER_ERR_UNKNOWN,
-					 _("Error getting the authenticated user from the iFolder WebService."));
 		return NULL;
 	}
 	
@@ -684,14 +672,10 @@ ifolder_domain_get_authenticated_user_policy (iFolderDomain *domain, GError **er
 	if (user == NULL)
 		return NULL;
 	
-	core_user_policy = priv->ifolder_service->GetAuthenticatedUserPolicy ();
+	core_user_policy = priv->ifolder_service->GetAuthenticatedUserPolicy (error);
 	if (core_user_policy == NULL)
 	{
 		g_object_unref (user);
-		g_set_error (error,
-					 IFOLDER_ERROR,
-					 IFOLDER_ERR_UNKNOWN,
-					 _("Error getting the authenticated user policy from the iFolder WebService."));
 		return NULL;
 	}
 	

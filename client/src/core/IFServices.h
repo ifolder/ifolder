@@ -30,10 +30,18 @@
 #include "simiasiFolderWebSoapProxy.h"
 #include "IFDomain.h"
 
+// Forward declarations
+class GLIBCLIENT_API Domain;
+class GLIBCLIENT_API iFolderWebSoap;
+class GLIBCLIENT_API ifolder__ArrayOfString;
+
+typedef int (*WebCall)(gpointer req, gpointer resp);
+
 namespace ifweb
 {
 // Forward declarations
 class IFServiceManager;
+class WebService;
 class DomainService;
 class iFolderService;
 class iFolder;
@@ -60,6 +68,7 @@ class GLIBCLIENT_API IFServiceManager
 private:
 	static GArray connectionList;
 
+	static void Initialize(WebService *service, struct soap *soap);
 public:
 	static DomainService* GetDomainService(const gchar* domainID, const gchar *host);
 	static DomainService* GetDomainService(IFDomain *pDomain, const gchar *host);
@@ -67,20 +76,27 @@ public:
 	static iFolderService* GetiFolderService(IFDomain *pDomain, const gchar *host);
 };
 
+class GLIBCLIENT_API WebService
+{
+	friend class IFServiceManager;
+protected:
+	IFDomain *m_pDomain;
+	WebService(IFDomain *pDomain) : m_pDomain(pDomain) {};
+	gboolean HandleError(struct soap *soap, GError **error);
+};
 
-class GLIBCLIENT_API DomainService
+
+class GLIBCLIENT_API DomainService : WebService
 {
 	friend class IFServiceManager;
 	friend class IFDomain;
 private:
-	IFDomain	*m_pDomain;
-public:
 	Domain		m_DomainService;
 private:
 
-	DomainService(IFDomain *pDomain) : m_pDomain(pDomain) {};
+	DomainService(IFDomain *pDomain) : WebService(pDomain) {};
 	virtual ~DomainService() { g_free((gchar*)m_DomainService.endpoint); };
-
+	
 public:
 	DomainInfo* GetDomainInfo(const gchar* userID, GError** error);
 	HostInfo* GetHomeServer(const gchar* userID, GError** error);
@@ -91,15 +107,14 @@ public:
 	gchar* GetDomainID(GError **error);
 };
 
-class GLIBCLIENT_API iFolderService
+class GLIBCLIENT_API iFolderService : WebService
 {
 	friend class IFServiceManager;
 	friend class IFDomain;
 private:
-	IFDomain		*m_pDomain;
 	iFolderWebSoap	m_iFolderService;
 
-	iFolderService(IFDomain *pDomain) : m_pDomain(pDomain) {};
+	iFolderService(IFDomain *pDomain) : WebService(pDomain) {};
 	~iFolderService() { g_free((gchar*)m_iFolderService.endpoint); };
 public:
 	iFolderIterator* GetiFolders(gint index, gint max, GError **error);
@@ -142,7 +157,7 @@ public:
 	iFolderUser* GetUser(const gchar *pUserID, GError **error);
 	iFolderUserDetails* GetUserDetails(const gchar *pUserID, GError **error);
 	iFolderUserIterator* GetUsersBySearch(gint index, gint max, enum ifolder__SearchOperation operation, const gchar* pattern, enum ifolder__SearchProperty property, GError **error);
-	Login(const gchar *user, const gchar *password, GError **error);
+	gboolean Login(const gchar *user, const gchar *password, GError **error);
 };
 
 
@@ -684,7 +699,7 @@ public:
 	{
 		ifolder__iFolderPolicy *pPolicy = new ifolder__iFolderPolicy();
 		pPolicy->iFolderID = m_iFolderID;
-		pPolicy->Locked = m_Locked;
+		pPolicy->Locked = (m_Locked != 0); // This is to work around a MS C4800 compile error.
 		pPolicy->SpaceLimit = m_SpaceLimit;
 		pPolicy->SpaceLimitEffective = m_SpaceLimitEffective;
 		pPolicy->SpaceUsed = m_SpaceUsed;

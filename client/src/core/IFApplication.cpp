@@ -30,7 +30,7 @@ gchar		*IFApplication::m_pDataPath = NULL;
 gboolean	IFApplication::m_Initialized = false;
 gchar		IFApplication::SEPARATOR[] = "|";
 
-GQuark	IF_CORE_ERROR_DOMAIN_QUARK = g_quark_from_string(IF_CORE_ERROR_DOMAIN);
+GQuark	IF_CORE_ERROR = g_quark_from_string("iFolder Core");
 	
 
 gboolean IFApplication::Initialize(GError **error)
@@ -60,7 +60,7 @@ gboolean IFApplication::Initialize(const gchar *pDataPath, GError **error)
 		return true;
 	
 	// Someone tried to initialize to another path return an error.
-	g_set_error(error, IF_CORE_ERROR_DOMAIN_QUARK, IF_ERR_ALREADY_INITIALIZED, "Already initialize to path : %s\n", m_pDataPath);
+	g_set_error(error, IF_CORE_ERROR, IF_ERR_ALREADY_INITIALIZED, "Already initialize to path : %s\n", m_pDataPath);
 	return false;
 }
 

@@ -34,7 +34,7 @@ TRAYAPP_SRC := ../linux/gnome-applet
 
 # Compiler and Linker Options
 
-CFLAGS = -mms-bitfields
+CFLAGS = -mms-bitfields -DVERSION=\"3.5.FIXME\"
 
 DEFINES =
 

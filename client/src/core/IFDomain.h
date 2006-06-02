@@ -38,6 +38,7 @@ class ParseTree;
 class Domain;
 namespace ifweb
 {
+	class WebService;
 	class DomainService;
 	class iFolderService;
 	class IFServiceManager;
@@ -48,6 +49,7 @@ namespace ifweb
 class GLIBCLIENT_API IFDomain
 {
 	friend class ifweb::IFServiceManager;
+	friend class ifweb::WebService;
 	friend class IFDomainList;
 private:
 	// XML elements

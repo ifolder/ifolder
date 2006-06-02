@@ -33,8 +33,7 @@ struct _SimiasError_
 
 extern struct _SimiasError_ SimiasErrorToIFError(const gchar *pError);
 
-#define IF_CORE_ERROR_DOMAIN "IF Core"
-extern GQuark	IF_CORE_ERROR_DOMAIN_QUARK;
+extern GQuark	IF_CORE_ERROR;
 
 #define IF_SUCCESS		0		// The operation was successful.
 
