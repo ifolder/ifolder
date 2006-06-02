@@ -149,6 +149,7 @@ typedef enum
 const gchar *ifolder_get_id (iFolder *ifolder);
 const gchar *ifolder_get_name (iFolder *ifolder);
 const gchar *ifolder_get_description (iFolder *ifolder);
+const gchar *ifolder_get_local_path (iFolder *ifolder);
 gpointer ifolder_get_user_data (iFolder *ifolder);
 void ifolder_set_user_data (iFolder *ifolder, gpointer user_data);
 

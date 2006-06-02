@@ -170,7 +170,7 @@ create_title_bar(IFAAccountWizard *aw)
 	gtk_misc_set_alignment(GTK_MISC(aw->pageLabel), 0, 0.5);
 	gtk_label_set_use_markup(GTK_LABEL(aw->pageLabel), true);
 	g_message("FIXME: Change the wizard page label to white and add a blue-ish (themed) background");
-	GdkPixbuf *addAccountPixbuf = ifolder_util_load_pixbuf("ifolder-add-account48.png");
+	GdkPixbuf *addAccountPixbuf = ifa_load_pixbuf("ifolder-add-account48.png");
 	aw->addAccountImage = gtk_image_new_from_pixbuf(addAccountPixbuf);
 //	g_object_unref(G_OBJECT(addAccountPixbuf));
 	gtk_box_pack_end(GTK_BOX(pageTitleHBox), aw->addAccountImage, false, false, 0);

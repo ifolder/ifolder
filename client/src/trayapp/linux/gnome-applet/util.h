@@ -47,7 +47,7 @@ void ifa_quit_ifolder (); /* This should be implemented by the Operating System'
 void ifa_show_help (gchar *page_name);
 void ifa_show_about ();
 
-GdkPixbuf *ifolder_util_load_pixbuf(const gchar *image_name);
+GdkPixbuf *ifa_load_pixbuf(const gchar *image_name);
 
 G_END_DECLS
 

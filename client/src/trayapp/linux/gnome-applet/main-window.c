@@ -102,9 +102,25 @@ struct _IFAMainWindowPrivate
 	
 	GtkWidget		*ifoldersScrolledWindow;
 	GtkWidget		*ifoldersIconView;
+	GtkListStore	*ifoldersListStore;
+	GtkTreeModel	*ifoldersListStoreFilter;
+};
+
+enum
+{
+	COL_IFOLDER,
+	COL_DISPLAY_NAME,
+	COL_PIXBUF,
+	NUM_COLS
 };
 
 static IFAMainWindow *main_window = NULL;
+
+static GdkPixbuf *OK_PIXBUF			= NULL;
+static GdkPixbuf *WAIT_PIXBUF		= NULL;
+static GdkPixbuf *SYNC_PIXBUF		= NULL;
+static GdkPixbuf *WARNING_PIXBUF	= NULL;
+static GdkPixbuf *ERROR_PIXBUF		= NULL;
 
 #define IFA_MAIN_WINDOW_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), IFA_MAIN_WINDOW_TYPE, IFAMainWindowPrivate))
 
@@ -115,6 +131,8 @@ G_DEFINE_TYPE (IFAMainWindow, ifa_main_window, GTK_TYPE_DIALOG)
 /* Forward Declarations */
 
 static GtkWidget * ifa_main_window_new (GtkWindow *parent);
+
+static void load_pixbufs (void);
 
 static void                 ifa_main_window_get_property   (GObject            *object,
 							     guint               prop_id,
@@ -136,6 +154,9 @@ static GtkWidget * create_menu (IFAMainWindow *mw);
 static GtkWidget * create_content_area (IFAMainWindow *mw);
 static GtkWidget * create_actions_pane (IFAMainWindow *mw);
 static GtkWidget * create_icon_view_pane (IFAMainWindow *mw);
+
+static GtkListStore * create_store (IFAMainWindow *mw);
+static gint sort_func (GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, IFAMainWindow *mw);
 
 static GtkWidget * create_status_bar (IFAMainWindow *mw);
 
@@ -175,7 +196,12 @@ static void share_ifolder_handler (GtkButton *widget, IFAMainWindow *mw);
 static void disconnect_ifolder_handler (GtkButton *widget, IFAMainWindow *mw);
 static void view_ifolder_properties_handler (GtkButton *widget, IFAMainWindow *mw);
 
+static gboolean ifolder_filter_func (GtkTreeModel *model, GtkTreeIter *iter, GValue *value, gint column, IFAMainWindow *mw);
 
+static void on_ifolder_activated (GtkIconView *iconview, GtkTreePath *path, IFAMainWindow *mw);
+static void on_ifolder_selected (GtkIconView *iconview, IFAMainWindow *mw);
+
+static void populate_store (IFAMainWindow *mw);
 
 static void
 ifa_main_window_class_init (IFAMainWindowClass *klass)
@@ -196,6 +222,8 @@ ifa_main_window_class_init (IFAMainWindowClass *klass)
 	object_class->finalize = ifa_main_window_finalize;
 	
 	widget_class->style_set = ifa_main_window_style_set;
+	
+	load_pixbufs ();
 	
 	g_type_class_add_private (object_class, sizeof (IFAMainWindowPrivate));
 }
@@ -220,6 +248,8 @@ ifa_main_window_init (IFAMainWindow *mw)
 	priv->mainStatusBarContext = 1;
 	
 	gtk_window_set_default_size (GTK_WINDOW (mw), 600, 480);
+	gtk_widget_set_size_request (GTK_WIDGET (mw), 600, 480);
+	
 	g_message ("FIXME: set up the icons so we can call gtk_window_set_icon() on the main window");
 /*	gtk_window_set_icon (GTK_WINDOW (mw), fixme);*/
 	gtk_window_set_position (GTK_WINDOW (mw), GTK_WIN_POS_CENTER);
@@ -279,6 +309,21 @@ ifa_main_window_set_property (GObject      *object,
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
     }
+}
+
+static void
+load_pixbufs (void)
+{
+	if (OK_PIXBUF == NULL)
+		OK_PIXBUF = ifa_load_pixbuf ("ifolder48.png");
+	if (WAIT_PIXBUF == NULL)
+		WAIT_PIXBUF = ifa_load_pixbuf ("ifolder-waiting48.png");
+	if (SYNC_PIXBUF == NULL)
+		SYNC_PIXBUF = ifa_load_pixbuf ("ifolder-sync48.png");
+	if (WARNING_PIXBUF == NULL)
+		WARNING_PIXBUF = ifa_load_pixbuf ("ifolder-warning48.png");
+	if (ERROR_PIXBUF == NULL)
+		ERROR_PIXBUF = ifa_load_pixbuf ("ifolder-error48.png");
 }
 
 static void
@@ -416,6 +461,7 @@ on_realize (GtkWidget *widget, IFAMainWindow *mw)
 	/* Register for domain events that could affect this window */
 	
 	/* Widget signal handlers */
+	populate_store (mw);
 
 	priv->realized = TRUE;
 }
@@ -842,6 +888,61 @@ create_actions_pane (IFAMainWindow *mw)
 static GtkWidget *
 create_icon_view_pane (IFAMainWindow *mw)
 {
+	IFAMainWindowPrivate *priv = IFA_MAIN_WINDOW_GET_PRIVATE (mw);
+	
+	priv->ifoldersScrolledWindow = gtk_scrolled_window_new (NULL, NULL);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (priv->ifoldersScrolledWindow), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+
+	priv->ifoldersListStore = create_store (mw);	
+	priv->ifoldersListStoreFilter = gtk_tree_model_filter_new (GTK_TREE_MODEL (priv->ifoldersListStore), NULL);
+	gtk_tree_model_filter_set_visible_func (GTK_TREE_MODEL_FILTER (priv->ifoldersListStoreFilter), (GtkTreeModelFilterVisibleFunc) ifolder_filter_func, mw, NULL);
+	
+	priv->ifoldersIconView = gtk_icon_view_new_with_model (priv->ifoldersListStoreFilter);
+	gtk_container_add (GTK_CONTAINER (priv->ifoldersScrolledWindow), priv->ifoldersIconView);
+	
+	gtk_icon_view_set_selection_mode (GTK_ICON_VIEW (priv->ifoldersIconView), GTK_SELECTION_SINGLE);
+	gtk_icon_view_set_orientation (GTK_ICON_VIEW (priv->ifoldersIconView), GTK_ORIENTATION_HORIZONTAL);
+//	gtk_icon_view_set_orientation (GTK_ICON_VIEW (priv->ifoldersIconView), GTK_ORIENTATION_VERTICAL);
+	
+	gtk_icon_view_set_markup_column (GTK_ICON_VIEW (priv->ifoldersIconView), COL_DISPLAY_NAME);
+//	gtk_icon_view_set_text_column (GTK_ICON_VIEW (priv->ifoldersIconView), COL_DISPLAY_NAME);
+	gtk_icon_view_set_pixbuf_column (GTK_ICON_VIEW (priv->ifoldersIconView), COL_PIXBUF);
+	
+	gtk_icon_view_set_item_width (GTK_ICON_VIEW (priv->ifoldersIconView), 250);
+	gtk_icon_view_set_spacing (GTK_ICON_VIEW (priv->ifoldersIconView), 4);
+	
+	g_signal_connect (priv->ifoldersIconView, "item-activated", G_CALLBACK (on_ifolder_activated), mw);
+	g_signal_connect (priv->ifoldersIconView, "selection-changed", G_CALLBACK (on_ifolder_selected), mw);
+	
+	return priv->ifoldersScrolledWindow;
+}
+
+static GtkListStore *
+create_store (IFAMainWindow *mw)
+{
+	GtkListStore *store;
+	
+	store = gtk_list_store_new (NUM_COLS, G_TYPE_POINTER, G_TYPE_STRING, GDK_TYPE_PIXBUF);
+	
+	gtk_tree_sortable_set_default_sort_func (GTK_TREE_SORTABLE (store), (GtkTreeIterCompareFunc)sort_func, mw, NULL);
+	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (store), GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, GTK_SORT_ASCENDING);
+	
+	return store;
+}
+
+static gint
+sort_func (GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, IFAMainWindow *mw)
+{
+	iFolder *ifolder_a, *ifolder_b;
+	const gchar *name_a, *name_b;
+	
+	gtk_tree_model_get (model, a, 0, &ifolder_a, -1);
+	gtk_tree_model_get (model, b, 0, &ifolder_b, -1);
+	
+	name_a = ifolder_get_name (ifolder_a);
+	name_b = ifolder_get_name (ifolder_b);
+	
+	return g_utf8_collate (name_a, name_b);
 }
 
 static GtkWidget *
@@ -850,6 +951,7 @@ create_status_bar (IFAMainWindow *mw)
 	IFAMainWindowPrivate *priv = IFA_MAIN_WINDOW_GET_PRIVATE (mw);
 	
 	priv->mainStatusBar = gtk_statusbar_new ();
+	gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (priv->mainStatusBar), FALSE);
 	update_status (mw, _("Idle..."));
 	
 	return priv->mainStatusBar;
@@ -996,3 +1098,110 @@ view_ifolder_properties_handler (GtkButton *widget, IFAMainWindow *mw)
 	g_message ("FIXME: Implement IFAMainWindow::view_ifolder_properties_handler()");
 }
 
+static gboolean
+ifolder_filter_func (GtkTreeModel *model, GtkTreeIter *iter, GValue *value, gint column, IFAMainWindow *mw)
+{
+	g_message ("FIXME: Implement IFAMainWindow::ifolder_filter_func()");
+	return TRUE;
+}
+
+static void
+on_ifolder_activated (GtkIconView *iconview, GtkTreePath *path, IFAMainWindow *mw)
+{
+	open_ifolder_handler (NULL, mw);
+}
+
+static void
+on_ifolder_selected (GtkIconView *iconview, IFAMainWindow *mw)
+{
+	g_message ("FIXME: Implement IFAMainWindow::on_ifolder_selected()");
+}
+
+static void
+populate_store (IFAMainWindow *mw)
+{
+	GSList *domains, *domainPtr;
+	GSList *ifolders, *ifolderPtr;
+	iFolderDomain *domain;
+	iFolder *ifolder;
+	GError *err = NULL;
+	GtkWidget *errDialog;
+	guint index;
+	GtkTreeIter iter;
+	gchar *tmpStr;
+	
+
+	IFAMainWindowPrivate *priv = IFA_MAIN_WINDOW_GET_PRIVATE (mw);
+
+	g_debug ("FIXME: IMPLEMENT IFAMainWindow::populate_store()");
+
+	domains = ifolder_client_get_all_domains (ifolder_client, &err);
+	if (err)
+	{
+		errDialog = gtk_message_dialog_new (GTK_WINDOW (mw), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, err->message);
+		g_clear_error (&err);
+		gtk_dialog_run (GTK_DIALOG (errDialog));
+		gtk_widget_destroy (errDialog);
+		return;
+	}
+	
+	if (domains == NULL)
+		return;
+
+g_debug ("# of domains: %d", g_slist_length (domains));
+	
+	for (domainPtr = domains; domainPtr != NULL; domainPtr = g_slist_next (domainPtr))
+	{
+		domain = IFOLDER_DOMAIN (domainPtr->data);
+		
+		index = 0;
+		ifolders = ifolder_domain_get_connected_ifolders (domain, index, 10, &err);
+		if (err)
+		{
+			errDialog = gtk_message_dialog_new (GTK_WINDOW (mw), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, err->message);
+			g_clear_error (&err);
+			gtk_dialog_run (GTK_DIALOG (errDialog));
+			gtk_widget_destroy (errDialog);
+			continue;
+		}
+		index = g_slist_length (ifolders);
+g_debug ("# of ifolders in '%s': %d", ifolder_domain_get_name (domain), index);
+
+		while (ifolders != NULL)
+		{
+			for (ifolderPtr = ifolders; ifolderPtr != NULL; ifolderPtr = g_slist_next (ifolderPtr))
+			{
+				ifolder = IFOLDER (ifolderPtr->data);
+				
+				tmpStr = g_markup_printf_escaped ("<span size=\"large\" weight=\"bold\">%s</span>\n%s\n%s",
+												  ifolder_get_name (ifolder),
+												  ifolder_get_local_path (ifolder),
+												  "FIXME: need to figure out how to get the status here");
+
+				gtk_list_store_append (priv->ifoldersListStore, &iter);
+				gtk_list_store_set (priv->ifoldersListStore, &iter,
+									COL_IFOLDER, ifolder,
+									COL_DISPLAY_NAME, tmpStr,
+									COL_PIXBUF, OK_PIXBUF,
+									-1);
+
+				g_free (tmpStr);
+			}
+			
+			g_slist_free (ifolders);
+
+			ifolders = ifolder_domain_get_connected_ifolders (domain, index, 10, &err);
+			if (err)
+			{
+				errDialog = gtk_message_dialog_new (GTK_WINDOW (mw), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, err->message);
+				g_clear_error (&err);
+				gtk_dialog_run (GTK_DIALOG (errDialog));
+				gtk_widget_destroy (errDialog);
+				break;
+			}
+			index = g_slist_length (ifolders);
+		}
+	}
+	
+	g_slist_free (domains);
+}

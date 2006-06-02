@@ -879,21 +879,45 @@ ifolder_domain_disconnect_ifolder(iFolderDomain *domain, iFolder *ifolder, GErro
 }
 
 GSList *
-ifolder_domain_get_connected_ifolders(iFolderDomain *domain, const int index, const int count, GError **error)
+ifolder_domain_get_connected_ifolders(iFolderDomain *domain, guint index, guint count, GError **error)
 {
+	GSList *fakeList;
+	iFolder *ifolder;
+	IFiFolder *core_ifolder;
+
 	g_return_val_if_fail (IFOLDER_IS_DOMAIN (domain), NULL);
 	g_message("FIXME: Implement ifolder_domain_get_connected_ifolders");
 	
-	return g_slist_alloc();
+	if (index > 0) return NULL;
+
+	fakeList = NULL;
+	
+	core_ifolder = new IFiFolder ("/home/boyd/test0");
+	ifolder = ifolder_new_connected (domain, core_ifolder);
+	fakeList = g_slist_append (fakeList, ifolder);
+	
+	core_ifolder = new IFiFolder ("/home/boyd/test1");
+	ifolder = ifolder_new_connected (domain, core_ifolder);
+	fakeList = g_slist_append (fakeList, ifolder);
+	
+	core_ifolder = new IFiFolder ("/home/boyd/test2");
+	ifolder = ifolder_new_connected (domain, core_ifolder);
+	fakeList = g_slist_append (fakeList, ifolder);
+	
+	core_ifolder = new IFiFolder ("/home/boyd/test3");
+	ifolder = ifolder_new_connected (domain, core_ifolder);
+	fakeList = g_slist_append (fakeList, ifolder);
+	
+	return fakeList;
 }
 
 GSList *
-ifolder_domain_get_disconnected_ifolders(iFolderDomain *domain, const int index, const int count, GError **error)
+ifolder_domain_get_disconnected_ifolders(iFolderDomain *domain, guint index, guint count, GError **error)
 {
 	g_return_val_if_fail (IFOLDER_IS_DOMAIN (domain), NULL);
 	g_message("FIXME: Implement ifolder_domain_get_disconnected_ifolders");
 	
-	return g_slist_alloc();
+	return NULL;
 }
 
 iFolder *
@@ -911,5 +935,5 @@ ifolder_domain_get_ifolders_by_name(iFolderDomain *domain, const iFolderSearchOp
 	g_return_val_if_fail (IFOLDER_IS_DOMAIN (domain), NULL);
 	g_message("FIXME: Implement ifolder_domain_get_ifolders_by_name");
 	
-	return g_slist_alloc();
+	return NULL;
 }

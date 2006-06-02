@@ -61,6 +61,7 @@ enum
 	PROP_ID,
 	PROP_NAME,
 	PROP_DESCRIPTION,
+	PROP_LOCAL_PATH,
 	PROP_STATE
 };
 
@@ -133,6 +134,21 @@ ifolder_class_init(iFolderClass *klass)
 						_("The description of the iFolder."),
 						NULL,
 						(GParamFlags) (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+	
+	/**
+	 * iFolder:local-path:
+	 * 
+	 * The local path of the iFolder (only valid for a connected iFolder)..
+	 * 
+	 * Since: 3.5
+	 */
+	g_object_class_install_property (object_class,
+					PROP_LOCAL_PATH,
+					g_param_spec_string ("local-path",
+					_("iFolder Local Path"),
+					_(""),
+					NULL,
+					G_PARAM_READABLE));
 
 	/**
 	 * iFolder:state:
@@ -213,6 +229,9 @@ ifolder_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec 
 		case PROP_DESCRIPTION:
 			g_value_set_string (value, ifolder_get_description (ifolder));
 			break;
+		case PROP_LOCAL_PATH:
+			g_value_set_string (value, ifolder_get_local_path (ifolder));
+			break;
 		case PROP_STATE:
 			g_value_set_uint (value, (guint)ifolder_get_state (ifolder, NULL));
 			break;
@@ -233,6 +252,8 @@ ifolder_new_disconnected (iFolderDomain *domain, ifweb::iFolder *core_ifolder)
 {
 	iFolder *ifolder;
 	iFolderPrivate *priv;
+
+	g_debug ("iFolder::ifolder_new_disconnected");
 	
 	g_return_val_if_fail (IFOLDER_IS_DOMAIN (domain), NULL);
 	g_return_val_if_fail (core_ifolder != NULL, NULL);
@@ -258,6 +279,8 @@ ifolder_new_connected (iFolderDomain *domain, IFiFolder *core_ifolder)
 	iFolder *ifolder;
 	iFolderPrivate *priv;
 	
+	g_debug ("iFolder::ifolder_new_connected");
+
 	g_return_val_if_fail (IFOLDER_IS_DOMAIN (domain), NULL);
 	g_return_val_if_fail (core_ifolder != NULL, NULL);
 
@@ -296,6 +319,8 @@ ifolder_get_name(iFolder *ifolder)
 {
 	iFolderPrivate *priv;
 
+g_debug ("iFolder::ifolder_get_name()");
+
 	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), "");
 
 	priv = IFOLDER_GET_PRIVATE (ifolder);
@@ -303,7 +328,7 @@ ifolder_get_name(iFolder *ifolder)
 	if (!priv->connected)
 		return ((ifweb::iFolder *)priv->core_ifolder)->Name;
 	
-	return NULL;	/* FIXME: Get the Name from IFiFolder */
+	return "Fake Name";	/* FIXME: Get the Name from IFiFolder */
 }
 
 const gchar *
@@ -319,6 +344,21 @@ ifolder_get_description(iFolder *ifolder)
 		return ((ifweb::iFolder *)priv->core_ifolder)->Description;
 	
 	return NULL;	/* FIXME: Get the Description from IFiFolder */
+}
+
+const gchar *
+ifolder_get_local_path (iFolder *ifolder)
+{
+	iFolderPrivate *priv;
+
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), "");
+
+	priv = IFOLDER_GET_PRIVATE (ifolder);
+	
+	if (!priv->connected)
+		return NULL;
+	
+	return "/this/is/a/fake/path";	/* FIXME: Get the local path from IFiFolder */
 }
 
 gpointer

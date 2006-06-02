@@ -40,10 +40,29 @@ ifa_show_help(gchar *page_name)
 }
 
 GdkPixbuf *
-ifolder_util_load_pixbuf(const gchar *image_name)
+ifa_load_pixbuf(const gchar *image_name)
 {
-	g_message("FIXME: Implement ifolder_util_load_pixbuf()");
-	return NULL;
+	GdkPixbuf *pixbuf;
+	gchar *image_path;
+	GError *err = NULL;
+	
+	image_path = g_build_filename (DATADIR "/pixmaps/ifolder3", image_name, NULL);
+
+	if (g_file_test (image_path, G_FILE_TEST_EXISTS))
+	{
+		pixbuf = gdk_pixbuf_new_from_file (image_path, &err);
+		if (pixbuf == NULL)
+		{
+			g_warning ("Could not load %s: %s", image_path, err->message);
+			g_error_free (err);
+		}
+	}
+	else
+		g_warning ("Could not load %s: file does not exist", image_path);
+
+	g_free (image_path);
+	
+	return pixbuf;
 }
 
 void

@@ -440,7 +440,7 @@ static GtkWidget *ifa_dropdown_menu_create (GtkMenuItem *parent, IFApplet *apple
 static void
 ifa_show_ifolders_cb(GtkMenuItem *mi, IFApplet *applet)
 {
-	/* @todo Add code to show the main iFolder GUI window */
+	ifa_show_main_window ();
 }
 
 static void
@@ -818,68 +818,31 @@ static GtkWidget * ifa_get_instance (IFApplet *applet)
 
 static void ifa_icons_free (IFApplet *applet)
 {
-	/*
-	gint i,j;
-
-	g_object_unref (applet->no_connection_icon);
-	g_object_unref (applet->wired_icon);
-	g_object_unref (applet->adhoc_icon);
-	g_object_unref (applet->vpn_lock_icon);
-
-	g_object_unref (applet->wireless_00_icon);
-	g_object_unref (applet->wireless_25_icon);
-	g_object_unref (applet->wireless_50_icon);
-	g_object_unref (applet->wireless_75_icon);
-	g_object_unref (applet->wireless_100_icon);
-
-	for (i = 0; i < NUM_CONNECTING_STAGES; i++)
-		for (j = 0; j < NUM_CONNECTING_FRAMES; j++)
-			g_object_unref (applet->network_connecting_icons[i][j]);
-
-	for (i = 0; i < NUM_VPN_CONNECTING_FRAMES; i++)
-		g_object_unref (applet->vpn_connecting_icons[i]);
-	*/
+	g_object_unref (applet->starting_up_icon);
+	g_object_unref (applet->shutting_down_icon);
+	g_object_unref (applet->uploading_icon);
+	g_object_unref (applet->downloading_icon);
+	g_object_unref (applet->idle_icon);
 }
-
-#define ICON_LOAD(x, y)	\
-	{		\
-		GError *err = NULL; \
-		x = gtk_icon_theme_load_icon (icon_theme, y, icon_size, (GtkIconLookupFlags)0, &err); \
-		if (x == NULL) { \
-			success = FALSE; \
-			g_warning ("Icon %s missing: %s", y, err->message); \
-			g_error_free (err); \
-			goto out; \
-		} \
-	}
 
 static gboolean
 ifa_icons_load_from_disk (IFApplet *applet, GtkIconTheme *icon_theme)
 {
-	char *	name;
-	int		i, j;
-	gboolean	success = FALSE;
+	applet->starting_up_icon = ifa_load_pixbuf ("ifolder-starting-up22.png");
+	applet->shutting_down_icon = ifa_load_pixbuf ("ifolder-shutting-down22.png");
+	applet->uploading_icon = ifa_load_pixbuf ("ifolder-uploading22.png");
+	applet->downloading_icon = ifa_load_pixbuf ("ifolder-downloading22.png");
+	applet->idle_icon = ifa_load_pixbuf ("ifolder-idle22.png");
 
-	/* Assume icons are square */
-	gint icon_size = 22;
-
-	ICON_LOAD(applet->starting_up_icon, "ifolder-starting-up");
-	ICON_LOAD(applet->shutting_down_icon, "ifolder-shutting-down");
-	ICON_LOAD(applet->uploading_icon, "ifolder-uploading");
-	ICON_LOAD(applet->downloading_icon, "ifolder-downloading");
-	ICON_LOAD(applet->idle_icon, "ifolder-idle");
-
-	success = TRUE;
-
-out:
-	if (!success)
+	if (applet->starting_up_icon == NULL || applet->shutting_down_icon == NULL || applet->uploading_icon == NULL || applet->downloading_icon == NULL || applet->idle_icon == NULL)
 	{
 		char *msg = g_strdup(_("The iFolder3 applet could not find some required resources.  It cannot continue.\n"));
 		show_warning_dialog (msg);
 		ifa_icons_free (applet);
+		return FALSE;
 	}
 
-	return success;
+	return TRUE;
 }
 
 static void ifa_icon_theme_changed (GtkIconTheme *icon_theme, IFApplet *applet)
