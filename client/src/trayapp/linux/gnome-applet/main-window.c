@@ -97,7 +97,6 @@ struct _IFAMainWindowPrivate
 	GtkWidget		*openButton;
 	GtkWidget		*synchronizeNowButton;
 	GtkWidget		*shareButton;
-	GtkWidget		*fixUnsynchronizedFilesButton;
 	GtkWidget		*disconnectiFolderButton;
 	GtkWidget		*viewiFolderPropertiesButton;
 	
@@ -163,6 +162,20 @@ static void on_sync_log_menu_item (GtkMenuItem *menuitem, IFAMainWindow *mw);
 /* Help Menu Handlers */
 static void on_help (GtkMenuItem *menuitem, IFAMainWindow *mw);
 static void on_about (GtkMenuItem *menuitem, IFAMainWindow *mw);
+
+/* Widget Signal Handlers */
+static void on_search_entry_changed (GtkEntry *entry, IFAMainWindow *mw);
+static void on_cancel_search_button (GtkButton *widget, IFAMainWindow *mw);
+
+static void add_ifolder_handler (GtkButton *widget, IFAMainWindow *mw);
+
+static void open_ifolder_handler (GtkButton *widget, IFAMainWindow *mw);
+static void synchronize_now_handler (GtkButton *widget, IFAMainWindow *mw);
+static void share_ifolder_handler (GtkButton *widget, IFAMainWindow *mw);
+static void disconnect_ifolder_handler (GtkButton *widget, IFAMainWindow *mw);
+static void view_ifolder_properties_handler (GtkButton *widget, IFAMainWindow *mw);
+
+
 
 static void
 ifa_main_window_class_init (IFAMainWindowClass *klass)
@@ -626,44 +639,209 @@ create_content_area (IFAMainWindow *mw)
 static GtkWidget *
 create_actions_pane (IFAMainWindow *mw)
 {
-	GtkWidget *vbox, *l, *searchHBox;
+	GtkWidget *actionsVBox, *vbox, *l, *searchHBox, *spacerHBox, *hbox, *ifolderTasks;
 	gchar *tmpStr;
 	GtkStyle *default_style;
+	GtkWidget *image;
 	IFAMainWindowPrivate *priv = IFA_MAIN_WINDOW_GET_PRIVATE (mw);
 	
-	vbox = gtk_vbox_new (FALSE, 0);
+	actionsVBox = gtk_vbox_new (FALSE, 0);
 	
-	gtk_widget_set_size_request (vbox, 175, -1);
+	gtk_widget_set_size_request (actionsVBox, 175, -1);
 	
 	/* Spacer */
 	l = gtk_label_new ("<span size=\"small\"></span>");
-	gtk_box_pack_start (GTK_BOX (vbox), l, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (actionsVBox), l, FALSE, FALSE, 0);
 	gtk_label_set_use_markup (GTK_LABEL (l), TRUE);
 	
 	/* Filter */
 	tmpStr = g_markup_printf_escaped ("<span size=\"large\">%s</span>", _("Filter"));
 	l = gtk_label_new (tmpStr);
 	g_free (tmpStr);
-	gtk_box_pack_start (GTK_BOX (vbox), l, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (actionsVBox), l, FALSE, FALSE, 0);
 	gtk_label_set_use_markup (GTK_LABEL (l), TRUE);
 	gtk_misc_set_alignment (GTK_MISC (l), 0, 0.5);
 	default_style = gtk_widget_get_style (l);
 	gtk_widget_modify_fg (l, GTK_STATE_NORMAL, &(default_style->base[GTK_STATE_SELECTED]));
 	
 	searchHBox = gtk_hbox_new (FALSE, 4);
-	gtk_box_pack_start (GTK_BOX (vbox), searchHBox, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (actionsVBox), searchHBox, FALSE, FALSE, 0);
 	
 	priv->searchEntry = gtk_entry_new ();
 	gtk_box_pack_start (GTK_BOX (searchHBox), priv->searchEntry, TRUE, TRUE, 0);
 	gtk_entry_select_region (GTK_ENTRY (priv->searchEntry), 0, -1);
+	g_signal_connect (priv->searchEntry, "changed", G_CALLBACK (on_search_entry_changed), mw);
+	
+	image = gtk_image_new_from_stock (GTK_STOCK_STOP, GTK_ICON_SIZE_MENU);
+	gtk_misc_set_alignment (GTK_MISC (image), 0.5, 0);
+	
+	priv->cancelSearchButton = gtk_button_new ();
+	gtk_button_set_image (GTK_BUTTON (priv->cancelSearchButton), image);
+	gtk_box_pack_start (GTK_BOX (searchHBox), priv->cancelSearchButton, FALSE, FALSE, 0);
+	gtk_button_set_relief (GTK_BUTTON (priv->cancelSearchButton), GTK_RELIEF_NONE);
+	gtk_widget_set_sensitive (priv->cancelSearchButton, FALSE);
+	g_signal_connect (priv->cancelSearchButton, "clicked", G_CALLBACK (on_cancel_search_button), mw);
 
-	return vbox;
+	/* Spacer */
+	l = gtk_label_new ("<span size=\"small\"></span>");
+	gtk_box_pack_start (GTK_BOX (actionsVBox), l, FALSE, FALSE, 0);
+	gtk_label_set_use_markup (GTK_LABEL (l), TRUE);
+
+	/* Application Actions */
+	tmpStr = g_markup_printf_escaped ("<span size=\"large\">%s</span>", _("General Actions"));
+	l = gtk_label_new (tmpStr);
+	g_free (tmpStr);
+	gtk_box_pack_start (GTK_BOX (actionsVBox), l, FALSE, FALSE, 0);
+	gtk_label_set_use_markup (GTK_LABEL (l), TRUE);
+	gtk_misc_set_alignment (GTK_MISC (l), 0, 0.5);
+	default_style = gtk_widget_get_style (l);
+	gtk_widget_modify_fg (l, GTK_STATE_NORMAL, &(default_style->base[GTK_STATE_SELECTED]));
+
+	spacerHBox = gtk_hbox_new (FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (actionsVBox), spacerHBox, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (spacerHBox), gtk_label_new (""), FALSE, FALSE, 4);
+	
+	vbox = gtk_vbox_new (FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (spacerHBox), vbox, TRUE, TRUE, 0);
+	
+	/* New iFolder Button */
+	hbox = gtk_hbox_new (FALSE, 0);
+	priv->createiFolderButton = gtk_button_new ();
+	gtk_container_add (GTK_CONTAINER (priv->createiFolderButton), hbox);
+	gtk_box_pack_start (GTK_BOX (vbox), priv->createiFolderButton, FALSE, FALSE, 0);
+	gtk_button_set_relief (GTK_BUTTON (priv->createiFolderButton), GTK_RELIEF_NONE);
+	
+	tmpStr = g_markup_printf_escaped ("<span>%s</span>", _("New iFolder..."));
+	l = gtk_label_new (tmpStr);
+	g_free (tmpStr);
+	gtk_box_pack_start (GTK_BOX (hbox), l, FALSE, FALSE, 4);
+	gtk_label_set_use_markup (GTK_LABEL (l), TRUE);
+	gtk_label_set_use_underline (GTK_LABEL (l), FALSE);
+	gtk_misc_set_alignment (GTK_MISC (l), 0, 0.5);
+	
+	g_signal_connect (priv->createiFolderButton, "clicked", G_CALLBACK (add_ifolder_handler), mw);
+	
+	/* Spacer */
+	l = gtk_label_new ("<span size=\"small\"></span>");
+	gtk_box_pack_start (GTK_BOX (actionsVBox), l, FALSE, FALSE, 0);
+	gtk_label_set_use_markup (GTK_LABEL (l), TRUE);
+	
+	/* iFolder Actions */
+	ifolderTasks = gtk_vbox_new (FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (actionsVBox), ifolderTasks, FALSE, FALSE, 0);
+
+	tmpStr = g_markup_printf_escaped ("<span size=\"large\">%s</span>", _("iFolder Actions"));
+	l = gtk_label_new (tmpStr);
+	g_free (tmpStr);
+	gtk_box_pack_start (GTK_BOX (ifolderTasks), l, FALSE, FALSE, 0);
+	gtk_label_set_use_markup (GTK_LABEL (l), TRUE);
+	gtk_misc_set_alignment (GTK_MISC (l), 0, 0.5);
+	default_style = gtk_widget_get_style (l);
+	gtk_widget_modify_fg (l, GTK_STATE_NORMAL, &(default_style->base[GTK_STATE_SELECTED]));
+
+	spacerHBox = gtk_hbox_new (FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (ifolderTasks), spacerHBox, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (spacerHBox), gtk_label_new (""), FALSE, FALSE, 4);
+	
+	vbox = gtk_vbox_new (FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (spacerHBox), vbox, TRUE, TRUE, 0);
+	
+	/* Open iFolder Button */
+	hbox = gtk_hbox_new (FALSE, 0);
+	priv->openButton = gtk_button_new ();
+	gtk_container_add (GTK_CONTAINER (priv->openButton), hbox);
+	gtk_box_pack_start (GTK_BOX (vbox), priv->openButton, FALSE, FALSE, 0);
+	gtk_button_set_relief (GTK_BUTTON (priv->openButton), GTK_RELIEF_NONE);
+	
+	tmpStr = g_markup_printf_escaped ("<span>%s</span>", _("Open..."));
+	l = gtk_label_new (tmpStr);
+	g_free (tmpStr);
+	gtk_box_pack_start (GTK_BOX (hbox), l, FALSE, FALSE, 4);
+	gtk_label_set_use_markup (GTK_LABEL (l), TRUE);
+	gtk_label_set_use_underline (GTK_LABEL (l), FALSE);
+	gtk_misc_set_alignment (GTK_MISC (l), 0, 0.5);
+	
+	gtk_widget_set_sensitive (priv->openButton, FALSE);
+	g_signal_connect (priv->openButton, "clicked", G_CALLBACK (open_ifolder_handler), mw);
+
+	/* Synchronize Now Button */
+	hbox = gtk_hbox_new (FALSE, 0);
+	priv->synchronizeNowButton = gtk_button_new ();
+	gtk_container_add (GTK_CONTAINER (priv->synchronizeNowButton), hbox);
+	gtk_box_pack_start (GTK_BOX (vbox), priv->synchronizeNowButton, FALSE, FALSE, 0);
+	gtk_button_set_relief (GTK_BUTTON (priv->synchronizeNowButton), GTK_RELIEF_NONE);
+	
+	tmpStr = g_markup_printf_escaped ("<span>%s</span>", _("Synchronize now"));
+	l = gtk_label_new (tmpStr);
+	g_free (tmpStr);
+	gtk_box_pack_start (GTK_BOX (hbox), l, FALSE, FALSE, 4);
+	gtk_label_set_use_markup (GTK_LABEL (l), TRUE);
+	gtk_label_set_use_underline (GTK_LABEL (l), FALSE);
+	gtk_misc_set_alignment (GTK_MISC (l), 0, 0.5);
+	
+	gtk_widget_set_sensitive (priv->synchronizeNowButton, FALSE);
+	g_signal_connect (priv->synchronizeNowButton, "clicked", G_CALLBACK (synchronize_now_handler), mw);
+
+	/* Share Button */
+	hbox = gtk_hbox_new (FALSE, 0);
+	priv->shareButton = gtk_button_new ();
+	gtk_container_add (GTK_CONTAINER (priv->shareButton), hbox);
+	gtk_box_pack_start (GTK_BOX (vbox), priv->shareButton, FALSE, FALSE, 0);
+	gtk_button_set_relief (GTK_BUTTON (priv->shareButton), GTK_RELIEF_NONE);
+	
+	tmpStr = g_markup_printf_escaped ("<span>%s</span>", _("Share with..."));
+	l = gtk_label_new (tmpStr);
+	g_free (tmpStr);
+	gtk_box_pack_start (GTK_BOX (hbox), l, FALSE, FALSE, 4);
+	gtk_label_set_use_markup (GTK_LABEL (l), TRUE);
+	gtk_label_set_use_underline (GTK_LABEL (l), FALSE);
+	gtk_misc_set_alignment (GTK_MISC (l), 0, 0.5);
+	
+	gtk_widget_set_sensitive (priv->shareButton, FALSE);
+	g_signal_connect (priv->shareButton, "clicked", G_CALLBACK (share_ifolder_handler), mw);
+
+	/* Share Button */
+	hbox = gtk_hbox_new (FALSE, 0);
+	priv->disconnectiFolderButton = gtk_button_new ();
+	gtk_container_add (GTK_CONTAINER (priv->disconnectiFolderButton), hbox);
+	gtk_box_pack_start (GTK_BOX (vbox), priv->disconnectiFolderButton, FALSE, FALSE, 0);
+	gtk_button_set_relief (GTK_BUTTON (priv->disconnectiFolderButton), GTK_RELIEF_NONE);
+	
+	tmpStr = g_markup_printf_escaped ("<span>%s</span>", _("Disconnect iFolder..."));
+	l = gtk_label_new (tmpStr);
+	g_free (tmpStr);
+	gtk_box_pack_start (GTK_BOX (hbox), l, FALSE, FALSE, 4);
+	gtk_label_set_use_markup (GTK_LABEL (l), TRUE);
+	gtk_label_set_use_underline (GTK_LABEL (l), FALSE);
+	gtk_misc_set_alignment (GTK_MISC (l), 0, 0.5);
+	
+	gtk_widget_set_sensitive (priv->disconnectiFolderButton, FALSE);
+	g_signal_connect (priv->disconnectiFolderButton, "clicked", G_CALLBACK (disconnect_ifolder_handler), mw);
+
+	/* Properties Button */
+	hbox = gtk_hbox_new (FALSE, 0);
+	priv->viewiFolderPropertiesButton = gtk_button_new ();
+	gtk_container_add (GTK_CONTAINER (priv->viewiFolderPropertiesButton), hbox);
+	gtk_box_pack_start (GTK_BOX (vbox), priv->viewiFolderPropertiesButton, FALSE, FALSE, 0);
+	gtk_button_set_relief (GTK_BUTTON (priv->viewiFolderPropertiesButton), GTK_RELIEF_NONE);
+	
+	tmpStr = g_markup_printf_escaped ("<span>%s</span>", _("Properties..."));
+	l = gtk_label_new (tmpStr);
+	g_free (tmpStr);
+	gtk_box_pack_start (GTK_BOX (hbox), l, FALSE, FALSE, 4);
+	gtk_label_set_use_markup (GTK_LABEL (l), TRUE);
+	gtk_label_set_use_underline (GTK_LABEL (l), FALSE);
+	gtk_misc_set_alignment (GTK_MISC (l), 0, 0.5);
+	
+	gtk_widget_set_sensitive (priv->viewiFolderPropertiesButton, FALSE);
+	g_signal_connect (priv->viewiFolderPropertiesButton, "clicked", G_CALLBACK (view_ifolder_properties_handler), mw);
+
+	return actionsVBox;
 }
 
 static GtkWidget *
 create_icon_view_pane (IFAMainWindow *mw)
 {
-	return gtk_label_new ("FIXME: Implement create_icon_view_pane()");
 }
 
 static GtkWidget *
@@ -689,37 +867,37 @@ update_status (IFAMainWindow *mw, const gchar *message)
 static void
 on_create_ifolder (GtkMenuItem *menuitem, IFAMainWindow *mw)
 {
-	g_message ("FIXME: Implement IFAMainWindow::on_create_ifolder()");
+	add_ifolder_handler (NULL, mw);
 }
 
 static void
 on_open_ifolder (GtkMenuItem *menuitem, IFAMainWindow *mw)
 {
-	g_message ("FIXME: Implement IFAMainWindow::on_open_ifolder()");
+	open_ifolder_handler (NULL, mw);
 }
 
 static void
 on_share_ifolder (GtkMenuItem *menuitem, IFAMainWindow *mw)
 {
-	g_message ("FIXME: Implement IFAMainWindow::on_share_ifolder()");
+	share_ifolder_handler (NULL, mw);
 }
 
 static void
 on_sync_ifolder_now (GtkMenuItem *menuitem, IFAMainWindow *mw)
 {
-	g_message ("FIXME: Implement IFAMainWindow::on_sync_ifolder_now()");
+	synchronize_now_handler (NULL, mw);
 }
 
 static void
 on_disconnect_ifolder (GtkMenuItem *menuitem, IFAMainWindow *mw)
 {
-	g_message ("FIXME: Implement IFAMainWindow::on_disconnect_ifolder()");
+	disconnect_ifolder_handler (NULL, mw);
 }
 
 static void
 on_show_ifolder_properties (GtkMenuItem *menuitem, IFAMainWindow *mw)
 {
-	g_message ("FIXME: Implement IFAMainWindow::on_show_ifolder_properties()");
+	view_ifolder_properties_handler (NULL, mw);
 }
 
 static void
@@ -768,5 +946,53 @@ static void
 on_about (GtkMenuItem *menuitem, IFAMainWindow *mw)
 {
 	ifa_show_about ();
+}
+
+static void
+on_search_entry_changed (GtkEntry *entry, IFAMainWindow *mw)
+{
+	g_message ("FIXME: Implement IFAMainWindow::on_search_entry_changed()");
+}
+
+static void
+on_cancel_search_button (GtkButton *widget, IFAMainWindow *mw)
+{
+	g_message ("FIXME: Implement IFAMainWindow::on_cancel_search_button()");
+}
+
+static void
+add_ifolder_handler (GtkButton *widget, IFAMainWindow *mw)
+{
+	g_message ("FIXME: Implement IFAMainWindow::add_ifolder_handler()");
+}
+
+static void
+open_ifolder_handler (GtkButton *widget, IFAMainWindow *mw)
+{
+	g_message ("FIXME: Implement IFAMainWindow::open_ifolder_handler()");
+}
+
+static void
+synchronize_now_handler (GtkButton *widget, IFAMainWindow *mw)
+{
+	g_message ("FIXME: Implement IFAMainWindow::synchronize_now_handler()");
+}
+
+static void
+share_ifolder_handler (GtkButton *widget, IFAMainWindow *mw)
+{
+	g_message ("FIXME: Implement IFAMainWindow::share_ifolder_handler()");
+}
+
+static void
+disconnect_ifolder_handler (GtkButton *widget, IFAMainWindow *mw)
+{
+	g_message ("FIXME: Implement IFAMainWindow::disconnect_ifolder_handler()");
+}
+
+static void
+view_ifolder_properties_handler (GtkButton *widget, IFAMainWindow *mw)
+{
+	g_message ("FIXME: Implement IFAMainWindow::view_ifolder_properties_handler()");
 }
 
