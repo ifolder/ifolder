@@ -73,10 +73,10 @@ IFDomain::~IFDomain(void)
 	g_free(m_MasterHost);
 	g_free(m_UserName);
 	g_free(m_UserID);
-	if (m_DS != NULL)
-		delete m_DS;
-	if (m_iFS != NULL)
-		delete m_iFS;
+	//if (m_DS != NULL)
+		// TODO delete m_DS;
+	//if (m_iFS != NULL)
+		// TODO delete m_iFS;
 }
 
 IFDomain* IFDomain::Add(const gchar* userName, const gchar* password, const gchar* host, GError **error)

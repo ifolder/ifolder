@@ -31,6 +31,7 @@
 #include "IFDomain.h"
 
 // Forward declarations
+class IFDomain;
 class GLIBCLIENT_API Domain;
 class GLIBCLIENT_API iFolderWebSoap;
 class GLIBCLIENT_API ifolder__ArrayOfString;
@@ -79,6 +80,7 @@ public:
 class GLIBCLIENT_API WebService
 {
 	friend class IFServiceManager;
+	friend class IFDomain;
 protected:
 	IFDomain *m_pDomain;
 	WebService(IFDomain *pDomain) : m_pDomain(pDomain) {};
@@ -90,7 +92,7 @@ class GLIBCLIENT_API DomainService : WebService
 {
 	friend class IFServiceManager;
 	friend class IFDomain;
-private:
+public:
 	Domain		m_DomainService;
 private:
 
@@ -111,9 +113,9 @@ class GLIBCLIENT_API iFolderService : WebService
 {
 	friend class IFServiceManager;
 	friend class IFDomain;
-private:
+public:
 	iFolderWebSoap	m_iFolderService;
-
+private:
 	iFolderService(IFDomain *pDomain) : WebService(pDomain) {};
 	~iFolderService() { g_free((gchar*)m_iFolderService.endpoint); };
 public:
