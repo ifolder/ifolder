@@ -14,6 +14,6 @@ GSOAP_DIR := $(IFOLDER_TOP)/tools/gsoap/win32-2.7
 PO := $(IFOLDER_TOP)/po
 
 IFOLDER_INSTALL_DIR := $(IFOLDER_TOP)/stage
-
+datadir := $(IFOLDER_INSTALL_DIR)
 #VERSION := $(shell cat ./VERSION)
 

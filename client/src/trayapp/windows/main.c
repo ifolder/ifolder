@@ -3,9 +3,15 @@
 
 #include <ifolder-client.h>
 #include "../linux/gnome-applet/preferences-window.h"
+#include "../linux/gnome-applet/main-window.h"
 #include "../linux/gnome-applet/util.h"
 
 iFolderClient *ifolder_client = NULL;
+
+static void showMainWindow( GtkWidget *widget, gpointer data )
+{
+	ifa_show_main_window();
+}
 
 static void showPreferences( GtkWidget *widget, gpointer data )
 {
@@ -44,7 +50,7 @@ int main( int   argc,
 
     /* GtkWidget is the storage type for widgets */
     GtkWidget *window;
-    GtkWidget *prefsButton, *quitButton;
+    GtkWidget *prefsButton, *quitButton, *mainButton;
 
 	g_thread_init(NULL);
 
@@ -75,7 +81,13 @@ int main( int   argc,
     /* Sets the border width of the window. */
     gtk_container_set_border_width (GTK_CONTAINER (window), 10);
     
-    /* Creates a new button with the label "Hello World". */
+	/* Creates a new button with the label "Hello World". */
+	mainButton = gtk_button_new_with_label ("Main");
+
+	g_signal_connect (G_OBJECT (mainButton), "clicked",
+			  G_CALLBACK (showMainWindow), NULL);
+
+	/* Creates a new button with the label "Hello World". */
     prefsButton = gtk_button_new_with_label ("Preferences");
     
     g_signal_connect (G_OBJECT (prefsButton), "clicked",
@@ -96,7 +108,8 @@ int main( int   argc,
 
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 	gtk_container_add(GTK_CONTAINER(window), winBox);
-
+	
+	gtk_box_pack_start(GTK_BOX(winBox), mainButton, true, true, 0);
 	gtk_box_pack_start(GTK_BOX(winBox), prefsButton, true, true, 0);
 	gtk_box_pack_start(GTK_BOX(winBox), quitButton, true, true, 0);
 
