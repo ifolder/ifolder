@@ -14,7 +14,7 @@ iFolderClient_LIBPATH = $(srcdir)/../../TrayIcon $(srcdir)/../../iFolder $(srcdi
 EXTRA_DIST = $(iFolderClient_CSFILES) ifolder.in ifolder.desktop.in AssemblyInfo.cs.in
 
 ifolder: $(srcdir)/ifolder.in
-	sed -e 's,@_prefix_@,@prefix@,g' -e 's,@_webbindir_@,@webbindir@,g' $< > $@
+	sed -e 's,@_prefix_@,@prefix@,g' -e 's,@_webbindir_@,@webbindir@,g' -e 's,@_casadir_@,@casadir@,g' $< > $@
 	chmod +x $@
 
 ifolder.desktop: $(srcdir)/ifolder.desktop.in
