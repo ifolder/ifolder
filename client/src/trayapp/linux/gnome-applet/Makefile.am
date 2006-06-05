@@ -48,6 +48,8 @@ ifolder3_applet_SOURCES = \
 	util.h					\
 	eggtrayicon.c			\
 	eggtrayicon.h					\
+	sync-log-window.c				\
+	sync-log-window.h				\
 	wait-dialog.c					\
 	wait-dialog.h
 

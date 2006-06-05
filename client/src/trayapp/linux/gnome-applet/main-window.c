@@ -33,6 +33,7 @@
 
 #include "main-window.h"
 #include "preferences-window.h"
+#include "sync-log-window.h"
 
 /*@todo Remove this when gettext is added */
 #define _
@@ -127,7 +128,7 @@ static GdkPixbuf *ERROR_PIXBUF		= NULL;
 
 static void                 ifa_main_window_finalize       (GObject            *object);
 
-G_DEFINE_TYPE (IFAMainWindow, ifa_main_window, GTK_TYPE_DIALOG)
+G_DEFINE_TYPE (IFAMainWindow, ifa_main_window, GTK_TYPE_WINDOW)
 
 /* Forward Declarations */
 
@@ -241,7 +242,6 @@ static void
 ifa_main_window_init (IFAMainWindow *mw)
 {
 	IFAMainWindowPrivate *priv;
-	GtkWidget *vbox;
 	
 	g_message ("ifa_main_window_init()");
 
@@ -257,18 +257,15 @@ ifa_main_window_init (IFAMainWindow *mw)
 	priv->mainStatusBarContext = 1;
 	
 	gtk_window_set_default_size (GTK_WINDOW (mw), 600, 480);
-	gtk_widget_set_size_request (GTK_WIDGET (mw), 600, 480);
-	gtk_window_set_resizable (GTK_WINDOW (mw), TRUE);
+//	gtk_widget_set_size_request (GTK_WIDGET (mw), 600, 480);
 	
 	gtk_window_set_icon (GTK_WINDOW (mw), WINDOW_ICON);
 	gtk_window_set_position (GTK_WINDOW (mw), GTK_WIN_POS_CENTER);
 
-	vbox = gtk_bin_get_child (GTK_BIN (mw));
-
 	/* Widgets */
 	gtk_widget_push_composite_child ();
 
-	gtk_box_pack_start (GTK_BOX (vbox), create_widgets (mw), TRUE, TRUE, 0);
+	gtk_container_add (GTK_CONTAINER (mw), create_widgets (mw));
 	
 	gtk_widget_pop_composite_child ();
 }
@@ -410,7 +407,7 @@ ifa_main_window_new (GtkWindow *parent)
 	
 	gtk_window_set_title (GTK_WINDOW (mw), _("My iFolders"));
 	
-	gtk_window_set_resizable (GTK_WINDOW (mw), FALSE);
+	gtk_window_set_resizable (GTK_WINDOW (mw), TRUE);
 	gtk_window_set_modal (GTK_WINDOW (mw), FALSE);
 	gtk_window_set_type_hint (GTK_WINDOW (mw), GDK_WINDOW_TYPE_HINT_NORMAL);
 
@@ -1073,7 +1070,7 @@ on_refresh (GtkMenuItem *menuitem, IFAMainWindow *mw)
 static void
 on_sync_log_menu_item (GtkMenuItem *menuitem, IFAMainWindow *mw)
 {
-	g_message ("FIXME: Implement IFAMainWindow::on_sync_log_menu_item()");
+	ifa_show_sync_log_window ();
 }
 
 static void

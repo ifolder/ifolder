@@ -42,6 +42,7 @@
 #include "util.h"
 #include "main-window.h"
 #include "preferences-window.h"
+#include "sync-log-window.h"
 
 /*@todo Remove this when gettext is added */
 #define _
@@ -452,7 +453,7 @@ ifa_show_account_settings_cb(GtkMenuItem *mi, IFApplet *applet)
 static void
 ifa_show_sync_log_cb(GtkMenuItem *mi, IFApplet *applet)
 {
-	g_message ("FIXME: Implement ifa_show_sync_log_cb()");
+	ifa_show_sync_log_window ();
 }
 
 static void
