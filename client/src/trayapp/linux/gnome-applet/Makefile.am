@@ -5,6 +5,7 @@ IMAGE_DIR = $(top_srcdir)/src/images
 
 icondir = $(datadir)/pixmaps/ifolder3
 icon_DATA = \
+	$(IMAGE_DIR)/16x16/ifolder16.png \
 	$(IMAGE_DIR)/22x22/ifolder-downloading22.png \
 	$(IMAGE_DIR)/22x22/ifolder-idle22.png \
 	$(IMAGE_DIR)/22x22/ifolder-shutting-down22.png \

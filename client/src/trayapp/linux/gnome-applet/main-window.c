@@ -116,6 +116,7 @@ enum
 
 static IFAMainWindow *main_window = NULL;
 
+static GdkPixbuf *WINDOW_ICON		= NULL;
 static GdkPixbuf *OK_PIXBUF			= NULL;
 static GdkPixbuf *WAIT_PIXBUF		= NULL;
 static GdkPixbuf *SYNC_PIXBUF		= NULL;
@@ -147,6 +148,7 @@ static void                 ifa_main_window_style_set      (GtkWidget          *
 
 static void on_realize (GtkWidget *widget, IFAMainWindow *mw);
 static void on_hide (GtkWidget *widget, IFAMainWindow *mw);
+static gboolean on_key_press (GtkWidget *widget, GdkEventKey *key, IFAMainWindow *mw);
 
 static GtkWidget * create_widgets (IFAMainWindow *mw);
 static GtkWidget * create_menu (IFAMainWindow *mw);
@@ -258,8 +260,7 @@ ifa_main_window_init (IFAMainWindow *mw)
 	gtk_widget_set_size_request (GTK_WIDGET (mw), 600, 480);
 	gtk_window_set_resizable (GTK_WINDOW (mw), TRUE);
 	
-	g_message ("FIXME: set up the icons so we can call gtk_window_set_icon() on the main window");
-/*	gtk_window_set_icon (GTK_WINDOW (mw), fixme);*/
+	gtk_window_set_icon (GTK_WINDOW (mw), WINDOW_ICON);
 	gtk_window_set_position (GTK_WINDOW (mw), GTK_WIN_POS_CENTER);
 
 	vbox = gtk_bin_get_child (GTK_BIN (mw));
@@ -322,6 +323,8 @@ ifa_main_window_set_property (GObject      *object,
 static void
 load_pixbufs (void)
 {
+	if (WINDOW_ICON == NULL)
+		WINDOW_ICON = ifa_load_pixbuf ("ifolder16.png");
 	if (OK_PIXBUF == NULL)
 		OK_PIXBUF = ifa_load_pixbuf ("ifolder48.png");
 	if (WAIT_PIXBUF == NULL)
@@ -413,12 +416,12 @@ ifa_main_window_new (GtkWindow *parent)
 
 /*
 	g_signal_connect (mw, "response", G_CALLBACK (on_mw_response), mw);
-	g_signal_connect (mw, "key-press-event", G_CALLBACK (on_key_press), mw);
 	g_signal_connect (mw, "key-release-event", G_CALLBACK (on_key_release), mw);
 	g_signal_connect (mw, "response", G_CALLBACK (on_response), mw);
 */
 	g_signal_connect (mw, "realize", G_CALLBACK (on_realize), mw);
 	g_signal_connect (mw, "hide", G_CALLBACK (on_hide), mw);
+	g_signal_connect (mw, "key-press-event", G_CALLBACK (on_key_press), mw);
 	
 	return GTK_WIDGET (mw);
 }
@@ -481,6 +484,25 @@ on_hide (GtkWidget *widget, IFAMainWindow *mw)
 
 	gtk_widget_destroy (GTK_WIDGET (mw));
 	main_window = NULL;
+}
+
+static gboolean
+on_key_press (GtkWidget *widget, GdkEventKey *key, IFAMainWindow *mw)
+{
+	switch (key->keyval)
+	{
+		case GDK_F1:
+			on_help (NULL, mw);
+			break;
+		case GDK_F5:
+			on_refresh (NULL, mw);
+			break;
+		default:
+			return FALSE;	/* propogate the event on to other key-press handlers */
+			break;
+	}
+	
+	return TRUE; /* don't propogate the event on to other key-press handlers */
 }
 
 static GtkWidget *
@@ -1038,7 +1060,14 @@ on_preferences_menu_item (GtkMenuItem *menuitem, IFAMainWindow *mw)
 static void
 on_refresh (GtkMenuItem *menuitem, IFAMainWindow *mw)
 {
-	g_message ("FIXME: Implement IFAMainWindow::on_refresh()");
+	IFAMainWindowPrivate *priv = IFA_MAIN_WINDOW_GET_PRIVATE (mw);
+	
+	g_debug ("IFAMainWindow::on_refresh()");
+
+	/* Clear out the store and rebuild it */
+	gtk_list_store_clear (priv->ifoldersListStore);
+	
+	populate_store (mw);
 }
 
 static void
@@ -1050,7 +1079,7 @@ on_sync_log_menu_item (GtkMenuItem *menuitem, IFAMainWindow *mw)
 static void
 on_help (GtkMenuItem *menuitem, IFAMainWindow *mw)
 {
-	g_message ("FIXME: Implement IFAMainWindow::on_help()");
+	ifa_show_help (IFA_HELP_MAIN_PAGE);
 }
 
 static void
