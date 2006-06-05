@@ -26,11 +26,26 @@
 #include <glib.h>
 #include "glibclient.h"
 #include "IFDirectory.h"
+#include "Xml.h"
 
 class GLIBCLIENT_API IFiFolder
 {
 private:
 	IFDirectory m_RootDir;
+
+	gchar *m_Version;
+public:
+	// Properties.
+	gchar *m_Name;
+	gchar *m_ID;
+	gchar *m_Path;
+	gchar *m_Description;
+	gchar *m_Owner;
+
+private:
+	gboolean Serialize(FILE *pStream);
+	static IFiFolder* DeSerialize(XmlTree *tree, GNode *pDNode);
+	
 public:
 	IFiFolder(gchar *pPath);
 	virtual ~IFiFolder(void);

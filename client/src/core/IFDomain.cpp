@@ -27,20 +27,6 @@
 
 // IFDomain class
 
-gchar *IFDomain::EDomain = "Domain";
-gchar *IFDomain::EName = "name";
-gchar *IFDomain::EDescription = "description";
-gchar *IFDomain::EUser = "User";
-gchar *IFDomain::EHostID = "Host";
-gchar *IFDomain::EMasterHost = "master-host";
-gchar *IFDomain::EID = "id";
-gchar *IFDomain::EPW = "pw";
-gchar *IFDomain::EPOB = "pob";
-gchar *IFDomain::EVersion = "version";
-gchar *IFDomain::EActive = "active";
-gchar *IFDomain::EDefault = "default";
-
-
 IFDomain::IFDomain(const gchar *host)
 {
 	m_UserPassword = NULL;
@@ -262,7 +248,7 @@ gboolean IFDomain::Serialize(FILE *pStream)
 	return true;
 }
 
-IFDomain* IFDomain::DeSerialize(ParseTree *tree, GNode *pDNode)
+IFDomain* IFDomain::DeSerialize(XmlTree *tree, GNode *pDNode)
 {
 	IFDomain *pDomain; // = new IFDomain();
 	GNode *gnode = pDNode;
@@ -470,7 +456,7 @@ void IFDomainList::Restore()
 	}
 	if (pFileData != NULL)
 	{
-		list->m_ParseTree = new ParseTree();
+		list->m_XmlTree = new XmlTree();
 		if (!g_markup_parse_context_parse(pContext, pFileData, fileLength, &pError))
 		{
 			g_debug(pError->message);
@@ -482,14 +468,14 @@ void IFDomainList::Restore()
 			g_clear_error(&pError);
 		}
 		g_free(pFileData);
-		GNode* dNode = list->m_ParseTree->FindChild(NULL, IFDomain::EDomain, IFXElement);
+		GNode* dNode = list->m_XmlTree->FindChild(NULL, EDomain, IFXElement);
 		while (dNode != NULL)
 		{
-			Insert(IFDomain::DeSerialize(list->m_ParseTree, dNode));
-			dNode = list->m_ParseTree->FindSibling(dNode, IFDomain::EDomain, IFXElement);
+			Insert(IFDomain::DeSerialize(list->m_XmlTree, dNode));
+			dNode = list->m_XmlTree->FindSibling(dNode, EDomain, IFXElement);
 		}
-		delete list->m_ParseTree;
-		list->m_ParseTree = NULL;
+		delete list->m_XmlTree;
+		list->m_XmlTree = NULL;
 	}
 	g_markup_parse_context_free(pContext);
 }
@@ -497,11 +483,11 @@ void IFDomainList::Restore()
 void IFDomainList::XmlStart(GMarkupParseContext *pContext, const gchar *pName, const gchar **pANames, const gchar **pAValues, gpointer userData, GError **ppError)
 {
 	IFDomainList *dList = (IFDomainList*)userData;
-	dList->m_ParseTree->StartNode(pName);
+	dList->m_XmlTree->StartNode(pName);
 	int i = 0;
 	while (pANames[i] != NULL)
 	{
-		dList->m_ParseTree->AddAttribute(pANames[i], pAValues[i]);
+		dList->m_XmlTree->AddAttribute(pANames[i], pAValues[i]);
 		i++;
 	}
 }
@@ -509,13 +495,13 @@ void IFDomainList::XmlStart(GMarkupParseContext *pContext, const gchar *pName, c
 void IFDomainList::XmlEnd(GMarkupParseContext *pContext, const gchar *pName, gpointer userData, GError **ppError)
 {
 	IFDomainList *dList = (IFDomainList*)userData;
-	dList->m_ParseTree->EndNode();
+	dList->m_XmlTree->EndNode();
 }
 
 void IFDomainList::XmlText(GMarkupParseContext *pContext, const gchar *text, gsize textLen, gpointer userData, GError **ppError)
 {
 	IFDomainList *dList = (IFDomainList*)userData;
-	dList->m_ParseTree->AddText(text, textLen);
+	dList->m_XmlTree->AddText(text, textLen);
 }
 
 void IFDomainList::XmlError(GMarkupParseContext *pContext, GError *pError, gpointer userData)
@@ -565,105 +551,3 @@ IFDomain* IFDomainList::GetDefault()
 	return pDomain;
 }
 
-// DomainParseContext Class
-
-ParseTree::ParseTree()
-{
-	m_CurrentNode = m_RootNode = NULL;
-}
-
-ParseTree::~ParseTree()
-{
-	// Free the XmlNodes.
-	g_node_traverse(m_RootNode, G_IN_ORDER, G_TRAVERSE_ALL, -1, FreeXmlNodes, NULL);
-
-	g_node_destroy(m_RootNode);
-}
-
-gboolean ParseTree::FreeXmlNodes(GNode *pNode, gpointer data)
-{
-	XmlNode *xNode = (XmlNode*)pNode->data;
-	delete xNode;
-	return false;
-}
-
-void ParseTree::StartNode(const gchar *name)
-{
-	GNode *newNode = g_node_new(new XmlNode(g_strdup(name), IFXElement));
-	if (m_CurrentNode)
-	{
-		g_node_append(m_CurrentNode, newNode);
-		m_CurrentNode = newNode;
-	}
-	else
-	{
-		m_CurrentNode = m_RootNode = newNode;
-	}
-}
-
-void ParseTree::EndNode()
-{
-	if (m_CurrentNode)
-		m_CurrentNode = m_CurrentNode->parent;
-}
-
-void ParseTree::AddText(const gchar *text, gsize len)
-{
-	if (m_CurrentNode)
-	{
-		XmlNode *pNode = (XmlNode*)m_CurrentNode->data;
-		gchar *pValue = g_strstrip(g_strndup(text, len));
-		pNode->m_Value = pValue;
-	}
-}
-
-void ParseTree::AddAttribute(const gchar *name, const gchar *value)
-{
-	if (m_CurrentNode)
-	{
-		GNode *newNode = g_node_new(new XmlNode(g_strdup(name), g_strdup(value), IFXAttribute));
-		g_node_append(m_CurrentNode, newNode);
-	}
-}
-
-GNode* ParseTree::FindChild(GNode *parent, gchar* name, IFXNodeType type)
-{
-	if (parent == NULL)
-		parent = m_RootNode;
-
-    GNode *gnode = g_node_first_child(parent);
-	while (gnode != NULL)
-	{
-		XmlNode* xNode = (XmlNode*)gnode->data;
-		if (xNode->m_Type == type)
-		{
-			if (strcmp(xNode->m_Name, name) == 0)
-			{
-				break;
-			}
-		}
-		gnode = g_node_next_sibling(gnode);
-	}
-	return gnode;
-}
-
-GNode* ParseTree::FindSibling(GNode *sibling, gchar* name, IFXNodeType type)
-{
-	if (sibling == NULL)
-		return NULL;
-
-    GNode *gnode = g_node_next_sibling(sibling);
-	while (gnode != NULL)
-	{
-		XmlNode* xNode = (XmlNode*)gnode->data;
-		if (xNode->m_Type == type)
-		{
-			if (strcmp(xNode->m_Name, name) == 0)
-			{
-				break;
-			}
-		}
-		gnode = g_node_next_sibling(gnode);
-	}
-	return gnode;
-}

@@ -29,12 +29,14 @@
 #include "simiasDomain_USCOREx0020_USCOREServiceSoapProxy.h"
 #include "simiasiFolderWebSoapProxy.h"
 
+#include "Xml.h"
+
 // forward declarations
 class IFDomain;
 class IFDomainIterator;
 class IFDomainList;
 class XmlNode;
-class ParseTree;
+class XmlTree;
 class Domain;
 namespace ifweb
 {
@@ -52,22 +54,7 @@ class GLIBCLIENT_API IFDomain
 	friend class ifweb::WebService;
 	friend class IFDomainList;
 private:
-	// XML elements
-	static gchar *EDomain;
-	static gchar *EName;
-	static gchar *EDescription;
-	static gchar *EUser;
-	static gchar *EHostID;
-	static gchar *EMasterHost;
-	static gchar *EID;
-	static gchar *EPW;
-	static gchar *EPOB;
-	static gchar *EVersion;
-	static gchar *EActive;
-	static gchar *EDefault;
-
 	// Members.
-private:
 	gint	m_lastError;
 	gchar	*m_lastErrorString;
 	gint	m_GraceRemaining;
@@ -100,7 +87,7 @@ private:
 	IFDomain(const gchar *host);
 	virtual ~IFDomain(void);
 	gboolean Serialize(FILE *pStream);
-	static IFDomain* DeSerialize(ParseTree *tree, GNode *pDNode);
+	static IFDomain* DeSerialize(XmlTree *tree, GNode *pDNode);
 	static int ParseLoginHeader(struct soap *soap, const char *key, const char*val);
 	
 public:
@@ -146,7 +133,7 @@ private:
 	static			IFDomainList* m_Instance;
 	gchar			*m_pFileName;
 	GArray			*m_List;
-	ParseTree		*m_ParseTree;
+	XmlTree			*m_XmlTree;
 	static gchar	*EDomains;
 	static gfloat	m_Version;
 	
@@ -170,41 +157,6 @@ private:
 
 public:
 	static int Initialize();
-};
-
-enum IFXNodeType
-{
-	IFXElement,
-	IFXAttribute,
-};
-	
-class XmlNode
-{
-public:
-	gchar	*m_Name;
-	gchar	*m_Value;
-
-	IFXNodeType m_Type;
-	XmlNode(gchar *name, IFXNodeType type) { m_Name = name; m_Value = NULL; m_Type = type; }
-	XmlNode(gchar *name, gchar *value, IFXNodeType type) { m_Name = name; m_Value = value; m_Type = type; }
-	virtual ~XmlNode() { g_free(m_Name); g_free(m_Value); }
-};
-
-class ParseTree
-{
-public:
-	GNode		*m_CurrentNode;
-	GNode		*m_RootNode;
-
-	ParseTree();
-	virtual ~ParseTree();
-	static gboolean FreeXmlNodes(GNode *pNode, gpointer data);
-	void StartNode(const gchar *name);
-	void EndNode();
-	void AddText(const gchar *text, gsize len);
-	void AddAttribute(const gchar *name, const gchar *value);
-	GNode* FindChild(GNode *parent, gchar* name, IFXNodeType type);
-	GNode* FindSibling(GNode *sibling, gchar* name, IFXNodeType type);
 };
 
 #endif //_IFDOMAIN_H_

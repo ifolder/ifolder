@@ -59,3 +59,66 @@ int IFiFolder::Stop()
 {
 	return 0;
 }
+
+
+gboolean IFiFolder::Serialize(FILE *pStream)
+{
+	gchar *value;
+	// <iFolder>
+	fprintf(pStream, "<%s %s=\"%s\" %s=\"%s\">\n", EiFolder, EID, m_ID, EVersion, m_Version);
+	// <name>
+	value = g_markup_escape_text(m_Name, (gssize)strlen(m_Name));
+	fprintf(pStream, "<%s>%s</%s>\n", EName, value, EName);
+	g_free(value);
+	// <description>
+	value = g_markup_escape_text(m_Description, (gssize)strlen(m_Description));
+	fprintf(pStream, "<%s>%s</%s>\n", EDescription, value, EDescription);
+	g_free(value);
+	// <owner>
+	value = g_markup_escape_text(m_Owner, (gssize)strlen(m_Owner));
+	fprintf(pStream, "<%s>%s</%s>\n", EOwner, value, EOwner);
+	g_free(value);
+	// <path>
+	value = g_markup_escape_text(m_Path, (gssize)strlen(m_Path));
+	fprintf(pStream, "<%s>%s</%s>\n", EPath, value, EPath);
+	g_free(value);
+	// </iFolder>
+	fprintf(pStream, "</%s>\n", EiFolder);
+	return true;
+}
+
+IFiFolder* IFiFolder::DeSerialize(XmlTree *tree, GNode *pDNode)
+{
+	IFiFolder *piFolder; 
+	GNode *gnode = pDNode;
+	GNode *tnode;
+
+	// path Get the path so that we can construct the IFDomain object.
+	tnode = tree->FindChild(gnode, EPath, IFXElement);
+	if (tnode != NULL)
+	{
+		gchar *pPath = ((XmlNode*)tnode->data)->m_Value;
+		piFolder = new IFiFolder(pPath);
+	}
+	// id
+	tnode = tree->FindChild(gnode, EID, IFXAttribute);
+	if (tnode != NULL)
+		piFolder->m_ID = g_strdup(((XmlNode*)tnode->data)->m_Value);
+	// version
+	tnode = tree->FindChild(gnode, EVersion, IFXAttribute);
+	if (tnode != NULL)
+		piFolder->m_Version = g_strdup(((XmlNode*)tnode->data)->m_Value);
+	// name
+	tnode = tree->FindChild(gnode, EName, IFXElement);
+	if (tnode != NULL)
+		piFolder->m_Name = g_strdup(((XmlNode*)tnode->data)->m_Value);
+	// description
+	tnode = tree->FindChild(gnode, EDescription, IFXElement);
+	if (tnode != NULL)
+		piFolder->m_Description = g_strdup(((XmlNode*)tnode->data)->m_Value);
+	// owner
+	tnode = tree->FindChild(gnode, EOwner, IFXElement);
+	if (tnode != NULL)
+		piFolder->m_Owner = g_strdup(((XmlNode*)tnode->data)->m_Value);
+	return piFolder;
+}

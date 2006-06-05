@@ -185,6 +185,9 @@ if not exist $(ProjectDir)simiasClient.cpp $(SolutionDir)..\..\tools\gsoap\win32
 			<File
 				RelativePath=".\stdsoap2.cpp">
 			</File>
+			<File
+				RelativePath=".\Xml.cpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -228,6 +231,9 @@ if not exist $(ProjectDir)simiasClient.cpp $(SolutionDir)..\..\tools\gsoap\win32
 			</File>
 			<File
 				RelativePath=".\stdsoap2.h">
+			</File>
+			<File
+				RelativePath=".\Xml.h">
 			</File>
 		</Filter>
 		<Filter

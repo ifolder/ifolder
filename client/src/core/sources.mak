@@ -32,6 +32,6 @@ libifolder3_core_la_SOURCES =			\
 	IFErrors.cpp		\
 	IFFileInfo.cpp		\
 	IFiFolder.cpp		\
-	IFOptions.cpp		\
-	IFServices.cpp
+	IFServices.cpp		\
+	Xml.cpp
 
