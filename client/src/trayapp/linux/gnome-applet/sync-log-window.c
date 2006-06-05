@@ -51,6 +51,9 @@ struct _IFASyncLogWindowPrivate
 	GtkWidget		*clearMenuItem;
 	GtkWidget		*closeMenuItem;
 	
+	GtkWidget		*copyMenuItem;
+	GtkWidget		*selectAllMenuItem;
+	
 	GtkWidget		*helpMenuItem;
 	
 	GtkWidget		*toolbar;
@@ -60,6 +63,8 @@ struct _IFASyncLogWindowPrivate
 	
 	GtkTextBuffer	*textBuffer;
 	GtkWidget		*textView;
+	
+	guint			fakeLogTimerID;
 };
 
 static IFASyncLogWindow *sync_log_window = NULL;
@@ -102,11 +107,18 @@ static GtkWidget * create_content_area (IFASyncLogWindow *slw);
 static void on_save (GtkMenuItem *menuitem, IFASyncLogWindow *slw);
 static void on_clear (GtkMenuItem *menuitem, IFASyncLogWindow *slw);
 static void on_close (GtkMenuItem *menuitem, IFASyncLogWindow *slw);
+static void on_edit_menu_show (GtkWidget *widget, IFASyncLogWindow *slw);
+static void on_copy (GtkMenuItem *menuitem, IFASyncLogWindow *slw);
+static void on_select_all (GtkMenuItem *menuitem, IFASyncLogWindow *slw);
 static void on_help (GtkMenuItem *menuitem, IFASyncLogWindow *slw);
 
 /* Toolbar Button Handlers */
 static void on_save_toolitem_clicked (GtkToolButton *toolbutton, IFASyncLogWindow *slw);
 static void on_clear_toolitem_clicked (GtkToolButton *toolbutton, IFASyncLogWindow *slw);
+
+static void log_message (const gchar *message, IFASyncLogWindow *slw);
+
+static gboolean log_fake_message (IFASyncLogWindow *slw);
 
 static void
 ifa_sync_log_window_class_init (IFASyncLogWindowClass *klass)
@@ -145,6 +157,7 @@ ifa_sync_log_window_init (IFASyncLogWindow *slw)
 	slw->private_data = priv;
 	
 	priv->realized = FALSE;
+	priv->fakeLogTimerID = 0;
 	
 	gtk_window_set_default_size (GTK_WINDOW (slw), 500, 400);
 //	gtk_widget_set_size_request (GTK_WIDGET (slw), 500, 400);
@@ -342,12 +355,22 @@ on_realize (GtkWidget *widget, IFASyncLogWindow *slw)
 	/* FIXME: Register for domain events that could affect this window */
 	
 	priv->realized = TRUE;
+	
+	g_message ("FIXME: IFASyncLogWindow::on_realize(): Remove this fake data");
+	priv->fakeLogTimerID = g_timeout_add (5000, (GSourceFunc)log_fake_message, slw);
 }
 
 static void
 on_hide (GtkWidget *widget, IFASyncLogWindow *slw)
 {
+	IFASyncLogWindowPrivate *priv = IFA_SYNC_LOG_WINDOW_GET_PRIVATE (slw);
 	g_debug ("IFASyncLogWindow::on_hide()");
+
+	if (priv->fakeLogTimerID > 0)
+	{
+		g_source_remove (priv->fakeLogTimerID);
+		priv->fakeLogTimerID = 0;
+	}
 
 	gtk_widget_destroy (GTK_WIDGET (slw));
 	sync_log_window = NULL;
@@ -395,6 +418,9 @@ create_menu (IFASyncLogWindow *slw)
 	GtkWidget *fileMenu;
 	GtkWidget *fileMenuItem;
 	
+	GtkWidget *editMenu;
+	GtkWidget *editMenuItem;
+	
 	GtkWidget *helpMenu;
 	GtkWidget *helpMenuItem0;
 
@@ -433,6 +459,29 @@ create_menu (IFASyncLogWindow *slw)
 	gtk_menu_shell_append (GTK_MENU_SHELL (priv->menuBar), fileMenuItem);
 
 	/**
+	 * Edit Menu
+	 */
+	editMenu = gtk_menu_new ();
+	g_signal_connect (editMenu, "show", G_CALLBACK (on_edit_menu_show), slw);
+	
+	/* Copy */
+	priv->copyMenuItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_COPY, accelGroup);
+	gtk_menu_shell_append (GTK_MENU_SHELL (editMenu), priv->copyMenuItem);
+	g_signal_connect (priv->copyMenuItem, "activate", G_CALLBACK (on_copy), slw);
+
+	/* Separator */
+	gtk_menu_shell_append (GTK_MENU_SHELL (editMenu), gtk_separator_menu_item_new ());
+	
+	/* Select All */	
+	priv->selectAllMenuItem = gtk_menu_item_new_with_mnemonic (_("Select _All"));
+	gtk_menu_shell_append (GTK_MENU_SHELL (editMenu), priv->selectAllMenuItem);
+	g_signal_connect (priv->selectAllMenuItem, "activate", G_CALLBACK (on_select_all), slw);
+
+	editMenuItem = gtk_menu_item_new_with_mnemonic (_("_Edit"));
+	gtk_menu_item_set_submenu (GTK_MENU_ITEM (editMenuItem), editMenu);
+	gtk_menu_shell_append (GTK_MENU_SHELL (priv->menuBar), editMenuItem);
+
+	/**
 	 * Help Menu
 	 */
 	helpMenu = gtk_menu_new ();
@@ -445,6 +494,10 @@ create_menu (IFASyncLogWindow *slw)
 	helpMenuItem0 = gtk_menu_item_new_with_mnemonic (_("_Help"));
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (helpMenuItem0), helpMenu);
 	gtk_menu_shell_append (GTK_MENU_SHELL (priv->menuBar), helpMenuItem0);
+
+	gtk_widget_set_sensitive (GTK_WIDGET (priv->saveMenuItem), FALSE);
+	gtk_widget_set_sensitive (GTK_WIDGET (priv->clearMenuItem), FALSE);
+	gtk_widget_set_sensitive (GTK_WIDGET (priv->copyMenuItem), FALSE);
 
 	return priv->menuBar;
 }
@@ -469,6 +522,9 @@ create_toolbar (IFASyncLogWindow *slw)
 	g_signal_connect (priv->clearToolButton, "clicked", G_CALLBACK (on_clear_toolitem_clicked), slw);
 	gtk_toolbar_insert (GTK_TOOLBAR (priv->toolbar), priv->clearToolButton, -1);
 	
+	gtk_widget_set_sensitive (GTK_WIDGET (priv->saveToolButton), FALSE);
+	gtk_widget_set_sensitive (GTK_WIDGET (priv->clearToolButton), FALSE);
+	
 	return priv->toolbar;
 }
 
@@ -488,10 +544,9 @@ create_content_area (IFASyncLogWindow *slw)
 	
 	gtk_text_view_set_editable (GTK_TEXT_VIEW (priv->textView), FALSE);
 	gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (priv->textView), FALSE);
-	gtk_text_view_set_left_margin (GTK_TEXT_VIEW (priv->textView), 12);
-	gtk_text_view_set_right_margin (GTK_TEXT_VIEW (priv->textView), 12);
-	gtk_text_view_set_pixels_above_lines (GTK_TEXT_VIEW (priv->textView), 12);
-	gtk_text_view_set_pixels_below_lines (GTK_TEXT_VIEW (priv->textView), 12);
+	gtk_text_view_set_left_margin (GTK_TEXT_VIEW (priv->textView), 4);
+	gtk_text_view_set_right_margin (GTK_TEXT_VIEW (priv->textView), 4);
+	gtk_text_view_set_pixels_above_lines (GTK_TEXT_VIEW (priv->textView), 4);
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (priv->textView), GTK_WRAP_NONE);
 	
 	return sw;
@@ -506,13 +561,69 @@ on_save (GtkMenuItem *menuitem, IFASyncLogWindow *slw)
 static void
 on_clear (GtkMenuItem *menuitem, IFASyncLogWindow *slw)
 {
-	g_message ("FIXME: Implement IFASyncLogWindow::on_clear()");
+	IFASyncLogWindowPrivate *priv = IFA_SYNC_LOG_WINDOW_GET_PRIVATE (slw);
+
+	gtk_text_buffer_set_text (priv->textBuffer, "", 0);
+
+	gtk_widget_set_sensitive (GTK_WIDGET (priv->saveMenuItem), FALSE);
+	gtk_widget_set_sensitive (GTK_WIDGET (priv->clearMenuItem), FALSE);
+	gtk_widget_set_sensitive (GTK_WIDGET (priv->copyMenuItem), FALSE);
+
+	gtk_widget_set_sensitive (GTK_WIDGET (priv->saveToolButton), FALSE);
+	gtk_widget_set_sensitive (GTK_WIDGET (priv->clearToolButton), FALSE);
 }
 
 static void
 on_close (GtkMenuItem *menuitem, IFASyncLogWindow *slw)
 {
 	gtk_widget_hide (GTK_WIDGET (slw));
+}
+
+static void
+on_edit_menu_show (GtkWidget *widget, IFASyncLogWindow *slw)
+{
+	IFASyncLogWindowPrivate *priv = IFA_SYNC_LOG_WINDOW_GET_PRIVATE (slw);
+	
+	if (gtk_text_buffer_get_selection_bounds (priv->textBuffer, NULL, NULL))
+		gtk_widget_set_sensitive (priv->copyMenuItem, TRUE);
+	else
+		gtk_widget_set_sensitive (priv->copyMenuItem, FALSE);
+}
+
+static void
+on_copy (GtkMenuItem *menuitem, IFASyncLogWindow *slw)
+{
+	GtkTextIter startIter;
+	GtkTextIter endIter;
+	gchar *selected_text;
+	GtkClipboard *clipboard;
+	IFASyncLogWindowPrivate *priv = IFA_SYNC_LOG_WINDOW_GET_PRIVATE (slw);
+	
+	if (gtk_text_buffer_get_selection_bounds (priv->textBuffer, NULL, NULL))
+	{
+		gtk_text_buffer_get_selection_bounds (priv->textBuffer, &startIter, &endIter);
+		
+		selected_text = gtk_text_buffer_get_text (priv->textBuffer, &startIter, &endIter, FALSE);
+		
+		clipboard = gtk_widget_get_clipboard (GTK_WIDGET (slw), GDK_SELECTION_CLIPBOARD); /* Use the default clipboard */
+		
+		gtk_clipboard_set_text (clipboard, selected_text, -1);
+		
+		g_free (selected_text);
+	}
+}
+
+static void
+on_select_all (GtkMenuItem *menuitem, IFASyncLogWindow *slw)
+{
+	GtkTextIter startIter;
+	GtkTextIter endIter;
+	IFASyncLogWindowPrivate *priv = IFA_SYNC_LOG_WINDOW_GET_PRIVATE (slw);
+	
+	gtk_text_buffer_get_start_iter (priv->textBuffer, &startIter);
+	gtk_text_buffer_get_end_iter (priv->textBuffer, &endIter);
+	
+	gtk_text_buffer_select_range (priv->textBuffer, &startIter, &endIter);
 }
 
 static void
@@ -532,3 +643,31 @@ on_clear_toolitem_clicked (GtkToolButton *toolbutton, IFASyncLogWindow *slw)
 {
 	on_clear (NULL, slw);
 }
+
+static void
+log_message (const gchar *message, IFASyncLogWindow *slw)
+{
+	GtkTextIter iter;
+	IFASyncLogWindowPrivate *priv = IFA_SYNC_LOG_WINDOW_GET_PRIVATE (slw);
+	
+	gtk_text_buffer_get_end_iter (priv->textBuffer, &iter);
+	gtk_text_buffer_insert (priv->textBuffer, &iter, message, -1);
+	
+	gtk_text_buffer_get_end_iter (priv->textBuffer, &iter);
+	gtk_text_buffer_insert (priv->textBuffer, &iter, "\n", 1);
+
+	gtk_widget_set_sensitive (GTK_WIDGET (priv->saveMenuItem), TRUE);
+	gtk_widget_set_sensitive (GTK_WIDGET (priv->clearMenuItem), TRUE);
+
+	gtk_widget_set_sensitive (GTK_WIDGET (priv->saveToolButton), TRUE);
+	gtk_widget_set_sensitive (GTK_WIDGET (priv->clearToolButton), TRUE);
+}
+
+static gboolean
+log_fake_message (IFASyncLogWindow *slw)
+{
+	log_message ("Fake message!", slw);
+	
+	return TRUE; /* keep the timeout going */
+}
+
