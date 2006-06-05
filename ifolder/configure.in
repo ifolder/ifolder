@@ -367,8 +367,18 @@ AC_SUBST(GSOAP_PATH)
 #
 webdir='${libexecdir}/web'
 webbindir='${webdir}/bin'
+# setup 64bit casa path in ifolder script
+case `arch` in
+    x86_64)
+	casadir=/usr/lib64
+	;;
+	*)
+	casadir=/usr/lib
+	;;
+esac
 AC_SUBST(webdir)
 AC_SUBST(webbindir)
+AC_SUBST(casadir)
 
 
 #
