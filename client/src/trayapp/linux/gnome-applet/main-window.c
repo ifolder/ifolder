@@ -201,6 +201,13 @@ static gboolean ifolder_filter_func (GtkTreeModel *model, GtkTreeIter *iter, GVa
 static void on_ifolder_activated (GtkIconView *iconview, GtkTreePath *path, IFAMainWindow *mw);
 static void on_ifolder_selected (GtkIconView *iconview, IFAMainWindow *mw);
 
+static iFolder * get_selected_ifolder (IFAMainWindow *mw);
+
+static void update_sensitivity (IFAMainWindow *mw);
+static void update_actions_sensitivity (iFolder *ifolder, IFAMainWindow *mw);
+static void update_menu_sensitivity (iFolder *ifolder, IFAMainWindow *mw);
+
+
 static void populate_store (IFAMainWindow *mw);
 
 static void
@@ -910,7 +917,8 @@ create_icon_view_pane (IFAMainWindow *mw)
 	gtk_icon_view_set_pixbuf_column (GTK_ICON_VIEW (priv->ifoldersIconView), COL_PIXBUF);
 	
 	gtk_icon_view_set_item_width (GTK_ICON_VIEW (priv->ifoldersIconView), 250);
-	gtk_icon_view_set_spacing (GTK_ICON_VIEW (priv->ifoldersIconView), 4);
+	gtk_icon_view_set_spacing (GTK_ICON_VIEW (priv->ifoldersIconView), 8);
+	gtk_icon_view_set_margin (GTK_ICON_VIEW (priv->ifoldersIconView), 12);
 	
 	g_signal_connect (priv->ifoldersIconView, "item-activated", G_CALLBACK (on_ifolder_activated), mw);
 	g_signal_connect (priv->ifoldersIconView, "selection-changed", G_CALLBACK (on_ifolder_selected), mw);
@@ -1115,7 +1123,93 @@ on_ifolder_activated (GtkIconView *iconview, GtkTreePath *path, IFAMainWindow *m
 static void
 on_ifolder_selected (GtkIconView *iconview, IFAMainWindow *mw)
 {
-	g_message ("FIXME: Implement IFAMainWindow::on_ifolder_selected()");
+	update_sensitivity (mw);
+}
+
+static iFolder *
+get_selected_ifolder (IFAMainWindow *mw)
+{
+	IFAMainWindowPrivate *priv;
+	iFolder *ifolder = NULL;
+	GList *selected_items;
+	GtkTreePath *path;
+	GtkTreeIter iter;
+	
+	priv = IFA_MAIN_WINDOW_GET_PRIVATE (mw);
+	
+	selected_items = gtk_icon_view_get_selected_items (GTK_ICON_VIEW (priv->ifoldersIconView));
+	if (selected_items)
+	{
+		if (g_list_length (selected_items) != 1)
+			goto one_item_not_selected;
+		
+		path = (GtkTreePath *)selected_items->data;
+		if (gtk_tree_model_get_iter (priv->ifoldersListStoreFilter, &iter, path))
+			gtk_tree_model_get (priv->ifoldersListStoreFilter, &iter, 0, &ifolder, -1);
+		
+one_item_not_selected:
+		/* Free the list */
+		g_list_foreach (selected_items, (GFunc)gtk_tree_path_free, NULL);
+		g_list_free (selected_items);
+	}
+	
+	return ifolder;
+}
+
+static void
+update_sensitivity (IFAMainWindow *mw)
+{
+	iFolder *ifolder;
+	
+	ifolder = get_selected_ifolder (mw);
+	update_actions_sensitivity (ifolder, mw);
+	update_menu_sensitivity (ifolder, mw);
+}
+
+static void
+update_actions_sensitivity (iFolder *ifolder, IFAMainWindow *mw)
+{
+	IFAMainWindowPrivate *priv = IFA_MAIN_WINDOW_GET_PRIVATE (mw);
+	
+	if (ifolder == NULL)
+	{
+		gtk_widget_set_sensitive (priv->openButton, FALSE);
+		gtk_widget_set_sensitive (priv->synchronizeNowButton, FALSE);
+		gtk_widget_set_sensitive (priv->shareButton, FALSE);
+		gtk_widget_set_sensitive (priv->disconnectiFolderButton, FALSE);
+		gtk_widget_set_sensitive (priv->viewiFolderPropertiesButton, FALSE);
+	}
+	else
+	{
+		gtk_widget_set_sensitive (priv->openButton, TRUE);
+		gtk_widget_set_sensitive (priv->synchronizeNowButton, TRUE);
+		gtk_widget_set_sensitive (priv->shareButton, TRUE);
+		gtk_widget_set_sensitive (priv->disconnectiFolderButton, TRUE);
+		gtk_widget_set_sensitive (priv->viewiFolderPropertiesButton, TRUE);
+	}
+}
+
+static void
+update_menu_sensitivity (iFolder *ifolder, IFAMainWindow *mw)
+{
+	IFAMainWindowPrivate *priv = IFA_MAIN_WINDOW_GET_PRIVATE (mw);
+	
+	if (ifolder == NULL)
+	{
+		gtk_widget_set_sensitive (priv->disconnectMenuItem, FALSE);
+		gtk_widget_set_sensitive (priv->shareMenuItem, FALSE);
+		gtk_widget_set_sensitive (priv->openMenuItem, FALSE);
+		gtk_widget_set_sensitive (priv->syncNowMenuItem, FALSE);
+		gtk_widget_set_sensitive (priv->propMenuItem, FALSE);
+	}
+	else
+	{
+		gtk_widget_set_sensitive (priv->disconnectMenuItem, TRUE);
+		gtk_widget_set_sensitive (priv->shareMenuItem, TRUE);
+		gtk_widget_set_sensitive (priv->openMenuItem, TRUE);
+		gtk_widget_set_sensitive (priv->syncNowMenuItem, TRUE);
+		gtk_widget_set_sensitive (priv->propMenuItem, TRUE);
+	}
 }
 
 static void
@@ -1174,7 +1268,7 @@ g_debug ("# of ifolders in '%s': %d", ifolder_domain_get_name (domain), index);
 			{
 				ifolder = IFOLDER (ifolderPtr->data);
 				
-				tmpStr = g_markup_printf_escaped ("<span size=\"large\">%s</span>\n%s\n%s",
+				tmpStr = g_markup_printf_escaped ("<span size=\"large\">%s</span>\n<span foreground=\"#CCCCCC\">%s\n%s</span>",
 												  ifolder_get_name (ifolder),
 												  ifolder_get_local_path (ifolder),
 												  "FIXME: need to figure out how to get the status here");
