@@ -34,6 +34,7 @@
 #include "main-window.h"
 #include "preferences-window.h"
 #include "sync-log-window.h"
+#include "ifolder-prop-dialog.h"
 
 /*@todo Remove this when gettext is added */
 #define _
@@ -1130,7 +1131,18 @@ disconnect_ifolder_handler (GtkButton *widget, IFAMainWindow *mw)
 static void
 view_ifolder_properties_handler (GtkButton *widget, IFAMainWindow *mw)
 {
-	g_message ("FIXME: Implement IFAMainWindow::view_ifolder_properties_handler()");
+	GtkWidget *ipd;
+	iFolder *ifolder;
+	
+	ifolder = get_selected_ifolder (mw);
+	if (!ifolder)
+		return;
+		
+	ipd = ifa_ifolder_prop_dialog_new (GTK_WINDOW (mw), ifolder);
+	if (!ipd)
+		return;
+	
+	gtk_dialog_run (GTK_DIALOG (ipd));
 }
 
 static gboolean

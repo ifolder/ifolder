@@ -40,6 +40,8 @@ ifolder3_applet_SOURCES = \
 	account-properties-dialog.h		\
 	account-wizard.c				\
 	account-wizard.h				\
+	ifolder-prop-dialog.c			\
+	ifolder-prop-dialog.h			\
 	main-window.c					\
 	main-window.h					\
 	preferences-window.c			\

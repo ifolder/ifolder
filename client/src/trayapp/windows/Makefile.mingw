@@ -28,33 +28,17 @@ include ../../../makefiledefs.mingw
 TARGET = iFolder3
 TRAYAPP_SRC := ../linux/gnome-applet
 
-IMAGE_DIR = $(IFOLDER_SRC)/images
-
-icondir = $(datadir)/pixmaps/ifolder3
-icon_DATA = \
-	$(IMAGE_DIR)/16x16/ifolder16.png \
-	$(IMAGE_DIR)/22x22/ifolder-downloading22.png \
-	$(IMAGE_DIR)/22x22/ifolder-idle22.png \
-	$(IMAGE_DIR)/22x22/ifolder-shutting-down22.png \
-	$(IMAGE_DIR)/22x22/ifolder-starting-up22.png \
-	$(IMAGE_DIR)/22x22/ifolder-uploading22.png \
-	$(IMAGE_DIR)/48x48/ifolder48.png \
-	$(IMAGE_DIR)/48x48/ifolder-error48.png \
-	$(IMAGE_DIR)/48x48/ifolder-sync48.png \
-	$(IMAGE_DIR)/48x48/ifolder-waiting48.png \
-	$(IMAGE_DIR)/48x48/ifolder-warning48.png
-
 ##
 ## VARIABLE DEFINITIONS
 ##
 
 # Compiler and Linker Options
 
-CFLAGS = -mms-bitfields -DVERSION=\"3.5.FIXME\" -DDATADIR="\"$(datadir)"\"
+CFLAGS = -mms-bitfields -DVERSION=\"3.5.FIXME\"
 
 DEFINES =
 
-LDFLAGS = -mwindows -DDATADIR=$(datadir)
+LDFLAGS = -mwindows
 
 #-mconsole
 #-mwindows
@@ -87,12 +71,13 @@ EXE_LIB_PATHS =		-L$(IFOLDER_SRC)/core \
 ##
 
 EXE_C_SRC = 		main.c \
-			$(TRAYAPP_SRC)/account-wizard.c		\
-			$(TRAYAPP_SRC)/main-window.c		\
-			$(TRAYAPP_SRC)/account-properties-dialog.c \
+			$(TRAYAPP_SRC)/account-wizard.c	\
+			$(TRAYAPP_SRC)/ifolder-prop-dialog.c			\
+			$(TRAYAPP_SRC)/main-window.c					\
+			$(TRAYAPP_SRC)/account-properties-dialog.c		\
 			$(TRAYAPP_SRC)/preferences-window.c	\
 			$(TRAYAPP_SRC)/util.c			\
-			$(TRAYAPP_SRC)/sync-log-window.c	\
+			$(TRAYAPP_SRC)/sync-log-window.c				\
 			$(TRAYAPP_SRC)/wait-dialog.c
 
 
@@ -150,8 +135,6 @@ all: $(TARGET).exe
 install: all
 	mkdir -p $(IFOLDER_INSTALL_DIR)
 	cp $(TARGET).exe $(IFOLDER_INSTALL_DIR)
-	mkdir -p $(icondir)
-	cp $(icon_DATA) $(icondir)
 
 #
 # BUILD EXE
