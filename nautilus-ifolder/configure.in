@@ -94,7 +94,9 @@ ifolder_prefix=$(pkg-config --variable=prefix ifolder3)
 AC_SUBST(ifolder_prefix)
 
 gnome_root=$(pkg-config --variable=prefix libnautilus-extension)
+gnome_lib=$(pkg-config --variable=libdir libnautilus-extension)
 AC_SUBST(gnome_root)
+AC_SUBST(gnome_lib)
 INSTALL_BIN_OPTS='--mode=755'
 AC_SUBST(INSTALL_BIN_OPTS)
 
@@ -102,8 +104,8 @@ dnl ========================================================
 dnl Set EXTENSION_INSTALL_DIR, PIXMAPS_DIR, & EMBLEMS_DIR
 dnl ========================================================
 
-AC_DEFINE_UNQUOTED(EXTENSION_INSTALL_DIR, "${gnome_root}/lib/nautilus/extensions-1.0", [extension install directory])
-extension_install_dir="${gnome_root}/lib/nautilus/extensions-1.0"
+AC_DEFINE_UNQUOTED(EXTENSION_INSTALL_DIR, "${gnome_lib}/nautilus/extensions-1.0", [extension install directory])
+extension_install_dir="${gnome_lib}/nautilus/extensions-1.0"
 AC_DEFINE_UNQUOTED(PIXMAPS_DIR, "${gnome_root}/${DATADIRNAME}/${PACKAGE}/pixmaps", [pixmaps directory])
 pixmaps_dir="${gnome_root}/${DATADIRNAME}/${PACKAGE}/pixmaps"
 AC_DEFINE_UNQUOTED(EMBLEMS_DIR, "${gnome_root}/${DATADIRNAME}/icons/gnome/48x48/emblems", [emblems directory])
