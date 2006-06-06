@@ -163,6 +163,7 @@ void ifolder_set_description (iFolder *ifolder, const gchar *new_description, GE
 
 gboolean ifolder_is_connected (iFolder *ifolder);
 
+const gchar * ifolder_get_owner_full_name (iFolder *ifolder);
 iFolderUser * ifolder_get_owner (iFolder *ifolder);
 iFolderDomain * ifolder_get_domain (iFolder *ifolder);
 long ifolder_get_size (iFolder *ifolder, GError **error);

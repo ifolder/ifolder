@@ -409,6 +409,31 @@ ifolder_is_connected (iFolder *ifolder)
 	return priv->connected;
 }
 
+const gchar *
+ifolder_get_owner_full_name (iFolder *ifolder)
+{
+	iFolderPrivate *priv;
+	iFolderUser *user = NULL;
+
+	g_return_val_if_fail (IFOLDER_IS_IFOLDER (ifolder), NULL);
+
+	priv = IFOLDER_GET_PRIVATE (ifolder);
+	
+	if (!priv->connected)
+	{
+		user = ifolder_domain_get_user (priv->domain, ((ifweb::iFolder *)priv->core_ifolder)->OwnerID, NULL);
+	}
+	else
+	{
+		/* FIXME: Get the OwnerID from IFiFolder */
+	}
+	
+	if (!user)
+		return NULL;
+	
+	return ifolder_user_get_full_name (user);
+}
+
 iFolderUser *
 ifolder_get_owner (iFolder *ifolder)
 {

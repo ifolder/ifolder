@@ -41,10 +41,12 @@ extern iFolderClient *ifolder_client;
 typedef struct _IFAiFolderPropDialogPrivate IFAiFolderPropDialogPrivate;
 struct _IFAiFolderPropDialogPrivate 
 {
-	GtkWidget 		*parentWindow;
+	GtkWindow 		*parentWindow;
 
 	gboolean		realized;
 	gboolean		controlKeyPressed;
+	
+	iFolder			*ifolder;
 	
 	GtkWidget		*notebook;
 	
@@ -52,6 +54,33 @@ struct _IFAiFolderPropDialogPrivate
 	 * General Page
 	 */
 	GtkWidget		*generalPage;
+	GtkWidget		*basicTable;
+	GtkWidget		*nameLabel;
+	GtkWidget		*ownerLabel;
+	GtkWidget		*locationLabel;
+	GtkWidget		*accountLabel;
+	
+	GtkWidget		*usedValue;
+	GtkWidget		*diskTable;
+	GtkWidget		*limitLabel;
+	GtkWidget		*limitCheckButton;
+	GtkWidget		*limitValue;
+	GtkWidget		*limitEntry;
+	GtkWidget		*limitUnit;
+	GtkWidget		*availLabel;
+	GtkWidget		*availValue;
+	GtkWidget		*availUnit;
+	
+	GtkWidget		*diskUsageBar;
+	GtkWidget		*diskUsageFrame;
+	GtkWidget		*diskUsageFullLabel;
+	GtkWidget		*diskUsageEmptyLabel;
+	
+	GtkWidget		*lastSuccessfulSync;
+	GtkWidget		*ffSyncValue;
+	GtkWidget		*syncIntervalValue;
+	
+	GtkWidget		*syncNowButton;
 	
 	/**
 	 * Sharing Page
@@ -104,6 +133,10 @@ static GtkWidget * create_sharing_page (IFAiFolderPropDialog *ipd);
 static GtkWidget * create_history_page (IFAiFolderPropDialog *ipd);
 static GtkWidget * create_unsynchronized_items_page (IFAiFolderPropDialog *ipd);
 
+static void on_general_page_realize (GtkWidget *widget, IFAiFolderPropDialog *ipd);
+
+static void on_sync_now_clicked (GtkButton *button, IFAiFolderPropDialog *ipd);
+
 static void
 ifa_ifolder_prop_dialog_class_init (IFAiFolderPropDialogClass *klass)
 {
@@ -148,6 +181,7 @@ ifa_ifolder_prop_dialog_init (IFAiFolderPropDialog *ipd)
 	
 	gtk_window_set_icon (GTK_WINDOW (ipd), WINDOW_ICON);
 	gtk_window_set_position (GTK_WINDOW (ipd), GTK_WIN_POS_CENTER_ON_PARENT);
+	
 
 	/* Widgets */
 	gtk_widget_push_composite_child ();
@@ -280,12 +314,15 @@ ifa_ifolder_prop_dialog_new (GtkWindow *parent, iFolder *ifolder)
 	
 	priv = IFA_IFOLDER_PROP_DIALOG_GET_PRIVATE(ipd);
 
+	priv->parentWindow = parent;
 	if (parent != NULL)
 	{
 		gtk_window_set_transient_for (GTK_WINDOW (ipd), parent);
 		gtk_window_set_destroy_with_parent (GTK_WINDOW (ipd), TRUE);
 		gtk_window_set_modal (GTK_WINDOW (ipd), TRUE);
 	}
+	
+	priv->ifolder = ifolder;
 
 	tmpStr = g_markup_printf_escaped ("%s %s", ifolder_get_name (ifolder), _("Properties"));
 	gtk_window_set_title (GTK_WINDOW (ipd), tmpStr);
@@ -355,7 +392,10 @@ create_notebook (IFAiFolderPropDialog *ipd)
 	
 	priv->notebook = gtk_notebook_new ();
 	
-	gtk_notebook_append_page (GTK_NOTEBOOK (priv->notebook), create_general_page (ipd), gtk_label_new (_("General")));
+	priv->generalPage = create_general_page (ipd);
+	gtk_notebook_append_page (GTK_NOTEBOOK (priv->notebook), priv->generalPage, gtk_label_new (_("General")));
+	g_signal_connect (priv->generalPage, "realize", G_CALLBACK (on_general_page_realize), ipd);
+
 	gtk_notebook_append_page (GTK_NOTEBOOK (priv->notebook), create_sharing_page (ipd), gtk_label_new (_("Sharing")));
 	gtk_notebook_append_page (GTK_NOTEBOOK (priv->notebook), create_history_page (ipd), gtk_label_new (_("History")));
 	gtk_notebook_append_page (GTK_NOTEBOOK (priv->notebook), create_unsynchronized_items_page (ipd), gtk_label_new (_("Unsynchronized Items")));
@@ -367,13 +407,256 @@ create_notebook (IFAiFolderPropDialog *ipd)
 static GtkWidget *
 create_general_page (IFAiFolderPropDialog *ipd)
 {
-	GtkWidget *vbox;
+	GtkWidget *vbox, *basicBox, *ifolderImage, *basicLabelsBox, *label,
+			  *diskSectionBox, *diskSpacerBox, *graphBox, *graphLabelBox,
+			  *syncSectionBox, *syncSpacerBox, *syncWidgetBox, *syncTable,
+			  *rightBox;
+	GdkPixbuf *ifolderPixbuf;
+	gchar *tmpStr;
 	IFAiFolderPropDialogPrivate *priv = IFA_IFOLDER_PROP_DIALOG_GET_PRIVATE (ipd);
 	
-	vbox = gtk_vbox_new (FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox), gtk_label_new ("FIXME: Implement me!"), TRUE, TRUE, 0);
+	vbox = gtk_vbox_new (FALSE, 10);
+	gtk_container_set_border_width (GTK_CONTAINER (vbox), IFA_DEFAULT_BORDER_WIDTH);
 
-	return vbox;	
+	basicBox = gtk_hbox_new (FALSE, 10);
+	gtk_box_pack_start (GTK_BOX (vbox), basicBox, FALSE, TRUE, 0);
+	
+	ifolderPixbuf = ifa_load_pixbuf ("ifolder48.png");
+	ifolderImage = gtk_image_new_from_pixbuf (ifolderPixbuf);
+	gtk_misc_set_alignment (GTK_MISC (ifolderImage), 0.5, 0);
+	
+	gtk_box_pack_start (GTK_BOX (basicBox), ifolderImage, FALSE, FALSE, 0);
+	
+	basicLabelsBox = gtk_vbox_new (FALSE, 5);
+	gtk_box_pack_start (GTK_BOX (basicBox), basicLabelsBox, FALSE, TRUE, 0);
+	
+	priv->nameLabel = gtk_label_new (NULL);
+	gtk_label_set_use_markup (GTK_LABEL (priv->nameLabel), TRUE);
+	gtk_label_set_use_underline (GTK_LABEL (priv->nameLabel), FALSE);
+	gtk_misc_set_alignment (GTK_MISC (priv->nameLabel), 0, 0.5);
+	gtk_box_pack_start (GTK_BOX (basicLabelsBox), priv->nameLabel, FALSE, TRUE, 5);
+	
+	/* Create a table to hold the values */
+	priv->basicTable = gtk_table_new (3, 2, FALSE);
+	gtk_box_pack_start (GTK_BOX (basicLabelsBox), priv->basicTable, TRUE, TRUE, 0);
+	gtk_table_set_col_spacings(GTK_TABLE(priv->basicTable), 5);
+	gtk_table_set_row_spacings(GTK_TABLE(priv->basicTable), 5);
+	
+
+	tmpStr = g_markup_printf_escaped ("<span size=\"small\">%s</span>", _("Owner:"));
+	label = gtk_label_new (tmpStr);
+	g_free (tmpStr);
+	gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_table_attach (GTK_TABLE (priv->basicTable), label, 0,1, 0,1,
+					 (GtkAttachOptions)(GTK_SHRINK | GTK_FILL),
+					 (GtkAttachOptions)0,
+					 0,0);
+	
+	priv->ownerLabel = gtk_label_new (NULL);
+	gtk_label_set_use_markup (GTK_LABEL (priv->ownerLabel), TRUE);
+	gtk_label_set_use_underline (GTK_LABEL (priv->ownerLabel), FALSE);
+	gtk_misc_set_alignment (GTK_MISC (priv->ownerLabel), 0, 0.5);
+	gtk_table_attach (GTK_TABLE (priv->basicTable), priv->ownerLabel, 1,2, 0,1,
+					 (GtkAttachOptions)(GTK_EXPAND | GTK_FILL),
+					 (GtkAttachOptions)0,
+					 0,0);
+					 
+	tmpStr = g_markup_printf_escaped ("<span size=\"small\">%s</span>", _("Location:"));
+	label = gtk_label_new (tmpStr);
+	g_free (tmpStr);
+	gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_table_attach (GTK_TABLE (priv->basicTable), label, 0,1, 1,2,
+					 (GtkAttachOptions)(GTK_SHRINK | GTK_FILL),
+					 (GtkAttachOptions)0,
+					 0,0);
+	
+	priv->locationLabel = gtk_label_new (NULL);
+	gtk_label_set_use_markup (GTK_LABEL (priv->locationLabel), TRUE);
+	gtk_label_set_use_underline (GTK_LABEL (priv->locationLabel), FALSE);
+	gtk_misc_set_alignment (GTK_MISC (priv->locationLabel), 0, 0.5);
+	gtk_table_attach (GTK_TABLE (priv->basicTable), priv->locationLabel, 1,2, 1,2,
+					 (GtkAttachOptions)(GTK_EXPAND | GTK_FILL),
+					 (GtkAttachOptions)0,
+					 0,0);
+	
+	tmpStr = g_markup_printf_escaped ("<span size=\"small\">%s</span>", _("Account:"));
+	label = gtk_label_new (tmpStr);
+	g_free (tmpStr);
+	gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_table_attach (GTK_TABLE (priv->basicTable), label, 0,1, 2,3,
+					 (GtkAttachOptions)(GTK_SHRINK | GTK_FILL),
+					 (GtkAttachOptions)0,
+					 0,0);
+	
+	priv->accountLabel = gtk_label_new (NULL);
+	gtk_label_set_use_markup (GTK_LABEL (priv->accountLabel), TRUE);
+	gtk_label_set_use_underline (GTK_LABEL (priv->accountLabel), FALSE);
+	gtk_misc_set_alignment (GTK_MISC (priv->accountLabel), 0, 0.5);
+	gtk_table_attach (GTK_TABLE (priv->basicTable), priv->accountLabel, 1,2, 2,3,
+					 (GtkAttachOptions)(GTK_EXPAND | GTK_FILL),
+					 (GtkAttachOptions)0,
+					 0,0);
+	
+	/**
+	 * Disk Space
+	 */
+	/* create a section box */
+	diskSectionBox = gtk_vbox_new (FALSE, IFA_DEFAULT_SECTION_TITLE_SPACING);
+	gtk_box_pack_start (GTK_BOX (vbox), diskSectionBox, FALSE, TRUE, 0);
+	tmpStr = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>", _("Disk Space on Server"));
+	label = gtk_label_new (tmpStr);
+	g_free (tmpStr);
+	gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_box_pack_start (GTK_BOX (diskSectionBox), label, FALSE, TRUE, 0);
+	
+	/* hbox to provide spacing */
+	diskSpacerBox = gtk_hbox_new (FALSE, 10);
+	gtk_box_pack_start (GTK_BOX (diskSectionBox), diskSpacerBox, TRUE, TRUE, 0);
+	label = gtk_label_new (NULL);
+	gtk_box_pack_start (GTK_BOX (diskSpacerBox), label, FALSE, TRUE, 0);
+	
+	/* create a table to hold the values */
+	priv->diskTable = gtk_table_new (3, 3, FALSE);
+	gtk_box_pack_start (GTK_BOX (diskSpacerBox), priv->diskTable, TRUE, TRUE, 0);
+	gtk_table_set_col_spacings(GTK_TABLE(priv->basicTable), 20);
+	gtk_table_set_row_spacings(GTK_TABLE(priv->basicTable), 5);
+
+	label = gtk_label_new (_("Used:"));
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_table_attach (GTK_TABLE (priv->diskTable), label, 0,1, 0,1,
+					 (GtkAttachOptions)(GTK_EXPAND | GTK_FILL),
+					 (GtkAttachOptions)0,
+					 0,0);
+	priv->usedValue = gtk_label_new (NULL);
+	gtk_misc_set_alignment (GTK_MISC (priv->usedValue), 1, 0.5);
+	gtk_table_attach (GTK_TABLE (priv->diskTable), priv->usedValue, 1,2, 0,1,
+					 (GtkAttachOptions)(GTK_SHRINK | GTK_FILL),
+					 (GtkAttachOptions)0,
+					 0,0);
+	label = gtk_label_new (_("MB:"));
+	gtk_table_attach (GTK_TABLE (priv->diskTable), label, 2,3, 0,1,
+					 (GtkAttachOptions)(GTK_SHRINK | GTK_FILL),
+					 (GtkAttachOptions)0,
+					 0,0);
+	
+	priv->limitUnit = gtk_label_new (_("MB:"));
+	gtk_table_attach (GTK_TABLE (priv->diskTable), priv->limitUnit, 2,3, 1,2,
+					 (GtkAttachOptions)(GTK_SHRINK | GTK_FILL),
+					 (GtkAttachOptions)0,
+					 0,0);
+	
+	priv->availLabel = gtk_label_new (_("Available:"));
+	gtk_misc_set_alignment (GTK_MISC (priv->availLabel), 0, 0.5);
+	gtk_table_attach (GTK_TABLE (priv->diskTable), priv->availLabel, 0,1, 2,3,
+					 (GtkAttachOptions)(GTK_EXPAND | GTK_FILL),
+					 (GtkAttachOptions)0,
+					 0,0);
+	priv->availValue = gtk_label_new (NULL);
+	gtk_misc_set_alignment (GTK_MISC (priv->availValue), 1, 0.5);
+	gtk_table_attach (GTK_TABLE (priv->diskTable), priv->availValue, 1,2, 2,3,
+					 (GtkAttachOptions)(GTK_SHRINK | GTK_FILL),
+					 (GtkAttachOptions)0,
+					 0,0);
+	priv->availUnit = gtk_label_new (_("MB:"));
+	gtk_table_attach (GTK_TABLE (priv->diskTable), priv->availUnit, 2,3, 2,3,
+					 (GtkAttachOptions)(GTK_SHRINK | GTK_FILL),
+					 (GtkAttachOptions)0,
+					 0,0);
+	
+	priv->diskUsageFrame = gtk_frame_new (NULL);
+	gtk_box_pack_start (GTK_BOX (diskSpacerBox), priv->diskUsageFrame, FALSE, TRUE, 0);
+	graphBox = gtk_hbox_new (FALSE, 5);
+	gtk_container_set_border_width (GTK_CONTAINER (graphBox), 5);
+	gtk_container_add (GTK_CONTAINER (priv->diskUsageFrame), graphBox);
+	
+	priv->diskUsageBar = gtk_progress_bar_new ();
+	gtk_box_pack_start (GTK_BOX (graphBox), priv->diskUsageBar, FALSE, TRUE, 0);
+	
+	gtk_progress_bar_set_orientation (GTK_PROGRESS_BAR (priv->diskUsageBar), GTK_PROGRESS_BOTTOM_TO_TOP);
+	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (priv->diskUsageBar), 0);
+	
+	graphLabelBox = gtk_vbox_new (FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (graphBox), graphLabelBox, FALSE, TRUE, 0);
+	
+	priv->diskUsageFullLabel = gtk_label_new (_("full"));
+	gtk_misc_set_alignment (GTK_MISC (priv->diskUsageFullLabel), 0, 0);
+	gtk_box_pack_start (GTK_BOX (graphLabelBox), priv->diskUsageFullLabel, TRUE, TRUE, 0);
+	
+	priv->diskUsageEmptyLabel = gtk_label_new (_("empty"));
+	gtk_misc_set_alignment (GTK_MISC (priv->diskUsageEmptyLabel), 0, 1);
+	gtk_box_pack_start (GTK_BOX (graphLabelBox), priv->diskUsageEmptyLabel, TRUE, TRUE, 0);
+	
+	/**
+	 * Synchronization Information
+	 */
+	/* create a section box */
+	syncSectionBox = gtk_vbox_new (FALSE, IFA_DEFAULT_SECTION_TITLE_SPACING);
+	gtk_box_pack_start (GTK_BOX (vbox), syncSectionBox, FALSE, TRUE, 0);
+	tmpStr = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>", _("Synchronization"));
+	label = gtk_label_new (tmpStr);
+	g_free (tmpStr);
+	gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_box_pack_start (GTK_BOX (syncSectionBox), label, FALSE, TRUE, 0);
+	
+	/* hbox to provide spacing */
+	syncSpacerBox = gtk_hbox_new (FALSE, 10);
+	gtk_box_pack_start (GTK_BOX (syncSectionBox), syncSpacerBox, TRUE, TRUE, 0);
+	label = gtk_label_new (NULL);
+	gtk_box_pack_start (GTK_BOX (syncSpacerBox), label, FALSE, TRUE, 0);
+	
+	syncWidgetBox = gtk_vbox_new (FALSE, 10);
+	gtk_box_pack_start (GTK_BOX (syncSpacerBox), syncWidgetBox, TRUE, TRUE, 0);
+	
+	/* create a table to hold the values */
+	syncTable = gtk_table_new (3, 2, FALSE);
+	gtk_box_pack_start (GTK_BOX (syncWidgetBox), syncTable, TRUE, TRUE, 0);
+	gtk_table_set_homogeneous (GTK_TABLE (syncTable), FALSE);
+	gtk_table_set_col_spacings(GTK_TABLE(syncTable), 20);
+	gtk_table_set_row_spacings(GTK_TABLE(syncTable), 5);
+	
+	label = gtk_label_new (_("Last Successful Synchronization:"));
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_table_attach (GTK_TABLE (syncTable), label, 0,1, 0,1,
+					 (GtkAttachOptions)(GTK_SHRINK | GTK_FILL),
+					 (GtkAttachOptions)0,
+					 0,0);
+	priv->lastSuccessfulSync = gtk_label_new (_("N/A"));
+	gtk_misc_set_alignment (GTK_MISC (priv->lastSuccessfulSync), 0, 0.5);
+	gtk_table_attach_defaults (GTK_TABLE (syncTable), priv->lastSuccessfulSync, 1,2, 0,1);
+	
+	label = gtk_label_new (_("Files/Folders to Synchronize:"));
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_table_attach (GTK_TABLE (syncTable), label, 0,1, 1,2,
+					 (GtkAttachOptions)(GTK_SHRINK | GTK_FILL),
+					 (GtkAttachOptions)0,
+					 0,0);
+	priv->ffSyncValue = gtk_label_new ("0");
+	gtk_misc_set_alignment (GTK_MISC (priv->ffSyncValue), 0, 0.5);
+	gtk_table_attach_defaults (GTK_TABLE (syncTable), priv->ffSyncValue, 1,2, 1,2);
+	
+	label = gtk_label_new (_("Automatically Synchronizes Every:"));
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_table_attach (GTK_TABLE (syncTable), label, 0,1, 2,3,
+					 (GtkAttachOptions)(GTK_SHRINK | GTK_FILL),
+					 (GtkAttachOptions)0,
+					 0,0);
+	priv->syncIntervalValue = gtk_label_new ("1 minute(s)");
+	gtk_misc_set_alignment (GTK_MISC (priv->syncIntervalValue), 0, 0.5);
+	gtk_table_attach_defaults (GTK_TABLE (syncTable), priv->syncIntervalValue, 1,2, 2,3);
+	
+	rightBox = gtk_hbox_new (FALSE, 10);
+	gtk_box_pack_end (GTK_BOX (syncWidgetBox), rightBox, FALSE, FALSE, 0);
+	
+	priv->syncNowButton = gtk_button_new_with_mnemonic (_("Synchronize _Now"));
+	gtk_box_pack_end (GTK_BOX (rightBox), priv->syncNowButton, FALSE, FALSE, 0);
+	g_signal_connect (priv->syncNowButton, "clicked", G_CALLBACK (on_sync_now_clicked), ipd);
+	
+	return vbox;
 }
 
 static GtkWidget *
@@ -418,3 +701,37 @@ create_buttons (IFAiFolderPropDialog *ipd)
 	gtk_dialog_add_button (GTK_DIALOG (ipd), GTK_STOCK_CLOSE, GTK_RESPONSE_OK);
 }
 
+static void
+on_general_page_realize (GtkWidget *widget, IFAiFolderPropDialog *ipd)
+{
+	gchar *tmpStr;
+	IFAiFolderPropDialogPrivate *priv;
+	iFolderDomain *domain;
+	
+	priv = IFA_IFOLDER_PROP_DIALOG_GET_PRIVATE (ipd);
+	
+	tmpStr = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>", ifolder_get_name (priv->ifolder));
+	gtk_label_set_markup (GTK_LABEL (priv->nameLabel), tmpStr);
+	g_free (tmpStr);
+
+	tmpStr = g_markup_printf_escaped ("<span size=\"small\">%s</span>", ifolder_get_owner_full_name (priv->ifolder));
+	gtk_label_set_markup (GTK_LABEL (priv->ownerLabel), tmpStr);
+	g_free (tmpStr);
+
+	tmpStr = g_markup_printf_escaped ("<span size=\"small\">%s</span>", ifolder_get_local_path (priv->ifolder));
+	gtk_label_set_markup (GTK_LABEL (priv->locationLabel), tmpStr);
+	g_free (tmpStr);
+
+	domain = ifolder_get_domain (priv->ifolder);
+	tmpStr = g_markup_printf_escaped ("<span size=\"small\">%s</span>", ifolder_domain_get_name (domain));
+	gtk_label_set_markup (GTK_LABEL (priv->accountLabel), tmpStr);
+	g_free (tmpStr);
+	
+	g_message ("FIXME: Read and set all the quota and synchronization time information");
+}
+
+static void
+on_sync_now_clicked (GtkButton *button, IFAiFolderPropDialog *ipd)
+{
+	g_message ("FIXME: Implement IFAiFolderPropDialog::on_sync_now_clicked()");
+}
