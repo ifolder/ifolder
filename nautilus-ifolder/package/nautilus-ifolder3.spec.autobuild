@@ -72,7 +72,7 @@ make DESTDIR=$RPM_BUILD_ROOT install
 %dir /opt/gnome/share/nautilus-ifolder3/pixmaps
 %dir /opt/gnome/share/icons/gnome/48x48
 %dir /opt/gnome/share/icons/gnome/48x48/emblems
-/opt/gnome/lib/nautilus/extensions-1.0/libnautilus-ifolder*
+/opt/gnome/%_lib/nautilus/extensions-1.0/libnautilus-ifolder*
 /opt/gnome/share/icons/gnome/48x48/emblems/emblem-ifolder.icon
 /opt/gnome/share/icons/gnome/48x48/emblems/emblem-ifolder.png
 /opt/gnome/share/nautilus-ifolder3/pixmaps/ifolder-folder.png
