@@ -1,0 +1,86 @@
+﻿<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Language" content="de">
+<meta name="Generator" content="Novell HTML-Konvertierung 10. M&auml;rz 2004">
+<meta name="Generation-Date" content="Sonntag, 23. Oktober 2005 15:54 Uhr">
+<meta name="Content-Date" content="Montag, 22. Okt. 2005 12:00:00 Uhr MEZ">
+<meta name="Robots" content="Index, Follow">
+<meta name="Document_Number" content="zHTML xD.0000.0000.0002.0007.">
+<meta name="Author" content="zHTML xD.0000.0000.0002.0007.">
+<meta name="Product_Class" content="">
+<meta name="Product_and_Version" content="iFolder(TM)">
+<meta name="Copyright" content="Copyright Novell, Inc. 1983-2004">
+<link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
+<title>Hilfe zu iFolder</title>
+<script type="text/javascript" language="javascript">
+function loadMenu()
+{
+	if ((parent.theMenu) && (parent.theMenu.amBusy == false) && parent.frames[2])
+	{
+	   parent.theMenu.loadScript("../doc/user/data/accountsprefs.html","../doc/user/data/toc_accountsprefs.html");
+	}
+	else{ setTimeout("loadMenu()",200);}
+}
+loadMenu();
+</script>
+<script type="text/javascript" language="javascript" src="../../../ui/jsglobal.js"></script>
+</head>
+<body onload="">
+<script type="text/javascript" language="javascript">
+  var prev_link="preferences.html";
+  var next_link="bwbirb9.html";
+</script>
+<script type="text/javascript" language="javascript" src="../../../ui/topnav.js"></script>
+<a name="bvwppw5"></a>
+<div class="Topic" title="Configuring Local Firewall Settings for iFolder Traffic">
+<h2 class="TOPIC-TITLE"><br />Konfigurieren von lokalen Firewall-Einstellungen f&uuml;r den iFolder-Verkehr</h2>
+<p class="TOPIC">Wenn Sie eine lokale Firewall verwenden, m&uuml;ssen Sie Ihre Firewall so einstellen, dass iFolder einen lokalen dynamischen Port ausw&auml;hlen oder einen lokalen statischen Port konfigurieren kann, damit der iFolder-Client lokal (auf demselben Computer) mit Mono XSP Server kommunizieren kann. iFolder verwendet Mono XSP-Webservices, um &uuml;ber HTTP oder HTTPS (SSL, Standard) mit den Novell iFolder-Enterprise-Servern zu kommunizieren, auf denen Sie iFolder-Konten besitzen. Der iFolder-Administrator konfiguriert iFolder-Services, mit denen bestimmt wird, ob f&uuml;r die Kommunikation in Ihrer Umgebung HTTP oder HTTPS verwendet wird.</p>
+<p class="TOPIC">Ihre Firewall blockiert den Datenverkehr zwischen Mono XSP und dem Novell iFolder-Enterprise-Server nicht, da Mono XSP die HTTP- bzw. HTTPS-Standardports f&uuml;r den Datenverkehr verwendet. Wenn Sie jedoch den Datenverkehr zwischen dem Client und Mono-XSP blockieren, kann der Client nicht mit dem Server kommunizieren. Sie k&ouml;nnen sich in diesem Fall nicht bei Ihrem iFolder-Konto anmelden und iFolder-Daten synchronisieren.</p>
+<p class="TOPIC">Zun&auml;chst wird mit der iFolder-Konfiguration kein bestimmter Port f&uuml;r die Kommunikation zwischen Client und Mono XSP angegeben. Wenn iFolder zum ersten Mal ausgef&uuml;hrt wird, &ouml;ffnet es einen verf&uuml;gbaren lokalen Port zum Abfragen von Anforderungen von Mono XSP und zum Senden von Daten an den Server &uuml;ber Mono XSP. Die Portnummer wird in eine Konfigurationsdatei geschrieben und dieser Port wird anschlie&szlig;end verwendet, es sei denn, der Port ist nicht verf&uuml;gbar, wenn iFolder gestartet wird. Wenn der Port von einer anderen Anwendung verwendet wird, w&auml;hlt iFolder einen anderen verf&uuml;gbaren Port aus, konfiguriert den Port in der Konfigurationsdatei neu und verwendet den Port daraufhin. Wenn iFolder beispielsweise ausgefallen ist und eine andere Anwendung den Port verwendet, muss iFolder einen anderen Port ausw&auml;hlen und konfigurieren, wenn Sie iFolder neu starten.</p>
+<h4 class="BRIDGEHEAD"><br />Verwenden eines lokalen dynamischen Ports</h4>
+<p class="TOPIC">Wenn Sie auf Ihrem Computer eine lokale Firewall verwenden, muss die Firewall den lokalen Datenverkehr zwischen dem iFolder-Server und dem Mono XSP-Server jedes Mal erfassen, wenn iFolder Kontakt mit dem Server aufnimmt, damit die Liste der Benutzer und die iFolder-Daten synchronisiert werden. Lassen Sie zu, dass der Datenverkehr den Empfang von Popup-Warnmeldungen bei jedem Start des Clients deaktiviert. Wenn Sie den Datenverkehr dauerhaft zulassen, werden Sie normalerweise nicht mehr durch Ihre Firewall erinnert.</p>
+<h4 class="BRIDGEHEAD"><br />Verwenden eines lokalen statischen Ports</h4>
+<p class="TOPIC">Sie k&ouml;nnen den Parameter des Bereichs f&uuml;r den Port des Webservices optional im Abschnitt "Service Manager" der Datei Simias.config hinzuf&uuml;gen, um einen statischen Port oder einen Bereich von Ports f&uuml;r diesen lokalen Datenverkehr zu verwenden. Dieser Port bzw. Bereich von Ports kann anschlie&szlig;end in der Firewall ge&ouml;ffnet werden, damit die Kommunikation f&uuml;r Mono-XSP zul&auml;ssig wird. </p>
+<p class="TOPIC">Sie k&ouml;nnen Simias.config an den folgenden Speicherorten finden:</p>
+<table class="TABLENOTITLE" border="0" cellpadding="5" cellspacing="0">
+<tr class="HEADERROW"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bwejkc4"></a><em class="TBLHEAD">Betriebssystem</em></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">Speicherort der Datei Simias.config</em></th>
+</tr>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bwejkc5"></a><p class="ENTRY">Linux</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">/home/<em class="VARIABLE">Benutzername</em>/.local/share/simias/Simias.config</p></td>
+</tr>
+<tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bwejlap"></a><p class="ENTRY">Windows</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">C:\Dokumente und Einstellungen\<em class="VARIABLE">Benutzername</em>\Lokale Einstellungen\Anwendungsdaten\simias\Simias.config</p></td>
+</tr>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bwejkc6"></a><p class="ENTRY">Macintosh</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">/Benutzer/<em class="VARIABLE">Benutzername</em>/.local/share/simias/Simias.config</p></td>
+</tr></table>
+<p class="TOPIC">F&uuml;gen Sie die Einstellung des Bereichs f&uuml;r den Port des Webservices dem Abschnitt "Service Manager" der Datei Simias.config hinzu. Beispiel:</p> <pre class="CODESAMPLENARROW">&lt;configuration&gt;</pre>
+<pre class="CODESAMPLENARROW">  &lt;section name="ServiceManager"&gt;</pre>
+<pre class="CODESAMPLENARROW">    &lt;setting name="WebServicePortRange" value="<em class="VARIABLE">monoxsp_port</em>" /&gt;   </pre>
+<pre class="CODESAMPLENARROW">  &lt;/section&gt;</pre>
+<pre class="CODESAMPLENARROW">&lt;/configuration&gt;</pre>
+<p class="TOPIC">Ersetzen Sie <em class="VARIABLE">monoxsp_port</em> durch eine Portnummer oder einen Portnummernbereich:</p>
+<ul class="LISTBULLET">
+<li class="BULLETITEM">Geben Sie einen Wert einer einzelnen, vierstelligen Portnummer an (beispielsweise 1234), um einen einzelnen statischen Port zu verwenden. Beispiel: <pre class="CODESAMPLENARROW">&lt;setting name="WebServicePortRange" value="<em class="VARIABLE">1234</em>" /&gt;</pre>
+</li>
+<li class="BULLETITEM">Geben Sie einen Portnummernbereich an (beispielsweise "1234-1236"), um jeden verf&uuml;gbaren Port im angegebenen Portbereich zu verwenden. Beispiel: <pre class="CODESAMPLENARROW">&lt;setting name="WebServicePortRange" value="<em class="VARIABLE">1234-1236</em>" /&gt;</pre>
+</li>
+</ul>
+<p class="TOPIC">So konfigurieren Sie Ihr System so, dass ein bestimmter Port bzw. Portbereich verwendet wird:</p>
+<ol class="STEPLIST">
+<li class="STEP"><a name="bw4v93e"></a>
+<p class="STEP">Konfigurieren Sie Ihre Firewall so, dass der Datenverkehr f&uuml;r den Port bzw. Portbereich zul&auml;ssig ist, der f&uuml;r den iFolder-Verkehr verwendet werden soll.</p>
+<p class="STEP">Informationen zum &Ouml;ffnen eines Ports in der Firewall finden Sie in der Dokumentation Ihrer Firewall.</p></li>
+<li class="STEP"><a name="bw4v6ou"></a>
+<p class="STEP">Stoppen Sie den iFolder-Client durch Klicken mit der rechten Maustaste auf das iFolder-Symbol (<img src="../graphics/ifolder16.png" alt="Symbol f&uuml;r die iFolder-Anwendung" />). W&auml;hlen Sie dann "Beenden" aus.</p></li>
+<li class="STEP"><a name="bw4v6r7"></a>
+<p class="STEP">&Auml;ndern Sie die Datei Simias.config, indem Sie den Parameter des Bereichs f&uuml;r den Port des Webservices dem Abschnitt "Service Manager" hinzuf&uuml;gen.</p></li>
+<li class="STEP"><a name="bw4vbz4"></a>
+<p class="STEP">Starten Sie den iFolder-Client.</p>
+<p class="STEP">Weitere Informationen finden Sie unter <a href="bw08fxi.html#bw08fxi">Starten des iFolder-Client</a>.</p></li>
+</ol> </div>
+<script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
+</body>
+</html>

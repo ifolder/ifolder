@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SetupPrereq><conditions><condition Type="1" Comparison="2" Path="HKEY_LOCAL_MACHINE\SOFTWARE\Novell\Simias\1.20.000" FileName="" ReturnValue=""/></conditions><files><file LocalFile="c:\temp\setup.exe" /></files><execute file="setup.exe"/><properties Id="{22CA77F6-47DE-4A3B-BFFC-1D5EA8FA94C2}"/></SetupPrereq>

@@ -1,0 +1,63 @@
+<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=big-5">
+<meta http-equiv="Content-Language" content="zh-tw">
+
+<meta name="Generator" content="Novell HTML Conversion 10 March 2004">
+<meta name="Generation-Date" content="Sunday, October 23, 2005 15:54">
+<meta name="Content-Date" content="Mon, 22 Oct 2005 12:00:00 GMT">
+<meta name="Robots" content="INDEX, FOLLOW">
+<meta name="Document_Number" content="zHTML xD.0000.0000.0003.0002.">
+<meta name="Author" content="zHTML xD.0000.0000.0003.0002.">
+<meta name="Product_Class" content="">
+<meta name="Product_and_Version" content="iFolder(TM)">
+<meta name="Copyright" content="版權所有 Novell, Inc. 1983-2004">
+
+<link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
+
+
+<title>iFolder 說明</title>
+<script type="text/javascript" language="javascript">
+function loadMenu()
+{
+	if ((parent.theMenu) && (parent.theMenu.amBusy == false) && parent.frames[2])
+	{
+	   parent.theMenu.loadScript("../doc/user/data/myifolders.html","../doc/user/data/toc_myifolders.html");
+	}
+	else{ setTimeout("loadMenu()",200);}
+}
+loadMenu();
+</script>
+<script type="text/javascript" language="javascript" src="../../../ui/jsglobal.js"></script>
+</head>
+
+<body onload="">
+<script type="text/javascript" language="javascript">
+  var prev_link="bx08x4y.html";
+  var next_link="bwagrrn.html";
+</script>
+
+<script type="text/javascript" language="javascript" src="../../../ui/topnav.js"></script>
+
+<a name="bwensdb"></a>
+
+<div class="Topic" title="檔案類型和大小不同步的指示">
+
+<h2 class="TOPIC-TITLE"><br />檔案類型和大小不同步的指示</h2>
+<p class="TOPIC">當 iFolder 用戶端與 Novell iFolder 3.<em class="VERSIONVARIABLE">x</em> 搭配使用時，您的 iFolder 管理員可能會指定系統、使用者或 iFolder 層級上的檔案類型限制及最大檔案大小限制。在可用於您所擁有之 iFolder 中資料的空間量上，您的帳戶可能也會受到限制。當您參與其他 iFolder 時，會針對 iFolder 的擁有者計算在伺服器上所佔用的空間大小。</p>
+<p class="TOPIC">一些檔案類型不適合進行同步，例如作業系統檔案、檔案管理員所建立的隱藏檔案，或作為連結之檔案集合執行的資料庫。您可以只包含用於您公司的關鍵檔案類型，或排除很可能與公司無關的檔案，例如 .mp3 檔案。 </p>
+<h4 class="BRIDGEHEAD"><br />作業系統檔案</h4>
+<p class="TOPIC">請勿將系統目錄轉換成 iFolder。大部分系統檔案不會經常變更，因此建議保留基本系統的影像檔和關鍵軟體，不要嘗試將這些檔案同步至伺服器。</p>
+<h4 class="BRIDGEHEAD"><br />隱藏檔案</h4>
+<p class="TOPIC">如果您的檔案系統使用隱藏檔案追蹤顯示優先設定，則您的管理員可能會限制那些檔案類型，以在系統的同步中將它們排除在外。通常，隱藏檔案只與建立它們的特定電腦相關，並在每次存取檔案或目錄時發生變更。您不需要保留這些檔案，將它們同步會導致重複的檔案衝突錯誤。 </p>
+<p class="TOPIC">例如，iFolder 會自動排除名為 thumbs.db 和 .DS_Store 的兩個隱藏檔案管理員檔案。</p>
+<h4 class="BRIDGEHEAD"><br />資料庫檔案</h4>
+<p class="TOPIC">iFolder 會同步個別檔案或個別檔案的已變更部份，它不會將檔案作為一個集合進行同步。如果您具有作為連結檔案集合執行的資料庫檔案，請不要嘗試在 iFolder 中將它們同步。</p>
+<p class="TOPIC">請勿透過將 GroupWise 歸檔、快取或遠端目錄轉換為 iFolder，同步您的 GroupWise<sup>®</sup> 資料。如果這麼做，則在同步檔案數次之後，GroupWise 資料檔案便會被損壞。GroupWise 需要將歸檔中的檔案作為檔案集合來維護。</p> </div>
+
+<script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
+
+</body>
+</html>

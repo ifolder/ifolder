@@ -1,0 +1,57 @@
+<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Language" content="zh-tw">
+
+<meta name="Generator" content="Novell HTML Conversion 10 March 2004">
+<meta name="Generation-Date" content="Sunday, October 23, 2005 15:54">
+<meta name="Content-Date" content="Mon, 22 Oct 2005 12:00:00 GMT">
+<meta name="Robots" content="INDEX, FOLLOW">
+<meta name="Document_Number" content="zHTML xD.0000.0000.0002.0008.">
+<meta name="Author" content="zHTML xD.0000.0000.0002.0008.">
+<meta name="Product_Class" content="">
+<meta name="Product_and_Version" content="iFolder(TM)">
+<meta name="Copyright" content="版權所有 Novell, Inc. 1983-2004">
+
+<link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
+
+
+<title>iFolder 說明</title>
+<script type="text/javascript" language="javascript">
+function loadMenu()
+{
+	if ((parent.theMenu) && (parent.theMenu.amBusy == false) && parent.frames[2])
+	{
+	   parent.theMenu.loadScript("../doc/user/data/accountsprefs.html","../doc/user/data/toc_accountsprefs.html");
+	}
+	else{ setTimeout("loadMenu()",200);}
+}
+loadMenu();
+</script>
+<script type="text/javascript" language="javascript" src="../../../ui/jsglobal.js"></script>
+</head>
+
+<body onload="">
+<script type="text/javascript" language="javascript">
+  var prev_link="bvwppw5.html";
+  var next_link="myifolders.html";
+</script>
+
+<script type="text/javascript" language="javascript" src="../../../ui/topnav.js"></script>
+
+<a name="bwbirb9"></a>
+
+<div class="Topic" title="設定 iFolder 交通的本地病毒掃描器設定">
+
+<h2 class="TOPIC-TITLE"><br />設定 iFolder 交通的本地病毒掃描器設定</h2>
+<p class="TOPIC">如果要在電腦上使用病毒掃描軟體，請從病毒掃描中排除 ..\simias\WorkArea\ 目錄。例如，Windows 上的 ..\simias\WorkArea\ 目錄位於 c:\documents and settings\<em class="VARIABLE">username</em>\local settings\application data\simias\WorkArea\.simias.wf.<em class="VARIABLE">guid</em> 中。 </p>
+<p class="TOPIC">此 ..\simias\WorkArea\ 目錄是 iFolder 將檔案進行分階段處理的位置，以便從伺服器下載。如果 iFolder 檔案附帶病毒，且您的病毒掃描軟體掃描到該病毒，而該檔案位於 ..\simias\WorkArea 目錄，則病毒掃描器會立現找到病毒的訊息，然後將該檔案移至隔離區，接著 iFolder 會再次嘗試同步該檔案。 </p>
+<p class="TOPIC">不掃描 WorkArea 便會允許完成檔案的同步化；受感染的檔案會成功下載，並移至本地 iFolder。隨後，病毒掃描器會在 iFolder 中偵測到受感染的檔案，並將其從資料夾移至隔離區，以保護電腦免受感染。iFolder 偵測到檔案被刪除後，便會在新的同步開始時，從伺服器及成員電腦中移除該檔案。 </p>
+<p class="TOPIC">但是，如果從中下載檔案的 iFolder 是「唯讀」的，則不會對伺服器及其他成員電腦強制執行本地刪除。如果許可權允許同步化變更，則必須在其他位置偵測病毒。使用者的病毒掃描器很可能會警告使用者發現病毒，因此該使用者應該警告其他 iFolder 成員關於此病毒的訊息。</p> </div>
+
+<script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
+
+</body>
+</html>
