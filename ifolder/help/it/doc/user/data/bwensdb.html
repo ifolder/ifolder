@@ -1,0 +1,64 @@
+﻿
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"><!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Language" content="it">
+
+<meta name="Generator" content="Novell HTML Conversion 10 March 2004">
+<meta name="Generation-Date" content="Sunday, October 23, 2005 15:54">
+<meta name="Content-Date" content="Mon, 22 Oct 2005 12:00:00 GMT">
+<meta name="Robots" content="INDEX, FOLLOW">
+<meta name="Document_Number" content="zHTML xD.0000.0000.0003.0002.">
+<meta name="Author" content="zHTML xD.0000.0000.0003.0002.">
+<meta name="Product_Class" content="">
+<meta name="Product_and_Version" content="iFolder(TM)">
+<meta name="Copyright" content="Copyright Novell, Inc. 1983-2004">
+
+<link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
+
+
+<title>Guida di iFolder</title>
+<script type="text/javascript" language="javascript">
+function loadMenu()
+{
+	if ((parent.theMenu) && (parent.theMenu.amBusy == false) && parent.frames[2])
+	{
+	   parent.theMenu.loadScript("../doc/user/data/myifolders.html","../doc/user/data/toc_myifolders.html");
+	}
+	else{ setTimeout("loadMenu()",200);}
+}
+loadMenu();
+</script>
+<script type="text/javascript" language="javascript" src="../../../ui/jsglobal.js"></script>
+</head>
+
+<body onload="">
+<script type="text/javascript" language="javascript">
+  var prev_link="bx08x4y.html";
+  var next_link="bwagrrn.html";
+</script>
+
+<script type="text/javascript" language="javascript" src="../../../ui/topnav.js"></script>
+
+<a name="bwensdb"></a>
+
+<div class="Topic" title="Guidelines for File Types and Sizes to Not Synchronize">
+
+<h2 class="TOPIC-TITLE"><br />Indicazioni relative a tipi e dimensioni dei file da non sincronizzare</h2>
+<p class="TOPIC">Quando il client iFolder è utilizzato con Novell iFolder 3.<em class="VERSIONVARIABLE">x</em>, è possibile che l’amministratore di iFolder specifichi restrizioni relative ai tipi e alle dimensioni massime dei file a livello di sistema, di utente o di cartelle iFolder. Inoltre è possibile che il conto preveda limitazioni per quanto riguarda la quantità di spazio utilizzabile per i dati delle cartelle iFolder di cui si è proprietari. Quando si partecipa ad altre cartelle iFolder, lo spazio utilizzato sul server viene utilizzato a svantaggio del proprietario di quella cartella.</p>
+<p class="TOPIC">Alcuni tipi di file non sono buoni candidati per la sincronizzazione, ad esempio i file del sistema operativo, i file nascosti creati da un manager di file o i database implementati come raccolte di file collegati. Si potrebbero includere solo i tipi di file principali utilizzati per l’attività o escludere i file probabilmente non legati all’attività, ad esempio i file .mp3. </p>
+<h4 class="BRIDGEHEAD"><br />File del sistema operativo</h4>
+<p class="TOPIC">È consigliabile non convertire le directory di sistema in cartelle iFolder. La maggior parte dei file di sistema vengono raramente modificati ed è meglio mantenere un file di immagine del sistema di base e del software principale piuttosto che tentare di sincronizzare questi file con il server.</p>
+<h4 class="BRIDGEHEAD"><br />File nascosti</h4>
+<p class="TOPIC">Se il file system utilizza file nascosti per tenere traccia delle preferenze di visualizzazione, è possibile che l’amministratore limiti questi tipi di file in modo da escluderli dalla sincronizzazione sul sistema dell’utente. In genere, i file nascosti riguardano solo il particolare computer su cui sono stati creati e vengono modificati ogni volta che si accede al file o alla directory. Non è necessario mantenere questi file e la loro sincronizzazione genera ripetuti errori di conflitto di file. </p>
+<p class="TOPIC">Ad esempio, verranno automaticamente esclusi due file di gestione di file nascosti denominati thumbs.db e .DS_Store.</p>
+<h4 class="BRIDGEHEAD"><br />File di database</h4>
+<p class="TOPIC">In iFolder vengono sincronizzati i singoli file o le parti modificate dei singoli file, non i file come un unico insieme. Se si dispone di un file di database implementato come raccolta di file collegati, non tentare di sincronizzali in una cartella iFolder.</p>
+<p class="TOPIC">Non tentare di sincronizzare i dati GroupWise<sup>®</sup> inserendo l’archivio GroupWise, la cache o le directory remote nelle cartelle iFolder, altrimenti i file dei dati GroupWise si danneggeranno dopo alcune sincronizzazioni. I file dell’archivio GroupWise devono essere gestiti come un unico insieme.</p> </div>
+
+<script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
+
+</body>
+</html>

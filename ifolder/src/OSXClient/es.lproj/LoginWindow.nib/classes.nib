@@ -1,0 +1,17 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {authenticate = id; cancel = id; }; 
+            CLASS = LoginWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                passwordField = NSSecureTextField; 
+                serverField = NSTextField; 
+                userNameField = NSTextField; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }
+    ); 
+    IBVersion = 1; 
+}
