@@ -2138,18 +2138,20 @@ namespace Novell.FormsTrayApp
 		private void updateView()
 		{
 			int nextY;
+			Point point = localiFoldersHeading.Location;
+			point.Y += localiFoldersHeading.Height;
 			if ( iFolderView.Items.Count == 0 )
 			{
 				iFolderView.Visible = false;
 
-				// Show the informational message.
-				infoMessage.Location = iFolderView.Location;
+				infoMessage.Location = point;
 				panel2.Controls.Add( infoMessage );
 				nextY = infoMessage.Top + infoMessage.Height;
 			}
 			else
 			{
 				iFolderView.Visible = true;
+				iFolderView.Location = point;
 				nextY = iFolderView.Top + iFolderView.Height;
 
 				// Hide the informational message.
