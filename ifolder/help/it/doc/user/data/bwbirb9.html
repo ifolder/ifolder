@@ -1,0 +1,58 @@
+﻿
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"><!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Language" content="it">
+
+<meta name="Generator" content="Novell HTML Conversion 10 March 2004">
+<meta name="Generation-Date" content="Sunday, October 23, 2005 15:54">
+<meta name="Content-Date" content="Mon, 22 Oct 2005 12:00:00 GMT">
+<meta name="Robots" content="INDEX, FOLLOW">
+<meta name="Document_Number" content="zHTML xD.0000.0000.0002.0008.">
+<meta name="Author" content="zHTML xD.0000.0000.0002.0008.">
+<meta name="Product_Class" content="">
+<meta name="Product_and_Version" content="iFolder(TM)">
+<meta name="Copyright" content="Copyright Novell, Inc. 1983-2004">
+
+<link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
+
+
+<title>Guida di iFolder</title>
+<script type="text/javascript" language="javascript">
+function loadMenu()
+{
+	if ((parent.theMenu) && (parent.theMenu.amBusy == false) && parent.frames[2])
+	{
+	   parent.theMenu.loadScript("../doc/user/data/accountsprefs.html","../doc/user/data/toc_accountsprefs.html");
+	}
+	else{ setTimeout("loadMenu()",200);}
+}
+loadMenu();
+</script>
+<script type="text/javascript" language="javascript" src="../../../ui/jsglobal.js"></script>
+</head>
+
+<body onload="">
+<script type="text/javascript" language="javascript">
+  var prev_link="bvwppw5.html";
+  var next_link="myifolders.html";
+</script>
+
+<script type="text/javascript" language="javascript" src="../../../ui/topnav.js"></script>
+
+<a name="bwbirb9"></a>
+
+<div class="Topic" title="Configuring Local Virus Scanner Settings for iFolder Traffic">
+
+<h2 class="TOPIC-TITLE"><br />Configurazione delle impostazioni del software antivirus locale per il traffico iFolder</h2>
+<p class="TOPIC">Se nel computer viene utilizzato un software antivirus, escludere la directory ..\simias\WorkArea\ dal controllo antivirus. Ad esempio, l’ubicazione della directory ..\simias\WorkArea\ in Windows è c:\Documents and Settings\<em class="VARIABLE">nomeutente</em>\Impostazioni locali\Dati applicazioni\simias\WorkArea\.simias.wf.<em class="VARIABLE">guid</em>. </p>
+<p class="TOPIC">La directory ..\simias\WorkArea\ è l’ubicazione in cui iFolder memorizza provvisoriamente i file per lo scaricamento dal server. Se un file iFolder contiene un virus e il software antivirus effettua la scansione del virus mentre il file si trova nella directory ..\simias\WorkArea, verrà visualizzato un messaggio di rilevamento virus, il file verrà messo in quarantena, quindi iFolder tenterà nuovamente di sincronizzare il file. </p>
+<p class="TOPIC">Se la directory WorkArea non viene sottoposta a scansione, sarà possibile completare la sincronizzazione e il file infetto verrà scaricato e spostato nella cartella iFolder locale. Il software antivirus rileverà quindi la presenza del file infetto nella cartella iFolder e lo metterà in quarantena, proteggendo così il computer dall’infezione. iFolder rileverà la cancellazione del file e alla successiva sincronizzazione rimuoverà il file dal server e dai computer membri. </p>
+<p class="TOPIC">Tuttavia, se la cartella iFolder in cui il file viene scaricato è di sola lettura, la cancellazione locale non verrà eseguita sul server e sugli altri computer membri. Il virus dovrà essere rilevato in un’altra postazione in cui le autorizzazioni consentono la sincronizzazione delle modifiche. Probabilmente il software antivirus dell’utente visualizzerà un avviso di presenza di virus e quindi l’utente ne potrà informare gli altri membri.</p> </div>
+
+<script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
+
+</body>
+</html>

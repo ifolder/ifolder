@@ -1,0 +1,111 @@
+<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<head>
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=utf-8">
+<meta http-equiv="Content-Language" content="sk">
+
+<meta name="Generator" content="Novell HTML Conversion 10 March 2004">
+<meta name="Generation-Date" content="Sunday, October 23, 2005 15:54">
+<meta name="Content-Date" content="Mon, 22 Oct 2005 12:00:00 GMT">
+<meta name="Robots" content="INDEX, FOLLOW">
+<meta name="Document_Number" content="zHTML xD.0000.0000.0002.0002.">
+<meta name="Author" content="zHTML xD.0000.0000.0002.0002.">
+<meta name="Product_Class" content="">
+<meta name="Product_and_Version" content="Aplikácia iFolder (TM)">
+<meta name="Copyright" content="Copyright Novell, Inc. 1983-2004">
+
+<link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
+
+
+<title>Pomocník aplikácie iFolder</title>
+<script type="text/javascript" language="javascript">
+function loadMenu()
+{
+	if ((parent.theMenu) && (parent.theMenu.amBusy == false) && parent.frames[2])
+	{
+	   parent.theMenu.loadScript("../doc/user/data/accountsprefs.html","../doc/user/data/toc_accountsprefs.html");
+	}
+	else{ setTimeout("loadMenu()",200);}
+}
+loadMenu();
+</script>
+<script type="text/javascript" language="javascript" src="../../../ui/jsglobal.js"></script>
+</head>
+
+<body onload="">
+<script type="text/javascript" language="javascript">
+  var prev_link="bw08fxi.html";
+  var next_link="login.html";
+</script>
+
+<script type="text/javascript" language="javascript" src="../../../ui/topnav.js"></script>
+
+<a name="accounts"></a>
+
+<div class="Topic" title="Konfigurácia konta aplikácie iFolder">
+
+<h2 class="TOPIC-TITLE"><br />Konfigurácia konta aplikácie iFolder</h2>
+<p class="TOPIC">Skôr, ako budete môcť vytvoriť alebo zdieľať v systéme priečinky iFolder, musíte nakonfigurovať najmenej jedno konto aplikácie iFolder. Pre každý hostiteľský počítač alebo server môžete vytvoriť iba jedno konto, môžete však vlastniť aj viacero kont. </p>
+<p class="TOPIC">Používateľ s odlišnou lokálnou prihlasovacou identitou a kontom používateľa sa môže prihlásiť v inom čase na rovnaký počítač a pomocou aplikácie iFolder môže vytvoriť vlastnú množinu priečinkov iFolder s danou identitou. Aplikácia iFolder synchronizuje iba priečinky iFolder, ktoré patria aktívnemu používateľovi.</p>
+<ol class="STEPLIST">
+<li class="STEP"><a name="bviaku6"></a>
+<p class="STEP">Prístup k nastaveniu konta získate jedným z nasledujúcich spôsobov:</p>
+<ul class="LISTBULLET">
+<li class="BULLETITEM">Pri prvom spustení aplikácie iFolder po inštalácii vás aplikácia iFolder vyzve na nastavenie konta aplikácie iFolder. Kliknutím na tlačidlo Áno prejdete priamo na kartu Kontá v dialógovom okne Preferencie aplikácie iFolder.</li>
+
+<li class="BULLETITEM">
+Pravým tlačidlom kliknite na ikonu aplikácie iFolder <img src="../graphics/ifolder16.png" alt="Ikona aplikácie iFolder" /> v oblasti upozornení a vyberte možnosť Kontá. Otvorí sa karta Kontá v dialógovom okne Preferencie aplikácie iFolder.
+</li>
+</ul></li>
+
+<li class="STEP"><a name="bvial71"></a>
+<p class="STEP">Prístup do oblasti Nastavenie konta získate kliknutím na možnosť Nové. </p></li>
+
+<li class="STEP"><a name="bviamdh"></a>
+<p class="STEP">Zadajte nasledujúce hodnoty:</p>
+<table class="TABLENOTITLE" border="0" cellpadding="5" cellspacing="0">
+<tr class="HEADERROW"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bvibwik"></a><em class="TBLHEAD">Parameter</em></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">Popis</em></th>
+</tr>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bvibwil"></a><p class="ENTRY">Server</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Názov DNS alebo adresa IP podnikového servera iFolder, na ktorom máte vytvorené konto. Napríklad: svr21.example.com alebo 192.168.1.1.</p></td>
+</tr>
+<tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bvibwim"></a><p class="ENTRY">Meno používateľa</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Zadajte identitu používateľa pre toto konto. Správca aplikácie iFolder určí, či by ste ako formát mali použiť sieťovú identifikáciu používateľa (bežné meno LDAP), alebo e-mailovú adresu.</p><p class="ENTRY">Ak je napríklad meno používateľa John Smith, je identifikácia používateľa jsmith a e-mailová adresa je john.smith@example.com. Správca nakonfiguruje nastavenie servera, ktoré určuje, ktorý z týchto dvoch formátov bude prijímaný v poli Meno používateľa pre účely overovania.</p></td>
+</tr>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bvibwin"></a><p class="ENTRY">Heslo</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Heslo pre meno používateľa. </p></td>
+</tr>
+<tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bvibwio"></a><p class="ENTRY">Zapamätať heslo</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Ak sa chcete automaticky prihlásiť na toto konto aplikácie iFolder  pri prihlásení na počítač, vyberte možnosť Zapamätať heslo. Ďalšie informácie nájdete v časti <a href="login.html#login">Prihlásenie sa na konto aplikácie iFolder</a>.</p><p class="ENTRY">Ak sa zmení vaše sieťové heslo, automatické overenie pri najbližšom pokuse aplikácie iFolder o prihlásenie na konto aplikácie iFolder korektne zlyhá. Aplikácia iFolder vás vyzve na prihlásenie sa pomocou nového hesla a umožní zadať a uložiť nové heslo.</p></td>
+</tr>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bvibwip"></a><p class="ENTRY">Povoliť konto</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Ak chcete povoliť pre toto konto synchronizáciu pozvánok aplikácie iFolder, zoznamu používateľov a priečinkov aplikácie iFolder na pozadí, vyberte možnosť Povoliť konto.</p></td>
+</tr>
+<tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bvibwiq"></a><p class="ENTRY">Predvolené konto</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Ak chcete pri vytváraní priečinkov iFolder nastaviť toto konto ako predvolené v rozbaľovacom zozname kont, vyberte možnosť Predvolené konto.</p></td>
+</tr></table>
+
+<a name="bviajos"></a> <br /><img src="../graphics/ifos_accounts_new_a.png" alt="Používateľské rozhranie nového konta" /></li>
+
+<li class="STEP"><a name="bvib17w"></a>
+<p class="STEP">Kliknite na tlačidlo OK alebo na tlačidlo Prihlásiť sa.</p>
+<p class="STEP">Ak sa zobrazí výzva s certifikátom, prezrite si certifikát a prijmite ho kliknutím na tlačidlo OK. Konto sa zobrazí v zozname kont so stavom Prihlásený. Aplikácia iFolder začne synchronizovať všetky existujúce priečinky iFolder, upozornenia aplikácie iFolder a zoznam používateľov pre toto konto.</p></li>
+
+<li class="STEP"><a name="bvib1d8"></a>
+<p class="STEP">Kliknutím na tlačidlo OK zatvorte dialógové okno Preferencie aplikácie iFolder.</p></li>
+
+<li class="STEP"><a name="bvwsa5n"></a>
+<p class="STEP">Nastavte priečinky iFolder pre konto jedným z nasledujúcich spôsobov:</p>
+<ul class="LISTBULLET">
+<li class="BULLETITEM">Ak sú pre toto konto k dispozícii priečinky iFolder, zobrazí sa správa s upozornením aplikácie iFolder. Kliknutím na správu otvoríte dialógové okno Priečinky iFolder. Pokračujte postupom v časti <a href="setupifolder.html#setupifolder"> Nastavenie dostupného priečinka iFolder</a>.</li>
+
+<li class="BULLETITEM">Ak pre konto nie sú k dispozícii žiadne priečinky iFolder alebo ak chcete okamžite začať pridávať priečinky iFolder, kliknite pravým tlačidlom na ikonu aplikácie iFolder a výberom možnosti Priečinky iFolder otvorte okno Priečinky iFolder. Pokračujte postupom v časti <a href="createifolder.html#createifolder">Vytvorenie priečinka iFolder</a>.</li>
+</ul></li>
+</ol> </div>
+
+<script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
+
+</body>
+</html>

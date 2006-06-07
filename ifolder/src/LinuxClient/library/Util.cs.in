@@ -1,0 +1,1017 @@
+/***********************************************************************
+ *  $RCSfile: Util.cs.in,v $
+ *
+ *  Copyright (C) 2004 Novell, Inc.
+ *
+ *  This program is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2 of the License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public
+ *  License along with this program; if not, write to the Free
+ *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ *
+ *  Authors:
+ *		Calvin Gaisford <cgaisford@novell.com>
+ *		Boyd Timothy <btimothy@novell.com>
+ *
+ ***********************************************************************/
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+
+using Gtk;
+using Gdk;
+using Mono.Posix;
+
+using Simias.Client;
+
+namespace Novell.iFolder
+{
+	public class Util
+	{
+		internal static string prefix = "@_prefix_@";
+		internal static string imagesdir = "@_prefix_@/share/ifolder3/images";
+		internal static string helpdir = "@_prefix_@/share/ifolder3/help";
+		internal static int SectionSpacing = 20;
+		internal static int SectionTitleSpacing = 5;
+		static public uint DefaultBorderWidth = 10;
+		
+		// The purpose of these variable is to allow us to keep track of
+		// last place the user created/setup an iFolder so that we can open
+		// to the same place the next time they create/setup an iFolder.
+		internal static string lastSetupPath = null;
+		internal static string lastCreatedPath = null;
+
+		// Be nice and keep track of the directory where the user saves
+		// the sync log.
+		internal static string lastSavedSyncLogPath = null;
+
+		internal static iFolderWindow		ifwin		  = null;
+		internal static LogWindow			logwin		  = null;
+		internal static PreferencesWindow	prefswin	  = null;
+		
+		private static bool biFolderWindowNeverShown	= true;
+		private static bool bLogWinNeverShown			= true;
+
+		private static Manager				simiasManager	= null;
+		private static iFolderWebService	ifws			= null;
+		private static SimiasWebService		simws			= null;
+		
+		private static QuitiFolderDelegate quitiFolderDelegate = null;
+		
+		///
+		/// The following variables/properties are needed to keep track of the
+		/// application modal dialogs.  This allows us to coordinate the modal
+		/// dialogs between the main application and the TrayIcon running in
+		/// the Notification Area.  Without this, the user can end up feeling
+		/// "stuck" without knowing why.
+		///
+		private static Gtk.Window currentModalWindow = null;
+		private static object modalWindowLockObject = new object();
+		
+		public static Gtk.Window CurrentModalWindow
+		{
+			get
+			{
+				return currentModalWindow;
+			}
+		}
+
+		/// <summary>
+		/// This should be called by any process in the iFolder Client
+		/// immediately after creating a Dialog/Window that should be made
+		/// modal.
+		///
+		/// It will return 'true' if the window was successfully registered
+		/// and allowed to be modal.  If 'false' is returned the caller should
+		/// call Util.CurrentModalWindow.Present() if appropriate.
+		/// </summary>
+		public static bool RegisterModalWindow(Gtk.Window potentialModalWindow)
+		{
+			lock(modalWindowLockObject)
+			{
+				if (currentModalWindow != null)
+				{
+					return false;
+				}
+				
+				currentModalWindow = potentialModalWindow;
+				
+				// Register an event listener for when the Dialog/Window is
+				// closed so we can clean up our reference and allow other
+				// modal dialogs to exist.
+				if (potentialModalWindow is Gtk.Dialog)
+				{
+					((Gtk.Dialog)potentialModalWindow).Close +=
+						new EventHandler(OnModalDialogClosed);
+					((Gtk.Dialog)potentialModalWindow).Response +=
+						new ResponseHandler(OnModalDialogResponse);
+				}		
+				else
+				{
+					potentialModalWindow.DeleteEvent +=
+						new DeleteEventHandler(OnModalWindowDeleted);
+				}
+
+				potentialModalWindow.Destroyed +=
+					new EventHandler(OnModalWindowDestroyed);
+			}
+			
+			return true;
+		}
+		
+		private static void OnModalDialogClosed(object o, EventArgs args)
+		{
+			lock(modalWindowLockObject)
+			{
+				currentModalWindow = null;
+			}
+		}
+		
+		private static void OnModalDialogResponse(object o, ResponseArgs args)
+		{
+			lock(modalWindowLockObject)
+			{
+				currentModalWindow = null;
+			}
+		}
+		
+		private static void OnModalWindowDeleted(object o, DeleteEventArgs args)
+		{
+			lock(modalWindowLockObject)
+			{
+				currentModalWindow = null;
+			}
+		}
+		
+		private static void OnModalWindowDestroyed(object o, EventArgs args)
+		{
+			lock(modalWindowLockObject)
+			{
+				currentModalWindow = null;
+			}
+		}
+		
+		public static void InitCatalog()
+		{
+			Mono.Posix.Catalog.Init("@_PACKAGE_@", "@_prefix_@/share/locale");
+		}
+
+
+		public static string GS(string msgid)
+		{
+			return Mono.Posix.Catalog.GetString(msgid);
+		}
+
+
+		public static string ImagesPath(string imgStr)
+		{
+			return string.Format("{0}/{1}", imagesdir, imgStr);
+		}
+		
+		public static string PluginsPath
+		{
+			get
+			{
+				return "@_prefix_@/lib";
+			}
+		}
+		
+		public static string HelpURL(string helpFile)
+		{
+			string langCode = System.Globalization.CultureInfo.CurrentCulture.Name;
+			if (langCode == null || langCode.Length < 2 || langCode.Length > 4)
+			{
+				if (langCode == null)
+					Console.WriteLine("System.Globalization.CultureInfo.CurrentCulture.Name returned null.");
+				else
+					Console.WriteLine("System.Globalization.CultureInfo.CurrentCulture.Name returned: {0}", langCode);
+				
+				Console.WriteLine("Defaulting to \"en\" for help files.");
+
+				langCode = "en";
+			}
+			else if (!langCode.StartsWith("zh"))
+				langCode = langCode.Substring(0, 2); // Only use the first two letters if NOT Chinese
+
+			return string.Format("file://{0}/{1}/doc/user/data/{2}", helpdir, langCode, helpFile);
+		}
+
+		public static void OpenInBrowser(string path)
+		{
+			System.Diagnostics.Process process;
+			process = new System.Diagnostics.Process();
+			process.StartInfo.CreateNoWindow = true;
+			process.StartInfo.UseShellExecute = false;
+			process.StartInfo.Arguments = "\"" + path + "\"";
+
+			// Try to start Nautilus from the location it's normally installed
+			// on Novell Linux Desktop
+			process.StartInfo.FileName = "/opt/gnome/bin/nautilus";
+
+			try
+			{
+				process.Start();
+				return;
+			}
+			catch(Exception e)
+			{
+			}
+
+			// Try to start Nautilus by finding it in the PATH
+			process.StartInfo.FileName = "nautilus";
+
+			try
+			{
+				process.Start();
+				return;
+			}
+			catch(Exception e)
+			{
+			}
+
+			process.StartInfo.FileName = "/opt/kde3/bin/konqueror";
+
+			try
+			{
+				process.Start();
+				return;
+			}
+			catch(Exception e)
+			{
+			}
+
+			process.StartInfo.FileName = "konqueror";
+
+			try
+			{
+				process.Start();
+				return;
+			}
+			catch(Exception e)
+			{
+			}
+
+			throw new Exception("Unable to launch file browser");
+		}
+
+		public static void ShowHelp(string helpFile, Gtk.Window parent)
+		{
+			try
+			{
+//				Gnome.Url.Show(HelpURL(helpFile));
+				if (GnomeUrlShowExternal(HelpURL(helpFile)))
+					return;
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.Message);
+				Console.WriteLine(e.StackTrace);
+			}
+
+			iFolderMsgDialog dg = new iFolderMsgDialog(
+				parent,
+				iFolderMsgDialog.DialogType.Error,
+				iFolderMsgDialog.ButtonSet.Ok,
+				"",
+				string.Format(Util.GS("Error displaying help file \"{0}\""), helpFile),
+				Util.GS("iFolder could not open the default web browser to show the help file."));
+			dg.Run();
+			dg.Hide();
+			dg.Destroy();
+		}
+
+		public static void ShowAbout()
+		{
+			try
+			{
+				string[] authors = new string[]
+				{
+					Util.GS("iFolder 3 Team"),
+					"",
+					Util.GS("Developers:"),
+					"  Boyd Timothy",
+					"  Brady Anderson",
+					"  Bruce Getter",
+					"  Calvin Gaisford",
+					"  Mike Lasky",
+					"  Rob Lyon",
+					"  Russ Young",
+					"",
+					Util.GS("Quality Assurance:"),
+					"  Eric Ward",
+					"  Victor Billings",
+					"",
+					Util.GS("Product Management:"),
+					"  Jared Allen",
+					"  Trent Badger",
+					"",
+					Util.GS("Documentation:"),
+					"  Catherine Craft",
+					Util.GS("  ...and everyone who actively contributes\n  to the iFolder Wiki at http://www.ifolder.com/"),
+					"",
+					Util.GS("Special Thanks"),
+					"",
+					Util.GS("Retired Contributers:"),
+					"  Bruce Bergeson",
+					"  Dale Olds",
+					"  Doug Eddy",
+					"  James Bell",
+					"  Joe Stark",
+					"  Paul Thomas",
+					"  Pete Mimmack",
+					"  Scott Reeves",
+					"  Sharon Smith",
+					"  Tim Mellor",
+					"",
+					Util.GS("Organizations:"),
+					"  Mono Team",
+					"  Novell, Inc.",
+					"",
+					Util.GS("Code Contributors:"),
+					"  Dave Camp",
+					"  Edd Dumbill",
+					"  Martin Meredith",
+					"  Nat Friedman",
+					"  Niel M. Bornstein",
+					"",
+					Util.GS("Other Contributors:"),
+					"  Jakub Steiner",
+					"  Ryan Collier"
+				};
+
+/*
+				AboutDialog aboutDialog = new AboutDialog();
+
+				aboutDialog.Authors = authors;
+				aboutDialog.Comments = Util.GS("The iFolder Project is a file sharing solution that allows people to easily share folders or files of any type with other users, whether they use the same or different operating system.");
+				aboutDialog.Copyright = Util.GS("Copyright (C) 2004-2006 Novell, Inc.  All rights reserved.");
+				aboutDialog.License =
+					Util.GS("iFolder @_VERSION_@\n" +
+							"Copyright (C) 2004-2006 Novell, Inc.\n" +
+							"All rights reserved.\n\n" +
+					
+							"This program is free software; you can redistribute it and/or modify\n" +
+							"it under the terms of the GNU General Public License as published by\n" +
+							"the Free Software Foundation; either version 2 of the License, or\n" +
+							"(at your option) any later version.\n\n" +
+							
+							"This program is distributed in the hope that it will be useful,\n" +
+							"but WITHOUT ANY WARRANTY; without even the implied warranty of\n" +
+							"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n" +
+							"GNU General Public License for more details.\n\n" +
+							
+							"You should have received a copy of the GNU General Public License\n" +
+							"along with this program; if not, write to the Free Software\n" +
+							"Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA");
+				
+				aboutDialog.Logo = new Gdk.Pixbuf(Util.ImagesPath("ifolder128.png"));
+				aboutDialog.Name = "iFolder";
+//				aboutDialog.TranslatorCredits = Util.GS("<Place translator credits here>");
+				aboutDialog.Version = "@_VERSION_@";
+				aboutDialog.Website = "http://www.ifolder.com/";
+				aboutDialog.WebsiteLabel = "http://www.ifolder.com/";
+				aboutDialog.WrapLicense = false;
+*/
+				Gnome.About aboutDialog =
+					new Gnome.About(
+						"iFolder",
+						"@_VERSION_@",
+						Util.GS("Copyright (C) 2004-2006 Novell, Inc.  All rights reserved."),
+						Util.GS("The iFolder Project is a file sharing solution that allows people to easily share folders or files of any type with other users, whether they use the same or different operating system."),
+						authors,
+						null,
+						null,
+						new Gdk.Pixbuf(Util.ImagesPath("ifolder128.png")));
+
+				if (!RegisterModalWindow(aboutDialog))
+				{
+					try
+					{
+						Util.CurrentModalWindow.Present();
+					}
+					catch{}
+					aboutDialog.Destroy();
+					return;
+				}
+				
+//				aboutDialog.Modal = true;
+				aboutDialog.TransientFor = GetiFolderWindow();
+				aboutDialog.ShowAll();
+			}
+			catch(Exception e)
+			{
+				Console.WriteLine("Error showing About dialog: {0}", e.Message);
+			}
+		}
+		
+		public static PreferencesWindow GetPreferencesWindow()
+		{
+			return prefswin;
+		}
+		
+		///
+		/// Specify page = 0 to open the preferences to the General tab
+		/// Specify page = 1 to open the preferences to the Accounts tab
+		///
+		public static void ShowPrefsPage(int page, Manager simiasManager)
+		{
+			if (CheckWebService(simiasManager))
+			{
+				if (prefswin == null)
+				{
+					prefswin = new PreferencesWindow(ifws, simiasManager);
+					
+					prefswin.Destroyed +=
+						new EventHandler(PrefsWinDestroyedHandler);
+					prefswin.ShowAll();
+					prefswin.CurrentPage = page;
+				}
+				else
+				{
+					prefswin.Present();
+					prefswin.CurrentPage = page;
+				}
+			}
+		}
+
+		private static void PrefsWinDestroyedHandler(object o, EventArgs args)
+		{
+			prefswin = null;
+		}
+		
+		public static Manager CreateSimiasManager(string[] args)
+		{
+			if (simiasManager == null)
+				simiasManager = new Manager(args);
+			
+			return simiasManager;
+		}
+		
+		public static Manager GetSimiasManager()
+		{
+			if (simiasManager == null)
+			{
+				simiasManager = new Manager();
+			}
+			
+			return simiasManager;
+		}
+		
+		public static iFolderWindow GetiFolderWindow()
+		{
+			if(ifwin == null && CheckWebService(simiasManager))
+			{
+				ifwin = new iFolderWindow(ifws, simws, simiasManager);
+				ifwin.DeleteEvent +=
+						new DeleteEventHandler(OniFolderWindowDeleteEvent);
+				ifwin.Destroyed +=
+						new EventHandler(OniFolderWindowDestroyed);
+			}
+
+			return ifwin;
+		}
+		
+		public static void ShowiFolderWindow()
+		{
+			if(CheckWebService(simiasManager))
+			{
+				if (ifwin == null)
+				{
+					ifwin = new iFolderWindow(ifws, simws, simiasManager);
+					ifwin.DeleteEvent +=
+							new DeleteEventHandler(OniFolderWindowDeleteEvent);
+					ifwin.Destroyed +=
+							new EventHandler(OniFolderWindowDestroyed);
+					ifwin.ShowAll();
+					biFolderWindowNeverShown = false;
+				}
+				else
+				{
+					if (biFolderWindowNeverShown)
+					{
+						ifwin.ShowAll();
+						biFolderWindowNeverShown = false;
+					}
+					else
+					{
+						if (!ifwin.Visible)
+						{
+							int x = ifwin.LastXPos;
+							int y = ifwin.LastYPos;
+							
+							if (x >= 0 && y >= 0)
+								ifwin.Move(x, y);
+						}
+
+						ifwin.Present();
+					}
+				}
+			}
+		}
+		
+		public static void ShowLoginError(Gtk.Window parent, StatusCodes statusCode)
+		{
+			string primaryText = null;
+			string secondaryText = null;
+			string exceptionText = null;
+
+			switch(statusCode)
+			{
+				case StatusCodes.InvalidCredentials:
+				case StatusCodes.InvalidPassword:
+				case StatusCodes.UnknownUser:
+					primaryText = Util.GS("The username or password is invalid");
+					secondaryText = Util.GS("Please try again.");
+					break;
+				case StatusCodes.AccountDisabled:
+					primaryText = Util.GS("The user account is disabled");
+					secondaryText = Util.GS("Please contact your network administrator for assistance.");
+					break;
+				case StatusCodes.AccountLockout:
+					primaryText = Util.GS("The user account is locked");
+					secondaryText = Util.GS("Please contact your network administrator for assistance.");
+					break;
+				case StatusCodes.UnknownDomain:
+					primaryText = Util.GS("Unable to contact the specified server");
+					secondaryText = Util.GS("Please verify the information entered and try again.  If the problem persists, please contact your network administrator.");
+					break;
+				default:
+					primaryText = Util.GS("Unable to connect to the iFolder Server");
+					secondaryText = Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.");
+					exceptionText = string.Format("{0}: {1}", Util.GS("Authentication Status Code"), statusCode);
+					break;
+			}
+
+			iFolderMsgDialog dg;
+			if (exceptionText == null)
+			{
+				dg = new iFolderMsgDialog(
+					parent,
+					iFolderMsgDialog.DialogType.Error,
+					iFolderMsgDialog.ButtonSet.Ok,
+					"",
+					primaryText,
+					secondaryText);
+			}
+			else
+			{
+				dg = new iFolderMsgDialog(
+					parent,
+					iFolderMsgDialog.DialogType.Error,
+					iFolderMsgDialog.ButtonSet.Ok,
+					"",
+					primaryText,
+					secondaryText,
+					exceptionText);
+			}
+
+			dg.Run();
+			dg.Hide();
+			dg.Destroy();
+		}
+		
+		private static void OniFolderWindowDeleteEvent(object o, DeleteEventArgs args)
+		{
+			ifwin.CloseWindow();
+			args.RetVal = true;
+		}
+
+		private static void OniFolderWindowDestroyed(object o, EventArgs args)
+		{
+			ifwin = null;
+		}
+
+		public static LogWindow GetLogWindow(Manager simiasManager)
+		{
+			if (logwin == null)
+			{
+				logwin = new LogWindow(simiasManager);
+				logwin.Destroyed +=
+					new EventHandler(LogWindowDestroyedHandler);
+			}
+			
+			return logwin;
+		}
+		
+		public static void ShowLogWindow(Manager simiasManager)
+		{
+			if (logwin == null)
+			{
+				logwin = new LogWindow(simiasManager);
+				logwin.Destroyed +=
+						new EventHandler(LogWindowDestroyedHandler);
+				logwin.ShowAll();
+				bLogWinNeverShown = false;
+			}
+			else
+			{
+				if (bLogWinNeverShown)
+				{
+					logwin.ShowAll();
+					bLogWinNeverShown = false;
+				}
+				else
+					logwin.Present();
+			}
+		}
+
+		private static void LogWindowDestroyedHandler(object o, EventArgs args)
+		{
+			logwin = null;
+		}
+
+		private static bool CheckWebService(Manager simiasManager)
+		{
+			if(ifws == null)
+			{
+				try
+				{
+					string localServiceUrl = simiasManager.WebServiceUri.ToString();
+					ifws = new iFolderWebService();
+					ifws.Url = localServiceUrl + "/iFolder.asmx";
+					LocalService.Start(ifws, simiasManager.WebServiceUri, simiasManager.DataPath);
+					
+					simws = new SimiasWebService();
+					simws.Url = localServiceUrl + "/Simias.asmx";
+					LocalService.Start(simws, simiasManager.WebServiceUri, simiasManager.DataPath);
+					
+					ifws.Ping();
+				}
+				catch(System.Net.WebException we)
+				{
+					ifws = null;
+
+					if(we.Message == "Error: ConnectFailure")
+					{
+						iFolderMsgDialog mDialog = new iFolderMsgDialog(
+							null,
+							iFolderMsgDialog.DialogType.Error,
+							iFolderMsgDialog.ButtonSet.Ok,
+							"",
+							Util.GS("Unable to locate the Simias process"),
+							Util.GS("The Simias process must be running for iFolder to work.  Restart iFolder.  If the problem persists, please contact your network administrator for assistance."));
+						mDialog.Run();
+						mDialog.Hide();
+						mDialog.Destroy();
+						mDialog = null;
+					}
+					else
+						throw we;
+				}
+				catch(Exception e)
+				{
+					ifws = null;
+
+					iFolderExceptionDialog ied = new iFolderExceptionDialog(
+													null, e);
+					ied.Run();
+					ied.Hide();
+					ied.Destroy();
+					ied = null;
+				}
+			}
+			return(ifws != null);
+		}
+
+		public static void CloseiFolderWindows()
+		{
+			if(ifwin != null)
+			{
+				ifwin.Destroyed -=
+					new EventHandler(OniFolderWindowDestroyed);
+				ifwin.Hide();
+				ifwin.Destroy();
+				ifwin = null;
+			}
+
+			if(logwin != null)
+			{
+				logwin.Destroyed -=
+					new EventHandler(LogWindowDestroyedHandler);
+				logwin.Hide();
+				logwin.Destroy();
+				logwin = null;
+			}
+
+			if(prefswin != null)
+			{
+				prefswin.Destroyed -=
+					new EventHandler(PrefsWinDestroyedHandler);
+				prefswin.Hide();
+				prefswin.Destroy();
+				prefswin = null;
+			}
+		}
+		
+		public static void SetQuitiFolderDelegate(QuitiFolderDelegate aQuitiFolderDelegate)
+		{
+			quitiFolderDelegate = aQuitiFolderDelegate;
+		}
+		
+		public static void QuitiFolder()
+		{
+			if (quitiFolderDelegate != null)
+				quitiFolderDelegate();
+		}
+		
+		public static string LastSetupPath
+		{
+			get
+			{
+				if (lastSetupPath == null)
+				{
+					lastSetupPath = GetDefaultUserPath();
+				}
+
+				return lastSetupPath;
+			}
+			set
+			{
+				lastSetupPath = value;
+			}
+		}
+
+		public static string LastCreatedPath
+		{
+			get
+			{
+				if (lastCreatedPath == null)
+				{
+					lastCreatedPath = GetDefaultUserPath();
+				}
+
+				return lastCreatedPath;
+			}
+
+			/// <summary>
+			/// This call expects "value" to contain the full path of
+			/// the iFolder that was just created.  It will strip off
+			/// the iFolder path.  For example:
+			///
+			///     /home/joe/ifolders/My Documents
+			///
+			///         will be changed to:
+			///
+			///     /home/joe/ifolders
+			///
+			/// </summary>
+			set
+			{
+				if (value != null)
+				{
+					int lastSlashPos = value.LastIndexOf('/');
+					if (lastSlashPos > 0)
+					{
+						lastCreatedPath = value.Substring(0, lastSlashPos);
+					}
+				}
+			}
+		}
+		
+		public static string LastSavedSyncLogPath
+		{
+			get
+			{
+				if (lastSavedSyncLogPath == null)
+				{
+					lastSavedSyncLogPath = GetDefaultUserPath();
+				}
+				
+				return lastSavedSyncLogPath;
+			}
+			set
+			{
+				if (value != null)
+				{
+					int lastSlashPos = value.LastIndexOf('/');
+					if (lastSlashPos > 0)
+					{
+						lastSavedSyncLogPath = value.Substring(0, lastSlashPos);
+					}
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Saves the positions and sizes of the iFolder windows.  Returns
+		/// true if successful.
+		/// </summary>
+		public static bool SaveiFolderWindows()
+		{
+//			iFolderWindow ifwin = Util.GetiFolderWindow()
+			if (ifwin != null)
+			{
+				if (ifwin.Visible)
+				{
+					// Save the iFolder Window's position and size
+					int x;
+					int y;
+					int width;
+					int height;
+					
+					ifwin.GetPosition(out x, out y);
+					ifwin.GetSize(out width, out height);
+
+					ClientConfig.Set(ClientConfig.KEY_IFOLDER_WINDOW_X_POS, x);
+					ClientConfig.Set(ClientConfig.KEY_IFOLDER_WINDOW_Y_POS, y);
+					ClientConfig.Set(ClientConfig.KEY_IFOLDER_WINDOW_WIDTH, width);
+					ClientConfig.Set(ClientConfig.KEY_IFOLDER_WINDOW_HEIGHT, height);
+					ClientConfig.Set(ClientConfig.KEY_IFOLDER_WINDOW_VISIBLE, true);
+				}
+				else
+				{
+					// Save the fact that the iFolder Window was NOT open
+					ClientConfig.Set(ClientConfig.KEY_IFOLDER_WINDOW_VISIBLE, false);
+				}
+			}
+			
+			return true;
+		}
+		
+		/// <summary>
+		/// Saves the positions and sizes of the iFolder windows.  Returns
+		/// true if successful.
+		/// </summary>
+		public static bool LoadiFolderWindows()
+		{
+			if (ifwin != null)
+			{
+				if (ClientConfig.Exists(ClientConfig.KEY_IFOLDER_WINDOW_X_POS)
+					&& ClientConfig.Exists(ClientConfig.KEY_IFOLDER_WINDOW_WIDTH))
+				{
+					int width = (int)ClientConfig.Get(ClientConfig.KEY_IFOLDER_WINDOW_WIDTH);
+					int height = (int)ClientConfig.Get(ClientConfig.KEY_IFOLDER_WINDOW_HEIGHT);
+					
+					ifwin.DefaultWidth = width;
+					ifwin.DefaultHeight = height;
+
+					int x = (int)ClientConfig.Get(ClientConfig.KEY_IFOLDER_WINDOW_X_POS);
+					int y = (int)ClientConfig.Get(ClientConfig.KEY_IFOLDER_WINDOW_Y_POS);
+
+					ifwin.Move(x, y);
+				}
+
+				if (ClientConfig.Exists(ClientConfig.KEY_IFOLDER_WINDOW_VISIBLE))
+				{
+					bool showiFolderWindow = (bool)
+						ClientConfig.Get(ClientConfig.KEY_IFOLDER_WINDOW_VISIBLE);
+					
+					if (showiFolderWindow)
+						Util.ShowiFolderWindow();
+					
+					return true;
+				}
+			}
+			
+			return false;
+		}
+
+		/// <summary>
+		/// Returns the path to the user's Desktop if it exists or the user's
+		/// home directory if the Desktop directory is not found.
+		/// </summary>
+		private static string GetDefaultUserPath()
+		{
+			string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+			if (path == null)
+				path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+					
+			return path;
+		}
+
+		/// <summary>
+		/// Fix for Bug 119785 - Help doesn't work on NLD SP2 or SUSE 10.
+		///
+		/// FIXME: This method spawns "gnome-open" (a C program which invokes
+		/// gnome_url_show().  Something in the way that we're running iFolder
+		/// prevents Gnome.Url.Show() from working correctly.  When we have
+		/// more time to figure out exactly what's going on, we can take care
+		/// of this.
+		/// FIXME: Re-implement this to what Jim Norman sent me in an email so that we use kde-open when we're running in KDE
+		/// </summary>
+		private static bool GnomeUrlShowExternal(string url)
+		{
+			// Launch the small "gnome-url-show" executable
+			// to show the url.
+			Process gnomeUrlShowProcess = new Process();
+			
+			gnomeUrlShowProcess.StartInfo.FileName = "gnome-open";
+			gnomeUrlShowProcess.StartInfo.Arguments = url;
+			
+			try
+			{
+				gnomeUrlShowProcess.Start();
+				gnomeUrlShowProcess.WaitForExit();
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.Message);
+				Console.WriteLine(e.StackTrace);
+				return false;
+			}
+
+			if (gnomeUrlShowProcess.ExitCode == 0)
+				return true;
+			else
+				return false;
+		}
+		
+		///
+		/// DllImports needed for various things
+		///
+		// FIXME: Remove these two functions when we change our minimum requirement to gtk-sharp2-2.6		
+		[DllImport("libgtk-x11-2.0.so.0")]
+		static extern void gtk_label_set_max_width_chars(IntPtr label,
+														 int n_chars);
+
+		public static void GtkLabelSetMaxWidthChars(Gtk.Label label, int n_chars)
+		{
+			gtk_label_set_max_width_chars(label.Handle, n_chars);
+		}
+		
+		[DllImport("libgtk-x11-2.0.so.0")]
+		static extern void gtk_label_set_ellipsize(IntPtr label,
+												   uint mode);
+		
+		public static void GtkLabelSetEllipsize(Gtk.Label label, bool bUseEllipsis)
+		{
+			if (bUseEllipsis)
+				gtk_label_set_ellipsize(label.Handle, 3);
+			else
+				gtk_label_set_ellipsize(label.Handle, 0);
+		}
+		
+		///
+		/// Functions to deal with loading themed folder icons taken gratefully
+		/// from the banshee project (IconThemeUtils.cs).
+		///
+		[DllImport("libgtk-x11-2.0.so.0")]
+        private extern static IntPtr gtk_icon_theme_get_default();
+
+		[DllImport("libgtk-x11-2.0.so.0")]
+        private extern static IntPtr gtk_icon_theme_load_icon(IntPtr theme, string name, int size, 
+            int flags, IntPtr error);
+            
+		public static Gdk.Pixbuf LoadIcon(string name, int size)
+		{
+			return LoadIcon(name, size, true);
+		}
+		
+		public static Gdk.Pixbuf LoadIcon(string name, int size, bool fallBackOnResource)
+		{
+			try
+			{
+				IntPtr native = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), name, size, 0, IntPtr.Zero);
+				if (native != IntPtr.Zero)
+				{
+					Gdk.Pixbuf ret = (Gdk.Pixbuf)GLib.Object.GetObject(native, true);
+					if (ret != null)
+						return ret;
+				}
+			}
+			catch{}
+			
+			if (!fallBackOnResource)
+				return null;
+			
+			try
+			{
+				return new Gdk.Pixbuf(System.Reflection.Assembly.GetEntryAssembly(), name + ".png");
+			}
+			catch{}
+			
+			return null;
+		}
+		
+		///
+		/// Function to be able to create a lightened version of a Gdk.Pixbuf.
+		///
+		[DllImport("libeel-2.so.2")]
+		private static extern IntPtr eel_create_spotlight_pixbuf(IntPtr src);
+		
+		public static Gdk.Pixbuf EelCreateSpotlightPixbuf(Gdk.Pixbuf src)
+		{
+			IntPtr destPtr;
+			Gdk.Pixbuf dest;
+			
+			destPtr = eel_create_spotlight_pixbuf(src.Handle);
+			
+			if (destPtr == IntPtr.Zero)
+				dest = src.Copy();
+			else
+				dest = new Gdk.Pixbuf(destPtr);
+			
+			return dest;
+		}
+	}
+	
+	public delegate void QuitiFolderDelegate();
+}

@@ -1,0 +1,63 @@
+<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<head>
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=utf-8">
+<meta http-equiv="Content-Language" content="cs">
+
+<meta name="Generator" content="Konverze HTML společnosti Novell, 10. března 2004">
+<meta name="Generation-Date" content="neděle, 23. října 2005, 15:54">
+<meta name="Content-Date" content="Po, 22. října 2004, 12:00:00 GMT">
+<meta name="Robots" content="INDEX, FOLLOW">
+<meta name="Document_Number" content="zHTML xD.0000.0000.0003.0002.">
+<meta name="Author" content="zHTML xD.0000.0000.0003.0002.">
+<meta name="Product_Class" content="">
+<meta name="Product_and_Version" content="iFolder(TM)">
+<meta name="Copyright" content="Copyright Novell, Inc. 1983-2004">
+
+<link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
+
+
+<title>Nápověda aplikace iFolder</title>
+<script type="text/javascript" language="javascript">
+function loadMenu()
+{
+	if ((parent.theMenu) && (parent.theMenu.amBusy == false) && parent.frames[2])
+	{
+	   parent.theMenu.loadScript("../doc/user/data/myifolders.html","../doc/user/data/toc_myifolders.html");
+	}
+	else{ setTimeout("loadMenu()",200);}
+}
+loadMenu();
+</script>
+<script type="text/javascript" language="javascript" src="../../../ui/jsglobal.js"></script>
+</head>
+
+<body onload="">
+<script type="text/javascript" language="javascript">
+  var prev_link="bx08x4y.html";
+  var next_link="bwagrrn.html";
+</script>
+
+<script type="text/javascript" language="javascript" src="../../../ui/topnav.js"></script>
+
+<a name="bwensdb"></a>
+
+<div class="Topic" title="Pravidla pro typy a velikosti souborů, které nemají být synchronizovány">
+
+<h2 class="TOPIC-TITLE"><br />Pravidla pro typy a velikosti souborů, které nemají být synchronizovány</h2>
+<p class="TOPIC">Pokud používáte klienta iFolder se službou Novell iFolder 3.<em class="VERSIONVARIABLE">x</em>, správce služby iFolder může zadat omezení typů souborů a maximální velikosti souborů na úrovni systému, uživatele nebo složek iFolder. Váš účet může být rovněž omezen velikostí místa, které můžete použít pro data ve složkách iFolder, které vlastníte. Pokud máte data v jiných složkách iFolder, místo spotřebované na serveru se započítává do kvóty vlastníka dané složky iFolder.</p>
+<p class="TOPIC">Některé typy souborů se nehodí pro synchronizaci, jako např. soubory operačního systému, skryté soubory vytvořené správcem souborů nebo databáze, které jsou implementovány jako kolekce spojených souborů.  Můžete zahrnout pouze klíčové typy souborů, které sami používáte nebo naopak vyloučit soubory, které s vaší činností pravděpodobně nesouvisí, jako např. soubory mp3. </p>
+<h4 class="BRIDGEHEAD"><br />Soubory operačního systému</h4>
+<p class="TOPIC">Neměli byste převádět systémové adresáře na složky iFolder. Většina systémových souborů se mění zřídka a doporučujeme vést si soubor bitové kopie svého základního systému a klíčového programového vybavení než se pokoušet synchronizovat tyto soubory se serverem.</p>
+<h4 class="BRIDGEHEAD"><br />Skryté soubory</h4>
+<p class="TOPIC">Pokud váš systém souborů používá skryté soubory ke sledování předvoleb zobrazení, správce může omezit tyto typy souborů a vyloučit je v systému z procesu synchronizace. Skryté soubory jsou obvykle platné pouze pro daný počítač, na němž byly vytvořeny, a mění se při každém přístupu k souboru nebo do adresáře. Tyto soubory není třeba uchovávat a výsledkem jejich synchronizace jsou opakující se chyby konfliktu souborů. </p>
+<p class="TOPIC">Aplikace iFolder například automaticky vylučuje dva typy skrytých souborů vytvářených správcem souborů – thumbs.db a DS_Store.</p>
+<h4 class="BRIDGEHEAD"><br />Databázové soubory</h4>
+<p class="TOPIC">Aplikace iFolder synchronizuje jednotlivé soubory nebo změněné části jednotlivých souborů; nesynchronizuje soubory po sadách. Pokud máte databázový soubor, který je implementován jako kolekce spojených souborů, nepokoušejte se o jejich synchronizaci ve složce iFolder.</p>
+<p class="TOPIC">Nepokoušejte se o synchronizaci dat aplikace GroupWise<sup>®</sup> tím, že byste vytvářeli ve složkách iFolder archivy, mezipaměti nebo vzdálené adresáře aplikace GroupWise. Pokud tak učiníte, po několika synchronizacích souborů dojde k porušení datových souborů aplikace GroupWise. Aplikace GroupWise vyžaduje, aby soubory v archivu byly vedeny jako sada souborů.</p> </div>
+
+<script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
+
+</body>
+</html>

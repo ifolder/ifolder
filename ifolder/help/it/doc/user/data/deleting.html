@@ -1,0 +1,90 @@
+﻿
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"><!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Language" content="it">
+
+<meta name="Generator" content="Novell HTML Conversion 10 March 2004">
+<meta name="Generation-Date" content="Sunday, October 23, 2005 15:54">
+<meta name="Content-Date" content="Mon, 22 Oct 2005 12:00:00 GMT">
+<meta name="Robots" content="INDEX, FOLLOW">
+<meta name="Document_Number" content="zHTML xD.0000.0000.0003.0012.">
+<meta name="Author" content="zHTML xD.0000.0000.0003.0012.">
+<meta name="Product_Class" content="">
+<meta name="Product_and_Version" content="iFolder(TM)">
+<meta name="Copyright" content="Copyright Novell, Inc. 1983-2004">
+
+<link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
+
+
+<title>Guida di iFolder</title>
+<script type="text/javascript" language="javascript">
+function loadMenu()
+{
+	if ((parent.theMenu) && (parent.theMenu.amBusy == false) && parent.frames[2])
+	{
+	   parent.theMenu.loadScript("../doc/user/data/myifolders.html","../doc/user/data/toc_myifolders.html");
+	}
+	else{ setTimeout("loadMenu()",200);}
+}
+loadMenu();
+</script>
+<script type="text/javascript" language="javascript" src="../../../ui/jsglobal.js"></script>
+</head>
+
+<body onload="">
+<script type="text/javascript" language="javascript">
+  var prev_link="movelocation.html";
+  var next_link="legal.html";
+</script>
+
+<script type="text/javascript" language="javascript" src="../../../ui/topnav.js"></script>
+
+<a name="deleting"></a>
+
+<div class="Topic" title="Deleting an iFolder">
+
+<h2 class="TOPIC-TITLE"><br />Cancellazione di una cartella iFolder</h2>
+<p class="TOPIC">Se si cancella una cartella iFolder dalla raccolta, vengono eliminati anche la copia locale della cartella e i relativi contenuti. Questa operazione interessa inoltre la relazione di condivisione della cartella iFolder in modi diversi a seconda dei diritti di accesso dell'utente. Nella tabella seguente vengono illustrati gli effetti sulla relazione di condivisione e le cartelle iFolder partecipanti in base ai diritti di accesso di cui dispone l'utente che cancella la cartella iFolder.</p>
+<table class="TABLENOTITLE" border="0" cellpadding="5" cellspacing="0">
+<tr class="HEADERROW"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="brzc2fh"></a><em class="TBLHEAD">Diritto di accesso dell'utente che cancella la cartella iFolder</em></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">Relazione di condivisione</em></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">Copia sul server della cartella iFolder</em></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">Copie partecipanti della cartella iFolder</em></th>
+</tr>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="brzc2fi"></a><p class="ENTRY">Proprietario</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">La relazione di condivisione per la cartella iFolder viene terminata.</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">I metadati e i contenuti della cartella iFolder vengono cancellati dal server. </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Viene annullata la conversione in cartella iFolder della cartella normale. </p></td>
+</tr>
+<tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="brzc2fj"></a><p class="ENTRY">Controllo completo</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Viene annullata la sottoscrizione dell'utente alla condivisione.</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Nessun effetto.</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">La copia locale della cartella iFolder viene convertita nuovamente in cartella normale.</p></td>
+</tr>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="brzc2fk"></a><p class="ENTRY">Lettura/scrittura</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Viene annullata la sottoscrizione dell'utente alla condivisione.</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Nessun effetto.</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">La copia locale della cartella iFolder viene convertita nuovamente in cartella normale.</p></td>
+</tr>
+<tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="brzc2fl"></a><p class="ENTRY">Sola lettura</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Viene annullata la sottoscrizione dell'utente alla condivisione.</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Nessun effetto.</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">La copia locale della cartella iFolder viene convertita nuovamente in cartella normale.</p></td>
+</tr></table>
+
+<p class="TOPIC">La cancellazione di una cartella iFolder non determina la disinstallazione del client iFolder dalla workstation in uso.</p>
+<ol class="STEPLIST">
+<li class="STEP"><a name="bq8ubrz"></a>
+<p class="STEP">Selezionare la cartella iFolder che di desidera cancellare in un manager di file o nel browser delle cartelle iFolder.</p></li>
+
+<li class="STEP"><a name="bq8u9b1"></a>
+<p class="STEP">Fare clic con il pulsante destro del mouse sulla cartella iFolder e scegliere Cancella.</p></li>
+</ol> </div>
+
+<script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
+
+</body>
+</html>
