@@ -1,0 +1,26 @@
+GSOAP=../../soapcpp2
+SOAPH=../../stdsoap2.h
+SOAPC=../../stdsoap2.c
+SOAPCPP=../../stdsoap2.cpp
+CC=gcc
+CPP=g++
+LIBS=
+COFLAGS=-O2
+CWFLAGS=-Wall
+CIFLAGS=-I../..
+CMFLAGS=
+CFLAGS= $(CWFLAGS) $(COFLAGS) $(CIFLAGS) $(CMFLAGS)
+all:		magic magicserver mtmagicserver
+magic:		magic.h magic.cpp $(SOAPH) $(SOAPCPP)
+		$(GSOAP) magic.h
+		$(CPP) $(CFLAGS) -o magic magic.cpp soapC.cpp soapClient.cpp $(SOAPCPP) $(LIBS)
+magicserver:	magic.h magicserver.cpp $(SOAPH) $(SOAPCPP)
+		$(GSOAP) magic.h
+		$(CPP) $(CFLAGS) -o magicserver magicserver.cpp soapC.cpp soapServer.cpp $(SOAPCPP) $(LIBS)
+mtmagicserver:	magic.h mtmagicserver.cpp $(SOAPH) $(SOAPCPP)
+		$(GSOAP) magic.h
+		$(CPP) $(CFLAGS) -o mtmagicserver mtmagicserver.cpp soapC.cpp soapServer.cpp $(SOAPCPP) -lpthread $(LIBS)
+clean:
+		rm -f *.o soapH.h soapStub.h soapC.cpp soapC.c soapClient.cpp soapClient.c soapServer.cpp soapServer.c soap*Proxy.h
+distclean:
+		rm -f *.o *.wsdl *.xsd *.xml *.nsmap *.log soapH.h soapStub.h soapC.cpp soapC.c soapClient.cpp soapClient.c soapServer.cpp soapServer.c soap*Proxy.h magic magicserver mtmagicserver
