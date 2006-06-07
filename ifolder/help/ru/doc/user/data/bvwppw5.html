@@ -1,0 +1,109 @@
+<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Language" content="ru">
+
+<meta name="Generator" content="Novell HTML Conversion 10 March 2004">
+<meta name="Generation-Date" content="Sunday, October 23, 2005 15:54">
+<meta name="Content-Date" content="Mon, 22 Oct 2005 12:00:00 GMT">
+<meta name="Robots" content="INDEX, FOLLOW">
+<meta name="Document_Number" content="zHTML xD.0000.0000.0002.0007.">
+<meta name="Author" content="zHTML xD.0000.0000.0002.0007.">
+<meta name="Product_Class" content="">
+<meta name="Product_and_Version" content="iFolder(TM)">
+<meta name="Copyright" content="Авторские права Novell, Inc. 1983-2004">
+
+<link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
+
+
+<title>Справка iFolder</title>
+<script type="text/javascript" language="javascript">
+function loadMenu()
+{
+	if ((parent.theMenu) && (parent.theMenu.amBusy == false) && parent.frames[2])
+	{
+	   parent.theMenu.loadScript("../doc/user/data/accountsprefs.html","../doc/user/data/toc_accountsprefs.html");
+	}
+	else{ setTimeout("loadMenu()",200);}
+}
+loadMenu();
+</script>
+<script type="text/javascript" language="javascript" src="../../../ui/jsglobal.js"></script>
+</head>
+
+<body onload="">
+<script type="text/javascript" language="javascript">
+  var prev_link="preferences.html";
+  var next_link="bwbirb9.html";
+</script>
+
+<script type="text/javascript" language="javascript" src="../../../ui/topnav.js"></script>
+
+<a name="bvwppw5"></a>
+
+<div class="Topic" title="Конфигурирование параметров локального брандмауэра для трафика iFolder">
+
+<h2 class="TOPIC-TITLE"><br />Конфигурирование параметров локального брандмауэра для трафика iFolder</h2>
+<p class="TOPIC">При использовании локального брандмауэра Вы должны настроить брандмауэр так, чтобы iFolder мог выбрать локальный динамический порт, или сконфигурируйте локальный статический порт клиента iFolder для осуществления локального взаимодействия (на одном и том же компьютере) с сервером Mono XSP. Клиент iFolder использует веб-сервисы Mono XSP для взаимодействия по протоколу HTTP или HTTPS (по умолчанию SSL) с серверами Novell iFolder, на которых у пользователя есть учетные записи. Администратор iFolder конфигурирует сервисы iFolder, определяя, какое взаимодействие (HTTP или HTTPS) используется в Вашей среде.</p>
+<p class="TOPIC">Брандмауэр не блокирует трафик между сервером Mono XSP и сервером Novell iFolder, поскольку Mono XSP использует для трафика стандартные порты HTTP или HTTPS. Однако, если сам пользователь заблокирует трафик между клиентом и сервером Mono-XSP, у клиента не будет возможности взаимодействия с сервером. В этом случае пользователь не сможет зарегистрироваться с помощью учетной записи iFolder и синхронизировать данные iFolder.</p>
+<p class="TOPIC">Изначально в конфигурации iFolder не указан конкретный порт, который следует использовать для взаимодействия клиента с сервером Mono XSP. При первом запуске iFolder он открывает доступный локальный порт для прослушивания запросов с сервера Mono XSP и отправки данных на сервер с помощью Mono XSP. Номер порта записывается в конфигурационный файл, а затем этот порт всегда используется при запуске iFolder, за исключением тех случаев, когда он недоступен. Если порт используется другим приложением, iFolder выбирает следующий доступный порт, перенастраивает его в конфигурационном файле и затем использует новый порт. Например, если другое приложение захватит порт iFolder пока он неактивен, при перезагрузке клиента iFolder он должен выбрать и сконфигурировать другой порт.</p>
+<h4 class="BRIDGEHEAD"><br />Использование локального динамического порта</h4>
+<p class="TOPIC">Если на Вашем компьютере используется локальный брандмауэр, он должен обнаружить локальный трафик между iFolder и сервером Mono XSP, возникающий при синхронизации списка пользователей и данных iFolder между клиентом iFolder и сервером. Разрешите этот трафик, чтобы при запуске клиента не отображалось всплывающее предупреждение. Если разрешить трафик на постоянной основе, Ваш брандмауэр не будет выдавать повторные напоминания.</p>
+<h4 class="BRIDGEHEAD"><br />Использование локального статического порта</h4>
+<p class="TOPIC">При необходимости можно добавить параметр "Web Service Port Range" (Диапазон портов веб-сервиса) в раздел "Service Manager" (Менеджер сервиса) конфигурационного файла Simias, чтобы разрешить серверу Mono-XSP использовать статический порт или диапазон портов для данного локального трафика. Этот порт или диапазон портов может затем быть открыт в брандмауэре для разрешения взаимодействия с сервером Mono-XSP. </p>
+<p class="TOPIC">Конфигурационный файл Simias может располагаться в следующих местах:</p>
+<table class="TABLENOTITLE" border="0" cellpadding="5" cellspacing="0">
+<tr class="HEADERROW"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bwejkc4"></a><em class="TBLHEAD">Операционная система</em></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">Расположение конфигурационного файла Simias</em></th>
+</tr>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bwejkc5"></a><p class="ENTRY">Linux</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">/home/<em class="VARIABLE">username</em>/.local/share/simias/Simias.config</p></td>
+</tr>
+<tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bwejlap"></a><p class="ENTRY">Windows</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">C:\Documents and Settings\<em class="VARIABLE">имя_пользователя</em>\Local Settings\Application Data\simias\Simias.config</p></td>
+</tr>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bwejkc6"></a><p class="ENTRY">Macintosh</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">/Users/<em class="VARIABLE">имя_пользователя</em>/.local/share/simias/Simias.config</p></td>
+</tr></table>
+
+<p class="TOPIC">Добавьте параметр "Web Service Port Range" (Диапазон портов веб-сервиса) в раздел "Service Manager" (Менеджер сервиса) конфигурационного файла Simias. Например:</p> <pre class="CODESAMPLENARROW">&lt;configuration&gt;</pre>
+
+<pre class="CODESAMPLENARROW">  &lt;section name="ServiceManager"&gt;</pre>
+
+<pre class="CODESAMPLENARROW">    &lt;setting name="WebServicePortRange" value="<em class="VARIABLE">monoxsp_port</em>" /&gt;   </pre>
+
+<pre class="CODESAMPLENARROW">  &lt;/section&gt;</pre>
+
+<pre class="CODESAMPLENARROW">&lt;/configuration&gt;</pre>
+
+<p class="TOPIC">Замените <em class="VARIABLE">monoxsp_port</em> номером порта или номерами диапазона портов:</p>
+<ul class="LISTBULLET">
+<li class="BULLETITEM">Укажите значение номера отдельного порта (например, 1234). Этот порт будет использоваться в качестве отдельного статического порта. Например: <pre class="CODESAMPLENARROW">&lt;setting name="WebServicePortRange" value="<em class="VARIABLE">1234</em>" /&gt;</pre>
+</li>
+
+<li class="BULLETITEM">Укажите диапазон портов (например "1234-1236") для использования любого доступного порта в указанном диапазоне. Например: <pre class="CODESAMPLENARROW">&lt;setting name="WebServicePortRange" value="<em class="VARIABLE">1234-1236</em>" /&gt;</pre>
+</li>
+</ul>
+<p class="TOPIC">Для конфигурирования системы с использованием определенного порта или диапазона портов выполните следующие действия:</p>
+<ol class="STEPLIST">
+<li class="STEP"><a name="bw4v93e"></a>
+<p class="STEP">Сконфигурируйте брандмауэр таким образом, чтобы разрешить трафик порта или диапазона портов, которые нужно использовать для работы iFolder.</p>
+<p class="STEP">Для получения информации об открытии порта в брандмауэре см. документацию по брандмауэру.</p></li>
+
+<li class="STEP"><a name="bw4v6ou"></a>
+<p class="STEP">Остановите клиент iFolder, щелкнув правой кнопкой значок iFolder <img src="../graphics/ifolder16.png" alt="Значок приложения iFolder" />, затем выбрав "Выход".</p></li>
+
+<li class="STEP"><a name="bw4v6r7"></a>
+<p class="STEP">Измените конфигурационный файл Simias путем добавления параметра "Web Service Port Range" (Диапазон портов веб-сервиса) в раздел "Service Manager" (Менеджер сервиса).</p></li>
+
+<li class="STEP"><a name="bw4vbz4"></a>
+<p class="STEP">Запустите клиент iFolder.</p>
+<p class="STEP">Дополнительную информацию см. в разделе <a href="bw08fxi.html#bw08fxi">Запуск клиента iFolder</a>.</p></li>
+</ol> </div>
+
+<script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<head>
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=utf-8">
+<meta http-equiv="Content-Language" content="sk">
+
+<meta name="Generator" content="Novell HTML Conversion 10 March 2004">
+<meta name="Generation-Date" content="Sunday, October 23, 2005 15:54">
+<meta name="Content-Date" content="Mon, 22 Oct 2005 12:00:00 GMT">
+<meta name="Robots" content="INDEX, FOLLOW">
+<meta name="Document_Number" content="zHTML xD.0000.0000.0003.0002.">
+<meta name="Author" content="zHTML xD.0000.0000.0003.0002.">
+<meta name="Product_Class" content="">
+<meta name="Product_and_Version" content="Aplikácia iFolder (TM)">
+<meta name="Copyright" content="Copyright Novell, Inc. 1983-2004">
+
+<link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
+
+
+<title>Pomocník aplikácie iFolder</title>
+<script type="text/javascript" language="javascript">
+function loadMenu()
+{
+	if ((parent.theMenu) && (parent.theMenu.amBusy == false) && parent.frames[2])
+	{
+	   parent.theMenu.loadScript("../doc/user/data/myifolders.html","../doc/user/data/toc_myifolders.html");
+	}
+	else{ setTimeout("loadMenu()",200);}
+}
+loadMenu();
+</script>
+<script type="text/javascript" language="javascript" src="../../../ui/jsglobal.js"></script>
+</head>
+
+<body onload="">
+<script type="text/javascript" language="javascript">
+  var prev_link="bx08x4y.html";
+  var next_link="bwagrrn.html";
+</script>
+
+<script type="text/javascript" language="javascript" src="../../../ui/topnav.js"></script>
+
+<a name="bwensdb"></a>
+
+<div class="Topic" title="Pokyny pre typy a veľkosti súborov, ktoré nemajú byť synchronizované">
+
+<h2 class="TOPIC-TITLE"><br />Pokyny pre typy a veľkosti súborov, ktoré nemajú byť synchronizované</h2>
+<p class="TOPIC">Ak je klient aplikácie iFolder používaný so serverom Novell 3.<em class="VERSIONVARIABLE">x</em>, správca aplikácie iFolder môže určiť obmedzenie typu súborov a obmedzenie maximálnej veľkosti súborov pre systém, používateľov i aplikáciu iFolder. Správca môže nastaviť obmedzenie konta používateľa v súvislosti s veľkosťou priečinkov iFolder, ktoré používateľ vlastní. Ak pristupujete k iným priečinkom iFolder, využité miesto na serveri sa započíta vlastníkovi príslušného priečinka iFolder.</p>
+<p class="TOPIC">Niektoré typy súborov nie sú vhodné pre synchronizáciu, napríklad súbory operačného systému, skryté súbory vytvorené správcom súborov alebo databázy implementované kolekciou prepojených súborov. Vhodné je zahrnúť do synchronizácie iba kľúčové typy súborov používané pri práci a vylúčiť súbory, ktoré nemajú vzťah k práci, napríklad súbory MP3. </p>
+<h4 class="BRIDGEHEAD"><br />Súbory operačného systému</h4>
+<p class="TOPIC">Konverzia adresárov systému na priečinky iFolder sa neodporúča. Väčšina súborov sa mení nepravidelne a je lepšie vytvoriť bitový obraz základného systému a kľúčového softvéru ako sa pokúšať tieto súbory synchronizovať na server.</p>
+<h4 class="BRIDGEHEAD"><br />Skryté súbory</h4>
+<p class="TOPIC">Ak súborový systém používa skryté súbory na sledovanie preferencií zobrazenia, správca môže príslušné typy súborov obmedziť a vylúčiť ich zo synchronizácie v systéme. Vo väčšine prípadov sú skryté súbory relevantné iba pre počítač, v ktorom boli vytvorené. Skryté súbory sa môžu zmeniť pri každom prístupe k súborom alebo adresárom, preto skryté súbory nie je potrebné uchovávať a ich synchronizácia môže spôsobiť opakované chyby konfliktov. </p>
+<p class="TOPIC">Aplikácia iFolder automaticky vylučuje dva skryté súbory správcu súborov (thumbs.db a .DS_Store).</p>
+<h4 class="BRIDGEHEAD"><br />Súbory databázy</h4>
+<p class="TOPIC">Aplikácia iFolder synchronizuje jednotlivé súbory a zmenené časti jednotlivých súborov a nesynchronizuje súbory ako skupinu. Ak máte súbor databázy, ktorý je implementovaný ako kolekcia prepojených súborov, nepokúšajte sa v aplikácii iFolder súbory synchronizovať.</p>
+<p class="TOPIC">Nepokúšajte sa synchronizovať údaje servera GroupWise<sup>®</sup> vytváraním archívu servera GroupWise, vyrovnávacou pamäťou ani vzdialenými adresármi s aplikáciou iFolder. V prípade takejto synchronizácie sa po niekoľkých synchronizáciách súboru údaje servera GroupWise poškodia. Server GroupWise vyžaduje, aby boli súbory udržiavané ako množina súborov.</p> </div>
+
+<script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
+
+</body>
+</html>

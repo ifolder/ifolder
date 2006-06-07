@@ -1,0 +1,69 @@
+﻿
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"><!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Language" content="it">
+
+<meta name="Generator" content="Novell HTML Conversion 10 March 2004">
+<meta name="Generation-Date" content="Sunday, October 23, 2005 15:54">
+<meta name="Content-Date" content="Mon, 22 Oct 2005 12:00:00 GMT">
+<meta name="Robots" content="INDEX, FOLLOW">
+<meta name="Document_Number" content="zHTML xD.0000.0000.0003.0003.">
+<meta name="Author" content="zHTML xD.0000.0000.0003.0003.">
+<meta name="Product_Class" content="">
+<meta name="Product_and_Version" content="iFolder(TM)">
+<meta name="Copyright" content="Copyright Novell, Inc. 1983-2004">
+
+<link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
+
+
+<title>Guida di iFolder</title>
+<script type="text/javascript" language="javascript">
+function loadMenu()
+{
+	if ((parent.theMenu) && (parent.theMenu.amBusy == false) && parent.frames[2])
+	{
+	   parent.theMenu.loadScript("../doc/user/data/myifolders.html","../doc/user/data/toc_myifolders.html");
+	}
+	else{ setTimeout("loadMenu()",200);}
+}
+loadMenu();
+</script>
+<script type="text/javascript" language="javascript" src="../../../ui/jsglobal.js"></script>
+</head>
+
+<body onload="">
+<script type="text/javascript" language="javascript">
+  var prev_link="bwensdb.html";
+  var next_link="createifolder.html";
+</script>
+
+<script type="text/javascript" language="javascript" src="../../../ui/topnav.js"></script>
+
+<a name="bwagrrn"></a>
+
+<div class="Topic" title="Naming Conventions for an iFolder and Its Folders and Files">
+
+<h2 class="TOPIC-TITLE"><br />Convenzioni di denominazione per le cartelle iFolder e i relativi file e cartelle</h2>
+<p class="TOPIC">Le convenzioni di denominazione imposte dal client iFolder tengono conto delle limitazioni collettive previste dai file system Linux, Windows e Macintosh. Per poter essere sincronizzate, le cartelle iFolder e i relativi file e cartelle devono avere nomi validi che rispettino le convenzioni di denominazione.</p>
+<p class="TOPIC">Utilizzare le seguenti convenzioni di denominazione:</p>
+<ul class="LISTBULLET">
+<li class="BULLETITEM">iFolder supporta il set di caratteri <a href="http://www.unicode.org" target="_blank" class="ULINK">Unicode*</a> con codifica UTF-8. </li>
+
+<li class="BULLETITEM">Non utilizzare i seguenti caratteri non validi all’interno dei nomi di cartelle iFolder o di file e cartelle in esse contenuti: <pre class="CODESAMPLENARROW">\/:*?"&lt;&gt;|;</pre>
+
+<p class="BULLETITEM">Se si utilizzano i caratteri non validi all’interno di un nome di file o di cartella, verrà generato un conflitto di denominazione, che dovrà essere risolto affinché sia possibile sincronizzare il file o la cartella.</p></li>
+
+<li class="BULLETITEM">La lunghezza massima consentita per il nome di un componente di un singolo percorso è di 255 byte. Per i nomi dei file, la lunghezza massima include il punto (.) e l’estensione.</li>
+
+<li class="BULLETITEM">I nomi di cartelle iFolder, file e cartelle in esse contenuti non fanno distinzione tra maiuscole e minuscole; tuttavia, tale distinzione viene mantenuta. Se i nomi dei file differiscono solo per le maiuscole e le minuscole, verrà generato un conflitto di denominazione, che dovrà essere risolto affinché sia possibile sincronizzare il file o la cartella.</li>
+
+<li class="BULLETITEM">Se si creano cartelle iFolder in un file system FAT32 in Linux, evitare di assegnare ai file nomi con caratteri tutti maiuscoli. La gestione dei file VFAT o FAT32 in Linux modifica automaticamente i nomi dei file che hanno caratteri tutti maiuscoli e che soddisfano il formato file MS-DOS 8.3 da caratteri tutti maiuscoli a caratteri tutti minuscoli. Si determineranno così problemi di sincronizzazione di questi file nel caso in cui la cartella iFolder sia stata configurata con diritto di accesso in sola lettura.</li>
+</ul> </div>
+
+<script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
+
+</body>
+</html>
