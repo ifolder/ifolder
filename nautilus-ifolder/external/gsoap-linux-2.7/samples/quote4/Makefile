@@ -1,0 +1,20 @@
+GSOAP=../../soapcpp2
+SOAPH=../../stdsoap2.h
+SOAPC=../../stdsoap2.c
+SOAPCPP=../../stdsoap2.cpp
+CC=gcc
+CPP=g++
+LIBS=
+COFLAGS=-O2
+CWFLAGS=-Wall
+CIFLAGS=-I../..
+CMFLAGS=
+CFLAGS= $(CWFLAGS) $(COFLAGS) $(CIFLAGS) $(CMFLAGS)
+all:		quote4
+quote4:		quote4.h quote4.cpp $(SOAPH) $(SOAPCPP)
+		$(GSOAP) $(CIFLAGS) quote4.h
+		$(CPP) $(CFLAGS) -o quote4 quote4.cpp dom++.cpp soapC.cpp soapClient.cpp $(SOAPCPP) $(LIBS)
+clean:
+		rm -f *.o soapH.h soapStub.h soapC.cpp soapC.c soapClient.cpp soapClient.c soapServer.cpp soapServer.c soap*Proxy.h
+distclean:
+		rm -f *.o *.wsdl *.xsd *.xml *.nsmap *.log soapH.h soapStub.h soapC.cpp soapC.c soapClient.cpp soapClient.c soapServer.cpp soapServer.c soap*Proxy.h quote4
