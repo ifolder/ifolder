@@ -24,7 +24,9 @@
 #define _IFDOMAIN_H_
 
 //#include <vector>
+#include <glib.h>
 #include "stdsoap2.h"
+#include "IFIterator.h"
 #include "glibclient.h"
 #include "simiasDomain_USCOREx0020_USCOREServiceSoapProxy.h"
 #include "simiasiFolderWebSoapProxy.h"
@@ -33,11 +35,12 @@
 
 // forward declarations
 class IFDomain;
-class IFDomainIterator;
 class IFDomainList;
+class IFiFolderList;
 class XmlNode;
 class XmlTree;
 class Domain;
+
 namespace ifweb
 {
 	class WebService;
@@ -45,6 +48,7 @@ namespace ifweb
 	class iFolderService;
 	class IFServiceManager;
 }
+
 
 //class GLIBCLIENT_API std::vector<IFDomain*>;
 
@@ -65,6 +69,7 @@ public:
 	ifweb::iFolderService		*m_iFS;
 
 private:
+	IFiFolderList *m_iFolders;
 	// Persist everything below here.
 	gchar*		m_UserPassword;
 	gchar*		m_POBoxID;
@@ -82,6 +87,7 @@ public:
 	gboolean	m_Authenticated; // Not persisted.
 	gboolean	m_Active;
 	gboolean	m_Default;
+	gchar		*m_DataPath;
 	
 private:
 	IFDomain(const gchar *host);
@@ -102,27 +108,14 @@ public:
 	static IFDomain* GetDefault();
 	void SetDefault();
 	void SetActive(gboolean state);
+
+	// Methods Dealing with iFolders.
+	IFiFolderIterator GetiFolders(GError **error);
+	IFiFolder* Create(const gchar *path, const gchar *description, GError **error);
+	gboolean Delete(const gchar *pID, GError **error);
+	IFiFolder* Connect(const gchar *id, const gchar *path, GError **error);
 };
 
-class GLIBCLIENT_API IFDomainIterator
-{
-private:
-	GArray				*m_List;
-	guint				m_Index;
-	
-public:
-	IFDomainIterator(GArray* list) {m_List = list; m_Index = 0; }
-	virtual ~IFDomainIterator() {};
-	void Reset() {m_Index = 0; }
-	IFDomain* Next()
-	{
-		if (m_Index >= m_List->len)
-			return NULL;
-		IFDomain *pDomain = g_array_index(m_List, IFDomain*, m_Index);
-		m_Index++;
-		return pDomain;
-	};
-};
 
 class IFDomainList
 {
@@ -133,17 +126,11 @@ private:
 	static			IFDomainList* m_Instance;
 	gchar			*m_pFileName;
 	GArray			*m_List;
-	XmlTree			*m_XmlTree;
-	static gchar	*EDomains;
 	static gfloat	m_Version;
 	
 	IFDomainList(void);
 	virtual ~IFDomainList(void);
 	static IFDomainList* Instance();
-	static void XmlStart(GMarkupParseContext *pContext, const gchar *pName, const gchar **pANames, const gchar **pAValues, gpointer userData, GError **ppError);
-	static void XmlEnd(GMarkupParseContext *pContext, const gchar *pName, gpointer userData, GError **ppError);
-	static void XmlText(GMarkupParseContext *pContext, const gchar *text, gsize textLen, gpointer userData, GError **ppError);
-	static void XmlError(GMarkupParseContext *pContext, GError *pError, gpointer userData);
 	static void Destroy(gpointer data);
 	static void Insert(IFDomain *pDomain);
 	static gint Count();

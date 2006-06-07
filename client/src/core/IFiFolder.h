@@ -26,10 +26,17 @@
 #include <glib.h>
 #include "glibclient.h"
 #include "IFDirectory.h"
+#include "IFIterator.h"
 #include "Xml.h"
+
+// forward declarations
+class IFiFolder;
+class IFiFolderList;
+class IFDomain;
 
 class GLIBCLIENT_API IFiFolder
 {
+	friend class IFiFolderList;
 private:
 	IFDirectory m_RootDir;
 
@@ -47,14 +54,37 @@ private:
 	static IFiFolder* DeSerialize(XmlTree *tree, GNode *pDNode);
 	
 public:
-	IFiFolder(gchar *pPath);
+	IFiFolder(const gchar *pPath);
 	virtual ~IFiFolder(void);
-	static IFiFolder* Create(gchar *pPath);
 	static gboolean IsiFolder(gchar *pPath);
-	int Revert();
-	int Connect();
-	int Sync();
-	int Stop();
+	gboolean Sync(GError **error);
+	gboolean Stop(GError **error);
+};
+
+class IFiFolderList
+{
+	friend class IFiFolder;
+	friend class IFDomain;
+private:
+	IFDomain		*m_pDomain;
+	gchar			*m_pFileName;
+	GArray			*m_List;
+	static gfloat	m_Version;
+	
+	IFiFolderList(IFDomain *pDomain);
+	virtual ~IFiFolderList(void);
+	static void Destroy(gpointer data);
+	void Insert(IFiFolder *piFolder);
+	gint Count();
+	gboolean Remove(const gchar *id);
+	IFiFolderIterator GetIterator();
+	IFiFolder* GetiFolderByID(const gchar *pID);
+	IFiFolder* GetiFolderByName(const gchar *pName);
+	void Save();
+	void Restore();
+
+public:
+	static int Initialize();
 };
 
 #endif //_IFIFOLDER_H_

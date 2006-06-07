@@ -41,6 +41,7 @@ extern GQuark	IF_CORE_ERROR;
 
 #define IF_ERR_ALREADY_INITIALIZED	0xff011000
 #define	IF_ERR_NOT_AUTHENTICATED	0xff011001
+#define IF_ERR_DOES_NOT_EXIST		0xff011002
 
 // Errors returned from simias.
 #define IF_ERR_SuccessInGrace		0xff011100

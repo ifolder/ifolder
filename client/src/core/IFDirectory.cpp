@@ -25,7 +25,7 @@
 #include "IFFileInfo.h"
 
 // Private Methods
-gboolean IFDirectory::Initialize(gchar *pPath, gchar *pDataPath)
+gboolean IFDirectory::Initialize(const gchar *pPath, gchar *pDataPath)
 {
 	m_error = NULL;
 	if (!g_path_is_absolute(pPath))
@@ -238,7 +238,7 @@ gboolean IFDirectory::IsRecursiveLink()
 	return isRecursive;
 }
 
-IFDirectory::IFDirectory(gchar *pPath, gchar *pDataPath, IFDirectory *piFolder)
+IFDirectory::IFDirectory(const gchar *pPath, gchar *pDataPath, IFDirectory *piFolder)
 {
 	Initialize(pPath, pDataPath);
 	m_piFolder = piFolder;
@@ -247,7 +247,7 @@ IFDirectory::IFDirectory(gchar *pPath, gchar *pDataPath, IFDirectory *piFolder)
 //
 // Public Methods
 //
-IFDirectory::IFDirectory(gchar *pPath)
+IFDirectory::IFDirectory(const gchar *pPath)
 {
 	Initialize(pPath, IFApplication::DataPath());
 	m_piFolder = this;

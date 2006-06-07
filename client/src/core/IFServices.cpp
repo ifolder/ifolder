@@ -373,7 +373,7 @@ iFolderIterator* iFolderService::GetiFolders(gint index, gint max, GError **erro
 	return NULL;
 }
 
-iFolder* iFolderService::CreateiFolder(gchar *description, gchar* name, GError **error)
+iFolder* iFolderService::CreateiFolder(const gchar *description, const gchar* name, GError **error)
 {
 	if (!m_pDomain->m_Authenticated)
 	{
@@ -384,8 +384,8 @@ iFolder* iFolderService::CreateiFolder(gchar *description, gchar* name, GError *
 	_ifolder__CreateiFolder req;
 	_ifolder__CreateiFolderResponse resp;
 	// Set the input parameters.
-	req.description = description;
-	req.name = name;
+	req.description = (gchar*)description;
+	req.name = (gchar*)name;
 	
 	gboolean retry = true;
 	while (retry)

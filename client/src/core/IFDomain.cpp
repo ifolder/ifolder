@@ -20,8 +20,9 @@
  *  Author: Russ Young
  *
  ***********************************************************************/
-#include "IFDomain.h"
 #include "IFApplication.h"
+#include "IFDomain.h"
+#include "IFiFolder.h"
 #include "simias.nsmap"
 #include "IFServices.h"
 
@@ -42,6 +43,14 @@ IFDomain::IFDomain(const gchar *host)
 	m_Authenticated = false;
 	m_Active = true;
 	m_Default = false;
+	m_DataPath = g_build_filename(IFApplication::DataPath(), m_ID, NULL);
+	if (g_mkdir_with_parents(m_DataPath, 0700) == -1)
+	{
+		// There was an error creating the directory.
+		g_error("Failed creating path : %s : Error = %d\n", m_DataPath, g_file_error_from_errno(errno));
+	}
+	// Now get the iFolder list;
+	m_iFolders = new IFiFolderList(this);
 	m_DS = ifweb::IFServiceManager::GetDomainService(this, host);
 	m_iFS = ifweb::IFServiceManager::GetiFolderService(this, host);;
 }
@@ -59,6 +68,8 @@ IFDomain::~IFDomain(void)
 	g_free(m_MasterHost);
 	g_free(m_UserName);
 	g_free(m_UserID);
+	g_free(m_DataPath);
+	delete m_iFolders;
 	//if (m_DS != NULL)
 		// TODO delete m_DS;
 	//if (m_iFS != NULL)
@@ -346,9 +357,58 @@ void IFDomain::SetActive(gboolean state)
 	IFDomainList::Save();
 }
 
+// Methods Dealing with iFolders.
+IFiFolderIterator IFDomain::GetiFolders(GError **error)
+{
+	return m_iFolders->GetIterator();
+}
+
+IFiFolder* IFDomain::Create(const gchar *path, const gchar *description, GError **error)
+{
+	IFiFolder *ifolder = NULL;
+	ifweb::iFolder *sfolder = m_iFS->CreateiFolder(path, description, error);
+	if (sfolder != NULL)
+	{
+		ifolder = new IFiFolder(path);
+		ifolder->m_Description = g_strdup(sfolder->Description);
+		ifolder->m_ID = g_strdup(sfolder->ID);
+		ifolder->m_Name = g_strdup(sfolder->Name);
+		ifolder->m_Owner = g_strdup(sfolder->OwnerFullName);
+		delete sfolder;
+		m_iFolders->Insert(ifolder);
+	}
+	return ifolder;
+}
+
+gboolean IFDomain::Delete(const gchar *pID, GError **error)
+{
+	gboolean bstatus = m_iFolders->Remove(pID);
+	if (!bstatus)
+	{
+		g_set_error(error, IF_CORE_ERROR, IF_ERR_DOES_NOT_EXIST, "Does Not exist");
+	}
+	return bstatus;
+}
+
+IFiFolder* IFDomain::Connect(const gchar *id, const gchar *path, GError **error)
+{
+	IFiFolder *ifolder = NULL;
+	ifweb::iFolder *sfolder = m_iFS->GetiFolder(id, error);
+	if (sfolder != NULL)
+	{
+		ifolder = new IFiFolder(path);
+		ifolder->m_Description = g_strdup(sfolder->Description);
+		ifolder->m_ID = g_strdup(sfolder->ID);
+		ifolder->m_Name = g_strdup(sfolder->Name);
+		ifolder->m_Owner = g_strdup(sfolder->OwnerFullName);
+		delete sfolder;
+		m_iFolders->Insert(ifolder);
+	}
+	return ifolder;
+}
+
 // IFDomainList class
 IFDomainList* IFDomainList::m_Instance = NULL;
-gchar	*IFDomainList::EDomains = "Domains";
 gfloat	IFDomainList::m_Version = 1.0;
 	
 IFDomainList::IFDomainList(void)
@@ -443,9 +503,7 @@ void IFDomainList::Save()
 void IFDomainList::Restore()
 {
 	IFDomainList* list = Instance();
-	const GMarkupParser parser = {XmlStart, XmlEnd, XmlText, NULL, XmlError};
-	GMarkupParseContext *pContext = g_markup_parse_context_new(&parser, (GMarkupParseFlags)0, list, NULL);
-
+	
 	gchar *pFileData = NULL;
 	gsize fileLength;
 	GError *pError = NULL;
@@ -456,58 +514,25 @@ void IFDomainList::Restore()
 	}
 	if (pFileData != NULL)
 	{
-		list->m_XmlTree = new XmlTree();
-		if (!g_markup_parse_context_parse(pContext, pFileData, fileLength, &pError))
+		XmlTree *xmlTree = new XmlTree();
+		if (xmlTree->Parse(pFileData, fileLength, &pError))
+		{
+			GNode* dNode = xmlTree->FindChild(NULL, EDomain, IFXElement);
+			while (dNode != NULL)
+			{
+				Insert(IFDomain::DeSerialize(xmlTree, dNode));
+				dNode = xmlTree->FindSibling(dNode, EDomain, IFXElement);
+			}
+		}
+		else
 		{
 			g_debug(pError->message);
 			g_clear_error(&pError);
 		}
-		if (!g_markup_parse_context_end_parse(pContext, &pError))
-		{
-			g_debug(pError->message);
-			g_clear_error(&pError);
-		}
+		delete xmlTree;
 		g_free(pFileData);
-		GNode* dNode = list->m_XmlTree->FindChild(NULL, EDomain, IFXElement);
-		while (dNode != NULL)
-		{
-			Insert(IFDomain::DeSerialize(list->m_XmlTree, dNode));
-			dNode = list->m_XmlTree->FindSibling(dNode, EDomain, IFXElement);
-		}
-		delete list->m_XmlTree;
-		list->m_XmlTree = NULL;
-	}
-	g_markup_parse_context_free(pContext);
-}
-
-void IFDomainList::XmlStart(GMarkupParseContext *pContext, const gchar *pName, const gchar **pANames, const gchar **pAValues, gpointer userData, GError **ppError)
-{
-	IFDomainList *dList = (IFDomainList*)userData;
-	dList->m_XmlTree->StartNode(pName);
-	int i = 0;
-	while (pANames[i] != NULL)
-	{
-		dList->m_XmlTree->AddAttribute(pANames[i], pAValues[i]);
-		i++;
 	}
 }
-
-void IFDomainList::XmlEnd(GMarkupParseContext *pContext, const gchar *pName, gpointer userData, GError **ppError)
-{
-	IFDomainList *dList = (IFDomainList*)userData;
-	dList->m_XmlTree->EndNode();
-}
-
-void IFDomainList::XmlText(GMarkupParseContext *pContext, const gchar *text, gsize textLen, gpointer userData, GError **ppError)
-{
-	IFDomainList *dList = (IFDomainList*)userData;
-	dList->m_XmlTree->AddText(text, textLen);
-}
-
-void IFDomainList::XmlError(GMarkupParseContext *pContext, GError *pError, gpointer userData)
-{
-}
-
 
 IFDomainIterator IFDomainList::GetIterator()
 {

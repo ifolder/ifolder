@@ -27,7 +27,9 @@
 
 // Xml Element Tags.
 gchar *EDomain = "Domain";
+gchar *EDomains = "Domains";
 gchar *EiFolder = "iFolder";
+gchar *EiFolders = "iFolders";
 gchar *EName = "name";
 gchar *EDescription = "description";
 gchar *EUser = "User";
@@ -48,6 +50,28 @@ gchar *EPath = "path";
 XmlTree::XmlTree()
 {
 	m_CurrentNode = m_RootNode = NULL;
+}
+
+gboolean XmlTree::Parse(gchar *pData, gsize dataLength, GError **error)
+{
+	gboolean bStatus = true;
+	const GMarkupParser parser = {XmlStart, XmlEnd, XmlText, NULL, XmlError};
+	GMarkupParseContext *pContext = g_markup_parse_context_new(&parser, (GMarkupParseFlags)0, this, NULL);
+	if (pData != NULL)
+	{
+		if (!g_markup_parse_context_parse(pContext, pData, dataLength, error))
+		{
+			g_debug((*error)->message);
+			bStatus = false;
+		}
+		if (!g_markup_parse_context_end_parse(pContext, error))
+		{
+			g_debug((*error)->message);
+			bStatus = false;
+		}
+	}
+	g_markup_parse_context_free(pContext);
+	return bStatus;
 }
 
 XmlTree::~XmlTree()
@@ -144,4 +168,32 @@ GNode* XmlTree::FindSibling(GNode *sibling, gchar* name, IFXNodeType type)
 		gnode = g_node_next_sibling(gnode);
 	}
 	return gnode;
+}
+
+void XmlTree::XmlStart(GMarkupParseContext *pContext, const gchar *pName, const gchar **pANames, const gchar **pAValues, gpointer userData, GError **ppError)
+{
+	XmlTree *pTree = (XmlTree*)userData;
+	pTree->StartNode(pName);
+	int i = 0;
+	while (pANames[i] != NULL)
+	{
+		pTree->AddAttribute(pANames[i], pAValues[i]);
+		i++;
+	}
+}
+
+void XmlTree::XmlEnd(GMarkupParseContext *pContext, const gchar *pName, gpointer userData, GError **ppError)
+{
+	XmlTree *pTree = (XmlTree*)userData;
+	pTree->EndNode();
+}
+
+void XmlTree::XmlText(GMarkupParseContext *pContext, const gchar *text, gsize textLen, gpointer userData, GError **ppError)
+{
+	XmlTree *pTree = (XmlTree*)userData;
+	pTree->AddText(text, textLen);
+}
+
+void XmlTree::XmlError(GMarkupParseContext *pContext, GError *pError, gpointer userData)
+{
 }

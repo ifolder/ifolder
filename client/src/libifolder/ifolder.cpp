@@ -634,8 +634,7 @@ ifolder_start_synchronization (iFolder *ifolder, bool sync_now, GError **error)
 		return;
 	}
 	
-	g_message ("FIXME: IFiFolder should change to return a GError on IFiFolder::Sync()");
-	((IFiFolder *)priv->core_ifolder)->Sync ();
+	((IFiFolder *)priv->core_ifolder)->Sync (error);
 }
 
 void
@@ -653,8 +652,7 @@ ifolder_stop_synchronization (iFolder *ifolder, GError **error)
 		return;
 	}
 	
-	g_message ("FIXME: IFiFolder should change to return a GError on IFiFolder::Sync()");
-	((IFiFolder *)priv->core_ifolder)->Stop ();
+	((IFiFolder *)priv->core_ifolder)->Stop (error);
 }
 
 void

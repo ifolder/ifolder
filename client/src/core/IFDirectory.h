@@ -42,15 +42,15 @@ class GLIBCLIENT_API IFDirectory
 	IFFileInfoList	*m_pFileList;
 
 private:
-	IFDirectory(gchar *pPath, gchar *pDataPath, IFDirectory *piFolder);
-	gboolean Initialize(gchar *pPath, gchar *pDataPath);
+	IFDirectory(const gchar *pPath, gchar *pDataPath, IFDirectory *piFolder);
+	gboolean Initialize(const gchar *pPath, gchar *pDataPath);
 	void DetectFileChanges(IFFileInfoList *pOldList, IFFileInfoList *pNewList);
 	void DetectDirChanges(IFFileInfoList *pOldList, IFFileInfoList *pNewList);
 	void Remove(gchar *path);
 	gboolean IsRecursiveLink();
 		
 public:
-	IFDirectory(gchar *pPath);
+	IFDirectory(const gchar *pPath);
 	virtual ~IFDirectory(void);
 
 	void DetectChanges();

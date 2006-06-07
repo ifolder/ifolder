@@ -120,7 +120,7 @@ private:
 	~iFolderService() { g_free((gchar*)m_iFolderService.endpoint); };
 public:
 	iFolderIterator* GetiFolders(gint index, gint max, GError **error);
-	iFolder* CreateiFolder(gchar *description, gchar* name, GError **error);
+	iFolder* CreateiFolder(const gchar *description, const gchar* name, GError **error);
 	iFolderIterator* GetiFoldersByName(gint index, gint max, enum ifolder__SearchOperation operation, const gchar* pattern, GError **error);
 	iFolderIterator* GetiFoldersBySearch(time_t after, gint index, gint max, enum ifolder__SearchOperation operation, const gchar* pattern, enum ifolder__MemberRole role, GError **error);
 	gboolean RemoveMembership(const gchar *ifolderID, GError **error);

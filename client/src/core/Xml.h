@@ -27,8 +27,10 @@
 #include "glibclient.h"
 
 // Xml Element Tags.
+extern gchar *EDomains;
 extern gchar *EDomain;
 extern gchar *EiFolder;
+extern gchar *EiFolders;
 extern gchar *EName;
 extern gchar *EDescription;
 extern gchar *EUser;
@@ -69,7 +71,12 @@ public:
 
 	XmlTree();
 	virtual ~XmlTree();
+	static void XmlStart(GMarkupParseContext *pContext, const gchar *pName, const gchar **pANames, const gchar **pAValues, gpointer userData, GError **ppError);
+	static void XmlEnd(GMarkupParseContext *pContext, const gchar *pName, gpointer userData, GError **ppError);
+	static void XmlText(GMarkupParseContext *pContext, const gchar *text, gsize textLen, gpointer userData, GError **ppError);
+	static void XmlError(GMarkupParseContext *pContext, GError *pError, gpointer userData);
 	static gboolean FreeXmlNodes(GNode *pNode, gpointer data);
+	gboolean Parse(gchar *pData, gsize dataLength, GError **error);
 	void StartNode(const gchar *name);
 	void EndNode();
 	void AddText(const gchar *text, gsize len);
