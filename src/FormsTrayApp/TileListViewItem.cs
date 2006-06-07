@@ -134,17 +134,18 @@ namespace Novell.FormsTrayApp
 
 		protected override bool IsInputKey(Keys keyData)
 		{
-			switch (keyData)
+			if ( (keyData & Keys.Up) == Keys.Up ||
+				(keyData & Keys.Down) == Keys.Down ||
+				(keyData & Keys.Left) == Keys.Left ||
+				(keyData & Keys.Right) == Keys.Right ||
+				(keyData & Keys.PageDown) == Keys.PageDown ||
+				(keyData & Keys.PageUp) == Keys.PageUp )
 			{
-				case Keys.Up:
-				case Keys.Down:
-				case Keys.Right:
-				case Keys.Left:
-				case Keys.PageUp:
-				case Keys.PageDown:
-					return true;
-				default:
-					return base.IsInputKey (keyData);
+				return true;
+			}
+			else
+			{
+				return base.IsInputKey (keyData);
 			}
 		}
 
