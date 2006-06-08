@@ -187,6 +187,7 @@ namespace Novell.FormsTrayApp
 			InitializeComponent();
 
 			infoMessage = new NoiFolderMessage();
+			panel2.Controls.Add( infoMessage );
 			progressBar1.Visible = false;
 
 			ifWebService = ifolderWebService;
@@ -1243,8 +1244,8 @@ namespace Novell.FormsTrayApp
 			this.panel2.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
 			this.panel2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel2.BackgroundImage")));
 			this.panel2.ContextMenu = this.iFolderContextMenu;
-			this.panel2.Controls.Add(this.iFolderView);
 			this.panel2.Controls.Add(this.localiFoldersHeading);
+			this.panel2.Controls.Add(this.iFolderView);
 			this.panel2.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("panel2.Dock")));
 			this.panel2.Enabled = ((bool)(resources.GetObject("panel2.Enabled")));
 			this.panel2.Font = ((System.Drawing.Font)(resources.GetObject("panel2.Font")));
@@ -1434,16 +1435,14 @@ namespace Novell.FormsTrayApp
 					ifListView.SelectedIndexChanged += new Novell.FormsTrayApp.iFoldersListView.SelectedIndexChangedDelegate(ifListView_SelectedIndexChanged);
 					ifListView.DoubleClick += new EventHandler(iFolderView_DoubleClick);
 					ifListView.NavigateItem += new Novell.FormsTrayApp.iFoldersListView.NavigateItemDelegate(iFolderView_NavigateItem);
-					ifListView.Location = new Point( 8, panel2.Controls[ panel2.Controls.Count - 1 ].Bottom );
 
 					iFolderListViews.Add( domainInfo.ID, ifListView );
 
 					updateWidth();
 
-					if ( !hide )
-					{
-						panel2.Controls.Add( ifListView );
-					}
+					ifListView.Visible = !hide;
+					panel2.Controls.Add( ifListView );
+					updateView();
 				}
 			}
 
@@ -1492,32 +1491,40 @@ namespace Novell.FormsTrayApp
 				if ( ifListView != null )
 				{
 					domainInfo = ifListView.DomainInfo;
+					foreach (TileListViewItem tlvi in ifListView.Items)
+					{
+						ht.Remove( ((iFolderObject)tlvi.Tag).ID );
+					}
 
 					// Remove the domain.
 					iFolderListViews.Remove( domainID );
 
 					updateWidth();
 
-					if ( !hide )
-					{
-						panel2.Controls.Remove( ifListView );
-					}
+					panel2.Controls.Remove( ifListView );
+					updateView();
 				}
 
 				// Reset the default domain.
-				ifListView = (iFoldersListView)iFolderListViews[ defaultDomainID ];
-				if ( ifListView != null )
+				if ( defaultDomainID != null )
 				{
-					ifListView.DomainInfo.IsDefault = true;
+					ifListView = (iFoldersListView)iFolderListViews[ defaultDomainID ];
+					if ( ifListView != null )
+					{
+						ifListView.DomainInfo.IsDefault = true;
+					}
 				}
 			}
 
-			// Update the domain list file.
-			removeDomainFromFile(domainInfo, defaultDomainID);
-
-			if (RemoveDomain != null)
+			if (domainInfo != null)
 			{
-				RemoveDomain(this, new DomainRemoveEventArgs(domainInfo, defaultDomainID));
+				// Update the domain list file.
+				removeDomainFromFile(domainInfo, defaultDomainID);
+
+				if (RemoveDomain != null)
+				{
+					RemoveDomain(this, new DomainRemoveEventArgs(domainInfo, defaultDomainID));
+				}
 			}
 		}
 
@@ -2079,8 +2086,11 @@ namespace Novell.FormsTrayApp
 			{
 				lock( ht )
 				{
-					TileListViewItem tlvi = addiFolderToAvailableListView( ifolderObject );
-					ht.Add( ifolder.ID, tlvi );
+					if (ht[ifolder.ID] == null)
+					{
+						TileListViewItem tlvi = addiFolderToAvailableListView( ifolderObject );
+						ht.Add( ifolder.ID, tlvi );
+					}
 				}
 			}
 
@@ -2143,29 +2153,23 @@ namespace Novell.FormsTrayApp
 			if ( iFolderView.Items.Count == 0 )
 			{
 				iFolderView.Visible = false;
-
+				infoMessage.Visible = true;
 				infoMessage.Location = point;
-				panel2.Controls.Add( infoMessage );
-				nextY = infoMessage.Top + infoMessage.Height;
+				point.Y += infoMessage.Height;
 			}
 			else
 			{
+				infoMessage.Visible = false;
 				iFolderView.Visible = true;
 				iFolderView.Location = point;
-				nextY = iFolderView.Top + iFolderView.Height;
-
-				// Hide the informational message.
-				panel2.Controls.Remove( infoMessage );
+				point.Y += iFolderView.Height;
 			}
 
-			// Adjust positions of ifolder views
-			if ( !hide )
+			for (int i = 3; i < panel2.Controls.Count; i++)
 			{
-				foreach ( iFoldersListView ifListView in iFolderListViews.Values )
-				{
-					ifListView.Top = nextY;
-					nextY = nextY + ifListView.Height;
-				}
+				Control control = panel2.Controls[i];
+				control.Location = point;
+				point.Y += control.Height;
 			}
 		}
 
@@ -3029,27 +3033,14 @@ namespace Novell.FormsTrayApp
 		{
 			hide = !hide;
 
-			if ( hide )
-			{
-				showiFolders.Text = resourceManager.GetString("viewAvailableiFolders");
-				menuViewAvailable.Checked = false;
+			showiFolders.Text = hide ? resourceManager.GetString("viewAvailableiFolders") :
+				resourceManager.GetString("showiFolders.Text");
+			menuViewAvailable.Checked = !hide;
 
-				// Remove the server listview controls.
-				foreach ( iFoldersListView ifListView in iFolderListViews.Values )
-				{
-					panel2.Controls.Remove( ifListView );
-				}
-			}
-			else
+			// Hide the server listview controls.
+			foreach ( iFoldersListView ifListView in iFolderListViews.Values )
 			{
-				showiFolders.Text = resourceManager.GetString("showiFolders.Text");
-				menuViewAvailable.Checked = true;
-
-				// Add the server listview controls.
-				foreach ( iFoldersListView ifListView in iFolderListViews.Values )
-				{
-					panel2.Controls.Add( ifListView );
-				}
+				ifListView.Visible = !hide;
 			}
 
 			updateView();

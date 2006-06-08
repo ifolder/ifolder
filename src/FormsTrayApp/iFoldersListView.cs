@@ -237,6 +237,9 @@ namespace Novell.FormsTrayApp
 
 		#region Properties
 
+		/// <summary>
+		/// Gets the DomainInformation.
+		/// </summary>
 		public DomainInformation DomainInfo
 		{
 			get
@@ -245,6 +248,17 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
+		/// <summary>
+		/// Gets the TileListViewItemCollection.
+		/// </summary>
+		public TileListViewItemCollection Items
+		{
+			get { return tileListView1.Items; }
+		}
+
+		/// <summary>
+		/// Gets/sets the selected item in the listview.
+		/// </summary>
 		public TileListViewItem SelectedItem
 		{
 			get { return tileListView1.SelectedItem; }
@@ -255,6 +269,11 @@ namespace Novell.FormsTrayApp
 
 		#region Public Methods
 
+		/// <summary>
+		/// Add an iFolder to the listview.
+		/// </summary>
+		/// <param name="ifolderObject">The iFolder object to add to the listview.</param>
+		/// <returns>A TileListViewItem object which represents the iFolder.</returns>
 		public TileListViewItem AddiFolderToListView( iFolderObject ifolderObject )
 		{
 			TileListViewItem tlvi = null;
@@ -265,11 +284,17 @@ namespace Novell.FormsTrayApp
 			return tlvi;
 		}
 
+		/// <summary>
+		/// Finalizes an update.
+		/// </summary>
 		public void FinalizeUpdate()
 		{
 			this.ResumeLayout();
 		}
 
+		/// <summary>
+		/// Initializes an update.
+		/// </summary>
 		public void InitializeUpdate()
 		{
 			tileListView1.Items.Clear();
@@ -277,11 +302,22 @@ namespace Novell.FormsTrayApp
 			this.SuspendLayout();
 		}
 
+		/// <summary>
+		/// Move to a specific item in the listview.
+		/// </summary>
+		/// <param name="row">The row of the item to move to.</param>
+		/// <param name="column">The column of the item to move to.</param>
+		/// <returns><b>True</b> if successful in moving to the object; otherwise, <b>False</b> is returned.</returns>
 		public bool MoveToItem( int row, int column )
 		{
 			return tileListView1.MoveToItem( row, column );
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="iFolderID"></param>
+		/// <param name="state"></param>
 		public void UpdateiFolderStatus( string iFolderID, iFolderState state )
 		{
 			// TODO:
