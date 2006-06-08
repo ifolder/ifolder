@@ -1493,6 +1493,12 @@ namespace Novell.FormsTrayApp
 					domainInfo = ifListView.DomainInfo;
 					foreach (TileListViewItem tlvi in ifListView.Items)
 					{
+						if ( tlvi.Selected )
+						{
+							selectedItem = null;
+							updateMenus(null);
+						}
+
 						ht.Remove( ((iFolderObject)tlvi.Tag).ID );
 					}
 
@@ -2147,7 +2153,6 @@ namespace Novell.FormsTrayApp
 
 		private void updateView()
 		{
-			int nextY;
 			Point point = localiFoldersHeading.Location;
 			point.Y += localiFoldersHeading.Height;
 			if ( iFolderView.Items.Count == 0 )
