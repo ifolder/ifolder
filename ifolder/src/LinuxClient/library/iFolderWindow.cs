@@ -1373,110 +1373,118 @@ namespace Novell.iFolder
 					UriList uriList = new UriList(args.SelectionData);
 					if (uriList.Count == 1)
 					{
-						string path = uriList.ToLocalPaths()[0];
-
-			DomainInformation[] domains = domainController.GetDomains();
-			if (domains.Length <= 0) return;	// FIXME: This should never happen.  Maybe alert the user?
-			string domainID = domains[0].ID;	// Default to the first in the list
-			DomainInformation defaultDomain = domainController.GetDefaultDomain();
-			if (defaultDomain != null)
-				domainID = defaultDomain.ID;
-
-			DragCreateDialog cd = new DragCreateDialog(this, domains, domainID, path);
-			cd.TransientFor = this;
-	
-			int rc = 0;
-			do
-			{
-				rc = cd.Run();
-				cd.Hide();
-
-				if (rc == (int)ResponseType.Ok)
-				{
-					try
-					{
-						string selectedFolder = cd.iFolderPath.Trim();
-						string selectedDomain = cd.DomainID;
-	
-						string parentDir = System.IO.Path.GetDirectoryName( selectedFolder );
-						if ( ( parentDir == null ) || ( parentDir == String.Empty ) )
-						{
-							iFolderMsgDialog dg = new iFolderMsgDialog(
-								this,
-								iFolderMsgDialog.DialogType.Warning,
-								iFolderMsgDialog.ButtonSet.Ok,
-								"",
-								Util.GS("Invalid folder specified"),
-								Util.GS("An invalid folder was specified"));
-							dg.Run();
-							dg.Hide();
-							dg.Destroy();
-							continue;
-						}
-						
-						iFolderHolder ifHolder = null;
+						string path = null;
 						try
 						{
-							ifHolder = 
-								ifdata.CreateiFolder(selectedFolder,
-													 selectedDomain);
+							path = uriList.ToLocalPaths()[0];
 						}
-						catch(Exception e)
+						catch
 						{
-							if (DisplayCreateOrSetupException(e))
-							{
-								// Update the selectedFolder path
-								continue;	// The function handled the exception
-							}
+							return;
 						}
-	
-						if(ifHolder == null)
-							throw new Exception("Simias returned null");
-	
-						// If we make it this far, we've succeeded and we don't
-						// need to keep looping.
-						rc = 0;
-	
-						// Save off the path so that the next time the user
-						// creates an iFolder, we'll open it to the directory
-						// they used last.
-						Util.LastCreatedPath = ifHolder.iFolder.UnManagedPath;
-	
-						if ((bool)ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION))
+
+						DomainInformation[] domains = domainController.GetDomains();
+						if (domains.Length <= 0) return;	// FIXME: This should never happen.  Maybe alert the user?
+						string domainID = domains[0].ID;	// Default to the first in the list
+						DomainInformation defaultDomain = domainController.GetDefaultDomain();
+						if (defaultDomain != null)
+							domainID = defaultDomain.ID;
+			
+						DragCreateDialog cd = new DragCreateDialog(this, domains, domainID, path);
+						cd.TransientFor = this;
+				
+						int rc = 0;
+						do
 						{
-							iFolderCreationDialog dlg = 
-								new iFolderCreationDialog(ifHolder.iFolder);
-							dlg.TransientFor = this;
-							int createRC;
-							do
+							rc = cd.Run();
+							cd.Hide();
+			
+							if (rc == (int)ResponseType.Ok)
 							{
-								createRC = dlg.Run();
-								if(createRC == (int)Gtk.ResponseType.Help)
+								try
 								{
-									Util.ShowHelp("myifolders.html", this);
+									string selectedFolder = cd.iFolderPath.Trim();
+									string selectedDomain = cd.DomainID;
+				
+									string parentDir = System.IO.Path.GetDirectoryName( selectedFolder );
+									if ( ( parentDir == null ) || ( parentDir == String.Empty ) )
+									{
+										iFolderMsgDialog dg = new iFolderMsgDialog(
+											this,
+											iFolderMsgDialog.DialogType.Warning,
+											iFolderMsgDialog.ButtonSet.Ok,
+											"",
+											Util.GS("Invalid folder specified"),
+											Util.GS("An invalid folder was specified"));
+										dg.Run();
+										dg.Hide();
+										dg.Destroy();
+										continue;
+									}
+									
+									iFolderHolder ifHolder = null;
+									try
+									{
+										ifHolder = 
+											ifdata.CreateiFolder(selectedFolder,
+																 selectedDomain);
+									}
+									catch(Exception e)
+									{
+										if (DisplayCreateOrSetupException(e))
+										{
+											// Update the selectedFolder path
+											continue;	// The function handled the exception
+										}
+									}
+				
+									if(ifHolder == null)
+										throw new Exception("Simias returned null");
+				
+									// If we make it this far, we've succeeded and we don't
+									// need to keep looping.
+									rc = 0;
+				
+									// Save off the path so that the next time the user
+									// creates an iFolder, we'll open it to the directory
+									// they used last.
+									Util.LastCreatedPath = ifHolder.iFolder.UnManagedPath;
+				
+									if ((bool)ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION))
+									{
+										iFolderCreationDialog dlg = 
+											new iFolderCreationDialog(ifHolder.iFolder);
+										dlg.TransientFor = this;
+										int createRC;
+										do
+										{
+											createRC = dlg.Run();
+											if(createRC == (int)Gtk.ResponseType.Help)
+											{
+												Util.ShowHelp("myifolders.html", this);
+											}
+										}while(createRC != (int)Gtk.ResponseType.Ok);
+				
+										dlg.Hide();
+					
+										if(dlg.HideDialog)
+										{
+											ClientConfig.Set(
+												ClientConfig.KEY_SHOW_CREATION, false);
+										}
+					
+										cd.Destroy();
+										cd = null;
+									}
 								}
-							}while(createRC != (int)Gtk.ResponseType.Ok);
-	
-							dlg.Hide();
-		
-							if(dlg.HideDialog)
-							{
-								ClientConfig.Set(
-									ClientConfig.KEY_SHOW_CREATION, false);
+								catch (Exception e)
+								{
+									Console.WriteLine(e.Message);
+									continue;
+								}
 							}
-		
-							cd.Destroy();
-							cd = null;
 						}
-					}
-					catch (Exception e)
-					{
-						Console.WriteLine(e.Message);
-						continue;
-					}
-				}
-			}
-			while(rc == (int)ResponseType.Ok);
+						while(rc == (int)ResponseType.Ok);
 
 
 
