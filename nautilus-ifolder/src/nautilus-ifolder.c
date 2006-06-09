@@ -585,7 +585,7 @@ can_be_ifolder (NautilusFileInfo *file)
 {
 	struct soap soap;
 	gchar *folder_path;
-	gboolean b_can_be_ifolder = TRUE;
+	gboolean b_can_be_ifolder = FALSE;
 	char username[512];
 	char password[1024];
 	
