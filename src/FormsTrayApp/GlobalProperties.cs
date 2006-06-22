@@ -3060,31 +3060,54 @@ namespace Novell.FormsTrayApp
 		{
 			bool result = false;
 
-			// This needs to be coded to select the appropriate TileListViewItem object in the listview
+			// Select the appropriate TileListViewItem object in the listview
 			// above or below the current listview.
-/*			if ( !hide && iFolderListViews.Count > 0 )
+			if ( !hide && iFolderListViews.Count > 0 )
 			{
-				bool senderLocalView = false;
-				if ( sender.GetType().Equals( typeof( TileListView ) ) )
+				int index = panel2.Controls.GetChildIndex( sender as Control );
+				
+				try
 				{
-					senderLocalView = true;
+					switch ( e.Direction )
+					{
+						case MoveDirection.Down:
+							if ( index == 1 )
+							{
+								((iFoldersListView)panel2.Controls[3]).MoveToItem( e.Row, e.Column );
+							}
+							else if ( index != panel2.Controls.Count - 1 )
+							{
+								((iFoldersListView)panel2.Controls[index+1]).MoveToItem( e.Row, e.Column );
+							}
+							break;
+						case MoveDirection.Right:
+							if ( index == 1 ) // iFolders on this computer
+							{
+								((iFoldersListView)panel2.Controls[3]).MoveToItem( 0, e.Column );
+							}
+							else if ( index == 3 )
+							{
+								((TileListView)panel2.Controls[1]).MoveToItem( -1, e.Column );
+							}
+							else
+							{
+								((iFoldersListView)panel2.Controls[index-1]).MoveToItem( -1, e.Column );
+							}
+							break;
+						case MoveDirection.Up:
+							if ( index == 3 )
+							{
+								((TileListView)panel2.Controls[1]).MoveToItem( e.Row, e.Column );
+							}
+							else if ( index != 1 )
+							{
+								((iFoldersListView)panel2.Controls[index-1]).MoveToItem( e.Row, e.Column );
+							}
+							break;
+					}
 				}
-
-				foreach ( iFoldersListView ifListView in iFolderListViews.Values )
-				{
-				}
-
-				switch ( e.Direction )
-				{
-					case MoveDirection.Right:
-						if ( senderLocalView )
-						{
-							((iFoldersListView)).MoveToItem( e.Row, e.Column );
-						}
-						break;
-
-				}
-			}*/
+				catch {} // Ignore.
+			}
 
 			return result;
 		}

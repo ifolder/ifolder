@@ -368,6 +368,9 @@ namespace Novell.FormsTrayApp
 			Close();
 		}
 
+		/// <summary>
+		/// Thread used to connect to the server.
+		/// </summary>
 		private void connectToServer()
 		{
 			if ( this.domainInfo != null )
@@ -447,14 +450,14 @@ namespace Novell.FormsTrayApp
 						try
 						{
 							// Check for an update.
-							//TODO:							if (FormsTrayApp.CheckForClientUpdate(domainInfo.ID))
-						{
-							//								if (ShutdownTrayApp != null)
-						{
-							// Shut down the tray app.
-							//									ShutdownTrayApp(this, new EventArgs());
-						}
-						}
+//TODO:							if (FormsTrayApp.CheckForClientUpdate(domainInfo.ID))
+							{
+//								if (ShutdownTrayApp != null)
+								{
+									// Shut down the tray app.
+//									ShutdownTrayApp(this, new EventArgs());
+								}
+							}
 						}
 						catch // Ignore
 						{
@@ -654,6 +657,12 @@ namespace Novell.FormsTrayApp
 
 		#endregion
 
+		#region Public Methods
+		/// <summary>
+		/// Sets the proxy for the domain.
+		/// </summary>
+		/// <param name="hostUrl"></param>
+		/// <param name="unknownScheme"></param>
 		public void SetProxyForDomain( string hostUrl, bool unknownScheme )
 		{
 			UriBuilder ubHost = new UriBuilder( hostUrl );
@@ -698,6 +707,7 @@ namespace Novell.FormsTrayApp
 				}
 			}
 		}
+		#endregion
 
 		#region Properties
 

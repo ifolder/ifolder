@@ -387,6 +387,9 @@ namespace Novell.Wizard
 
 		#region Properties
 
+		/// <summary>
+		/// Gets the identity page.
+		/// </summary>
 		public IdentityPage IdentityPage
 		{
 			get { return identityPage; }
@@ -397,12 +400,12 @@ namespace Novell.Wizard
 		/// </summary>
 		public int MaxPages
 		{
-			get
-			{
-				return maxPages;
-			}
+			get { return maxPages; }
 		}
 
+		/// <summary>
+		/// Gets the server page.
+		/// </summary>
 		public ServerPage ServerPage
 		{
 			get { return serverPage; }
@@ -452,6 +455,10 @@ namespace Novell.Wizard
 
 		#region Public Methods
 
+		/// <summary>
+		/// Method used to connect to the Simias server.
+		/// </summary>
+		/// <returns><b>True</b> if successfully connected; otherwise, <b>False</b> is returned.</returns>
 		public bool ConnectToServer()
 		{
 			bool result = false;

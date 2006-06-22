@@ -337,10 +337,25 @@ namespace Novell.FormsTrayApp
 		public bool MoveToItem( int row, int column )
 		{
 			bool result = false;
+			bool traversingListView = false;
+
+			if ( row == -1 )
+			{
+				traversingListView = true;
+				row = Items.Count / itemsPerRow;
+			}
 
 			if ( column < itemsPerRow )
 			{
 				int index = row * itemsPerRow + column;
+				if ( ( index >= Items.Count ) && traversingListView )
+				{
+					if ( --row >= 0 )
+					{
+						index = row * itemsPerRow + column;
+					}
+				}
+
 				if ( index < Items.Count )
 				{
 					TileListViewItem tlvi = Items[ index ];
