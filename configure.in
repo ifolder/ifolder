@@ -187,7 +187,15 @@ case $IFOLDER_OS in
         STORELIB_PATH="../../external/sqlite/darwin"
         STORELIB="sqlite"
         SYSTEM_XML='System.Xml.dll'
-		GSOAP_PATH="$TOOLDIR/gsoap/macosx-2.7"
+	case $host_cpu in
+		i686*)
+			GSOAP_PATH="$TOOLDIR/gsoap/macosx-x86-2.7"
+		;;
+		*)
+			GSOAP_PATH="$TOOLDIR/gsoap/macosx-2.7"
+		;;
+	esac
+
         #
         # Set pkg-config variables
         #
