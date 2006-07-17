@@ -1,5 +1,6 @@
 # handle Mono secondary dependencies
-GSOAP_DIR=../../tools/gsoap/macosx-2.7
+#GSOAP_DIR=../../tools/gsoap/macosx-2.7
+GSOAP_DIR=$(GSOAP_PATH)
 
 export MONO_PATH := $(MONO_PATH)
 
@@ -24,7 +25,7 @@ all: "$(srcdir)/build/$(BUILDCONF)/iFolder 3.app"
 
 
 "$(srcdir)/build/$(BUILDCONF)/iFolder 3.app": iFolder.xcodeproj
-	xcodebuild -configuration $(BUILDCONF) HEADER_SEARCH_PATHS="../libifolder $(SIMIAS_CLIENT_C_INCLUDES)" LIBRARY_SEARCH_PATHS="../libifolder/.libs $(SIMIAS_CLIENT_C_LIBS)"
+	xcodebuild -configuration $(BUILDCONF) HEADER_SEARCH_PATHS="../libifolder $(SIMIAS_CLIENT_C_INCLUDES)" LIBRARY_SEARCH_PATHS="../libifolder/.libs $(SIMIAS_CLIENT_C_LIBS)" OTHER_LDFLAGS="-bind_at_load"
 
 install-exec-local: "$(srcdir)/build/$(BUILDCONF)/iFolder 3.app"
 	$(mkinstalldirs) $(DESTDIR)$(prefix)/Applications
