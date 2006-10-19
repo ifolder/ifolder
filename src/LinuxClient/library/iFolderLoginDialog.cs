@@ -59,6 +59,10 @@ namespace Novell.iFolder
 			{
 				return passEntry.Text;
 			}
+			set
+			{
+				passEntry.Text = value;
+			}
 		}
 
 		public string Host

@@ -80,30 +80,15 @@ namespace Novell.iFolder
 
 			SetupDialog();
 			
+			this.Response +=
+				new ResponseHandler(OnDialogResponse);
+			
 			// FIXME: Figure out if we need to register for when the window closes so that fields will be saved.
 			// I believe that the FocusOutEventHandlers should already take care of it, but you never know
 		}
 		
 		~EnterpriseAccountDialog()
 		{
-			// Unregister fr domain events
-			if (domainController != null)
-			{
-				domainController.DomainHostModified -=
-					new DomainHostModifiedEventHandler(OnDomainHostModified);
-				domainController.DomainLoggedIn -=
-					new DomainLoggedInEventHandler(OnDomainLoggedIn);
-				domainController.DomainLoggedOut -=
-					new DomainLoggedOutEventHandler(OnDomainLoggedOut);
-				domainController.DomainActivated -=
-					new DomainActivatedEventHandler(OnDomainActivated);
-				domainController.DomainInactivated -=
-					new DomainInactivatedEventHandler(OnDomainInactivated);
-				domainController.NewDefaultDomain -=
-					new DomainNewDefaultEventHandler(OnNewDefaultDomain);
-				domainController.DomainDeleted -=
-					new DomainDeletedEventHandler(OnDomainDeleted);
-			}
 		}
 
 		private void SetupDialog()
@@ -468,6 +453,28 @@ namespace Novell.iFolder
 			
 		}
 		
+		private void OnDialogResponse(object o, ResponseArgs args)
+		{
+			// Unregister for domain events
+			if (domainController != null)
+			{
+				domainController.DomainHostModified -=
+					new DomainHostModifiedEventHandler(OnDomainHostModified);
+				domainController.DomainLoggedIn -=
+					new DomainLoggedInEventHandler(OnDomainLoggedIn);
+				domainController.DomainLoggedOut -=
+					new DomainLoggedOutEventHandler(OnDomainLoggedOut);
+				domainController.DomainActivated -=
+					new DomainActivatedEventHandler(OnDomainActivated);
+				domainController.DomainInactivated -=
+					new DomainInactivatedEventHandler(OnDomainInactivated);
+				domainController.NewDefaultDomain -=
+					new DomainNewDefaultEventHandler(OnNewDefaultDomain);
+				domainController.DomainDeleted -=
+					new DomainDeletedEventHandler(OnDomainDeleted);
+			}
+		}
+		
 		private void InitGlobalCheckButtons()
 		{
 			EnableAccountButton.Active = domain.Active;
@@ -578,7 +585,10 @@ namespace Novell.iFolder
 		private bool SaveServerAddress()
 		{
 			string serverAddress = ServerAddressEntry.Text;
+			string username = domain.MemberName;
+			string password = domainController.GetDomainPassword(domain.ID);
 			bServerAddressChanged = false;
+			bool bHostAddressUpdated = false;
 
 			if (serverAddress == null || serverAddress.Trim().Length == 0)
 			{
@@ -600,16 +610,69 @@ namespace Novell.iFolder
 				ServerAddressEntry.Text = domain.Host;
 				ServerAddressEntry.Changed += new EventHandler(OnServerAddressChanged);
 				
-				return false;
+				return bHostAddressUpdated;
+			}
+			
+			// Make sure that we have a password for calling UpdateDomainHostAddress
+			if (password == null || password.Trim().Length == 0)
+			{
+				Entry tempPasswordEntry = new Entry();
+				tempPasswordEntry.Visibility = false;
+				iFolderMsgDialog dg =
+					new iFolderMsgDialog(
+						this,
+						iFolderMsgDialog.DialogType.Info,
+						iFolderMsgDialog.ButtonSet.OkCancel,
+						"",
+						Util.GS("Please enter your password"),
+						Util.GS("Your password is required to change the address of the server."));
+				dg.ExtraWidget = tempPasswordEntry;
+				tempPasswordEntry.GrabFocus();
+				tempPasswordEntry.ActivatesDefault = true;
+				dg.TransientFor = this;
+				int rc = dg.Run();
+				password = tempPasswordEntry.Text;
+				dg.Hide();
+				dg.Destroy();
+				if ((ResponseType)rc == ResponseType.Cancel)
+				{
+					// Set the ServerAddressEntry back to the original value
+					ServerAddressEntry.Changed -= new EventHandler(OnServerAddressChanged);
+					ServerAddressEntry.Text = domain.Host;
+					ServerAddressEntry.Changed += new EventHandler(OnServerAddressChanged);
+
+					return bHostAddressUpdated;
+				}
+
+				
+				
+				if (password == null || password.Trim().Length == 0)
+				{
+					// Set the ServerAddressEntry back to the original value
+					ServerAddressEntry.Changed -= new EventHandler(OnServerAddressChanged);
+					ServerAddressEntry.Text = domain.Host;
+					ServerAddressEntry.Changed += new EventHandler(OnServerAddressChanged);
+
+					return bHostAddressUpdated;
+				}
 			}
 			
 			serverAddress = serverAddress.Trim();
 			
+			Exception hostAddressUpdateException = null;
 			try
 			{
-				domainController.UpdateDomainHostAddress(domain.ID, serverAddress);
+				if (domainController.UpdateDomainHostAddress(domain.ID, serverAddress, username, password) != null)
+				{
+					bHostAddressUpdated = true;
+				}
 			}
 			catch(Exception e)
+			{
+				hostAddressUpdateException = e;
+			}
+			
+			if (!bHostAddressUpdated)
 			{
 				// FIXME: Register this as a modal window
 				iFolderMsgDialog dg = new iFolderMsgDialog(
@@ -618,8 +681,8 @@ namespace Novell.iFolder
 					iFolderMsgDialog.ButtonSet.Ok,
 					"",
 					Util.GS("Unable to modify the server address"),
-					Util.GS("An error was encountered while attempting to modify the server address."),
-					e.Message);
+					Util.GS("An error was encountered while attempting to modify the server address.  Please verify the address and your password are correct."),
+					hostAddressUpdateException == null ? null : hostAddressUpdateException.Message);
 				dg.Run();
 				dg.Hide();
 				dg.Destroy();
@@ -628,11 +691,9 @@ namespace Novell.iFolder
 				ServerAddressEntry.Changed -= new EventHandler(OnServerAddressChanged);
 				ServerAddressEntry.Text = domain.Host;
 				ServerAddressEntry.Changed += new EventHandler(OnServerAddressChanged);
-				
-				return false;
 			}
 			
-			return true;
+			return bHostAddressUpdated;
 		}
 		
 		private bool SavePassword()

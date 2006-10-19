@@ -35,6 +35,7 @@ public class iFolderWaitDialog : Dialog
 	private ButtonSet		buttonSet;
 	private ProgressBar	progressBar;
 	private Timer			progressBarTimer;
+	private bool			bHideCalled;
 
 	public enum ButtonSet : int
 	{
@@ -123,6 +124,8 @@ public class iFolderWaitDialog : Dialog
 			default:
 				break;
 		}
+		
+		bHideCalled = false;
 	}
 	
 	private void OnRealizeWidget(object o, EventArgs args)
@@ -136,12 +139,14 @@ public class iFolderWaitDialog : Dialog
 	
 	private void UpdateProgress(object state)
 	{
-		GLib.Idle.Add(PulseProgressBar);
+		if (!bHideCalled)
+			GLib.Idle.Add(PulseProgressBar);
 	}
 	
 	private bool PulseProgressBar()
 	{
-		progressBar.Pulse();
+		if (!bHideCalled)
+			progressBar.Pulse();
 		return false; // Prevent GLib.Idle from automatically calling this again
 	}
 	
@@ -175,6 +180,7 @@ public class iFolderWaitDialog : Dialog
 	
 	protected override void OnHidden()
 	{
+		bHideCalled = true;
 		if (progressBarTimer != null)
 		{
 			progressBarTimer.Dispose();

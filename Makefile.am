@@ -1,6 +1,11 @@
-SUBDIRS = src help po
-
+if LINUX
+SUBDIRS = src help-linux po
 DIST_SUBDIRS = $(SUBDIRS) doc package test
+else
+SUBDIRS = src help po
+DIST_SUBDIRS = $(SUBDIRS) doc package test help-linux
+endif
+
 
 # remove all of the CVS directories
 dist-hook:

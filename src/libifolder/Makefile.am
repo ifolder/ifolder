@@ -5,8 +5,9 @@ EXTRA_DIST = ifolder.h
 # Make sure the following files are not included in the dist
 dist-hook:
 	rm -rf `find $(distdir) |grep iFolderClientLib.c`
-	rm -rf `find $(distdir) |grep envC.c`
-	rm -rf `find $(distdir) |grep stdsoap2.c`
+
+#	rm -rf `find $(distdir) |grep envC.c`
+#	rm -rf `find $(distdir) |grep stdsoap2.c`
 
 
 lib_LTLIBRARIES = libifolderclient.la
@@ -14,7 +15,7 @@ lib_LTLIBRARIES = libifolderclient.la
 override CFLAGS =
 
 libifolderclient_la_SOURCES = \
- 	envC.c iFolderClientLib.c stdsoap2.c ifolder.c ifolder.h
+ 	iFolderClientLib.c stdsoap2.h ifolder.c ifolder.h
 
 libifolderclient_la_CFLAGS = \
 	$(SIMIAS_CLIENT_C_CFLAGS) \
@@ -23,19 +24,28 @@ libifolderclient_la_CFLAGS = \
 libifolderclient_la_LDFLAGS = \
 	$(SIMIAS_CLIENT_C_LIBS)
 
-envC.c: $(srcdir)/stdsoap2.c
-	> $(srcdir)/env.h
-	$(GSOAP_PATH)/soapcpp2 -c -penv $(srcdir)/env.h
+#envC.c: $(srcdir)/stdsoap2.c
+#	> $(srcdir)/env.h
+#	$(GSOAP_PATH)/soapcpp2 -c -penv $(srcdir)/env.h
 
-$(srcdir)/stdsoap2.c:
+$(srcdir)/stdsoap2.h:
 	cp $(GSOAP_PATH)/stdsoap2.h $(srcdir)
-	cp $(GSOAP_PATH)/stdsoap2.c $(srcdir)
 
-$(srcdir)/iFolderClient.h: $(srcdir)/stdsoap2.c $(IFOLDER_CLIENT_WSDL)
+#$(srcdir)/iFolderClient.h: $(srcdir)/stdsoap2.c $(IFOLDER_CLIENT_WSDL)
+
+$(srcdir)/iFolderClient.h: $(srcdir)/stdsoap2.h $(IFOLDER_CLIENT_WSDL)
 	$(GSOAP_PATH)/wsdl2h -c -o $@ $(IFOLDER_CLIENT_WSDL)
 
 $(srcdir)/iFolderClientLib.c: $(srcdir)/iFolderClient.h
+	> $(srcdir)/env.h
+	$(GSOAP_PATH)/soapcpp2 -c -penv $(srcdir)/env.h
 	$(GSOAP_PATH)/soapcpp2 -c -n -piFolder $(srcdir)/iFolderClient.h
+
+install-exec-hook:
+if !WINDOWS
+	rm -f $(DESTDIR)$(libdir)/libifolderclient.a
+	rm -f $(DESTDIR)$(libdir)/libifolderclient.la
+endif
 
 install-exec-local:
 	$(mkinstalldirs) $(DESTDIR)$(includedir)/ifolder3

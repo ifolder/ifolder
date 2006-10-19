@@ -3,14 +3,14 @@ AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
 m4_pattern_allow(PKG_CONFIG)
 
-AM_INIT_AUTOMAKE(ifolder3, 3.5)
+AM_INIT_AUTOMAKE(ifolder3, 3.4)
 # Check to see if the BUILDNUM is set by global build
 if test "$BUILDNUM" = ""; then
 	let "BUILDNUM=`date +%G%j`-2000000"
 fi
 
 VERSION=$VERSION.$BUILDNUM.1
-SIMIASVER=1.5.$BUILDNUM.1
+SIMIASVER=1.4.$BUILDNUM.1
 AM_MAINTAINER_MODE
 AC_PROG_CC
 
@@ -187,7 +187,15 @@ case $IFOLDER_OS in
         STORELIB_PATH="../../external/sqlite/darwin"
         STORELIB="sqlite"
         SYSTEM_XML='System.Xml.dll'
-		GSOAP_PATH="$TOOLDIR/gsoap/macosx-2.7"
+	case $host_cpu in
+		i686*)
+			GSOAP_PATH="$TOOLDIR/gsoap/macosx-x86-2.7"
+		;;
+		*)
+			GSOAP_PATH="$TOOLDIR/gsoap/macosx-2.7"
+		;;
+	esac
+
         #
         # Set pkg-config variables
         #
@@ -367,8 +375,18 @@ AC_SUBST(GSOAP_PATH)
 #
 webdir='${libexecdir}/web'
 webbindir='${webdir}/bin'
+# setup 64bit casa path in ifolder script
+case `arch` in
+    x86_64)
+	casadir=/usr/lib64
+	;;
+	*)
+	casadir=/usr/lib
+	;;
+esac
 AC_SUBST(webdir)
 AC_SUBST(webbindir)
+AC_SUBST(casadir)
 
 
 #
@@ -546,6 +564,7 @@ package/linux/Makefile
 package/darwin/Makefile
 doc/Makefile
 help/Makefile
+help-linux/Makefile
 po/Makefile
 ])
 

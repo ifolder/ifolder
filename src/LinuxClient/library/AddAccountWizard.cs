@@ -200,8 +200,7 @@ namespace Novell.iFolder
 						ClientConfig.KEY_IFOLDER_ACCOUNT_SERVER_ADDRESS);
 			}
 			ServerNameEntry.Changed += new EventHandler(UpdateServerInformationPageSensitivity);
-			ServerNameEntry.KeyPressEvent
-				+= new KeyPressEventHandler(OnServerNameEntryKeyPress);
+			ServerNameEntry.ActivatesDefault = true;
 			
 			// Row 3
 			MakeDefaultLabel = new Label(Util.GS("Setting this iFolder Server as your default server will allow iFolder to automatically select this server when adding new folders."));
@@ -270,6 +269,7 @@ namespace Novell.iFolder
 						ClientConfig.KEY_IFOLDER_ACCOUNT_USER_NAME);
 			}
 			UserNameEntry.Changed += new EventHandler(UpdateUserInformationPageSensitivity);
+			UserNameEntry.ActivatesDefault = true;
 
 			// Row 3
 			l = new Label(Util.GS("_Password:"));
@@ -289,6 +289,7 @@ namespace Novell.iFolder
 						ClientConfig.KEY_IFOLDER_ACCOUNT_PASSWORD);
 			}
 			PasswordEntry.Changed += new EventHandler(UpdateUserInformationPageSensitivity);
+			PasswordEntry.ActivatesDefault = true;
 
 			// Row 4
 			RememberPasswordCheckButton = new CheckButton(Util.GS("_Remember my password"));
@@ -753,21 +754,6 @@ namespace Novell.iFolder
 			Util.ShowiFolderWindow();
 		}
 		
-		private void OnServerNameEntryKeyPress(object o, KeyPressEventArgs args)
-		{
-			args.RetVal = true;
-			
-			// Advance to the next page if the user presses return
-			switch(args.Event.Key)
-			{
-				case Gdk.Key.KP_Enter:
-				case Gdk.Key.Return:
-					if (ForwardButton.Sensitive)
-						AccountDruid.Page = UserInformationPage;
-					break;
-			}
-		}
-
 		void KeyPressHandler(object o, KeyPressEventArgs args)
 		{
 			args.RetVal = true;

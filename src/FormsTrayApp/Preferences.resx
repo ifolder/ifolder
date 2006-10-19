@@ -3497,7 +3497,7 @@
     <value>Unable to Verify Identity</value>
   </data>
   <data name="updateHostError">
-    <value>An error was encountered while saving the server value.</value>
+    <value>An error was encountered while saving the server address.  Please verify the server address and the credentials entered then try again.</value>
   </data>
   <data name="removeAccountError">
     <value>An error was encountered while removing the account.</value>

@@ -1481,7 +1481,6 @@
 		<row><td>USERPROFILE</td><td>TARGETDIR</td><td>.:USERPR~1|UserProfile</td><td/><td>0</td><td/></row>
 		<row><td>V1.1.4322</td><td>FRAMEWORK</td><td>V1_1_4~1|v1.1.4322</td><td/><td>0</td><td/></row>
 		<row><td>WEB</td><td>INSTALLDIR</td><td>web</td><td/><td>0</td><td/></row>
-		<row><td>WEB1</td><td>TARGETDIR</td><td>WEB1</td><td/><td>0</td><td/></row>
 		<row><td>WindowsFolder</td><td>TARGETDIR</td><td>.:Windows</td><td/><td>0</td><td/></row>
 		<row><td>WindowsVolume</td><td>TARGETDIR</td><td>.:WinRoot</td><td/><td>0</td><td/></row>
 		<row><td>ZH_CN1</td><td>INSTALLDIR</td><td>zh-CN</td><td/><td>0</td><td/></row>

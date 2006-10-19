@@ -968,12 +968,16 @@
 		3EAD01D80867661F00AB7E6B /* debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				OTHER_LDFLAGS = "";
+				PREBINDING = YES;
 			};
 			name = debug;
 		};
 		3EAD01D90867661F00AB7E6B /* release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				OTHER_LDFLAGS = "";
+				PREBINDING = YES;
 			};
 			name = release;
 		};

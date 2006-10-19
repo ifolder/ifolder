@@ -74,13 +74,10 @@ namespace Novell.iFolder
 		private Gtk.ThreadNotify	iFolderAppStateChanged;
 		private SimiasEventBroker	simiasEventBroker;
 		private	iFolderLoginDialog	LoginDialog;
-//		private bool				logwinShown;
 
-		/// These variables are used to track when to animate the
-		/// iFolder Icon in the notification panel.  The animation
-		/// should only occur when files/folders are actually
-		/// being uploaded/downloaded.
-		private bool				bCollectionIsSynchronizing;
+		/// This variables is used to track the state of the iFolder
+		/// Icon in the notification panel.  The animation should
+		/// only occur when files/folders are being uploaded/downloaded.
 		// 0 = Not animating, 1 = uploading, -1 = downloading
 		private int					currentIconAnimationDirection;
 		
@@ -146,7 +143,6 @@ namespace Novell.iFolder
 
 			tIcon = new TrayIcon("iFolder");
 
-			bCollectionIsSynchronizing = false;
 			currentIconAnimationDirection = 0;
 
 			eBox = new EventBox();
@@ -194,11 +190,6 @@ namespace Novell.iFolder
 			forceShutdown = false;
 
 			ClientUpgradeDialog = null;
-
-//			logwin = new LogWindow();
-//			logwin.Destroyed +=
-//					new EventHandler(LogWindowDestroyedHandler);
-//			logwinShown = false;
 		}
 
 
@@ -404,23 +395,100 @@ namespace Novell.iFolder
 			switch (args.ResponseId)
 			{
 				case Gtk.ResponseType.Ok:
-					Status status =
-						domainController.AuthenticateDomain(
-							LoginDialog.Domain,
-							LoginDialog.Password,
-							LoginDialog.ShouldSavePassword);
-					if (status == null ||
-						(status.statusCode != StatusCodes.Success &&
-						 status.statusCode != StatusCodes.SuccessInGrace))
+					DomainInformation dom = domainController.GetDomain(LoginDialog.Domain);
+					if (dom == null)
 					{
-						Util.ShowLoginError(LoginDialog, status.statusCode);
-					}
-					else
-					{
-						// Login was successful so close the Login dialog
+						iFolderMsgDialog dialog = new iFolderMsgDialog(
+							null,
+							iFolderMsgDialog.DialogType.Error,
+							iFolderMsgDialog.ButtonSet.None,
+							Util.GS("Account Error"),
+							Util.GS("This account has been removed from your computer."),
+							Util.GS("If you wish to connect to this account again, please add it in the Account Settings Dialog."));
+						dialog.Run();
+						dialog.Hide();
+						dialog.Destroy();
+						dialog = null;
+						
 						LoginDialog.Hide();
 						LoginDialog.Destroy();
 						LoginDialog = null;
+						break;
+					}
+
+					try
+					{
+						Status status =
+							domainController.AuthenticateDomain(
+								LoginDialog.Domain,
+								LoginDialog.Password,
+								LoginDialog.ShouldSavePassword);
+						if (status != null)
+						{
+							switch(status.statusCode)
+							{
+								case StatusCodes.Success:
+								case StatusCodes.SuccessInGrace:
+									// Login was successful so close the Login dialog
+									LoginDialog.Hide();
+									LoginDialog.Destroy();
+									LoginDialog = null;
+									break;
+								case StatusCodes.InvalidCertificate:
+									byte[] byteArray = simws.GetCertificate(dom.Host);
+									System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(byteArray);
+
+									iFolderMsgDialog dialog = new iFolderMsgDialog(
+										null,
+										iFolderMsgDialog.DialogType.Question,
+										iFolderMsgDialog.ButtonSet.YesNo,
+										"",
+										Util.GS("Accept the certificate of this server?"),
+										string.Format(Util.GS("iFolder is unable to verify \"{0}\" as a trusted server.  You should examine this server's identity certificate carefully."), dom.Host),
+										cert.ToString(true));
+
+									Gdk.Pixbuf certPixbuf = Util.LoadIcon("gnome-mime-application-x-x509-ca-cert", 48);
+									if (certPixbuf != null && dialog.Image != null)
+										dialog.Image.Pixbuf = certPixbuf;
+
+									int rc = dialog.Run();
+									dialog.Hide();
+									dialog.Destroy();
+									if(rc == -8) // User clicked the Yes button
+									{
+										simws.StoreCertificate(byteArray, dom.Host);
+										OnReLoginDialogResponse(o, args);
+									}
+									else
+									{
+										// Prevent the auto login feature from being called again
+										domainController.DisableDomainAutoLogin(LoginDialog.Domain);
+
+										LoginDialog.Hide();
+										LoginDialog.Destroy();
+										LoginDialog = null;
+									}
+									break;
+								default:
+									Util.ShowLoginError(LoginDialog, status.statusCode);
+									break;
+							}
+						}
+					}
+					catch(Exception e)
+					{
+						iFolderMsgDialog dialog = new iFolderMsgDialog(
+							null,
+							iFolderMsgDialog.DialogType.Error,
+							iFolderMsgDialog.ButtonSet.None,
+							Util.GS("Account Error"),
+							Util.GS("Unable to connect to the iFolder Server"),
+							Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."),
+							e.Message);
+						dialog.Run();
+						dialog.Hide();
+						dialog.Destroy();
+						dialog = null;
 					}
 
 					break;
@@ -446,27 +514,21 @@ namespace Novell.iFolder
 			{
 				// Animate the iFolder Icon only when we're actually uploading
 				// or downloading a file/directory.
-				if (args.Direction == Simias.Client.Event.Direction.Uploading
-					&& bCollectionIsSynchronizing && currentIconAnimationDirection != 1)
+				if (args.ObjectType == ObjectType.File || args.ObjectType == ObjectType.Directory)
 				{
-					gAppIcon.Pixbuf = UploadingPixbuf;
-					currentIconAnimationDirection = 1;
+					if (args.Direction == Simias.Client.Event.Direction.Uploading
+						&& currentIconAnimationDirection != 1)
+					{
+						gAppIcon.Pixbuf = UploadingPixbuf;
+						currentIconAnimationDirection = 1;
+					}
+					else if (args.Direction == Simias.Client.Event.Direction.Downloading
+								&& currentIconAnimationDirection != -1)
+					{
+						gAppIcon.Pixbuf = DownloadingPixbuf;
+						currentIconAnimationDirection = -1;
+					}
 				}
-				else if (args.Direction == Simias.Client.Event.Direction.Downloading
-						 && bCollectionIsSynchronizing
-						 && currentIconAnimationDirection != -1)
-				{
-					gAppIcon.Pixbuf = DownloadingPixbuf;
-					currentIconAnimationDirection = -1;
-				}
-
-				iFolderWindow ifwin = Util.GetiFolderWindow();
-				if(ifwin != null)
-					ifwin.HandleFileSyncEvent(args);
-
-				LogWindow logwin = Util.GetLogWindow(simiasManager);
-				if(logwin != null)
-					logwin.HandleFileSyncEvent(args);
 			}
 			catch {}
 
@@ -559,14 +621,11 @@ namespace Novell.iFolder
 			{
 				case Simias.Client.Event.Action.StartSync:
 				{
-					bCollectionIsSynchronizing = true;
-
 					collectionSynchronizing = args.ID;
 					break;
 				}
 				case Simias.Client.Event.Action.StopSync:
 				{
-					bCollectionIsSynchronizing = false;
 					currentIconAnimationDirection = 0;
 					gAppIcon.Pixbuf = RunningPixbuf;
 
@@ -618,18 +677,6 @@ namespace Novell.iFolder
 					break;
 				}
 			}
-
-			try
-			{
-				iFolderWindow ifwin = Util.GetiFolderWindow();
-				if(ifwin != null)
-					ifwin.HandleSyncEvent(args);
-	
-				LogWindow logwin = Util.GetLogWindow(simiasManager);
-				if(logwin != null)
-					logwin.HandleSyncEvent(args);
-			}
-			catch {}
 		}
 
 
@@ -1228,6 +1275,9 @@ namespace Novell.iFolder
 
 		private void quit_ifolder(object o, EventArgs args)
 		{
+			if (simiasEventBroker != null)
+				simiasEventBroker.AbortEventProcessing();
+
 			if (!forceShutdown)
 			{
 				Util.SaveiFolderWindows();
@@ -1265,7 +1315,7 @@ namespace Novell.iFolder
 
 		private void show_help(object o, EventArgs args)
 		{
-			Util.ShowHelp("front.html", null);
+			Util.ShowHelp(Util.HelpMainPage, null);
 		}
 
 

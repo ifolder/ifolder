@@ -30,6 +30,7 @@ using System.Collections;
 using Gtk;
 using Simias.Client;
 using Simias.Client.Event;
+using Novell.iFolder.Events;
 using Novell.iFolder.Controller;
 
 namespace Novell.iFolder
@@ -51,6 +52,7 @@ namespace Novell.iFolder
 		private ToolButton			ClearButton;
 		private bool				ControlKeyPressed;
 //		private Manager				simiasManager;
+		private SimiasEventBroker	simiasEventBroker;
 		
 
 		/// <summary>
@@ -67,6 +69,26 @@ namespace Novell.iFolder
 			ControlKeyPressed = false;
 			KeyPressEvent += new KeyPressEventHandler(KeyPressHandler);
 			KeyReleaseEvent += new KeyReleaseEventHandler(KeyReleaseHandler);
+			
+			simiasEventBroker = SimiasEventBroker.GetSimiasEventBroker();
+			if (simiasEventBroker != null)
+			{
+				simiasEventBroker.CollectionSyncEventFired +=
+					new CollectionSyncEventHandler(OniFolderSyncEvent);
+				simiasEventBroker.FileSyncEventFired +=
+					new FileSyncEventHandler(OniFolderFileSyncEvent);
+			}
+		}
+
+		~LogWindow()
+		{
+			if (simiasEventBroker != null)
+			{
+				simiasEventBroker.CollectionSyncEventFired -=
+					new CollectionSyncEventHandler(OniFolderSyncEvent);
+				simiasEventBroker.FileSyncEventFired -=
+					new FileSyncEventHandler(OniFolderFileSyncEvent);
+			}
 		}
 
 		void KeyPressHandler(object o, KeyPressEventArgs args)
@@ -238,8 +260,11 @@ namespace Novell.iFolder
 
 
 
-		public void HandleSyncEvent(CollectionSyncEventArgs args)
+		private void OniFolderSyncEvent(object o, CollectionSyncEventArgs args)
 		{
+			if (args == null || args.ID == null || args.Name == null)
+				return;	// Prevent a null object exception
+
 			switch(args.Action)
 			{
 				case Simias.Client.Event.Action.StartLocalSync:
@@ -291,8 +316,11 @@ namespace Novell.iFolder
 		}
 
 
-		public void HandleFileSyncEvent(FileSyncEventArgs args)
+		private void OniFolderFileSyncEvent(object o, FileSyncEventArgs args)
 		{
+			if (args == null || args.CollectionID == null || args.Name == null)
+				return;	// Prevent a null object exception
+
 			try
 			{
 				string message = null;
@@ -432,6 +460,26 @@ namespace Novell.iFolder
 							Util.GS("Read-only iFolder prevented synchronization: {0}"),
 							args.Name);
 						break;
+					case SyncStatus.Busy:
+						message = string.Format(
+							Util.GS("Could not synchronize because the server is busy: {0}"),
+							args.Name);
+						break;
+					case SyncStatus.ClientError:
+						message = string.Format(
+							Util.GS("Client sent bad data and could not synchronize: {0}"),
+							args.Name);
+						break;
+					case SyncStatus.InUse:
+						message = string.Format(
+							Util.GS("Could not synchronize because this file is in use: {0}"),
+							args.Name);
+						break;
+					case SyncStatus.ServerFailure:
+						message = string.Format(
+							Util.GS("Updating the metadata for this file failed: {0}"),
+							args.Name);
+						break;
 					default:
 						message = string.Format(
 							Util.GS("iFolder failed synchronization: {0}"),
@@ -452,136 +500,154 @@ namespace Novell.iFolder
 
 		private void SaveLog()
 		{
-			int rc = 0;
-			bool saveFile = true;
-			string filename = null;
-			
-			string initialPath = Util.LastSavedSyncLogPath;
-			
-			FileChooserDialog fcd = new FileChooserDialog(
-				Util.GS("Save as..."), this,
-				FileChooserAction.Save,
-				Stock.Cancel, ResponseType.Cancel,
-                Stock.Save, ResponseType.Ok);
-
-            fcd.SelectMultiple = false;
-            
-            fcd.CurrentName = Util.GS("Untitled iFolder Synchronization Log.txt");
-            
-            if (initialPath != null)
-            	fcd.SetCurrentFolder(initialPath);
-
-			while (saveFile)
+			try
 			{
-				rc = fcd.Run();
-				fcd.Hide();
+				int rc = 0;
+				bool saveFile = true;
+				string filename = null;
+				
+				string initialPath = Util.LastSavedSyncLogPath;
+				
+				FileChooserDialog fcd = new FileChooserDialog(
+					Util.GS("Save as..."), this,
+					FileChooserAction.Save,
+					Stock.Cancel, ResponseType.Cancel,
+	                Stock.Save, ResponseType.Ok);
 	
-				if(rc == (int)ResponseType.Ok)
+	            fcd.SelectMultiple = false;
+	            
+	            fcd.CurrentName = Util.GS("Untitled iFolder Synchronization Log.txt");
+	            
+	            if (initialPath != null)
+	            	fcd.SetCurrentFolder(initialPath);
+	
+				while (saveFile)
 				{
-					filename = fcd.Filename;
-					
-					if(File.Exists(filename))
+					rc = fcd.Run();
+					fcd.Hide();
+		
+					if(rc == (int)ResponseType.Ok)
 					{
-						iFolderMsgDialog dialog = new iFolderMsgDialog(
-							this,
-							iFolderMsgDialog.DialogType.Question,
-							iFolderMsgDialog.ButtonSet.YesNo,
-							"",
-							Util.GS("Overwrite the existing file?"),
-							Util.GS("The file you selected exists.  Selecting yes will overwrite the contents of this file."));
-						rc = dialog.Run();
-						dialog.Hide();
-						dialog.Destroy();
-						if(rc != -8)
-							saveFile = false;
-					}
-				}
-				else
-					break;	// out of the while loop
-	
-				if(saveFile)
-				{
-					FileStream fs = null;
-					try
-					{
-						fs = File.Create(filename);
-					}
-					catch (System.UnauthorizedAccessException uae)
-					{
-						iFolderMsgDialog dg = new iFolderMsgDialog(
-							this,
-							iFolderMsgDialog.DialogType.Error,
-							iFolderMsgDialog.ButtonSet.Ok,
-							"",
-							Util.GS("Insufficient access"),
-							Util.GS("You do not have access to save the file in the location you specified.  Please select a different location."));
-						dg.Run();
-						dg.Hide();
-						dg.Destroy();
-
-						continue;	// To the next iteration of the while loop
-					}
-					catch (Exception e)
-					{
-						iFolderMsgDialog dg = new iFolderMsgDialog(
-							this,
-							iFolderMsgDialog.DialogType.Error,
-							iFolderMsgDialog.ButtonSet.Ok,
-							"",
-							Util.GS("Error saving the log file"),
-							string.Format(Util.GS("An exception occurred trying to save the log: {0}"), e.Message),
-							e.StackTrace);
-						dg.Run();
-						dg.Hide();
-						dg.Destroy();
-
-						continue;	// To the next iteration of the while loop
-					}
-	
-					if(fs != null)
-					{
-						TreeIter iter;
-						StreamWriter w = new StreamWriter(fs);
-	
-						if(LogTreeStore.GetIterFirst(out iter))
-						{
-							string logEntry = 
-								(string)LogTreeStore.GetValue(iter, 0);
-	
-							w.WriteLine(logEntry);
-	
-							while(LogTreeStore.IterNext(ref iter))
-							{
-								logEntry = 
-									(string)LogTreeStore.GetValue(iter, 0);
-	
-								w.WriteLine(logEntry);
-							}
-						}
+						filename = fcd.Filename;
 						
-						w.Close();
-	
-						Util.LastSavedSyncLogPath = filename;
-	
-						break;
+						if(File.Exists(filename))
+						{
+							iFolderMsgDialog dialog = new iFolderMsgDialog(
+								this,
+								iFolderMsgDialog.DialogType.Question,
+								iFolderMsgDialog.ButtonSet.YesNo,
+								"",
+								Util.GS("Overwrite the existing file?"),
+								Util.GS("The file you selected exists.  Selecting yes will overwrite the contents of this file."));
+							rc = dialog.Run();
+							dialog.Hide();
+							dialog.Destroy();
+							if(rc != -8)
+								saveFile = false;
+						}
 					}
 					else
+						break;	// out of the while loop
+		
+					if(saveFile)
 					{
-						iFolderMsgDialog dg = new iFolderMsgDialog(
-							this,
-							iFolderMsgDialog.DialogType.Error,
-							iFolderMsgDialog.ButtonSet.Ok,
-							"",
-							Util.GS("Error saving the log file"),
-							Util.GS("The iFolder Client experienced an error trying to save the log.  Please report this bug."));
-						dg.Run();
-						dg.Hide();
-						dg.Destroy();
+						FileStream fs = null;
+						try
+						{
+							fs = File.Create(filename);
+						}
+						catch (System.UnauthorizedAccessException uae)
+						{
+							iFolderMsgDialog dg = new iFolderMsgDialog(
+								this,
+								iFolderMsgDialog.DialogType.Error,
+								iFolderMsgDialog.ButtonSet.Ok,
+								"",
+								Util.GS("Insufficient access"),
+								Util.GS("You do not have access to save the file in the location you specified.  Please select a different location."));
+							dg.Run();
+							dg.Hide();
+							dg.Destroy();
+	
+							continue;	// To the next iteration of the while loop
+						}
+						catch (Exception e)
+						{
+							iFolderMsgDialog dg = new iFolderMsgDialog(
+								this,
+								iFolderMsgDialog.DialogType.Error,
+								iFolderMsgDialog.ButtonSet.Ok,
+								"",
+								Util.GS("Error saving the log file"),
+								string.Format(Util.GS("An exception occurred trying to save the log: {0}"), e.Message),
+								e.StackTrace);
+							dg.Run();
+							dg.Hide();
+							dg.Destroy();
+	
+							continue;	// To the next iteration of the while loop
+						}
+		
+						if(fs != null)
+						{
+							TreeIter iter;
+							StreamWriter w = new StreamWriter(fs);
+		
+							if(LogTreeStore.GetIterFirst(out iter))
+							{
+								string logEntry = 
+									(string)LogTreeStore.GetValue(iter, 0);
+		
+								w.WriteLine(logEntry);
+		
+								while(LogTreeStore.IterNext(ref iter))
+								{
+									logEntry = 
+										(string)LogTreeStore.GetValue(iter, 0);
+		
+									w.WriteLine(logEntry);
+								}
+							}
+							
+							w.Close();
+		
+							Util.LastSavedSyncLogPath = filename;
+		
+							break;
+						}
+						else
+						{
+							iFolderMsgDialog dg = new iFolderMsgDialog(
+								this,
+								iFolderMsgDialog.DialogType.Error,
+								iFolderMsgDialog.ButtonSet.Ok,
+								"",
+								Util.GS("Error saving the log file"),
+								Util.GS("The iFolder Client experienced an error trying to save the log.  Please report this bug."));
+							dg.Run();
+							dg.Hide();
+							dg.Destroy();
+						}
 					}
 				}
+	
+				fcd.Destroy();
 			}
-
-			fcd.Destroy();
+			catch(Exception e)
+			{
+				iFolderMsgDialog dg = new iFolderMsgDialog(
+					this,
+					iFolderMsgDialog.DialogType.Error,
+					iFolderMsgDialog.ButtonSet.Ok,
+					"",
+					Util.GS("Error saving the log file"),
+					Util.GS("The iFolder Client experienced an exception trying to save the log.  Please report this bug.")
+					+ "\n\n" +
+					Util.GS("Please ensure you have the lastest updates of gtk2 and gtk-sharp2 installed on your system."));
+				dg.Run();
+				dg.Hide();
+				dg.Destroy();
+			}
 		}
 
 

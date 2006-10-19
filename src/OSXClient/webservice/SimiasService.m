@@ -27,6 +27,7 @@
 #import "Simias.h"
 #import "AuthStatus.h"
 #import "MemberSearchResults.h"
+#import "applog.h"
 
 typedef struct soap_struct
 {
@@ -50,7 +51,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 	SOAP_DATA	*pSoap;
 	[super init];
 	simiasURL = [[NSString stringWithFormat:@"%@/Simias.asmx", [[Simias getInstance] simiasURL]] retain];
-//	NSLog(@"Initialized SimiasService on URL: %@", simiasURL);
+//	ifconlog2(@"Initialized SimiasService on URL: %@", simiasURL);
 	
 	soapData = malloc(sizeof(SOAP_DATA));
 	pSoap = (SOAP_DATA *)soapData;
@@ -85,6 +86,8 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 			pSoap->soap->passwd = pSoap->password;
 		}
 	}
+	
+	[self readCredentials];
 	
 	pSoap->instanceLock = [[NSRecursiveLock alloc] init];
 	
@@ -758,7 +761,9 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 // Sets the Address for the specified domainID
 //----------------------------------------------------------------------------
 -(BOOL) SetDomainHostAddress:(NSString *)domainID
-							NewHostAddress:(NSString *)hostAddress
+							withAddress:(NSString *)hostAddress
+							forUser:(NSString *)userName
+							withPassword:(NSString *)password
 {
     int err_code;
 	BOOL setHostResult = NO;
@@ -769,9 +774,13 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 
 	NSAssert( (domainID != nil), @"domainID was nil");
 	NSAssert( (hostAddress != nil), @"hostAddress was nil");
+	NSAssert( (userName != nil), @"userName was nil");
+	NSAssert( (password != nil), @"password was nil");
 
 	setAddrMessage.domainID = (char *)[domainID UTF8String];
 	setAddrMessage.hostAddress = (char *)[hostAddress UTF8String];
+	setAddrMessage.user = (char *)[userName UTF8String];
+	setAddrMessage.password = (char *)[password UTF8String];
 	
     err_code = soap_call___ns1__SetDomainHostAddress(
 			pSoap,
@@ -965,7 +974,7 @@ void unlockSimiasSoap(void *soapData)
 		[simiasURL release];
 	
 	simiasURL = [[NSString stringWithFormat:@"%@/Simias.asmx", [[Simias getInstance] simiasURL]] retain];
-	NSLog(@"Initialized SimiasService on URL: %@", simiasURL);	
+	ifconlog2(@"Initialized SimiasService on URL: %@", simiasURL);	
 }
 
 @end

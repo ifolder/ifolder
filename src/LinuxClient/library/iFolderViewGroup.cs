@@ -56,7 +56,7 @@ namespace Novell.iFolder
 		private static uint				rebuildTimeout = 20;
 		private uint						rebuildTableTimeoutID;
 		
-		private static int				ItemMaxWidth = 300;
+		private static int				ItemMaxWidth = 250;
 		
 		private int						currentWidth;
 		
@@ -281,7 +281,7 @@ namespace Novell.iFolder
 			
 			nameLabel = new Label(
 				string.Format(
-					"<span size=\"xx-large\">{0}</span>",
+					"<span size=\"x-large\">{0}</span>",
 					GLib.Markup.EscapeText(name)));
 			contentVBox.PackStart(nameLabel, false, false, 0);
 			nameLabel.UseMarkup = true;

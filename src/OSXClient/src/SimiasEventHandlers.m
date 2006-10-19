@@ -28,6 +28,7 @@
 #include "applog.h"
 
 SimiasEventClient simiasEventClient;
+BOOL connectClients=FALSE;
 
 
 void SimiasEventInitialize(void)
@@ -43,6 +44,8 @@ void SimiasEventInitialize(void)
 		[[NSApp delegate] addLogTS:NSLocalizedString(@"Error registering the events", nil)];
 		return;
 	}
+	
+	connectClients = TRUE;
 
 	[[NSApp delegate] addLogTS:NSLocalizedString(@"Events initialized and registered", nil)];
 }
@@ -50,6 +53,7 @@ void SimiasEventInitialize(void)
 
 void SimiasEventDisconnect(void)
 {
+	connectClients = FALSE;
 	sec_set_event(simiasEventClient, ACTION_NODE_CREATED, false, nil, nil);
 	sec_set_event(simiasEventClient, ACTION_NODE_DELETED, false, nil, nil);
 	sec_set_event(simiasEventClient, ACTION_NODE_CHANGED, false, nil, nil);
@@ -74,25 +78,31 @@ int SimiasEventStateCallBack(SEC_STATE_EVENT state_event, const char *message, v
 	
 	SimiasEventClient *sec = (SimiasEventClient *)data;
 
-	switch(state_event)
+	if(sec != NULL)
 	{
-		case SEC_STATE_EVENT_CONNECTED:
-			ifconlog1(@"Event client connected");
-			//[[NSApp delegate] simiasHasStarted];
-			sec_set_event(*sec, ACTION_NODE_CREATED, true, (SimiasEventFunc)SimiasEventNode, nil);
-			sec_set_event(*sec, ACTION_NODE_DELETED, true, (SimiasEventFunc)SimiasEventNode, nil);
-			sec_set_event(*sec, ACTION_NODE_CHANGED, true, (SimiasEventFunc)SimiasEventNode, nil);
+		switch(state_event)
+		{
+			case SEC_STATE_EVENT_CONNECTED:
+				if(	connectClients )
+				{
+					ifconlog1(@"Event client connected");
+					//[[NSApp delegate] simiasHasStarted];
+					sec_set_event(*sec, ACTION_NODE_CREATED, true, (SimiasEventFunc)SimiasEventNode, nil);
+					sec_set_event(*sec, ACTION_NODE_DELETED, true, (SimiasEventFunc)SimiasEventNode, nil);
+					sec_set_event(*sec, ACTION_NODE_CHANGED, true, (SimiasEventFunc)SimiasEventNode, nil);
 
-			sec_set_event(*sec, ACTION_COLLECTION_SYNC, true, (SimiasEventFunc)SimiasEventSyncCollection, nil);
-			sec_set_event(*sec, ACTION_FILE_SYNC, true, (SimiasEventFunc)SimiasEventSyncFile, nil);
-			sec_set_event(*sec, ACTION_NOTIFY_MESSAGE, true, (SimiasEventFunc)SimiasEventNotifyMessage, nil);
-			break;
-		case SEC_STATE_EVENT_DISCONNECTED:
-			ifconlog1(@"Event client disconnected!");
-			break;
-		case SEC_STATE_EVENT_ERROR:
-			ifconlog1(@"ERROR with Simias Event Client");
-			break;
+					sec_set_event(*sec, ACTION_COLLECTION_SYNC, true, (SimiasEventFunc)SimiasEventSyncCollection, nil);
+					sec_set_event(*sec, ACTION_FILE_SYNC, true, (SimiasEventFunc)SimiasEventSyncFile, nil);
+					sec_set_event(*sec, ACTION_NOTIFY_MESSAGE, true, (SimiasEventFunc)SimiasEventNotifyMessage, nil);
+				}
+				break;
+			case SEC_STATE_EVENT_DISCONNECTED:
+				ifconlog1(@"Event client disconnected!");
+				break;
+			case SEC_STATE_EVENT_ERROR:
+				ifconlog1(@"ERROR with Simias Event Client");
+				break;
+		}
 	}
     [pool release];	
 	return 0;

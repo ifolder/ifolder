@@ -72,6 +72,17 @@ namespace Novell.iFolder.Web
 		public iFolderUser()
 		{
 		}
+/*
+		public iFolderUser(Simias.Storage.Member member)
+		{
+			this.Name = member.Name;
+			this.UserID = member.UserID;
+			this.Rights = member.Rights.ToString();
+			this.ID = member.ID;
+			this.State = "Member";
+			this.IsOwner = member.IsOwner;
+		}
+*/
 
 		/// <summary>
 		/// </summary>
@@ -106,7 +117,31 @@ namespace Novell.iFolder.Web
 				}
 			}
 		}
+/*
+		public iFolderUser(Simias.Storage.Member member,
+							Novell.AddressBook.Contact contact)
+		{
+			if(contact != null)
+			{
+				Novell.AddressBook.Name name;
+			
+				name = contact.GetPreferredName();
+				if(name != null)
+				{
+					this.Surname = name.Family;
+					this.FirstName = name.Given;
+				}
+				this.FN = contact.FN;
+			}
 
+			this.Name = member.Name;
+			this.UserID = member.UserID;
+			this.ID = member.ID;
+			this.State = "Member";
+			this.IsOwner = member.IsOwner;
+			this.Rights = member.Rights.ToString();
+		}
+*/
 		/// <summary>
 		/// </summary>
 		/// <param name="sub"></param>
@@ -131,9 +166,8 @@ namespace Novell.iFolder.Web
 			this.Rights = sub.SubscriptionRights.ToString();
 			this.ID = sub.ID;
 			this.iFolderID = sub.SubscriptionCollectionID;
+			this.State = "Invited";
 			this.IsOwner = false;
-#if ( !REMOVE_OLD_INVITATION )
-			this.State = domain.SupportsNewInvitation ? "Ready" : "Invited";
 
 			if(sub.SubscriptionState == 
 				Simias.POBox.SubscriptionStates.Invited)
@@ -163,9 +197,61 @@ namespace Novell.iFolder.Web
 			{
 				this.State = "Unknown";
 			}
-#else
-			this.State = "Ready";
-#endif
 		}
+/*
+		public iFolderUser(Simias.POBox.Subscription sub,
+							Novell.AddressBook.Contact contact)
+		{
+			if(contact != null)
+			{
+				Novell.AddressBook.Name name;
+			
+				name = contact.GetPreferredName();
+				if(name != null)
+				{
+					this.Surname = name.Family;
+					this.FirstName = name.Given;
+				}
+				this.FN = contact.FN;
+			}
+
+			this.Name = sub.ToName;
+			this.UserID = sub.ToIdentity;
+			this.Rights = sub.SubscriptionRights.ToString();
+			this.ID = sub.ID;
+			this.iFolderID = sub.SubscriptionCollectionID;
+			this.State = "Invited";
+			this.IsOwner = false;
+
+			if(sub.SubscriptionState == 
+							Simias.POBox.SubscriptionStates.Invited)
+			{
+				this.State = "WaitSync";
+			}
+			else if(sub.SubscriptionState == 
+							Simias.POBox.SubscriptionStates.Posted)
+			{
+				this.State = "Invited";
+			}
+			else if(sub.SubscriptionState == 
+							Simias.POBox.SubscriptionStates.Pending)
+			{
+				this.State = "AccessRequest";
+			}
+			else if(sub.SubscriptionState == 
+							Simias.POBox.SubscriptionStates.Responded)
+			{
+				if(sub.SubscriptionDisposition ==
+								Simias.POBox.SubscriptionDispositions.Declined)
+					this.State = "Declined";
+				else
+					this.State = "Unknown";
+			}
+			else
+			{
+				this.State = "Unknown";
+			}
+		}
+*/
 	}
 }

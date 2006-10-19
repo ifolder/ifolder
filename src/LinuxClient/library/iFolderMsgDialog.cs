@@ -253,6 +253,7 @@ public class iFolderMsgDialog : Dialog
 		
 		defaultButton.CanDefault = true;
 		defaultButton.GrabFocus();
+		defaultButton.GrabDefault();
 	}
 	
 //	private void ShowDetailsButtonPressed(object o, EventArgs args)

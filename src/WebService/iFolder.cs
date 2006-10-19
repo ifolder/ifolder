@@ -213,15 +213,12 @@ namespace Novell.iFolder.Web
 			this.OwnerID = subscription.FromIdentity;
 			this.CurrentUserRights = subscription.SubscriptionRights.ToString();
 
-#if ( !REMOVE_OLD_INVITATION )
 			if(	(subscription.SubscriptionState == 
 								SubscriptionStates.Ready) ||
 						(subscription.SubscriptionState == 
 								SubscriptionStates.Received) )
 			{
-#endif
 				this.State = "Available";
-#if ( !REMOVE_OLD_INVITATION )
 			}
 			else if(subscription.SubscriptionState == 
 									SubscriptionStates.Replied)
@@ -233,11 +230,21 @@ namespace Novell.iFolder.Web
 			{
 				this.State = "WaitSync";
 			}
+/*			else if(	(subscription.SubscriptionState == 
+								SubscriptionStates.Replied) ||
+						(subscription.SubscriptionState == 
+								SubscriptionStates.Delivered) ||
+						(subscription.SubscriptionState == 
+								SubscriptionStates.Pending) ||
+						(subscription.SubscriptionState == 
+								SubscriptionStates.Responded) ||
+						(subscription.SubscriptionState == 
+								SubscriptionStates.Acknowledged) )
+*/
 			else
 			{
 				this.State = "Unknown";
 			}
-#endif
 		}
 	}
 }

@@ -42,7 +42,7 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 - (id)initWithSoapData:(void *)soapdata
 {
 	[super init];
-	simiasURL = [[NSString stringWithFormat:@"%@/simias10/Simias.asmx", [[Simias getInstance] simiasURL]] retain];
+	simiasURL = [[NSString stringWithFormat:@"%@/Simias.asmx", [[Simias getInstance] simiasURL]] retain];
 	results = NULL;
 	domainID = nil;
 	searchContext = nil;

@@ -74,6 +74,8 @@ namespace Novell.iFolder
 		private iFolderWaitDialog	WaitDialog;
 		
 		private DomainProviderUI domainProviderUI;
+		
+		private iFolderLoginDialog	LoginDialog;
 
 		/// <summary>
 		/// Default constructor for iFolderAccountsPage
@@ -491,9 +493,9 @@ namespace Novell.iFolder
 					if (dom != null)
 					{
 						if (!dom.Authenticated)
-							LoginDomain(dom, iter);
+							LoginDomain(dom);
 						else
-							LogoutDomain(dom, iter);
+							LogoutDomain(dom);
 					}
 				}
 			}
@@ -502,81 +504,94 @@ namespace Novell.iFolder
 			onlineToggleButton.Activatable = true;
 		}
 		
-		private void LoginDomain(DomainInformation dom, TreeIter iter)
+		private void LoginDomain(DomainInformation dom)
 		{
 			try
 			{
-				bool bSavePassword = false;
-				string password = domainController.GetDomainPassword(dom.ID);
-				if (password != null)
-					bSavePassword = true;
-				else
+				LoginDialog =
+					new iFolderLoginDialog(dom.ID, dom.Name, dom.MemberName);
+				if (!Util.RegisterModalWindow(LoginDialog))
 				{
-					// Prompt the user for their password
-					iFolderLoginDialog dialog =
-						new iFolderLoginDialog(
-							dom.ID, dom.Name, dom.MemberName);
-					int rc = dialog.Run();
-					dialog.Hide();
-					if (rc == (int)ResponseType.Ok)
-					{
-						password = dialog.Password;
-						bSavePassword = dialog.ShouldSavePassword;
-					}
-					else
-					{
-						dialog.Destroy();
-						return;	// The user decided not to login
-					}
-
-					dialog.Destroy();
-				}
-
-				if (WaitDialog != null)
-				{
-					WaitDialog.Hide();
-					WaitDialog.Destroy();
-					WaitDialog = null;
-				}
-				
-				VBox vbox = new VBox(false, 0);
-				Image connectingImage = new Image(Util.ImagesPath("ifolder-add-account48.png"));
-				vbox.PackStart(connectingImage, false, false, 0);
-	
-				WaitDialog = 
-					new iFolderWaitDialog(
-						topLevelWindow,
-						vbox,
-						iFolderWaitDialog.ButtonSet.None,
-						Util.GS("Connecting..."),
-						Util.GS("Connecting..."),
-						Util.GS("Please wait while your iFolder account is connecting."));
-
-				if (!Util.RegisterModalWindow(WaitDialog))
-				{
-					try
-					{
-						Util.CurrentModalWindow.Present();
-					}
-					catch{}
-					WaitDialog.Destroy();
+					LoginDialog.Destroy();
+					LoginDialog = null;
 					return;
 				}
-				WaitDialog.Show();
 				
-				DomainLoginThread domainLoginThread =
-					new DomainLoginThread(domainController);
+				LoginDialog.Response +=
+					new ResponseHandler(OnLoginDialogResponse);
 				
-				domainLoginThread.Completed +=
-					new DomainLoginCompletedHandler(OnDomainLoginCompleted);
-					
-				domainLoginThread.Login(dom.ID, password, bSavePassword);
+				LoginDialog.ShowAll();
+				
+				string password = domainController.GetDomainPassword(dom.ID);
+				if (password != null)
+				{
+					LoginDialog.Hide();
+					LoginDialog.Password = password;
+					LoginDialog.Respond(Gtk.ResponseType.Ok);
+				}
 			}
 			catch
 			{
 				Util.ShowLoginError(topLevelWindow, StatusCodes.Unknown);
 
 				UpdateDomainStatus(dom.ID);
+			}
+		}
+		
+		private void OnLoginDialogResponse(object o, ResponseArgs args)
+		{
+			switch (args.ResponseId)
+			{
+				case Gtk.ResponseType.Ok:
+					DomainInformation dom = domainController.GetDomain(LoginDialog.Domain);
+
+					if (WaitDialog != null)
+					{
+						WaitDialog.Hide();
+						WaitDialog.Destroy();
+						WaitDialog = null;
+					}
+					
+					VBox vbox = new VBox(false, 0);
+					Image connectingImage = new Image(Util.ImagesPath("ifolder-add-account48.png"));
+					vbox.PackStart(connectingImage, false, false, 0);
+		
+					WaitDialog = 
+						new iFolderWaitDialog(
+							topLevelWindow,
+							vbox,
+							iFolderWaitDialog.ButtonSet.None,
+							Util.GS("Connecting..."),
+							Util.GS("Connecting..."),
+							Util.GS("Please wait while your iFolder account is connecting."));
+	
+					if (!Util.RegisterModalWindow(WaitDialog))
+					{
+						try
+						{
+							Util.CurrentModalWindow.Present();
+						}
+						catch{}
+						WaitDialog.Destroy();
+						return;
+					}
+					WaitDialog.Show();
+					
+					DomainLoginThread domainLoginThread =
+						new DomainLoginThread(domainController);
+					
+					domainLoginThread.Completed +=
+						new DomainLoginCompletedHandler(OnDomainLoginCompleted);
+						
+					domainLoginThread.Login(dom.ID, LoginDialog.Password, LoginDialog.ShouldSavePassword);
+
+					break;
+				case Gtk.ResponseType.Cancel:
+				case Gtk.ResponseType.DeleteEvent:
+					LoginDialog.Hide();
+					LoginDialog.Destroy();
+					LoginDialog = null;
+					break;
 			}
 		}
 		
@@ -593,27 +608,71 @@ namespace Novell.iFolder
 
 			if (authStatus != null)
 			{
-				if (authStatus.statusCode == StatusCodes.Success ||
-					authStatus.statusCode == StatusCodes.SuccessInGrace)
+				switch (authStatus.statusCode)
 				{
-					UpdateWidgetSensitivity();
-				}
-				else
-				{
-					Util.ShowLoginError(topLevelWindow, authStatus.statusCode);
+					case StatusCodes.Success:
+					case StatusCodes.SuccessInGrace:
+						if (LoginDialog != null)
+						{
+							LoginDialog.Hide();
+							LoginDialog.Destroy();
+							LoginDialog = null;
+						}
+						UpdateWidgetSensitivity();
+						break;
+					case StatusCodes.InvalidCertificate:
+						DomainInformation dom = domainController.GetDomain(args.DomainID);
+						byte[] byteArray = simws.GetCertificate(dom.Host);
+						System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(byteArray);
 
-					UpdateDomainStatus(args.DomainID);
+						iFolderMsgDialog dialog = new iFolderMsgDialog(
+							null,
+							iFolderMsgDialog.DialogType.Question,
+							iFolderMsgDialog.ButtonSet.YesNo,
+							"",
+							Util.GS("Accept the certificate of this server?"),
+							string.Format(Util.GS("iFolder is unable to verify \"{0}\" as a trusted server.  You should examine this server's identity certificate carefully."), dom.Host),
+							cert.ToString(true));
+
+						Gdk.Pixbuf certPixbuf = Util.LoadIcon("gnome-mime-application-x-x509-ca-cert", 48);
+						if (certPixbuf != null && dialog.Image != null)
+							dialog.Image.Pixbuf = certPixbuf;
+
+						int rc = dialog.Run();
+						dialog.Hide();
+						dialog.Destroy();
+						if(rc == -8) // User clicked the Yes button
+						{
+							simws.StoreCertificate(byteArray, dom.Host);
+							LoginDialog.Respond(Gtk.ResponseType.Ok);
+						}
+						else
+						{
+							LoginDialog.Respond(Gtk.ResponseType.Cancel);
+						}
+						break;
+					default:
+						Util.ShowLoginError(topLevelWindow, authStatus.statusCode);
+						
+						if (LoginDialog != null)
+							LoginDialog.Present();
+	
+						UpdateDomainStatus(args.DomainID);
+						break;
 				}
 			}
 			else
 			{
 				Util.ShowLoginError(topLevelWindow, StatusCodes.Unknown);
+				
+				if (LoginDialog != null)
+					LoginDialog.Present();
 
 				UpdateDomainStatus(args.DomainID);
 			}
 		}
 		
-		private void LogoutDomain(DomainInformation dom, TreeIter iter)
+		private void LogoutDomain(DomainInformation dom)
 		{
 			try
 			{

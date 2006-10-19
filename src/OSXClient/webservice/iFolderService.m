@@ -25,6 +25,7 @@
 #include "iFolderStub.h"
 #include "ifolder.nsmap"
 #import "Simias.h"
+#import "applog.h"
 
 typedef struct soap_struct
 {
@@ -52,7 +53,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	SOAP_DATA	*pSoap;
 	[super init];
 	simiasURL = [[NSString stringWithFormat:@"%@/iFolder.asmx", [[Simias getInstance] simiasURL]] retain];
-//	NSLog(@"Initialized iFolderService on URL: %@", simiasURL);
+//	ifconlog2(@"Initialized iFolderService on URL: %@", simiasURL);
 
 	soapData = malloc(sizeof(SOAP_DATA));
 	pSoap = (SOAP_DATA *)soapData;
@@ -78,6 +79,9 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	{
 		memset(pSoap->password, 0, 1024);
 	}
+
+	[self readCredentials];
+
 
 /*
 	if( (pSoap->username != NULL) && (pSoap->password != NULL) && (pSoap->soap != NULL) )
@@ -1586,7 +1590,7 @@ void unlockSoap(void *soapData)
 		[simiasURL release];
 	
 	simiasURL = [[NSString stringWithFormat:@"%@/iFolder.asmx", [[Simias getInstance] simiasURL]] retain];
-	NSLog(@"Initialized iFolderService on URL: %@", simiasURL);
+	ifconlog2(@"Initialized iFolderService on URL: %@", simiasURL);
 }
 
 @end

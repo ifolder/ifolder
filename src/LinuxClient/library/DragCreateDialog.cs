@@ -35,7 +35,7 @@ namespace Novell.iFolder
 		private string				initialPath;
 		private string				folderName;
 		private string				folderPath;
-		TextView						descriptionTextView;
+//		TextView						descriptionTextView;
 		private Expander				optionsExpander;
 
 		public string iFolderPath
@@ -62,12 +62,13 @@ namespace Novell.iFolder
 		{
 			get
 			{
-				return descriptionTextView.Buffer.Text;
+//				return descriptionTextView.Buffer.Text;
+				return "";
 			}
-			set
-			{
-				descriptionTextView.Buffer.Text = value;
-			}
+//			set
+//			{
+//				descriptionTextView.Buffer.Text = value;
+//			}
 		}
 
 		///
@@ -196,6 +197,7 @@ namespace Novell.iFolder
 			
 			domainComboBox.Active = defaultDomain;
 
+/*
 			l = new Label(Util.GS("Description:"));
 			l.Xalign = 0;
 			optionsTable.Attach(l, 1,2,1,2,
@@ -214,6 +216,7 @@ namespace Novell.iFolder
 			sw.Add(descriptionTextView);
 			optionsTable.Attach(sw, 2,3,1,2,
 								AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
+*/
 			
 			optionsTable.ShowAll();
 			

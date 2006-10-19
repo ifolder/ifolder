@@ -50,6 +50,7 @@ namespace Novell.iFolder
 		private iFolderWebService	ifws;
 		private SimiasWebService	simws;
 		private iFolderData		ifdata;
+		private SimiasEventBroker	simiasEventBroker;
 
 		private Statusbar			MainStatusBar;
 		private ProgressBar		SyncBar;
@@ -210,6 +211,15 @@ namespace Novell.iFolder
 				domainController.DomainLoggedOut +=
 					new DomainLoggedOutEventHandler(OnDomainLoggedOutEvent);
 			}
+			
+			simiasEventBroker = SimiasEventBroker.GetSimiasEventBroker();
+			if (simiasEventBroker != null)
+			{
+				simiasEventBroker.CollectionSyncEventFired +=
+					new CollectionSyncEventHandler(OniFolderSyncEvent);
+				simiasEventBroker.FileSyncEventFired +=
+					new FileSyncEventHandler(OniFolderFileSyncEvent);
+			}
 		}
 		
 		~iFolderWindow()
@@ -224,6 +234,14 @@ namespace Novell.iFolder
 					new DomainLoggedInEventHandler(OnDomainLoggedInEvent);
 				domainController.DomainLoggedOut -=
 					new DomainLoggedOutEventHandler(OnDomainLoggedOutEvent);
+			}
+			
+			if (simiasEventBroker != null)
+			{
+				simiasEventBroker.CollectionSyncEventFired -=
+					new CollectionSyncEventHandler(OniFolderSyncEvent);
+				simiasEventBroker.FileSyncEventFired -=
+					new FileSyncEventHandler(OniFolderFileSyncEvent);
 			}
 		}
 
@@ -353,7 +371,7 @@ namespace Novell.iFolder
 			SyncNowMenuItem.Activated += new EventHandler(OnSynchronizeNow);
 
 			RevertMenuItem = 
-				new ImageMenuItem (Util.GS("C_hange to a normal folder"));
+				new ImageMenuItem (Util.GS("_Revert to a normal folder"));
 			RevertMenuItem.Image = new Image(Stock.Undo, Gtk.IconSize.Menu);
 			iFolderMenu.Append(RevertMenuItem);
 			RevertMenuItem.Activated += new EventHandler(RemoveiFolderHandler);
@@ -480,7 +498,7 @@ namespace Novell.iFolder
 		private Widget CreateActions()
 		{
 			VBox actionsVBox = new VBox(false, 0);
-			actionsVBox.WidthRequest = 250;
+			actionsVBox.WidthRequest = 175;
 
 			///
 			/// Spacer
@@ -494,7 +512,7 @@ namespace Novell.iFolder
 			///
 			l = new Label(
 				string.Format(
-					"<span size=\"x-large\">{0}</span>",
+					"<span size=\"large\">{0}</span>",
 					Util.GS("Filter")));
 			actionsVBox.PackStart(l, false, false, 0);
 			l.UseMarkup = true;
@@ -534,7 +552,7 @@ namespace Novell.iFolder
 			///
 			l = new Label(
 				string.Format(
-					"<span size=\"x-large\">{0}</span>",
+					"<span size=\"large\">{0}</span>",
 					Util.GS("General Actions")));
 			actionsVBox.PackStart(l, false, false, 0);
 			l.UseMarkup = true;
@@ -556,7 +574,7 @@ namespace Novell.iFolder
 			AddiFolderButton.Relief = ReliefStyle.None;
 
 			Label buttonText = new Label(
-				string.Format("<span size=\"large\">{0}</span>",
+				string.Format("<span>{0}</span>",
 							  Util.GS("Upload a folder...")));
 //							  Util.GS("Upload a folder")));
 			hbox.PackStart(buttonText, false, false, 4);
@@ -576,7 +594,7 @@ namespace Novell.iFolder
 			ShowHideAllFoldersButton.Relief = ReliefStyle.None;
 
 			ShowHideAllFoldersButtonText = new Label(
-				string.Format("<span size=\"large\">{0}</span>",
+				string.Format("<span>{0}</span>",
 							  Util.GS("View available iFolders")));
 			hbox.PackStart(ShowHideAllFoldersButtonText, false, false, 4);
 			ShowHideAllFoldersButtonText.UseMarkup = true;
@@ -601,7 +619,7 @@ namespace Novell.iFolder
 			actionsVBox.PackStart(SynchronizedFolderTasks, false, false, 0);
 			l = new Label(
 				string.Format(
-					"<span size=\"x-large\">{0}</span>",
+					"<span size=\"large\">{0}</span>",
 					Util.GS("iFolder Actions")));
 			SynchronizedFolderTasks.PackStart(l, false, false, 0);
 			l.UseMarkup = true;
@@ -623,7 +641,7 @@ namespace Novell.iFolder
 			OpenSynchronizedFolderButton.Relief = ReliefStyle.None;
 
 			buttonText = new Label(
-				string.Format("<span size=\"large\">{0}</span>",
+				string.Format("<span>{0}</span>",
 							  Util.GS("Open...")));
 			hbox.PackStart(buttonText, false, false, 4);
 			buttonText.UseMarkup = true;
@@ -644,7 +662,7 @@ namespace Novell.iFolder
 			ResolveConflictsButton.Relief = ReliefStyle.None;
 
 			buttonText = new Label(
-				string.Format("<span size=\"large\">{0}</span>",
+				string.Format("<span>{0}</span>",
 							  Util.GS("Resolve conflicts...")));
 			hbox.PackStart(buttonText, false, false, 4);
 			buttonText.UseMarkup = true;
@@ -663,7 +681,7 @@ namespace Novell.iFolder
 			SynchronizeNowButton.Relief = ReliefStyle.None;
 
 			buttonText = new Label(
-				string.Format("<span size=\"large\">{0}</span>",
+				string.Format("<span>{0}</span>",
 							  Util.GS("Synchronize now")));
 			hbox.PackStart(buttonText, true, true, 4);
 			buttonText.UseMarkup = true;
@@ -683,7 +701,7 @@ namespace Novell.iFolder
 			ShareSynchronizedFolderButton.Relief = ReliefStyle.None;
 
 			buttonText = new Label(
-				string.Format("<span size=\"large\">{0}</span>",
+				string.Format("<span>{0}</span>",
 							  Util.GS("Share with...")));
 			hbox.PackStart(buttonText, true, true, 4);
 			buttonText.UseMarkup = true;
@@ -703,7 +721,7 @@ namespace Novell.iFolder
 			RemoveiFolderButton.Relief = ReliefStyle.None;
 
 			buttonText = new Label(
-				string.Format("<span size=\"large\">{0}</span>",
+				string.Format("<span>{0}</span>",
 							  Util.GS("Revert to a normal folder")));
 			hbox.PackStart(buttonText, true, true, 4);
 			buttonText.UseMarkup = true;
@@ -722,7 +740,7 @@ namespace Novell.iFolder
 			ViewFolderPropertiesButton.Relief = ReliefStyle.None;
 
 			buttonText = new Label(
-				string.Format("<span size=\"large\">{0}</span>",
+				string.Format("<span>{0}</span>",
 							  Util.GS("Properties...")));
 			hbox.PackStart(buttonText, true, true, 4);
 			buttonText.UseMarkup = true;
@@ -742,7 +760,7 @@ namespace Novell.iFolder
 			DownloadAvailableiFolderButton.Relief = ReliefStyle.None;
 
 			buttonText = new Label(
-				string.Format("<span size=\"large\">{0}</span>",
+				string.Format("<span>{0}</span>",
 							  Util.GS("Download...")));
 			hbox.PackStart(buttonText, true, true, 4);
 			buttonText.UseMarkup = true;
@@ -762,7 +780,7 @@ namespace Novell.iFolder
 			DeleteFromServerButton.Relief = ReliefStyle.None;
 
 			buttonText = new Label(
-				string.Format("<span size=\"large\">{0}</span>",
+				string.Format("<span>{0}</span>",
 							  Util.GS("Delete from server")));
 			hbox.PackStart(buttonText, true, true, 4);
 			buttonText.UseMarkup = true;
@@ -782,7 +800,7 @@ namespace Novell.iFolder
 			RemoveMembershipButton.Relief = ReliefStyle.None;
 
 			buttonText = new Label(
-				string.Format("<span size=\"large\">{0}</span>",
+				string.Format("<span>{0}</span>",
 							  Util.GS("Remove my membership")));
 			hbox.PackStart(buttonText, true, true, 4);
 			buttonText.UseMarkup = true;
@@ -827,7 +845,7 @@ namespace Novell.iFolder
 			
 			// Row 1: Header
 			Label l = new Label(
-				string.Format("<span size=\"large\">{0}</span>",
+				string.Format("<span>{0}</span>",
 							   Util.GS("There are no iFolders on this computer.  To set up an iFolder, do one of the following:")));
 			table.Attach(l,
 						 0, 2,
@@ -1355,112 +1373,118 @@ namespace Novell.iFolder
 					UriList uriList = new UriList(args.SelectionData);
 					if (uriList.Count == 1)
 					{
-						string path = uriList.ToLocalPaths()[0];
-
-			DomainInformation[] domains = domainController.GetDomains();
-			if (domains.Length <= 0) return;	// FIXME: This should never happen.  Maybe alert the user?
-			string domainID = domains[0].ID;	// Default to the first in the list
-			DomainInformation defaultDomain = domainController.GetDefaultDomain();
-			if (defaultDomain != null)
-				domainID = defaultDomain.ID;
-
-			DragCreateDialog cd = new DragCreateDialog(this, domains, domainID, path);
-			cd.TransientFor = this;
-	
-			int rc = 0;
-			do
-			{
-				rc = cd.Run();
-				cd.Hide();
-
-				if (rc == (int)ResponseType.Ok)
-				{
-					try
-					{
-						string selectedFolder	= cd.iFolderPath.Trim();
-						string selectedDomain	= cd.DomainID;
-						string description		= cd.Description;
-	
-						string parentDir = System.IO.Path.GetDirectoryName( selectedFolder );
-						if ( ( parentDir == null ) || ( parentDir == String.Empty ) )
-						{
-							iFolderMsgDialog dg = new iFolderMsgDialog(
-								this,
-								iFolderMsgDialog.DialogType.Warning,
-								iFolderMsgDialog.ButtonSet.Ok,
-								"",
-								Util.GS("Invalid folder specified"),
-								Util.GS("An invalid folder was specified"));
-							dg.Run();
-							dg.Hide();
-							dg.Destroy();
-							continue;
-						}
-						
-						iFolderHolder ifHolder = null;
+						string path = null;
 						try
 						{
-							ifHolder = 
-								ifdata.CreateiFolder(selectedFolder,
-													 selectedDomain,
-													 description);
+							path = uriList.ToLocalPaths()[0];
 						}
-						catch(Exception e)
+						catch
 						{
-							if (DisplayCreateOrSetupException(e))
-							{
-								// Update the selectedFolder path
-								continue;	// The function handled the exception
-							}
+							return;
 						}
-	
-						if(ifHolder == null)
-							throw new Exception("Simias returned null");
-	
-						// If we make it this far, we've succeeded and we don't
-						// need to keep looping.
-						rc = 0;
-	
-						// Save off the path so that the next time the user
-						// creates an iFolder, we'll open it to the directory
-						// they used last.
-						Util.LastCreatedPath = ifHolder.iFolder.UnManagedPath;
-	
-						if ((bool)ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION))
+
+						DomainInformation[] domains = domainController.GetDomains();
+						if (domains.Length <= 0) return;	// FIXME: This should never happen.  Maybe alert the user?
+						string domainID = domains[0].ID;	// Default to the first in the list
+						DomainInformation defaultDomain = domainController.GetDefaultDomain();
+						if (defaultDomain != null)
+							domainID = defaultDomain.ID;
+			
+						DragCreateDialog cd = new DragCreateDialog(this, domains, domainID, path);
+						cd.TransientFor = this;
+				
+						int rc = 0;
+						do
 						{
-							iFolderCreationDialog dlg = 
-								new iFolderCreationDialog(ifHolder.iFolder);
-							dlg.TransientFor = this;
-							int createRC;
-							do
+							rc = cd.Run();
+							cd.Hide();
+			
+							if (rc == (int)ResponseType.Ok)
 							{
-								createRC = dlg.Run();
-								if(createRC == (int)Gtk.ResponseType.Help)
+								try
 								{
-									Util.ShowHelp("myifolders.html", this);
+									string selectedFolder = cd.iFolderPath.Trim();
+									string selectedDomain = cd.DomainID;
+				
+									string parentDir = System.IO.Path.GetDirectoryName( selectedFolder );
+									if ( ( parentDir == null ) || ( parentDir == String.Empty ) )
+									{
+										iFolderMsgDialog dg = new iFolderMsgDialog(
+											this,
+											iFolderMsgDialog.DialogType.Warning,
+											iFolderMsgDialog.ButtonSet.Ok,
+											"",
+											Util.GS("Invalid folder specified"),
+											Util.GS("An invalid folder was specified"));
+										dg.Run();
+										dg.Hide();
+										dg.Destroy();
+										continue;
+									}
+									
+									iFolderHolder ifHolder = null;
+									try
+									{
+										ifHolder = 
+											ifdata.CreateiFolder(selectedFolder,
+																 selectedDomain);
+									}
+									catch(Exception e)
+									{
+										if (DisplayCreateOrSetupException(e))
+										{
+											// Update the selectedFolder path
+											continue;	// The function handled the exception
+										}
+									}
+				
+									if(ifHolder == null)
+										throw new Exception("Simias returned null");
+				
+									// If we make it this far, we've succeeded and we don't
+									// need to keep looping.
+									rc = 0;
+				
+									// Save off the path so that the next time the user
+									// creates an iFolder, we'll open it to the directory
+									// they used last.
+									Util.LastCreatedPath = ifHolder.iFolder.UnManagedPath;
+				
+									if ((bool)ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION))
+									{
+										iFolderCreationDialog dlg = 
+											new iFolderCreationDialog(ifHolder.iFolder);
+										dlg.TransientFor = this;
+										int createRC;
+										do
+										{
+											createRC = dlg.Run();
+											if(createRC == (int)Gtk.ResponseType.Help)
+											{
+												Util.ShowHelp("myifolders.html", this);
+											}
+										}while(createRC != (int)Gtk.ResponseType.Ok);
+				
+										dlg.Hide();
+					
+										if(dlg.HideDialog)
+										{
+											ClientConfig.Set(
+												ClientConfig.KEY_SHOW_CREATION, false);
+										}
+					
+										cd.Destroy();
+										cd = null;
+									}
 								}
-							}while(createRC != (int)Gtk.ResponseType.Ok);
-	
-							dlg.Hide();
-		
-							if(dlg.HideDialog)
-							{
-								ClientConfig.Set(
-									ClientConfig.KEY_SHOW_CREATION, false);
+								catch (Exception e)
+								{
+									Console.WriteLine(e.Message);
+									continue;
+								}
 							}
-		
-							cd.Destroy();
-							cd = null;
 						}
-					}
-					catch (Exception e)
-					{
-						Console.WriteLine(e.Message);
-						continue;
-					}
-				}
-			}
-			while(rc == (int)ResponseType.Ok);
+						while(rc == (int)ResponseType.Ok);
 
 
 
@@ -1557,7 +1581,7 @@ namespace Novell.iFolder
 						}
 						else
 						{
-							Util.ShowHelp("front.html", this);
+							Util.ShowHelp(Util.HelpMainPage, this);
 						}
 					}
 					break;
@@ -1600,7 +1624,7 @@ namespace Novell.iFolder
 
 		private void OnHelpMenuItem(object o, EventArgs args)
 		{
-			Util.ShowHelp("front.html", this);
+			Util.ShowHelp(Util.HelpMainPage, this);
 		}
 
 		private void OnAbout(object o, EventArgs args)
@@ -1695,7 +1719,7 @@ namespace Novell.iFolder
 			}
 
 			ShowHideAllFoldersButtonText.Markup =
-				string.Format("<span size=\"large\">{0}</span>",
+				string.Format("<span>{0}</span>",
 							  Util.GS("Hide available iFolders"));
 
 			bAvailableFoldersShowing = true;
@@ -1719,7 +1743,7 @@ namespace Novell.iFolder
 			}
 
 			ShowHideAllFoldersButtonText.Markup =
-				string.Format("<span size=\"large\">{0}</span>",
+				string.Format("<span>{0}</span>",
 							  Util.GS("View available iFolders"));
 
 			bAvailableFoldersShowing = false;
@@ -1894,7 +1918,11 @@ namespace Novell.iFolder
 
 		private bool SynchronizedFoldersFilterFunc(TreeModel model, TreeIter iter)
 		{
-			iFolderHolder ifHolder = (iFolderHolder)model.GetValue(iter, 0);
+			ListStore ifolderListStore = model as ListStore;
+			if (!ifolderListStore.IterIsValid(iter))
+				return false;	// Prevent a bad TreeIter from causing problems
+
+			iFolderHolder ifHolder = (iFolderHolder)ifolderListStore.GetValue(iter, 0);
 			if (ifHolder != null && ifHolder.iFolder != null && !ifHolder.iFolder.IsSubscription)
 			{
 				string searchString = SearchEntry.Text;
@@ -2350,9 +2378,8 @@ namespace Novell.iFolder
 				{
 					try
 					{
-						string selectedFolder	= cd.iFolderPath.Trim();
-						string selectedDomain	= cd.DomainID;
-						string description		= cd.Description;
+						string selectedFolder = cd.iFolderPath.Trim();
+						string selectedDomain = cd.DomainID;
 	
 						if (selectedFolder == String.Empty)
 						{
@@ -2408,8 +2435,7 @@ namespace Novell.iFolder
 						{
 							ifHolder = 
 								ifdata.CreateiFolder(selectedFolder,
-													 selectedDomain,
-													 description);
+													 selectedDomain);
 						}
 						catch(Exception e)
 						{
@@ -2619,8 +2645,11 @@ namespace Novell.iFolder
 				ResolveConflicts(holder);
 		}
 		
-		public void HandleSyncEvent(CollectionSyncEventArgs args)
+		private void OniFolderSyncEvent(object o, CollectionSyncEventArgs args)
 		{
+			if (args == null || args.ID == null || args.Name == null)
+				return;	// Prevent a null object exception
+
 			switch(args.Action)
 			{
 				case Simias.Client.Event.Action.StartLocalSync:
@@ -2675,8 +2704,11 @@ namespace Novell.iFolder
 			// Maybe emit a NewConflictEvent here?
 		}
 
-		public void HandleFileSyncEvent(FileSyncEventArgs args)
+		private void OniFolderFileSyncEvent(object o, FileSyncEventArgs args)
 		{
+			if (args == null || args.CollectionID == null || args.Name == null)
+				return;	// Prevent a null object exception
+
 			if (args.SizeRemaining == args.SizeToSync)
 			{
 				if (!args.Direction.Equals(Simias.Client.Event.Direction.Local))

@@ -42,6 +42,7 @@ namespace Novell.iFolder
 		internal static int SectionSpacing = 20;
 		internal static int SectionTitleSpacing = 5;
 		static public uint DefaultBorderWidth = 10;
+		static public string HelpMainPage = "bookinfo.html";
 		
 		// The purpose of these variable is to allow us to keep track of
 		// last place the user created/setup an iFolder so that we can open
@@ -161,13 +162,13 @@ namespace Novell.iFolder
 		
 		public static void InitCatalog()
 		{
-			Mono.Posix.Catalog.Init("@_PACKAGE_@", "@_prefix_@/share/locale");
+			Mono.Unix.Catalog.Init("@_PACKAGE_@", "@_prefix_@/share/locale");
 		}
 
 
 		public static string GS(string msgid)
 		{
-			return Mono.Posix.Catalog.GetString(msgid);
+			return Mono.Unix.Catalog.GetString(msgid);
 		}
 
 
@@ -344,6 +345,7 @@ namespace Novell.iFolder
 					"",
 					Util.GS("Other Contributors:"),
 					"  Jakub Steiner",
+					"  Ron Randquist",
 					"  Ryan Collier"
 				};
 
@@ -381,7 +383,8 @@ namespace Novell.iFolder
 				aboutDialog.WrapLicense = false;
 */
 				Gnome.About aboutDialog =
-					new Gnome.About(
+//					new Gnome.About(
+					GnomeAboutNew(
 						"iFolder",
 						"@_VERSION_@",
 						Util.GS("Copyright (C) 2004-2006 Novell, Inc.  All rights reserved."),
@@ -1010,6 +1013,32 @@ namespace Novell.iFolder
 				dest = new Gdk.Pixbuf(destPtr);
 			
 			return dest;
+		}
+		
+		///
+		/// C# Binding to gnome_about_new() which seems to be broken in SuSE Linux 10.0
+		///
+		[DllImport("libgnomeui-2.so.0")]
+		private static extern IntPtr gnome_about_new(string name, string version, string copyright,
+													 string comments, string[] authors, string[] documenters,
+													 string translator_credits,
+													 IntPtr logo_pixbuf);
+		
+		public static Gnome.About GnomeAboutNew(string name, string version, string copyright,
+											   string comments, string[] authors, string[] documenters,
+											   string translator_credits, Gdk.Pixbuf logo_pixbuf)
+		{
+			IntPtr aboutPtr;
+			Gnome.About about = null;
+			
+			aboutPtr = gnome_about_new(name, version, copyright,
+										comments, authors, documenters,
+										translator_credits, logo_pixbuf.Handle);
+			
+			if (aboutPtr != IntPtr.Zero)
+				about = new Gnome.About(aboutPtr);
+			
+			return about;
 		}
 	}
 	

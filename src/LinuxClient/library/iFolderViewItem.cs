@@ -571,7 +571,7 @@ namespace Novell.iFolder
 		{
 			string text = null;
 			if (holder.iFolder.IsSubscription)
-				text = "47";
+				text = "";
 			else
 				text = holder.StateString;
 			
@@ -584,10 +584,10 @@ namespace Novell.iFolder
 
 				string potentialMarkup;
 				if (holder.iFolder.IsSubscription)
-					potentialMarkup =
-						string.Format("<span size=\"small\">{0} {1}</span>",
-									  GLib.Markup.EscapeText(text),
-									  Util.GS("MB"));
+					potentialMarkup = "";
+//						string.Format("<span size=\"small\">{0} {1}</span>",
+//									  GLib.Markup.EscapeText(text),
+//									  Util.GS("MB"));
 				else
 					potentialMarkup =
 						string.Format("<span size=\"small\">{0}</span>",

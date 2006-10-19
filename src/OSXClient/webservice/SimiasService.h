@@ -64,7 +64,9 @@
 				ProxyPassword:(NSString *)proxyPassword;
 
 -(BOOL) SetDomainHostAddress:(NSString *)domainID
-							NewHostAddress:(NSString *)hostAddress;
+							withAddress:(NSString *)hostAddress
+							forUser:(NSString *)userName
+							withPassword:(NSString *)password;
 
 -(MemberSearchResults *) InitMemberSearchResults;
 -(void)readCredentials;

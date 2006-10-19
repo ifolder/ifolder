@@ -78,6 +78,7 @@ namespace Novell.iFolder
 		///
 		public const string KEY_IFOLDER_DEBUG_COLOR_PALETTE		= "/apps/ifolder3/debug/color_palette";
 		public const string KEY_IFOLDER_DEBUG_IFOLDER_DATA		= "/apps/ifolder3/debug/ifolder_data";
+		public const string KEY_IFOLDER_DEBUG_PRINT_SIMIAS_EVENT_ERRORS = "/apps/ifolder3/debug/print_simias_event_errors";
 
 		private static GConf.Client				client = null;
 		private static GConf.NotifyEventHandler	SettingChangedHandler;
@@ -95,7 +96,7 @@ namespace Novell.iFolder
 					
 					SettingChangedHandler =
 						new GConf.NotifyEventHandler(OnSettingChanged);
-					client.AddNotify("/apps/ifolder", SettingChangedHandler);
+					client.AddNotify("/apps/ifolder3", SettingChangedHandler);
 				}
 				
 				return client;
@@ -153,6 +154,7 @@ namespace Novell.iFolder
 				
 				case KEY_IFOLDER_DEBUG_COLOR_PALETTE:
 				case KEY_IFOLDER_DEBUG_IFOLDER_DATA:
+				case KEY_IFOLDER_DEBUG_PRINT_SIMIAS_EVENT_ERRORS:
 					return false;
 			}
 			

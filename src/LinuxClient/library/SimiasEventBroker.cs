@@ -126,6 +126,8 @@ namespace Novell.iFolder
 		private Thread				SEThread;
 		private ManualResetEvent	SEEvent;
 		private Manager				simiasManager;
+		
+		private bool						printErrors;
 
 		///
 		/// iFolder Events
@@ -181,6 +183,10 @@ namespace Novell.iFolder
 			SEThread = new Thread(new ThreadStart(SimiasEventThread));
 			SEThread.IsBackground = true;
 			SEEvent = new ManualResetEvent(false);
+
+			printErrors = (bool)ClientConfig.Get(ClientConfig.KEY_IFOLDER_DEBUG_PRINT_SIMIAS_EVENT_ERRORS);
+			ClientConfig.SettingChanged +=
+				new GConf.NotifyEventHandler(OnSettingChanged);
 		}
 
 		public static SimiasEventBroker GetSimiasEventBroker()
@@ -247,13 +253,37 @@ namespace Novell.iFolder
 			runEventThread = false;
 		}
 
+		public void AbortEventProcessing()
+		{
+			// Allow the main application to tell the EventBroker to no longer
+			// dispatch events immediately after iFolder starts shutting down.
+			runEventThread = false;
+			try
+			{
+				SEThread.Interrupt();
+				SEThread.Abort();
+			}
+			catch{}
+		}
+
 		private void SimiasEventHandler(SimiasEventArgs args)
 		{
-			lock(SimiasEventQueue)
+			try
 			{
-				SimiasEventQueue.Enqueue(args);
+				lock(SimiasEventQueue)
+				{
+					SimiasEventQueue.Enqueue(args);
+				}
+				SEEvent.Set();
 			}
-			SEEvent.Set();
+			catch(Exception e)
+			{
+				if (printErrors)
+				{
+					Console.WriteLine("Exception in SimiasEventHandler(): " + e.Message);
+					Console.WriteLine(e.StackTrace);
+				}
+			}
 		}
 
 
@@ -270,6 +300,8 @@ namespace Novell.iFolder
 
 				while(hasmore && runEventThread)
 				{
+					if (!runEventThread) break;
+
 					SimiasEventArgs args;
 
 					lock(NodeEventQueue)
@@ -304,6 +336,11 @@ namespace Novell.iFolder
 
 		private void ErrorHandler( ApplicationException e, object context )
 		{
+			if (printErrors)
+			{
+				Console.WriteLine("****** ****** Simias Event Client got an error! ***** *****");
+				Console.WriteLine(e.Message);
+			}
 /*
 			lock(NodeEventQueue)
 			{
@@ -316,23 +353,45 @@ namespace Novell.iFolder
 
 		private void SimiasEventNotifyHandler(SimiasEventArgs args)
 		{
-			NotifyEventArgs notifyEventArgs = args as NotifyEventArgs;
-			lock(NotifyEventQueue)
+			try
 			{
-				NotifyEventQueue.Enqueue(notifyEventArgs);
-				GenericEventFired.WakeupMain();
+				NotifyEventArgs notifyEventArgs = args as NotifyEventArgs;
+				lock(NotifyEventQueue)
+				{
+					NotifyEventQueue.Enqueue(notifyEventArgs);
+					GenericEventFired.WakeupMain();
+				}
+			}
+			catch(Exception e)
+			{
+				if (printErrors)
+				{
+					Console.WriteLine("Exception in SimiasEventNotifyHandler(): " + e.Message);
+					Console.WriteLine(e.StackTrace);
+				}
 			}
 		}
 
 
 		private void SimiasEventSyncFileHandler(SimiasEventArgs args)
 		{
-			FileSyncEventArgs fileSyncArgs = args as FileSyncEventArgs;
-
-			lock(FileEventQueue)
+			try
 			{
-				FileEventQueue.Enqueue(fileSyncArgs);
-				FileEventFired.WakeupMain();
+				FileSyncEventArgs fileSyncArgs = args as FileSyncEventArgs;
+	
+				lock(FileEventQueue)
+				{
+					FileEventQueue.Enqueue(fileSyncArgs);
+					FileEventFired.WakeupMain();
+				}
+			}
+			catch(Exception e)
+			{
+				if (printErrors)
+				{
+					Console.WriteLine("Exception in SimiasEventSyncFileHandler(): " + e.Message);
+					Console.WriteLine(e.StackTrace);
+				}
 			}
 		}
 
@@ -340,152 +399,190 @@ namespace Novell.iFolder
 
 		private void SimiasEventSyncCollectionHandler(SimiasEventArgs args)
 		{
-			CollectionSyncEventArgs syncEventArgs =
-				args as CollectionSyncEventArgs;
-
-			if(ifdata.IsiFolder(syncEventArgs.ID))
+			try
 			{
-				iFolderHolder ifHolder =
-					ifdata.GetiFolder(syncEventArgs.ID);
-
-				switch (syncEventArgs.Action)
+				if (args == null)
 				{
-					case Simias.Client.Event.Action.StartLocalSync:
-						ifHolder.State = iFolderState.SynchronizingLocal;
-						break;
-					case Simias.Client.Event.Action.StartSync:
-						ifHolder.State = iFolderState.Synchronizing;
-						break;
-					case Simias.Client.Event.Action.StopSync:
-						try
-						{
-							SyncSize syncSize = ifws.CalculateSyncSize(syncEventArgs.ID);
-							ifHolder.ObjectsToSync = syncSize.SyncNodeCount;
-						}
-						catch
-						{}
-
-						if (ifHolder.ObjectsToSync > 0)
-							ifHolder.State = iFolderState.Normal;
-						else
-						{
-							if (syncEventArgs.Connected || ifHolder.iFolder.Role == "Master")
-								ifHolder.State = iFolderState.Normal;
-							else
-								ifHolder.State = iFolderState.Disconnected;
-						}
-						break;
+					Console.WriteLine("SimiasEventSyncCollectionHandler received a null SimiasEventArgs");
+					return;
 				}
-
-				if( (ifHolder.iFolder.UnManagedPath == null) ||
-						(ifHolder.iFolder.UnManagedPath.Length == 0) )
+				CollectionSyncEventArgs syncEventArgs =
+					args as CollectionSyncEventArgs;
+				if (syncEventArgs == null || syncEventArgs.Name == null || syncEventArgs.ID == null)
 				{
-					// Because the iFolder has no path
-					// re-read the iFolder and fire a changed event
-					ifHolder = ifdata.ReadiFolder(syncEventArgs.ID);
-					lock(NodeEventQueue)
+					Console.WriteLine("SimiasEventSyncCollectionHandler() Name, ID, Action, or Connected is null");
+					return;	// Prevent a null object 
+				}
+	
+				if(ifdata.IsiFolder(syncEventArgs.ID))
+				{
+					iFolderHolder ifHolder =
+						ifdata.GetiFolder(syncEventArgs.ID);
+					
+					if (ifHolder != null)
 					{
-						NodeEventQueue.Enqueue(new SimiasEvent(
-									ifHolder.iFolder.ID, null, 
-									null, SimiasEventType.ChangediFolder));
-						SimiasEventFired.WakeupMain();
+						switch (syncEventArgs.Action)
+						{
+							case Simias.Client.Event.Action.StartLocalSync:
+								ifHolder.State = iFolderState.SynchronizingLocal;
+								break;
+							case Simias.Client.Event.Action.StartSync:
+								ifHolder.State = iFolderState.Synchronizing;
+								break;
+							case Simias.Client.Event.Action.StopSync:
+								try
+								{
+									SyncSize syncSize = ifws.CalculateSyncSize(syncEventArgs.ID);
+									ifHolder.ObjectsToSync = syncSize.SyncNodeCount;
+								}
+								catch
+								{}
+		
+								if (ifHolder.ObjectsToSync > 0)
+									ifHolder.State = iFolderState.Normal;
+								else
+								{
+									if (syncEventArgs.Connected || ifHolder.iFolder.Role == "Master")
+										ifHolder.State = iFolderState.Normal;
+									else
+										ifHolder.State = iFolderState.Disconnected;
+								}
+								break;
+						}
+		
+						if( (ifHolder.iFolder.UnManagedPath == null) ||
+								(ifHolder.iFolder.UnManagedPath.Length == 0) )
+						{
+							// Because the iFolder has no path
+							// re-read the iFolder and fire a changed event
+							ifHolder = ifdata.ReadiFolder(syncEventArgs.ID);
+							if (ifHolder != null)
+							{
+								lock(NodeEventQueue)
+								{
+									NodeEventQueue.Enqueue(new SimiasEvent(
+												ifHolder.iFolder.ID, null, 
+												null, SimiasEventType.ChangediFolder));
+									SimiasEventFired.WakeupMain();
+								}
+							}
+						}
 					}
 				}
+	
+				// pass the sync event on to the client
+				lock(SyncEventQueue)
+				{
+					SyncEventQueue.Enqueue(syncEventArgs);
+					SyncEventFired.WakeupMain();
+				}
 			}
-
-			// pass the sync event on to the client
-			lock(SyncEventQueue)
+			catch(Exception e)
 			{
-				SyncEventQueue.Enqueue(syncEventArgs);
-				SyncEventFired.WakeupMain();
+				if (printErrors)
+				{
+					Console.WriteLine("Exception in SimiasEventSyncCollectionHandler(): " + e.Message);
+					Console.WriteLine(e.StackTrace);
+				}
 			}
 		}
 
 
 		private void NodeCreatedHandler(NodeEventArgs nargs)
 		{
-			switch(nargs.Type)
+			try
 			{
-				case "Subscription":
+				switch(nargs.Type)
 				{
-					if(ifdata.ISPOBox(nargs.Collection))
+					case "Subscription":
 					{
-						// The Collection is the PO Box so the node
-						// is most likely an invitation
-
+						if(ifdata.ISPOBox(nargs.Collection))
+						{
+							// The Collection is the PO Box so the node
+							// is most likely an invitation
+	
+							iFolderHolder ifHolder =
+								ifdata.ReadAvailableiFolder(nargs.ID,
+															nargs.Collection);
+	
+							// if the iFolder already exists, ifdata will
+							// return null to check it here
+							if(ifHolder != null)
+							{
+								lock(NodeEventQueue)
+								{
+									NodeEventQueue.Enqueue(new SimiasEvent(
+										ifHolder.iFolder.CollectionID, null, null,
+										SimiasEventType.NewiFolder));
+									SimiasEventFired.WakeupMain();
+								}
+							}
+						}
+	
+						break;
+					}					
+	
+					case "Member":
+					{
+						if(ifdata.IsiFolder(nargs.Collection))
+						{
+							iFolderUser newuser =
+								ifdata.GetiFolderUserFromNodeID(
+										nargs.Collection, nargs.ID);
+	
+							if( (newuser != null) &&
+									!ifdata.IsCurrentUser(newuser.UserID) )
+							{
+								lock(NodeEventQueue)
+								{
+									NodeEventQueue.Enqueue(new SimiasEvent(
+												nargs.Collection, newuser,
+												newuser.UserID,
+												SimiasEventType.NewUser));
+									SimiasEventFired.WakeupMain();
+								}
+							}
+						}
+						break;
+					}
+	
+					case "Collection":
+					{
 						iFolderHolder ifHolder =
-							ifdata.ReadAvailableiFolder(nargs.ID,
-														nargs.Collection);
-
-						// if the iFolder already exists, ifdata will
-						// return null to check it here
+								ifdata.ReadiFolder(nargs.Collection);
+	
 						if(ifHolder != null)
 						{
 							lock(NodeEventQueue)
 							{
 								NodeEventQueue.Enqueue(new SimiasEvent(
-									ifHolder.iFolder.CollectionID, null, null,
+									ifHolder.iFolder.ID, null, null,
 									SimiasEventType.NewiFolder));
 								SimiasEventFired.WakeupMain();
 							}
 						}
+						break;
 					}
-
-					break;
-				}					
-
-				case "Member":
-				{
-					if(ifdata.IsiFolder(nargs.Collection))
+					
+					case "Domain":
 					{
-						iFolderUser newuser =
-							ifdata.GetiFolderUserFromNodeID(
-									nargs.Collection, nargs.ID);
-
-						if( (newuser != null) &&
-								!ifdata.IsCurrentUser(newuser.UserID) )
-						{
-							lock(NodeEventQueue)
-							{
-								NodeEventQueue.Enqueue(new SimiasEvent(
-											nargs.Collection, newuser,
-											newuser.UserID,
-											SimiasEventType.NewUser));
-								SimiasEventFired.WakeupMain();
-							}
-						}
-					}
-					break;
-				}
-
-				case "Collection":
-				{
-					iFolderHolder ifHolder =
-							ifdata.ReadiFolder(nargs.Collection);
-
-					if(ifHolder != null)
-					{
+						// The user just successfully created/logged-into a domain
 						lock(NodeEventQueue)
 						{
-							NodeEventQueue.Enqueue(new SimiasEvent(
-								ifHolder.iFolder.ID, null, null,
-								SimiasEventType.NewiFolder));
+							NodeEventQueue.Enqueue(
+								new SimiasEvent(nargs.Collection, SimiasEventType.NewDomain));
 							SimiasEventFired.WakeupMain();
 						}
+						break;
 					}
-					break;
 				}
-				
-				case "Domain":
+			}
+			catch(Exception e)
+			{
+				if (printErrors)
 				{
-					// The user just successfully created/logged-into a domain
-					lock(NodeEventQueue)
-					{
-						NodeEventQueue.Enqueue(
-							new SimiasEvent(nargs.Collection, SimiasEventType.NewDomain));
-						SimiasEventFired.WakeupMain();
-					}
-					break;
+					Console.WriteLine("Exception in NodeCreatedHandler(): " + e.Message);
+					Console.WriteLine(e.StackTrace);
 				}
 			}
 		}
@@ -495,76 +592,87 @@ namespace Novell.iFolder
 
 		private void NodeChangedHandler(NodeEventArgs nargs)
 		{
-			switch(nargs.Type)
+			try
 			{
-				case "Collection":
+				switch(nargs.Type)
 				{
-					iFolderHolder ifHolder =
-						ifdata.ReadiFolder(nargs.Collection);
-
-					if( (ifHolder != null) &&
-						(ifHolder.iFolder.HasConflicts) )
+					case "Collection":
 					{
-						lock(NodeEventQueue)
-						{
-							NodeEventQueue.Enqueue(new SimiasEvent(
-								ifHolder.iFolder.ID, null, null,
-								SimiasEventType.ChangediFolder));
-							SimiasEventFired.WakeupMain();
-						}
-					}
-
-					break;
-				}
-
-				case "Member":
-				{
-					if(ifdata.IsiFolder(nargs.Collection))
-					{
-						iFolderUser newuser =
-							ifdata.GetiFolderUserFromNodeID(
-									nargs.Collection, nargs.ID);
-
-						if( (newuser != null) &&
-								!ifdata.IsCurrentUser(newuser.UserID) )
-						{
-							lock(NodeEventQueue)
-							{
-								NodeEventQueue.Enqueue(new SimiasEvent(
-											nargs.Collection, newuser, 
-											newuser.UserID,
-											SimiasEventType.ChangedUser));
-								SimiasEventFired.WakeupMain();
-							}
-						}
-					}
-					break;
-				}
-
-
-				case "Subscription":
-				{
-					if(ifdata.ISPOBox(nargs.Collection))
-					{
-						// The Collection is the PO Box so the node
-						// is most likely an invitation
-
 						iFolderHolder ifHolder =
-							ifdata.ReadAvailableiFolder(nargs.ID,
-														nargs.Collection);
-						if(ifHolder != null)
+							ifdata.ReadiFolder(nargs.Collection);
+	
+						if( (ifHolder != null) &&
+							(ifHolder.iFolder.HasConflicts) )
 						{
 							lock(NodeEventQueue)
 							{
 								NodeEventQueue.Enqueue(new SimiasEvent(
-									ifHolder.iFolder.CollectionID, null, null,
+									ifHolder.iFolder.ID, null, null,
 									SimiasEventType.ChangediFolder));
 								SimiasEventFired.WakeupMain();
 							}
 						}
+	
+						break;
 					}
-					break;
-				}					
+	
+					case "Member":
+					{
+						if(ifdata.IsiFolder(nargs.Collection))
+						{
+							iFolderUser newuser =
+								ifdata.GetiFolderUserFromNodeID(
+										nargs.Collection, nargs.ID);
+	
+							if( (newuser != null) &&
+									!ifdata.IsCurrentUser(newuser.UserID) )
+							{
+								lock(NodeEventQueue)
+								{
+									NodeEventQueue.Enqueue(new SimiasEvent(
+												nargs.Collection, newuser, 
+												newuser.UserID,
+												SimiasEventType.ChangedUser));
+									SimiasEventFired.WakeupMain();
+								}
+							}
+						}
+						break;
+					}
+	
+	
+					case "Subscription":
+					{
+						if(ifdata.ISPOBox(nargs.Collection))
+						{
+							// The Collection is the PO Box so the node
+							// is most likely an invitation
+	
+							iFolderHolder ifHolder =
+								ifdata.ReadAvailableiFolder(nargs.ID,
+															nargs.Collection);
+							if(ifHolder != null)
+							{
+								lock(NodeEventQueue)
+								{
+									NodeEventQueue.Enqueue(new SimiasEvent(
+										ifHolder.iFolder.CollectionID, null, null,
+										SimiasEventType.ChangediFolder));
+									SimiasEventFired.WakeupMain();
+								}
+							}
+						}
+						break;
+					}					
+				}
+			}
+			catch(Exception e)
+			{
+				if (printErrors)
+				{
+					Console.WriteLine("Exception in NodeChangedHandler(): " + e.Message);
+					Console.WriteLine(e.StackTrace);
+				}
 			}
 		}
 
@@ -572,66 +680,77 @@ namespace Novell.iFolder
 
 		private void NodeDeletedHandler(NodeEventArgs nargs)
 		{
-			switch(nargs.Type)
+			try
 			{
-				case "Subscription":
+				switch(nargs.Type)
 				{
-					if(ifdata.ISPOBox(nargs.Collection))
+					case "Subscription":
 					{
+						if(ifdata.ISPOBox(nargs.Collection))
+						{
+							lock(NodeEventQueue)
+							{
+								ifdata.DeliFolder(nargs.ID);
+								NodeEventQueue.Enqueue(new SimiasEvent(
+									nargs.Collection, null, null,
+									SimiasEventType.DeliFolder));
+								SimiasEventFired.WakeupMain();
+							}
+						}
+						break;
+					}
+					case "Collection":
+					{	
 						lock(NodeEventQueue)
 						{
-							ifdata.DeliFolder(nargs.ID);
-							NodeEventQueue.Enqueue(new SimiasEvent(
-								nargs.Collection, null, null,
-								SimiasEventType.DeliFolder));
+							iFolderHolder ifHolder =
+								ifdata.GetiFolder(nargs.Collection);
+							if( (ifHolder != null) &&
+								(!ifHolder.iFolder.IsSubscription) )
+							{
+								ifdata.DeliFolder(nargs.ID);
+								NodeEventQueue.Enqueue(new SimiasEvent(
+									nargs.Collection, null, null,
+									SimiasEventType.DeliFolder));
+							}
 							SimiasEventFired.WakeupMain();
 						}
+						break;
 					}
-					break;
-				}
-				case "Collection":
-				{	
-					lock(NodeEventQueue)
+					case "Member":
 					{
-						iFolderHolder ifHolder =
-							ifdata.GetiFolder(nargs.Collection);
-						if( (ifHolder != null) &&
-							(!ifHolder.iFolder.IsSubscription) )
+						if(ifdata.IsiFolder(nargs.Collection))
 						{
-							ifdata.DeliFolder(nargs.ID);
-							NodeEventQueue.Enqueue(new SimiasEvent(
-								nargs.Collection, null, null,
-								SimiasEventType.DeliFolder));
+							lock(NodeEventQueue)
+							{
+								NodeEventQueue.Enqueue(new SimiasEvent(
+									nargs.Collection, null, nargs.ID,
+										SimiasEventType.DelUser));
+								SimiasEventFired.WakeupMain();
+							}
 						}
-						SimiasEventFired.WakeupMain();
+						break;
 					}
-					break;
-				}
-				case "Member":
-				{
-					if(ifdata.IsiFolder(nargs.Collection))
+					
+					case "Domain":
 					{
+						// The user just successfully created/logged-into a domain
 						lock(NodeEventQueue)
 						{
-							NodeEventQueue.Enqueue(new SimiasEvent(
-								nargs.Collection, null, nargs.ID,
-									SimiasEventType.DelUser));
+							NodeEventQueue.Enqueue(
+								new SimiasEvent(nargs.Collection, SimiasEventType.DelDomain));
 							SimiasEventFired.WakeupMain();
 						}
+						break;
 					}
-					break;
 				}
-				
-				case "Domain":
+			}
+			catch(Exception e)
+			{
+				if (printErrors)
 				{
-					// The user just successfully created/logged-into a domain
-					lock(NodeEventQueue)
-					{
-						NodeEventQueue.Enqueue(
-							new SimiasEvent(nargs.Collection, SimiasEventType.DelDomain));
-						SimiasEventFired.WakeupMain();
-					}
-					break;
+					Console.WriteLine("Exception in NodeDeletedHandler(): " + e.Message);
+					Console.WriteLine(e.StackTrace);
 				}
 			}
 		}
@@ -639,6 +758,8 @@ namespace Novell.iFolder
 
 		private void OnGenericEventFired()
 		{
+			if (!runEventThread) return;
+
 			bool hasmore = false;
 
 			lock(NotifyEventQueue)
@@ -680,6 +801,8 @@ namespace Novell.iFolder
 
 		private void OnFileEventFired()
 		{
+			if (!runEventThread) return;
+
 			bool hasmore = false;
 
 			lock(FileEventQueue)
@@ -709,6 +832,8 @@ namespace Novell.iFolder
 
 		private void OnSyncEventFired()
 		{
+			if (!runEventThread) return;
+
 			bool hasmore = false;
 
 			lock(SyncEventQueue)
@@ -738,6 +863,8 @@ namespace Novell.iFolder
 
 		private void OnSimiasEventFired()
 		{
+			if (!runEventThread) return;
+
 			bool hasmore = false;
 			// at this point, we are running in the same thread
 			// so we can safely show events
@@ -809,6 +936,15 @@ namespace Novell.iFolder
 				{
 					hasmore = (NodeEventQueue.Count > 0);
 				}
+			}
+		}
+		
+		private void OnSettingChanged(object sender, GConf.NotifyEventArgs args)
+		{
+			if (args.Key != null && args.Key == ClientConfig.KEY_IFOLDER_DEBUG_PRINT_SIMIAS_EVENT_ERRORS)
+			{
+				printErrors = (bool)args.Value;
+				Console.WriteLine("Print Simias Event Errors: {0}", printErrors);
 			}
 		}
 	}
