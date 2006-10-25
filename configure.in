@@ -373,7 +373,7 @@ AC_SUBST(GSOAP_PATH)
 #
 # We have our own "standard" directories for web services.
 #
-webdir='${libexecdir}/web'
+webdir='${libdir}/simias/web'
 webbindir='${webdir}/bin'
 # setup 64bit casa path in ifolder script
 case `arch` in
