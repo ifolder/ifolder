@@ -32,8 +32,8 @@ namespace Novell.iFolder
 	{
 		private DomainInformation[]	domains;
 		private ComboBox			domainComboBox;
+		private ComboBox			security_lvl_ComboBox;
 		private string				initialPath;
-//		TextView					descriptionTextView;
 		iFolderWebService			ifws;
 		private uint				keyReleasedTimeoutID;
 
@@ -60,7 +60,15 @@ namespace Novell.iFolder
 					return "0";
 			}
 		}
-		
+
+		public int Encrypt_Status
+		{
+			get
+			{
+				return security_lvl_ComboBox.Active;
+			}
+		}
+
 		public string Description
 		{
 			get
@@ -117,10 +125,23 @@ namespace Novell.iFolder
 			optionsTable.Attach(l, 1,2,0,1,
 								AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
+			l = new Label(Util.GS("Security Level:"));
+			l.Xalign = 0;
+			optionsTable.Attach(l, 1,2,1,2,
+								AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+
 			// Set up Domains
 			domainComboBox = ComboBox.NewText();
 			optionsTable.Attach(domainComboBox, 2,3,0,1,
 								AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
+
+			security_lvl_ComboBox = ComboBox.NewText();
+			optionsTable.Attach(security_lvl_ComboBox, 2,3,1,2,
+								AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
+			security_lvl_ComboBox.AppendText("Encrypt iFolder");
+			security_lvl_ComboBox.AppendText("Use SSL");
+			security_lvl_ComboBox.AppendText("None");
+			security_lvl_ComboBox.Active = 0;
 			
 			int defaultDomain = 0;
 			for (int x = 0; x < domains.Length; x++)

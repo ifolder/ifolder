@@ -105,6 +105,9 @@ namespace Novell.iFolder
 
 			searchTimeoutID = 0;
 			selectedUsers = new Hashtable();
+			KeyPressEvent += new KeyPressEventHandler (KeyPressHandler);
+	                KeyReleaseEvent += new KeyReleaseEventHandler(KeyReleaseHandler);
+			AddEvents( (int) Gdk.EventMask.KeyPressMask | (int) Gdk.EventMask.KeyReleaseMask );
 		}
 
 
@@ -121,6 +124,30 @@ namespace Novell.iFolder
 
 
 
+
+		void KeyPressHandler(object o, KeyPressEventArgs args)
+		{
+			args.RetVal = true;
+			switch(args.Event.Key)
+			{
+				case Gdk.Key.Control_R:
+				case Gdk.Key.Control_L:
+					memberList.ctrl_pressed = true;
+					break;
+			}
+		}
+
+		void KeyReleaseHandler(object o, KeyReleaseEventArgs args)
+		{
+			args.RetVal = true;
+			switch(args.Event.Key)
+			{
+				case Gdk.Key.Control_R:
+				case Gdk.Key.Control_L:
+					memberList.ctrl_pressed = false;
+					break;
+			}
+		}
 
 		/// <summary>
 		/// Set up the UI inside the Window
@@ -295,8 +322,6 @@ namespace Novell.iFolder
 		}
 
 
-
-
 		private void UserCellTextDataFunc (Gtk.TreeViewColumn tree_column,
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
@@ -312,9 +337,6 @@ namespace Novell.iFolder
 			else
 				((CellRendererText) cell).Text = member.Name;
 		}
-
-
-
 
 		private int SelTreeStoreSortFunction(TreeModel model, TreeIter a, TreeIter b)
 		{
@@ -374,7 +396,6 @@ namespace Novell.iFolder
 				UserDelButton.Sensitive = false;
 			}
 		}
-
 
 
 		public void OnSearchEntryChanged(object o, EventArgs args)
@@ -453,7 +474,7 @@ namespace Novell.iFolder
 			string searchContext;
 			MemberInfo[] memberInfoA;
 			int totalMembers;
-			
+
 			if (searchString == null)
 			{
 				simws.FindFirstMembers(
@@ -475,11 +496,10 @@ namespace Novell.iFolder
 					out memberInfoA,
 					out totalMembers);
 			}
-			
+		
 			memberListModel.Reinitialize(searchContext, memberInfoA, totalMembers);
 			memberList.Reload();
 			memberList.Refresh();
-
 			// The code in this if statement fixes Bug 87444 (User Selector
 			// dialog is not refreshed when performing a search).  By forcing
 			// the first item to be selected, this bug no longer happens.
@@ -493,29 +513,33 @@ namespace Novell.iFolder
 
 		private void OnAddButtonClicked(object o, EventArgs args)
 		{
-			int selectedIndex = memberList.Selected;
-			if (selectedIndex >= 0)
+			int selectedIndex;
+			for(int i = memberList.sel_rows_count(); i>0; i--)
 			{
-				MemberInfo memberInfo = null;
-				try
+				selectedIndex = (int) memberList.getRowAt(i-1);
+				if (selectedIndex >= 0)
 				{
-					memberInfo = memberListModel.GetMemberInfo(selectedIndex);
-				}
-				catch(Exception e)
-				{
-					Console.WriteLine(e.Message);
-				}
-				if (memberInfo != null)
-				{
-					if (!selectedUsers.ContainsKey(memberInfo.UserID))
+					MemberInfo memberInfo = null;
+					try
 					{
-						selectedUsers.Add(memberInfo.UserID, memberInfo);
-						SelTreeStore.AppendValues(memberInfo);
-						
-						SetResponseSensitive(ResponseType.Ok, true);
+						memberInfo = memberListModel.GetMemberInfo(selectedIndex);
+					}
+					catch(Exception e)
+					{
+						Console.WriteLine(e.Message);
+					}
+					if (memberInfo != null)
+					{
+						if (!selectedUsers.ContainsKey(memberInfo.UserID))
+						{
+							selectedUsers.Add(memberInfo.UserID, memberInfo);
+							SelTreeStore.AppendValues(memberInfo);
+							SetResponseSensitive(ResponseType.Ok, true);
+						}
 					}
 				}
 			}
+			memberList.clear_sel_rows();
 		}
 
 
@@ -600,11 +624,11 @@ namespace Novell.iFolder
 				return searchContext;
 			}
 		}
-		
+
 		#endregion
 		
 		#region Public Methods
-		
+
 		public void Reinitialize(string SearchContext, MemberInfo[] MemberList, int Total)
 		{
 			CloseSearch();	// Close an existing search if present
@@ -766,10 +790,7 @@ namespace Novell.iFolder
 			
 			if (fullName != null && fullName.Length > 0)
 			{
-				if (duplicateMembers.Contains(memberInfo.FullName))
-					return string.Format("{0} ({1})", fullName, memberInfo.Name);
-				else
-					return string.Format("{0}", fullName);
+				return string.Format("{0} ({1})", fullName, memberInfo.Name);
 			}
 
 			return memberInfo.Name;

@@ -31,7 +31,8 @@ namespace Novell.iFolder
 	{
 		private DomainInformation[]	domains;
 		private string				defaultDomainID;
-		private ComboBox				domainComboBox;
+		private ComboBox			domainComboBox;
+		private ComboBox			security_lvl_ComboBox;
 		private string				initialPath;
 		private string				folderName;
 		private string				folderPath;
@@ -55,6 +56,13 @@ namespace Novell.iFolder
 					return domains[activeIndex].ID;
 				else
 					return "0";
+			}
+		}
+		public int Encrypt_Status
+		{
+			get
+			{
+				return security_lvl_ComboBox.Active;
 			}
 		}
 		
@@ -177,10 +185,20 @@ namespace Novell.iFolder
 			optionsTable.Attach(l, 1,2,0,1,
 								AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
+			l = new Label(Util.GS("Security Level:"));
+			l.Xalign = 0;
+			optionsTable.Attach(l, 1,2,1,2, AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+
 			// Set up Domains
 			domainComboBox = ComboBox.NewText();
 			optionsTable.Attach(domainComboBox, 2,3,0,1,
 								AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
+
+			security_lvl_ComboBox = ComboBox.NewText();
+			optionsTable.Attach(security_lvl_ComboBox, 2,3,1,2,
+								AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
+			security_lvl_ComboBox.Active = 0;
+
 			
 			int defaultDomain = 0;
 			for (int x = 0; x < domains.Length; x++)

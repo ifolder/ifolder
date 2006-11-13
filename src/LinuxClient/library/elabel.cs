@@ -66,20 +66,17 @@ public class ELabel : Label {
 
 	void Refresh ()
 	{
-		string ellipsized = Ellipsize (layout, text, Allocation.Width, ellipsis_width, en_width);
+		string ellipsized = Ellipsize (layout, text, Allocation.Width, ellipsis_width, en_width, 0);
 		if (base.Text != ellipsized)
 			base.Text = ellipsized;
 	}
 
-	public static string Ellipsize (Pango.Layout layout, string newtext, int bound, int ellipsis_width, int en_width)
+	public static string Ellipsize (Pango.Layout layout, string newtext, int bound, int ellipsis_width, int en_width, int hAdjust)
 	{
 		int width, tmp;
 
 		layout.SetText (newtext);
 		layout.GetPixelSize (out width, out tmp);
-
-		if (width < bound)
-			return newtext;
 
 		if (bound <= ellipsis_width)
 			return ellipsis;
@@ -87,11 +84,30 @@ public class ELabel : Label {
 		string ellipsized = "";
 		int i = 0;
 
+
+		if(hAdjust !=0)
+		{
+			i+=hAdjust;
+			while(i<newtext.Length)
+			{
+				ellipsized = ellipsized+newtext[i];
+				layout.SetText(ellipsized);
+				layout.GetPixelSize(out width, out tmp);
+				if(width > bound - ellipsis_width)
+					break;
+				i++;
+			}
+			return ellipsized;
+		}
+
+
+		if (width < bound)
+			return newtext;
 		//make a guess of where to start
 		i = (bound - ellipsis_width) / (en_width);
 		if (i >= newtext.Length)
 			i = 0;
-		ellipsized = newtext.Substring (0, i);
+		ellipsized = newtext.Substring (hAdjust, i);
 
 		//add chars one by one to determine how many are allowed
 		while (true)
