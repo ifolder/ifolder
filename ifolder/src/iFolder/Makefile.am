@@ -25,17 +25,18 @@ endif
 
 all: Novell.iFolder.dll
 
-$(srcdir)/iFolderWebService.cs: $(srcdir)/../WebService/iFolderWebService.wsdl
-if WINDOWS
-	wsdl $(srcdir)/../WebService/iFolderWebService.wsdl
-endif
-if LINUX
-	wsdl -nologo -out:iFolderWebService.cs $(srcdir)/../WebService/iFolderWebService.wsdl
+# Removed because the iFolderWeb project is now building iFolderWebService.cs
+#$(srcdir)/iFolderWebService.cs: $(srcdir)/../WebService/iFolderWebService.wsdl
+#if WINDOWS
+#	wsdl $(srcdir)/../WebService/iFolderWebService.wsdl
+#endif
+#if LINUX
+#	wsdl -nologo -out:iFolderWebService.cs $(srcdir)/../WebService/iFolderWebService.wsdl
 #	We used to have to do this because of the way the wdsl was being generated
 #   But it all appears fine after switching to [SoapDocumentMethod]
 #	cat iFolderWebService.cs | sed 's/iFolder1/iFolder/' | sed 's/iFolderUser1/iFolderUser/' | sed 's/DiskSpace1/DiskSpace/' > newsource.cs
 #	mv newsource.cs iFolderWebService.cs
-endif
+#endif
 
 Novell.iFolder.dll: $(iFolder_CSFILES) $(iFolder_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(iFolder_FLAGS) $(iFolder_LIBS:%=/r:%) $(iFolder_LIBPATH:%=/lib:%) $(iFolder_CSFILES_CSC) $(DOC_FILE_CMD)
