@@ -300,6 +300,25 @@ namespace Novell.iFolder.Web
 		/// </returns>
 		[WebMethod(EnableSession=true, Description="Create an iFolder. This will create an iFolder using the path specified.  The Path must exist or an exception will be thrown.")]
 		[SoapDocumentMethod]
+		public iFolderWeb CreateiFolderInDomainEncr(string Path, string DomainID, int encryption_status)
+		{
+			try
+			{
+				Collection col = SharedCollection.CreateLocalSharedCollection( Path, DomainID, 
+									encryption_status, iFolderWeb.iFolderType);
+
+				return new iFolderWeb(col);
+			}
+			catch(Exception e)
+			{
+				Console.WriteLine(e);
+				throw e;
+			}
+		}
+
+
+		[WebMethod(EnableSession=true, Description="Create an iFolder. This will create an iFolder using the path specified.  The Path must exist or an exception will be thrown.")]
+		[SoapDocumentMethod]
 		public iFolderWeb CreateiFolderInDomain(string Path, string DomainID)
 		{
 			try
@@ -314,8 +333,6 @@ namespace Novell.iFolder.Web
 				throw e;
 			}
 		}
-
-
 
 
 		/// <summary>

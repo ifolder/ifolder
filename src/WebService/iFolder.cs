@@ -117,6 +117,9 @@ namespace Novell.iFolder.Web
 		/// </summary>
 		public string Role;
 
+		public int encryption_status;
+		public string passphrase;
+
 		/// <summary>
 		/// </summary>
 		public iFolderWeb()
@@ -187,6 +190,7 @@ namespace Novell.iFolder.Web
 			}
 
 			this.Role = collection.Role.ToString();
+			this.encryption_status = collection.Encryption_Status;
 		}
 
 
