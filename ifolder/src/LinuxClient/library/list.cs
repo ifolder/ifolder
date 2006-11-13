@@ -32,6 +32,8 @@ public class BigList : Gtk.DrawingArea {
 	IListModel provider;
 	const string ellipsis = "...";
 	Hashtable ellipses = new Hashtable ();
+	public ArrayList sel_rows = new ArrayList();
+	public bool ctrl_pressed = false;
 	int old_width;
 	int ellipsis_width, en_width, line_height;
 	int selected_line = -1;
@@ -170,8 +172,9 @@ public class BigList : Gtk.DrawingArea {
 	{
 		Gdk.EventScroll es = args.Event;
                 double newloc = 0.0;
+		double newdisp = 0.0;
 		int steps = Math.Max (rows / 6, 2);
-		
+
                 switch (es.Direction){
                 case ScrollDirection.Up:
                         newloc = vAdjustment.Value - steps;
@@ -180,6 +183,7 @@ public class BigList : Gtk.DrawingArea {
                 case ScrollDirection.Down:
                         newloc = vAdjustment.Value + steps;
                         break;
+		
                 }
 
 		newloc = Math.Max (newloc, 0);
@@ -245,6 +249,22 @@ public class BigList : Gtk.DrawingArea {
 		} else
 			Selected = new_selected;
 
+
+		if (ctrl_pressed)
+		{
+			if(sel_rows.Contains(Selected))
+				sel_rows.Remove(Selected);
+			else
+				sel_rows.Add(Selected);
+
+		}
+		else
+		{
+			sel_rows.Clear();
+			sel_rows.Add(Selected);
+		}
+
+
 		last_click_time = a.Event.Time;
 		a.RetVal = true;
 	}
@@ -264,6 +284,20 @@ public class BigList : Gtk.DrawingArea {
 			return -2;
 		return (line + top_displayed);
 	}
+
+
+	public int getRowAt(int i) {
+			return (int) sel_rows[i];
+	}
+	
+	public void clear_sel_rows() {
+		sel_rows.Clear();
+	}
+	
+	public int sel_rows_count() {
+		return sel_rows.Count;
+	}
+
 
 	public int Selected {
 		get {
@@ -315,11 +349,16 @@ public class BigList : Gtk.DrawingArea {
 	public event ItemSelected ItemSelected;
 	
 	public event ItemActivated ItemActivated;
-	
+
         void ExposeHandler (object obj, ExposeEventArgs args)
         {
-                Gdk.Window win = args.Event.Window;
-                Gdk.Rectangle area = args.Event.Area;
+
+		int max_steps = 25;
+		int displ, len, ht;
+		string temp_str = "";
+
+		Gdk.Window win = args.Event.Window;
+		Gdk.Rectangle area = args.Event.Area;
 
 		win.DrawRectangle (Style.BaseGC (StateType.Normal), true, area);
 
@@ -329,7 +368,7 @@ public class BigList : Gtk.DrawingArea {
 			Gdk.Rectangle region_area = new Gdk.Rectangle (0, y, Allocation.Width, line_height);
 			StateType state = StateType.Normal;
 
-			if (row == selected_line) {
+			if (sel_rows.Contains(row)) {
 				if (HasFocus)
 					state = StateType.Selected;
 				else
@@ -339,19 +378,22 @@ public class BigList : Gtk.DrawingArea {
 			}
 			
 			//FIXME: we have a ghost row at the end of the list!
-			//Console.WriteLine (row + " " + provider.Rows);
 
 			if (row >= provider.Rows)
 				return;
 
 			string text = "";
-			if (ellipses [row] == null){
-				text = provider.GetValue (row);
-				text = ELabel.Ellipsize (layout, text, Allocation.Width - 2 * 2, ellipsis_width, en_width);
-				ellipses [row] = text;
-			} else
-				text = (string) ellipses [row];
-			layout.SetText (text);
+		
+			if(ellipses[row] == null)
+			{
+				text = provider.GetValue(row);
+			}	
+			else
+				text = (string) ellipses[row];
+			displ = (int) ((max_steps/HAdjustment.Upper)*HAdjustment.Value);
+			text = ELabel.Ellipsize (layout, text, Allocation.Width - 2 * 2, ellipsis_width, en_width, displ);
+
+			layout.SetText(text);
 
 			gc = Style.TextGC (state);
 			win.DrawLayout (gc, 2, y, layout);

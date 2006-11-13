@@ -478,8 +478,8 @@ namespace Novell.iFolder
 					// Set the pixbufs based on current state
 					if (holder.iFolder.HasConflicts)
 					{
-						newNormalPixbuf = ErrorPixbuf;
-						newSpotlightPixbuf = ErrorPixbufSpotlight;
+						newNormalPixbuf = WarningPixbuf;
+						newSpotlightPixbuf = WarningPixbufSpotlight;
 					}
 					else
 					{

@@ -781,12 +781,13 @@ namespace Novell.iFolder
 		// CreateiFolder
 		// creates an iFolder in the domain at the path specified
 		//===================================================================
-		public iFolderHolder CreateiFolder(string path, string domainID)
+		public iFolderHolder CreateiFolder(string path, string domainID, int encryption_status)
 		{
 			lock(instanceLock)
 			{
-   				iFolderWeb newiFolder = 
-								ifws.CreateiFolderInDomain(path, domainID);
+   				iFolderWeb newiFolder = ifws.CreateiFolderInDomainEncr(path, domainID, 
+											encryption_status);
+
 				if (newiFolder == null)
 				{
 					return null;

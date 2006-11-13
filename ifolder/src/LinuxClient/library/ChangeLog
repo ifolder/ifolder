@@ -1,0 +1,40 @@
+2006-11-13  Sushma Rai  <rsushma@novell.com>
+
+	* list.cs (class BigList): Added variables sel_rows and ctrl_pressed.
+	(ScrollHandler): Handling the scroll down.
+	(ButtonPressEventHandler):
+	(getRowAt): Added new to get the row for the given integer.
+	(clear_sel_rows):  Added new to clear the selected rows.
+	(sel_rows_count): Added new to read the number of slected rows.
+	(ExposeHandler):
+
+	* CreateDialog.cs (class CreateDialog): Added combo box for setting the
+	security level. Also added the property Encrypt_Status.
+	(CreateMoreOptionsExpander): Added Label for securty level and setting
+	the combo box labels.
+
+	* elabel.cs (Ellipsize): Changed the signature to include ...
+	(Refresh): Calling Ellipsize(), as per new signature.
+
+	* iFolderWindow.cs (OnIconViewDragDataReceived):	
+	(CreateNewiFolder):
+
+	* iFolderData.cs (CreateiFolder): Changed the signature to consider the
+	varialbe encryption_status.
+
+	* DragCreateDialog.cs (class DragCreateDialog): 
+	(Encrypt_Status):
+	(CreateMoreOptionsExpander):
+	
+	* iFolderUserSelector.cs (class iFolderUserSelector):
+	(iFolderUserSelector):
+	(KeyPressHandler): 
+	(KeyReleaseHandler):		
+	(OnAddButtonClicked):
+	(duplicateMembers)
+
+	* iFolderViewItem.cs (SetPixbufs):
+	
+	
+	
+	
