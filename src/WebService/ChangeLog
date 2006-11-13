@@ -7,3 +7,5 @@
 	* Makefile.am: 
 
 	* iFolderService.cs (iFolderWeb): 
+
+	Patch submitted by Ramesh Sundar <sramesh@novell.com>
