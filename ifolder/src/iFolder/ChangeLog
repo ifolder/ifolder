@@ -1,3 +1,5 @@
 2006-11-13  Sushma Rai  <rsushma@novell.com>
 
 	* Makefile.am: 
+
+	Patch submitted by Ramesh Sundar <sramesh@novell.com>
