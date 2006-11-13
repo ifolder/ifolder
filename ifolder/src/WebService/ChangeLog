@@ -1,0 +1,9 @@
+2006-11-13  Sushma Rai  <rsushma@novell.com>
+
+	* iFolder.cs (class iFolderWeb): Added members encryption_status and 
+	passphrase.
+	(iFolderWeb):
+
+	* Makefile.am: 
+
+	* iFolderService.cs (iFolderWeb): 

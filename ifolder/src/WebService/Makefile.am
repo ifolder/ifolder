@@ -21,10 +21,13 @@ DOC_FILE_CMD = /doc:$(DOC_FILE)
 DOC_FILE_CLEAN = *.doc.xml
 endif
 
-all: Novell.iFolder.Web.dll
+all: Novell.iFolder.Web.dll ../iFolder/iFolderWebService.cs
 
 Novell.iFolder.Web.dll: $(iFolderWebService_CSFILES) $(iFolderWebService_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderWebService_FLAGS) $(SIMIAS_LIBS) $(SIMIAS_CLIENT_LIBS) $(iFolderWebService_LIBS:%=/r:%) $(iFolderWebService_LIBPATH:%=/lib:%) $(iFolderWebService_RESOURCES:%=$(ICON_FLAG)%) $(iFolderWebService_CSFILES_CSC) $(DOC_FILE_CMD)
+
+../iFolder/iFolderWebService.cs: Novell.iFolder.Web.dll
+	wsdl -out:../iFolder/iFolderWebService.cs -type:Novell.iFolder.Web.iFolderService,Novell.iFolder.Web.dll
 
 if DEBUG
 if WINDOWS
