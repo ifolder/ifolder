@@ -202,7 +202,7 @@ case $IFOLDER_OS in
         PKG_CONFIG_REQUIRES="simias >= 1.0"
 		PKG_CONFIG_LIBS="/r:Novell.iFolder.dll"
 		PKG_CONFIG_CONFLICTS=""
-    	libexecdir='${exec_prefix}'
+    	libexecdir='${exec_prefix}/lib/simias'
     ;;
     #
     # Linux-specific configuration
@@ -254,7 +254,7 @@ case $IFOLDER_OS in
 		#ALL_LINGUAS="pt_BR fr it de es ru ja"
 		#AM_GNU_GETTEXT_VERSION(0.10.40)
 		AM_GNU_GETTEXT(external)
-    	libexecdir='${exec_prefix}'
+    	libexecdir='${exec_prefix}/lib/simias'
     ;;
     #
     # Windows-specific configuration
@@ -373,7 +373,7 @@ AC_SUBST(GSOAP_PATH)
 #
 # We have our own "standard" directories for web services.
 #
-webdir='${libdir}/web'
+webdir='${libexecdir}/web'
 webbindir='${webdir}/bin'
 # setup 64bit casa path in ifolder script
 case `arch` in
