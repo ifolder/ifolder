@@ -9,7 +9,7 @@ iFolderWebService_FLAGS = $(CSC_LIBFLAG)
 iFolderWebService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll SimiasClient.dll
 iFolderWebService_LIBPATH = $(LOG4NET_DIR)
 
-EXTRA_DIST = iFolder.asmx $(iFolderWebService_CSFILES) $(srcdir)/iFolderWebService.wsdl AssemblyInfo.cs.in
+EXTRA_DIST = iFolder.asmx $(iFolderWebService_CSFILES) AssemblyInfo.cs.in
 
 AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in Makefile
 	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
@@ -26,16 +26,26 @@ all: Novell.iFolder.Web.dll ../iFolder/iFolderWebService.cs
 Novell.iFolder.Web.dll: $(iFolderWebService_CSFILES) $(iFolderWebService_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderWebService_FLAGS) $(SIMIAS_LIBS) $(SIMIAS_CLIENT_LIBS) $(iFolderWebService_LIBS:%=/r:%) $(iFolderWebService_LIBPATH:%=/lib:%) $(iFolderWebService_RESOURCES:%=$(ICON_FLAG)%) $(iFolderWebService_CSFILES_CSC) $(DOC_FILE_CMD)
 
-../iFolder/iFolderWebService.cs: Novell.iFolder.Web.dll
+../iFolder/iFolderWebService.cs: iFolderWebService.wsdl 
 	wsdl -out:../iFolder/iFolderWebService.cs iFolderWebService.wsdl
+	
+iFolderWebService.wsdl: copy Novell.iFolder.Web.dll GenerateWsdl.exe
+	$(MONO) GenerateWsdl.exe Novell.iFolder.Web.dll Novell.iFolder.Web.iFolderService http://127.0.0.1:8086/simias10/iFolder.asmx $@
+	
+GenerateWsdl.exe: GenerateWsdl.cs
+	$(CSC) /out:$@ $(CSCFLAGS) $(CSC_EXEFLAG) $(GenerateWsdl_LIBS:%=/r:%) $<	
 
+copy:
+	cp $(DESTDIR)$(webbindir)/SimiasClient.dll .
+	cp $(DESTDIR)$(webbindir)/SimiasLib.dll .
+	
 if DEBUG
 if WINDOWS
 DEBUG_FILES = Novell.iFolder.Web.pdb
 endif
 endif
 
-install-exec-local: Novell.iFolder.Web.dll $(DATA_FILES)
+install-exec-local: all $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(webdir)
 	$(mkinstalldirs) $(DESTDIR)$(webbindir)
 	$(INSTALL_PROGRAM) iFolder.asmx $(DEBUG_FILES) $(DESTDIR)$(webdir)
@@ -47,7 +57,7 @@ uninstall-local:
 
 installcheck-local: install
 	
-CLEAN_FILES = Novell.iFolder.Web.dll $(DOC_FILE_CLEAN) AssemblyInfo.cs
+CLEAN_FILES = Novell.iFolder.Web.dll $(DOC_FILE_CLEAN) AssemblyInfo.cs ../iFolder/iFolderWebService.cs iFolderWebService.wsdl
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
