@@ -54,7 +54,7 @@ class GenerateWsdl
 				ServiceDescriptionReflector reflector = new ServiceDescriptionReflector();
 				reflector.Reflect(type, args[2]);
 
-				XmlTextWriter writer = new XmlTextWriter(args[3], Encoding.UTF8);
+				XmlTextWriter writer = new XmlTextWriter(args[3], Encoding.ASCII);
 				writer.Formatting = Formatting.Indented;
 				reflector.ServiceDescriptions[0].Write(writer);
 				writer.Close();
