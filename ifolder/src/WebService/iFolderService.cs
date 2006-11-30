@@ -298,14 +298,14 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// iFolder object representing the iFolder created
 		/// </returns>
-		[WebMethod(EnableSession=true, Description="Create an iFolder. This will create an iFolder using the path specified.  The Path must exist or an exception will be thrown.")]
+		[WebMethod(EnableSession=true, Description="Create an iFolder. This will create an iFolder using the path specified with the security Level desired. The Path must exist or an exception will be thrown.")]
 		[SoapDocumentMethod]
-		public iFolderWeb CreateiFolderInDomainEncr(string Path, string DomainID, int encryption_status)
+		public iFolderWeb CreateiFolderInDomainEncr(string Path, string DomainID, int SecurityStatus)
 		{
 			try
 			{
 				Collection col = SharedCollection.CreateLocalSharedCollection( Path, DomainID, 
-									encryption_status, iFolderWeb.iFolderType);
+									SecurityStatus, iFolderWeb.iFolderType);
 
 				return new iFolderWeb(col);
 			}
@@ -316,6 +316,9 @@ namespace Novell.iFolder.Web
 			}
 		}
 
+
+
+//	added now..
 
 		[WebMethod(EnableSession=true, Description="Create an iFolder. This will create an iFolder using the path specified.  The Path must exist or an exception will be thrown.")]
 		[SoapDocumentMethod]
@@ -366,7 +369,70 @@ namespace Novell.iFolder.Web
 		}
 
 
+		/*
+		/// Not used
+		[WebMethod(EnableSession=true, Description="This method is for setting security policy from the thick client.")]
+		[SoapDocumentMethod]
+		public int SetSecurityPolicy(string DomainID, int status)
+		{
+			
+                        Simias.Storage.Store store = Simias.Storage.Store.GetStore();
+	                Simias.Storage.Domain domain = store.GetDomain(DomainID);
+			Simias.Storage.Member member = domain.GetCurrentMember();
+			// Can make the changes to read and modify the status
+			Simias.Policy.SecurityState.Create(member, status);
+			return 0;
+		}
+		*/
 
+		/// This method is for finding the user security status depending upon the system and user policies
+		/// This is not a webmethos and is not exposed.
+		private int DeriveStatus(int system, int user, int preference)
+		{
+			if( preference != 0)	// server wins
+			{
+				if(system != 0)
+					return system;
+				return user;
+			}
+			else			// user wins
+			{
+				if(user != 0)
+					return user;
+				return system;
+			}
+		}
+
+		[WebMethod(EnableSession=true, Description="This method is for getting security policy from the Collectionstore.")]
+		[SoapDocumentMethod]
+		public int GetSecurityPolicy(string DomainID)
+		{
+			try
+			{
+				int SysEncrPolicy=0, UserEncrPolicy=0;
+				int SecurityStatus = 0;
+
+				SysEncrPolicy = Simias.Policy.SecurityState.GetStatus( DomainID );
+                        	Simias.Storage.Store store = Simias.Storage.Store.GetStore();
+	                        Simias.Storage.Domain domain = store.GetDomain(DomainID);
+				Simias.Storage.Member member = domain.GetCurrentMember();
+				UserEncrPolicy = Simias.Policy.SecurityState.GetStatus( member );
+
+				// We use a bitpattern for the security policy.
+				// The first 2 bits give the policy for encryption.
+				// the next 2 bits give the policy for secure data transfer (SSL)
+				SecurityStatus += DeriveStatus(SysEncrPolicy%4, UserEncrPolicy%4, (UserEncrPolicy & 0x10000));
+				SysEncrPolicy = SysEncrPolicy/4;
+				UserEncrPolicy = UserEncrPolicy/4;
+				SecurityStatus += 4*(DeriveStatus(SysEncrPolicy%4, UserEncrPolicy%4, UserEncrPolicy & 0x100000));
+				return SecurityStatus;
+			}
+			catch( Exception e )
+			{
+				Console.WriteLine(e);
+				throw(e);
+			}
+		}
 
 		/// <summary>
 		/// WebMethod that gets an iFolder based on an iFolderID

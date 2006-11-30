@@ -36,5 +36,12 @@
 	* iFolderViewItem.cs (SetPixbufs):
 	
 	Patch submitted by Sundar Ramesh <sramesh@novell.com>	
+
+2006-11-30 Ramesh Sunder <sramesh@novell.com>
 	
+	* CreateDialog.cs : Added UI elements to accept user choice regarding security
+
+	* iFolderData.cs : Added methods for Creating ifolders with security status, obtaining security Policy settings
+
+ 	
 	

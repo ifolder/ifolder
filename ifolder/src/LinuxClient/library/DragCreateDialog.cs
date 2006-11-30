@@ -65,7 +65,6 @@ namespace Novell.iFolder
 				return security_lvl_ComboBox.Active;
 			}
 		}
-		
 		public string Description
 		{
 			get
