@@ -1405,7 +1405,7 @@ namespace Novell.iFolder
 								{
 									string selectedFolder = cd.iFolderPath.Trim();
 									string selectedDomain = cd.DomainID;
-									int encryption_status = cd.Encrypt_Status;
+									int SecurityStatus = cd.Encrypt_Status;
 				
 									string parentDir = System.IO.Path.GetDirectoryName( selectedFolder );
 									if ( ( parentDir == null ) || ( parentDir == String.Empty ) )
@@ -1427,7 +1427,7 @@ namespace Novell.iFolder
 									try
 									{
 										ifHolder = ifdata.CreateiFolder(selectedFolder,
-													 selectedDomain, encryption_status);
+													 selectedDomain, SecurityStatus);
 									}
 									catch(Exception e)
 									{
@@ -2364,7 +2364,6 @@ namespace Novell.iFolder
 			DomainInformation defaultDomain = domainController.GetDefaultDomain();
 			if (defaultDomain != null)
 				domainID = defaultDomain.ID;
-
 			CreateDialog cd = new CreateDialog(this, domains, domainID, Util.LastCreatedPath, ifws);
 			cd.TransientFor = this;
 	
@@ -2381,7 +2380,7 @@ namespace Novell.iFolder
 						string selectedFolder = cd.iFolderPath.Trim();
 						string selectedDomain = cd.DomainID;
 					
-						int encryption_status = cd.Encrypt_Status;
+						int SecurityStatus = cd.Encrypt_Status;
 	
 						if (selectedFolder == String.Empty)
 						{
@@ -2436,7 +2435,7 @@ namespace Novell.iFolder
 						try
 						{
 							ifHolder = ifdata.CreateiFolder(selectedFolder, 
-										selectedDomain, encryption_status);
+										selectedDomain, SecurityStatus);
 						}
 						catch(Exception e)
 						{

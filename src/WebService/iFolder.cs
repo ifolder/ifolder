@@ -190,7 +190,7 @@ namespace Novell.iFolder.Web
 			}
 
 			this.Role = collection.Role.ToString();
-			this.encryption_status = collection.Encryption_Status;
+			this.encryption_status = collection.SecurityStatus;
 		}
 
 

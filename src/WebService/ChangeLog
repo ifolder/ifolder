@@ -9,3 +9,9 @@
 	* iFolderService.cs (iFolderWeb): 
 
 	Patch submitted by Ramesh Sundar <sramesh@novell.com>
+
+2006-11-30  Ramesh Sunder <sramesh@novell.com>
+
+	* iFolderService : Added web method to create ifolders with security status and to get security policy settings
+
+

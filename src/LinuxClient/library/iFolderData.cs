@@ -123,6 +123,7 @@ namespace Novell.iFolder
 
 			try
 			{
+				System.Console.WriteLine("Url = {0}", simiasManager.WebServiceUri);
 				ifws = new iFolderWebService();
 				ifws.Url = 
 					simiasManager.WebServiceUri.ToString() +
@@ -262,6 +263,7 @@ namespace Novell.iFolder
 						// recreate an iFolderHolder object because we lose
 						// count of the number of objects that are left to
 						// synchronize (Bug #82690).
+					//	Console.WriteLine("encr_status: {0}", ifolder.encryption_status);
 						string ifolderID =
 							ifolder.IsSubscription ?
 								ifolder.CollectionID :
@@ -781,12 +783,12 @@ namespace Novell.iFolder
 		// CreateiFolder
 		// creates an iFolder in the domain at the path specified
 		//===================================================================
-		public iFolderHolder CreateiFolder(string path, string domainID, int encryption_status)
+		public iFolderHolder CreateiFolder(string path, string domainID, int SecurityStatus)
 		{
 			lock(instanceLock)
 			{
    				iFolderWeb newiFolder = ifws.CreateiFolderInDomainEncr(path, domainID, 
-											encryption_status);
+											SecurityStatus);
 
 				if (newiFolder == null)
 				{
@@ -798,6 +800,17 @@ namespace Novell.iFolder
 			}	
 		}
 
+		public int GetSecurityPolicy(string domainID)
+		{
+			return ifws.GetSecurityPolicy(domainID);
+		}
+		/*
+		// Not Used
+		public int SetSecurityPolicy(string domainID, int status)
+		{
+			return ifws.SetSecurityPolicy(domainID, status);
+		}
+		*/
 
 
 
