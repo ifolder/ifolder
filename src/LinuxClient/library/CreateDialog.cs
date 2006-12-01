@@ -30,9 +30,22 @@ namespace Novell.iFolder
 {
 	public class CreateDialog : FileChooserDialog
 	{
+
+		enum SecurityState
+		{
+			encrypt = 1,
+			enforceEncrypt = 2,
+			SSL = 4,
+			enforceSSL = 8
+		}
+
+		enum SecurityOption
+		{
+			encryption = 1,
+			SSL = 2
+		}
 		private DomainInformation[]	domains;
 		private ComboBox			domainComboBox;
-	//	private ComboBox			security_lvl_ComboBox;
 		private CheckButton			Encryption;
 		private CheckButton 			SSL;
 		private string				initialPath;
@@ -67,12 +80,11 @@ namespace Novell.iFolder
 		{
 			get
 			{
-			//	return security_lvl_ComboBox.Active;
 				int retval=0;
 				if(Encryption.Active == true)
-					retval += 1;
+					retval += (int) SecurityOption.encryption;
 				if(SSL.Active == true)
-					retval += 2;
+					retval += (int) SecurityOption.SSL;
 				return retval;
 			}
 		}
@@ -128,18 +140,17 @@ namespace Novell.iFolder
 		{
 			Encryption.Active = SSL.Active = false;
 			Encryption.Sensitive = SSL.Sensitive = true;
-			if(status%2 == 1)
+			if( (status & (int) SecurityState.encrypt) == (int)SecurityState.encrypt)
+			{
 				Encryption.Active = true;
+				if( (status & (int) SecurityState.enforceEncrypt) == (int)SecurityState.enforceEncrypt)
+					Encryption.Sensitive = false;
+			}
 			else
 				Encryption.Sensitive = false;
-			status = status/2;
-			if(status%2 == 1)
-				Encryption.Sensitive = false;
-			status = status/2;
-			if(status%2 == 1)
+			if( (status & (int) SecurityState.SSL) == (int)SecurityState.SSL) 
 				SSL.Active = true;
-			status = status/2;
-			if(status%2 ==1)
+			if( (status & (int) SecurityState.enforceSSL) == (int)SecurityState.enforceSSL)
 				SSL.Sensitive = false;
 		}
 
@@ -155,18 +166,18 @@ namespace Novell.iFolder
 			optionsTable.RowSpacing = 10;
 			optionsTable.SetColSpacing(0, 30);
 			
-			Label l = new Label(Util.GS("iFolder Account:"));
+			Label l = new Label(Util.GS("iFolder Account"));
 			l.Xalign = 0;
 			optionsTable.Attach(l, 1,2,0,1,
 								AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
-			Encryption = new CheckButton("Encrypt the iFolder");
+			Encryption = new CheckButton(Util.GS("Encrypt the iFolder"));
 			optionsTable.Attach(Encryption, 2,3,1,2, AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
-			SSL = new CheckButton("Secure Data Transfer");
+			SSL = new CheckButton(Util.GS("Secure Data Transfer"));
 			optionsTable.Attach(SSL, 3,4,1,2, AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
-			l = new Label(Util.GS("Security:"));
+			l = new Label(Util.GS("Security"));
 			l.Xalign = 0;
 			optionsTable.Attach(l, 1,2,1,2,
 								AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -175,15 +186,6 @@ namespace Novell.iFolder
 			domainComboBox = ComboBox.NewText();
 			optionsTable.Attach(domainComboBox, 2,4,0,1,
 								AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
-			/*
-			security_lvl_ComboBox = ComboBox.NewText();
-			optionsTable.Attach(security_lvl_ComboBox, 2,3,1,2,
-								AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
-			security_lvl_ComboBox.AppendText("Encrypt iFolder");
-			security_lvl_ComboBox.AppendText("Use SSL");
-			security_lvl_ComboBox.AppendText("None");
-			security_lvl_ComboBox.Active = 0;
-			*/
 			
 			int defaultDomain = 0;
 			for (int x = 0; x < domains.Length; x++)

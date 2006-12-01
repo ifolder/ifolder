@@ -109,6 +109,18 @@ namespace Novell.iFolder.Web
 		CaseEqual
 	};
 
+	enum SecurityState
+	{
+		encrypt = 1,
+		enforceEncrypt = 2,
+		encryptionState = 3,
+		SSL = 4,
+		enforceSSL = 8,
+		SSLState = 12,
+		UserEncrypt = 16,
+		UserSSL = 32
+	}
+
 	/// <summary>
 	/// This is the core of the iFolderServce.  All of the methods in the
 	/// web service are implemented here.
@@ -421,10 +433,8 @@ namespace Novell.iFolder.Web
 				// We use a bitpattern for the security policy.
 				// The first 2 bits give the policy for encryption.
 				// the next 2 bits give the policy for secure data transfer (SSL)
-				SecurityStatus += DeriveStatus(SysEncrPolicy%4, UserEncrPolicy%4, (UserEncrPolicy & 0x10000));
-				SysEncrPolicy = SysEncrPolicy/4;
-				UserEncrPolicy = UserEncrPolicy/4;
-				SecurityStatus += 4*(DeriveStatus(SysEncrPolicy%4, UserEncrPolicy%4, UserEncrPolicy & 0x100000));
+				SecurityStatus += DeriveStatus( (SysEncrPolicy & (int)SecurityState.encryptionState), (UserEncrPolicy &(int)SecurityState.encryptionState ), (UserEncrPolicy & (int)SecurityState.UserEncrypt));
+				SecurityStatus += DeriveStatus( (SysEncrPolicy & (int)SecurityState.SSLState), (UserEncrPolicy & (int)SecurityState.SSLState), (UserEncrPolicy & (int)SecurityState.UserSSL));
 				return SecurityStatus;
 			}
 			catch( Exception e )
