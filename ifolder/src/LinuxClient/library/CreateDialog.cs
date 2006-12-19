@@ -33,8 +33,8 @@ namespace Novell.iFolder
 
 		enum SecurityState
 		{
-			encrypt = 1,
-			enforceEncrypt = 2,
+			encryption = 1,
+			enforceEncryption = 2,
 			SSL = 4,
 			enforceSSL = 8
 		}
@@ -76,17 +76,23 @@ namespace Novell.iFolder
 			}
 		}
 
-		public int Encrypt_Status
+		public bool ssl
 		{
 			get
 			{
-				int retval=0;
-				if(Encryption.Active == true)
-					retval += (int) SecurityOption.encryption;
-				if(SSL.Active == true)
-					retval += (int) SecurityOption.SSL;
-				return retval;
+				return SSL.Active;
 			}
+		}
+
+		public string EncryptionAlgorithm
+		{
+			get
+			{
+				if(Encryption.Active == true)
+					return "BlowFish";
+				else 
+					return "";			
+			}			
 		}
 
 		public string Description
@@ -132,26 +138,27 @@ namespace Novell.iFolder
 
 		private void OnDomainChangedEvent(System.Object o, EventArgs args)
 		{
-			int status = ifws.GetSecurityPolicy(this.DomainID);
-			ChangeStatus(status);
+			int SecurityPolicy = ifws.GetSecurityPolicy(this.DomainID);
+			ChangeStatus(SecurityPolicy);
 		}
 		
-		private void ChangeStatus(int status)
+		private void ChangeStatus(int SecurityPolicy)
 		{
 			Encryption.Active = SSL.Active = false;
-			Encryption.Sensitive = SSL.Sensitive = true;
-			if( (status & (int) SecurityState.encrypt) == (int)SecurityState.encrypt)
+			Encryption.Sensitive = SSL.Sensitive = false;
+			
+			if(SecurityPolicy !=0)
 			{
-				Encryption.Active = true;
-				if( (status & (int) SecurityState.enforceEncrypt) == (int)SecurityState.enforceEncrypt)
-					Encryption.Sensitive = false;
+				if((SecurityPolicy & (int)SecurityState.enforceEncryption) != (int)SecurityState.enforceEncryption)
+					Encryption.Sensitive = true;
+				else
+					Encryption.Active = true;				
+
+				if((SecurityPolicy & (int) SecurityState.enforceSSL ) != (int) SecurityState.enforceSSL)
+					SSL.Sensitive = true;
+				else
+					SSL.Active = true;
 			}
-			else
-				Encryption.Sensitive = false;
-			if( (status & (int) SecurityState.SSL) == (int)SecurityState.SSL) 
-				SSL.Active = true;
-			if( (status & (int) SecurityState.enforceSSL) == (int)SecurityState.enforceSSL)
-				SSL.Sensitive = false;
 		}
 
 		

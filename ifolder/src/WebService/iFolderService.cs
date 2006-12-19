@@ -312,12 +312,12 @@ namespace Novell.iFolder.Web
 		/// </returns>
 		[WebMethod(EnableSession=true, Description="Create an iFolder. This will create an iFolder using the path specified with the security Level desired. The Path must exist or an exception will be thrown.")]
 		[SoapDocumentMethod]
-		public iFolderWeb CreateiFolderInDomainEncr(string Path, string DomainID, int SecurityStatus)
+		public iFolderWeb CreateiFolderInDomainEncr(string Path, string DomainID, bool SSL, string encryptionAlgorithm)
 		{
 			try
 			{
 				Collection col = SharedCollection.CreateLocalSharedCollection( Path, DomainID, 
-									SecurityStatus, iFolderWeb.iFolderType);
+									SSL, iFolderWeb.iFolderType, encryptionAlgorithm);
 
 				return new iFolderWeb(col);
 			}

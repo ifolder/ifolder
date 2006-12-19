@@ -32,12 +32,23 @@ namespace Novell.iFolder
 		private DomainInformation[]	domains;
 		private string				defaultDomainID;
 		private ComboBox			domainComboBox;
-		private ComboBox			security_lvl_ComboBox;
+		private CheckButton			SSL;
+		private CheckButton			Encryption;
 		private string				initialPath;
 		private string				folderName;
 		private string				folderPath;
 //		TextView						descriptionTextView;
 		private Expander				optionsExpander;
+		private iFolderWebService			ifws;
+
+
+		enum SecurityState
+		{
+			encryption = 1,
+			enforceEncryption = 2,
+			SSL = 4,
+			enforceSSL = 8
+		}
 
 		public string iFolderPath
 		{
@@ -58,13 +69,6 @@ namespace Novell.iFolder
 					return "0";
 			}
 		}
-		public int Encrypt_Status
-		{
-			get
-			{
-				return security_lvl_ComboBox.Active;
-			}
-		}
 		public string Description
 		{
 			get
@@ -77,12 +81,30 @@ namespace Novell.iFolder
 //				descriptionTextView.Buffer.Text = value;
 //			}
 		}
+		public bool ssl
+		{
+			get
+			{
+				return SSL.Active;
+			}
+		}
+
+		public string EncryptionAlgorithm
+		{
+			get
+			{
+				if(Encryption.Active == true)
+					return "BlowFish";
+				else 
+					return "";			
+			}			
+		}
 
 		///
 		/// defaultDomainID: If the main iFolders window is currently
 		/// filtering the list of domains, this parameter is used to allow this
 		/// dialog to respect the currently selected domain.
-		public DragCreateDialog(Gtk.Window parentWindow, DomainInformation[] domainArray, string defaultDomainID, string initialPath)
+		public DragCreateDialog(Gtk.Window parentWindow, DomainInformation[] domainArray, string defaultDomainID, string initialPath, iFolderWebService ifws)
 				: base(Util.GS("Convert to an iFolder..."), parentWindow,
 				DialogFlags.Modal | DialogFlags.DestroyWithParent | DialogFlags.NoSeparator,
 				Stock.Help, ResponseType.Help, Stock.Cancel, ResponseType.Cancel, Stock.Ok, ResponseType.Ok)
@@ -93,6 +115,8 @@ namespace Novell.iFolder
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png"));
 
 			this.initialPath = initialPath;
+
+			this.ifws = ifws;
 			
 //			this.SetPolicy((int)this.AllowShrink, (int)this.AllowGrow, 1);
 			
@@ -102,6 +126,7 @@ namespace Novell.iFolder
 			widgets.ShowAll();
 
 			this.VBox.Add(widgets);
+			domainComboBox.Changed += new EventHandler(OnDomainChangedEvent);
 		}
 		
 		private Widget SetupWidgets()
@@ -179,26 +204,28 @@ namespace Novell.iFolder
 			optionsTable.RowSpacing = 10;
 			optionsTable.SetColSpacing(0, 30);
 			
-			Label l = new Label(Util.GS("iFolder Account:"));
+				
+			Label l = new Label(Util.GS("iFolder Account"));
 			l.Xalign = 0;
 			optionsTable.Attach(l, 1,2,0,1,
 								AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
-			l = new Label(Util.GS("Security Level:"));
+			Encryption = new CheckButton(Util.GS("Encrypt the iFolder"));
+			optionsTable.Attach(Encryption, 2,3,1,2, AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+
+			SSL = new CheckButton(Util.GS("Secure Data Transfer"));
+			optionsTable.Attach(SSL, 3,4,1,2, AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+
+			l = new Label(Util.GS("Security"));
 			l.Xalign = 0;
-			optionsTable.Attach(l, 1,2,1,2, AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+			optionsTable.Attach(l, 1,2,1,2,
+								AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
 			// Set up Domains
 			domainComboBox = ComboBox.NewText();
 			optionsTable.Attach(domainComboBox, 2,3,0,1,
 								AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
 
-			security_lvl_ComboBox = ComboBox.NewText();
-			optionsTable.Attach(security_lvl_ComboBox, 2,3,1,2,
-								AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
-			security_lvl_ComboBox.Active = 0;
-
-			
 			int defaultDomain = 0;
 			for (int x = 0; x < domains.Length; x++)
 			{
@@ -213,6 +240,9 @@ namespace Novell.iFolder
 			}
 			
 			domainComboBox.Active = defaultDomain;
+
+			int SecurityPolicy = ifws.GetSecurityPolicy(this.DomainID);
+			ChangeStatus(SecurityPolicy);
 
 /*
 			l = new Label(Util.GS("Description:"));
@@ -245,6 +275,31 @@ namespace Novell.iFolder
 			// Resize the dialog
 			if (!optionsExpander.Expanded)
 				this.Resize(20, 20);
+		}
+		
+		private void OnDomainChangedEvent(System.Object o, EventArgs args)
+		{
+			int SecurityPolicy = ifws.GetSecurityPolicy(this.DomainID);
+			ChangeStatus(SecurityPolicy);
+		}
+		
+		private void ChangeStatus(int SecurityPolicy)
+		{
+			Encryption.Active = SSL.Active = false;
+			Encryption.Sensitive = SSL.Sensitive = false;
+			
+			if(SecurityPolicy !=0)
+			{
+				if(SecurityPolicy & (int)SecurityState.enforceEncryption != (int)SecurityState.enforceEncryption)
+					Encryption.Sensitive = true;
+				else
+					Encryption.Active = true;				
+
+				if(SecurityPolicy & (int) SecurityState.enforceSSL != (int) SecurityState.enforceSSL)
+					SSL.Sensitive = true;
+				else
+					SSL.Active = true;
+			}
 		}
 	}
 }
