@@ -149,15 +149,20 @@ namespace Novell.iFolder
 			
 			if(SecurityPolicy !=0)
 			{
-				if((SecurityPolicy & (int)SecurityState.enforceEncryption) != (int)SecurityState.enforceEncryption)
-					Encryption.Sensitive = true;
-				else
-					Encryption.Active = true;				
-
-				if((SecurityPolicy & (int) SecurityState.enforceSSL ) != (int) SecurityState.enforceSSL)
-					SSL.Sensitive = true;
-				else
-					SSL.Active = true;
+				if( (SecurityPolicy & (int)SecurityState.encryption) == (int) SecurityState.encryption)
+				{
+					if( (SecurityPolicy & (int)SecurityState.enforceEncryption) == (int) SecurityState.enforceEncryption)
+						Encryption.Active = true;
+					else
+						Encryption.Sensitive = true;
+				}
+				if( (SecurityPolicy & (int)SecurityState.SSL) == (int) SecurityState.SSL)
+				{
+					if( (SecurityPolicy & (int)SecurityState.enforceSSL) == (int) SecurityState.enforceSSL)
+						SSL.Active = true;
+					else
+						SSL.Sensitive = true;
+				}
 			}
 		}
 
@@ -292,3 +297,4 @@ namespace Novell.iFolder
 		}
 	}
 }
+
