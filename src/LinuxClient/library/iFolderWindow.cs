@@ -1390,7 +1390,7 @@ namespace Novell.iFolder
 						if (defaultDomain != null)
 							domainID = defaultDomain.ID;
 			
-						DragCreateDialog cd = new DragCreateDialog(this, domains, domainID, path);
+						DragCreateDialog cd = new DragCreateDialog(this, domains, domainID, path, ifws);
 						cd.TransientFor = this;
 				
 						int rc = 0;
@@ -1405,7 +1405,8 @@ namespace Novell.iFolder
 								{
 									string selectedFolder = cd.iFolderPath.Trim();
 									string selectedDomain = cd.DomainID;
-									int SecurityStatus = cd.Encrypt_Status;
+									bool SSL = cd.ssl;
+									string algorithm = cd.EncryptionAlgorithm;
 				
 									string parentDir = System.IO.Path.GetDirectoryName( selectedFolder );
 									if ( ( parentDir == null ) || ( parentDir == String.Empty ) )
@@ -1427,7 +1428,7 @@ namespace Novell.iFolder
 									try
 									{
 										ifHolder = ifdata.CreateiFolder(selectedFolder,
-													 selectedDomain, SecurityStatus);
+													 selectedDomain, SSL, algorithm);
 									}
 									catch(Exception e)
 									{
@@ -2380,7 +2381,8 @@ namespace Novell.iFolder
 						string selectedFolder = cd.iFolderPath.Trim();
 						string selectedDomain = cd.DomainID;
 					
-						int SecurityStatus = cd.Encrypt_Status;
+						bool SSL = cd.ssl;
+						string algorithm = cd.EncryptionAlgorithm;
 	
 						if (selectedFolder == String.Empty)
 						{
@@ -2434,8 +2436,7 @@ namespace Novell.iFolder
 						iFolderHolder ifHolder = null;
 						try
 						{
-							ifHolder = ifdata.CreateiFolder(selectedFolder, 
-										selectedDomain, SecurityStatus);
+							ifHolder = ifdata.CreateiFolder(selectedFolder, selectedDomain, SSL, algorithm);
 						}
 						catch(Exception e)
 						{
