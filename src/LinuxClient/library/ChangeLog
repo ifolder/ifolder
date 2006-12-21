@@ -1,3 +1,15 @@
+2006-12-22  Ramesh Sunder <sramesh@novell.com>
+
+	* MigrationPage.cs: A new tab page in preferences to provision migration 
+	of folders from 2.x to 3.x domain.
+
+	* MigrationWizard.cs: A wizard that performs migration.
+
+	* MigrateLocation.cs: Pops up file browser for selecting the destination 
+	location where the folder is to be copied.
+
+	* PreferencesWindow.cs: Changes for showing the Migration Page.
+
 2006-11-13  Sushma Rai  <rsushma@novell.com>
 
 	* list.cs (class BigList): Added variables sel_rows and ctrl_pressed.
