@@ -30,19 +30,12 @@ namespace Novell.iFolder
 {
 	public class CreateDialog : FileChooserDialog
 	{
-
 		enum SecurityState
 		{
 			encryption = 1,
 			enforceEncryption = 2,
 			SSL = 4,
 			enforceSSL = 8
-		}
-
-		enum SecurityOption
-		{
-			encryption = 1,
-			SSL = 2
 		}
 		private DomainInformation[]	domains;
 		private ComboBox			domainComboBox;
@@ -178,8 +171,9 @@ namespace Novell.iFolder
 			optionsTable.RowSpacing = 10;
 			optionsTable.SetColSpacing(0, 30);
 			
-			Label l = new Label(Util.GS("iFolder Account"));
+			Label l = new Label(Util.GS("iFolder Account")+":");
 			l.Xalign = 0;
+			///Syntax:  Table.Attach(widget, column_start, column_end, row_start, row_end, AttachOptions,.....
 			optionsTable.Attach(l, 1,2,0,1,
 								AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
@@ -189,7 +183,7 @@ namespace Novell.iFolder
 			SSL = new CheckButton(Util.GS("Secure Data Transfer"));
 			optionsTable.Attach(SSL, 3,4,1,2, AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
-			l = new Label(Util.GS("Security"));
+			l = new Label(Util.GS("Security")+":");
 			l.Xalign = 0;
 			optionsTable.Attach(l, 1,2,1,2,
 								AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
