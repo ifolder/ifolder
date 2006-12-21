@@ -7,7 +7,7 @@ iFolderWebService_INCLUDES =
 iFolderWebService_RESOURCES =
 iFolderWebService_FLAGS = $(CSC_LIBFLAG)
 iFolderWebService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll SimiasClient.dll
-iFolderWebService_LIBPATH = $(LOG4NET_DIR)
+iFolderWebService_LIBPATH = $(LOG4NET_DIR) $(webbindir)
 GenerateWsdl_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll
 
 EXTRA_DIST = iFolder.asmx $(iFolderWebService_CSFILES) AssemblyInfo.cs.in
@@ -30,16 +30,12 @@ Novell.iFolder.Web.dll: $(iFolderWebService_CSFILES) $(iFolderWebService_RESOURC
 ../iFolder/iFolderWebService.cs: iFolderWebService.wsdl 
 	wsdl -out:../iFolder/iFolderWebService.cs iFolderWebService.wsdl
 	
-iFolderWebService.wsdl: copy Novell.iFolder.Web.dll GenerateWsdl.exe
+iFolderWebService.wsdl: Novell.iFolder.Web.dll GenerateWsdl.exe
 	$(MONO) GenerateWsdl.exe Novell.iFolder.Web.dll Novell.iFolder.Web.iFolderService http://127.0.0.1:8086/simias10/iFolder.asmx $@
 	
 GenerateWsdl.exe: GenerateWsdl.cs
 	$(CSC) /out:$@ $(CSCFLAGS) $(CSC_EXEFLAG) $(GenerateWsdl_LIBS:%=/r:%) $<	
 
-copy:
-	cp $(DESTDIR)$(webbindir)/SimiasClient.dll .
-	cp $(DESTDIR)$(webbindir)/SimiasLib.dll .
-	
 if DEBUG
 if WINDOWS
 DEBUG_FILES = Novell.iFolder.Web.pdb
