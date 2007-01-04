@@ -2009,7 +2009,8 @@ namespace Novell.FormsTrayApp
 			{
 				if (eventData.Equals("NodeCreated"))
 				{
-//					if (IsSelected(ifolder.DomainID))
+					// Next line is commented previously...
+				//	if (IsSelected(ifolder.DomainID))
 					{
 						addiFolderToListView(new iFolderObject(ifolder, iFolderState.Normal));
 
@@ -2021,15 +2022,21 @@ namespace Novell.FormsTrayApp
 
 						// Check for existing subscriptions when an iFolder gets created and remove them
 						// from the list.
-/*TODO:						if (!ifolder.IsSubscription)
+						///*
+						if (!ifolder.IsSubscription)
 						{
 							// See if there is a subscription for this ifolder.
 							lock (ht)
 							{
-								ListViewItem[] lvia = new ListViewItem[ht.Count];
+								TileListViewItem[] lvia = new TileListViewItem[ht.Count];
 								ht.Values.CopyTo(lvia, 0);
-
-								foreach(ListViewItem lvi in lvia)
+								/*
+								string[] keys = new string[ht.Count];
+								(ht.Keys).CopyTo(keys, 0);
+									for(int i=0;i<keys.Length;i++)
+										lvia[i] = (ListViewItem) ht[keys[i]];
+								*/
+								foreach(TileListViewItem lvi in lvia)
 								{
 									iFolderObject ifo = lvi.Tag as iFolderObject;
 									if (ifo.iFolderWeb.IsSubscription &&
@@ -2041,7 +2048,7 @@ namespace Novell.FormsTrayApp
 									}
 								}
 							}
-						}*/
+						}//*/
 					}
 				}
 				else

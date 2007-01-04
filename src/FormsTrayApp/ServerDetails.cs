@@ -1038,12 +1038,14 @@ namespace Novell.FormsTrayApp
 
 				try
 				{
+					/*
 					if (!simiasWebService.SetDomainHostAddress(domain.ID, address.Text))
 					{
 	// TODO:					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("updateHostError"), resourceManager.GetString("accountErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 	//					mmb.ShowDialog();
 						// TODO: Don't dismiss the dialog.
 					}
+					*/
 				}
 				catch (Exception ex)
 				{

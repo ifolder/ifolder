@@ -41,6 +41,13 @@ namespace Novell.iFolderCom
 	public class CreateiFolder : System.Windows.Forms.Form
 	{
 		#region Class Members
+		enum SecurityState
+		{
+			encryption = 1,
+			enforceEncryption = 2,
+			SSL = 4,
+			enforceSSL = 8
+		}
 		System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(CreateiFolder));
 		private iFolderWebService ifWebService;
 		private bool successful;
@@ -53,6 +60,11 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Button browse;
 		private System.Windows.Forms.TextBox ifolderPath;
+		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.CheckBox encryption;
+		private System.Windows.Forms.CheckBox ssl;
+
+		
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -158,6 +170,9 @@ namespace Novell.iFolderCom
 			this.ifolderPath = new System.Windows.Forms.TextBox();
 			this.label2 = new System.Windows.Forms.Label();
 			this.browse = new System.Windows.Forms.Button();
+			this.label3 = new System.Windows.Forms.Label();
+			this.encryption = new System.Windows.Forms.CheckBox();
+			this.ssl = new System.Windows.Forms.CheckBox();
 			this.SuspendLayout();
 			// 
 			// ok
@@ -327,6 +342,79 @@ namespace Novell.iFolderCom
 			this.browse.Visible = ((bool)(resources.GetObject("browse.Visible")));
 			this.browse.Click += new System.EventHandler(this.browse_Click);
 			// 
+			// label3
+			// 
+			this.label3.AccessibleDescription = resources.GetString("label3.AccessibleDescription");
+			this.label3.AccessibleName = resources.GetString("label3.AccessibleName");
+			this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label3.Anchor")));
+			this.label3.AutoSize = ((bool)(resources.GetObject("label3.AutoSize")));
+			this.label3.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label3.Dock")));
+			this.label3.Enabled = ((bool)(resources.GetObject("label3.Enabled")));
+			this.label3.Font = ((System.Drawing.Font)(resources.GetObject("label3.Font")));
+			this.label3.Image = ((System.Drawing.Image)(resources.GetObject("label3.Image")));
+			this.label3.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label3.ImageAlign")));
+			this.label3.ImageIndex = ((int)(resources.GetObject("label3.ImageIndex")));
+			this.label3.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label3.ImeMode")));
+			this.label3.Location = ((System.Drawing.Point)(resources.GetObject("label3.Location")));
+			this.label3.Name = "label3";
+			this.label3.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label3.RightToLeft")));
+			this.label3.Size = ((System.Drawing.Size)(resources.GetObject("label3.Size")));
+			this.label3.TabIndex = ((int)(resources.GetObject("label3.TabIndex")));
+			this.label3.Text = resources.GetString("label3.Text");
+			this.label3.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label3.TextAlign")));
+			this.label3.Visible = ((bool)(resources.GetObject("label3.Visible")));
+			// 
+			// encryption
+			// 
+			this.encryption.AccessibleDescription = resources.GetString("encryption.AccessibleDescription");
+			this.encryption.AccessibleName = resources.GetString("encryption.AccessibleName");
+			this.encryption.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("encryption.Anchor")));
+			this.encryption.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("encryption.Appearance")));
+			this.encryption.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("encryption.BackgroundImage")));
+			this.encryption.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("encryption.CheckAlign")));
+			this.encryption.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("encryption.Dock")));
+			this.encryption.Enabled = ((bool)(resources.GetObject("encryption.Enabled")));
+			this.encryption.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("encryption.FlatStyle")));
+			this.encryption.Font = ((System.Drawing.Font)(resources.GetObject("encryption.Font")));
+			this.encryption.Image = ((System.Drawing.Image)(resources.GetObject("encryption.Image")));
+			this.encryption.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("encryption.ImageAlign")));
+			this.encryption.ImageIndex = ((int)(resources.GetObject("encryption.ImageIndex")));
+			this.encryption.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("encryption.ImeMode")));
+			this.encryption.Location = ((System.Drawing.Point)(resources.GetObject("encryption.Location")));
+			this.encryption.Name = "encryption";
+			this.encryption.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("encryption.RightToLeft")));
+			this.encryption.Size = ((System.Drawing.Size)(resources.GetObject("encryption.Size")));
+			this.encryption.TabIndex = ((int)(resources.GetObject("encryption.TabIndex")));
+			this.encryption.Text = resources.GetString("encryption.Text");
+			this.encryption.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("encryption.TextAlign")));
+			this.encryption.Visible = ((bool)(resources.GetObject("encryption.Visible")));
+			this.encryption.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+			// 
+			// ssl
+			// 
+			this.ssl.AccessibleDescription = resources.GetString("ssl.AccessibleDescription");
+			this.ssl.AccessibleName = resources.GetString("ssl.AccessibleName");
+			this.ssl.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("ssl.Anchor")));
+			this.ssl.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("ssl.Appearance")));
+			this.ssl.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("ssl.BackgroundImage")));
+			this.ssl.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("ssl.CheckAlign")));
+			this.ssl.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("ssl.Dock")));
+			this.ssl.Enabled = ((bool)(resources.GetObject("ssl.Enabled")));
+			this.ssl.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("ssl.FlatStyle")));
+			this.ssl.Font = ((System.Drawing.Font)(resources.GetObject("ssl.Font")));
+			this.ssl.Image = ((System.Drawing.Image)(resources.GetObject("ssl.Image")));
+			this.ssl.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("ssl.ImageAlign")));
+			this.ssl.ImageIndex = ((int)(resources.GetObject("ssl.ImageIndex")));
+			this.ssl.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("ssl.ImeMode")));
+			this.ssl.Location = ((System.Drawing.Point)(resources.GetObject("ssl.Location")));
+			this.ssl.Name = "ssl";
+			this.ssl.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("ssl.RightToLeft")));
+			this.ssl.Size = ((System.Drawing.Size)(resources.GetObject("ssl.Size")));
+			this.ssl.TabIndex = ((int)(resources.GetObject("ssl.TabIndex")));
+			this.ssl.Text = resources.GetString("ssl.Text");
+			this.ssl.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("ssl.TextAlign")));
+			this.ssl.Visible = ((bool)(resources.GetObject("ssl.Visible")));
+			// 
 			// CreateiFolder
 			// 
 			this.AcceptButton = this.ok;
@@ -339,6 +427,9 @@ namespace Novell.iFolderCom
 			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 			this.CancelButton = this.cancel;
 			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
+			this.Controls.Add(this.ssl);
+			this.Controls.Add(this.encryption);
+			this.Controls.Add(this.label3);
 			this.Controls.Add(this.browse);
 			this.Controls.Add(this.ifolderPath);
 			this.Controls.Add(this.label2);
@@ -422,7 +513,6 @@ namespace Novell.iFolderCom
 					servers.SelectedIndex = 0;
 				}
 			}
-
 			if (!ifolderPath.Text.Equals(string.Empty))
 			{
 				ifolderPath.ReadOnly = true;
@@ -463,6 +553,29 @@ namespace Novell.iFolderCom
 		private void servers_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
 			ok.Enabled = (ifolderPath.Text.Length > 0) && (servers.SelectedItem != null);
+			// Change the corresponding encryption check boxes
+			DomainItem domain = (DomainItem) servers.SelectedItem;
+			int SecurityPolicy = ifWebService.GetSecurityPolicy(domain.ID);
+			this.encryption.Checked = this.ssl.Checked = false;
+			this.encryption.Enabled = this.ssl.Enabled = false;
+
+			if(SecurityPolicy !=0)
+			{
+				if( (SecurityPolicy & (int)SecurityState.encryption) == (int) SecurityState.encryption)
+				{
+					if( (SecurityPolicy & (int)SecurityState.enforceEncryption) == (int) SecurityState.enforceEncryption)
+						encryption.Checked = true;
+					else
+						encryption.Enabled = true;
+				}
+				if( (SecurityPolicy & (int)SecurityState.SSL) == (int) SecurityState.SSL)
+				{
+					if( (SecurityPolicy & (int)SecurityState.enforceSSL) == (int) SecurityState.enforceSSL)
+						ssl.Checked = true;
+					else
+						ssl.Enabled = true;
+				}
+			}
 		}
 
 		private void ok_Click(object sender, System.EventArgs e)
@@ -493,7 +606,7 @@ namespace Novell.iFolderCom
 
 				if (!Directory.Exists(ifolderPath.Text))
 				{
-					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("createPrompt"), resourceManager.GetString("createPromptTitle"), string.Empty, MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question);
+					MyMessageBox mmb =new MyMessageBox(resourceManager.GetString("createPrompt"), resourceManager.GetString("createPromptTitle"), string.Empty, MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question);
 					if (mmb.ShowDialog() == DialogResult.Yes)
 					{
 						string parent = Path.GetDirectoryName(ifolderPath.Text);
@@ -528,8 +641,25 @@ namespace Novell.iFolderCom
 						DomainItem domainItem = (DomainItem)servers.SelectedItem;
 
 						// Create the iFolder.
-						iFolderWeb ifolder = ifWebService.CreateiFolderInDomain(ifolderPath.Text, domainItem.ID);
-
+						// TODO item. this web service call should be changed to constain the encr_status
+						//Added by Ramesh
+						//	iFolderWeb ifolder = ifWebService.CreateiFolderInDomain(ifolderPath.Text, domainItem.ID);
+						
+						//Console.WriteLine("encryption_status: {0}", encryption_status.SelectedIndex);
+						//string str= encryption_status.SelectedIndex==0 ? "0" : "1";
+						//MyMessageBox mmb = new MyMessageBox("encryption: Calling createiFolder()", "Check", string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						//mmb.ShowDialog();
+						int temp=ifWebService.GetSecurityPolicy(domainItem.ID);
+						int encr_status = 0;
+						if(this.encryption.Checked)
+							encr_status +=1;
+						if(this.ssl.Checked)
+							encr_status +=2;
+						
+						bool SSL = this.ssl.Checked;
+						string algorithm = (this.encryption.Checked)? "BlowFish" : "";
+						
+						iFolderWeb ifolder = ifWebService.CreateiFolderInDomainEncr(ifolderPath.Text, domainItem.ID, SSL, algorithm );
 						// Notify the shell.
 						Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolderPath.Text, IntPtr.Zero);
 
@@ -659,6 +789,32 @@ namespace Novell.iFolderCom
 		#endregion
 
 		#region Private Methods
+
+		private void SetSecurityState()
+		{
+			DomainItem domain = (DomainItem) servers.SelectedItem;
+			this.encryption.Checked = this.ssl.Checked = false;
+			this.encryption.Enabled = this.ssl.Enabled = false;
+			if(domain == null)
+				return;
+			int securityPolicy = ifWebService.GetSecurityPolicy(domain.ID);
+
+			if( (securityPolicy & 0x0001) == 0x01)
+			{
+				if( (securityPolicy & 0x0010) == 0x0010)
+					this.encryption.Checked = true;
+				else
+					this.encryption.Enabled = true;
+			}
+			if( (securityPolicy & 0x0100) == 0x0100)
+			{
+			if( (securityPolicy & 0x01000) == 0x01000)
+				this.ssl.Checked = true;
+			else
+				this.ssl.Enabled = true;
+			}
+
+		}
 		private int calculateSize(Control control, int delta)
 		{
 			int size;
@@ -675,6 +831,12 @@ namespace Novell.iFolderCom
 
 			return (int)Math.Max(delta, size);
 		}
+		private void checkBox1_CheckedChanged(object sender, System.EventArgs e)
+		{
+		
+		}
 		#endregion
+
 	}
 }
+

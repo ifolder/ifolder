@@ -26,9 +26,9 @@ endif
 all: Novell.iFolder.dll
 
 $(srcdir)/iFolderWebService.cs: $(srcdir)/../WebService/iFolderWebService.wsdl
-if WINDOWS
-	wsdl $(srcdir)/../WebService/iFolderWebService.wsdl
-endif
+#if WINDOWS
+#	wsdl $(srcdir)/../WebService/iFolderWebService.wsdl
+#endif
 if LINUX
 	wsdl -nologo -out:iFolderWebService.cs $(srcdir)/../WebService/iFolderWebService.wsdl
 #	We used to have to do this because of the way the wdsl was being generated

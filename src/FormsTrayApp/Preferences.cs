@@ -95,12 +95,17 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.GroupBox groupBox4;
 		private System.Windows.Forms.TabPage tabGeneral;
 		private System.Windows.Forms.TabPage tabAccounts;
+		private System.Windows.Forms.TabPage tabMigrate;
 		private System.Windows.Forms.Timer timer1;
 		private System.Windows.Forms.ColumnHeader columnHeader1;
 		private System.Windows.Forms.HelpProvider helpProvider1;
 		private System.Windows.Forms.ComboBox timeUnit;
 		private System.Windows.Forms.Label label1;
 		private System.ComponentModel.IContainer components;
+		private System.Windows.Forms.ListView listView1;
+		private System.Windows.Forms.ColumnHeader columnHeader4;
+		private System.Windows.Forms.ColumnHeader columnHeader5;
+		private System.Windows.Forms.Button btnMigrate;
 		private Manager simiasManager;
 		#endregion
 
@@ -187,11 +192,16 @@ namespace Novell.FormsTrayApp
 			this.details = new System.Windows.Forms.Button();
 			this.removeAccount = new System.Windows.Forms.Button();
 			this.addAccount = new System.Windows.Forms.Button();
+			this.tabMigrate = new System.Windows.Forms.TabPage();
+			this.listView1 = new System.Windows.Forms.ListView();
+			this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
+			this.columnHeader5 = new System.Windows.Forms.ColumnHeader();
 			this.cancel = new System.Windows.Forms.Button();
 			this.apply = new System.Windows.Forms.Button();
 			this.ok = new System.Windows.Forms.Button();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.helpProvider1 = new System.Windows.Forms.HelpProvider();
+			this.btnMigrate = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabGeneral.SuspendLayout();
@@ -199,6 +209,7 @@ namespace Novell.FormsTrayApp
 			this.groupBox1.SuspendLayout();
 			this.groupBox3.SuspendLayout();
 			this.tabAccounts.SuspendLayout();
+			this.tabMigrate.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// defaultInterval
@@ -280,6 +291,7 @@ namespace Novell.FormsTrayApp
 			this.tabControl1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("tabControl1.BackgroundImage")));
 			this.tabControl1.Controls.Add(this.tabGeneral);
 			this.tabControl1.Controls.Add(this.tabAccounts);
+			this.tabControl1.Controls.Add(this.tabMigrate);
 			this.tabControl1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("tabControl1.Dock")));
 			this.tabControl1.Enabled = ((bool)(resources.GetObject("tabControl1.Enabled")));
 			this.tabControl1.Font = ((System.Drawing.Font)(resources.GetObject("tabControl1.Font")));
@@ -787,6 +799,77 @@ namespace Novell.FormsTrayApp
 			this.addAccount.Visible = ((bool)(resources.GetObject("addAccount.Visible")));
 			this.addAccount.Click += new System.EventHandler(this.addAccount_Click);
 			// 
+			// tabMigrate
+			// 
+			this.tabMigrate.AccessibleDescription = resources.GetString("tabMigrate.AccessibleDescription");
+			this.tabMigrate.AccessibleName = resources.GetString("tabMigrate.AccessibleName");
+			this.tabMigrate.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("tabMigrate.Anchor")));
+			this.tabMigrate.AutoScroll = ((bool)(resources.GetObject("tabMigrate.AutoScroll")));
+			this.tabMigrate.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("tabMigrate.AutoScrollMargin")));
+			this.tabMigrate.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("tabMigrate.AutoScrollMinSize")));
+			this.tabMigrate.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("tabMigrate.BackgroundImage")));
+			this.tabMigrate.Controls.Add(this.btnMigrate);
+			this.tabMigrate.Controls.Add(this.listView1);
+			this.tabMigrate.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("tabMigrate.Dock")));
+			this.tabMigrate.Enabled = ((bool)(resources.GetObject("tabMigrate.Enabled")));
+			this.tabMigrate.Font = ((System.Drawing.Font)(resources.GetObject("tabMigrate.Font")));
+			this.helpProvider1.SetHelpKeyword(this.tabMigrate, resources.GetString("tabMigrate.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.tabMigrate, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("tabMigrate.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.tabMigrate, resources.GetString("tabMigrate.HelpString"));
+			this.tabMigrate.ImageIndex = ((int)(resources.GetObject("tabMigrate.ImageIndex")));
+			this.tabMigrate.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("tabMigrate.ImeMode")));
+			this.tabMigrate.Location = ((System.Drawing.Point)(resources.GetObject("tabMigrate.Location")));
+			this.tabMigrate.Name = "tabMigrate";
+			this.tabMigrate.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("tabMigrate.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.tabMigrate, ((bool)(resources.GetObject("tabMigrate.ShowHelp"))));
+			this.tabMigrate.Size = ((System.Drawing.Size)(resources.GetObject("tabMigrate.Size")));
+			this.tabMigrate.TabIndex = ((int)(resources.GetObject("tabMigrate.TabIndex")));
+			this.tabMigrate.Text = resources.GetString("tabMigrate.Text");
+			this.tabMigrate.ToolTipText = resources.GetString("tabMigrate.ToolTipText");
+			this.tabMigrate.Visible = ((bool)(resources.GetObject("tabMigrate.Visible")));
+			// 
+			// listView1
+			// 
+			this.listView1.AccessibleDescription = resources.GetString("listView1.AccessibleDescription");
+			this.listView1.AccessibleName = resources.GetString("listView1.AccessibleName");
+			this.listView1.Alignment = ((System.Windows.Forms.ListViewAlignment)(resources.GetObject("listView1.Alignment")));
+			this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("listView1.Anchor")));
+			this.listView1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("listView1.BackgroundImage")));
+			this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+																						this.columnHeader4,
+																						this.columnHeader5});
+			this.listView1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("listView1.Dock")));
+			this.listView1.Enabled = ((bool)(resources.GetObject("listView1.Enabled")));
+			this.listView1.Font = ((System.Drawing.Font)(resources.GetObject("listView1.Font")));
+			this.listView1.FullRowSelect = true;
+			this.helpProvider1.SetHelpKeyword(this.listView1, resources.GetString("listView1.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.listView1, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("listView1.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.listView1, resources.GetString("listView1.HelpString"));
+			this.listView1.HideSelection = false;
+			this.listView1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("listView1.ImeMode")));
+			this.listView1.LabelWrap = ((bool)(resources.GetObject("listView1.LabelWrap")));
+			this.listView1.Location = ((System.Drawing.Point)(resources.GetObject("listView1.Location")));
+			this.listView1.Name = "listView1";
+			this.listView1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("listView1.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.listView1, ((bool)(resources.GetObject("listView1.ShowHelp"))));
+			this.listView1.Size = ((System.Drawing.Size)(resources.GetObject("listView1.Size")));
+			this.listView1.TabIndex = ((int)(resources.GetObject("listView1.TabIndex")));
+			this.listView1.Text = resources.GetString("listView1.Text");
+			this.listView1.View = System.Windows.Forms.View.Details;
+			this.listView1.Visible = ((bool)(resources.GetObject("listView1.Visible")));
+			// 
+			// columnHeader4
+			// 
+			this.columnHeader4.Text = resources.GetString("columnHeader4.Text");
+			this.columnHeader4.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("columnHeader4.TextAlign")));
+			this.columnHeader4.Width = ((int)(resources.GetObject("columnHeader4.Width")));
+			// 
+			// columnHeader5
+			// 
+			this.columnHeader5.Text = resources.GetString("columnHeader5.Text");
+			this.columnHeader5.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("columnHeader5.TextAlign")));
+			this.columnHeader5.Width = ((int)(resources.GetObject("columnHeader5.Width")));
+			// 
 			// cancel
 			// 
 			this.cancel.AccessibleDescription = resources.GetString("cancel.AccessibleDescription");
@@ -882,6 +965,34 @@ namespace Novell.FormsTrayApp
 			// 
 			this.helpProvider1.HelpNamespace = resources.GetString("helpProvider1.HelpNamespace");
 			// 
+			// btnMigrate
+			// 
+			this.btnMigrate.AccessibleDescription = resources.GetString("btnMigrate.AccessibleDescription");
+			this.btnMigrate.AccessibleName = resources.GetString("btnMigrate.AccessibleName");
+			this.btnMigrate.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("btnMigrate.Anchor")));
+			this.btnMigrate.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnMigrate.BackgroundImage")));
+			this.btnMigrate.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("btnMigrate.Dock")));
+			this.btnMigrate.Enabled = ((bool)(resources.GetObject("btnMigrate.Enabled")));
+			this.btnMigrate.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("btnMigrate.FlatStyle")));
+			this.btnMigrate.Font = ((System.Drawing.Font)(resources.GetObject("btnMigrate.Font")));
+			this.helpProvider1.SetHelpKeyword(this.btnMigrate, resources.GetString("btnMigrate.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.btnMigrate, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("btnMigrate.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.btnMigrate, resources.GetString("btnMigrate.HelpString"));
+			this.btnMigrate.Image = ((System.Drawing.Image)(resources.GetObject("btnMigrate.Image")));
+			this.btnMigrate.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("btnMigrate.ImageAlign")));
+			this.btnMigrate.ImageIndex = ((int)(resources.GetObject("btnMigrate.ImageIndex")));
+			this.btnMigrate.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("btnMigrate.ImeMode")));
+			this.btnMigrate.Location = ((System.Drawing.Point)(resources.GetObject("btnMigrate.Location")));
+			this.btnMigrate.Name = "btnMigrate";
+			this.btnMigrate.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("btnMigrate.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.btnMigrate, ((bool)(resources.GetObject("btnMigrate.ShowHelp"))));
+			this.btnMigrate.Size = ((System.Drawing.Size)(resources.GetObject("btnMigrate.Size")));
+			this.btnMigrate.TabIndex = ((int)(resources.GetObject("btnMigrate.TabIndex")));
+			this.btnMigrate.Text = resources.GetString("btnMigrate.Text");
+			this.btnMigrate.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("btnMigrate.TextAlign")));
+			this.btnMigrate.Visible = ((bool)(resources.GetObject("btnMigrate.Visible")));
+			this.btnMigrate.Click +=new EventHandler(btnMigrate_Click);
+			// 
 			// Preferences
 			// 
 			this.AcceptButton = this.ok;
@@ -928,6 +1039,7 @@ namespace Novell.FormsTrayApp
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox3.ResumeLayout(false);
 			this.tabAccounts.ResumeLayout(false);
+			this.tabMigrate.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -1336,6 +1448,43 @@ namespace Novell.FormsTrayApp
 				UpdateDomain(this, new DomainConnectEventArgs(domain.DomainInfo));
 			}
 		}
+		/// <summary>
+		/// Adds Migration Details to the list view item..
+		/// </summary>
+		public void AddMigrationDetails()
+		{
+			string iFolderRegistryKey = @"Software\Novell iFolder";
+			RegistryKey iFolderKey = Registry.LocalMachine.OpenSubKey(iFolderRegistryKey);
+			string[] AllKeys = new string[iFolderKey.SubKeyCount];
+			string User;
+			AllKeys = iFolderKey.GetSubKeyNames();
+			this.listView1.Items.Clear();
+		
+			for(int i=0; i< AllKeys.Length; i++)
+			{
+				ListViewItem lvi;
+				User = iFolderRegistryKey + "\\" + AllKeys[i];
+				RegistryKey UserKey = Registry.LocalMachine.OpenSubKey(User);
+				if( UserKey.GetValue("FolderPath") != null)
+				{
+					lvi = new ListViewItem( new string[]{AllKeys[i], (string)UserKey.GetValue("FolderPath")});
+					listView1.Items.Add(lvi);
+					lvi.Selected = true;
+				}
+				UserKey.Close();
+				/*
+				else
+				{
+					lvi = new ListViewItem( new string[]{AllKeys[i], "Not a user"});
+					this.listView1.Items.Add(lvi);
+				}
+				*/
+				
+			}
+			iFolderKey.Close();
+			
+		}
+
 		#endregion
 
 		#region Private Methods
@@ -1650,10 +1799,16 @@ namespace Novell.FormsTrayApp
 			}
 
 			minimumSyncInterval = minimumSeconds = defaultMinimumSeconds;
+			/*
 			timeUnit.Items.Add(resourceManager.GetString("seconds"));
 			timeUnit.Items.Add(resourceManager.GetString("minutes"));
 			timeUnit.Items.Add(resourceManager.GetString("hours"));
 			timeUnit.Items.Add(resourceManager.GetString("days"));
+			*/
+			timeUnit.Items.Add("seconds");
+			timeUnit.Items.Add("minutes");
+			timeUnit.Items.Add("hours");
+			timeUnit.Items.Add("days");
 
 			// Resize the buttons
 //			resizeButton(login);
@@ -1906,6 +2061,7 @@ namespace Novell.FormsTrayApp
 
 		private void removeAccount_Click(object sender, System.EventArgs e)
 		{
+			
 			ListViewItem lvi = accounts.SelectedItems[0];
 			Domain domain = (Domain)lvi.Tag;
 
@@ -1968,6 +2124,7 @@ namespace Novell.FormsTrayApp
 
 				removeAccount.Dispose();
 			}
+			
 		}
 
 		private void timer1_Tick(object sender, System.EventArgs e)
@@ -2089,6 +2246,18 @@ namespace Novell.FormsTrayApp
 						helpProvider1.HelpNamespace = helpFile;
 					}
 					break;
+				case 2:
+					// Migration tab clicked
+					string iFolderRegistryKey = @"Software\Novell iFolder";
+					RegistryKey iFolderKey = Registry.LocalMachine.OpenSubKey(iFolderRegistryKey);
+					string[] AllKeys = new string[iFolderKey.SubKeyCount];
+					AllKeys = iFolderKey.GetSubKeyNames();
+					string total="";
+					for ( int i=0;i<AllKeys.Length; i++)
+						total += AllKeys[i];
+					AddMigrationDetails();
+					
+					break;
 			}
 		}
 
@@ -2151,5 +2320,56 @@ namespace Novell.FormsTrayApp
 
 			base.WndProc (ref m);
 		}
+
+		private void btnMigrate_Click(object sender, EventArgs e)
+		{
+			ListViewItem lvi = this.listView1.SelectedItems[0];
+			MigrationWizard migrationWizard = new MigrationWizard( lvi.SubItems[0].Text, lvi.SubItems[1].Text, ifWebService);
+		//	accountWizard.EnterpriseConnect += new Novell.Wizard.AccountWizard.EnterpriseConnectDelegate(accountWizard_EnterpriseConnect);
+			if ( migrationWizard.ShowDialog() == DialogResult.OK )
+			{
+				// Display the iFolders dialog.
+				if ( DisplayiFolderDialog != null )
+				{
+					DisplayiFolderDialog( this, new EventArgs() );
+				}
+			}
+
+			migrationWizard.Dispose();
+
+			/*
+			ListViewItem lvi = this.listView1.SelectedItems[0];
+			string str= lvi.SubItems[1].Text;
+			//CreateiFolder createiFolder = new CreateiFolder();
+			//ArrayList domains = new ArrayList();
+			//Domain selectedDomain = (Domain)servers.SelectedItem;
+			//selectedDomain = selectedDomain.ShowAll ? defaultDomain : selectedDomain;
+			//DomainItem selectedDomainItem = null;
+			/*
+			foreach (Domain d in servers.Items)
+			{
+				if (!d.ShowAll)
+				{
+					DomainItem domainItem = new DomainItem(d.Name, d.ID);
+					if ((selectedDomain != null) && d.ID.Equals(selectedDomain.ID))
+					{
+						selectedDomainItem = domainItem;
+					}
+
+					domains.Add(domainItem);
+				}
+			}*/
+			/*
+			CreateiFolder createiFolder = new CreateiFolder();
+			createiFolder.ShowDialog();
+			//createiFolder.Servers = domains;
+			//createiFolder.SelectedDomain = selectedDomainItem;
+			//createiFolder.LoadPath = Application.StartupPath;
+			
+			//Novell.iFolderCom.MyMessageBox mmb1 = new MyMessageBox(str, resourceManager.GetString("accountErrorTitle"), "nothing", MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+			//mmb1.ShowDialog();
+			*/
+		}
 	}
 }
+

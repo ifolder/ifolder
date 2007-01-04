@@ -109,6 +109,18 @@ namespace Novell.iFolder.Web
 		CaseEqual
 	};
 
+	enum SecurityState
+	{
+		encrypt = 1,
+		enforceEncrypt = 2,
+		encryptionState = 3,
+		SSL = 4,
+		enforceSSL = 8,
+		SSLState = 12,
+		UserEncrypt = 16,
+		UserSSL = 32
+	}
+
 	/// <summary>
 	/// This is the core of the iFolderServce.  All of the methods in the
 	/// web service are implemented here.
@@ -298,6 +310,28 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// iFolder object representing the iFolder created
 		/// </returns>
+		[WebMethod(EnableSession=true, Description="Create an iFolder. This will create an iFolder using the path specified with the security Level desired. The Path must exist or an exception will be thrown.")]
+		[SoapDocumentMethod]
+		public iFolderWeb CreateiFolderInDomainEncr(string Path, string DomainID, bool SSL, string encryptionAlgorithm)
+		{
+			try
+			{
+				Collection col = SharedCollection.CreateLocalSharedCollection( Path, DomainID, 
+									SSL, iFolderWeb.iFolderType, encryptionAlgorithm);
+
+				return new iFolderWeb(col);
+			}
+			catch(Exception e)
+			{
+				Console.WriteLine(e);
+				throw e;
+			}
+		}
+
+
+
+//	added now..
+
 		[WebMethod(EnableSession=true, Description="Create an iFolder. This will create an iFolder using the path specified.  The Path must exist or an exception will be thrown.")]
 		[SoapDocumentMethod]
 		public iFolderWeb CreateiFolderInDomain(string Path, string DomainID)
@@ -314,8 +348,6 @@ namespace Novell.iFolder.Web
 				throw e;
 			}
 		}
-
-
 
 
 		/// <summary>
@@ -349,7 +381,68 @@ namespace Novell.iFolder.Web
 		}
 
 
+		/*
+		/// Not used
+		[WebMethod(EnableSession=true, Description="This method is for setting security policy from the thick client.")]
+		[SoapDocumentMethod]
+		public int SetSecurityPolicy(string DomainID, int status)
+		{
+			
+                        Simias.Storage.Store store = Simias.Storage.Store.GetStore();
+	                Simias.Storage.Domain domain = store.GetDomain(DomainID);
+			Simias.Storage.Member member = domain.GetCurrentMember();
+			// Can make the changes to read and modify the status
+			Simias.Policy.SecurityState.Create(member, status);
+			return 0;
+		}
+		*/
 
+		/// This method is for finding the user security status depending upon the system and user policies
+		/// This is not a webmethos and is not exposed.
+		private int DeriveStatus(int system, int user, int preference)
+		{
+			if( preference != 0)	// server wins
+			{
+				if(system != 0)
+					return system;
+				return user;
+			}
+			else			// user wins
+			{
+				if(user != 0)
+					return user;
+				return system;
+			}
+		}
+
+		[WebMethod(EnableSession=true, Description="This method is for getting security policy from the Collectionstore.")]
+		[SoapDocumentMethod]
+		public int GetSecurityPolicy(string DomainID)
+		{
+			try
+			{
+				int SysEncrPolicy=0, UserEncrPolicy=0;
+				int SecurityStatus = 0;
+
+				SysEncrPolicy = Simias.Policy.SecurityState.GetStatus( DomainID );
+                        	Simias.Storage.Store store = Simias.Storage.Store.GetStore();
+	                        Simias.Storage.Domain domain = store.GetDomain(DomainID);
+				Simias.Storage.Member member = domain.GetCurrentMember();
+				UserEncrPolicy = Simias.Policy.SecurityState.GetStatus( member );
+
+				// We use a bitpattern for the security policy.
+				// The first 2 bits give the policy for encryption.
+				// the next 2 bits give the policy for secure data transfer (SSL)
+				SecurityStatus += DeriveStatus( (SysEncrPolicy & (int)SecurityState.encryptionState), (UserEncrPolicy &(int)SecurityState.encryptionState ), (UserEncrPolicy & (int)SecurityState.UserEncrypt));
+				SecurityStatus += DeriveStatus( (SysEncrPolicy & (int)SecurityState.SSLState), (UserEncrPolicy & (int)SecurityState.SSLState), (UserEncrPolicy & (int)SecurityState.UserSSL));
+				return SecurityStatus;
+			}
+			catch( Exception e )
+			{
+				Console.WriteLine(e);
+				throw(e);
+			}
+		}
 
 		/// <summary>
 		/// WebMethod that gets an iFolder based on an iFolderID
@@ -1430,36 +1523,24 @@ namespace Novell.iFolder.Web
 			else
 				throw new Exception("Invalid Rights Specified");
 
-#if ( !REMOVE_OLD_INVITATION )
-			if (domain.SupportsNewInvitation)
-			{			
-#endif
-				// Create the new member in the collection.
-				Member collectionMember = new Member(member.Name, member.UserID, newRights);
-				col.Commit(collectionMember);
-				return new iFolderUser(domain, collectionMember);
-#if ( !REMOVE_OLD_INVITATION )
-			}
-			else
-			{
-				// Use the POBox for the domain that this iFolder belongs to.
-				POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
-					domain.ID, 
-					store.GetUserIDFromDomainID(domain.ID));
 
-				Subscription sub = poBox.CreateSubscription(col,
-					col.GetCurrentMember(),
-					"iFolder");
+			// Use the POBox for the domain that this iFolder belongs to.
+			POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
+						domain.ID, 
+						store.GetUserIDFromDomainID(domain.ID));
 
-				sub.SubscriptionRights = newRights;
-				sub.ToName = member.Name;
-				sub.ToIdentity = MemberID;
+			Subscription sub = poBox.CreateSubscription(col,
+										col.GetCurrentMember(),
+										"iFolder");
 
-				poBox.AddMessage(sub);
+			sub.SubscriptionRights = newRights;
+			sub.ToName = member.Name;
+			sub.ToIdentity = MemberID;
 
-				return new iFolderUser( sub );
-			}
-#endif
+			poBox.AddMessage(sub);
+
+			iFolderUser user = new iFolderUser( sub );
+			return user;
 		}
 
 
@@ -1512,35 +1593,24 @@ namespace Novell.iFolder.Web
 			else
 				throw new Exception("Invalid Rights Specified");
 
-#if ( !REMOVE_OLD_INVITATION )
-			if (domain.SupportsNewInvitation)
-			{
-#endif
-				// Create the new member in the collection.
-				Member collectionMember = new Member(member.Name, member.UserID, newRights);
-				col.Commit(collectionMember);
-				return new iFolderUser(domain, collectionMember);
-#if ( !REMOVE_OLD_INVITATION )
-			}
-			else
-			{
-				// Use the POBox for the domain that this iFolder belongs to.
-				POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
-					domain.ID, 
-					store.GetUserIDFromDomainID(domain.ID));
 
-				Subscription sub = poBox.CreateSubscription(col,
-					col.GetCurrentMember(),
-					"iFolder");
+			// Use the POBox for the domain that this iFolder belongs to.
+			POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
+						domain.ID, 
+						store.GetUserIDFromDomainID(domain.ID));
 
-				sub.SubscriptionRights = newRights;
-				sub.ToName = member.Name;
-				sub.ToIdentity = UserID;
+			Subscription sub = poBox.CreateSubscription(col,
+										col.GetCurrentMember(),
+										"iFolder");
 
-				poBox.AddMessage(sub);
-				return new iFolderUser( sub );
-			}
-#endif
+			sub.SubscriptionRights = newRights;
+			sub.ToName = member.Name;
+			sub.ToIdentity = UserID;
+
+			poBox.AddMessage(sub);
+
+			iFolderUser user = new iFolderUser( sub );
+			return user;
 		}
 
 
@@ -1617,26 +1687,19 @@ namespace Novell.iFolder.Web
 			}
 
 			sub.CollectionRoot = Path.GetFullPath(LocalPath);
-
-#if ( !REMOVE_OLD_INVITATION )
-			Domain domain = store.GetDomain(DomainID);
-			if(domain == null)
-				throw new Exception("Unable to access the domain");
-
-			if(domain.SupportsNewInvitation || (sub.SubscriptionState == SubscriptionStates.Ready))
+			if(sub.SubscriptionState == SubscriptionStates.Ready)
 			{
-#endif
 				poBox.Commit(sub);
 				sub.CreateSlave(store);
-#if ( !REMOVE_OLD_INVITATION )
 			}
 			else
 			{
 				sub.Accept(store, SubscriptionDispositions.Accepted);
 				poBox.Commit(sub);
 			}
-#endif
-			return new iFolderWeb(sub);
+
+			iFolderWeb ifolder = new iFolderWeb(sub);
+			return ifolder;
 		}
 
 
@@ -1655,9 +1718,7 @@ namespace Novell.iFolder.Web
 			Store store = Store.GetStore();
 
 			Simias.POBox.POBox poBox = 
-				Simias.POBox.POBox.FindPOBox(store, DomainID, store.GetUserIDFromDomainID(DomainID));
-			if (poBox == null)
-				throw new Exception("Cannot find POBox");
+				Simias.POBox.POBox.GetPOBox( store, DomainID );
 
 			// iFolders returned in the Web service are also
 			// Subscriptions and it ID will be the subscription ID
@@ -1665,26 +1726,13 @@ namespace Novell.iFolder.Web
 			if(node == null)
 				throw new Exception("Invalid iFolderID");
 
-#if ( !REMOVE_OLD_INVITATION )
-			Domain domain = store.GetDomain(DomainID);
-			if(domain == null)
-				throw new Exception("Unable to access domain");
+			Subscription sub = new Subscription(node);
 
-			if(domain.SupportsNewInvitation)
-			{
-#endif
-				poBox.Commit(poBox.Delete(node));
-#if ( !REMOVE_OLD_INVITATION )
-			}
-			else
-			{
-				// Change the local subscription
-				Subscription sub = new Subscription(node);
-				sub.SubscriptionState = SubscriptionStates.Replied;
-				sub.SubscriptionDisposition = SubscriptionDispositions.Declined;
-				poBox.Commit(sub);
-			}
-#endif
+			// Change the local subscription
+			sub.SubscriptionState = SubscriptionStates.Replied;
+			sub.SubscriptionDisposition = SubscriptionDispositions.Declined;
+
+			poBox.Commit(sub);
 		}
 
 
