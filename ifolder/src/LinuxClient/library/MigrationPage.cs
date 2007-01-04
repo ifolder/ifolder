@@ -165,15 +165,7 @@ namespace Novell.iFolder
 
 		private void PopulateiFolderList()
 		{
-			string str;
-			string working_dir;
-			str = System.IO.Directory.GetCurrentDirectory();
-			string root = System.IO.Directory.GetDirectoryRoot(str);
-			while( str!= root && !System.IO.Directory.Exists(str+"/.novell"))
-			{
-				str = System.IO.Directory.GetParent(str).FullName;
-			}
-			Console.WriteLine("In Populatelist.....Home: {0}", str);
+			string str = Mono.Unix.UnixEnvironment.EffectiveUser.HomeDirectory;
 			if(!System.IO.Directory.Exists(str+"/.novell/ifolder"))
 				return;		// ifolder2.x is not present;
 			string[] dirs;

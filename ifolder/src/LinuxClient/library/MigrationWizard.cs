@@ -673,15 +673,7 @@ namespace Novell.iFolder
 			{
 				if(deleteFromServer.Active == true)
 				{
-					// Delete the folder from 2.x;
-					string str = System.IO.Directory.GetCurrentDirectory();
-	                	        string root = System.IO.Directory.GetDirectoryRoot(str);
-
-        	                	while( str!= root && !System.IO.Directory.Exists(str+"/.novell"))
-	                	        {
-        	                	        str = System.IO.Directory.GetParent(str).FullName;
-	        	                }
-				// modify here..
+					string str = Mono.Unix.UnixEnvironment.EffectiveUser.HomeDirectory;
 						
 					if(System.IO.Directory.Exists(str+"/.novell/ifolder/"+Uname))
 						System.IO.Directory.Delete(str+"/.novell/ifolder/"+Uname, true);  
