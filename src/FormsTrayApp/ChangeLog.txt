@@ -1,0 +1,4 @@
+2007-01-05  Ramesh Sunder <sramesh@novell.com>
+
+	* MigrationWizard: Wizard for migration from iFolder2.x to 3.x
+	* Preferences.cs: Added a new tab for migration

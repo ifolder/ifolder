@@ -1,0 +1,3 @@
+2007-01-05  Ramesh Sunder <sramesh@novell.com>
+
+	* CreateiFolder.cs: Changes for encryption and SSL options
