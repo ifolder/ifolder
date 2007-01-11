@@ -55,6 +55,16 @@ static void cleanup_gsoap (struct soap *p_soap)
 	soap_end (p_soap);
 }   
 
+char* DerivePassword(char* str)
+{
+        char* ptr;
+        if( (ptr=strchr( str, ':')) !=NULL)
+        {
+                return ptr+1;
+        }
+        else return str;
+}
+
 
 /**         
  * Calls to iFolder via GSoap
@@ -79,7 +89,7 @@ bool is_ifolder_running ()
 	init_gsoap (&soap);
 	if (simias_get_web_service_credential(username, password) == SIMIAS_SUCCESS) {
 		soap.userid = username;
-		soap.passwd = password;
+		soap.passwd = DerivePassword(password);
 	}
 	err_code = soap_call___ns1__Ping (&soap,
 			soap_url, //http://<host>:<port>/simias10[/<username>]/iFolder.asmx
