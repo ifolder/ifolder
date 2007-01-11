@@ -211,6 +211,16 @@ sec_reconnected (gpointer user_data)
 	return FALSE; /* Don't have this be called over and overa automatically. */
 }
 
+char* DerivePassword(char* str)
+{
+	char* ptr;
+	if( (ptr=strchr( str, ':')) !=NULL)
+	{
+		return ptr+1;
+	}
+	else return str;
+}
+
 static void
 sec_reconnected_idle_removed (gpointer data)
 {
@@ -601,7 +611,7 @@ can_be_ifolder (NautilusFileInfo *file)
 		init_gsoap (&soap);
 		if (simias_get_web_service_credential(username, password) == SIMIAS_SUCCESS) {
 			soap.userid = username;
-			soap.passwd = password;
+			soap.passwd = DerivePassword(password);
 		}
 //printf("Calling iFolderWebService.CanBeiFolder()\n");
 		soap_call___ns1__CanBeiFolder (&soap,
@@ -651,7 +661,7 @@ create_ifolder_in_domain (NautilusFileInfo *file, char *domain_id)
 		init_gsoap (&soap);
 		if (simias_get_web_service_credential(username, password) == SIMIAS_SUCCESS) {
 			soap.userid = username;
-			soap.passwd = password;
+			soap.passwd = DerivePassword(password);
 		}
 //printf("Calling iFolderWebService.CreateiFolderInDomain()\n");
 		soap_call___ns1__CreateiFolderInDomain (&soap, soapURL, NULL, &req, &resp);
@@ -706,7 +716,7 @@ revert_ifolder (NautilusFileInfo *file)
 			init_gsoap (&soap);
 			if (simias_get_web_service_credential(username, password) == SIMIAS_SUCCESS) {
 				soap.userid = username;
-				soap.passwd = password;
+				soap.passwd = DerivePassword(password);
 			}
 //printf("Calling iFolderWebService.RevertiFolder()\n");
 			soap_call___ns1__RevertiFolder (&soap, 
@@ -762,7 +772,7 @@ get_ifolder_holder (gchar *ifolder_id)
 		init_gsoap (&soap);
 		if (simias_get_web_service_credential(username, password) == SIMIAS_SUCCESS) {
 			soap.userid = username;
-			soap.passwd = password;
+			soap.passwd = DerivePassword(password);
 		}
 //printf("Calling iFolderWebService.GetiFolder()\n");
 		soap_call___ns1__GetiFolder (&soap,
@@ -842,7 +852,6 @@ invalidate_local_path (gpointer key,
 		DEBUG_IFOLDER (("invalidate_local_path: gnome_vfs_get_uri_from_local_path (%s) returned NULL", file_path));
 	}
 }
-
 /**
  * This should only be called by sec_reconnected ().
  */
@@ -862,8 +871,9 @@ refresh_ifolders_ht ()
 	init_gsoap (&soap);
 	if (simias_get_web_service_credential(username, password) == SIMIAS_SUCCESS) {
 		soap.userid = username;
-		soap.passwd = password;
+		soap.passwd = DerivePassword(password);
 	}
+	DEBUG_IFOLDER(("user %s Pass %s\n", username, soap.passwd));
 //printf("Calling iFolderWebService.GetAlliFolders()\n");
 	soap_call___ns1__GetAlliFolders (&soap,
 									 soapURL,
