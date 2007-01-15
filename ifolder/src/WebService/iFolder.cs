@@ -24,6 +24,7 @@
 using System;
 using Simias.Storage;
 using Simias.POBox;
+using Simias.Discovery;
 using Simias.Sync;
 using System.Xml;
 using System.Xml.Serialization;
@@ -251,5 +252,36 @@ namespace Novell.iFolder.Web
 				this.State = "Unknown";
 			}
 		}
+
+		/// <summary>
+	        /// CollectionInfo from DiscoveryFrameWork
+		/// </summary>
+		public iFolderWeb(CollectionInfo c)
+		{
+			this.DomainID = c.DomainID;
+			this.Name = c.Name;
+			this.ID = c.ID;
+			this.CollectionID = c.CollectionID;
+			this.Description = c.Description;
+
+                        // TODO : Remove the following  line when cleaning up POBox.
+			this.IsSubscription = true;
+			this.EnumeratedState = (int) SubscriptionStates.Ready;
+			this.Owner = c.OwnerFullName;
+
+			Domain domain = Store.GetStore().GetDomain(c.DomainID);
+			if(domain != null)
+			{
+				Simias.Storage.Member member = domain.GetMemberByID(c.OwnerID);
+				if(member != null)
+					this.Owner = member.FN;
+			}
+
+			this.OwnerID = c.OwnerID;
+			this.CurrentUserRights = "Admin";
+
+			this.State = "WaitSync";
+		}
+
 	}
 }

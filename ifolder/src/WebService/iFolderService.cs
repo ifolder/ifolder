@@ -38,6 +38,7 @@ using Simias.Client;
 using Simias.Storage;
 using Simias.Sync;
 using Simias.POBox;
+using Simias.Discovery;
 using Simias.Policy;
 using Simias.Web;
 using System.Xml;
@@ -573,6 +574,48 @@ namespace Novell.iFolder.Web
 			ArrayList list = new ArrayList();
 
 			Store store = Store.GetStore();
+			ArrayList collectionList;
+			ICSList iFolderList = 
+					store.GetCollectionsByType(iFolderWeb.iFolderType);
+
+			foreach(ShallowNode sn in iFolderList)
+			{
+				Collection col = store.GetCollectionByID(sn.ID);
+				list.Add(new iFolderWeb(col));
+			}
+
+
+			collectionList = Simias.Discovery.CollectionList.GetCollectionList();
+
+			if (collectionList != null )
+			{
+
+			        foreach ( CollectionInfo ci in collectionList ) 
+				{
+					if (store.GetCollectionByID(ci.CollectionID) != null)
+					    continue;
+					list.Add(new iFolderWeb(ci));
+				}
+			}
+
+			return (iFolderWeb[])list.ToArray(typeof(iFolderWeb));
+		}
+
+
+		/// <summary>
+		/// WebMethod that returns all iFolders on the iFolder Server
+		/// </summary>
+		/// <returns>
+		/// An array of iFolders
+		/// </returns>
+		[WebMethod(EnableSession=true, Description="Returns all iFolders on the Server")]
+		[SoapDocumentMethod]
+		public iFolderWeb[] GetAlliFolders1()
+		{
+
+			ArrayList list = new ArrayList();
+
+			Store store = Store.GetStore();
 
 			ICSList iFolderList = 
 					store.GetCollectionsByType(iFolderWeb.iFolderType);
@@ -585,6 +628,7 @@ namespace Novell.iFolder.Web
 
 
 			ICSList domainList = store.GetDomainList();
+
 			foreach (ShallowNode sn in domainList)
 			{
 				// Now we need to get all of Subscriptions
@@ -669,51 +713,13 @@ namespace Novell.iFolder.Web
 				}
 			}
 
+			ArrayList collectionList = Simias.Discovery.CollectionList.GetCollectionList();
 
-			// Now we need to get all of Subscriptions
-			POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
-						DomainID, 
-						store.GetUserIDFromDomainID(DomainID));
-			if(poBox != null)
+		        foreach (CollectionInfo ci in collectionList)
 			{
-
-				// Get all of the subscription obects in the POBox
-				ICSList poList = poBox.Search(
-						PropertyTags.Types,
-						typeof(Subscription).Name,
-						SearchOp.Equal);
-
-				foreach(ShallowNode sNode in poList)
-				{
-					Subscription sub = new Subscription(poBox, sNode);
-
-					// if the subscription is not for us, we don't
-					// care
-					if(sub.ToIdentity != poBox.Owner.UserID)
-						continue;
-
-					// BHT: Filter out subscriptions that are not iFolders
-					if (sub.SubscriptionCollectionType != iFolderWeb.iFolderType)
-						continue;
-
-					// Filter out all subscriptions that match
-					// iFolders that are already local on our machine
-					if (store.GetCollectionByID(
-								sub.SubscriptionCollectionID) != null)
-					{
-						continue;
-					}
-					// Add check for declined iFolders
-					// We don't want those to show up either since they
-					// are going to be deleted by the PO Service
-					if(sub.SubscriptionDisposition == 
-								SubscriptionDispositions.Declined)
-					{
-						continue;
-					}
-
-					list.Add(new iFolderWeb(sub));
-				}
+			        if ( ci.DomainID != DomainID)
+				        continue;
+				list.Add (new iFolderWeb (ci));
 			}
 
 			return (iFolderWeb[])list.ToArray(typeof(iFolderWeb));
@@ -1628,11 +1634,132 @@ namespace Novell.iFolder.Web
 		[WebMethod(EnableSession=true, Description="Accept an invitation fo an iFolder.  The iFolder ID represents a Subscription object")]
 		[SoapDocumentMethod]
 		public iFolderWeb AcceptiFolderInvitation( string DomainID,
+							   string iFolderID, 
+							   string LocalPath)
+		{
+		        Store store = Store.GetStore ();
+//TODO : later. need a unique way to get the collection information
+//		    CollectionInfo cinfo = GetCollectionInfo (DomainID, iFolderID); 
+//TODO : create this exception inf the framework
+		        CollectionInfo cinfo = DiscoveryFramework.GetCollectionInfo (iFolderID);
+
+ 			if(cinfo == null)
+ 				throw new Exception("Invalid iFolderID");
+
+		    
+			string path = Path.Combine(LocalPath, cinfo.DirNodeName);
+			if (Directory.Exists(path))
+				throw new Exception("PathExists");
+
+			CollectionPathStatus pStatus;
+
+			pStatus = SharedCollection.CheckCollectionPath(path);
+			switch(pStatus)
+			{
+				case CollectionPathStatus.ValidPath:
+					break;
+				case CollectionPathStatus.RootOfDrivePath:
+					throw new Exception("RootOfDrivePath");
+				case CollectionPathStatus.InvalidCharactersPath:
+					throw new Exception("InvalidCharactersPath");
+				case CollectionPathStatus.AtOrInsideStorePath:
+					throw new Exception("AtOrInsideStorePath");
+				case CollectionPathStatus.ContainsStorePath:
+					throw new Exception("ContainsStorePath");
+				case CollectionPathStatus.NotFixedDrivePath:
+					throw new Exception("NotFixedDrivePath");
+				case CollectionPathStatus.SystemDirectoryPath:
+					throw new Exception("SystemDirectoryPath");
+				case CollectionPathStatus.SystemDrivePath:
+					throw new Exception("SystemDrivePath");
+				case CollectionPathStatus.IncludesWinDirPath:
+					throw new Exception("IncludesWinDirPath");
+				case CollectionPathStatus.IncludesProgFilesPath:
+					throw new Exception("IncludesProgFilesPath");
+				case CollectionPathStatus.DoesNotExistPath:
+					throw new Exception("DoesNotExistPath");
+				case CollectionPathStatus.NoReadRightsPath:
+					throw new Exception("NoReadRightsPath");
+				case CollectionPathStatus.NoWriteRightsPath:
+					throw new Exception("NoWriteRightsPath");
+				case CollectionPathStatus.ContainsCollectionPath:
+					throw new Exception("ContainsCollectionPath");
+				case CollectionPathStatus.AtOrInsideCollectionPath:
+					throw new Exception("AtOrInsideCollectionPath");
+			}
+
+//			Collection c = DiscoveryFramework.CreateProxyCollection (store, DomainID, iFolderID, Path.GetFullPath(LocalPath));
+//			CreateProxy (store, DomainID, iFolderID, Path.GetFullPath (path));
+			DiscoveryFramework.CreateProxy (store, DomainID, iFolderID, Path.GetFullPath (path));
+
+			iFolderWeb ifolder = new iFolderWeb(cinfo);
+//			ifolder.State = "WaitConnect";
+//			iFolderWeb ifolder = new iFolderWeb(c);
+			return ifolder;
+		}
+
+		public void CreateProxy1 (Store store, string DomainID,string iFolderID, string localPath )
+		{
+			ArrayList commitList = new ArrayList();
+
+			CollectionInfo cinfo = DiscoveryFramework.GetCollectionInfo (iFolderID);
+
+			Collection c = new Collection(store, cinfo.Name,
+				cinfo.CollectionID, DomainID);
+
+			c.HostID = cinfo.HostID;
+			
+			commitList.Add(c);
+
+			// Create the member as well
+                        Domain domain = store.GetDomain(DomainID);
+			Member m = domain.GetCurrentMember ();
+
+			Member member = new Member(m.Name, cinfo.MemberNodeID, m.UserID, Simias.Storage.Access.Rights.Admin, null);
+			member.IsOwner = true;
+			member.Proxy = true;
+			commitList.Add(member);
+
+// 			// check for a dir node
+// 			if (((this.DirNodeID != null) && (this.DirNodeID.Length > 0))
+// 				&& (this.DirNodeName != null) && (this.DirNodeName.Length > 0)
+// 				&& (this.CollectionRoot != null) && (this.CollectionRoot.Length > 0))
+// 			{
+
+//			string path = Path.Combine(this.CollectionRoot, this.DirNodeName);
+
+ 			DirNode dn = new DirNode(c, localPath, cinfo.DirNodeID);
+// 			DirNode dn = new DirNode(c, localPath);
+// //			DirNode dn = new DirNode(c, localPath, c.ID);
+ 			if (!Directory.Exists(localPath)) Directory.CreateDirectory(localPath);
+
+// 			dn.Proxy = true;
+ 			commitList.Add(dn);
+//			}
+
+			c.Proxy = true;
+			c.Commit((Node[]) commitList.ToArray(typeof(Node)));
+		}
+
+		/// <summary>
+		/// Accepts an Enterprise Subscription
+		/// </summary>
+		/// <param name="DomainID"></param>
+		/// <param name = "iFolderID">
+		/// The ID of the iFolder to accept the invitation for
+		/// </param>
+		/// <param name = "LocalPath">
+		/// The LocalPath to to store the iFolder
+		/// </param>
+		[WebMethod(EnableSession=true, Description="Accept an invitation fo an iFolder.  The iFolder ID represents a Subscription object")]
+		[SoapDocumentMethod]
+		public iFolderWeb AcceptiFolderInvitation1( string DomainID,
 												   string iFolderID, 
 												string LocalPath)
 		{
 			Store store = Store.GetStore();
-
+//note : check for local collection. ui is handling the collection information wrongly
+//here use the discovery framework to get the collection information.
 			POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
 						DomainID, 
 						store.GetUserIDFromDomainID(DomainID));
@@ -1641,7 +1768,7 @@ namespace Novell.iFolder.Web
 			// Subscriptions and it ID will be the subscription ID
 			Node node = poBox.GetNodeByID(iFolderID);
 			if(node == null)
-				throw new Exception("Invalid iFolderID");
+				throw new Exception("Invalid iFolderID : id : "+ iFolderID);
 
 			Subscription sub = new Subscription(node);
 
@@ -1701,8 +1828,6 @@ namespace Novell.iFolder.Web
 			iFolderWeb ifolder = new iFolderWeb(sub);
 			return ifolder;
 		}
-
-
 
 		/// <summary>
 		/// Decline an Enterprise subscription
