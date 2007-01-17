@@ -65,7 +65,7 @@ namespace Novell.iFolder
 		private Gdk.Pixbuf			DownloadingPixbuf;
 		private Gdk.Pixbuf			UploadingPixbuf;
 		private Gtk.EventBox		eBox;
-		private TrayIcon			tIcon;
+		private Egg.TrayIcon			tIcon;
 		private iFolderWebService	ifws;
 		private SimiasWebService	simws;
 		private iFolderData			ifdata;
@@ -141,7 +141,7 @@ namespace Novell.iFolder
 			
 			Util.SetQuitiFolderDelegate(new QuitiFolderDelegate(QuitiFolder));
 
-			tIcon = new TrayIcon("iFolder");
+			tIcon = new Egg.TrayIcon("iFolder");
 
 			currentIconAnimationDirection = 0;
 
