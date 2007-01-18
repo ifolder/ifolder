@@ -1,3 +1,8 @@
+2007-01-19  Johnny Jacob  <jjohnny@novell.com>
+
+	* iFolderData.cs (AcceptiFolderInvitation): Use the collectionID
+	instead of ifolderID. Fixes #236120.
+	
 2006-12-22  Ramesh Sunder <sramesh@novell.com>
 
 	* MigrationPage.cs: A new tab page in preferences to provision migration 
