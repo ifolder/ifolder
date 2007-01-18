@@ -829,7 +829,7 @@ namespace Novell.iFolder
 
    		 		iFolderWeb newifolder = ifws.AcceptiFolderInvitation(
 											domainID,
-											ifolderID,
+											collectionID,
 											localPath);
 				if (newifolder == null)
 				{
