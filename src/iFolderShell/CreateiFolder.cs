@@ -463,6 +463,7 @@ namespace Novell.iFolderCom
 		#region Event Handlers
 		private void CreateiFolder_Load(object sender, System.EventArgs e)
 		{
+			this.ok.Enabled = false;
 			if (servers.Items.Count == 0)
 			{
 				try
@@ -486,7 +487,6 @@ namespace Novell.iFolderCom
 
 						DomainItem domainItem = new DomainItem(name, id);
 						servers.Items.Add(domainItem);
-
 						if (id.Equals(defaultID))
 						{
 							selectedDomain = domainItem;
@@ -494,7 +494,9 @@ namespace Novell.iFolderCom
 					}
 
 					if (selectedDomain != null)
+					{
 						servers.SelectedItem = selectedDomain;
+					}
 					else
 						servers.SelectedIndex = 0;
 				}
@@ -650,15 +652,15 @@ namespace Novell.iFolderCom
 						//MyMessageBox mmb = new MyMessageBox("encryption: Calling createiFolder()", "Check", string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 						//mmb.ShowDialog();
 						int temp=ifWebService.GetSecurityPolicy(domainItem.ID);
+						/*
 						int encr_status = 0;
 						if(this.encryption.Checked)
 							encr_status +=1;
 						if(this.ssl.Checked)
 							encr_status +=2;
-						
+						*/
 						bool SSL = this.ssl.Checked;
 						string algorithm = (this.encryption.Checked)? "BlowFish" : "";
-						
 						iFolderWeb ifolder = ifWebService.CreateiFolderInDomainEncr(ifolderPath.Text, domainItem.ID, SSL, algorithm );
 						// Notify the shell.
 						Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolderPath.Text, IntPtr.Zero);

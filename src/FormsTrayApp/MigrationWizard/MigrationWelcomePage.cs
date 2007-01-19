@@ -64,7 +64,7 @@ namespace Novell.Wizard
 			
 			this.DescriptionText = "Description...";
 			this.Name = "MigrationWelcomePage";
-			this.WelcomeTitle = "Welcome to the iFolder Invitation Wizard";
+			this.WelcomeTitle = "Welcome to the iFolder Migration Wizard";
 
 		}
 		#endregion

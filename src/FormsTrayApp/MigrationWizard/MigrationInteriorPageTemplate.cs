@@ -88,22 +88,24 @@ namespace Novell.Wizard
 			// 
 			// headerPanel
 			// 
-			this.headerPanel.BackColor = System.Drawing.Color.White;
+			//this.headerPanel.BackColor = System.Drawing.Color.White;
+			this.headerPanel.BackColor = System.Drawing.Color.FromArgb(101, 163, 237);
 			this.headerPanel.Controls.Add(this.pictureBox1);
-			this.headerPanel.Controls.Add(this.headerSubTitle);
+			//this.headerPanel.Controls.Add(this.headerSubTitle);
 			this.headerPanel.Controls.Add(this.headerTitle);
 			this.headerPanel.Location = new System.Drawing.Point(0, 0);
 			this.headerPanel.Name = "headerPanel";
 			this.headerPanel.Size = new System.Drawing.Size(496, 56);
 			this.headerPanel.TabIndex = 0;
 			// 
-			// pictureBox1
+			// pictureBox1  for adding the image
 			// 
-			this.pictureBox1.Location = new System.Drawing.Point(452, 12);
+			this.pictureBox1.Location = new System.Drawing.Point(436, 8);
 			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.Size = new System.Drawing.Size(32, 32);
+			this.pictureBox1.Size = new System.Drawing.Size(48, 48);
 			this.pictureBox1.TabIndex = 2;
 			this.pictureBox1.TabStop = false;
+			/*
 			// 
 			// headerSubTitle
 			// 
@@ -112,11 +114,13 @@ namespace Novell.Wizard
 			this.headerSubTitle.Size = new System.Drawing.Size(408, 16);
 			this.headerSubTitle.TabIndex = 1;
 			this.headerSubTitle.Text = "Header subtitle";
+			*/
 			// 
 			// headerTitle
 			// 
 			this.headerTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
 			this.headerTitle.Location = new System.Drawing.Point(24, 16);
+			this.headerTitle.ForeColor = System.Drawing.Color.White;
 			this.headerTitle.Name = "headerTitle";
 			this.headerTitle.Size = new System.Drawing.Size(424, 16);
 			this.headerTitle.TabIndex = 0;
@@ -130,6 +134,7 @@ namespace Novell.Wizard
 			this.groupBox1.TabIndex = 1;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "groupBox1";
+			this.groupBox1.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(101)), ((System.Byte)(163)), ((System.Byte)(237)));
 			// 
 			// InteriorPageTemplate
 			// 

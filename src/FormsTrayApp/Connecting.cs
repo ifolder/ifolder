@@ -428,6 +428,7 @@ namespace Novell.FormsTrayApp
 					case StatusCodes.Success:
 					case StatusCodes.SuccessInGrace:
 						// Set the credentials in the current process.
+						
 						DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domainInfo.ID, password);
 						domainAuth.Authenticate(simiasManager.WebServiceUri, simiasManager.DataPath);
 
@@ -449,6 +450,20 @@ namespace Novell.FormsTrayApp
 
 						try
 						{
+							bool res = FormsTrayApp.ClientUpdates(domainInfo.ID);
+							
+							if (res == false)
+							{
+								// remove the domain.....
+								try
+								{
+									simiasWebService.LeaveDomain(domainInfo.ID, false);
+								}
+								catch{ }
+								MessageBox.Show(" You need to upgrade the client to connect to this server.", "Unable to Login", MessageBoxButtons.OK);
+								return false;
+							}
+					
 							// Check for an update.
 //TODO:							if (FormsTrayApp.CheckForClientUpdate(domainInfo.ID))
 							{
@@ -459,8 +474,9 @@ namespace Novell.FormsTrayApp
 								}
 							}
 						}
-						catch // Ignore
+						catch(Exception ex) // Ignore
 						{
+							MessageBox.Show(ex.ToString(), "error in webservice", MessageBoxButtons.OK);
 						}
 
 						if ( defaultServer )
@@ -609,6 +625,23 @@ namespace Novell.FormsTrayApp
 
 					try
 					{
+						bool res = FormsTrayApp.ClientUpdates(domainInfo.ID);
+						if(res == false)
+						{
+							MessageBox.Show("You need to upgrade your client to connect to the server.", "Login denied", MessageBoxButtons.OK);
+							try
+							{
+								DomainAuthentication domainAuth1 = new DomainAuthentication("iFolder", domainInfo.ID, null);
+								Status auth = domainAuth1.Logout(simiasManager.WebServiceUri, simiasManager.DataPath);
+							}
+							catch(Exception ex)
+							{
+								//MessageBox.Show(ex.ToString(), "error in login", MessageBoxButtons.OK);
+							}
+							return false;
+							//this.simiasWebService.
+						}
+						
 /* TODO:						bool update = FormsTrayApp.CheckForClientUpdate(domainInfo.ID);
 						if (update)
 						{

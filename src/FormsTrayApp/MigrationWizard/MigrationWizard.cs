@@ -36,6 +36,7 @@ using System.Security.Permissions;
 
 using Novell.FormsTrayApp;
 using Novell.iFolderCom;
+using Novell.Win32Util;
 using Simias.Client;
 using Simias.Client.Authentication;
 using Simias.Client.Event;
@@ -132,13 +133,13 @@ namespace Novell.Wizard
 			// 
 			// TODO: Localize
 			
-			this.welcomePage.DescriptionText = "This wizard will guide you through migrating your iFolder account to 3.x.";
-			this.welcomePage.ActionText = "To continue, click Next.";
+			this.welcomePage.ActionText = "This wizard will guide you through migrating your iFolder account to 3.x.";
+			this.welcomePage.DescriptionText = "To continue, click Next.";
 			this.welcomePage.Location = new System.Drawing.Point(0, 0);
 			this.welcomePage.Name = "welcomePage";
 			this.welcomePage.Size = new System.Drawing.Size(496, 304);
 			this.welcomePage.TabIndex = 1;
-			this.welcomePage.WelcomeTitle = "Welcome to the iFolder Migration Wizard";
+			this.welcomePage.WelcomeTitle = "Welcome to the iFolder Migration Assistant";
 			
 		
 			// 
@@ -146,8 +147,8 @@ namespace Novell.Wizard
 			// 
 			// TODO: Localize
 			
-			this.serverPage.HeaderSubTitle = "Enter the name of your iFolder server.";
-			this.serverPage.HeaderTitle = "Choose an iFolder Server";
+			//this.serverPage.HeaderSubTitle = "Enter the name of your iFolder server.";
+			this.serverPage.HeaderTitle = "Migration Options";
 			this.serverPage.Location = new System.Drawing.Point(0, 0);
 			this.serverPage.Name = "serverPage";
 			this.serverPage.Size = new System.Drawing.Size(496, 304);
@@ -157,8 +158,8 @@ namespace Novell.Wizard
 			// identityPage
 			// 
 			// TODO: Localize
-			this.identityPage.HeaderSubTitle = "Enter your iFolder username and password.";
-			this.identityPage.HeaderTitle = "iFolder Account Information";
+			//this.identityPage.HeaderSubTitle = "Enter your iFolder username and password.";
+			this.identityPage.HeaderTitle = "Server Information";
 			this.identityPage.Location = new System.Drawing.Point(0, 0);
 			this.identityPage.Name = "identityPage";
 			this.identityPage.Size = new System.Drawing.Size(496, 304);
@@ -168,8 +169,8 @@ namespace Novell.Wizard
 			// verifyPage
 			// 
 			// TODO: Localize
-			this.verifyPage.HeaderSubTitle = "Verify the iFolder account information.";
-			this.verifyPage.HeaderTitle = "Verify iFolder Account Information";
+			//this.verifyPage.HeaderSubTitle = "Verify the iFolder account information.";
+			this.verifyPage.HeaderTitle = "Verify and Migrate";
 			this.verifyPage.Location = new System.Drawing.Point(0, 0);
 			this.verifyPage.Name = "verifyPage";
 			this.verifyPage.Size = new System.Drawing.Size(496, 304);
@@ -306,6 +307,7 @@ namespace Novell.Wizard
 			// 
 			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox1.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(101)), ((System.Byte)(163)), ((System.Byte)(237)));
 			this.groupBox1.Location = new System.Drawing.Point(0, 302);
 			this.groupBox1.Name = "groupBox1";
 			this.groupBox1.Size = new System.Drawing.Size(496, 4);
@@ -317,6 +319,7 @@ namespace Novell.Wizard
 			// 
 			this.AcceptButton = this.next;
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+			this.BackColor = System.Drawing.SystemColors.Control;
 			this.CancelButton = this.cancel;
 			this.ClientSize = new System.Drawing.Size(496, 348);
 			this.ControlBox = false;
@@ -329,7 +332,7 @@ namespace Novell.Wizard
 			this.MinimizeBox = false;
 			this.Name = "MigrationWizard";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-			this.Text = "iFolder Account Wizard";
+			this.Text = "iFolder Migration Assistant";
 			this.Activated += new System.EventHandler(this.MigrationWizard_Activated);
 			this.ResumeLayout(false);
 
@@ -388,7 +391,7 @@ namespace Novell.Wizard
 				if (currentIndex == (maxPages - 2))
 				{
 					// TODO: Localize
-					next.Text = "&Connect";
+					next.Text = "&Migrate";
 					this.verifyPage.UpdateDetails();
 				}
 				else if (currentIndex == (maxPages - 1))
@@ -545,7 +548,6 @@ namespace Novell.Wizard
 			return false;
 		}		
 
-
 		/// <summary>
 		/// Method that performs migration..
 		/// 
@@ -563,28 +565,88 @@ namespace Novell.Wizard
 			bool ssl = this.MigrationIdentityPage.SSL;
 			string encryptionAlgorithm = encr? "BlowFish" : "" ;
 			int securityStatus = 0;
-			securityStatus += encr ? 1:0;
-			securityStatus += ssl ? 2:0;
 			string destination;
 			// Migration Option is true if the folder is to be removed from 2.x domain
+			try
+			{
 			if( !this.MigrationServerPage.MigrationOption)
 			{
 				destination = this.MigrationServerPage.HomeLocation;
-				if(ifws.CanBeiFolder(destination)== false)
+				DirectoryInfo dir = new DirectoryInfo(destination);
+				if((dir.Exists) && (ifws.CanBeiFolder(destination)== false))	// Display a message box
+				{	
+					MessageBox.Show("The folder can not be converted into ifolder","Error creating iFolder",MessageBoxButtons.OK);
 					return false; // can't be an iFolder
+				}
+				
 				// Copy the 2.x folder to destination
+				// Create the parent folder
+				if( this.MigrationServerPage.CopyParentDirectory)
+				{
+					string filename;
+					DirectoryInfo di = new DirectoryInfo(this.location);
+					filename = di.Name;
+					destination = destination+"\\"+filename;
+					//MessageBox mb = new MessageBox("file name = {0}", filename);
+					//MessageBox.Show("file name is:", destination, MessageBoxButtons.OK);
+					di = new DirectoryInfo(destination);
+					if( di.Exists )
+					{
+						MessageBox.Show("The directory exists already", "Error", MessageBoxButtons.OK);
+						return false;
+					}
+					else
+					{
+						try
+						{
+							di.Create();
+						}
+						catch(Exception ex)
+						{
+							MessageBox.Show(ex.ToString(), "Error creating directory", MessageBoxButtons.OK);
+							return false;
+						}
+					}
+				}
+
+				// Copy the contents
 				if(!CopyDirectory(new DirectoryInfo(location), new DirectoryInfo(destination)))
+				{
+					MessageBox.Show("Unable to copy the folder", "Error copying the folder", MessageBoxButtons.OK);
 					return false;	// unable to copy..
+				}
+				if(ifws.CanBeiFolder(destination)== false)	// Display a message box
+				{	
+					MessageBox.Show("The folder can not be converted into ifolder","Error creating iFolder",MessageBoxButtons.OK);
+					return false; // can't be an iFolder
+				}
+				else
+				{
+					MessageBox.Show("Can be ifolder","test",MessageBoxButtons.OK);
+				}
 			}
 			else
 			{
 				destination = this.location;
-				if(ifws.CanBeiFolder(destination) == false)
-					return false;  // can't be an iFolder...
+				if(ifws.CanBeiFolder(destination)== false)	// Display a message box
+				{	
+					MessageBox.Show("The folder can not be converted into ifolder","Error creating iFolder",MessageBoxButtons.OK);
+					return false; // can't be an iFolder
+				}
 			}
-
-			if( ifws.CreateiFolderInDomainEncr(destination, domain.ID, ssl, encryptionAlgorithm) == null)
-				return false;	// error creating iFolder
+			
+				if( ifws.CreateiFolderInDomainEncr(destination, domain.ID, ssl, encryptionAlgorithm) == null)
+				{
+					MessageBox.Show("Unable to convert to an iFolder", "Migrate error", MessageBoxButtons.OK);
+					return false;	// error creating iFolder
+				}
+			}
+			catch
+			{
+						MessageBox.Show("Unable to convert to an iFolder", "Migrate error", MessageBoxButtons.OK);
+						return false;
+			}
+			
 			if(this.MigrationServerPage.MigrationOption)
 			{
 				// TODO: Remove from server..(remove registry contents)
@@ -600,10 +662,209 @@ namespace Novell.Wizard
 						mmb.ShowDialog();
 						mmb.Dispose();
 					}
-			}			
+			}	
 			return true;
 		}
+		/*
+		public bool create(string path)
+		{
+			bool successful = false;
+			try
+			{
+				try
+				{
+					Uri uriPath = new Uri( 
+						path.EndsWith(Path.DirectorySeparatorChar.ToString()) ?
+					path :
+						path + Path.DirectorySeparatorChar.ToString());
 
+					if (path.StartsWith(@"\\"))
+					{
+						throw new Exception("Invalid path");
+					}
+				}
+				catch
+				{
+					MyMessageBox mmb = new MyMessageBox("invalidFolder", "errorTitle", string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					mmb.ShowDialog();
+					successful = false;
+					return successful;
+				}
+
+				if (!Directory.Exists(path))
+				{
+					MyMessageBox mmb =new MyMessageBox("createPrompt", "createPromptTitle", string.Empty, MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question);
+					if (mmb.ShowDialog() == DialogResult.Yes)
+					{
+						string parent = Path.GetDirectoryName(path);
+						while ((parent != null) && !parent.Equals(string.Empty))
+						{
+							if (Directory.Exists(parent))
+							{
+								path = path.Replace(parent, FixPath(parent));
+								break;
+							}
+
+							parent = Path.GetDirectoryName(parent);
+						}
+
+						Directory.CreateDirectory(path);
+					}
+					else
+					{
+						successful = false;
+					}
+				}
+				else
+				{
+					path = FixPath( path );
+				}
+
+				if (successful)
+				{
+					if (Win32Security.AccessAllowed(path))
+					{
+						DomainItem domain = this.MigrationIdentityPage.domain;
+						bool ssl = this.MigrationIdentityPage.SSL;
+						bool encr = this.MigrationIdentityPage.Encrypion;
+						string algorithm = encr? "BlowFish" : "" ;
+
+						//Cursor.Current = Cursors.WaitCursor;
+						//DomainItem domainItem = (DomainItem)servers.SelectedItem;
+
+						// Create the iFolder.
+						// TODO item. this web service call should be changed to constain the encr_status
+						//Added by Ramesh
+						//	iFolderWeb ifolder = ifWebService.CreateiFolderInDomain(path, domainItem.ID);
+						
+						//Console.WriteLine("encryption_status: {0}", encryption_status.SelectedIndex);
+						//string str= encryption_status.SelectedIndex==0 ? "0" : "1";
+						//MyMessageBox mmb = new MyMessageBox("encryption: Calling createiFolder()", "Check", string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						//mmb.ShowDialog();
+						int temp=ifws.GetSecurityPolicy(domain.ID);
+						/*
+						int encr_status = 0;
+						if(this.encryption.Checked)
+							encr_status +=1;
+						if(this.ssl.Checked)
+							encr_status +=2;
+						*//*
+						bool SSL = this.ssl.Checked;
+						string algorithm = (this.encryption.Checked)? "BlowFish" : "";
+						iFolderWeb ifolder = ifws.CreateiFolderInDomainEncr(path, domain.ID, ssl, algorithm );
+						// Notify the shell.
+						Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, path, IntPtr.Zero);
+
+						Cursor.Current = Cursors.Default;
+					}
+					else
+					{
+						successful = false;
+						MyMessageBox mmb = new MyMessageBox("accessDenied", "accessErrorTitle", string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						mmb.ShowDialog();
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				successful = false;
+				Cursor.Current = Cursors.Default;
+				MyMessageBox mmb;
+				string message= "";;
+				string caption = "";/*resourceManager.GetString("pathInvalidErrorTitle");
+
+				if (ex.Message.IndexOf("InvalidCharactersPath") != -1)
+				{
+					message = resourceManager.GetString("invalidCharsError");
+				}
+				else if (ex.Message.IndexOf("AtOrInsideStorePath") != -1)
+				{
+					message = resourceManager.GetString("pathInStoreError");
+				}
+				else if (ex.Message.IndexOf("ContainsStorePath") != -1)
+				{
+					message = resourceManager.GetString("pathContainsStoreError");
+				}
+				else if (ex.Message.IndexOf("SystemDirectoryPath") != -1)
+				{
+					message = resourceManager.GetString("systemDirError");
+				}
+				else if (ex.Message.IndexOf("SystemDrivePath") != -1)
+				{
+					message = resourceManager.GetString("systemDriveError");
+				}
+				else if (ex.Message.IndexOf("IncludesWinDirPath") != -1)
+				{
+					message = resourceManager.GetString("winDirError");
+				}
+				else if (ex.Message.IndexOf("IncludesProgFilesPath") != -1)
+				{
+					message = resourceManager.GetString("progFilesDirError");
+				}
+				else if (ex.Message.IndexOf("ContainsCollectionPath") != -1)
+				{
+					message = resourceManager.GetString("containsiFolderError");
+				}
+				else if (ex.Message.IndexOf("AtOrInsideCollectionPath") != -1)
+				{
+					message = resourceManager.GetString("pathIniFolderError");
+				}
+				else if (ex.Message.IndexOf("RootOfDrivePath") != -1)
+				{
+					message = resourceManager.GetString("rootDriveError");
+				}
+				else if (ex.Message.IndexOf("NotFixedDrivePath") != -1)
+				{
+					message = resourceManager.GetString("networkPathError");
+				}
+				else
+				{
+					message = resourceManager.GetString("iFolderCreateError");
+					caption = resourceManager.GetString("errorTitle");
+				}
+				*//*
+				mmb = new MyMessageBox(message, caption, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+				mmb.ShowDialog();
+			}
+			return successful;
+		}
+		*/
+		public string FixPath(string path)
+		{
+			if (path[1].Equals(':'))
+			{
+				string root = path.Substring(0, 2);
+				path = path.Replace(root, root.ToUpper());
+			}
+
+			try
+			{
+				string parent = path;
+				string temp = string.Empty;
+				while (true)
+				{
+					string file = Path.GetFileName(parent);
+					parent = Path.GetDirectoryName(parent);
+					if ((parent == null) || parent.Equals(string.Empty))
+					{
+						string psub = path.Substring(3);
+						if (string.Compare(psub, temp, true) == 0)
+							path = path.Replace(psub, temp);
+						break;
+					}
+
+					string[] dirs = Directory.GetFileSystemEntries(parent, file);
+					if (dirs.Length == 1)
+					{
+						temp = Path.Combine(Path.GetFileName(dirs[0]), temp);
+					}
+				}
+			}
+			catch {}
+
+			return path;
+		}
+		
 		/// <summary>
 		/// Method used to connect to the Simias server.
 		/// </summary>

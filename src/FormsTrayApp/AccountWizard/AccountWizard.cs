@@ -74,6 +74,7 @@ namespace Novell.Wizard
 	{
 		#region Class Members
 		DomainInformation domainInfo;
+		private Preferences prefs;
 		private System.Windows.Forms.Button cancel;
 		private System.Windows.Forms.Button next;
 		private System.Windows.Forms.Button back;
@@ -88,6 +89,7 @@ namespace Novell.Wizard
 		private int currentIndex = 0;
 		private Manager simiasManager;
 		private SimiasWebService simiasWebService;
+		private iFolderWebService ifWebService;
 
 		/// <summary>
 		/// Required designer variable.
@@ -98,10 +100,12 @@ namespace Novell.Wizard
 		/// <summary>
 		/// Constructs an AccountWizard object.
 		/// </summary>
-		public AccountWizard( SimiasWebService simiasWebService, Manager simiasManager, bool firstAccount )
+		public AccountWizard( iFolderWebService ifWebService, SimiasWebService simiasWebService, Manager simiasManager, bool firstAccount, Preferences prefs )
 		{
 			this.simiasManager = simiasManager;
 			this.simiasWebService = simiasWebService;
+			this.ifWebService = ifWebService;
+			this.prefs = prefs;
 
 			//
 			// Required for Windows Form Designer support
@@ -420,8 +424,7 @@ namespace Novell.Wizard
 			{
 				// TODO: Localize
 				StringBuilder sb = new StringBuilder("Congratulations, you are now connected to:\n\n");
-
-				sb.AppendFormat( "{0}\n", domainInfo.Name );
+				sb.AppendFormat( "{0}\n", domainInfo.Name );				
 				sb.AppendFormat( "({0})\n\n", serverPage.ServerAddress );
 				sb.Append( "You can now add folders to be synchronized to the server.  You may also download folders from the server and have them be synchronized to your computer." );
 
@@ -467,8 +470,41 @@ namespace Novell.Wizard
 			connecting.EnterpriseConnect += new Novell.FormsTrayApp.Connecting.EnterpriseConnectDelegate(connecting_EnterpriseConnect);
 			if ( connecting.ShowDialog() == DialogResult.OK )
 			{
-				domainInfo = connecting.DomainInformation;
+				MessageBox.Show(" True. connect returned ok.", "temp", MessageBoxButtons.OK);
 				result = true;
+				domainInfo = connecting.DomainInformation;
+				/*
+				string newClientVersion = null;
+
+				newClientVersion = this.ifWebService.CheckForUpdatedClient(domainInfo.ID);
+				if( newClientVersion != null)
+				{
+					MessageBox.Show( newClientVersion, "Client upgrade needed: ", MessageBoxButtons.OK);
+				}
+
+				bool serverOld = false;
+
+				serverOld = this.ifWebService.CheckForServerUpdate(domainInfo.ID);
+
+				if( serverOld)
+				{
+					result = false;
+					this.prefs.RemoveDomainFromList(domainInfo, null);
+					MessageBox.Show("Server Is Old. Cannot connect to the server","Server Old",MessageBoxButtons.OK);
+				}
+
+				newClientVersion = null;
+				newClientVersion = this.ifWebService.CheckForUpdatedClientAvailable(domainInfo.ID);
+				if( newClientVersion != null)
+				{
+					MessageBox.Show( newClientVersion+System.IO.Path.GetTempPath(), "Client upgrade Available: Click OK to Install", MessageBoxButtons.OK);
+					if(this.ifWebService.RunClientUpdate(domainInfo.ID, null))
+						MessageBox.Show( "Process started", "Client upgrade Available:", MessageBoxButtons.OK);
+					else
+						MessageBox.Show( "Failed to start process", "Client upgrade Available:", MessageBoxButtons.OK);
+				}
+				*/
+
 			}
 
 			return result;

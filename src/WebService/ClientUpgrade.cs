@@ -46,6 +46,8 @@ namespace Novell.iFolder.Install
 		/// iFolder Client update files.
 		/// </summary>
 		private static string iFolderWindowsApplication = "iFolderApp.exe";
+		private static string iFolderLinuxApplication = "iFolderClient.exe";
+		private static readonly string LinuxPlatformFile = "/etc/issue";
 
 		/// <summary>
 		/// Strings used in the handler query.
@@ -88,10 +90,14 @@ namespace Novell.iFolder.Install
 		/// </summary>
 		/// <param name="fileList">List of files to download.</param>
 		/// <returns>The path to the downloaded files.</returns>
-		private string DownloadFiles( string[] fileList )
+		private string DownloadFiles( string[] fileList, string path )
 		{
+			string downloadDir = "";
 			// Create the temporary directory.
-			string downloadDir = Path.Combine( Path.GetTempPath(), iFolderUpdateDirectory );
+			if( path == null)
+				downloadDir = Path.Combine( Path.GetTempPath(), iFolderUpdateDirectory );
+			else
+				downloadDir = Path.Combine( path, iFolderUpdateDirectory);
 			if ( Directory.Exists( downloadDir ) )
 			{
 				// Clean up the old directory.
@@ -110,7 +116,14 @@ namespace Novell.iFolder.Install
 				{
 					// Add the filename as the query string.
 					NameValueCollection nvc = new NameValueCollection();
-					nvc.Add( PlatformQuery, MyEnvironment.Platform.ToString() );
+					if ( MyEnvironment.Platform == MyPlatformID.Windows )
+						nvc.Add( PlatformQuery, MyEnvironment.Platform.ToString() );
+					else
+					{
+						// FIXME: Add code here to handle Mac OS X
+					
+						nvc.Add( PlatformQuery, GetLinuxPlatformString() );
+					}
 					nvc.Add( FileQuery, file );
 					webClient.QueryString = nvc;
 					webClient.DownloadFile( hostAddress + "/ClientUpdateHandler.ashx", Path.Combine( downloadDir, file ) );
@@ -146,7 +159,116 @@ namespace Novell.iFolder.Install
 		}
 		
 		/// <summary>
-		/// Checks to see if there is a newer client application on the domain server and
+		/// Gets a string to identify the linux platform this code is running
+		/// on by returning the contents of the "/etc/issue" file.
+		/// </summary>
+		/// <returns>A string that identifies the linux platform if it can be
+		/// determined.  Otherwise null is returned.</returns>
+		private string GetLinuxPlatformString()
+		{
+			string platformString = null;
+			
+			if ( File.Exists( LinuxPlatformFile ) )
+			{
+				StreamReader sr = null;
+				try
+				{
+					sr = new StreamReader( LinuxPlatformFile );
+					string line = null;
+					do
+					{
+						line = sr.ReadLine();
+						if (line != null)
+						{
+							if (platformString == null)
+								platformString = line;
+							else
+								platformString = string.Concat(platformString, line);
+						}
+					} while (line != null);
+				}
+				catch {}
+				finally
+				{
+					if (sr != null)
+						sr.Close();
+				}
+				
+				if ( platformString != null )
+					platformString = platformString.Trim();
+			}
+			
+			return platformString;
+		}
+		
+		/// <summary>
+		/// Gets the version of the currently running Linux client.
+		/// </summary>
+		/// <returns>A Version object containing the version of the client if successful.
+		/// Otherwise null is returned.</returns>
+		private string GetLinuxClientVersion()
+		{
+			string version = null;
+
+			string fullPath = Path.Combine( SimiasSetup.bindir, iFolderLinuxApplication );
+			if ( File.Exists( fullPath ) )
+			{
+				FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo( fullPath );
+				version = versionInfo.ProductVersion;
+			}
+
+			return version;
+		}
+
+		/// <summary>
+		/// Checks to see if there is a newer client application available on the domain server and
+		/// prompts the user to upgrade.
+		/// </summary>
+		/// <param name="domainID">The ID of the domain to check for updates against.</param>
+		/// <returns>The version of the update if available. Otherwise null is returned.</returns>
+		private string CheckForUpdateAvailable()
+		{
+			string updateVersion = null;
+
+			// Make sure that the service object is authenticated.
+			if ( service != null )
+			{
+				// Get the current version of this client.
+				string currentVersion = null;
+				string platformString = null;
+				if ( MyEnvironment.Platform == MyPlatformID.Windows )
+				{
+					platformString = MyEnvironment.Platform.ToString();
+					currentVersion = GetWindowsClientVersion();
+				}
+				else if ( MyEnvironment.Platform == MyPlatformID.Unix )
+				{
+					// FIXME: Create a function for the Mac client
+					platformString = GetLinuxPlatformString();
+					currentVersion = GetLinuxClientVersion();
+				}
+				
+				if ( platformString != null && currentVersion != null )
+				{
+					// Call to the web service to see if there is a version newer than the one
+					// that is currently running.
+					updateVersion = service.IsUpdateAvailableActual( platformString, currentVersion );
+					/*
+					bool status = service.IsServerOlder(platformString, currentVersion);
+					if(status == true)
+						updateVersion = "Server OLDER";
+					else
+						updateVersion = "server not older";
+					*/
+				}
+			}
+
+			return updateVersion;
+		}
+
+		
+		/// <summary>
+		/// Checks to see if there is a need for newer client application on the domain server and
 		/// prompts the user to upgrade.
 		/// </summary>
 		/// <param name="domainID">The ID of the domain to check for updates against.</param>
@@ -160,33 +282,83 @@ namespace Novell.iFolder.Install
 			{
 				// Get the current version of this client.
 				string currentVersion = null;
+				string platformString = null;
 				if ( MyEnvironment.Platform == MyPlatformID.Windows )
 				{
+					platformString = MyEnvironment.Platform.ToString();
 					currentVersion = GetWindowsClientVersion();
 				}
-				else
+				else if ( MyEnvironment.Platform == MyPlatformID.Unix )
 				{
-					// TODO: Get the current client version for Linux.
+					// FIXME: Create a function for the Mac client
+					platformString = GetLinuxPlatformString();
+					currentVersion = GetLinuxClientVersion();
 				}
-
-				if ( currentVersion != null )
+				
+				if ( platformString != null && currentVersion != null )
 				{
 					// Call to the web service to see if there is a version newer than the one
 					// that is currently running.
-					updateVersion = service.IsUpdateAvailable( MyEnvironment.Platform.ToString(), currentVersion );
+					updateVersion = service.IsUpdateAvailable( platformString, currentVersion );
+					/*
+					bool status = service.IsServerOlder(platformString, currentVersion);
+					if(status == true)
+						updateVersion = "Server OLDER";
+					else
+						updateVersion = "server not older";
+					*/
 				}
 			}
 
 			return updateVersion;
 		}
 
+		/// <summary>
+		/// Checks to see if the server is running an older
+		/// version of simias
+		/// </summary>
+		/// <param name="domainID">The ID of the domain to check for updates against.</param>
+		/// <returns>The version of the update if available. Otherwise null is returned.</returns>
+		private bool CheckForServerUpdate()
+		{
+			string updateVersion = null;
+			bool serverOlder = false;
+
+			// Make sure that the service object is authenticated.
+			if ( service != null )
+			{
+				// Get the current version of this client.
+				string currentVersion = null;
+				string platformString = null;
+				if ( MyEnvironment.Platform == MyPlatformID.Windows )
+				{
+					platformString = MyEnvironment.Platform.ToString();
+					currentVersion = GetWindowsClientVersion();
+				}
+				else if ( MyEnvironment.Platform == MyPlatformID.Unix )
+				{
+					// FIXME: Create a function for the Mac client
+					platformString = GetLinuxPlatformString();
+					currentVersion = GetLinuxClientVersion();
+				}
+
+				if ( platformString != null && currentVersion != null )
+				{
+					// Call to the web service to see if there is a version newer than the one
+					// that is currently running.
+					serverOlder = service.IsServerOlder(platformString, currentVersion);
+				}
+			}
+
+			return serverOlder;
+		}
 
 		/// <summary>
 		/// Gets the updated client application and runs the installation program.
 		/// Note: This call will return before the application is updated.
 		/// </summary>
 		/// <returns>True if the installation program is successfully started. Otherwise false is returned.</returns>
-		private bool RunUpdate()
+		private bool RunUpdate(string path)
 		{
 			bool running = false;
 
@@ -198,9 +370,16 @@ namespace Novell.iFolder.Install
 				if ( fileList != null )
 				{
 					// Download the files in the list to a temporary directory.
-					string downloadDir = DownloadFiles( fileList );
+					string downloadDir = DownloadFiles( fileList, path );
 					if ( downloadDir != null )
 					{
+						if( path != null)
+						{
+							running = true;
+							return running;
+						}
+						/*		For installing the client  */
+
 						if ( MyEnvironment.Platform == MyPlatformID.Windows )
 						{
 							// There should only be one file needed for the windows update.
@@ -210,9 +389,29 @@ namespace Novell.iFolder.Install
 							installProcess.StartInfo.CreateNoWindow = false;
 							running = installProcess.Start();
 						}
-						else
+						else if ( MyEnvironment.Platform == MyPlatformID.Unix )
 						{
-							// TODO: Run the Linux install.
+							// If the platform is Unix, this code will assume
+							// that a script file named, "install-ifolder.sh"
+							// exists.  It will be launched to run/control the
+							// installation.
+							string installScriptPath = Path.Combine( downloadDir, "install-ifolder.sh" );
+							if ( File.Exists( installScriptPath ) )
+							{
+								Process installProcess = new Process();
+								
+								installProcess.StartInfo.FileName = "sh";
+								installProcess.StartInfo.WorkingDirectory = downloadDir;
+								installProcess.StartInfo.Arguments = 
+									string.Format("{0} {1}", installScriptPath, downloadDir);
+								installProcess.StartInfo.UseShellExecute = true;
+								installProcess.StartInfo.CreateNoWindow = false;
+								try
+								{
+									running = installProcess.Start();
+								}
+								catch{}
+							}
 						}
 					}
 				}
@@ -234,6 +433,18 @@ namespace Novell.iFolder.Install
 			ClientUpgrade cu = new ClientUpgrade(domainID);
 			return cu.CheckForUpdate();
 		}
+
+		public static bool CheckForServerUpdate(string domainID)
+		{
+			ClientUpgrade cu = new ClientUpgrade(domainID);
+			return cu.CheckForServerUpdate();
+		}
+
+		public static string CheckForUpdateAvailable(string domainID)
+		{
+			ClientUpgrade cu = new ClientUpgrade(domainID);
+			return cu.CheckForUpdateAvailable();
+		}
 			
 		/// <summary>
 		/// Gets the updated client application and runs the installation program.
@@ -241,10 +452,10 @@ namespace Novell.iFolder.Install
 		/// </summary>
 		/// <param name="domainID">The ID of the domain to check for updates against.</param>
 		/// <returns>True if the installation program is successfully started. Otherwise false is returned.</returns>
-		public static bool RunUpdate(string domainID)
+		public static bool RunUpdate(string domainID, string path)
 		{
 			ClientUpgrade cu = new ClientUpgrade(domainID);
-			return cu.RunUpdate();
+			return cu.RunUpdate(path);
 		}
 
 		#endregion

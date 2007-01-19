@@ -44,6 +44,8 @@ namespace Novell.Wizard
 		private System.Windows.Forms.RadioButton removeFromServer;
 		private System.Windows.Forms.RadioButton copyToServer;
 
+		private System.Windows.Forms.CheckBox copyOption;
+
 		private System.Windows.Forms.TextBox iFolderLocation;
 		private System.Windows.Forms.Button browseButton;
 		private System.Windows.Forms.CheckBox defaultServer;
@@ -84,28 +86,41 @@ namespace Novell.Wizard
 			this.removeFromServer = new RadioButton();
 			this.copyToServer = new RadioButton();
 			this.iFolderLocation = new TextBox();
+			this.copyOption = new CheckBox();
 			this.browseButton = new Button();
 			this.defaultDescription = new System.Windows.Forms.Label();
 			this.defaultServer = new System.Windows.Forms.CheckBox();
 			this.SuspendLayout();
+
+			// 
+			// label1
+			// 
+			
+			this.label1.Location = new System.Drawing.Point(40, 208);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(50, 24);
+			this.label1.TabIndex = 1;
+			this.label1.Text = "Location:";
 			// 
 			// iFolderLocation
 			// 
 		
-			this.iFolderLocation.Location = new System.Drawing.Point(96, 184);
+			this.iFolderLocation.Location = new System.Drawing.Point(96, 208);
 			this.iFolderLocation.Name = "iFolderLocation";
 			this.iFolderLocation.Size = new System.Drawing.Size(280, 20);
 			this.iFolderLocation.TabIndex = 2;
 			this.iFolderLocation.Text = this.homeLocation;
+			this.iFolderLocation.Enabled = false;
 
 			///
 			/// Browse button
 			/// 
 
-			this.browseButton.Location = new Point(390, 184);
+			this.browseButton.Location = new Point(390, 208);
 			this.browseButton.Size = new Size(75, 20);
 			this.browseButton.Name = "browseButton";
 			this.browseButton.Text = "&Browse";
+			this.browseButton.Enabled = false;
 			this.browseButton.Click += new EventHandler(browseButton_Click);
 		
 			//this.serverAddress.TextChanged += new System.EventHandler(this.serverAddress_TextChanged);
@@ -113,7 +128,7 @@ namespace Novell.Wizard
 			this.removeFromServer.Name = "removeFromServer";
 			this.removeFromServer.Size = new Size(320, 20);
 			this.removeFromServer.TabIndex = 2;
-			this.removeFromServer.Text = "Migrate the folder and remove from 2.x domain";
+			this.removeFromServer.Text = "Migrate the ifolder and disconnect it from 2.x domain";
 			this.removeFromServer.Checked = true;
 			this.removeFromServer.CheckedChanged += new EventHandler(removeClicked);
 			
@@ -122,17 +137,19 @@ namespace Novell.Wizard
 			this.copyToServer.Location = new Point(96, 144);
 			this.copyToServer.Name = "copyToServer";
 			this.copyToServer.Size = new Size(320, 20);
-			this.copyToServer.Text = "Create a c new copy and connect to 3.x server";
-
-			// 
-			// label1
-			// 
+			this.copyToServer.Text = "Create a copy and connect it to 3.x server";
+			this.copyToServer.Checked = false;
+			this.copyToServer.CheckedChanged +=new EventHandler(copyToServer_CheckedChanged);
 			
-			this.label1.Location = new System.Drawing.Point(40, 184);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(45, 16);
-			this.label1.TabIndex = 1;
-			this.label1.Text = "Location:";
+
+			// CopyOption.
+			this.copyOption.Location = new Point(112, 168);  // change 144
+			this.copyOption.Name = "copyOption";
+			this.copyOption.Size = new Size(320,20);
+			this.copyOption.Text = "Copy only the iFolder content";
+			this.copyOption.Enabled = false;
+			this.copyOption.Visible = true;
+			this.copyOption.Checked = false;
 			
 			// 
 			// label2
@@ -143,7 +160,7 @@ namespace Novell.Wizard
 			this.label2.Size = new System.Drawing.Size(416, 24);
 			this.label2.TabIndex = 1;
 			//this.label2.Text = "Enter the name of your iFolder server (for example, ifolder.example.net).";
-			this.label2.Text = "Select one among the following options";
+			this.label2.Text = "Select one of the following options";
 			
 			// 
 			// defaultDescription
@@ -192,6 +209,7 @@ namespace Novell.Wizard
 			this.Controls.Add(this.copyToServer);
 			this.Controls.Add(this.iFolderLocation);
 			this.Controls.Add(this.browseButton);
+			this.Controls.Add(this.copyOption);
 			this.ResumeLayout(false);
 
 		}
@@ -301,6 +319,14 @@ namespace Novell.Wizard
 			}
 		}
 
+		public bool CopyParentDirectory
+		{
+			get
+			{
+				return !this.copyOption.Checked;
+			}
+		}
+
 		public string HomeLocation
 		{
 			get
@@ -327,6 +353,14 @@ namespace Novell.Wizard
 		}
 		*/
 		#endregion
+
+		private void copyToServer_CheckedChanged(object sender, EventArgs e)
+		{
+			if(this.copyToServer.Checked == true)
+				this.copyOption.Enabled = true;
+			else
+				this.copyOption.Enabled = false;
+		}
 	}
 }
 

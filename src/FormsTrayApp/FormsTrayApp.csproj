@@ -238,6 +238,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "MigrationWindow.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MigrationWindow.resx"
+                    DependentUpon = "MigrationWindow.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "NavigateItemEventArgs.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

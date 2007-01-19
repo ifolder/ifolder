@@ -158,6 +158,9 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.MenuItem menuViewAvailable;
 		private System.Windows.Forms.ContextMenu iFolderContextMenu;
 		private System.Windows.Forms.MenuItem menuItem7;
+		private System.Windows.Forms.MenuItem menuSeparator;
+		private System.Windows.Forms.MenuItem MigrationMenuItem;
+		private System.Windows.Forms.MenuItem MigrationMenuSubItem;
 		private System.Windows.Forms.Button accept;
 		private System.Windows.Forms.Button remove;
 		private System.Windows.Forms.Button resolve;
@@ -275,6 +278,9 @@ namespace Novell.FormsTrayApp
 			this.menuActionAccept = new System.Windows.Forms.MenuItem();
 			this.menuActionRemove = new System.Windows.Forms.MenuItem();
 			this.menuItem7 = new System.Windows.Forms.MenuItem();
+			this.menuSeparator = new System.Windows.Forms.MenuItem();
+			this.MigrationMenuItem = new System.Windows.Forms.MenuItem();
+			this.MigrationMenuSubItem = new System.Windows.Forms.MenuItem();
 			this.menuActionOpen = new System.Windows.Forms.MenuItem();
 			this.menuActionShare = new System.Windows.Forms.MenuItem();
 			this.menuActionResolve = new System.Windows.Forms.MenuItem();
@@ -316,7 +322,7 @@ namespace Novell.FormsTrayApp
 			this.label1 = new System.Windows.Forms.Label();
 			this.showiFolders = new System.Windows.Forms.Button();
 			this.panel2 = new System.Windows.Forms.Panel();
-			this.iFolderView = new Novell.FormsTrayApp.TileListView();
+			this.iFolderView = new TileListView();
 			this.localiFoldersHeading = new System.Windows.Forms.RichTextBox();
 			this.panel1.SuspendLayout();
 			this.iFolderActions.SuspendLayout();
@@ -485,6 +491,8 @@ namespace Novell.FormsTrayApp
 																					   this.menuActionRevert,
 																					   this.menuActionProperties,
 																					   this.menuItem4,
+																					   this.MigrationMenuItem,
+																					   this.menuSeparator,
 																					   this.menuClose,
 																					   this.menuExit});
 			this.menuAction.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuAction.Shortcut")));
@@ -530,6 +538,32 @@ namespace Novell.FormsTrayApp
 			this.menuItem7.ShowShortcut = ((bool)(resources.GetObject("menuItem7.ShowShortcut")));
 			this.menuItem7.Text = resources.GetString("menuItem7.Text");
 			this.menuItem7.Visible = ((bool)(resources.GetObject("menuItem7.Visible")));
+			//
+			// menuSeparator
+			//
+			this.menuSeparator.Enabled = true;
+			this.menuSeparator.Visible = true;
+			this.MigrationMenuItem.Index = 12;
+			this.menuSeparator.Text = resources.GetString("menuItem7.Text");
+
+			//
+			// MigrationmenuItem
+			//
+			this.MigrationMenuItem.Enabled = true;
+			this.MigrationMenuItem.Visible = true;
+			this.MigrationMenuItem.Index = 11;
+			this.MigrationMenuItem.Text = "Migration";
+			this.MigrationMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																					   this.MigrationMenuSubItem });
+
+			// 
+			// MigrationMenuSubItem
+			//
+			this.MigrationMenuSubItem.Enabled = true;
+			this.MigrationMenuSubItem.Visible = true;
+			this.MigrationMenuSubItem.Text = "Migrate From 2.x";
+			this.MigrationMenuSubItem.Click += new System.EventHandler(this.menuMigrateMigrate_Click);
+
 			// 
 			// menuActionOpen
 			// 
@@ -603,7 +637,7 @@ namespace Novell.FormsTrayApp
 			// menuClose
 			// 
 			this.menuClose.Enabled = ((bool)(resources.GetObject("menuClose.Enabled")));
-			this.menuClose.Index = 11;
+			this.menuClose.Index = 13;
 			this.menuClose.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuClose.Shortcut")));
 			this.menuClose.ShowShortcut = ((bool)(resources.GetObject("menuClose.ShowShortcut")));
 			this.menuClose.Text = resources.GetString("menuClose.Text");
@@ -612,7 +646,7 @@ namespace Novell.FormsTrayApp
 			// menuExit
 			// 
 			this.menuExit.Enabled = ((bool)(resources.GetObject("menuExit.Enabled")));
-			this.menuExit.Index = 12;
+			this.menuExit.Index = 14;
 			this.menuExit.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuExit.Shortcut")));
 			this.menuExit.ShowShortcut = ((bool)(resources.GetObject("menuExit.ShowShortcut")));
 			this.menuExit.Text = resources.GetString("menuExit.Text");
@@ -714,6 +748,7 @@ namespace Novell.FormsTrayApp
 			this.menuViewAvailable.Text = resources.GetString("menuViewAvailable.Text");
 			this.menuViewAvailable.Visible = ((bool)(resources.GetObject("menuViewAvailable.Visible")));
 			this.menuViewAvailable.Click += new System.EventHandler(this.showiFolders_Click);
+			
 			// 
 			// menuHelp
 			// 
@@ -1244,8 +1279,8 @@ namespace Novell.FormsTrayApp
 			this.panel2.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
 			this.panel2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel2.BackgroundImage")));
 			this.panel2.ContextMenu = this.iFolderContextMenu;
-			this.panel2.Controls.Add(this.localiFoldersHeading);
 			this.panel2.Controls.Add(this.iFolderView);
+			this.panel2.Controls.Add(this.localiFoldersHeading);
 			this.panel2.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("panel2.Dock")));
 			this.panel2.Enabled = ((bool)(resources.GetObject("panel2.Enabled")));
 			this.panel2.Font = ((System.Drawing.Font)(resources.GetObject("panel2.Font")));
@@ -1258,9 +1293,10 @@ namespace Novell.FormsTrayApp
 			this.panel2.Text = resources.GetString("panel2.Text");
 			this.panel2.Visible = ((bool)(resources.GetObject("panel2.Visible")));
 			this.panel2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel2_MouseDown);
-			// 
-			// iFolderView
-			// 
+
+			//
+			//iFolderView
+			//
 			this.iFolderView.AccessibleDescription = resources.GetString("iFolderView.AccessibleDescription");
 			this.iFolderView.AccessibleName = resources.GetString("iFolderView.AccessibleName");
 			this.iFolderView.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("iFolderView.Anchor")));
@@ -1289,6 +1325,7 @@ namespace Novell.FormsTrayApp
 			this.iFolderView.NavigateItem += new Novell.FormsTrayApp.TileListView.NavigateItemDelegate(this.iFolderView_NavigateItem);
 			this.iFolderView.DoubleClick += new System.EventHandler(this.iFolderView_DoubleClick);
 			this.iFolderView.SelectedIndexChanged += new Novell.FormsTrayApp.TileListView.SelectedIndexChangedDelegate(this.ifListView_SelectedIndexChanged);
+
 			// 
 			// localiFoldersHeading
 			// 
@@ -2799,6 +2836,7 @@ namespace Novell.FormsTrayApp
 		private void menuFileExit_Click(object sender, System.EventArgs e)
 		{
 			this.Close();
+			FormsTrayApp.CloseApp();
 		}
 
 		private void menuHelpHelp_Click(object sender, System.EventArgs e)
@@ -3190,5 +3228,12 @@ namespace Novell.FormsTrayApp
 		private static extern uint GetDriveType(string rootPathName);
 
 		#endregion
+
+		private void menuMigrateMigrate_Click(object sender, EventArgs e)
+		{
+			Novell.FormsTrayApp.MigrationWindow migrationWindow = new MigrationWindow(this.ifWebService);
+			migrationWindow.ShowDialog();
+		}
 	}
 }
+

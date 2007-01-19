@@ -101,6 +101,8 @@ namespace Novell.FormsTrayApp
 		private int index = 0;
 		private bool syncToServer = false;
 
+		private Image trayImage;
+
 		private Queue eventQueue;
 		private Thread worker = null;
 
@@ -230,17 +232,18 @@ namespace Novell.FormsTrayApp
 				try
 				{
 					string basePath = Path.Combine(Application.StartupPath, "res");
-
+					
 					trayIcon = new Icon(Path.Combine(basePath, "ifolder_loaded.ico"));
 					startupIcon = new Icon(Path.Combine(basePath, "ifolder-startup.ico"));
 					shutdownIcon = new Icon(Path.Combine(basePath, "ifolder-shutdown.ico"));
+				
+				
 					syncIcons[0] = new Icon(trayIcon, trayIcon.Size);
 					for (int i = 0; i < numberOfSyncIcons; i++)
 					{
 						string syncIcon = string.Format(Path.Combine(basePath, "ifolder_sync{0}.ico"), i+1);
 						syncIcons[i] = new Icon(syncIcon);
 					}
-			
 					this.ShowInTaskbar = false;
 					this.WindowState = FormWindowState.Minimized;
 					//this.Hide();
@@ -266,6 +269,11 @@ namespace Novell.FormsTrayApp
 			this.Load += new System.EventHandler(FormsTrayApp_Load);
 		}
 
+		public static void CloseApp()
+		{
+			instance.ShutdownTrayApp(null);
+		}
+
 		/// <summary>
 		/// Disposes the object.
 		/// </summary>
@@ -278,6 +286,92 @@ namespace Novell.FormsTrayApp
 					components.Dispose();
 
 			base.Dispose( disposing );
+		}
+
+		static public bool ClientUpdates(string domainID)
+		{
+			string newClientVersion = null;
+			bool result = false;
+			bool serverOld = false;
+
+			if( instance.ifWebService.CheckForServerUpdate(domainID))
+			{
+				MessageBox.Show("Server Is Old. Cannot connect to the server","Server Old",MessageBoxButtons.OK);
+				return false;
+			}
+			else if( (newClientVersion = instance.ifWebService.CheckForUpdatedClient(domainID)) != null)
+			{
+				//int res = (int) MessageBox.Show( newClientVersion, "Client upgrade needed: ", MessageBoxButtons.OKCancel);
+				int res = (int) MessageBox.Show( "Would you like to upgrade your client to "+newClientVersion+ ". The client will be closed automatically if you click Yes", "Client upgrade available. ", MessageBoxButtons.OKCancel);
+				if( res == (int) DialogResult.OK)
+				{
+					// download client
+					if(instance.ifWebService.RunClientUpdate(domainID, null))
+					{
+						MessageBox.Show( "The install process has started", "Client upgrade ", MessageBoxButtons.OK);
+						instance.ShutdownTrayApp(null);
+						//		FormsTrayApp.ShutdownForms();
+						// Shut down the tray app.
+					}
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else if((newClientVersion = instance.ifWebService.CheckForUpdatedClientAvailable(domainID)) != null)
+			{
+				int res = (int) MessageBox.Show( "Would you like to upgrade your client to "+newClientVersion+ ". The client will be closed automatically if you click Yes", "Client upgrade needed. ", MessageBoxButtons.OKCancel);
+				if( res == (int) DialogResult.OK)
+				{
+					// download client
+					if(instance.ifWebService.RunClientUpdate(domainID, null))
+					{
+						MessageBox.Show( "The install process has started", "Client upgrade ", MessageBoxButtons.OK);
+						instance.ShutdownTrayApp(null);
+						//		FormsTrayApp.ShutdownForms();
+						// Shut down the tray app.
+					}
+				}
+				else
+				{
+					return true;
+				}
+			}
+
+
+			/*
+			newClientVersion = instance.ifWebService.CheckForUpdatedClient(domainID);
+			if( newClientVersion != null)
+			{
+				MessageBox.Show( newClientVersion, "Client upgrade needed: ", MessageBoxButtons.OK);
+			}
+			serverOld = instance.ifWebService.CheckForServerUpdate(domainID);
+			if( serverOld)
+			{
+				result = false;
+				//	this.prefs.RemoveDomainFromList(domainInfo, null);
+				MessageBox.Show("Server Is Old. Cannot connect to the server","Server Old",MessageBoxButtons.OK);
+			}
+
+			newClientVersion = null;
+			newClientVersion = instance.ifWebService.CheckForUpdatedClientAvailable(domainID);
+			if( newClientVersion != null)
+			{
+				MessageBox.Show( newClientVersion+System.IO.Path.GetTempPath(), "Client upgrade Available: Click OK to Install", MessageBoxButtons.OK);
+				if(instance.ifWebService.RunClientUpdate(domainID, null))
+				{
+					result = true;
+					MessageBox.Show( "Process started", "Client upgrade Available:", MessageBoxButtons.OK);
+			//		FormsTrayApp.ShutdownForms();
+					// Shut down the tray app.
+					instance.ShutdownTrayApp(null);
+				}
+				else
+					MessageBox.Show( "Failed to start process", "Client upgrade Available:", MessageBoxButtons.OK);
+			}
+			*/
+			return true;
 		}
 
 		/// <summary>
@@ -296,7 +390,8 @@ namespace Novell.FormsTrayApp
 				DialogResult result = mmb.ShowDialog();
 				if ( result == DialogResult.Yes )
 				{
-					updateStarted = instance.ifWebService.RunClientUpdate(domainID);
+// Commented by ramesh
+//					updateStarted = instance.ifWebService.RunClientUpdate(domainID);
 					if ( updateStarted == false )
 					{
 						mmb = new MyMessageBox(resourceManager.GetString("clientUpgradeFailure"), resourceManager.GetString("upgradeErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
@@ -593,7 +688,7 @@ namespace Novell.FormsTrayApp
 
 					if (accountPrompt)
 					{
-						AccountWizard accountWizard = new AccountWizard( simiasWebService, simiasManager, true );
+						AccountWizard accountWizard = new AccountWizard( ifWebService, simiasWebService, simiasManager, true, this.preferences );
 						accountWizard.EnterpriseConnect += new Novell.Wizard.AccountWizard.EnterpriseConnectDelegate(preferences_EnterpriseConnect);
 						wizardRunning = true;
 						DialogResult result = accountWizard.ShowDialog();
@@ -1272,6 +1367,11 @@ namespace Novell.FormsTrayApp
 					break;
 				}
 			}
+		}
+
+		public static void ShutdownForms()
+		{
+			instance.ShutdownTrayApp(null);
 		}
 
 		private void ShutdownTrayApp(Exception ex)

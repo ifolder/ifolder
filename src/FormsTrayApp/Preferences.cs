@@ -1566,7 +1566,7 @@ namespace Novell.FormsTrayApp
 			{
 				DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domain.ID, null);
 				Status authStatus = domainAuth.Logout(simiasManager.WebServiceUri, simiasManager.DataPath);
-				if ( authStatus.statusCode == StatusCodes.Success )
+				if ( authStatus != null && authStatus.statusCode == StatusCodes.Success )
 				{
 					result = true;
 					domain.DomainInfo.Authenticated = false;
@@ -1799,17 +1799,17 @@ namespace Novell.FormsTrayApp
 			}
 
 			minimumSyncInterval = minimumSeconds = defaultMinimumSeconds;
-			/*
+			
 			timeUnit.Items.Add(resourceManager.GetString("seconds"));
 			timeUnit.Items.Add(resourceManager.GetString("minutes"));
 			timeUnit.Items.Add(resourceManager.GetString("hours"));
 			timeUnit.Items.Add(resourceManager.GetString("days"));
-			*/
+			/*
 			timeUnit.Items.Add("seconds");
 			timeUnit.Items.Add("minutes");
 			timeUnit.Items.Add("hours");
 			timeUnit.Items.Add("days");
-
+			*/
 			// Resize the buttons
 //			resizeButton(login);
 //			resizeButton(logout);
@@ -2045,7 +2045,7 @@ namespace Novell.FormsTrayApp
 		#region Accounts Tab
 		private void addAccount_Click(object sender, System.EventArgs e)
 		{
-			AccountWizard accountWizard = new AccountWizard( simiasWebService, simiasManager, accounts.Items.Count == 0 );
+			AccountWizard accountWizard = new AccountWizard( ifWebService, simiasWebService, simiasManager, accounts.Items.Count == 0, this );
 			accountWizard.EnterpriseConnect += new Novell.Wizard.AccountWizard.EnterpriseConnectDelegate(accountWizard_EnterpriseConnect);
 			if ( accountWizard.ShowDialog() == DialogResult.OK )
 			{
@@ -2324,9 +2324,9 @@ namespace Novell.FormsTrayApp
 		private void btnMigrate_Click(object sender, EventArgs e)
 		{
 			ListViewItem lvi = this.listView1.SelectedItems[0];
-			MigrationWizard migrationWizard = new MigrationWizard( lvi.SubItems[0].Text, lvi.SubItems[1].Text, ifWebService);
+		//	MigrationWizard migrationWizard = new MigrationWizard( lvi.SubItems[0].Text, lvi.SubItems[1].Text, ifWebService);
 		//	accountWizard.EnterpriseConnect += new Novell.Wizard.AccountWizard.EnterpriseConnectDelegate(accountWizard_EnterpriseConnect);
-			if ( migrationWizard.ShowDialog() == DialogResult.OK )
+		/*	if ( migrationWizard.ShowDialog() == DialogResult.OK )
 			{
 				// Display the iFolders dialog.
 				if ( DisplayiFolderDialog != null )
@@ -2336,7 +2336,7 @@ namespace Novell.FormsTrayApp
 			}
 
 			migrationWizard.Dispose();
-
+*/
 			/*
 			ListViewItem lvi = this.listView1.SelectedItems[0];
 			string str= lvi.SubItems[1].Text;

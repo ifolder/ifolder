@@ -160,6 +160,7 @@ namespace Novell.Wizard
 			this.security.Name = "security";
 			this.security.Size = new System.Drawing.Size(304, 16);
 			this.security.TabIndex = 8;
+			this.security.MouseHover += new EventHandler(security_MouseHover);
 			// 
 			// label6
 			// 
@@ -270,6 +271,7 @@ namespace Novell.Wizard
 				this.security.Text = "None";
 			}
 		}
+
 		private void MigrationVerifyPage_Load(object sender, EventArgs e)
 		{
 			UpdateDetails();
@@ -297,6 +299,11 @@ namespace Novell.Wizard
 				this.security.Text = "None";
 			}
 			*/
+		}
+
+		private void security_MouseHover(object sender, EventArgs e)
+		{
+			
 		}
 	}
 }
