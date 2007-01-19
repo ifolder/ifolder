@@ -279,7 +279,7 @@ namespace Novell.iFolder
 
 				tSelect.GetSelected(out tModel, out iter);
 				string id = (string) tModel.GetValue(iter, 0);
-				MigrationWizard migratewiz = new MigrationWizard(GetName(id), GetHomeLocation(id), ifws, this);
+				MigrationWizard migratewiz = null; //new MigrationWizard(GetName(id), GetHomeLocation(id), ifws, this);
 
 				migratewiz.TransientFor = topLevelWindow;
 				if (!Util.RegisterModalWindow(migratewiz))

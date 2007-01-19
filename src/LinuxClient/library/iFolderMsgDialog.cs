@@ -60,6 +60,7 @@ public class iFolderMsgDialog : Dialog
 		Ok = 1,
 		OkCancel,
 		YesNo,
+		AcceptDeny,
 		None
 	}
 	
@@ -246,8 +247,16 @@ public class iFolderMsgDialog : Dialog
 				defaultButton = this.AddButton(Stock.Ok, ResponseType.Ok);
 				break;
 			case ButtonSet.YesNo:
-				this.AddButton(Stock.No, ResponseType.No);
-				defaultButton = this.AddButton(Stock.Yes, ResponseType.Yes);
+		//		this.AddButton(Stock.No, ResponseType.No);
+		//		defaultButton = this.AddButton(Stock.Yes, ResponseType.Yes);
+				this.AddButton("No", ResponseType.No);
+				defaultButton = this.AddButton("Yes", ResponseType.Yes);
+				break;
+			case ButtonSet.AcceptDeny:
+		//		this.AddButton(Stock.No, ResponseType.No);
+		//		defaultButton = this.AddButton(Stock.Yes, ResponseType.Yes);
+				this.AddButton("Deny", ResponseType.No);
+				defaultButton = this.AddButton("Accept", ResponseType.Yes);
 				break;
 		}
 		

@@ -62,13 +62,17 @@ namespace Novell.iFolder
 		private bool				migrationStatus;
 		
 		private Gdk.Pixbuf				AddAccountPixbuf;
-		private MigrationPage page;
+		private MigrationWindow page;
 
 		///
 		/// Migration Options page
 		///
-		private CheckButton 			deleteFromServer;
-		private CheckButton			copyToServer;
+		private RadioButton 			deleteFromServer;
+		private RadioButton			copyToServer;
+		
+		private RadioButton 			group;
+
+		private CheckButton 			copyDir;
 		private Button				BrowseButton;
 		private Entry 				LocationEntry;
 
@@ -92,7 +96,7 @@ namespace Novell.iFolder
 		///
 		iFolderWaitDialog	WaitDialog;
 
-		public MigrationWizard(string User, string path, iFolderWebService ifws, MigrationPage page) : base(WindowType.Toplevel)
+		public MigrationWizard(string User, string path, iFolderWebService ifws, MigrationWindow page) : base(WindowType.Toplevel)
 		{
 			this.Title = Util.GS("iFolder Migration Assistant");
 			this.Resizable = false;
@@ -182,15 +186,15 @@ namespace Novell.iFolder
 			///
 			/// Content
 			///
-			Table table = new Table(4, 3, false);
+			Table table = new Table(5, 6, false);
 			MigrationOptionsPage.VBox.PackStart(table, true, true, 0);
 			table.ColumnSpacing = 6;
 			table.RowSpacing = 6;
 			table.BorderWidth = 12;
 
 			// Row 1
-			Label l = new Label(Util.GS("Select one among the following options"));
-			table.Attach(l, 0,3, 0,1,
+			Label l = new Label(Util.GS("Select one of the following options")+":");
+			table.Attach(l, 0,6, 0,1,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			l.LineWrap = true;
 			l.Xalign = 0.0F;
@@ -198,31 +202,44 @@ namespace Novell.iFolder
 			// Row 2
 			table.Attach(new Label(""), 0,1, 1,2,
 				AttachOptions.Fill, 0,12,0); // spacer
-			deleteFromServer = new CheckButton("Migrate the folder and remove from 2.x domain");
+			deleteFromServer = new RadioButton(Util.GS("Migrate the folder and  disconnect from 2.x domain"));
 			deleteFromServer.Active = true;
-			deleteFromServer.Sensitive = false;
+			deleteFromServer.Sensitive = true;
 			deleteFromServer.Toggled += new EventHandler(OndeleteCheckButtonChanged);
-			table.Attach(deleteFromServer, 1,3, 1,2,
+			table.Attach(deleteFromServer, 1,6, 1,2,
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			
 			// Row 3
 
-			table.Attach(new Label(""), 0,1, 1,2,
+			table.Attach(new Label(""), 0,1, 2,3,
 				AttachOptions.Fill, 0,12,0); // spacer
-			copyToServer = new CheckButton("Create a new copy of the folder and connect to server");
+			copyToServer = new RadioButton(deleteFromServer, Util.GS("Create a copy of the folder and connect to server"));
+			copyToServer.Active = false;
 			copyToServer.Toggled += new EventHandler(OncopyCheckButtonChanged);
 
-			table.Attach(copyToServer, 1,3, 2,3,
+			table.Attach(copyToServer, 1,6, 2,3,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+
 			// Row 4
+
+//			table.Attach(new Label("'), 0,1, 3,4, AttachOptions.Shrink, 0,15, 0);  // spacer
+			table.Attach(new Label(""), 0,1, 3,4,
+				AttachOptions.Shrink, 0,12,0); // spacer
+			table.Attach(new Label(""), 1,2, 3,4, AttachOptions.Fill, 0,3,0);
+
+			copyDir = new CheckButton(Util.GS("Copy the parent folder"));	
+			copyDir.Sensitive = false;
+			table.Attach(copyDir, 2,6, 3,4, AttachOptions.Fill| AttachOptions.Expand, 0,0,0);
+
+			// Row 5
 			
-			table.Attach(new Label("Location:"), 0,1, 3,4, AttachOptions.Fill, 0,0,0);
+			table.Attach(new Label("Location:"), 0,1, 4,5, AttachOptions.Fill, 0,0,0);
 			LocationEntry = new Entry();
 			LocationEntry.Text = location;
 			LocationEntry.Sensitive = false;
-			table.Attach(LocationEntry, 1,2, 3,4, AttachOptions.Fill, 0,0,0);	
+			table.Attach(LocationEntry, 1,5, 4,5, AttachOptions.Fill, 0,0,0);	
 			BrowseButton = new Button("_Browse");
-			table.Attach(BrowseButton, 2,3, 3,4, AttachOptions.Fill, 0,0,0); 
+			table.Attach(BrowseButton, 5,6, 4,5, AttachOptions.Fill, 0,0,0); 
 			BrowseButton.Sensitive = false;
 			BrowseButton.Clicked += new EventHandler(OnBrowseButtonClicked);	
 			return MigrationOptionsPage;
@@ -318,11 +335,7 @@ namespace Novell.iFolder
 		private Gnome.DruidPage CreateMigratePage()
 		{
 			
-			MigratePage =
-				new DruidConnectPage(
-					Util.GS("Verify and Migrate"),
-					AddAccountPixbuf,
-					null);
+			MigratePage = new DruidConnectPage(Util.GS("Verify and Migrate"),AddAccountPixbuf,null);
 
 			MigratePage.CancelClicked +=
 				new Gnome.CancelClickedHandler(OnCancelClicked);
@@ -343,7 +356,7 @@ namespace Novell.iFolder
 			table.BorderWidth = 12;
 
 			// Row 1
-			Label l = new Label(Util.GS("Please verify that the information you've entered is correct."));
+			Label l = new Label(Util.GS("Please verify that the information you've entered is correct")+".");
 			table.Attach(l, 0,3, 0,1,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			l.LineWrap = true;
@@ -352,7 +365,7 @@ namespace Novell.iFolder
 			// Row 2
 			table.Attach(new Label(""), 0,1, 1,2,
 				AttachOptions.Fill, 0,12,0); // spacer
-			l = new Label(Util.GS("Server Address:"));
+			l = new Label(Util.GS("Server Address")+":");
 			table.Attach(l, 1,2, 1,2,
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			l.Xalign = 0.0F;
@@ -362,7 +375,7 @@ namespace Novell.iFolder
 			ServerAddressLabel.Xalign = 0.0F;
 
 			// Row 3
-			l = new Label(Util.GS("Location:"));
+			l = new Label(Util.GS("Location")+":");
 			table.Attach(l, 1,2, 2,3,
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			l.Xalign = 0.0F;
@@ -372,7 +385,7 @@ namespace Novell.iFolder
 			Location.Xalign = 0.0F;
 			
 			// Row 4
-			l = new Label(Util.GS("Migration Option:"));
+			l = new Label(Util.GS("Migration Option")+":");
 			table.Attach(l, 1,2, 3,4,
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			l.Xalign = 0.0F;
@@ -382,7 +395,7 @@ namespace Novell.iFolder
 			MigrationOptionLabel.Xalign = 0.0F;
 			
 			// Row 5
-			ShowSecurityLabel = new Label(Util.GS("Security:"));
+			ShowSecurityLabel = new Label(Util.GS("Security")+":");
 			table.Attach(ShowSecurityLabel, 1,2, 4,5,
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			ShowSecurityLabel.Xalign = 0.0F;
@@ -395,7 +408,7 @@ namespace Novell.iFolder
 			l = new Label(
 				string.Format(
 					"\n\n{0}",
-					Util.GS("Click \"Migrate\" to migrate your folder to the server specified.")));
+					Util.GS("Click \"Migrate\" to migrate your folder to the server specified")+"."));
 			table.Attach(l, 0,3, 5,6,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			l.LineWrap = true;
@@ -488,6 +501,7 @@ namespace Novell.iFolder
 		private void OnUserInformationPagePrepared(object o, Gnome.PreparedArgs args)
 		{
 			this.Title = Util.GS("iFolder Migration Assistant - (2 of 3)");
+			ForwardButton.Label = "gtk-go-forward";
 			if(Prepared)
 				return;
 			Prepared = true;
@@ -522,16 +536,18 @@ namespace Novell.iFolder
 				MigrationOptionLabel.Text = "Create a copy and migrate to iFolder3.x";
 			if(encryptionCheckButton.Active)
 			{
-				SecurityLabel.Text = "Encrypt the iFolder ";
+				SecurityLabel.Text = Util.GS("Encrypt the iFolder ");
 				if(sslCheckButton.Active)
 				{
-					SecurityLabel.Text += "and Use secure channel for data transfer";
+					SecurityLabel.Text += Util.GS("and Use secure channel for data transfer");
 				}
 			}
 			else if(sslCheckButton.Active)
 			{
-				SecurityLabel.Text = "Use Secure channel for data transfer";
+				SecurityLabel.Text = Util.GS("Use Secure channel for data transfer");
 			}
+			else
+				SecurityLabel.Text = Util.GS("None");
 			
 			// Hack to modify the "Forward" button to be a "Connect" button
 			ForwardButton.Label = Util.GS("Migrate");
@@ -557,13 +573,15 @@ namespace Novell.iFolder
 			}
 			else
 			{
+				SummaryPage.Title = Util.GS("Error in Migration");
 				SummaryPage.Text = string.Format(Util.GS("Sorry! The iFolder cannot be migrated to the specified account.\n\nPlease try again."));
 				AccountDruid.SetButtonsSensitive(true, false, false, false);
 			}
 		}
 
-	public static void CopyDirectory(DirectoryInfo source, DirectoryInfo destination) 
+	public static bool CopyDirectory(DirectoryInfo source, DirectoryInfo destination) 
 	{
+		bool success = false;
 
         	if (!destination.Exists) 
 		{
@@ -573,12 +591,13 @@ namespace Novell.iFolder
 			}
 			catch(Exception e)
 			{
+				return success;
 			}
 	        }
 		
 		if(!source.Exists)
 		{
-			return;
+			return success;
 		}
 
         	// Copy all files.
@@ -593,6 +612,7 @@ namespace Novell.iFolder
 		}
 		catch(Exception e)
 		{
+			return success;
 		}
 
 		try
@@ -606,13 +626,16 @@ namespace Novell.iFolder
         		    string destinationDir = System.IO.Path.Combine(destination.FullName, dir.Name);
 
 	        	    // Call CopyDirectory() recursively.
-	        	    CopyDirectory(dir, new DirectoryInfo(destinationDir));
+	        	    return CopyDirectory(dir, new DirectoryInfo(destinationDir));
         		}
 		}
 		catch(Exception e)
 		{
+			return success;
 		}
+		return true;
     	}		
+
 		/// <summary>
 		/// Return true if the connect was successful, otherwise, return false.
 		/// Returning true will allow the druid to advance one page.
@@ -642,21 +665,44 @@ namespace Novell.iFolder
 
 			if( ifws.CanBeiFolder(LocationEntry.Text) )
 			{
+				string destDir = LocationEntry.Text;
 				if(copyToServer.Active == true)  // copy the ifolder in location to LocationEntry.Text
 				{
 					System.IO.DirectoryInfo source = new System.IO.DirectoryInfo(location);
 					System.IO.DirectoryInfo destination = new System.IO.DirectoryInfo(LocationEntry.Text);	
-					CopyDirectory(source, destination);
+					if( copyDir.Active )
+					{
+						string fileName;
+						fileName = source.Name;
+						destDir += "/" + fileName;
+						System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(destDir);
+						if( !di.Exists)
+						{
+							try
+							{
+								di.Create();
+							}
+							catch(Exception ex)
+							{
+								migrationStatus = false;
+							}
+						}
+						destination = new System.IO.DirectoryInfo(destDir);
+					}
+					if( !CopyDirectory(source, destination) )
+					{
+						migrationStatus = false;
+						return true;;
+					}
 				}
 				DirectoryInfo d = new DirectoryInfo(location);
 				
 				// Create iFolder
 				string Algorithm = "";
 				Algorithm = encryptionCheckButton.Active ? "BlowFish" : "";
-				if((d.Exists) && (ifdata.CreateiFolder(LocationEntry.Text, (domains[domainList.Active]).ID, sslCheckButton.Active, Algorithm ) == null))
+				if((d.Exists) && (ifdata.CreateiFolder(destDir, (domains[domainList.Active]).ID, sslCheckButton.Active, Algorithm ) == null))
 				{
 					// error creating the ifolder..
-					Console.WriteLine("error creating the ifolder");
 					migrationStatus = false;
 				}
 				else
@@ -690,30 +736,32 @@ namespace Novell.iFolder
 			}
 			return true;
 		}
-		
+
 		private void OndeleteCheckButtonChanged(object o, EventArgs e)
 		{
 			if(deleteFromServer.Active == true)
 			{
-				copyToServer.Active = false;
-				copyToServer.Sensitive = true;
-				deleteFromServer.Sensitive = false;
+			//	copyToServer.Active = false;
+			//	copyToServer.Sensitive = true;
+			//	deleteFromServer.Sensitive = false;
 				prevLocation = LocationEntry.Text;
 				LocationEntry.Text = location;
 				LocationEntry.Sensitive = false;
 				BrowseButton.Sensitive = false;
+				copyDir.Sensitive = false;
 			}
 		}	
 		private void OncopyCheckButtonChanged(object o, EventArgs e)
 		{
 			if(copyToServer.Active == true)
 			{
-				deleteFromServer.Active = false;
-				deleteFromServer.Sensitive = true;
-				copyToServer.Sensitive = false;
+			//	deleteFromServer.Active = false;
+			//	deleteFromServer.Sensitive = true;
+			//	copyToServer.Sensitive = false;
 				LocationEntry.Sensitive = true;
 				BrowseButton.Sensitive = true;
 				LocationEntry.Text = prevLocation;
+				copyDir.Sensitive = true;
 				
 			}
 		}

@@ -312,34 +312,94 @@ namespace Novell.iFolder
 		{
 			if (ClientUpgradeDialog != null)
 				return;	// This dialog is already showing
-
+			if(DomainController.upgradeStatus.statusCode == StatusCodes.ServerOld)
+			{
+				ClientUpgradeDialog = new iFolderMsgDialog(
+				null,
+				iFolderMsgDialog.DialogType.Info,
+				iFolderMsgDialog.ButtonSet.Ok,
+				Util.GS("iFolder Server Older"),
+				Util.GS("The server is running an older version."),
+				string.Format(Util.GS("The server needs to be upgraded to be connected from this client")));
+			
+			}
+			else if(DomainController.upgradeStatus.statusCode == StatusCodes.UpgradeNeeded)
+			{
+				ClientUpgradeDialog = new iFolderMsgDialog(
+				null,
+				iFolderMsgDialog.DialogType.Info,
+				iFolderMsgDialog.ButtonSet.AcceptDeny,
+				Util.GS("iFolder Client Upgrade"),
+				Util.GS("Would you like to download new iFolder Client?"),
+				string.Format(Util.GS("The client needs to be upgraded to be connected to the server")));
+			}
+			else 
+			{
 			ClientUpgradeDialog = new iFolderMsgDialog(
 				null,
 				iFolderMsgDialog.DialogType.Info,
-				iFolderMsgDialog.ButtonSet.YesNo,
+				iFolderMsgDialog.ButtonSet.AcceptDeny,
 				Util.GS("iFolder Client Upgrade"),
-				Util.GS("Would you like to upgrade your iFolder Client?"),
+				Util.GS("Would you like to download new iFolder Client?"),
 				string.Format(Util.GS("A newer version \"{0}\" of the iFolder Client is available."), args.NewClientVersion));
+			}
 			int rc = ClientUpgradeDialog.Run();
 			ClientUpgradeDialog.Hide();
 			ClientUpgradeDialog.Destroy();
 			if (rc == -8)
 			{
 				bool bUpdateRunning = false;
-				
+				Gtk.Window win = new Gtk.Window("");
+				string initialPath = (string)System.IO.Path.GetTempPath();
+				Console.WriteLine("Initial Path: {0}", initialPath);
+				CopyLocation cp = new CopyLocation(win, (string)System.IO.Path.GetTempPath());
+				string selectedFolder = "";
+	                        int rc1 = 0;
+        	                do
+                	        {
+                        	        rc1 = cp.Run();
+                                	cp.Hide();
+	                                if(rc1 ==(int)ResponseType.Ok)
+        	                        {
+                	                        selectedFolder = cp.iFolderPath.Trim();
+                                		cp.Destroy();
+	                                        cp = null;
+        	                                break;
+                	                }
+                       		 }while( rc1 == (int)ResponseType.Ok);
+				if( cp != null)
+					cp.Destroy();
+				win.Hide();
+				win.Destroy();
+				if( rc1 != (int) ResponseType.Ok)
+				{
+					ClientUpgradeDialog = null;
+					return;
+				}
 				try
 				{
-					bUpdateRunning = ifws.RunClientUpdate(args.DomainID);
+					bUpdateRunning = ifws.RunClientUpdate(args.DomainID, selectedFolder);
 				}
 				catch(Exception e)
 				{
-					Console.WriteLine("Error starting iFolder Upgrade: {0}", e.Message);
 					ClientUpgradeDialog = null;
 					return;
 				}
 				
 				if (bUpdateRunning)
-					QuitiFolder();
+				{
+				ClientUpgradeDialog = new iFolderMsgDialog(
+				null,
+				iFolderMsgDialog.DialogType.Info,
+				iFolderMsgDialog.ButtonSet.Ok,
+				Util.GS("Download Complete..."),
+				Util.GS("Download Finished "),
+				string.Format(Util.GS("The new client rpm's have been downloaded.")));
+				ClientUpgradeDialog.Run();
+				ClientUpgradeDialog.Hide();
+				ClientUpgradeDialog.Destroy();
+				//	QuitiFolder();
+				}
 				else
 				{
 					iFolderMsgDialog dialog = new iFolderMsgDialog(
@@ -353,6 +413,23 @@ namespace Novell.iFolder
 					dialog.Hide();
 					dialog.Destroy();
 					dialog = null;
+				}
+				
+				if( DomainController.upgradeStatus.statusCode == StatusCodes.UpgradeNeeded )
+				{
+					// Deny login
+					if( domainController.GetDomain(args.DomainID) != null)
+						domainController.RemoveDomain(args.DomainID, false);
+				}
+
+			}
+			else //if(rc == -9)
+			{
+				if(DomainController.upgradeStatus.statusCode == StatusCodes.ServerOld || DomainController.upgradeStatus.statusCode == StatusCodes.UpgradeNeeded )
+				{
+					// Deny login
+					if( domainController.GetDomain(args.DomainID) != null)
+						domainController.RemoveDomain(args.DomainID, false);
 				}
 			}
 

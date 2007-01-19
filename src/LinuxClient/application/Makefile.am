@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-iFolderClient_CSFILES = $(srcdir)/iFolderApplication.cs $(srcdir)/AssemblyInfo.cs
+iFolderClient_CSFILES = $(srcdir)/iFolderApplication.cs $(srcdir)/CopyLocation.cs $(srcdir)/AssemblyInfo.cs
 iFolderClient_CSFILES_CSC := $(subst /,$(SEP),$(iFolderClient_CSFILES))
 iFolderClient_INCLUDES =
 iFolderClient_RESOURCES =

@@ -59,6 +59,8 @@ namespace Novell.iFolder.Controller
 		
 		private SimiasEventBroker eventBroker = null;
 		private Manager simiasManager;
+
+		public static Status upgradeStatus;
 		
 		///
 		/// Events
@@ -463,18 +465,16 @@ namespace Novell.iFolder.Controller
 						}
 						catch (Exception e)
 						{
-							Console.WriteLine("Error saving the password: {0}", e.Message);
 						}
 					}
 					
-					HandleDomainLoggedIn(domainID, status);
+					status = HandleDomainLoggedIn(domainID, status);
 				}
 			}
 			catch (Exception e)
 			{
 				status = null;
 			}
-
 			return status;
 		}
 		
@@ -760,7 +760,7 @@ namespace Novell.iFolder.Controller
 				((authStatus.statusCode == StatusCodes.Success) ||
 				 (authStatus.statusCode == StatusCodes.SuccessInGrace)))
 			{
-				HandleDomainLoggedIn(domainID, authStatus);
+				authStatus = HandleDomainLoggedIn(domainID, authStatus);
 			}
 			else
 			{
@@ -770,8 +770,10 @@ namespace Novell.iFolder.Controller
 			}
 		}
 		
-		private void HandleDomainLoggedIn(string domainID, Status status)
+		private Status HandleDomainLoggedIn(string domainID, Status status)
 		{
+		//	Status tempStatus = status;
+			DomainController.upgradeStatus = status;
 			// Update our cache of the DomainInformation object
 			try
 			{
@@ -825,15 +827,65 @@ namespace Novell.iFolder.Controller
 			string newClientVersion = GetNewClientVersion(domainID);
 			if (newClientVersion != null)
 			{
+				// New client is needed to connect to the server
 				// Notify DomainClientUpgradeAvailable listeners
 				if (DomainClientUpgradeAvailable != null)
 				{
+					DomainController domainController = DomainController.GetDomainController();
+					DomainController.upgradeStatus.statusCode = StatusCodes.UpgradeNeeded;
 					DomainClientUpgradeAvailableEventArgs args =
 						new DomainClientUpgradeAvailableEventArgs(
 							domainID, newClientVersion);
 					DomainClientUpgradeAvailable(this, args);
 				}
 			}
+			else
+			{
+				bool serverIsOld = IsServerOld(domainID);
+				
+				if(serverIsOld)
+				{
+					DomainController.upgradeStatus.statusCode = StatusCodes.ServerOld;
+					DomainController domainController = DomainController.GetDomainController();
+					DomainClientUpgradeAvailableEventArgs args =
+						new DomainClientUpgradeAvailableEventArgs(
+							domainID, newClientVersion);
+					DomainClientUpgradeAvailable(this, args);
+				}
+				else
+				{
+					string upgradeAvailable = GetNewClientAvailable(domainID); 
+					if( upgradeAvailable == null)
+					{
+						return DomainController.upgradeStatus;
+					}
+					Console.WriteLine("Upgrade available is: {0}", upgradeAvailable);
+					DomainClientUpgradeAvailableEventArgs args =
+						new DomainClientUpgradeAvailableEventArgs(
+							domainID, upgradeAvailable);
+					DomainClientUpgradeAvailable(this, args);				
+				}
+				
+			}
+			return DomainController.upgradeStatus;
+		}
+
+		private bool IsServerOld(string domainID)
+		{
+			return ifws.CheckForServerUpdate(domainID);
+		}
+
+		private string GetNewClientAvailable(string domainID)
+		{
+			string AvailableClientVersion = null;
+			try
+			{
+				AvailableClientVersion = ifws.CheckForUpdatedClientAvailable(domainID);
+			}
+			catch
+			{
+			}
+			return AvailableClientVersion;
 		}
 
 		/// <returns>Returns the version of a newer client or null if no new version exists.</returns>		
