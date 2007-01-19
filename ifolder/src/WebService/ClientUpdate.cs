@@ -69,4 +69,50 @@ public class ClientUpdate : System.Web.Services.Protocols.SoapHttpClientProtocol
         object[] results = this.EndInvoke(asyncResult);
         return ((string)(results[0]));
     }
+
+    /// <remarks/>
+    [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://novell.com/ifolder/web/IsUpdateAvailableActual", RequestNamespace="http://novell.com/ifolder/web/", ResponseNamespace="http://novell.com/ifolder/web/")]
+    public string IsUpdateAvailableActual(string platform, string currentVersion) {
+        object[] results = this.Invoke("IsUpdateAvailableActual", new object[] {
+                    platform,
+                    currentVersion});
+        return ((string)(results[0]));
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult BeginIsUpdateAvailableActual(string platform, string currentVersion, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("IsUpdateAvailableActual", new object[] {
+                    platform,
+                    currentVersion}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public string EndIsUpdateAvailableActual(System.IAsyncResult asyncResult) {
+        object[] results = this.EndInvoke(asyncResult);
+        return ((string)(results[0]));
+    }
+
+
+    /// <remarks/>
+    [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://novell.com/ifolder/web/IsServerOlder", RequestNamespace="http://novell.com/ifolder/web/", ResponseNamespace="http://novell.com/ifolder/web/")]
+    public bool IsServerOlder(string platform, string currentVersion) {
+        object[] results = this.Invoke("IsServerOlder", new object[] {
+                    platform,
+                    currentVersion});
+        return ((bool)(results[0]));
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult BeginIsServerOlder(string platform, string currentVersion, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("IsServerOlder", new object[] {
+                    platform,
+                    currentVersion}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public bool EndIsServerOlder(System.IAsyncResult asyncResult) {
+        object[] results = this.EndInvoke(asyncResult);
+        return ((bool)(results[0]));
+    }
+
 }

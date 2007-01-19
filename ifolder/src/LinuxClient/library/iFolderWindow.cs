@@ -76,6 +76,11 @@ namespace Novell.iFolder
 		private Gtk.MenuItem		SyncLogMenuItem;
 		private CheckMenuItem		ViewServeriFoldersMenuItem;
 
+		private Gtk.MenuItem		MigrateMenuItem;
+		private Gtk.MenuItem		MigrateMenuSubItem;
+
+//		private Gtk.MenuItem 		Migrate2xMenuItem;		
+
 		private DomainController	domainController;
 
 		// Manager object that knows about simias resources.
@@ -381,6 +386,16 @@ namespace Novell.iFolder
 			PropMenuItem.Activated += new EventHandler(OnShowFolderProperties);
 
 			iFolderMenu.Append(new SeparatorMenuItem());
+
+			MigrateMenuItem = new MenuItem(Util.GS("_Migrate iFolder"));
+			Menu MigrateMenu = new Menu();
+			MigrateMenuSubItem = new MenuItem(Util.GS("Migrate from 2.x"));
+			MigrateMenu.Append(MigrateMenuSubItem);
+			MigrateMenuItem.Submenu = MigrateMenu;
+			iFolderMenu.Append( MigrateMenuItem);
+			MigrateMenuSubItem.Activated += new EventHandler(Migrate2xClickedHandler);
+
+			iFolderMenu.Append(new SeparatorMenuItem());
 			CloseMenuItem = new ImageMenuItem (Stock.Close, agrp);
 			iFolderMenu.Append(CloseMenuItem);
 			CloseMenuItem.Activated += new EventHandler(CloseEventHandler);
@@ -450,6 +465,18 @@ namespace Novell.iFolder
 			MenuItem ViewMenuItem = new MenuItem(Util.GS("_View"));
 			ViewMenuItem.Submenu = ViewMenu;
 			menubar.Append(ViewMenuItem);
+
+			//	Changes for Migration menu item
+			/*
+			Menu MigrationMenu = new Menu();
+	
+			Migrate2xMenuItem = new MenuItem(Util.GS("Migrate from 2.x"));
+			MigrationMenu.Append(Migrate2xMenuItem);
+			Migrate2xMenuItem.Activated += new EventHandler(Migrate2xClickedHandler);
+			MenuItem MigrationMenuItem = new MenuItem(Util.GS("_Migrate"));
+			MigrationMenuItem.Submenu = MigrationMenu;
+			menubar.Append(MigrationMenuItem);
+			*/
 
 
 			//----------------------------
@@ -1076,6 +1103,13 @@ namespace Novell.iFolder
 		private void AddiFolderHandler(object o,  EventArgs args)
 		{
 			CreateNewiFolder();
+		}
+
+		private void Migrate2xClickedHandler(object o, EventArgs args)
+		{
+			MigrationWindow migrationWindow = new MigrationWindow(this, ifws);
+			migrationWindow.ShowAll();
+			return;
 		}
 		
 		private void OnToggleViewServeriFoldersMenuItem(object o, EventArgs args)

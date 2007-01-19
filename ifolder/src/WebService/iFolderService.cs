@@ -2363,7 +2363,21 @@ namespace Novell.iFolder.Web
 		}
 
 		/// <summary>
-		/// Checks to see if there is a newer client application on the domain server and
+		/// Checks to see if there is a newer client application available on the domain server and
+		/// prompts the user to upgrade.
+		/// </summary>
+		/// <param name="domainID">The ID of the domain to check for updates against.</param>
+		/// <returns>The version of the update if available. Otherwise null is returned.</returns>
+		[WebMethod(Description="Check for an available update")]
+		[SoapDocumentMethod]
+		public string CheckForUpdatedClientAvailable(string domainID)
+		{
+			return Novell.iFolder.Install.ClientUpgrade.CheckForUpdateAvailable(domainID);
+		}
+
+
+		/// <summary>
+		/// Checks to see if there is a need for newer client application on the domain server and
 		/// prompts the user to upgrade.
 		/// </summary>
 		/// <param name="domainID">The ID of the domain to check for updates against.</param>
@@ -2376,6 +2390,19 @@ namespace Novell.iFolder.Web
 		}
 
 		/// <summary>
+		/// Checks to see if the erver is running an
+		/// older version of simias
+		/// </summary>
+		/// <param name="domainID">The ID of the domain to check for updates against.</param>
+		/// <returns>The version of the update if available. Otherwise null is returned.</returns>
+		[WebMethod(Description="Check for an available update")]
+		[SoapDocumentMethod]
+		public bool CheckForServerUpdate(string domainID)
+		{
+			return Novell.iFolder.Install.ClientUpgrade.CheckForServerUpdate(domainID);
+		}
+
+		/// <summary>
 		/// Gets the updated client application and runs the installation program.
 		/// Note: This call will return before the application is updated.
 		/// </summary>
@@ -2383,9 +2410,9 @@ namespace Novell.iFolder.Web
 		/// <returns>True if the installation program is successfully started. Otherwise false is returned.</returns>
 		[WebMethod(Description="Run the client update")]
 		[SoapDocumentMethod]
-		public bool RunClientUpdate(string domainID)
+		public bool RunClientUpdate(string domainID, string path)
 		{
-			return Novell.iFolder.Install.ClientUpgrade.RunUpdate(domainID);
+			return Novell.iFolder.Install.ClientUpgrade.RunUpdate(domainID, path);
 		}
 	}
 }
