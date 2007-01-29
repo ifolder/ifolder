@@ -268,7 +268,27 @@ namespace Novell.iFolder.Controller
 					return null;
 			}
 		}
-		
+
+		/// <summary>
+		/// Returns the Recovery Agent List for the specified Domain
+		/// </summary>
+	        public string[] GetRAList ()
+		{
+		    return (string [])simws.GetRAList();
+		}
+
+		/// <summary>
+		/// Returns the Certificate for the Recover Agent for the specified Domain
+		/// </summary>
+	        public byte[] GetRACertificate (string domainID, string recoveryAgent)
+		{
+		    DomainInformation di = GetDomain (domainID);
+		    SimiasWebService sws = new SimiasWebService();
+		    sws.Url = di.HostUrl + "/Simias.asmx";
+		    
+		    return sws.GetRACertificate(recoveryAgent);		    
+		}
+
 		/// <summary>
 		/// Call this to connect and authenticate to a brand new domain
 		/// </summary>
