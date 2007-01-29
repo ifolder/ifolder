@@ -39,8 +39,10 @@ namespace Novell.iFolder
 		}
 		private DomainInformation[]	domains;
 		private ComboBox			domainComboBox;
-		private CheckButton			Encryption;
-		private CheckButton 			SSL;
+//		private CheckButton			Encryption;
+//		private CheckButton 			SSL;
+		private RadioButton 			Encryption;
+		private RadioButton			SSL;
 		private string				initialPath;
 		iFolderWebService			ifws;
 		private uint				keyReleasedTimeoutID;
@@ -147,8 +149,16 @@ namespace Novell.iFolder
 					if( (SecurityPolicy & (int)SecurityState.enforceEncryption) == (int) SecurityState.enforceEncryption)
 						Encryption.Active = true;
 					else
+					{
 						Encryption.Sensitive = true;
+						SSL.Sensitive = true;
+					}
 				}
+				else
+				{
+					SSL.Active = true;
+				}
+				/*
 				if( (SecurityPolicy & (int)SecurityState.SSL) == (int) SecurityState.SSL)
 				{
 					if( (SecurityPolicy & (int)SecurityState.enforceSSL) == (int) SecurityState.enforceSSL)
@@ -156,6 +166,11 @@ namespace Novell.iFolder
 					else
 						SSL.Sensitive = true;
 				}
+				*/
+			}
+			else
+			{
+				SSL.Active = true;
 			}
 		}
 
@@ -177,10 +192,10 @@ namespace Novell.iFolder
 			optionsTable.Attach(l, 1,2,0,1,
 								AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
-			Encryption = new CheckButton(Util.GS("Encrypt the iFolder"));
+			Encryption = new RadioButton(Util.GS("Encrypt the iFolder"));
 			optionsTable.Attach(Encryption, 2,3,1,2, AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
-			SSL = new CheckButton(Util.GS("Secure Data Transfer"));
+			SSL = new RadioButton(Encryption, Util.GS("Sharable"));
 			optionsTable.Attach(SSL, 3,4,1,2, AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
 			l = new Label(Util.GS("Security")+":");

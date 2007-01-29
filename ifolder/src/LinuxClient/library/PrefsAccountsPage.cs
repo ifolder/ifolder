@@ -618,6 +618,82 @@ namespace Novell.iFolder
 							LoginDialog.Destroy();
 							LoginDialog = null;
 						}
+						// Check if any recovery agent present;
+						// if( domainController.GetRAList(args.DomainID) == null)
+						// {
+							// No recovery agent present;
+							return;
+						// }
+						int result;
+						Status passphraseStatus = simws.IsPassPhraseSet(args.DomainID);
+						if(passphraseStatus.statusCode == StatusCodes.Success)
+						{
+							Console.WriteLine("PassPhrase set");
+							VerifyPassPhraseDialog vpd = new VerifyPassPhraseDialog();
+							// vpd.TransientFor = this;
+							do
+							{
+							result = vpd.Run();
+							vpd.Hide();
+							// Verify PassPhrase..  If correct store passphrase and set a local property..
+							passphraseStatus =  simws.SetPassPhrase(args.DomainID, vpd.PassPhrase);
+							if( passphraseStatus.statusCode == StatusCodes.PassPhraseInvalid)  // check for invalid passphrase
+							{
+								// Display an error Message
+								Console.WriteLine("Invalid Passphrase");
+							}
+							else
+								break;
+							}while( result != (int)ResponseType.Cancel);
+
+								if(passphraseStatus.statusCode == StatusCodes.Success)
+								{
+									if( vpd.ShouldSavePassPhrase == true )
+									{
+
+									//	Console.WriteLine("calling Save pass-phrase ");
+										try
+										{
+											simws.StorePassPhrase( args.DomainID, vpd.PassPhrase, CredentialType.Basic);
+										}
+										catch(Exception e) {	}
+									}
+								}
+						}
+						else
+						{
+                                                               EnterPassPhraseDialog epd = new EnterPassPhraseDialog();
+                                                              //vpd.TransientFor = this;
+								do
+								{
+                                                                result = epd.Run();
+                                                                epd.Hide();
+								if( epd.PassPhrase != epd.RetypedPassPhrase )
+								{
+									Console.WriteLine("PassPhrases do not match");
+									// show an error message
+									epd.Run();
+									epd.Hide();
+								}
+								else
+									break;
+								}while( result != (int)ResponseType.Cancel);
+								if( epd.PassPhrase == epd.RetypedPassPhrase)
+								{
+									// Check the recovery agent
+									Status passPhraseStatus = simws.SetPassPhrase( args.DomainID, epd.PassPhrase);
+									if(passphraseStatus.statusCode == StatusCodes.Success)
+									{
+										// successfully set the passphrase
+									}
+									else
+									{
+										// error setting the passphrase
+									}
+								}
+						}
+						
+//						string[] array = domainController.GetRAList( args.DomainID);
 						UpdateWidgetSensitivity();
 						break;
 					case StatusCodes.InvalidCertificate:

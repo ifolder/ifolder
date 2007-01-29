@@ -2470,6 +2470,7 @@ namespace Novell.iFolder
 						iFolderHolder ifHolder = null;
 						try
 						{
+
 							ifHolder = ifdata.CreateiFolder(selectedFolder, selectedDomain, SSL, algorithm);
 						}
 						catch(Exception e)
