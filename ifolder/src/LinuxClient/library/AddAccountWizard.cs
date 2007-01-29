@@ -38,10 +38,12 @@ namespace Novell.iFolder
 		private Gnome.DruidPageStandard	UserInformationPage;
 		private DruidConnectPage		ConnectPage;
 		private Gnome.DruidPageEdge		SummaryPage;
+		private Gnome.DruidPageStandard		RAPage;
 		private DomainController		domainController;
 		private SimiasWebService		simws;
 		private bool					ControlKeyPressed;
 		private Button						ForwardButton;
+		private Button						BackButton;	        
 		private Button						FinishButton;
 		
 		private Gdk.Pixbuf				AddAccountPixbuf;
@@ -60,6 +62,17 @@ namespace Novell.iFolder
 		private Entry		PasswordEntry;	// set Visibility = false;
 		private CheckButton	RememberPasswordCheckButton;
 		
+		///
+		/// Recovery Agents Page Widgets
+		///
+
+	        private iFolderTreeView RATreeView;
+	        private Entry           PassPhraseEntry;
+	        private Entry           PassPhraseVerifyEntry;
+	        private CheckButton	RememberPassPhraseCheckButton;
+	        private string[]        RAList;
+	        private ListStore       RATreeStore;
+
 		///
 		/// Connect Page Widgets
 		///
@@ -123,6 +136,7 @@ namespace Novell.iFolder
 			AccountDruid.AppendPage(CreateServerInformationPage());
 			AccountDruid.AppendPage(CreateUserInformationPage());
 			AccountDruid.AppendPage(CreateConnectPage());
+			AccountDruid.AppendPage(CreateRAPage());
 			AccountDruid.AppendPage(CreateSummaryPage());
 			
 			return vbox;
@@ -400,6 +414,117 @@ namespace Novell.iFolder
 		}
 		
 		///
+		/// Recovery Agents Page 
+		///
+		private Gnome.DruidPage CreateRAPage()
+		{
+			RAPage = new Gnome.DruidPageStandard(
+					Util.GS("Encryption"),
+					AddAccountPixbuf,
+					null);
+
+			RAPage.CancelClicked +=
+				new Gnome.CancelClickedHandler(OnCancelClicked);
+
+			RAPage.Prepared +=
+				new Gnome.PreparedHandler(OnRAPagePrepared);
+			
+			///
+			/// Content
+			///
+			Table table = new Table(6, 3, false);
+			RAPage.VBox.PackStart(table, false, false, 0);
+			table.ColumnSpacing = 6;
+			table.RowSpacing = 6;
+			table.BorderWidth = 12;
+
+			// Row 1
+			Label l = new Label(Util.GS("Enter the Passphrase"));
+			table.Attach(l, 0,3, 0,1,
+				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+			l.LineWrap = true;
+			l.Xalign = 0.0F;
+
+			// Row 2
+			table.Attach(new Label(""), 0,1, 1,2,
+				AttachOptions.Fill, 0,12,0); // spacer
+			l = new Label(Util.GS("_PassPhrase:"));
+			table.Attach(l, 1,2, 1,2,
+				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+			l.Xalign = 0.0F;
+			PassPhraseEntry = new Entry();
+			PassPhraseEntry.Visibility = false;
+			table.Attach(PassPhraseEntry, 2,3, 1,2,
+				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+			l.MnemonicWidget = PassPhraseEntry;
+
+			// Row 3
+			l = new Label(Util.GS("_Retype PassPhrase:"));
+			table.Attach(l, 1,2, 2,3,
+				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+			l.Xalign = 0.0F;
+			PassPhraseVerifyEntry = new Entry();
+			PassPhraseVerifyEntry.Visibility = false;
+			table.Attach(PassPhraseVerifyEntry, 2,3, 2,3,
+				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+			l.MnemonicWidget = PassPhraseVerifyEntry;
+
+			// Row 4
+			//add a check box
+// 			RememberPassPhraseCheckButton = new CheckButton(Util.GS("_Remember my passphrase"));
+// 			table.Attach(RememberPasswordCheckButton, 2,3, 3,4,
+// 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+
+			// Row 4
+			l = new Label(Util.GS("Select Recovery Agent"));
+			table.Attach(l, 0,3, 3,4,
+				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+			l.LineWrap = true;
+			l.Xalign = 0.0F;
+
+			// Row 5
+			RATreeView = new iFolderTreeView ();
+			ScrolledWindow sw = new ScrolledWindow();
+			sw.ShadowType = Gtk.ShadowType.EtchedIn;
+			sw.HscrollbarPolicy = Gtk.PolicyType.Automatic;
+			sw.VscrollbarPolicy = Gtk.PolicyType.Automatic;
+			sw.Add(RATreeView);
+
+			RATreeStore = new ListStore(typeof(string));
+			RATreeView.Model = RATreeStore;
+
+			// RA Name Column
+			TreeViewColumn raNameColumn = new TreeViewColumn();
+			raNameColumn.Title = Util.GS("Recovery Agents");
+			CellRendererText cr = new CellRendererText();
+			cr.Xpad = 5;
+			raNameColumn.PackStart(cr, false);
+			raNameColumn.SetCellDataFunc(cr,
+						     new TreeCellDataFunc(RANameCellTextDataFunc));
+			raNameColumn.Resizable = true;
+			raNameColumn.MinWidth = 250;
+
+			RATreeView.AppendColumn(raNameColumn);
+
+			RATreeView.Selection.Mode = SelectionMode.Single;
+ 			RATreeStore.AppendValues ("  ");
+ 			RATreeStore.AppendValues ("  ");
+
+ 			table.Attach(sw, 0,3, 4,6,
+ 				AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
+
+			return RAPage;
+		}
+
+		private void RANameCellTextDataFunc (Gtk.TreeViewColumn tree_column,
+				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
+				Gtk.TreeIter iter)
+		{
+			string value = (string) tree_model.GetValue(iter, 0);
+			((CellRendererText) cell).Text = value;
+		}
+
+		///
 		/// Summary Page
 		///
 		private Gnome.DruidPage CreateSummaryPage()
@@ -471,7 +596,7 @@ namespace Novell.iFolder
 		
 		private void OnServerInformationPagePrepared(object o, Gnome.PreparedArgs args)
 		{
-			this.Title = Util.GS("iFolder Account Assistant - (1 of 3)");
+			this.Title = Util.GS("iFolder Account Assistant - (1 of 5)");
 			UpdateServerInformationPageSensitivity(null, null);
 			
 			DomainInformation[] domains = domainController.GetDomains();
@@ -489,10 +614,25 @@ namespace Novell.iFolder
 			
 			ServerNameEntry.GrabFocus();
 		}
-		
+
+		private void OnRAPagePrepared(object o, Gnome.PreparedArgs args)
+		{
+			this.Title = Util.GS("iFolder Account Assistant - (4 of 5)");
+
+			ForwardButton.Label = "gtk-go-forward";
+			//TODO :
+//			BackButton.Label = Util.GS("_Skip");
+// 			RAList = domainController.GetRAList ();
+// 			foreach (string raagent in RAList )
+// 			    RATreeStore.AppendValues (raagent);
+			RATreeView.Sensitive = false;
+
+			AccountDruid.SetButtonsSensitive(false , true, true, true);
+		}
+
 		private void OnUserInformationPagePrepared(object o, Gnome.PreparedArgs args)
 		{
-			this.Title = Util.GS("iFolder Account Assistant - (2 of 3)");
+			this.Title = Util.GS("iFolder Account Assistant - (2 of 5)");
 			UpdateUserInformationPageSensitivity(null, null);
 			UserNameEntry.GrabFocus();
 
@@ -502,7 +642,7 @@ namespace Novell.iFolder
 		
 		private void OnConnectPagePrepared(object o, Gnome.PreparedArgs args)
 		{
-			this.Title = Util.GS("iFolder Account Assistant - (3 of 3)");
+			this.Title = Util.GS("iFolder Account Assistant - (3 of 5)");
 
 			ServerNameVerifyLabel.Text = ServerNameEntry.Text;
 			UserNameVerifyLabel.Text = UserNameEntry.Text;
@@ -715,8 +855,9 @@ namespace Novell.iFolder
 						{
 							// We connected successfully!
 							ConnectedDomain = dom;
+							//TODO - Check for recoveryagent status.
 							
-							AccountDruid.Page = SummaryPage;
+							AccountDruid.Page = RAPage;
 							break;
 						}
 						else
@@ -818,6 +959,8 @@ namespace Novell.iFolder
 							ForwardButton = button;
 						else if (button.Label == "gtk-apply")
 							FinishButton = button;
+						else if (button.Label == "gtk-go-back")
+							BackButton = button;
 					}
 				}
 			}
