@@ -272,9 +272,23 @@ namespace Novell.iFolder.Controller
 		/// <summary>
 		/// Returns the Recovery Agent List for the specified Domain
 		/// </summary>
-	        public string[] GetRAList ()
+	        public string[] GetRAList (string domainID)
 		{
-		    return (string [])simws.GetRAList();
+		    DomainInformation di = GetDomain (domainID);
+		    SimiasWebService sws = new SimiasWebService();
+		    sws.Url = di.HostUrl + "/Simias.asmx";
+
+		    string[] ragents = sws.GetRAList();
+
+		    return ragents;
+		}
+
+		/// <summary>
+		/// Returns the Recovery Agent List for the specified Domain
+		/// </summary>
+	        public Status IsPassPhraseSet (string domainID)
+		{
+		    return simws.IsPassPhraseSet (domainID);
 		}
 
 		/// <summary>
