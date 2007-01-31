@@ -283,12 +283,37 @@ namespace Novell.iFolder.Controller
 		    return ragents;
 		}
 
+
 		/// <summary>
 		/// Returns the Recovery Agent List for the specified Domain
 		/// </summary>
 	        public Status IsPassPhraseSet (string domainID)
 		{
 		    return simws.IsPassPhraseSet (domainID);
+		}
+
+		/// <summary>
+		/// Returns the Recovery Agent List for the specified Domain
+		/// </summary>
+	        public Status SetPassPhrase (string domainID, string passPhrase, string recoveryAgent)
+		{
+		    return simws.SetPassPhrase (domainID, passPhrase, "public key", recoveryAgent);
+		}
+
+		/// <summary>
+		/// Returns the Recovery Agent List for the specified Domain
+		/// </summary>
+	        public void StorePassPhrase (string domainID, string passPhrase, CredentialType type, bool persist)
+		{
+		    simws.StorePassPhrase (domainID, passPhrase, type, persist);
+		}
+
+		/// <summary>
+		/// Returns the Recovery Agent List for the specified Domain
+		/// </summary>
+	        public Status ValidatePassPhrase (string domainID, string passPhrase)
+		{
+		    return simws.ValidatePassPhrase (domainID, passPhrase);
 		}
 
 		/// <summary>
