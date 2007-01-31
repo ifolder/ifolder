@@ -24,18 +24,18 @@
 
 using Gtk;
 using System;
+using Novell.iFolder.Controller;
 
 namespace Novell.iFolder
 {
 	public class EnterPassPhraseDialog : Dialog
 	{
-
-
-
 		private Entry PassPhraseEntry;
 		private Entry           PassPhraseVerifyEntry;
 		private CheckButton savePassPhraseButton;
 		private string[] RAList;
+		private string	DomainID;
+
 
 		private iFolderTreeView RATreeView;
 
@@ -43,7 +43,6 @@ namespace Novell.iFolder
 		private Entry	passEntry;
 		private Entry	serverEntry;
 		private CheckButton savePasswordButton;
-		private string	DomainID;
 		private string  DomainName;
 		private string  DomainUserName;
 		private bool	FullDialog;
@@ -68,6 +67,23 @@ namespace Novell.iFolder
 				return PassPhraseVerifyEntry.Text;
 			}
 		}	
+
+		public bool ShouldSavePassPhrase
+		{
+			get
+			{
+				return savePassPhraseButton.Active;
+			}
+		}
+
+		public string RecoveryAgent
+		{
+			get
+			{
+				return null; 
+			}
+		}
+
 		public string UserName
 		{
 			get
@@ -135,8 +151,9 @@ namespace Novell.iFolder
 			SetupDialog();
 		}
 
-		public EnterPassPhraseDialog() : base()
+		public EnterPassPhraseDialog(string domainID) : base()
  		{
+			this.DomainID = domainID;
 			FullDialog = true;
 			SetupDialog();
 		}
@@ -169,7 +186,7 @@ namespace Novell.iFolder
 			imagebox.PackStart(iFolderScaledBanner, true, true, 0);
 			this.VBox.PackStart (imagebox, false, true, 0);
 
-			Table table = new Table(7777777, 3, false);
+			Table table = new Table(7, 3, false);
 			this.VBox.PackStart(table, false, false, 0);
 			table.ColumnSpacing = 6;
 			table.RowSpacing = 6;
@@ -228,11 +245,18 @@ namespace Novell.iFolder
 			sw.VscrollbarPolicy = Gtk.PolicyType.Automatic;
 			sw.Add(RATreeView);
 
+			DomainController domainController = DomainController.GetDomainController();
 			ListStore RATreeStore = new ListStore(typeof(string));
 			RATreeView.Model = RATreeStore;
-//                      RAList = domainController.GetRAList ();
-//                      foreach (string raagent in RAList )
-//                          RATreeStore.AppendValues (raagent);
+                        RAList = domainController.GetRAList(DomainID);
+			if( RAList == null)
+			{
+				Console.WriteLine(" no recovery agent present:");
+			}
+			else
+				Console.WriteLine("Recovery agent present");
+                        foreach (string raagent in RAList )
+                            RATreeStore.AppendValues (raagent);
 
 			// RA Name Column
 			TreeViewColumn raNameColumn = new TreeViewColumn();
@@ -248,8 +272,6 @@ namespace Novell.iFolder
 			RATreeView.AppendColumn(raNameColumn);
 
 			RATreeView.Selection.Mode = SelectionMode.Single;
- 			RATreeStore.AppendValues ("HELLO");
- 			RATreeStore.AppendValues ("HELLO1");
 
  			table.Attach(sw, 0,3, 5,7,
  				AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
