@@ -38,7 +38,7 @@ namespace Novell.iFolder
 		private Gnome.DruidPageStandard	UserInformationPage;
 		private DruidConnectPage		ConnectPage;
 		private Gnome.DruidPageEdge		SummaryPage;
-		private Gnome.DruidPageStandard		RAPage;
+		private DruidRAPage	                RAPage;
 		private DomainController		domainController;
 		private SimiasWebService		simws;
 		private bool					ControlKeyPressed;
@@ -67,11 +67,16 @@ namespace Novell.iFolder
 		///
 
 	        private iFolderTreeView RATreeView;
+	        private ScrolledWindow  RAScrolledWindow;
 	        private Entry           PassPhraseEntry;
 	        private Entry           PassPhraseVerifyEntry;
 	        private CheckButton	RememberPassPhraseCheckButton;
 	        private string[]        RAList;
 	        private ListStore       RATreeStore;
+	        private bool            PassPhraseSet;
+	        private bool            RememberPassPhrase;
+		private Label		RetypePassPhraseLabel;
+		private Label		SelectRALabel;
 
 		///
 		/// Connect Page Widgets
@@ -418,13 +423,19 @@ namespace Novell.iFolder
 		///
 		private Gnome.DruidPage CreateRAPage()
 		{
-			RAPage = new Gnome.DruidPageStandard(
+			RAPage = new DruidRAPage(
 					Util.GS("Encryption"),
 					AddAccountPixbuf,
 					null);
 
 			RAPage.CancelClicked +=
 				new Gnome.CancelClickedHandler(OnCancelClicked);
+
+			RAPage.ValidateClicked +=
+				new ValidateClickedHandler(OnValidateClicked);
+
+			RAPage.SkipClicked +=
+				new SkipClickedHandler(OnSkipClicked);
 
 			RAPage.Prepared +=
 				new Gnome.PreparedHandler(OnRAPagePrepared);
@@ -459,8 +470,8 @@ namespace Novell.iFolder
 			l.MnemonicWidget = PassPhraseEntry;
 
 			// Row 3
-			l = new Label(Util.GS("_Retype PassPhrase:"));
-			table.Attach(l, 1,2, 2,3,
+			RetypePassPhraseLabel = new Label(Util.GS("R_etype PassPhrase:"));
+			table.Attach(RetypePassPhraseLabel, 1,2, 2,3,
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			l.Xalign = 0.0F;
 			PassPhraseVerifyEntry = new Entry();
@@ -470,25 +481,24 @@ namespace Novell.iFolder
 			l.MnemonicWidget = PassPhraseVerifyEntry;
 
 			// Row 4
-			//add a check box
-// 			RememberPassPhraseCheckButton = new CheckButton(Util.GS("_Remember my passphrase"));
-// 			table.Attach(RememberPasswordCheckButton, 2,3, 3,4,
-// 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+			RememberPassPhraseCheckButton = new CheckButton(Util.GS("_Remember PassPhrase"));
+			table.Attach(RememberPassPhraseCheckButton, 2,3, 3,4,
+				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 
-			// Row 4
-			l = new Label(Util.GS("Select Recovery Agent"));
-			table.Attach(l, 0,3, 3,4,
+			// Row 5
+			SelectRALabel = new Label(Util.GS("Select Recovery Agent"));
+			table.Attach(SelectRALabel, 0,3, 4,5,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			l.LineWrap = true;
 			l.Xalign = 0.0F;
 
-			// Row 5
+			// Row 6-7
 			RATreeView = new iFolderTreeView ();
-			ScrolledWindow sw = new ScrolledWindow();
-			sw.ShadowType = Gtk.ShadowType.EtchedIn;
-			sw.HscrollbarPolicy = Gtk.PolicyType.Automatic;
-			sw.VscrollbarPolicy = Gtk.PolicyType.Automatic;
-			sw.Add(RATreeView);
+			ScrolledWindow RAScrolledWindow = new ScrolledWindow();
+			RAScrolledWindow.ShadowType = Gtk.ShadowType.None;
+			RAScrolledWindow.HscrollbarPolicy = Gtk.PolicyType.Automatic;
+			RAScrolledWindow.VscrollbarPolicy = Gtk.PolicyType.Automatic;
+			RAScrolledWindow.Add(RATreeView);
 
 			RATreeStore = new ListStore(typeof(string));
 			RATreeView.Model = RATreeStore;
@@ -507,10 +517,8 @@ namespace Novell.iFolder
 			RATreeView.AppendColumn(raNameColumn);
 
 			RATreeView.Selection.Mode = SelectionMode.Single;
- 			RATreeStore.AppendValues ("  ");
- 			RATreeStore.AppendValues ("  ");
 
- 			table.Attach(sw, 0,3, 4,6,
+ 			table.Attach(RAScrolledWindow, 0,3, 5,7,
  				AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
 
 			return RAPage;
@@ -580,6 +588,23 @@ namespace Novell.iFolder
 				AccountDruid.SetButtonsSensitive(true, false, true, true);
 		}
 
+		private void UpdateRAPageSensitivity(object o, EventArgs args)
+		{
+			string currentUserName = UserNameEntry.Text;
+			string currentPassword = PasswordEntry.Text;
+			if (currentUserName != null && currentPassword != null)
+			{
+				currentUserName = currentUserName.Trim();
+				currentPassword = currentPassword.Trim();
+				if (currentUserName.Length > 0 && currentPassword.Length > 0)
+					AccountDruid.SetButtonsSensitive(true, true, true, true);
+				else
+					AccountDruid.SetButtonsSensitive(true, false, true, true);
+			}
+			else
+				AccountDruid.SetButtonsSensitive(true, false, true, true);
+		}
+
 		///
 		/// Event Handlers
 		///
@@ -618,16 +643,29 @@ namespace Novell.iFolder
 		private void OnRAPagePrepared(object o, Gnome.PreparedArgs args)
 		{
 			this.Title = Util.GS("iFolder Account Assistant - (4 of 5)");
-
+			PassPhraseSet = false;
 			ForwardButton.Label = "gtk-go-forward";
-			//TODO :
-//			BackButton.Label = Util.GS("_Skip");
-// 			RAList = domainController.GetRAList ();
-// 			foreach (string raagent in RAList )
-// 			    RATreeStore.AppendValues (raagent);
-			RATreeView.Sensitive = false;
 
-			AccountDruid.SetButtonsSensitive(false , true, true, true);
+			//TODO :
+			BackButton.Label = Util.GS("_Skip");
+
+			if ( domainController.IsPassPhraseSet (ConnectedDomain.ID).statusCode == StatusCodes.PassPhraseNotSet)
+			{
+			       string[] list = domainController.GetRAList (ConnectedDomain.ID);
+
+			       foreach (string raagent in list )
+				       RATreeStore.AppendValues (raagent);
+
+			} else {
+			       // PassPhrase already available.
+			       PassPhraseSet = true;
+ 			       PassPhraseVerifyEntry.Hide ();
+			       RATreeView.Hide();
+ 			       SelectRALabel.Hide();
+ 			       RetypePassPhraseLabel.Hide();
+			}
+
+			AccountDruid.SetButtonsSensitive(true , true, true, true);
 		}
 
 		private void OnUserInformationPagePrepared(object o, Gnome.PreparedArgs args)
@@ -694,7 +732,68 @@ namespace Novell.iFolder
 			
 			AccountDruid.SetButtonsSensitive(false, true, false, true);
 		}
+
+		private bool OnValidateClicked(object o, EventArgs args)
+		{
+		        //Validate the PassPhrase Locally.
+		        if ( !PassPhraseSet )
+			{
+			        if (PassPhraseEntry.Text == PassPhraseVerifyEntry.Text)
+				{
+				       Status passPhraseStatus = domainController.SetPassPhrase (ConnectedDomain.ID, PassPhraseEntry.Text, "ra");
+				       if(passPhraseStatus.statusCode == StatusCodes.Success)
+				       {
+                                              domainController.StorePassPhrase( ConnectedDomain.ID, PassPhraseEntry.Text,
+								     CredentialType.Basic, RememberPassPhraseCheckButton.Active);
+				       }
+
+				} else {
+				       iFolderMsgDialog dialog = new iFolderMsgDialog(
+                                               null,
+                                               iFolderMsgDialog.DialogType.Error,
+                                               iFolderMsgDialog.ButtonSet.None,
+                                               Util.GS("PassPhrase mismatch"),
+                                               Util.GS("The PassPhrase and retyped PassPhrase are not same"),
+                                               Util.GS("Please enter the passphrase again"));
+                                       dialog.Run();
+                                       dialog.Hide();
+                                       dialog.Destroy();
+                                       dialog = null;				        
+				       
+				       return false;
+				}
+			} else {
+			    // PassPhrase is already set.
+			        Status validationStatus = domainController.ValidatePassPhrase (ConnectedDomain.ID, PassPhraseEntry.Text );
+				if (validationStatus.statusCode == StatusCodes.PassPhraseInvalid ) 
+				{
+				       iFolderMsgDialog dialog = new iFolderMsgDialog(
+                                               null,
+                                               iFolderMsgDialog.DialogType.Error,
+                                               iFolderMsgDialog.ButtonSet.None,
+                                               Util.GS("PassPhrase Invlid"),
+                                               Util.GS("The PassPhrase enter is not valid"),
+                                               Util.GS("Please enter the passphrase again"));
+                                       dialog.Run();
+                                       dialog.Hide();
+                                       dialog.Destroy();
+                                       dialog = null;				        
+				}
+                                domainController.StorePassPhrase( ConnectedDomain.ID, PassPhraseEntry.Text,
+								  CredentialType.Basic, RememberPassPhraseCheckButton.Active);
+			}
+
+			BackButton.Label = Util.GS("gtk-go-back");
+		        return true;
+		}
 		
+		private bool OnSkipClicked(object o, EventArgs args)
+		{
+			AccountDruid.Page = SummaryPage;
+
+			BackButton.Label = Util.GS("gtk-go-back");
+			return false;
+		}
 		/// <summary>
 		/// Return true if the connect was successful, otherwise, return false.
 		/// Returning true will allow the druid to advance one page.
@@ -997,6 +1096,50 @@ namespace Novell.iFolder
 			return false;	// Allow the default event handler (to advance to the next druid page)
 		}
 	}
+
+	///
+	/// Override Gnome.DruidPageStandard for our Connect Page so that we can
+	/// override the behavior of the Next button
+	///
+	public class DruidRAPage : Gnome.DruidPageStandard
+	{
+		public event ValidateClickedHandler ValidateClicked;
+		public event SkipClickedHandler SkipClicked;
+
+		public DruidRAPage(string title, Gdk.Pixbuf logo, Gdk.Pixbuf top_watermark)
+			: base (title, logo, top_watermark)
+		{
+		}
+		
+		protected override bool OnNextClicked(Widget druid)
+		{
+			if (ValidateClicked != null)
+			{
+				if (!ValidateClicked(this, EventArgs.Empty))
+					return true;	// Prevent the default event handler (from advancing to the next druid page
+			}
+
+		    //Validate the passphrase here.
+		    
+			return false;	// Allow the default event handler (to advance to the next druid page)
+		}
+
+	        //Skip.
+		protected override bool OnBackClicked(Widget druid)
+		{
+			if (SkipClicked != null)
+			{
+				if (!SkipClicked(this, EventArgs.Empty))
+					return true;	// Prevent the default event handler (from advancing to the next druid page
+			}
+
+			return false;	// Allow the default event handler (to advance to the next druid page)
+		}
+
+	}
+
+	public delegate bool ValidateClickedHandler(object o, EventArgs args);
+	public delegate bool SkipClickedHandler(object o, EventArgs args);
 	
 	/// <summary>
 	/// Return true if the connect was successful, otherwise return false.
