@@ -2470,7 +2470,58 @@ namespace Novell.iFolder
 						iFolderHolder ifHolder = null;
 						try
 						{
-
+							if( algorithm != "")
+							{
+								// encryption is selected
+								bool passPhraseStatus = false;
+		                                                Status passphraseStatus = simws.IsPassPhraseSet(selectedDomain);
+								if(passphraseStatus.statusCode == StatusCodes.Success)
+						//		if( true)
+								{
+									// if passphrase not given during login
+									Console.WriteLine("passphrase set");
+									string uid, passphrasecheck;
+									simws.GetPassPhrase(selectedDomain, out uid, out passphrasecheck);
+									if( passphrasecheck == null || passphrasecheck =="")
+									{
+										Console.WriteLine(" passphrase not entered at login");
+										passPhraseStatus = ShowVerifyDialog(selectedDomain, simws);
+										/*
+										// check for remember option
+										bool rememberOption = simws.GetRememberOption(DomainID);
+										if( rememberOption == false)
+										{
+											passPhraseStatus = ShowVerifyDialog( DomainID, simws);
+										}
+										else 
+										{
+											Console.WriteLine(" remember Option true. Checking for passphrase existence");
+											string passphrasecheck,uid;
+											simws.GetPassPhrase( DomainID, out uid, out passphrasecheck);
+											if(passphrasecheck == null || passphrasecheck == "")
+												passPhraseStatus = ShowVerifyDialog( DomainID, simws);
+											else
+												passPhraseStatus = true;
+										}
+										*/
+									}
+									else
+									{
+										Console.WriteLine("passphrase is known");
+										passPhraseStatus = true;
+									}
+								}
+								else
+								{
+									// if passphrase is not set
+									passPhraseStatus = ShowEnterPassPhraseDialog(selectedDomain, simws);
+								}
+								if( passPhraseStatus == false)
+								{
+									Console.WriteLine(" No passphrase. can't create iFolder");
+									continue;
+								}
+							}
 							ifHolder = ifdata.CreateiFolder(selectedFolder, selectedDomain, SSL, algorithm);
 						}
 						catch(Exception e)
@@ -2853,6 +2904,125 @@ namespace Novell.iFolder
 				}
 			}
 		}
+
+		private bool ShowEnterPassPhraseDialog(string DomainID, SimiasWebService simws)
+		{
+			bool status = false;
+			int result;	
+			EnterPassPhraseDialog epd = new EnterPassPhraseDialog(DomainID);
+			do
+			{
+				result = epd.Run();
+				epd.Hide();
+				if( epd.PassPhrase != epd.RetypedPassPhrase )
+				{
+					Console.WriteLine("PassPhrases do not match");
+					// show an error message
+					iFolderMsgDialog dialog = new iFolderMsgDialog(
+						null,
+						iFolderMsgDialog.DialogType.Error,
+						iFolderMsgDialog.ButtonSet.None,
+						Util.GS("PassPhrase mismatch"),
+						Util.GS("The PassPhrase and retyped PassPhrase are not same"),
+						Util.GS("Please enter the passphrase again"));
+						dialog.Run();
+						dialog.Hide();
+						dialog.Destroy();
+						dialog = null;
+				}
+				else
+					break;
+			}while( result != (int)ResponseType.Cancel);
+			
+			if( epd.PassPhrase == epd.RetypedPassPhrase)
+			{
+				// Check the recovery agent
+				string publicKey = "";
+				Status passPhraseStatus = simws.SetPassPhrase( DomainID, epd.PassPhrase, epd.RecoveryAgent, publicKey);
+				if(passPhraseStatus.statusCode == StatusCodes.Success)
+				{
+					status = true;
+					simws.StorePassPhrase( DomainID, epd.PassPhrase, CredentialType.Basic, epd.ShouldSavePassPhrase);
+				}
+				else 
+				{
+					// error setting the passphrase
+					iFolderMsgDialog dialog = new iFolderMsgDialog(
+						null,
+						iFolderMsgDialog.DialogType.Error,
+						iFolderMsgDialog.ButtonSet.None,
+						Util.GS("Error setting the PassPhrase"),
+						Util.GS("Unable to set the passphrase"),
+						Util.GS("Please try again"));
+						dialog.Run();
+						dialog.Hide();
+						dialog.Destroy();
+						dialog = null;
+				}
+			}
+			return status;
+		}
+
+		private bool ShowVerifyDialog(string DomainID, SimiasWebService simws)
+		{
+			bool status = false;
+			int result;
+			Status passPhraseStatus= null;
+			VerifyPassPhraseDialog vpd = new VerifyPassPhraseDialog();
+			// vpd.TransientFor = this;
+			do
+			{
+				result = vpd.Run();
+				vpd.Hide();
+				// Verify PassPhrase..  If correct store passphrase and set a local property..
+				if( result == (int)ResponseType.Ok)
+					passPhraseStatus =  simws.ValidatePassPhrase(DomainID, vpd.PassPhrase);
+				if( passPhraseStatus != null)
+				{
+					if( passPhraseStatus.statusCode == StatusCodes.PassPhraseInvalid)  // check for invalid passphrase
+					{
+						// Display an error Message
+						Console.WriteLine("Invalid Passphrase");
+						iFolderMsgDialog dialog = new iFolderMsgDialog(
+							null,
+							iFolderMsgDialog.DialogType.Error,
+							iFolderMsgDialog.ButtonSet.None,
+							Util.GS("Invalid PassPhrase"),
+							Util.GS("The PassPhrase entered is invalid"),
+							Util.GS("Please re-enter the passphrase"));
+							dialog.Run();
+							dialog.Hide();
+							dialog.Destroy();
+							dialog = null;
+						passPhraseStatus = null;
+					}
+					else if(passPhraseStatus.statusCode == StatusCodes.Success)
+						break;
+				}
+			}while( result != (int)ResponseType.Cancel && result !=(int)ResponseType.DeleteEvent);
+			if( passPhraseStatus != null && passPhraseStatus.statusCode == StatusCodes.Success)
+			{
+				status = true;
+				try
+				{
+					simws.StorePassPhrase( DomainID, vpd.PassPhrase, CredentialType.Basic, vpd.ShouldSavePassPhrase);
+				}
+				catch(Exception ex) {}
+			}
+			else //if(result == (int)ResponseType.Cancel)
+			{
+				Console.WriteLine(" cancelled passphrase entry");
+				simws.StorePassPhrase(DomainID, "", CredentialType.Basic, false);
+				string uid, passphrasecheck;
+				simws.GetPassPhrase(DomainID, out uid, out passphrasecheck);
+				if(passphrasecheck == "")
+					Console.WriteLine(" Cancel clicked at the time of login-- confirmed");
+				else
+					Console.WriteLine(" cancel clicked is not confirmed");
+			}
+			return status;
+		}
+
 	}
 
 
