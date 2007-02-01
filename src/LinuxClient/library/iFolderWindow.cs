@@ -69,6 +69,10 @@ namespace Novell.iFolder
 		private ImageMenuItem		QuitMenuItem;
 		private ImageMenuItem		RefreshMenuItem;
 		private ImageMenuItem		HelpMenuItem;
+	        private MenuItem                RecoveryMenuItem;
+		private MenuItem		ExportMenuSubItem;
+		private MenuItem 		ImportMenuSubItem;
+	        private MenuItem                ResetPassMenuItem;
 		private ImageMenuItem		AboutMenuItem;
 		
 		private ImageMenuItem		PreferencesMenuItem;
@@ -478,7 +482,33 @@ namespace Novell.iFolder
 			menubar.Append(MigrationMenuItem);
 			*/
 
+			//----------------------------
+			// Security Menu
+			//----------------------------
+			Menu SecurityMenu = new Menu();
 
+			RecoveryMenuItem = new MenuItem(Util.GS("_Key Recovery"));
+//			RecoveryMenuItem.Activated += new EventHandler(OnRecoveryMenuItem);
+			SecurityMenu.Append(RecoveryMenuItem);
+			ImportMenuSubItem = new MenuItem(Util.GS("Import Decrypted Keys"));
+			ExportMenuSubItem = new MenuItem(Util.GS("Export Encrypted Keys")); 
+			ImportMenuSubItem.Activated += new EventHandler(ImportClicked);
+			ExportMenuSubItem.Activated += new EventHandler(ExportClicked);
+		
+			Menu recoverMenu = new Menu();
+			recoverMenu.Append( ExportMenuSubItem);
+			recoverMenu.Append( ImportMenuSubItem);
+
+			RecoveryMenuItem.Submenu = recoverMenu;;
+
+			ResetPassMenuItem = new MenuItem(Util.GS("Reset _Passphrase"));
+			ResetPassMenuItem.Activated += new EventHandler(OnResetPassMenuItem);
+			SecurityMenu.Append(ResetPassMenuItem);
+
+			MenuItem MainSecurityMenuItem = new MenuItem (Util.GS ("_Security"));
+			MainSecurityMenuItem.Submenu = SecurityMenu;
+			menubar.Append (MainSecurityMenuItem);
+			
 			//----------------------------
 			// Help Menu
 			//----------------------------
@@ -1111,6 +1141,25 @@ namespace Novell.iFolder
 			migrationWindow.ShowAll();
 			return;
 		}
+
+		private void ExportClicked( object o, EventArgs args)
+		{
+			Console.WriteLine(" export clicked");
+			ExportKeysDialog export = new ExportKeysDialog();
+			export.TransientFor = this;
+			export.Run();
+			export.Hide();
+			export.Destroy();
+		}
+
+		private void ImportClicked( object o, EventArgs args)
+		{
+			ImportKeysDialog export = new ImportKeysDialog();
+			export.TransientFor = this;
+			export.Run();
+			export.Hide();
+			export.Destroy();
+		}
 		
 		private void OnToggleViewServeriFoldersMenuItem(object o, EventArgs args)
 		{
@@ -1660,6 +1709,21 @@ namespace Novell.iFolder
 		private void OnHelpMenuItem(object o, EventArgs args)
 		{
 			Util.ShowHelp(Util.HelpMainPage, this);
+		}
+
+		private void OnRecoveryMenuItem(object o, EventArgs args)
+		{
+			Util.ShowHelp(Util.HelpMainPage, this);
+		}
+
+		private void OnResetPassMenuItem(object o, EventArgs args)
+		{
+			ResetPassPhraseDialog resetDialog = new ResetPassPhraseDialog();
+			resetDialog.TransientFor = this;
+			resetDialog.Run();
+			resetDialog.Hide();
+			resetDialog.Destroy();
+	//		Util.ShowHelp(Util.HelpMainPage, this);
 		}
 
 		private void OnAbout(object o, EventArgs args)
@@ -2399,6 +2463,13 @@ namespace Novell.iFolder
 			DomainInformation defaultDomain = domainController.GetDefaultDomain();
 			if (defaultDomain != null)
 				domainID = defaultDomain.ID;
+		/*
+			ResetPassPhraseDialog resetDialog = new ResetPassPhraseDialog(domainID);
+			resetDialog.TransientFor = this;
+			resetDialog.Run();
+			resetDialog.Hide();
+			resetDialog.Destroy();
+		*/
 			CreateDialog cd = new CreateDialog(this, domains, domainID, Util.LastCreatedPath, ifws);
 			cd.TransientFor = this;
 	
@@ -2519,7 +2590,7 @@ namespace Novell.iFolder
 								if( passPhraseStatus == false)
 								{
 									Console.WriteLine(" No passphrase. can't create iFolder");
-									continue;
+//									continue;
 								}
 							}
 							ifHolder = ifdata.CreateiFolder(selectedFolder, selectedDomain, SSL, algorithm);
@@ -2910,6 +2981,8 @@ namespace Novell.iFolder
 			bool status = false;
 			int result;	
 			EnterPassPhraseDialog epd = new EnterPassPhraseDialog(DomainID);
+			try
+			{
 			do
 			{
 				result = epd.Run();
@@ -2923,8 +2996,8 @@ namespace Novell.iFolder
 						iFolderMsgDialog.DialogType.Error,
 						iFolderMsgDialog.ButtonSet.None,
 						Util.GS("PassPhrase mismatch"),
-						Util.GS("The PassPhrase and retyped PassPhrase are not same"),
-						Util.GS("Please enter the passphrase again"));
+						Util.GS("The PassPhrase and retyped Passphrase are not same"),
+						Util.GS("Enter the passphrase again"));
 						dialog.Run();
 						dialog.Hide();
 						dialog.Destroy();
@@ -2951,16 +3024,22 @@ namespace Novell.iFolder
 						null,
 						iFolderMsgDialog.DialogType.Error,
 						iFolderMsgDialog.ButtonSet.None,
-						Util.GS("Error setting the PassPhrase"),
+						Util.GS("Error setting the Passphrase"),
 						Util.GS("Unable to set the passphrase"),
-						Util.GS("Please try again"));
+						Util.GS("Try again"));
 						dialog.Run();
 						dialog.Hide();
 						dialog.Destroy();
 						dialog = null;
 				}
 			}
-			return status;
+			}
+			catch(Exception e)
+			{
+				return true;
+			}
+			return true;
+//			return status;
 		}
 
 		private bool ShowVerifyDialog(string DomainID, SimiasWebService simws)
@@ -2970,6 +3049,8 @@ namespace Novell.iFolder
 			Status passPhraseStatus= null;
 			VerifyPassPhraseDialog vpd = new VerifyPassPhraseDialog();
 			// vpd.TransientFor = this;
+			try
+			{
 			do
 			{
 				result = vpd.Run();
@@ -2987,14 +3068,16 @@ namespace Novell.iFolder
 							null,
 							iFolderMsgDialog.DialogType.Error,
 							iFolderMsgDialog.ButtonSet.None,
-							Util.GS("Invalid PassPhrase"),
-							Util.GS("The PassPhrase entered is invalid"),
+							Util.GS("Invalid Passphrase"),
+							Util.GS("The Passphrase entered is invalid"),
 							Util.GS("Please re-enter the passphrase"));
 							dialog.Run();
 							dialog.Hide();
 							dialog.Destroy();
 							dialog = null;
 						passPhraseStatus = null;
+				// 	to be removed
+						break;
 					}
 					else if(passPhraseStatus.statusCode == StatusCodes.Success)
 						break;
@@ -3007,22 +3090,37 @@ namespace Novell.iFolder
 				{
 					simws.StorePassPhrase( DomainID, vpd.PassPhrase, CredentialType.Basic, vpd.ShouldSavePassPhrase);
 				}
-				catch(Exception ex) {}
+				catch(Exception ex) 
+				{
+					return true;
+				}
 			}
 			else //if(result == (int)ResponseType.Cancel)
 			{
 				Console.WriteLine(" cancelled passphrase entry");
-				simws.StorePassPhrase(DomainID, "", CredentialType.Basic, false);
-				string uid, passphrasecheck;
-				simws.GetPassPhrase(DomainID, out uid, out passphrasecheck);
-				if(passphrasecheck == "")
-					Console.WriteLine(" Cancel clicked at the time of login-- confirmed");
-				else
-					Console.WriteLine(" cancel clicked is not confirmed");
+				try
+				{
+					simws.StorePassPhrase(DomainID, "", CredentialType.Basic, false);
+					string uid, passphrasecheck;
+					simws.GetPassPhrase(DomainID, out uid, out passphrasecheck);
+					if(passphrasecheck == "")
+						Console.WriteLine(" Cancel clicked at the time of login-- confirmed");
+					else
+						Console.WriteLine(" cancel clicked is not confirmed");
+				}
+				catch(Exception e)
+				{
+					return true;
+				}
 			}
-			return status;
+			}
+			catch(Exception e)
+			{
+				return true;
+			}
+			return true;
+//			return status;
 		}
-
 	}
 
 

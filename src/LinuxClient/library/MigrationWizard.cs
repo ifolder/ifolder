@@ -153,8 +153,8 @@ namespace Novell.iFolder
 		{
 			IntroductoryPage = new Gnome.DruidPageEdge(Gnome.EdgePosition.Start,
 				true,	// use an antialiased canvas
-				Util.GS("Migrate the iFolder Account"),
-				Util.GS("Welcome to the iFolder Migration Wizard.\n\nClick \"Forward\" to begin."),
+				Util.GS("Migrate the iFolder "),
+				Util.GS("Welcome to iFolder Migration Assistant.\nThe next few screens will let you,\nmigrate your data to iFolder 3.x.\n\nClick \"Forward\" to continue."),
 				AddAccountPixbuf, null, null);
 			
 			IntroductoryPage.CancelClicked +=
@@ -202,7 +202,7 @@ namespace Novell.iFolder
 			// Row 2
 			table.Attach(new Label(""), 0,1, 1,2,
 				AttachOptions.Fill, 0,12,0); // spacer
-			deleteFromServer = new RadioButton(Util.GS("Migrate the folder and  disconnect from 2.x domain"));
+			deleteFromServer = new RadioButton(Util.GS("Migrate the iFolder and disconnect it from 2.x domain"));
 			deleteFromServer.Active = true;
 			deleteFromServer.Sensitive = true;
 			deleteFromServer.Toggled += new EventHandler(OndeleteCheckButtonChanged);
@@ -213,7 +213,7 @@ namespace Novell.iFolder
 
 			table.Attach(new Label(""), 0,1, 2,3,
 				AttachOptions.Fill, 0,12,0); // spacer
-			copyToServer = new RadioButton(deleteFromServer, Util.GS("Create a copy of the folder and connect to server"));
+			copyToServer = new RadioButton(deleteFromServer, Util.GS("Create a copy of the iFolder and migrate"));
 			copyToServer.Active = false;
 			copyToServer.Toggled += new EventHandler(OncopyCheckButtonChanged);
 

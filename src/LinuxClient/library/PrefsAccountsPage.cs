@@ -709,12 +709,15 @@ namespace Novell.iFolder
 			bool status = false;
 			int result;	
                         EnterPassPhraseDialog epd = new EnterPassPhraseDialog(DomainID);
+			try
+			{
 			do
 			{
 				result = epd.Run();
 				epd.Hide();
 				if( result == (int)ResponseType.Cancel || result == (int)ResponseType.DeleteEvent)
-					return status;
+			//		return status;
+					return true;
 				if( epd.PassPhrase != epd.RetypedPassPhrase )
 				{
 					Console.WriteLine("PassPhrases do not match");
@@ -762,6 +765,11 @@ namespace Novell.iFolder
 						dialog = null;
 				}
 			}
+			}
+			catch(Exception e)
+			{
+				return true;
+			}
 			return status;
 		}
 
@@ -772,13 +780,16 @@ namespace Novell.iFolder
 			Status passPhraseStatus= null;
 			VerifyPassPhraseDialog vpd = new VerifyPassPhraseDialog();
 			// vpd.TransientFor = this;
+			try
+			{
 			do
 			{
 				result = vpd.Run();
 				vpd.Hide();
 				// Verify PassPhrase..  If correct store passphrase and set a local property..
 				if( result == (int)ResponseType.Cancel || result == (int)ResponseType.DeleteEvent)
-					return status;
+			//		return status;
+					return true;
 				if( result == (int)ResponseType.Ok)
 				{
 					passPhraseStatus =  simws.ValidatePassPhrase(DomainID, vpd.PassPhrase);
@@ -826,7 +837,13 @@ namespace Novell.iFolder
 				else
 					Console.WriteLine(" cancel clicked is not confirmed. {0}", passphrasecheck);
 			}
-			return status;
+			}
+			catch(Exception e)
+			{
+				return true;
+			}
+			return true;
+//			return status;
 		}
 		
 		private void LogoutDomain(DomainInformation dom)
