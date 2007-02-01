@@ -735,6 +735,7 @@ namespace Novell.iFolder
 
 		private bool OnValidateClicked(object o, EventArgs args)
 		{
+		    try {
 		        //Validate the PassPhrase Locally.
 		        if ( !PassPhraseSet )
 			{
@@ -782,7 +783,10 @@ namespace Novell.iFolder
                                 domainController.StorePassPhrase( ConnectedDomain.ID, PassPhraseEntry.Text,
 								  CredentialType.Basic, RememberPassPhraseCheckButton.Active);
 			}
-
+		    } catch (Exception e)
+		    {
+			//Avoid ifolder crash incase of exception.
+		    }
 			BackButton.Label = Util.GS("gtk-go-back");
 		        return true;
 		}
