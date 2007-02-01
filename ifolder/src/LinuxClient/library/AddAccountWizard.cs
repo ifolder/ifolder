@@ -357,7 +357,7 @@ namespace Novell.iFolder
 			table.BorderWidth = 12;
 
 			// Row 1
-			Label l = new Label(Util.GS("Please verify that the information you've entered is correct."));
+			Label l = new Label(Util.GS("Please verify that the information you have entered is correct."));
 			table.Attach(l, 0,3, 0,1,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			l.LineWrap = true;
@@ -459,7 +459,7 @@ namespace Novell.iFolder
 			// Row 2
 			table.Attach(new Label(""), 0,1, 1,2,
 				AttachOptions.Fill, 0,12,0); // spacer
-			l = new Label(Util.GS("_PassPhrase:"));
+			l = new Label(Util.GS("_Passphrase:"));
 			table.Attach(l, 1,2, 1,2,
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			l.Xalign = 0.0F;
@@ -470,7 +470,7 @@ namespace Novell.iFolder
 			l.MnemonicWidget = PassPhraseEntry;
 
 			// Row 3
-			RetypePassPhraseLabel = new Label(Util.GS("R_etype PassPhrase:"));
+			RetypePassPhraseLabel = new Label(Util.GS("R_etype the Passphrase:"));
 			table.Attach(RetypePassPhraseLabel, 1,2, 2,3,
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			l.Xalign = 0.0F;
@@ -481,12 +481,12 @@ namespace Novell.iFolder
 			l.MnemonicWidget = PassPhraseVerifyEntry;
 
 			// Row 4
-			RememberPassPhraseCheckButton = new CheckButton(Util.GS("_Remember PassPhrase"));
+			RememberPassPhraseCheckButton = new CheckButton(Util.GS("_Remember the Passphrase"));
 			table.Attach(RememberPassPhraseCheckButton, 2,3, 3,4,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 
 			// Row 5
-			SelectRALabel = new Label(Util.GS("Select Recovery Agent"));
+			SelectRALabel = new Label(Util.GS("Select the Passphrase Recovery Agent"));
 			table.Attach(SelectRALabel, 0,3, 4,5,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			l.LineWrap = true;
@@ -505,7 +505,7 @@ namespace Novell.iFolder
 
 			// RA Name Column
 			TreeViewColumn raNameColumn = new TreeViewColumn();
-			raNameColumn.Title = Util.GS("Recovery Agents");
+			raNameColumn.Title = Util.GS("Passphrase Recovery Agents");
 			CellRendererText cr = new CellRendererText();
 			cr.Xpad = 5;
 			raNameColumn.PackStart(cr, false);
