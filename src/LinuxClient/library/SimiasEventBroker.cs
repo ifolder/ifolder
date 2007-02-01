@@ -496,28 +496,28 @@ namespace Novell.iFolder
 				{
 					case "Subscription":
 					{
-						if(ifdata.ISPOBox(nargs.Collection))
-						{
-							// The Collection is the PO Box so the node
-							// is most likely an invitation
+				// 		if(ifdata.ISPOBox(nargs.Collection))
+// 						{
+// 							// The Collection is the PO Box so the node
+// 							// is most likely an invitation
 	
-							iFolderHolder ifHolder =
-								ifdata.ReadAvailableiFolder(nargs.ID,
-															nargs.Collection);
+// 							iFolderHolder ifHolder =
+// 								ifdata.ReadAvailableiFolder(nargs.ID,
+// 															nargs.Collection);
 	
-							// if the iFolder already exists, ifdata will
-							// return null to check it here
-							if(ifHolder != null)
-							{
-								lock(NodeEventQueue)
-								{
-									NodeEventQueue.Enqueue(new SimiasEvent(
-										ifHolder.iFolder.CollectionID, null, null,
-										SimiasEventType.NewiFolder));
-									SimiasEventFired.WakeupMain();
-								}
-							}
-						}
+// 							// if the iFolder already exists, ifdata will
+// 							// return null to check it here
+// 							if(ifHolder != null)
+// 							{
+// 								lock(NodeEventQueue)
+// 								{
+// 									NodeEventQueue.Enqueue(new SimiasEvent(
+// 										ifHolder.iFolder.CollectionID, null, null,
+// 										SimiasEventType.NewiFolder));
+// 									SimiasEventFired.WakeupMain();
+// 								}
+// 							}
+// 						}
 	
 						break;
 					}					
