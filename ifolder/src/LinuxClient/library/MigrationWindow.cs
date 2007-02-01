@@ -50,7 +50,7 @@ namespace Novell.iFolder
 		/// Default constructor for LogWindow
 		/// </summary>
 		public MigrationWindow( Gtk.Window topWindow, iFolderWebService ifws )
-			: base (Util.GS("iFolder Migration Window"))
+			: base (Util.GS("iFolder Migration"))
 		{
                         this.topLevelWindow = topWindow;
                         this.ifws = ifws;

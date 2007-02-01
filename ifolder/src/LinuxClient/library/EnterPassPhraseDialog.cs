@@ -17,7 +17,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  Author: Calvin Gaisford <cgaisford@novell.com>
+ *  Author: Ramesh Sunder <sramesh@novell.com>
  * 
  ***********************************************************************/
 
@@ -38,15 +38,6 @@ namespace Novell.iFolder
 
 
 		private iFolderTreeView RATreeView;
-
-		private Entry	nameEntry;
-		private Entry	passEntry;
-		private Entry	serverEntry;
-		private CheckButton savePasswordButton;
-		private string  DomainName;
-		private string  DomainUserName;
-		private bool	FullDialog;
-
 		private Image				 iFolderBanner;
 		private Image				 iFolderScaledBanner;
 		private Gdk.Pixbuf			 ScaledPixbuf;
@@ -84,83 +75,16 @@ namespace Novell.iFolder
 			}
 		}
 
-		public string UserName
-		{
-			get
-			{
-				if(FullDialog)
-					return nameEntry.Text;
-				else
-					return "";
-			}
-		}
-
-		public string Password
-		{
-			get
-			{
-				return passEntry.Text;
-			}
-			set
-			{
-				passEntry.Text = value;
-			}
-		}
-
-		public string Host
-		{
-			get
-			{
-				if(FullDialog)
-					return serverEntry.Text;
-				else
-					return "";
-			}
-		}
-
-		public string Domain
-		{
-			get
-			{
-				if(FullDialog)
-					return "";
-				else
-					return DomainID;
-			}
-		}
-		
-		public bool ShouldSavePassword
-		{
-			get
-			{
-				if (savePasswordButton != null)
-					return savePasswordButton.Active;
-				else
-					return false;
-					
-			}
-		}
-
-		public EnterPassPhraseDialog(string domain, string domainName,
-					string userName) : base()
-		{
-			DomainID = domain;
-			DomainName = domainName;
-			DomainUserName = userName;
-			FullDialog = false;
-			SetupDialog();
-		}
-
 		public EnterPassPhraseDialog(string domainID) : base()
  		{
 			this.DomainID = domainID;
-			FullDialog = true;
+		//	FullDialog = true;
 			SetupDialog();
 		}
 
 		private void SetupDialog()
 		{
-			this.Title = Util.GS("PassPhrase Manager");
+			this.Title = Util.GS("iFolder Passphrase");
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png"));
 			this.HasSeparator = false;
 //			this.BorderWidth = 10;
@@ -193,7 +117,7 @@ namespace Novell.iFolder
 			table.BorderWidth = 12;
 
 			// Row 1
-			Label l = new Label(Util.GS("Enter the Passphrase"));
+			Label l = new Label(Util.GS("Enter the Passphrase")+":");
 			table.Attach(l, 0,3, 0,1,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			l.LineWrap = true;
@@ -202,7 +126,7 @@ namespace Novell.iFolder
 			// Row 2
 			table.Attach(new Label(""), 0,1, 1,2,
 				AttachOptions.Fill, 0,12,0); // spacer
-			l = new Label(Util.GS("_PassPhrase:"));
+			l = new Label(Util.GS("_Passphrase:"));
 			table.Attach(l, 1,2, 1,2,
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			l.Xalign = 0.0F;
@@ -214,7 +138,7 @@ namespace Novell.iFolder
 			l.MnemonicWidget = PassPhraseEntry;
 
 			// Row 3
-			l = new Label(Util.GS("_Retype PassPhrase:"));
+			l = new Label(Util.GS("_Re-type Passphrase:"));
 			table.Attach(l, 1,2, 2,3,
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			l.Xalign = 0.0F;
@@ -232,7 +156,7 @@ namespace Novell.iFolder
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
 			// Row 4
-			l = new Label(Util.GS("Select Recovery Agent"));
+			l = new Label(Util.GS("Select Passphrase Recovery Agent")+":");
 			table.Attach(l, 0,3, 4,5,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			l.LineWrap = true;
@@ -281,7 +205,7 @@ namespace Novell.iFolder
 		
 
 			this.AddButton(Stock.Cancel, ResponseType.Cancel);
-			this.AddButton(Util.GS("Co_nnect"), ResponseType.Ok);
+			this.AddButton(Stock.Ok, ResponseType.Ok);
 			this.SetResponseSensitive(ResponseType.Ok, false);
 			this.DefaultResponse = ResponseType.Ok;
 		}

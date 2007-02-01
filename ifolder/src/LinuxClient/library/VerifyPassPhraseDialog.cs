@@ -31,30 +31,9 @@ namespace Novell.iFolder
 	{
 		private Entry passPhraseEntry;
 		private CheckButton savePassPhraseButton;
-	
-		private Entry	nameEntry;
-		private Entry	passEntry;
-		private Entry	serverEntry;
-		private CheckButton savePasswordButton;
-		private string	DomainID;
-		private string  DomainName;
-		private string  DomainUserName;
-		private bool	FullDialog;
-
 		private Image				 iFolderBanner;
 		private Image				 iFolderScaledBanner;
 		private Gdk.Pixbuf			 ScaledPixbuf;
-
-		public string UserName
-		{
-			get
-			{
-				if(FullDialog)
-					return nameEntry.Text;
-				else
-					return "";
-			}
-		}
 
 		public string PassPhrase
 		{
@@ -62,34 +41,7 @@ namespace Novell.iFolder
 			{
 				return passPhraseEntry.Text;
 			}
-			set
-			{
-				passEntry.Text = value;
-			}
 		}
-
-		public string Host
-		{
-			get
-			{
-				if(FullDialog)
-					return serverEntry.Text;
-				else
-					return "";
-			}
-		}
-
-		public string Domain
-		{
-			get
-			{
-				if(FullDialog)
-					return "";
-				else
-					return DomainID;
-			}
-		}
-		
 		public bool ShouldSavePassPhrase
 		{
 			get
@@ -101,26 +53,15 @@ namespace Novell.iFolder
 					
 			}
 		}
-
-		public VerifyPassPhraseDialog(string domain, string domainName,
-					string userName) : base()
-		{
-			DomainID = domain;
-			DomainName = domainName;
-			DomainUserName = userName;
-			FullDialog = false;
-			SetupDialog();
-		}
-
 		public VerifyPassPhraseDialog() : base()
  		{
-			FullDialog = true;
+//			FullDialog = true;
 			SetupDialog();
 		}
 
 		private void SetupDialog()
 		{
-			this.Title = Util.GS("PassPhrase Manager Dialog");
+			this.Title = Util.GS("iFolder PassPhrase");
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png"));
 			this.HasSeparator = false;
 //			this.BorderWidth = 10;
@@ -168,99 +109,6 @@ namespace Novell.iFolder
 				loginTable.Attach(savePassPhraseButton, 1,2,2,4,
 						AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 	
-
-		/*
-			if(FullDialog)
-			{
-				Label nameLabel = new Label(Util.GS("Username:"));
-				nameLabel.Xalign = 1; 
-				loginTable.Attach(nameLabel, 0,1,0,1,
-						AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-	
-				nameEntry = new Entry();
-				nameEntry.Changed += new EventHandler(OnFieldsChanged);
-				nameEntry.ActivatesDefault = true;
-				loginTable.Attach(nameEntry, 1,2,0,1, 
-						AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
-
-				Label passLabel = new Label(Util.GS("Password:"));
-				passLabel.Xalign = 1;
-				loginTable.Attach(passLabel, 0,1,1,2,
-						AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-	
-				passEntry = new Entry();
-				passEntry.Changed += new EventHandler(OnFieldsChanged);
-				passEntry.ActivatesDefault = true;
-				passEntry.Visibility = false;
-				loginTable.Attach(passEntry, 1,2,1,2,
-					AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
-
-				Label serverLabel = new Label(Util.GS("iFolder Server:"));
-				serverLabel.Xalign = 1;
-				loginTable.Attach(serverLabel, 0,1,2,3,
-						AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-	
-				serverEntry = new Entry();
-				serverEntry.Changed += new EventHandler(OnFieldsChanged);
-				serverEntry.ActivatesDefault = true;
-				loginTable.Attach(serverEntry, 1,2,2,3,
-						AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
-
-				savePasswordButton = 
-					new CheckButton(Util.GS(
-						"_Remember password"));
-				loginTable.Attach(savePasswordButton, 1,2,3,4,
-						AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
-			}
-			else
-			{
-				Label domainLabel = new Label(Util.GS("iFolder Server:"));
-				domainLabel.Xalign = 1;
-				loginTable.Attach(domainLabel, 0,1,0,1,
-						AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-
-
-				Label domainNameLabel = new Label(DomainName);
-				domainNameLabel.UseUnderline = false;
-				domainNameLabel.Xalign = 0;
-				loginTable.Attach(domainNameLabel, 1,2,0,1,
-						AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
-
-
-
-				Label nameLabel = new Label(Util.GS("Username:"));
-				nameLabel.Xalign = 1;
-				loginTable.Attach(nameLabel, 0,1,1,2,
-						AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-	
-				Label userNameLabel = new Label(DomainUserName);
-				userNameLabel.UseUnderline = false;
-				userNameLabel.Xalign = 0;
-				loginTable.Attach(userNameLabel, 1,2,1,2, 
-						AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
-						
-
-				Label passLabel = new Label(Util.GS("Password:"));
-				passLabel.Xalign = 1;
-				loginTable.Attach(passLabel, 0,1,2,3,
-						AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-	
-				passEntry = new Entry();
-				passEntry.Changed += new EventHandler(OnFieldsChanged);
-				passEntry.ActivatesDefault = true;
-				passEntry.Visibility = false;
-				loginTable.Attach(passEntry, 1,2,2,3,
-					AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
-
-				savePasswordButton = 
-					new CheckButton(Util.GS(
-						"_Remember password"));
-				loginTable.Attach(savePasswordButton, 1,2,3,4,
-						AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
-			}
-
-		*/	
-
 			this.VBox.PackStart(loginTable, false, false, 0);
 			this.VBox.ShowAll();
 
@@ -302,7 +150,7 @@ namespace Novell.iFolder
 			this.SetResponseSensitive(ResponseType.Ok, enableOK);
 		}
 
-
+/*
 		private void OnFieldsChanged(object obj, EventArgs args)
 		{
 			bool enableOK = false;
@@ -318,5 +166,6 @@ namespace Novell.iFolder
 
 			this.SetResponseSensitive(ResponseType.Ok, enableOK);
 		}
+*/
 	}
 }
