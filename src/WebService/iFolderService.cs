@@ -1530,26 +1530,15 @@ namespace Novell.iFolder.Web
 				throw new Exception("Invalid Rights Specified");
 
 
-			// Use the POBox for the domain that this iFolder belongs to.
-			POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
-						domain.ID, 
-						store.GetUserIDFromDomainID(domain.ID));
+			// member
+			Member membercoll = new Member(MemberName, MemberID, newRights);
 
-			Subscription sub = poBox.CreateSubscription(col,
-										col.GetCurrentMember(),
-										"iFolder");
+			// commit
+			col.Commit(membercoll);
 
-			sub.SubscriptionRights = newRights;
-			sub.ToName = member.Name;
-			sub.ToIdentity = MemberID;
-
-			poBox.AddMessage(sub);
-
-			iFolderUser user = new iFolderUser( sub );
+			iFolderUser user = new iFolderUser(domain, membercoll );
 			return user;
 		}
-
-
 
 		/// <summary>
 		/// WebMethod that invites a user to an iFolder.
