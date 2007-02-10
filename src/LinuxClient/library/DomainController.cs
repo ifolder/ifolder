@@ -300,7 +300,7 @@ namespace Novell.iFolder.Controller
 		/// </summary>
 	        public Status SetPassPhrase (string domainID, string passPhrase, string recoveryAgent)
 		{
-		    return simws.SetPassPhrase (domainID, passPhrase, "public key", recoveryAgent);
+		    return simws.SetPassPhrase (domainID,"Arul", passPhrase, "public key", recoveryAgent);
 		}
 
 		/// <summary>
