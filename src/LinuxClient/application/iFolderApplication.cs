@@ -651,7 +651,7 @@ namespace Novell.iFolder
 			{
 				// Check the recovery agent
 				string publicKey = ""; // needed to be found
-				Status passPhraseStatus = simws.SetPassPhrase( DomainID,"Arul", epd.PassPhrase, epd.RecoveryAgent, publicKey);
+				Status passPhraseStatus = simws.SetPassPhrase( DomainID,epd.PassPhrase, epd.RecoveryAgent, publicKey);
 				if(passPhraseStatus.statusCode == StatusCodes.Success)
 				{
 					status = true;
