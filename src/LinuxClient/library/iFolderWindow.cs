@@ -1825,6 +1825,7 @@ namespace Novell.iFolder
 			ViewServeriFoldersMenuItem.Toggled -= new EventHandler(OnToggleViewServeriFoldersMenuItem);
 			ViewServeriFoldersMenuItem.Active = true;
 			ViewServeriFoldersMenuItem.Toggled += new EventHandler(OnToggleViewServeriFoldersMenuItem);
+			RefreshiFolders(true);
 		}
 		
 		private void HideAvailableiFolders()
@@ -1900,6 +1901,7 @@ namespace Novell.iFolder
                 }
                 while(rc == -5);
 			}
+			RefreshiFolders(true);
 		}
 		
 		private void DeleteSelectedFolderFromServer()
@@ -1932,6 +1934,7 @@ namespace Novell.iFolder
 					return;
 				}
 			}
+			RefreshiFolders(true);
 		}
 		
 		private void RemoveMembershipFromSelectedFolder()
