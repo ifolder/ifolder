@@ -290,7 +290,7 @@ namespace Novell.iFolder.Controller
 		/// <summary>
 		/// Returns the Recovery Agent List for the specified Domain
 		/// </summary>
-	        public Status IsPassPhraseSet (string domainID)
+	        public bool IsPassPhraseSet (string domainID)
 		{
 		    return simws.IsPassPhraseSet (domainID);
 		}

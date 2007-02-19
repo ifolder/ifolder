@@ -35,6 +35,7 @@ using Simias.Client.Event;
 
 using Novell.iFolder.Events;
 using Novell.iFolder.Controller;
+using Novell.iFolder.Web;
 
 namespace Novell.iFolder
 {
