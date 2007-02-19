@@ -649,7 +649,7 @@ namespace Novell.iFolder
 			//TODO :
 			BackButton.Label = Util.GS("_Skip");
 
-			if ( domainController.IsPassPhraseSet (ConnectedDomain.ID).statusCode == false)
+			if ( domainController.IsPassPhraseSet (ConnectedDomain.ID) == false)
 			{
 			       string[] list = domainController.GetRAList (ConnectedDomain.ID);
 
