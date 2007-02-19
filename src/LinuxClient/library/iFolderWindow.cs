@@ -2548,9 +2548,8 @@ namespace Novell.iFolder
 							{
 								// encryption is selected
 								bool passPhraseStatus = false;
-		                                                Status passphraseStatus = simws.IsPassPhraseSet(selectedDomain);
-								if(passphraseStatus.statusCode == StatusCodes.Success)
-						//		if( true)
+		                                                bool passphraseStatus = simws.IsPassPhraseSet(selectedDomain);
+								if(passphraseStatus == true)
 								{
 									// if passphrase not given during login
 									Console.WriteLine("passphrase set");

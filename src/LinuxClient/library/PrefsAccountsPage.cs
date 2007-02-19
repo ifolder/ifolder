@@ -626,8 +626,8 @@ namespace Novell.iFolder
 					//		return;
 						// }
 						int result;
-						Status passphraseStatus = simws.IsPassPhraseSet(args.DomainID);
-						if(passphraseStatus.statusCode == StatusCodes.Success)
+						bool passphraseStatus = simws.IsPassPhraseSet(args.DomainID);
+						if(passphraseStatus == true)
 				//		if( true)
 						{
 							bool rememberOption = simws.GetRememberOption(args.DomainID);
