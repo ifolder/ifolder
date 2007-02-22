@@ -129,16 +129,6 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "AcceptInvitation.cs"
-                    SubType = "Form"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "AcceptInvitation.resx"
-                    DependentUpon = "AcceptInvitation.cs"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
                     RelPath = "AdvancedSettings.cs"
                     SubType = "Form"
                     BuildAction = "Compile"
@@ -157,6 +147,16 @@
                     RelPath = "BalloonType.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Connecting.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Connecting.resx"
+                    DependentUpon = "Connecting.cs"
+                    BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "Credits.cs"
@@ -223,6 +223,46 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "iFoldersListView.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "iFoldersListView.resx"
+                    DependentUpon = "iFoldersListView.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "ItemSelectedEventArgs.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MigrationWindow.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MigrationWindow.resx"
+                    DependentUpon = "MigrationWindow.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "NavigateItemEventArgs.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NoiFolderMessage.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NoiFolderMessage.resx"
+                    DependentUpon = "NoiFolderMessage.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Preferences.cs"
                     SubType = "Form"
                     BuildAction = "Compile"
@@ -240,6 +280,16 @@
                 <File
                     RelPath = "RemoveAccount.resx"
                     DependentUpon = "RemoveAccount.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "RevertiFolder.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "RevertiFolder.resx"
+                    DependentUpon = "RevertiFolder.cs"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
@@ -283,6 +333,31 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "TileListView.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TileListView.resx"
+                    DependentUpon = "TileListView.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "TileListViewItem.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TileListViewItem.resx"
+                    DependentUpon = "TileListViewItem.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "TileListViewItemCollection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "ToolBarEx.cs"
                     SubType = "Component"
                     BuildAction = "Compile"
@@ -290,6 +365,101 @@
                 <File
                     RelPath = "ToolBarEx.resx"
                     DependentUpon = "ToolBarEx.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "WebMethods.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "AccountWizard\AccountWizard.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "AccountWizard\AccountWizard.resx"
+                    DependentUpon = "AccountWizard.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "AccountWizard\BaseWizardPage.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "AccountWizard\BaseWizardPage.resx"
+                    DependentUpon = "BaseWizardPage.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "AccountWizard\CompletionPage.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "AccountWizard\CompletionPage.resx"
+                    DependentUpon = "CompletionPage.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "AccountWizard\IdentityPage.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "AccountWizard\IdentityPage.resx"
+                    DependentUpon = "IdentityPage.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "AccountWizard\InteriorPageTemplate.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "AccountWizard\InteriorPageTemplate.resx"
+                    DependentUpon = "InteriorPageTemplate.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "AccountWizard\ServerPage.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "AccountWizard\ServerPage.resx"
+                    DependentUpon = "ServerPage.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "AccountWizard\VerifyPage.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "AccountWizard\VerifyPage.resx"
+                    DependentUpon = "VerifyPage.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "AccountWizard\WelcomePage.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "AccountWizard\WelcomePage.resx"
+                    DependentUpon = "WelcomePage.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "AccountWizard\WelcomePageTemplate.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "AccountWizard\WelcomePageTemplate.resx"
+                    DependentUpon = "WelcomePageTemplate.cs"
                     BuildAction = "EmbeddedResource"
                 />
             </Include>

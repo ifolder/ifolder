@@ -493,92 +493,12 @@ namespace Novell.FormsTrayApp
 		{
 			bool result = false;
 
-			Cursor.Current = Cursors.WaitCursor;
-
-			try
+			Connecting connecting = new Connecting( simiasWebService, simiasManager, domainInfo, password.Text, rememberPassword.Checked );
+			if ( connecting.ShowDialog() == DialogResult.OK )
 			{
-				DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domainInfo.ID, password.Text);
-				Status authStatus = domainAuth.Authenticate(simiasManager.WebServiceUri, simiasManager.DataPath);
-				MyMessageBox mmb;
-				switch (authStatus.statusCode)
-				{
-					case StatusCodes.InvalidCertificate:
-						byte[] byteArray = simiasWebService.GetCertificate(domainInfo.Host);
-						System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(byteArray);
-						mmb = new MyMessageBox(string.Format(resourceManager.GetString("verifyCert"), domainInfo.Host), resourceManager.GetString("verifyCertTitle"), cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2);
-						if (mmb.ShowDialog() == DialogResult.Yes)
-						{
-							simiasWebService.StoreCertificate(byteArray, domainInfo.Host);
-							result = authenticate();
-						}
-						break;
-					case StatusCodes.Success:
-					case StatusCodes.SuccessInGrace:
-						if (authStatus.statusCode.Equals(StatusCodes.SuccessInGrace))
-						{
-							mmb = new MyMessageBox(
-								string.Format(resourceManager.GetString("graceLogin"), authStatus.RemainingGraceLogins),
-								resourceManager.GetString("graceLoginTitle"),
-								string.Empty,
-								MyMessageBoxButtons.OK,
-								MyMessageBoxIcon.Information);
-							mmb.ShowDialog();
-						}
-						
-						try
-						{
-							updateStarted = FormsTrayApp.CheckForClientUpdate(domainInfo.ID);
-						}
-						catch // Ignore
-						{
-						}
-
-						if (rememberPassword.Checked)
-						{
-							try
-							{
-								simiasWebService.SetDomainCredentials(domainInfo.ID, password.Text, CredentialType.Basic);
-							}
-							catch (Exception ex)
-							{
-								mmb = new MyMessageBox(resourceManager.GetString("savePasswordError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-								mmb.ShowDialog();
-							}
-						}
-
-						result = true;
-						break;
-					case StatusCodes.InvalidCredentials:
-					case StatusCodes.InvalidPassword:
-					case StatusCodes.UnknownUser:
-						mmb = new MyMessageBox(resourceManager.GetString("badPassword"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-						mmb.ShowDialog();
-						break;
-					case StatusCodes.AccountDisabled:
-						mmb = new MyMessageBox(resourceManager.GetString("accountDisabled"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-						mmb.ShowDialog();
-						break;
-					case StatusCodes.AccountLockout:
-						mmb = new MyMessageBox(resourceManager.GetString("accountLockout"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-						mmb.ShowDialog();
-						break;
-					case StatusCodes.SimiasLoginDisabled:
-						mmb = new MyMessageBox(resourceManager.GetString("iFolderAccountDisabled"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-						mmb.ShowDialog();
-						break;
-					default:
-						mmb = new MyMessageBox(string.Format(resourceManager.GetString("serverReconnectError"), authStatus.statusCode.ToString()), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-						mmb.ShowDialog();
-						break;
-				}
-			}
-			catch (Exception ex)
-			{
-				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("serverConnectError"), resourceManager.GetString("serverConnectErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-				mmb.ShowDialog();
+				result = true;
 			}
 
-			Cursor.Current = Cursors.Default;
 			return result;
 		}
 

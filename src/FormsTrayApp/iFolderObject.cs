@@ -1,7 +1,7 @@
 /***********************************************************************
  *  $RCSfile$
  *
- *  Copyright (C) 2004 Novell, Inc.
+ *  Copyright (C) 2004-2006 Novell, Inc.
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public
@@ -61,8 +61,14 @@ namespace Novell.FormsTrayApp
 	/// </summary>
 	public class iFolderObject
 	{
+		#region Class Members
+
 		private iFolderWeb ifolderWeb;
 		private iFolderState ifolderState;
+
+		#endregion
+
+		#region Constructor
 
 		/// <summary>
 		/// Constructs an iFolderObject object.
@@ -74,6 +80,10 @@ namespace Novell.FormsTrayApp
 			this.ifolderWeb = ifolderWeb;
 			this.ifolderState = ifolderState;
 		}
+
+		#endregion
+
+		#region Properties
 
 		/// <summary>
 		/// Gets/sets the iFolderWeb object.
@@ -92,5 +102,15 @@ namespace Novell.FormsTrayApp
 			get { return ifolderState; }
 			set { ifolderState = value; }
 		}
+
+		/// <summary>
+		/// Gets the identifier of the iFolder.
+		/// </summary>
+		public string ID
+		{
+			get { return ifolderWeb.ID; }
+		}
+
+		#endregion
 	}
 }
