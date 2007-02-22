@@ -30,11 +30,14 @@ Novell.iFolder.Web.dll: $(iFolderWebService_CSFILES) $(iFolderWebService_RESOURC
 ../iFolder/iFolderWebService.cs: iFolderWebService.wsdl 
 	wsdl -out:../iFolder/iFolderWebService.cs iFolderWebService.wsdl
 	
-iFolderWebService.wsdl: Novell.iFolder.Web.dll GenerateWsdl.exe
+iFolderWebService.wsdl: Novell.iFolder.Web.dll GenerateWsdl.exe copy
 	$(MONO) GenerateWsdl.exe Novell.iFolder.Web.dll Novell.iFolder.Web.iFolderService http://127.0.0.1:8086/simias10/iFolder.asmx $@
 	
 GenerateWsdl.exe: GenerateWsdl.cs
 	$(CSC) /out:$@ $(CSCFLAGS) $(CSC_EXEFLAG) $(GenerateWsdl_LIBS:%=/r:%) $<	
+copy:
+	cp $(DESTDIR)$(webbindir)/SimiasClient.dll .
+	cp $(DESTDIR)$(webbindir)/SimiasLib.dll .
 
 if DEBUG
 if WINDOWS

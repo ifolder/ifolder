@@ -622,27 +622,6 @@
   <data name="clientUpgradePrompt">
     <value>A newer version "{0}" of the iFolder Client is available. Would you like to upgrade now?</value>
   </data>
-  <data name="failedAuth">
-    <value>The username or password is invalid.  Please verify the information entered and try again.</value>
-  </data>
-  <data name="graceLogin">
-    <value>Your password has expired.  You have {0} grace logins remaining.</value>
-  </data>
-  <data name="graceLoginTitle">
-    <value>Expired Password</value>
-  </data>
-  <data name="accountDisabled">
-    <value>The user account is disabled.  Please contact your network administrator for assistance. </value>
-  </data>
-  <data name="iFolderAccountDisabled">
-    <value>The iFolder account is disabled.  Please contact your network administrator for assistance.</value>
-  </data>
-  <data name="accountLockout">
-    <value>The user account has been locked.  Please contact your network administrator for assistance.</value>
-  </data>
-  <data name="serverConnectErrorTitle">
-    <value>Unable to Connect to iFolder Server</value>
-  </data>
   <data name="checkingForiFolders">
     <value>Checking for new iFolders on: {0}</value>
   </data>
@@ -741,12 +720,6 @@
   </data>
   <data name="myiFolders">
     <value>iFolders</value>
-  </data>
-  <data name="verifyCert">
-    <value>iFolder cannot verify the identity of the iFolder Server {0}.  The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be {0} which could put your confidential information at risk.  Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?</value>
-  </data>
-  <data name="verifyCertTitle">
-    <value>Unable to Verify Identity</value>
   </data>
   <data name="createAccount">
     <value>To begin using iFolder, you must first set up an iFolder account.  Click here to add a new account.</value>

@@ -34,6 +34,7 @@ using System.Collections;
 using Novell.iFolderCom;
 using Novell.Win32Util;
 using Novell.CustomUIControls;
+using Novell.Wizard;
 using Simias.Client;
 using Simias.Client.Authentication;
 using Simias.Client.Event;
@@ -90,9 +91,8 @@ namespace Novell.FormsTrayApp
 		private System.ComponentModel.IContainer components;
 		static private System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(FormsTrayApp));
 		private bool shutdown = false;
-		private bool winShutDown = false;
 		private bool simiasRunning = false;
-		private Hashtable authenticationInProgress = new Hashtable();
+		private bool wizardRunning = false;
 		private Icon trayIcon;
 		private Icon startupIcon;
 		private Icon shutdownIcon;
@@ -100,6 +100,8 @@ namespace Novell.FormsTrayApp
 		private Icon[] syncIcons = new Icon[numberOfSyncIcons];
 		private int index = 0;
 		private bool syncToServer = false;
+
+		private Image trayImage;
 
 		private Queue eventQueue;
 		private Thread worker = null;
@@ -115,6 +117,7 @@ namespace Novell.FormsTrayApp
 		/// </summary>
 		protected AutoResetEvent workEvent = null;
 
+		private bool isConnecting = false;
 		private ServerInfo serverInfo = null;
 		private ShellNotifyIcon shellNotifyIcon;
 		private iFolderWeb ifolderFromNotify;
@@ -229,17 +232,18 @@ namespace Novell.FormsTrayApp
 				try
 				{
 					string basePath = Path.Combine(Application.StartupPath, "res");
-
+					
 					trayIcon = new Icon(Path.Combine(basePath, "ifolder_loaded.ico"));
 					startupIcon = new Icon(Path.Combine(basePath, "ifolder-startup.ico"));
 					shutdownIcon = new Icon(Path.Combine(basePath, "ifolder-shutdown.ico"));
+				
+				
 					syncIcons[0] = new Icon(trayIcon, trayIcon.Size);
 					for (int i = 0; i < numberOfSyncIcons; i++)
 					{
 						string syncIcon = string.Format(Path.Combine(basePath, "ifolder_sync{0}.ico"), i+1);
 						syncIcons[i] = new Icon(syncIcon);
 					}
-			
 					this.ShowInTaskbar = false;
 					this.WindowState = FormWindowState.Minimized;
 					//this.Hide();
@@ -265,6 +269,11 @@ namespace Novell.FormsTrayApp
 			this.Load += new System.EventHandler(FormsTrayApp_Load);
 		}
 
+		public static void CloseApp()
+		{
+			instance.ShutdownTrayApp(null);
+		}
+
 		/// <summary>
 		/// Disposes the object.
 		/// </summary>
@@ -277,6 +286,92 @@ namespace Novell.FormsTrayApp
 					components.Dispose();
 
 			base.Dispose( disposing );
+		}
+
+		static public bool ClientUpdates(string domainID)
+		{
+			string newClientVersion = null;
+			bool result = false;
+			bool serverOld = false;
+
+			if( instance.ifWebService.CheckForServerUpdate(domainID))
+			{
+				MessageBox.Show("Server Is Old. Cannot connect to the server","Server Old",MessageBoxButtons.OK);
+				return false;
+			}
+			else if( (newClientVersion = instance.ifWebService.CheckForUpdatedClient(domainID)) != null)
+			{
+				//int res = (int) MessageBox.Show( newClientVersion, "Client upgrade needed: ", MessageBoxButtons.OKCancel);
+				int res = (int) MessageBox.Show( "Would you like to upgrade your client to "+newClientVersion+ ". The client will be closed automatically if you click Yes", "Client upgrade available. ", MessageBoxButtons.OKCancel);
+				if( res == (int) DialogResult.OK)
+				{
+					// download client
+					if(instance.ifWebService.RunClientUpdate(domainID, null))
+					{
+						MessageBox.Show( "The install process has started", "Client upgrade ", MessageBoxButtons.OK);
+						instance.ShutdownTrayApp(null);
+						//		FormsTrayApp.ShutdownForms();
+						// Shut down the tray app.
+					}
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else if((newClientVersion = instance.ifWebService.CheckForUpdatedClientAvailable(domainID)) != null)
+			{
+				int res = (int) MessageBox.Show( "Would you like to upgrade your client to "+newClientVersion+ ". The client will be closed automatically if you click Yes", "Client upgrade needed. ", MessageBoxButtons.OKCancel);
+				if( res == (int) DialogResult.OK)
+				{
+					// download client
+					if(instance.ifWebService.RunClientUpdate(domainID, null))
+					{
+						MessageBox.Show( "The install process has started", "Client upgrade ", MessageBoxButtons.OK);
+						instance.ShutdownTrayApp(null);
+						//		FormsTrayApp.ShutdownForms();
+						// Shut down the tray app.
+					}
+				}
+				else
+				{
+					return true;
+				}
+			}
+
+
+			/*
+			newClientVersion = instance.ifWebService.CheckForUpdatedClient(domainID);
+			if( newClientVersion != null)
+			{
+				MessageBox.Show( newClientVersion, "Client upgrade needed: ", MessageBoxButtons.OK);
+			}
+			serverOld = instance.ifWebService.CheckForServerUpdate(domainID);
+			if( serverOld)
+			{
+				result = false;
+				//	this.prefs.RemoveDomainFromList(domainInfo, null);
+				MessageBox.Show("Server Is Old. Cannot connect to the server","Server Old",MessageBoxButtons.OK);
+			}
+
+			newClientVersion = null;
+			newClientVersion = instance.ifWebService.CheckForUpdatedClientAvailable(domainID);
+			if( newClientVersion != null)
+			{
+				MessageBox.Show( newClientVersion+System.IO.Path.GetTempPath(), "Client upgrade Available: Click OK to Install", MessageBoxButtons.OK);
+				if(instance.ifWebService.RunClientUpdate(domainID, null))
+				{
+					result = true;
+					MessageBox.Show( "Process started", "Client upgrade Available:", MessageBoxButtons.OK);
+			//		FormsTrayApp.ShutdownForms();
+					// Shut down the tray app.
+					instance.ShutdownTrayApp(null);
+				}
+				else
+					MessageBox.Show( "Failed to start process", "Client upgrade Available:", MessageBoxButtons.OK);
+			}
+			*/
+			return true;
 		}
 
 		/// <summary>
@@ -295,7 +390,8 @@ namespace Novell.FormsTrayApp
 				DialogResult result = mmb.ShowDialog();
 				if ( result == DialogResult.Yes )
 				{
-					updateStarted = instance.ifWebService.RunClientUpdate(domainID);
+// Commented by ramesh
+//					updateStarted = instance.ifWebService.RunClientUpdate(domainID);
 					if ( updateStarted == false )
 					{
 						mmb = new MyMessageBox(resourceManager.GetString("clientUpgradeFailure"), resourceManager.GetString("upgradeErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
@@ -350,13 +446,16 @@ namespace Novell.FormsTrayApp
 
 		private void menuProperties_Click(object sender, System.EventArgs e)
 		{
-			if (globalProperties.Visible)
+			if (!wizardRunning)
 			{
-				globalProperties.Activate();
-			}
-			else
-			{
-				globalProperties.Show();
+				if (globalProperties.Visible)
+				{
+					globalProperties.Activate();
+				}
+				else
+				{
+					globalProperties.Show();
+				}
 			}
 		}
 
@@ -442,27 +541,10 @@ namespace Novell.FormsTrayApp
 					ifolderAdvanced.Dispose();
 					break;
 				case NotifyType.Subscription:
-					AcceptInvitation acceptInvitation = new AcceptInvitation(ifWebService, ifolderFromNotify);
-					acceptInvitation.StartPosition = FormStartPosition.CenterScreen;
-					acceptInvitation.Visible = false;
-					acceptInvitation.CreateControl();
-					ShellNotifyIcon.SetForegroundWindow(acceptInvitation.Handle);
-					acceptInvitation.ShowDialog();
-					acceptInvitation.Dispose();
+					globalProperties.AcceptiFolder( ifolderFromNotify );
 					break;
 				case NotifyType.SyncError:
 					syncLog.Show();
-					break;
-				case NotifyType.CreateAccount:
-					if (preferences.Visible)
-					{
-						preferences.Activate();
-					}
-					else
-					{
-						preferences.Show();
-					}
-					preferences.SelectAccounts(true);
 					break;
 			}
 		}
@@ -471,10 +553,10 @@ namespace Novell.FormsTrayApp
 		{
 			foreach (MenuItem item in this.contextMenu1.MenuItems)
 			{
-				item.Visible = simiasRunning;
+				item.Visible = simiasRunning && !wizardRunning;
 			}
 
-			if (simiasRunning)
+			if (simiasRunning && !wizardRunning)
 			{
 				// Show/hide store browser menu item based on whether or not the file is installed.
 				menuStoreBrowser.Visible = File.Exists(Path.Combine(Application.StartupPath, "StoreBrowser.exe"));
@@ -536,6 +618,7 @@ namespace Novell.FormsTrayApp
 					preferences.RemoveDomain += new Novell.FormsTrayApp.Preferences.RemoveDomainDelegate(preferences_RemoveDomain);
 					preferences.ShutdownTrayApp += new Novell.FormsTrayApp.Preferences.ShutdownTrayAppDelegate(preferences_ShutdownTrayApp);
 					preferences.UpdateDomain += new Novell.FormsTrayApp.Preferences.UpdateDomainDelegate(preferences_UpdateDomain);
+					preferences.DisplayiFolderDialog += new Novell.FormsTrayApp.Preferences.DisplayiFolderDialogDelegate(preferences_DisplayiFolderDialog);
 					preferences.CreateControl();
 					IntPtr handle = preferences.Handle;
 
@@ -576,7 +659,7 @@ namespace Novell.FormsTrayApp
 									preferences.AddDomainToList(dw);
 								}
 
-								globalProperties.AddDomainToList(dw);
+								BeginInvoke( globalProperties.addDomainToListDelegate, new object[] {dw} );
 
 								// Set the proxy for this domain.
 								preferences.SetProxyForDomain( dw.HostUrl, false );
@@ -605,8 +688,16 @@ namespace Novell.FormsTrayApp
 
 					if (accountPrompt)
 					{
-						notifyType = NotifyType.CreateAccount;
-						shellNotifyIcon.DisplayBalloonTooltip(resourceManager.GetString("createAccountTitle"), resourceManager.GetString("createAccount"), BalloonType.Info);
+						AccountWizard accountWizard = new AccountWizard( ifWebService, simiasWebService, simiasManager, true, this.preferences );
+						accountWizard.EnterpriseConnect += new Novell.Wizard.AccountWizard.EnterpriseConnectDelegate(preferences_EnterpriseConnect);
+						wizardRunning = true;
+						DialogResult result = accountWizard.ShowDialog();
+						wizardRunning = false;
+						if ( result == DialogResult.OK )
+						{
+							// Display the iFolders dialog.
+							preferences_DisplayiFolderDialog( this, new EventArgs() );
+						}
 					}
 				}
 				catch (Exception ex)
@@ -686,7 +777,7 @@ namespace Novell.FormsTrayApp
 
 		private void serverInfo_EnterpriseConnect(object sender, DomainConnectEventArgs e)
 		{
-			globalProperties.AddDomainToList(e.DomainInfo);
+			BeginInvoke( globalProperties.addDomainToListDelegate, new object[] {e.DomainInfo} );
 		}
 
 		private void globalProperties_RemoveDomain(object sender, DomainRemoveEventArgs e)
@@ -696,7 +787,7 @@ namespace Novell.FormsTrayApp
 
 		private void preferences_EnterpriseConnect(object sender, DomainConnectEventArgs e)
 		{
-			globalProperties.AddDomainToList(e.DomainInfo);
+			BeginInvoke( globalProperties.addDomainToListDelegate, new object[] {e.DomainInfo} );
 		}
 
 		private void preferences_RemoveDomain(object sender, DomainRemoveEventArgs e)
@@ -712,6 +803,11 @@ namespace Novell.FormsTrayApp
 		private void preferences_UpdateDomain(object sender, DomainConnectEventArgs e)
 		{
 			globalProperties.UpdateDomain(e.DomainInfo);
+		}
+
+		private void preferences_DisplayiFolderDialog(object sender, EventArgs e)
+		{
+			menuProperties_Click( sender, e );
 		}
 
 		private void syncAnimateTimer_Tick(object sender, System.EventArgs e)
@@ -738,8 +834,6 @@ namespace Novell.FormsTrayApp
 		{
 			if (serverInfo != null)
 			{
-				authenticationInProgress.Remove( serverInfo.DomainInfo.ID );
-
 				// Keep track of the cancelled state.
 				if (serverInfo.Cancelled)
 				{
@@ -780,113 +874,6 @@ namespace Novell.FormsTrayApp
 		#endregion
 
 		#region Private Methods
-		private bool authenticate(DomainInformation domainInfo, out string credentials)
-		{
-			bool result = false;
-			credentials = null;
-
-			try
-			{
-				// See if credentials have already been set in
-				// this process.
-				DomainAuthentication domainAuth =
-					new DomainAuthentication(
-					"iFolder",
-					domainInfo.ID,
-					null);
-
-				MyMessageBox mmb;
-				Status status = domainAuth.Authenticate(simiasManager.WebServiceUri, simiasManager.DataPath);
-				switch (status.statusCode)
-				{
-					case StatusCodes.InvalidCertificate:
-						byte[] byteArray = simiasWebService.GetCertificate(domainInfo.Host);
-						System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(byteArray);
-						mmb = new MyMessageBox(string.Format(resourceManager.GetString("verifyCert"), domainInfo.Host), resourceManager.GetString("verifyCertTitle"), cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2);
-						mmb.StartPosition = FormStartPosition.CenterScreen;
-						if (mmb.ShowDialog() == DialogResult.Yes)
-						{
-							simiasWebService.StoreCertificate(byteArray, domainInfo.Host);
-							result = authenticate(domainInfo, out credentials);
-						}
-						break;
-					case StatusCodes.Success:
-						result = true;
-						break;
-					case StatusCodes.SuccessInGrace:
-						mmb = new MyMessageBox(
-							string.Format(resourceManager.GetString("graceLogin"), status.RemainingGraceLogins),
-							resourceManager.GetString("graceLoginTitle"),
-							string.Empty,
-							MyMessageBoxButtons.OK,
-							MyMessageBoxIcon.Information);
-						mmb.StartPosition = FormStartPosition.CenterScreen;
-						mmb.ShowDialog();
-						result = true;
-						break;
-					default:
-					{
-						string userID;
-
-						// See if there is a password saved on this domain.
-						CredentialType credType = simiasWebService.GetDomainCredentials(domainInfo.ID, out userID, out credentials);
-						if ((credType == CredentialType.Basic) && (credentials != null))
-						{
-							// There are credentials that were saved on the domain. Use them to authenticate.
-							// If the authentication fails for any reason, pop up and ask for new credentials.
-							domainAuth = new DomainAuthentication("iFolder", domainInfo.ID, credentials);
-							Status authStatus = domainAuth.Authenticate(simiasManager.WebServiceUri, simiasManager.DataPath);
-							switch (authStatus.statusCode)
-							{
-								case StatusCodes.Success:
-									result = true;
-									break;
-								case StatusCodes.SuccessInGrace:
-									mmb = new MyMessageBox(
-										string.Format(resourceManager.GetString("graceLogin"), status.RemainingGraceLogins),
-										resourceManager.GetString("graceLoginTitle"),
-										string.Empty,
-										MyMessageBoxButtons.OK,
-										MyMessageBoxIcon.Information);
-									mmb.StartPosition = FormStartPosition.CenterScreen;
-									mmb.ShowDialog();
-									result = true;
-									break;
-								case StatusCodes.AccountDisabled:
-									mmb = new MyMessageBox(resourceManager.GetString("accountDisabled"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-									mmb.StartPosition = FormStartPosition.CenterScreen;
-									mmb.ShowDialog();
-									break;
-								case StatusCodes.AccountLockout:
-									mmb = new MyMessageBox(resourceManager.GetString("accountLockout"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-									mmb.StartPosition = FormStartPosition.CenterScreen;
-									mmb.ShowDialog();
-									break;
-								case StatusCodes.SimiasLoginDisabled:
-									mmb = new MyMessageBox(resourceManager.GetString("iFolderAccountDisabled"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-									mmb.StartPosition = FormStartPosition.CenterScreen;
-									mmb.ShowDialog();
-									break;
-								case StatusCodes.UnknownUser:
-								case StatusCodes.InvalidPassword:
-								case StatusCodes.InvalidCredentials:
-									// There are bad credentials stored. Remove them.
-									simiasWebService.SetDomainCredentials(domainInfo.ID, null, CredentialType.None);
-									mmb = new MyMessageBox(resourceManager.GetString("failedAuth"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
-									mmb.StartPosition = FormStartPosition.CenterScreen;
-									mmb.ShowDialog();
-									break;
-							}
-						}
-						break;
-					}
-				}
-			}
-			catch {}
-
-			return result;
-		}
-
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
@@ -1334,26 +1321,22 @@ namespace Novell.FormsTrayApp
 			{
 				case "Domain-Up":
 				{
-					try
+					// Only display one dialog.
+					if ( !isConnecting && serverInfo == null )
 					{
-						DomainInformation domainInfo = simiasWebService.GetDomainInformation(notifyEventArgs.Message);
-						string credentials;
-						if ( !authenticationInProgress.Contains( domainInfo.ID ) )
-						{
-							authenticationInProgress.Add( domainInfo.ID, null );
-							bool removeFromList = true;
+						isConnecting = true;
 
-							if (!authenticate(domainInfo, out credentials))
+						try
+						{
+							DomainInformation domainInfo = simiasWebService.GetDomainInformation(notifyEventArgs.Message);
+							Connecting connecting = new Connecting( simiasWebService, simiasManager, domainInfo );
+							connecting.StartPosition = FormStartPosition.CenterScreen;
+							if ( connecting.ShowDialog() != DialogResult.OK )
 							{
-								// Only display one dialog.
-								if (serverInfo == null)
-								{
-									removeFromList = false;
-									serverInfo = new ServerInfo(simiasManager, domainInfo, credentials);
-									serverInfo.Closed += new EventHandler(serverInfo_Closed);
-									serverInfo.Show();
-									ShellNotifyIcon.SetForegroundWindow(serverInfo.Handle);
-								}
+								serverInfo = new ServerInfo(simiasManager, domainInfo, connecting.Password);
+								serverInfo.Closed += new EventHandler(serverInfo_Closed);
+								serverInfo.Show();
+								ShellNotifyIcon.SetForegroundWindow(serverInfo.Handle);
 							}
 							else
 							{
@@ -1373,20 +1356,22 @@ namespace Novell.FormsTrayApp
 								domainInfo.Authenticated = true;
 								preferences.UpdateDomainStatus(new Domain(domainInfo));
 							}
-							
-							if ( removeFromList)
-							{
-								authenticationInProgress.Remove( domainInfo.ID );
-							}
 						}
-					}
-					catch //(Exception ex)
-					{
-//						MessageBox.Show(ex.Message);
+						catch (Exception ex)
+						{
+							MessageBox.Show(ex.Message);
+						}
+
+						isConnecting = false;
 					}
 					break;
 				}
 			}
+		}
+
+		public static void ShutdownForms()
+		{
+			instance.ShutdownTrayApp(null);
 		}
 
 		private void ShutdownTrayApp(Exception ex)
@@ -1422,20 +1407,8 @@ namespace Novell.FormsTrayApp
 					eventClient.Deregister();
 				}
 
-				if ( winShutDown )
-				{
-					// If Windows is shutting down, we need to call through the web
-					// service to shutdown simias.
-					simiasWebService.StopSimiasProcess();
-
-					// Wait 1 second to give Simias a chance to shutdown.
-					Thread.Sleep( 1000 );
-				}
-				else
-				{
-					// Shut down the web server.
-					simiasManager.Stop();
-				}
+				// Shut down the web server.
+				simiasManager.Stop();
 
 				if ((worker != null) && worker.IsAlive)
 				{
@@ -1573,24 +1546,5 @@ namespace Novell.FormsTrayApp
 			catch {}
 		}
 		#endregion
-
-		private const int WM_QUERYENDSESSION = 0x0011;
-
-		/// <summary>
-		/// Override of WndProc method.
-		/// </summary>
-		/// <param name="m">The message to process.</param>
-		protected override void WndProc(ref Message m)
-		{
-			// Keep track if we receive a shutdown message.
-			switch (m.Msg)
-			{
-				case WM_QUERYENDSESSION:
-					this.winShutDown = true;
-					break;
-			}
-
-			base.WndProc (ref m);
-		}
 	}
 }

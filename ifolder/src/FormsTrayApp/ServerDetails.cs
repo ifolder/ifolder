@@ -40,8 +40,12 @@ namespace Novell.FormsTrayApp
 		private const double megaByte = 1048576;
 		private System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(ServerDetails));
 		private iFolderWebService ifWebService;
-		private Domain selectedDomain;
-		private System.Windows.Forms.GroupBox groupBox6;
+		private SimiasWebService simiasWebService;
+		private Domain domain;
+		private bool updatePassword = false;
+		private bool enableChanged = false;
+		private bool defaultChanged = false;
+		private bool addressChanged = false;
 		private System.Windows.Forms.Label label18;
 		private System.Windows.Forms.Label label17;
 		private Novell.iFolderCom.GaugeChart gaugeChart1;
@@ -54,11 +58,26 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Label label13;
 		private System.Windows.Forms.Label label12;
 		private System.Windows.Forms.Label label11;
-		private System.Windows.Forms.Label label9;
 		private System.Windows.Forms.TextBox enterpriseDescription;
 		private System.Windows.Forms.Button ok;
-		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label server;
+		private System.Windows.Forms.TabControl tabControl1;
+		private System.Windows.Forms.TabPage tabPage1;
+		private System.Windows.Forms.TabPage tabPage2;
+		private System.Windows.Forms.TabPage tabPage3;
+		private System.Windows.Forms.GroupBox groupBox1;
+		private System.Windows.Forms.Label serverNameLabel;
+		private System.Windows.Forms.Label serverAddressLabel;
+		private System.Windows.Forms.TextBox address;
+		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.CheckBox accountEnabled;
+		private System.Windows.Forms.CheckBox defaultServer;
+		private System.Windows.Forms.Label usernameLabel;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.Label username;
+		private System.Windows.Forms.TextBox password;
+		private System.Windows.Forms.CheckBox rememberPassword;
+		private System.Windows.Forms.Button cancel;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -68,16 +87,17 @@ namespace Novell.FormsTrayApp
 		/// Constructs a ServerDetails object.
 		/// </summary>
 		/// <param name="ifolderWebService">The iFolderWebService object to use.</param>
-		/// <param name="selectedDomain">The server to provide details for.</param>
-		public ServerDetails(iFolderWebService ifolderWebService, Domain selectedDomain)
+		/// <param name="domain">The server to provide details for.</param>
+		public ServerDetails(SimiasWebService simiasWebService, iFolderWebService ifolderWebService, Domain domain)
 		{
 			//
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
 
+			this.simiasWebService = simiasWebService;
 			ifWebService = ifolderWebService;
-			this.selectedDomain = selectedDomain;
+			this.domain = domain;
 		}
 
 		/// <summary>
@@ -103,7 +123,6 @@ namespace Novell.FormsTrayApp
 		private void InitializeComponent()
 		{
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(ServerDetails));
-			this.groupBox6 = new System.Windows.Forms.GroupBox();
 			this.label18 = new System.Windows.Forms.Label();
 			this.label17 = new System.Windows.Forms.Label();
 			this.gaugeChart1 = new Novell.iFolderCom.GaugeChart();
@@ -116,45 +135,32 @@ namespace Novell.FormsTrayApp
 			this.label13 = new System.Windows.Forms.Label();
 			this.label12 = new System.Windows.Forms.Label();
 			this.label11 = new System.Windows.Forms.Label();
-			this.label9 = new System.Windows.Forms.Label();
 			this.enterpriseDescription = new System.Windows.Forms.TextBox();
 			this.ok = new System.Windows.Forms.Button();
-			this.label1 = new System.Windows.Forms.Label();
 			this.server = new System.Windows.Forms.Label();
-			this.groupBox6.SuspendLayout();
+			this.tabControl1 = new System.Windows.Forms.TabControl();
+			this.tabPage1 = new System.Windows.Forms.TabPage();
+			this.label2 = new System.Windows.Forms.Label();
+			this.address = new System.Windows.Forms.TextBox();
+			this.serverAddressLabel = new System.Windows.Forms.Label();
+			this.serverNameLabel = new System.Windows.Forms.Label();
+			this.tabPage2 = new System.Windows.Forms.TabPage();
+			this.rememberPassword = new System.Windows.Forms.CheckBox();
+			this.password = new System.Windows.Forms.TextBox();
+			this.username = new System.Windows.Forms.Label();
+			this.label1 = new System.Windows.Forms.Label();
+			this.usernameLabel = new System.Windows.Forms.Label();
+			this.tabPage3 = new System.Windows.Forms.TabPage();
+			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.accountEnabled = new System.Windows.Forms.CheckBox();
+			this.defaultServer = new System.Windows.Forms.CheckBox();
+			this.cancel = new System.Windows.Forms.Button();
+			this.tabControl1.SuspendLayout();
+			this.tabPage1.SuspendLayout();
+			this.tabPage2.SuspendLayout();
+			this.tabPage3.SuspendLayout();
+			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
-			// 
-			// groupBox6
-			// 
-			this.groupBox6.AccessibleDescription = resources.GetString("groupBox6.AccessibleDescription");
-			this.groupBox6.AccessibleName = resources.GetString("groupBox6.AccessibleName");
-			this.groupBox6.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("groupBox6.Anchor")));
-			this.groupBox6.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("groupBox6.BackgroundImage")));
-			this.groupBox6.Controls.Add(this.label18);
-			this.groupBox6.Controls.Add(this.label17);
-			this.groupBox6.Controls.Add(this.gaugeChart1);
-			this.groupBox6.Controls.Add(this.totalSpaceUnits);
-			this.groupBox6.Controls.Add(this.usedSpaceUnits);
-			this.groupBox6.Controls.Add(this.freeSpaceUnits);
-			this.groupBox6.Controls.Add(this.totalSpace);
-			this.groupBox6.Controls.Add(this.usedSpace);
-			this.groupBox6.Controls.Add(this.freeSpace);
-			this.groupBox6.Controls.Add(this.label13);
-			this.groupBox6.Controls.Add(this.label12);
-			this.groupBox6.Controls.Add(this.label11);
-			this.groupBox6.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("groupBox6.Dock")));
-			this.groupBox6.Enabled = ((bool)(resources.GetObject("groupBox6.Enabled")));
-			this.groupBox6.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.groupBox6.Font = ((System.Drawing.Font)(resources.GetObject("groupBox6.Font")));
-			this.groupBox6.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("groupBox6.ImeMode")));
-			this.groupBox6.Location = ((System.Drawing.Point)(resources.GetObject("groupBox6.Location")));
-			this.groupBox6.Name = "groupBox6";
-			this.groupBox6.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("groupBox6.RightToLeft")));
-			this.groupBox6.Size = ((System.Drawing.Size)(resources.GetObject("groupBox6.Size")));
-			this.groupBox6.TabIndex = ((int)(resources.GetObject("groupBox6.TabIndex")));
-			this.groupBox6.TabStop = false;
-			this.groupBox6.Text = resources.GetString("groupBox6.Text");
-			this.groupBox6.Visible = ((bool)(resources.GetObject("groupBox6.Visible")));
 			// 
 			// label18
 			// 
@@ -418,28 +424,6 @@ namespace Novell.FormsTrayApp
 			this.label11.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label11.TextAlign")));
 			this.label11.Visible = ((bool)(resources.GetObject("label11.Visible")));
 			// 
-			// label9
-			// 
-			this.label9.AccessibleDescription = resources.GetString("label9.AccessibleDescription");
-			this.label9.AccessibleName = resources.GetString("label9.AccessibleName");
-			this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label9.Anchor")));
-			this.label9.AutoSize = ((bool)(resources.GetObject("label9.AutoSize")));
-			this.label9.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label9.Dock")));
-			this.label9.Enabled = ((bool)(resources.GetObject("label9.Enabled")));
-			this.label9.Font = ((System.Drawing.Font)(resources.GetObject("label9.Font")));
-			this.label9.Image = ((System.Drawing.Image)(resources.GetObject("label9.Image")));
-			this.label9.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label9.ImageAlign")));
-			this.label9.ImageIndex = ((int)(resources.GetObject("label9.ImageIndex")));
-			this.label9.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label9.ImeMode")));
-			this.label9.Location = ((System.Drawing.Point)(resources.GetObject("label9.Location")));
-			this.label9.Name = "label9";
-			this.label9.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label9.RightToLeft")));
-			this.label9.Size = ((System.Drawing.Size)(resources.GetObject("label9.Size")));
-			this.label9.TabIndex = ((int)(resources.GetObject("label9.TabIndex")));
-			this.label9.Text = resources.GetString("label9.Text");
-			this.label9.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label9.TextAlign")));
-			this.label9.Visible = ((bool)(resources.GetObject("label9.Visible")));
-			// 
 			// enterpriseDescription
 			// 
 			this.enterpriseDescription.AccessibleDescription = resources.GetString("enterpriseDescription.AccessibleDescription");
@@ -489,28 +473,7 @@ namespace Novell.FormsTrayApp
 			this.ok.Text = resources.GetString("ok.Text");
 			this.ok.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("ok.TextAlign")));
 			this.ok.Visible = ((bool)(resources.GetObject("ok.Visible")));
-			// 
-			// label1
-			// 
-			this.label1.AccessibleDescription = resources.GetString("label1.AccessibleDescription");
-			this.label1.AccessibleName = resources.GetString("label1.AccessibleName");
-			this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label1.Anchor")));
-			this.label1.AutoSize = ((bool)(resources.GetObject("label1.AutoSize")));
-			this.label1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label1.Dock")));
-			this.label1.Enabled = ((bool)(resources.GetObject("label1.Enabled")));
-			this.label1.Font = ((System.Drawing.Font)(resources.GetObject("label1.Font")));
-			this.label1.Image = ((System.Drawing.Image)(resources.GetObject("label1.Image")));
-			this.label1.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label1.ImageAlign")));
-			this.label1.ImageIndex = ((int)(resources.GetObject("label1.ImageIndex")));
-			this.label1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label1.ImeMode")));
-			this.label1.Location = ((System.Drawing.Point)(resources.GetObject("label1.Location")));
-			this.label1.Name = "label1";
-			this.label1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label1.RightToLeft")));
-			this.label1.Size = ((System.Drawing.Size)(resources.GetObject("label1.Size")));
-			this.label1.TabIndex = ((int)(resources.GetObject("label1.TabIndex")));
-			this.label1.Text = resources.GetString("label1.Text");
-			this.label1.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label1.TextAlign")));
-			this.label1.Visible = ((bool)(resources.GetObject("label1.Visible")));
+			this.ok.Click += new System.EventHandler(this.ok_Click);
 			// 
 			// server
 			// 
@@ -534,6 +497,429 @@ namespace Novell.FormsTrayApp
 			this.server.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("server.TextAlign")));
 			this.server.Visible = ((bool)(resources.GetObject("server.Visible")));
 			// 
+			// tabControl1
+			// 
+			this.tabControl1.AccessibleDescription = resources.GetString("tabControl1.AccessibleDescription");
+			this.tabControl1.AccessibleName = resources.GetString("tabControl1.AccessibleName");
+			this.tabControl1.Alignment = ((System.Windows.Forms.TabAlignment)(resources.GetObject("tabControl1.Alignment")));
+			this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("tabControl1.Anchor")));
+			this.tabControl1.Appearance = ((System.Windows.Forms.TabAppearance)(resources.GetObject("tabControl1.Appearance")));
+			this.tabControl1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("tabControl1.BackgroundImage")));
+			this.tabControl1.Controls.Add(this.tabPage1);
+			this.tabControl1.Controls.Add(this.tabPage2);
+			this.tabControl1.Controls.Add(this.tabPage3);
+			this.tabControl1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("tabControl1.Dock")));
+			this.tabControl1.Enabled = ((bool)(resources.GetObject("tabControl1.Enabled")));
+			this.tabControl1.Font = ((System.Drawing.Font)(resources.GetObject("tabControl1.Font")));
+			this.tabControl1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("tabControl1.ImeMode")));
+			this.tabControl1.ItemSize = ((System.Drawing.Size)(resources.GetObject("tabControl1.ItemSize")));
+			this.tabControl1.Location = ((System.Drawing.Point)(resources.GetObject("tabControl1.Location")));
+			this.tabControl1.Name = "tabControl1";
+			this.tabControl1.Padding = ((System.Drawing.Point)(resources.GetObject("tabControl1.Padding")));
+			this.tabControl1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("tabControl1.RightToLeft")));
+			this.tabControl1.SelectedIndex = 0;
+			this.tabControl1.ShowToolTips = ((bool)(resources.GetObject("tabControl1.ShowToolTips")));
+			this.tabControl1.Size = ((System.Drawing.Size)(resources.GetObject("tabControl1.Size")));
+			this.tabControl1.TabIndex = ((int)(resources.GetObject("tabControl1.TabIndex")));
+			this.tabControl1.Text = resources.GetString("tabControl1.Text");
+			this.tabControl1.Visible = ((bool)(resources.GetObject("tabControl1.Visible")));
+			// 
+			// tabPage1
+			// 
+			this.tabPage1.AccessibleDescription = resources.GetString("tabPage1.AccessibleDescription");
+			this.tabPage1.AccessibleName = resources.GetString("tabPage1.AccessibleName");
+			this.tabPage1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("tabPage1.Anchor")));
+			this.tabPage1.AutoScroll = ((bool)(resources.GetObject("tabPage1.AutoScroll")));
+			this.tabPage1.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("tabPage1.AutoScrollMargin")));
+			this.tabPage1.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("tabPage1.AutoScrollMinSize")));
+			this.tabPage1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("tabPage1.BackgroundImage")));
+			this.tabPage1.Controls.Add(this.label2);
+			this.tabPage1.Controls.Add(this.address);
+			this.tabPage1.Controls.Add(this.serverAddressLabel);
+			this.tabPage1.Controls.Add(this.serverNameLabel);
+			this.tabPage1.Controls.Add(this.server);
+			this.tabPage1.Controls.Add(this.enterpriseDescription);
+			this.tabPage1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("tabPage1.Dock")));
+			this.tabPage1.Enabled = ((bool)(resources.GetObject("tabPage1.Enabled")));
+			this.tabPage1.Font = ((System.Drawing.Font)(resources.GetObject("tabPage1.Font")));
+			this.tabPage1.ImageIndex = ((int)(resources.GetObject("tabPage1.ImageIndex")));
+			this.tabPage1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("tabPage1.ImeMode")));
+			this.tabPage1.Location = ((System.Drawing.Point)(resources.GetObject("tabPage1.Location")));
+			this.tabPage1.Name = "tabPage1";
+			this.tabPage1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("tabPage1.RightToLeft")));
+			this.tabPage1.Size = ((System.Drawing.Size)(resources.GetObject("tabPage1.Size")));
+			this.tabPage1.TabIndex = ((int)(resources.GetObject("tabPage1.TabIndex")));
+			this.tabPage1.Text = resources.GetString("tabPage1.Text");
+			this.tabPage1.ToolTipText = resources.GetString("tabPage1.ToolTipText");
+			this.tabPage1.Visible = ((bool)(resources.GetObject("tabPage1.Visible")));
+			// 
+			// label2
+			// 
+			this.label2.AccessibleDescription = resources.GetString("label2.AccessibleDescription");
+			this.label2.AccessibleName = resources.GetString("label2.AccessibleName");
+			this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label2.Anchor")));
+			this.label2.AutoSize = ((bool)(resources.GetObject("label2.AutoSize")));
+			this.label2.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label2.Dock")));
+			this.label2.Enabled = ((bool)(resources.GetObject("label2.Enabled")));
+			this.label2.Font = ((System.Drawing.Font)(resources.GetObject("label2.Font")));
+			this.label2.Image = ((System.Drawing.Image)(resources.GetObject("label2.Image")));
+			this.label2.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label2.ImageAlign")));
+			this.label2.ImageIndex = ((int)(resources.GetObject("label2.ImageIndex")));
+			this.label2.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label2.ImeMode")));
+			this.label2.Location = ((System.Drawing.Point)(resources.GetObject("label2.Location")));
+			this.label2.Name = "label2";
+			this.label2.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label2.RightToLeft")));
+			this.label2.Size = ((System.Drawing.Size)(resources.GetObject("label2.Size")));
+			this.label2.TabIndex = ((int)(resources.GetObject("label2.TabIndex")));
+			this.label2.Text = resources.GetString("label2.Text");
+			this.label2.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label2.TextAlign")));
+			this.label2.Visible = ((bool)(resources.GetObject("label2.Visible")));
+			// 
+			// address
+			// 
+			this.address.AccessibleDescription = resources.GetString("address.AccessibleDescription");
+			this.address.AccessibleName = resources.GetString("address.AccessibleName");
+			this.address.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("address.Anchor")));
+			this.address.AutoSize = ((bool)(resources.GetObject("address.AutoSize")));
+			this.address.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("address.BackgroundImage")));
+			this.address.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("address.Dock")));
+			this.address.Enabled = ((bool)(resources.GetObject("address.Enabled")));
+			this.address.Font = ((System.Drawing.Font)(resources.GetObject("address.Font")));
+			this.address.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("address.ImeMode")));
+			this.address.Location = ((System.Drawing.Point)(resources.GetObject("address.Location")));
+			this.address.MaxLength = ((int)(resources.GetObject("address.MaxLength")));
+			this.address.Multiline = ((bool)(resources.GetObject("address.Multiline")));
+			this.address.Name = "address";
+			this.address.PasswordChar = ((char)(resources.GetObject("address.PasswordChar")));
+			this.address.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("address.RightToLeft")));
+			this.address.ScrollBars = ((System.Windows.Forms.ScrollBars)(resources.GetObject("address.ScrollBars")));
+			this.address.Size = ((System.Drawing.Size)(resources.GetObject("address.Size")));
+			this.address.TabIndex = ((int)(resources.GetObject("address.TabIndex")));
+			this.address.Text = resources.GetString("address.Text");
+			this.address.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("address.TextAlign")));
+			this.address.Visible = ((bool)(resources.GetObject("address.Visible")));
+			this.address.WordWrap = ((bool)(resources.GetObject("address.WordWrap")));
+			// 
+			// serverAddressLabel
+			// 
+			this.serverAddressLabel.AccessibleDescription = resources.GetString("serverAddressLabel.AccessibleDescription");
+			this.serverAddressLabel.AccessibleName = resources.GetString("serverAddressLabel.AccessibleName");
+			this.serverAddressLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("serverAddressLabel.Anchor")));
+			this.serverAddressLabel.AutoSize = ((bool)(resources.GetObject("serverAddressLabel.AutoSize")));
+			this.serverAddressLabel.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("serverAddressLabel.Dock")));
+			this.serverAddressLabel.Enabled = ((bool)(resources.GetObject("serverAddressLabel.Enabled")));
+			this.serverAddressLabel.Font = ((System.Drawing.Font)(resources.GetObject("serverAddressLabel.Font")));
+			this.serverAddressLabel.Image = ((System.Drawing.Image)(resources.GetObject("serverAddressLabel.Image")));
+			this.serverAddressLabel.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("serverAddressLabel.ImageAlign")));
+			this.serverAddressLabel.ImageIndex = ((int)(resources.GetObject("serverAddressLabel.ImageIndex")));
+			this.serverAddressLabel.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("serverAddressLabel.ImeMode")));
+			this.serverAddressLabel.Location = ((System.Drawing.Point)(resources.GetObject("serverAddressLabel.Location")));
+			this.serverAddressLabel.Name = "serverAddressLabel";
+			this.serverAddressLabel.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("serverAddressLabel.RightToLeft")));
+			this.serverAddressLabel.Size = ((System.Drawing.Size)(resources.GetObject("serverAddressLabel.Size")));
+			this.serverAddressLabel.TabIndex = ((int)(resources.GetObject("serverAddressLabel.TabIndex")));
+			this.serverAddressLabel.Text = resources.GetString("serverAddressLabel.Text");
+			this.serverAddressLabel.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("serverAddressLabel.TextAlign")));
+			this.serverAddressLabel.Visible = ((bool)(resources.GetObject("serverAddressLabel.Visible")));
+			// 
+			// serverNameLabel
+			// 
+			this.serverNameLabel.AccessibleDescription = resources.GetString("serverNameLabel.AccessibleDescription");
+			this.serverNameLabel.AccessibleName = resources.GetString("serverNameLabel.AccessibleName");
+			this.serverNameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("serverNameLabel.Anchor")));
+			this.serverNameLabel.AutoSize = ((bool)(resources.GetObject("serverNameLabel.AutoSize")));
+			this.serverNameLabel.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("serverNameLabel.Dock")));
+			this.serverNameLabel.Enabled = ((bool)(resources.GetObject("serverNameLabel.Enabled")));
+			this.serverNameLabel.Font = ((System.Drawing.Font)(resources.GetObject("serverNameLabel.Font")));
+			this.serverNameLabel.Image = ((System.Drawing.Image)(resources.GetObject("serverNameLabel.Image")));
+			this.serverNameLabel.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("serverNameLabel.ImageAlign")));
+			this.serverNameLabel.ImageIndex = ((int)(resources.GetObject("serverNameLabel.ImageIndex")));
+			this.serverNameLabel.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("serverNameLabel.ImeMode")));
+			this.serverNameLabel.Location = ((System.Drawing.Point)(resources.GetObject("serverNameLabel.Location")));
+			this.serverNameLabel.Name = "serverNameLabel";
+			this.serverNameLabel.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("serverNameLabel.RightToLeft")));
+			this.serverNameLabel.Size = ((System.Drawing.Size)(resources.GetObject("serverNameLabel.Size")));
+			this.serverNameLabel.TabIndex = ((int)(resources.GetObject("serverNameLabel.TabIndex")));
+			this.serverNameLabel.Text = resources.GetString("serverNameLabel.Text");
+			this.serverNameLabel.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("serverNameLabel.TextAlign")));
+			this.serverNameLabel.Visible = ((bool)(resources.GetObject("serverNameLabel.Visible")));
+			// 
+			// tabPage2
+			// 
+			this.tabPage2.AccessibleDescription = resources.GetString("tabPage2.AccessibleDescription");
+			this.tabPage2.AccessibleName = resources.GetString("tabPage2.AccessibleName");
+			this.tabPage2.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("tabPage2.Anchor")));
+			this.tabPage2.AutoScroll = ((bool)(resources.GetObject("tabPage2.AutoScroll")));
+			this.tabPage2.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("tabPage2.AutoScrollMargin")));
+			this.tabPage2.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("tabPage2.AutoScrollMinSize")));
+			this.tabPage2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("tabPage2.BackgroundImage")));
+			this.tabPage2.Controls.Add(this.rememberPassword);
+			this.tabPage2.Controls.Add(this.password);
+			this.tabPage2.Controls.Add(this.username);
+			this.tabPage2.Controls.Add(this.label1);
+			this.tabPage2.Controls.Add(this.usernameLabel);
+			this.tabPage2.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("tabPage2.Dock")));
+			this.tabPage2.Enabled = ((bool)(resources.GetObject("tabPage2.Enabled")));
+			this.tabPage2.Font = ((System.Drawing.Font)(resources.GetObject("tabPage2.Font")));
+			this.tabPage2.ImageIndex = ((int)(resources.GetObject("tabPage2.ImageIndex")));
+			this.tabPage2.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("tabPage2.ImeMode")));
+			this.tabPage2.Location = ((System.Drawing.Point)(resources.GetObject("tabPage2.Location")));
+			this.tabPage2.Name = "tabPage2";
+			this.tabPage2.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("tabPage2.RightToLeft")));
+			this.tabPage2.Size = ((System.Drawing.Size)(resources.GetObject("tabPage2.Size")));
+			this.tabPage2.TabIndex = ((int)(resources.GetObject("tabPage2.TabIndex")));
+			this.tabPage2.Text = resources.GetString("tabPage2.Text");
+			this.tabPage2.ToolTipText = resources.GetString("tabPage2.ToolTipText");
+			this.tabPage2.Visible = ((bool)(resources.GetObject("tabPage2.Visible")));
+			// 
+			// rememberPassword
+			// 
+			this.rememberPassword.AccessibleDescription = resources.GetString("rememberPassword.AccessibleDescription");
+			this.rememberPassword.AccessibleName = resources.GetString("rememberPassword.AccessibleName");
+			this.rememberPassword.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("rememberPassword.Anchor")));
+			this.rememberPassword.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("rememberPassword.Appearance")));
+			this.rememberPassword.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("rememberPassword.BackgroundImage")));
+			this.rememberPassword.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("rememberPassword.CheckAlign")));
+			this.rememberPassword.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("rememberPassword.Dock")));
+			this.rememberPassword.Enabled = ((bool)(resources.GetObject("rememberPassword.Enabled")));
+			this.rememberPassword.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("rememberPassword.FlatStyle")));
+			this.rememberPassword.Font = ((System.Drawing.Font)(resources.GetObject("rememberPassword.Font")));
+			this.rememberPassword.Image = ((System.Drawing.Image)(resources.GetObject("rememberPassword.Image")));
+			this.rememberPassword.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("rememberPassword.ImageAlign")));
+			this.rememberPassword.ImageIndex = ((int)(resources.GetObject("rememberPassword.ImageIndex")));
+			this.rememberPassword.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("rememberPassword.ImeMode")));
+			this.rememberPassword.Location = ((System.Drawing.Point)(resources.GetObject("rememberPassword.Location")));
+			this.rememberPassword.Name = "rememberPassword";
+			this.rememberPassword.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("rememberPassword.RightToLeft")));
+			this.rememberPassword.Size = ((System.Drawing.Size)(resources.GetObject("rememberPassword.Size")));
+			this.rememberPassword.TabIndex = ((int)(resources.GetObject("rememberPassword.TabIndex")));
+			this.rememberPassword.Text = resources.GetString("rememberPassword.Text");
+			this.rememberPassword.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("rememberPassword.TextAlign")));
+			this.rememberPassword.Visible = ((bool)(resources.GetObject("rememberPassword.Visible")));
+			this.rememberPassword.CheckedChanged += new System.EventHandler(this.rememberPassword_CheckedChanged);
+			// 
+			// password
+			// 
+			this.password.AccessibleDescription = resources.GetString("password.AccessibleDescription");
+			this.password.AccessibleName = resources.GetString("password.AccessibleName");
+			this.password.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("password.Anchor")));
+			this.password.AutoSize = ((bool)(resources.GetObject("password.AutoSize")));
+			this.password.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("password.BackgroundImage")));
+			this.password.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("password.Dock")));
+			this.password.Enabled = ((bool)(resources.GetObject("password.Enabled")));
+			this.password.Font = ((System.Drawing.Font)(resources.GetObject("password.Font")));
+			this.password.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("password.ImeMode")));
+			this.password.Location = ((System.Drawing.Point)(resources.GetObject("password.Location")));
+			this.password.MaxLength = ((int)(resources.GetObject("password.MaxLength")));
+			this.password.Multiline = ((bool)(resources.GetObject("password.Multiline")));
+			this.password.Name = "password";
+			this.password.PasswordChar = ((char)(resources.GetObject("password.PasswordChar")));
+			this.password.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("password.RightToLeft")));
+			this.password.ScrollBars = ((System.Windows.Forms.ScrollBars)(resources.GetObject("password.ScrollBars")));
+			this.password.Size = ((System.Drawing.Size)(resources.GetObject("password.Size")));
+			this.password.TabIndex = ((int)(resources.GetObject("password.TabIndex")));
+			this.password.Text = resources.GetString("password.Text");
+			this.password.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("password.TextAlign")));
+			this.password.Visible = ((bool)(resources.GetObject("password.Visible")));
+			this.password.WordWrap = ((bool)(resources.GetObject("password.WordWrap")));
+			this.password.TextChanged += new System.EventHandler(this.password_TextChanged);
+			// 
+			// username
+			// 
+			this.username.AccessibleDescription = resources.GetString("username.AccessibleDescription");
+			this.username.AccessibleName = resources.GetString("username.AccessibleName");
+			this.username.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("username.Anchor")));
+			this.username.AutoSize = ((bool)(resources.GetObject("username.AutoSize")));
+			this.username.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("username.Dock")));
+			this.username.Enabled = ((bool)(resources.GetObject("username.Enabled")));
+			this.username.Font = ((System.Drawing.Font)(resources.GetObject("username.Font")));
+			this.username.Image = ((System.Drawing.Image)(resources.GetObject("username.Image")));
+			this.username.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("username.ImageAlign")));
+			this.username.ImageIndex = ((int)(resources.GetObject("username.ImageIndex")));
+			this.username.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("username.ImeMode")));
+			this.username.Location = ((System.Drawing.Point)(resources.GetObject("username.Location")));
+			this.username.Name = "username";
+			this.username.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("username.RightToLeft")));
+			this.username.Size = ((System.Drawing.Size)(resources.GetObject("username.Size")));
+			this.username.TabIndex = ((int)(resources.GetObject("username.TabIndex")));
+			this.username.Text = resources.GetString("username.Text");
+			this.username.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("username.TextAlign")));
+			this.username.Visible = ((bool)(resources.GetObject("username.Visible")));
+			// 
+			// label1
+			// 
+			this.label1.AccessibleDescription = resources.GetString("label1.AccessibleDescription");
+			this.label1.AccessibleName = resources.GetString("label1.AccessibleName");
+			this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label1.Anchor")));
+			this.label1.AutoSize = ((bool)(resources.GetObject("label1.AutoSize")));
+			this.label1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label1.Dock")));
+			this.label1.Enabled = ((bool)(resources.GetObject("label1.Enabled")));
+			this.label1.Font = ((System.Drawing.Font)(resources.GetObject("label1.Font")));
+			this.label1.Image = ((System.Drawing.Image)(resources.GetObject("label1.Image")));
+			this.label1.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label1.ImageAlign")));
+			this.label1.ImageIndex = ((int)(resources.GetObject("label1.ImageIndex")));
+			this.label1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label1.ImeMode")));
+			this.label1.Location = ((System.Drawing.Point)(resources.GetObject("label1.Location")));
+			this.label1.Name = "label1";
+			this.label1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label1.RightToLeft")));
+			this.label1.Size = ((System.Drawing.Size)(resources.GetObject("label1.Size")));
+			this.label1.TabIndex = ((int)(resources.GetObject("label1.TabIndex")));
+			this.label1.Text = resources.GetString("label1.Text");
+			this.label1.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label1.TextAlign")));
+			this.label1.Visible = ((bool)(resources.GetObject("label1.Visible")));
+			// 
+			// usernameLabel
+			// 
+			this.usernameLabel.AccessibleDescription = resources.GetString("usernameLabel.AccessibleDescription");
+			this.usernameLabel.AccessibleName = resources.GetString("usernameLabel.AccessibleName");
+			this.usernameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("usernameLabel.Anchor")));
+			this.usernameLabel.AutoSize = ((bool)(resources.GetObject("usernameLabel.AutoSize")));
+			this.usernameLabel.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("usernameLabel.Dock")));
+			this.usernameLabel.Enabled = ((bool)(resources.GetObject("usernameLabel.Enabled")));
+			this.usernameLabel.Font = ((System.Drawing.Font)(resources.GetObject("usernameLabel.Font")));
+			this.usernameLabel.Image = ((System.Drawing.Image)(resources.GetObject("usernameLabel.Image")));
+			this.usernameLabel.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("usernameLabel.ImageAlign")));
+			this.usernameLabel.ImageIndex = ((int)(resources.GetObject("usernameLabel.ImageIndex")));
+			this.usernameLabel.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("usernameLabel.ImeMode")));
+			this.usernameLabel.Location = ((System.Drawing.Point)(resources.GetObject("usernameLabel.Location")));
+			this.usernameLabel.Name = "usernameLabel";
+			this.usernameLabel.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("usernameLabel.RightToLeft")));
+			this.usernameLabel.Size = ((System.Drawing.Size)(resources.GetObject("usernameLabel.Size")));
+			this.usernameLabel.TabIndex = ((int)(resources.GetObject("usernameLabel.TabIndex")));
+			this.usernameLabel.Text = resources.GetString("usernameLabel.Text");
+			this.usernameLabel.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("usernameLabel.TextAlign")));
+			this.usernameLabel.Visible = ((bool)(resources.GetObject("usernameLabel.Visible")));
+			// 
+			// tabPage3
+			// 
+			this.tabPage3.AccessibleDescription = resources.GetString("tabPage3.AccessibleDescription");
+			this.tabPage3.AccessibleName = resources.GetString("tabPage3.AccessibleName");
+			this.tabPage3.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("tabPage3.Anchor")));
+			this.tabPage3.AutoScroll = ((bool)(resources.GetObject("tabPage3.AutoScroll")));
+			this.tabPage3.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("tabPage3.AutoScrollMargin")));
+			this.tabPage3.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("tabPage3.AutoScrollMinSize")));
+			this.tabPage3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("tabPage3.BackgroundImage")));
+			this.tabPage3.Controls.Add(this.groupBox1);
+			this.tabPage3.Controls.Add(this.totalSpaceUnits);
+			this.tabPage3.Controls.Add(this.usedSpaceUnits);
+			this.tabPage3.Controls.Add(this.freeSpaceUnits);
+			this.tabPage3.Controls.Add(this.totalSpace);
+			this.tabPage3.Controls.Add(this.usedSpace);
+			this.tabPage3.Controls.Add(this.freeSpace);
+			this.tabPage3.Controls.Add(this.label13);
+			this.tabPage3.Controls.Add(this.label12);
+			this.tabPage3.Controls.Add(this.label11);
+			this.tabPage3.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("tabPage3.Dock")));
+			this.tabPage3.Enabled = ((bool)(resources.GetObject("tabPage3.Enabled")));
+			this.tabPage3.Font = ((System.Drawing.Font)(resources.GetObject("tabPage3.Font")));
+			this.tabPage3.ImageIndex = ((int)(resources.GetObject("tabPage3.ImageIndex")));
+			this.tabPage3.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("tabPage3.ImeMode")));
+			this.tabPage3.Location = ((System.Drawing.Point)(resources.GetObject("tabPage3.Location")));
+			this.tabPage3.Name = "tabPage3";
+			this.tabPage3.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("tabPage3.RightToLeft")));
+			this.tabPage3.Size = ((System.Drawing.Size)(resources.GetObject("tabPage3.Size")));
+			this.tabPage3.TabIndex = ((int)(resources.GetObject("tabPage3.TabIndex")));
+			this.tabPage3.Text = resources.GetString("tabPage3.Text");
+			this.tabPage3.ToolTipText = resources.GetString("tabPage3.ToolTipText");
+			this.tabPage3.Visible = ((bool)(resources.GetObject("tabPage3.Visible")));
+			// 
+			// groupBox1
+			// 
+			this.groupBox1.AccessibleDescription = resources.GetString("groupBox1.AccessibleDescription");
+			this.groupBox1.AccessibleName = resources.GetString("groupBox1.AccessibleName");
+			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("groupBox1.Anchor")));
+			this.groupBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("groupBox1.BackgroundImage")));
+			this.groupBox1.Controls.Add(this.label18);
+			this.groupBox1.Controls.Add(this.gaugeChart1);
+			this.groupBox1.Controls.Add(this.label17);
+			this.groupBox1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("groupBox1.Dock")));
+			this.groupBox1.Enabled = ((bool)(resources.GetObject("groupBox1.Enabled")));
+			this.groupBox1.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.groupBox1.Font = ((System.Drawing.Font)(resources.GetObject("groupBox1.Font")));
+			this.groupBox1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("groupBox1.ImeMode")));
+			this.groupBox1.Location = ((System.Drawing.Point)(resources.GetObject("groupBox1.Location")));
+			this.groupBox1.Name = "groupBox1";
+			this.groupBox1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("groupBox1.RightToLeft")));
+			this.groupBox1.Size = ((System.Drawing.Size)(resources.GetObject("groupBox1.Size")));
+			this.groupBox1.TabIndex = ((int)(resources.GetObject("groupBox1.TabIndex")));
+			this.groupBox1.TabStop = false;
+			this.groupBox1.Text = resources.GetString("groupBox1.Text");
+			this.groupBox1.Visible = ((bool)(resources.GetObject("groupBox1.Visible")));
+			// 
+			// accountEnabled
+			// 
+			this.accountEnabled.AccessibleDescription = resources.GetString("accountEnabled.AccessibleDescription");
+			this.accountEnabled.AccessibleName = resources.GetString("accountEnabled.AccessibleName");
+			this.accountEnabled.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("accountEnabled.Anchor")));
+			this.accountEnabled.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("accountEnabled.Appearance")));
+			this.accountEnabled.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("accountEnabled.BackgroundImage")));
+			this.accountEnabled.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("accountEnabled.CheckAlign")));
+			this.accountEnabled.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("accountEnabled.Dock")));
+			this.accountEnabled.Enabled = ((bool)(resources.GetObject("accountEnabled.Enabled")));
+			this.accountEnabled.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("accountEnabled.FlatStyle")));
+			this.accountEnabled.Font = ((System.Drawing.Font)(resources.GetObject("accountEnabled.Font")));
+			this.accountEnabled.Image = ((System.Drawing.Image)(resources.GetObject("accountEnabled.Image")));
+			this.accountEnabled.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("accountEnabled.ImageAlign")));
+			this.accountEnabled.ImageIndex = ((int)(resources.GetObject("accountEnabled.ImageIndex")));
+			this.accountEnabled.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("accountEnabled.ImeMode")));
+			this.accountEnabled.Location = ((System.Drawing.Point)(resources.GetObject("accountEnabled.Location")));
+			this.accountEnabled.Name = "accountEnabled";
+			this.accountEnabled.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("accountEnabled.RightToLeft")));
+			this.accountEnabled.Size = ((System.Drawing.Size)(resources.GetObject("accountEnabled.Size")));
+			this.accountEnabled.TabIndex = ((int)(resources.GetObject("accountEnabled.TabIndex")));
+			this.accountEnabled.Text = resources.GetString("accountEnabled.Text");
+			this.accountEnabled.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("accountEnabled.TextAlign")));
+			this.accountEnabled.Visible = ((bool)(resources.GetObject("accountEnabled.Visible")));
+			// 
+			// defaultServer
+			// 
+			this.defaultServer.AccessibleDescription = resources.GetString("defaultServer.AccessibleDescription");
+			this.defaultServer.AccessibleName = resources.GetString("defaultServer.AccessibleName");
+			this.defaultServer.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("defaultServer.Anchor")));
+			this.defaultServer.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("defaultServer.Appearance")));
+			this.defaultServer.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("defaultServer.BackgroundImage")));
+			this.defaultServer.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("defaultServer.CheckAlign")));
+			this.defaultServer.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("defaultServer.Dock")));
+			this.defaultServer.Enabled = ((bool)(resources.GetObject("defaultServer.Enabled")));
+			this.defaultServer.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("defaultServer.FlatStyle")));
+			this.defaultServer.Font = ((System.Drawing.Font)(resources.GetObject("defaultServer.Font")));
+			this.defaultServer.Image = ((System.Drawing.Image)(resources.GetObject("defaultServer.Image")));
+			this.defaultServer.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("defaultServer.ImageAlign")));
+			this.defaultServer.ImageIndex = ((int)(resources.GetObject("defaultServer.ImageIndex")));
+			this.defaultServer.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("defaultServer.ImeMode")));
+			this.defaultServer.Location = ((System.Drawing.Point)(resources.GetObject("defaultServer.Location")));
+			this.defaultServer.Name = "defaultServer";
+			this.defaultServer.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("defaultServer.RightToLeft")));
+			this.defaultServer.Size = ((System.Drawing.Size)(resources.GetObject("defaultServer.Size")));
+			this.defaultServer.TabIndex = ((int)(resources.GetObject("defaultServer.TabIndex")));
+			this.defaultServer.Text = resources.GetString("defaultServer.Text");
+			this.defaultServer.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("defaultServer.TextAlign")));
+			this.defaultServer.Visible = ((bool)(resources.GetObject("defaultServer.Visible")));
+			// 
+			// cancel
+			// 
+			this.cancel.AccessibleDescription = resources.GetString("cancel.AccessibleDescription");
+			this.cancel.AccessibleName = resources.GetString("cancel.AccessibleName");
+			this.cancel.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("cancel.Anchor")));
+			this.cancel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("cancel.BackgroundImage")));
+			this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.cancel.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("cancel.Dock")));
+			this.cancel.Enabled = ((bool)(resources.GetObject("cancel.Enabled")));
+			this.cancel.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("cancel.FlatStyle")));
+			this.cancel.Font = ((System.Drawing.Font)(resources.GetObject("cancel.Font")));
+			this.cancel.Image = ((System.Drawing.Image)(resources.GetObject("cancel.Image")));
+			this.cancel.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("cancel.ImageAlign")));
+			this.cancel.ImageIndex = ((int)(resources.GetObject("cancel.ImageIndex")));
+			this.cancel.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("cancel.ImeMode")));
+			this.cancel.Location = ((System.Drawing.Point)(resources.GetObject("cancel.Location")));
+			this.cancel.Name = "cancel";
+			this.cancel.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("cancel.RightToLeft")));
+			this.cancel.Size = ((System.Drawing.Size)(resources.GetObject("cancel.Size")));
+			this.cancel.TabIndex = ((int)(resources.GetObject("cancel.TabIndex")));
+			this.cancel.Text = resources.GetString("cancel.Text");
+			this.cancel.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("cancel.TextAlign")));
+			this.cancel.Visible = ((bool)(resources.GetObject("cancel.Visible")));
+			// 
 			// ServerDetails
 			// 
 			this.AcceptButton = this.ok;
@@ -544,13 +930,13 @@ namespace Novell.FormsTrayApp
 			this.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMargin")));
 			this.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMinSize")));
 			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+			this.CancelButton = this.cancel;
 			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
-			this.Controls.Add(this.server);
-			this.Controls.Add(this.enterpriseDescription);
-			this.Controls.Add(this.label1);
+			this.Controls.Add(this.cancel);
+			this.Controls.Add(this.defaultServer);
+			this.Controls.Add(this.accountEnabled);
+			this.Controls.Add(this.tabControl1);
 			this.Controls.Add(this.ok);
-			this.Controls.Add(this.label9);
-			this.Controls.Add(this.groupBox6);
 			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
 			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -566,13 +952,126 @@ namespace Novell.FormsTrayApp
 			this.StartPosition = ((System.Windows.Forms.FormStartPosition)(resources.GetObject("$this.StartPosition")));
 			this.Text = resources.GetString("$this.Text");
 			this.Load += new System.EventHandler(this.ServerDetails_Load);
-			this.groupBox6.ResumeLayout(false);
+			this.tabControl1.ResumeLayout(false);
+			this.tabPage1.ResumeLayout(false);
+			this.tabPage2.ResumeLayout(false);
+			this.tabPage3.ResumeLayout(false);
+			this.groupBox1.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
 		#endregion
 
 		#region Event Handlers
+
+		private void ok_Click(object sender, System.EventArgs e)
+		{
+			// Update the password, if the password settings have changed.
+			if (updatePassword)
+			{
+				try
+				{
+					if (rememberPassword.Checked)
+					{
+						simiasWebService.SetDomainCredentials(domain.ID, password.Text, CredentialType.Basic);
+					}
+					else
+					{
+						simiasWebService.SetDomainCredentials(domain.ID, null, CredentialType.None);
+					}
+				}
+				catch (Exception ex)
+				{
+// TODO:					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("savePasswordError"), resourceManager.GetString("passwordErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+//					mmb.ShowDialog();
+					// TODO: Don't dismiss the dialog.
+				}
+			}
+
+			// Update the account enabled setting.
+			if ( accountEnabled.Checked != domain.DomainInfo.Active )
+			{
+				enableChanged = true;
+
+				try
+				{
+					if (accountEnabled.Checked)
+					{
+						simiasWebService.SetDomainActive(domain.ID);
+						domain.DomainInfo.Active = true;
+					}
+					else
+					{
+						simiasWebService.SetDomainInactive(domain.ID);
+						domain.DomainInfo.Active = false;
+					}
+				}
+				catch 
+				{
+					// TODO: Message???
+					// TODO: Don't dismiss the dialog.
+				}
+			}
+
+			// Update the default setting.
+			if ( defaultServer.Enabled && defaultServer.Checked )
+			{
+				defaultChanged = true;
+
+				try
+				{
+					simiasWebService.SetDefaultDomain(domain.DomainInfo.ID);
+
+					domain.DomainInfo.IsDefault = true;
+				}
+				catch (Exception ex)
+				{
+// TODO:					mmb = new MyMessageBox(resourceManager.GetString("setDefaultError"), resourceManager.GetString("accountErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+//					mmb.ShowDialog();
+				}
+			}
+
+			// Update the host address.
+			if ( !address.Text.Equals( domain.DomainInfo.Host ) )
+			{
+				addressChanged = true;
+
+				try
+				{
+					/*
+					if (!simiasWebService.SetDomainHostAddress(domain.ID, address.Text))
+					{
+	// TODO:					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("updateHostError"), resourceManager.GetString("accountErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+	//					mmb.ShowDialog();
+						// TODO: Don't dismiss the dialog.
+					}
+					*/
+				}
+				catch (Exception ex)
+				{
+// TODO:					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("updateHostError"), resourceManager.GetString("accountErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+//					mmb.ShowDialog();
+					// TODO: Don't dismiss the dialog.
+				}
+			}
+		}
+
+		private void password_TextChanged(object sender, System.EventArgs e)
+		{
+			if ( password.Focused )
+			{
+				updatePassword = true;
+			}
+		}
+
+		private void rememberPassword_CheckedChanged(object sender, System.EventArgs e)
+		{
+			if ( rememberPassword.Focused )
+			{
+				updatePassword = true;
+			}
+		}
+
 		private void ServerDetails_Load(object sender, System.EventArgs e)
 		{
 			// Load the icon.
@@ -582,13 +1081,41 @@ namespace Novell.FormsTrayApp
 			}
 			catch {} // Non-fatal ...
 
-			server.Text = selectedDomain.Name;
-			enterpriseDescription.Text = selectedDomain.DomainInfo.Description;
+			Text = string.Format( Text, domain.Name );
+			server.Text = domain.Name;
+			address.Text = domain.DomainInfo.Host;
+			// Don't allow the address to be edited if online.
+			address.Enabled = !domain.DomainInfo.Authenticated;
+			enterpriseDescription.Text = domain.DomainInfo.Description;
+			defaultServer.Checked = domain.DomainInfo.IsDefault;
+			// Don't allow the default server to be unchecked.
+			defaultServer.Enabled = !domain.DomainInfo.IsDefault;
+			accountEnabled.Checked = domain.DomainInfo.Active;
+
+			username.Text = domain.DomainInfo.MemberName;
+			// Check for a saved password.
+			try
+			{
+				string userID;
+				string credentials;
+				CredentialType credType = simiasWebService.GetDomainCredentials(domain.ID, out userID, out credentials);
+				if ((credType == CredentialType.Basic) && (credentials != null))
+				{
+					// There are credentials that were saved on the domain.
+					rememberPassword.Checked = true;
+					password.Text = credentials;
+				}
+			}
+			catch (Exception ex)
+			{
+				// TODO: message
+				MessageBox.Show(ex.Message);
+			}
 
 			try
 			{
 				// Get the disk space.
-				DiskSpace diskSpace = ifWebService.GetUserDiskSpace(selectedDomain.DomainInfo.MemberUserID);
+				DiskSpace diskSpace = ifWebService.GetUserDiskSpace(domain.DomainInfo.MemberUserID);
 				double used = 0;
 				if (diskSpace.UsedSpace != 0)
 				{
@@ -631,6 +1158,43 @@ namespace Novell.FormsTrayApp
 			// Cause the gauge chart to be redrawn.
 			gaugeChart1.Invalidate(true);
 		}
+
+		#endregion
+
+		#region Properties
+
+		/// <summary>
+		/// Gets a value indicating if the server address was changed.
+		/// </summary>
+		public bool AddressChanged
+		{
+			get { return addressChanged; }
+		}
+
+		/// <summary>
+		/// Gets a value indicating if the default domain was changed.
+		/// </summary>
+		public bool DefaultChanged
+		{
+			get { return defaultChanged; }
+		}
+
+		/// <summary>
+		/// Gets the Domain that was displayed/modified.
+		/// </summary>
+		public Domain Domain
+		{
+			get { return domain; }
+		}
+
+		/// <summary>
+		/// Gets a value indicating if the account enabled state was changed.
+		/// </summary>
+		public bool EnableChanged
+		{
+			get { return enableChanged; }
+		}
+
 		#endregion
 	}
 }
