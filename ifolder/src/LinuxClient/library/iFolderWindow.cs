@@ -1860,6 +1860,14 @@ namespace Novell.iFolder
 		
 		private void DownloadiFolder(iFolderHolder holder)
 		{
+                        if( holder.iFolder.encryptionAlgorithm != null && holder.iFolder.encryptionAlgorithm != "")
+                        {
+				if( IsPassPhraseAvailable(holder.iFolder.DomainID) == false)
+				{
+					return;
+				}
+                        }
+
 			if (holder != null && holder.iFolder.IsSubscription)
 			{
 				string newPath = "";
@@ -1885,7 +1893,6 @@ namespace Novell.iFolder
 													   newPath);
 
 						iFoldersIconView.UnselectAll();
-
                         rc = 0;
 
                         // Save off the path so that the next time the user
@@ -2552,7 +2559,6 @@ namespace Novell.iFolder
 								if(passphraseStatus == true)
 								{
 									// if passphrase not given during login
-									Console.WriteLine("passphrase set");
 									string uid, passphrasecheck;
 									simws.GetPassPhrase(selectedDomain, out uid, out passphrasecheck);
 									if( passphrasecheck == null || passphrasecheck =="")
@@ -2580,7 +2586,6 @@ namespace Novell.iFolder
 									}
 									else
 									{
-										Console.WriteLine("passphrase is known");
 										passPhraseStatus = true;
 									}
 								}
@@ -2591,8 +2596,8 @@ namespace Novell.iFolder
 								}
 								if( passPhraseStatus == false)
 								{
-									Console.WriteLine(" No passphrase. can't create iFolder");
-//									continue;
+									// No Passphrase
+									continue;
 								}
 							}
 							ifHolder = ifdata.CreateiFolder(selectedFolder, selectedDomain, SSL, algorithm);
@@ -2989,6 +2994,8 @@ namespace Novell.iFolder
 			{
 				result = epd.Run();
 				epd.Hide();
+                                if( result == (int)ResponseType.Cancel || result == (int) ResponseType.DeleteEvent)
+                                        break;
 				if( epd.PassPhrase != epd.RetypedPassPhrase )
 				{
 					Console.WriteLine("PassPhrases do not match");
@@ -3008,6 +3015,11 @@ namespace Novell.iFolder
 				else
 					break;
 			}while( result != (int)ResponseType.Cancel);
+                        if( result == (int)ResponseType.Cancel || result ==(int)ResponseType.DeleteEvent)
+                        {
+                                status = false;
+                                simws.StorePassPhrase(DomainID, "", CredentialType.None, false);
+                        }
 			
 			if( epd.PassPhrase == epd.RetypedPassPhrase)
 			{
@@ -3022,6 +3034,7 @@ namespace Novell.iFolder
 				else 
 				{
 					// error setting the passphrase
+					status = false;
 					iFolderMsgDialog dialog = new iFolderMsgDialog(
 						null,
 						iFolderMsgDialog.DialogType.Error,
@@ -3038,10 +3051,9 @@ namespace Novell.iFolder
 			}
 			catch(Exception e)
 			{
-				return true;
+				return false;
 			}
-			return true;
-//			return status;
+			return status;
 		}
 
 		private bool ShowVerifyDialog(string DomainID, SimiasWebService simws)
@@ -3078,50 +3090,68 @@ namespace Novell.iFolder
 							dialog.Destroy();
 							dialog = null;
 						passPhraseStatus = null;
-				// 	to be removed
-						break;
 					}
 					else if(passPhraseStatus.statusCode == StatusCodes.Success)
 						break;
 				}
 			}while( result != (int)ResponseType.Cancel && result !=(int)ResponseType.DeleteEvent);
-			if( passPhraseStatus != null && passPhraseStatus.statusCode == StatusCodes.Success)
+			if( result == (int)ResponseType.Cancel || result == (int)ResponseType.DeleteEvent)
 			{
-				status = true;
-				try
-				{
-					simws.StorePassPhrase( DomainID, vpd.PassPhrase, CredentialType.Basic, vpd.ShouldSavePassPhrase);
-				}
-				catch(Exception ex) 
-				{
-					return true;
-				}
-			}
-			else //if(result == (int)ResponseType.Cancel)
-			{
-				Console.WriteLine(" cancelled passphrase entry");
 				try
 				{
 					simws.StorePassPhrase(DomainID, "", CredentialType.Basic, false);
-					string uid, passphrasecheck;
-					simws.GetPassPhrase(DomainID, out uid, out passphrasecheck);
-					if(passphrasecheck == "")
-						Console.WriteLine(" Cancel clicked at the time of login-- confirmed");
-					else
-						Console.WriteLine(" cancel clicked is not confirmed");
+					status = false;
 				}
 				catch(Exception e)
 				{
-					return true;
+					return false;
+				}
+			}
+			else if( passPhraseStatus != null && passPhraseStatus.statusCode == StatusCodes.Success)
+			{
+				try
+				{
+					simws.StorePassPhrase( DomainID, vpd.PassPhrase, CredentialType.Basic, vpd.ShouldSavePassPhrase);
+					status = true;
+				}
+				catch(Exception ex) 
+				{
+					return false;
 				}
 			}
 			}
 			catch(Exception e)
 			{
-				return true;
+				return false;
 			}
-			return true;
-//			return status;
+//			return false;
+			return status;
+		}
+
+		private bool IsPassPhraseAvailable(string selectedDomain)
+		{
+			bool passPhraseStatus = false;;
+			bool passphraseStatus = simws.IsPassPhraseSet(selectedDomain);
+			if(passphraseStatus == true)
+			{
+				// if passphrase not given during login
+				string uid, passphrasecheck;
+				simws.GetPassPhrase(selectedDomain, out uid, out passphrasecheck);
+				if( passphrasecheck == null || passphrasecheck =="")
+				{
+					passPhraseStatus = ShowVerifyDialog(selectedDomain, simws);
+				}
+				else
+				{
+					passPhraseStatus = true;
+				}
+			}
+			else
+			{
+				// if passphrase is not set
+				passPhraseStatus = ShowEnterPassPhraseDialog(selectedDomain, simws);
+			}
+			return passPhraseStatus;
 		}
 	}
 

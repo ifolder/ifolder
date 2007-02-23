@@ -77,6 +77,11 @@ namespace Novell.iFolder.Controller
 		public event DomainNewDefaultEventHandler NewDefaultDomain;
 		public event DomainInGraceLoginPeriodEventHandler DomainInGraceLoginPeriod;
 		public event DomainClientUpgradeAvailableEventHandler DomainClientUpgradeAvailable;
+
+		public static iFolderWebService GetiFolderService()
+		{
+			return instance.ifws;
+		}
 		
 		private DomainController()
 		{

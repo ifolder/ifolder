@@ -959,8 +959,14 @@ namespace Novell.iFolder
 							// We connected successfully!
 							ConnectedDomain = dom;
 							//TODO - Check for recoveryagent status.
-							
-							AccountDruid.Page = RAPage;
+
+							iFolderWebService ifws = DomainController.GetiFolderService();
+
+							int policy = ifws.GetSecurityPolicy(dom.ID);
+							if( policy % 2 ==0)
+								AccountDruid.Page = SummaryPage;
+							else
+								AccountDruid.Page = RAPage;
 							break;
 						}
 						else
