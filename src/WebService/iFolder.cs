@@ -121,6 +121,8 @@ namespace Novell.iFolder.Web
 		/// <summary>
 		/// </summary>
 		public bool ssl;
+
+		public string encryptionAlgorithm;
 		
 		/// <summary>
 		/// </summary>
@@ -193,6 +195,10 @@ namespace Novell.iFolder.Web
 
 			this.Role = collection.Role.ToString();
 			this.ssl = collection.SSL;
+			if( collection.EncryptionAlgorithm == null || collection.EncryptionAlgorithm == "" ) 
+				this.encryptionAlgorithm = "";
+			else
+				this.encryptionAlgorithm = collection.EncryptionAlgorithm;
 		}
 
 
@@ -281,6 +287,10 @@ namespace Novell.iFolder.Web
 			this.CurrentUserRights = "Admin";
 
 			this.State = "WaitSync";
+			if( c.encryptionAlgorithm != null)
+				this.encryptionAlgorithm = c.encryptionAlgorithm;
+			else
+				this.encryptionAlgorithm = "";
 		}
 
 	}

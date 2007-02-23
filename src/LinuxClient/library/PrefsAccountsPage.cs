@@ -626,9 +626,12 @@ namespace Novell.iFolder
 					//		return;
 						// }
 						int result;
+						iFolderWebService ifws = DomainController.GetiFolderService();
+						int policy = ifws.GetSecurityPolicy(args.DomainID);
+						if( policy % 2 == 0)
+							break;
 						bool passphraseStatus = simws.IsPassPhraseSet(args.DomainID);
 						if(passphraseStatus == true)
-				//		if( true)
 						{
 							bool rememberOption = simws.GetRememberOption(args.DomainID);
 							if( rememberOption == false)
@@ -716,12 +719,9 @@ namespace Novell.iFolder
 				result = epd.Run();
 				epd.Hide();
 				if( result == (int)ResponseType.Cancel || result == (int)ResponseType.DeleteEvent)
-			//		return status;
-					return true;
+					break;
 				if( epd.PassPhrase != epd.RetypedPassPhrase )
 				{
-					Console.WriteLine("PassPhrases do not match");
-					// show an error message
 					// show an error message
 					iFolderMsgDialog dialog = new iFolderMsgDialog(
 						null,
@@ -738,6 +738,15 @@ namespace Novell.iFolder
 				else
 					break;
 			}while( result != (int)ResponseType.Cancel);
+
+                        if( result == (int)ResponseType.Cancel || result ==(int)ResponseType.DeleteEvent)
+                        {
+                                status = false;
+                                simws.StorePassPhrase(DomainID, "", CredentialType.None, false);
+                                string uid, passphrasecheck;
+				// You can check for pass phrase with the follwing statement.....
+                                //simws.GetPassPhrase(DomainID, out uid, out passphrasecheck);
+                        }
 			
 			if( epd.PassPhrase == epd.RetypedPassPhrase)
 			{
@@ -746,12 +755,13 @@ namespace Novell.iFolder
 				Status passPhraseStatus = simws.SetPassPhrase( DomainID, epd.PassPhrase, epd.RecoveryAgent, publicKey);
 				if(passPhraseStatus.statusCode == StatusCodes.Success)
 				{
-					status = true;
 					simws.StorePassPhrase( DomainID, epd.PassPhrase, CredentialType.Basic, epd.ShouldSavePassPhrase);
+					status= simws.IsPassPhraseSet(DomainID);
 				}
 				else 
 				{
 					// error setting the passphrase
+					status = false;
 					iFolderMsgDialog dialog = new iFolderMsgDialog(
 						null,
 						iFolderMsgDialog.DialogType.Error,
@@ -768,7 +778,7 @@ namespace Novell.iFolder
 			}
 			catch(Exception e)
 			{
-				return true;
+				return false;
 			}
 			return status;
 		}
@@ -788,8 +798,7 @@ namespace Novell.iFolder
 				vpd.Hide();
 				// Verify PassPhrase..  If correct store passphrase and set a local property..
 				if( result == (int)ResponseType.Cancel || result == (int)ResponseType.DeleteEvent)
-			//		return status;
-					return true;
+					break;
 				if( result == (int)ResponseType.Ok)
 				{
 					passPhraseStatus =  simws.ValidatePassPhrase(DomainID, vpd.PassPhrase);
@@ -799,7 +808,6 @@ namespace Novell.iFolder
 					if( passPhraseStatus.statusCode == StatusCodes.PassPhraseInvalid)  // check for invalid passphrase
 					{
 						// Display an error Message
-						Console.WriteLine("Invalid Passphrase");
 						iFolderMsgDialog dialog = new iFolderMsgDialog(
 							null,
 							iFolderMsgDialog.DialogType.Error,
@@ -817,33 +825,33 @@ namespace Novell.iFolder
 						break;
 				}
 			}while( result != (int)ResponseType.Cancel && result !=(int)ResponseType.DeleteEvent);
-			if( passPhraseStatus != null && passPhraseStatus.statusCode == StatusCodes.Success)
+			if(result == (int)ResponseType.Cancel || result ==(int)ResponseType.DeleteEvent)
 			{
-				status = true;
+				status = false;
+				simws.StorePassPhrase(DomainID, "", CredentialType.None, false);
+				/*  Testing purpose
+				string uid, passphrasecheck;
+				simws.GetPassPhrase(DomainID, out uid, out passphrasecheck);
+				*/
+			}
+			else if( passPhraseStatus != null && passPhraseStatus.statusCode == StatusCodes.Success)
+			{
 				try
 				{
 					simws.StorePassPhrase( DomainID, vpd.PassPhrase, CredentialType.Basic, vpd.ShouldSavePassPhrase);
+					status = true;
 				}
-				catch(Exception ex) {}
-			}
-			else //if(result == (int)ResponseType.Cancel)
-			{
-				Console.WriteLine(" cancelled passphrase entry");
-				simws.StorePassPhrase(DomainID, null, CredentialType.None, false);
-				string uid, passphrasecheck;
-				simws.GetPassPhrase(DomainID, out uid, out passphrasecheck);
-				if(passphrasecheck == "" || passphrasecheck == null)
-					Console.WriteLine(" Cancel clicked at the time of login-- confirmed");
-				else
-					Console.WriteLine(" cancel clicked is not confirmed. {0}", passphrasecheck);
+				catch(Exception ex) 
+				{
+					return false;
+				}
 			}
 			}
 			catch(Exception e)
 			{
-				return true;
+				return false;
 			}
-			return true;
-//			return status;
+			return status;
 		}
 		
 		private void LogoutDomain(DomainInformation dom)

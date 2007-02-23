@@ -520,6 +520,9 @@ namespace Novell.iFolder
                                                  //       return;
                                                 // }
                                                 int result;
+						int policy = ifws.GetSecurityPolicy(DomainID);
+						if( policy % 2 == 0)
+							break;
                                                 bool passphraseStatus = simws.IsPassPhraseSet(DomainID);
 						if(passphraseStatus == true)
 				//		if( false)
@@ -626,7 +629,7 @@ namespace Novell.iFolder
 				result = epd.Run();
 				epd.Hide();
 				if( result == (int)ResponseType.Cancel || result == (int) ResponseType.DeleteEvent)
-					return true; //return status;
+					break; //return true; //return status;
 				if( epd.PassPhrase != epd.RetypedPassPhrase )
 				{
 					Console.WriteLine("PassPhrases do not match");
@@ -647,7 +650,13 @@ namespace Novell.iFolder
 					break;
 			}while( result != (int)ResponseType.Cancel );
 			
-			if( epd.PassPhrase == epd.RetypedPassPhrase && (result !=(int)ResponseType.Cancel ))
+			if( result == (int)ResponseType.Cancel || result ==(int)ResponseType.DeleteEvent)
+			{
+				status = false;
+				simws.StorePassPhrase(DomainID, "", CredentialType.None, false);
+			}
+			
+			else if( epd.PassPhrase == epd.RetypedPassPhrase && (result !=(int)ResponseType.Cancel ))
 			{
 				// Check the recovery agent
 				string publicKey = ""; // needed to be found
@@ -661,6 +670,7 @@ namespace Novell.iFolder
 				{
 					// error setting the passphrase
 					// show an error message
+					status = false;
 					iFolderMsgDialog dialog = new iFolderMsgDialog(
 						null,
 						iFolderMsgDialog.DialogType.Error,
@@ -677,10 +687,10 @@ namespace Novell.iFolder
 			}
 			catch(Exception e)
 			{
-				return true;
+				return false;
 			}
-			return true;
-//			return status;
+//			return true;
+			return status;
 		}
 
 		private bool ShowVerifyDialog(string DomainID, SimiasWebService simws)
@@ -698,7 +708,7 @@ namespace Novell.iFolder
 				vpd.Hide();
 				// Verify PassPhrase..  If correct store passphrase and set a local property..
 				if( result == (int)ResponseType.Cancel || result == (int)ResponseType.DeleteEvent)
-					return true; //return status;
+					break; //return true; //return status;
 				if( result == (int)ResponseType.Ok)
 				{
 					passPhraseStatus =  simws.ValidatePassPhrase(DomainID, vpd.PassPhrase);
@@ -726,33 +736,26 @@ namespace Novell.iFolder
 						break;
 				}
 			}while( result != (int)ResponseType.Cancel && result !=(int)ResponseType.DeleteEvent);
-			if( passPhraseStatus != null && passPhraseStatus.statusCode == StatusCodes.Success)
+			if(result == (int)ResponseType.Cancel || result ==(int)ResponseType.DeleteEvent)
 			{
-				status = true;
+				status = false;
+				simws.StorePassPhrase(DomainID, "", CredentialType.None, false);
+			}
+			else if( passPhraseStatus != null && passPhraseStatus.statusCode == StatusCodes.Success)
+			{
 				try
 				{
 					simws.StorePassPhrase( DomainID, vpd.PassPhrase, CredentialType.Basic, vpd.ShouldSavePassPhrase);
+					status = simws.IsPassPhraseSet(DomainID);
 				}
 				catch(Exception ex) {}
-			}
-			else //if(result == (int)ResponseType.Cancel)
-			{
-				Console.WriteLine(" cancelled passphrase entry");
-				simws.StorePassPhrase(DomainID, "a", CredentialType.None, false);
-				string uid, passphrasecheck;
-				simws.GetPassPhrase(DomainID, out uid, out passphrasecheck);
-				if(passphrasecheck == "" || passphrasecheck == null)
-					Console.WriteLine(" Cancel clicked at the time of login-- confirmed");
-				else
-					Console.WriteLine(" cancel clicked is not confirmed: {0}", passphrasecheck);
 			}
 			}
 			catch(Exception e)
 			{
-				return true;
+				return false;
 			}
-			return true;
-//			return status;
+			return status;
 		}
 
 
