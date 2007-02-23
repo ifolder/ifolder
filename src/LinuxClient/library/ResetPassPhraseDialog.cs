@@ -37,6 +37,7 @@ namespace Novell.iFolder
 		private Entry retypePassPhrase;
 		private ComboBox recoveryAgentCombo;
 		private string[] RAList;
+		private DomainInformation[] domains;
 		private string DomainID;
 		private CheckButton savePassPhrase;
 	
@@ -44,6 +45,30 @@ namespace Novell.iFolder
 		private Image				 iFolderScaledBanner;
 		private Gdk.Pixbuf			 ScaledPixbuf;
 
+
+		public string Domain
+		{
+			get
+			{
+				return domains[domainComboBox.Active].ID;
+			}
+		}
+
+		public string OldPassphrase
+		{
+			get
+			{
+				return oldPassPhrase.Text;
+			}
+		}
+
+		public string NewPassphrase
+		{
+			get
+			{
+				return newPassPhrase.Text;
+			}
+		}
 
 		public ResetPassPhraseDialog() : base()
 		{
@@ -94,7 +119,7 @@ namespace Novell.iFolder
 			table.Attach(domainComboBox, 1,2, 0,1,
 					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
 			DomainController domainController = DomainController.GetDomainController();
-			DomainInformation[] domains = domainController.GetDomains();	
+			domains = domainController.GetDomains();	
 			for (int x = 0; x < domains.Length; x++)
 			{
 				domainComboBox.AppendText(domains[x].Name);
@@ -104,7 +129,7 @@ namespace Novell.iFolder
 
 			// Row 2
 			
-			lbl = new Label(Util.GS("Enter Passphrase")+":");
+			lbl = new Label(Util.GS("Enter Present Passphrase")+":");
 			table.Attach(lbl, 0,1, 1,2,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			lbl.LineWrap = true;
@@ -114,6 +139,7 @@ namespace Novell.iFolder
 			table.Attach(oldPassPhrase, 1,2, 1,2,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			lbl.MnemonicWidget = oldPassPhrase;
+			oldPassPhrase.Changed += new EventHandler(UpdateSensitivity);
 
 			// Row 3	
 			lbl = new Label(Util.GS("Enter New Passphrase")+":");
@@ -125,7 +151,8 @@ namespace Novell.iFolder
 			newPassPhrase = new Entry();
 			table.Attach(newPassPhrase, 1,2, 2,3,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
-			lbl.MnemonicWidget = newPassPhrase;	
+			lbl.MnemonicWidget = newPassPhrase;
+			newPassPhrase.Changed += new EventHandler(UpdateSensitivity);	
 
 			// Row 4	
 			lbl = new Label(Util.GS("Re-type Passphrase")+":");
@@ -137,7 +164,8 @@ namespace Novell.iFolder
 			retypePassPhrase = new Entry();
 			table.Attach(retypePassPhrase, 1,2, 3,4,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
-			lbl.MnemonicWidget = retypePassPhrase;					
+			lbl.MnemonicWidget = retypePassPhrase;			
+			retypePassPhrase.Changed += new EventHandler(UpdateSensitivity);		
 
 			// Row 5
 			lbl = new Label(Util.GS("Recovery Agent")+":");
@@ -170,6 +198,24 @@ namespace Novell.iFolder
 			this.AddButton(Util.GS("Reset"), ResponseType.Ok);
 			this.SetResponseSensitive(ResponseType.Ok, false);
 			this.DefaultResponse = ResponseType.Ok;
+			
+		}
+
+		private void UpdateSensitivity( object o, EventArgs args)
+		{
+			if( oldPassPhrase != null && newPassPhrase != null && retypePassPhrase != null)
+			{
+				if( newPassPhrase.Text.Length >0 && newPassPhrase.Text == retypePassPhrase.Text)
+				{
+					// Check for validity of passphrase
+					if( oldPassPhrase.Text.Length > 0)
+					{
+						this.SetResponseSensitive( ResponseType.Ok, true);
+						return;	
+					}
+				}
+			}
+			this.SetResponseSensitive( ResponseType.Ok, false);
 		}
 		private void OnBannerExposed(object o, ExposeEventArgs args)
 		{
@@ -197,8 +243,6 @@ namespace Novell.iFolder
 		private void OnFieldsChanged(object obj, EventArgs args)
 		{
 			bool enableOK = false;
-			
-
 			this.SetResponseSensitive(ResponseType.Ok, enableOK);
 		}
 	}

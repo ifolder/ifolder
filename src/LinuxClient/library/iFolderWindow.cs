@@ -1720,10 +1720,20 @@ namespace Novell.iFolder
 		{
 			ResetPassPhraseDialog resetDialog = new ResetPassPhraseDialog();
 			resetDialog.TransientFor = this;
-			resetDialog.Run();
+			int result = resetDialog.Run();
+			string DomainID = resetDialog.Domain;
+			Console.WriteLine("DomainID is {0}", DomainID);
+			string oldPassphrase = resetDialog.OldPassphrase;
+			string newPassphrase = resetDialog.NewPassphrase;
+			//string RAName = resetDialog.RAName;
+			//string RAPublicKey = ;
 			resetDialog.Hide();
 			resetDialog.Destroy();
-	//		Util.ShowHelp(Util.HelpMainPage, this);
+			if( result == (int) ResponseType.Ok)
+			{
+				Console.WriteLine("Calling Reset Passphrase");
+				domainController.ReSetPassphrase(DomainID, oldPassphrase, newPassphrase, null, null);
+			}
 		}
 
 		private void OnAbout(object o, EventArgs args)
