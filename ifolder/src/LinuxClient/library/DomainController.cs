@@ -309,6 +309,29 @@ namespace Novell.iFolder.Controller
 		}
 
 		/// <summary>
+		/// Resets the passphrase
+		/// </summary>
+		public void ReSetPassphrase(string DomainID, string OldPassphrase, string NewPassphrase, string RAName, string RAPublicKey)
+		{
+			Status status = simws.ReSetPassPhrase (DomainID, OldPassphrase, NewPassphrase, RAName, RAPublicKey);
+			if(status.statusCode != StatusCodes.Success)
+			{		
+				// passphrase invalid, re enter once again, 
+				iFolderMsgDialog dialog = new iFolderMsgDialog(
+														null,
+														iFolderMsgDialog.DialogType.Error,
+														iFolderMsgDialog.ButtonSet.None,
+														Util.GS("Error setting the PassPhrase"),
+														Util.GS("Unable to set the passphrase"),
+														Util.GS("Please try again"));
+				dialog.Run();
+				dialog.Hide();
+				dialog.Destroy();
+				dialog = null;
+			}			
+		}
+
+		/// <summary>
 		/// Returns the Recovery Agent List for the specified Domain
 		/// </summary>
 	        public void StorePassPhrase (string domainID, string passPhrase, CredentialType type, bool persist)
