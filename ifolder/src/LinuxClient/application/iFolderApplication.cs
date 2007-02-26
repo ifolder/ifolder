@@ -535,8 +535,8 @@ namespace Novell.iFolder
 							else 
 							{
 								Console.WriteLine(" remember Option true. Checking for passphrase existence");
-								string passphrasecheck,uid;
-								simws.GetPassPhrase( DomainID, out uid, out passphrasecheck);
+								string passphrasecheck;
+								passphrasecheck= simws.GetPassPhrase(DomainID);
 								if(passphrasecheck == null || passphrasecheck == "")
 									ShowVerifyDialog( DomainID, simws);
 							}

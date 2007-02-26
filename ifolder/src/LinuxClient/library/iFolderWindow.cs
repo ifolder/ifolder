@@ -2569,8 +2569,7 @@ namespace Novell.iFolder
 								if(passphraseStatus == true)
 								{
 									// if passphrase not given during login
-									string uid, passphrasecheck;
-									simws.GetPassPhrase(selectedDomain, out uid, out passphrasecheck);
+									string passphrasecheck = 	simws.GetPassPhrase(selectedDomain);
 									if( passphrasecheck == null || passphrasecheck =="")
 									{
 										Console.WriteLine(" passphrase not entered at login");
@@ -3145,8 +3144,7 @@ namespace Novell.iFolder
 			if(passphraseStatus == true)
 			{
 				// if passphrase not given during login
-				string uid, passphrasecheck;
-				simws.GetPassPhrase(selectedDomain, out uid, out passphrasecheck);
+				string passphrasecheck = simws.GetPassPhrase(selectedDomain);
 				if( passphrasecheck == null || passphrasecheck =="")
 				{
 					passPhraseStatus = ShowVerifyDialog(selectedDomain, simws);
