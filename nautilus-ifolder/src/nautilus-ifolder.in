@@ -24,7 +24,7 @@
 #######################################################################
 
 # Startup nautilus-ifolder.exe
-export MONO_PATH=@prefix@/lib:@webbindir@
+export MONO_PATH=@prefix@/lib/simias/web/bin:@webbindir@
 export LD_LIBRARY_PATH=@prefix@/lib:@webbindir@
 cd @prefix@/lib
 mono nautilus-ifolder.exe $1 $2 $3 $4
