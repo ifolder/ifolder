@@ -643,7 +643,10 @@ namespace Novell.iFolder
 								Console.WriteLine(" remember Option true. Checking for passphrase existence");
 								string passphrasecheck = 	simws.GetPassPhrase(args.DomainID);
 								if(passphrasecheck == null || passphrasecheck == "")
+								{
+									Console.WriteLine("BugBug: Passphrase doesn't exist");
 									ShowVerifyDialog( args.DomainID, simws);
+								}
 							}
 						}
 						else
@@ -747,14 +750,14 @@ namespace Novell.iFolder
                                 //simws.GetPassPhrase(DomainID, out uid, out passphrasecheck);
                         }
 			
-			if( epd.PassPhrase == epd.RetypedPassPhrase)
+			else if( epd.PassPhrase == epd.RetypedPassPhrase)
 			{
 				// Check the recovery agent
 				string publicKey = "";
-				Status passPhraseStatus = simws.SetPassPhrase( DomainID, epd.PassPhrase, epd.RecoveryAgent, publicKey);
+				Status passPhraseStatus = simws.SetPassPhrase( DomainID, Util.PadString(epd.PassPhrase, 16)/*epd.PassPhrase*/, epd.RecoveryAgent, publicKey);
 				if(passPhraseStatus.statusCode == StatusCodes.Success)
 				{
-					simws.StorePassPhrase( DomainID, epd.PassPhrase, CredentialType.Basic, epd.ShouldSavePassPhrase);
+					simws.StorePassPhrase( DomainID, Util.PadString(epd.PassPhrase, 16)/*epd.PassPhrase*/, CredentialType.Basic, epd.ShouldSavePassPhrase);
 					status= simws.IsPassPhraseSet(DomainID);
 				}
 				else 
@@ -775,8 +778,19 @@ namespace Novell.iFolder
 				}
 			}
 			}
-			catch(Exception e)
+			catch(Exception ex)
 			{
+                                iFolderMsgDialog dialog = new iFolderMsgDialog(
+                                                                       null,
+                                                                       iFolderMsgDialog.DialogType.Error,
+                                                                       iFolderMsgDialog.ButtonSet.None,
+                                                                       Util.GS("Unable to set the passphrase"),
+                                                                       Util.GS(ex.Message),
+                                                                       Util.GS("Please enter the passphrase again"));
+                                dialog.Run();
+                                dialog.Hide();
+                                dialog.Destroy();
+                                dialog = null;
 				return false;
 			}
 			return status;
@@ -800,7 +814,8 @@ namespace Novell.iFolder
 					break;
 				if( result == (int)ResponseType.Ok)
 				{
-					passPhraseStatus =  simws.ValidatePassPhrase(DomainID, vpd.PassPhrase);
+					Console.WriteLine(Util.PadString(vpd.PassPhrase, 16));
+					passPhraseStatus =  simws.ValidatePassPhrase(DomainID, Util.PadString(vpd.PassPhrase, 16)/*vpd.PassPhrase*/);
 				}
 				if( passPhraseStatus != null)
 				{
@@ -837,7 +852,7 @@ namespace Novell.iFolder
 			{
 				try
 				{
-					simws.StorePassPhrase( DomainID, vpd.PassPhrase, CredentialType.Basic, vpd.ShouldSavePassPhrase);
+					simws.StorePassPhrase( DomainID, Util.PadString(vpd.PassPhrase, 16)/*vpd.PassPhrase*/, CredentialType.Basic, vpd.ShouldSavePassPhrase);
 					status = true;
 				}
 				catch(Exception ex) 

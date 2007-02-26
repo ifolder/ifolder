@@ -311,24 +311,45 @@ namespace Novell.iFolder.Controller
 		/// <summary>
 		/// Resets the passphrase
 		/// </summary>
-		public void ReSetPassphrase(string DomainID, string OldPassphrase, string NewPassphrase, string RAName, string RAPublicKey)
+		public bool ReSetPassphrase(string DomainID, string OldPassphrase, string NewPassphrase, string RAName, string RAPublicKey)
 		{
-			Status status = simws.ReSetPassPhrase (DomainID, OldPassphrase, NewPassphrase, RAName, RAPublicKey);
+			try
+			{
+				Status status = simws.ReSetPassPhrase (DomainID, Util.PadString(OldPassphrase, 16), Util.PadString(NewPassphrase, 16), RAName, RAPublicKey);
 			if(status.statusCode != StatusCodes.Success)
-			{		
+			{	
+				return false;	
 				// passphrase invalid, re enter once again, 
 				iFolderMsgDialog dialog = new iFolderMsgDialog(
 														null,
 														iFolderMsgDialog.DialogType.Error,
 														iFolderMsgDialog.ButtonSet.None,
 														Util.GS("Error setting the PassPhrase"),
-														Util.GS("Unable to set the passphrase"),
+														Util.GS("Unable to Reset the passphrase"),
 														Util.GS("Please try again"));
 				dialog.Run();
 				dialog.Hide();
 				dialog.Destroy();
 				dialog = null;
-			}			
+			}		
+			else
+				return true;
+			}
+			catch(Exception ex)
+			{
+                                iFolderMsgDialog dialog = new iFolderMsgDialog(
+                                                                       null,
+                                                                       iFolderMsgDialog.DialogType.Error,
+                                                                       iFolderMsgDialog.ButtonSet.None,
+                                                                       Util.GS("Unable to Reset the passphrase"),
+                                                                       Util.GS(ex.Message),
+                                                                       Util.GS("Please try again"));
+                                dialog.Run();
+                                dialog.Hide();
+                                dialog.Destroy();
+                                dialog = null;
+				return false;
+			}
 		}
 
 		/// <summary>

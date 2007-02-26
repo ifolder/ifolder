@@ -70,6 +70,14 @@ namespace Novell.iFolder
 			}
 		}
 
+		public bool SavePassphrase
+		{
+			get
+			{
+				return savePassPhrase.Active;
+			}
+		}
+
 		public ResetPassPhraseDialog() : base()
 		{
 			this.DomainID = DomainID;

@@ -275,7 +275,7 @@ namespace Novell.iFolder
 					}
 				}
 			}
-
+			CleanUpPassphrase();
 			CurrentState = iFolderAppState.Running;
 			iFolderAppStateChanged.WakeupMain();
 		}
@@ -660,11 +660,11 @@ namespace Novell.iFolder
 			{
 				// Check the recovery agent
 				string publicKey = ""; // needed to be found
-				Status passPhraseStatus = simws.SetPassPhrase( DomainID,epd.PassPhrase, epd.RecoveryAgent, publicKey);
+				Status passPhraseStatus = simws.SetPassPhrase( DomainID,Util.PadString(epd.PassPhrase, 16)/*epd.PassPhrase*/, epd.RecoveryAgent, publicKey);
 				if(passPhraseStatus.statusCode == StatusCodes.Success)
 				{
 					status = true;
-					simws.StorePassPhrase( DomainID, epd.PassPhrase, CredentialType.Basic, epd.ShouldSavePassPhrase);
+					simws.StorePassPhrase( DomainID, Util.PadString(epd.PassPhrase, 16)/*epd.PassPhrase*/, CredentialType.Basic, epd.ShouldSavePassPhrase);
 				}
 				else 
 				{
@@ -685,8 +685,19 @@ namespace Novell.iFolder
 				}
 			}
 			}
-			catch(Exception e)
+			catch(Exception ex)
 			{
+                                iFolderMsgDialog dialog = new iFolderMsgDialog(
+                                                                       null,
+                                                                       iFolderMsgDialog.DialogType.Error,
+                                                                       iFolderMsgDialog.ButtonSet.None,
+                                                                       Util.GS("Unable to set the passphrase"),
+                                                                       Util.GS(ex.Message),
+                                                                       Util.GS("Please enter the passphrase again"));
+                                dialog.Run();
+                                dialog.Hide();
+                                dialog.Destroy();
+                                dialog = null;
 				return false;
 			}
 //			return true;
@@ -711,7 +722,7 @@ namespace Novell.iFolder
 					break; //return true; //return status;
 				if( result == (int)ResponseType.Ok)
 				{
-					passPhraseStatus =  simws.ValidatePassPhrase(DomainID, vpd.PassPhrase);
+					passPhraseStatus =  simws.ValidatePassPhrase(DomainID, Util.PadString(vpd.PassPhrase, 16));
 				}
 				if( passPhraseStatus != null)
 				{
@@ -745,7 +756,7 @@ namespace Novell.iFolder
 			{
 				try
 				{
-					simws.StorePassPhrase( DomainID, vpd.PassPhrase, CredentialType.Basic, vpd.ShouldSavePassPhrase);
+					simws.StorePassPhrase( DomainID, Util.PadString(vpd.PassPhrase, 16)/*vpd.PassPhrase*/, CredentialType.Basic, vpd.ShouldSavePassPhrase);
 					status = simws.IsPassPhraseSet(DomainID);
 				}
 				catch(Exception ex) {}
@@ -1526,9 +1537,32 @@ namespace Novell.iFolder
 			quit_ifolder(null, null);
 		}
 
+		private void CleanUpPassphrase()
+		{
+			Console.WriteLine("In cleanup passphrase");
+			try
+			{
+			DomainInformation[] domains = domainController.GetDomains();
+			foreach( DomainInformation domain in domains)
+			{
+				Console.WriteLine("Removing Passphrase");
+				bool rememberOption = simws.GetRememberOption(domain.ID);
+				if( rememberOption == false)
+				{
+					simws.StorePassPhrase(domain.ID, "", CredentialType.None, false);
+				}
+			}
+			}
+			catch(Exception ex)
+			{
+			}
+			
+		}
+
 
 		private void quit_ifolder(object o, EventArgs args)
 		{
+			CleanUpPassphrase();
 			if (simiasEventBroker != null)
 				simiasEventBroker.AbortEventProcessing();
 

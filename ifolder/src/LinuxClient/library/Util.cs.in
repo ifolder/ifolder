@@ -171,6 +171,16 @@ namespace Novell.iFolder
 			return Mono.Unix.Catalog.GetString(msgid);
 		}
 
+                public static string PadString(string str, int length)
+                {
+                        string retStr;
+                        retStr = str;
+                        while( retStr.Length < length)
+                        {
+                                retStr += retStr;
+                        }
+                        return retStr.Substring(0,length);
+                }
 
 		public static string ImagesPath(string imgStr)
 		{
