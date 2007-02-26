@@ -839,7 +839,7 @@ namespace Novell.iFolder
 
    		 		iFolderWeb newifolder = ifws.AcceptiFolderInvitation(
 											domainID,
-											collectionID,
+											ifolderID,
 											localPath);
 				if (newifolder == null)
 				{
@@ -856,7 +856,7 @@ namespace Novell.iFolder
 					}
 				}
 
-				ifHolder = GetiFolder(collectionID);
+				ifHolder = GetiFolder(ifolderID);
 				ifHolder.iFolder = newifolder;
 
 				// FIXME: Figure out if there's a better way to cause the UI to update besides causing a Refresh
@@ -930,7 +930,7 @@ namespace Novell.iFolder
 				{
 					ifHolder = GetiFolder(ifolderID);
 					ifolder = ifHolder.iFolder;
-					if (ifolder.Role.Equals("Master"))
+					if (ifolder.Role == null || ifolder.Role.Equals("Master"))
 					{
 						string realID = ifolder.ID;
 						ifws.DeleteiFolder(realID);

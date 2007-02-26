@@ -527,8 +527,40 @@ namespace Novell.iFolder.Web
 		[SoapDocumentMethod]
 		public void DeleteiFolder(string iFolderID)
 		{
-			SharedCollection.DeleteSharedCollection(iFolderID);
+                       Store store = Store.GetStore();
+
+                        SharedCollection.DeleteSharedCollection(iFolderID);
+                       DiscoveryFramework.DeleteCollectionInCatalog(store.DefaultDomain, iFolderID);
+
 		}
+
+
+
+                /// <summary>
+                /// WebMethod that will revert an iFolder back to an unsubscribed
+                /// state that can be then re-setup on the local box.  This API will
+                /// not delete the iFolder
+                /// </summary>
+                /// <param name = "iFolderID">
+                /// The ID of the collection representing this iFolder
+                /// </param>
+                /// <returns>
+                /// An iFolder object representing the subscription for the reverted iFolder.
+                /// </returns>
+                [WebMethod(EnableSession=true, Description="Revert an iFolder on the local computer but remain a member")]
+                [SoapDocumentMethod]
+                public iFolderWeb RevertiFolder(string iFolderID)
+                {
+                        iFolderWeb ifolder = null;
+                        CollectionInfo cinfo = SharedCollection.RevertSharedCollection(iFolderID);
+                        if (cinfo != null)
+                        {
+                                ifolder = new iFolderWeb(cinfo);
+                        }
+
+                        return ifolder;
+                }
+
 
 
 
@@ -546,7 +578,7 @@ namespace Novell.iFolder.Web
 		/// </returns>
 		[WebMethod(EnableSession=true, Description="Revert an iFolder on the local computer but remain a member")]
 		[SoapDocumentMethod]
-		public iFolderWeb RevertiFolder(string iFolderID)
+		public iFolderWeb RevertiFolder1(string iFolderID)
 		{
 			iFolderWeb ifolder = null;
 			Subscription sub = SharedCollection.RevertSharedCollection(iFolderID);
@@ -1829,7 +1861,7 @@ namespace Novell.iFolder.Web
 		[SoapDocumentMethod]
 		public void DeclineiFolderInvitation( string DomainID, string iFolderID )
 		{
-			Store store = Store.GetStore();
+/*			Store store = Store.GetStore();
 
 			Simias.POBox.POBox poBox = 
 				Simias.POBox.POBox.GetPOBox( store, DomainID );
@@ -1846,7 +1878,7 @@ namespace Novell.iFolder.Web
 			sub.SubscriptionState = SubscriptionStates.Replied;
 			sub.SubscriptionDisposition = SubscriptionDispositions.Declined;
 
-			poBox.Commit(sub);
+			poBox.Commit(sub);*/
 		}
 
 
