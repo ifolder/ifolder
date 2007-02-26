@@ -467,6 +467,7 @@ namespace Novell.iFolder
 			PassPhraseEntry.Visibility = false;
 			table.Attach(PassPhraseEntry, 2,3, 1,2,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+			PassPhraseEntry.Changed += new EventHandler(ChangeSensitivity);
 			l.MnemonicWidget = PassPhraseEntry;
 
 			// Row 3
@@ -478,6 +479,7 @@ namespace Novell.iFolder
 			PassPhraseVerifyEntry.Visibility = false;
 			table.Attach(PassPhraseVerifyEntry, 2,3, 2,3,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+			PassPhraseVerifyEntry.Changed += new EventHandler(ChangeSensitivity);
 			l.MnemonicWidget = PassPhraseVerifyEntry;
 
 			// Row 4
@@ -520,6 +522,9 @@ namespace Novell.iFolder
 
  			table.Attach(RAScrolledWindow, 0,3, 5,7,
  				AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
+
+			AccountDruid.CancelButton.Sensitive = false;
+
 
 			return RAPage;
 		}
@@ -645,6 +650,7 @@ namespace Novell.iFolder
 			this.Title = Util.GS("iFolder Account Assistant - (4 of 5)");
 			PassPhraseSet = false;
 			ForwardButton.Label = "gtk-go-forward";
+			ForwardButton.Sensitive = false;
 
 			//TODO :
 			BackButton.Label = Util.GS("_Skip");
@@ -735,18 +741,35 @@ namespace Novell.iFolder
 
 		private bool OnValidateClicked(object o, EventArgs args)
 		{
+			bool NextPage = true;
 		    try {
 		        //Validate the PassPhrase Locally.
 		        if ( !PassPhraseSet )
 			{
 			        if (PassPhraseEntry.Text == PassPhraseVerifyEntry.Text)
 				{
-				       Status passPhraseStatus = domainController.SetPassPhrase (ConnectedDomain.ID, PassPhraseEntry.Text, "ra");
-				       if(passPhraseStatus.statusCode == StatusCodes.Success)
-				       {
-                                              domainController.StorePassPhrase( ConnectedDomain.ID, PassPhraseEntry.Text,
-								     CredentialType.Basic, RememberPassPhraseCheckButton.Active);
-				       }
+				        Status passPhraseStatus = domainController.SetPassPhrase (ConnectedDomain.ID, Util.PadString(PassPhraseEntry.Text, 16), "ra");
+					if(passPhraseStatus.statusCode == StatusCodes.Success)
+					{
+						domainController.StorePassPhrase( ConnectedDomain.ID, Util.PadString(PassPhraseEntry.Text, 16),
+								CredentialType.Basic, RememberPassPhraseCheckButton.Active);
+					}
+					else
+					{
+					       iFolderMsgDialog dialog = new iFolderMsgDialog(
+        	                                       null,
+                	                               iFolderMsgDialog.DialogType.Error,
+                        	                       iFolderMsgDialog.ButtonSet.None,
+                                	               Util.GS("Errot setting the Passphrase"),
+                                        	       Util.GS("Unable to change the Passphrase"),
+	                                               	Util.GS("Please try again"));
+        	                               dialog.Run();
+                	                       dialog.Hide();
+                        	               dialog.Destroy();
+                                	       dialog = null;
+						NextPage = false;
+					
+					}
 
 				} else {
 				       iFolderMsgDialog dialog = new iFolderMsgDialog(
@@ -760,14 +783,16 @@ namespace Novell.iFolder
                                        dialog.Hide();
                                        dialog.Destroy();
                                        dialog = null;				        
+					NextPage = false;
 				       
-				       return false;
+				      // return false;
 				}
 			} else {
 			    // PassPhrase is already set.
-			        Status validationStatus = domainController.ValidatePassPhrase (ConnectedDomain.ID, PassPhraseEntry.Text );
+			        Status validationStatus = domainController.ValidatePassPhrase (ConnectedDomain.ID, Util.PadString(PassPhraseEntry.Text, 16) );
 				if (validationStatus.statusCode == StatusCodes.PassPhraseInvalid ) 
 				{
+					NextPage = false;
 				       iFolderMsgDialog dialog = new iFolderMsgDialog(
                                                null,
                                                iFolderMsgDialog.DialogType.Error,
@@ -780,13 +805,33 @@ namespace Novell.iFolder
                                        dialog.Destroy();
                                        dialog = null;				        
 				}
-                                domainController.StorePassPhrase( ConnectedDomain.ID, PassPhraseEntry.Text,
+				else if(validationStatus.statusCode == StatusCodes.Success )
+	                                domainController.StorePassPhrase( ConnectedDomain.ID, Util.PadString(PassPhraseEntry.Text, 16),
 								  CredentialType.Basic, RememberPassPhraseCheckButton.Active);
 			}
-		    } catch (Exception e)
-		    {
+		    } 
+			catch (Exception ex)
+		    	{
+				iFolderMsgDialog dialog = new iFolderMsgDialog(
+			                                               null,
+                        			                       iFolderMsgDialog.DialogType.Error,
+			                                               iFolderMsgDialog.ButtonSet.None,
+                        			                       Util.GS("Unable to set the passphrase"),
+			                                               Util.GS(ex.Message),
+                        			                       Util.GS("Please enter the passphrase again"));
+				dialog.Run();
+				dialog.Hide();
+				dialog.Destroy();
+				dialog = null;
+				NextPage = false;
 			//Avoid ifolder crash incase of exception.
 		    }
+			if( NextPage == false)
+			{
+				Console.WriteLine("In the same page");
+				AccountDruid.Page = RAPage;
+				return false;
+			}
 			BackButton.Label = Util.GS("gtk-go-back");
 		        return true;
 		}
@@ -966,7 +1011,11 @@ namespace Novell.iFolder
 							if( policy % 2 ==0)
 								AccountDruid.Page = SummaryPage;
 							else
+							{
 								AccountDruid.Page = RAPage;
+								ForwardButton.Sensitive = false;
+								AccountDruid.CancelButton.Sensitive = false;
+							}
 							break;
 						}
 						else
@@ -996,6 +1045,18 @@ namespace Novell.iFolder
 		private void OnCancelClicked(object o, Gnome.CancelClickedArgs args)
 		{
 			CloseDialog();
+		}
+
+		private void ChangeSensitivity( object o, EventArgs args)
+		{
+			if( PassPhraseEntry.Text == PassPhraseVerifyEntry.Text)
+				ForwardButton.Sensitive = true;
+			else if(PassPhraseVerifyEntry.Text == "" && PassPhraseEntry.Text.Length > 0)
+			{
+				ForwardButton.Sensitive = true;
+			}
+			else
+				ForwardButton.Sensitive = false;
 		}
 		
 		private void OnFinishClicked(object o, Gnome.FinishClickedArgs args)

@@ -8,8 +8,8 @@ UILIB_CSFILES_CSC := $(subst /,$(SEP),$(UILIB_CSFILES))
 UILIB_INCLUDES =
 UILIB_RESOURCES =
 UILIB_FLAGS = $(CSC_LIBFLAG)
-UILIB_LIBS = System.dll System.Drawing.dll System.Data.dll Novell.iFolder.dll Mono.Posix.dll
-UILIB_LIBPATH = $(srcdir)/../iFolder
+UILIB_LIBS = System.dll System.Drawing.dll System.Data.dll Novell.iFolder.dll Mono.Posix.dll SimiasLib.dll
+UILIB_LIBPATH = $(srcdir)/../iFolder $(webbindir)
 
 EXTRA_DIST = $(UILIB_CSFILES) Util.cs.in 
 
