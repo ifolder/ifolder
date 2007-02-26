@@ -1918,7 +1918,6 @@ namespace Novell.iFolder
                 }
                 while(rc == -5);
 			}
-			RefreshiFolders(true);
 		}
 		
 		private void DeleteSelectedFolderFromServer()
