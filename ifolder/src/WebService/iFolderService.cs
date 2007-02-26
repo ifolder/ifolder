@@ -581,12 +581,12 @@ namespace Novell.iFolder.Web
 		public iFolderWeb RevertiFolder1(string iFolderID)
 		{
 			iFolderWeb ifolder = null;
-			Subscription sub = SharedCollection.RevertSharedCollection(iFolderID);
-			if (sub != null)
-			{
-				ifolder = new iFolderWeb(sub);
-			}
-
+//			Subscription sub = SharedCollection.RevertSharedCollection(iFolderID);
+//			if (sub != null)
+//			{
+//				ifolder = new iFolderWeb(sub);
+//			}
+//
 			return ifolder;
 		}
 
