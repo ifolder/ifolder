@@ -32,8 +32,10 @@ namespace Novell.iFolder
 		private DomainInformation[]	domains;
 		private string				defaultDomainID;
 		private ComboBox			domainComboBox;
-		private CheckButton			SSL;
-		private CheckButton			Encryption;
+	//	private CheckButton			SSL;
+	//	private CheckButton			Encryption;
+		private RadioButton 			SSL;
+		private RadioButton			Encryption;
 		private string				initialPath;
 		private string				folderName;
 		private string				folderPath;
@@ -96,7 +98,7 @@ namespace Novell.iFolder
 				if(Encryption.Active == true)
 					return "BlowFish";
 				else 
-					return "";			
+					return null;			
 			}			
 		}
 
@@ -196,6 +198,7 @@ namespace Novell.iFolder
 		{
 			optionsExpander = new Expander(Util.GS("More options"));
 			optionsExpander.Activated += new EventHandler(OnOptionsExpanded);
+			optionsExpander.Activate();
 
 			Table optionsTable = new Table(2, 3, false);
 			optionsExpander.Add(optionsTable);
@@ -210,10 +213,12 @@ namespace Novell.iFolder
 			optionsTable.Attach(l, 1,2,0,1,
 								AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
-			Encryption = new CheckButton(Util.GS("Encrypt the iFolder"));
+		//	Encryption = new CheckButton(Util.GS("Encrypt the iFolder"));
+			Encryption = new RadioButton(Util.GS("Encryption Enabled"));
 			optionsTable.Attach(Encryption, 2,3,1,2, AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
-			SSL = new CheckButton(Util.GS("Secure Data Transfer"));
+		//	SSL = new CheckButton(Util.GS("Secure Data Transfer"));
+			SSL = new RadioButton(Encryption, Util.GS("Sharable"));
 			optionsTable.Attach(SSL, 3,4,1,2, AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
 			l = new Label(Util.GS("Security"));
@@ -282,24 +287,34 @@ namespace Novell.iFolder
 			int SecurityPolicy = ifws.GetSecurityPolicy(this.DomainID);
 			ChangeStatus(SecurityPolicy);
 		}
-		
-		private void ChangeStatus(int SecurityPolicy)
-		{
-			Encryption.Active = SSL.Active = false;
-			Encryption.Sensitive = SSL.Sensitive = false;
-			
-			if(SecurityPolicy !=0)
-			{
-				if(SecurityPolicy & (int)SecurityState.enforceEncryption != (int)SecurityState.enforceEncryption)
-					Encryption.Sensitive = true;
-				else
-					Encryption.Active = true;				
 
-				if(SecurityPolicy & (int) SecurityState.enforceSSL != (int) SecurityState.enforceSSL)
-					SSL.Sensitive = true;
-				else
-					SSL.Active = true;
-			}
-		}
+                private void ChangeStatus(int SecurityPolicy)
+                {
+			Encryption.Active = Encryption.Sensitive = false;
+			SSL.Active = SSL.Sensitive = false;
+
+                        if(SecurityPolicy !=0)
+                        {
+                                if( (SecurityPolicy & (int)SecurityState.encryption) == (int) SecurityState.encryption)
+                                {
+                                        if( (SecurityPolicy & (int)SecurityState.enforceEncryption) == (int) SecurityState.enforceEncryption)
+                                                Encryption.Active = true;
+                                        else
+                                        {
+                                                Encryption.Sensitive = true;
+                                                SSL.Sensitive = true;
+                                        }
+                                }
+                                else
+                                {
+                                        SSL.Active = true;
+                                }
+                        }
+                        else
+                        {
+                                SSL.Active = true;
+                        }
+                }
+
 	}
 }
