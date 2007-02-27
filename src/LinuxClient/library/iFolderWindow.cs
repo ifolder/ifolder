@@ -1511,8 +1511,37 @@ namespace Novell.iFolder
 									iFolderHolder ifHolder = null;
 									try
 									{
-										ifHolder = ifdata.CreateiFolder(selectedFolder,
-													 selectedDomain, SSL, algorithm);
+										if( algorithm != null)
+										{
+											// encryption is selected
+											bool passPhraseStatus = false;
+					                                                bool passphraseStatus = simws.IsPassPhraseSet(selectedDomain);
+											if(passphraseStatus == true)
+											{
+												// if passphrase not given during login
+												string passphrasecheck = 	simws.GetPassPhrase(selectedDomain);
+												if( passphrasecheck == null || passphrasecheck =="")
+												{
+													Console.WriteLine(" passphrase not entered at login");
+													passPhraseStatus = ShowVerifyDialog(selectedDomain, simws);
+												}
+												else
+												{
+													passPhraseStatus = true;
+												}
+											}
+											else
+											{
+												// if passphrase is not set
+												passPhraseStatus = ShowEnterPassPhraseDialog(selectedDomain, simws);
+											}
+											if( passPhraseStatus == false)
+											{
+												// No Passphrase
+												continue;
+											}
+										}
+										ifHolder = ifdata.CreateiFolder(selectedFolder, selectedDomain, SSL, algorithm);
 									}
 									catch(Exception e)
 									{
@@ -1522,7 +1551,6 @@ namespace Novell.iFolder
 											continue;	// The function handled the exception
 										}
 									}
-				
 									if(ifHolder == null)
 										throw new Exception("Simias returned null");
 				
@@ -2612,7 +2640,7 @@ namespace Novell.iFolder
 						iFolderHolder ifHolder = null;
 						try
 						{
-							if( algorithm != "")
+							if( algorithm != null)
 							{
 								// encryption is selected
 								bool passPhraseStatus = false;

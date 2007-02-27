@@ -1020,6 +1020,7 @@ namespace Novell.iFolder
 						}
 						else
 						{
+							Console.WriteLine("Error while authenticating");
 							Util.ShowLoginError(this, authStatus.statusCode);
 						}
 					}

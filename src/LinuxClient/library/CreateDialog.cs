@@ -86,7 +86,7 @@ namespace Novell.iFolder
 				if(Encryption.Active == true)
 					return "BlowFish";
 				else 
-					return "";			
+					return null;			
 			}			
 		}
 

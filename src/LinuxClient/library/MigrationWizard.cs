@@ -698,8 +698,8 @@ namespace Novell.iFolder
 				DirectoryInfo d = new DirectoryInfo(location);
 				
 				// Create iFolder
-				string Algorithm = "";
-				Algorithm = encryptionCheckButton.Active ? "BlowFish" : "";
+				string Algorithm = null;
+				Algorithm = encryptionCheckButton.Active ? "BlowFish" : null;
 				if((d.Exists) && (ifdata.CreateiFolder(destDir, (domains[domainList.Active]).ID, sslCheckButton.Active, Algorithm ) == null))
 				{
 					// error creating the ifolder..

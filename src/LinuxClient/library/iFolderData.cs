@@ -785,20 +785,21 @@ namespace Novell.iFolder
 		//===================================================================
 		public iFolderHolder CreateiFolder(string path, string domainID, bool SSL, string EncryptionAlgorithm)
 		{
-			string Passphrase  = simws.GetPassPhrase(domainID);
-
 			// Manipulate the passphrase to the nearest multiple of eight
 
-			if(Passphrase.Length %8 !=0)
-			{
-				
-			}
-			
-				
 			lock(instanceLock)
 			{
-   				iFolderWeb newiFolder = ifws.CreateiFolderInDomainEncr(path, domainID, 
+				iFolderWeb newiFolder;
+				if( EncryptionAlgorithm == null)		// Sharable iFolder
+				{
+					newiFolder = ifws.CreateiFolderInDomain(path, domainID);
+				}
+				else
+				{
+					string Passphrase  = simws.GetPassPhrase(domainID);
+   					newiFolder = ifws.CreateiFolderInDomainEncr(path, domainID, 
 											SSL, EncryptionAlgorithm, Passphrase);
+				}
 
 				if (newiFolder == null)
 				{
