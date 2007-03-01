@@ -927,9 +927,11 @@ namespace Novell.iFolder
 				iFolderHolder ifHolder = null;
 				iFolderWeb ifolder = null;
 
-				if(IsiFolder(ifolderID))
+				ifHolder = GetiFolder(ifolderID);
+				bool IsOwner = (domainController.GetDomain (ifHolder.iFolder.DomainID).MemberUserID.Equals (ifHolder.iFolder.OwnerID));
+
+				if(IsiFolder(ifolderID) && IsOwner)
 				{
-					ifHolder = GetiFolder(ifolderID);
 					ifolder = ifHolder.iFolder;
 					if (ifolder.Role == null || ifolder.Role.Equals("Master"))
 					{

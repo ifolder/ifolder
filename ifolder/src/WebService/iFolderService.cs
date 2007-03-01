@@ -1860,24 +1860,9 @@ namespace Novell.iFolder.Web
 		[SoapDocumentMethod]
 		public void DeclineiFolderInvitation( string DomainID, string iFolderID )
 		{
-/*			Store store = Store.GetStore();
-
-			Simias.POBox.POBox poBox = 
-				Simias.POBox.POBox.GetPOBox( store, DomainID );
-
-			// iFolders returned in the Web service are also
-			// Subscriptions and it ID will be the subscription ID
-			Node node = poBox.GetNodeByID(iFolderID);
-			if(node == null)
-				throw new Exception("Invalid iFolderID");
-
-			Subscription sub = new Subscription(node);
-
-			// Change the local subscription
-			sub.SubscriptionState = SubscriptionStates.Replied;
-			sub.SubscriptionDisposition = SubscriptionDispositions.Declined;
-
-			poBox.Commit(sub);*/
+		        Store store = Store.GetStore ();
+			Domain domain = store.GetDomain(DomainID);
+			DiscoveryFramework.RemoveMembership (DomainID, iFolderID);
 		}
 
 
