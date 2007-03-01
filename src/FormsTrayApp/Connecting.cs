@@ -389,6 +389,74 @@ namespace Novell.FormsTrayApp
 				connectResult = initialConnect();
 			}
 
+			/*
+			 *	Add  code here for showing passphrase dialogs depending on I/P;
+			 */
+			if( connectResult)
+			{
+				// Check which dialog to display.
+				/*	if passphrase is not set show verify dialog. else check for remember option 
+				 *	and if the passphrase differs show the verify dialog.
+				 */
+				
+				bool passPhraseStatus = false;
+				
+				bool passphraseStatus = this.simiasWebService.IsPassPhraseSet(this.domainInfo.ID);
+				if( passphraseStatus )
+					MessageBox.Show("passphrase", "passphrase is set");
+				else
+					MessageBox.Show("passphrase", "passphrase is not set");
+				if(passphraseStatus == true)
+				{
+					// if passphrase not given during login
+					string passphrasecheck = null;
+					if( this.simiasWebService.GetRememberOption(this.domainInfo.ID) == true )
+					{
+						passphrasecheck = this.simiasWebService.GetPassPhrase(this.domainInfo.ID);
+					}
+					if( passphrasecheck == null || passphrasecheck =="")
+					{
+						MessageBox.Show( "passphrase is not remembered", "passphrase");
+						TrayApp.VerifyPassphraseDialog vpd = new TrayApp.VerifyPassphraseDialog(this.domainInfo.ID, this.simiasWebService);
+						vpd.ShowDialog();
+						passPhraseStatus = vpd.PassphraseStatus;
+					}
+					else
+					{
+						passPhraseStatus = true;
+					}
+
+				}
+				/*
+				if(passphraseStatus == true)
+				{
+					// if passphrase not given during login
+					string passphrasecheck = this.simiasWebService.GetPassPhrase(this.domainInfo.ID);
+					if( passphrasecheck == null || passphrasecheck =="")
+					{
+						TrayApp.VerifyPassphraseDialog vpd = new TrayApp.VerifyPassphraseDialog(this.domainInfo.ID, this.simiasWebService);
+						vpd.ShowDialog();
+						passPhraseStatus = vpd.PassphraseStatus;
+					}
+					else
+					{
+						passPhraseStatus = true;
+					}
+				}
+				*/
+				else
+				{
+					// Passphrase not set
+					MessageBox.Show("Showing Enter passphrase dialog", "passphrase");
+					TrayApp.EnterPassphraseDialog enterPassPhrase= new TrayApp.EnterPassphraseDialog(this.domainInfo.ID, this.simiasWebService);
+					enterPassPhrase.ShowDialog();
+					passPhraseStatus = enterPassPhrase.PassphraseStatus;
+				}
+				if( passPhraseStatus == false)
+				{
+					// No Passphrase
+				}
+			}
 			BeginInvoke( this.connectDoneDelegate );
 		}
 

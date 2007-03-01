@@ -184,6 +184,26 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "EnterPassphraseDialog.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "EnterPassphraseDialog.resx"
+                    DependentUpon = "EnterPassphraseDialog.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "ExportKeysDialog.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ExportKeysDialog.resx"
+                    DependentUpon = "ExportKeysDialog.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "FormsTrayApp.cs"
                     SubType = "Form"
                     BuildAction = "Compile"
@@ -230,6 +250,16 @@
                 <File
                     RelPath = "iFoldersListView.resx"
                     DependentUpon = "iFoldersListView.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "ImportKeysDialog.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ImportKeysDialog.resx"
+                    DependentUpon = "ImportKeysDialog.cs"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
@@ -280,6 +310,16 @@
                 <File
                     RelPath = "RemoveAccount.resx"
                     DependentUpon = "RemoveAccount.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "ResetPassphrase.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ResetPassphrase.resx"
+                    DependentUpon = "ResetPassphrase.cs"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
@@ -365,6 +405,16 @@
                 <File
                     RelPath = "ToolBarEx.resx"
                     DependentUpon = "ToolBarEx.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "VerifyPassphraseDialog.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "VerifyPassphraseDialog.resx"
+                    DependentUpon = "VerifyPassphraseDialog.cs"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
