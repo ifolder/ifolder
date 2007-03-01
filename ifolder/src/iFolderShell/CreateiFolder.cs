@@ -50,6 +50,7 @@ namespace Novell.iFolderCom
 		}
 		System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(CreateiFolder));
 		private iFolderWebService ifWebService;
+		private SimiasWebService simws;
 		private bool successful;
 		private DomainItem selectedDomain;
 		private string loadPath;
@@ -61,8 +62,8 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.Button browse;
 		private System.Windows.Forms.TextBox ifolderPath;
 		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.CheckBox encryption;
-		private System.Windows.Forms.CheckBox ssl;
+		private System.Windows.Forms.RadioButton encryption;
+		private System.Windows.Forms.RadioButton ssl;
 
 		
 		/// <summary>
@@ -98,6 +99,11 @@ namespace Novell.iFolderCom
 		public iFolderWebService iFolderWebService
 		{
 			set { ifWebService = value; }
+		}
+
+		public SimiasWebService simiasWebService
+		{
+			set { simws = value; }
 		}
 
 		/// <summary>
@@ -171,8 +177,8 @@ namespace Novell.iFolderCom
 			this.label2 = new System.Windows.Forms.Label();
 			this.browse = new System.Windows.Forms.Button();
 			this.label3 = new System.Windows.Forms.Label();
-			this.encryption = new System.Windows.Forms.CheckBox();
-			this.ssl = new System.Windows.Forms.CheckBox();
+			this.encryption = new System.Windows.Forms.RadioButton();
+			this.ssl = new System.Windows.Forms.RadioButton();
 			this.SuspendLayout();
 			// 
 			// ok
@@ -464,6 +470,9 @@ namespace Novell.iFolderCom
 		private void CreateiFolder_Load(object sender, System.EventArgs e)
 		{
 			this.ok.Enabled = false;
+			this.encryption.Checked = false;
+			this.encryption.Enabled = this.ssl.Enabled = false;
+			this.ssl.Checked = true;
 			if (servers.Items.Count == 0)
 			{
 				try
@@ -558,9 +567,9 @@ namespace Novell.iFolderCom
 			// Change the corresponding encryption check boxes
 			DomainItem domain = (DomainItem) servers.SelectedItem;
 			int SecurityPolicy = ifWebService.GetSecurityPolicy(domain.ID);
-			this.encryption.Checked = this.ssl.Checked = false;
+			this.encryption.Checked = false;
 			this.encryption.Enabled = this.ssl.Enabled = false;
-
+			this.ssl.Checked = true;
 			if(SecurityPolicy !=0)
 			{
 				if( (SecurityPolicy & (int)SecurityState.encryption) == (int) SecurityState.encryption)
@@ -568,8 +577,14 @@ namespace Novell.iFolderCom
 					if( (SecurityPolicy & (int)SecurityState.enforceEncryption) == (int) SecurityState.enforceEncryption)
 						encryption.Checked = true;
 					else
+					{
 						encryption.Enabled = true;
+						ssl.Enabled = true;
+					}
 				}
+				else
+					ssl.Checked = true;
+				/*
 				if( (SecurityPolicy & (int)SecurityState.SSL) == (int) SecurityState.SSL)
 				{
 					if( (SecurityPolicy & (int)SecurityState.enforceSSL) == (int) SecurityState.enforceSSL)
@@ -577,13 +592,15 @@ namespace Novell.iFolderCom
 					else
 						ssl.Enabled = true;
 				}
+				*/
 			}
+			else
+				ssl.Checked = true;
 		}
 
 		private void ok_Click(object sender, System.EventArgs e)
 		{
 			successful = true;
-
 			try
 			{
 				try
@@ -659,9 +676,61 @@ namespace Novell.iFolderCom
 						if(this.ssl.Checked)
 							encr_status +=2;
 						*/
+						iFolderWeb ifolder;
+						if( this.ssl.Checked)
+						{
+							// Non-encrypted folder
+							ifolder = this.ifWebService.CreateiFolderInDomain(ifolderPath.Text, domainItem.ID);
+						}
+						else
+						{
+							// encrypted folder
+							string algorithm = (this.encryption.Checked)? "BlowFish" : "";
+							bool passPhraseStatus = false;
+							bool passphraseStatus = simws.IsPassPhraseSet(domainItem.ID);
+							if(passphraseStatus == true)
+							{
+								// if passphrase not given during login
+								string passphrasecheck = null;
+									passphrasecheck = simws.GetPassPhrase(domainItem.ID);
+									if( passphrasecheck == null || passphrasecheck =="")
+									{
+										VerifyPassphraseDialog vpd = new VerifyPassphraseDialog(domainItem.ID, this.simws);
+										vpd.ShowDialog();
+										passPhraseStatus = vpd.PassphraseStatus;
+									}
+								else
+								{
+									passPhraseStatus = true;
+								}
+							}
+							else
+							{
+								// Passphrase not enterd at the time of login...
+								EnterPassphraseDialog enterPassPhrase= new EnterPassphraseDialog(domainItem.ID, this.simws);
+								enterPassPhrase.ShowDialog();
+								passPhraseStatus = enterPassPhrase.PassphraseStatus;
+							}
+							if( passPhraseStatus == false)
+							{
+								// No Passphrase
+								successful = false;
+								MyMessageBox mmb = new MyMessageBox("Passphrase error", "Passphrase needs to be there for encrypting the iFolder", string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+								mmb.ShowDialog();
+							}
+							else
+							{
+								// check for passphrase existence and display corresponding dialogs.
+								string Passphrase = simws.GetPassPhrase(domainItem.ID);
+								ifolder = this.ifWebService.CreateiFolderInDomainEncr(ifolderPath.Text, domainItem.ID, false, algorithm, Passphrase);
+							}
+
+						}
+						/*
 						bool SSL = this.ssl.Checked;
 						string algorithm = (this.encryption.Checked)? "BlowFish" : "";
 						iFolderWeb ifolder = ifWebService.CreateiFolderInDomainEncr(ifolderPath.Text, domainItem.ID, SSL, algorithm );
+						*/
 						// Notify the shell.
 						Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolderPath.Text, IntPtr.Zero);
 

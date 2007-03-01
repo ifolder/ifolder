@@ -139,6 +139,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "EnterPassphraseDialog.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "EnterPassphraseDialog.resx"
+                    DependentUpon = "EnterPassphraseDialog.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "GaugeChart.cs"
                     SubType = "UserControl"
                     BuildAction = "Compile"
@@ -211,6 +221,16 @@
                 <File
                     RelPath = "UserProperties.resx"
                     DependentUpon = "UserProperties.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "VerifyPassphraseDialog.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "VerifyPassphraseDialog.resx"
+                    DependentUpon = "VerifyPassphraseDialog.cs"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

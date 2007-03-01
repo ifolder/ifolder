@@ -317,8 +317,7 @@ namespace Novell.iFolder.Web
 		{
 			try
 			{
-				Collection col = SharedCollection.CreateLocalSharedCollection( Path, DomainID, 
-									SSL, iFolderWeb.iFolderType, EncryptionAlgorithm, Passphrase);
+				Collection col = SharedCollection.CreateLocalSharedCollection( Path, DomainID, SSL, iFolderWeb.iFolderType, EncryptionAlgorithm, Passphrase);
 
 				return new iFolderWeb(col);
 			}

@@ -136,6 +136,11 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.MenuItem menuViewLog;
 		private System.Windows.Forms.MenuItem menuEdit;
 		private System.Windows.Forms.MenuItem menuEditPrefs;
+		private System.Windows.Forms.MenuItem menuSecurity;
+		private System.Windows.Forms.MenuItem menuResetPassphrase;
+		private System.Windows.Forms.MenuItem menuRecoverKeys;
+		private System.Windows.Forms.MenuItem menuImportKeys;
+		private System.Windows.Forms.MenuItem menuExportKeys;
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.Panel panel1;
 		private System.Windows.Forms.Panel panel2;
@@ -293,6 +298,11 @@ namespace Novell.FormsTrayApp
 			this.menuEdit = new System.Windows.Forms.MenuItem();
 			this.menuViewAccounts = new System.Windows.Forms.MenuItem();
 			this.menuEditPrefs = new System.Windows.Forms.MenuItem();
+			this.menuSecurity = new MenuItem();
+			this.menuResetPassphrase = new MenuItem();
+			this.menuRecoverKeys = new MenuItem();
+			this.menuImportKeys = new MenuItem();
+			this.menuExportKeys = new MenuItem();
 			this.menuView = new System.Windows.Forms.MenuItem();
 			this.menuViewRefresh = new System.Windows.Forms.MenuItem();
 			this.menuItem1 = new System.Windows.Forms.MenuItem();
@@ -472,6 +482,7 @@ namespace Novell.FormsTrayApp
 																					  this.menuAction,
 																					  this.menuEdit,
 																					  this.menuView,
+																					  this.menuSecurity,
 																					  this.menuHelp});
 			this.mainMenu1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("mainMenu1.RightToLeft")));
 			// 
@@ -749,11 +760,61 @@ namespace Novell.FormsTrayApp
 			this.menuViewAvailable.Visible = ((bool)(resources.GetObject("menuViewAvailable.Visible")));
 			this.menuViewAvailable.Click += new System.EventHandler(this.showiFolders_Click);
 			
+			//
+			//menuSecurity
+			//
+			this.menuSecurity.Enabled = true;
+			this.menuSecurity.Index = 3;
+			this.menuSecurity.Text = "Security";
+			this.menuSecurity.MenuItems.AddRange( new System.Windows.Forms.MenuItem[] {
+																						  this.menuRecoverKeys,
+																						  this.menuResetPassphrase
+																					  });
+			this.menuSecurity.Visible = true;
+
+			//
+			//menuRecoverKeys
+			//
+			this.menuRecoverKeys.Index = 0;
+			this.menuRecoverKeys.Enabled = true;
+			this.menuRecoverKeys.Text = "Key Recovery";
+			this.menuRecoverKeys.Visible = true;
+			this.menuRecoverKeys.MenuItems.AddRange( new System.Windows.Forms.MenuItem[] {
+																							 this.menuExportKeys,
+																							 this.menuImportKeys
+																						 });
+			//
+			//menuExportKeys
+			//
+			this.menuExportKeys.Index = 0;
+			this.menuExportKeys.Enabled = true;
+			this.menuExportKeys.Visible = true;
+			this.menuExportKeys.Text = "Export Encrypted Keys";
+			this.menuExportKeys.Click += new EventHandler(menuExportKeys_Select);
+
+			//
+			// menuImportKeys
+			//
+			this.menuImportKeys.Index = 1;
+			this.menuImportKeys.Enabled = true;
+			this.menuImportKeys.Text = "Import Decrypted Keys";
+			this.menuImportKeys.Visible = true;
+			this.menuImportKeys.Click += new EventHandler(menuImportKeys_Select);
+
+			//
+			// menuResetPassphrase
+			//
+			this.menuResetPassphrase.Index = 1;
+			this.menuResetPassphrase.Enabled = true;
+			this.menuResetPassphrase.Text = "Reset Passphrase";
+			this.menuResetPassphrase.Visible = true;
+			this.menuResetPassphrase.Click += new EventHandler(menuResetPassphrase_Select);
+
 			// 
 			// menuHelp
 			// 
 			this.menuHelp.Enabled = ((bool)(resources.GetObject("menuHelp.Enabled")));
-			this.menuHelp.Index = 3;
+			this.menuHelp.Index = 4;
 			this.menuHelp.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
 																					 this.menuHelpHelp,
 																					 this.menuHelpAbout});
@@ -2370,7 +2431,6 @@ namespace Novell.FormsTrayApp
 			{
 				// Get the list of iFolders
 				iFolderWeb[] ifolderArray = ifWebService.GetAlliFolders();
-
 				// Clear the listviews
 				panel2.SuspendLayout();
 				iFolderView.Items.Clear();
@@ -2976,6 +3036,7 @@ namespace Novell.FormsTrayApp
 			createiFolder.SelectedDomain = selectedDomainItem;
 			createiFolder.LoadPath = Application.StartupPath;
 			createiFolder.iFolderWebService = ifWebService;
+			createiFolder.simiasWebService = this.simiasWebService;
 
 			if ((DialogResult.OK == createiFolder.ShowDialog()) && iFolderComponent.DisplayConfirmationEnabled)
 			{
@@ -3234,6 +3295,27 @@ namespace Novell.FormsTrayApp
 			Novell.FormsTrayApp.MigrationWindow migrationWindow = new MigrationWindow(this.ifWebService);
 			migrationWindow.ShowDialog();
 		}
+		
+		private void menuResetPassphrase_Select(object sender, EventArgs e)
+		{
+			// Show the reset passphrase window
+			TrayApp.ResetPassphrase resetPassphraseWindow = new TrayApp.ResetPassphrase();
+			resetPassphraseWindow.ShowDialog();
+		}
+
+		private void menuExportKeys_Select(object sender, EventArgs e)
+		{
+			// Show export keys dialog
+			TrayApp.ExportKeysDialog exportKeys = new TrayApp.ExportKeysDialog();
+			exportKeys.ShowDialog();
+		}
+
+		private void menuImportKeys_Select(object sender, EventArgs e)
+		{
+			TrayApp.ImportKeysDialog importKeys = new TrayApp.ImportKeysDialog();
+			importKeys.ShowDialog();
+		}
+
 	}
 }
 

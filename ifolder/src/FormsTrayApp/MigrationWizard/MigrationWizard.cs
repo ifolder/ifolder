@@ -634,12 +634,14 @@ namespace Novell.Wizard
 					return false; // can't be an iFolder
 				}
 			}
-			
+				/*
+				 * TODO: change the wizard create iFolder with passphrase
 				if( ifws.CreateiFolderInDomainEncr(destination, domain.ID, ssl, encryptionAlgorithm) == null)
 				{
 					MessageBox.Show("Unable to convert to an iFolder", "Migrate error", MessageBoxButtons.OK);
 					return false;	// error creating iFolder
 				}
+				*/
 			}
 			catch
 			{
