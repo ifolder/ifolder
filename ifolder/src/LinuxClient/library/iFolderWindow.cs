@@ -3199,7 +3199,7 @@ namespace Novell.iFolder
 			{
 				try
 				{
-					simws.StorePassPhrase(DomainID, "", CredentialType.Basic, false);
+					simws.StorePassPhrase(DomainID, "", CredentialType.None, false);
 					status = false;
 				}
 				catch(Exception e)
