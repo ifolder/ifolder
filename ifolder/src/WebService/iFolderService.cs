@@ -524,12 +524,11 @@ namespace Novell.iFolder.Web
 		/// </returns>
 		[WebMethod(EnableSession=true, Description="Delete An iFolder")]
 		[SoapDocumentMethod]
-		public void DeleteiFolder(string iFolderID)
+		public void DeleteiFolder(string DomainID, string iFolderID)
 		{
                        Store store = Store.GetStore();
-
                         SharedCollection.DeleteSharedCollection(iFolderID);
-                       DiscoveryFramework.DeleteCollectionInCatalog(store.DefaultDomain, iFolderID);
+			DiscoveryFramework.DeleteCollectionInCatalog(DomainID, iFolderID);
 
 		}
 
