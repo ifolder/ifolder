@@ -417,7 +417,7 @@ namespace Novell.FormsTrayApp
 					if( passphrasecheck == null || passphrasecheck =="")
 					{
 						MessageBox.Show( "passphrase is not remembered", "passphrase");
-						TrayApp.VerifyPassphraseDialog vpd = new TrayApp.VerifyPassphraseDialog(this.domainInfo.ID, this.simiasWebService);
+						Novell.iFolderCom.VerifyPassphraseDialog vpd = new Novell.iFolderCom.VerifyPassphraseDialog(this.domainInfo.ID, this.simiasWebService);
 						vpd.ShowDialog();
 						passPhraseStatus = vpd.PassphraseStatus;
 					}
@@ -448,7 +448,7 @@ namespace Novell.FormsTrayApp
 				{
 					// Passphrase not set
 					MessageBox.Show("Showing Enter passphrase dialog", "passphrase");
-					TrayApp.EnterPassphraseDialog enterPassPhrase= new TrayApp.EnterPassphraseDialog(this.domainInfo.ID, this.simiasWebService);
+					EnterPassphraseDialog enterPassPhrase= new EnterPassphraseDialog(this.domainInfo.ID, this.simiasWebService);
 					enterPassPhrase.ShowDialog();
 					passPhraseStatus = enterPassPhrase.PassphraseStatus;
 				}
