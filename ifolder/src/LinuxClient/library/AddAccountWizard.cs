@@ -838,6 +838,8 @@ namespace Novell.iFolder
 		
 		private bool OnSkipClicked(object o, EventArgs args)
 		{
+			domainController.StorePassPhrase( ConnectedDomain.ID, "",
+								CredentialType.None, false);
 			AccountDruid.Page = SummaryPage;
 
 			BackButton.Label = Util.GS("gtk-go-back");
