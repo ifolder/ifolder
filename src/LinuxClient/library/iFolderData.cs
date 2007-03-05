@@ -936,7 +936,7 @@ namespace Novell.iFolder
 					if (ifolder.Role == null || ifolder.Role.Equals("Master"))
 					{
 						string realID = ifolder.ID;
-						ifws.DeleteiFolder(realID);
+						ifws.DeleteiFolder(ifolder.DomainID, realID);
 						QuickDelete(realID);
 						return;
 					}
