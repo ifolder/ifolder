@@ -171,16 +171,22 @@ namespace Novell.iFolder
 			return Mono.Unix.Catalog.GetString(msgid);
 		}
 
-                public static string PadString(string str, int length)
+                public static string PadString(string Passhrase, int length)
                 {
-                        string retStr;
-                        retStr = str;
-                        while( retStr.Length < length)
-                        {
-                                retStr += retStr;
-                        }
-                        return retStr.Substring(0,length);
-                }
+			int minimumLength = length;
+			int incLength = 8;
+			
+			string NewPassphrase = Passhrase;
+
+			while(NewPassphrase.Length % incLength !=0 || NewPassphrase.Length < minimumLength)
+			{
+				NewPassphrase += Passhrase;
+				if(NewPassphrase.Length < minimumLength)
+					continue;
+				NewPassphrase = NewPassphrase.Remove((NewPassphrase.Length /incLength)*incLength, NewPassphrase.Length % incLength);
+			}
+			return NewPassphrase;
+		}
 
 		public static string ImagesPath(string imgStr)
 		{
