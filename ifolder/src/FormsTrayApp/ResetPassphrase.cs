@@ -331,23 +331,28 @@ namespace TrayApp
 		private void btnReset_Click(object sender, System.EventArgs e)
 		{
 			// assign domain id.
+			//MessageBox.Show("In reset passphrase", "Reset Passphrase");
+			//return;
 			DomainItem domainItem = (DomainItem)this.DomainComboBox.SelectedItem;
 			this.domainID = domainItem.ID;
+			//MessageBox.Show("In reset passphrase", "Reset Passphrase");
+			//return;
 			Status status = this.simws.ReSetPassPhrase(this.domainID, this.passPhrase.Text , this.newPassphrase.Text, "RAName", "Public Key");
 			if( status.statusCode == StatusCodes.Success)
 			{
-				this.simws.StorePassPhrase(this.domainID, this.newPassphrase.Text, CredentialType.Basic, this.rememberPassphrase.Checked);
-				// successful..
+				MessageBox.Show("successfully reset passphrase", "success");
 				this.success = true;
 				this.Dispose();
 				this.Close();
+				this.simws.StorePassPhrase(this.domainID, this.newPassphrase.Text, CredentialType.Basic, this.rememberPassphrase.Checked);
+				// successful..		
 			}
 			else
 			{
+				MessageBox.Show("Error resetting passphrase" , "reset error" );
 				this.success = false;
 				// Unable to reset.
 			}
-			this.Show();
 		}
 
 		private void passPhrase_TextChanged(object sender, System.EventArgs e)

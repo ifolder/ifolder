@@ -687,7 +687,17 @@ namespace Novell.iFolderCom
 							// encrypted folder
 							string algorithm = (this.encryption.Checked)? "BlowFish" : "";
 							bool passPhraseStatus = false;
-							bool passphraseStatus = simws.IsPassPhraseSet(domainItem.ID);
+							bool passphraseStatus = false;
+							try
+							{
+								passphraseStatus = simws.IsPassPhraseSet(domainItem.ID);
+							}
+							catch(Exception ex)
+							{
+								string caption = resourceManager.GetString("errorTitle");
+								MyMessageBox mmb = new MyMessageBox("Unable to talk to the server. First login to server" , caption, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+								mmb.ShowDialog();
+							}
 							if(passphraseStatus == true)
 							{
 								// if passphrase not given during login
@@ -715,7 +725,7 @@ namespace Novell.iFolderCom
 							{
 								// No Passphrase
 								successful = false;
-								MyMessageBox mmb = new MyMessageBox("Passphrase error", "Passphrase needs to be there for encrypting the iFolder", string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+								MyMessageBox mmb = new MyMessageBox("Passphrase error", "Passphrase needs to be supplied for encrypting the iFolder", string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 								mmb.ShowDialog();
 							}
 							else

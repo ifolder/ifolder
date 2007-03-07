@@ -155,6 +155,7 @@ namespace Novell.iFolderCom
 			this.Controls.Add(this.panel1);
 			this.Name = "VerifyPassphraseDialog";
 			this.Text = "VerifyPassphraseDialog";
+			this.Load += new System.EventHandler(this.VerifyPassphraseDialog_Load);
 			this.panel1.ResumeLayout(false);
 			this.ResumeLayout(false);
 
@@ -196,6 +197,11 @@ namespace Novell.iFolderCom
 					}
 				}
 			}
+		}
+
+		private void VerifyPassphraseDialog_Load(object sender, System.EventArgs e)
+		{
+			this.btnOk.Enabled = false;
 		}
 	}
 }
