@@ -402,10 +402,12 @@ namespace Novell.FormsTrayApp
 				bool passPhraseStatus = false;
 				
 				bool passphraseStatus = this.simiasWebService.IsPassPhraseSet(this.domainInfo.ID);
+				/*
 				if( passphraseStatus )
 					MessageBox.Show("passphrase", "passphrase is set");
 				else
 					MessageBox.Show("passphrase", "passphrase is not set");
+					*/
 				if(passphraseStatus == true)
 				{
 					// if passphrase not given during login
@@ -416,7 +418,7 @@ namespace Novell.FormsTrayApp
 					}
 					if( passphrasecheck == null || passphrasecheck =="")
 					{
-						MessageBox.Show( "passphrase is not remembered", "passphrase");
+					//	MessageBox.Show( "passphrase is not remembered", "passphrase");
 						Novell.iFolderCom.VerifyPassphraseDialog vpd = new Novell.iFolderCom.VerifyPassphraseDialog(this.domainInfo.ID, this.simiasWebService);
 						vpd.ShowDialog();
 						passPhraseStatus = vpd.PassphraseStatus;
@@ -447,7 +449,7 @@ namespace Novell.FormsTrayApp
 				else
 				{
 					// Passphrase not set
-					MessageBox.Show("Showing Enter passphrase dialog", "passphrase");
+				//	MessageBox.Show("Showing Enter passphrase dialog", "passphrase");
 					EnterPassphraseDialog enterPassPhrase= new EnterPassphraseDialog(this.domainInfo.ID, this.simiasWebService);
 					enterPassPhrase.ShowDialog();
 					passPhraseStatus = enterPassPhrase.PassphraseStatus;

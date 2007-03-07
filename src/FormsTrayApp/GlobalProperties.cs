@@ -3300,6 +3300,7 @@ namespace Novell.FormsTrayApp
 		{
 			// Show the reset passphrase window
 			TrayApp.ResetPassphrase resetPassphraseWindow = new TrayApp.ResetPassphrase();
+			resetPassphraseWindow.simiasWebservice = this.simiasWebService;
 			resetPassphraseWindow.ShowDialog();
 		}
 

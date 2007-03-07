@@ -259,7 +259,7 @@ namespace Novell.iFolderCom
 					{
 						if (ifolder.Role.Equals("Master"))
 						{
-							ifWebService.DeleteiFolder(ifolder.ID);
+							ifWebService.DeleteiFolder(ifolder.DomainID, ifolder.ID);
 						}
 						else
 						{

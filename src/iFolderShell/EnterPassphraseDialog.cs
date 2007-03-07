@@ -231,7 +231,7 @@ namespace Novell.iFolderCom
 				{
 					simws.StorePassPhrase( DomainID, this.Passphrase.Text, CredentialType.Basic, this.savePassphrase.Checked);
 					string passphr = simws.GetPassPhrase(DomainID);
-					MessageBox.Show("Passphrase is set & stored", passphr, MessageBoxButtons.OK);
+					//MessageBox.Show("Passphrase is set & stored", passphr, MessageBoxButtons.OK);
 					this.status= simws.IsPassPhraseSet(DomainID);
 					if( status == true)
 					{
@@ -259,7 +259,7 @@ namespace Novell.iFolderCom
 
 		private void EnterPassphraseDialog_Load(object sender, System.EventArgs e)
 		{
-			
+			this.btnOk.Enabled = false;
 		}
 
 		private void Passphrase_TextChanged(object sender, System.EventArgs e)
