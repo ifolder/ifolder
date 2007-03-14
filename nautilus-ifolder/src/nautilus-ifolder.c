@@ -38,6 +38,8 @@
 
 #include <simias-event-client.h>
 #include <simiasweb.h>
+//#include <simias.nsmap>
+//#include <simiasStub.h>
 //#include "simias-internal.h"
 
 #include <ifolder.h>
@@ -47,6 +49,7 @@
 #include "nautilus-ifolder.h"
 #include "nautilus-ifolder-holder.h"
 #include "../config.h"
+
 
 /* Turn this on to see debug messages */
 #if DEBUG
@@ -96,6 +99,7 @@ time_t last_read_of_soap_url = 0;
 
 static void ifolder_extension_register_type (GTypeModule *module);
 static void ifolder_nautilus_instance_init (iFolderNautilus *ifn);
+static void update_security_status( GtkComboBox *domains, gpointer user_data);
 
 static GObjectClass * parent_class = NULL;
 static GType ifolder_nautilus_type;
@@ -147,7 +151,7 @@ static void cleanup_gsoap (struct soap *p_soap);
 static gchar * get_file_path (NautilusFileInfo *file);
 static gboolean is_ifolder (NautilusFileInfo *file);
 static gboolean can_be_ifolder (NautilusFileInfo *file);
-static gint create_ifolder_in_domain (NautilusFileInfo *file, char *domain_id);
+static gint create_ifolder_in_domain (NautilusFileInfo *file, char *domain_id, gboolean encryption);
 static gint revert_ifolder (NautilusFileInfo *file);
 static iFolderHolder * get_ifolder_holder (gchar *ifolder_id);
 /*static GSList *get_all_ifolder_paths ();*/
@@ -642,7 +646,42 @@ can_be_ifolder (NautilusFileInfo *file)
 }
 
 static gint
-create_ifolder_in_domain (NautilusFileInfo *file, char *domain_id)
+get_security_policy(char *domain_id)
+{
+	DEBUG_IFOLDER(("Ramesh: calling get policy: %s", domain_id));
+	struct soap soap;
+	gchar *folder_path;
+	char username[512];
+	char password[1024];
+	
+	if( domain_id != NULL)
+	{
+		// read the policy from web servives
+		struct _ns1__GetSecurityPolicy req;
+		struct _ns1__GetSecurityPolicyResponse resp;
+		req.DomainID = domain_id;
+		init_gsoap(&soap);
+		if(simias_get_web_service_credential(username, password) == SIMIAS_SUCCESS) {
+			soap.userid = username;
+			soap.passwd = DerivePassword(password);
+		}
+		soap_call___ns1__GetSecurityPolicy(&soap, soapURL, NULL, &req, &resp);
+		if(soap.error) {
+			DEBUG_IFOLDER((" error calling getsecuritypolicy"));
+			soap_print_fault(&soap, stderr);
+		}
+		else {
+			return resp.GetSecurityPolicyResult;
+		}
+		cleanup_gsoap(&soap);		
+	}
+	else
+		return -1;
+	return 0;
+}
+
+static gint
+create_ifolder_in_domain (NautilusFileInfo *file, char *domain_id, gboolean encryption)
 {
 	struct soap soap;
 	gchar *folder_path;
@@ -650,7 +689,9 @@ create_ifolder_in_domain (NautilusFileInfo *file, char *domain_id)
 	char password[1024];
 	
 	folder_path = get_file_path (file);
-	if (folder_path != NULL) {
+	if(folder_path == NULL)
+		return -1;
+	if (!encryption) {		// Shared iFolder
 		DEBUG_IFOLDER (("****About to call CreateiFolderInDomain (\"%s\", \"%s\")...\n", folder_path, domain_id));
 		struct _ns1__CreateiFolderInDomain req;
 		struct _ns1__CreateiFolderInDomainResponse resp;
@@ -685,9 +726,46 @@ create_ifolder_in_domain (NautilusFileInfo *file, char *domain_id)
 		}
 
 		cleanup_gsoap (&soap);
-	} else {
-		/* Error getting the folder path */
-		return -1;
+	} else {		// Creating encrypted iFolder
+				// call for passphrase dialog
+		/*
+		DEBUG_IFOLDER (("****About to call CreateiFolderInDomainEncr (\"%s\", \"%s\")...\n", folder_path, domain_id));
+		struct _ns1__CreateiFolderInDomainEncr req;
+		struct _ns1__CreateiFolderInDomainEncrResponse resp;
+		req.Path = folder_path;
+		req.DomainID = domain_id;
+		req.SSL = FALSE;
+		req.EncryptionAlgorithm = "BlowFish";
+		init_gsoap (&soap);
+		if (simias_get_web_service_credential(username, password) == SIMIAS_SUCCESS) {
+			soap.userid = username;
+			soap.passwd = DerivePassword(password);
+		}
+//printf("Calling iFolderWebService.CreateiFolderInDomain()\n");
+		soap_call___ns1__CreateiFolderInDomainEncr (&soap, soapURL, NULL, &req, &resp);
+		g_free (folder_path);
+		if (soap.error) {
+			DEBUG_IFOLDER (("****error calling CreateiFolderInDomainEncr***\n"));
+			soap_print_fault (&soap, stderr);
+			if (soap.error == SOAP_TCP_ERROR) {
+				reread_local_service_url ();
+			}
+			cleanup_gsoap (&soap);
+			return -1;
+		} else {
+			DEBUG_IFOLDER (("***calling CreateiFolderInDomainEncr succeeded***\n"));
+			struct ns1__iFolderWeb *ifolder = resp.CreateiFolderInDomainEncrResult;
+			if (ifolder == NULL) {
+				DEBUG_IFOLDER (("***The created iFolder is NULL\n"));
+				cleanup_gsoap (&soap);
+				return -1;
+			} else {
+				DEBUG_IFOLDER (("***The created iFolder's ID is: %s\n", ifolder->ID));
+			}
+		}
+
+		cleanup_gsoap (&soap);
+		*/
 	}
 	
 	return 0;
@@ -741,7 +819,6 @@ revert_ifolder (NautilusFileInfo *file)
 					DEBUG_IFOLDER (("***The reverted iFolder's ID was: %s\n", ifolder->ID));
 				}
 			}
-
 			cleanup_gsoap (&soap);
 		}
 	} else {
@@ -750,6 +827,39 @@ revert_ifolder (NautilusFileInfo *file)
 	}
 	
 	return 0;
+}
+
+static gboolean
+passphrase_dialog(gchar *domain_id)
+{
+	struct soap soap;
+	char username[512];
+	char password[1024];
+/*
+	struct _ns1__IsPassPhraseSet  ns1__IsPassPhraseSet;
+	struct _ns1__IsPassPhraseSetResponse ns1__IsPassPhraseSetResponse;
+	
+	init_gsoap (&soap);
+	if (simias_get_web_service_credential(username, password) == SIMIAS_SUCCESS) {
+		soap.userid = username;
+		soap.passwd = DerivePassword(password);
+	}
+	soap_call___ns1__IsPassPhraseSet( &soap, soapURL, NULL, &ns1__IsPassPhraseSet, &ns1__IsPassPhraseSetResponse);
+	if(soap.error) {
+		DEBUG_IFOLDER(("soap error"));
+		soap_print_fault (&soap, stderr);
+		if (soap.error == SOAP_TCP_ERROR) {
+			reread_local_service_url ();
+		}
+		cleanup_gsoap (&soap);
+		return NULL;
+	}
+	else
+	{
+			struct ns1__Status *status = 
+				ns1__IsPassPhraseSetResponse.IsPassPhraseSetResult;
+	}
+*/
 }
 
 static iFolderHolder *
@@ -1263,15 +1373,39 @@ create_ifolder_thread (gpointer user_data)
 	NautilusMenuItem *item;
 	GList *files;
 	NautilusFileInfo *file;
+	pthread_t thread;
 	gint error;
 	char *domain_id;
+	char args[1024];
+	char *encrypt;
+	gboolean encryption;
 	
 	item = (NautilusMenuItem *)user_data;
 	files = g_object_get_data (G_OBJECT (item), "files");
 	domain_id = (char *)g_object_get_data (G_OBJECT (item), "domain_id");
+	encryption = (gboolean)g_object_get_data(G_OBJECT(item), "encrypt");
+	if( encryption == TRUE)
+	{
+		DEBUG_IFOLDER(("Ramesh: Encryption selected"));
+	}
+	else
+		DEBUG_IFOLDER(("Ramesh: Encryption is not selected"));
+	encrypt = (encryption == TRUE) ? "true" : "false";
 	file = NAUTILUS_FILE_INFO (files->data);
 
-	error = create_ifolder_in_domain (file, domain_id);
+	// Added by Ramesh
+	DEBUG_IFOLDER(("%s create %s %s %s", NAUTILUS_IFOLDER_SH_PATH, get_file_path (file), domain_id, encrypt));
+	sprintf (args, "%s create %s %s %s", NAUTILUS_IFOLDER_SH_PATH, get_file_path (file), domain_id, encrypt);
+	g_object_set_data(G_OBJECT(item), "ifolder_args", strdup(args));
+	g_object_ref(item);
+	DEBUG_IFOLDER(("Ramesh: Calling the ifolder_dialog_thread.\n"));
+	pthread_create(&thread, NULL, ifolder_dialog_thread, item);
+//	ifolder_dialog_thread(item);
+	DEBUG_IFOLDER(("Ramesh: Returned from the ifolder_dialog_thread.\n"));
+	return;
+	/*
+	error = create_ifolder_in_domain (file, domain_id, encryption);
+
 	if (error) {
 		DEBUG_IFOLDER (("An error occurred creating an iFolder\n"));
 		iFolderErrorMessage *errMsg = malloc (sizeof (iFolderErrorMessage));
@@ -1286,9 +1420,9 @@ create_ifolder_thread (gpointer user_data)
 						g_object_get_data (G_OBJECT (item), "parent_window"));
 		}
 	}
-
 	free (domain_id);
 	g_object_unref(item);
+	*/
 }
 
 static void
@@ -1303,6 +1437,8 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 	GtkWidget *path_entry;
 	GtkWidget *domain_label;
 	GtkWidget *domain_menu;
+	GtkWidget *encrypt, *sharable;
+	GtkWidget *hbox;
 	gint response;
 	int result;
 	char domain_name[1024];
@@ -1318,6 +1454,7 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 	SimiasDomainInfo **domainsA;
 	SimiasDomainInfo *domain;
 	int i;
+	int security_status;
 	
 	GtkWidget *parent_window;
 
@@ -1373,6 +1510,8 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 		domain = domainsA[++i];
 	}
 	
+	security_status = get_security_policy(strdup(domainsA[default_domain_idx]->id));
+	
 	/* Cleanup the memory used by domainsA */
 	simias_free_domains(&domainsA);
 
@@ -1406,9 +1545,28 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 	gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(domain_menu), renderer, TRUE);
 	gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(domain_menu), renderer,
 								   "text", 0, NULL);
+	encrypt = gtk_radio_button_new_with_label_from_widget(NULL, "Encrypt the iFolder");
+	sharable = gtk_radio_button_new_with_label_from_widget( encrypt, "Sharable");
+	g_object_set_data(G_OBJECT(item), "encryption_button", encrypt);
+	g_object_set_data(G_OBJECT(item), "sharable_button", sharable);
 
+	if( security_status % 2 == 0)
+	{
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sharable), TRUE);
+		gtk_widget_set_sensitive(sharable, FALSE);
+		gtk_widget_set_sensitive(encrypt, FALSE);
+	}
+	else
+	{
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (encrypt), TRUE);
+		gtk_widget_set_sensitive(sharable, TRUE);
+		gtk_widget_set_sensitive(encrypt, TRUE);
+	}
 	/* Select the first in the list or the default */
 	gtk_combo_box_set_active(GTK_COMBO_BOX(domain_menu), default_domain_idx);
+	g_signal_connect (domain_menu, "changed",
+				G_CALLBACK (update_security_status),
+				item);
 	
 	gtk_box_pack_start(GTK_BOX(vbox), domain_menu, FALSE, FALSE, 0);
 	
@@ -1429,10 +1587,20 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 	g_free(file_path);
 	
 	gtk_box_pack_start(GTK_BOX(vbox), path_entry, FALSE, FALSE, 0);
+
+	/* encryption options */
+	hbox = gtk_hbox_new( FALSE, 10); 
+//	encrypt = gtk_radio_button_new_with_label_from_widget(NULL, "Encrypt the iFolder");
+//	sharable = gtk_radio_button_new_with_label_from_widget( encrypt, "Sharable");
+	gtk_box_pack_start(GTK_BOX(hbox), encrypt, FALSE, FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(hbox), sharable, FALSE, FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
 	
 	gtk_widget_show_all(vbox);
 
 	response = gtk_dialog_run(GTK_DIALOG(dialog));
+
+	// call update domains
 
 	if (response == GTK_RESPONSE_ACCEPT) {
 		/**
@@ -1463,7 +1631,11 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 		 * have to free the memory being used by the domain_id char *.
 		 */
 		g_object_set_data (G_OBJECT (item), "domain_id", domain_id);
-
+		g_object_set_data (G_OBJECT(item), "encrypt", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (encrypt)));
+/*
+		g_object_set_data(G_OBJECT(item), "encryption_button", encrypt);
+		g_object_set_data(G_OBJECT(item), "sharable_button", shared);
+*/
 		/**
 		 * Increment the reference count on the NautilusMenuItem * so
 		 * it isn't just destroyed without our knowledge.  The
@@ -1503,6 +1675,53 @@ revert_ifolder_thread (gpointer user_data)
 	}
 
 	g_object_unref(item);
+}
+
+static void 
+update_security_status( GtkComboBox *domains, gpointer user_data)
+{
+	DEBUG_IFOLDER(("Ramesh: combo changed"));
+	NautilusMenuItem *item;
+	int status = 0;
+	char *domain_id;
+	GtkTreeIter iter;
+	GtkTreeModel *domains_model;
+	GtkWidget *encryption, *sharable;
+	item = (NautilusMenuItem *)user_data;
+	encryption = g_object_get_data (G_OBJECT (item), "encryption_button");
+	sharable = g_object_get_data(G_OBJECT(item), "sharable_button");
+	gtk_combo_box_get_active_iter( domains, &iter);
+	domains_model = gtk_combo_box_get_model(domains);
+	if (!gtk_tree_model_iter_nth_child(GTK_TREE_MODEL(domains_model),
+									   &iter, NULL,
+									   gtk_combo_box_get_active(
+									   		GTK_COMBO_BOX(domains)))) {
+		DEBUG_IFOLDER(("Ramesh: nothing selected in combo box it seems\n"));
+		return;
+	}
+
+	gtk_tree_model_get(GTK_TREE_MODEL(domains_model), &iter,
+						1, &domain_id,
+						-1);
+
+	DEBUG_IFOLDER(("Ramesh: Domain-id is: %s\n", domain_id));
+	status = get_security_policy(domain_id);
+	if( status%2 ==0)
+	{
+		// sharable
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sharable), TRUE);
+		gtk_widget_set_sensitive(sharable, FALSE);
+		gtk_widget_set_sensitive(encryption, FALSE);
+	}
+	else
+	{
+		// encryption
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (encryption), TRUE);
+		gtk_widget_set_sensitive(sharable, TRUE);
+		gtk_widget_set_sensitive(encryption, TRUE);
+	}
+	DEBUG_IFOLDER(("security policy is: %d\n", status));
+
 }
 
 static void
@@ -1545,6 +1764,7 @@ share_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 	pthread_t thread;
 	char args [1024];
 	memset (args, '\0', sizeof (args));
+	DEBUG_IFOLDER(("Ramesh: Entering sharing of iFolder:"));
 	
 	files = g_object_get_data (G_OBJECT (item), "files");
 	file = NAUTILUS_FILE_INFO (files->data);
