@@ -1,3 +1,4 @@
+
 # English translations for ifolder-build package.
 # Copyright (C) 2005 THE ifolder-build'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the ifolder-build package.
@@ -31,7 +32,7 @@ msgstr "Si dispone dell'accesso di sola lettura alla cartella iFolder. I file in
 #: src/LinuxClient/application/iFolderApplication.cs:466 
 #, csharp-format
 msgid "Incomplete Synchronization: {0}"
-msgstr "Sincronizzazione non completata"
+msgstr "Sincronizzazione non completata: {0}"
 #: src/LinuxClient/application/iFolderApplication.cs:533 
 #, csharp-format
 msgid "New iFolder \"{0}\""
@@ -83,10 +84,10 @@ msgid "Preferences"
 msgstr "Preferenze"
 #: src/LinuxClient/application/iFolderApplication.cs:912 
 msgid "Help"
-msgstr "Guida"
+msgstr "?"
 #: src/LinuxClient/application/iFolderApplication.cs:921 
 msgid "About"
-msgstr "Info su..."
+msgstr "Informazioni su"
 #: src/LinuxClient/application/iFolderApplication.cs:949 
 msgid "Quit"
 msgstr "Esci"
@@ -132,19 +133,19 @@ msgstr "MB"
 #: src/LinuxClient/library/AccountDialog.cs:213 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:394
 msgid "Used:"
-msgstr "Usati:"
+msgstr "In uso:"
 #: src/LinuxClient/library/AccountDialog.cs:225 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:412
 msgid "Available:"
-msgstr "Disponibile:"
+msgstr "Disponibili:"
 #: src/LinuxClient/library/AccountDialog.cs:258 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:441
 msgid "full"
-msgstr "Completo"
+msgstr "pieno"
 #: src/LinuxClient/library/AccountDialog.cs:263 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:446
 msgid "empty"
-msgstr "Vuoto"
+msgstr "vuoto"
 #: src/LinuxClient/library/AccountDialog.cs:273 
 #: src/LinuxClient/library/AccountDialog.cs:275
 #: src/LinuxClient/library/AccountDialog.cs:277
@@ -158,10 +159,10 @@ msgid "N/A"
 msgstr "N/D"
 #: src/LinuxClient/library/CreateDialog.cs:81 
 msgid "New iFolder..."
-msgstr "New iFolder..."
+msgstr "Nuova cartella iFolder..."
 #: src/LinuxClient/library/CreateDialog.cs:105 
 msgid "More options"
-msgstr "More options"
+msgstr "Altre opzioni"
 #: src/LinuxClient/library/CreateDialog.cs:114 
 #: src/LinuxClient/library/iFolderLoginDialog.cs:176
 #: src/LinuxClient/library/iFolderLoginDialog.cs:195
@@ -188,7 +189,7 @@ msgid ""
 msgstr "Nome: {0}\nIn condivisione con: {1}\nAccesso: {2}"
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:96 
 msgid "The iFolder will be set up here:"
-msgstr "The iFolder will be set up here:"
+msgstr "La cartella iFolder verrà configurata in:"
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:142 
 #: src/LinuxClient/library/iFolderAccessDialog.cs:114
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:628
@@ -224,10 +225,10 @@ msgstr "Accesso per {0}"
 #: src/LinuxClient/library/iFolderAccessDialog.cs:93 
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:144
 msgid "Access"
-msgstr "ACCESSO"
+msgstr "Accesso"
 #: src/LinuxClient/library/iFolderAccessDialog.cs:124 
 msgid "Make this user the owner of the iFolder."
-msgstr "Assegnare a questo utente la proprietà della cartella iFolder."
+msgstr "Assegna a questo utente la proprietà della cartella iFolder."
 #: src/LinuxClient/library/iFolderConflictDialog.cs:152 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:521
 #: src/LinuxClient/library/iFolderWindow.cs:688
@@ -241,7 +242,7 @@ msgid "Resolve Conflicts"
 msgstr "Risolvi conflitti"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:327 
 msgid "This iFolder contains conflicts"
-msgstr "La cartella iFolder contiene conflitti."
+msgstr "La cartella iFolder contiene conflitti"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:350 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:350
 msgid "Location:"
@@ -356,11 +357,11 @@ msgstr "Nome utente:"
 #: src/LinuxClient/library/iFolderLoginDialog.cs:221
 #: src/LinuxClient/library/PrefsAccountsPage.cs:275
 msgid "Password:"
-msgstr "Parola d'ordine:"
+msgstr "Password:"
 #: src/LinuxClient/library/iFolderLoginDialog.cs:189 
 #: src/LinuxClient/library/iFolderLoginDialog.cs:235
 msgid "_Remember password"
-msgstr "Memorizza parola d'ordine"
+msgstr "_Memorizza password"
 #: src/LinuxClient/library/iFolderLoginDialog.cs:245 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:327
 #: src/LinuxClient/library/PrefsAccountsPage.cs:633
@@ -371,12 +372,12 @@ msgstr "Memorizza parola d'ordine"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:1014
 #: src/LinuxClient/library/PrefsAccountsPage.cs:1075
 msgid "_Log In"
-msgstr "connettersi"
+msgstr "_Login"
 #: src/LinuxClient/library/iFolderMsgDialog.cs:142 
 #: src/LinuxClient/library/iFolderMsgDialog.cs:197
 #: src/LinuxClient/library/iFolderMsgDialog.cs:204
 msgid "Show _Details"
-msgstr "Mostra dettagli"
+msgstr "Mostra _dettagli"
 #: src/LinuxClient/library/iFolderMsgDialog.cs:199 
 msgid "Hide _Details"
 msgstr "Nascondi _dettagli"
@@ -387,19 +388,19 @@ msgstr "Proprietà iFolder"
 #: src/LinuxClient/library/iFolderPropertiesDialog.cs:208 
 #: src/LinuxClient/library/PreferencesWindow.cs:107
 msgid "_General"
-msgstr "Generale"
+msgstr "_Generale"
 #: src/LinuxClient/library/iFolderPropertiesDialog.cs:213 
 msgid "_Sharing"
-msgstr "Condivisione"
+msgstr "_Condivisione"
 #: src/LinuxClient/library/iFolderPropertiesDialog.cs:249 
 msgid "This iFolder contains conflicts."
 msgstr "La cartella iFolder contiene conflitti."
 #: src/LinuxClient/library/iFolderPropertiesDialog.cs:256 
 msgid "_Resolve conflicts"
-msgstr "Risolvi conflitti"
+msgstr "_Risolvi conflitti"
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:115 
 msgid "minute(s)"
-msgstr "minuti"
+msgstr "minuto/i"
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:158 
 msgid "Set _Quota:"
 msgstr "Imposta _quota:"
@@ -421,13 +422,13 @@ msgid "Automatically Synchronizes Every:"
 msgstr "Sincronizza automaticamente ogni:"
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:516 
 msgid "Synchronize _Now"
-msgstr "Sincronizza ora"
+msgstr "Sincronizza _ora"
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:128 
 msgid "User"
 msgstr "Utente"
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:135 
 msgid "State"
-msgstr "Provincia"
+msgstr "Stato"
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:189 
 msgid "Acc_ess..."
 msgstr "Acc_esso..."
@@ -442,7 +443,7 @@ msgid "iFolder User"
 msgstr "Utente iFolder"
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:320 
 msgid "Remove the selected users?"
-msgstr "Rimuovi utenti selezionati?"
+msgstr "Rimuovere gli utenti selezionati?"
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:321 
 msgid ""
 "This will remove the selected users from this iFolder.  They will no longer "
@@ -469,13 +470,13 @@ msgid "<Enter text to find a user>"
 msgstr "<Immettere il testo per individuare un utente>"
 #: src/LinuxClient/library/iFolderUserSelector.cs:169 
 msgid "(Full or partial name)"
-msgstr "(Nome completo o parziale)"
+msgstr "(nome completo o parziale)"
 #: src/LinuxClient/library/iFolderUserSelector.cs:207 
 msgid "_Add >>"
-msgstr "Aggiungi"
+msgstr "_Aggiungi >>"
 #: src/LinuxClient/library/iFolderUserSelector.cs:211 
 msgid "_Remove"
-msgstr "Rimuovi"
+msgstr "_Rimuovi"
 #: src/LinuxClient/library/iFolderUserSelector.cs:239 
 msgid "Selected Users"
 msgstr "Utenti selezionati"
@@ -518,10 +519,10 @@ msgstr "Server non disponibile"
 #: src/LinuxClient/library/iFolderWindow.cs:369 
 #: src/LinuxClient/library/iFolderWindow.cs:1828
 msgid "Idle..."
-msgstr "Inattivo"
+msgstr "Inattivo..."
 #: src/LinuxClient/library/iFolderWindow.cs:416 
 msgid "New"
-msgstr "Nuovo"
+msgstr "Nuova"
 #: src/LinuxClient/library/iFolderWindow.cs:417 
 msgid "Create a new iFolder"
 msgstr "Crea nuova cartella iFolder"
@@ -539,7 +540,7 @@ msgid "Synchronize the selected iFolder"
 msgstr "Sincronizza la cartella iFolder selezionata"
 #: src/LinuxClient/library/iFolderWindow.cs:439 
 msgid "Share"
-msgstr "Condiv."
+msgstr "Condividi"
 #: src/LinuxClient/library/iFolderWindow.cs:440 
 msgid "Share the selected iFolder"
 msgstr "Condividi cartella iFolder selezionata"
@@ -559,19 +560,19 @@ msgid "Server:"
 msgstr "Server:"
 #: src/LinuxClient/library/iFolderWindow.cs:515 
 msgid "_New"
-msgstr "Nuovo"
+msgstr "_Nuova"
 #: src/LinuxClient/library/iFolderWindow.cs:525 
 msgid "_Set Up..."
-msgstr "Configura"
+msgstr "_Configura..."
 #: src/LinuxClient/library/iFolderWindow.cs:530 
 msgid "_Delete"
-msgstr "Cancella"
+msgstr "_Cancella"
 #: src/LinuxClient/library/iFolderWindow.cs:536 
 msgid "Re_move"
 msgstr "Ri_muovi"
 #: src/LinuxClient/library/iFolderWindow.cs:546 
 msgid "Share _with..."
-msgstr "Condividi con..."
+msgstr "Condividi _con..."
 #: src/LinuxClient/library/iFolderWindow.cs:550 
 msgid "Resolve conflic_ts"
 msgstr "Risolvi confli_tti"
@@ -586,25 +587,25 @@ msgid "i_Folder"
 msgstr "i_Folder"
 #: src/LinuxClient/library/iFolderWindow.cs:586 
 msgid "_Preferences"
-msgstr "Preferenze"
+msgstr "_Preferenze"
 #: src/LinuxClient/library/iFolderWindow.cs:591 
 msgid "_Edit"
-msgstr "Modifica"
+msgstr "_Modifica"
 #: src/LinuxClient/library/iFolderWindow.cs:609 
 msgid "_Accounts"
-msgstr "Conti"
+msgstr "_Conti"
 #: src/LinuxClient/library/iFolderWindow.cs:614 
 msgid "Synchronization _Log"
-msgstr "Log di sincronizzazione"
+msgstr "_Log di sincronizzazione"
 #: src/LinuxClient/library/iFolderWindow.cs:618 
 msgid "_View"
-msgstr "Visualizza"
+msgstr "_Visualizza"
 #: src/LinuxClient/library/iFolderWindow.cs:633 
 msgid "A_bout"
-msgstr "Informazioni_su"
+msgstr "Informazioni _su"
 #: src/LinuxClient/library/iFolderWindow.cs:641 
 msgid "_Help"
-msgstr "Guida"
+msgstr "_?"
 #: src/LinuxClient/library/iFolderWindow.cs:700 
 msgid "Location"
 msgstr "Ubicazione"
@@ -641,17 +642,17 @@ msgid "Properties"
 msgstr "Proprietà"
 #: src/LinuxClient/library/iFolderWindow.cs:1118 
 msgid "Set Up..."
-msgstr "Configura"
+msgstr "Configura..."
 #: src/LinuxClient/library/iFolderWindow.cs:1154 
 msgid "New..."
-msgstr "Nuovo"
+msgstr "Nuova..."
 #: src/LinuxClient/library/iFolderWindow.cs:1160 
 msgid "Refresh"
 msgstr "Aggiorna"
 #: src/LinuxClient/library/iFolderWindow.cs:1228 
 #, csharp-format
 msgid "Unable to open iFolder \"{0}\""
-msgstr "Impossibile aprire la cartella iFolder \"{0}\""
+msgstr "Impossibile aprire la cartella iFolder {0}."
 #: src/LinuxClient/library/iFolderWindow.cs:1229 
 msgid ""
 "iFolder could not open the Nautilus File Manager or the Konquerer File "
@@ -671,7 +672,7 @@ msgstr "Questa operazione annulla la conversione della cartella in cartella iFol
 #: src/LinuxClient/library/iFolderWindow.cs:1527
 #, csharp-format
 msgid "Remove iFolder {0}?"
-msgstr "Rimuovi cartella iFolder {0}?"
+msgstr "Rimuovere la cartella iFolder {0}?"
 #: src/LinuxClient/library/iFolderWindow.cs:1499 
 msgid ""
 "This removes the iFolder from your local computer.  Because you are the "
@@ -697,7 +698,7 @@ msgstr "Questa operazione annulla l'appartenenza dell'utente alla condivisione d
 #: src/LinuxClient/library/LogWindow.cs:251
 #, csharp-format
 msgid "Checking for new iFolders: {0}"
-msgstr "Ricerca di nuove cartelle iFolder in corso..."
+msgstr "Ricerca di nuove cartelle iFolder: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1745 
 #: src/LinuxClient/library/iFolderWindow.cs:1771
 #: src/LinuxClient/library/LogWindow.cs:253
@@ -716,17 +717,17 @@ msgstr "Sincronizzazione in corso: {0}"
 #: src/LinuxClient/library/LogWindow.cs:310
 #, csharp-format
 msgid "Deleting file: {0}"
-msgstr "Cancellazione del file: {0}"
+msgstr "Cancellazione file: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1916 
 #: src/LinuxClient/library/LogWindow.cs:338
 #, csharp-format
 msgid "Uploading file: {0}"
-msgstr "Caricamento del file in corso: {0}"
+msgstr "Caricamento file: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1921 
 #: src/LinuxClient/library/LogWindow.cs:342
 #, csharp-format
 msgid "Downloading file: {0}"
-msgstr "Scaricamento del file in corso: {0}"
+msgstr "Scaricamento file: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1926 
 #: src/LinuxClient/library/LogWindow.cs:315
 #, csharp-format
@@ -790,7 +791,7 @@ msgid ""
 msgstr "La cartella specificata non è valida. Rimuovere il carattere di separazione finale (/) e riprovare."
 #: src/LinuxClient/library/iFolderWindow.cs:2338 
 msgid "Show All"
-msgstr "-- Mostra tutto --"
+msgstr "Mostra tutto"
 #: src/LinuxClient/library/iFolderWindow.cs:2358 
 msgid ""
 "The folder you've specified does not exist.  Please select an existing "
@@ -928,7 +929,7 @@ msgstr "Sincronizzazione avviata: {0}"
 #: src/LinuxClient/library/LogWindow.cs:279 
 #, csharp-format
 msgid "Done checking for new iFolders: {0}"
-msgstr "Ricerca di nuove cartelle iFolder completata"
+msgstr "Ricerca di nuove cartelle iFolder completata: {0}"
 #: src/LinuxClient/library/LogWindow.cs:281 
 msgid "Done checking for new iFolders"
 msgstr "Ricerca di nuove cartelle iFolder completata"
@@ -975,7 +976,7 @@ msgstr "Sincronizzazione non eseguita a causa delle norme relative ai tipi di fi
 #: src/LinuxClient/library/LogWindow.cs:420 
 #, csharp-format
 msgid "Insufficient disk space on the server prevented synchronization: {0}"
-msgstr "Spazio su disco insufficiente sul serve. Sincronizzazione non eseguita: {0}"
+msgstr "Spazio su disco insufficiente sul server. Sincronizzazione non eseguita: {0}"
 #: src/LinuxClient/library/LogWindow.cs:426 
 #, csharp-format
 msgid "Insufficient disk space on this computer prevented synchronization: {0}"
@@ -993,7 +994,7 @@ msgid "Save iFolder Log..."
 msgstr "Salva log di iFolder..."
 #: src/LinuxClient/library/LogWindow.cs:485 
 msgid "Overwrite the existing file?"
-msgstr "Sovrascrivi il file esistente"
+msgstr "Sovrascrivere il file esistente?"
 #: src/LinuxClient/library/LogWindow.cs:486 
 msgid ""
 "The file you selected exists.  Selecting yes will overwrite the contents of "
@@ -1034,16 +1035,16 @@ msgid "Username"
 msgstr "Nome utente"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:226 
 msgid "_Details"
-msgstr "Dettagli"
+msgstr "_Dettagli"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:231 
 msgid "Account Settings"
 msgstr "Impostazioni conto"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:261 
 msgid "User Name:"
-msgstr "Nome utente"
+msgstr "Nome utente:"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:295 
 msgid "Remember _password"
-msgstr "Memorizza _parola d'ordine"
+msgstr "Memorizza _password"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:303 
 msgid "_Enable account"
 msgstr "_Abilita conto"
@@ -1055,7 +1056,7 @@ msgid "Logged in"
 msgstr "Login eseguito"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:435 
 msgid "Logged out"
-msgstr "Scollegato"
+msgstr "Logout eseguito"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:440 
 msgid "Disabled"
 msgstr "Disattivato"
@@ -1113,10 +1114,10 @@ msgid ""
 msgstr "Il certificato relativo a questo server iFolder è firmato da un'autorità di certificazione sconosciuta. È possibile che il server a cui si sta tentando di eseguire la connessione non sia \"{0}\". Ciò può costituire un rischio per la riservatezza dei propri dati. Prima di accettare il certificato, è necessario rivolgersi all'amministratore di sistema. Accettare il certificato in modo permanente e continuare la connessione?"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:894 
 msgid "_Log Out"
-msgstr "Logout"
+msgstr "_Logout"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:1275 
 msgid "Your password has expired"
-msgstr "Parola d'ordine scaduta"
+msgstr "Password scaduta"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:1276 
 #, csharp-format
 msgid "You have {0} grace logins remaining."
@@ -1131,7 +1132,7 @@ msgid "Application"
 msgstr "Applicazione"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:122 
 msgid "_Show Confirmation dialog when creating iFolders"
-msgstr "Mostra finestra di conferma per la creazione di cartelle iFolder"
+msgstr "_Visualizza finestra di conferma per la creazione di cartelle iFolder"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:127 
 msgid ""
 "To start up iFolder at login, leave iFolder running when you log out and "
@@ -1145,7 +1146,7 @@ msgid "Notify of share_d iFolders"
 msgstr "Notifica cartelle iFolder con_divise"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:170 
 msgid "Notify of conflic_ts"
-msgstr "Notifica di confli_tti"
+msgstr "Notifica confli_tti"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:176 
 msgid "Notify when a _user joins"
 msgstr "Notifica adesione utente"
@@ -1157,13 +1158,13 @@ msgid "Synchronize iFolders Every"
 msgstr "Sincronizza cartelle iFolder ogni"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:240 
 msgid "seconds"
-msgstr "Secondi"
+msgstr "secondi"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:241 
 msgid "minutes"
 msgstr "minuti"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:242 
 msgid "hours"
-msgstr "Ore"
+msgstr "ore"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:243 
 msgid "days"
 msgstr "giorni"
@@ -1183,7 +1184,7 @@ msgid "System Name:"
 msgstr "Nome sistema:"
 #: src/LinuxClient/library/RemoveAccountDialog.cs:121 
 msgid "_Remove my iFolders and files from the server"
-msgstr "Rimuovi cartelle iFolder e file personali dal server"
+msgstr "_Rimuovi cartelle iFolder e file personali dal server"
 #: src/LinuxClient/library/RemoveAccountDialog.cs:163 
 msgid "Removing iFolders from Server"
 msgstr "Rimozione delle cartelle iFolder dal server in corso"
@@ -1195,7 +1196,7 @@ msgid ""
 "If you've shared any iFolders with other users, they will no longer be able "
 "to synchronize them with the server.  Additionally, you will no longer be "
 "able to access these iFolders from any other computer."
-msgstr "La rimozione delle cartelle iFolder dal server causerà la cancellazione dei file archiviati sul server. I file nel computer locale verranno conservati.\n\nSe si condividono le cartelle iFolder con altri utenti, questi ultimi non potranno più eseguire la sincronizzazione con il server. Non sarà inoltre più possibile accedere alle cartelle iFolder da altri computer."
+msgstr "La rimozione delle cartelle iFolder dal server causerà la cancellazione dei file archiviati sul server. I file nel computer locale verranno mantenuti.\n\nSe si condividono le cartelle iFolder con altri utenti, questi ultimi non potranno più eseguire la sincronizzazione con il server. Non sarà inoltre più possibile accedere alle cartelle iFolder da altri computer."
 #: src/LinuxClient/library/Util.cs:167 
 #, csharp-format
 msgid "Error displaying help file \"{0}\""
@@ -1235,7 +1236,7 @@ msgid "Other Contributors:"
 msgstr "Altri collaboratori:"
 #: src/LinuxClient/library/Util.cs:231 
 msgid "Copyright (C) 2004-2005 Novell, Inc."
-msgstr "Copyright (C) 2004-2005, Novell Inc."
+msgstr "Copyright (C) 2004-2005 Novell, Inc."
 #: src/LinuxClient/library/Util.cs:232 
 msgid ""
 "The iFolder Project is a file sharing solution that allows people to easily "
@@ -1245,7 +1246,7 @@ msgid ""
 msgstr "Il progetto iFolder è una soluzione per la condivisione di file che consente agli utenti di condividere facilmente cartelle o file di qualsiasi tipo indipendentemente dal sistema operativo utilizzato. Il progetto è basato sulla piattaforma Mono/.NET Framework in modo da garantire la completa integrazione in ambienti desktop esistenti."
 #: src/LinuxClient/library/Util.cs:332 
 msgid "The username or password is invalid"
-msgstr "Nome utente o parola d'ordine non valido"
+msgstr "Nome utente o password non valido"
 #: src/LinuxClient/library/Util.cs:333 
 msgid "Please try again."
 msgstr "Riprovare."
@@ -1254,7 +1255,7 @@ msgid "The user account is disabled"
 msgstr "Conto utente disabilitato"
 #: src/LinuxClient/library/Util.cs:337 src/LinuxClient/library/Util.cs:341 
 msgid "Please contact your network administrator for assistance."
-msgstr "Contattare l'amministratore di rete per assistenza."
+msgstr "Per ottenere assistenza, contattare l'amministratore di rete."
 #: src/LinuxClient/library/Util.cs:340 
 msgid "The user account is locked"
 msgstr "Conto utente bloccato"
@@ -1277,4 +1278,4 @@ msgid ""
 "The Simias process must be running for iFolder to work.  Restart iFolder.  "
 "If the problem persists, please contact your network administrator for "
 "assistance."
-msgstr "È necessario che il processo Simias sia in esecuzione per il corretto funzionamento di iFolder. Riavviare iFolder. Se il problema persiste, contattare l'amministratore di rete per assistenza."
+msgstr "Per il corretto funzionamento di iFolder, è necessario che il processo Simias sia in esecuzione. Riavviare iFolder. Se il problema persiste, contattare l'amministratore di rete per ottenere assistenza."

@@ -1,3 +1,4 @@
+
 # English translations for ifolder-build package.
 # Copyright (C) 2005 THE ifolder-build'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the ifolder-build package.
@@ -31,11 +32,11 @@ msgstr "K této složce iFolder máte přístup pouze pro čtení. Soubory, kter
 #: src/LinuxClient/application/iFolderApplication.cs:466 
 #, csharp-format
 msgid "Incomplete Synchronization: {0}"
-msgstr "Neúplná synchronizace: {0}"
+msgstr "Neúplná synchronizace"
 #: src/LinuxClient/application/iFolderApplication.cs:533 
 #, csharp-format
 msgid "New iFolder \"{0}\""
-msgstr "Nová složka iFolder \"{0}\""
+msgstr "Nová složka iFolder"
 #: src/LinuxClient/application/iFolderApplication.cs:535 
 #, csharp-format
 msgid ""
@@ -92,7 +93,7 @@ msgid "Quit"
 msgstr "Ukončit"
 #: src/LinuxClient/library/AccountDialog.cs:54 
 msgid "Details"
-msgstr "Podrobnosti"
+msgstr "Podrobné údaje"
 #: src/LinuxClient/library/AccountDialog.cs:65 
 msgid "Close"
 msgstr "Zavřít"
@@ -117,7 +118,7 @@ msgstr "Diskový prostor na serveru"
 #: src/LinuxClient/library/AccountDialog.cs:201 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:195
 msgid "Quota:"
-msgstr "Kvóta:"
+msgstr "Kvóta"
 #: src/LinuxClient/library/AccountDialog.cs:209 
 #: src/LinuxClient/library/AccountDialog.cs:221
 #: src/LinuxClient/library/AccountDialog.cs:233
@@ -136,15 +137,15 @@ msgstr "Používáno:"
 #: src/LinuxClient/library/AccountDialog.cs:225 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:412
 msgid "Available:"
-msgstr "K dispozici:"
+msgstr "K dispozici"
 #: src/LinuxClient/library/AccountDialog.cs:258 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:441
 msgid "full"
-msgstr "plný"
+msgstr "Úplná"
 #: src/LinuxClient/library/AccountDialog.cs:263 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:446
 msgid "empty"
-msgstr "prázdný"
+msgstr "Prázdné"
 #: src/LinuxClient/library/AccountDialog.cs:273 
 #: src/LinuxClient/library/AccountDialog.cs:275
 #: src/LinuxClient/library/AccountDialog.cs:277
@@ -158,10 +159,10 @@ msgid "N/A"
 msgstr "Nepoužívá se"
 #: src/LinuxClient/library/CreateDialog.cs:81 
 msgid "New iFolder..."
-msgstr "New iFolder..."
+msgstr "Nová složka iFolder"
 #: src/LinuxClient/library/CreateDialog.cs:105 
 msgid "More options"
-msgstr "More options"
+msgstr "Více možností"
 #: src/LinuxClient/library/CreateDialog.cs:114 
 #: src/LinuxClient/library/iFolderLoginDialog.cs:176
 #: src/LinuxClient/library/iFolderLoginDialog.cs:195
@@ -175,10 +176,10 @@ msgid "File name:"
 msgstr "Název souboru:"
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:65 
 msgid "Set Up iFolder: "
-msgstr "Nastavit složku iFolder: "
+msgstr "Nastavit složku iFolder {0}"
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:78 
 msgid "Details:"
-msgstr "Podrobnosti:"
+msgstr "Podrobné údaje"
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:88 
 #, csharp-format
 msgid ""
@@ -188,7 +189,7 @@ msgid ""
 msgstr "Název: {0}\nSdíleno: {1}\nPřístup: {2}"
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:96 
 msgid "The iFolder will be set up here:"
-msgstr "The iFolder will be set up here:"
+msgstr "Složka iFolder bude vytvořena zde:"
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:142 
 #: src/LinuxClient/library/iFolderAccessDialog.cs:114
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:628
@@ -206,7 +207,7 @@ msgstr "Úplné řízení"
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:632
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:707
 msgid "Read Only"
-msgstr "Pouze pro čtení"
+msgstr "Pouze ke čtení"
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:148 
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:634
 #: src/LinuxClient/library/iFolderUserSelector.cs:738
@@ -224,7 +225,7 @@ msgstr "Přístup pro {0}"
 #: src/LinuxClient/library/iFolderAccessDialog.cs:93 
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:144
 msgid "Access"
-msgstr "Přístup"
+msgstr "PŘÍSTUP"
 #: src/LinuxClient/library/iFolderAccessDialog.cs:124 
 msgid "Make this user the owner of the iFolder."
 msgstr "Udělejte z tohoto uživatele vlastníka složky iFoder."
@@ -232,7 +233,7 @@ msgstr "Udělejte z tohoto uživatele vlastníka složky iFoder."
 #: src/LinuxClient/library/iFolderConflictDialog.cs:521
 #: src/LinuxClient/library/iFolderWindow.cs:688
 msgid "Name"
-msgstr "Název"
+msgstr "Název:"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:154 
 msgid "File"
 msgstr "Soubor"
@@ -241,22 +242,22 @@ msgid "Resolve Conflicts"
 msgstr "Vyřešit konflikty"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:327 
 msgid "This iFolder contains conflicts"
-msgstr "Tato složka iFolder obsahuje konflikty"
+msgstr "Tato složka iFolder obsahuje konflikty."
 #: src/LinuxClient/library/iFolderConflictDialog.cs:350 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:350
 msgid "Location:"
-msgstr "Umístění:"
+msgstr "Místo"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:380 
 msgid "Local Version"
 msgstr "Místní verze"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:397 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:441
 msgid "Date:"
-msgstr "Datum:"
+msgstr "Datum"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:406 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:450
 msgid "Size:"
-msgstr "Velikost:"
+msgstr "Velikost"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:424 
 msgid "Server Version"
 msgstr "Verze serveru"
@@ -335,7 +336,7 @@ msgstr "Chyba aplikace iFolder"
 #: src/LinuxClient/library/iFolderExceptionDialog.cs:91
 #: src/LinuxClient/library/iFolderExceptionDialog.cs:99
 msgid "Show Details"
-msgstr "Zobrazit podrobosti"
+msgstr "Zobrazit podrobné údaje"
 #: src/LinuxClient/library/iFolderExceptionDialog.cs:76 
 #: src/LinuxClient/library/iFolderExceptionDialog.cs:98
 msgid ""
@@ -343,7 +344,7 @@ msgid ""
 msgstr "Klepnutím na \"Zobrazit podrobnosti\" získáte úplný text zprávy, kterou jste obdrželi s touto chybou"
 #: src/LinuxClient/library/iFolderExceptionDialog.cs:94 
 msgid "Hide Details"
-msgstr "Skrýt podrobnosti"
+msgstr "(Skrýt podrobnosti.)"
 #: src/LinuxClient/library/iFolderLoginDialog.cs:116 
 msgid "iFolder Login"
 msgstr "Přihlášení složky iFolder"
@@ -360,7 +361,7 @@ msgstr "Heslo:"
 #: src/LinuxClient/library/iFolderLoginDialog.cs:189 
 #: src/LinuxClient/library/iFolderLoginDialog.cs:235
 msgid "_Remember password"
-msgstr "_Pamatovat si heslo"
+msgstr "Pamatovat si heslo"
 #: src/LinuxClient/library/iFolderLoginDialog.cs:245 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:327
 #: src/LinuxClient/library/PrefsAccountsPage.cs:633
@@ -371,15 +372,15 @@ msgstr "_Pamatovat si heslo"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:1014
 #: src/LinuxClient/library/PrefsAccountsPage.cs:1075
 msgid "_Log In"
-msgstr "_Přihlásit"
+msgstr "přihlásit "
 #: src/LinuxClient/library/iFolderMsgDialog.cs:142 
 #: src/LinuxClient/library/iFolderMsgDialog.cs:197
 #: src/LinuxClient/library/iFolderMsgDialog.cs:204
 msgid "Show _Details"
-msgstr "Zobrazit_podrobnosti"
+msgstr "Zobrazit podrobné údaje"
 #: src/LinuxClient/library/iFolderMsgDialog.cs:199 
 msgid "Hide _Details"
-msgstr "Skrýt_ podrobnosti"
+msgstr "(Skrýt podrobnosti.)"
 #: src/LinuxClient/library/iFolderPropertiesDialog.cs:109 
 #: src/LinuxClient/library/iFolderPropertiesDialog.cs:159
 msgid "iFolder Properties"
@@ -387,16 +388,16 @@ msgstr "Vlastnosti složky iFolder"
 #: src/LinuxClient/library/iFolderPropertiesDialog.cs:208 
 #: src/LinuxClient/library/PreferencesWindow.cs:107
 msgid "_General"
-msgstr "_Obecné"
+msgstr "Obecné"
 #: src/LinuxClient/library/iFolderPropertiesDialog.cs:213 
 msgid "_Sharing"
-msgstr "_Sdílení"
+msgstr "Sdílení..."
 #: src/LinuxClient/library/iFolderPropertiesDialog.cs:249 
 msgid "This iFolder contains conflicts."
 msgstr "Tato složka iFolder obsahuje konflikty."
 #: src/LinuxClient/library/iFolderPropertiesDialog.cs:256 
 msgid "_Resolve conflicts"
-msgstr "_Vyřešit konflikty"
+msgstr "Vyřešit konflikty"
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:115 
 msgid "minute(s)"
 msgstr "minut"
@@ -405,7 +406,7 @@ msgid "Set _Quota:"
 msgstr "Nastavte Kvótu:"
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:337 
 msgid "Owner:"
-msgstr "Majitel:"
+msgstr "Majitel"
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:461 
 #: src/LinuxClient/library/PrefsGeneralPage.cs:198
 msgid "Synchronization"
@@ -418,16 +419,16 @@ msgid "Files/Folders to Synchronize:"
 msgstr "Soubory a složky k synchronizaci:"
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:504 
 msgid "Automatically Synchronizes Every:"
-msgstr "Automatická synchronizace každých:"
+msgstr "Automaticky se bude synchronizovat každých:"
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:516 
 msgid "Synchronize _Now"
-msgstr "Synchronizovat_nyní"
+msgstr "Synchronizovat nyní"
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:128 
 msgid "User"
 msgstr "Uživatel"
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:135 
 msgid "State"
-msgstr "Stav"
+msgstr "Okres"
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:189 
 msgid "Acc_ess..."
 msgstr "Pří_stup..."
@@ -453,7 +454,7 @@ msgid "Select Users"
 msgstr "Volba uživatelů"
 #: src/LinuxClient/library/iFolderUserSelector.cs:148 
 msgid "Find:"
-msgstr "Najít:"
+msgstr "Hledat"
 #: src/LinuxClient/library/iFolderUserSelector.cs:154 
 msgid "First Name"
 msgstr "Jméno"
@@ -472,10 +473,10 @@ msgid "(Full or partial name)"
 msgstr "(Celé nebo částečné jméno)"
 #: src/LinuxClient/library/iFolderUserSelector.cs:207 
 msgid "_Add >>"
-msgstr "_Přidat >>"
+msgstr "Přidat"
 #: src/LinuxClient/library/iFolderUserSelector.cs:211 
 msgid "_Remove"
-msgstr "_Odebrat"
+msgstr "Odebrat"
 #: src/LinuxClient/library/iFolderUserSelector.cs:239 
 msgid "Selected Users"
 msgstr "Vybraní uživatelé"
@@ -511,14 +512,14 @@ msgid "Incomplete synchronization"
 msgstr "Neúplná synchronizace"
 #: src/LinuxClient/library/iFolderWindow.cs:186 
 msgid "Checking for changes"
-msgstr "Kontrola změn"
+msgstr "Kontrola změn: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:189 
 msgid "Server unavailable"
 msgstr "Server není k dispozici"
 #: src/LinuxClient/library/iFolderWindow.cs:369 
 #: src/LinuxClient/library/iFolderWindow.cs:1828
 msgid "Idle..."
-msgstr "Nečinný..."
+msgstr "Nečinné"
 #: src/LinuxClient/library/iFolderWindow.cs:416 
 msgid "New"
 msgstr "Nový"
@@ -539,7 +540,7 @@ msgid "Synchronize the selected iFolder"
 msgstr "Synchronizovat vybranou složku iFolder"
 #: src/LinuxClient/library/iFolderWindow.cs:439 
 msgid "Share"
-msgstr "Sdílet"
+msgstr "Sdílení"
 #: src/LinuxClient/library/iFolderWindow.cs:440 
 msgid "Share the selected iFolder"
 msgstr "Sdílet vybranou složku iFolder"
@@ -556,22 +557,22 @@ msgstr "Filtrovat seznam složek iFolder podle serverů"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:248
 #: src/LinuxClient/library/RemoveAccountDialog.cs:91
 msgid "Server:"
-msgstr "Server:"
+msgstr "Server"
 #: src/LinuxClient/library/iFolderWindow.cs:515 
 msgid "_New"
-msgstr "_Nový"
+msgstr "Nový"
 #: src/LinuxClient/library/iFolderWindow.cs:525 
 msgid "_Set Up..."
-msgstr "_Nastavit"
+msgstr "Nastavit"
 #: src/LinuxClient/library/iFolderWindow.cs:530 
 msgid "_Delete"
-msgstr "_Odstranit"
+msgstr "Odstranit"
 #: src/LinuxClient/library/iFolderWindow.cs:536 
 msgid "Re_move"
 msgstr "Ode_brat"
 #: src/LinuxClient/library/iFolderWindow.cs:546 
 msgid "Share _with..."
-msgstr "Sdílet_s..."
+msgstr "Sdílet s..."
 #: src/LinuxClient/library/iFolderWindow.cs:550 
 msgid "Resolve conflic_ts"
 msgstr "Vyřešit konflikt_y"
@@ -580,34 +581,34 @@ msgid "S_ynchronize now"
 msgstr "S_ynchronizovat teď"
 #: src/LinuxClient/library/iFolderWindow.cs:560 
 msgid "_Revert to a Normal Folder"
-msgstr "_Změnit na normální složku"
+msgstr "Změnit na normální složku"
 #: src/LinuxClient/library/iFolderWindow.cs:578 
 msgid "i_Folder"
 msgstr "Složka i_Folder"
 #: src/LinuxClient/library/iFolderWindow.cs:586 
 msgid "_Preferences"
-msgstr "_Předvolby"
+msgstr "Předvolby"
 #: src/LinuxClient/library/iFolderWindow.cs:591 
 msgid "_Edit"
-msgstr "_Upravit"
+msgstr "Úpravy"
 #: src/LinuxClient/library/iFolderWindow.cs:609 
 msgid "_Accounts"
-msgstr "Úč_ty"
+msgstr "Účty"
 #: src/LinuxClient/library/iFolderWindow.cs:614 
 msgid "Synchronization _Log"
-msgstr "_Synchronizační protokol"
+msgstr "Synchronizační protokol"
 #: src/LinuxClient/library/iFolderWindow.cs:618 
 msgid "_View"
-msgstr "_Zobrazit"
+msgstr "Zobrazení"
 #: src/LinuxClient/library/iFolderWindow.cs:633 
 msgid "A_bout"
 msgstr "O _programu"
 #: src/LinuxClient/library/iFolderWindow.cs:641 
 msgid "_Help"
-msgstr "_Nápověda"
+msgstr "Nápověda"
 #: src/LinuxClient/library/iFolderWindow.cs:700 
 msgid "Location"
-msgstr "Umístění"
+msgstr "Místo"
 #: src/LinuxClient/library/iFolderWindow.cs:713 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:199
 msgid "Status"
@@ -651,7 +652,7 @@ msgstr "Obnovit"
 #: src/LinuxClient/library/iFolderWindow.cs:1228 
 #, csharp-format
 msgid "Unable to open iFolder \"{0}\""
-msgstr "Nelze otevřít složku iFolder \"{0}\""
+msgstr "Nelze otevřít složku iFolder {0}."
 #: src/LinuxClient/library/iFolderWindow.cs:1229 
 msgid ""
 "iFolder could not open the Nautilus File Manager or the Konquerer File "
@@ -671,7 +672,7 @@ msgstr "Tato operace převede složku iFolder zpět na normální složku a soub
 #: src/LinuxClient/library/iFolderWindow.cs:1527
 #, csharp-format
 msgid "Remove iFolder {0}?"
-msgstr "Odebrat složku iFolder {0}?"
+msgstr "Odebrat složku iFolder"
 #: src/LinuxClient/library/iFolderWindow.cs:1499 
 msgid ""
 "This removes the iFolder from your local computer.  Because you are the "
@@ -711,12 +712,12 @@ msgstr "Kontrola změn: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1776 
 #, csharp-format
 msgid "Synchronizing: {0}"
-msgstr "Synchronizace: {0}"
+msgstr "Probíhá synchronizace"
 #: src/LinuxClient/library/iFolderWindow.cs:1908 
 #: src/LinuxClient/library/LogWindow.cs:310
 #, csharp-format
 msgid "Deleting file: {0}"
-msgstr "Odstraňování souboru: {0}"
+msgstr "odstranění souboru\n"
 #: src/LinuxClient/library/iFolderWindow.cs:1916 
 #: src/LinuxClient/library/LogWindow.cs:338
 #, csharp-format
@@ -779,7 +780,7 @@ msgid "Invalid folder specified"
 msgstr "Byla zadána neplatná složka"
 #: src/LinuxClient/library/iFolderWindow.cs:2180 
 msgid "An invalid folder was specified."
-msgstr "Byla zadána neplatná složka."
+msgstr "Byla zadána neplatná složka"
 #: src/LinuxClient/library/iFolderWindow.cs:2196 
 msgid "An invalid folder was specified"
 msgstr "Byla zadána neplatná složka"
@@ -790,7 +791,7 @@ msgid ""
 msgstr "Složka, kterou jste zadali, je neplatná.  Odstraňte prosím znak koncového oddělovače (/) a zkuste to znovu."
 #: src/LinuxClient/library/iFolderWindow.cs:2338 
 msgid "Show All"
-msgstr "Zobrazit vše"
+msgstr "-- Zobrazit vše --"
 #: src/LinuxClient/library/iFolderWindow.cs:2358 
 msgid ""
 "The folder you've specified does not exist.  Please select an existing "
@@ -1031,10 +1032,10 @@ msgid "System Name"
 msgstr "Název systému"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:188 
 msgid "Username"
-msgstr "Uživatelské jméno"
+msgstr "Uživatelské jméno:"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:226 
 msgid "_Details"
-msgstr "_Podrobnosti"
+msgstr "Podrobné údaje"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:231 
 msgid "Account Settings"
 msgstr "Nastavení účtu"
@@ -1046,13 +1047,13 @@ msgid "Remember _password"
 msgstr "Pamatovat si heslo"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:303 
 msgid "_Enable account"
-msgstr "_Povolit účet"
+msgstr " Povolit účet"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:310 
 msgid "De_fault account"
 msgstr "Vý_chozí účet"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:431 
 msgid "Logged in"
-msgstr "Přihlášen"
+msgstr "Přihlášení provedeno\n"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:435 
 msgid "Logged out"
 msgstr "Odhlášen"
@@ -1113,7 +1114,7 @@ msgid ""
 msgstr "Certifikát pro tento server iFolder byl podepsán neznámým certifikačním úřadem.  Možná se připojujete k serveru, který předstírá, že je \"{0}\", což by mohlo ohrozit vaše důvěrné informace.  Před přijetím tohoto certifikátu byste ho měli ověřit u správce systému.  Chcete přijmout tento certifikát trvale a pokračovat v připojení?"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:894 
 msgid "_Log Out"
-msgstr "_Odhlásit"
+msgstr "Odhlásit"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:1275 
 msgid "Your password has expired"
 msgstr "Vaše heslo vypršelo"
@@ -1128,10 +1129,11 @@ msgid ""
 msgstr "Momentálně vytváříte nový účet. Uzavřením okna nebo změnou na jinou stránku tuto operaci zrušíte."
 #: src/LinuxClient/library/PrefsGeneralPage.cs:102 
 msgid "Application"
-msgstr "Aplikace"
+msgstr "Aplikace %s"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:122 
 msgid "_Show Confirmation dialog when creating iFolders"
-msgstr "_Zobrazit potvrzovací dialogové okno při vytváření složek iFolder"
+msgstr "Zobrazit potvrzovací dialogové okno při vytváření složky iFolder
+"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:127 
 msgid ""
 "To start up iFolder at login, leave iFolder running when you log out and "
@@ -1145,10 +1147,10 @@ msgid "Notify of share_d iFolders"
 msgstr "Upozornění na s_dílené složky iFolder"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:170 
 msgid "Notify of conflic_ts"
-msgstr "Upozornit na konflikt_ty"
+msgstr "Upozornit na konflikt_ts"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:176 
 msgid "Notify when a _user joins"
-msgstr "Upozornit na připojení _uživatele"
+msgstr "Upozornit na připojení uživatele"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:219 
 msgid "Automatically S_ynchronize iFolders"
 msgstr "Automaticky s_ynchronizovat složky iFolder"
@@ -1180,7 +1182,7 @@ msgid "Remove this iFolder account?"
 msgstr "Odebrat tento účet iFolder?"
 #: src/LinuxClient/library/RemoveAccountDialog.cs:77 
 msgid "System Name:"
-msgstr "Název systému:"
+msgstr "Název systému"
 #: src/LinuxClient/library/RemoveAccountDialog.cs:121 
 msgid "_Remove my iFolders and files from the server"
 msgstr "Odebrat moje složky iFolder a soubory ze serveru"
@@ -1205,37 +1207,37 @@ msgid "iFolder could not open the default web browser to show the help file."
 msgstr "Aplikace iFolder nemohla otevřít výchozí webový prohlížeč, aby se zobrazil soubor nápovědy."
 #: src/LinuxClient/library/Util.cs:180 
 msgid "iFolder 3 Team"
-msgstr "Tým iFolder 3"
+msgstr "			Tým iFolder 3"
 #: src/LinuxClient/library/Util.cs:182 
 msgid "Developers:"
-msgstr "Vývojáři:"
+msgstr "Vývojáři"
 #: src/LinuxClient/library/Util.cs:194 
 msgid "Quality Assurance:"
-msgstr "Zajištění kvality:"
+msgstr "Zajištění kvality"
 #: src/LinuxClient/library/Util.cs:201 
 msgid "Product Management:"
-msgstr "Produktový management:"
+msgstr "Produktový management"
 #: src/LinuxClient/library/Util.cs:205 
 msgid "Documentation:"
-msgstr "Dokumentace:"
+msgstr "Dokumentace"
 #: src/LinuxClient/library/Util.cs:208 
 msgid "Special Thanks"
-msgstr "Zvláštní poděkování"
+msgstr "			Zvláštní poděkování"
 #: src/LinuxClient/library/Util.cs:210 
 msgid "Retired Contributers:"
 msgstr "Přispěvatelé, kteří již nejsou aktivní:"
 #: src/LinuxClient/library/Util.cs:216 
 msgid "Organizations:"
-msgstr "Organizace:"
+msgstr "Organizace"
 #: src/LinuxClient/library/Util.cs:220 
 msgid "Code Contributors:"
-msgstr "Přispěvatelé kódování:"
+msgstr "Přispěvatelé kódování"
 #: src/LinuxClient/library/Util.cs:226 
 msgid "Other Contributors:"
-msgstr "Další přispěvatelé:"
+msgstr "Další přispěvatelé"
 #: src/LinuxClient/library/Util.cs:231 
 msgid "Copyright (C) 2004-2005 Novell, Inc."
-msgstr "Copyright (C) 2004-2005 Novell, Inc."
+msgstr "Copyright (C) 1998, Novell Inc."
 #: src/LinuxClient/library/Util.cs:232 
 msgid ""
 "The iFolder Project is a file sharing solution that allows people to easily "
@@ -1254,7 +1256,7 @@ msgid "The user account is disabled"
 msgstr "Uživatelský účet je vypnut"
 #: src/LinuxClient/library/Util.cs:337 src/LinuxClient/library/Util.cs:341 
 msgid "Please contact your network administrator for assistance."
-msgstr "Požádejte o pomoc správce sítě."
+msgstr "Pokud chcete získat pomoc, kontaktujte vašeho správce sítě."
 #: src/LinuxClient/library/Util.cs:340 
 msgid "The user account is locked"
 msgstr "Uživatelský účet je uzamčen"
@@ -1265,7 +1267,7 @@ msgstr "Nelze kontaktovat určený server"
 msgid ""
 "Please verify the information entered and try again.  If the problem "
 "persists, please contact your network administrator."
-msgstr "Ověřte prosím zadané informace a zkuste to znovu. Pokud problém přetrvává, obraťte se na správce systému."
+msgstr "Ověřte prosím zadané informace a zkuste to znovu.  Pokud problém přetrvává, kontaktujte vašeho správce systému."
 #: src/LinuxClient/library/Util.cs:350 
 msgid "Authentication Status Code"
 msgstr "Stavový kód ověření"
@@ -1277,4 +1279,4 @@ msgid ""
 "The Simias process must be running for iFolder to work.  Restart iFolder.  "
 "If the problem persists, please contact your network administrator for "
 "assistance."
-msgstr "Aby mohla aplikace iFolder pracovat, musí běžet proces Simias. Restartujte aplikaci iFolder. Pokud problém přetrvává, obraťte se na správce sítě."
+msgstr "Aby mohla aplikace iFolder pracovat, musí běžet proces Simias.  Restartujte aplikaci iFolder.  Pokud problém přetrvává, kontaktujte vašeho správce sítě."
