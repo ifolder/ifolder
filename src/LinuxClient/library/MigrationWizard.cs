@@ -46,6 +46,7 @@ namespace Novell.iFolder
 		private Gnome.DruidPageEdge		IntroductoryPage;
 		private Gnome.DruidPageStandard	MigrationOptionsPage;
 		private Gnome.DruidPageStandard	UserInformationPage;
+		private Gnome.DruidPageStandard 	RAPage;
 		private DruidConnectPage		MigratePage;
 		private Gnome.DruidPageEdge		SummaryPage;
 		private DomainController		domainController;
@@ -60,6 +61,8 @@ namespace Novell.iFolder
 		private bool 				Prepared;
 		private iFolderData			ifdata;
 		private bool				migrationStatus;
+
+		public event MigrationValidateClickedHandler ValidateClicked;
 		
 		private Gdk.Pixbuf				AddAccountPixbuf;
 		private MigrationWindow page;
@@ -80,8 +83,8 @@ namespace Novell.iFolder
 		/// Server Info page
 		///
 		private ComboBox 			domainList;
-		private CheckButton			encryptionCheckButton;
-		private CheckButton			sslCheckButton;
+		private RadioButton			encryptionCheckButton;
+		private RadioButton			sslCheckButton;
 		
 		///
 		/// Migrate Page Widgets
@@ -91,7 +94,23 @@ namespace Novell.iFolder
 		private Label		MigrationOptionLabel;
 		private Label		ShowSecurityLabel;
 		private Label		SecurityLabel;
-		
+
+		///
+		/// RAPage widgets
+		///
+
+	        private iFolderTreeView RATreeView;
+	        private ScrolledWindow  RAScrolledWindow;
+	        private Entry           PassPhraseEntry;
+	        private Entry           PassPhraseVerifyEntry;
+	        private CheckButton	RememberPassPhraseCheckButton;
+	        private string[]        RAList;
+	        private ListStore       RATreeStore;
+	        private bool            PassPhraseSet;
+	        private bool            RememberPassPhrase;
+		private Label		RetypePassPhraseLabel;
+		private Label		SelectRALabel;
+	
 		/// Wait Message
 		///
 		iFolderWaitDialog	WaitDialog;
@@ -140,6 +159,7 @@ namespace Novell.iFolder
 			AccountDruid.AppendPage(CreateIntroductoryPage());
 			AccountDruid.AppendPage(CreateMigrationOptionsPage());
 			AccountDruid.AppendPage(CreateUserInformationPage());
+			AccountDruid.AppendPage(CreateRAPage());
 			AccountDruid.AppendPage(CreateMigratePage());
 			AccountDruid.AppendPage(CreateSummaryPage());
 			
@@ -285,6 +305,8 @@ namespace Novell.iFolder
 
 			UserInformationPage.Prepared +=
 				new Gnome.PreparedHandler(OnUserInformationPagePrepared);
+
+			UserInformationPage.NextClicked += new Gnome.NextClickedHandler(OnUserInfoForwardClicked);
 			
 			///
 			/// Content
@@ -320,13 +342,219 @@ namespace Novell.iFolder
 			l.Xalign = 0.0F;
 			
 			// Row 4
-			encryptionCheckButton = new CheckButton(Util.GS("Encrypt iFolder"));
+			encryptionCheckButton = new RadioButton(Util.GS("Encrypt iFolder"));
 			table.Attach(encryptionCheckButton, 1,3, 3,4,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			//Row 5
-			sslCheckButton = new CheckButton(Util.GS("Use Secure channel for data transfer"));
+			sslCheckButton = new RadioButton(encryptionCheckButton, Util.GS("Sharable"));
 			table.Attach(sslCheckButton, 1,3, 4,5, AttachOptions.Fill | AttachOptions.Expand, 0,0,0); 
 			return UserInformationPage;
+		}
+
+		///
+		/// RAPage
+		///
+		private Gnome.DruidPage CreateRAPage()
+		{
+			RAPage = new Gnome.DruidPageStandard(
+				Util.GS("PassPhrase"),
+				AddAccountPixbuf,
+				null);
+			RAPage.CancelClicked += new Gnome.CancelClickedHandler(OnCancelClicked);
+			RAPage.Prepared +=
+				new Gnome.PreparedHandler(OnRAPagePrepared);
+			RAPage.NextClicked +=
+				new Gnome.NextClickedHandler(OnValidateClicked);
+			///
+			/// Content
+			///
+			Table table = new Table(6, 3, false);
+			RAPage.VBox.PackStart(table, false, false, 0);
+			table.ColumnSpacing = 6;
+			table.RowSpacing = 6;
+			table.BorderWidth = 12;
+
+			// Row 1
+			Label l = new Label(Util.GS("Enter the Passphrase"));
+			table.Attach(l, 0,3, 0,1,
+				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+			l.LineWrap = true;
+			l.Xalign = 0.0F;
+
+			// Row 2
+			table.Attach(new Label(""), 0,1, 1,2,
+				AttachOptions.Fill, 0,12,0); // spacer
+			l = new Label(Util.GS("_Passphrase:"));
+			table.Attach(l, 1,2, 1,2,
+				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+			l.Xalign = 0.0F;
+			PassPhraseEntry = new Entry();
+			PassPhraseEntry.Visibility = false;
+			table.Attach(PassPhraseEntry, 2,3, 1,2,
+				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+			PassPhraseEntry.Changed += new EventHandler(ChangeSensitivity);
+			l.MnemonicWidget = PassPhraseEntry;
+
+			// Row 3
+			RetypePassPhraseLabel = new Label(Util.GS("R_etype the Passphrase:"));
+			table.Attach(RetypePassPhraseLabel, 1,2, 2,3,
+				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+			l.Xalign = 0.0F;
+			PassPhraseVerifyEntry = new Entry();
+			PassPhraseVerifyEntry.Visibility = false;
+			table.Attach(PassPhraseVerifyEntry, 2,3, 2,3,
+				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+			PassPhraseVerifyEntry.Changed += new EventHandler(ChangeSensitivity);
+			l.MnemonicWidget = PassPhraseVerifyEntry;
+
+			// Row 4
+			RememberPassPhraseCheckButton = new CheckButton(Util.GS("_Remember the Passphrase"));
+			table.Attach(RememberPassPhraseCheckButton, 2,3, 3,4,
+				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+
+			// Row 5
+			SelectRALabel = new Label(Util.GS("Select the Passphrase Recovery Agent"));
+			table.Attach(SelectRALabel, 0,3, 4,5,
+				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+			l.LineWrap = true;
+			l.Xalign = 0.0F;
+
+			// Row 6-7
+			RATreeView = new iFolderTreeView ();
+			ScrolledWindow RAScrolledWindow = new ScrolledWindow();
+			RAScrolledWindow.ShadowType = Gtk.ShadowType.None;
+			RAScrolledWindow.HscrollbarPolicy = Gtk.PolicyType.Automatic;
+			RAScrolledWindow.VscrollbarPolicy = Gtk.PolicyType.Automatic;
+			RAScrolledWindow.Add(RATreeView);
+
+			RATreeStore = new ListStore(typeof(string));
+			RATreeView.Model = RATreeStore;
+
+			// RA Name Column
+			TreeViewColumn raNameColumn = new TreeViewColumn();
+			raNameColumn.Title = Util.GS("Passphrase Recovery Agents");
+			CellRendererText cr = new CellRendererText();
+			cr.Xpad = 5;
+			raNameColumn.PackStart(cr, false);
+			raNameColumn.SetCellDataFunc(cr,
+						     new TreeCellDataFunc(RANameCellTextDataFunc));
+			raNameColumn.Resizable = true;
+			raNameColumn.MinWidth = 250;
+
+			RATreeView.AppendColumn(raNameColumn);
+
+			RATreeView.Selection.Mode = SelectionMode.Single;
+
+ 			table.Attach(RAScrolledWindow, 0,3, 5,7,
+ 				AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
+
+//			AccountDruid.CancelButton.Sensitive = false;
+
+			return RAPage;		
+		}
+
+		private void RANameCellTextDataFunc (Gtk.TreeViewColumn tree_column,
+				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
+				Gtk.TreeIter iter)
+		{
+			string value = (string) tree_model.GetValue(iter, 0);
+			((CellRendererText) cell).Text = value;
+		}
+
+		private void OnValidateClicked(object o, EventArgs args)
+		{
+			bool NextPage = true;
+		    try {
+		        //Validate the PassPhrase Locally.
+		        if ( !PassPhraseSet )
+			{
+			        if (PassPhraseEntry.Text == PassPhraseVerifyEntry.Text)
+				{
+				        Status passPhraseStatus = domainController.SetPassPhrase ((domains[domainList.Active]).ID, Util.PadString(PassPhraseEntry.Text, 16), "ra");
+					if(passPhraseStatus.statusCode == StatusCodes.Success)
+					{
+						domainController.StorePassPhrase( (domains[domainList.Active]).ID, Util.PadString(PassPhraseEntry.Text, 16),
+								CredentialType.Basic, RememberPassPhraseCheckButton.Active);
+					}
+					else
+					{
+					       iFolderMsgDialog dialog = new iFolderMsgDialog(
+        	                                       null,
+                	                               iFolderMsgDialog.DialogType.Error,
+                        	                       iFolderMsgDialog.ButtonSet.None,
+                                	               Util.GS("Errot setting the Passphrase"),
+                                        	       Util.GS("Unable to change the Passphrase"),
+	                                               	Util.GS("Please try again"));
+        	                               dialog.Run();
+                	                       dialog.Hide();
+                        	               dialog.Destroy();
+                                	       dialog = null;
+						NextPage = false;
+					
+					}
+
+				} else {
+				       iFolderMsgDialog dialog = new iFolderMsgDialog(
+                                               null,
+                                               iFolderMsgDialog.DialogType.Error,
+                                               iFolderMsgDialog.ButtonSet.None,
+                                               Util.GS("PassPhrase mismatch"),
+                                               Util.GS("The PassPhrase and retyped PassPhrase are not same"),
+                                               Util.GS("Please enter the passphrase again"));
+                                       dialog.Run();
+                                       dialog.Hide();
+                                       dialog.Destroy();
+                                       dialog = null;				        
+					NextPage = false;
+				       
+				      // return false;
+				}
+			} else {
+			    // PassPhrase is already set.
+			        Status validationStatus = domainController.ValidatePassPhrase ((domains[domainList.Active]).ID, Util.PadString(PassPhraseEntry.Text, 16) );
+				if (validationStatus.statusCode == StatusCodes.PassPhraseInvalid ) 
+				{
+					NextPage = false;
+				       iFolderMsgDialog dialog = new iFolderMsgDialog(
+                                               null,
+                                               iFolderMsgDialog.DialogType.Error,
+                                               iFolderMsgDialog.ButtonSet.None,
+                                               Util.GS("PassPhrase Invlid"),
+                                               Util.GS("The PassPhrase enter is not valid"),
+                                               Util.GS("Please enter the passphrase again"));
+                                       dialog.Run();
+                                       dialog.Hide();
+                                       dialog.Destroy();
+                                       dialog = null;				        
+				}
+				else if(validationStatus.statusCode == StatusCodes.Success )
+	                                domainController.StorePassPhrase( (domains[domainList.Active]).ID, Util.PadString(PassPhraseEntry.Text, 16),
+								  CredentialType.Basic, RememberPassPhraseCheckButton.Active);
+			}
+		    } 
+			catch (Exception ex)
+		    	{
+				iFolderMsgDialog dialog = new iFolderMsgDialog(
+			                                               null,
+                        			                       iFolderMsgDialog.DialogType.Error,
+			                                               iFolderMsgDialog.ButtonSet.None,
+                        			                       Util.GS("Unable to set the passphrase"),
+			                                               Util.GS(ex.Message),
+                        			                       Util.GS("Please enter the passphrase again"));
+				dialog.Run();
+				dialog.Hide();
+				dialog.Destroy();
+				dialog = null;
+				NextPage = false;
+			//Avoid ifolder crash incase of exception.
+		    }
+			if( NextPage == false)
+			{
+				Console.WriteLine("In the same page");
+				AccountDruid.Page = UserInformationPage;
+			//	return false;
+			}
+		//	return true;
 		}
 		
 		///
@@ -473,29 +701,42 @@ namespace Novell.iFolder
                         ChangeStatus(status);
                 }
 
-                private void ChangeStatus(int SecurityPolicy)
-                {
-                        encryptionCheckButton.Active = sslCheckButton.Active = false;
-                        encryptionCheckButton.Sensitive = sslCheckButton.Sensitive = false;
-                        if(SecurityPolicy !=0)
-                        {
-                                if( (SecurityPolicy & (int)SecurityState.encrypt) == (int) SecurityState.encrypt)
-                                {
-                                        if( (SecurityPolicy & (int)SecurityState.enforceEncrypt) == (int) SecurityState.enforceEncrypt)
-                                                encryptionCheckButton.Active = true;
-                                        else
-                                                encryptionCheckButton.Sensitive = true;
-                                }
-                                if( (SecurityPolicy & (int)SecurityState.SSL) == (int) SecurityState.SSL)
-                                {
-                                        if( (SecurityPolicy & (int)SecurityState.enforceSSL) == (int) SecurityState.enforceSSL)
-                                                sslCheckButton.Active = true;
-                                        else
-                                                sslCheckButton.Sensitive = true;
-                                }
-                        }
-
-                }
+		private void ChangeStatus(int SecurityPolicy)
+		{
+			encryptionCheckButton.Active = sslCheckButton.Active = false;
+			encryptionCheckButton.Sensitive = sslCheckButton.Sensitive = false;
+			
+			if(SecurityPolicy !=0)
+			{
+				if( (SecurityPolicy & (int)SecurityState.encrypt) == (int) SecurityState.encrypt)
+				{
+					if( (SecurityPolicy & (int)SecurityState.enforceEncrypt) == (int) SecurityState.enforceEncrypt)
+						encryptionCheckButton.Active = true;
+					else
+					{
+						encryptionCheckButton.Sensitive = true;
+						sslCheckButton.Sensitive = true;
+					}
+				}
+				else
+				{
+					sslCheckButton.Active = true;
+				}
+				/*
+				if( (SecurityPolicy & (int)SecurityState.SSL) == (int) SecurityState.SSL)
+				{
+					if( (SecurityPolicy & (int)SecurityState.enforceSSL) == (int) SecurityState.enforceSSL)
+						sslCheckButton.Active = true;
+					else
+						sslCheckButton.Sensitive = true;
+				}
+				*/
+			}
+			else
+			{
+				sslCheckButton.Active = true;
+			}
+		}
 
 		
 		private void OnUserInformationPagePrepared(object o, Gnome.PreparedArgs args)
@@ -522,6 +763,45 @@ namespace Novell.iFolder
 			ChangeStatus(ifws.GetSecurityPolicy(domains[domainList.Active].ID));
 			// Hack to make sure the "Forward" button has the right text.
 			ForwardButton.Label = "gtk-go-forward";
+		}
+
+		private void OnRAPagePrepared(object o, Gnome.PreparedArgs args)
+		{
+			this.Title = Util.GS("iFolder Migration Assistant - (4 of 5)");
+			PassPhraseSet = false;
+
+			try
+			{
+				if ( domainController.IsPassPhraseSet ((domains[domainList.Active]).ID) == false)
+				{
+				       string[] list = domainController.GetRAList ((domains[domainList.Active]).ID);
+
+				       foreach (string raagent in list )
+					       RATreeStore.AppendValues (raagent);
+
+				} else {
+				       // PassPhrase already available.
+				       PassPhraseSet = true;
+ 				       PassPhraseVerifyEntry.Hide ();
+				       RATreeView.Hide();
+ 				       SelectRALabel.Hide();
+ 				       RetypePassPhraseLabel.Hide();
+				}
+
+				AccountDruid.SetButtonsSensitive(true , true, true, true);
+			}
+			catch(Exception ex)
+			{
+				iFolderMsgDialog errorMsg = new iFolderMsgDialog(null, 
+												iFolderMsgDialog.DialogType.Info,
+												iFolderMsgDialog.ButtonSet.Ok,
+												Util.GS("Migration"),
+												Util.GS("User not Logged-in to the domain"), 
+												string.Format(Util.GS("For creating an encrypted iFolder you should be connected to the domain.")));
+				errorMsg.Run();
+				errorMsg.Destroy();
+				AccountDruid.Page = MigrationOptionsPage;
+			}
 		}
 		
 		private void OnMigratePagePrepared(object o, Gnome.PreparedArgs args)
@@ -695,6 +975,7 @@ namespace Novell.iFolder
 						return true;;
 					}
 				}
+				Console.WriteLine("Migrating:");
 				DirectoryInfo d = new DirectoryInfo(location);
 				
 				// Create iFolder
@@ -765,6 +1046,16 @@ namespace Novell.iFolder
 				
 			}
 		}
+		private void OnUserInfoForwardClicked(object o, EventArgs args)
+		{
+			Console.WriteLine("Forward clicked");
+			// Check for encryption status. If not yes then, skip the RAPage
+//			if( encryptionCheckButton.Active == false)
+//				AccountDruid.Page = RAPage;
+//			else
+//				AccountDruid.Page = MigratePage;
+		}
+
 		private void OnCancelClicked(object o, Gnome.CancelClickedArgs args)
 		{
 			CloseDialog();
@@ -844,6 +1135,18 @@ namespace Novell.iFolder
 				}
 			}
 		}
+
+		private void ChangeSensitivity( object o, EventArgs args)
+		{
+			if( PassPhraseEntry.Text == PassPhraseVerifyEntry.Text)
+				ForwardButton.Sensitive = true;
+			else if(PassPhraseVerifyEntry.Text == "" && PassPhraseEntry.Text.Length > 0)
+			{
+				ForwardButton.Sensitive = true;
+			}
+			else
+				ForwardButton.Sensitive = false;
+		}
 		
 		public void CloseDialog()
 		{
@@ -856,4 +1159,5 @@ namespace Novell.iFolder
 	/// Return true if the connect was successful, otherwise return false.
 	/// </summary>
 //	public delegate bool ConnectClickedHandler(object o, EventArgs args);
+	public delegate bool MigrationValidateClickedHandler(object o, EventArgs args);
 } 

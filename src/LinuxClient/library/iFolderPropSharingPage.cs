@@ -188,12 +188,11 @@ namespace Novell.iFolder
 
 			AddButton = new Button(Gtk.Stock.Add);
 			rightBox.PackStart(AddButton);
+			if( this.ifolder.encryptionAlgorithm != null && this.ifolder.encryptionAlgorithm != "")
+				AddButton.Sensitive = false;
 			AddButton.Clicked += new EventHandler(OnAddUser);
 
-			RemoveButton = new Button(Gtk.Stock.Remove);
-			rightBox.PackStart(RemoveButton);
 			RemoveButton.Clicked += new EventHandler(OnRemoveUser);
-
 			AccessButton = new Button(Util.GS("Acc_ess..."));
 			leftBox.PackStart(AccessButton);
 			AccessButton.Clicked += new EventHandler(OnAccessClicked);

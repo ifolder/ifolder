@@ -786,7 +786,6 @@ namespace Novell.iFolder
 		public iFolderHolder CreateiFolder(string path, string domainID, bool SSL, string EncryptionAlgorithm)
 		{
 			// Manipulate the passphrase to the nearest multiple of eight
-
 			lock(instanceLock)
 			{
 				iFolderWeb newiFolder;
