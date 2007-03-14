@@ -180,7 +180,10 @@ namespace Novell.iFolder
 			else
 				Console.WriteLine("Recovery agent present");
                         foreach (string raagent in RAList )
+			{
+				Console.WriteLine("raagent:{0}", raagent);
                             RATreeStore.AppendValues (raagent);
+			}
 
 			// RA Name Column
 			TreeViewColumn raNameColumn = new TreeViewColumn();
