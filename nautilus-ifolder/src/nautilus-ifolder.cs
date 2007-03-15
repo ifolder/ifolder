@@ -379,7 +379,7 @@ namespace Novell.iFolder.Nautilus
 			{
 				try
 				{
-					simws.StorePassPhrase(DomainID, "", CredentialType.Basic, false);
+					simws.StorePassPhrase(DomainID, "", CredentialType.None, false);
 					status = false;
 				}
 				catch(Exception e)
@@ -494,7 +494,7 @@ namespace Novell.iFolder.Nautilus
                                 Console.WriteLine(" cancelled passphrase entry");
                                 try
                                 {
-                                        simws.StorePassPhrase(DomainID, "", CredentialType.Basic, false);
+                                        simws.StorePassPhrase(DomainID, "", CredentialType.None, false);
                                         string passphrasecheck;
                                         passphrasecheck = simws.GetPassPhrase(DomainID);
                                         if(passphrasecheck == "")
