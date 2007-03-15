@@ -86,13 +86,12 @@ namespace Novell.iFolder
 		public void UpdateiFolder(iFolderWeb ifolder)
 		{
 			this.ifolder = ifolder;
+			if( this.ifolder.encryptionAlgorithm != null && this.ifolder.encryptionAlgorithm != "")
+				this.AddButton.Sensitive = false;		
 
 			RefreshUserList();
 			UpdateWidgets();
 		}
-
-
-
 
 		/// <summary>
 		/// Set up the UI inside the Window
@@ -188,18 +187,14 @@ namespace Novell.iFolder
 
 			AddButton = new Button(Gtk.Stock.Add);
 			rightBox.PackStart(AddButton);
-			if( this.ifolder.encryptionAlgorithm != null && this.ifolder.encryptionAlgorithm != "")
-				AddButton.Sensitive = false;
 			AddButton.Clicked += new EventHandler(OnAddUser);
-
+			RemoveButton = new Button(Gtk.Stock.Remove);
+			rightBox.PackStart(RemoveButton);
 			RemoveButton.Clicked += new EventHandler(OnRemoveUser);
 			AccessButton = new Button(Util.GS("Acc_ess..."));
 			leftBox.PackStart(AccessButton);
 			AccessButton.Clicked += new EventHandler(OnAccessClicked);
 		}
-
-
-
 
 		private void RefreshUserList()
 		{
@@ -553,6 +548,10 @@ namespace Novell.iFolder
 					AccessButton.Sensitive = true;
 				}
 			}
+
+			if( this.ifolder.encryptionAlgorithm != null && this.ifolder.encryptionAlgorithm != "")
+				this.AddButton.Sensitive = false;
+			
 		}
 
 
