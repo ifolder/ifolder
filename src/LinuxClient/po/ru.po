@@ -268,7 +268,7 @@ msgstr "Переименовать"
 #: src/LinuxClient/library/iFolderConflictDialog.cs:482 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:773
 msgid "Enter a new name and click Rename to resolve the conflict."
-msgstr "Введите новое имя и щелкните "Переименовать" для устранения конфликта."
+msgstr "Введите новое имя и щелкните \"Переименовать\" для устранения конфликта."
 #: src/LinuxClient/library/iFolderConflictDialog.cs:533 
 msgid "Folder"
 msgstr "Папка"
@@ -325,7 +325,7 @@ msgid ""
 "The folder you selected is now an iFolder.  To learn more about using "
 "iFolder and sharing iFolders with other users, see \"Managing iFolders\" in "
 "iFolder Help."
-msgstr "Выбранная папка теперь является папкой iFolder. Дополнительную информацию об использовании iFolder персонально и совместно с другими пользователями см. в разделе "Управление папками iFolder" справки по iFolder."
+msgstr "Выбранная папка теперь является папкой iFolder. Дополнительную информацию об использовании iFolder персонально и совместно с другими пользователями см. в разделе \"Управление папками iFolder\" справки по iFolder."
 #: src/LinuxClient/library/iFolderCreationDialog.cs:92 
 msgid "Do not show this message again."
 msgstr "Не выводить больше это сообщение."
@@ -999,7 +999,7 @@ msgstr "Перезаписать существующий файл?"
 msgid ""
 "The file you selected exists.  Selecting yes will overwrite the contents of "
 "this file."
-msgstr "Выбранный файл существует. Выберите "Да", чтобы перезаписать содержимое данного файла."
+msgstr "Выбранный файл существует. Выберите \"Да\", чтобы перезаписать содержимое данного файла."
 #: src/LinuxClient/library/LogWindow.cs:511 
 msgid "Insufficient access"
 msgstr "Неполный доступ"
@@ -1132,7 +1132,7 @@ msgid "Application"
 msgstr "Приложение"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:122 
 msgid "_Show Confirmation dialog when creating iFolders"
-msgstr "_Отображать диалоговое окно "Подтверждение" при создании папок iFolder"
+msgstr "_Отображать диалоговое окно \"Подтверждение\" при создании папок iFolder"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:127 
 msgid ""
 "To start up iFolder at login, leave iFolder running when you log out and "

@@ -32,11 +32,11 @@ msgstr "Masz dostęp do tego folderu iFolder w trybie tylko do odczytu. Umieszcz
 #: src/LinuxClient/application/iFolderApplication.cs:466 
 #, csharp-format
 msgid "Incomplete Synchronization: {0}"
-msgstr "Synchronizacja niepełna"
+msgstr "Synchronizacja niepełna: {0}"
 #: src/LinuxClient/application/iFolderApplication.cs:533 
 #, csharp-format
 msgid "New iFolder \"{0}\""
-msgstr "Nowy iFolder"
+msgstr "Nowy iFolder \"{0}\""
 #: src/LinuxClient/application/iFolderApplication.cs:535 
 #, csharp-format
 msgid ""
@@ -176,7 +176,7 @@ msgid "File name:"
 msgstr "Nazwa pliku:"
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:65 
 msgid "Set Up iFolder: "
-msgstr "Konfiguruj iFolder {0}"
+msgstr "Konfiguruj iFolder: "
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:78 
 msgid "Details:"
 msgstr "Szczegóły"
@@ -512,7 +512,7 @@ msgid "Incomplete synchronization"
 msgstr "Synchronizacja niepełna"
 #: src/LinuxClient/library/iFolderWindow.cs:186 
 msgid "Checking for changes"
-msgstr "Wyszukiwanie zmian: {0}"
+msgstr "Sprawdzanie zmian"
 #: src/LinuxClient/library/iFolderWindow.cs:189 
 msgid "Server unavailable"
 msgstr "Serwer niedostępny"
@@ -672,7 +672,7 @@ msgstr "Spowoduje to przywrócenie iFolderu z powrotem do postaci zwykłego fold
 #: src/LinuxClient/library/iFolderWindow.cs:1527
 #, csharp-format
 msgid "Remove iFolder {0}?"
-msgstr "Usuń iFolder"
+msgstr "Usuń iFolder {0}?"
 #: src/LinuxClient/library/iFolderWindow.cs:1499 
 msgid ""
 "This removes the iFolder from your local computer.  Because you are the "
@@ -698,7 +698,7 @@ msgstr "Spowoduje to usunięcie użytkownika jako członka iFolderu. Nie można 
 #: src/LinuxClient/library/LogWindow.cs:251
 #, csharp-format
 msgid "Checking for new iFolders: {0}"
-msgstr "Wyszukiwanie nowych iFolderów..."
+msgstr "Wyszukiwanie nowych iFolderów: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1745 
 #: src/LinuxClient/library/iFolderWindow.cs:1771
 #: src/LinuxClient/library/LogWindow.cs:253
@@ -712,12 +712,12 @@ msgstr "Wyszukiwanie zmian: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1776 
 #, csharp-format
 msgid "Synchronizing: {0}"
-msgstr "Synchronizowanie"
+msgstr "Synchronizowanie: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1908 
 #: src/LinuxClient/library/LogWindow.cs:310
 #, csharp-format
 msgid "Deleting file: {0}"
-msgstr "usuwanie pliku\n"
+msgstr "Usuwanie pliku: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1916 
 #: src/LinuxClient/library/LogWindow.cs:338
 #, csharp-format
@@ -929,7 +929,7 @@ msgstr "Synchronizacja rozpoczęta: {0}"
 #: src/LinuxClient/library/LogWindow.cs:279 
 #, csharp-format
 msgid "Done checking for new iFolders: {0}"
-msgstr "Wyszukiwanie nowych iFolderów zakończone"
+msgstr "Wyszukiwanie nowych iFolderów zakończone: {0}"
 #: src/LinuxClient/library/LogWindow.cs:281 
 msgid "Done checking for new iFolders"
 msgstr "Wyszukiwanie nowych iFolderów zakończone"
@@ -1053,7 +1053,7 @@ msgid "De_fault account"
 msgstr "_Domyślne konto"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:431 
 msgid "Logged in"
-msgstr "Zalogowano\n"
+msgstr "Zalogowany"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:435 
 msgid "Logged out"
 msgstr "Wylogowany"
@@ -1129,7 +1129,7 @@ msgid ""
 msgstr "Trwa tworzenie nowego konta. Zamknięcie tego okna lub przejście na inną stronę spowoduje anulowanie wykonywanej operacji."
 #: src/LinuxClient/library/PrefsGeneralPage.cs:102 
 msgid "Application"
-msgstr "Aplikacja %s"
+msgstr "Aplikacja"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:122 
 msgid "_Show Confirmation dialog when creating iFolders"
 msgstr "Pokaż okno dialogowe potwierdzenia podczas tworzeniu iFolderów"

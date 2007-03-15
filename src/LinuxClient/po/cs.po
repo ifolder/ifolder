@@ -32,11 +32,11 @@ msgstr "K této složce iFolder máte přístup pouze pro čtení. Soubory, kter
 #: src/LinuxClient/application/iFolderApplication.cs:466 
 #, csharp-format
 msgid "Incomplete Synchronization: {0}"
-msgstr "Neúplná synchronizace"
+msgstr "Neúplná synchronizace: {0}"
 #: src/LinuxClient/application/iFolderApplication.cs:533 
 #, csharp-format
 msgid "New iFolder \"{0}\""
-msgstr "Nová složka iFolder"
+msgstr "Nová složka iFolder \"{0}\""
 #: src/LinuxClient/application/iFolderApplication.cs:535 
 #, csharp-format
 msgid ""
@@ -176,7 +176,7 @@ msgid "File name:"
 msgstr "Název souboru:"
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:65 
 msgid "Set Up iFolder: "
-msgstr "Nastavit složku iFolder {0}"
+msgstr "Nastavit složku iFolder: "
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:78 
 msgid "Details:"
 msgstr "Podrobné údaje"
@@ -512,7 +512,7 @@ msgid "Incomplete synchronization"
 msgstr "Neúplná synchronizace"
 #: src/LinuxClient/library/iFolderWindow.cs:186 
 msgid "Checking for changes"
-msgstr "Kontrola změn: {0}"
+msgstr "Kontrola změn"
 #: src/LinuxClient/library/iFolderWindow.cs:189 
 msgid "Server unavailable"
 msgstr "Server není k dispozici"
@@ -672,7 +672,7 @@ msgstr "Tato operace převede složku iFolder zpět na normální složku a soub
 #: src/LinuxClient/library/iFolderWindow.cs:1527
 #, csharp-format
 msgid "Remove iFolder {0}?"
-msgstr "Odebrat složku iFolder"
+msgstr "Odebrat složku iFolder {0}?"
 #: src/LinuxClient/library/iFolderWindow.cs:1499 
 msgid ""
 "This removes the iFolder from your local computer.  Because you are the "
@@ -698,7 +698,7 @@ msgstr "Tato operace vás odebere jako člena aplikace iFolder. Dokud vás vlast
 #: src/LinuxClient/library/LogWindow.cs:251
 #, csharp-format
 msgid "Checking for new iFolders: {0}"
-msgstr "Kontrola nových složek iFolder..."
+msgstr "Kontrola nových složek iFolder: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1745 
 #: src/LinuxClient/library/iFolderWindow.cs:1771
 #: src/LinuxClient/library/LogWindow.cs:253
@@ -712,12 +712,12 @@ msgstr "Kontrola změn: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1776 
 #, csharp-format
 msgid "Synchronizing: {0}"
-msgstr "Probíhá synchronizace"
+msgstr "Synchronizace: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1908 
 #: src/LinuxClient/library/LogWindow.cs:310
 #, csharp-format
 msgid "Deleting file: {0}"
-msgstr "odstranění souboru\n"
+msgstr "Odstraňování souboru: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1916 
 #: src/LinuxClient/library/LogWindow.cs:338
 #, csharp-format
@@ -929,7 +929,7 @@ msgstr "Synchronizace spuštěna: {0}"
 #: src/LinuxClient/library/LogWindow.cs:279 
 #, csharp-format
 msgid "Done checking for new iFolders: {0}"
-msgstr "Kontrola nových složek iFolder je dokončena"
+msgstr "Kontrola nových složek iFolder je dokončena: {0}"
 #: src/LinuxClient/library/LogWindow.cs:281 
 msgid "Done checking for new iFolders"
 msgstr "Kontrola nových složek iFolder je dokončena"
@@ -1053,7 +1053,7 @@ msgid "De_fault account"
 msgstr "Vý_chozí účet"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:431 
 msgid "Logged in"
-msgstr "Přihlášení provedeno\n"
+msgstr "Přihlášení provedeno"
 #: src/LinuxClient/library/PrefsAccountsPage.cs:435 
 msgid "Logged out"
 msgstr "Odhlášen"
@@ -1129,11 +1129,10 @@ msgid ""
 msgstr "Momentálně vytváříte nový účet. Uzavřením okna nebo změnou na jinou stránku tuto operaci zrušíte."
 #: src/LinuxClient/library/PrefsGeneralPage.cs:102 
 msgid "Application"
-msgstr "Aplikace %s"
+msgstr "Aplikace"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:122 
 msgid "_Show Confirmation dialog when creating iFolders"
-msgstr "Zobrazit potvrzovací dialogové okno při vytváření složky iFolder
-"
+msgstr "_Zobrazit potvrzovací dialogové okno při vytváření složek iFolder"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:127 
 msgid ""
 "To start up iFolder at login, leave iFolder running when you log out and "
