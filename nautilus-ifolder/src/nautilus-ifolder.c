@@ -1383,7 +1383,7 @@ create_ifolder_thread (gpointer user_data)
 	item = (NautilusMenuItem *)user_data;
 	files = g_object_get_data (G_OBJECT (item), "files");
 	domain_id = (char *)g_object_get_data (G_OBJECT (item), "domain_id");
-	encryption = (gboolean)g_object_get_data(G_OBJECT(item), "encrypt");
+	encryption = (gboolean)(*((int *)g_object_get_data(G_OBJECT(item), "encrypt")));
 	if( encryption == TRUE)
 	{
 		DEBUG_IFOLDER(("Ramesh: Encryption selected"));
@@ -1448,6 +1448,7 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 	GtkTreeIter iter;
 	GtkCellRenderer *renderer;
 	char *domain_id;
+	int encryption_option;
 
 	int default_domain_idx = 0;
 	
@@ -1631,7 +1632,8 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 		 * have to free the memory being used by the domain_id char *.
 		 */
 		g_object_set_data (G_OBJECT (item), "domain_id", domain_id);
-		g_object_set_data (G_OBJECT(item), "encrypt", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (encrypt)));
+		encryption_option = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (encrypt));
+		g_object_set_data (G_OBJECT(item), "encrypt", &encryption_option);
 /*
 		g_object_set_data(G_OBJECT(item), "encryption_button", encrypt);
 		g_object_set_data(G_OBJECT(item), "sharable_button", shared);
