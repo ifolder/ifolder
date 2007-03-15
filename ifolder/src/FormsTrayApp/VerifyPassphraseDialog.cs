@@ -117,6 +117,7 @@ namespace Novell.iFolderCom
 			this.Passphrase.Size = new System.Drawing.Size(240, 20);
 			this.Passphrase.TabIndex = 3;
 			this.Passphrase.Text = "";
+			this.Passphrase.TextChanged += new EventHandler(Passphrase_TextChanged);
 			// 
 			// savePassphrase
 			// 
@@ -172,7 +173,15 @@ namespace Novell.iFolderCom
 
 		private void btnOk_Click(object sender, System.EventArgs e)
 		{
-			Status passPhraseStatus =  simws.ValidatePassPhrase(this.DomainID, this.Passphrase.Text);
+			Status passPhraseStatus = null;
+			try
+			{
+				passPhraseStatus =  simws.ValidatePassPhrase(this.DomainID, PadString(this.Passphrase.Text, 16));
+			}
+			catch(Exception ex)
+			{
+				MessageBox.Show("Unable to validate the Passphrase. "+ ex.Message);
+			}
 			if( passPhraseStatus != null)
 			{
 				if( passPhraseStatus.statusCode == StatusCodes.PassPhraseInvalid)  // check for invalid passphrase
@@ -185,7 +194,7 @@ namespace Novell.iFolderCom
 				{
 					try
 					{
-						simws.StorePassPhrase( DomainID, this.Passphrase.Text, CredentialType.Basic, this.savePassphrase.Checked);
+						simws.StorePassPhrase( DomainID, PadString(this.Passphrase.Text, 16), CredentialType.Basic, this.savePassphrase.Checked);
 						status = true;
 						this.Dispose();
 						this.Close();
@@ -193,6 +202,7 @@ namespace Novell.iFolderCom
 					catch(Exception ex) 
 					{
 						// TODO: Show error Messahe
+						MessageBox.Show("Unable to store Passphrase");
 						status = false;
 					}
 				}
@@ -202,6 +212,33 @@ namespace Novell.iFolderCom
 		private void VerifyPassphraseDialog_Load(object sender, System.EventArgs e)
 		{
 			this.btnOk.Enabled = false;
+			this.waterMark.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder48.png"));
 		}
+
+		private void Passphrase_TextChanged(object sender, EventArgs e)
+		{
+			if( this.Passphrase.Text.Length > 0)
+				this.btnOk.Enabled = true;
+			else
+				this.btnOk.Enabled = false;
+		}
+
+		private string PadString(string Passhrase, int length)
+		{
+			int minimumLength = length;
+			int incLength = 8;
+			
+			string NewPassphrase = Passhrase;
+
+			while(NewPassphrase.Length % incLength !=0 || NewPassphrase.Length < minimumLength)
+			{
+				NewPassphrase += Passhrase;
+				if(NewPassphrase.Length < minimumLength)
+					continue;
+				NewPassphrase = NewPassphrase.Remove((NewPassphrase.Length /incLength)*incLength, NewPassphrase.Length % incLength);
+			}
+			return NewPassphrase;
+		}
+
 	}
 }

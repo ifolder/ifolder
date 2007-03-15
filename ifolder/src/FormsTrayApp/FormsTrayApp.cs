@@ -684,7 +684,8 @@ namespace Novell.FormsTrayApp
 					shellNotifyIcon.Icon = trayIcon;
 
 					// Display the overlay icon on all iFolders.
-					updateOverlayIcons();
+					if(accountPrompt == false)
+						updateOverlayIcons();
 
 					if (accountPrompt)
 					{
