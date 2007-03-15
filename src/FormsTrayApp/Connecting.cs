@@ -400,8 +400,16 @@ namespace Novell.FormsTrayApp
 				 */
 				
 				bool passPhraseStatus = false;
-				
-				bool passphraseStatus = this.simiasWebService.IsPassPhraseSet(this.domainInfo.ID);
+				bool passphraseStatus = false;
+				try
+				{
+					passphraseStatus = this.simiasWebService.IsPassPhraseSet(this.domainInfo.ID);
+				}
+				catch(Exception ex)
+				{
+					MessageBox.Show("Unable to check for passphrase. "+ ex.Message);
+					BeginInvoke( this.connectDoneDelegate );
+				}
 				/*
 				if( passphraseStatus )
 					MessageBox.Show("passphrase", "passphrase is set");

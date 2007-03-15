@@ -1571,6 +1571,8 @@ namespace Novell.FormsTrayApp
 					result = true;
 					domain.DomainInfo.Authenticated = false;
 					lvi.Tag = domain;
+					// Domain Logged out. Remove Passphrase..
+					this.simiasWebService.StorePassPhrase(domain.ID, "", CredentialType.None, false);
 				}
 			}
 

@@ -697,6 +697,7 @@ namespace Novell.iFolderCom
 								string caption = resourceManager.GetString("errorTitle");
 								MyMessageBox mmb = new MyMessageBox("Unable to talk to the server. First login to server" , caption, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 								mmb.ShowDialog();
+								return;
 							}
 							if(passphraseStatus == true)
 							{
@@ -1029,6 +1030,7 @@ namespace Novell.iFolderCom
 			this.Passphrase.Size = new System.Drawing.Size(240, 20);
 			this.Passphrase.TabIndex = 3;
 			this.Passphrase.Text = "";
+			this.Passphrase.TextChanged +=new EventHandler(Passphrase_TextChanged);
 			// 
 			// savePassphrase
 			// 
@@ -1074,6 +1076,23 @@ namespace Novell.iFolderCom
 		}
 		#endregion
 
+		private string PadString(string Passhrase, int length)
+		{
+			int minimumLength = length;
+			int incLength = 8;
+			
+			string NewPassphrase = Passhrase;
+
+			while(NewPassphrase.Length % incLength !=0 || NewPassphrase.Length < minimumLength)
+			{
+				NewPassphrase += Passhrase;
+				if(NewPassphrase.Length < minimumLength)
+					continue;
+				NewPassphrase = NewPassphrase.Remove((NewPassphrase.Length /incLength)*incLength, NewPassphrase.Length % incLength);
+			}
+			return NewPassphrase;
+		}
+
 		private void btnCancel_Click(object sender, System.EventArgs e)
 		{
 			simws.StorePassPhrase(DomainID, "", CredentialType.None, false);
@@ -1084,7 +1103,7 @@ namespace Novell.iFolderCom
 
 		private void btnOk_Click(object sender, System.EventArgs e)
 		{
-			Status passPhraseStatus =  simws.ValidatePassPhrase(this.DomainID, this.Passphrase.Text);
+			Status passPhraseStatus =  simws.ValidatePassPhrase(this.DomainID, PadString(this.Passphrase.Text, 16));
 			if( passPhraseStatus != null)
 			{
 				if( passPhraseStatus.statusCode == StatusCodes.PassPhraseInvalid)  // check for invalid passphrase
@@ -1097,7 +1116,7 @@ namespace Novell.iFolderCom
 				{
 					try
 					{
-						simws.StorePassPhrase( DomainID, this.Passphrase.Text, CredentialType.Basic, this.savePassphrase.Checked);
+						simws.StorePassPhrase( DomainID, PadString(this.Passphrase.Text, 16), CredentialType.Basic, this.savePassphrase.Checked);
 						status = true;
 						this.Dispose();
 						this.Close();
@@ -1105,6 +1124,7 @@ namespace Novell.iFolderCom
 					catch(Exception ex) 
 					{
 						// TODO: Show error Messahe
+						MessageBox.Show("Unable to store passphrase. "+ex.Message);
 						status = false;
 					}
 				}
@@ -1114,6 +1134,15 @@ namespace Novell.iFolderCom
 		private void VerifyPassphraseDialog_Load(object sender, System.EventArgs e)
 		{
 			this.btnOk.Enabled = false;
+			this.waterMark.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder48.png"));
+		}
+
+		private void Passphrase_TextChanged(object sender, EventArgs e)
+		{
+			if( this.Passphrase.Text.Length > 0)
+				this.btnOk.Enabled = true;
+			else
+				this.btnOk.Enabled = false;
 		}
 	}
 
@@ -1335,10 +1364,18 @@ namespace Novell.iFolderCom
 			if( this.Passphrase.Text == this.RetypePassphrase.Text)
 			{
 				string publicKey = "";
-				Status passPhraseStatus = simws.SetPassPhrase( DomainID, this.Passphrase.Text, null, publicKey);
+				Status passPhraseStatus = null;
+				try
+				{
+					passPhraseStatus = simws.SetPassPhrase( DomainID, PadString(this.Passphrase.Text, 16), null, publicKey);
+				}
+				catch(Exception ex)
+				{
+					MessageBox.Show("Unable to set passphrase. "+ ex.Message);
+				}
 				if(passPhraseStatus.statusCode == StatusCodes.Success)
 				{
-					simws.StorePassPhrase( DomainID, this.Passphrase.Text, CredentialType.Basic, this.savePassphrase.Checked);
+					simws.StorePassPhrase( DomainID, PadString(this.Passphrase.Text, 16), CredentialType.Basic, this.savePassphrase.Checked);
 					string passphr = simws.GetPassPhrase(DomainID);
 					//MessageBox.Show("Passphrase is set & stored", passphr, MessageBoxButtons.OK);
 					this.status= simws.IsPassPhraseSet(DomainID);
@@ -1362,6 +1399,7 @@ namespace Novell.iFolderCom
 			}
 			else
 			{
+				MessageBox.Show("Passphrase and re-typed passphrase doesn't match");
 				status = false;
 			}
 		}
@@ -1369,6 +1407,7 @@ namespace Novell.iFolderCom
 		private void EnterPassphraseDialog_Load(object sender, System.EventArgs e)
 		{
 			this.btnOk.Enabled = false;
+			this.waterMark.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder48.png"));
 		}
 
 		private void Passphrase_TextChanged(object sender, System.EventArgs e)
@@ -1388,6 +1427,24 @@ namespace Novell.iFolderCom
 			else
 				this.btnOk.Enabled = false;
 		}
+
+		private string PadString(string Passhrase, int length)
+		{
+			int minimumLength = length;
+			int incLength = 8;
+			
+			string NewPassphrase = Passhrase;
+
+			while(NewPassphrase.Length % incLength !=0 || NewPassphrase.Length < minimumLength)
+			{
+				NewPassphrase += Passhrase;
+				if(NewPassphrase.Length < minimumLength)
+					continue;
+				NewPassphrase = NewPassphrase.Remove((NewPassphrase.Length /incLength)*incLength, NewPassphrase.Length % incLength);
+			}
+			return NewPassphrase;
+		}
+
 	}
 }
 
