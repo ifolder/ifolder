@@ -32,11 +32,11 @@ msgstr "Ehhez az iFolder mappához Olvasásra hozzáférése van. Az ebben az iF
 #: src/LinuxClient/application/iFolderApplication.cs:466 
 #, csharp-format
 msgid "Incomplete Synchronization: {0}"
-msgstr "Befejezetlen szinkronizálás"
+msgstr "Befejezetlen szinkronizálás: {0}"
 #: src/LinuxClient/application/iFolderApplication.cs:533 
 #, csharp-format
 msgid "New iFolder \"{0}\""
-msgstr "Új iFolder"
+msgstr "Új iFolder \"{0}\""
 #: src/LinuxClient/application/iFolderApplication.cs:535 
 #, csharp-format
 msgid ""
@@ -176,7 +176,7 @@ msgid "File name:"
 msgstr "Fájlnév:"
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:65 
 msgid "Set Up iFolder: "
-msgstr "A(z) {0} iFolder beállítása"
+msgstr "iFolder beállítása: "
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:78 
 msgid "Details:"
 msgstr "Részletek"
@@ -512,7 +512,7 @@ msgid "Incomplete synchronization"
 msgstr "Befejezetlen szinkronizálás"
 #: src/LinuxClient/library/iFolderWindow.cs:186 
 msgid "Checking for changes"
-msgstr "Változások keresése: {0}"
+msgstr "Változások keresése"
 #: src/LinuxClient/library/iFolderWindow.cs:189 
 msgid "Server unavailable"
 msgstr "Nem érhető el a kiszolgáló"
@@ -698,7 +698,7 @@ msgstr "Ezzel megszűnik az iFolder mappa tagjának lenni. Az iFolder mappát cs
 #: src/LinuxClient/library/LogWindow.cs:251
 #, csharp-format
 msgid "Checking for new iFolders: {0}"
-msgstr "Új iFolder mappák keresése..."
+msgstr "Új iFolder mappák keresése: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1745 
 #: src/LinuxClient/library/iFolderWindow.cs:1771
 #: src/LinuxClient/library/LogWindow.cs:253
@@ -712,12 +712,12 @@ msgstr "Változások keresése: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1776 
 #, csharp-format
 msgid "Synchronizing: {0}"
-msgstr "Szinkronizálás"
+msgstr "Szinkronizálás: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1908 
 #: src/LinuxClient/library/LogWindow.cs:310
 #, csharp-format
 msgid "Deleting file: {0}"
-msgstr "fájl törlése\n"
+msgstr "Fájl törlése: {0}"
 #: src/LinuxClient/library/iFolderWindow.cs:1916 
 #: src/LinuxClient/library/LogWindow.cs:338
 #, csharp-format
@@ -929,7 +929,7 @@ msgstr "Szinkronizálás megkezdve: {0}"
 #: src/LinuxClient/library/LogWindow.cs:279 
 #, csharp-format
 msgid "Done checking for new iFolders: {0}"
-msgstr "Az új iFolder mappák keresése befejeződött"
+msgstr "Az új iFolder mappák keresése befejeződött: {0}"
 #: src/LinuxClient/library/LogWindow.cs:281 
 msgid "Done checking for new iFolders"
 msgstr "Az új iFolder mappák keresése befejeződött"
@@ -1129,7 +1129,7 @@ msgid ""
 msgstr "Jelenleg egy új fiókot hoz létre. Ha bezárja az ablakot, vagy átvált egy másik oldalra, azzal megszakítja a műveletet."
 #: src/LinuxClient/library/PrefsGeneralPage.cs:102 
 msgid "Application"
-msgstr "%s alkalmazás"
+msgstr "Alkalmazás"
 #: src/LinuxClient/library/PrefsGeneralPage.cs:122 
 msgid "_Show Confirmation dialog when creating iFolders"
 msgstr "Megerősítés párbeszédpanel megjelenítése iFolder létrehozásakor"
