@@ -128,6 +128,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "MigrationPassphrasePage.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MigrationPassphrasePage.resx"
+                    DependentUpon = "MigrationPassphrasePage.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "MigrationServerPage.cs"
                     SubType = "UserControl"
                     BuildAction = "Compile"

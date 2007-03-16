@@ -726,7 +726,7 @@ namespace Novell.iFolderCom
 							{
 								// No Passphrase
 								successful = false;
-								MyMessageBox mmb = new MyMessageBox("Passphrase error", "Passphrase needs to be supplied for encrypting the iFolder", string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+								MyMessageBox mmb = new MyMessageBox("Passphrase needs to be supplied for encrypting the iFolder", "Passphrase error", string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 								mmb.ShowDialog();
 							}
 							else
@@ -1108,7 +1108,7 @@ namespace Novell.iFolderCom
 			{
 				if( passPhraseStatus.statusCode == StatusCodes.PassPhraseInvalid)  // check for invalid passphrase
 				{
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox("Passphrase Invalid", "Unable to validate the passphrase", "Please try again", MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox("Unable to validate the passphrase", "Passphrase Invalid", "Please try again", MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 					mmb.Dispose();	
 				}
@@ -1381,7 +1381,7 @@ namespace Novell.iFolderCom
 					this.status= simws.IsPassPhraseSet(DomainID);
 					if( status == true)
 					{
-						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox("Enter passphrase", "Successfully set the passphrase", "", MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox("Successfully set the passphrase", "Enter passphrase", "",MyMessageBoxButtons.OK, MyMessageBoxIcon.None);
 						mmb.ShowDialog();
 						mmb.Dispose();
 						this.Dispose();
@@ -1392,7 +1392,7 @@ namespace Novell.iFolderCom
 				{
 					// Unable to set the passphrase
 					status = false;
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox("Error setting the passphrase", "Unable to set the passphrase", "Please try again", MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox("Unable to set the passphrase", "Error setting the passphrase", "Please try again", MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 					mmb.Dispose();
 				}

@@ -186,7 +186,7 @@ namespace Novell.iFolderCom
 			{
 				if( passPhraseStatus.statusCode == StatusCodes.PassPhraseInvalid)  // check for invalid passphrase
 				{
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox("Passphrase Invalid", "Unable to validate the passphrase", "Please try again", MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox("Unable to validate the passphrase", "Passphrase Invalid", "Please try again", MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 					mmb.Dispose();	
 				}
