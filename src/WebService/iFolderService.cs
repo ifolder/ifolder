@@ -1707,57 +1707,15 @@ namespace Novell.iFolder.Web
 					throw new Exception("AtOrInsideCollectionPath");
 			}
 
-//			Collection c = DiscoveryFramework.CreateProxyCollection (store, DomainID, iFolderID, Path.GetFullPath(LocalPath));
-//			CreateProxy (store, DomainID, iFolderID, Path.GetFullPath (path));
 			DiscoveryFramework.CreateProxy (store, DomainID, iFolderID, Path.GetFullPath (path));
 
 			iFolderWeb ifolder = new iFolderWeb(cinfo);
-//			ifolder.State = "WaitConnect";
-//			iFolderWeb ifolder = new iFolderWeb(c);
+// 			ifolder.State = "Available";
+// 			ifolder.Role = "Master";
+// 			ifolder.UnManagedPath = path;
+// 			ifolder.IsSubscription = false;
+
 			return ifolder;
-		}
-
-		public void CreateProxy1 (Store store, string DomainID,string iFolderID, string localPath )
-		{
-			ArrayList commitList = new ArrayList();
-
-			CollectionInfo cinfo = DiscoveryFramework.GetCollectionInfo (iFolderID);
-
-			Collection c = new Collection(store, cinfo.Name,
-				cinfo.CollectionID, DomainID);
-
-			c.HostID = cinfo.HostID;
-			
-			commitList.Add(c);
-
-			// Create the member as well
-                        Domain domain = store.GetDomain(DomainID);
-			Member m = domain.GetCurrentMember ();
-
-			Member member = new Member(m.Name, cinfo.MemberNodeID, m.UserID, Simias.Storage.Access.Rights.Admin, null);
-			member.IsOwner = true;
-			member.Proxy = true;
-			commitList.Add(member);
-
-// 			// check for a dir node
-// 			if (((this.DirNodeID != null) && (this.DirNodeID.Length > 0))
-// 				&& (this.DirNodeName != null) && (this.DirNodeName.Length > 0)
-// 				&& (this.CollectionRoot != null) && (this.CollectionRoot.Length > 0))
-// 			{
-
-//			string path = Path.Combine(this.CollectionRoot, this.DirNodeName);
-
- 			DirNode dn = new DirNode(c, localPath, cinfo.DirNodeID);
-// 			DirNode dn = new DirNode(c, localPath);
-// //			DirNode dn = new DirNode(c, localPath, c.ID);
- 			if (!Directory.Exists(localPath)) Directory.CreateDirectory(localPath);
-
-// 			dn.Proxy = true;
- 			commitList.Add(dn);
-//			}
-
-			c.Proxy = true;
-			c.Commit((Node[]) commitList.ToArray(typeof(Node)));
 		}
 
 		/// <summary>
