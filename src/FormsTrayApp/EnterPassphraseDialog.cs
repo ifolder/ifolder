@@ -247,7 +247,7 @@ namespace Novell.iFolderCom
 					this.status= simws.IsPassPhraseSet(DomainID);
 					if( status == true)
 					{
-						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox("Enter passphrase", "Successfully set the passphrase", "", MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox("Successfully set the passphrase", "Enter passphrase", "", MyMessageBoxButtons.OK, MyMessageBoxIcon.None);
 						mmb.ShowDialog();
 						mmb.Dispose();
 						this.Dispose();
@@ -258,7 +258,7 @@ namespace Novell.iFolderCom
 				{
 					// Unable to set the passphrase
 					status = false;
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox("Error setting the passphrase", "Unable to set the passphrase", "Please try again", MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox("Unable to set the passphrase", "Error setting the passphrase", "Please try again", MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 					mmb.Dispose();
 				}

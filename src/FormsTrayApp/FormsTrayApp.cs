@@ -657,6 +657,8 @@ namespace Novell.FormsTrayApp
 								if (dw.IsSlave)
 								{
 									preferences.AddDomainToList(dw);
+									// Clear Passphrase
+									this.simiasWebService.StorePassPhrase( dw.ID, "", CredentialType.None, false);
 								}
 
 								BeginInvoke( globalProperties.addDomainToListDelegate, new object[] {dw} );

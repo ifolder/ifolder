@@ -30,6 +30,7 @@ namespace Novell.FormsTrayApp
 	/// </summary>
 	public enum iFolderState
 	{
+		Initial,
 		/// <summary>
 		/// The Normal state.
 		/// </summary>
