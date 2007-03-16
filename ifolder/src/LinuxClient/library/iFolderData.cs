@@ -846,18 +846,34 @@ namespace Novell.iFolder
 					return null;
 				}
 
-				if(newifolder.ID != ifolderID)
-				{
+ 				if(newifolder.ID != ifolderID)
+ 				{
 					subToiFolderMap.Remove(ifolderID);
-					if (newifolder.IsSubscription)
-					{
+ 					if (newifolder.IsSubscription)
+ 					{
 						subToiFolderMap[newifolder.ID]
 							= newifolder.CollectionID;
 					}
 				}
 
+
 				ifHolder = GetiFolder(ifolderID);
 				ifHolder.iFolder = newifolder;
+
+				if (ifolderIters.ContainsKey(ifolderID))
+				{
+					// Emit a TreeModel RowChanged Event
+					TreeIter iter = (TreeIter)
+					    ifolderIters[ifolderID];
+					TreePath path = iFolderListStore.GetPath(iter);
+					if (path != null)
+					{
+						iFolderChangedHandler changedHandler =
+							new iFolderChangedHandler(
+							path, iter, iFolderListStore);
+						GLib.Idle.Add(changedHandler.IdleHandler);
+					}
+				}
 
 				// FIXME: Figure out if there's a better way to cause the UI to update besides causing a Refresh
 				Refresh();

@@ -316,6 +316,7 @@ namespace Novell.iFolder
 			return vbox;
 		}
 		
+
 		/// <summary>
 		/// Creates the menubar for the iFolderWindow
 		/// </summary>
@@ -1381,7 +1382,7 @@ namespace Novell.iFolder
 						menu.Append (item_share);
 						item_share.Activated += new EventHandler(
 								OnShareSynchronizedFolder);
-
+						
 						if (!holder.iFolder.Role.Equals("Master"))
 						{
 							MenuItem item_revert = new MenuItem (
@@ -1407,6 +1408,18 @@ namespace Novell.iFolder
 						menu.Append (item_properties);
 						item_properties.Activated +=
 							new EventHandler(OnShowFolderProperties);
+
+						if (holder.State == iFolderState.Initial && holder.iFolder.State == "Available")
+						{
+						        //iFolder has not synced yet. So these functions needs to be disabled.
+						        item_share.Sensitive = false;
+							item_properties.Sensitive = false;
+						}
+						else 
+						{
+						        item_share.Sensitive = true;
+							item_properties.Sensitive = true;
+						}
 					}
 
 					menu.ShowAll();
@@ -2204,8 +2217,18 @@ namespace Novell.iFolder
 					// Show the Local iFolder Buttons
 					OpenSynchronizedFolderButton.Visible	= true;
 					SynchronizeNowButton.Visible			= true;
-					ShareSynchronizedFolderButton.Visible	= true;
-					ViewFolderPropertiesButton.Visible		= true;
+
+					if (holder.State == iFolderState.Initial && holder.iFolder.State == "Available")
+					{
+					        ShareSynchronizedFolderButton.Visible	= false;
+					        ViewFolderPropertiesButton.Visible	= false;
+					}
+					else 
+					{
+					        ShareSynchronizedFolderButton.Visible	= true;
+					        ViewFolderPropertiesButton.Visible	= true;
+					}
+
 					RemoveiFolderButton.Visible	= true;
 
 					if (holder.iFolder.HasConflicts)
@@ -2218,12 +2241,29 @@ namespace Novell.iFolder
 				
 				RemoveiFolderButton.Sensitive = true;
 			}
+
 		}
 		
 		private void UpdateMenuSensitivity(iFolderHolder holder)
 		{
 			if (holder != null)
 			{
+			        if((holder.iFolder != null) && (holder.State == iFolderState.Initial))
+ 				{
+				        ShareMenuItem.Sensitive = false;
+					OpenMenuItem.Sensitive = false;
+					SyncNowMenuItem.Sensitive = false;
+					ConflictMenuItem.Sensitive = false;
+					RevertMenuItem.Sensitive = false;
+					DeleteMenuItem.Sensitive = false;
+					RemoveMenuItem.Sensitive = false;
+					RemoveMenuItem.Visible = false;
+					PropMenuItem.Sensitive = false;
+					DownloadMenuItem.Sensitive = false;
+					return ;
+ 				}
+
+
 				if(	(holder.iFolder != null) &&
 									(holder.iFolder.HasConflicts) )
 				{
@@ -2236,18 +2276,31 @@ namespace Novell.iFolder
 //					ConflictButton.Sensitive = false;
 				}
 
+
 				if(!holder.iFolder.IsSubscription)
 				{
 					DownloadMenuItem.Sensitive = false;
-					ShareMenuItem.Sensitive = true;
+
+					if (holder.State == iFolderState.Initial && holder.iFolder.State == "Available")
+					{
+					        ShareMenuItem.Sensitive = false;
+						PropMenuItem.Sensitive = false;
+					}
+					else 
+					{
+					        ShareMenuItem.Sensitive = true;
+						PropMenuItem.Sensitive = true;
+					}
+
 					OpenMenuItem.Sensitive = true;
 					SyncNowMenuItem.Sensitive = true;
 					if (holder.iFolder.Role.Equals("Master"))
 						RevertMenuItem.Sensitive = false;
+
 					else
 						RevertMenuItem.Sensitive = true;
-					PropMenuItem.Sensitive = true;
 
+					PropMenuItem.Sensitive = true;
 					DeleteMenuItem.Sensitive = false;
 					RemoveMenuItem.Sensitive = false;
 				}
@@ -2293,6 +2346,7 @@ namespace Novell.iFolder
 				PropMenuItem.Sensitive = false;
 				DownloadMenuItem.Sensitive = false;
 			}
+
 		}
 		
 		private void RefreshiFolders(bool bReadFromSimias)

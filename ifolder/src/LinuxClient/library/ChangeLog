@@ -1,3 +1,10 @@
+2007-03-16  Johnny Jacob  <jjohnny@novell.com>
+
+	* iFolderData.cs (AcceptiFolderInvitation): Add event handlers
+	during accept. Fixes #255243.
+	* iFolderWindow.cs : If the iFolder is 'Not Set Up' then disable
+	share with, properties menu items and buttons.
+	
 2007-01-19  Johnny Jacob  <jjohnny@novell.com>
 
 	* iFolderData.cs (AcceptiFolderInvitation): Use the collectionID
