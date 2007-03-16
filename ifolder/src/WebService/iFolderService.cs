@@ -1710,10 +1710,10 @@ namespace Novell.iFolder.Web
 			DiscoveryFramework.CreateProxy (store, DomainID, iFolderID, Path.GetFullPath (path));
 
 			iFolderWeb ifolder = new iFolderWeb(cinfo);
-// 			ifolder.State = "Available";
-// 			ifolder.Role = "Master";
-// 			ifolder.UnManagedPath = path;
-// 			ifolder.IsSubscription = false;
+ 			ifolder.State = "Available";
+			ifolder.Role = "Master";
+ 			ifolder.UnManagedPath = path;
+ 			ifolder.IsSubscription = false;
 
 			return ifolder;
 		}
