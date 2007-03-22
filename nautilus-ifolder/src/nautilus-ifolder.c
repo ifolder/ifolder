@@ -1081,11 +1081,12 @@ show_ifolder_error_message (void *user_data)
 	iFolderErrorMessage *errMsg = (iFolderErrorMessage *)user_data;
 	GtkDialog *message_dialog;
 
-	message_dialog = eel_show_error_dialog (
-						errMsg->message,
-						errMsg->detail,
-						errMsg->title,
-						GTK_WINDOW (errMsg->window));
+	message_dialog = gtk_message_dialog_new(GTK_WINDOW(errMsg->window), 
+						GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, 
+						GTK_MESSAGE_ERROR, 
+						GTK_BUTTONS_OK, 
+						errMsg->message);
+
 	gtk_dialog_run (message_dialog);
 	gtk_object_destroy (GTK_OBJECT (message_dialog));
 	
@@ -1501,15 +1502,14 @@ revert_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 
 	window = g_object_get_data (G_OBJECT (item), "parent_window");
 
-	message_dialog = eel_show_yes_no_dialog (
-						_("Revert this iFolder to a normal folder?"), 
-	                    _("This reverts the iFolder back to a normal folder and leaves the files intact.  The iFolder is then available from the server and must be set up in a different location to synchronize."),
-						_(""), 
-						GTK_STOCK_YES,
-						GTK_STOCK_NO,
-						GTK_WINDOW (window));
-	/* FIXME: Figure out why the next call doesn't set the default button to "NO" */
-	gtk_dialog_set_default_response (message_dialog, GTK_RESPONSE_CANCEL);
+	message_dialog = gtk_message_dialog_new(window, 
+						 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, 
+						 GTK_MESSAGE_QUESTION, GTK_BUTTONS_YES_NO, 
+						 "Reverting iFolder");
+	gtk_message_dialog_format_secondary_text(message_dialog, "This reverts the iFolder back to a normal folder and leaves the files intact.  The iFolder is then available from the server and must be set up in a different location to synchronize. - Johnny");
+	gtk_widget_show_all(message_dialog);
+//	gtk_dialog_set_default_response (message_dialog, GTK_RESPONSE_CANCEL);
+
 	response = gtk_dialog_run (message_dialog);
 	gtk_object_destroy (GTK_OBJECT (message_dialog));
 	
