@@ -679,7 +679,7 @@ namespace Novell.iFolder
 		///
 		private void OnAccountWizardHelp(object o, EventArgs args)
 		{
-			Util.ShowHelp("accounts.html", this);
+			Util.ShowHelp("migration.html", this);
 		}
 
 		private void OnIntroductoryPagePrepared(object o, Gnome.PreparedArgs args)
