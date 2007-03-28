@@ -23,7 +23,7 @@ Group:        System/GUI/Other
 Autoreqprov:  on
 Version:      3.4.@@BUILDNUM@@.1
 Requires:     nautilus >= 2.10.0
-Requires:     simias >= 1.4
+Requires:     simias = 1.4
 Requires:     ifolder3 = %{version}
 Obsoletes:    %{name} < %{version}
 Provides:     nautilus-ifolder
