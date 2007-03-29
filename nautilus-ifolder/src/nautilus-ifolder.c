@@ -25,8 +25,6 @@
 #include <libnautilus-extension/nautilus-info-provider.h>
 #include <libnautilus-extension/nautilus-menu-provider.h>
 
-#include <eel/eel-stock-dialogs.h>
-
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <gconf/gconf-client.h>
