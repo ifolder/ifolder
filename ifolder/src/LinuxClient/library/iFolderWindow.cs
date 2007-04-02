@@ -1802,7 +1802,7 @@ namespace Novell.iFolder
 					simws.StorePassPhrase(DomainID, Util.PadString(newPassphrase, 16), CredentialType.Basic, rememberOption);
 					iFolderMsgDialog dialog = new iFolderMsgDialog(
                                                                                                                 null,
-                                                                                                                iFolderMsgDialog.DialogType.Error,
+                                                                                                                iFolderMsgDialog.DialogType.Info,
                                                                                                                 iFolderMsgDialog.ButtonSet.None,
                                                                                                                 Util.GS("Passphrase Reset"),
                                                                                                                 Util.GS("Successfully changed the passphrase"),
