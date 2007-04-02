@@ -470,7 +470,7 @@ namespace Novell.iFolder
 			{
 			        if (PassPhraseEntry.Text == PassPhraseVerifyEntry.Text)
 				{
-				        Status passPhraseStatus = domainController.SetPassPhrase ((domains[domainList.Active]).ID, Util.PadString(PassPhraseEntry.Text, 16), "ra");
+				        Status passPhraseStatus = domainController.SetPassPhrase ((domains[domainList.Active]).ID, Util.PadString(PassPhraseEntry.Text, 16), "");
 					if(passPhraseStatus.statusCode == StatusCodes.Success)
 					{
 						domainController.StorePassPhrase( (domains[domainList.Active]).ID, Util.PadString(PassPhraseEntry.Text, 16),
@@ -573,6 +573,8 @@ namespace Novell.iFolder
 
 			MigratePage.Prepared +=
 				new Gnome.PreparedHandler(OnMigratePagePrepared);
+
+			MigratePage.BackClicked += new Gnome.BackClickedHandler(OnBackButtonClicked);
 			
 			///
 			/// Content
@@ -769,13 +771,14 @@ namespace Novell.iFolder
 		{
 			this.Title = Util.GS("iFolder Migration Assistant - (4 of 5)");
 			PassPhraseSet = false;
-
+			if( encryptionCheckButton.Active == false)
+				return;
 			try
 			{
 				if ( domainController.IsPassPhraseSet ((domains[domainList.Active]).ID) == false)
 				{
 				       string[] list = domainController.GetRAList ((domains[domainList.Active]).ID);
-
+				       RATreeStore.Clear();
 				       foreach (string raagent in list )
 					       RATreeStore.AppendValues (raagent);
 
@@ -789,6 +792,7 @@ namespace Novell.iFolder
 				}
 
 				AccountDruid.SetButtonsSensitive(true , true, true, true);
+				ForwardButton.Sensitive = false;
 			}
 			catch(Exception ex)
 			{
@@ -858,6 +862,11 @@ namespace Novell.iFolder
 				AccountDruid.SetButtonsSensitive(true, false, false, false);
 			}
 		}
+	void OnBackButtonClicked(object o, EventArgs args)
+	{
+			if( encryptionCheckButton.Active == false)
+				AccountDruid.Page = RAPage;
+	}
 
 	public static bool CopyDirectory(DirectoryInfo source, DirectoryInfo destination) 
 	{
@@ -1050,10 +1059,8 @@ namespace Novell.iFolder
 		{
 			Console.WriteLine("Forward clicked");
 			// Check for encryption status. If not yes then, skip the RAPage
-//			if( encryptionCheckButton.Active == false)
-//				AccountDruid.Page = RAPage;
-//			else
-//				AccountDruid.Page = MigratePage;
+			if( encryptionCheckButton.Active == false)
+				AccountDruid.Page = RAPage;
 		}
 
 		private void OnCancelClicked(object o, Gnome.CancelClickedArgs args)
