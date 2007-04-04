@@ -362,20 +362,24 @@ namespace Novell.iFolder.Install
 		{
 			bool running = false;
 
+			Console.WriteLine("RunUpdate in ClientUpgrade");
+
 			// Make sure that the service is authenticated.
 			if ( service != null )
 			{
+				Console.WriteLine("GetUpdateFiles");
 				// Get the list of files needed for the update.
 				string[] fileList = service.GetUpdateFiles();
 				if ( fileList != null )
 				{
+					Console.WriteLine("DownloadFiles");
 					// Download the files in the list to a temporary directory.
 					string downloadDir = DownloadFiles( fileList, path );
 					if ( downloadDir != null )
 					{
 						running = true;
-						/*		For installing the client  
 
+						//Install the client
 						if ( MyEnvironment.Platform == MyPlatformID.Windows )
 						{
 							// There should only be one file needed for the windows update.
@@ -394,6 +398,10 @@ namespace Novell.iFolder.Install
 							string installScriptPath = Path.Combine( downloadDir, "install-ifolder.sh" );
 							if ( File.Exists( installScriptPath ) )
 							{
+								Console.WriteLine("path :{0}", path);
+								Console.WriteLine("downloadDir :{0}", downloadDir);
+								Console.WriteLine("installScriptPath :{0}", installScriptPath);
+								
 								Process installProcess = new Process();
 								
 								installProcess.StartInfo.FileName = "sh";
@@ -409,8 +417,7 @@ namespace Novell.iFolder.Install
 								catch{}
 							}
 						}
-
-						*/
+						
 					}
 				}
 			}
@@ -452,6 +459,7 @@ namespace Novell.iFolder.Install
 		/// <returns>True if the installation program is successfully started. Otherwise false is returned.</returns>
 		public static bool RunUpdate(string domainID, string path)
 		{
+			Console.WriteLine("RunUpdate");
 			ClientUpgrade cu = new ClientUpgrade(domainID);
 			return cu.RunUpdate(path);
 		}

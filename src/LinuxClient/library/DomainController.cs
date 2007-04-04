@@ -315,7 +315,7 @@ namespace Novell.iFolder.Controller
 		{
 			try
 			{
-				Status status = simws.ReSetPassPhrase (DomainID, Util.PadString(OldPassphrase, 16), Util.PadString(NewPassphrase, 16), RAName, RAPublicKey);
+				Status status = simws.ReSetPassPhrase (DomainID, OldPassphrase, NewPassphrase, RAName, RAPublicKey);
 			if(status.statusCode != StatusCodes.Success)
 			{	
 				return false;	

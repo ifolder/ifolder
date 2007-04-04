@@ -1076,23 +1076,6 @@ namespace Novell.iFolderCom
 		}
 		#endregion
 
-		private string PadString(string Passhrase, int length)
-		{
-			int minimumLength = length;
-			int incLength = 8;
-			
-			string NewPassphrase = Passhrase;
-
-			while(NewPassphrase.Length % incLength !=0 || NewPassphrase.Length < minimumLength)
-			{
-				NewPassphrase += Passhrase;
-				if(NewPassphrase.Length < minimumLength)
-					continue;
-				NewPassphrase = NewPassphrase.Remove((NewPassphrase.Length /incLength)*incLength, NewPassphrase.Length % incLength);
-			}
-			return NewPassphrase;
-		}
-
 		private void btnCancel_Click(object sender, System.EventArgs e)
 		{
 			simws.StorePassPhrase(DomainID, "", CredentialType.None, false);
@@ -1103,7 +1086,7 @@ namespace Novell.iFolderCom
 
 		private void btnOk_Click(object sender, System.EventArgs e)
 		{
-			Status passPhraseStatus =  simws.ValidatePassPhrase(this.DomainID, PadString(this.Passphrase.Text, 16));
+			Status passPhraseStatus =  simws.ValidatePassPhrase(this.DomainID, this.Passphrase.Text);
 			if( passPhraseStatus != null)
 			{
 				if( passPhraseStatus.statusCode == StatusCodes.PassPhraseInvalid)  // check for invalid passphrase
@@ -1116,7 +1099,7 @@ namespace Novell.iFolderCom
 				{
 					try
 					{
-						simws.StorePassPhrase( DomainID, PadString(this.Passphrase.Text, 16), CredentialType.Basic, this.savePassphrase.Checked);
+						simws.StorePassPhrase( DomainID, this.Passphrase.Text, CredentialType.Basic, this.savePassphrase.Checked);
 						status = true;
 						this.Dispose();
 						this.Close();
@@ -1367,7 +1350,7 @@ namespace Novell.iFolderCom
 				Status passPhraseStatus = null;
 				try
 				{
-					passPhraseStatus = simws.SetPassPhrase( DomainID, PadString(this.Passphrase.Text, 16), null, publicKey);
+					passPhraseStatus = simws.SetPassPhrase( DomainID, this.Passphrase.Text, null, publicKey);
 				}
 				catch(Exception ex)
 				{
@@ -1375,7 +1358,7 @@ namespace Novell.iFolderCom
 				}
 				if(passPhraseStatus.statusCode == StatusCodes.Success)
 				{
-					simws.StorePassPhrase( DomainID, PadString(this.Passphrase.Text, 16), CredentialType.Basic, this.savePassphrase.Checked);
+					simws.StorePassPhrase( DomainID, this.Passphrase.Text, CredentialType.Basic, this.savePassphrase.Checked);
 					string passphr = simws.GetPassPhrase(DomainID);
 					//MessageBox.Show("Passphrase is set & stored", passphr, MessageBoxButtons.OK);
 					this.status= simws.IsPassPhraseSet(DomainID);
@@ -1427,24 +1410,6 @@ namespace Novell.iFolderCom
 			else
 				this.btnOk.Enabled = false;
 		}
-
-		private string PadString(string Passhrase, int length)
-		{
-			int minimumLength = length;
-			int incLength = 8;
-			
-			string NewPassphrase = Passhrase;
-
-			while(NewPassphrase.Length % incLength !=0 || NewPassphrase.Length < minimumLength)
-			{
-				NewPassphrase += Passhrase;
-				if(NewPassphrase.Length < minimumLength)
-					continue;
-				NewPassphrase = NewPassphrase.Remove((NewPassphrase.Length /incLength)*incLength, NewPassphrase.Length % incLength);
-			}
-			return NewPassphrase;
-		}
-
 	}
 }
 

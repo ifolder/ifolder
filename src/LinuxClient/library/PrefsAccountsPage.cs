@@ -754,10 +754,10 @@ namespace Novell.iFolder
 			{
 				// Check the recovery agent
 				string publicKey = "";
-				Status passPhraseStatus = simws.SetPassPhrase( DomainID, Util.PadString(epd.PassPhrase, 16)/*epd.PassPhrase*/, epd.RecoveryAgent, publicKey);
+				Status passPhraseStatus = simws.SetPassPhrase( DomainID, epd.PassPhrase, epd.RecoveryAgent, publicKey);
 				if(passPhraseStatus.statusCode == StatusCodes.Success)
 				{
-					simws.StorePassPhrase( DomainID, Util.PadString(epd.PassPhrase, 16)/*epd.PassPhrase*/, CredentialType.Basic, epd.ShouldSavePassPhrase);
+					simws.StorePassPhrase( DomainID, epd.PassPhrase, CredentialType.Basic, epd.ShouldSavePassPhrase);
 					status= simws.IsPassPhraseSet(DomainID);
 				}
 				else 
@@ -814,8 +814,7 @@ namespace Novell.iFolder
 					break;
 				if( result == (int)ResponseType.Ok)
 				{
-					Console.WriteLine(Util.PadString(vpd.PassPhrase, 16));
-					passPhraseStatus =  simws.ValidatePassPhrase(DomainID, Util.PadString(vpd.PassPhrase, 16)/*vpd.PassPhrase*/);
+					passPhraseStatus =  simws.ValidatePassPhrase(DomainID, vpd.PassPhrase);
 				}
 				if( passPhraseStatus != null)
 				{
@@ -852,7 +851,7 @@ namespace Novell.iFolder
 			{
 				try
 				{
-					simws.StorePassPhrase( DomainID, Util.PadString(vpd.PassPhrase, 16)/*vpd.PassPhrase*/, CredentialType.Basic, vpd.ShouldSavePassPhrase);
+					simws.StorePassPhrase( DomainID, vpd.PassPhrase, CredentialType.Basic, vpd.ShouldSavePassPhrase);
 					status = true;
 				}
 				catch(Exception ex) 
