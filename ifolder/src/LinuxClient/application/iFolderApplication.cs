@@ -218,7 +218,7 @@ namespace Novell.iFolder
 			CurrentState = iFolderAppState.Starting;
 			iFolderAppStateChanged.WakeupMain();
 
-			if(ifws == null)
+			//if(ifws == null)
 			{
 				simiasManager.Start();
 
@@ -373,15 +373,22 @@ namespace Novell.iFolder
 				win.Destroy();
 				if( rc1 != (int) ResponseType.Ok)
 				{
+					Console.WriteLine("OnClientUpgradeAvailableEvent return");
 					ClientUpgradeDialog = null;
 					return;
 				}
 				try
 				{
-					bUpdateRunning = ifws.RunClientUpdate(args.DomainID, selectedFolder);
+					if(ifws !=null)
+					{
+						Console.WriteLine("ifws.RunClientUpdate");
+						bUpdateRunning = ifws.RunClientUpdate(args.DomainID, selectedFolder);
+						Console.WriteLine("ifws.RunClientUpdate done.");
+					}
 				}
 				catch(Exception e)
 				{
+					Console.WriteLine("ifws.RunClientUpdate exception :{0}", e.Message);
 					ClientUpgradeDialog = null;
 					return;
 				}
@@ -660,11 +667,11 @@ namespace Novell.iFolder
 			{
 				// Check the recovery agent
 				string publicKey = ""; // needed to be found
-				Status passPhraseStatus = simws.SetPassPhrase( DomainID,Util.PadString(epd.PassPhrase, 16)/*epd.PassPhrase*/, epd.RecoveryAgent, publicKey);
+				Status passPhraseStatus = simws.SetPassPhrase( DomainID, epd.PassPhrase, epd.RecoveryAgent, publicKey);
 				if(passPhraseStatus.statusCode == StatusCodes.Success)
 				{
 					status = true;
-					simws.StorePassPhrase( DomainID, Util.PadString(epd.PassPhrase, 16)/*epd.PassPhrase*/, CredentialType.Basic, epd.ShouldSavePassPhrase);
+					simws.StorePassPhrase( DomainID, epd.PassPhrase, CredentialType.Basic, epd.ShouldSavePassPhrase);
 				}
 				else 
 				{
@@ -722,7 +729,7 @@ namespace Novell.iFolder
 					break; //return true; //return status;
 				if( result == (int)ResponseType.Ok)
 				{
-					passPhraseStatus =  simws.ValidatePassPhrase(DomainID, Util.PadString(vpd.PassPhrase, 16));
+					passPhraseStatus =  simws.ValidatePassPhrase(DomainID, vpd.PassPhrase);
 				}
 				if( passPhraseStatus != null)
 				{
@@ -756,7 +763,7 @@ namespace Novell.iFolder
 			{
 				try
 				{
-					simws.StorePassPhrase( DomainID, Util.PadString(vpd.PassPhrase, 16)/*vpd.PassPhrase*/, CredentialType.Basic, vpd.ShouldSavePassPhrase);
+					simws.StorePassPhrase( DomainID, vpd.PassPhrase, CredentialType.Basic, vpd.ShouldSavePassPhrase);
 					status = simws.IsPassPhraseSet(DomainID);
 				}
 				catch(Exception ex) {}

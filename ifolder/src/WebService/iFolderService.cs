@@ -419,6 +419,8 @@ namespace Novell.iFolder.Web
 		[SoapDocumentMethod]
 		public int GetSecurityPolicy(string DomainID)
 		{
+			Console.WriteLine("GetSecurityPolicy web service called");
+
 			try
 			{
 				int SysEncrPolicy=0, UserEncrPolicy=0;
@@ -2374,6 +2376,7 @@ namespace Novell.iFolder.Web
 		[SoapDocumentMethod]
 		public bool RunClientUpdate(string domainID, string path)
 		{
+			Console.WriteLine("RunClientUpdate web service called");
 			return Novell.iFolder.Install.ClientUpgrade.RunUpdate(domainID, path);
 		}
 	}

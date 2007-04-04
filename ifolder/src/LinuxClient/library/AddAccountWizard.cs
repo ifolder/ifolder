@@ -748,10 +748,10 @@ namespace Novell.iFolder
 			{
 			        if (PassPhraseEntry.Text == PassPhraseVerifyEntry.Text)
 				{
-				        Status passPhraseStatus = domainController.SetPassPhrase (ConnectedDomain.ID, Util.PadString(PassPhraseEntry.Text, 16), "ra");
+				        Status passPhraseStatus = domainController.SetPassPhrase (ConnectedDomain.ID, PassPhraseEntry.Text, "");
 					if(passPhraseStatus.statusCode == StatusCodes.Success)
 					{
-						domainController.StorePassPhrase( ConnectedDomain.ID, Util.PadString(PassPhraseEntry.Text, 16),
+						domainController.StorePassPhrase( ConnectedDomain.ID, PassPhraseEntry.Text,
 								CredentialType.Basic, RememberPassPhraseCheckButton.Active);
 					}
 					else
@@ -789,7 +789,7 @@ namespace Novell.iFolder
 				}
 			} else {
 			    // PassPhrase is already set.
-			        Status validationStatus = domainController.ValidatePassPhrase (ConnectedDomain.ID, Util.PadString(PassPhraseEntry.Text, 16) );
+			        Status validationStatus = domainController.ValidatePassPhrase (ConnectedDomain.ID, PassPhraseEntry.Text );
 				if (validationStatus.statusCode == StatusCodes.PassPhraseInvalid ) 
 				{
 					NextPage = false;
@@ -806,7 +806,7 @@ namespace Novell.iFolder
                                        dialog = null;				        
 				}
 				else if(validationStatus.statusCode == StatusCodes.Success )
-	                                domainController.StorePassPhrase( ConnectedDomain.ID, Util.PadString(PassPhraseEntry.Text, 16),
+	                                domainController.StorePassPhrase( ConnectedDomain.ID, PassPhraseEntry.Text,
 								  CredentialType.Basic, RememberPassPhraseCheckButton.Active);
 			}
 		    } 
