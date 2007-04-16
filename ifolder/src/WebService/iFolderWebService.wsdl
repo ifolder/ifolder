@@ -15,10 +15,24 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="IsServerCompatible">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="IsiFolderResponse">
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="1" maxOccurs="1" name="IsiFolderResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IsServerCompatibleResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="IsServerCompatibleResult" type="s:boolean" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -853,6 +867,12 @@
   <message name="IsiFolderSoapOut">
     <part name="parameters" element="s0:IsiFolderResponse" />
   </message>
+  <message name="IsServerCompatibleSoapIn">
+    <part name="parameters" element="s0:IsServerCompatible" />
+  </message>
+  <message name="IsServerCompatibleSoapOut">
+    <part name="parameters" element="s0:IsServerCompatibleResponse" />
+  </message>
   <message name="CanBeiFolderSoapIn">
     <part name="parameters" element="s0:CanBeiFolder" />
   </message>
@@ -1182,6 +1202,11 @@
       <input message="s0:IsiFolderSoapIn" />
       <output message="s0:IsiFolderSoapOut" />
     </operation>
+    <operation name="IsServerCompatible">
+      <documentation>Checks a LocalPath to see if it's an iFolder</documentation>
+      <input message="s0:IsServerCompatibleSoapIn" />
+      <output message="s0:IsServerCompatibleSoapOut" />
+    </operation>
     <operation name="CanBeiFolder">
       <documentation>Checks LocalPath to see if can be an iFolder</documentation>
       <input message="s0:CanBeiFolderSoapIn" />
@@ -1461,6 +1486,15 @@
     </operation>
     <operation name="IsiFolder">
       <soap:operation soapAction="http://novell.com/ifolder/web/IsiFolder" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="IsServerCompatible">
+      <soap:operation soapAction="http://novell.com/ifolder/web/IsServerCompatible" style="document" />
       <input>
         <soap:body use="literal" />
       </input>

@@ -225,6 +225,12 @@ namespace Novell.iFolder.Web
 		}
 
 
+		[WebMethod(EnableSession=true, Description="Checks a LocalPath to see if it's an iFolder")]
+		[SoapDocumentMethod]
+		public bool IsServerCompatible (string domainID)
+		{
+		        return Novell.iFolder.Install.ClientUpgrade.IsServerCompatible (domainID);
+		}
 
 
 		/// <summary>

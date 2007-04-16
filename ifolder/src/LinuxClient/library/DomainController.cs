@@ -59,7 +59,8 @@ namespace Novell.iFolder.Controller
 		
 		private SimiasEventBroker eventBroker = null;
 		private Manager simiasManager;
-		
+
+		public Status upgradeStatus;		
 		///
 		/// Events
 		///
@@ -467,7 +468,7 @@ namespace Novell.iFolder.Controller
 						}
 					}
 					
-					HandleDomainLoggedIn(domainID, status);
+					status = HandleDomainLoggedIn(domainID, status);
 				}
 			}
 			catch (Exception e)
@@ -770,8 +771,9 @@ namespace Novell.iFolder.Controller
 			}
 		}
 		
-		private void HandleDomainLoggedIn(string domainID, Status status)
+		private Status HandleDomainLoggedIn(string domainID, Status status)
 		{
+			upgradeStatus = status;
 			// Update our cache of the DomainInformation object
 			try
 			{
@@ -821,6 +823,11 @@ namespace Novell.iFolder.Controller
 				}
 			}
 			
+			//HACK ALERT : This is a Fix for 3.4 Clients. IsServerOld is available
+			// only in 3.6 servers. Based on that we deny login. :-(
+
+			//note : use domaincontroller to handle this.
+
 			// Check to see if there's a new version of the client available
 			string newClientVersion = GetNewClientVersion(domainID);
 			if (newClientVersion != null)
@@ -832,8 +839,19 @@ namespace Novell.iFolder.Controller
 						new DomainClientUpgradeAvailableEventArgs(
 							domainID, newClientVersion);
 					DomainClientUpgradeAvailable(this, args);
-				}
+				} 
 			}
+
+			return upgradeStatus;
+		}
+
+	        public bool IsServerCompatible (string domainID)
+		{
+		        // UGLY HACK : This is a hack to avoid login of a 3.4 client to a 3.6 server.
+		        // IsServerOld is available only on 3.6 server. The call will fail in case of < 3.6
+		        bool status = false;
+		        status = ifws.IsServerCompatible (domainID);
+			return status;
 		}
 
 		/// <returns>Returns the version of a newer client or null if no new version exists.</returns>		

@@ -546,6 +546,11 @@ namespace Novell.iFolder
 					primaryText = Util.GS("Unable to contact the specified server");
 					secondaryText = Util.GS("Please verify the information entered and try again.  If the problem persists, please contact your network administrator.");
 					break;
+				case StatusCodes.ServerInCompatible:
+					primaryText = Util.GS("Client is Incompatible with the server. ");
+					secondaryText = Util.GS("Client version is incompatible with the server. Please upgrade your client.  If the problem persists, please contact your network administrator.");
+					break;
+
 				default:
 					primaryText = Util.GS("Unable to connect to the iFolder Server");
 					secondaryText = Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.");

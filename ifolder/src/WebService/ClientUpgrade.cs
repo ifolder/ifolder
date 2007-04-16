@@ -314,7 +314,23 @@ namespace Novell.iFolder.Install
 
 			return running;
 		}
-		
+
+	        public bool IsServerCompatible ()
+		{
+		        bool result = false;
+			try 
+			{
+			    service.IsServerOlder (GetLinuxPlatformString(), GetLinuxClientVersion());
+			}
+			catch (Exception e)
+			{
+
+			    result = true;
+			}
+
+			return result ;
+		}
+
 		#endregion
 
 		#region Public Methods
@@ -339,6 +355,12 @@ namespace Novell.iFolder.Install
 		{
 			ClientUpgrade cu = new ClientUpgrade(domainID);
 			return cu.RunUpdate();
+		}
+
+	        public static bool IsServerCompatible (string domainID)
+		{
+			ClientUpgrade cu = new ClientUpgrade(domainID);
+			return cu.IsServerCompatible();
 		}
 
 		#endregion

@@ -353,10 +353,28 @@ namespace Novell.iFolder
 					dialog.Hide();
 					dialog.Destroy();
 					dialog = null;
+
+					if ( domainController.IsServerCompatible (args.DomainID) )
+					{
+					    ServerInCompatibleError(args.DomainID);
+					}
 				}
+			}
+			else 
+			{
+			    if ( domainController.IsServerCompatible (args.DomainID) )
+			    {
+ 				    ServerInCompatibleError(args.DomainID);
+			    }
 			}
 
 			ClientUpgradeDialog = null;
+		}
+
+	        public void ServerInCompatibleError (string domainID)
+		{
+			domainController.upgradeStatus.statusCode = StatusCodes.ServerInCompatible;
+			domainController.RemoveDomain(domainID, false);
 		}
 
 		private void ReLogin(string domainID)
