@@ -616,7 +616,7 @@ namespace Novell.iFolder.Web
 				list.Add(new iFolderWeb(col));
 			}
 
-			Simias.Discovery.DiscService.UpdateCollectionList();
+//			Simias.Discovery.DiscService.UpdateCollectionList();
 			collectionList = Simias.Discovery.CollectionList.GetCollectionList();
 
 			if (collectionList != null )
@@ -1709,7 +1709,7 @@ namespace Novell.iFolder.Web
 					throw new Exception("AtOrInsideCollectionPath");
 			}
 
-			DiscoveryFramework.CreateProxy (store, DomainID, iFolderID, Path.GetFullPath (path));
+			DiscoveryFramework.CreateProxy (store, cinfo, DomainID, iFolderID, Path.GetFullPath (path));
 
 			iFolderWeb ifolder = new iFolderWeb(cinfo);
  			ifolder.State = "Available";
@@ -1819,8 +1819,6 @@ namespace Novell.iFolder.Web
 		[SoapDocumentMethod]
 		public void DeclineiFolderInvitation( string DomainID, string iFolderID )
 		{
-		        Store store = Store.GetStore ();
-			Domain domain = store.GetDomain(DomainID);
 			DiscoveryFramework.RemoveMembership (DomainID, iFolderID);
 		}
 
