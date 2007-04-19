@@ -95,12 +95,24 @@ namespace Novell.FormsTrayApp
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(TileListView));
 			// 
 			// TileListView
 			// 
+			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
+			this.AccessibleName = resources.GetString("$this.AccessibleName");
+			this.AutoScroll = ((bool)(resources.GetObject("$this.AutoScroll")));
+			this.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMargin")));
+			this.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMinSize")));
 			this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
+			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
+			this.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("$this.ImeMode")));
+			this.Location = ((System.Drawing.Point)(resources.GetObject("$this.Location")));
 			this.Name = "TileListView";
-			this.Size = new System.Drawing.Size(288, 72);
+			this.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("$this.RightToLeft")));
+			this.Size = ((System.Drawing.Size)(resources.GetObject("$this.Size")));
 			this.Click += new System.EventHandler(this.TileListView_Click);
 			this.SizeChanged += new System.EventHandler(this.TileListView_SizeChanged);
 			this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TileListView_MouseDown);

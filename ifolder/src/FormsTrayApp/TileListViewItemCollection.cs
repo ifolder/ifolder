@@ -26,10 +26,19 @@ using System.Collections;
 
 namespace Novell.FormsTrayApp
 {
+	public class ListViewArrayList : IComparer
+	{
+		int IComparer.Compare(Object X, Object Y)
+		{
+			string str1 = ((iFolderObject)((TileListViewItem) X).Tag).iFolderWeb.Name;
+			string str2 = ((iFolderObject)((TileListViewItem) Y).Tag).iFolderWeb.Name;
+			return String.Compare(str1, str2 );
+		}
+	}
 	/// <summary>
 	/// Summary description for TileListViewItemCollection.
 	/// </summary>
-	public class TileListViewItemCollection
+	public class TileListViewItemCollection 
 	{
 		private TileListView owner;
 		private ArrayList list = new ArrayList();
@@ -47,6 +56,12 @@ namespace Novell.FormsTrayApp
 			{
 				return false;
 			}
+		}
+
+		public void Sort()
+		{
+			IComparer myComparer = new ListViewArrayList();
+			list.Sort(myComparer);
 		}
 
 		public TileListViewItem this[int index]

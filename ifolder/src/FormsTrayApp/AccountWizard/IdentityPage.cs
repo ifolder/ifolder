@@ -26,6 +26,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using Novell.FormsTrayApp;
 
 namespace Novell.Wizard
 {
@@ -42,6 +43,7 @@ namespace Novell.Wizard
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.CheckBox rememberPassword;
 		private System.ComponentModel.IContainer components = null;
+		private System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(Novell.FormsTrayApp.FormsTrayApp));
 		#endregion
 
 		/// <summary>
@@ -75,7 +77,7 @@ namespace Novell.Wizard
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(416, 16);
 			this.label1.TabIndex = 0;
-			this.label1.Text = "Enter your iFolder username and password (for example, jsmith).";
+			this.label1.Text = Resource.GetString("IdpgLbl1txt");//"Enter your iFolder username and password (for example, jsmith).";
 			// 
 			// label3
 			// 
@@ -83,7 +85,7 @@ namespace Novell.Wizard
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(62, 14);
 			this.label3.TabIndex = 1;
-			this.label3.Text = "&Username:";
+			this.label3.Text = Resource.GetString("UName");//"&Username:";
 			// 
 			// username
 			// 
@@ -109,7 +111,7 @@ namespace Novell.Wizard
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(64, 16);
 			this.label4.TabIndex = 3;
-			this.label4.Text = "&Password:";
+			this.label4.Text = Resource.GetString("PasswordTxt");//"&Password:";
 			// 
 			// rememberPassword
 			// 
@@ -118,7 +120,7 @@ namespace Novell.Wizard
 			this.rememberPassword.Name = "rememberPassword";
 			this.rememberPassword.Size = new System.Drawing.Size(344, 24);
 			this.rememberPassword.TabIndex = 5;
-			this.rememberPassword.Text = "&Remember my password";
+			this.rememberPassword.Text = Resource.GetString("RememberPasswd");//"&Remember my password";
 			// 
 			// IdentityPage
 			// 
@@ -128,8 +130,8 @@ namespace Novell.Wizard
 			this.Controls.Add(this.username);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.label1);
-			this.HeaderSubTitle = "HeaderSubTitle";
-			this.HeaderTitle = "HeaderTitle";
+			this.HeaderSubTitle = "";
+			this.HeaderTitle = "";
 			this.Name = "IdentityPage";
 			this.Controls.SetChildIndex(this.label1, 0);
 			this.Controls.SetChildIndex(this.label3, 0);

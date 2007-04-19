@@ -695,7 +695,7 @@ namespace Novell.iFolderCom
 							catch(Exception ex)
 							{
 								string caption = resourceManager.GetString("errorTitle");
-								MyMessageBox mmb = new MyMessageBox("Unable to talk to the server. First login to server" , caption, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+								MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("LoginToDomain")/*"Unable to talk to the server. First login to server"*/ , caption, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 								mmb.ShowDialog();
 								return;
 							}
@@ -726,7 +726,7 @@ namespace Novell.iFolderCom
 							{
 								// No Passphrase
 								successful = false;
-								MyMessageBox mmb = new MyMessageBox("Passphrase needs to be supplied for encrypting the iFolder", "Passphrase error", string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+								MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("PPForEncryption")/*"Passphrase needs to be supplied for encrypting the iFolder"*/, resourceManager.GetString("$this.Text")/*"Passphrase error"*/, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 								mmb.ShowDialog();
 							}
 							else
@@ -986,6 +986,7 @@ namespace Novell.iFolderCom
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(CreateiFolder));
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.waterMark = new System.Windows.Forms.PictureBox();
 			this.lblPassphrase = new System.Windows.Forms.Label();
@@ -1020,7 +1021,7 @@ namespace Novell.iFolderCom
 			this.lblPassphrase.Name = "lblPassphrase";
 			this.lblPassphrase.Size = new System.Drawing.Size(140, 20);
 			this.lblPassphrase.TabIndex = 2;
-			this.lblPassphrase.Text = "Enter Passphrase:";
+			this.lblPassphrase.Text = resources.GetString("EnterPPText");//"Enter Passphrase:";
 			this.lblPassphrase.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// Passphrase
@@ -1038,7 +1039,7 @@ namespace Novell.iFolderCom
 			this.savePassphrase.Name = "savePassphrase";
 			this.savePassphrase.Size = new System.Drawing.Size(240, 20);
 			this.savePassphrase.TabIndex = 4;
-			this.savePassphrase.Text = "Remember Passphrase";
+			this.savePassphrase.Text = resources.GetString("RememberPPText");//"Remember Passphrase";
 			// 
 			// btnCancel
 			// 
@@ -1046,7 +1047,7 @@ namespace Novell.iFolderCom
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(72, 24);
 			this.btnCancel.TabIndex = 5;
-			this.btnCancel.Text = "&Cancel";
+			this.btnCancel.Text = resources.GetString("cancel.Text");//"&Cancel";
 			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
 			// 
 			// btnOk
@@ -1054,7 +1055,7 @@ namespace Novell.iFolderCom
 			this.btnOk.Location = new System.Drawing.Point(319, 134);
 			this.btnOk.Name = "btnOk";
 			this.btnOk.TabIndex = 6;
-			this.btnOk.Text = "&Ok";
+			this.btnOk.Text = resources.GetString("ok.Text");//"&Ok";
 			this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
 			// 
 			// VerifyPassphraseDialog
@@ -1068,7 +1069,7 @@ namespace Novell.iFolderCom
 			this.Controls.Add(this.lblPassphrase);
 			this.Controls.Add(this.panel1);
 			this.Name = "VerifyPassphraseDialog";
-			this.Text = "VerifyPassphraseDialog";
+			this.Text = resources.GetString("VerifyPPTitle");//"Verify Passphrase";
 			this.Load += new System.EventHandler(this.VerifyPassphraseDialog_Load);
 			this.panel1.ResumeLayout(false);
 			this.ResumeLayout(false);
@@ -1087,11 +1088,12 @@ namespace Novell.iFolderCom
 		private void btnOk_Click(object sender, System.EventArgs e)
 		{
 			Status passPhraseStatus =  simws.ValidatePassPhrase(this.DomainID, this.Passphrase.Text);
+			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(CreateiFolder));
 			if( passPhraseStatus != null)
 			{
 				if( passPhraseStatus.statusCode == StatusCodes.PassPhraseInvalid)  // check for invalid passphrase
 				{
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox("Unable to validate the passphrase", "Passphrase Invalid", "Please try again", MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resources.GetString("ValidatePPError")/*"Unable to validate the passphrase"*/, resources.GetString("VerifyPPTitle")/*"Passphrase Invalid"*/, resources.GetString("TryAgain")/*"Please try again"*/, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 					mmb.Dispose();	
 				}
@@ -1107,7 +1109,7 @@ namespace Novell.iFolderCom
 					catch(Exception ex) 
 					{
 						// TODO: Show error Messahe
-						MessageBox.Show("Unable to store passphrase. "+ex.Message);
+					//	MessageBox.Show("Unable to store passphrase. "+ex.Message);
 						status = false;
 					}
 				}
@@ -1198,6 +1200,7 @@ namespace Novell.iFolderCom
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(CreateiFolder));
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.waterMark = new System.Windows.Forms.PictureBox();
 			this.RecoveryAgentCombo = new System.Windows.Forms.ComboBox();
@@ -1243,7 +1246,7 @@ namespace Novell.iFolderCom
 			this.lblRecoveryAgent.Name = "lblRecoveryAgent";
 			this.lblRecoveryAgent.Size = new System.Drawing.Size(140, 20);
 			this.lblRecoveryAgent.TabIndex = 3;
-			this.lblRecoveryAgent.Text = "Recovery Agent";
+			this.lblRecoveryAgent.Text = resources.GetString("RecoveryAgent");//"Recovery Agent";
 			this.lblRecoveryAgent.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// Passphrase
@@ -1270,7 +1273,7 @@ namespace Novell.iFolderCom
 			this.lblPassphrase.Name = "lblPassphrase";
 			this.lblPassphrase.Size = new System.Drawing.Size(120, 20);
 			this.lblPassphrase.TabIndex = 6;
-			this.lblPassphrase.Text = "Enter Passphrase";
+			this.lblPassphrase.Text = resources.GetString("EnterPPText");//"Enter Passphrase";
 			// 
 			// lblRetypePassphrase
 			// 
@@ -1278,7 +1281,7 @@ namespace Novell.iFolderCom
 			this.lblRetypePassphrase.Name = "lblRetypePassphrase";
 			this.lblRetypePassphrase.Size = new System.Drawing.Size(120, 20);
 			this.lblRetypePassphrase.TabIndex = 7;
-			this.lblRetypePassphrase.Text = "Retype Passphrase";
+			this.lblRetypePassphrase.Text = resources.GetString("RetypePP");//"Retype Passphrase";
 			// 
 			// savePassphrase
 			// 
@@ -1286,14 +1289,14 @@ namespace Novell.iFolderCom
 			this.savePassphrase.Name = "savePassphrase";
 			this.savePassphrase.Size = new System.Drawing.Size(240, 20);
 			this.savePassphrase.TabIndex = 8;
-			this.savePassphrase.Text = "Remember Passphrase";
+			this.savePassphrase.Text = resources.GetString("RememberPPText");//"Remember Passphrase";
 			// 
 			// btnCancel
 			// 
 			this.btnCancel.Location = new System.Drawing.Point(239, 200);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.TabIndex = 9;
-			this.btnCancel.Text = "&Cancel";
+			this.btnCancel.Text = resources.GetString("cancel.Text");//"&Cancel";
 			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
 			// 
 			// btnOk
@@ -1319,7 +1322,7 @@ namespace Novell.iFolderCom
 			this.Controls.Add(this.RecoveryAgentCombo);
 			this.Controls.Add(this.panel1);
 			this.Name = "EnterPassphraseDialog";
-			this.Text = "EnterPassphraseDialog";
+			this.Text = resources.GetString("EnterPPTitle");//"Enter Passphrase";
 			this.Load += new System.EventHandler(this.EnterPassphraseDialog_Load);
 			this.panel1.ResumeLayout(false);
 			this.ResumeLayout(false);
@@ -1344,6 +1347,7 @@ namespace Novell.iFolderCom
 			 *	else show dialog again..
 			 * 
 			 */
+			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(CreateiFolder));
 			if( this.Passphrase.Text == this.RetypePassphrase.Text)
 			{
 				string publicKey = "";
@@ -1354,7 +1358,7 @@ namespace Novell.iFolderCom
 				}
 				catch(Exception ex)
 				{
-					MessageBox.Show("Unable to set passphrase. "+ ex.Message);
+					MessageBox.Show(resources.GetString("ErrorSetPP")/*"Unable to set passphrase. "*/+ ex.Message);
 				}
 				if(passPhraseStatus.statusCode == StatusCodes.Success)
 				{
@@ -1364,7 +1368,7 @@ namespace Novell.iFolderCom
 					this.status= simws.IsPassPhraseSet(DomainID);
 					if( status == true)
 					{
-						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox("Successfully set the passphrase", "Enter passphrase", "",MyMessageBoxButtons.OK, MyMessageBoxIcon.None);
+						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resources.GetString("SetPPSuccess")/*"Successfully set the passphrase"*/, resources.GetString("EnterPPTitle")/*"Enter passphrase"*/, "",MyMessageBoxButtons.OK, MyMessageBoxIcon.None);
 						mmb.ShowDialog();
 						mmb.Dispose();
 						this.Dispose();
@@ -1375,14 +1379,14 @@ namespace Novell.iFolderCom
 				{
 					// Unable to set the passphrase
 					status = false;
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox("Unable to set the passphrase", "Error setting the passphrase", "Please try again", MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resources.GetString("ErrorSetPP")/*"Unable to set the passphrase"*/, resources.GetString("EnterPPTitle")/*"Error setting the passphrase"*/, resources.GetString("TryAgain")/*"Please try again"*/, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 					mmb.Dispose();
 				}
 			}
 			else
 			{
-				MessageBox.Show("Passphrase and re-typed passphrase doesn't match");
+				MessageBox.Show(resources.GetString("PPSDontMatch")/*"Passphrase and re-typed passphrase doesn't match"*/);
 				status = false;
 			}
 		}

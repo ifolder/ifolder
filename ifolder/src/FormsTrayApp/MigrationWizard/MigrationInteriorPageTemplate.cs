@@ -124,7 +124,7 @@ namespace Novell.Wizard
 			this.headerTitle.Name = "headerTitle";
 			this.headerTitle.Size = new System.Drawing.Size(424, 16);
 			this.headerTitle.TabIndex = 0;
-			this.headerTitle.Text = "Header Title";
+			this.headerTitle.Text = "";
 			// 
 			// groupBox1
 			// 
@@ -133,7 +133,7 @@ namespace Novell.Wizard
 			this.groupBox1.Size = new System.Drawing.Size(496, 4);
 			this.groupBox1.TabIndex = 1;
 			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = "groupBox1";
+			this.groupBox1.Text = "";
 			this.groupBox1.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(101)), ((System.Byte)(163)), ((System.Byte)(237)));
 			// 
 			// InteriorPageTemplate

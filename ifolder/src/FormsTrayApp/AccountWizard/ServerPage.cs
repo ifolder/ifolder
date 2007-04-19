@@ -27,6 +27,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
+using Novell.FormsTrayApp;
 
 namespace Novell.Wizard
 {
@@ -44,6 +45,7 @@ namespace Novell.Wizard
 		private System.Windows.Forms.CheckBox defaultServer;
 		private System.Windows.Forms.Label defaultDescription;
 		private System.ComponentModel.IContainer components = null;
+		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(Novell.FormsTrayApp.FormsTrayApp));
 
 		#endregion
 
@@ -92,7 +94,7 @@ namespace Novell.Wizard
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(88, 16);
 			this.label1.TabIndex = 1;
-			this.label1.Text = "Server &address:";
+			this.label1.Text = Resource.GetString("ServerNameText");//"Server address:";
 			// 
 			// label2
 			// 
@@ -100,7 +102,7 @@ namespace Novell.Wizard
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(416, 24);
 			this.label2.TabIndex = 0;
-			this.label2.Text = "Enter the name of your iFolder server (for example, ifolder.example.net).";
+			this.label2.Text = Resource.GetString("ServerPagelbl2txt");//"Enter the name of your iFolder server (for example, ifolder.example.net).";
 			// 
 			// defaultDescription
 			// 
@@ -108,8 +110,7 @@ namespace Novell.Wizard
 			this.defaultDescription.Name = "defaultDescription";
 			this.defaultDescription.Size = new System.Drawing.Size(416, 32);
 			this.defaultDescription.TabIndex = 3;
-			this.defaultDescription.Text = "Setting this iFolder server as your default server will allow iFolder to automati" +
-				"cally select this server when adding new iFolders.";
+			this.defaultDescription.Text = Resource.GetString("ServerPageDesc");//"Setting this iFolder server as your default server will allow iFolder to automatically select this server when adding new iFolders.";
 			// 
 			// defaultServer
 			// 
@@ -118,7 +119,7 @@ namespace Novell.Wizard
 			this.defaultServer.Name = "defaultServer";
 			this.defaultServer.Size = new System.Drawing.Size(406, 24);
 			this.defaultServer.TabIndex = 4;
-			this.defaultServer.Text = "Make this my &default server.";
+			this.defaultServer.Text = Resource.GetString("DefaultServer");//"Make this my &default server.";
 			// 
 			// ServerPage
 			// 
@@ -127,8 +128,8 @@ namespace Novell.Wizard
 			this.Controls.Add(this.defaultDescription);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.label1);
-			this.HeaderSubTitle = "HeaderSubTitle";
-			this.HeaderTitle = "HeaderTitle";
+			this.HeaderSubTitle = "";
+			this.HeaderTitle = "";
 			this.Name = "ServerPage";
 			this.Controls.SetChildIndex(this.label1, 0);
 			this.Controls.SetChildIndex(this.label2, 0);

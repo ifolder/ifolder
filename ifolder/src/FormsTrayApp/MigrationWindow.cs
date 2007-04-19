@@ -19,17 +19,20 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.ColumnHeader columnHeader1;
 		private System.Windows.Forms.ColumnHeader columnHeader2;
 		private bool windowActive;
-
+		private static System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(MigrationWindow));
+		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(FormsTrayApp));
 		private iFolderWebService ifWebService; 
+		private SimiasWebService simiasWebService;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 
-		public MigrationWindow(iFolderWebService ifWebService)
+		public MigrationWindow(iFolderWebService ifWebService, SimiasWebService simiasWebService)
 		{
 			windowActive = false;
 			this.ifWebService = ifWebService;
+			this.simiasWebService = simiasWebService;
 			//
 			// Required for Windows Form Designer support
 			//
@@ -62,6 +65,7 @@ namespace Novell.FormsTrayApp
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(MigrationWindow));
 			this.listView1 = new System.Windows.Forms.ListView();
 			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
 			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
@@ -71,55 +75,115 @@ namespace Novell.FormsTrayApp
 			// 
 			// listView1
 			// 
+			this.listView1.AccessibleDescription = resources.GetString("listView1.AccessibleDescription");
+			this.listView1.AccessibleName = resources.GetString("listView1.AccessibleName");
+			this.listView1.Alignment = ((System.Windows.Forms.ListViewAlignment)(resources.GetObject("listView1.Alignment")));
+			this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("listView1.Anchor")));
+			this.listView1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("listView1.BackgroundImage")));
 			this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
 																						this.columnHeader1,
 																						this.columnHeader2});
+			this.listView1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("listView1.Dock")));
+			this.listView1.Enabled = ((bool)(resources.GetObject("listView1.Enabled")));
+			this.listView1.Font = ((System.Drawing.Font)(resources.GetObject("listView1.Font")));
 			this.listView1.FullRowSelect = true;
-			this.listView1.Location = new System.Drawing.Point(12, 12);
+			this.listView1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("listView1.ImeMode")));
+			this.listView1.LabelWrap = ((bool)(resources.GetObject("listView1.LabelWrap")));
+			this.listView1.Location = ((System.Drawing.Point)(resources.GetObject("listView1.Location")));
 			this.listView1.MultiSelect = false;
 			this.listView1.Name = "listView1";
-			this.listView1.Size = new System.Drawing.Size(400, 339);
-			this.listView1.TabIndex = 0;
+			this.listView1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("listView1.RightToLeft")));
+			this.listView1.Size = ((System.Drawing.Size)(resources.GetObject("listView1.Size")));
+			this.listView1.TabIndex = ((int)(resources.GetObject("listView1.TabIndex")));
+			this.listView1.Text = resources.GetString("listView1.Text");
 			this.listView1.View = System.Windows.Forms.View.Details;
-			this.listView1.SelectedIndexChanged +=new EventHandler(listView1_SelectedIndexChanged);
+			this.listView1.Visible = ((bool)(resources.GetObject("listView1.Visible")));
+			this.listView1.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
 			// 
 			// columnHeader1
 			// 
-			this.columnHeader1.Text = "User Name";
-			this.columnHeader1.Width = 155;
+			this.columnHeader1.Text = resources.GetString("columnHeader1.Text");
+			this.columnHeader1.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("columnHeader1.TextAlign")));
+			this.columnHeader1.Width = ((int)(resources.GetObject("columnHeader1.Width")));
 			// 
 			// columnHeader2
 			// 
-			this.columnHeader2.Text = "Home Location";
-			this.columnHeader2.Width = 241;
+			this.columnHeader2.Text = resources.GetString("columnHeader2.Text");
+			this.columnHeader2.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("columnHeader2.TextAlign")));
+			this.columnHeader2.Width = ((int)(resources.GetObject("columnHeader2.Width")));
 			// 
 			// btnCancel
 			// 
-			this.btnCancel.Location = new System.Drawing.Point(330, 367);
+			this.btnCancel.AccessibleDescription = resources.GetString("btnCancel.AccessibleDescription");
+			this.btnCancel.AccessibleName = resources.GetString("btnCancel.AccessibleName");
+			this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("btnCancel.Anchor")));
+			this.btnCancel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnCancel.BackgroundImage")));
+			this.btnCancel.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("btnCancel.Dock")));
+			this.btnCancel.Enabled = ((bool)(resources.GetObject("btnCancel.Enabled")));
+			this.btnCancel.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("btnCancel.FlatStyle")));
+			this.btnCancel.Font = ((System.Drawing.Font)(resources.GetObject("btnCancel.Font")));
+			this.btnCancel.Image = ((System.Drawing.Image)(resources.GetObject("btnCancel.Image")));
+			this.btnCancel.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("btnCancel.ImageAlign")));
+			this.btnCancel.ImageIndex = ((int)(resources.GetObject("btnCancel.ImageIndex")));
+			this.btnCancel.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("btnCancel.ImeMode")));
+			this.btnCancel.Location = ((System.Drawing.Point)(resources.GetObject("btnCancel.Location")));
 			this.btnCancel.Name = "btnCancel";
-			this.btnCancel.TabIndex = 1;
-			this.btnCancel.Text = "Cancel";
+			this.btnCancel.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("btnCancel.RightToLeft")));
+			this.btnCancel.Size = ((System.Drawing.Size)(resources.GetObject("btnCancel.Size")));
+			this.btnCancel.TabIndex = ((int)(resources.GetObject("btnCancel.TabIndex")));
+			this.btnCancel.Text = resources.GetString("btnCancel.Text");
+			this.btnCancel.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("btnCancel.TextAlign")));
+			this.btnCancel.Visible = ((bool)(resources.GetObject("btnCancel.Visible")));
 			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
 			// 
 			// btnMigrate
 			// 
-			this.btnMigrate.Location = new System.Drawing.Point(250, 367);
+			this.btnMigrate.AccessibleDescription = resources.GetString("btnMigrate.AccessibleDescription");
+			this.btnMigrate.AccessibleName = resources.GetString("btnMigrate.AccessibleName");
+			this.btnMigrate.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("btnMigrate.Anchor")));
+			this.btnMigrate.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnMigrate.BackgroundImage")));
+			this.btnMigrate.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("btnMigrate.Dock")));
+			this.btnMigrate.Enabled = ((bool)(resources.GetObject("btnMigrate.Enabled")));
+			this.btnMigrate.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("btnMigrate.FlatStyle")));
+			this.btnMigrate.Font = ((System.Drawing.Font)(resources.GetObject("btnMigrate.Font")));
+			this.btnMigrate.Image = ((System.Drawing.Image)(resources.GetObject("btnMigrate.Image")));
+			this.btnMigrate.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("btnMigrate.ImageAlign")));
+			this.btnMigrate.ImageIndex = ((int)(resources.GetObject("btnMigrate.ImageIndex")));
+			this.btnMigrate.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("btnMigrate.ImeMode")));
+			this.btnMigrate.Location = ((System.Drawing.Point)(resources.GetObject("btnMigrate.Location")));
 			this.btnMigrate.Name = "btnMigrate";
-			this.btnMigrate.TabIndex = 2;
-			this.btnMigrate.Text = "Migrate";
+			this.btnMigrate.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("btnMigrate.RightToLeft")));
+			this.btnMigrate.Size = ((System.Drawing.Size)(resources.GetObject("btnMigrate.Size")));
+			this.btnMigrate.TabIndex = ((int)(resources.GetObject("btnMigrate.TabIndex")));
+			this.btnMigrate.Text = resources.GetString("btnMigrate.Text");
+			this.btnMigrate.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("btnMigrate.TextAlign")));
+			this.btnMigrate.Visible = ((bool)(resources.GetObject("btnMigrate.Visible")));
 			this.btnMigrate.Click += new System.EventHandler(this.btnMigrate_Click);
-			//this.btnMigrate.Enabled = false;
 			// 
 			// MigrationWindow
 			// 
-			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.ClientSize = new System.Drawing.Size(424, 398);
+			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
+			this.AccessibleName = resources.GetString("$this.AccessibleName");
+			this.AutoScaleBaseSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScaleBaseSize")));
+			this.AutoScroll = ((bool)(resources.GetObject("$this.AutoScroll")));
+			this.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMargin")));
+			this.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMinSize")));
+			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
 			this.Controls.Add(this.btnMigrate);
 			this.Controls.Add(this.btnCancel);
 			this.Controls.Add(this.listView1);
+			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
+			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("$this.ImeMode")));
+			this.Location = ((System.Drawing.Point)(resources.GetObject("$this.Location")));
+			this.MaximumSize = ((System.Drawing.Size)(resources.GetObject("$this.MaximumSize")));
+			this.MinimumSize = ((System.Drawing.Size)(resources.GetObject("$this.MinimumSize")));
 			this.Name = "MigrationWindow";
-			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-			this.Text = "Migration";
+			this.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("$this.RightToLeft")));
+			this.StartPosition = ((System.Windows.Forms.FormStartPosition)(resources.GetObject("$this.StartPosition")));
+			this.Text = resources.GetString("$this.Text");
 			this.Load += new System.EventHandler(this.MigrationWindow_Load);
 			this.ResumeLayout(false);
 
@@ -136,7 +200,7 @@ namespace Novell.FormsTrayApp
 			RegistryKey iFolderKey = Registry.LocalMachine.OpenSubKey(iFolderRegistryKey);
 			if(iFolderKey == null)
 			{
-				MessageBox.Show("iFolder2.x is not installed on this system", "iFolder2.x not present", MessageBoxButtons.OK);
+				MessageBox.Show(Resource.GetString("ifolder2NotPresent")/*"iFolder2.x is not installed on this system"*/, resourceManager.GetString("$this.Text"), MessageBoxButtons.OK);
 				this.Dispose();
 				return;
 			}
@@ -171,7 +235,7 @@ namespace Novell.FormsTrayApp
 			if( this.listView1.SelectedItems.Count <= 0)
 			{
 				if( !this.windowActive )
-					MessageBox.Show("No iFolder2.x folders present for migration.", "Migration", MessageBoxButtons.OK);
+					MessageBox.Show(Resource.GetString("ifolder2NotPresent")/*"iFolder2.x is not installed on this system"*/, resourceManager.GetString("$this.Text"), MessageBoxButtons.OK);
 				this.Dispose(true);
 			}
 			this.windowActive = true;
@@ -182,7 +246,7 @@ namespace Novell.FormsTrayApp
 		private void btnMigrate_Click(object sender, System.EventArgs e)
 		{
 			ListViewItem lvi = this.listView1.SelectedItems[0];
-			MigrationWizard migrationWizard = new MigrationWizard( lvi.SubItems[0].Text, lvi.SubItems[1].Text, ifWebService);
+			MigrationWizard migrationWizard = new MigrationWizard( lvi.SubItems[0].Text, lvi.SubItems[1].Text, ifWebService, this.simiasWebService);
 			//	accountWizard.EnterpriseConnect += new Novell.Wizard.AccountWizard.EnterpriseConnectDelegate(accountWizard_EnterpriseConnect);
 			if ( migrationWizard.ShowDialog() == DialogResult.OK )
 			{

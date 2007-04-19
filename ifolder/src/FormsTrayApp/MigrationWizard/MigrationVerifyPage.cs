@@ -32,6 +32,7 @@ using Novell.FormsTrayApp;
 using Simias.Client;
 using Simias.Client.Authentication;
 using Simias.Client.Event;
+using Novell.FormsTrayApp;
 
 namespace Novell.Wizard
 {
@@ -56,6 +57,7 @@ namespace Novell.Wizard
 		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.Label defaultDescription;
 		private MigrationWizard wizard;
+		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(Novell.FormsTrayApp.FormsTrayApp));
 
 		#endregion
 
@@ -99,7 +101,7 @@ namespace Novell.Wizard
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(94, 16);
 			this.label1.TabIndex = 3;
-			this.label1.Text = "location:";
+			this.label1.Text = Resource.GetString("LocationText");//"location:";
 			// 
 			// label2
 			// 
@@ -107,7 +109,7 @@ namespace Novell.Wizard
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(440, 16);
 			this.label2.TabIndex = 0;
-			this.label2.Text = "Please verify that the information you have entered is correct.";
+			this.label2.Text = Resource.GetString("AccountVerify");//"Please verify that the information you have entered is correct.";
 			// 
 			// label3
 			// 
@@ -115,7 +117,7 @@ namespace Novell.Wizard
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(88, 16);
 			this.label3.TabIndex = 1;
-			this.label3.Text = "Server address:";
+			this.label3.Text = Resource.GetString("ServerNameText");//"Server address:";
 			// 
 			// label4
 			// 
@@ -123,7 +125,7 @@ namespace Novell.Wizard
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(118, 16);
 			this.label4.TabIndex = 5;
-			this.label4.Text = "Migration option:";
+			this.label4.Text = Resource.GetString("MigrationOptions")+":";//"Migration option:";
 			// 
 			// defaultDescription
 			// 
@@ -131,7 +133,7 @@ namespace Novell.Wizard
 			this.defaultDescription.Name = "defaultDescription";
 			this.defaultDescription.Size = new System.Drawing.Size(118, 16);
 			this.defaultDescription.TabIndex = 7;
-			this.defaultDescription.Text = "Security:";
+			this.defaultDescription.Text = Resource.GetString("Security") + ":";//"Security:";
 			// 
 			// serverAddress
 			// 
@@ -168,7 +170,7 @@ namespace Novell.Wizard
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(432, 16);
 			this.label6.TabIndex = 9;
-			this.label6.Text = "Click Connect to validate your connection with the server.";
+			this.label6.Text = Resource.GetString("ClickMigrate");//"Click Migrate to migrate your data.";
 			// 
 			// VerifyPage
 			// 
@@ -252,19 +254,19 @@ namespace Novell.Wizard
 			this.serverAddress.Text = wizard.MigrationIdentityPage.DomainName;
 			this.location.Text = wizard.MigrationServerPage.HomeLocation;
 			if(wizard.MigrationServerPage.MigrationOption)
-				this.migrationOption.Text = "Remove from 2.x domain";
+				this.migrationOption.Text = Resource.GetString("MigrateNRemove");//"Remove from 2.x domain";
 			else
-				this.migrationOption.Text = "Create a copy of the folder and connect to 3.x to domain";
+				this.migrationOption.Text = Resource.GetString("MigrateNCopy");//"Create a copy of the folder and connect to 3.x to domain";
 			this.security.Text = "";
 			if( wizard.MigrationIdentityPage.Encrypion)
 			{
-				this.security.Text = "Encrypt the folder";
+				this.security.Text = Resource.GetString("EncryptedText");//"Encrypt the folder";
 				if( wizard.MigrationIdentityPage.SSL)
 					this.security.Text += " and use secure channel for data transfer";
 			}
 			else if(wizard.MigrationIdentityPage.SSL)
 			{
-				this.security.Text = "Use secure channel for data transfer";
+				this.security.Text = Resource.GetString("SharableText");//"Use secure channel for data transfer";
 			}
 			else
 			{

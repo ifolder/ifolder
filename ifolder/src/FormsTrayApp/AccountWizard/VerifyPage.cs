@@ -56,6 +56,7 @@ namespace Novell.Wizard
 		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.Label defaultDescription;
 		private AccountWizard wizard;
+		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(Novell.FormsTrayApp.FormsTrayApp));
 
 		#endregion
 
@@ -99,7 +100,7 @@ namespace Novell.Wizard
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(94, 16);
 			this.label1.TabIndex = 3;
-			this.label1.Text = "Username:";
+			this.label1.Text = Resource.GetString("UName");//"User name:";
 			// 
 			// label2
 			// 
@@ -107,7 +108,7 @@ namespace Novell.Wizard
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(440, 16);
 			this.label2.TabIndex = 0;
-			this.label2.Text = "Please verify that the information you have entered is correct.";
+			this.label2.Text = Resource.GetString("AccountVerify");//"Please verify that the information you have entered is correct.";
 			// 
 			// label3
 			// 
@@ -115,7 +116,7 @@ namespace Novell.Wizard
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(88, 16);
 			this.label3.TabIndex = 1;
-			this.label3.Text = "Server address:";
+			this.label3.Text = Resource.GetString("ServerNameText");//"Server address:";
 			// 
 			// label4
 			// 
@@ -123,7 +124,7 @@ namespace Novell.Wizard
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(118, 16);
 			this.label4.TabIndex = 5;
-			this.label4.Text = "Remember password:";
+			this.label4.Text = Resource.GetString("RememberPasswd");//"Remember password:";
 			// 
 			// defaultDescription
 			// 
@@ -131,7 +132,7 @@ namespace Novell.Wizard
 			this.defaultDescription.Name = "defaultDescription";
 			this.defaultDescription.Size = new System.Drawing.Size(118, 16);
 			this.defaultDescription.TabIndex = 7;
-			this.defaultDescription.Text = "Make default account:";
+			this.defaultDescription.Text = Resource.GetString("DefaultServer");//"Make default account:";
 			// 
 			// serverAddress
 			// 
@@ -167,7 +168,7 @@ namespace Novell.Wizard
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(432, 16);
 			this.label6.TabIndex = 9;
-			this.label6.Text = "Click Connect to validate your connection with the server.";
+			this.label6.Text = Resource.GetString("ClickConnect");//"Click Connect to validate your connection with the server.";
 			// 
 			// VerifyPage
 			// 
@@ -181,8 +182,8 @@ namespace Novell.Wizard
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.label1);
-			this.HeaderSubTitle = "HeaderSubTitle";
-			this.HeaderTitle = "HeaderTitle";
+			this.HeaderSubTitle = "";
+			this.HeaderTitle = "";
 			this.Name = "VerifyPage";
 			this.Controls.SetChildIndex(this.label1, 0);
 			this.Controls.SetChildIndex(this.label2, 0);

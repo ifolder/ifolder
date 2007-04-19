@@ -90,15 +90,19 @@ namespace Novell.Wizard
 	//	private WelcomePage welcomePage;
 		private MigrationServerPage serverPage;
 		private MigrationIdentityPage identityPage;
+		private MigrationPassphrasePage passphrasePage;
+		private MigrationPassphraseVerifyPage passphraseVerifyPage;
 		private MigrationVerifyPage verifyPage;
 		private MigrationCompletionPage completionPage;
 	//	private IdentityPage identityPage;
 	//	private VerifyPage verifyPage;
 	//	private CompletionPage completionPage;
 		private MigrationBaseWizardPage[] pages;
-		internal const int maxPages = 5;
+		internal const int maxPages = 7;
 		private int currentIndex = 0;
 		private iFolderWebService ifws;
+		private SimiasWebService simiasWebService;
+		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(Novell.FormsTrayApp.FormsTrayApp));
 
 		/// <summary>
 		/// Required designer variable.
@@ -109,7 +113,7 @@ namespace Novell.Wizard
 		/// <summary>
 		/// Constructs an MigrationWizard object.
 		/// </summary>
-		public MigrationWizard( string Uname, string path, iFolderWebService ifws )
+		public MigrationWizard( string Uname, string path, iFolderWebService ifws, SimiasWebService simiasWebService )
 		{
 			//
 			// Required for Windows Form Designer support
@@ -117,6 +121,7 @@ namespace Novell.Wizard
 			this.UserName = Uname;
 			this.location = path;
 			this.ifws = ifws;
+			this.simiasWebService = simiasWebService;
 			InitializeComponent();
 						
 			// Initialize the wizard pages ... I had to move this here so that
@@ -126,6 +131,8 @@ namespace Novell.Wizard
 
 			this.serverPage = new MigrationServerPage(path);
 			this.identityPage = new MigrationIdentityPage(ifws);
+			this.passphrasePage = new MigrationPassphrasePage();
+			this.passphraseVerifyPage = new MigrationPassphraseVerifyPage();
 			this.verifyPage = new MigrationVerifyPage();
 			this.completionPage = new MigrationCompletionPage();
 			//
@@ -133,13 +140,13 @@ namespace Novell.Wizard
 			// 
 			// TODO: Localize
 			
-			this.welcomePage.ActionText = "This wizard will guide you through migrating your iFolder account to 3.x.";
-			this.welcomePage.DescriptionText = "To continue, click Next.";
+			this.welcomePage.ActionText = Resource.GetString("MigrationWelcomepgAT");//"This wizard will guide you through migrating your iFolder account to 3.x.";
+			this.welcomePage.DescriptionText = Resource.GetString("WelcomePageAction");//"To continue, click Next.";
 			this.welcomePage.Location = new System.Drawing.Point(0, 0);
 			this.welcomePage.Name = "welcomePage";
 			this.welcomePage.Size = new System.Drawing.Size(496, 304);
 			this.welcomePage.TabIndex = 1;
-			this.welcomePage.WelcomeTitle = "Welcome to the iFolder Migration Assistant";
+			this.welcomePage.WelcomeTitle = Resource.GetString("MigrationWelcomeTitle");//"Welcome to the iFolder Migration Assistant";
 			
 		
 			// 
@@ -148,7 +155,7 @@ namespace Novell.Wizard
 			// TODO: Localize
 			
 			//this.serverPage.HeaderSubTitle = "Enter the name of your iFolder server.";
-			this.serverPage.HeaderTitle = "Migration Options";
+			this.serverPage.HeaderTitle = Resource.GetString("MigrationOptions");//"Migration Options";
 			this.serverPage.Location = new System.Drawing.Point(0, 0);
 			this.serverPage.Name = "serverPage";
 			this.serverPage.Size = new System.Drawing.Size(496, 304);
@@ -159,18 +166,32 @@ namespace Novell.Wizard
 			// 
 			// TODO: Localize
 			//this.identityPage.HeaderSubTitle = "Enter your iFolder username and password.";
-			this.identityPage.HeaderTitle = "Server Information";
+			this.identityPage.HeaderTitle = Resource.GetString("ServerInfo");//"Server Information";
 			this.identityPage.Location = new System.Drawing.Point(0, 0);
 			this.identityPage.Name = "identityPage";
 			this.identityPage.Size = new System.Drawing.Size(496, 304);
 			this.identityPage.TabIndex = 1;
+			//
+			// passphrasePage
+			//
+			this.passphrasePage.HeaderTitle = "Passphrase Entry";
+			this.passphrasePage.Location = new Point(0, 0);
+			this.passphrasePage.Name = "passphrasePage";
+			this.passphrasePage.Size = new Size(496,304);
+			this.passphrasePage.TabIndex = 1;
+			//
+			// passphraseVerifyPage
+			//
+			this.passphraseVerifyPage.HeaderTitle = "Passphrase";
+			this.passphraseVerifyPage.Location = new Point(0, 0);
+			this.passphraseVerifyPage.Size = new Size(496, 304);
 			
 			// 
 			// verifyPage
 			// 
 			// TODO: Localize
 			//this.verifyPage.HeaderSubTitle = "Verify the iFolder account information.";
-			this.verifyPage.HeaderTitle = "Verify and Migrate";
+			this.verifyPage.HeaderTitle = Resource.GetString("MigrateVerify");//"Verify and Migrate";
 			this.verifyPage.Location = new System.Drawing.Point(0, 0);
 			this.verifyPage.Name = "verifyPage";
 			this.verifyPage.Size = new System.Drawing.Size(496, 304);
@@ -180,12 +201,12 @@ namespace Novell.Wizard
 			// completionPage
 			//
 			// TODO: Localize
-			this.completionPage.DescriptionText = "Description...";
+			this.completionPage.DescriptionText = Resource.GetString("CompletionPageDT");//"Description...";
 			this.completionPage.Location = new System.Drawing.Point(0, 0);
 			this.completionPage.Name = "completionPage";
 			this.completionPage.Size = new System.Drawing.Size(496, 304);
 			this.completionPage.TabIndex = 1;
-			this.completionPage.WelcomeTitle = "Completing the iFolder Invitation Wizard";
+			this.completionPage.WelcomeTitle = Resource.GetString("MigrationCompleteWT");//"Completing the iFolder Migration Wizard";
 			/*
 			this.Controls.Add(this.welcomePage);
 			this.Controls.Add(this.serverPage);
@@ -196,6 +217,8 @@ namespace Novell.Wizard
 			this.Controls.Add(this.welcomePage);
 			this.Controls.Add(this.serverPage);
 			this.Controls.Add(this.identityPage);
+			this.Controls.Add(this.passphrasePage);
+			this.Controls.Add(this.passphraseVerifyPage);
 			this.Controls.Add(this.verifyPage);
 			this.Controls.Add(this.completionPage);
 			// Load the application icon.
@@ -211,8 +234,10 @@ namespace Novell.Wizard
 			pages[0] = this.welcomePage;
 			pages[1] = this.serverPage;
 			pages[2] = this.identityPage;
-			pages[3] = this.verifyPage;
-			pages[4] = this.completionPage;
+			pages[3] = this.passphrasePage;
+			pages[4] = this.passphraseVerifyPage;
+			pages[5] = this.verifyPage;
+			pages[6] = this.completionPage;
 			/*
 			pages[1] = this.serverPage;
 			pages[2] = this.identityPage;
@@ -281,7 +306,7 @@ namespace Novell.Wizard
 			this.cancel.Name = "cancel";
 			this.cancel.Size = new System.Drawing.Size(72, 23);
 			this.cancel.TabIndex = 3;
-			this.cancel.Text = "Cancel";
+			this.cancel.Text = Resource.GetString("CancelText");//"Cancel";
 			// 
 			// next
 			// 
@@ -290,7 +315,7 @@ namespace Novell.Wizard
 			this.next.Name = "next";
 			this.next.Size = new System.Drawing.Size(72, 23);
 			this.next.TabIndex = 2;
-			this.next.Text = "&Next >";
+			this.next.Text = Resource.GetString("NextText")+" >";
 			this.next.Click += new System.EventHandler(this.next_Click);
 			// 
 			// back
@@ -300,7 +325,7 @@ namespace Novell.Wizard
 			this.back.Name = "back";
 			this.back.Size = new System.Drawing.Size(72, 23);
 			this.back.TabIndex = 1;
-			this.back.Text = "< &Back";
+			this.back.Text = "< "+Resource.GetString("BackText");
 			this.back.Click += new System.EventHandler(this.back_Click);
 			// 
 			// groupBox1
@@ -313,7 +338,7 @@ namespace Novell.Wizard
 			this.groupBox1.Size = new System.Drawing.Size(496, 4);
 			this.groupBox1.TabIndex = 4;
 			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = "groupBox1";
+			this.groupBox1.Text = "";
 			// 
 			// MigrationWizard
 			// 
@@ -332,7 +357,7 @@ namespace Novell.Wizard
 			this.MinimizeBox = false;
 			this.Name = "MigrationWizard";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-			this.Text = "iFolder Migration Assistant";
+			this.Text = Resource.GetString("MigrationTitle");//"iFolder Migration Assistant";
 			this.Activated += new System.EventHandler(this.MigrationWizard_Activated);
 			this.ResumeLayout(false);
 
@@ -353,10 +378,13 @@ namespace Novell.Wizard
 				(currentIndex == (maxPages - 2)))
 			{
 				// TODO: Localize
-				this.next.Text = "&Next >";
+				this.next.Text = Resource.GetString("NextText")+" >";
 			}
+			
 
 			int previousIndex = this.pages[currentIndex].DeactivatePage();
+			//if( previousIndex == 3/*passphrase page*/ && this.identityPage.Encrypion == false)
+			//	previousIndex = 2;
 			this.pages[previousIndex].ActivatePage(0);
 
 			currentIndex = previousIndex;
@@ -379,19 +407,149 @@ namespace Novell.Wizard
 				// Exit
 				return;
 			}
-
+			if( currentIndex == 3 )
+			{
+				// Set Passphrase
+				if( this.passphrasePage.Passphrase != this.passphrasePage.RetypePassphrase)
+				{
+					MessageBox.Show("Passphrase entered and retyped passphrase does not match");
+				}
+				else
+				{
+					string publicKey = "";
+					Status passPhraseStatus = null;
+					try
+					{
+						passPhraseStatus = this.simiasWebService.SetPassPhrase( this.identityPage.domain.ID, this.passphrasePage.Passphrase, null, publicKey);
+					}
+					catch(Exception ex)
+					{
+						//MessageBox.Show("Unable to set Passphrase. "+ ex.Message);
+						MessageBox.Show( "Exception while setting passphrase"+ex.Message);
+						return;
+					}
+					if(passPhraseStatus.statusCode == StatusCodes.Success)
+					{
+						// Validating Passphrase
+						//passPhraseStatus = simws.ValidatePassPhrase( DomainID, PadString(this.Passphrase.Text, 16));
+						//if(passPhraseStatus.statusCode != StatusCodes.Success)
+						//	MessageBox.Show("Passphrase not validated");
+						this.simiasWebService.StorePassPhrase( this.identityPage.domain.ID, this.passphrasePage.Passphrase, CredentialType.Basic, this.passphrasePage.RememberPassphrase);
+						string passphr = this.simiasWebService.GetPassPhrase(this.identityPage.domain.ID);
+						//MessageBox.Show("Passphrase is set & stored", passphr, MessageBoxButtons.OK);
+						bool status = this.simiasWebService.IsPassPhraseSet(this.identityPage.domain.ID);
+						if( status == true)
+						{
+							MessageBox.Show("Successfully set the passphrase");
+							//Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(Resource.GetString("SetPassphraseSuccess")/*"Successfully set the passphrase"*/, resourceManager.GetString("$this.Text"), "", MyMessageBoxButtons.OK, MyMessageBoxIcon.None);
+							//mmb.ShowDialog();
+							//mmb.Dispose();
+							//this.Dispose();
+							//this.Close();
+						}
+					}
+					else 
+					{
+						// Unable to set the passphrase
+						MessageBox.Show("Unable to store the passphrase");
+						return;
+					}
+				}
+			}
+			else if(currentIndex == 4)
+			{
+				// Validate passphrase
+				Status passPhraseStatus = null;
+				try
+				{
+					passPhraseStatus =  this.simiasWebService.ValidatePassPhrase(this.identityPage.domain.ID, this.passphraseVerifyPage.Passphrase);
+				}
+				catch(Exception ex)
+				{
+					MessageBox.Show("Unable to validate the Passphrase. "+ ex.Message);
+					return;
+				}
+				if( passPhraseStatus != null)
+				{
+					if( passPhraseStatus.statusCode == StatusCodes.PassPhraseInvalid)  // check for invalid passphrase
+					{
+						MessageBox.Show("Invalid passphrase");
+						return;
+					}
+					else if(passPhraseStatus.statusCode == StatusCodes.Success)
+					{
+						try
+						{
+							this.simiasWebService.StorePassPhrase( this.identityPage.domain.ID, this.passphraseVerifyPage.Passphrase, CredentialType.Basic, this.passphraseVerifyPage.RememberPassphrase);
+						}
+						catch(Exception ex) 
+						{
+							// TODO: Show error Messahe
+							MessageBox.Show("Unable to store Passphrase");
+							return;
+						}
+					}
+				}
+			}
 			int nextIndex = this.pages[currentIndex].ValidatePage(currentIndex);
+			if( nextIndex == 4 )
+			{
+				// Set the passphrase
+				nextIndex = 5;
+			}
+			else if( nextIndex == 3)
+			{
+				if( this.identityPage.Encrypion == false )
+					nextIndex = 5;
+				else // encryption selected.. 
+				{
+					//MessageBox.Show("Encryption selected");
+					string passphrasecheck = this.simiasWebService.GetPassPhrase(this.identityPage.domain.ID);
+					if( passphrasecheck!= null && passphrasecheck != "")
+					{
+						Status status = this.simiasWebService.ValidatePassPhrase(this.identityPage.domain.ID, passphrasecheck);
+						if( status != null && status.statusCode == StatusCodes.Success)
+						{
+							// Passphrase validated.
+							//MessageBox.Show("Passphrase validated");
+							nextIndex = 5;
+						}
+					}
+					else if(this.simiasWebService.IsPassPhraseSet(this.identityPage.domain.ID) == true)
+					{
+						//MessageBox.Show("passphrase set");
+						nextIndex = 4;
+					}
+					//else
+						//MessageBox.Show("Passphrase not set");
+				}
+				/*
+				else if( passphrase present at login)
+					nextIndex = 5;
+				else if( passphrase not set)
+					nextIndex = 3;
+				else
+					nextIndex = 4;	
+					*/
+
+			}
 			if (nextIndex != currentIndex)
 			{
 				this.pages[currentIndex].DeactivatePage();
 				this.pages[nextIndex].ActivatePage(currentIndex);
+				if( nextIndex == 5)
+				{
+					//MessageBox.Show(String.Format("previous page of {0} is {1}", nextIndex, 2));
+					this.pages[nextIndex].PreviousIndex = 2;
+				}
+				
 
 				currentIndex = nextIndex;
 
 				if (currentIndex == (maxPages - 2))
 				{
 					// TODO: Localize
-					next.Text = "&Migrate";
+					next.Text = Resource.GetString("MigrateText");//"&Migrate";
 					this.verifyPage.UpdateDetails();
 				}
 				else if (currentIndex == (maxPages - 1))
@@ -400,7 +558,7 @@ namespace Novell.Wizard
 					// button to a Finish button.
 					next.DialogResult = DialogResult.OK;
 					// TODO: Localize
-					next.Text = "&Finish";
+					next.Text = Resource.GetString("FinishText");//"&Finish";
 				}
 			}
 		}
@@ -456,11 +614,11 @@ namespace Novell.Wizard
 			get
 			{
 				// TODO: Localize
-				StringBuilder sb = new StringBuilder("Congratulations, your account is migrated successfully to:\n\n");
+				StringBuilder sb = new StringBuilder(Resource.GetString("MigrationSuccessMsg")/*"Congratulations, your account is migrated successfully.\n\n"*/);
 
 		//		sb.AppendFormat( "{0}\n", domainInfo.Name );
 		//		sb.AppendFormat( "({0})\n\n", serverPage.ServerAddress );
-				sb.Append( "You can now add folders to the new server. You may also download folders from the server and have them be synchronized to your computer." );
+		//		sb.Append( "You can now add folders to the new server. You may also download folders from the server and have them be synchronized to your computer." );
 
 				return sb.ToString();				
 			}
@@ -575,7 +733,7 @@ namespace Novell.Wizard
 				DirectoryInfo dir = new DirectoryInfo(destination);
 				if((dir.Exists) && (ifws.CanBeiFolder(destination)== false))	// Display a message box
 				{	
-					MessageBox.Show("The folder can not be converted into ifolder","Error creating iFolder",MessageBoxButtons.OK);
+					MessageBox.Show(Resource.GetString("CannotBeiFolder")/*"The folder can not be converted into ifolder"*/,Resource.GetString("MigrationTitle"),MessageBoxButtons.OK);
 					return false; // can't be an iFolder
 				}
 				
@@ -592,7 +750,7 @@ namespace Novell.Wizard
 					di = new DirectoryInfo(destination);
 					if( di.Exists )
 					{
-						MessageBox.Show("The directory exists already", "Error", MessageBoxButtons.OK);
+						MessageBox.Show(Resource.GetString("DirExists")/*"The directory exists already"*/, Resource.GetString("MigrationTitle"), MessageBoxButtons.OK);
 						return false;
 					}
 					else
@@ -612,17 +770,17 @@ namespace Novell.Wizard
 				// Copy the contents
 				if(!CopyDirectory(new DirectoryInfo(location), new DirectoryInfo(destination)))
 				{
-					MessageBox.Show("Unable to copy the folder", "Error copying the folder", MessageBoxButtons.OK);
+					MessageBox.Show(Resource.GetString("CannotCopy")/*"Unable to copy the folder"*/, Resource.GetString("MigrationTitle")/*"Error copying the folder"*/, MessageBoxButtons.OK);
 					return false;	// unable to copy..
 				}
 				if(ifws.CanBeiFolder(destination)== false)	// Display a message box
 				{	
-					MessageBox.Show("The folder can not be converted into ifolder","Error creating iFolder",MessageBoxButtons.OK);
+					MessageBox.Show(Resource.GetString("CannotBeiFolder")/*"The folder can not be converted into ifolder"*/,Resource.GetString("MigrationTitle")/*"Error creating iFolder"*/,MessageBoxButtons.OK);
 					return false; // can't be an iFolder
 				}
 				else
 				{
-					MessageBox.Show("Can be ifolder","test",MessageBoxButtons.OK);
+				//	MessageBox.Show("Can be ifolder","test",MessageBoxButtons.OK);
 				}
 			}
 			else
@@ -630,22 +788,31 @@ namespace Novell.Wizard
 				destination = this.location;
 				if(ifws.CanBeiFolder(destination)== false)	// Display a message box
 				{	
-					MessageBox.Show("The folder can not be converted into ifolder","Error creating iFolder",MessageBoxButtons.OK);
+					MessageBox.Show(Resource.GetString("CannotBeiFolder")/*"The folder can not be converted into ifolder"*/,Resource.GetString("MigrationTitle")/*"Error creating iFolder"*/,MessageBoxButtons.OK);
 					return false; // can't be an iFolder
 				}
 			}
 				/*
 				 * TODO: change the wizard create iFolder with passphrase
-				if( ifws.CreateiFolderInDomainEncr(destination, domain.ID, ssl, encryptionAlgorithm) == null)
+				 */
+				if( ssl )
+				{
+					if( ifws.CreateiFolderInDomain(destination, domain.ID) == null)
+					{
+						MessageBox.Show("Unable to convert to an iFolder", "Migrate error", MessageBoxButtons.OK);
+						return false;	// error creating iFolder
+					}
+				}
+				else if( ifws.CreateiFolderInDomainEncr(destination, domain.ID, ssl, encryptionAlgorithm, "") == null)
 				{
 					MessageBox.Show("Unable to convert to an iFolder", "Migrate error", MessageBoxButtons.OK);
 					return false;	// error creating iFolder
 				}
-				*/
+				
 			}
 			catch
 			{
-						MessageBox.Show("Unable to convert to an iFolder", "Migrate error", MessageBoxButtons.OK);
+						MessageBox.Show(Resource.GetString("CannotBeiFolder")/*"The folder can not be converted into ifolder"*/,Resource.GetString("MigrationTitle")/*"Error creating iFolder"*/,MessageBoxButtons.OK);
 						return false;
 			}
 			

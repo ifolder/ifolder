@@ -42,6 +42,7 @@ namespace Novell.FormsTrayApp
 		private bool selected = false;
 		private Image icon;
 		private Rectangle iconRect;
+		//private PictureBox picture;
 		private SolidBrush nameBrush;
 		private Font nameFont;
 		private string completeName = string.Empty;
@@ -71,7 +72,7 @@ namespace Novell.FormsTrayApp
 		{
 			Tag = ifolderObject;
 			ItemName = ifolderObject.iFolderWeb.Name;
-
+			
 			if ( ifolderObject.iFolderWeb.IsSubscription )
 			{
 				// TODO: Localize.
@@ -159,6 +160,7 @@ namespace Novell.FormsTrayApp
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
+			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(TileListViewItem));
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			// 
 			// timer1
@@ -168,9 +170,20 @@ namespace Novell.FormsTrayApp
 			// 
 			// TileListViewItem
 			// 
+			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
+			this.AccessibleName = resources.GetString("$this.AccessibleName");
+			this.AutoScroll = ((bool)(resources.GetObject("$this.AutoScroll")));
+			this.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMargin")));
+			this.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMinSize")));
 			this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
+			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
+			this.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("$this.ImeMode")));
+			this.Location = ((System.Drawing.Point)(resources.GetObject("$this.Location")));
 			this.Name = "TileListViewItem";
-			this.Size = new System.Drawing.Size(280, 72);
+			this.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("$this.RightToLeft")));
+			this.Size = ((System.Drawing.Size)(resources.GetObject("$this.Size")));
 			this.Paint += new System.Windows.Forms.PaintEventHandler(this.TileListViewItem_Paint);
 			this.MouseEnter += new System.EventHandler(this.TileListViewItem_MouseEnter);
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TileListViewItem_KeyDown);
@@ -228,7 +241,8 @@ namespace Novell.FormsTrayApp
 		{
 			// Draw the icon.
 			e.Graphics.DrawImage( icon, iconRect );
-
+			
+			//ImageList.Draw(e.Graphics, iconRect.X, iconRect.Y, iconRect.Width, iconRect.Height, imageIndex);
 			// Draw the name string.
 			drawFormattedString( e.Graphics, completeName, nameFont, nameBrush, nameRect );
 
