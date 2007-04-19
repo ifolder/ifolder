@@ -682,6 +682,7 @@ namespace Novell.iFolder
 							if(popUpInput == (int)ResponseType.Cancel)
 							//look for the user input, if yes break other wise loop
 						}*/
+					}	
 						gotTheUserInput = true;					
 				}while( gotTheUserInput == false );
 		
@@ -749,24 +750,24 @@ namespace Novell.iFolder
 							dialog = null;
 					}
 				}
-			}
-			catch(Exception ex)
-			{
-                                iFolderMsgDialog dialog = new iFolderMsgDialog(
-                                                                       null,
-                                                                       iFolderMsgDialog.DialogType.Error,
-                                                                       iFolderMsgDialog.ButtonSet.None,
-                                                                       Util.GS("Unable to set the passphrase"),
-                                                                       Util.GS(ex.Message),
-                                                                       Util.GS("Please enter the passphrase again"));
-                                dialog.Run();
-                                dialog.Hide();
-                                dialog.Destroy();
-                                dialog = null;
-				return false;
-			}
-			return status;
+		}	
+		catch(Exception ex)
+		{
+                            iFolderMsgDialog dialog = new iFolderMsgDialog(
+                                                                   null,
+                                                                   iFolderMsgDialog.DialogType.Error,
+                                                                   iFolderMsgDialog.ButtonSet.None,
+                                                                   Util.GS("Unable to set the passphrase"),
+                                                                   Util.GS(ex.Message),
+                                                                   Util.GS("Please enter the passphrase again"));
+                            dialog.Run();
+                            dialog.Hide();
+                            dialog.Destroy();
+                            dialog = null;
+			return false;
 		}
+		return status;
+	}	
 
 		private bool ShowVerifyDialog(string DomainID, SimiasWebService simws)
 		{
