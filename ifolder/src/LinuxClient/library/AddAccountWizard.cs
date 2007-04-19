@@ -742,33 +742,84 @@ namespace Novell.iFolder
 		private bool OnValidateClicked(object o, EventArgs args)
 		{
 			bool NextPage = true;
+			string publicKey = "";
 		    try {
 		        //Validate the PassPhrase Locally.
 		        if ( !PassPhraseSet )
 			{
 			        if (PassPhraseEntry.Text == PassPhraseVerifyEntry.Text)
 				{
-				        Status passPhraseStatus = domainController.SetPassPhrase (ConnectedDomain.ID, PassPhraseEntry.Text, "");
-					if(passPhraseStatus.statusCode == StatusCodes.Success)
+					string recoveryAgentName = "";
+					TreeSelection tSelect = RATreeView.Selection;
+					if(tSelect != null && tSelect.CountSelectedRows() == 1)
 					{
-						domainController.StorePassPhrase( ConnectedDomain.ID, PassPhraseEntry.Text,
-								CredentialType.Basic, RememberPassPhraseCheckButton.Active);
+						TreeModel tModel;
+						TreeIter iter;
+						tSelect.GetSelected(out tModel, out iter);
+						recoveryAgentName = (string) tModel.GetValue(iter, 0);
 					}
-					else
+					if( recoveryAgentName != null && recoveryAgentName != "None")
 					{
-					       iFolderMsgDialog dialog = new iFolderMsgDialog(
-        	                                       null,
-                	                               iFolderMsgDialog.DialogType.Error,
-                        	                       iFolderMsgDialog.ButtonSet.None,
-                                	               Util.GS("Errot setting the Passphrase"),
-                                        	       Util.GS("Unable to change the Passphrase"),
-	                                               	Util.GS("Please try again"));
-        	                               dialog.Run();
-                	                       dialog.Hide();
-                        	               dialog.Destroy();
-                                	       dialog = null;
-						NextPage = false;
+						// Show Certificate..
+						byte [] RACertificateObj = domainController.GetRACertificate(ConnectedDomain.ID, recoveryAgentName);
+						if( RACertificateObj != null && RACertificateObj.Length != 0)
+						{
+							System.Security.Cryptography.X509Certificates.X509Certificate Cert = new System.Security.Cryptography.X509Certificates.X509Certificate(RACertificateObj);
+							CertificateDialog dlg = new CertificateDialog(Cert.ToString(true));
+						/*
+							if (!Util.RegisterModalWindow(dlg))
+							{
+								dlg.Destroy();
+								dlg = null;
+								return false;
+							}
+						*/
+							int res = dlg.Run();
+							dlg.Hide();
+							dlg.Destroy();
+							dlg = null;
+							if( res == (int)ResponseType.Ok)
+							{
+								publicKey = System.Text.Encoding.ASCII.GetString(Cert.GetPublicKey());
+								Console.WriteLine(" The public key is: {0}", publicKey);
+							}
+							else
+							{
+								Console.WriteLine("Response type is not ok");
+				                                //status = false;
+	                        			        simws.StorePassPhrase(ConnectedDomain.ID, "", CredentialType.None, false);
+								NextPage = false;
+
+							}
+						//	string publickey = (string)Cert.GetPublicKey();
+							
+						}
+					}
+					if( NextPage)
+					{
 					
+				        	Status passPhraseStatus = domainController.SetPassPhrase (ConnectedDomain.ID, PassPhraseEntry.Text, publicKey);
+						if(passPhraseStatus.statusCode == StatusCodes.Success)
+						{
+							domainController.StorePassPhrase( ConnectedDomain.ID, PassPhraseEntry.Text,
+								CredentialType.Basic, RememberPassPhraseCheckButton.Active);
+						}
+						else
+						{
+						       iFolderMsgDialog dialog = new iFolderMsgDialog(
+        		                                       null,
+        	        	                               iFolderMsgDialog.DialogType.Error,
+        	                	                       iFolderMsgDialog.ButtonSet.None,
+        	                        	               Util.GS("Errot setting the Passphrase"),
+        	                                	       Util.GS("Unable to change the Passphrase"),
+		                                               	Util.GS("Please try again"));
+        		                               dialog.Run();
+        	        	                       dialog.Hide();
+        	                	               dialog.Destroy();
+        	                        	       dialog = null;
+							NextPage = false;
+					
+						}
 					}
 
 				} else {

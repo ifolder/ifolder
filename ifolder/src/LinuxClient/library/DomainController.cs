@@ -283,10 +283,13 @@ namespace Novell.iFolder.Controller
 		    SimiasWebService sws = new SimiasWebService();
 		    sws.Url = di.HostUrl + "/Simias.asmx";
 
-//		    string[] ragents = sws.GetRAList();
+		    string[] ragents = sws.GetRAList();
 		    //TODO :
-		    string[] ragents = new string [1];
-		    ragents[0] = "   ";
+			if(ragents == null)
+			{
+			    ragents = new string [1];
+			    ragents[0] = "   ";
+			}
 
 		    return ragents;
 		}
@@ -376,6 +379,7 @@ namespace Novell.iFolder.Controller
 		    DomainInformation di = GetDomain (domainID);
 		    SimiasWebService sws = new SimiasWebService();
 		    sws.Url = di.HostUrl + "/Simias.asmx";
+			Console.WriteLine("In domain Controller: Recovery Agent is : {0}", recoveryAgent);
 		    
 		    return sws.GetRACertificate(recoveryAgent);		    
 		}

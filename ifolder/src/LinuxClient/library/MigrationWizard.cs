@@ -52,6 +52,7 @@ namespace Novell.iFolder
 		private DomainController		domainController;
 		private DomainInformation[]		domains;
 		private iFolderWebService 		ifws;
+		private SimiasWebService		simws;
 		private bool					ControlKeyPressed;
 		private Button						ForwardButton;
 		private Button						FinishButton;
@@ -61,6 +62,7 @@ namespace Novell.iFolder
 		private bool 				Prepared;
 		private iFolderData			ifdata;
 		private bool				migrationStatus;
+		private bool				alreadyEncrypted;
 
 		public event MigrationValidateClickedHandler ValidateClicked;
 		
@@ -115,7 +117,7 @@ namespace Novell.iFolder
 		///
 		iFolderWaitDialog	WaitDialog;
 
-		public MigrationWizard(string User, string path, iFolderWebService ifws, MigrationWindow page) : base(WindowType.Toplevel)
+		public MigrationWizard(string User, string path, iFolderWebService ifws, SimiasWebService simws, MigrationWindow page, bool encrypted) : base(WindowType.Toplevel)
 		{
 			this.Title = Util.GS("iFolder Migration Assistant");
 			this.Resizable = false;
@@ -125,9 +127,11 @@ namespace Novell.iFolder
 			prevLocation = "";
 			this.ifdata = iFolderData.GetData();
 			this.ifws = ifws;
+			this.simws = simws;
 			this.Uname = User;
 			this.page = page;
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png"));
+			this.alreadyEncrypted = encrypted;
 
 			domainController = DomainController.GetDomainController();
 			
@@ -464,33 +468,83 @@ namespace Novell.iFolder
 		private void OnValidateClicked(object o, EventArgs args)
 		{
 			bool NextPage = true;
+			string publicKey = "";
 		    try {
 		        //Validate the PassPhrase Locally.
 		        if ( !PassPhraseSet )
 			{
 			        if (PassPhraseEntry.Text == PassPhraseVerifyEntry.Text)
 				{
-				        Status passPhraseStatus = domainController.SetPassPhrase ((domains[domainList.Active]).ID, PassPhraseEntry.Text, "");
-					if(passPhraseStatus.statusCode == StatusCodes.Success)
+					string recoveryAgentName = "";
+					TreeSelection tSelect = RATreeView.Selection;
+					if(tSelect != null && tSelect.CountSelectedRows() == 1)
 					{
-						domainController.StorePassPhrase( (domains[domainList.Active]).ID, PassPhraseEntry.Text,
-								CredentialType.Basic, RememberPassPhraseCheckButton.Active);
+						TreeModel tModel;
+						TreeIter iter;
+						tSelect.GetSelected(out tModel, out iter);
+						recoveryAgentName = (string) tModel.GetValue(iter, 0);
 					}
-					else
+					if( recoveryAgentName != null && recoveryAgentName != "None")
 					{
-					       iFolderMsgDialog dialog = new iFolderMsgDialog(
-        	                                       null,
-                	                               iFolderMsgDialog.DialogType.Error,
-                        	                       iFolderMsgDialog.ButtonSet.None,
-                                	               Util.GS("Errot setting the Passphrase"),
-                                        	       Util.GS("Unable to change the Passphrase"),
-	                                               	Util.GS("Please try again"));
-        	                               dialog.Run();
-                	                       dialog.Hide();
-                        	               dialog.Destroy();
-                                	       dialog = null;
-						NextPage = false;
+						// Show Certificate..
+						byte [] RACertificateObj = domainController.GetRACertificate((domains[domainList.Active]).ID, recoveryAgentName);
+						if( RACertificateObj != null && RACertificateObj.Length != 0)
+						{
+							System.Security.Cryptography.X509Certificates.X509Certificate Cert = new System.Security.Cryptography.X509Certificates.X509Certificate(RACertificateObj);
+							CertificateDialog dlg = new CertificateDialog(Cert.ToString(true));
+						/*
+							if (!Util.RegisterModalWindow(dlg))
+							{
+								dlg.Destroy();
+								dlg = null;
+								return false;
+							}
+						*/
+							int res = dlg.Run();
+							dlg.Hide();
+							dlg.Destroy();
+							dlg = null;
+							if( res == (int)ResponseType.Ok)
+							{
+								publicKey = System.Text.Encoding.ASCII.GetString(Cert.GetPublicKey());
+								Console.WriteLine(" The public key is: {0}", publicKey);
+							}
+							else
+							{
+								Console.WriteLine("Response type is not ok");
+				                                //status = false;
+	                        			        simws.StorePassPhrase((domains[domainList.Active]).ID, "", CredentialType.None, false);
+								NextPage = false;
+
+							}
+						//	string publickey = (string)Cert.GetPublicKey();
+							
+						}
+					}
+					if( NextPage)
+					{
+					        Status passPhraseStatus = domainController.SetPassPhrase ((domains[domainList.Active]).ID, PassPhraseEntry.Text, "");
+						if(passPhraseStatus.statusCode == StatusCodes.Success)
+						{
+							domainController.StorePassPhrase( (domains[domainList.Active]).ID, PassPhraseEntry.Text,
+								CredentialType.Basic, RememberPassPhraseCheckButton.Active);
+						}
+						else
+						{
+						       iFolderMsgDialog dialog = new iFolderMsgDialog(
+        		                                       null,
+        	        	                               iFolderMsgDialog.DialogType.Error,
+        	                	                       iFolderMsgDialog.ButtonSet.None,
+        	                        	               Util.GS("Errot setting the Passphrase"),
+        	                                	       Util.GS("Unable to change the Passphrase"),
+		                                               	Util.GS("Please try again"));
+        		                               dialog.Run();
+        	        	                       dialog.Hide();
+        	                	               dialog.Destroy();
+        	                        	       dialog = null;
+							NextPage = false;
 					
+						}
 					}
 
 				} else {
@@ -748,6 +802,7 @@ namespace Novell.iFolder
 			if(Prepared)
 				return;
 			Prepared = true;
+			Console.WriteLine("Preparing UserInformation Page");
 			domains = domainController.GetDomains();
 			DomainInformation defaultDomain = domainController.GetDefaultDomain();
 			string domainID = "";
@@ -772,12 +827,20 @@ namespace Novell.iFolder
 			this.Title = Util.GS("iFolder Migration Assistant - (4 of 5)");
 			PassPhraseSet = false;
 			if( encryptionCheckButton.Active == false)
+			{
+				Console.WriteLine("On rapage prepared. Encryption");
 				return;
+			}
+			Console.WriteLine("OnRAPagePrepared");
 			try
 			{
 				if ( domainController.IsPassPhraseSet ((domains[domainList.Active]).ID) == false)
 				{
 				       string[] list = domainController.GetRAList ((domains[domainList.Active]).ID);
+					PassPhraseVerifyEntry.Show();
+				       RATreeView.Show();
+ 				       SelectRALabel.Show();
+ 				       RetypePassPhraseLabel.Show();
 				       RATreeStore.Clear();
 				       foreach (string raagent in list )
 					       RATreeStore.AppendValues (raagent);
@@ -866,6 +929,32 @@ namespace Novell.iFolder
 	{
 			if( encryptionCheckButton.Active == false)
 				AccountDruid.Page = RAPage;
+			// Check if the passphrase is stored and validated properly..
+			
+			else 
+			{
+				Console.WriteLine("Checking for passphrase entered at login");
+				string passphrasecheck = simws.GetPassPhrase((domains[domainList.Active]).ID);
+				if( passphrasecheck != null && passphrasecheck != "")
+				{
+					Console.WriteLine("some passphrase exists: {0}", passphrasecheck);
+					Status passPhraseStatus =  simws.ValidatePassPhrase((domains[domainList.Active]).ID, passphrasecheck);
+					if( passPhraseStatus != null && passPhraseStatus.statusCode == StatusCodes.Success )
+					{
+						Console.WriteLine("Passphrase is validated");
+						AccountDruid.Page = RAPage;
+					}
+					else if( passPhraseStatus == null)
+						Console.WriteLine("Status is null:");
+					else if( passPhraseStatus.statusCode == StatusCodes.PassPhraseInvalid)
+						Console.WriteLine("Passphrase is invalid");
+					else
+						Console.WriteLine("Some other error");
+						
+				}
+				else 
+					Console.WriteLine("No passphrase exists");
+			}
 	}
 
 	public static bool CopyDirectory(DirectoryInfo source, DirectoryInfo destination) 
@@ -1059,8 +1148,45 @@ namespace Novell.iFolder
 		{
 			Console.WriteLine("Forward clicked");
 			// Check for encryption status. If not yes then, skip the RAPage
+			if( encryptionCheckButton.Active == false && alreadyEncrypted == true)
+			{
+				// 2.x is encrypted and the new folder is not
+				iFolderMsgDialog dlg = new iFolderMsgDialog( null, iFolderMsgDialog.DialogType.Info, iFolderMsgDialog.ButtonSet.OkCancel, "Caution", "The original 2.x iFolder is encrypted and the migrated folder is chosen not to encrypt", "Do you want to continue?" );
+				int result = dlg.Run();
+				dlg.Hide();
+				dlg.Destroy();
+				if( result != (int) ResponseType.Ok)
+				{
+					AccountDruid.Page = MigrationOptionsPage;
+					return;
+				}
+			}
 			if( encryptionCheckButton.Active == false)
 				AccountDruid.Page = RAPage;
+			else 
+			{
+				Console.WriteLine("Checking for passphrase entered at login");
+				string passphrasecheck = simws.GetPassPhrase((domains[domainList.Active]).ID);
+				if( passphrasecheck != null && passphrasecheck != "")
+				{
+					Console.WriteLine("some passphrase exists: {0}", passphrasecheck);
+					Status passPhraseStatus =  simws.ValidatePassPhrase((domains[domainList.Active]).ID, passphrasecheck);
+					if( passPhraseStatus != null && passPhraseStatus.statusCode == StatusCodes.Success )
+					{
+						Console.WriteLine("Passphrase is validated");
+						AccountDruid.Page = RAPage;
+					}
+					else if( passPhraseStatus == null)
+						Console.WriteLine("Status is null:");
+					else if( passPhraseStatus.statusCode == StatusCodes.PassPhraseInvalid)
+						Console.WriteLine("Passphrase is invalid");
+					else
+						Console.WriteLine("Some other error");
+						
+				}
+				else 
+					Console.WriteLine("No passphrase exists");
+			}
 		}
 
 		private void OnCancelClicked(object o, Gnome.CancelClickedArgs args)
