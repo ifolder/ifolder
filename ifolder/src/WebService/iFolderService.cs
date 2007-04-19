@@ -616,7 +616,7 @@ namespace Novell.iFolder.Web
 				list.Add(new iFolderWeb(col));
 			}
 
-//			Simias.Discovery.DiscService.UpdateCollectionList();
+			Simias.Discovery.DiscService.UpdateCollectionList();
 			collectionList = Simias.Discovery.CollectionList.GetCollectionList();
 
 			if (collectionList != null )
