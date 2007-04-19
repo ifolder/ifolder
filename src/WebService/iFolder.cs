@@ -286,7 +286,7 @@ namespace Novell.iFolder.Web
 
 			this.OwnerID = c.OwnerID;
 //			this.CurrentUserRights = "Admin";
-			this.CurrentUserRights = = c.UserRights;
+			this.CurrentUserRights = c.UserRights;
 
 			this.State = "WaitSync";
 			if( c.encryptionAlgorithm != null)
