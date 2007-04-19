@@ -627,6 +627,7 @@ namespace Novell.iFolder
 		private bool ShowEnterPassPhraseDialog(string DomainID, SimiasWebService simws)
 		{
 			bool status = false;
+			bool gotTheUserInput = false;
 			int result;	
 			EnterPassPhraseDialog epd = new EnterPassPhraseDialog(DomainID);
 			if (!Util.RegisterModalWindow(epd))
@@ -637,102 +638,117 @@ namespace Novell.iFolder
 			}
 			try
 			{
-			do
-			{
-				result = epd.Run();
-				epd.Hide();
-				if( result == (int)ResponseType.Cancel || result == (int) ResponseType.DeleteEvent)
-					break; //return true; //return status;
-				if( epd.PassPhrase != epd.RetypedPassPhrase )
+				do
 				{
-					Console.WriteLine("PassPhrases do not match");
-					// show an error message
-					iFolderMsgDialog dialog = new iFolderMsgDialog(
-						null,
-						iFolderMsgDialog.DialogType.Error,
-						iFolderMsgDialog.ButtonSet.None,
-						Util.GS("PassPhrase mismatch"),
-						Util.GS("The PassPhrase and retyped PassPhrase are not same"),
-						Util.GS("Please enter the passphrase again"));
-						dialog.Run();
-						dialog.Hide();
-						dialog.Destroy();
-						dialog = null;
-				}
-				else
-					break;
-			}while( result != (int)ResponseType.Cancel );
-			
-			if( result == (int)ResponseType.Cancel || result ==(int)ResponseType.DeleteEvent)
-			{
-				status = false;
-				simws.StorePassPhrase(DomainID, "", CredentialType.None, false);
-			}
-			
-			else if( epd.PassPhrase == epd.RetypedPassPhrase && (result !=(int)ResponseType.Cancel ))
-			{
-								string publicKey = "";
-
-				if( epd.RecoveryAgent != null)
-				{
-					// Show Certificate..
-					byte [] RACertificateObj = domainController.GetRACertificate(DomainID, epd.RecoveryAgent);
-					if( RACertificateObj != null && RACertificateObj.Length != 0)
+					result = epd.Run();
+					epd.Hide();
+					if( result == (int)ResponseType.Cancel || result == (int) ResponseType.DeleteEvent)
 					{
-						System.Security.Cryptography.X509Certificates.X509Certificate Cert = new System.Security.Cryptography.X509Certificates.X509Certificate(RACertificateObj);
-						CertificateDialog dlg = new CertificateDialog(Cert.ToString(true));
-						if (!Util.RegisterModalWindow(dlg))
+						status = false;
+						//Return as false since the user cancelled or deleted the window frame	
+						return status;
+					}
+					if( epd.PassPhrase != epd.RetypedPassPhrase )
+					{
+						// show an error message
+						iFolderMsgDialog dialog = new iFolderMsgDialog(
+							null,
+							iFolderMsgDialog.DialogType.Error,
+							iFolderMsgDialog.ButtonSet.None,
+							Util.GS("PassPhrase mismatch"),
+							Util.GS("The PassPhrase and retyped PassPhrase are not same"),
+							Util.GS("Please enter the passphrase again"));
+							dialog.Run();
+							dialog.Hide();
+							dialog.Destroy();
+							dialog = null;
+					}
+					else
+					{
+						/*
+						if(epd.RecoveryAgent == null)
 						{
+							iFolderMsgDialog dialog = new iFolderMsgDialog(
+							null,
+							iFolderMsgDialog.DialogType.Warning,
+							iFolderMsgDialog.ButtonSet.OkCancel,
+							Util.GS("No recovery agent selected 1"),
+							Util.GS("No recovery agent selected 3"),
+							Util.GS("No recovery agent selected 3"));
+							int popUpInput = dialog.Run();
+							dialog.Hide();
+							dialog.Destroy();
+							dialog = null;
+							if(popUpInput == (int)ResponseType.Cancel)
+							//look for the user input, if yes break other wise loop
+						}*/
+						gotTheUserInput = true;					
+				}while( gotTheUserInput == false );
+		
+
+				//check explicitly here since we r not sure whether other events
+				if( result != (int)ResponseType.Cancel || result != (int) ResponseType.DeleteEvent)
+				{
+					string publicKey = "";
+
+					if( epd.RecoveryAgent != null)
+					{
+						// Show Certificate..
+						byte [] RACertificateObj = domainController.GetRACertificate(DomainID, epd.RecoveryAgent);
+						if( RACertificateObj != null && RACertificateObj.Length != 0)
+						{
+							System.Security.Cryptography.X509Certificates.X509Certificate Cert = new System.Security.Cryptography.X509Certificates.X509Certificate(RACertificateObj);
+							CertificateDialog dlg = new CertificateDialog(Cert.ToString(true));
+							if (!Util.RegisterModalWindow(dlg))
+							{
+								dlg.Destroy();
+								dlg = null;
+								return false;
+							}
+							int res = dlg.Run();
+							dlg.Hide();
 							dlg.Destroy();
 							dlg = null;
-							return false;
+							if( res == (int)ResponseType.Ok)
+							{
+								publicKey = System.Text.Encoding.ASCII.GetString(Cert.GetPublicKey());
+								Console.WriteLine(" The public key is: {0}", publicKey);
+							}
+							else
+							{
+								Console.WriteLine("Response type is not ok");
+				                                status = false;
+	                        			        simws.StorePassPhrase(DomainID, "", CredentialType.None, false);
+								return ShowEnterPassPhraseDialog( DomainID, simws);
+								//	return status;
+							}						
 						}
-						int res = dlg.Run();
-						dlg.Hide();
-						dlg.Destroy();
-						dlg = null;
-						if( res == (int)ResponseType.Ok)
-						{
-							publicKey = System.Text.Encoding.ASCII.GetString(Cert.GetPublicKey());
-							Console.WriteLine(" The public key is: {0}", publicKey);
-						}
-						else
-						{
-							Console.WriteLine("Response type is not ok");
-			                                status = false;
-                        			        simws.StorePassPhrase(DomainID, "", CredentialType.None, false);
-							return ShowEnterPassPhraseDialog( DomainID, simws);
-						//	return status; 
-						}
-					//	string publickey = (string)Cert.GetPublicKey();
-						
+					}
+					// Check the recovery agent
+					Status passPhraseStatus = simws.SetPassPhrase( DomainID, epd.PassPhrase, epd.RecoveryAgent, publicKey);
+					if(passPhraseStatus.statusCode == StatusCodes.Success)
+					{
+						status = true;
+						simws.StorePassPhrase( DomainID, epd.PassPhrase, CredentialType.Basic, epd.ShouldSavePassPhrase);
+					}
+					else 
+					{
+						// error setting the passphrase
+						// show an error message
+						status = false;
+						iFolderMsgDialog dialog = new iFolderMsgDialog(
+							null,
+							iFolderMsgDialog.DialogType.Error,
+							iFolderMsgDialog.ButtonSet.None,
+							Util.GS("Error setting the PassPhrase"),
+							Util.GS("Unable to set the passphrase"),
+							Util.GS("Please try again"));
+							dialog.Run();
+							dialog.Hide();
+							dialog.Destroy();
+							dialog = null;
 					}
 				}
-				// Check the recovery agent
-				Status passPhraseStatus = simws.SetPassPhrase( DomainID, epd.PassPhrase, epd.RecoveryAgent, publicKey);
-				if(passPhraseStatus.statusCode == StatusCodes.Success)
-				{
-					status = true;
-					simws.StorePassPhrase( DomainID, epd.PassPhrase, CredentialType.Basic, epd.ShouldSavePassPhrase);
-				}
-				else 
-				{
-					// error setting the passphrase
-					// show an error message
-					status = false;
-					iFolderMsgDialog dialog = new iFolderMsgDialog(
-						null,
-						iFolderMsgDialog.DialogType.Error,
-						iFolderMsgDialog.ButtonSet.None,
-						Util.GS("Error setting the PassPhrase"),
-						Util.GS("Unable to set the passphrase"),
-						Util.GS("Please try again"));
-						dialog.Run();
-						dialog.Hide();
-						dialog.Destroy();
-						dialog = null;
-				}
-			}
 			}
 			catch(Exception ex)
 			{
@@ -749,7 +765,6 @@ namespace Novell.iFolder
                                 dialog = null;
 				return false;
 			}
-//			return true;
 			return status;
 		}
 
