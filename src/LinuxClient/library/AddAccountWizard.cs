@@ -743,140 +743,129 @@ namespace Novell.iFolder
 		{
 			bool NextPage = true;
 			string publicKey = "";
-		    try {
-		        //Validate the PassPhrase Locally.
-		        if ( !PassPhraseSet )
+			
+			try
 			{
-			        if (PassPhraseEntry.Text == PassPhraseVerifyEntry.Text)
+			    	if ( PassPhraseSet ==false )
 				{
-					string recoveryAgentName = "";
-					TreeSelection tSelect = RATreeView.Selection;
-					if(tSelect != null && tSelect.CountSelectedRows() == 1)
+					if (PassPhraseEntry.Text != PassPhraseVerifyEntry.Text)
 					{
-						TreeModel tModel;
-						TreeIter iter;
-						tSelect.GetSelected(out tModel, out iter);
-						recoveryAgentName = (string) tModel.GetValue(iter, 0);
+						iFolderMsgDialog dialog = new iFolderMsgDialog(
+															null,
+															iFolderMsgDialog.DialogType.Error,
+															iFolderMsgDialog.ButtonSet.None,
+															Util.GS("PassPhrase mismatch"),
+															Util.GS("The PassPhrase and retyped PassPhrase are not same"),
+															Util.GS("Please enter the passphrase again"));
+															dialog.Run();
+															dialog.Hide();
+															dialog.Destroy();
+															dialog = null;				        
+															NextPage = false;
 					}
-					if( recoveryAgentName != null && recoveryAgentName != "None")
+					else
 					{
-						// Show Certificate..
-						byte [] RACertificateObj = domainController.GetRACertificate(ConnectedDomain.ID, recoveryAgentName);
-						if( RACertificateObj != null && RACertificateObj.Length != 0)
+						string recoveryAgentName = "";
+						TreeSelection tSelect = RATreeView.Selection;
+						if(tSelect != null && tSelect.CountSelectedRows() == 1)
 						{
-							System.Security.Cryptography.X509Certificates.X509Certificate Cert = new System.Security.Cryptography.X509Certificates.X509Certificate(RACertificateObj);
-							CertificateDialog dlg = new CertificateDialog(Cert.ToString(true));
-						/*
-							if (!Util.RegisterModalWindow(dlg))
+							TreeModel tModel;
+							TreeIter iter;
+							tSelect.GetSelected(out tModel, out iter);
+							recoveryAgentName = (string) tModel.GetValue(iter, 0);
+						}
+						if( recoveryAgentName != null && recoveryAgentName != "None")
+						{
+							// Show Certificate..
+							byte [] RACertificateObj = domainController.GetRACertificate(ConnectedDomain.ID, recoveryAgentName);
+							if( RACertificateObj != null && RACertificateObj.Length != 0)
 							{
+								System.Security.Cryptography.X509Certificates.X509Certificate Cert = new System.Security.Cryptography.X509Certificates.X509Certificate(RACertificateObj);
+								CertificateDialog dlg = new CertificateDialog(Cert.ToString(true));
+
+								int res = dlg.Run();
+								dlg.Hide();
 								dlg.Destroy();
 								dlg = null;
-								return false;
+								if( res == (int)ResponseType.Ok)
+								{
+									publicKey = System.Text.Encoding.ASCII.GetString(Cert.GetPublicKey());
+									Console.WriteLine(" The public key is: {0}", publicKey);
+								}
+								else
+								{
+									Console.WriteLine("Response type is not ok");
+								        simws.StorePassPhrase(ConnectedDomain.ID, "", CredentialType.None, false);
+									NextPage = false;
+								}
 							}
-						*/
-							int res = dlg.Run();
-							dlg.Hide();
-							dlg.Destroy();
-							dlg = null;
-							if( res == (int)ResponseType.Ok)
+						}
+						if( NextPage)
+						{
+							Status passPhraseStatus = domainController.SetPassPhrase (ConnectedDomain.ID, PassPhraseEntry.Text, publicKey);
+							if(passPhraseStatus.statusCode == StatusCodes.Success)
 							{
-								publicKey = System.Text.Encoding.ASCII.GetString(Cert.GetPublicKey());
-								Console.WriteLine(" The public key is: {0}", publicKey);
+								domainController.StorePassPhrase( ConnectedDomain.ID, PassPhraseEntry.Text,
+									CredentialType.Basic, RememberPassPhraseCheckButton.Active);
 							}
 							else
 							{
-								Console.WriteLine("Response type is not ok");
-				                                //status = false;
-	                        			        simws.StorePassPhrase(ConnectedDomain.ID, "", CredentialType.None, false);
-								NextPage = false;
-
+							   iFolderMsgDialog dialog = new iFolderMsgDialog(
+																null,
+																iFolderMsgDialog.DialogType.Error,
+																iFolderMsgDialog.ButtonSet.None,
+																Util.GS("Errot setting the Passphrase"),
+																Util.GS("Unable to change the Passphrase"),
+																Util.GS("Please try again"));
+																dialog.Run();
+																dialog.Hide();
+																dialog.Destroy();
+																dialog = null;
+																NextPage = false;
 							}
-						//	string publickey = (string)Cert.GetPublicKey();
-							
 						}
-					}
-					if( NextPage)
-					{
-					
-				        	Status passPhraseStatus = domainController.SetPassPhrase (ConnectedDomain.ID, PassPhraseEntry.Text, publicKey);
-						if(passPhraseStatus.statusCode == StatusCodes.Success)
-						{
-							domainController.StorePassPhrase( ConnectedDomain.ID, PassPhraseEntry.Text,
-								CredentialType.Basic, RememberPassPhraseCheckButton.Active);
-						}
-						else
-						{
-						       iFolderMsgDialog dialog = new iFolderMsgDialog(
-        		                                       null,
-        	        	                               iFolderMsgDialog.DialogType.Error,
-        	                	                       iFolderMsgDialog.ButtonSet.None,
-        	                        	               Util.GS("Errot setting the Passphrase"),
-        	                                	       Util.GS("Unable to change the Passphrase"),
-		                                               	Util.GS("Please try again"));
-        		                               dialog.Run();
-        	        	                       dialog.Hide();
-        	                	               dialog.Destroy();
-        	                        	       dialog = null;
-							NextPage = false;
-					
-						}
-					}
-
-				} else {
-				       iFolderMsgDialog dialog = new iFolderMsgDialog(
-                                               null,
-                                               iFolderMsgDialog.DialogType.Error,
-                                               iFolderMsgDialog.ButtonSet.None,
-                                               Util.GS("PassPhrase mismatch"),
-                                               Util.GS("The PassPhrase and retyped PassPhrase are not same"),
-                                               Util.GS("Please enter the passphrase again"));
-                                       dialog.Run();
-                                       dialog.Hide();
-                                       dialog.Destroy();
-                                       dialog = null;				        
-					NextPage = false;
-				       
-				      // return false;
+					}					
 				}
-			} else {
-			    // PassPhrase is already set.
-			        Status validationStatus = domainController.ValidatePassPhrase (ConnectedDomain.ID, PassPhraseEntry.Text );
-				if (validationStatus.statusCode == StatusCodes.PassPhraseInvalid ) 
+				else 
 				{
-					NextPage = false;
-				       iFolderMsgDialog dialog = new iFolderMsgDialog(
-                                               null,
-                                               iFolderMsgDialog.DialogType.Error,
-                                               iFolderMsgDialog.ButtonSet.None,
-                                               Util.GS("PassPhrase Invlid"),
-                                               Util.GS("The PassPhrase enter is not valid"),
-                                               Util.GS("Please enter the passphrase again"));
-                                       dialog.Run();
-                                       dialog.Hide();
-                                       dialog.Destroy();
-                                       dialog = null;				        
+					// PassPhrase is already set.
+					Status validationStatus = domainController.ValidatePassPhrase (ConnectedDomain.ID, PassPhraseEntry.Text );
+					if (validationStatus.statusCode == StatusCodes.PassPhraseInvalid ) 
+					{
+						NextPage = false;
+						iFolderMsgDialog dialog = new iFolderMsgDialog(
+						null,
+						iFolderMsgDialog.DialogType.Error,
+						iFolderMsgDialog.ButtonSet.None,
+						Util.GS("PassPhrase Invlid"),
+						Util.GS("The PassPhrase enter is not valid"),
+						Util.GS("Please enter the passphrase again"));
+						dialog.Run();
+						dialog.Hide();
+						dialog.Destroy();
+						dialog = null;				        
+					}
+					else if(validationStatus.statusCode == StatusCodes.Success )
+					domainController.StorePassPhrase( ConnectedDomain.ID, PassPhraseEntry.Text,
+												CredentialType.Basic, RememberPassPhraseCheckButton.Active);
 				}
-				else if(validationStatus.statusCode == StatusCodes.Success )
-	                                domainController.StorePassPhrase( ConnectedDomain.ID, PassPhraseEntry.Text,
-								  CredentialType.Basic, RememberPassPhraseCheckButton.Active);
-			}
-		    } 
+			} 
 			catch (Exception ex)
-		    	{
+			{
 				iFolderMsgDialog dialog = new iFolderMsgDialog(
-			                                               null,
-                        			                       iFolderMsgDialog.DialogType.Error,
-			                                               iFolderMsgDialog.ButtonSet.None,
-                        			                       Util.GS("Unable to set the passphrase"),
-			                                               Util.GS(ex.Message),
-                        			                       Util.GS("Please enter the passphrase again"));
+				null,
+				iFolderMsgDialog.DialogType.Error,
+				iFolderMsgDialog.ButtonSet.None,
+				Util.GS("Unable to set the passphrase"),
+				Util.GS(ex.Message),
+				Util.GS("Please enter the passphrase again"));
 				dialog.Run();
 				dialog.Hide();
 				dialog.Destroy();
 				dialog = null;
 				NextPage = false;
-			//Avoid ifolder crash incase of exception.
-		    }
+				//Avoid ifolder crash incase of exception.
+			}
 			if( NextPage == false)
 			{
 				Console.WriteLine("In the same page");
@@ -884,13 +873,11 @@ namespace Novell.iFolder
 				return false;
 			}
 			BackButton.Label = Util.GS("gtk-go-back");
-		        return true;
+			return true;
 		}
 		
 		private bool OnSkipClicked(object o, EventArgs args)
 		{
-			domainController.StorePassPhrase( ConnectedDomain.ID, "",
-								CredentialType.None, false);
 			AccountDruid.Page = SummaryPage;
 
 			BackButton.Label = Util.GS("gtk-go-back");
@@ -1231,8 +1218,8 @@ namespace Novell.iFolder
 		public event ValidateClickedHandler ValidateClicked;
 		public event SkipClickedHandler SkipClicked;
 
-		public DruidRAPage(string title, Gdk.Pixbuf logo, Gdk.Pixbuf top_watermark)
-			: base (title, logo, top_watermark)
+		public DruidRAPage(string title, Gdk.Pixbuf logo, Gdk.Pixbuf topwatermark)
+			: base (title, logo, topwatermark)
 		{
 		}
 		
