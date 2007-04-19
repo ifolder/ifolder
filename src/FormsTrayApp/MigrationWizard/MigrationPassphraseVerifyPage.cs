@@ -17,7 +17,7 @@
  *  License along with this program; if not, write to the Free
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- *  Author: Bruce Getter <bgetter@novell.com>
+ *  Author: Ramesh Sunder <sramesh@novell.com>
  *
  ***********************************************************************/
 
@@ -27,22 +27,23 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
-using Novell.FormsTrayApp;
-using Novell.iFolderCom;
 
 namespace Novell.Wizard
 {
 	/// <summary>
 	/// Class for the wizard page where the invitation file is selected.
 	/// </summary>
-	public class MigrationServerPage : Novell.Wizard.MigrationInteriorPageTemplate
+	public class MigrationPassphraseVerifyPage : Novell.Wizard.MigrationInteriorPageTemplate
 	{
 		#region Class Members
 
-//		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(SelectInvitationPage));
-		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.Label label2;
-
+		//		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(SelectInvitationPage));
+		private System.Windows.Forms.Label EnterPPTitle;
+		private System.Windows.Forms.Label EnterPPLabel;
+		private System.Windows.Forms.Label RememberPPLabel;
+		private System.Windows.Forms.TextBox EnterPPText;
+		private System.Windows.Forms.CheckBox RememberPPCheck;
+		
 		private System.Windows.Forms.RadioButton removeFromServer;
 		private System.Windows.Forms.RadioButton copyToServer;
 
@@ -53,8 +54,9 @@ namespace Novell.Wizard
 		private System.Windows.Forms.CheckBox defaultServer;
 		private System.Windows.Forms.Label defaultDescription;
 		private System.ComponentModel.IContainer components = null;
-		private static System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(CreateiFolder));
-		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(Novell.FormsTrayApp.FormsTrayApp));
+
+		private System.Windows.Forms.Label label1, label2;
+
 		private string homeLocation;
 		private string prevLoc;
 
@@ -65,10 +67,10 @@ namespace Novell.Wizard
 		/// <summary>
 		/// Constructs a ServerPage object.
 		/// </summary>
-		public MigrationServerPage(string loc)
+		public MigrationPassphraseVerifyPage()
 		{
 			// This call is required by the Windows Form Designer.
-			this.homeLocation = loc;
+			this.homeLocation = "Home Location";
 			InitializeComponent();
 
 			//defaultDescription.Visible = defaultServer.Visible = !makeDefaultAccount;
@@ -84,17 +86,57 @@ namespace Novell.Wizard
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.label1 = new System.Windows.Forms.Label();
-			this.label2 = new System.Windows.Forms.Label();
-			this.removeFromServer = new RadioButton();
-			this.copyToServer = new RadioButton();
-			this.iFolderLocation = new TextBox();
-			this.copyOption = new CheckBox();
-			this.browseButton = new Button();
-			this.defaultDescription = new System.Windows.Forms.Label();
-			this.defaultServer = new System.Windows.Forms.CheckBox();
-			this.SuspendLayout();
+			EnterPPTitle = new Label();
+			EnterPPLabel = new Label();
+			this.EnterPPText = new TextBox();
+			RememberPPLabel = new Label();
+			RememberPPCheck = new CheckBox();
 
+			//EnterPPTitle
+			EnterPPTitle.Text = "Enter Passphrase:";
+			EnterPPTitle.Location = new System.Drawing.Point(40, 96);
+			EnterPPTitle.Size = new System.Drawing.Size(416, 16);
+			//EnterPPLabel
+			EnterPPLabel.Text = "Enter Passphrase:";
+			EnterPPLabel.Location = new System.Drawing.Point(80, 122);
+			EnterPPLabel.Size = new System.Drawing.Size(120, 16);
+			// EnterPPText
+			this.EnterPPText.Text = "";
+			this.EnterPPText.Location = new System.Drawing.Point(200, 122);
+			this.EnterPPText.Size = new System.Drawing.Size(260, 16);
+			/*
+			//RetypePPLabel
+			RetypePPLabel.Text = "Retype Passphrase:";
+			RetypePPLabel.Location = new System.Drawing.Point(80, 146);
+			RetypePPLabel.Size = new System.Drawing.Size(120, 16);
+			//RetypePPText
+			this.RetypePPText.Text = "";
+			this.RetypePPText.Location = new System.Drawing.Point(200, 146);
+			this.RetypePPText.Size = new System.Drawing.Size(260, 16);
+			*/
+			//RememberPPLabel
+			RememberPPLabel.Text = "Remember Passphrase";
+			RememberPPLabel.Location = new System.Drawing.Point(200, 146);
+			RememberPPLabel.Size = new System.Drawing.Size(350, 16);
+			//RememberPPCheck
+			RememberPPCheck.Text = "RememberPassphrase";
+			RememberPPCheck.Location = new System.Drawing.Point(200, 146);
+			RememberPPCheck.Size = new System.Drawing.Size(350, 16);
+			/*
+			//RecoveryAgentTitle
+			this.RecoveryAgentTitle.Text = "Select Recovery Agent:";
+			this.RecoveryAgentTitle.Location = new System.Drawing.Point(40, 196);
+			this.RecoveryAgentTitle.Size = new System.Drawing.Size(416, 16);
+			//RecoveryAgentLabel
+			this.RecoveryAgentLabel.Text = "Recovery Agent:";
+			this.RecoveryAgentLabel.Location = new System.Drawing.Point(80, 220);
+			this.RecoveryAgentLabel.Size = new System.Drawing.Size(120, 16);
+			//RecoveryAgentCombo
+			this.RecoveryAgentCombo.Location = new System.Drawing.Point(200, 220);
+			this.RecoveryAgentCombo.Size = new System.Drawing.Size(260, 16);
+			*/
+			this.SuspendLayout();
+			/*
 			// 
 			// label1
 			// 
@@ -103,7 +145,7 @@ namespace Novell.Wizard
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(50, 24);
 			this.label1.TabIndex = 1;
-			this.label1.Text = Resource.GetString("LocationText");//"Location:";
+			this.label1.Text = "This is PASSPHRASE PAGE";
 			// 
 			// iFolderLocation
 			// 
@@ -122,7 +164,7 @@ namespace Novell.Wizard
 			this.browseButton.Location = new Point(390, 208);
 			this.browseButton.Size = new Size(75, 20);
 			this.browseButton.Name = "browseButton";
-			this.browseButton.Text = resourceManager.GetString("browse.Text");//"&Browse";
+			this.browseButton.Text = "&Browse";
 			this.browseButton.Enabled = false;
 			this.browseButton.Click += new EventHandler(browseButton_Click);
 		
@@ -131,7 +173,7 @@ namespace Novell.Wizard
 			this.removeFromServer.Name = "removeFromServer";
 			this.removeFromServer.Size = new Size(320, 20);
 			this.removeFromServer.TabIndex = 2;
-			this.removeFromServer.Text = Resource.GetString("MigrateNRemove");//"Migrate the ifolder and disconnect it from 2.x domain";
+			this.removeFromServer.Text = "Migrate the ifolder and disconnect it from 2.x domain";
 			this.removeFromServer.Checked = true;
 			this.removeFromServer.CheckedChanged += new EventHandler(removeClicked);
 			
@@ -140,7 +182,7 @@ namespace Novell.Wizard
 			this.copyToServer.Location = new Point(96, 144);
 			this.copyToServer.Name = "copyToServer";
 			this.copyToServer.Size = new Size(320, 20);
-			this.copyToServer.Text = Resource.GetString("MigrateNCopy");//"Create a copy and connect it to 3.x server";
+			this.copyToServer.Text = "Create a copy and connect it to 3.x server";
 			this.copyToServer.Checked = false;
 			this.copyToServer.CheckedChanged +=new EventHandler(copyToServer_CheckedChanged);
 			
@@ -149,7 +191,7 @@ namespace Novell.Wizard
 			this.copyOption.Location = new Point(112, 168);  // change 144
 			this.copyOption.Name = "copyOption";
 			this.copyOption.Size = new Size(320,20);
-			this.copyOption.Text = Resource.GetString("CopyParent");//"Copy the parent folder";
+			this.copyOption.Text = "Copy only the iFolder content";
 			this.copyOption.Enabled = false;
 			this.copyOption.Visible = true;
 			this.copyOption.Checked = false;
@@ -163,11 +205,12 @@ namespace Novell.Wizard
 			this.label2.Size = new System.Drawing.Size(416, 24);
 			this.label2.TabIndex = 1;
 			//this.label2.Text = "Enter the name of your iFolder server (for example, ifolder.example.net).";
-			this.label2.Text = Resource.GetString("SelectAnOption");//"Select one of the following options";
+			this.label2.Text = "Select one of the following options";
 			
 			// 
 			// defaultDescription
-			// 
+			//
+			*/ 
 			/*
 			this.defaultDescription.Location = new System.Drawing.Point(40, 168);
 			this.defaultDescription.Name = "defaultDescription";
@@ -206,13 +249,10 @@ namespace Novell.Wizard
 			this.Controls.SetChildIndex(this.serverAddress, 0);
 			this.Controls.SetChildIndex(this.defaultServer, 0);
 			*/
-			this.Controls.Add(this.removeFromServer);
-			this.Controls.Add(this.label2);
-			this.Controls.Add(this.label1);
-			this.Controls.Add(this.copyToServer);
-			this.Controls.Add(this.iFolderLocation);
-			this.Controls.Add(this.browseButton);
-			this.Controls.Add(this.copyOption);
+			this.Controls.Add(this.EnterPPTitle);
+			this.Controls.Add(this.EnterPPLabel);
+			this.Controls.Add(this.RememberPPCheck);
+			this.Controls.Add(this.EnterPPText);
 			this.ResumeLayout(false);
 
 		}
@@ -222,32 +262,9 @@ namespace Novell.Wizard
 
 		private void browseButton_Click(object sender, System.EventArgs args)
 		{
-			FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-
-			folderBrowserDialog.Description = /*resourceManager.GetString(*/"chooseFolder";//);
-			folderBrowserDialog.SelectedPath = this.iFolderLocation.Text;
-
-			if(folderBrowserDialog.ShowDialog() == DialogResult.OK)
-			{
-				this.iFolderLocation.Text = folderBrowserDialog.SelectedPath;
-			}
 		}
 		private void removeClicked(object sender, System.EventArgs args)
 		{
-			if(removeFromServer.Checked == true)
-			{
-				this.browseButton.Enabled = false;
-				this.iFolderLocation.Enabled = false;
-				this.prevLoc = this.iFolderLocation.Text;
-				this.iFolderLocation.Text = homeLocation;
-				
-			}
-			else
-			{
-				this.browseButton.Enabled = true;
-				this.iFolderLocation.Enabled = true;
-				this.iFolderLocation.Text = this.prevLoc;
-			}
 		}
 		/*
 		private void serverAddress_TextChanged(object sender, System.EventArgs e)
@@ -273,7 +290,7 @@ namespace Novell.Wizard
 			base.ActivatePage (previousIndex);
 
 			// Enable/disable the buttons.
-		//	serverAddress_TextChanged(this, null);
+			//	serverAddress_TextChanged(this, null);
 
 			//serverAddress.Focus();
 		}
@@ -310,60 +327,71 @@ namespace Novell.Wizard
 
 		#region Properties
 
-		/// <summary>
-		/// Gets the Migration option
-		/// 
-		
-		public bool MigrationOption
+		public string Passphrase
 		{
 			get
 			{
-				return this.removeFromServer.Checked;
+				return this.EnterPPText.Text;
 			}
 		}
-
-		public bool CopyParentDirectory
+		public bool RememberPassphrase
 		{
 			get
 			{
-				return this.copyOption.Checked;
+				return this.RememberPPCheck.Checked;
 			}
 		}
 
-		public string HomeLocation
-		{
-			get
-			{
-				return this.iFolderLocation.Text;
-			}
-		}
-
-		/// <summary>
-		/// Gets the server address entered.
-		/// </summary>
-		/*
-		public string ServerAddress
-		{
-			get { return serverAddress.Text; }
-		}
-
-		/// <summary>
-		/// Gets a value indicating if this server should be the default server.
-		/// </summary>
-		public bool DefaultServer
-		{
-			get { return defaultServer.Checked; }
-		}
-		*/
 		#endregion
 
 		private void copyToServer_CheckedChanged(object sender, EventArgs e)
 		{
-			if(this.copyToServer.Checked == true)
-				this.copyOption.Enabled = true;
-			else
-				this.copyOption.Enabled = false;
 		}
 	}
+	/*
+	internal class EnterPP : System.Windows.Forms.Form
+	{
+		#region class members
+
+		private System.Windows.Forms.Label EnterPPTitle;
+		private System.Windows.Forms.Label EnterPPLabel;
+		private System.Windows.Forms.Label RetypePPLabel;
+		private System.Windows.Forms.Label RememberPPLabel;
+		#endregion
+		#region constructor
+
+		public EnterPP()
+		{
+			EnterPPTitle = new Label();
+			EnterPPLabel = new Label();
+			RetypePPLabel = new Label();
+			RememberPPLabel = new Label();
+
+			//EnterPPTitle
+			EnterPPTitle.Text = "Enter Passphrase:";
+			EnterPPTitle.Location = new System.Drawing.Point(40, 96);
+			EnterPPTitle.Size = new System.Drawing.Size(416, 16);
+			//EnterPPLabel
+			EnterPPLabel.Text = "Passphrase";
+			EnterPPLabel.Location = new System.Drawing.Point(80, 122);
+			EnterPPLabel.Size = new System.Drawing.Size(90, 16);
+			//RetypePPLabel
+			RetypePPLabel.Text = "Retype Passphrase";
+			RetypePPLabel.Location = new System.Drawing.Point(80, 146);
+			RetypePPLabel.Size = new System.Drawing.Size(90, 16);
+			//RememberPPLabel
+			RememberPPLabel.Text = "Remember Passphrase";
+			RememberPPLabel.Location = new System.Drawing.Point(80, 170);
+			RememberPPLabel.Size = new System.Drawing.Size(200, 16);
+			this.Controls.Add(EnterPPTitle);
+			this.Controls.Add(this.EnterPPLabel);
+			this.Controls.Add(this.RetypePPLabel);
+			this.Controls.Add(this.RememberPPLabel);
+
+		}
+		#endregion
+		
+	}
+	*/
 }
 

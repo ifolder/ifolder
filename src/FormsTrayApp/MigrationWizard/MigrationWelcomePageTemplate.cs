@@ -27,6 +27,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Data;
 using System.Windows.Forms;
+using Novell.FormsTrayApp;
 
 namespace Novell.Wizard
 {
@@ -45,6 +46,7 @@ namespace Novell.Wizard
 		private System.Windows.Forms.Panel headerPanel1;
 		private System.Windows.Forms.Panel padPanel1; 
 		private System.Windows.Forms.Label headerTitle;
+		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(Novell.FormsTrayApp.FormsTrayApp));
 		/// <summary> 
 		/// Required designer variable.
 		/// </summary>
@@ -114,7 +116,7 @@ namespace Novell.Wizard
 			this.headerTitle.Name = "headerTitle";
 			this.headerTitle.Size = new System.Drawing.Size(350, 16);
 			//this.headerTitle.TabIndex = 0;
-			this.headerTitle.Text = "Migrate the iFolder";
+			this.headerTitle.Text = Resource.GetString("MigrationHT");//"Migrate the iFolder";
 			// 
 			// panel1
 			// 
@@ -133,7 +135,7 @@ namespace Novell.Wizard
 			this.actionText.Name = "actionText";
 			this.actionText.Size = new System.Drawing.Size(296, 40);
 			this.actionText.TabIndex = 2;
-			this.actionText.Text = "action...";
+			this.actionText.Text = "";
 			// 
 			// descriptionText
 			// 
@@ -141,7 +143,7 @@ namespace Novell.Wizard
 			this.descriptionText.Name = "descriptionText";
 			this.descriptionText.Size = new System.Drawing.Size(296, 184);
 			this.descriptionText.TabIndex = 1;
-			this.descriptionText.Text = "Description ...";
+			this.descriptionText.Text = "";
 			// 
 			// welcomeTitle
 			// 

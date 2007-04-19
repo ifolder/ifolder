@@ -84,6 +84,7 @@ namespace Novell.FormsTrayApp
 		public event RemoveDomainDelegate RemoveDomain;
 
 		private Hashtable iFolderListViews = new Hashtable();
+		private Hashtable acceptedFolders = new Hashtable();
 		private ImageList largeImageList;
 		private TileListViewItem selectedItem;
 		private bool hide = true;
@@ -563,7 +564,7 @@ namespace Novell.FormsTrayApp
 			this.MigrationMenuItem.Enabled = true;
 			this.MigrationMenuItem.Visible = true;
 			this.MigrationMenuItem.Index = 11;
-			this.MigrationMenuItem.Text = "Migration";
+			this.MigrationMenuItem.Text = resources.GetString("menuMigration");//"Migration";
 			this.MigrationMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
 																					   this.MigrationMenuSubItem });
 
@@ -572,7 +573,7 @@ namespace Novell.FormsTrayApp
 			//
 			this.MigrationMenuSubItem.Enabled = true;
 			this.MigrationMenuSubItem.Visible = true;
-			this.MigrationMenuSubItem.Text = "Migrate From 2.x";
+			this.MigrationMenuSubItem.Text = resources.GetString("MigrationSubMenu");//"Migrate From 2.x";
 			this.MigrationMenuSubItem.Click += new System.EventHandler(this.menuMigrateMigrate_Click);
 
 			// 
@@ -765,7 +766,7 @@ namespace Novell.FormsTrayApp
 			//
 			this.menuSecurity.Enabled = true;
 			this.menuSecurity.Index = 3;
-			this.menuSecurity.Text = "Security";
+			this.menuSecurity.Text = resources.GetString("SecurityText");//"Security";
 			this.menuSecurity.MenuItems.AddRange( new System.Windows.Forms.MenuItem[] {
 																						  this.menuRecoverKeys,
 																						  this.menuResetPassphrase
@@ -777,7 +778,7 @@ namespace Novell.FormsTrayApp
 			//
 			this.menuRecoverKeys.Index = 0;
 			this.menuRecoverKeys.Enabled = true;
-			this.menuRecoverKeys.Text = "Key Recovery";
+			this.menuRecoverKeys.Text = resources.GetString("KeyRecoveryText");//"Key Recovery";
 			this.menuRecoverKeys.Visible = true;
 			this.menuRecoverKeys.MenuItems.AddRange( new System.Windows.Forms.MenuItem[] {
 																							 this.menuExportKeys,
@@ -789,7 +790,7 @@ namespace Novell.FormsTrayApp
 			this.menuExportKeys.Index = 0;
 			this.menuExportKeys.Enabled = true;
 			this.menuExportKeys.Visible = true;
-			this.menuExportKeys.Text = "Export Encrypted Keys";
+			this.menuExportKeys.Text = resources.GetString("menuExportKeysText");//"Export Encrypted Keys";
 			this.menuExportKeys.Click += new EventHandler(menuExportKeys_Select);
 
 			//
@@ -797,7 +798,7 @@ namespace Novell.FormsTrayApp
 			//
 			this.menuImportKeys.Index = 1;
 			this.menuImportKeys.Enabled = true;
-			this.menuImportKeys.Text = "Import Decrypted Keys";
+			this.menuImportKeys.Text = resources.GetString("menuImportKeysText");//"Import Decrypted Keys";
 			this.menuImportKeys.Visible = true;
 			this.menuImportKeys.Click += new EventHandler(menuImportKeys_Select);
 
@@ -806,7 +807,7 @@ namespace Novell.FormsTrayApp
 			//
 			this.menuResetPassphrase.Index = 1;
 			this.menuResetPassphrase.Enabled = true;
-			this.menuResetPassphrase.Text = "Reset Passphrase";
+			this.menuResetPassphrase.Text = resources.GetString("ResetPPText");//"Reset Passphrase";
 			this.menuResetPassphrase.Visible = true;
 			this.menuResetPassphrase.Click += new EventHandler(menuResetPassphrase_Select);
 
@@ -1452,6 +1453,7 @@ namespace Novell.FormsTrayApp
 			this.SizeChanged += new System.EventHandler(this.GlobalProperties_SizeChanged);
 			this.Load += new System.EventHandler(this.GlobalProperties_Load);
 			this.Move += new System.EventHandler(this.GlobalProperties_Move);
+			this.Resize += new System.EventHandler(this.GlobalProperties_SizeChanged);
 			this.VisibleChanged += new System.EventHandler(this.GlobalProperties_VisibleChanged);
 			this.panel1.ResumeLayout(false);
 			this.iFolderActions.ResumeLayout(false);
@@ -1921,6 +1923,7 @@ namespace Novell.FormsTrayApp
 									startSync = true;
 									iFolderObject ifolderObject = (iFolderObject)tlvi.Tag;
 									ifolderObject.iFolderState = iFolderState.Synchronizing;
+									tlvi.ItemLocation = ifolderObject.iFolderWeb.UnManagedPath;
 									int imageIndex;
 									tlvi.Status = getItemState( ifolderObject, 0, out imageIndex );
 									tlvi.ImageIndex = imageIndex;
@@ -2170,10 +2173,11 @@ namespace Novell.FormsTrayApp
 
 		private void addiFolderToListView(iFolderObject ifolderObject)
 		{
+			//MessageBox.Show("Called addifoldertolistview");
 			iFolderWeb ifolder = ifolderObject.iFolderWeb;
-
 			if ( !ifolder.IsSubscription )
 			{
+			//	MessageBox.Show("Not a subscription");
 				lock (ht)
 				{
 					// Add only if it isn't already in the list.
@@ -2184,9 +2188,14 @@ namespace Novell.FormsTrayApp
 						tlvi.Status = getItemState( ifolderObject, 0, out imageIndex );
 						tlvi.ImageIndex = imageIndex;
 						iFolderView.Items.Add(tlvi);
-
+						iFolderView.Items.Sort();
 						// Add the listviewitem to the hashtable.
 						ht.Add(ifolder.ID, tlvi);
+			//			MessageBox.Show(String.Format("Added a new Item to iFolderView: hashtable count: {0}", ht.Count));
+					}
+					else
+					{
+			//			MessageBox.Show("The folder is already present in ht:");
 					}
 				}
 
@@ -2324,7 +2333,11 @@ namespace Novell.FormsTrayApp
 						switch (ifolderObject.iFolderWeb.State)
 						{
 							case "Local":
-								imageIndex = 0;
+								// change 3 to image index for encryption ifolder icon
+								if( ifolderObject.iFolderWeb.encryptionAlgorithm == null || ifolderObject.iFolderWeb.encryptionAlgorithm == "")
+									imageIndex = 0;
+								else
+									imageIndex = 3;
 								status = string.Format( resourceManager.GetString("statusSynced"), ifolderObject.iFolderWeb.LastSyncTime );
 								break;
 							case "Available":
@@ -2350,6 +2363,10 @@ namespace Novell.FormsTrayApp
 						}
 						break;
 					}
+					case iFolderState.Initial:
+						imageIndex = 4;
+						status = "Initial "+ifolderObject.iFolderWeb.State;
+						break;
 					case iFolderState.Disconnected:
 						imageIndex = 5;
 						status = resourceManager.GetString("disconnected");
@@ -2377,7 +2394,6 @@ namespace Novell.FormsTrayApp
 						break;
 				}
 			}
-
 			return status;
 		}
 
@@ -2413,7 +2429,6 @@ namespace Novell.FormsTrayApp
 		private void refreshiFolders(/*Domain domain*/)
 		{
 			Cursor.Current = Cursors.WaitCursor;
-
 			Hashtable oldHt = new Hashtable();
 			lock(ht)
 			{
@@ -2422,8 +2437,7 @@ namespace Novell.FormsTrayApp
 				{
 					iFolderObject ifolderObject = (iFolderObject)tlvi.Tag;
 					oldHt.Add( ifolderObject.ID, ifolderObject.iFolderState );
-				}
-					
+				}					
 				ht.Clear();
 			}
 
@@ -2431,7 +2445,6 @@ namespace Novell.FormsTrayApp
 			{
 				// Get the list of iFolders
 				iFolderWeb[] ifolderArray = ifWebService.GetAlliFolders();
-				// Clear the listviews
 				panel2.SuspendLayout();
 				iFolderView.Items.Clear();
 				selectedItem = null;
@@ -2454,8 +2467,20 @@ namespace Novell.FormsTrayApp
 							state = (iFolderState)oldHt[ ifolder.ID ];
 						}
 					}
-
+					if( this.acceptedFolders.Contains(ifolder.ID))
+					{
+						this.acceptedFolders.Remove(ifolder.ID);
+					}
 					addiFolderToListView(new iFolderObject(ifolder, state));
+				}
+				// Check whether or not the count is same..
+				foreach( System.Object obj in this.acceptedFolders.Values)
+				{
+					TileListViewItem tlv = (TileListViewItem)obj;
+					iFolderObject ifobj = (iFolderObject)tlv.Tag;
+					ifobj.iFolderWeb.IsSubscription = false;
+					ifobj.iFolderState = iFolderState.Initial;
+					addiFolderToListView( ifobj );
 				}
 			}
 			catch (Exception ex)
@@ -2464,7 +2489,7 @@ namespace Novell.FormsTrayApp
 				mmb.ShowDialog();
 				mmb.Dispose();
 			}
-
+			iFolderView.Items.Sort();
 			foreach (iFoldersListView ifListView in iFolderListViews.Values)
 			{
 				ifListView.FinalizeUpdate();
@@ -2570,11 +2595,23 @@ namespace Novell.FormsTrayApp
 						revert.Top = share.Top + buttonDelta;
 						properties.Top = revert.Top + buttonDelta;
 					}
+					if( ifolderObject.iFolderState == iFolderState.Initial )
+					{
+						this.open.Visible = this.share.Visible = this.revert.Visible = this.properties.Visible = false;
 
+						this.menuOpen.Enabled = this.menuShare.Enabled = false; 
+						this.menuRevert.Enabled = this.menuProperties.Enabled = false;
+
+						this.menuActionOpen.Enabled = this.menuActionShare.Enabled = false;
+						this.menuActionRevert.Enabled = this.menuActionProperties.Enabled = false;
+						return;
+					}
 					// Show the local iFolder buttons
 					this.open.Visible = this.syncNow.Visible = this.share.Visible =
-						this.revert.Visible = this.properties.Visible = true;
-
+					this.revert.Visible = this.properties.Visible = true;
+					// Show right-click menu
+					this.menuOpen.Enabled = this.menuShare.Enabled = true; 
+					this.menuRevert.Enabled = this.menuProperties.Enabled = true;
 				}
 			}
 		}
@@ -2883,7 +2920,6 @@ namespace Novell.FormsTrayApp
 			}
 
 			selectedItem = tileListView.SelectedItem;
-
 			updateMenus( selectedItem == null ? null : (iFolderObject)selectedItem.Tag );
 		}
 
@@ -2969,6 +3005,8 @@ namespace Novell.FormsTrayApp
 
 							lock ( ht )
 							{
+								acceptedFolders.Remove(newiFolder.ID);
+								ht.Remove(newiFolder.ID);
 								ht.Add( newiFolder.ID, tlvi );
 							}
 						}
@@ -3094,13 +3132,27 @@ namespace Novell.FormsTrayApp
 			if ( selectedItem != null )
 			{
 				iFolderWeb ifolder = ((iFolderObject)selectedItem.Tag).iFolderWeb;
+				iFolderObject ifobj = new iFolderObject(((iFolderObject)selectedItem.Tag).iFolderWeb, iFolderState.Disconnected);
+				iFolderWeb ifolderWeb = ((iFolderObject)selectedItem.Tag).iFolderWeb;
+				ifobj.iFolderWeb.IsSubscription = false;
+				TileListViewItem tlvi = new TileListViewItem(ifobj);
+				
 
 				// Accept the iFolder.
 				if ( AcceptiFolder( ifolder ) )
 				{
 					lock (ht)
 					{
+						//MessageBox.Show("Ramesh: Removing from the tilelistview");
 						removeTileListViewItem( selectedItem );
+						//MessageBox.Show("Ramesh: Adding to list view");					
+						addiFolderToListView(new iFolderObject(ifolderWeb, iFolderState.Initial));
+						if( acceptedFolders.Contains(ifobj.iFolderWeb.ID) )
+							acceptedFolders.Remove(ifobj.iFolderWeb.ID);
+						acceptedFolders.Add(ifobj.iFolderWeb.ID, tlvi);
+					//	iFolderView.Items.Add(tlvi);
+					//	ht.Add( ifobj.iFolderWeb.DomainID, tlvi);
+					//	addiFolderToAvailableListView();
 					}
 				}
 			}
@@ -3292,14 +3344,14 @@ namespace Novell.FormsTrayApp
 
 		private void menuMigrateMigrate_Click(object sender, EventArgs e)
 		{
-			Novell.FormsTrayApp.MigrationWindow migrationWindow = new MigrationWindow(this.ifWebService);
+			Novell.FormsTrayApp.MigrationWindow migrationWindow = new MigrationWindow(this.ifWebService, this.simiasWebService);
 			migrationWindow.ShowDialog();
 		}
 		
 		private void menuResetPassphrase_Select(object sender, EventArgs e)
 		{
 			// Show the reset passphrase window
-			TrayApp.ResetPassphrase resetPassphraseWindow = new TrayApp.ResetPassphrase();
+			ResetPassphrase resetPassphraseWindow = new ResetPassphrase();
 			resetPassphraseWindow.simiasWebservice = this.simiasWebService;
 			resetPassphraseWindow.ShowDialog();
 		}
@@ -3307,13 +3359,13 @@ namespace Novell.FormsTrayApp
 		private void menuExportKeys_Select(object sender, EventArgs e)
 		{
 			// Show export keys dialog
-			TrayApp.ExportKeysDialog exportKeys = new TrayApp.ExportKeysDialog();
+			ExportKeysDialog exportKeys = new ExportKeysDialog();
 			exportKeys.ShowDialog();
 		}
 
 		private void menuImportKeys_Select(object sender, EventArgs e)
 		{
-			TrayApp.ImportKeysDialog importKeys = new TrayApp.ImportKeysDialog();
+			ImportKeysDialog importKeys = new ImportKeysDialog();
 			importKeys.ShowDialog();
 		}
 

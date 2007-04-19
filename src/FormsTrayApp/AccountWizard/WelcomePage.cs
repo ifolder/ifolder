@@ -26,6 +26,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using Novell.FormsTrayApp;
 
 namespace Novell.Wizard
 {
@@ -36,6 +37,7 @@ namespace Novell.Wizard
 	{
 		#region Class Members
 		private System.ComponentModel.IContainer components = null;
+		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(Novell.FormsTrayApp.FormsTrayApp));
 		#endregion
 
 		/// <summary>
@@ -60,9 +62,9 @@ namespace Novell.Wizard
 			// WelcomePage
 			// 
 			// TODO: Localize
-			this.DescriptionText = "Description...";
+			this.DescriptionText = Resource.GetString("CompletionPageDT");//"Description...";
 			this.Name = "WelcomePage";
-			this.WelcomeTitle = "Welcome to the iFolder Invitation Wizard";
+			this.WelcomeTitle = Resource.GetString("WelcomePageTitle");//"Welcome to the iFolder Invitation Wizard";
 
 		}
 		#endregion

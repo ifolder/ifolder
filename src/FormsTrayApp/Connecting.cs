@@ -398,7 +398,6 @@ namespace Novell.FormsTrayApp
 				/*	if passphrase is not set show verify dialog. else check for remember option 
 				 *	and if the passphrase differs show the verify dialog.
 				 */
-				
 				bool passPhraseStatus = false;
 				bool passphraseStatus = false;
 				try
@@ -407,7 +406,8 @@ namespace Novell.FormsTrayApp
 				}
 				catch(Exception ex)
 				{
-					MessageBox.Show("Unable to check for passphrase. "+ ex.Message);
+					//MessageBox.Show("Unable to check for passphrase. "+ ex.Message);
+					MessageBox.Show( resourceManager.GetString("IsPassphraseSetException") + ex.Message);
 					BeginInvoke( this.connectDoneDelegate );
 				}
 				/*
@@ -423,11 +423,12 @@ namespace Novell.FormsTrayApp
 					if( this.simiasWebService.GetRememberOption(this.domainInfo.ID) == true )
 					{
 						passphrasecheck = this.simiasWebService.GetPassPhrase(this.domainInfo.ID);
+						//MessageBox.Show(String.Format("Remember option is true and passphrase is {0}", passphrasecheck));
 					}
 					if( passphrasecheck == null || passphrasecheck =="")
 					{
 					//	MessageBox.Show( "passphrase is not remembered", "passphrase");
-						Novell.iFolderCom.VerifyPassphraseDialog vpd = new Novell.iFolderCom.VerifyPassphraseDialog(this.domainInfo.ID, this.simiasWebService);
+						VerifyPassphraseDialog vpd = new VerifyPassphraseDialog(this.domainInfo.ID, this.simiasWebService);
 						vpd.ShowDialog();
 						passPhraseStatus = vpd.PassphraseStatus;
 					}
@@ -538,7 +539,7 @@ namespace Novell.FormsTrayApp
 									simiasWebService.LeaveDomain(domainInfo.ID, false);
 								}
 								catch{ }
-								MessageBox.Show(" You need to upgrade the client to connect to this server.", "Unable to Login", MessageBoxButtons.OK);
+								MessageBox.Show(resourceManager.GetString("UpgradeNeededMsg")/*" You need to upgrade the client to connect to this server."*/, resourceManager.GetString("DisableLoginMsg")/*"Unable to Login"*/, MessageBoxButtons.OK);
 								return false;
 							}
 					
@@ -554,7 +555,7 @@ namespace Novell.FormsTrayApp
 						}
 						catch(Exception ex) // Ignore
 						{
-							MessageBox.Show(ex.ToString(), "error in webservice", MessageBoxButtons.OK);
+							//MessageBox.Show(ex.ToString(), "error in webservice", MessageBoxButtons.OK);
 						}
 
 						if ( defaultServer )
@@ -706,7 +707,8 @@ namespace Novell.FormsTrayApp
 						bool res = FormsTrayApp.ClientUpdates(domainInfo.ID);
 						if(res == false)
 						{
-							MessageBox.Show("You need to upgrade your client to connect to the server.", "Login denied", MessageBoxButtons.OK);
+							//MessageBox.Show("You need to upgrade your client to connect to the server.", "Login denied", MessageBoxButtons.OK);
+							MessageBox.Show(resourceManager.GetString("UpgradeNeededMsg")/*" You need to upgrade the client to connect to this server."*/, resourceManager.GetString("DisableLoginMsg")/*"Unable to Login"*/, MessageBoxButtons.OK);
 							try
 							{
 								DomainAuthentication domainAuth1 = new DomainAuthentication("iFolder", domainInfo.ID, null);

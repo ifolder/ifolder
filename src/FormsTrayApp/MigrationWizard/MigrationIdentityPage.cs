@@ -29,6 +29,7 @@ using System.Windows.Forms;
 using System.Xml;
 using System.IO;
 using Novell.iFolderCom;
+using Novell.FormsTrayApp;
 
 namespace Novell.Wizard
 {
@@ -37,14 +38,24 @@ namespace Novell.Wizard
 	/// </summary>
 	public class MigrationIdentityPage : Novell.Wizard.MigrationInteriorPageTemplate
 	{
+		enum SecurityState
+		{
+			encryption = 1,
+			enforceEncryption = 2,
+			SSL = 4,
+			enforceSSL = 8
+		}
 		#region Class Members
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Label label4;
-		private System.Windows.Forms.CheckBox encryptionCB;
-		private System.Windows.Forms.CheckBox sslCB;
+		//private System.Windows.Forms.CheckBox encryptionCB;
+		//private System.Windows.Forms.CheckBox sslCB;
+		private System.Windows.Forms.RadioButton encryptionCB;
+		private System.Windows.Forms.RadioButton sslCB;
 		private System.Windows.Forms.ComboBox Domains;
 		private System.ComponentModel.IContainer components = null;
+		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(Novell.FormsTrayApp.FormsTrayApp));
 
 		private iFolderWebService ifws;
 		private DomainItem selectedDomain;
@@ -72,8 +83,8 @@ namespace Novell.Wizard
 			this.label3 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
 			this.Domains = new ComboBox();
-			this.encryptionCB = new CheckBox();
-			this.sslCB = new CheckBox();			
+			this.encryptionCB = new RadioButton();//new CheckBox();
+			this.sslCB = new RadioButton();//new CheckBox();			
 			this.SuspendLayout();
 			// 
 			// label1
@@ -82,7 +93,7 @@ namespace Novell.Wizard
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(416, 16);
 			this.label1.TabIndex = 0;
-			this.label1.Text = "Select the domain";
+			this.label1.Text = Resource.GetString("SelectDomain");//"Select the domain";
 			// 
 			// label3
 			// 
@@ -90,7 +101,7 @@ namespace Novell.Wizard
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(90, 16);
 			this.label3.TabIndex = 1;
-			this.label3.Text = "Server Address:";
+			this.label3.Text = Resource.GetString("ServerNameText");//"Server Address:";
 
 			///
 			/// Domains
@@ -116,7 +127,7 @@ namespace Novell.Wizard
 
 			this.encryptionCB.Location = new Point(80, 172);
 			this.encryptionCB.Name = "encryptionCB";
-			this.encryptionCB.Text = "Encrypt the iFolder";
+			this.encryptionCB.Text = Resource.GetString("EncryptedText");//"Encryption enabled";
 			this.encryptionCB.Size = new Size(390, 16);
 
 			///
@@ -125,7 +136,7 @@ namespace Novell.Wizard
 
 			this.sslCB.Location = new Point(80, 198);
 			this.sslCB.Name = "sslCB";
-			this.sslCB.Text = "Use Secure channel for data transfer";
+			this.sslCB.Text = Resource.GetString("SharableText");//"Sharable";
 			this.sslCB.Size = new Size(390, 16);
 			
 			// 
@@ -137,8 +148,8 @@ namespace Novell.Wizard
 			this.Controls.Add(this.Domains);
 			this.Controls.Add(this.encryptionCB);
 			this.Controls.Add(this.sslCB);
-			this.HeaderSubTitle = "HeaderSubTitle";
-			this.HeaderTitle = "HeaderTitle";
+			this.HeaderSubTitle = "";
+			this.HeaderTitle = "";
 			this.Name = "IdentityPage";
 			this.Controls.SetChildIndex(this.label1, 0);
 			this.Controls.SetChildIndex(this.label3, 0);
@@ -337,6 +348,37 @@ namespace Novell.Wizard
 		private void Domains_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			DomainItem domain = (DomainItem) Domains.SelectedItem;
+			int SecurityPolicy = ifws.GetSecurityPolicy(domain.ID);
+			this.encryptionCB.Checked = false;
+			this.encryptionCB.Enabled = this.sslCB.Enabled = false;
+			this.sslCB.Checked = true;
+			if(SecurityPolicy !=0)
+			{
+				if( (SecurityPolicy & (int)SecurityState.encryption) == (int) SecurityState.encryption)
+				{
+					if( (SecurityPolicy & (int)SecurityState.enforceEncryption) == (int) SecurityState.enforceEncryption)
+						encryptionCB.Checked = true;
+					else
+					{
+						encryptionCB.Enabled = true;
+						sslCB.Enabled = true;
+					}
+				}
+				else
+					sslCB.Checked = true;
+				/*
+				if( (SecurityPolicy & (int)SecurityState.SSL) == (int) SecurityState.SSL)
+				{
+					if( (SecurityPolicy & (int)SecurityState.enforceSSL) == (int) SecurityState.enforceSSL)
+						sslCB.Checked = true;
+					else
+						sslCB.Enabled = true;
+				}
+				*/
+			}
+			else
+				sslCB.Checked = true;
+			/*
 			int securityPolicy = ifws.GetSecurityPolicy(domain.ID);
 			this.encryptionCB.Checked = this.sslCB.Checked = false;
 			this.encryptionCB.Enabled = this.sslCB.Enabled = false;
@@ -355,6 +397,7 @@ namespace Novell.Wizard
 				else
 					this.sslCB.Enabled = true;
 			}
+			*/
 		}
 	}
 }

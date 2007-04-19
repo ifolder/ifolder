@@ -1571,11 +1571,16 @@ namespace Novell.FormsTrayApp
 					result = true;
 					domain.DomainInfo.Authenticated = false;
 					lvi.Tag = domain;
-					// Domain Logged out. Remove Passphrase..
-					this.simiasWebService.StorePassPhrase(domain.ID, "", CredentialType.None, false);
+					// Domain Logged out. Remove Passphrase if store passphrase is not selected..
+					if( this.simiasWebService.GetRememberOption(domain.ID) == false)
+					{
+						//MessageBox.Show("Remember option not selected");
+						this.simiasWebService.StorePassPhrase(domain.ID, "", CredentialType.None, false);
+					}
+					//else
+					//	MessageBox.Show("Remember option selected");
 				}
 			}
-
 			return result;
 		}
 

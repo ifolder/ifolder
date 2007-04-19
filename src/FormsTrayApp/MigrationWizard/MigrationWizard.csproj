@@ -138,6 +138,11 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "MigrationPassphraseVerifyPage.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "MigrationServerPage.cs"
                     SubType = "UserControl"
                     BuildAction = "Compile"

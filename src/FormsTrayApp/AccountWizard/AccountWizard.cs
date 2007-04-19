@@ -90,6 +90,7 @@ namespace Novell.Wizard
 		private Manager simiasManager;
 		private SimiasWebService simiasWebService;
 		private iFolderWebService ifWebService;
+		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(Novell.FormsTrayApp.FormsTrayApp));
 
 		/// <summary>
 		/// Required designer variable.
@@ -123,53 +124,53 @@ namespace Novell.Wizard
 			// welcomePage
 			// 
 			// TODO: Localize
-			this.welcomePage.DescriptionText = "This wizard will guide you through setting up your iFolder account.";
-			this.welcomePage.ActionText = "To continue, click Next.";
+			this.welcomePage.DescriptionText = Resource.GetString("WelcomePageDescription");//"This wizard will guide you through setting up your iFolder account.";
+			this.welcomePage.ActionText = Resource.GetString("WelcomePageAction");//"To continue, click Next.";
 			this.welcomePage.Location = new System.Drawing.Point(0, 0);
-			this.welcomePage.Name = "welcomePage";
+			this.welcomePage.Name = Resource.GetString("WelcomePageName");//"welcomePage";
 			this.welcomePage.Size = new System.Drawing.Size(496, 304);
 			this.welcomePage.TabIndex = 1;
-			this.welcomePage.WelcomeTitle = "Welcome to the iFolder Account Wizard";
+			this.welcomePage.WelcomeTitle = Resource.GetString("WelcomePageTitle");//"Welcome to the iFolder Account Wizard";
 			// 
 			// serverPage
 			// 
 			// TODO: Localize
-			this.serverPage.HeaderSubTitle = "Enter the name of your iFolder server.";
-			this.serverPage.HeaderTitle = "Choose an iFolder Server";
+			this.serverPage.HeaderSubTitle = Resource.GetString("ServerPageHeaderST");//"Enter the name of the iFolder server.";
+			this.serverPage.HeaderTitle = Resource.GetString("ServerPageHeaderTitle");//"Choose an iFolder Server";
 			this.serverPage.Location = new System.Drawing.Point(0, 0);
-			this.serverPage.Name = "serverPage";
+			this.serverPage.Name = Resource.GetString("ServerPageName");//"serverPage";
 			this.serverPage.Size = new System.Drawing.Size(496, 304);
 			this.serverPage.TabIndex = 1;
 			// 
 			// identityPage
 			// 
 			// TODO: Localize
-			this.identityPage.HeaderSubTitle = "Enter your iFolder username and password.";
-			this.identityPage.HeaderTitle = "iFolder Account Information";
+			this.identityPage.HeaderSubTitle = Resource.GetString("IdentityPageHeaderST");//"Enter your iFolder username and password.";
+			this.identityPage.HeaderTitle = Resource.GetString("IdentityPageHeaderTitle");//"iFolder Account Information";
 			this.identityPage.Location = new System.Drawing.Point(0, 0);
-			this.identityPage.Name = "identityPage";
+			this.identityPage.Name = Resource.GetString("IdentityPageName");//"identityPage";
 			this.identityPage.Size = new System.Drawing.Size(496, 304);
 			this.identityPage.TabIndex = 1;
 			// 
 			// verifyPage
 			// 
 			// TODO: Localize
-			this.verifyPage.HeaderSubTitle = "Verify the iFolder account information.";
-			this.verifyPage.HeaderTitle = "Verify iFolder Account Information";
+			this.verifyPage.HeaderSubTitle = Resource.GetString("VerifyPageHeaderST");//"Verify the iFolder account information.";
+			this.verifyPage.HeaderTitle = Resource.GetString("VerifyPageHeaderTitle");//"Verify iFolder Account Information";
 			this.verifyPage.Location = new System.Drawing.Point(0, 0);
-			this.verifyPage.Name = "verifyPage";
+			this.verifyPage.Name = Resource.GetString("VerifyPageName");//"verifyPage";
 			this.verifyPage.Size = new System.Drawing.Size(496, 304);
 			this.verifyPage.TabIndex = 1;
 			//
 			// completionPage
 			//
 			// TODO: Localize
-			this.completionPage.DescriptionText = "Description...";
+			this.completionPage.DescriptionText = Resource.GetString("CompletionPageDT");//"Description...";
 			this.completionPage.Location = new System.Drawing.Point(0, 0);
 			this.completionPage.Name = "completionPage";
 			this.completionPage.Size = new System.Drawing.Size(496, 304);
 			this.completionPage.TabIndex = 1;
-			this.completionPage.WelcomeTitle = "Completing the iFolder Invitation Wizard";
+			this.completionPage.WelcomeTitle = Resource.GetString("CompletionPageWT");//"Completing the iFolder Invitation Wizard";
 
 			this.Controls.Add(this.welcomePage);
 			this.Controls.Add(this.serverPage);
@@ -249,30 +250,33 @@ namespace Novell.Wizard
 			// 
 			this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.cancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.cancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
 			this.cancel.Location = new System.Drawing.Point(416, 318);
-			this.cancel.Name = "cancel";
+			this.cancel.Name = Resource.GetString("CancelText");//"cancel";
 			this.cancel.Size = new System.Drawing.Size(72, 23);
 			this.cancel.TabIndex = 3;
-			this.cancel.Text = "Cancel";
+			this.cancel.Text = Resource.GetString("CancelText");//"Cancel";
 			// 
 			// next
 			// 
 			this.next.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.next.ImeMode = System.Windows.Forms.ImeMode.NoControl;
 			this.next.Location = new System.Drawing.Point(328, 318);
-			this.next.Name = "next";
+			this.next.Name = Resource.GetString("NextText");//"next";
 			this.next.Size = new System.Drawing.Size(72, 23);
 			this.next.TabIndex = 2;
-			this.next.Text = "&Next >";
+			this.next.Text = Resource.GetString("NextText")+" >";
 			this.next.Click += new System.EventHandler(this.next_Click);
 			// 
 			// back
 			// 
 			this.back.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.back.ImeMode = System.Windows.Forms.ImeMode.NoControl;
 			this.back.Location = new System.Drawing.Point(253, 318);
-			this.back.Name = "back";
+			this.back.Name = Resource.GetString("BackText");//"back";
 			this.back.Size = new System.Drawing.Size(72, 23);
 			this.back.TabIndex = 1;
-			this.back.Text = "< &Back";
+			this.back.Text = "< "+Resource.GetString("BackText");
 			this.back.Click += new System.EventHandler(this.back_Click);
 			// 
 			// groupBox1
@@ -284,7 +288,7 @@ namespace Novell.Wizard
 			this.groupBox1.Size = new System.Drawing.Size(496, 4);
 			this.groupBox1.TabIndex = 4;
 			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = "groupBox1";
+			this.groupBox1.Text = "";
 			// 
 			// AccountWizard
 			// 
@@ -298,11 +302,12 @@ namespace Novell.Wizard
 			this.Controls.Add(this.next);
 			this.Controls.Add(this.cancel);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+			this.ImeMode = System.Windows.Forms.ImeMode.NoControl;
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "AccountWizard";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-			this.Text = "iFolder Account Wizard";
+			this.Text = Resource.GetString("AccWizardText");//"iFolder Account Wizard";
 			this.Activated += new System.EventHandler(this.AccountWizard_Activated);
 			this.ResumeLayout(false);
 
@@ -323,7 +328,7 @@ namespace Novell.Wizard
 				(currentIndex == (maxPages - 2)))
 			{
 				// TODO: Localize
-				this.next.Text = "&Next >";
+				this.next.Text = Resource.GetString("NextText")+" >";
 			}
 
 			int previousIndex = this.pages[currentIndex].DeactivatePage();
@@ -361,7 +366,7 @@ namespace Novell.Wizard
 				if (currentIndex == (maxPages - 2))
 				{
 					// TODO: Localize
-					next.Text = "&Connect";
+					next.Text = Resource.GetString("ConnectText");//"&Connect";
 				}
 				else if (currentIndex == (maxPages - 1))
 				{
@@ -369,7 +374,7 @@ namespace Novell.Wizard
 					// button to a Finish button.
 					next.DialogResult = DialogResult.OK;
 					// TODO: Localize
-					next.Text = "&Finish";
+					next.Text = Resource.GetString("FinishText");//"&Finish";
 				}
 			}
 		}
@@ -423,11 +428,10 @@ namespace Novell.Wizard
 			get
 			{
 				// TODO: Localize
-				StringBuilder sb = new StringBuilder("Congratulations, you are now connected to:\n\n");
-				sb.AppendFormat( "{0}\n", domainInfo.Name );				
+				StringBuilder sb = new StringBuilder(Resource.GetString("CongratsMsg")/*"Congratulations, you are now connected to:\n\n"*/);
+				sb.AppendFormat( "\n\n{0}\n", domainInfo.Name );				
 				sb.AppendFormat( "({0})\n\n", serverPage.ServerAddress );
-				sb.Append( "You can now add folders to be synchronized to the server.  You may also download folders from the server and have them be synchronized to your computer." );
-
+				sb.Append( Resource.GetString("CongratsDescription")/*"You can now add folders to be synchronized to the server.  You may also download folders from the server and have them be synchronized to your computer."*/ );
 				return sb.ToString();				
 			}
 		}

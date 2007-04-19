@@ -281,7 +281,7 @@ namespace Novell.FormsTrayApp
 
 			tlvi = new TileListViewItem( ifolderObject );
 			tlvi = tileListView1.Items.Add( tlvi );
-
+			tileListView1.Items.Sort();
 			return tlvi;
 		}
 

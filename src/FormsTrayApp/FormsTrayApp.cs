@@ -296,19 +296,19 @@ namespace Novell.FormsTrayApp
 
 			if( instance.ifWebService.CheckForServerUpdate(domainID))
 			{
-				MessageBox.Show("Server Is Old. Cannot connect to the server","Server Old",MessageBoxButtons.OK);
+				MessageBox.Show(resourceManager.GetString("ServerOld")/*"Server Is Old. Cannot connect to the server"*/,resourceManager.GetString("ServerOldTitle")/*"Server Old"*/,MessageBoxButtons.OK);
 				return false;
 			}
 			else if( (newClientVersion = instance.ifWebService.CheckForUpdatedClient(domainID)) != null)
 			{
 				//int res = (int) MessageBox.Show( newClientVersion, "Client upgrade needed: ", MessageBoxButtons.OKCancel);
-				int res = (int) MessageBox.Show( "Would you like to upgrade your client to "+newClientVersion+ ". The client will be closed automatically if you click Yes", "Client upgrade available. ", MessageBoxButtons.OKCancel);
+				int res = (int) MessageBox.Show(String.Format( resourceManager.GetString("UpgradeClientMsg"),newClientVersion) /* "Would you like to upgrade your client to "+newClientVersion+ ". The client will be closed automatically if you click Yes"*/, resourceManager.GetString("UpgradeNeededTitle")/*"Client upgrade available. "*/, MessageBoxButtons.OKCancel);
 				if( res == (int) DialogResult.OK)
 				{
 					// download client
 					if(instance.ifWebService.RunClientUpdate(domainID, null))
 					{
-						MessageBox.Show( "The install process has started", "Client upgrade ", MessageBoxButtons.OK);
+						//MessageBox.Show( "The install process has started", "Client upgrade ", MessageBoxButtons.OK);
 						instance.ShutdownTrayApp(null);
 						//		FormsTrayApp.ShutdownForms();
 						// Shut down the tray app.
@@ -321,13 +321,13 @@ namespace Novell.FormsTrayApp
 			}
 			else if((newClientVersion = instance.ifWebService.CheckForUpdatedClientAvailable(domainID)) != null)
 			{
-				int res = (int) MessageBox.Show( "Would you like to upgrade your client to "+newClientVersion+ ". The client will be closed automatically if you click Yes", "Client upgrade needed. ", MessageBoxButtons.OKCancel);
+				int res = (int) MessageBox.Show(String.Format( resourceManager.GetString("UpgradeClientMsg"),newClientVersion) /* "Would you like to upgrade your client to "+newClientVersion+ ". The client will be closed automatically if you click Yes"*/, resourceManager.GetString("UpgradeAvailableTitle")/*"Client upgrade available. "*/, MessageBoxButtons.OKCancel);
 				if( res == (int) DialogResult.OK)
 				{
 					// download client
 					if(instance.ifWebService.RunClientUpdate(domainID, null))
 					{
-						MessageBox.Show( "The install process has started", "Client upgrade ", MessageBoxButtons.OK);
+					//	MessageBox.Show( "The install process has started", "Client upgrade ", MessageBoxButtons.OK);
 						instance.ShutdownTrayApp(null);
 						//		FormsTrayApp.ShutdownForms();
 						// Shut down the tray app.
@@ -658,7 +658,8 @@ namespace Novell.FormsTrayApp
 								{
 									preferences.AddDomainToList(dw);
 									// Clear Passphrase
-									this.simiasWebService.StorePassPhrase( dw.ID, "", CredentialType.None, false);
+									if( this.simiasWebService.GetRememberOption(dw.ID) == false)
+										this.simiasWebService.StorePassPhrase( dw.ID, "", CredentialType.None, false);
 								}
 
 								BeginInvoke( globalProperties.addDomainToListDelegate, new object[] {dw} );

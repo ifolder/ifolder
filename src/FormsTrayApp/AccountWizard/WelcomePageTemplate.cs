@@ -27,6 +27,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Data;
 using System.Windows.Forms;
+using Novell.FormsTrayApp;
 
 namespace Novell.Wizard
 {
@@ -41,6 +42,7 @@ namespace Novell.Wizard
 		private System.Windows.Forms.Label descriptionText;
 		private System.Windows.Forms.PictureBox waterMark;
 		private System.Windows.Forms.Label actionText;
+		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(Novell.FormsTrayApp.FormsTrayApp));
 		/// <summary> 
 		/// Required designer variable.
 		/// </summary>
@@ -103,7 +105,7 @@ namespace Novell.Wizard
 			this.actionText.Name = "actionText";
 			this.actionText.Size = new System.Drawing.Size(296, 40);
 			this.actionText.TabIndex = 2;
-			this.actionText.Text = "action...";
+			this.actionText.Text = "";
 			// 
 			// descriptionText
 			// 
@@ -111,7 +113,7 @@ namespace Novell.Wizard
 			this.descriptionText.Name = "descriptionText";
 			this.descriptionText.Size = new System.Drawing.Size(296, 184);
 			this.descriptionText.TabIndex = 1;
-			this.descriptionText.Text = "Description ...";
+			this.descriptionText.Text = Resource.GetString("CompletionPageDT");//"Description ...";
 			// 
 			// welcomeTitle
 			// 

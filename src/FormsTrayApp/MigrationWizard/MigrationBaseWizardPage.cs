@@ -120,5 +120,12 @@ namespace Novell.Wizard
 			return this.previousIndex;
 		}
 		#endregion
+		public virtual int PreviousIndex
+		{
+			set
+			{
+				this.previousIndex = value;
+			}
+		}
 	}
 }
