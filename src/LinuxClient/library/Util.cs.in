@@ -861,6 +861,31 @@ namespace Novell.iFolder
 			return true;
 		}
 		
+		public static void DontShowMigrationPrompt()
+		{
+		//	if( ClientConfig.Exists(ClientConfig.KEY_NOTIFY_MIGRATION_2_X) )
+		//	{
+				Console.WriteLine("Setting true");
+				ClientConfig.Set( ClientConfig.KEY_NOTIFY_MIGRATION_2_X, true);
+				bool val = Util.ShowMigrationPrompt();
+				if( val == true)
+					Console.WriteLine("Set to true: confirmed");
+				else
+					Console.WriteLine("Not Set to true: confirmed");
+		//	}
+		}
+
+		public static bool ShowMigrationPrompt()
+		{
+			if( ClientConfig.Exists(ClientConfig.KEY_NOTIFY_MIGRATION_2_X) )
+			{
+				Console.WriteLine("Returning false");
+				return !((bool)ClientConfig.Get( ClientConfig.KEY_NOTIFY_MIGRATION_2_X ));
+			}
+			Console.WriteLine("Returning true");
+			return true;
+		}
+		
 		/// <summary>
 		/// Saves the positions and sizes of the iFolder windows.  Returns
 		/// true if successful.

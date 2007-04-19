@@ -36,7 +36,7 @@ namespace Novell.iFolder
 		private string[] RAList;
 		private string	DomainID;
 
-
+		ListStore RATreeStore;
 		private iFolderTreeView RATreeView;
 		private Image				 iFolderBanner;
 		private Image				 iFolderScaledBanner;
@@ -71,6 +71,19 @@ namespace Novell.iFolder
 		{
 			get
 			{
+				TreeSelection tSelect = RATreeView.Selection;
+				if(tSelect == null)
+					return null;
+				if(tSelect.CountSelectedRows() == 1)
+				{
+					TreeModel tModel;
+					TreeIter iter;
+					tSelect.GetSelected(out tModel, out iter);
+					string id = (string) tModel.GetValue(iter, 0);
+					if(id == "None")
+						return null;
+					return id;
+				}
 				return null; 
 			}
 		}
@@ -91,6 +104,7 @@ namespace Novell.iFolder
 			this.SetDefaultSize (450, 100);
 	//		this.Resizable = false;
 			this.Modal = true;
+			this.DestroyWithParent = true;
 			this.DefaultResponse = ResponseType.Ok;
 
 			//-----------------------------
@@ -170,7 +184,7 @@ namespace Novell.iFolder
 			sw.Add(RATreeView);
 
 			DomainController domainController = DomainController.GetDomainController();
-			ListStore RATreeStore = new ListStore(typeof(string));
+			RATreeStore = new ListStore(typeof(string));
 			RATreeView.Model = RATreeStore;
                         RAList = domainController.GetRAList(DomainID);
 			if( RAList == null)
@@ -184,7 +198,7 @@ namespace Novell.iFolder
 				Console.WriteLine("raagent:{0}", raagent);
                             RATreeStore.AppendValues (raagent);
 			}
-
+			RATreeStore.AppendValues("None");
 			// RA Name Column
 			TreeViewColumn raNameColumn = new TreeViewColumn();
 			raNameColumn.Title = Util.GS("Recovery Agents");

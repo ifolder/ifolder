@@ -236,6 +236,7 @@ namespace Novell.iFolder
 		//===================================================================
 		public void Refresh()
 		{
+			Console.WriteLine("In Refresh: Number of iFolders: {0}", ifws.GetAlliFolders().Length);
 			lock (instanceLock)
 			{
 				// Clear orphaned iFolders out of the iFolderListStore
@@ -836,11 +837,15 @@ namespace Novell.iFolder
 			{
 				iFolderHolder ifHolder = null;
 				string collectionID = GetiFolderID(ifolderID);
+				iFolderWeb[] ifarray = ifws.GetAlliFolders();
+				Console.WriteLine("The number of iFolders is: {0}", ifarray.Length);
 
    		 		iFolderWeb newifolder = ifws.AcceptiFolderInvitation(
 											domainID,
 											ifolderID,
 											localPath);
+				ifarray = ifws.GetAlliFolders();
+				Console.WriteLine("The number of iFolders is: {0}", ifarray.Length);
 				if (newifolder == null)
 				{
 					return null;

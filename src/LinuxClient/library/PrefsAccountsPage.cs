@@ -714,12 +714,34 @@ namespace Novell.iFolder
 			bool status = false;
 			int result;	
                         EnterPassPhraseDialog epd = new EnterPassPhraseDialog(DomainID);
+			if (!Util.RegisterModalWindow(epd))
+			{
+				epd.Destroy();
+				epd = null;
+				return false;
+			}
 			try
 			{
 			do
 			{
 				result = epd.Run();
 				epd.Hide();
+				if( epd.RecoveryAgent != null)
+				{
+					Console.WriteLine("Recovery Agent Selected is: {0}", epd.RecoveryAgent);
+					byte [] RACertificateObj = domainController.GetRACertificate(DomainID, epd.RecoveryAgent);
+					if( RACertificateObj != null && RACertificateObj.Length != 0)
+					{
+						Console.WriteLine(" Got Certificate");
+						System.Security.Cryptography.X509Certificates.X509Certificate Cert = new System.Security.Cryptography.X509Certificates.X509Certificate(RACertificateObj);
+					//	string publickey = (string)Cert.GetPublicKey();
+						
+					}
+					else
+					{
+						Console.WriteLine("No Certificate");
+					}
+				}
 				if( result == (int)ResponseType.Cancel || result == (int)ResponseType.DeleteEvent)
 					break;
 				if( epd.PassPhrase != epd.RetypedPassPhrase )
@@ -752,8 +774,44 @@ namespace Novell.iFolder
 			
 			else if( epd.PassPhrase == epd.RetypedPassPhrase)
 			{
-				// Check the recovery agent
 				string publicKey = "";
+
+				if( epd.RecoveryAgent != null)
+				{
+					// Show Certificate..
+					byte [] RACertificateObj = domainController.GetRACertificate(DomainID, epd.RecoveryAgent);
+					if( RACertificateObj != null && RACertificateObj.Length != 0)
+					{
+						System.Security.Cryptography.X509Certificates.X509Certificate Cert = new System.Security.Cryptography.X509Certificates.X509Certificate(RACertificateObj);
+						CertificateDialog dlg = new CertificateDialog(Cert.ToString(true));
+						if (!Util.RegisterModalWindow(dlg))
+						{
+							dlg.Destroy();
+							dlg = null;
+							return false;
+						}
+						int res = dlg.Run();
+						dlg.Hide();
+						dlg.Destroy();
+						dlg = null;
+						if( res == (int)ResponseType.Ok)
+						{
+							publicKey = System.Text.Encoding.ASCII.GetString(Cert.GetPublicKey());
+							Console.WriteLine(" The public key is: {0}", publicKey);
+						}
+						else
+						{
+							Console.WriteLine("Response type is not ok");
+			                                status = false;
+                        			        simws.StorePassPhrase(DomainID, "", CredentialType.None, false);
+							return ShowEnterPassPhraseDialog( DomainID, simws );
+						//	return status; 
+						}
+					//	string publickey = (string)Cert.GetPublicKey();
+						
+					}
+				}
+				// Check the recovery agent
 				Status passPhraseStatus = simws.SetPassPhrase( DomainID, epd.PassPhrase, epd.RecoveryAgent, publicKey);
 				if(passPhraseStatus.statusCode == StatusCodes.Success)
 				{
@@ -802,6 +860,12 @@ namespace Novell.iFolder
 			int result;
 			Status passPhraseStatus= null;
 			VerifyPassPhraseDialog vpd = new VerifyPassPhraseDialog();
+			if (!Util.RegisterModalWindow(vpd))
+			{
+				vpd.Destroy();
+				vpd = null;
+				return false;
+			}
 			// vpd.TransientFor = this;
 			try
 			{

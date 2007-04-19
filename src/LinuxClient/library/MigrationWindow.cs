@@ -40,6 +40,7 @@ namespace Novell.iFolder
 	{
                 private Gtk.Window                              topLevelWindow;
                 private iFolderWebService               ifws;
+		private SimiasWebService 		simws;
                 private iFolderTreeView         AccTreeView;
                 private ListStore                       AccTreeStore;
                 private Button                          MigrateButton;
@@ -49,11 +50,13 @@ namespace Novell.iFolder
 		/// <summary>
 		/// Default constructor for LogWindow
 		/// </summary>
-		public MigrationWindow( Gtk.Window topWindow, iFolderWebService ifws )
+		public MigrationWindow( Gtk.Window topWindow, iFolderWebService ifws, SimiasWebService simws)
 			: base (Util.GS("iFolder Migration"))
 		{
                         this.topLevelWindow = topWindow;
+			this.Modal = true;
                         this.ifws = ifws;
+			this.simws = simws;
                         curDomains = new Hashtable();
 			CreateWidgets();
 			PopulateWidgets();
@@ -108,7 +111,7 @@ namespace Novell.iFolder
                         nameColumn.SetCellDataFunc(ncrt,
                                                                            new TreeCellDataFunc(NameCellTextDataFunc));
                         nameColumn.Resizable = true;
-                        nameColumn.MinWidth = 250;
+                        nameColumn.MinWidth = 175;
                         AccTreeView.AppendColumn(nameColumn);
 
                         AccTreeView.Selection.Mode = SelectionMode.Single;
@@ -117,7 +120,13 @@ namespace Novell.iFolder
 			
                         // Status column
                         TreeViewColumn statusColumn = new TreeViewColumn();
-           //             AccTreeView.AppendColumn(statusColumn);
+			statusColumn.Title = Util.GS("Status");
+			CellRendererText scrt = new CellRendererText();
+			statusColumn.PackStart(scrt, false);
+			statusColumn.SetCellDataFunc(scrt, new TreeCellDataFunc(StatusCellTextDataFunc));
+                        statusColumn.Resizable = true;
+                        statusColumn.MinWidth = 75;
+                        AccTreeView.AppendColumn(statusColumn);
 
                         // Set up buttons for add/remove/accept/decline
                         HButtonBox buttonBox = new HButtonBox();
@@ -222,6 +231,38 @@ namespace Novell.iFolder
                         return homeLoc;
                 }
 
+                private string GetEncryptionStatus(string path)
+                {
+                        char[] seps={'/'};
+                        string[] parts = path.Split(seps);
+                        string userDir="";
+                        int i;
+                        for(i=0;i<parts.Length-1;i++)
+                                userDir+="/"+parts[i];
+                        userDir+="/reg/"+parts[i];
+                        string homeLoc="";
+                        if( System.IO.File.Exists(userDir+"/folderpath"))
+                        {
+                                StreamReader  reader = new StreamReader(userDir+"/encryptionstatus");
+                                homeLoc = reader.ReadLine();
+                        }
+                        return homeLoc;
+                }
+
+		private void StatusCellTextDataFunc( Gtk.TreeViewColumn tree_column,
+					Gtk.CellRenderer cell, Gtk.TreeModel tree_model,	
+	                                Gtk.TreeIter iter)
+		{
+			string id = (string) tree_model.GetValue(iter, 0);
+			string status = GetEncryptionStatus(id);
+			if(status == null)
+				status = Util.GS("Not encrypted");
+			else if( status == "BLWF")
+				status = Util.GS("Encrypted");
+			else
+				status = "Not encrypted";
+			((CellRendererText) cell).Text = status;
+		}
                 private void NameCellTextDataFunc (Gtk.TreeViewColumn tree_column,
                                 Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
                                 Gtk.TreeIter iter)
@@ -247,9 +288,17 @@ namespace Novell.iFolder
 
                                 tSelect.GetSelected(out tModel, out iter);
                                 string id = (string) tModel.GetValue(iter, 0);
-                                MigrationWizard migratewiz = new MigrationWizard(GetName(id), GetHomeLocation(id), ifws, this);
+				string status = GetEncryptionStatus(id);
+				bool stat = false;;
+				if( status == null)
+					stat = false;
+				else if( status == "BLWF")
+					stat = true;
+				else
+					stat = false;
+                                MigrationWizard migratewiz = new MigrationWizard(GetName(id), GetHomeLocation(id), ifws, simws, this, stat);
 
-                                migratewiz.TransientFor = topLevelWindow;
+                                // migratewiz.TransientFor = topLevelWindow;
                                 if (!Util.RegisterModalWindow(migratewiz))
                                 {
                                         try

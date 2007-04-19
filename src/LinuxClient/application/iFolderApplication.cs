@@ -629,6 +629,12 @@ namespace Novell.iFolder
 			bool status = false;
 			int result;	
 			EnterPassPhraseDialog epd = new EnterPassPhraseDialog(DomainID);
+			if (!Util.RegisterModalWindow(epd))
+			{
+				epd.Destroy();
+				epd = null;
+				return false;
+			}
 			try
 			{
 			do
@@ -665,8 +671,44 @@ namespace Novell.iFolder
 			
 			else if( epd.PassPhrase == epd.RetypedPassPhrase && (result !=(int)ResponseType.Cancel ))
 			{
+								string publicKey = "";
+
+				if( epd.RecoveryAgent != null)
+				{
+					// Show Certificate..
+					byte [] RACertificateObj = domainController.GetRACertificate(DomainID, epd.RecoveryAgent);
+					if( RACertificateObj != null && RACertificateObj.Length != 0)
+					{
+						System.Security.Cryptography.X509Certificates.X509Certificate Cert = new System.Security.Cryptography.X509Certificates.X509Certificate(RACertificateObj);
+						CertificateDialog dlg = new CertificateDialog(Cert.ToString(true));
+						if (!Util.RegisterModalWindow(dlg))
+						{
+							dlg.Destroy();
+							dlg = null;
+							return false;
+						}
+						int res = dlg.Run();
+						dlg.Hide();
+						dlg.Destroy();
+						dlg = null;
+						if( res == (int)ResponseType.Ok)
+						{
+							publicKey = System.Text.Encoding.ASCII.GetString(Cert.GetPublicKey());
+							Console.WriteLine(" The public key is: {0}", publicKey);
+						}
+						else
+						{
+							Console.WriteLine("Response type is not ok");
+			                                status = false;
+                        			        simws.StorePassPhrase(DomainID, "", CredentialType.None, false);
+							return ShowEnterPassPhraseDialog( DomainID, simws);
+						//	return status; 
+						}
+					//	string publickey = (string)Cert.GetPublicKey();
+						
+					}
+				}
 				// Check the recovery agent
-				string publicKey = ""; // needed to be found
 				Status passPhraseStatus = simws.SetPassPhrase( DomainID, epd.PassPhrase, epd.RecoveryAgent, publicKey);
 				if(passPhraseStatus.statusCode == StatusCodes.Success)
 				{
@@ -717,6 +759,12 @@ namespace Novell.iFolder
 			int result;
 			Status passPhraseStatus= null;
 			VerifyPassPhraseDialog vpd = new VerifyPassPhraseDialog();
+			if (!Util.RegisterModalWindow(vpd))
+			{
+				vpd.Destroy();
+				vpd = null;
+				return false;
+			}
 			// vpd.TransientFor = this;
 			try
 			{
@@ -1218,7 +1266,42 @@ namespace Novell.iFolder
 					ShowAddAccountWizard();
 				}
 				else
+				{
 					Util.LoadiFolderWindows();
+					if( Util.ShowMigrationPrompt() )
+					{
+						//  Prompt for migration...
+						string str = Mono.Unix.UnixEnvironment.EffectiveUser.HomeDirectory;
+						if(System.IO.Directory.Exists(str+"/.novell/ifolder"))
+						{
+							string[] dirs;
+							dirs = System.IO.Directory.GetDirectories(str+"/.novell/ifolder");
+							if( dirs.Length > 2)
+							{
+								iFolderMsgDialog dlg = new iFolderMsgDialog( null, iFolderMsgDialog.DialogType.Info, iFolderMsgDialog.ButtonSet.OkCancel, 
+												"Migration", "There are 2.x iFolders on this machine." , "Do you want to migrate them?" );
+								CheckButton dontShowAgain = new CheckButton(Util.GS("Don't show this message again"));
+								dlg.ExtraWidget = dontShowAgain;
+								int res = dlg.Run();
+								dlg.Hide();
+								dlg.Destroy();
+								if( ((CheckButton)(dlg.ExtraWidget)).Active == true)
+								{
+									Console.WriteLine("The check box is checked");
+									Util.DontShowMigrationPrompt();
+								}
+								else
+										Console.WriteLine("The check box is not checked");
+								if( res == (int)ResponseType.Ok)
+								{
+									// Call Migration window.....
+									MigrationWindow migrationWindow = new MigrationWindow( Util.GetiFolderWindow(), ifws, simws);
+									migrationWindow.ShowAll();
+								}
+							}
+						}
+					}
+				}
 			}
 			else
 				Console.WriteLine("DomainController instance is null");

@@ -47,6 +47,7 @@ namespace Novell.iFolder
 		public const string KEY_NOTIFY_COLLISIONS = "/apps/ifolder3/notification/collisions";
 		public const string KEY_NOTIFY_USERS = "/apps/ifolder3/notification/new_users";
 //		public static string KEY_NOTIFY_SYNC_ERRORS = "/apps/ifolder3/notification/sync_errors";
+		public const string KEY_NOTIFY_MIGRATION_2_X = "/apps/ifolder3/notification/migrate2x";
 
 		///
 		/// /apps/ifolder3/synchronization
