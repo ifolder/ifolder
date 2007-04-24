@@ -29,6 +29,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
 using System.Xml;
+using System.Threading;
 using Microsoft.Win32;
 using Novell.iFolderCom;
 using Novell.Win32Util;
@@ -55,6 +56,9 @@ namespace Novell.FormsTrayApp
 		public delegate void AddDomainToListDelegate(DomainInformation domainInfo);
 		public AddDomainToListDelegate addDomainToListDelegate;
 
+		//Refresh Delegate to ensure other operations happen during refresh time.
+		public delegate void RefreshiFoldersDelegate();
+		public RefreshiFoldersDelegate refreshiFoldersDelegate;
 
 		/// <summary>
 		/// Delegate for node create and change events.
@@ -90,10 +94,14 @@ namespace Novell.FormsTrayApp
 		private bool hide = true;
 		private NoiFolderMessage infoMessage;
 		private int minWidth;
+		// Refresh thread to get the latest catalog entries
+		private Thread refreshThread;
+		private bool inRefresh = false;
 
 		System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(GlobalProperties));
 		private Preferences preferences;
 		private SyncLog syncLog;
+		private iFolderWeb[] ifolderArray;
 		private System.Timers.Timer updateEnterpriseTimer;
 		private Hashtable ht;
 		private uint objectsToSync;
@@ -189,7 +197,7 @@ namespace Novell.FormsTrayApp
 			createChangeEventDelegate = new CreateChangeEventDelegate(createChangeEvent);
 			deleteEventDelegate = new DeleteEventDelegate(deleteEvent);
 			addDomainToListDelegate = new AddDomainToListDelegate(AddDomainToList);
-
+			refreshiFoldersDelegate = new RefreshiFoldersDelegate(refreshiFolders);
 			//
 			// Required for Windows Form Designer support
 			//
@@ -225,6 +233,8 @@ namespace Novell.FormsTrayApp
 				// TODO: update icons.
 				largeImageList = new ImageList();
 				largeImageList.ImageSize = new Size( 48, 48 );
+				largeImageList.ColorDepth = ColorDepth.Depth32Bit;
+				largeImageList.TransparentColor = Color.Black;
 				largeImageList.Images.Add( Bitmap.FromFile( Path.Combine( Application.StartupPath, @"res\ifolder48.png" ) ) );
 				largeImageList.Images.Add( Bitmap.FromFile( Path.Combine( Application.StartupPath, @"res\ifolder-sync48.png" ) ) );
 				largeImageList.Images.Add( Bitmap.FromFile( Path.Combine( Application.StartupPath, @"res\ifolder-download48.png" ) ) );
@@ -654,6 +664,7 @@ namespace Novell.FormsTrayApp
 			this.menuClose.ShowShortcut = ((bool)(resources.GetObject("menuClose.ShowShortcut")));
 			this.menuClose.Text = resources.GetString("menuClose.Text");
 			this.menuClose.Visible = ((bool)(resources.GetObject("menuClose.Visible")));
+			this.menuClose.Click += new System.EventHandler(this.menuClose_Click);
 			// 
 			// menuExit
 			// 
@@ -1496,6 +1507,7 @@ namespace Novell.FormsTrayApp
 
 			string selectedPath = string.Empty;
 			FolderBrowserDialog browserDialog = new FolderBrowserDialog();
+			Cursor.Current = Cursors.WaitCursor;
 			while (true)
 			{
 				browserDialog.ShowNewFolderButton = true;
@@ -1504,17 +1516,21 @@ namespace Novell.FormsTrayApp
 				DialogResult dialogResult = browserDialog.ShowDialog();
 				if ( dialogResult == DialogResult.OK )
 				{
+					browserDialog.Dispose();
+					//ensure UI is re-painted
+					Invalidate();
+					Update();
 					result = acceptiFolder( ifolder, browserDialog.SelectedPath );
 					if ( result )
 						break;
 				}
 				else
 				{
+					browserDialog.Dispose();
 					break;
 				}
 			}
-
-			browserDialog.Dispose();
+			Cursor.Current = Cursors.Default;
 
 			return result;
 		}
@@ -2227,6 +2243,7 @@ namespace Novell.FormsTrayApp
 				// TODO: what if the listview isn't in the list?
 
 				tlvi = ifListView.AddiFolderToListView( ifolderObject );
+				ifListView.Items.Sort();
 				int imageIndex;
 				tlvi.Status = getItemState( ifolderObject, 0, out imageIndex );
 				tlvi.ImageIndex = imageIndex;
@@ -2399,7 +2416,11 @@ namespace Novell.FormsTrayApp
 
 		private void refreshAll(/*Domain domain*/)
 		{
-			refreshiFolders(/*domain*/);
+			Cursor.Current = Cursors.WaitCursor;
+			inRefresh = true;
+			refreshThread = new Thread(new ThreadStart(updateiFolders));
+			refreshThread.Start();
+//			refreshiFolders(/*domain*/);
 
 			// Call to sync the POBoxes.
 /*			if (domain.ShowAll)
@@ -2426,7 +2447,27 @@ namespace Novell.FormsTrayApp
 			}*/
 		}
 
-		private void refreshiFolders(/*Domain domain*/)
+		private void updateiFolders()
+		{
+			bool done = false;
+			while(!done)
+			{
+				try
+				{
+					ifolderArray = ifWebService.GetAlliFolders();
+					done = true;
+				}
+				catch(Exception e)
+				{
+					Thread.Sleep(3000);
+					done = false;
+					continue;
+				}
+			}
+			BeginInvoke(this.refreshiFoldersDelegate);
+		}
+
+		public void refreshiFolders(/*Domain domain*/)
 		{
 			Cursor.Current = Cursors.WaitCursor;
 			Hashtable oldHt = new Hashtable();
@@ -2443,8 +2484,8 @@ namespace Novell.FormsTrayApp
 
 			try
 			{
-				// Get the list of iFolders
-				iFolderWeb[] ifolderArray = ifWebService.GetAlliFolders();
+				// Get the list of iFolders - now the calling thread does this and also handles exception
+//				iFolderWeb[] ifolderArray = ifWebService.GetAlliFolders();
 				panel2.SuspendLayout();
 				iFolderView.Items.Clear();
 				selectedItem = null;
@@ -2457,7 +2498,7 @@ namespace Novell.FormsTrayApp
 				}
 				
 				// Walk the list of iFolders and add them to the listviews.
-				foreach (iFolderWeb ifolder in ifolderArray)
+				foreach (iFolderWeb ifolder in ifolderArray) //iFolderArray is a class member should be made null for GC
 				{
 					iFolderState state = iFolderState.Normal;
 					if (!ifolder.IsSubscription)
@@ -2489,7 +2530,7 @@ namespace Novell.FormsTrayApp
 				mmb.ShowDialog();
 				mmb.Dispose();
 			}
-			iFolderView.Items.Sort();
+//			iFolderView.Items.Sort();
 			foreach (iFoldersListView ifListView in iFolderListViews.Values)
 			{
 				ifListView.FinalizeUpdate();
@@ -2497,7 +2538,8 @@ namespace Novell.FormsTrayApp
 
 			updateView();
 			panel2.ResumeLayout();
-
+			inRefresh = false;
+			ifolderArray = null;
 			Cursor.Current = Cursors.Default;
 		}
 
@@ -2766,17 +2808,25 @@ namespace Novell.FormsTrayApp
 						menuRevert.Visible = menuProperties.Visible = menuResolve.Visible = 
 						menuResolveSeparator.Visible = menuSeparator2.Visible = false;
 
-					// Display the subscription-related menus.
-					menuAccept.Visible = menuRemove.Visible = menuSeparator1.Visible = true;
+					// Display the subscription-related menus based on Refresh thread.
+					if(!inRefresh)
+						menuAccept.Visible = menuRemove.Visible = menuSeparator1.Visible = true;
+					else
+						menuAccept.Visible = menuRemove.Visible = menuSeparator1.Visible = false;
 				}
 				else
 				{
 					// Hide the subscription-related menus.
 					menuAccept.Visible = menuRemove.Visible = false;
 
-					// Display the iFolder menus.
-					menuOpen.Visible = menuSyncNow.Visible = menuShare.Visible =
-						menuRevert.Visible = menuProperties.Visible = 
+					// Display the iFolder menus based on Refresh thread.
+					menuOpen.Visible = menuSyncNow.Visible = menuShare.Visible = true;
+					if(!inRefresh)
+						menuRevert.Visible = true;
+					else
+						menuRevert.Visible = false;
+					
+					menuProperties.Visible = 
 						menuSeparator2.Visible = true;
 
 					menuResolve.Visible = 
@@ -2873,7 +2923,8 @@ namespace Novell.FormsTrayApp
 
 			iFolderActions.Visible = false;
 
-			refreshiFolders();
+//			Call the refresh thread
+			refreshAll();
 
 			showiFolders_Click( this, null );
 		}
@@ -2953,6 +3004,10 @@ namespace Novell.FormsTrayApp
 			{
 				refreshAll(/*(Domain)servers.SelectedItem*/);
 			}
+			if (e.KeyCode == Keys.F4)
+			{
+				GC.Collect(); //collect all generations
+			}
 		}
 
 		private void menuOpen_Click(object sender, System.EventArgs e)
@@ -2985,6 +3040,10 @@ namespace Novell.FormsTrayApp
 				RevertiFolder revertiFolder = new RevertiFolder();
 				if ( revertiFolder.ShowDialog() == DialogResult.Yes )
 				{
+					//ensure UI is re-painted before Revert is done
+					Invalidate();
+					Update();
+					
 					// Delete the iFolder.
 					iFolderWeb newiFolder = ifWebService.RevertiFolder(ifolder.ID);
 
@@ -3367,6 +3426,11 @@ namespace Novell.FormsTrayApp
 		{
 			ImportKeysDialog importKeys = new ImportKeysDialog();
 			importKeys.ShowDialog();
+		}
+		
+		private void menuClose_Click(object sender, System.EventArgs e)
+		{
+			Hide();
 		}
 
 	}
