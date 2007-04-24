@@ -3043,6 +3043,7 @@ namespace Novell.FormsTrayApp
 					//ensure UI is re-painted before Revert is done
 					Invalidate();
 					Update();
+					Cursor.Current = Cursors.WaitCursor;
 					
 					// Delete the iFolder.
 					iFolderWeb newiFolder = ifWebService.RevertiFolder(ifolder.ID);
