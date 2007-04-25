@@ -1,3 +1,8 @@
+2007-04-25  Johnny Jacob  <jjohnny@novell.com>
+	
+	* iFolderUserSelector.cs : Fillterout Host Nodes in the user
+	list. Fixes #256364.
+	
 2007-04-19  Ramesh Sunder <sramesh@novell.com>
 	* Added CertificateDialog.cs to show certificate while setting passphrase
 	* Changes for migration wizard and account wizard for accepting certificate
