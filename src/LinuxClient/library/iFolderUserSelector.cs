@@ -636,11 +636,13 @@ namespace Novell.iFolder
 			memberFullNames.Clear();
 			duplicateMembers.Clear();
 
+			int nonMemberElements = 0;
+
 			searchContext = SearchContext;
 
 			if (MemberList != null)
 			{
-				for (int i = 0; i < MemberList.Length; i++)
+				for (int i = 0, j=0; i < MemberList.Length; i++)
 				{
 					MemberInfo memberInfo = MemberList[i];
 
@@ -658,7 +660,14 @@ namespace Novell.iFolder
 					else
 						memberFullNames[memberInfo.FullName] = memberInfo.Name;
 
-					memberInfos[i] = memberInfo;
+					if ( memberInfo.IsHost ) 
+					{
+					        nonMemberElements++;
+					}
+					else
+					{
+    					        memberInfos[j++] = memberInfo;
+					}
 				}
 			
 				if (MemberList.Length >= Total)
@@ -668,7 +677,7 @@ namespace Novell.iFolder
 				}
 			}
 			
-			total = Total;
+			total = Total - nonMemberElements;
 		}
 		
 		public void CloseSearch()
