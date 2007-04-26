@@ -3,6 +3,8 @@ using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
+using System.Xml;
+using Novell.iFolderCom;
 
 namespace Novell.FormsTrayApp
 {
@@ -24,6 +26,9 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Button BrowseButton;
 		private System.Windows.Forms.Button btnCancel;
 		private System.Windows.Forms.Button btnImport;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.ComboBox DomainComboBox;
+		private DomainItem selectedDomain;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -77,6 +82,8 @@ namespace Novell.FormsTrayApp
 			this.BrowseButton = new System.Windows.Forms.Button();
 			this.btnCancel = new System.Windows.Forms.Button();
 			this.btnImport = new System.Windows.Forms.Button();
+			this.label1 = new System.Windows.Forms.Label();
+			this.DomainComboBox = new System.Windows.Forms.ComboBox();
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -237,6 +244,7 @@ namespace Novell.FormsTrayApp
 			this.oneTimePassphrase.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("oneTimePassphrase.TextAlign")));
 			this.oneTimePassphrase.Visible = ((bool)(resources.GetObject("oneTimePassphrase.Visible")));
 			this.oneTimePassphrase.WordWrap = ((bool)(resources.GetObject("oneTimePassphrase.WordWrap")));
+			this.oneTimePassphrase.TextChanged += new System.EventHandler(this.oneTimePassphrase_TextChanged);
 			// 
 			// Passphrase
 			// 
@@ -262,6 +270,7 @@ namespace Novell.FormsTrayApp
 			this.Passphrase.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("Passphrase.TextAlign")));
 			this.Passphrase.Visible = ((bool)(resources.GetObject("Passphrase.Visible")));
 			this.Passphrase.WordWrap = ((bool)(resources.GetObject("Passphrase.WordWrap")));
+			this.Passphrase.TextChanged += new System.EventHandler(this.Passphrase_TextChanged);
 			// 
 			// retypePassphrase
 			// 
@@ -287,6 +296,7 @@ namespace Novell.FormsTrayApp
 			this.retypePassphrase.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("retypePassphrase.TextAlign")));
 			this.retypePassphrase.Visible = ((bool)(resources.GetObject("retypePassphrase.Visible")));
 			this.retypePassphrase.WordWrap = ((bool)(resources.GetObject("retypePassphrase.WordWrap")));
+			this.retypePassphrase.TextChanged += new System.EventHandler(this.retypePassphrase_TextChanged);
 			// 
 			// LocationEntry
 			// 
@@ -312,6 +322,7 @@ namespace Novell.FormsTrayApp
 			this.LocationEntry.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("LocationEntry.TextAlign")));
 			this.LocationEntry.Visible = ((bool)(resources.GetObject("LocationEntry.Visible")));
 			this.LocationEntry.WordWrap = ((bool)(resources.GetObject("LocationEntry.WordWrap")));
+			this.LocationEntry.TextChanged += new System.EventHandler(this.LocationEntry_TextChanged);
 			// 
 			// BrowseButton
 			// 
@@ -335,6 +346,7 @@ namespace Novell.FormsTrayApp
 			this.BrowseButton.Text = resources.GetString("BrowseButton.Text");
 			this.BrowseButton.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("BrowseButton.TextAlign")));
 			this.BrowseButton.Visible = ((bool)(resources.GetObject("BrowseButton.Visible")));
+			this.BrowseButton.Click += new System.EventHandler(this.BrowseButton_Click);
 			// 
 			// btnCancel
 			// 
@@ -358,6 +370,7 @@ namespace Novell.FormsTrayApp
 			this.btnCancel.Text = resources.GetString("btnCancel.Text");
 			this.btnCancel.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("btnCancel.TextAlign")));
 			this.btnCancel.Visible = ((bool)(resources.GetObject("btnCancel.Visible")));
+			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
 			// 
 			// btnImport
 			// 
@@ -382,6 +395,50 @@ namespace Novell.FormsTrayApp
 			this.btnImport.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("btnImport.TextAlign")));
 			this.btnImport.Visible = ((bool)(resources.GetObject("btnImport.Visible")));
 			// 
+			// label1
+			// 
+			this.label1.AccessibleDescription = resources.GetString("label1.AccessibleDescription");
+			this.label1.AccessibleName = resources.GetString("label1.AccessibleName");
+			this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label1.Anchor")));
+			this.label1.AutoSize = ((bool)(resources.GetObject("label1.AutoSize")));
+			this.label1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label1.Dock")));
+			this.label1.Enabled = ((bool)(resources.GetObject("label1.Enabled")));
+			this.label1.Font = ((System.Drawing.Font)(resources.GetObject("label1.Font")));
+			this.label1.Image = ((System.Drawing.Image)(resources.GetObject("label1.Image")));
+			this.label1.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label1.ImageAlign")));
+			this.label1.ImageIndex = ((int)(resources.GetObject("label1.ImageIndex")));
+			this.label1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label1.ImeMode")));
+			this.label1.Location = ((System.Drawing.Point)(resources.GetObject("label1.Location")));
+			this.label1.Name = "label1";
+			this.label1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label1.RightToLeft")));
+			this.label1.Size = ((System.Drawing.Size)(resources.GetObject("label1.Size")));
+			this.label1.TabIndex = ((int)(resources.GetObject("label1.TabIndex")));
+			this.label1.Text = resources.GetString("label1.Text");
+			this.label1.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label1.TextAlign")));
+			this.label1.Visible = ((bool)(resources.GetObject("label1.Visible")));
+			// 
+			// DomainComboBox
+			// 
+			this.DomainComboBox.AccessibleDescription = resources.GetString("DomainComboBox.AccessibleDescription");
+			this.DomainComboBox.AccessibleName = resources.GetString("DomainComboBox.AccessibleName");
+			this.DomainComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("DomainComboBox.Anchor")));
+			this.DomainComboBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("DomainComboBox.BackgroundImage")));
+			this.DomainComboBox.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("DomainComboBox.Dock")));
+			this.DomainComboBox.Enabled = ((bool)(resources.GetObject("DomainComboBox.Enabled")));
+			this.DomainComboBox.Font = ((System.Drawing.Font)(resources.GetObject("DomainComboBox.Font")));
+			this.DomainComboBox.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("DomainComboBox.ImeMode")));
+			this.DomainComboBox.IntegralHeight = ((bool)(resources.GetObject("DomainComboBox.IntegralHeight")));
+			this.DomainComboBox.ItemHeight = ((int)(resources.GetObject("DomainComboBox.ItemHeight")));
+			this.DomainComboBox.Location = ((System.Drawing.Point)(resources.GetObject("DomainComboBox.Location")));
+			this.DomainComboBox.MaxDropDownItems = ((int)(resources.GetObject("DomainComboBox.MaxDropDownItems")));
+			this.DomainComboBox.MaxLength = ((int)(resources.GetObject("DomainComboBox.MaxLength")));
+			this.DomainComboBox.Name = "DomainComboBox";
+			this.DomainComboBox.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("DomainComboBox.RightToLeft")));
+			this.DomainComboBox.Size = ((System.Drawing.Size)(resources.GetObject("DomainComboBox.Size")));
+			this.DomainComboBox.TabIndex = ((int)(resources.GetObject("DomainComboBox.TabIndex")));
+			this.DomainComboBox.Text = resources.GetString("DomainComboBox.Text");
+			this.DomainComboBox.Visible = ((bool)(resources.GetObject("DomainComboBox.Visible")));
+			// 
 			// ImportKeysDialog
 			// 
 			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
@@ -392,6 +449,8 @@ namespace Novell.FormsTrayApp
 			this.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMinSize")));
 			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
+			this.Controls.Add(this.DomainComboBox);
+			this.Controls.Add(this.label1);
 			this.Controls.Add(this.btnImport);
 			this.Controls.Add(this.btnCancel);
 			this.Controls.Add(this.BrowseButton);
@@ -415,10 +474,114 @@ namespace Novell.FormsTrayApp
 			this.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("$this.RightToLeft")));
 			this.StartPosition = ((System.Windows.Forms.FormStartPosition)(resources.GetObject("$this.StartPosition")));
 			this.Text = resources.GetString("$this.Text");
+			this.Load += new System.EventHandler(this.ImportKeysDialog_Load);
 			this.panel1.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
 		#endregion
+
+		private void btnCancel_Click(object sender, System.EventArgs e)
+		{
+			this.Dispose();
+			this.Close();
+		}
+
+		private void ImportKeysDialog_Load(object sender, System.EventArgs e)
+		{
+			this.btnImport.Enabled = false;
+			this.btnImport.Select();
+			if (this.DomainComboBox.Items.Count == 0)
+			{
+				try
+				{
+					XmlDocument domainsDoc = new XmlDocument();
+					domainsDoc.Load(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "domain.list"));
+
+					XmlElement element = (XmlElement)domainsDoc.SelectSingleNode("/domains");
+
+					// Get the ID of the default domain.
+					XmlElement defaultDomainElement = (XmlElement)domainsDoc.SelectSingleNode("/domains/defaultDomain");
+					string defaultID = defaultDomainElement.GetAttribute("ID");
+
+					// Get the domains.
+					// Look for a domain with this ID.
+					XmlNodeList nodeList = element.GetElementsByTagName("domain");
+					foreach (XmlNode node in nodeList)
+					{
+						string name = ((XmlElement)node).GetAttribute("name");
+						string id = ((XmlElement)node).GetAttribute("ID");
+
+						DomainItem domainItem = new DomainItem(name, id);
+						this.DomainComboBox.Items.Add(domainItem);
+						if (id.Equals(defaultID))
+						{
+							selectedDomain = domainItem;
+						}
+					}
+
+					if (selectedDomain != null)
+					{
+						this.DomainComboBox.SelectedItem = selectedDomain;
+					}
+					else
+						this.DomainComboBox.SelectedIndex = 0;
+				}
+				catch
+				{
+				}
+			}
+			else
+			{
+				if (selectedDomain != null)
+				{
+					this.DomainComboBox.SelectedItem = selectedDomain;
+				}
+				else if (this.DomainComboBox.Items.Count > 0)
+				{
+					this.DomainComboBox.SelectedIndex = 0;
+				}
+			}
+		}
+
+		private void UpdateSensitivity()
+		{
+			if( this.Passphrase.Text.Length >0 && this.Passphrase.Text == this.retypePassphrase.Text )
+				if( this.oneTimePassphrase.Text.Length > 0)
+					if( this.LocationEntry.Text.Length > 0 && this.DomainComboBox.SelectedIndex >= 0)
+					{
+						this.btnImport.Enabled = true;
+						return;
+					}
+			this.btnImport.Enabled = true;
+		}
+
+		private void LocationEntry_TextChanged(object sender, EventArgs e)
+		{
+			UpdateSensitivity();
+		}
+
+		private void retypePassphrase_TextChanged(object sender, EventArgs e)
+		{
+			UpdateSensitivity();
+		}
+
+		private void Passphrase_TextChanged(object sender, EventArgs e)
+		{
+			UpdateSensitivity();
+		}
+
+		private void oneTimePassphrase_TextChanged(object sender, EventArgs e)
+		{
+			UpdateSensitivity();
+		}
+
+		private void BrowseButton_Click(object sender, System.EventArgs e)
+		{
+			OpenFileDialog fileDlg = new OpenFileDialog();
+			fileDlg.ReadOnlyChecked = true;
+			fileDlg.ShowDialog();
+			this.LocationEntry.Text = fileDlg.FileName;
+		}
 	}
 }

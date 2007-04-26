@@ -3,6 +3,8 @@ using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
+using System.Xml;
+using Novell.iFolderCom;
 
 namespace Novell.FormsTrayApp
 {
@@ -24,10 +26,19 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Button btnCancel;
 		private System.Windows.Forms.Button btnExport;
 		private System.Windows.Forms.Button BrowseButton;
+		private DomainItem selectedDomain;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
 		private System.ComponentModel.Container components = null;
+
+		public System.Windows.Forms.ComboBox DomainComboBox
+		{
+			get
+			{
+				return this.domainComboBox;
+			}
+		}
 
 		public ExportKeysDialog()
 		{
@@ -234,6 +245,7 @@ namespace Novell.FormsTrayApp
 			this.domainComboBox.TabIndex = ((int)(resources.GetObject("domainComboBox.TabIndex")));
 			this.domainComboBox.Text = resources.GetString("domainComboBox.Text");
 			this.domainComboBox.Visible = ((bool)(resources.GetObject("domainComboBox.Visible")));
+			this.domainComboBox.SelectedIndexChanged += new System.EventHandler(this.domainComboBox_SelectedIndexChanged);
 			// 
 			// filePath
 			// 
@@ -333,6 +345,7 @@ namespace Novell.FormsTrayApp
 			this.btnCancel.Text = resources.GetString("btnCancel.Text");
 			this.btnCancel.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("btnCancel.TextAlign")));
 			this.btnCancel.Visible = ((bool)(resources.GetObject("btnCancel.Visible")));
+			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
 			// 
 			// btnExport
 			// 
@@ -379,6 +392,7 @@ namespace Novell.FormsTrayApp
 			this.BrowseButton.Text = resources.GetString("BrowseButton.Text");
 			this.BrowseButton.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("BrowseButton.TextAlign")));
 			this.BrowseButton.Visible = ((bool)(resources.GetObject("BrowseButton.Visible")));
+			this.BrowseButton.Click += new System.EventHandler(this.BrowseButton_Click);
 			// 
 			// ExportKeysDialog
 			// 
@@ -413,6 +427,7 @@ namespace Novell.FormsTrayApp
 			this.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("$this.RightToLeft")));
 			this.StartPosition = ((System.Windows.Forms.FormStartPosition)(resources.GetObject("$this.StartPosition")));
 			this.Text = resources.GetString("$this.Text");
+			this.Load += new System.EventHandler(this.ExportKeysDialog_Load);
 			this.panel1.ResumeLayout(false);
 			this.ResumeLayout(false);
 
@@ -421,7 +436,84 @@ namespace Novell.FormsTrayApp
 
 		private void filePath_TextChanged(object sender, System.EventArgs e)
 		{
-		
+			if( this.filePath.Text.Length > 0 && this.domainComboBox.SelectedIndex >=0)
+				this.btnExport.Enabled = true;
+			else
+				this.btnExport.Enabled = false;
+		}
+
+		private void BrowseButton_Click(object sender, System.EventArgs e)
+		{
+			OpenFileDialog fileDlg = new OpenFileDialog();
+			fileDlg.ShowDialog();
+			this.filePath.Text = fileDlg.FileName;
+		}
+
+		private void btnCancel_Click(object sender, System.EventArgs e)
+		{
+			this.Dispose();
+			this.Close();
+		}
+
+		private void ExportKeysDialog_Load(object sender, System.EventArgs e)
+		{
+			this.btnExport.Select();
+			if (this.DomainComboBox.Items.Count == 0)
+			{
+				try
+				{
+					XmlDocument domainsDoc = new XmlDocument();
+					domainsDoc.Load(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "domain.list"));
+					XmlElement element = (XmlElement)domainsDoc.SelectSingleNode("/domains");
+
+					// Get the ID of the default domain.
+					XmlElement defaultDomainElement = (XmlElement)domainsDoc.SelectSingleNode("/domains/defaultDomain");
+					string defaultID = defaultDomainElement.GetAttribute("ID");
+
+					// Get the domains.
+					// Look for a domain with this ID.
+					XmlNodeList nodeList = element.GetElementsByTagName("domain");
+					foreach (XmlNode node in nodeList)
+					{
+						string name = ((XmlElement)node).GetAttribute("name");
+						string id = ((XmlElement)node).GetAttribute("ID");
+
+						DomainItem domainItem = new DomainItem(name, id);
+						this.DomainComboBox.Items.Add(domainItem);
+						if (id.Equals(defaultID))
+						{
+							selectedDomain = domainItem;
+						}
+					}
+
+					if (selectedDomain != null)
+					{
+						this.DomainComboBox.SelectedItem = selectedDomain;
+					}
+					else
+						this.DomainComboBox.SelectedIndex = 0;
+				}
+				catch
+				{
+				}
+			}
+			else
+			{
+				if (selectedDomain != null)
+				{
+					this.DomainComboBox.SelectedItem = selectedDomain;
+				}
+				else if (this.DomainComboBox.Items.Count > 0)
+				{
+					this.DomainComboBox.SelectedIndex = 0;
+				}
+			}
+		}
+
+		private void domainComboBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			// Handle the change in domain.....
+			// Change the recovery agent name and e-mail id..
 		}
 	}
 }

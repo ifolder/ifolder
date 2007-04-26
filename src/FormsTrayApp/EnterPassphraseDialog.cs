@@ -34,6 +34,7 @@ namespace Novell.FormsTrayApp
 		private string DomainID;
 		private bool	status;
 		private static System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(EnterPassphraseDialog));
+		private System.Windows.Forms.PictureBox pictureBox1;
 		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(FormsTrayApp));
 
 		public bool PassphraseStatus
@@ -92,6 +93,7 @@ namespace Novell.FormsTrayApp
 			this.savePassphrase = new System.Windows.Forms.CheckBox();
 			this.btnCancel = new System.Windows.Forms.Button();
 			this.btnOk = new System.Windows.Forms.Button();
+			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -103,8 +105,9 @@ namespace Novell.FormsTrayApp
 			this.panel1.AutoScroll = ((bool)(resources.GetObject("panel1.AutoScroll")));
 			this.panel1.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("panel1.AutoScrollMargin")));
 			this.panel1.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("panel1.AutoScrollMinSize")));
-			this.panel1.BackColor = System.Drawing.Color.Blue;
+			this.panel1.BackColor = System.Drawing.Color.Transparent;
 			this.panel1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel1.BackgroundImage")));
+			this.panel1.Controls.Add(this.pictureBox1);
 			this.panel1.Controls.Add(this.waterMark);
 			this.panel1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("panel1.Dock")));
 			this.panel1.Enabled = ((bool)(resources.GetObject("panel1.Enabled")));
@@ -123,7 +126,7 @@ namespace Novell.FormsTrayApp
 			this.waterMark.AccessibleDescription = resources.GetString("waterMark.AccessibleDescription");
 			this.waterMark.AccessibleName = resources.GetString("waterMark.AccessibleName");
 			this.waterMark.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("waterMark.Anchor")));
-			this.waterMark.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(101)), ((System.Byte)(163)), ((System.Byte)(237)));
+			this.waterMark.BackColor = System.Drawing.Color.Transparent;
 			this.waterMark.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("waterMark.BackgroundImage")));
 			this.waterMark.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("waterMark.Dock")));
 			this.waterMark.Enabled = ((bool)(resources.GetObject("waterMark.Enabled")));
@@ -353,6 +356,27 @@ namespace Novell.FormsTrayApp
 			this.btnOk.Visible = ((bool)(resources.GetObject("btnOk.Visible")));
 			this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
 			// 
+			// pictureBox1
+			// 
+			this.pictureBox1.AccessibleDescription = resources.GetString("pictureBox1.AccessibleDescription");
+			this.pictureBox1.AccessibleName = resources.GetString("pictureBox1.AccessibleName");
+			this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("pictureBox1.Anchor")));
+			this.pictureBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.BackgroundImage")));
+			this.pictureBox1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("pictureBox1.Dock")));
+			this.pictureBox1.Enabled = ((bool)(resources.GetObject("pictureBox1.Enabled")));
+			this.pictureBox1.Font = ((System.Drawing.Font)(resources.GetObject("pictureBox1.Font")));
+			this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+			this.pictureBox1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("pictureBox1.ImeMode")));
+			this.pictureBox1.Location = ((System.Drawing.Point)(resources.GetObject("pictureBox1.Location")));
+			this.pictureBox1.Name = "pictureBox1";
+			this.pictureBox1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("pictureBox1.RightToLeft")));
+			this.pictureBox1.Size = ((System.Drawing.Size)(resources.GetObject("pictureBox1.Size")));
+			this.pictureBox1.SizeMode = ((System.Windows.Forms.PictureBoxSizeMode)(resources.GetObject("pictureBox1.SizeMode")));
+			this.pictureBox1.TabIndex = ((int)(resources.GetObject("pictureBox1.TabIndex")));
+			this.pictureBox1.TabStop = false;
+			this.pictureBox1.Text = resources.GetString("pictureBox1.Text");
+			this.pictureBox1.Visible = ((bool)(resources.GetObject("pictureBox1.Visible")));
+			// 
 			// EnterPassphraseDialog
 			// 
 			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
@@ -410,6 +434,15 @@ namespace Novell.FormsTrayApp
 			 */
 			if( this.Passphrase.Text == this.RetypePassphrase.Text)
 			{
+				if( this.RecoveryAgentCombo.SelectedItem != null && this.RecoveryAgentCombo.SelectedText != "None")
+				{
+					// Show the certificate.....
+					byte[] CertificateObj = this.simws.GetRACertificateOnClient(this.DomainID, this.RecoveryAgentCombo.SelectedText);
+					System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(CertificateObj);
+					MyMessageBox mmb = new MyMessageBox( "Verify Certificate", "Verify Certificate", cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2 );
+					DialogResult messageDialogResult = mmb.ShowDialog();
+					return;
+				}
 				string publicKey = "";
 				Status passPhraseStatus = null;
 				try
@@ -458,7 +491,17 @@ namespace Novell.FormsTrayApp
 		private void EnterPassphraseDialog_Load(object sender, System.EventArgs e)
 		{
 			this.btnOk.Enabled = false;
-			this.waterMark.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder48.png"));
+			this.Icon = new Icon(System.IO.Path.Combine(Application.StartupPath, @"ifolder_app.ico"));
+			this.waterMark.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder-banner.png"));
+			//this.waterMark.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder48.png"));
+			this.pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+			this.pictureBox1.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder-banner-scaler.png"));
+			string[] rAgents= this.simws.GetRAListOnClient(DomainID);
+			foreach( string rAgent in rAgents)
+			{
+				this.RecoveryAgentCombo.Items.Add( rAgent );
+				//MessageBox.Show(String.Format("Adding {0}", rAgent));
+			}
 			// Needs to be changed
 			//string[] ralist = this.simws.GetRAList(this.DomainID);
 		}

@@ -197,7 +197,8 @@ namespace Novell.FormsTrayApp
 			createChangeEventDelegate = new CreateChangeEventDelegate(createChangeEvent);
 			deleteEventDelegate = new DeleteEventDelegate(deleteEvent);
 			addDomainToListDelegate = new AddDomainToListDelegate(AddDomainToList);
-			refreshiFoldersDelegate = new RefreshiFoldersDelegate(refreshiFolders);
+			//refreshiFoldersDelegate = new RefreshiFoldersDelegate(refreshiFolders);
+			refreshiFoldersDelegate = new RefreshiFoldersDelegate(refreshiFoldersInvoke);
 			//
 			// Required for Windows Form Designer support
 			//
@@ -1289,6 +1290,7 @@ namespace Novell.FormsTrayApp
 			this.filter.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("filter.TextAlign")));
 			this.filter.Visible = ((bool)(resources.GetObject("filter.Visible")));
 			this.filter.WordWrap = ((bool)(resources.GetObject("filter.WordWrap")));
+			this.filter.TextChanged +=new EventHandler(filter_TextChanged);
 			// 
 			// label1
 			// 
@@ -2467,7 +2469,12 @@ namespace Novell.FormsTrayApp
 			BeginInvoke(this.refreshiFoldersDelegate);
 		}
 
-		public void refreshiFolders(/*Domain domain*/)
+		public void refreshiFoldersInvoke()
+		{
+			refreshiFolders(null);
+		}
+
+		public void refreshiFolders(string search/*Domain domain*/)
 		{
 			Cursor.Current = Cursors.WaitCursor;
 			Hashtable oldHt = new Hashtable();
@@ -2485,7 +2492,8 @@ namespace Novell.FormsTrayApp
 			try
 			{
 				// Get the list of iFolders - now the calling thread does this and also handles exception
-//				iFolderWeb[] ifolderArray = ifWebService.GetAlliFolders();
+				if( search != null)
+					ifolderArray = ifWebService.GetAlliFolders();
 				panel2.SuspendLayout();
 				iFolderView.Items.Clear();
 				selectedItem = null;
@@ -2500,6 +2508,8 @@ namespace Novell.FormsTrayApp
 				// Walk the list of iFolders and add them to the listviews.
 				foreach (iFolderWeb ifolder in ifolderArray) //iFolderArray is a class member should be made null for GC
 				{
+					if( search != null && ((String)ifolder.Name).StartsWith(search) == false)
+						continue;
 					iFolderState state = iFolderState.Normal;
 					if (!ifolder.IsSubscription)
 					{
@@ -2530,7 +2540,7 @@ namespace Novell.FormsTrayApp
 				mmb.ShowDialog();
 				mmb.Dispose();
 			}
-//			iFolderView.Items.Sort();
+			iFolderView.Items.Sort();
 			foreach (iFoldersListView ifListView in iFolderListViews.Values)
 			{
 				ifListView.FinalizeUpdate();
@@ -2547,6 +2557,7 @@ namespace Novell.FormsTrayApp
 		{
 			iFolderAdvanced ifolderAdvanced = new iFolderAdvanced();
 			ifolderAdvanced.CurrentiFolder = ((iFolderObject)tlvi.Tag).iFolderWeb;
+			ifolderAdvanced.DomainName = ((DomainInformation)this.simiasWebService.GetDomainInformation(((iFolderObject)tlvi.Tag).iFolderWeb.DomainID)).Name;
 			ifolderAdvanced.LoadPath = Application.StartupPath;
 			ifolderAdvanced.ActiveTab = activeTab;
 			ifolderAdvanced.EventClient = eventClient;
@@ -2982,6 +2993,7 @@ namespace Novell.FormsTrayApp
 
 		private void menuFileExit_Click(object sender, System.EventArgs e)
 		{
+			this.Dispose();
 			this.Close();
 			FormsTrayApp.CloseApp();
 		}
@@ -3057,6 +3069,14 @@ namespace Novell.FormsTrayApp
 						{
 							// Remove the iFolder from the server.
 							ifWebService.DeclineiFolderInvitation( newiFolder.DomainID, newiFolder.ID );
+						/*
+							if( newiFolder.Role == null || newiFolder.Role == "Master")
+							{
+								MessageBox.Show("Deleting iFolder");
+								ifWebService.DeleteiFolder(newiFolder.DomainID, newiFolder.ID);
+								MessageBox.Show("Deleted successfully");
+							}
+						*/
 						}
 						else
 						{
@@ -3432,6 +3452,13 @@ namespace Novell.FormsTrayApp
 		private void menuClose_Click(object sender, System.EventArgs e)
 		{
 			Hide();
+		}
+
+		private void filter_TextChanged(object sender, EventArgs e)
+		{
+			// filter text changed.....
+			//if( this.filter.Text.Length > 0)
+			refreshiFolders(this.filter.Text);
 		}
 
 	}
