@@ -27,8 +27,8 @@ using System.Runtime.CompilerServices;
 // by using the '*' as shown below:
 //
 
-[assembly: AssemblyVersion("3.6.7094.1")]
-[assembly: AssemblyInformationalVersion("3.6.7094.1")]
+[assembly: AssemblyVersion("3.6.7116.1")]
+[assembly: AssemblyInformationalVersion("3.6.7116.1")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 
@@ -56,5 +56,5 @@ using System.Runtime.CompilerServices;
 //       documentation for more information on this.
 //
 [assembly: AssemblyDelaySign(false)]
-[assembly: AssemblyKeyFile("")]
+[assembly: AssemblyKeyFile("../../PublicPrivateKeyFile.snk")]
 [assembly: AssemblyKeyName("")]
