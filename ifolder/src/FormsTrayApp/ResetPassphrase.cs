@@ -513,6 +513,7 @@ namespace Novell.FormsTrayApp
 		private void ResetPassphrase_Load(object sender, System.EventArgs e)
 		{
 			this.btnReset.Enabled = false;
+			this.btnReset.Select();
 			if (this.DomainComboBox.Items.Count == 0)
 			{
 				try
