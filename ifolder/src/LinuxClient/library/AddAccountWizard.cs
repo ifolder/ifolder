@@ -580,11 +580,11 @@ namespace Novell.iFolder
 		{
 			string currentUserName = UserNameEntry.Text;
 			string currentPassword = PasswordEntry.Text;
-			if (currentUserName != null && currentPassword != null)
+			if (currentUserName != null /*&& currentPassword != null*/)
 			{
 				currentUserName = currentUserName.Trim();
-				currentPassword = currentPassword.Trim();
-				if (currentUserName.Length > 0 && currentPassword.Length > 0)
+			//	currentPassword = currentPassword.Trim();
+				if (currentUserName.Length > 0 /*&& currentPassword.Length > 0*/)
 					AccountDruid.SetButtonsSensitive(true, true, true, true);
 				else
 					AccountDruid.SetButtonsSensitive(true, false, true, true);
