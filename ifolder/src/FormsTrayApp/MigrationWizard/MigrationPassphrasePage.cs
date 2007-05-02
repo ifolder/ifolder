@@ -264,6 +264,7 @@ namespace Novell.Wizard
 			this.Controls.Add(this.RecoveryAgentLabel);
 			this.Controls.Add(this.RecoveryAgentTitle);
 			this.Controls.Add(this.RecoveryAgentCombo);
+			this.Load+= new EventHandler(MigrationPassphrasePage_Load);
 			this.ResumeLayout(false);
 
 		}
@@ -356,6 +357,8 @@ namespace Novell.Wizard
 		{
 			get
 			{
+				if( this.RecoveryAgentCombo.SelectedIndex >= 0)
+					return (string)(this.RecoveryAgentCombo.SelectedText);
 				return null;
 				//return this.RecoveryAgentCombo.SelectedItem;
 			}
@@ -372,6 +375,17 @@ namespace Novell.Wizard
 
 		private void copyToServer_CheckedChanged(object sender, EventArgs e)
 		{
+		}
+
+		private void MigrationPassphrasePage_Load(object sender, EventArgs e)
+		{
+			string[] rAgents= ((MigrationWizard)this.Parent).simws.GetRAListOnClient(((MigrationWizard)this.Parent).MigrationIdentityPage.domain.ID/*DomainID*/);
+			foreach( string rAgent in rAgents)
+			{
+				this.RecoveryAgentCombo.Items.Add( rAgent );
+				//MessageBox.Show(String.Format("Adding {0}", rAgent));
+			}
+			this.RecoveryAgentCombo.Items.Add("None");
 		}
 	}
 	/*

@@ -4790,7 +4790,7 @@
     <value>WindowsDefaultLocation</value>
   </data>
   <data name="$this.Text">
-    <value />
+    <value> iFolder Properties</value>
   </data>
   <data name="$this.ToolTip">
     <value />

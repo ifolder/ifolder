@@ -54,6 +54,22 @@ namespace Novell.FormsTrayApp
 
 		}
 
+		public void DisplayNoMatches()
+		{
+			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(NoiFolderMessage));
+			this.richTextBox2.Text = resources.GetString("richTextBox2.NoMatchesText");
+			this.richTextBox3.Visible = this.richTextBox4.Visible = false;
+			this.pictureBox1.Visible = this.pictureBox2.Visible = false;
+		}
+
+		public void DisplayNoiFolders()
+		{
+			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(NoiFolderMessage));
+			this.richTextBox2.Text = resources.GetString("richTextBox2.Text");
+			this.richTextBox3.Visible = this.richTextBox4.Visible = true;
+			this.pictureBox1.Visible = this.pictureBox2.Visible = true;
+		}
+
 		/// <summary> 
 		/// Clean up any resources being used.
 		/// </summary>

@@ -943,4 +943,16 @@
 	<data name="ResetError">
 		<value>Error resetting passphrase</value>
 	</data>
+	<data name="YesText">
+		<value>Yes</value>
+	</data>
+	<data name="NoText">
+		<value>No</value>
+	</data>
+	<data name="NotEncrypted">
+		<value>Not Encrypted</value>
+	</data>
+	<data name="Encrypted">
+		<value>Encrypted</value>
+	</data>
 </root>

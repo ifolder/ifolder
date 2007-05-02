@@ -469,6 +469,7 @@ namespace Novell.iFolderCom
 		#region Event Handlers
 		private void CreateiFolder_Load(object sender, System.EventArgs e)
 		{
+			this.Icon = new Icon(Path.Combine(loadPath, @"res\ifolder_16.ico"));
 			this.ok.Enabled = false;
 			this.encryption.Checked = false;
 			this.encryption.Enabled = this.ssl.Enabled = false;
@@ -699,6 +700,7 @@ namespace Novell.iFolderCom
 								string caption = resourceManager.GetString("errorTitle");
 								MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("LoginToDomain")/*"Unable to talk to the server. First login to server"*/ , caption, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 								mmb.ShowDialog();
+								successful = false;
 								return;
 							}
 							if(passphraseStatus == true)
@@ -934,6 +936,7 @@ namespace Novell.iFolderCom
 		
 		private System.Windows.Forms.Panel panel1;
 		private System.Windows.Forms.PictureBox waterMark;
+		private System.Windows.Forms.PictureBox pictureBox1;
 		private System.Windows.Forms.Label lblPassphrase;
 		private System.Windows.Forms.TextBox Passphrase;
 		private System.Windows.Forms.CheckBox savePassphrase;
@@ -990,6 +993,7 @@ namespace Novell.iFolderCom
 		{
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(CreateiFolder));
 			this.panel1 = new System.Windows.Forms.Panel();
+			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.waterMark = new System.Windows.Forms.PictureBox();
 			this.lblPassphrase = new System.Windows.Forms.Label();
 			this.Passphrase = new System.Windows.Forms.TextBox();
@@ -1003,19 +1007,25 @@ namespace Novell.iFolderCom
 			// 
 			this.panel1.BackColor = System.Drawing.Color.Blue;
 			this.panel1.Controls.Add(this.waterMark);
+			this.panel1.Controls.Add(this.pictureBox1);
 			this.panel1.Location = new System.Drawing.Point(0, 0);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(448, 56);
+			this.panel1.Size = new System.Drawing.Size(448, 65);
 			this.panel1.TabIndex = 1;
 			// 
 			// waterMark
 			// 
-			this.waterMark.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(101)), ((System.Byte)(163)), ((System.Byte)(237)));
-			this.waterMark.Location = new System.Drawing.Point(16, 8);
+			//this.waterMark.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(101)), ((System.Byte)(163)), ((System.Byte)(237)));
+			this.waterMark.Location = new System.Drawing.Point(0,0);
 			this.waterMark.Name = "waterMark";
-			this.waterMark.Size = new System.Drawing.Size(48, 48);
+			this.waterMark.Size = new System.Drawing.Size(159, 65);
 			this.waterMark.TabIndex = 0;
 			this.waterMark.TabStop = false;
+			//
+			//pictureBox1
+			//
+			this.pictureBox1.Location = new System.Drawing.Point(159, 0);
+			this.pictureBox1.Size = new System.Drawing.Size(320, 65);
 			// 
 			// lblPassphrase
 			// 
@@ -1121,7 +1131,10 @@ namespace Novell.iFolderCom
 		private void VerifyPassphraseDialog_Load(object sender, System.EventArgs e)
 		{
 			this.btnOk.Enabled = false;
-			this.waterMark.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder48.png"));
+			//this.waterMark.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder48.png"));
+			this.waterMark.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder-banner.png"));
+			this.pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+			this.pictureBox1.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder-banner-scaler.png"));
 		}
 
 		private void Passphrase_TextChanged(object sender, EventArgs e)
@@ -1144,6 +1157,7 @@ namespace Novell.iFolderCom
 		
 		private System.Windows.Forms.Panel panel1;
 		private System.Windows.Forms.PictureBox waterMark;
+		private System.Windows.Forms.PictureBox pictureBox1;
 		private System.Windows.Forms.ComboBox RecoveryAgentCombo;
 		private System.Windows.Forms.Label lblRecoveryAgent;
 		private System.Windows.Forms.TextBox Passphrase;
@@ -1205,6 +1219,7 @@ namespace Novell.iFolderCom
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(CreateiFolder));
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.waterMark = new System.Windows.Forms.PictureBox();
+			this.pictureBox1 = new PictureBox();
 			this.RecoveryAgentCombo = new System.Windows.Forms.ComboBox();
 			this.lblRecoveryAgent = new System.Windows.Forms.Label();
 			this.Passphrase = new System.Windows.Forms.TextBox();
@@ -1221,19 +1236,26 @@ namespace Novell.iFolderCom
 			// 
 			this.panel1.BackColor = System.Drawing.Color.Blue;
 			this.panel1.Controls.Add(this.waterMark);
+			this.panel1.Controls.Add(this.pictureBox1);
 			this.panel1.Location = new System.Drawing.Point(0, 0);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(448, 56);
+			this.panel1.Size = new System.Drawing.Size(448, 65);
 			this.panel1.TabIndex = 1;
 			// 
 			// waterMark
 			// 
-			this.waterMark.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(101)), ((System.Byte)(163)), ((System.Byte)(237)));
-			this.waterMark.Location = new System.Drawing.Point(16, 8);
+			//this.waterMark.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(101)), ((System.Byte)(163)), ((System.Byte)(237)));
+			this.waterMark.Location = new System.Drawing.Point(0, 0);
 			this.waterMark.Name = "waterMark";
-			this.waterMark.Size = new System.Drawing.Size(48, 48);
+			this.waterMark.Size = new System.Drawing.Size(159, 65);
 			this.waterMark.TabIndex = 0;
 			this.waterMark.TabStop = false;
+			//
+			//pictureBox1
+			//
+			this.pictureBox1.Location = new Point(159, 0);
+			this.pictureBox1.Size = new Size(320, 65);
+			this.pictureBox1.Name = "pictureBox1";
 			// 
 			// RecoveryAgentCombo
 			// 
@@ -1353,6 +1375,25 @@ namespace Novell.iFolderCom
 			if( this.Passphrase.Text == this.RetypePassphrase.Text)
 			{
 				string publicKey = "";
+				string ragent = null;
+				if( this.RecoveryAgentCombo.SelectedItem != null && this.RecoveryAgentCombo.SelectedText != "None")
+				{
+					// Show the certificate.....
+					byte[] CertificateObj = this.simws.GetRACertificateOnClient(DomainID, this.RecoveryAgentCombo.SelectedText);
+					System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(CertificateObj);
+					MyMessageBox mmb = new MyMessageBox( "Verify Certificate", "Verify Certificate", cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2 );
+					DialogResult messageDialogResult = mmb.ShowDialog();
+					mmb.Dispose();
+					mmb.Close();
+					if( messageDialogResult != DialogResult.OK )
+						return;
+					else
+					{
+						ragent = this.RecoveryAgentCombo.SelectedText;
+						publicKey = cert.GetPublicKeyString();
+					}
+					//return;
+				}
 				Status passPhraseStatus = null;
 				try
 				{
@@ -1396,7 +1437,16 @@ namespace Novell.iFolderCom
 		private void EnterPassphraseDialog_Load(object sender, System.EventArgs e)
 		{
 			this.btnOk.Enabled = false;
-			this.waterMark.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder48.png"));
+			//this.waterMark.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder48.png"));
+			this.waterMark.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder-banner.png"));
+			this.pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+			this.pictureBox1.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder-banner-scaler.png"));
+			string[] rAgents= this.simws.GetRAListOnClient(DomainID);
+			foreach( string rAgent in rAgents)
+			{
+				this.RecoveryAgentCombo.Items.Add( rAgent ); 
+				//MessageBox.Show(String.Format("Adding {0}", rAgent));
+			}
 		}
 
 		private void Passphrase_TextChanged(object sender, System.EventArgs e)

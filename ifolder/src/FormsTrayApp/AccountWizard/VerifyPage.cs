@@ -210,8 +210,8 @@ namespace Novell.Wizard
 			serverAddress.Text = wizard.ServerPage.ServerAddress;
 			username.Text = wizard.IdentityPage.Username;
 			// TODO: Localize
-			rememberPassword.Text = wizard.IdentityPage.RememberPassword ? "Yes" : "No";
-			defaultAccount.Text = wizard.ServerPage.DefaultServer ? "Yes" : "No";
+			rememberPassword.Text = wizard.IdentityPage.RememberPassword ? Resource.GetString("YesText") : Resource.GetString("NoText");
+			defaultAccount.Text = wizard.ServerPage.DefaultServer ? Resource.GetString("YesText") : Resource.GetString("NoText");
 		}
 
 		/// <summary>

@@ -579,6 +579,7 @@ namespace Novell.iFolderCom
 
 		private iFolderUser addCacheEntry(int index)
 		{
+			//MessageBox.Show("In addCacheEntry");
 			iFolderUser[] ifolderUsers;
 
 			ifWebService.FindSeekiFolderMembers(
@@ -610,6 +611,7 @@ namespace Novell.iFolderCom
 
 		private int initializeCache()
 		{
+			//MessageBox.Show("In initializeCache");
 			int totalMembers = 0;
 			cache = new Hashtable();
 			duplicateNames = new Hashtable();
@@ -737,6 +739,7 @@ namespace Novell.iFolderCom
 		
 		private int removedListContains(iFolderUser ifolderUser)
 		{
+			//MessageBox.Show("In removedListContains");
 			int index = -1;
 
 			lock (removedList)
@@ -758,6 +761,7 @@ namespace Novell.iFolderCom
 		#region Public Methods
 		public iFolderUser GetiFolderUserFromListViewItem(ListViewItem lvi)
 		{
+			//MessageBox.Show("In GetiFolderUserFromListViewItem");
 			iFolderUser ifolderUser = null;
 
 			Type type = lvi.Tag.GetType();
@@ -839,6 +843,7 @@ namespace Novell.iFolderCom
 
 		private void add_Click(object sender, System.EventArgs e)
 		{
+			//MessageBox.Show("In add_Click");
 			foreach (int index in rosterLV.SelectedIndices)
 			{
 				iFolderUser ifolderUser = (iFolderUser)cache[index];
@@ -885,6 +890,7 @@ namespace Novell.iFolderCom
 
 		private void remove_Click(object sender, System.EventArgs e)
 		{
+			//MessageBox.Show("In remove_Click");
 			foreach (ListViewItem lvi in addedLV.SelectedItems)
 			{
 				iFolderUser selectedUser = GetiFolderUserFromListViewItem(lvi);
@@ -957,6 +963,7 @@ namespace Novell.iFolderCom
 
 		private void addedLV_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
+			//MessageBox.Show("In addedLV_SelectedIndexChanged");
 			// Enable the remove button if one or more added item is selected.
 			remove.Enabled = addedLV.SelectedItems.Count > 0;
 
@@ -981,6 +988,7 @@ namespace Novell.iFolderCom
 
 		private void addedLV_ColumnClick(object sender, System.Windows.Forms.ColumnClickEventArgs e)
 		{
+			//MessageBox.Show("In addedLV_ColumnClick");
 			switch (addedLV.Sorting)
 			{
 				case SortOrder.None:
@@ -1040,6 +1048,7 @@ namespace Novell.iFolderCom
 						switch(nmhdr.code)
 						{
 							case Win32.LVN_GETDISPINFOW:
+							//	MessageBox.Show("LVN_GETDISPINFOW");
 								Win32.LVDISPINFOW lvDispInfo = (Win32.LVDISPINFOW)m.GetLParam(typeof(Win32.LVDISPINFOW));
 								iFolderUser ifolderUser = null;
 									
@@ -1103,10 +1112,12 @@ namespace Novell.iFolderCom
 								Marshal.StructureToPtr( lvDispInfo, m.LParam, true );
 								return;
 							case Win32.LVN_ODCACHEHINT:
+							//	MessageBox.Show("LVN_ODCACHEHINT");
 								Win32.NMLVCACHEHINT nmlvCacheHint = (Win32.NMLVCACHEHINT)m.GetLParam(typeof(Win32.NMLVCACHEHINT));
 								updateCache(nmlvCacheHint.iFrom, nmlvCacheHint.iTo);
 								break;
 							case Win32.LVN_ODFINDITEMW:
+							//	MessageBox.Show("LVN_ODFINDITEMW");
 								Win32.NMLVFINDITEM nmlvFindItem = (Win32.NMLVFINDITEM)m.GetLParam(typeof(Win32.NMLVFINDITEM));
 								System.Diagnostics.Debug.WriteLine("iStart = " + nmlvFindItem.iStart.ToString());
 								System.Diagnostics.Debug.WriteLine("psz = " + nmlvFindItem.lvfi.psz);
@@ -1118,6 +1129,7 @@ namespace Novell.iFolderCom
 //								m.Result = (IntPtr)index;
 								return;
 							case Win32.LVN_ITEMCHANGED:
+							//	MessageBox.Show("LVN_ITEMCHANGED");
 								Win32.NMLISTVIEW nmListView = (Win32.NMLISTVIEW)m.GetLParam(typeof(Win32.NMLISTVIEW));
 								if ((nmListView.uChanged & Win32.LVIF_STATE) == Win32.LVIF_STATE)
 								{
@@ -1132,6 +1144,7 @@ namespace Novell.iFolderCom
 					}
 					break;
 			}
+
 
 			try
 			{

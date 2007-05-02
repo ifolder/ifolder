@@ -185,6 +185,9 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.MenuItem menuRemove;
 		private System.Windows.Forms.MenuItem menuRefresh;
 		private System.ComponentModel.IContainer components;
+		private string DownloadPath;
+
+		private System.Windows.Forms.Timer searchTimer;
 		#endregion
 
 		/// <summary>
@@ -229,7 +232,7 @@ namespace Novell.FormsTrayApp
 			// Load the application icon
 			try
 			{
-				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"ifolder_app.ico"));
+				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_16.ico"));
 
 				// TODO: update icons.
 				largeImageList = new ImageList();
@@ -275,6 +278,7 @@ namespace Novell.FormsTrayApp
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(GlobalProperties));
 			this.iFolderContextMenu = new System.Windows.Forms.ContextMenu();
 			this.menuOpen = new System.Windows.Forms.MenuItem();
@@ -346,6 +350,7 @@ namespace Novell.FormsTrayApp
 			this.panel2 = new System.Windows.Forms.Panel();
 			this.iFolderView = new TileListView();
 			this.localiFoldersHeading = new System.Windows.Forms.RichTextBox();
+			this.searchTimer = new System.Windows.Forms.Timer(this.components);
 			this.panel1.SuspendLayout();
 			this.iFolderActions.SuspendLayout();
 			this.panel2.SuspendLayout();
@@ -1433,6 +1438,11 @@ namespace Novell.FormsTrayApp
 			this.localiFoldersHeading.WordWrap = ((bool)(resources.GetObject("localiFoldersHeading.WordWrap")));
 			this.localiFoldersHeading.ZoomFactor = ((System.Single)(resources.GetObject("localiFoldersHeading.ZoomFactor")));
 			// 
+			// searchTimer
+			// 
+			this.searchTimer.Interval = 1000;
+			this.searchTimer.Tick += new EventHandler(searchTimer_Tick);
+			// 
 			// GlobalProperties
 			// 
 			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
@@ -1524,7 +1534,10 @@ namespace Novell.FormsTrayApp
 					Update();
 					result = acceptiFolder( ifolder, browserDialog.SelectedPath );
 					if ( result )
+					{
+						DownloadPath = browserDialog.SelectedPath + ifolder.Name;;
 						break;
+					}
 				}
 				else
 				{
@@ -1869,15 +1882,16 @@ namespace Novell.FormsTrayApp
 
 		private void removeTileListViewItem( TileListViewItem tlvi )
 		{
+			if( tlvi == null)
+				return;
 			if ( tlvi.Equals( selectedItem ) )
 			{
 				selectedItem = null;
 				updateMenus( null );
 			}
-
+			ht.Remove( ((iFolderObject)tlvi.Tag).ID );
 			tlvi.Remove();
 			updateView();
-			ht.Remove( ((iFolderObject)tlvi.Tag).ID );
 		}
 
 		private void saveXmlFile(XmlDocument doc)
@@ -2111,7 +2125,6 @@ namespace Novell.FormsTrayApp
 								// Notify the shell.
 								Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
 							}
-
 							removeTileListViewItem( tlvi );
 						}
 					}
@@ -2291,6 +2304,10 @@ namespace Novell.FormsTrayApp
 			if ( iFolderView.Items.Count == 0 )
 			{
 				iFolderView.Visible = false;
+				if( this.filter.Text.Length > 0)
+					infoMessage.DisplayNoMatches();
+				else
+					infoMessage.DisplayNoiFolders();
 				infoMessage.Visible = true;
 				infoMessage.Location = point;
 				point.Y += infoMessage.Height;
@@ -2476,6 +2493,7 @@ namespace Novell.FormsTrayApp
 
 		public void refreshiFolders(string search/*Domain domain*/)
 		{
+			search = this.filter.Text;
 			Cursor.Current = Cursors.WaitCursor;
 			Hashtable oldHt = new Hashtable();
 			lock(ht)
@@ -2492,8 +2510,8 @@ namespace Novell.FormsTrayApp
 			try
 			{
 				// Get the list of iFolders - now the calling thread does this and also handles exception
-				if( search != null)
-					ifolderArray = ifWebService.GetAlliFolders();
+			//	if( search != null)
+			//		ifolderArray = ifWebService.GetAlliFolders();
 				panel2.SuspendLayout();
 				iFolderView.Items.Clear();
 				selectedItem = null;
@@ -2508,7 +2526,7 @@ namespace Novell.FormsTrayApp
 				// Walk the list of iFolders and add them to the listviews.
 				foreach (iFolderWeb ifolder in ifolderArray) //iFolderArray is a class member should be made null for GC
 				{
-					if( search != null && ((String)ifolder.Name).StartsWith(search) == false)
+					if( search != null && ((String)ifolder.Name).ToLower().IndexOf(search.ToLower(), 0, ((String)ifolder.Name).Length) < 0)
 						continue;
 					iFolderState state = iFolderState.Normal;
 					if (!ifolder.IsSubscription)
@@ -2529,6 +2547,8 @@ namespace Novell.FormsTrayApp
 				{
 					TileListViewItem tlv = (TileListViewItem)obj;
 					iFolderObject ifobj = (iFolderObject)tlv.Tag;
+					if( search != null && ((String)ifobj.iFolderWeb.Name).ToLower().IndexOf(search.ToLower(), 0, ((String)ifobj.iFolderWeb.Name).Length) < 0)
+						continue;
 					ifobj.iFolderWeb.IsSubscription = false;
 					ifobj.iFolderState = iFolderState.Initial;
 					addiFolderToListView( ifobj );
@@ -2549,7 +2569,7 @@ namespace Novell.FormsTrayApp
 			updateView();
 			panel2.ResumeLayout();
 			inRefresh = false;
-			ifolderArray = null;
+		//	ifolderArray = null;
 			Cursor.Current = Cursors.Default;
 		}
 
@@ -3059,24 +3079,23 @@ namespace Novell.FormsTrayApp
 					
 					// Delete the iFolder.
 					iFolderWeb newiFolder = ifWebService.RevertiFolder(ifolder.ID);
-
+					
 					// Notify the shell.
 					Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
-
+					
 					if (newiFolder != null)
 					{
+						acceptedFolders.Remove(newiFolder.ID);
 						if ( revertiFolder.RemoveFromServer )
 						{
 							// Remove the iFolder from the server.
 							ifWebService.DeclineiFolderInvitation( newiFolder.DomainID, newiFolder.ID );
-						/*
+						
 							if( newiFolder.Role == null || newiFolder.Role == "Master")
 							{
-								MessageBox.Show("Deleting iFolder");
 								ifWebService.DeleteiFolder(newiFolder.DomainID, newiFolder.ID);
-								MessageBox.Show("Deleted successfully");
 							}
-						*/
+						
 						}
 						else
 						{
@@ -3085,7 +3104,7 @@ namespace Novell.FormsTrayApp
 
 							lock ( ht )
 							{
-								acceptedFolders.Remove(newiFolder.ID);
+							//	acceptedFolders.Remove(newiFolder.ID);
 								ht.Remove(newiFolder.ID);
 								ht.Add( newiFolder.ID, tlvi );
 							}
@@ -3097,7 +3116,6 @@ namespace Novell.FormsTrayApp
 						removeTileListViewItem( selectedItem );
 					}
 				}
-
 				updateView();
 				revertiFolder.Dispose();
 			}
@@ -3215,7 +3233,7 @@ namespace Novell.FormsTrayApp
 				iFolderObject ifobj = new iFolderObject(((iFolderObject)selectedItem.Tag).iFolderWeb, iFolderState.Disconnected);
 				iFolderWeb ifolderWeb = ((iFolderObject)selectedItem.Tag).iFolderWeb;
 				ifobj.iFolderWeb.IsSubscription = false;
-				TileListViewItem tlvi = new TileListViewItem(ifobj);
+				//TileListViewItem tlvi = new TileListViewItem(ifobj);
 				
 
 				// Accept the iFolder.
@@ -3229,6 +3247,8 @@ namespace Novell.FormsTrayApp
 						addiFolderToListView(new iFolderObject(ifolderWeb, iFolderState.Initial));
 						if( acceptedFolders.Contains(ifobj.iFolderWeb.ID) )
 							acceptedFolders.Remove(ifobj.iFolderWeb.ID);
+						ifobj.iFolderWeb.UnManagedPath = DownloadPath;
+						TileListViewItem tlvi = new TileListViewItem(ifobj);
 						acceptedFolders.Add(ifobj.iFolderWeb.ID, tlvi);
 					//	iFolderView.Items.Add(tlvi);
 					//	ht.Add( ifobj.iFolderWeb.DomainID, tlvi);
@@ -3458,9 +3478,22 @@ namespace Novell.FormsTrayApp
 		{
 			// filter text changed.....
 			//if( this.filter.Text.Length > 0)
-			refreshiFolders(this.filter.Text);
+			if( this.filter.Focused)
+			{
+				this.searchTimer.Stop();
+				this.searchTimer.Start();
+			}
+				//refreshiFolders(this.filter.Text);
 		}
 
+		private void searchTimer_Tick(object sender, EventArgs e)
+		{
+			// The timer event has been fired...
+			// Stop the timer.
+			searchTimer.Stop();
+			//searchText = this.filter.Text;
+			refreshiFolders(this.filter.Text);
+		}
 	}
 }
 

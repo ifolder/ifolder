@@ -46,6 +46,9 @@ namespace Novell.iFolderCom
 		private string loadPath;
 		private const int SHOP_FILEPATH = 0x2;
 		private System.Windows.Forms.LinkLabel iFolderOverview;
+		private System.Windows.Forms.Button button1;
+		private bool migrate;
+		private static System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(NewiFolder));
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -77,6 +80,15 @@ namespace Novell.iFolderCom
 
 			// Center the window.
 			this.StartPosition = FormStartPosition.CenterScreen;
+			migrate = false;
+		}
+
+		public void ShowMigrationPrompt()
+		{
+			this.iFolderOverview.Text = resourceManager.GetString("MigrationLabel.Text");
+			this.Text = resourceManager.GetString("MigrationTitle.Text");
+			this.button1.Visible = true;
+			this.close.Text = resourceManager.GetString("OK");
 		}
 
 		/// <summary>
@@ -106,6 +118,7 @@ namespace Novell.iFolderCom
 			this.iFolderEmblem = new System.Windows.Forms.PictureBox();
 			this.dontAsk = new System.Windows.Forms.CheckBox();
 			this.iFolderOverview = new System.Windows.Forms.LinkLabel();
+			this.button1 = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// close
@@ -205,6 +218,30 @@ namespace Novell.iFolderCom
 			this.iFolderOverview.Visible = ((bool)(resources.GetObject("iFolderOverview.Visible")));
 			this.iFolderOverview.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.iFolderOverview_LinkClicked);
 			// 
+			// button1
+			// 
+			this.button1.AccessibleDescription = resources.GetString("button1.AccessibleDescription");
+			this.button1.AccessibleName = resources.GetString("button1.AccessibleName");
+			this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("button1.Anchor")));
+			this.button1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button1.BackgroundImage")));
+			this.button1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("button1.Dock")));
+			this.button1.Enabled = ((bool)(resources.GetObject("button1.Enabled")));
+			this.button1.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("button1.FlatStyle")));
+			this.button1.Font = ((System.Drawing.Font)(resources.GetObject("button1.Font")));
+			this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
+			this.button1.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("button1.ImageAlign")));
+			this.button1.ImageIndex = ((int)(resources.GetObject("button1.ImageIndex")));
+			this.button1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("button1.ImeMode")));
+			this.button1.Location = ((System.Drawing.Point)(resources.GetObject("button1.Location")));
+			this.button1.Name = "button1";
+			this.button1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("button1.RightToLeft")));
+			this.button1.Size = ((System.Drawing.Size)(resources.GetObject("button1.Size")));
+			this.button1.TabIndex = ((int)(resources.GetObject("button1.TabIndex")));
+			this.button1.Text = resources.GetString("button1.Text");
+			this.button1.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("button1.TextAlign")));
+			this.button1.Visible = ((bool)(resources.GetObject("button1.Visible")));
+			this.button1.Click += new EventHandler(button1_Click);
+			// 
 			// NewiFolder
 			// 
 			this.AcceptButton = this.close;
@@ -216,6 +253,7 @@ namespace Novell.iFolderCom
 			this.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMinSize")));
 			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
+			this.Controls.Add(this.button1);
 			this.Controls.Add(this.iFolderOverview);
 			this.Controls.Add(this.dontAsk);
 			this.Controls.Add(this.iFolderEmblem);
@@ -271,6 +309,21 @@ namespace Novell.iFolderCom
 				loadPath = value;
 			}
 		}
+
+		public bool DontAsk
+		{
+			get
+			{
+				return this.dontAsk.Checked;
+			}
+		}
+		public bool Migrate
+		{
+			get
+			{
+				return this.migrate;
+			}
+		}
 		#endregion
 
 		#region Event Handlers
@@ -290,7 +343,7 @@ namespace Novell.iFolderCom
 		{
 			try
 			{
-				this.Icon = new Icon(Path.Combine(loadPath, @"ifolder_app.ico"));
+				this.Icon = new Icon(Path.Combine(loadPath, @"res\ifolder_16.ico"));
 			}
 			catch {}
 		}
@@ -302,9 +355,14 @@ namespace Novell.iFolderCom
 
 		private void close_Click(object sender, System.EventArgs e)
 		{
-			if (dontAsk.Checked)
+			if (dontAsk.Checked && this.button1.Visible == false)
 			{
 				iFolderComponent.DisplayConfirmationEnabled = !dontAsk.Checked;
+			}
+
+			else if( this.button1.Visible == true )
+			{
+				migrate = true;
 			}
 
 			this.Close();
@@ -342,5 +400,10 @@ namespace Novell.iFolderCom
 			catch{}
 		}
 		#endregion
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+			this.Close();
+		}
 	}
 }

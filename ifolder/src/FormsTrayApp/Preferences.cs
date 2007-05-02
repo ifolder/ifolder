@@ -1794,7 +1794,7 @@ namespace Novell.FormsTrayApp
 			// Load the application icon and banner image.
 			try
 			{
-				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"ifolder_app.ico"));
+				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_16.ico"));
 			}
 			catch {} // Non-fatal ...
 

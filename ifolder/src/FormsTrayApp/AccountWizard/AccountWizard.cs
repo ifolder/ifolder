@@ -181,7 +181,7 @@ namespace Novell.Wizard
 			// Load the application icon.
 			try
 			{
-				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"ifolder_app.ico"));
+				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_16.ico"));
 			}
 			catch {} // Ignore
 
