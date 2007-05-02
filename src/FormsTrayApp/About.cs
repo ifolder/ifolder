@@ -298,7 +298,7 @@ namespace Novell.FormsTrayApp
 		{
 			IntPtr hIcon = Win32Window.LoadImageFromFile(
 				0,
-				Path.Combine(Application.StartupPath, "ifolder_app.ico"),
+				Path.Combine(Application.StartupPath, @"res\ifolder_16.ico"),
 				Win32Window.IMAGE_ICON,
 				48,
 				48,

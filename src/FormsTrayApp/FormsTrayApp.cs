@@ -147,6 +147,7 @@ namespace Novell.FormsTrayApp
 		private Manager simiasManager;
 		private string iFolderLogPath;
 		static private FormsTrayApp instance;
+		private bool NoAccounts;
 		#endregion
 
 		[STAThread]
@@ -178,7 +179,7 @@ namespace Novell.FormsTrayApp
 			notifyMessageDelegate = new NotifyMessageDelegate(notifyMessage);
 
 			// Check for currently running instance.  Search for existing window ...
-			string windowName = "iFolder Services " + Environment.UserName;
+			string windowName = FormsTrayApp.resourceManager.GetString("iFolderServices")/*"iFolder Services "*/ + Environment.UserName;
 			Novell.Win32Util.Win32Window window = Novell.Win32Util.Win32Window.FindWindow(null, windowName);
 			if (window != null)
 			{
@@ -220,7 +221,7 @@ namespace Novell.FormsTrayApp
 				InitializeComponent();
 
 				// Append the username to the window string so we can search for it.
-				this.Text = "iFolder Services " + Environment.UserName;
+				this.Text = FormsTrayApp.resourceManager.GetString("iFolderServices")/*"iFolder Services "*/ + Environment.UserName;
 
 				this.components = new System.ComponentModel.Container();
 
@@ -233,10 +234,12 @@ namespace Novell.FormsTrayApp
 				{
 					string basePath = Path.Combine(Application.StartupPath, "res");
 					
-					trayIcon = new Icon(Path.Combine(basePath, "ifolder_loaded.ico"));
-					startupIcon = new Icon(Path.Combine(basePath, "ifolder-startup.ico"));
-					shutdownIcon = new Icon(Path.Combine(basePath, "ifolder-shutdown.ico"));
-				
+					//trayIcon = new Icon(Path.Combine(basePath, "ifolder_loaded.ico"));
+					//startupIcon = new Icon(Path.Combine(basePath, "ifolder-startup.ico"));
+					//shutdownIcon = new Icon(Path.Combine(basePath, "ifolder-shutdown.ico"));
+					startupIcon = new Icon(Path.Combine(basePath, "ifolder_waiting_16.ico"));
+					shutdownIcon = new Icon(Path.Combine(basePath, "ifolder_download_16.ico"));
+					trayIcon = new Icon(Path.Combine(basePath, "ifolder_16.ico"));
 				
 					syncIcons[0] = new Icon(trayIcon, trayIcon.Size);
 					for (int i = 0; i < numberOfSyncIcons; i++)
@@ -672,6 +675,7 @@ namespace Novell.FormsTrayApp
 
 						if (domains.Length.Equals(0))
 						{
+							this.NoAccounts = true;
 							accountPrompt = true;
 						}
 					}
@@ -688,7 +692,29 @@ namespace Novell.FormsTrayApp
 
 					// Display the overlay icon on all iFolders.
 					if(accountPrompt == false)
+					{
 						updateOverlayIcons();
+						// check for 2.x folders for migration
+						string iFolderKey = @"SOFTWARE\Novell\iFolder";
+						RegistryKey regKey = Registry.CurrentUser.CreateSubKey(iFolderKey);
+						int Migration = (int) regKey.GetValue("MigrationPrompt",(int)1);
+						if( Migration == 1)
+						{
+							// show the dialog if 2.x folders present
+							if( iFolder2Present() == true)
+							{
+								//	MessageBox.Show("You have iFolder2.x installation.");
+								//Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox("You have iFolder2.x installation.");
+								bool migrate = MigrationPrompt();
+								if( migrate == true)
+								{
+								//	MessageBox.Show("Migration selected");
+									Novell.FormsTrayApp.MigrationWindow migrationWindow = new MigrationWindow(this.ifWebService, this.simiasWebService);
+									migrationWindow.ShowDialog(this);
+								}
+							}
+						}
+					}
 
 					if (accountPrompt)
 					{
@@ -1548,6 +1574,53 @@ namespace Novell.FormsTrayApp
 				}
 			}
 			catch {}
+		}
+		private bool iFolder2Present()
+		{
+			string iFolderRegistryKey = @"Software\Novell iFolder";
+			bool status = false;
+			RegistryKey iFolderKey = Registry.LocalMachine.OpenSubKey(iFolderRegistryKey);
+			if(iFolderKey == null)
+				return false;
+			string[] AllKeys = new string[iFolderKey.SubKeyCount];
+			string User;
+			AllKeys = iFolderKey.GetSubKeyNames();
+			for(int i=0; i< AllKeys.Length; i++)
+			{
+				User = iFolderRegistryKey + "\\" + AllKeys[i];
+				RegistryKey UserKey = Registry.LocalMachine.OpenSubKey(User);
+				if (UserKey == null) 
+					return false;
+				if( UserKey.GetValue("FolderPath") != null)
+				{
+					status = true;
+					break;
+				}
+				UserKey.Close();
+			}
+			iFolderKey.Close();
+			return status;
+		}
+		private bool MigrationPrompt()
+		{
+			//System.Windows.Forms.Label lblMessage = new Label("There are some 2.x iFolders existing on this machine");
+			//System.Windows.Forms.CheckBox DontShowAgain = new CheckBox("Don't show this message again");
+		
+			Novell.iFolderCom.NewiFolder newif = new Novell.iFolderCom.NewiFolder();
+			newif.ShowMigrationPrompt();
+			newif.ShowDialog(null);
+			bool dontAsk = newif.DontAsk;
+			bool result = newif.Migrate;
+			newif.Dispose();
+			newif.Close();
+			if( dontAsk == true)
+			{
+				string iFolderKey = @"SOFTWARE\Novell\iFolder";
+				RegistryKey regKey = Registry.CurrentUser.CreateSubKey(iFolderKey);
+				regKey.SetValue("MigrationPrompt",0);
+				regKey.Close();
+			}
+			return result;
 		}
 		#endregion
 	}

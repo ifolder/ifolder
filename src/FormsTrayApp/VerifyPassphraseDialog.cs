@@ -359,7 +359,7 @@ namespace Novell.FormsTrayApp
 		private void VerifyPassphraseDialog_Load(object sender, System.EventArgs e)
 		{
 			this.btnOk.Enabled = false;
-			this.Icon = new Icon(System.IO.Path.Combine(Application.StartupPath, @"ifolder_app.ico"));
+			this.Icon = new Icon(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder_16.ico"));
 			//this.waterMark.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder48.png"));
 			this.waterMark.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder-banner.png"));
 			this.pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;

@@ -434,6 +434,8 @@ namespace Novell.FormsTrayApp
 			 */
 			if( this.Passphrase.Text == this.RetypePassphrase.Text)
 			{
+				string publicKey = "";
+				string ragent = null;
 				if( this.RecoveryAgentCombo.SelectedItem != null && this.RecoveryAgentCombo.SelectedText != "None")
 				{
 					// Show the certificate.....
@@ -441,13 +443,22 @@ namespace Novell.FormsTrayApp
 					System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(CertificateObj);
 					MyMessageBox mmb = new MyMessageBox( "Verify Certificate", "Verify Certificate", cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2 );
 					DialogResult messageDialogResult = mmb.ShowDialog();
-					return;
+					mmb.Dispose();
+					mmb.Close();
+					if( messageDialogResult != DialogResult.OK )
+						return;
+					else
+					{
+						ragent = this.RecoveryAgentCombo.SelectedText;
+						publicKey = cert.GetPublicKeyString();
+					}
+					//return;
 				}
-				string publicKey = "";
+				
 				Status passPhraseStatus = null;
 				try
 				{
-					passPhraseStatus = simws.SetPassPhrase( DomainID, this.Passphrase.Text, null, publicKey);
+					passPhraseStatus = simws.SetPassPhrase( DomainID, this.Passphrase.Text, ragent, publicKey);
 				}
 				catch(Exception ex)
 				{
@@ -491,7 +502,7 @@ namespace Novell.FormsTrayApp
 		private void EnterPassphraseDialog_Load(object sender, System.EventArgs e)
 		{
 			this.btnOk.Enabled = false;
-			this.Icon = new Icon(System.IO.Path.Combine(Application.StartupPath, @"ifolder_app.ico"));
+			this.Icon = new Icon(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder_16.ico"));
 			this.waterMark.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder-banner.png"));
 			//this.waterMark.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder48.png"));
 			this.pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -499,7 +510,7 @@ namespace Novell.FormsTrayApp
 			string[] rAgents= this.simws.GetRAListOnClient(DomainID);
 			foreach( string rAgent in rAgents)
 			{
-				this.RecoveryAgentCombo.Items.Add( rAgent );
+				this.RecoveryAgentCombo.Items.Add( rAgent ); 
 				//MessageBox.Show(String.Format("Adding {0}", rAgent));
 			}
 			// Needs to be changed

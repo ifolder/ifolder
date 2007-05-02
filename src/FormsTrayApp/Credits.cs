@@ -140,7 +140,17 @@ namespace Novell.FormsTrayApp
 														  resources.GetString("listBox1.Items45"),
 														  resources.GetString("listBox1.Items46"),
 														  resources.GetString("listBox1.Items47"),
-														  resources.GetString("listBox1.Items48")});
+														  resources.GetString("listBox1.Items48"),
+														  resources.GetString("listBox1.Items49"),
+														  resources.GetString("listBox1.Items50"),
+														  resources.GetString("listBox1.Items51"),
+														  resources.GetString("listBox1.Items52"),
+														  resources.GetString("listBox1.Items53"),
+														  resources.GetString("listBox1.Items54"),
+														  resources.GetString("listBox1.Items55"),
+														  resources.GetString("listBox1.Items56"),
+														  resources.GetString("listBox1.Items57"),
+														  resources.GetString("listBox1.Items58")});
 			this.listBox1.Location = ((System.Drawing.Point)(resources.GetObject("listBox1.Location")));
 			this.listBox1.Name = "listBox1";
 			this.listBox1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("listBox1.RightToLeft")));

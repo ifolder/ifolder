@@ -104,6 +104,13 @@ namespace Novell.Wizard
 		private SimiasWebService simiasWebService;
 		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(Novell.FormsTrayApp.FormsTrayApp));
 
+		public SimiasWebService simws
+		{
+			get
+			{
+				return this.simiasWebService;
+			}
+		}
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -417,6 +424,24 @@ namespace Novell.Wizard
 				else
 				{
 					string publicKey = "";
+					string ragent = null;
+					if( this.passphrasePage.RecoveryAgent != null && this.passphrasePage.RecoveryAgent != "None")
+					{
+						byte[] CertificateObj = this.simws.GetRACertificateOnClient(this.identityPage.domain.ID, this.passphrasePage.RecoveryAgent);
+						System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(CertificateObj);
+						MessageBox.Show("this is the public key\n"+cert.GetPublicKeyString());
+						MyMessageBox mmb = new MyMessageBox( "Verify Certificate", "Verify Certificate", cert.GetPublicKeyString()+cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2 );
+						DialogResult messageDialogResult = mmb.ShowDialog();
+						mmb.Dispose();
+						mmb.Close();
+						if( messageDialogResult != DialogResult.OK )
+							return;
+						else
+						{
+							ragent = this.passphrasePage.RecoveryAgent;
+							publicKey = cert.GetPublicKeyString();
+						}
+					}
 					Status passPhraseStatus = null;
 					try
 					{
@@ -437,7 +462,14 @@ namespace Novell.Wizard
 						this.simiasWebService.StorePassPhrase( this.identityPage.domain.ID, this.passphrasePage.Passphrase, CredentialType.Basic, this.passphrasePage.RememberPassphrase);
 						string passphr = this.simiasWebService.GetPassPhrase(this.identityPage.domain.ID);
 						//MessageBox.Show("Passphrase is set & stored", passphr, MessageBoxButtons.OK);
-						bool status = this.simiasWebService.IsPassPhraseSet(this.identityPage.domain.ID);
+						bool status = false;
+						try
+						{
+							status = this.simiasWebService.IsPassPhraseSet(this.identityPage.domain.ID);
+						}
+						catch(Exception ex)
+						{
+						}
 						if( status == true)
 						{
 							MessageBox.Show("Successfully set the passphrase");
@@ -504,24 +536,33 @@ namespace Novell.Wizard
 				else // encryption selected.. 
 				{
 					//MessageBox.Show("Encryption selected");
-					string passphrasecheck = this.simiasWebService.GetPassPhrase(this.identityPage.domain.ID);
-					if( passphrasecheck!= null && passphrasecheck != "")
+					try
 					{
-						Status status = this.simiasWebService.ValidatePassPhrase(this.identityPage.domain.ID, passphrasecheck);
-						if( status != null && status.statusCode == StatusCodes.Success)
+						string passphrasecheck = this.simiasWebService.GetPassPhrase(this.identityPage.domain.ID);
+						if( passphrasecheck!= null && passphrasecheck != "")
 						{
-							// Passphrase validated.
-							//MessageBox.Show("Passphrase validated");
-							nextIndex = 5;
+							Status status = this.simiasWebService.ValidatePassPhrase(this.identityPage.domain.ID, passphrasecheck);
+							if( status != null && status.statusCode == StatusCodes.Success)
+							{
+								// Passphrase validated.
+								//MessageBox.Show("Passphrase validated");
+								nextIndex = 5;
+							}
 						}
-					}
-					else if(this.simiasWebService.IsPassPhraseSet(this.identityPage.domain.ID) == true)
-					{
-						//MessageBox.Show("passphrase set");
-						nextIndex = 4;
-					}
-					//else
+						else if(this.simiasWebService.IsPassPhraseSet(this.identityPage.domain.ID) == true)
+						{
+							//MessageBox.Show("passphrase set");
+							nextIndex = 4;
+						}
+						//else
 						//MessageBox.Show("Passphrase not set");
+					}
+					catch(Exception ex)
+					{
+						MessageBox.Show("Unable to get passphrase. \nLogin to the domain and try again.");
+						// Stay in the same page
+						nextIndex = currentIndex;
+					}
 				}
 				/*
 				else if( passphrase present at login)

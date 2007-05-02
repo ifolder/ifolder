@@ -146,7 +146,7 @@
     <value>13</value>
   </data>
   <data name="listBox1.Items">
-    <value>			iFolder 3 Team</value>
+    <value>			iFolder 3.6 Team</value>
   </data>
   <data name="listBox1.Items1">
     <value />
@@ -155,141 +155,171 @@
     <value>Developers</value>
   </data>
   <data name="listBox1.Items3">
-    <value>	Boyd Timothy</value>
+    <value>	Arul Selvan</value>
   </data>
   <data name="listBox1.Items4">
-    <value>	Brady Anderson</value>
+    <value>	Johnny Jacob</value>
   </data>
   <data name="listBox1.Items5">
-    <value>	Bruce Getter</value>
+    <value>	Kalidas Balakrishnan</value>
   </data>
   <data name="listBox1.Items6">
-    <value>	Calvin Gaisford</value>
+    <value>	Kumar Anil</value>
   </data>
   <data name="listBox1.Items7">
-    <value>	Mike Lasky</value>
+    <value>	Ramesh Sunder</value>
   </data>
   <data name="listBox1.Items8">
-    <value>	Paul Thomas</value>
+    <value />
   </data>
   <data name="listBox1.Items9">
-    <value>	Rob Lyon</value>
+    <value>Quality Assurance</value>
   </data>
   <data name="listBox1.Items10">
-    <value>	Russ Young</value>
+    <value>	Nitin Purswani</value>
   </data>
   <data name="listBox1.Items11">
-    <value>	Scott Reeves</value>
+    <value>	Prabhudas Varadarajan</value>
   </data>
   <data name="listBox1.Items12">
-    <value>	Tim Mellor</value>
+    <value>	Sujatha Narasimhan</value>
   </data>
   <data name="listBox1.Items13">
     <value />
   </data>
   <data name="listBox1.Items14">
-    <value>Quality Assurance</value>
-  </data>
-  <data name="listBox1.Items15">
-    <value>	Eric Ward</value>
-  </data>
-  <data name="listBox1.Items16">
-    <value>	James Bell</value>
-  </data>
-  <data name="listBox1.Items17">
-    <value>	Pete Mimmack</value>
-  </data>
-  <data name="listBox1.Items18">
-    <value>	Sharon Smith</value>
-  </data>
-  <data name="listBox1.Items19">
-    <value>	Victor Billings</value>
-  </data>
-  <data name="listBox1.Items20">
-    <value />
-  </data>
-  <data name="listBox1.Items21">
     <value>Product Management</value>
   </data>
-  <data name="listBox1.Items22">
+  <data name="listBox1.Items15">
     <value>	Jared Allen</value>
   </data>
-  <data name="listBox1.Items23">
+  <data name="listBox1.Items16">
     <value>	Trent Badger</value>
   </data>
-  <data name="listBox1.Items24">
+  <data name="listBox1.Items17">
+    <value>	Uma Shankar</value>
+  </data>
+  <data name="listBox1.Items18">
     <value />
   </data>
-  <data name="listBox1.Items25">
+  <data name="listBox1.Items19">
     <value>Documentation</value>
   </data>
-  <data name="listBox1.Items26">
+  <data name="listBox1.Items20">
     <value>	Catherine Craft</value>
   </data>
-  <data name="listBox1.Items27">
+  <data name="listBox1.Items21">
+    <value>	Radhika Nair</value>
+  </data>
+  <data name="listBox1.Items22">
     <value />
   </data>
-  <data name="listBox1.Items28">
+  <data name="listBox1.Items23">
     <value />
   </data>
-  <data name="listBox1.Items29">
+  <data name="listBox1.Items24">
     <value>			Special Thanks</value>
   </data>
-  <data name="listBox1.Items30">
+  <data name="listBox1.Items25">
     <value />
   </data>
-  <data name="listBox1.Items31">
+  <data name="listBox1.Items26">
     <value>Retired Contributors</value>
   </data>
-  <data name="listBox1.Items32">
+  <data name="listBox1.Items27">
     <value>	Dale Olds</value>
   </data>
-  <data name="listBox1.Items33">
+  <data name="listBox1.Items28">
     <value>	Joe Stark</value>
   </data>
-  <data name="listBox1.Items34">
+  <data name="listBox1.Items29">
     <value>	Doug Eddy</value>
   </data>
-  <data name="listBox1.Items35">
+  <data name="listBox1.Items30">
     <value>	Bruce Bergeson</value>
   </data>
+  <data name="listBox1.Items31">
+    <value>	Boyd Timothy</value>
+  </data>
+  <data name="listBox1.Items32">
+    <value>	Brady Anderson</value>
+  </data>
+  <data name="listBox1.Items33">
+    <value>	Bruce Getter</value>
+  </data>
+  <data name="listBox1.Items34">
+    <value>	Calvin Gaisford</value>
+  </data>
+  <data name="listBox1.Items35">
+    <value>	Mike Lasky</value>
+  </data>
   <data name="listBox1.Items36">
-    <value />
+    <value>	Paul Thomas</value>
   </data>
   <data name="listBox1.Items37">
-    <value>Organizations</value>
+    <value>	Rob Lyon</value>
   </data>
   <data name="listBox1.Items38">
-    <value>	Mono Team</value>
+    <value>	Russ Young</value>
   </data>
   <data name="listBox1.Items39">
-    <value>	Novell, Inc.</value>
+    <value>	Scott Reeves</value>
   </data>
   <data name="listBox1.Items40">
-    <value />
+    <value>	Tim Mellor</value>
   </data>
   <data name="listBox1.Items41">
-    <value>Code Contributors</value>
+    <value>	Eric Ward</value>
   </data>
   <data name="listBox1.Items42">
-    <value>	Dave Camp</value>
+    <value>	James Bell</value>
   </data>
   <data name="listBox1.Items43">
-    <value>	Nat Friedman</value>
+    <value>	Pete Mimmack</value>
   </data>
   <data name="listBox1.Items44">
-    <value>	Edd Dumbill</value>
+    <value>	Sharon Smith</value>
   </data>
   <data name="listBox1.Items45">
-    <value>	Niel M. Bornstein</value>
+    <value>	Victor Billings</value>
   </data>
   <data name="listBox1.Items46">
     <value />
   </data>
   <data name="listBox1.Items47">
-    <value>Other Contributors</value>
+    <value>Organizations</value>
   </data>
   <data name="listBox1.Items48">
+    <value>	Mono Team</value>
+  </data>
+  <data name="listBox1.Items49">
+    <value>	Novell, Inc.</value>
+  </data>
+  <data name="listBox1.Items50">
+    <value />
+  </data>
+  <data name="listBox1.Items51">
+    <value>Code Contributors</value>
+  </data>
+  <data name="listBox1.Items52">
+    <value>	Dave Camp</value>
+  </data>
+  <data name="listBox1.Items53">
+    <value>	Nat Friedman</value>
+  </data>
+  <data name="listBox1.Items54">
+    <value>	Edd Dumbill</value>
+  </data>
+  <data name="listBox1.Items55">
+    <value>	Niel M. Bornstein</value>
+  </data>
+  <data name="listBox1.Items56">
+    <value />
+  </data>
+  <data name="listBox1.Items57">
+    <value>Other Contributors</value>
+  </data>
+  <data name="listBox1.Items58">
     <value>	Jakub Steiner</value>
   </data>
   <data name="listBox1.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -409,14 +439,14 @@
   <data name="$this.TrayLargeIcon" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
-  <data name="$this.Name">
-    <value>Credits</value>
-  </data>
   <data name="$this.Localizable" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
   <data name="$this.GridSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>8, 8</value>
+  </data>
+  <data name="$this.Name">
+    <value>Credits</value>
   </data>
   <data name="$this.DrawGrid" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -464,7 +494,7 @@
     <value />
   </data>
   <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>NoControl</value>
+    <value>Inherit</value>
   </data>
   <data name="$this.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>

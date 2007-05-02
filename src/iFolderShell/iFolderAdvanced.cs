@@ -1829,6 +1829,7 @@ namespace Novell.iFolderCom
 			this.MaximumSize = ((System.Drawing.Size)(resources.GetObject("$this.MaximumSize")));
 			this.MinimizeBox = false;
 			this.MinimumSize = ((System.Drawing.Size)(resources.GetObject("$this.MinimumSize")));
+			//this.Text = ((System.Drawing.Size)(resources.GetObject("$this.Text")));
 			this.Name = "iFolderAdvanced";
 			this.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("$this.RightToLeft")));
 			this.helpProvider1.SetShowHelp(this, ((bool)(resources.GetObject("$this.ShowHelp"))));
@@ -2030,13 +2031,13 @@ namespace Novell.iFolderCom
 
 		private void nodeEvent(iFolderWeb ifolder, iFolderUser ifolderUser, string eventData)
 		{
-			MessageBox.Show("Node event");
+			//MessageBox.Show("Node event");
 			try
 			{
 				if (ifolder != null)
 				{
 					currentiFolder = ifolder;
-					showConflictMessage(ifolder.HasConflicts);
+				//	showConflictMessage(ifolder.HasConflicts);
 				}
 				else if (ifolderUser != null)
 				{
@@ -2368,7 +2369,7 @@ namespace Novell.iFolderCom
 			// TODO: Should this be set to the effective interval.
 			syncInterval.Value = (decimal)currentiFolder.SyncInterval;
 			autoSync.Checked = currentiFolder.SyncInterval != Timeout.Infinite;
-			MessageBox.Show("In refresh data");
+			//MessageBox.Show("In refresh data");
 
 			// TODO: Need to set syncUnits value using similar method as trayapp.
 			switch (currentiFolder.Role)
@@ -3010,7 +3011,7 @@ namespace Novell.iFolderCom
 				shareWith.SmallImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_card.ico")));
 				shareWith.SmallImageList.Images.Add(new Icon(Path.Combine(basePath, "inviteduser.ico")));
 
-				this.Icon = new Icon(Path.Combine(basePath, @"..\ifolder_app.ico"));
+				this.Icon = new Icon(Path.Combine(basePath, @"ifolder_16.ico"));
 				this.pictureBox1.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder48.png"));
 				this.iFolderName.Text = this.currentiFolder.Name;
 				this.iFolderLocation.Text = ((string)this.currentiFolder.UnManagedPath).Substring(0,30);

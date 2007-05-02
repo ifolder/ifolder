@@ -23,6 +23,7 @@ namespace Novell.FormsTrayApp
 		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(FormsTrayApp));
 		private iFolderWebService ifWebService; 
 		private SimiasWebService simiasWebService;
+		private System.Windows.Forms.ColumnHeader encryptionStatus;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -71,6 +72,7 @@ namespace Novell.FormsTrayApp
 			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
 			this.btnCancel = new System.Windows.Forms.Button();
 			this.btnMigrate = new System.Windows.Forms.Button();
+			this.encryptionStatus = new System.Windows.Forms.ColumnHeader();
 			this.SuspendLayout();
 			// 
 			// listView1
@@ -82,7 +84,8 @@ namespace Novell.FormsTrayApp
 			this.listView1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("listView1.BackgroundImage")));
 			this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
 																						this.columnHeader1,
-																						this.columnHeader2});
+																						this.columnHeader2,
+																						this.encryptionStatus});
 			this.listView1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("listView1.Dock")));
 			this.listView1.Enabled = ((bool)(resources.GetObject("listView1.Enabled")));
 			this.listView1.Font = ((System.Drawing.Font)(resources.GetObject("listView1.Font")));
@@ -160,6 +163,12 @@ namespace Novell.FormsTrayApp
 			this.btnMigrate.Visible = ((bool)(resources.GetObject("btnMigrate.Visible")));
 			this.btnMigrate.Click += new System.EventHandler(this.btnMigrate_Click);
 			// 
+			// encryptionStatus
+			// 
+			this.encryptionStatus.Text = resources.GetString("encryptionStatus.Text");
+			this.encryptionStatus.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("encryptionStatus.TextAlign")));
+			this.encryptionStatus.Width = ((int)(resources.GetObject("encryptionStatus.Width")));
+			// 
 			// MigrationWindow
 			// 
 			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
@@ -192,6 +201,7 @@ namespace Novell.FormsTrayApp
 
 		private void MigrationWindow_Load(object sender, System.EventArgs e)
 		{
+			this.Icon = new Icon(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder_16.ico"));
 			AddMigrationDetails();
 		}
 		public void AddMigrationDetails()
@@ -218,7 +228,15 @@ namespace Novell.FormsTrayApp
 					return;
 				if( UserKey.GetValue("FolderPath") != null)
 				{
-					lvi = new ListViewItem( new string[]{AllKeys[i], (string)UserKey.GetValue("FolderPath")});
+					RegistryKey encrKey = UserKey.OpenSubKey("Home");
+					string encrStatus = Resource.GetString("NotEncrypted");
+					if( encrKey!= null)
+					{
+						Object obj = encrKey.GetValue("EncryptionStatus", null);
+						if( obj != null)
+							encrStatus = Resource.GetString("Encrypted");
+					}
+					lvi = new ListViewItem( new string[]{AllKeys[i], (string)UserKey.GetValue("FolderPath"), encrStatus});
 					listView1.Items.Add(lvi);
 					lvi.Selected = true;
 				}
