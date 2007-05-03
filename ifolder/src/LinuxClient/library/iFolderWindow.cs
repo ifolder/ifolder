@@ -1582,7 +1582,16 @@ namespace Novell.iFolder
 										{
 											// encryption is selected
 											bool passPhraseStatus = false;
-					                                                bool passphraseStatus = simws.IsPassPhraseSet(selectedDomain);
+											bool passphraseStatus = false;
+											try
+											{
+					                                                	passphraseStatus = simws.IsPassPhraseSet(selectedDomain);
+											}
+											catch(Exception ex)
+											{
+												DisplayLoginMesg();
+												continue;
+											}
 											if(passphraseStatus == true)
 											{
 												// if passphrase not given during login
@@ -2752,7 +2761,16 @@ namespace Novell.iFolder
 							{
 								// encryption is selected
 								bool passPhraseStatus = false;
-		                        bool passphraseStatus = simws.IsPassPhraseSet(selectedDomain);
+								bool passphraseStatus = false;
+								try
+								{
+		                        				passphraseStatus = simws.IsPassPhraseSet(selectedDomain);
+								}
+								catch(Exception ex)
+								{
+									DisplayLoginMesg();	
+									continue;
+								}
 								if(passphraseStatus == true)
 								{
 									// if passphrase not given during login
@@ -3005,6 +3023,16 @@ namespace Novell.iFolder
 			iFolderHolder holder = ifdata.GetiFolder(ifolderID);
 			if (holder != null)
 				ResolveConflicts(holder);
+		}
+
+		private void DisplayLoginMesg()
+		{
+			iFolderMsgDialog dlg = new iFolderMsgDialog(null, iFolderMsgDialog.DialogType.Error, iFolderMsgDialog.ButtonSet.Ok,
+									Util.GS("iFolder Error"), Util.GS("Error creating iFolder"), 
+									Util.GS("You should be logged-in to the domain for creating encrypted iFolders."));
+			dlg.Run();
+			dlg.Hide();
+			dlg.Destroy();
 		}
 		
 		private void OniFolderSyncEvent(object o, CollectionSyncEventArgs args)
@@ -3386,8 +3414,17 @@ namespace Novell.iFolder
 
 		private bool IsPassPhraseAvailable(string selectedDomain)
 		{
-			bool passPhraseStatus = false;;
-			bool passphraseStatus = simws.IsPassPhraseSet(selectedDomain);
+			bool passPhraseStatus = false;
+			bool passphraseStatus = false;
+			try
+			{
+				passphraseStatus = simws.IsPassPhraseSet(selectedDomain);
+			}
+			catch(Exception ex)
+			{
+				DisplayLoginMesg();	
+				return false;
+			}
 			if(passphraseStatus == true)
 			{
 				// if passphrase not given during login

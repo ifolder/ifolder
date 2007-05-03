@@ -779,7 +779,7 @@
 		<value>0</value>
 	</data>
 	<data name="encryption.Text">
-		<value>Encryption Enabled</value>
+		<value>Encrypted</value>
 	</data>
 	<data name="encryption.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
 		<value>MiddleLeft</value>
@@ -863,7 +863,7 @@
 		<value>0</value>
 	</data>
 	<data name="ssl.Text">
-		<value>Sharable</value>
+		<value>Shared</value>
 	</data>
 	<data name="ssl.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
 		<value>MiddleLeft</value>
@@ -1079,6 +1079,6 @@
 		<value>Passphrase should be supplied for encrypting the iFolder</value>
 	</data>
 	<data name="LoginToDomain">
-		<value>Unable to talk to the server. First login to server</value>
+		<value>You have to be logged-in to the domain for creating an encrypted iFolder.</value>
 	</data>
 </root>

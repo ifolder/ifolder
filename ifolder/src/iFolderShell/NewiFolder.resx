@@ -587,6 +587,6 @@
 	<value>Ok</value>
   </data>
   <data name="MigrationTitle.Text">
-	<value>"Migration Prompt"</value>
+	<value>Migration Alert</value>
   </data>
 </root>

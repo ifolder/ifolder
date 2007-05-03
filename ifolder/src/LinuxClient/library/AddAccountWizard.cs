@@ -774,7 +774,7 @@ namespace Novell.iFolder
 							tSelect.GetSelected(out tModel, out iter);
 							recoveryAgentName = (string) tModel.GetValue(iter, 0);
 						}
-						if( recoveryAgentName != null && recoveryAgentName != "None")
+						if( recoveryAgentName != null && recoveryAgentName != Util.GS("None"))
 						{
 							// Show Certificate..
 							byte [] RACertificateObj = domainController.GetRACertificate(ConnectedDomain.ID, recoveryAgentName);

@@ -698,7 +698,8 @@ namespace Novell.iFolderCom
 							catch(Exception ex)
 							{
 								string caption = resourceManager.GetString("errorTitle");
-								MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("LoginToDomain")/*"Unable to talk to the server. First login to server"*/ , caption, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+								//MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("LoginToDomain")/*"Unable to talk to the server. First login to server"*/ , caption, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+								MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("iFolderCreateError"), caption, resourceManager.GetString("LoginToDomain"), MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 								mmb.ShowDialog();
 								successful = false;
 								return;
