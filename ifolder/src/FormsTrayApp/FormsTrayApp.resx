@@ -881,7 +881,12 @@
 		<value>Migrate</value>
 	</data>
 	<data name="MigrationSuccessMsg">
-		<value>Congratulations, your data is migrated successfully.</value>
+		<value>Congratulations, your data is migrated successfully.
+		
+		It is recommended to disconnect from 2.x to 
+		avoid multiple synchronizations.
+		
+		Click "Finish" to close the wizard.</value>
 	</data>
 	<data name="CannotBeiFolder">
 		<value>The folder can not be converted into ifolder</value>
