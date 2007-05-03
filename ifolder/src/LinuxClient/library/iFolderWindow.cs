@@ -3237,7 +3237,7 @@ namespace Novell.iFolder
 						iFolderMsgDialog.ButtonSet.None,
 						Util.GS("PassPhrase mismatch"),
 						Util.GS("The PassPhrase and retyped Passphrase are not same"),
-						Util.GS("Enter the passphrase again"));
+						Util.GS("Please enter the passphrase again"));
 						dialog.Run();
 						dialog.Hide();
 						dialog.Destroy();
@@ -3368,7 +3368,7 @@ namespace Novell.iFolder
 							iFolderMsgDialog.ButtonSet.None,
 							Util.GS("Invalid Passphrase"),
 							Util.GS("The Passphrase entered is invalid"),
-							Util.GS("Please re-enter the passphrase"));
+							Util.GS("Please enter the passphrase again"));
 							dialog.Run();
 							dialog.Hide();
 							dialog.Destroy();

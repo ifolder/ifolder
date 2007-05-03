@@ -814,7 +814,7 @@ namespace Novell.iFolder
 																null,
 																iFolderMsgDialog.DialogType.Error,
 																iFolderMsgDialog.ButtonSet.None,
-																Util.GS("Errot setting the Passphrase"),
+																Util.GS("Error setting the Passphrase"),
 																Util.GS("Unable to change the Passphrase"),
 																Util.GS("Please try again"));
 																dialog.Run();
@@ -838,7 +838,7 @@ namespace Novell.iFolder
 						iFolderMsgDialog.DialogType.Error,
 						iFolderMsgDialog.ButtonSet.None,
 						Util.GS("PassPhrase Invlid"),
-						Util.GS("The PassPhrase enter is not valid"),
+						Util.GS("The PassPhrase entered is not valid"),
 						Util.GS("Please enter the passphrase again"));
 						dialog.Run();
 						dialog.Hide();
