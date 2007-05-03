@@ -910,7 +910,7 @@ namespace Novell.iFolder
 
 				SummaryPage.Text = 
 					string.Format(
-						Util.GS("Congratulations!  Your folder has been\nsuccessfully migrated to \nthe latest version of iFolder.\n\nClick \"Finish\" to close this window."));
+						Util.GS("Congratulations!  Your folder has been\nsuccessfully migrated to \nthe latest version of iFolder.\n\nIt is recommended to \ndisconnect from 2.x server to \navoid multiple synchronizations.\n\nClick \"Finish\" to close this window."));
 
 			// Hack to modify the "Apply" button to be a "Finish" button
 //			AccountDruid.Forall(EnableFinishButtonCallback);
