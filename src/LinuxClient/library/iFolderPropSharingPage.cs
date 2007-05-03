@@ -141,7 +141,7 @@ namespace Novell.iFolder
 			CellRendererText accesscr = new CellRendererText();
 			accesscr.Xpad = 5;
 			TreeViewColumn accessColumn = 
-			UserTreeView.AppendColumn(Util.GS("Access"),
+			UserTreeView.AppendColumn(Util.GS("Acc_ess"),
 					accesscr,
 					new TreeCellDataFunc(AccessCellTextDataFunc));
 			accessColumn.Resizable = true;
