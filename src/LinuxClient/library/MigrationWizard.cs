@@ -350,7 +350,7 @@ namespace Novell.iFolder
 			table.Attach(encryptionCheckButton, 1,3, 3,4,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			//Row 5
-			sslCheckButton = new RadioButton(encryptionCheckButton, Util.GS("Sharable"));
+			sslCheckButton = new RadioButton(encryptionCheckButton, Util.GS("Shared"));
 			table.Attach(sslCheckButton, 1,3, 4,5, AttachOptions.Fill | AttachOptions.Expand, 0,0,0); 
 			return UserInformationPage;
 		}
@@ -484,7 +484,7 @@ namespace Novell.iFolder
 						tSelect.GetSelected(out tModel, out iter);
 						recoveryAgentName = (string) tModel.GetValue(iter, 0);
 					}
-					if( recoveryAgentName != null && recoveryAgentName != "None")
+					if( recoveryAgentName != null && recoveryAgentName != Util.GS("None"))
 					{
 						// Show Certificate..
 						byte [] RACertificateObj = domainController.GetRACertificate((domains[domainList.Active]).ID, recoveryAgentName);

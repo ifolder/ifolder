@@ -881,7 +881,7 @@
 		<value>Migrate</value>
 	</data>
 	<data name="MigrationSuccessMsg">
-		<value>Congratulations, your account is migrated successfully.</value>
+		<value>Congratulations, your data is migrated successfully.</value>
 	</data>
 	<data name="CannotBeiFolder">
 		<value>The folder can not be converted into ifolder</value>
@@ -902,7 +902,7 @@
 		<value>Encryption enabled</value>
 	</data>
 	<data name="SharableText">
-		<value>Sharable</value>
+		<value>Shared</value>
 	</data>
 	<data name="LocationText">
 		<value>Location:</value>
