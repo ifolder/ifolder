@@ -128,3 +128,13 @@ msgstr ""
 #: src/nautilus-ifolder.c:1840
 msgid "Convert the selected folder to an iFolder"
 msgstr ""
+
+msgid ""
+"Encrypt the iFolder"
+msgstr ""
+"Encrypted"
+
+msgid ""
+"Sharable"
+msgstr ""
+"Shared"

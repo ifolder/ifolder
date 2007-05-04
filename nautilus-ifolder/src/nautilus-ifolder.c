@@ -52,11 +52,11 @@
 
 
 /* Turn this on to see debug messages */
-#if DEBUG
+//#if DEBUG
 #define DEBUG_IFOLDER(args) (g_print("nautilus-ifolder: "), g_printf args)
-#else
-#define DEBUG_IFOLDER
-#endif
+//#else
+//#define DEBUG_IFOLDER
+//#endif
 
 #ifdef _
 #undef _
@@ -1546,8 +1546,8 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 	gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(domain_menu), renderer, TRUE);
 	gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(domain_menu), renderer,
 								   "text", 0, NULL);
-	encrypt = gtk_radio_button_new_with_label_from_widget(NULL, "Encrypt the iFolder");
-	sharable = gtk_radio_button_new_with_label_from_widget( encrypt, "Sharable");
+	encrypt = gtk_radio_button_new_with_label_from_widget(NULL, _("Encrypt the iFolder"));
+	sharable = gtk_radio_button_new_with_label_from_widget( encrypt, _("Sharable"));
 	g_object_set_data(G_OBJECT(item), "encryption_button", encrypt);
 	g_object_set_data(G_OBJECT(item), "sharable_button", sharable);
 
@@ -1591,8 +1591,8 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 
 	/* encryption options */
 	hbox = gtk_hbox_new( FALSE, 10); 
-//	encrypt = gtk_radio_button_new_with_label_from_widget(NULL, "Encrypt the iFolder");
-//	sharable = gtk_radio_button_new_with_label_from_widget( encrypt, "Sharable");
+//	encrypt = gtk_radio_button_new_with_label_from_widget(NULL, _("Encrypt the iFolder"));
+//	sharable = gtk_radio_button_new_with_label_from_widget( encrypt, _("Sharable"));
 	gtk_box_pack_start(GTK_BOX(hbox), encrypt, FALSE, FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(hbox), sharable, FALSE, FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);

@@ -45,6 +45,8 @@ namespace Novell.iFolder.Nautilus
 			// Don't do anything if nothing was specified to do
 			if (args.Length == 0)
 				return 0;
+			for(int i=0;i<args.Length;i++)
+				Console.WriteLine(args[i]);
 
 			// Make sure this process is a gnome program
 			Gnome.Program program = 
@@ -294,11 +296,11 @@ namespace Novell.iFolder.Nautilus
 			{
 				// Check the recovery agent
 				string publicKey = "";
-				Status passPhraseStatus = simws.SetPassPhrase( DomainID, Util.PadString(epd.PassPhrase, 16)/*epd.PassPhrase*/, epd.RecoveryAgent, publicKey);
+				Status passPhraseStatus = simws.SetPassPhrase( DomainID, epd.PassPhrase, epd.RecoveryAgent, publicKey);
 				if(passPhraseStatus.statusCode == StatusCodes.Success)
 				{
 					status = true;
-					simws.StorePassPhrase( DomainID, Util.PadString(epd.PassPhrase, 16)/*epd.PassPhrase*/, CredentialType.Basic, epd.ShouldSavePassPhrase);
+					simws.StorePassPhrase( DomainID, epd.PassPhrase, CredentialType.Basic, epd.ShouldSavePassPhrase);
 				}
 				else 
 				{
@@ -351,7 +353,7 @@ namespace Novell.iFolder.Nautilus
 				vpd.Hide();
 				// Verify PassPhrase..  If correct store passphrase and set a local property..
 				if( result == (int)ResponseType.Ok)
-					passPhraseStatus =  simws.ValidatePassPhrase(DomainID, Util.PadString(vpd.PassPhrase, 16)/*vpd.PassPhrase*/);
+					passPhraseStatus =  simws.ValidatePassPhrase(DomainID, vpd.PassPhrase);
 				if( passPhraseStatus != null)
 				{
 					if( passPhraseStatus.statusCode == StatusCodes.PassPhraseInvalid)  // check for invalid passphrase
@@ -391,7 +393,7 @@ namespace Novell.iFolder.Nautilus
 			{
 				try
 				{
-					simws.StorePassPhrase( DomainID, Util.PadString(vpd.PassPhrase, 16)/*vpd.PassPhrase*/, CredentialType.Basic, vpd.ShouldSavePassPhrase);
+					simws.StorePassPhrase( DomainID, vpd.PassPhrase, CredentialType.Basic, vpd.ShouldSavePassPhrase);
 					status = true;
 				}
 				catch(Exception ex) 
