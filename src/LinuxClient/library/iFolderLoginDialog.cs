@@ -154,7 +154,7 @@ namespace Novell.iFolder
 	
 			if(FullDialog)
 			{
-				Label nameLabel = new Label(Util.GS("User Name:"));
+				Label nameLabel = new Label(Util.GS("Username:"));
 				nameLabel.Xalign = 1; 
 				loginTable.Attach(nameLabel, 0,1,0,1,
 						AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -210,7 +210,7 @@ namespace Novell.iFolder
 
 
 
-				Label nameLabel = new Label(Util.GS("User Name:"));
+				Label nameLabel = new Label(Util.GS("Username:"));
 				nameLabel.Xalign = 1;
 				loginTable.Attach(nameLabel, 0,1,1,2,
 						AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -277,14 +277,14 @@ namespace Novell.iFolder
 		private void OnFieldsChanged(object obj, EventArgs args)
 		{
 			bool enableOK = false;
-			// Don't check for password... Fix for bug #235354
+
 			if( FullDialog &&
 				(nameEntry.Text.Length > 0) &&
-			/*	(passEntry.Text.Length > 0 ) &&*/
+				(passEntry.Text.Length > 0 ) &&
 				(serverEntry.Text.Length > 0) )
 				enableOK = true;
-			else if( (!FullDialog)// &&
-			/*	(passEntry.Text.Length > 0 )*/ )
+			else if( (!FullDialog) &&
+				(passEntry.Text.Length > 0 ) )
 				enableOK = true;
 
 			this.SetResponseSensitive(ResponseType.Ok, enableOK);

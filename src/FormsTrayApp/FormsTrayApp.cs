@@ -75,7 +75,7 @@ namespace Novell.FormsTrayApp
 	/// </summary>
 	public class FormsTrayApp : Form
 	{
-        #region Class Members
+		#region Class Members
 		// Delegates used to marshal back to the control's creation thread.
 		private delegate void SyncCollectionDelegate(CollectionSyncEventArgs syncEventArgs);
 		private SyncCollectionDelegate syncCollectionDelegate;
@@ -96,7 +96,7 @@ namespace Novell.FormsTrayApp
 		private Icon trayIcon;
 		private Icon startupIcon;
 		private Icon shutdownIcon;
-        private const int numberOfSyncIcons = 10;
+		private const int numberOfSyncIcons = 10;
 		private Icon[] syncIcons = new Icon[numberOfSyncIcons];
 		private int index = 0;
 		private bool syncToServer = false;
@@ -144,6 +144,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.MenuItem menuItem1;
 		private System.Windows.Forms.MenuItem menuAbout;
 		private System.Windows.Forms.MenuItem menuAccounts;
+		private System.Windows.Forms.Form startupWind;
 		private Manager simiasManager;
 		private string iFolderLogPath;
 		static private FormsTrayApp instance;
@@ -330,7 +331,7 @@ namespace Novell.FormsTrayApp
 					// download client
 					if(instance.ifWebService.RunClientUpdate(domainID, null))
 					{
-					//	MessageBox.Show( "The install process has started", "Client upgrade ", MessageBoxButtons.OK);
+						//	MessageBox.Show( "The install process has started", "Client upgrade ", MessageBoxButtons.OK);
 						instance.ShutdownTrayApp(null);
 						//		FormsTrayApp.ShutdownForms();
 						// Shut down the tray app.
@@ -393,8 +394,8 @@ namespace Novell.FormsTrayApp
 				DialogResult result = mmb.ShowDialog();
 				if ( result == DialogResult.Yes )
 				{
-// Commented by ramesh
-//					updateStarted = instance.ifWebService.RunClientUpdate(domainID);
+					// Commented by ramesh
+					//					updateStarted = instance.ifWebService.RunClientUpdate(domainID);
 					if ( updateStarted == false )
 					{
 						mmb = new MyMessageBox(resourceManager.GetString("clientUpgradeFailure"), resourceManager.GetString("upgradeErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
@@ -403,6 +404,11 @@ namespace Novell.FormsTrayApp
 				}
 			}
 			return updateStarted;
+		}
+
+		public static GlobalProperties globalProp()
+		{
+				return instance.globalProperties;
 		}
 
 		#region Event Handlers
@@ -585,6 +591,7 @@ namespace Novell.FormsTrayApp
 				{
 					// See Bug 77741 - for some reason the web services won't get started properly
 					// when the application is run with the working directory set to a different drive.
+					ShowStartupScreen();
 					Environment.CurrentDirectory = Application.StartupPath;
 					simiasManager.Start();
 
@@ -689,6 +696,12 @@ namespace Novell.FormsTrayApp
 
 					shellNotifyIcon.Text = resourceManager.GetString("iFolderServices");
 					shellNotifyIcon.Icon = trayIcon;
+					if( this.startupWind != null)
+					{
+						this.startupWind.Dispose();
+						this.startupWind.Close();
+						this.startupWind = null;
+					}
 
 					// Display the overlay icon on all iFolders.
 					if(accountPrompt == false)
@@ -735,6 +748,17 @@ namespace Novell.FormsTrayApp
 					ShutdownTrayApp(ex);
 				}
 			}
+		}
+
+		private void ShowStartupScreen()
+		{
+			string basePath = Path.Combine(Application.StartupPath, "res");
+			startupWind = new Form();
+			startupWind.FormBorderStyle = FormBorderStyle.None;
+			startupWind.BackgroundImage = Bitmap.FromFile(Path.Combine(basePath, "ifolder_startup_nl.gif"));
+			startupWind.Size = startupWind.BackgroundImage.Size;
+			startupWind.StartPosition = FormStartPosition.CenterScreen;
+			startupWind.Show();
 		}
 
 		private void errorHandler(ApplicationException e, object context)

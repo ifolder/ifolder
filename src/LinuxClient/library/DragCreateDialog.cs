@@ -214,11 +214,11 @@ namespace Novell.iFolder
 								AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
 		//	Encryption = new CheckButton(Util.GS("Encrypt the iFolder"));
-			Encryption = new RadioButton(Util.GS("Encrypted"));
+			Encryption = new RadioButton(Util.GS("Encryption Enabled"));
 			optionsTable.Attach(Encryption, 2,3,1,2, AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
 		//	SSL = new CheckButton(Util.GS("Secure Data Transfer"));
-			SSL = new RadioButton(Encryption, Util.GS("Shared"));
+			SSL = new RadioButton(Encryption, Util.GS("Sharable"));
 			optionsTable.Attach(SSL, 3,4,1,2, AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
 			l = new Label(Util.GS("Security"));

@@ -279,14 +279,11 @@ namespace Novell.iFolder.Controller
 		/// </summary>
 	        public string[] GetRAList (string domainID)
 		{
-		/*
 		    DomainInformation di = GetDomain (domainID);
 		    SimiasWebService sws = new SimiasWebService();
 		    sws.Url = di.HostUrl + "/Simias.asmx";
+
 		    string[] ragents = sws.GetRAList();
-		*/
-			Console.WriteLine("Calling Getralist on client");
-			string[] ragents = simws.GetRAListOnClient(domainID);
 		    //TODO :
 			if(ragents == null)
 			{
@@ -330,7 +327,7 @@ namespace Novell.iFolder.Controller
 														null,
 														iFolderMsgDialog.DialogType.Error,
 														iFolderMsgDialog.ButtonSet.None,
-														Util.GS("Error setting the Passphrase"),
+														Util.GS("Error setting the PassPhrase"),
 														Util.GS("Unable to Reset the passphrase"),
 														Util.GS("Please try again"));
 				dialog.Run();
@@ -379,15 +376,12 @@ namespace Novell.iFolder.Controller
 		/// </summary>
 	        public byte[] GetRACertificate (string domainID, string recoveryAgent)
 		{
-		/*
 		    DomainInformation di = GetDomain (domainID);
 		    SimiasWebService sws = new SimiasWebService();
 		    sws.Url = di.HostUrl + "/Simias.asmx";
-		*/
 			Console.WriteLine("In domain Controller: Recovery Agent is : {0}", recoveryAgent);
-			return simws.GetRACertificateOnClient(domainID, recoveryAgent);
 		    
-		//    return sws.GetRACertificate(recoveryAgent);		    
+		    return sws.GetRACertificate(recoveryAgent);		    
 		}
 
 		/// <summary>

@@ -1149,72 +1149,18 @@ namespace Novell.iFolder
 			Console.WriteLine(" export clicked");
 			ExportKeysDialog export = new ExportKeysDialog();
 			export.TransientFor = this;
-			int res = export.Run();
-			string fileName = export.FileName;
-			string domainID = export.Domain;
+			export.Run();
 			export.Hide();
 			export.Destroy();
-			if( res == (int)ResponseType.Ok)
-			{
-				try
-				{
-					this.simws.ExportiFoldersCryptoKeys(domainID, fileName);
-				}
-				catch(Exception ex)
-				{
-					Console.WriteLine("Exception in export keys");
-				}
-				/*
-				System.IO.FileInfo finfo = new System.IO.FileInfo( fileName);
-				if( finfo.Exists == false)
-				{
-					try
-					{
-						FileStream fstream = finfo.Create();
-						if( fstream != null)
-						{
-							fstream.Close();
-							this.simws.ExportiFoldersCryptoKeys(domainID, fileName);
-						}
-						else
-						{
-							// Show error message...
-							Console.WriteLine("Unable to create the file");
-							return;
-						}
-					}
-					catch(Exception ex)
-					{
-						Console.WriteLine("Unable to create the file");
-						return;
-					}
-				}
-				*/
-			}
 		}
 
 		private void ImportClicked( object o, EventArgs args)
 		{
 			ImportKeysDialog export = new ImportKeysDialog();
 			export.TransientFor = this;
-			int result = export.Run();
-			string fileName = export.FileName;
-			string domainID = export.Domain;
-			string OneTimePassphrase = export.OneTimePP;
+			export.Run();
 			export.Hide();
 			export.Destroy();
-			if( result == (int)ResponseType.Ok)
-			{
-				Console.WriteLine("Clicked OK");
-				try
-				{
-					this.simws.ImportiFoldersCryptoKeys( domainID, OneTimePassphrase, fileName);
-				}
-				catch(Exception ex)
-				{
-					Console.WriteLine("Error importing the keys");
-				}
-			}
 		}
 		
 		private void OnToggleViewServeriFoldersMenuItem(object o, EventArgs args)
@@ -1582,16 +1528,7 @@ namespace Novell.iFolder
 										{
 											// encryption is selected
 											bool passPhraseStatus = false;
-											bool passphraseStatus = false;
-											try
-											{
-					                                                	passphraseStatus = simws.IsPassPhraseSet(selectedDomain);
-											}
-											catch(Exception ex)
-											{
-												DisplayLoginMesg();
-												continue;
-											}
+					                                                bool passphraseStatus = simws.IsPassPhraseSet(selectedDomain);
 											if(passphraseStatus == true)
 											{
 												// if passphrase not given during login
@@ -2761,16 +2698,7 @@ namespace Novell.iFolder
 							{
 								// encryption is selected
 								bool passPhraseStatus = false;
-								bool passphraseStatus = false;
-								try
-								{
-		                        				passphraseStatus = simws.IsPassPhraseSet(selectedDomain);
-								}
-								catch(Exception ex)
-								{
-									DisplayLoginMesg();	
-									continue;
-								}
+		                        bool passphraseStatus = simws.IsPassPhraseSet(selectedDomain);
 								if(passphraseStatus == true)
 								{
 									// if passphrase not given during login
@@ -3024,16 +2952,6 @@ namespace Novell.iFolder
 			if (holder != null)
 				ResolveConflicts(holder);
 		}
-
-		private void DisplayLoginMesg()
-		{
-			iFolderMsgDialog dlg = new iFolderMsgDialog(null, iFolderMsgDialog.DialogType.Error, iFolderMsgDialog.ButtonSet.Ok,
-									Util.GS("iFolder Error"), Util.GS("Error creating iFolder"), 
-									Util.GS("You should be logged-in to the domain for creating encrypted iFolders."));
-			dlg.Run();
-			dlg.Hide();
-			dlg.Destroy();
-		}
 		
 		private void OniFolderSyncEvent(object o, CollectionSyncEventArgs args)
 		{
@@ -3237,7 +3155,7 @@ namespace Novell.iFolder
 						iFolderMsgDialog.ButtonSet.None,
 						Util.GS("PassPhrase mismatch"),
 						Util.GS("The PassPhrase and retyped Passphrase are not same"),
-						Util.GS("Please enter the passphrase again"));
+						Util.GS("Enter the passphrase again"));
 						dialog.Run();
 						dialog.Hide();
 						dialog.Destroy();
@@ -3368,7 +3286,7 @@ namespace Novell.iFolder
 							iFolderMsgDialog.ButtonSet.None,
 							Util.GS("Invalid Passphrase"),
 							Util.GS("The Passphrase entered is invalid"),
-							Util.GS("Please enter the passphrase again"));
+							Util.GS("Please re-enter the passphrase"));
 							dialog.Run();
 							dialog.Hide();
 							dialog.Destroy();
@@ -3414,17 +3332,8 @@ namespace Novell.iFolder
 
 		private bool IsPassPhraseAvailable(string selectedDomain)
 		{
-			bool passPhraseStatus = false;
-			bool passphraseStatus = false;
-			try
-			{
-				passphraseStatus = simws.IsPassPhraseSet(selectedDomain);
-			}
-			catch(Exception ex)
-			{
-				DisplayLoginMesg();	
-				return false;
-			}
+			bool passPhraseStatus = false;;
+			bool passphraseStatus = simws.IsPassPhraseSet(selectedDomain);
 			if(passphraseStatus == true)
 			{
 				// if passphrase not given during login

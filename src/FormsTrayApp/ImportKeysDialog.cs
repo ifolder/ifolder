@@ -30,18 +30,19 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.ComboBox DomainComboBox;
 		private DomainItem selectedDomain;
 		private System.Windows.Forms.PictureBox pictureBox1;
+		private SimiasWebService simiasWebService;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 
-		public ImportKeysDialog()
+		public ImportKeysDialog(SimiasWebService simws)
 		{
 			//
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-
+			this.simiasWebService = simws;
 			//
 			// TODO: Add any constructor code after InitializeComponent call
 			//
@@ -397,6 +398,7 @@ namespace Novell.FormsTrayApp
 			this.btnImport.Text = resources.GetString("btnImport.Text");
 			this.btnImport.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("btnImport.TextAlign")));
 			this.btnImport.Visible = ((bool)(resources.GetObject("btnImport.Visible")));
+			this.btnImport.Click += new EventHandler(btnImport_Click);
 			// 
 			// label1
 			// 
@@ -582,7 +584,7 @@ namespace Novell.FormsTrayApp
 						this.btnImport.Enabled = true;
 						return;
 					}
-			this.btnImport.Enabled = true;
+			this.btnImport.Enabled = false;
 		}
 
 		private void LocationEntry_TextChanged(object sender, EventArgs e)
@@ -611,6 +613,19 @@ namespace Novell.FormsTrayApp
 			fileDlg.ReadOnlyChecked = true;
 			fileDlg.ShowDialog();
 			this.LocationEntry.Text = fileDlg.FileName;
+		}
+
+		private void btnImport_Click(object sender, EventArgs e)
+		{
+			DomainItem domainItem = (DomainItem)this.DomainComboBox.SelectedItem;
+			try
+			{
+				this.simiasWebService.ImportiFoldersCryptoKeys(domainItem.ID, this.oneTimePassphrase.Text, this.LocationEntry.Text);
+			}
+			catch(Exception ex)
+			{
+				MessageBox.Show(string.Format("Error importing the keys. {0}", ex.Message));
+			}
 		}
 	}
 }

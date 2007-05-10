@@ -260,7 +260,7 @@ namespace Novell.iFolder
 			else if( status == "BLWF")
 				status = Util.GS("Encrypted");
 			else
-				status = Util.GS("Not encrypted");
+				status = "Not encrypted";
 			((CellRendererText) cell).Text = status;
 		}
                 private void NameCellTextDataFunc (Gtk.TreeViewColumn tree_column,
