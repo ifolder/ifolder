@@ -188,6 +188,7 @@ namespace Novell.FormsTrayApp
 		private string DownloadPath;
 
 		private System.Windows.Forms.Timer searchTimer;
+		private System.Windows.Forms.Timer refreshTimer;
 		#endregion
 
 		/// <summary>
@@ -246,6 +247,7 @@ namespace Novell.FormsTrayApp
 				largeImageList.Images.Add( Bitmap.FromFile( Path.Combine( Application.StartupPath, @"res\ifolder-waiting48.png" ) ) );
 				largeImageList.Images.Add( Bitmap.FromFile( Path.Combine( Application.StartupPath, @"res\ifolder-warning48.png" ) ) );
 				largeImageList.Images.Add( Bitmap.FromFile( Path.Combine( Application.StartupPath, @"res\ifolder-error48.png" ) ) );
+				largeImageList.Images.Add( Bitmap.FromFile( Path.Combine( Application.StartupPath, @"res\encrypt_ilock_48.gif" ) ) );
 
 				iFolderView.LargeImageList = largeImageList;
 
@@ -351,6 +353,7 @@ namespace Novell.FormsTrayApp
 			this.iFolderView = new TileListView();
 			this.localiFoldersHeading = new System.Windows.Forms.RichTextBox();
 			this.searchTimer = new System.Windows.Forms.Timer(this.components);
+			this.refreshTimer = new System.Windows.Forms.Timer(this.components);
 			this.panel1.SuspendLayout();
 			this.iFolderActions.SuspendLayout();
 			this.panel2.SuspendLayout();
@@ -1442,6 +1445,11 @@ namespace Novell.FormsTrayApp
 			// 
 			this.searchTimer.Interval = 1000;
 			this.searchTimer.Tick += new EventHandler(searchTimer_Tick);
+			//
+			// RefreshTimer
+			//
+			this.refreshTimer.Interval = 300000;  // 5 mins default
+			this.refreshTimer.Tick += new EventHandler(refreshTimer_Tick);
 			// 
 			// GlobalProperties
 			// 
@@ -2369,11 +2377,11 @@ namespace Novell.FormsTrayApp
 						switch (ifolderObject.iFolderWeb.State)
 						{
 							case "Local":
-								// change 3 to image index for encryption ifolder icon
+								// change 3 to image index for encryption ifolder icon and shared icon
 								if( ifolderObject.iFolderWeb.encryptionAlgorithm == null || ifolderObject.iFolderWeb.encryptionAlgorithm == "")
 									imageIndex = 0;
 								else
-									imageIndex = 3;
+									imageIndex = 7;
 								status = string.Format( resourceManager.GetString("statusSynced"), ifolderObject.iFolderWeb.LastSyncTime );
 								break;
 							case "Available":
@@ -2433,9 +2441,12 @@ namespace Novell.FormsTrayApp
 			return status;
 		}
 
-		private void refreshAll(/*Domain domain*/)
+		public void refreshAll(/*Domain domain*/)
 		{
+			this.refreshTimer.Stop();
 			Cursor.Current = Cursors.WaitCursor;
+			if( inRefresh == true)
+				return;
 			inRefresh = true;
 			refreshThread = new Thread(new ThreadStart(updateiFolders));
 			refreshThread.Start();
@@ -2571,6 +2582,7 @@ namespace Novell.FormsTrayApp
 			inRefresh = false;
 		//	ifolderArray = null;
 			Cursor.Current = Cursors.Default;
+			this.refreshTimer.Start();
 		}
 
 		private void invokeiFolderProperties(TileListViewItem tlvi, int activeTab)
@@ -2955,7 +2967,10 @@ namespace Novell.FormsTrayApp
 			iFolderActions.Visible = false;
 
 //			Call the refresh thread
+			this.refreshTimer.Interval = this.ifWebService.GetDefaultSyncInterval()* 1000;
+		//	MessageBox.Show(string.Format("Setting default sync interval to {0}. Calling refreash.", this.refreshTimer.Interval));
 			refreshAll();
+			this.refreshTimer.Start();
 
 			showiFolders_Click( this, null );
 		}
@@ -3034,7 +3049,8 @@ namespace Novell.FormsTrayApp
 			// Pressing the F5 key will cause a refresh to occur.
 			if (e.KeyCode == Keys.F5)
 			{
-				refreshAll(/*(Domain)servers.SelectedItem*/);
+				if( this.inRefresh == false )
+					refreshAll(/*(Domain)servers.SelectedItem*/);
 			}
 			if (e.KeyCode == Keys.F4)
 			{
@@ -3182,7 +3198,8 @@ namespace Novell.FormsTrayApp
 
 		private void menuRefresh_Click(object sender, System.EventArgs e)
 		{
-			refreshAll(/*(Domain)servers.SelectedItem*/);
+			if( this.inRefresh == false )
+				refreshAll(/*(Domain)servers.SelectedItem*/);
 		}
 
 		private void menuViewAccounts_Click(object sender, System.EventArgs e)
@@ -3232,13 +3249,12 @@ namespace Novell.FormsTrayApp
 				iFolderWeb ifolder = ((iFolderObject)selectedItem.Tag).iFolderWeb;
 				iFolderObject ifobj = new iFolderObject(((iFolderObject)selectedItem.Tag).iFolderWeb, iFolderState.Disconnected);
 				iFolderWeb ifolderWeb = ((iFolderObject)selectedItem.Tag).iFolderWeb;
-				ifobj.iFolderWeb.IsSubscription = false;
 				//TileListViewItem tlvi = new TileListViewItem(ifobj);
 				
-
 				// Accept the iFolder.
 				if ( AcceptiFolder( ifolder ) )
 				{
+					ifobj.iFolderWeb.IsSubscription = false;
 					lock (ht)
 					{
 						//MessageBox.Show("Ramesh: Removing from the tilelistview");
@@ -3459,13 +3475,13 @@ namespace Novell.FormsTrayApp
 		private void menuExportKeys_Select(object sender, EventArgs e)
 		{
 			// Show export keys dialog
-			ExportKeysDialog exportKeys = new ExportKeysDialog();
+			ExportKeysDialog exportKeys = new ExportKeysDialog(this.simiasWebService);
 			exportKeys.ShowDialog();
 		}
 
 		private void menuImportKeys_Select(object sender, EventArgs e)
 		{
-			ImportKeysDialog importKeys = new ImportKeysDialog();
+			ImportKeysDialog importKeys = new ImportKeysDialog(this.simiasWebService);
 			importKeys.ShowDialog();
 		}
 		
@@ -3493,6 +3509,13 @@ namespace Novell.FormsTrayApp
 			searchTimer.Stop();
 			//searchText = this.filter.Text;
 			refreshiFolders(this.filter.Text);
+		}
+
+		private void refreshTimer_Tick(object sender, EventArgs e)
+		{
+		//	this.refreshTimer.Stop();
+			this.refreshAll();
+		//	this.refreshTimer.Start();
 		}
 	}
 }

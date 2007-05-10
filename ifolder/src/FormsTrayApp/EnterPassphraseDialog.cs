@@ -445,7 +445,7 @@ namespace Novell.FormsTrayApp
 					DialogResult messageDialogResult = mmb.ShowDialog();
 					mmb.Dispose();
 					mmb.Close();
-					if( messageDialogResult != DialogResult.OK )
+					if( messageDialogResult != DialogResult.Yes )
 						return;
 					else
 					{
@@ -488,7 +488,7 @@ namespace Novell.FormsTrayApp
 				{
 					// Unable to set the passphrase
 					status = false;
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(Resource.GetString("IsPassphraseSetException")/*"Unable to set the passphrase"*/, resourceManager.GetString("$this.Text")/*"Error setting the passphrase"*/, Resource.GetString("TryAgain")/*"Please try again"*/, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(Resource.GetString("IsPassphraseSetException")/*"Unable to set the passphrase"*/, resourceManager.GetString("$this.Text")/*"Error setting the passphrase"*/, ""/*Resource.GetString("TryAgain")*//*"Please try again"*/, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 					mmb.Dispose();
 				}

@@ -333,7 +333,7 @@ namespace Novell.FormsTrayApp
 			{
 				if( passPhraseStatus.statusCode == StatusCodes.PassPhraseInvalid)  // check for invalid passphrase
 				{
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(Resource.GetString("InvalidPPText")/*"Invalid the passphrase"*/, Resource.GetString("VerifyPP")/*"Passphrase Invalid"*/, Resource.GetString("TryAgain")/*"Please try again"*/, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(Resource.GetString("InvalidPPText")/*"Invalid the passphrase"*/, Resource.GetString("VerifyPP")/*"Passphrase Invalid"*/, ""/*Resource.GetString("TryAgain")*//*"Please try again"*/, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 					mmb.Dispose();	
 				}

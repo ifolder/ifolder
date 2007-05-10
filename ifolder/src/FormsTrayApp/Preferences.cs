@@ -107,6 +107,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.ColumnHeader columnHeader5;
 		private System.Windows.Forms.Button btnMigrate;
 		private Manager simiasManager;
+		public Novell.FormsTrayApp.GlobalProperties parent;
 		#endregion
 
 		/// <summary>
@@ -2151,6 +2152,11 @@ namespace Novell.FormsTrayApp
 					{
 						e.NewValue = CheckState.Checked;
 					}
+					else
+					{
+						// Call refresh
+						(FormsTrayApp.globalProp()).refreshAll();
+					}
 				}
 				else
 				{
@@ -2158,6 +2164,8 @@ namespace Novell.FormsTrayApp
 					{
 						e.NewValue = CheckState.Unchecked;
 					}
+					else
+						(FormsTrayApp.globalProp()).refreshAll();
 				}
 			}
 		}

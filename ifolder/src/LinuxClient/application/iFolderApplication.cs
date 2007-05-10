@@ -1295,7 +1295,7 @@ namespace Novell.iFolder
 							if( dirs.Length > 2)
 							{
 								iFolderMsgDialog dlg = new iFolderMsgDialog( null, iFolderMsgDialog.DialogType.Info, iFolderMsgDialog.ButtonSet.OkCancel, 
-												Util.GS("Migration Alert"), Util.GS("There are 2.x iFolders on this machine.") , Util.GS("Do you want to migrate them?") );
+												"Migration", "There are 2.x iFolders on this machine." , "Do you want to migrate them?" );
 								CheckButton dontShowAgain = new CheckButton(Util.GS("Don't show this message again"));
 								dlg.ExtraWidget = dontShowAgain;
 								int res = dlg.Run();

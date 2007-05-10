@@ -28,6 +28,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Button BrowseButton;
 		private DomainItem selectedDomain;
 		private System.Windows.Forms.PictureBox pictureBox1;
+		private SimiasWebService simiasWebService;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -41,13 +42,13 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
-		public ExportKeysDialog()
+		public ExportKeysDialog(SimiasWebService simws)
 		{
 			//
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-
+			this.simiasWebService = simws;
 			//
 			// TODO: Add any constructor code after InitializeComponent call
 			//
@@ -372,6 +373,7 @@ namespace Novell.FormsTrayApp
 			this.btnExport.Text = resources.GetString("btnExport.Text");
 			this.btnExport.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("btnExport.TextAlign")));
 			this.btnExport.Visible = ((bool)(resources.GetObject("btnExport.Visible")));
+			this.btnExport.Click += new EventHandler(btnExport_Click);
 			// 
 			// BrowseButton
 			// 
@@ -543,6 +545,23 @@ namespace Novell.FormsTrayApp
 		{
 			// Handle the change in domain.....
 			// Change the recovery agent name and e-mail id..
+		}
+
+		private void btnExport_Click(object sender, EventArgs e)
+		{
+			DomainItem domainItem = (DomainItem)this.domainComboBox.SelectedItem;
+			try
+			{
+				this.simiasWebService.ExportiFoldersCryptoKeys(domainItem.ID, this.filePath.Text);
+			}
+			catch(Exception ex)
+			{
+				MessageBox.Show(string.Format("Unable to export keys: {0}", ex.Message));
+				return;
+			}
+			MessageBox.Show("Successfully exported the keys");
+			this.Dispose();
+			this.Close();
 		}
 	}
 }

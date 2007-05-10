@@ -80,7 +80,7 @@ namespace Novell.iFolder
 					TreeIter iter;
 					tSelect.GetSelected(out tModel, out iter);
 					string id = (string) tModel.GetValue(iter, 0);
-					if(id == Util.GS("None"))
+					if(id == "None")
 						return null;
 					return id;
 				}
@@ -198,7 +198,7 @@ namespace Novell.iFolder
 				Console.WriteLine("raagent:{0}", raagent);
                             RATreeStore.AppendValues (raagent);
 			}
-			RATreeStore.AppendValues(Util.GS("None"));
+			RATreeStore.AppendValues("None");
 			// RA Name Column
 			TreeViewColumn raNameColumn = new TreeViewColumn();
 			raNameColumn.Title = Util.GS("Recovery Agents");
