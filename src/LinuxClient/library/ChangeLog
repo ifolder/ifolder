@@ -1,3 +1,7 @@
+2007-05-11  Johnny Jacob  <jjohnny@novell.com>
+	
+	* iFolderData.cs : Remove ifolders when the domain is inactive.
+	
 2007-04-25  Johnny Jacob  <jjohnny@novell.com>
 	
 	* iFolderUserSelector.cs : Fillterout Host Nodes in the user

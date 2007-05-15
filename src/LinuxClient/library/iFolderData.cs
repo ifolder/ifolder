@@ -168,6 +168,9 @@ namespace Novell.iFolder
 					new DomainAddedEventHandler(OnDomainAddedEvent);
 				domainController.DomainDeleted +=
 					new DomainDeletedEventHandler(OnDomainDeletedEvent);
+
+				domainController.DomainLoggedOut +=
+					new DomainLoggedOutEventHandler(OnDomainLoggedOutEvent);
 			}
 
 			// Register with the SimiasEventBroker to get Simias Events
@@ -333,7 +336,7 @@ namespace Novell.iFolder
 						DomainInformation domain =
 							domainController.GetDomain(holder.iFolder.DomainID);
 						
-						if (domain == null)
+						if (domain == null || !domain.Authenticated)
 						{
 							// Queue removal of the holder
 							itersToRemove.Add(holder.iFolder.ID);
@@ -1056,6 +1059,11 @@ namespace Novell.iFolder
 			Refresh();
 		}
 		
+		private void OnDomainLoggedOutEvent(object o, DomainEventArgs args)
+		{
+			Refresh();
+		}
+
 		private void OniFolderSyncEvent(object o, CollectionSyncEventArgs args)
 		{
 			if (args == null || args.ID == null || args.Name == null)
