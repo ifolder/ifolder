@@ -457,13 +457,33 @@ namespace Novell.FormsTrayApp
 		{
 			if (!wizardRunning)
 			{
-				if (globalProperties.Visible)
+				DomainInformation[] domains;
+				domains = this.simiasWebService.GetDomains(false);
+				if (domains.Length.Equals(0))
 				{
-					globalProperties.Activate();
+					if (globalProperties.Visible)
+						globalProperties.Hide();
+					AccountWizard accountWizard = new AccountWizard( ifWebService, simiasWebService, simiasManager, true, this.preferences );
+					accountWizard.EnterpriseConnect += new Novell.Wizard.AccountWizard.EnterpriseConnectDelegate(preferences_EnterpriseConnect);
+					wizardRunning = true;
+					DialogResult result = accountWizard.ShowDialog();
+					wizardRunning = false;
+					if ( result == DialogResult.OK )
+					{
+						// Display the iFolders dialog.
+						preferences_DisplayiFolderDialog( this, new EventArgs() );
+					}
 				}
 				else
 				{
-					globalProperties.Show();
+					if (globalProperties.Visible)
+					{
+						globalProperties.Activate();
+					}
+					else
+					{
+						globalProperties.Show();
+					}
 				}
 			}
 		}
