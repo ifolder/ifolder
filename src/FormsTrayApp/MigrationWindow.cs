@@ -233,7 +233,7 @@ namespace Novell.FormsTrayApp
 					if( encrKey!= null)
 					{
 						Object obj = encrKey.GetValue("EncryptionStatus", null);
-						if( obj != null)
+						if( (int)obj != 0)
 							encrStatus = Resource.GetString("Encrypted");
 					}
 					lvi = new ListViewItem( new string[]{AllKeys[i], (string)UserKey.GetValue("FolderPath"), encrStatus});
@@ -264,7 +264,10 @@ namespace Novell.FormsTrayApp
 		private void btnMigrate_Click(object sender, System.EventArgs e)
 		{
 			ListViewItem lvi = this.listView1.SelectedItems[0];
-			MigrationWizard migrationWizard = new MigrationWizard( lvi.SubItems[0].Text, lvi.SubItems[1].Text, ifWebService, this.simiasWebService);
+			bool encr = false;
+			if( lvi.SubItems[2].Text == Resource.GetString("Encrypted"))
+				encr = true;
+			MigrationWizard migrationWizard = new MigrationWizard( lvi.SubItems[0].Text, lvi.SubItems[1].Text, encr, ifWebService, this.simiasWebService);
 			//	accountWizard.EnterpriseConnect += new Novell.Wizard.AccountWizard.EnterpriseConnectDelegate(accountWizard_EnterpriseConnect);
 			if ( migrationWizard.ShowDialog() == DialogResult.OK )
 			{
