@@ -100,6 +100,7 @@ namespace Novell.Wizard
 		private MigrationBaseWizardPage[] pages;
 		internal const int maxPages = 7;
 		private int currentIndex = 0;
+		private bool encryptedOriginal;
 		private iFolderWebService ifws;
 		private SimiasWebService simiasWebService;
 		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(Novell.FormsTrayApp.FormsTrayApp));
@@ -120,11 +121,12 @@ namespace Novell.Wizard
 		/// <summary>
 		/// Constructs an MigrationWizard object.
 		/// </summary>
-		public MigrationWizard( string Uname, string path, iFolderWebService ifws, SimiasWebService simiasWebService )
+		public MigrationWizard( string Uname, string path, bool encryptedOriginal, iFolderWebService ifws, SimiasWebService simiasWebService )
 		{
 			//
 			// Required for Windows Form Designer support
 			//
+			this.encryptedOriginal = encryptedOriginal;
 			this.UserName = Uname;
 			this.location = path;
 			this.ifws = ifws;
@@ -532,7 +534,20 @@ namespace Novell.Wizard
 			else if( nextIndex == 3)
 			{
 				if( this.identityPage.Encrypion == false )
-					nextIndex = 5;
+				{
+					// if 2.x is encrypted make a prompt
+					if( this.encryptedOriginal == true )
+					{
+						MyMessageBox mmb1 = new MyMessageBox("The original 2.x folder is encrypted and you choose to convert it to an un-encrypted one.\nDo you want to continue?", "Migration Alert", "", MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Warning, MyMessageBoxDefaultButton.Button1);
+						DialogResult res = mmb1.ShowDialog();
+						if( res == DialogResult.No )
+							nextIndex = currentIndex;
+						else
+							nextIndex = 5;
+					}
+					else
+						nextIndex = 5;
+				}
 				else // encryption selected.. 
 				{
 					//MessageBox.Show("Encryption selected");
@@ -772,11 +787,17 @@ namespace Novell.Wizard
 			{
 				destination = this.MigrationServerPage.HomeLocation;
 				DirectoryInfo dir = new DirectoryInfo(destination);
-				if((dir.Exists) && (ifws.CanBeiFolder(destination)== false))	// Display a message box
-				{	
-					MessageBox.Show(Resource.GetString("CannotBeiFolder")/*"The folder can not be converted into ifolder"*/,Resource.GetString("MigrationTitle"),MessageBoxButtons.OK);
-					return false; // can't be an iFolder
+				if( dir.Exists == false)
+				{
+					MessageBox.Show("Destination does not exist");
+					return false;
 				}
+				
+			//	if((dir.Exists) && (ifws.CanBeiFolder(destination)== false))	// Display a message box
+			//	{	
+			//		MessageBox.Show(string.Format(Resource.GetString("CannotBeiFolder")+dir.Name)/*"The folder can not be converted into ifolder"*/,Resource.GetString("MigrationTitle"),MessageBoxButtons.OK);
+			//		return false; // can't be an iFolder
+			//	}
 				
 				// Copy the 2.x folder to destination
 				// Create the parent folder
@@ -807,6 +828,11 @@ namespace Novell.Wizard
 						}
 					}
 				}
+				if(ifws.CanBeiFolder(destination)== false)	// Display a message box
+				{	
+					MessageBox.Show(Resource.GetString("CannotBeiFolder")/*"The folder can not be converted into ifolder"*/,Resource.GetString("MigrationTitle")/*"Error creating iFolder"*/,MessageBoxButtons.OK);
+					return false; // can't be an iFolder
+				}
 
 				// Copy the contents
 				if(!CopyDirectory(new DirectoryInfo(location), new DirectoryInfo(destination)))
@@ -814,13 +840,9 @@ namespace Novell.Wizard
 					MessageBox.Show(Resource.GetString("CannotCopy")/*"Unable to copy the folder"*/, Resource.GetString("MigrationTitle")/*"Error copying the folder"*/, MessageBoxButtons.OK);
 					return false;	// unable to copy..
 				}
-				if(ifws.CanBeiFolder(destination)== false)	// Display a message box
-				{	
-					MessageBox.Show(Resource.GetString("CannotBeiFolder")/*"The folder can not be converted into ifolder"*/,Resource.GetString("MigrationTitle")/*"Error creating iFolder"*/,MessageBoxButtons.OK);
-					return false; // can't be an iFolder
-				}
 				else
 				{
+					// Not needed
 				//	MessageBox.Show("Can be ifolder","test",MessageBoxButtons.OK);
 				}
 			}
@@ -851,7 +873,7 @@ namespace Novell.Wizard
 				}
 				
 			}
-			catch
+			catch(Exception ex)
 			{
 						MessageBox.Show(Resource.GetString("CannotBeiFolder")/*"The folder can not be converted into ifolder"*/,Resource.GetString("MigrationTitle")/*"Error creating iFolder"*/,MessageBoxButtons.OK);
 						return false;
