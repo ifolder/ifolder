@@ -789,7 +789,7 @@ namespace Novell.iFolder
 								dlg = null;
 								if( res == (int)ResponseType.Ok)
 								{
-									publicKey = System.Text.Encoding.ASCII.GetString(Cert.GetPublicKey());
+									publicKey = Convert.ToBase64String(Cert.GetPublicKey());
 									Console.WriteLine(" The public key is: {0}", publicKey);
 								}
 								else

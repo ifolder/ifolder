@@ -431,8 +431,8 @@ namespace Novell.Wizard
 					{
 						byte[] CertificateObj = this.simws.GetRACertificateOnClient(this.identityPage.domain.ID, this.passphrasePage.RecoveryAgent);
 						System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(CertificateObj);
-						MessageBox.Show("this is the public key\n"+cert.GetPublicKeyString());
-						MyMessageBox mmb = new MyMessageBox( "Verify Certificate", "Verify Certificate", cert.GetPublicKeyString()+cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2 );
+						MessageBox.Show("this is the public key\n"+Convert.ToBase64String(cert.GetPublicKey()));
+						MyMessageBox mmb = new MyMessageBox( "Verify Certificate", "Verify Certificate", Convert.ToBase64String(cert.GetPublicKey())+cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2 );
 						DialogResult messageDialogResult = mmb.ShowDialog();
 						mmb.Dispose();
 						mmb.Close();
@@ -441,7 +441,7 @@ namespace Novell.Wizard
 						else
 						{
 							ragent = this.passphrasePage.RecoveryAgent;
-							publicKey = cert.GetPublicKeyString();
+							publicKey = Convert.ToBase64String(cert.GetPublicKey());
 						}
 					}
 					Status passPhraseStatus = null;
