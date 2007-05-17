@@ -1391,7 +1391,7 @@ namespace Novell.iFolderCom
 					else
 					{
 						ragent = this.RecoveryAgentCombo.SelectedText;
-						publicKey = cert.GetPublicKeyString();
+						publicKey = Convert.ToBase64String(cert.GetPublicKey());
 					}
 					//return;
 				}
