@@ -580,11 +580,11 @@ namespace Novell.iFolder
 		{
 			string currentUserName = UserNameEntry.Text;
 			string currentPassword = PasswordEntry.Text;
-			if (currentUserName != null && currentPassword != null)
+			if (currentUserName != null /*&& currentPassword != null*/)
 			{
 				currentUserName = currentUserName.Trim();
-				currentPassword = currentPassword.Trim();
-				if (currentUserName.Length > 0 && currentPassword.Length > 0)
+			//	currentPassword = currentPassword.Trim();
+				if (currentUserName.Length > 0 /*&& currentPassword.Length > 0*/)
 					AccountDruid.SetButtonsSensitive(true, true, true, true);
 				else
 					AccountDruid.SetButtonsSensitive(true, false, true, true);
@@ -774,7 +774,7 @@ namespace Novell.iFolder
 							tSelect.GetSelected(out tModel, out iter);
 							recoveryAgentName = (string) tModel.GetValue(iter, 0);
 						}
-						if( recoveryAgentName != null && recoveryAgentName != "None")
+						if( recoveryAgentName != null && recoveryAgentName != Util.GS("None"))
 						{
 							// Show Certificate..
 							byte [] RACertificateObj = domainController.GetRACertificate(ConnectedDomain.ID, recoveryAgentName);
@@ -814,7 +814,7 @@ namespace Novell.iFolder
 																null,
 																iFolderMsgDialog.DialogType.Error,
 																iFolderMsgDialog.ButtonSet.None,
-																Util.GS("Errot setting the Passphrase"),
+																Util.GS("Error setting the Passphrase"),
 																Util.GS("Unable to change the Passphrase"),
 																Util.GS("Please try again"));
 																dialog.Run();
@@ -838,7 +838,7 @@ namespace Novell.iFolder
 						iFolderMsgDialog.DialogType.Error,
 						iFolderMsgDialog.ButtonSet.None,
 						Util.GS("PassPhrase Invlid"),
-						Util.GS("The PassPhrase enter is not valid"),
+						Util.GS("The PassPhrase entered is not valid"),
 						Util.GS("Please enter the passphrase again"));
 						dialog.Run();
 						dialog.Hide();

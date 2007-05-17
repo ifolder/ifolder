@@ -266,7 +266,7 @@ namespace Novell.iFolder
 
 				if (EncryptedOKPixbuf == null)
 				{
-					EncryptedOKPixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder_encrypted_fold_48.png"));
+					EncryptedOKPixbuf = new Gdk.Pixbuf(Util.ImagesPath("encrypt-ilock-48.png"));
 					EncryptedOKPixbufSpotlight =
 						Util.EelCreateSpotlightPixbuf(EncryptedOKPixbuf);
 				}

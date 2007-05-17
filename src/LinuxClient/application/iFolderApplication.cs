@@ -98,6 +98,8 @@ namespace Novell.iFolder
 		private bool				forceShutdown;
 		
 		private iFolderMsgDialog	ClientUpgradeDialog;
+
+		private Gtk.Window startupWind;
 		
 		///
 		/// D-Bus variables
@@ -1171,10 +1173,22 @@ namespace Novell.iFolder
 		// ThreadNotify Method that will react to a fired event
 		private void OniFolderAppStateChanged()
 		{
+
+			if(CurrentState != iFolderAppState.Starting)
+			{
+				if( this.startupWind != null)
+				{
+					startupWind.Destroy();
+					startupWind = null;
+				}
+			}
+
+			// If the state is starting show the splash screen...
 			switch(CurrentState)
 			{
 				case iFolderAppState.Starting:
 					gAppIcon.Pixbuf = StartingPixbuf;
+					ShowStartupScreen();
 					break;
 
 				case iFolderAppState.Running:
@@ -1257,6 +1271,18 @@ namespace Novell.iFolder
 					break;
 			}
 		}
+
+		private void ShowStartupScreen()
+		{
+			startupWind = new Gtk.Window(Gtk.WindowType.Popup);
+			Gtk.Image image = new Gtk.Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-startup-nl.png")));
+			startupWind.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png"));
+			startupWind.WindowPosition = Gtk.WindowPosition.Center;
+			VBox vbox = new VBox (false, 0);
+			startupWind.Add (vbox);
+			vbox.PackStart(image, false, false, 0);
+			startupWind.ShowAll();
+		}
 		
 		static private void GuaranteeShutdown()
 		{
@@ -1284,6 +1310,7 @@ namespace Novell.iFolder
 				else
 				{
 					Util.LoadiFolderWindows();
+					Console.WriteLine("Showing the migration prompt");
 					if( Util.ShowMigrationPrompt() )
 					{
 						//  Prompt for migration...
@@ -1295,7 +1322,7 @@ namespace Novell.iFolder
 							if( dirs.Length > 2)
 							{
 								iFolderMsgDialog dlg = new iFolderMsgDialog( null, iFolderMsgDialog.DialogType.Info, iFolderMsgDialog.ButtonSet.OkCancel, 
-												"Migration", "There are 2.x iFolders on this machine." , "Do you want to migrate them?" );
+												Util.GS("Migration Alert"), Util.GS("There are 2.x iFolders on this machine.") , Util.GS("Do you want to migrate them?") );
 								CheckButton dontShowAgain = new CheckButton(Util.GS("Don't show this message again"));
 								dlg.ExtraWidget = dontShowAgain;
 								int res = dlg.Run();

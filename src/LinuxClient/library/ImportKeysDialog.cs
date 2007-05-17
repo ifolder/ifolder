@@ -42,12 +42,43 @@ namespace Novell.iFolder
 		private Label recoveryAgentCombo;
 		private string[] RAList;
 		private string DomainID;
+		private DomainInformation[] domains;
 		private CheckButton savePassPhrase;
 	
 		private Image				 iFolderBanner;
 		private Image				 iFolderScaledBanner;
 		private Gdk.Pixbuf			 ScaledPixbuf;
 
+		public string FileName
+		{
+			get
+			{
+				return this.location.Text;
+			}
+		}
+	
+		public string Domain
+		{
+			get
+			{
+				return domains[domainCombo.Active].ID;
+			}
+		}
+		
+		public string OneTimePP
+		{
+			get
+			{
+				return this.oneTimePassphrase.Text;
+			}
+		}
+		public string PassPhrase
+		{
+			get
+			{
+				return this.passPhrase.Text;
+			}
+		}
 
 		public ImportKeysDialog() : base()
 		{
@@ -80,70 +111,108 @@ namespace Novell.iFolder
 					new ExposeEventHandler(OnBannerExposed);
 			imagebox.PackStart(iFolderScaledBanner, true, true, 0);
 			this.VBox.PackStart (imagebox, false, true, 0);
-
-
 		
                         ///
                         /// Content
                         ///
-                        Table table = new Table(4, 3, false);
+                        Table table = new Table(5, 3, false);
                         table.ColumnSpacing = 6;
                         table.RowSpacing = 6;
                         table.BorderWidth = 12;
 
+			//Row 0
+			Label l = new Label(Util.GS("iFolder Account")+":");
+			table.Attach(l, 0,1, 0,1, AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+                        l.LineWrap = true;
+			l.Xalign = 0.0F;
+			domainCombo = ComboBox.NewText();
+			DomainController domainController = DomainController.GetDomainController();
+			domains = domainController.GetDomains();
+			for (int x = 0; x < domains.Length; x++)
+			{
+				domainCombo.AppendText(domains[x].Name);
+			}
+			if( domains.Length > 0)
+				domainCombo.Active = 0;
+			// read domains from domain controller...
+			table.Attach(domainCombo, 1,2,0,1, AttachOptions.Fill|AttachOptions.Expand, 0,0,0);
+			l.MnemonicWidget = domainCombo;		
+	
                         // Row 1
-                        Label l = new Label(Util.GS("File Path")+":");
-                        table.Attach(l, 0,1, 0,1,
+                        l = new Label(Util.GS("File Path")+":");
+                        table.Attach(l, 0,1, 1,2,
                                 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
                         l.LineWrap = true;
-//                        l.Xalign = 0.0F;
+                        l.Xalign = 0.0F;
                         location = new Entry();
-                        table.Attach(location, 1,2, 0,1,
+			this.location.Changed += new EventHandler(OnFieldsChanged);
+                        table.Attach(location, 1,2, 1,2,
                                 AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
                         l.MnemonicWidget = location;
 
                         BrowseButton = new Button("_Browse");
-                        table.Attach(BrowseButton, 2,3, 0,1, AttachOptions.Fill, 0,0,0);
-                        BrowseButton.Sensitive = false;
+                        table.Attach(BrowseButton, 2,3, 1,2, AttachOptions.Fill, 0,0,0);
+                        BrowseButton.Sensitive = true;
+			BrowseButton.Clicked += new EventHandler(OnBrowseButtonClicked);
 
                         // Row 2
                         l = new Label(Util.GS("One Time Passphrase")+":");
-                        table.Attach(l, 0,1, 1,2,
+			l.Xalign = 0.0F;
+                        table.Attach(l, 0,1, 2,3,
                                 AttachOptions.Fill, 0,0,0); 
 
                         oneTimePassphrase = new Entry();
-                        table.Attach(oneTimePassphrase, 1,2, 1,2,
+			oneTimePassphrase.Changed += new EventHandler(OnFieldsChanged);
+                        table.Attach(oneTimePassphrase, 1,2, 2,3,
                                 AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
                         l.MnemonicWidget = oneTimePassphrase;
 
                         // Row 3
                         l = new Label(Util.GS("New Passphrase")+":");
-                        table.Attach(l, 0,1, 2,3,
+			l.Xalign = 0.0F;
+                        table.Attach(l, 0,1, 3,4,
                                 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
                         passPhrase = new Entry();
-                        table.Attach(passPhrase, 1,2, 2,3,
+			passPhrase.Changed += new EventHandler(OnFieldsChanged);
+                        table.Attach(passPhrase, 1,2, 3,4,
                                 AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
                         l.MnemonicWidget = passPhrase;
 
 
                         // Row 4
 	                l = new Label(Util.GS("Re-type Passphrase")+":");
-                        table.Attach(l, 0,1, 3,4,
+			l.Xalign = 0.0F;
+                        table.Attach(l, 0,1, 4,5,
                                 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
                         retypePassPhrase = new Entry();
-                        table.Attach(retypePassPhrase, 1,2, 3,4,
+			retypePassPhrase.Changed += new EventHandler(OnFieldsChanged);
+                        table.Attach(retypePassPhrase, 1,2, 4,5,
                                 AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
                         l.MnemonicWidget = retypePassPhrase;
 
 			this.VBox.PackStart(table, false, false, 0);
 
 			this.VBox.ShowAll();
-		
 
 			this.AddButton(Stock.Cancel, ResponseType.Cancel);
 			this.AddButton(Stock.Ok, ResponseType.Ok);
 			this.SetResponseSensitive(ResponseType.Ok, false);
 			this.DefaultResponse = ResponseType.Ok;
+		}
+		private void OnBrowseButtonClicked(object o, EventArgs e)
+		{
+			FileChooserDialog filedlg = new FileChooserDialog("", Util.GS("Select a folder..."), this, FileChooserAction.Open, Stock.Cancel, ResponseType.Cancel,Stock.Ok, ResponseType.Ok);
+			int res = filedlg.Run();
+			string str = filedlg.Filename;
+			filedlg.Hide();
+			filedlg.Destroy();
+			if( res == (int)ResponseType.Ok)
+			{
+				this.location.Text = str;
+			}
+			else
+			{
+			}
 		}
 		private void OnBannerExposed(object o, ExposeEventArgs args)
 		{
@@ -171,6 +240,9 @@ namespace Novell.iFolder
 		private void OnFieldsChanged(object obj, EventArgs args)
 		{
 			bool enableOK = false;
+			if( this.passPhrase.Text.Length > 0 && this.passPhrase.Text == this.retypePassPhrase.Text )
+				if( this.oneTimePassphrase.Text.Length > 0 && this.location.Text.Length > 0)
+					enableOK= true;
 			this.SetResponseSensitive(ResponseType.Ok, enableOK);
 		}
 	}

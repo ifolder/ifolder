@@ -346,11 +346,11 @@ namespace Novell.iFolder
 			l.Xalign = 0.0F;
 			
 			// Row 4
-			encryptionCheckButton = new RadioButton(Util.GS("Encrypt iFolder"));
+			encryptionCheckButton = new RadioButton(Util.GS("Encrypted"));
 			table.Attach(encryptionCheckButton, 1,3, 3,4,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			//Row 5
-			sslCheckButton = new RadioButton(encryptionCheckButton, Util.GS("Sharable"));
+			sslCheckButton = new RadioButton(encryptionCheckButton, Util.GS("Shared"));
 			table.Attach(sslCheckButton, 1,3, 4,5, AttachOptions.Fill | AttachOptions.Expand, 0,0,0); 
 			return UserInformationPage;
 		}
@@ -361,7 +361,7 @@ namespace Novell.iFolder
 		private Gnome.DruidPage CreateRAPage()
 		{
 			RAPage = new Gnome.DruidPageStandard(
-				Util.GS("PassPhrase"),
+				Util.GS("Passphrase"),
 				AddAccountPixbuf,
 				null);
 			RAPage.CancelClicked += new Gnome.CancelClickedHandler(OnCancelClicked);
@@ -484,7 +484,7 @@ namespace Novell.iFolder
 						tSelect.GetSelected(out tModel, out iter);
 						recoveryAgentName = (string) tModel.GetValue(iter, 0);
 					}
-					if( recoveryAgentName != null && recoveryAgentName != "None")
+					if( recoveryAgentName != null && recoveryAgentName != Util.GS("None"))
 					{
 						// Show Certificate..
 						byte [] RACertificateObj = domainController.GetRACertificate((domains[domainList.Active]).ID, recoveryAgentName);
@@ -535,7 +535,7 @@ namespace Novell.iFolder
         		                                       null,
         	        	                               iFolderMsgDialog.DialogType.Error,
         	                	                       iFolderMsgDialog.ButtonSet.None,
-        	                        	               Util.GS("Errot setting the Passphrase"),
+        	                        	               Util.GS("Error setting the Passphrase"),
         	                                	       Util.GS("Unable to change the Passphrase"),
 		                                               	Util.GS("Please try again"));
         		                               dialog.Run();
@@ -573,8 +573,8 @@ namespace Novell.iFolder
                                                null,
                                                iFolderMsgDialog.DialogType.Error,
                                                iFolderMsgDialog.ButtonSet.None,
-                                               Util.GS("PassPhrase Invlid"),
-                                               Util.GS("The PassPhrase enter is not valid"),
+                                               Util.GS("PassPhrase Invalid"),
+                                               Util.GS("The PassPhrase entered is not valid"),
                                                Util.GS("Please enter the passphrase again"));
                                        dialog.Run();
                                        dialog.Hide();
@@ -649,7 +649,7 @@ namespace Novell.iFolder
 			// Row 2
 			table.Attach(new Label(""), 0,1, 1,2,
 				AttachOptions.Fill, 0,12,0); // spacer
-			l = new Label(Util.GS("Server Address")+":");
+			l = new Label(Util.GS("Server Address:"));
 			table.Attach(l, 1,2, 1,2,
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			l.Xalign = 0.0F;
@@ -659,7 +659,7 @@ namespace Novell.iFolder
 			ServerAddressLabel.Xalign = 0.0F;
 
 			// Row 3
-			l = new Label(Util.GS("Location")+":");
+			l = new Label(Util.GS("Location:"));
 			table.Attach(l, 1,2, 2,3,
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			l.Xalign = 0.0F;
@@ -746,7 +746,7 @@ namespace Novell.iFolder
 		
 		private void OnMigrationOptionsPagePrepared(object o, Gnome.PreparedArgs args)
 		{
-			this.Title = Util.GS("iFolder Migration Assistant - (1 of 3)");
+			this.Title = Util.GS("iFolder Migration Assistant - (1 of 5)");
 			
 //			ServerNameEntry.GrabFocus();
 		}
@@ -797,7 +797,7 @@ namespace Novell.iFolder
 		
 		private void OnUserInformationPagePrepared(object o, Gnome.PreparedArgs args)
 		{
-			this.Title = Util.GS("iFolder Migration Assistant - (2 of 3)");
+			this.Title = Util.GS("iFolder Migration Assistant - (2 of 5)");
 			ForwardButton.Label = "gtk-go-forward";
 			if(Prepared)
 				return;
@@ -873,14 +873,14 @@ namespace Novell.iFolder
 		
 		private void OnMigratePagePrepared(object o, Gnome.PreparedArgs args)
 		{
-			this.Title = Util.GS("iFolder Migration Assistant - (3 of 3)");
+			this.Title = Util.GS("iFolder Migration Assistant - (3 of 5)");
 			ServerAddressLabel.Text = (domains[domainList.Active]).Name;	
 			Location.Text = location;
 			
 			if(deleteFromServer.Active)
-				MigrationOptionLabel.Text = "Delete from iFolder2.X server";
+				MigrationOptionLabel.Text = Util.GS("Delete from iFolder2.X server");
 			else
-				MigrationOptionLabel.Text = "Create a copy and migrate to iFolder3.x";
+				MigrationOptionLabel.Text = Util.GS("Create a copy and migrate to iFolder3.x");
 			if(encryptionCheckButton.Active)
 			{
 				SecurityLabel.Text = Util.GS("Encrypt the iFolder ");
@@ -891,7 +891,7 @@ namespace Novell.iFolder
 			}
 			else if(sslCheckButton.Active)
 			{
-				SecurityLabel.Text = Util.GS("Use Secure channel for data transfer");
+				SecurityLabel.Text = Util.GS("Shared iFolder");
 			}
 			else
 				SecurityLabel.Text = Util.GS("None");
@@ -910,7 +910,7 @@ namespace Novell.iFolder
 
 				SummaryPage.Text = 
 					string.Format(
-						Util.GS("Congratulations!  Your folder has been\nsuccessfully migrated to \nthe latest version of iFolder.\n\nClick \"Finish\" to close this window."));
+						Util.GS("Congratulations!  Your folder has been\nsuccessfully migrated to \nthe latest version of iFolder.\nIt is recommended to \ndisconnect from 2.x server to \n avoid multiple synchronizations.\n\nClick \"Finish\" to close this window."));
 
 			// Hack to modify the "Apply" button to be a "Finish" button
 //			AccountDruid.Forall(EnableFinishButtonCallback);
@@ -1040,33 +1040,32 @@ namespace Novell.iFolder
 				Console.WriteLine(" Showing wait dialog:");
 			}
 			*/
-
-			if( ifws.CanBeiFolder(LocationEntry.Text) )
+			System.IO.DirectoryInfo source = new System.IO.DirectoryInfo(location);
+			System.IO.DirectoryInfo destination = new System.IO.DirectoryInfo(LocationEntry.Text);	
+			string destDir = LocationEntry.Text;
+			if( copyDir.Active )
 			{
-				string destDir = LocationEntry.Text;
+				string fileName;
+				fileName = source.Name;
+				destDir += "/" + fileName;
+				System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(destDir);
+				if( !di.Exists)
+				{
+					try
+					{
+						di.Create();
+					}
+					catch(Exception ex)
+					{
+						migrationStatus = false;
+					}
+				}
+				destination = new System.IO.DirectoryInfo(destDir);
+			}
+			if( ifws.CanBeiFolder(destDir))
+			{
 				if(copyToServer.Active == true)  // copy the ifolder in location to LocationEntry.Text
 				{
-					System.IO.DirectoryInfo source = new System.IO.DirectoryInfo(location);
-					System.IO.DirectoryInfo destination = new System.IO.DirectoryInfo(LocationEntry.Text);	
-					if( copyDir.Active )
-					{
-						string fileName;
-						fileName = source.Name;
-						destDir += "/" + fileName;
-						System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(destDir);
-						if( !di.Exists)
-						{
-							try
-							{
-								di.Create();
-							}
-							catch(Exception ex)
-							{
-								migrationStatus = false;
-							}
-						}
-						destination = new System.IO.DirectoryInfo(destDir);
-					}
 					if( !CopyDirectory(source, destination) )
 					{
 						migrationStatus = false;
