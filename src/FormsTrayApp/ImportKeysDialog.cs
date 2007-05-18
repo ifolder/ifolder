@@ -620,7 +620,7 @@ namespace Novell.FormsTrayApp
 			DomainItem domainItem = (DomainItem)this.DomainComboBox.SelectedItem;
 			try
 			{
-				this.simiasWebService.ImportiFoldersCryptoKeys(domainItem.ID, this.oneTimePassphrase.Text, this.LocationEntry.Text);
+				this.simiasWebService.ImportiFoldersCryptoKeys(domainItem.ID, this.Passphrase.Text,  this.oneTimePassphrase.Text, this.LocationEntry.Text);
 			}
 			catch(Exception ex)
 			{

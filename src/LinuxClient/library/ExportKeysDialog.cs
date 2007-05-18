@@ -171,6 +171,7 @@ namespace Novell.iFolder
 
 		private void OnBrowseButtonClicked(object o, EventArgs e)
 		{
+			//change the message to "Select a file..." instead of "Select a folder..."
 			FileChooserDialog filedlg = new FileChooserDialog("", Util.GS("Select a folder..."), this, FileChooserAction.Save, Stock.Cancel, ResponseType.Cancel,Stock.Ok, ResponseType.Ok);
 			int res = filedlg.Run();
 			string str = filedlg.Filename;
@@ -180,9 +181,7 @@ namespace Novell.iFolder
 			{
 				this.location.Text = str;
 			}
-			else
-			{
-			}
+			//Otherwise do nothing
 		}
 		private void OnBannerExposed(object o, ExposeEventArgs args)
 		{
