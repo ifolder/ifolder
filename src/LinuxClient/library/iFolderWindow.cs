@@ -1163,9 +1163,9 @@ namespace Novell.iFolder
 													null,
 													iFolderMsgDialog.DialogType.Info,
 													iFolderMsgDialog.ButtonSet.None,
-													Util.GS("Export Decrypted Keys"),
+													Util.GS("Export Encrypted Keys"),
 													Util.GS("File name:")+fileName,
-													Util.GS("Use your new passphrase from now"));
+													Util.GS(""));
 					dialog.Run();
 					dialog.Hide();
 					dialog.Destroy();
@@ -1178,7 +1178,7 @@ namespace Novell.iFolder
 						null,
 						iFolderMsgDialog.DialogType.Error,
 						iFolderMsgDialog.ButtonSet.None,
-						Util.GS("Export Decrypted Keys"),
+						Util.GS("Export Encrypted Keys"),
 						Util.GS(ex.Message),
 						Util.GS(""));
 						dialog.Run();
