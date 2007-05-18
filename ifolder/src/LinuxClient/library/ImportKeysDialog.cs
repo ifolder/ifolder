@@ -210,9 +210,7 @@ namespace Novell.iFolder
 			{
 				this.location.Text = str;
 			}
-			else
-			{
-			}
+			//Otherwise do nothing			
 		}
 		private void OnBannerExposed(object o, ExposeEventArgs args)
 		{

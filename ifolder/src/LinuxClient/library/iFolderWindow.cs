@@ -1147,7 +1147,6 @@ namespace Novell.iFolder
 
 		private void ExportClicked( object o, EventArgs args)
 		{
-			Console.WriteLine(" export clicked");
 			ExportKeysDialog export = new ExportKeysDialog();
 			export.TransientFor = this;
 			int res = export.Run();
@@ -1160,60 +1159,79 @@ namespace Novell.iFolder
 				try
 				{
 					this.simws.ExportiFoldersCryptoKeys(domainID, fileName);
+					iFolderMsgDialog dialog = new iFolderMsgDialog(
+													null,
+													iFolderMsgDialog.DialogType.Info,
+													iFolderMsgDialog.ButtonSet.None,
+													Util.GS("Export Decrypted Keys"),
+													Util.GS("File name:")+fileName,
+													Util.GS("Use your new passphrase from now"));
+					dialog.Run();
+					dialog.Hide();
+					dialog.Destroy();
+					dialog = null;
 				}
 				catch(Exception ex)
 				{
-					Console.WriteLine("Exception in export keys");
+					// show an error message
+					iFolderMsgDialog dialog = new iFolderMsgDialog(
+						null,
+						iFolderMsgDialog.DialogType.Error,
+						iFolderMsgDialog.ButtonSet.None,
+						Util.GS("Export Decrypted Keys"),
+						Util.GS(ex.Message),
+						Util.GS(""));
+						dialog.Run();
+						dialog.Hide();
+						dialog.Destroy();
+						dialog = null;
 				}
-				/*
-				System.IO.FileInfo finfo = new System.IO.FileInfo( fileName);
-				if( finfo.Exists == false)
-				{
-					try
-					{
-						FileStream fstream = finfo.Create();
-						if( fstream != null)
-						{
-							fstream.Close();
-							this.simws.ExportiFoldersCryptoKeys(domainID, fileName);
-						}
-						else
-						{
-							// Show error message...
-							Console.WriteLine("Unable to create the file");
-							return;
-						}
-					}
-					catch(Exception ex)
-					{
-						Console.WriteLine("Unable to create the file");
-						return;
-					}
-				}
-				*/
 			}
 		}
 
 		private void ImportClicked( object o, EventArgs args)
 		{
-			ImportKeysDialog export = new ImportKeysDialog();
-			export.TransientFor = this;
-			int result = export.Run();
-			string fileName = export.FileName;
-			string domainID = export.Domain;
-			string OneTimePassphrase = export.OneTimePP;
-			export.Hide();
-			export.Destroy();
+			ImportKeysDialog import = new ImportKeysDialog();
+			import.TransientFor = this;
+			int result = import.Run();
+			string fileName = import.FileName;
+			string domainID = import.Domain;
+			string OneTimePassphrase = import.OneTimePP;
+			string NewPassphrase = import.PassPhrase;
+			import.Hide();
+			import.Destroy();
 			if( result == (int)ResponseType.Ok)
 			{
-				Console.WriteLine("Clicked OK");
 				try
 				{
-					this.simws.ImportiFoldersCryptoKeys( domainID, OneTimePassphrase, fileName);
+					this.simws.ImportiFoldersCryptoKeys( domainID, NewPassphrase, OneTimePassphrase, fileName);
+
+					iFolderMsgDialog dialog = new iFolderMsgDialog(
+													null,
+													iFolderMsgDialog.DialogType.Info,
+													iFolderMsgDialog.ButtonSet.None,
+													Util.GS("Import Decrypted Keys"),
+													Util.GS("Successfully changed the passphrase"),
+													Util.GS("Use your new passphrase from now"));
+					dialog.Run();
+					dialog.Hide();
+					dialog.Destroy();
+					dialog = null;
 				}
 				catch(Exception ex)
 				{
-					Console.WriteLine("Error importing the keys");
+					// show an error message
+					iFolderMsgDialog dialog = new iFolderMsgDialog(
+						null,
+						iFolderMsgDialog.DialogType.Error,
+						iFolderMsgDialog.ButtonSet.None,
+						Util.GS("Import Decrypted Keys"),
+						Util.GS("Error setting the Passphrase"),
+						Util.GS(""));
+						dialog.Run();
+						dialog.Hide();
+						dialog.Destroy();
+						dialog = null;
 				}
 			}
 		}
