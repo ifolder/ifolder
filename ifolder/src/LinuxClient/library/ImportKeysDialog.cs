@@ -69,7 +69,10 @@ namespace Novell.iFolder
 		{
 			get
 			{
-				return this.oneTimePassphrase.Text;
+				if( this.oneTimePassphrase.Text != null)
+					return this.oneTimePassphrase.Text;
+				else
+					return null;
 			}
 		}
 		public string PassPhrase
@@ -239,7 +242,7 @@ namespace Novell.iFolder
 		{
 			bool enableOK = false;
 			if( this.passPhrase.Text.Length > 0 && this.passPhrase.Text == this.retypePassPhrase.Text )
-				if( this.oneTimePassphrase.Text.Length > 0 && this.location.Text.Length > 0)
+				if( this.location.Text.Length > 0)
 					enableOK= true;
 			this.SetResponseSensitive(ResponseType.Ok, enableOK);
 		}
