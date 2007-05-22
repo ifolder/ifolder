@@ -1531,7 +1531,7 @@ namespace Novell.FormsTrayApp
 			Domain domain = (Domain)lvi.Tag;
 			if (domain != null)
 			{
-				Connecting connecting = new Connecting( simiasWebService, simiasManager, domain.DomainInfo );
+				Connecting connecting = new Connecting( this.ifWebService, simiasWebService, simiasManager, domain.DomainInfo );
 				if ( connecting.ShowDialog() == DialogResult.OK )
 				{
 					result = true;
@@ -1539,7 +1539,7 @@ namespace Novell.FormsTrayApp
 
 				if ( !result )
 				{
-					ServerInfo serverInfo = new ServerInfo( simiasManager, domain.DomainInfo, connecting.Password );
+					ServerInfo serverInfo = new ServerInfo( this.ifWebService, simiasManager, domain.DomainInfo, connecting.Password );
 					serverInfo.ShowDialog();
 					result = serverInfo.DomainInfo.Authenticated;
 					serverInfo.Dispose();

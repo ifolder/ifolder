@@ -57,6 +57,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.TextBox serverName;
 		private System.Windows.Forms.PictureBox bannerFill;
 		private System.Windows.Forms.Panel panel1;
+		private iFolderWebService ifWebService;
 		private Manager simiasManager;
 		/// <summary>
 		/// Required designer variable.
@@ -67,7 +68,7 @@ namespace Novell.FormsTrayApp
 		/// Constructs a ServerInfo object.
 		/// </summary>
 		/// <param name="domainInfo">The DomainInformation object for the domain.</param>
-		public ServerInfo(Manager simiasManager, DomainInformation domainInfo, string password)
+		public ServerInfo(iFolderWebService ifws, Manager simiasManager, DomainInformation domainInfo, string password)
 		{
 			//
 			// Required for Windows Form Designer support
@@ -76,6 +77,7 @@ namespace Novell.FormsTrayApp
 
 			this.domainInfo = domainInfo;
 			this.simiasManager = simiasManager;
+			this.ifWebService = ifws;
 
 			if (password != null)
 			{
@@ -493,7 +495,7 @@ namespace Novell.FormsTrayApp
 		{
 			bool result = false;
 
-			Connecting connecting = new Connecting( simiasWebService, simiasManager, domainInfo, password.Text, rememberPassword.Checked );
+			Connecting connecting = new Connecting( this.ifWebService, simiasWebService, simiasManager, domainInfo, password.Text, rememberPassword.Checked );
 			if ( connecting.ShowDialog() == DialogResult.OK )
 			{
 				result = true;
