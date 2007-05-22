@@ -508,7 +508,9 @@ namespace Novell.iFolderCom
 						servers.SelectedItem = selectedDomain;
 					}
 					else
-							servers.SelectedIndex = 0;
+					{
+						servers.SelectedIndex = 0;
+					}
 				}
 				catch
 				{
@@ -537,12 +539,14 @@ namespace Novell.iFolderCom
 			if (ifolderPath.ReadOnly)
 			{
 				servers.Focus();
-				servers.SelectedIndex = 0;
+				if( servers.SelectedIndex < 0)
+					servers.SelectedIndex = 0;
 			}
 			else
 			{
 				ifolderPath.Focus();
-				servers.SelectedIndex = 0;
+				if( servers.SelectedIndex < 0)
+					servers.SelectedIndex = 0;
 			}
 		}
 

@@ -63,6 +63,7 @@ namespace Novell.FormsTrayApp
 		private bool connectResult;
 		private DialogResult messageDialogResult;
 		protected AutoResetEvent messageEvent = new AutoResetEvent( false );
+		private iFolderWebService ifWebService;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -72,8 +73,8 @@ namespace Novell.FormsTrayApp
 
 		#region Constructor
 
-		public Connecting( SimiasWebService simiasWebService, Manager simiasManager, string server, string user, string password, bool defaultServer, bool rememberPassword ) :
-			this( simiasWebService, simiasManager, password )
+		public Connecting( iFolderWebService ifws, SimiasWebService simiasWebService, Manager simiasManager, string server, string user, string password, bool defaultServer, bool rememberPassword ) :
+			this( ifws, simiasWebService, simiasManager, password )
 		{
 			this.server = server;
 			this.user = user;
@@ -81,29 +82,30 @@ namespace Novell.FormsTrayApp
 			this.rememberPassword = rememberPassword;
 		}
 
-		public Connecting( SimiasWebService simiasWebService, Manager simiasManager, DomainInformation domainInfo, string password, bool rememberPassword ) :
-			this( simiasWebService, simiasManager, domainInfo, password )
+		public Connecting( iFolderWebService ifws, SimiasWebService simiasWebService, Manager simiasManager, DomainInformation domainInfo, string password, bool rememberPassword ) :
+			this( ifws, simiasWebService, simiasManager, domainInfo, password )
 		{
 			this.updatePasswordPreference = true;
 			this.rememberPassword = rememberPassword;
 		}
 
-		public Connecting( SimiasWebService simiasWebService, Manager simiasManager, DomainInformation domainInfo, string password ) :
-			this( simiasWebService, simiasManager, password )
+		public Connecting( iFolderWebService ifws, SimiasWebService simiasWebService, Manager simiasManager, DomainInformation domainInfo, string password ) :
+			this( ifws, simiasWebService, simiasManager, password )
 		{
 			this.domainInfo = domainInfo;
 		}
 
-		public Connecting( SimiasWebService simiasWebService, Manager simiasManager, DomainInformation domainInfo ) :
-			this( simiasWebService, simiasManager, domainInfo, null )
+		public Connecting( iFolderWebService ifws, SimiasWebService simiasWebService, Manager simiasManager, DomainInformation domainInfo ) :
+			this( ifws, simiasWebService, simiasManager, domainInfo, null )
 		{
 		}
 
-		private Connecting( SimiasWebService simiasWebService, Manager simiasManager, string password )
+		private Connecting( iFolderWebService ifws, SimiasWebService simiasWebService, Manager simiasManager, string password )
 		{
 			this.simiasWebService = simiasWebService;
 			this.simiasManager = simiasManager;
 			this.password = password;
+			this.ifWebService = ifws;
 
 			displayMessageDelegate = new DisplayMessageDelegate( displayMessage );
 			connectDoneDelegate = new ConnectDoneDelegate( connectDone );
@@ -400,6 +402,16 @@ namespace Novell.FormsTrayApp
 				 */
 				bool passPhraseStatus = false;
 				bool passphraseStatus = false;
+				int policy =0;
+				if( this.ifWebService != null )
+				{
+					policy = this.ifWebService.GetSecurityPolicy(this.domainInfo.ID);
+				}
+				if( policy %2==0 || this.ifWebService == null)
+				{
+					BeginInvoke( this.connectDoneDelegate );
+					return;
+				}
 				try
 				{
 					passphraseStatus = this.simiasWebService.IsPassPhraseSet(this.domainInfo.ID);
@@ -409,6 +421,7 @@ namespace Novell.FormsTrayApp
 					//MessageBox.Show("Unable to check for passphrase. "+ ex.Message);
 					MessageBox.Show( resourceManager.GetString("IsPassphraseSetException") + ex.Message);
 					BeginInvoke( this.connectDoneDelegate );
+					return;
 				}
 				/*
 				if( passphraseStatus )

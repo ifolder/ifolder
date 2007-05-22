@@ -578,7 +578,7 @@ namespace Novell.FormsTrayApp
 		private void UpdateSensitivity()
 		{
 			if( this.Passphrase.Text.Length >0 && this.Passphrase.Text == this.retypePassphrase.Text )
-				if( this.oneTimePassphrase.Text.Length > 0)
+				//if( this.oneTimePassphrase.Text.Length > 0)
 					if( this.LocationEntry.Text.Length > 0 && this.DomainComboBox.SelectedIndex >= 0)
 					{
 						this.btnImport.Enabled = true;
@@ -620,7 +620,12 @@ namespace Novell.FormsTrayApp
 			DomainItem domainItem = (DomainItem)this.DomainComboBox.SelectedItem;
 			try
 			{
-				this.simiasWebService.ImportiFoldersCryptoKeys(domainItem.ID, this.Passphrase.Text,  this.oneTimePassphrase.Text, this.LocationEntry.Text);
+				string onetimepp;
+				if( this.oneTimePassphrase != null)
+					onetimepp = this.oneTimePassphrase.Text;
+				else
+					onetimepp = null;
+				this.simiasWebService.ImportiFoldersCryptoKeys(domainItem.ID, this.Passphrase.Text,  onetimepp, this.LocationEntry.Text);
 			}
 			catch(Exception ex)
 			{

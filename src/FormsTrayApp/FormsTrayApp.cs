@@ -167,7 +167,6 @@ namespace Novell.FormsTrayApp
 			instance = new FormsTrayApp();
 			Application.Run(instance);
 		}
-
 		/// <summary>
 		/// Constructs a FormsTrayApp object.
 		/// </summary>
@@ -1403,11 +1402,11 @@ namespace Novell.FormsTrayApp
 						try
 						{
 							DomainInformation domainInfo = simiasWebService.GetDomainInformation(notifyEventArgs.Message);
-							Connecting connecting = new Connecting( simiasWebService, simiasManager, domainInfo );
+							Connecting connecting = new Connecting( this.ifWebService, simiasWebService, simiasManager, domainInfo );
 							connecting.StartPosition = FormStartPosition.CenterScreen;
 							if ( connecting.ShowDialog() != DialogResult.OK )
 							{
-								serverInfo = new ServerInfo(simiasManager, domainInfo, connecting.Password);
+								serverInfo = new ServerInfo(this.ifWebService, simiasManager, domainInfo, connecting.Password);
 								serverInfo.Closed += new EventHandler(serverInfo_Closed);
 								serverInfo.Show();
 								ShellNotifyIcon.SetForegroundWindow(serverInfo.Handle);
@@ -1527,6 +1526,7 @@ namespace Novell.FormsTrayApp
 							}
 							else if (eventArgs.Type.Equals(NodeTypes.SubscriptionType))
 							{
+							//	MessageBox.Show(string.Format("Calling iFolderInvitation: \n iFolderID: {0}\n POBoxID: {1}", eventArgs.Collection, eventArgs.Node));
 								ifolder = ifWebService.GetiFolderInvitation(eventArgs.Collection, eventArgs.Node);
 							}
 							break;
@@ -1552,6 +1552,7 @@ namespace Novell.FormsTrayApp
 								}
 								case "Subscription"://NodeTypes.SubscriptionType:
 								{
+								//	MessageBox.Show(string.Format("Calling subscription iFolderInvitation: \n iFolderID: {0}\n POBoxID: {1}", eventArgs.Collection, eventArgs.Node));
 									ifolder = ifWebService.GetiFolderInvitation(eventArgs.Collection, eventArgs.Node);
 
 									// If the iFolder is not Available or it exists locally, we don't need to process the event.

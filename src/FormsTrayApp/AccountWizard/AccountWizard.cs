@@ -470,7 +470,7 @@ namespace Novell.Wizard
 		{
 			bool result = false;
 
-			Connecting connecting = new Connecting( simiasWebService, simiasManager, serverPage.ServerAddress, identityPage.Username, identityPage.Password, serverPage.DefaultServer, identityPage.RememberPassword );
+			Connecting connecting = new Connecting( this.ifWebService, simiasWebService, simiasManager, serverPage.ServerAddress, identityPage.Username, identityPage.Password, serverPage.DefaultServer, identityPage.RememberPassword );
 			connecting.EnterpriseConnect += new Novell.FormsTrayApp.Connecting.EnterpriseConnectDelegate(connecting_EnterpriseConnect);
 			if ( connecting.ShowDialog() == DialogResult.OK )
 			{

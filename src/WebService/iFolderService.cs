@@ -461,7 +461,7 @@ namespace Novell.iFolder.Web
 		public iFolderWeb GetiFolderInvitation(string POBoxID, string iFolderID)
 		{
 			iFolderWeb ifolder = null;
-
+		/*
 			Store store = Store.GetStore();
 			POBox poBox = Simias.POBox.POBox.GetPOBoxByID(store, POBoxID);
 			if(poBox != null)
@@ -480,7 +480,9 @@ namespace Novell.iFolder.Web
 					}
 				}
 			}
-
+		*/
+			CollectionInfo ci = DiscoveryFramework.GetCollectionInfo(iFolderID);
+			ifolder = new iFolderWeb(ci);
 			return ifolder;
 		}
 
