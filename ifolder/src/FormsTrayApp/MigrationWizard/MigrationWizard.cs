@@ -713,7 +713,6 @@ namespace Novell.Wizard
 		/// <param name="destination" description = "destination directory"></param>
 		public bool CopyDirectory(DirectoryInfo source, DirectoryInfo destination) 
 		{
-
 			if (!destination.Exists) 
 			{
 				try
@@ -734,7 +733,6 @@ namespace Novell.Wizard
 				FileInfo[] files = source.GetFiles();
 				foreach (FileInfo file in files) 
 				{
-
 					file.CopyTo(System.IO.Path.Combine(destination.FullName, file.Name));
 				}
 			}
@@ -747,10 +745,8 @@ namespace Novell.Wizard
 				DirectoryInfo[] dirs = source.GetDirectories();
 				foreach (DirectoryInfo dir in dirs) 
 				{
-
 					// Get destination directory.
 					string destinationDir = System.IO.Path.Combine(destination.FullName, dir.Name);
-
 					// Call CopyDirectory() recursively.
 					CopyDirectory(dir, new DirectoryInfo(destinationDir));
 				}
@@ -764,10 +760,9 @@ namespace Novell.Wizard
 
 		/// <summary>
 		/// Method that performs migration..
-		/// 
+		/// </summary>
 		public bool MigrateFolder()
 		{
-			// TODO: Add code here to Migrate..
 			/*
 			 * Check if the destination folder can be an iFolder
 			 * Copy the folder if needed
@@ -775,113 +770,98 @@ namespace Novell.Wizard
 			 * if the folder is to be removed from 2.x domain remove.
 			 */
 			DomainItem domain = this.MigrationIdentityPage.domain;
-			bool encr = this.MigrationIdentityPage.Encrypion;
-			bool ssl = this.MigrationIdentityPage.SSL;
-			string encryptionAlgorithm = encr? "BlowFish" : "" ;
-			int securityStatus = 0;
+			bool shared = this.MigrationIdentityPage.SSL;
+			string encryptionAlgorithm = this.MigrationIdentityPage.Encrypion? "BlowFish" : "" ;
 			string destination;
+			
 			// Migration Option is true if the folder is to be removed from 2.x domain
 			try
 			{
-			if( !this.MigrationServerPage.MigrationOption)
-			{
-				destination = this.MigrationServerPage.HomeLocation;
-				DirectoryInfo dir = new DirectoryInfo(destination);
-				if( dir.Exists == false)
+				if(this.MigrationServerPage.MigrationOption == false)
 				{
-					MessageBox.Show("Destination does not exist");
-					return false;
-				}
-				
-			//	if((dir.Exists) && (ifws.CanBeiFolder(destination)== false))	// Display a message box
-			//	{	
-			//		MessageBox.Show(string.Format(Resource.GetString("CannotBeiFolder")+dir.Name)/*"The folder can not be converted into ifolder"*/,Resource.GetString("MigrationTitle"),MessageBoxButtons.OK);
-			//		return false; // can't be an iFolder
-			//	}
-				
-				// Copy the 2.x folder to destination
-				// Create the parent folder
-				if( this.MigrationServerPage.CopyParentDirectory)
-				{
-					string filename;
-					DirectoryInfo di = new DirectoryInfo(this.location);
-					filename = di.Name;
-					destination = destination+"\\"+filename;
-					//MessageBox mb = new MessageBox("file name = {0}", filename);
-					//MessageBox.Show("file name is:", destination, MessageBoxButtons.OK);
-					di = new DirectoryInfo(destination);
-					if( di.Exists )
+					destination = this.MigrationServerPage.HomeLocation;
+					DirectoryInfo dir = new DirectoryInfo(destination);
+					if( dir.Exists == false)
 					{
-						MessageBox.Show(Resource.GetString("DirExists")/*"The directory exists already"*/, Resource.GetString("MigrationTitle"), MessageBoxButtons.OK);
+						MessageBox.Show("Error creating directory");
 						return false;
 					}
-					else
+					
+					// Create the ifolder directory
+					if( this.MigrationServerPage.CopyParentDirectory)
 					{
-						try
+						DirectoryInfo di = new DirectoryInfo(this.location);
+						destination = destination+"\\"+di.Name;
+						di = new DirectoryInfo(destination);
+						if( di.Exists )
 						{
-							di.Create();
-						}
-						catch(Exception ex)
-						{
-							MessageBox.Show(ex.ToString(), "Error creating directory", MessageBoxButtons.OK);
+							MessageBox.Show(Resource.GetString("DirExists")/*"The directory exists already"*/, Resource.GetString("MigrationTitle"), MessageBoxButtons.OK);
 							return false;
 						}
+						else
+						{
+							try
+							{
+								di.Create();
+							}
+							catch(Exception ex)
+							{
+								MessageBox.Show(ex.ToString(), "Error creating directory", MessageBoxButtons.OK);
+								return false;
+							}
+						}
 					}
-				}
-				if(ifws.CanBeiFolder(destination)== false)	// Display a message box
-				{	
-					MessageBox.Show(Resource.GetString("CannotBeiFolder")/*"The folder can not be converted into ifolder"*/,Resource.GetString("MigrationTitle")/*"Error creating iFolder"*/,MessageBoxButtons.OK);
-					return false; // can't be an iFolder
-				}
+					//Check that the final path is already 3.6 ifolder, we don't do a 2.x check here
+					if(ifws.CanBeiFolder(destination)== false)
+					{	
+						MessageBox.Show(Resource.GetString("CannotBeiFolder")/*"The folder can not be converted into ifolder"*/,Resource.GetString("MigrationTitle")/*"Error creating iFolder"*/,MessageBoxButtons.OK);
+						return false; // can't be an iFolder
+					}
 
-				// Copy the contents
-				if(!CopyDirectory(new DirectoryInfo(location), new DirectoryInfo(destination)))
-				{
-					MessageBox.Show(Resource.GetString("CannotCopy")/*"Unable to copy the folder"*/, Resource.GetString("MigrationTitle")/*"Error copying the folder"*/, MessageBoxButtons.OK);
-					return false;	// unable to copy..
+					// Copy the contents
+					if(!CopyDirectory(new DirectoryInfo(location), new DirectoryInfo(destination)))
+					{
+						MessageBox.Show(Resource.GetString("CannotCopy")/*"Unable to copy the folder"*/, Resource.GetString("MigrationTitle")/*"Error copying the folder"*/, MessageBoxButtons.OK);
+						return false;	// unable to copy..
+					}				
 				}
 				else
 				{
-					// Not needed
-				//	MessageBox.Show("Can be ifolder","test",MessageBoxButtons.OK);
+					destination = this.location;
+					if(ifws.CanBeiFolder(destination)== false)	// Display a message box
+					{	
+						MessageBox.Show(Resource.GetString("CannotBeiFolder")/*"The folder can not be converted into ifolder"*/,Resource.GetString("MigrationTitle")/*"Error creating iFolder"*/,MessageBoxButtons.OK);
+						return false; // can't be an iFolder
+					}
 				}
-			}
-			else
-			{
-				destination = this.location;
-				if(ifws.CanBeiFolder(destination)== false)	// Display a message box
-				{	
-					MessageBox.Show(Resource.GetString("CannotBeiFolder")/*"The folder can not be converted into ifolder"*/,Resource.GetString("MigrationTitle")/*"Error creating iFolder"*/,MessageBoxButtons.OK);
-					return false; // can't be an iFolder
-				}
-			}
-				/*
-				 * TODO: change the wizard create iFolder with passphrase
-				 */
-				if( ssl )
+				
+				if(shared)
 				{
 					if( ifws.CreateiFolderInDomain(destination, domain.ID) == null)
 					{
 						MessageBox.Show("Unable to convert to an iFolder", "Migrate error", MessageBoxButtons.OK);
-						return false;	// error creating iFolder
+						return false;
 					}
 				}
-				else if( ifws.CreateiFolderInDomainEncr(destination, domain.ID, ssl, encryptionAlgorithm, "") == null)
+				else
 				{
-					MessageBox.Show("Unable to convert to an iFolder", "Migrate error", MessageBoxButtons.OK);
-					return false;	// error creating iFolder
+					string passphrase = this.simiasWebService.GetPassPhrase(this.identityPage.domain.ID);
+					if( ifws.CreateiFolderInDomainEncr(destination, domain.ID, false, encryptionAlgorithm, passphrase) == null)
+					{
+						MessageBox.Show("Unable to convert to an iFolder", "Migrate error", MessageBoxButtons.OK);
+						return false;
+					}
 				}
-				
 			}
 			catch(Exception ex)
 			{
-						MessageBox.Show(Resource.GetString("CannotBeiFolder")/*"The folder can not be converted into ifolder"*/,Resource.GetString("MigrationTitle")/*"Error creating iFolder"*/,MessageBoxButtons.OK);
-						return false;
+				MessageBox.Show(Resource.GetString("CannotBeiFolder")/*"The folder can not be converted into ifolder"*/,Resource.GetString("MigrationTitle")/*"Error creating iFolder"*/,MessageBoxButtons.OK);
+				return false;
 			}
 			
-			if(this.MigrationServerPage.MigrationOption)
+			if(this.MigrationServerPage.MigrationOption == true)
 			{
-				// TODO: Remove from server..(remove registry contents)
+				//remove the 2.x registry entry for the migarted (not copy) ifolder
 				string iFolderRegistryKey = @"Software\Novell iFolder";
 				RegistryKey iFolderKey = Registry.LocalMachine.OpenSubKey(iFolderRegistryKey, true);
 					try
@@ -897,170 +877,7 @@ namespace Novell.Wizard
 			}	
 			return true;
 		}
-		/*
-		public bool create(string path)
-		{
-			bool successful = false;
-			try
-			{
-				try
-				{
-					Uri uriPath = new Uri( 
-						path.EndsWith(Path.DirectorySeparatorChar.ToString()) ?
-					path :
-						path + Path.DirectorySeparatorChar.ToString());
-
-					if (path.StartsWith(@"\\"))
-					{
-						throw new Exception("Invalid path");
-					}
-				}
-				catch
-				{
-					MyMessageBox mmb = new MyMessageBox("invalidFolder", "errorTitle", string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-					mmb.ShowDialog();
-					successful = false;
-					return successful;
-				}
-
-				if (!Directory.Exists(path))
-				{
-					MyMessageBox mmb =new MyMessageBox("createPrompt", "createPromptTitle", string.Empty, MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question);
-					if (mmb.ShowDialog() == DialogResult.Yes)
-					{
-						string parent = Path.GetDirectoryName(path);
-						while ((parent != null) && !parent.Equals(string.Empty))
-						{
-							if (Directory.Exists(parent))
-							{
-								path = path.Replace(parent, FixPath(parent));
-								break;
-							}
-
-							parent = Path.GetDirectoryName(parent);
-						}
-
-						Directory.CreateDirectory(path);
-					}
-					else
-					{
-						successful = false;
-					}
-				}
-				else
-				{
-					path = FixPath( path );
-				}
-
-				if (successful)
-				{
-					if (Win32Security.AccessAllowed(path))
-					{
-						DomainItem domain = this.MigrationIdentityPage.domain;
-						bool ssl = this.MigrationIdentityPage.SSL;
-						bool encr = this.MigrationIdentityPage.Encrypion;
-						string algorithm = encr? "BlowFish" : "" ;
-
-						//Cursor.Current = Cursors.WaitCursor;
-						//DomainItem domainItem = (DomainItem)servers.SelectedItem;
-
-						// Create the iFolder.
-						// TODO item. this web service call should be changed to constain the encr_status
-						//Added by Ramesh
-						//	iFolderWeb ifolder = ifWebService.CreateiFolderInDomain(path, domainItem.ID);
-						
-						//Console.WriteLine("encryption_status: {0}", encryption_status.SelectedIndex);
-						//string str= encryption_status.SelectedIndex==0 ? "0" : "1";
-						//MyMessageBox mmb = new MyMessageBox("encryption: Calling createiFolder()", "Check", string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-						//mmb.ShowDialog();
-						int temp=ifws.GetSecurityPolicy(domain.ID);
-						/*
-						int encr_status = 0;
-						if(this.encryption.Checked)
-							encr_status +=1;
-						if(this.ssl.Checked)
-							encr_status +=2;
-						*//*
-						bool SSL = this.ssl.Checked;
-						string algorithm = (this.encryption.Checked)? "BlowFish" : "";
-						iFolderWeb ifolder = ifws.CreateiFolderInDomainEncr(path, domain.ID, ssl, algorithm );
-						// Notify the shell.
-						Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, path, IntPtr.Zero);
-
-						Cursor.Current = Cursors.Default;
-					}
-					else
-					{
-						successful = false;
-						MyMessageBox mmb = new MyMessageBox("accessDenied", "accessErrorTitle", string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-						mmb.ShowDialog();
-					}
-				}
-			}
-			catch (Exception ex)
-			{
-				successful = false;
-				Cursor.Current = Cursors.Default;
-				MyMessageBox mmb;
-				string message= "";;
-				string caption = "";/*resourceManager.GetString("pathInvalidErrorTitle");
-
-				if (ex.Message.IndexOf("InvalidCharactersPath") != -1)
-				{
-					message = resourceManager.GetString("invalidCharsError");
-				}
-				else if (ex.Message.IndexOf("AtOrInsideStorePath") != -1)
-				{
-					message = resourceManager.GetString("pathInStoreError");
-				}
-				else if (ex.Message.IndexOf("ContainsStorePath") != -1)
-				{
-					message = resourceManager.GetString("pathContainsStoreError");
-				}
-				else if (ex.Message.IndexOf("SystemDirectoryPath") != -1)
-				{
-					message = resourceManager.GetString("systemDirError");
-				}
-				else if (ex.Message.IndexOf("SystemDrivePath") != -1)
-				{
-					message = resourceManager.GetString("systemDriveError");
-				}
-				else if (ex.Message.IndexOf("IncludesWinDirPath") != -1)
-				{
-					message = resourceManager.GetString("winDirError");
-				}
-				else if (ex.Message.IndexOf("IncludesProgFilesPath") != -1)
-				{
-					message = resourceManager.GetString("progFilesDirError");
-				}
-				else if (ex.Message.IndexOf("ContainsCollectionPath") != -1)
-				{
-					message = resourceManager.GetString("containsiFolderError");
-				}
-				else if (ex.Message.IndexOf("AtOrInsideCollectionPath") != -1)
-				{
-					message = resourceManager.GetString("pathIniFolderError");
-				}
-				else if (ex.Message.IndexOf("RootOfDrivePath") != -1)
-				{
-					message = resourceManager.GetString("rootDriveError");
-				}
-				else if (ex.Message.IndexOf("NotFixedDrivePath") != -1)
-				{
-					message = resourceManager.GetString("networkPathError");
-				}
-				else
-				{
-					message = resourceManager.GetString("iFolderCreateError");
-					caption = resourceManager.GetString("errorTitle");
-				}
-				*//*
-				mmb = new MyMessageBox(message, caption, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-				mmb.ShowDialog();
-			}
-			return successful;
-		}
-		*/
+		
 		public string FixPath(string path)
 		{
 			if (path[1].Equals(':'))
