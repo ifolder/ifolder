@@ -245,7 +245,7 @@ namespace Novell.iFolder
 			optionsTable.Attach(sw, 2,3,1,2,
 								AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
 */
-			
+			moreOptionsExpander.Expanded = true;			
 			optionsTable.ShowAll();
 			
 			return moreOptionsExpander;
