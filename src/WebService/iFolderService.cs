@@ -364,6 +364,7 @@ namespace Novell.iFolder.Web
 		public iFolderWeb GetiFolder(string iFolderID)
 		{
 			iFolderWeb ifolder = null;
+			ArrayList collectionList;
 
 			Store store = Store.GetStore();
 			Collection col = store.GetCollectionByID(iFolderID);
@@ -375,6 +376,11 @@ namespace Novell.iFolder.Web
 					ifolder = new iFolderWeb(col);
 				else
 					ifolder = null;
+			}
+			else
+			{
+				CollectionInfo ci = DiscoveryFramework.GetCollectionInfo(iFolderID);
+				ifolder = new iFolderWeb(ci);			
 			}
 
 			return ifolder;
@@ -1712,13 +1718,11 @@ namespace Novell.iFolder.Web
 			}
 
 			DiscoveryFramework.CreateProxy (store, cinfo, DomainID, iFolderID, Path.GetFullPath (path));
-
 			iFolderWeb ifolder = new iFolderWeb(cinfo);
  			ifolder.State = "Available";
 			ifolder.Role = "Master";
  			ifolder.UnManagedPath = path;
  			ifolder.IsSubscription = false;
-
 			return ifolder;
 		}
 
