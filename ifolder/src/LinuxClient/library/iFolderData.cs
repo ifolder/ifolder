@@ -576,6 +576,7 @@ namespace Novell.iFolder
 			lock(instanceLock)
 			{
 				iFolderHolder ifHolder = null;
+				Console.WriteLine("In GetiFolder");
 
 				if (ifolderIters.ContainsKey(ifolderID))
 				{
@@ -588,7 +589,10 @@ namespace Novell.iFolder
 			}
 		}
 
-
+		public iFolderWeb GetDefaultiFolder( string iFolderID)
+		{
+			return ifws.GetiFolder(iFolderID);
+		}
 
 
 		//===================================================================
@@ -795,10 +799,12 @@ namespace Novell.iFolder
 				iFolderWeb newiFolder;
 				if( EncryptionAlgorithm == null)		// Sharable iFolder
 				{
+					Console.WriteLine("Creating unencrypted folder");
 					newiFolder = ifws.CreateiFolderInDomain(path, domainID);
 				}
 				else
 				{
+					Console.WriteLine("Creating encrypted folder");
 					string Passphrase  = simws.GetPassPhrase(domainID);
    					newiFolder = ifws.CreateiFolderInDomainEncr(path, domainID, 
 											SSL, EncryptionAlgorithm, Passphrase);
@@ -853,6 +859,8 @@ namespace Novell.iFolder
 				{
 					return null;
 				}
+				if( subToiFolderMap == null)
+					subToiFolderMap = new Hashtable();
 
  				if(newifolder.ID != ifolderID)
  				{
@@ -866,7 +874,14 @@ namespace Novell.iFolder
 
 
 				ifHolder = GetiFolder(ifolderID);
+				if( ifHolder == null)
+				{
+					Console.WriteLine("Calling addiFolder");
+					ifHolder = AddiFolder(newifolder);
+				}
 				ifHolder.iFolder = newifolder;
+				if( ifolderIters == null)
+					ifolderIters = new Hashtable();
 
 				if (ifolderIters.ContainsKey(ifolderID))
 				{

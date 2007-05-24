@@ -32,6 +32,13 @@ namespace Novell.iFolder
 {
 	public class AddAccountWizard : Window
 	{
+                enum SecurityState
+                {
+                        encrypt = 1,
+                        enforceEncrypt = 2,
+                        SSL = 4,
+                        enforceSSL = 8
+                }
 		private Gnome.Druid				AccountDruid;
 		private Gnome.DruidPageEdge		IntroductoryPage;
 		private Gnome.DruidPageStandard	ServerInformationPage;
@@ -39,12 +46,17 @@ namespace Novell.iFolder
 		private DruidConnectPage		ConnectPage;
 		private Gnome.DruidPageEdge		SummaryPage;
 		private DruidRAPage	                RAPage;
+		private DruidRAPage	                DefaultiFolderPage;
 		private DomainController		domainController;
 		private SimiasWebService		simws;
 		private bool					ControlKeyPressed;
 		private Button						ForwardButton;
 		private Button						BackButton;	        
 		private Button						FinishButton;
+		private bool passPhraseEntered;
+		private bool waitForPassphrase;
+		private bool upload;
+		private iFolderWeb defaultiFolder;
 		
 		private Gdk.Pixbuf				AddAccountPixbuf;
 		
@@ -79,6 +91,16 @@ namespace Novell.iFolder
 		private Label		SelectRALabel;
 
 		///
+		/// Default iFolder Page
+		///
+		private RadioButton encryptionCheckButton;
+		private RadioButton sslCheckButton;
+		private Entry LocationEntry;
+		private CheckButton CreateDefault;
+		private Button BrowseButton;
+		private string DefaultPath;
+
+		///
 		/// Connect Page Widgets
 		///
 		private Label		ServerNameVerifyLabel;
@@ -109,6 +131,8 @@ namespace Novell.iFolder
 			this.simws = simws;
 
 			domainController = DomainController.GetDomainController();
+			this.passPhraseEntered = false;
+			this.waitForPassphrase = false;
 			
 			ConnectedDomain = null;
 			
@@ -142,6 +166,7 @@ namespace Novell.iFolder
 			AccountDruid.AppendPage(CreateUserInformationPage());
 			AccountDruid.AppendPage(CreateConnectPage());
 			AccountDruid.AppendPage(CreateRAPage());
+			AccountDruid.AppendPage(CreateDefaultiFolderPage());
 			AccountDruid.AppendPage(CreateSummaryPage());
 			
 			return vbox;
@@ -529,12 +554,159 @@ namespace Novell.iFolder
 			return RAPage;
 		}
 
+		private Gnome.DruidPage CreateDefaultiFolderPage()
+		{
+			DefaultiFolderPage = new DruidRAPage(
+					Util.GS("Default iFolder"),
+					AddAccountPixbuf,
+					null);
+
+			DefaultiFolderPage.CancelClicked +=
+				new Gnome.CancelClickedHandler(OnCancelClicked);
+
+			DefaultiFolderPage.ValidateClicked +=
+				new ValidateClickedHandler(OnDefaultiFolderValidateClicked);
+
+			DefaultiFolderPage.SkipClicked +=
+				new SkipClickedHandler(OnDefaultAccountSkipClicked);
+
+			DefaultiFolderPage.Prepared +=
+				new Gnome.PreparedHandler(OnDefaultAccountPagePrepared);
+			
+			///
+			/// Content
+			///
+			Table table = new Table(3, 5, false);
+			DefaultiFolderPage.VBox.PackStart(table, false, false, 0);
+			table.ColumnSpacing = 6;
+			table.RowSpacing = 6;
+			table.BorderWidth = 12;
+
+			// Row 1
+			//Label l = new Label(Util.GS("Enter the Passphrase"));
+			CreateDefault = new CheckButton(Util.GS("Create default iFolder."));
+			table.Attach(CreateDefault, 0,5, 0,1,
+				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+			//l.LineWrap = true;
+			//l.Xalign = 0.0F;
+			CreateDefault.Xalign = 0.0F;
+			CreateDefault.Toggled += new EventHandler(OnCreateDefaultChanged);
+			
+			// Row 2
+			Label l = new Label(Util.GS("Location:"));
+			table.Attach(l, 1,2, 1,2, AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+			//l.Xalign = 0.0F;
+			
+			LocationEntry = new Entry();
+			table.Attach(LocationEntry, 2,4, 1,2, AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+
+			BrowseButton = new Button(Util.GS("Browse"));
+			table.Attach(BrowseButton, 4,5, 1,2, AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+			BrowseButton.Clicked += new EventHandler(OnBrowseButtonClicked);
+
+			// row 3
+			l = new Label("Security:");
+			table.Attach( l, 1,2, 2,3, AttachOptions.Fill | AttachOptions.Shrink, 0,0,0);
+			//l.Xalign = 0.0F;
+			encryptionCheckButton = new RadioButton(Util.GS("Encrypted"));
+			table.Attach(encryptionCheckButton, 2,3, 2,3,
+					AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+                        //Row 5
+			sslCheckButton = new RadioButton(encryptionCheckButton, Util.GS("Shared"));
+			table.Attach(sslCheckButton, 3,4, 2,3, AttachOptions.Fill | AttachOptions.Shrink, 0,0,0);
+			if( upload == false)
+			{
+				encryptionCheckButton.Visible = false;
+				sslCheckButton.Visible = false;
+			}
+			if( this.CreateDefault.Active == false)
+			{
+				encryptionCheckButton.Sensitive = false;
+				sslCheckButton.Sensitive = false;
+				LocationEntry.Sensitive = false;
+				BrowseButton.Sensitive = false;
+			}
+			else
+			{
+				encryptionCheckButton.Sensitive = sslCheckButton.Sensitive = true;
+				LocationEntry.Sensitive = BrowseButton.Sensitive = true;
+			}
+			return DefaultiFolderPage;
+		}
+
 		private void RANameCellTextDataFunc (Gtk.TreeViewColumn tree_column,
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
 			string value = (string) tree_model.GetValue(iter, 0);
 			((CellRendererText) cell).Text = value;
+		}
+
+		private string GetDefaultPath()
+		{
+			string str = Mono.Unix.UnixEnvironment.EffectiveUser.HomeDirectory;
+			str += "/"+ConnectedDomain.Name+"/"+UserNameEntry.Text;
+			if( upload == true )
+				return str+"/"+"Default";
+			else
+				return str;
+		}
+
+		private void OnCreateDefaultChanged(object o, EventArgs e)
+		{
+			if( this.CreateDefault.Active == false)
+			{
+				encryptionCheckButton.Sensitive = false;
+				sslCheckButton.Sensitive = false;
+				BrowseButton.Sensitive = false;
+			}
+			else
+			{
+				if( upload == true)
+				{
+					encryptionCheckButton.Sensitive = sslCheckButton.Sensitive = true;
+				}
+				else
+				{
+					LocationEntry.Sensitive = true;
+					encryptionCheckButton.Sensitive = sslCheckButton.Sensitive = false;
+					encryptionCheckButton.Active = sslCheckButton.Active = false;
+				}
+				BrowseButton.Sensitive = true;
+			}
+		}
+
+		private void OnBrowseButtonClicked(object o, EventArgs e)
+		{
+			if( upload == true)
+			{
+				MigrateLocation NewLoc = new MigrateLocation(this, System.IO.Directory.GetCurrentDirectory(), DomainController.GetiFolderService() );
+				NewLoc.TransientFor = this;
+				int rc = 0;
+				do
+				{
+					rc = NewLoc.Run();
+					NewLoc.Hide();
+					if(rc ==(int)ResponseType.Ok)
+					{
+						string selectedFolder = NewLoc.iFolderPath.Trim();
+						LocationEntry.Text = selectedFolder;
+						NewLoc.Destroy();
+						NewLoc = null;
+						break;
+					}
+				}while( rc == (int)ResponseType.Ok);
+			}
+			else
+			{
+				FileChooserDialog dlg = new FileChooserDialog("", Util.GS("Select Location..."), null, FileChooserAction.SelectFolder, Stock.Ok, ResponseType.Ok, Stock.Cancel, ResponseType.Cancel);
+				int rc = dlg.Run();
+				string path = dlg.CurrentFolder;
+				dlg.Hide();
+				dlg.Destroy();
+				if( rc == (int)ResponseType.Ok)
+					LocationEntry.Text = path;				
+			}
 		}
 
 		///
@@ -645,6 +817,80 @@ namespace Novell.iFolder
 			ServerNameEntry.GrabFocus();
 		}
 
+		private void OnDefaultAccountPagePrepared(object o, Gnome.PreparedArgs args)
+		{
+			this.Title = Util.GS("iFolder Account Assistant - (5 of 6)");
+			string str = "";
+			try
+			{
+				str = this.simws.GetDefaultiFolder( ConnectedDomain.ID );
+			}
+			catch(Exception ex)
+			{
+				Console.WriteLine("Exception: old server: {0}", ex.Message);
+				AccountDruid.Page = SummaryPage;
+				return;
+			}
+			if(  str == null || str == "")
+			{
+				Console.WriteLine("Default account does not exist");
+				upload = true;
+				LocationEntry.Sensitive = false;
+			}
+			else
+			{
+				Console.WriteLine("Default account exists");
+				upload = false;
+				CreateDefault.Label = Util.GS("Download Default iFolder:");
+			}
+			if( passPhraseEntered == true)
+				AccountDruid.SetButtonsSensitive(false, true, true, true);
+			else
+				Console.WriteLine("Passphrase entered is false");
+			iFolderWebService ifws = DomainController.GetiFolderService();
+			int securityPolicy = ifws.GetSecurityPolicy(ConnectedDomain.ID);
+			ChangeStatus( securityPolicy);
+			LocationEntry.Text = GetDefaultPath();
+
+			// Check for ssl and display the status of encryption radfio buttons
+		}
+		private void ChangeStatus(int SecurityPolicy)
+		{
+			encryptionCheckButton.Active = sslCheckButton.Active = false;
+			encryptionCheckButton.Sensitive = sslCheckButton.Sensitive = false;
+			
+			if(SecurityPolicy !=0)
+			{
+				if( (SecurityPolicy & (int)SecurityState.encrypt) == (int) SecurityState.encrypt)
+				{
+					if( (SecurityPolicy & (int)SecurityState.enforceEncrypt) == (int) SecurityState.enforceEncrypt)
+						encryptionCheckButton.Active = true;
+					else
+					{
+						encryptionCheckButton.Sensitive = true;
+						sslCheckButton.Sensitive = true;
+					}
+				}
+				else
+				{
+					sslCheckButton.Active = true;
+				}
+				/*
+				if( (SecurityPolicy & (int)SecurityState.SSL) == (int) SecurityState.SSL)
+				{
+					if( (SecurityPolicy & (int)SecurityState.enforceSSL) == (int) SecurityState.enforceSSL)
+						sslCheckButton.Active = true;
+					else
+						sslCheckButton.Sensitive = true;
+				}
+				*/
+			}
+			else
+			{
+				sslCheckButton.Active = true;
+			}
+		}
+
 		private void OnRAPagePrepared(object o, Gnome.PreparedArgs args)
 		{
 			this.Title = Util.GS("iFolder Account Assistant - (4 of 5)");
@@ -739,10 +985,186 @@ namespace Novell.iFolder
 			AccountDruid.SetButtonsSensitive(false, true, false, true);
 		}
 
+		private bool CreateDefaultiFolder()
+		{
+			iFolderData ifdata = iFolderData.GetData();
+			iFolderHolder ifHolder = null;
+			// shared
+			if( this.encryptionCheckButton.Active == false)
+			{
+				Console.WriteLine("Shared");
+				if( (ifHolder = ifdata.CreateiFolder(this.LocationEntry.Text, ConnectedDomain.ID, this.sslCheckButton.Active, null)) == null)
+					return false;
+				else
+				{
+					this.simws.DefaultAccount(ConnectedDomain.ID, ifHolder.iFolder.ID);
+					AccountDruid.Page = SummaryPage;
+					Console.WriteLine("Making default account and verifying");
+					string str = this.simws.GetDefaultiFolder( ConnectedDomain.ID );
+					if( str == null)
+						Console.WriteLine("Not set the default account");
+					else
+						Console.WriteLine("Set the default iFolder to: {0}", str);
+					return true;
+				}
+			}
+			// shared
+			else 
+			{
+				Console.WriteLine("encrypted");
+				if( this.passPhraseEntered == true )
+				{
+					Console.WriteLine("passphrase entered");
+					if( (ifHolder = ifdata.CreateiFolder(this.LocationEntry.Text, ConnectedDomain.ID, this.sslCheckButton.Active, "BlowFish")) == null)
+					{
+						throw new Exception("Simias returned null");
+						return false;
+					}
+					else
+					{
+						Console.WriteLine("Making default account");
+						this.simws.DefaultAccount(ConnectedDomain.ID, ifHolder.iFolder.ID);
+						string str = this.simws.GetDefaultiFolder( ConnectedDomain.ID );
+						if( str == null)
+							Console.WriteLine("Not set the default account");
+						else
+							Console.WriteLine("Set the default iFolder to: {0}", str);
+
+						AccountDruid.Page = SummaryPage;
+						return true;
+					}
+				}
+				else
+				{
+					// Go to passphrase page
+					waitForPassphrase = true;
+					AccountDruid.Page = RAPage;
+				}
+			}
+			return false;
+		}
+
+		private bool OnDefaultiFolderValidateClicked(object o, EventArgs args)
+		{
+			// if there is default iFolder present already check for download
+			// else upload
+			if( this.CreateDefault.Active == false)
+				return true;
+			string defaultiFolderID = simws.GetDefaultiFolder( ConnectedDomain.ID );
+			if( defaultiFolderID == null || defaultiFolderID == "")
+			{
+				// upload
+				upload = true;
+				if( LocationEntry.Text == GetDefaultPath())
+				{
+					string str = Mono.Unix.UnixEnvironment.EffectiveUser.HomeDirectory;
+					str += "/"+ConnectedDomain.Name;
+					if(System.IO.Directory.Exists(str) == false)
+					{
+						Console.WriteLine("Createing {0}", str);
+						System.IO.Directory.CreateDirectory(str);
+					}
+					str += "/"+ UserNameEntry.Text;
+					if(System.IO.Directory.Exists(str) == false)
+					{
+						Console.WriteLine("Createing {0}", str);
+						System.IO.Directory.CreateDirectory(str);
+					}
+					str += "/"+"Default";
+					if(System.IO.Directory.Exists(str) == false)
+					{
+						Console.WriteLine("Createing {0}", str);
+						System.IO.Directory.CreateDirectory(str);
+					}
+				}
+				return CreateDefaultiFolder();
+			}
+			else
+			{
+				// download
+				upload = false;
+				iFolderData ifdata = iFolderData.GetData();
+				Console.WriteLine("Reading ifdata");
+				defaultiFolder = ifdata.GetDefaultiFolder( defaultiFolderID );
+				if( defaultiFolder == null)
+					Console.WriteLine("iFolder object is null");
+				else //if( defaultiFolder.encryptionAlgorithm == null || defaultiFolder.encryptionAlgorithm == "")
+				{
+					// Not encrypted... Download here
+				//	Console.WriteLine("Unencrypted download: " );
+					return DownloadiFolder();
+				}
+				/*
+				else
+				{
+					// encrypted... Check for passphrase
+					Console.WriteLine("Encrypted {0} download: ", ifolder.encryptionAlgorithm);
+				}
+				*/
+			}
+			return false;
+		}
+			
+		private bool DownloadiFolder()
+		{
+			iFolderData ifdata = iFolderData.GetData();
+			bool canbeSet = false;
+			if( defaultiFolder.encryptionAlgorithm == null || defaultiFolder.encryptionAlgorithm == "")
+			{
+				canbeSet = true;
+				/*
+				try
+				{
+					ifdata.AcceptiFolderInvitation( ifolderID, domainID, this.LocationEntry.Text);
+					Console.WriteLine("finished accepting invitation");
+					return true;
+				}
+				catch(Exception ex)
+				{
+					Console.WriteLine("Exception: Unable to download: {0}", ex.Message);
+					return false;
+				}
+				*/
+			}
+			else
+			{
+				if( this.passPhraseEntered == false )
+				{
+					// Go to passphrase page
+					waitForPassphrase = true;
+					AccountDruid.Page = RAPage;
+					return false;
+				}
+				else
+				{
+					canbeSet = true;
+				}
+			}
+			if( canbeSet == true )
+			{
+				try
+				{
+					ifdata.AcceptiFolderInvitation( defaultiFolder.ID, defaultiFolder.DomainID, this.LocationEntry.Text);
+					Console.WriteLine("finished accepting invitation");
+					AccountDruid.Page = SummaryPage;
+					return true;
+				}
+				catch(Exception ex)
+				{
+				//	Console.WriteLine("Exception: Unable to download: {0}", ex.Message);
+					DisplayCreateOrSetupException(ex);
+					AccountDruid.Page = DefaultiFolderPage;
+					return false;
+				}
+			}
+			return false;
+		}
+
 		private bool OnValidateClicked(object o, EventArgs args)
 		{
 			bool NextPage = true;
 			string publicKey = "";
+			iFolderData ifdata = iFolderData.GetData();
 			
 			try
 			{
@@ -796,6 +1218,7 @@ namespace Novell.iFolder
 								{
 									Console.WriteLine("Response type is not ok");
 								        simws.StorePassPhrase(ConnectedDomain.ID, "", CredentialType.None, false);
+							//		this.passPhraseEntered = true;
 									NextPage = false;
 								}
 							}
@@ -807,6 +1230,31 @@ namespace Novell.iFolder
 							{
 								domainController.StorePassPhrase( ConnectedDomain.ID, PassPhraseEntry.Text,
 									CredentialType.Basic, RememberPassPhraseCheckButton.Active);
+								this.passPhraseEntered = true;
+								if( this.waitForPassphrase == true)
+								{
+									if( upload == true)
+									{
+										return CreateDefaultiFolder();
+									}
+									else
+									{
+										return DownloadiFolder();
+									}
+									// Create the default iFolder and go to summary page...
+									/*
+									if( ifdata.CreateiFolder(this.LocationEntry.Text, ConnectedDomain.ID, this.sslCheckButton.Active, "BlowFish") == null)
+									{
+										throw new Exception("Simias returned null");
+										return false;
+									}
+									else
+									{
+										AccountDruid.Page = SummaryPage;
+										return true;	
+									}
+									*/
+								}
 							}
 							else
 							{
@@ -829,6 +1277,7 @@ namespace Novell.iFolder
 				else 
 				{
 					// PassPhrase is already set.
+					Console.WriteLine("Validating passphrase");
 					Status validationStatus = domainController.ValidatePassPhrase (ConnectedDomain.ID, PassPhraseEntry.Text );
 					if (validationStatus.statusCode == StatusCodes.PassPhraseInvalid ) 
 					{
@@ -846,8 +1295,36 @@ namespace Novell.iFolder
 						dialog = null;				        
 					}
 					else if(validationStatus.statusCode == StatusCodes.Success )
-					domainController.StorePassPhrase( ConnectedDomain.ID, PassPhraseEntry.Text,
+					{
+						Console.WriteLine("Success. storing passphrase");
+						domainController.StorePassPhrase( ConnectedDomain.ID, PassPhraseEntry.Text,
 												CredentialType.Basic, RememberPassPhraseCheckButton.Active);
+						this.passPhraseEntered = true;
+						if( this.waitForPassphrase == true)
+						{
+							// Create the default iFolder and go to summary page...
+							if( upload == true)
+							{
+								return CreateDefaultiFolder();
+							}
+							else
+							{
+								return DownloadiFolder();
+							}
+							/*
+							if( ifdata.CreateiFolder(this.LocationEntry.Text, ConnectedDomain.ID, this.sslCheckButton.Active, "BlowFish") == null)
+							{
+								throw new Exception("Simias returned null");
+								return false;
+							}
+							else
+							{
+								AccountDruid.Page = SummaryPage;
+								return true;	
+							}
+							*/
+						}
+					}
 				}
 			} 
 			catch (Exception ex)
@@ -878,7 +1355,15 @@ namespace Novell.iFolder
 		
 		private bool OnSkipClicked(object o, EventArgs args)
 		{
-			AccountDruid.Page = SummaryPage;
+			AccountDruid.Page = DefaultiFolderPage;
+
+			BackButton.Label = Util.GS("gtk-go-back");
+			return false;
+		}
+
+		private bool OnDefaultAccountSkipClicked(object o, EventArgs args)
+		{
+			AccountDruid.Page = RAPage;
 
 			BackButton.Label = Util.GS("gtk-go-back");
 			return false;
@@ -1049,7 +1534,10 @@ namespace Novell.iFolder
 
 							int policy = ifws.GetSecurityPolicy(dom.ID);
 							if( policy % 2 ==0)
+							{
 								AccountDruid.Page = SummaryPage;
+								AccountDruid.Page = DefaultiFolderPage;
+							}
 							else
 							{
 								AccountDruid.Page = RAPage;
@@ -1176,12 +1664,128 @@ namespace Novell.iFolder
 				}
 			}
 		}
+
+		// Return true if we were able to determine the exception type.
+		private bool DisplayCreateOrSetupException(Exception e)
+		{
+			string primaryText = null;
+			string secondaryText = null;
+			if (e.Message.IndexOf("Path did not exist") >= 0 || e.Message.IndexOf("URI scheme was not recognized") >= 0)
+			{
+				primaryText = Util.GS("Invalid folder specified");
+				secondaryText = Util.GS("The folder you've specified does not exist.  Please select an existing folder and try again.");
+			}
+			else if (e.Message.IndexOf("PathExists") >= 0)
+			{
+				primaryText = Util.GS("A folder with the same name already exists.");
+				secondaryText = Util.GS("The location you selected already contains a folder with the same name as this iFolder.  Please select a different location and try again.");
+			}
+			else if (e.Message.IndexOf("RootOfDrivePath") >= 0)
+			{
+				primaryText = Util.GS("iFolders cannot exist at the drive level.");
+				secondaryText = Util.GS("The location you selected is at the root of the drive.  Please select a location that is not at the root of a drive and try again.");
+			}
+			else if (e.Message.IndexOf("InvalidCharactersPath") >= 0)
+			{
+				primaryText = Util.GS("The selected location contains invalid characters.");
+				secondaryText = Util.GS("The characters \\:*?\"<>| cannot be used in an iFolder. Please select a different location and try again.");
+			}
+			else if (e.Message.IndexOf("AtOrInsideStorePath") >= 0)
+			{
+				primaryText = Util.GS("The selected location is inside the iFolder data folder.");
+				secondaryText = Util.GS("The iFolder data folder is normally located in your home folder in the folder \".local/share\".  Please select a different location and try again.");
+			}
+			else if (e.Message.IndexOf("ContainsStorePath") >= 0)
+			{
+				primaryText = Util.GS("The selected location contains the iFolder data files.");
+				secondaryText = Util.GS("The location you have selected contains the iFolder data files.  These are normally located in your home folder in the folder \".local/share\".  Please select a different location and try again.");
+			}
+			else if (e.Message.IndexOf("NotFixedDrivePath") >= 0)
+			{
+				primaryText = Util.GS("The selected location is on a network or non-physical drive.");
+				secondaryText = Util.GS("iFolders must reside on a physical drive.  Please select a different location and try again.");
+			}
+			else if (e.Message.IndexOf("SystemDirectoryPath") >= 0)
+			{
+				primaryText = Util.GS("The selected location contains a system folder.");
+				secondaryText = Util.GS("System folders cannot be contained in an iFolder.  Please select a different location and try again.");
+			}
+			else if (e.Message.IndexOf("SystemDrivePath") >= 0)
+			{
+				primaryText = Util.GS("The selected location is a system drive.");
+				secondaryText = Util.GS("System drives cannot be contained in an iFolder.  Please select a different location and try again.");
+			}
+			else if (e.Message.IndexOf("IncludesWinDirPath") >= 0)
+			{
+				primaryText = Util.GS("The selected location includes the Windows folder.");
+				secondaryText = Util.GS("The Windows folder cannot be contained in an iFolder.  Please select a different location and try again.");
+			}
+			else if (e.Message.IndexOf("IncludesProgFilesPath") >= 0)
+			{
+				primaryText = Util.GS("The selected location includes the Program Files folder.");
+				secondaryText = Util.GS("The Program Files folder cannot be contained in an iFolder.  Please select a different location and try again.");
+			}
+			else if (e.Message.IndexOf("DoesNotExistPath") >= 0)
+			{
+				primaryText = Util.GS("The selected location does not exist.");
+				secondaryText = Util.GS("iFolders can only be created from folders that exist.  Please select a different location and try again.");
+			}
+			else if (e.Message.IndexOf("NoReadRightsPath") >= 0)
+			{
+				primaryText = Util.GS("You do not have access to read files in the selected location.");
+				secondaryText = Util.GS("iFolders can only be created from folders where you have access to read and write files.  Please select a different location and try again.");
+			}
+			else if (e.Message.IndexOf("NoWriteRightsPath") >= 0)
+			{
+				primaryText = Util.GS("You do not have access to write files in the selected location.");
+				secondaryText = Util.GS("iFolders can only be created from folders where you have access to read and write files.  Please select a different location and try again.");
+			}
+			else if (e.Message.IndexOf("ContainsCollectionPath") >= 0)
+			{
+				primaryText = Util.GS("The selected location already contains an iFolder.");
+				secondaryText = Util.GS("iFolders cannot exist inside other iFolders.  Please select a different location and try again.");
+			}
+			else if (e.Message.IndexOf("AtOrInsideCollectionPath") >= 0)
+			{
+				primaryText = Util.GS("The selected location is inside another iFolder.");
+				secondaryText = Util.GS("iFolders cannot exist inside other iFolders.  Please select a different location and try again.");
+			}
+						
+			if (primaryText != null)
+			{
+				iFolderMsgDialog dg = new iFolderMsgDialog(
+					this,
+					iFolderMsgDialog.DialogType.Warning,
+					iFolderMsgDialog.ButtonSet.Ok,
+					"",
+					primaryText,
+					secondaryText);
+					dg.Run();
+					dg.Hide();
+					dg.Destroy();
+					
+					return true;
+			}
+			else
+			{
+				iFolderExceptionDialog ied =
+					new iFolderExceptionDialog(
+						this,
+						e);
+				ied.Run();
+				ied.Hide();
+				ied.Destroy();
+			}
+			
+			return false;
+		}
 		
 		public void CloseDialog()
 		{
 			this.Hide();
 			this.Destroy();
 		}
+
 	}
 	
 	///

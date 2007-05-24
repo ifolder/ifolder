@@ -2112,6 +2112,21 @@ namespace Novell.iFolder
 
 				try
 				{
+					bool removeDefault = false;
+					string domainID = holder.iFolder.DomainID;
+					if( simws.GetDefaultiFolder( domainID ) == holder.iFolder.ID)
+					{
+						Console.WriteLine("Removing default iFolder");
+						removeDefault = true;
+					}
+					if( removeDefault == true )
+					{
+						Console.WriteLine("Removing default ifolder");
+						simws.DefaultAccount(domainID, null);
+					}
+					else
+						Console.WriteLine("Not a default account");
+
 					ifdata.DeleteiFolder(holder.iFolder.ID);
 					iFoldersIconView.UnselectAll();
 				}
@@ -2606,15 +2621,31 @@ namespace Novell.iFolder
 				{
 					try
 					{
+						bool removeDefault = false;
+						string domainID = holder.iFolder.DomainID;
+						if( simws.GetDefaultiFolder( domainID ) == holder.iFolder.ID)
+						{
+							Console.WriteLine("Removing default iFolder");
+							removeDefault = true;
+						}
 						iFolderHolder subHolder =
 							ifdata.RevertiFolder(holder.iFolder.ID);
 						
 						if (deleteFromServerCB.Active)
 						{
+							string defaultiFolder = "";
 							if (subHolder == null)
+							{
+								defaultiFolder = holder.iFolder.ID;
 								ifdata.DeleteiFolder(holder.iFolder.ID);
+							}
 							else
+							{
+								defaultiFolder = subHolder.iFolder.ID;
 								ifdata.DeleteiFolder(subHolder.iFolder.ID);
+							}
+							if( removeDefault )
+								simws.DefaultAccount(domainID, null);
 						}
 						
 						iFoldersIconView.UnselectAll();
