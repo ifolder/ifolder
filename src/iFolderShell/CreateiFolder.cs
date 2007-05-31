@@ -1048,6 +1048,7 @@ namespace Novell.iFolderCom
 			this.Passphrase.Size = new System.Drawing.Size(240, 20);
 			this.Passphrase.TabIndex = 3;
 			this.Passphrase.Text = "";
+			this.Passphrase.PasswordChar = '*';
 			this.Passphrase.TextChanged +=new EventHandler(Passphrase_TextChanged);
 			// 
 			// savePassphrase
@@ -1286,6 +1287,7 @@ namespace Novell.iFolderCom
 			this.Passphrase.TabIndex = 4;
 			this.Passphrase.Text = "";
 			this.Passphrase.TextChanged += new System.EventHandler(this.Passphrase_TextChanged);
+			this.Passphrase.PasswordChar = '*';
 			// 
 			// RetypePassphrase
 			// 
@@ -1294,6 +1296,7 @@ namespace Novell.iFolderCom
 			this.RetypePassphrase.Size = new System.Drawing.Size(240, 20);
 			this.RetypePassphrase.TabIndex = 5;
 			this.RetypePassphrase.Text = "";
+			this.RetypePassphrase.PasswordChar = '*';
 			this.RetypePassphrase.TextChanged += new System.EventHandler(this.RetypePassphrase_TextChanged);
 			// 
 			// lblPassphrase
@@ -1379,14 +1382,15 @@ namespace Novell.iFolderCom
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(CreateiFolder));
 			if( this.Passphrase.Text == this.RetypePassphrase.Text)
 			{
-				string publicKey = "";
+				string publicKey = null;
 				string ragent = null;
-				if( this.RecoveryAgentCombo.SelectedItem != null && this.RecoveryAgentCombo.SelectedText != "None")
+				if( this.RecoveryAgentCombo.SelectedItem != null && (string)this.RecoveryAgentCombo.SelectedItem != "None")
 				{
 					// Show the certificate.....
-					byte[] CertificateObj = this.simws.GetRACertificateOnClient(DomainID, this.RecoveryAgentCombo.SelectedText);
+					byte[] CertificateObj = this.simws.GetRACertificateOnClient(DomainID, (string)this.RecoveryAgentCombo.SelectedItem);
 					System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(CertificateObj);
-					MyMessageBox mmb = new MyMessageBox( "Verify Certificate", "Verify Certificate", cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2 );
+				//	MyMessageBox mmb = new MyMessageBox( "Verify Certificate", "Verify Certificate", cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2 );
+					MyMessageBox mmb = new MyMessageBox( string.Format(resources.GetString("verifyCert"), (string)this.RecoveryAgentCombo.SelectedItem), resources.GetString("verifyCertTitle"), cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2);
 					DialogResult messageDialogResult = mmb.ShowDialog();
 					mmb.Dispose();
 					mmb.Close();
@@ -1402,7 +1406,7 @@ namespace Novell.iFolderCom
 				Status passPhraseStatus = null;
 				try
 				{
-					passPhraseStatus = simws.SetPassPhrase( DomainID, this.Passphrase.Text, null, publicKey);
+					passPhraseStatus = simws.SetPassPhrase( DomainID, this.Passphrase.Text, ragent, publicKey);
 				}
 				catch(Exception ex)
 				{

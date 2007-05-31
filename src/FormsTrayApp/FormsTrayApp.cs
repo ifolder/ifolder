@@ -111,6 +111,7 @@ namespace Novell.FormsTrayApp
 		// Hashtable used to hold collection IDs for collections that have already had notifications posted.
 		private Hashtable collectionsNotified = new Hashtable();
 		private string currentSyncCollectionName;
+		private bool errorSyncingCurrentCollection;
 
 		/// <summary>
 		/// Event used to signal that there are events in the queue that need to be processed.
@@ -1158,6 +1159,7 @@ namespace Novell.FormsTrayApp
 					case Action.StartSync:
 					{
 						currentSyncCollectionName = syncEventArgs.Name;
+						errorSyncingCurrentCollection = false;
 
 						if (syncEventArgs.Name.StartsWith("POBox:"))
 						{
@@ -1190,6 +1192,13 @@ namespace Novell.FormsTrayApp
 						else
 						{
 							message = string.Format(resourceManager.GetString("syncComplete"), syncEventArgs.Name);
+						}
+						if( errorSyncingCurrentCollection == true)
+						{
+							MessageBox.Show("Error while syncing files");
+							string title = string.Format(resourceManager.GetString("quotaFailureTitle"), currentSyncCollectionName);
+							notifyType = NotifyType.SyncError;
+							shellNotifyIcon.DisplayBalloonTooltip(title, "Synchronization log contains the information regarding the files that are not synchronized.", BalloonType.Error);
 						}
 						break;
 					}
@@ -1286,15 +1295,19 @@ namespace Novell.FormsTrayApp
 					case SyncStatus.UpdateConflict:
 					case SyncStatus.FileNameConflict:
 						message = string.Format(resourceManager.GetString("conflictFailure"), syncEventArgs.Name);
+						errorSyncingCurrentCollection = true;
 						break;
 					case SyncStatus.Policy:
 						message = string.Format(resourceManager.GetString("policyFailure"), syncEventArgs.Name);
+						errorSyncingCurrentCollection = true;
 						break;
 					case SyncStatus.Access:
 						message = string.Format(resourceManager.GetString("accessFailure"), syncEventArgs.Name);
+						errorSyncingCurrentCollection = true;
 						break;
 					case SyncStatus.Locked:
 						message = string.Format(resourceManager.GetString("lockFailure"), syncEventArgs.Name);
+						errorSyncingCurrentCollection = true;
 						break;
 					case SyncStatus.PolicyQuota:
 						if (!collectionsNotified.Contains(syncEventArgs.CollectionID))
@@ -1306,15 +1319,19 @@ namespace Novell.FormsTrayApp
 							shellNotifyIcon.DisplayBalloonTooltip(title, resourceManager.GetString("quotaFailureInfo"), BalloonType.Error);
 						}
 						message = string.Format(resourceManager.GetString("quotaFailure"), syncEventArgs.Name);
+						errorSyncingCurrentCollection = true;
 						break;
 					case SyncStatus.PolicySize:
 						message = string.Format(resourceManager.GetString("policySizeFailure"), syncEventArgs.Name);
+						errorSyncingCurrentCollection = true;
 						break;
 					case SyncStatus.PolicyType:
 						message = string.Format(resourceManager.GetString("policyTypeFailure"), syncEventArgs.Name);
+						errorSyncingCurrentCollection = true;
 						break;
 					case SyncStatus.DiskFull:
 						message = string.Format(syncToServer ? resourceManager.GetString("serverDiskFullFailure") : resourceManager.GetString("clientDiskFullFailure"), syncEventArgs.Name);
+						errorSyncingCurrentCollection = true;
 						break;
 					case SyncStatus.ReadOnly:
 						if (!collectionsNotified.Contains(syncEventArgs.CollectionID))
@@ -1326,13 +1343,16 @@ namespace Novell.FormsTrayApp
 							shellNotifyIcon.DisplayBalloonTooltip(title, resourceManager.GetString("readOnlyFailureInfo"), BalloonType.Error);
 						}
 						message = string.Format(resourceManager.GetString("readOnlyFailure"), syncEventArgs.Name);
+						errorSyncingCurrentCollection = true;
 						break;
 					default:
 						message = string.Format(resourceManager.GetString("genericFailure"), syncEventArgs.Name);
+						errorSyncingCurrentCollection = true;
 						break;
 				}
 
 				// Add message to log.
+				// message += string.Format("file name: {0}, iFolder: {1}", syncEventArgs.Name, currentSyncCollectionName);
 				syncLog.AddMessageToLog(syncEventArgs.TimeStamp, message);
 			}
 			catch {}
