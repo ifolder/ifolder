@@ -101,6 +101,7 @@ namespace Novell.iFolder
 			loginTable.Attach( passPhraseLabel, 0,1,0,2, AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			passPhraseEntry = new Entry();
 			passPhraseEntry.ActivatesDefault = true;
+			passPhraseEntry.Visibility = false;
 			passPhraseEntry.Changed += new EventHandler(OnPassPhraseChanged);
 			loginTable.Attach(passPhraseEntry, 1,2,0,2, AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 				savePassPhraseButton = 

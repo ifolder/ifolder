@@ -468,7 +468,7 @@ namespace Novell.iFolder
 		private void OnValidateClicked(object o, EventArgs args)
 		{
 			bool NextPage = true;
-			string publicKey = "";
+			string publicKey = null;
 		    try {
 		        //Validate the PassPhrase Locally.
 		        if ( !PassPhraseSet )
@@ -483,6 +483,8 @@ namespace Novell.iFolder
 						TreeIter iter;
 						tSelect.GetSelected(out tModel, out iter);
 						recoveryAgentName = (string) tModel.GetValue(iter, 0);
+						if(recoveryAgentName == Util.GS("None"))
+							recoveryAgentName = null;
 					}
 					if( recoveryAgentName != null && recoveryAgentName != Util.GS("None"))
 					{
@@ -523,10 +525,10 @@ namespace Novell.iFolder
 					}
 					if( NextPage)
 					{
-					        Status passPhraseStatus = domainController.SetPassPhrase ((domains[domainList.Active]).ID, PassPhraseEntry.Text, "");
+					        Status passPhraseStatus = simws.SetPassPhrase ((domains[domainList.Active]).ID, PassPhraseEntry.Text, recoveryAgentName, publicKey);
 						if(passPhraseStatus.statusCode == StatusCodes.Success)
 						{
-							domainController.StorePassPhrase( (domains[domainList.Active]).ID, PassPhraseEntry.Text,
+							simws.StorePassPhrase( (domains[domainList.Active]).ID, PassPhraseEntry.Text,
 								CredentialType.Basic, RememberPassPhraseCheckButton.Active);
 						}
 						else
@@ -844,6 +846,7 @@ namespace Novell.iFolder
 				       RATreeStore.Clear();
 				       foreach (string raagent in list )
 					       RATreeStore.AppendValues (raagent);
+					RATreeStore.AppendValues(Util.GS("None"));
 
 				} else {
 				       // PassPhrase already available.
