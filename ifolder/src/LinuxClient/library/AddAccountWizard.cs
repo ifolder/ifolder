@@ -99,6 +99,8 @@ namespace Novell.iFolder
 		private CheckButton CreateDefault;
 		private Button BrowseButton;
 		private string DefaultPath;
+		private Label locationLabel;
+		private Label securityLabel;
 
 		///
 		/// Connect Page Widgets
@@ -593,8 +595,8 @@ namespace Novell.iFolder
 			CreateDefault.Toggled += new EventHandler(OnCreateDefaultChanged);
 			
 			// Row 2
-			Label l = new Label(Util.GS("Location:"));
-			table.Attach(l, 1,2, 1,2, AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+			locationLabel = new Label(Util.GS("Location:"));
+			table.Attach(locationLabel, 1,2, 1,2, AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			//l.Xalign = 0.0F;
 			
 			LocationEntry = new Entry();
@@ -605,8 +607,8 @@ namespace Novell.iFolder
 			BrowseButton.Clicked += new EventHandler(OnBrowseButtonClicked);
 
 			// row 3
-			l = new Label("Security:");
-			table.Attach( l, 1,2, 2,3, AttachOptions.Fill | AttachOptions.Shrink, 0,0,0);
+			securityLabel = new Label("Security:");
+			table.Attach( securityLabel, 1,2, 2,3, AttachOptions.Fill | AttachOptions.Shrink, 0,0,0);
 			//l.Xalign = 0.0F;
 			encryptionCheckButton = new RadioButton(Util.GS("Encrypted"));
 			table.Attach(encryptionCheckButton, 2,3, 2,3,
@@ -645,7 +647,7 @@ namespace Novell.iFolder
 		private string GetDefaultPath()
 		{
 			string str = Mono.Unix.UnixEnvironment.EffectiveUser.HomeDirectory;
-			str += "/"+ConnectedDomain.Name+"/"+UserNameEntry.Text;
+			str += "/ifolder/"+ConnectedDomain.Name+"/"+UserNameEntry.Text;
 			if( upload == true )
 				return str+"/"+"Default";
 			else
@@ -659,20 +661,25 @@ namespace Novell.iFolder
 				encryptionCheckButton.Sensitive = false;
 				sslCheckButton.Sensitive = false;
 				BrowseButton.Sensitive = false;
+				locationLabel.Sensitive = false;
+				securityLabel.Sensitive = false;
+				LocationEntry.Sensitive = false;
 			}
 			else
 			{
 				if( upload == true)
 				{
-					encryptionCheckButton.Sensitive = sslCheckButton.Sensitive = true;
+					securityLabel.Sensitive = encryptionCheckButton.Sensitive = sslCheckButton.Sensitive = true;
 				}
 				else
 				{
-					LocationEntry.Sensitive = true;
 					encryptionCheckButton.Sensitive = sslCheckButton.Sensitive = false;
 					encryptionCheckButton.Active = sslCheckButton.Active = false;
+					securityLabel.Sensitive = false;
 				}
+				LocationEntry.Sensitive = true;
 				BrowseButton.Sensitive = true;
+				locationLabel.Sensitive = true;
 			}
 		}
 
@@ -821,6 +828,7 @@ namespace Novell.iFolder
 		{
 			this.Title = Util.GS("iFolder Account Assistant - (5 of 6)");
 			string str = "";
+			this.CreateDefault.Active = true;
 			try
 			{
 				str = this.simws.GetDefaultiFolder( ConnectedDomain.ID );
@@ -835,13 +843,16 @@ namespace Novell.iFolder
 			{
 				Console.WriteLine("Default account does not exist");
 				upload = true;
-				LocationEntry.Sensitive = false;
+				LocationEntry.Sensitive = true;
+				securityLabel.Sensitive = true;
 			}
 			else
 			{
 				Console.WriteLine("Default account exists");
 				upload = false;
 				CreateDefault.Label = Util.GS("Download Default iFolder:");
+				securityLabel.Visible = false;
+				encryptionCheckButton.Visible = sslCheckButton.Visible = false;
 			}
 			if( passPhraseEntered == true)
 				AccountDruid.SetButtonsSensitive(false, true, true, true);
@@ -907,6 +918,7 @@ namespace Novell.iFolder
 
 			       foreach (string raagent in list )
 				       RATreeStore.AppendValues (raagent);
+				RATreeStore.AppendValues( Util.GS("None"));
 
 			} else {
 			       // PassPhrase already available.
@@ -993,45 +1005,60 @@ namespace Novell.iFolder
 			if( this.encryptionCheckButton.Active == false)
 			{
 				Console.WriteLine("Shared");
-				if( (ifHolder = ifdata.CreateiFolder(this.LocationEntry.Text, ConnectedDomain.ID, this.sslCheckButton.Active, null)) == null)
-					return false;
-				else
+				try
 				{
-					this.simws.DefaultAccount(ConnectedDomain.ID, ifHolder.iFolder.ID);
-					AccountDruid.Page = SummaryPage;
-					Console.WriteLine("Making default account and verifying");
-					string str = this.simws.GetDefaultiFolder( ConnectedDomain.ID );
-					if( str == null)
-						Console.WriteLine("Not set the default account");
+					if( (ifHolder = ifdata.CreateiFolder(this.LocationEntry.Text, ConnectedDomain.ID, this.sslCheckButton.Active, null)) == null)
+						return false;
 					else
-						Console.WriteLine("Set the default iFolder to: {0}", str);
-					return true;
+					{
+						this.simws.DefaultAccount(ConnectedDomain.ID, ifHolder.iFolder.ID);
+						AccountDruid.Page = SummaryPage;
+						Console.WriteLine("Making default account and verifying");
+						string str = this.simws.GetDefaultiFolder( ConnectedDomain.ID );
+						if( str == null)
+							Console.WriteLine("Not set the default account");
+						else
+							Console.WriteLine("Set the default iFolder to: {0}", str);
+						return true;
+					}
+				}
+				catch( Exception ex)
+				{
+					DisplayCreateOrSetupException(ex);
+					return false;
 				}
 			}
-			// shared
 			else 
 			{
 				Console.WriteLine("encrypted");
 				if( this.passPhraseEntered == true )
 				{
 					Console.WriteLine("passphrase entered");
-					if( (ifHolder = ifdata.CreateiFolder(this.LocationEntry.Text, ConnectedDomain.ID, this.sslCheckButton.Active, "BlowFish")) == null)
+					try
 					{
-						throw new Exception("Simias returned null");
-						return false;
-					}
-					else
-					{
-						Console.WriteLine("Making default account");
-						this.simws.DefaultAccount(ConnectedDomain.ID, ifHolder.iFolder.ID);
-						string str = this.simws.GetDefaultiFolder( ConnectedDomain.ID );
-						if( str == null)
-							Console.WriteLine("Not set the default account");
+						if( (ifHolder = ifdata.CreateiFolder(this.LocationEntry.Text, ConnectedDomain.ID, this.sslCheckButton.Active, "BlowFish")) == null)
+						{
+							throw new Exception("Simias returned null");
+							return false;
+						}
 						else
-							Console.WriteLine("Set the default iFolder to: {0}", str);
+						{
+							Console.WriteLine("Making default account");
+							this.simws.DefaultAccount(ConnectedDomain.ID, ifHolder.iFolder.ID);
+							string str = this.simws.GetDefaultiFolder( ConnectedDomain.ID );
+							if( str == null)
+								Console.WriteLine("Not set the default account");
+							else
+								Console.WriteLine("Set the default iFolder to: {0}", str);
 
-						AccountDruid.Page = SummaryPage;
-						return true;
+							AccountDruid.Page = SummaryPage;
+							return true;
+						}
+					}
+					catch(Exception ex)
+					{
+						DisplayCreateOrSetupException(ex);
+						return false;
 					}
 				}
 				else
@@ -1057,24 +1084,10 @@ namespace Novell.iFolder
 				upload = true;
 				if( LocationEntry.Text == GetDefaultPath())
 				{
-					string str = Mono.Unix.UnixEnvironment.EffectiveUser.HomeDirectory;
-					str += "/"+ConnectedDomain.Name;
-					if(System.IO.Directory.Exists(str) == false)
+					if(!System.IO.Directory.Exists( LocationEntry.Text ))
 					{
-						Console.WriteLine("Createing {0}", str);
-						System.IO.Directory.CreateDirectory(str);
-					}
-					str += "/"+ UserNameEntry.Text;
-					if(System.IO.Directory.Exists(str) == false)
-					{
-						Console.WriteLine("Createing {0}", str);
-						System.IO.Directory.CreateDirectory(str);
-					}
-					str += "/"+"Default";
-					if(System.IO.Directory.Exists(str) == false)
-					{
-						Console.WriteLine("Createing {0}", str);
-						System.IO.Directory.CreateDirectory(str);
+						System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(LocationEntry.Text);
+						dir.Create();
 					}
 				}
 				return CreateDefaultiFolder();
@@ -1163,7 +1176,7 @@ namespace Novell.iFolder
 		private bool OnValidateClicked(object o, EventArgs args)
 		{
 			bool NextPage = true;
-			string publicKey = "";
+			string publicKey = null;
 			iFolderData ifdata = iFolderData.GetData();
 			
 			try
@@ -1195,6 +1208,8 @@ namespace Novell.iFolder
 							TreeIter iter;
 							tSelect.GetSelected(out tModel, out iter);
 							recoveryAgentName = (string) tModel.GetValue(iter, 0);
+							if( recoveryAgentName == Util.GS("None"))
+								recoveryAgentName = null;
 						}
 						if( recoveryAgentName != null && recoveryAgentName != Util.GS("None"))
 						{
@@ -1225,10 +1240,10 @@ namespace Novell.iFolder
 						}
 						if( NextPage)
 						{
-							Status passPhraseStatus = domainController.SetPassPhrase (ConnectedDomain.ID, PassPhraseEntry.Text, publicKey);
+							Status passPhraseStatus = simws.SetPassPhrase (ConnectedDomain.ID, PassPhraseEntry.Text, recoveryAgentName, publicKey);
 							if(passPhraseStatus.statusCode == StatusCodes.Success)
 							{
-								domainController.StorePassPhrase( ConnectedDomain.ID, PassPhraseEntry.Text,
+								simws.StorePassPhrase( ConnectedDomain.ID, PassPhraseEntry.Text,
 									CredentialType.Basic, RememberPassPhraseCheckButton.Active);
 								this.passPhraseEntered = true;
 								if( this.waitForPassphrase == true)

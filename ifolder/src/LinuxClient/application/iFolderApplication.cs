@@ -87,6 +87,7 @@ namespace Novell.iFolder
 		/// is able to notify the user at the end when there's a
 		/// problem.
 		private string				collectionSynchronizing;
+		private iFolderHolder iFolderHolderSyncing;
 		private Hashtable			synchronizationErrors;
 
 		private DomainController	domainController;
@@ -692,7 +693,7 @@ namespace Novell.iFolder
 				//check explicitly here since we r not sure whether other events
 				if( result != (int)ResponseType.Cancel || result != (int) ResponseType.DeleteEvent)
 				{
-					string publicKey = "";
+					string publicKey = null;
 
 					if( epd.RecoveryAgent != null)
 					{
@@ -885,53 +886,57 @@ namespace Novell.iFolder
 							synchronizationErrors.Remove(args.CollectionID);
 
 						break;
-//					case SyncStatus.UpdateConflict:
-//					case SyncStatus.FileNameConflict:
-//						// Conflicts are handled in the OniFolderChangedEvent method
-//						break;
-//					case SyncStatus.Policy:
-//						message = Util.GS("A policy prevented complete synchronization.");
-//						break;
-//					case SyncStatus.Access:
-//						message = Util.GS("Insuficient rights prevented complete synchronization.");
-//						break;
-//					case SyncStatus.Locked:
-//						message = Util.GS("The iFolder is locked.");
-//						break;
+					case SyncStatus.UpdateConflict:
+					case SyncStatus.FileNameConflict:
+						// Conflicts are handled in the OniFolderChangedEvent method
+						break;
+					case SyncStatus.Policy:
+						message = Util.GS("A policy prevented complete synchronization.");
+						break;
+					case SyncStatus.Access:
+						message = Util.GS("Insuficient rights prevented complete synchronization.");
+						break;
+					case SyncStatus.Locked:
+						message = Util.GS("The iFolder is locked.");
+						break;
 					case SyncStatus.PolicyQuota:
-//						message = Util.GS("The iFolder is full.  Click here to view the Synchronization Log.");
+						message = Util.GS("The iFolder is full.  Click here to view the Synchronization Log.");
 						message = Util.GS("The iFolder is full.\n\nClick <a href=\"ShowSyncLog\">here</a> to view the Synchronization Log.");
 						break;
-//					case SyncStatus.PolicySize:
-//						message = Util.GS("A size restriction policy prevented complete synchronization.");
-//						break;
-//					case SyncStatus.PolicyType:
-//						message = Util.GS("A file type restriction policy prevented complete synchronization.");
-//						break;
-//					case SyncStatus.DiskFull:
-//						if (args.Direction == Simias.Client.Event.Direction.Uploading)
-//						{
-//							message = Util.GS("Insufficient disk space on the server prevented complete synchronization.");
-//						}
-//						else
-//						{
-//							message = Util.GS("Insufficient disk space on this computer prevented complete synchronization.");
-//						}
-//						break;
+					case SyncStatus.PolicySize:
+						message = Util.GS("A size restriction policy prevented complete synchronization.");
+						break;
+					case SyncStatus.PolicyType:
+						message = Util.GS("A file type restriction policy prevented complete synchronization.");
+						break;
+					case SyncStatus.DiskFull:
+						if (args.Direction == Simias.Client.Event.Direction.Uploading)
+						{
+							message = Util.GS("Insufficient disk space on the server prevented complete synchronization.");
+						}
+						else
+						{
+							message = Util.GS("Insufficient disk space on this computer prevented complete synchronization.");
+						}
+						break;
 					case SyncStatus.ReadOnly:
 						message = Util.GS("You have Read-only access to this iFolder.  Files that you place in this iFolder will not be synchronized.\n\nClick <a href=\"ShowSyncLog\">here</a> to view the Synchronization Log.");
 						break;
-//					default:
-//						message = Util.GS("iFolder synchronization failed.");
-//						break;
+					default:
+						message = Util.GS("iFolder synchronization failed.");
+						break;
 				}
 				
 				if (message != null)
 				{
 					Hashtable collectionSyncErrors = null;
+					// Displays the file name also along with the reason for ...
+				//	message = String.Format("Cannot synchronize: {0}. ", args.Name) + message;
+					Console.WriteLine("Ramesh: Synchronization errors: {0}, {1}, {2}", args.Name, message, args.CollectionID);
 					if (synchronizationErrors.ContainsKey(args.CollectionID))
 					{
 						collectionSyncErrors = (Hashtable)synchronizationErrors[args.CollectionID];
+						Console.WriteLine("collection sync errors exist: {0}", collectionSyncErrors.Count);
 					}
 					else
 					{
@@ -942,6 +947,10 @@ namespace Novell.iFolder
 					if (!collectionSyncErrors.ContainsKey(args.Status))
 					{
 						collectionSyncErrors[args.Status] = message;
+					// per iFolder log message
+					//	if( iFolderHolderSyncing != null)
+					//		iFolderHolderSyncing.iflog.LogMessage(message);
+						Console.WriteLine("collection sync error count: {0}", collectionSyncErrors.Count);
 					}
 				}
 			}
@@ -960,6 +969,10 @@ namespace Novell.iFolder
 				case Simias.Client.Event.Action.StartSync:
 				{
 					collectionSynchronizing = args.ID;
+					iFolderHolderSyncing = ifdata.GetiFolder( collectionSynchronizing);
+				// per iFolder synchronization log
+				//	if( iFolderHolderSyncing != null)
+				//		iFolderHolderSyncing.iflog = new iFolderLogWindow();
 					break;
 				}
 				case Simias.Client.Event.Action.StopSync:
@@ -978,12 +991,17 @@ namespace Novell.iFolder
 								{
 									Hashtable collectionSyncErrors = (Hashtable)synchronizationErrors[ifHolder.iFolder.ID];
 									ICollection errors = collectionSyncErrors.Keys;
+									Console.WriteLine("Number of errors: {0}", errors.Count);
 									ArrayList keysToClear = new ArrayList();
+									bool showErrorBaloon = false;
 									foreach(SyncStatus syncStatusKey in errors)
 									{
 										string errMsg = (string) collectionSyncErrors[syncStatusKey];
 										if (errMsg != null && errMsg.Length > 0)
 										{
+											showErrorBaloon = true;
+										/*
+										// Shows baloon for every file not synced.....
 											NotifyWindow notifyWin = new NotifyWindow(
 												tIcon, string.Format(Util.GS("Incomplete Synchronization: {0}"), ifHolder.iFolder.Name),
 												errMsg,
@@ -991,20 +1009,32 @@ namespace Novell.iFolder
 											notifyWin.LinkClicked +=
 												new LinkClickedEventHandler(OnNotifyWindowLinkClicked);
 											notifyWin.ShowAll();
-											
+										*/	
 											// Set this message to "" so that
 											// the notification bubble isn't
 											// popped-up on every sync cycle.
 											keysToClear.Add(syncStatusKey);
 										}
 									}
+									if( showErrorBaloon == true)
+									{
+										NotifyWindow notifyWin = new NotifyWindow(
+											tIcon, string.Format(Util.GS("Incomplete Synchronization: {0}"), ifHolder.iFolder.Name),
+											Util.GS("Synchronization log contains the information regarding the files that are not synchronized")/*errMsg*/,
+											Gtk.MessageType.Warning, 10000);
+										notifyWin.LinkClicked +=
+											new LinkClickedEventHandler(OnNotifyWindowLinkClicked);
+										notifyWin.ShowAll();
+									}
 									
 									// Clear out all the keys whose messages
 									// were just notified to the user.
 									foreach(SyncStatus syncStatusKey in keysToClear)
 									{
-										collectionSyncErrors[syncStatusKey] = "";
+										collectionSyncErrors.Remove( syncStatusKey);
+							//			collectionSyncErrors[syncStatusKey] = null;
 									}
+									Console.WriteLine("After removing keys count: {0}", collectionSyncErrors.Count);
 								}
 							}
 						}
