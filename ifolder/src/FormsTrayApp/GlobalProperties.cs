@@ -3109,6 +3109,12 @@ namespace Novell.FormsTrayApp
 						
 							if( newiFolder.Role == null || newiFolder.Role == "Master")
 							{
+								string defaultiFolderID = this.simiasWebService.GetDefaultiFolder( newiFolder.DomainID );
+								if( defaultiFolderID == newiFolder.ID)
+								{
+									//MessageBox.Show("Setting default iFolder ID to null");
+									this.simiasWebService.DefaultAccount( newiFolder.DomainID, null );
+								}
 								ifWebService.DeleteiFolder(newiFolder.DomainID, newiFolder.ID);
 							}
 						
@@ -3272,6 +3278,17 @@ namespace Novell.FormsTrayApp
 					}
 				}
 			}
+		}
+
+		public void UpdateDisplay( iFolderWeb ifolderWeb, string DownloadPath)
+		{
+			iFolderObject ifobj = new iFolderObject(ifolderWeb, iFolderState.Initial);
+			addiFolderToListView(new iFolderObject(ifolderWeb, iFolderState.Initial));
+			if( acceptedFolders.Contains(ifolderWeb.ID) )
+				acceptedFolders.Remove(ifolderWeb.ID);
+			ifolderWeb.UnManagedPath = DownloadPath;
+			TileListViewItem tlvi = new TileListViewItem(ifobj);
+			acceptedFolders.Add(ifolderWeb.ID, tlvi);
 		}
 
 		private void menuRemove_Click(object sender, System.EventArgs e)

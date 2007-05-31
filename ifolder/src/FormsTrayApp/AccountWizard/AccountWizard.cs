@@ -83,9 +83,10 @@ namespace Novell.Wizard
 		private ServerPage serverPage;
 		private IdentityPage identityPage;
 		private VerifyPage verifyPage;
+		private DefaultiFolderPage defaultiFolderPage;
 		private CompletionPage completionPage;
 		private BaseWizardPage[] pages;
-		internal const int maxPages = 5;
+		internal const int maxPages = 6;
 		private int currentIndex = 0;
 		private Manager simiasManager;
 		private SimiasWebService simiasWebService;
@@ -107,6 +108,7 @@ namespace Novell.Wizard
 			this.simiasWebService = simiasWebService;
 			this.ifWebService = ifWebService;
 			this.prefs = prefs;
+			bool defaultiFolderExists = false;
 
 			//
 			// Required for Windows Form Designer support
@@ -120,6 +122,7 @@ namespace Novell.Wizard
 			this.identityPage = new IdentityPage();
 			this.verifyPage = new VerifyPage( firstAccount );
 			this.completionPage = new CompletionPage();
+			this.defaultiFolderPage = new DefaultiFolderPage(this.ifWebService, this.simiasWebService, this.domainInfo);
 			//
 			// welcomePage
 			// 
@@ -162,6 +165,14 @@ namespace Novell.Wizard
 			this.verifyPage.Size = new System.Drawing.Size(496, 304);
 			this.verifyPage.TabIndex = 1;
 			//
+			// DefaultiFolderPage
+			//
+			this.defaultiFolderPage.Name = "defaultiFolderPage";
+			this.defaultiFolderPage.Location = new System.Drawing.Point(0, 0);
+			this.defaultiFolderPage.Size = new System.Drawing.Size(496, 304);
+			this.defaultiFolderPage.HeaderTitle = "Default iFolder";
+			this.defaultiFolderPage.HeaderSubTitle = "Create/Download Default iFolder";
+			//
 			// completionPage
 			//
 			// TODO: Localize
@@ -176,6 +187,7 @@ namespace Novell.Wizard
 			this.Controls.Add(this.serverPage);
 			this.Controls.Add(this.identityPage);
 			this.Controls.Add(this.verifyPage);
+			this.Controls.Add(this.defaultiFolderPage);
 			this.Controls.Add(this.completionPage);
 
 			// Load the application icon.
@@ -191,7 +203,8 @@ namespace Novell.Wizard
 			pages[1] = this.serverPage;
 			pages[2] = this.identityPage;
 			pages[3] = this.verifyPage;
-			pages[4] = this.completionPage;
+			pages[4] = this.defaultiFolderPage;
+			pages[5] = this.completionPage;
 
 			try
 			{
@@ -330,10 +343,10 @@ namespace Novell.Wizard
 				// TODO: Localize
 				this.next.Text = Resource.GetString("NextText")+" >";
 			}
-
+			if( currentIndex == (maxPages -2) )
+				return;
 			int previousIndex = this.pages[currentIndex].DeactivatePage();
 			this.pages[previousIndex].ActivatePage(0);
-
 			currentIndex = previousIndex;
 		}
 
@@ -366,7 +379,10 @@ namespace Novell.Wizard
 				if (currentIndex == (maxPages - 2))
 				{
 					// TODO: Localize
-					next.Text = Resource.GetString("ConnectText");//"&Connect";
+					// Changing the connet button text.....
+					//next.Text = Resource.GetString("ConnectText");//"&Connect";
+					next.Text = "&Create";
+				//	MessageBox.Show(string.Format("Setting default path: {0}", this.defaultiFolderPage.defaultPath));
 				}
 				else if (currentIndex == (maxPages - 1))
 				{
@@ -377,6 +393,15 @@ namespace Novell.Wizard
 					next.Text = Resource.GetString("FinishText");//"&Finish";
 				}
 			}
+		}
+
+		private string GetDefaultPath(string userName, string domainName)
+		{
+			string appdata = System.Environment.GetEnvironmentVariable("APPDATA");
+			int i = appdata.LastIndexOf("\\");
+			appdata = appdata.Substring(0, i+1);
+			appdata = appdata + "ifolder\\" + userName + "\\" + domainName ;
+			return appdata;
 		}
 
 		#endregion
@@ -476,6 +501,8 @@ namespace Novell.Wizard
 			{
 				result = true;
 				domainInfo = connecting.DomainInformation;
+				this.defaultiFolderPage.DomainInfo = this.domainInfo;
+				this.defaultiFolderPage.defaultPath = this.GetDefaultPath(this.identityPage.Username, this.defaultiFolderPage.DomainInfo.Name);
 				/*
 				string newClientVersion = null;
 
@@ -511,6 +538,12 @@ namespace Novell.Wizard
 			}
 
 			return result;
+		}
+
+		public void UpdateDisplay( iFolderWeb ifolder, string path)
+		{
+		//	MessageBox.Show("Updating display");
+			(Novell.FormsTrayApp.FormsTrayApp.globalProp()).UpdateDisplay(ifolder, path);
 		}
 
 		#endregion

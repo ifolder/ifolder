@@ -100,7 +100,7 @@ namespace Novell.Wizard
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(94, 16);
 			this.label1.TabIndex = 3;
-			this.label1.Text = Resource.GetString("UName");//"User name:";
+			this.label1.Text = Resource.GetString("UName")+":";//"User name:";
 			// 
 			// label2
 			// 
@@ -122,42 +122,42 @@ namespace Novell.Wizard
 			// 
 			this.label4.Location = new System.Drawing.Point(50, 152);
 			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(118, 16);
+			this.label4.Size = new System.Drawing.Size(148, 16);
 			this.label4.TabIndex = 5;
-			this.label4.Text = Resource.GetString("RememberPasswd");//"Remember password:";
+			this.label4.Text = Resource.GetString("RememberPasswd")+":";//"Remember password:";
 			// 
 			// defaultDescription
 			// 
 			this.defaultDescription.Location = new System.Drawing.Point(50, 176);
 			this.defaultDescription.Name = "defaultDescription";
-			this.defaultDescription.Size = new System.Drawing.Size(118, 16);
+			this.defaultDescription.Size = new System.Drawing.Size(150, 16);
 			this.defaultDescription.TabIndex = 7;
 			this.defaultDescription.Text = Resource.GetString("DefaultServer");//"Make default account:";
 			// 
 			// serverAddress
 			// 
-			this.serverAddress.Location = new System.Drawing.Point(176, 104);
+			this.serverAddress.Location = new System.Drawing.Point(238, 104);
 			this.serverAddress.Name = "serverAddress";
 			this.serverAddress.Size = new System.Drawing.Size(304, 16);
 			this.serverAddress.TabIndex = 2;
 			// 
 			// username
 			// 
-			this.username.Location = new System.Drawing.Point(176, 128);
+			this.username.Location = new System.Drawing.Point(238, 128);
 			this.username.Name = "username";
 			this.username.Size = new System.Drawing.Size(304, 16);
 			this.username.TabIndex = 4;
 			// 
 			// rememberPassword
 			// 
-			this.rememberPassword.Location = new System.Drawing.Point(176, 152);
+			this.rememberPassword.Location = new System.Drawing.Point(238, 152);
 			this.rememberPassword.Name = "rememberPassword";
 			this.rememberPassword.Size = new System.Drawing.Size(168, 16);
 			this.rememberPassword.TabIndex = 6;
 			// 
 			// defaultAccount
 			// 
-			this.defaultAccount.Location = new System.Drawing.Point(176, 176);
+			this.defaultAccount.Location = new System.Drawing.Point(238, 176);
 			this.defaultAccount.Name = "defaultAccount";
 			this.defaultAccount.Size = new System.Drawing.Size(168, 16);
 			this.defaultAccount.TabIndex = 8;
