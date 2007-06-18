@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-iFolder_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/iFolderWebService.cs
+iFolder_CSFILES =  $(srcdir)/iFolderWebService.cs
 iFolder_CSFILES_CSC := $(subst /,$(SEP),$(iFolder_CSFILES))
 iFolder_INCLUDES =
 iFolder_RESOURCES =
@@ -38,8 +38,8 @@ all: Novell.iFolder.dll
 #	mv newsource.cs iFolderWebService.cs
 #endif
 
-Novell.iFolder.dll: $(iFolder_CSFILES) $(iFolder_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(iFolder_FLAGS) $(iFolder_LIBS:%=/r:%) $(iFolder_LIBPATH:%=/lib:%) $(iFolder_CSFILES_CSC) $(DOC_FILE_CMD)
+Novell.iFolder.dll: $(srcdir)/AssemblyInfo.cs $(iFolder_CSFILES) $(iFolder_RESOURCES)
+	$(CSC) /out:$@ $(CSCFLAGS) $(iFolder_FLAGS) $(iFolder_LIBS:%=/r:%) $(iFolder_LIBPATH:%=/lib:%) $(srcdir)/AssemblyInfo.cs $(iFolder_CSFILES_CSC) $(DOC_FILE_CMD)
 
 if DEBUG
 if WINDOWS

@@ -540,7 +540,6 @@ AC_OUTPUT([
 Makefile
 src/Makefile
 src/iFolder/Makefile
-src/iFolder/AssemblyInfo.cs
 src/LinuxClient/Makefile
 src/LinuxClient/library/Makefile
 src/LinuxClient/application/Makefile
@@ -548,13 +547,10 @@ src/LinuxClient/bonjour-ui/Makefile
 src/LinuxClient/po/Makefile
 src/LinuxClient/po/POTFILES
 src/FormsTrayApp/Makefile
-src/FormsTrayApp/AssemblyInfo.cs
 src/iFolderShell/Makefile
-src/iFolderShell/AssemblyInfo.cs
 src/TrayIcon/Makefile
 src/TrayIcon/libtrayicon/Makefile
 src/WebService/Makefile
-src/WebService/AssemblyInfo.cs
 src/libifolder/Makefile
 src/OSXClient/Makefile
 src/OSXClient/Info.plist
