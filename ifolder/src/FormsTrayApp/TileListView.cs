@@ -275,7 +275,7 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
-		private bool isReCalculateNeeded
+		public bool isReCalculateNeeded
 		{
 			get
 			{

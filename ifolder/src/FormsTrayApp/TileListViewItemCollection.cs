@@ -107,7 +107,8 @@ namespace Novell.FormsTrayApp
 		{
 			list.Clear();
 			owner.Controls.Clear();
-			owner.ReCalculateItems();
+			if(owner.isReCalculateNeeded)
+				owner.ReCalculateItems();
 		}
 
 		public int IndexOf(TileListViewItem value)
