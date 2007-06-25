@@ -32,6 +32,14 @@ using Simias.Client.Authentication;
 
 namespace Novell.iFolder.Controller
 {
+	public enum UpgradeResult
+	{
+		Latest = 0,
+		UpgradeNeeded = 1,
+		ServerOld = 2,
+		UpgradeAvailable = 3,
+		Unknown =4,
+	};
 	public class DomainController
 	{
 		private static DomainController instance = null;
@@ -39,8 +47,8 @@ namespace Novell.iFolder.Controller
 		/// <summary>
 		/// Member that provides acces to the iFolder Web Service
 		/// </summary>
-		private iFolderWebService	ifws;
-
+	//	private iFolderWebService	ifws;
+		public iFolderWebService	ifws;
 
 		/// <summary>
 		/// Member that provides acces to the Simias Web Service
@@ -895,6 +903,7 @@ namespace Novell.iFolder.Controller
 		{
 		//	Status tempStatus = status;
 			DomainController.upgradeStatus = status;
+			Console.WriteLine("In handledoaminloggedin");
 			// Update our cache of the DomainInformation object
 			try
 			{
@@ -943,7 +952,8 @@ namespace Novell.iFolder.Controller
 					}
 				}
 			}
-			
+			CheckForUpdate(domainID);
+		/*	
 			// Check to see if there's a new version of the client available
 			string newClientVersion = GetNewClientVersion(domainID);
 			if (newClientVersion != null)
@@ -988,7 +998,56 @@ namespace Novell.iFolder.Controller
 				}
 				
 			}
+		*/
 			return DomainController.upgradeStatus;
+		}
+
+		private void CheckForUpdate( string domainID )
+		{
+			string serverVersion = null;
+			UpgradeResult status = UpgradeResult.Unknown;
+			try
+			{
+				status = (UpgradeResult)this.ifws.CheckForUpdate(domainID, out serverVersion);
+			}
+			catch(Exception ex)
+			{
+				Console.WriteLine("Exception: {0}", ex.Message);
+				// Trying to connect to a older 3.2 server. Disconnect the domain.
+			//	status = UpgradeResult.ServerOld;
+				status = UpgradeResult.Latest;
+			}
+			DomainClientUpgradeAvailableEventArgs args;
+			switch( status)
+			{
+				case UpgradeResult.Latest: 
+						break;
+				case UpgradeResult.UpgradeNeeded:
+						DomainController.upgradeStatus.statusCode = StatusCodes.UpgradeNeeded;
+						args =
+								new DomainClientUpgradeAvailableEventArgs(
+									domainID, serverVersion);
+					DomainClientUpgradeAvailable(this, args);
+						break;
+				case UpgradeResult.ServerOld: 
+						DomainController.upgradeStatus.statusCode = StatusCodes.ServerOld;
+						args =
+								new DomainClientUpgradeAvailableEventArgs(
+									domainID, serverVersion);
+					DomainClientUpgradeAvailable(this, args);
+						break;
+				case UpgradeResult.UpgradeAvailable:
+						args =
+								new DomainClientUpgradeAvailableEventArgs(
+									domainID, serverVersion);
+					DomainClientUpgradeAvailable(this, args);
+						break;
+				case UpgradeResult.Unknown:
+						DomainController.upgradeStatus.statusCode = StatusCodes.Unknown;
+						break;
+				default:
+						break;
+			}
 		}
 
 		private bool IsServerOld(string domainID)
@@ -1164,7 +1223,13 @@ namespace Novell.iFolder.Controller
 				{
 					// FIXME: Add in some type of error logging to show that we
 					// weren't able to get information about a newly added domain
+					Console.WriteLine("Ramesh: Got an exception");
 					return;
+				}
+
+				if( domain == null)
+				{
+					Console.WriteLine("Ramesh: Domain is null");	
 				}
 	
 				AddDomainToHashtable(domain);

@@ -633,6 +633,7 @@ namespace Novell.iFolder
 				encryptionCheckButton.Sensitive = sslCheckButton.Sensitive = true;
 				LocationEntry.Sensitive = BrowseButton.Sensitive = true;
 			}
+			AccountDruid.BackButton.Sensitive = false;
 			return DefaultiFolderPage;
 		}
 
@@ -670,6 +671,9 @@ namespace Novell.iFolder
 				if( upload == true)
 				{
 					securityLabel.Sensitive = encryptionCheckButton.Sensitive = sslCheckButton.Sensitive = true;
+					iFolderWebService ifws = DomainController.GetiFolderService();
+					int securityPolicy = ifws.GetSecurityPolicy(ConnectedDomain.ID);
+					ChangeStatus( securityPolicy);
 				}
 				else
 				{
@@ -862,6 +866,8 @@ namespace Novell.iFolder
 			int securityPolicy = ifws.GetSecurityPolicy(ConnectedDomain.ID);
 			ChangeStatus( securityPolicy);
 			LocationEntry.Text = GetDefaultPath();
+			AccountDruid.BackButton.Sensitive = false;
+			ForwardButton.Label = Util.GS("Next");
 
 			// Check for ssl and display the status of encryption radfio buttons
 		}
@@ -869,7 +875,7 @@ namespace Novell.iFolder
 		{
 			encryptionCheckButton.Active = sslCheckButton.Active = false;
 			encryptionCheckButton.Sensitive = sslCheckButton.Sensitive = false;
-			
+			Console.WriteLine("Security Policy is: {0}", SecurityPolicy);	
 			if(SecurityPolicy !=0)
 			{
 				if( (SecurityPolicy & (int)SecurityState.encrypt) == (int) SecurityState.encrypt)
@@ -1082,14 +1088,14 @@ namespace Novell.iFolder
 			{
 				// upload
 				upload = true;
-				if( LocationEntry.Text == GetDefaultPath())
-				{
+				//if( LocationEntry.Text == GetDefaultPath())
+				//{
 					if(!System.IO.Directory.Exists( LocationEntry.Text ))
 					{
 						System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(LocationEntry.Text);
 						dir.Create();
 					}
-				}
+				//}
 				return CreateDefaultiFolder();
 			}
 			else

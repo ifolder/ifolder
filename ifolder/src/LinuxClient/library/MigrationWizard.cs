@@ -271,7 +271,14 @@ namespace Novell.iFolder
 
 		private void OnBrowseButtonClicked(object o, EventArgs e)
 		{
-			MigrateLocation NewLoc = new MigrateLocation(this, System.IO.Directory.GetCurrentDirectory(), ifws );
+			System.IO.DirectoryInfo source = new System.IO.DirectoryInfo(location);
+			string destDir = LocationEntry.Text;
+			string fileName = null;
+			if( copyDir.Active )
+			{
+				fileName = source.Name;
+			}
+			MigrateLocation NewLoc = new MigrateLocation(this, fileName, ifws );
 			NewLoc.TransientFor = this;
 			int rc = 0;
 			do

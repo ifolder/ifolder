@@ -31,6 +31,14 @@ using Simias;
 
 namespace Novell.iFolder.Install
 {
+	public enum UpgradeResult
+	{
+		Latest = 0,
+		UpgradeNeeded = 1,
+		ServerOld = 2,
+		UpgradeAvailable = 3,
+		Unknown =4,
+	};
 	/// <summary>
 	/// Summary description for Class1.
 	/// </summary>
@@ -63,7 +71,7 @@ namespace Novell.iFolder.Install
 		/// <summary>
 		/// Address to the host where the web service is running.
 		/// </summary>
-		private string hostAddress;
+		public string hostAddress;
 		#endregion
 
 		#region Constructor
@@ -74,6 +82,7 @@ namespace Novell.iFolder.Install
 		/// <param name="domainID">Identifier of the domain that the user belongs to.</param>
 		private ClientUpgrade( string domainID )
 		{
+			// Set the web state when authentication is really required...
 			WebState ws = new WebState(domainID, domainID);
 			// Get the address of the host service.
 			hostAddress = DomainProvider.ResolveLocation( domainID ).ToString();
@@ -82,6 +91,7 @@ namespace Novell.iFolder.Install
 			service.Url = hostAddress + "/ClientUpdate.asmx";
 			ws.InitializeWebClient(service, domainID);
 		}
+
 		#endregion
 
 		#region Private Methods
@@ -273,10 +283,10 @@ namespace Novell.iFolder.Install
 		/// </summary>
 		/// <param name="domainID">The ID of the domain to check for updates against.</param>
 		/// <returns>The version of the update if available. Otherwise null is returned.</returns>
-		private string CheckForUpdate()
+		private StatusCodes CheckForUpdate(out string ServerVersion)
 		{
 			string updateVersion = null;
-
+			ServerVersion = null;
 			// Make sure that the service object is authenticated.
 			if ( service != null )
 			{
@@ -299,7 +309,11 @@ namespace Novell.iFolder.Install
 				{
 					// Call to the web service to see if there is a version newer than the one
 					// that is currently running.
-					updateVersion = service.IsUpdateAvailable( platformString, currentVersion );
+				//	updateVersion = service.IsUpdateAvailable( platformString, currentVersion );
+					string serverVersion = null;
+					StatusCodes stat = (StatusCodes)service.CheckForUpdate(platformString, currentVersion, out serverVersion );
+					ServerVersion = serverVersion;
+					return stat;
 					/*
 					bool status = service.IsServerOlder(platformString, currentVersion);
 					if(status == true)
@@ -310,7 +324,7 @@ namespace Novell.iFolder.Install
 				}
 			}
 
-			return updateVersion;
+			return StatusCodes.Unknown;
 		}
 
 		/// <summary>
@@ -433,10 +447,34 @@ namespace Novell.iFolder.Install
 		/// prompts the user to upgrade.
 		/// </summary>
 		/// <returns>The version of the update if available. Otherwise null is returned.</returns>
-		public static string CheckForUpdate(string domainID)
+		public static int CheckForUpdate(string domainID, out string serverVersion)
 		{
+			int retval = -1;
+			string ServerVersion = null;
 			ClientUpgrade cu = new ClientUpgrade(domainID);
-			return cu.CheckForUpdate();
+			StatusCodes stat = cu.CheckForUpdate(out ServerVersion);
+			switch( stat)
+			{
+				case StatusCodes.Success: 
+						retval = (int)UpgradeResult.Latest;
+						break;
+				case StatusCodes.UpgradeNeeded:
+						retval = (int)UpgradeResult.UpgradeNeeded;
+						break;
+				case StatusCodes.ServerOld: 
+						retval = (int)UpgradeResult.ServerOld;
+						break;
+				case StatusCodes.OlderVersion:
+						retval = (int)UpgradeResult.UpgradeAvailable;
+						break;
+				case StatusCodes.Unknown:
+						retval = (int)UpgradeResult.Unknown;
+						break;
+				default:
+						break;
+			}
+			serverVersion = ServerVersion;
+			return retval;
 		}
 
 		public static bool CheckForServerUpdate(string domainID)
