@@ -35,6 +35,7 @@ using System.IO;
 using System.Net;
 using Simias;
 using Simias.Client;
+using Simias.Authentication;
 using Simias.Storage;
 using Simias.Sync;
 using Simias.POBox;
@@ -2354,7 +2355,24 @@ namespace Novell.iFolder.Web
 		[SoapDocumentMethod]
 		public string CheckForUpdatedClient(string domainID)
 		{
-			return Novell.iFolder.Install.ClientUpgrade.CheckForUpdate(domainID);
+		//	return Novell.iFolder.Install.ClientUpgrade.CheckForUpdate(domainID);
+			return null;
+		}
+
+		/// <summary>
+		/// Checks to see if there is a need for newer client application on the domain server and
+		/// prompts the user to upgrade.
+		/// </summary>
+		/// <param name="domainID">The ID of the domain to check for updates against.</param>
+		/// <returns>The version of the update if available. Otherwise null is returned.</returns>
+		[WebMethod(Description="Check for an available update")]
+		[SoapDocumentMethod]
+		public int CheckForUpdate(string domainID, out string ServerVersion)
+		{
+			string serverVersion = null;
+			int status = Novell.iFolder.Install.ClientUpgrade.CheckForUpdate(domainID, out serverVersion);
+			ServerVersion = serverVersion;
+			return status;
 		}
 
 		/// <summary>

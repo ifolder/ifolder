@@ -152,6 +152,8 @@ public class iFolderWaitDialog : Dialog
 	
 	protected override bool OnDeleteEvent(Gdk.Event evnt)
 	{
+		return true;
+		/*
 		if (progressBarTimer != null)
 		{
 			progressBarTimer.Dispose();
@@ -162,6 +164,7 @@ public class iFolderWaitDialog : Dialog
 			return true; // Do nothing and don't let this be seen elsewhere
 		else
 			return false;	// Allow this to send the cancel
+		*/
 	}
 	
 	protected override bool OnDestroyEvent(Gdk.Event evnt)

@@ -274,7 +274,7 @@ namespace Novell.iFolder.Web
 			this.IsSubscription = true;
 			this.EnumeratedState = (int) SubscriptionStates.Ready;
 			this.Owner = c.OwnerFullName;
-			this.CurrentUserID = c.MemberNodeID;
+			this.CurrentUserID = c.MemberUserID;
 
 			Domain domain = Store.GetStore().GetDomain(c.DomainID);
 			if(domain != null)

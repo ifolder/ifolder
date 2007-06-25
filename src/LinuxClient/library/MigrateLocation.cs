@@ -35,6 +35,7 @@ namespace Novell.iFolder
 		private CheckButton			Encryption;
 		private CheckButton 			SSL;
 		private string				initialPath;
+		private string copyDir;
 		iFolderWebService			ifws;
 		private uint				keyReleasedTimeoutID;
 
@@ -72,8 +73,9 @@ namespace Novell.iFolder
 		{
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png"));
 
-			this.initialPath = initialPath;
-			
+			this.initialPath = System.IO.Directory.GetCurrentDirectory(); 
+		
+			this.copyDir = initialPath;	
 			this.ifws = ifws;
 			
 			keyReleasedTimeoutID = 0;
@@ -88,6 +90,8 @@ namespace Novell.iFolder
 		protected override void OnSelectionChanged()
 		{
 			string currentPath = this.Filename;
+			if( copyDir != null)
+				currentPath += "/"+copyDir;
 
 			try
 			{
