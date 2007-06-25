@@ -3196,4 +3196,16 @@
 	<data name="MigrationSubMenu">
 		<value>Migrate From 2.x</value>
 	</data>
+		<data name="AlsoRemoveMembership">
+		<value>Also remove my membership</value>
+	</data>
+	<data name="RemoveMembershipTitle">
+		<value>Remove your membership from {0}</value>
+	</data>
+	<data name="RemoveMembershipMesg">
+		<value>This removes your Membership from iFolder and removes the iFolder from your list.</value>
+	</data>
+	<data name="RemoveMyMembership">
+		<value>Remove My Membership</value>
+	</data>
 </root>

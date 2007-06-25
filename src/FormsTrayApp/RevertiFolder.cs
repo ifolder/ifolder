@@ -37,7 +37,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.PictureBox icon;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.CheckBox removeFromServer;
+		public System.Windows.Forms.CheckBox removeFromServer;
 		private System.Windows.Forms.Button no;
 		private System.Windows.Forms.Button yes;
 		/// <summary>

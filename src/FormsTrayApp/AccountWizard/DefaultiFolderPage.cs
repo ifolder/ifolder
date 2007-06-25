@@ -203,7 +203,9 @@ namespace Novell.Wizard
 		{
 			// TODO:
 			bool status = false;
-			if( upload ) // Create iFolder
+			if( this.CreateDefault.Checked == false)
+				status = true;
+			else if( upload ) // Create iFolder
 			{
 				iFolderWeb ifolder = null;
 				ifolder = CreateDefaultiFolder( this.sslCheckButton.Checked );
@@ -296,6 +298,18 @@ namespace Novell.Wizard
 			}
 		}
 
+		public string DefaultiFolderID
+		{
+			get
+			{
+				return this.defaultiFolderID;
+			}
+			set
+			{
+				this.defaultiFolderID = value;
+			}
+		}
+
 		#endregion
 		
 		private void CreateDefault_CheckedChanged(object sender, EventArgs e)
@@ -362,12 +376,21 @@ namespace Novell.Wizard
 		private iFolderWeb CreateDefaultiFolder( bool shared)
 		{
 			// if the path mentioned is the default path create the default directories
-			if( this.defaultPath == this.LocationEntry.Text)
+			//if( this.defaultPath == this.LocationEntry.Text)
+			//{
+				//	MessageBox.Show("creating default path");
+			try
 			{
-			//	MessageBox.Show("creating default path");
 				DirectoryInfo di = new DirectoryInfo( this.defaultPath );
 				di.Create();
 			}
+			catch( Exception ex)
+			{
+				// Unable to create the folder
+				DisplayErrorMesg(ex);
+				return null;
+			}
+			//}
 			if( shared)
 			{
 				iFolderWeb ifolder = null;
@@ -558,6 +581,7 @@ namespace Novell.Wizard
 			//	MessageBox.Show("Default iFolder exists");
 				this.CreateDefault.Text = "Download Default iFolder";
 				this.label2.Visible = this.encryptionCheckButton.Visible = this.sslCheckButton.Visible = false;
+				
 			}
 			if( this.DefaultPath != null && this.DefaultPath.Length > 0)
 			{

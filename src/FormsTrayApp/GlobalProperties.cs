@@ -2641,7 +2641,14 @@ namespace Novell.FormsTrayApp
 
 					// Enable the available iFolder related menu items.
 					this.menuActionRemove.Enabled = this.menuActionAccept.Enabled = true;
-
+					if( ifolderWeb.CurrentUserID != ifolderWeb.OwnerID)
+					{
+						this.menuRemove.Text = this.remove.Text = this.menuActionRemove.Text = this.resourceManager.GetString("RemoveMyMembership");
+					}
+					else
+					{
+						this.menuRemove.Text = this.remove.Text = this.menuActionRemove.Text = this.resourceManager.GetString("menuActionRemove.Text");
+					}
 					// Show the available iFolder buttons
 					this.accept.Visible = this.remove.Visible = true;
 				}
@@ -2884,6 +2891,14 @@ namespace Novell.FormsTrayApp
 			{
 				selectedItem.Selected = false;
 				selectedItem = null;
+				// Disable the iFolder actions...
+				// Hide the button panels.
+				iFolderActions.Visible = false;
+
+				// Disable all of the item-related menu items.
+				this.menuActionOpen.Enabled = this.menuActionAccept.Enabled = this.menuActionProperties.Enabled =
+					this.menuActionRemove.Enabled = this.menuActionResolve.Enabled = this.menuActionRevert.Enabled =
+					this.menuActionShare.Enabled = this.menuActionSync.Enabled = false;
 			}
 		}
 
@@ -3084,8 +3099,12 @@ namespace Novell.FormsTrayApp
 			try
 			{
 				iFolderWeb ifolder = ((iFolderObject)selectedItem.Tag).iFolderWeb;
+				//bool IsMaster = (this.ifWebService.GetUserID( ifolder.DomainID) == ifolder.OwnerID);
+				bool IsMaster = (ifolder.CurrentUserID == ifolder.OwnerID);
 
 				RevertiFolder revertiFolder = new RevertiFolder();
+				if( !IsMaster )
+					revertiFolder.removeFromServer.Text = this.resourceManager.GetString("AlsoRemoveMembership");
 				if ( revertiFolder.ShowDialog() == DialogResult.Yes )
 				{
 					//ensure UI is re-painted before Revert is done
@@ -3105,9 +3124,7 @@ namespace Novell.FormsTrayApp
 						if ( revertiFolder.RemoveFromServer )
 						{
 							// Remove the iFolder from the server.
-							ifWebService.DeclineiFolderInvitation( newiFolder.DomainID, newiFolder.ID );
-						
-							if( newiFolder.Role == null || newiFolder.Role == "Master")
+							if( IsMaster )
 							{
 								string defaultiFolderID = this.simiasWebService.GetDefaultiFolder( newiFolder.DomainID );
 								if( defaultiFolderID == newiFolder.ID)
@@ -3117,7 +3134,7 @@ namespace Novell.FormsTrayApp
 								}
 								ifWebService.DeleteiFolder(newiFolder.DomainID, newiFolder.ID);
 							}
-						
+							ifWebService.DeclineiFolderInvitation( newiFolder.DomainID, newiFolder.ID );
 						}
 						else
 						{
@@ -3296,17 +3313,37 @@ namespace Novell.FormsTrayApp
 			if ( selectedItem != null )
 			{
 				iFolderWeb ifolder = ((iFolderObject)selectedItem.Tag).iFolderWeb;
-				MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(
-					string.Format( resourceManager.GetString("deleteiFolder"), ifolder.Name ),
-					resourceManager.GetString("removeTitle"),
-					string.Empty,
-					MyMessageBoxButtons.YesNo,
-					MyMessageBoxIcon.Question,
-					MyMessageBoxDefaultButton.Button2);
+				MyMessageBox mmb = null;
+				if( ifolder.CurrentUserID == ifolder.OwnerID)
+				{
+					mmb = new Novell.iFolderCom.MyMessageBox(
+						string.Format( resourceManager.GetString("deleteiFolder"), ifolder.Name ),
+						resourceManager.GetString("removeTitle"),
+						string.Empty,
+						MyMessageBoxButtons.YesNo,
+						MyMessageBoxIcon.Question,
+						MyMessageBoxDefaultButton.Button2);
+				}
+				else
+				{
+					mmb = new Novell.iFolderCom.MyMessageBox(
+						 this.resourceManager.GetString("RemoveMembershipMesg") ,
+						string.Format(this.resourceManager.GetString("RemoveMembershipTitle"), ifolder.Name ),
+						string.Empty,
+						MyMessageBoxButtons.YesNo,
+						MyMessageBoxIcon.Question,
+						MyMessageBoxDefaultButton.Button2);
+				}
 				if (mmb.ShowDialog() == DialogResult.Yes)
 				{
 					try
 					{
+						// check whether the user is the owner...
+						//string userID = this.ifWebService.GetUserID(ifolder.DomainID);
+						if( ifolder.CurrentUserID == ifolder.OwnerID)
+						{
+							ifWebService.DeleteiFolder(ifolder.DomainID, ifolder.ID);
+						}
 						ifWebService.DeclineiFolderInvitation(ifolder.DomainID, ifolder.ID);
 
 						lock (ht)

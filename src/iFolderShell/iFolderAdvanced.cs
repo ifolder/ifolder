@@ -2484,6 +2484,11 @@ namespace Novell.iFolderCom
 
 			// Enable/disable the Add button.
 			add.Enabled = currentUser != null ? currentUser.Rights.Equals("Admin") : false;
+			if( this.currentiFolder.encryptionAlgorithm != null && this.currentiFolder.encryptionAlgorithm != "")
+			{
+				// Disable add sharing button...
+				this.add.Enabled = false;
+			}
 
 			setLimit.Visible = limitEdit.Visible = currentUser != null ? currentUser.UserID.Equals(currentiFolder.OwnerID) : false;
 			limitLabel.Visible = limit.Visible = !setLimit.Visible;
@@ -3017,7 +3022,7 @@ namespace Novell.iFolderCom
 				this.iFolderLocation.Text = ((string)this.currentiFolder.UnManagedPath).Substring(0,30);
 				this.iFolderOwner.Text = this.currentiFolder.Owner;
 				this.iFolderAccount.Text = this.domainName;
-
+				
 //				conflictIcon.SizeMode = PictureBoxSizeMode.StretchImage;
 //				conflictIcon.Image = new Icon(new Icon(Path.Combine(basePath, "ifolderconflict.ico")), 32, 32).ToBitmap();
 

@@ -387,7 +387,7 @@ namespace Novell.iFolderCom
 
 					IntPtr hIcon = Win32Window.LoadImageFromFile(
 						0,
-						Path.Combine(loadPath, "ifolder_emblem.ico"),
+						Path.Combine(loadPath, @"res\ifolder_16.ico"),
 						Win32Window.IMAGE_ICON,
 						32,
 						32,

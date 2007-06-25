@@ -376,7 +376,7 @@ namespace Novell.iFolderCom
 					NewiFolder newiFolder = new NewiFolder();
 					newiFolder.FolderName = path;
 					newiFolder.LoadPath = dllPath;
-					newiFolder.Show();
+					newiFolder.ShowDialog();
 				}
 			}
 			catch (WebException e)

@@ -2065,6 +2065,7 @@ namespace Novell.FormsTrayApp
 			}
 
 			accountWizard.Dispose();
+			this.Focus();
 		}
 
 		private void removeAccount_Click(object sender, System.EventArgs e)

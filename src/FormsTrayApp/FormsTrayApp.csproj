@@ -453,6 +453,11 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "AccountWizard\DefaultiFolderPage.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "AccountWizard\IdentityPage.cs"
                     SubType = "UserControl"
                     BuildAction = "Compile"
