@@ -261,7 +261,7 @@ namespace Novell.Wizard
 			// 
 			// cancel
 			// 
-			this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			//this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.cancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.cancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
 			this.cancel.Location = new System.Drawing.Point(416, 318);
@@ -269,6 +269,7 @@ namespace Novell.Wizard
 			this.cancel.Size = new System.Drawing.Size(72, 23);
 			this.cancel.TabIndex = 3;
 			this.cancel.Text = Resource.GetString("CancelText");//"Cancel";
+			this.cancel.Click += new EventHandler(cancel_Click);
 			// 
 			// next
 			// 
@@ -307,7 +308,7 @@ namespace Novell.Wizard
 			// 
 			this.AcceptButton = this.next;
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.CancelButton = this.cancel;
+			//this.CancelButton = this.cancel;
 			this.ClientSize = new System.Drawing.Size(496, 348);
 			this.ControlBox = false;
 			this.Controls.Add(this.groupBox1);
@@ -380,8 +381,9 @@ namespace Novell.Wizard
 				{
 					// TODO: Localize
 					// Changing the connet button text.....
-					//next.Text = Resource.GetString("ConnectText");//"&Connect";
-					next.Text = "&Create";
+					next.Text = "&Next >";
+					this.back.Enabled = false;
+					this.cancel.Text = "Skip";
 				//	MessageBox.Show(string.Format("Setting default path: {0}", this.defaultiFolderPage.defaultPath));
 				}
 				else if (currentIndex == (maxPages - 1))
@@ -547,5 +549,24 @@ namespace Novell.Wizard
 		}
 
 		#endregion
+
+		private void cancel_Click(object sender, EventArgs e)
+		{
+			if( this.currentIndex == this.MaxPages-2)
+			{
+				// Handling skip.....
+				this.pages[currentIndex].DeactivatePage();
+				this.pages[currentIndex+1].ActivatePage(currentIndex);
+				currentIndex++;
+				next.DialogResult = DialogResult.OK;
+				next.Text = Resource.GetString("FinishText");
+				return;
+			}
+			else
+			{
+				this.Close();
+				this.Dispose();
+			}
+		}
 	}
 }

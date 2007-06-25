@@ -140,7 +140,7 @@
                 />
                 <File
                     RelPath = "EnterPassphraseDialog.cs"
-                    SubType = "Form"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File

@@ -542,7 +542,8 @@ namespace Novell.FormsTrayApp
 
 						try
 						{
-							bool res = FormsTrayApp.ClientUpdates(domainInfo.ID);
+							bool serverOld = false;
+							bool res = FormsTrayApp.ClientUpdates(domainInfo.ID, out serverOld);
 							
 							if (res == false)
 							{
@@ -552,7 +553,8 @@ namespace Novell.FormsTrayApp
 									simiasWebService.LeaveDomain(domainInfo.ID, false);
 								}
 								catch{ }
-								MessageBox.Show(resourceManager.GetString("UpgradeNeededMsg")/*" You need to upgrade the client to connect to this server."*/, resourceManager.GetString("DisableLoginMsg")/*"Unable to Login"*/, MessageBoxButtons.OK);
+								if( serverOld == false)
+									MessageBox.Show(resourceManager.GetString("UpgradeNeededMsg")/*" You need to upgrade the client to connect to this server."*/, resourceManager.GetString("DisableLoginMsg")/*"Unable to Login"*/, MessageBoxButtons.OK);
 								return false;
 							}
 					
@@ -717,11 +719,13 @@ namespace Novell.FormsTrayApp
 
 					try
 					{
-						bool res = FormsTrayApp.ClientUpdates(domainInfo.ID);
+						bool serverOld = false;
+						bool res = FormsTrayApp.ClientUpdates(domainInfo.ID, out serverOld);
 						if(res == false)
 						{
 							//MessageBox.Show("You need to upgrade your client to connect to the server.", "Login denied", MessageBoxButtons.OK);
-							MessageBox.Show(resourceManager.GetString("UpgradeNeededMsg")/*" You need to upgrade the client to connect to this server."*/, resourceManager.GetString("DisableLoginMsg")/*"Unable to Login"*/, MessageBoxButtons.OK);
+							if( serverOld == false)
+								MessageBox.Show(resourceManager.GetString("UpgradeNeededMsg")/*" You need to upgrade the client to connect to this server."*/, resourceManager.GetString("DisableLoginMsg")/*"Unable to Login"*/, MessageBoxButtons.OK);
 							try
 							{
 								DomainAuthentication domainAuth1 = new DomainAuthentication("iFolder", domainInfo.ID, null);

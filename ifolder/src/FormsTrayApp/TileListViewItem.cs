@@ -456,8 +456,9 @@ namespace Novell.FormsTrayApp
 			if ( ifolderObject.iFolderWeb.IsSubscription )
 			{
 				// TODO: Localize.
+				//MessageBox.Show(string.Format("the size is: {0}", ifolderObject.iFolderWeb.Size));
 				text += completeLocation + "\n" + 
-					"Size: " + completeStatus + "\n";
+					"Size: " + completeStatus/*ifolderObject.iFolderWeb.Size*/ + "\n";
 			}
 			else
 			{
