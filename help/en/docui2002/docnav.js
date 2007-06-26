@@ -96,7 +96,7 @@ function MenuItem (owner, id, type, text, url, nSearchID, status, nItem, pItem, 
 	this.nextItem = nItem;
 	this.prevItem = pItem;
 	this.FirstChild = -1;
-	this.parent = parent
+	this.parent = parent;
 	this.isopen = (owner == -1)? true:false;
 	this.isSelected = false; 
 	this.isChecked = true;	
@@ -128,7 +128,7 @@ function MIDraw (indentStr) {
 	var aLine = '<nobr>' + indentStr;
 	if (!this.noOutlineImg) {
 		if (this.FirstChild != -1) {
-			aLine += '<A HREF="#" onClick' + mRef + '.toggleExpand(' + this.id + ');"' + MOver + 'plusMinusIcon\',this);"' + MOut + 'plusMinusIcon\');">' + iconTag + '</A>';				
+			aLine += '<a href="#" onClick' + mRef + '.toggleExpand(' + this.id + ');"' + MOver + 'plusMinusIcon\',this);"' + MOut + 'plusMinusIcon\');">' + iconTag + '</a>';				
 		} else {
 			aLine += iconTag;
 		}
@@ -140,23 +140,23 @@ function MIDraw (indentStr) {
 	if (useCheckImages)
        	{   
       	  var img = o.imgStore.getTag(this.checkedIconName(), "checkIcon" + this.id, tip);      
-          checkImgLink = '<A ID="CheckDocNavEntry' + this.id + '" HREF="#" onClick' + mRef + '.toggleChecked(' + this.id + ')">' + img + '</A>';
+          checkImgLink = '<a id="CheckDocNavEntry' + this.id + '" href="#" onClick' + mRef + '.toggleChecked(' + this.id + ')">' + img + '</a>';
 	   	}    
 	if (useImages) theImg = o.imgStore.getTag(this.docIconName(), 'docIcon' + this.id, tip);
-	var sTxt = '<SPAN CLASS="' + ((this.CSSClass) ? this.CSSClass : ((this.FirstChild != -1) ? 'node' : 'leaf')) + '">';
-	var lTxt = '<A ID="DocNavEntry' + this.id + '" ';
+	var sTxt = '<span class="' + ((this.CSSClass) ? this.CSSClass : ((this.FirstChild != -1) ? 'node' : 'leaf')) + '">';
+	var lTxt = '<a id="DocNavEntry' + this.id + '" ';
 	var theUrl = (((this.url == '') && theBrowser.canJSVoid && o.showAllAsLinks) || o.wizardInstalled) ? 'javascript:void(0);' : this.url;
 	if (theUrl != '') {
 		if (this.target.charAt(1) == "_") {theUrl = "javascript:" + o.reverseRef + ".loadURLInTarget('" + theUrl + "', '" + this.target + "');";}
-			lTxt += ' HREF="' + theUrl + '" TARGET="' + this.target + '" onClick' + mRef + '.itemClicked(' + this.id + ');"'
+			lTxt += ' href="' + theUrl + '" target="' + this.target + '" onClick' + mRef + '.itemClicked(' + this.id + ');"'
 			+ MOver + 'docIcon\',this);"' + MOut + 'docIcon\');"';
 	}
-	lTxt += (tip) ? ' TITLE="' + tip + '">' : '>';
+	lTxt += (tip) ? ' title="' + tip + '">' : '>';
 	aLine += sTxt + checkImgLink + lTxt + theImg;
 	if (this.multiLine) {
-		aLine += '</A></SPAN><TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0"><TR><TD>' + sTxt + lTxt + this.text + '</A></SPAN></TD></TR></TABLE>';
+		aLine += '</a></span><table border="0" cellpadding="0" cellspacing="0"><tr><td>' + sTxt + lTxt + this.text + '</a></span></td></tr></table>';
 	} else {
-		aLine += this.text + '</A></SPAN>';
+		aLine += this.text + '</a></span>';
 	}
 	aLine += '</nobr>';
 	if ((theBrowser.hasW3CDOM) && (theBrowser.hasDHTML) && (!this.multiLine))  { aLine += '<br>'; }
@@ -459,9 +459,9 @@ function MenuDrawALevel(firstItem, indentStr, isVisible, theDoc) {
 		e = this.entry[currEntry];
 		aLine = e.draw(indentStr);
 		if (theBrowser.hasDHTML) {
-			aLine = '<DIV ID="entryDIV' + currEntry + '" CLASS="menuItem">' + aLine + '</DIV>';
+			aLine = '<div id="entryDIV' + currEntry + '" class="menuItem">' + aLine + '</div>';
 		} else {
-			aLine += '<BR CLEAR="ALL">';
+			aLine += '<br clear="ALL">';
 		}
 		theBrowser.lineByLine = true;
 		if (theBrowser.lineByLine) {theDoc.writeln(aLine);} else {theLevel += aLine;}
@@ -813,11 +813,7 @@ function MenuLoadScript(parentPageURL, firstChildPage, fromToggle)
    {   
       this.markChildrenForDelete = chapterID;
    }
-
 }
-
-
-
 // Other functions
 function DrawMenu(m) {
 	m.draw();
@@ -1072,7 +1068,7 @@ if (floatingMode == true) {
 //	############################   End of Joust   ############################
 
 function initOutlineIcons(imgStore) {
-	var ip = '../docui2002/images/menu/';
+	var ip = '../docuinovdocx/images/menu/';
      //	ip += (theBrowser.platform == 'Mac') ? 'mac/' : ((theBrowser.platform == 'OS/2') ? 'os2/' : 'win/');
 	
 	imgStore.add('iconPlusTop', ip + 'plustop.gif', 18, 18);
@@ -1095,7 +1091,7 @@ function initOutlineIcons(imgStore) {
 	//Add folder and document images to the imgStore.
 	imgStore.add('Folder', ip + 'folderclosed.gif', 18, 18);
 	
-	var di = '../docui2002/images/menu/';
+	var di = '../docuinovdocx/images/menu/';
 	if ((theBrowser.code == 'NS') || (theBrowser.code == 'MSIE')) {
 		di += theBrowser.code.toLowerCase() + '_doc';
 		imgStore.add('Document', di + '.gif', 18, 18);
@@ -1106,4 +1102,11 @@ function initOutlineIcons(imgStore) {
 	}
 }  
 
-
+function loadMenu()
+{
+	if ((theMenu) && (theMenu.amBusy == false) && frames[2])
+	{
+	   theMenu.loadScript(text.parentfile,text.parenttoc);
+	}
+	else{ setTimeout("loadMenu()",200);}
+}

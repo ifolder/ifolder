@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="en" />
+<meta name="Generator" content="Novell Documentation  8 June 2005" />
+<meta name="Generation-Date" content="Friday, March 23, 2007 19:04" />
+<meta name="Content-Date" content="Mon, 26 Mar 2006 12:00:00 GMT" />
+<meta name="Robots" content="INDEX, FOLLOW" />
+<meta name="Document_Number" content="zHTML xD.0000.0000.0003.0010." />
+<meta name="Author" content="zHTML xD.0000.0000.0003.0010." />
+<meta name="Product_Class" content="" />
+<meta name="Product_and_Version" content="iFolder™" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2005" />
+
+<style type="text/css">
+  @import url(../../../ui/novdocmain.css);
+</style>
+
+<title>iFolder
+Help</title>
+<script type="text/javascript">
+  var prev_link="firewall.html";
+  var next_link="myifolders.html";
+  var parentfile = "../doc/user/data/accountsprefs.html";
+  var parenttoc = "../doc/user/data/toc_accountsprefs.html";
+  parent.loadMenu();
+</script>
+<script type="text/javascript" src="../../../ui/jsglobal.js"></script>
+</head>
+
+<body onload="">
+<script type="text/javascript" src="../../../ui/topnav.js"></script>
+
+<div class="sect1" title="Configuring Local Virus Scanner Settings for iFolder Traffic" id="virusscan">
+
+<h2 class="title"><span class="number">3.10</span> Configuring Local
+Virus Scanner Settings for iFolder Traffic</h2>
+
+<p class="para">If you use virus scanning software on your computer, exclude
+the <span class="filename">..\simias\WorkArea\</span> directory
+from the virus scan. For example, the location of the <span class="filename">..\simias\WorkArea\</span> directory
+on Windows is <span class="filename">c:\documents and settings\<span class="replaceable">username</span>\local settings\application
+data\simias\WorkArea\.simias.wf.<span class="replaceable">guid</span></span>. </p>
+<p class="para">The <span class="filename">..\simias\WorkArea\</span> directory
+is where iFolder stages files for download from the server. If an
+iFolder file has a virus attached and your virus scanning software
+scans that virus while the file is in the <span class="filename">..\simias\WorkArea</span> directory,
+the virus scanner pops up with a message indicating that a virus
+has been found, moves the file to quarantine, then iFolder again
+tries to synchronize the file. </p>
+<p class="para">Not scanning the WorkArea allows the synchronization to finish.
+The infected file is successfully downloaded and moved to the local
+iFolder. The virus scanner then detects the infected file in the iFolder
+and moves it from that folder to quarantine, protecting the computer
+from infection. iFolder detects the deletion of the file and when
+the next synchronization begins, iFolder removes the file from the
+server and member computers. </p>
+<p class="para">However, if the iFolder where the file is downloaded is Read-Only,
+the local deletion is not enforced to the server and other member
+computers. The virus must be detected elsewhere where permissions allow
+changes to be synchronized. The user’s virus scanner probably
+alerts the user of the virus, so the user should alert other iFolder
+members about the virus.</p>
+</div>
+
+
+<script type="text/javascript" src="../../../ui/bottomnav.js"></script>
+</body>
+</html>
