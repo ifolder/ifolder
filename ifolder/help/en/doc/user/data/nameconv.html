@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="en" />
+<meta name="Generator" content="Novell Documentation  8 June 2005" />
+<meta name="Generation-Date" content="Friday, March 23, 2007 19:04" />
+<meta name="Content-Date" content="Mon, 26 Mar 2006 12:00:00 GMT" />
+<meta name="Robots" content="INDEX, FOLLOW" />
+<meta name="Document_Number" content="zHTML xD.0000.0000.0004.0003." />
+<meta name="Author" content="zHTML xD.0000.0000.0004.0003." />
+<meta name="Product_Class" content="" />
+<meta name="Product_and_Version" content="iFolder™" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2005" />
+
+<style type="text/css">
+  @import url(../../../ui/novdocmain.css);
+</style>
+
+<title>iFolder
+Help</title>
+<script type="text/javascript">
+  var prev_link="typeguide.html";
+  var next_link="ificons.html";
+  var parentfile = "../doc/user/data/myifolders.html";
+  var parenttoc = "../doc/user/data/toc_myifolders.html";
+  parent.loadMenu();
+</script>
+<script type="text/javascript" src="../../../ui/jsglobal.js"></script>
+</head>
+
+<body onload="">
+<script type="text/javascript" src="../../../ui/topnav.js"></script>
+
+<div class="sect1" title="Naming Conventions for an iFolder and Its Folders and Files" id="nameconv">
+
+<h2 class="title"><span class="number">4.3</span> Naming Conventions
+for an iFolder and Its Folders and Files</h2>
+
+<p class="para">The iFolder client imposes naming conventions that consider
+the collective restrictions of the Linux, and Windows file systems.
+An iFolder, folder, or file must have a valid name that complies
+with the naming conventions before it can be synchronized.</p>
+<p class="para">Use the following naming conventions for your iFolders and
+the folders and files in them:</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">iFolder supports the <a href="http://www.unicode.org" class="ulink">Unicode<sup class="superscript">*</sup></a> character
+set with UTF-8 encoding. </li>
+<li class="listitem">Do not use the following invalid characters in the
+names of iFolders or in the names of folders and files in them:<pre class="screen">
+\/:*?"&lt;&gt;|;
+</pre>
+<p class="listitem">iFolder creates a name conflict if you use the invalid characters
+in a file or folder name. The conflict must be resolved before the
+file or folder can be synchronized.</p></li>
+<li class="listitem">The maximum name length for a single path component
+is 255 bytes. For filenames, the maximum length includes the dot
+(.) and file extension.</li>
+<li class="listitem">Names of iFolders, folders, and files are case insensitive;
+however, case is preserved. If filenames differ only by case, iFolder
+creates a name conflict. The conflict must be resolved before the
+file or folder can be synchronized.</li>
+<li class="listitem">If you create iFolders on a FAT32 file system on
+Linux, avoid naming files in all uppercase characters. The VFAT
+or FAT32 file handling on Linux automatically changes the filenames that
+are all uppercase characters and meet the MS-DOS 8.3 file format
+from all uppercase characters to all lowercase characters. This
+creates synchronization problems for those files if the iFolder
+is set with the Read Only access right.</li></ul></div>
+
+</div>
+
+
+<script type="text/javascript" src="../../../ui/bottomnav.js"></script>
+</body>
+</html>
