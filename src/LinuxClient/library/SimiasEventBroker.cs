@@ -280,8 +280,8 @@ namespace Novell.iFolder
 			{
 				if (printErrors)
 				{
-					Console.WriteLine("Exception in SimiasEventHandler(): " + e.Message);
-					Console.WriteLine(e.StackTrace);
+					Debug.PrintLine("Exception in SimiasEventHandler(): " + e.Message);
+					Debug.PrintLine(e.StackTrace);
 				}
 			}
 		}
@@ -338,8 +338,8 @@ namespace Novell.iFolder
 		{
 			if (printErrors)
 			{
-				Console.WriteLine("****** ****** Simias Event Client got an error! ***** *****");
-				Console.WriteLine(e.Message);
+				Debug.PrintLine("****** ****** Simias Event Client got an error! ***** *****");
+				Debug.PrintLine(e.Message);
 			}
 /*
 			lock(NodeEventQueue)
@@ -366,8 +366,8 @@ namespace Novell.iFolder
 			{
 				if (printErrors)
 				{
-					Console.WriteLine("Exception in SimiasEventNotifyHandler(): " + e.Message);
-					Console.WriteLine(e.StackTrace);
+					Debug.PrintLine("Exception in SimiasEventNotifyHandler(): " + e.Message);
+					Debug.PrintLine(e.StackTrace);
 				}
 			}
 		}
@@ -389,8 +389,8 @@ namespace Novell.iFolder
 			{
 				if (printErrors)
 				{
-					Console.WriteLine("Exception in SimiasEventSyncFileHandler(): " + e.Message);
-					Console.WriteLine(e.StackTrace);
+					Debug.PrintLine("Exception in SimiasEventSyncFileHandler(): " + e.Message);
+					Debug.PrintLine(e.StackTrace);
 				}
 			}
 		}
@@ -403,14 +403,14 @@ namespace Novell.iFolder
 			{
 				if (args == null)
 				{
-					Console.WriteLine("SimiasEventSyncCollectionHandler received a null SimiasEventArgs");
+					Debug.PrintLine("SimiasEventSyncCollectionHandler received a null SimiasEventArgs");
 					return;
 				}
 				CollectionSyncEventArgs syncEventArgs =
 					args as CollectionSyncEventArgs;
 				if (syncEventArgs == null || syncEventArgs.Name == null || syncEventArgs.ID == null)
 				{
-					Console.WriteLine("SimiasEventSyncCollectionHandler() Name, ID, Action, or Connected is null");
+					Debug.PrintLine("SimiasEventSyncCollectionHandler() Name, ID, Action, or Connected is null");
 					return;	// Prevent a null object 
 				}
 	
@@ -481,8 +481,8 @@ namespace Novell.iFolder
 			{
 				if (printErrors)
 				{
-					Console.WriteLine("Exception in SimiasEventSyncCollectionHandler(): " + e.Message);
-					Console.WriteLine(e.StackTrace);
+					Debug.PrintLine("Exception in SimiasEventSyncCollectionHandler(): " + e.Message);
+					Debug.PrintLine(e.StackTrace);
 				}
 			}
 		}
@@ -581,8 +581,8 @@ namespace Novell.iFolder
 			{
 				if (printErrors)
 				{
-					Console.WriteLine("Exception in NodeCreatedHandler(): " + e.Message);
-					Console.WriteLine(e.StackTrace);
+					Debug.PrintLine("Exception in NodeCreatedHandler(): " + e.Message);
+					Debug.PrintLine(e.StackTrace);
 				}
 			}
 		}
@@ -670,8 +670,8 @@ namespace Novell.iFolder
 			{
 				if (printErrors)
 				{
-					Console.WriteLine("Exception in NodeChangedHandler(): " + e.Message);
-					Console.WriteLine(e.StackTrace);
+					Debug.PrintLine("Exception in NodeChangedHandler(): " + e.Message);
+					Debug.PrintLine(e.StackTrace);
 				}
 			}
 		}
@@ -749,8 +749,8 @@ namespace Novell.iFolder
 			{
 				if (printErrors)
 				{
-					Console.WriteLine("Exception in NodeDeletedHandler(): " + e.Message);
-					Console.WriteLine(e.StackTrace);
+					Debug.PrintLine("Exception in NodeDeletedHandler(): " + e.Message);
+					Debug.PrintLine(e.StackTrace);
 				}
 			}
 		}
@@ -944,7 +944,7 @@ namespace Novell.iFolder
 			if (args.Key != null && args.Key == ClientConfig.KEY_IFOLDER_DEBUG_PRINT_SIMIAS_EVENT_ERRORS)
 			{
 				printErrors = (bool)args.Value;
-				Console.WriteLine("Print Simias Event Errors: {0}", printErrors);
+				Debug.PrintLine(String.Format("Print Simias Event Errors: {0}", printErrors));
 			}
 		}
 	}

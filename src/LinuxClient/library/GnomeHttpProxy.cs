@@ -255,7 +255,7 @@ namespace Novell.iFolder
 			}
 			catch( Exception e )
 			{
-				//Console.WriteLine( e.Message );
+				//Debug.PrintLine( e.Message );
 			}	
 		}
 	}

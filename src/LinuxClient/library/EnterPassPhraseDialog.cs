@@ -189,13 +189,13 @@ namespace Novell.iFolder
                         RAList = domainController.GetRAList(DomainID);
 			if( RAList == null)
 			{
-				Console.WriteLine(" no recovery agent present:");
+				Debug.PrintLine(" no recovery agent present:");
 			}
 			else
-				Console.WriteLine("Recovery agent present");
+				Debug.PrintLine("Recovery agent present");
                         foreach (string raagent in RAList )
 			{
-				Console.WriteLine("raagent:{0}", raagent);
+				Debug.PrintLine(String.Format("raagent:{0}", raagent));
                             RATreeStore.AppendValues (raagent);
 			}
 			RATreeStore.AppendValues(Util.GS("None"));

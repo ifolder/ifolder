@@ -123,7 +123,7 @@ namespace Novell.iFolder
 
 			try
 			{
-				System.Console.WriteLine("Url = {0}", simiasManager.WebServiceUri);
+				Debug.PrintLine(String.Format("Url = {0}", simiasManager.WebServiceUri));
 				ifws = new iFolderWebService();
 				ifws.Url = 
 					simiasManager.WebServiceUri.ToString() +
@@ -239,7 +239,7 @@ namespace Novell.iFolder
 		//===================================================================
 		public void Refresh()
 		{
-			Console.WriteLine("In Refresh: Number of iFolders: {0}", ifws.GetAlliFolders().Length);
+			Debug.PrintLine(String.Format("In Refresh: Number of iFolders: {0}", ifws.GetAlliFolders().Length));
 			lock (instanceLock)
 			{
 				// Clear orphaned iFolders out of the iFolderListStore
@@ -267,7 +267,7 @@ namespace Novell.iFolder
 						// recreate an iFolderHolder object because we lose
 						// count of the number of objects that are left to
 						// synchronize (Bug #82690).
-					//	Console.WriteLine("encr_status: {0}", ifolder.encryption_status);
+					//	Debug.PrintLine("encr_status: {0}", ifolder.encryption_status);
 						string ifolderID =
 							ifolder.IsSubscription ?
 								ifolder.CollectionID :
@@ -287,7 +287,7 @@ namespace Novell.iFolder
 							}
 							catch(Exception e)
 							{
-								Console.WriteLine(e.Message);
+								Debug.PrintLine(e.Message);
 							}
 
 							if (existingHolder != null)
@@ -343,7 +343,7 @@ namespace Novell.iFolder
 						}
 //						else
 //						{
-//Console.WriteLine("\tdomain is NOT null");
+//Debug.PrintLine("\tdomain is NOT null");
 //						}
 					} while (iFolderListStore.IterNext(ref iter));
 					
@@ -402,7 +402,7 @@ namespace Novell.iFolder
 					}
 //					else
 //					{
-//Console.WriteLine("*** SOMETHING WENT BAD IN iFolderData.AddiFolder() ***");
+//Debug.PrintLine("*** SOMETHING WENT BAD IN iFolderData.AddiFolder() ***");
 //					}
 				}
 				else
@@ -576,7 +576,7 @@ namespace Novell.iFolder
 			lock(instanceLock)
 			{
 				iFolderHolder ifHolder = null;
-				Console.WriteLine("In GetiFolder");
+				Debug.PrintLine("In GetiFolder");
 
 				if (ifolderIters.ContainsKey(ifolderID))
 				{
@@ -679,7 +679,7 @@ namespace Novell.iFolder
 				iFolderHolder[] ifolderA = (iFolderHolder[])arrayList.ToArray(typeof(iFolderHolder));
 //				foreach (iFolderHolder ifHolder in ifolderA)
 //				{
-//Console.WriteLine("\t{0}", ifHolder.iFolder.Name);
+//Debug.PrintLine("\t{0}", ifHolder.iFolder.Name);
 //				}
 
 				return ifolderA;
@@ -713,7 +713,7 @@ namespace Novell.iFolder
 						}
 						catch(Exception e)
 						{
-							Console.WriteLine(e.Message);
+							Debug.PrintLine(e.Message);
 						}
 					}
 				}
@@ -799,12 +799,12 @@ namespace Novell.iFolder
 				iFolderWeb newiFolder;
 				if( EncryptionAlgorithm == null)		// Sharable iFolder
 				{
-					Console.WriteLine("Creating unencrypted folder");
+					Debug.PrintLine("Creating unencrypted folder");
 					newiFolder = ifws.CreateiFolderInDomain(path, domainID);
 				}
 				else
 				{
-					Console.WriteLine("Creating encrypted folder");
+					Debug.PrintLine("Creating encrypted folder");
 					string Passphrase  = simws.GetPassPhrase(domainID);
    					newiFolder = ifws.CreateiFolderInDomainEncr(path, domainID, 
 											SSL, EncryptionAlgorithm, Passphrase);
@@ -847,14 +847,14 @@ namespace Novell.iFolder
 				iFolderHolder ifHolder = null;
 				string collectionID = GetiFolderID(ifolderID);
 				iFolderWeb[] ifarray = ifws.GetAlliFolders();
-				Console.WriteLine("The number of iFolders is: {0}", ifarray.Length);
+				Debug.PrintLine(String.Format("The number of iFolders is: {0}", ifarray.Length));
 
    		 		iFolderWeb newifolder = ifws.AcceptiFolderInvitation(
 											domainID,
 											ifolderID,
 											localPath);
 				ifarray = ifws.GetAlliFolders();
-				Console.WriteLine("The number of iFolders is: {0}", ifarray.Length);
+				Debug.PrintLine(String.Format("The number of iFolders is: {0}", ifarray.Length));
 				if (newifolder == null)
 				{
 					return null;
@@ -876,7 +876,7 @@ namespace Novell.iFolder
 				ifHolder = GetiFolder(ifolderID);
 				if( ifHolder == null)
 				{
-					Console.WriteLine("Calling addiFolder");
+					Debug.PrintLine("Calling addiFolder");
 					ifHolder = AddiFolder(newifolder);
 				}
 				ifHolder.iFolder = newifolder;
@@ -1216,8 +1216,8 @@ namespace Novell.iFolder
 		{
 			lock(instanceLock)
 			{
-				Console.WriteLine("************************** iFolderData Data Inspection **************************");
-				Console.WriteLine("ifolderIters Hashtable (All items in iFolderListStore, {0}):", ifolderIters.Count);
+				Debug.PrintLine("************************** iFolderData Data Inspection **************************");
+				Debug.PrintLine(String.Format("ifolderIters Hashtable (All items in iFolderListStore, {0}):", ifolderIters.Count));
 				foreach(TreeIter treeIter in ifolderIters.Values)
 				{
 					iFolderHolder ifHolder = null;
@@ -1228,19 +1228,19 @@ namespace Novell.iFolder
 					catch{}
 					
 					if (ifHolder == null)
-						Console.WriteLine("\tIter does not exist in iFolderListStore");
+						Debug.PrintLine("\tIter does not exist in iFolderListStore");
 					else
-						Console.WriteLine("\t{0}, {1}", ifHolder.iFolder.ID, ifHolder.iFolder.Name);
+						Debug.PrintLine(String.Format("\t{0}, {1}", ifHolder.iFolder.ID, ifHolder.iFolder.Name));
 				}
 				
-				Console.WriteLine("subToiFolderMap Hashtable (All subscriptions, {0})", subToiFolderMap.Count);
+				Debug.PrintLine(String.Format("subToiFolderMap Hashtable (All subscriptions, {0})", subToiFolderMap.Count));
 				foreach(string key in subToiFolderMap.Keys)
 				{
 					string ifolderID = (string)subToiFolderMap[key];
-					Console.WriteLine("\t{0}, {1}", key, ifolderID);
+					Debug.PrintLine(String.Format("\t{0}, {1}", key, ifolderID));
 				}
 				
-				Console.WriteLine("iFolderListStore Contents ({0}):", iFolderListStore.IterNChildren());
+				Debug.PrintLine(String.Format("iFolderListStore Contents ({0}):", iFolderListStore.IterNChildren()));
 				TreeIter iter;
 				if (iFolderListStore.GetIterFirst(out iter))
 				{
@@ -1252,14 +1252,14 @@ namespace Novell.iFolder
 						holder =
 							(iFolderHolder)iFolderListStore.GetValue(iter, 0);
 						
-						Console.WriteLine("\t{0}, {1}", holder.iFolder.ID, holder.iFolder.Name);
+						Debug.PrintLine(String.Format("\t{0}, {1}", holder.iFolder.ID, holder.iFolder.Name));
 					} while (iFolderListStore.IterNext(ref iter));
 				}
 				
-				Console.WriteLine("deletediFolders ({0})", deletediFolders.Count);
+				Debug.PrintLine(String.Format("deletediFolders ({0})", deletediFolders.Count));
 				foreach (string id in deletediFolders.Values)
 				{
-					Console.WriteLine("\t{0}", id);
+					Debug.PrintLine(String.Format("\t{0}", id));
 				}
 			}
 		}
@@ -1324,6 +1324,16 @@ namespace Novell.iFolder
 				list.EmitRowChanged(path, iter);
 
 			return false;	// Don't keep calling this
+		}
+	}
+
+	public class Debug
+	{
+		public static void PrintLine(string str)
+		{
+			#if DEBUG
+				Console.WriteLine(str);
+			#endif
 		}
 	}
 }

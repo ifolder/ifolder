@@ -106,7 +106,7 @@ public class BigList : Gtk.DrawingArea {
 	{
                 Gdk.Rectangle rect = args.Allocation;
                 if (rect.Equals (Gdk.Rectangle.Zero))
-                        Console.WriteLine ("ERROR: Allocation is null!");
+                        Debug.PrintLine ("ERROR: Allocation is null!");
 
 		int nrows = Allocation.Height / line_height;
 		if (nrows != rows){

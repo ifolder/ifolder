@@ -516,11 +516,11 @@ namespace Novell.iFolder
 							if( res == (int)ResponseType.Ok)
 							{
 								publicKey = Convert.ToBase64String(Cert.GetPublicKey());
-								Console.WriteLine(" The public key is: {0}", publicKey);
+								Debug.PrintLine(String.Format(" The public key is: {0}", publicKey));
 							}
 							else
 							{
-								Console.WriteLine("Response type is not ok");
+								Debug.PrintLine("Response type is not ok");
 				                                //status = false;
 	                        			        simws.StorePassPhrase((domains[domainList.Active]).ID, "", CredentialType.None, false);
 								NextPage = false;
@@ -613,7 +613,7 @@ namespace Novell.iFolder
 		    }
 			if( NextPage == false)
 			{
-				Console.WriteLine("In the same page");
+				Debug.PrintLine("In the same page");
 				AccountDruid.Page = UserInformationPage;
 			//	return false;
 			}
@@ -811,7 +811,7 @@ namespace Novell.iFolder
 			if(Prepared)
 				return;
 			Prepared = true;
-			Console.WriteLine("Preparing UserInformation Page");
+			Debug.PrintLine("Preparing UserInformation Page");
 			domains = domainController.GetDomains();
 			DomainInformation defaultDomain = domainController.GetDefaultDomain();
 			string domainID = "";
@@ -837,10 +837,10 @@ namespace Novell.iFolder
 			PassPhraseSet = false;
 			if( encryptionCheckButton.Active == false)
 			{
-				Console.WriteLine("On rapage prepared. Encryption");
+				Debug.PrintLine("On rapage prepared. Encryption");
 				return;
 			}
-			Console.WriteLine("OnRAPagePrepared");
+			Debug.PrintLine("OnRAPagePrepared");
 			try
 			{
 				if ( domainController.IsPassPhraseSet ((domains[domainList.Active]).ID) == false)
@@ -943,27 +943,27 @@ namespace Novell.iFolder
 			
 			else 
 			{
-				Console.WriteLine("Checking for passphrase entered at login");
+				Debug.PrintLine("Checking for passphrase entered at login");
 				string passphrasecheck = simws.GetPassPhrase((domains[domainList.Active]).ID);
 				if( passphrasecheck != null && passphrasecheck != "")
 				{
-					Console.WriteLine("some passphrase exists: {0}", passphrasecheck);
+					Debug.PrintLine(String.Format("some passphrase exists: {0}", passphrasecheck));
 					Status passPhraseStatus =  simws.ValidatePassPhrase((domains[domainList.Active]).ID, passphrasecheck);
 					if( passPhraseStatus != null && passPhraseStatus.statusCode == StatusCodes.Success )
 					{
-						Console.WriteLine("Passphrase is validated");
+						Debug.PrintLine("Passphrase is validated");
 						AccountDruid.Page = RAPage;
 					}
 					else if( passPhraseStatus == null)
-						Console.WriteLine("Status is null:");
+						Debug.PrintLine("Status is null:");
 					else if( passPhraseStatus.statusCode == StatusCodes.PassPhraseInvalid)
-						Console.WriteLine("Passphrase is invalid");
+						Debug.PrintLine("Passphrase is invalid");
 					else
-						Console.WriteLine("Some other error");
+						Debug.PrintLine("Some other error");
 						
 				}
 				else 
-					Console.WriteLine("No passphrase exists");
+					Debug.PrintLine("No passphrase exists");
 			}
 	}
 
@@ -1047,7 +1047,7 @@ namespace Novell.iFolder
 						Util.GS("Please wait while your iFolder is being migrated"));
 				
 				WaitDialog.Show();
-				Console.WriteLine(" Showing wait dialog:");
+				Debug.PrintLine(" Showing wait dialog:");
 			}
 			*/
 			System.IO.DirectoryInfo source = new System.IO.DirectoryInfo(location);
@@ -1082,7 +1082,7 @@ namespace Novell.iFolder
 						return true;;
 					}
 				}
-				Console.WriteLine("Migrating:");
+				Debug.PrintLine("Migrating:");
 				DirectoryInfo d = new DirectoryInfo(location);
 				
 				// Create iFolder
@@ -1096,7 +1096,7 @@ namespace Novell.iFolder
 				else
 				{
 					migrationStatus = true;
-					Console.WriteLine("Created successfully");
+					Debug.PrintLine("Created successfully");
 				}
 			}
 			else
@@ -1155,7 +1155,7 @@ namespace Novell.iFolder
 		}
 		private void OnUserInfoForwardClicked(object o, EventArgs args)
 		{
-			Console.WriteLine("Forward clicked");
+			Debug.PrintLine("Forward clicked");
 			// Check for encryption status. If not yes then, skip the RAPage
 			if( encryptionCheckButton.Active == false && alreadyEncrypted == true)
 			{
@@ -1174,27 +1174,27 @@ namespace Novell.iFolder
 				AccountDruid.Page = RAPage;
 			else 
 			{
-				Console.WriteLine("Checking for passphrase entered at login");
+				Debug.PrintLine("Checking for passphrase entered at login");
 				string passphrasecheck = simws.GetPassPhrase((domains[domainList.Active]).ID);
 				if( passphrasecheck != null && passphrasecheck != "")
 				{
-					Console.WriteLine("some passphrase exists: {0}", passphrasecheck);
+					Debug.PrintLine(String.Format("some passphrase exists: {0}", passphrasecheck));
 					Status passPhraseStatus =  simws.ValidatePassPhrase((domains[domainList.Active]).ID, passphrasecheck);
 					if( passPhraseStatus != null && passPhraseStatus.statusCode == StatusCodes.Success )
 					{
-						Console.WriteLine("Passphrase is validated");
+						Debug.PrintLine("Passphrase is validated");
 						AccountDruid.Page = RAPage;
 					}
 					else if( passPhraseStatus == null)
-						Console.WriteLine("Status is null:");
+						Debug.PrintLine("Status is null:");
 					else if( passPhraseStatus.statusCode == StatusCodes.PassPhraseInvalid)
-						Console.WriteLine("Passphrase is invalid");
+						Debug.PrintLine("Passphrase is invalid");
 					else
-						Console.WriteLine("Some other error");
+						Debug.PrintLine("Some other error");
 						
 				}
 				else 
-					Console.WriteLine("No passphrase exists");
+					Debug.PrintLine("No passphrase exists");
 			}
 		}
 

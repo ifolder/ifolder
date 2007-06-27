@@ -197,7 +197,7 @@ namespace Novell.iFolder
 		{
 			char[] seps={'/'};
 			string[] parts = path.Split(seps);
-			Console.WriteLine(parts[parts.Length-1]);
+			Debug.PrintLine(parts[parts.Length-1]);
 			return parts[parts.Length-1];
 		}
 

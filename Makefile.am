@@ -1,5 +1,5 @@
 if LINUX
-SUBDIRS = src help-linux po
+SUBDIRS = src help po
 DIST_SUBDIRS = $(SUBDIRS) doc package test
 else
 SUBDIRS = src help po

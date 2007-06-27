@@ -293,7 +293,7 @@ namespace Novell.iFolder.Controller
 		    sws.Url = di.HostUrl + "/Simias.asmx";
 		    string[] ragents = sws.GetRAList();
 		*/
-			Console.WriteLine("Calling Getralist on client");
+			Debug.PrintLine("Calling Getralist on client");
 			string[] ragents = simws.GetRAListOnClient(domainID);
 		    //TODO :
 			if(ragents == null)
@@ -392,7 +392,7 @@ namespace Novell.iFolder.Controller
 		    SimiasWebService sws = new SimiasWebService();
 		    sws.Url = di.HostUrl + "/Simias.asmx";
 		*/
-			Console.WriteLine("In domain Controller: Recovery Agent is : {0}", recoveryAgent);
+			Debug.PrintLine(String.Format("In domain Controller: Recovery Agent is : {0}", recoveryAgent));
 			return simws.GetRACertificateOnClient(domainID, recoveryAgent);
 		    
 		//    return sws.GetRACertificate(recoveryAgent);		    
@@ -903,7 +903,7 @@ namespace Novell.iFolder.Controller
 		{
 		//	Status tempStatus = status;
 			DomainController.upgradeStatus = status;
-			Console.WriteLine("In handledoaminloggedin");
+			Debug.PrintLine("In handledoaminloggedin");
 			// Update our cache of the DomainInformation object
 			try
 			{
@@ -990,7 +990,7 @@ namespace Novell.iFolder.Controller
 					{
 						return DomainController.upgradeStatus;
 					}
-					Console.WriteLine("Upgrade available is: {0}", upgradeAvailable);
+					Debug.PrintLine("Upgrade available is: {0}", upgradeAvailable);
 					DomainClientUpgradeAvailableEventArgs args =
 						new DomainClientUpgradeAvailableEventArgs(
 							domainID, upgradeAvailable);
@@ -1012,7 +1012,7 @@ namespace Novell.iFolder.Controller
 			}
 			catch(Exception ex)
 			{
-				Console.WriteLine("Exception: {0}", ex.Message);
+				Debug.PrintLine(String.Format("Exception: {0}", ex.Message));
 				// Trying to connect to a older 3.2 server. Disconnect the domain.
 			//	status = UpgradeResult.ServerOld;
 				status = UpgradeResult.Latest;
@@ -1083,7 +1083,7 @@ namespace Novell.iFolder.Controller
 				DomainInformation dom = (DomainInformation) keyedDomains[domainID];
 				if (dom != null)
 					domainName = dom.Name;
-				Console.WriteLine("Error checking for new version of iFolder Client on {0}: {1}", domainName, e.Message);
+				Debug.PrintLine(String.Format("Error checking for new version of iFolder Client on {0}: {1}", domainName, e.Message));
 			}
 
 			return newClientVersion;
@@ -1223,13 +1223,13 @@ namespace Novell.iFolder.Controller
 				{
 					// FIXME: Add in some type of error logging to show that we
 					// weren't able to get information about a newly added domain
-					Console.WriteLine("Ramesh: Got an exception");
+					Debug.PrintLine("Ramesh: Got an exception");
 					return;
 				}
 
 				if( domain == null)
 				{
-					Console.WriteLine("Ramesh: Domain is null");	
+					Debug.PrintLine("Ramesh: Domain is null");	
 				}
 	
 				AddDomainToHashtable(domain);
@@ -1501,7 +1501,7 @@ namespace Novell.iFolder.Controller
 			}
 			catch(Exception e)
 			{
-				Console.WriteLine("Exception attempting a login: {0}", e.Message);
+				Debug.PrintLine(String.Format("Exception attempting a login: {0}", e.Message));
 				authStatus = new Status();	// Default is UnknownStatus
 			}
 
@@ -1522,7 +1522,7 @@ namespace Novell.iFolder.Controller
 			}
 			catch(Exception e)
 			{
-				Console.WriteLine("Exception attempting a login: {0}", e.Message);
+				Debug.PrintLine(String.Format("Exception attempting a login: {0}", e.Message));
 				authStatus = new Status();	// Default is UnknownStatus
 			}
 
