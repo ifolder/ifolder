@@ -960,4 +960,7 @@
 	<data name="Encrypted">
 		<value>Encrypted</value>
 	</data>
+	<data name="AccountName">
+		<value>Account Name</value>
+	</data>
 </root>

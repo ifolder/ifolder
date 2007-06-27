@@ -456,8 +456,9 @@ namespace Novell.Wizard
 			{
 				// TODO: Localize
 				StringBuilder sb = new StringBuilder(Resource.GetString("CongratsMsg")/*"Congratulations, you are now connected to:\n\n"*/);
-				sb.AppendFormat( "\n\n{0}\n", domainInfo.Name );				
-				sb.AppendFormat( "({0})\n\n", serverPage.ServerAddress );
+				sb.AppendFormat( "\n\n{0} : {1}\n", Resource.GetString("AccountName"), domainInfo.Name );//"Account Name" and domain name.				
+				sb.AppendFormat( "{0} : {1}\n", Resource.GetString("ServerNameText"), serverPage.ServerAddress );//"Server Address" and IP
+				sb.AppendFormat( "{0} :	{1}\n\n", Resource.GetString("UName"), identityPage.Username ); //"User Name" and user name
 				sb.Append( Resource.GetString("CongratsDescription")/*"You can now add folders to be synchronized to the server.  You may also download folders from the server and have them be synchronized to your computer."*/ );
 				return sb.ToString();				
 			}
