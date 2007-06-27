@@ -206,7 +206,7 @@ namespace Novell.iFolder
 		[GLib.ConnectBefore]
 		public void OnLabelClicked(	object obj, ButtonPressEventArgs args)
 		{
-			Console.WriteLine("Mouse on test");
+			Debug.PrintLine("Mouse on test");
 		}
 */
 		private bool HideWindowCallback()
@@ -240,7 +240,7 @@ namespace Novell.iFolder
 				if(mask != null)
 					this.ShapeCombineMask(mask, 0, 0);
 				else
-					Console.WriteLine("Novell.iFolder.NotifyWindow: mask was null");
+					Debug.PrintLine("Novell.iFolder.NotifyWindow: mask was null");
 			}
 
 		}
@@ -545,7 +545,7 @@ namespace Novell.iFolder
 //				ret = (Gdk.Pixmpa) GLib.Object.GetObject(raw_ret);
 
 //			GLib.Object obj = GLib.Object.GetObject(mask_handle);
-//			Console.WriteLine(obj);
+//			Debug.PrintLine(obj);
 			mask = new Gdk.Pixmap(mask_handle);
 
 			return ret;

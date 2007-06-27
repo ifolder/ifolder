@@ -273,7 +273,7 @@ namespace Novell.iFolder
 					}
 					catch(Exception e)
 					{
-						Console.WriteLine(e);
+						Debug.PrintLine(e.Message);
 						ifws = null;
 					}
 				}
@@ -299,7 +299,7 @@ namespace Novell.iFolder
 			catch(Exception e)
 			{
 				// ignore
-				Console.WriteLine(e);
+				Debug.PrintLine(e.Message);
 			}
 
 			CurrentState = iFolderAppState.Stopped;
@@ -354,7 +354,7 @@ namespace Novell.iFolder
 				bool bUpdateRunning = false;
 				Gtk.Window win = new Gtk.Window("");
 				string initialPath = (string)System.IO.Path.GetTempPath();
-				Console.WriteLine("Initial Path: {0}", initialPath);
+				Debug.PrintLine(String.Format("Initial Path: {0}", initialPath));
 				CopyLocation cp = new CopyLocation(win, (string)System.IO.Path.GetTempPath());
 				string selectedFolder = "";
 	                        int rc1 = 0;
@@ -376,7 +376,7 @@ namespace Novell.iFolder
 				win.Destroy();
 				if( rc1 != (int) ResponseType.Ok)
 				{
-					Console.WriteLine("OnClientUpgradeAvailableEvent return");
+					Debug.PrintLine("OnClientUpgradeAvailableEvent return");
 					ClientUpgradeDialog = null;
 					return;
 				}
@@ -384,14 +384,13 @@ namespace Novell.iFolder
 				{
 					if(ifws !=null)
 					{
-						Console.WriteLine("ifws.RunClientUpdate");
+						Debug.PrintLine("ifws.RunClientUpdate");
 						bUpdateRunning = ifws.RunClientUpdate(args.DomainID, selectedFolder);
-						Console.WriteLine("ifws.RunClientUpdate done.");
 					}
 				}
 				catch(Exception e)
 				{
-					Console.WriteLine("ifws.RunClientUpdate exception :{0}", e.Message);
+					Debug.PrintLine(String.Format("ifws.RunClientUpdate exception :{0}", e.Message));
 					ClientUpgradeDialog = null;
 					return;
 				}
@@ -479,7 +478,6 @@ namespace Novell.iFolder
 
 		private void OnReLoginDialogResponse(object o, ResponseArgs args)
 		{
-				Console.WriteLine("Login dialog response");
 			switch (args.ResponseId)
 			{
 				case Gtk.ResponseType.Ok:
@@ -519,7 +517,7 @@ namespace Novell.iFolder
 								case StatusCodes.Success:
 								case StatusCodes.SuccessInGrace:
 									// Login was successful so close the Login dialog
-									Console.WriteLine("Login dialog response- success");
+									Debug.PrintLine("Login dialog response- success");
 									LoginDialog.Hide();
 									LoginDialog.Destroy();
 									LoginDialog = null;
@@ -544,7 +542,7 @@ namespace Novell.iFolder
 							}
 							else 
 							{
-								Console.WriteLine(" remember Option true. Checking for passphrase existence");
+								Debug.PrintLine(" remember Option true. Checking for passphrase existence");
 								string passphrasecheck;
 								passphrasecheck= simws.GetPassPhrase(DomainID);
 								if(passphrasecheck == null || passphrasecheck == "")
@@ -716,11 +714,9 @@ namespace Novell.iFolder
 							if( res == (int)ResponseType.Ok)
 							{
 								publicKey = Convert.ToBase64String(Cert.GetPublicKey());
-								Console.WriteLine(" The public key is: {0}", publicKey);
 							}
 							else
 							{
-								Console.WriteLine("Response type is not ok");
 				                                status = false;
 	                        			        simws.StorePassPhrase(DomainID, "", CredentialType.None, false);
 								return ShowEnterPassPhraseDialog( DomainID, simws);
@@ -803,7 +799,8 @@ namespace Novell.iFolder
 					if( passPhraseStatus.statusCode == StatusCodes.PassPhraseInvalid)  // check for invalid passphrase
 					{
 						// Display an error Message
-						Console.WriteLine("Invalid Passphrase");
+						Debug.PrintLine("Invalid Passphrase");
+						Debug.PrintLine("Invalid Passphrase");
 						iFolderMsgDialog dialog = new iFolderMsgDialog(
 							null,
 							iFolderMsgDialog.DialogType.Error,
@@ -932,11 +929,11 @@ namespace Novell.iFolder
 					Hashtable collectionSyncErrors = null;
 					// Displays the file name also along with the reason for ...
 				//	message = String.Format("Cannot synchronize: {0}. ", args.Name) + message;
-					Console.WriteLine("Ramesh: Synchronization errors: {0}, {1}, {2}", args.Name, message, args.CollectionID);
+					Debug.PrintLine(String.Format("Synchronization errors: {0}, {1}, {2}", args.Name, message, args.CollectionID));
 					if (synchronizationErrors.ContainsKey(args.CollectionID))
 					{
 						collectionSyncErrors = (Hashtable)synchronizationErrors[args.CollectionID];
-						Console.WriteLine("collection sync errors exist: {0}", collectionSyncErrors.Count);
+						Debug.PrintLine(String.Format("collection sync errors exist: {0}", collectionSyncErrors.Count));
 					}
 					else
 					{
@@ -950,7 +947,7 @@ namespace Novell.iFolder
 					// per iFolder log message
 					//	if( iFolderHolderSyncing != null)
 					//		iFolderHolderSyncing.iflog.LogMessage(message);
-						Console.WriteLine("collection sync error count: {0}", collectionSyncErrors.Count);
+						Debug.PrintLine(String.Format("collection sync error count: {0}", collectionSyncErrors.Count));
 					}
 				}
 			}
@@ -991,7 +988,7 @@ namespace Novell.iFolder
 								{
 									Hashtable collectionSyncErrors = (Hashtable)synchronizationErrors[ifHolder.iFolder.ID];
 									ICollection errors = collectionSyncErrors.Keys;
-									Console.WriteLine("Number of errors: {0}", errors.Count);
+									Debug.PrintLine(String.Format("Number of errors: {0}", errors.Count));
 									ArrayList keysToClear = new ArrayList();
 									bool showErrorBaloon = false;
 									foreach(SyncStatus syncStatusKey in errors)
@@ -1034,7 +1031,7 @@ namespace Novell.iFolder
 										collectionSyncErrors.Remove( syncStatusKey);
 							//			collectionSyncErrors[syncStatusKey] = null;
 									}
-									Console.WriteLine("After removing keys count: {0}", collectionSyncErrors.Count);
+									Debug.PrintLine(String.Format("After removing keys count: {0}", collectionSyncErrors.Count));
 								}
 							}
 						}
@@ -1294,7 +1291,7 @@ namespace Novell.iFolder
 					catch(Exception e)
 					{
 						// ignore
-						Console.WriteLine(e);
+						Debug.PrintLine(e.Message);
 					}
 
 					Application.Quit();
@@ -1340,7 +1337,7 @@ namespace Novell.iFolder
 				else
 				{
 					Util.LoadiFolderWindows();
-					Console.WriteLine("Showing the migration prompt");
+					Debug.PrintLine("Showing the migration prompt");
 					if( Util.ShowMigrationPrompt() )
 					{
 						//  Prompt for migration...
@@ -1360,11 +1357,11 @@ namespace Novell.iFolder
 								dlg.Destroy();
 								if( ((CheckButton)(dlg.ExtraWidget)).Active == true)
 								{
-									Console.WriteLine("The check box is checked");
+									Debug.PrintLine("The check box is checked");
 									Util.DontShowMigrationPrompt();
 								}
 								else
-										Console.WriteLine("The check box is not checked");
+										Debug.PrintLine("The check box is not checked");
 								if( res == (int)ResponseType.Ok)
 								{
 									// Call Migration window.....
@@ -1377,7 +1374,7 @@ namespace Novell.iFolder
 				}
 			}
 			else
-				Console.WriteLine("DomainController instance is null");
+				Debug.PrintLine("DomainController instance is null");
 
 			return false;	// Prevent this from being called over and over by GLib.Timeout
 		}
@@ -1702,13 +1699,13 @@ namespace Novell.iFolder
 
 		private void CleanUpPassphrase()
 		{
-			Console.WriteLine("In cleanup passphrase");
+			Debug.PrintLine("In cleanup passphrase");
 			try
 			{
 			DomainInformation[] domains = domainController.GetDomains();
 			foreach( DomainInformation domain in domains)
 			{
-				Console.WriteLine("Removing Passphrase");
+				Debug.PrintLine("Removing Passphrase");
 				bool rememberOption = simws.GetRememberOption(domain.ID);
 				if( rememberOption == false)
 				{
@@ -1743,7 +1740,7 @@ namespace Novell.iFolder
 				}
 				catch(Exception e)
 				{
-					Console.WriteLine(e.Message);
+					Debug.PrintLine(e.Message);
 				}
 
 				System.Environment.Exit(1);
@@ -1808,7 +1805,7 @@ namespace Novell.iFolder
 		
 //		private void OnNetworkStateChanged(object o, NetworkStateChangedArgs args)
 //		{
-//			Console.WriteLine("OnNetworkStateChanged: {0}", args.Connected);
+//			Debug.PrintLine("OnNetworkStateChanged: {0}", args.Connected);
 //		}
 		
 /*		
@@ -1826,7 +1823,7 @@ namespace Novell.iFolder
 		{
 			if (theApp == null)
 			{
-				Console.WriteLine("RegisterWithDBus() called with a null application.");
+				Debug.PrintLine("RegisterWithDBus() called with a null application.");
 				return;
 			}
 
@@ -1835,7 +1832,7 @@ namespace Novell.iFolder
 				connection = Bus.GetSessionBus();
 				if (connection == null)
 				{
-					Console.WriteLine("Could not get a connection to the D-Bus session");
+					Debug.PrintLine("Could not get a connection to the D-Bus session");
 					return;
 				}
 				
@@ -1843,7 +1840,7 @@ namespace Novell.iFolder
 				
 				if (service == null)
 				{
-					Console.WriteLine("Could not create a D-Bus service instance.");
+					Debug.PrintLine("Could not create a D-Bus service instance.");
 					return;
 				}
 				
@@ -1851,8 +1848,8 @@ namespace Novell.iFolder
 			}
 			catch(Exception e)
 			{
-				Console.WriteLine(e);
-				Console.WriteLine("Could not connect to D-Bus.  D-Bus support will be disabled for this instance: " + e.Message);
+				Debug.PrintLine(e);
+				Debug.PrintLine("Could not connect to D-Bus.  D-Bus support will be disabled for this instance: " + e.Message);
 			}
 		}
 		
@@ -1877,7 +1874,7 @@ namespace Novell.iFolder
 //				Connection connection = Bus.GetSessionBus();
 //				Service service = Service.Get(connection, "com.novell.iFolder");
 //				iFolderApplication initialApp = service.GetObject(typeof(iFolderApplication), "/opt/novell/iFolder/Application") as iFolderApplication
-				Console.WriteLine("iFolder is already running!");
+				Debug.PrintLine("iFolder is already running!");
 				return;
 			}
 
@@ -1905,12 +1902,12 @@ namespace Novell.iFolder
 			}
 			catch(Exception e)
 			{
-				Console.WriteLine(e);
+				Debug.PrintLine(e);
 				Process[] processes =
 					System.Diagnostics.Process.GetProcessesByName("iFolderClient");
 				if (processes.Length > 1)
 				{
-					Console.WriteLine("iFolder is already running.  If you were trying " +
+					Debug.PrintLine("iFolder is already running.  If you were trying " +
 									  "to control the already running instance of iFolder, D-Bus must be enabled.  " +
 									  "iFolder could not connect to your D-Bus Session Bus.");
 					return;
@@ -1929,7 +1926,7 @@ namespace Novell.iFolder
 			}
 			catch(Exception bigException)
 			{
-				Console.WriteLine(bigException);
+				Debug.PrintLine(bigException.Message);
 				iFolderCrashDialog cd = new iFolderCrashDialog(bigException);
 				if (!Util.RegisterModalWindow(cd))
 				{

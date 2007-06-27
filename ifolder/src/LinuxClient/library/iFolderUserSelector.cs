@@ -526,7 +526,7 @@ namespace Novell.iFolder
 					}
 					catch(Exception e)
 					{
-						Console.WriteLine(e.Message);
+						Debug.PrintLine(e.Message);
 					}
 					if (memberInfo != null)
 					{
@@ -699,7 +699,7 @@ namespace Novell.iFolder
 		{
 			if (index < 0 || index >= total || (total == 0))
 			{
-				Console.WriteLine("MemberListModel.GetMemberInfo() called with index out of the range or when total == 0");
+				Debug.PrintLine("MemberListModel.GetMemberInfo() called with index out of the range or when total == 0");
 
 				// FIXME: Figure out the right exception to throw here
 				throw new Exception("GetValue called when no items are present");
@@ -754,7 +754,7 @@ namespace Novell.iFolder
 				}
 				catch (Exception e)
 				{
-					Console.WriteLine("Exception thrown calling simws.FindSeekMembers(): {0}", e.Message);
+					Debug.PrintLine(String.Format("Exception thrown calling simws.FindSeekMembers(): {0}", e.Message));
 				}
 				
 				memberInfoReturn = (MemberInfo)memberInfos[index];
@@ -792,7 +792,7 @@ namespace Novell.iFolder
 			}
 			catch(Exception e)
 			{
-				Console.WriteLine(string.Format("{0}: {1}", row, e.Message));
+				Debug.PrintLine(string.Format("{0}: {1}", row, e.Message));
 				return Util.GS("Unknown");
 			}
 			string fullName = memberInfo.FullName;

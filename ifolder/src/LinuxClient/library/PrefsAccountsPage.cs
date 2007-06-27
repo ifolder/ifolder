@@ -640,11 +640,11 @@ namespace Novell.iFolder
 							}
 							else 
 							{
-								Console.WriteLine(" remember Option true. Checking for passphrase existence");
+								Debug.PrintLine(" remember Option true. Checking for passphrase existence");
 								string passphrasecheck = 	simws.GetPassPhrase(args.DomainID);
 								if(passphrasecheck == null || passphrasecheck == "")
 								{
-									Console.WriteLine("BugBug: Passphrase doesn't exist");
+									Debug.PrintLine("BugBug: Passphrase doesn't exist");
 									ShowVerifyDialog( args.DomainID, simws);
 								}
 							}
@@ -728,18 +728,18 @@ namespace Novell.iFolder
 				epd.Hide();
 				if( epd.RecoveryAgent != null)
 				{
-					Console.WriteLine("Recovery Agent Selected is: {0}", epd.RecoveryAgent);
+					Debug.PrintLine(String.Format("Recovery Agent Selected is: {0}", epd.RecoveryAgent));
 					byte [] RACertificateObj = domainController.GetRACertificate(DomainID, epd.RecoveryAgent);
 					if( RACertificateObj != null && RACertificateObj.Length != 0)
 					{
-						Console.WriteLine(" Got Certificate");
+						Debug.PrintLine(" Got Certificate");
 						System.Security.Cryptography.X509Certificates.X509Certificate Cert = new System.Security.Cryptography.X509Certificates.X509Certificate(RACertificateObj);
 					//	string publickey = (string)Cert.GetPublicKey();
 						
 					}
 					else
 					{
-						Console.WriteLine("No Certificate");
+						Debug.PrintLine("No Certificate");
 					}
 				}
 				if( result == (int)ResponseType.Cancel || result == (int)ResponseType.DeleteEvent)
@@ -797,11 +797,11 @@ namespace Novell.iFolder
 						if( res == (int)ResponseType.Ok)
 						{
 							publicKey = Convert.ToBase64String(Cert.GetPublicKey());
-							Console.WriteLine(" The public key is: {0}", publicKey);
+							Debug.PrintLine(String.Format(" The public key is: {0}", publicKey));
 						}
 						else
 						{
-							Console.WriteLine("Response type is not ok");
+							Debug.PrintLine("Response type is not ok");
 			                                status = false;
                         			        simws.StorePassPhrase(DomainID, "", CredentialType.None, false);
 							return ShowEnterPassPhraseDialog( DomainID, simws );

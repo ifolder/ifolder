@@ -105,76 +105,76 @@ namespace Novell.iFolder
 /*
 		private static void UnitTest()
 		{
-			Console.WriteLine("============= Unit Testing GetFriendlyTime() ==============");
-			Console.WriteLine("\tDateTime.Now: {0}", GetFriendlyTime(DateTime.Now));
+			Debug.PrintLine("============= Unit Testing GetFriendlyTime() ==============");
+			Debug.PrintLine("\tDateTime.Now: {0}", GetFriendlyTime(DateTime.Now));
 			
 			DateTime dateTime = DateTime.Now.Subtract(TimeSpan.FromSeconds(30));
 			string friendlyTime = GetFriendlyTime(dateTime);
-			Console.WriteLine("\t30 Seconds Ago: {0}", friendlyTime);
+			Debug.PrintLine("\t30 Seconds Ago: {0}", friendlyTime);
 			
 			dateTime = DateTime.Now.Subtract(TimeSpan.FromSeconds(59));
 			friendlyTime = GetFriendlyTime(dateTime);
-			Console.WriteLine("\t59 Seconds Ago: {0}", friendlyTime);
+			Debug.PrintLine("\t59 Seconds Ago: {0}", friendlyTime);
 			
 			dateTime = DateTime.Now.Subtract(TimeSpan.FromSeconds(60));
 			friendlyTime = GetFriendlyTime(dateTime);
-			Console.WriteLine("\t60 Seconds Ago: {0}", friendlyTime);
+			Debug.PrintLine("\t60 Seconds Ago: {0}", friendlyTime);
 			
 			dateTime = DateTime.Now.Subtract(TimeSpan.FromSeconds(61));
 			friendlyTime = GetFriendlyTime(dateTime);
-			Console.WriteLine("\t61 Seconds Ago: {0}", friendlyTime);
+			Debug.PrintLine("\t61 Seconds Ago: {0}", friendlyTime);
 			
 			dateTime = DateTime.Now.Subtract(TimeSpan.FromMinutes(1));
 			friendlyTime = GetFriendlyTime(dateTime);
-			Console.WriteLine("\t1 Minute Ago: {0}", friendlyTime);
+			Debug.PrintLine("\t1 Minute Ago: {0}", friendlyTime);
 			
 			dateTime = DateTime.Now.Subtract(TimeSpan.FromMinutes(2));
 			friendlyTime = GetFriendlyTime(dateTime);
-			Console.WriteLine("\t2 Minutes Ago: {0}", friendlyTime);
+			Debug.PrintLine("\t2 Minutes Ago: {0}", friendlyTime);
 			
 			dateTime = DateTime.Now.Subtract(TimeSpan.FromMinutes(30));
 			friendlyTime = GetFriendlyTime(dateTime);
-			Console.WriteLine("\t30 Minutes Ago: {0}", friendlyTime);
+			Debug.PrintLine("\t30 Minutes Ago: {0}", friendlyTime);
 			
 			dateTime = DateTime.Now.Subtract(TimeSpan.FromMinutes(59));
 			friendlyTime = GetFriendlyTime(dateTime);
-			Console.WriteLine("\t59 Minutes Ago: {0}", friendlyTime);
+			Debug.PrintLine("\t59 Minutes Ago: {0}", friendlyTime);
 			
 			dateTime = DateTime.Now.Subtract(TimeSpan.FromMinutes(60));
 			friendlyTime = GetFriendlyTime(dateTime);
-			Console.WriteLine("\t60 Minutes Ago: {0}", friendlyTime);
+			Debug.PrintLine("\t60 Minutes Ago: {0}", friendlyTime);
 			
 			dateTime = DateTime.Now.Subtract(TimeSpan.FromMinutes(61));
 			friendlyTime = GetFriendlyTime(dateTime);
-			Console.WriteLine("\t61 Minutes Ago: {0}", friendlyTime);
+			Debug.PrintLine("\t61 Minutes Ago: {0}", friendlyTime);
 			
 			dateTime = DateTime.Now.Subtract(TimeSpan.FromMinutes(62));
 			friendlyTime = GetFriendlyTime(dateTime);
-			Console.WriteLine("\t62 Minutes Ago: {0}", friendlyTime);
+			Debug.PrintLine("\t62 Minutes Ago: {0}", friendlyTime);
 			
 			dateTime = DateTime.Now.Subtract(TimeSpan.FromMinutes(120));
 			friendlyTime = GetFriendlyTime(dateTime);
-			Console.WriteLine("\t120 Minutes Ago: {0}", friendlyTime);
+			Debug.PrintLine("\t120 Minutes Ago: {0}", friendlyTime);
 			
 			dateTime = DateTime.Now.Subtract(TimeSpan.FromMinutes(121));
 			friendlyTime = GetFriendlyTime(dateTime);
-			Console.WriteLine("\t121 Minutes Ago: {0}", friendlyTime);
+			Debug.PrintLine("\t121 Minutes Ago: {0}", friendlyTime);
 			
 			dateTime = DateTime.Now.Subtract(TimeSpan.FromMinutes(122));
 			friendlyTime = GetFriendlyTime(dateTime);
-			Console.WriteLine("\t122 Minutes Ago: {0}", friendlyTime);
+			Debug.PrintLine("\t122 Minutes Ago: {0}", friendlyTime);
 			
 			dateTime = DateTime.Now.Subtract(TimeSpan.FromDays(1));
 			friendlyTime = GetFriendlyTime(dateTime);
-			Console.WriteLine("\t1 Day Ago: {0}", friendlyTime);
+			Debug.PrintLine("\t1 Day Ago: {0}", friendlyTime);
 			
 			dateTime = DateTime.Now.Subtract(TimeSpan.FromDays(2));
 			friendlyTime = GetFriendlyTime(dateTime);
-			Console.WriteLine("\t2 Days Ago: {0}", friendlyTime);
+			Debug.PrintLine("\t2 Days Ago: {0}", friendlyTime);
 			
 			dateTime = DateTime.Now.Subtract(TimeSpan.FromDays(5));
 			friendlyTime = GetFriendlyTime(dateTime);
-			Console.WriteLine("\t5 Days Ago: {0}", friendlyTime);
+			Debug.PrintLine("\t5 Days Ago: {0}", friendlyTime);
 		}
 */
 		

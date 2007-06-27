@@ -1619,7 +1619,7 @@ namespace Novell.iFolder
 												string passphrasecheck = 	simws.GetPassPhrase(selectedDomain);
 												if( passphrasecheck == null || passphrasecheck =="")
 												{
-													Console.WriteLine(" passphrase not entered at login");
+													Debug.PrintLine(" passphrase not entered at login");
 													passPhraseStatus = ShowVerifyDialog(selectedDomain, simws);
 												}
 												else
@@ -1689,7 +1689,7 @@ namespace Novell.iFolder
 								}
 								catch (Exception e)
 								{
-									Console.WriteLine(e.Message);
+									Debug.PrintLine(e.Message);
 									continue;
 								}
 							}
@@ -1879,7 +1879,7 @@ namespace Novell.iFolder
 			}while(result != (int) ResponseType.Ok);
 			if( result == (int) ResponseType.Ok)
 			{
-				Console.WriteLine("Calling Reset Passphrase");
+				Debug.PrintLine("Calling Reset Passphrase");
 				bool status = domainController.ReSetPassphrase(DomainID, oldPassphrase, newPassphrase, null, null);
 				if( status == true)
 				{
@@ -2116,16 +2116,16 @@ namespace Novell.iFolder
 					string domainID = holder.iFolder.DomainID;
 					if( simws.GetDefaultiFolder( domainID ) == holder.iFolder.ID)
 					{
-						Console.WriteLine("Removing default iFolder");
+						Debug.PrintLine("Removing default iFolder");
 						removeDefault = true;
 					}
 					if( removeDefault == true )
 					{
-						Console.WriteLine("Removing default ifolder");
+						Debug.PrintLine("Removing default ifolder");
 						simws.DefaultAccount(domainID, null);
 					}
 					else
-						Console.WriteLine("Not a default account");
+						Debug.PrintLine("Not a default account");
 
 					ifdata.DeleteiFolder(holder.iFolder.ID);
 					iFoldersIconView.UnselectAll();
@@ -2625,7 +2625,7 @@ namespace Novell.iFolder
 						string domainID = holder.iFolder.DomainID;
 						if( simws.GetDefaultiFolder( domainID ) == holder.iFolder.ID)
 						{
-							Console.WriteLine("Removing default iFolder");
+							Debug.PrintLine("Removing default iFolder");
 							removeDefault = true;
 						}
 						iFolderHolder subHolder =
@@ -2829,7 +2829,7 @@ namespace Novell.iFolder
 									string passphrasecheck = 	simws.GetPassPhrase(selectedDomain);
 									if( passphrasecheck == null || passphrasecheck =="")
 									{
-										Console.WriteLine(" passphrase not entered at login");
+										Debug.PrintLine(" passphrase not entered at login");
 										passPhraseStatus = ShowVerifyDialog(selectedDomain, simws);
 										/*
 										// check for remember option
@@ -2840,9 +2840,9 @@ namespace Novell.iFolder
 										}
 										else 
 										{
-											Console.WriteLine(" remember Option true. Checking for passphrase existence");
+											Debug.PrintLine(" remember Option true. Checking for passphrase existence");
 											string passphrasecheck,uid;
-											Console.WriteLine("domain: {0}", DomainID);
+											Debug.PrintLine("domain: {0}", DomainID);
 											simws.GetPassPhrase( DomainID, out uid, out passphrasecheck);
 											if(passphrasecheck == null || passphrasecheck == "")
 												passPhraseStatus = ShowVerifyDialog( DomainID, simws);
@@ -2920,7 +2920,7 @@ namespace Novell.iFolder
 					}
 					catch (Exception e)
 					{
-						Console.WriteLine(e.Message);
+						Debug.PrintLine(e.Message);
 						continue;
 					}
 				}
@@ -3281,7 +3281,7 @@ namespace Novell.iFolder
                                         break;
 				if( epd.PassPhrase != epd.RetypedPassPhrase )
 				{
-					Console.WriteLine("PassPhrases do not match");
+					Debug.PrintLine("PassPhrases do not match");
 					// show an error message
 					iFolderMsgDialog dialog = new iFolderMsgDialog(
 						null,
@@ -3329,11 +3329,11 @@ namespace Novell.iFolder
 						if( res == (int)ResponseType.Ok)
 						{
 							publicKey = Convert.ToBase64String(Cert.GetPublicKey());
-							Console.WriteLine(" The public key is: {0}", publicKey);
+							Debug.PrintLine(String.Format(" The public key is: {0}", publicKey));
 						}
 						else
 						{
-							Console.WriteLine("Response type is not ok");
+							Debug.PrintLine("Response type is not ok");
 			                                status = false;
                         			        simws.StorePassPhrase(DomainID, "", CredentialType.None, false);
 							return ShowEnterPassPhraseDialog( DomainID, simws );
@@ -3413,7 +3413,7 @@ namespace Novell.iFolder
 					if( passPhraseStatus.statusCode == StatusCodes.PassPhraseInvalid)  // check for invalid passphrase
 					{
 						// Display an error Message
-						Console.WriteLine("Invalid Passphrase");
+						Debug.PrintLine("Invalid Passphrase");
 						iFolderMsgDialog dialog = new iFolderMsgDialog(
 							null,
 							iFolderMsgDialog.DialogType.Error,
@@ -3516,7 +3516,7 @@ public class UriList : ArrayList {
 
 				if (i.EndsWith ("\r")) {
 					s = i.Substring (0, i.Length - 1);
-//					Console.WriteLine ("uri = {0}", s);
+//					Debug.PrintLine ("uri = {0}", s);
 				}
 				
 				try {
@@ -3728,4 +3728,5 @@ public class UriList : ArrayList {
 			return false;
 		}
 	}
+	
 }

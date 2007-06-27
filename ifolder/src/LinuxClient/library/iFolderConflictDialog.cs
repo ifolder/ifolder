@@ -54,12 +54,12 @@ namespace Novell.iFolder
 				if( (con.LocalName != null) &&
 					(con.LocalName.Length > 0) )
 				{
-//					Console.WriteLine("Creating with Local Conflict");
+//					Debug.PrintLine("Creating with Local Conflict");
 					localConflict = con;
 				}
 				else
 				{
-//					Console.WriteLine("Creating with Server Conflict");
+//					Debug.PrintLine("Creating with Server Conflict");
 					serverConflict = con;
 				}
 
@@ -158,7 +158,7 @@ namespace Novell.iFolder
 
 		public void AddNameConflict(Conflict con)
 		{
-//			Console.WriteLine("Adding a new conflict");
+//			Debug.PrintLine("Adding a new conflict");
 			if(!con.IsNameConflict)
 				throw new Exception("Cannot add a FileConflict");
 
@@ -166,12 +166,12 @@ namespace Novell.iFolder
 				(con.LocalName.Length > 0) &&
 				(localConflict == null) )
 			{
-//				Console.WriteLine("Adding a local Conflict");
+//				Debug.PrintLine("Adding a local Conflict");
 				localConflict = con;
 			}
 			else if(serverConflict == null)
 			{
-//				Console.WriteLine("Adding a server Conflict");
+//				Debug.PrintLine("Adding a server Conflict");
 				serverConflict = con;
 			}
 			else
@@ -682,18 +682,18 @@ namespace Novell.iFolder
 						else
 							key = con.ServerFullPath;
 
-//						Console.WriteLine("Key = {0}", key);
+//						Debug.PrintLine("Key = {0}", key);
 
 						if(conflictTable.ContainsKey(key))
 						{
-//							Console.WriteLine("Found key, adding to holder");
+//							Debug.PrintLine("Found key, adding to holder");
 							ConflictHolder ch = 
 								(ConflictHolder)conflictTable[key];
 							ch.AddNameConflict(con);
 						}
 						else
 						{
-//							Console.WriteLine("No key, New holder");
+//							Debug.PrintLine("No key, New holder");
 							ConflictHolder ch = new ConflictHolder(con, ifolder.UnManagedPath);
 							ConflictTreeStore.AppendValues(ch);
 							conflictTable.Add(key, ch);
@@ -703,7 +703,7 @@ namespace Novell.iFolder
 			}
 			catch(Exception ex)
 			{
-				Console.WriteLine(ex);
+				Debug.PrintLine(ex.Message);
 			}
 		}
 

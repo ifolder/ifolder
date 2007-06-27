@@ -160,7 +160,7 @@ namespace Novell.iFolder
 		
 		private void OnWidgetRealized(object o, EventArgs args)
 		{
-//			Console.WriteLine("iFolderIconView.OnWidgetRealized");
+//			Debug.PrintLine("iFolderIconView.OnWidgetRealized");
 		}
 		
 		private void OnSizeAllocated(object o, SizeAllocatedArgs args)
@@ -203,7 +203,7 @@ namespace Novell.iFolder
 		
 		public iFolderHolder GetiFolderAtPos(int x, int y)
 		{
-//			Console.WriteLine("iFolderIconView.GetiFolderAtPos({0}, {1}", x, y);
+//			Debug.PrintLine("iFolderIconView.GetiFolderAtPos({0}, {1}", x, y);
 
 			foreach(iFolderViewGroup group in viewGroups)
 			{
@@ -222,7 +222,7 @@ namespace Novell.iFolder
 		
 		private void SelectionChangedHandler(object o, EventArgs args)
 		{
-//Console.WriteLine("iFolderIconView.SelectionChangedHandler()");
+//Debug.PrintLine("iFolderIconView.SelectionChangedHandler()");
 			iFolderViewGroupSelection gSelect = (iFolderViewGroupSelection)o;
 			iFolderViewGroup group = gSelect.ViewGroup;
 		
@@ -313,7 +313,7 @@ namespace Novell.iFolder
 			// Control which item has keyboard focus, activating an item,
 			// providing a context menu, etc..
 	
-//			Console.WriteLine("iFolderIconView.OnKeyPressEvent(): {0}", evnt.Key);
+//			Debug.PrintLine("iFolderIconView.OnKeyPressEvent(): {0}", evnt.Key);
 			
 			switch(evnt.Key)
 			{

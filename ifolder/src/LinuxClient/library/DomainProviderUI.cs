@@ -177,8 +177,8 @@ namespace Novell.iFolder.DomainProvider
 				}
 				catch(Exception e)
 				{
-					Console.WriteLine(e.Message);
-					Console.WriteLine(e.StackTrace);
+					Debug.PrintLine(e.Message);
+					Debug.PrintLine(e.StackTrace);
 				}
 
 				return providers;

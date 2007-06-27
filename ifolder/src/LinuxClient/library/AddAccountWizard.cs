@@ -839,20 +839,20 @@ namespace Novell.iFolder
 			}
 			catch(Exception ex)
 			{
-				Console.WriteLine("Exception: old server: {0}", ex.Message);
+				Debug.PrintLine(String.Format("Exception: old server: {0}", ex.Message));
 				AccountDruid.Page = SummaryPage;
 				return;
 			}
 			if(  str == null || str == "")
 			{
-				Console.WriteLine("Default account does not exist");
+				Debug.PrintLine("Default account does not exist");
 				upload = true;
 				LocationEntry.Sensitive = true;
 				securityLabel.Sensitive = true;
 			}
 			else
 			{
-				Console.WriteLine("Default account exists");
+				Debug.PrintLine("Default account exists");
 				upload = false;
 				CreateDefault.Label = Util.GS("Download Default iFolder:");
 				securityLabel.Visible = false;
@@ -861,7 +861,7 @@ namespace Novell.iFolder
 			if( passPhraseEntered == true)
 				AccountDruid.SetButtonsSensitive(false, true, true, true);
 			else
-				Console.WriteLine("Passphrase entered is false");
+				Debug.PrintLine("Passphrase entered is false");
 			iFolderWebService ifws = DomainController.GetiFolderService();
 			int securityPolicy = ifws.GetSecurityPolicy(ConnectedDomain.ID);
 			ChangeStatus( securityPolicy);
@@ -875,7 +875,7 @@ namespace Novell.iFolder
 		{
 			encryptionCheckButton.Active = sslCheckButton.Active = false;
 			encryptionCheckButton.Sensitive = sslCheckButton.Sensitive = false;
-			Console.WriteLine("Security Policy is: {0}", SecurityPolicy);	
+			Debug.PrintLine(String.Format("Security Policy is: {0}", SecurityPolicy));	
 			if(SecurityPolicy !=0)
 			{
 				if( (SecurityPolicy & (int)SecurityState.encrypt) == (int) SecurityState.encrypt)
@@ -1010,7 +1010,7 @@ namespace Novell.iFolder
 			// shared
 			if( this.encryptionCheckButton.Active == false)
 			{
-				Console.WriteLine("Shared");
+				Debug.PrintLine("Shared");
 				try
 				{
 					if( (ifHolder = ifdata.CreateiFolder(this.LocationEntry.Text, ConnectedDomain.ID, this.sslCheckButton.Active, null)) == null)
@@ -1019,12 +1019,12 @@ namespace Novell.iFolder
 					{
 						this.simws.DefaultAccount(ConnectedDomain.ID, ifHolder.iFolder.ID);
 						AccountDruid.Page = SummaryPage;
-						Console.WriteLine("Making default account and verifying");
+						Debug.PrintLine("Making default account and verifying");
 						string str = this.simws.GetDefaultiFolder( ConnectedDomain.ID );
 						if( str == null)
-							Console.WriteLine("Not set the default account");
+							Debug.PrintLine("Not set the default account");
 						else
-							Console.WriteLine("Set the default iFolder to: {0}", str);
+							Debug.PrintLine(String.Format("Set the default iFolder to: {0}", str));
 						return true;
 					}
 				}
@@ -1036,10 +1036,10 @@ namespace Novell.iFolder
 			}
 			else 
 			{
-				Console.WriteLine("encrypted");
+				Debug.PrintLine("encrypted");
 				if( this.passPhraseEntered == true )
 				{
-					Console.WriteLine("passphrase entered");
+					Debug.PrintLine("passphrase entered");
 					try
 					{
 						if( (ifHolder = ifdata.CreateiFolder(this.LocationEntry.Text, ConnectedDomain.ID, this.sslCheckButton.Active, "BlowFish")) == null)
@@ -1049,13 +1049,13 @@ namespace Novell.iFolder
 						}
 						else
 						{
-							Console.WriteLine("Making default account");
+							Debug.PrintLine("Making default account");
 							this.simws.DefaultAccount(ConnectedDomain.ID, ifHolder.iFolder.ID);
 							string str = this.simws.GetDefaultiFolder( ConnectedDomain.ID );
 							if( str == null)
-								Console.WriteLine("Not set the default account");
+								Debug.PrintLine("Not set the default account");
 							else
-								Console.WriteLine("Set the default iFolder to: {0}", str);
+								Debug.PrintLine(String.Format("Set the default iFolder to: {0}", str));
 
 							AccountDruid.Page = SummaryPage;
 							return true;
@@ -1103,21 +1103,21 @@ namespace Novell.iFolder
 				// download
 				upload = false;
 				iFolderData ifdata = iFolderData.GetData();
-				Console.WriteLine("Reading ifdata");
+				Debug.PrintLine("Reading ifdata");
 				defaultiFolder = ifdata.GetDefaultiFolder( defaultiFolderID );
 				if( defaultiFolder == null)
-					Console.WriteLine("iFolder object is null");
+					Debug.PrintLine("iFolder object is null");
 				else //if( defaultiFolder.encryptionAlgorithm == null || defaultiFolder.encryptionAlgorithm == "")
 				{
 					// Not encrypted... Download here
-				//	Console.WriteLine("Unencrypted download: " );
+				//	Debug.PrintLine("Unencrypted download: " );
 					return DownloadiFolder();
 				}
 				/*
 				else
 				{
 					// encrypted... Check for passphrase
-					Console.WriteLine("Encrypted {0} download: ", ifolder.encryptionAlgorithm);
+					Debug.PrintLine("Encrypted {0} download: ", ifolder.encryptionAlgorithm);
 				}
 				*/
 			}
@@ -1135,12 +1135,12 @@ namespace Novell.iFolder
 				try
 				{
 					ifdata.AcceptiFolderInvitation( ifolderID, domainID, this.LocationEntry.Text);
-					Console.WriteLine("finished accepting invitation");
+					Debug.PrintLine("finished accepting invitation");
 					return true;
 				}
 				catch(Exception ex)
 				{
-					Console.WriteLine("Exception: Unable to download: {0}", ex.Message);
+					Debug.PrintLine("Exception: Unable to download: {0}", ex.Message);
 					return false;
 				}
 				*/
@@ -1164,13 +1164,13 @@ namespace Novell.iFolder
 				try
 				{
 					ifdata.AcceptiFolderInvitation( defaultiFolder.ID, defaultiFolder.DomainID, this.LocationEntry.Text);
-					Console.WriteLine("finished accepting invitation");
+					Debug.PrintLine("finished accepting invitation");
 					AccountDruid.Page = SummaryPage;
 					return true;
 				}
 				catch(Exception ex)
 				{
-				//	Console.WriteLine("Exception: Unable to download: {0}", ex.Message);
+				//	Debug.PrintLine("Exception: Unable to download: {0}", ex.Message);
 					DisplayCreateOrSetupException(ex);
 					AccountDruid.Page = DefaultiFolderPage;
 					return false;
@@ -1233,11 +1233,11 @@ namespace Novell.iFolder
 								if( res == (int)ResponseType.Ok)
 								{
 									publicKey = Convert.ToBase64String(Cert.GetPublicKey());
-									Console.WriteLine(" The public key is: {0}", publicKey);
+									Debug.PrintLine(String.Format(" The public key is: {0}", publicKey));
 								}
 								else
 								{
-									Console.WriteLine("Response type is not ok");
+									Debug.PrintLine("Response type is not ok");
 								        simws.StorePassPhrase(ConnectedDomain.ID, "", CredentialType.None, false);
 							//		this.passPhraseEntered = true;
 									NextPage = false;
@@ -1298,7 +1298,7 @@ namespace Novell.iFolder
 				else 
 				{
 					// PassPhrase is already set.
-					Console.WriteLine("Validating passphrase");
+					Debug.PrintLine("Validating passphrase");
 					Status validationStatus = domainController.ValidatePassPhrase (ConnectedDomain.ID, PassPhraseEntry.Text );
 					if (validationStatus.statusCode == StatusCodes.PassPhraseInvalid ) 
 					{
@@ -1317,7 +1317,7 @@ namespace Novell.iFolder
 					}
 					else if(validationStatus.statusCode == StatusCodes.Success )
 					{
-						Console.WriteLine("Success. storing passphrase");
+						Debug.PrintLine("Success. storing passphrase");
 						domainController.StorePassPhrase( ConnectedDomain.ID, PassPhraseEntry.Text,
 												CredentialType.Basic, RememberPassPhraseCheckButton.Active);
 						this.passPhraseEntered = true;
@@ -1366,7 +1366,7 @@ namespace Novell.iFolder
 			}
 			if( NextPage == false)
 			{
-				Console.WriteLine("In the same page");
+				Debug.PrintLine("In the same page");
 				AccountDruid.Page = RAPage;
 				return false;
 			}
@@ -1569,7 +1569,7 @@ namespace Novell.iFolder
 						}
 						else
 						{
-							Console.WriteLine("Error while authenticating");
+							Debug.PrintLine("Error while authenticating");
 							Util.ShowLoginError(this, authStatus.statusCode);
 						}
 					}
