@@ -1069,6 +1069,8 @@ namespace Novell.iFolder
 		public void OnDomainLoggedInEvent(object sender, DomainEventArgs args)
 		{
 			UpdateDomainStatus(args.DomainID);
+			iFolderData ifdata = iFolderData.GetData();
+			ifdata.Refresh();
 		}
 		
 		public void OnDomainLoggedOutEvent(object sender, DomainEventArgs args)
