@@ -6,13 +6,13 @@ using System.Runtime.CompilerServices;
 // set of attributes.
 //
 
-[assembly: AssemblyTitle("")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Novell-iFolder")]
+[assembly: AssemblyDescription("Simple and Secure storage solution")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Novell, Inc.")]
 [assembly: AssemblyProduct("iFolder")]
-[assembly: AssemblyCopyright("(c) 2004-2005 Novell, Inc.")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCopyright("(c) 2004-2007 Novell, Inc.")]
+[assembly: AssemblyTrademark("iFolder")]
 [assembly: AssemblyCulture("")]		
 
 //
