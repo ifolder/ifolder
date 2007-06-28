@@ -1446,7 +1446,30 @@ namespace Novell.iFolder.Web
 			return new iFolderUser( domain, simMem );
 		}
 
+		/// <summary>
+		/// WebMethod that gets a member from the default domain
+		/// </summary>
+		/// <param name = "UserID">
+		/// The ID of the member to be added
+		/// </param>
+		/// <returns>
+		/// Member that matches the UserID
+		/// </returns>
+		[WebMethod(EnableSession=true, Description="Lookup a single member to a collection")]
+		[SoapDocumentMethod]
+		public string GetRAName( string DomainID )
+		{
+			Store store = Store.GetStore();
 
+			Domain domain = store.GetDomain(DomainID);
+			if(domain == null)
+				throw new Exception("Unable to access domain");
+
+			Simias.Storage.Member member = domain.GetCurrentMember();
+			if(member == null)
+				throw new Exception("Invalid UserID");
+			return member.RAName;
+		}
 
 
 		/// <summary>
