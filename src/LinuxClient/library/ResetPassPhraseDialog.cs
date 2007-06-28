@@ -50,7 +50,11 @@ namespace Novell.iFolder
 		{
 			get
 			{
-				return domains[domainComboBox.Active].ID;
+				int activeIndex = domainComboBox.Active;
+				if (activeIndex >= 0)
+					return domains[activeIndex].ID;
+				else
+					return null;
 			}
 		}
 
@@ -184,16 +188,16 @@ namespace Novell.iFolder
 			recoveryAgentCombo = ComboBox.NewText();
 			table.Attach(recoveryAgentCombo, 1,2, 4,5,
 					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
-/*			RAList = domainController.GetRAList(DomainID);
+			RAList = domainController.GetRAList(DomainID);
 			if( RAList == null)
 			{
-				Debug.PrintLine(" no recovery agent present:");
+				//Debug.PrintLine(" no recovery agent present:");
 	                        foreach (string raagent in RAList )
         	                    recoveryAgentCombo.AppendText(raagent);
 			}
 
-*/
-			recoveryAgentCombo.AppendText("First");
+
+		//	recoveryAgentCombo.AppendText("First");
 
 			// Row 6
 			savePassPhrase = new CheckButton(Util.GS("Remember Passphrase"));
@@ -206,7 +210,28 @@ namespace Novell.iFolder
 			this.AddButton(Util.GS("Reset"), ResponseType.Ok);
 			this.SetResponseSensitive(ResponseType.Ok, false);
 			this.DefaultResponse = ResponseType.Ok;
+			domainComboBox.Changed += new EventHandler(OnDomainChangedEvent);
+			DisplayRAList();
 			
+		}
+
+		private void OnDomainChangedEvent( object o, EventArgs args)
+		{
+			DisplayRAList();
+		}
+		
+		private void DisplayRAList()
+		{
+			string domainID = this.Domain;
+			DomainController domController = DomainController.GetDomainController();
+			string [] raList = domController.GetRAList(domainID);
+			if( RAList != null)
+			{
+	            foreach (string raagent in RAList )
+	            {
+        	    	recoveryAgentCombo.AppendText(raagent);
+        	    }	
+			}
 		}
 
 		private void UpdateSensitivity( object o, EventArgs args)

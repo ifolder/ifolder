@@ -1263,6 +1263,11 @@ namespace Novell.iFolder.Controller
 					DomainDeleted(this, args);
 			}
 		}
+		
+		public string GetRAName(string domainID)
+		{
+			return this.ifws.GetRAName(domainID);
+		}
 	}
 
 	public class DomainAccountAlreadyExistsException : Exception

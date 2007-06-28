@@ -60,7 +60,11 @@ namespace Novell.iFolder
 		{
 			get
 			{
-				return domains[domainCombo.Active].ID;
+				int activeIndex = domainCombo.Active;
+				if (activeIndex >= 0)
+					return domains[activeIndex].ID;
+				else
+					return null;
 			}
 		}
 
@@ -149,10 +153,12 @@ namespace Novell.iFolder
 //                        recoveryAgentCombo = ComboBox.NewText();
 			recoveryAgentCombo = new Entry();
 			recoveryAgentCombo.Sensitive = false;
-                        table.Attach(recoveryAgentCombo, 1,2,2,3, AttachOptions.Fill|AttachOptions.Expand, 0,0,0);
-                        // Populate combo box with recovery agents
-                        // Row 4
-                        l = new Label(Util.GS("E-Mail ID")+":");
+            table.Attach(recoveryAgentCombo, 1,2,2,3, AttachOptions.Fill|AttachOptions.Expand, 0,0,0);
+            // Populate combo box with recovery agents
+            // Row 4
+            //l = new Label(Util.GS("E-Mail ID")+":");
+			// replacing email-id by Issuername as email-id field is not there in the certificate
+			l = new Label(Util.GS("Issuer Name")+":");
 			l.Xalign = 0.0F;
                         table.Attach(l, 0,1, 3,4,
                                 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
@@ -167,6 +173,49 @@ namespace Novell.iFolder
 			this.AddButton(Stock.Ok, ResponseType.Ok);
 			this.SetResponseSensitive(ResponseType.Ok, false);
 			this.DefaultResponse = ResponseType.Ok;
+			domainCombo.Changed += new EventHandler(OnDomainChangedEvent);
+			DisplayRAName();
+		}
+		
+		private void OnDomainChangedEvent( object o, EventArgs args)
+		{
+			DisplayRAName();
+		}
+		
+		private void DisplayRAName()
+		{
+			string domainID = this.Domain;
+			DomainController domController = DomainController.GetDomainController();
+			string raName = domController.GetRAName(domainID);
+			Console.WriteLine("Changing the raname");
+			if( raName ==null || raName == "")
+			{
+				recoveryAgentCombo.Text = Util.GS("None");
+				email.Text = Util.GS("None");
+			}
+			else
+			{
+				Console.WriteLine("RAName is :"+raName);
+				// display the RAName and Issuer Name/email-id in the text-box
+				try
+				{
+					byte[] byteArray = domController.GetRACertificate(domainID, raName);
+					System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(byteArray);
+					if(cert != null)
+					{
+						email.Text = cert.GetIssuerName();
+					}
+					else
+						email.Text = "None";
+				}
+				catch(Exception Ex)
+				{
+					recoveryAgentCombo.Text = raName;
+					email.Text = "None";
+					return;
+				}
+				recoveryAgentCombo.Text = raName;
+			}	
 		}
 
 		private void OnBrowseButtonClicked(object o, EventArgs e)
