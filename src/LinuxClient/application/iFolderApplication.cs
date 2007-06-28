@@ -265,10 +265,8 @@ namespace Novell.iFolder
 					try
 					{
 						simiasEventBroker = SimiasEventBroker.GetSimiasEventBroker();
-	
 						// Set up to have data ready for events
 						ifdata = iFolderData.GetData();
-	
 						domainController = DomainController.GetDomainController();
 					}
 					catch(Exception e)
@@ -516,6 +514,7 @@ namespace Novell.iFolder
 							{
 								case StatusCodes.Success:
 								case StatusCodes.SuccessInGrace:
+									ifdata.Refresh();
 									// Login was successful so close the Login dialog
 									Debug.PrintLine("Login dialog response- success");
 									LoginDialog.Hide();
