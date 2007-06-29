@@ -156,9 +156,7 @@ namespace Novell.iFolder
             table.Attach(recoveryAgentCombo, 1,2,2,3, AttachOptions.Fill|AttachOptions.Expand, 0,0,0);
             // Populate combo box with recovery agents
             // Row 4
-            //l = new Label(Util.GS("E-Mail ID")+":");
-			// replacing email-id by Issuername as email-id field is not there in the certificate
-			l = new Label(Util.GS("Issuer Name")+":");
+            l = new Label(Util.GS("E-Mail ID")+":");
 			l.Xalign = 0.0F;
                         table.Attach(l, 0,1, 3,4,
                                 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
@@ -187,33 +185,32 @@ namespace Novell.iFolder
 			string domainID = this.Domain;
 			DomainController domController = DomainController.GetDomainController();
 			string raName = domController.GetRAName(domainID);
-			Console.WriteLine("Changing the raname");
+			email.Text = Util.GS("Information Not Available");
 			if( raName ==null || raName == "")
 			{
-				recoveryAgentCombo.Text = Util.GS("None");
-				email.Text = Util.GS("None");
+				recoveryAgentCombo.Text = Util.GS("Information Not Available");
 			}
 			else
 			{
-				Console.WriteLine("RAName is :"+raName);
-				// display the RAName and Issuer Name/email-id in the text-box
-				try
+				//parsing the RAName by '='
+				char [] EmailParser = {'='};
+				string [] ParsedString = raName.Split(EmailParser);
+				string emailID = "";
+				if (ParsedString.Length > 1)
 				{
-					byte[] byteArray = domController.GetRACertificate(domainID, raName);
-					System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(byteArray);
-					if(cert != null)
+					for(int x = 0; x < ParsedString.Length; x++)
 					{
-						email.Text = cert.GetIssuerName();
+						// Iterate through the parsed string to again parse for '@' to get mail-id
+						char [] FinalEmailParser = {'@'};
+						string [] FinalParsedString = ParsedString[x].Split(FinalEmailParser);
+						if(FinalParsedString.Length > 1)
+						{
+							emailID = ParsedString[x];
+							email.Text = emailID;
+						}	
 					}
-					else
-						email.Text = "None";
-				}
-				catch(Exception Ex)
-				{
-					recoveryAgentCombo.Text = raName;
-					email.Text = "None";
-					return;
-				}
+				}	
+				//Console.WriteLine("email ID :"+emailID);	
 				recoveryAgentCombo.Text = raName;
 			}	
 		}
