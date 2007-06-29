@@ -29,6 +29,7 @@ namespace Novell.FormsTrayApp
 		private DomainItem selectedDomain;
 		private System.Windows.Forms.PictureBox pictureBox1;
 		private SimiasWebService simiasWebService;
+		private iFolderWebService ifWebService;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -42,13 +43,14 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
-		public ExportKeysDialog(SimiasWebService simws)
+		public ExportKeysDialog(iFolderWebService ifws, SimiasWebService simws)
 		{
 			//
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
 			this.simiasWebService = simws;
+			this.ifWebService = ifws;
 			//
 			// TODO: Add any constructor code after InitializeComponent call
 			//
@@ -520,6 +522,7 @@ namespace Novell.FormsTrayApp
 					if (selectedDomain != null)
 					{
 						this.DomainComboBox.SelectedItem = selectedDomain;
+						DisplayRAName(selectedDomain);
 					}
 					else
 						this.DomainComboBox.SelectedIndex = 0;
@@ -533,6 +536,7 @@ namespace Novell.FormsTrayApp
 				if (selectedDomain != null)
 				{
 					this.DomainComboBox.SelectedItem = selectedDomain;
+					DisplayRAName(selectedDomain);
 				}
 				else if (this.DomainComboBox.Items.Count > 0)
 				{
@@ -545,7 +549,48 @@ namespace Novell.FormsTrayApp
 		{
 			// Handle the change in domain.....
 			// Change the recovery agent name and e-mail id..
+			DomainItem domainItem = (DomainItem)this.domainComboBox.SelectedItem;
+			DisplayRAName(selectedDomain);
 		}
+
+		private void DisplayRAName(DomainItem selectedDomain)
+		{
+			try
+			{
+				string RAName = this.ifWebService.GetRAName(selectedDomain.ID);
+				if(RAName == null || RAName == "")
+				{
+					return;
+				}
+				else	
+				{
+					
+					this.recoveryAgent.Text = RAName;
+					char [] EmailParser = {'='};
+					string [] ParsedString = RAName.Split(EmailParser);
+					string emailID = "";
+					if (ParsedString.Length > 1)
+					{
+						for(int x = 0; x < ParsedString.Length; x++)
+						{
+							char [] FinalEmailParser = {'@'};
+							string [] FinalParsedString = ParsedString[x].Split(FinalEmailParser);
+							if(FinalParsedString.Length > 1)
+							{
+								emailID = ParsedString[x];
+								this.emailID.Text = emailID;
+							}	
+						}
+					}	
+				}
+			}	
+			catch(Exception ex)
+			{
+				//MessageBox.Show(string.Format("No RA Name found : {0}", ex.Message ));
+				return;
+			}
+		}
+		
 
 		private void btnExport_Click(object sender, EventArgs e)
 		{

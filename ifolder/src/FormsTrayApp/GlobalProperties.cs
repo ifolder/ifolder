@@ -3529,7 +3529,7 @@ namespace Novell.FormsTrayApp
 		private void menuExportKeys_Select(object sender, EventArgs e)
 		{
 			// Show export keys dialog
-			ExportKeysDialog exportKeys = new ExportKeysDialog(this.simiasWebService);
+			ExportKeysDialog exportKeys = new ExportKeysDialog(this.ifWebService, this.simiasWebService);
 			exportKeys.ShowDialog();
 		}
 

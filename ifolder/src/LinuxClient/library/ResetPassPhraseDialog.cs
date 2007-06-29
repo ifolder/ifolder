@@ -189,7 +189,7 @@ namespace Novell.iFolder
 			table.Attach(recoveryAgentCombo, 1,2, 4,5,
 					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
 			RAList = domainController.GetRAList(DomainID);
-			if( RAList == null)
+			if( RAList != null)
 			{
 				//Debug.PrintLine(" no recovery agent present:");
 	                        foreach (string raagent in RAList )
@@ -227,10 +227,10 @@ namespace Novell.iFolder
 			string [] raList = domController.GetRAList(domainID);
 			if( RAList != null)
 			{
-	            foreach (string raagent in RAList )
-	            {
-        	    	recoveryAgentCombo.AppendText(raagent);
-        	    }	
+	            		foreach (string raagent in RAList )
+	            		{
+        	    			recoveryAgentCombo.AppendText(raagent);
+        	    		}	
 			}
 		}
 
