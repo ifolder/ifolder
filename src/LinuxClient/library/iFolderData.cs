@@ -929,8 +929,10 @@ namespace Novell.iFolder
 	    			iFolderWeb reviFolder = 
 						ifws.RevertiFolder(ifHolder.iFolder.ID);
 					if (reviFolder == null)
-						throw new Exception(Util.GS("The iFolder Web Service returned a null object when calling RevertiFolder().  You may want to restart your iFolder Client and attempt this operation again."));
-
+					{
+						ifHolder = null;
+						return ifHolder;
+					}
 					ifHolder.iFolder = reviFolder;
 					if(reviFolder.IsSubscription)
 					{
@@ -944,6 +946,11 @@ namespace Novell.iFolder
 				}
 				catch(Exception e)
 				{
+					if ( String.Compare( e.Message, "Invalid CollectionID" ) == 0 )	
+					{
+						ifHolder = null;
+						return ifHolder;
+					}
 					throw new Exception(Util.GS("An exception occurred while attempting to revert the iFolder to a normal folder.  Exception message: ") + e.Message);
 				}
 
