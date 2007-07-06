@@ -231,6 +231,8 @@ namespace Novell.FormsTrayApp
 				first = false;
 
 				connectThread = new Thread( new ThreadStart( connectToServer ) );
+				connectThread.IsBackground = true;
+				connectThread.Priority = ThreadPriority.BelowNormal;
 				connectThread.Start();
 			}
 		}
