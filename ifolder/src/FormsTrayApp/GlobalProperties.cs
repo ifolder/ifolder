@@ -2449,6 +2449,8 @@ namespace Novell.FormsTrayApp
 				return;
 			inRefresh = true;
 			refreshThread = new Thread(new ThreadStart(updateiFolders));
+			refreshThread.IsBackground = true;
+			refreshThread.Priority = ThreadPriority.BelowNormal;
 			refreshThread.Start();
 //			refreshiFolders(/*domain*/);
 
@@ -3271,7 +3273,7 @@ namespace Novell.FormsTrayApp
 			{
 				iFolderWeb ifolder = ((iFolderObject)selectedItem.Tag).iFolderWeb;
 				iFolderObject ifobj = new iFolderObject(((iFolderObject)selectedItem.Tag).iFolderWeb, iFolderState.Disconnected);
-				iFolderWeb ifolderWeb = ((iFolderObject)selectedItem.Tag).iFolderWeb;
+//				iFolderWeb ifolderWeb = ((iFolderObject)selectedItem.Tag).iFolderWeb;
 				//TileListViewItem tlvi = new TileListViewItem(ifobj);
 				
 				// Accept the iFolder.
@@ -3283,7 +3285,7 @@ namespace Novell.FormsTrayApp
 						//MessageBox.Show("Ramesh: Removing from the tilelistview");
 						removeTileListViewItem( selectedItem );
 						//MessageBox.Show("Ramesh: Adding to list view");					
-						addiFolderToListView(new iFolderObject(ifolderWeb, iFolderState.Initial));
+						addiFolderToListView(new iFolderObject(ifolder, iFolderState.Initial));
 						if( acceptedFolders.Contains(ifobj.iFolderWeb.ID) )
 							acceptedFolders.Remove(ifobj.iFolderWeb.ID);
 						ifobj.iFolderWeb.UnManagedPath = DownloadPath;
@@ -3447,7 +3449,7 @@ namespace Novell.FormsTrayApp
 				iFolderWeb ifolder = ((iFolderObject)selectedItem.Tag).iFolderWeb;
 				if (ifolder.IsSubscription)
 				{
-					if (ifolder.State.Equals("Available"))
+					if (ifolder.State.Equals("Available") || ifolder.State.Equals("WaitSync"))
 					{
 						menuAccept_Click(sender, e);
 					}

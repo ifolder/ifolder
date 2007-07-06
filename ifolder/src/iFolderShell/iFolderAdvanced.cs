@@ -163,6 +163,8 @@ namespace Novell.iFolderCom
 			if (worker == null)
 			{
 				worker = new Thread(new ThreadStart(eventThreadProc));
+				worker.IsBackground = true;
+				worker.Priority = ThreadPriority.BelowNormal;
 				worker.Start();
 			}
 
