@@ -1163,9 +1163,8 @@ namespace Novell.iFolder
 													null,
 													iFolderMsgDialog.DialogType.Info,
 													iFolderMsgDialog.ButtonSet.None,
-													Util.GS("Export Encrypted Keys"),
-													Util.GS("File name:")+fileName,
-													Util.GS(""));
+													Util.GS("Export Encrypted Keys"), Util.GS("Successfully exported the keys."), 
+													Util.GS("File name:")+fileName);
 					dialog.Run();
 					dialog.Hide();
 					dialog.Destroy();
@@ -1191,6 +1190,23 @@ namespace Novell.iFolder
 
 		private void ImportClicked( object o, EventArgs args)
 		{
+			DomainInformation[] domains = this.domainController.GetLoggedInDomains();
+			if( domains == null)
+			{
+				iFolderMsgDialog dialog = new iFolderMsgDialog(
+                                                                                                                null,
+                                                                                                                iFolderMsgDialog.DialogType.Error,
+                                                                                                                iFolderMsgDialog.ButtonSet.None,
+                                                                                                                Util.GS("No Logged-In domains"),
+                                                                                                                Util.GS("There are no logged-in domains for importing keys."),
+                                                                                                                Util.GS("For importing keys the domain should be connected. Log on to a domain an try."));
+					dialog.Run();
+	                                dialog.Hide();
+        	                        dialog.Destroy();
+                	                dialog = null;
+					return;
+				}
+
 			ImportKeysDialog import = new ImportKeysDialog();
 			import.TransientFor = this;
 			int result = import.Run();
@@ -1211,7 +1227,7 @@ namespace Novell.iFolder
 													iFolderMsgDialog.DialogType.Info,
 													iFolderMsgDialog.ButtonSet.None,
 													Util.GS("Import Decrypted Keys"),
-													Util.GS("Successfully changed the passphrase"),
+													Util.GS("Successfully imported the keys and changed the passphrase"),
 													Util.GS("Use your new passphrase from now"));
 					dialog.Run();
 					dialog.Hide();
@@ -1226,7 +1242,7 @@ namespace Novell.iFolder
 						iFolderMsgDialog.DialogType.Error,
 						iFolderMsgDialog.ButtonSet.None,
 						Util.GS("Import Decrypted Keys"),
-						Util.GS("Error setting the Passphrase"),
+						Util.GS("Error importing the keys."),
 						Util.GS(""));
 						dialog.Run();
 						dialog.Hide();
@@ -1844,22 +1860,71 @@ namespace Novell.iFolder
 
 		private void OnResetPassMenuItem(object o, EventArgs args)
 		{
-			string DomainID, oldPassphrase, newPassphrase;
+			string DomainID, oldPassphrase, newPassphrase, RAName, publicKey;
 			bool rememberOption;
 			int result =0;
 			do
 			{
+				DomainInformation[] domains = this.domainController.GetLoggedInDomains();
+				if( domains == null)
+				{
+					iFolderMsgDialog dialog = new iFolderMsgDialog(
+                                                                                                                null,
+                                                                                                                iFolderMsgDialog.DialogType.Error,
+                                                                                                                iFolderMsgDialog.ButtonSet.None,
+                                                                                                                Util.GS("No Logged-In domains"),
+                                                                                                                Util.GS("There are no logged-in domains for changing the passphrase."),
+                                                                                                                Util.GS("For changing passphrase the domain should be connected. Log on to a domain an try."));
+					dialog.Run();
+	                                dialog.Hide();
+        	                        dialog.Destroy();
+                	                dialog = null;
+					return;
+				}
 				ResetPassPhraseDialog resetDialog = new ResetPassPhraseDialog();
+				resetDialog.Domains = domains;
 				resetDialog.TransientFor = this;
 				result = resetDialog.Run();
 				DomainID = resetDialog.Domain;
 				oldPassphrase = resetDialog.OldPassphrase;
 				newPassphrase = resetDialog.NewPassphrase;
 				rememberOption = resetDialog.SavePassphrase;
+				RAName = resetDialog.RAName;
+				publicKey = null;
 				resetDialog.Hide();
 				resetDialog.Destroy();
 				if(result == (int)ResponseType.Cancel || result == (int)ResponseType.DeleteEvent)
 					return;
+				if( RAName != Util.GS("None") && RAName != string.Empty)
+				{
+					byte [] RACertificateObj = domainController.GetRACertificate(DomainID, RAName);
+					if( RACertificateObj != null && RACertificateObj.Length != 0)
+					{
+						System.Security.Cryptography.X509Certificates.X509Certificate Cert = new System.Security.Cryptography.X509Certificates.X509Certificate(RACertificateObj);
+						CertificateDialog dlg = new CertificateDialog(Cert.ToString(true));
+						if (!Util.RegisterModalWindow(dlg))
+						{
+							dlg.Destroy();
+							dlg = null;
+							return ;
+						}
+						int res = dlg.Run();
+						dlg.Hide();
+						dlg.Destroy();
+						dlg = null;
+						if( res == (int)ResponseType.Ok)
+						{
+							publicKey = Convert.ToBase64String(Cert.GetPublicKey());
+							Debug.PrintLine(String.Format(" The public key is: {0}", publicKey));
+						}
+						else
+						{
+							Debug.PrintLine("Response type is not ok");
+							return;
+						}
+					}
+				}
+
 				Status passPhraseStatus =  simws.ValidatePassPhrase(DomainID, oldPassphrase);
 				if( passPhraseStatus == null || passPhraseStatus.statusCode != StatusCodes.Success)
 				{
@@ -1880,7 +1945,7 @@ namespace Novell.iFolder
 			if( result == (int) ResponseType.Ok)
 			{
 				Debug.PrintLine("Calling Reset Passphrase");
-				bool status = domainController.ReSetPassphrase(DomainID, oldPassphrase, newPassphrase, null, null);
+				bool status = domainController.ReSetPassphrase(DomainID, oldPassphrase, newPassphrase, RAName, publicKey);
 				if( status == true)
 				{
 					simws.StorePassPhrase(DomainID, newPassphrase, CredentialType.Basic, rememberOption);

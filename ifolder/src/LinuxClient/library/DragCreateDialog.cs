@@ -160,7 +160,7 @@ namespace Novell.iFolder
 			///
 			/// Name
 			///
-			Label label = new Label(string.Format("Name:"));
+			Label label = new Label(string.Format(Util.GS("Name:")));
 			label.Xalign = 0;
 			table.Attach(label, 0, 1, 0, 1,
 						 AttachOptions.Shrink | AttachOptions.Fill, 0, 0, 0);
@@ -174,7 +174,7 @@ namespace Novell.iFolder
 			///
 			/// Folder
 			///
-			label = new Label(string.Format("Folder:"));
+			label = new Label(string.Format(Util.GS("Folder:")));
 			label.Xalign = 0;
 			label.Yalign = 0;
 			table.Attach(label, 0, 1, 1, 2,

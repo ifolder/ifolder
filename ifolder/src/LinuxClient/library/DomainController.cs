@@ -29,6 +29,7 @@ using Novell.iFolder.Events;
 
 using Simias.Client;
 using Simias.Client.Authentication;
+using Novell.iFolder.DomainProvider;
 
 namespace Novell.iFolder.Controller
 {
@@ -208,6 +209,43 @@ namespace Novell.iFolder.Controller
 
 				return domains;
 			}
+		}
+
+		public DomainInformation[] GetLoggedInDomains()
+		{
+			Hashtable ht = new Hashtable();
+			DomainProviderUI domainProviderUI = DomainProviderUI.GetDomainProviderUI();
+			foreach( DomainInformation dom in keyedDomains.Values)
+			{
+                        	IDomainProviderUI provider = domainProviderUI.GetProviderForID(dom.ID);			
+                        	if (provider != null)
+	                        {
+        	                        if (dom.Active)
+					{
+						ht.Add(dom.ID, dom);
+					}
+                        	        else
+						continue;
+	                        }
+        	                else
+                	        {
+                        	        if (dom != null && dom.Authenticated)
+					{
+						ht.Add(dom.ID, dom);
+					}
+	                                else
+						continue;
+                	        }
+			}
+			if( ht.Count > 0)
+			{
+				DomainInformation[] domains1 = new DomainInformation[ht.Count];
+				ICollection icol = ht.Values;
+				icol.CopyTo( domains1, 0);
+				return domains1;
+			}
+			else
+				return null;
 		}
 
 		/// <summary>
