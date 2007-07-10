@@ -45,15 +45,25 @@ namespace Novell.iFolder
 		private Image				 iFolderScaledBanner;
 		private Gdk.Pixbuf			 ScaledPixbuf;
 
+		public DomainInformation[] Domains
+		{
+			get
+			{
+				return this.domains;
+			}
+			set
+			{
+				this.domains = value;
+			}
+		}
 
 		public string Domain
 		{
 			get
 			{
-				int activeIndex = domainComboBox.Active;
-				if (activeIndex >= 0)
-					return domains[activeIndex].ID;
-				else
+				if( domains != null)
+					return domains[domainComboBox.Active].ID;
+				else 
 					return null;
 			}
 		}
@@ -79,6 +89,14 @@ namespace Novell.iFolder
 			get
 			{
 				return savePassPhrase.Active;
+			}
+		}
+
+		public string RAName
+		{
+			get
+			{
+				return recoveryAgentCombo.ActiveText;
 			}
 		}
 
@@ -130,6 +148,7 @@ namespace Novell.iFolder
 			domainComboBox = ComboBox.NewText();
 			table.Attach(domainComboBox, 1,2, 0,1,
 					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
+			/*
 			DomainController domainController = DomainController.GetDomainController();
 			domains = domainController.GetDomains();	
 			for (int x = 0; x < domains.Length; x++)
@@ -138,7 +157,7 @@ namespace Novell.iFolder
 			}
 			if( domains.Length > 0)
 				domainComboBox.Active = 0;
-
+			*/
 			// Row 2
 			
 			lbl = new Label(Util.GS("Enter Present Passphrase")+":");
@@ -148,6 +167,7 @@ namespace Novell.iFolder
 			lbl.Xalign = 0.0F;
 			
 			oldPassPhrase = new Entry();
+			oldPassPhrase.Visibility = false;
 			table.Attach(oldPassPhrase, 1,2, 1,2,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			lbl.MnemonicWidget = oldPassPhrase;
@@ -161,6 +181,7 @@ namespace Novell.iFolder
 			lbl.Xalign = 0.0F;
 			
 			newPassPhrase = new Entry();
+			newPassPhrase.Visibility = false;
 			table.Attach(newPassPhrase, 1,2, 2,3,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			lbl.MnemonicWidget = newPassPhrase;
@@ -174,6 +195,7 @@ namespace Novell.iFolder
 			lbl.Xalign = 0.0F;
 			
 			retypePassPhrase = new Entry();
+			retypePassPhrase.Visibility = false;
 			table.Attach(retypePassPhrase, 1,2, 3,4,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			lbl.MnemonicWidget = retypePassPhrase;			
@@ -188,16 +210,21 @@ namespace Novell.iFolder
 			recoveryAgentCombo = ComboBox.NewText();
 			table.Attach(recoveryAgentCombo, 1,2, 4,5,
 					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
-			RAList = domainController.GetRAList(DomainID);
+		/*
+			DomainController domainController = DomainController.GetDomainController();
+			RAList = domainController.GetRAList("f5737f43-d284-4b7b-8647-ecb151aeabdd");
 			if( RAList != null)
 			{
 				//Debug.PrintLine(" no recovery agent present:");
 	                        foreach (string raagent in RAList )
+				{
+					Console.WriteLine("RALIst is {0}", raagent);
         	                    recoveryAgentCombo.AppendText(raagent);
+				}
 			}
 
-
-		//	recoveryAgentCombo.AppendText("First");
+			recoveryAgentCombo.AppendText("First");
+		*/
 
 			// Row 6
 			savePassPhrase = new CheckButton(Util.GS("Remember Passphrase"));
@@ -210,9 +237,27 @@ namespace Novell.iFolder
 			this.AddButton(Util.GS("Reset"), ResponseType.Ok);
 			this.SetResponseSensitive(ResponseType.Ok, false);
 			this.DefaultResponse = ResponseType.Ok;
+			this.Realized += new EventHandler(OnResetPassphraseLoad);	
 			domainComboBox.Changed += new EventHandler(OnDomainChangedEvent);
+		}
+
+
+		private void OnResetPassphraseLoad( object o, EventArgs args)
+		{
+			DomainController domainController = DomainController.GetDomainController();
+			domains = domainController.GetLoggedInDomains();
+			if( domains == null)
+			{
+					this.Respond( ResponseType.DeleteEvent);
+					return;	
+			}
+			for (int x = 0; x < domains.Length; x++)
+			{
+				domainComboBox.AppendText(domains[x].Name);
+			}
+			if( domains.Length > 0)
+				domainComboBox.Active = 0;
 			DisplayRAList();
-			
 		}
 
 		private void OnDomainChangedEvent( object o, EventArgs args)
@@ -223,8 +268,12 @@ namespace Novell.iFolder
 		private void DisplayRAList()
 		{
 			string domainID = this.Domain;
+			if( RAList != null)
+				for( int i=RAList.Length; i>=0; i--)
+					recoveryAgentCombo.RemoveText(i);
 			DomainController domController = DomainController.GetDomainController();
-			string [] raList = domController.GetRAList(domainID);
+			Debug.PrintLine(string.Format("domain id is: {0}", domainID));
+			RAList = domController.GetRAList(domainID);
 			if( RAList != null)
 			{
 	            		foreach (string raagent in RAList )
@@ -232,6 +281,12 @@ namespace Novell.iFolder
         	    			recoveryAgentCombo.AppendText(raagent);
         	    		}	
 			}
+			else
+			{
+				Debug.PrintLine("No recovery agent present");
+			}
+			recoveryAgentCombo.AppendText(Util.GS("None"));
+			recoveryAgentCombo.Active = 0;
 		}
 
 		private void UpdateSensitivity( object o, EventArgs args)

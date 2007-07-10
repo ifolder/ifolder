@@ -56,12 +56,27 @@ namespace Novell.iFolder
 				return this.location.Text;
 			}
 		}
+
+		public DomainInformation[] Domains
+		{
+			get
+			{
+				return this.domains;
+			}
+			set
+			{
+				this.domains = value;
+			}
+		}
 	
 		public string Domain
 		{
 			get
 			{
-				return domains[domainCombo.Active].ID;
+				if( domains != null)
+					return domains[domainCombo.Active].ID;
+				else
+					return null;
 			}
 		}
 		
@@ -129,6 +144,7 @@ namespace Novell.iFolder
                         l.LineWrap = true;
 			l.Xalign = 0.0F;
 			domainCombo = ComboBox.NewText();
+		/*
 			DomainController domainController = DomainController.GetDomainController();
 			domains = domainController.GetDomains();
 			for (int x = 0; x < domains.Length; x++)
@@ -137,6 +153,7 @@ namespace Novell.iFolder
 			}
 			if( domains.Length > 0)
 				domainCombo.Active = 0;
+		*/
 			// read domains from domain controller...
 			table.Attach(domainCombo, 1,2,0,1, AttachOptions.Fill|AttachOptions.Expand, 0,0,0);
 			l.MnemonicWidget = domainCombo;		
@@ -165,6 +182,7 @@ namespace Novell.iFolder
                                 AttachOptions.Fill, 0,0,0); 
 
                         oneTimePassphrase = new Entry();
+			oneTimePassphrase.Visibility = false;
 			oneTimePassphrase.Changed += new EventHandler(OnFieldsChanged);
                         table.Attach(oneTimePassphrase, 1,2, 2,3,
                                 AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
@@ -176,6 +194,7 @@ namespace Novell.iFolder
                         table.Attach(l, 0,1, 3,4,
                                 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
                         passPhrase = new Entry();
+			passPhrase.Visibility = false;
 			passPhrase.Changed += new EventHandler(OnFieldsChanged);
                         table.Attach(passPhrase, 1,2, 3,4,
                                 AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
@@ -188,6 +207,7 @@ namespace Novell.iFolder
                         table.Attach(l, 0,1, 4,5,
                                 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
                         retypePassPhrase = new Entry();
+			retypePassPhrase.Visibility = false;
 			retypePassPhrase.Changed += new EventHandler(OnFieldsChanged);
                         table.Attach(retypePassPhrase, 1,2, 4,5,
                                 AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
@@ -201,6 +221,21 @@ namespace Novell.iFolder
 			this.AddButton(Stock.Ok, ResponseType.Ok);
 			this.SetResponseSensitive(ResponseType.Ok, false);
 			this.DefaultResponse = ResponseType.Ok;
+			this.Realized += new EventHandler(OnImportKeysLoad);
+		}
+		private void OnImportKeysLoad(object o, EventArgs args)
+		{
+			DomainController domainController = DomainController.GetDomainController();
+			domains = null;
+			domains = domainController.GetLoggedInDomains();
+			if( domains == null)
+				return;
+			for (int x = 0; x < domains.Length; x++)
+			{
+				domainCombo.AppendText(domains[x].Name);
+			}
+			if( domains.Length > 0)
+				domainCombo.Active = 0;
 		}
 		private void OnBrowseButtonClicked(object o, EventArgs e)
 		{

@@ -1946,6 +1946,11 @@ msgstr ""
 "PassPhrase Invalid"
 
 msgid ""
+"Invalid PassPhrase"
+msgstr ""
+"Invalid PassPhrase"
+
+msgid ""
 "The PassPhrase entered is not valid"
 msgstr ""
 "The PassPhrase entered is not valid"
@@ -2761,6 +2766,12 @@ msgstr ""
 "Enter Present Passphrase"
 
 msgid ""
+"Enter New Passphrase"
+msgstr ""
+"Enter New Passphrase"
+
+
+msgid ""
 "Reset"
 msgstr ""
 "Reset"
@@ -2869,3 +2880,99 @@ msgid ""
 "Don't show this message again"
 msgstr ""
 "Don't show this message again"
+
+msgid ""
+"Default iFolder"
+msgstr ""
+"Default iFolder"
+
+msgid ""
+"Create default iFolder."
+msgstr ""
+"Create default iFolder."
+
+msgid ""
+"Browse"
+msgstr ""
+"Browse"
+
+msgid ""
+"Security:"
+msgstr ""
+"Security:"
+
+msgid ""
+"Select Location..."
+msgstr ""
+"Select Location..."
+
+msgid ""
+"Download Default iFolder:"
+msgstr ""
+"Download Default iFolder:"
+
+msgid ""
+"Next"
+msgstr ""
+"Next"
+
+msgid ""
+"iFolder Account"
+msgstr ""
+"iFolder Account"
+
+msgid ""
+"Convert to an iFolder..."
+msgstr ""
+"Convert to an iFolder..."
+
+msgid ""
+"_Browse"
+msgstr ""
+"_Browse"
+
+msgid ""
+"Synchronized: {0}"
+msgstr ""
+"Synchronized: {0}"
+
+msgid ""
+"No Logged-In domains"
+msgstr ""
+"No Logged-In domains"
+
+msgid ""
+"There are no logged-in domains for importing keys."
+msgstr ""
+"There are no logged-in domains for importing keys."
+
+msgid ""
+"For importing keys the domain should be connected. Log on to a domain an try."
+msgstr ""
+"For importing keys the domain should be connected. Log on to a domain an try."
+
+msgid ""
+"Successfully imported the keys and changed the passphrase"
+msgstr ""
+"Successfully imported the keys and changed the passphrase"
+
+msgid ""
+"Error importing the keys."
+msgstr ""
+"Error importing the keys."
+
+msgid ""
+"There are no logged-in domains for changing the passphrase."
+msgstr ""
+"There are no logged-in domains for changing the passphrase."
+
+msgid ""
+"For changing passphrase the domain should be connected. Log on to a domain an try."
+msgstr ""
+"For changing passphrase the domain should be connected. Log on to a domain an try."
+
+msgid ""
+"Successfully exported the keys."
+msgstr ""
+"Successfully exported the keys."
+
