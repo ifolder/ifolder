@@ -3570,7 +3570,13 @@ namespace Novell.FormsTrayApp
 		private void refreshTimer_Tick(object sender, EventArgs e)
 		{
 		//	this.refreshTimer.Stop();
-			this.refreshAll();
+			if( this.Focused)
+				this.refreshAll();
+			else
+			{
+				this.refreshTimer.Stop();
+				this.refreshTimer.Start();
+			}
 		//	this.refreshTimer.Start();
 		}
 	}

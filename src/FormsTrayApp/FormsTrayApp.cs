@@ -1218,7 +1218,7 @@ namespace Novell.FormsTrayApp
 						//	MessageBox.Show("Error while syncing files");
 							string title = string.Format(resourceManager.GetString("quotaFailureTitle"), currentSyncCollectionName);
 							notifyType = NotifyType.SyncError;
-							shellNotifyIcon.DisplayBalloonTooltip(title, "Synchronization log contains the information regarding the files that are not synchronized.", BalloonType.Error);
+							shellNotifyIcon.DisplayBalloonTooltip(title, resourceManager.GetString("SyncErrorPrompt")/*"Synchronization log contains the information regarding the files that are not synchronized."*/, BalloonType.Error);
 						}
 						break;
 					}

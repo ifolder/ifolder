@@ -30,6 +30,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.PictureBox pictureBox1;
 		private SimiasWebService simiasWebService;
 		private iFolderWebService ifWebService;
+		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(ExportKeysDialog));
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -601,10 +602,10 @@ namespace Novell.FormsTrayApp
 			}
 			catch(Exception ex)
 			{
-				MessageBox.Show(string.Format("Unable to export keys: {0}", ex.Message));
+				MessageBox.Show(string.Format(Resource.GetString("UnableToExportMesg")/*"Unable to export keys: {0}"*/, ex.Message));
 				return;
 			}
-			MessageBox.Show("Successfully exported the keys");
+			MessageBox.Show(Resource.GetString("ExportKeysSuccess")/*"Successfully exported the keys"*/);
 			this.Dispose();
 			this.Close();
 		}

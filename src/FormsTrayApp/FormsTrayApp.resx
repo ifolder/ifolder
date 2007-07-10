@@ -803,10 +803,13 @@
 		<value>Cancel</value>
 	</data>
 	<data name="NextText">
-		<value>Next</value>
+		<value>&amp;Next</value>
 	</data>
 	<data name="BackText">
-		<value>Back</value>
+		<value>&amp;Back</value>
+	</data>
+	<data name="NextText">
+		<value>&amp;Next</value>
 	</data>
 	<data name="AccWizardText">
 		<value>iFolder Account Wizard</value>
@@ -815,7 +818,7 @@
 		<value>Connect</value>
 	</data>
 	<data name="FinishText">
-		<value>Finish</value>
+		<value>&amp;Finish</value>
 	</data>
 	<data name="CongratsMsg">
 		<value>Congratulations, you are now connected to:</value>
@@ -904,7 +907,7 @@
 		<value>Select the domain</value>
 	</data>
 	<data name="EncryptedText">
-		<value>Encryption enabled</value>
+		<value>Encrypted</value>
 	</data>
 	<data name="SharableText">
 		<value>Shared</value>
@@ -963,4 +966,16 @@
 	<data name="AccountName">
 		<value>Account Name</value>
 	</data>
+	<data name="SyncErrorPrompt">
+		<value>Synchronization log contains the information regarding the files that are not synchronized.</value>
+	</data>
+	<data name="CreateDefaultiFolder" >
+    <value>Create Default iFolder</value>
+  </data>
+  <data name="BrowseText" >
+    <value>&amp;Browse</value>
+  </data>
+  <data name="SkipText" >
+    <value>&amp;Skip</value>
+  </data>
 </root>

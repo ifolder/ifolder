@@ -324,7 +324,6 @@ namespace Novell.Wizard
 			this.Text = Resource.GetString("AccWizardText");//"iFolder Account Wizard";
 			this.Activated += new System.EventHandler(this.AccountWizard_Activated);
 			this.ResumeLayout(false);
-
 		}
 		#endregion
 
@@ -381,9 +380,9 @@ namespace Novell.Wizard
 				{
 					// TODO: Localize
 					// Changing the connet button text.....
-					next.Text = "&Next >";
+					next.Text = Resource.GetString("NextText")+" >";//"&Next >";
 					this.back.Enabled = false;
-					this.cancel.Text = "Skip";
+					this.cancel.Text = Resource.GetString("SkipText")+" >";//"Skip";
 				//	MessageBox.Show(string.Format("Setting default path: {0}", this.defaultiFolderPage.defaultPath));
 				}
 				else if (currentIndex == (maxPages - 1))

@@ -161,7 +161,7 @@ STDMETHODIMP CiFolderShell::GetOverlayInfo(LPWSTR pwszIconFile,
 	switch (m_iFolderClass)
 	{
 	case IFOLDER_ISIFOLDER:
-        lstrcat(szModule, TEXT("ifolder_emblem.ico"));
+        lstrcat(szModule, TEXT("res\\ifolder_16.ico"));
 		break;
 	case IFOLDER_CONFLICT:
 		lstrcat(szModule, TEXT("ifolder_conflict_emb.ico"));
