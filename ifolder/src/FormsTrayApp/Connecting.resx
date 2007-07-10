@@ -380,7 +380,7 @@
 		<value>An error was encountered while saving the password.</value>
 	</data>
 	<data name="IsPassphraseSetException">
-		<value>Unable to check for passphrase.</value>
+		<value>Unable to check for passphrase. </value>
 	</data>
 	<data name="UpgradeNeededMsg">
 		<value>You need to upgrade the client to connect to this server.</value>

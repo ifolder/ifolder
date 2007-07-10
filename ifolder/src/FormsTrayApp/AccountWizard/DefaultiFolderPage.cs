@@ -52,7 +52,8 @@ namespace Novell.Wizard
 		private System.Windows.Forms.CheckBox defaultServer;
 		private System.Windows.Forms.Label defaultDescription;
 		private System.ComponentModel.IContainer components = null;
-		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(Novell.FormsTrayApp.FormsTrayApp));
+	//	private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(Novell.Wizard.AccountWizard));
+		private System.Resources.ResourceManager resManager;
 		
 		private System.Windows.Forms.RadioButton encryptionCheckButton;
 		private System.Windows.Forms.RadioButton sslCheckButton;
@@ -76,6 +77,7 @@ namespace Novell.Wizard
 		public DefaultiFolderPage(iFolderWebService ifws, SimiasWebService simws, DomainInformation domainInfo )
 		{
 			// This call is required by the Windows Form Designer.
+			this.resManager = new System.Resources.ResourceManager(typeof(Novell.FormsTrayApp.FormsTrayApp));
 			InitializeComponent();
 			this.simws = simws;
 			this.domainInfo = domainInfo;
@@ -106,7 +108,7 @@ namespace Novell.Wizard
 			// CreateDefault
 			//
 			this.CreateDefault.Location = new Point( 40, 96);
-			this.CreateDefault.Text = "Create Default iFolder";
+			this.CreateDefault.Text = this.resManager.GetString("CreateDefaultiFolder");//"Create Default iFolder";
 			this.CreateDefault.Size = new Size(416, 24);
 			this.CreateDefault.TabIndex = 1;
 			this.CreateDefault.CheckedChanged += new EventHandler(CreateDefault_CheckedChanged);
@@ -117,7 +119,7 @@ namespace Novell.Wizard
 			this.label1.Location = new System.Drawing.Point(56, 120);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(50, 20);
-			this.label1.Text = "Location: ";
+			this.label1.Text = this.resManager.GetString("LocationText") + " "; //"Location:"+ " ";
 			// 
 			// locationentry
 			//
@@ -125,11 +127,11 @@ namespace Novell.Wizard
 			this.LocationEntry.Multiline = false;
 			this.LocationEntry.Size = new Size(280, 20);
 			this.LocationEntry.TabIndex = 2;
-			this.LocationEntry.Text = "";
+			this.LocationEntry.Text = string.Empty;
 			//
 			// browsebutton
 			//
-			this.BrowseButton.Text = "Browse";
+			this.BrowseButton.Text = this.resManager.GetString("BrowseText"); //"Browse";
 			this.BrowseButton.Location = new Point( 406, 120);
 			this.BrowseButton.TabIndex = 3;
 			this.BrowseButton.Size = new Size( 75, 20);
@@ -138,16 +140,16 @@ namespace Novell.Wizard
 			// row 3
 			// encryptioncheckbutton, ssl checkbutton
 			//
-			this.label2.Text = "Security:";
+			this.label2.Text = this.resManager.GetString("Security")+ ": "; //"Security:";
 			this.label2.Location = new Point( 56, 144);
 			this.label2.Size = new Size( 50, 20);
 		
-			this.encryptionCheckButton.Text = "Encrypted";
+			this.encryptionCheckButton.Text = this.resManager.GetString("EncryptedText");//"Encrypted";
 			this.encryptionCheckButton.Location = new Point(112, 144);
 			this.encryptionCheckButton.Size = new Size(180, 20);
 			this.encryptionCheckButton.TabIndex = 4;
 
-			this.sslCheckButton.Text = "Shared";
+			this.sslCheckButton.Text = this.resManager.GetString("SharableText");//"Shared";
 			this.sslCheckButton.Size = new Size(180, 20);
 			this.sslCheckButton.TabIndex = 5;
 			this.sslCheckButton.Location = new Point(298, 144);
@@ -416,7 +418,7 @@ namespace Novell.Wizard
 				}
 				catch(Exception ex)
 				{
-					MessageBox.Show("Unable to contact server for ispassphraseset()");
+				//	MessageBox.Show("Unable to contact the server.");
 					return null;
 				}
 				if(passphraseStatus == true)
@@ -448,7 +450,7 @@ namespace Novell.Wizard
 					//	successful = false;
 					//	MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("PPForEncryption")/*"Passphrase needs to be supplied for encrypting the iFolder"*/, resourceManager.GetString("$this.Text")/*"Passphrase error"*/, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					//	mmb.ShowDialog();
-					MessageBox.Show("Unable to set the passphrase");
+				//	MessageBox.Show("Unable to set the passphrase");
 				}
 				else
 				{

@@ -122,7 +122,7 @@ namespace Novell.Wizard
 			this.welcomeTitle.Name = "welcomeTitle";
 			this.welcomeTitle.Size = new System.Drawing.Size(296, 40);
 			this.welcomeTitle.TabIndex = 0;
-			this.welcomeTitle.Text = "Welcome to the <WIZARD> Wizard";
+			this.welcomeTitle.Text = Resource.GetString("WelcomePageTitle");//"Welcome to the <WIZARD> Wizard";
 			// 
 			// waterMark
 			// 

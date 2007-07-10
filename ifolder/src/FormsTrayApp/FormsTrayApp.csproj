@@ -7,7 +7,7 @@
     >
         <Build>
             <Settings
-                ApplicationIcon = "ifolder_app.ico"
+                ApplicationIcon = "ifolder_16.ico"
                 AssemblyKeyContainerName = ""
                 AssemblyName = "iFolderApp"
                 AssemblyOriginatorKeyFile = ""

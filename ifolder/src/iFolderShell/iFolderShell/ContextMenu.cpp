@@ -550,7 +550,7 @@ HBITMAP CiFolderShell::GetBitmap()
 	// Build the path name to the icon.
 	TCHAR szIconName[MAX_PATH];
 	lstrcpy(szIconName, m_szShellPath);
-	lstrcat(szIconName, TEXT("res\\ifolder_loaded.ico"));
+	lstrcat(szIconName, TEXT("res\\ifolder_16.ico"));
 
 	// Load the icon
 	hIcon = (HICON)LoadImage(g_hmodThisDll, szIconName, IMAGE_ICON, x, y, LR_LOADFROMFILE);

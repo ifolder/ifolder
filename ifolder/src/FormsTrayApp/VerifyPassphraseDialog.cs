@@ -31,6 +31,7 @@ namespace Novell.FormsTrayApp
 		private System.ComponentModel.Container components = null;
 		private System.Windows.Forms.PictureBox pictureBox1;
 		private static System.Resources.ResourceManager  Resource = new System.Resources.ResourceManager(typeof(FormsTrayApp));
+		private System.Resources.ResourceManager resManager;
 
 		public bool PassphraseStatus
 		{
@@ -44,6 +45,7 @@ namespace Novell.FormsTrayApp
 		{
 			this.DomainID = domainID;
 			this.simws = simws;
+			this.resManager = new System.Resources.ResourceManager(typeof(VerifyPassphraseDialog));
 			//
 			// Required for Windows Form Designer support
 			//
@@ -327,7 +329,7 @@ namespace Novell.FormsTrayApp
 			}
 			catch(Exception ex)
 			{
-				MessageBox.Show("Unable to validate the Passphrase. "+ ex.Message);
+				MessageBox.Show(this.resManager.GetString("ValidatePPError")/*"Unable to validate the Passphrase. {0}"*/, ex.Message);
 			}
 			if( passPhraseStatus != null)
 			{

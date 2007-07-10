@@ -31,6 +31,7 @@ namespace Novell.FormsTrayApp
 		private DomainItem selectedDomain;
 		private System.Windows.Forms.PictureBox pictureBox1;
 		private SimiasWebService simiasWebService;
+		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(ImportKeysDialog));
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -626,10 +627,15 @@ namespace Novell.FormsTrayApp
 				else
 					onetimepp = null;
 				this.simiasWebService.ImportiFoldersCryptoKeys(domainItem.ID, this.Passphrase.Text,  onetimepp, this.LocationEntry.Text);
+				MessageBox.Show(Resource.GetString("ImportKeysSuccess")/*"Successfully imported the keys. You can use the new passphrase."*/);
+				this.Dispose();
+				this.Close();
 			}
 			catch(Exception ex)
 			{
-				MessageBox.Show(string.Format("Error importing the keys. {0}", ex.Message));
+				MessageBox.Show(string.Format(Resource.GetString("ImportErrorMesg")/*"Error importing the keys. {0}"*/, ex.Message));
+				this.Dispose();
+				this.Close();
 			}
 		}
 	}

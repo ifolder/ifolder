@@ -103,7 +103,7 @@ namespace Novell.Wizard
 			this.password.PasswordChar = '*';
 			this.password.Size = new System.Drawing.Size(344, 20);
 			this.password.TabIndex = 4;
-			this.password.Text = "";
+			this.password.Text = string.Empty;
 			// 
 			// label4
 			// 

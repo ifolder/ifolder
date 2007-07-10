@@ -185,6 +185,7 @@ namespace Novell.FormsTrayApp
 			this.RecoveryAgentCombo.TabIndex = ((int)(resources.GetObject("RecoveryAgentCombo.TabIndex")));
 			this.RecoveryAgentCombo.Text = resources.GetString("RecoveryAgentCombo.Text");
 			this.RecoveryAgentCombo.Visible = ((bool)(resources.GetObject("RecoveryAgentCombo.Visible")));
+			this.RecoveryAgentCombo.SelectedIndexChanged += new System.EventHandler(this.RecoveryAgentCombo_SelectedIndexChanged);
 			// 
 			// lblRecoveryAgent
 			// 
@@ -536,6 +537,11 @@ namespace Novell.FormsTrayApp
 				this.btnOk.Enabled = true;
 			else
 				this.btnOk.Enabled = false;
+		}
+
+		private void RecoveryAgentCombo_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+		
 		}
 	}
 }
