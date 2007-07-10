@@ -24,7 +24,8 @@ EXTRA_DIST =						\
 	tools							\
 	$(srcdir)/$(PACKAGE)*.pc.in		\
 	$(ADDITIONAL_LIB_FILES)			\
-	$(srcdir)/intltool-*.in
+	$(srcdir)/intltool-*.in			\
+	$(srcdir)/iFolder.snk
 
 all: ifolder3.pc ifolder3-c.pc
 
