@@ -89,6 +89,7 @@ namespace Novell.iFolder
 	        private bool            RememberPassPhrase;
 		private Label		RetypePassPhraseLabel;
 		private Label		SelectRALabel;
+		private bool AlreadyPrepared;
 
 		///
 		/// Default iFolder Page
@@ -131,6 +132,7 @@ namespace Novell.iFolder
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png"));
 
 			this.simws = simws;
+//			this.AlreadyPrepared = false;
 
 			domainController = DomainController.GetDomainController();
 			this.passPhraseEntered = false;
@@ -475,6 +477,7 @@ namespace Novell.iFolder
 			table.ColumnSpacing = 6;
 			table.RowSpacing = 6;
 			table.BorderWidth = 12;
+			this.AlreadyPrepared = false;
 
 			// Row 1
 			Label l = new Label(Util.GS("Enter the Passphrase"));
@@ -917,25 +920,28 @@ namespace Novell.iFolder
 
 			//TODO :
 			BackButton.Label = Util.GS("_Skip");
-
-			if ( domainController.IsPassPhraseSet (ConnectedDomain.ID) == false)
+			if( !AlreadyPrepared)
 			{
-			       string[] list = domainController.GetRAList (ConnectedDomain.ID);
+				if ( domainController.IsPassPhraseSet (ConnectedDomain.ID) == false)
+				{
+				       string[] list = domainController.GetRAList (ConnectedDomain.ID);
 
-			       foreach (string raagent in list )
-				       RATreeStore.AppendValues (raagent);
-				RATreeStore.AppendValues( Util.GS("None"));
+				       foreach (string raagent in list )
+					       RATreeStore.AppendValues (raagent);
+					RATreeStore.AppendValues( Util.GS("None"));
 
-			} else {
-			       // PassPhrase already available.
-			       PassPhraseSet = true;
- 			       PassPhraseVerifyEntry.Hide ();
-			       RATreeView.Hide();
- 			       SelectRALabel.Hide();
- 			       RetypePassPhraseLabel.Hide();
+				} else {
+				       // PassPhrase already available.
+				       PassPhraseSet = true;
+ 				       PassPhraseVerifyEntry.Hide ();
+				       RATreeView.Hide();
+ 				       SelectRALabel.Hide();
+ 				       RetypePassPhraseLabel.Hide();
+				}
 			}
 
 			AccountDruid.SetButtonsSensitive(true , true, true, true);
+			AlreadyPrepared = true;
 		}
 
 		private void OnUserInformationPagePrepared(object o, Gnome.PreparedArgs args)
