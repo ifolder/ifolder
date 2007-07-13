@@ -248,6 +248,7 @@ namespace Novell.FormsTrayApp
 				largeImageList.Images.Add( Bitmap.FromFile( Path.Combine( Application.StartupPath, @"res\ifolder-warning48.png" ) ) );
 				largeImageList.Images.Add( Bitmap.FromFile( Path.Combine( Application.StartupPath, @"res\ifolder-error48.png" ) ) );
 				largeImageList.Images.Add( Bitmap.FromFile( Path.Combine( Application.StartupPath, @"res\encrypt_ilock_48.gif" ) ) );
+				largeImageList.Images.Add( Bitmap.FromFile( Path.Combine( Application.StartupPath, @"res\ifolder_user_48.png" ) ) );
 
 				iFolderView.LargeImageList = largeImageList;
 
@@ -2379,7 +2380,12 @@ namespace Novell.FormsTrayApp
 							case "Local":
 								// change 3 to image index for encryption ifolder icon and shared icon
 								if( ifolderObject.iFolderWeb.encryptionAlgorithm == null || ifolderObject.iFolderWeb.encryptionAlgorithm == "")
-									imageIndex = 0;
+								{
+									if(ifolderObject.iFolderWeb.shared == true)
+										imageIndex = 8;
+									else
+										imageIndex = 0;
+								}	
 								else
 									imageIndex = 7;
 								status = string.Format( resourceManager.GetString("statusSynced"), ifolderObject.iFolderWeb.LastSyncTime );

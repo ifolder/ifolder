@@ -39,7 +39,8 @@ IMAGE_FILES =								\
 	$(IMAGE_DIR)/ifolder-warning48.png		\
 	$(IMAGE_DIR)/ifolder_encrypted_fold_48.png	\
 	$(IMAGE_DIR)/ifolder-startup-nl.png		\
-	$(IMAGE_DIR)/encrypt-ilock-48.png
+	$(IMAGE_DIR)/encrypt-ilock-48.png		\
+	$(IMAGE_DIR)/ifolder_user_48.png
 
 schemasdir			= $(GCONF_SCHEMA_FILE_DIR)
 schemas_DATA		= ifolder3.schemas
