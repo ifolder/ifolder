@@ -125,6 +125,11 @@ namespace Novell.iFolder.Web
 		public string encryptionAlgorithm;
 		
 		/// <summary>
+		/// whether collection is shared or not 
+		/// </summary>
+		public bool shared;
+		
+		/// <summary>
 		/// </summary>
 		public iFolderWeb()
 		{
@@ -195,10 +200,17 @@ namespace Novell.iFolder.Web
 
 			this.Role = collection.Role.ToString();
 			this.ssl = collection.SSL;
-			if( collection.EncryptionAlgorithm == null || collection.EncryptionAlgorithm == "" ) 
+			if( collection.EncryptionAlgorithm == null || collection.EncryptionAlgorithm == "" )
 				this.encryptionAlgorithm = "";
 			else
 				this.encryptionAlgorithm = collection.EncryptionAlgorithm;
+			ICSList memberList;
+
+			memberList = collection.GetMemberList();
+			if( memberList.Count >1)
+				this.shared = true;
+			else
+				this.shared = false;
 		}
 
 

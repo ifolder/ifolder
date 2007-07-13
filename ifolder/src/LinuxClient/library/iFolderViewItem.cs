@@ -50,6 +50,9 @@ namespace Novell.iFolder
 		private static Gdk.Pixbuf EncryptedOKPixbuf			= null;
 
 		private static Gdk.Pixbuf EncryptedOKPixbufSpotlight			= null;	
+		private static Gdk.Pixbuf SharedOKPixbuf			= null;
+
+		private static Gdk.Pixbuf SharedOKPixbufSpotlight			= null;	
 		///
 		/// WaitPixbuf is used:
 		///     1. When the client is first started, all iFolders are waiting
@@ -269,6 +272,13 @@ namespace Novell.iFolder
 					EncryptedOKPixbuf = new Gdk.Pixbuf(Util.ImagesPath("encrypt-ilock-48.png"));
 					EncryptedOKPixbufSpotlight =
 						Util.EelCreateSpotlightPixbuf(EncryptedOKPixbuf);
+				}
+				
+				if (SharedOKPixbuf == null)
+				{
+					SharedOKPixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder_user_48.png"));
+					SharedOKPixbufSpotlight =
+						Util.EelCreateSpotlightPixbuf(SharedOKPixbuf);
 				}
 				
 				if (SubscriptionPixbuf == null)
@@ -519,8 +529,16 @@ namespace Novell.iFolder
 									if( holder.iFolder.encryptionAlgorithm == null || holder.iFolder.encryptionAlgorithm == "")
 									{
 										// Not an encrypted file
-										newNormalPixbuf = OKPixbuf;
-										newSpotlightPixbuf = OKPixbufSpotlight;
+										if( holder.iFolder.shared == true)
+										{
+											newNormalPixbuf = SharedOKPixbuf;
+											newSpotlightPixbuf = SharedOKPixbufSpotlight;
+										}
+										else
+										{
+											newNormalPixbuf = OKPixbuf;
+											newSpotlightPixbuf = OKPixbufSpotlight;
+										}
 									}
 									else
 									{
