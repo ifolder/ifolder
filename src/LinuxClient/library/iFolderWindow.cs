@@ -70,7 +70,7 @@ namespace Novell.iFolder
 		private ImageMenuItem		QuitMenuItem;
 		private ImageMenuItem		RefreshMenuItem;
 		private ImageMenuItem		HelpMenuItem;
-	        private MenuItem                RecoveryMenuItem;
+		private MenuItem                RecoveryMenuItem;
 		private MenuItem		ExportMenuSubItem;
 		private MenuItem 		ImportMenuSubItem;
 	        private MenuItem                ResetPassMenuItem;
@@ -1140,6 +1140,41 @@ namespace Novell.iFolder
 
 		private void Migrate2xClickedHandler(object o, EventArgs args)
 		{
+			bool if2Present = true;
+                        string str = Mono.Unix.UnixEnvironment.EffectiveUser.HomeDirectory;
+                        if(!System.IO.Directory.Exists(str+"/.novell/ifolder"))
+			{
+				if2Present = false;
+                        }
+			else
+			{
+                        	string[] dirs;
+	                        dirs = System.IO.Directory.GetDirectories(str+"/.novell/ifolder");
+        	                str = str+"/.novell/ifolder";
+				int i;
+        	                for(i=0;i<dirs.Length;i++)
+        	                {
+        	                        if(dirs[i] != str+"/reg" && dirs[i] != str+"/Save")
+        	                        {
+						break;
+        	                        }
+				}
+				if( i == dirs.Length)
+					if2Present = false;
+                        }
+			if( if2Present == false)
+			{
+				iFolderMsgDialog NoiF2Dialog = new iFolderMsgDialog(
+				null,
+				iFolderMsgDialog.DialogType.Info,
+				iFolderMsgDialog.ButtonSet.Ok,
+				Util.GS("iFolder Migration"),
+				Util.GS("There is no iFolder 2.x data present on this computer."),Util.GS(" "));
+				NoiF2Dialog.Run();
+				NoiF2Dialog.Hide();
+				NoiF2Dialog.Destroy();
+				return;
+			}
 			MigrationWindow migrationWindow = new MigrationWindow(this, ifws, simws);
 			migrationWindow.ShowAll();
 			return;

@@ -2976,3 +2976,7 @@ msgid ""
 msgstr ""
 "Successfully exported the keys."
 
+msgid ""
+"There is no iFolder 2.x data present on this computer."
+msgstr ""
+"There is no iFolder 2.x data present on this computer."
