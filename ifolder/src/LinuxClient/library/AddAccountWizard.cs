@@ -172,6 +172,7 @@ namespace Novell.iFolder
 			AccountDruid.AppendPage(CreateRAPage());
 			AccountDruid.AppendPage(CreateDefaultiFolderPage());
 			AccountDruid.AppendPage(CreateSummaryPage());
+			AccountDruid.SetButtonsSensitive(false, true, true, true);
 			
 			return vbox;
 		}
@@ -1019,6 +1020,8 @@ namespace Novell.iFolder
 				Debug.PrintLine("Shared");
 				try
 				{
+					System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(LocationEntry.Text);
+					dir.Create();
 					if( (ifHolder = ifdata.CreateiFolder(this.LocationEntry.Text, ConnectedDomain.ID, this.sslCheckButton.Active, null)) == null)
 						return false;
 					else
@@ -1048,6 +1051,8 @@ namespace Novell.iFolder
 					Debug.PrintLine("passphrase entered");
 					try
 					{
+						System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(LocationEntry.Text);
+						dir.Create();
 						if( (ifHolder = ifdata.CreateiFolder(this.LocationEntry.Text, ConnectedDomain.ID, this.sslCheckButton.Active, "BlowFish")) == null)
 						{
 							throw new Exception("Simias returned null");
@@ -1096,11 +1101,13 @@ namespace Novell.iFolder
 				upload = true;
 				//if( LocationEntry.Text == GetDefaultPath())
 				//{
+				/*
 					if(!System.IO.Directory.Exists( LocationEntry.Text ))
 					{
 						System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(LocationEntry.Text);
 						dir.Create();
 					}
+				*/
 				//}
 				return CreateDefaultiFolder();
 			}
@@ -1169,6 +1176,8 @@ namespace Novell.iFolder
 			{
 				try
 				{
+					System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(LocationEntry.Text);
+					dir.Create();
 					ifdata.AcceptiFolderInvitation( defaultiFolder.ID, defaultiFolder.DomainID, this.LocationEntry.Text);
 					Debug.PrintLine("finished accepting invitation");
 					AccountDruid.Page = SummaryPage;

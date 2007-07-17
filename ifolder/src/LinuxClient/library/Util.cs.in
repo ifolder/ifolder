@@ -328,6 +328,7 @@ namespace Novell.iFolder
 					"",
 					Util.GS("Quality Assurance:"),
 					"  Nitin Purswani",
+					" Prabhudas Varadarajan",
 					"  Sujatha Narasimhan",
 					"",
 					Util.GS("Product Management:"),
@@ -385,7 +386,7 @@ namespace Novell.iFolder
 
 				aboutDialog.Authors = authors;
 				aboutDialog.Comments = Util.GS("The iFolder Project is a file sharing solution that allows people to easily share folders or files of any type with other users, whether they use the same or different operating system.");
-				aboutDialog.Copyright = Util.GS("Copyright (C) 2004-2006 Novell, Inc.  All rights reserved.");
+				aboutDialog.Copyright = Util.GS("Copyright (C) 2004-2007 Novell, Inc.  All rights reserved.");
 				aboutDialog.License =
 					Util.GS("iFolder @_VERSION_@\n" +
 							"Copyright (C) 2004-2006 Novell, Inc.\n" +

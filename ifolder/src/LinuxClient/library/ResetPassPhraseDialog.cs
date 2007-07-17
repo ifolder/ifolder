@@ -234,7 +234,8 @@ namespace Novell.iFolder
 		
 
 			this.AddButton(Stock.Cancel, ResponseType.Cancel);
-			this.AddButton(Util.GS("Reset"), ResponseType.Ok);
+			Button but = (Button)this.AddButton(Util.GS("Reset"), ResponseType.Ok);
+			but.Image = new Image(Stock.Undo, Gtk.IconSize.Menu);//new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-download16.png")));
 			this.SetResponseSensitive(ResponseType.Ok, false);
 			this.DefaultResponse = ResponseType.Ok;
 			this.Realized += new EventHandler(OnResetPassphraseLoad);	
