@@ -1424,7 +1424,7 @@ namespace Novell.FormsTrayApp
 			this.localiFoldersHeading.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("localiFoldersHeading.Dock")));
 			this.localiFoldersHeading.Enabled = ((bool)(resources.GetObject("localiFoldersHeading.Enabled")));
 			this.localiFoldersHeading.Font = ((System.Drawing.Font)(resources.GetObject("localiFoldersHeading.Font")));
-			this.localiFoldersHeading.ForeColor = System.Drawing.SystemColors.InactiveCaption;
+			this.localiFoldersHeading.ForeColor = System.Drawing.SystemColors.Desktop;
 			this.localiFoldersHeading.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("localiFoldersHeading.ImeMode")));
 			this.localiFoldersHeading.Location = ((System.Drawing.Point)(resources.GetObject("localiFoldersHeading.Location")));
 			this.localiFoldersHeading.MaxLength = ((int)(resources.GetObject("localiFoldersHeading.MaxLength")));
@@ -2540,6 +2540,7 @@ namespace Novell.FormsTrayApp
 				foreach (iFoldersListView ifListView in iFolderListViews.Values)
 				{
 					ifListView.InitializeUpdate();
+				//	ifListView.setVisible = false;
 				}
 				
 				// Walk the list of iFolders and add them to the listviews.
@@ -2990,7 +2991,7 @@ namespace Novell.FormsTrayApp
 			iFolderActions.Visible = false;
 
 //			Call the refresh thread
-			this.refreshTimer.Interval = this.ifWebService.GetDefaultSyncInterval()* 1000;
+			this.refreshTimer.Interval = Math.Abs(this.ifWebService.GetDefaultSyncInterval()* 1000);
 		//	MessageBox.Show(string.Format("Setting default sync interval to {0}. Calling refreash.", this.refreshTimer.Interval));
 			refreshAll();
 			this.refreshTimer.Start();

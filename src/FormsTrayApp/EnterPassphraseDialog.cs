@@ -400,9 +400,11 @@ namespace Novell.FormsTrayApp
 			this.Controls.Add(this.panel1);
 			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
 			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("$this.ImeMode")));
 			this.Location = ((System.Drawing.Point)(resources.GetObject("$this.Location")));
+			this.MaximizeBox = false;
 			this.MaximumSize = ((System.Drawing.Size)(resources.GetObject("$this.MaximumSize")));
 			this.MinimumSize = ((System.Drawing.Size)(resources.GetObject("$this.MinimumSize")));
 			this.Name = "EnterPassphraseDialog";
@@ -433,6 +435,7 @@ namespace Novell.FormsTrayApp
 			 *	else show dialog again..
 			 * 
 			 */
+			System.Resources.ResourceManager resManager = new System.Resources.ResourceManager(typeof(Connecting));
 			if( this.Passphrase.Text == this.RetypePassphrase.Text)
 			{
 				string publicKey = null;
@@ -442,8 +445,7 @@ namespace Novell.FormsTrayApp
 					// Show the certificate.....
 					byte[] CertificateObj = this.simws.GetRACertificateOnClient(this.DomainID, (string)this.RecoveryAgentCombo.SelectedItem);
 					System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(CertificateObj);
-				//	MyMessageBox mmb = new MyMessageBox( "Verify Certificate", "Verify Certificate", cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2 );
-					System.Resources.ResourceManager resManager = new System.Resources.ResourceManager(typeof(Connecting));
+					//	MyMessageBox mmb = new MyMessageBox( "Verify Certificate", "Verify Certificate", cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2 );
 					MyMessageBox mmb = new MyMessageBox( string.Format(resManager.GetString("verifyCert"), (string)this.RecoveryAgentCombo.SelectedItem), resManager.GetString("verifyCertTitle"), cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2);
 					DialogResult messageDialogResult = mmb.ShowDialog();
 					mmb.Dispose();
@@ -456,6 +458,15 @@ namespace Novell.FormsTrayApp
 						publicKey = Convert.ToBase64String(cert.GetPublicKey());
 					}
 					//return;
+				}
+				else	// If recovery agent is not selected...
+				{
+					MyMessageBox mmb = new MyMessageBox( resManager.GetString("NoCertWarning"), resManager.GetString("NoCertTitle"), "", MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2);
+					DialogResult messageDialogResult = mmb.ShowDialog();
+					mmb.Dispose();
+					mmb.Close();
+					if( messageDialogResult != DialogResult.Yes )
+						return;
 				}
 				
 				Status passPhraseStatus = null;
@@ -505,6 +516,7 @@ namespace Novell.FormsTrayApp
 		private void EnterPassphraseDialog_Load(object sender, System.EventArgs e)
 		{
 			this.btnOk.Enabled = false;
+			this.btnCancel.Select();
 			this.Icon = new Icon(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder_16.ico"));
 			this.waterMark.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder-banner.png"));
 			//this.waterMark.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder48.png"));

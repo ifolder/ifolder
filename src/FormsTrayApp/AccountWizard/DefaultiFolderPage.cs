@@ -360,6 +360,8 @@ namespace Novell.Wizard
 			{
 				try
 				{
+					DirectoryInfo di = new DirectoryInfo( this.LocationEntry.Text );
+					di.Create();
 					iFolderWeb ifolder = this.ifws.AcceptiFolderInvitation( defaultiFolder.DomainID, defaultiFolder.ID, this.LocationEntry.Text);
 					AccountWizard wiz = (AccountWizard)this.Parent;
 					wiz.UpdateDisplay( ifolder, this.LocationEntry.Text+"/"+ifolder.Name );
@@ -555,9 +557,9 @@ namespace Novell.Wizard
 				this.upload = true;
 				this.defaultPath += "\\Default";
 				int SecurityPolicy = this.ifws.GetSecurityPolicy(domainInfo.ID);
-				this.encryptionCheckButton.Checked = false;
+				this.encryptionCheckButton.Checked = true;
 				this.encryptionCheckButton.Enabled = this.sslCheckButton.Enabled = false;
-				this.sslCheckButton.Checked = true;
+				this.sslCheckButton.Checked = false;
 				if(SecurityPolicy !=0)
 				{
 					if( (SecurityPolicy & (int)SecurityState.encryption) == (int) SecurityState.encryption)

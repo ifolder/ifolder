@@ -81,6 +81,7 @@ namespace Novell.FormsTrayApp
 		{
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(ExportKeysDialog));
 			this.panel1 = new System.Windows.Forms.Panel();
+			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.waterMark = new System.Windows.Forms.PictureBox();
 			this.domainLabel = new System.Windows.Forms.Label();
 			this.filePathLabel = new System.Windows.Forms.Label();
@@ -93,7 +94,6 @@ namespace Novell.FormsTrayApp
 			this.btnCancel = new System.Windows.Forms.Button();
 			this.btnExport = new System.Windows.Forms.Button();
 			this.BrowseButton = new System.Windows.Forms.Button();
-			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -120,6 +120,27 @@ namespace Novell.FormsTrayApp
 			this.panel1.TabIndex = ((int)(resources.GetObject("panel1.TabIndex")));
 			this.panel1.Text = resources.GetString("panel1.Text");
 			this.panel1.Visible = ((bool)(resources.GetObject("panel1.Visible")));
+			// 
+			// pictureBox1
+			// 
+			this.pictureBox1.AccessibleDescription = resources.GetString("pictureBox1.AccessibleDescription");
+			this.pictureBox1.AccessibleName = resources.GetString("pictureBox1.AccessibleName");
+			this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("pictureBox1.Anchor")));
+			this.pictureBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.BackgroundImage")));
+			this.pictureBox1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("pictureBox1.Dock")));
+			this.pictureBox1.Enabled = ((bool)(resources.GetObject("pictureBox1.Enabled")));
+			this.pictureBox1.Font = ((System.Drawing.Font)(resources.GetObject("pictureBox1.Font")));
+			this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+			this.pictureBox1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("pictureBox1.ImeMode")));
+			this.pictureBox1.Location = ((System.Drawing.Point)(resources.GetObject("pictureBox1.Location")));
+			this.pictureBox1.Name = "pictureBox1";
+			this.pictureBox1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("pictureBox1.RightToLeft")));
+			this.pictureBox1.Size = ((System.Drawing.Size)(resources.GetObject("pictureBox1.Size")));
+			this.pictureBox1.SizeMode = ((System.Windows.Forms.PictureBoxSizeMode)(resources.GetObject("pictureBox1.SizeMode")));
+			this.pictureBox1.TabIndex = ((int)(resources.GetObject("pictureBox1.TabIndex")));
+			this.pictureBox1.TabStop = false;
+			this.pictureBox1.Text = resources.GetString("pictureBox1.Text");
+			this.pictureBox1.Visible = ((bool)(resources.GetObject("pictureBox1.Visible")));
 			// 
 			// waterMark
 			// 
@@ -376,7 +397,7 @@ namespace Novell.FormsTrayApp
 			this.btnExport.Text = resources.GetString("btnExport.Text");
 			this.btnExport.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("btnExport.TextAlign")));
 			this.btnExport.Visible = ((bool)(resources.GetObject("btnExport.Visible")));
-			this.btnExport.Click += new EventHandler(btnExport_Click);
+			this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
 			// 
 			// BrowseButton
 			// 
@@ -402,27 +423,6 @@ namespace Novell.FormsTrayApp
 			this.BrowseButton.Visible = ((bool)(resources.GetObject("BrowseButton.Visible")));
 			this.BrowseButton.Click += new System.EventHandler(this.BrowseButton_Click);
 			// 
-			// pictureBox1
-			// 
-			this.pictureBox1.AccessibleDescription = resources.GetString("pictureBox1.AccessibleDescription");
-			this.pictureBox1.AccessibleName = resources.GetString("pictureBox1.AccessibleName");
-			this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("pictureBox1.Anchor")));
-			this.pictureBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.BackgroundImage")));
-			this.pictureBox1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("pictureBox1.Dock")));
-			this.pictureBox1.Enabled = ((bool)(resources.GetObject("pictureBox1.Enabled")));
-			this.pictureBox1.Font = ((System.Drawing.Font)(resources.GetObject("pictureBox1.Font")));
-			this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-			this.pictureBox1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("pictureBox1.ImeMode")));
-			this.pictureBox1.Location = ((System.Drawing.Point)(resources.GetObject("pictureBox1.Location")));
-			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("pictureBox1.RightToLeft")));
-			this.pictureBox1.Size = ((System.Drawing.Size)(resources.GetObject("pictureBox1.Size")));
-			this.pictureBox1.SizeMode = ((System.Windows.Forms.PictureBoxSizeMode)(resources.GetObject("pictureBox1.SizeMode")));
-			this.pictureBox1.TabIndex = ((int)(resources.GetObject("pictureBox1.TabIndex")));
-			this.pictureBox1.TabStop = false;
-			this.pictureBox1.Text = resources.GetString("pictureBox1.Text");
-			this.pictureBox1.Visible = ((bool)(resources.GetObject("pictureBox1.Visible")));
-			// 
 			// ExportKeysDialog
 			// 
 			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
@@ -447,9 +447,11 @@ namespace Novell.FormsTrayApp
 			this.Controls.Add(this.panel1);
 			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
 			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("$this.ImeMode")));
 			this.Location = ((System.Drawing.Point)(resources.GetObject("$this.Location")));
+			this.MaximizeBox = false;
 			this.MaximumSize = ((System.Drawing.Size)(resources.GetObject("$this.MaximumSize")));
 			this.MinimumSize = ((System.Drawing.Size)(resources.GetObject("$this.MinimumSize")));
 			this.Name = "ExportKeysDialog";
@@ -491,7 +493,7 @@ namespace Novell.FormsTrayApp
 			this.waterMark.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder-banner.png"));
 			this.pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
 			this.pictureBox1.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder-banner-scaler.png"));
-			this.btnExport.Select();
+			this.btnCancel.Select();
 			if (this.DomainComboBox.Items.Count == 0)
 			{
 				try

@@ -296,9 +296,11 @@ namespace Novell.FormsTrayApp
 			this.Controls.Add(this.panel1);
 			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
 			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("$this.ImeMode")));
 			this.Location = ((System.Drawing.Point)(resources.GetObject("$this.Location")));
+			this.MaximizeBox = false;
 			this.MaximumSize = ((System.Drawing.Size)(resources.GetObject("$this.MaximumSize")));
 			this.MinimumSize = ((System.Drawing.Size)(resources.GetObject("$this.MinimumSize")));
 			this.Name = "VerifyPassphraseDialog";
@@ -361,6 +363,7 @@ namespace Novell.FormsTrayApp
 		private void VerifyPassphraseDialog_Load(object sender, System.EventArgs e)
 		{
 			this.btnOk.Enabled = false;
+			this.btnCancel.Select();
 			this.Icon = new Icon(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder_16.ico"));
 			//this.waterMark.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder48.png"));
 			this.waterMark.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder-banner.png"));
