@@ -146,6 +146,7 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.Label iFolderLocation;
 		private System.Windows.Forms.Label iFolderAccount;
 		private System.Windows.Forms.Label iFolderOwner;
+		private System.Windows.Forms.Button btnHelp;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -306,6 +307,7 @@ namespace Novell.iFolderCom
 			this.iFolderOwner = new System.Windows.Forms.Label();
 			this.iFolderLocation = new System.Windows.Forms.Label();
 			this.iFolderAccount = new System.Windows.Forms.Label();
+			this.btnHelp = new System.Windows.Forms.Button();
 			this.tabControl1.SuspendLayout();
 			this.tabGeneral.SuspendLayout();
 			this.groupBox1.SuspendLayout();
@@ -1795,6 +1797,35 @@ namespace Novell.iFolderCom
 			this.toolTip1.SetToolTip(this.syncLabel, resources.GetString("syncLabel.ToolTip"));
 			this.syncLabel.Visible = ((bool)(resources.GetObject("syncLabel.Visible")));
 			// 
+			// btnHelp
+			// 
+			this.btnHelp.AccessibleDescription = resources.GetString("btnHelp.AccessibleDescription");
+			this.btnHelp.AccessibleName = resources.GetString("btnHelp.AccessibleName");
+			this.btnHelp.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("btnHelp.Anchor")));
+			this.btnHelp.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnHelp.BackgroundImage")));
+			this.btnHelp.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("btnHelp.Dock")));
+			this.btnHelp.Enabled = ((bool)(resources.GetObject("btnHelp.Enabled")));
+			this.btnHelp.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("btnHelp.FlatStyle")));
+			this.btnHelp.Font = ((System.Drawing.Font)(resources.GetObject("btnHelp.Font")));
+			this.helpProvider1.SetHelpKeyword(this.btnHelp, resources.GetString("btnHelp.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.btnHelp, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("btnHelp.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.btnHelp, resources.GetString("btnHelp.HelpString"));
+			this.btnHelp.Image = ((System.Drawing.Image)(resources.GetObject("btnHelp.Image")));
+			this.btnHelp.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("btnHelp.ImageAlign")));
+			this.btnHelp.ImageIndex = ((int)(resources.GetObject("btnHelp.ImageIndex")));
+			this.btnHelp.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("btnHelp.ImeMode")));
+			this.btnHelp.Location = ((System.Drawing.Point)(resources.GetObject("btnHelp.Location")));
+			this.btnHelp.Name = "btnHelp";
+			this.btnHelp.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("btnHelp.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.btnHelp, ((bool)(resources.GetObject("btnHelp.ShowHelp"))));
+			this.btnHelp.Size = ((System.Drawing.Size)(resources.GetObject("btnHelp.Size")));
+			this.btnHelp.TabIndex = ((int)(resources.GetObject("btnHelp.TabIndex")));
+			this.btnHelp.Text = resources.GetString("btnHelp.Text");
+			this.btnHelp.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("btnHelp.TextAlign")));
+			this.toolTip1.SetToolTip(this.btnHelp, resources.GetString("btnHelp.ToolTip"));
+			this.btnHelp.Visible = ((bool)(resources.GetObject("btnHelp.Visible")));
+			this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
+			// 
 			// iFolderAdvanced
 			// 
 			this.AcceptButton = this.ok;
@@ -1814,6 +1845,7 @@ namespace Novell.iFolderCom
 			this.Controls.Add(this.cancel);
 			this.Controls.Add(this.ok);
 			this.Controls.Add(this.tabControl1);
+			this.Controls.Add(this.btnHelp);
 			//this.Controls.Add(this.conflictIcon);
 			//this.Controls.Add(this.conflicts);
 			this.FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -3773,6 +3805,20 @@ namespace Novell.iFolderCom
 			access.Top = add.Top = remove.Top = shareWith.Top + shareWith.Height + lvbDelta;
 			remove.Left = shareWith.Left + shareWith.Width - remove.Width;
 			add.Left = remove.Left - add.Width - bbDelta;
+		}
+
+		private void btnHelp_Click(object sender, System.EventArgs e)
+		{
+			string helpFile = "";
+			if( this.tabControl1.SelectedIndex == 1)
+			{
+				helpFile = Path.Combine(Path.Combine(Path.Combine(Application.StartupPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"doc\user\data\sharewith.html#bq6lwm0");
+			}
+			else if( this.tabControl1.SelectedIndex == 0)
+			{
+				helpFile = Path.Combine(Path.Combine(Path.Combine(Application.StartupPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"doc\user\data\propifolders.html");
+			}
+			new iFolderComponent().ShowHelp(Application.StartupPath, helpFile);
 		}
 		#endregion
 	}

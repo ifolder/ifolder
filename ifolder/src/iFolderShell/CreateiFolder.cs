@@ -574,9 +574,9 @@ namespace Novell.iFolderCom
 			// Change the corresponding encryption check boxes
 			DomainItem domain = (DomainItem) servers.SelectedItem;
 			int SecurityPolicy = ifWebService.GetSecurityPolicy(domain.ID);
-			this.encryption.Checked = false;
+			this.encryption.Checked = true;
 			this.encryption.Enabled = this.ssl.Enabled = false;
-			this.ssl.Checked = true;
+			this.ssl.Checked = false;
 			if(SecurityPolicy !=0)
 			{
 				if( (SecurityPolicy & (int)SecurityState.encryption) == (int) SecurityState.encryption)

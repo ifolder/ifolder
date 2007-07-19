@@ -85,6 +85,7 @@ namespace Novell.Wizard
 		private System.Windows.Forms.Button cancel;
 		private System.Windows.Forms.Button next;
 		private System.Windows.Forms.Button back;
+		private System.Windows.Forms.Button btnHelp;
 		internal System.Windows.Forms.GroupBox groupBox1;
 		private MigrationWelcomePage welcomePage;
 	//	private WelcomePage welcomePage;
@@ -304,6 +305,7 @@ namespace Novell.Wizard
 			this.cancel = new System.Windows.Forms.Button();
 			this.next = new System.Windows.Forms.Button();
 			this.back = new System.Windows.Forms.Button();
+			this.btnHelp = new System.Windows.Forms.Button();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.SuspendLayout();
 			// 
@@ -337,6 +339,17 @@ namespace Novell.Wizard
 			this.back.Text = "< "+Resource.GetString("BackText");
 			this.back.Click += new System.EventHandler(this.back_Click);
 			// 
+			// btnHelp
+			// 
+			this.btnHelp.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.btnHelp.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+			this.btnHelp.Location = new System.Drawing.Point(16, 318);
+			this.btnHelp.Name = Resource.GetString("BackText");//"back";
+			this.btnHelp.Size = new System.Drawing.Size(72, 23);
+			this.btnHelp.TabIndex = 1;
+			this.btnHelp.Text = Resource.GetString("menuHelp.Text");
+			this.btnHelp.Click += new System.EventHandler(this.help_Click);
+			// 
 			// groupBox1
 			// 
 			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
@@ -358,6 +371,7 @@ namespace Novell.Wizard
 			this.ClientSize = new System.Drawing.Size(496, 348);
 			this.ControlBox = false;
 			this.Controls.Add(this.groupBox1);
+			this.Controls.Add(this.btnHelp);
 			this.Controls.Add(this.back);
 			this.Controls.Add(this.next);
 			this.Controls.Add(this.cancel);
@@ -936,5 +950,11 @@ namespace Novell.Wizard
 		*/
 
 		#endregion
+
+		private void help_Click( object o, EventArgs args)
+		{
+			string helpFile = Path.Combine(Path.Combine(Path.Combine(Application.StartupPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"doc\user\data\migration.html");
+			new iFolderComponent().ShowHelp(Application.StartupPath, helpFile);
+		}
 	}
 }

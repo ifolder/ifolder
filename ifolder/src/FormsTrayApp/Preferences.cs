@@ -107,6 +107,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.ColumnHeader columnHeader5;
 		private System.Windows.Forms.Button btnMigrate;
 		private Manager simiasManager;
+		private System.Windows.Forms.Button btnHelp;
 		public Novell.FormsTrayApp.GlobalProperties parent;
 		#endregion
 
@@ -203,6 +204,7 @@ namespace Novell.FormsTrayApp
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.helpProvider1 = new System.Windows.Forms.HelpProvider();
 			this.btnMigrate = new System.Windows.Forms.Button();
+			this.btnHelp = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabGeneral.SuspendLayout();
@@ -966,6 +968,34 @@ namespace Novell.FormsTrayApp
 			// 
 			this.helpProvider1.HelpNamespace = resources.GetString("helpProvider1.HelpNamespace");
 			// 
+			// btnHelp
+			// 
+			this.btnHelp.AccessibleDescription = resources.GetString("btnHelp.AccessibleDescription");
+			this.btnHelp.AccessibleName = resources.GetString("btnHelp.AccessibleName");
+			this.btnHelp.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("btnHelp.Anchor")));
+			this.btnHelp.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnHelp.BackgroundImage")));
+			this.btnHelp.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("btnHelp.Dock")));
+			this.btnHelp.Enabled = ((bool)(resources.GetObject("btnHelp.Enabled")));
+			this.btnHelp.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("btnHelp.FlatStyle")));
+			this.btnHelp.Font = ((System.Drawing.Font)(resources.GetObject("btnHelp.Font")));
+			this.helpProvider1.SetHelpKeyword(this.btnHelp, resources.GetString("btnHelp.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.btnHelp, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("btnHelp.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.btnHelp, resources.GetString("btnHelp.HelpString"));
+			this.btnHelp.Image = ((System.Drawing.Image)(resources.GetObject("btnHelp.Image")));
+			this.btnHelp.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("btnHelp.ImageAlign")));
+			this.btnHelp.ImageIndex = ((int)(resources.GetObject("btnHelp.ImageIndex")));
+			this.btnHelp.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("btnHelp.ImeMode")));
+			this.btnHelp.Location = ((System.Drawing.Point)(resources.GetObject("btnHelp.Location")));
+			this.btnHelp.Name = "btnHelp";
+			this.btnHelp.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("btnHelp.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.btnHelp, ((bool)(resources.GetObject("btnHelp.ShowHelp"))));
+			this.btnHelp.Size = ((System.Drawing.Size)(resources.GetObject("btnHelp.Size")));
+			this.btnHelp.TabIndex = ((int)(resources.GetObject("btnHelp.TabIndex")));
+			this.btnHelp.Text = resources.GetString("btnHelp.Text");
+			this.btnHelp.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("btnHelp.TextAlign")));
+			this.btnHelp.Visible = ((bool)(resources.GetObject("btnHelp.Visible")));
+			this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
+			// 
 			// btnMigrate
 			// 
 			this.btnMigrate.AccessibleDescription = resources.GetString("btnMigrate.AccessibleDescription");
@@ -1010,6 +1040,7 @@ namespace Novell.FormsTrayApp
 			this.Controls.Add(this.tabControl1);
 			this.Controls.Add(this.apply);
 			this.Controls.Add(this.cancel);
+			this.Controls.Add(this.btnHelp);
 			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
 			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
 			this.HelpButton = true;
@@ -2392,6 +2423,12 @@ namespace Novell.FormsTrayApp
 			//Novell.iFolderCom.MyMessageBox mmb1 = new MyMessageBox(str, resourceManager.GetString("accountErrorTitle"), "nothing", MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 			//mmb1.ShowDialog();
 			*/
+		}
+
+		private void btnHelp_Click(object sender, System.EventArgs e)
+		{
+			string helpFile = Path.Combine(Path.Combine(Path.Combine(Application.StartupPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"doc\user\data\preferences.html");
+			new iFolderComponent().ShowHelp(Application.StartupPath, helpFile);
 		}
 	}
 }

@@ -42,6 +42,7 @@ namespace Novell.FormsTrayApp
 		private DomainInformation domainInfo;
 		private System.Windows.Forms.RichTextBox richTextBox1;
 		private Novell.FormsTrayApp.TileListView tileListView1;
+		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager( typeof(FormsTrayApp));
 		/// <summary> 
 		/// Required designer variable.
 		/// </summary>
@@ -196,14 +197,14 @@ namespace Novell.FormsTrayApp
 			this.richTextBox1.Cursor = System.Windows.Forms.Cursors.Arrow;
 			this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Top;
 			this.richTextBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
-			this.richTextBox1.ForeColor = System.Drawing.SystemColors.InactiveCaption;
+			this.richTextBox1.ForeColor = System.Drawing.SystemColors.Desktop;
 			this.richTextBox1.Location = new System.Drawing.Point(0, 0);
 			this.richTextBox1.Name = "richTextBox1";
 			this.richTextBox1.Size = new System.Drawing.Size(288, 40);
 			this.richTextBox1.TabIndex = 0;
 			this.richTextBox1.ReadOnly = true;
 			this.richTextBox1.TabStop = false;
-			this.richTextBox1.Text = "iFolders on {0}";
+			this.richTextBox1.Text = Resource.GetString("iFoldersOnServerHeading");
 			// 
 			// tileListView1
 			// 
@@ -264,6 +265,18 @@ namespace Novell.FormsTrayApp
 		{
 			get { return tileListView1.SelectedItem; }
 			set { tileListView1.SelectedItem = value; }
+		}
+
+		public bool setVisible
+		{
+			get
+			{
+				return this.richTextBox1.Visible;
+			}
+			set
+			{
+				this.richTextBox1.Visible = value;
+			}
 		}
 
 		#endregion
