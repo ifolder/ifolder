@@ -50,9 +50,9 @@ namespace Novell.Wizard
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Label label4;
 		//private System.Windows.Forms.CheckBox encryptionCB;
-		//private System.Windows.Forms.CheckBox sslCB;
+		//private System.Windows.Forms.CheckBox sharedCB;
 		private System.Windows.Forms.RadioButton encryptionCB;
-		private System.Windows.Forms.RadioButton sslCB;
+		private System.Windows.Forms.RadioButton sharedCB;
 		private System.Windows.Forms.ComboBox Domains;
 		private System.ComponentModel.IContainer components = null;
 		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(Novell.FormsTrayApp.FormsTrayApp));
@@ -84,7 +84,7 @@ namespace Novell.Wizard
 			this.label4 = new System.Windows.Forms.Label();
 			this.Domains = new ComboBox();
 			this.encryptionCB = new RadioButton();//new CheckBox();
-			this.sslCB = new RadioButton();//new CheckBox();			
+			this.sharedCB = new RadioButton();//new CheckBox();			
 			this.SuspendLayout();
 			// 
 			// label1
@@ -131,13 +131,13 @@ namespace Novell.Wizard
 			this.encryptionCB.Size = new Size(390, 16);
 
 			///
-			/// sslCB
+			/// sharedCB
 			/// 
 
-			this.sslCB.Location = new Point(80, 198);
-			this.sslCB.Name = "sslCB";
-			this.sslCB.Text = Resource.GetString("SharableText");//"Sharable";
-			this.sslCB.Size = new Size(390, 16);
+			this.sharedCB.Location = new Point(80, 198);
+			this.sharedCB.Name = "sharedCB";
+			this.sharedCB.Text = Resource.GetString("SharableText");//"Sharable";
+			this.sharedCB.Size = new Size(390, 16);
 			
 			// 
 			// IdentityPage
@@ -147,7 +147,7 @@ namespace Novell.Wizard
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.Domains);
 			this.Controls.Add(this.encryptionCB);
-			this.Controls.Add(this.sslCB);
+			this.Controls.Add(this.sharedCB);
 			this.HeaderSubTitle = "";
 			this.HeaderTitle = "";
 			this.Name = "IdentityPage";
@@ -163,33 +163,13 @@ namespace Novell.Wizard
 		}
 		#endregion
 
-		#region Event Handlers
-		/*
-		private void username_TextChanged(object sender, System.EventArgs e)
-		{
-			// Enable the buttons.
-			if (username.Text != "")
-			{
-				((AccountWizard)this.Parent).WizardButtons = WizardButtons.Next | WizardButtons.Back | WizardButtons.Cancel;
-			}
-			else
-			{
-				((AccountWizard)this.Parent).WizardButtons = WizardButtons.Back | WizardButtons.Cancel;
-			}
-		}
-	*/
-		#endregion
-
+		
 		#region Overridden Methods
 
 		internal override void ActivatePage(int previousIndex)
 		{
 			((MigrationWizard)this.Parent).MigrationWizardButtons = MigrationWizardButtons.Next | MigrationWizardButtons.Back | MigrationWizardButtons.Cancel;
 			base.ActivatePage (previousIndex);
-
-			// Enable/disable the buttons
-		//	username_TextChanged( this, null );
-		//	username.Focus();
 		}
 
 		/// <summary>
@@ -209,7 +189,6 @@ namespace Novell.Wizard
 
 		internal override int ValidatePage(int currentIndex)
 		{
-			// TODO:
 			MigrationWizard wiz = (MigrationWizard)this.Parent;
 
 			return base.ValidatePage (currentIndex);
@@ -251,44 +230,10 @@ namespace Novell.Wizard
 		{
 			get
 			{
-				return sslCB.Checked;
+				return sharedCB.Checked;
 			}
 		}
 
-		/// <summary>
-		/// Gets the value of the password entered.
-		/// </summary>
-		/*
-		public string Password
-		{
-			get
-			{
-				return password.Text;
-			}
-		}
-
-		/// <summary>
-		/// Gets a value indicating if the remember password option is checked.
-		/// </summary>
-		public bool RememberPassword
-		{
-			get
-			{
-				return rememberPassword.Checked;
-			}
-		}
-
-		/// <summary>
-		/// Gets the value of the username entered.
-		/// </summary>
-		public string Username
-		{
-			get
-			{
-				return username.Text;
-			}
-		}
-		*/
 		#endregion
 
 		private void MigrationIdentityPage_Load(object sender, EventArgs e)
@@ -330,6 +275,7 @@ namespace Novell.Wizard
 				}
 				catch
 				{
+					//ignore, the case would be 3.x local data base correction
 				}
 			}
 			else
@@ -349,9 +295,9 @@ namespace Novell.Wizard
 		{
 			DomainItem domain = (DomainItem) Domains.SelectedItem;
 			int SecurityPolicy = ifws.GetSecurityPolicy(domain.ID);
-			this.encryptionCB.Checked = false;
-			this.encryptionCB.Enabled = this.sslCB.Enabled = false;
-			this.sslCB.Checked = true;
+			this.encryptionCB.Checked = true;
+			this.encryptionCB.Enabled = this.sharedCB.Enabled = false;
+			this.sharedCB.Checked = false;
 			if(SecurityPolicy !=0)
 			{
 				if( (SecurityPolicy & (int)SecurityState.encryption) == (int) SecurityState.encryption)
@@ -361,43 +307,14 @@ namespace Novell.Wizard
 					else
 					{
 						encryptionCB.Enabled = true;
-						sslCB.Enabled = true;
+						sharedCB.Enabled = true;
 					}
 				}
 				else
-					sslCB.Checked = true;
-				/*
-				if( (SecurityPolicy & (int)SecurityState.SSL) == (int) SecurityState.SSL)
-				{
-					if( (SecurityPolicy & (int)SecurityState.enforceSSL) == (int) SecurityState.enforceSSL)
-						sslCB.Checked = true;
-					else
-						sslCB.Enabled = true;
-				}
-				*/
+					sharedCB.Checked = true;				
 			}
 			else
-				sslCB.Checked = true;
-			/*
-			int securityPolicy = ifws.GetSecurityPolicy(domain.ID);
-			this.encryptionCB.Checked = this.sslCB.Checked = false;
-			this.encryptionCB.Enabled = this.sslCB.Enabled = false;
-
-			if( (securityPolicy & 0x0001) == 0x01)
-			{
-				if( (securityPolicy & 0x0010) == 0x0010)
-					this.encryptionCB.Checked = true;
-				else
-					this.encryptionCB.Enabled = true;
-			}
-			if( (securityPolicy & 0x0100) == 0x0100)
-			{
-				if( (securityPolicy & 0x01000) == 0x01000)
-					this.sslCB.Checked = true;
-				else
-					this.sslCB.Enabled = true;
-			}
-			*/
+				sharedCB.Checked = true;			
 		}
 	}
 }

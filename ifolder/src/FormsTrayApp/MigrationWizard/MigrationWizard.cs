@@ -275,9 +275,7 @@ namespace Novell.Wizard
 				pages[i].Hide();
 
 			// Activate the first wizard page.
-			//pages[0].Show();
-			pages[0].ActivatePage(0);
-			
+			pages[0].ActivatePage(0);			
 		}
 
 		/// <summary>
@@ -400,28 +398,14 @@ namespace Novell.Wizard
 			if ((currentIndex == (maxPages - 1)) ||
 				(currentIndex == (maxPages - 2)))
 			{
-				// TODO: Localize
 				this.next.Text = Resource.GetString("NextText")+" >";
 			}
 			
-
 			int previousIndex = this.pages[currentIndex].DeactivatePage();
-			//if( previousIndex == 3/*passphrase page*/ && this.identityPage.Encrypion == false)
-			//	previousIndex = 2;
 			this.pages[previousIndex].ActivatePage(0);
-
 			currentIndex = previousIndex;
 		}
-/*
-		private void connecting_EnterpriseConnect(object sender, DomainConnectEventArgs e)
-		{
-			if (EnterpriseConnect != null)
-			{
-				// Fire the event telling that a new domain has been added.
-				EnterpriseConnect(this, new DomainConnectEventArgs( e.DomainInfo ));
-			}
-		}
-*/
+
 		private void next_Click(object sender, System.EventArgs e)
 		{
 			// Check if we're on the last page.
@@ -430,12 +414,15 @@ namespace Novell.Wizard
 				// Exit
 				return;
 			}
-			if( currentIndex == 3 )
+			
+			System.Resources.ResourceManager resManager = new System.Resources.ResourceManager(typeof(Connecting));
+			
+			if( currentIndex == 3 )// Set Passphrase
 			{
-				// Set Passphrase
+				
 				if( this.passphrasePage.Passphrase != this.passphrasePage.RetypePassphrase)
 				{
-					MessageBox.Show("Passphrase entered and retyped passphrase does not match");
+					MessageBox.Show(Resource.GetString("TypeRetypeMisMatch"));
 				}
 				else
 				{
@@ -443,10 +430,11 @@ namespace Novell.Wizard
 					string ragent = null;
 					if( this.passphrasePage.RecoveryAgent != null && this.passphrasePage.RecoveryAgent != "None")
 					{
-						byte[] CertificateObj = this.simws.GetRACertificateOnClient(this.identityPage.domain.ID, this.passphrasePage.RecoveryAgent);
+						// Show the certificate.....
+						byte[] CertificateObj = this.simws.GetRACertificateOnClient(this.DomainID, (string)this.RecoveryAgentCombo.SelectedItem);
 						System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(CertificateObj);
-						MessageBox.Show("this is the public key\n"+Convert.ToBase64String(cert.GetPublicKey()));
-						MyMessageBox mmb = new MyMessageBox( "Verify Certificate", "Verify Certificate", Convert.ToBase64String(cert.GetPublicKey())+cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2 );
+						//	MyMessageBox mmb = new MyMessageBox( "Verify Certificate", "Verify Certificate", cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2 );
+						MyMessageBox mmb = new MyMessageBox( string.Format(resManager.GetString("verifyCert"), (string)this.RecoveryAgentCombo.SelectedItem), resManager.GetString("verifyCertTitle"), cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2);
 						DialogResult messageDialogResult = mmb.ShowDialog();
 						mmb.Dispose();
 						mmb.Close();
@@ -465,48 +453,30 @@ namespace Novell.Wizard
 					}
 					catch(Exception ex)
 					{
-						//MessageBox.Show("Unable to set Passphrase. "+ ex.Message);
-						MessageBox.Show( "Exception while setting passphrase"+ex.Message);
+						MessageBox.Show( Resource.GetString("IsPassphraseSetException")+ex.Message);
 						return;
 					}
 					if(passPhraseStatus.statusCode == StatusCodes.Success)
 					{
-						// Validating Passphrase
-						//passPhraseStatus = simws.ValidatePassPhrase( DomainID, PadString(this.Passphrase.Text, 16));
-						//if(passPhraseStatus.statusCode != StatusCodes.Success)
-						//	MessageBox.Show("Passphrase not validated");
 						this.simiasWebService.StorePassPhrase( this.identityPage.domain.ID, this.passphrasePage.Passphrase, CredentialType.Basic, this.passphrasePage.RememberPassphrase);
-						string passphr = this.simiasWebService.GetPassPhrase(this.identityPage.domain.ID);
-						//MessageBox.Show("Passphrase is set & stored", passphr, MessageBoxButtons.OK);
-						bool status = false;
-						try
-						{
-							status = this.simiasWebService.IsPassPhraseSet(this.identityPage.domain.ID);
-						}
-						catch(Exception ex)
-						{
-						}
-						if( status == true)
-						{
-							MessageBox.Show("Successfully set the passphrase");
-							//Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(Resource.GetString("SetPassphraseSuccess")/*"Successfully set the passphrase"*/, resourceManager.GetString("$this.Text"), "", MyMessageBoxButtons.OK, MyMessageBoxIcon.None);
-							//mmb.ShowDialog();
-							//mmb.Dispose();
-							//this.Dispose();
-							//this.Close();
-						}
+						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(Resource.GetString("SetPassphraseSuccess")/*"Successfully set the passphrase"*/, resourceManager.GetString("$this.Text"), "", MyMessageBoxButtons.OK, MyMessageBoxIcon.None);
+						mmb.ShowDialog();
+						mmb.Dispose();
+						this.Dispose();
+						this.Close();
 					}
 					else 
 					{
 						// Unable to set the passphrase
-						MessageBox.Show("Unable to store the passphrase");
+						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(Resource.GetString("IsPassphraseSetException")/*"Unable to set the passphrase"*/, resourceManager.GetString("$this.Text")/*"Error setting the passphrase"*/, ""/*Resource.GetString("TryAgain")*//*"Please try again"*/, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						mmb.ShowDialog();
+						mmb.Dispose();
 						return;
 					}
 				}
 			}
-			else if(currentIndex == 4)
-			{
-				// Validate passphrase
+			else if(currentIndex == 4)// Validate passphrase
+			{				
 				Status passPhraseStatus = null;
 				try
 				{
@@ -514,14 +484,16 @@ namespace Novell.Wizard
 				}
 				catch(Exception ex)
 				{
-					MessageBox.Show("Unable to validate the Passphrase. "+ ex.Message);
+					MessageBox.Show(resManager.GetString("ValidatePPError")/*"Unable to validate the Passphrase. {0}"*/, ex.Message);
 					return;
 				}
 				if( passPhraseStatus != null)
 				{
 					if( passPhraseStatus.statusCode == StatusCodes.PassPhraseInvalid)  // check for invalid passphrase
 					{
-						MessageBox.Show("Invalid passphrase");
+						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(Resource.GetString("InvalidPPText")/*"Invalid the passphrase"*/, Resource.GetString("VerifyPP")/*"Passphrase Invalid"*/, ""/*Resource.GetString("TryAgain")*//*"Please try again"*/, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						mmb.ShowDialog();
+						mmb.Dispose();	
 						return;
 					}
 					else if(passPhraseStatus.statusCode == StatusCodes.Success)
@@ -532,13 +504,13 @@ namespace Novell.Wizard
 						}
 						catch(Exception ex) 
 						{
-							// TODO: Show error Messahe
 							MessageBox.Show("Unable to store Passphrase");
 							return;
 						}
 					}
 				}
 			}
+			
 			int nextIndex = this.pages[currentIndex].ValidatePage(currentIndex);
 			if( nextIndex == 4 )
 			{
@@ -552,7 +524,7 @@ namespace Novell.Wizard
 					// if 2.x is encrypted make a prompt
 					if( this.encryptedOriginal == true )
 					{
-						MyMessageBox mmb1 = new MyMessageBox("The original 2.x folder is encrypted and you choose to convert it to an un-encrypted one.\nDo you want to continue?", "Migration Alert", "", MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Warning, MyMessageBoxDefaultButton.Button1);
+						MyMessageBox mmb1 = new MyMessageBox(Resource.GetString("EncryptTotext"), Resource.GetString("MigrationAlert"), "", MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Warning, MyMessageBoxDefaultButton.Button1);
 						DialogResult res = mmb1.ShowDialog();
 						if( res == DialogResult.No )
 							nextIndex = currentIndex;
@@ -564,7 +536,6 @@ namespace Novell.Wizard
 				}
 				else // encryption selected.. 
 				{
-					//MessageBox.Show("Encryption selected");
 					try
 					{
 						string passphrasecheck = this.simiasWebService.GetPassPhrase(this.identityPage.domain.ID);
@@ -574,7 +545,6 @@ namespace Novell.Wizard
 							if( status != null && status.statusCode == StatusCodes.Success)
 							{
 								// Passphrase validated.
-								//MessageBox.Show("Passphrase validated");
 								nextIndex = 5;
 							}
 						}
@@ -582,9 +552,7 @@ namespace Novell.Wizard
 						{
 							//MessageBox.Show("passphrase set");
 							nextIndex = 4;
-						}
-						//else
-						//MessageBox.Show("Passphrase not set");
+						}						
 					}
 					catch(Exception ex)
 					{
@@ -593,33 +561,23 @@ namespace Novell.Wizard
 						nextIndex = currentIndex;
 					}
 				}
-				/*
-				else if( passphrase present at login)
-					nextIndex = 5;
-				else if( passphrase not set)
-					nextIndex = 3;
-				else
-					nextIndex = 4;	
-					*/
 
 			}
+			
 			if (nextIndex != currentIndex)
 			{
 				this.pages[currentIndex].DeactivatePage();
 				this.pages[nextIndex].ActivatePage(currentIndex);
 				if( nextIndex == 5)
 				{
-					//MessageBox.Show(String.Format("previous page of {0} is {1}", nextIndex, 2));
 					this.pages[nextIndex].PreviousIndex = 2;
 				}
-				
 
 				currentIndex = nextIndex;
 
 				if (currentIndex == (maxPages - 2))
 				{
-					// TODO: Localize
-					next.Text = Resource.GetString("MigrateText");//"&Migrate";
+					next.Text = Resource.GetString("MigrateText");
 					this.verifyPage.UpdateDetails();
 				}
 				else if (currentIndex == (maxPages - 1))
@@ -627,24 +585,10 @@ namespace Novell.Wizard
 					// We're on the completion page ... change the Next 
 					// button to a Finish button.
 					next.DialogResult = DialogResult.OK;
-					// TODO: Localize
 					next.Text = Resource.GetString("FinishText");//"&Finish";
 				}
 			}
 		}
-
-		#endregion
-
-		#region Events
-
-		/// <summary>
-		/// Delegate used when successfully connected to Enterprise Server.
-		/// </summary>
-		public delegate void EnterpriseConnectDelegate(object sender, DomainConnectEventArgs e);
-		/// <summary>
-		/// Occurs when successfully connected to enterprise.
-		/// </summary>
-		public event EnterpriseConnectDelegate EnterpriseConnect;
 
 		#endregion
 
@@ -683,13 +627,7 @@ namespace Novell.Wizard
 		{
 			get
 			{
-				// TODO: Localize
 				StringBuilder sb = new StringBuilder(Resource.GetString("MigrationSuccessMsg")/*"Congratulations, your account is migrated successfully.\n\n"*/);
-
-		//		sb.AppendFormat( "{0}\n", domainInfo.Name );
-		//		sb.AppendFormat( "({0})\n\n", serverPage.ServerAddress );
-		//		sb.Append( "You can now add folders to the new server. You may also download folders from the server and have them be synchronized to your computer." );
-
 				return sb.ToString();				
 			}
 		}
@@ -797,7 +735,7 @@ namespace Novell.Wizard
 					DirectoryInfo dir = new DirectoryInfo(destination);
 					if( dir.Exists == false)
 					{
-						MessageBox.Show("Error creating directory");
+						MessageBox.Show(Resource.GetString("ErrDirCreate"));						
 						return false;
 					}
 					
@@ -820,7 +758,7 @@ namespace Novell.Wizard
 							}
 							catch(Exception ex)
 							{
-								MessageBox.Show(ex.ToString(), "Error creating directory", MessageBoxButtons.OK);
+								MessageBox.Show(ex.ToString(), Resource.GetString("ErrDirCreate"), MessageBoxButtons.OK);
 								return false;
 							}
 						}
@@ -878,16 +816,16 @@ namespace Novell.Wizard
 				//remove the 2.x registry entry for the migarted (not copy) ifolder
 				string iFolderRegistryKey = @"Software\Novell iFolder";
 				RegistryKey iFolderKey = Registry.LocalMachine.OpenSubKey(iFolderRegistryKey, true);
-					try
-					{
-						iFolderKey.DeleteSubKeyTree(UserName);
-					}
-					catch(Exception ex)
-					{
-						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox("Changed error msg", "Not able to delete key", ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-						mmb.ShowDialog();
-						mmb.Dispose();
-					}
+				try
+				{
+					iFolderKey.DeleteSubKeyTree(UserName);
+				}
+				catch(Exception ex)
+				{
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(ex.Message, Resource.GetString("MigrationTitle"), MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					mmb.ShowDialog();
+					mmb.Dispose();
+				}
 			}	
 			return true;
 		}
@@ -928,26 +866,6 @@ namespace Novell.Wizard
 			return path;
 		}
 		
-		/// <summary>
-		/// Method used to connect to the Simias server.
-		/// </summary>
-		/// <returns><b>True</b> if successfully connected; otherwise, <b>False</b> is returned.</returns>
-		/*
-		public bool ConnectToServer()
-		{
-			bool result = false;
-
-			Connecting connecting = new Connecting( simiasWebService, simiasManager, serverPage.ServerAddress, identityPage.Username, identityPage.Password, serverPage.DefaultServer, identityPage.RememberPassword );
-			connecting.EnterpriseConnect += new Novell.FormsTrayApp.Connecting.EnterpriseConnectDelegate(connecting_EnterpriseConnect);
-			if ( connecting.ShowDialog() == DialogResult.OK )
-			{
-				domainInfo = connecting.DomainInformation;
-				result = true;
-			}
-
-			return result;
-		}
-		*/
 
 		#endregion
 

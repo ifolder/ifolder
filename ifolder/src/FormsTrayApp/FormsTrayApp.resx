@@ -984,4 +984,19 @@
   <data name="iFoldersOnServerHeading" >
     <value>iFolders on {0}</value>
   </data>
+  <data name="TypeRetypeMisMatch" >
+    <value>Passphrase entered and retyped passphrase does not match</value>
+  </data>
+  <data name="EncryptTotext" >
+    <value>The original 2.x ifolder is encrypted and you choose to convert it to an un-encrypted one.\nDo you want to continue?</value>
+  </data>
+  <data name="MigrationAlert" >
+    <value>Migration Alert</value>
+  </data>
+  <data name="ErrDirCreate" >
+    <value>Error in directory creation</value>
+  </data>
+  <data name="PassStoreErr" >
+    <value>Unable to store Passphrase</value>
+  </data>
 </root>

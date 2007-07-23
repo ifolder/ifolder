@@ -59,7 +59,6 @@ namespace Novell.Wizard
 			// 
 			// CompletionPage
 			// 
-			// TODO: Localize
 			this.Name = "CompletionPage";
 			this.WelcomeTitle = Resource.GetString("MigrationCompletionWT");//"Completing the iFolder Migration Assistant";
 		}
@@ -73,7 +72,6 @@ namespace Novell.Wizard
 			base.ActivatePage (previousIndex);
 			
 			
-			// TODO: Localize.
 			this.DescriptionText = ((MigrationWizard)(this.Parent)).SummaryText;
 			this.ActionText = Resource.GetString("CompletionPageAT");//"To close this wizard, click Finish.";
 			

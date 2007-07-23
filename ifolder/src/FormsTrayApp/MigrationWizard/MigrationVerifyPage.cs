@@ -44,7 +44,6 @@ namespace Novell.Wizard
 	{
 		#region Class Members
 
-//		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(SelectiFolderLocationPage));
 		private System.Windows.Forms.Label label1;
 		private System.ComponentModel.IContainer components = null;
 		private System.Windows.Forms.Label label2;
@@ -69,9 +68,7 @@ namespace Novell.Wizard
 		public MigrationVerifyPage( )
 		{
 			// This call is required by the Windows Form Designer.
-			InitializeComponent();
-
-		//	defaultDescription.Visible = defaultAccount.Visible = !hideDefaultAccount;
+			InitializeComponent();		
 		}
 
 		#endregion
@@ -208,16 +205,6 @@ namespace Novell.Wizard
 		internal override void ActivatePage(int previousIndex)
 		{
 			base.ActivatePage (previousIndex);
-
-			
-			/*
-			wizard = (AccountWizard)this.Parent;
-			serverAddress.Text = wizard.ServerPage.ServerAddress;
-			location.Text = wizard.IdentityPage.location;
-			// TODO: Localize
-			migrationOption.Text = wizard.IdentityPage.migrationOption ? "Yes" : "No";
-			security.Text = wizard.ServerPage.DefaultServer ? "Yes" : "No";
-			*/
 		}
 
 		/// <summary>
@@ -276,31 +263,7 @@ namespace Novell.Wizard
 
 		private void MigrationVerifyPage_Load(object sender, EventArgs e)
 		{
-			UpdateDetails();
-			/*
-			MigrationWizard wizard = (MigrationWizard)this.Parent;
-			this.serverAddress.Text = wizard.MigrationIdentityPage.DomainName;
-			this.location.Text = wizard.MigrationServerPage.HomeLocation;
-			if(wizard.MigrationServerPage.MigrationOption)
-				this.migrationOption.Text = "Remove from 2.x domain";
-			else
-				this.migrationOption.Text = "Create a copy of the folder and connect to 3.x to domain";
-			this.security.Text = "";
-			if( wizard.MigrationIdentityPage.Encrypion)
-			{
-				this.security.Text = "Encrypt the folder";
-				if( wizard.MigrationIdentityPage.SSL)
-					this.security.Text += " and use secure channel for data transfer";
-			}
-			else if(wizard.MigrationIdentityPage.SSL)
-			{
-				this.security.Text = "Use secure channel for data transfer";
-			}
-			else
-			{
-				this.security.Text = "None";
-			}
-			*/
+			UpdateDetails();			
 		}
 
 		private void security_MouseHover(object sender, EventArgs e)

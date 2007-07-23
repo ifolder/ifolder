@@ -352,8 +352,7 @@ namespace Novell.FormsTrayApp
 					}
 					catch(Exception ex) 
 					{
-						// TODO: Show error Messahe
-						//MessageBox.Show("Unable to store Passphrase");
+						MessageBox.Show(Resource.GetString("PassStoreErr"));
 						status = false;
 					}
 				}
