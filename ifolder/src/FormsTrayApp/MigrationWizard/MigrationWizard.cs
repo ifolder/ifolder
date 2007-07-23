@@ -431,10 +431,10 @@ namespace Novell.Wizard
 					if( this.passphrasePage.RecoveryAgent != null && this.passphrasePage.RecoveryAgent != "None")
 					{
 						// Show the certificate.....
-						byte[] CertificateObj = this.simws.GetRACertificateOnClient(this.DomainID, (string)this.RecoveryAgentCombo.SelectedItem);
+						byte[] CertificateObj = this.simws.GetRACertificateOnClient(this.identityPage.domain.ID, this.passphrasePage.RecoveryAgent);
 						System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(CertificateObj);
 						//	MyMessageBox mmb = new MyMessageBox( "Verify Certificate", "Verify Certificate", cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2 );
-						MyMessageBox mmb = new MyMessageBox( string.Format(resManager.GetString("verifyCert"), (string)this.RecoveryAgentCombo.SelectedItem), resManager.GetString("verifyCertTitle"), cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2);
+						MyMessageBox mmb = new MyMessageBox( string.Format(resManager.GetString("verifyCert"), this.passphrasePage.RecoveryAgent), resManager.GetString("verifyCertTitle"), cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2);
 						DialogResult messageDialogResult = mmb.ShowDialog();
 						mmb.Dispose();
 						mmb.Close();
@@ -459,7 +459,7 @@ namespace Novell.Wizard
 					if(passPhraseStatus.statusCode == StatusCodes.Success)
 					{
 						this.simiasWebService.StorePassPhrase( this.identityPage.domain.ID, this.passphrasePage.Passphrase, CredentialType.Basic, this.passphrasePage.RememberPassphrase);
-						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(Resource.GetString("SetPassphraseSuccess")/*"Successfully set the passphrase"*/, resourceManager.GetString("$this.Text"), "", MyMessageBoxButtons.OK, MyMessageBoxIcon.None);
+						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(Resource.GetString("SetPassphraseSuccess")/*"Successfully set the passphrase"*/, "", "", MyMessageBoxButtons.OK, MyMessageBoxIcon.None);
 						mmb.ShowDialog();
 						mmb.Dispose();
 						this.Dispose();
@@ -468,7 +468,7 @@ namespace Novell.Wizard
 					else 
 					{
 						// Unable to set the passphrase
-						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(Resource.GetString("IsPassphraseSetException")/*"Unable to set the passphrase"*/, resourceManager.GetString("$this.Text")/*"Error setting the passphrase"*/, ""/*Resource.GetString("TryAgain")*//*"Please try again"*/, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(Resource.GetString("IsPassphraseSetException")/*"Unable to set the passphrase"*/, ""/*"Error setting the passphrase"*/, ""/*Resource.GetString("TryAgain")*//*"Please try again"*/, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 						mmb.ShowDialog();
 						mmb.Dispose();
 						return;
@@ -822,7 +822,7 @@ namespace Novell.Wizard
 				}
 				catch(Exception ex)
 				{
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(ex.Message, Resource.GetString("MigrationTitle"), MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(ex.Message, Resource.GetString("MigrationTitle"),"", MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 					mmb.Dispose();
 				}
