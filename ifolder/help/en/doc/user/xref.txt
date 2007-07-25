@@ -1,25 +1,23 @@
-bookinfo.html               iFolder Help
+bookinfo.html               OES 2: Novell iFolder 3.6 Help
 overview.html               Overview of iFolder
-ovwsharing.html             iFolder Sharing
 benefits.html               Benefits of iFolder
+bawqltp.html                The iFolder Client
+bawqmpe.html                iFolder Account
 keyfeatures.html            Key Features of iFolder
 ovwxplat.html               Cross-Platform Considerations
 ovwnext.html                What’s Next
-coexistmig.html             Coexistence and Migration Issues
-coexistence.html            Coexistence of Novell iFolder 2.1x and iFolder Clients
-migration.html              Migrating from iFolder 2.1x to iFolder 3.6
-upgrading.html              Upgrading iFolder 3.4 client to iFolder 3.6
 accountsprefs.html          Managing iFolder Accounts and Preferences
 startclient.html            Starting the iFolder Client
 stopclient.html             Exiting the iFolder Client
 accounts.html               Configuring an iFolder Account
 login.html                  Logging In to an iFolder Account
-logout.html                 Logging Out of an iFolder Account
 accountdetails.html         Viewing and Modifying iFolder Account Settings
 delacct.html                Deleting an iFolder Account
 preferences.html            Configuring iFolder Preferences for the Client
 firewall.html               Configuring Local Firewall Settings for iFolder Traffic
 virusscan.html              Configuring Local Virus Scanner Settings for iFolder Traffic
+logout.html                 Logging Out of an iFolder Account
+b9lvmk9.html                What’s Next
 myifolders.html             Managing iFolders
 locguide.html               Guidelines for the Location and Use of iFolders
 typeguide.html              Guidelines for File Types and Sizes to Not Synchronize
@@ -37,4 +35,7 @@ conflicts.html              Resolving File Conflicts
 reverting.html              Reverting an iFolder to a Normal Folder
 movelocation.html           Moving an iFolder
 deleting.html               Deleting an iFolder
+coexistmig.html             Novell iFolder Migration And Upgrade
+migration.html              Migrating from iFolder 2.x to iFolder 3.6
+upgrading.html              Upgrading And Coexistence of iFolder Clients
 legal.html                  Legal Notices

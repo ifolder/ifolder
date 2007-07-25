@@ -6,11 +6,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="en" />
 <meta name="Generator" content="Novell Documentation  8 June 2005" />
-<meta name="Generation-Date" content="Friday, March 23, 2007 19:04" />
-<meta name="Content-Date" content="Mon, 26 Mar 2006 12:00:00 GMT" />
+<meta name="Generation-Date" content="Wednesday, July 25, 2007 15:08" />
+<meta name="Content-Date" content="Mon, 25 Jul 2007 12:00:00 GMT" />
 <meta name="Robots" content="INDEX, FOLLOW" />
-<meta name="Document_Number" content="zHTML xD.0000.0000.0002.0003." />
-<meta name="Author" content="zHTML xD.0000.0000.0002.0003." />
+<meta name="Document_Number" content="zHTML xD.0000.0000.0004.0002." />
+<meta name="Author" content="zHTML xD.0000.0000.0004.0002." />
 <meta name="Product_Class" content="" />
 <meta name="Product_and_Version" content="iFolder™" />
 <meta name="Copyright" content="Copyright Novell, Inc. 2005" />
@@ -19,11 +19,11 @@
   @import url(../../../ui/novdocmain.css);
 </style>
 
-<title>iFolder
-Help</title>
+<title>OES
+2: Novell iFolder 3.6 Help</title>
 <script type="text/javascript">
   var prev_link="migration.html";
-  var next_link="accountsprefs.html";
+  var next_link="legal.html";
   var parentfile = "../doc/user/data/coexistmig.html";
   var parenttoc = "../doc/user/data/toc_coexistmig.html";
   parent.loadMenu();
@@ -34,21 +34,65 @@ Help</title>
 <body onload="">
 <script type="text/javascript" src="../../../ui/topnav.js"></script>
 
-<div class="sect1" title="Upgrading iFolder 3.4 client to iFolder 3.6" id="upgrading">
+<div class="sect1" title="Upgrading And Coexistence of iFolder Clients" id="upgrading">
 
-<h2 class="title"><span class="number">2.3</span> Upgrading iFolder 3.4 client to iFolder
-3.6</h2>
+<h2 class="title"><span class="number">4.2</span> Upgrading And Coexistence of iFolder Clients</h2>
 
-<p class="para">If you are currently using the iFolder 3.4 client and when
-you try to connect it to the iFolder 3.6 server, you are  will be
-prompted about whether you want to upgrade.</p>
-<div class="informalfigure"><img src="../graphics/ifolder_client _upgrade.png" alt="" /></div>
+<p class="para">This section discusses about the following:</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem"><a href="upgrading.html#bawu2sa">Section 4.2.1, Upgrading iFolder 3.x client
+to iFolder 3.6</a></li>
+<li class="listitem"><a href="upgrading.html#bawu2eu">Section 4.2.2, Coexistence of Novell iFolder 2.x and
+iFolder Clients</a></li></ul></div>
+
+<div class="sect2" title="Upgrading iFolder 3.x client to iFolder 3.6" id="bawu2sa">
+
+<h3 class="title"><span class="number">4.2.1</span> Upgrading iFolder 3.<span class="guimenu">x</span> client
+to iFolder 3.6</h3>
+
+<p class="para">If you are currently using the iFolder 3.<span class="guimenu">x</span> client
+and when you try to connect it to the iFolder 3.6 server, you are
+prompted whether you want to upgrade.</p>
+<div class="informalfigure"><img src="../graphics/ifolder_clientupgrade.png" alt="" /></div>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="b95j898">
 <p class="para">Click <span class="guimenu">Yes</span> to
-automatically upgrade your iFolder 3.4 client.</p></li></ol>
+automatically upgrade your iFolder 3.<span class="guimenu">x</span> client.</p></li></ol>
+</div>
+
+<p class="para">The automatic upgrade is possible only if you have the root
+access rights, as this process needs to install the rpm packages.
+If  you don’t have the root access rights, the package
+does not get installed automatically. But, the client packages is
+downloaded to a temporary location that enable you to upgrade later
+as it contains an install script that can be run manually. Until
+you upgrade the client, you will not be able to connect to the iFolder
+3.6 domain.</p>
+</div>
+
+<div class="sect2" title="Coexistence of Novell iFolder 2.x and iFolder Clients" id="bawu2eu">
+
+<h3 class="title"><span class="number">4.2.2</span> Coexistence of Novell iFolder 2.<span class="replaceable">x</span> and
+iFolder Clients</h3>
+
+<p class="para">The iFolder client for Novell iFolder 3.6 and the Novell iFolder
+2.<span class="replaceable">x</span> client can coexist on the same computer,
+but they are not integrated and their software should not be installed
+in the same folder. If you plan to use Novell iFolder 2.<span class="replaceable">x</span> on
+your computer, you must comply with the following restrictions:</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">Any local directory where you store
+your Novell iFolder 2.<span class="replaceable">x</span> data should not
+be converted to an iFolder.</li>
+<li class="listitem">Any directory that contains a local directory where
+you store your Novell iFolder 2.<span class="replaceable">x</span> data should
+not be converted to an iFolder.</li></ul></div>
+
+<p class="para"></p>
 </div>
 
 </div>

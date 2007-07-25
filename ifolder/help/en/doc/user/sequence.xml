@@ -4,20 +4,25 @@
 
 	<topic type="ExpandableHeirarchy" elemtype="BOOK">
 	<filename>data\bookinfo.html</filename>
-	<title>iFolder Help</title>
+	<title>OES 2: Novell iFolder 3.6 Help</title>
 
 		<topic type="ExpandableHeirarchy" elemtype="CHAPTER">
 		<filename>data\overview.html</filename>
 		<title>Overview of iFolder</title>
 
 			<topic type="File" elemtype="SECT1">
-			<filename>data\ovwsharing.html</filename>
-			<title>iFolder Sharing</title>
+			<filename>data\benefits.html</filename>
+			<title>Benefits of iFolder</title>
 			</topic>
 
 			<topic type="File" elemtype="SECT1">
-			<filename>data\benefits.html</filename>
-			<title>Benefits of iFolder</title>
+			<filename>data\bawqltp.html</filename>
+			<title>The iFolder Client</title>
+			</topic>
+
+			<topic type="File" elemtype="SECT1">
+			<filename>data\bawqmpe.html</filename>
+			<title>iFolder Account</title>
 			</topic>
 
 			<topic type="File" elemtype="SECT1">
@@ -33,26 +38,6 @@
 			<topic type="File" elemtype="SECT1">
 			<filename>data\ovwnext.html</filename>
 			<title>What’s Next</title>
-			</topic>
-		</topic>
-
-		<topic type="ExpandableHeirarchy" elemtype="CHAPTER">
-		<filename>data\coexistmig.html</filename>
-		<title>Coexistence and Migration Issues</title>
-
-			<topic type="File" elemtype="SECT1">
-			<filename>data\coexistence.html</filename>
-			<title>Coexistence of Novell iFolder 2.1x and iFolder Clients</title>
-			</topic>
-
-			<topic type="File" elemtype="SECT1">
-			<filename>data\migration.html</filename>
-			<title>Migrating from iFolder 2.1x to iFolder 3.6</title>
-			</topic>
-
-			<topic type="File" elemtype="SECT1">
-			<filename>data\upgrading.html</filename>
-			<title>Upgrading iFolder 3.4 client to iFolder 3.6</title>
 			</topic>
 		</topic>
 
@@ -81,11 +66,6 @@
 			</topic>
 
 			<topic type="File" elemtype="SECT1">
-			<filename>data\logout.html</filename>
-			<title>Logging Out of an iFolder Account</title>
-			</topic>
-
-			<topic type="File" elemtype="SECT1">
 			<filename>data\accountdetails.html</filename>
 			<title>Viewing and Modifying iFolder Account Settings</title>
 			</topic>
@@ -108,6 +88,16 @@
 			<topic type="File" elemtype="SECT1">
 			<filename>data\virusscan.html</filename>
 			<title>Configuring Local Virus Scanner Settings for iFolder Traffic</title>
+			</topic>
+
+			<topic type="File" elemtype="SECT1">
+			<filename>data\logout.html</filename>
+			<title>Logging Out of an iFolder Account</title>
+			</topic>
+
+			<topic type="File" elemtype="SECT1">
+			<filename>data\b9lvmk9.html</filename>
+			<title>What’s Next</title>
 			</topic>
 		</topic>
 
@@ -193,6 +183,21 @@
 			<topic type="File" elemtype="SECT1">
 			<filename>data\deleting.html</filename>
 			<title>Deleting an iFolder</title>
+			</topic>
+		</topic>
+
+		<topic type="ExpandableHeirarchy" elemtype="CHAPTER">
+		<filename>data\coexistmig.html</filename>
+		<title>Novell iFolder Migration And Upgrade</title>
+
+			<topic type="File" elemtype="SECT1">
+			<filename>data\migration.html</filename>
+			<title>Migrating from iFolder 2.x to iFolder 3.6</title>
+			</topic>
+
+			<topic type="File" elemtype="SECT1">
+			<filename>data\upgrading.html</filename>
+			<title>Upgrading And Coexistence of iFolder Clients</title>
 			</topic>
 		</topic>
 
