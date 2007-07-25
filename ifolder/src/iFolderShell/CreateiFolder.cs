@@ -1336,7 +1336,7 @@ namespace Novell.iFolderCom
 			this.btnOk.Location = new System.Drawing.Point(319, 200);
 			this.btnOk.Name = "btnOk";
 			this.btnOk.TabIndex = 10;
-			this.btnOk.Text = "&Ok";
+			this.btnOk.Text = resources.GetString("ok.Text");
 			this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
 			// 
 			// EnterPassphraseDialog
