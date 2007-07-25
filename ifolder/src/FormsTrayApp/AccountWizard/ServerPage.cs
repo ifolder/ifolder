@@ -193,8 +193,6 @@ namespace Novell.Wizard
 
 		internal override int ValidatePage(int currentIndex)
 		{
-			// TODO:
-
 			return base.ValidatePage (currentIndex);
 		}
 

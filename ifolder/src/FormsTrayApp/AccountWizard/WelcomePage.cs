@@ -61,7 +61,6 @@ namespace Novell.Wizard
 			// 
 			// WelcomePage
 			// 
-			// TODO: Localize
 			this.DescriptionText = Resource.GetString("CompletionPageDT");//"Description...";
 			this.Name = "WelcomePage";
 			this.WelcomeTitle = Resource.GetString("WelcomePageTitle");//"Welcome to the iFolder Invitation Wizard";

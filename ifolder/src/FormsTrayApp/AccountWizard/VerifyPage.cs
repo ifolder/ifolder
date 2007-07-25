@@ -43,7 +43,6 @@ namespace Novell.Wizard
 	{
 		#region Class Members
 
-//		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(SelectiFolderLocationPage));
 		private System.Windows.Forms.Label label1;
 		private System.ComponentModel.IContainer components = null;
 		private System.Windows.Forms.Label label2;
@@ -209,7 +208,6 @@ namespace Novell.Wizard
 			wizard = (AccountWizard)this.Parent;
 			serverAddress.Text = wizard.ServerPage.ServerAddress;
 			username.Text = wizard.IdentityPage.Username;
-			// TODO: Localize
 			rememberPassword.Text = wizard.IdentityPage.RememberPassword ? Resource.GetString("YesText") : Resource.GetString("NoText");
 			defaultAccount.Text = wizard.ServerPage.DefaultServer ? Resource.GetString("YesText") : Resource.GetString("NoText");
 		}

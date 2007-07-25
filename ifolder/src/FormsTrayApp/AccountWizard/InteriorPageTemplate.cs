@@ -99,9 +99,9 @@ namespace Novell.Wizard
 			// 
 			// pictureBox1
 			// 
-			this.pictureBox1.Location = new System.Drawing.Point(452, 12);
+			this.pictureBox1.Location = new System.Drawing.Point(436, 4);
 			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.Size = new System.Drawing.Size(32, 32);
+			this.pictureBox1.Size = new System.Drawing.Size(48, 48);
 			this.pictureBox1.TabIndex = 2;
 			this.pictureBox1.TabStop = false;
 			// 

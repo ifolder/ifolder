@@ -109,8 +109,7 @@ namespace Novell.Wizard
 			this.simiasWebService = simiasWebService;
 			this.ifWebService = ifWebService;
 			this.prefs = prefs;
-			bool defaultiFolderExists = false;
-
+			
 			//
 			// Required for Windows Form Designer support
 			//
@@ -171,8 +170,8 @@ namespace Novell.Wizard
 			this.defaultiFolderPage.Name = "defaultiFolderPage";
 			this.defaultiFolderPage.Location = new System.Drawing.Point(0, 0);
 			this.defaultiFolderPage.Size = new System.Drawing.Size(496, 304);
-			this.defaultiFolderPage.HeaderTitle = "Default iFolder";
-			this.defaultiFolderPage.HeaderSubTitle = "Create/Download Default iFolder";
+			this.defaultiFolderPage.HeaderTitle = Resource.GetString("defaultiFolderTitle");//"Default iFolder";
+			this.defaultiFolderPage.HeaderSubTitle = Resource.GetString("defaultiFolderMesg");//"Create/Download Default iFolder";
 			//
 			// completionPage
 			//
@@ -212,16 +211,18 @@ namespace Novell.Wizard
 				// Load the watermark.
 				// TODO:
 				Image image = Image.FromFile(Path.Combine(Application.StartupPath, "invitewiz.png"));
+			//	Image image = Image.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder48.png"));
 				this.welcomePage.Watermark = image;
 				this.completionPage.Watermark = image;
 
 				// TODO:
 				image = Image.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder_invite_32.png"));
+			//	image = Image.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder-add-account48.png"));
 				this.serverPage.Thumbnail = image;
 				this.verifyPage.Thumbnail = image;
 				this.identityPage.Thumbnail = image;
 			}
-			catch {} // Ignore.
+			catch {} // Ignore. Unable to load watermark. No functionality issues
 
 			foreach (BaseWizardPage page in pages)
 			{
@@ -397,12 +398,10 @@ namespace Novell.Wizard
 
 				if (currentIndex == (maxPages - 2))
 				{
-					// TODO: Localize
 					// Changing the connet button text.....
 					next.Text = Resource.GetString("NextText")+" >";//"&Next >";
 					this.back.Enabled = false;
 					this.cancel.Text = Resource.GetString("SkipText")+" >";//"Skip";
-				//	MessageBox.Show(string.Format("Setting default path: {0}", this.defaultiFolderPage.defaultPath));
 				}
 				else if (currentIndex == (maxPages - 1))
 				{
@@ -420,7 +419,7 @@ namespace Novell.Wizard
 			string appdata = System.Environment.GetEnvironmentVariable("APPDATA");
 			int i = appdata.LastIndexOf("\\");
 			appdata = appdata.Substring(0, i+1);
-			appdata = appdata + "ifolder\\" + userName + "\\" + domainName ;
+			appdata = appdata + Resource.GetString("ifolderDirText") + "\\" + domainName + "\\" + userName ;
 			return appdata;
 		}
 
@@ -523,39 +522,7 @@ namespace Novell.Wizard
 				result = true;
 				domainInfo = connecting.DomainInformation;
 				this.defaultiFolderPage.DomainInfo = this.domainInfo;
-				this.defaultiFolderPage.defaultPath = this.GetDefaultPath(this.identityPage.Username, this.defaultiFolderPage.DomainInfo.Name);
-				/*
-				string newClientVersion = null;
-
-				newClientVersion = this.ifWebService.CheckForUpdatedClient(domainInfo.ID);
-				if( newClientVersion != null)
-				{
-					MessageBox.Show( newClientVersion, "Client upgrade needed: ", MessageBoxButtons.OK);
-				}
-
-				bool serverOld = false;
-
-				serverOld = this.ifWebService.CheckForServerUpdate(domainInfo.ID);
-
-				if( serverOld)
-				{
-					result = false;
-					this.prefs.RemoveDomainFromList(domainInfo, null);
-					MessageBox.Show("Server Is Old. Cannot connect to the server","Server Old",MessageBoxButtons.OK);
-				}
-
-				newClientVersion = null;
-				newClientVersion = this.ifWebService.CheckForUpdatedClientAvailable(domainInfo.ID);
-				if( newClientVersion != null)
-				{
-					MessageBox.Show( newClientVersion+System.IO.Path.GetTempPath(), "Client upgrade Available: Click OK to Install", MessageBoxButtons.OK);
-					if(this.ifWebService.RunClientUpdate(domainInfo.ID, null))
-						MessageBox.Show( "Process started", "Client upgrade Available:", MessageBoxButtons.OK);
-					else
-						MessageBox.Show( "Failed to start process", "Client upgrade Available:", MessageBoxButtons.OK);
-				}
-				*/
-
+				this.defaultiFolderPage.defaultPath = this.GetDefaultPath(this.identityPage.Username, this.defaultiFolderPage.DomainInfo.Name);				
 			}
 
 			return result;
@@ -563,7 +530,6 @@ namespace Novell.Wizard
 
 		public void UpdateDisplay( iFolderWeb ifolder, string path)
 		{
-		//	MessageBox.Show("Updating display");
 			(Novell.FormsTrayApp.FormsTrayApp.globalProp()).UpdateDisplay(ifolder, path);
 		}
 

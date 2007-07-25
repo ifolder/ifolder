@@ -45,14 +45,12 @@ namespace Novell.Wizard
 			SSL = 4,
 			enforceSSL = 8
 		}
-//		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(SelectInvitationPage));
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.TextBox serverAddress;
 		private System.Windows.Forms.CheckBox defaultServer;
 		private System.Windows.Forms.Label defaultDescription;
 		private System.ComponentModel.IContainer components = null;
-	//	private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(Novell.Wizard.AccountWizard));
 		private System.Resources.ResourceManager resManager;
 		
 		private System.Windows.Forms.RadioButton encryptionCheckButton;
@@ -82,9 +80,6 @@ namespace Novell.Wizard
 			this.simws = simws;
 			this.domainInfo = domainInfo;
 			this.ifws = ifws;
-			
-		//	defaultDescription.Visible = defaultServer.Visible = !makeDefaultAccount;
-		//	defaultServer.Checked = makeDefaultAccount;
 		}
 
 		#endregion
@@ -211,23 +206,6 @@ namespace Novell.Wizard
 			{
 				iFolderWeb ifolder = null;
 				ifolder = CreateDefaultiFolder( this.sslCheckButton.Checked );
-				/*
-				if( this.sslCheckButton.Checked == true)  // Shared iFolder
-				{
-					try
-					{
-						ifolder = this.ifws.CreateiFolderInDomain(this.LocationEntry.Text, this.domainInfo.ID);
-					}
-					catch( Exception ex)
-					{
-						DisplayErrorMesg(ex);
-					}
-				}
-				else
-				{
-					ifolder = createEncryptediFolder();
-				}
-				*/
 				if( ifolder != null)
 				{
 					status = true;
@@ -243,7 +221,6 @@ namespace Novell.Wizard
 				}
 				else
 				{
-				//	MessageBox.Show("Unable to get the iFolder object");
 					status = false;
 				}
 			}
@@ -368,7 +345,6 @@ namespace Novell.Wizard
 				}
 				catch( Exception ex )
 				{
-					//MessageBox.Show("Unable to download the ifolder: {0}", ex.Message);
 					DisplayErrorMesg(ex);
 					return false;
 				}
@@ -379,10 +355,6 @@ namespace Novell.Wizard
 
 		private iFolderWeb CreateDefaultiFolder( bool shared)
 		{
-			// if the path mentioned is the default path create the default directories
-			//if( this.defaultPath == this.LocationEntry.Text)
-			//{
-				//	MessageBox.Show("creating default path");
 			try
 			{
 				DirectoryInfo di = new DirectoryInfo( this.defaultPath );
@@ -394,7 +366,6 @@ namespace Novell.Wizard
 				DisplayErrorMesg(ex);
 				return null;
 			}
-			//}
 			if( shared)
 			{
 				iFolderWeb ifolder = null;
@@ -446,18 +417,9 @@ namespace Novell.Wizard
 					enterPassPhrase.ShowDialog();
 					passPhraseStatus = enterPassPhrase.PassphraseStatus;
 				}
-				if( passPhraseStatus == false)
-				{
-					// No Passphrase
-					//	successful = false;
-					//	MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("PPForEncryption")/*"Passphrase needs to be supplied for encrypting the iFolder"*/, resourceManager.GetString("$this.Text")/*"Passphrase error"*/, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-					//	mmb.ShowDialog();
-				//	MessageBox.Show("Unable to set the passphrase");
-				}
-				else
+				if( passPhraseStatus == true)
 				{
 					// check for passphrase existence and display corresponding dialogs.
-				//	MessageBox.Show("Creating encrypted iFolder");
 					string Passphrase = simws.GetPassPhrase(domainInfo.ID);
 					iFolderWeb ifolder = null;
 					try
@@ -549,13 +511,11 @@ namespace Novell.Wizard
 		{
 			this.CreateDefault.Checked = true;
 			string str = "";
-		//	MessageBox.Show("calling getdefault");
-		//	if( this.simws != null && this.domainInfo != null)
 			str = this.simws.GetDefaultiFolder( this.domainInfo.ID);
 			if( str == null || str == "")
 			{
 				this.upload = true;
-				this.defaultPath += "\\Default";
+				this.defaultPath += "\\" + this.resManager.GetString("DefaultDirName");
 				int SecurityPolicy = this.ifws.GetSecurityPolicy(domainInfo.ID);
 				this.encryptionCheckButton.Checked = true;
 				this.encryptionCheckButton.Enabled = this.sslCheckButton.Enabled = false;
@@ -582,7 +542,6 @@ namespace Novell.Wizard
 			{
 				this.upload = false;
 				this.defaultiFolderID = str;
-			//	MessageBox.Show("Default iFolder exists");
 				this.CreateDefault.Text = "Download Default iFolder";
 				this.label2.Visible = this.encryptionCheckButton.Visible = this.sslCheckButton.Visible = false;
 				
@@ -596,7 +555,7 @@ namespace Novell.Wizard
 		private void BrowseButton_Click(object sender, EventArgs e)
 		{
 			FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-			folderBrowserDialog.Description = "Choose a folder";//resourceManager.GetString("chooseFolder");
+			folderBrowserDialog.Description = this.resManager.GetString("chooseFolder");
 			if(folderBrowserDialog.ShowDialog() == DialogResult.OK)
 			{
 				this.LocationEntry.Text = folderBrowserDialog.SelectedPath;
