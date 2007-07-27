@@ -121,6 +121,9 @@
   <data name="ifolderPath.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
+  <data name="RememberPPText">
+    <value>Mémoriser la phrase secrète</value>
+  </data>
   <data name="ssl.BackgroundImage" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
@@ -269,10 +272,13 @@
     <value>392, 44</value>
   </data>
   <data name="ssl.Text">
-    <value>Utiliser SSL</value>
+    <value>Partagé</value>
   </data>
   <data name="&gt;&gt;label3.ZOrder">
     <value>2</value>
+  </data>
+  <data name="ValidatePPError">
+    <value>Phrase secrète non valide</value>
   </data>
   <data name="browse.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -496,6 +502,9 @@
   <data name="encryption.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
+  <data name="ErrorSetPP">
+    <value>Impossible de définir la phrase secrète.</value>
+  </data>
   <data name="label2.AutoSize" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
@@ -526,6 +535,9 @@
   <data name="label1.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
+  <data name="EnterPPTitle">
+    <value>Entrer la phrase secrète</value>
+  </data>
   <data name="label1.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
@@ -554,7 +566,7 @@
     <value>Erreur d'accès iFolder</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>67, 16</value>
+    <value>89, 16</value>
   </data>
   <data name="servers.BackgroundImage" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -576,6 +588,9 @@
   </data>
   <data name="encryption.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Flat</value>
+  </data>
+  <data name="RecoveryAgent">
+    <value>Agent de récupération</value>
   </data>
   <data name="ifolderPath.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -631,8 +646,14 @@
   <data name="ifolderPath.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
   </data>
+  <data name="VerifyPPTitle">
+    <value>Vérifier la phrase secrète</value>
+  </data>
   <data name="&gt;&gt;servers.Name">
     <value>servers</value>
+  </data>
+  <data name="LoginToDomain">
+    <value>Vous avez été logué au domaine pour la création d'un dossier iFolder codé.</value>
   </data>
   <data name="ok.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>311, 110</value>
@@ -674,7 +695,7 @@
     <value>Codé</value>
   </data>
   <data name="servers.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>80, 13</value>
+    <value>107, 13</value>
   </data>
   <data name="label3.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>No</value>
@@ -730,8 +751,11 @@
   <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
   </data>
+  <data name="PPSDontMatch">
+    <value>Les deux phrases secrètes saisies ne correspondent pas</value>
+  </data>
   <data name="servers.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>306, 21</value>
+    <value>279, 21</value>
   </data>
   <data name="label3.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -753,6 +777,9 @@
   </data>
   <data name="servers.TabIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>1</value>
+  </data>
+  <data name="RetypePP">
+    <value>Retaper la phrase secrète</value>
   </data>
   <data name="$this.AutoScrollMinSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
@@ -841,6 +868,9 @@
   <data name="label1.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
+  <data name="PPForEncryption">
+    <value>Une phrase secrète doit être fournie pour coder le dossier iFolder</value>
+  </data>
   <data name="label2.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
   </data>
@@ -852,6 +882,9 @@
   </data>
   <data name="browse.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>MiddleCenter</value>
+  </data>
+  <data name="TryAgain">
+    <value>Réessayez</value>
   </data>
   <data name="browse.BackgroundImage" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -910,6 +943,9 @@
   <data name="encryption.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Normal</value>
   </data>
+  <data name="SetPPSuccess">
+    <value>Phrase secrète définie</value>
+  </data>
   <data name="label3.ImageIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>-1</value>
   </data>
@@ -956,7 +992,7 @@
     <value>Private</value>
   </data>
   <data name="encryption.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>96, 20</value>
+    <value>130, 20</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>482, 152</value>
@@ -968,7 +1004,7 @@
     <value>13</value>
   </data>
   <data name="$this.Text">
-    <value>Nouveau dossier IFolder</value>
+    <value>Nouveau dossier iFolder</value>
   </data>
   <data name="ok.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>MiddleCenter</value>
@@ -1006,14 +1042,17 @@
   <data name="&gt;&gt;label1.Name">
     <value>label1</value>
   </data>
+  <data name="EnterPPText">
+    <value>Entrer la phrase secrète :</value>
+  </data>
   <data name="label2.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
   </data>
   <data name="ifolderPath.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>80, 45</value>
+    <value>107, 45</value>
   </data>
   <data name="ifolderPath.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>306, 20</value>
+    <value>279, 20</value>
   </data>
   <data name="ifolderPath.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>

@@ -121,6 +121,9 @@
   <data name="ifolderPath.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
+  <data name="RememberPPText">
+    <value>Passwortsatz speichern</value>
+  </data>
   <data name="ssl.BackgroundImage" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
@@ -128,7 +131,7 @@
     <value>No</value>
   </data>
   <data name="ssl.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>96, 20</value>
+    <value>126, 20</value>
   </data>
   <data name="ssl.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>NoControl</value>
@@ -152,7 +155,7 @@
     <value />
   </data>
   <data name="networkPathError">
-    <value>Der ausgewählte Speicherort befindet sich in einem Netzwerk oder auf einem nicht-physikalischen Laufwerk. Ein iFolder muss sich auf einem physikalischen Laufwerk befinden. Wählen Sie einen anderen Speicherort aus und versuchen Sie es erneut.</value>
+    <value>Der ausgewählte Standort befindet sich in einem Netzwerk oder auf einem nicht-physikalischen Laufwerk. Ein iFolder muss sich auf einem physikalischen Laufwerk befinden. Wählen Sie einen anderen Standort und versuchen Sie es erneut.</value>
   </data>
   <data name="&gt;&gt;ok.Parent">
     <value>$this</value>
@@ -164,7 +167,7 @@
     <value>False</value>
   </data>
   <data name="systemDriveError">
-    <value>Der ausgewählte Speicherort ist ein Systemlaufwerk. Systemlaufwerke können keinen iFolder enthalten. Wählen Sie einen anderen Speicherort aus und versuchen Sie es erneut.</value>
+    <value>Der ausgewählte Standort ist ein Systemlaufwerk.  Systemlaufwerke können keinen iFolder enthalten.  Wählen Sie einen anderen Standort und versuchen Sie es erneut.</value>
   </data>
   <data name="servers.MaxLength" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>0</value>
@@ -182,7 +185,7 @@
     <value>$this</value>
   </data>
   <data name="createPrompt">
-    <value>Der angegebene Speicherort ist nicht vorhanden. Möchten Sie ihn erstellen?</value>
+    <value>Der angegebene Standort ist nicht vorhanden.  Möchten Sie ihn erstellen?</value>
   </data>
   <data name="ok.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>System</value>
@@ -212,7 +215,7 @@
     <value />
   </data>
   <data name="pathInStoreError">
-    <value>Der ausgewählte Speicherort befindet sich im iFolder-Datenordner. Wählen Sie einen anderen Speicherort aus und versuchen Sie es erneut.</value>
+    <value>Der ausgewählte Standort befindet sich im iFolder-Datenordner. Wählen Sie einen anderen Standort und versuchen Sie es erneut.</value>
   </data>
   <data name="&gt;&gt;encryption.ZOrder">
     <value>1</value>
@@ -236,7 +239,7 @@
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="label3.Text">
-    <value>S&amp;icherheit</value>
+    <value>Sich&amp;erheit</value>
   </data>
   <data name="ifolderPath.Text">
     <value />
@@ -269,10 +272,13 @@
     <value>392, 44</value>
   </data>
   <data name="ssl.Text">
-    <value>SSL verwenden</value>
+    <value>Gemeinsam genutzt</value>
   </data>
   <data name="&gt;&gt;label3.ZOrder">
     <value>2</value>
+  </data>
+  <data name="ValidatePPError">
+    <value>Ungültiger Passwortsatz</value>
   </data>
   <data name="browse.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -338,7 +344,7 @@
     <value>Private</value>
   </data>
   <data name="ssl.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>232, 77</value>
+    <value>232, 73</value>
   </data>
   <data name="ok.TabIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>5</value>
@@ -362,7 +368,7 @@
     <value>0</value>
   </data>
   <data name="containsiFolderError">
-    <value>Der ausgewählte Speicherort enthält bereits einen iFolder. Ein iFolder kann nicht in einem anderen iFolder vorhanden sein. Wählen Sie einen anderen Speicherort aus und versuchen Sie es erneut.</value>
+    <value>Der ausgewählte Standort enthält bereits einen iFolder.  Ein iFolder kann nicht in einem anderen iFolder existieren.  Wählen Sie einen anderen Standort und versuchen Sie es erneut.</value>
   </data>
   <data name="&gt;&gt;browse.ZOrder">
     <value>3</value>
@@ -419,7 +425,7 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="createPromptTitle">
-    <value>Speicherort erstellen</value>
+    <value>Standort erstellen</value>
   </data>
   <data name="&gt;&gt;ok.ZOrder">
     <value>9</value>
@@ -458,7 +464,7 @@
     <value>True</value>
   </data>
   <data name="systemDirError">
-    <value>Der ausgewählte Speicherort enthält einen Systemordner. Systemordner können keinen iFolder enthalten. Wählen Sie einen anderen Speicherort aus und versuchen Sie es erneut.</value>
+    <value>Der ausgewählte Standort enthält einen Systemordner.  Systemordner können keinen iFolder enthalten.  Wählen Sie einen anderen Standort und versuchen Sie es erneut.</value>
   </data>
   <data name="label1.TabIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>0</value>
@@ -496,6 +502,9 @@
   <data name="encryption.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
+  <data name="ErrorSetPP">
+    <value>Festlegen des Passwortsatzes nicht möglich.</value>
+  </data>
   <data name="label2.AutoSize" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
@@ -525,6 +534,9 @@
   </data>
   <data name="label1.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
+  </data>
+  <data name="EnterPPTitle">
+    <value>Passwortsatz eingeben</value>
   </data>
   <data name="label1.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -577,6 +589,9 @@
   <data name="encryption.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Flat</value>
   </data>
+  <data name="RecoveryAgent">
+    <value>Agent für die Wiederherstellung</value>
+  </data>
   <data name="ifolderPath.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
@@ -617,10 +632,10 @@
     <value>7</value>
   </data>
   <data name="rootDriveError">
-    <value>iFolder-Ordner können nicht auf der Laufwerkebene existieren. Der ausgewählte Speicherort befindet sich im Stammverzeichnis des Laufwerks. Wählen Sie einen Speicherort aus, der sich nicht im Stammverzeichnis eines Laufwerks befindet, und versuchen Sie es erneut.</value>
+    <value>Auf Laufwerksebene können keine iFolder-Ordner erstellt werden.  Das ausgewählte Verzeichnis ist das Stammverzeichnis des Laufwerks.  Wählen Sie ein anderes Verzeichnis aus (kein Stammverzeichnis) und versuchen Sie es erneut.</value>
   </data>
   <data name="progFilesDirError">
-    <value>Der ausgewählte Speicherort enthält den Programme-Ordner. Der Programme-Ordner kann keinen iFolder enthalten. Wählen Sie einen anderen Speicherort aus und versuchen Sie es erneut.</value>
+    <value>Der ausgewählte Standort enthält den Programme-Ordner.  Der Programme-Ordner kann keinen iFolder enthalten. Wählen Sie einen anderen Standort und versuchen Sie es erneut.</value>
   </data>
   <data name="encryption.ImageIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>0</value>
@@ -631,11 +646,17 @@
   <data name="ifolderPath.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
   </data>
+  <data name="VerifyPPTitle">
+    <value>Passwortsatz überprüfen</value>
+  </data>
   <data name="&gt;&gt;servers.Name">
     <value>servers</value>
   </data>
+  <data name="LoginToDomain">
+    <value>Sie müssen bei der Domäne angemeldet sein, um einen verschlüsselten iFolder-Ordner erstellen zu können.</value>
+  </data>
   <data name="ok.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>311, 110</value>
+    <value>326, 110</value>
   </data>
   <data name="cancel.Enabled" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -644,7 +665,7 @@
     <value>Private</value>
   </data>
   <data name="pathIniFolderError">
-    <value>Der ausgewählte Speicherort befindet sich in einem anderen iFolder. Ein iFolder kann nicht in einem anderen iFolder vorhanden sein. Wählen Sie einen anderen Speicherort aus und versuchen Sie es erneut.</value>
+    <value>Der ausgewählte Standort befindet sich in einem anderen iFolder. Ein iFolder kann nicht in einem anderen iFolder existieren. Wählen Sie einen anderen Standort und versuchen Sie es erneut.</value>
   </data>
   <data name="ssl.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>No</value>
@@ -710,7 +731,7 @@
     <value>True</value>
   </data>
   <data name="label2.Text">
-    <value>&amp;Speicherort:</value>
+    <value>S&amp;tandort:</value>
   </data>
   <data name="browse.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -729,6 +750,9 @@
   </data>
   <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
+  </data>
+  <data name="PPSDontMatch">
+    <value>Passwortsatz und Passwortsatzbestätigung stimmen nicht überein</value>
   </data>
   <data name="servers.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>306, 21</value>
@@ -754,6 +778,9 @@
   <data name="servers.TabIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>1</value>
   </data>
+  <data name="RetypePP">
+    <value>Passwortsatz wiederholen</value>
+  </data>
   <data name="$this.AutoScrollMinSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
   </data>
@@ -761,7 +788,7 @@
     <value>Private</value>
   </data>
   <data name="cancel.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>392, 110</value>
+    <value>407, 110</value>
   </data>
   <data name="browse.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Left</value>
@@ -785,7 +812,7 @@
     <value>False</value>
   </data>
   <data name="accessDenied">
-    <value>Sie haben unzureichende Zugriffsrechte für den ausgewählten Speicherort. iFolder können nur in Ordnern erstellt werden, in denen Sie Zugriff zum Lesen und Schreiben von Dateien haben. Wählen Sie einen anderen Speicherort aus und versuchen Sie es erneut.</value>
+    <value>Sie haben unzureichenden Zugriff auf den ausgewählten Standort. iFolder-Ordner können nur in Ordnern erstellt werden, in denen Sie Zugriff zum Lesen und Schreiben von Dateien haben.  Wählen Sie einen anderen Standort und versuchen Sie es erneut.</value>
   </data>
   <data name="servers.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -815,7 +842,7 @@
     <value />
   </data>
   <data name="pathInvalidErrorTitle">
-    <value>Ungültiger Speicherort</value>
+    <value>Ungültiger Standort</value>
   </data>
   <data name="&gt;&gt;cancel.ZOrder">
     <value>8</value>
@@ -824,10 +851,10 @@
     <value />
   </data>
   <data name="browse.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>75, 23</value>
+    <value>92, 24</value>
   </data>
   <data name="invalidCharsError">
-    <value>Der ausgewählte Speicherort enthält ungültige Zeichen. Die Zeichen \:*?"&lt;&gt;| dürfen in einem iFolder nicht verwendet werden. Wählen Sie einen anderen Speicherort aus und versuchen Sie es erneut.</value>
+    <value>Der ausgewählte Standort enthält ungültige Zeichen.  Die Zeichen \:*?"&lt;&gt;| können in einem iFolder nicht verwendet werden. Wählen Sie einen anderen Standort und versuchen Sie es erneut.</value>
   </data>
   <data name="label2.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -841,6 +868,9 @@
   <data name="label1.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
+  <data name="PPForEncryption">
+    <value>Zur Verschlüsselung des iFolder-Ordners sollte ein Passwortsatz angegeben werden</value>
+  </data>
   <data name="label2.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
   </data>
@@ -852,6 +882,9 @@
   </data>
   <data name="browse.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>MiddleCenter</value>
+  </data>
+  <data name="TryAgain">
+    <value>Versuchen Sie es erneut</value>
   </data>
   <data name="browse.BackgroundImage" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -884,7 +917,7 @@
     <value>Private</value>
   </data>
   <data name="invalidFolder">
-    <value>Ein ungültiger Speicherort wurde angegeben.</value>
+    <value>Ein ungültiger Standort wurde angegeben.</value>
   </data>
   <data name="servers.MaxDropDownItems" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>8</value>
@@ -909,6 +942,9 @@
   </data>
   <data name="encryption.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Normal</value>
+  </data>
+  <data name="SetPPSuccess">
+    <value>Passwortsatz erfolgreich festgelegt</value>
   </data>
   <data name="label3.ImageIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>-1</value>
@@ -944,7 +980,7 @@
     <value />
   </data>
   <data name="pathContainsStoreError">
-    <value>Der ausgewählte Speicherort enthält die iFolder-Datendateien. Wählen Sie einen anderen Speicherort aus und versuchen Sie es erneut.</value>
+    <value>Das ausgewählte Verzeichnis enthält die iFolder-Datendateien.  Wählen Sie einen anderen Standort aus und versuchen Sie es erneut.</value>
   </data>
   <data name="ifolderPath.ScrollBars" type="System.Windows.Forms.ScrollBars, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -956,10 +992,10 @@
     <value>Private</value>
   </data>
   <data name="encryption.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>96, 20</value>
+    <value>130, 20</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>482, 152</value>
+    <value>493, 152</value>
   </data>
   <data name="&gt;&gt;ifolderPath.Type">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -977,7 +1013,7 @@
     <value>-1</value>
   </data>
   <data name="createAccount">
-    <value>Um iFolder verwenden zu können, müssen Sie zuerst ein iFolder-Konto einrichten. Möchten Sie jetzt ein iFolder-Konto einrichten?</value>
+    <value>Um iFolder verwenden zu können, müssen Sie zuerst ein iFolder-Konto einrichten.  Möchten Sie jetzt ein iFolder-Konto einrichten?</value>
   </data>
   <data name="ifolderPath.AutoSize" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1005,6 +1041,9 @@
   </data>
   <data name="&gt;&gt;label1.Name">
     <value>label1</value>
+  </data>
+  <data name="EnterPPText">
+    <value>Passwortsatz eingeben:</value>
   </data>
   <data name="label2.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -1034,7 +1073,7 @@
     <value>MiddleCenter</value>
   </data>
   <data name="winDirError">
-    <value>Der ausgewählte Speicherort enthält den Windows-Ordner. Der Windows-Ordner kann keinen iFolder enthalten. Wählen Sie einen anderen Speicherort aus und versuchen Sie es erneut.</value>
+    <value>Der ausgewählte Standort enthält den Windows-Ordner. Der Windows-Ordner kann keinen iFolder enthalten. Wählen Sie einen anderen Standort und versuchen Sie es erneut.</value>
   </data>
   <data name="ok.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Left</value>

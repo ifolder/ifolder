@@ -121,6 +121,9 @@
   <data name="ifolderPath.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
+  <data name="RememberPPText">
+    <value>記住通關密語</value>
+  </data>
   <data name="ssl.BackgroundImage" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
@@ -236,7 +239,7 @@
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="label3.Text">
-    <value>安全性(&amp;E)</value>
+    <value>保全性(&amp;E)</value>
   </data>
   <data name="ifolderPath.Text">
     <value />
@@ -269,10 +272,13 @@
     <value>392, 44</value>
   </data>
   <data name="ssl.Text">
-    <value>使用 SSL</value>
+    <value>共用</value>
   </data>
   <data name="&gt;&gt;label3.ZOrder">
     <value>2</value>
+  </data>
+  <data name="ValidatePPError">
+    <value>通關密語無效</value>
   </data>
   <data name="browse.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -308,7 +314,7 @@
     <value />
   </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>67, 16</value>
+    <value>72, 16</value>
   </data>
   <data name="servers.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -496,6 +502,9 @@
   <data name="encryption.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
+  <data name="ErrorSetPP">
+    <value>無法設定通關密語。</value>
+  </data>
   <data name="label2.AutoSize" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
@@ -525,6 +534,9 @@
   </data>
   <data name="label1.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
+  </data>
+  <data name="EnterPPTitle">
+    <value>輸入通關密語</value>
   </data>
   <data name="label1.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -576,6 +588,9 @@
   </data>
   <data name="encryption.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Flat</value>
+  </data>
+  <data name="RecoveryAgent">
+    <value>復原代辦</value>
   </data>
   <data name="ifolderPath.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -631,8 +646,14 @@
   <data name="ifolderPath.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
   </data>
+  <data name="VerifyPPTitle">
+    <value>驗證通關密語</value>
+  </data>
   <data name="&gt;&gt;servers.Name">
     <value>servers</value>
+  </data>
+  <data name="LoginToDomain">
+    <value>您必須登入領域，才能建立加密的 iFolder。</value>
   </data>
   <data name="ok.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>311, 110</value>
@@ -674,7 +695,7 @@
     <value>已加密</value>
   </data>
   <data name="servers.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>80, 13</value>
+    <value>91, 13</value>
   </data>
   <data name="label3.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>No</value>
@@ -730,8 +751,11 @@
   <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
   </data>
+  <data name="PPSDontMatch">
+    <value>通關密語與重新輸入的通關密語不符</value>
+  </data>
   <data name="servers.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>306, 21</value>
+    <value>295, 21</value>
   </data>
   <data name="label3.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -753,6 +777,9 @@
   </data>
   <data name="servers.TabIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>1</value>
+  </data>
+  <data name="RetypePP">
+    <value>重新輸入通關密語</value>
   </data>
   <data name="$this.AutoScrollMinSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
@@ -841,6 +868,9 @@
   <data name="label1.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
+  <data name="PPForEncryption">
+    <value>應該提供通關密語，才能加密 iFolder</value>
+  </data>
   <data name="label2.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
   </data>
@@ -852,6 +882,9 @@
   </data>
   <data name="browse.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>MiddleCenter</value>
+  </data>
+  <data name="TryAgain">
+    <value>請再試一次</value>
   </data>
   <data name="browse.BackgroundImage" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -910,6 +943,9 @@
   <data name="encryption.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Normal</value>
   </data>
+  <data name="SetPPSuccess">
+    <value>成功設定通關密語</value>
+  </data>
   <data name="label3.ImageIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>-1</value>
   </data>
@@ -956,7 +992,7 @@
     <value>Private</value>
   </data>
   <data name="encryption.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>96, 20</value>
+    <value>130, 20</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>482, 152</value>
@@ -1006,14 +1042,17 @@
   <data name="&gt;&gt;label1.Name">
     <value>label1</value>
   </data>
+  <data name="EnterPPText">
+    <value>輸入通關密語：</value>
+  </data>
   <data name="label2.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
   </data>
   <data name="ifolderPath.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>80, 45</value>
+    <value>92, 45</value>
   </data>
   <data name="ifolderPath.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>306, 20</value>
+    <value>294, 20</value>
   </data>
   <data name="ifolderPath.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>

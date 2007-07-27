@@ -121,6 +121,9 @@
   <data name="ifolderPath.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
+  <data name="RememberPPText">
+    <value>Запомнить контрольную фразу</value>
+  </data>
   <data name="ssl.BackgroundImage" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
@@ -128,7 +131,7 @@
     <value>No</value>
   </data>
   <data name="ssl.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>104, 20</value>
+    <value>173, 20</value>
   </data>
   <data name="ssl.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>NoControl</value>
@@ -152,7 +155,7 @@
     <value />
   </data>
   <data name="networkPathError">
-    <value>Выбранное местоположение находится в сети или не на физическом диске. Папки iFolder должны располагаться на физическом диске. Выберите другое местоположение и повторите попытку.</value>
+    <value>Выбрано сетевое или нефизическое устройство. Папки iFolder должны находиться на физическом диске. Выберите другое расположение и повторите попытку.</value>
   </data>
   <data name="&gt;&gt;ok.Parent">
     <value>$this</value>
@@ -164,7 +167,7 @@
     <value>False</value>
   </data>
   <data name="systemDriveError">
-    <value>Выбранное местоположение является системным устройством. Системные устройства не могут содержать папку iFolder. Выберите другое местоположение и повторите попытку.</value>
+    <value>Выбранное расположение является системным диском. Системные диски не могут находиться в папке iFolder. Выберите другое расположение и повторите попытку.</value>
   </data>
   <data name="servers.MaxLength" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>0</value>
@@ -182,7 +185,7 @@
     <value>$this</value>
   </data>
   <data name="createPrompt">
-    <value>Указанное местоположение не существует. Создать его?</value>
+    <value>Указанное расположение не существует. Создать его?</value>
   </data>
   <data name="ok.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>System</value>
@@ -212,7 +215,7 @@
     <value />
   </data>
   <data name="pathInStoreError">
-    <value>Выбранное местоположение находится внутри папки с данными iFolder. Выберите другое местоположение и повторите попытку.</value>
+    <value>Выбранное расположение находится в папке данных iFolder. Выберите другое расположение и повторите попытку.</value>
   </data>
   <data name="&gt;&gt;encryption.ZOrder">
     <value>1</value>
@@ -236,7 +239,7 @@
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="label3.Text">
-    <value>&amp;Защита</value>
+    <value>З&amp;ащита</value>
   </data>
   <data name="ifolderPath.Text">
     <value />
@@ -266,13 +269,16 @@
     <value />
   </data>
   <data name="browse.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>392, 44</value>
+    <value>417, 45</value>
   </data>
   <data name="ssl.Text">
-    <value>Протокол SSL</value>
+    <value>Совместное использование</value>
   </data>
   <data name="&gt;&gt;label3.ZOrder">
     <value>2</value>
+  </data>
+  <data name="ValidatePPError">
+    <value>Неверная контрольная фраза</value>
   </data>
   <data name="browse.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -362,7 +368,7 @@
     <value>0</value>
   </data>
   <data name="containsiFolderError">
-    <value>Выбранное местоположение уже содержит папку iFolder. Папки iFolder не могут существовать внутри других папок iFolder. Выберите другое местоположение и повторите попытку.</value>
+    <value>В выбранном расположении уже есть папка iFolder. Папки iFolder нельзя создавать внутри других папок iFolder. Выберите другое расположение и повторите попытку.</value>
   </data>
   <data name="&gt;&gt;browse.ZOrder">
     <value>3</value>
@@ -380,7 +386,7 @@
     <value>Private</value>
   </data>
   <data name="browse.Text">
-    <value>&amp;Просмотр</value>
+    <value>Пр&amp;осмотр</value>
   </data>
   <data name="label3.AutoSize" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -395,7 +401,7 @@
     <value>32767</value>
   </data>
   <data name="ok.Text">
-    <value>ОК</value>
+    <value>OK</value>
   </data>
   <data name="label3.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -419,7 +425,7 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="createPromptTitle">
-    <value>Создать местоположение</value>
+    <value>Создать расположение</value>
   </data>
   <data name="&gt;&gt;ok.ZOrder">
     <value>9</value>
@@ -458,7 +464,7 @@
     <value>True</value>
   </data>
   <data name="systemDirError">
-    <value>Выбранное местоположение содержит системную папку. Системные папки не могут содержать папку iFolder. Выберите другое местоположение и повторите попытку.</value>
+    <value>В выбранном расположении содержится системная папка. Системные папки не могут находиться в папке iFolder. Выберите другое расположение и повторите попытку.</value>
   </data>
   <data name="label1.TabIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>0</value>
@@ -496,6 +502,9 @@
   <data name="encryption.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
+  <data name="ErrorSetPP">
+    <value>Невозможно установить контрольную фразу.</value>
+  </data>
   <data name="label2.AutoSize" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
@@ -525,6 +534,9 @@
   </data>
   <data name="label1.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
+  </data>
+  <data name="EnterPPTitle">
+    <value>Введите контрольную фразу</value>
   </data>
   <data name="label1.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -577,6 +589,9 @@
   <data name="encryption.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Flat</value>
   </data>
+  <data name="RecoveryAgent">
+    <value>Агент восстановления</value>
+  </data>
   <data name="ifolderPath.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
@@ -617,10 +632,10 @@
     <value>7</value>
   </data>
   <data name="rootDriveError">
-    <value>Папки iFolder не могут существовать на уровне дисков. Выбранное местоположение находится в корне диска. Выберите другое местоположение вне корня диска и повторите попытку.</value>
+    <value>Нельзя создавать папки iFolder на уровне диска. Выбрано корневое расположение на диске. Выберите расположение, которое не является корнем диска, и повторите попытку.</value>
   </data>
   <data name="progFilesDirError">
-    <value>Выбранное местоположение не может включать папку Program Files. Папка Program Files не может содержать папку iFolder. Выберите другое местоположение и повторите попытку.</value>
+    <value>В выбранном расположении содержится папка "Program Files". Папка "Program Files" не может находиться в папке iFolder. Выберите другое расположение и повторите попытку.</value>
   </data>
   <data name="encryption.ImageIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>0</value>
@@ -631,8 +646,14 @@
   <data name="ifolderPath.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
   </data>
+  <data name="VerifyPPTitle">
+    <value>Контрольная фраза</value>
+  </data>
   <data name="&gt;&gt;servers.Name">
     <value>servers</value>
+  </data>
+  <data name="LoginToDomain">
+    <value>Для создания зашифрованной папки iFolder необходимо зарегистрироваться в домене.</value>
   </data>
   <data name="ok.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>311, 110</value>
@@ -644,7 +665,7 @@
     <value>Private</value>
   </data>
   <data name="pathIniFolderError">
-    <value>Выбранное местоположение находится внутри другой папки iFolder. Папки iFolder не могут существовать внутри других папок iFolder. Выберите другое местоположение и повторите попытку.</value>
+    <value>Выбранное расположение находится внутри другой папки iFolder. Папки iFolder нельзя создавать внутри других папок iFolder. Выберите другое расположение и повторите попытку.</value>
   </data>
   <data name="ssl.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>No</value>
@@ -674,7 +695,7 @@
     <value>Шифрование</value>
   </data>
   <data name="servers.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>119, 13</value>
+    <value>116, 13</value>
   </data>
   <data name="label3.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>No</value>
@@ -730,8 +751,11 @@
   <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
   </data>
+  <data name="PPSDontMatch">
+    <value>Контрольная фраза и повторно введенная контрольная фраза не совпадают</value>
+  </data>
   <data name="servers.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>267, 21</value>
+    <value>291, 21</value>
   </data>
   <data name="label3.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -753,6 +777,9 @@
   </data>
   <data name="servers.TabIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>1</value>
+  </data>
+  <data name="RetypePP">
+    <value>Ведите контрольную фразу еще раз</value>
   </data>
   <data name="$this.AutoScrollMinSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
@@ -785,7 +812,7 @@
     <value>False</value>
   </data>
   <data name="accessDenied">
-    <value>Недостаточно прав для доступа к выбранному местоположению. Папки iFolder могут быть созданы только в папках, доступных для чтения и записи файлов.  Выберите другое местоположение и повторите попытку.</value>
+    <value>У Вас недостаточно прав доступа к выбранному расположению. Папки iFolder можно создавать только в тех каталогах, в которых у Вас есть права на чтение и запись файлов. Выберите другое расположение и повторите попытку.</value>
   </data>
   <data name="servers.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -815,7 +842,7 @@
     <value />
   </data>
   <data name="pathInvalidErrorTitle">
-    <value>Недопустимое местоположение</value>
+    <value>Недопустимое расположение</value>
   </data>
   <data name="&gt;&gt;cancel.ZOrder">
     <value>8</value>
@@ -824,10 +851,10 @@
     <value />
   </data>
   <data name="browse.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>75, 23</value>
+    <value>78, 24</value>
   </data>
   <data name="invalidCharsError">
-    <value>Выбранное местоположение содержит недопустимые символы. Символы \:*?"&lt;&gt;| не могут использоваться в iFolder. Выберите другое местоположение и повторите попытку.</value>
+    <value>Выбранное расположение содержит недопустимые символы. Символы \:*?"&lt;&gt;| не могут использоваться в iFolder. Выберите другое расположение и повторите попытку.</value>
   </data>
   <data name="label2.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -841,6 +868,9 @@
   <data name="label1.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
+  <data name="PPForEncryption">
+    <value>Для шифрования iFolder необходимо указать контрольную фразу</value>
+  </data>
   <data name="label2.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
   </data>
@@ -852,6 +882,9 @@
   </data>
   <data name="browse.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>MiddleCenter</value>
+  </data>
+  <data name="TryAgain">
+    <value>Повторите попытку</value>
   </data>
   <data name="browse.BackgroundImage" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -884,7 +917,7 @@
     <value>Private</value>
   </data>
   <data name="invalidFolder">
-    <value>Указано неверное местоположение.</value>
+    <value>Указано неверное расположение.</value>
   </data>
   <data name="servers.MaxDropDownItems" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>8</value>
@@ -909,6 +942,9 @@
   </data>
   <data name="encryption.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Normal</value>
+  </data>
+  <data name="SetPPSuccess">
+    <value>Контрольная фраза установлена успешно</value>
   </data>
   <data name="label3.ImageIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>-1</value>
@@ -944,7 +980,7 @@
     <value />
   </data>
   <data name="pathContainsStoreError">
-    <value>Выбранное местоположение содержит файлы данных iFolder. Выберите другое местоположение и повторите попытку.</value>
+    <value>В выбранном расположении содержатся файлы данных iFolder. Выберите другое расположение и повторите попытку.</value>
   </data>
   <data name="ifolderPath.ScrollBars" type="System.Windows.Forms.ScrollBars, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -956,10 +992,10 @@
     <value>Private</value>
   </data>
   <data name="encryption.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>96, 20</value>
+    <value>130, 20</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>482, 152</value>
+    <value>497, 152</value>
   </data>
   <data name="&gt;&gt;ifolderPath.Type">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1006,14 +1042,17 @@
   <data name="&gt;&gt;label1.Name">
     <value>label1</value>
   </data>
+  <data name="EnterPPText">
+    <value>Введите контрольную фразу:</value>
+  </data>
   <data name="label2.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
   </data>
   <data name="ifolderPath.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>119, 45</value>
+    <value>115, 45</value>
   </data>
   <data name="ifolderPath.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>267, 20</value>
+    <value>293, 20</value>
   </data>
   <data name="ifolderPath.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -1034,7 +1073,7 @@
     <value>MiddleCenter</value>
   </data>
   <data name="winDirError">
-    <value>Выбранное местоположение включает папку Windows. Папка Windows не может содержать папку iFolder. Выберите другое местоположение и повторите попытку.</value>
+    <value>В выбранном расположении содержится папка Windows. Папка Windows не может находиться в папке iFolder. Выберите другое расположение и повторите попытку.</value>
   </data>
   <data name="ok.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Left</value>

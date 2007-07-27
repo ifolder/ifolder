@@ -121,6 +121,9 @@
   <data name="ifolderPath.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
+  <data name="RememberPPText">
+    <value>Uložiť prístupový výraz</value>
+  </data>
   <data name="ssl.BackgroundImage" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
@@ -128,7 +131,7 @@
     <value>No</value>
   </data>
   <data name="ssl.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>125, 20</value>
+    <value>96, 20</value>
   </data>
   <data name="ssl.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>NoControl</value>
@@ -140,19 +143,19 @@
     <value />
   </data>
   <data name="chooseFolder">
-    <value>Vyberte priečinok, ktorý sa má zmeniť na priečinok aplikácie iFolder.</value>
+    <value>Zvoľte priečinok, ktorý chcete premeniť na priečinok iFolder</value>
   </data>
   <data name="browse.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
   </data>
   <data name="iFolderCreateError">
-    <value>Pri vytváraní priečinku iFolder nastala chyba.</value>
+    <value>Pri vytváraní priečinka iFolder sa vyskytla chyba.</value>
   </data>
   <data name="servers.Text">
     <value />
   </data>
   <data name="networkPathError">
-    <value>Zvolené umiestnenie sa nachádza na sieti alebo nefyzickej jednotke. Priečinky iFolder musia byť umiestnené na fyzickej jednotke. Zvoľte iné umiestnenie a skúste znova.</value>
+    <value>Vybrané umiestnenie je v sieti alebo na nefyzickej jednotke. Priečinky iFolder sa musia nachádzať na fyzickej jednotke. Vyberte iné umiestnenie a skúste to znova.</value>
   </data>
   <data name="&gt;&gt;ok.Parent">
     <value>$this</value>
@@ -164,13 +167,13 @@
     <value>False</value>
   </data>
   <data name="systemDriveError">
-    <value>Zvolené umiestnenie je systémová jednotka. Systémová jednotka nemôže obsahovať žiadne priečinky iFolder. Zvoľte iné umiestnenie a skúste znova.</value>
+    <value>Vybrané umiestnenie je systémovou jednotkou. Systémové jednotky nemôžu obsahovať priečinok iFolder. Vyberte iné umiestnenie a skúste to znova.</value>
   </data>
   <data name="servers.MaxLength" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>0</value>
   </data>
   <data name="encryption.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>80, 77</value>
+    <value>98, 77</value>
   </data>
   <data name="&gt;&gt;ssl.ZOrder">
     <value>0</value>
@@ -206,13 +209,13 @@
     <value>False</value>
   </data>
   <data name="errorTitle">
-    <value>Chyba priečinku iFolder</value>
+    <value>Chyba aplikácie iFolder</value>
   </data>
   <data name="ifolderPath.PasswordChar" type="System.Char, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
   <data name="pathInStoreError">
-    <value>Stanovené umiestnenie sa nachádza priečinku údajov iFolder. Zvoľte iné umiestnenie skúste znova.</value>
+    <value>Vybrané umiestnenie sa nachádza v priečinku údajov pre priečinok iFolder. Vyberte iné umiestnenie a skúste to znova.</value>
   </data>
   <data name="&gt;&gt;encryption.ZOrder">
     <value>1</value>
@@ -236,7 +239,7 @@
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="label3.Text">
-    <value>&amp;Bezpečnosť</value>
+    <value>Zab&amp;ezpečenie</value>
   </data>
   <data name="ifolderPath.Text">
     <value />
@@ -266,13 +269,16 @@
     <value />
   </data>
   <data name="browse.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>392, 44</value>
+    <value>384, 44</value>
   </data>
   <data name="ssl.Text">
-    <value>Použiť protokol SSL</value>
+    <value>Zdieľaný</value>
   </data>
   <data name="&gt;&gt;label3.ZOrder">
     <value>2</value>
+  </data>
+  <data name="ValidatePPError">
+    <value>Neplatný prístupový výraz</value>
   </data>
   <data name="browse.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -362,7 +368,7 @@
     <value>0</value>
   </data>
   <data name="containsiFolderError">
-    <value>Zvolené umiestnenie už obsahuje priečinok iFolder. Priečinky iFolder nemôžu existovať vnútri iných priečinkov iFolder. Zvoľte iné umiestnenie a skúste znova.</value>
+    <value>Vybrané umiestnenie už obsahuje priečinok iFolder. Priečinky iFolder nemôžu byť vnútri iných priečinkov iFolder. Vyberte iné umiestnenie a skúste to znova.</value>
   </data>
   <data name="&gt;&gt;browse.ZOrder">
     <value>3</value>
@@ -419,7 +425,7 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="createPromptTitle">
-    <value>Vytvoriť umiestnenie</value>
+    <value>Vytvorenie umiestnenia</value>
   </data>
   <data name="&gt;&gt;ok.ZOrder">
     <value>9</value>
@@ -458,7 +464,7 @@
     <value>True</value>
   </data>
   <data name="systemDirError">
-    <value>Zvolené umiestnenie obsahuje systémový priečinok. Systémový priečinok nemôže obsahovať priečinok iFolder. Zvoľte iné umiestnenie skúste znova.</value>
+    <value>Vybrané umiestnenie obsahuje systémový priečinok. Systémové priečinky nemôžu obsahovať priečinok iFolder. Vyberte iné umiestnenie a skúste to znova.</value>
   </data>
   <data name="label1.TabIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>0</value>
@@ -496,6 +502,9 @@
   <data name="encryption.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
+  <data name="ErrorSetPP">
+    <value>Prístupový výraz sa nedá nastaviť.</value>
+  </data>
   <data name="label2.AutoSize" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
@@ -518,13 +527,16 @@
     <value />
   </data>
   <data name="label3.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>67, 16</value>
+    <value>85, 16</value>
   </data>
   <data name="ifolderPath.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
   <data name="label1.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
+  </data>
+  <data name="EnterPPTitle">
+    <value>Zadanie prístupového výrazu</value>
   </data>
   <data name="label1.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -551,10 +563,10 @@
     <value>0</value>
   </data>
   <data name="accessErrorTitle">
-    <value>Chyba prístupu aplikácie iFolder</value>
+    <value>Chyba prístupu na konto iFolder</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>76, 16</value>
+    <value>80, 16</value>
   </data>
   <data name="servers.BackgroundImage" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -576,6 +588,9 @@
   </data>
   <data name="encryption.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Flat</value>
+  </data>
+  <data name="RecoveryAgent">
+    <value>Agent pre obnovenie údajov</value>
   </data>
   <data name="ifolderPath.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -617,10 +632,10 @@
     <value>7</value>
   </data>
   <data name="rootDriveError">
-    <value>Priečinky iFolders nemôžu existovať na úrovni jednotky. Zvolené umiestnenie je koreňom jednotky. Zvoľte iné umiestnenie a skúste znova.</value>
+    <value>Priečinky iFolder nemôžu existovať na úrovni jednotky. Vybrané umiestnenie je v koreňovom adresári jednotky. Vyberte umiestnenie, ktoré nie je v koreňovom adresári jednotky, a skúste to znova.</value>
   </data>
   <data name="progFilesDirError">
-    <value>Zvolené umiestnenie zahrňuje priečinok Program Files. Priečinok Program Files nemôže obsahovať priečinok iFolder. Zvoľte iné umiestnenie a skúste znova.</value>
+    <value>Vybrané umiestnenie obsahuje priečinok Program Files. Priečinok Program Files nemôže obsahovať priečinok iFolder. Vyberte iné umiestnenie a skúste to znova.</value>
   </data>
   <data name="encryption.ImageIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>0</value>
@@ -631,8 +646,14 @@
   <data name="ifolderPath.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
   </data>
+  <data name="VerifyPPTitle">
+    <value>Overenie prístupového výrazu</value>
+  </data>
   <data name="&gt;&gt;servers.Name">
     <value>servers</value>
+  </data>
+  <data name="LoginToDomain">
+    <value>Ak chcete vytvoriť šifrovaný priečinok iFolder, musíte sa prihlásiť do domény.</value>
   </data>
   <data name="ok.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>311, 110</value>
@@ -644,7 +665,7 @@
     <value>Private</value>
   </data>
   <data name="pathIniFolderError">
-    <value>Zvolené umiestnenie sa nachádza vo vnútri iného priečinku iFolder. Priečinky iFolder nemôžu existovať v iných priečinok iFolder. Zvoľte iné umiestnenie a skúste znova.</value>
+    <value>Vybrané umiestnenie je vnútri iného priečinka iFolder. Priečinky iFolder nemôžu byť vnútri iných priečinkov iFolder. Vyberte iné umiestnenie a skúste to znova.</value>
   </data>
   <data name="ssl.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>No</value>
@@ -671,10 +692,10 @@
     <value>browse</value>
   </data>
   <data name="encryption.Text">
-    <value>Šifrované</value>
+    <value>Šifrovaný</value>
   </data>
   <data name="servers.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>103, 13</value>
+    <value>98, 13</value>
   </data>
   <data name="label3.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>No</value>
@@ -730,8 +751,11 @@
   <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
   </data>
+  <data name="PPSDontMatch">
+    <value>Prístupový výraz sa nezhoduje s opätovne zadaným prístupovým výrazom</value>
+  </data>
   <data name="servers.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>283, 21</value>
+    <value>277, 21</value>
   </data>
   <data name="label3.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -753,6 +777,9 @@
   </data>
   <data name="servers.TabIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>1</value>
+  </data>
+  <data name="RetypePP">
+    <value>Znova prístupovový výraz</value>
   </data>
   <data name="$this.AutoScrollMinSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
@@ -785,7 +812,7 @@
     <value>False</value>
   </data>
   <data name="accessDenied">
-    <value>K zvolenému umiestneniu nemáte dostatočné prístupové práva. Priečinky iFolder môžu byť vytvorené iba v priečinku, kde máte právo čítať a zapisovať. Zvoľte iné umiestnenie a skúste znova.</value>
+    <value>Nemáte dostatočné oprávnenia na prístup do vybraného umiestnenia. Priečinky iFolder je možné vytvoriť iba v priečinkoch, ku ktorým máte prístup na čítanie a zápis súborov. Vyberte iné umiestnenie a skúste to znova.</value>
   </data>
   <data name="servers.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -824,10 +851,10 @@
     <value />
   </data>
   <data name="browse.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>75, 23</value>
+    <value>83, 23</value>
   </data>
   <data name="invalidCharsError">
-    <value>Zvolené umiestnenie obsahuje neplatné znaky.  Znaky \:*?"&lt;&gt;| v priečinku iFolder nemôžu byť použité. Zvoľte iné umiestnenie skúste znova.</value>
+    <value>Vybrané umiestnenie obsahuje neplatné znaky. V priečinku iFolder nie je možné použiť znaky \:*?"&lt;&gt;|. Vyberte iné umiestnenie a skúste to znova.</value>
   </data>
   <data name="label2.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -841,6 +868,9 @@
   <data name="label1.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
+  <data name="PPForEncryption">
+    <value>Na šifrovanie priečinka iFolder je potrebné zadať prístupový výraz</value>
+  </data>
   <data name="label2.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
   </data>
@@ -852,6 +882,9 @@
   </data>
   <data name="browse.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>MiddleCenter</value>
+  </data>
+  <data name="TryAgain">
+    <value>Skúste to znova</value>
   </data>
   <data name="browse.BackgroundImage" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -884,7 +917,7 @@
     <value>Private</value>
   </data>
   <data name="invalidFolder">
-    <value>Stanovené bolo neplatné umiestnenie.</value>
+    <value>Bolo zadané neplatné umiestnenie.</value>
   </data>
   <data name="servers.MaxDropDownItems" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>8</value>
@@ -902,13 +935,16 @@
     <value />
   </data>
   <data name="createAccountTitle">
-    <value>Založiť konto aplikácie iFolder</value>
+    <value>Vytvorenie konta iFolder</value>
   </data>
   <data name="browse.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
   <data name="encryption.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Normal</value>
+  </data>
+  <data name="SetPPSuccess">
+    <value>Prístupový výraz bol úspešne nastavený</value>
   </data>
   <data name="label3.ImageIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>-1</value>
@@ -944,7 +980,7 @@
     <value />
   </data>
   <data name="pathContainsStoreError">
-    <value>Zvolené umiestnenie obsahuje súbory údajov aplikácie iFolder. Zvoľte iné umiestnenie skúste znova.</value>
+    <value>Vybrané umiestnenie obsahuje priečinok údajov pre priečinok iFolder. Vyberte iné umiestnenie a skúste to znova.</value>
   </data>
   <data name="ifolderPath.ScrollBars" type="System.Windows.Forms.ScrollBars, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -956,7 +992,7 @@
     <value>Private</value>
   </data>
   <data name="encryption.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>96, 20</value>
+    <value>99, 20</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>482, 152</value>
@@ -968,7 +1004,7 @@
     <value>13</value>
   </data>
   <data name="$this.Text">
-    <value>Nový priečinok iiFolder</value>
+    <value>Nový priečinok iFolder</value>
   </data>
   <data name="ok.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>MiddleCenter</value>
@@ -977,7 +1013,7 @@
     <value>-1</value>
   </data>
   <data name="createAccount">
-    <value>Ak chcete začať používať aplikáciu iFolder, musíte najskôr vytvoriť konto aplikácie iFolder. Chcete konto aplikácie iFolder vytvoriť teraz?</value>
+    <value>Ak chcete začať používať priečinok iFolder, je nutné najprv nastaviť konto iFolder. Chcete vytvoriť konto iFolder teraz?</value>
   </data>
   <data name="ifolderPath.AutoSize" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1006,14 +1042,17 @@
   <data name="&gt;&gt;label1.Name">
     <value>label1</value>
   </data>
+  <data name="EnterPPText">
+    <value>Zadajte prístupový výraz:</value>
+  </data>
   <data name="label2.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
   </data>
   <data name="ifolderPath.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>103, 45</value>
+    <value>98, 45</value>
   </data>
   <data name="ifolderPath.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>283, 20</value>
+    <value>277, 20</value>
   </data>
   <data name="ifolderPath.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -1034,7 +1073,7 @@
     <value>MiddleCenter</value>
   </data>
   <data name="winDirError">
-    <value>Zvolené umiestnenie obsahuje priečinok Windows. Priečinok Windows nemôže obsahovať priečinok iFolder. Zvoľte iné umiestnenie a skúste znova.</value>
+    <value>Vybrané umiestnenie obsahuje priečinok Windows. Priečinok Windows nemôže obsahovať priečinok iFolder. Vyberte iné umiestnenie a skúste to znova.</value>
   </data>
   <data name="ok.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Left</value>

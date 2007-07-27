@@ -121,6 +121,9 @@
   <data name="ifolderPath.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
+  <data name="RememberPPText">
+    <value>Memorizza stringa di cifratura</value>
+  </data>
   <data name="ssl.BackgroundImage" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
@@ -206,13 +209,13 @@
     <value>False</value>
   </data>
   <data name="errorTitle">
-    <value>Errore di iFolder</value>
+    <value>Errore iFolder</value>
   </data>
   <data name="ifolderPath.PasswordChar" type="System.Char, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
   <data name="pathInStoreError">
-    <value>L'ubicazione selezionata si trova all'interno di una cartella di dati iFolder. Selezionare un'altra ubicazione e riprovare.</value>
+    <value>L'ubicazione selezionata si trova all'interno della cartella di dati di iFolder. Selezionare un'altra ubicazione e riprovare.</value>
   </data>
   <data name="&gt;&gt;encryption.ZOrder">
     <value>1</value>
@@ -260,7 +263,7 @@
     <value>MiddleCenter</value>
   </data>
   <data name="label1.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>11, 15</value>
+    <value>13, 15</value>
   </data>
   <data name="ok.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -269,10 +272,13 @@
     <value>392, 44</value>
   </data>
   <data name="ssl.Text">
-    <value>Usa SSL</value>
+    <value>Condivisione</value>
   </data>
   <data name="&gt;&gt;label3.ZOrder">
     <value>2</value>
+  </data>
+  <data name="ValidatePPError">
+    <value>Stringa di cifratura non valida</value>
   </data>
   <data name="browse.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -326,7 +332,7 @@
     <value>75, 23</value>
   </data>
   <data name="label1.Text">
-    <value>Ser&amp;ver:</value>
+    <value>&amp;Server:</value>
   </data>
   <data name="encryption.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>No</value>
@@ -496,6 +502,9 @@
   <data name="encryption.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
+  <data name="ErrorSetPP">
+    <value>Impossibile impostare la stringa di cifratura.</value>
+  </data>
   <data name="label2.AutoSize" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
@@ -526,6 +535,9 @@
   <data name="label1.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
+  <data name="EnterPPTitle">
+    <value>Immettere la stringa di cifratura</value>
+  </data>
   <data name="label1.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
@@ -554,7 +566,7 @@
     <value>Errore di accesso alla cartella iFolder</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>72, 24</value>
+    <value>67, 16</value>
   </data>
   <data name="servers.BackgroundImage" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -576,6 +588,9 @@
   </data>
   <data name="encryption.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Flat</value>
+  </data>
+  <data name="RecoveryAgent">
+    <value>Agente di recupero</value>
   </data>
   <data name="ifolderPath.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -617,10 +632,10 @@
     <value>7</value>
   </data>
   <data name="rootDriveError">
-    <value>e cartelle iFolder non possono trovarsi a livello di unità. L'ubicazione selezionata corrisponde alla radice dell'unità. Selezionare un'ubicazione che non corrisponda alla radice dell'unità e riprovare.</value>
+    <value>Le cartelle iFolder non possono trovarsi a livello di unità. L'ubicazione selezionata corrisponde alla radice dell'unità. Selezionare un'ubicazione che non corrisponda alla radice dell'unità e riprovare.</value>
   </data>
   <data name="progFilesDirError">
-    <value>L'ubicazione selezionata include la cartella Programmi. Tale cartella non può contenere una cartella iFolder. Selezionare un'altra ubicazione e riprovare.</value>
+    <value>L'ubicazione selezionata include la cartella Programmi. La cartella Programmi non può essere contenuta in una cartella iFolder. Selezionare un'altra ubicazione e riprovare.</value>
   </data>
   <data name="encryption.ImageIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>0</value>
@@ -631,8 +646,14 @@
   <data name="ifolderPath.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
   </data>
+  <data name="VerifyPPTitle">
+    <value>Verifica stringa di cifratura</value>
+  </data>
   <data name="&gt;&gt;servers.Name">
     <value>servers</value>
+  </data>
+  <data name="LoginToDomain">
+    <value>È necessario eseguire il login al dominio per creare una cartella iFolder cifrata.</value>
   </data>
   <data name="ok.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>311, 110</value>
@@ -644,7 +665,7 @@
     <value>Private</value>
   </data>
   <data name="pathIniFolderError">
-    <value>L'ubicazione selezionata si trova all'interno di un'altra cartella iFolder. Le cartelle iFolder non possono contenere altre cartelle iFolder. Selezionare un'altra ubicazione e riprovare.</value>
+    <value>L'ubicazione selezionata si trova all'interno di un'altra cartella iFolder. Le cartelle iFolder non possono trovarsi in altre cartelle iFolder. Selezionare un'altra ubicazione e riprovare.</value>
   </data>
   <data name="ssl.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>No</value>
@@ -671,7 +692,7 @@
     <value>browse</value>
   </data>
   <data name="encryption.Text">
-    <value>Cifratura</value>
+    <value>Cifratura eseguita</value>
   </data>
   <data name="servers.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>80, 13</value>
@@ -710,13 +731,13 @@
     <value>True</value>
   </data>
   <data name="label2.Text">
-    <value>&amp;Ubicazione:</value>
+    <value>&amp;Ubicazione</value>
   </data>
   <data name="browse.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
   <data name="label2.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>8, 43</value>
+    <value>13, 47</value>
   </data>
   <data name="ok.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -729,6 +750,9 @@
   </data>
   <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
+  </data>
+  <data name="PPSDontMatch">
+    <value>La stringa di cifratura originale e quella ridigitata non corrispondono</value>
   </data>
   <data name="servers.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>306, 21</value>
@@ -753,6 +777,9 @@
   </data>
   <data name="servers.TabIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>1</value>
+  </data>
+  <data name="RetypePP">
+    <value>Ridigitare la stringa di cifratura</value>
   </data>
   <data name="$this.AutoScrollMinSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
@@ -785,7 +812,7 @@
     <value>False</value>
   </data>
   <data name="accessDenied">
-    <value>Non si dispone di diritti di accesso sufficienti per l'ubicazione selezionata. È possibile creare cartelle iFolder solo in cartelle per le quali si dispone dell'accesso in lettura e scrittura ai file. Selezionare un'altra ubicazione e riprovare.</value>
+    <value>Diritti insufficienti per accedere all'ubicazione selezionata. È possibile creare cartelle iFolder solo nelle cartelle per le quali si dispone di accesso in lettura e scrittura ai file. Selezionare un'altra ubicazione e riprovare.</value>
   </data>
   <data name="servers.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -841,6 +868,9 @@
   <data name="label1.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
+  <data name="PPForEncryption">
+    <value>È necessario indicare la stringa di cifratura per la cifratura della cartella iFolder</value>
+  </data>
   <data name="label2.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
   </data>
@@ -852,6 +882,9 @@
   </data>
   <data name="browse.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>MiddleCenter</value>
+  </data>
+  <data name="TryAgain">
+    <value>Riprova</value>
   </data>
   <data name="browse.BackgroundImage" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -910,6 +943,9 @@
   <data name="encryption.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Normal</value>
   </data>
+  <data name="SetPPSuccess">
+    <value>Impostazione della stringa di cifratura completata</value>
+  </data>
   <data name="label3.ImageIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>-1</value>
   </data>
@@ -956,7 +992,7 @@
     <value>Private</value>
   </data>
   <data name="encryption.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>96, 20</value>
+    <value>130, 20</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>482, 152</value>
@@ -1006,6 +1042,9 @@
   <data name="&gt;&gt;label1.Name">
     <value>label1</value>
   </data>
+  <data name="EnterPPText">
+    <value>Immettere la stringa di cifratura:</value>
+  </data>
   <data name="label2.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
   </data>
@@ -1034,7 +1073,7 @@
     <value>MiddleCenter</value>
   </data>
   <data name="winDirError">
-    <value>L'ubicazione selezionata include la cartella di Windows. Tale cartella non può contenere una cartella iFolder. Selezionare un'altra ubicazione e riprovare.</value>
+    <value>L'ubicazione selezionata include la cartella Windows. La cartella Windows non può contenere una cartella iFolder. Selezionare un'altra ubicazione e riprovare.</value>
   </data>
   <data name="ok.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Left</value>
