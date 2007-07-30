@@ -940,10 +940,7 @@ namespace Novell.iFolder
 		/// </summary>
 		private static string GetDefaultUserPath()
 		{
-			string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-			if (path == null)
-				path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-					
+			string 	path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 			return path;
 		}
 
