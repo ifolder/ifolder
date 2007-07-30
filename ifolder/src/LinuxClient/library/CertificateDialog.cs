@@ -46,7 +46,7 @@ namespace Novell.iFolder
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png"));
 			this.HasSeparator = false;
 //			this.BorderWidth = 10;
-			this.SetDefaultSize (600, 350);
+			this.SetDefaultSize (450, 300);
 	//		this.Resizable = false;
 			this.Modal = true;
 			this.DestroyWithParent = true;
