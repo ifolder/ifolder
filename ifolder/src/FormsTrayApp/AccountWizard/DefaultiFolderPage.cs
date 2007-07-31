@@ -102,7 +102,7 @@ namespace Novell.Wizard
 			//	row1
 			// CreateDefault
 			//
-			this.CreateDefault.Location = new Point( 40, 96);
+			this.CreateDefault.Location = new Point( 40, 106);
 			this.CreateDefault.Text = this.resManager.GetString("CreateDefaultiFolder");//"Create Default iFolder";
 			this.CreateDefault.Size = new Size(416, 24);
 			this.CreateDefault.TabIndex = 1;
@@ -111,14 +111,14 @@ namespace Novell.Wizard
 			// row2
 			// locationentry, location label, browse button
 			//
-			this.label1.Location = new System.Drawing.Point(56, 120);
+			this.label1.Location = new System.Drawing.Point(56, 152);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(50, 20);
 			this.label1.Text = this.resManager.GetString("LocationText") + " "; //"Location:"+ " ";
 			// 
 			// locationentry
 			//
-			this.LocationEntry.Location = new Point(112, 120);
+			this.LocationEntry.Location = new Point(112, 150);
 			this.LocationEntry.Multiline = false;
 			this.LocationEntry.Size = new Size(280, 20);
 			this.LocationEntry.TabIndex = 2;
@@ -127,7 +127,7 @@ namespace Novell.Wizard
 			// browsebutton
 			//
 			this.BrowseButton.Text = this.resManager.GetString("BrowseText"); //"Browse";
-			this.BrowseButton.Location = new Point( 406, 120);
+			this.BrowseButton.Location = new Point( 406, 150);
 			this.BrowseButton.TabIndex = 3;
 			this.BrowseButton.Size = new Size( 75, 20);
 			this.BrowseButton.Click += new EventHandler(BrowseButton_Click);
@@ -136,18 +136,18 @@ namespace Novell.Wizard
 			// encryptioncheckbutton, ssl checkbutton
 			//
 			this.label2.Text = this.resManager.GetString("Security")+ ": "; //"Security:";
-			this.label2.Location = new Point( 56, 144);
+			this.label2.Location = new Point( 56, 194);
 			this.label2.Size = new Size( 50, 20);
 		
 			this.encryptionCheckButton.Text = this.resManager.GetString("EncryptedText");//"Encrypted";
-			this.encryptionCheckButton.Location = new Point(112, 144);
-			this.encryptionCheckButton.Size = new Size(180, 20);
+			this.encryptionCheckButton.Location = new Point(150, 194);
+			this.encryptionCheckButton.Size = new Size(125, 20);
 			this.encryptionCheckButton.TabIndex = 4;
 
 			this.sslCheckButton.Text = this.resManager.GetString("SharableText");//"Shared";
-			this.sslCheckButton.Size = new Size(180, 20);
+			this.sslCheckButton.Size = new Size(125, 20);
 			this.sslCheckButton.TabIndex = 5;
-			this.sslCheckButton.Location = new Point(298, 144);
+			this.sslCheckButton.Location = new Point(280, 194);
 
 			this.Controls.Add(this.CreateDefault);
 			this.Controls.Add(this.LocationEntry);

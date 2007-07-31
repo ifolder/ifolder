@@ -138,7 +138,6 @@ namespace Novell.Wizard
 			// serverPage
 			// 
 			// TODO: Localize
-			this.serverPage.HeaderSubTitle = Resource.GetString("ServerPageHeaderST");//"Enter the name of the iFolder server.";
 			this.serverPage.HeaderTitle = Resource.GetString("ServerPageHeaderTitle");//"Choose an iFolder Server";
 			this.serverPage.Location = new System.Drawing.Point(0, 0);
 			this.serverPage.Name = Resource.GetString("ServerPageName");//"serverPage";
@@ -148,7 +147,6 @@ namespace Novell.Wizard
 			// identityPage
 			// 
 			// TODO: Localize
-			this.identityPage.HeaderSubTitle = Resource.GetString("IdentityPageHeaderST");//"Enter your iFolder username and password.";
 			this.identityPage.HeaderTitle = Resource.GetString("IdentityPageHeaderTitle");//"iFolder Account Information";
 			this.identityPage.Location = new System.Drawing.Point(0, 0);
 			this.identityPage.Name = Resource.GetString("IdentityPageName");//"identityPage";
@@ -158,7 +156,6 @@ namespace Novell.Wizard
 			// verifyPage
 			// 
 			// TODO: Localize
-			this.verifyPage.HeaderSubTitle = Resource.GetString("VerifyPageHeaderST");//"Verify the iFolder account information.";
 			this.verifyPage.HeaderTitle = Resource.GetString("VerifyPageHeaderTitle");//"Verify iFolder Account Information";
 			this.verifyPage.Location = new System.Drawing.Point(0, 0);
 			this.verifyPage.Name = Resource.GetString("VerifyPageName");//"verifyPage";
@@ -170,8 +167,7 @@ namespace Novell.Wizard
 			this.defaultiFolderPage.Name = "defaultiFolderPage";
 			this.defaultiFolderPage.Location = new System.Drawing.Point(0, 0);
 			this.defaultiFolderPage.Size = new System.Drawing.Size(496, 304);
-			this.defaultiFolderPage.HeaderTitle = Resource.GetString("defaultiFolderTitle");//"Default iFolder";
-			this.defaultiFolderPage.HeaderSubTitle = Resource.GetString("defaultiFolderMesg");//"Create/Download Default iFolder";
+			this.defaultiFolderPage.HeaderTitle = Resource.GetString("CreateDefaultiFolder");//"Default iFolder";
 			//
 			// completionPage
 			//
@@ -210,17 +206,16 @@ namespace Novell.Wizard
 			{
 				// Load the watermark.
 				// TODO:
-				Image image = Image.FromFile(Path.Combine(Application.StartupPath, "invitewiz.png"));
-			//	Image image = Image.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder48.png"));
+				Image image = Image.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder_account_wiz.png"));
 				this.welcomePage.Watermark = image;
 				this.completionPage.Watermark = image;
 
 				// TODO:
-				image = Image.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder_invite_32.png"));
-			//	image = Image.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder-add-account48.png"));
+				image = Image.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder-add-account48.png"));
 				this.serverPage.Thumbnail = image;
 				this.verifyPage.Thumbnail = image;
 				this.identityPage.Thumbnail = image;
+				this.defaultiFolderPage.Thumbnail = image;
 			}
 			catch {} // Ignore. Unable to load watermark. No functionality issues
 

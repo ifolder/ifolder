@@ -40,7 +40,6 @@ namespace Novell.Wizard
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.PictureBox pictureBox1;
 		private System.Windows.Forms.Label headerTitle;
-		private System.Windows.Forms.Label headerSubTitle;
 		/// <summary> 
 		/// Required designer variable.
 		/// </summary>
@@ -80,7 +79,6 @@ namespace Novell.Wizard
 		{
 			this.headerPanel = new System.Windows.Forms.Panel();
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
-			this.headerSubTitle = new System.Windows.Forms.Label();
 			this.headerTitle = new System.Windows.Forms.Label();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.headerPanel.SuspendLayout();
@@ -90,7 +88,6 @@ namespace Novell.Wizard
 			// 
 			this.headerPanel.BackColor = System.Drawing.Color.White;
 			this.headerPanel.Controls.Add(this.pictureBox1);
-			this.headerPanel.Controls.Add(this.headerSubTitle);
 			this.headerPanel.Controls.Add(this.headerTitle);
 			this.headerPanel.Location = new System.Drawing.Point(0, 0);
 			this.headerPanel.Name = "headerPanel";
@@ -105,20 +102,12 @@ namespace Novell.Wizard
 			this.pictureBox1.TabIndex = 2;
 			this.pictureBox1.TabStop = false;
 			// 
-			// headerSubTitle
-			// 
-			this.headerSubTitle.Location = new System.Drawing.Point(40, 32);
-			this.headerSubTitle.Name = "headerSubTitle";
-			this.headerSubTitle.Size = new System.Drawing.Size(408, 16);
-			this.headerSubTitle.TabIndex = 1;
-			this.headerSubTitle.Text = "";
-			// 
 			// headerTitle
 			// 
-			this.headerTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
+			this.headerTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
 			this.headerTitle.Location = new System.Drawing.Point(24, 16);
 			this.headerTitle.Name = "headerTitle";
-			this.headerTitle.Size = new System.Drawing.Size(424, 16);
+			this.headerTitle.Size = new System.Drawing.Size(424, 25);
 			this.headerTitle.TabIndex = 0;
 			this.headerTitle.Text = "";
 			// 
@@ -151,15 +140,6 @@ namespace Novell.Wizard
 		{
 			get	{ return headerTitle.Text; }
 			set	{ headerTitle.Text = value;	}
-		}
-
-		/// <summary>
-		/// Gets/sets the text of the header subtitle.
-		/// </summary>
-		public string HeaderSubTitle
-		{
-			get { return headerSubTitle.Text; }
-			set	{ headerSubTitle.Text = value; }
 		}
 
 		/// <summary>

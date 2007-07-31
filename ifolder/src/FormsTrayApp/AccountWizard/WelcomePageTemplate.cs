@@ -42,6 +42,10 @@ namespace Novell.Wizard
 		private System.Windows.Forms.Label descriptionText;
 		private System.Windows.Forms.PictureBox waterMark;
 		private System.Windows.Forms.Label actionText;
+		private System.Windows.Forms.Label imageTitle1;
+		private System.Windows.Forms.Label imageTitle2;
+		private System.Windows.Forms.Label imageTitle3;
+
 		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(Novell.FormsTrayApp.FormsTrayApp));
 		/// <summary> 
 		/// Required designer variable.
@@ -85,6 +89,9 @@ namespace Novell.Wizard
 			this.descriptionText = new System.Windows.Forms.Label();
 			this.welcomeTitle = new System.Windows.Forms.Label();
 			this.waterMark = new System.Windows.Forms.PictureBox();
+			this.imageTitle1 = new System.Windows.Forms.Label();
+			this.imageTitle2 = new System.Windows.Forms.Label();
+			this.imageTitle3 = new System.Windows.Forms.Label();
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -126,16 +133,49 @@ namespace Novell.Wizard
 			// 
 			// waterMark
 			// 
-			this.waterMark.Location = new System.Drawing.Point(0, 0);
+			this.waterMark.Location = new System.Drawing.Point(0, 243);
 			this.waterMark.Name = "waterMark";
-			this.waterMark.Size = new System.Drawing.Size(168, 304);
+			this.waterMark.Size = new System.Drawing.Size(168, 60);
 			this.waterMark.TabIndex = 0;
 			this.waterMark.TabStop = false;
+			//
+			// imageTitle1;
+			//
+			this.imageTitle1.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
+			this.imageTitle1.Location = new System.Drawing.Point(35, 95);
+			this.imageTitle1.Name = "imageTitle1";
+			this.imageTitle1.Size = new System.Drawing.Size(125, 20);
+			this.imageTitle1.TabIndex = 0;
+			this.imageTitle1.TabStop = false;
+			this.imageTitle1.Text = Resource.GetString("YourFiles"); //Your Files
+			//
+			// imageTitle2;
+			//
+			this.imageTitle2.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
+			this.imageTitle2.Location = new System.Drawing.Point(65, 130);
+			this.imageTitle2.Name = "imageTitle2";
+			this.imageTitle2.Size = new System.Drawing.Size(150, 20);
+			this.imageTitle2.TabIndex = 0;
+			this.imageTitle2.TabStop = false;
+			this.imageTitle2.Text = Resource.GetString("AnyTime"); //Any Time...
+			//
+			// imageTitle3;
+			//
+			this.imageTitle3.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
+			this.imageTitle3.Location = new System.Drawing.Point(35, 160);
+			this.imageTitle3.Name = "imageTitle3";
+			this.imageTitle3.Size = new System.Drawing.Size(150, 20);
+			this.imageTitle3.TabIndex = 0;
+			this.imageTitle3.TabStop = false;
+			this.imageTitle3.Text = Resource.GetString("AnyWhere"); //AnyWhere...
 			// 
 			// WelcomePageTemplate
 			// 
 			this.Controls.Add(this.panel1);
 			this.Controls.Add(this.waterMark);
+			this.Controls.Add(this.imageTitle1);
+			this.Controls.Add(this.imageTitle2);
+			this.Controls.Add(this.imageTitle3);
 			this.Name = "WelcomePageTemplate";
 			this.panel1.ResumeLayout(false);
 			this.ResumeLayout(false);

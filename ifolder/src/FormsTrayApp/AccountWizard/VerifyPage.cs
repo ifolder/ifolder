@@ -95,7 +95,7 @@ namespace Novell.Wizard
 			// 
 			// label1
 			// 
-			this.label1.Location = new System.Drawing.Point(50, 128);
+			this.label1.Location = new System.Drawing.Point(50, 168);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(94, 16);
 			this.label1.TabIndex = 3;
@@ -103,7 +103,7 @@ namespace Novell.Wizard
 			// 
 			// label2
 			// 
-			this.label2.Location = new System.Drawing.Point(40, 80);
+			this.label2.Location = new System.Drawing.Point(40, 110);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(440, 16);
 			this.label2.TabIndex = 0;
@@ -111,15 +111,15 @@ namespace Novell.Wizard
 			// 
 			// label3
 			// 
-			this.label3.Location = new System.Drawing.Point(50, 104);
+			this.label3.Location = new System.Drawing.Point(50, 144);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(88, 16);
 			this.label3.TabIndex = 1;
-			this.label3.Text = Resource.GetString("ServerNameText");//"Server address:";
+			this.label3.Text = Resource.GetString("ServerNameText");//"Domain Name:";
 			// 
 			// label4
 			// 
-			this.label4.Location = new System.Drawing.Point(50, 152);
+			this.label4.Location = new System.Drawing.Point(50, 192);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(148, 16);
 			this.label4.TabIndex = 5;
@@ -127,7 +127,7 @@ namespace Novell.Wizard
 			// 
 			// defaultDescription
 			// 
-			this.defaultDescription.Location = new System.Drawing.Point(50, 176);
+			this.defaultDescription.Location = new System.Drawing.Point(50, 216);
 			this.defaultDescription.Name = "defaultDescription";
 			this.defaultDescription.Size = new System.Drawing.Size(150, 16);
 			this.defaultDescription.TabIndex = 7;
@@ -135,28 +135,28 @@ namespace Novell.Wizard
 			// 
 			// serverAddress
 			// 
-			this.serverAddress.Location = new System.Drawing.Point(238, 104);
+			this.serverAddress.Location = new System.Drawing.Point(238, 144);
 			this.serverAddress.Name = "serverAddress";
 			this.serverAddress.Size = new System.Drawing.Size(304, 16);
 			this.serverAddress.TabIndex = 2;
 			// 
 			// username
 			// 
-			this.username.Location = new System.Drawing.Point(238, 128);
+			this.username.Location = new System.Drawing.Point(238, 168);
 			this.username.Name = "username";
 			this.username.Size = new System.Drawing.Size(304, 16);
 			this.username.TabIndex = 4;
 			// 
 			// rememberPassword
 			// 
-			this.rememberPassword.Location = new System.Drawing.Point(238, 152);
+			this.rememberPassword.Location = new System.Drawing.Point(238, 192);
 			this.rememberPassword.Name = "rememberPassword";
 			this.rememberPassword.Size = new System.Drawing.Size(168, 16);
 			this.rememberPassword.TabIndex = 6;
 			// 
 			// defaultAccount
 			// 
-			this.defaultAccount.Location = new System.Drawing.Point(238, 176);
+			this.defaultAccount.Location = new System.Drawing.Point(238, 216);
 			this.defaultAccount.Name = "defaultAccount";
 			this.defaultAccount.Size = new System.Drawing.Size(168, 16);
 			this.defaultAccount.TabIndex = 8;
@@ -181,7 +181,6 @@ namespace Novell.Wizard
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.label1);
-			this.HeaderSubTitle = "";
 			this.HeaderTitle = "";
 			this.Name = "VerifyPage";
 			this.Controls.SetChildIndex(this.label1, 0);

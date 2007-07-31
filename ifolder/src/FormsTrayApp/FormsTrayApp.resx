@@ -764,7 +764,7 @@
 		<value>welcomePage</value>
 	</data>
 	<data name="WelcomePageTitle">
-		<value>Welcome to the iFolder Account Wizard</value>
+		<value>Welcome to the iFolder Account Creation Wizard</value>
 	</data>
 	<data name="ServerPageHeaderST">
 		<value>Enter the name of the iFolder server.</value>
@@ -785,7 +785,7 @@
 		<value>identityPage</value>
 	</data>
 	<data name="VerifyPageHeaderST">
-		<value>Verify the iFolder account information.</value>
+		<value>Verify and Connect .</value>
 	</data>
 	<data name="VerifyPageHeaderTitle">
 		<value>Verify iFolder Account Information</value>
@@ -812,7 +812,7 @@
 		<value>&amp;Next</value>
 	</data>
 	<data name="AccWizardText">
-		<value>iFolder Account Wizard</value>
+		<value>iFolder Account Creation Wizard</value>
 	</data>
 	<data name="ConnectText">
 		<value>Connect</value>
@@ -839,13 +839,13 @@
 		<value>Password</value>
 	</data>
 	<data name="RememberPasswd">
-		<value>Remember my password</value>
+		<value>Remember password</value>
 	</data>
 	<data name="ServerNameText">
 		<value>Server address</value>
 	</data>
 	<data name="ServerPagelbl2txt">
-		<value>Enter the name of your iFolder server (for example, ifolder.example.net).</value>
+		<value>Enter the name of your iFolder domain (for example, ifolder.example.net).</value>
 	</data>
 	<data name="ServerPageDesc">
 		<value>Setting this iFolder server as your default server will allow iFolder to automatically select this server when adding new iFolders.</value>
@@ -857,7 +857,7 @@
 		<value>Please verify that the information you have entered is correct.</value>
 	</data>
 	<data name="ClickConnect">
-		<value>Click Connect to validate your connection with the server.</value>
+		<value>Click Connect to validate your connection with the domain.</value>
 	</data>
 	<data name="MigrationWelcomepgAT">
 		<value>This wizard will guide you through migrating your iFolder account to 3.x.</value>
@@ -998,6 +998,15 @@
   </data>
   <data name="PassStoreErr" >
     <value>Unable to store Passphrase</value>
+  </data>
+  <data name="YourFiles" >
+    <value>Your Files</value>
+  </data>
+  <data name="AnyTime" >
+    <value>Anytime...</value>
+  </data>
+  <data name="AnyWhere" >
+    <value>Anywhere...</value>
   </data>
   <data name="DomainName" >
     <value>Domain Name</value>

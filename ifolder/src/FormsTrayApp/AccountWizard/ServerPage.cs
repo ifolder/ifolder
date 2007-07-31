@@ -81,7 +81,7 @@ namespace Novell.Wizard
 			// 
 			// serverAddress
 			// 
-			this.serverAddress.Location = new System.Drawing.Point(136, 120);
+			this.serverAddress.Location = new System.Drawing.Point(136, 160);
 			this.serverAddress.Name = "serverAddress";
 			this.serverAddress.Size = new System.Drawing.Size(320, 20);
 			this.serverAddress.TabIndex = 2;
@@ -90,15 +90,15 @@ namespace Novell.Wizard
 			// 
 			// label1
 			// 
-			this.label1.Location = new System.Drawing.Point(50, 122);
+			this.label1.Location = new System.Drawing.Point(50, 162);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(88, 16);
 			this.label1.TabIndex = 1;
-			this.label1.Text = Resource.GetString("ServerNameText");//"Server address:";
+			this.label1.Text = Resource.GetString("ServerNameText");//"Domain Name:";
 			// 
 			// label2
 			// 
-			this.label2.Location = new System.Drawing.Point(40, 96);
+			this.label2.Location = new System.Drawing.Point(40, 130);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(416, 24);
 			this.label2.TabIndex = 0;
@@ -128,7 +128,6 @@ namespace Novell.Wizard
 			this.Controls.Add(this.defaultDescription);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.label1);
-			this.HeaderSubTitle = "";
 			this.HeaderTitle = "";
 			this.Name = "ServerPage";
 			this.Controls.SetChildIndex(this.label1, 0);

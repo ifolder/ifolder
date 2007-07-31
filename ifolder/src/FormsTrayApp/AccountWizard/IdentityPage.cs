@@ -73,7 +73,7 @@ namespace Novell.Wizard
 			// 
 			// label1
 			// 
-			this.label1.Location = new System.Drawing.Point(40, 96);
+			this.label1.Location = new System.Drawing.Point(40, 116);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(416, 16);
 			this.label1.TabIndex = 0;
@@ -81,7 +81,7 @@ namespace Novell.Wizard
 			// 
 			// label3
 			// 
-			this.label3.Location = new System.Drawing.Point(50, 122);
+			this.label3.Location = new System.Drawing.Point(50, 152);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(62, 14);
 			this.label3.TabIndex = 1;
@@ -89,7 +89,7 @@ namespace Novell.Wizard
 			// 
 			// username
 			// 
-			this.username.Location = new System.Drawing.Point(112, 120);
+			this.username.Location = new System.Drawing.Point(112, 150);
 			this.username.Name = "username";
 			this.username.Size = new System.Drawing.Size(344, 20);
 			this.username.TabIndex = 2;
@@ -98,7 +98,7 @@ namespace Novell.Wizard
 			// 
 			// password
 			// 
-			this.password.Location = new System.Drawing.Point(112, 144);
+			this.password.Location = new System.Drawing.Point(112, 184);
 			this.password.Name = "password";
 			this.password.PasswordChar = '*';
 			this.password.Size = new System.Drawing.Size(344, 20);
@@ -107,7 +107,7 @@ namespace Novell.Wizard
 			// 
 			// label4
 			// 
-			this.label4.Location = new System.Drawing.Point(50, 146);
+			this.label4.Location = new System.Drawing.Point(50, 186);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(64, 16);
 			this.label4.TabIndex = 3;
@@ -116,11 +116,11 @@ namespace Novell.Wizard
 			// rememberPassword
 			// 
 			this.rememberPassword.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.rememberPassword.Location = new System.Drawing.Point(112, 176);
+			this.rememberPassword.Location = new System.Drawing.Point(112, 216);
 			this.rememberPassword.Name = "rememberPassword";
 			this.rememberPassword.Size = new System.Drawing.Size(344, 24);
 			this.rememberPassword.TabIndex = 5;
-			this.rememberPassword.Text = Resource.GetString("RememberPasswd");//"&Remember my password";
+			this.rememberPassword.Text = Resource.GetString("RememberPasswd");//"&Remember password";
 			// 
 			// IdentityPage
 			// 
@@ -130,7 +130,6 @@ namespace Novell.Wizard
 			this.Controls.Add(this.username);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.label1);
-			this.HeaderSubTitle = "";
 			this.HeaderTitle = "";
 			this.Name = "IdentityPage";
 			this.Controls.SetChildIndex(this.label1, 0);
