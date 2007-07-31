@@ -735,6 +735,7 @@ namespace Novell.Wizard
 					DirectoryInfo dir = new DirectoryInfo(destination);
 					if( dir.Exists == false)
 					{
+						this.verifyPage.CloseWaitDialog();
 						MessageBox.Show(Resource.GetString("ErrDirCreate"));						
 						return false;
 					}
@@ -747,6 +748,7 @@ namespace Novell.Wizard
 						di = new DirectoryInfo(destination);
 						if( di.Exists )
 						{
+							this.verifyPage.CloseWaitDialog();
 							MessageBox.Show(Resource.GetString("DirExists")/*"The directory exists already"*/, Resource.GetString("MigrationTitle"), MessageBoxButtons.OK);
 							return false;
 						}
@@ -758,6 +760,7 @@ namespace Novell.Wizard
 							}
 							catch(Exception ex)
 							{
+								this.verifyPage.CloseWaitDialog();
 								MessageBox.Show(ex.ToString(), Resource.GetString("ErrDirCreate"), MessageBoxButtons.OK);
 								return false;
 							}
@@ -766,6 +769,7 @@ namespace Novell.Wizard
 					//Check that the final path is already 3.6 ifolder, we don't do a 2.x check here
 					if(ifws.CanBeiFolder(destination)== false)
 					{	
+						this.verifyPage.CloseWaitDialog();
 						MessageBox.Show(Resource.GetString("CannotBeiFolder")/*"The folder can not be converted into ifolder"*/,Resource.GetString("MigrationTitle")/*"Error creating iFolder"*/,MessageBoxButtons.OK);
 						return false; // can't be an iFolder
 					}
@@ -773,6 +777,7 @@ namespace Novell.Wizard
 					// Copy the contents
 					if(!CopyDirectory(new DirectoryInfo(location), new DirectoryInfo(destination)))
 					{
+						this.verifyPage.CloseWaitDialog();
 						MessageBox.Show(Resource.GetString("CannotCopy")/*"Unable to copy the folder"*/, Resource.GetString("MigrationTitle")/*"Error copying the folder"*/, MessageBoxButtons.OK);
 						return false;	// unable to copy..
 					}				
@@ -782,6 +787,7 @@ namespace Novell.Wizard
 					destination = this.location;
 					if(ifws.CanBeiFolder(destination)== false)	// Display a message box
 					{	
+						this.verifyPage.CloseWaitDialog();
 						MessageBox.Show(Resource.GetString("CannotBeiFolder")/*"The folder can not be converted into ifolder"*/,Resource.GetString("MigrationTitle")/*"Error creating iFolder"*/,MessageBoxButtons.OK);
 						return false; // can't be an iFolder
 					}
@@ -791,7 +797,8 @@ namespace Novell.Wizard
 				{
 					if( ifws.CreateiFolderInDomain(destination, domain.ID) == null)
 					{
-						MessageBox.Show("Unable to convert to an iFolder", "Migrate error", MessageBoxButtons.OK);
+						this.verifyPage.CloseWaitDialog();
+						MessageBox.Show(Resource.GetString("MigrationConvert")/*Unable to convert to an iFolder*/, Resource.GetString("MigrationTitle")/*"Error creating iFolder"*/, MessageBoxButtons.OK);
 						return false;
 					}
 				}
@@ -800,13 +807,15 @@ namespace Novell.Wizard
 					string passphrase = this.simiasWebService.GetPassPhrase(this.identityPage.domain.ID);
 					if( ifws.CreateiFolderInDomainEncr(destination, domain.ID, false, encryptionAlgorithm, passphrase) == null)
 					{
-						MessageBox.Show("Unable to convert to an iFolder", "Migrate error", MessageBoxButtons.OK);
+						this.verifyPage.CloseWaitDialog();
+						MessageBox.Show(Resource.GetString("MigrationConvert")/*Unable to convert to an iFolder*/, Resource.GetString("MigrationTitle")/*"Error creating iFolder"*/, MessageBoxButtons.OK);
 						return false;
 					}
 				}
 			}
 			catch(Exception ex)
 			{
+				this.verifyPage.CloseWaitDialog();
 				MessageBox.Show(Resource.GetString("CannotBeiFolder")/*"The folder can not be converted into ifolder"*/,Resource.GetString("MigrationTitle")/*"Error creating iFolder"*/,MessageBoxButtons.OK);
 				return false;
 			}
@@ -822,9 +831,10 @@ namespace Novell.Wizard
 				}
 				catch(Exception ex)
 				{
+					this.verifyPage.CloseWaitDialog();
 					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(ex.Message, Resource.GetString("MigrationTitle"),"", MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
-					mmb.Dispose();
+					mmb.Close();
 				}
 			}	
 			return true;

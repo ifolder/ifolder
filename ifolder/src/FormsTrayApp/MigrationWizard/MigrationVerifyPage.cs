@@ -33,6 +33,7 @@ using Simias.Client;
 using Simias.Client.Authentication;
 using Simias.Client.Event;
 using Novell.FormsTrayApp;
+using System.Threading;
 
 namespace Novell.Wizard
 {
@@ -56,6 +57,7 @@ namespace Novell.Wizard
 		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.Label defaultDescription;
 		private MigrationWizard wizard;
+		private Connecting waitWindow;
 		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(Novell.FormsTrayApp.FormsTrayApp));
 
 		#endregion
@@ -69,6 +71,7 @@ namespace Novell.Wizard
 		{
 			// This call is required by the Windows Form Designer.
 			InitializeComponent();		
+			waitWindow = null;
 		}
 
 		#endregion
@@ -94,7 +97,7 @@ namespace Novell.Wizard
 			// 
 			// label1
 			// 
-			this.label1.Location = new System.Drawing.Point(50, 128);
+			this.label1.Location = new System.Drawing.Point(50, 196);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(94, 16);
 			this.label1.TabIndex = 3;
@@ -102,7 +105,7 @@ namespace Novell.Wizard
 			// 
 			// label2
 			// 
-			this.label2.Location = new System.Drawing.Point(40, 80);
+			this.label2.Location = new System.Drawing.Point(40, 100);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(440, 16);
 			this.label2.TabIndex = 0;
@@ -110,15 +113,15 @@ namespace Novell.Wizard
 			// 
 			// label3
 			// 
-			this.label3.Location = new System.Drawing.Point(50, 104);
+			this.label3.Location = new System.Drawing.Point(50, 124);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(88, 16);
 			this.label3.TabIndex = 1;
-			this.label3.Text = Resource.GetString("ServerNameText");//"Server address:";
+			this.label3.Text = Resource.GetString("DomainName")+":";//"Domain Name:";
 			// 
 			// label4
 			// 
-			this.label4.Location = new System.Drawing.Point(50, 152);
+			this.label4.Location = new System.Drawing.Point(50, 172);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(118, 16);
 			this.label4.TabIndex = 5;
@@ -126,7 +129,7 @@ namespace Novell.Wizard
 			// 
 			// defaultDescription
 			// 
-			this.defaultDescription.Location = new System.Drawing.Point(50, 176);
+			this.defaultDescription.Location = new System.Drawing.Point(50, 148);
 			this.defaultDescription.Name = "defaultDescription";
 			this.defaultDescription.Size = new System.Drawing.Size(118, 16);
 			this.defaultDescription.TabIndex = 7;
@@ -134,28 +137,28 @@ namespace Novell.Wizard
 			// 
 			// serverAddress
 			// 
-			this.serverAddress.Location = new System.Drawing.Point(176, 104);
+			this.serverAddress.Location = new System.Drawing.Point(176, 124);
 			this.serverAddress.Name = "serverAddress";
 			this.serverAddress.Size = new System.Drawing.Size(304, 16);
 			this.serverAddress.TabIndex = 2;
 			// 
 			// location
 			// 
-			this.location.Location = new System.Drawing.Point(176, 128);
+			this.location.Location = new System.Drawing.Point(176, 196);
 			this.location.Name = "location";
-			this.location.Size = new System.Drawing.Size(304, 16);
+			this.location.Size = new System.Drawing.Size(304, 48);
 			this.location.TabIndex = 4;
 			// 
 			// migrationOption
 			// 
-			this.migrationOption.Location = new System.Drawing.Point(176, 152);
+			this.migrationOption.Location = new System.Drawing.Point(176, 172);
 			this.migrationOption.Name = "migrationOption";
 			this.migrationOption.Size = new System.Drawing.Size(304, 16);
 			this.migrationOption.TabIndex = 6;
 			// 
 			// security
 			// 
-			this.security.Location = new System.Drawing.Point(176, 176);
+			this.security.Location = new System.Drawing.Point(176, 148);
 			this.security.Name = "security";
 			this.security.Size = new System.Drawing.Size(304, 16);
 			this.security.TabIndex = 8;
@@ -224,13 +227,33 @@ namespace Novell.Wizard
 
 		internal override int ValidatePage(int currentIndex)
 		{
+			Thread thrd = new Thread(new ThreadStart(ShowWaitDialog));
+			thrd.Start();
 			wizard = (MigrationWizard)this.Parent;
-			if ( !wizard.MigrateFolder() )
+			bool result = wizard.MigrateFolder();
+			CloseWaitDialog();
+
+			if ( !result )
 			{
 				// Unable to migrate the folder
 				return currentIndex;
 			}
 			return base.ValidatePage (currentIndex);
+		}
+
+		private void ShowWaitDialog()
+		{
+			waitWindow = new Connecting();
+			waitWindow.ShowDialog();
+		}
+
+		public void CloseWaitDialog()
+		{
+			if( waitWindow!=null)
+			{
+				waitWindow.Close();
+				waitWindow = null;
+			}
 		}
 
 		#endregion

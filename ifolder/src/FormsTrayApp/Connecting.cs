@@ -28,6 +28,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.Net;
 using System.Threading;
+using System.IO;
 
 using Novell.iFolderCom;
 using Simias.Client;
@@ -73,6 +74,11 @@ namespace Novell.FormsTrayApp
 
 		#region Constructor
 
+		public Connecting()
+		{
+			InitializeMigrationComponent();
+		}
+			
 		public Connecting( iFolderWebService ifws, SimiasWebService simiasWebService, Manager simiasManager, string server, string user, string password, bool defaultServer, bool rememberPassword ) :
 			this( ifws, simiasWebService, simiasManager, password )
 		{
@@ -220,6 +226,55 @@ namespace Novell.FormsTrayApp
 			this.ResumeLayout(false);
 
 		}
+
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeMigrationComponent()
+		{
+			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(Connecting));
+			// 
+			// Migrating
+			// 
+			this.AutoScaleBaseSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScaleBaseSize")));
+			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
+			this.Name = "Migrating";
+			this.Activated += new System.EventHandler(this.Connecting_Activated);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.Location = ((System.Drawing.Point)(resources.GetObject("$this.Location")));
+			this.MaximizeBox = false;
+			this.MaximumSize = ((System.Drawing.Size)(resources.GetObject("$this.MaximumSize")));
+			this.MinimizeBox = false;
+			this.MinimumSize = ((System.Drawing.Size)(resources.GetObject("$this.MinimumSize")));
+			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+			this.Text = resources.GetString("$this.Text");
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));			
+			this.Text = resources.GetString("Migration.Title");			
+			this.Cursor = Cursors.WaitCursor;
+			this.SuspendLayout();
+			// 
+			// label1
+			// 
+			this.label1 = new System.Windows.Forms.Label();
+			this.label1.AutoSize = ((bool)(resources.GetObject("label1.AutoSize")));
+			this.label1.Enabled = ((bool)(resources.GetObject("label1.Enabled")));
+			this.label1.Location = ((System.Drawing.Point)(resources.GetObject("label1.Location")));
+			this.label1.Visible = ((bool)(resources.GetObject("label1.Visible")));
+			this.label1.Text = resources.GetString("Migration.Text");
+			this.label1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label1.Dock")));
+			this.label1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label1.RightToLeft")));
+			this.label1.Size = ((System.Drawing.Size)(resources.GetObject("label1.Size")));
+			this.label1.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label1.TextAlign")));
+			this.label1.Visible = ((bool)(resources.GetObject("label1.Visible")));
+
+			this.ControlBox = false;
+			this.Controls.Add(this.label1);			
+			this.ResumeLayout(false);			
+		}
+
 		#endregion
 
 		#region Event Handlers

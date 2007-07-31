@@ -842,7 +842,7 @@
 		<value>Remember my password</value>
 	</data>
 	<data name="ServerNameText">
-		<value>Server address:</value>
+		<value>Server address</value>
 	</data>
 	<data name="ServerPagelbl2txt">
 		<value>Enter the name of your iFolder server (for example, ifolder.example.net).</value>
@@ -904,7 +904,7 @@
 		<value>Completing the iFolder Migration Assistant</value>
 	</data>
 	<data name="SelectDomain">
-		<value>Select the domain</value>
+		<value>Select the Domain</value>
 	</data>
 	<data name="EncryptedText">
 		<value>Encrypted</value>
@@ -916,7 +916,7 @@
 		<value>Location:</value>
 	</data>
 	<data name="MigrateNRemove">
-		<value>Migrate the ifolder and disconnect it from 2.x domain</value>
+		<value>Migrate the ifolder and disconnect it from 3.x domain</value>
 	</data>
 	<data name="MigrateNCopy">
 		<value>Create a copy and connect it to 3.x server</value>
@@ -988,7 +988,7 @@
     <value>Passphrase entered and retyped passphrase does not match</value>
   </data>
   <data name="EncryptTotext" >
-    <value>The original 2.x ifolder is encrypted and you choose to convert it to an un-encrypted one.\nDo you want to continue?</value>
+    <value>The original 3.x ifolder is encrypted and you choose to convert it to an un-encrypted one. Do you want to continue?</value>
   </data>
   <data name="MigrationAlert" >
     <value>Migration Alert</value>
@@ -998,5 +998,29 @@
   </data>
   <data name="PassStoreErr" >
     <value>Unable to store Passphrase</value>
+  </data>
+  <data name="DomainName" >
+    <value>Domain Name</value>
+  </data>
+  <data name="SelectSecurityOptions" >
+    <value>Select security options</value>
+  </data>  
+  <data name="EnterPassPhrase" >
+	<value>Enter Passphrase:</value>
+  </data>
+  <data name="ReTypePassPhrase" >
+	<value>ReType Passphrase:</value>
+  </data>
+  <data name="RememberPassPhrase" >
+	<value>Remember Passphrase</value>
+  </data>
+  <data name="SelectRecoveryAgent" >
+	<value>Select Recovery Agent:</value>
+  </data>
+  <data name="RecoveryAgent" >
+	<value>Recovery Agent:</value>
+  </data>
+  <data name="MigrationConvert" >
+	<value>Unable to convert to an iFolder</value>
   </data>
 </root>

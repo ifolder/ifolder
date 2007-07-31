@@ -37,8 +37,8 @@ namespace Novell.Wizard
 	{
 		#region Class Members
 		private System.Windows.Forms.Panel headerPanel;
-		private System.Windows.Forms.GroupBox groupBox1;
-		private System.Windows.Forms.PictureBox pictureBox1;
+		private System.Windows.Forms.PictureBox left_image;
+		private System.Windows.Forms.PictureBox right_image;
 		private System.Windows.Forms.Label headerTitle;
 		private System.Windows.Forms.Label headerSubTitle;
 		/// <summary> 
@@ -79,67 +79,54 @@ namespace Novell.Wizard
 		private void InitializeComponent()
 		{
 			this.headerPanel = new System.Windows.Forms.Panel();
-			this.pictureBox1 = new System.Windows.Forms.PictureBox();
+			this.left_image = new System.Windows.Forms.PictureBox();
+			this.right_image = new System.Windows.Forms.PictureBox();
 			this.headerSubTitle = new System.Windows.Forms.Label();
 			this.headerTitle = new System.Windows.Forms.Label();
-			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.headerPanel.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// headerPanel
 			// 
-			//this.headerPanel.BackColor = System.Drawing.Color.White;
-			this.headerPanel.BackColor = System.Drawing.Color.FromArgb(101, 163, 237);
-			this.headerPanel.Controls.Add(this.pictureBox1);
-			//this.headerPanel.Controls.Add(this.headerSubTitle);
-			this.headerPanel.Controls.Add(this.headerTitle);
+			this.headerPanel.Controls.Add(this.left_image);
+			this.headerPanel.Controls.Add(this.right_image);
 			this.headerPanel.Location = new System.Drawing.Point(0, 0);
 			this.headerPanel.Name = "headerPanel";
-			this.headerPanel.Size = new System.Drawing.Size(496, 56);
+			this.headerPanel.Size = new System.Drawing.Size(496, 65);
 			this.headerPanel.TabIndex = 0;
 			// 
-			// pictureBox1  for adding the image
+			// left_image  for adding the image
 			// 
-			this.pictureBox1.Location = new System.Drawing.Point(436, 8);
-			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.Size = new System.Drawing.Size(48, 48);
-			this.pictureBox1.TabIndex = 2;
-			this.pictureBox1.TabStop = false;
-			/*
+			this.left_image.Location = new System.Drawing.Point(0, 0);
+			this.left_image.Name = "left_image";
+			this.left_image.Size = new System.Drawing.Size(159,65);
+			this.left_image.TabIndex = 2;
+			this.left_image.TabStop = false;
+			this.left_image.Image = System.Drawing.Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder-banner.png"));
 			// 
-			// headerSubTitle
+			// right_image  for adding the image
 			// 
-			this.headerSubTitle.Location = new System.Drawing.Point(40, 32);
-			this.headerSubTitle.Name = "headerSubTitle";
-			this.headerSubTitle.Size = new System.Drawing.Size(408, 16);
-			this.headerSubTitle.TabIndex = 1;
-			this.headerSubTitle.Text = "Header subtitle";
-			*/
+			this.right_image.Location = new System.Drawing.Point(157,0);
+			this.right_image.Name = "right_image";
+			this.right_image.Size = new System.Drawing.Size(342,65);
+			this.right_image.TabIndex = 3;
+			this.right_image.TabStop = false;
+			this.right_image.SizeMode = PictureBoxSizeMode.StretchImage;
+			this.right_image.Image = System.Drawing.Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder-banner-scaler.png"));
 			// 
 			// headerTitle
 			// 
 			this.headerTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
-			this.headerTitle.Location = new System.Drawing.Point(24, 16);
-			this.headerTitle.ForeColor = System.Drawing.Color.White;
+			this.headerTitle.Location = new System.Drawing.Point(16,70);
 			this.headerTitle.Name = "headerTitle";
 			this.headerTitle.Size = new System.Drawing.Size(424, 16);
 			this.headerTitle.TabIndex = 0;
 			this.headerTitle.Text = "";
 			// 
-			// groupBox1
-			// 
-			this.groupBox1.Location = new System.Drawing.Point(0, 56);
-			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(496, 4);
-			this.groupBox1.TabIndex = 1;
-			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = "";
-			this.groupBox1.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(101)), ((System.Byte)(163)), ((System.Byte)(237)));
-			// 
 			// InteriorPageTemplate
 			// 
-			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.headerPanel);
+			this.Controls.Add(this.headerTitle);
 			this.Name = "InteriorPageTemplate";
 			this.Size = new System.Drawing.Size(496, 314);
 			this.headerPanel.ResumeLayout(false);
@@ -172,9 +159,10 @@ namespace Novell.Wizard
 		/// </summary>
 		public Image Thumbnail
 		{
-			get { return pictureBox1.Image;	}
-			set	{ pictureBox1.Image = value; }
+			get { return left_image.Image;	}
+			set	{ left_image.Image = value; }
 		}
 		#endregion
 	}
 }
+

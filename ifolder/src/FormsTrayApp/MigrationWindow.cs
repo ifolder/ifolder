@@ -191,7 +191,7 @@ namespace Novell.FormsTrayApp
 			this.MinimumSize = ((System.Drawing.Size)(resources.GetObject("$this.MinimumSize")));
 			this.Name = "MigrationWindow";
 			this.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("$this.RightToLeft")));
-			this.StartPosition = ((System.Windows.Forms.FormStartPosition)(resources.GetObject("$this.StartPosition")));
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = resources.GetString("$this.Text");
 			this.Load += new System.EventHandler(this.MigrationWindow_Load);
 			this.ResumeLayout(false);

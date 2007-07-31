@@ -64,6 +64,7 @@ namespace Novell.Wizard
 
 		private string homeLocation;
 		private string prevLoc;
+		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(Novell.FormsTrayApp.FormsTrayApp));
 
 		#endregion
 
@@ -103,11 +104,11 @@ namespace Novell.Wizard
 			RememberPPCheck = new CheckBox();
 
 			//EnterPPTitle
-			EnterPPTitle.Text = "Enter Passphrase:";
+			EnterPPTitle.Text = Resource.GetString("PassPhraseTitle"); //Please enter passphrase details here
 			EnterPPTitle.Location = new System.Drawing.Point(40, 96);
 			EnterPPTitle.Size = new System.Drawing.Size(416, 16);
 			//EnterPPLabel
-			EnterPPLabel.Text = "Enter Passphrase:";
+			EnterPPLabel.Text = Resource.GetString("EnterPassPhrase"); //"Enter Passphrase:"
 			EnterPPLabel.Location = new System.Drawing.Point(80, 122);
 			EnterPPLabel.Size = new System.Drawing.Size(120, 16);
 			// EnterPPText
@@ -115,7 +116,7 @@ namespace Novell.Wizard
 			this.EnterPPText.Location = new System.Drawing.Point(200, 122);
 			this.EnterPPText.Size = new System.Drawing.Size(260, 16);
 			//RetypePPLabel
-			RetypePPLabel.Text = "Retype Passphrase:";
+			RetypePPLabel.Text = Resource.GetString("ReTypePassPhrase"); //Retype Passphrase:
 			RetypePPLabel.Location = new System.Drawing.Point(80, 146);
 			RetypePPLabel.Size = new System.Drawing.Size(120, 16);
 			//RetypePPText
@@ -123,19 +124,19 @@ namespace Novell.Wizard
 			this.RetypePPText.Location = new System.Drawing.Point(200, 146);
 			this.RetypePPText.Size = new System.Drawing.Size(260, 16);
 			//RememberPPLabel
-			RememberPPLabel.Text = "Remember Passphrase";
+			RememberPPLabel.Text = Resource.GetString("RememberPassPhrase"); //Remember Passphrase
 			RememberPPLabel.Location = new System.Drawing.Point(200, 170);
 			RememberPPLabel.Size = new System.Drawing.Size(350, 16);
 			//RememberPPCheck
-			RememberPPCheck.Text = "RememberPassphrase";
+			RememberPPCheck.Text = Resource.GetString("RememberPassPhrase"); //Remember Passphrase
 			RememberPPCheck.Location = new System.Drawing.Point(200, 170);
 			RememberPPCheck.Size = new System.Drawing.Size(350, 16);
 			//RecoveryAgentTitle
-			this.RecoveryAgentTitle.Text = "Select Recovery Agent:";
+			this.RecoveryAgentTitle.Text = Resource.GetString("SelectRecoveryAgent"); //Select Recovery Agent:
 			this.RecoveryAgentTitle.Location = new System.Drawing.Point(40, 196);
 			this.RecoveryAgentTitle.Size = new System.Drawing.Size(416, 16);
 			//RecoveryAgentLabel
-			this.RecoveryAgentLabel.Text = "Recovery Agent:";
+			this.RecoveryAgentLabel.Text = Resource.GetString("RecoveryAgent"); //Recovery Agent:
 			this.RecoveryAgentLabel.Location = new System.Drawing.Point(80, 220);
 			this.RecoveryAgentLabel.Size = new System.Drawing.Size(120, 16);
 			//RecoveryAgentCombo

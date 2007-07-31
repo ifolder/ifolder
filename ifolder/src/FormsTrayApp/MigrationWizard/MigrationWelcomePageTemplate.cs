@@ -43,8 +43,6 @@ namespace Novell.Wizard
 		private System.Windows.Forms.PictureBox waterMark;
 		private System.Windows.Forms.Label actionText;
 		private System.Windows.Forms.PictureBox waterMark2;
-		private System.Windows.Forms.Panel headerPanel1;
-		private System.Windows.Forms.Panel padPanel1; 
 		private System.Windows.Forms.Label headerTitle;
 		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(Novell.FormsTrayApp.FormsTrayApp));
 		/// <summary> 
@@ -85,53 +83,37 @@ namespace Novell.Wizard
 		/// </summary>
 		protected void InitializeComponent()
 		{
-			
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.actionText = new System.Windows.Forms.Label();
 			this.descriptionText = new System.Windows.Forms.Label();
 			this.welcomeTitle = new System.Windows.Forms.Label();
 			this.waterMark = new System.Windows.Forms.PictureBox();
 			this.waterMark2 = new System.Windows.Forms.PictureBox();
-			this.headerPanel1 = new Panel();
 			this.headerTitle = new Label();
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			//
-			// headerPanel1
-			//
-			this.headerPanel1.BackColor = System.Drawing.Color.FromArgb(101, 163, 237);
-			//this.headerPanel1.Controls.Add(this.pictureBox1);
-			this.headerPanel1.Controls.Add(this.headerTitle);
-			this.headerPanel1.Controls.Add(this.waterMark);
-			this.headerPanel1.Location = new System.Drawing.Point(0, 0);
-			this.headerPanel1.Name = "headerPanel";
-			this.headerPanel1.Size = new System.Drawing.Size(496, 56);
-			//this.headerPanel1.TabIndex = 0;
-			//
 			// headerTitle
 			//
 			this.headerTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
-			this.headerTitle.ForeColor = System.Drawing.Color.White;
-			this.headerTitle.Location = new System.Drawing.Point(24, 16);
+			this.headerTitle.Location = new System.Drawing.Point(16,16);
 			this.headerTitle.Name = "headerTitle";
-			this.headerTitle.Size = new System.Drawing.Size(350, 16);
-			//this.headerTitle.TabIndex = 0;
-			this.headerTitle.Text = Resource.GetString("MigrationHT");//"Migrate the iFolder";
+			this.headerTitle.Size = new System.Drawing.Size(350, 16);			
 			// 
 			// panel1
 			// 
-			this.panel1.BackColor = System.Drawing.Color.White;
+			this.panel1.Controls.Add(this.headerTitle);
 			this.panel1.Controls.Add(this.actionText);
 			this.panel1.Controls.Add(this.descriptionText);
 			this.panel1.Controls.Add(this.welcomeTitle);
-			this.panel1.Location = new System.Drawing.Point(168, 56);// make 0 to 56
+			this.panel1.Location = new System.Drawing.Point(0, 65);// make 0 to 56
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(328, 304);
+			this.panel1.Size = new System.Drawing.Size(500,235);
 			this.panel1.TabIndex = 1;
 			// 
 			// actionText
 			// 
-			this.actionText.Location = new System.Drawing.Point(16, 256);
+			this.actionText.Location = new System.Drawing.Point(16, 270);
 			this.actionText.Name = "actionText";
 			this.actionText.Size = new System.Drawing.Size(296, 40);
 			this.actionText.TabIndex = 2;
@@ -139,47 +121,47 @@ namespace Novell.Wizard
 			// 
 			// descriptionText
 			// 
-			this.descriptionText.Location = new System.Drawing.Point(16, 72);
+			this.descriptionText.Location = new System.Drawing.Point(100, 100);
 			this.descriptionText.Name = "descriptionText";
-			this.descriptionText.Size = new System.Drawing.Size(296, 184);
+			this.descriptionText.Size = new System.Drawing.Size(296, 150);
 			this.descriptionText.TabIndex = 1;
 			this.descriptionText.Text = "";
 			// 
 			// welcomeTitle
 			// 
-			this.welcomeTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
-			this.welcomeTitle.Location = new System.Drawing.Point(16, 16);
+			this.welcomeTitle.Font = new System.Drawing.Font("TimesNewRoman", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
+			this.welcomeTitle.Location = new System.Drawing.Point(100, 30);
 			this.welcomeTitle.Name = "welcomeTitle";
-			this.welcomeTitle.Size = new System.Drawing.Size(296, 40);
+			this.welcomeTitle.Size = new System.Drawing.Size(296, 64);
 			this.welcomeTitle.TabIndex = 0;
 			this.welcomeTitle.Text = "Welcome to the <WIZARD> Wizard";
 			
 			// 
 			// waterMark
 			// 
-			this.waterMark.Location = new System.Drawing.Point(436, 8);
+			this.waterMark.Location = new System.Drawing.Point(0,0);			
 			this.waterMark.Name = "waterMark";
-			this.waterMark.Size = new System.Drawing.Size(48, 48);
+			this.waterMark.Size = new System.Drawing.Size(159,65);
 			this.waterMark.TabIndex = 0;
 			this.waterMark.TabStop = false;
-			this.waterMark.BackColor = System.Drawing.Color.FromArgb(101, 163, 237);
-			this.waterMark.Image = System.Drawing.Image.FromFile( System.IO.Path.Combine( Application.StartupPath, @"res\ifolder-upload48.png" ));
+			this.waterMark.Image = System.Drawing.Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder-banner.png"));
+			
 			// 
 			// waterMark2
 			// 
-			this.waterMark2.Location = new System.Drawing.Point(0, 56);
+			this.waterMark2.Location = new System.Drawing.Point(157,0);
 			this.waterMark2.Name = "waterMark";
-			this.waterMark2.Size = new System.Drawing.Size(168, 248);
+			this.waterMark2.Size = new System.Drawing.Size(342,65);
 			this.waterMark2.TabIndex = 0;
 			this.waterMark2.TabStop = false;
-			this.waterMark2.BackColor = System.Drawing.Color.FromArgb(101, 163, 237);
+			this.waterMark2.SizeMode = PictureBoxSizeMode.StretchImage;
+			this.waterMark2.Image = System.Drawing.Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder-banner-scaler.png"));
 			
 			// 
 			// WelcomePageTemplate
 			// 
 			this.Controls.Add(this.panel1);
-			this.Controls.Add(this.headerPanel1);
-			//this.Controls.Add(this.waterMark);
+            this.Controls.Add(this.waterMark);
 			this.Controls.Add(this.waterMark2);
 			this.Name = "MigrationWelcomePageTemplate";
 			this.panel1.ResumeLayout(false);

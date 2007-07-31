@@ -93,7 +93,7 @@ namespace Novell.Wizard
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(416, 16);
 			this.label1.TabIndex = 0;
-			this.label1.Text = Resource.GetString("SelectDomain");//"Select the domain";
+			this.label1.Text = Resource.GetString("SelectDomain");//"Select the Domain";
 			// 
 			// label3
 			// 
@@ -101,13 +101,13 @@ namespace Novell.Wizard
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(90, 16);
 			this.label3.TabIndex = 1;
-			this.label3.Text = Resource.GetString("ServerNameText");//"Server Address:";
+			this.label3.Text = Resource.GetString("DomainName");//"Domain Name";
 
 			///
 			/// Domains
 			/// 
 
-			this.Domains.Location = new Point(170, 122);
+			this.Domains.Location = new Point(170, 119);
 			this.Domains.Name = "Domains";
 			this.Domains.Size = new Size(260,16);
 			this.Domains.SelectedIndexChanged +=new EventHandler(Domains_SelectedIndexChanged);
@@ -115,26 +115,26 @@ namespace Novell.Wizard
 			// 
 			// label4
 			// 
-			this.label4.Location = new System.Drawing.Point(40, 146);
+			this.label4.Location = new System.Drawing.Point(40, 160);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(416, 16);
 			this.label4.TabIndex = 3;
-			this.label4.Text = "Select security options:";
+			this.label4.Text = Resource.GetString("SelectSecurityOptions");//Select security options"
 
 			///
 			/// encryptionCB
 			/// 
 
-			this.encryptionCB.Location = new Point(80, 172);
+			this.encryptionCB.Location = new Point(80, 186);
 			this.encryptionCB.Name = "encryptionCB";
-			this.encryptionCB.Text = Resource.GetString("EncryptedText");//"Encryption enabled";
+			this.encryptionCB.Text = Resource.GetString("EncryptedText");//"Encrypted";
 			this.encryptionCB.Size = new Size(390, 16);
 
 			///
 			/// sharedCB
 			/// 
 
-			this.sharedCB.Location = new Point(80, 198);
+			this.sharedCB.Location = new Point(80, 212);
 			this.sharedCB.Name = "sharedCB";
 			this.sharedCB.Text = Resource.GetString("SharableText");//"Sharable";
 			this.sharedCB.Size = new Size(390, 16);

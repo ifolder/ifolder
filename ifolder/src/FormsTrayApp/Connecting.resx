@@ -394,4 +394,10 @@
 	<data name="DisableLoginMsg">
 		<value>Unable to Login</value>
 	</data>
+	<data name="Migration.Title">
+		<value>Migrating...</value>
+	</data>
+	<data name="Migration.Text">
+		<value>Please wait while your iFolder account is migrating...</value>
+	</data>
 </root>

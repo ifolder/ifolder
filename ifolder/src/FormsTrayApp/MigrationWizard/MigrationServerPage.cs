@@ -99,7 +99,7 @@ namespace Novell.Wizard
 			// label1
 			// 
 			
-			this.label1.Location = new System.Drawing.Point(40, 208);
+			this.label1.Location = new System.Drawing.Point(40, 215);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(50, 24);
 			this.label1.TabIndex = 1;
@@ -108,7 +108,7 @@ namespace Novell.Wizard
 			// iFolderLocation
 			// 
 		
-			this.iFolderLocation.Location = new System.Drawing.Point(96, 208);
+			this.iFolderLocation.Location = new System.Drawing.Point(96, 213);
 			this.iFolderLocation.Name = "iFolderLocation";
 			this.iFolderLocation.Size = new System.Drawing.Size(280, 20);
 			this.iFolderLocation.TabIndex = 2;
@@ -119,7 +119,7 @@ namespace Novell.Wizard
 			/// Browse button
 			/// 
 
-			this.browseButton.Location = new Point(390, 208);
+			this.browseButton.Location = new Point(390, 213);
 			this.browseButton.Size = new Size(75, 20);
 			this.browseButton.Name = "browseButton";
 			this.browseButton.Text = resourceManager.GetString("browse.Text");//"&Browse";
@@ -127,17 +127,17 @@ namespace Novell.Wizard
 			this.browseButton.Click += new EventHandler(browseButton_Click);
 		
 			//this.serverAddress.TextChanged += new System.EventHandler(this.serverAddress_TextChanged);
-			this.removeFromServer.Location = new Point(96, 120);
+			this.removeFromServer.Location = new Point(96, 125);
 			this.removeFromServer.Name = "removeFromServer";
 			this.removeFromServer.Size = new Size(320, 20);
 			this.removeFromServer.TabIndex = 2;
-			this.removeFromServer.Text = Resource.GetString("MigrateNRemove");//"Migrate the ifolder and disconnect it from 2.x domain";
+			this.removeFromServer.Text = Resource.GetString("MigrateNRemove");//"Migrate the ifolder and disconnect it from 3.x domain";
 			this.removeFromServer.Checked = true;
 			this.removeFromServer.CheckedChanged += new EventHandler(removeClicked);
 			
 			//  Copy from server radio button
 
-			this.copyToServer.Location = new Point(96, 144);
+			this.copyToServer.Location = new Point(96, 150);
 			this.copyToServer.Name = "copyToServer";
 			this.copyToServer.Size = new Size(320, 20);
 			this.copyToServer.Text = Resource.GetString("MigrateNCopy");//"Create a copy and connect it to 3.x server";
@@ -146,7 +146,7 @@ namespace Novell.Wizard
 			
 
 			// CopyOption.
-			this.copyOption.Location = new Point(112, 168);  // change 144
+			this.copyOption.Location = new Point(112, 175);  // change 144
 			this.copyOption.Name = "copyOption";
 			this.copyOption.Size = new Size(320,20);
 			this.copyOption.Text = Resource.GetString("CopyParent");//"Copy the parent folder";
@@ -158,7 +158,7 @@ namespace Novell.Wizard
 			// label2
 			// 
 			
-			this.label2.Location = new System.Drawing.Point(40, 96);
+			this.label2.Location = new System.Drawing.Point(40, 100);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(416, 24);
 			this.label2.TabIndex = 1;
