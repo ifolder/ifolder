@@ -470,7 +470,7 @@
     <value>Inherit</value>
   </data>
   <data name="label2.Text">
-    <value>iFolder Project es una solución que permite compartir datos en entornos de grupos de trabajo. El proyecto se genera en el marco mono/.Net para que se pueda integrar sin problemas en los entornos de escritorio existentes.</value>
+    <value>iFolder Project es una solución que permite compartir datos en entornos de grupos de trabajo. El proyecto se genera en el marco mono/.Net para que se pueda integrar sin problemas con los entornos de escritorio existentes.</value>
   </data>
   <data name="label2.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>32, 136</value>

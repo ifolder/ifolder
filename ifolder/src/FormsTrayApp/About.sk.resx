@@ -224,7 +224,7 @@
     <value>title</value>
   </data>
   <data name="label3.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>195, 17</value>
+    <value>188, 16</value>
   </data>
   <data name="&gt;&gt;$this.Name">
     <value>About</value>
@@ -245,7 +245,7 @@
     <value>3</value>
   </data>
   <data name="$this.Text">
-    <value>Informácie o aplikácii iFolder</value>
+    <value>Čo je iFolder</value>
   </data>
   <data name="close.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Left</value>
@@ -293,7 +293,7 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="label3.Text">
-    <value>Copyright (C) 2004 - 2005 Novell, Inc.</value>
+    <value>Copyright (C) 2004–2005 Novell, Inc.</value>
   </data>
   <data name="close.ImageIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>-1</value>
@@ -470,7 +470,7 @@
     <value>Inherit</value>
   </data>
   <data name="label2.Text">
-    <value>Projekt aplikácie iFolder je riešenie na zdieľanie pre pracovné prostredia. Projekt je postavený na systéme mono/.Net, aby sa mohol jednoducho integrovať do pracovných prostredí.</value>
+    <value>Projekt iFolder je aplikácia pre zdieľanie súborov v prostriedí pracovných skupín. Projekt je založený na systéme mono/.NET, pomocou ktorého sa hladko integruje do existujúcich počítačových prostredí.</value>
   </data>
   <data name="label2.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>32, 136</value>
@@ -590,7 +590,7 @@
     <value>5</value>
   </data>
   <data name="credits.Text">
-    <value>Kredity</value>
+    <value>Autori</value>
   </data>
   <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -614,7 +614,7 @@
     <value>$this</value>
   </data>
   <data name="title.Text">
-    <value>aplikácia iFolder {0}</value>
+    <value>iFolder {0}</value>
   </data>
   <data name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>

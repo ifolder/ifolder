@@ -98,7 +98,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="menuRemove.Text">
-    <value>U&amp;suń z serwera</value>
+    <value>Usu&amp;ń z serwera</value>
   </data>
   <data name="menuAccept.ShowShortcut" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -107,7 +107,7 @@
     <value>True</value>
   </data>
   <data name="menuActionResolve.Text">
-    <value>Rozwiąż konfli&amp;kty</value>
+    <value>&amp;Rozwiąż konflikty</value>
   </data>
   <data name="label1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -134,7 +134,7 @@
     <value>Wyszukiwanie nowych iFolderów zakończone</value>
   </data>
   <data name="statusBar1.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>700, 22</value>
+    <value>468, 22</value>
   </data>
   <data name="menuShare.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -161,7 +161,7 @@
     <value>0, 0</value>
   </data>
   <data name="menuHelpAbout.Text">
-    <value>&amp;Informacje</value>
+    <value>O pro&amp;gramie</value>
   </data>
   <data name="accept.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>NoControl</value>
@@ -297,6 +297,9 @@
   </data>
   <data name="menuItem4.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
+  </data>
+  <data name="KeyRecoveryText">
+    <value>Odzyskiwanie klucza</value>
   </data>
   <data name="properties.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -466,6 +469,9 @@
   <data name="statusBar1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Bottom</value>
   </data>
+  <data name="MigrationSubMenu">
+    <value>Migruj z wersji 2.x</value>
+  </data>
   <data name="label1.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
   </data>
@@ -545,7 +551,7 @@
     <value>Private</value>
   </data>
   <data name="menuMigrate.Text">
-    <value>Mi&amp;gruj</value>
+    <value>&amp;Migruj</value>
   </data>
   <data name="&gt;&gt;menuViewRefresh.Name">
     <value>menuViewRefresh</value>
@@ -596,7 +602,7 @@
     <value>NoControl</value>
   </data>
   <data name="menuActionProperties.Text">
-    <value>Wł&amp;aściwości</value>
+    <value>W&amp;łaściwości</value>
   </data>
   <data name="panel1.AutoScrollMargin" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
@@ -612,6 +618,9 @@
   </data>
   <data name="syncNow.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Popup</value>
+  </data>
+  <data name="ResetPPText">
+    <value>Resetuj zwrot szyfrowania</value>
   </data>
   <data name="menuProperties.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -689,7 +698,7 @@
     <value>Private</value>
   </data>
   <data name="menuView.Text">
-    <value>Wido&amp;k</value>
+    <value>Wyśw&amp;ietl</value>
   </data>
   <data name="iFolderView.AutoScrollMargin" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
@@ -821,13 +830,13 @@
     <value>No</value>
   </data>
   <data name="menuViewRefresh.Text">
-    <value>O&amp;dśwież</value>
+    <value>Od&amp;śwież</value>
   </data>
   <data name="create.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>192, 23</value>
   </data>
   <data name="menuActionRevert.Text">
-    <value>Z&amp;mień w zwykły folder</value>
+    <value>Zmień na zwy&amp;kły folder</value>
   </data>
   <data name="localiFoldersHeading.RightMargin" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>0</value>
@@ -899,7 +908,7 @@
     <value>-1</value>
   </data>
   <data name="syncError">
-    <value>Podczas synchronizowania iFolderu wystąpił błąd.</value>
+    <value>Podczas synchronizacji iFolderu wystąpił błąd.</value>
   </data>
   <data name="menuActionShare.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -962,7 +971,7 @@
     <value />
   </data>
   <data name="pathExistsError">
-    <value>Wybrane położenie zawiera już folder o takiej samej nazwie, jak ten iFolder. Wybierz inne położenie i spróbuj ponownie.</value>
+    <value>Wybrane położenie zawiera już folder o takiej samej nazwie jak iFolder. Wskaż inne położenie i spróbuj ponownie.</value>
   </data>
   <data name="&gt;&gt;remove.Type">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -998,7 +1007,7 @@
     <value>None</value>
   </data>
   <data name="statusBar1.Text">
-    <value>Bezczynny...</value>
+    <value>Bezczynne...</value>
   </data>
   <data name="$this.Icon" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1034,7 +1043,7 @@
     <value>Microsoft Sans Serif, 8.25pt</value>
   </data>
   <data name="statusUnknown">
-    <value>Nieznany</value>
+    <value>Nieznane</value>
   </data>
   <data name="properties.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -1103,7 +1112,7 @@
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="menuHelpHelp.Text">
-    <value>Pom&amp;oc</value>
+    <value>Pomo&amp;c</value>
   </data>
   <data name="&gt;&gt;menuItem3.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1286,7 +1295,7 @@
     <value>4</value>
   </data>
   <data name="menuAction.Text">
-    <value>iFo&amp;lder</value>
+    <value>i&amp;Folder</value>
   </data>
   <data name="menuRefresh.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1302,6 +1311,9 @@
   </data>
   <data name="menuSyncNow.Text">
     <value>S&amp;ynchronizuj teraz</value>
+  </data>
+  <data name="menuExportKeysText">
+    <value>Eksportuj zaszyfrowane klucze</value>
   </data>
   <data name="iFolderView.Enabled" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1409,7 +1421,7 @@
     <value>BottomLeft</value>
   </data>
   <data name="checkingForiFolders">
-    <value>Wyszukiwanie nowych iFolderów...</value>
+    <value>Wyszukiwanie nowych folderów iFolder...</value>
   </data>
   <data name="menuHelp.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1418,7 +1430,7 @@
     <value>MiddleCenter</value>
   </data>
   <data name="syncingDir">
-    <value>Synchronizowanie katalogu: {0}</value>
+    <value>Synchronizacja katalogu: {0}</value>
   </data>
   <data name="label1.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>TopLeft</value>
@@ -1487,7 +1499,7 @@
     <value>Private</value>
   </data>
   <data name="statusSyncingItems">
-    <value>Elementów do zsynchronizowania: {0}</value>
+    <value>Liczba elementów do zsynchronizowania: {0}</value>
   </data>
   <data name="localiFoldersHeading.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Left</value>
@@ -1505,7 +1517,7 @@
     <value>True</value>
   </data>
   <data name="pathIncludesProgFilesDirError">
-    <value>Wybrane położenie znajduje się w folderze Program Files. Folder Program Files nie może zawierać iFolderu. Wybierz inne położenie i spróbuj ponownie.</value>
+    <value>Wybrane położenie zawiera folder Program Files. Folder Program Files nie może zawierać iFolderu. Wskaż inne położenie i spróbuj ponownie.</value>
   </data>
   <data name="deleteClientDir">
     <value>Usuwanie katalogu: {0}</value>
@@ -1580,7 +1592,7 @@
     <value>2</value>
   </data>
   <data name="menuActionCreate.Text">
-    <value>Przekaż fo&amp;lder...</value>
+    <value>Pobierz fo&amp;lder...</value>
   </data>
   <data name="menuActionAccept.Enabled" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -1602,6 +1614,9 @@
   </data>
   <data name="menuResolveSeparator.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
+  </data>
+  <data name="menuMigration">
+    <value>Migracja</value>
   </data>
   <data name="resolve.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -1631,7 +1646,7 @@
     <value>-1</value>
   </data>
   <data name="pathIncludesWinDirError">
-    <value>Wybrane położenie znajduje się w folderze Windows. Folder Windows nie może zawierać iFolderu. Wybierz inne położenie i spróbuj ponownie.</value>
+    <value>Wybrane położenie zawiera folder Windows. Folder Windows nie może zawierać iFolderu. Wskaż inne położenie i spróbuj ponownie.</value>
   </data>
   <data name="menuShare.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -1658,7 +1673,7 @@
     <value>Private</value>
   </data>
   <data name="groupBox1.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>700, 4</value>
+    <value>468, 4</value>
   </data>
   <data name="filter.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -1709,7 +1724,7 @@
     <value>None</value>
   </data>
   <data name="menuActionOpen.Text">
-    <value>Otwór&amp;z</value>
+    <value>&amp;Otwórz</value>
   </data>
   <data name="panel2.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Bottom, Left, Right</value>
@@ -1820,7 +1835,7 @@
     <value>False</value>
   </data>
   <data name="menuViewAccounts.Text">
-    <value>Ustawie&amp;nia konta...</value>
+    <value>Ustawienia ko&amp;nta...</value>
   </data>
   <data name="menuItem4.Text">
     <value>-</value>
@@ -1832,7 +1847,7 @@
     <value>24, 48</value>
   </data>
   <data name="pathInStoreError">
-    <value>Wybrane położenie znajduje się wewnątrz folderu danych iFolder. Wybierz inne położenie i spróbuj ponownie.</value>
+    <value>Wybrane położenie znajduje się wewnątrz folderu danych iFolder. Wskaż inne położenie i spróbuj ponownie.</value>
   </data>
   <data name="panel1.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1937,7 +1952,7 @@
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="deleteiFolder">
-    <value>Spowoduje to usunięcie iFolderu i jego plików z serwera. Czy na pewno chcesz usunąć {0} z serwera?</value>
+    <value>Spowoduje to usunięcie iFolderu i jego plików z serwera. Czy na pewno chcesz usunąć „{0}” z serwera?</value>
   </data>
   <data name="&gt;&gt;syncNow.Name">
     <value>syncNow</value>
@@ -1967,7 +1982,7 @@
     <value>iFolderActions</value>
   </data>
   <data name="pathIniFolderError">
-    <value>Wybrane położenie znajduje się wewnątrz innego iFolderu. iFoldery nie mogą zawierać innych iFolderów. Wybierz inne położenie i spróbuj ponownie.</value>
+    <value>Wybrane położenie znajduje się wewnątrz innego iFolderu. iFoldery nie mogą zawierać innych elementów iFolder. Wskaż inne położenie i spróbuj ponownie.</value>
   </data>
   <data name="label3.Font" type="System.Drawing.Font, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>Microsoft Sans Serif, 14.25pt</value>
@@ -2008,6 +2023,9 @@
   <data name="share.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
+  <data name="SecurityText">
+    <value>Zabezpieczenia</value>
+  </data>
   <data name="&gt;&gt;menuEditPrefs.Name">
     <value>menuEditPrefs</value>
   </data>
@@ -2030,10 +2048,10 @@
     <value>Błąd synchronizacji iFolderu</value>
   </data>
   <data name="menuViewAvailable.Text">
-    <value>Wyświetl dostępne &amp;iFoldery</value>
+    <value>Wyświetl dost&amp;ępne iFoldery</value>
   </data>
   <data name="menuProperties.Text">
-    <value>Wł&amp;aściwości</value>
+    <value>&amp;Właściwości</value>
   </data>
   <data name="menuItem1.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -2087,7 +2105,7 @@
     <value>Private</value>
   </data>
   <data name="create.Text">
-    <value>Przekaż folder...</value>
+    <value>Wyślij folder...</value>
   </data>
   <data name="label2.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -2102,7 +2120,7 @@
     <value>192, 23</value>
   </data>
   <data name="acceptDescription">
-    <value>Pobierz {0} do...</value>
+    <value>Pobierz „{0}” do...</value>
   </data>
   <data name="menuItem7.Text">
     <value>-</value>
@@ -2159,7 +2177,7 @@
     <value>Nieskonfigurowany</value>
   </data>
   <data name="acceptError">
-    <value>Podczas próby pobrania iFolderu wystąpił wyjątek.</value>
+    <value>Podczas próby pobierania iFolderu wystąpił wyjątek.</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>700, 471</value>
@@ -2192,7 +2210,7 @@
     <value>Inherit</value>
   </data>
   <data name="menuActionShare.Text">
-    <value>Współuży&amp;tkuj z...</value>
+    <value>W&amp;spółużytkuj z...</value>
   </data>
   <data name="$this.Text">
     <value>iFoldery</value>
@@ -2378,7 +2396,7 @@
     <value>True</value>
   </data>
   <data name="menuEditPrefs.Text">
-    <value>Pre&amp;ferencje</value>
+    <value>Preferenc&amp;je</value>
   </data>
   <data name="&gt;&gt;menuActionAccept.Name">
     <value>menuActionAccept</value>
@@ -2402,7 +2420,7 @@
     <value>True</value>
   </data>
   <data name="menuOpen.Text">
-    <value>Ot&amp;wórz...</value>
+    <value>&amp;Otwórz...</value>
   </data>
   <data name="iFolderView.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Left</value>
@@ -2603,7 +2621,7 @@
     <value>panel1</value>
   </data>
   <data name="menuEdit.Text">
-    <value>&amp;Edycja</value>
+    <value>&amp;Edytuj</value>
   </data>
   <data name="menuClose.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -2681,7 +2699,7 @@
     <value>Popup</value>
   </data>
   <data name="deleteUnknown">
-    <value>Usuwanie na serwerze: {0}</value>
+    <value>Usuwanie z serwera: {0}</value>
   </data>
   <data name="menuMigrateMigrate.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -2699,7 +2717,7 @@
     <value>Czynności iFolderu</value>
   </data>
   <data name="menuRevert.Text">
-    <value>Zmień w zwykły &amp;folder</value>
+    <value>Zmień n&amp;a zwykły folder</value>
   </data>
   <data name="localiFoldersHeading.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -2727,6 +2745,9 @@
   </data>
   <data name="&gt;&gt;share.Parent">
     <value>iFolderActions</value>
+  </data>
+  <data name="menuImportKeysText">
+    <value>Importuj odszyfrowane klucze</value>
   </data>
   <data name="remove.ImageIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>-1</value>
@@ -2870,7 +2891,7 @@
     <value>Inherit</value>
   </data>
   <data name="panel1.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>232, 445</value>
+    <value>232, 415</value>
   </data>
   <data name="panel1.TabIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>5</value>
@@ -2906,7 +2927,7 @@
     <value>7</value>
   </data>
   <data name="menuClose.Text">
-    <value>Zamkni&amp;j</value>
+    <value>Z&amp;amknij</value>
   </data>
   <data name="&gt;&gt;menuViewLog.Name">
     <value>menuViewLog</value>
@@ -2924,7 +2945,7 @@
     <value />
   </data>
   <data name="openErrorTitle">
-    <value>Błąd otwarcia iFolderu</value>
+    <value>Błąd otwierania iFolderu</value>
   </data>
   <data name="remove.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -2948,7 +2969,7 @@
     <value>open</value>
   </data>
   <data name="accessDenied">
-    <value>Brak wystarczających uprawnień dostępu do wybranego położenia. iFoldery można tworzyć tylko w folderach, do których użytkownik ma uprawnienia odczytu i zapisu. Wybierz inne położenie i spróbuj ponownie.</value>
+    <value>Nie masz wystarczających uprawnień do wybranego położenia. Możesz tworzyć iFoldery tylko w tych folderach, dla których masz uprawnienia do odczytu i zapisu plików. Wskaż inne położenie i spróbuj ponownie.</value>
   </data>
   <data name="resolve.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -2966,10 +2987,10 @@
     <value>Top, Left</value>
   </data>
   <data name="menuActionAccept.Text">
-    <value>Po&amp;bierz</value>
+    <value>&amp;Pobierz</value>
   </data>
   <data name="menuShare.Text">
-    <value>Współuży&amp;tkuj z...</value>
+    <value>W&amp;spółużytkuj z...</value>
   </data>
   <data name="panel2.TabIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>6</value>
@@ -3017,7 +3038,7 @@
     <value>True</value>
   </data>
   <data name="networkPath">
-    <value>Wybrane położenie znajduje się na dysku sieciowym lub dysku nie będącym dyskiem fizycznym. iFoldery muszą znajdować się na dysku fizycznym. Wybierz inne położenie i spróbuj ponownie.</value>
+    <value>Wybrane położenie znajduje się na dysku sieciowym lub dysku niebędącym dyskiem fizycznym. iFoldery muszą znajdować się na dyskach fizycznych. Wskaż inne położenie i spróbuj ponownie.</value>
   </data>
   <data name="menuHelpHelp.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -3044,7 +3065,7 @@
     <value>True</value>
   </data>
   <data name="statusSyncItemsFailed">
-    <value>Elementów niezsynchronizowanych: {0}</value>
+    <value>Liczba elementów niezsynchronizowanych: {0}</value>
   </data>
   <data name="menuActionCreate.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -3077,7 +3098,7 @@
     <value>Pobieranie katalogu: {0}</value>
   </data>
   <data name="statusBar1.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>0, 449</value>
+    <value>0, 419</value>
   </data>
   <data name="showiFolders.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -3110,10 +3131,10 @@
     <value>NoControl</value>
   </data>
   <data name="menuExit.Text">
-    <value>Za&amp;kończ</value>
+    <value>&amp;Zakończ</value>
   </data>
   <data name="menuResolve.Text">
-    <value>&amp;Rozwiąż konflikty</value>
+    <value>Rozwią&amp;ż konflikty</value>
   </data>
   <data name="showiFolders.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -3131,7 +3152,7 @@
     <value>False</value>
   </data>
   <data name="revert.Text">
-    <value>Zmień w zwykły folder</value>
+    <value>Zmień na zwykły folder</value>
   </data>
   <data name="statusSynced">
     <value>Zsynchronizowano: {0}</value>

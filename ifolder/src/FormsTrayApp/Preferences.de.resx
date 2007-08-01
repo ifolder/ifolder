@@ -308,7 +308,7 @@
     <value>Top, Bottom, Left</value>
   </data>
   <data name="notifyShared.Text">
-    <value>&amp;Benachrichtigen bei Freigabe von iFolder-Ordnern</value>
+    <value>Be&amp;nachrichtigen bei Freigabe von iFolder-Ordnern</value>
   </data>
   <data name="cancel.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -431,7 +431,7 @@
     <value>NoControl</value>
   </data>
   <data name="removeAccount.Text">
-    <value>&amp;Entfernen</value>
+    <value>Entfe&amp;rnen</value>
   </data>
   <data name="tabMigrate.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>424, 406</value>
@@ -626,7 +626,7 @@
     <value>False</value>
   </data>
   <data name="autoSync.HelpString">
-    <value>Wählen Sie diese Option, um die Synchronisierung im angegebenen Intervall zu aktivieren, oder heben Sie die Auswahl auf, um die Synchronisierung zu deaktivieren.</value>
+    <value>Wählen Sie diese Option, um die Synchronisierung im angegebenen Intervall zu aktivieren oder heben Sie die Auswahl auf, um die Synchronisierung zu deaktivieren.</value>
   </data>
   <data name="cancel.TabIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>2</value>
@@ -845,7 +845,7 @@
     <value />
   </data>
   <data name="details.HelpString">
-    <value>Klicken Sie hier, um Details für das ausgewählte Konto anzuzeigen.</value>
+    <value>Klicken Sie, um Details für das ausgewählte Konto anzuzeigen.</value>
   </data>
   <data name="defaultInterval.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1241,7 +1241,7 @@
     <value>label1</value>
   </data>
   <data name="columnHeader5.Text">
-    <value>Home-Speicherort</value>
+    <value>Ausgangsspeicherort</value>
   </data>
   <data name="addAccount.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Right</value>
@@ -1574,7 +1574,7 @@
     <value>0</value>
   </data>
   <data name="displayConfirmation.Text">
-    <value>&amp;Beim Erstellen von iFolder-Ordnern Bestätigungsdialogfeld einblenden</value>
+    <value>Beim Erstellen von iFolder-Ordnern &amp;Bestätigungsdialogfeld einblenden</value>
   </data>
   <data name="tabGeneral.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1763,7 +1763,7 @@
     <value>Inherit</value>
   </data>
   <data name="removeAccount.HelpString">
-    <value>Klicken Sie hier, um das ausgewählte iFolder-Konto zu entfernen.</value>
+    <value>Klicken Sie, um das ausgewählte iFolder-Konto zu entfernen.</value>
   </data>
   <data name="tabControl1.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1787,7 +1787,7 @@
     <value>Private</value>
   </data>
   <data name="addAccount.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>75, 23</value>
+    <value>83, 24</value>
   </data>
   <data name="ok.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -2000,7 +2000,7 @@
     <value>False</value>
   </data>
   <data name="notifyCollisions.Text">
-    <value>Bei K&amp;onflikten benachrichtigen</value>
+    <value>Über K&amp;onflikte benachrichtigen</value>
   </data>
   <data name="&gt;&gt;tabAccounts.Type">
     <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -2039,7 +2039,7 @@
     <value>False</value>
   </data>
   <data name="addAccount.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>177, 372</value>
+    <value>166, 372</value>
   </data>
   <data name="btnMigrate.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>328, 367</value>
@@ -2246,7 +2246,7 @@
     <value>True</value>
   </data>
   <data name="addAccount.HelpString">
-    <value>Klicken Sie hier, um ein neues iFolder-Konto zu erstellen.</value>
+    <value>Klicken Sie, um ein neues iFolder-Konto zu erstellen.</value>
   </data>
   <data name="autoStart.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Left</value>

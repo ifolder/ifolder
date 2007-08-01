@@ -106,6 +106,9 @@
   <data name="$this.AutoScrollMargin" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
   </data>
+  <data name="DisableLoginMsg">
+    <value>無法登入</value>
+  </data>
   <data name="label1.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
@@ -135,6 +138,9 @@
   </data>
   <data name="pictureBox1.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
+  </data>
+  <data name="IsPassphraseSetException">
+    <value>無法檢查通關密語。</value>
   </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>CenterParent</value>
@@ -248,7 +254,7 @@
     <value>連接中...</value>
   </data>
   <data name="label1.Text">
-    <value>正在連接您的 iFolder 帳戶，請稍候。</value>
+    <value>您的 iFolder 帳戶正在連接，請稍候。</value>
   </data>
   <data name="pictureBox1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -342,6 +348,9 @@
   </data>
   <data name="verifyCertTitle">
     <value>無法驗證身份</value>
+  </data>
+  <data name="UpgradeNeededMsg">
+    <value>您必須升級用戶端，才能連接至這部伺服器。</value>
   </data>
   <data name="label1.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>

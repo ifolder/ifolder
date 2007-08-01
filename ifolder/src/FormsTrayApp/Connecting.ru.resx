@@ -106,11 +106,14 @@
   <data name="$this.AutoScrollMargin" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
   </data>
+  <data name="DisableLoginMsg">
+    <value>Регистрация невозможна</value>
+  </data>
   <data name="label1.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
   <data name="verifyCert">
-    <value>iFolder не удается проверить идентичность сервера iFolder {0}. Сертификат для данного сервера iFolder подписан неизвестной сертифицирующей организацией. Возможно, Вы подключаетесь к серверу, который выполняет функцию {0}, что может привести к потере конфиденциальной информации. Перед принятием данного сертификата необходимо проконсультироваться с администратором системы.  Вы действительно хотите принять данный сертификат и продолжить установку соединения?</value>
+    <value>iFolder не удается проверить идентичность сервера iFolder {0}. Сертификат для данного сервера iFolder подписан неизвестной сертифицирующей организацией. Возможно, Вы подключаетесь к серверу, который выполняет функции {0}, что может привести к потере конфиденциальной информации. Перед принятием данного сертификата необходимо проконсультироваться с администратором системы.  Вы действительно хотите принять данный сертификат и продолжить установку соединения?</value>
   </data>
   <data name="pictureBox1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -135,6 +138,9 @@
   </data>
   <data name="pictureBox1.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
+  </data>
+  <data name="IsPassphraseSetException">
+    <value>Невозможно проверить контрольную фразу.</value>
   </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>CenterParent</value>
@@ -161,7 +167,7 @@
     <value>Inherit</value>
   </data>
   <data name="graceLogin">
-    <value>Срок действия пароля завершен. Осталось регистраций с просроченным паролем: {0}.</value>
+    <value>Срок действия пароля истек. Осталось {0} регистраций с просроченным паролем.</value>
   </data>
   <data name="pictureBox1.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Left</value>
@@ -182,7 +188,7 @@
     <value>5, 13</value>
   </data>
   <data name="failedAuth">
-    <value>Неверное имя пользователя или пароль. Проверьте правильность введенной информации и повторите попытку.</value>
+    <value>Имя пользователя или пароль неверны. Проверьте введенную информацию и повторите попытку.</value>
   </data>
   <data name="&gt;&gt;label1.ZOrder">
     <value>0</value>
@@ -209,7 +215,7 @@
     <value>Inherit</value>
   </data>
   <data name="serverConnectError">
-    <value>Ошибка при подключении к серверу iFolder. Проверьте введенную информацию и повторите попытку. Если проблема остается, обратитесь к администратору сети.</value>
+    <value>Произошла ошибка при подключении к серверу iFolder. Проверьте правильность введенной информации и повторите попытку. Если проблема сохраняется, обратитесь к сетевому администратору.</value>
   </data>
   <data name="label1.Enabled" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -221,7 +227,7 @@
     <value />
   </data>
   <data name="accountDisabled">
-    <value>Учетная запись пользователя запрещена. Обратитесь к администратору сети за помощью. </value>
+    <value>Учетная запись пользователя отключена. Обратитесь к администратору сети за помощью. </value>
   </data>
   <data name="pictureBox1.Text">
     <value />
@@ -236,7 +242,7 @@
     <value>True</value>
   </data>
   <data name="accountLockout">
-    <value>Учетная запись пользователя была заблокирована. Обратитесь к администратору сети за помощью.</value>
+    <value>Учетная запись пользователя заблокирована. Обратитесь к администратору сети за помощью.</value>
   </data>
   <data name="&gt;&gt;$this.Name">
     <value>Connecting</value>
@@ -257,7 +263,7 @@
     <value>Private</value>
   </data>
   <data name="iFolderAccountDisabled">
-    <value>Учетная запись iFolder запрещена. Обратитесь к администратору сети за помощью.</value>
+    <value>Учетная запись iFolder отключена. Обратитесь к администратору сети за помощью.</value>
   </data>
   <data name="alreadyJoinedTitle">
     <value>Учетная запись уже существует</value>
@@ -341,7 +347,10 @@
     <value>TopLeft</value>
   </data>
   <data name="verifyCertTitle">
-    <value>Не удается проверить подлинность</value>
+    <value>Не удается проверить идентичность</value>
+  </data>
+  <data name="UpgradeNeededMsg">
+    <value>Для подключения к этому серверу необходимо обновить версию клиента.</value>
   </data>
   <data name="label1.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>

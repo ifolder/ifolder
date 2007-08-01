@@ -143,7 +143,7 @@
     <value>False</value>
   </data>
   <data name="timeUnit.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>104, 20</value>
+    <value>104, 21</value>
   </data>
   <data name="removeAccount.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>75, 23</value>
@@ -251,7 +251,7 @@
     <value>True</value>
   </data>
   <data name="defaultInterval.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>64, 21</value>
+    <value>64, 20</value>
   </data>
   <data name="&gt;&gt;groupBox3.ZOrder">
     <value>2</value>
@@ -434,7 +434,7 @@
     <value>去除(&amp;R)</value>
   </data>
   <data name="tabMigrate.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>424, 407</value>
+    <value>424, 406</value>
   </data>
   <data name="listView1.HelpNavigator" type="System.Windows.Forms.HelpNavigator, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>AssociateIndex</value>
@@ -611,7 +611,7 @@
     <value />
   </data>
   <data name="tabGeneral.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>4, 21</value>
+    <value>4, 22</value>
   </data>
   <data name="groupBox1.Enabled" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -827,7 +827,7 @@
     <value>1</value>
   </data>
   <data name="helpProvider1.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>0, 0</value>
+    <value>100, 17</value>
   </data>
   <data name="&gt;&gt;autoStart.Type">
     <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -836,7 +836,7 @@
     <value>columnHeader3</value>
   </data>
   <data name="notifyJoins.HelpString">
-    <value>选中此框可在用户加入某一 iFolder 时接收通知。</value>
+    <value>选中此框可在用户加入 iFolder 之一时接收通知。</value>
   </data>
   <data name="helpProvider1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -1034,7 +1034,7 @@
     <value>System</value>
   </data>
   <data name="timer1.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>0, 0</value>
+    <value>17, 17</value>
   </data>
   <data name="&gt;&gt;groupBox1.ZOrder">
     <value>1</value>
@@ -1241,7 +1241,7 @@
     <value>label1</value>
   </data>
   <data name="columnHeader5.Text">
-    <value>主页位置</value>
+    <value>主位置</value>
   </data>
   <data name="addAccount.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Right</value>
@@ -1355,7 +1355,7 @@
     <value>False</value>
   </data>
   <data name="autoStart.HelpString">
-    <value>选中此框可在登录时启动 iFolder 客户端。</value>
+    <value>选中此框可在登录时启动 iFolder 客户程序。</value>
   </data>
   <data name="groupBox1.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1646,7 +1646,7 @@
     <value>16, 48</value>
   </data>
   <data name="tabAccounts.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>4, 21</value>
+    <value>4, 22</value>
   </data>
   <data name="removeAccount.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -1718,7 +1718,7 @@
     <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="tabMigrate.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>4, 21</value>
+    <value>4, 22</value>
   </data>
   <data name="ok.HelpNavigator" type="System.Windows.Forms.HelpNavigator, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>AssociateIndex</value>
@@ -1871,7 +1871,7 @@
     <value>groupBox4</value>
   </data>
   <data name="tabAccounts.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>424, 407</value>
+    <value>424, 406</value>
   </data>
   <data name="groupBox3.GridSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>8, 8</value>
@@ -2063,7 +2063,7 @@
     <value>True</value>
   </data>
   <data name="notifyCollisions.HelpString">
-    <value>选中此框可在 iFolder 中出现冲突时接收通知。</value>
+    <value>选中此框可在 iFolder 出现冲突时接收通知。</value>
   </data>
   <data name="&gt;&gt;timer1.Name">
     <value>timer1</value>
@@ -2522,7 +2522,7 @@
     <value>None</value>
   </data>
   <data name="tabGeneral.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>424, 407</value>
+    <value>424, 406</value>
   </data>
   <data name="defaultInterval.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>

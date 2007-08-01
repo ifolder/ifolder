@@ -106,6 +106,9 @@
   <data name="$this.AutoScrollMargin" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
   </data>
+  <data name="DisableLoginMsg">
+    <value>Impossibile eseguire il login</value>
+  </data>
   <data name="label1.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
@@ -135,6 +138,9 @@
   </data>
   <data name="pictureBox1.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
+  </data>
+  <data name="IsPassphraseSetException">
+    <value>Impossibile verificare la stringa di cifratura.</value>
   </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>CenterParent</value>
@@ -221,7 +227,7 @@
     <value />
   </data>
   <data name="accountDisabled">
-    <value>Conto utente disabilitato. Contattare l'amministratore di rete per assistenza. </value>
+    <value>Conto disabilitato. Contattare l'amministratore di rete per ottenere assistenza. </value>
   </data>
   <data name="pictureBox1.Text">
     <value />
@@ -236,7 +242,7 @@
     <value>True</value>
   </data>
   <data name="accountLockout">
-    <value>Conto utente bloccato. Contattare l'amministratore di rete per assistenza.</value>
+    <value>Conto utente bloccato. Contattare l'amministratore di rete per ottenere assistenza.</value>
   </data>
   <data name="&gt;&gt;$this.Name">
     <value>Connecting</value>
@@ -342,6 +348,9 @@
   </data>
   <data name="verifyCertTitle">
     <value>Impossibile verificare l'identità</value>
+  </data>
+  <data name="UpgradeNeededMsg">
+    <value>È necessario eseguire l'upgrade del client per connettersi a questo server.</value>
   </data>
   <data name="label1.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>

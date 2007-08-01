@@ -248,7 +248,7 @@
     <value>groupBox5</value>
   </data>
   <data name="label4.Text">
-    <value>&amp;Hostiteľ proxy:</value>
+    <value>Hostiteľ &amp;proxy:</value>
   </data>
   <data name="ok.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -320,7 +320,7 @@
     <value />
   </data>
   <data name="useProxy.Text">
-    <value>&amp;Použiť tento server proxy na synchronizáciu priečinkov iFolder s hostiteľom</value>
+    <value>&amp;Na synchronizáciu priečinkov iFolder s hostiteľom použiť tento server proxy</value>
   </data>
   <data name="label7.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -362,7 +362,7 @@
     <value>Private</value>
   </data>
   <data name="proxy.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>88, 56</value>
+    <value>103, 56</value>
   </data>
   <data name="&gt;&gt;ok.ZOrder">
     <value>1</value>
@@ -407,7 +407,7 @@
     <value>1</value>
   </data>
   <data name="useProxy.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>408, 20</value>
+    <value>433, 16</value>
   </data>
   <data name="&gt;&gt;label7.ZOrder">
     <value>3</value>
@@ -455,7 +455,7 @@
     <value>label7</value>
   </data>
   <data name="proxy.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>233, 20</value>
+    <value>218, 20</value>
   </data>
   <data name="label7.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>MiddleCenter</value>

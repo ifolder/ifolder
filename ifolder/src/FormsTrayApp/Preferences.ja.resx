@@ -143,7 +143,7 @@
     <value>False</value>
   </data>
   <data name="timeUnit.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>104, 20</value>
+    <value>104, 21</value>
   </data>
   <data name="removeAccount.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>75, 23</value>
@@ -251,7 +251,7 @@
     <value>True</value>
   </data>
   <data name="defaultInterval.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>64, 19</value>
+    <value>64, 20</value>
   </data>
   <data name="&gt;&gt;groupBox3.ZOrder">
     <value>2</value>
@@ -308,7 +308,7 @@
     <value>Top, Bottom, Left</value>
   </data>
   <data name="notifyShared.Text">
-    <value>共有iFolderを通知する(&amp;N)</value>
+    <value>共有iFolderの通知(&amp;N)</value>
   </data>
   <data name="cancel.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -434,7 +434,7 @@
     <value>削除(&amp;R)</value>
   </data>
   <data name="tabMigrate.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>424, 407</value>
+    <value>424, 406</value>
   </data>
   <data name="listView1.HelpNavigator" type="System.Windows.Forms.HelpNavigator, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>AssociateIndex</value>
@@ -518,7 +518,7 @@
     <value>Inherit</value>
   </data>
   <data name="accounts.HelpString">
-    <value>このコンピュータにあるiFolderアカウントのリストを表示します。</value>
+    <value>このコンピュータ上のiFolderアカウントのリストを表示します。</value>
   </data>
   <data name="&gt;&gt;ok.Type">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -626,7 +626,7 @@
     <value>False</value>
   </data>
   <data name="autoSync.HelpString">
-    <value>指定した間隔での同期を有効にするにはオンにし、同期を無効にするにはオフにします。</value>
+    <value>指定間隔での同期を有効にする場合はこのチェックボックスをオンにし、無効にする場合はオフにします。</value>
   </data>
   <data name="cancel.TabIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>2</value>
@@ -650,7 +650,7 @@
     <value>Top, Left, Right</value>
   </data>
   <data name="label1.Text">
-    <value>iFolderを次の間隔で同期</value>
+    <value>iFolderの同期間隔</value>
   </data>
   <data name="defaultInterval.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -836,7 +836,7 @@
     <value>columnHeader3</value>
   </data>
   <data name="notifyJoins.HelpString">
-    <value>自分のiFolderにユーザが追加されたとき、通知を受け取る場合はオンにします。</value>
+    <value>ユーザがいずれかのiFolderに参加したときに通知を受け取る場合は、このチェックボックスをオンにします。</value>
   </data>
   <data name="helpProvider1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -845,7 +845,7 @@
     <value />
   </data>
   <data name="details.HelpString">
-    <value>クリックすると選択したアカウントの詳細が表示されます。</value>
+    <value>選択したアカウントの詳細を表示します。</value>
   </data>
   <data name="defaultInterval.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1253,7 +1253,7 @@
     <value>True</value>
   </data>
   <data name="tabGeneral.Text">
-    <value>一般</value>
+    <value>全般</value>
   </data>
   <data name="displayConfirmation.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>16, 48</value>
@@ -1271,7 +1271,7 @@
     <value>Private</value>
   </data>
   <data name="notifyJoins.Text">
-    <value>ユーザが参加したときに通知する(&amp;W)</value>
+    <value>ユーザ参加の通知(&amp;W)</value>
   </data>
   <data name="ok.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1355,7 +1355,7 @@
     <value>False</value>
   </data>
   <data name="autoStart.HelpString">
-    <value>ログイン時にiFolderを開始するにはオンにします。</value>
+    <value>ログイン時にiFolderクライアントを起動する場合は、このチェックボックスをオンにします。</value>
   </data>
   <data name="groupBox1.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1574,7 +1574,7 @@
     <value>0</value>
   </data>
   <data name="displayConfirmation.Text">
-    <value>iFolderの作成時に確認ダイアログを表示(&amp;C)</value>
+    <value>iFolderの作成時に確認ダイアログを表示する(&amp;C)</value>
   </data>
   <data name="tabGeneral.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1646,13 +1646,13 @@
     <value>16, 48</value>
   </data>
   <data name="tabAccounts.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>4, 21</value>
+    <value>4, 22</value>
   </data>
   <data name="removeAccount.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
   </data>
   <data name="autoStart.Text">
-    <value>デスクトップへのログイン時にiFolderを開始(&amp;S)</value>
+    <value>デスクトップへのログイン時にiFolderを起動する(&amp;S)</value>
   </data>
   <data name="notifyShared.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1718,7 +1718,7 @@
     <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="tabMigrate.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>4, 21</value>
+    <value>4, 22</value>
   </data>
   <data name="ok.HelpNavigator" type="System.Windows.Forms.HelpNavigator, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>AssociateIndex</value>
@@ -1757,13 +1757,13 @@
     <value>Inherit</value>
   </data>
   <data name="defaultInterval.HelpString">
-    <value>iFolderが同期される間隔を指定します。</value>
+    <value>iFolderを同期する間隔を指定します。</value>
   </data>
   <data name="details.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
   </data>
   <data name="removeAccount.HelpString">
-    <value>クリックすると選択したiFolderのアカウントが削除されます。</value>
+    <value>選択したiFolderアカウントを削除します。</value>
   </data>
   <data name="tabControl1.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1871,7 +1871,7 @@
     <value>groupBox4</value>
   </data>
   <data name="tabAccounts.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>424, 407</value>
+    <value>424, 406</value>
   </data>
   <data name="groupBox3.GridSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>8, 8</value>
@@ -2063,7 +2063,7 @@
     <value>True</value>
   </data>
   <data name="notifyCollisions.HelpString">
-    <value>iFolderで競合が発生したときに、通知を受け取る場合はオンにします。</value>
+    <value>iFolderで競合が発生したときに通知を受け取る場合は、このチェックボックスをオンにします。</value>
   </data>
   <data name="&gt;&gt;timer1.Name">
     <value>timer1</value>
@@ -2246,7 +2246,7 @@
     <value>True</value>
   </data>
   <data name="addAccount.HelpString">
-    <value>クリックすると新しいiFolderのアカウントが追加されます。</value>
+    <value>新しいiFolderアカウントを作成します。</value>
   </data>
   <data name="autoStart.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Left</value>
@@ -2567,10 +2567,10 @@
     <value>マイグレーション</value>
   </data>
   <data name="displayConfirmation.HelpString">
-    <value>新しいiFolderが作成されたとき、確認ダイアログを表示するにはオンにします。</value>
+    <value>新しいiFolderを作成するときに確認ダイアログを表示する場合は、このチェックボックスをオンにします。</value>
   </data>
   <data name="notifyShared.HelpString">
-    <value>iFolderが共有されたとき、通知を受け取る場合はオンにします。</value>
+    <value>iFolderを共有するときに通知を受け取る場合は、このチェックボックスをオンにします。</value>
   </data>
   <data name="timeUnit.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />

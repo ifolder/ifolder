@@ -101,16 +101,19 @@
     <value>False</value>
   </data>
   <data name="unknownDomain">
-    <value>指定されたサーバと通信できません。入力した情報を確認し、再実行してください。問題が継続する場合は、ネットワーク管理者に問い合わせてください。</value>
+    <value>指定したサーバに接続できません。入力した情報を確認して再試行してください。問題が解決しない場合は、ネットワーク管理者に問い合わせてください。</value>
   </data>
   <data name="$this.AutoScrollMargin" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
+  </data>
+  <data name="DisableLoginMsg">
+    <value>ログインできません</value>
   </data>
   <data name="label1.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
   <data name="verifyCert">
-    <value>iFolderはiFolderサーバ {0} の識別子を確認できません。このiFolderサーバの証明書は不明の認証局によって署名されています。{0} になりすまそうとしているサーバに接続している可能性があり、機密情報が危険にさらされる場合があります。この証明書を受け入れる前に、システム管理者に確認してください。この証明書を完全に受け入れて、接続を続行しますか?</value>
+    <value>iFolderでiFolderサーバ {0} の識別情報を検証できません。このiFolderサーバの証明書が不明な認証局によって署名されています。{0} になりすましたサーバに接続している可能性があり、機密情報が漏洩する危険性があります。この証明書を承諾する前に、システム管理者に確認してください。この証明書を承諾して接続を続行しますか?</value>
   </data>
   <data name="pictureBox1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -136,6 +139,9 @@
   <data name="pictureBox1.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
+  <data name="IsPassphraseSetException">
+    <value>パスフレーズを確認できません。</value>
+  </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>CenterParent</value>
   </data>
@@ -149,7 +155,7 @@
     <value>1</value>
   </data>
   <data name="alreadyJoined">
-    <value>このサーバのアカウントはすでにローカルマシンに存在します。許可されているアカウントの数はサーバに1つだけです。</value>
+    <value>このサーバのアカウントはすでにローカルマシンに存在します。サーバごとに1つのアカウントしか使用できません。</value>
   </data>
   <data name="$this.Enabled" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -161,7 +167,7 @@
     <value>Inherit</value>
   </data>
   <data name="graceLogin">
-    <value>パスワードの期限が切れました。猶予ログインは {0} 回残っています。</value>
+    <value>パスワードの有効期限が切れています。{0} 回の猶予ログインが残っています。</value>
   </data>
   <data name="pictureBox1.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Left</value>
@@ -182,7 +188,7 @@
     <value>5, 13</value>
   </data>
   <data name="failedAuth">
-    <value>ユーザ名とパスワードが無効です。入力した情報を確認し、再実行してください。</value>
+    <value>ユーザ名とパスワードが無効です。入力した情報を確認して再試行してください。</value>
   </data>
   <data name="&gt;&gt;label1.ZOrder">
     <value>0</value>
@@ -209,7 +215,7 @@
     <value>Inherit</value>
   </data>
   <data name="serverConnectError">
-    <value>iFolderサーバへの接続中にエラーが発生しました。入力した情報を確認し、再実行してください。問題が継続する場合は、ネットワーク管理者に問い合わせてください。</value>
+    <value>iFolderサーバへの接続中にエラーが発生しました。入力した情報を確認して再試行してください。問題が解決しない場合は、ネットワーク管理者に問い合わせてください。</value>
   </data>
   <data name="label1.Enabled" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -221,7 +227,7 @@
     <value />
   </data>
   <data name="accountDisabled">
-    <value>ユーザアカウントは無効です。ネットワーク管理者に支援を依頼してください。 </value>
+    <value>ユーザアカウントが無効になっています。ネットワーク管理者に問い合わせてください。 </value>
   </data>
   <data name="pictureBox1.Text">
     <value />
@@ -236,7 +242,7 @@
     <value>True</value>
   </data>
   <data name="accountLockout">
-    <value>ユーザアカウントがロックされました。ネットワーク管理者に支援を依頼してください。</value>
+    <value>ユーザアカウントがロックされています。ネットワーク管理者に問い合わせてください。</value>
   </data>
   <data name="&gt;&gt;$this.Name">
     <value>Connecting</value>
@@ -245,10 +251,10 @@
     <value>Inherit</value>
   </data>
   <data name="$this.Text">
-    <value>接続しています...</value>
+    <value>接続中...</value>
   </data>
   <data name="label1.Text">
-    <value>iFolderアカウントが接続中のためお待ちください。</value>
+    <value>iFolderアカウントが接続するまでお待ちください。</value>
   </data>
   <data name="pictureBox1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -257,10 +263,10 @@
     <value>Private</value>
   </data>
   <data name="iFolderAccountDisabled">
-    <value>iFolderアカウントが無効です。ネットワーク管理者に支援を依頼してください。</value>
+    <value>iFolderアカウントが無効になっています。ネットワーク管理者に問い合わせてください。</value>
   </data>
   <data name="alreadyJoinedTitle">
-    <value>アカウントがすでに存在します</value>
+    <value>アカウントはすでに存在します</value>
   </data>
   <data name="&gt;&gt;label1.Name">
     <value>label1</value>
@@ -275,7 +281,7 @@
     <value>8, 8</value>
   </data>
   <data name="graceLoginTitle">
-    <value>パスワードの期限切れ</value>
+    <value>パスワードの有効期限切れ</value>
   </data>
   <data name="$this.DrawGrid" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -341,7 +347,10 @@
     <value>TopLeft</value>
   </data>
   <data name="verifyCertTitle">
-    <value>識別子を確認できません</value>
+    <value>識別情報を検証できません</value>
+  </data>
+  <data name="UpgradeNeededMsg">
+    <value>このサーバに接続するにはクライアントをアップグレードする必要があります。</value>
   </data>
   <data name="label1.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -365,7 +374,7 @@
     <value>False</value>
   </data>
   <data name="accountErrorTitle">
-    <value>iFolderのアカウントエラー</value>
+    <value>iFolderアカウントエラー</value>
   </data>
   <data name="$this.Name">
     <value>Connecting</value>

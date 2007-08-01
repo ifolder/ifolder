@@ -320,7 +320,7 @@
     <value />
   </data>
   <data name="useProxy.Text">
-    <value>&amp;Usa questo server proxy per sincronizzare le cartelle iFolder con l'host</value>
+    <value>&amp;Usa il server proxy per eseguire la sincronizzazione delle cartelle iFolder con l'host</value>
   </data>
   <data name="label7.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>

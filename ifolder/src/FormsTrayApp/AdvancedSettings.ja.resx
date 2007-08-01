@@ -179,7 +179,7 @@
     <value>56, 16</value>
   </data>
   <data name="port.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>398, 56</value>
+    <value>406, 56</value>
   </data>
   <data name="useProxy.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -212,7 +212,7 @@
     <value>Inherit</value>
   </data>
   <data name="port.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>63, 19</value>
+    <value>72, 20</value>
   </data>
   <data name="label7.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -320,7 +320,7 @@
     <value />
   </data>
   <data name="useProxy.Text">
-    <value>このプロキシサーバを使用して、iFolderとホストの同期を行う(&amp;U)</value>
+    <value>このプロキシを使用してiFolderとホストを同期する(&amp;U)</value>
   </data>
   <data name="label7.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -362,7 +362,7 @@
     <value>Private</value>
   </data>
   <data name="proxy.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>88, 56</value>
+    <value>133, 56</value>
   </data>
   <data name="&gt;&gt;ok.ZOrder">
     <value>1</value>
@@ -455,7 +455,7 @@
     <value>label7</value>
   </data>
   <data name="proxy.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>233, 20</value>
+    <value>188, 20</value>
   </data>
   <data name="label7.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>MiddleCenter</value>
@@ -527,7 +527,7 @@
     <value>True</value>
   </data>
   <data name="groupBox5.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>463, 88</value>
+    <value>495, 88</value>
   </data>
   <data name="cancel.ImageIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>-1</value>
@@ -599,7 +599,7 @@
     <value />
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>480, 142</value>
+    <value>523, 142</value>
   </data>
   <data name="$this.AutoScroll" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>

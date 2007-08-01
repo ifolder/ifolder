@@ -308,7 +308,7 @@
     <value>Top, Bottom, Left</value>
   </data>
   <data name="notifyShared.Text">
-    <value>&amp;Powiadom o współużytkowanych iFolderach</value>
+    <value>&amp;Powiadamiaj o współużytkowanych iFolderach</value>
   </data>
   <data name="cancel.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -431,7 +431,7 @@
     <value>NoControl</value>
   </data>
   <data name="removeAccount.Text">
-    <value>Us&amp;uń</value>
+    <value>&amp;Usuń</value>
   </data>
   <data name="tabMigrate.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>424, 406</value>
@@ -590,7 +590,7 @@
     <value>Bottom, Right</value>
   </data>
   <data name="apply.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>365, 448</value>
+    <value>374, 448</value>
   </data>
   <data name="$this.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -626,7 +626,7 @@
     <value>False</value>
   </data>
   <data name="autoSync.HelpString">
-    <value>Zaznacz, aby włączyć synchronizację z określonym interwałem lub usuń zaznaczenie, aby wyłączyć synchronizację.</value>
+    <value>Zaznacz, aby włączyć synchronizację z określonym interwałem czasowym, lub usuń zaznaczenie, aby wyłączyć synchronizację.</value>
   </data>
   <data name="cancel.TabIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>2</value>
@@ -767,7 +767,7 @@
     <value>32, 50</value>
   </data>
   <data name="displayConfirmation.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>368, 24</value>
+    <value>382, 20</value>
   </data>
   <data name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -836,7 +836,7 @@
     <value>columnHeader3</value>
   </data>
   <data name="notifyJoins.HelpString">
-    <value>Zaznacz, aby otrzymywać powiadomienia, gdy użytkownik przyłącza się do jednego z iFolderów.</value>
+    <value>Zaznacz, aby otrzymywać powiadomienia, gdy jakiś użytkownik dołączy do jednego z iFolderów.</value>
   </data>
   <data name="helpProvider1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -845,7 +845,7 @@
     <value />
   </data>
   <data name="details.HelpString">
-    <value>Kliknij, aby wyświetlić szczegółowe informacje o wybranym koncie.</value>
+    <value>Kliknij, aby obejrzeć szczegółowe informacje o wybranym koncie.</value>
   </data>
   <data name="defaultInterval.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -899,7 +899,7 @@
     <value>AssociateIndex</value>
   </data>
   <data name="cancel.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>285, 448</value>
+    <value>294, 448</value>
   </data>
   <data name="notifyShared.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Normal</value>
@@ -1025,7 +1025,7 @@
     <value>Nazwa użytkownika</value>
   </data>
   <data name="ok.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>205, 448</value>
+    <value>214, 448</value>
   </data>
   <data name="listView1.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1241,7 +1241,7 @@
     <value>label1</value>
   </data>
   <data name="columnHeader5.Text">
-    <value>Położenie domowe</value>
+    <value>Położenie folderu domowego</value>
   </data>
   <data name="addAccount.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Right</value>
@@ -1271,7 +1271,7 @@
     <value>Private</value>
   </data>
   <data name="notifyJoins.Text">
-    <value>Powiadom o &amp;dołączeniu użytkownika</value>
+    <value>Pow&amp;iadom o dołączeniu użytkownika</value>
   </data>
   <data name="ok.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1349,7 +1349,7 @@
     <value>True</value>
   </data>
   <data name="groupBox1.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>400, 80</value>
+    <value>409, 80</value>
   </data>
   <data name="groupBox1.ShowHelp" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -1439,7 +1439,7 @@
     <value />
   </data>
   <data name="groupBox3.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>400, 80</value>
+    <value>409, 80</value>
   </data>
   <data name="&gt;&gt;autoSync.Name">
     <value>autoSync</value>
@@ -1496,7 +1496,7 @@
     <value>System</value>
   </data>
   <data name="$this.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>0, 0</value>
+    <value>-40, -116</value>
   </data>
   <data name="$this.AutoScroll" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -1511,7 +1511,7 @@
     <value />
   </data>
   <data name="tabControl1.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>432, 432</value>
+    <value>441, 432</value>
   </data>
   <data name="&gt;&gt;groupBox1.Parent">
     <value>tabGeneral</value>
@@ -1574,7 +1574,7 @@
     <value>0</value>
   </data>
   <data name="displayConfirmation.Text">
-    <value>Pokaż ok&amp;no dialogowe potwierdzenia podczas tworzeniu iFolderów</value>
+    <value>Wyświetl okno dialogowe Potwie&amp;rdzenie podczas tworzenia iFolderów</value>
   </data>
   <data name="tabGeneral.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1652,7 +1652,7 @@
     <value>None</value>
   </data>
   <data name="autoStart.Text">
-    <value>Urucho&amp;m iFolder podczas logowania do pulpitu</value>
+    <value>Urucho&amp;m program iFolder podczas logowania do pulpitu</value>
   </data>
   <data name="notifyShared.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1757,7 +1757,7 @@
     <value>Inherit</value>
   </data>
   <data name="defaultInterval.HelpString">
-    <value>Określa interwał, z jakim iFoldery są synchronizowane.</value>
+    <value>Określa interwał czasowy, z jakim iFoldery są synchronizowane.</value>
   </data>
   <data name="details.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -1805,7 +1805,7 @@
     <value />
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>448, 478</value>
+    <value>457, 478</value>
   </data>
   <data name="addAccount.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -1838,7 +1838,7 @@
     <value>MiddleCenter</value>
   </data>
   <data name="$this.Text">
-    <value>Preferencje iFolderu</value>
+    <value>Preferencje programu iFolder</value>
   </data>
   <data name="&gt;&gt;autoStart.ZOrder">
     <value>0</value>
@@ -1979,7 +1979,7 @@
     <value>$this</value>
   </data>
   <data name="addAccount.Text">
-    <value>Dod&amp;aj</value>
+    <value>&amp;Dodaj</value>
   </data>
   <data name="tabAccounts.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Left</value>
@@ -2000,7 +2000,7 @@
     <value>False</value>
   </data>
   <data name="notifyCollisions.Text">
-    <value>P&amp;owiadom o konfliktach</value>
+    <value>P&amp;owiadamiaj o konfliktach</value>
   </data>
   <data name="&gt;&gt;tabAccounts.Type">
     <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -2063,7 +2063,7 @@
     <value>True</value>
   </data>
   <data name="notifyCollisions.HelpString">
-    <value>Zaznacz, aby otrzymywać powiadomienia o konfliktach występujących w iFolderze.</value>
+    <value>Zaznacz, aby otrzymywać powiadomienia o występowaniu konfliktów w programie iFolder.</value>
   </data>
   <data name="&gt;&gt;timer1.Name">
     <value>timer1</value>
@@ -2522,7 +2522,7 @@
     <value>None</value>
   </data>
   <data name="tabGeneral.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>424, 406</value>
+    <value>433, 406</value>
   </data>
   <data name="defaultInterval.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -2567,7 +2567,7 @@
     <value>Migracja</value>
   </data>
   <data name="displayConfirmation.HelpString">
-    <value>Zaznacz, aby wyświetlać okno potwierdzenia podczas tworzenia nowego iFolderu.</value>
+    <value>Zaznacz, aby wyświetlać okno dialogowe Potwierdzenie podczas tworzenia nowego iFolderu.</value>
   </data>
   <data name="notifyShared.HelpString">
     <value>Zaznacz, aby otrzymywać powiadomienia o współużytkowaniu iFolderu.</value>
@@ -2615,6 +2615,6 @@
     <value>Private</value>
   </data>
   <data name="groupBox4.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>400, 112</value>
+    <value>409, 112</value>
   </data>
 </root>

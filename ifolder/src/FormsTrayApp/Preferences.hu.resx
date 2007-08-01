@@ -116,7 +116,7 @@
     <value />
   </data>
   <data name="timeUnit.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>308, 48</value>
+    <value>288, 45</value>
   </data>
   <data name="displayConfirmation.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>System</value>
@@ -308,7 +308,7 @@
     <value>Top, Bottom, Left</value>
   </data>
   <data name="notifyShared.Text">
-    <value>Értesítés a &amp;megosztott iFolder mappákról</value>
+    <value>Értesítés a m&amp;egosztott iFolder mappákról</value>
   </data>
   <data name="cancel.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -407,7 +407,7 @@
     <value />
   </data>
   <data name="autoSync.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>16, 24</value>
+    <value>16, 22</value>
   </data>
   <data name="&gt;&gt;accounts.Name">
     <value>accounts</value>
@@ -434,7 +434,7 @@
     <value>&amp;Eltávolítás</value>
   </data>
   <data name="tabMigrate.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>432, 404</value>
+    <value>424, 406</value>
   </data>
   <data name="listView1.HelpNavigator" type="System.Windows.Forms.HelpNavigator, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>AssociateIndex</value>
@@ -569,10 +569,10 @@
     <value />
   </data>
   <data name="seconds">
-    <value>másodpercenként</value>
+    <value>másodperc</value>
   </data>
   <data name="removeAccount.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>265, 372</value>
+    <value>257, 372</value>
   </data>
   <data name="notifyCollisions.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -590,7 +590,7 @@
     <value>Bottom, Right</value>
   </data>
   <data name="apply.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>373, 446</value>
+    <value>365, 448</value>
   </data>
   <data name="$this.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -677,7 +677,7 @@
     <value>AssociateIndex</value>
   </data>
   <data name="details.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>345, 372</value>
+    <value>337, 372</value>
   </data>
   <data name="autoStart.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -713,7 +713,7 @@
     <value />
   </data>
   <data name="days">
-    <value>naponként</value>
+    <value>nap</value>
   </data>
   <data name="autoSync.HelpNavigator" type="System.Windows.Forms.HelpNavigator, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>AssociateIndex</value>
@@ -764,7 +764,7 @@
     <value>False</value>
   </data>
   <data name="label1.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>16, 50</value>
+    <value>32, 46</value>
   </data>
   <data name="displayConfirmation.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>368, 24</value>
@@ -821,13 +821,13 @@
     <value>Private</value>
   </data>
   <data name="hours">
-    <value>óránként</value>
+    <value>óra</value>
   </data>
   <data name="notifyCollisions.TabIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>1</value>
   </data>
   <data name="helpProvider1.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>0, 0</value>
+    <value>100, 17</value>
   </data>
   <data name="&gt;&gt;autoStart.Type">
     <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -899,7 +899,7 @@
     <value>AssociateIndex</value>
   </data>
   <data name="cancel.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>293, 446</value>
+    <value>285, 448</value>
   </data>
   <data name="notifyShared.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Normal</value>
@@ -1025,7 +1025,7 @@
     <value>Felhasználónév</value>
   </data>
   <data name="ok.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>213, 446</value>
+    <value>205, 448</value>
   </data>
   <data name="listView1.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1034,7 +1034,7 @@
     <value>System</value>
   </data>
   <data name="timer1.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>0, 0</value>
+    <value>17, 17</value>
   </data>
   <data name="&gt;&gt;groupBox1.ZOrder">
     <value>1</value>
@@ -1097,7 +1097,7 @@
     <value>MiddleCenter</value>
   </data>
   <data name="defaultInterval.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>243, 48</value>
+    <value>216, 45</value>
   </data>
   <data name="cancel.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -1160,7 +1160,7 @@
     <value>Private</value>
   </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>226, 16</value>
+    <value>160, 32</value>
   </data>
   <data name="btnMigrate.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1241,7 +1241,7 @@
     <value>label1</value>
   </data>
   <data name="columnHeader5.Text">
-    <value>Alapkönyvtár helye</value>
+    <value>Kezdési hely</value>
   </data>
   <data name="addAccount.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Right</value>
@@ -1271,7 +1271,7 @@
     <value>Private</value>
   </data>
   <data name="notifyJoins.Text">
-    <value>Értesítés &amp;felhasználó csatlakozásakor</value>
+    <value>Értesítés felhasználó &amp;csatlakozásakor</value>
   </data>
   <data name="ok.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1349,7 +1349,7 @@
     <value>True</value>
   </data>
   <data name="groupBox1.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>417, 80</value>
+    <value>400, 80</value>
   </data>
   <data name="groupBox1.ShowHelp" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -1373,7 +1373,7 @@
     <value />
   </data>
   <data name="btnMigrate.Text">
-    <value>Áthelyezés</value>
+    <value>Áttelepítés</value>
   </data>
   <data name="autoStart.ShowHelp" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1439,7 +1439,7 @@
     <value />
   </data>
   <data name="groupBox3.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>418, 80</value>
+    <value>400, 80</value>
   </data>
   <data name="&gt;&gt;autoSync.Name">
     <value>autoSync</value>
@@ -1511,7 +1511,7 @@
     <value />
   </data>
   <data name="tabControl1.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>440, 430</value>
+    <value>432, 432</value>
   </data>
   <data name="&gt;&gt;groupBox1.Parent">
     <value>tabGeneral</value>
@@ -1751,7 +1751,7 @@
     <value>groupBox3</value>
   </data>
   <data name="accounts.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>408, 348</value>
+    <value>400, 348</value>
   </data>
   <data name="groupBox1.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -1805,7 +1805,7 @@
     <value />
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>458, 478</value>
+    <value>448, 478</value>
   </data>
   <data name="addAccount.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -1871,7 +1871,7 @@
     <value>groupBox4</value>
   </data>
   <data name="tabAccounts.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>432, 404</value>
+    <value>424, 406</value>
   </data>
   <data name="groupBox3.GridSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>8, 8</value>
@@ -1979,7 +1979,7 @@
     <value>$this</value>
   </data>
   <data name="addAccount.Text">
-    <value>&amp;Hozzáadás</value>
+    <value>&amp;Hozzaádás</value>
   </data>
   <data name="tabAccounts.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Left</value>
@@ -2000,7 +2000,7 @@
     <value>False</value>
   </data>
   <data name="notifyCollisions.Text">
-    <value>É&amp;rtesítés az ütközésekről</value>
+    <value>Értesítés az üt&amp;közésekről</value>
   </data>
   <data name="&gt;&gt;tabAccounts.Type">
     <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -2039,7 +2039,7 @@
     <value>False</value>
   </data>
   <data name="addAccount.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>185, 372</value>
+    <value>177, 372</value>
   </data>
   <data name="btnMigrate.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>328, 367</value>
@@ -2105,7 +2105,7 @@
     <value />
   </data>
   <data name="minutes">
-    <value>percenként</value>
+    <value>perc</value>
   </data>
   <data name="notifyJoins.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Normal</value>
@@ -2297,7 +2297,7 @@
     <value>MiddleLeft</value>
   </data>
   <data name="details.Text">
-    <value>&amp;Tulajdonságok...</value>
+    <value>Tula&amp;jdonságok...</value>
   </data>
   <data name="displayConfirmation.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>NoControl</value>
@@ -2423,7 +2423,7 @@
     <value />
   </data>
   <data name="listView1.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>408, 339</value>
+    <value>400, 339</value>
   </data>
   <data name="$this.ShowHelp" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -2522,7 +2522,7 @@
     <value>None</value>
   </data>
   <data name="tabGeneral.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>432, 404</value>
+    <value>424, 406</value>
   </data>
   <data name="defaultInterval.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -2564,7 +2564,7 @@
     <value />
   </data>
   <data name="tabMigrate.Text">
-    <value>Áthelyezés</value>
+    <value>Áttelepítés</value>
   </data>
   <data name="displayConfirmation.HelpString">
     <value>Bejelölésével új iFolder mappa létrehozásakor megjelenik a megerősítést kérő párbeszédpanel.</value>
@@ -2615,6 +2615,6 @@
     <value>Private</value>
   </data>
   <data name="groupBox4.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>417, 112</value>
+    <value>400, 112</value>
   </data>
 </root>

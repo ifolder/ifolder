@@ -107,7 +107,7 @@
     <value>True</value>
   </data>
   <data name="menuActionResolve.Text">
-    <value>&amp;Разрешение конфликтов</value>
+    <value>Разре&amp;шение конфликтов</value>
   </data>
   <data name="label1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -131,7 +131,7 @@
     <value>-1</value>
   </data>
   <data name="doneCheckingForiFolders">
-    <value>Проверка новых папок iFolder завершена</value>
+    <value>Проверка новых папок iFolder выполнена</value>
   </data>
   <data name="statusBar1.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>702, 22</value>
@@ -161,7 +161,7 @@
     <value>0, 0</value>
   </data>
   <data name="menuHelpAbout.Text">
-    <value>О &amp;программе</value>
+    <value>О прог&amp;рамме</value>
   </data>
   <data name="accept.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>NoControl</value>
@@ -218,7 +218,7 @@
     <value>24, 138</value>
   </data>
   <data name="pathInvalidErrorTitle">
-    <value>Недопустимое местоположение</value>
+    <value>Недопустимое расположение</value>
   </data>
   <data name="panel1.AutoScroll" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -298,6 +298,9 @@
   <data name="menuItem4.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
+  <data name="KeyRecoveryText">
+    <value>Восстановление ключа</value>
+  </data>
   <data name="properties.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
@@ -365,7 +368,7 @@
     <value>Private</value>
   </data>
   <data name="menuMigrateMigrate.Text">
-    <value>Миграция с версии 2.x</value>
+    <value>Мигрировать с 2.x</value>
   </data>
   <data name="&gt;&gt;menuHelpHelp.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -466,6 +469,9 @@
   <data name="statusBar1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Bottom</value>
   </data>
+  <data name="MigrationSubMenu">
+    <value>Мигрировать с 2.x</value>
+  </data>
   <data name="label1.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
   </data>
@@ -545,7 +551,7 @@
     <value>Private</value>
   </data>
   <data name="menuMigrate.Text">
-    <value>&amp;Миграция</value>
+    <value>Ми&amp;грировать</value>
   </data>
   <data name="&gt;&gt;menuViewRefresh.Name">
     <value>menuViewRefresh</value>
@@ -596,7 +602,7 @@
     <value>NoControl</value>
   </data>
   <data name="menuActionProperties.Text">
-    <value>С&amp;войства</value>
+    <value>Сво&amp;йства</value>
   </data>
   <data name="panel1.AutoScrollMargin" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
@@ -612,6 +618,9 @@
   </data>
   <data name="syncNow.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Popup</value>
+  </data>
+  <data name="ResetPPText">
+    <value>Сброс контрольной фразы</value>
   </data>
   <data name="menuProperties.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -683,13 +692,13 @@
     <value>Private</value>
   </data>
   <data name="accept.Text">
-    <value>Загрузка...</value>
+    <value>Загрузить...</value>
   </data>
   <data name="$this.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
   <data name="menuView.Text">
-    <value>Пр&amp;осмотр</value>
+    <value>&amp;Просмотр</value>
   </data>
   <data name="iFolderView.AutoScrollMargin" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
@@ -821,13 +830,13 @@
     <value>No</value>
   </data>
   <data name="menuViewRefresh.Text">
-    <value>О&amp;бновить</value>
+    <value>&amp;Обновить</value>
   </data>
   <data name="create.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>192, 23</value>
   </data>
   <data name="menuActionRevert.Text">
-    <value>Преобразо&amp;вать в обычную папку</value>
+    <value>Изменить на обычну&amp;ю папку</value>
   </data>
   <data name="localiFoldersHeading.RightMargin" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>0</value>
@@ -869,7 +878,7 @@
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>184, 23</value>
+    <value>193, 23</value>
   </data>
   <data name="&gt;&gt;showiFolders.Parent">
     <value>panel1</value>
@@ -962,7 +971,7 @@
     <value />
   </data>
   <data name="pathExistsError">
-    <value>Выбранное местоположение уже содержит папку с тем же именем, что и данная папка iFolder. Выберите другое местоположение и повторите попытку.</value>
+    <value>Выбранное расположение уже содержит папку с тем же именем, что и данная папка iFolder. Выберите другое расположение и повторите попытку.</value>
   </data>
   <data name="&gt;&gt;remove.Type">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1103,7 +1112,7 @@
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="menuHelpHelp.Text">
-    <value>&amp;Справка</value>
+    <value>Справ&amp;ка</value>
   </data>
   <data name="&gt;&gt;menuItem3.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1274,7 +1283,7 @@
     <value>True</value>
   </data>
   <data name="uploadDir">
-    <value>Передача каталога: {0}</value>
+    <value>Отправка каталога: {0}</value>
   </data>
   <data name="showiFolders.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Popup</value>
@@ -1295,13 +1304,16 @@
     <value>True</value>
   </data>
   <data name="remove.Text">
-    <value>Удалить с сервера</value>
+    <value>Удаление с сервера</value>
   </data>
   <data name="panel2.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
   <data name="menuSyncNow.Text">
     <value>Син&amp;хронизировать сейчас</value>
+  </data>
+  <data name="menuExportKeysText">
+    <value>Экспорт зашифрованных ключей</value>
   </data>
   <data name="iFolderView.Enabled" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1337,7 +1349,7 @@
     <value>True</value>
   </data>
   <data name="label2.Text">
-    <value>Общие действия</value>
+    <value>Основные действия</value>
   </data>
   <data name="groupBox1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top</value>
@@ -1505,7 +1517,7 @@
     <value>True</value>
   </data>
   <data name="pathIncludesProgFilesDirError">
-    <value>Выбранное местоположение не может включать папку Program Files. Папка Program Files не может содержать папку iFolder. Выберите другое местоположение и повторите попытку.</value>
+    <value>Выбранное расположение включает папку "Program Files". Папка "Program Files" не может содержать папку iFolder. Выберите другое расположение и повторите попытку.</value>
   </data>
   <data name="deleteClientDir">
     <value>Удаление каталога: {0}</value>
@@ -1559,7 +1571,7 @@
     <value>0, 0</value>
   </data>
   <data name="localiFoldersHeading.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>381, 27</value>
+    <value>430, 32</value>
   </data>
   <data name="syncComplete">
     <value>Синхронизация завершена: {0}</value>
@@ -1580,7 +1592,7 @@
     <value>2</value>
   </data>
   <data name="menuActionCreate.Text">
-    <value>Переда&amp;ча папки...</value>
+    <value>Отправ&amp;ить папку...</value>
   </data>
   <data name="menuActionAccept.Enabled" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -1602,6 +1614,9 @@
   </data>
   <data name="menuResolveSeparator.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
+  </data>
+  <data name="menuMigration">
+    <value>Миграция</value>
   </data>
   <data name="resolve.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -1631,7 +1646,7 @@
     <value>-1</value>
   </data>
   <data name="pathIncludesWinDirError">
-    <value>Выбранное местоположение включает папку Windows. Папка Windows не может содержать папку iFolder. Выберите другое местоположение и повторите попытку.</value>
+    <value>Выбранное расположение включает папку Windows. Папка Windows не может содержать папку iFolder. Выберите другое расположение и повторите попытку.</value>
   </data>
   <data name="menuShare.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -1709,7 +1724,7 @@
     <value>None</value>
   </data>
   <data name="menuActionOpen.Text">
-    <value>&amp;Открыть</value>
+    <value>От&amp;крыть</value>
   </data>
   <data name="panel2.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Bottom, Left, Right</value>
@@ -1799,7 +1814,7 @@
     <value>0, 0</value>
   </data>
   <data name="share.Text">
-    <value>Совместное использование с...</value>
+    <value>Совместное использование...</value>
   </data>
   <data name="$this.Enabled" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1820,7 +1835,7 @@
     <value>False</value>
   </data>
   <data name="menuViewAccounts.Text">
-    <value>П&amp;араметры учетной записи...</value>
+    <value>Настройки &amp;учетной записи...</value>
   </data>
   <data name="menuItem4.Text">
     <value>-</value>
@@ -1832,7 +1847,7 @@
     <value>24, 48</value>
   </data>
   <data name="pathInStoreError">
-    <value>Выбранное местоположение находится внутри папки с данными iFolder. Выберите другое местоположение и повторите попытку.</value>
+    <value>Выбранное расположение находится внутри папки данных iFolder. Выберите другое расположение и повторите попытку.</value>
   </data>
   <data name="panel1.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1937,7 +1952,7 @@
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="deleteiFolder">
-    <value>Папка iFolder будет удалена с сервера вместе со всеми файлами. Удалить "{0}" с сервера?</value>
+    <value>Это действие приведет к удалению папки iFolder и ее файлов с сервера. Удалить папку "{0}" с сервера?</value>
   </data>
   <data name="&gt;&gt;syncNow.Name">
     <value>syncNow</value>
@@ -1967,7 +1982,7 @@
     <value>iFolderActions</value>
   </data>
   <data name="pathIniFolderError">
-    <value>Выбранное местоположение находится внутри другой папки iFolder. Папки iFolder не могут существовать внутри других папок iFolder. Выберите другое местоположение и повторите попытку.</value>
+    <value>Выбранное расположение находится внутри другой папки iFolder. Папки iFolder нельзя создавать внутри других папок iFolder. Выберите другое расположение и повторите попытку.</value>
   </data>
   <data name="label3.Font" type="System.Drawing.Font, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>Microsoft Sans Serif, 14.25pt</value>
@@ -2008,6 +2023,9 @@
   <data name="share.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
+  <data name="SecurityText">
+    <value>Защита</value>
+  </data>
   <data name="&gt;&gt;menuEditPrefs.Name">
     <value>menuEditPrefs</value>
   </data>
@@ -2030,7 +2048,7 @@
     <value>Ошибка синхронизации iFolder</value>
   </data>
   <data name="menuViewAvailable.Text">
-    <value>Просмотр доступн&amp;ых папок iFolder</value>
+    <value>Просмотрет&amp;ь доступные папки iFolder</value>
   </data>
   <data name="menuProperties.Text">
     <value>&amp;Свойства</value>
@@ -2066,7 +2084,7 @@
     <value>True</value>
   </data>
   <data name="menuActionSync.Text">
-    <value>Син&amp;хронизировать сейчас</value>
+    <value>Синхронизировать сей&amp;час</value>
   </data>
   <data name="filter.BackgroundImage" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -2081,13 +2099,13 @@
     <value>True</value>
   </data>
   <data name="menuActionRemove.Text">
-    <value>Удалить с с&amp;ервера</value>
+    <value>У&amp;далить с сервера</value>
   </data>
   <data name="resolve.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
   <data name="create.Text">
-    <value>Передача папки...</value>
+    <value>Отправить папку...</value>
   </data>
   <data name="label2.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -2102,7 +2120,7 @@
     <value>192, 23</value>
   </data>
   <data name="acceptDescription">
-    <value>Загрузить "{0}" в...</value>
+    <value>Загрузка "{0}" в...</value>
   </data>
   <data name="menuItem7.Text">
     <value>-</value>
@@ -2192,7 +2210,7 @@
     <value>Inherit</value>
   </data>
   <data name="menuActionShare.Text">
-    <value>Со&amp;вместное использование с...</value>
+    <value>Совместное испо&amp;льзование с...</value>
   </data>
   <data name="$this.Text">
     <value>Папки iFolder</value>
@@ -2339,7 +2357,7 @@
     <value>2</value>
   </data>
   <data name="removeTitle">
-    <value>Удаление iFolder</value>
+    <value>Удалить папку iFolder</value>
   </data>
   <data name="properties.Font" type="System.Drawing.Font, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>Microsoft Sans Serif, 8.25pt</value>
@@ -2369,7 +2387,7 @@
     <value>Private</value>
   </data>
   <data name="menuHelp.Text">
-    <value>С&amp;правка</value>
+    <value>Спр&amp;авка</value>
   </data>
   <data name="accept.Enabled" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -2378,7 +2396,7 @@
     <value>True</value>
   </data>
   <data name="menuEditPrefs.Text">
-    <value>&amp;Настройки</value>
+    <value>Настро&amp;йки</value>
   </data>
   <data name="&gt;&gt;menuActionAccept.Name">
     <value>menuActionAccept</value>
@@ -2402,7 +2420,7 @@
     <value>True</value>
   </data>
   <data name="menuOpen.Text">
-    <value>&amp;Открыть...</value>
+    <value>Откр&amp;ыть...</value>
   </data>
   <data name="iFolderView.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Left</value>
@@ -2465,7 +2483,7 @@
     <value>menuView</value>
   </data>
   <data name="menuAccept.Text">
-    <value>&amp;Загрузить</value>
+    <value>Загрузи&amp;ть</value>
   </data>
   <data name="create.Font" type="System.Drawing.Font, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>Microsoft Sans Serif, 8.25pt</value>
@@ -2603,7 +2621,7 @@
     <value>panel1</value>
   </data>
   <data name="menuEdit.Text">
-    <value>&amp;Изменить</value>
+    <value>Из&amp;менить</value>
   </data>
   <data name="menuClose.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -2612,7 +2630,7 @@
     <value>True</value>
   </data>
   <data name="uploadFile">
-    <value>Передача файла: {0}</value>
+    <value>Отправка файла: {0}</value>
   </data>
   <data name="menuExit.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -2699,7 +2717,7 @@
     <value>Действия iFolder</value>
   </data>
   <data name="menuRevert.Text">
-    <value>Преобра&amp;зовать в обычную папку</value>
+    <value>&amp;Изменить на обычную папку</value>
   </data>
   <data name="localiFoldersHeading.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -2727,6 +2745,9 @@
   </data>
   <data name="&gt;&gt;share.Parent">
     <value>iFolderActions</value>
+  </data>
+  <data name="menuImportKeysText">
+    <value>Импорт дешифрованных ключей</value>
   </data>
   <data name="remove.ImageIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>-1</value>
@@ -2798,7 +2819,7 @@
     <value>True</value>
   </data>
   <data name="viewAvailableiFolders">
-    <value>Просмотр доступных папок iFolder</value>
+    <value>Просмотр доступных файлов iFolder</value>
   </data>
   <data name="&gt;&gt;localiFoldersHeading.Name">
     <value>localiFoldersHeading</value>
@@ -2870,7 +2891,7 @@
     <value>Inherit</value>
   </data>
   <data name="panel1.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>232, 415</value>
+    <value>232, 447</value>
   </data>
   <data name="panel1.TabIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>5</value>
@@ -2948,7 +2969,7 @@
     <value>open</value>
   </data>
   <data name="accessDenied">
-    <value>Недостаточно прав для доступа к выбранному местоположению. Папки iFolder могут быть созданы только в папках, доступных для чтения и записи файлов.  Выберите другое местоположение и повторите попытку.</value>
+    <value>У Вас недостаточно прав доступа к выбранному расположению. Папки iFolder можно создавать только в тех каталогах, в которых у Вас есть права на чтение и запись файлов. Выберите другое расположение и повторите попытку.</value>
   </data>
   <data name="resolve.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -2966,10 +2987,10 @@
     <value>Top, Left</value>
   </data>
   <data name="menuActionAccept.Text">
-    <value>&amp;Загрузить</value>
+    <value>За&amp;грузить</value>
   </data>
   <data name="menuShare.Text">
-    <value>Со&amp;вместное использование с...</value>
+    <value>Совместное использова&amp;ние с...</value>
   </data>
   <data name="panel2.TabIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>6</value>
@@ -3017,7 +3038,7 @@
     <value>True</value>
   </data>
   <data name="networkPath">
-    <value>Выбранное местоположение находится в сети или не на физическом диске. Папки iFolder должны располагаться на физическом диске. Выберите другое местоположение и повторите попытку.</value>
+    <value>Выбранное расположение находится в сети или не на физическом диске. Папки iFolder должны располагаться на физическом диске. Выберите другое расположение и повторите попытку.</value>
   </data>
   <data name="menuHelpHelp.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -3110,10 +3131,10 @@
     <value>NoControl</value>
   </data>
   <data name="menuExit.Text">
-    <value>В&amp;ыход</value>
+    <value>&amp;Выход</value>
   </data>
   <data name="menuResolve.Text">
-    <value>Разрешение &amp;конфликтов</value>
+    <value>Разрешение кон&amp;фликтов</value>
   </data>
   <data name="showiFolders.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -3131,7 +3152,7 @@
     <value>False</value>
   </data>
   <data name="revert.Text">
-    <value>Преобразовать в обычную папку</value>
+    <value>Сделать обычной папкой</value>
   </data>
   <data name="statusSynced">
     <value>Синхронизировано: {0}</value>

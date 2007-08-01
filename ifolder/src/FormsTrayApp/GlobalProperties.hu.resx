@@ -98,7 +98,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="menuRemove.Text">
-    <value>Tö&amp;rlés a kiszolgálóról</value>
+    <value>Törlés &amp;a kiszolgálóról</value>
   </data>
   <data name="menuAccept.ShowShortcut" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -107,7 +107,7 @@
     <value>True</value>
   </data>
   <data name="menuActionResolve.Text">
-    <value>Ütközések fel&amp;oldása</value>
+    <value>Ütközések felol&amp;dása</value>
   </data>
   <data name="label1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -134,7 +134,7 @@
     <value>Az új iFolder mappák keresése befejeződött</value>
   </data>
   <data name="statusBar1.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>727, 22</value>
+    <value>721, 22</value>
   </data>
   <data name="menuShare.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -161,7 +161,7 @@
     <value>0, 0</value>
   </data>
   <data name="menuHelpAbout.Text">
-    <value>Né&amp;vjegy</value>
+    <value>&amp;Névjegy</value>
   </data>
   <data name="accept.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>NoControl</value>
@@ -278,7 +278,7 @@
     <value>Inherit</value>
   </data>
   <data name="showiFolders.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>32, 150</value>
+    <value>12, 150</value>
   </data>
   <data name="&gt;&gt;menuMigrateMigrate.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -297,6 +297,9 @@
   </data>
   <data name="menuItem4.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
+  </data>
+  <data name="KeyRecoveryText">
+    <value>Kulcs-helyreállítás</value>
   </data>
   <data name="properties.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -365,7 +368,7 @@
     <value>Private</value>
   </data>
   <data name="menuMigrateMigrate.Text">
-    <value>Áttelepítés 2.x verzióról</value>
+    <value>Áttérés 2.x verzióról</value>
   </data>
   <data name="&gt;&gt;menuHelpHelp.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -466,6 +469,9 @@
   <data name="statusBar1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Bottom</value>
   </data>
+  <data name="MigrationSubMenu">
+    <value>Áttérés 2.x verzióról</value>
+  </data>
   <data name="label1.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
   </data>
@@ -545,7 +551,7 @@
     <value>Private</value>
   </data>
   <data name="menuMigrate.Text">
-    <value>Áttelep&amp;ítés</value>
+    <value>Áttele&amp;pítés</value>
   </data>
   <data name="&gt;&gt;menuViewRefresh.Name">
     <value>menuViewRefresh</value>
@@ -596,7 +602,7 @@
     <value>NoControl</value>
   </data>
   <data name="menuActionProperties.Text">
-    <value>T&amp;ulajdonságok</value>
+    <value>&amp;Tulajdonságok</value>
   </data>
   <data name="panel1.AutoScrollMargin" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
@@ -612,6 +618,9 @@
   </data>
   <data name="syncNow.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Popup</value>
+  </data>
+  <data name="ResetPPText">
+    <value>Azonosítási kifejezés alapállapotba állítása</value>
   </data>
   <data name="menuProperties.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -689,7 +698,7 @@
     <value>Private</value>
   </data>
   <data name="menuView.Text">
-    <value>Megte&amp;kintés</value>
+    <value>&amp;Nézet</value>
   </data>
   <data name="iFolderView.AutoScrollMargin" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
@@ -749,7 +758,7 @@
     <value>Private</value>
   </data>
   <data name="menuRefresh.Text">
-    <value>F&amp;rissítés</value>
+    <value>&amp;Frissítés</value>
   </data>
   <data name="label1.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>MiddleCenter</value>
@@ -779,7 +788,7 @@
     <value>NoControl</value>
   </data>
   <data name="iFolderView.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>459, 50</value>
+    <value>432, 50</value>
   </data>
   <data name="label2.Enabled" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -821,13 +830,13 @@
     <value>No</value>
   </data>
   <data name="menuViewRefresh.Text">
-    <value>&amp;Frissítés</value>
+    <value>F&amp;rissítés</value>
   </data>
   <data name="create.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>192, 23</value>
   </data>
   <data name="menuActionRevert.Text">
-    <value>Átállítás &amp;normál mappává</value>
+    <value>V&amp;isszaállítás normál mappává</value>
   </data>
   <data name="localiFoldersHeading.RightMargin" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>0</value>
@@ -941,7 +950,7 @@
     <value>True</value>
   </data>
   <data name="create.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>32, 120</value>
+    <value>17, 120</value>
   </data>
   <data name="menuActionRemove.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -962,7 +971,7 @@
     <value />
   </data>
   <data name="pathExistsError">
-    <value>A kiválasztott helyen már vagy egy ugyanolyan nevű mappa, mint ez az iFolder mappa. Válasszon másik helyet, és próbálja meg újra.</value>
+    <value>A kijelölt hely már tartalmaz egy ugyanolyan nevű mappát, mint ez az iFolder mappa.  Válasszon másik helyet, és próbálja meg újra.</value>
   </data>
   <data name="&gt;&gt;remove.Type">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1303,6 +1312,9 @@
   <data name="menuSyncNow.Text">
     <value>A&amp;zonnali szinkronizálás</value>
   </data>
+  <data name="menuExportKeysText">
+    <value>Titkosított kulcsok exportálása</value>
+  </data>
   <data name="iFolderView.Enabled" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
@@ -1409,7 +1421,7 @@
     <value>BottomLeft</value>
   </data>
   <data name="checkingForiFolders">
-    <value>Új iFolder mappák keresése...</value>
+    <value>Új iFolder mappák keresése......</value>
   </data>
   <data name="menuHelp.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1505,7 +1517,7 @@
     <value>True</value>
   </data>
   <data name="pathIncludesProgFilesDirError">
-    <value>A kiválasztott helyen belül szerepel a Program Files mappa. A Program Files mappa nem tartalmazhat iFolder mappát. Válasszon másik helyet, és próbálja meg újra.</value>
+    <value>A kijelölt hely tartalmazza a Program Files mappát.  A Program Files mappa nem tartalmazhat iFolder mappát.  Válasszon másik helyet, és próbálja meg újra.</value>
   </data>
   <data name="deleteClientDir">
     <value>Könyvtár törlése: {0}</value>
@@ -1559,10 +1571,10 @@
     <value>0, 0</value>
   </data>
   <data name="localiFoldersHeading.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>459, 32</value>
+    <value>460, 32</value>
   </data>
   <data name="syncComplete">
-    <value>A szinkronizálás befejeződött: {0}</value>
+    <value>Szinkronizálás befejezve: {0}</value>
   </data>
   <data name="share.Enabled" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1574,7 +1586,7 @@
     <value>menuItem7</value>
   </data>
   <data name="menuViewLog.Text">
-    <value>Szinkronizálási na&amp;pló</value>
+    <value>Szinkronizálási &amp;napló</value>
   </data>
   <data name="filter.TabIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>2</value>
@@ -1602,6 +1614,9 @@
   </data>
   <data name="menuResolveSeparator.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
+  </data>
+  <data name="menuMigration">
+    <value>Áttelepítés</value>
   </data>
   <data name="resolve.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -1631,7 +1646,7 @@
     <value>-1</value>
   </data>
   <data name="pathIncludesWinDirError">
-    <value>A kiválasztott helyen belül szerepel a Windows mappa. A Windows mappa nem tartalmazhat iFolder mappát. Válasszon másik helyet, és próbálja meg újra.</value>
+    <value>A kijelölt hely tartalmazza a Windows mappát.  A Windows mappa nem tartalmazhat iFolder mappát.  Válasszon másik helyet, és próbálja meg újra.</value>
   </data>
   <data name="menuShare.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -1658,7 +1673,7 @@
     <value>Private</value>
   </data>
   <data name="groupBox1.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>727, 4</value>
+    <value>468, 4</value>
   </data>
   <data name="filter.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -1709,7 +1724,7 @@
     <value>None</value>
   </data>
   <data name="menuActionOpen.Text">
-    <value>&amp;Megnyitás</value>
+    <value>Me&amp;gnyitás</value>
   </data>
   <data name="panel2.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Bottom, Left, Right</value>
@@ -1814,13 +1829,13 @@
     <value>True</value>
   </data>
   <data name="logEntriesCleared">
-    <value>A naplóbejegyzések törlése megtörtént.</value>
+    <value>A naplóbejegyzések kiürítése megtörtént.</value>
   </data>
   <data name="resolve.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
   <data name="menuViewAccounts.Text">
-    <value>F&amp;iókbeállítások...</value>
+    <value>&amp;Fiókbeállítások...</value>
   </data>
   <data name="menuItem4.Text">
     <value>-</value>
@@ -1832,7 +1847,7 @@
     <value>24, 48</value>
   </data>
   <data name="pathInStoreError">
-    <value>A kiválasztott hely az iFolder adatmappán belül van. Válasszon másik helyet, és próbálja meg újra.</value>
+    <value>A megadott hely az iFolder adatmappán belül található.  Válasszon másik helyet, és próbálja meg újra.</value>
   </data>
   <data name="panel1.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1916,7 +1931,7 @@
     <value>Private</value>
   </data>
   <data name="synciFolder">
-    <value>Szinkronizálás megkezdve: {0}</value>
+    <value>Szinkronizálás megkezdése: {0}</value>
   </data>
   <data name="&gt;&gt;label2.ZOrder">
     <value>2</value>
@@ -1937,7 +1952,7 @@
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="deleteiFolder">
-    <value>Ezzel törlődik a kiszolgálóról az iFolder mappa és a benne lévő minden fájl. Biztos abban, hogy eltávolítja a(z) "{0}" mappát a kiszolgálóról?</value>
+    <value>Ezzel törli a kiszolgálóról ezt az iFolder mappát és fájljait.  Biztos benne, hogy eltávolítja a kiszolgálóról a(z) "{0}" mappát?</value>
   </data>
   <data name="&gt;&gt;syncNow.Name">
     <value>syncNow</value>
@@ -1967,7 +1982,7 @@
     <value>iFolderActions</value>
   </data>
   <data name="pathIniFolderError">
-    <value>A kiválasztott hely egy másik iFolder mappán belül van. Az iFolder mappák nem lehetnek más iFolder mappán belül. Válasszon másik helyet, és próbálja meg újra.</value>
+    <value>A kijelölt hely egy másik iFolder mappán belül található. Az iFolder mappák nem helyezkedhetnek el másik iFolder mappán belül. Válasszon másik helyet, és próbálja meg újra.</value>
   </data>
   <data name="label3.Font" type="System.Drawing.Font, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>Microsoft Sans Serif, 14.25pt</value>
@@ -2008,6 +2023,9 @@
   <data name="share.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
+  <data name="SecurityText">
+    <value>Biztonság</value>
+  </data>
   <data name="&gt;&gt;menuEditPrefs.Name">
     <value>menuEditPrefs</value>
   </data>
@@ -2030,10 +2048,10 @@
     <value>iFolder szinkronizálási hiba</value>
   </data>
   <data name="menuViewAvailable.Text">
-    <value>Elérhet&amp;ő mappák megjelenítése</value>
+    <value>&amp;Elérhető iFolder mappák megtekintése</value>
   </data>
   <data name="menuProperties.Text">
-    <value>&amp;Tulajdonságok</value>
+    <value>Tula&amp;jdonságok</value>
   </data>
   <data name="menuItem1.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -2102,7 +2120,7 @@
     <value>192, 23</value>
   </data>
   <data name="acceptDescription">
-    <value>A(z) "{0}" letöltése, célja...</value>
+    <value>A(z) "{0}" letöltése, helye...</value>
   </data>
   <data name="menuItem7.Text">
     <value>-</value>
@@ -2159,10 +2177,10 @@
     <value>Nincs beállítva</value>
   </data>
   <data name="acceptError">
-    <value>Kivétel történt az iFolder mappa letöltése közben.</value>
+    <value>Kivétel fordult elő az iFolder mappa letöltése közben.</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>727, 471</value>
+    <value>721, 471</value>
   </data>
   <data name="&gt;&gt;menuViewAccounts.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -2192,7 +2210,7 @@
     <value>Inherit</value>
   </data>
   <data name="menuActionShare.Text">
-    <value>Meg&amp;osztás...</value>
+    <value>Me&amp;gosztás...</value>
   </data>
   <data name="$this.Text">
     <value>iFolder mappák</value>
@@ -2213,7 +2231,7 @@
     <value>menuMigrate</value>
   </data>
   <data name="showiFolders.Text">
-    <value>Elérhető iFolder mappák elrejtése</value>
+    <value>Használható iFolder mappák elrejtése</value>
   </data>
   <data name="open.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -2333,7 +2351,7 @@
     <value>192, 23</value>
   </data>
   <data name="panel2.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>493, 443</value>
+    <value>468, 445</value>
   </data>
   <data name="&gt;&gt;accept.ZOrder">
     <value>2</value>
@@ -2345,7 +2363,7 @@
     <value>Microsoft Sans Serif, 8.25pt</value>
   </data>
   <data name="deleteAction">
-    <value>Tö&amp;rlés</value>
+    <value>&amp;Törlés</value>
   </data>
   <data name="filter.PasswordChar" type="System.Char, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -2378,7 +2396,7 @@
     <value>True</value>
   </data>
   <data name="menuEditPrefs.Text">
-    <value>Sa&amp;ját beállítások</value>
+    <value>&amp;Beállítások</value>
   </data>
   <data name="&gt;&gt;menuActionAccept.Name">
     <value>menuActionAccept</value>
@@ -2480,7 +2498,7 @@
     <value>menuActionResolve</value>
   </data>
   <data name="progressBar1.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>425, 450</value>
+    <value>400, 452</value>
   </data>
   <data name="revert.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -2696,10 +2714,10 @@
     <value>menuActionShare</value>
   </data>
   <data name="label3.Text">
-    <value>iFolder-műveletek</value>
+    <value>iFolder műveletek</value>
   </data>
   <data name="menuRevert.Text">
-    <value>Átá&amp;llítás normál mappává</value>
+    <value>&amp;Visszaállítás normál mappává</value>
   </data>
   <data name="localiFoldersHeading.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -2728,6 +2746,9 @@
   <data name="&gt;&gt;share.Parent">
     <value>iFolderActions</value>
   </data>
+  <data name="menuImportKeysText">
+    <value>Visszafejtett kulcsok importálása</value>
+  </data>
   <data name="remove.ImageIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>-1</value>
   </data>
@@ -2747,7 +2768,7 @@
     <value>Inherit</value>
   </data>
   <data name="showiFolders.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>192, 23</value>
+    <value>208, 24</value>
   </data>
   <data name="label2.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>MiddleCenter</value>
@@ -2798,7 +2819,7 @@
     <value>True</value>
   </data>
   <data name="viewAvailableiFolders">
-    <value>Az elérhető iFolder mappák megtekintése</value>
+    <value>Elérhető iFolder mappák megjelenítése</value>
   </data>
   <data name="&gt;&gt;localiFoldersHeading.Name">
     <value>localiFoldersHeading</value>
@@ -2870,7 +2891,7 @@
     <value>Inherit</value>
   </data>
   <data name="panel1.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>232, 445</value>
+    <value>232, 415</value>
   </data>
   <data name="panel1.TabIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>5</value>
@@ -2915,7 +2936,7 @@
     <value>menuHelp</value>
   </data>
   <data name="iFolderOpenError">
-    <value>Nem lehet megnyitni a(z) {0} iFolder mappát.</value>
+    <value>Nem sikerült megnyitni a(z) {0} iFolder mappát.</value>
   </data>
   <data name="statusConflicts">
     <value>ütközéseket tartalmaz</value>
@@ -2948,7 +2969,7 @@
     <value>open</value>
   </data>
   <data name="accessDenied">
-    <value>A kiválasztott hely eléréséhez nem rendelkezik megfelelő jogosultsággal. Az iFolder mappa csak olyan mappában hozható létre, amelynél rendelkezik a fájlok olvasási és írási jogosultságával is. Válasszon másik helyet, és próbálja meg újra.</value>
+    <value>Nem rendelkezik megfelelő hozzáférési jogosultsággal a kijelölt helyhez.  Az iFolder mappákat csak olyan mappában lehet létrehozni, ahol a fájlokhoz olvasási és írási engedélye is van.  Válasszon másik helyet, és próbálja meg újra.</value>
   </data>
   <data name="resolve.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -3017,7 +3038,7 @@
     <value>True</value>
   </data>
   <data name="networkPath">
-    <value>A kiválasztott hely hálózati vagy nem fizikai meghajtó. Az iFolder mappáknak fizikai meghajtón kell lenniük. Válasszon másik helyet, és próbálja meg újra.</value>
+    <value>A kijelölt hely hálózaton vagy nem fizikai meghajtón található.  Az iFolder mappáknak fizikai meghajtón kell lenniük.  Válasszon másik helyet, és próbálja meg újra.</value>
   </data>
   <data name="menuHelpHelp.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -3044,7 +3065,7 @@
     <value>True</value>
   </data>
   <data name="statusSyncItemsFailed">
-    <value>{0} elem nincs szinkronizálva</value>
+    <value>{0} elem szinkronizálása nem történt meg</value>
   </data>
   <data name="menuActionCreate.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -3110,10 +3131,10 @@
     <value>NoControl</value>
   </data>
   <data name="menuExit.Text">
-    <value>Kil&amp;épés</value>
+    <value>&amp;Kilépés</value>
   </data>
   <data name="menuResolve.Text">
-    <value>Ütközések felol&amp;dása</value>
+    <value>Ütközések &amp;feloldása</value>
   </data>
   <data name="showiFolders.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -3131,7 +3152,7 @@
     <value>False</value>
   </data>
   <data name="revert.Text">
-    <value>Átállítás normál mappává</value>
+    <value>Visszaalakítás normál mappává</value>
   </data>
   <data name="statusSynced">
     <value>Szinkronizálva: {0}</value>

@@ -308,7 +308,7 @@
     <value>Top, Bottom, Left</value>
   </data>
   <data name="notifyShared.Text">
-    <value>&amp;Notifica cartelle iFolder condivise</value>
+    <value>&amp;Notifica di cartelle iFolder condivise</value>
   </data>
   <data name="cancel.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -518,7 +518,7 @@
     <value>Inherit</value>
   </data>
   <data name="accounts.HelpString">
-    <value>Visualizza l'elenco dei conti iFolder su questo computer.</value>
+    <value>Consente di visualizzare l'elenco dei conti iFolder nel computer.</value>
   </data>
   <data name="&gt;&gt;ok.Type">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -626,7 +626,7 @@
     <value>False</value>
   </data>
   <data name="autoSync.HelpString">
-    <value>Selezionare l'opzione per abilitare l'intervallo di sincronizzazione specificato oppure deselezionarla per disabilitare la sincronizzazione.</value>
+    <value>Selezionare questa opzione per consentire la sincronizzazione in base a un intervallo specifico oppure deselezionarla per disabilitare la sincronizzazione.</value>
   </data>
   <data name="cancel.TabIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>2</value>
@@ -836,7 +836,7 @@
     <value>columnHeader3</value>
   </data>
   <data name="notifyJoins.HelpString">
-    <value>Selezionare l'opzione per ricevere notifiche quando un utente aderisce a una delle proprie cartelle iFolder.</value>
+    <value>Selezionare questa opzione per ricevere notifiche in caso di adesione di un'utente alle  proprie cartelle iFolder.</value>
   </data>
   <data name="helpProvider1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -1241,7 +1241,7 @@
     <value>label1</value>
   </data>
   <data name="columnHeader5.Text">
-    <value>Ubicazione iniziale</value>
+    <value>Ubicazione home</value>
   </data>
   <data name="addAccount.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Right</value>
@@ -1271,7 +1271,7 @@
     <value>Private</value>
   </data>
   <data name="notifyJoins.Text">
-    <value>Notifica a&amp;desione utente</value>
+    <value>Notifi&amp;ca adesione utente</value>
   </data>
   <data name="ok.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1355,7 +1355,7 @@
     <value>False</value>
   </data>
   <data name="autoStart.HelpString">
-    <value>Selezionare questa opzione per avviare il client iFolder all'accesso.</value>
+    <value>Selezionare questa opzione per avviare il client iFolder quando viene eseguito il login.</value>
   </data>
   <data name="groupBox1.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1574,7 +1574,7 @@
     <value>0</value>
   </data>
   <data name="displayConfirmation.Text">
-    <value>Mostra finestra di &amp;conferma per la creazione di cartelle iFolder</value>
+    <value>Vis&amp;ualizza finestra di dialogo di conferma alla creazione di cartelle iFolder</value>
   </data>
   <data name="tabGeneral.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1652,7 +1652,7 @@
     <value>None</value>
   </data>
   <data name="autoStart.Text">
-    <value>Avvia iFolder al login al de&amp;sktop</value>
+    <value>A&amp;vvia iFolder al login al desktop</value>
   </data>
   <data name="notifyShared.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1757,7 +1757,7 @@
     <value>Inherit</value>
   </data>
   <data name="defaultInterval.HelpString">
-    <value>Specifica l'intervallo di sincronizzazione delle cartelle iFolder.</value>
+    <value>Consente di specificare l'intervallo di sincronizzazione delle cartelle iFolder.</value>
   </data>
   <data name="details.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -2000,7 +2000,7 @@
     <value>False</value>
   </data>
   <data name="notifyCollisions.Text">
-    <value>N&amp;otifica conflitti</value>
+    <value>N&amp;otifica di conflitti</value>
   </data>
   <data name="&gt;&gt;tabAccounts.Type">
     <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -2042,7 +2042,7 @@
     <value>177, 372</value>
   </data>
   <data name="btnMigrate.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>307, 367</value>
+    <value>304, 367</value>
   </data>
   <data name="autoStart.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -2063,7 +2063,7 @@
     <value>True</value>
   </data>
   <data name="notifyCollisions.HelpString">
-    <value>Selezionare l'opzione per ricevere notifiche in caso di conflitti in una cartella iFolder.</value>
+    <value>Selezionare questa opzione per ricevere notifiche in caso di conflitto in una cartella iFolder.</value>
   </data>
   <data name="&gt;&gt;timer1.Name">
     <value>timer1</value>
@@ -2297,7 +2297,7 @@
     <value>MiddleLeft</value>
   </data>
   <data name="details.Text">
-    <value>&amp;Proprietà</value>
+    <value>&amp;Proprietà...</value>
   </data>
   <data name="displayConfirmation.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>NoControl</value>
@@ -2567,10 +2567,10 @@
     <value>Migrazione</value>
   </data>
   <data name="displayConfirmation.HelpString">
-    <value>Selezionare l'opzione per visualizzare la finestra di conferma della creazione di una nuova cartella iFolder.</value>
+    <value>Selezionare questa opzione affinché venga visualizzata la finestra di dialogo Conferma quando viene creata una nuova cartella iFolder.</value>
   </data>
   <data name="notifyShared.HelpString">
-    <value>Selezionare l'opzione per ricevere notifiche quando si appartiene alla condivisione di una cartella iFolder.</value>
+    <value>Selezionare questa opzione per ricevere notifiche in caso di condivisione di una cartella iFolder con l'utente.</value>
   </data>
   <data name="timeUnit.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />

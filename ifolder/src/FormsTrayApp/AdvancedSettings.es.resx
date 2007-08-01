@@ -176,10 +176,10 @@
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="label7.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>56, 16</value>
+    <value>50, 16</value>
   </data>
   <data name="port.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>377, 56</value>
+    <value>398, 55</value>
   </data>
   <data name="useProxy.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -227,10 +227,10 @@
     <value />
   </data>
   <data name="groupBox5.Text">
-    <value>Servidor alterno (proxy)</value>
+    <value>Alterno (proxy)</value>
   </data>
   <data name="label4.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>100, 16</value>
+    <value>134, 16</value>
   </data>
   <data name="$this.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
@@ -248,7 +248,7 @@
     <value>groupBox5</value>
   </data>
   <data name="label4.Text">
-    <value>&amp;Host del servidor alterno (proxy):</value>
+    <value>Host del a&amp;lterno (proxy):</value>
   </data>
   <data name="ok.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -320,7 +320,7 @@
     <value />
   </data>
   <data name="useProxy.Text">
-    <value>&amp;Utilice este servidor alterno (proxy) para sincronizar las carpetas de iFolder con el host</value>
+    <value>&amp;Utilizar este servidor alterno (proxy) para sincronizar las carpetas de iFolder con el host</value>
   </data>
   <data name="label7.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -362,7 +362,7 @@
     <value>Private</value>
   </data>
   <data name="proxy.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>88, 56</value>
+    <value>142, 56</value>
   </data>
   <data name="&gt;&gt;ok.ZOrder">
     <value>1</value>
@@ -455,7 +455,7 @@
     <value>label7</value>
   </data>
   <data name="proxy.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>233, 20</value>
+    <value>177, 20</value>
   </data>
   <data name="label7.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>MiddleCenter</value>
@@ -473,7 +473,7 @@
     <value>cancel</value>
   </data>
   <data name="label7.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>345, 58</value>
+    <value>343, 58</value>
   </data>
   <data name="label4.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -491,7 +491,7 @@
     <value />
   </data>
   <data name="ok.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>317, 112</value>
+    <value>315, 160</value>
   </data>
   <data name="cancel.Enabled" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -527,7 +527,7 @@
     <value>True</value>
   </data>
   <data name="groupBox5.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>463, 88</value>
+    <value>495, 88</value>
   </data>
   <data name="cancel.ImageIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>-1</value>
@@ -599,7 +599,7 @@
     <value />
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>480, 142</value>
+    <value>519, 192</value>
   </data>
   <data name="$this.AutoScroll" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -698,7 +698,7 @@
     <value>4</value>
   </data>
   <data name="cancel.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>396, 112</value>
+    <value>394, 160</value>
   </data>
   <data name="useProxy.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>

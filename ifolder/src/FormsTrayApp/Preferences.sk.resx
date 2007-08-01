@@ -308,7 +308,7 @@
     <value>Top, Bottom, Left</value>
   </data>
   <data name="notifyShared.Text">
-    <value>&amp;Upozorniť na zdielané aplikácie iFolders</value>
+    <value>Upozorniť na &amp;zdieľané priečinky iFolder</value>
   </data>
   <data name="cancel.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -518,7 +518,7 @@
     <value>Inherit</value>
   </data>
   <data name="accounts.HelpString">
-    <value>Zobraziť zoznam kont aplikácie iFolder na tomto počítači.</value>
+    <value>Zobrazuje zoznam kont iFolder na tomto počítači.</value>
   </data>
   <data name="&gt;&gt;ok.Type">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -569,7 +569,7 @@
     <value />
   </data>
   <data name="seconds">
-    <value>Sekundy</value>
+    <value>s</value>
   </data>
   <data name="removeAccount.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>257, 372</value>
@@ -626,7 +626,7 @@
     <value>False</value>
   </data>
   <data name="autoSync.HelpString">
-    <value>Začiarknite v prípade, že chcete povoliť synchronizáciu v zadanom intervale alebo začiarknutie zrušte v prípade, že synchronizáciu chcete zakázať.</value>
+    <value>Začiarknite toto políčko, ak chcete povoliť synchronizáciu v zadanom intervale, alebo zrušte začiarknutie, ak chcete synchronizáciu zakázať.</value>
   </data>
   <data name="cancel.TabIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>2</value>
@@ -650,7 +650,7 @@
     <value>Top, Left, Right</value>
   </data>
   <data name="label1.Text">
-    <value>Synchronizovať priečinky iFolder každých</value>
+    <value>Synchronizovať každých</value>
   </data>
   <data name="defaultInterval.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -701,7 +701,7 @@
     <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="notifyShared.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>234, 20</value>
+    <value>368, 24</value>
   </data>
   <data name="&gt;&gt;timeUnit.Parent">
     <value>groupBox1</value>
@@ -713,7 +713,7 @@
     <value />
   </data>
   <data name="days">
-    <value>Dni</value>
+    <value>dní</value>
   </data>
   <data name="autoSync.HelpNavigator" type="System.Windows.Forms.HelpNavigator, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>AssociateIndex</value>
@@ -749,7 +749,7 @@
     <value>Private</value>
   </data>
   <data name="autoSync.Text">
-    <value>Automaticky synchronizovať priečinky iFolders</value>
+    <value>Automaticky s&amp;ynchronizovať priečinky iFolder</value>
   </data>
   <data name="autoStart.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -767,7 +767,7 @@
     <value>32, 50</value>
   </data>
   <data name="displayConfirmation.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>368, 26</value>
+    <value>368, 24</value>
   </data>
   <data name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -821,13 +821,13 @@
     <value>Private</value>
   </data>
   <data name="hours">
-    <value>Hodiny</value>
+    <value>hod.</value>
   </data>
   <data name="notifyCollisions.TabIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>1</value>
   </data>
   <data name="helpProvider1.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>100, 17</value>
+    <value>0, 0</value>
   </data>
   <data name="&gt;&gt;autoStart.Type">
     <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -836,7 +836,7 @@
     <value>columnHeader3</value>
   </data>
   <data name="notifyJoins.HelpString">
-    <value>Začiarknite v prípade, že chcete dostávať upozornenia o prihlásení používateľa do jedného z vašich priečinkov iFolders.</value>
+    <value>Začiarknite toto políčko, ak chcete dostávať upozornenia na pripojenie používateľa k niektorému z vašich priečinkov iFolder.</value>
   </data>
   <data name="helpProvider1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -845,7 +845,7 @@
     <value />
   </data>
   <data name="details.HelpString">
-    <value>Kliknutím na tlačidlo zobrazíte podrobnosti o zvolenom konte.</value>
+    <value>Kliknutím sem zobrazíte podrobnosti o vybranom konte.</value>
   </data>
   <data name="defaultInterval.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -980,7 +980,7 @@
     <value>False</value>
   </data>
   <data name="columnHeader2.Text">
-    <value>Meno</value>
+    <value>Názov</value>
   </data>
   <data name="autoSync.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>368, 16</value>
@@ -1034,7 +1034,7 @@
     <value>System</value>
   </data>
   <data name="timer1.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
+    <value>0, 0</value>
   </data>
   <data name="&gt;&gt;groupBox1.ZOrder">
     <value>1</value>
@@ -1160,7 +1160,7 @@
     <value>Private</value>
   </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>176, 27</value>
+    <value>176, 16</value>
   </data>
   <data name="btnMigrate.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1241,7 +1241,7 @@
     <value>label1</value>
   </data>
   <data name="columnHeader5.Text">
-    <value>Domovské umiestnenie</value>
+    <value>Domáce umiestnenie</value>
   </data>
   <data name="addAccount.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Right</value>
@@ -1256,7 +1256,7 @@
     <value>Všeobecné</value>
   </data>
   <data name="displayConfirmation.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>16, 46</value>
+    <value>16, 48</value>
   </data>
   <data name="notifyShared.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -1271,7 +1271,7 @@
     <value>Private</value>
   </data>
   <data name="notifyJoins.Text">
-    <value>Upozorniť na pri&amp;hlásenie používateľa</value>
+    <value>Upozorniť na &amp;pripojenie používateľa</value>
   </data>
   <data name="ok.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1349,13 +1349,13 @@
     <value>True</value>
   </data>
   <data name="groupBox1.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>400, 87</value>
+    <value>400, 80</value>
   </data>
   <data name="groupBox1.ShowHelp" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
   <data name="autoStart.HelpString">
-    <value>Začiarknite v prípade, že aplikáciu iFolder chcete spustiť pri prihlásení.</value>
+    <value>Začiarknite toto políčko, ak chcete spúšťať klienta aplikácie iFolder pri prihlásení.</value>
   </data>
   <data name="groupBox1.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1574,7 +1574,7 @@
     <value>0</value>
   </data>
   <data name="displayConfirmation.Text">
-    <value>Zobraziť &amp;dialógové okno s potvrdením pri vytváraní priečinkov iFolders</value>
+    <value>P&amp;ri vytvorení priečinka iFolder zobraziť dialógové okno s potvrdením</value>
   </data>
   <data name="tabGeneral.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1652,7 +1652,7 @@
     <value>None</value>
   </data>
   <data name="autoStart.Text">
-    <value>Aplikáciu iFolder &amp;spustiť pri prihlásení na počítač</value>
+    <value>&amp;Spustiť aplikáciu iFolder pri prihlásení k počítaču</value>
   </data>
   <data name="notifyShared.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1757,13 +1757,13 @@
     <value>Inherit</value>
   </data>
   <data name="defaultInterval.HelpString">
-    <value>Určuje interval, v ktorom sú priečinky iFolders synchronizované.</value>
+    <value>Určuje interval synchronizácie priečinkov iFolder.</value>
   </data>
   <data name="details.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
   </data>
   <data name="removeAccount.HelpString">
-    <value>Kliknutím odstránite zvolené konto aplikácie iFolder.</value>
+    <value>Kliknutím sem odstránite vybrané konto iFolder.</value>
   </data>
   <data name="tabControl1.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1844,10 +1844,10 @@
     <value>0</value>
   </data>
   <data name="apply.Text">
-    <value>P&amp;oužiť</value>
+    <value>Po&amp;užiť</value>
   </data>
   <data name="notifyJoins.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>217, 20</value>
+    <value>368, 24</value>
   </data>
   <data name="accounts.Visible" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1979,7 +1979,7 @@
     <value>$this</value>
   </data>
   <data name="addAccount.Text">
-    <value>P&amp;ridať</value>
+    <value>Prid&amp;ať</value>
   </data>
   <data name="tabAccounts.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Left</value>
@@ -2000,7 +2000,7 @@
     <value>False</value>
   </data>
   <data name="notifyCollisions.Text">
-    <value>U&amp;pozorniť na konflikty</value>
+    <value>Upozorniť na konflik&amp;ty</value>
   </data>
   <data name="&gt;&gt;tabAccounts.Type">
     <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -2063,7 +2063,7 @@
     <value>True</value>
   </data>
   <data name="notifyCollisions.HelpString">
-    <value>Začiarknite v prípade, že chcete dostávať upozornenia o konfliktoch, ktoré sa objavia v aplikácii iFolder.</value>
+    <value>Začiarknite toto políčko, ak chcete dostávať upozornenia na konflikty v aplikácii iFolder.</value>
   </data>
   <data name="&gt;&gt;timer1.Name">
     <value>timer1</value>
@@ -2105,7 +2105,7 @@
     <value />
   </data>
   <data name="minutes">
-    <value>Minúty</value>
+    <value>min.</value>
   </data>
   <data name="notifyJoins.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Normal</value>
@@ -2168,7 +2168,7 @@
     <value>True</value>
   </data>
   <data name="autoStart.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>16, 18</value>
+    <value>16, 20</value>
   </data>
   <data name="accounts.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -2246,7 +2246,7 @@
     <value>True</value>
   </data>
   <data name="addAccount.HelpString">
-    <value>Kliknutím vytvoríte nové konto aplikácie iFolder.</value>
+    <value>Kliknutím sem vytvoríte nové konto iFolder.</value>
   </data>
   <data name="autoStart.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Left</value>
@@ -2567,10 +2567,10 @@
     <value>Prenos</value>
   </data>
   <data name="displayConfirmation.HelpString">
-    <value>Začiarknite v prípade, že po vytvorení priečinku iFolder chcete zobraziť dialógové okno s potvrdením.</value>
+    <value>Začiarknite toto políčko, ak chcete, aby sa pri vytvorení nového priečinka iFolder zobrazilo dialógové okno so žiadosťou o potvrdenie.</value>
   </data>
   <data name="notifyShared.HelpString">
-    <value>Začiarknite v prípade, že chcete dostávať upozornenia o tom, že je priečinok iFolder s vami zdieľaný.</value>
+    <value>Začiarknite toto políčko, ak chcete dostávať upozornenia na zdieľanie priečinka iFolder s vašim kontom.</value>
   </data>
   <data name="timeUnit.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />

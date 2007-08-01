@@ -251,7 +251,7 @@
     <value>True</value>
   </data>
   <data name="defaultInterval.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>64, 20</value>
+    <value>55, 20</value>
   </data>
   <data name="&gt;&gt;groupBox3.ZOrder">
     <value>2</value>
@@ -308,7 +308,7 @@
     <value>Top, Bottom, Left</value>
   </data>
   <data name="notifyShared.Text">
-    <value>&amp;Notificar las carpetas compartidas de iFolder</value>
+    <value>&amp;Notificar carpetas de iFolder compartidas</value>
   </data>
   <data name="cancel.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -431,7 +431,7 @@
     <value>NoControl</value>
   </data>
   <data name="removeAccount.Text">
-    <value>&amp;Eliminar</value>
+    <value>Eli&amp;minar</value>
   </data>
   <data name="tabMigrate.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>424, 406</value>
@@ -518,7 +518,7 @@
     <value>Inherit</value>
   </data>
   <data name="accounts.HelpString">
-    <value>Muestra la lista de cuentas de iFolder de este equipo.</value>
+    <value>Muestra la lista de cuentas iFolder de este equipo.</value>
   </data>
   <data name="&gt;&gt;ok.Type">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -626,7 +626,7 @@
     <value>False</value>
   </data>
   <data name="autoSync.HelpString">
-    <value>Marque esta opción para habilitar la sincronización en el intervalo especificado o desmárquela para inhabilitar la sincronización.</value>
+    <value>Seleccione esta opción para habilitar la sincronización en el intervalo especificado o deselecciónela para inhabilitar la sincronización.</value>
   </data>
   <data name="cancel.TabIndex" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>2</value>
@@ -749,7 +749,7 @@
     <value>Private</value>
   </data>
   <data name="autoSync.Text">
-    <value>S&amp;incronizar carpetas de iFolder automáticamente</value>
+    <value>&amp;Sincronizar carpetas de iFolder de forma automática</value>
   </data>
   <data name="autoStart.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -764,7 +764,7 @@
     <value>False</value>
   </data>
   <data name="label1.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>16, 50</value>
+    <value>32, 50</value>
   </data>
   <data name="displayConfirmation.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>368, 24</value>
@@ -836,7 +836,7 @@
     <value>columnHeader3</value>
   </data>
   <data name="notifyJoins.HelpString">
-    <value>Marque esta opción para recibir notificaciones cada vez que un usuario se una a sus carpetas de iFolder</value>
+    <value>Seleccione esta opción para recibir notificaciones cada vez que un usuario se una a sus carpetas de iFolder.</value>
   </data>
   <data name="helpProvider1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -845,7 +845,7 @@
     <value />
   </data>
   <data name="details.HelpString">
-    <value>Haga clic en esta opción para ver información de la cuenta seleccionada.</value>
+    <value>Haga clic aquí para mostrar información de la cuenta seleccionada.</value>
   </data>
   <data name="defaultInterval.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -947,7 +947,7 @@
     <value>Inherit</value>
   </data>
   <data name="columnHeader3.Text">
-    <value>Conectado</value>
+    <value>En línea</value>
   </data>
   <data name="notifyShared.HelpKeyword" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1097,7 +1097,7 @@
     <value>MiddleCenter</value>
   </data>
   <data name="defaultInterval.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>216, 48</value>
+    <value>225, 48</value>
   </data>
   <data name="cancel.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -1241,7 +1241,7 @@
     <value>label1</value>
   </data>
   <data name="columnHeader5.Text">
-    <value>Ubicación principal</value>
+    <value>Ubicación personal</value>
   </data>
   <data name="addAccount.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Right</value>
@@ -1271,7 +1271,7 @@
     <value>Private</value>
   </data>
   <data name="notifyJoins.Text">
-    <value>Notificar c&amp;uando se una un usuario</value>
+    <value>Notificar c&amp;uando se une un usuario</value>
   </data>
   <data name="ok.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1355,7 +1355,7 @@
     <value>False</value>
   </data>
   <data name="autoStart.HelpString">
-    <value>Marque esta opción para iniciar el Cliente iFolder al entrar.</value>
+    <value>Seleccione esta opción para iniciar el Cliente iFolder durante el inicio de sesión.</value>
   </data>
   <data name="groupBox1.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1574,7 +1574,7 @@
     <value>0</value>
   </data>
   <data name="displayConfirmation.Text">
-    <value>&amp;Mostrar diálogo de confirmación al crear carpetas de iFolder</value>
+    <value>Mostrar recuadro de diálogo de &amp;confirmación al crear carpetas de iFolder</value>
   </data>
   <data name="tabGeneral.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1652,7 +1652,7 @@
     <value>None</value>
   </data>
   <data name="autoStart.Text">
-    <value>Ini&amp;ciar iFolder al entrar al escritorio</value>
+    <value>Iniciar iFolder al entrar al &amp;escritorio</value>
   </data>
   <data name="notifyShared.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1757,13 +1757,13 @@
     <value>Inherit</value>
   </data>
   <data name="defaultInterval.HelpString">
-    <value>Especifica el intervalo al que se sincronizan las carpetas de iFolder.</value>
+    <value>Especifica el intervalo en el que se sincronizan las carpetas de iFolder.</value>
   </data>
   <data name="details.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
   </data>
   <data name="removeAccount.HelpString">
-    <value>Haga clic en esta opción para eliminar la cuenta de iFolder seleccionada.</value>
+    <value>Haga clic aquí para eliminar la cuenta iFolder seleccionada.</value>
   </data>
   <data name="tabControl1.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1844,7 +1844,7 @@
     <value>0</value>
   </data>
   <data name="apply.Text">
-    <value>&amp;Aplicar</value>
+    <value>Ap&amp;licar</value>
   </data>
   <data name="notifyJoins.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>368, 24</value>
@@ -2063,7 +2063,7 @@
     <value>True</value>
   </data>
   <data name="notifyCollisions.HelpString">
-    <value>Marque esta opción para recibir notificaciones cada vez que exista un conflicto en una carpeta de iFolder.</value>
+    <value>Seleccione esta opción para recibir notificaciones cuando ocurra un conflicto en iFolder.</value>
   </data>
   <data name="&gt;&gt;timer1.Name">
     <value>timer1</value>
@@ -2246,7 +2246,7 @@
     <value>True</value>
   </data>
   <data name="addAccount.HelpString">
-    <value>Haga clic en esta opción para crear una nueva cuenta de iFolder.</value>
+    <value>Haga clic aquí para crear una cuenta iFolder nueva.</value>
   </data>
   <data name="autoStart.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Left</value>
@@ -2567,10 +2567,10 @@
     <value>Migración</value>
   </data>
   <data name="displayConfirmation.HelpString">
-    <value>Marque esta opción para mostrar el diálogo de confirmación cuando se crea una nueva carpeta de iFolder.</value>
+    <value>Seleccione esta opción para mostrar el cuadro de diálogo de confirmación cada vez que se crea una nueva carpeta de iFolder.</value>
   </data>
   <data name="notifyShared.HelpString">
-    <value>Marque esta opción para recibir notificaciones cada vez que compartan una carpeta de iFolder con usted.</value>
+    <value>Seleccione esta opción para recibir notificaciones cada vez que compartan con usted una carpeta de iFolder.</value>
   </data>
   <data name="timeUnit.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
