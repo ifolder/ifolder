@@ -3812,7 +3812,7 @@ namespace Novell.iFolderCom
 			string helpFile = "";
 			if( this.tabControl1.SelectedIndex == 1)
 			{
-				helpFile = Path.Combine(Path.Combine(Path.Combine(Application.StartupPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"doc\user\data\sharewith.html#bq6lwm0");
+				helpFile = Path.Combine(Path.Combine(Path.Combine(Application.StartupPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"doc\user\data\sharewith.html");
 			}
 			else if( this.tabControl1.SelectedIndex == 0)
 			{

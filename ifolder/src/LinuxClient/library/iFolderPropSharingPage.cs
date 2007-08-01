@@ -634,7 +634,7 @@ namespace Novell.iFolder
 					}
 					case Gtk.ResponseType.Help:
 					{
-						Util.ShowHelp("sharewith.html#bq6lwm0", topLevelWindow);
+						Util.ShowHelp("sharewith.html", topLevelWindow);
 						break;
 					}
 					case Gtk.ResponseType.Cancel:

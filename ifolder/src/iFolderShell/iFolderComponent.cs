@@ -397,14 +397,14 @@ namespace Novell.iFolderCom
 		{
 			// TODO: - may need to pass in a specific page to load.
 			string helpPath = helpFile.Equals(string.Empty) ? 
-				Path.Combine(Path.Combine(Path.Combine(dllPath, "help"), GetLanguageDirectory()), @"doc\user\data\front.html") :
+				Path.Combine(Path.Combine(Path.Combine(dllPath, "help"), GetLanguageDirectory()), @"doc\user\data\bookinfo.html") :
 				Path.Combine(Path.Combine(Path.Combine(dllPath, "help"), GetLanguageDirectory()), helpFile);
 
 			if (!File.Exists(helpPath))
 			{
 				// Fall back to English if the language isn't installed.
 				helpPath = helpFile.Equals(string.Empty) ? 
-					Path.Combine(dllPath, @"help\en\doc\user\data\front.html") :
+					Path.Combine(dllPath, @"help\en\doc\user\data\bookinfo.html") :
 					Path.Combine(Path.Combine(dllPath, @"help\en"), helpFile);
 			}
 
