@@ -154,6 +154,10 @@ msgstr "Description:"
 msgid "Disk Space on Server"
 msgstr "Disk Space on Server"
 
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:100
+msgid "0"
+msgstr "0"
+
 #: src/LinuxClient/library/AccountDialog.cs:201 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:195
 msgid "Quota:"

@@ -813,7 +813,7 @@ namespace Novell.iFolder
 		
 		private void OnServerInformationPagePrepared(object o, Gnome.PreparedArgs args)
 		{
-			this.Title = Util.GS("iFolder Account Assistant - (1 of 5)");
+			this.Title = Util.GS("iFolder Account Assistant");
 			UpdateServerInformationPageSensitivity(null, null);
 			
 			DomainInformation[] domains = domainController.GetDomains();
@@ -834,7 +834,7 @@ namespace Novell.iFolder
 
 		private void OnDefaultAccountPagePrepared(object o, Gnome.PreparedArgs args)
 		{
-			this.Title = Util.GS("iFolder Account Assistant - (5 of 6)");
+			this.Title = Util.GS("iFolder Account Assistant");
 			string str = "";
 			this.CreateDefault.Active = true;
 			try
@@ -914,7 +914,7 @@ namespace Novell.iFolder
 
 		private void OnRAPagePrepared(object o, Gnome.PreparedArgs args)
 		{
-			this.Title = Util.GS("iFolder Account Assistant - (4 of 5)");
+			this.Title = Util.GS("iFolder Account Assistant");
 			PassPhraseSet = false;
 			ForwardButton.Label = "gtk-go-forward";
 			ForwardButton.Sensitive = false;
@@ -947,7 +947,7 @@ namespace Novell.iFolder
 
 		private void OnUserInformationPagePrepared(object o, Gnome.PreparedArgs args)
 		{
-			this.Title = Util.GS("iFolder Account Assistant - (2 of 5)");
+			this.Title = Util.GS("iFolder Account Assistant");
 			UpdateUserInformationPageSensitivity(null, null);
 			UserNameEntry.GrabFocus();
 
@@ -957,7 +957,7 @@ namespace Novell.iFolder
 		
 		private void OnConnectPagePrepared(object o, Gnome.PreparedArgs args)
 		{
-			this.Title = Util.GS("iFolder Account Assistant - (3 of 5)");
+			this.Title = Util.GS("iFolder Account Assistant");
 
 			ServerNameVerifyLabel.Text = ServerNameEntry.Text;
 			UserNameVerifyLabel.Text = UserNameEntry.Text;

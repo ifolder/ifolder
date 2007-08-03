@@ -97,7 +97,7 @@ namespace Novell.iFolder
 				LastSuccessfulSync.Text = Util.GS("N/A");
 			else
 				LastSuccessfulSync.Text = ifolder.LastSyncTime;
-			FFSyncValue.Text = "0";
+			FFSyncValue.Text = Util.GS("0");
 			
 			int syncInterval = 0;
 			if (ifolder.EffectiveSyncInterval <= 0)
@@ -206,7 +206,7 @@ namespace Novell.iFolder
 					diskTable.Attach(LimitLabel, 0,1,1,2,
 						AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
 				
-					LimitValue = new Label("0");
+					LimitValue = new Label(Util.GS("0"));
 					LimitValue.Xalign = 1;
 					diskTable.Attach(LimitValue, 1,2,1,2,
 						AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -246,15 +246,15 @@ namespace Novell.iFolder
 					{
 						LimitCheckButton.Active = false; 
 						LimitEntry.Sensitive = false;
-						LimitEntry.Text = "0";
+						LimitEntry.Text = Util.GS("0");
 					}
 					if(LimitLabel != null)
 					{
 						LimitLabel.Sensitive = false;
 						LimitValue.Sensitive = false;
-						LimitValue.Text = "0";
+						LimitValue.Text = Util.GS("0");
 					}
-					AvailValue.Text = "0";
+					AvailValue.Text = Util.GS("0");
 				}
 				else
 				{
@@ -291,7 +291,7 @@ namespace Novell.iFolder
 				// Add one because there is no iFolder that is zero
 				if(ds.UsedSpace == 0)
 				{
-					UsedValue.Text = "0";
+					UsedValue.Text = Util.GS("0");
 				}
 				else
 				{
@@ -417,7 +417,7 @@ namespace Novell.iFolder
 			usedLabel.Xalign = 0;
 			diskTable.Attach(usedLabel, 0,1,0,1,
 					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
-			UsedValue = new Label("0");
+			UsedValue = new Label(Util.GS("0"));
 			UsedValue.Xalign = 1;
 			diskTable.Attach(UsedValue, 1,2,0,1,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -435,7 +435,7 @@ namespace Novell.iFolder
 			AvailLabel.Xalign = 0;
 			diskTable.Attach(AvailLabel, 0,1,2,3,
 					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
-			AvailValue = new Label("0");
+			AvailValue = new Label(Util.GS("0"));
 			AvailValue.Xalign = 1;
 			diskTable.Attach(AvailValue, 1,2,2,3,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -518,7 +518,7 @@ namespace Novell.iFolder
 			FFSyncLabel.Xalign = 0;
 			syncTable.Attach(FFSyncLabel, 0,1,1,2,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-			FFSyncValue = new Label("0");
+			FFSyncValue = new Label(Util.GS("0"));
 			FFSyncValue.Xalign = 0;
 			syncTable.Attach(FFSyncValue, 1,2,1,2);
 			
@@ -569,7 +569,7 @@ namespace Novell.iFolder
 				DiskUsageEmptyLabel.Sensitive = false;
 
 				LimitEntry.Sensitive = false;
-				LimitEntry.Text = "0";
+				LimitEntry.Text = Util.GS("0");
 
 				// if the currrent value is not the same as the 
 				// read value, we need to save the currrent value
@@ -591,7 +591,7 @@ namespace Novell.iFolder
 
 			if(sizeLimit == 0)
 			{
-				AvailValue.Text = "0";
+				AvailValue.Text = Util.GS("0");
 			}
 			else
 			{
