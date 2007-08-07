@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-InvitationWizard_CSFILES = $(srcdir)/AcceptDeclinePage.cs $(srcdir)/AssemblyInfo.cs $(srcdir)/BaseWizardPage.cs $(srcdir)/CompletionPage.cs $(srcdir)/InteriorPageTemplate.cs $(srcdir)/InvitationWizard.cs $(srcdir)/SelectiFolderLocationPage.cs $(srcdir)/SelectInvitationPage.cs $(srcdir)/WelcomePage.cs $(srcdir)/WelcomePageTemplate.cs
+InvitationWizard_CSFILES = $(srcdir)/AcceptDeclinePage.cs $(srcdir)/BaseWizardPage.cs $(srcdir)/CompletionPage.cs $(srcdir)/InteriorPageTemplate.cs $(srcdir)/InvitationWizard.cs $(srcdir)/SelectiFolderLocationPage.cs $(srcdir)/SelectInvitationPage.cs $(srcdir)/WelcomePage.cs $(srcdir)/WelcomePageTemplate.cs
 InvitationWizard_CSFILES_CSC := $(subst /,$(SEP),$(InvitationWizard_CSFILES))
 InvitationWizard_INCLUDES =
 InvitationWizard_RESOURCES = $(srcdir)/App$(ICON_EXT)
@@ -16,10 +16,6 @@ PROJECT_FILES = $(srcdir)/InvitationWizard.csproj $(srcdir)/FormsInvitationWizar
 
 EXTRA_DIST = $(InvitationWizard_CSFILES) $(DATA_FILES) $(RESX_FILES) $(PROJECT_FILES) AssemblyInfo.cs.in
 
-AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in Makefile
-	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
-	chmod +x $@
-
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml
 DOC_FILE_CMD = /doc:$(DOC_FILE)
@@ -28,8 +24,8 @@ endif
 
 all: InvitationWizard.exe
 
-InvitationWizard.exe: $(InvitationWizard_CSFILES) $(InvitationWizard_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(InvitationWizard_FLAGS) $(SIMIAS_LIBS) $(InvitationWizard_LIBS:%=/r:%) $(InvitationWizard_LIBPATH:%=/lib:%) $(InvitationWizard_RESOURCES:%=$(ICON_FLAG)%) $(InvitationWizard_CSFILES_CSC) $(DOC_FILE_CMD)
+InvitationWizard.exe: $(srcdir)/AssemblyInfo.cs $(InvitationWizard_CSFILES) $(InvitationWizard_RESOURCES)
+	$(CSC) /out:$@ $(CSCFLAGS) $(InvitationWizard_FLAGS) $(SIMIAS_LIBS) $(InvitationWizard_LIBS:%=/r:%) $(InvitationWizard_LIBPATH:%=/lib:%) $(InvitationWizard_RESOURCES:%=$(ICON_FLAG)%) $(srcdir)/AssemblyInfo.cs $(InvitationWizard_CSFILES_CSC) $(DOC_FILE_CMD)
 
 if DEBUG
 if WINDOWS
@@ -63,7 +59,10 @@ clean-local:
 
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)
+	rm -rf Makefile
+	rm -rf AssemblyInfo.cs
 
 maintainer-clean-local:
 	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
+	rm -rf AssemblyInfo.cs
 

@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-iFolderClient_CSFILES = $(srcdir)/iFolderApplication.cs $(srcdir)/CopyLocation.cs $(srcdir)/AssemblyInfo.cs
+iFolderClient_CSFILES = $(srcdir)/iFolderApplication.cs $(srcdir)/CopyLocation.cs 
 iFolderClient_CSFILES_CSC := $(subst /,$(SEP),$(iFolderClient_CSFILES))
 iFolderClient_INCLUDES =
 iFolderClient_RESOURCES =
@@ -29,14 +29,10 @@ endif
 
 all: iFolderClient.exe ifolder ifolder.desktop
 
-iFolderClient.exe: AssemblyInfo.cs $(iFolderClient_CSFILES) $(iFolderClient_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(SIMIAS_CLIENT_LIBS) $(iFolderClient_FLAGS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(iFolderClient_LIBS:%=/r:%) $(iFolderClient_LIBPATH:%=/lib:%) $(iFolderClient_RESOURCES:%=$(ICON_FLAG)%) $(iFolderClient_CSFILES_CSC) $(DOC_FILE_CMD)
+iFolderClient.exe: $(srcdir)/AssemblyInfo.cs $(iFolderClient_CSFILES) $(iFolderClient_RESOURCES)
+	$(CSC) /out:$@ $(CSCFLAGS) $(SIMIAS_CLIENT_LIBS) $(iFolderClient_FLAGS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(iFolderClient_LIBS:%=/r:%) $(iFolderClient_LIBPATH:%=/lib:%) $(iFolderClient_RESOURCES:%=$(ICON_FLAG)%) $(srcdir)/AssemblyInfo.cs $(iFolderClient_CSFILES_CSC) $(DOC_FILE_CMD)
 
 # 	$(CSC) /out:$@ $(CSCFLAGS) $(SIMIAS_CLIENT_LIBS) $(iFolderClient_FLAGS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(DBUS_SHARP_LIBS) $(iFolderClient_LIBS:%=/r:%) $(iFolderClient_LIBPATH:%=/lib:%) $(iFolderClient_RESOURCES:%=$(ICON_FLAG)%) $(iFolderClient_CSFILES_CSC) $(DOC_FILE_CMD)
-
-AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in Makefile
-	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
-	chmod +x $@
 
 install-exec-local: all
 	$(mkinstalldirs) $(DESTDIR)$(bindir) $(DESTDIR)$(datadir)/applications
@@ -56,6 +52,9 @@ clean-local:
 distclean-local:
 	rm -f ifolder
 	rm -f ifolder.desktop
+	rm -rf Makefile
+	rm -rf AssemblyInfo.cs
 
 maintainer-clean-local:
 	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
+	rm -rf AssemblyInfo.cs

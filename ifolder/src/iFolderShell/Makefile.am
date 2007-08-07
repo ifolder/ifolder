@@ -8,7 +8,7 @@ endif
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-iFolderComponent_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/iFolderAdvanced.cs $(srcdir)/ShareListMember.cs $(srcdir)/MyMessageBox.cs $(srcdir)/Win32Window.cs $(srcdir)/iFolderComponent.cs $(srcdir)/NewiFolder.cs $(srcdir)/UserProperties.cs $(srcdir)/iFolderInfo.cs $(srcdir)/GaugeChart.cs $(srcdir)/Picker.cs $(srcdir)/ConflictResolver.cs $(srcdir)/CreateiFolder.cs $(srcdir)/DomainItem.cs $(srcdir)/VirtualListView.cs $(srcdir)/Win32.cs $(srcdir)/Win32Security.cs
+iFolderComponent_CSFILES = $(srcdir)/iFolderAdvanced.cs $(srcdir)/ShareListMember.cs $(srcdir)/MyMessageBox.cs $(srcdir)/Win32Window.cs $(srcdir)/iFolderComponent.cs $(srcdir)/NewiFolder.cs $(srcdir)/UserProperties.cs $(srcdir)/iFolderInfo.cs $(srcdir)/GaugeChart.cs $(srcdir)/Picker.cs $(srcdir)/ConflictResolver.cs $(srcdir)/CreateiFolder.cs $(srcdir)/DomainItem.cs $(srcdir)/VirtualListView.cs $(srcdir)/Win32.cs $(srcdir)/Win32Security.cs
 iFolderComponent_CSFILES_CSC := $(subst /,$(SEP),$(iFolderComponent_CSFILES))
 iFolderComponent_INCLUDES =
 iFolderComponent_RESOURCES =
@@ -43,10 +43,6 @@ PROJECT_FILES = $(srcdir)/iFolderComponent.csproj $(srcdir)/iFolderComponent.sln
 
 EXTRA_DIST = $(iFolderShell_RESOURCES_DLLS) $(iFolderComponent_CSFILES) $(iFolderShell_SRCFILES) $(iFolderShellRes_SRCFILES) $(iFolderShell_DEF) $(DATA_FILES) $(iFolderComponent_RESX_FILES) $(WINDOWS_FILES) $(srcdir)/iFolderShell.reg $(PROJECT_FILES) AssemblyInfo.cs.in iFolderShell/nifver.h.in 
 
-AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in Makefile
-	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
-	chmod +x $@
-
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml
 DOC_FILE_CMD = /doc:$(DOC_FILE)
@@ -79,8 +75,8 @@ iFolderShell/nifver.h: $(srcdir)/iFolderShell/nifver.h.in
 iFolderComponent.tlb: iFolderComponent.dll
 	$(TLBX) $< $(LDOUT)$@
 
-iFolderComponent.dll: $(iFolderComponent_RESOURCES_FILES) $(iFolderComponent_CSFILES) $(iFolderComponent_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderComponent_FLAGS) $(SIMIAS_CLIENT_LIBS) $(iFolderComponent_LIBS:%=/r:%) $(iFolderComponent_LIBPATH:%=/lib:%) $(iFolderComponent_RESOURCES_FILES:%=/res:%) $(iFolderComponent_CSFILES_CSC) $(DOC_FILE_CMD)
+iFolderComponent.dll: $(srcdir)/AssemblyInfo.cs $(iFolderComponent_RESOURCES_FILES) $(iFolderComponent_CSFILES) $(iFolderComponent_RESOURCES)
+	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderComponent_FLAGS) $(SIMIAS_CLIENT_LIBS) $(iFolderComponent_LIBS:%=/r:%) $(iFolderComponent_LIBPATH:%=/lib:%) $(iFolderComponent_RESOURCES_FILES:%=/res:%) $(srcdir)/AssemblyInfo.cs $(iFolderComponent_CSFILES_CSC) $(DOC_FILE_CMD)
 	
 Novell.iFolderCom.%.resources: %.resx
 	$(RESG) $< $@
@@ -130,7 +126,10 @@ clean-local:
 
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)
+	rm -rf AssemblyInfo.cs
+	rm -rf Makefile
 
 maintainer-clean-local:
 	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
+	rm -rf AssemblyInfo.cs
 

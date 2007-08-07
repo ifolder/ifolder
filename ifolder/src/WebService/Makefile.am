@@ -13,10 +13,6 @@ Simias_WEBBINPATH = `pkg-config --variable=libdir simias-client`
 
 EXTRA_DIST = iFolder.asmx $(iFolderWebService_CSFILES) AssemblyInfo.cs.in
 
-AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in Makefile
-	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
-	chmod +x $@
-
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml
 DOC_FILE_CMD = /doc:$(DOC_FILE)
@@ -26,7 +22,7 @@ endif
 all: Novell.iFolder.Web.dll ../iFolder/iFolderWebService.cs
 
 Novell.iFolder.Web.dll: $(srcdir)/AssemblyInfo.cs $(iFolderWebService_CSFILES) $(iFolderWebService_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderWebService_FLAGS) $(SIMIAS_LIBS) $(SIMIAS_CLIENT_LIBS) $(iFolderWebService_LIBS:%=/r:%) $(iFolderWebService_LIBPATH:%=/lib:%) $(iFolderWebService_RESOURCES:%=$(ICON_FLAG)%) $(iFolderWebService_CSFILES_CSC) $(DOC_FILE_CMD) $(srcdir)/AssemblyInfo.cs
+	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderWebService_FLAGS) $(SIMIAS_LIBS) $(SIMIAS_CLIENT_LIBS) $(iFolderWebService_LIBS:%=/r:%) $(iFolderWebService_LIBPATH:%=/lib:%) $(iFolderWebService_RESOURCES:%=$(ICON_FLAG)%) $(srcdir)/AssemblyInfo.cs $(iFolderWebService_CSFILES_CSC) $(DOC_FILE_CMD) 
 
 ../iFolder/iFolderWebService.cs: iFolderWebService.wsdl 
 	wsdl -out:../iFolder/iFolderWebService.cs iFolderWebService.wsdl
@@ -65,8 +61,11 @@ clean-local:
 
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)
+	rm -rf AssemblyInfo.cs
+	rm -rf Makefile
 
 maintainer-clean-local:
 	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
+	rm -rf AssemblyInfo.cs
 
 

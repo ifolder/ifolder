@@ -11,10 +11,6 @@ iFolder_LIBPATH =
 
 EXTRA_DIST = AssemblyInfo.cs.in
 
-AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in Makefile
-	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
-	chmod +x $@
-
 CUR_DIR := $(shell pwd)
 
 if MAKE_DOC_FILE
@@ -61,7 +57,10 @@ clean-local:
 
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)
+	rm -rf AssemblyInfo.cs
+	rm -rf Makefile
 
 maintainer-clean-local:
 	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
+	rm -rf AssemblyInfo.cs
 
