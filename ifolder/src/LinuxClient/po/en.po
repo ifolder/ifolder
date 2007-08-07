@@ -476,7 +476,7 @@ msgstr "Password:"
 #: src/LinuxClient/library/iFolderLoginDialog.cs:189 
 #: src/LinuxClient/library/iFolderLoginDialog.cs:235
 msgid "_Remember password"
-msgstr "_Remember password"
+msgstr "_Remember password on this computer"
 
 #: src/LinuxClient/library/iFolderLoginDialog.cs:245 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:327
@@ -1398,7 +1398,7 @@ msgstr "User Name:"
 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:295 
 msgid "Remember _password"
-msgstr "Remember _password"
+msgstr "Remember _password on this computer"
 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:303 
 msgid "_Enable account"
@@ -1787,7 +1787,7 @@ msgstr ""
 msgid ""
 "_Remember my password"
 msgstr ""
-"_Remember my password"
+"_Remember my password on this computer"
 
 msgid ""
 "Verify and Connect"
@@ -1807,7 +1807,7 @@ msgstr ""
 msgid ""
 "Remember password:"
 msgstr ""
-"Remember password:"
+"Remember password on this computer:"
 
 msgid ""
 "Make default account:"
@@ -1842,7 +1842,7 @@ msgstr ""
 msgid ""
 "_Remember the Passphrase"
 msgstr ""
-"_Remember the Passphrase"
+"_Remember the Passphrase on this computer"
 
 msgid ""
 "Select the Passphrase Recovery Agent"
@@ -2057,7 +2057,7 @@ msgstr ""
 msgid ""
 "Remember Passphrase"
 msgstr ""
-"Remember Passphrase"
+"Remember Passphrase on this computer"
 
 msgid ""
 "Select Passphrase Recovery Agent"
@@ -2783,7 +2783,7 @@ msgstr ""
 msgid ""
 "_Remember Passphrase"
 msgstr ""
-"_Remember Passphrase"
+"_Remember Passphrase on this computer"
 
 msgid ""
 "iFolder Server Older"
@@ -2984,3 +2984,13 @@ msgid ""
 "There is no iFolder 2.x data present on this computer."
 msgstr ""
 "There is no iFolder 2.x data present on this computer."
+
+msgid ""
+"There is no Recovery Agent selected. Encrypted data cannot be recovered later, if passphrase is lost. Do you want to continue?"
+msgstr ""
+"There is no Recovery Agent selected. Encrypted data cannot be recovered later, if passphrase is lost. Do you want to continue?"
+
+msgid ""
+"Recovery Agent Not Selected"
+msgstr ""
+"Recovery Agent Not Selected"

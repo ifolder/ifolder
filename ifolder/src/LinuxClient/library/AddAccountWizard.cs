@@ -1221,7 +1221,7 @@ namespace Novell.iFolder
 					}
 					else
 					{
-						string recoveryAgentName = "";
+						string recoveryAgentName = null;
 						TreeSelection tSelect = RATreeView.Selection;
 						if(tSelect != null && tSelect.CountSelectedRows() == 1)
 						{
@@ -1232,7 +1232,7 @@ namespace Novell.iFolder
 							if( recoveryAgentName == Util.GS("None"))
 								recoveryAgentName = null;
 						}
-						if( recoveryAgentName != null && recoveryAgentName != Util.GS("None"))
+						if( recoveryAgentName != null && recoveryAgentName != Util.GS("None") )
 						{
 							// Show Certificate..
 							byte [] RACertificateObj = domainController.GetRACertificate(ConnectedDomain.ID, recoveryAgentName);
@@ -1259,6 +1259,23 @@ namespace Novell.iFolder
 								}
 							}
 						}
+                        else
+                        {
+                            iFolderMsgDialog dg = new iFolderMsgDialog(
+                                this, 
+                                iFolderMsgDialog.DialogType.Warning,
+                                iFolderMsgDialog.ButtonSet.YesNo,
+                                "No Recovery Agent",
+                                Util.GS("Recovery Agent Not Selected"),
+                                Util.GS("There is no Recovery Agent selected. Encrypted data cannot be recovered later, if passphrase is lost. Do you want to continue?"));
+		       	                int rc = dg.Run();
+                	    		dg.Hide();
+            	                dg.Destroy();
+                                if( (ResponseType)rc != ResponseType.Yes )
+                                {
+                                    NextPage = false;
+                                }
+                        }
 						if( NextPage)
 						{
 							Status passPhraseStatus = simws.SetPassPhrase (ConnectedDomain.ID, PassPhraseEntry.Text, recoveryAgentName, publicKey);
