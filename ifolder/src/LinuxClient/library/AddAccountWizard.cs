@@ -915,7 +915,6 @@ namespace Novell.iFolder
 		private void OnRAPagePrepared(object o, Gnome.PreparedArgs args)
 		{
 			this.Title = Util.GS("iFolder Account Assistant");
-			PassPhraseSet = false;
 			ForwardButton.Label = "gtk-go-forward";
 			ForwardButton.Sensitive = false;
 
@@ -925,6 +924,7 @@ namespace Novell.iFolder
 			{
 				if ( domainController.IsPassPhraseSet (ConnectedDomain.ID) == false)
 				{
+					PassPhraseSet = false;
 				       string[] list = domainController.GetRAList (ConnectedDomain.ID);
 
 				       foreach (string raagent in list )

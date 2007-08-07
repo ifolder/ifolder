@@ -1234,7 +1234,7 @@ namespace Novell.iFolder
                                                                                                                 iFolderMsgDialog.ButtonSet.None,
                                                                                                                 Util.GS("No Logged-In domains"),
                                                                                                                 Util.GS("There are no logged-in domains for importing keys."),
-                                                                                                                Util.GS("For importing keys the domain should be connected. Log on to a domain an try."));
+                                                                                                                Util.GS("For importing keys the domain should be connected. Log on to the domain and try."));
 					dialog.Run();
 	                                dialog.Hide();
         	                        dialog.Destroy();
@@ -1908,7 +1908,7 @@ namespace Novell.iFolder
                                                                                                                 iFolderMsgDialog.ButtonSet.None,
                                                                                                                 Util.GS("No Logged-In domains"),
                                                                                                                 Util.GS("There are no logged-in domains for changing the passphrase."),
-                                                                                                                Util.GS("For changing passphrase the domain should be connected. Log on to a domain an try."));
+                                                                                                                Util.GS("For changing passphrase the domain should be connected. Log on to the domain and try."));
 					dialog.Run();
 	                                dialog.Hide();
         	                        dialog.Destroy();
