@@ -18,7 +18,7 @@ namespace Novell.FormsTrayApp
 		/// Required designer variable.
 		/// </summary>
 		
-		private System.Windows.Forms.Panel panel1;
+		private System.Windows.Forms.Panel panel;
 		private System.Windows.Forms.PictureBox waterMark;
 		private System.Windows.Forms.ComboBox RecoveryAgentCombo;
 		private System.Windows.Forms.Label lblRecoveryAgent;
@@ -30,11 +30,11 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Button btnCancel;
 		private System.Windows.Forms.Button btnOk;
 		private System.ComponentModel.Container components = null;
-		private SimiasWebService simws;
+		private SimiasWebService simws = null;
 		private string DomainID;
 		private bool	status;
 		private static System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(EnterPassphraseDialog));
-		private System.Windows.Forms.PictureBox pictureBox1;
+		private System.Windows.Forms.PictureBox pictureBox;
 		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(FormsTrayApp));
 
 		public bool PassphraseStatus
@@ -82,8 +82,8 @@ namespace Novell.FormsTrayApp
 		private void InitializeComponent()
 		{
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(EnterPassphraseDialog));
-			this.panel1 = new System.Windows.Forms.Panel();
-			this.pictureBox1 = new System.Windows.Forms.PictureBox();
+			this.panel = new System.Windows.Forms.Panel();
+			this.pictureBox = new System.Windows.Forms.PictureBox();
 			this.waterMark = new System.Windows.Forms.PictureBox();
 			this.RecoveryAgentCombo = new System.Windows.Forms.ComboBox();
 			this.lblRecoveryAgent = new System.Windows.Forms.Label();
@@ -94,53 +94,53 @@ namespace Novell.FormsTrayApp
 			this.savePassphrase = new System.Windows.Forms.CheckBox();
 			this.btnCancel = new System.Windows.Forms.Button();
 			this.btnOk = new System.Windows.Forms.Button();
-			this.panel1.SuspendLayout();
+			this.panel.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// panel1
+			// panel
 			// 
-			this.panel1.AccessibleDescription = resources.GetString("panel1.AccessibleDescription");
-			this.panel1.AccessibleName = resources.GetString("panel1.AccessibleName");
-			this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("panel1.Anchor")));
-			this.panel1.AutoScroll = ((bool)(resources.GetObject("panel1.AutoScroll")));
-			this.panel1.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("panel1.AutoScrollMargin")));
-			this.panel1.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("panel1.AutoScrollMinSize")));
-			this.panel1.BackColor = System.Drawing.Color.Transparent;
-			this.panel1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel1.BackgroundImage")));
-			this.panel1.Controls.Add(this.pictureBox1);
-			this.panel1.Controls.Add(this.waterMark);
-			this.panel1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("panel1.Dock")));
-			this.panel1.Enabled = ((bool)(resources.GetObject("panel1.Enabled")));
-			this.panel1.Font = ((System.Drawing.Font)(resources.GetObject("panel1.Font")));
-			this.panel1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("panel1.ImeMode")));
-			this.panel1.Location = ((System.Drawing.Point)(resources.GetObject("panel1.Location")));
-			this.panel1.Name = "panel1";
-			this.panel1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("panel1.RightToLeft")));
-			this.panel1.Size = ((System.Drawing.Size)(resources.GetObject("panel1.Size")));
-			this.panel1.TabIndex = ((int)(resources.GetObject("panel1.TabIndex")));
-			this.panel1.Text = resources.GetString("panel1.Text");
-			this.panel1.Visible = ((bool)(resources.GetObject("panel1.Visible")));
+			this.panel.AccessibleDescription = resources.GetString("panel1.AccessibleDescription");
+			this.panel.AccessibleName = resources.GetString("panel1.AccessibleName");
+			this.panel.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("panel1.Anchor")));
+			this.panel.AutoScroll = ((bool)(resources.GetObject("panel1.AutoScroll")));
+			this.panel.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("panel1.AutoScrollMargin")));
+			this.panel.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("panel1.AutoScrollMinSize")));
+			this.panel.BackColor = System.Drawing.Color.Transparent;
+			this.panel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel1.BackgroundImage")));
+			this.panel.Controls.Add(this.pictureBox);
+			this.panel.Controls.Add(this.waterMark);
+			this.panel.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("panel1.Dock")));
+			this.panel.Enabled = ((bool)(resources.GetObject("panel1.Enabled")));
+			this.panel.Font = ((System.Drawing.Font)(resources.GetObject("panel1.Font")));
+			this.panel.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("panel1.ImeMode")));
+			this.panel.Location = ((System.Drawing.Point)(resources.GetObject("panel1.Location")));
+			this.panel.Name = "panel1";
+			this.panel.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("panel1.RightToLeft")));
+			this.panel.Size = ((System.Drawing.Size)(resources.GetObject("panel1.Size")));
+			this.panel.TabIndex = ((int)(resources.GetObject("panel1.TabIndex")));
+			this.panel.Text = resources.GetString("panel1.Text");
+			this.panel.Visible = ((bool)(resources.GetObject("panel1.Visible")));
 			// 
-			// pictureBox1
+			// pictureBox
 			// 
-			this.pictureBox1.AccessibleDescription = resources.GetString("pictureBox1.AccessibleDescription");
-			this.pictureBox1.AccessibleName = resources.GetString("pictureBox1.AccessibleName");
-			this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("pictureBox1.Anchor")));
-			this.pictureBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.BackgroundImage")));
-			this.pictureBox1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("pictureBox1.Dock")));
-			this.pictureBox1.Enabled = ((bool)(resources.GetObject("pictureBox1.Enabled")));
-			this.pictureBox1.Font = ((System.Drawing.Font)(resources.GetObject("pictureBox1.Font")));
-			this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-			this.pictureBox1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("pictureBox1.ImeMode")));
-			this.pictureBox1.Location = ((System.Drawing.Point)(resources.GetObject("pictureBox1.Location")));
-			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("pictureBox1.RightToLeft")));
-			this.pictureBox1.Size = ((System.Drawing.Size)(resources.GetObject("pictureBox1.Size")));
-			this.pictureBox1.SizeMode = ((System.Windows.Forms.PictureBoxSizeMode)(resources.GetObject("pictureBox1.SizeMode")));
-			this.pictureBox1.TabIndex = ((int)(resources.GetObject("pictureBox1.TabIndex")));
-			this.pictureBox1.TabStop = false;
-			this.pictureBox1.Text = resources.GetString("pictureBox1.Text");
-			this.pictureBox1.Visible = ((bool)(resources.GetObject("pictureBox1.Visible")));
+			this.pictureBox.AccessibleDescription = resources.GetString("pictureBox1.AccessibleDescription");
+			this.pictureBox.AccessibleName = resources.GetString("pictureBox1.AccessibleName");
+			this.pictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("pictureBox1.Anchor")));
+			this.pictureBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.BackgroundImage")));
+			this.pictureBox.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("pictureBox1.Dock")));
+			this.pictureBox.Enabled = ((bool)(resources.GetObject("pictureBox1.Enabled")));
+			this.pictureBox.Font = ((System.Drawing.Font)(resources.GetObject("pictureBox1.Font")));
+			this.pictureBox.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+			this.pictureBox.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("pictureBox1.ImeMode")));
+			this.pictureBox.Location = ((System.Drawing.Point)(resources.GetObject("pictureBox1.Location")));
+			this.pictureBox.Name = "pictureBox1";
+			this.pictureBox.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("pictureBox1.RightToLeft")));
+			this.pictureBox.Size = ((System.Drawing.Size)(resources.GetObject("pictureBox1.Size")));
+			this.pictureBox.SizeMode = ((System.Windows.Forms.PictureBoxSizeMode)(resources.GetObject("pictureBox1.SizeMode")));
+			this.pictureBox.TabIndex = ((int)(resources.GetObject("pictureBox1.TabIndex")));
+			this.pictureBox.TabStop = false;
+			this.pictureBox.Text = resources.GetString("pictureBox1.Text");
+			this.pictureBox.Visible = ((bool)(resources.GetObject("pictureBox1.Visible")));
 			// 
 			// waterMark
 			// 
@@ -184,8 +184,7 @@ namespace Novell.FormsTrayApp
 			this.RecoveryAgentCombo.Size = ((System.Drawing.Size)(resources.GetObject("RecoveryAgentCombo.Size")));
 			this.RecoveryAgentCombo.TabIndex = ((int)(resources.GetObject("RecoveryAgentCombo.TabIndex")));
 			this.RecoveryAgentCombo.Text = resources.GetString("RecoveryAgentCombo.Text");
-			this.RecoveryAgentCombo.Visible = ((bool)(resources.GetObject("RecoveryAgentCombo.Visible")));
-			this.RecoveryAgentCombo.SelectedIndexChanged += new System.EventHandler(this.RecoveryAgentCombo_SelectedIndexChanged);
+			this.RecoveryAgentCombo.Visible = ((bool)(resources.GetObject("RecoveryAgentCombo.Visible")));			
 			// 
 			// lblRecoveryAgent
 			// 
@@ -397,7 +396,7 @@ namespace Novell.FormsTrayApp
 			this.Controls.Add(this.Passphrase);
 			this.Controls.Add(this.lblRecoveryAgent);
 			this.Controls.Add(this.RecoveryAgentCombo);
-			this.Controls.Add(this.panel1);
+			this.Controls.Add(this.panel);
 			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
 			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -412,7 +411,7 @@ namespace Novell.FormsTrayApp
 			this.StartPosition = ((System.Windows.Forms.FormStartPosition)(resources.GetObject("$this.StartPosition")));
 			this.Text = resources.GetString("$this.Text");
 			this.Load += new System.EventHandler(this.EnterPassphraseDialog_Load);
-			this.panel1.ResumeLayout(false);
+			this.panel.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -520,8 +519,8 @@ namespace Novell.FormsTrayApp
 			this.Icon = new Icon(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder_16.ico"));
 			this.waterMark.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder-banner.png"));
 			//this.waterMark.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder48.png"));
-			this.pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-			this.pictureBox1.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder-banner-scaler.png"));
+			this.pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+			this.pictureBox.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder-banner-scaler.png"));
 			string[] rAgents= this.simws.GetRAListOnClient(DomainID);
 			foreach( string rAgent in rAgents)
 			{
@@ -545,15 +544,16 @@ namespace Novell.FormsTrayApp
 
 		private void UpdateSensitivity()
 		{
-			if( this.Passphrase.Text.Length > 0 && this.Passphrase.Text == this.RetypePassphrase.Text)
+			if( this.Passphrase.Text.Length > 0 && 
+				this.RetypePassphrase.Text.Length > 0 && 
+				this.Passphrase.Text == this.RetypePassphrase.Text)
+			{
 				this.btnOk.Enabled = true;
+			}
 			else
+			{
 				this.btnOk.Enabled = false;
-		}
-
-		private void RecoveryAgentCombo_SelectedIndexChanged(object sender, System.EventArgs e)
-		{
-		
+			}
 		}
 	}
 }

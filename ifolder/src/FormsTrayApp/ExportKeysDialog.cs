@@ -13,7 +13,7 @@ namespace Novell.FormsTrayApp
 	/// </summary>
 	public class ExportKeysDialog : System.Windows.Forms.Form
 	{
-		private System.Windows.Forms.Panel panel1;
+		private System.Windows.Forms.Panel panel;
 		private System.Windows.Forms.PictureBox waterMark;
 		private System.Windows.Forms.Label domainLabel;
 		private System.Windows.Forms.Label filePathLabel;
@@ -27,9 +27,9 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Button btnExport;
 		private System.Windows.Forms.Button BrowseButton;
 		private DomainItem selectedDomain;
-		private System.Windows.Forms.PictureBox pictureBox1;
-		private SimiasWebService simiasWebService;
-		private iFolderWebService ifWebService;
+		private System.Windows.Forms.PictureBox pictureBox;
+		private SimiasWebService simiasWebService = null;
+		private iFolderWebService ifWebService = null;
 		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(ExportKeysDialog));
 		/// <summary>
 		/// Required designer variable.
@@ -79,9 +79,8 @@ namespace Novell.FormsTrayApp
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(ExportKeysDialog));
-			this.panel1 = new System.Windows.Forms.Panel();
-			this.pictureBox1 = new System.Windows.Forms.PictureBox();
+			this.panel = new System.Windows.Forms.Panel();
+			this.pictureBox = new System.Windows.Forms.PictureBox();
 			this.waterMark = new System.Windows.Forms.PictureBox();
 			this.domainLabel = new System.Windows.Forms.Label();
 			this.filePathLabel = new System.Windows.Forms.Label();
@@ -94,345 +93,345 @@ namespace Novell.FormsTrayApp
 			this.btnCancel = new System.Windows.Forms.Button();
 			this.btnExport = new System.Windows.Forms.Button();
 			this.BrowseButton = new System.Windows.Forms.Button();
-			this.panel1.SuspendLayout();
+			this.panel.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// panel1
+			// panel
 			// 
-			this.panel1.AccessibleDescription = resources.GetString("panel1.AccessibleDescription");
-			this.panel1.AccessibleName = resources.GetString("panel1.AccessibleName");
-			this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("panel1.Anchor")));
-			this.panel1.AutoScroll = ((bool)(resources.GetObject("panel1.AutoScroll")));
-			this.panel1.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("panel1.AutoScrollMargin")));
-			this.panel1.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("panel1.AutoScrollMinSize")));
-			this.panel1.BackColor = System.Drawing.Color.Transparent;
-			this.panel1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel1.BackgroundImage")));
-			this.panel1.Controls.Add(this.pictureBox1);
-			this.panel1.Controls.Add(this.waterMark);
-			this.panel1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("panel1.Dock")));
-			this.panel1.Enabled = ((bool)(resources.GetObject("panel1.Enabled")));
-			this.panel1.Font = ((System.Drawing.Font)(resources.GetObject("panel1.Font")));
-			this.panel1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("panel1.ImeMode")));
-			this.panel1.Location = ((System.Drawing.Point)(resources.GetObject("panel1.Location")));
-			this.panel1.Name = "panel1";
-			this.panel1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("panel1.RightToLeft")));
-			this.panel1.Size = ((System.Drawing.Size)(resources.GetObject("panel1.Size")));
-			this.panel1.TabIndex = ((int)(resources.GetObject("panel1.TabIndex")));
-			this.panel1.Text = resources.GetString("panel1.Text");
-			this.panel1.Visible = ((bool)(resources.GetObject("panel1.Visible")));
+			this.panel.AccessibleDescription = Resource.GetString("panel1.AccessibleDescription");
+			this.panel.AccessibleName = Resource.GetString("panel1.AccessibleName");
+			this.panel.Anchor = ((System.Windows.Forms.AnchorStyles)(Resource.GetObject("panel1.Anchor")));
+			this.panel.AutoScroll = ((bool)(Resource.GetObject("panel1.AutoScroll")));
+			this.panel.AutoScrollMargin = ((System.Drawing.Size)(Resource.GetObject("panel1.AutoScrollMargin")));
+			this.panel.AutoScrollMinSize = ((System.Drawing.Size)(Resource.GetObject("panel1.AutoScrollMinSize")));
+			this.panel.BackColor = System.Drawing.Color.Transparent;
+			this.panel.BackgroundImage = ((System.Drawing.Image)(Resource.GetObject("panel1.BackgroundImage")));
+			this.panel.Controls.Add(this.pictureBox);
+			this.panel.Controls.Add(this.waterMark);
+			this.panel.Dock = ((System.Windows.Forms.DockStyle)(Resource.GetObject("panel1.Dock")));
+			this.panel.Enabled = ((bool)(Resource.GetObject("panel1.Enabled")));
+			this.panel.Font = ((System.Drawing.Font)(Resource.GetObject("panel1.Font")));
+			this.panel.ImeMode = ((System.Windows.Forms.ImeMode)(Resource.GetObject("panel1.ImeMode")));
+			this.panel.Location = ((System.Drawing.Point)(Resource.GetObject("panel1.Location")));
+			this.panel.Name = "panel1";
+			this.panel.RightToLeft = ((System.Windows.Forms.RightToLeft)(Resource.GetObject("panel1.RightToLeft")));
+			this.panel.Size = ((System.Drawing.Size)(Resource.GetObject("panel1.Size")));
+			this.panel.TabIndex = ((int)(Resource.GetObject("panel1.TabIndex")));
+			this.panel.Text = Resource.GetString("panel1.Text");
+			this.panel.Visible = ((bool)(Resource.GetObject("panel1.Visible")));
 			// 
-			// pictureBox1
+			// pictureBox
 			// 
-			this.pictureBox1.AccessibleDescription = resources.GetString("pictureBox1.AccessibleDescription");
-			this.pictureBox1.AccessibleName = resources.GetString("pictureBox1.AccessibleName");
-			this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("pictureBox1.Anchor")));
-			this.pictureBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.BackgroundImage")));
-			this.pictureBox1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("pictureBox1.Dock")));
-			this.pictureBox1.Enabled = ((bool)(resources.GetObject("pictureBox1.Enabled")));
-			this.pictureBox1.Font = ((System.Drawing.Font)(resources.GetObject("pictureBox1.Font")));
-			this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-			this.pictureBox1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("pictureBox1.ImeMode")));
-			this.pictureBox1.Location = ((System.Drawing.Point)(resources.GetObject("pictureBox1.Location")));
-			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("pictureBox1.RightToLeft")));
-			this.pictureBox1.Size = ((System.Drawing.Size)(resources.GetObject("pictureBox1.Size")));
-			this.pictureBox1.SizeMode = ((System.Windows.Forms.PictureBoxSizeMode)(resources.GetObject("pictureBox1.SizeMode")));
-			this.pictureBox1.TabIndex = ((int)(resources.GetObject("pictureBox1.TabIndex")));
-			this.pictureBox1.TabStop = false;
-			this.pictureBox1.Text = resources.GetString("pictureBox1.Text");
-			this.pictureBox1.Visible = ((bool)(resources.GetObject("pictureBox1.Visible")));
+			this.pictureBox.AccessibleDescription = Resource.GetString("pictureBox1.AccessibleDescription");
+			this.pictureBox.AccessibleName = Resource.GetString("pictureBox1.AccessibleName");
+			this.pictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)(Resource.GetObject("pictureBox1.Anchor")));
+			this.pictureBox.BackgroundImage = ((System.Drawing.Image)(Resource.GetObject("pictureBox1.BackgroundImage")));
+			this.pictureBox.Dock = ((System.Windows.Forms.DockStyle)(Resource.GetObject("pictureBox1.Dock")));
+			this.pictureBox.Enabled = ((bool)(Resource.GetObject("pictureBox1.Enabled")));
+			this.pictureBox.Font = ((System.Drawing.Font)(Resource.GetObject("pictureBox1.Font")));
+			this.pictureBox.Image = ((System.Drawing.Image)(Resource.GetObject("pictureBox1.Image")));
+			this.pictureBox.ImeMode = ((System.Windows.Forms.ImeMode)(Resource.GetObject("pictureBox1.ImeMode")));
+			this.pictureBox.Location = ((System.Drawing.Point)(Resource.GetObject("pictureBox1.Location")));
+			this.pictureBox.Name = "pictureBox1";
+			this.pictureBox.RightToLeft = ((System.Windows.Forms.RightToLeft)(Resource.GetObject("pictureBox1.RightToLeft")));
+			this.pictureBox.Size = ((System.Drawing.Size)(Resource.GetObject("pictureBox1.Size")));
+			this.pictureBox.SizeMode = ((System.Windows.Forms.PictureBoxSizeMode)(Resource.GetObject("pictureBox1.SizeMode")));
+			this.pictureBox.TabIndex = ((int)(Resource.GetObject("pictureBox1.TabIndex")));
+			this.pictureBox.TabStop = false;
+			this.pictureBox.Text = Resource.GetString("pictureBox1.Text");
+			this.pictureBox.Visible = ((bool)(Resource.GetObject("pictureBox1.Visible")));
 			// 
 			// waterMark
 			// 
-			this.waterMark.AccessibleDescription = resources.GetString("waterMark.AccessibleDescription");
-			this.waterMark.AccessibleName = resources.GetString("waterMark.AccessibleName");
-			this.waterMark.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("waterMark.Anchor")));
+			this.waterMark.AccessibleDescription = Resource.GetString("waterMark.AccessibleDescription");
+			this.waterMark.AccessibleName = Resource.GetString("waterMark.AccessibleName");
+			this.waterMark.Anchor = ((System.Windows.Forms.AnchorStyles)(Resource.GetObject("waterMark.Anchor")));
 			this.waterMark.BackColor = System.Drawing.Color.Transparent;
-			this.waterMark.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("waterMark.BackgroundImage")));
-			this.waterMark.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("waterMark.Dock")));
-			this.waterMark.Enabled = ((bool)(resources.GetObject("waterMark.Enabled")));
-			this.waterMark.Font = ((System.Drawing.Font)(resources.GetObject("waterMark.Font")));
-			this.waterMark.Image = ((System.Drawing.Image)(resources.GetObject("waterMark.Image")));
-			this.waterMark.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("waterMark.ImeMode")));
-			this.waterMark.Location = ((System.Drawing.Point)(resources.GetObject("waterMark.Location")));
+			this.waterMark.BackgroundImage = ((System.Drawing.Image)(Resource.GetObject("waterMark.BackgroundImage")));
+			this.waterMark.Dock = ((System.Windows.Forms.DockStyle)(Resource.GetObject("waterMark.Dock")));
+			this.waterMark.Enabled = ((bool)(Resource.GetObject("waterMark.Enabled")));
+			this.waterMark.Font = ((System.Drawing.Font)(Resource.GetObject("waterMark.Font")));
+			this.waterMark.Image = ((System.Drawing.Image)(Resource.GetObject("waterMark.Image")));
+			this.waterMark.ImeMode = ((System.Windows.Forms.ImeMode)(Resource.GetObject("waterMark.ImeMode")));
+			this.waterMark.Location = ((System.Drawing.Point)(Resource.GetObject("waterMark.Location")));
 			this.waterMark.Name = "waterMark";
-			this.waterMark.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("waterMark.RightToLeft")));
-			this.waterMark.Size = ((System.Drawing.Size)(resources.GetObject("waterMark.Size")));
-			this.waterMark.SizeMode = ((System.Windows.Forms.PictureBoxSizeMode)(resources.GetObject("waterMark.SizeMode")));
-			this.waterMark.TabIndex = ((int)(resources.GetObject("waterMark.TabIndex")));
+			this.waterMark.RightToLeft = ((System.Windows.Forms.RightToLeft)(Resource.GetObject("waterMark.RightToLeft")));
+			this.waterMark.Size = ((System.Drawing.Size)(Resource.GetObject("waterMark.Size")));
+			this.waterMark.SizeMode = ((System.Windows.Forms.PictureBoxSizeMode)(Resource.GetObject("waterMark.SizeMode")));
+			this.waterMark.TabIndex = ((int)(Resource.GetObject("waterMark.TabIndex")));
 			this.waterMark.TabStop = false;
-			this.waterMark.Text = resources.GetString("waterMark.Text");
-			this.waterMark.Visible = ((bool)(resources.GetObject("waterMark.Visible")));
+			this.waterMark.Text = Resource.GetString("waterMark.Text");
+			this.waterMark.Visible = ((bool)(Resource.GetObject("waterMark.Visible")));
 			// 
 			// domainLabel
 			// 
-			this.domainLabel.AccessibleDescription = resources.GetString("domainLabel.AccessibleDescription");
-			this.domainLabel.AccessibleName = resources.GetString("domainLabel.AccessibleName");
-			this.domainLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("domainLabel.Anchor")));
-			this.domainLabel.AutoSize = ((bool)(resources.GetObject("domainLabel.AutoSize")));
-			this.domainLabel.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("domainLabel.Dock")));
-			this.domainLabel.Enabled = ((bool)(resources.GetObject("domainLabel.Enabled")));
-			this.domainLabel.Font = ((System.Drawing.Font)(resources.GetObject("domainLabel.Font")));
-			this.domainLabel.Image = ((System.Drawing.Image)(resources.GetObject("domainLabel.Image")));
-			this.domainLabel.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("domainLabel.ImageAlign")));
-			this.domainLabel.ImageIndex = ((int)(resources.GetObject("domainLabel.ImageIndex")));
-			this.domainLabel.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("domainLabel.ImeMode")));
-			this.domainLabel.Location = ((System.Drawing.Point)(resources.GetObject("domainLabel.Location")));
+			this.domainLabel.AccessibleDescription = Resource.GetString("domainLabel.AccessibleDescription");
+			this.domainLabel.AccessibleName = Resource.GetString("domainLabel.AccessibleName");
+			this.domainLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(Resource.GetObject("domainLabel.Anchor")));
+			this.domainLabel.AutoSize = ((bool)(Resource.GetObject("domainLabel.AutoSize")));
+			this.domainLabel.Dock = ((System.Windows.Forms.DockStyle)(Resource.GetObject("domainLabel.Dock")));
+			this.domainLabel.Enabled = ((bool)(Resource.GetObject("domainLabel.Enabled")));
+			this.domainLabel.Font = ((System.Drawing.Font)(Resource.GetObject("domainLabel.Font")));
+			this.domainLabel.Image = ((System.Drawing.Image)(Resource.GetObject("domainLabel.Image")));
+			this.domainLabel.ImageAlign = ((System.Drawing.ContentAlignment)(Resource.GetObject("domainLabel.ImageAlign")));
+			this.domainLabel.ImageIndex = ((int)(Resource.GetObject("domainLabel.ImageIndex")));
+			this.domainLabel.ImeMode = ((System.Windows.Forms.ImeMode)(Resource.GetObject("domainLabel.ImeMode")));
+			this.domainLabel.Location = ((System.Drawing.Point)(Resource.GetObject("domainLabel.Location")));
 			this.domainLabel.Name = "domainLabel";
-			this.domainLabel.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("domainLabel.RightToLeft")));
-			this.domainLabel.Size = ((System.Drawing.Size)(resources.GetObject("domainLabel.Size")));
-			this.domainLabel.TabIndex = ((int)(resources.GetObject("domainLabel.TabIndex")));
-			this.domainLabel.Text = resources.GetString("domainLabel.Text");
-			this.domainLabel.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("domainLabel.TextAlign")));
-			this.domainLabel.Visible = ((bool)(resources.GetObject("domainLabel.Visible")));
+			this.domainLabel.RightToLeft = ((System.Windows.Forms.RightToLeft)(Resource.GetObject("domainLabel.RightToLeft")));
+			this.domainLabel.Size = ((System.Drawing.Size)(Resource.GetObject("domainLabel.Size")));
+			this.domainLabel.TabIndex = ((int)(Resource.GetObject("domainLabel.TabIndex")));
+			this.domainLabel.Text = Resource.GetString("domainLabel.Text");
+			this.domainLabel.TextAlign = ((System.Drawing.ContentAlignment)(Resource.GetObject("domainLabel.TextAlign")));
+			this.domainLabel.Visible = ((bool)(Resource.GetObject("domainLabel.Visible")));
 			// 
 			// filePathLabel
 			// 
-			this.filePathLabel.AccessibleDescription = resources.GetString("filePathLabel.AccessibleDescription");
-			this.filePathLabel.AccessibleName = resources.GetString("filePathLabel.AccessibleName");
-			this.filePathLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("filePathLabel.Anchor")));
-			this.filePathLabel.AutoSize = ((bool)(resources.GetObject("filePathLabel.AutoSize")));
-			this.filePathLabel.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("filePathLabel.Dock")));
-			this.filePathLabel.Enabled = ((bool)(resources.GetObject("filePathLabel.Enabled")));
-			this.filePathLabel.Font = ((System.Drawing.Font)(resources.GetObject("filePathLabel.Font")));
-			this.filePathLabel.Image = ((System.Drawing.Image)(resources.GetObject("filePathLabel.Image")));
-			this.filePathLabel.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("filePathLabel.ImageAlign")));
-			this.filePathLabel.ImageIndex = ((int)(resources.GetObject("filePathLabel.ImageIndex")));
-			this.filePathLabel.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("filePathLabel.ImeMode")));
-			this.filePathLabel.Location = ((System.Drawing.Point)(resources.GetObject("filePathLabel.Location")));
+			this.filePathLabel.AccessibleDescription = Resource.GetString("filePathLabel.AccessibleDescription");
+			this.filePathLabel.AccessibleName = Resource.GetString("filePathLabel.AccessibleName");
+			this.filePathLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(Resource.GetObject("filePathLabel.Anchor")));
+			this.filePathLabel.AutoSize = ((bool)(Resource.GetObject("filePathLabel.AutoSize")));
+			this.filePathLabel.Dock = ((System.Windows.Forms.DockStyle)(Resource.GetObject("filePathLabel.Dock")));
+			this.filePathLabel.Enabled = ((bool)(Resource.GetObject("filePathLabel.Enabled")));
+			this.filePathLabel.Font = ((System.Drawing.Font)(Resource.GetObject("filePathLabel.Font")));
+			this.filePathLabel.Image = ((System.Drawing.Image)(Resource.GetObject("filePathLabel.Image")));
+			this.filePathLabel.ImageAlign = ((System.Drawing.ContentAlignment)(Resource.GetObject("filePathLabel.ImageAlign")));
+			this.filePathLabel.ImageIndex = ((int)(Resource.GetObject("filePathLabel.ImageIndex")));
+			this.filePathLabel.ImeMode = ((System.Windows.Forms.ImeMode)(Resource.GetObject("filePathLabel.ImeMode")));
+			this.filePathLabel.Location = ((System.Drawing.Point)(Resource.GetObject("filePathLabel.Location")));
 			this.filePathLabel.Name = "filePathLabel";
-			this.filePathLabel.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("filePathLabel.RightToLeft")));
-			this.filePathLabel.Size = ((System.Drawing.Size)(resources.GetObject("filePathLabel.Size")));
-			this.filePathLabel.TabIndex = ((int)(resources.GetObject("filePathLabel.TabIndex")));
-			this.filePathLabel.Text = resources.GetString("filePathLabel.Text");
-			this.filePathLabel.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("filePathLabel.TextAlign")));
-			this.filePathLabel.Visible = ((bool)(resources.GetObject("filePathLabel.Visible")));
+			this.filePathLabel.RightToLeft = ((System.Windows.Forms.RightToLeft)(Resource.GetObject("filePathLabel.RightToLeft")));
+			this.filePathLabel.Size = ((System.Drawing.Size)(Resource.GetObject("filePathLabel.Size")));
+			this.filePathLabel.TabIndex = ((int)(Resource.GetObject("filePathLabel.TabIndex")));
+			this.filePathLabel.Text = Resource.GetString("filePathLabel.Text");
+			this.filePathLabel.TextAlign = ((System.Drawing.ContentAlignment)(Resource.GetObject("filePathLabel.TextAlign")));
+			this.filePathLabel.Visible = ((bool)(Resource.GetObject("filePathLabel.Visible")));
 			// 
 			// recoveryAgentLabel
 			// 
-			this.recoveryAgentLabel.AccessibleDescription = resources.GetString("recoveryAgentLabel.AccessibleDescription");
-			this.recoveryAgentLabel.AccessibleName = resources.GetString("recoveryAgentLabel.AccessibleName");
-			this.recoveryAgentLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("recoveryAgentLabel.Anchor")));
-			this.recoveryAgentLabel.AutoSize = ((bool)(resources.GetObject("recoveryAgentLabel.AutoSize")));
-			this.recoveryAgentLabel.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("recoveryAgentLabel.Dock")));
-			this.recoveryAgentLabel.Enabled = ((bool)(resources.GetObject("recoveryAgentLabel.Enabled")));
-			this.recoveryAgentLabel.Font = ((System.Drawing.Font)(resources.GetObject("recoveryAgentLabel.Font")));
-			this.recoveryAgentLabel.Image = ((System.Drawing.Image)(resources.GetObject("recoveryAgentLabel.Image")));
-			this.recoveryAgentLabel.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("recoveryAgentLabel.ImageAlign")));
-			this.recoveryAgentLabel.ImageIndex = ((int)(resources.GetObject("recoveryAgentLabel.ImageIndex")));
-			this.recoveryAgentLabel.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("recoveryAgentLabel.ImeMode")));
-			this.recoveryAgentLabel.Location = ((System.Drawing.Point)(resources.GetObject("recoveryAgentLabel.Location")));
+			this.recoveryAgentLabel.AccessibleDescription = Resource.GetString("recoveryAgentLabel.AccessibleDescription");
+			this.recoveryAgentLabel.AccessibleName = Resource.GetString("recoveryAgentLabel.AccessibleName");
+			this.recoveryAgentLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(Resource.GetObject("recoveryAgentLabel.Anchor")));
+			this.recoveryAgentLabel.AutoSize = ((bool)(Resource.GetObject("recoveryAgentLabel.AutoSize")));
+			this.recoveryAgentLabel.Dock = ((System.Windows.Forms.DockStyle)(Resource.GetObject("recoveryAgentLabel.Dock")));
+			this.recoveryAgentLabel.Enabled = ((bool)(Resource.GetObject("recoveryAgentLabel.Enabled")));
+			this.recoveryAgentLabel.Font = ((System.Drawing.Font)(Resource.GetObject("recoveryAgentLabel.Font")));
+			this.recoveryAgentLabel.Image = ((System.Drawing.Image)(Resource.GetObject("recoveryAgentLabel.Image")));
+			this.recoveryAgentLabel.ImageAlign = ((System.Drawing.ContentAlignment)(Resource.GetObject("recoveryAgentLabel.ImageAlign")));
+			this.recoveryAgentLabel.ImageIndex = ((int)(Resource.GetObject("recoveryAgentLabel.ImageIndex")));
+			this.recoveryAgentLabel.ImeMode = ((System.Windows.Forms.ImeMode)(Resource.GetObject("recoveryAgentLabel.ImeMode")));
+			this.recoveryAgentLabel.Location = ((System.Drawing.Point)(Resource.GetObject("recoveryAgentLabel.Location")));
 			this.recoveryAgentLabel.Name = "recoveryAgentLabel";
-			this.recoveryAgentLabel.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("recoveryAgentLabel.RightToLeft")));
-			this.recoveryAgentLabel.Size = ((System.Drawing.Size)(resources.GetObject("recoveryAgentLabel.Size")));
-			this.recoveryAgentLabel.TabIndex = ((int)(resources.GetObject("recoveryAgentLabel.TabIndex")));
-			this.recoveryAgentLabel.Text = resources.GetString("recoveryAgentLabel.Text");
-			this.recoveryAgentLabel.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("recoveryAgentLabel.TextAlign")));
-			this.recoveryAgentLabel.Visible = ((bool)(resources.GetObject("recoveryAgentLabel.Visible")));
+			this.recoveryAgentLabel.RightToLeft = ((System.Windows.Forms.RightToLeft)(Resource.GetObject("recoveryAgentLabel.RightToLeft")));
+			this.recoveryAgentLabel.Size = ((System.Drawing.Size)(Resource.GetObject("recoveryAgentLabel.Size")));
+			this.recoveryAgentLabel.TabIndex = ((int)(Resource.GetObject("recoveryAgentLabel.TabIndex")));
+			this.recoveryAgentLabel.Text = Resource.GetString("recoveryAgentLabel.Text");
+			this.recoveryAgentLabel.TextAlign = ((System.Drawing.ContentAlignment)(Resource.GetObject("recoveryAgentLabel.TextAlign")));
+			this.recoveryAgentLabel.Visible = ((bool)(Resource.GetObject("recoveryAgentLabel.Visible")));
 			// 
 			// emailLabel
 			// 
-			this.emailLabel.AccessibleDescription = resources.GetString("emailLabel.AccessibleDescription");
-			this.emailLabel.AccessibleName = resources.GetString("emailLabel.AccessibleName");
-			this.emailLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("emailLabel.Anchor")));
-			this.emailLabel.AutoSize = ((bool)(resources.GetObject("emailLabel.AutoSize")));
-			this.emailLabel.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("emailLabel.Dock")));
-			this.emailLabel.Enabled = ((bool)(resources.GetObject("emailLabel.Enabled")));
-			this.emailLabel.Font = ((System.Drawing.Font)(resources.GetObject("emailLabel.Font")));
-			this.emailLabel.Image = ((System.Drawing.Image)(resources.GetObject("emailLabel.Image")));
-			this.emailLabel.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("emailLabel.ImageAlign")));
-			this.emailLabel.ImageIndex = ((int)(resources.GetObject("emailLabel.ImageIndex")));
-			this.emailLabel.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("emailLabel.ImeMode")));
-			this.emailLabel.Location = ((System.Drawing.Point)(resources.GetObject("emailLabel.Location")));
+			this.emailLabel.AccessibleDescription = Resource.GetString("emailLabel.AccessibleDescription");
+			this.emailLabel.AccessibleName = Resource.GetString("emailLabel.AccessibleName");
+			this.emailLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(Resource.GetObject("emailLabel.Anchor")));
+			this.emailLabel.AutoSize = ((bool)(Resource.GetObject("emailLabel.AutoSize")));
+			this.emailLabel.Dock = ((System.Windows.Forms.DockStyle)(Resource.GetObject("emailLabel.Dock")));
+			this.emailLabel.Enabled = ((bool)(Resource.GetObject("emailLabel.Enabled")));
+			this.emailLabel.Font = ((System.Drawing.Font)(Resource.GetObject("emailLabel.Font")));
+			this.emailLabel.Image = ((System.Drawing.Image)(Resource.GetObject("emailLabel.Image")));
+			this.emailLabel.ImageAlign = ((System.Drawing.ContentAlignment)(Resource.GetObject("emailLabel.ImageAlign")));
+			this.emailLabel.ImageIndex = ((int)(Resource.GetObject("emailLabel.ImageIndex")));
+			this.emailLabel.ImeMode = ((System.Windows.Forms.ImeMode)(Resource.GetObject("emailLabel.ImeMode")));
+			this.emailLabel.Location = ((System.Drawing.Point)(Resource.GetObject("emailLabel.Location")));
 			this.emailLabel.Name = "emailLabel";
-			this.emailLabel.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("emailLabel.RightToLeft")));
-			this.emailLabel.Size = ((System.Drawing.Size)(resources.GetObject("emailLabel.Size")));
-			this.emailLabel.TabIndex = ((int)(resources.GetObject("emailLabel.TabIndex")));
-			this.emailLabel.Text = resources.GetString("emailLabel.Text");
-			this.emailLabel.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("emailLabel.TextAlign")));
-			this.emailLabel.Visible = ((bool)(resources.GetObject("emailLabel.Visible")));
+			this.emailLabel.RightToLeft = ((System.Windows.Forms.RightToLeft)(Resource.GetObject("emailLabel.RightToLeft")));
+			this.emailLabel.Size = ((System.Drawing.Size)(Resource.GetObject("emailLabel.Size")));
+			this.emailLabel.TabIndex = ((int)(Resource.GetObject("emailLabel.TabIndex")));
+			this.emailLabel.Text = Resource.GetString("emailLabel.Text");
+			this.emailLabel.TextAlign = ((System.Drawing.ContentAlignment)(Resource.GetObject("emailLabel.TextAlign")));
+			this.emailLabel.Visible = ((bool)(Resource.GetObject("emailLabel.Visible")));
 			// 
 			// domainComboBox
 			// 
-			this.domainComboBox.AccessibleDescription = resources.GetString("domainComboBox.AccessibleDescription");
-			this.domainComboBox.AccessibleName = resources.GetString("domainComboBox.AccessibleName");
-			this.domainComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("domainComboBox.Anchor")));
-			this.domainComboBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("domainComboBox.BackgroundImage")));
-			this.domainComboBox.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("domainComboBox.Dock")));
-			this.domainComboBox.Enabled = ((bool)(resources.GetObject("domainComboBox.Enabled")));
-			this.domainComboBox.Font = ((System.Drawing.Font)(resources.GetObject("domainComboBox.Font")));
-			this.domainComboBox.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("domainComboBox.ImeMode")));
-			this.domainComboBox.IntegralHeight = ((bool)(resources.GetObject("domainComboBox.IntegralHeight")));
-			this.domainComboBox.ItemHeight = ((int)(resources.GetObject("domainComboBox.ItemHeight")));
-			this.domainComboBox.Location = ((System.Drawing.Point)(resources.GetObject("domainComboBox.Location")));
-			this.domainComboBox.MaxDropDownItems = ((int)(resources.GetObject("domainComboBox.MaxDropDownItems")));
-			this.domainComboBox.MaxLength = ((int)(resources.GetObject("domainComboBox.MaxLength")));
+			this.domainComboBox.AccessibleDescription = Resource.GetString("domainComboBox.AccessibleDescription");
+			this.domainComboBox.AccessibleName = Resource.GetString("domainComboBox.AccessibleName");
+			this.domainComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)(Resource.GetObject("domainComboBox.Anchor")));
+			this.domainComboBox.BackgroundImage = ((System.Drawing.Image)(Resource.GetObject("domainComboBox.BackgroundImage")));
+			this.domainComboBox.Dock = ((System.Windows.Forms.DockStyle)(Resource.GetObject("domainComboBox.Dock")));
+			this.domainComboBox.Enabled = ((bool)(Resource.GetObject("domainComboBox.Enabled")));
+			this.domainComboBox.Font = ((System.Drawing.Font)(Resource.GetObject("domainComboBox.Font")));
+			this.domainComboBox.ImeMode = ((System.Windows.Forms.ImeMode)(Resource.GetObject("domainComboBox.ImeMode")));
+			this.domainComboBox.IntegralHeight = ((bool)(Resource.GetObject("domainComboBox.IntegralHeight")));
+			this.domainComboBox.ItemHeight = ((int)(Resource.GetObject("domainComboBox.ItemHeight")));
+			this.domainComboBox.Location = ((System.Drawing.Point)(Resource.GetObject("domainComboBox.Location")));
+			this.domainComboBox.MaxDropDownItems = ((int)(Resource.GetObject("domainComboBox.MaxDropDownItems")));
+			this.domainComboBox.MaxLength = ((int)(Resource.GetObject("domainComboBox.MaxLength")));
 			this.domainComboBox.Name = "domainComboBox";
-			this.domainComboBox.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("domainComboBox.RightToLeft")));
-			this.domainComboBox.Size = ((System.Drawing.Size)(resources.GetObject("domainComboBox.Size")));
-			this.domainComboBox.TabIndex = ((int)(resources.GetObject("domainComboBox.TabIndex")));
-			this.domainComboBox.Text = resources.GetString("domainComboBox.Text");
-			this.domainComboBox.Visible = ((bool)(resources.GetObject("domainComboBox.Visible")));
+			this.domainComboBox.RightToLeft = ((System.Windows.Forms.RightToLeft)(Resource.GetObject("domainComboBox.RightToLeft")));
+			this.domainComboBox.Size = ((System.Drawing.Size)(Resource.GetObject("domainComboBox.Size")));
+			this.domainComboBox.TabIndex = ((int)(Resource.GetObject("domainComboBox.TabIndex")));
+			this.domainComboBox.Text = Resource.GetString("domainComboBox.Text");
+			this.domainComboBox.Visible = ((bool)(Resource.GetObject("domainComboBox.Visible")));
 			this.domainComboBox.SelectedIndexChanged += new System.EventHandler(this.domainComboBox_SelectedIndexChanged);
 			// 
 			// filePath
 			// 
-			this.filePath.AccessibleDescription = resources.GetString("filePath.AccessibleDescription");
-			this.filePath.AccessibleName = resources.GetString("filePath.AccessibleName");
-			this.filePath.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("filePath.Anchor")));
-			this.filePath.AutoSize = ((bool)(resources.GetObject("filePath.AutoSize")));
-			this.filePath.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("filePath.BackgroundImage")));
-			this.filePath.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("filePath.Dock")));
-			this.filePath.Enabled = ((bool)(resources.GetObject("filePath.Enabled")));
-			this.filePath.Font = ((System.Drawing.Font)(resources.GetObject("filePath.Font")));
-			this.filePath.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("filePath.ImeMode")));
-			this.filePath.Location = ((System.Drawing.Point)(resources.GetObject("filePath.Location")));
-			this.filePath.MaxLength = ((int)(resources.GetObject("filePath.MaxLength")));
-			this.filePath.Multiline = ((bool)(resources.GetObject("filePath.Multiline")));
+			this.filePath.AccessibleDescription = Resource.GetString("filePath.AccessibleDescription");
+			this.filePath.AccessibleName = Resource.GetString("filePath.AccessibleName");
+			this.filePath.Anchor = ((System.Windows.Forms.AnchorStyles)(Resource.GetObject("filePath.Anchor")));
+			this.filePath.AutoSize = ((bool)(Resource.GetObject("filePath.AutoSize")));
+			this.filePath.BackgroundImage = ((System.Drawing.Image)(Resource.GetObject("filePath.BackgroundImage")));
+			this.filePath.Dock = ((System.Windows.Forms.DockStyle)(Resource.GetObject("filePath.Dock")));
+			this.filePath.Enabled = ((bool)(Resource.GetObject("filePath.Enabled")));
+			this.filePath.Font = ((System.Drawing.Font)(Resource.GetObject("filePath.Font")));
+			this.filePath.ImeMode = ((System.Windows.Forms.ImeMode)(Resource.GetObject("filePath.ImeMode")));
+			this.filePath.Location = ((System.Drawing.Point)(Resource.GetObject("filePath.Location")));
+			this.filePath.MaxLength = ((int)(Resource.GetObject("filePath.MaxLength")));
+			this.filePath.Multiline = ((bool)(Resource.GetObject("filePath.Multiline")));
 			this.filePath.Name = "filePath";
-			this.filePath.PasswordChar = ((char)(resources.GetObject("filePath.PasswordChar")));
-			this.filePath.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("filePath.RightToLeft")));
-			this.filePath.ScrollBars = ((System.Windows.Forms.ScrollBars)(resources.GetObject("filePath.ScrollBars")));
-			this.filePath.Size = ((System.Drawing.Size)(resources.GetObject("filePath.Size")));
-			this.filePath.TabIndex = ((int)(resources.GetObject("filePath.TabIndex")));
-			this.filePath.Text = resources.GetString("filePath.Text");
-			this.filePath.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("filePath.TextAlign")));
-			this.filePath.Visible = ((bool)(resources.GetObject("filePath.Visible")));
-			this.filePath.WordWrap = ((bool)(resources.GetObject("filePath.WordWrap")));
+			this.filePath.PasswordChar = ((char)(Resource.GetObject("filePath.PasswordChar")));
+			this.filePath.RightToLeft = ((System.Windows.Forms.RightToLeft)(Resource.GetObject("filePath.RightToLeft")));
+			this.filePath.ScrollBars = ((System.Windows.Forms.ScrollBars)(Resource.GetObject("filePath.ScrollBars")));
+			this.filePath.Size = ((System.Drawing.Size)(Resource.GetObject("filePath.Size")));
+			this.filePath.TabIndex = ((int)(Resource.GetObject("filePath.TabIndex")));
+			this.filePath.Text = Resource.GetString("filePath.Text");
+			this.filePath.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(Resource.GetObject("filePath.TextAlign")));
+			this.filePath.Visible = ((bool)(Resource.GetObject("filePath.Visible")));
+			this.filePath.WordWrap = ((bool)(Resource.GetObject("filePath.WordWrap")));
 			this.filePath.TextChanged += new System.EventHandler(this.filePath_TextChanged);
 			// 
 			// recoveryAgent
 			// 
-			this.recoveryAgent.AccessibleDescription = resources.GetString("recoveryAgent.AccessibleDescription");
-			this.recoveryAgent.AccessibleName = resources.GetString("recoveryAgent.AccessibleName");
-			this.recoveryAgent.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("recoveryAgent.Anchor")));
-			this.recoveryAgent.AutoSize = ((bool)(resources.GetObject("recoveryAgent.AutoSize")));
-			this.recoveryAgent.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("recoveryAgent.BackgroundImage")));
-			this.recoveryAgent.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("recoveryAgent.Dock")));
-			this.recoveryAgent.Enabled = ((bool)(resources.GetObject("recoveryAgent.Enabled")));
-			this.recoveryAgent.Font = ((System.Drawing.Font)(resources.GetObject("recoveryAgent.Font")));
-			this.recoveryAgent.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("recoveryAgent.ImeMode")));
-			this.recoveryAgent.Location = ((System.Drawing.Point)(resources.GetObject("recoveryAgent.Location")));
-			this.recoveryAgent.MaxLength = ((int)(resources.GetObject("recoveryAgent.MaxLength")));
-			this.recoveryAgent.Multiline = ((bool)(resources.GetObject("recoveryAgent.Multiline")));
+			this.recoveryAgent.AccessibleDescription = Resource.GetString("recoveryAgent.AccessibleDescription");
+			this.recoveryAgent.AccessibleName = Resource.GetString("recoveryAgent.AccessibleName");
+			this.recoveryAgent.Anchor = ((System.Windows.Forms.AnchorStyles)(Resource.GetObject("recoveryAgent.Anchor")));
+			this.recoveryAgent.AutoSize = ((bool)(Resource.GetObject("recoveryAgent.AutoSize")));
+			this.recoveryAgent.BackgroundImage = ((System.Drawing.Image)(Resource.GetObject("recoveryAgent.BackgroundImage")));
+			this.recoveryAgent.Dock = ((System.Windows.Forms.DockStyle)(Resource.GetObject("recoveryAgent.Dock")));
+			this.recoveryAgent.Enabled = ((bool)(Resource.GetObject("recoveryAgent.Enabled")));
+			this.recoveryAgent.Font = ((System.Drawing.Font)(Resource.GetObject("recoveryAgent.Font")));
+			this.recoveryAgent.ImeMode = ((System.Windows.Forms.ImeMode)(Resource.GetObject("recoveryAgent.ImeMode")));
+			this.recoveryAgent.Location = ((System.Drawing.Point)(Resource.GetObject("recoveryAgent.Location")));
+			this.recoveryAgent.MaxLength = ((int)(Resource.GetObject("recoveryAgent.MaxLength")));
+			this.recoveryAgent.Multiline = ((bool)(Resource.GetObject("recoveryAgent.Multiline")));
 			this.recoveryAgent.Name = "recoveryAgent";
-			this.recoveryAgent.PasswordChar = ((char)(resources.GetObject("recoveryAgent.PasswordChar")));
-			this.recoveryAgent.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("recoveryAgent.RightToLeft")));
-			this.recoveryAgent.ScrollBars = ((System.Windows.Forms.ScrollBars)(resources.GetObject("recoveryAgent.ScrollBars")));
-			this.recoveryAgent.Size = ((System.Drawing.Size)(resources.GetObject("recoveryAgent.Size")));
-			this.recoveryAgent.TabIndex = ((int)(resources.GetObject("recoveryAgent.TabIndex")));
-			this.recoveryAgent.Text = resources.GetString("recoveryAgent.Text");
-			this.recoveryAgent.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("recoveryAgent.TextAlign")));
-			this.recoveryAgent.Visible = ((bool)(resources.GetObject("recoveryAgent.Visible")));
-			this.recoveryAgent.WordWrap = ((bool)(resources.GetObject("recoveryAgent.WordWrap")));
+			this.recoveryAgent.PasswordChar = ((char)(Resource.GetObject("recoveryAgent.PasswordChar")));
+			this.recoveryAgent.RightToLeft = ((System.Windows.Forms.RightToLeft)(Resource.GetObject("recoveryAgent.RightToLeft")));
+			this.recoveryAgent.ScrollBars = ((System.Windows.Forms.ScrollBars)(Resource.GetObject("recoveryAgent.ScrollBars")));
+			this.recoveryAgent.Size = ((System.Drawing.Size)(Resource.GetObject("recoveryAgent.Size")));
+			this.recoveryAgent.TabIndex = ((int)(Resource.GetObject("recoveryAgent.TabIndex")));
+			this.recoveryAgent.Text = Resource.GetString("recoveryAgent.Text");
+			this.recoveryAgent.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(Resource.GetObject("recoveryAgent.TextAlign")));
+			this.recoveryAgent.Visible = ((bool)(Resource.GetObject("recoveryAgent.Visible")));
+			this.recoveryAgent.WordWrap = ((bool)(Resource.GetObject("recoveryAgent.WordWrap")));
 			// 
 			// emailID
 			// 
-			this.emailID.AccessibleDescription = resources.GetString("emailID.AccessibleDescription");
-			this.emailID.AccessibleName = resources.GetString("emailID.AccessibleName");
-			this.emailID.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("emailID.Anchor")));
-			this.emailID.AutoSize = ((bool)(resources.GetObject("emailID.AutoSize")));
-			this.emailID.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("emailID.BackgroundImage")));
-			this.emailID.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("emailID.Dock")));
-			this.emailID.Enabled = ((bool)(resources.GetObject("emailID.Enabled")));
-			this.emailID.Font = ((System.Drawing.Font)(resources.GetObject("emailID.Font")));
-			this.emailID.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("emailID.ImeMode")));
-			this.emailID.Location = ((System.Drawing.Point)(resources.GetObject("emailID.Location")));
-			this.emailID.MaxLength = ((int)(resources.GetObject("emailID.MaxLength")));
-			this.emailID.Multiline = ((bool)(resources.GetObject("emailID.Multiline")));
+			this.emailID.AccessibleDescription = Resource.GetString("emailID.AccessibleDescription");
+			this.emailID.AccessibleName = Resource.GetString("emailID.AccessibleName");
+			this.emailID.Anchor = ((System.Windows.Forms.AnchorStyles)(Resource.GetObject("emailID.Anchor")));
+			this.emailID.AutoSize = ((bool)(Resource.GetObject("emailID.AutoSize")));
+			this.emailID.BackgroundImage = ((System.Drawing.Image)(Resource.GetObject("emailID.BackgroundImage")));
+			this.emailID.Dock = ((System.Windows.Forms.DockStyle)(Resource.GetObject("emailID.Dock")));
+			this.emailID.Enabled = ((bool)(Resource.GetObject("emailID.Enabled")));
+			this.emailID.Font = ((System.Drawing.Font)(Resource.GetObject("emailID.Font")));
+			this.emailID.ImeMode = ((System.Windows.Forms.ImeMode)(Resource.GetObject("emailID.ImeMode")));
+			this.emailID.Location = ((System.Drawing.Point)(Resource.GetObject("emailID.Location")));
+			this.emailID.MaxLength = ((int)(Resource.GetObject("emailID.MaxLength")));
+			this.emailID.Multiline = ((bool)(Resource.GetObject("emailID.Multiline")));
 			this.emailID.Name = "emailID";
-			this.emailID.PasswordChar = ((char)(resources.GetObject("emailID.PasswordChar")));
-			this.emailID.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("emailID.RightToLeft")));
-			this.emailID.ScrollBars = ((System.Windows.Forms.ScrollBars)(resources.GetObject("emailID.ScrollBars")));
-			this.emailID.Size = ((System.Drawing.Size)(resources.GetObject("emailID.Size")));
-			this.emailID.TabIndex = ((int)(resources.GetObject("emailID.TabIndex")));
-			this.emailID.Text = resources.GetString("emailID.Text");
-			this.emailID.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("emailID.TextAlign")));
-			this.emailID.Visible = ((bool)(resources.GetObject("emailID.Visible")));
-			this.emailID.WordWrap = ((bool)(resources.GetObject("emailID.WordWrap")));
+			this.emailID.PasswordChar = ((char)(Resource.GetObject("emailID.PasswordChar")));
+			this.emailID.RightToLeft = ((System.Windows.Forms.RightToLeft)(Resource.GetObject("emailID.RightToLeft")));
+			this.emailID.ScrollBars = ((System.Windows.Forms.ScrollBars)(Resource.GetObject("emailID.ScrollBars")));
+			this.emailID.Size = ((System.Drawing.Size)(Resource.GetObject("emailID.Size")));
+			this.emailID.TabIndex = ((int)(Resource.GetObject("emailID.TabIndex")));
+			this.emailID.Text = Resource.GetString("emailID.Text");
+			this.emailID.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(Resource.GetObject("emailID.TextAlign")));
+			this.emailID.Visible = ((bool)(Resource.GetObject("emailID.Visible")));
+			this.emailID.WordWrap = ((bool)(Resource.GetObject("emailID.WordWrap")));
 			// 
 			// btnCancel
 			// 
-			this.btnCancel.AccessibleDescription = resources.GetString("btnCancel.AccessibleDescription");
-			this.btnCancel.AccessibleName = resources.GetString("btnCancel.AccessibleName");
-			this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("btnCancel.Anchor")));
-			this.btnCancel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnCancel.BackgroundImage")));
-			this.btnCancel.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("btnCancel.Dock")));
-			this.btnCancel.Enabled = ((bool)(resources.GetObject("btnCancel.Enabled")));
-			this.btnCancel.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("btnCancel.FlatStyle")));
-			this.btnCancel.Font = ((System.Drawing.Font)(resources.GetObject("btnCancel.Font")));
-			this.btnCancel.Image = ((System.Drawing.Image)(resources.GetObject("btnCancel.Image")));
-			this.btnCancel.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("btnCancel.ImageAlign")));
-			this.btnCancel.ImageIndex = ((int)(resources.GetObject("btnCancel.ImageIndex")));
-			this.btnCancel.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("btnCancel.ImeMode")));
-			this.btnCancel.Location = ((System.Drawing.Point)(resources.GetObject("btnCancel.Location")));
+			this.btnCancel.AccessibleDescription = Resource.GetString("btnCancel.AccessibleDescription");
+			this.btnCancel.AccessibleName = Resource.GetString("btnCancel.AccessibleName");
+			this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)(Resource.GetObject("btnCancel.Anchor")));
+			this.btnCancel.BackgroundImage = ((System.Drawing.Image)(Resource.GetObject("btnCancel.BackgroundImage")));
+			this.btnCancel.Dock = ((System.Windows.Forms.DockStyle)(Resource.GetObject("btnCancel.Dock")));
+			this.btnCancel.Enabled = ((bool)(Resource.GetObject("btnCancel.Enabled")));
+			this.btnCancel.FlatStyle = ((System.Windows.Forms.FlatStyle)(Resource.GetObject("btnCancel.FlatStyle")));
+			this.btnCancel.Font = ((System.Drawing.Font)(Resource.GetObject("btnCancel.Font")));
+			this.btnCancel.Image = ((System.Drawing.Image)(Resource.GetObject("btnCancel.Image")));
+			this.btnCancel.ImageAlign = ((System.Drawing.ContentAlignment)(Resource.GetObject("btnCancel.ImageAlign")));
+			this.btnCancel.ImageIndex = ((int)(Resource.GetObject("btnCancel.ImageIndex")));
+			this.btnCancel.ImeMode = ((System.Windows.Forms.ImeMode)(Resource.GetObject("btnCancel.ImeMode")));
+			this.btnCancel.Location = ((System.Drawing.Point)(Resource.GetObject("btnCancel.Location")));
 			this.btnCancel.Name = "btnCancel";
-			this.btnCancel.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("btnCancel.RightToLeft")));
-			this.btnCancel.Size = ((System.Drawing.Size)(resources.GetObject("btnCancel.Size")));
-			this.btnCancel.TabIndex = ((int)(resources.GetObject("btnCancel.TabIndex")));
-			this.btnCancel.Text = resources.GetString("btnCancel.Text");
-			this.btnCancel.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("btnCancel.TextAlign")));
-			this.btnCancel.Visible = ((bool)(resources.GetObject("btnCancel.Visible")));
+			this.btnCancel.RightToLeft = ((System.Windows.Forms.RightToLeft)(Resource.GetObject("btnCancel.RightToLeft")));
+			this.btnCancel.Size = ((System.Drawing.Size)(Resource.GetObject("btnCancel.Size")));
+			this.btnCancel.TabIndex = ((int)(Resource.GetObject("btnCancel.TabIndex")));
+			this.btnCancel.Text = Resource.GetString("btnCancel.Text");
+			this.btnCancel.TextAlign = ((System.Drawing.ContentAlignment)(Resource.GetObject("btnCancel.TextAlign")));
+			this.btnCancel.Visible = ((bool)(Resource.GetObject("btnCancel.Visible")));
 			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
 			// 
 			// btnExport
 			// 
-			this.btnExport.AccessibleDescription = resources.GetString("btnExport.AccessibleDescription");
-			this.btnExport.AccessibleName = resources.GetString("btnExport.AccessibleName");
-			this.btnExport.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("btnExport.Anchor")));
-			this.btnExport.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnExport.BackgroundImage")));
-			this.btnExport.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("btnExport.Dock")));
-			this.btnExport.Enabled = ((bool)(resources.GetObject("btnExport.Enabled")));
-			this.btnExport.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("btnExport.FlatStyle")));
-			this.btnExport.Font = ((System.Drawing.Font)(resources.GetObject("btnExport.Font")));
-			this.btnExport.Image = ((System.Drawing.Image)(resources.GetObject("btnExport.Image")));
-			this.btnExport.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("btnExport.ImageAlign")));
-			this.btnExport.ImageIndex = ((int)(resources.GetObject("btnExport.ImageIndex")));
-			this.btnExport.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("btnExport.ImeMode")));
-			this.btnExport.Location = ((System.Drawing.Point)(resources.GetObject("btnExport.Location")));
+			this.btnExport.AccessibleDescription = Resource.GetString("btnExport.AccessibleDescription");
+			this.btnExport.AccessibleName = Resource.GetString("btnExport.AccessibleName");
+			this.btnExport.Anchor = ((System.Windows.Forms.AnchorStyles)(Resource.GetObject("btnExport.Anchor")));
+			this.btnExport.BackgroundImage = ((System.Drawing.Image)(Resource.GetObject("btnExport.BackgroundImage")));
+			this.btnExport.Dock = ((System.Windows.Forms.DockStyle)(Resource.GetObject("btnExport.Dock")));
+			this.btnExport.Enabled = ((bool)(Resource.GetObject("btnExport.Enabled")));
+			this.btnExport.FlatStyle = ((System.Windows.Forms.FlatStyle)(Resource.GetObject("btnExport.FlatStyle")));
+			this.btnExport.Font = ((System.Drawing.Font)(Resource.GetObject("btnExport.Font")));
+			this.btnExport.Image = ((System.Drawing.Image)(Resource.GetObject("btnExport.Image")));
+			this.btnExport.ImageAlign = ((System.Drawing.ContentAlignment)(Resource.GetObject("btnExport.ImageAlign")));
+			this.btnExport.ImageIndex = ((int)(Resource.GetObject("btnExport.ImageIndex")));
+			this.btnExport.ImeMode = ((System.Windows.Forms.ImeMode)(Resource.GetObject("btnExport.ImeMode")));
+			this.btnExport.Location = ((System.Drawing.Point)(Resource.GetObject("btnExport.Location")));
 			this.btnExport.Name = "btnExport";
-			this.btnExport.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("btnExport.RightToLeft")));
-			this.btnExport.Size = ((System.Drawing.Size)(resources.GetObject("btnExport.Size")));
-			this.btnExport.TabIndex = ((int)(resources.GetObject("btnExport.TabIndex")));
-			this.btnExport.Text = resources.GetString("btnExport.Text");
-			this.btnExport.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("btnExport.TextAlign")));
-			this.btnExport.Visible = ((bool)(resources.GetObject("btnExport.Visible")));
+			this.btnExport.RightToLeft = ((System.Windows.Forms.RightToLeft)(Resource.GetObject("btnExport.RightToLeft")));
+			this.btnExport.Size = ((System.Drawing.Size)(Resource.GetObject("btnExport.Size")));
+			this.btnExport.TabIndex = ((int)(Resource.GetObject("btnExport.TabIndex")));
+			this.btnExport.Text = Resource.GetString("btnExport.Text");
+			this.btnExport.TextAlign = ((System.Drawing.ContentAlignment)(Resource.GetObject("btnExport.TextAlign")));
+			this.btnExport.Visible = ((bool)(Resource.GetObject("btnExport.Visible")));
 			this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
 			// 
 			// BrowseButton
 			// 
-			this.BrowseButton.AccessibleDescription = resources.GetString("BrowseButton.AccessibleDescription");
-			this.BrowseButton.AccessibleName = resources.GetString("BrowseButton.AccessibleName");
-			this.BrowseButton.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("BrowseButton.Anchor")));
-			this.BrowseButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("BrowseButton.BackgroundImage")));
-			this.BrowseButton.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("BrowseButton.Dock")));
-			this.BrowseButton.Enabled = ((bool)(resources.GetObject("BrowseButton.Enabled")));
-			this.BrowseButton.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("BrowseButton.FlatStyle")));
-			this.BrowseButton.Font = ((System.Drawing.Font)(resources.GetObject("BrowseButton.Font")));
-			this.BrowseButton.Image = ((System.Drawing.Image)(resources.GetObject("BrowseButton.Image")));
-			this.BrowseButton.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("BrowseButton.ImageAlign")));
-			this.BrowseButton.ImageIndex = ((int)(resources.GetObject("BrowseButton.ImageIndex")));
-			this.BrowseButton.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("BrowseButton.ImeMode")));
-			this.BrowseButton.Location = ((System.Drawing.Point)(resources.GetObject("BrowseButton.Location")));
+			this.BrowseButton.AccessibleDescription = Resource.GetString("BrowseButton.AccessibleDescription");
+			this.BrowseButton.AccessibleName = Resource.GetString("BrowseButton.AccessibleName");
+			this.BrowseButton.Anchor = ((System.Windows.Forms.AnchorStyles)(Resource.GetObject("BrowseButton.Anchor")));
+			this.BrowseButton.BackgroundImage = ((System.Drawing.Image)(Resource.GetObject("BrowseButton.BackgroundImage")));
+			this.BrowseButton.Dock = ((System.Windows.Forms.DockStyle)(Resource.GetObject("BrowseButton.Dock")));
+			this.BrowseButton.Enabled = ((bool)(Resource.GetObject("BrowseButton.Enabled")));
+			this.BrowseButton.FlatStyle = ((System.Windows.Forms.FlatStyle)(Resource.GetObject("BrowseButton.FlatStyle")));
+			this.BrowseButton.Font = ((System.Drawing.Font)(Resource.GetObject("BrowseButton.Font")));
+			this.BrowseButton.Image = ((System.Drawing.Image)(Resource.GetObject("BrowseButton.Image")));
+			this.BrowseButton.ImageAlign = ((System.Drawing.ContentAlignment)(Resource.GetObject("BrowseButton.ImageAlign")));
+			this.BrowseButton.ImageIndex = ((int)(Resource.GetObject("BrowseButton.ImageIndex")));
+			this.BrowseButton.ImeMode = ((System.Windows.Forms.ImeMode)(Resource.GetObject("BrowseButton.ImeMode")));
+			this.BrowseButton.Location = ((System.Drawing.Point)(Resource.GetObject("BrowseButton.Location")));
 			this.BrowseButton.Name = "BrowseButton";
-			this.BrowseButton.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("BrowseButton.RightToLeft")));
-			this.BrowseButton.Size = ((System.Drawing.Size)(resources.GetObject("BrowseButton.Size")));
-			this.BrowseButton.TabIndex = ((int)(resources.GetObject("BrowseButton.TabIndex")));
-			this.BrowseButton.Text = resources.GetString("BrowseButton.Text");
-			this.BrowseButton.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("BrowseButton.TextAlign")));
-			this.BrowseButton.Visible = ((bool)(resources.GetObject("BrowseButton.Visible")));
+			this.BrowseButton.RightToLeft = ((System.Windows.Forms.RightToLeft)(Resource.GetObject("BrowseButton.RightToLeft")));
+			this.BrowseButton.Size = ((System.Drawing.Size)(Resource.GetObject("BrowseButton.Size")));
+			this.BrowseButton.TabIndex = ((int)(Resource.GetObject("BrowseButton.TabIndex")));
+			this.BrowseButton.Text = Resource.GetString("BrowseButton.Text");
+			this.BrowseButton.TextAlign = ((System.Drawing.ContentAlignment)(Resource.GetObject("BrowseButton.TextAlign")));
+			this.BrowseButton.Visible = ((bool)(Resource.GetObject("BrowseButton.Visible")));
 			this.BrowseButton.Click += new System.EventHandler(this.BrowseButton_Click);
 			// 
 			// ExportKeysDialog
 			// 
-			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
-			this.AccessibleName = resources.GetString("$this.AccessibleName");
-			this.AutoScaleBaseSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScaleBaseSize")));
-			this.AutoScroll = ((bool)(resources.GetObject("$this.AutoScroll")));
-			this.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMargin")));
-			this.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMinSize")));
-			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
-			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
+			this.AccessibleDescription = Resource.GetString("$this.AccessibleDescription");
+			this.AccessibleName = Resource.GetString("$this.AccessibleName");
+			this.AutoScaleBaseSize = ((System.Drawing.Size)(Resource.GetObject("$this.AutoScaleBaseSize")));
+			this.AutoScroll = ((bool)(Resource.GetObject("$this.AutoScroll")));
+			this.AutoScrollMargin = ((System.Drawing.Size)(Resource.GetObject("$this.AutoScrollMargin")));
+			this.AutoScrollMinSize = ((System.Drawing.Size)(Resource.GetObject("$this.AutoScrollMinSize")));
+			this.BackgroundImage = ((System.Drawing.Image)(Resource.GetObject("$this.BackgroundImage")));
+			this.ClientSize = ((System.Drawing.Size)(Resource.GetObject("$this.ClientSize")));
 			this.Controls.Add(this.BrowseButton);
 			this.Controls.Add(this.btnExport);
 			this.Controls.Add(this.btnCancel);
@@ -444,22 +443,22 @@ namespace Novell.FormsTrayApp
 			this.Controls.Add(this.recoveryAgentLabel);
 			this.Controls.Add(this.filePathLabel);
 			this.Controls.Add(this.domainLabel);
-			this.Controls.Add(this.panel1);
-			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
-			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
+			this.Controls.Add(this.panel);
+			this.Enabled = ((bool)(Resource.GetObject("$this.Enabled")));
+			this.Font = ((System.Drawing.Font)(Resource.GetObject("$this.Font")));
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("$this.ImeMode")));
-			this.Location = ((System.Drawing.Point)(resources.GetObject("$this.Location")));
+			this.Icon = ((System.Drawing.Icon)(Resource.GetObject("$this.Icon")));
+			this.ImeMode = ((System.Windows.Forms.ImeMode)(Resource.GetObject("$this.ImeMode")));
+			this.Location = ((System.Drawing.Point)(Resource.GetObject("$this.Location")));
 			this.MaximizeBox = false;
-			this.MaximumSize = ((System.Drawing.Size)(resources.GetObject("$this.MaximumSize")));
-			this.MinimumSize = ((System.Drawing.Size)(resources.GetObject("$this.MinimumSize")));
+			this.MaximumSize = ((System.Drawing.Size)(Resource.GetObject("$this.MaximumSize")));
+			this.MinimumSize = ((System.Drawing.Size)(Resource.GetObject("$this.MinimumSize")));
 			this.Name = "ExportKeysDialog";
-			this.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("$this.RightToLeft")));
-			this.StartPosition = ((System.Windows.Forms.FormStartPosition)(resources.GetObject("$this.StartPosition")));
-			this.Text = resources.GetString("$this.Text");
+			this.RightToLeft = ((System.Windows.Forms.RightToLeft)(Resource.GetObject("$this.RightToLeft")));
+			this.StartPosition = ((System.Windows.Forms.FormStartPosition)(Resource.GetObject("$this.StartPosition")));
+			this.Text = Resource.GetString("$this.Text");
 			this.Load += new System.EventHandler(this.ExportKeysDialog_Load);
-			this.panel1.ResumeLayout(false);
+			this.panel.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -491,60 +490,47 @@ namespace Novell.FormsTrayApp
 			this.Icon = new Icon(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder_16.ico"));
 			//this.waterMark.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder48.png"));
 			this.waterMark.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder-banner.png"));
-			this.pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-			this.pictureBox1.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder-banner-scaler.png"));
+			this.pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+			this.pictureBox.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder-banner-scaler.png"));
 			this.btnCancel.Select();
-			if (this.DomainComboBox.Items.Count == 0)
+
+			try
 			{
-				try
+				XmlDocument domainsDoc = new XmlDocument();
+				domainsDoc.Load(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "domain.list"));
+				XmlElement element = (XmlElement)domainsDoc.SelectSingleNode("/domains");
+
+				// Get the ID of the default domain.
+				XmlElement defaultDomainElement = (XmlElement)domainsDoc.SelectSingleNode("/domains/defaultDomain");
+				string defaultID = defaultDomainElement.GetAttribute("ID");
+
+				// Get the domains.
+				// Look for a domain with this ID.
+				XmlNodeList nodeList = element.GetElementsByTagName("domain");
+				foreach (XmlNode node in nodeList)
 				{
-					XmlDocument domainsDoc = new XmlDocument();
-					domainsDoc.Load(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "domain.list"));
-					XmlElement element = (XmlElement)domainsDoc.SelectSingleNode("/domains");
+					string name = ((XmlElement)node).GetAttribute("name");
+					string id = ((XmlElement)node).GetAttribute("ID");
 
-					// Get the ID of the default domain.
-					XmlElement defaultDomainElement = (XmlElement)domainsDoc.SelectSingleNode("/domains/defaultDomain");
-					string defaultID = defaultDomainElement.GetAttribute("ID");
-
-					// Get the domains.
-					// Look for a domain with this ID.
-					XmlNodeList nodeList = element.GetElementsByTagName("domain");
-					foreach (XmlNode node in nodeList)
+					DomainItem domainItem = new DomainItem(name, id);
+					this.DomainComboBox.Items.Add(domainItem);
+					if (id.Equals(defaultID))
 					{
-						string name = ((XmlElement)node).GetAttribute("name");
-						string id = ((XmlElement)node).GetAttribute("ID");
-
-						DomainItem domainItem = new DomainItem(name, id);
-						this.DomainComboBox.Items.Add(domainItem);
-						if (id.Equals(defaultID))
-						{
-							selectedDomain = domainItem;
-						}
+						selectedDomain = domainItem;
 					}
+				}
 
-					if (selectedDomain != null)
-					{
-						this.DomainComboBox.SelectedItem = selectedDomain;
-						DisplayRAName(selectedDomain);
-					}
-					else
-						this.DomainComboBox.SelectedIndex = 0;
-				}
-				catch
-				{
-				}
-			}
-			else
-			{
 				if (selectedDomain != null)
 				{
 					this.DomainComboBox.SelectedItem = selectedDomain;
 					DisplayRAName(selectedDomain);
 				}
-				else if (this.DomainComboBox.Items.Count > 0)
-				{
+				else
 					this.DomainComboBox.SelectedIndex = 0;
-				}
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show("ExportKeysDialog_Load {0}", ex.Message);
 			}
 		}
 
@@ -589,15 +575,14 @@ namespace Novell.FormsTrayApp
 			}	
 			catch(Exception ex)
 			{
-				//MessageBox.Show(string.Format("No RA Name found : {0}", ex.Message ));
-				return;
+				MessageBox.Show("DisplayRAName : {0}", ex.Message);				
 			}
 		}
 		
 
 		private void btnExport_Click(object sender, EventArgs e)
 		{
-			DomainItem domainItem = (DomainItem)this.domainComboBox.SelectedItem;
+			DomainItem domainItem = (DomainItem)this.domainComboBox.SelectedItem;			
 			try
 			{
 				this.simiasWebService.ExportiFoldersCryptoKeys(domainItem.ID, this.filePath.Text);
