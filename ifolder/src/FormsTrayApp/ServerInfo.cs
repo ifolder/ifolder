@@ -535,6 +535,7 @@ namespace Novell.FormsTrayApp
 			{
 				domainInfo.Authenticated = true;
 				password.Clear();
+				(FormsTrayApp.globalProp()).refreshAll();
 				Close();
 			}
 			else

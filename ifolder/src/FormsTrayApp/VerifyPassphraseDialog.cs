@@ -362,7 +362,7 @@ namespace Novell.FormsTrayApp
 		private void VerifyPassphraseDialog_Load(object sender, System.EventArgs e)
 		{
 			this.btnOk.Enabled = false;
-			this.btnCancel.Select();
+			this.Passphrase.Select();
 			this.Icon = new Icon(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder_16.ico"));
 			//this.waterMark.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder48.png"));
 			this.waterMark.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder-banner.png"));
@@ -373,9 +373,13 @@ namespace Novell.FormsTrayApp
 		private void Passphrase_TextChanged(object sender, EventArgs e)
 		{
 			if( this.Passphrase.Text.Length > 0)
+			{
 				this.btnOk.Enabled = true;
+			}
 			else
+			{
 				this.btnOk.Enabled = false;
+			}
 		}
 	}
 }

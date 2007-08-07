@@ -1046,7 +1046,7 @@
 		<value>Enter Passphrase:</value>
 	</data>
 	<data name="RememberPPText">
-		<value>Remember Passphrase</value>
+		<value>Remember Passphrase on this computer</value>
 	</data>
 	<data name="VerifyPPTitle">
 		<value>Verify Passphrase</value>

@@ -2750,7 +2750,7 @@
 		<value>WindowsDefaultLocation</value>
 	</data>
 	<data name="$this.Text">
-		<value>iFolders</value>
+		<value>iFolder</value>
 	</data>
 	<data name="&gt;&gt;iFolderContextMenu.Name">
 		<value>iFolderContextMenu</value>

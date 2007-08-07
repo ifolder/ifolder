@@ -338,7 +338,7 @@
 		<value>Unable to Verify Identity</value>
 	</data>
 	<data name="NoCertWarning">
-		<value>There is no Recovery Agent selected. The passphrase cannot be recovered later, if recovery agent is not selected.</value>
+		<value>There is no Recovery Agent selected. Encrypted data cannot be recovered later, if passphrase is lost. Do you want to continue?</value>
 	</data>
 	<data name="NoCertTitle">
 		<value>No Recovery agent</value>

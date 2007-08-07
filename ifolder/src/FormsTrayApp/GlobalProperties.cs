@@ -2458,6 +2458,7 @@ namespace Novell.FormsTrayApp
 			refreshThread.IsBackground = true;
 			refreshThread.Priority = ThreadPriority.BelowNormal;
 			refreshThread.Start();
+
 //			refreshiFolders(/*domain*/);
 
 			// Call to sync the POBoxes.
@@ -2525,7 +2526,6 @@ namespace Novell.FormsTrayApp
 				}					
 				ht.Clear();
 			}
-
 			try
 			{
 				// Get the list of iFolders - now the calling thread does this and also handles exception
@@ -3027,6 +3027,10 @@ namespace Novell.FormsTrayApp
 			{
 				e.Cancel = true;
 				Hide();
+			}
+			else
+			{
+				FormsTrayApp.CloseApp();
 			}
 		}
 
@@ -3530,9 +3534,16 @@ namespace Novell.FormsTrayApp
 		private void menuResetPassphrase_Select(object sender, EventArgs e)
 		{
 			// Show the reset passphrase window
-			ResetPassphrase resetPassphraseWindow = new ResetPassphrase();
-			resetPassphraseWindow.simiasWebservice = this.simiasWebService;
-			resetPassphraseWindow.ShowDialog();
+			ResetPassphrase resetPassphraseWindow = new ResetPassphrase(this.simiasWebService);
+			if( resetPassphraseWindow.DomainCount >0)
+				resetPassphraseWindow.ShowDialog();
+			else
+			{
+				System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(FormsTrayApp));
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(Resource.GetString("NoLoggedInDomainsText")/*"There are no logged-in domains for changing passphrase. For changing passphrase the domain should be connected. Log on to a domain and try."*/, Resource.GetString("ResetError")/*"Reset passphrase error"*/, "", MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+				mmb.ShowDialog();
+				mmb.Dispose();
+			}
 		}
 
 		private void menuExportKeys_Select(object sender, EventArgs e)
@@ -3545,7 +3556,15 @@ namespace Novell.FormsTrayApp
 		private void menuImportKeys_Select(object sender, EventArgs e)
 		{
 			ImportKeysDialog importKeys = new ImportKeysDialog(this.simiasWebService);
-			importKeys.ShowDialog();
+			if( importKeys.DomainCount > 0)
+				importKeys.ShowDialog();
+			else
+			{
+				System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(FormsTrayApp));
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(Resource.GetString("NoLoggedInDomainsTextForImport")/*"There are no logged-in domains for changing passphrase. For changing passphrase the domain should be connected. Log on to a domain and try."*/, Resource.GetString("ImportKeysError")/*"Reset passphrase error"*/, "", MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+				mmb.ShowDialog();
+				mmb.Dispose();
+			}
 		}
 		
 		private void menuClose_Click(object sender, System.EventArgs e)

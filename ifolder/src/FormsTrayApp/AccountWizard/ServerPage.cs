@@ -81,7 +81,7 @@ namespace Novell.Wizard
 			// 
 			// serverAddress
 			// 
-			this.serverAddress.Location = new System.Drawing.Point(136, 160);
+			this.serverAddress.Location = new System.Drawing.Point(136, 140);
 			this.serverAddress.Name = "serverAddress";
 			this.serverAddress.Size = new System.Drawing.Size(320, 20);
 			this.serverAddress.TabIndex = 2;
@@ -90,7 +90,7 @@ namespace Novell.Wizard
 			// 
 			// label1
 			// 
-			this.label1.Location = new System.Drawing.Point(50, 162);
+			this.label1.Location = new System.Drawing.Point(50, 142);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(88, 16);
 			this.label1.TabIndex = 1;
@@ -98,7 +98,7 @@ namespace Novell.Wizard
 			// 
 			// label2
 			// 
-			this.label2.Location = new System.Drawing.Point(40, 130);
+			this.label2.Location = new System.Drawing.Point(40, 110);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(416, 24);
 			this.label2.TabIndex = 0;
@@ -106,7 +106,7 @@ namespace Novell.Wizard
 			// 
 			// defaultDescription
 			// 
-			this.defaultDescription.Location = new System.Drawing.Point(40, 168);
+			this.defaultDescription.Location = new System.Drawing.Point(40, 174);
 			this.defaultDescription.Name = "defaultDescription";
 			this.defaultDescription.Size = new System.Drawing.Size(416, 32);
 			this.defaultDescription.TabIndex = 3;
@@ -115,7 +115,7 @@ namespace Novell.Wizard
 			// defaultServer
 			// 
 			this.defaultServer.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.defaultServer.Location = new System.Drawing.Point(50, 208);
+			this.defaultServer.Location = new System.Drawing.Point(50, 220);
 			this.defaultServer.Name = "defaultServer";
 			this.defaultServer.Size = new System.Drawing.Size(406, 24);
 			this.defaultServer.TabIndex = 4;

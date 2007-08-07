@@ -439,7 +439,7 @@ namespace Novell.FormsTrayApp
 			{
 				string publicKey = null;
 				string ragent = null;
-				if( this.RecoveryAgentCombo.SelectedItem != null && (string)this.RecoveryAgentCombo.SelectedItem != "None")
+				if( this.RecoveryAgentCombo.SelectedItem != null && (string)this.RecoveryAgentCombo.SelectedItem != Resource.GetString("NoneText"))
 				{
 					// Show the certificate.....
 					byte[] CertificateObj = this.simws.GetRACertificateOnClient(this.DomainID, (string)this.RecoveryAgentCombo.SelectedItem);
@@ -527,7 +527,7 @@ namespace Novell.FormsTrayApp
 				this.RecoveryAgentCombo.Items.Add( rAgent ); 
 				//MessageBox.Show(String.Format("Adding {0}", rAgent));
 			}
-			this.RecoveryAgentCombo.Items.Add("None");
+			this.RecoveryAgentCombo.Items.Add(Resource.GetString("NoneText"));
 			// Needs to be changed
 			//string[] ralist = this.simws.GetRAList(this.DomainID);
 		}

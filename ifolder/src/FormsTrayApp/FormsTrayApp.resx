@@ -839,7 +839,7 @@
 		<value>Password</value>
 	</data>
 	<data name="RememberPasswd">
-		<value>Remember password</value>
+		<value>Remember password on this computer</value>
 	</data>
 	<data name="ServerNameText">
 		<value>Server address</value>
@@ -937,7 +937,7 @@
 		<value>Migrate the iFolder</value>
 	</data>
 	<data name="InvalidPPText">
-		<value>Invalid the passphrase</value>
+		<value>The passphrase entered is invalid.</value>
 	</data>
 	<data name="VerifyPP">
 		<value>Verify Passphrase</value>
@@ -949,7 +949,7 @@
 		<value>Reset Passphrase</value>
 	</data>
 	<data name="ResetError">
-		<value>Error resetting passphrase</value>
+		<value>Error changing the passphrase</value>
 	</data>
 	<data name="YesText">
 		<value>Yes</value>
@@ -1021,7 +1021,7 @@
 	<value>ReType Passphrase:</value>
   </data>
   <data name="RememberPassPhrase" >
-	<value>Remember Passphrase</value>
+	<value>Remember Passphrase on this computer</value>
   </data>
   <data name="SelectRecoveryAgent" >
 	<value>Select Recovery Agent:</value>
@@ -1031,5 +1031,20 @@
   </data>
   <data name="MigrationConvert" >
 	<value>Unable to convert to an iFolder</value>
+  </data>
+  <data name="DefaultDirName" >
+	<value>Default</value>
+  </data>
+  <data name="NoneText" >
+	<value>None</value>
+  </data>
+  <data name="NoLoggedInDomainsText" >
+	<value>For changing passphrase the domain should be connected. Log on to the domain and try."</value>
+  </data>
+  <data name="NoLoggedInDomainsTextForImport" >
+	<value>For importing the domain should be connected. Log on to the domain and try."</value>
+  </data>
+  <data name="ImportKeysError" >
+	<value>Error importing keys</value>
   </data>
 </root>

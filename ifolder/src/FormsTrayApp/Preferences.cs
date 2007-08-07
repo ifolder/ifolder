@@ -1060,6 +1060,7 @@ namespace Novell.FormsTrayApp
 			this.helpProvider1.SetShowHelp(this, ((bool)(resources.GetObject("$this.ShowHelp"))));
 			this.StartPosition = ((System.Windows.Forms.FormStartPosition)(resources.GetObject("$this.StartPosition")));
 			this.Text = resources.GetString("$this.Text");
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.Closing += new System.ComponentModel.CancelEventHandler(this.Preferences_Closing);
 			this.Load += new System.EventHandler(this.Preferences_Load);
 			this.Move += new System.EventHandler(this.Preferences_Move);
@@ -2204,7 +2205,9 @@ namespace Novell.FormsTrayApp
 						e.NewValue = CheckState.Unchecked;
 					}
 					else
-						(FormsTrayApp.globalProp()).refreshAll();
+					{
+						//(FormsTrayApp.globalProp()).refreshAll();
+					}
 				}
 			}
 		}

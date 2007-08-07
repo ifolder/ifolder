@@ -7,7 +7,7 @@
     >
         <Build>
             <Settings
-                ApplicationIcon = "App.ico"
+                ApplicationIcon = "ifolder_16.ico"
                 AssemblyKeyContainerName = ""
                 AssemblyName = "MigrationWizard"
                 AssemblyOriginatorKeyFile = ""

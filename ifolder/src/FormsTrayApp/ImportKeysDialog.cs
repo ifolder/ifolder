@@ -37,6 +37,14 @@ namespace Novell.FormsTrayApp
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 
+		public int DomainCount
+		{
+			get
+			{
+				return this.DomainComboBox.Items.Count;
+			}
+		}
+
 		public ImportKeysDialog(SimiasWebService simws)
 		{
 			//
@@ -44,6 +52,7 @@ namespace Novell.FormsTrayApp
 			//
 			InitializeComponent();
 			this.simiasWebService = simws;
+			GetLoggedInDomains();
 			//
 			// TODO: Add any constructor code after InitializeComponent call
 			//
@@ -524,44 +533,25 @@ namespace Novell.FormsTrayApp
 			this.pictureBox.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder-banner-scaler.png"));
 			this.btnImport.Enabled = false;
 			this.btnCancel.Select();
-			
 			try
 			{
-				XmlDocument domainsDoc = new XmlDocument();
-				domainsDoc.Load(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "domain.list"));
-
-				XmlElement element = (XmlElement)domainsDoc.SelectSingleNode("/domains");
-
-				// Get the ID of the default domain.
-				XmlElement defaultDomainElement = (XmlElement)domainsDoc.SelectSingleNode("/domains/defaultDomain");
-				string defaultID = defaultDomainElement.GetAttribute("ID");
-
-				// Get the domains.
-				// Look for a domain with this ID.
-				XmlNodeList nodeList = element.GetElementsByTagName("domain");
-				foreach (XmlNode node in nodeList)
+				if( this.DomainComboBox.Items.Count > 0)
 				{
-					string name = ((XmlElement)node).GetAttribute("name");
-					string id = ((XmlElement)node).GetAttribute("ID");
-
-					DomainItem domainItem = new DomainItem(name, id);
-					this.DomainComboBox.Items.Add(domainItem);
-					if (id.Equals(defaultID))
+					if (selectedDomain != null)
 					{
-						selectedDomain = domainItem;
+						this.DomainComboBox.SelectedItem = selectedDomain;
 					}
-				}
-
-				if (selectedDomain != null)
-				{
-					this.DomainComboBox.SelectedItem = selectedDomain;
+					else
+						this.DomainComboBox.SelectedIndex = 0;
 				}
 				else
-					this.DomainComboBox.SelectedIndex = 0;
+				{
+					this.Hide();
+					this.Close();
+				}
 			}
-			catch (Exception ex)
+			catch
 			{
-				MessageBox.Show("ImportKeysDialog_Load : {0}", ex.Message);
 			}
 		}
 
@@ -625,6 +615,25 @@ namespace Novell.FormsTrayApp
 				MessageBox.Show(string.Format(Resource.GetString("ImportErrorMesg")/*"Error importing the keys. {0}"*/, ex.Message));
 				this.Dispose();
 				this.Close();
+			}
+		}
+		private void GetLoggedInDomains()
+		{
+			try
+			{
+				DomainInformation[] domains;
+				domains = this.simiasWebService.GetDomains(true);
+				foreach (DomainInformation di in domains)
+				{
+					if( di.Authenticated)
+					{
+						DomainItem domainItem = new DomainItem(di.Name, di.ID);
+						this.DomainComboBox.Items.Add(domainItem);
+					}
+				}
+			}
+			catch(Exception ex)
+			{
 			}
 		}
 	}

@@ -332,6 +332,7 @@ namespace Novell.Wizard
 			this.Name = "AccountWizard";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = Resource.GetString("AccWizardText");//"iFolder Account Wizard";
+			this.next.Select();
 			this.Activated += new System.EventHandler(this.AccountWizard_Activated);
 			this.ResumeLayout(false);
 		}
@@ -396,7 +397,7 @@ namespace Novell.Wizard
 					// Changing the connet button text.....
 					next.Text = Resource.GetString("NextText")+" >";//"&Next >";
 					this.back.Enabled = false;
-					this.cancel.Text = Resource.GetString("SkipText")+" >";//"Skip";
+					//this.cancel.Text = Resource.GetString("SkipText")+" >";//"Skip";
 				}
 				else if (currentIndex == (maxPages - 1))
 				{
@@ -413,7 +414,7 @@ namespace Novell.Wizard
 		{
 			string appdata = System.Environment.GetEnvironmentVariable("APPDATA");
 			int i = appdata.LastIndexOf("\\");
-			appdata = appdata.Substring(0, i+1);
+			appdata = appdata.Substring(0, i);
 			appdata = appdata + Resource.GetString("ifolderDirText") + "\\" + domainName + "\\" + userName ;
 			return appdata;
 		}

@@ -41,10 +41,24 @@ namespace Novell.FormsTrayApp
 
 		public SimiasWebService simiasWebservice
 		{
+			get
+			{
+				return this.simws;
+			}
 			set
 			{
 				this.simws = value;
 			}
+		}
+
+		public string DomainID
+		{
+			get
+			{
+				DomainItem domainItem = (DomainItem)this.DomainComboBox.SelectedItem;
+				this.domainID = domainItem.ID;
+				return this.domainID;
+			}			
 		}
 
 		public bool Success 
@@ -55,12 +69,22 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
-		public ResetPassphrase()
+		public int DomainCount
+		{
+			get
+			{
+				return this.DomainComboBox.Items.Count;
+			}
+		}
+
+		public ResetPassphrase(SimiasWebService simws)
 		{
 			//
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
+			this.simws = simws;
+			GetLoggedInDomains();
 
 			//
 			// TODO: Add any constructor code after InitializeComponent call
@@ -547,56 +571,58 @@ namespace Novell.FormsTrayApp
 			this.btnCancel.Select();
 			try
 			{
-				XmlDocument domainsDoc = new XmlDocument();
-				domainsDoc.Load(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "domain.list"));
-
-				XmlElement element = (XmlElement)domainsDoc.SelectSingleNode("/domains");
-
-				// Get the ID of the default domain.
-				XmlElement defaultDomainElement = (XmlElement)domainsDoc.SelectSingleNode("/domains/defaultDomain");
-				string defaultID = defaultDomainElement.GetAttribute("ID");
-
-				// Get the domains.
-				// Look for a domain with this ID.
-				XmlNodeList nodeList = element.GetElementsByTagName("domain");
-				foreach (XmlNode node in nodeList)
+				if( this.DomainComboBox.Items.Count > 0)
 				{
-					string name = ((XmlElement)node).GetAttribute("name");
-					string id = ((XmlElement)node).GetAttribute("ID");
-
-					DomainItem domainItem = new DomainItem(name, id);
-					this.DomainComboBox.Items.Add(domainItem);
-					if (id.Equals(defaultID))
+					if (selectedDomain != null)
 					{
-						selectedDomain = domainItem;
+						this.DomainComboBox.SelectedItem = selectedDomain;
 					}
+					else
+						this.DomainComboBox.SelectedIndex = 0;
+					PopulateRecoveryAgentList();
 				}
-
-				if (selectedDomain != null)
-				{
-					this.DomainComboBox.SelectedItem = selectedDomain;
-				}
-				else
-					this.DomainComboBox.SelectedIndex = 0;
 			}
-			catch (Exception ex)
+			catch
 			{
-				MessageBox.Show("ResetPassphrase_Load : {0}", ex.Message);
 			}		
 		}
 
 		private void btnReset_Click(object sender, System.EventArgs e)
 		{
-			// assign domain id.
-			//MessageBox.Show("In reset passphrase", "Reset Passphrase");
-			//return;
 			try
 			{
 				DomainItem domainItem = (DomainItem)this.DomainComboBox.SelectedItem;
 				this.domainID = domainItem.ID;
-				//MessageBox.Show("In reset passphrase", "Reset Passphrase");
-				//return;
-				Status status = this.simws.ReSetPassPhrase(this.domainID, this.passPhrase.Text , this.newPassphrase.Text, "RAName", "Public Key");
+				System.Resources.ResourceManager resManager = new System.Resources.ResourceManager(typeof(Connecting));
+				string publicKey = null;
+				string ragent = null;
+				if( this.recoveryAgentCombo.SelectedItem != null && (string)this.recoveryAgentCombo.SelectedItem != Resource.GetString("NoneText"))
+				{
+					// Show the certificate.....
+					byte[] CertificateObj = this.simws.GetRACertificateOnClient(this.DomainID, (string)this.recoveryAgentCombo.SelectedItem);
+					System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(CertificateObj);
+					MyMessageBox mmb = new MyMessageBox( string.Format(resManager.GetString("verifyCert"), (string)this.recoveryAgentCombo.SelectedItem), resManager.GetString("verifyCertTitle"), cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2);
+					DialogResult messageDialogResult = mmb.ShowDialog();
+					mmb.Dispose();
+					mmb.Close();
+					if( messageDialogResult != DialogResult.Yes )
+						return;
+					else
+					{
+						ragent = this.recoveryAgentCombo.SelectedText;
+						publicKey = Convert.ToBase64String(cert.GetPublicKey());
+					}
+				}
+				else	// If recovery agent is not selected...
+				{
+					MyMessageBox mmb = new MyMessageBox( resManager.GetString("NoCertWarning"), resManager.GetString("NoCertTitle"), "", MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2);
+					DialogResult messageDialogResult = mmb.ShowDialog();
+					mmb.Dispose();
+					mmb.Close();
+					if( messageDialogResult != DialogResult.Yes )
+						return;
+				}
+				Status status = this.simws.ReSetPassPhrase(this.domainID, this.passPhrase.Text , this.newPassphrase.Text, ragent, publicKey);
 				if( status.statusCode == StatusCodes.Success)
 				{
 					MessageBox.Show(Resource.GetString("ResetSuccess") /*"successfully reset passphrase"*/, Resource.GetString("ResetTitle"));
@@ -606,11 +632,15 @@ namespace Novell.FormsTrayApp
 					this.simws.StorePassPhrase(this.domainID, this.newPassphrase.Text, CredentialType.Basic, this.rememberPassphrase.Checked);
 					// successful..		
 				}
+				else if( status.statusCode == StatusCodes.PassPhraseInvalid)
+				{
+					MessageBox.Show(Resource.GetString("InvalidPPText")/*"Error resetting passphrase"*/ , Resource.GetString("ResetTitle")/*"reset error"*/ );
+					this.success = false;
+				}
 				else
 				{
 					MessageBox.Show(Resource.GetString("ResetError")/*"Error resetting passphrase"*/ , Resource.GetString("ResetTitle")/*"reset error"*/ );
 					this.success = false;
-					// Unable to reset.
 				}
 			}
 			catch(Exception ex)
@@ -627,7 +657,6 @@ namespace Novell.FormsTrayApp
 
 		private void retypePassphrase_TextChanged(object sender, System.EventArgs e)
 		{
-			//	MessageBox.Show(Resource.Test1, "In Reset passphrase");
 			UpdateSensitivity();
 		}
 
@@ -647,6 +676,52 @@ namespace Novell.FormsTrayApp
 			else
 				this.btnReset.Enabled = false;
 
+		}
+
+		private void pictureBox1_Click(object sender, System.EventArgs e)
+		{
+		
+		}
+
+		private void DomainComboBox_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			PopulateRecoveryAgentList();
+		}
+		private void PopulateRecoveryAgentList()
+		{
+			this.recoveryAgentCombo.Items.Clear();
+			try
+			{
+				string[] rAgents= this.simws.GetRAListOnClient(this.DomainID);
+				foreach( string rAgent in rAgents)
+				{
+					this.recoveryAgentCombo.Items.Add( rAgent ); 
+				}
+			}
+			catch(Exception ex)
+			{
+			}
+			this.recoveryAgentCombo.Items.Add(Resource.GetString("NoneText"));
+		}
+
+		private void GetLoggedInDomains()
+		{
+			try
+			{
+				DomainInformation[] domains;
+				domains = this.simiasWebservice.GetDomains(true);
+				foreach (DomainInformation di in domains)
+				{
+					if( di.Authenticated)
+					{
+						DomainItem domainItem = new DomainItem(di.Name, di.ID);
+						this.DomainComboBox.Items.Add(domainItem);
+					}
+				}
+			}
+			catch(Exception ex)
+			{
+			}
 		}
 	}
 }
