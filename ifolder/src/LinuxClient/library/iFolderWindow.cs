@@ -1411,8 +1411,7 @@ namespace Novell.iFolder
 						{
 							DomainInformation domain =
 								domainController.GetDomain(holder.iFolder.DomainID);
-							if (domain == null || 
-								domain.MemberUserID == holder.iFolder.OwnerID)
+							if ( holder.iFolder.CurrentUserID== holder.iFolder.OwnerID)
 							{
 								// The current user is the owner
 								DeleteSelectedFolderFromServer();
@@ -1455,8 +1454,8 @@ namespace Novell.iFolder
 
 						DomainInformation domain =
 							domainController.GetDomain(holder.iFolder.DomainID);
-						if (domain == null || 
-							domain.MemberUserID == holder.iFolder.OwnerID)
+						
+						if ( holder.iFolder.CurrentUserID== holder.iFolder.OwnerID)
 						{
 							// The current user is the owner
 							MenuItem item_delete = new MenuItem (

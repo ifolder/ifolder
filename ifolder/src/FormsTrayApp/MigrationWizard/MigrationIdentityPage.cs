@@ -40,6 +40,7 @@ namespace Novell.Wizard
 	{
 		enum SecurityState
 		{
+			//Bit map values
 			encryption = 1,
 			enforceEncryption = 2,
 			SSL = 4,

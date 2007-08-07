@@ -973,7 +973,7 @@ namespace Novell.iFolder
 				iFolderWeb ifolder = null;
 
 				ifHolder = GetiFolder(ifolderID);
-				bool IsOwner = (domainController.GetDomain (ifHolder.iFolder.DomainID).MemberUserID.Equals (ifHolder.iFolder.OwnerID));
+				bool IsOwner = (ifHolder.iFolder.CurrentUserID.Equals (ifHolder.iFolder.OwnerID));
 
 				if(IsiFolder(ifolderID) && IsOwner)
 				{
