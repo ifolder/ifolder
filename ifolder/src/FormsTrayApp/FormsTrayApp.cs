@@ -1346,8 +1346,11 @@ namespace Novell.FormsTrayApp
 						errorSyncingCurrentCollection = true;
 						break;
 					case SyncStatus.PolicyType:
-						message = string.Format(resourceManager.GetString("policyTypeFailure"), syncEventArgs.Name);
-						errorSyncingCurrentCollection = true;
+						message = string.Format(resourceManager.GetString("policyTypeFailure"), syncEventArgs.Name);						
+						if( String.Compare( (string)syncEventArgs.Name, (string)"thumbs.db", true ) != 0 )
+						{
+							errorSyncingCurrentCollection = true;
+						}						
 						break;
 					case SyncStatus.DiskFull:
 						message = string.Format(syncToServer ? resourceManager.GetString("serverDiskFullFailure") : resourceManager.GetString("clientDiskFullFailure"), syncEventArgs.Name);
