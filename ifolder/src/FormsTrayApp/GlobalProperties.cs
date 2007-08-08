@@ -2991,7 +2991,8 @@ namespace Novell.FormsTrayApp
 			iFolderActions.Visible = false;
 
 //			Call the refresh thread
-			this.refreshTimer.Interval = Math.Abs(this.ifWebService.GetDefaultSyncInterval()* 1000);
+			/// Default refresh interval is 5 minutes now 
+			//this.refreshTimer.Interval = Math.Abs(this.ifWebService.GetDefaultSyncInterval()* 1000);
 		//	MessageBox.Show(string.Format("Setting default sync interval to {0}. Calling refreash.", this.refreshTimer.Interval));
 			refreshAll();
 			this.refreshTimer.Start();
@@ -3596,14 +3597,9 @@ namespace Novell.FormsTrayApp
 		private void refreshTimer_Tick(object sender, EventArgs e)
 		{
 		//	this.refreshTimer.Stop();
-			if( this.Focused)
-				this.refreshAll();
-			else
-			{
-				this.refreshTimer.Stop();
-				this.refreshTimer.Start();
-			}
-		//	this.refreshTimer.Start();
+			this.refreshAll();
+			this.refreshTimer.Stop();
+			this.refreshTimer.Start();
 		}
 	}
 }
