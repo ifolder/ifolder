@@ -106,7 +106,7 @@ namespace Novell.iFolder
 			loginTable.Attach(passPhraseEntry, 1,2,0,2, AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 				savePassPhraseButton = 
 					new CheckButton(Util.GS(
-						"_Remember passphrase"));
+						"_Remember Passphrase"));
 				loginTable.Attach(savePassPhraseButton, 1,2,2,4,
 						AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 	
