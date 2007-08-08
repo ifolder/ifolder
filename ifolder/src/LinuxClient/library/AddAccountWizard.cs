@@ -931,7 +931,9 @@ namespace Novell.iFolder
 					       RATreeStore.AppendValues (raagent);
 					RATreeStore.AppendValues( Util.GS("None"));
 
-				} else {
+				}
+				else
+				{
 				       // PassPhrase already available.
 				       PassPhraseSet = true;
  				       PassPhraseVerifyEntry.Hide ();
@@ -1092,87 +1094,59 @@ namespace Novell.iFolder
 		{
 			// if there is default iFolder present already check for download
 			// else upload
+
+			bool status = false;
+			
 			if( this.CreateDefault.Active == false)
-				return true;
+			{
+				status = true;
+				return status;
+			}
 			string defaultiFolderID = simws.GetDefaultiFolder( ConnectedDomain.ID );
 			if( defaultiFolderID == null || defaultiFolderID == "")
 			{
-				// upload
+				// No deafult ifolder so create a one
 				upload = true;
-				//if( LocationEntry.Text == GetDefaultPath())
-				//{
-				/*
-					if(!System.IO.Directory.Exists( LocationEntry.Text ))
-					{
-						System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(LocationEntry.Text);
-						dir.Create();
-					}
-				*/
-				//}
-				return CreateDefaultiFolder();
+				status = CreateDefaultiFolder();
+				return status;
 			}
 			else
 			{
-				// download
+				// download the deafult ifolder
 				upload = false;
 				iFolderData ifdata = iFolderData.GetData();
 				Debug.PrintLine("Reading ifdata");
 				defaultiFolder = ifdata.GetDefaultiFolder( defaultiFolderID );
-				if( defaultiFolder == null)
-					Debug.PrintLine("iFolder object is null");
-				else //if( defaultiFolder.encryptionAlgorithm == null || defaultiFolder.encryptionAlgorithm == "")
-				{
-					// Not encrypted... Download here
-				//	Debug.PrintLine("Unencrypted download: " );
-					return DownloadiFolder();
-				}
-				/*
+				if( defaultiFolder != null)
+					status = DownloadiFolder();
 				else
-				{
-					// encrypted... Check for passphrase
-					Debug.PrintLine("Encrypted {0} download: ", ifolder.encryptionAlgorithm);
-				}
-				*/
-			}
-			return false;
+					Debug.PrintLine("iFolder object is null");
+			}			
+			return status;
 		}
 			
 		private bool DownloadiFolder()
 		{
 			iFolderData ifdata = iFolderData.GetData();
-			bool canbeSet = false;
+			bool downLoad = false;
 			if( defaultiFolder.encryptionAlgorithm == null || defaultiFolder.encryptionAlgorithm == "")
 			{
-				canbeSet = true;
-				/*
-				try
-				{
-					ifdata.AcceptiFolderInvitation( ifolderID, domainID, this.LocationEntry.Text);
-					Debug.PrintLine("finished accepting invitation");
-					return true;
-				}
-				catch(Exception ex)
-				{
-					Debug.PrintLine("Exception: Unable to download: {0}", ex.Message);
-					return false;
-				}
-				*/
+				downLoad = true;				
 			}
 			else
 			{
 				if( this.passPhraseEntered == false )
 				{
-					// Go to passphrase page
+					// Go to passphrase page to get the passphrase
 					waitForPassphrase = true;
 					AccountDruid.Page = RAPage;
 					return false;
 				}
 				else
-				{
-					canbeSet = true;
-				}
+					downLoad = true;				
 			}
-			if( canbeSet == true )
+			
+			if( downLoad == true )
 			{
 				try
 				{
@@ -1185,7 +1159,7 @@ namespace Novell.iFolder
 				}
 				catch(Exception ex)
 				{
-				//	Debug.PrintLine("Exception: Unable to download: {0}", ex.Message);
+					//	Debug.PrintLine("Exception: Unable to download: {0}", ex.Message);
 					DisplayCreateOrSetupException(ex);
 					AccountDruid.Page = DefaultiFolderPage;
 					return false;
