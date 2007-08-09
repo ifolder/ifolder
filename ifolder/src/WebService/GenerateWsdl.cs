@@ -1,24 +1,25 @@
-/***********************************************************************
- *  $RCSfile: iFolder.cs,v $
- *
- *  Copyright © Unpublished Work of Novell, Inc. All Rights Reserved.
- *
- *  THIS WORK IS AN UNPUBLISHED WORK AND CONTAINS CONFIDENTIAL,
- *  PROPRIETARY AND TRADE SECRET INFORMATION OF NOVELL, INC. ACCESS TO 
- *  THIS WORK IS RESTRICTED TO (I) NOVELL, INC. EMPLOYEES WHO HAVE A 
- *  NEED TO KNOW HOW TO PERFORM TASKS WITHIN THE SCOPE OF THEIR 
- *  ASSIGNMENTS AND (II) ENTITIES OTHER THAN NOVELL, INC. WHO HAVE 
- *  ENTERED INTO APPROPRIATE LICENSE AGREEMENTS. NO PART OF THIS WORK 
- *  MAY BE USED, PRACTICED, PERFORMED, COPIED, DISTRIBUTED, REVISED, 
- *  MODIFIED, TRANSLATED, ABRIDGED, CONDENSED, EXPANDED, COLLECTED, 
- *  COMPILED, LINKED, RECAST, TRANSFORMED OR ADAPTED WITHOUT THE PRIOR 
- *  WRITTEN CONSENT OF NOVELL, INC. ANY USE OR EXPLOITATION OF THIS 
- *  WORK WITHOUT AUTHORIZATION COULD SUBJECT THE PERPETRATOR TO 
- *  CRIMINAL AND CIVIL LIABILITY.  
- *
- *  Author: Rob
- *
- ***********************************************************************/
+/****************************************************************************
+ |
+ | Copyright (c) 2007 Novell, Inc.
+ | All Rights Reserved.
+ |
+ | This program is free software; you can redistribute it and/or
+ | modify it under the terms of version 2 of the GNU General Public License as
+ | published by the Free Software Foundation.
+ |
+ | This program is distributed in the hope that it will be useful,
+ | but WITHOUT ANY WARRANTY; without even the implied warranty of
+ | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ | GNU General Public License for more details.
+ |
+ | You should have received a copy of the GNU General Public License
+ | along with this program; if not, contact Novell, Inc.
+ |
+ | To contact Novell about this file by physical or electronic mail,
+ | you may find current contact information at www.novell.com
+ |
+ | Author: Rob Lyon <rlyon@novell.com> 
+ |**************************************************************************/
 
 using System;
 using System.Xml;
