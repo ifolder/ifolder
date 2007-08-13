@@ -474,7 +474,7 @@ namespace Novell.FormsTrayApp
 
 		private void BrowseButton_Click(object sender, System.EventArgs e)
 		{
-			OpenFileDialog fileDlg = new OpenFileDialog();
+			SaveFileDialog fileDlg = new SaveFileDialog();
 			fileDlg.ShowDialog();
 			this.filePath.Text = fileDlg.FileName;
 		}
