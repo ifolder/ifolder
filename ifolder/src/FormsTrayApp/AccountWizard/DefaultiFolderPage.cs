@@ -357,7 +357,7 @@ namespace Novell.Wizard
 		{
 			try
 			{
-				DirectoryInfo di = new DirectoryInfo( this.defaultPath );
+				DirectoryInfo di = new DirectoryInfo( this.LocationEntry.Text );
 				di.Create();
 			}
 			catch( Exception ex)

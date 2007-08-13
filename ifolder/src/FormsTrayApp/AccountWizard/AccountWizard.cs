@@ -375,6 +375,7 @@ namespace Novell.Wizard
 			// Check if we're on the last page.
 			if (currentIndex == (maxPages - 1))
 			{
+				(Novell.FormsTrayApp.FormsTrayApp.globalProp()).refreshAll();
 				// Exit
 				return;
 			}
