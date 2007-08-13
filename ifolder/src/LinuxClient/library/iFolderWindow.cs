@@ -1898,6 +1898,7 @@ namespace Novell.iFolder
 		{
 			string DomainID, oldPassphrase, newPassphrase, RAName, publicKey;
 			bool rememberOption;
+			bool status = false;
 			int result =0;
 			do
 			{
@@ -1925,63 +1926,11 @@ namespace Novell.iFolder
 				oldPassphrase = resetDialog.OldPassphrase;
 				newPassphrase = resetDialog.NewPassphrase;
 				rememberOption = resetDialog.SavePassphrase;
-				RAName = resetDialog.RAName;
-				publicKey = null;
+				status = resetDialog.Status;
 				resetDialog.Hide();
 				resetDialog.Destroy();
 				if(result == (int)ResponseType.Cancel || result == (int)ResponseType.DeleteEvent)
 					return;
-				if( RAName != Util.GS("None") && RAName != string.Empty)
-				{
-					byte [] RACertificateObj = domainController.GetRACertificate(DomainID, RAName);
-					if( RACertificateObj != null && RACertificateObj.Length != 0)
-					{
-						System.Security.Cryptography.X509Certificates.X509Certificate Cert = new System.Security.Cryptography.X509Certificates.X509Certificate(RACertificateObj);
-						CertificateDialog dlg = new CertificateDialog(Cert.ToString(true));
-						if (!Util.RegisterModalWindow(dlg))
-						{
-							dlg.Destroy();
-							dlg = null;
-							return ;
-						}
-						int res = dlg.Run();
-						dlg.Hide();
-						dlg.Destroy();
-						dlg = null;
-						if( res == (int)ResponseType.Ok)
-						{
-							publicKey = Convert.ToBase64String(Cert.GetPublicKey());
-							Debug.PrintLine(String.Format(" The public key is: {0}", publicKey));
-						}
-						else
-						{
-							Debug.PrintLine("Response type is not ok");
-							return;
-						}
-					}
-				}
-
-				Status passPhraseStatus =  simws.ValidatePassPhrase(DomainID, oldPassphrase);
-				if( passPhraseStatus == null || passPhraseStatus.statusCode != StatusCodes.Success)
-				{
-					 iFolderMsgDialog dialog = new iFolderMsgDialog(
-                                                                                                                null,
-                                                                                                                iFolderMsgDialog.DialogType.Error,
-                                                                                                                iFolderMsgDialog.ButtonSet.None,
-                                                                                                                Util.GS("Invalid Passphrase"),
-                                                                                                                Util.GS("Passphrase entered is wrong"),
-                                                                                                                Util.GS("Please try again"));
-                                	dialog.Run();
-	                                dialog.Hide();
-        	                        dialog.Destroy();
-                	                dialog = null;
-					result = 0;
-				}
-			}while(result != (int) ResponseType.Ok);
-			if( result == (int) ResponseType.Ok)
-			{
-				Debug.PrintLine("Calling Reset Passphrase");
-				bool status = domainController.ReSetPassphrase(DomainID, oldPassphrase, newPassphrase, RAName, publicKey);
 				if( status == true)
 				{
 					simws.StorePassPhrase(DomainID, newPassphrase, CredentialType.Basic, rememberOption);
@@ -1989,7 +1938,7 @@ namespace Novell.iFolder
                                                                                                                 null,
                                                                                                                 iFolderMsgDialog.DialogType.Info,
                                                                                                                 iFolderMsgDialog.ButtonSet.None,
-                                                                                                                Util.GS("Passphrase Reset"),
+                                                                                                                Util.GS("Reset Passphrase"),
                                                                                                                 Util.GS("Successfully changed the passphrase"),
                                                                                                                 Util.GS("Use your new passphrase from now"));
 	                                dialog.Run();
@@ -1997,21 +1946,7 @@ namespace Novell.iFolder
                 	                dialog.Destroy();
                         	        dialog = null;
 				}
-				else
-				{
-					 iFolderMsgDialog dialog = new iFolderMsgDialog(
-                                                                                                                null,
-                                                                                                                iFolderMsgDialog.DialogType.Error,
-                                                                                                                iFolderMsgDialog.ButtonSet.None,
-                                                                                                                Util.GS("Error setting the PassPhrase"),
-                                                                                                                Util.GS("Unable to set the passphrase"),
-                                                                                                                Util.GS("Please try again"));
-                                	dialog.Run();
-	                                dialog.Hide();
-        	                        dialog.Destroy();
-                	                dialog = null;
-				}
-			}
+			}while(status == false);
 		}
 
 		private void OnAbout(object o, EventArgs args)

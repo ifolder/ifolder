@@ -46,6 +46,7 @@ namespace Novell.iFolder
 		private Image				 iFolderBanner;
 		private Image				 iFolderScaledBanner;
 		private Gdk.Pixbuf			 ScaledPixbuf;
+		private bool status;
 
 		public DomainInformation[] Domains
 		{
@@ -100,6 +101,15 @@ namespace Novell.iFolder
 			{
 				return recoveryAgentCombo.ActiveText;
 			}
+		}
+
+		public bool Status
+		{
+			get
+			{
+				return status;
+			}
+
 		}
 
 		public ResetPassPhraseDialog() : base()
@@ -237,11 +247,102 @@ namespace Novell.iFolder
 
 			this.AddButton(Stock.Cancel, ResponseType.Cancel);
 			Button but = (Button)this.AddButton(Util.GS("Reset"), ResponseType.Ok);
+			but.Clicked += new EventHandler(OnResetClicked);
 			but.Image = new Image(Stock.Undo, Gtk.IconSize.Menu);//new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-download16.png")));
 			this.SetResponseSensitive(ResponseType.Ok, false);
 			this.DefaultResponse = ResponseType.Ok;
 			this.Realized += new EventHandler(OnResetPassphraseLoad);	
 			domainComboBox.Changed += new EventHandler(OnDomainChangedEvent);
+		}
+
+		private void OnResetClicked( object o, EventArgs args)
+		{
+			Debug.PrintLine("Reset clicked");
+			string publicKey = null;
+			bool reset = false;
+			DomainController domainController = DomainController.GetDomainController();
+			if( this.RAName != Util.GS("None") && this.RAName != string.Empty)
+			{
+				byte [] RACertificateObj = domainController.GetRACertificate(this.Domain, this.RAName);
+				if( RACertificateObj != null && RACertificateObj.Length != 0)
+				{
+					System.Security.Cryptography.X509Certificates.X509Certificate Cert = new System.Security.Cryptography.X509Certificates.X509Certificate(RACertificateObj);
+					CertificateDialog dlg = new CertificateDialog(Cert.ToString(true));
+					if (!Util.RegisterModalWindow(dlg))
+					{
+						dlg.Destroy();
+						dlg = null;
+						return ;
+					}
+					int res = dlg.Run();
+					dlg.Hide();
+					dlg.Destroy();
+					dlg = null;
+					if( res == (int)ResponseType.Ok)
+					{
+						publicKey = Convert.ToBase64String(Cert.GetPublicKey());
+						Debug.PrintLine(String.Format(" The public key is: {0}", publicKey));
+						reset = true;
+					}
+					else
+					{
+						reset = false;
+						Debug.PrintLine("Response type is not ok");
+						return;
+					}
+				}
+			}
+			else
+			{
+		                iFolderMsgDialog dg = new iFolderMsgDialog(
+		                    this, 
+		                    iFolderMsgDialog.DialogType.Warning,
+		                    iFolderMsgDialog.ButtonSet.YesNo,
+		                    "No Recovery Agent",
+		                    Util.GS("Recovery Agent Not Selected"),
+		                    Util.GS("There is no Recovery Agent selected. Encrypted data cannot be recovered later, if passphrase is lost. Do you want to continue?"));
+				       	int rc = dg.Run();
+			    		dg.Hide();
+		            	dg.Destroy();
+		                if( (ResponseType)rc == ResponseType.Yes )
+		                {
+					// reset passphrase
+					reset = true;
+		                }
+		                else
+		                {
+					return;
+		                }
+			}
+			if( reset == true)
+			{
+				try
+				{
+					status = domainController.ReSetPassphrase(this.Domain, this.OldPassphrase, this.NewPassphrase, this.RAName, publicKey);
+				}
+				catch(Exception ex)
+				{
+				}
+			}
+			if( status == false)
+			{
+				 iFolderMsgDialog dialog = new iFolderMsgDialog(
+                                                                                                               null,
+                                                                                                               iFolderMsgDialog.DialogType.Error,
+                                                                                                                iFolderMsgDialog.ButtonSet.None,
+                                                                                                                Util.GS("Reset Passphrase"),
+                                                                                                                Util.GS("Unable to change the Passphrase"),
+                                                                                                                Util.GS("Please try again"));
+                               	dialog.Run();
+                                dialog.Hide();
+       	                        dialog.Destroy();
+               	                dialog = null;
+			}
+		}
+
+		protected bool OnDeleteEvent(object o, EventArgs args)
+		{
+			return true;
 		}
 
 
