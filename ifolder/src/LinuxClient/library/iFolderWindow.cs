@@ -1223,6 +1223,10 @@ namespace Novell.iFolder
 						dialog = null;
 				}
 			}
+			else if( res == (int)ResponseType.Help)
+			{
+				Util.ShowHelp("managingpassphrse.html", this);
+			}
 		}
 
 		private void ImportClicked( object o, EventArgs args)
@@ -1286,6 +1290,10 @@ namespace Novell.iFolder
 						dialog.Destroy();
 						dialog = null;
 				}
+			}
+			else if( result == (int)ResponseType.Help)
+			{
+				Util.ShowHelp("managingpassphrse.html", this);
 			}
 		}
 		

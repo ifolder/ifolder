@@ -177,7 +177,7 @@ namespace Novell.iFolder
                                 if( tSelect == null)
                                 {
                                         MigrateButton.Sensitive                 = false;
-                                        DetailsButton.Sensitive                 = false;
+                                        DetailsButton.Sensitive                 = true;
                                 }
                                 if(tSelect.CountSelectedRows() == 1)
                                 {
@@ -187,13 +187,13 @@ namespace Novell.iFolder
                                 else
                                 {
                                         MigrateButton.Sensitive                 = false;
-                                        DetailsButton.Sensitive                 = false;
+                                        DetailsButton.Sensitive                 = true;
                                 }
                         }
                         else
                         {
                                 MigrateButton.Sensitive = false;
-                                DetailsButton.Sensitive = false;
+                                DetailsButton.Sensitive = true;
                         }
                 }
 

@@ -169,6 +169,7 @@ namespace Novell.iFolder
 			this.VBox.ShowAll();
 		
 
+			this.AddButton(Stock.Help, ResponseType.Help);
 			this.AddButton(Stock.Cancel, ResponseType.Cancel);
 			this.AddButton(Stock.Ok, ResponseType.Ok);
 			this.SetResponseSensitive(ResponseType.Ok, false);
