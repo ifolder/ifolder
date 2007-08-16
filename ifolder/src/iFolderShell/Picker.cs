@@ -81,6 +81,7 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.ColumnHeader columnHeader3;
 		private Novell.iFolderCom.VirtualListView rosterLV;
 		private System.ComponentModel.IContainer components;
+		private System.Windows.Forms.Button btnHelp;	
 		#endregion
 
 		/// <summary>
@@ -160,6 +161,7 @@ namespace Novell.iFolderCom
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.ok = new System.Windows.Forms.Button();
 			this.cancel = new System.Windows.Forms.Button();
+			this.btnHelp = new System.Windows.Forms.Button();
 			this.searchTimer = new System.Windows.Forms.Timer(this.components);
 			this.rosterLV = new Novell.iFolderCom.VirtualListView();
 			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
@@ -362,6 +364,16 @@ namespace Novell.iFolderCom
 			this.cancel.Text = resources.GetString("cancel.Text");
 			this.cancel.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("cancel.TextAlign")));
 			this.cancel.Visible = ((bool)(resources.GetObject("cancel.Visible")));
+
+			// 
+			// btnHelp
+			//
+			this.btnHelp.Text = resources.GetString("btnHelp.Text");
+			this.btnHelp.Location = ((System.Drawing.Point)(resources.GetObject("btnHelp.Location")));
+			this.btnHelp.Size = ((System.Drawing.Size)(resources.GetObject("btnHelp.Size")));
+			this.btnHelp.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("btnHelp.Anchor")));
+			this.btnHelp.Click += new EventHandler(btnHelp_Click);
+
 			// 
 			// searchTimer
 			// 
@@ -470,6 +482,7 @@ namespace Novell.iFolderCom
 			this.Controls.Add(this.addedLV);
 			this.Controls.Add(this.remove);
 			this.Controls.Add(this.add);
+			this.Controls.Add(this.btnHelp);
 			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
 			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -488,6 +501,12 @@ namespace Novell.iFolderCom
 			this.SizeChanged += new System.EventHandler(this.Picker_SizeChanged);
 			this.Load += new System.EventHandler(this.Picker_Load);
 			this.ResumeLayout(false);
+
+			void btnHelp_Click(object sender, EventArgs e)
+			{
+				string helpFile = Path.Combine(Path.Combine(Path.Combine(Application.StartupPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"doc\user\data\sharewith.html");
+				new iFolderComponent().ShowHelp(Application.StartupPath, helpFile);
+			}
 
 		}
 		#endregion
