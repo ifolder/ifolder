@@ -6,8 +6,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="en" />
 <meta name="Generator" content="Novell Documentation  8 June 2005" />
-<meta name="Generation-Date" content="Wednesday, July 25, 2007 15:08" />
-<meta name="Content-Date" content="Mon, 25 Jul 2007 12:00:00 GMT" />
+<meta name="Generation-Date" content="Monday, August 13, 2007 23:34" />
+<meta name="Content-Date" content="Mon, 13 Aug 2007 12:00:00 GMT" />
 <meta name="Robots" content="INDEX, FOLLOW" />
 <meta name="Document_Number" content="zHTML xD.0000.0000.0001.0004." />
 <meta name="Author" content="zHTML xD.0000.0000.0001.0004." />
@@ -49,7 +49,8 @@ the following key features:</p>
 <li class="listitem"><a href="keyfeatures.html#b7x5io1">Section 1.4.4, Encryption</a></li>
 <li class="listitem"><a href="keyfeatures.html#b7x6cp3">Section 1.4.5, Enhanced Web Access</a></li>
 <li class="listitem"><a href="keyfeatures.html#b9lux1e">Section 1.4.6, Migration</a></li>
-<li class="listitem"><a href="keyfeatures.html#b9425th">Section 1.4.7, Synchronization Log</a></li></ul></div>
+<li class="listitem"><a href="keyfeatures.html#bayydrd">Section 1.4.7, Default iFolder</a></li>
+<li class="listitem"><a href="keyfeatures.html#b9425th">Section 1.4.8, Synchronization Log</a></li></ul></div>
 
 <div class="sect2" title="iFolder Sharing" id="bawqka3">
 
@@ -152,14 +153,24 @@ the Full Control right.</p>
 
 <h3 class="title"><span class="number">1.4.3</span> File Synchronization </h3>
 
-<p class="para">When you set up an iFolder account, you can enable <span class="guimenu">Remember
-My Password</span> so that iFolder can synchronize iFolder membership
-and files in the background as you work. </p>
+<p class="para">When you are connected to the server, iFolder can synchronize
+iFolder membership and files in the background as you work. When
+you set up an iFolder account, you can enable <span class="guimenu">Remember
+My Password</span> so that iFolder can remember the password
+on that machine, and next time when you launch iFolder, it is automatically
+connect to the server and synchronize the data without prompts  for
+password.</p>
 <p class="para">You can configure the iFolder client to run automatically
 each time you log in to your computer’s desktop environment.
 The session runs in the background as you work with files in your
 local iFolders, tracking and logging any changes you make. </p>
 <p class="para">You can synchronize the files manually or at specified intervals.</p>
+<p class="para">iFolder 3.6 also has delta synchronization capabilities. When
+you make any changes to an iFolder file, only the deltas or changes
+get synchronized to the server. In other words, Delta synchronization only
+retrieves updates since the last synchronization between the iFolder
+client and the server. This increases the efficiency since it reduces
+the synchronization time. </p>
 </div>
 
 <div class="sect2" title="Encryption" id="b7x5io1">
@@ -208,13 +219,27 @@ to iFolder 3.6 quickly and easily. For more information, see <a href="coexistmig
 Migration And Upgrade </a>.</p>
 </div>
 
+<div class="sect2" title="Default iFolder" id="bayydrd">
+
+<h3 class="title"><span class="number">1.4.7</span> Default iFolder</h3>
+
+<p class="para">iFolder 3.6 allows you to set up a default iFolder when you
+configure a new account. When you configure a new iFolder account,
+iFolder automatically check for the presence of default iFolder.
+If you have not created one, iFolder prompts you to create one.
+If a default iFolder is already exists, iFolder client prompts you
+to download. You are also allowed to ignore both these options.
+For more information see, <a href="accounts.html#bbba119">Step 6</a> in the section <a href="accounts.html#accounts">Section 2.2, Configuring an iFolder
+Account</a>. </p>
+</div>
+
 <div class="sect2" title="Synchronization Log" id="b9425th">
 
-<h3 class="title"><span class="number">1.4.7</span> Synchronization Log</h3>
+<h3 class="title"><span class="number">1.4.8</span> Synchronization Log</h3>
 
 <p class="para">The synchronization log displays a log of your iFolder background
 activity, such as uploading and downloading files for different
-iFolders. </p>
+iFolders, excluded files and non-synchronized files. </p>
 </div>
 
 </div>

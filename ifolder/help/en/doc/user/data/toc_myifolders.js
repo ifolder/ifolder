@@ -23,9 +23,11 @@
       level3ID = parent.theMenu.addChild(level2ID, "Document", "Setting an iFolder Quota", "../doc/user/data/ifquota.html", "zHTML xD.0000.0000.0003.0011.", "Setting an iFolder Quota");
       level3ID = parent.theMenu.addChild(level2ID, "Document", "Synchronizing Files", "../doc/user/data/sync.html", "zHTML xD.0000.0000.0003.0012.", "Synchronizing Files");
       level3ID = parent.theMenu.addChild(level2ID, "Document", "Resolving File Conflicts", "../doc/user/data/conflicts.html", "zHTML xD.0000.0000.0003.0013.", "Resolving File Conflicts");
-      level3ID = parent.theMenu.addChild(level2ID, "Document", "Reverting an iFolder to a Normal Folder", "../doc/user/data/reverting.html", "zHTML xD.0000.0000.0003.0014.", "Reverting an iFolder to a Normal Folder");
-      level3ID = parent.theMenu.addChild(level2ID, "Document", "Moving an iFolder", "../doc/user/data/movelocation.html", "zHTML xD.0000.0000.0003.0015.", "Moving an iFolder");
-      level3ID = parent.theMenu.addChild(level2ID, "Document", "Deleting an iFolder", "../doc/user/data/deleting.html", "zHTML xD.0000.0000.0003.0016.", "Deleting an iFolder");
+      level3ID = parent.theMenu.addChild(level2ID, "Document", "Moving an iFolder", "../doc/user/data/movelocation.html", "zHTML xD.0000.0000.0003.0014.", "Moving an iFolder");
+      level3ID = parent.theMenu.addChild(level2ID, "Document", "Reverting an iFolder to a Normal Folder", "../doc/user/data/reverting.html", "zHTML xD.0000.0000.0003.0015.", "Reverting an iFolder to a Normal Folder");
+      level3ID = parent.theMenu.addChild(level2ID, "Document", "Removing Membership From a Shared iFolder", "../doc/user/data/bbb7rj2.html", "zHTML xD.0000.0000.0003.0016.", "Removing Membership From a Shared iFolder");
+      level3ID = parent.theMenu.addChild(level2ID, "Document", "Deleting an iFolder", "../doc/user/data/deleting.html", "zHTML xD.0000.0000.0003.0017.", "Deleting an iFolder");
+      level3ID = parent.theMenu.addChild(level2ID, "Document", "What’s Next", "../doc/user/data/bbbcabq.html", "zHTML xD.0000.0000.0003.0018.", "What’s Next");
       parent.theMenu.reload();
 
       }

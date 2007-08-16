@@ -6,11 +6,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="en" />
 <meta name="Generator" content="Novell Documentation  8 June 2005" />
-<meta name="Generation-Date" content="Wednesday, July 25, 2007 15:08" />
-<meta name="Content-Date" content="Mon, 25 Jul 2007 12:00:00 GMT" />
+<meta name="Generation-Date" content="Monday, August 13, 2007 23:34" />
+<meta name="Content-Date" content="Mon, 13 Aug 2007 12:00:00 GMT" />
 <meta name="Robots" content="INDEX, FOLLOW" />
-<meta name="Document_Number" content="zHTML xD.0000.0000.0002.0003." />
-<meta name="Author" content="zHTML xD.0000.0000.0002.0003." />
+<meta name="Document_Number" content="zHTML xD.0000.0000.0002.0002." />
+<meta name="Author" content="zHTML xD.0000.0000.0002.0002." />
 <meta name="Product_Class" content="" />
 <meta name="Product_and_Version" content="iFolder™" />
 <meta name="Copyright" content="Copyright Novell, Inc. 2005" />
@@ -22,7 +22,7 @@
 <title>OES
 2: Novell iFolder 3.6 Help</title>
 <script type="text/javascript">
-  var prev_link="stopclient.html";
+  var prev_link="startclient.html";
   var next_link="login.html";
   var parentfile = "../doc/user/data/accountsprefs.html";
   var parenttoc = "../doc/user/data/toc_accountsprefs.html";
@@ -36,7 +36,7 @@
 
 <div class="sect1" title="Configuring an iFolder Account" id="accounts">
 
-<h2 class="title"><span class="number">2.3</span> Configuring an iFolder
+<h2 class="title"><span class="number">2.2</span> Configuring an iFolder
 Account</h2>
 
 <p class="para">Use the iFolder Account Assistant to add and configure a new
@@ -61,7 +61,7 @@ Account Assistant</span>, using one of the following methods:</p>
 <ul class="listbullet">
 <li class="listitem">The first time you start iFolder under
 your current local login identity, iFolder prompts you to set up
-an iFolder account. Click <span class="guimenu">Yes</span> to go directly
+an iFolder account. Click <span class="guimenu">Forward</span> to go directly
 to the <span class="guimenu">iFolder Account Assistant</span>.</li>
 <li class="listitem">Right-click the iFolder Services icon <img src="../graphics/ifolder22.png" alt="iFolder Application Icon " /> in
 the Notification area, select <span class="guimenu">Accounts </span>to open
@@ -82,12 +82,12 @@ specify the following values:</p>
 </tr>
 
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvibwil"></a>
-<p class="para"><span class="guimenu">iFolder Server Address</span></p></td>
+<p class="para"><span class="guimenu">Server Address</span></p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">The DNS name or IP address of the iFolder
 enterprise server where you have an account. Get this information
 from your iFolder administrator.</p>
-<p class="para">For example: <tt class="literal">svr21.example.com</tt> or <tt class="literal">192.168.1.1</tt></p></td>
+<p class="para">For example: <tt class="literal">svr21.example.com</tt> or <tt class="literal">192.168.1.1</tt></p><img src="../graphics/if3_server_address.png" alt="" /></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvibwiq"></a>
 <p class="para"><span class="guimenu">Make this my   default</span> server</p></td>
@@ -107,7 +107,7 @@ use is your network user ID (LDAP common name) or your e-mail address.</p>
 an e-mail address of <tt class="literal">john.smith@example.com</tt>,
 your administrator configures a setting for the server that determines
 which of the two formats to accept in the <span class="guimenu">Username</span> field
-for authentication purposes.</p></td>
+for authentication purposes.</p><img src="../graphics/if3_identity.png" alt="" /></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvibwin"></a>
 <p class="para"><span class="guimenu">Password</span></p></td>
@@ -124,17 +124,10 @@ to your computer. </p>
 fails gracefully the next time iFolder attempts to log in to the
 iFolder account. iFolder prompts you to log in with your new password
 and allows you to specify and save the new password.</p></td>
-</tr>
-<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b91apfu"></a>
-<p class="para"><span class="guimenu">Account Is Default</span></p></td>
-<td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">When you have multiple accounts, select <span class="guimenu">Account
-Is Default </span>to make this account the one selected by default
-in the drop-down list of accounts when you create and upload iFolders.</p></td>
 </tr></table>
 </div>
 
-<p class="para">If your admin has set your encryption policy to <span class="emphasis">on</span> or <span class="emphasis">enforced</span>,
+<p class="para">If your admin has set your encryption policy to <span class="emphasis">on</span>,
 iFolder will prompt you to enter your passphrase and select the
 Passphrase recovery agent. For more information on passphrase management
 see <a href="managingpassphrse.html#managingpassphrse">Section 3.10, Managing Passphrase for Encrypted iFolders</a></p></li>
@@ -159,10 +152,33 @@ the settings by logging in to the iFolder server.</p>
 <li class="step" id="b2m63qj">
 <p class="para">If you are prompted to <span class="guimenu">Accept
 the certificate of this server</span>, click <span class="guimenu">Details</span> to
-review the certificate information, then click <span class="guimenu">Yes</span> to
-accept it if it is good. </p>
+review the certificate information, then click <span class="guimenu">OK</span> to
+accept it. </p>
 <p class="para">If you do not accept the certificate, you cannot connect to
 the server.</p></li>
+<li class="step" id="bbba119">
+<p class="para">On successful connection, it it asks
+you to create a Default  iFolder, if you have not set up one currently.</p>
+<div class="informalfigure"><img src="../graphics/if3_defaultifolder_a.png" alt="" /></div>
+
+<p class="para">Specify the location where you want to create the Default
+iFolder. </p>
+<p class="para">By default, the Default iFolder is stored at <span class="filename">&lt;users
+home directory&gt;/ifolder/server_name/user_name</span>.
+You are allowed to change this location.</p>
+<p class="para">Select the type of the Default iFolder that you want to create.
+If you choose Encrypted, it prmpts you to give the passphrase. For
+more information see <a href="accounts.html#b8yvcnt">Step 3</a>.</p>
+<p class="para">Once a folder is made a Default iFolder, you can change the
+type only by deleting it from the server. If you remove Default
+iFolder on the server, the next time you configure the account from
+any thick-client, iFolder prompts you to create a Default iFolder. </p>
+<p class="para">If you have already set up a Default iFolder, it asks you
+to download it to your local machine.</p>
+<div class="informalfigure"><img src="../graphics/if3_defaultifolder_dwnld_a.png" alt="" /></div>
+
+<p class="para">Download the Default iFolder and click <span class="guimenu">Next</span> to
+go to complete account configuration.</p></li>
 <li class="step" id="b407oqi">
 <p class="para">On successful connection, click <span class="guimenu">Finish</span> to
 close the iFolder Account Assistant.</p>
@@ -202,9 +218,9 @@ Uploading an iFolder</a>.
 <div class="informalfigure"><img src="../graphics/if_menu_a.png" alt="iFolder Client Menu" /></div>
 </li>
 <li class="listitem">If iFolders for this account are available for download
-from the server, an iFolder Notification message <img src="../graphics/prefs-notification32.png" alt="Balloon Notification Icon " /> pops
-up adjacent to the Notification area of the taskbar. Click the message
-to open the iFolder browser. Continue with <a href="setupifolder.html#setupifolder">Section 3.8, Downloading an
+from the server, they are listed on the iFolder window under iFolders
+on &lt;iFolder server name&gt;. The  <img src="../graphics/if3_download.png" alt="iFolder Client Menu" /> icon indicates
+that the iFolder is available for download. Continue with <a href="setupifolder.html#setupifolder">Section 3.8, Downloading an
 Available iFolder</a>.</li></ul></div>
 </li></ol>
 </div>
