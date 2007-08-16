@@ -232,6 +232,15 @@ namespace Novell.FormsTrayApp
 				}
 			}
 		}
+
+		/// <summary>
+		/// Gets if Shutdown or logoff message is received.
+		/// </summary>
+		public bool MachineShutdown()
+		{
+			return this.shutdown;
+		}
+		
 		#endregion
 
 		#region Private Methods
@@ -338,8 +347,13 @@ namespace Novell.FormsTrayApp
 			switch (m.Msg)
 			{
 				case WM_QUERYENDSESSION:
+				{
+#if DEBUG					
+					MessageBox.Show("Shutdown msg got - synclog");
+#endif
 					this.shutdown = true;
 					break;
+				}
 			}
 
 			base.WndProc (ref m);

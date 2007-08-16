@@ -1461,6 +1461,14 @@ namespace Novell.FormsTrayApp
 		}
 
 		/// <summary>
+		/// Gets if Shutdown or logoff message is received.
+		/// </summary>
+		public bool MachineShutdown()
+		{
+			return this.shutdown;
+		}
+
+		/// <summary>
 		/// Updates the domain status in the Accounts page.
 		/// </summary>
 		/// <param name="domain">The domain to update.</param>
@@ -2372,8 +2380,13 @@ namespace Novell.FormsTrayApp
 			switch (m.Msg)
 			{
 				case WM_QUERYENDSESSION:
+				{
+#if DEBUG					
+					MessageBox.Show("Shutdown msg got - Preferences");
+#endif
 					this.shutdown = true;
 					break;
+				}
 			}
 
 			base.WndProc (ref m);

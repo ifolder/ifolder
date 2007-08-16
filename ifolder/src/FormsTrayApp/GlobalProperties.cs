@@ -1758,6 +1758,31 @@ namespace Novell.FormsTrayApp
 
 			return result;
 		}
+		
+		/// <summary>
+		/// Gets if Shutdown or logoff message is received.
+		/// </summary>
+		public bool MachineShutdown()
+		{
+			return this.shutdown;
+		}
+	
+		/// <summary>
+		/// Updates the display whenever an iFolder is downloaded.
+		/// </summary>
+		/// <param name="iFolderWeb">The Web object for the downloaded iFolder.</param>
+		/// <param name="DownloadPath">The path the downloaded iFolder.</param>
+		public void UpdateDisplay( iFolderWeb ifolderWeb, string DownloadPath)
+		{
+			iFolderObject ifobj = new iFolderObject(ifolderWeb, iFolderState.Initial);
+			addiFolderToListView(new iFolderObject(ifolderWeb, iFolderState.Initial));
+			if( acceptedFolders.Contains(ifolderWeb.ID) )
+				acceptedFolders.Remove(ifolderWeb.ID);
+			ifolderWeb.UnManagedPath = DownloadPath;
+			TileListViewItem tlvi = new TileListViewItem(ifobj);
+			acceptedFolders.Add(ifolderWeb.ID, tlvi);
+		}
+
 
 		/// <summary>
 		/// Updates the specified domain.
@@ -3312,17 +3337,6 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
-		public void UpdateDisplay( iFolderWeb ifolderWeb, string DownloadPath)
-		{
-			iFolderObject ifobj = new iFolderObject(ifolderWeb, iFolderState.Initial);
-			addiFolderToListView(new iFolderObject(ifolderWeb, iFolderState.Initial));
-			if( acceptedFolders.Contains(ifolderWeb.ID) )
-				acceptedFolders.Remove(ifolderWeb.ID);
-			ifolderWeb.UnManagedPath = DownloadPath;
-			TileListViewItem tlvi = new TileListViewItem(ifobj);
-			acceptedFolders.Add(ifolderWeb.ID, tlvi);
-		}
-
 		private void menuRemove_Click(object sender, System.EventArgs e)
 		{
 			if ( selectedItem != null )
@@ -3510,8 +3524,13 @@ namespace Novell.FormsTrayApp
 			switch (m.Msg)
 			{
 				case WM_QUERYENDSESSION:
+				{
+#if DEBUG					
+					MessageBox.Show("Shutdown msg got - GP");
+#endif
 					this.shutdown = true;
 					break;
+				}
 			}
 
 			base.WndProc (ref m);

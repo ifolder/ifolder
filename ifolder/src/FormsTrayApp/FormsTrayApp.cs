@@ -101,6 +101,7 @@ namespace Novell.FormsTrayApp
 		private System.ComponentModel.IContainer components;
 		static private System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(FormsTrayApp));
 		private bool shutdown = false;
+		private bool shutdown_msg = false;
 		private bool simiasRunning = false;
 		private bool wizardRunning = false;
 		private Icon trayIcon;
@@ -1493,6 +1494,10 @@ namespace Novell.FormsTrayApp
 
 		private void ShutdownTrayApp(Exception ex)
 		{
+#if DEBUG		
+			MessageBox.Show("FApp End");
+#endif
+
 			// Hide the dialogs.
 			if (preferences != null)
 				preferences.Hide();
@@ -1515,6 +1520,7 @@ namespace Novell.FormsTrayApp
 				mmb.ShowDialog();
 			}
 
+
 			simiasRunning = false;
 
 			try
@@ -1524,9 +1530,18 @@ namespace Novell.FormsTrayApp
 					eventClient.Deregister();
 				}
 
+#if DEBUG
+				MessageBox.Show(String.Format("Status GP {0}", globalProperties.MachineShutdown().ToString()));
+				MessageBox.Show(String.Format("Status Form {0}", this.MachineShutdown().ToString()));
+				MessageBox.Show(String.Format("Status Sync {0}", syncLog.MachineShutdown().ToString()));
+				MessageBox.Show(String.Format("Status Pref {0}", preferences.MachineShutdown().ToString())); 
+#endif				
 				// Shut down the web server.
-				simiasManager.Stop();
-
+				if(this.MachineShutdown() == false && globalProperties.MachineShutdown() == false && preferences.MachineShutdown() == false && syncLog.MachineShutdown() == false)
+				{
+					simiasManager.Stop();
+				}
+				
 				if ((worker != null) && worker.IsAlive)
 				{
 					worker.Abort();
@@ -1539,6 +1554,37 @@ namespace Novell.FormsTrayApp
 
 			Cursor.Current = Cursors.Default;
 			Application.Exit();
+		}
+		private const int WM_QUERYENDSESSION = 0x0011;
+
+		/// <summary>
+		/// Override of WndProc method.
+		/// </summary>
+		/// <param name="m">The message to process.</param>
+		protected override void WndProc(ref Message m)
+		{
+			// Keep track if we receive a shutdown message.
+			switch (m.Msg)
+			{
+				case WM_QUERYENDSESSION:
+				{
+#if debug					
+				MessageBox.Show("Shutdown msg got - forms");
+#endif
+					this.shutdown_msg = true;
+					break;
+				}
+			}
+
+			base.WndProc (ref m);
+		}
+
+		/// <summary>
+		/// Gets if Shutdown or logoff message is received.
+		/// </summary>
+		public bool MachineShutdown()
+		{
+			return this.shutdown_msg;
 		}
 
 		private void eventThreadProc()
