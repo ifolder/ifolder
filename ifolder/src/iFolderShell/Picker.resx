@@ -1093,16 +1093,4 @@
   <data name="searchPrompt">
     <value>&lt;Enter text to find a user&gt;</value>
   </data>
-  <data name="btnHelp.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 360</value>
-  </data>
-  <data name="btnHelp.Text" xml:space="preserve">
-    <value>&amp;Help</value>
-  </data>
-  <data name="btnHelp.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>75, 23</value>
-  </data>
-  <data name="btnHelp.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Bottom, Left</value>
-  </data>
 </root>
