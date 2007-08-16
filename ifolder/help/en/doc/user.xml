@@ -14,7 +14,7 @@
  www.novell.com
 
 
- BASELINE PAGE COUNT (based on 200 words per page): 73
+ BASELINE PAGE COUNT (based on 200 words per page): 77
 
 
  WORD COUNT
@@ -22,13 +22,13 @@
        Count    Doctype    Title
       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
          711    bookinfo   OES 2: Novell iFolder 3.6 Help
-         214    preface    iFolder Help
-        1622    chapter    Overview of iFolder
-        4803    chapter    Managing iFolder Accounts and Preferences
-        6463    chapter    Managing iFolders
-         974    chapter    Novell iFolder Migration And Upgrade
+         215    preface    iFolder Help
+        1835    chapter    Overview of iFolder
+        4930    chapter    Managing iFolder Accounts and Preferences
+        6717    chapter    Managing iFolders
+        1009    chapter    Novell iFolder Migration And Upgrade
       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-       14787    book       OES 2: Novell iFolder 3.6 Help
+       15417    book       OES 2: Novell iFolder 3.6 Help
 
 
  GRAPHICS REFERENCED IN BOOK
@@ -38,13 +38,15 @@
            2       a_mig_assistant.png
            2       ifolder-sync22.png
            2       ifolder_encrypted_fold.png
-           2       if_notify_a.png
+           2       if3_newuser.png
            2       if_acctasst1_a.png
            2       if3_upload.png
            2       if_revertmsg_a.png
+           2       if3_migration_a.png
            2       if3_causion.png
            2       ifolder-waiting22.png
            2       ifolder24.png
+           2       if3_identity.png
            6       ifolder32.png
            2       if3_export_encrypt_keys.png
            8       ifolder-error_16.png
@@ -53,36 +55,43 @@
            2       if_apbrmenu_a.png
           38       ifolder22.png
            2       a_mig_asst1.png
-           2       if3_download.png
+           2       if3_newifolder.png
+           4       if3_download.png
            6       folder_16.png
            2       a_mig_ass3.png
            2       ifolder-error22.png
-           2       prefs-notification32.png
            2       if_mig_err_msge.png
            2       if3_ifcr_share-accessro_a.png
            2       if3_notification.png
            2       if_preferences_a.png
+           2       upgrade.png
+           2       remove_memeber.png
            2       ifolder-download22.png
            2       ifolder-user-current16.png
+           2       if3_remove_account.png
            2       a_mig_window.png
            2       ifolder-warning22.png
            2       if3_passphrase.png
            2       if3_sharing_a.png
            2       if_prefaccts_a.png
+           2       if3_defaultifolder_dwnld_a.png
+           2       if3_defaultifolder_a.png
            2       if3_shared_a.png
            4       if_menu_a.png
+           2       if3_revert.png
            2       if3_import_decyptd_key.png
            2       ifolder-user-owner16.png
            2       if_acctasst2_a.png
            2       ifolder_clientupgrade.png
            2       if3_migration_alert.png
+           2       if3_server_address.png
 
 
  CROSS-REFERENCES
 
        Count       Type
       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-         105       xref
+         113       xref
            0       link
            0       ulink-xrefext
            0       ulink-xrefexttext
@@ -106,13 +115,13 @@
 
 
 
-<book revision = "07/25/07" conformance = "ifolder3,doc,yes,4,80"
+<book revision = "08/13/07" conformance = "ifolder3,doc,yes,4,80"
     lang = "en" id = "user">
 <bookinfo id = "bookinfo" xml:base = "00_frontos.xml"><title>OES
 2: Novell iFolder 3.6 Help</title>
 <productname>iFolder&trade;</productname>
 <productnumber>3.6</productnumber>
-<date>July 2007</date>
+<date>September 2007</date>
 <titleabbrev>Help</titleabbrev>
 <legalnotice id = "b423epo"><title>Legal Notices</title>
 <para>Novell, Inc., makes no representations or warranties with
@@ -202,8 +211,8 @@ of their respective owners.</member></simplelist></legalnotice></bookinfo>
 
 <preface id = "preface" xml:base = "00_preface.xml"><title>iFolder
 Help</title>
-<para>iFolder&trade; is a file-sharing application for Linux&ast;,
-and Windows&ast;clients. With iFolder, your local files automatically
+<para>iFolder&trade; is a file-sharing application for Linux&ast; and
+Windows&ast; clients. With iFolder, your local files automatically
 follow you everywhere---online, offline, all the time---across computers.
 You can share files in multiple iFolders, each with different users.
 You control who can participate in an iFolder and their access rights
@@ -246,6 +255,9 @@ and Windows clients. You can share files in multiple iFolders, each
 with different users. You control who can participate in an iFolder
 and the access level for each member. You can also participate in
 iFolders that others share with you. </para>
+<para> iFolder 3.6 also provides you a simple, hassle-free user
+interface for both client-side migration from iFolder 2.<replaceable>x</replaceable> to
+iFolder 3.6 and upgrade from iFolder 3.x to iFolder 3.6.</para>
 <para>This section familiarizes you with the various benefits and
 features of iFolder:</para>
 <itemizedlist role="subtoc"><listitem><para><xref linkend = "benefits"
@@ -267,7 +279,8 @@ per iFolder</para></listitem>
 across the wire and while stored on the iFolder server</para></listitem>
 <listitem><para>With enhanced web access console, you can access
 your files on the iFolder server from any workstation without the
-iFolder client, using a Web browser</para></listitem>
+iFolder client, using a Web browser and perform all the operations
+of iFolder client</para></listitem>
 <listitem><para>Allows you to easily and selectively share personal
 and business files</para></listitem>
 <listitem><para>Allows you to control the access level of member
@@ -291,7 +304,7 @@ shared iFolders to set up on each computer. iFolder supports the
 following operating systems:</para>
 <itemizedlist><listitem><para>SUSE&reg; Linux Enterprise Desktop
 10 SP1</para></listitem>
-<listitem><para>Windows XP&sol;2003</para></listitem>
+<listitem><para>Windows XP SP2&sol;2000 Professional SP4</para></listitem>
 <listitem><para>Open SUSE 10.2 and later</para></listitem></itemizedlist></sect1>
 <sect1 id = "bawqmpe"><title>iFolder Account</title>
 <para>You must configure  at least one iFolder account before you
@@ -318,6 +331,7 @@ the following key features:</para>
 <listitem><para><xref linkend = "b7x5io1" xrefstyle = "SectTitleOnPage"/></para></listitem>
 <listitem><para><xref linkend = "b7x6cp3" xrefstyle = "SectTitleOnPage"/></para></listitem>
 <listitem><para><xref linkend = "b9lux1e" xrefstyle = "SectTitleOnPage"/></para></listitem>
+<listitem><para><xref linkend = "bayydrd" xrefstyle = "SectTitleOnPage"/></para></listitem>
 <listitem><para><xref linkend = "b9425th" xrefstyle = "SectTitleOnPage"/></para></listitem></itemizedlist>
 <sect2 id = "bawqka3"><title>iFolder Sharing</title>
 <para>Typically, when you work in multiple locations or in collaboration
@@ -389,14 +403,24 @@ right. As a member user, your level of access in each shared iFolder can
 differ, depending on the access granted to you by any member with
 the Full Control right.</para></sect2>
 <sect2 id = "b9425tg"><title>File Synchronization </title>
-<para>When you set up an iFolder account, you can enable <guimenu>Remember
-My Password</guimenu> so that iFolder can synchronize iFolder membership
-and files in the background as you work. </para>
+<para>When you are connected to the server, iFolder can synchronize
+iFolder membership and files in the background as you work. When
+you set up an iFolder account, you can enable <guimenu>Remember
+My Password</guimenu> so that iFolder can remember the password
+on that machine, and next time when you launch iFolder, it is automatically
+connect to the server and synchronize the data without prompts  for
+password.</para>
 <para>You can configure the iFolder client to run automatically
 each time you log in to your computer&rsquo;s desktop environment.
 The session runs in the background as you work with files in your
 local iFolders, tracking and logging any changes you make. </para>
-<para>You can synchronize the files manually or at specified intervals.</para></sect2>
+<para>You can synchronize the files manually or at specified intervals.</para>
+<para>iFolder 3.6 also has delta synchronization capabilities. When
+you make any changes to an iFolder file, only the deltas or changes
+get synchronized to the server. In other words, Delta synchronization only
+retrieves updates since the last synchronization between the iFolder
+client and the server. This increases the efficiency since it reduces
+the synchronization time. </para></sect2>
 <sect2 id = "b7x5io1"><title>Encryption</title>
 <para>iFolder 3.6 provides higher security for your confidential
 iFolder files, to protect them from intentional or unintentional
@@ -429,10 +453,20 @@ for Novell iFolder 3.6. The Migration Wizard provided in the iFolder
 3.6 client helps you migrate the existing iFolder 2.<replaceable>x</replaceable> data
 to iFolder 3.6 quickly and easily. For more information, see <xref
     linkend = "coexistmig" xrefstyle = "HeadingOnPage"/>.</para></sect2>
+<sect2 id = "bayydrd"><title>Default iFolder</title>
+<para>iFolder 3.6 allows you to set up a default iFolder when you
+configure a new account. When you configure a new iFolder account,
+iFolder automatically check for the presence of default iFolder.
+If you have not created one, iFolder prompts you to create one.
+If a default iFolder is already exists, iFolder client prompts you
+to download. You are also allowed to ignore both these options.
+For more information see, <xref linkend = "bbba119"
+    xrefstyle = "StepOnPage"/> in the section <xref linkend = "accounts"
+    xrefstyle = "SectTitleOnPage"/>. </para></sect2>
 <sect2 id = "b9425th"><title>Synchronization Log</title>
 <para>The synchronization log displays a log of your iFolder background
 activity, such as uploading and downloading files for different
-iFolders. </para></sect2></sect1>
+iFolders, excluded files and non-synchronized files. </para></sect2></sect1>
 <sect1 role = "General" id = "ovwxplat"><title>Cross-Platform Considerations</title>
 <para>The user interfaces for the Linux, and Windows versions of
 the iFolder client conform to interface conventions of their individual
@@ -508,31 +542,31 @@ when logging In to the desktop</guimenu></para></entry>
 <sect1 role = "General" id = "ovwnext"><title>What&rsquo;s Next</title>
 <para>For information about configuring using the iFolder client,
 see the following:</para>
-<itemizedlist><listitem><para><xref linkend = "coexistmig"
-    xrefstyle = "ChapTitleOnPage"/></para></listitem>
-<listitem><para><xref linkend = "accountsprefs"
+<itemizedlist><listitem><para><xref linkend = "accountsprefs"
     xrefstyle = "ChapTitleOnPage"/></para></listitem>
 <listitem><para><xref linkend = "myifolders"
+    xrefstyle = "ChapTitleOnPage"/></para></listitem>
+<listitem><para><xref linkend = "coexistmig"
     xrefstyle = "ChapTitleOnPage"/></para></listitem></itemizedlist></sect1></chapter>
 
 <chapter revision = "03/20/06" conformance = "none,doc,yes,4,80"
     lang = "en" id = "accountsprefs" xml:base = "03_accounts.xml">
 <title>Managing iFolder Accounts and Preferences</title>
 <para>This section discusses how to configure your iFolder&trade; accounts
-and how to manage preferences for the iFolder 3.6 or later client.</para>
+and how to manage preferences for the iFolder 3.6 client.</para>
 <itemizedlist role="subtoc"><listitem><para><xref
     linkend = "startclient" xrefstyle = "SectTitleOnPage"/></para></listitem>
-<listitem><para><xref linkend = "stopclient"
-    xrefstyle = "SectTitleOnPage"/></para></listitem>
 <listitem><para><xref linkend = "accounts" xrefstyle = "SectTitleOnPage"/></para></listitem>
 <listitem><para><xref linkend = "login" xrefstyle = "SectTitleOnPage"/></para></listitem>
 <listitem><para><xref linkend = "accountdetails"
     xrefstyle = "SectTitleOnPage"/></para></listitem>
-<listitem><para><xref linkend = "delacct" xrefstyle = "SectTitleOnPage"/></para></listitem>
 <listitem><para><xref linkend = "preferences"
     xrefstyle = "SectTitleOnPage"/></para></listitem>
 <listitem><para><xref linkend = "firewall" xrefstyle = "SectTitleOnPage"/></para></listitem>
 <listitem><para><xref linkend = "virusscan"
+    xrefstyle = "SectTitleOnPage"/></para></listitem>
+<listitem><para><xref linkend = "delacct" xrefstyle = "SectTitleOnPage"/></para></listitem>
+<listitem><para><xref linkend = "stopclient"
     xrefstyle = "SectTitleOnPage"/></para></listitem>
 <listitem><para><xref linkend = "logout" xrefstyle = "SectTitleOnPage"/></para></listitem>
 <listitem><para><xref linkend = "b9lvmk9" xrefstyle = "SectTitleOnPage"/></para></listitem></itemizedlist>
@@ -607,7 +641,7 @@ from Startup Programs</guimenu>.</para></listitem>
 <listitem><para>Make sure iFolder is not running when you log out,
 then save the session setup. Select this session option when you
 log in to the desktop.</para></listitem></itemizedlist></sect3>
-<sect3 id = "b4tb73z"><title>Starting iFolder on Demand</title>
+<sect3 id = "b4tb73z"><title>Starting iFolder Manually</title>
 <procedure id = "b25pz8o"><step id = "bw187q5"><para>Log in to your
 computer with the local Linux user identity you want to use when
 you create iFolders.</para></step>
@@ -639,8 +673,8 @@ fileref="graphics/ifolder22.png" width="11.00pt" format="PNG"/></imageobject>
 width="11.00pt" format="png"/></imageobject></inlinemediaobject>,
 then select <guimenu>Preferences</guimenu> to open the iFolder Preferences
 dialog box to the <guimenu>General</guimenu> tab.</para></step>
-<step id = "b41mcvh"><para>Select <guimenu>Start iFolder When Logging
-In to the Desktop</guimenu>, then click <guimenu>Apply</guimenu>.</para></step>
+<step id = "b41mcvh"><para>Select <guimenu>Start iFolder When logging
+in to the Desktop</guimenu>, then click <guimenu>Apply</guimenu>.</para></step>
 <step id = "b41mcvi"><para>Click <guimenu>OK</guimenu> to close
 the iFolders Preferences dialog box.</para></step></procedure>
 <para>To disable iFolder from starting automatically when you log
@@ -649,10 +683,10 @@ on to the desktop:</para>
 the iFolder Services icon, then select <guimenu>Preferences</guimenu> to
 open the iFolder Preferences dialog box to the <guimenu>General</guimenu> tab.</para></step>
 <step id = "b41m9ty"><para>Deselect <guimenu>Start iFolder When
-Logging In to the Desktop</guimenu>, then click <guimenu>Apply</guimenu>.</para></step>
+logging in to the Desktop</guimenu>, then click <guimenu>Apply</guimenu>.</para></step>
 <step id = "b41mac7"><para>Click <guimenu>OK</guimenu> to close
 the iFolders Preferences dialog box.</para></step></procedure></sect3>
-<sect3 id = "b4tb879"><title>Starting iFolder on Demand</title>
+<sect3 id = "b4tb879"><title>Starting iFolder Manually</title>
 <procedure id = "b25pz8p"><step id = "bw08fxw"><para>Log on to the
 computer with the local Windows user identity you want to use when
 you create iFolders.</para></step>
@@ -660,24 +694,6 @@ you create iFolders.</para></step>
 on successful logon, start iFolder by clicking <menuchoice><guimenu>Start</guimenu>
 <guimenu>Programs</guimenu><guimenu>iFolder 3</guimenu></menuchoice>,
 then select the <guimenu>iFolder 3 Client</guimenu> application. </para></step></procedure></sect3></sect2></sect1>
-<sect1 role = "General" id = "stopclient"><title>Exiting the iFolder
-Client</title>
-<procedure id = "b41k315"><step id = "b41k316"><para>Right-click
-the iFolder Services icon <inlinemediaobject><textobject role="description"><phrase>iFolder
-Application Icon </phrase></textobject><imageobject role="fo"><imagedata
-fileref="graphics/ifolder22.png" width="11.00pt" format="PNG"/></imageobject>
-<imageobject role="html"><imagedata fileref="graphics/ifolder22.png"
-width="11.00pt" format="png"/></imageobject></inlinemediaobject> in
-the Notification area, then select <guimenu>Quit</guimenu>.</para>
-<informalfigure pgwide = "0"><mediaobject><imageobject role="fo"><imagedata
-fileref="graphics/if_menu_a.png" width="18%" format="PNG"/></imageobject>
-<imageobject role="html"><imagedata fileref="graphics/if_menu_a.png"
-width="18%" format="png"/></imageobject></mediaobject></informalfigure></step></procedure>
-<para>Files are synchronized with your iFolder server account only
-when you are connected to the iFolder server. You can stop synchronization
-by logging out of an account. iFolder continues to run in the background.
-For information, see <xref linkend = "logout"
-    xrefstyle = "SectTitleOnPage"/>.</para></sect1>
 <sect1 role = "General" id = "accounts"><title>Configuring an iFolder
 Account</title>
 <para>Use the iFolder Account Assistant to add and configure a new
@@ -696,12 +712,12 @@ Account Assistant</guimenu>, using one of the following methods:</para>
 <informalfigure pgwide = "0"><mediaobject><textobject role="description"><phrase>iFolder
 Account Assistant Welcome Page</phrase></textobject>
 <imageobject role="fo"><imagedata fileref="graphics/if_acctasst1_a.png"
-width="66%" format="PNG"/></imageobject>
+width="65%" format="PNG"/></imageobject>
 <imageobject role="html"><imagedata fileref="graphics/if_acctasst1_a.png"
-width="66%" format="png"/></imageobject></mediaobject></informalfigure>
+width="65%" format="png"/></imageobject></mediaobject></informalfigure>
 <itemizedlist><listitem><para>The first time you start iFolder under
 your current local login identity, iFolder prompts you to set up
-an iFolder account. Click <guimenu>Yes</guimenu> to go directly
+an iFolder account. Click <guimenu>Forward</guimenu> to go directly
 to the <guimenu>iFolder Account Assistant</guimenu>.</para></listitem>
 <listitem><para>Right-click the iFolder Services icon <inlinemediaobject><textobject
 role="description"><phrase>iFolder Application Icon </phrase></textobject><imageobject
@@ -726,11 +742,15 @@ specify the following values:</para>
 </thead>
 <tbody>
 <row rowsep = "0" id = "bvibwil">
-<entry colname = "1"><para><guimenu>iFolder Server Address</guimenu></para></entry>
+<entry colname = "1"><para><guimenu>Server Address</guimenu></para></entry>
 <entry colname = "2"><para>The DNS name or IP address of the iFolder
 enterprise server where you have an account. Get this information
 from your iFolder administrator.</para>
-<para>For example: <literal>svr21.example.com</literal> or <literal>192.168.1.1</literal></para></entry>
+<para>For example: <literal>svr21.example.com</literal> or <literal>192.168.1.1</literal></para>
+<mediaobject><imageobject role="fo"><imagedata fileref="graphics/if3_server_address.png"
+width="" format="PNG"/></imageobject>
+<imageobject role="html"><imagedata fileref="graphics/if3_server_address.png"
+width="" format="png"/></imageobject></mediaobject></entry>
 </row>
 <row rowsep = "0" id = "bvibwiq">
 <entry colname = "1"><para><guimenu>Make this my   default</guimenu> server</para></entry>
@@ -748,7 +768,11 @@ use is your network user ID (LDAP common name) or your e-mail address.</para>
 an e-mail address of <literal>john.smith&commat;example.com</literal>,
 your administrator configures a setting for the server that determines
 which of the two formats to accept in the <guimenu>Username</guimenu> field
-for authentication purposes.</para></entry>
+for authentication purposes.</para>
+<mediaobject><imageobject role="fo"><imagedata fileref="graphics/if3_identity.png"
+width="" format="PNG"/></imageobject>
+<imageobject role="html"><imagedata fileref="graphics/if3_identity.png"
+width="" format="png"/></imageobject></mediaobject></entry>
 </row>
 <row rowsep = "0" id = "bvibwin">
 <entry colname = "1"><para><guimenu>Password</guimenu></para></entry>
@@ -764,15 +788,9 @@ fails gracefully the next time iFolder attempts to log in to the
 iFolder account. iFolder prompts you to log in with your new password
 and allows you to specify and save the new password.</para></entry>
 </row>
-<row rowsep = "0" id = "b91apfu">
-<entry colname = "1"><para><guimenu>Account Is Default</guimenu></para></entry>
-<entry colname = "2"><para>When you have multiple accounts, select <guimenu>Account
-Is Default </guimenu>to make this account the one selected by default
-in the drop-down list of accounts when you create and upload iFolders.</para></entry>
-</row>
 </tbody>
 </tgroup></informaltable>
-<para>If your admin has set your encryption policy to <emphasis>on</emphasis> or <emphasis>enforced</emphasis>,
+<para>If your admin has set your encryption policy to <emphasis>on</emphasis>,
 iFolder will prompt you to enter your passphrase and select the
 Passphrase recovery agent. For more information on passphrase management
 see <xref linkend = "managingpassphrse" xrefstyle = "SectTitleOnPage"/></para></step>
@@ -785,9 +803,9 @@ you begin the login process, this passphrase exchange will be done
 automatically; no dialog box will appear.</para>
 <para>Select the desired Recovery agent from the list and click <guimenu>OK</guimenu>.</para>
 <informalfigure pgwide = "0"><mediaobject><imageobject role="fo"><imagedata
-fileref="graphics/if3_passphrase.png" width="70%" format="PNG"/></imageobject>
+fileref="graphics/if3_passphrase.png" width="65%" format="PNG"/></imageobject>
 <imageobject role="html"><imagedata fileref="graphics/if3_passphrase.png"
-width="70%" format="png"/></imageobject></mediaobject></informalfigure></step>
+width="65%" format="png"/></imageobject></mediaobject></informalfigure></step>
 <step id = "bvib17w"><para>Verify that the information you have
 entered is correct, return to previous pages to make corrections
 if necessary, then click <guimenu>Connect</guimenu> to validate
@@ -795,15 +813,41 @@ the settings by logging in to the iFolder server.</para>
 <informalfigure pgwide = "0"><mediaobject><textobject role="description"><phrase>iFolder
 Account Assistant Verify and Connect Page</phrase></textobject>
 <imageobject role="fo"><imagedata fileref="graphics/if_acctasst2_a.png"
-width="66%" format="PNG"/></imageobject>
+width="65%" format="PNG"/></imageobject>
 <imageobject role="html"><imagedata fileref="graphics/if_acctasst2_a.png"
-width="66%" format="png"/></imageobject></mediaobject></informalfigure></step>
+width="65%" format="png"/></imageobject></mediaobject></informalfigure></step>
 <step id = "b2m63qj"><para>If you are prompted to <guimenu>Accept
 the certificate of this server</guimenu>, click <guimenu>Details</guimenu> to
-review the certificate information, then click <guimenu>Yes</guimenu> to
-accept it if it is good. </para>
+review the certificate information, then click <guimenu>OK</guimenu> to
+accept it. </para>
 <para>If you do not accept the certificate, you cannot connect to
 the server.</para></step>
+<step id = "bbba119"><para>On successful connection, it it asks
+you to create a Default  iFolder, if you have not set up one currently.</para>
+<informalfigure pgwide = "0"><mediaobject><imageobject role="fo"><imagedata
+fileref="graphics/if3_defaultifolder_a.png" width="65%" format="PNG"/></imageobject>
+<imageobject role="html"><imagedata fileref="graphics/if3_defaultifolder_a.png"
+width="65%" format="png"/></imageobject></mediaobject></informalfigure>
+<para>Specify the location where you want to create the Default
+iFolder. </para>
+<para>By default, the Default iFolder is stored at <filename>&lt;users
+home directory>&sol;ifolder&sol;server&lowbar;name&sol;user&lowbar;name</filename>.
+You are allowed to change this location.</para>
+<para>Select the type of the Default iFolder that you want to create.
+If you choose Encrypted, it prmpts you to give the passphrase. For
+more information see <xref linkend = "b8yvcnt" xrefstyle = "StepOnPage"/>.</para>
+<para>Once a folder is made a Default iFolder, you can change the
+type only by deleting it from the server. If you remove Default
+iFolder on the server, the next time you configure the account from
+any thick-client, iFolder prompts you to create a Default iFolder. </para>
+<para>If you have already set up a Default iFolder, it asks you
+to download it to your local machine.</para>
+<informalfigure pgwide = "0"><mediaobject><imageobject role="fo"><imagedata
+fileref="graphics/if3_defaultifolder_dwnld_a.png" width="65%" format="PNG"/></imageobject>
+<imageobject role="html"><imagedata fileref="graphics/if3_defaultifolder_dwnld_a.png"
+width="65%" format="png"/></imageobject></mediaobject></informalfigure>
+<para>Download the Default iFolder and click <guimenu>Next</guimenu> to
+go to complete account configuration.</para></step>
 <step id = "b407oqi"><para>On successful connection, click <guimenu>Finish</guimenu> to
 close the iFolder Account Assistant.</para>
 <para>iFolder synchronizes the user list for the specified account
@@ -826,9 +870,9 @@ box is selected.</para>
 <informalfigure pgwide = "0"><mediaobject><textobject role="description"><phrase>Accounts
 Tab of the iFolder Preferences Dialog Box</phrase></textobject>
 <imageobject role="fo"><imagedata fileref="graphics/if_prefaccts_a.png"
-width="42%" format="PNG"/></imageobject>
+width="65%" format="PNG"/></imageobject>
 <imageobject role="html"><imagedata fileref="graphics/if_prefaccts_a.png"
-width="42%" format="png"/></imageobject></mediaobject></informalfigure></step>
+width="65%" format="png"/></imageobject></mediaobject></informalfigure></step>
 <step id = "bvib1d8"><para>Close the iFolder Preferences dialog
 box.</para></step></substeps></step>
 <step id = "bvwsa5n"><para>Set up iFolders for the account using
@@ -844,14 +888,13 @@ width="18%" format="PNG"/></imageobject>
 <imageobject role="html"><imagedata fileref="graphics/if_menu_a.png"
 width="18%" format="png"/></imageobject></mediaobject></informalfigure></listitem>
 <listitem><para>If iFolders for this account are available for download
-from the server, an iFolder Notification message <inlinemediaobject><textobject
-role="description"><phrase>Balloon Notification Icon </phrase></textobject><imageobject
-role="fo"><imagedata fileref="graphics/prefs-notification32.png"
-width="11pt" format="PNG"/></imageobject>
-<imageobject role="html"><imagedata fileref="graphics/prefs-notification32.png"
-width="11pt" format="png"/></imageobject></inlinemediaobject> pops
-up adjacent to the Notification area of the taskbar. Click the message
-to open the iFolder browser. Continue with <xref
+from the server, they are listed on the iFolder window under iFolders
+on &lt;iFolder server name>. The  <inlinemediaobject><imageobject
+role="fo"><imagedata fileref="graphics/if3_download.png" width=""
+format="PNG"/></imageobject>
+<imageobject role="html"><imagedata fileref="graphics/if3_download.png"
+width="" format="png"/></imageobject></inlinemediaobject> icon indicates
+that the iFolder is available for download. Continue with <xref
     linkend = "setupifolder" xrefstyle = "SectTitleOnPage"/>.</para></listitem></itemizedlist></step></procedure></sect1>
 <sect1 role = "General" id = "login"><title>Logging In to an iFolder
 Account</title>
@@ -1135,57 +1178,6 @@ only if multiple accounts exist)</para></listitem></itemizedlist></step>
 <step id = "b41rjds"><para>When you are done, close the <guimenu>Account
 Properties</guimenu> dialog box, then close the <guimenu>iFolder Preferences</guimenu> dialog
 box.</para></step></procedure></sect1>
-<sect1 role = "General" id = "delacct"><title>Deleting an iFolder
-Account</title>
-<para>You can specify whether to remove an account only from the
-current computer, or whether to also remove the iFolders you own
-from the server. </para>
-<para>If you remove an iFolder account only from your computer:</para>
-<itemizedlist><listitem><para>The local iFolders for this account
-are reverted to normal folders. Use a file manager to locate and
-delete the local copy of the data if it is not needed.</para></listitem>
-<listitem><para>You can continue to access the iFolders from other
-computers with the iFolder client. </para></listitem>
-<listitem><para>When the iFolder client is used with a Novell iFolder
-3.6 enterprise server, you can also access files from anywhere with
-Novell iFolder 3.6 Web access.</para></listitem></itemizedlist>
-<para>If you remove your iFolder account from the server: </para>
-<itemizedlist><listitem><para>All of the iFolders you own are unshared.</para></listitem>
-<listitem><para>The local copies of iFolders on member computers
-are reverted to normal folders. Use a file manager to locate and
-delete the local copy of the data if it is not needed.</para></listitem>
-<listitem><para>The iFolder and its contents are removed from the
-server.</para></listitem>
-<listitem><para>You are removed as a member of iFolders that others
-shared with you.</para></listitem>
-<listitem><para>The account is removed from the local computer.</para></listitem></itemizedlist>
-<para>If you decide to use this account again on this or another
-computer, you must set up the account and its iFolders just as you
-did when it was new.</para>
-<para>To delete an iFolder account:</para>
-<procedure id = "b25pz8v"><step id = "bvwspv2"><para>Right-click
-the iFolder Services icon <inlinemediaobject><textobject role="description"><phrase>iFolder
-Application Icon </phrase></textobject><imageobject role="fo"><imagedata
-fileref="graphics/ifolder22.png" width="11.00pt" format="PNG"/></imageobject>
-<imageobject role="html"><imagedata fileref="graphics/ifolder22.png"
-width="11.00pt" format="png"/></imageobject></inlinemediaobject> in
-the Notification area, then select <guimenu>Account Settings</guimenu> to
-open the iFolder Preferences dialog box to the <guimenu>Accounts</guimenu> tab.</para></step>
-<step id = "bvwspv3"><para>Select the iFolder account you want to
-delete, then click <guimenu>Delete</guimenu>.</para></step>
-<step id = "bvwspqf"><para>A message prompts you to determine the
-extent of the delete action. Do one of the following:</para>
-<itemizedlist><listitem><formalpara id = "bvwsuhg"><title>Remove
-the iFolder Account from Only the Current Computer:</title>
-<para>Make sure to deselect <guimenu>Remove My iFolder and Files
-from the Server</guimenu>, then click <guimenu>Yes</guimenu>.</para></formalpara></listitem>
-<listitem><formalpara id = "bvwsxkq"><title>Remove the iFolder Account
-and Your iFolders and Files from the Server:</title>
-<para>Select <guimenu>Remove My iFolder and Files from the Server</guimenu>,
-then click <guimenu>Yes</guimenu>.</para></formalpara></listitem>
-<listitem><formalpara id = "bvwsxkr"><title>Cancel the Delete: </title>
-<para>Click <guimenu>No</guimenu> to back out of the delete action.
-Your account and its iFolders remain untouched.</para></formalpara></listitem></itemizedlist></step></procedure></sect1>
 <sect1 role = "General" id = "preferences"><title>Configuring iFolder
 Preferences for the Client</title>
 <procedure id = "b25pz8w"><step id = "bvibeb7"><para>Right-click
@@ -1215,7 +1207,7 @@ width="89%" format="png"/></imageobject></mediaobject></informalfigure></step>
 <tbody>
 <row rowsep = "0" id = "btvr5uc">
 <entry colname = "1"><para><guimenu>Start iFolder When Logging In to
-the Desktop</guimenu></para></entry>
+the Desktop</guimenu> (Available only in Windows Client)</para></entry>
 <entry colname = "2"><para>Select this option to launch iFolder
 whenever you log in with the local username where you set up the
 iFolder account. For those accounts where you have enabled <guimenu>Remember
@@ -1361,10 +1353,6 @@ locations:</para>
 <entry colname = "2"><para><filename>C:&bsol;Documents and Settings&bsol;<replaceable>username</replaceable>&bsol;Local
 Settings&bsol;Application Data&bsol;simias&bsol;Simias.config</filename></para></entry>
 </row>
-<row rowsep = "0" id = "bwejkc6">
-<entry colname = "1"><para>Macintosh</para></entry>
-<entry colname = "2"><para><filename>&sol;Users&sol;<replaceable>username</replaceable>&sol;.local&sol;share&sol;simias&sol;Simias.config</filename></para></entry>
-</row>
 </tbody>
 </tgroup></informaltable>
 <para>Add the Web Service Port Range Setting to the Service Manager
@@ -1438,6 +1426,82 @@ computers. The virus must be detected elsewhere where permissions allow
 changes to be synchronized. The user&rsquo;s virus scanner probably
 alerts the user of the virus, so the user should alert other iFolder
 members about the virus.</para></sect1>
+<sect1 role = "General" id = "delacct"><title>Deleting an iFolder
+Account</title>
+<para>You can specify whether to remove an account only from the
+current computer, or whether to also remove the iFolders you own
+from the server. </para>
+<para>If you remove an iFolder account only from your computer:</para>
+<itemizedlist><listitem><para>The local iFolders for this account
+are reverted to normal folders. Use a file manager to locate and
+delete the local copy of the data if it is not needed.</para></listitem>
+<listitem><para>You can continue to access the iFolders from other
+computers with the iFolder client. </para></listitem>
+<listitem><para>When the iFolder client is used with a Novell iFolder
+3.6 enterprise server, you can also access files from anywhere with
+Novell iFolder 3.6 Web access.</para></listitem></itemizedlist>
+<para>If you remove your iFolder account from the server: </para>
+<itemizedlist><listitem><para>All of the iFolders you own are unshared.</para></listitem>
+<listitem><para>The local copies of iFolders on member computers
+are reverted to normal folders. Use a file manager to locate and
+delete the local copy of the data if it is not needed.</para></listitem>
+<listitem><para>The iFolder and its contents are removed from the
+server.</para></listitem>
+<listitem><para>You are removed as a member of iFolders that others
+shared with you.</para></listitem>
+<listitem><para>The account is removed from the local computer.</para></listitem></itemizedlist>
+<para>If you decide to use this account again on this or another
+computer, you must set up the account and its iFolders just as you
+did when it was new.</para>
+<para>To delete an iFolder account:</para>
+<procedure id = "b25pz8v"><step id = "bvwspv2"><para>Right-click
+the iFolder Services icon <inlinemediaobject><textobject role="description"><phrase>iFolder
+Application Icon </phrase></textobject><imageobject role="fo"><imagedata
+fileref="graphics/ifolder22.png" width="11.00pt" format="PNG"/></imageobject>
+<imageobject role="html"><imagedata fileref="graphics/ifolder22.png"
+width="11.00pt" format="png"/></imageobject></inlinemediaobject> in
+the Notification area, then select <guimenu>Account Settings</guimenu> to
+open the iFolder Preferences dialog box to the <guimenu>Accounts</guimenu> tab.</para></step>
+<step id = "bvwspv3"><para>Select the iFolder account you want to
+delete, then click <guimenu>Remove</guimenu>.</para></step>
+<step id = "bvwspqf"><para>A message prompts you to determine the
+extent of the remove action. </para>
+<informalfigure pgwide = "0"><mediaobject><imageobject role="fo"><imagedata
+fileref="graphics/if3_remove_account.png" width="35%" format="PNG"/></imageobject>
+<imageobject role="html"><imagedata fileref="graphics/if3_remove_account.png"
+width="35%" format="png"/></imageobject></mediaobject></informalfigure>
+<para>Do one of the following:</para>
+<itemizedlist><listitem><formalpara id = "bvwsuhg"><title>Remove
+the iFolder Account from Only the Current Computer:</title>
+<para>Make sure to deselect <guimenu>Remove My iFolder and Files
+from the Server</guimenu>, then click <guimenu>Yes</guimenu>.</para></formalpara></listitem>
+<listitem><formalpara id = "bvwsxkq"><title>Remove the iFolder Account
+and Your iFolders and Files from the Server:</title>
+<para>Select <guimenu>Remove My iFolder and Files from the Server</guimenu>,
+then click <guimenu>Yes</guimenu>.</para></formalpara></listitem>
+<listitem><formalpara id = "bvwsxkr"><title>Cancel the Delete: </title>
+<para>Click <guimenu>No</guimenu> to back out of the delete action.
+Your account and its iFolders remain untouched.</para></formalpara></listitem></itemizedlist></step></procedure></sect1>
+<sect1 role = "General" id = "stopclient"><title>Exiting the iFolder
+Client</title>
+<procedure id = "b41k315"><step id = "b41k316"><para>Right-click
+the iFolder Services icon <inlinemediaobject><textobject role="description"><phrase>iFolder
+Application Icon </phrase></textobject><imageobject role="fo"><imagedata
+fileref="graphics/ifolder22.png" width="11.00pt" format="PNG"/></imageobject>
+<imageobject role="html"><imagedata fileref="graphics/ifolder22.png"
+width="11.00pt" format="png"/></imageobject></inlinemediaobject> in
+the Notification area, then select <guimenu>Quit</guimenu>.</para>
+<informalfigure pgwide = "0"><mediaobject><imageobject role="fo"><imagedata
+fileref="graphics/if_menu_a.png" width="18%" format="PNG"/></imageobject>
+<imageobject role="html"><imagedata fileref="graphics/if_menu_a.png"
+width="18%" format="png"/></imageobject></mediaobject></informalfigure></step></procedure>
+<para>Files are synchronized with your iFolder server account only
+when you are connected to the iFolder server. You can stop synchronization
+by logging out of an account. iFolder continues to run in the background
+in offline mode.  For information, see <xref linkend = "logout"
+    xrefstyle = "SectTitleOnPage"/>.</para>
+<para>Note that you can have multiple account, each created on different
+host server (domain). </para></sect1>
 <sect1 id = "logout"><title>Logging Out of an iFolder Account</title>
 <para>Log out of an iFolder account whenever you want to work offline. </para>
 <itemizedlist role="subtoc"><listitem><para><xref linkend = "b41m00c"
@@ -1472,9 +1536,10 @@ then deselect the <guimenu>Online</guimenu> check box beside it.</para></step>
 from the iFolder server, then click <guimenu>OK</guimenu> to close
 the iFolders Preferences dialog box.</para></step></procedure></sect2></sect1>
 <sect1 id = "b9lvmk9"><title>What&rsquo;s Next</title>
-<para>For information about configuring using the iFolder client,
-see the following:</para>
+<para>For information about using the iFolder client, see the following:</para>
 <itemizedlist><listitem><para><xref linkend = "myifolders"
+    xrefstyle = "ChapTitleOnPage"/></para></listitem>
+<listitem><para><xref linkend = "coexistmig"
     xrefstyle = "ChapTitleOnPage"/></para></listitem></itemizedlist></sect1></chapter>
 
 <chapter revision = "03/22/06" conformance = "none,doc,yes,4,80"
@@ -1507,11 +1572,13 @@ be modified and read by those with privileges to do so. </para>
 <listitem><para><xref linkend = "sync" xrefstyle = "SectTitleOnPage"/></para></listitem>
 <listitem><para><xref linkend = "conflicts"
     xrefstyle = "SectTitleOnPage"/></para></listitem>
-<listitem><para><xref linkend = "reverting"
-    xrefstyle = "SectTitleOnPage"/></para></listitem>
 <listitem><para><xref linkend = "movelocation"
     xrefstyle = "SectTitleOnPage"/></para></listitem>
-<listitem><para><xref linkend = "deleting" xrefstyle = "SectTitleOnPage"/></para></listitem></itemizedlist>
+<listitem><para><xref linkend = "reverting"
+    xrefstyle = "SectTitleOnPage"/></para></listitem>
+<listitem><para><xref linkend = "bbb7rj2" xrefstyle = "SectTitleOnPage"/></para></listitem>
+<listitem><para><xref linkend = "deleting" xrefstyle = "SectTitleOnPage"/></para></listitem>
+<listitem><para><xref linkend = "bbbcabq" xrefstyle = "SectTitleOnPage"/></para></listitem></itemizedlist>
 <sect1 role = "General" id = "locguide"><title>Guidelines for the
 Location and Use of iFolders</title>
 <para>Generally, you can put iFolders anywhere on your local hard
@@ -1532,15 +1599,10 @@ invalid characters:</para>
 location cannot be on a network drive or non-physical drive.</para></listitem>
 <listitem><para>An iFolder cannot exist at the root of the hard
 drive. </para></listitem>
-<listitem><para>An iFolder can be created only from an existing
-folder. </para></listitem>
 <listitem><para>An iFolder can be created only from a folder where
 you have the file system access rights to read and write files.
 When you set up a shared iFolder on a computer, you must have file system
 access rights to the folder where you are placing the iFolder.</para></listitem>
-<listitem><para>An iFolder cannot contain or reside in a system
-folder such as the <filename>C:&bsol;Windows</filename> directory
-or a Linux or Macintosh system volume.</para></listitem>
 <listitem><para>An iFolder cannot contain or reside in an applications
 folder such as the Program Files folder.</para></listitem>
 <listitem><para>The iFolder cannot contain or reside in the iFolder
@@ -1889,6 +1951,10 @@ dismiss the message.</para></listitem>
 <listitem><para>Select <guimenu>Do Not Show This Message Again </guimenu>to
 disable future notifications, then click <guimenu>Close</guimenu> to
 dismiss the message.</para>
+<informalfigure pgwide = "0"><mediaobject><imageobject role="fo"><imagedata
+fileref="graphics/if3_newifolder.png" width="50%" format="PNG"/></imageobject>
+<imageobject role="html"><imagedata fileref="graphics/if3_newifolder.png"
+width="50%" format="png"/></imageobject></mediaobject></informalfigure>
 <para>If you later decide that you want to get confirmation messages,
 go to iFolder Preferences, select <guimenu>Show Confirmation Dialog
 When Creating iFolders</guimenu>, then click <guimenu>OK</guimenu>.</para></listitem></itemizedlist></step></procedure></sect2>
@@ -1922,9 +1988,9 @@ the folder, then click <guimenu>Add</guimenu>.</para></listitem>
 <listitem><para>If the normal folder does not exist, click <guimenu>Make
 New Folder</guimenu> to create it, select the newly created folder,
 then click <guimenu>Add</guimenu>.</para></listitem></itemizedlist></step>
-<step id = "b93crcv"><para>Click <guimenu>More options</guimenu> to
+<step id = "b93crcv"><para>Under <guimenu>More options</guimenu> to
 select one of the following from the given options:</para>
-<itemizedlist><listitem><para>Select <guimenu>Encryption Enabled</guimenu> to
+<itemizedlist><listitem><para>Select <guimenu>Encrypted</guimenu> to
 enable encryption for the selected iFolder.</para></listitem>
 <listitem><para>Select <guimenu>Shared</guimenu> to enable sharing
 for the selected iFolder. </para>
@@ -1933,7 +1999,10 @@ a balloon pop-up message in the Notification area. Shared users
 can click the balloon to set up the iFolder at that time, or close
 the balloon to download the iFolder later.</para></listitem></itemizedlist></step>
 <step id = "bwb5ss4"><para>Click <guimenu>OK</guimenu>.</para>
-<para>The iFolder appears in the <guimenu>iFolders on This Computer</guimenu> list.</para></step>
+<para>The iFolder appears in the <guimenu>iFolders on This Computer</guimenu> list.</para>
+<para>If you have not set the passphrase during the login session,
+and when you select the type Encrypted, it prompts you to enter
+the passphrase.</para></step>
 <step id = "bwb5tng"><para>If the <literal>iFolder Created</literal> message
 appears, do one of the following:</para>
 <itemizedlist><listitem><para>Click <guimenu>Close</guimenu> to
@@ -2111,7 +2180,7 @@ files in the iFolder</para></entry>
 <entry colname = "2"><para>Yes</para></entry>
 <entry colname = "3"><para>Yes</para></entry>
 <entry colname = "4"><para>Yes</para></entry>
-<entry colname = "5"><para>Yes</para></entry>
+<entry colname = "5"><para>No</para></entry>
 </row>
 <row rowsep = "1" id = "b4035it">
 <entry colname = "1"><para>Rename the iFolder</para></entry>
@@ -2269,17 +2338,21 @@ on iFolder Server Name </guimenu>in your iFolder browser, where
 the <replaceable>iFolder Server Name</replaceable> is the name of
 the server for that account. To participate in the shared iFolder
 on your computer, you can download the iFolder.</para>
-<para>If the <guimenu>Notify of Shared iFolders </guimenu>parameter
-is enabled, iFolder announces the availability of shared iFolders
-with a balloon pop-up message in the Notification area. You can
-click the balloon to set up the iFolder at that time, or close the
-balloon to download the iFolder later.</para>
-<figure pgwide = "0" id = "b40hlcu"><title>Example Notification
-of a Shared iFolder</title>
-<mediaobject><imageobject role="fo"><imagedata fileref="graphics/if_notify_a.png"
+<para>When a new user joins your shared iFolder list, iFolder announces
+the avilablity of new shared user with a balloon pop-up message
+in the Notification area.</para>
+<figure pgwide = "0" id = "bbb561e"><title>Example of Notification
+of a New SharedUser</title>
+<mediaobject><imageobject role="fo"><imagedata fileref="graphics/if3_newuser.png"
 width="48%" format="PNG"/></imageobject>
-<imageobject role="html"><imagedata fileref="graphics/if_notify_a.png"
+<imageobject role="html"><imagedata fileref="graphics/if3_newuser.png"
 width="48%" format="png"/></imageobject></mediaobject></figure>
+<para>The shared user also will get a balloon pop-up message in
+the Notification area soon after he or she finishes downloading
+the shared iFolder. The message reads that the &lt;Username of the
+user who shared the iFolder> has joined the &lt;iFolder name>. Whenever
+a new user joins the shared members, all the existing member users
+are notified of the new shared member.</para>
 <procedure id = "b25pz97"><step id = "bv2ht17"><para>Right-click
 the iFolder Services icon <inlinemediaobject><textobject role="description"><phrase>iFolder
 Application Icon </phrase></textobject><imageobject role="fo"><imagedata
@@ -2412,13 +2485,14 @@ then click <guimenu>Properties</guimenu>.</para></step></procedure></sect2></sec
 your iFolders to ensure data security at the server side.  </para>
 <para>After you successfully log in to the iFolder, an optional
  iFolder passphrase dialog box opens where you can enter your encryption
-passphrase. iFolder uses the passphrase to generate a unique encryption
-key for encrypting and decrypting your iFolder. You can also open
-this dialog box at any time during  your session. If you don&rsquo;t
-provide a passphrase, the encrypted iFolders are not processed.
-If you cannot recall your passphrase, the recovery agent you selected
-during login, helps you recover your encryption key. For more information
-see <xref linkend = "b8yvcnt" xrefstyle = "StepOnPage"/></para>
+passphrase if encryption is enabled by the Admin. iFolder uses the passphrase
+to generate a unique encryption key for encrypting and decrypting
+your iFolder.If you don&rsquo;t provide a passphrase, the passphrase
+dialog box appears automatically while processing the encrypted
+iFolders. If you cannot recall your passphrase, the recovery agent
+you selected during login, helps you recover your encryption key.
+For more information, see <xref linkend = "b8yvcnt"
+    xrefstyle = "StepOnPage"/></para>
 <para>Encryption occurs before the files leave your workstation
 to travel securely across an Internet connection to be uploaded
 to, and stored on, the iFolder server. The iFolder data remain encrypted on
@@ -2427,18 +2501,22 @@ the server. The iFolder client decrypts the downloaded files as
 they arrive on your local workstation. </para>
 <sect2 id = "recoveringpassphrse"><title>Recovering an Encrypted
 iFolder </title>
-<para>Each iFolder has a unique data encryption key. You use your
-passphrase to create the key at the time the iFolder is created.This
-key is used to encrypt all the data in that iFolder. If you forget
+<para>Each iFolder has a unique data encryption key which is auto
+generated during iFolder creation. You use your passphrase to create
+the key that encrypts the unique data encryption key. If you forget
 the secret passphrase, you cannot access either the iFolder data
-or the encrypted key used for recovering it. To avoid this problem,
- you must export the keys to a file and sent to the recovery agent.
-The recovery agent retrieves the keys and send back to you.  You
-can import the keys and use them to reset the passphrase . </para>
+or the encrypted key used for recovering it unless your passphrase
+is saved locally (enabling <guimenu>Remember passphrase</guimenu>).
+To avoid this problem,  you must export the keys using the Export
+encrypted Keys menu item and send it manually to the recovery agent
+using e-mail address given in the dialog box. The recovery agent
+retrieves the keys and sends back to you (through e-mail or any
+other communication channel).  You can import the keys and use them
+to reset the passphrase . </para>
 <note>
-<para> The Recovery agent is an entity independent of entities owning
-the iFolder server's infrastructure, or, independent of the IT department
-if deployed in a corporate environment.  </para></note>
+<para> The Recovery agent is generally an entity independent of
+entities owning the iFolder server's infrastructure, or, independent
+of the IT department if deployed in a corporate environment.  </para></note>
 <para>To export your data encryption key,</para>
 <procedure id = "b91cqi1"><step id = "b91cqi2"><para>Select <guimenu>Security
 > Key Recovery > Export Encrypted Keys</guimenu></para>
@@ -2449,19 +2527,25 @@ width="71%" format="png"/></imageobject></mediaobject></informalfigure></step>
 <step id = "b91cs8u"><para>Select the iFolder account from the drop
 down list.</para></step>
 <step id = "b91csad"><para>Specify the location on your local machine
-where you want to store your encrypted key.</para></step>
+where you want to store your exported file that contains the encrypted
+keys.</para></step>
 <step id = "b91csy8"><para>Click <guimenu>OK</guimenu></para></step></procedure>
-<para>To decrypt and re-encrypt your data encryption key, (optional)</para>
+<para>To import your recovered data encryption key, </para>
 <procedure id = "b93ch7p"><step id = "b93ch7q"><para>Select <guimenu>Security>
 Key Recovery > Import Decryted Keys</guimenu></para>
 <informalfigure pgwide = "0"><mediaobject><imageobject role="fo"><imagedata
 fileref="graphics/if3_import_decyptd_key.png" width="71%" format="PNG"/></imageobject>
 <imageobject role="html"><imagedata fileref="graphics/if3_import_decyptd_key.png"
 width="71%" format="png"/></imageobject></mediaobject></informalfigure></step>
-<step id = "b93cnjb"><para>Specify the location that the encrypted
-key is stored.</para></step>
+<step id = "b93cnjb"><para>Specify the location of the imported
+file that contains the decrypted keys.</para></step>
 <step id = "b93cnlj"><para>Specify the one time passphrase provided
-by the Recovery agent to decrypt and rerieve the key.</para></step>
+by the Recovery agent to decrypt and rerieve the key.(optional)</para>
+<para>The Recovery agent can choose to encrypt the recovered decrypted
+keys using the one time passphrase. The one time passphrase and
+key file need to be send through different communication channels
+(for security reason). If the Recover agent choose not to re-encrypt, then
+the imported file contains decrypted keys. </para></step>
 <step id = "b93coe4"><para>Specify the new passphrase to re-encrypt
 the data encryption key.</para></step>
 <step id = "b93conm"><para>Re-type the passphrase to verify and
@@ -2626,6 +2710,33 @@ box, select the server version of the file, click <guimenu>Save
 this Version</guimenu>, then click <guimenu>OK</guimenu>.</para>
 <para>The server version of the file downloads to your local machine
 and overwrites the local copy of the file by that name.</para></step></procedure></sect2></sect1>
+<sect1 role = "General" id = "movelocation"><title>Moving an iFolder</title>
+<para>After you create an iFolder, the path to the iFolder is static.
+You cannot move an iFolder from its original location to another
+location on your local computer and have it remain an iFolder. Moving the
+iFolder breaks the link between the synchronization database and
+the folder you converted to an iFolder. </para>
+<para>To move an iFolder on the computer where you created it:</para>
+<procedure id = "b25pz9f"><step id = "bv5cbfn"><para>In a file manager
+or the iFolder browser, select the iFolder you want to move.</para></step>
+<step id = "b403aa8"><para>Revert the iFolder to a normal folder.</para></step>
+<step id = "bv5cbj9"><para>In a file manager, move the folder to
+another location on the computer.</para></step>
+<step id = "bv5ccu2"><para>Convert the folder back to an iFolder
+and upload the iFolder to the server.</para></step>
+<step id = "bv5ccwu"><para>(Optional) Share the iFolder.</para></step>
+<step id = "b41ty8l"><para>Allow the iFolder to synchronize files
+with the iFolder server.</para></step></procedure>
+<para>To move an iFolder on a participating computer:</para>
+<procedure id = "b25pz9g"><step id = "bv5chii"><para>In iFolders,
+revert the iFolder to stop participating in the iFolder on the current
+computer.</para></step>
+<step id = "bv5chij"><para>Select the available iFolder, then click <guimenu>Download
+an iFolder</guimenu>.</para></step>
+<step id = "bv5cgpu"><para>Specify a new local path where you want
+to place the iFolder.</para></step>
+<step id = "bv5cgpv"><para>Allow the iFolder to synchronize files
+with the iFolder server.</para></step></procedure></sect1>
 <sect1 role = "General" id = "reverting"><title>Reverting an iFolder
 to a Normal Folder</title>
 <para>You can revert an iFolder to a normal folder for the local
@@ -2663,33 +2774,34 @@ this iFolder from the server</guimenu>, then click <guimenu>Yes</guimenu>. </par
 <para>The iFolder reverts to a normal folder on your local computer
 and on all members&rsquo; computers. The server copy of the iFolder
 is permanently deleted from the server.</para></listitem></itemizedlist></step></procedure></sect1>
-<sect1 role = "General" id = "movelocation"><title>Moving an iFolder</title>
-<para>After you create an iFolder, the path to the iFolder is static.
-You cannot move an iFolder from its original location to another
-location on your local computer and have it remain an iFolder. Moving the
-iFolder breaks the link between the synchronization database and
-the folder you converted to an iFolder. </para>
-<para>To move an iFolder on the computer where you created it:</para>
-<procedure id = "b25pz9f"><step id = "bv5cbfn"><para>In a file manager
-or the iFolder browser, select the iFolder you want to move.</para></step>
-<step id = "b403aa8"><para>Revert the iFolder to a normal folder.</para></step>
-<step id = "bv5cbj9"><para>In a file manager, move the folder to
-another location on the computer.</para></step>
-<step id = "bv5ccu2"><para>Convert the folder back to an iFolder
-and upload the iFolder to the server.</para></step>
-<step id = "bv5ccwu"><para>(Optional) Share the iFolder.</para></step>
-<step id = "b41ty8l"><para>Allow the iFolder to synchronize files
-with the iFolder server.</para></step></procedure>
-<para>To move an iFolder on a participating computer:</para>
-<procedure id = "b25pz9g"><step id = "bv5chii"><para>In iFolders,
-revert the iFolder to stop participating in the iFolder on the current
-computer.</para></step>
-<step id = "bv5chij"><para>Select the available iFolder, then click <guimenu>Download
-an iFolder</guimenu>.</para></step>
-<step id = "bv5cgpu"><para>Specify a new local path where you want
-to place the iFolder.</para></step>
-<step id = "bv5cgpv"><para>Allow the iFolder to synchronize files
-with the iFolder server.</para></step></procedure></sect1>
+<sect1 id = "bbb7rj2"><title>Removing Membership From a Shared iFolder</title>
+<para>To remove membership from a downloaded shared iFolder,</para>
+<procedure id = "bbb7rz5"><step id = "bbb7rz6"><para>In the file
+manager or the iFolder browser, locate the iFolder that you want
+to remove your memebrship from.  </para></step>
+<step id = "bbb7smi"><para>Right-click the iFolder and select Revert
+to a normal folder to appear the confirmation dialog box.</para>
+<informalfigure pgwide = "0"><mediaobject><imageobject role="fo"><imagedata
+fileref="graphics/if3_revert.png" width="45%" format="PNG"/></imageobject>
+<imageobject role="html"><imagedata fileref="graphics/if3_revert.png"
+width="45%" format="png"/></imageobject></mediaobject></informalfigure></step>
+<step id = "bbb7sr7"><para>In the confirmation dialog box, select <guimenu>Also
+remove my membership from the iFolder</guimenu>. </para></step>
+<step id = "bbb7uad"><para>Click <guimenu>Yes</guimenu> to confirm.</para>
+<para>The local copy of the iFolder is normal folder and is no longer
+synchronized with the server.  </para></step></procedure>
+<para>To remove membership from a shared iFolder on the server,</para>
+<procedure id = "bbb7vnq"><step id = "bbbbz9l"><para>In the iFolder
+browser, locate the iFolder that you want to remove your memebrship
+from.</para></step>
+<step id = "bbb7vru"><para>Right-click the iFolder and <guimenu>Select
+Remove my membership</guimenu>.</para>
+<informalfigure pgwide = "0"><mediaobject><imageobject role="fo"><imagedata
+fileref="graphics/remove_memeber.png" width="75%" format="PNG"/></imageobject>
+<imageobject role="html"><imagedata fileref="graphics/remove_memeber.png"
+width="75%" format="png"/></imageobject></mediaobject></informalfigure></step>
+<step id = "bbb7vzm"><para>Click <guimenu>OK</guimenu> to confirm
+your action.</para></step></procedure></sect1>
 <sect1 role = "General" id = "deleting"><title>Deleting an iFolder</title>
 <para>If you delete an iFolder from your collection, it deletes
 the local copy of the iFolder and its contents. It also can affect
@@ -2731,14 +2843,16 @@ to a normal folder</para></entry>
 </row>
 <row rowsep = "1" id = "b403cc1">
 <entry colname = "1"><para>Read&sol;Write User</para></entry>
-<entry colname = "2"><para>Unsubscribes the user from the share</para></entry>
+<entry colname = "2"><para>Remove memebrship of the user from the
+share</para></entry>
 <entry colname = "3"><para>No effect</para></entry>
 <entry colname = "4"><para>Reverts the local copy of the iFolder
 to a normal folder</para></entry>
 </row>
 <row rowsep = "0" id = "b403cc2">
 <entry colname = "1"><para>Read Only User</para></entry>
-<entry colname = "2"><para>Unsubscribes the user from the share</para></entry>
+<entry colname = "2"><para>Remove memebrship of the user from the
+share</para></entry>
 <entry colname = "3"><para>No effect</para></entry>
 <entry colname = "4"><para>Reverts the local copy of the iFolder
 to a normal folder</para></entry>
@@ -2749,7 +2863,11 @@ to a normal folder</para></entry>
 from your workstation.</para>
 <procedure id = "b25pz9h"><step id = "bq8ubrz"><para>In a file manager
 or iFolder browser, locate the iFolder that you want to delete.</para></step>
-<step id = "bq8u9b1"><para>Right-click the iFolder, then click <guimenu>Delete</guimenu>.</para></step></procedure></sect1></chapter>
+<step id = "bq8u9b1"><para>Right-click the iFolder, then click <guimenu>Delete</guimenu>.</para></step></procedure></sect1>
+<sect1 id = "bbbcabq"><title>What&rsquo;s Next</title>
+<para>For information about migration and upgrade, see the following:</para>
+<itemizedlist><listitem><para><xref linkend = "coexistmig"
+    xrefstyle = "ChapTitleOnPage"/></para></listitem></itemizedlist></sect1></chapter>
 
 <chapter conformance = ",doc,yes,4," lang = "en" id = "coexistmig"
     xml:base = "02b_coexist-migration.xml"><title>Novell iFolder
@@ -2783,7 +2901,7 @@ on this, refer <xref linkend = "b8anh5z" xrefstyle = "StepOnPage"/>.</para>
 <para>iFolder prompts you about the resynchronization of the files
 to 3.6 server,  and asks whether you need to retain the 2.<replaceable>x</replaceable> client
 until the 3.6 completes synchronization. During this process, only
-the data get migrated, hence,  the user has to set the preference
+the data get migrated, hence, the user has to set the preference
 in the new client.  </para></sect2>
 <sect2 id = "bax6esx"><title>Migration Procedure</title>
 <procedure id = "b88immu"><step id = "b88immv"><para>Install the
@@ -2819,9 +2937,9 @@ to complete your data migration.</para></step>
 <step id = "b8andsn"><para> Click<guimenu> Forward </guimenu>to
 display the Migration options.</para>
 <informalfigure pgwide = "0"><mediaobject><imageobject role="fo"><imagedata
-fileref="graphics/a_mig_assistant.png" width="61%" format="PNG"/></imageobject>
+fileref="graphics/a_mig_assistant.png" width="65%" format="PNG"/></imageobject>
 <imageobject role="html"><imagedata fileref="graphics/a_mig_assistant.png"
-width="61%" format="png"/></imageobject></mediaobject></informalfigure></step>
+width="65%" format="png"/></imageobject></mediaobject></informalfigure></step>
 <step id = "b8anh5z"><para>Select one of the following:</para>
 <informalfigure pgwide = "0"><mediaobject><imageobject role="fo"><imagedata
 fileref="graphics/a_mig_asst1.png" width="65%" format="PNG"/></imageobject>
@@ -2895,7 +3013,15 @@ fileref="graphics/a_mig_ass3.png" width="61%" format="PNG"/></imageobject>
 <imageobject role="html"><imagedata fileref="graphics/a_mig_ass3.png"
 width="61%" format="png"/></imageobject></mediaobject></informalfigure>
 <para>If the given information is correct, click <guimenu>Migrate </guimenu>to
-begin the migration process.</para></step></procedure></sect2></sect1>
+begin migration.</para>
+<para>Click <guimenu>Back</guimenu> to go back and make any necessary
+changes.</para></step>
+<step id = "bb51sen"><para>Click <guimenu>Finish</guimenu> to complete
+the migration.</para>
+<informalfigure pgwide = "0"><mediaobject><imageobject role="fo"><imagedata
+fileref="graphics/if3_migration_a.png" width="65%" format="PNG"/></imageobject>
+<imageobject role="html"><imagedata fileref="graphics/if3_migration_a.png"
+width="65%" format="png"/></imageobject></mediaobject></informalfigure></step></procedure></sect2></sect1>
 <sect1 id = "upgrading"><title>Upgrading And Coexistence of iFolder Clients</title>
 <para>This section discusses about the following:</para>
 <itemizedlist role="subtoc"><listitem><para><xref linkend = "bawu2sa"
@@ -2919,7 +3045,13 @@ does not get installed automatically. But, the client packages is
 downloaded to a temporary location that enable you to upgrade later
 as it contains an install script that can be run manually. Until
 you upgrade the client, you will not be able to connect to the iFolder
-3.6 domain.</para></sect2>
+3.6 domain.</para>
+<para>If you click No and attempt to connect to the iFolder 3.6
+server, it throws an error message as shown below:</para>
+<informalfigure pgwide = "0"><mediaobject><imageobject role="fo"><imagedata
+fileref="graphics/upgrade.png" width="50%" format="PNG"/></imageobject>
+<imageobject role="html"><imagedata fileref="graphics/upgrade.png"
+width="50%" format="png"/></imageobject></mediaobject></informalfigure></sect2>
 <sect2 id = "bawu2eu"><title>Coexistence of Novell iFolder 2.<replaceable>x</replaceable> and
 iFolder Clients</title>
 <para>The iFolder client for Novell iFolder 3.6 and the Novell iFolder

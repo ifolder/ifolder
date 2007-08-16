@@ -23,14 +23,14 @@ Creating C:\doc\Builds\doc\user\data\ovwxplat.html
 Creating C:\doc\Builds\doc\user\data\ovwnext.html
 Creating C:\doc\Builds\doc\user\data\accountsprefs.html
 Creating C:\doc\Builds\doc\user\data\startclient.html
-Creating C:\doc\Builds\doc\user\data\stopclient.html
 Creating C:\doc\Builds\doc\user\data\accounts.html
 Creating C:\doc\Builds\doc\user\data\login.html
 Creating C:\doc\Builds\doc\user\data\accountdetails.html
-Creating C:\doc\Builds\doc\user\data\delacct.html
 Creating C:\doc\Builds\doc\user\data\preferences.html
 Creating C:\doc\Builds\doc\user\data\firewall.html
 Creating C:\doc\Builds\doc\user\data\virusscan.html
+Creating C:\doc\Builds\doc\user\data\delacct.html
+Creating C:\doc\Builds\doc\user\data\stopclient.html
 Creating C:\doc\Builds\doc\user\data\logout.html
 Creating C:\doc\Builds\doc\user\data\b9lvmk9.html
 Creating C:\doc\Builds\doc\user\data\myifolders.html
@@ -47,15 +47,17 @@ Creating C:\doc\Builds\doc\user\data\managingpassphrse.html
 Creating C:\doc\Builds\doc\user\data\ifquota.html
 Creating C:\doc\Builds\doc\user\data\sync.html
 Creating C:\doc\Builds\doc\user\data\conflicts.html
-Creating C:\doc\Builds\doc\user\data\reverting.html
 Creating C:\doc\Builds\doc\user\data\movelocation.html
+Creating C:\doc\Builds\doc\user\data\reverting.html
+Creating C:\doc\Builds\doc\user\data\bbb7rj2.html
 Creating C:\doc\Builds\doc\user\data\deleting.html
+Creating C:\doc\Builds\doc\user\data\bbbcabq.html
 Creating C:\doc\Builds\doc\user\data\coexistmig.html
 Creating C:\doc\Builds\doc\user\data\migration.html
 Creating C:\doc\Builds\doc\user\data\upgrading.html
 Graphics source directory: D:\iFolder36\help\user\graphics
 Copying graphics to C:\doc\Builds\doc\user\graphics
-Copied 45 of 41 graphics
+Copied 56 of 50 graphics
 Creating navigation file: C:\doc\Builds\doc\user\sequence.xml
 Creating tree title file
 Creating target file C:\doc\tmp\target.txt
@@ -73,14 +75,14 @@ Modifying c:\doc\builds\doc\user\data\ovwxplat.html
 Modifying c:\doc\builds\doc\user\data\ovwnext.html
 Modifying c:\doc\builds\doc\user\data\accountsprefs.html
 Modifying c:\doc\builds\doc\user\data\startclient.html
-Modifying c:\doc\builds\doc\user\data\stopclient.html
 Modifying c:\doc\builds\doc\user\data\accounts.html
 Modifying c:\doc\builds\doc\user\data\login.html
 Modifying c:\doc\builds\doc\user\data\accountdetails.html
-Modifying c:\doc\builds\doc\user\data\delacct.html
 Modifying c:\doc\builds\doc\user\data\preferences.html
 Modifying c:\doc\builds\doc\user\data\firewall.html
 Modifying c:\doc\builds\doc\user\data\virusscan.html
+Modifying c:\doc\builds\doc\user\data\delacct.html
+Modifying c:\doc\builds\doc\user\data\stopclient.html
 Modifying c:\doc\builds\doc\user\data\logout.html
 Modifying c:\doc\builds\doc\user\data\b9lvmk9.html
 Modifying c:\doc\builds\doc\user\data\myifolders.html
@@ -97,9 +99,11 @@ Modifying c:\doc\builds\doc\user\data\managingpassphrse.html
 Modifying c:\doc\builds\doc\user\data\ifquota.html
 Modifying c:\doc\builds\doc\user\data\sync.html
 Modifying c:\doc\builds\doc\user\data\conflicts.html
-Modifying c:\doc\builds\doc\user\data\reverting.html
 Modifying c:\doc\builds\doc\user\data\movelocation.html
+Modifying c:\doc\builds\doc\user\data\reverting.html
+Modifying c:\doc\builds\doc\user\data\bbb7rj2.html
 Modifying c:\doc\builds\doc\user\data\deleting.html
+Modifying c:\doc\builds\doc\user\data\bbbcabq.html
 Modifying c:\doc\builds\doc\user\data\coexistmig.html
 Modifying c:\doc\builds\doc\user\data\migration.html
 Modifying c:\doc\builds\doc\user\data\upgrading.html
