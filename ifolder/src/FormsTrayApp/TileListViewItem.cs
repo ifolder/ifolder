@@ -458,8 +458,8 @@ namespace Novell.FormsTrayApp
 			{
 				// TODO: Localize.
 				//MessageBox.Show(string.Format("the size is: {0}", ifolderObject.iFolderWeb.Size));
-				text += completeLocation + "\n" + 
-					"Size: " + completeStatus/*ifolderObject.iFolderWeb.Size*/ + "\n";
+				// remove the comment to display the size in bytes
+				text += completeLocation + "\n" ;//+"Size: " + completeStatus/*ifolderObject.iFolderWeb.Size*/ + "\n";
 			}
 			else
 			{

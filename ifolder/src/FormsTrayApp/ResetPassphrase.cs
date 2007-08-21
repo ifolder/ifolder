@@ -633,7 +633,7 @@ namespace Novell.FormsTrayApp
 						return;
 					else
 					{
-						ragent = this.recoveryAgentCombo.SelectedText;
+						ragent = (string)this.recoveryAgentCombo.SelectedItem;
 						publicKey = Convert.ToBase64String(cert.GetPublicKey());
 					}
 				}
