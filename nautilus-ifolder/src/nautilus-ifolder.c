@@ -18,7 +18,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  *  Author: Boyd Timothy <btimothy@novell.com>
- * 
+ *  Modified: Satya	 <ssutapalli@novell.com> 16-Aug-2007	Updating hash table for downloaded folders
  ***********************************************************************/
 #include <libnautilus-extension/nautilus-extension-types.h>
 #include <libnautilus-extension/nautilus-file-info.h>
@@ -52,11 +52,11 @@
 
 
 /* Turn this on to see debug messages */
-//#if DEBUG
+#if DEBUG
 #define DEBUG_IFOLDER(args) (g_print("nautilus-ifolder: "), g_printf args)
-//#else
-//#define DEBUG_IFOLDER
-//#endif
+#else
+#define DEBUG_IFOLDER
+#endif
 
 #ifdef _
 #undef _
@@ -149,6 +149,7 @@ static void reread_local_service_url ();
 static void init_gsoap (struct soap *p_soap);
 static void cleanup_gsoap (struct soap *p_soap);
 static gchar * get_file_path (NautilusFileInfo *file);
+static gboolean is_an_ifolder (NautilusFileInfo *file);
 static gboolean is_ifolder (NautilusFileInfo *file);
 static gboolean can_be_ifolder (NautilusFileInfo *file);
 static gint create_ifolder_in_domain (NautilusFileInfo *file, char *domain_id, gboolean encryption);
@@ -584,12 +585,103 @@ is_ifolder (NautilusFileInfo *file)
 	holder = (iFolderHolder *)g_hash_table_lookup (ifolders_ht, folder_path);
 	if (holder != NULL)
 		b_is_ifolder = TRUE;
+	else 
+		b_is_ifolder = is_an_ifolder(file);
 	
 	g_free (folder_path);
 	
 	DEBUG_IFOLDER (("is_ifolder() returning: %s", b_is_ifolder ? "TRUE" : "FALSE"));
 
 	return b_is_ifolder;
+}
+
+/*
+ *Name: is_an_ifolder
+ *Description: The following function will check for a folder whether it is iFolder or not. 
+ *This function comes into scenario once Nautilus is started and any modifications takes 
+ *place in iFolder. That means something like iFolders downloaded etc. On identifying whether 
+ *it is iFolder or not it will update the ifolders_ht hashtable accordingly. Returns true if 
+ *successfully retrieves iFolder details
+*/
+
+static gboolean
+is_an_ifolder(NautilusFileInfo *file)
+{
+	gboolean isAniFolder = FALSE;
+	gchar *folder_path;
+	struct soap soap;
+	char username[512];
+	char password[1024];
+
+	if (!nautilus_file_info_is_directory (file))
+		return FALSE;
+
+	folder_path = get_file_path (file);
+	if (folder_path != NULL) 
+	{
+		struct _ns1__IsiFolder ns1__IsiFolder;
+		struct _ns1__IsiFolderResponse ns1__IsiFolderResponse;
+		ns1__IsiFolder.LocalPath = folder_path;
+		init_gsoap (&soap);
+		if (simias_get_web_service_credential(username, password) == SIMIAS_SUCCESS)
+		{ 
+			soap.userid = username;
+			soap.passwd = DerivePassword(password);
+		}
+		soap_call___ns1__IsiFolder( &soap,
+						soapURL,
+						NULL,
+						&ns1__IsiFolder,
+						&ns1__IsiFolderResponse );
+
+		if (soap.error)
+		{
+			DEBUG_IFOLDER (("***Error calling IsiFolder***\n"));
+			soap_print_fault (&soap, stderr);
+			if( soap.error == SOAP_TCP_ERROR)
+			{	
+				reread_local_service_url();
+			}
+		} 
+		else 
+		{
+			DEBUG_IFOLDER (("***calling IsiFolder succeeded***\n"));
+			if (ns1__IsiFolderResponse.IsiFolderResult)
+			{
+				isAniFolder  = TRUE;
+
+				struct _ns1__GetiFolderByLocalPath  ns1_GetiFolderByLocalPath;
+				struct _ns1__GetiFolderByLocalPathResponse  ns1_GetiFolderByLocalPathResponse;
+				ns1_GetiFolderByLocalPath.LocalPath = folder_path;
+
+				soap_call___ns1__GetiFolderByLocalPath( &soap, soapURL, NULL, &ns1_GetiFolderByLocalPath, &ns1_GetiFolderByLocalPathResponse );
+
+				if (soap.error)
+				{
+					DEBUG_IFOLDER (("***Error getting iFolder Local Path details***\n"));
+					soap_print_fault (&soap, stderr);
+					if( soap.error == SOAP_TCP_ERROR)
+					{	
+						reread_local_service_url();
+					}
+				}
+				else
+				{
+					struct ns1__iFolderWeb *iFolderWebResponse = ns1_GetiFolderByLocalPathResponse.GetiFolderByLocalPathResult;
+					if( iFolderWebResponse->UnManagedPath )
+					{
+						iFolderHolder *holder = ifolder_holder_new (iFolderWebResponse -> ID, iFolderWebResponse -> DomainID, iFolderWebResponse -> UnManagedPath, iFolderWebResponse -> Name);
+						if( holder != NULL )
+						{
+							g_hash_table_insert (ifolders_ht, holder->unmanaged_path, holder);
+						}
+					}				
+				}
+			}
+		}	
+		cleanup_gsoap (&soap);
+	}
+	return isAniFolder;	
 }
 
 static gboolean
@@ -1024,9 +1116,7 @@ refresh_ifolders_ht ()
 								array_of_ifolders->iFolderWeb [i]->UnManagedPath,
 								array_of_ifolders->iFolderWeb [i]->Name);
 						if (holder != NULL) {
-							g_hash_table_insert (ifolders_ht,
-												 holder->unmanaged_path,
-												 holder);
+							g_hash_table_insert (ifolders_ht, holder->unmanaged_path, holder);
 							DEBUG_IFOLDER (("refresh_ifolders_ht: added new iFolder=%s", holder->name));
 						} else {
 							DEBUG_IFOLDER (("ifolder_holder_new returned NULL"));
@@ -1901,7 +1991,6 @@ ifolder_nautilus_get_file_items (NautilusMenuProvider *provider,
 	items = NULL;
 	
 	if (is_ifolder (file)) {
-DEBUG_IFOLDER (("This is an iFolder"));
 		/* Menu item: Revert to a Normal Folder */
 		item = nautilus_menu_item_new ("NautilusiFolder::revert_ifolder",
 					_("Revert to a Normal Folder"),
