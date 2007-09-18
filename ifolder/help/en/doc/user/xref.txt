@@ -8,14 +8,14 @@ ovwxplat.html               Cross-Platform Considerations
 ovwnext.html                What’s Next
 accountsprefs.html          Managing iFolder Accounts and Preferences
 startclient.html            Starting the iFolder Client
-stopclient.html             Exiting the iFolder Client
 accounts.html               Configuring an iFolder Account
 login.html                  Logging In to an iFolder Account
 accountdetails.html         Viewing and Modifying iFolder Account Settings
-delacct.html                Deleting an iFolder Account
 preferences.html            Configuring iFolder Preferences for the Client
 firewall.html               Configuring Local Firewall Settings for iFolder Traffic
 virusscan.html              Configuring Local Virus Scanner Settings for iFolder Traffic
+delacct.html                Deleting an iFolder Account
+stopclient.html             Exiting the iFolder Client
 logout.html                 Logging Out of an iFolder Account
 b9lvmk9.html                What’s Next
 myifolders.html             Managing iFolders
@@ -32,9 +32,11 @@ managingpassphrse.html      Managing Passphrase for Encrypted iFolders
 ifquota.html                Setting an iFolder Quota
 sync.html                   Synchronizing Files
 conflicts.html              Resolving File Conflicts
-reverting.html              Reverting an iFolder to a Normal Folder
 movelocation.html           Moving an iFolder
+reverting.html              Reverting an iFolder to a Normal Folder
+bbb7rj2.html                Removing Membership From a Shared iFolder
 deleting.html               Deleting an iFolder
+bbbcabq.html                What’s Next
 coexistmig.html             Novell iFolder Migration And Upgrade
 migration.html              Migrating from iFolder 2.x to iFolder 3.6
 upgrading.html              Upgrading And Coexistence of iFolder Clients

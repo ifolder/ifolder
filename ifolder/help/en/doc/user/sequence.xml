@@ -51,11 +51,6 @@
 			</topic>
 
 			<topic type="File" elemtype="SECT1">
-			<filename>data\stopclient.html</filename>
-			<title>Exiting the iFolder Client</title>
-			</topic>
-
-			<topic type="File" elemtype="SECT1">
 			<filename>data\accounts.html</filename>
 			<title>Configuring an iFolder Account</title>
 			</topic>
@@ -71,11 +66,6 @@
 			</topic>
 
 			<topic type="File" elemtype="SECT1">
-			<filename>data\delacct.html</filename>
-			<title>Deleting an iFolder Account</title>
-			</topic>
-
-			<topic type="File" elemtype="SECT1">
 			<filename>data\preferences.html</filename>
 			<title>Configuring iFolder Preferences for the Client</title>
 			</topic>
@@ -88,6 +78,16 @@
 			<topic type="File" elemtype="SECT1">
 			<filename>data\virusscan.html</filename>
 			<title>Configuring Local Virus Scanner Settings for iFolder Traffic</title>
+			</topic>
+
+			<topic type="File" elemtype="SECT1">
+			<filename>data\delacct.html</filename>
+			<title>Deleting an iFolder Account</title>
+			</topic>
+
+			<topic type="File" elemtype="SECT1">
+			<filename>data\stopclient.html</filename>
+			<title>Exiting the iFolder Client</title>
 			</topic>
 
 			<topic type="File" elemtype="SECT1">
@@ -171,18 +171,28 @@
 			</topic>
 
 			<topic type="File" elemtype="SECT1">
-			<filename>data\reverting.html</filename>
-			<title>Reverting an iFolder to a Normal Folder</title>
-			</topic>
-
-			<topic type="File" elemtype="SECT1">
 			<filename>data\movelocation.html</filename>
 			<title>Moving an iFolder</title>
 			</topic>
 
 			<topic type="File" elemtype="SECT1">
+			<filename>data\reverting.html</filename>
+			<title>Reverting an iFolder to a Normal Folder</title>
+			</topic>
+
+			<topic type="File" elemtype="SECT1">
+			<filename>data\bbb7rj2.html</filename>
+			<title>Removing Membership From a Shared iFolder</title>
+			</topic>
+
+			<topic type="File" elemtype="SECT1">
 			<filename>data\deleting.html</filename>
 			<title>Deleting an iFolder</title>
+			</topic>
+
+			<topic type="File" elemtype="SECT1">
+			<filename>data\bbbcabq.html</filename>
+			<title>What’s Next</title>
 			</topic>
 		</topic>
 

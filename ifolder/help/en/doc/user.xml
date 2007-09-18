@@ -25,10 +25,10 @@
          215    preface    iFolder Help
         1835    chapter    Overview of iFolder
         4930    chapter    Managing iFolder Accounts and Preferences
-        6717    chapter    Managing iFolders
-        1009    chapter    Novell iFolder Migration And Upgrade
+        6726    chapter    Managing iFolders
+        1006    chapter    Novell iFolder Migration And Upgrade
       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-       15417    book       OES 2: Novell iFolder 3.6 Help
+       15423    book       OES 2: Novell iFolder 3.6 Help
 
 
  GRAPHICS REFERENCED IN BOOK
@@ -60,7 +60,6 @@
            6       folder_16.png
            2       a_mig_ass3.png
            2       ifolder-error22.png
-           2       if_mig_err_msge.png
            2       if3_ifcr_share-accessro_a.png
            2       if3_notification.png
            2       if_preferences_a.png
@@ -115,7 +114,7 @@
 
 
 
-<book revision = "08/13/07" conformance = "ifolder3,doc,yes,4,80"
+<book revision = "09/18/07" conformance = "ifolder3,doc,no,4,80"
     lang = "en" id = "user">
 <bookinfo id = "bookinfo" xml:base = "00_frontos.xml"><title>OES
 2: Novell iFolder 3.6 Help</title>
@@ -1906,16 +1905,6 @@ and create the new folder as part of the process. </para>
 that suits your personal or corporate work habits. The subdirectory
 structure is constant across all member iFolders. Each workstation can
 specify a different parent directory for the shared iFolder.</para>
-<para>Click<guimenu> More options</guimenu> to select the iFolder
-type from the given options. If your admin has set your encryption
-policy to <emphasis>On</emphasis> or <emphasis>Enforced</emphasis>,
-you are permitted to create encypted iFolders. You can decide whether
-to create encrypted iFolders or it to be shared with other users. </para>
-<figure pgwide = "0" id = "b92ev2r"><title>File Manager</title>
-<mediaobject><imageobject role="fo"><imagedata fileref="graphics/if3_shared_a.png"
-width="64%" format="PNG"/></imageobject>
-<imageobject role="html"><imagedata fileref="graphics/if3_shared_a.png"
-width="64%" format="png"/></imageobject></mediaobject></figure>
 <para>You can create iFolders with a file manager or with the iFolder
 browser, which is available in the client application. Use the following
 methods to create an iFolder:</para>
@@ -1974,9 +1963,14 @@ format="PNG"/></imageobject>
 <imageobject role="html"><imagedata fileref="graphics/ifolder22.png"
 width="11.00pt" format="png"/></imageobject></inlinemediaobject>,
 then click <guimenu>iFolders</guimenu>.</para></listitem></itemizedlist></step>
-<step id = "bv2gxbv"><para>Click <guimenu>Upload a folder</guimenu>.</para></step>
-<step id = "bv2gwvt"><para>Specify the iFolder account you want
-to use for this iFolder.</para>
+<step id = "bv2gxbv"><para>Click <guimenu>Upload a folder</guimenu>.</para>
+<informalfigure pgwide = "0"><mediaobject><imageobject role="fo"><imagedata
+fileref="graphics/if3_shared_a.png" width="64%" format="PNG"/></imageobject>
+<imageobject role="html"><imagedata fileref="graphics/if3_shared_a.png"
+width="64%" format="png"/></imageobject></mediaobject></informalfigure></step>
+<step id = "bbtpvmk"><para>Under <guimenu>More Options</guimenu>,
+specify the <guimenu>iFolder Account</guimenu> you want to use for
+this iFolder.</para>
 <para>If you have multiple iFolder accounts, the default account
 is listed first. Use the drop-down list to select a different account.</para></step>
 <step id = "bv2guwr"><para>In the browser, navigate to the directory
@@ -1988,8 +1982,15 @@ the folder, then click <guimenu>Add</guimenu>.</para></listitem>
 <listitem><para>If the normal folder does not exist, click <guimenu>Make
 New Folder</guimenu> to create it, select the newly created folder,
 then click <guimenu>Add</guimenu>.</para></listitem></itemizedlist></step>
-<step id = "b93crcv"><para>Under <guimenu>More options</guimenu> to
-select one of the following from the given options:</para>
+<step id = "b93crcv"><para>Select the iFolder <guimenu>Type</guimenu> from
+the given options.You can decide whether to create encrypted iFolders
+or it to be shared with other users.</para>
+<important>
+<para>You are permitted to create encrypted iFolders only if your
+iFolder Admin has set your encryption policy to <guimenu>On</guimenu>.
+If not, you can create only Shared iFolders, and this option by default
+is selected. In this case, both the options for <guimenu>Type</guimenu> are
+disabled.</para></important>
 <itemizedlist><listitem><para>Select <guimenu>Encrypted</guimenu> to
 enable encryption for the selected iFolder.</para></listitem>
 <listitem><para>Select <guimenu>Shared</guimenu> to enable sharing
@@ -2872,11 +2873,11 @@ or iFolder browser, locate the iFolder that you want to delete.</para></step>
 <chapter conformance = ",doc,yes,4," lang = "en" id = "coexistmig"
     xml:base = "02b_coexist-migration.xml"><title>Novell iFolder
 Migration And Upgrade </title>
-<para>This section discusses user-friendly upgrade and migration
-to iFolder 3.6 client for Novell&reg; iFolder&reg; 3.6
-from the Novell iFolder 2.<replaceable>x</replaceable> client. It
-also discusses the hassle free client side upgrade from iFolder
-3.<replaceable>x</replaceable> to 3.6.</para>
+<para>This section discusses user-friendly migration to iFolder
+3.6 client for Novell&reg; iFolder&trade; 3.6 from the Novell
+iFolder 2.<replaceable>x</replaceable> client. It also discusses
+the hassle-free upgrade of the client from iFolder 3.<replaceable>x</replaceable> to
+iFolder 3.6.</para>
 <itemizedlist role="subtoc"><listitem><para><xref linkend = "migration"
     xrefstyle = "SectTitleOnPage"/></para></listitem>
 <listitem><para><xref linkend = "upgrading"
@@ -2899,7 +2900,7 @@ it prompts you again to convert the existing folders or to make a
 copy of the 2.<replaceable>x</replaceable> iFolder. For more information
 on this, refer <xref linkend = "b8anh5z" xrefstyle = "StepOnPage"/>.</para>
 <para>iFolder prompts you about the resynchronization of the files
-to 3.6 server,  and asks whether you need to retain the 2.<replaceable>x</replaceable> client
+to 3.6 server, and asks whether you need to retain the 2.<replaceable>x</replaceable> client
 until the 3.6 completes synchronization. During this process, only
 the data get migrated, hence, the user has to set the preference
 in the new client.  </para></sect2>
@@ -2932,7 +2933,7 @@ width="65%" format="png"/></imageobject></mediaobject></informalfigure>
 <note>
 <para>You can also reach the Migration Assistant by <guimenu>iFolder
 > Migration > Migrate from iFolder 2.x</guimenu>.</para></note>
-<para>Migration Assistant will take you through the Migration process
+<para>Migration Assistant takes you through the Migration process
 to complete your data migration.</para></step>
 <step id = "b8andsn"><para> Click<guimenu> Forward </guimenu>to
 display the Migration options.</para>
@@ -2974,7 +2975,7 @@ copied to it. If the option remains unselected, only the directories <filename>d
 moved to the specified location.</para></step>
 <step id = "b8ann46"><para>Click <guimenu>Forward</guimenu> to select
 the domain and Security Options as follows:</para>
-<substeps id = "bawqfz4"><step id = "b8ao41w"><para>Select the domain
+<substeps id = "bbnj9dh"><step id = "b8ao41w"><para>Select the domain
 from the drop-down list.</para>
 <informalfigure pgwide = "0"><mediaobject><imageobject role="fo"><imagedata
 fileref="graphics/if3_mig_asst2.png" width="65%" format="PNG"/></imageobject>
@@ -2987,15 +2988,11 @@ encrypt the selected iFolder.</para>
 prompts you to enter the passphrase. You can skip this option and
 set the passphrase later.</para>
 <para>If you are not currently connected to the iFolder domain,
-it prompts you to connect to the domain.</para>
-<informalfigure pgwide = "0"><mediaobject><imageobject role="fo"><imagedata
-fileref="graphics/if_mig_err_msge.png" width="62%" format="PNG"/></imageobject>
-<imageobject role="html"><imagedata fileref="graphics/if_mig_err_msge.png"
-width="62%" format="png"/></imageobject></mediaobject></informalfigure></listitem>
+it prompts you to connect to the domain.</para></listitem>
 <listitem><para>Select <guimenu>Shared </guimenu>to share the iFolder
 with other members in the iFolder 3.6 domain.</para>
-<para>When you attempt to migrate an encrypted 2.<replaceable>x</replaceable> 
-iFolder to a shared one, it prompts you to verify the action.</para>
+<para>When you attempt to migrate an encrypted 2.<replaceable>x</replaceable> iFolder
+to a shared one, it prompts you to verify the action.</para>
 <informalfigure pgwide = "0"><mediaobject><imageobject role="fo"><imagedata
 fileref="graphics/if3_causion.png" width="65%" format="PNG"/></imageobject>
 <imageobject role="html"><imagedata fileref="graphics/if3_causion.png"
@@ -3041,11 +3038,11 @@ automatically upgrade your iFolder 3.<guimenu>x</guimenu> client.</para></step><
 <para>The automatic upgrade is possible only if you have the root
 access rights, as this process needs to install the rpm packages.
 If  you don&rsquo;t have the root access rights, the package
-does not get installed automatically. But, the client packages is
-downloaded to a temporary location that enable you to upgrade later
-as it contains an install script that can be run manually. Until
-you upgrade the client, you will not be able to connect to the iFolder
-3.6 domain.</para>
+does not get installed automatically. However, the client packages
+are downloaded to a temporary location.This enables you to upgrade
+it later as it contains an install script that you can run manually.
+Not that until you upgrade the client, you can not connect to the
+iFolder 3.6 domain.</para>
 <para>If you click No and attempt to connect to the iFolder 3.6
 server, it throws an error message as shown below:</para>
 <informalfigure pgwide = "0"><mediaobject><imageobject role="fo"><imagedata
