@@ -1985,12 +1985,6 @@ then click <guimenu>Add</guimenu>.</para></listitem></itemizedlist></step>
 <step id = "b93crcv"><para>Select the iFolder <guimenu>Type</guimenu> from
 the given options.You can decide whether to create encrypted iFolders
 or it to be shared with other users.</para>
-<important>
-<para>You are permitted to create encrypted iFolders only if your
-iFolder Admin has set your encryption policy to <guimenu>On</guimenu>.
-If not, you can create only Shared iFolders, and this option by default
-is selected. In this case, both the options for <guimenu>Type</guimenu> are
-disabled.</para></important>
 <itemizedlist><listitem><para>Select <guimenu>Encrypted</guimenu> to
 enable encryption for the selected iFolder.</para></listitem>
 <listitem><para>Select <guimenu>Shared</guimenu> to enable sharing
@@ -1998,7 +1992,13 @@ for the selected iFolder. </para>
 <para>iFolder announces the availability of shared iFolders with
 a balloon pop-up message in the Notification area. Shared users
 can click the balloon to set up the iFolder at that time, or close
-the balloon to download the iFolder later.</para></listitem></itemizedlist></step>
+the balloon to download the iFolder later.</para></listitem></itemizedlist>
+<important>
+<para>You are permitted to create encrypted iFolders only if your
+iFolder Admin has set your encryption policy to <guimenu>On</guimenu>.
+If not, you can create only Shared iFolders, and this option by default
+is selected. In this case, both the options for <guimenu>Type</guimenu> are
+disabled.</para></important></step>
 <step id = "bwb5ss4"><para>Click <guimenu>OK</guimenu>.</para>
 <para>The iFolder appears in the <guimenu>iFolders on This Computer</guimenu> list.</para>
 <para>If you have not set the passphrase during the login session,
