@@ -1,0 +1,10 @@
+--braces-after-if-line 
+--indent-level4 
+-lp -di1 -nut -bli0 -npcs 
+-nsaf -nsaw -nsai
+-cdb -sc
+-nce
+--format-first-column-comments
+-Thandler_rec
+--line-length80
+--tab-size4

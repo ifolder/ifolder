@@ -241,7 +241,7 @@ case $IFOLDER_OS in
         STORELIB_PATH="../../external/sqlite/linux"
         STORELIB="libsqlite.so"
         SYSTEM_XML='System.Xml.dll'
-		GSOAP_PATH="$TOOLDIR/gsoap/linux-2.7"
+		GSOAP_PATH="$TOOLDIR/gsoap/gsoap-linux-2.7"
         #
         # Set pkg-config variables
         #
@@ -542,6 +542,7 @@ src/Makefile
 src/iFolder/Makefile
 src/iFolder/AssemblyInfo.cs
 src/LinuxClient/Makefile
+src/LinuxClient/NetworkManager-sharp/Makefile
 src/LinuxClient/library/Makefile
 src/LinuxClient/application/Makefile
 src/LinuxClient/application/AssemblyInfo.cs
