@@ -1,0 +1,237 @@
+-------------------------------------------------------------------
+Tue Mar 17 01:48:43 MDT 2009 - sbipin@novell.com
+
+- Trunk code update from 3.6 to 3.7.2
+
+Major features:
+
+	- iFolder client for Macintosh and Vista.
+	- iFolder Merge
+	- Improved file conflict management
+	- Enhanced Web administration 
+
+-------------------------------------------------------------------
+Tue Aug 28 07:37:43 MDT 2007 - srinidhi@novell.com
+
+- #287119: Key recovery corrupting the iFolder data. UTF8 was used
+  instead of Base64, causing this issue
+- #295009: When user is having account on different iFolders and logged
+  into any one of them, it shows headings of unlogged iFolders like
+  “ifolders on .....” issue is fixed.
+- #277714: Changes to script file for client upgrade.
+- #301346: Usability fixes such as displaying email-id and raagent name
+  in the export key dialog box , modifying credits and removing size
+  from tooltip.
+- Initial build of 64bit Windows client
+- #273058: Modified app.ico, ifolder_app.ico, and ifolder_loading.ico to
+  change the tray icon for windows.
+- #295009: All issues found in the iFolder usability testing issues are
+  fixed.
+- #296464: Fix for validating the passphrase properly at the time of
+  account creation. Changes to resetpassphrase Dialog.
+- #285797: Fix to create the non-existing path when the Default iFolder
+  is created during initial connection.
+- copyright information updated for web-access and admin files
+- Updated certificate in Mac and Linux UI source code.
+- #296310: Added warning when no recovery agent is selected during
+  setting of passphrase.
+- #290977, 285797, 297718, 296386: Changes to strings for localization.
+- #295002, 295005: Fix for unlocalized strings in "General" tab of
+  iFolder Properties dialog
+- #297300: Administrator was not able to log in until any user logs in
+  to web access or through thick client. Issue is fixed.
+- #294387: Linux client fixes emerging after code review. must fix
+  category of linux client is fixed now.
+- #255244: Modified the GUI with Image
+- #296016: Read write membership deletes the ifolder. This issue found
+  only in linux client, windows client works fine. If a user(user1)
+  create a ifolder and share with another user(user2) with read/write
+  access, then the user2 is able to delete the ifolder. this has been
+  fixed
+- #294996: Repositioned the security options to allow foreign characters
+  properly.
+- #294998: Changed the hotkey for "Add" as it is clashing with another
+  one.
+- #272740: Modification of migration wizard - windows client.
+- #287459: Changed the Certificate Dialog box size so that it does not
+  exceed the size of the parent window from which it is displayed.
+- #200489: Default parent folder is changed from ~/Desktop to Users Home
+  Directory.
+- #293747, 256595: Fix for remove membership and delete iFolder in
+  multi-server environment.
+- #289989: Rename property was originally added for files Now addes for
+  files under a directory also, this solves the file corruption when dir
+  is renamed.
+- #294387: Changes based on review comments. Localized strings.
+- #288125: RA PublicKey is checked for null and as well as empty string
+  solves this problem
+- #291265: Fix for using internal identity store.
+- #290323: linux client where not selecting passphrase was resulting in
+  improper UI
+- #280399: Multiple file synchronization fails in client - if the number
+  of files are in the order of 100000.
+- #289676: sharable icons are put for windows and linux thick client
+- #275031: "3.2 Server Upgrade:Shared iFolders, Remove Membership throws
+  exception" issue is fixed.
+- #287410: domain force synced while passphase set/reset Compilations
+  warnings removed
+- #290977: Download Default iFolder- does not work with the defaut path
+  entered. Added help buttons for windows thick client.
+- #287799: Changes to strings for localization. Changes to provide
+  notification message after importing the keys.
+- #288727, 284683: Fix for removing domain from the windows thick
+  client. Fix for addressing the exception while connecting to a
+  server,even though the domain is created.
+- #288727: Accept RAName during reset passphrase Changes to some
+  strings. Missing strings added to en.po file.
+- #288727, 284683: Fix for removing domain from the thick clients. Fix
+  for addressing the exception while connecting to a server,even though
+  the domain is created.
+- #290718: Problem 1: Sync doesnot work after the import key operation.
+  It says the ket doesnot match Description: Encryption key hash is re
+  assigned with the hash of original key, which was not required causes
+  this issue. This is fixed Problem 2: RA agent reselection is enabled in
+  the reset passphrase. No test case executed, recommend DT to do this.
+- #287473: Linux thick client related changes for displaying proper info
+  in export key dialog boxes .
+- #260442: now no need to do a refresh on linux thick client to show all
+  the iFolders.
+- #81615: Versioning mess for dll was sorted & updated. Related files
+  are updated. It is done for both iFolder and simias modules.
+- #235305: AccountWizardCompletionPage.cs and FormsTrayApp.resx - Add
+  user information for finish page
+- #283661: Picker.resx - Added "<<" for remove button CreateiFolder.resx
+  - Corrected spelling "Location" (not filed in bugzilla)
+- #284654: Removing the Console.WriteLine statements on Linux. Change in
+  top-level makefile.am to show the new help files.
+- #285501,285499: New help files has been added to svn
+- #283124: client version rolled back to previous version for data
+  change conflicts.
+- #285793, 286263, 284603: Windows UI freeze. This is because the
+  Recalculation is done even if the window size is not changed and the
+  changed size becomes undefined, so it gets into an infinite loop.
+- #277699: Added new apis for Upgrade and version handshake between
+  client and server. Changes to collectionInfo objest to hold User id
+- #277699, 278152: Changes to use version handshake apis for client
+  updates. Changes to default ifolder related issues. Fix for migration
+  UI issue.
+- #287175: Enabled File Monitoring in Linux, so that the file system
+  will not be dredged always during synchronization. This is for
+  performance enhancement.
+- #285797, 256595, 277699, 261216, 278152, 285828, 283747: Changes to
+  use new api for version handshake and client updates. Fix for removing
+  membership and deleting an iFolder from windows thick client. Fix for
+  default iFolder issues.
+- #274106: Changing the copyright year for windows thick client
+- #272132: Bug related to AssemblyInfo.cs. Now no need to do a make
+  clean before doing make for iFolder client.
+- #273097, 274479, 277698: Fix for accepting certificate and setting
+  passphrase when no recovery agent is selected.( linux & windows)
+  creation of Default iFolder. (Linux & windows) Error message when
+  iFolder is not completely synced.(linux & windows).
+- #256381: MoreOptions expanded by default
+- #273073: Fixed, code review also done for windows client migration.
+- #277253: .Net 2.0 and language packs have been included
+- Windows client passphrase pop up is disabled.
+- Recovery utility changes in simias will give later
+- #272132: Build problem in ifolder - AssemblyInfo.cs
+- #272273: Added startup screen and new encryption icon for Linux
+  client. Restored the export and import key bindings
+- #275042: Only the account wizard should be shown if there are no
+  accounts present on the client. Fix is on windows thick client.
+- #272717, 272732, 272273: Migration changes for windows thick client as
+  per brainshare inputs.
+- #275042: Only the account wizard should be shown if there are no
+  accounts present on the client. Fix is on windows thick client.
+- #272717, 272732, 272273: Migration changes for windows thick client as
+  per brainshare inputs.
+- #267289: Logout still shows iFolders on the domain.
+- #270300, 272615: Conflict fixes and slave provisiong exception fix
+- #259792,272615: Export import key bindings. Refresh on timeout, domain
+  logged in logout. Encryption icon change. Splash screen.
+- #261222: Changes for displaying a pop-up message to disconnect from
+  2.x server after migration
+- #235354, 261216, 266941: Changes for strings on thick clients, fixes
+  for reverting and deleting iFolders on windows thick clients, fix for
+  improving speed of iFolder properties dialog
+- #265132: First 16K is not synced to the server. Other sizes are synced
+  happily, this happens if the simias server runs behind apache. If the
+  simias server runs behind the problem doesnot appear. As a work around
+  16K is broken into two eight 8k and sent to the server. sine the work
+  around is available moving the priority to low
+- #259276: Windows thick-client UI fixes. Fixes for enhancing
+  performance.
+- #257462: Changes for displaying certificate from windows thick client.
+- #256364: Filter out host nodes out of user list in the client
+- #267021: Discovery code is optimized for fetching the catalog
+  information
+- #267013, 267017, 267019: Windows opmization code for refresh,
+  download, revert, default domain selection during upload. Made the
+  refresh work through a thread and dialog update through delegate.
+  Appropriate changes for Window repaint to happen synchronously.
+- #255241 & 259276: Fix for migrating data from 2.x to 3.6, and to
+  improve the speed of windows thick client.
+- #266103: Fixes for improving speed of windows thick client. Fixes
+  simias for optimized fetch of ifolder information. Added ability to
+  yield the thread that fetches data.
+- #266095:  * Added CertificateDialog.cs to show certificate while
+  setting passphrase * Changes for migration wizard and account wizard
+  for accepting certificate * Prompt for migration at the time of
+  initial login
+- #255240, #255246: Fix for handling exceptions during passphrase
+  management through windows thick-client
+- #257380: Changed the help link in migration wizard
+- #255243: Linux UI - During download Action, UI will update
+  immediately.
+- #255243: Fixes for iFolder Webservice.
+- #254910: Fixes the bug "iFolder properties throwing an exception."
+- #257951: Fix for removing the limitation upon length of passphrase.
+- #259270: Fix for Migration from 2.x to 3.x for sharable folder upon
+  Linux Client.
+- #257471: Success icon changed
+- #255240, 255246: Fix for handling exceptions during passphrase
+  management through windows thick-client
+- Updated help files for ifolder UI.
+- #257380: Changed the help link in migration wizard
+- #254790: Fix for creation of encrypted iFolders through nautilus
+- #253498: Fix for windows UI freeze issue Fixes for passphrase handling
+- Fix for the windows client issue. "Unble to register
+  iFoldercomponent.dll".
+- Fix for "Operation timed out issue" on windows thick-client
+- #248180: Changes for handling passphrase from windows thick client
+- #251264: Fixes for passphrase related errors while creating encrypted
+  iFolders.
+- #248180: andling passphrase from windows thick-client while creating
+  encrypted iFolders.
+- #251265: Changing the store version for new client and server.
+- #251273, 251270: Fix for revert ifolder and delete ifolder
+- #248180: Changes for handling passphrase from Linux thick client
+- #249258: Fix for creating sharable iFolder. Fix for Creating an
+  iFolder by dragging a folder from file explorer.
+- Fix for remove membership issues
+- #248928: Monopath fix for enabling sharing from nautilus
+- #249258: Fix for creating sharable iFolder. Fix for Creating an
+  iFolder by dragging a folder from file explorer.
+- #248180: Changes for passphrase management for LinuxClient
+- #241485: The web access list and the Thick client list will be
+  consistent with this fix. UI will get the updated list of ifolders
+  from the simias client.
+- #236120: Invalid iFolder ID issue. The collection ID was not in
+  sync across various UI actions. Now it is made to be sync. There
+  will be a delay between actions but does not affect the actual
+  Sync performance
+- #244679: ifolder never starts and complains it has no access to
+  /home/abuild
+- #239744: Fix for sharing in Linux UI issue
+- Changes to remove eel dependencies. Replaced eel dialogs with gtk.
+  Removed the eel dependency in Configure.in file
+- Simias.wsdl update.
+- Changes to linux thick client UI for accepting passphrase storing
+  it on local machine
+- Updated Account creation wizard - Encryption pages.
+- 1. Correcte strings
+  2. HandleException incase of wron passpharse.
+  3. Dont read available ifolders from subscription.
+- Encryption page in add account wizard.
+- Fix for enabling nautilus-plugin
+
