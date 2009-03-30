@@ -1,3 +1,1 @@
-2007-10-17  Ashok Singh  <siashok@novell.com>	
-
-	* Makefile infrastructure for iFolder plugins directory
+Please refer to "ifolder-enterprise-plugins.changes" for plugins ChangeLog (both server as well as client plugins)
