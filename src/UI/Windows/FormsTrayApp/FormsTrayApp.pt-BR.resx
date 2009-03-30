@@ -1,0 +1,1103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 1.3
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">1.3</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1">this is my long string</data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        [base64 mime encoded serialized .NET Framework object]
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        [base64 mime encoded string representing a byte array form of the .NET Framework object]
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used forserialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="SecureSync">
+    <value>Sincronização Segura</value>
+  </data>
+  <data name="menuHideTrayIcon.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="$this.Text">
+    <value>Serviços do iFolder</value>
+  </data>
+  <data name="CancelText">
+    <value>&amp;Cancelar</value>
+  </data>
+  <data name="menuItem10.ShowShortcut" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="IdentityPageHeaderST">
+    <value>Digite seu nome de usuário e senha do iFolder.</value>
+  </data>
+  <data name="MigrationSuccessMsg">
+    <value>Parabéns! Seus dados são migrados com êxito.
+		
+		É recomendável se desconectar do 2.x para 
+		evitar várias sincronizações.
+		
+		Clique em "Concluir" para fechar o assistente.</value>
+  </data>
+  <data name="WelcomePageName">
+    <value>Página de Boas-vindas</value>
+  </data>
+  <data name="$this.SnapToGrid" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="DownloadDefaultiFolder">
+    <value>Fazer Download do iFolder Padrão</value>
+  </data>
+  <data name="menuTools.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;syncAnimateTimer.Type">
+    <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="MigrateNCopy">
+    <value>Criar uma cópia e conectá-la ao servidor 3.x</value>
+  </data>
+  <data name="menuPreferences.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="menuSeparator1.Text">
+    <value>-</value>
+  </data>
+  <data name="menuExit.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="menuItem10.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="TryAgain">
+    <value>Tente novamente. </value>
+  </data>
+  <data name="CompletionPageDT">
+    <value>Descrição...</value>
+  </data>
+  <data name="exitTitle">
+    <value>Sair do Novell iFolder</value>
+  </data>
+  <data name="menuEventLogReader.ShowShortcut" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="menuHelp.Text">
+    <value>&amp;Ajuda</value>
+  </data>
+  <data name="contextMenu1.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="$this.Localizable" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="ServerPageName">
+    <value>Página do Servidor</value>
+  </data>
+  <data name="BackText">
+    <value>&amp;Voltar</value>
+  </data>
+  <data name="IdpgLbl1txt">
+    <value>Digite seu nome de usuário e senha do iFolder (ex.: jsilva).</value>
+  </data>
+  <data name="menuEventLogReader.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="CannotCopy">
+    <value>Impossível copiar a pasta</value>
+  </data>
+  <data name="NoText">
+    <value>Não</value>
+  </data>
+  <data name="menuAccounts.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="menuTools.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="$this.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </data>
+  <data name="menuItem1.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="&gt;&gt;menuProperties.Type">
+    <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="menuSyncLog.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="menuHideTrayIcon.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="&gt;&gt;menuSeparator1.Name">
+    <value>menuSeparator1</value>
+  </data>
+  <data name="menuStoreBrowser.ShowShortcut" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="clientDiskFullFailure">
+    <value>Espaço em disco insuficiente no servidor impediu a sincronização: {0}</value>
+  </data>
+  <data name="$this.TrayLargeIcon" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </data>
+  <data name="ServerPageHeaderTitle">
+    <value>Escolher um Servidor iFolder</value>
+  </data>
+  <data name="BrowseText">
+    <value>&amp;Procurar</value>
+  </data>
+  <data name="$this.AutoScrollMargin" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>0, 0</value>
+  </data>
+  <data name="menuItem1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="&gt;&gt;menuAccounts.Name">
+    <value>menuAccounts</value>
+  </data>
+  <data name="$this.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>0, 0</value>
+  </data>
+  <data name="CongratsDescription">
+    <value>Agora você pode adicionar pastas para sincronização com o servidor. Também é possível fazer o download de pastas do servidor e sincronizá-las com o seu computador.</value>
+  </data>
+  <data name="&gt;&gt;menuHelp.Name">
+    <value>menuHelp</value>
+  </data>
+  <data name="CannotBeiFolder">
+    <value>A pasta não pode ser convertida em uma pasta do iFolder</value>
+  </data>
+  <data name="menuAccounts.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="downloading">
+    <value>Fazendo download: {0}</value>
+  </data>
+  <data name="downloadFile">
+    <value>Fazendo download do arquivo: {0}</value>
+  </data>
+  <data name="menuStoreBrowser.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="&gt;&gt;menuItem1.Name">
+    <value>menuItem1</value>
+  </data>
+  <data name="NotEncrypted">
+    <value>Não Criptografado</value>
+  </data>
+  <data name="menuItem10.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="menuItem10.Text">
+    <value>-</value>
+  </data>
+  <data name="&gt;&gt;menuExit.Name">
+    <value>menuExit</value>
+  </data>
+  <data name="collisionMessage">
+    <value>Conflito detectado na pasta do iFolder "{0}". Clique aqui para resolver os conflitos na pasta do iFolder.</value>
+  </data>
+  <data name="menuEventLogReader.Text">
+    <value>Leitor do Registro de Eventos</value>
+  </data>
+  <data name="myiFolders">
+    <value>iFolder</value>
+  </data>
+  <data name="downloadDeltaSyncFile">
+    <value>Fazendo download do arquivo: {0}. A sincronização muda somente: {1}% gravações.</value>
+  </data>
+  <data name="localSync">
+    <value>Verificando se há mudanças: {0}</value>
+  </data>
+  <data name="menuProperties.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="DirExists">
+    <value>O diretório já existe</value>
+  </data>
+  <data name="FinishText">
+    <value>&amp;Concluir</value>
+  </data>
+  <data name="menuTools.Text">
+    <value>Ferramentas</value>
+  </data>
+  <data name="menuSyncLog.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>None</value>
+  </data>
+  <data name="AnyTime">
+    <value>Qualquer Horário...</value>
+  </data>
+  <data name="syncingDir">
+    <value>Sincronizando diretório: {0}</value>
+  </data>
+  <data name="menuHelp.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="menuHelp.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>None</value>
+  </data>
+  <data name="fatalErrorTitle">
+    <value>Impossível Iniciar Serviços do iFolder</value>
+  </data>
+  <data name="deleteClientDir">
+    <value>Apagando diretório: {0}</value>
+  </data>
+  <data name="ServerPageDesc">
+    <value>A configuração deste Servidor iFolder como padrão permitirá que o iFolder selecione automaticamente esse servidor ao adicionar novas pastas.</value>
+  </data>
+  <data name="CompletionPageAT">
+    <value>Para fechar o assistente, clique em Concluir.</value>
+  </data>
+  <data name="RememberPasswd">
+    <value>Lembrar senha neste computador</value>
+  </data>
+  <data name="menuSyncLog.Text">
+    <value>Registro de Sincronização</value>
+  </data>
+  <data name="uploading">
+    <value>Fazendo upload: {0}</value>
+  </data>
+  <data name="menuExit.Text">
+    <value>Sair</value>
+  </data>
+  <data name="actionRequiredTitle">
+    <value>Ação Necessária</value>
+  </data>
+  <data name="ResetSuccess">
+    <value>Redefinir Frase Secreta com Êxito </value>
+  </data>
+  <data name="menuPreferences.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="&gt;&gt;menuEventLogReader.Name">
+    <value>menuEventLogReader</value>
+  </data>
+  <data name="menuItem1.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>None</value>
+  </data>
+  <data name="menuExit.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="MigrateText">
+    <value>Migrar</value>
+  </data>
+  <data name="menuPreferences.Text">
+    <value>Preferências</value>
+  </data>
+  <data name="&gt;&gt;menuItem10.Type">
+    <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="ReloginAlert">
+    <value>Efetue login novamente no iFolder e no cliente da Web para continuar o processamento do iFolder criptografado.</value>
+  </data>
+  <data name="&gt;&gt;menuTools.Name">
+    <value>menuTools</value>
+  </data>
+  <data name="ResetTitle">
+    <value>Redefinir Frase Secreta</value>
+  </data>
+  <data name="menuItem1.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="menuAbout.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="$this.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value />
+  </data>
+  <data name="&gt;&gt;menuItem1.Type">
+    <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DefaultDirName">
+    <value>Padrão</value>
+  </data>
+  <data name="downloadDir">
+    <value>Fazendo download do diretório: {0}</value>
+  </data>
+  <data name="&gt;&gt;contextMenu1.Type">
+    <value>System.Windows.Forms.ContextMenu, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="IsPassphraseSetException">
+    <value>Não foi possível verificar a frase secreta. </value>
+  </data>
+  <data name="VerifyPP">
+    <value>Verificar Frase Secreta</value>
+  </data>
+  <data name="VerifyPageHeaderTitle">
+    <value>Verificar Informações sobre a Conta do iFolder</value>
+  </data>
+  <data name="menuProperties.Text">
+    <value>Pastas do iFolder</value>
+  </data>
+  <data name="menuHideTrayIcon.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="subscriptionMessage">
+    <value>{0} o convidou para participar desta pasta iFolder compartilhada. Clique aqui para configurá-la.</value>
+  </data>
+  <data name="InvalidPPText">
+    <value>A frase secreta digitada é inválida.</value>
+  </data>
+  <data name="YesText">
+    <value>Sim</value>
+  </data>
+  <data name="fatalErrorMessage">
+    <value>Um erro de software está impedindo a inicialização do iFolder. Contate o administrador do sistema.</value>
+  </data>
+  <data name="ServerNameText">
+    <value>Endereço do servidor</value>
+  </data>
+  <data name="clientUpgradeFailure">
+    <value>Falha no upgrade de cliente iFolder. Contate o administrador do sistema.</value>
+  </data>
+  <data name="DomainName">
+    <value>Nome do Domínio</value>
+  </data>
+  <data name="menuHideTrayIcon.ShowShortcut" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="menuPreferences.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>None</value>
+  </data>
+  <data name="localFile">
+    <value>Mudanças encontradas no arquivo: {0}</value>
+  </data>
+  <data name="UpgradeClientMsg">
+    <value>Deseja fazer o upgrade o cliente para {0}. O cliente será fechado automaticamente se você clicar em Sim.</value>
+  </data>
+  <data name="menuAccounts.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="menuPreferences.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="menuExit.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="menuHelp.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="menuSyncLog.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="AccountVerify">
+    <value>Verifique se as informações digitadas estão corretas.</value>
+  </data>
+  <data name="menuSeparator1.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>None</value>
+  </data>
+  <data name="syncComplete">
+    <value>Sincronização concluída: {0}</value>
+  </data>
+  <data name="PassStoreErr">
+    <value>Impossível armazenar Frase Secreta</value>
+  </data>
+  <data name="menuHideTrayIcon.Text">
+    <value>Ocultar</value>
+  </data>
+  <data name="MigrationWelcomeTitle">
+    <value>Bem-vindo ao Assistente de Migração do iFolder</value>
+  </data>
+  <data name="PasswordTxt">
+    <value>Senha</value>
+  </data>
+  <data name="ConnectText">
+    <value>C&amp;onectar</value>
+  </data>
+  <data name="readOnlyFailure">
+    <value>A pasta iFolder apenas leitura impediu a sincronização: {0}</value>
+  </data>
+  <data name="menuHelp.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="checkingForiFolders">
+    <value>Verificando novas pastas do iFolder em: {0}</value>
+  </data>
+  <data name="menuTools.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="SyncErrorPrompt">
+    <value>O registro de sincronização contém as informações referentes aos arquivos não sincronizados.</value>
+  </data>
+  <data name="TypeRetypeMisMatch">
+    <value>A frase secreta digitada e a frase secreta digitada novamente não são iguais</value>
+  </data>
+  <data name="$this.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="WelcomePageAction">
+    <value>Para continuar, clique em Avançar.</value>
+  </data>
+  <data name="menuAbout.ShowShortcut" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="menuSyncLog.ShowShortcut" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="NoLoggedInDomainsText">
+    <value>É necessário estar conectado ao domínio para mudar a frase secreta. Efetue login no domínio e tente."</value>
+  </data>
+  <data name="AccWizardText">
+    <value>Assistente de Criação da Conta do iFolder</value>
+  </data>
+  <data name="menuAccounts.ShowShortcut" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="&gt;&gt;menuAccounts.Type">
+    <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="WelcomePageTitle">
+    <value>Bem-vindo ao Assistente de Criação da Conta do iFolder</value>
+  </data>
+  <data name="uploadDir">
+    <value>Fazendo upload do diretório: {0}</value>
+  </data>
+  <data name="EncryptTotext">
+    <value>O ifolder 3.x original está criptografado e você escolheu convertê-lo em uma versão não-criptograda. Continuar?</value>
+  </data>
+  <data name="InvalidCurrentPPText">
+    <value>A frase secreta digitada atualmente é inválida.</value>
+  </data>
+  <data name="Security">
+    <value>Segurança</value>
+  </data>
+  <data name="synciFolder">
+    <value>Sincronização iniciada: {0}</value>
+  </data>
+  <data name="policySizeFailure">
+    <value>A política de restrição de tamanho impediu a sincronização: {0}</value>
+  </data>
+  <data name="&gt;&gt;menuSeparator1.Type">
+    <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="syncingFile">
+    <value>Sincronizando arquivo: {0}</value>
+  </data>
+  <data name="menuPreferences.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="createAccountTitle">
+    <value>Bem-vindo ao iFolder</value>
+  </data>
+  <data name="UpgradeAvailableTitle">
+    <value>Upgrade de cliente disponível.</value>
+  </data>
+  <data name="ErrDirCreate">
+    <value>Erro na criação do diretório</value>
+  </data>
+  <data name="UName">
+    <value>Nome do Usuário</value>
+  </data>
+  <data name="uploadDeltaSyncFile">
+    <value>Fazendo upload do arquivo: {0}. A sincronização muda somente: {1}% gravações.</value>
+  </data>
+  <data name="ServerOldTitle">
+    <value>Servidor Antigo</value>
+  </data>
+  <data name="CreateDefaultiFolder">
+    <value>Criar iFolder Padrão</value>
+  </data>
+  <data name="menuItem10.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>None</value>
+  </data>
+  <data name="SelectSecurityOptions">
+    <value>Selecionar opções de segurança</value>
+  </data>
+  <data name="contextMenu1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="newMemberTitle">
+    <value>Novo Usuário do iFolder</value>
+  </data>
+  <data name="SetPassphraseSuccess">
+    <value>Defina com êxito a frase secreta. </value>
+  </data>
+  <data name="Available.Text">
+    <value>Disponível: </value>
+  </data>
+  <data name="SharableText">
+    <value>Regular</value>
+  </data>
+  <data name="iFolderServicesStopping">
+    <value>Serviços do iFolder encerrando...</value>
+  </data>
+  <data name="upgradeErrorTitle">
+    <value>Falha de Upgrade</value>
+  </data>
+  <data name="menuStoreBrowser.Text">
+    <value>Armazenar Browser</value>
+  </data>
+  <data name="ServerPagelbl2txt">
+    <value>Digite o nome do seu domínio iFolder (ex.: ifolder.exemplo.net).</value>
+  </data>
+  <data name="menuSeparator1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="UpgradeNeededTitle">
+    <value>O upgrade do cliente é necessário.</value>
+  </data>
+  <data name="&gt;&gt;menuEventLogReader.Type">
+    <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="quotaFailure">
+    <value>Pasta cheia do iFolder impediu a sincronização: {0}</value>
+  </data>
+  <data name="menuProperties.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>None</value>
+  </data>
+  <data name="serverDiskFullFailure">
+    <value>Espaço em disco insuficiente no servidor impediu a sincronização: {0}</value>
+  </data>
+  <data name="genericFailure">
+    <value>Falha de sincronização do iFolder: {0}</value>
+  </data>
+  <data name="&gt;&gt;$this.Type">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="$this.BackgroundImage" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value />
+  </data>
+  <data name="ServerInfo">
+    <value>Informações sobre o Servidor</value>
+  </data>
+  <data name="SelectRecoveryAgent">
+    <value>Selecionar Agente de Recuperação:</value>
+  </data>
+  <data name="$this.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="exitMessage">
+    <value>Se você sair do aplicativo Novell iFolder, as mudanças no seu iFolder não serão mais monitoradas.
+Na próxima vez em que você efetuar login, o Novell iFolder reconciliará todas as diferenças entre o seu iFolder e o Servidor.
+
+Tem certeza de que deseja sair do Aplicativo?</value>
+  </data>
+  <data name="$this.AutoScaleBaseSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>5, 13</value>
+  </data>
+  <data name="WelcomePageDescription">
+    <value>Este assistente o orientará durante a configuração da conta do iFolder. </value>
+  </data>
+  <data name="clientUpgradeTitle">
+    <value>Upgrade de Cliente iFolder</value>
+  </data>
+  <data name="menuSyncLog.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="menuHelp.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="&gt;&gt;menuTools.Type">
+    <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="deleteUnknown">
+    <value>Apagando no servidor: {0}</value>
+  </data>
+  <data name="lockFailure">
+    <value>Pasta bloqueada do iFolder impediu a sincronização: {0}</value>
+  </data>
+  <data name="syncAnimateTimer.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>139, 17</value>
+  </data>
+  <data name="&gt;&gt;syncAnimateTimer.Name">
+    <value>syncAnimateTimer</value>
+  </data>
+  <data name="MigrationWelcomepgAT">
+    <value>Este assistente o orientará durante a migração de sua conta do iFolder para 3.x.</value>
+  </data>
+  <data name="RememberPassPhrase">
+    <value>Lembrar Frase Secreta neste computador</value>
+  </data>
+  <data name="menuEventLogReader.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </data>
+  <data name="$this.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value />
+  </data>
+  <data name="VerifyPageName">
+    <value>Verificar Página</value>
+  </data>
+  <data name="YourFiles">
+    <value>Seus Arquivos</value>
+  </data>
+  <data name="menuAccounts.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="ServerPageHeaderST">
+    <value>Digite o nome do servidor iFolder.</value>
+  </data>
+  <data name="quotaFailureInfo">
+    <value>A pasta iFolder está cheia. Clique aqui para ver o Registro de Sincronização.</value>
+  </data>
+  <data name="VerifyPageHeaderST">
+    <value>Verificar e Conectar.</value>
+  </data>
+  <data name="menuTools.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>None</value>
+  </data>
+  <data name="&gt;&gt;menuSyncLog.Type">
+    <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="MigrationCompletionWT">
+    <value>Concluindo o Assistente de Migração do iFolder</value>
+  </data>
+  <data name="menuHideTrayIcon.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>None</value>
+  </data>
+  <data name="NoneText">
+    <value>Nenhum</value>
+  </data>
+  <data name="&gt;&gt;menuAbout.Name">
+    <value>menuAbout</value>
+  </data>
+  <data name="MigrationAlert">
+    <value>Alerta de Migração</value>
+  </data>
+  <data name="IdentityPageName">
+    <value>Página de Identidade</value>
+  </data>
+  <data name="CopyParent">
+    <value>Copiar pasta pai</value>
+  </data>
+  <data name="MigrationMergePrompt.Text">
+    <value>O iFolder selecionado para download é um iFolder migrado. Há pastas do iFolder 2.x na sua máquina local. Deseja fundir esse iFolder com alguma das pastas do iFolder 2.x?
+    </value>
+  </data>
+  <data name="ClickConnect">
+    <value>Clique em Conectar para validar a sua conexão com o domínio.</value>
+  </data>
+  <data name="menuAccounts.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>None</value>
+  </data>
+  <data name="SelectDomain">
+    <value>Selecionar Domínio</value>
+  </data>
+  <data name="MigrateNRemove">
+    <value>Migrar o ifolder e desconectá-lo do domínio 2.x</value>
+  </data>
+  <data name="NoLoggedInDomainsTextForImport">
+    <value>É necessário estar conectado ao domínio para importar. Efetue login no domínio e tente."</value>
+  </data>
+  <data name="menuExit.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="menuEventLogReader.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>None</value>
+  </data>
+  <data name="CongratsMsg">
+    <value>Parabéns, você está conectado a:</value>
+  </data>
+  <data name="&gt;&gt;menuStoreBrowser.Name">
+    <value>menuStoreBrowser</value>
+  </data>
+  <data name="menuStoreBrowser.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="ServerOld">
+    <value>Servidor Antigo. Impossível conectar-se ao servidor</value>
+  </data>
+  <data name="menuEventLogReader.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="MigrateVerify">
+    <value>Verificar e Migrar</value>
+  </data>
+  <data name="ImportKeysError">
+    <value>Erro ao importar chaves</value>
+  </data>
+  <data name="menuStoreBrowser.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>None</value>
+  </data>
+  <data name="menuHelp.ShowShortcut" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="menuAbout.Text">
+    <value>Sobre</value>
+  </data>
+  <data name="menuExit.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>None</value>
+  </data>
+  <data name="$this.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value />
+  </data>
+  <data name="menuItem1.Text">
+    <value>-</value>
+  </data>
+  <data name="menuPreferences.ShowShortcut" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="deleteClientFile">
+    <value>Apagando arquivo: {0}</value>
+  </data>
+  <data name="MigrationCompleteWT">
+    <value>Concluindo o Assistente de Migração do iFolder</value>
+  </data>
+  <data name="&gt;&gt;menuItem10.Name">
+    <value>menuItem10</value>
+  </data>
+  <data name="$this.TrayHeight" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>80</value>
+  </data>
+  <data name="MigrationOptions">
+    <value>Opções de Migração</value>
+  </data>
+  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Inherit</value>
+  </data>
+  <data name="menuProperties.ShowShortcut" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="&gt;&gt;menuProperties.Name">
+    <value>menuProperties</value>
+  </data>
+  <data name="localDir">
+    <value>Mudanças encontradas no diretório: {0}</value>
+  </data>
+  <data name="menuItem1.ShowShortcut" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="iFolderServicesStarting">
+    <value>Serviços do iFolder inicializando...</value>
+  </data>
+  <data name="readOnlyFailureInfo">
+    <value>Você tem acesso apenas leitura a esta pasta iFolder. Os arquivos colocados nela não serão sincronizados. Clique aqui para ver o Registro de Sincronização.</value>
+  </data>
+  <data name="createAccount">
+    <value>Para começar a usar o iFolder, é preciso configurar uma conta do iFolder primeiro. Clique aqui para adicionar uma nova conta.</value>
+  </data>
+  <data name="MigrationConvert">
+    <value>Impossível converter para uma pasta do iFolder</value>
+  </data>
+  <data name="contextMenu1.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </data>
+  <data name="&gt;&gt;menuPreferences.Type">
+    <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="iFolderServices">
+    <value>Serviços do iFolder</value>
+  </data>
+  <data name="accessFailure">
+    <value>Direitos insuficientes impediram a sincronização: {0}</value>
+  </data>
+  <data name="&gt;&gt;menuAbout.Type">
+    <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="$this.AutoScrollMinSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>0, 0</value>
+  </data>
+  <data name="menuItem10.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="ReTypePassPhrase">
+    <value>Redigitar Frase Secreta:</value>
+  </data>
+  <data name="ResetError">
+    <value>Erro ao mudar a frase secreta</value>
+  </data>
+  <data name="$this.Icon" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value />
+  </data>
+  <data name="menuAbout.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="menuSeparator1.ShowShortcut" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="menuTools.ShowShortcut" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="AnyWhere">
+    <value>Qualquer Lugar...</value>
+  </data>
+  <data name="contextMenu1.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>No</value>
+  </data>
+  <data name="menuProperties.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="menuExit.ShowShortcut" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="iFoldersOnServerHeading">
+    <value>Pastas do iFolder em {0}</value>
+  </data>
+  <data name="&gt;&gt;menuSyncLog.Name">
+    <value>menuSyncLog</value>
+  </data>
+  <data name="MigrationHT">
+    <value>Migrar o iFolder</value>
+  </data>
+  <data name="RecoveryAgent">
+    <value>Agente de Recuperação:</value>
+  </data>
+  <data name="$this.GridSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>8, 8</value>
+  </data>
+  <data name="menuTools.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="conflictFailure">
+    <value>Conflito: {0}</value>
+  </data>
+  <data name="AccountName">
+    <value>Nome da Conta</value>
+  </data>
+  <data name="$this.AutoScroll" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </data>
+  <data name="doneCheckingForiFolders">
+    <value>Concluída a verificação de novas pastas do iFolder: {0}</value>
+  </data>
+  <data name="quotaFailureTitle">
+    <value>Sincronização Incompleta: {0}</value>
+  </data>
+  <data name="newMemberMessage">
+    <value>{0} ingressou na pasta "{1}" do iFolder. Clique aqui para ver a lista de membros do iFolder.</value>
+  </data>
+  <data name="EnterPassPhrase">
+    <value>Digitar Frase Secreta:</value>
+  </data>
+  <data name="SkipText">
+    <value>&amp;Ignorar</value>
+  </data>
+  <data name="subscriptionTitle">
+    <value>Novo iFolder "{0}"</value>
+  </data>
+  <data name="NextText">
+    <value>Ava&amp;nçar</value>
+  </data>
+  <data name="menuProperties.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>WindowsDefaultLocation</value>
+  </data>
+  <data name="$this.DrawGrid" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="$this.MinimumSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>0, 0</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>292, 266</value>
+  </data>
+  <data name="syncAnimateTimer.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="&gt;&gt;menuStoreBrowser.Type">
+    <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="uploadFile">
+    <value>Fazendo upload do arquivo: {0}</value>
+  </data>
+  <data name="menuEventLogReader.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="IdentityPageHeaderTitle">
+    <value>Informações sobre a Conta do iFolder</value>
+  </data>
+  <data name="ifolder2NotPresent">
+    <value>O iFolder 2.x não está instalado neste sistema</value>
+  </data>
+  <data name="$this.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>No</value>
+  </data>
+  <data name="&gt;&gt;menuPreferences.Name">
+    <value>menuPreferences</value>
+  </data>
+  <data name="menuHideTrayIcon.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="$this.MaximumSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>0, 0</value>
+  </data>
+  <data name="menuAbout.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>None</value>
+  </data>
+  <data name="MigrationTitle">
+    <value>Assistente de Migração do iFolder</value>
+  </data>
+  <data name="&gt;&gt;menuHelp.Type">
+    <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="MigrationRenamePrompt.Text">
+    <value>Os nomes do iFolder do servidor e da sua máquina local são diferentes. Deseja mudar o nome do iFolder do servidor para o nome do iFolder da sua máquina local?
+    </value>
+  </data>
+  <data name="&gt;&gt;$this.Name">
+    <value>FormsTrayApp</value>
+  </data>
+  <data name="port">
+    <value>Porta</value>
+  </data>
+  <data name="SelectAnOption">
+    <value>Selecionar uma das seguintes opções</value>
+  </data>
+  <data name="menuItem1.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="menuAbout.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="menuAccounts.Text">
+    <value>Contas</value>
+  </data>
+  <data name="menuSeparator1.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="menuSeparator1.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </data>
+  <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Invariant Language (Invariant Country)</value>
+  </data>
+  <data name="policyTypeFailure">
+    <value>A política de restrição de tipo de arquivo impediu a sincronização: {0}</value>
+  </data>
+  <data name="syncAnimateTimer.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="&gt;&gt;contextMenu1.Name">
+    <value>contextMenu1</value>
+  </data>
+  <data name="ClickMigrate">
+    <value>Clique em Migrar para migrar os dados.</value>
+  </data>
+  <data name="menuStoreBrowser.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="Encrypted">
+    <value>Criptografado</value>
+  </data>
+  <data name="EncryptedText">
+    <value>Criptografado</value>
+  </data>
+  <data name="menuSyncLog.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="CompletionPageWT">
+    <value>Concluindo o Assistente de Convite do iFolder</value>
+  </data>
+  <data name="$this.Name">
+    <value>FormsTrayApp</value>
+  </data>
+  <data name="menuAbout.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="&gt;&gt;menuExit.Type">
+    <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DiskSpace.Text">
+    <value>Espaço em Disco </value>
+  </data>
+  <data name="DefaultServer">
+    <value>Torne este meu servidor pa&amp;drão.</value>
+  </data>
+  <data name="policyFailure">
+    <value>A política impediu a sincronização: {0}</value>
+  </data>
+  <data name="clientUpgradePrompt">
+    <value>Uma versão mais recente "{0}" do Cliente iFolder está disponível. Deseja fazer o upgrade agora?</value>
+  </data>
+  <data name="menuItem10.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="LocationText">
+    <value>Localização:</value>
+  </data>
+  <data name="menuStoreBrowser.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </data>
+  <data name="menuSeparator1.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
+  <data name="menuProperties.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+</root>
