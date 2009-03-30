@@ -1,0 +1,153 @@
+body { 
+		margin-left: .2in;
+		padding:0;
+		font-family:arial, helvetica, sans-serif;
+		font-size: 75%;
+		font-weight: normal;
+		color: #000000;
+		background-color: #ffffff;
+}
+
+/* headings */
+	h1 {font-size: 125%; font-weight: bold; color: #000000;}
+	h2,h3,h4,h5,h6 {font-size: 100%; font-weight: bold; color: #000000; margin-bottom:-6px;}
+
+	/* single file heading adjustments */
+	.singlefile h1 {font-size: 185%; color: #CC0000; margin-top:10px;}
+	.singlefile h2 {font-size: 140%; margin-top:35px;}
+	.singlefile h3 {font-size: 125%; margin-top:25px;}
+
+/* sections */
+	div.sect1 { margin-bottom: 10pt; }
+	div.sect2 { }
+	div.sect3, div.sect4, div.sect5, div.sect6 {margin-left:18px;}
+	
+/* msgset */
+	div.msgexplan {margin: 0px 0px 7px 0px;}
+	div.msgexplan span.title {margin: 0px 7px 0px 0px; font-size: 100%; font-weight: bold; color: #000000;}
+	div.msgtext p.para {margin: 4px 0px 16px 0px; font-size: 100%; font-weight: bold; color: #b00000;}
+
+/* links */
+	a {color:#0000cc;}
+	a:hover {color:#3366ff;}
+	a:visited {color:#993333;}
+	li.listitem a:hover {color:#3366ff;}
+	a.ulink a:hover {text-decoration:none; color:#3366ff;}
+
+	a.nav:link,
+	a.nav:visited,
+	a.nav:active { vertical-align: middle; font-weight: bold; color: gray; text-decoration: none; font-size: 100%;}
+	a.nav:hover { vertical-align: middle; font-weight: bold; color: #999999; text-decoration: none; font-size: 100%;}  
+
+/* paragraphs */	
+	p.para {font-weight: normal; color: #000000;}
+/*	p.title {margin:10px 0 4px 0;} */
+	p.msgtext {font-style: italic; font-weight: normal}
+	p.trademark {font-size: 75%; font-weight: normal; font-style: italic;}
+	/*p.entry {font-size: 95%; font-weight: normal; color: #000000; margin-top: -5px;}
+	p.table {font-weight: bold;}*/
+	pre.screen {font-family: monospace; margin: 10px 5px 10px 0px; padding: 1px 0px 3px 5px;font-size: 110%;color: #000000;}
+	p.glossterm {font-weight: bold;}
+	div.glossdef {margin:-10pt 0 0 0;}
+	
+/* admonitions */	
+	div.note,
+	div.tip,
+	div.warning,
+	div.important {margin: 12px 0px 5px 0px; padding: 0px 15px 0px 15px; border-bottom: 1px solid #999999; border-top: 1px solid #999999;}
+
+	div.note p em.title,
+	div.tip p em.title,
+	div.warning p em.title,
+	div.important p em.title {margin: 0px 7px 0px 0px; font-weight: bold; font-style: normal;font-size:95%;}
+	div.warning em.title {color: #cc0000}
+
+/* figures and images */	
+	img.inline {vertical-align: middle;}
+	img {line-height: normal;}
+	br.img {line-height: normal;}
+	div.figure em.figure {font-size: 95%; font-style: normal; font-weight: bold; color: #000000; margin:5px 5px 0 0;}
+	div.figure em.title {font-family: times, serif; font-size: 95%; font-style: italic; font-weight: normal; color: #000000;}
+	div.figure p.title em.num {font-size: 95%; font-style: normal; font-weight: bold; color: #000000; margin:0 5px 0px 0;}
+	div.figure p.title {font-size: 95%; font-style: normal; font-weight: normal; color: #000000;}
+	div.informalfigure {margin:15px 0px 10px 0px;}
+	div.formalpara em.title {font-style: normal; font-weight: bold; color: #000000; margin:0 5px 0 0;}
+	div.formalpara p.title {font-style: normal; font-weight: normal; color: #000000;}
+	
+/* tables */
+	div.table p.title em.num {font-size: 95%; font-style: normal; font-weight: bold; color: #000000; margin:0 5px 0px 0;}
+	td {font-size: 95%; font-weight: normal; color: #000000;}
+	div.table p.title {font-size: 95%; font-style: normal; font-weight: normal; color: #000000;}
+	div.formalpara table.topbot-lines {margin:0px 0 16px 0;}
+	div.informaltable table.topbot-lines {margin:10px 0 7px 0;}
+
+	table.topbot-lines {border-spacing: 0px; border-top:2px solid #000000; border-bottom:1px solid #606060;}
+	table.topbot-lines tr.headerrow th {border-bottom:1px solid #000000; border-top:none; padding: 4px 4px 4px 4px;}
+	table.topbot-lines tr.headerrow th p.para {font-size: 95%; font-weight: bold; margin:1px 0 0 0;}
+	table.topbot-lines tr.evenrow {background-color: white}
+	table.topbot-lines tr.evenrow td p.para {font-size: 95%; font-weight: normal; color: #000000; margin:1pt 0 2pt 0; padding: 4px 8px 4px 6px;}
+	table.topbot-lines tr.oddrow {background-color: #f8f8f8}
+	table.topbot-lines tr.oddrow td p.para {font-size: 95%; font-weight: normal; color: #000000; margin:1pt 0 2pt 0; padding: 4px 8px 4px 6px; background-color: #f8f8f8}
+
+	table.all-lines {border-spacing: 0px; border-top:2px solid #000000; border-bottom:1px solid #606060;}
+	table.all-lines tr.headerrow th {border-bottom:1px solid #000000; border-top:none; padding: 4px 4px 4px 4px;}
+	table.all-lines tr.headerrow th p.para {font-size: 95%; font-weight: bold; margin:1px 0 0 0;}
+	table.all-lines tr.evenrow {background-color: white}
+	table.all-lines tr.evenrow td p.para {font-size: 95%; font-weight: normal; color: #000000; margin:1pt 0 2pt 0; padding: 4px 8px 4px 6px;}
+	table.all-lines tr.oddrow {background-color: #f8f8f8}
+	table.all-lines tr.oddrow td p.para {font-size: 95%; font-weight: normal; color: #000000; margin:1pt 0 2pt 0; padding: 4px 8px 4px 6px; background-color: #f8f8f8}
+
+	table.no-lines tr.headerrow {background-color: white }
+	table.no-lines tr.headerrow th p.para {font-size: 95%; font-weight: bold; color: #404040; margin:1pt 0 0 0; background-color: white }
+	table.no-lines tr.evenrow td p.para {font-size: 95%; font-weight: normal; color: #000000; margin:1pt 0 2pt 0; padding: 4px 8px 4px 6px; background-color: white }
+	table.no-lines tr.evenrow td {background-color: white}
+	table.no-lines tr.oddrow td p.para {font-size: 95%; font-weight: normal; color: #000000; margin:1pt 0 2pt 0; padding: 4px 8px 4px 6px; background-color: white}
+	table.no-lines tr.oddrow td {background-color: white}
+	
+	table.calloutlist td {margin:0px; padding: 0px 6px 0px 0px;}
+	table.calloutlist p {margin: 5px 0px 5px 0px; padding: 0px;}
+	
+/* variablelists */
+	dt.term {font-style: normal; font-weight: bold; color: #000000;}
+	dd.listitem {margin-left: 22px; font-weight: normal;}
+	dt.refclass .application {font-size: 90%; font-style: normal; font-weight: bold; color: #000000; padding: 0px 20px 2px 0px;}
+	
+/* lists,procedures */
+	div.itemizedlist, div.orderedlist, div.procedure, div.substeps {margin-bottom:15px; font-weight: normal;}
+	ul.listbullet,ul.listcheck,ol {margin-left: 28px; padding-left: 0pt;}
+	ul.listcheck  {list-style-image : url("images/checkbox.gif"); list-style-type: square;}
+	ul.listbullet {list-style-type: disc; list-style-image : none;}
+	ul.simplelist {margin-left: 0px; list-style-type: none; list-style-image : none;padding-left: 0pt;}
+	div.orderedlist div.orderedlist > ol {list-style-type: lower-alpha;}
+	div.orderedlist div.orderedlist div.orderedlist > ol {list-style-type: lower-roman;}
+	div.substeps div.substeps div.substeps > ol {list-style-type:lower-alpha;}
+	div.substeps div.substeps > ol {list-style-type: decimal;}
+	div.substeps > ol {list-style-type: lower-alpha;}
+	li {margin: 5px 0 4px 0;}
+	li.member {margin:3px 0px 0px 10px;text-indent:-10px; font-weight: normal;}
+	li.step {font-weight: bold;color: #000000;}
+	div.procedure h1.title {font-weight: bold; color: #000000; margin-top: 22px; margin-bottom: -4pt;}
+
+/* bold inlines */	
+	em.refclass,em.glossterm,em.option {font-weight: bold; font-style: normal}
+
+/* italic inlines */	
+	em.diskname,em.emphasis,em.variable,em.versionvariable {font-style: italic; font-weight: normal}
+	span.citetitle,span.guimenu,span.replaceable {font-style: italic;}
+	tt,span.command,span.literal,span.filename {font-family: monospace; font-size: 130%;}
+	
+/* other inlines */	
+	em.msgtext {font-weight: bold; font-style: italic}
+	span.emphasis {font-weight: bold;}
+
+/* superscript and subscript */	
+	span.subscript,span.superscript {font-size: 80%;}
+
+/* single file toc elements */
+	div.toc {line-height: 11.5pt; background-color: #EEEEEE;  margin: 20px 0px 24px 0px; padding: 1px 0px 5px 0px}
+	div.toc h2 {margin-left: 5px}
+	div.toc div.toc1 {font-weight: normal; margin: 15px 10px 6px 5px}
+	div.toc div.toc2 {font-weight: normal; margin: 8px 10px 5px 25px}
+	div.toc div.toc3 {font-weight: normal; margin: 5px 10px 2px 50px}
+	div.toc div.toc4 {font-weight: normal; margin: 0px 10px 2px 75px}
+	
