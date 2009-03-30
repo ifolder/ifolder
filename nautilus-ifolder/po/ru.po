@@ -1,0 +1,109 @@
+# Language UTF-8 translations for PACKAGE package.
+# Copyright (C) 2005 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2005.
+#
+#: src/nautilus-ifolder.c:1323 src/nautilus-ifolder.c:1362
+#: src/nautilus-ifolder.c:1582 src/nautilus-ifolder.c:1604
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-10-21 14:23-0600\n"
+"PO-Revision-Date: 2005-10-04 16:55-0600\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+#: src/nautilus-ifolder.c:1242
+msgid "iFolder Created"
+msgstr "Папка iFolder создана"
+#: src/nautilus-ifolder.c:1269
+msgid ""
+"The folder you selected is now an iFolder.  To learn more about using "
+"iFolder and sharing iFolders with other users, see \"Managing iFolders\" in "
+"iFolder Help."
+msgstr "Выбранная папка теперь является папкой iFolder. Дополнительную информацию об использовании iFolder персонально и совместно с другими пользователями см. в разделе \"Managing iFolders\" (Управление iFolder) справки по iFolder."
+#: src/nautilus-ifolder.c:1279
+msgid "Do not show this message again."
+msgstr "Не выводить больше это сообщение."
+#: src/nautilus-ifolder.c:1324
+msgid "Error opening dialog."
+msgstr "Ошибка при открытии диалогового окна."
+#: src/nautilus-ifolder.c:1325
+msgid "Sorry, unable to open the window to perform the specified action."
+msgstr "Невозможно открыть окно для выполнения указанного действия."
+#: src/nautilus-ifolder.c:1363
+msgid "The folder could not be converted."
+msgstr "Папка не может быть преобразована."
+#: src/nautilus-ifolder.c:1364
+msgid "Sorry, unable to convert the specified folder into an iFolder."
+msgstr "Невозможно преобразовать указанную папку в папку iFolder."
+#: src/nautilus-ifolder.c:1438
+msgid "Create iFolder"
+msgstr "Создание iFolder"
+#: src/nautilus-ifolder.c:1439
+msgid "No iFolder Domains"
+msgstr "Нет доменов iFolder"
+#: src/nautilus-ifolder.c:1440
+msgid ""
+"A new iFolder cannot be created because you have not attached to any iFolder "
+"domains."
+msgstr "Новая папка iFolder не может быть создана, так как она не подключена ни к каким доменам iFolder."
+#: src/nautilus-ifolder.c:1462 src/nautilus-ifolder.c:1839
+msgid "Convert to an iFolder"
+msgstr "Преобразовать в папку iFolder"
+#: src/nautilus-ifolder.c:1480
+msgid "<b>_Domain:</b>"
+msgstr "<b>_Домен:</b>"
+#: src/nautilus-ifolder.c:1500
+msgid "<b>_Path:</b>"
+msgstr "<b>_Путь:</b>"
+#: src/nautilus-ifolder.c:1583
+msgid "The iFolder could not be reverted."
+msgstr "Папка iFolder не может быть преобразована в обычную папку."
+#: src/nautilus-ifolder.c:1584
+msgid "Sorry, unable to revert the specified iFolder to a normal folder."
+msgstr "Невозможно преобразовать указанную папку iFolder в обычную папку."
+#: src/nautilus-ifolder.c:1602
+msgid "Revert this iFolder to a normal folder?"
+msgstr "Преобразовать данную папку iFolder в обычную папку?"
+#: src/nautilus-ifolder.c:1603
+msgid ""
+"This reverts the iFolder back to a normal folder and leaves the files intact.  The iFolder is then available from the server and must be set up in a different location to synchronize."
+msgstr "Это приведет к преобразованию iFolder в обычную папку и сохранению файлов без изменений. Затем папка iFolder будет доступна на сервере и должна быть настроена в другом расположении для синхронизации."
+#: src/nautilus-ifolder.c:1772
+msgid "Revert to a Normal Folder"
+msgstr "Преобразовать в обычную папку"
+#: src/nautilus-ifolder.c:1773
+msgid "Revert the selected iFolder back to normal folder"
+msgstr "Преобразование выбранной папки iFolder в обычную папку"
+#: src/nautilus-ifolder.c:1787
+msgid "Share iFolder with..."
+msgstr "Совместно использовать папку iFolder с..."
+#: src/nautilus-ifolder.c:1788
+msgid "Share the selected iFolder with another user"
+msgstr "Совместно использовать выбранную папку iFolder с другим пользователем"
+#: src/nautilus-ifolder.c:1802
+msgid "iFolder Properties"
+msgstr "Свойства iFolder"
+#: src/nautilus-ifolder.c:1803
+msgid "View the properties of the selected iFolder"
+msgstr "Просмотр свойств выбранной папки iFolder"
+#: src/nautilus-ifolder.c:1817
+msgid "iFolder Help..."
+msgstr "Справка iFolder..."
+#: src/nautilus-ifolder.c:1818
+msgid "View the iFolder help"
+msgstr "Просмотр справки iFolder"
+#: src/nautilus-ifolder.c:1840
+msgid "Convert the selected folder to an iFolder"
+msgstr "Преобразовать выбранную папку в папку iFolder"
+msgid ""
+"Encrypt the iFolder"
+msgstr ""
+"Encrypted"
+msgid ""
+"Sharable"
+msgstr "Совместно используемый"
