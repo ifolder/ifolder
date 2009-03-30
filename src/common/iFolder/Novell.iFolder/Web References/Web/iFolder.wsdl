@@ -1,0 +1,3200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://novell.com/ifolder/web/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://novell.com/ifolder/web/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Web Service providing access to iFolder</wsdl:documentation>
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://novell.com/ifolder/web/">
+      <s:element name="Ping">
+        <s:complexType />
+      </s:element>
+      <s:element name="PingResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="IsiFolder">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LocalPath" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IsiFolderResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="IsiFolderResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CanBeiFolder">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LocalPath" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CanBeiFolderResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CanBeiFolderResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IsPathIniFolder">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LocalPath" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IsPathIniFolderResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="IsPathIniFolderResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateLocaliFolder">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Path" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateLocaliFolderResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CreateLocaliFolderResult" type="tns:iFolderWeb" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="iFolderWeb">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="DomainID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ID" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="LocalIncarnation" type="s:unsignedLong" />
+          <s:element minOccurs="0" maxOccurs="1" name="ManagedPath" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="UnManagedPath" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="MasterIncarnation" type="s:unsignedLong" />
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Owner" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="OwnerID" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="EffectiveSyncInterval" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="SyncInterval" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="Synchronizable" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="Type" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="State" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsSubscription" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="EnumeratedState" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsWorkgroup" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="HasConflicts" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="CurrentUserID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CurrentUserRights" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CollectionID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LastSyncTime" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Role" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ssl" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="encryptionAlgorithm" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="MigratediFolder" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="shared" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="CreateiFolderInDomainEncr">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Path" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DomainID" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="SSL" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="EncryptionAlgorithm" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Passphrase" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateiFolderInDomainEncrResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CreateiFolderInDomainEncrResult" type="tns:iFolderWeb" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateiFolderInDomain">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Path" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DomainID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateiFolderInDomainResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CreateiFolderInDomainResult" type="tns:iFolderWeb" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CheckiFolder">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CheckiFolderResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CheckiFolderResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetiFolder">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetiFolderResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetiFolderResult" type="tns:iFolderWeb" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMinimaliFolder">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="infoToFetch" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMinimaliFolderResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetMinimaliFolderResult" type="tns:iFolderWeb" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetSecurityPolicy">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DomainID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetSecurityPolicyResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GetSecurityPolicyResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDisableSharingPolicy">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="currentUserID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OwnerID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DomainID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDisableSharingPolicyResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GetDisableSharingPolicyResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CanOwnerBeChanged">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="newUserID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CanOwnerBeChangedResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CanOwnerBeChangedResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetLimitPolicyStatus">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DomainID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetLimitPolicyStatusResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GetLimitPolicyStatusResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetiFolderInvitation">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="POBoxID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetiFolderInvitationResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetiFolderInvitationResult" type="tns:iFolderWeb" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetiFolderByLocalPath">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LocalPath" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetiFolderByLocalPathResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetiFolderByLocalPathResult" type="tns:iFolderWeb" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteiFolder">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DomainID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteiFolderResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="RevertiFolder">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RevertiFolderResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="RevertiFolderResult" type="tns:iFolderWeb" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RevertiFolder1">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RevertiFolder1Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="RevertiFolder1Result" type="tns:iFolderWeb" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAlliFolders">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetAlliFoldersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAlliFoldersResult" type="tns:ArrayOfIFolderWeb" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfIFolderWeb">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="iFolderWeb" nillable="true" type="tns:iFolderWeb" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetAlliFolders1">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetAlliFolders1Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAlliFolders1Result" type="tns:ArrayOfIFolderWeb" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetiFoldersForDomain">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DomainID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetiFoldersForDomainResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetiFoldersForDomainResult" type="tns:ArrayOfIFolderWeb" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetiFolders">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetiFoldersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetiFoldersResult" type="tns:ArrayOfIFolderWeb" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SetUserRights">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Rights" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SetUserRightsResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetOwner">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetOwnerResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetOwnerResult" type="tns:iFolderUser" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="iFolderUser">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="UserID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Rights" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="State" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsOwner" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="FirstName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Surname" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="FN" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ChangeOwner">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="NewOwnerUserID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OldOwnerRights" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ChangeOwnerResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="RemoveiFolderUser">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RemoveiFolderUserResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetiFolderUsers">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetiFolderUsersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetiFolderUsersResult" type="tns:ArrayOfIFolderUser" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfIFolderUser">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="iFolderUser" nillable="true" type="tns:iFolderUser" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetDomainUsers">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DomainID" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="numUsers" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDomainUsersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetDomainUsersResult" type="tns:ArrayOfIFolderUser" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SearchForDomainUsers">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DomainID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="SearchString" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SearchForDomainUsersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SearchForDomainUsersResult" type="tns:ArrayOfIFolderUser" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FindCloseiFolderMembers">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="searchContext" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FindCloseiFolderMembersResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="FindFirstiFolderMembers">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="count" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FindFirstiFolderMembersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="FindFirstiFolderMembersResult" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="searchContext" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="memberList" type="tns:ArrayOfIFolderUser" />
+            <s:element minOccurs="1" maxOccurs="1" name="totalMembers" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FindFirstSpecificiFolderMembers">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="attributeName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="searchString" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="operation" type="tns:iFolderSearchType" />
+            <s:element minOccurs="1" maxOccurs="1" name="count" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:simpleType name="iFolderSearchType">
+        <s:restriction base="s:string">
+          <s:enumeration value="Equal" />
+          <s:enumeration value="Not_Equal" />
+          <s:enumeration value="Begins" />
+          <s:enumeration value="Ends" />
+          <s:enumeration value="Contains" />
+          <s:enumeration value="Greater" />
+          <s:enumeration value="Less" />
+          <s:enumeration value="Greater_Equal" />
+          <s:enumeration value="Less_Equal" />
+          <s:enumeration value="Exists" />
+          <s:enumeration value="CaseEqual" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="FindFirstSpecificiFolderMembersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="FindFirstSpecificiFolderMembersResult" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="searchContext" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="memberList" type="tns:ArrayOfIFolderUser" />
+            <s:element minOccurs="1" maxOccurs="1" name="totalMembers" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FindNextiFolderMembers">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="searchContext" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="count" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FindNextiFolderMembersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="FindNextiFolderMembersResult" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="searchContext" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="memberList" type="tns:ArrayOfIFolderUser" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FindPreviousiFolderMembers">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="searchContext" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="count" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FindPreviousiFolderMembersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="FindPreviousiFolderMembersResult" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="searchContext" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="memberList" type="tns:ArrayOfIFolderUser" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FindSeekiFolderMembers">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="searchContext" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="offset" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="count" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FindSeekiFolderMembersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="FindSeekiFolderMembersResult" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="searchContext" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="memberList" type="tns:ArrayOfIFolderUser" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetiFolderUser">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetiFolderUserResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetiFolderUserResult" type="tns:iFolderUser" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetRAName">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DomainID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetRANameResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetRANameResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetiFolderUserFromNodeID">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CollectionID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="NodeID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetiFolderUserFromNodeIDResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetiFolderUserFromNodeIDResult" type="tns:iFolderUser" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddAndInviteUser">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="MemberName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="GivenName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="FamilyName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="MemberID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="PublicKey" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Rights" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddAndInviteUserResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AddAndInviteUserResult" type="tns:iFolderUser" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="InviteUser">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Rights" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="InviteUserResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="InviteUserResult" type="tns:iFolderUser" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="MergeiFolder">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DomainID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="path" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="MergeiFolderResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="MergeiFolderResult" type="tns:iFolderWeb" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AcceptiFolderInvitation">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DomainID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="LocalPath" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AcceptiFolderInvitationResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AcceptiFolderInvitationResult" type="tns:iFolderWeb" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AcceptiFolderInvitation1">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DomainID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="LocalPath" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AcceptiFolderInvitation1Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AcceptiFolderInvitation1Result" type="tns:iFolderWeb" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeclineiFolderInvitation">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DomainID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeclineiFolderInvitationResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetUserDiskSpace">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserDiskSpaceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserDiskSpaceResult" type="tns:DiskSpace" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DiskSpace">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="AvailableSpace" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="Limit" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="UsedSpace" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetiFolderDiskSpace">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetiFolderDiskSpaceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetiFolderDiskSpaceResult" type="tns:DiskSpace" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SetUserDiskSpaceLimit">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserID" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="Limit" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SetUserDiskSpaceLimitResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="SetiFolderDiskSpaceLimit">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="Limit" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SetiFolderDiskSpaceLimitResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="SetiFolderSecureSync">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="ssl" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SetiFolderSecureSyncResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="SetiFolderSyncInterval">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="Interval" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SetiFolderSyncIntervalResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="SetDefaultSyncInterval">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="Interval" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SetDefaultSyncIntervalResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetDefaultSyncInterval">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetDefaultSyncIntervalResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GetDefaultSyncIntervalResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AuthenticateToDomain">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DomainID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AuthenticateToDomainResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="AuthenticateToDomainResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetiFolderConflicts">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetiFolderConflictsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetiFolderConflictsResult" type="tns:ArrayOfConflict" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfConflict">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Conflict" nillable="true" type="tns:Conflict" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Conflict">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ConflictID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LocalName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LocalDate" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LocalSize" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LocalFullPath" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsNameConflict" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="ServerName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ServerDate" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ServerSize" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ServerFullPath" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ResolveFileConflict">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="conflictID" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="localChangesWin" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ResolveFileConflictResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="ResolveEnhancedFileConflict">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="conflictID" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="localChangesWin" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="conflictBinPath" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ResolveEnhancedFileConflictResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="ResolveNameConflict">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="conflictID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="newLocalName" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ResolveNameConflictResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="RenameAndResolveConflict">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="conflictID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="newFileName" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RenameAndResolveConflictResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="SetupProxy">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Host" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="Port" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SetupProxyResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="RemoveProxy">
+        <s:complexType />
+      </s:element>
+      <s:element name="RemoveProxyResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="CalculateSyncSize">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CalculateSyncSizeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CalculateSyncSizeResult" type="tns:SyncSize" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="SyncSize">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="SyncNodeCount" type="s:unsignedInt" />
+          <s:element minOccurs="1" maxOccurs="1" name="SyncByteCount" type="s:unsignedLong" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="SynciFolderNow">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SynciFolderNowResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="DeleteiFolderFileSizeLimit">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteiFolderFileSizeLimitResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetMemberiFolderFileSizeLimit">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMemberiFolderFileSizeLimitResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GetMemberiFolderFileSizeLimitResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetiFolderFileSizeLimit">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetiFolderFileSizeLimitResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GetiFolderFileSizeLimitResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SetiFolderFileSizeLimit">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="iFolderID" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="Limit" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SetiFolderFileSizeLimitResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="CheckForUpdatedClientAvailable">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CheckForUpdatedClientAvailableResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CheckForUpdatedClientAvailableResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CheckForUpdatedClient">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CheckForUpdatedClientResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CheckForUpdatedClientResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CheckForUpdate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CheckForUpdateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CheckForUpdateResult" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="ServerVersion" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CheckForServerUpdate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CheckForServerUpdateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CheckForServerUpdateResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RunClientUpdate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="path" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RunClientUpdateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="RunClientUpdateResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="PingSoapIn">
+    <wsdl:part name="parameters" element="tns:Ping" />
+  </wsdl:message>
+  <wsdl:message name="PingSoapOut">
+    <wsdl:part name="parameters" element="tns:PingResponse" />
+  </wsdl:message>
+  <wsdl:message name="IsiFolderSoapIn">
+    <wsdl:part name="parameters" element="tns:IsiFolder" />
+  </wsdl:message>
+  <wsdl:message name="IsiFolderSoapOut">
+    <wsdl:part name="parameters" element="tns:IsiFolderResponse" />
+  </wsdl:message>
+  <wsdl:message name="CanBeiFolderSoapIn">
+    <wsdl:part name="parameters" element="tns:CanBeiFolder" />
+  </wsdl:message>
+  <wsdl:message name="CanBeiFolderSoapOut">
+    <wsdl:part name="parameters" element="tns:CanBeiFolderResponse" />
+  </wsdl:message>
+  <wsdl:message name="IsPathIniFolderSoapIn">
+    <wsdl:part name="parameters" element="tns:IsPathIniFolder" />
+  </wsdl:message>
+  <wsdl:message name="IsPathIniFolderSoapOut">
+    <wsdl:part name="parameters" element="tns:IsPathIniFolderResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateLocaliFolderSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateLocaliFolder" />
+  </wsdl:message>
+  <wsdl:message name="CreateLocaliFolderSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateLocaliFolderResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateiFolderInDomainEncrSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateiFolderInDomainEncr" />
+  </wsdl:message>
+  <wsdl:message name="CreateiFolderInDomainEncrSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateiFolderInDomainEncrResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateiFolderInDomainSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateiFolderInDomain" />
+  </wsdl:message>
+  <wsdl:message name="CreateiFolderInDomainSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateiFolderInDomainResponse" />
+  </wsdl:message>
+  <wsdl:message name="CheckiFolderSoapIn">
+    <wsdl:part name="parameters" element="tns:CheckiFolder" />
+  </wsdl:message>
+  <wsdl:message name="CheckiFolderSoapOut">
+    <wsdl:part name="parameters" element="tns:CheckiFolderResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetiFolderSoapIn">
+    <wsdl:part name="parameters" element="tns:GetiFolder" />
+  </wsdl:message>
+  <wsdl:message name="GetiFolderSoapOut">
+    <wsdl:part name="parameters" element="tns:GetiFolderResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetMinimaliFolderSoapIn">
+    <wsdl:part name="parameters" element="tns:GetMinimaliFolder" />
+  </wsdl:message>
+  <wsdl:message name="GetMinimaliFolderSoapOut">
+    <wsdl:part name="parameters" element="tns:GetMinimaliFolderResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetSecurityPolicySoapIn">
+    <wsdl:part name="parameters" element="tns:GetSecurityPolicy" />
+  </wsdl:message>
+  <wsdl:message name="GetSecurityPolicySoapOut">
+    <wsdl:part name="parameters" element="tns:GetSecurityPolicyResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDisableSharingPolicySoapIn">
+    <wsdl:part name="parameters" element="tns:GetDisableSharingPolicy" />
+  </wsdl:message>
+  <wsdl:message name="GetDisableSharingPolicySoapOut">
+    <wsdl:part name="parameters" element="tns:GetDisableSharingPolicyResponse" />
+  </wsdl:message>
+  <wsdl:message name="CanOwnerBeChangedSoapIn">
+    <wsdl:part name="parameters" element="tns:CanOwnerBeChanged" />
+  </wsdl:message>
+  <wsdl:message name="CanOwnerBeChangedSoapOut">
+    <wsdl:part name="parameters" element="tns:CanOwnerBeChangedResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetLimitPolicyStatusSoapIn">
+    <wsdl:part name="parameters" element="tns:GetLimitPolicyStatus" />
+  </wsdl:message>
+  <wsdl:message name="GetLimitPolicyStatusSoapOut">
+    <wsdl:part name="parameters" element="tns:GetLimitPolicyStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetiFolderInvitationSoapIn">
+    <wsdl:part name="parameters" element="tns:GetiFolderInvitation" />
+  </wsdl:message>
+  <wsdl:message name="GetiFolderInvitationSoapOut">
+    <wsdl:part name="parameters" element="tns:GetiFolderInvitationResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetiFolderByLocalPathSoapIn">
+    <wsdl:part name="parameters" element="tns:GetiFolderByLocalPath" />
+  </wsdl:message>
+  <wsdl:message name="GetiFolderByLocalPathSoapOut">
+    <wsdl:part name="parameters" element="tns:GetiFolderByLocalPathResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeleteiFolderSoapIn">
+    <wsdl:part name="parameters" element="tns:DeleteiFolder" />
+  </wsdl:message>
+  <wsdl:message name="DeleteiFolderSoapOut">
+    <wsdl:part name="parameters" element="tns:DeleteiFolderResponse" />
+  </wsdl:message>
+  <wsdl:message name="RevertiFolderSoapIn">
+    <wsdl:part name="parameters" element="tns:RevertiFolder" />
+  </wsdl:message>
+  <wsdl:message name="RevertiFolderSoapOut">
+    <wsdl:part name="parameters" element="tns:RevertiFolderResponse" />
+  </wsdl:message>
+  <wsdl:message name="RevertiFolder1SoapIn">
+    <wsdl:part name="parameters" element="tns:RevertiFolder1" />
+  </wsdl:message>
+  <wsdl:message name="RevertiFolder1SoapOut">
+    <wsdl:part name="parameters" element="tns:RevertiFolder1Response" />
+  </wsdl:message>
+  <wsdl:message name="GetAlliFoldersSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAlliFolders" />
+  </wsdl:message>
+  <wsdl:message name="GetAlliFoldersSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAlliFoldersResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAlliFolders1SoapIn">
+    <wsdl:part name="parameters" element="tns:GetAlliFolders1" />
+  </wsdl:message>
+  <wsdl:message name="GetAlliFolders1SoapOut">
+    <wsdl:part name="parameters" element="tns:GetAlliFolders1Response" />
+  </wsdl:message>
+  <wsdl:message name="GetiFoldersForDomainSoapIn">
+    <wsdl:part name="parameters" element="tns:GetiFoldersForDomain" />
+  </wsdl:message>
+  <wsdl:message name="GetiFoldersForDomainSoapOut">
+    <wsdl:part name="parameters" element="tns:GetiFoldersForDomainResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetiFoldersSoapIn">
+    <wsdl:part name="parameters" element="tns:GetiFolders" />
+  </wsdl:message>
+  <wsdl:message name="GetiFoldersSoapOut">
+    <wsdl:part name="parameters" element="tns:GetiFoldersResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetUserRightsSoapIn">
+    <wsdl:part name="parameters" element="tns:SetUserRights" />
+  </wsdl:message>
+  <wsdl:message name="SetUserRightsSoapOut">
+    <wsdl:part name="parameters" element="tns:SetUserRightsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetOwnerSoapIn">
+    <wsdl:part name="parameters" element="tns:GetOwner" />
+  </wsdl:message>
+  <wsdl:message name="GetOwnerSoapOut">
+    <wsdl:part name="parameters" element="tns:GetOwnerResponse" />
+  </wsdl:message>
+  <wsdl:message name="ChangeOwnerSoapIn">
+    <wsdl:part name="parameters" element="tns:ChangeOwner" />
+  </wsdl:message>
+  <wsdl:message name="ChangeOwnerSoapOut">
+    <wsdl:part name="parameters" element="tns:ChangeOwnerResponse" />
+  </wsdl:message>
+  <wsdl:message name="RemoveiFolderUserSoapIn">
+    <wsdl:part name="parameters" element="tns:RemoveiFolderUser" />
+  </wsdl:message>
+  <wsdl:message name="RemoveiFolderUserSoapOut">
+    <wsdl:part name="parameters" element="tns:RemoveiFolderUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetiFolderUsersSoapIn">
+    <wsdl:part name="parameters" element="tns:GetiFolderUsers" />
+  </wsdl:message>
+  <wsdl:message name="GetiFolderUsersSoapOut">
+    <wsdl:part name="parameters" element="tns:GetiFolderUsersResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDomainUsersSoapIn">
+    <wsdl:part name="parameters" element="tns:GetDomainUsers" />
+  </wsdl:message>
+  <wsdl:message name="GetDomainUsersSoapOut">
+    <wsdl:part name="parameters" element="tns:GetDomainUsersResponse" />
+  </wsdl:message>
+  <wsdl:message name="SearchForDomainUsersSoapIn">
+    <wsdl:part name="parameters" element="tns:SearchForDomainUsers" />
+  </wsdl:message>
+  <wsdl:message name="SearchForDomainUsersSoapOut">
+    <wsdl:part name="parameters" element="tns:SearchForDomainUsersResponse" />
+  </wsdl:message>
+  <wsdl:message name="FindCloseiFolderMembersSoapIn">
+    <wsdl:part name="parameters" element="tns:FindCloseiFolderMembers" />
+  </wsdl:message>
+  <wsdl:message name="FindCloseiFolderMembersSoapOut">
+    <wsdl:part name="parameters" element="tns:FindCloseiFolderMembersResponse" />
+  </wsdl:message>
+  <wsdl:message name="FindFirstiFolderMembersSoapIn">
+    <wsdl:part name="parameters" element="tns:FindFirstiFolderMembers" />
+  </wsdl:message>
+  <wsdl:message name="FindFirstiFolderMembersSoapOut">
+    <wsdl:part name="parameters" element="tns:FindFirstiFolderMembersResponse" />
+  </wsdl:message>
+  <wsdl:message name="FindFirstSpecificiFolderMembersSoapIn">
+    <wsdl:part name="parameters" element="tns:FindFirstSpecificiFolderMembers" />
+  </wsdl:message>
+  <wsdl:message name="FindFirstSpecificiFolderMembersSoapOut">
+    <wsdl:part name="parameters" element="tns:FindFirstSpecificiFolderMembersResponse" />
+  </wsdl:message>
+  <wsdl:message name="FindNextiFolderMembersSoapIn">
+    <wsdl:part name="parameters" element="tns:FindNextiFolderMembers" />
+  </wsdl:message>
+  <wsdl:message name="FindNextiFolderMembersSoapOut">
+    <wsdl:part name="parameters" element="tns:FindNextiFolderMembersResponse" />
+  </wsdl:message>
+  <wsdl:message name="FindPreviousiFolderMembersSoapIn">
+    <wsdl:part name="parameters" element="tns:FindPreviousiFolderMembers" />
+  </wsdl:message>
+  <wsdl:message name="FindPreviousiFolderMembersSoapOut">
+    <wsdl:part name="parameters" element="tns:FindPreviousiFolderMembersResponse" />
+  </wsdl:message>
+  <wsdl:message name="FindSeekiFolderMembersSoapIn">
+    <wsdl:part name="parameters" element="tns:FindSeekiFolderMembers" />
+  </wsdl:message>
+  <wsdl:message name="FindSeekiFolderMembersSoapOut">
+    <wsdl:part name="parameters" element="tns:FindSeekiFolderMembersResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetiFolderUserSoapIn">
+    <wsdl:part name="parameters" element="tns:GetiFolderUser" />
+  </wsdl:message>
+  <wsdl:message name="GetiFolderUserSoapOut">
+    <wsdl:part name="parameters" element="tns:GetiFolderUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetRANameSoapIn">
+    <wsdl:part name="parameters" element="tns:GetRAName" />
+  </wsdl:message>
+  <wsdl:message name="GetRANameSoapOut">
+    <wsdl:part name="parameters" element="tns:GetRANameResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetiFolderUserFromNodeIDSoapIn">
+    <wsdl:part name="parameters" element="tns:GetiFolderUserFromNodeID" />
+  </wsdl:message>
+  <wsdl:message name="GetiFolderUserFromNodeIDSoapOut">
+    <wsdl:part name="parameters" element="tns:GetiFolderUserFromNodeIDResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddAndInviteUserSoapIn">
+    <wsdl:part name="parameters" element="tns:AddAndInviteUser" />
+  </wsdl:message>
+  <wsdl:message name="AddAndInviteUserSoapOut">
+    <wsdl:part name="parameters" element="tns:AddAndInviteUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="InviteUserSoapIn">
+    <wsdl:part name="parameters" element="tns:InviteUser" />
+  </wsdl:message>
+  <wsdl:message name="InviteUserSoapOut">
+    <wsdl:part name="parameters" element="tns:InviteUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="MergeiFolderSoapIn">
+    <wsdl:part name="parameters" element="tns:MergeiFolder" />
+  </wsdl:message>
+  <wsdl:message name="MergeiFolderSoapOut">
+    <wsdl:part name="parameters" element="tns:MergeiFolderResponse" />
+  </wsdl:message>
+  <wsdl:message name="AcceptiFolderInvitationSoapIn">
+    <wsdl:part name="parameters" element="tns:AcceptiFolderInvitation" />
+  </wsdl:message>
+  <wsdl:message name="AcceptiFolderInvitationSoapOut">
+    <wsdl:part name="parameters" element="tns:AcceptiFolderInvitationResponse" />
+  </wsdl:message>
+  <wsdl:message name="AcceptiFolderInvitation1SoapIn">
+    <wsdl:part name="parameters" element="tns:AcceptiFolderInvitation1" />
+  </wsdl:message>
+  <wsdl:message name="AcceptiFolderInvitation1SoapOut">
+    <wsdl:part name="parameters" element="tns:AcceptiFolderInvitation1Response" />
+  </wsdl:message>
+  <wsdl:message name="DeclineiFolderInvitationSoapIn">
+    <wsdl:part name="parameters" element="tns:DeclineiFolderInvitation" />
+  </wsdl:message>
+  <wsdl:message name="DeclineiFolderInvitationSoapOut">
+    <wsdl:part name="parameters" element="tns:DeclineiFolderInvitationResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetUserDiskSpaceSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserDiskSpace" />
+  </wsdl:message>
+  <wsdl:message name="GetUserDiskSpaceSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserDiskSpaceResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetiFolderDiskSpaceSoapIn">
+    <wsdl:part name="parameters" element="tns:GetiFolderDiskSpace" />
+  </wsdl:message>
+  <wsdl:message name="GetiFolderDiskSpaceSoapOut">
+    <wsdl:part name="parameters" element="tns:GetiFolderDiskSpaceResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetUserDiskSpaceLimitSoapIn">
+    <wsdl:part name="parameters" element="tns:SetUserDiskSpaceLimit" />
+  </wsdl:message>
+  <wsdl:message name="SetUserDiskSpaceLimitSoapOut">
+    <wsdl:part name="parameters" element="tns:SetUserDiskSpaceLimitResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetiFolderDiskSpaceLimitSoapIn">
+    <wsdl:part name="parameters" element="tns:SetiFolderDiskSpaceLimit" />
+  </wsdl:message>
+  <wsdl:message name="SetiFolderDiskSpaceLimitSoapOut">
+    <wsdl:part name="parameters" element="tns:SetiFolderDiskSpaceLimitResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetiFolderSecureSyncSoapIn">
+    <wsdl:part name="parameters" element="tns:SetiFolderSecureSync" />
+  </wsdl:message>
+  <wsdl:message name="SetiFolderSecureSyncSoapOut">
+    <wsdl:part name="parameters" element="tns:SetiFolderSecureSyncResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetiFolderSyncIntervalSoapIn">
+    <wsdl:part name="parameters" element="tns:SetiFolderSyncInterval" />
+  </wsdl:message>
+  <wsdl:message name="SetiFolderSyncIntervalSoapOut">
+    <wsdl:part name="parameters" element="tns:SetiFolderSyncIntervalResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetDefaultSyncIntervalSoapIn">
+    <wsdl:part name="parameters" element="tns:SetDefaultSyncInterval" />
+  </wsdl:message>
+  <wsdl:message name="SetDefaultSyncIntervalSoapOut">
+    <wsdl:part name="parameters" element="tns:SetDefaultSyncIntervalResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDefaultSyncIntervalSoapIn">
+    <wsdl:part name="parameters" element="tns:GetDefaultSyncInterval" />
+  </wsdl:message>
+  <wsdl:message name="GetDefaultSyncIntervalSoapOut">
+    <wsdl:part name="parameters" element="tns:GetDefaultSyncIntervalResponse" />
+  </wsdl:message>
+  <wsdl:message name="AuthenticateToDomainSoapIn">
+    <wsdl:part name="parameters" element="tns:AuthenticateToDomain" />
+  </wsdl:message>
+  <wsdl:message name="AuthenticateToDomainSoapOut">
+    <wsdl:part name="parameters" element="tns:AuthenticateToDomainResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetiFolderConflictsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetiFolderConflicts" />
+  </wsdl:message>
+  <wsdl:message name="GetiFolderConflictsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetiFolderConflictsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ResolveFileConflictSoapIn">
+    <wsdl:part name="parameters" element="tns:ResolveFileConflict" />
+  </wsdl:message>
+  <wsdl:message name="ResolveFileConflictSoapOut">
+    <wsdl:part name="parameters" element="tns:ResolveFileConflictResponse" />
+  </wsdl:message>
+  <wsdl:message name="ResolveEnhancedFileConflictSoapIn">
+    <wsdl:part name="parameters" element="tns:ResolveEnhancedFileConflict" />
+  </wsdl:message>
+  <wsdl:message name="ResolveEnhancedFileConflictSoapOut">
+    <wsdl:part name="parameters" element="tns:ResolveEnhancedFileConflictResponse" />
+  </wsdl:message>
+  <wsdl:message name="ResolveNameConflictSoapIn">
+    <wsdl:part name="parameters" element="tns:ResolveNameConflict" />
+  </wsdl:message>
+  <wsdl:message name="ResolveNameConflictSoapOut">
+    <wsdl:part name="parameters" element="tns:ResolveNameConflictResponse" />
+  </wsdl:message>
+  <wsdl:message name="RenameAndResolveConflictSoapIn">
+    <wsdl:part name="parameters" element="tns:RenameAndResolveConflict" />
+  </wsdl:message>
+  <wsdl:message name="RenameAndResolveConflictSoapOut">
+    <wsdl:part name="parameters" element="tns:RenameAndResolveConflictResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetupProxySoapIn">
+    <wsdl:part name="parameters" element="tns:SetupProxy" />
+  </wsdl:message>
+  <wsdl:message name="SetupProxySoapOut">
+    <wsdl:part name="parameters" element="tns:SetupProxyResponse" />
+  </wsdl:message>
+  <wsdl:message name="RemoveProxySoapIn">
+    <wsdl:part name="parameters" element="tns:RemoveProxy" />
+  </wsdl:message>
+  <wsdl:message name="RemoveProxySoapOut">
+    <wsdl:part name="parameters" element="tns:RemoveProxyResponse" />
+  </wsdl:message>
+  <wsdl:message name="CalculateSyncSizeSoapIn">
+    <wsdl:part name="parameters" element="tns:CalculateSyncSize" />
+  </wsdl:message>
+  <wsdl:message name="CalculateSyncSizeSoapOut">
+    <wsdl:part name="parameters" element="tns:CalculateSyncSizeResponse" />
+  </wsdl:message>
+  <wsdl:message name="SynciFolderNowSoapIn">
+    <wsdl:part name="parameters" element="tns:SynciFolderNow" />
+  </wsdl:message>
+  <wsdl:message name="SynciFolderNowSoapOut">
+    <wsdl:part name="parameters" element="tns:SynciFolderNowResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeleteiFolderFileSizeLimitSoapIn">
+    <wsdl:part name="parameters" element="tns:DeleteiFolderFileSizeLimit" />
+  </wsdl:message>
+  <wsdl:message name="DeleteiFolderFileSizeLimitSoapOut">
+    <wsdl:part name="parameters" element="tns:DeleteiFolderFileSizeLimitResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetMemberiFolderFileSizeLimitSoapIn">
+    <wsdl:part name="parameters" element="tns:GetMemberiFolderFileSizeLimit" />
+  </wsdl:message>
+  <wsdl:message name="GetMemberiFolderFileSizeLimitSoapOut">
+    <wsdl:part name="parameters" element="tns:GetMemberiFolderFileSizeLimitResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetiFolderFileSizeLimitSoapIn">
+    <wsdl:part name="parameters" element="tns:GetiFolderFileSizeLimit" />
+  </wsdl:message>
+  <wsdl:message name="GetiFolderFileSizeLimitSoapOut">
+    <wsdl:part name="parameters" element="tns:GetiFolderFileSizeLimitResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetiFolderFileSizeLimitSoapIn">
+    <wsdl:part name="parameters" element="tns:SetiFolderFileSizeLimit" />
+  </wsdl:message>
+  <wsdl:message name="SetiFolderFileSizeLimitSoapOut">
+    <wsdl:part name="parameters" element="tns:SetiFolderFileSizeLimitResponse" />
+  </wsdl:message>
+  <wsdl:message name="CheckForUpdatedClientAvailableSoapIn">
+    <wsdl:part name="parameters" element="tns:CheckForUpdatedClientAvailable" />
+  </wsdl:message>
+  <wsdl:message name="CheckForUpdatedClientAvailableSoapOut">
+    <wsdl:part name="parameters" element="tns:CheckForUpdatedClientAvailableResponse" />
+  </wsdl:message>
+  <wsdl:message name="CheckForUpdatedClientSoapIn">
+    <wsdl:part name="parameters" element="tns:CheckForUpdatedClient" />
+  </wsdl:message>
+  <wsdl:message name="CheckForUpdatedClientSoapOut">
+    <wsdl:part name="parameters" element="tns:CheckForUpdatedClientResponse" />
+  </wsdl:message>
+  <wsdl:message name="CheckForUpdateSoapIn">
+    <wsdl:part name="parameters" element="tns:CheckForUpdate" />
+  </wsdl:message>
+  <wsdl:message name="CheckForUpdateSoapOut">
+    <wsdl:part name="parameters" element="tns:CheckForUpdateResponse" />
+  </wsdl:message>
+  <wsdl:message name="CheckForServerUpdateSoapIn">
+    <wsdl:part name="parameters" element="tns:CheckForServerUpdate" />
+  </wsdl:message>
+  <wsdl:message name="CheckForServerUpdateSoapOut">
+    <wsdl:part name="parameters" element="tns:CheckForServerUpdateResponse" />
+  </wsdl:message>
+  <wsdl:message name="RunClientUpdateSoapIn">
+    <wsdl:part name="parameters" element="tns:RunClientUpdate" />
+  </wsdl:message>
+  <wsdl:message name="RunClientUpdateSoapOut">
+    <wsdl:part name="parameters" element="tns:RunClientUpdateResponse" />
+  </wsdl:message>
+  <wsdl:portType name="iFolderWebServiceSoap">
+    <wsdl:operation name="Ping">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Allows a client to ping to make sure the Web Service is up and running</wsdl:documentation>
+      <wsdl:input message="tns:PingSoapIn" />
+      <wsdl:output message="tns:PingSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="IsiFolder">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Checks a LocalPath to see if it's an iFolder</wsdl:documentation>
+      <wsdl:input message="tns:IsiFolderSoapIn" />
+      <wsdl:output message="tns:IsiFolderSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CanBeiFolder">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Checks LocalPath to see if can be an iFolder</wsdl:documentation>
+      <wsdl:input message="tns:CanBeiFolderSoapIn" />
+      <wsdl:output message="tns:CanBeiFolderSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="IsPathIniFolder">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Checks LocalPath to see if is in an iFolder</wsdl:documentation>
+      <wsdl:input message="tns:IsPathIniFolderSoapIn" />
+      <wsdl:output message="tns:IsPathIniFolderSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateLocaliFolder">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Create An iFolder. This will create an iFolder using the path specified.  The Path must exist or an exception will be thrown.</wsdl:documentation>
+      <wsdl:input message="tns:CreateLocaliFolderSoapIn" />
+      <wsdl:output message="tns:CreateLocaliFolderSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateiFolderInDomainEncr">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Create an iFolder. This will create an iFolder using the path specified with the security Level desired. The Path must exist or an exception will be thrown.</wsdl:documentation>
+      <wsdl:input message="tns:CreateiFolderInDomainEncrSoapIn" />
+      <wsdl:output message="tns:CreateiFolderInDomainEncrSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateiFolderInDomain">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Create an iFolder. This will create an iFolder using the path specified.  The Path must exist or an exception will be thrown.</wsdl:documentation>
+      <wsdl:input message="tns:CreateiFolderInDomainSoapIn" />
+      <wsdl:output message="tns:CreateiFolderInDomainSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CheckiFolder">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Checks the presence of an iFolder</wsdl:documentation>
+      <wsdl:input message="tns:CheckiFolderSoapIn" />
+      <wsdl:output message="tns:CheckiFolderSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetiFolder">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get An iFolder</wsdl:documentation>
+      <wsdl:input message="tns:GetiFolderSoapIn" />
+      <wsdl:output message="tns:GetiFolderSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMinimaliFolder">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get An minimal iFolder</wsdl:documentation>
+      <wsdl:input message="tns:GetMinimaliFolderSoapIn" />
+      <wsdl:output message="tns:GetMinimaliFolderSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSecurityPolicy">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method is for getting security policy from the Collectionstore.</wsdl:documentation>
+      <wsdl:input message="tns:GetSecurityPolicySoapIn" />
+      <wsdl:output message="tns:GetSecurityPolicySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDisableSharingPolicy">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method is for getting Disable sharing policy from the Collectionstore.</wsdl:documentation>
+      <wsdl:input message="tns:GetDisableSharingPolicySoapIn" />
+      <wsdl:output message="tns:GetDisableSharingPolicySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CanOwnerBeChanged">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets whetgher ifolder can be transferred or not</wsdl:documentation>
+      <wsdl:input message="tns:CanOwnerBeChangedSoapIn" />
+      <wsdl:output message="tns:CanOwnerBeChangedSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLimitPolicyStatus">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets whetgher ifolder can be created or not</wsdl:documentation>
+      <wsdl:input message="tns:GetLimitPolicyStatusSoapIn" />
+      <wsdl:output message="tns:GetLimitPolicyStatusSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetiFolderInvitation">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get An iFolder</wsdl:documentation>
+      <wsdl:input message="tns:GetiFolderInvitationSoapIn" />
+      <wsdl:output message="tns:GetiFolderInvitationSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetiFolderByLocalPath">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get An iFolder using a LocalPath</wsdl:documentation>
+      <wsdl:input message="tns:GetiFolderByLocalPathSoapIn" />
+      <wsdl:output message="tns:GetiFolderByLocalPathSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteiFolder">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Delete An iFolder</wsdl:documentation>
+      <wsdl:input message="tns:DeleteiFolderSoapIn" />
+      <wsdl:output message="tns:DeleteiFolderSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RevertiFolder">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Revert an iFolder on the local computer but remain a member</wsdl:documentation>
+      <wsdl:input message="tns:RevertiFolderSoapIn" />
+      <wsdl:output message="tns:RevertiFolderSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RevertiFolder1">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Revert an iFolder on the local computer but remain a member</wsdl:documentation>
+      <wsdl:input message="tns:RevertiFolder1SoapIn" />
+      <wsdl:output message="tns:RevertiFolder1SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAlliFolders">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns all iFolders on the Server</wsdl:documentation>
+      <wsdl:input message="tns:GetAlliFoldersSoapIn" />
+      <wsdl:output message="tns:GetAlliFoldersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAlliFolders1">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns all iFolders on the Server</wsdl:documentation>
+      <wsdl:input message="tns:GetAlliFolders1SoapIn" />
+      <wsdl:output message="tns:GetAlliFolders1SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetiFoldersForDomain">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns all iFolders in the specified domain</wsdl:documentation>
+      <wsdl:input message="tns:GetiFoldersForDomainSoapIn" />
+      <wsdl:output message="tns:GetiFoldersForDomainSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetiFolders">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns iFolders for the specified UserID</wsdl:documentation>
+      <wsdl:input message="tns:GetiFoldersSoapIn" />
+      <wsdl:output message="tns:GetiFoldersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetUserRights">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Set the Rights of a member of an iFolder.  The Rights can be "Admin", "ReadOnly", or "ReadWrite".</wsdl:documentation>
+      <wsdl:input message="tns:SetUserRightsSoapIn" />
+      <wsdl:output message="tns:SetUserRightsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetOwner">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get the Owner of an iFolder</wsdl:documentation>
+      <wsdl:input message="tns:GetOwnerSoapIn" />
+      <wsdl:output message="tns:GetOwnerSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ChangeOwner">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Changes the owner of an iFolder and sets the rights of the previous owner to the rights specified.</wsdl:documentation>
+      <wsdl:input message="tns:ChangeOwnerSoapIn" />
+      <wsdl:output message="tns:ChangeOwnerSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RemoveiFolderUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Remove a single member from an iFolder</wsdl:documentation>
+      <wsdl:input message="tns:RemoveiFolderUserSoapIn" />
+      <wsdl:output message="tns:RemoveiFolderUserSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetiFolderUsers">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get the list of iFolder Members</wsdl:documentation>
+      <wsdl:input message="tns:GetiFolderUsersSoapIn" />
+      <wsdl:output message="tns:GetiFolderUsersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDomainUsers">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a scoped list of iFolderUsers for the specified domain</wsdl:documentation>
+      <wsdl:input message="tns:GetDomainUsersSoapIn" />
+      <wsdl:output message="tns:GetDomainUsersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SearchForDomainUsers">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Search for a Member of a specified name in the specified domain.</wsdl:documentation>
+      <wsdl:input message="tns:SearchForDomainUsersSoapIn" />
+      <wsdl:output message="tns:SearchForDomainUsersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FindCloseiFolderMembers">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">End the search for domain members.</wsdl:documentation>
+      <wsdl:input message="tns:FindCloseiFolderMembersSoapIn" />
+      <wsdl:output message="tns:FindCloseiFolderMembersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FindFirstiFolderMembers">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Starts a search for all domain members.</wsdl:documentation>
+      <wsdl:input message="tns:FindFirstiFolderMembersSoapIn" />
+      <wsdl:output message="tns:FindFirstiFolderMembersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FindFirstSpecificiFolderMembers">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Starts a search for a specific set of domain members.</wsdl:documentation>
+      <wsdl:input message="tns:FindFirstSpecificiFolderMembersSoapIn" />
+      <wsdl:output message="tns:FindFirstSpecificiFolderMembersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FindNextiFolderMembers">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Continues the search for domain members from the current record location.</wsdl:documentation>
+      <wsdl:input message="tns:FindNextiFolderMembersSoapIn" />
+      <wsdl:output message="tns:FindNextiFolderMembersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FindPreviousiFolderMembers">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Continues the search for domain members previous to the current record location.</wsdl:documentation>
+      <wsdl:input message="tns:FindPreviousiFolderMembersSoapIn" />
+      <wsdl:output message="tns:FindPreviousiFolderMembersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FindSeekiFolderMembers">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Continues the search for domain members from the specified record location.</wsdl:documentation>
+      <wsdl:input message="tns:FindSeekiFolderMembersSoapIn" />
+      <wsdl:output message="tns:FindSeekiFolderMembersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetiFolderUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Lookup a single member to a collection</wsdl:documentation>
+      <wsdl:input message="tns:GetiFolderUserSoapIn" />
+      <wsdl:output message="tns:GetiFolderUserSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRAName">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Lookup a single member to a collection</wsdl:documentation>
+      <wsdl:input message="tns:GetRANameSoapIn" />
+      <wsdl:output message="tns:GetRANameSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetiFolderUserFromNodeID">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Lookup a user in a collection based on node ID.</wsdl:documentation>
+      <wsdl:input message="tns:GetiFolderUserFromNodeIDSoapIn" />
+      <wsdl:output message="tns:GetiFolderUserFromNodeIDSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddAndInviteUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Invite a user to an iFolder.  This call will only work with Enterprise iFolders</wsdl:documentation>
+      <wsdl:input message="tns:AddAndInviteUserSoapIn" />
+      <wsdl:output message="tns:AddAndInviteUserSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="InviteUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Invite a user to an iFolder.  This call will only work with Enterprise iFolders</wsdl:documentation>
+      <wsdl:input message="tns:InviteUserSoapIn" />
+      <wsdl:output message="tns:InviteUserSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="MergeiFolder">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Accept an invitation fo an iFolder.  The iFolder ID represents a Subscription object</wsdl:documentation>
+      <wsdl:input message="tns:MergeiFolderSoapIn" />
+      <wsdl:output message="tns:MergeiFolderSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AcceptiFolderInvitation">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Accept an invitation fo an iFolder.  The iFolder ID represents a Subscription object</wsdl:documentation>
+      <wsdl:input message="tns:AcceptiFolderInvitationSoapIn" />
+      <wsdl:output message="tns:AcceptiFolderInvitationSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AcceptiFolderInvitation1">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Accept an invitation fo an iFolder.  The iFolder ID represents a Subscription object</wsdl:documentation>
+      <wsdl:input message="tns:AcceptiFolderInvitation1SoapIn" />
+      <wsdl:output message="tns:AcceptiFolderInvitation1SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeclineiFolderInvitation">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Decline an invitation to an iFolder.  The iFolder ID represents a Subscription object</wsdl:documentation>
+      <wsdl:input message="tns:DeclineiFolderInvitationSoapIn" />
+      <wsdl:output message="tns:DeclineiFolderInvitationSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserDiskSpace">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets the DiskSpaceQuota for a member</wsdl:documentation>
+      <wsdl:input message="tns:GetUserDiskSpaceSoapIn" />
+      <wsdl:output message="tns:GetUserDiskSpaceSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetiFolderDiskSpace">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets the DiskSpaceQuota for an iFolder</wsdl:documentation>
+      <wsdl:input message="tns:GetiFolderDiskSpaceSoapIn" />
+      <wsdl:output message="tns:GetiFolderDiskSpaceSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetUserDiskSpaceLimit">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Sets the Disk Space Limit for a user</wsdl:documentation>
+      <wsdl:input message="tns:SetUserDiskSpaceLimitSoapIn" />
+      <wsdl:output message="tns:SetUserDiskSpaceLimitSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetiFolderDiskSpaceLimit">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Sets the Disk Space Limit for an iFolder</wsdl:documentation>
+      <wsdl:input message="tns:SetiFolderDiskSpaceLimitSoapIn" />
+      <wsdl:output message="tns:SetiFolderDiskSpaceLimitSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetiFolderSecureSync">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Sets the Disk Space Limit for an iFolder</wsdl:documentation>
+      <wsdl:input message="tns:SetiFolderSecureSyncSoapIn" />
+      <wsdl:output message="tns:SetiFolderSecureSyncSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetiFolderSyncInterval">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Sets the Sync Interval for an iFolder</wsdl:documentation>
+      <wsdl:input message="tns:SetiFolderSyncIntervalSoapIn" />
+      <wsdl:output message="tns:SetiFolderSyncIntervalSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetDefaultSyncInterval">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Sets the Default Sync Interval</wsdl:documentation>
+      <wsdl:input message="tns:SetDefaultSyncIntervalSoapIn" />
+      <wsdl:output message="tns:SetDefaultSyncIntervalSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDefaultSyncInterval">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets the Default Sync Interval</wsdl:documentation>
+      <wsdl:input message="tns:GetDefaultSyncIntervalSoapIn" />
+      <wsdl:output message="tns:GetDefaultSyncIntervalSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AuthenticateToDomain">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Connects to an iFolder Domain</wsdl:documentation>
+      <wsdl:input message="tns:AuthenticateToDomainSoapIn" />
+      <wsdl:output message="tns:AuthenticateToDomainSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetiFolderConflicts">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Connects to an iFolder Enterprise Server</wsdl:documentation>
+      <wsdl:input message="tns:GetiFolderConflictsSoapIn" />
+      <wsdl:output message="tns:GetiFolderConflictsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ResolveFileConflict">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Resolves a file conflict in an iFolder.</wsdl:documentation>
+      <wsdl:input message="tns:ResolveFileConflictSoapIn" />
+      <wsdl:output message="tns:ResolveFileConflictSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ResolveEnhancedFileConflict">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Resolves a file conflict in an iFolder.</wsdl:documentation>
+      <wsdl:input message="tns:ResolveEnhancedFileConflictSoapIn" />
+      <wsdl:output message="tns:ResolveEnhancedFileConflictSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ResolveNameConflict">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Resolves a name conflict</wsdl:documentation>
+      <wsdl:input message="tns:ResolveNameConflictSoapIn" />
+      <wsdl:output message="tns:ResolveNameConflictSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RenameAndResolveConflict">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Renames a file and resolves a name conflict</wsdl:documentation>
+      <wsdl:input message="tns:RenameAndResolveConflictSoapIn" />
+      <wsdl:output message="tns:RenameAndResolveConflictSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetupProxy">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Sets up a proxy for iFolder to use</wsdl:documentation>
+      <wsdl:input message="tns:SetupProxySoapIn" />
+      <wsdl:output message="tns:SetupProxySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RemoveProxy">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Removes proxy settings</wsdl:documentation>
+      <wsdl:input message="tns:RemoveProxySoapIn" />
+      <wsdl:output message="tns:RemoveProxySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CalculateSyncSize">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Calculates the number of nodes and bytes that need to be sync'd.</wsdl:documentation>
+      <wsdl:input message="tns:CalculateSyncSizeSoapIn" />
+      <wsdl:output message="tns:CalculateSyncSizeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SynciFolderNow">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Sends a command to the sync engine to sync the iFolder of the specified ID.</wsdl:documentation>
+      <wsdl:input message="tns:SynciFolderNowSoapIn" />
+      <wsdl:output message="tns:SynciFolderNowSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteiFolderFileSizeLimit">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Delete a file size limit policy from an iFolder</wsdl:documentation>
+      <wsdl:input message="tns:DeleteiFolderFileSizeLimitSoapIn" />
+      <wsdl:output message="tns:DeleteiFolderFileSizeLimitSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMemberiFolderFileSizeLimit">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a users file size limit on an iFolder</wsdl:documentation>
+      <wsdl:input message="tns:GetMemberiFolderFileSizeLimitSoapIn" />
+      <wsdl:output message="tns:GetMemberiFolderFileSizeLimitSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetiFolderFileSizeLimit">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get the file size limit of an iFolder</wsdl:documentation>
+      <wsdl:input message="tns:GetiFolderFileSizeLimitSoapIn" />
+      <wsdl:output message="tns:GetiFolderFileSizeLimitSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetiFolderFileSizeLimit">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Set the file size limit of an iFolder</wsdl:documentation>
+      <wsdl:input message="tns:SetiFolderFileSizeLimitSoapIn" />
+      <wsdl:output message="tns:SetiFolderFileSizeLimitSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CheckForUpdatedClientAvailable">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Check for an available update</wsdl:documentation>
+      <wsdl:input message="tns:CheckForUpdatedClientAvailableSoapIn" />
+      <wsdl:output message="tns:CheckForUpdatedClientAvailableSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CheckForUpdatedClient">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Check for an available update</wsdl:documentation>
+      <wsdl:input message="tns:CheckForUpdatedClientSoapIn" />
+      <wsdl:output message="tns:CheckForUpdatedClientSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CheckForUpdate">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Check for an available update</wsdl:documentation>
+      <wsdl:input message="tns:CheckForUpdateSoapIn" />
+      <wsdl:output message="tns:CheckForUpdateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CheckForServerUpdate">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Check for an available update</wsdl:documentation>
+      <wsdl:input message="tns:CheckForServerUpdateSoapIn" />
+      <wsdl:output message="tns:CheckForServerUpdateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RunClientUpdate">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Run the client update</wsdl:documentation>
+      <wsdl:input message="tns:RunClientUpdateSoapIn" />
+      <wsdl:output message="tns:RunClientUpdateSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="iFolderWebServiceSoap" type="tns:iFolderWebServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Ping">
+      <soap:operation soapAction="http://novell.com/ifolder/web/Ping" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsiFolder">
+      <soap:operation soapAction="http://novell.com/ifolder/web/IsiFolder" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CanBeiFolder">
+      <soap:operation soapAction="http://novell.com/ifolder/web/CanBeiFolder" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsPathIniFolder">
+      <soap:operation soapAction="http://novell.com/ifolder/web/IsPathIniFolder" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateLocaliFolder">
+      <soap:operation soapAction="http://novell.com/ifolder/web/CreateLocaliFolder" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateiFolderInDomainEncr">
+      <soap:operation soapAction="http://novell.com/ifolder/web/CreateiFolderInDomainEncr" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateiFolderInDomain">
+      <soap:operation soapAction="http://novell.com/ifolder/web/CreateiFolderInDomain" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckiFolder">
+      <soap:operation soapAction="http://novell.com/ifolder/web/CheckiFolder" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetiFolder">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolder" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMinimaliFolder">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetMinimaliFolder" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSecurityPolicy">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetSecurityPolicy" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDisableSharingPolicy">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetDisableSharingPolicy" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CanOwnerBeChanged">
+      <soap:operation soapAction="http://novell.com/ifolder/web/CanOwnerBeChanged" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLimitPolicyStatus">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetLimitPolicyStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetiFolderInvitation">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderInvitation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetiFolderByLocalPath">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderByLocalPath" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteiFolder">
+      <soap:operation soapAction="http://novell.com/ifolder/web/DeleteiFolder" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RevertiFolder">
+      <soap:operation soapAction="http://novell.com/ifolder/web/RevertiFolder" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RevertiFolder1">
+      <soap:operation soapAction="http://novell.com/ifolder/web/RevertiFolder1" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAlliFolders">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetAlliFolders" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAlliFolders1">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetAlliFolders1" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetiFoldersForDomain">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFoldersForDomain" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetiFolders">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolders" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetUserRights">
+      <soap:operation soapAction="http://novell.com/ifolder/web/SetUserRights" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetOwner">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetOwner" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChangeOwner">
+      <soap:operation soapAction="http://novell.com/ifolder/web/ChangeOwner" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveiFolderUser">
+      <soap:operation soapAction="http://novell.com/ifolder/web/RemoveiFolderUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetiFolderUsers">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderUsers" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDomainUsers">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetDomainUsers" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchForDomainUsers">
+      <soap:operation soapAction="http://novell.com/ifolder/web/SearchForDomainUsers" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FindCloseiFolderMembers">
+      <soap:operation soapAction="http://novell.com/ifolder/web/FindCloseiFolderMembers" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FindFirstiFolderMembers">
+      <soap:operation soapAction="http://novell.com/ifolder/web/FindFirstiFolderMembers" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FindFirstSpecificiFolderMembers">
+      <soap:operation soapAction="http://novell.com/ifolder/web/FindFirstSpecificiFolderMembers" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FindNextiFolderMembers">
+      <soap:operation soapAction="http://novell.com/ifolder/web/FindNextiFolderMembers" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FindPreviousiFolderMembers">
+      <soap:operation soapAction="http://novell.com/ifolder/web/FindPreviousiFolderMembers" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FindSeekiFolderMembers">
+      <soap:operation soapAction="http://novell.com/ifolder/web/FindSeekiFolderMembers" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetiFolderUser">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRAName">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetRAName" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetiFolderUserFromNodeID">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderUserFromNodeID" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddAndInviteUser">
+      <soap:operation soapAction="http://novell.com/ifolder/web/AddAndInviteUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="InviteUser">
+      <soap:operation soapAction="http://novell.com/ifolder/web/InviteUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MergeiFolder">
+      <soap:operation soapAction="http://novell.com/ifolder/web/MergeiFolder" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AcceptiFolderInvitation">
+      <soap:operation soapAction="http://novell.com/ifolder/web/AcceptiFolderInvitation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AcceptiFolderInvitation1">
+      <soap:operation soapAction="http://novell.com/ifolder/web/AcceptiFolderInvitation1" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeclineiFolderInvitation">
+      <soap:operation soapAction="http://novell.com/ifolder/web/DeclineiFolderInvitation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserDiskSpace">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetUserDiskSpace" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetiFolderDiskSpace">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderDiskSpace" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetUserDiskSpaceLimit">
+      <soap:operation soapAction="http://novell.com/ifolder/web/SetUserDiskSpaceLimit" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetiFolderDiskSpaceLimit">
+      <soap:operation soapAction="http://novell.com/ifolder/web/SetiFolderDiskSpaceLimit" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetiFolderSecureSync">
+      <soap:operation soapAction="http://novell.com/ifolder/web/SetiFolderSecureSync" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetiFolderSyncInterval">
+      <soap:operation soapAction="http://novell.com/ifolder/web/SetiFolderSyncInterval" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetDefaultSyncInterval">
+      <soap:operation soapAction="http://novell.com/ifolder/web/SetDefaultSyncInterval" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDefaultSyncInterval">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetDefaultSyncInterval" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AuthenticateToDomain">
+      <soap:operation soapAction="http://novell.com/ifolder/web/AuthenticateToDomain" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetiFolderConflicts">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderConflicts" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ResolveFileConflict">
+      <soap:operation soapAction="http://novell.com/ifolder/web/ResolveFileConflict" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ResolveEnhancedFileConflict">
+      <soap:operation soapAction="http://novell.com/ifolder/web/ResolveEnhancedFileConflict" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ResolveNameConflict">
+      <soap:operation soapAction="http://novell.com/ifolder/web/ResolveNameConflict" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RenameAndResolveConflict">
+      <soap:operation soapAction="http://novell.com/ifolder/web/RenameAndResolveConflict" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetupProxy">
+      <soap:operation soapAction="http://novell.com/ifolder/web/SetupProxy" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveProxy">
+      <soap:operation soapAction="http://novell.com/ifolder/web/RemoveProxy" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CalculateSyncSize">
+      <soap:operation soapAction="http://novell.com/ifolder/web/CalculateSyncSize" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SynciFolderNow">
+      <soap:operation soapAction="http://novell.com/ifolder/web/SynciFolderNow" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteiFolderFileSizeLimit">
+      <soap:operation soapAction="http://novell.com/ifolder/web/DeleteiFolderFileSizeLimit" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMemberiFolderFileSizeLimit">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetMemberiFolderFileSizeLimit" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetiFolderFileSizeLimit">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderFileSizeLimit" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetiFolderFileSizeLimit">
+      <soap:operation soapAction="http://novell.com/ifolder/web/SetiFolderFileSizeLimit" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckForUpdatedClientAvailable">
+      <soap:operation soapAction="http://novell.com/ifolder/web/CheckForUpdatedClientAvailable" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckForUpdatedClient">
+      <soap:operation soapAction="http://novell.com/ifolder/web/CheckForUpdatedClient" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckForUpdate">
+      <soap:operation soapAction="http://novell.com/ifolder/web/CheckForUpdate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckForServerUpdate">
+      <soap:operation soapAction="http://novell.com/ifolder/web/CheckForServerUpdate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RunClientUpdate">
+      <soap:operation soapAction="http://novell.com/ifolder/web/RunClientUpdate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="iFolderWebServiceSoap12" type="tns:iFolderWebServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Ping">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/Ping" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsiFolder">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/IsiFolder" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CanBeiFolder">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/CanBeiFolder" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsPathIniFolder">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/IsPathIniFolder" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateLocaliFolder">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/CreateLocaliFolder" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateiFolderInDomainEncr">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/CreateiFolderInDomainEncr" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateiFolderInDomain">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/CreateiFolderInDomain" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckiFolder">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/CheckiFolder" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetiFolder">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/GetiFolder" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMinimaliFolder">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/GetMinimaliFolder" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSecurityPolicy">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/GetSecurityPolicy" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDisableSharingPolicy">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/GetDisableSharingPolicy" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CanOwnerBeChanged">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/CanOwnerBeChanged" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLimitPolicyStatus">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/GetLimitPolicyStatus" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetiFolderInvitation">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/GetiFolderInvitation" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetiFolderByLocalPath">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/GetiFolderByLocalPath" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteiFolder">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/DeleteiFolder" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RevertiFolder">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/RevertiFolder" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RevertiFolder1">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/RevertiFolder1" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAlliFolders">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/GetAlliFolders" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAlliFolders1">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/GetAlliFolders1" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetiFoldersForDomain">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/GetiFoldersForDomain" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetiFolders">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/GetiFolders" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetUserRights">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/SetUserRights" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetOwner">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/GetOwner" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChangeOwner">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/ChangeOwner" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveiFolderUser">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/RemoveiFolderUser" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetiFolderUsers">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/GetiFolderUsers" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDomainUsers">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/GetDomainUsers" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchForDomainUsers">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/SearchForDomainUsers" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FindCloseiFolderMembers">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/FindCloseiFolderMembers" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FindFirstiFolderMembers">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/FindFirstiFolderMembers" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FindFirstSpecificiFolderMembers">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/FindFirstSpecificiFolderMembers" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FindNextiFolderMembers">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/FindNextiFolderMembers" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FindPreviousiFolderMembers">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/FindPreviousiFolderMembers" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FindSeekiFolderMembers">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/FindSeekiFolderMembers" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetiFolderUser">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/GetiFolderUser" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRAName">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/GetRAName" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetiFolderUserFromNodeID">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/GetiFolderUserFromNodeID" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddAndInviteUser">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/AddAndInviteUser" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="InviteUser">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/InviteUser" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MergeiFolder">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/MergeiFolder" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AcceptiFolderInvitation">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/AcceptiFolderInvitation" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AcceptiFolderInvitation1">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/AcceptiFolderInvitation1" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeclineiFolderInvitation">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/DeclineiFolderInvitation" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserDiskSpace">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/GetUserDiskSpace" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetiFolderDiskSpace">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/GetiFolderDiskSpace" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetUserDiskSpaceLimit">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/SetUserDiskSpaceLimit" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetiFolderDiskSpaceLimit">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/SetiFolderDiskSpaceLimit" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetiFolderSecureSync">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/SetiFolderSecureSync" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetiFolderSyncInterval">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/SetiFolderSyncInterval" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetDefaultSyncInterval">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/SetDefaultSyncInterval" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDefaultSyncInterval">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/GetDefaultSyncInterval" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AuthenticateToDomain">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/AuthenticateToDomain" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetiFolderConflicts">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/GetiFolderConflicts" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ResolveFileConflict">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/ResolveFileConflict" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ResolveEnhancedFileConflict">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/ResolveEnhancedFileConflict" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ResolveNameConflict">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/ResolveNameConflict" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RenameAndResolveConflict">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/RenameAndResolveConflict" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetupProxy">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/SetupProxy" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveProxy">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/RemoveProxy" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CalculateSyncSize">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/CalculateSyncSize" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SynciFolderNow">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/SynciFolderNow" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteiFolderFileSizeLimit">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/DeleteiFolderFileSizeLimit" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMemberiFolderFileSizeLimit">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/GetMemberiFolderFileSizeLimit" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetiFolderFileSizeLimit">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/GetiFolderFileSizeLimit" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetiFolderFileSizeLimit">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/SetiFolderFileSizeLimit" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckForUpdatedClientAvailable">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/CheckForUpdatedClientAvailable" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckForUpdatedClient">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/CheckForUpdatedClient" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckForUpdate">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/CheckForUpdate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckForServerUpdate">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/CheckForServerUpdate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RunClientUpdate">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/RunClientUpdate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="iFolderWebService">
+    <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Web Service providing access to iFolder</wsdl:documentation>
+    <wsdl:port name="iFolderWebServiceSoap" binding="tns:iFolderWebServiceSoap">
+      <soap:address location="http://localhost:8086/iFolder.asmx" />
+    </wsdl:port>
+    <wsdl:port name="iFolderWebServiceSoap12" binding="tns:iFolderWebServiceSoap12">
+      <soap12:address location="http://localhost:8086/iFolder.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
