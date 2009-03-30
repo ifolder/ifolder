@@ -1,0 +1,103 @@
+/***********************************************************************
+ |  $RCSfile$
+ |
+ | Copyright (c) 2007 Novell, Inc.
+ | All Rights Reserved.
+ |
+ | This program is free software; you can redistribute it and/or
+ | modify it under the terms of version 2 of the GNU General Public License as
+ | published by the Free Software Foundation.
+ |
+ | This program is distributed in the hope that it will be useful,
+ | but WITHOUT ANY WARRANTY; without even the implied warranty of
+ | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ | GNU General Public License for more details.
+ |
+ | You should have received a copy of the GNU General Public License
+ | along with this program; if not, contact Novell, Inc.
+ |
+ | To contact Novell about this file by physical or electronic mail,
+ | you may find current contact information at www.novell.com 
+ |
+ |  Author: Calvin Gaisford <cgaisford@novell.com>
+ | 
+ ***********************************************************************/
+ 
+ 
+#import "SetupiFolderSheetController.h"
+#import "iFolderWindowController.h"
+#import "iFolderData.h"
+
+@implementation SetupiFolderSheetController
+
+
+-(void)awakeFromNib
+{
+	// bind the fields up to our data
+	[domainID bind:@"value" toObject:[[iFolderData sharedInstance] ifolderArrayController]
+				withKeyPath:@"selection.properties.DomainID" options:nil];
+	[iFolderID bind:@"value" toObject:[[iFolderData sharedInstance] ifolderArrayController]
+				withKeyPath:@"selection.properties.ID" options:nil];
+	[iFolderName bind:@"value" toObject:[[iFolderData sharedInstance] ifolderArrayController]
+				withKeyPath:@"selection.properties.Name" options:nil];
+	[SharedBy bind:@"value" toObject:[[iFolderData sharedInstance] ifolderArrayController]
+				withKeyPath:@"selection.properties.Owner" options:nil];
+	[Rights bind:@"value" toObject:[[iFolderData sharedInstance] ifolderArrayController]
+				withKeyPath:@"selection.properties.CurrentUserRights" options:nil];
+}
+
+
+- (IBAction) showWindow:(id)sender
+{
+	if( [ [iFolderID stringValue] length] > 0)
+	{
+		// Because we use the same dialog, clear out the path
+		[pathField setStringValue:@""];
+	
+		[NSApp beginSheet:setupSheet modalForWindow:mainWindow
+			modalDelegate:self didEndSelector:NULL contextInfo:nil];
+	}
+}
+
+- (IBAction)browseForPath:(id)sender
+{
+	int result;
+	NSOpenPanel *oPanel = [NSOpenPanel openPanel];
+	
+	[oPanel setAllowsMultipleSelection:NO];
+	[oPanel setCanChooseDirectories:YES];
+	[oPanel setCanChooseFiles:NO];
+	NSString *lastPath = [pathField stringValue];
+	if([lastPath length] > 0)
+		result = [oPanel runModalForDirectory:lastPath file:nil types:nil];
+	else
+		result = [oPanel runModalForDirectory:NSHomeDirectory() file:nil types:nil];
+	
+	if (result == NSOKButton)
+	{
+		NSString *dirName = [oPanel directory];
+		[pathField setStringValue:dirName];
+	}
+}
+
+- (IBAction)cancelSetup:(id)sender
+{
+	[setupSheet orderOut:nil];
+	[NSApp endSheet:setupSheet];
+}
+
+- (IBAction)setupiFolder:(id)sender
+{
+	if( ( [ [iFolderID stringValue] length] > 0) &&
+		( [ [pathField stringValue] length] > 0 ) )
+	{
+		[setupSheet orderOut:nil];
+		[NSApp endSheet:setupSheet];
+
+		[ifolderWindowController acceptiFolderInvitation:[iFolderID stringValue]
+							InDomain:[domainID stringValue]
+							toPath:[pathField stringValue] ];
+	}
+}
+
+@end

@@ -1,0 +1,211 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<TITLE>Novell Documentation</TITLE>
+<META NAME="ROBOTS" CONTENT="NOINDEX,NOFOLLOW">
+<link href="http://www.novell.com/inc/novell_style.css" rel="stylesheet" type="text/css"></link> 
+<STYLE ID="JoustStyles" TYPE="text/css">
+<!--
+	.menuItem {position:absolute; visibility:hidden; left:8px; color:#CC0000; white-space:nowrap;}
+	.menuItem BR { clear: both; } 
+	.node { color: #333333;
+		font-family : "Helvetica", "Arial",  sans-serif;
+		font-size : 11px;
+		 white-space:nowrap;}
+	.node A:link { color: #333333; text-decoration: none;font-size : 11px; }
+	.node A:visited { color: #333333; text-decoration: none;font-size : 11px; }
+	.node A:active { color: #CC0000; text-decoration: none;font-size : 11px; }
+	.node A:hover { color: #999999; text-decoration: none;font-size : 11px; }
+	.leaf { color: #333333;
+		font-family : "Helvetica", "Arial",  sans-serif;
+		font-size : 11px;
+		white-space:nowrap;}                  
+	.leaf A:link { vertical-align: center; color: #333333; text-decoration: none;font-size : 11px;}
+	.leaf A:visited { vertical-align: center; color: #333333; text-decoration: none;font-size : 11px; }
+	.leaf A:active { vertical-align: center; color: #CC0000; text-decoration: none;font-size : 11px; }
+	.leaf A:hover { vertical-align: center; color: #999999; text-decoration: none;font-size : 11px; }  
+	
+	.leadCopy {vertical-align: top; text-decoration:none; font-family: Arial, Helvetica, sans-serif; font-size: 11px; color: #333333; white-space:nowrap;}
+	.leadCopy b {vertical-align: top; text-decoration:none; font-family: Trebuchet MS; font-weight: bold; color: #333333}
+	.leadCopy a {vertical-align: top; text-decoration:none; color: #333333}
+	.leadCopy a:hover {vertical-align: top; text-decoration:none; color: #999999}
+
+-->
+</STYLE>
+
+<!--
+Joust Outliner Version 2.5.4
+(c) Copyright 1996-2001, MITEM (Europe) Ltd. All rights reserved.
+This code may be freely copied and distributed provided that it is accompanied by this 
+header.  For full details of the Joust license, as well as documentation and help, go 
+to http://www.ivanpeters.com/.
+
+Do not modify anything between here and the "End of Joust" marker unless you know what you
+are doing.  
+-->
+<script language="JavaScript" src="menu.js"></script>
+</HEAD>
+<BODY BGCOLOR="#EDEEEC" LINK="#000000" marginwidth="1" marginheight="1" onResize="frameResized();">
+
+<DIV ID="menuTop">
+<table border="0"  bgcolor="#EDEEEC" cellpadding="0" cellspacing="0" width="200%">
+<script language="JavaScript">
+ if (document.location.pathname.indexOf("/ndk/doc") >= 0)
+ {
+   document.write('    <tr><td  colspan="2" style="background-image:url(http://www.novell.com/img/t2_colordot_resources.gif)"><img src="http://www.novell.com/img/spacer.gif" width="1" height="20" border="0" alt=""></td></tr>');
+ }
+ else          
+ {
+   document.write('    <tr><td  colspan="2" style="background-image:url(http://www.novell.com/img/t2_colordot_supporttraining.gif)"><img src="http://www.novell.com/img/spacer.gif" width="1" height="20" border="0" alt=""></td></tr>');
+ }  
+</script>
+  <tr>  
+    <td colspan="2" style="background-image:url(http://www.novell.com/img/dotlinebg_horiz.gif)"><img src="http://www.novell.com/img/spacer.gif" width="1" height="1" border="0" alt=""></td>
+  </tr> 
+  <tr>
+    <td width="20" style="background-image:url(http://www.novell.com/img/t2_bg_1.gif)"><img src="http://www.novell.com/img/t2_arrow_1.gif" width="20" height="20" alt=""></td>
+    <td width="100%" style="background-image:url(http://www.novell.com/img/t2_bg_1.gif)" class="headingBlock">contents</td>
+  </tr>
+  <tr>
+    <td  colspan="2"><img src="http://www.novell.com/img/spacer.gif" width="1" height="10" border="0" alt=""></td>
+  </tr>
+  <tr>
+    <td colspan="2"> 
+      <table border="0" cellpadding="0" cellspacing="0" width="200%"> 
+        <tr> 
+          <td width="10"><img src="http://www.novell.com/img/spacer.gif" width="10" height="1" alt=""></td>
+          <td width="100%">
+			<table width="200" >
+			  <tr>
+			    <td nowrap class="leadCopy"><a href="#" onClick="javascript:searchSelectedTopics();" name="searchform"> Search  Checked Items for</a></td>
+			    <td nowrap align="center"><a href="help.html#search" target="text"><IMG src="images/help_btn.gif" border="0"></a></td>
+			  </tr>
+			  <tr>
+			    <td valign="top" nowrap ><input onKeyPress="checkEnter(event)" id="query0" name="query0" type="text" style="width:185px; font-size:11px;"/></td>
+			    <td nowrap align="center"><a href="#" onClick="javascript:searchSelectedTopics();" name="searchform"><IMG SRC="images/n_arrows_grey.gif" border="0"  width="7" height="7"></a>
+			    </td>
+			  </tr>
+			  <tr><td class="leadCopy" nowrap><a href="#" onClick="javascript:printSelectedTopics();">Print Checked Items</a></td>
+			    <td nowrap align="center"><a href="help.html#print" target="text"><IMG src="images/help_btn.gif" border="0" width="10" height="10"></a>
+			    </td>
+			   </tr>  
+			   <tr><td colspan="2"><IMG src="http://www.novell.com/img/spacer.gif" border="0" width="1" height="5"></a></td></tr>
+			</table>
+		</td>
+   		</tr>
+   	  </table> 
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" style="background-image:url(http://www.novell.com/img/dotlinebg_horiz.gif)"><img src="http://www.novell.com/img/spacer.gif" width="1" height="1" border="0" alt=""></td>
+  </tr>
+  <tr>
+   <td colspan="2"><img src="http://www.novell.com/img/spacer.gif" width="1" height="10" border="0" alt=""></td>
+  </tr> 
+</table>
+<script language="JavaScript"> 
+     document.write('<table bgcolor="#EDEEEC" cellpadding="0" cellspacing="0" width="100%">');
+     if (document.location.pathname.indexOf("/documentation/lg") >= 0 || document.location.pathname.indexOf("/documentation/beta") >= 0)
+     {
+         document.write('  <tr>');
+         document.write('       <td class="leadCopy" height="16"><img src="http://www.novell.com/img/spacer.gif" width="5" height="16" border="0" alt=""><img src="images/menu_new_root.gif" width="16" height="16" border="0"><a href="/documentation-index/index.jsp" target="_top">Product Documentation Home</a></td> ');
+         document.write('    </tr>');
+     }
+     else if(document.location.pathname.indexOf("/ndk/doc") >= 0)
+     {
+         document.write('  <tr>');
+         document.write('       <td class="leadCopy" height="16"><img src="http://www.novell.com/img/spacer.gif" width="5" height="16" border="0" alt=""><img src="images/menu_new_root.gif" width="16" height="16" border="0"><a href="/ndk/doc.htm" target="_top">NDK Doc Home</td>');
+         document.write('  </tr> ');
+     }    
+
+      var title = "";    
+      title = parent.frames[3].document.title; 
+      if (!title || title.length == 0)
+      {
+        title = "Document Contents";     
+      } 
+
+      var link =  parent.frames[3].document.location.pathname;
+	  if(link)
+	  {
+	      if (link.indexOf("treetitl.html") >=0)
+	      {
+	         if (title.indexOf(" - ") >= 0)
+	         {
+	            title = title.substring(22,title.indexOf(" - "));
+	         }
+			 var re = /\\/g;
+			 link = link.replace(re,'/');
+	         link = link.substring(0,link.lastIndexOf("/"));
+	         link = link + "/treetitl.html";
+	      }
+	      else
+	      {                                   
+	         title = title.substring(22,title.indexOf(" - "));
+			 var re = /\\/g;
+			 link = link.replace(re,'/');
+	         link = link.substring(0,link.lastIndexOf("/"));     
+	         link = link.substring(0,link.lastIndexOf("/"));
+	         link = link.substring(0,link.lastIndexOf("/"));
+	         link = link + "/treetitl.html";
+
+	      }
+
+	     document.write('  <tr>');
+	     document.write('       <td class="leadCopy" height="16"><img src="http://www.novell.com/img/spacer.gif" width="5" height="16" border="0" alt=""><img src="images/menu_new_root2.gif" width="16" height="16" border="0"><a href="'+ link +'" target="text">' + title + '</a></td> ');
+	     document.write('  </tr> ');   
+	     document.write('</table>');       
+ 	 }
+	 else
+	 {
+	     document.write('  <tr>');
+	     document.write('       <td class="leadCopy" height="16"><img src="http://www.novell.com/img/spacer.gif" width="5" height="16" border="0" alt=""><img src="images/menu_new_root2.gif" width="16" height="16" border="0">' + title + '</td> ');
+	     document.write('  </tr> ');   
+	     document.write('</table>');       
+	 }
+ 	      
+
+</script>
+</DIV>
+
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+setTop();
+//-->
+</SCRIPT>
+ 
+</table>
+</DIV>
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+setTop();
+//-->
+</SCRIPT>
+
+<!-- Set up any font's, colours, etc. that should apply to the menu here -->
+<FONT FACE="GENEVA, ARIAL, MS SANS SERIF, SANS-SERIF" SIZE="1">
+
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+if (theMenu) {
+	parent.DrawMenu(theMenu);
+}
+//-->
+</SCRIPT>
+
+<!-- Close any tags you set up for the menu here -->
+</FONT>
+
+<DIV ID="menuBottom">
+<!-- Place anything you want to appear after the menu between these DIV tags. -->
+&nbsp; 
+</DIV>
+
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+setBottom();
+//-->
+</SCRIPT>
+
+</BODY>
+</HTML>

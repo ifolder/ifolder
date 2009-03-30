@@ -1,0 +1,7 @@
+2007-05-02  B S Srinidhi  <srinidhi@novell.com>
+
+	* *.resx : Updated translated strings
+
+2007-04-24 Kalidas Balakrishnan <bkalidas@novell.com>
+
+	* GlobalProperties.cs - optimized the way refresh is being done. Made the images to render at 32 bit depth, added code to ensure proper painting of window during Download and Revert.

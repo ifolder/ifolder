@@ -1,0 +1,44 @@
+﻿<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Language" content="de">
+<meta name="Generator" content="Novell HTML-Konvertierung 10. M&auml;rz 2004">
+<meta name="Generation-Date" content="Sonntag, 23. Oktober 2005 15:54 Uhr">
+<meta name="Content-Date" content="Montag, 22. Okt. 2005 12:00:00 Uhr MEZ">
+<meta name="Robots" content="Index, Follow">
+<meta name="Document_Number" content="zHTML xD.0000.0000.0002.0008.">
+<meta name="Author" content="zHTML xD.0000.0000.0002.0008.">
+<meta name="Product_Class" content="">
+<meta name="Product_and_Version" content="iFolder(TM)">
+<meta name="Copyright" content="Copyright Novell, Inc. 1983-2004">
+<link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
+<title>Hilfe zu iFolder</title>
+<script type="text/javascript" language="javascript">
+function loadMenu()
+{
+	if ((parent.theMenu) && (parent.theMenu.amBusy == false) && parent.frames[2])
+	{
+	   parent.theMenu.loadScript("../doc/user/data/accountsprefs.html","../doc/user/data/toc_accountsprefs.html");
+	}
+	else{ setTimeout("loadMenu()",200);}
+}
+loadMenu();
+</script>
+<script type="text/javascript" language="javascript" src="../../../ui/jsglobal.js"></script>
+</head>
+<body onload="">
+<script type="text/javascript" language="javascript">
+  var prev_link="bvwppw5.html";
+  var next_link="myifolders.html";
+</script>
+<script type="text/javascript" language="javascript" src="../../../ui/topnav.js"></script>
+<a name="bwbirb9"></a>
+<div class="Topic" title="Configuring Local Virus Scanner Settings for iFolder Traffic">
+<h2 class="TOPIC-TITLE"><br />Konfigurieren von lokalen Virenscanner-Einstellungen f&uuml;r den iFolder-Verkehr</h2>
+<p class="TOPIC">Wenn Sie die Antivirensoftware auf Ihrem Computer verwenden, schlie&szlig;en Sie das Verzeichnis ..\simias\WorkArea\ von der Viren&uuml;berpr&uuml;fung aus. Beispielsweise lautet der Speicherort des Verzeichnisses ..\simias\WorkArea\ unter Windows C:\Dokumente und Einstellungen\<em class="VARIABLE">Benutzername</em>\Lokale Einstellungen\Anwendungsdaten\simias\WorkArea\.simias.wf.<em class="VARIABLE">GUID</em>. </p>
+<p class="TOPIC">Im Verzeichnis ..\simias\WorkArea\ werden von iFolder Dateien zum Herunterladen vom Server aufgef&uuml;hrt. Wenn einer iFolder-Datei ein Virus enth&auml;lt und Ihre Antivirensoftware diesen Virus scannt, w&auml;hrend sich die Datei im Verzeichnis ..\simias\WorkArea befindet, wird in der Viren&uuml;berpr&uuml;fung eine Popup-Meldung angezeigt, die besagt, dass ein Virus gefunden wurde. Die Datei wird gesperrt und anschlie&szlig;end versucht iFolder erneut, die Datei zu synchronisieren. </p>
+<p class="TOPIC">Wenn die WorkArea nicht &uuml;berpr&uuml;ft wird, kann die Synchronisierung beendet werden, die infizierte Datei wird erfolgreich heruntergeladen und in den lokalen iFolder-Ordner verschoben. Das Virenpr&uuml;fprogramm erkennt daraufhin die infizierte Datei im iFolder-Ordner, verschiebt sie aus diesem Ordner und sperrt sie. Dadurch wird der Computer vor einer Infektion gesch&uuml;tzt. Der L&ouml;schvorgang der Datei wird von iFolder erfasst und wenn die n&auml;chste Synchronisierung beginnt, wird die Datei durch iFolder vom Server sowie von den Mitgliedercomputern entfernt. </p>
+<p class="TOPIC">Wenn jedoch der iFolder-Ordner, in den die Datei heruntergeladen wird, ein Nur-Lesen-Ordner ist, wird der lokale L&ouml;schvorgang nicht f&uuml;r den Server und andere Mitgliedercomputer umgesetzt. Der Virus muss an anderer Stelle erkannt werden, an der &Auml;nderungen mithilfe von Berechtigungen synchronisiert werden k&ouml;nnen. Das Virenpr&uuml;fprogramm des Benutzers warnt den Benutzer wahrscheinlich vor dem Virus, demnach sollte der Benutzer weitere iFolder-Mitglieder &uuml;ber den Virus benachrichtigen.</p> </div>
+<script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Language" content="pl">
+
+<meta name="Generator" content="Konwersja do wersji HTML - Novell, 10 marca 2004">
+<meta name="Generation-Date" content="Niedziela, 23 pa&#378;dziernika 2005, 15:54">
+<meta name="Content-Date" content="Poniedzia&#322;ek, 22 pa&#378;dziernika 2005, 12:00:00 GMT">
+<meta name="Robots" content="INDEX, FOLLOW">
+<meta name="Document_Number" content="zHTML xD.0000.0000.0002.0007.">
+<meta name="Author" content="zHTML xD.0000.0000.0002.0007.">
+<meta name="Product_Class" content="">
+<meta name="Product_and_Version" content="iFolder(TM)">
+<meta name="Copyright" content="Copyright Novell, Inc. 1983-2004">
+
+<link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
+
+
+<title>iFolder - pomoc</title>
+<script type="text/javascript" language="javascript">
+function loadMenu()
+{
+	if ((parent.theMenu) && (parent.theMenu.amBusy == false) && parent.frames[2])
+	{
+	   parent.theMenu.loadScript("../doc/user/data/accountsprefs.html","../doc/user/data/toc_accountsprefs.html");
+	}
+	else{ setTimeout("loadMenu()",200);}
+}
+loadMenu();
+</script>
+<script type="text/javascript" language="javascript" src="../../../ui/jsglobal.js"></script>
+</head>
+
+<body onload="">
+<script type="text/javascript" language="javascript">
+  var prev_link="preferences.html";
+  var next_link="bwbirb9.html";
+</script>
+
+<script type="text/javascript" language="javascript" src="../../../ui/topnav.js"></script>
+
+<a name="bvwppw5"></a>
+
+<div class="Topic" title="Configuring Local Firewall Settings for iFolder Traffic">
+
+<h2 class="TOPIC-TITLE"><br />Konfigurowanie ustawie&#324; zapory lokalnej w celu umo&#380;liwienia komunikacji programu iFolder</h2>
+<p class="TOPIC">W przypadku korzystania z zapory lokalnej trzeba j&#261; tak skonfigurowa&#263;, aby pozwala&#322;a programowi iFolder na wyb&#243;r lokalnego portu dynamicznego, lub skonfigurowa&#263; lokalny port statyczny przypisany do klienta programu iFolder w celu nawi&#261;zywania komunikacji lokalnej (na tym samym komputerze) z serwerem Mono XSP. Program iFolder korzysta z us&#322;ug sieciowych Mono XSP do komunikacji przy u&#380;yciu protoko&#322;u HTTP lub HTTPS (SSL, opcja domy&#347;lna) z serwerami systemu Novell iFolder, na kt&#243;rych znajduj&#261; si&#281; konta iFolder. Administrator systemu iFolder konfiguruje us&#322;ugi iFolder, okre&#347;laj&#261;c, czy komunikacja korzysta w danym &#347;rodowisku z protoko&#322;u HTTP czy HTTPS.</p>
+<p class="TOPIC">Zapora nie blokuje ruchu mi&#281;dzy serwerem Mono XSP a serwerem systemu Novell iFolder, poniewa&#380; serwer Mono XSP do cel&#243;w ruchu sieciowego korzysta ze standardowych port&#243;w HTTP lub HTTPS. Je&#347;li jednak ruch mi&#281;dzy klientem a serwerem Mono XSP zostanie zablokowany, klient nie b&#281;dzie mia&#322; mo&#380;liwo&#347;ci komunikowania si&#281; z serwerem. U&#380;ytkownik nie b&#281;dzie m&#243;g&#322; zalogowa&#263; si&#281; do konta iFolder ani zsynchronizowa&#263; danych w iFolderach.</p>
+<p class="TOPIC">Pocz&#261;tkowa konfiguracja programu iFolder nie okre&#347;la konkretnego portu u&#380;ywanego do cel&#243;w komunikacji mi&#281;dzy klientem a serwerem Mono XSP. Podczas pierwszego uruchomienia program iFolder otwiera dost&#281;pny port lokalny, przez kt&#243;ry prowadzi nas&#322;uch &#380;&#261;da&#324; z serwera Mono XSP i wysy&#322;a dane do serwera za po&#347;rednictwem us&#322;ugi Mono XSP. Program zapisuje ten numer portu w pliku konfiguracyjnym i korzysta z niego w kolejnych sesjach, chyba &#380;e ten port nie jest dost&#281;pny w momencie uruchomienia programu iFolder. Je&#347;li dany port jest u&#380;ywany przez inn&#261; aplikacj&#281;, program iFolder wybiera inny dost&#281;pny port, zmienia konfiguracj&#281; portu w pliku konfiguracyjnym i w kolejnych sesjach korzysta z tego nowego portu. Je&#347;li na przyk&#322;ad program iFolder jest wy&#322;&#261;czony i inna aplikacja przejmuje dany port, podczas ponownego uruchamiania programu iFolder musi on wybra&#263; i skonfigurowa&#263; do u&#380;ycia inny port.</p>
+<h4 class="BRIDGEHEAD"><br />Korzystanie z lokalnego portu dynamicznego</h4>
+<p class="TOPIC">Je&#347;li komputer korzysta z zapory lokalnej, zapora powinna wykrywa&#263; ruch lokalny mi&#281;dzy programem iFolder i serwerem Mono XSP podczas ka&#380;dego kontaktu programu iFolder z serwerem nawi&#261;zywanego w celu zsynchronizowania listy u&#380;ytkownik&#243;w i danych w iFolderach. Aby unikn&#261;&#263; wy&#347;wietlania alert&#243;w w okienkach podr&#281;cznych przy ka&#380;dym uruchomieniu klienta, nale&#380;y zezwoli&#263; na ten ruch sieciowy. Je&#347;li zezwolenie na ten ruch sieciowy b&#281;dzie sta&#322;e, zapora nie powinna wysy&#322;a&#263; wi&#281;cej powiadomie&#324;.</p>
+<h4 class="BRIDGEHEAD"><br />Korzystanie z lokalnego portu statycznego</h4>
+<p class="TOPIC">W sekcji Service Manager pliku Simias.config mo&#380;na opcjonalnie doda&#263; parametr Web Service Port Range, aby umo&#380;liwi&#263; serwerowi Mono XSP wykorzystanie portu statycznego lub zakresu port&#243;w do obs&#322;ugi ruchu lokalnego. Ten port lub zakres port&#243;w mo&#380;e by&#263; otwierany w zaporze w celu umo&#380;liwienia komunikacji z serwerem Mono XSP. </p>
+<p class="TOPIC">Plik Simias.config mo&#380;na znale&#378;&#263; w nast&#281;puj&#261;cych lokalizacjach:</p>
+<table class="TABLENOTITLE" border="0" cellpadding="5" cellspacing="0">
+<tr class="HEADERROW"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bwejkc4"></a><em class="TBLHEAD">System operacyjny</em></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col"><em class="TBLHEAD">Lokalizacja pliku Simias.config</em></th>
+</tr>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bwejkc5"></a><p class="ENTRY">Linux</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">/home/<em class="VARIABLE">nazwa_u&#380;ytkownika</em>/.local/share/simias/Simias.config</p></td>
+</tr>
+<tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bwejlap"></a><p class="ENTRY">Windows</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">C:\Documents and Settings\<em class="VARIABLE">nazwa_u&#380;ytkownika</em>\Local Settings\Application Data\simias\Simias.config</p></td>
+</tr>
+<tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bwejkc6"></a><p class="ENTRY">Macintosh</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">/Users/<em class="VARIABLE">nazwa_u&#380;ytkownika</em>/.local/share/simias/Simias.config</p></td>
+</tr></table>
+
+<p class="TOPIC">Dodawanie parametru Web Service Port Range do sekcji Service Manager w pliku Simias.config. Na przyk&#322;ad:</p> <pre class="CODESAMPLENARROW">&#60;configuration&#62;</pre>
+
+<pre class="CODESAMPLENARROW">  &#60;section name="ServiceManager"&#62;</pre>
+
+<pre class="CODESAMPLENARROW">    &#60;setting name="WebServicePortRange" value="<em class="VARIABLE">port_monoxsp</em>" /&#62;   </pre>
+
+<pre class="CODESAMPLENARROW">  &#60;/section&#62;</pre>
+
+<pre class="CODESAMPLENARROW">&#60;/configuration&#62;</pre>
+
+<p class="TOPIC">W miejsce <em class="VARIABLE">port_monoxsp</em> wpisz numer portu lub zakres numer&#243;w port&#243;w:</p>
+<ul class="LISTBULLET">
+<li class="BULLETITEM">Aby korzysta&#263; z pojedynczego portu statycznego, okre&#347;l jeden czterocyfrowy numer portu (na przyk&#322;ad 1234). Na przyk&#322;ad: <pre class="CODESAMPLENARROW">&#60;setting name="WebServicePortRange" value="<em class="VARIABLE">1234</em>" /&#62;</pre>
+</li>
+
+<li class="BULLETITEM">Okre&#347;l zakres port&#243;w (na przyk&#322;ad "1234-1236"), aby korzysta&#263; z dowolnego dost&#281;pnego portu z podanego zakresu. Na przyk&#322;ad: <pre class="CODESAMPLENARROW">&#60;setting name="WebServicePortRange" value="<em class="VARIABLE">1234-1236</em>" /&#62;</pre>
+</li>
+</ul>
+<p class="TOPIC">Aby skonfigurowa&#263; system do korzystania z okre&#347;lonego portu lub zakresu port&#243;w:</p>
+<ol class="STEPLIST">
+<li class="STEP"><a name="bw4v93e"></a>
+<p class="STEP">Skonfiguruj zapor&#281; tak, aby umo&#380;liwia&#322;a ruch przez dany port lub zakres port&#243;w, kt&#243;re maj&#261; by&#263; u&#380;ywane przez program iFolder do przesy&#322;ania danych.</p>
+<p class="STEP">Informacje na temat otwierania portu w zaporze mo&#380;na znale&#378;&#263; w dokumentacji danej zapory.</p></li>
+
+<li class="STEP"><a name="bw4v6ou"></a>
+<p class="STEP">Zatrzymaj klienta programu iFolder, klikaj&#261;c prawym przyciskiem myszy ikon&#281; programu iFolder <img src="../graphics/ifolder16.png" alt="Ikona aplikacji iFolder" />, a nast&#281;pnie wybieraj&#261;c polecenie Zako&#324;cz.</p></li>
+
+<li class="STEP"><a name="bw4v6r7"></a>
+<p class="STEP">Zmodyfikuj plik Simias.config, dodaj&#261;c parametr Web Service Port Range do sekcji Service Manager.</p></li>
+
+<li class="STEP"><a name="bw4vbz4"></a>
+<p class="STEP">Uruchom klienta programu iFolder.</p>
+<p class="STEP">Wi&#281;cej informacji mo&#380;na znale&#378;&#263; w sekcji <a href="bw08fxi.html#bw08fxi">Uruchamianie klienta programu iFolder</a>.</p></li>
+</ol> </div>
+
+<script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
+
+</body>
+</html>
