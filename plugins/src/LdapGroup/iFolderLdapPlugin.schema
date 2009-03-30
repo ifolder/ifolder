@@ -1,0 +1,50 @@
+# iFolderLdapPlugin.schema -- ifolder LDAP attribute extension schema
+#/*****************************************************************************
+#*
+#* Copyright (c) [2009] Novell, Inc.
+#* All Rights Reserved.
+#*
+#* This program is free software; you can redistribute it and/or
+#* modify it under the terms of version 2 of the GNU General Public License as
+#* published by the Free Software Foundation.
+#*
+#* This program is distributed in the hope that it will be useful,
+#* but WITHOUT ANY WARRANTY; without even the implied warranty of
+#* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.   See the
+#* GNU General Public License for more details.
+#*
+#* You should have received a copy of the GNU General Public License
+#* along with this program; if not, contact Novell, Inc.
+#*
+#* To contact Novell about this file by physical or electronic mail,
+#* you may find current contact information at www.novell.com
+#*
+#*-----------------------------------------------------------------------------
+#*
+#*                 $Author: Mahabaleshwar Asundi <amahabaleshwar@novell.com>
+#*                 $Modified by: <Modifier>
+#*                 $Mod Date: <Date Modified>
+#*                 $Revision: 0.0
+#*-----------------------------------------------------------------------------
+#* This module is used to:
+#*        <Description of the functionality of the file >
+#*
+#***************************************************************************/
+
+# iFolderHomeServer attribute stores DNS Name or IP address of Users/Groups iFolder server.
+
+attributetype ( 2.16.840.1.113719.1.288.1.42
+        NAME 'iFolderHomeServer'
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+
+# iFolderUserProvision is an Auxilary object class,  that can be used along with the other
+# User/Group object classes. When extended, iFolderHomeServer attribute can be used to store
+# iFolder server DNS Name or IP address associated with the User/Group object.
+
+objectClass     ( 2.16.840.1.113719.1.288.1.43
+    NAME 'iFolderUserProvision'
+        DESC 'iFolder User Provision object'
+        AUXILIARY
+        MAY  ( iFolderHomeServer )
+        )
+

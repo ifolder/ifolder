@@ -1,0 +1,5 @@
+See http://www.ifolder.com/ for more information on the iFolder open source project.
+
+AUTHOR: SATYANARAYANA SVV
+PRODUCT: Plugins for Novell-iFolder
+Description: All the Windows DLL's must be signed with iFolder.snk which is available in src/WindowsClient directory. 

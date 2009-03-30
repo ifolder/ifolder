@@ -1,0 +1,147 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{02AA77ED-4C75-4996-A597-81E699C2E83C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AutoAccountCreator</RootNamespace>
+    <AssemblyName>AutoAccountCreator</AssemblyName>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>iFolder.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="iFolderApp, Version=3.6.1.0, Culture=neutral, PublicKeyToken=08dab5faaddc8eb1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\iFolder_stage\iFolderApp.exe</HintPath>
+    </Reference>
+    <Reference Include="iFolderComponent, Version=3.6.1.0, Culture=neutral, PublicKeyToken=08dab5faaddc8eb1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\iFolder_stage\iFolderComponent.dll</HintPath>
+    </Reference>
+    <Reference Include="Novell.iFolder, Version=3.6.1.0, Culture=neutral, PublicKeyToken=08dab5faaddc8eb1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\iFolder_stage\Novell.iFolder.dll</HintPath>
+    </Reference>
+    <Reference Include="SimiasClient, Version=3.6.1.0, Culture=neutral, PublicKeyToken=08dab5faaddc8eb1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\iFolder_stage\lib\simias\web\bin\SimiasClient.dll</HintPath>
+    </Reference>
+    <Reference Include="SimiasLib, Version=3.6.1.0, Culture=neutral, PublicKeyToken=08dab5faaddc8eb1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\iFolder_stage\lib\simias\web\bin\SimiasLib.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AutoAccount.cs" />
+    <Compile Include="AutoAccountHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="EnterPasswordPopup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EnterPasswordPopup.designer.cs">
+      <DependentUpon>EnterPasswordPopup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="EnterPasswordPopup.cs.resx">
+      <DependentUpon>EnterPasswordPopup.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnterPasswordPopup.de.resx">
+      <DependentUpon>EnterPasswordPopup.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnterPasswordPopup.es.resx">
+      <DependentUpon>EnterPasswordPopup.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnterPasswordPopup.fr.resx">
+      <DependentUpon>EnterPasswordPopup.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnterPasswordPopup.hu.resx">
+      <DependentUpon>EnterPasswordPopup.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnterPasswordPopup.it.resx">
+      <DependentUpon>EnterPasswordPopup.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnterPasswordPopup.ja.resx">
+      <DependentUpon>EnterPasswordPopup.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnterPasswordPopup.pl.resx">
+      <DependentUpon>EnterPasswordPopup.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnterPasswordPopup.pt-BR.resx">
+      <DependentUpon>EnterPasswordPopup.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnterPasswordPopup.resx">
+      <DependentUpon>EnterPasswordPopup.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnterPasswordPopup.ru.resx">
+      <DependentUpon>EnterPasswordPopup.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnterPasswordPopup.sk.resx">
+      <DependentUpon>EnterPasswordPopup.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnterPasswordPopup.zh-CN.resx">
+      <DependentUpon>EnterPasswordPopup.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnterPasswordPopup.zh-TW.resx">
+      <DependentUpon>EnterPasswordPopup.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="iFolder.snk" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>if not exist C:\iFolder_stage\lib\plugins mkdir C:\iFolder_stage\lib\plugins
+xcopy /Y $(TargetPath) C:\iFolder_stage\lib\plugins
+xcopy /Y $(ProjectDir)..\..\common\AutoAccount.xsd C:\iFolder_stage\
+xcopy /Y $(ProjectDir)..\..\common\AutoAccount.xml C:\iFolder_stage\</PostBuildEvent>
+  </PropertyGroup>
+</Project>
