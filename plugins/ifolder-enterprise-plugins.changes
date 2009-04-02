@@ -1,9 +1,0 @@
--------------------------------------------------------------------
-Tue Mar 17 01:48:43 MDT 2009 - sbipin@novell.com
-
-- Trunk code update from 3.6 to 3.7.2
-
-Major features:
-
-	- LDAPGroup Support
-	- Auto-Account creation by using a Response file
