@@ -1,3 +1,7 @@
+2009-04-08 Kalidas Balakrishnan <bkalidas@novell.com>
+	* Patch from Mathew O'Gorman <mog@rldn.net>
+	- Patch to make client work in Debian :-)
+
 -------------------------------------------------------------------
 Tue Mar 17 01:48:43 MDT 2009 - sbipin@novell.com
 
