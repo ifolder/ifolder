@@ -2029,7 +2029,7 @@ revert_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 	if (ifolder_path != NULL) {
 		holder = (iFolderHolder *)g_hash_table_lookup (ifolders_ht, ifolder_path);
 		if (holder != NULL) {
-			sprintf (args, "%s revert %s", 
+			sprintf (args, "%s revert \"%s\"", 
 					 NAUTILUS_IFOLDER_SH_PATH, ifolder_path); 
 		}
 		

@@ -210,7 +210,6 @@ namespace Novell.iFolder.Nautilus
 
 		private static void RemoveSelectedFolderHandler(string path)
 		{
-			Console.WriteLine("Calling RemoveSelectedFolderHandler\n");
 				iFolderMsgDialog dialog = new iFolderMsgDialog(
 					null,
 					iFolderMsgDialog.DialogType.Question,
