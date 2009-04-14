@@ -1780,7 +1780,31 @@ namespace Novell.FormsTrayApp
 		{
 			set { syncLog = value; }
 		}
-		#endregion
+
+        public iFolderWebService iFWebService
+        {
+            set
+            {
+                this.ifWebService = value;
+            }
+        }
+
+        public SimiasWebService Simws
+        {
+            set
+            {
+                this.simiasWebService = value;
+            }
+        }
+
+        public IProcEventClient EventClient
+        {
+            set
+            {
+                this.eventClient = value;
+            }
+        }
+        #endregion
 
 		#region Public Methods
         public bool AcceptiFolder(iFolderWeb ifolder, out bool added)

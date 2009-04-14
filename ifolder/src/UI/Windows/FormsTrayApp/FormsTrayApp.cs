@@ -117,6 +117,7 @@ namespace Novell.FormsTrayApp
 		private bool shutdown = false;
 		private bool shutdown_msg = false;
 		private bool simiasRunning = false;
+        private bool simiasStarting = false;
 		private bool wizardRunning = false;
         private bool exitFlag = true;
 		private Icon trayIcon;
@@ -183,6 +184,10 @@ namespace Novell.FormsTrayApp
         public static IiFolderLog log;
         private const int HWND_BOARDCAST = 0xffff;
         private System.Windows.Forms.Timer splashTimer;
+        private System.Windows.Forms.Timer SimiasTimer;
+        private static bool RegularStart = false;
+        private static string lockObject = "SimiasStarting";
+        private bool ShowWindow = false;
         internal uint appRestart;
 
 		#endregion
@@ -212,6 +217,10 @@ namespace Novell.FormsTrayApp
 				}
 			}
 
+            if (args.Length == 1 && args[0].Equals("\\r"))
+            {
+                RegularStart = true;
+            }
 			instance = new FormsTrayApp();
 			Application.Run(instance);
 		}
@@ -344,10 +353,14 @@ namespace Novell.FormsTrayApp
 
         public static void LogInit()
         {
-            if (!File.Exists(iFolderLogManager.LogConfFilePath))
-                File.Copy(Path.Combine(SimiasSetup.sysconfdir, iFolderLogManager.LogConfFileName), iFolderLogManager.LogConfFilePath);
-            iFolderLogManager.Configure(iFolderLogManager.LogConfDirPath);
-            FormsTrayApp.log = iFolderLogManager.GetLogger(typeof(System.Object));
+            try
+            {
+                if (!File.Exists(iFolderLogManager.LogConfFilePath))
+                    File.Copy(Path.Combine(SimiasSetup.sysconfdir, iFolderLogManager.LogConfFileName), iFolderLogManager.LogConfFilePath);
+                iFolderLogManager.Configure(iFolderLogManager.LogConfDirPath);
+                FormsTrayApp.log = iFolderLogManager.GetLogger(typeof(System.Object));
+            }
+            catch { }
       	}                    
 	
         public static void SetTrayIconStatus(bool value)
@@ -641,10 +654,24 @@ namespace Novell.FormsTrayApp
 
 		private void shellNotifyIcon_Click(object sender, EventArgs e)
 		{
-			if (simiasRunning)
-			{
-				menuProperties_Click(sender, e);
-			}
+            ShowWindow = true;
+            if (simiasRunning)
+            {
+                menuProperties_Click(sender, e);
+            }
+            else if (!simiasStarting)
+            {
+                //simiasStarting = true;
+                shellNotifyIcon.DisplayBalloonTooltip(resourceManager.GetString("iFolderServices"), resourceManager.GetString("iFolderServicesStarting"), BalloonType.Info);
+                //Thread th = new Thread(new ThreadStart(this.DelayedStart));
+                //th.Start();
+                DelayedStart();
+                return;
+            }
+            else
+            {
+                shellNotifyIcon.DisplayBalloonTooltip(resourceManager.GetString("iFolderServices"), resourceManager.GetString("iFolderServicesStarting"), BalloonType.Info);
+            }
 		}
 
 		private void shellNotifyIcon_BalloonClick(object sender, EventArgs e)
@@ -677,7 +704,8 @@ namespace Novell.FormsTrayApp
 					ifolderAdvanced.Dispose();
 					break;
 				case NotifyType.Subscription:
-					globalProperties.AcceptiFolder( ifolderFromNotify, out added);
+                    if(ifolderFromNotify != null)
+					    globalProperties.AcceptiFolder( ifolderFromNotify, out added);
 					break;
 				case NotifyType.SyncError:
                     if (infolog.Visible)
@@ -690,6 +718,24 @@ namespace Novell.FormsTrayApp
 
 		private void shellNotifyIcon_ContextMenuPopup(object sender, EventArgs e)
 		{
+            if (!simiasRunning )
+            {
+                if( !simiasStarting )
+                {
+                    //simiasStarting = true;
+                    shellNotifyIcon.DisplayBalloonTooltip(resourceManager.GetString("iFolderServices"), resourceManager.GetString("iFolderServicesStarting"), BalloonType.Info);
+                    //Thread th = new Thread(new ThreadStart(this.DelayedStart));
+                    //th.Start();                    
+                    DelayedStart();
+                }                
+                foreach (MenuItem item in this.contextMenu1.MenuItems)
+                {
+                    item.Visible = false;
+                }
+                shellNotifyIcon.DisplayBalloonTooltip(resourceManager.GetString("iFolderServices"), resourceManager.GetString("iFolderServicesStarting"), BalloonType.Info);
+                return;
+            }
+            
 			foreach (MenuItem item in this.contextMenu1.MenuItems)
 			{
 				item.Visible = simiasRunning && !wizardRunning;
@@ -708,6 +754,82 @@ namespace Novell.FormsTrayApp
 		{
 			ShutdownTrayApp(null);
 		}
+
+        public void DelayedStart()
+        {
+            lock (lockObject)
+            {
+                if (simiasRunning || simiasStarting)
+                    return;
+                else
+                {
+                    simiasStarting = true;
+                    iFolderComponent.SimiasStarting = true;
+                }
+            }
+            StartSimias();
+            LogInit();
+            PostSimiasStart();
+        }
+
+        public void StartSimias()
+        {
+            try
+            {
+                //simiasStarting = true;
+                DateTime starttime = DateTime.Now;
+                simiasManager.Start();
+                if (simiasManager.WebServiceUri == null || simiasManager.DataPath == null)
+                {
+                    MessageBox.Show("simiasManager is not proper.");
+                    Thread.Sleep(2000);
+                }
+                SetWebServiceInformation(simiasManager.WebServiceUri, simiasManager.DataPath);
+                ifWebService = new iFolderWebService();
+                ifWebService.Url = simiasManager.WebServiceUri + "/iFolder.asmx";
+                simiasWebService = new SimiasWebService();
+                simiasWebService.Url = simiasManager.WebServiceUri + "/Simias.asmx";
+                LocalService.Start(simiasWebService, simiasManager.WebServiceUri, simiasManager.DataPath);
+                LocalService.Start(ifWebService, simiasManager.WebServiceUri, simiasManager.DataPath);
+                eventClient.Register();
+/*                eventQueue = new Queue();
+                workEvent = new AutoResetEvent(false);
+
+                // Set up the event handlers to watch for create, delete, and change events.
+                eventClient = new IProcEventClient(new IProcEventError(errorHandler), null);
+                eventClient.Register();
+ */
+                //InitGUI();
+                if (!eventError)
+                {
+                    eventClient.SetEvent(IProcEventAction.AddNodeChanged, new IProcEventHandler(trayApp_nodeEventHandler));
+                    eventClient.SetEvent(IProcEventAction.AddNodeCreated, new IProcEventHandler(trayApp_nodeEventHandler));
+                    eventClient.SetEvent(IProcEventAction.AddNodeDeleted, new IProcEventHandler(trayApp_nodeEventHandler));
+                    eventClient.SetEvent(IProcEventAction.AddCollectionSync, new IProcEventHandler(trayApp_collectionSyncHandler));
+                    eventClient.SetEvent(IProcEventAction.AddFileSync, new IProcEventHandler(trayApp_fileSyncHandler));
+                    eventClient.SetEvent(IProcEventAction.AddNotifyMessage, new IProcEventHandler(trayApp_notifyMessageHandler));
+                }
+                
+                this.globalProperties.iFWebService = ifWebService;
+                this.globalProperties.Simws = simiasWebService;
+                this.globalProperties.EventClient = eventClient;
+                this.preferences.ifolderWebService = ifWebService;
+                this.preferences.Simws = simiasWebService;
+                this.preferences.simManager = simiasManager;
+                
+                DateTime endtime = DateTime.Now;
+                simiasRunning = true;
+                iFolderComponent.SimiasRunning = true;
+            //    MessageBox.Show(string.Format("start time: {0} and end time: {1}", starttime, endtime));
+                simiasStarting = false;
+                iFolderComponent.SimiasStarting = false;
+            //    PostSimiasStart();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format("Exception in starting simias: {0}--{1}", ex.Message, ex.StackTrace));
+            }
+        }
 
 		private void FormsTrayApp_Load(object sender, System.EventArgs e)
 		{
@@ -737,40 +859,21 @@ namespace Novell.FormsTrayApp
                                 simiasManager.Stop();
                             }
                         }
-                        simiasManager.Start();
-                        if (simiasManager.WebServiceUri == null || simiasManager.DataPath == null)
-                            Thread.Sleep(2000);
-                        else
-                            break;
                     }
                    
                     // Write the web service information out to the registry where the iFolder Shell
                     // component and any other iFolder type applications can get access to the web
                     // service.
-                    if (simiasManager.WebServiceUri == null || simiasManager.DataPath == null)
-                        ShutdownTrayApp( new Exception("iFolder failed to initialize, please try again "));
-                    SetWebServiceInformation(simiasManager.WebServiceUri, simiasManager.DataPath);
-
-                    ifWebService = new iFolderWebService();
-                    ifWebService.Url = simiasManager.WebServiceUri + "/iFolder.asmx";
-                    simiasWebService = new SimiasWebService();
-                    simiasWebService.Url = simiasManager.WebServiceUri + "/Simias.asmx";
-
+                    
+                    ifWebService = null; // new iFolderWebService();
+                    simiasWebService = null;// new SimiasWebService();
                     eventQueue = new Queue();
                     workEvent = new AutoResetEvent(false);
-
+                    
                     // Set up the event handlers to watch for create, delete, and change events.
                     eventClient = new IProcEventClient(new IProcEventError(errorHandler), null);
-                    eventClient.Register();
-                    if (!eventError)
-                    {
-                        eventClient.SetEvent(IProcEventAction.AddNodeChanged, new IProcEventHandler(trayApp_nodeEventHandler));
-                        eventClient.SetEvent(IProcEventAction.AddNodeCreated, new IProcEventHandler(trayApp_nodeEventHandler));
-                        eventClient.SetEvent(IProcEventAction.AddNodeDeleted, new IProcEventHandler(trayApp_nodeEventHandler));
-                        eventClient.SetEvent(IProcEventAction.AddCollectionSync, new IProcEventHandler(trayApp_collectionSyncHandler));
-                        eventClient.SetEvent(IProcEventAction.AddFileSync, new IProcEventHandler(trayApp_fileSyncHandler));
-                        eventClient.SetEvent(IProcEventAction.AddNotifyMessage, new IProcEventHandler(trayApp_notifyMessageHandler));
-                    }
+                    //eventClient.Register();
+                    
                     // Instantiate the Preferences dialog.
                     preferences = new Preferences(ifWebService, simiasWebService, simiasManager);
                     preferences.EnterpriseConnect += new Novell.FormsTrayApp.Preferences.EnterpriseConnectDelegate(preferences_EnterpriseConnect);
@@ -790,12 +893,7 @@ namespace Novell.FormsTrayApp
 
                     infolog = new SyncLog();
                     ///Make the changes to Sync lof to make it info log , make clear button hide and rename it
-                    infolog.Customize();
-
-                    // Cause the web services to start.
-                    LocalService.Start(simiasWebService, simiasManager.WebServiceUri, simiasManager.DataPath);
-                    LocalService.Start(ifWebService, simiasManager.WebServiceUri, simiasManager.DataPath);
-                    simiasRunning = true;
+                    infolog.Customize();                    
                     // Instantiate the GlobalProperties dialog.
                     globalProperties = new GlobalProperties(ifWebService, simiasWebService, eventClient);
                     globalProperties.RemoveDomain += new Novell.FormsTrayApp.GlobalProperties.RemoveDomainDelegate(globalProperties_RemoveDomain);
@@ -803,16 +901,46 @@ namespace Novell.FormsTrayApp
                     globalProperties.SyncLogDialog = syncLog;
                     globalProperties.CreateControl();
                     handle = globalProperties.Handle;
+                   
+                    if (RegularStart)
+                    {
+                        DelayedStart();
+                    }
+                    else
+                    {
+                        try
+                        {
+                            LogInit();
+                        }
+                        catch { }
+                        shellNotifyIcon.Text = resourceManager.GetString("iFolderServices");
+                        shellNotifyIcon.Icon = trayIcon;
 
-                    //Initialize the logging Capability
-                    LogInit();
+                        SimiasTimer = new System.Windows.Forms.Timer();
+                        SimiasTimer.Interval = 120000;
+                        SimiasTimer.Tick += new EventHandler(SimiasTimer_Tick);
+                        SimiasTimer.Start();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(string.Format("Exception: {0}--{1}", ex.Message, ex.StackTrace));
+                    ShutdownTrayApp(ex);
+                }
+                finally
+                {
+                    CloseStartupScreen();
+                }
+			}
+		}
 
+        public void PostSimiasStart()
+        {
                     bool accountPrompt = false;
                     try
                     {
                         // Pre-load the servers and accounts list.
                         globalProperties.InitializeServerList();
-
                         DomainInformation[] domains;
                         domains = this.simiasWebService.GetDomains(false);
                         foreach (DomainInformation dw in domains)
@@ -850,134 +978,132 @@ namespace Novell.FormsTrayApp
                         worker.Priority = ThreadPriority.BelowNormal;
                         worker.Start();
                     }
-
                     shellNotifyIcon.Text = resourceManager.GetString("iFolderServices");
                     shellNotifyIcon.Icon = trayIcon;
-                    /* The following code block commented as the functioanlity has been implemented as a seperate 
-                     function splashTimeEvent*/
-                    /*if( this.startupWind != null)
-					{
-						this.startupWind.Dispose();
-						this.startupWind.Close();
-						this.startupWind = null;
-					}*/
-
                     // Display the overlay icon on all iFolders.
-                    if (accountPrompt == false)
+                    try
                     {
-                        this.globalProperties.Show();
-                        updateOverlayIcons();
-                        // check for 2.x folders for migration
-                        string iFolderKey = @"SOFTWARE\Novell\iFolder";
-                        RegistryKey regKey = Registry.CurrentUser.CreateSubKey(iFolderKey);
-                        int Migration = (int)regKey.GetValue("MigrationPrompt", (int)1);
-                        if (Migration == 1)
+                        if (accountPrompt == false)
                         {
-                            // show the dialog if 2.x folders present
-                            if (iFolder2Present() == true)
+                            if ((!Preferences.HideiFolderInTray && RegularStart) || ShowWindow )
                             {
-                                //	MessageBox.Show("You have iFolder2.x installation.");
-                                //Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox("You have iFolder2.x installation.");
-                                bool migrate = MigrationPrompt();
-                                if (migrate == true)
-                                {
-                                    //	MessageBox.Show("Migration selected");
-                                    Novell.FormsTrayApp.MigrationWindow migrationWindow = new MigrationWindow(this.ifWebService, this.simiasWebService);
-                                    migrationWindow.ShowDialog(this);
-                                }
+                                this.globalProperties.Show();
                             }
-                        }
-                    }
-
-                    if (accountPrompt)
-                    {
-                        bool status = false;
-
-                        string filePathValue;
-                        System.Object[] args = new System.Object[5];
-
-                        try
-                        {
-                            Assembly idAssembly = Assembly.LoadFrom(AutoAccountConstants.assemblyName);
-                            if (idAssembly != null)
+                            updateOverlayIcons();
+                            // check for 2.x folders for migration
+                            string iFolderKey = @"SOFTWARE\Novell\iFolder";
+                            RegistryKey regKey = Registry.CurrentUser.CreateSubKey(iFolderKey);
+                            int Migration = (int)regKey.GetValue("MigrationPrompt", (int)1);
+                            if (Migration == 1)
                             {
-                                Type type = idAssembly.GetType(AutoAccountConstants.autoAccountClass);
-                                if (null != type)
+                                // show the dialog if 2.x folders present
+                                if (iFolder2Present() == true)
                                 {
-                                    args[0] = ifWebService;
-                                    args[1] = simiasWebService;
-                                    args[2] = simiasManager;
-                                    args[3] = globalProperties;
-                                    args[4] = this;
-                                    System.Object autoAccount = Activator.CreateInstance(type, args);
-                                    MethodInfo method = type.GetMethod(AutoAccountConstants.autoAccountCreateAccountsMethod);
-                                    status = (bool)method.Invoke(autoAccount, null);
-
-                                    if (status)
+                                    //	MessageBox.Show("You have iFolder2.x installation.");
+                                    //Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox("You have iFolder2.x installation.");
+                                    bool migrate = MigrationPrompt();
+                                    if (migrate == true)
                                     {
-                                        method = type.GetMethod(AutoAccountConstants.autoAccountPrefMethod);
-                                        method.Invoke(autoAccount, null);
-                                        PropertyInfo info = type.GetProperty(AutoAccountConstants.autoAccountFilePath);
-                                        filePathValue = (string)info.GetValue(autoAccount, null);
-                                        FormsTrayApp.log.Debug("File path value is {0}", filePathValue);
-                                        System.IO.FileInfo fileInfo = new System.IO.FileInfo(filePathValue);
-                                        fileInfo.MoveTo(filePathValue + ".backup");
+                                        //	MessageBox.Show("Migration selected");
+                                        Novell.FormsTrayApp.MigrationWindow migrationWindow = new MigrationWindow(this.ifWebService, this.simiasWebService);
+                                        migrationWindow.ShowDialog(this);
                                     }
                                 }
                             }
                         }
-                        catch (Exception ex)
+                        if (accountPrompt)
                         {
-                            FormsTrayApp.log.Info("Error: {0}", ex.Message);
-                            FormsTrayApp.log.Debug("Exception Type {0}", ex.GetType());
-                            FormsTrayApp.log.Debug("StackTrace {0}", ex.StackTrace);
-                        }
+                            bool status = false;
 
-                        if (!status)
-                        {
-                            DomainInformation[] domains;
-                            domains = this.simiasWebService.GetDomains(false);
-                            if (domains.Length.Equals(0))
+                            string filePathValue;
+                            System.Object[] args = new System.Object[5];
+
+                            try
                             {
-                                AccountWizard accountWizard = new AccountWizard(ifWebService, simiasWebService, simiasManager, true, this.preferences, this.globalProperties);
-                                accountWizard.EnterpriseConnect += new Novell.Wizard.AccountWizard.EnterpriseConnectDelegate(preferences_EnterpriseConnect);
-                                wizardRunning = true;
-                                DialogResult result = accountWizard.ShowDialog();
-                                wizardRunning = false;
-                                if (result == DialogResult.OK)
+                                Assembly idAssembly = Assembly.LoadFrom(AutoAccountConstants.assemblyName);
+                                if (idAssembly != null)
                                 {
-                                    // Display the iFolders dialog.
-                                    preferences_DisplayiFolderDialog(this, new EventArgs());
+                                    Type type = idAssembly.GetType(AutoAccountConstants.autoAccountClass);
+                                    if (null != type)
+                                    {
+                                        args[0] = ifWebService;
+                                        args[1] = simiasWebService;
+                                        args[2] = simiasManager;
+                                        args[3] = globalProperties;
+                                        args[4] = this;
+                                        System.Object autoAccount = Activator.CreateInstance(type, args);
+                                        MethodInfo method = type.GetMethod(AutoAccountConstants.autoAccountCreateAccountsMethod);
+                                        status = (bool)method.Invoke(autoAccount, null);
+
+                                        if (status)
+                                        {
+                                            method = type.GetMethod(AutoAccountConstants.autoAccountPrefMethod);
+                                            method.Invoke(autoAccount, null);
+                                            PropertyInfo info = type.GetProperty(AutoAccountConstants.autoAccountFilePath);
+                                            filePathValue = (string)info.GetValue(autoAccount, null);
+                                            FormsTrayApp.log.Debug("File path value is {0}", filePathValue);
+                                            System.IO.FileInfo fileInfo = new System.IO.FileInfo(filePathValue);
+                                            fileInfo.MoveTo(filePathValue + ".backup");
+                                        }
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                FormsTrayApp.log.Info("Error: {0}", ex.Message);
+                                FormsTrayApp.log.Debug("Exception Type {0}", ex.GetType());
+                                FormsTrayApp.log.Debug("StackTrace {0}", ex.StackTrace);
+                            }
+                            if (!status)
+                            {
+                                DomainInformation[] domains;
+                                domains = this.simiasWebService.GetDomains(false);
+                                if (domains.Length.Equals(0))
+                                {
+                                    AccountWizard accountWizard = new AccountWizard(ifWebService, simiasWebService, simiasManager, true, this.preferences, this.globalProperties);
+                                    accountWizard.EnterpriseConnect += new Novell.Wizard.AccountWizard.EnterpriseConnectDelegate(preferences_EnterpriseConnect);
+                                    wizardRunning = true;
+                                    DialogResult result = accountWizard.ShowDialog();
+                                    wizardRunning = false;
+                                    if (result == DialogResult.OK)
+                                    {
+                                        // Display the iFolders dialog.
+                                        preferences_DisplayiFolderDialog(this, new EventArgs());
+                                    }
+                                }
+                            }
+                            else if (!wizardRunning)
+                            {
+                                if (globalProperties.Visible)
+                                {
+                                    globalProperties.Activate();
+                                }
+                                else
+                                {
+                                    // Show the main windows only when we have one or more domains 
+                                    DomainInformation[] domains;
+                                    domains = this.simiasWebService.GetDomains(false);
+                                    if (!domains.Length.Equals(0))
+                                        globalProperties.Show();
                                 }
                             }
                         }
-                        else if (!wizardRunning)
-                        {
-                            if (globalProperties.Visible)
-                            {
-                                globalProperties.Activate();
-                            }
-                            else
-                            {
-                                // Show the main windows only when we have one or more domains 
-                                DomainInformation[] domains;
-                                domains = this.simiasWebService.GetDomains(false);
-                                if (!domains.Length.Equals(0))
-                                    globalProperties.Show();
-                            }
-                        }
                     }
-                }
-                catch (Exception ex)
-                {
-                    ShutdownTrayApp(ex);
-                }
-                finally
-                {
-                    CloseStartupScreen();
-                }
-			}
-		}
+                    catch (Exception e1)
+                    {
+                        MessageBox.Show(string.Format("Exception: {0}--{1}", e1.Message, e1.StackTrace));
+                    }
+        }
+
+        void SimiasTimer_Tick(object sender, EventArgs e)
+        {
+            SimiasTimer.Stop();
+            if (!simiasRunning && !simiasStarting)
+            {
+                //simiasStarting = true;
+                DelayedStart();
+            }
+        }
 
 		private void ShowStartupScreen()
 		{
@@ -1728,18 +1854,16 @@ namespace Novell.FormsTrayApp
 								catch // Ignore
 								{
 								}
-
 								domainInfo.Authenticated = true;
 								preferences.UpdateDomainStatus(new Domain(domainInfo));
                                 //This will add the Server to the UI in case of No ifolder on server and password is set as remembered.
                                 globalProperties.AddDomainToUIList(domainInfo);
-                                globalProperties.updateifListViewDomainStatus(domainInfo.ID, true);
-                                
+                                globalProperties.updateifListViewDomainStatus(domainInfo.ID, true);                                
 							}
 						}
 						catch (Exception ex)
 						{
-							MessageBox.Show(ex.Message);
+							MessageBox.Show(string.Format("Exception here: {0}--{1}", ex.Message, ex.StackTrace));
 						}
 
 						isConnecting = false;
@@ -1783,6 +1907,7 @@ namespace Novell.FormsTrayApp
 
 
 			simiasRunning = false;
+            iFolderComponent.SimiasRunning = false;
 
 			try
 			{
