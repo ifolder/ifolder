@@ -40,7 +40,7 @@ using System.IO;
 using Novell.iFolder.Web;
 using Novell.iFolderCom;
 
-namespace Novell.FormsTrayApp
+namespace Novell.iFolderCom
 {
 	/// <summary>
 	/// Summary description for RevertiFolder.
