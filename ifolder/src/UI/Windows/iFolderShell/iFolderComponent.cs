@@ -147,11 +147,6 @@ namespace Novell.iFolderCom
 
 		private System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(iFolderAdvanced));
         
-//		public iFolderComponent(Uri location)
-//		{
-//			manager= iFolderManager.Connect(location);
-//		}
-
         public static bool SimiasRunning
         {
             get
@@ -187,8 +182,6 @@ namespace Novell.iFolderCom
 		/// </summary>
 		public iFolderComponent()
 		{
-			System.Diagnostics.Debug.WriteLine("In iFolderComponent()");
-
 			try
 			{
 				connectToWebService();
@@ -252,7 +245,6 @@ namespace Novell.iFolderCom
 		{
 			iFolderWeb ifolder = null;
 			hasConflicts = false;
-
 			try
 			{
 				connectToWebService();
@@ -510,9 +502,20 @@ namespace Novell.iFolderCom
 		{
 			if (ifWebService == null)
 			{
+                if (simiasRunning == false)
+                {
+                    Process[] processArray = Process.GetProcessesByName("simias");
+                    if (processArray == null || processArray.Length == 0)
+                    {
+                        System.Diagnostics.Debug.WriteLine(string.Format("simias is not running dude..."));
+                        return;
+                    }
+                    simiasRunning = true;
+                }
+                System.Diagnostics.Debug.WriteLine(string.Format("In connectToWebService(). Simias is running...", SimiasRunning));
                 /// If simias is not started do not start the web services...
-                if (SimiasRunning == false)
-                    return;
+                //if (SimiasRunning == false)
+                //    return;
                 // Use the language stored in the registry.
                 Thread.CurrentThread.CurrentUICulture = new CultureInfo(GetLanguageDirectory());
 
