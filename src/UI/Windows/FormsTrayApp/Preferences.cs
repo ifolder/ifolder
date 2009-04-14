@@ -1252,6 +1252,30 @@ namespace Novell.FormsTrayApp
             }
         }
 
+
+        public iFolderWebService ifolderWebService
+        {
+            set
+            {
+                this.ifWebService = value;
+            }
+        }
+
+        public SimiasWebService Simws
+        {
+            set
+            {
+                this.simiasWebService = value;
+            }
+        }
+
+        public Manager simManager
+        {
+            set
+            {
+                this.simiasManager = value;
+            }
+        }        
         
         #endregion
 

@@ -134,6 +134,10 @@ namespace Novell.iFolderCom
 		private static readonly string displayConfirmationDisabled = "DisplayConfirmationDisabled";
 		private static readonly string displayTrayIconDisabled = "DisplayTrayIconDisabled";
 		private static readonly string iFolderKey = @"SOFTWARE\Novell\iFolder";
+        private static bool simiasStarting = false;
+        private static bool simiasRunning = false;
+        private static string simiasStartingLock = "simiasStartingLock";
+        private static string simiasRunningLock = "simiasRunningLock";
 
 		private System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(iFolderAdvanced));
 
@@ -141,6 +145,36 @@ namespace Novell.iFolderCom
 //		{
 //			manager= iFolderManager.Connect(location);
 //		}
+
+        public static bool SimiasRunning
+        {
+            get
+            {
+                return simiasRunning;
+            }
+            set
+            {
+                lock (simiasRunningLock)
+                {
+                    simiasRunning = value;
+                }
+            }
+        }
+
+        public static bool SimiasStarting
+        {
+            get
+            {
+                return simiasStarting;
+            }
+            set
+            {
+                lock (simiasStartingLock)
+                {
+                    simiasStarting = value;
+                }
+            }
+        }
 
 		/// <summary>
 		/// Constructs an iFolderComponent object.
@@ -454,6 +488,9 @@ namespace Novell.iFolderCom
 		{
 			if (ifWebService == null)
 			{
+                /// If simias is not started do not start the web services...
+                if (SimiasRunning == false)
+                    return;
                 // Use the language stored in the registry.
                 Thread.CurrentThread.CurrentUICulture = new CultureInfo(GetLanguageDirectory());
 
