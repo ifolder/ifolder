@@ -878,44 +878,45 @@ namespace Novell.iFolder
 		private void UpdateWidgetSensitivity()
 		{
 			TreeSelection tSelect = AccTreeView.Selection;
-			if(tSelect.CountSelectedRows() == 1)
-			{
-				TreeModel tModel;
-				TreeIter iter;
-	
-				tSelect.GetSelected(out tModel, out iter);
-				string domainID = (string) tModel.GetValue(iter, 0);
-				DomainInformation dom = domainController.GetDomain(domainID);
-				if (dom == null) return;	// Prevent null pointer
-				
-				IDomainProviderUI provider = domainProviderUI.GetProviderForID(domainID);
-				if (provider != null)
-				{
-					if (provider.CanDelete)
-						RemoveButton.Sensitive = true;
-					else
-						RemoveButton.Sensitive = false;
-					
-					if (provider.HasDetails)
-						DetailsButton.Sensitive = true;
-					else
-						DetailsButton.Sensitive = false;
-				}
-				else
-				{
-					RemoveButton.Sensitive			= true;
-					DetailsButton.Sensitive			= true;
-				}
 
-				// Set the control states
-				AddButton.Sensitive				= true;
-			}
-			else
-			{
-				// Nothing is selected
-				AddButton.Sensitive				= true;
-				RemoveButton.Sensitive			= false;
-				DetailsButton.Sensitive			= false;
+			// Nothing is selected
+			AddButton.Sensitive= true;
+			RemoveButton.Sensitive= false;
+			DetailsButton.Sensitive= false;
+			if(tSelect != null)	
+			{	
+				if(tSelect.CountSelectedRows() == 1)
+				{
+					TreeModel tModel;
+					TreeIter iter;
+	
+					tSelect.GetSelected(out tModel, out iter);
+					string domainID = (string) tModel.GetValue(iter, 0);
+					DomainInformation dom = domainController.GetDomain(domainID);
+					if (dom == null) return;	// Prevent null pointer
+				
+					IDomainProviderUI provider = domainProviderUI.GetProviderForID(domainID);
+					if (provider != null)
+					{
+						if (provider.CanDelete)
+							RemoveButton.Sensitive = true;
+						else
+							RemoveButton.Sensitive = false;
+					
+						if (provider.HasDetails)
+							DetailsButton.Sensitive = true;
+						else
+							DetailsButton.Sensitive = false;
+					}
+					else
+					{
+						RemoveButton.Sensitive	= true;
+						DetailsButton.Sensitive	= true;
+					}
+
+					// Set the control states
+					AddButton.Sensitive= true;
+				}
 			}
 		}
 		
