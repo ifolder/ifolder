@@ -217,7 +217,7 @@ namespace Novell.FormsTrayApp
 				}
 			}
 
-            if (args.Length == 1 && args[0].Equals("\\r"))
+            if (args.Length == 1 && args[0].Equals("/r"))
             {
                 RegularStart = true;
             }
