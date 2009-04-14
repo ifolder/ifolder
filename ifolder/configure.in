@@ -1,6 +1,8 @@
 AC_INIT(src/common/WebService/iFolder.cs)
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
+AC_CONFIG_MACRO_DIR([m4])
+AC_PROG_CXX(am__fastdepCXX)
 m4_pattern_allow(PKG_CONFIG)
 
 AM_INIT_AUTOMAKE(ifolder3, 3.7)
