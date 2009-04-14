@@ -5267,4 +5267,10 @@
     <value>OwnerShip of the iFolder {0} could not be tranferred to {1} as it is violating 
            the limit of iFolder's set by the Administrator.</value>
   </data>
+  <data name="AlsoRemoveMembership">
+    <value>Also remove my membership</value>
+  </data>
+  <data name="iFolderRevertError">
+    <value>An error was encountered while reverting the iFolder.</value>
+  </data>
 </root>

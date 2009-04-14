@@ -2555,6 +2555,7 @@ namespace Novell.FormsTrayApp
 					RemoveDomainFromList(args.Node);
 					break;
 			}
+            refreshAll();
 		}
 
 		private void createChangeEvent(iFolderWeb ifolder, string eventData)

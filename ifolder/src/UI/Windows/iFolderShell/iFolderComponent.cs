@@ -75,11 +75,17 @@ namespace Novell.iFolderCom
 		/// <returns>This method returns <b>true</b> if the specified path is successfully converted into an iFolder; otherwise, <b>false</b>.</returns>
 		bool CreateiFolder([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path);
 
-		/// <summary>
+		/*/// <summary>
 		/// Reverts the specified path back to a normal folder.
 		/// </summary>
 		/// <param name="path">The path to revert back to a normal folder.</param>
-		void DeleteiFolder([MarshalAs(UnmanagedType.LPWStr)] string path);
+		void DeleteiFolder([MarshalAs(UnmanagedType.LPWStr)] string path);*/
+
+        /// <summary>
+        /// Displays the Revert to Normal Folder dialog
+        /// </summary>
+        /// <param name="path"></param>
+        void RevertToNormal([MarshalAs(UnmanagedType.LPWStr)] string path);
 
 		/// <summary>
 		/// Displays the Advanced Properties dialog for the specified iFolder.
@@ -140,7 +146,7 @@ namespace Novell.iFolderCom
         private static string simiasRunningLock = "simiasRunningLock";
 
 		private System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(iFolderAdvanced));
-
+        
 //		public iFolderComponent(Uri location)
 //		{
 //			manager= iFolderManager.Connect(location);
@@ -293,46 +299,62 @@ namespace Novell.iFolderCom
 
 			return false;
 		}
-
+        
 		/// <summary>
-		/// Reverts the specified path back to a normal folder.
+		/// Reverts the specified path back to a normal folder. Also remove iFolder / Membership.
 		/// </summary>
 		/// <param name="path">The path to revert back to a normal folder.</param>
-		public void DeleteiFolder([MarshalAs(UnmanagedType.LPWStr)] string path)
-		{
-			try
-			{
-				connectToWebService();
-				if (ifWebService != null)
-				{
-					iFolderWeb ifolder = ifWebService.GetiFolderByLocalPath(path);
-					if (ifolder != null)
-					{
-						if (ifolder.Role.Equals("Master"))
-						{
-							ifWebService.DeleteiFolder(ifolder.DomainID, ifolder.ID);
-						}
-						else
-						{
-							ifWebService.RevertiFolder(ifolder.ID);
-						}
-					}
-				}
-			}
-			catch (WebException e)
-			{
-				ifWebService = null;
-				if (e.Status == WebExceptionStatus.ProtocolError)
-				{
-					LocalService.ClearCredentials();
-				}
-			}
-			catch (Exception e)
-			{
-				System.Diagnostics.Debug.WriteLine("Caught exception - " + e.Message);
-			}
-		}
 
+        public void RevertToNormal([MarshalAs(UnmanagedType.LPWStr)] string path)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            try
+            {
+                connectToWebService();
+                RevertiFolder revertiFolder = new RevertiFolder();
+                iFolderWeb ifolder = ifWebService.GetiFolderByLocalPath(path);
+                bool IsMaster = (ifolder.CurrentUserID == ifolder.OwnerID);
+                if (!IsMaster)
+                    revertiFolder.removeFromServer.Text = resourceManager.GetString("AlsoRemoveMembership");
+                if (revertiFolder.ShowDialog() == DialogResult.Yes)
+                {
+                    Cursor.Current = Cursors.WaitCursor;
+                    if (ifWebService != null && ifolder != null)
+                    {
+                        ifWebService.RevertiFolder(ifolder.ID);
+                        if(revertiFolder.RemoveFromServer)
+                        {
+                            if (IsMaster)
+                            {
+                                ifWebService.DeleteiFolder(ifolder.DomainID, ifolder.ID);
+                            }  
+                            else
+                            {
+                                ifWebService.DeclineiFolderInvitation(ifolder.DomainID, ifolder.ID);
+                            }
+                        }
+                    }
+                }
+                revertiFolder.Dispose();
+            }
+            catch (WebException e)
+            {
+                ifWebService = null;
+                if (e.Status == WebExceptionStatus.ProtocolError)
+                {
+                    LocalService.ClearCredentials();
+                }
+            }
+            catch (Exception e)
+            {
+                Cursor.Current = Cursors.Default;
+                Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("iFolderRevertError"), 
+                    resourceManager.GetString("revertErrorTitle"), e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+                mmb.ShowDialog();
+                mmb.Dispose();
+            }
+            Cursor.Current = Cursors.Default;
+        }
 		/// <summary>
 		/// Displays the Advanced Properties dialog for the specified iFolder.
 		/// </summary>
