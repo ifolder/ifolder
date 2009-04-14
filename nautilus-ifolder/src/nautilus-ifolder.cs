@@ -67,6 +67,8 @@ namespace Novell.iFolder.Nautilus
 			Util.InitCatalog();
 			
 			switch (args [0]) {
+				case "revert":
+					return showRevertiFolderDialog(args);
 				case "share":
 					return showShareDialog (args);
 				case "properties":
@@ -203,6 +205,77 @@ namespace Novell.iFolder.Nautilus
 			propsDialog.Hide ();
 			propsDialog.Destroy ();
 
+			return StopSimias();
+		}
+
+		private static void RemoveSelectedFolderHandler(string path)
+		{
+			Console.WriteLine("Calling RemoveSelectedFolderHandler\n");
+				iFolderMsgDialog dialog = new iFolderMsgDialog(
+					null,
+					iFolderMsgDialog.DialogType.Question,
+					iFolderMsgDialog.ButtonSet.YesNo,
+					"",
+					Util.GS("Revert this iFolder back to a normal folder?"),
+					Util.GS("The folder will still be on your computer, but it will no longer synchronize with the iFolder Server."));
+
+				CheckButton deleteFromServerCB;
+
+				iFolderWeb ifolder = ifws.GetiFolderByLocalPath(path);
+				bool IsMaster = (ifolder.CurrentUserID == ifolder.OwnerID);
+
+				if (IsMaster)
+					deleteFromServerCB = new CheckButton(Util.GS("Also _delete this iFolder from the server"));
+				else
+					deleteFromServerCB = new CheckButton(Util.GS("Also _remove my membership from this iFolder"));
+				
+				dialog.ExtraWidget = deleteFromServerCB;
+
+				int rc = dialog.Run();
+				dialog.Hide();
+				dialog.Destroy();
+				if(rc == -8)
+				{
+					try
+					{
+						if (ifolder != null)
+						{
+							ifws.RevertiFolder(ifolder.ID);
+							if(deleteFromServerCB.Active)
+							{
+								if (IsMaster)
+								{
+									ifws.DeleteiFolder(ifolder.DomainID, ifolder.ID);
+								}
+								else
+								{
+									ifws.DeclineiFolderInvitation(ifolder.DomainID, ifolder.ID);
+								}
+							}
+
+						}
+					}
+					catch(Exception e)
+					{
+						iFolderExceptionDialog ied =
+							new iFolderExceptionDialog(
+								null,
+								e);
+						ied.Run();
+						ied.Hide();
+						ied.Destroy();
+					}
+				}
+		}
+
+		private static int showRevertiFolderDialog (string[] args)
+		{
+			if (args.Length < 2) {
+				Console.Write ("ERROR: iFolder ID not specified\n");
+				return -1;
+			}
+			StartSimias(args);
+			RemoveSelectedFolderHandler(args[1]);
 			return StopSimias();
 		}
 		
@@ -462,7 +535,6 @@ namespace Novell.iFolder.Nautilus
 			{
 				return false;
 			}
-//			return false;
 			return status;
 		}
 
@@ -496,155 +568,4 @@ namespace Novell.iFolder.Nautilus
 			return passPhraseStatus;
 		}
 	}
-
-		/*
-
-                private static bool ShowVerifyDialog(string DomainID, SimiasWebService simws)
-                {
-                        bool status = false;
-                        int result;
-                        Status passPhraseStatus= null;
-                        VerifyPassPhraseDialog vpd = new VerifyPassPhraseDialog();
-                        // vpd.TransientFor = this;
-                        try
-                        {
-                        do
-                        {
-                                result = vpd.Run();
-                                vpd.Hide();
-                                // Verify PassPhrase..  If correct store passphrase and set a local property..
-                                if( result == (int)ResponseType.Ok)
-                                        passPhraseStatus =  simws.ValidatePassPhrase(DomainID, vpd.PassPhrase);
-                                if( passPhraseStatus != null)
-                                {
-                                        if( passPhraseStatus.statusCode == StatusCodes.PassPhraseInvalid)  // check for invalid passphrase
-                                        {
-                                                // Display an error Message
-                                                Console.WriteLine("Invalid Passphrase");
-                                                iFolderMsgDialog dialog = new iFolderMsgDialog(
-                                                        null,
-                                                        iFolderMsgDialog.DialogType.Error,
-                                                        iFolderMsgDialog.ButtonSet.None,
-                                                        Util.GS("Invalid Passphrase"),
-                                                        Util.GS("The Passphrase entered is invalid"),
-                                                        Util.GS("Please re-enter the passphrase"));
-                                                        dialog.Run();
-                                                        dialog.Hide();
-                                                        dialog.Destroy();
-                                                        dialog = null;
-                                                passPhraseStatus = null;
-                                //      to be removed
-                                                break;
-                                        }
-                                        else if(passPhraseStatus.statusCode == StatusCodes.Success)
-                                                break;
-                                }
-                        }while( result != (int)ResponseType.Cancel && result !=(int)ResponseType.DeleteEvent);
-                        if( passPhraseStatus != null && passPhraseStatus.statusCode == StatusCodes.Success)
-                        {
-                                status = true;
-                                try
-                                {
-                                        simws.StorePassPhrase( DomainID, vpd.PassPhrase, CredentialType.Basic, vpd.ShouldSavePassPhrase);
-                                }
-                                catch(Exception ex)
-                                {
-                                        return true;
-                                }
-                        }
-                        else //if(result == (int)ResponseType.Cancel)
-                        {
-                                Console.WriteLine(" cancelled passphrase entry");
-                                try
-                                {
-                                        simws.StorePassPhrase(DomainID, "", CredentialType.None, false);
-                                        string passphrasecheck;
-                                        passphrasecheck = simws.GetPassPhrase(DomainID);
-                                        if(passphrasecheck == "")
-                                                Console.WriteLine(" Cancel clicked at the time of login-- confirmed");
-                                        else
-                                                Console.WriteLine(" cancel clicked is not confirmed");
-                                }
-                                catch(Exception e)
-                                {
-                                        return true;
-                                }
-                        }
-                        }
-                        catch(Exception e)
-                        {
-                                return true;
-                        }
-                        return true;
-//                      return status;
-                }
-
-                private static bool ShowEnterPassPhraseDialog(string DomainID, SimiasWebService simws)
-                {
-                        bool status = false;
-                        int result;
-                        EnterPassPhraseDialog epd = new EnterPassPhraseDialog(DomainID);
-                        try
-                        {
-                        do
-                        {
-                                result = epd.Run();
-                                epd.Hide();
-                                if( epd.PassPhrase != epd.RetypedPassPhrase )
-                                {
-                                        Console.WriteLine("PassPhrases do not match");
-                                        // show an error message
-                                        iFolderMsgDialog dialog = new iFolderMsgDialog(
-                                                null,
-                                                iFolderMsgDialog.DialogType.Error,
-                                                iFolderMsgDialog.ButtonSet.None,
-                                                Util.GS("PassPhrase mismatch"),
-                                                Util.GS("The PassPhrase and retyped Passphrase are not same"),
-                                                Util.GS("Enter the passphrase again"));
-                                                dialog.Run();
-                                                dialog.Hide();
-                                                dialog.Destroy();
-                                                dialog = null;
-                                }
-                                else
-                                        break;
-                        }while( result != (int)ResponseType.Cancel);
-
-                        if( epd.PassPhrase == epd.RetypedPassPhrase)
-                        {
-                                // Check the recovery agent
-                                string publicKey = "";
-                                Status passPhraseStatus = simws.SetPassPhrase( DomainID, epd.PassPhrase, epd.RecoveryAgent, publicKey);
-                                if(passPhraseStatus.statusCode == StatusCodes.Success)
-                                {
-                                        status = true;
-                                        simws.StorePassPhrase( DomainID, epd.PassPhrase, CredentialType.Basic, epd.ShouldSavePassPhrase);
-                                }
-                                else
-                                {
-                                        // error setting the passphrase
-                                        iFolderMsgDialog dialog = new iFolderMsgDialog(
-                                                null,
-                                                iFolderMsgDialog.DialogType.Error,
-                                                iFolderMsgDialog.ButtonSet.None,
-                                                Util.GS("Error setting the Passphrase"),
-                                                Util.GS("Unable to set the passphrase"),
-                                                Util.GS("Try again"));
-                                                dialog.Run();
-                                                dialog.Hide();
-                                                dialog.Destroy();
-                                                dialog = null;
-                                }
-                        }
-                        }
-                        catch(Exception e)
-                        {
-                                return true;
-                        }
-                        return true;
-//                      return status;
-                }
-
-	}
-	*/
 }

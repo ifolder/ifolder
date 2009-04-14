@@ -48,9 +48,6 @@
 
 #include <simias-event-client.h>
 #include <simiasweb.h>
-//#include <simias.nsmap>
-//#include <simiasStub.h>
-//#include "simias-internal.h"
 
 #include <ifolder.h>
 #include <iFolderStub.h>
@@ -795,7 +792,6 @@ can_be_ifolder (NautilusFileInfo *file)
 			soap.userid = username;
 			soap.passwd = DerivePassword(password);
 		}
-//printf("Calling iFolderWebService.CanBeiFolder()\n");
 		soap_call___ns1__CanBeiFolder (&soap,
 									   soapURL, 
 									   NULL, 
@@ -833,7 +829,7 @@ can_be_ifolder (NautilusFileInfo *file)
 static gint
 get_security_policy(char *domain_id)
 {
-	DEBUG_IFOLDER((" calling get policy: %s", domain_id));
+	DEBUG_IFOLDER(("calling get policy: %s", domain_id));
 	struct soap soap;
 	gchar *folder_path;
 	char username[512];
@@ -894,7 +890,6 @@ create_ifolder_in_domain (NautilusFileInfo *file, char *domain_id, gboolean encr
 			soap.userid = username;
 			soap.passwd = DerivePassword(password);
 		}
-//printf("Calling iFolderWebService.CreateiFolderInDomain()\n");
 		soap_call___ns1__CreateiFolderInDomain (&soap, soapURL, NULL, &req, &resp);
 		g_free (folder_path);
 		if (soap.error) {
@@ -933,7 +928,6 @@ create_ifolder_in_domain (NautilusFileInfo *file, char *domain_id, gboolean encr
 			soap.userid = username;
 			soap.passwd = DerivePassword(password);
 		}
-//printf("Calling iFolderWebService.CreateiFolderInDomain()\n");
 		soap_call___ns1__CreateiFolderInDomainEncr (&soap, soapURL, NULL, &req, &resp);
 		g_free (folder_path);
 		if (soap.error) {
@@ -991,7 +985,6 @@ revert_ifolder (NautilusFileInfo *file)
 				soap.userid = username;
 				soap.passwd = DerivePassword(password);
 			}
-//printf("Calling iFolderWebService.RevertiFolder()\n");
 			soap_call___ns1__RevertiFolder (&soap, 
 												 soapURL, 
 												 NULL, 
@@ -1090,7 +1083,6 @@ get_ifolder_holder (gchar *ifolder_id)
 			soap.userid = username;
 			soap.passwd = DerivePassword(password);
 		}
-//printf("Calling iFolderWebService.GetiFolder()\n");
 		soap_call___ns1__GetiFolder (&soap,
 									 soapURL,
 									 NULL,
@@ -1199,8 +1191,7 @@ refresh_ifolders_ht ()
 		soap.userid = username;
 		soap.passwd = DerivePassword(password);
 	}
-	DEBUG_IFOLDER(("user %s Pass %s\n", username, soap.passwd));
-//printf("Calling iFolderWebService.GetAlliFolders()\n");
+	/*DEBUG_IFOLDER(("user %s Pass %s\n", username, soap.passwd));*/
 	soap_call___ns1__GetAlliFolders (&soap,
 									 soapURL,
 									 NULL,
@@ -1462,13 +1453,6 @@ show_ifolder_error_message (void *user_data)
 	GtkWindow *window;
 	const gchar *mesg = errMsg->message;
 
-
-/*	message_dialog = eel_show_error_dialog (
-						errMsg->message,
-						errMsg->detail,
-						errMsg->title,
-						GTK_WINDOW (errMsg->window));
-*/
 	message_dialog = gtk_message_dialog_new(GTK_WINDOW(errMsg->window), GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, errMsg->message);
 
 	gtk_dialog_run (message_dialog);
@@ -1668,7 +1652,7 @@ create_ifolder_thread (gpointer user_data)
 	encryption = (gboolean)(*((int *)g_object_get_data(G_OBJECT(item), "encrypt")));
 	if( encryption == TRUE)
 	{
-		DEBUG_IFOLDER((" Encryption selected"));
+		DEBUG_IFOLDER(("Encryption selected"));
 	}
 	else
 		DEBUG_IFOLDER(("Encryption is not selected"));
@@ -1681,7 +1665,6 @@ create_ifolder_thread (gpointer user_data)
 	g_object_ref(item);
 	DEBUG_IFOLDER(("Calling the ifolder_dialog_thread.\n"));
 	pthread_create(&thread, NULL, ifolder_dialog_thread, item);
-//	ifolder_dialog_thread(item);
 	DEBUG_IFOLDER(("Returned from the ifolder_dialog_thread.\n"));
 	return;
 	/*
@@ -1993,7 +1976,7 @@ update_security_status( GtkComboBox *domains, gpointer user_data)
 									   &iter, NULL,
 									   gtk_combo_box_get_active(
 									   		GTK_COMBO_BOX(domains)))) {
-		DEBUG_IFOLDER((" nothing selected in combo box it seems\n"));
+		DEBUG_IFOLDER(("nothing selected in combo box it seems\n"));
 		return;
 	}
 
@@ -2029,31 +2012,42 @@ update_security_status( GtkComboBox *domains, gpointer user_data)
 static void
 revert_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 {
-	GtkDialog *message_dialog;
-	GtkWidget *window;
-	int response;
+	gchar *ifolder_path;
+	iFolderHolder *holder;
+	GList *files;
+	NautilusFileInfo *file;
 	pthread_t thread;
-	GtkWidget *dialog, *label, *okay_button, *creation_dialog;
+	char args [1024];
+	memset (args, '\0', sizeof (args));
 	
-
-
-	window = g_object_get_data (G_OBJECT (item), "parent_window");
-
-	creation_dialog = gtk_message_dialog_new(window, GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_QUESTION, GTK_BUTTONS_YES_NO, "Reverting iFolder");
-	gtk_message_dialog_format_secondary_text(creation_dialog, _("This reverts the iFolder back to a normal folder and leaves the files intact.  The iFolder is then available from the server and must be set up in a different location to synchronize."));
-	gtk_widget_show_all(creation_dialog);
-
-	//gtk_container_add(GTK_CONTAINER(GTK_DIALOG(creation_dialog)->vbox), label);
-	response = gtk_dialog_run (creation_dialog);
-	gtk_object_destroy (GTK_OBJECT (creation_dialog));
-
-	if (response == GTK_RESPONSE_YES) {
-		g_object_ref(item);
-		pthread_create (&thread, 
-						NULL, 
-						revert_ifolder_thread,
-						item);
+	files = g_object_get_data (G_OBJECT (item), "files");
+	file = NAUTILUS_FILE_INFO (files->data);
+	if (file == NULL)
+		return;
+		
+	ifolder_path = get_file_path (file);
+	if (ifolder_path != NULL) {
+		holder = (iFolderHolder *)g_hash_table_lookup (ifolders_ht, ifolder_path);
+		if (holder != NULL) {
+			sprintf (args, "%s revert %s", 
+					 NAUTILUS_IFOLDER_SH_PATH, ifolder_path); 
+		}
+		
+		g_free (ifolder_path);
 	}
+	
+	if (strlen (args) <= 0)
+		return;
+		
+	g_object_set_data (G_OBJECT (item),
+				"ifolder_args",
+				strdup(args));
+		
+	g_object_ref(item);
+	pthread_create (&thread, 
+					NULL, 
+					ifolder_dialog_thread,
+					item);
 }
 
 ///<summary>
