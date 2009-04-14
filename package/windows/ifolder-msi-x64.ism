@@ -1143,12 +1143,8 @@
 		<row><td>InstallUtil_Simias_uninstall</td><td>114</td><td>LOCATION_OF_INSTALLUTIL</td><td>/uninstall /ShowCallStack /LogToConsole=false /LogFile=Simias.UninstallLog "[INSTALLDIR]\lib\simias\web\bin\Simias.exe"</td><td>Runs InstallUtil on Simias.exe to uninstall it.</td></row>
 		<row><td>InstallUtil_iFolderApp</td><td>114</td><td>LOCATION_OF_INSTALLUTIL</td><td>/ShowCallStack /LogFile=iFolderApp.InstallLog "[INSTALLDIR]iFolderApp.exe"</td><td>Runs InstallUtil on iFolderApp.exe to install it</td></row>
 		<row><td>InstallUtil_iFolderApp_uninstall</td><td>114</td><td>LOCATION_OF_INSTALLUTIL</td><td>/uninstall /ShowCallStack /LogFile=iFolderApp.UninstallLog "[INSTALLDIR]iFolderApp.exe"</td><td>Runs InstallUtil on iFolderApp.exe to uninstall it</td></row>
-		<row><td>RegAsm_Novell.iFolder</td><td>50</td><td>LOCATION_OF_REGASM</td><td>"[INSTALLDIR]Novell.iFolder.dll" /codebase /silent /logo</td><td>Registers Novell.iFolder.dll using RegAsm.exe on target machine</td></row>
-		<row><td>RegAsm_Novell.iFolder_uninstall</td><td>50</td><td>LOCATION_OF_REGASM</td><td>"[INSTALLDIR]Novell.iFolder.dll" /unregister /silent /logo</td><td>Unregisters Novell.iFolder.dll using RegAsm.exe on target machine</td></row>
 		<row><td>RegAsm_iFolderComponent</td><td>50</td><td>LOCATION_OF_REGASM</td><td>"[INSTALLDIR]iFolderComponent.dll" /codebase /silent /nologo</td><td>Registers iFolderComponent.dll using RegAsm.exe on target machine</td></row>
 		<row><td>RegAsm_iFolderComponent_uninstall</td><td>50</td><td>LOCATION_OF_REGASM</td><td>"[INSTALLDIR]iFolderComponent.dll" /unregister /silent /nologo</td><td>Unregisters iFolderComponent.dll using RegAsm.exe on target machine</td></row>
-		<row><td>RegAsm_iFolderWebService</td><td>50</td><td>LOCATION_OF_REGASM</td><td>"[INSTALLDIR]iFolderWebService.dll" /codebase /silent /logo</td><td>Registers iFolderWebService.dll using RegAsm.exe on target machine</td></row>
-		<row><td>RegAsm_iFolderWebService_uninstall</td><td>50</td><td>LOCATION_OF_REGASM</td><td>"[INSTALLDIR]iFolderWebService.dll" /unregister /silent /logo</td><td>Unregisters iFolderWebService.dll using RegAsm.exe on target machine</td></row>
 		<row><td>Restore_Simias_Directory</td><td>2</td><td>NewBinary19</td><td>[ProductCode] /f</td><td>Custom action needed to keep the iFolder 3.0 Client from deleting the simias directory on upgrade.</td></row>
 		<row><td>Save_Simias_Directory</td><td>2</td><td>NewBinary19</td><td>[ProductCode] /u</td><td>Custom action needed to keep the iFolder 3.0 Client from deleting the simias directory on upgrade.</td></row>
 		<row><td>SetAllUsersProfileNT</td><td>51</td><td>ALLUSERSPROFILE</td><td>[%SystemRoot]\Profiles\All Users</td><td/></row>
@@ -21015,12 +21011,8 @@
 		<row><td>PublishFeatures</td><td/><td>6300</td><td>PublishFeatures</td><td/></row>
 		<row><td>PublishProduct</td><td/><td>6400</td><td>PublishProduct</td><td/></row>
 		<row><td>RMCCPSearch</td><td>Not CCP_SUCCESS And CCP_TEST</td><td>600</td><td>RMCCPSearch</td><td/></row>
-		<row><td>RegAsm_Novell.iFolder</td><td>(NOT REMOVE) AND LOCATION_OF_REGASM</td><td>6602</td><td/><td/></row>
-		<row><td>RegAsm_Novell.iFolder_uninstall</td><td>REMOVE="ALL" AND (NOT UPGRADINGPRODUCTCODE)</td><td>1406</td><td/><td/></row>
 		<row><td>RegAsm_iFolderComponent</td><td>(NOT REMOVE) AND LOCATION_OF_REGASM</td><td>6601</td><td/><td/></row>
 		<row><td>RegAsm_iFolderComponent_uninstall</td><td>REMOVE="ALL" AND (NOT UPGRADINGPRODUCTCODE)</td><td>1405</td><td/><td/></row>
-		<row><td>RegAsm_iFolderWebService</td><td>(NOT REMOVE) AND LOCATION_OF_REGASM</td><td>6603</td><td/><td/></row>
-		<row><td>RegAsm_iFolderWebService_uninstall</td><td>REMOVE="ALL" AND (NOT UPGRADINGPRODUCTCODE)</td><td>1407</td><td/><td/></row>
 		<row><td>RegisterClassInfo</td><td/><td>4600</td><td>RegisterClassInfo</td><td/></row>
 		<row><td>RegisterComPlus</td><td/><td>5700</td><td>RegisterComPlus</td><td/></row>
 		<row><td>RegisterExtensionInfo</td><td/><td>4700</td><td>RegisterExtensionInfo</td><td/></row>
@@ -21371,7 +21363,6 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<row><td>IS_SQLSERVER_USERNAME</td><td>sa</td><td/></row>
 		<row><td>InstallChoice</td><td>AR</td><td/></row>
 		<row><td>LOCATION_OF_INSTALLUTIL</td><td/><td/></row>
-		<row><td>LOCATION_OF_REGASM</td><td/><td/></row>
 		<row><td>Manufacturer</td><td>##COMPANY_NAME##</td><td/></row>
 		<row><td>PIDTemplate</td><td>12345&lt;###-%%%%%%%&gt;@@@@@</td><td/></row>
 		<row><td>PROGMSG_IIS_CREATEAPPPOOL</td><td>##IDS_PROGMSG_IIS_CREATEAPPPOOL##</td><td/></row>
