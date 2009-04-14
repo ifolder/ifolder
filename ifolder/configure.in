@@ -1,10 +1,7 @@
 AC_INIT(src/common/WebService/iFolder.cs)
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
-if test-d m4; then
-echo "adding m4"
 AC_CONFIG_MACRO_DIR([m4])
-fi
 AC_PROG_CXX(am__fastdepCXX)
 m4_pattern_allow(PKG_CONFIG)
 
@@ -19,7 +16,6 @@ VERSION=$VERSION.$ASSEMBLY_VERSION.$BUILD_NUMBER
 SIMIASVER=1.5.$BUILDNUM.1
 AM_MAINTAINER_MODE
 AC_PROG_CC
-
 #
 # Check for a 32 / 64
 #HACK ALERT : for libflaim 64bit builds
@@ -281,8 +277,7 @@ case $IFOLDER_OS in
 		#ALL_LINGUAS="pt_BR fr it de es ru ja"
 		#AM_GNU_GETTEXT_VERSION(0.10.40)
 		#AM_GNU_GETTEXT(external)
-    	libexecdir='${exec_prefix}/${LIB64}/simias'
-	libdir='${exec_prefix}/${LIB64}'
+    	libexecdir='${exec_prefix}/lib/simias'
     ;;
     #
     # Windows-specific configuration
