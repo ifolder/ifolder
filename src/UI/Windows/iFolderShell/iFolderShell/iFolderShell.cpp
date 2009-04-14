@@ -491,7 +491,7 @@ STDMETHODIMP CiFolderShell::Initialize(LPCITEMIDLIST pidlFolder,
 									   HKEY hKeyProgID)
 {
     OutputDebugString(TEXT("CiFolderShell::Initialize()\n"));
-
+	HRESULT hr = 0;
 	if (pDataObj == NULL)
 	{
 	    OutputDebugString(TEXT("CiFolderShell::Initialize() returning E_INVALIDARG\n"));
@@ -516,8 +516,13 @@ STDMETHODIMP CiFolderShell::Initialize(LPCITEMIDLIST pidlFolder,
 
 		if (m_spiFolder == NULL)
 		{
+			OleInitialize(NULL);
 			// Instantiate the iFolder smart pointer.
-			m_spiFolder.CreateInstance(__uuidof(iFolderComponent));
+			hr = m_spiFolder.CreateInstance(__uuidof(iFolderComponent));
+			if (FAILED(hr))
+			{
+				OutputDebugString(TEXT("Unable to CreateInstance of iFodlerComponent::Initialize()\n"));
+			}
 		}
 
 		try
