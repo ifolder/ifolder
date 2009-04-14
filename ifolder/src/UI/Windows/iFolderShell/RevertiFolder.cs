@@ -40,7 +40,7 @@ using System.IO;
 using Novell.iFolder.Web;
 using Novell.iFolderCom;
 
-namespace Novell.iFolderCom //FormsTrayApp
+namespace Novell.FormsTrayApp
 {
 	/// <summary>
 	/// Summary description for RevertiFolder.
@@ -317,7 +317,6 @@ namespace Novell.iFolderCom //FormsTrayApp
         private void help_Click(object sender, System.EventArgs e)
         {
             string helpFile = Path.Combine(Path.Combine(Path.Combine(Application.StartupPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"reverting.html");
-            helpFile = iFolderAdvanced.veryfiyPath(helpFile, "reverting.html");
             new iFolderComponent().ShowHelp(Application.StartupPath, helpFile);
         }
 	}
