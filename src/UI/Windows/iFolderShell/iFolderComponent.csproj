@@ -151,6 +151,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RevertiFolder.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="ShareListMember.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -559,6 +562,62 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Picker.zh-TW.resx">
       <DependentUpon>Picker.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RevertiFolder.cs.resx">
+      <DependentUpon>RevertiFolder.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RevertiFolder.de.resx">
+      <DependentUpon>RevertiFolder.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RevertiFolder.es.resx">
+      <DependentUpon>RevertiFolder.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RevertiFolder.fr.resx">
+      <DependentUpon>RevertiFolder.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RevertiFolder.hu.resx">
+      <DependentUpon>RevertiFolder.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RevertiFolder.it.resx">
+      <DependentUpon>RevertiFolder.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RevertiFolder.ja.resx">
+      <DependentUpon>RevertiFolder.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RevertiFolder.pl.resx">
+      <DependentUpon>RevertiFolder.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RevertiFolder.pt-BR.resx">
+      <DependentUpon>RevertiFolder.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RevertiFolder.resx">
+      <DependentUpon>RevertiFolder.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RevertiFolder.ru.resx">
+      <DependentUpon>RevertiFolder.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RevertiFolder.sk.resx">
+      <DependentUpon>RevertiFolder.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RevertiFolder.zh-CN.resx">
+      <DependentUpon>RevertiFolder.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RevertiFolder.zh-TW.resx">
+      <DependentUpon>RevertiFolder.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="UserProperties.cs.resx">

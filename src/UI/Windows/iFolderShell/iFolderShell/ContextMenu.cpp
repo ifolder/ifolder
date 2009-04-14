@@ -388,14 +388,11 @@ STDMETHODIMP CiFolderShell::InvokeCommand(LPCMINVOKECOMMANDINFO lpcmi)
 					LoadString(g_hmodResDll, IDS_REVERT_PROMPT, szMessage, MAX_MESSAGE_LENGTH/sizeof(TCHAR));
 					LoadString(g_hmodResDll, IDS_REVERT_TITLE, szTitle, MAX_MENU_LENGTH/sizeof(TCHAR));
 
-					if (MessageBoxEx(lpcmi->hwnd, szMessage, szTitle, MB_YESNO | MB_ICONQUESTION | MB_DEFBUTTON2, 0) == IDYES)
-					{
-						// Change this iFolder back to a regular folder.
-						m_spiFolder->DeleteiFolder(m_szFileUserClickedOn);
+					// Change this iFolder back to a regular folder.
+					m_spiFolder->RevertToNormal(m_szFileUserClickedOn);
 
-						// Tell the shell to refresh the icon...
-						SHChangeNotify(SHCNE_UPDATEITEM, SHCNF_PATH, m_szFileUserClickedOn, NULL);
-					}
+					// Tell the shell to refresh the icon...
+					SHChangeNotify(SHCNE_UPDATEITEM, SHCNF_PATH, m_szFileUserClickedOn, NULL);
 				}
 				catch (...)
 				{
