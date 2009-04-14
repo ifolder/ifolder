@@ -66,10 +66,6 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Novell.iFolder.Web, Version=3.7.1.20, Culture=neutral, PublicKeyToken=08dab5faaddc8eb1, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\iFolder_stage\lib\simias\web\bin\Novell.iFolder.Web.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -89,6 +85,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="iFolder.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Novell.iFolder.Web.csproj">
+      <Project>{9138D2DD-53AF-4631-974A-36F017202F49}</Project>
+      <Name>Novell.iFolder.Web</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v8.0\WebApplications\Microsoft.WebApplication.targets" />
