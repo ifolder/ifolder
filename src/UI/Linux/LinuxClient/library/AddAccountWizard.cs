@@ -1333,9 +1333,34 @@ namespace Novell.iFolder
 			{
 				try
 				{
-					System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(LocationEntry.Text);
+					string downloadpath = this.LocationEntry.Text;
+					System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(downloadpath);
+					if(dir.Name == defaultiFolder.Name)
+					{
+                                		downloadpath = System.IO.Directory.GetParent(this.LocationEntry.Text).ToString();
+						dir = new System.IO.DirectoryInfo(downloadpath);
+					}
 					dir.Create();
-					ifdata.AcceptiFolderInvitation( defaultiFolder.ID, defaultiFolder.DomainID, this.LocationEntry.Text);
+					if( System.IO.Directory.Exists( System.IO.Path.Combine(downloadpath,defaultiFolder.Name))) 
+					{
+						iFolderMsgDialog DownloadMergeDialog = new iFolderMsgDialog(
+                                                null,
+                                                iFolderMsgDialog.DialogType.Info,
+                                                iFolderMsgDialog.ButtonSet.OkCancel,
+                                                Util.GS("A folder with the same name already exists."),
+                                                string.Format(Util.GS("Click Ok to merge the folder or Cancel to select a different location")),null);
+                                                int rc = DownloadMergeDialog.Run();
+                                                DownloadMergeDialog.Hide();
+                                                DownloadMergeDialog.Destroy();
+                                                if ((ResponseType)rc == ResponseType.Ok)
+                                                {
+                                                        ifdata.AcceptiFolderInvitation( defaultiFolder.ID, defaultiFolder.DomainID, System.IO.Path.Combine(downloadpath,defaultiFolder.Name),true);
+                                                }
+						else
+							return false;
+					}
+					else 
+						ifdata.AcceptiFolderInvitation( defaultiFolder.ID, defaultiFolder.DomainID, downloadpath);
 					Debug.PrintLine("finished accepting invitation");
 					AccountDruid.Page = SummaryPage;
 					return true;

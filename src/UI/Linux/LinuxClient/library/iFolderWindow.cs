@@ -2420,12 +2420,45 @@ namespace Novell.iFolder
 							}							
 						}
 
-						ifdata.AcceptiFolderInvitation(
+						if( merge )
+						{
+							ifdata.AcceptiFolderInvitation(
 											holder.iFolder.ID,
 											holder.iFolder.DomainID,
 											newPath,
 											merge);
-						
+						}
+						else
+						{
+							//check for download , if it fails with Path already exists , pop up for prompt to merge. 
+							string downloadpath = newPath;
+							System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(downloadpath);
+		                                        if(dir.Name == holder.iFolder.Name)
+							{
+                		                                downloadpath = System.IO.Directory.GetParent(newPath).ToString();
+								dir = new System.IO.DirectoryInfo(downloadpath);
+							}
+                                        		if( System.IO.Directory.Exists( downloadpath+"/"+holder.iFolder.Name))
+                                        		{
+		                                                iFolderMsgDialog DownloadMergeDialog = new iFolderMsgDialog(
+		                                                null,
+                		                                iFolderMsgDialog.DialogType.Info,
+                                		                iFolderMsgDialog.ButtonSet.OkCancel,
+                                                		Util.GS("A folder with the same name already exists."),
+		                                                string.Format(Util.GS("Click Ok to merge the folder or Cancel to select a different location")),null);
+                		                                int rc1 = DownloadMergeDialog.Run();
+                                		                DownloadMergeDialog.Hide();
+                                                		DownloadMergeDialog.Destroy();
+                		                                if ((ResponseType)rc1 == ResponseType.Ok)
+                                			        {
+                                		                        ifdata.AcceptiFolderInvitation( holder.iFolder.ID, holder.iFolder.DomainID, System.IO.Path.Combine(downloadpath,holder.iFolder.Name),true);
+        	                                        	}
+								else
+									continue;
+							}
+							else
+		                                                ifdata.AcceptiFolderInvitation( holder.iFolder.ID, holder.iFolder.DomainID, downloadpath);
+						}
 						iFoldersIconView.UnselectAll();
 						rc = 0;
 
@@ -3083,7 +3116,25 @@ namespace Novell.iFolder
 			iFolderHolder holder = iFoldersIconView.SelectedFolder;
 			if (holder != null)
 			{
-				ShowFolderProperties(holder, 1);
+				iFolderWeb selectedFolder = holder.iFolder;
+				if(selectedFolder.encryptionAlgorithm != null && selectedFolder.encryptionAlgorithm != "")
+				{
+						
+					iFolderMsgDialog dg = new iFolderMsgDialog(
+								this,
+								iFolderMsgDialog.DialogType.Warning,
+								iFolderMsgDialog.ButtonSet.Ok,
+								"",
+								Util.GS("Cannot share iFolder"),
+								Util.GS("It is not possible to share an Encrypted iFolder. Only regular iFolders can be shared"));
+					dg.Run();
+					dg.Hide();
+					dg.Destroy();
+				}
+				else
+				{
+					ShowFolderProperties(holder, 1);
+				}
 			}
 		}
 

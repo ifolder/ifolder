@@ -1127,4 +1127,10 @@ Are you sure you want to exit the Application ?</value>
   <data name="DownloadDefaultiFolder">
     <value>D&amp;ownload default iFolder</value>
   </data>
+  <data name="alreadyexists">
+    <value>A folder with the name you specified already exists. . .</value>
+  </data>
+  <data name="selectoption">
+    <value>Click Ok to Merge Or Cancel to select a different location</value>
+  </data>
 </root>

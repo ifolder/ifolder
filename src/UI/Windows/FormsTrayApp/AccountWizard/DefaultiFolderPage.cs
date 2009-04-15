@@ -378,53 +378,72 @@ namespace Novell.Wizard
         /// Download iFolder
         /// </summary>
         /// <param name="defaultiFolder"></param>
-        private bool DownloadiFolder( iFolderWeb defaultiFolder)
-		{
-			bool status = false;
-			if( defaultiFolder.encryptionAlgorithm == null || defaultiFolder.encryptionAlgorithm == "")
-			{
-				// unencrypted...
-				status = true;
-			}
-			else
-			{
-				// encrypted.. Check for passphrase
-				string passphrasecheck = null;
-				passphrasecheck = simws.GetPassPhrase(domainInfo.ID);
-				if( passphrasecheck == null || passphrasecheck =="")
-				{
-					VerifyPassphraseDialog vpd = new VerifyPassphraseDialog(domainInfo.ID, this.simws);
-					vpd.ShowDialog();
-					status = vpd.PassphraseStatus;
-				}
-				else
-				{
-					status = true;
-				}
-			}
-			if( status == true )
-			{
-				try
-				{
-					DirectoryInfo di = new DirectoryInfo( this.LocationEntry.Text );
-					di.Create();
-					iFolderWeb ifolder = this.ifws.AcceptiFolderInvitation( defaultiFolder.DomainID, defaultiFolder.ID, this.LocationEntry.Text);
-					AccountWizard wiz = (AccountWizard)this.Parent;
+        private bool DownloadiFolder(iFolderWeb defaultiFolder)
+        {
+            bool status = false;
+            if (defaultiFolder.encryptionAlgorithm == null || defaultiFolder.encryptionAlgorithm == "")
+            {
+                // unencrypted...
+                status = true;
+            }
+            else
+            {
+                // encrypted.. Check for passphrase
+                string passphrasecheck = null;
+                passphrasecheck = simws.GetPassPhrase(domainInfo.ID);
+                if (passphrasecheck == null || passphrasecheck == "")
+                {
+                    VerifyPassphraseDialog vpd = new VerifyPassphraseDialog(domainInfo.ID, this.simws);
+                    vpd.ShowDialog();
+                    status = vpd.PassphraseStatus;
+                }
+                else
+                {
+                    status = true;
+                }
+            }
+            if (status == true)
+            {
+                try
+                {
+                    string downloadpath = this.LocationEntry.Text;
+                    DirectoryInfo di = new DirectoryInfo(downloadpath);
+                    if (di.Name == defaultiFolder.Name)
+                    {
+                        downloadpath = Directory.GetParent(this.LocationEntry.Text).ToString();
+                        di = new DirectoryInfo(downloadpath);
+                    }
+
+                    di.Create();
+                    iFolderWeb ifolder = null;
+                    if (System.IO.Directory.Exists(Path.Combine(downloadpath, defaultiFolder.Name)))
+                    {
+                        MyMessageBox mmb = new MyMessageBox(resManager.GetString("selectoption"), resManager.GetString("alreadyexists"), String.Empty, MyMessageBoxButtons.OKCancel, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button1);
+                        if (mmb.ShowDialog() == DialogResult.OK)
+                        {
+                            ifolder = this.ifws.MergeiFolder(defaultiFolder.DomainID, defaultiFolder.ID, Path.Combine(downloadpath, defaultiFolder.Name));
+                        }
+                        else
+                            return false;
+                    }
+                    else
+                        ifolder = this.ifws.AcceptiFolderInvitation(defaultiFolder.DomainID, defaultiFolder.ID, downloadpath);
+                    AccountWizard wiz = (AccountWizard)this.Parent;
                     if (ifolder != null && wiz != null)
                     {
-                        wiz.GlobalProps.AddiFolderToAcceptediFolders(ifolder, null, this.LocationEntry.Text);
+                        wiz.GlobalProps.AddiFolderToAcceptediFolders(ifolder, null, downloadpath);
                     }
-					wiz.UpdateDisplay( ifolder, this.LocationEntry.Text+"/"+ifolder.Name );
-				}
-				catch( Exception ex )
-				{
-					DisplayErrorMesg(ex);
-					return false;
-				}
-				return true;
-			}
-			else return status;
-		}
+                    wiz.UpdateDisplay(ifolder, Path.Combine(downloadpath, ifolder.Name));
+                }
+                catch (Exception ex)
+                {
+                    DisplayErrorMesg(ex);
+                    return false;
+                }
+                return true;
+            }
+            else return status;
+        }
 
         /// <summary>
         /// Create Default iFolder
@@ -674,4 +693,8 @@ namespace Novell.Wizard
 		}
 	}
 }
+
+
+
+
 

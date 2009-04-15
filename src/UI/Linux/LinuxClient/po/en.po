@@ -3539,3 +3539,8 @@ msgid ""
 msgstr ""
 "New password and confirm password do not match."
 
+msgid ""
+"Click Ok to merge the folder or Cancel to select a different location"
+msgstr ""
+"Click Ok to merge the folder or Cancel to select a different location"
+
