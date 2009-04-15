@@ -77,7 +77,7 @@ namespace Novell.iFolder
 
 			VBox v = new VBox();
 			Label l = new Label("<span weight=\"bold\" size=\"larger\">" +
-					Util.GS("Remove this iFolder account?") + "</span>");
+					Util.GS("Remove this iFolder Account?") + "</span>");
 			l.LineWrap = true;
 			l.UseMarkup = true;
 			l.Selectable = false;
@@ -93,7 +93,7 @@ namespace Novell.iFolder
 			//
 			// Row: Server
 			//
-			l = new Label(Util.GS("Account Name:"));
+			l = new Label(Util.GS("iFolder server name:"));
 			l.Xalign = 1;
 			table.Attach(l, 0,1, 0,1,
 						 AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -120,7 +120,7 @@ namespace Novell.iFolder
 			//
 			// Row: Username
 			//
-			l = new Label(Util.GS("User Name:"));
+			l = new Label(Util.GS("User name:"));
 			l.Xalign = 1;
 			table.Attach(l, 0,1, 2,3,
 						 AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -132,13 +132,13 @@ namespace Novell.iFolder
 						 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 
 			v.PackEnd(table, true, true, 0);
-						
 			h.PackEnd(v);
 
 			this.VBox.PackStart(h, true, true, 0);
 
 			cbutton = new CheckButton(Util.GS("_Remove my iFolders and files from the server"));
 			this.VBox.PackStart(cbutton, false, false, 10);
+
 
 			cbutton.Toggled +=
 				new EventHandler(OnRemoveiFoldersToggled);

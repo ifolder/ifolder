@@ -132,7 +132,7 @@ namespace Novell.iFolder
 
 			ShowConfirmationButton = 
 				new CheckButton(Util.GS(
-					"_Show Confirmation dialog when creating iFolders"));
+					"_Display confirmation dialog on successful creation of iFolder"));
 			appWidgetBox.PackStart(ShowConfirmationButton, false, true, 0);
 			ShowConfirmationButton.Toggled += 
 						new EventHandler(OnShowConfButton);
@@ -181,20 +181,20 @@ namespace Novell.iFolder
 
 
 			NotifyiFoldersButton =
-				new CheckButton(Util.GS("Notify of share_d iFolders")); 
+				new CheckButton(Util.GS("Notify when iFolders are _shared")); 
 			notifyWidgetBox.PackStart(NotifyiFoldersButton, false, true, 0);
 
 			NotifyiFoldersButton.Toggled += 
 						new EventHandler(OnNotifyiFoldersButton);
 
 			NotifyCollisionsButton =
-				new CheckButton(Util.GS("Notify of conflic_ts")); 
+				new CheckButton(Util.GS("Notify when conflic_ts arise")); 
 			notifyWidgetBox.PackStart(NotifyCollisionsButton, false, true, 0);
 			NotifyCollisionsButton.Toggled += 
 						new EventHandler(OnNotifyCollisionsButton);
 
 			NotifyUsersButton =
-				new CheckButton(Util.GS("Notify when a _user joins")); 
+				new CheckButton(Util.GS("Notify when a _user joins the iFolder domain")); 
 			notifyWidgetBox.PackStart(NotifyUsersButton, false, true, 0);
 
 			NotifyUsersButton.Toggled += 

@@ -145,7 +145,7 @@ namespace Novell.iFolder
 			CellRendererText statecr = new CellRendererText();
 			statecr.Xpad = 5;
 			TreeViewColumn stateColumn = 
-			UserTreeView.AppendColumn(Util.GS("State"),
+			UserTreeView.AppendColumn(Util.GS("Role"),
 					statecr,
 					new TreeCellDataFunc(StateCellTextDataFunc));
 			stateColumn.Resizable = true;
@@ -154,7 +154,7 @@ namespace Novell.iFolder
 			CellRendererText accesscr = new CellRendererText();
 			accesscr.Xpad = 5;
 			TreeViewColumn accessColumn = 
-			UserTreeView.AppendColumn(Util.GS("Acc_ess"),
+			UserTreeView.AppendColumn(Util.GS("Rights"),
 					accesscr,
 					new TreeCellDataFunc(AccessCellTextDataFunc));
 			accessColumn.Resizable = true;
@@ -204,7 +204,7 @@ namespace Novell.iFolder
 			RemoveButton = new Button(Gtk.Stock.Remove);
 			rightBox.PackStart(RemoveButton);
 			RemoveButton.Clicked += new EventHandler(OnRemoveUser);
-			AccessButton = new Button(Util.GS("Acc_ess..."));
+			AccessButton = new Button(Util.GS("R_ights..."));
 			leftBox.PackStart(AccessButton);
 			AccessButton.Clicked += new EventHandler(OnAccessClicked);
 		}
@@ -543,7 +543,7 @@ namespace Novell.iFolder
 					                                        iFolderMsgDialog.DialogType.Error,
                                         					iFolderMsgDialog.ButtonSet.Ok,
 					                                        Util.GS("Policy Violation"),
-                                        					String.Format(Util.GS("OwnerShip of the iFolder {0} could not be tranferred to {1} as it is violating the limit of iFolder's set by the Administrator."),ifolder.Name,user.Name),Util.GS(" "));
+                                        					String.Format(Util.GS("Ownership of the iFolder {0} could not be transferred to {1} as it is violating the limit of iFolders set by the Administrator."),ifolder.Name,user.Name),Util.GS(" "));
 					                                messdialog.Run();
 					                                messdialog.Hide();
 					                                messdialog.Destroy();
