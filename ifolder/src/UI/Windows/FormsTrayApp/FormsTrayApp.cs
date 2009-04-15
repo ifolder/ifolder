@@ -189,6 +189,7 @@ namespace Novell.FormsTrayApp
         private static string lockObject = "SimiasStarting";
         private bool ShowWindow = false;
         internal uint appRestart;
+        public static bool disableSyncLogPopup = false;
 
 		#endregion
 
@@ -221,6 +222,15 @@ namespace Novell.FormsTrayApp
             {
                 RegularStart = true;
             }
+            foreach (string argument in args)
+            {
+                if (argument.Equals("-disableSyncLog"))
+                {
+                    disableSyncLogPopup = true;
+                    break;
+                }
+            }
+
 			instance = new FormsTrayApp();
 			Application.Run(instance);
 		}
@@ -603,7 +613,7 @@ namespace Novell.FormsTrayApp
 			}
 			else
 			{
-				syncLog.Show();
+                syncLog.Show();
 			}
 		}
 
@@ -613,7 +623,7 @@ namespace Novell.FormsTrayApp
             {
                 infolog.Activate();
             }
-            else
+            else if (false == disableSyncLogPopup)
             {
                 infolog.Show();
             }
@@ -712,7 +722,7 @@ namespace Novell.FormsTrayApp
                         infolog.Activate();
                     else
                         syncLog.Show();
-					break;
+                    break;
 			}
 		}
 
