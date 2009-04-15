@@ -16,14 +16,6 @@ m4_pattern_allow(PKG_CONFIG)
 GTK_SHARP2_MINIMUM_VERSION=1.9.5
 AC_SUBST(GTK_SHARP2_MINIMUM_VERSION)
 
-AC_CHECKING([whether a location for the client plugin was specified])
-AC_ARG_WITH(clientplugins,
-	[AS_HELP_STRING([--with-clientplugins],
-	[configure simias to run as a client. This option will also change the default --with-simiasdatadir to the user's home directory. [Default=FALSE]])],        [clientplugins="TRUE"
-	]
-	)
-AC_SUBST(clientplugins)
-
 #
 # Check for a 32 / 64
 #HACK ALERT : for libflaim 64bit builds
@@ -48,12 +40,8 @@ AC_SUBST(LIB64)
 case $host_os in
     linux*)
         SIMIAS_OS='linux'
-	if test "$clientplugins" = "TRUE"; then
-		AC_CHECK_PROG(CSC, mcs, mcs)
-	else
-		AC_CHECK_PROG(CSC, gmcs, gmcs)
-	fi
-        test -z "$CSC" && AC_MSG_ERROR([no C Sharp compiler: gmcs not found in \$PATH])
+        AC_CHECK_PROG(CSC, mcs, mcs)
+        test -z "$CSC" && AC_MSG_ERROR([no C Sharp compiler: mcs not found in \$PATH])
 	    PKG_CONFIG_DIR="$LIB64"
 
         PKG_CHECK_MODULES(GTK_SHARP, gtk-sharp-2.0 >= $GTK_SHARP2_MINIMUM_VERSION)
@@ -65,16 +53,16 @@ case $host_os in
     ;;
     darwin*)
         SIMIAS_OS='darwin'
-        AC_CHECK_PROG(CSC, gmcs, gmcs)
-        test -z "$CSC" && AC_MSG_ERROR([no C Sharp compiler: gmcs not found in \$PATH])
+        AC_CHECK_PROG(CSC, mcs, mcs)
+        test -z "$CSC" && AC_MSG_ERROR([no C Sharp compiler: mcs not found in \$PATH])
 		export PKG_CONFIG_PATH="/Library/Frameworks/Mono.framework/Versions/Current/lib/pkgconfig:$PKG_CONFIG_PATH"
 	    PKG_CONFIG_DIR='lib'
     ;;
     cygwin*)
         SIMIAS_OS='windows'
         AC_CHECK_PROG(CSC, csc, csc)
-        test -z "$CSC" && AC_CHECK_PROG(CSC, gmcs, gmcs)
-        test -z "$CSC" && AC_MSG_ERROR([no C Sharp compiler: neither csc nor gmcs found in \$PATH])
+        test -z "$CSC" && AC_CHECK_PROG(CSC, mcs, mcs)
+        test -z "$CSC" && AC_MSG_ERROR([no C Sharp compiler: neither csc nor mcs found in \$PATH])
     	PKG_CONFIG_DIR='.'
     ;;
     *)
@@ -86,11 +74,7 @@ AM_CONDITIONAL(LINUX, test "$SIMIAS_OS" = "linux")
 AM_CONDITIONAL(WINDOWS, test "$SIMIAS_OS" = "windows")
 AM_CONDITIONAL(DARWIN, test "$SIMIAS_OS" = "darwin")
 AM_CONDITIONAL(DARWIN_X86, test "$host_cpu" = "i686")
-if test "$clientplugins" = "TRUE"; then
-	AM_CONDITIONAL(MONO, test "$CSC" = "mcs")
-else
-	AM_CONDITIONAL(MONO, test "$CSC" = "gmcs")
-fi
+AM_CONDITIONAL(MONO, test "$CSC" = "mcs")
 AM_CONDITIONAL(DOTNET, test "$CSC" = "csc")
 
 
@@ -146,7 +130,7 @@ case $CSC in
     #
     # Mono-specific configuration
     #
-    gmcs)
+    mcs)
         CSC_EXEFLAG=/target:exe
         CSC_LIBFLAG=/target:library
         CSC_WINEXEFLAG=/target:winexe
@@ -161,22 +145,6 @@ case $CSC in
 		then
 			CSCFLAGS="$CSCFLAGS /d:MONONATIVE"
 		fi
-    ;;
-    mcs)
-        CSC_EXEFLAG=/target:exe
-        CSC_LIBFLAG=/target:library
-        CSC_WINEXEFLAG=/target:winexe
-        CSCFLAGS='/d:MONO /warn:4 /d:TRACE'
-        CSCFLAGS_DEBUG="/debug+ /d:DEBUG"
-        CSCFLAGS_OPTIMIZE="/optimize+"
-        MONO=mono
-        MONO_DEBUG='mono --debug'
-        MONO_PATH=
-        SYSTEM_XML='System.Xml.dll'
-                if pkg-config --atleast-version=1.1.13 mono > /dev/null 2>&1
-                then
-                        CSCFLAGS="$CSCFLAGS /d:MONONATIVE"
-                fi
     ;;
     #
     # .NET-specific configuration
