@@ -1700,4 +1700,14 @@ static iFolderData *sharedInstance = nil;
 	}
 }
 */
+
+-(NSNumber*)changeUserPassword:(NSString*)domainID changePassword:(NSString*)oldPasswd withNewPassword:(NSString*)newPasswd
+{
+	return [ifolderService ChangePassword:domainID changePassword:oldPasswd withNewPassword:newPasswd];
+}
+
+-(void)setDomainPassword:(NSString*)domainID withPassword:(NSString*)newPasswd
+{
+	[simiasService SetDomainPassword:domainID password:newPasswd];
+}
 @end

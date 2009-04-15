@@ -117,6 +117,7 @@
 -(BOOL) CanOwnerBeChanged:(NSString*)newUserID forDomain:(NSString*) domainID;
 -(clientUpdate*) CheckForMacUpdate:(NSString*)domainID forCurrentVersion:(NSString*)curVer;
 -(BOOL) RunClientUpdate:(NSString*)domainID withDownloadPath:(NSString*)path;
+-(NSNumber*) ChangePassword:(NSString*)domainID changePassword:(NSString*)oldPasswd withNewPassword:(NSString*)newPasswd;
 @end
 
 #endif // __iFolderService__

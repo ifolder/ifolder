@@ -1796,6 +1796,37 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	return status;
 }
 
+-(NSNumber*) ChangePassword:(NSString*)domainID changePassword:(NSString*)oldPasswd withNewPassword:(NSString*)newPasswd
+{
+	NSNumber *status = nil;
+	struct soap *pSoap = lockSoap(soapData);
+	
+	NSAssert((domainID != nil),@"domainID was nil");
+	NSAssert((oldPasswd != nil),@"domainID was nil");
+	NSAssert((newPasswd != nil),@"domainID was nil");
+	
+	struct _ns1__ChangePassword               changePasswordInput;
+	struct _ns1__ChangePasswordResponse       changePasswordResponse;
+	
+	changePasswordInput.domainid = (char*)[domainID UTF8String];
+	changePasswordInput.oldpassword = (char*)[oldPasswd UTF8String];
+	changePasswordInput.newpassword = (char*)[newPasswd UTF8String];
+	
+	int err_code = soap_call___ns1__ChangePassword(
+			   pSoap,
+			   [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
+			   NULL,
+			   &changePasswordInput,
+			   &changePasswordResponse);
+	
+	handle_soap_error(soapData,@"iFolderService.ChangePassword");
+	
+	status = [NSNumber numberWithInt:changePasswordResponse.ChangePasswordResult];
+	
+	unlockSoap(soapData);
+	return status;
+}
+
 //----------------------------------------------------------------------------
 // getiFolderProperties
 // Get the properties of iFolder

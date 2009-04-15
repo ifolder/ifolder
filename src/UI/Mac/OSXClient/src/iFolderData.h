@@ -144,4 +144,6 @@
 -(BOOL) isPassPhraseSet:(NSString*)domainID;
 -(void)clientUpdates:(NSString*)domID;
 //- (void)runUpdates:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo; // This method is to handle NSBeginAlertSheet to handle the upgrade client
+-(NSNumber*)changeUserPassword:(NSString*)domainID changePassword:(NSString*)oldPasswd withNewPassword:(NSString*)newPasswd;
+-(void)setDomainPassword:(NSString*)domainID withPassword:(NSString*)newPasswd;
 @end

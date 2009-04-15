@@ -47,6 +47,7 @@
 @class DefaultiFolderSheetController;
 @class iFolder;
 @class iFolderTextFieldCell;
+@class ChangePasswordSheetController;
 
 
 @interface iFolderWindowController : NSWindowController
@@ -58,6 +59,7 @@
 	IBOutlet ImportKeysSheetController      *importKeysSheetController;
 	IBOutlet ResetPPKeySheetController      *resetPPKeySheetController;
 	IBOutlet AdvConflictController          *advConflictSheetController;
+	IBOutlet ChangePasswordSheetController  *changePasswordSheetController;
     IBOutlet NSTableView					*iFolderTable;
 	IBOutlet NSTextField					*statusText;
 	IBOutlet NSProgressIndicator			*statusProgress;
@@ -95,6 +97,7 @@
 - (IBAction)shareiFolder:(id)sender;
 - (IBAction)synciFolder:(id)sender;
 - (IBAction)resolveConflicts:(id)sender;
+- (IBAction)changePassword:(id)sender;
 
 +(void)updateStatusTS:(NSString *)message;
 -(void)updateStatus:(NSString *)message;
