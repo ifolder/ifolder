@@ -786,13 +786,19 @@ namespace Novell.FormsTrayApp
         {
             try
             {
-                //simiasStarting = true;
                 DateTime starttime = DateTime.Now;
                 simiasManager.Start();
                 if (simiasManager.WebServiceUri == null || simiasManager.DataPath == null)
                 {
-                    MessageBox.Show("simiasManager is not proper.");
-                    Thread.Sleep(2000);
+                    simiasManager.Start();
+                    if (simiasManager.WebServiceUri == null || simiasManager.DataPath == null)
+                    {
+                        MessageBox.Show("Unable to start xsp web service, iFolder will not be able to work, restart the application.",
+                            "iFolder",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Exclamation);
+                        return;
+                    }
                 }
                 SetWebServiceInformation(simiasManager.WebServiceUri, simiasManager.DataPath);
                 ifWebService = new iFolderWebService();
@@ -802,14 +808,6 @@ namespace Novell.FormsTrayApp
                 LocalService.Start(simiasWebService, simiasManager.WebServiceUri, simiasManager.DataPath);
                 LocalService.Start(ifWebService, simiasManager.WebServiceUri, simiasManager.DataPath);
                 eventClient.Register();
-/*                eventQueue = new Queue();
-                workEvent = new AutoResetEvent(false);
-
-                // Set up the event handlers to watch for create, delete, and change events.
-                eventClient = new IProcEventClient(new IProcEventError(errorHandler), null);
-                eventClient.Register();
- */
-                //InitGUI();
                 if (!eventError)
                 {
                     eventClient.SetEvent(IProcEventAction.AddNodeChanged, new IProcEventHandler(trayApp_nodeEventHandler));
@@ -819,21 +817,19 @@ namespace Novell.FormsTrayApp
                     eventClient.SetEvent(IProcEventAction.AddFileSync, new IProcEventHandler(trayApp_fileSyncHandler));
                     eventClient.SetEvent(IProcEventAction.AddNotifyMessage, new IProcEventHandler(trayApp_notifyMessageHandler));
                 }
-                
+
                 this.globalProperties.iFWebService = ifWebService;
                 this.globalProperties.Simws = simiasWebService;
                 this.globalProperties.EventClient = eventClient;
                 this.preferences.ifolderWebService = ifWebService;
                 this.preferences.Simws = simiasWebService;
                 this.preferences.simManager = simiasManager;
-                
+
                 DateTime endtime = DateTime.Now;
                 simiasRunning = true;
                 iFolderComponent.SimiasRunning = true;
-            //    MessageBox.Show(string.Format("start time: {0} and end time: {1}", starttime, endtime));
                 simiasStarting = false;
                 iFolderComponent.SimiasStarting = false;
-            //    PostSimiasStart();
             }
             catch (Exception ex)
             {
@@ -849,7 +845,6 @@ namespace Novell.FormsTrayApp
 			}
 			else
 			{
-
 
                 try
                 {
@@ -2070,7 +2065,6 @@ namespace Novell.FormsTrayApp
 								}
 								case "Subscription"://NodeTypes.SubscriptionType:
 								{
-								//	MessageBox.Show(string.Format("Calling subscription iFolderInvitation: \n iFolderID: {0}\n POBoxID: {1}", eventArgs.Collection, eventArgs.Node));
 									ifolder = ifWebService.GetiFolderInvitation(eventArgs.Collection, eventArgs.Node);
 
 									// If the iFolder is not Available or it exists locally, we don't need to process the event.
