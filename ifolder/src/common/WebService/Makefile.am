@@ -24,9 +24,15 @@ all: Novell.iFolder.Web.dll ../iFolder/iFolderWebService.cs
 Novell.iFolder.Web.dll: $(srcdir)/AssemblyInfo.cs $(iFolderWebService_CSFILES) $(iFolderWebService_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderWebService_FLAGS) $(SIMIAS_LIBS) $(SIMIAS_CLIENT_LIBS) $(iFolderWebService_LIBS:%=/r:%) $(iFolderWebService_LIBPATH:%=/lib:%) $(iFolderWebService_RESOURCES:%=$(ICON_FLAG)%) $(srcdir)/AssemblyInfo.cs $(iFolderWebService_CSFILES_CSC) $(DOC_FILE_CMD) 
 
-../iFolder/iFolderWebService.cs: iFolderWebService.wsdl 
-	wsdl -out:../iFolder/iFolderWebService.cs iFolderWebService.wsdl
-	
+if LINUX
+../iFolder/iFolderWebService.cs: iFolderWebService.wsdl
+    $(WSDL) -out:../iFolder/iFolderWebService.cs iFolderWebService.wsdl
+endif
+if DARWIN
+../iFolder/iFolderWebService.cs: iFolderWebService.wsdl
+        wsdl -out:../iFolder/iFolderWebService.cs iFolderWebService.wsdl
+endif
+
 iFolderWebService.wsdl: Novell.iFolder.Web.dll GenerateWsdl.exe copy
 	$(MONO) GenerateWsdl.exe Novell.iFolder.Web.dll Novell.iFolder.Web.iFolderService http://127.0.0.1:8086/simias10/iFolder.asmx $@
 	

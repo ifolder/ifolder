@@ -45,7 +45,10 @@ case $host_os in
         IFOLDER_OS='linux'
         AC_CHECK_PROG(CSC, mcs, mcs)
         test -z "$CSC" && AC_MSG_ERROR([no C Sharp compiler: mcs not found in \$PATH])
-        PKG_CONFIG_DIR=${LIB64}   ;;
+        PKG_CONFIG_DIR=${LIB64} 
+
+        AC_CHECK_PROG(WSDL, wsdl1, wsdl1,wsdl)
+    ;;   
     darwin*)
         IFOLDER_OS='darwin'
         AC_CHECK_PROG(CSC, mcs, mcs)
