@@ -65,6 +65,7 @@ namespace Novell.FormsTrayApp
         private const decimal maximumHours = (decimal)(maximumMinutes / 60);
         private const decimal maximumDays = (decimal)(maximumHours / 24);
         private const decimal minmumSecondsAllowed = 5;
+        private const string startiFolderinTray = "StartiFolderinTray";
         private const string iFolderRun = "DisableAutoStart";
         private const string notifyShareDisabled = "NotifyShareDisable";
         private const string notifyCollisionDisabled = "NotifyCollisionDisabled";
@@ -124,6 +125,7 @@ namespace Novell.FormsTrayApp
         private System.Windows.Forms.Button btnHelp;
         public Novell.FormsTrayApp.GlobalProperties parent;
         public string str;
+        private System.Windows.Forms.CheckBox startInTrayIcon;
         
         
         #endregion
@@ -192,6 +194,7 @@ namespace Novell.FormsTrayApp
             this.defaultInterval = new System.Windows.Forms.NumericUpDown();
             this.displayConfirmation = new System.Windows.Forms.CheckBox();
             this.displayTrayIcon = new System.Windows.Forms.CheckBox();
+            this.startInTrayIcon = new System.Windows.Forms.CheckBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabGeneral = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
@@ -332,6 +335,41 @@ namespace Novell.FormsTrayApp
             this.displayTrayIcon.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("displayTrayIcon.TextAlign")));
             this.displayTrayIcon.Visible = ((bool)(resources.GetObject("displayTrayIcon.Visible")));
             this.displayTrayIcon.CheckedChanged += new System.EventHandler(this.displayTrayIcon_CheckedChanged);
+
+
+            //
+            //start In Tray Icon
+            //
+            this.startInTrayIcon.AccessibleDescription = resources.GetString("startInTrayIcon.AccessibleDescription");
+            this.startInTrayIcon.AccessibleName = resources.GetString("startInTrayIcon.AccessibleName");
+            this.startInTrayIcon.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("startInTrayIcon.Anchor")));
+            this.startInTrayIcon.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("startInTrayIcon.Appearance")));
+            this.startInTrayIcon.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("startInTrayIcon.BackgroundImage")));
+            this.startInTrayIcon.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("startInTrayIcon.CheckAlign")));
+            this.startInTrayIcon.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("startInTrayIcon.Dock")));
+            this.startInTrayIcon.Enabled = ((bool)(resources.GetObject("startInTrayIcon.Enabled")));
+            this.startInTrayIcon.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("startInTrayIcon.FlatStyle")));
+            this.startInTrayIcon.Font = ((System.Drawing.Font)(resources.GetObject("startInTrayIcon.Font")));
+            this.helpProvider1.SetHelpKeyword(this.startInTrayIcon, resources.GetString("startInTrayIcon.HelpKeyword"));
+            this.helpProvider1.SetHelpNavigator(this.startInTrayIcon, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("startInTrayIcon.HelpNavigator"))));
+            this.helpProvider1.SetHelpString(this.startInTrayIcon, resources.GetString("startInTrayIcon.HelpString"));
+            this.startInTrayIcon.Image = ((System.Drawing.Image)(resources.GetObject("startInTrayIcon.Image")));
+            this.startInTrayIcon.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("startInTrayIcon.ImageAlign")));
+            this.startInTrayIcon.ImageIndex = ((int)(resources.GetObject("startInTrayIcon.ImageIndex")));
+            this.startInTrayIcon.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("startInTrayIcon.ImeMode")));
+            this.startInTrayIcon.Location = ((System.Drawing.Point)(resources.GetObject("startInTrayIcon.Location")));
+            this.startInTrayIcon.Name = "startInTrayIcon";
+            this.startInTrayIcon.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("startInTrayIcon.RightToLeft")));
+            this.helpProvider1.SetShowHelp(this.displayConfirmation, ((bool)(resources.GetObject("startInTrayIcon.ShowHelp"))));
+            this.startInTrayIcon.Size = ((System.Drawing.Size)(resources.GetObject("startInTrayIcon.Size")));
+            this.startInTrayIcon.TabIndex = ((int)(resources.GetObject("startInTrayIcon.TabIndex")));
+            this.startInTrayIcon.Text = resources.GetString("startInTrayIcon.Text");
+            this.startInTrayIcon.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("startInTrayIcon.TextAlign")));
+            this.startInTrayIcon.Visible = ((bool)(resources.GetObject("startInTrayIcon.Visible")));
+            this.startInTrayIcon.CheckedChanged += new System.EventHandler(this.startInTrayIcon_CheckedChanged);
+
+
+
             // 
             // tabControl1
             // 
@@ -635,6 +673,7 @@ namespace Novell.FormsTrayApp
             this.groupBox3.Controls.Add(this.autoStart);
             this.groupBox3.Controls.Add(this.displayConfirmation);
             this.groupBox3.Controls.Add(this.displayTrayIcon);
+            this.groupBox3.Controls.Add(this.startInTrayIcon);
             this.groupBox3.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("groupBox3.Dock")));
             this.groupBox3.Enabled = ((bool)(resources.GetObject("groupBox3.Enabled")));
             this.groupBox3.FlatStyle = System.Windows.Forms.FlatStyle.System;
@@ -1276,6 +1315,46 @@ namespace Novell.FormsTrayApp
                 this.simiasManager = value;
             }
         }        
+
+
+
+        public static bool HideiFolderInTray
+        {
+            get
+            {
+                int notify;
+                try
+                {
+                    // Create/open the iFolder key.
+                    RegistryKey regKey = Registry.CurrentUser.CreateSubKey(iFolderKey);
+
+                    // Get the notify share value ... default the value to 0 (enabled).
+                    notify = (int)regKey.GetValue(startiFolderinTray, 0);
+                }
+                catch
+                {
+                    return true;
+                }
+
+                return (notify == 0);
+            }
+            set
+            {
+                // Create/open the iFolder key.
+                RegistryKey regKey = Registry.CurrentUser.CreateSubKey(iFolderKey);
+
+                if (value)
+                {
+                    // Delete the value.
+                    regKey.DeleteValue(startiFolderinTray, false);
+                }
+                else
+                {
+                    // Set the disable value.
+                    regKey.SetValue(startiFolderinTray, 1);
+                }
+            }
+        }
         
         #endregion
 
@@ -1749,6 +1828,7 @@ namespace Novell.FormsTrayApp
             NotifyShareEnabled = notifyShared.Checked;
             NotifyCollisionEnabled = notifyCollisions.Checked;
             NotifyJoinEnabled = notifyJoins.Checked;
+            HideiFolderInTray = startInTrayIcon.Checked;
 
             // Check and update display confirmation setting.
             iFolderComponent.DisplayConfirmationEnabled = displayConfirmation.Checked;
@@ -1758,7 +1838,6 @@ namespace Novell.FormsTrayApp
                 FormsTrayApp.SetTrayIconStatus(false);
             else
                 FormsTrayApp.SetTrayIconStatus(true);
-
 
             try
             {
@@ -2011,6 +2090,7 @@ namespace Novell.FormsTrayApp
                 notifyShared.Checked = NotifyShareEnabled;
                 notifyCollisions.Checked = NotifyCollisionEnabled;
                 notifyJoins.Checked = NotifyJoinEnabled;
+                startInTrayIcon.Checked = HideiFolderInTray;
 
                 // Update the display confirmation setting.
                 displayConfirmation.Checked = iFolderComponent.DisplayConfirmationEnabled;
@@ -2071,6 +2151,14 @@ namespace Novell.FormsTrayApp
         private void displayTrayIcon_CheckedChanged(object sender, System.EventArgs e)
         {
             if (displayTrayIcon.Focused)
+            {
+                apply.Enabled = true;
+            }
+        }
+
+        private void startInTrayIcon_CheckedChanged(object sender, System.EventArgs e)
+        {
+            if (startInTrayIcon.Focused)
             {
                 apply.Enabled = true;
             }

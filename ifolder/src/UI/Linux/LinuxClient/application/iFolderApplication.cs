@@ -1141,7 +1141,8 @@ namespace Novell.iFolder
 			{
 				case iFolderAppState.Starting:
 					gAppIcon.Pixbuf = StartingPixbuf;
-					ShowStartupScreen();
+					if(!(bool)ClientConfig.Get(ClientConfig.KEY_IFOLDER_WINDOW_HIDE))
+						ShowStartupScreen();
 					break;
 
 				case iFolderAppState.Running:
@@ -1287,7 +1288,9 @@ namespace Novell.iFolder
 				}
 				else
 				{
-					Util.LoadiFolderWindows();
+					if(! (bool)ClientConfig.Get(ClientConfig.KEY_IFOLDER_WINDOW_HIDE)) 
+						Util.LoadiFolderWindows();
+
 					Debug.PrintLine("Showing the migration prompt");
 					if( Util.ShowMigrationPrompt() )
 					{
@@ -1756,6 +1759,7 @@ namespace Novell.iFolder
 
 		private void quit_ifolder(object o, EventArgs args)
 		{
+
 			
                         quitDlg.Run();
 	                if (quit_iFolder)
