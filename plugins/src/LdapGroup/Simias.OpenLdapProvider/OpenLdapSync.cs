@@ -856,6 +856,15 @@ namespace Simias.OpenLdapProvider
 			LdapAttribute timeStampAttr = null;
 
 			bool attrError = false;
+			string FullNameDisplay = "";
+
+			store = Store.GetStore();
+			Domain domain = store.GetDomain( store.DefaultDomain );
+			if ( domain != null )
+			{
+				FullNameDisplay = domain.UsersFullNameDisplay;
+			}
+
 			try
 			{
 				// get the last update time
@@ -899,6 +908,10 @@ namespace Simias.OpenLdapProvider
 
 				if ( firstName != null && lastName != null )
 				{
+					if(FullNameDisplay == "FirstNameLastName")
+						fullName = firstName + " " + lastName;
+					else
+						fullName = lastName + " " + firstName;	
 					fullName = firstName + " " + lastName;
 				}
 				else
