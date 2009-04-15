@@ -430,7 +430,7 @@ namespace Novell.iFolderCom
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = resources.GetString("groupBox1.Text");
 			this.toolTip1.SetToolTip(this.groupBox1, resources.GetString("groupBox1.ToolTip"));
-			this.groupBox1.Visible = ((bool)(resources.GetObject("groupBox1.Visible")));
+			this.groupBox1.Visible = ((bool)(resources.GetObject("groupBox1.Visible")));            
 			// 
 			// syncNow
 			// 
@@ -734,7 +734,7 @@ namespace Novell.iFolderCom
 			this.groupBox3.Text = resources.GetString("groupBox3.Text");
 			this.toolTip1.SetToolTip(this.groupBox3, resources.GetString("groupBox3.ToolTip"));
 			this.groupBox3.Visible = ((bool)(resources.GetObject("groupBox3.Visible")));
-			// 
+            			// 
 			// gaugeChart
 			// 
 			this.gaugeChart.AccessibleDescription = resources.GetString("gaugeChart.AccessibleDescription");
@@ -1628,7 +1628,8 @@ namespace Novell.iFolderCom
 			this.groupBox2.Controls.Add(this.iFolderAccount);
 			this.groupBox2.Controls.Add(this.iFolderLocation);
 			this.groupBox2.Controls.Add(this.iFolderOwner);
-			this.groupBox2.ForeColor = this.groupBox3.ForeColor;
+            this.groupBox3.ForeColor = this.groupBox2.ForeColor = this.groupBox3.ForeColor;
+			//this.groupBox2.ForeColor = this.groupBox3.ForeColor;
 			// 
 			// pictureBox1
 			// 

@@ -105,7 +105,7 @@ namespace Novell.Wizard
             this.label3.Location = new System.Drawing.Point(this.defaultTextXPos, this.label1.Location.Y + this.label1.Size.Height + this.defaultSpacing);
             this.label3.Name = "label3";
             this.label3.TabIndex = 1;
-            this.label3.Text = Resource.GetString("UName");//"&Username:";
+            this.label3.Text = Resource.GetString("UNameTextbox") + ":";//"&Username:";
             this.strSize = graphics.MeasureString(this.label3.Text, this.label3.Font);
             this.label3.Size = new System.Drawing.Size(this.defaultTextWidth, ((int)this.strSize.Width / this.defaultTextWidth + 1) * 16);			
 			// 
@@ -123,7 +123,7 @@ namespace Novell.Wizard
             this.label4.Location = new System.Drawing.Point(this.defaultTextXPos, this.label3.Location.Y + this.label3.Size.Height + this.defaultSpacing);
             this.label4.Name = "label4";
             this.label4.TabIndex = 3;
-            this.label4.Text = Resource.GetString("PasswordTxt");//"&Password:";
+            this.label4.Text = Resource.GetString("PasswordTxt") + ":";//"&Password:";
             this.strSize = graphics.MeasureString(this.label4.Text, this.label4.Font);
             this.label4.Size = new System.Drawing.Size(this.defaultTextWidth, ((int)this.strSize.Width / this.defaultTextWidth + 1) * 16);
             // 
@@ -142,7 +142,7 @@ namespace Novell.Wizard
             this.rememberPassword.Location = new System.Drawing.Point(this.defaultTextXPos + this.defaultTextWidth, this.label4.Location.Y + this.label4.Size.Height + this.defaultSpacing);
             this.rememberPassword.Name = "rememberPassword";
             this.rememberPassword.TabIndex = 5;
-            this.rememberPassword.Text = Resource.GetString("RememberPasswd");//"&Remember password";
+            this.rememberPassword.Text = Resource.GetString("RememberPasswdCheckbox");//"&Remember password";
             this.strSize = graphics.MeasureString(this.rememberPassword.Text, this.rememberPassword.Font);
             this.rememberPassword.Size = new System.Drawing.Size(300, ((int)(this.strSize.Width / 300) + 1) * 16);
 

@@ -1048,7 +1048,13 @@ namespace Novell.FormsTrayApp
                                             filePathValue = (string)info.GetValue(autoAccount, null);
                                             FormsTrayApp.log.Debug("File path value is {0}", filePathValue);
                                             System.IO.FileInfo fileInfo = new System.IO.FileInfo(filePathValue);
-                                            fileInfo.MoveTo(filePathValue + ".backup");
+                                            System.IO.FileInfo backupFileInfo = new System.IO.FileInfo(filePathValue + ".backup");
+
+                                            if(File.Exists(filePathValue + ".backup"))
+                                            {
+                                                backupFileInfo.Delete();
+                                            }
+                                            fileInfo.MoveTo(filePathValue + ".backup");                                                                                        
                                         }
                                     }
                                 }

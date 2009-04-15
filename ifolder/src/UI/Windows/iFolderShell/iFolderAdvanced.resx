@@ -366,7 +366,7 @@
   </data>
   <data name="groupBox1.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>1</value>
-  </data>
+  </data>    
   <data name="groupBox1.Text">
     <value>Synchronization</value>
   </data>
@@ -638,7 +638,7 @@
     <value>1</value>
   </data>
   <data name="label4.Text">
-    <value>Last Successful Synchronization:</value>
+    <value>Last successful synchronization:</value>
   </data>
   <data name="label4.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>TopLeft</value>
@@ -1004,7 +1004,7 @@
     <value>7</value>
   </data>
   <data name="securesync.Text">
-    <value> Secure Sync:</value>
+    <value> Secure sync:</value>
   </data>
   <data name="securesync.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>MiddleLeft</value>
@@ -1184,7 +1184,7 @@
     <value>3</value>
   </data>
   <data name="label8.Text">
-    <value>Files/Folders to Synchronize:</value>
+    <value>Files/Folders to synchronize:</value>
   </data>
   <data name="label8.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>TopLeft</value>
@@ -1260,7 +1260,7 @@
   </data>
   <data name="groupBox3.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>8, 140</value>
-  </data>
+  </data>    
   <data name="groupBox3.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
   </data>
@@ -2834,7 +2834,7 @@
     <value>1</value>
   </data>
   <data name="access.Text">
-    <value>Access...</value>
+    <value>Right&amp;s...</value>
   </data>
   <data name="access.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>MiddleCenter</value>
@@ -2927,7 +2927,7 @@
     <value>2</value>
   </data>
   <data name="add.Text">
-    <value>A&amp;dd...</value>
+    <value>A&amp;dd</value>
   </data>
   <data name="add.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>MiddleCenter</value>
@@ -3149,7 +3149,7 @@
     <value>Private</value>
   </data>
   <data name="columnHeader2.Text">
-    <value>State</value>
+    <value>Role</value>
   </data>
   <data name="columnHeader2.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Left</value>
@@ -3164,7 +3164,7 @@
     <value>Private</value>
   </data>
   <data name="columnHeader3.Text">
-    <value>Access</value>
+    <value>Rights</value>
   </data>
   <data name="columnHeader3.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Left</value>
@@ -4418,7 +4418,7 @@
     <value>2</value>
   </data>
   <data name="lblOwner.Text">
-    <value>Owner</value>
+    <value>Owner:</value>
   </data>
   <data name="lblOwner.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>TopLeft</value>
@@ -4508,7 +4508,7 @@
     <value>3</value>
   </data>
   <data name="lblLocation.Text">
-    <value>Location</value>
+    <value>Location:</value>
   </data>
   <data name="lblLocation.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>TopLeft</value>
@@ -4598,7 +4598,7 @@
     <value>4</value>
   </data>
   <data name="lblAccount.Text">
-    <value>Account</value>
+    <value>Account:</value>
   </data>
   <data name="lblAccount.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>TopLeft</value>
@@ -5216,7 +5216,7 @@
     <value>Unable to open iFolder {0}.</value>
   </data>
   <data name="userProperties">
-    <value>Access for {0}</value>
+    <value>Access Rights for {0}</value>
   </data>
   <data name="helpErrorTitle">
     <value>iFolder Help Error</value>
@@ -5246,8 +5246,11 @@
     <value>Sharing is disabled so this iFolder can not be shared.</value>
   </data>
   <data name="slaveSyncInterval">
-    <value>Automatically Synchronizes Every:                   {0} {1}</value>
+    <value>Automatically synchronizes every:                   {0} {1}</value>
   </data>
+    <data name="properties">
+        <value>Properties</value>
+    </data>
   <data name="seconds">
     <value>second(s)</value>
   </data>
@@ -5264,8 +5267,7 @@
     <value>iFolder Services</value>
   </data>
   <data name="ifolderlimiterror">
-    <value>OwnerShip of the iFolder {0} could not be tranferred to {1} as it is violating 
-           the limit of iFolder's set by the Administrator.</value>
+    <value>OwnerShip of the iFolder {0} cannot be tranferred to {1} as it is violates \n the limit set by the Administrator on the number of iFolders.</value>
   </data>
   <data name="AlsoRemoveMembership">
     <value>Also remove my membership</value>

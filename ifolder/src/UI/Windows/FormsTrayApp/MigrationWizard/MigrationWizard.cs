@@ -482,7 +482,7 @@ namespace Novell.Wizard
 					if(passPhraseStatus.statusCode == StatusCodes.Success)
 					{
 						this.simiasWebService.StorePassPhrase( this.identityPage.domain.ID, this.passphrasePage.Passphrase, CredentialType.Basic, this.passphrasePage.RememberPassphrase);
-						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(Resource.GetString("SetPassphraseSuccess")/*"Successfully set the passphrase"*/, "", "", MyMessageBoxButtons.OK, MyMessageBoxIcon.None);
+						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(Resource.GetString("SetPassphraseSuccess")/*"Successfully set the passphrase"*/, "", "", MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
 						mmb.ShowDialog();
 						mmb.Dispose();
 						this.Dispose();

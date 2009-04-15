@@ -1563,7 +1563,7 @@ namespace Novell.iFolderCom
 					this.status= simws.IsPassPhraseSet(DomainID);
 					if( status == true)
 					{
-						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resources.GetString("SetPPSuccess")/*"Successfully set the passphrase"*/, resources.GetString("EnterPPTitle")/*"Enter passphrase"*/, "",MyMessageBoxButtons.OK, MyMessageBoxIcon.None);
+						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resources.GetString("SetPPSuccess")/*"Successfully set the passphrase"*/, resources.GetString("EnterPPTitle")/*"Enter passphrase"*/, "",MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
 						mmb.ShowDialog();
 						mmb.Dispose();
 						this.Dispose();
