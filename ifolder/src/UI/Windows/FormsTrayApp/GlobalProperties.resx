@@ -3415,4 +3415,7 @@ Are you sure you want to exit the Application ?</value>
   <data name="notApplicable">
     <value>N/A</value>
   </data>
+  <data name="Changepassword">
+    <value>Change password</value>
+  </data>  
 </root>
