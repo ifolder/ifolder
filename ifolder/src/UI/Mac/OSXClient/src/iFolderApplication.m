@@ -312,10 +312,10 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 	ifconlog1(@"Loading application defaults");
 	[self setupApplicationDefaults];
 
-	// check if we should restore windows
-	if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_RESTOREWIN])
+   if([[NSUserDefaults standardUserDefaults] integerForKey:PREFKEY_WINONSTARTUP] == 0) //Restore Window option
 	{
-		// yes, so only restore it was there before
+		
+	// yes, so only restore it was there before
 		if([[NSUserDefaults standardUserDefaults] boolForKey:STATE_SHOWMAINWINDOW])		
 		{
 			ifconlog1(@"Showing iFolder Window");
@@ -326,9 +326,23 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 			ifconlog1(@"Showing Sync Log Window");
 			[self showSyncLog:self];
 		}
+		
+
 	}
-	else
+	else if([[NSUserDefaults standardUserDefaults] integerForKey:PREFKEY_WINONSTARTUP] == 2) //Normal start up
+	{
 		[self showiFolderWindow:self];
+		
+		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:STATE_SHOWMAINWINDOW];	
+		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:STATE_SHOWLOGWINDOW];
+	}
+	
+	else
+	{
+		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:STATE_SHOWMAINWINDOW];	//Hide main window on start up
+		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:STATE_SHOWLOGWINDOW];
+		
+	}
 
 	[self setupProxyMonitor];
 
@@ -347,7 +361,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 {
 
 	NSArray *keys	= [NSArray arrayWithObjects:	PREFKEY_WINPOS,
-													PREFKEY_RESTOREWIN,
+													PREFKEY_WINONSTARTUP,
 													PREFKEY_CLICKIFOLDER,
 													PREFKEY_NOTIFYIFOLDERS,
                                                     PREFKEY_CREATEIFOLDER,
@@ -360,7 +374,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 													nil];
 
 	NSArray *values = [NSArray arrayWithObjects:	[NSNumber numberWithBool:YES],
-													[NSNumber numberWithBool:YES],
+													[NSNumber numberWithInt:2],
 													[NSNumber numberWithInt:0],
 													[NSNumber numberWithBool:YES],
 													[NSNumber numberWithBool:YES],
