@@ -1060,9 +1060,11 @@ namespace Novell.iFolder
 				        TreePath path = iFolderListStore.GetPath(iter);
 				        if (path != null)
 						{
-                            iFolderChangedHandler changedHandler =
+							//below code was commented, BUG#488624 ,as list.IterIsValid(iter) throwing random Exception		
+                          /*  iFolderChangedHandler changedHandler =
 								  new iFolderChangedHandler(path, iter, iFolderListStore);
-						    GLib.Idle.Add(changedHandler.IdleHandler);	
+						    GLib.Idle.Add(changedHandler.IdleHandler);	*/
+							Refresh();	
 						}		
 					}
 					
