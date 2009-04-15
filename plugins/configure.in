@@ -9,7 +9,10 @@ ASSEMBLY_VERSION=2
 VERSION=$VERSION.$ASSEMBLY_VERSION.0
 AM_MAINTAINER_MODE
 AC_PROG_CC
+if test -d m4; then
+echo "adding m4"
 AC_CONFIG_MACRO_DIR([m4])
+fi
 AC_PROG_CXX(am__fastdepCXX)
 m4_pattern_allow(PKG_CONFIG)
 
