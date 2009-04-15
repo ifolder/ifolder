@@ -413,6 +413,11 @@ namespace Simias.IdentitySynchronization
 							member.Properties.ModifyProperty( prop );
 							status = MemberStatus.Updated;
 						}
+						if ( FN != null && FN != "" && FN != member.FN )
+						{
+							// This is special scenario where withour time stamp change, FN can be changed
+							status = MemberStatus.Updated;
+						}
 					}
 				}
 
