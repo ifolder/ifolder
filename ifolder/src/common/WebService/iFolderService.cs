@@ -2826,14 +2826,17 @@ namespace Novell.iFolder.Web
 			string serverVersion = null;
 			int status = Novell.iFolder.Install.ClientUpgrade.CheckForUpdate(domainID, out serverVersion);
 			ServerVersion = serverVersion;
-            Store store = Store.GetStore();
-            Domain dom = store.GetDomain(domainID);
-            if (dom != null)
-            {
-                Version ver = new Version(serverVersion);
-                dom.ServerVersion = ver;
-                dom.Commit();
-            }
+            		Store store = Store.GetStore();
+            		Domain dom = store.GetDomain(domainID);
+            		if (dom != null)
+            		{
+                		if (dom.Owner != null)
+                		{
+                			Version ver = new Version(serverVersion);
+                			dom.ServerVersion = ver;
+                			dom.Commit();
+				}
+            		}
 			return status;
 		}
 
