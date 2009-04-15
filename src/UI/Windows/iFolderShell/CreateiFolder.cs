@@ -724,6 +724,13 @@ namespace Novell.iFolderCom
 					{
 						throw new Exception("Invalid path");
 					}
+                    			if ((ifolderPath.Text.EndsWith(@":\"))||(ifolderPath.Text.EndsWith(@":")))
+                    			{
+                        			MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("rootDriveError"), resourceManager.GetString("errorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+                        			mmb.ShowDialog();
+                        			successful = false;
+                        			return;
+                    			}
 				}
 				catch
 				{
@@ -1246,7 +1253,7 @@ namespace Novell.iFolderCom
 						this.Dispose();
 						this.Close();
 					}
-					catch(Exception ex) 
+					catch 
 					{
 						// TODO: Show error Messahe
 					//	MessageBox.Show("Unable to store passphrase. "+ex.Message);

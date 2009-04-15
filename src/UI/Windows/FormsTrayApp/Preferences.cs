@@ -1292,6 +1292,48 @@ namespace Novell.FormsTrayApp
         }
 
 
+
+
+        public static bool HideiFolderInTray
+        {
+            get
+            {
+                int notify;
+                try
+                {
+                    // Create/open the iFolder key.
+                    RegistryKey regKey = Registry.CurrentUser.CreateSubKey(iFolderKey);
+
+                    // Get the notify share value ... default the value to 0 (enabled).
+                    notify = (int)regKey.GetValue(startiFolderinTray, 1);
+                }
+                catch
+                {
+                    return true;
+                }
+
+                return (notify == 0);
+            }
+            set
+            {
+                // Create/open the iFolder key.
+                RegistryKey regKey = Registry.CurrentUser.CreateSubKey(iFolderKey);
+
+                if (value)
+                {
+                    // Delete the value.
+                    //regKey.DeleteValue(startiFolderinTray, false);
+                    //set enable value
+                    regKey.SetValue(startiFolderinTray, 0);
+                }
+                else
+                {
+                    // Set the disable value.
+                    regKey.SetValue(startiFolderinTray, 1);
+                }
+            }
+        }
+ 
         public iFolderWebService ifolderWebService
         {
             set
@@ -1315,47 +1357,7 @@ namespace Novell.FormsTrayApp
                 this.simiasManager = value;
             }
         }        
-
-
-
-        public static bool HideiFolderInTray
-        {
-            get
-            {
-                int notify;
-                try
-                {
-                    // Create/open the iFolder key.
-                    RegistryKey regKey = Registry.CurrentUser.CreateSubKey(iFolderKey);
-
-                    // Get the notify share value ... default the value to 0 (enabled).
-                    notify = (int)regKey.GetValue(startiFolderinTray, 0);
-                }
-                catch
-                {
-                    return true;
-                }
-
-                return (notify == 0);
-            }
-            set
-            {
-                // Create/open the iFolder key.
-                RegistryKey regKey = Registry.CurrentUser.CreateSubKey(iFolderKey);
-
-                if (value)
-                {
-                    // Delete the value.
-                    regKey.DeleteValue(startiFolderinTray, false);
-                }
-                else
-                {
-                    // Set the disable value.
-                    regKey.SetValue(startiFolderinTray, 1);
-                }
-            }
-        }
-        
+       
         #endregion
 
         #region Public Methods

@@ -3816,19 +3816,30 @@ namespace Novell.FormsTrayApp
 
 		private void menuResolve_Click(object sender, System.EventArgs e)
 		{
-            if (!AdvancedConflictResolver(ifWebService, ((iFolderObject)selectedItem.Tag).iFolderWeb))
-            {
-                ConflictResolver conflictResolver = new ConflictResolver();
-                conflictResolver.iFolder = ((iFolderObject)selectedItem.Tag).iFolderWeb;
-                conflictResolver.iFolderWebService = ifWebService;
-                conflictResolver.LoadPath = Application.StartupPath;
-                conflictResolver.Show();
-            }
+            		if (!AdvancedConflictResolver(ifWebService, ((iFolderObject)selectedItem.Tag).iFolderWeb))
+            		{
+                		ConflictResolver conflictResolver = new ConflictResolver();
+                		conflictResolver.iFolder = ((iFolderObject)selectedItem.Tag).iFolderWeb;
+                		conflictResolver.iFolderWebService = ifWebService;
+                		conflictResolver.LoadPath = Application.StartupPath;
+                		conflictResolver.Show();
+            		}
 		}
 
 		private void menuShare_Click(object sender, System.EventArgs e)
 		{
-			invokeiFolderProperties( selectedItem, 1 );
+			TileListViewItem selected = (TileListViewItem)selectedItem;
+		        iFolderWeb curriFolder = ((iFolderObject)selected.Tag).iFolderWeb;
+
+		        if (curriFolder.encryptionAlgorithm != null && curriFolder.encryptionAlgorithm != "")
+            		{
+		                MyMessageBox cannotShareDialog = new MyMessageBox(resourceManager.GetString("cannotShareMessage"), resourceManager.GetString("cannotShareTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Warning);
+                		cannotShareDialog.ShowDialog();
+		        }
+		        else
+		        {
+                	        invokeiFolderProperties( selectedItem, 1 );
+            		}
 		}
 
 		private void menuSyncNow_Click(object sender, System.EventArgs e)
