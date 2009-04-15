@@ -7,8 +7,10 @@ INCLUDES =						\
 	-DG_LOG_DOMAIN=\"Nautilus-iFolder\"		        \
 	-DDATADIR=\"$(datadir)\"			\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" 	\
+	-DOLD_CLIENT=$(old)                             \
 	-I$(top_srcdir)					\
 	-I$(top_builddir)				\
+        -I$(gnome_vfs_path)                             \
 	$(WARN_CFLAGS)                                  \
 	$(DISABLE_DEPRECATED_CFLAGS)			\
 	$(NAUTILUS_CFLAGS)						\

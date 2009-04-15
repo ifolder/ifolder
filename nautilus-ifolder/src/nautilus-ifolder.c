@@ -220,7 +220,8 @@ sec_reconnected (gpointer user_data)
 	 * Invalidate NautilusFileInfo on every iFolder's unmanaged path so that
 	 * Nautilus will update the emblem.
 	 */
-	//g_hash_table_foreach (ifolders_ht, invalidate_local_path, NULL);
+        if( OLD_CLIENT )
+	g_hash_table_foreach (ifolders_ht, invalidate_local_path, NULL);
 
 	return FALSE; /* Don't have this be called over and overa automatically. */
 }
@@ -290,8 +291,9 @@ sec_disconnected (gpointer user_data)
 	 * info so that all iFolder emblems are removed when iFolder is not
 	 * running.
 	 */
-	//g_hash_table_foreach (seen_ifolders_ht,
-	//					  seen_ifolders_ht_invalidate_ifolder, NULL);
+	if( OLD_CLIENT )
+	g_hash_table_foreach (seen_ifolders_ht,
+						  seen_ifolders_ht_invalidate_ifolder, NULL);
 
 	/**
 	 * Since iFolder is no longer running (or at least the event server
@@ -334,6 +336,7 @@ add_ifolder (gpointer user_data)
 	iFolderHolder *holder;
 	char *file_uri;
 	NautilusFileInfo *file;
+        file = NULL;
 	
 	holder = (iFolderHolder *)user_data;
 	g_hash_table_insert (ifolders_ht,
@@ -343,7 +346,8 @@ add_ifolder (gpointer user_data)
 	file_uri = gnome_vfs_get_uri_from_local_path (holder->unmanaged_path);
 	if (file_uri) {
 		/* FIXME: Change the following to be nautilus_file_info_get_existing () once it's available in the Nautilus Extension API */
-		//file = nautilus_file_get_existing (file_uri);
+		if( OLD_CLIENT )
+			file = nautilus_file_get_existing (file_uri);
 		if (ifolder_file) {
 			DEBUG_IFOLDER (("Found NautilusFile: %s\n", file_uri));
 			nautilus_file_info_invalidate_extension_info (ifolder_file);
@@ -398,6 +402,7 @@ remove_ifolder (gpointer user_data)
 	iFolderHolder *holder;
 	gchar *file_uri;
 	NautilusFileInfo *file;
+        file = NULL;
 	
 	ifolder_id = (char *)user_data;
 	
@@ -421,12 +426,13 @@ remove_ifolder (gpointer user_data)
 		 * this file_uri and invalidate the extension information.
 		 */
 		/* FIXME: Change the following to be nautilus_file_info_get_existing () once it's available in the Nautilus Extension API */
-/*		file = nautilus_file_get_existing (file_uri);
+		if( OLD_CLIENT )
+			file = nautilus_file_get_existing (file_uri);
 		if (file) {
 			nautilus_file_info_invalidate_extension_info (file);
 			
 			g_object_unref (G_OBJECT(file));
-		}  */
+		}  
 		
 		/**
 		 * Now that this folder is not an iFolder anymore, we can remove it
@@ -1145,12 +1151,14 @@ invalidate_local_path (gpointer key,
 	gchar *file_path;
 	NautilusFileInfo *file;
 	char *file_uri;
+        file = NULL;
 
 	file_path = (gchar *)key;
 
 	file_uri = gnome_vfs_get_uri_from_local_path (file_path);
 	if (file_uri) {
-		file = nautilus_file_get_existing (file_uri);
+		if( OLD_CLIENT )
+		    file = nautilus_file_get_existing (file_uri);
 													 
 		if (file) {
 			DEBUG_IFOLDER (("invalidate_local_path: %s\n", file_uri));
@@ -1402,9 +1410,11 @@ seen_ifolders_ht_invalidate_ifolder (gpointer key, gpointer value, gpointer user
 {
 	gchar *file_uri;
 	NautilusFileInfo *file;
+        file = NULL;
 	
 	file_uri = (gchar *)value;
-	file = nautilus_file_get_existing (file_uri);
+        if( OLD_CLIENT )  
+	    file = nautilus_file_get_existing (file_uri);
 
 	if (file) {
 		DEBUG_IFOLDER (("seen_ifolders_ht_invalidate_ifolder: %s\n", file_uri));

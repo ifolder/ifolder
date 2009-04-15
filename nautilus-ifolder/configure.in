@@ -19,6 +19,11 @@ AC_SUBST(IFOLDER_REQUIRED)
 
 PACKAGE=nautilus-ifolder3
 AC_SUBST(PACKAGE)
+#
+# Handle --with-newnautilus
+#
+AC_CHECKING([whether the version of nautilus is specified or not.])
+AC_ARG_WITH(newnautilus,[AS_HELP_STRING([--with-newnautilus],[configure nautilus plugins to run with nautilus 1.x API's or nautilus 2.x API's. [Default=FALSE]])], [newnautilus="TRUE"],[newnautilus="FALSE"])
 
 AM_INIT_AUTOMAKE($PACKAGE, 3.4)
 # Check to see if the BUILDNUM is set by global build
@@ -39,6 +44,19 @@ dnl PKG_CONFIG and required versions
 dnl ========================================================
 dnl Check for pkgconfig first
 AC_CHECK_PROG(HAVE_PKGCONFIG, pkg-config, yes, no)
+
+[if test "$newnautilus" = "TRUE"; then
+gnome_vfs_path=/usr/include/gnome-vfs-2.0
+extension=extensions-2.0
+old=FALSE
+else
+gnome_vfs_path=/opt/gnome/include/gnome-vfs-2.0
+extension=extensions-1.0
+old=TRUE
+fi]
+AC_SUBST(gnome_vfs_path)
+AC_SUBST(extension)
+AC_SUBST(old)
 
 #
 # Check for a 32 / 64
@@ -122,8 +140,8 @@ dnl ========================================================
 dnl Set EXTENSION_INSTALL_DIR, PIXMAPS_DIR, & EMBLEMS_DIR
 dnl ========================================================
 
-AC_DEFINE_UNQUOTED(EXTENSION_INSTALL_DIR, "${gnome_lib}/nautilus/extensions-1.0", [extension install directory])
-extension_install_dir="${gnome_lib}/nautilus/extensions-1.0"
+AC_DEFINE_UNQUOTED(EXTENSION_INSTALL_DIR, "${gnome_lib}/nautilus/${extension}", [extension install directory])
+extension_install_dir="${gnome_lib}/nautilus/${extension}"
 AC_DEFINE_UNQUOTED(PIXMAPS_DIR, "${gnome_root}/${DATADIRNAME}/${PACKAGE}/pixmaps", [pixmaps directory])
 pixmaps_dir="${gnome_root}/${DATADIRNAME}/${PACKAGE}/pixmaps"
 AC_DEFINE_UNQUOTED(EMBLEMS_DIR, "${gnome_root}/${DATADIRNAME}/icons/gnome/48x48/emblems", [emblems directory])
