@@ -71,6 +71,7 @@ namespace Novell.AutoAccount
         const string pathXML = "path";
         const string encryptedXML = "encrypted";
 		const string secureSyncXML = "securesync";
+        const string forceMergeXML = "forcemerge";
 /*        const string passphraseXML = "passphrase";
         const string rememberPassphraseXML = "remember-passphrase";
         const string recoveryAgentXML = "recovery-agent";
@@ -325,6 +326,18 @@ namespace Novell.AutoAccount
                                     iFolderWindow.log.Info("Invalid value for {0}. Using default value ...", secureSyncXML);
                                 }
                                 break;
+                            case forceMergeXML:
+                				if ((string.Compare(newIter.Current.Value, "true", true) == 0) ||
+                                    (string.Compare(newIter.Current.Value, "false", true) == 0))
+                                {
+                                    userAccount[i].ForceMerge = Boolean.Parse(newIter.Current.Value);
+                                }
+                                else
+                                {
+                                    iFolderWindow.log.Info("Invalid value for {0}. Using default value ...", forceMergeXML);
+                                }
+                                break;
+
 								/*
                             case passphraseXML:
                                 userAccount[i].Passphrase = newIter.Current.Value;
@@ -1110,12 +1123,24 @@ namespace Novell.AutoAccount
             try
             {
                 System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(path);
+                if (dir.Name == defaultiFolder.Name)
+                {
+                    path = Directory.GetParent(path).ToString();
+                    dir = new System.IO.DirectoryInfo(path);
+                }
+
                 dir.Create();
-                iFolderWindow.log.Info("Downloading default iFolder at path {0}", path );
-                ifdata.AcceptiFolderInvitation( defaultiFolder.ID, defaultiFolder.DomainID, path);
+                iFolderWindow.log.Info("Downloading default iFolder at path {0}", path);
+                ifdata.AcceptiFolderInvitation(defaultiFolder.ID, defaultiFolder.DomainID, path);
+                iFolderWindow.log.Info("Value of force merge {0}", acct.ForceMerge.ToString());
+                if (!acct.ForceMerge)
+                    ifdata.AcceptiFolderInvitation(defaultiFolder.ID, defaultiFolder.DomainID, path);
+                else
+                    ifdata.AcceptiFolderInvitation(defaultiFolder.ID, defaultiFolder.DomainID, Path.Combine(path, defaultiFolder.Name), true);
+
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 AddAccountWizard.DisplayCreateOrSetupException(ex, false);
                 return false;

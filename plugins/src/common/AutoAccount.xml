@@ -10,6 +10,7 @@
 		<path></path>
 		<encrypted>false</encrypted>
 		<securesync>false</securesync>
+		<forcemerge>false</forcemerge>
 	</default-ifolder>
 </user-account>
 

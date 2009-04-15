@@ -80,6 +80,7 @@ namespace Novell.AutoAccount
         const string pathXML = "path";
         const string encryptedXML = "encrypted";
         const string secureSyncXML = "securesync";
+        const string forceMergeXML = "forcemerge";
         //const string passphraseXML = "passphrase";
         //const string rememberPassphraseXML = "remember-passphrase";
         //const string recoveryAgentXML = "recovery-agent";
@@ -345,6 +346,19 @@ namespace Novell.AutoAccount
                                     Novell.FormsTrayApp.FormsTrayApp.log.Info("Invalid value for {0}. Using default value ...", secureSyncXML);
                                 }
                                 break;
+
+                            case forceMergeXML:
+                                if ((string.Compare(newIter.Current.Value, "true", true ) == 0) ||
+                                    string.Compare(newIter.Current.Value, "false", true) == 0)
+                                {
+                                    userAccount[i].ForceMerge = Boolean.Parse(newIter.Current.Value);
+                                }
+                                else
+                                {
+                                    Novell.FormsTrayApp.FormsTrayApp.log.Info("Invalid value for {0}. Using default value ...", forceMergeXML);
+                                }
+                                break;
+
                                 
                             /*case passphraseXML:
                                 userAccount[i].Passphrase = newIter.Current.Value;
@@ -1165,8 +1179,18 @@ namespace Novell.AutoAccount
             try
             {
                 DirectoryInfo di = new DirectoryInfo(path);
+                if (di.Name == defaultiFolder.Name)
+                {
+                    path = Directory.GetParent(path).ToString();
+                    di = new DirectoryInfo(path);
+                }
                 di.Create();
-                iFolderWeb ifolder = this.ifWebService.AcceptiFolderInvitation(defaultiFolder.DomainID, defaultiFolder.ID, path);
+                iFolderWeb ifolder = null;
+                if (!acct.ForceMerge)
+                    ifolder = this.ifWebService.AcceptiFolderInvitation(defaultiFolder.DomainID, defaultiFolder.ID, path);
+                else
+                    ifolder = this.ifWebService.MergeiFolder(defaultiFolder.DomainID, defaultiFolder.ID, Path.Combine(path,defaultiFolder.Name));
+
                 globalProperties.AddToAcceptedFolders(ifolder);
             }
             catch (Exception ex)

@@ -46,7 +46,7 @@ namespace Novell.AutoAccountHelper
     public class UserAccount
     {
         private string server, userid, passwd, defaultiFolderPath/*, passphrase, recoveryAgent*/;
-        private bool rememberPassword, /*rememberPassphrase, */defaultAccount, encrypted, promptForInvalidCert,secureSync;
+        private bool rememberPassword, /*rememberPassphrase, */defaultAccount, encrypted, promptForInvalidCert,secureSync, forcemerge;
         private bool needDefaultiFolder, valid, wizard;
 
         /// <summary>
@@ -65,6 +65,7 @@ namespace Novell.AutoAccountHelper
             wizard = false;
             passwd = "";
 			secureSync = false;
+	    forcemerge = false;
         }
 
         /// <summary>
@@ -222,6 +223,18 @@ namespace Novell.AutoAccountHelper
                 secureSync = value;
             }
         }
+
+	public bool ForceMerge
+	{
+	    get
+            {
+		return forcemerge;
+	    }
+	    set
+	    {
+		forcemerge = value;
+	    }
+	}
 		
         /// <summary>
         /// Gets/Sets whether to prompt for invalid cert
