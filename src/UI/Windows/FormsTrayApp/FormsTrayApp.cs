@@ -850,7 +850,10 @@ namespace Novell.FormsTrayApp
                 {
                     // See Bug 77741 - for some reason the web services won't get started properly
                     // when the application is run with the working directory set to a different drive.
-                    ShowStartupScreen();
+                    if (!Preferences.HideiFolderInTray)
+                    {
+                        ShowStartupScreen();
+                    }
                     Environment.CurrentDirectory = Application.StartupPath;
                     //Verify whether Simias process is running.
                     //if yes, perform Stop

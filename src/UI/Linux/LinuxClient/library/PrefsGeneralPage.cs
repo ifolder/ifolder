@@ -58,6 +58,7 @@ namespace Novell.iFolder
 		private Gtk.CheckButton			NotifyCollisionsButton; 
 		private Gtk.CheckButton			NotifyiFoldersButton; 
 //		private Gtk.CheckButton			NotifySyncErrorsButton;
+		private Gtk.CheckButton			HideMainWindowButton;
 		private int						lastSyncInterval;
 		private SyncUnit				currentSyncUnit;
 
@@ -193,6 +194,13 @@ namespace Novell.iFolder
 			NotifyCollisionsButton.Toggled += 
 						new EventHandler(OnNotifyCollisionsButton);
 
+
+			HideMainWindowButton=
+				new CheckButton(Util.GS("_Hide ifolder main window while startup")); 
+			notifyWidgetBox.PackStart(HideMainWindowButton, false, true, 0);
+			HideMainWindowButton.Toggled += 
+						new EventHandler(OnHideMainWindowButton);
+			
 			NotifyUsersButton =
 				new CheckButton(Util.GS("Notify when a _user joins the iFolder domain")); 
 			notifyWidgetBox.PackStart(NotifyUsersButton, false, true, 0);
@@ -292,6 +300,15 @@ namespace Novell.iFolder
 				NotifyUsersButton.Active = true;
 			else
 				NotifyUsersButton.Active = false;
+
+
+
+			if((bool)ClientConfig.Get(ClientConfig.KEY_IFOLDER_WINDOW_HIDE))
+				HideMainWindowButton.Active = true;
+			else
+				HideMainWindowButton.Active = false;
+
+
 
 			if((bool)ClientConfig.Get(ClientConfig.KEY_NOTIFY_COLLISIONS))
 				NotifyCollisionsButton.Active = true;
@@ -398,6 +415,24 @@ namespace Novell.iFolder
 			else
 				ClientConfig.Set(ClientConfig.KEY_NOTIFY_COLLISIONS, false);
 		}
+
+
+
+
+		private void OnHideMainWindowButton(object o, EventArgs args)
+		{
+			if(HideMainWindowButton.Active)
+			{
+				ClientConfig.Set(ClientConfig.KEY_IFOLDER_WINDOW_HIDE, true);
+			}
+			else
+			{
+				ClientConfig.Set(ClientConfig.KEY_IFOLDER_WINDOW_HIDE, false);
+			}
+		}
+
+
+
 
 		private void OnNotifyiFoldersButton(object o, EventArgs args)
 		{

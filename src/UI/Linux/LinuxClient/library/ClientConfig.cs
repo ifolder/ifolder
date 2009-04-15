@@ -72,7 +72,8 @@ namespace Novell.iFolder
 		public const string KEY_IFOLDER_WINDOW_Y_POS		= "/apps/ifolder3/ui/main_window/top";
 		public const string KEY_IFOLDER_WINDOW_WIDTH		= "/apps/ifolder3/ui/main_window/width";
 		public const string KEY_IFOLDER_WINDOW_HEIGHT		= "/apps/ifolder3/ui/main_window/height";
-		public const string KEY_IFOLDER_WINDOW_VISIBLE	= "/apps/ifolder3/ui/main_window/visible";
+		public const string KEY_IFOLDER_WINDOW_VISIBLE	    = "/apps/ifolder3/ui/main_window/visible";
+		public const string KEY_IFOLDER_WINDOW_HIDE	        = "/apps/ifolder3/ui/main_window/hide";
 		public const string KEY_SHOW_SERVER_IFOLDERS		= "/apps/ifolder3/ui/main_window/show_available_ifolders";
 		
 		///
@@ -143,6 +144,9 @@ namespace Novell.iFolder
 				case KEY_IFOLDER_WINDOW_VISIBLE:
 //				case KEY_SHOW_NETWORK_ERRORS:
 					return true;
+
+				case KEY_IFOLDER_WINDOW_HIDE:
+					return false;
 
 				case KEY_SYNC_UNIT:
 					return "Minutes";
