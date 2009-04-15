@@ -1604,9 +1604,6 @@ namespace Novell.iFolder
 			logview_item.Activated +=
 					new EventHandler(showLogWindow);
 
-			trayMenu.Append(new SeparatorMenuItem());
-
-
 
 			ImageMenuItem prefs_item = new ImageMenuItem (
 											Util.GS("Preferences"));
@@ -1615,6 +1612,9 @@ namespace Novell.iFolder
 			trayMenu.Append(prefs_item);
 			prefs_item.Activated +=
 					new EventHandler(show_preferences);
+
+			
+			trayMenu.Append(new SeparatorMenuItem());
 
 
 			ImageMenuItem help_item = new ImageMenuItem (

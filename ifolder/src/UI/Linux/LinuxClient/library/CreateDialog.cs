@@ -245,7 +245,7 @@ namespace Novell.iFolder
 			optionsTable.RowSpacing = 10;
 			optionsTable.SetColSpacing(0, 30);
 			
-			Label l = new Label(Util.GS("iFolder Account")+":");
+			Label l = new Label(Util.GS("iFolder account")+":");
 			l.Xalign = 0;
 			///Syntax:  Table.Attach(widget, column_start, column_end, row_start, row_end, AttachOptions,.....
 			optionsTable.Attach(l, 1,2,0,1,

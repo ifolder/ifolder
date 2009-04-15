@@ -288,15 +288,24 @@ msgstr "Unknown"
 msgid "Access for Multiple Users"
 msgstr "Access for Multiple Users"
 
+msgid "Access Rights for Multiple Users"
+msgstr "Access Rights for Multiple Users"
+
 #: src/LinuxClient/library/iFolderAccessDialog.cs:77 
 #, csharp-format
 msgid "Access for {0}"
 msgstr "Access for {0}"
 
+msgid "Access Rights for {0}"
+msgstr "Access Rights for {0}"
+
 #: src/LinuxClient/library/iFolderAccessDialog.cs:93 
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:144
 msgid "Access"
 msgstr "Access"
+
+msgid "Access Rights"
+msgstr "Access Rights"
 
 #: src/LinuxClient/library/iFolderAccessDialog.cs:124 
 msgid "Make this user the owner of the iFolder."
@@ -546,13 +555,22 @@ msgstr "Synchronization"
 msgid "Last Successful Synchronization:"
 msgstr "Last Successful Synchronization:"
 
+msgid "Last successful synchronization:"
+msgstr "Last successful synchronization:"
+
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:495 
 msgid "Files/Folders to Synchronize:"
 msgstr "Files/Folders to Synchronize:"
 
+msgid "Files/Folders to synchronize:"
+msgstr "Files/Folders to synchronize:"
+
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:504 
 msgid "Automatically Synchronizes Every:"
 msgstr "Automatically Synchronizes Every:"
+
+msgid "Automatically synchronizes every:"
+msgstr "Automatically synchronizes every:"
 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:516 
 msgid "Synchronize _Now"
@@ -566,9 +584,18 @@ msgstr "User"
 msgid "State"
 msgstr "State"
 
+msgid "Role"
+msgstr "Role"
+
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:189 
 msgid "Acc_ess..."
 msgstr "Acc_ess..."
+
+msgid "R_ights..."
+msgstr "R_ights..."
+
+msgid "Rights"
+msgstr "Rights"
 
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:272 
 msgid "Owner"
@@ -1387,6 +1414,10 @@ msgstr "System Name"
 msgid "Username"
 msgstr "Username"
 
+#: src/LinuxClient/library/PrefsAccountsPage.cs:188 
+msgid "Server Name"
+msgstr "Server Name"
+
 #: src/LinuxClient/library/PrefsAccountsPage.cs:226 
 msgid "_Details"
 msgstr "_Details"
@@ -1396,8 +1427,8 @@ msgid "Account Settings"
 msgstr "Account Settings"
 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:261 
-msgid "User Name:"
-msgstr "User Name:"
+msgid "User name:"
+msgstr "User name:"
 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:295 
 msgid "Remember _password"
@@ -1525,6 +1556,31 @@ msgstr "Application"
 msgid "_Show Confirmation dialog when creating iFolders"
 msgstr "_Show Confirmation dialog when creating iFolders"
 
+msgid "_Display confirmation dialog on successful creation of iFolder"
+msgstr "_Display confirmation dialog on successful creation of iFolder"
+
+msgid "Show _Network Events  messages when iFolder is started"
+msgstr "Show _Network Events  messages when iFolder is started"
+
+#: src/LinuxClient/library/PrefsGeneralPage.cs:127 
+msgid ""
+"To start up iFolder at login, leave iFolder running when you log out and "
+"save your current setup."
+msgstr ""
+"To start up iFolder at login, leave iFolder running when you log out and "
+"save your current setup."
+
+#: src/LinuxClient/library/PrefsGeneralPage.cs:142 
+msgid "Notification"
+msgstr "Notification"
+
+#: src/LinuxClient/library/PrefsGeneralPage.cs:163 
+msgid "Notify of share_d iFolders"
+msgstr "Notify of share_d iFolders"
+
+msgid "Notify when iFolders are _shared"
+msgstr "Notify when iFolders are _shared"
+
 msgid "Show _Network Events  messages when iFolder is started"
 msgstr "Show _Network Events  messages when iFolder is started"
 
@@ -1545,12 +1601,12 @@ msgid "Notify of share_d iFolders"
 msgstr "Notify of share_d iFolders"
 
 #: src/LinuxClient/library/PrefsGeneralPage.cs:170 
-msgid "Notify of conflic_ts"
-msgstr "Notify of conflic_ts"
+msgid "Notify when conflic_ts arise"
+msgstr "Notify when conflic_ts arise"
 
 #: src/LinuxClient/library/PrefsGeneralPage.cs:176 
-msgid "Notify when a _user joins"
-msgstr "Notify when a _user joins"
+msgid "Notify when a _user joins the iFolder domain"
+msgstr "Notify when a _user joins the iFolder domain"
 
 #: src/LinuxClient/library/PrefsGeneralPage.cs:219 
 msgid "Automatically S_ynchronize iFolders"
@@ -1592,9 +1648,15 @@ msgstr ""
 msgid "Remove this iFolder account?"
 msgstr "Remove this iFolder account?"
 
+msgid "Remove this iFolder Account?"
+msgstr "Remove this iFolder Account?"
+
 #: src/LinuxClient/library/RemoveAccountDialog.cs:77 
 msgid "System Name:"
 msgstr "System Name:"
+
+msgid "iFolder server name:"
+msgstr "iFolder server name:"
 
 #: src/LinuxClient/library/RemoveAccountDialog.cs:121 
 msgid "_Remove my iFolders and files from the server"
@@ -1740,6 +1802,11 @@ msgstr ""
 "Welcome to the iFolder Account Assistant.\n\nClick \"Forward\" to begin."
 
 msgid ""
+"Welcome to the iFolder Account Creation Wizard.\n\nClick \"Forward\" to begin."
+msgstr ""
+"Welcome to the iFolder Account Creation Wizard.\n\nClick \"Forward\" to begin."
+
+msgid ""
 "iFolder Server"
 msgstr ""
 "iFolder Server"
@@ -1755,9 +1822,19 @@ msgstr ""
 "Server _Address:"
 
 msgid ""
+"Server _address:"
+msgstr ""
+"Server _address:"
+
+msgid ""
 "Setting this iFolder Server as your default server will allow iFolder to automatically select this server when adding new folders."
 msgstr ""
 "Setting this iFolder Server as your default server will allow iFolder to automatically select this server when adding new folders."
+
+msgid ""
+"Setting this iFolder Server as your default server will enable iFolder to automatically select this server when adding new folders."
+msgstr ""
+"Setting this iFolder Server as your default server will enable iFolder to automatically select this server when adding new folders."
 
 msgid ""
 "Make this my _default server"
@@ -1765,9 +1842,19 @@ msgstr ""
 "Make this my _default server"
 
 msgid ""
+"Set this as my _default server"
+msgstr ""
+"Set this as my _default server"
+
+msgid ""
 "Identity"
 msgstr ""
 "Identity"
+
+msgid ""
+"iFolder Account Information"
+msgstr ""
+"iFolder Account Information"
 
 msgid ""
 "Enter your iFolder user name and password (for example, \"jsmith\")."
@@ -1778,6 +1865,17 @@ msgid ""
 "_User Name:"
 msgstr ""
 "_User Name:"
+
+
+msgid ""
+"_User name:"
+msgstr ""
+"_User name:"
+
+msgid ""
+"User name:"
+msgstr ""
+"User name:"
 
 msgid ""
 "_Password:"
@@ -1790,6 +1888,11 @@ msgstr ""
 "_Remember my password on this computer"
 
 msgid ""
+"_Remember password on this computer"
+msgstr ""
+"_Remember password on this computer"
+
+msgid ""
 "Verify and Connect"
 msgstr ""
 "Verify and Connect"
@@ -1800,9 +1903,19 @@ msgstr ""
 "Please verify that the information you have entered is correct."
 
 msgid ""
+"Please verify the information you have entered."
+msgstr ""
+"Please verify the information you have entered."
+
+msgid ""
 "Server Address:"
 msgstr ""
 "Server Address:"
+
+msgid ""
+"Server address:"
+msgstr ""
+"Server address:"
 
 msgid ""
 "Remember password:"
@@ -1815,9 +1928,20 @@ msgstr ""
 "Make default account:"
 
 msgid ""
-"Click \"Connect\" to validate your connection with the server."
+"Click \"Connect\" to test your connection with the server."
 msgstr ""
-"Click \"Connect\" to validate your connection with the server."
+"Click \"Connect\" to test your connection with the server."
+
+
+msgid ""
+"Click \"Connect\" to proceed." 
+msgstr ""
+"Click \"Connect\" to proceed."
+
+msgid ""
+"Unable to Verify Identity"
+msgstr ""
+"Unable to Verify Identity"
 
 msgid ""
 "Encryption"
@@ -1825,9 +1949,9 @@ msgstr ""
 "Encryption"
 
 msgid ""
-"Enter the Passphrase"
+"Enter the passphrase"
 msgstr ""
-"Enter the Passphrase"
+"Enter the passphrase"
 
 msgid ""
 "_Passphrase:"
@@ -1865,6 +1989,12 @@ msgstr ""
 "iFolder Account Assistant"
 
 msgid ""
+"iFolder Account Creation Wizard"
+msgstr ""
+"iFolder Account Creation Wizard"
+
+
+msgid ""
 "iFolder Account Assistant - (1 of 5)"
 msgstr ""
 "iFolder Account Assistant - (1 of 5)"
@@ -1914,20 +2044,26 @@ msgid ""
 msgstr ""
 "Congratulations!  You are now\nconnected to:\n\nAccount Name: {0}\nServer Address: {1}\nUser Name: {2}\n\nClick \"Finish\" to close this window."
 
+
+msgid ""
+"You are now connected to:\n\nServer name: \t{0}\nServer address: \t{1}\nUser name: \t{2}\n\nClick \"Finish\" to close this wizard."
+msgstr ""
+"You are now connected to:\n\nServer name: \t{0}\nServer address: \t{1}\nUser name: \t{2}\n\nClick \"Finish\" to close this wizard."
+
 msgid ""
 "_Finish"
 msgstr ""
 "_Finish"
 
 msgid ""
-"PassPhrase mismatch"
+"Passphrase mismatch"
 msgstr ""
-"PassPhrase mismatch"
+"Passphrase mismatch"
 
 msgid ""
-"The PassPhrase and retyped PassPhrase are not same"
+"The passphrase and retyped passphrase are not same"
 msgstr ""
-"The PassPhrase and retyped PassPhrase are not same"
+"The passphrase and retyped passphrase are not same"
 
 msgid ""
 "None"
@@ -1935,9 +2071,9 @@ msgstr ""
 "None"
 
 msgid ""
-"Error setting the Passphrase"
+"Error setting the passphrase"
 msgstr ""
-"Error setting the Passphrase"
+"Error setting the passphrase"
 
 msgid ""
 "Unable to change the Passphrase"
@@ -2035,9 +2171,9 @@ msgstr ""
 "Type"
 
 msgid ""
-"Unable to Reset the passphrase"
+"Unable to reset the passphrase"
 msgstr ""
-"Unable to Reset the passphrase"
+"Unable to reset the passphrase"
 
 msgid ""
 "Unable to remove the account"
@@ -2050,19 +2186,14 @@ msgstr ""
 "iFolder encountered a problem removing the account.  Please restart iFolder and try again."
 
 msgid ""
-"iFolder Passphrase"
+"iFolder passphrase"
 msgstr ""
-"iFolder Passphrase"
+"iFolder passphrase"
 
 msgid ""
-"_Re-type Passphrase:"
+"_Re-type passphrase:"
 msgstr ""
-"_Re-type Passphrase:"
-
-msgid ""
-"Remember Passphrase"
-msgstr ""
-"Remember Passphrase on this computer"
+"_Re-type passphrase:"
 
 msgid ""
 "Select Passphrase Recovery Agent"
@@ -2180,14 +2311,14 @@ msgstr ""
 "Export Encrypted Keys"
 
 msgid ""
-"File Path"
+"File path"
 msgstr ""
-"File Path"
+"File path"
 
 msgid ""
-"Recovery Agent"
+"Recovery agent"
 msgstr ""
-"Recovery Agent"
+"Recovery agent"
 
 msgid ""
 "E-Mail ID"
@@ -2269,6 +2400,13 @@ msgid ""
 msgstr ""
 "Connect iFolder Account"
 
+
+msgid ""
+"iFolder Login"
+msgstr ""
+"iFolder Login"
+
+
 msgid ""
 "Unable to launch File Browser"
 msgstr ""
@@ -2325,6 +2463,11 @@ msgstr ""
 "_Upload a folder..."
 
 msgid ""
+"_Upload a Folder..."
+msgstr ""
+"_Upload a Folder..."
+
+msgid ""
 "_Download..."
 msgstr ""
 "_Download..."
@@ -2333,6 +2476,11 @@ msgid ""
 "Dele_te from server"
 msgstr ""
 "Dele_te from server"
+
+msgid ""
+"Dele_te From Server"
+msgstr ""
+"Dele_te From Server"
 
 msgid ""
 "Re_move my membership"
@@ -2435,9 +2583,19 @@ msgstr ""
 "Delete from server"
 
 msgid ""
+"Delete from Server"
+msgstr ""
+"Delete from Server"
+
+msgid ""
 "Remove my membership"
 msgstr ""
 "Remove my membership"
+
+msgid ""
+"Remove my Membership"
+msgstr ""
+"Remove my Membership"
 
 msgid ""
 "iFolders on This Computer"
@@ -2465,9 +2623,9 @@ msgstr ""
 "No matches found"
 
 msgid ""
-"Invalid Passphrase"
+"Invalid passphrase"
 msgstr ""
-"Invalid Passphrase"
+"Invalid passphrase"
 
 msgid ""
 "Passphrase entered is wrong"
@@ -2510,6 +2668,11 @@ msgstr ""
 "Revert this iFolder back to a normal folder?"
 
 msgid ""
+"Revert this iFolder to a normal folder?"
+msgstr ""
+"Revert this iFolder to a normal folder?"
+
+msgid ""
 "The folder will still be on your computer, but it will no longer synchronize with the iFolder Server."
 msgstr ""
 "The folder will still be on your computer, but it will no longer synchronize with the iFolder Server."
@@ -2520,9 +2683,24 @@ msgstr ""
 "Also _delete this iFolder from the server"
 
 msgid ""
+"_Delete this iFolder from the server"
+msgstr ""
+"_Delete this iFolder from the server"
+
+msgid ""
 "Also _remove my membership from this iFolder"
 msgstr ""
 "Also _remove my membership from this iFolder"
+
+msgid ""
+"_Remove my membership from this iFolder"
+msgstr ""
+"_Remove my membership from this iFolder"
+
+msgid ""
+"Revert to Normal Folder"
+msgstr ""
+"Revert to Normal Folder"
 
 msgid ""
 "Delete \"{0}\" from the server?"
@@ -2555,19 +2733,19 @@ msgstr ""
 "You should be logged-in to the domain for creating encrypted iFolders."
 
 msgid ""
-"One Time Passphrase"
+"One time passphrase"
 msgstr ""
-"One Time Passphrase"
+"One time passphrase"
 
 msgid ""
-"New Passphrase"
+"New passphrase"
 msgstr ""
-"New Passphrase"
+"New passphrase"
 
 msgid ""
-"Re-type Passphrase"
+"Re-type passphrase"
 msgstr ""
-"Re-type Passphrase"
+"Re-type passphrase"
 
 msgid ""
 "iFolder Migration"
@@ -2578,6 +2756,11 @@ msgid ""
 "User Name"
 msgstr ""
 "User Name"
+
+msgid ""
+"User name"
+msgstr ""
+"User name"
 
 msgid ""
 "Home Location"
@@ -2770,14 +2953,14 @@ msgstr ""
 "Reset Passphrase"
 
 msgid ""
-"Enter Present Passphrase"
+"Enter passphrase"
 msgstr ""
-"Enter Present Passphrase"
+"Enter passphrase"
 
 msgid ""
-"Enter New Passphrase"
+"Enter new passphrase"
 msgstr ""
-"Enter New Passphrase"
+"Enter new passphrase"
 
 
 msgid ""
@@ -2786,9 +2969,9 @@ msgstr ""
 "Reset"
 
 msgid ""
-"_Remember Passphrase"
+"_Remember passphrase"
 msgstr ""
-"_Remember Passphrase on this computer"
+"_Remember passphrase on this computer"
 
 msgid ""
 "iFolder Server Older"
@@ -2920,15 +3103,21 @@ msgid ""
 msgstr ""
 "Download Default iFolder:"
 
+
+msgid ""
+"Download default iFolder"
+msgstr ""
+"Download default iFolder"
+
 msgid ""
 "Next"
 msgstr ""
 "Next"
 
 msgid ""
-"iFolder Account"
+"iFolder account"
 msgstr ""
-"iFolder Account"
+"iFolder account"
 
 msgid ""
 "Convert to an iFolder..."
@@ -3116,6 +3305,11 @@ msgstr ""
 "Merge to folder"
 
 msgid ""
+"Merge to Folder"
+msgstr ""
+"Merge to Folder"
+
+msgid ""
 "_Merge"
 msgstr ""
 "_Merge"
@@ -3171,6 +3365,11 @@ msgstr ""
 "OwnerShip of the iFolder {0} could not be tranferred to {1} as it is violating the limit of iFolder's set by the Administrator."
 
 msgid ""
+"Ownership of the iFolder {0} could not be transferred to {1} as it is violating the limit of iFolders set by the Administrator."
+msgstr ""
+"OwnerShip of the iFolder {0} could not be transferred to {1} as it is violating the limit of iFolders set by the Administrator."
+
+msgid ""
 "Certificate Expired! for \"{0}\" server. Unable to verify \"{0}\" as a trusted server. You should examine this server's identity certificate carefully. Do you still want to continue?"
 msgstr ""
 "Certificate Expired! for \"{0}\" server. Unable to verify \"{0}\" as a trusted server. You should examine this server's identity certificate carefully. Do you still want to continue?"
@@ -3179,6 +3378,11 @@ msgid ""
 "Secure Sync"
 msgstr ""
 "Secure Sync"
+
+msgid ""
+"Secure sync:"
+msgstr ""
+"Secure sync:"
 
 msgid ""
 "port"

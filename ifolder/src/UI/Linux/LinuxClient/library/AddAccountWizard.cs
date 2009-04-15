@@ -189,7 +189,7 @@ namespace Novell.iFolder
         /// <param name="simws">Simias WebService</param>
 		public AddAccountWizard(SimiasWebService simws) : base(WindowType.Toplevel)
 		{
-			this.Title = Util.GS("iFolder Account Assistant");
+			this.Title = Util.GS("iFolder Account Creation Wizard");
 			this.Resizable = false;
 			this.Modal = true;
 			this.WindowPosition = Gtk.WindowPosition.Center;
@@ -265,7 +265,7 @@ namespace Novell.iFolder
 			IntroductoryPage = new Gnome.DruidPageEdge(Gnome.EdgePosition.Start,
 				true,	// use an antialiased canvas
 				Util.GS("Configure an iFolder Account"),
-				Util.GS("Welcome to the iFolder Account Assistant.\n\nClick \"Forward\" to begin."),
+				Util.GS("Welcome to the iFolder Account Creation Wizard.\n\nClick \"Forward\" to begin."),
 				AddAccountPixbuf, null, null);
 			
 			IntroductoryPage.CancelClicked +=
@@ -313,7 +313,7 @@ namespace Novell.iFolder
 			// Row 2
 			table.Attach(new Label(""), 0,1, 1,2,
 				AttachOptions.Fill, 0,12,0); // spacer
-			l = new Label(Util.GS("Server _Address:"));
+			l = new Label(Util.GS("Server _address:"));
 			table.Attach(l, 1,2, 1,2,
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			l.Xalign = 0.0F;
@@ -332,14 +332,14 @@ namespace Novell.iFolder
 			ServerNameEntry.ActivatesDefault = true;
 			
 			// Row 3
-			MakeDefaultLabel = new Label(Util.GS("Setting this iFolder Server as your default server will allow iFolder to automatically select this server when adding new folders."));
+			MakeDefaultLabel = new Label(Util.GS("Setting this iFolder Server as your default server will enable iFolder to automatically select this server when adding new folders."));
 			table.Attach(MakeDefaultLabel, 0,3, 2,3,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			MakeDefaultLabel.LineWrap = true;
 			MakeDefaultLabel.Xalign = 0.0F;
 			
 			// Row 4
-			DefaultServerCheckButton = new CheckButton(Util.GS("Make this my _default server"));
+			DefaultServerCheckButton = new CheckButton(Util.GS("Set this as my _default server"));
 			table.Attach(DefaultServerCheckButton, 1,3, 3,4,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			
@@ -353,7 +353,7 @@ namespace Novell.iFolder
 		{
 			UserInformationPage =
 				new Gnome.DruidPageStandard(
-					Util.GS("Identity"),
+					Util.GS("iFolder Account Information"),
 					AddAccountPixbuf,
 					null);
 
@@ -382,7 +382,7 @@ namespace Novell.iFolder
 			// Row 2
 			table.Attach(new Label(""), 0,1, 1,2,
 				AttachOptions.Fill, 0,12,0); // spacer
-			l = new Label(Util.GS("_User Name:"));
+			l = new Label(Util.GS("_User name:"));
 			table.Attach(l, 1,2, 1,2,
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			l.Xalign = 0.0F;
@@ -421,7 +421,7 @@ namespace Novell.iFolder
 			PasswordEntry.ActivatesDefault = true;
 
 			// Row 4
-			RememberPasswordCheckButton = new CheckButton(Util.GS("_Remember my password"));
+			RememberPasswordCheckButton = new CheckButton(Util.GS("_Remember password on this computer"));
 			table.Attach(RememberPasswordCheckButton, 2,3, 3,4,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			if ((bool)ClientConfig.Get(
@@ -467,7 +467,7 @@ namespace Novell.iFolder
 			table.BorderWidth = 12;
 
 			// Row 1
-			Label l = new Label(Util.GS("Please verify that the information you have entered is correct."));
+			Label l = new Label(Util.GS("Please verify the information you have entered."));
 			table.Attach(l, 0,3, 0,1,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			l.LineWrap = true;
@@ -476,7 +476,7 @@ namespace Novell.iFolder
 			// Row 2
 			table.Attach(new Label(""), 0,1, 1,2,
 				AttachOptions.Fill, 0,12,0); // spacer
-			l = new Label(Util.GS("Server Address:"));
+			l = new Label(Util.GS("Server address:"));
 			table.Attach(l, 1,2, 1,2,
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			l.Xalign = 0.0F;
@@ -486,7 +486,7 @@ namespace Novell.iFolder
 			ServerNameVerifyLabel.Xalign = 0.0F;
 
 			// Row 3
-			l = new Label(Util.GS("User Name:"));
+			l = new Label(Util.GS("User name")+":");
 			table.Attach(l, 1,2, 2,3,
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			l.Xalign = 0.0F;
@@ -496,7 +496,7 @@ namespace Novell.iFolder
 			UserNameVerifyLabel.Xalign = 0.0F;
 			
 			// Row 4
-			l = new Label(Util.GS("Remember password:"));
+			l = new Label(Util.GS("Remember password on this computer") + ":");
 			table.Attach(l, 1,2, 3,4,
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			l.Xalign = 0.0F;
@@ -519,7 +519,7 @@ namespace Novell.iFolder
 			l = new Label(
 				string.Format(
 					"\n\n{0}",
-					Util.GS("Click \"Connect\" to validate your connection with the server.")));
+					Util.GS("Click \"Connect\" to proceed.")));
 			table.Attach(l, 0,3, 5,6,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			l.LineWrap = true;
@@ -582,7 +582,7 @@ namespace Novell.iFolder
 			l.MnemonicWidget = PassPhraseEntry;
 
 			// Row 3
-			RetypePassPhraseLabel = new Label(Util.GS("R_etype the Passphrase:"));
+			RetypePassPhraseLabel = new Label(Util.GS("R_etype the passphrase:"));
 			table.Attach(RetypePassPhraseLabel, 1,2, 2,3,
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			l.Xalign = 0.0F;
@@ -594,7 +594,7 @@ namespace Novell.iFolder
 			l.MnemonicWidget = PassPhraseVerifyEntry;
 
 			// Row 4
-			RememberPassPhraseCheckButton = new CheckButton(Util.GS("_Remember the Passphrase"));
+			RememberPassPhraseCheckButton = new CheckButton(Util.GS("_Remember the passphrase"));
 			table.Attach(RememberPassPhraseCheckButton, 2,3, 3,4,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 
@@ -682,14 +682,14 @@ namespace Novell.iFolder
 			CreateDefault.Toggled += new EventHandler(OnCreateDefaultChanged);
 			
 			// Row 2
-			locationLabel = new Label(Util.GS("Location:"));
+			locationLabel = new Label(Util.GS("_Location:"));
 			table.Attach(locationLabel, 1,2, 1,2, AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			//l.Xalign = 0.0F;
 			
 			LocationEntry = new Entry();
 			table.Attach(LocationEntry, 2,4, 1,2, AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 
-			BrowseButton = new Button(Util.GS("Browse"));
+			BrowseButton = new Button(Util.GS("_Browse"));
 			table.Attach(BrowseButton, 4,5, 1,2, AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			BrowseButton.Clicked += new EventHandler(OnBrowseButtonClicked);
 
@@ -933,13 +933,13 @@ namespace Novell.iFolder
 
 		private void OnIntroductoryPagePrepared(object o, Gnome.PreparedArgs args)
 		{
-			this.Title = Util.GS("iFolder Account Assistant");
+			this.Title = Util.GS("iFolder Account Creation Wizard");
 			AccountDruid.SetButtonsSensitive(false, true, true, true);
 		}
 		
 		private void OnServerInformationPagePrepared(object o, Gnome.PreparedArgs args)
 		{
-			this.Title = Util.GS("iFolder Account Assistant");
+			this.Title = Util.GS("iFolder Account Creation Wizard");
 			UpdateServerInformationPageSensitivity(null, null);
 			
 			DomainInformation[] domains = domainController.GetDomains();
@@ -960,7 +960,7 @@ namespace Novell.iFolder
 
 		private void OnDefaultAccountPagePrepared(object o, Gnome.PreparedArgs args)
 		{
-			this.Title = Util.GS("iFolder Account Assistant");
+			this.Title = Util.GS("iFolder Account Creation Wizard");
 			string str = "";
 			this.CreateDefault.Active = true;
 			try
@@ -984,7 +984,7 @@ namespace Novell.iFolder
 			{
 				Debug.PrintLine("Default account exists");
 				upload = false;
-				CreateDefault.Label = Util.GS("Download Default iFolder:");
+				CreateDefault.Label = Util.GS("_Download default iFolder");
 				securityLabel.Visible = false;
 				encryptionCheckButton.Visible = sslCheckButton.Visible = SecureSync.Visible = false;
 			}
@@ -1061,7 +1061,7 @@ namespace Novell.iFolder
         /// </summary>
 		private void OnRAPagePrepared(object o, Gnome.PreparedArgs args)
 		{
-			this.Title = Util.GS("iFolder Account Assistant");
+			this.Title = Util.GS("iFolder Account Creation Wizard");
 			ForwardButton.Label = "gtk-go-forward";
 			ForwardButton.Sensitive = false;
 
@@ -1096,7 +1096,7 @@ namespace Novell.iFolder
 
 		private void OnUserInformationPagePrepared(object o, Gnome.PreparedArgs args)
 		{
-			this.Title = Util.GS("iFolder Account Assistant");
+			this.Title = Util.GS("iFolder Account Creation Wizard");
 			UpdateUserInformationPageSensitivity(null, null);
 			UserNameEntry.GrabFocus();
 
@@ -1109,7 +1109,7 @@ namespace Novell.iFolder
         /// </summary>
 		private void OnConnectPagePrepared(object o, Gnome.PreparedArgs args)
 		{
-			this.Title = Util.GS("iFolder Account Assistant");
+			this.Title = Util.GS("iFolder Account Creation Wizard");
 
 			ServerNameVerifyLabel.Text = ServerNameEntry.Text;
 			UserNameVerifyLabel.Text = UserNameEntry.Text;
@@ -1146,13 +1146,13 @@ namespace Novell.iFolder
         /// </summary>
 		private void OnSummaryPagePrepared(object o, Gnome.PreparedArgs args)
 		{
-			this.Title = Util.GS("iFolder Account Assistant");
+			this.Title = Util.GS("iFolder Account Creation Wizard");
 
 			if (ConnectedDomain != null && ConnectedDomain.Name != null && ConnectedDomain.Host != null)
 			{
 				SummaryPage.Text = 
 					string.Format(
-						Util.GS("Congratulations!  You are now\nconnected to:\n\nAccount Name: {0}\nServer Address: {1}\nUser Name: {2}\n\nClick \"Finish\" to close this window."),
+						Util.GS("You are now connected to:\n\nServer name: \t{0}\nServer address: {1}\nUser name: \t{2}\n\nClick \"Finish\" to close this wizard."),
 						ConnectedDomain.Name,
 						ConnectedDomain.Host,
 						UserNameEntry.Text.Trim());
@@ -1370,8 +1370,8 @@ namespace Novell.iFolder
 															null,
 															iFolderMsgDialog.DialogType.Error,
 															iFolderMsgDialog.ButtonSet.None,
-															Util.GS("PassPhrase mismatch"),
-															Util.GS("The PassPhrase and retyped PassPhrase are not same"),
+															Util.GS("Passphrase mismatch"),
+															Util.GS("The passphrase and retyped passphrase are not same"),
 															Util.GS("Please enter the passphrase again"));
 															dialog.Run();
 															dialog.Hide();
@@ -1475,8 +1475,8 @@ namespace Novell.iFolder
 																null,
 																iFolderMsgDialog.DialogType.Error,
 																iFolderMsgDialog.ButtonSet.None,
-																Util.GS("Error setting the Passphrase"),
-																Util.GS("Unable to set the Passphrase"),
+																Util.GS("Error setting the passphrase"),
+																Util.GS("Unable to set the passphrase"),
 																Util.GS("Please try again"));
 																dialog.Run();
 																dialog.Hide();
@@ -1712,7 +1712,7 @@ namespace Novell.iFolder
 							this,
 							iFolderMsgDialog.DialogType.Question,
 							iFolderMsgDialog.ButtonSet.YesNo,
-							"",
+							Util.GS("Unable to Verify Identity"),
 							Util.GS("Expired!"),
 							string.Format(Util.GS("Certificate Expired! for \"{0}\" iFolder server.  You should examine this server's identity certificate carefully.Do you still want to continue?"), serverName),
 							cert.ToString(true));
@@ -1730,7 +1730,7 @@ namespace Novell.iFolder
 								this,
 								iFolderMsgDialog.DialogType.Question,
 								iFolderMsgDialog.ButtonSet.YesNo,
-								"",
+								Util.GS("Unable to Verify Identity"),
 								Util.GS("Accept the certificate of this server?"),
 								string.Format(Util.GS("iFolder is unable to verify \"{0}\" as a trusted server.  You should examine this server's identity certificate carefully."), serverName),
 								cert.ToString(true));
@@ -1774,7 +1774,7 @@ namespace Novell.iFolder
 								this,
 								iFolderMsgDialog.DialogType.Question,
 								iFolderMsgDialog.ButtonSet.YesNo,
-								"",
+								Util.GS("Unable to Verify Identity"),
 								Util.GS("Accept the certificate of this server?"),
 								string.Format(Util.GS("iFolder is unable to verify \"{0}\" as a trusted server.  You should examine this server's identity certificate carefully."), serverName),
 								cert.ToString(true));

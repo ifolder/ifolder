@@ -122,7 +122,7 @@ namespace Novell.iFolder
 			loginTable.ColumnSpacing = 10;
 			loginTable.Homogeneous = false;
 
-			Label passPhraseLabel = new Label(Util.GS("Enter Passphrase")+":");
+			Label passPhraseLabel = new Label(Util.GS("Enter passphrase")+":");
 			passPhraseLabel.Xalign = 1;
 			loginTable.Attach( passPhraseLabel, 0,1,0,2, AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			passPhraseEntry = new Entry();
@@ -132,7 +132,7 @@ namespace Novell.iFolder
 			loginTable.Attach(passPhraseEntry, 1,2,0,2, AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 				savePassPhraseButton = 
 					new CheckButton(Util.GS(
-						"_Remember Passphrase"));
+						"_Remember passphrase"));
 				loginTable.Attach(savePassPhraseButton, 1,2,2,4,
 						AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 	

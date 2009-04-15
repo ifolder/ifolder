@@ -141,7 +141,7 @@ namespace Novell.iFolder
                         table.BorderWidth = 12;
 
                         // Row 1
-                        Label l = new Label(Util.GS("iFolder Account")+":");
+                        Label l = new Label(Util.GS("iFolder account")+":");
                         table.Attach(l, 0,1, 0,1,
                                 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
                         l.LineWrap = true;
@@ -159,7 +159,7 @@ namespace Novell.iFolder
                         // read domains from domain controller...
                         table.Attach(domainCombo, 1,2,0,1, AttachOptions.Fill|AttachOptions.Expand, 0,0,0);
                         // Row 2
-                        l = new Label(Util.GS("File Path")+":");
+                        l = new Label(Util.GS("File path")+":");
 			l.Xalign = 0.0F;
                         table.Attach(l, 0,1, 1,2,
                                 AttachOptions.Fill, 0,0,0); // spacer
@@ -176,7 +176,7 @@ namespace Novell.iFolder
 			BrowseButton.Clicked += new EventHandler(OnBrowseButtonClicked);
 
                         // Row 3
-                        l = new Label(Util.GS("Recovery Agent")+":");
+                        l = new Label(Util.GS("Recovery agent")+":");
 			l.Xalign = 0.0F;
                         table.Attach(l, 0,1, 2,3,
                                 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);

@@ -99,9 +99,9 @@ namespace Novell.iFolder
 				this.TransientFor = parent;
 
 			if(userName == null)
-				this.Title = Util.GS("Access for Multiple Users");
+				this.Title = Util.GS("Access Rights for Multiple Users");
 			else
-				this.Title = string.Format(Util.GS("Access for {0}"), userName);
+				this.Title = string.Format(Util.GS("Access Rights for {0}"), userName);
 			this.HasSeparator = false;
 			this.Resizable = false;
 			this.Modal = true;
@@ -117,7 +117,7 @@ namespace Novell.iFolder
 			this.VBox.PackStart(accSectionBox, false, true, 0);
 			accSectionBox.BorderWidth = 10;
 			Label accSectionLabel = new Label("<span weight=\"bold\">" +
-												Util.GS("Access") +
+												Util.GS("Access Rights") +
 												"</span>");
 			accSectionLabel.UseMarkup = true;
 			accSectionLabel.Xalign = 0;

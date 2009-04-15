@@ -297,7 +297,7 @@ namespace Novell.iFolder
 			///
 			/// Row 1 (User Name)
 			///
-			Label l = new Label(Util.GS("User Name:"));
+			Label l = new Label(Util.GS("User name:"));
 			table.Attach(l,
 						 0,1, 0,1,
 						 AttachOptions.Shrink | AttachOptions.Fill,

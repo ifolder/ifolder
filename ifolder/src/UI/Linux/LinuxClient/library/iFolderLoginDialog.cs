@@ -156,7 +156,7 @@ namespace Novell.iFolder
         /// </summary>
 		private void SetupDialog()
 		{
-			this.Title = Util.GS("Connect iFolder Account");
+			this.Title = Util.GS("iFolder Login");
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png"));
 			this.HasSeparator = false;
 //			this.BorderWidth = 10;
@@ -193,7 +193,7 @@ namespace Novell.iFolder
 	
 			if(FullDialog)
 			{
-				Label nameLabel = new Label(Util.GS("User Name:"));
+				Label nameLabel = new Label(Util.GS("_User name:"));
 				nameLabel.Xalign = 1; 
 				loginTable.Attach(nameLabel, 0,1,0,1,
 						AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -204,7 +204,7 @@ namespace Novell.iFolder
 				loginTable.Attach(nameEntry, 1,2,0,1, 
 						AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 
-				Label passLabel = new Label(Util.GS("Password:"));
+				Label passLabel = new Label(Util.GS("_Password:"));
 				passLabel.Xalign = 1;
 				loginTable.Attach(passLabel, 0,1,1,2,
 						AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -216,7 +216,7 @@ namespace Novell.iFolder
 				loginTable.Attach(passEntry, 1,2,1,2,
 					AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 
-				Label serverLabel = new Label(Util.GS("iFolder Server:"));
+				Label serverLabel = new Label(Util.GS("iFolder server:"));
 				serverLabel.Xalign = 1;
 				loginTable.Attach(serverLabel, 0,1,2,3,
 						AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);

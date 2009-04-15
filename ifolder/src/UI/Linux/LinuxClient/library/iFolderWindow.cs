@@ -358,7 +358,7 @@ namespace Novell.iFolder
 			//----------------------------
 			Menu iFolderMenu = new Menu();
 
-			NewMenuItem = new ImageMenuItem (Util.GS("_Upload a folder..."));
+			NewMenuItem = new ImageMenuItem (Util.GS("_Upload a Folder..."));
 			NewMenuItem.Image = new Image(
 					new Gdk.Pixbuf(Util.ImagesPath("ifolder-upload16.png")));
 			iFolderMenu.Append(NewMenuItem);
@@ -371,7 +371,7 @@ namespace Novell.iFolder
 				new ImageMenuItem (Util.GS("_Download..."));
 			DownloadMenuItem.Image = new Image(
 				new Gdk.Pixbuf(Util.ImagesPath("ifolder-download16.png")));
-			MergeMenuItem = new ImageMenuItem( Util.GS("Merge"));
+			MergeMenuItem = new ImageMenuItem( Util.GS("Merge to Folder"));
 			MergeMenuItem.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("ifolder-download16.png")));
 			
 			iFolderMenu.Append(DownloadMenuItem);
@@ -380,7 +380,7 @@ namespace Novell.iFolder
 			MergeMenuItem.Activated += new EventHandler(MergeAvailableiFolderHandler);
 
 			DeleteMenuItem =
-				new ImageMenuItem (Util.GS("Dele_te from server"));
+				new ImageMenuItem (Util.GS("Dele_te From Server"));
 			DeleteMenuItem.Image = new Image(Stock.Delete, Gtk.IconSize.Menu);
 			iFolderMenu.Append(DeleteMenuItem);
 			DeleteMenuItem.Activated += new EventHandler(DeleteFromServerHandler);
@@ -912,7 +912,7 @@ namespace Novell.iFolder
 
 			buttonText = new Label(
 				string.Format("<span>{0}</span>",
-							  Util.GS("Remove my membership")));
+							  Util.GS("Remove My Membership")));
 			hbox.PackStart(buttonText, true, true, 4);
 			buttonText.UseMarkup = true;
 			buttonText.UseUnderline = false;
@@ -1538,7 +1538,7 @@ namespace Novell.iFolder
 						{
 							// The current user is the owner
 							MenuItem item_delete = new MenuItem (
-									Util.GS("Delete from server"));
+									Util.GS("Delete from Server"));
 							menu.Append (item_delete);
 							item_delete.Activated += new EventHandler(
 									DeleteFromServerHandler);
@@ -1547,7 +1547,7 @@ namespace Novell.iFolder
 						{
 							// The current user is not the owner
 							MenuItem item_remove_membership = new MenuItem (
-									Util.GS("Remove my membership"));
+									Util.GS("Remove My Membership"));
 							menu.Append (item_remove_membership);
 							item_remove_membership.Activated +=
 								new EventHandler(
@@ -3105,8 +3105,8 @@ namespace Novell.iFolder
 					this,
 					iFolderMsgDialog.DialogType.Question,
 					iFolderMsgDialog.ButtonSet.YesNo,
-					"",
-					Util.GS("Revert this iFolder back to a normal folder?"),
+					Util.GS("Revert to Normal Folder"),
+					Util.GS("Revert this iFolder to a normal folder?"),
 					Util.GS("The folder will still be on your computer, but it will no longer synchronize with the iFolder Server."));
 
 				CheckButton deleteFromServerCB;
@@ -3114,9 +3114,9 @@ namespace Novell.iFolder
 				DomainInformation domain =
 					domainController.GetDomain(holder.iFolder.DomainID);
 				if (domain == null || domain.MemberUserID == holder.iFolder.OwnerID)
-					deleteFromServerCB = new CheckButton(Util.GS("Also _delete this iFolder from the server"));
+					deleteFromServerCB = new CheckButton(Util.GS("_Delete this iFolder from the server"));
 				else
-					deleteFromServerCB = new CheckButton(Util.GS("Also _remove my membership from this iFolder"));
+					deleteFromServerCB = new CheckButton(Util.GS("_Remove my membership from this iFolder"));
 				
 				dialog.ExtraWidget = deleteFromServerCB;
 
@@ -3890,8 +3890,8 @@ namespace Novell.iFolder
 			    	null,
 		    		iFolderMsgDialog.DialogType.Error,
 	    			iFolderMsgDialog.ButtonSet.None,
-    				Util.GS("PassPhrase mismatch"),
-				    Util.GS("The PassPhrase and retyped PassPhrase are not same"),
+    				Util.GS("passphrase mismatch"),
+				    Util.GS("The passphrase and retyped passphrase are not same"),
 	    		    Util.GS("Please enter the passphrase again"));
 		    	dialog.Run();
 	    		dialog.Hide();

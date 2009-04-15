@@ -180,7 +180,7 @@ namespace Novell.iFolder
                         table.BorderWidth = 12;
 
 			//Row 0
-			Label l = new Label(Util.GS("iFolder Account")+":");
+			Label l = new Label(Util.GS("iFolder account")+":");
 			table.Attach(l, 0,1, 0,1, AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
                         l.LineWrap = true;
 			l.Xalign = 0.0F;
@@ -202,7 +202,7 @@ namespace Novell.iFolder
 			domainCombo.Changed += new EventHandler(OnDomainChangedEvent);	
 	
                         // Row 1
-                        l = new Label(Util.GS("File Path")+":");
+                        l = new Label(Util.GS("File path")+":");
                         table.Attach(l, 0,1, 1,2,
                                 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
                         l.LineWrap = true;
@@ -219,7 +219,7 @@ namespace Novell.iFolder
 			BrowseButton.Clicked += new EventHandler(OnBrowseButtonClicked);
 
                         // Row 2
-                        l = new Label(Util.GS("One Time Passphrase")+":");
+                        l = new Label(Util.GS("One time passphrase")+":");
 			l.Xalign = 0.0F;
                         table.Attach(l, 0,1, 2,3,
                                 AttachOptions.Fill, 0,0,0); 
@@ -232,7 +232,7 @@ namespace Novell.iFolder
                         l.MnemonicWidget = oneTimePassphrase;
 
                         // Row 3
-                        l = new Label(Util.GS("New Passphrase")+":");
+                        l = new Label(Util.GS("New passphrase")+":");
 			l.Xalign = 0.0F;
                         table.Attach(l, 0,1, 3,4,
                                 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
@@ -245,7 +245,7 @@ namespace Novell.iFolder
 
 
                         // Row 4
-	                l = new Label(Util.GS("Re-type Passphrase")+":");
+	                l = new Label(Util.GS("Re-type passphrase")+":");
 			l.Xalign = 0.0F;
                         table.Attach(l, 0,1, 4,5,
                                 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);

@@ -129,7 +129,7 @@ namespace Novell.iFolder
         /// </summary>
 		private void SetupDialog()
 		{
-			this.Title = Util.GS("iFolder Passphrase");
+			this.Title = Util.GS("iFolder passphrase");
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png"));
 			this.HasSeparator = false;
 //			this.BorderWidth = 10;
@@ -163,7 +163,7 @@ namespace Novell.iFolder
 			table.BorderWidth = 12;
 
 			// Row 1 
-			Label l = new Label(Util.GS("Enter the Passphrase")+":");
+			Label l = new Label(Util.GS("Enter the passphrase")+":");
 			table.Attach(l,0,3, 0,1,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			l.LineWrap = true;
@@ -199,7 +199,7 @@ namespace Novell.iFolder
 			l.MnemonicWidget = PassPhraseEntry;
 
 			// Row 4
-			l = new Label(Util.GS("_Re-type Passphrase:"));
+			l = new Label(Util.GS("_Re-type passphrase:"));
 			table.Attach(l, 1,2, 3,4, 
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			l.Xalign = 0.0F;
@@ -211,7 +211,7 @@ namespace Novell.iFolder
 			l.MnemonicWidget = PassPhraseVerifyEntry;
 			
 			// Row 5
-			savePassPhraseButton = new CheckButton(Util.GS("Remember Passphrase"));	
+			savePassPhraseButton = new CheckButton(Util.GS("Remember passphrase"));	
 			table.Attach(savePassPhraseButton, 2,3, 4,5,
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 

@@ -459,7 +459,7 @@ namespace Novell.iFolder
 			l.MnemonicWidget = PassPhraseEntry;
 
 			// Row 3
-			RetypePassPhraseLabel = new Label(Util.GS("R_etype the Passphrase:"));
+			RetypePassPhraseLabel = new Label(Util.GS("R_etype the passphrase:"));
 			table.Attach(RetypePassPhraseLabel, 1,2, 2,3,
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			l.Xalign = 0.0F;
@@ -471,7 +471,7 @@ namespace Novell.iFolder
 			l.MnemonicWidget = PassPhraseVerifyEntry;
 
 			// Row 4
-			RememberPassPhraseCheckButton = new CheckButton(Util.GS("_Remember the Passphrase"));
+			RememberPassPhraseCheckButton = new CheckButton(Util.GS("_Remember the passphrase"));
 			table.Attach(RememberPassPhraseCheckButton, 2,3, 3,4,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 
@@ -599,7 +599,7 @@ namespace Novell.iFolder
         		                                       null,
         	        	                               iFolderMsgDialog.DialogType.Error,
         	                	                       iFolderMsgDialog.ButtonSet.None,
-        	                        	               Util.GS("Error setting the Passphrase"),
+        	                        	               Util.GS("Error setting the passphrase"),
         	                                	       Util.GS("Unable to change the Passphrase"),
 		                                               	Util.GS("Please try again"));
         		                               dialog.Run();
@@ -616,8 +616,8 @@ namespace Novell.iFolder
                                                null,
                                                iFolderMsgDialog.DialogType.Error,
                                                iFolderMsgDialog.ButtonSet.None,
-                                               Util.GS("PassPhrase mismatch"),
-                                               Util.GS("The PassPhrase and retyped PassPhrase are not same"),
+                                               Util.GS("Passphrase mismatch"),
+                                               Util.GS("The passphrase and retyped passphrase are not same"),
                                                Util.GS("Please enter the passphrase again"));
                                        dialog.Run();
                                        dialog.Hide();

@@ -199,7 +199,7 @@ namespace Novell.iFolder
 
 			// Server Column
 			TreeViewColumn serverColumn = new TreeViewColumn();
-			serverColumn.Title = Util.GS("Name");
+			serverColumn.Title = Util.GS("Server Name");
 			CellRendererText servercr = new CellRendererText();
 			servercr.Xpad = 5;
 			serverColumn.PackStart(servercr, false);
@@ -791,7 +791,7 @@ namespace Novell.iFolder
 							null,
 							iFolderMsgDialog.DialogType.Error,
 							iFolderMsgDialog.ButtonSet.None,
-							Util.GS("Invalid PassPhrase"),
+							Util.GS("Invalid passPhrase"),
 							Util.GS("The PassPhrase entered is invalid"),
 							Util.GS("Please re-enter the passphrase"));
 							dialog.Run();

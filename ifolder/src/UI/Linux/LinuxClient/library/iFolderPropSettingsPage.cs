@@ -539,7 +539,7 @@ namespace Novell.iFolder
 			syncTable.ColumnSpacing = 20;
 			syncTable.RowSpacing = 5;
 			
-			Label lastSyncLabel = new Label(Util.GS("Last Successful Synchronization:"));
+			Label lastSyncLabel = new Label(Util.GS("Last successful synchronization:"));
 			lastSyncLabel.Xalign = 0;
 			syncTable.Attach(lastSyncLabel, 0,1,0,1,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -548,7 +548,7 @@ namespace Novell.iFolder
 			syncTable.Attach(LastSuccessfulSync, 1,2,0,1);
 			
 			Label FFSyncLabel = 
-					new Label(Util.GS("Files/Folders to Synchronize:"));
+					new Label(Util.GS("Files/Folders to synchronize:"));
 			FFSyncLabel.Xalign = 0;
 			syncTable.Attach(FFSyncLabel, 0,1,1,2,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -557,7 +557,7 @@ namespace Novell.iFolder
 			syncTable.Attach(FFSyncValue, 1,2,1,2);
 			
 			Label SyncIntervalLabel =
-				new Label(Util.GS("Automatically Synchronizes Every:"));
+				new Label(Util.GS("Automatically synchronizes every:"));
 			SyncIntervalLabel.Xalign = 0;
 			syncTable.Attach(SyncIntervalLabel, 0,1,2,3,
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -567,7 +567,7 @@ namespace Novell.iFolder
 
 
 			Label SecureSyncLabel =
-                                new Label(Util.GS("Secure Sync"));
+                                new Label(Util.GS("Secure sync:"));
                         SecureSyncLabel.Xalign = 0;
                         syncTable.Attach(SecureSyncLabel, 0,1,3,4,
                                 AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
