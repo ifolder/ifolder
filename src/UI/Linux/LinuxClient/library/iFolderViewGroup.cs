@@ -494,6 +494,12 @@ namespace Novell.iFolder
 		
 		public void RebuildTable()
 		{
+                        if( (null == model) || (null == items) || (null == table)  )
+                        {
+                                iFolderViewGroup.log.Info("NULL Reference Exception: Object, model is -{0}-items is-{1}-table is -{2}-",model,items,table); 
+                                return; // prevent null pointer exception
+                        }
+
 			int numOfItems = model.IterNChildren();
 
 			if (numOfItems > 0)
@@ -536,6 +542,12 @@ namespace Novell.iFolder
 						if (holder != null)
 						{
 							iFolderViewItem item = new iFolderViewItem(holder, this, iter, ItemMaxWidth);
+                                                        if(null == item)
+                                                        {
+                                                                iFolderViewGroup.log.Info("NULL Reference Exception: Object item is NULL");
+                                                                return; //prevent null pointer exception
+                                                        }
+
 							table.Attach(item,
 										 (uint)currentColumn, (uint)currentColumn + 1,
 										 (uint)currentRow, (uint)currentRow + 1,
