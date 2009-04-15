@@ -148,6 +148,7 @@ namespace EnhancedMenuItems
         private IconMenuItem menuViewLog;
         private IconMenuItem menuEditPrefs;
         private IconMenuItem menuResetPassphrase;
+        private IconMenuItem menuResetPassword;
         private IconMenuItem menuRecoverKeys;
         private MenuItem menuItem7;
 
@@ -404,6 +405,16 @@ namespace EnhancedMenuItems
                     this.menuResetPassphrase.Visible = tempMenuItem.Visible;
                     this.menuResetPassphrase.Name = "iMenuResetPassphrase";
                     iFolderMenuItem.MenuItems.Add(menuResetPassphrase);
+
+                    tempMenuItem = iFolderMenuItem.MenuItems.Find("MenuResetPassword", true)[0];
+                    menuImage = Image.FromFile(Path.Combine(Application.StartupPath, @"res\resetPassphrase16.png"));
+                    menuResetPassword = new IconMenuItem(tempMenuItem.Text, menuImage);
+                    this.menuResetPassword.Visible = tempMenuItem.Enabled;
+                    this.menuResetPassword.Index = tempMenuItem.Index;
+                    this.menuResetPassword.Text = tempMenuItem.Text;
+                    this.menuResetPassword.Visible = tempMenuItem.Visible;
+                    this.menuResetPassword.Name = "iMenuResetPassword";
+                    iFolderMenuItem.MenuItems.Add(this.menuResetPassword);
 
                     return true;
                 }
