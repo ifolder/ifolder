@@ -84,6 +84,7 @@ namespace Novell.iFolder
 		private MenuItem		ExportMenuSubItem;
 		private MenuItem 		ImportMenuSubItem;
 	        private MenuItem                ResetPassMenuItem;
+		private MenuItem		ResetPasswordMenuItem;
 		private ImageMenuItem		AboutMenuItem;
 		
 		private ImageMenuItem		PreferencesMenuItem;
@@ -533,6 +534,10 @@ namespace Novell.iFolder
 			ResetPassMenuItem = new MenuItem(Util.GS("Reset _Passphrase"));
 			ResetPassMenuItem.Activated += new EventHandler(OnResetPassMenuItem);
 			SecurityMenu.Append(ResetPassMenuItem);
+
+			ResetPasswordMenuItem = new MenuItem(Util.GS("Change Password"));
+			ResetPasswordMenuItem.Activated += new EventHandler(OnResetPasswordMenuItem);
+			SecurityMenu.Append(ResetPasswordMenuItem);
 
 			MenuItem MainSecurityMenuItem = new MenuItem (Util.GS ("_Security"));
 			MainSecurityMenuItem.Submenu = SecurityMenu;
@@ -1987,6 +1992,71 @@ namespace Novell.iFolder
 		private void OnRecoveryMenuItem(object o, EventArgs args)
 		{
 			Util.ShowHelp(Util.HelpMainPage, this);
+		}
+
+		private void OnResetPasswordMenuItem(object o, EventArgs args)
+		{
+			string DomainID, oldPassword, newPassword;
+			bool rememberOption;
+			bool status = false;
+			int result =0;
+			do
+			{
+				DomainInformation[] domains = this.domainController.GetLoggedInDomains();
+				if( domains == null)
+				{
+					iFolderMsgDialog dialog = new iFolderMsgDialog(
+                                                                                                                null,
+                                                                                                                iFolderMsgDialog.DialogType.Error,
+                                                                                                                iFolderMsgDialog.ButtonSet.None,
+                                                                                                                Util.GS("No Logged-In domains"),
+                                                                                                                Util.GS("There are no logged-in domains for changing the password."),
+                                                                                                                Util.GS("For changing password the domain should be connected. Log on to the domain and try."));
+					dialog.Run();
+	                                dialog.Hide();
+        	                        dialog.Destroy();
+                	                dialog = null;
+					return;
+				}
+				ResetPasswordDialog resetDialog = new ResetPasswordDialog(simws,ifws);
+				resetDialog.Domains = domains;
+				resetDialog.TransientFor = this;
+				result = resetDialog.Run();
+				DomainID = resetDialog.Domain;
+				newPassword = resetDialog.NewPassword;
+				rememberOption = resetDialog.SavePassword;
+				status = resetDialog.Status;
+				resetDialog.Hide();
+				resetDialog.Destroy();
+
+				if(result == (int)ResponseType.Cancel || result == (int)ResponseType.DeleteEvent)
+					return;
+				if (result == (int)ResponseType.Help) 
+				{
+		                   //Util.ShowHelp("managingpassphrse.html", this); 
+				}
+				else if( status == true)
+				{
+					if( rememberOption == true)
+					{
+						simws.SetDomainCredentials(DomainID, newPassword, CredentialType.Basic);
+					}
+					else
+					{
+						simws.SetDomainCredentials(DomainID, null, CredentialType.None);
+					}
+					iFolderMsgDialog dialog = new iFolderMsgDialog(
+                                                                                                                null,
+                                                                                                                iFolderMsgDialog.DialogType.Info,
+                                                                                                                iFolderMsgDialog.ButtonSet.None,
+                                                                                                                Util.GS("Change password"),
+                                                                                                                Util.GS("Successfully changed the password."), null);
+                                        dialog.Run();
+                                        dialog.Hide();
+                                        dialog.Destroy();
+                                        dialog = null;
+				}
+			}while(status == false);
 		}
 
 		private void OnResetPassMenuItem(object o, EventArgs args)

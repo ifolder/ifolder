@@ -3234,3 +3234,104 @@ msgid ""
 "Disk Space Used: {0}"
 msgstr ""
 "Disk Space Used: {0}"
+
+msgid ""
+"Cannot share iFolder"
+msgstr ""
+"Cannot share iFolder"
+
+msgid ""
+"It is not possible to share an Encrypted iFolder. Only regular iFolders can be shared"
+msgstr ""
+"It is not possible to share an Encrypted iFolder. Only regular iFolders can be shared"
+
+msgid ""
+"Incorrect old password."
+msgstr ""
+"Incorrect old password."
+
+msgid ""
+"Failed to reset password."
+msgstr ""
+"Failed to reset password."
+
+msgid ""
+"Login disabled."
+msgstr ""
+"Login disabled."
+
+msgid ""
+"User account expired."
+msgstr ""
+"User account expired."
+
+msgid ""
+"User can not change password."
+msgstr ""
+"User can not change password."
+
+msgid ""
+"User password expired."
+msgstr ""
+"User password expired."
+
+msgid ""
+"Minimum password length restriction not met."
+msgstr ""
+"Minimum password length restriction not met."
+
+msgid ""
+"User not found in simias."
+msgstr ""
+"User not found in simias."
+
+msgid ""
+"Could not change password, "
+msgstr ""
+"Could not change password, "
+
+msgid ""
+"Change password"
+msgstr ""
+"Change password"
+
+msgid ""
+"Successfully changed the password."
+msgstr ""
+"Successfully changed the password."
+
+msgid ""
+"Current password"
+msgstr ""
+"Current password"
+
+msgid ""
+"New password"
+msgstr ""
+"New password"
+
+msgid ""
+"Confirm new password"
+msgstr ""
+"Confirm new password"
+
+msgid ""
+"There are no logged-in domains for changing the password."
+msgstr ""
+"There are no logged-in domains for changing the password."
+
+msgid ""
+"For changing password the domain should be connected. Log on to the domain and try."
+msgstr ""
+"For changing password the domain should be connected. Log on to the domain and try."
+
+msgid ""
+"Old password and new password should not be same."
+msgstr ""
+"Old password and new password should not be same."
+
+msgid ""
+"New password and confirm password do not match."
+msgstr ""
+"New password and confirm password do not match."
+
