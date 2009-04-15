@@ -1,7 +1,10 @@
 AC_INIT(src/common/WebService/iFolder.cs)
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
+if test-d m4; then
+echo "adding m4"
 AC_CONFIG_MACRO_DIR([m4])
+fi
 AC_PROG_CXX(am__fastdepCXX)
 m4_pattern_allow(PKG_CONFIG)
 
@@ -280,7 +283,8 @@ case $IFOLDER_OS in
 		#ALL_LINGUAS="pt_BR fr it de es ru ja"
 		#AM_GNU_GETTEXT_VERSION(0.10.40)
 		#AM_GNU_GETTEXT(external)
-    	libexecdir='${exec_prefix}/lib/simias'
+    	libexecdir='${exec_prefix}/${LIB64}/simias'
+	libdir='${exec_prefix}/${LIB64}'
     ;;
     #
     # Windows-specific configuration
