@@ -521,7 +521,10 @@ static iFolderWindowController *sharedInstance = nil;
 	[self openiFolder:sender];
 }
 
-
+- (IBAction)changePassword:(id)sender
+{
+	[changePasswordSheetController showWindow:self];
+}
 
 //=======================================================================
 // createiFolder

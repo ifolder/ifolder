@@ -41,6 +41,24 @@
             SUPERCLASS = NSWindowController; 
         }, 
         {
+            ACTIONS = {onCancel = id; onChange = id; }; 
+            CLASS = ChangePasswordSheetController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                changeButton = NSButton; 
+                changePasswordSheet = id; 
+                domainID = NSTextField; 
+                enterNewPassword = NSSecureTextField; 
+                enterOldPassword = NSSecureTextField; 
+                iFolderWindowController = iFolderWindowController; 
+                ifolderAccount = NSPopUpButton; 
+                mainWindow = id; 
+                rememberPassword = NSButton; 
+                retypePassword = NSSecureTextField; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
             ACTIONS = {
                 browseForPath = id; 
                 cancelCreating = id; 
@@ -174,6 +192,7 @@
         }, 
         {
             ACTIONS = {
+                changePassword = id; 
                 customizeToolbar = id; 
                 deleteiFolder = id; 
                 doubleClickedTable = id; 
@@ -195,6 +214,7 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 advConflictSheetController = AdvConflictController; 
+                changePasswordSheetController = ChangePasswordSheetController; 
                 createSheetController = CreateiFolderSheetController; 
                 exportKeysSheetController = ExportKeysSheetController; 
                 iFolderTable = NSTableView; 

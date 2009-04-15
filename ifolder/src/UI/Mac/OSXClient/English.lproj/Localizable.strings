@@ -893,3 +893,83 @@
 /*ServerOldMessage*/
 "Server is old. Cannot connect to the server" = "Server is old. Cannot connect to the server";
 
+/*iFolder policy Notification Message*/
+"A policy prevented complete synchronization" = "A policy prevented complete synchronization";
+
+/*iFolder Access Notification Message*/
+"Insufficient rights prevented complete synchronization: \"%@\"" = "Insufficient rights prevented complete synchronization: \"%@\"";
+
+/*iFolder Locked Notification Message*/
+"The iFolder is locked: \"%@\"" = "The iFolder is locked: \"%@\"";
+
+/*iFolder Policy Size Notification Message*/
+"A size restriction policy prevented complete synchronization: \"%@\"" = "A size restriction policy prevented complete synchronization: \"%@\"";
+
+/*iFolder Policy Type Notification Message*/
+"A file type restriction policy prevented complete synchronization: \"%@\"" = "A file type restriction policy prevented complete synchronization: \"%@\"";
+
+/*iFolder disk full Notification Message*/
+"Insufficient disk space on the server\/client prevented complete synchronization: \"%@\"" = "Insufficient disk space on the server\/client prevented complete synchronization: \"%@\"";
+
+/*SyncInterval update title*/
+"Sync interval is not set" = "Sync interval is not set";
+
+/*SyncInterval update message*/
+"Sync interval is not updated. Do you want to update sync interval?" = "Sync interval is not updated. Do you want to update sync interval?";
+
+/*Select directory title*/
+"Select Directory" = "Select Directory";
+
+/*Select directory message*/
+"Either the selected item is not a directory or the selected path does not exist.  Select an available directory to upload" = "Either the selected item is not a directory or the selected path does not exist. Select an available directory to upload";
+
+/*Cannot share iFolder title*/
+"Cannot share iFolder" = "Cannot share iFolder";
+
+/*Cannot share iFolder message*/
+"It is not possible to share an Encrypted iFolder. Only regular iFolders can be shared" = "It is not possible to share an Encrypted iFolder. Only regular iFolders can be shared.";
+
+/* iFolder Window Status Message */
+"Path is too long for the file \"%@\" to be downloaded" = "Path is too long for the file \"%@\" to be downloaded";
+
+/*Invalid new password*/
+"Invalid new password" = "Invalid new password";
+
+/*Old password and new password should not be same*/
+"Old password and new password should not be same" = "Old password and new password should not be same";
+
+/*New password and confirm password do not match*/
+"New password and confirm password do not match" = "New password and confirm password do not match";
+
+/*Error Changing Password*/
+"Error Changing Password" = "Error Changing Password";
+
+/*Successful*/
+"Successfuly changed password" = "Successfuly changed password";
+
+/*Incorrect old password*/
+"Incorrect old password" = "Incorrect old password";
+
+/*Failed to reset password*/
+"Failed to reset password" = "Failed to reset password";
+
+/*Login disabled*/
+"Login disabled"="Login disabled";
+
+/*User account expired*/
+"User account expired"="User account expired";
+
+/*User cannot change password*/
+"User cannot change password"="User cannot change password";
+
+/*User password expired*/
+"User password expired"="User password expired";
+
+/*Minimum password length restriction not met*/
+"Minimum password length restriction not met"="Minimum password length restriction not met";
+
+/*User not found in simias*/
+"User not found in simias"="User not found in simias";
+
+/*Error changing password*/
+"Error changing password"="Error changing password";

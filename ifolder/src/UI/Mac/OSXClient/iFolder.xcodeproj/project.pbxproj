@@ -155,6 +155,7 @@
 		B2B381E70D6166EC009612DA /* encrypt-ilock-22.png in Resources */ = {isa = PBXBuildFile; fileRef = B2B381E60D6166EC009612DA /* encrypt-ilock-22.png */; };
 		B2C843210D585752004A1F47 /* ExportKeysSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2C8431F0D585752004A1F47 /* ExportKeysSheetController.m */; };
 		B2CA78590D2E75660003F8E4 /* VerifyPassPhrase.nib in Resources */ = {isa = PBXBuildFile; fileRef = B2CA78570D2E75660003F8E4 /* VerifyPassPhrase.nib */; };
+		B2CB48E40F82354B0051D657 /* ChangePasswordSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2CB48E20F82354B0051D657 /* ChangePasswordSheetController.m */; };
 		B2F757AE0D59C3D8005E3C0F /* ImportKeysSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2F757AD0D59C3D8005E3C0F /* ImportKeysSheetController.m */; };
 		B2FA8F3F0DDC1516000D86AE /* ifolder-conflict22.png in Resources */ = {isa = PBXBuildFile; fileRef = B2FA8F3E0DDC1516000D86AE /* ifolder-conflict22.png */; };
 /* End PBXBuildFile section */
@@ -502,6 +503,8 @@
 		B2C8431F0D585752004A1F47 /* ExportKeysSheetController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ExportKeysSheetController.m; path = src/ExportKeysSheetController.m; sourceTree = "<group>"; };
 		B2C843200D585752004A1F47 /* ExportKeysSheetController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ExportKeysSheetController.h; path = src/ExportKeysSheetController.h; sourceTree = "<group>"; };
 		B2CA78580D2E75660003F8E4 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/VerifyPassPhrase.nib; sourceTree = "<group>"; };
+		B2CB48E20F82354B0051D657 /* ChangePasswordSheetController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ChangePasswordSheetController.m; path = src/ChangePasswordSheetController.m; sourceTree = "<group>"; };
+		B2CB48E30F82354B0051D657 /* ChangePasswordSheetController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ChangePasswordSheetController.h; path = src/ChangePasswordSheetController.h; sourceTree = "<group>"; };
 		B2F757AC0D59C3D8005E3C0F /* ImportKeysSheetController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ImportKeysSheetController.h; path = src/ImportKeysSheetController.h; sourceTree = "<group>"; };
 		B2F757AD0D59C3D8005E3C0F /* ImportKeysSheetController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ImportKeysSheetController.m; path = src/ImportKeysSheetController.m; sourceTree = "<group>"; };
 		B2FA8F3E0DDC1516000D86AE /* ifolder-conflict22.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ifolder-conflict22.png"; path = "../../../images/ifolder-conflict22.png"; sourceTree = SOURCE_ROOT; };
@@ -544,6 +547,8 @@
 				3E0E6CFE07C7E7290057D505 /* ConflictWindowController.m */,
 				B2399CB40DA6481700C4EDDD /* DefaultiFolderSheetController.m */,
 				B2399CB50DA6481700C4EDDD /* DefaultiFolderSheetController.h */,
+				B2CB48E20F82354B0051D657 /* ChangePasswordSheetController.m */,
+				B2CB48E30F82354B0051D657 /* ChangePasswordSheetController.h */,
 			);
 			name = OtherWindows;
 			sourceTree = "<group>";
@@ -1043,6 +1048,7 @@
 				B2399CB60DA6481700C4EDDD /* DefaultiFolderSheetController.m in Sources */,
 				B240E4BB0EA460B900117A56 /* iFolderTextFieldCell.m in Sources */,
 				B2A94CF00EB09A6700B1070A /* clientUpdate.m in Sources */,
+				B2CB48E40F82354B0051D657 /* ChangePasswordSheetController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
