@@ -34,7 +34,7 @@
 
 
 #define PREFKEY_WINPOS			@"general.winposition"
-#define PREFKEY_RESTOREWIN		@"general.restorewin"
+#define PREFKEY_WINONSTARTUP	@"general.winonstartup"
 #define PREFKEY_CLICKIFOLDER	@"general.clickifolder"
 #define PREFKEY_NOTIFYIFOLDERS	@"notify.ifolders"
 #define PREFKEY_NOTIFYCOLL		@"notify.collisions"
