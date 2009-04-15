@@ -158,6 +158,7 @@ namespace Novell.FormsTrayApp
         private System.Windows.Forms.MenuItem menuEditPrefs;
         private System.Windows.Forms.MenuItem menuSecurity;
         private System.Windows.Forms.MenuItem menuResetPassphrase;
+        private System.Windows.Forms.MenuItem menuResetPassword;
         private System.Windows.Forms.MenuItem menuRecoverKeys;
         private System.Windows.Forms.MenuItem menuImportKeys;
         private System.Windows.Forms.MenuItem menuExportKeys;
@@ -345,8 +346,11 @@ namespace Novell.FormsTrayApp
 																						 });
                         this.menuResetPassphrase.Visible = false;
                         this.menuResetPassphrase = menuSecurity.MenuItems.Find("iMenuResetPassphrase", true)[0];
-                        this.menuResetPassphrase.Click += new System.EventHandler(menuResetPassphrase_Select);  
+                        this.menuResetPassphrase.Click += new System.EventHandler(menuResetPassphrase_Select);
 
+                        this.menuResetPassword.Visible = false;
+                        this.menuResetPassword = menuSecurity.MenuItems.Find("iMenuResetPassword", true)[0];
+                        this.menuResetPassword.Click += new System.EventHandler(menuResetPassword_Click);  
                         
                     }
                 }
@@ -491,6 +495,7 @@ namespace Novell.FormsTrayApp
             this.menuEditPrefs = new System.Windows.Forms.MenuItem();
             this.menuSecurity = new MenuItem();
             this.menuResetPassphrase = new MenuItem();
+            this.menuResetPassword = new MenuItem();
             this.menuRecoverKeys = new MenuItem();
             this.menuImportKeys = new MenuItem();
             this.menuExportKeys = new MenuItem();
@@ -1014,7 +1019,8 @@ namespace Novell.FormsTrayApp
             this.menuSecurity.Text = resources.GetString("SecurityText");//"Security";
             this.menuSecurity.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
 																						  this.menuRecoverKeys,
-																						  this.menuResetPassphrase
+																						  this.menuResetPassphrase,
+                                                                                          this.menuResetPassword
 																					  });
             this.menuSecurity.Visible = true;
             this.menuSecurity.Name = "MenuSecurity";
@@ -1060,6 +1066,16 @@ namespace Novell.FormsTrayApp
             this.menuResetPassphrase.Visible = true;
             this.menuResetPassphrase.Click += new EventHandler(menuResetPassphrase_Select);
             this.menuResetPassphrase.Name = "MenuResetPassphrase";
+
+            //
+            // menuResetPassword
+            //
+            this.menuResetPassword.Index = 2;
+            this.menuResetPassword.Enabled = true;
+            this.menuResetPassword.Text = resources.GetString("Changepassword");// resources.GetString("ResetPPText");//"Reset Passphrase";
+            this.menuResetPassword.Visible = true;
+            this.menuResetPassword.Click += new EventHandler(menuResetPassword_Click);
+            this.menuResetPassword.Name = "MenuResetPassword";
 
             // 
             // menuHelp
@@ -1752,6 +1768,21 @@ namespace Novell.FormsTrayApp
             this.ResumeLayout(false);
             
 
+        }
+
+        void menuResetPassword_Click(object sender, EventArgs e)
+        {
+            // Show the reset passphrase window
+            ResetPassword resetPasswordWindow = new ResetPassword(this.simiasWebService, this.ifWebService);
+            if (resetPasswordWindow.DomainCount > 0)
+                resetPasswordWindow.ShowDialog();
+            else
+            {
+                System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(FormsTrayApp));
+                Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(Resource.GetString("NoLoggedInDomainsPasswordText")/*"There are no logged-in domains for changing passphrase. For changing passphrase the domain should be connected. Log on to a domain and try."*/, Resource.GetString("ResetPasswordError")/*"Reset passphrase error"*/, "", MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+                mmb.ShowDialog();
+                mmb.Dispose();
+            }
         }
         #endregion
 
@@ -4192,7 +4223,7 @@ namespace Novell.FormsTrayApp
 			else
 			{
 				System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(FormsTrayApp));
-				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(Resource.GetString("NoLoggedInDomainsText")/*"There are no logged-in domains for changing passphrase. For changing passphrase the domain should be connected. Log on to a domain and try."*/, Resource.GetString("ResetError")/*"Reset passphrase error"*/, "", MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+                Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(Resource.GetString("NoLoggedInDomainsText")/*"There are no logged-in domains for changing passphrase. For changing passphrase the domain should be connected. Log on to a domain and try."*/, Resource.GetString("ResetError")/*"Reset passphrase error"*/, "", MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);                
 				mmb.ShowDialog();
 				mmb.Dispose();
 			}
