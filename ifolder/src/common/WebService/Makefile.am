@@ -26,7 +26,7 @@ Novell.iFolder.Web.dll: $(srcdir)/AssemblyInfo.cs $(iFolderWebService_CSFILES) $
 
 if LINUX
 ../iFolder/iFolderWebService.cs: iFolderWebService.wsdl
-    $(WSDL) -out:../iFolder/iFolderWebService.cs iFolderWebService.wsdl
+	$(WSDL) -out:../iFolder/iFolderWebService.cs iFolderWebService.wsdl
 endif
 if DARWIN
 ../iFolder/iFolderWebService.cs: iFolderWebService.wsdl
