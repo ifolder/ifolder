@@ -755,7 +755,7 @@
 		<value>Server Old</value>
 	</data>
 	<data name="UpgradeClientMsg">
-		<value>Would you like to upgrade your client to {0}. The client will be closed automatically if you click Ok.</value>
+		<value>Would you like to upgrade your client to {0}? The client will be closed automatically if you click Ok.</value>
 	</data>
 	<data name="UpgradeAvailableTitle">
 		<value>Client upgrade available.</value>
@@ -791,13 +791,13 @@
 		<value>Enter the name of the iFolder server.</value>
 	</data>
 	<data name="ServerPageHeaderTitle">
-		<value>Choose an iFolder Server</value>
+		<value>iFolder Server</value>
 	</data>
 	<data name="ServerPageName">
 		<value>serverPage</value>
 	</data>
 	<data name="IdentityPageHeaderST">
-		<value>Enter your iFolder username and password.</value>
+		<value>Enter your iFolder user name and password.</value>
 	</data>
 	<data name="IdentityPageHeaderTitle">
 		<value>iFolder Account Information</value>
@@ -809,7 +809,7 @@
 		<value>Verify and Connect .</value>
 	</data>
 	<data name="VerifyPageHeaderTitle">
-		<value>Verify iFolder Account Information</value>
+		<value>Verify and Connect</value>
 	</data>
 	<data name="VerifyPageName">
 		<value>verifyPage</value>
@@ -818,7 +818,7 @@
 		<value>Description...</value>
 	</data>
 	<data name="CompletionPageWT">
-		<value>Completing the iFolder Invitation Wizard</value>
+		<value>Congratulations!</value>
 	</data>
 	<data name="CancelText">
 		<value>&amp;Cancel</value>
@@ -842,43 +842,55 @@
 		<value>&amp;Finish</value>
 	</data>
 	<data name="CongratsMsg">
-		<value>Congratulations, you are now connected to:</value>
+		<value>You are now connected to:</value>
 	</data>
 	<data name="CongratsDescription">
 		<value>You can now add folders to be synchronized to the server.  You may also download folders from the server and have them be synchronized to your computer.</value>
 	</data>
 	<data name="CompletionPageAT">
-		<value>To close this wizard, click Finish.</value>
+		<value>Click Finish to close this wizard</value>
 	</data>
 	<data name="IdpgLbl1txt">
-		<value>Enter your iFolder username and password (for example, jsmith).</value>
+		<value>Enter your iFolder username and password (for example, "jsmith").</value>
 	</data>
 	<data name="UName">
-		<value>User Name</value>
+		<value>User name</value>
 	</data>
+    <data name="UNameTextbox">
+        <value>&amp;User name</value>
+    </data>
 	<data name="PasswordTxt">
-		<value>Password</value>
+		<value>&amp;Password</value>
 	</data>
 	<data name="RememberPasswd">
 		<value>Remember password on this computer</value>
 	</data>
+    <data name="RememberPasswdCheckbox">
+        <value>&amp;Remember password on this computer</value>
+    </data>
 	<data name="ServerNameText">
-		<value>Server address</value>
+		<value>Domain address</value>
 	</data>
+    <data name="ServerNameTextbox">
+        <value>&amp;Domain address</value>
+    </data>
 	<data name="ServerPagelbl2txt">
-		<value>Enter the name of your iFolder domain (for example, ifolder.example.net).</value>
+		<value>Enter the name of your iFolder domain (for example, "ifolder.example.net").</value>
 	</data>
 	<data name="ServerPageDesc">
-		<value>Setting this iFolder server as your default server will allow iFolder to automatically select this server when adding new iFolders.</value>
+		<value>Setting this iFolder server as your default server will enable iFolder to automatically select this server when adding new iFolders.</value>
 	</data>
 	<data name="DefaultServer">
-		<value>Make this my &amp;default server.</value>
+		<value>Set this as my default server</value>
 	</data>
+    <data name="DefaultServerCheckbox">
+        <value>Set this as my &amp;default server</value>
+    </data>
 	<data name="AccountVerify">
-		<value>Please verify that the information you have entered is correct.</value>
+		<value>Please verify the information you have entered</value>
 	</data>
 	<data name="ClickConnect">
-		<value>Click Connect to validate your connection with the domain.</value>
+		<value>Click connect to proceed.</value>
 	</data>
 	<data name="MigrationWelcomepgAT">
 		<value>This wizard will guide you through migrating your iFolder account to 3.x.</value>
@@ -928,13 +940,13 @@
 		<value>Select the Domain</value>
 	</data>
 	<data name="EncryptedText">
-		<value>Encrypted</value>
+		<value>&amp;Encrypted</value>
 	</data>
 	<data name="SharableText">
-		<value>Regular</value>
+		<value>&amp;Regular</value>
 	</data>
 	<data name="LocationText">
-		<value>Location:</value>
+		<value>&amp;Location:</value>
 	</data>
 	<data name="MigrateNRemove">
 		<value>Migrate the ifolder and disconnect it from 2.x domain</value>
@@ -991,13 +1003,16 @@
 		<value>Encrypted</value>
 	</data>
 	<data name="AccountName">
-		<value>Account Name</value>
+		<value>Domain Name</value>
 	</data>
 	<data name="SyncErrorPrompt">
 		<value>Synchronization log contains the information regarding the files that are not synchronized.</value>
 	</data>
 	<data name="CreateDefaultiFolder" >
-    <value>Create Default iFolder</value>
+    <value>Create &amp;Default iFolder</value>
+    </data>
+  <data name ="DefaultiFolder">
+    <value>Default iFolder</value>
   </data>
   <data name="BrowseText" >
     <value>&amp;Browse</value>
@@ -1048,7 +1063,7 @@
 	<value>ReType Passphrase:</value>
   </data>
   <data name="RememberPassPhrase" >
-	<value>Remember Passphrase on this computer</value>
+	<value>&amp;Remember passphrase on this computer</value>
   </data>
   <data name="SelectRecoveryAgent" >
 	<value>Select Recovery Agent:</value>
@@ -1093,7 +1108,7 @@ Are you sure you want to exit the Application ?</value>
     <value>Port</value>
   </data>
   <data name="SecureSync">
-    <value>Secure Sync</value>
+    <value>&amp;Secure Sync</value>
   </data>
   <data name="DiskSpace.Text">
     <value>Disk Space </value>
@@ -1110,6 +1125,6 @@ Are you sure you want to exit the Application ?</value>
     </value>
   </data>
   <data name="DownloadDefaultiFolder">
-    <value>Download Default iFolder</value>
+    <value>D&amp;ownload default iFolder</value>
   </data>
 </root>

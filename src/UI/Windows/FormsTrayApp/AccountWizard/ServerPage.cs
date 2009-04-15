@@ -111,7 +111,7 @@ namespace Novell.Wizard
 			this.label2.Location = new System.Drawing.Point( this.defaultTextXPos-10, this.defaultTextYPos );
 			this.label2.Name = "label2";			
 			this.label2.TabIndex = 0;
-			this.label2.Text = Resource.GetString("ServerPagelbl2txt");//"Enter the name of your iFolder server (for example, ifolder.example.net).";			
+			this.label2.Text = Resource.GetString("ServerPagelbl2txt");//"Enter the name of your iFolder server (for example, "ifolder.example.net").";			
             this.strSize = graphics.MeasureString(this.label2.Text, this.label2.Font);
 			this.label2.Size = new System.Drawing.Size( this.maxTextWidth , ((int)this.strSize.Width/this.maxTextWidth+1)*16 );			
 			// 
@@ -120,7 +120,7 @@ namespace Novell.Wizard
 			this.label1.Location = new System.Drawing.Point( this.defaultTextXPos, this.label2.Location.Y+this.label2.Size.Height+this.defaultSpacing );
 			this.label1.Name = "label1";			
 			this.label1.TabIndex = 1;
-			this.label1.Text = Resource.GetString("ServerNameText");//"Domain Name:";
+            this.label1.Text = Resource.GetString("ServerNameTextbox") + ":";//"Server address:";
             this.strSize = graphics.MeasureString(this.label1.Text, this.label1.Font);
 			this.label1.Size = new System.Drawing.Size( this.defaultTextWidth, ((int)this.strSize.Width/this.defaultTextWidth+1)*16 );
 			// 
@@ -149,7 +149,7 @@ namespace Novell.Wizard
 			this.defaultServer.Name = "defaultServer";
 			this.defaultServer.Size = new System.Drawing.Size(406, 20);
 			this.defaultServer.TabIndex = 4;
-			this.defaultServer.Text = Resource.GetString("DefaultServer");//"Make this my &default server.";
+			this.defaultServer.Text = Resource.GetString("DefaultServerCheckbox");//"Make this my &default server.";
 
             graphics.Dispose();
 			// 

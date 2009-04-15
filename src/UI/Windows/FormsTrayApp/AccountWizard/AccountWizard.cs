@@ -168,7 +168,7 @@ namespace Novell.Wizard
 			// verifyPage
 			// 
 			// TODO: Localize
-			this.verifyPage.HeaderTitle = Resource.GetString("VerifyPageHeaderTitle");//"Verify iFolder Account Information";
+			this.verifyPage.HeaderTitle = Resource.GetString("VerifyPageHeaderTitle");//"Verify and Connect";
 			this.verifyPage.Location = new System.Drawing.Point(0, 0);
 			this.verifyPage.Name = Resource.GetString("VerifyPageName");//"verifyPage";
 			this.verifyPage.Size = new System.Drawing.Size(496, 304);
@@ -179,7 +179,7 @@ namespace Novell.Wizard
 			this.defaultiFolderPage.Name = "defaultiFolderPage";
 			this.defaultiFolderPage.Location = new System.Drawing.Point(0, 0);
 			this.defaultiFolderPage.Size = new System.Drawing.Size(496, 304);
-			this.defaultiFolderPage.HeaderTitle = Resource.GetString("CreateDefaultiFolder");//"Default iFolder";
+			this.defaultiFolderPage.HeaderTitle = Resource.GetString("DefaultiFolder");//"Default iFolder";
 			//
 			// completionPage
 			//
@@ -545,9 +545,9 @@ namespace Novell.Wizard
 			{
 				// TODO: Localize
 				StringBuilder sb = new StringBuilder(Resource.GetString("CongratsMsg")/*"Congratulations, you are now connected to:\n\n"*/);
-				sb.AppendFormat( "\n\n{0} : {1}\n", Resource.GetString("AccountName"), domainInfo.Name );//"Account Name" and domain name.				
-				sb.AppendFormat( "{0} : {1}\n", Resource.GetString("ServerNameText"), serverPage.ServerAddress );//"Server Address" and IP
-				sb.AppendFormat( "{0} :	 {1}\n\n", Resource.GetString("UName"), identityPage.Username ); //"User Name" and user name
+				sb.AppendFormat( "\n\n{0}:\t{1}\n", Resource.GetString("AccountName"), domainInfo.Name );//"Domain Name" and domain name.				
+				sb.AppendFormat( "{0}:\t{1}\n", Resource.GetString("ServerNameText"), serverPage.ServerAddress );//"Server address" and IP
+				sb.AppendFormat( "{0}:\t{1}\n\n", Resource.GetString("UName"), identityPage.Username ); //"User name" and user name
 				sb.Append( Resource.GetString("CongratsDescription")/*"You can now add folders to be synchronized to the server.  You may also download folders from the server and have them be synchronized to your computer."*/ );
 				return sb.ToString();				
 			}

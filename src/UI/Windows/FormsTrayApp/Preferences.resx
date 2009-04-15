@@ -254,7 +254,7 @@
     <value>1</value>
   </data>
   <data name="displayConfirmation.Text">
-    <value>Show &amp;Confirmation dialog when creating iFolders</value>
+    <value>Display &amp;Confirmation dialog on successful creation of iFolders</value>
   </data>
   <data name="displayConfirmation.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>MiddleLeft</value>
@@ -728,7 +728,7 @@
     <value>1</value>
   </data>
   <data name="notifyCollisions.Text">
-    <value>N&amp;otify of conflicts</value>
+    <value>N&amp;otify when conflicts arise</value>
   </data>
   <data name="notifyCollisions.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>MiddleLeft</value>
@@ -824,7 +824,7 @@
     <value>0</value>
   </data>
   <data name="notifyShared.Text">
-    <value>&amp;Notify of shared iFolders</value>
+    <value>&amp;Notify when iFolders are shared</value>
   </data>
   <data name="notifyShared.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>MiddleLeft</value>
@@ -920,7 +920,7 @@
     <value>2</value>
   </data>
   <data name="notifyJoins.Text">
-    <value>Notify &amp;when a user joins</value>
+    <value>Notify &amp;when a user joins the iFolder domain</value>
   </data>
   <data name="notifyJoins.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>MiddleLeft</value>
@@ -1091,7 +1091,7 @@
     <value>4</value>
   </data>
   <data name="label1.Text">
-    <value>Synchronize iFolders Every</value>
+    <value>Synchronize iFolders every</value>
   </data>
   <data name="label1.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>TopLeft</value>
@@ -1274,7 +1274,7 @@
     <value>1</value>
   </data>
   <data name="autoSync.Text">
-    <value>Automatically S&amp;ynchronize iFolders</value>
+    <value>Automatically s&amp;ynchronize iFolders</value>
   </data>
   <data name="autoSync.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>MiddleLeft</value>
@@ -1676,7 +1676,7 @@
     <value>Private</value>
   </data>
   <data name="columnHeader2.Text">
-    <value>Name</value>
+    <value>Server Name</value>
   </data>
   <data name="columnHeader2.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Left</value>
@@ -1769,7 +1769,7 @@
     <value>3</value>
   </data>
   <data name="details.Text">
-    <value>&amp;Properties...</value>
+    <value>&amp;Properties</value>
   </data>
   <data name="details.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>MiddleCenter</value>
@@ -2795,16 +2795,16 @@
     <value>System.Windows.Forms.Form, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
     <data name="seconds">
-    <value>Seconds</value>
+    <value>seconds</value>
   </data>
     <data name="minutes">
-    <value>Minutes</value>
+    <value>minutes</value>
   </data>
     <data name="hours">
-    <value>Hours</value>
+    <value>hours</value>
   </data>
     <data name="days">
-    <value>Days</value>
+    <value>days</value>
   </data>
   <data name="PreferencesErrorTitle">
     <value>Error changing preferences</value>
