@@ -185,6 +185,7 @@
 		<row><td>AutoAccount.xsd.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td>{DE3EF0D4-1F0F-4C60-BCCE-5E1217974001}</td><td>INSTALLDIR.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td>8</td><td/><td>autoaccount.xsd.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td>17</td><td>This component consists of files not belonging to other components.</td><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>AutoAccountCreator.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td>{784C4302-98F2-42E4-B64C-A2B6DDE98AF9}</td><td>PLUGINS.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td>8</td><td/><td>autoaccountcreator.d.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td>17</td><td>This component consists of a Windows dynamic link library.</td><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>EnhancedConflictReso.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td>{636907C1-D664-449D-AC8F-0DA79489F559}</td><td>PLUGINS.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td>8</td><td/><td>enhancedconflictreso.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td>17</td><td>This component consists of a Windows dynamic link library.</td><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>EnhancedMenuItems.dl.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td>{54217969-E8FD-4819-9C98-F880E112334C}</td><td>PLUGINS.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td>8</td><td/><td>enhancedmenuitems.dl.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td>17</td><td>This component consists of a Windows dynamic link library.</td><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
 
 	<table name="Condition">
@@ -364,6 +365,7 @@
 		<row><td>autoaccount.xsd.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td>AutoAccount.xsd.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td>AUTOAC~1.XSD|AutoAccount.xsd</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\AutoAccount.xsd</td><td>1</td><td/></row>
 		<row><td>autoaccountcreator.d.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td>AutoAccountCreator.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td>AUTOAC~1.DLL|AutoAccountCreator.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_PLUGINS&gt;\AutoAccountCreator.dll</td><td>1</td><td/></row>
 		<row><td>enhancedconflictreso.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td>EnhancedConflictReso.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td>ENHANC~1.DLL|EnhancedConflictResolution.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_PLUGINS&gt;\EnhancedConflictResolution.dll</td><td>1</td><td/></row>
+		<row><td>enhancedmenuitems.dl.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td>EnhancedMenuItems.dl.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td>ENHANC~1.DLL|EnhancedMenuItems.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_PLUGINS&gt;\EnhancedMenuItems.dll</td><td>1</td><td/></row>
 	</table>
 
 	<table name="Font">
@@ -453,6 +455,7 @@
 		<row><td>AutoAccount.xsd.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td/><td/><td>_5906DF99_5FA4_4B0B_98DB_467589EEF3C2_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>AutoAccountCreator.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td/><td/><td>_957F51A4_70FA_46F9_8C8F_6CEA3CC95B6D_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>EnhancedConflictReso.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td/><td/><td>_6D7671D2_F7B8_462C_BAE5_FA976B13F2EB_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>EnhancedMenuItems.dl.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td/><td/><td>_7842EE29_3A81_4346_887D_7BAE7757D4CB_FILTER</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISCustomActionReference">
@@ -941,6 +944,7 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<row><td>AutoAccount.xsd.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td>ifolder3clientplugins.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td>0</td></row>
 		<row><td>AutoAccountCreator.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td>ifolder3clientplugins.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td>0</td></row>
 		<row><td>EnhancedConflictReso.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td>ifolder3clientplugins.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td>0</td></row>
+		<row><td>EnhancedMenuItems.dl.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td>ifolder3clientplugins.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td>0</td></row>
 	</table>
 
 	<table name="ModuleConfiguration">
