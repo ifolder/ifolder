@@ -79,6 +79,7 @@ namespace Novell.iFolder
 		private uint						searchTimeoutID;
 		
 		private bool						alreadyDisposed;
+		private static iFolderLog 				log;
 
 		public new string Name
 		{
