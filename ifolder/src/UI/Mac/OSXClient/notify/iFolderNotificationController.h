@@ -20,8 +20,8 @@
 *
 *-----------------------------------------------------------------------------
 *
-*                 $Author: Timothy Hatcher <timothy@colloquy.info> Karl Adam <karl@colloquy.info>
-*                 $Modified by: Satyam <ssutapalli@novell.com>	01-01-2008	Added notification for sync fail
+*                 $Author: Timothy Hatcher <timothy@colloquy.info> Karl?Adam?<karl@colloquy.info>
+*                 $Modified by: Satyam <ssutapalli@novell.com>  01-01-2008      Added notification for sync fail
 *-----------------------------------------------------------------------------
 * This module is used to:
 *        <Description of the functionality of the file >
@@ -43,18 +43,33 @@
 - (void) performNotification:(NSDictionary *) context;
 
 + (void) newiFolderNotification:(iFolder *)ifolder;
-+ (void) newUserNotification:(iFolder *)ifolder;
++ (void) newUserNotification:(iFolder*)ifolder;
 + (void) collisionNotification:(iFolder *)ifolder;
-+ (void) readOnlyNotification:(iFolder *)ifolder;
-+ (void) iFolderFullNotification:(iFolder *)ifolder;
-+ (void) syncFailNotification:(iFolder*)ifolder;
++ (void) readOnlyNotification:(NSString*)ifolderAndFileName;
++ (void) iFolderFullNotification:(NSString*)ifolderAndFileName;
+//+ (void) syncFailNotification:(NSString*)ifolderAndFileName;
+
+//+ (void) policyNotification:(iFolder*)ifolder;
++ (void) accessNotification:(NSString*)ifolderAndFileName;
++ (void) lockedNotification:(NSString*)ifolderAndFileName;
++ (void) policySizeNotification:(NSString*)ifolderAndFileName;
++ (void) policyTypeNotification:(NSString*)ifolderAndFileName;
++ (void) diskFullNotification:(NSString*)ifolderAndFileName;
+
 
 - (void) ifolderNotify:(iFolder *)ifolder;
-- (void) userNotify:(iFolder *)ifolder;
+- (void) userNotify:(iFolder*)ifolder;
 - (void) colNotify:(iFolder *)ifolder;
-- (void) readOnlyNotify:(iFolder *)ifolder;
-- (void) iFolderFullNotify:(iFolder *)ifolder;
--(void) syncFailNotify:(iFolder*) ifolder;
+- (void) readOnlyNotify:(NSString*)ifolderAndFileName;
+- (void) iFolderFullNotify:(NSString*)ifolderAndFileName;
+//- (void) syncFailNotify:(NSString*)ifolderAndFileName;
+
+//- (void) policyNotify:(iFolder*)ifolder;
+- (void) accessNotify:(NSString*)ifolderAndFileName;
+- (void) lockedNotify:(NSString*)ifolderAndFileName;
+- (void) policySizeNotify:(NSString*)ifolderAndFileName;
+- (void) policyTypeNotify:(NSString*)ifolderAndFileName;
+- (void) diskFullNotify:(NSString*)ifolderAndFileName;
 
 @end
 	

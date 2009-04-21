@@ -25,7 +25,7 @@
 *                 $Modified by: Satyam <ssutapalli@novell.com>  9/4/2008   Added Action outlet for show/hide toolbar
 *-----------------------------------------------------------------------------
 * This module is used to:
-*       	iFolder Preferences dialog controller 
+*               iFolder Preferences dialog controller
 *
 *******************************************************************************/
 
@@ -53,6 +53,7 @@
 	NSMutableDictionary		*toolbarItemDict;	
 	NSMutableArray			*toolbarItemArray;
 	int						modalReturnCode;
+	BOOL                    syncValueChanged;
 }
 
 - (IBAction)toggleSyncEnabled:(id)sender;
@@ -86,5 +87,5 @@
 
 - (void)setupToolbar;
 -(void)saveCurrentSyncInterval;
-
+- (void)textDidChange:(NSNotification *)aNotification;
 @end

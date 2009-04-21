@@ -1,226 +1,106 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-	<key>IBClasses</key>
-	<array>
-		<dict>
-			<key>ACTIONS</key>
-			<dict>
-				<key></key>
-				<string>id</string>
-			</dict>
-			<key>CLASS</key>
-			<string>FirstResponder</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>NSObject</string>
-		</dict>
-		<dict>
-			<key>ACTIONS</key>
-			<dict>
-				<key>changeSyncUnits</key>
-				<string>id</string>
-				<key>playSound</key>
-				<string>id</string>
-				<key>showHideToolbar</key>
-				<string>id</string>
-				<key>toggleSyncEnabled</key>
-				<string>id</string>
-				<key>updateSyncValue</key>
-				<string>id</string>
-			</dict>
-			<key>CLASS</key>
-			<string>iFolderPrefsController</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>OUTLETS</key>
-			<dict>
-				<key>accountsController</key>
-				<string>AccountsController</string>
-				<key>accountsView</key>
-				<string>NSView</string>
-				<key>blankView</key>
-				<string>NSView</string>
-				<key>enableSync</key>
-				<string>NSButton</string>
-				<key>generalView</key>
-				<string>NSView</string>
-				<key>notifyView</key>
-				<string>NSView</string>
-				<key>syncLabel</key>
-				<string>NSTextField</string>
-				<key>syncUnits</key>
-				<string>NSPopUpButton</string>
-				<key>syncValue</key>
-				<string>NSTextField</string>
-				<key>syncView</key>
-				<string>NSView</string>
-			</dict>
-			<key>SUPERCLASS</key>
-			<string>NSWindowController</string>
-		</dict>
-		<dict>
-			<key>CLASS</key>
-			<string>NSObject</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-		</dict>
-		<dict>
-			<key>CLASS</key>
-			<string>VerticalBarView</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>NSView</string>
-		</dict>
-		<dict>
-			<key>ACTIONS</key>
-			<dict>
-				<key>addAccount</key>
-				<string>id</string>
-				<key>loginoutClicked</key>
-				<string>id</string>
-				<key>removeAccount</key>
-				<string>id</string>
-				<key>toggleActive</key>
-				<string>id</string>
-				<key>toggleDefault</key>
-				<string>id</string>
-				<key>toggleSavePassword</key>
-				<string>id</string>
-			</dict>
-			<key>CLASS</key>
-			<string>AccountsController</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>OUTLETS</key>
-			<dict>
-				<key>accounts</key>
-				<string>NSTableView</string>
-				<key>addAccount</key>
-				<string>NSButton</string>
-				<key>defaultAccount</key>
-				<string>NSButton</string>
-				<key>defaultiFolderController</key>
-				<string>DefaultiFolderSheetController</string>
-				<key>domainDescription</key>
-				<string>NSTextView</string>
-				<key>enableAccount</key>
-				<string>NSButton</string>
-				<key>freeSpace</key>
-				<string>NSTextField</string>
-				<key>host</key>
-				<string>NSTextField</string>
-				<key>leaveDomainController</key>
-				<string>LeaveDomainSheetController</string>
-				<key>loginout</key>
-				<string>NSButton</string>
-				<key>name</key>
-				<string>NSTextField</string>
-				<key>parentWindow</key>
-				<string>NSWindow</string>
-				<key>password</key>
-				<string>NSSecureTextField</string>
-				<key>progressIndicator</key>
-				<string>NSProgressIndicator</string>
-				<key>rememberPassword</key>
-				<string>NSButton</string>
-				<key>removeAccount</key>
-				<string>NSButton</string>
-				<key>state</key>
-				<string>NSTextField</string>
-				<key>totalSpace</key>
-				<string>NSTextField</string>
-				<key>usedSpace</key>
-				<string>NSTextField</string>
-				<key>userName</key>
-				<string>NSTextField</string>
-				<key>vertBar</key>
-				<string>VerticalBarView</string>
-				<key>view</key>
-				<string>NSView</string>
-			</dict>
-			<key>SUPERCLASS</key>
-			<string>NSObject</string>
-		</dict>
-		<dict>
-			<key>ACTIONS</key>
-			<dict>
-				<key>cancelLeaveDomain</key>
-				<string>id</string>
-				<key>leaveDomain</key>
-				<string>id</string>
-				<key>showWindow</key>
-				<string>id</string>
-			</dict>
-			<key>CLASS</key>
-			<string>LeaveDomainSheetController</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>OUTLETS</key>
-			<dict>
-				<key>accountsController</key>
-				<string>AccountsController</string>
-				<key>leaveAll</key>
-				<string>NSButton</string>
-				<key>leaveDomainSheet</key>
-				<string>NSWindow</string>
-				<key>prefsWindow</key>
-				<string>NSWindow</string>
-				<key>server</key>
-				<string>NSTextField</string>
-				<key>systemName</key>
-				<string>NSTextField</string>
-				<key>userName</key>
-				<string>NSTextField</string>
-			</dict>
-			<key>SUPERCLASS</key>
-			<string>NSWindowController</string>
-		</dict>
-		<dict>
-			<key>ACTIONS</key>
-			<dict>
-				<key>onBrowse</key>
-				<string>id</string>
-				<key>onCancel</key>
-				<string>id</string>
-				<key>onCreate</key>
-				<string>id</string>
-				<key>onCreateDefaultiFolder</key>
-				<string>id</string>
-			</dict>
-			<key>CLASS</key>
-			<string>DefaultiFolderSheetController</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>OUTLETS</key>
-			<dict>
-				<key>browseButton</key>
-				<string>NSButton</string>
-				<key>createButton</key>
-				<string>NSButton</string>
-				<key>createDefaultiFolder</key>
-				<string>NSButton</string>
-				<key>defaultSecureSync</key>
-				<string>NSButton</string>
-				<key>defaultiFolderWindow</key>
-				<string>id</string>
-				<key>ifolderPath</key>
-				<string>NSTextField</string>
-				<key>mainWindow</key>
-				<string>id</string>
-				<key>security</key>
-				<string>NSMatrix</string>
-				<key>securityText</key>
-				<string>NSTextField</string>
-			</dict>
-			<key>SUPERCLASS</key>
-			<string>NSWindowController</string>
-		</dict>
-	</array>
-	<key>IBVersion</key>
-	<string>1</string>
-</dict>
-</plist>
+{
+    IBClasses = (
+        {
+            ACTIONS = {
+                addAccount = id; 
+                loginoutClicked = id; 
+                removeAccount = id; 
+                toggleActive = id; 
+                toggleDefault = id; 
+                toggleSavePassword = id; 
+            }; 
+            CLASS = AccountsController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                accounts = NSTableView; 
+                addAccount = NSButton; 
+                defaultAccount = NSButton; 
+                defaultiFolderController = DefaultiFolderSheetController; 
+                domainDescription = NSTextView; 
+                enableAccount = NSButton; 
+                freeSpace = NSTextField; 
+                host = NSTextField; 
+                leaveDomainController = LeaveDomainSheetController; 
+                loginout = NSButton; 
+                name = NSTextField; 
+                parentWindow = NSWindow; 
+                password = NSSecureTextField; 
+                progressIndicator = NSProgressIndicator; 
+                rememberPassword = NSButton; 
+                removeAccount = NSButton; 
+                state = NSTextField; 
+                totalSpace = NSTextField; 
+                usedSpace = NSTextField; 
+                userName = NSTextField; 
+                vertBar = VerticalBarView; 
+                view = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {onBrowse = id; onCancel = id; onCreate = id; onCreateDefaultiFolder = id; }; 
+            CLASS = DefaultiFolderSheetController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                browseButton = NSButton; 
+                createButton = NSButton; 
+                createDefaultiFolder = NSButton; 
+                defaultSecureSync = NSButton; 
+                defaultiFolderWindow = id; 
+                ifolderPath = NSTextField; 
+                mainWindow = id; 
+                security = NSMatrix; 
+                securityText = NSTextField; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {"" = id; }; 
+            CLASS = FirstResponder; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {cancelLeaveDomain = id; leaveDomain = id; showWindow = id; }; 
+            CLASS = LeaveDomainSheetController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                accountsController = AccountsController; 
+                leaveAll = NSButton; 
+                leaveDomainSheet = NSWindow; 
+                prefsWindow = NSWindow; 
+                server = NSTextField; 
+                systemName = NSTextField; 
+                userName = NSTextField; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }, 
+        {CLASS = VerticalBarView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {
+            ACTIONS = {
+                changeSyncUnits = id; 
+                playSound = id; 
+                showHideToolbar = id; 
+                toggleSyncEnabled = id; 
+                updateSyncValue = id; 
+            }; 
+            CLASS = iFolderPrefsController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                accountsController = AccountsController; 
+                accountsView = NSView; 
+                blankView = NSView; 
+                enableSync = NSButton; 
+                generalView = NSView; 
+                notifyView = NSView; 
+                syncLabel = NSTextField; 
+                syncUnits = NSPopUpButton; 
+                syncValue = NSTextField; 
+                syncView = NSView; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }
+    ); 
+    IBVersion = 1; 
+}

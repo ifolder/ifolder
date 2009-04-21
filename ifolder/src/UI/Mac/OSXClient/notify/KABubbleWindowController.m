@@ -20,7 +20,7 @@
 *
 *-----------------------------------------------------------------------------
 *
-*                 $Author: Timothy Hatcher <timothy@colloquy.info> Karl Adam <karl@colloquy.info>
+*                 $Author: Timothy Hatcher <timothy@colloquy.info> Karl?Adam?<karl@colloquy.info>
 *                 $Modified by: <Modifier>
 *                 $Mod Date: <Date Modified>
 *                 $Revision: 0.0
@@ -34,13 +34,13 @@
 #import "KABubbleWindowController.h"
 #import "KABubbleWindowView.h"
 
-static unsigned int bubbleWindowDepth = 0;
+
 
 @implementation KABubbleWindowController
 
 #define TIMER_INTERVAL ( 1. / 30. )
 #define FADE_INCREMENT 0.05
-#define DISPLAY_TIME 30.
+#define DISPLAY_TIME 10.
 #define KABubblePadding 10.
 
 #pragma mark -
@@ -51,8 +51,34 @@ static unsigned int bubbleWindowDepth = 0;
 }
 
 + (KABubbleWindowController *) bubbleWithTitle:(NSString *) title text:(id) text icon:(NSImage *) icon
- {
+ {	
+	float titleHeight;
+	float titleWidth;
+	float textWidth;
+	float textHeight;
+	
+	NSAttributedString *attStrTitle = [[NSAttributedString alloc] initWithString:(NSString*)title attributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSFont boldSystemFontOfSize:13.],NSFontAttributeName,[NSColor blackColor],NSForegroundColorAttributeName,nil]];
+	
+	NSAttributedString *attStrText = [[NSAttributedString alloc] initWithString:(NSString*)text attributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSFont messageFontOfSize:11.],NSFontAttributeName,[NSColor blackColor],NSForegroundColorAttributeName,nil]];
+
+	NSSize sizTitle = [attStrTitle size];
+	titleWidth = sizTitle.width;
+	titleHeight = sizTitle.height;
+	
+	NSSize sizText = [attStrText size];
+	textWidth = sizText.width;
+	textHeight = sizText.height;
+
+	//[ret setFrame:newRect];
+	
 	id ret = [[[self alloc] init] autorelease];
+	
+	NSRect windowRect = NSMakeRect(0,0,titleWidth + 75.0,(textWidth/titleWidth)*textHeight + titleHeight + 30.0);
+	[[ret window] setFrame:windowRect display:NO];
+	NSRect screen = [[NSScreen mainScreen] visibleFrame];
+	
+	[[ret window] setFrameTopLeftPoint:NSMakePoint( NSWidth( screen ) - NSWidth( [[ret window] frame] ) - KABubblePadding, NSMaxY( screen ) - KABubblePadding )];
+	
 	[ret setTitle:title];
 	if( [text isKindOfClass:[NSString class]] ) [ret setText:text];
 	else if( [text isKindOfClass:[NSAttributedString class]] ) [ret setAttributedText:text];
@@ -61,10 +87,9 @@ static unsigned int bubbleWindowDepth = 0;
 }
 
 - (id) init
-{
-	extern unsigned int bubbleWindowDepth;
-
-	NSPanel *panel = [[[NSPanel alloc] initWithContentRect:NSMakeRect( 0., 0., 270., 65. ) styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO] autorelease];
+{	
+	NSPanel *panel = [[[NSPanel alloc] initWithContentRect:NSMakeRect( 0., 0., 75.0,30.0) styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO] autorelease];
+		
 	[panel setBecomesKeyOnlyIfNeeded:YES];
 	[panel setHidesOnDeactivate:NO];
 	[panel setBackgroundColor:[NSColor clearColor]];
@@ -81,20 +106,20 @@ static unsigned int bubbleWindowDepth = 0;
 	[view setAction:@selector( _bubbleClicked: )];
 	[panel setContentView:view];
 
-	NSRect screen = [[NSScreen mainScreen] visibleFrame];
-	[panel setFrameTopLeftPoint:NSMakePoint( NSWidth( screen ) - NSWidth( [panel frame] ) - KABubblePadding, NSMaxY( screen ) - KABubblePadding - ( NSHeight( [panel frame] ) * bubbleWindowDepth ) )];
-
+	//NSRect screen = [[NSScreen mainScreen] visibleFrame];
+		
+	//[panel setFrameTopLeftPoint:NSMakePoint( NSWidth( screen ) - NSWidth( [panel frame] ) - KABubblePadding, NSMaxY( screen ) - KABubblePadding )];
+	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _applicationDidSwitch: ) name:NSApplicationDidBecomeActiveNotification object:[NSApplication sharedApplication]];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _applicationDidSwitch: ) name:NSApplicationDidHideNotification object:[NSApplication sharedApplication]];
 
-	_depth = ++bubbleWindowDepth;
 	_autoFadeOut = YES;
 	_delegate = nil;
 	_target = nil;
 	_representedObject = nil;
 	_action = NULL;
 	_animationTimer = nil;
-
+	
 	return ( self = [super initWithWindow:panel] );
 }
 
@@ -111,9 +136,6 @@ static unsigned int bubbleWindowDepth = 0;
 	_representedObject = nil;
 	_delegate = nil;
 	_animationTimer = nil;
-
-	extern unsigned int bubbleWindowDepth;
-	if( _depth == bubbleWindowDepth ) bubbleWindowDepth = 0;
 
 	[super dealloc];
 }

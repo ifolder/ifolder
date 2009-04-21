@@ -21,15 +21,15 @@
 *-----------------------------------------------------------------------------
 *
 *                 $Author: Calvin Gaisford <cgaisford@novell.com>
-*                 $Modified by: Satyam <ssutapalli@novell.com>	01-01-2008	Added notification for sync fail 
+*                 $Modified by: Satyam <ssutapalli@novell.com>  01-01-2008      Added notification for sync fail
 *                 $Modified by: Satyam <ssutapalli@novell.com>  13-02-2008  Added auto refresh if remember password is selected
 *                 $Modified by: Satyam <ssutapalli@novell.com>  22-05-208   Commented log statements
-*                 $Modified by: Satyam <ssutapalli@novell.com>	18-06-2008  Added notification for creating new iFolder
-*                 $Modified by: Satyam <ssutapalli@novell.com>	16-07-2008  UI Refresh timer added 
-*                 $Modified by: Satyam <ssutapalli@novell.com>	14-08-2008  Changed help file path
-*                 $Modified by: Satyam <ssutapalli@novell.com>	17-09-2008  Commented the code which uses poBoxID of a domain
-*                 $Modified by: Satyam <ssutapalli@novell.com>	08-10-2008  Handling processNodeEvents as threads to fix sync issue
-*                 $Modified by: Satyam <ssutapalli@novell.com>	21-10-2008  Changed the way of getting language id in showHelp
+*                 $Modified by: Satyam <ssutapalli@novell.com>  18-06-2008  Added notification for creating new iFolder
+*                 $Modified by: Satyam <ssutapalli@novell.com>  16-07-2008  UI Refresh timer added
+*                 $Modified by: Satyam <ssutapalli@novell.com>  14-08-2008  Changed help file path
+*                 $Modified by: Satyam <ssutapalli@novell.com>  17-09-2008  Commented the code which uses poBoxID of a domain
+*                 $Modified by: Satyam <ssutapalli@novell.com>  08-10-2008  Handling processNodeEvents as threads to fix sync issue
+*                 $Modified by: Satyam <ssutapalli@novell.com>  21-10-2008  Changed the way of getting language id in showHelp
 *-----------------------------------------------------------------------------
 * This module is used to:
 *        <Description of the functionality of the file >
@@ -1558,26 +1558,20 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 			// PolicyType
 			else if([[fse status] compare:@"PolicyType"] == 0)
 			{
+				syncMessage = [NSString
+					stringWithFormat:NSLocalizedString(@"A file type restriction policy prevented complete synchronization: \"%@\"", @"iFolder Policy Type Notification Message"), 
+					[fse name]];
+				[iFolderWindowController updateStatusTS:
+					[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
+					
+				//[iFolderNotificationController syncFailNotification:[fse name]];
+				[self addLogTS:syncMessage];
 				
-				//NSLog(@"%@ is the last component",[[fse name] lastPathComponent] );
-				if([[[fse name] lastPathComponent] caseInsensitiveCompare:@"Thumbs.db"] != NSOrderedSame && [[[fse name] lastPathComponent] caseInsensitiveCompare:@".DS_Store"] != NSOrderedSame)
-				{					
-					syncMessage = [NSString
-					stringWithFormat:NSLocalizedString(@"A file type restriction policy prevented complete synchronization: \"%@\"", @"iFolder Policy Type Notification Message"), [fse name]];
-					
-					[self addLogTS:syncMessage];
-					
-					[iFolderWindowController updateStatusTS:
-						[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
-					
-					//[iFolderNotificationController syncFailNotification:[fse name]];
-					
-					NSString *notificationFileDetails = [NSString stringWithFormat:@"%@###%@",[ifolder Name],[fse name]];
-					
-					if(ifolder != nil)
-						[iFolderNotificationController policyTypeNotification:notificationFileDetails];
-					
-				}				
+				NSString *notificationFileDetails = [NSString stringWithFormat:@"%@###%@",[ifolder Name],[fse name]];
+				
+				if(ifolder != nil)
+					[iFolderNotificationController policyTypeNotification:notificationFileDetails];
+				
 				
 //				if([syncFailNotifications objectForKey:[fse collectionID]] == nil && 
 //						[[fse name] caseInsensitiveCompare:@"Thumbs.db"] != NSOrderedSame /*&&

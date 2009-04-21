@@ -22,11 +22,9 @@
 *
 *                 $Author: Calvin Gaisford <cgaisford@novell.com>
 *                 $Modified by: Satyam <ssutapalli@novell.com> 22/04/2008   Added secure sync for creating iFolder
-*                 $Modified by: Satyam <ssutapalli@novell.com>	18-06-2008  Added notification while creating new iFolder
 *-----------------------------------------------------------------------------
 * This module is used to:
-*        <Description of the functionality of the file >
-*
+*               Create iFolder dialog
 *
 *******************************************************************************/
 

@@ -20,7 +20,7 @@
 *
 *-----------------------------------------------------------------------------
 *
-*                 $Author: Authors: Timothy Hatcher <timothy@colloquy.info> Karl Adam <karl@colloquy.info>
+*                 $Author: Authors: Timothy Hatcher <timothy@colloquy.info> Karl?Adam?<karl@colloquy.info>
 *                 $Modified by: <Modifier>
 *                 $Mod Date: <Date Modified>
 *                 $Revision: 0.0
@@ -96,6 +96,9 @@ void KABubbleShadeInterpolate( void *info, float const *inData, float *outData )
 
 	float srcX = NSMinX( [self bounds] ), srcY = NSMinY( [self bounds] );
 	float dstX = NSMinX( [self bounds] ), dstY = NSMaxY( [self bounds] );
+	
+	NSRect borderRect = [self bounds];
+	
 	CGShadingRef shading = CGShadingCreateAxial( cspace, CGPointMake( srcX, srcY ), CGPointMake( dstX, dstY ), function, false, false );	
 
 	CGContextDrawShading( [[NSGraphicsContext currentContext] graphicsPort], shading );
@@ -109,8 +112,8 @@ void KABubbleShadeInterpolate( void *info, float const *inData, float *outData )
 	[[NSColor colorWithCalibratedRed:0. green:0. blue:0. alpha:.5] set];
 	[path stroke];
 
-	[_title drawAtPoint:NSMakePoint( 55., 40. ) withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSFont boldSystemFontOfSize:13.], NSFontAttributeName, [NSColor controlTextColor], NSForegroundColorAttributeName, nil]];
-	[_text drawInRect:NSMakeRect( 55., 10., 200., 30. )];
+	[_title drawAtPoint:NSMakePoint( 55., borderRect.size.height-25. ) withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSFont boldSystemFontOfSize:13.], NSFontAttributeName, [NSColor controlTextColor], NSForegroundColorAttributeName, nil]];
+	[_text drawInRect:NSMakeRect( 55., 10., borderRect.size.width-75., borderRect.size.height-35. )];
 
 	if( [_icon size].width > 32. || [_icon size].height > 32. ) { // Assume a square image.
 		NSImageRep *sourceImageRep = [_icon bestRepresentationForDevice:nil];
@@ -122,8 +125,9 @@ void KABubbleShadeInterpolate( void *info, float const *inData, float *outData )
 		[_icon unlockFocus];
 	}
 
-	[_icon compositeToPoint:NSMakePoint( 15., 20. ) operation:NSCompositeSourceAtop fraction:1.];
-
+	//[_icon compositeToPoint:NSMakePoint( 15., 20. ) operation:NSCompositeSourceAtop fraction:1.];
+	//[_icon drawAtPoint:NSMakePoint(15.,borderRect.size.height-50.) fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:1.];
+	[_icon drawAtPoint:NSMakePoint(15.,(borderRect.size.height-32.)/2.0) fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:1.];
 	[[self window] invalidateShadow];
 }
 
