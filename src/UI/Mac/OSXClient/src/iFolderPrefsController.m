@@ -60,7 +60,17 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 	[self accountPreferences:nil];
 }
 
-
+-(BOOL)windowShouldClose:(id)window
+{
+	if(syncValueChanged)
+	{
+		if(NSRunAlertPanel(NSLocalizedString(@"Sync interval is not set",@"SyncInterval update title"),NSLocalizedString(@"Sync interval is not updated. Do you want to update sync interval?",@"SyncInterval update message"),NSLocalizedString(@"Yes",@"Yes"),NSLocalizedString(@"No",@"No"),nil) == NSAlertDefaultReturn)
+		{
+				[self saveCurrentSyncInterval];
+		}
+	}
+	return YES;
+}
 
 - (void)windowWillClose:(NSNotification *)aNotification
 {
@@ -71,8 +81,13 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 	}
 }
 
-
-
+- (void)textDidChange:(NSNotification *)aNotification
+{
+	if([aNotification object] == syncValue)
+	{
+		syncValueChanged = YES;
+	}
+}
 
 - (void)awakeFromNib
 {
@@ -124,11 +139,15 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 		[self saveCurrentSyncInterval];
 	}
 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:)  name:NSControlTextDidChangeNotification object:syncValue];
+	syncValueChanged = NO;
 }
 
 
 -(void)saveCurrentSyncInterval
 {	
+	syncValueChanged = NO;
+	
 	long syncVal = [[syncValue stringValue] intValue];
 	
 	if([syncUnits indexOfSelectedItem] == 3 && syncVal < 5)
@@ -193,8 +212,6 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 {
 	[self saveCurrentSyncInterval];
 }
-
-
 
 - (void) updateSize:(NSSize)newSize
 {

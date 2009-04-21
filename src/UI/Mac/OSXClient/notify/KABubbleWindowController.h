@@ -20,7 +20,7 @@
 *
 *-----------------------------------------------------------------------------
 *
-*                 $Author: Timothy Hatcher <timothy@colloquy.info> Karl Adam <karl@colloquy.info>
+*                 $Author: Timothy Hatcher <timothy@colloquy.info> Karl?Adam?<karl@colloquy.info>
 *                 $Modified by: <Modifier>
 *                 $Mod Date: <Date Modified>
 *                 $Revision: 0.0
@@ -30,12 +30,10 @@
 *
 *
 *******************************************************************************/
-
 @interface KABubbleWindowController : NSWindowController
 {
 	id _delegate;
 	NSTimer *_animationTimer;
-	unsigned int _depth;
 	BOOL _autoFadeOut;
 	SEL _action;
 	id _target;

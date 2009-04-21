@@ -24,7 +24,7 @@
 *                 $Modified by: Satyam <ssutapalli@novell.com> 22/04/2008   Added secure sync for creating iFolder
 *-----------------------------------------------------------------------------
 * This module is used to:
-*        	Create iFolder dialog
+*               Create iFolder dialog
 *
 *******************************************************************************/
 
@@ -60,6 +60,6 @@
 - (IBAction) createiFolder:(id)sender;
 - (IBAction) browseForPath:(id)sender;
 - (IBAction) domainSelectionChanges:(id)sender;
-
+- (void)textDidChange:(NSNotification *)aNotification;
 
 @end

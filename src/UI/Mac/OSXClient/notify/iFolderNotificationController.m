@@ -20,8 +20,8 @@
 *
 *-----------------------------------------------------------------------------
 *
-*                 $Author: Timothy Hatcher <timothy@colloquy.info> Karl Adam <karl@colloquy.info>
-*                 $Modified by: Satyam <ssutapalli@novell.com>	01-01-2008	Added notification for sync fail
+*                 $Author: Timothy Hatcher <timothy@colloquy.info> Karl?Adam?<karl@colloquy.info>
+*                 $Modified by: Satyam <ssutapalli@novell.com>  01-01-2008      Added notification for sync fail
 *-----------------------------------------------------------------------------
 * This module is used to:
 *        <Description of the functionality of the file >
@@ -137,30 +137,69 @@ static iFolderNotificationController *sharedInstance = nil;
 // readOnlyNotification
 // This method will create a thread that shows a notification when the iFolder going to sync is read-only
 //==========================================================================================================
-+ (void) readOnlyNotification:(iFolder *)ifolder
++ (void) readOnlyNotification:(NSString*)ifolderAndFileName
 {
 	[[self defaultManager] performSelectorOnMainThread:@selector(readOnlyNotify:) 
-				withObject:ifolder waitUntilDone:YES ];
+				withObject:ifolderAndFileName waitUntilDone:YES ];
 }
 
 //=========================================================================================================
 // iFolderFullNotification
 // This method will create a thread that shows a notification when the quota is full for further syncing
 //=========================================================================================================
-+ (void) iFolderFullNotification:(iFolder *)ifolder
++ (void) iFolderFullNotification:(NSString*)ifolderAndFileName
 {
 	[[self defaultManager] performSelectorOnMainThread:@selector(iFolderFullNotify:) 
-				withObject:ifolder waitUntilDone:YES ];
+				withObject:ifolderAndFileName waitUntilDone:YES ];
 }
 
 //============================================================================================================
 // syncFailNotification
 // This method will create a thread that shows a notification when sync fails due to exclude file policy.
 //============================================================================================================
-+ (void) syncFailNotification:(iFolder*)ifolder
+//+ (void) syncFailNotification:(NSString*)ifolderAndFileName
+//{
+//	[[self defaultManager] performSelectorOnMainThread:@selector(syncFailNotify:) 
+//				withObject:ifolder waitUntilDone:YES ];
+//}
+
+/*
++ (void) policyNotification:(iFolder*)ifolder
 {
-	[[self defaultManager] performSelectorOnMainThread:@selector(syncFailNotify:) 
-				withObject:ifolder waitUntilDone:YES ];
+	[[self defaultManager] performSelectorOnMainThread:@selector(policyNotify:) 
+											withObject:ifolder waitUntilDone:YES ];	
+}
+*/
+
++ (void) accessNotification:(NSString*)ifolderAndFileName
+{
+	[[self defaultManager] performSelectorOnMainThread:@selector(accessNotify:) 
+											withObject:ifolderAndFileName waitUntilDone:YES ];		
+}
+
++ (void) lockedNotification:(NSString*)ifolderAndFileName
+{
+	[[self defaultManager] performSelectorOnMainThread:@selector(lockedNotify:) 
+											withObject:ifolderAndFileName waitUntilDone:YES ];	
+}
+
++ (void) policySizeNotification:(NSString*)ifolderAndFileName
+{
+	[[self defaultManager] performSelectorOnMainThread:@selector(policySizeNotify:) 
+											withObject:ifolderAndFileName waitUntilDone:YES ];	
+
+}
+
++ (void) policyTypeNotification:(NSString*)ifolderAndFileName
+{
+	[[self defaultManager] performSelectorOnMainThread:@selector(policyTypeNotify:) 
+											withObject:ifolderAndFileName waitUntilDone:YES ];	
+}
+
++ (void) diskFullNotification:(NSString*)ifolderAndFileName
+{
+	[[self defaultManager] performSelectorOnMainThread:@selector(diskFullNotify:) 
+											withObject:ifolderAndFileName waitUntilDone:YES ];		
 }
 
 //========================================================================================
@@ -215,46 +254,110 @@ static iFolderNotificationController *sharedInstance = nil;
 // readOnlyNotify
 // This method will show a notification when the going to synchronize is read-only one
 //==============================================================================================
-- (void) readOnlyNotify:(iFolder *)ifolder
+- (void) readOnlyNotify:(NSString*)ifolderAndFileName
 {
-	if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_NOTIFYIFOLDERS])
-	{
-		[notifyContext setObject:[ifolder Name] forKey:@"title"];
-		[notifyContext setObject:NSLocalizedString(@"Files placed in this read-only iFolder will not be synchronized.", @"Message in notification window")
-										forKey:@"description"];
-		[self performNotification:notifyContext];
-	}
+	NSArray* nameList = [ifolderAndFileName componentsSeparatedByString:@"###"];
+		
+	[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"Incomplete Synchronization: \"%@\"",@"iFolder SyncFail Title"), [nameList objectAtIndex:0]] forKey:@"title"];
+	[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"Read-only iFolder prevented synchronization: \"%@\"", @"iFolder Read-only notification message"),[nameList objectAtIndex:1]] forKey:@"description"];
+		
+	[self performNotification:notifyContext];
 }
 
 //==============================================================================================
 // iFolderFullNotify
 // This method will show a notification when the space (quota) alloted for iFolder is full.
 //==============================================================================================
-- (void) iFolderFullNotify:(iFolder *)ifolder
+- (void) iFolderFullNotify:(NSString*)ifolderAndFileName
 {
-	if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_NOTIFYIFOLDERS])
-	{
-		[notifyContext setObject:[ifolder Name] forKey:@"title"];
-		[notifyContext setObject:NSLocalizedString(@"Incomplete synchronization because the iFolder is full.", @"Message in notification window")
-										forKey:@"description"];
-		[self performNotification:notifyContext];
-	}
+	NSArray* nameList = [ifolderAndFileName componentsSeparatedByString:@"###"];
+		
+	[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"Incomplete Synchronization: \"%@\"",@"iFolder SyncFail Title"), [nameList objectAtIndex:0]] forKey:@"title"];
+	[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"Full iFolder prevented synchronization: \"%@\"", @"iFolder Window Status Message"),[nameList objectAtIndex:1]] forKey:@"description"];
+		
+	[self performNotification:notifyContext];
 }
 
 //============================================================================================================
 // syncFailNotify
 // This method will show a notification on the top right corner when sync fails due to exclude file policy.
 //============================================================================================================
--(void) syncFailNotify:(iFolder*) ifolder
-{
-	if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_SYNCFAIL])
-	{
-		[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"Incomplete Synchronization: %@",@"iFolder SyncFail Title"), [ifolder Name]] forKey:@"title"];
-		[notifyContext setObject:NSLocalizedString(@"Synchronization log contains the information regarding the files that are not synchronized", @"iFolder SyncFail Notification Message")
-										forKey:@"description"];
+//-(void) syncFailNotify:(NSString*)ifolderAndFileName
+//{
+//	if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_SYNCFAIL])
+//	{
+//		NSArray* nameList = [ifolderAndFileName componentsSeparatedByString:@"###"];
+//		
+//		[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"Incomplete Synchronization: \"%@\"",@"iFolder SyncFail Title"), [nameList objectAtIndex:0]] forKey:@"title"];
+//		[notifyContext setObject:NSLocalizedString(@"Synchronization log contains the information regarding the files that are not synchronized", @"iFolder SyncFail Notification Message")
+//										forKey:@"description"];
 						
-		[self performNotification:notifyContext];
-	}
+//		[self performNotification:notifyContext];
+//	}
+//}
+
+/*
+- (void) policyNotify:(iFolder*)ifolder
+{
+	[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"Incomplete Synchronization: %@",@"iFolder SyncFail Title"), [ifolder Name]] forKey:@"title"];
+	[notifyContext setObject:NSLocalizedString(@"A policy prevented complete synchronization", @"iFolder policy Notification Message")
+					  forKey:@"description"];
+	
+	[self performNotification:notifyContext];
+	
+}
+*/
+
+- (void) accessNotify:(NSString*)ifolderAndFileName
+{
+	NSArray* nameList = [ifolderAndFileName componentsSeparatedByString:@"###"];
+	
+	[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"Incomplete Synchronization: \"%@\"",@"iFolder SyncFail Title"), [nameList objectAtIndex:0]] forKey:@"title"];
+	[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"Insufficient rights prevented complete synchronization: \"%@\"", @"iFolder Access Notification Message"), [nameList objectAtIndex:1]] forKey:@"description"];
+	
+	[self performNotification:notifyContext];
+	
+}
+
+- (void) lockedNotify:(NSString*)ifolderAndFileName
+{
+	NSArray* nameList = [ifolderAndFileName componentsSeparatedByString:@"###"];
+	
+	[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"Incomplete Synchronization: \"%@\"",@"iFolder SyncFail Title"), [nameList objectAtIndex:0]] forKey:@"title"];
+	[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"The iFolder is locked: \"%@\"", @"iFolder Locked Notification Message"),[nameList objectAtIndex:1]] forKey:@"description"];
+	
+	[self performNotification:notifyContext];	
+}
+
+- (void) policySizeNotify:(NSString*)ifolderAndFileName
+{
+	NSArray* nameList = [ifolderAndFileName componentsSeparatedByString:@"###"];
+	
+	[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"Incomplete Synchronization: %@",@"iFolder SyncFail Title"), [nameList objectAtIndex:0]] forKey:@"title"];
+	[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"A size restriction policy prevented complete synchronization: \"%@\"", @"iFolder Policy Size Notification Message"),[nameList objectAtIndex:1]] forKey:@"description"];
+	
+	[self performNotification:notifyContext];	
+}
+
+- (void) policyTypeNotify:(NSString*)ifolderAndFileName
+{
+	NSArray* nameList = [ifolderAndFileName componentsSeparatedByString:@"###"];
+	
+	[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"Incomplete Synchronization: \"%@\"",@"iFolder SyncFail Title"), [nameList objectAtIndex:0]] forKey:@"title"];
+	[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"A file type restriction policy prevented complete synchronization: \"%@\"", @"iFolder Policy Type Notification Message"),[nameList objectAtIndex:1]] forKey:@"description"];
+	
+	[self performNotification:notifyContext];	
+}
+
+- (void) diskFullNotify:(NSString*)ifolderAndFileName
+{
+	NSArray* nameList = [ifolderAndFileName componentsSeparatedByString:@"###"];
+	
+	[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"Incomplete Synchronization: \"%@\"",@"iFolder SyncFail Title"), [nameList objectAtIndex:0]] forKey:@"title"];
+	[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"Insufficient disk space on the server\/client prevented complete synchronization: \"%@\"", @"iFolder disk full Notification Message"),[nameList objectAtIndex:1]] forKey:@"description"];
+	
+	[self performNotification:notifyContext];	
+	
 }
 
 //=================================================================================================
@@ -275,9 +378,12 @@ static iFolderNotificationController *sharedInstance = nil;
 //		else [self _bounceIconOnce];
 //	}
 	if([[NSUserDefaults standardUserDefaults] integerForKey:PREFKEY_NOTIFYBYINDEX] == 0)
+	{
 		[self _bounceIconOnce];
+	}
 	else
 		[self _bounceIconContinuously];
+		
 
 
 	if([[NSUserDefaults standardUserDefaults] integerForKey:PREFKEY_NOTIFYBYINDEX] == 0)
@@ -304,7 +410,7 @@ static iFolderNotificationController *sharedInstance = nil;
 	NSImage *icon = [context objectForKey:@"image"];
 	id title = [context objectForKey:@"title"];
 	id description = [context objectForKey:@"description"];
-
+	
 	if( ! icon ) icon = [[NSApplication sharedApplication] applicationIconImage];
 
 		if( ( bubble = [_bubbles objectForKey:[context objectForKey:@"coalesceKey"]] ) ) {

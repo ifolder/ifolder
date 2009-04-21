@@ -21,12 +21,12 @@
 *-----------------------------------------------------------------------------
 *
 *                 $Author: Calvin Gaisford <cgaisford@novell.com>
-*                 $Modified by: Satyam <ssutapalli@novell.com>	01-01-2008	Added notification for sync fail
-*                 $Modified by: Satyam <ssutapalli@novell.com>	18-06-2008  Added notification for creating new iFolder
-*                 $Modified by: Satyam <ssutapalli@novell.com>	16-07-2008  UI Refresh timer added
+*                 $Modified by: Satyam <ssutapalli@novell.com>  01-01-2008      Added notification for sync fail
+*                 $Modified by: Satyam <ssutapalli@novell.com>  18-06-2008  Added notification for creating new iFolder
+*                 $Modified by: Satyam <ssutapalli@novell.com>  16-07-2008  UI Refresh timer added
 *-----------------------------------------------------------------------------
 * This module is used to:
-*        	Main Application of iFolder
+*               Main Application of iFolder
 *
 *******************************************************************************/
 
@@ -66,7 +66,7 @@
     IBOutlet NSArrayController		*logController;
 	NSMutableDictionary				*readOnlyNotifications;	
 	NSMutableDictionary				*iFolderFullNotifications;
-	NSMutableDictionary				*syncFailNotifications;
+	//NSMutableDictionary				*syncFailNotifications;
 		
 	unsigned long					itemSyncCount;
 	unsigned long					totalSyncCount;
