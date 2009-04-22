@@ -1,4 +1,3 @@
-#
 # spec file for package ifolder3 (Version 3.7.2.@@BUILDNUM@@.1)
 #
 # Copyright (c) 2009 SUSE LINUX Products GmbH, Nuernberg, Germany.
@@ -17,21 +16,42 @@
 
 # norootforbuild
 
+%if %suse_version < 1030
 BuildRequires: aspell-en compat-libstdc++ gdk-pixbuf gnutls-devel gtk-sharp2-complete ifolder3 intltool libgnomeprintui-devel libwnck-devel nautilus-devel perl-XML-Parser mDNSResponder update-desktop-files gconf2 gconf2-devel
+%else
+%ifarch         x86_64
+BuildRequires: aspell-en libstdc++33-32bit libstdc++33-devel-32bit gdk-pixbuf gnutls-devel gtk-sharp2-complete ifolder3 intltool libgnomeprintui-devel libwnck-devel nautilus-devel perl-XML-Parser mDNSResponder update-desktop-files gconf2 gconf2-devel
+%else
+BuildRequires: aspell-en libstdc++33 libstdc++33-devel gdk-pixbuf gnutls-devel gtk-sharp2-complete ifolder3 intltool libgnomeprintui-devel libwnck-devel nautilus-devel perl-XML-Parser mDNSResponder update-desktop-files gconf2 gconf2-devel
+%endif
+%endif
+
+#suse_version determines the suse version 1110 is equivalent to 11.1 and sle11 , 1100 is 11.0.
+#From suse 11.1 compat-libstdc++ package is split in to libstdc++33 for 32 bit and libstdc++33-32bit for 64 bit architecture.
 
 Name:         nautilus-ifolder3
-
 %define buildnum @@BUILDNUM@@
 URL:          http://forge.novell.com/modules/xfmod/project/?ifolder
-%define prefix /usr
+%define prefix /opt/novell/ifolder3
+%if %suse_version < 1030
+%define gnome_root /opt/gnome
+%else
 %define gnome_root /usr
+%endif
+
+%if %suse_version < 1100
+%define extension extensions-1.0
+%else
+%define extension extensions-2.0
+%endif
+
 License:      GNU General Public License (GPL) v2
 Group:        System/GUI/Other
 Autoreqprov:  on
 Version:      3.7.2.@@BUILDNUM@@.1
 Requires:     nautilus >= 2.10.0
-Requires:     simias >= 1.7.0
-Requires:     ifolder3 >= 3.7.0 
+Requires:     simias >= 1.8.2
+Requires:     ifolder3 >= 3.7.2 
 #Obsoletes:    %{name} < %{version}
 Provides:     nautilus-ifolder
 Obsoletes:    nautilus-ifolder
@@ -53,8 +73,11 @@ export BUILDNUM=%{buildnum}
 
 %build
 export BUILDNUM=%{buildnum}
-export CFLAGS="$RPM_OPT_FLAGS"
+%if %suse_version < 1100
 ./autogen.sh --prefix=%{prefix}
+%else
+./autogen.sh --prefix=%{prefix} --with-newnautilus
+%endif
 make
 #make dist
 #=============================================================================
@@ -63,7 +86,6 @@ make
 export BUILDNUM=%{buildnum}
 %{__rm} -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install
-%find_lang %{name}
 #=============================================================================
 
 %clean
@@ -71,22 +93,25 @@ make DESTDIR=$RPM_BUILD_ROOT install
 #=============================================================================
 
 %post
-/usr/bin/gtk-update-icon-cache /usr/share/icons/gnome/
+%if %suse_version <= 1030
+%{gnome_root}/bin/gtk-update-icon-cache
+%else
+%{gnome_root}/bin/gtk-update-icon-cache %{gnome_root}/share/icons/gnome
+%endif
 echo "Restart the system before you start using iFolder"
 #=============================================================================
 
-%files -f %{name}.lang
+%files
 %defattr(-,root,root)
-%dir /usr/share/nautilus-ifolder3
-%dir /usr/share/nautilus-ifolder3/pixmaps
-%dir /usr/share/icons/gnome/48x48
-%dir /usr/share/icons/gnome/48x48/emblems
-/usr/%_lib/nautilus/extensions-1.0/libnautilus-ifolder*
-/usr/%_lib/nautilus-ifolder
-/usr/%_lib/nautilus-ifolder.exe
-%attr(644,root,root) /usr/share/icons/gnome/48x48/emblems/emblem-ifolder.icon
-%attr(644,root,root) /usr/share/icons/gnome/48x48/emblems/emblem-ifolder.png
-%attr(644,root,root) /usr/share/nautilus-ifolder3/pixmaps/ifolder-folder.png
+%{prefix}/*
+%dir %{gnome_root}/share/nautilus-ifolder3
+%dir %{gnome_root}/share/nautilus-ifolder3/pixmaps
+%dir %{gnome_root}/share/icons/gnome/48x48
+%dir %{gnome_root}/share/icons/gnome/48x48/emblems
+%{gnome_root}/%_lib/nautilus/%{extension}/libnautilus-ifolder*
+%{gnome_root}/share/icons/gnome/48x48/emblems/emblem-ifolder.icon
+%{gnome_root}/share/icons/gnome/48x48/emblems/emblem-ifolder.png
+%{gnome_root}/share/nautilus-ifolder3/pixmaps/ifolder-folder.png
 
 %changelog -n nautilus-ifolder3
 * Thu Mar 02 2006 - btimothy@novell.com
