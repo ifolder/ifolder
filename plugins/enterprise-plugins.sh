@@ -48,7 +48,7 @@ fi
 # Prepare spec file
 mkdir -p $PACKAGE
 echo "Preparing spec file and copying to $PACKAGE/ ..."
-sed -e "s/@@BUILDNUM@@/$BUILDNUM/" package/linux/$PACKAGE.spec > $PACKAGE/$PACKAGE.spec
+sed -e "s/@@BUILDNUM@@/$BUILDNUM/" package/linux/$PACKAGE.spec.autobuild > $PACKAGE/$PACKAGE.spec
 
 # Create the tarballs
 echo "Generating tarball for $PACKAGE..."
