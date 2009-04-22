@@ -14,33 +14,48 @@
 #
 # Please submit bugfixes or comments via http://support.novell.com
 #
-#
 
 # norootforbuild
 
 Name:           ifolder3
-BuildRequires:  aspell-en cairo cairo-devel compat-libstdc++ gdk-pixbuf glitz-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ gnome-sharp2 gconf-sharp2  
-%define buildnum @@BUILDNUM@@
 
+%if %suse_version < 1110
+BuildRequires:  aspell-en cairo cairo-devel compat-libstdc++ gdk-pixbuf novell-ifolder-libflaim novell-ifolder-libflaim-devel glitz-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ 
+%else
+%ifarch         x86_64
+BuildRequires:  aspell-en cairo cairo-devel libstdc++33-32bit gdk-pixbuf glitz-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ gnome-sharp2 gconf-sharp2
+%else
+BuildRequires:  aspell-en cairo cairo-devel libstdc++33 gdk-pixbuf glitz-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ gnome-sharp2 gconf-sharp2
+%endif
+%endif
+
+#suse_version determines the suse version 1110 is equivalent to 11.1 and sle11 , 1100 is 11.0.
+#From suse 11.1 compat-libstdc++ package is split in to libstdc++33 for 32 bit and libstdc++33-32bit for 64 bit architecture.
+
+%define buildnum @@BUILDNUM@@
 URL:            http://www.ifolder.com
-%define prefix /usr
+%define prefix /opt/novell/ifolder3
 %define sysconfdir /etc
+%if %suse_version < 1110
+%define gnome_root /opt/gnome
+%else
+%define gnome_root /usr
+%endif
 License:        GNU General Public License (GPL) v2
 Group:          System/GUI/Other
 Autoreqprov:    on
-Requires:       simias >= 1.6
+Requires:       simias >= 1.8.2
 Requires:       gconf-sharp2
 Requires:       gnome-sharp2
 Requires:       gtk-sharp2
 #Requires:       dbus-1-mono
-Requires:       xsp
-#Obsoletes:      %{name} < 3.7.2.@@BUILDNUM@@.1
+Requires:       xsp >= 1.2.5 
+#Obsoletes:      %{name} < %{version}
 Version:        3.7.2.@@BUILDNUM@@.1
 Release:        1
 Summary:        File Sharing and Collaboration Tool
 Source:         ifolder3.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
-%gconf_schemas_prereq
 #=============================================================================
 
 %description
@@ -85,20 +100,21 @@ unset GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL
 if ! [ -d  $RPM_BUILD_ROOT/usr/bin ]; then
 	mkdir -p $RPM_BUILD_ROOT/usr/bin
 fi
+ln -s %{prefix}/bin/ifolder $RPM_BUILD_ROOT/usr/bin/ifolder
 #=============================================================================
 
-%post 
-export GCONF_CONFIG_SOURCE=`usr/bin/gconftool-2 --get-default-source`
-/usr/bin/gconftool-2 --makefile-install-rule \
-    /etc/ifolder3.schemas > /dev/null
+%post
+export GCONF_CONFIG_SOURCE=`%{gnome_root}/bin/gconftool-2 --get-default-source`
+%{gnome_root}/bin/gconftool-2 --makefile-install-rule \
+    %{prefix}/etc/gconf/schemas/ifolder3.schemas > /dev/null
 echo "Restart the system before you start using iFolder"
 
 %preun
-export GCONF_CONFIG_SOURCE=`usr/bin/gconftool-2 --get-default-source`
-/usr/bin/gconftool-2 --makefile-uninstall-rule \
-    /etc/ifolder3.schemas > /dev/null
+export GCONF_CONFIG_SOURCE=`%{gnome_root}/bin/gconftool-2 --get-default-source`
+%{gnome_root}/bin/gconftool-2 --makefile-uninstall-rule \
+    %{prefix}/etc/gconf/schemas/ifolder3.schemas > /dev/null
 
-        echo "/usr/$%_lib/" >> /etc/ld.so.conf
+ echo "/opt/novell/ifolder3/%_lib/" >> /etc/ld.so.conf
 /sbin/ldconfig
 
 %postun
@@ -107,36 +123,22 @@ ldconfig
 
 %files
 %defattr(755,root,root)
-%{prefix}/bin/*
-/etc/UI.log4net
-/etc/ifolder3.schemas
-%attr(755,root,root) %{prefix}/include/ifolder3
-%attr(755,root,root) %{prefix}/include/ifolder3/*
-%attr(755,root,root) %{prefix}/share/ifolder3
-%{prefix}/share/ifolder3/*
-/usr/%_lib/TrayIcon.dll
+%dir /opt/novell
+%{prefix}/*
+%attr(644,root,root) %{prefix}/include/ifolder3/*
+%attr(644,root,root) %{prefix}/%_lib/*
+/opt/novell/ifolder3/%_lib/TrayIcon.dll
+%attr(755,root,root) %dir %{prefix}/%_lib
+%attr(755,root,root) %dir %{prefix}/%_lib/pkgconfig
 %attr(755,root,root) %dir %{prefix}/%_lib/simias
-%{prefix}/%_lib/Novell.iFolder.UI.gtk.dll
-%{prefix}/%_lib/Novell.iFolder.dll
-%{prefix}/%_lib/libifolderclient.so
-%{prefix}/%_lib/libifolderclient.so.0
-%{prefix}/%_lib/libifolderclient.so.0.0.0
-%{prefix}/%_lib/libtrayicon.a
-%{prefix}/%_lib/libtrayicon.la
-%{prefix}/%_lib/libtrayicon.so
-%{prefix}/%_lib/libtrayicon.so.0
-%{prefix}/%_lib/libtrayicon.so.0.0.0    
 %attr(755,root,root) %dir %{prefix}/%_lib/simias/web
 %attr(755,root,root) %dir %{prefix}/%_lib/simias/web/bin
-%{prefix}/%_lib/simias/web/bin/*
-%{prefix}/%_lib/simias/web/*
-%{prefix}/%_lib/pkgconfig/*
 /usr/bin/ifolder
 /usr/share/applications/ifolder.desktop
 
 %changelog -n ifolder3
 * Tue Feb 06 2007 - ro@suse.de
- rebuild tools/gsoap utils (again)
+- rebuild tools/gsoap utils (again)
 * Tue Feb 06 2007 - srinidhi@novell.com
 - #239744: Fix for sharing in Linux UI issue
 - Updated Account creation wizard - Encryption pages
