@@ -36,9 +36,6 @@ esac
 
 AC_SUBST(LIB64)
 
-etcdir="/etc"
-AC_SUBST(etcdir)
-
 
 #
 # Check for a valid operating system and C# compiler
@@ -252,7 +249,7 @@ case $IFOLDER_OS in
         EMPTY=
         EXE_EXT=''
 		GCONF_SCHEMA_CONFIG_SOURCE=`gconftool-2 --get-default-source`
-		GCONF_SCHEMA_FILE_DIR='$(etcdir)'
+		GCONF_SCHEMA_FILE_DIR='$(sysconfdir)/gconf/schemas'
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
         INSTALL_EXE_OPTS='--mode=644'

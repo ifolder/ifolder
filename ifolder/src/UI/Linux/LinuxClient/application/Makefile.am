@@ -14,7 +14,7 @@ iFolderClient_LIBS = System.dll System.Drawing.dll System.Data.dll Novell.iFolde
 EXTRA_DIST = $(iFolderClient_CSFILES) ifolder.in ifolder.desktop.in AssemblyInfo.cs.in
 
 ifolder: $(srcdir)/ifolder.in
-	sed -e 's,@_prefix_@,@prefix@,g' -e 's,@_webbindir_@,@webbindir@,g' -e 's,@_casadir_@,@casadir@,g' $< > $@
+	sed -e 's,@_prefix_@,@prefix@,g' -e 's,@_webbindir_@,@webbindir@,g' -e 's,@_casadir_@,@casadir@,g' -e 's,@_lib64_@,@LIB64@,g' $< > $@
 	chmod +x $@
 
 ifolder.desktop: $(srcdir)/ifolder.desktop.in

@@ -31,13 +31,13 @@ Novell.iFolder.UI.gtk.dll: Util.cs $(UILIB_CSFILES) $(UILIB_RESOURCES)
 
 install-exec-local: all
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
-	$(mkinstalldirs) $(DESTDIR)$(etcdir)
+	$(mkinstalldirs) $(DESTDIR)$(sysconfdir)
 	$(INSTALL_PROGRAM) Novell.iFolder.UI.gtk.dll $(DESTDIR)$(libdir)
-	$(INSTALL_PROGRAM) UI.log4net $(DESTDIR)$(etcdir) 
+	$(INSTALL_PROGRAM) UI.log4net $(DESTDIR)$(sysconfdir) 
 
 uninstall-local:
 	cd $(DESTDIR)$(libdir); rm -f Novell.iFolder.UI.gtk.dll
-	cd $(DESTDIR)$(etcdir); rm -f UI.log4net
+	cd $(DESTDIR)$(sysconfdir); rm -f UI.log4net
 
 CLEAN_FILES = Novell.iFolder.UI.gtk.dll $(DOC_FILE_CLEAN) Util.cs
 

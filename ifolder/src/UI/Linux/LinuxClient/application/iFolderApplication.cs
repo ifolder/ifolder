@@ -310,9 +310,8 @@ namespace Novell.iFolder
 					// Wait and ping it again
 					System.Threading.Thread.Sleep(10);
 				}
-				
 				//Initialize the logging infrastructure
-            	LogInit(simiasManager.DataPath);
+		            	LogInit(simiasManager.DataPath);
 				
 				if (forceShutdown)
 					QuitiFolder();
@@ -1965,7 +1964,7 @@ namespace Novell.iFolder
                 Directory.CreateDirectory(iFolderLogManager.LogConfDirPath);
             }
 			if(!File.Exists(iFolderLogManager.LogConfFilePath))
-	            File.Copy(Path.Combine(SimiasSetup.etcdir, iFolderLogManager.LogConfFileName), iFolderLogManager.LogConfFilePath);
+	            File.Copy(Path.Combine(SimiasSetup.sysconfdir, iFolderLogManager.LogConfFileName), iFolderLogManager.LogConfFilePath);
             iFolderLogManager.Configure(iFolderLogManager.LogConfDirPath);
             iFolderWindow.log = iFolderLogManager.GetLogger(typeof(System.Object));
         }
