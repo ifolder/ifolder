@@ -20,7 +20,7 @@ BUILDNUM=`expr \`date +%G%j\` - 2000000`
 # workarea/versioning/trunk/ark-iman/install
 PACKAGE_DIR=../
 PACKAGE_VER=${PACKAGE_VER:="3.7.1"}
-PACKAGE=ifolder-client-plugins
+PACKAGE=novell-ifolder-client-plugins
 SRC_DIR=ifolder3-client-plugins
 TARBALL_NAME=$PACKAGE
 NPS_BUILDNUM=`printf "%x%s\n" \`date +%_m\` \`date +%d\` | tr [:lower:] [:upper:]`

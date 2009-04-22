@@ -2,8 +2,7 @@
 
 ###
 #
-# Script to generate tarball for ifolder3 server and building the RPM
-# using autobuild
+# Script to generate tarball for ifolder3 enterprise plugins
 #
 ###
 # Stop on errors
@@ -19,7 +18,7 @@ BUILDNUM=`expr \`date +%G%j\` - 2000000`
 # workarea/versioning/trunk/ark-iman/install
 PACKAGE_DIR=../
 PACKAGE_VER=${PACKAGE_VER:="3.7.1"}
-PACKAGE=ifolder-enterprise-plugins
+PACKAGE=novell-ifolder-enterprise-plugins
 SRC_DIR=plugins
 TARBALL_NAME=$PACKAGE
 NPS_BUILDNUM=`printf "%x%s\n" \`date +%_m\` \`date +%d\` | tr [:lower:] [:upper:]`
@@ -32,14 +31,18 @@ PUB_DIR=x86_64
 echo "Removing old tarball(s)..."
 [ -d $PACKAGE ] && rm -rf $PACKAGE
 
-## Create the symlinks - much more efficient than copying sources
-##ln -sf $SRC_DIR $PACKAGE_DIR/$TARBALL_NAME
-
 # Update work area
 if [ -d .svn ]
 then
 	echo "Updating work area..."
 	svn up $SVN_OPTIONS
+fi
+
+# Handle the situation when plugins are checked out by a different name
+if [ ! -d ../$TARBALL_NAME ]
+then
+	mkdir ../$TARBALL_NAME
+	cp -rf ../`basename \`pwd\``/* ../$TARBALL_NAME
 fi
 
 # Prepare spec file
@@ -56,5 +59,7 @@ popd
 # Copy tarball
 echo "Tarball generated!!"
 mv $PACKAGE_DIR/$TARBALL_NAME.tar.gz $PACKAGE
-##rm ../$TARBALL_NAME
+
+# Let's not nuke ourselves!
+[ "`basename \`pwd\``" = "$TARBALL_NAME" ] || rm -rf ../$TARBALL_NAME
 
