@@ -2,8 +2,7 @@
 
 ###
 #
-# Script to generate tarball for ifolder3 server and building the RPM
-# using autobuild
+# Script to generate tarball for ifolder3 client plugins
 #
 ###
 
@@ -32,16 +31,18 @@ HOST_ARCH=`uname -i`
 echo "Removing old tarball(s)..."
 [ -d $PACKAGE ] && rm -rf $PACKAGE
 
-# Create the symlinks - much more efficient than copying sources
-#ln -sf $SRC_DIR $PACKAGE_DIR/$TARBALL_NAME
-mkdir ../$TARBALL_NAME
-cp -rf ../ifolder3-client-plugins/* ../$TARBALL_NAME
-
 # Update work area
 if [ -d .svn ]
 then
 	echo "Updating work area..."
 	svn up $SVN_OPTIONS
+fi
+
+# Handle the situation when plugins are checked out by a different name
+if [ ! -d ../$TARBALL_NAME ]
+then
+	mkdir ../$TARBALL_NAME
+	cp -rf ../`basename \`pwd\``/* ../$TARBALL_NAME
 fi
 
 # Prepare spec file
@@ -59,5 +60,7 @@ popd
 # Copy tarball 
 echo "Tarball generated!!"
 mv $PACKAGE_DIR/$TARBALL_NAME.tar.gz $PACKAGE
-rm -rf ../$TARBALL_NAME
+
+# Let's not nuke ourselves!
+[ "`basename \`pwd\``" = "$TARBALL_NAME" ] || rm -rf ../$TARBALL_NAME
 
