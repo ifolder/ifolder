@@ -40,13 +40,13 @@ UserMovement.dll: $(UserMovement_CSFILES)
 
 install-exec-local: all $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(webbindir)
-	$(mkinstalldirs) $(DESTDIR)$(etcdir)/simias/bill/modules
+	$(mkinstalldirs) $(DESTDIR)$(sysconfdir)/simias/bill/modules
 	$(INSTALL_PROGRAM) UserMovement.dll $(DESTDIR)$(webbindir)
-	$(INSTALL_PROGRAM) UserMovement.conf $(DESTDIR)$(etcdir)/simias/bill/modules/
+	$(INSTALL_PROGRAM) UserMovement.conf $(DESTDIR)$(sysconfdir)/simias/bill/modules/
 
 uninstall-local:
 	cd $(DESTDIR)$(webbindir); rm -f UserMovement.dll
-	cd $(DESTDIR)$(etcdir)/simias/bill/modules/; rm -f UserMovement.conf
+	cd $(DESTDIR)$(sysconfdir)/simias/bill/modules/; rm -f UserMovement.conf
 
 installcheck-local: install
 	

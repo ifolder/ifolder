@@ -438,12 +438,10 @@ admindir="${libexecdir}/admin"
 AC_SUBST(admindir)
 
 
-etcdir="/etc"
-AC_SUBST(etcdir)
 #
 # Setup the bootstrapdir
 #
-simiasconfdir="${etcdir}/simias"
+simiasconfdir="${sysconfdir}/simias"
 AC_SUBST(simiasconfdir)
 
 #
