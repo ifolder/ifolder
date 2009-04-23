@@ -526,6 +526,7 @@ AC_ARG_WITH(clientplugins,
 				src/LdapGroup/Simias.LdapProvider/Makefile
 				src/LdapGroup/Simias.OpenLdapProvider/Makefile
 				src/LdapGroup/Simias.ADLdapProvider/Makefile
+				src/LdapGroup/Simias.UserAdd/Makefile
 			])
          ]
 	)

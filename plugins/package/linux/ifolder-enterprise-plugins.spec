@@ -73,7 +73,9 @@ make DESTDIR=$RPM_BUILD_ROOT install
 %defattr(755,root,root)
 %dir %{prefix}/share/plugins
 %{prefix}/bin/iFolderLdapUserUpdate.sh
+%{prefix}/bin/UserAdd.exe
 /etc/iFolderLdapPlugin.ldif
+/etc/iFolderADLdapPlugin.ldif
 /etc/iFolderLdapPlugin.schema
 /etc/simias/bill/modules/IdentityManagement.conf
 /etc/simias/bill/modules/UserMovement.conf
