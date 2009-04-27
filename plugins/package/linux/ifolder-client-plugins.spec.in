@@ -18,7 +18,18 @@
 # norootforbuild
 
 Name:           ifolder-client-plugins
+
+%if %suse_version <= 1100
 BuildRequires:  aspell-en cairo cairo-devel compat-libstdc++ gdk-pixbuf glitz-devel libflaim libflaim-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ simias ifolder3 e2fsprogs-devel
+%else
+%ifarch         x86_64
+BuildRequires:  aspell-en cairo cairo-devel libstdc++33-32bit gdk-pixbuf glitz-devel libflaim libflaim-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ simias ifolder3 libflaim-devel e2fsprogs-devel 
+%else
+BuildRequires:  aspell-en cairo cairo-devel libstdc++33 gdk-pixbuf glitz-devel libflaim libflaim-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ simias ifolder3 libflaim-devel e2fsprogs-devel
+%endif
+%endif
+
+
 %define buildnum @@BUILDNUM@@
 
 URL:            http://www.ifolder.com
@@ -27,12 +38,12 @@ URL:            http://www.ifolder.com
 License:        GNU General Public License (GPL) v2 
 Group:          System/GUI/Other
 Autoreqprov:    on
-Requires:       simias > 1.7.0
-Requires:       ifolder3 > 3.7.0
+Requires:       simias > 1.8.2
+Requires:       ifolder3 > 3.7.2
 Requires:       gconf-sharp2
 Requires:       gnome-sharp2
 Requires:       gtk-sharp2
-Requires:       xsp
+Requires:       xsp >= 1.2.5
 #Obsoletes:      %{name} < %{version}
 Version:        3.7.2.@@BUILDNUM@@.1
 Release:        1
