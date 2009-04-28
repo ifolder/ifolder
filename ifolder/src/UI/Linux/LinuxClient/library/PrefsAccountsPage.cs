@@ -523,6 +523,7 @@ namespace Novell.iFolder
 							LogoutDomain(dom);
 					}
 				}
+				UpdateDomainStatus(dom.ID);
 			}
 			
 			// Reenable the ability for the user to toggle the checkbox
@@ -689,6 +690,8 @@ namespace Novell.iFolder
 						}
 						
 //						string[] array = domainController.GetRAList( args.DomainID);
+						iFolderData ifdata = iFolderData.GetData();
+                        ifdata.Refresh();
 						UpdateWidgetSensitivity();
 						break;
 					case StatusCodes.InvalidCertificate:
@@ -854,7 +857,9 @@ namespace Novell.iFolder
 //				}
 //				else
 //				{
-					UpdateDomainStatus(dom.ID);
+					//UpdateDomainStatus(dom.ID);
+					iFolderData ifdata = iFolderData.GetData();
+					ifdata.Refresh();
 //				}
 			}
 			catch (Exception ex)
@@ -982,24 +987,24 @@ namespace Novell.iFolder
 		
 		public void OnDomainLoggedInEvent(object sender, DomainEventArgs args)
 		{
-			UpdateDomainStatus(args.DomainID);
-			iFolderData ifdata = iFolderData.GetData();
-			ifdata.Refresh();
+			//UpdateDomainStatus(args.DomainID);
+			//iFolderData ifdata = iFolderData.GetData();
+			//ifdata.Refresh();
 		}
 		
 		public void OnDomainLoggedOutEvent(object sender, DomainEventArgs args)
 		{
-			UpdateDomainStatus(args.DomainID);
+			//UpdateDomainStatus(args.DomainID);
 		}
 
 		public void OnDomainActivatedEvent(object sender, DomainEventArgs args)
 		{
-			UpdateDomainStatus(args.DomainID);
+			//UpdateDomainStatus(args.DomainID);
 		}
 
 		public void OnDomainInactivatedEvent(object sender, DomainEventArgs args)
 		{
-			UpdateDomainStatus(args.DomainID);
+			//UpdateDomainStatus(args.DomainID);
 		}
 
 		public void OnNewDefaultDomainEvent(object sender, NewDefaultDomainEventArgs args)

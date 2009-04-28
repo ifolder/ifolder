@@ -198,7 +198,7 @@ namespace Novell.iFolder
 				eventBroker.FileSyncEventFired			+= OniFolderFileSyncEvent;
 			}
 
-			Refresh();
+//			Refresh();
 		}
 		
 		private int TreeModelSortFunction(TreeModel model, TreeIter a, TreeIter b)
@@ -324,7 +324,13 @@ namespace Novell.iFolder
 	
 								TreePath path = iFolderListStore.GetPath(iter);
 								if (path != null)
-									iFolderListStore.EmitRowChanged(path, iter);
+								{
+									iFolderChangedHandler changedHandler =
+								    new iFolderChangedHandler( path, iter, iFolderListStore);
+                                    GLib.Idle.Add(changedHandler.IdleHandler);
+                                }
+		                       //  iFolderListStore.EmitRowChanged(path, iter);
+
 							}
 							try
 							{
@@ -1007,7 +1013,7 @@ namespace Novell.iFolder
 				}
 
 				// FIXME: Figure out if there's a better way to cause the UI to update besides causing a Refresh
-				Refresh();
+				//Refresh();
 
 				return ifHolder;
 			}
@@ -1061,10 +1067,10 @@ namespace Novell.iFolder
 				        if (path != null)
 						{
 							//below code was commented, BUG#488624 ,as list.IterIsValid(iter) throwing random Exception		
-                          /*  iFolderChangedHandler changedHandler =
+                            iFolderChangedHandler changedHandler =
 								  new iFolderChangedHandler(path, iter, iFolderListStore);
-						    GLib.Idle.Add(changedHandler.IdleHandler);	*/
-							Refresh();	
+						    GLib.Idle.Add(changedHandler.IdleHandler);	
+						//	Refresh();	
 						}		
 					}
 					
@@ -1218,12 +1224,12 @@ namespace Novell.iFolder
 		
 		private void OnDomainDeletedEvent(object o, DomainEventArgs args)
 		{
-			Refresh();
+			//Refresh();
 		}
 		
 		private void OnDomainLoggedOutEvent(object o, DomainEventArgs args)
 		{
-			Refresh();
+			//Refresh();
 		}
 
 		private void OniFolderSyncEvent(object o, CollectionSyncEventArgs args)
@@ -1296,7 +1302,12 @@ namespace Novell.iFolder
 			// Emit a TreeModel RowChanged Event
 			TreePath path = iFolderListStore.GetPath(iter);
 			if (path != null)
-				iFolderListStore.EmitRowChanged(path, iter);
+			{
+				 iFolderChangedHandler changedHandler =
+						 new iFolderChangedHandler( path, iter, iFolderListStore);
+				 GLib.Idle.Add(changedHandler.IdleHandler);				 
+			}		
+			//	iFolderListStore.EmitRowChanged(path, iter);
 		}
 
 		private void OniFolderFileSyncEvent(object o, FileSyncEventArgs args)
@@ -1351,7 +1362,12 @@ namespace Novell.iFolder
 						// Emit a TreeModel RowChanged Event
 						TreePath path = iFolderListStore.GetPath(iter);
 						if (path != null)
-							iFolderListStore.EmitRowChanged(path, iter);
+						{
+							iFolderChangedHandler changedHandler =
+									 new iFolderChangedHandler(path, iter, iFolderListStore);
+							GLib.Idle.Add(changedHandler.IdleHandler);
+						}
+				//			iFolderListStore.EmitRowChanged(path, iter);
 					}
 				}
 			}
