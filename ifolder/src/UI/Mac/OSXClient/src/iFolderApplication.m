@@ -30,6 +30,7 @@
 *                 $Modified by: Satyam <ssutapalli@novell.com>  17-09-2008  Commented the code which uses poBoxID of a domain
 *                 $Modified by: Satyam <ssutapalli@novell.com>  08-10-2008  Handling processNodeEvents as threads to fix sync issue
 *                 $Modified by: Satyam <ssutapalli@novell.com>  21-10-2008  Changed the way of getting language id in showHelp
+*                 $Modified by: Satyam <ssutapalli@novell.com>  28-04-2009  Adding check not to display/log .DS_Store/Thumbs.db policy restriction details
 *-----------------------------------------------------------------------------
 * This module is used to:
 *        <Description of the functionality of the file >
@@ -1558,19 +1559,25 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 			// PolicyType
 			else if([[fse status] compare:@"PolicyType"] == 0)
 			{
-				syncMessage = [NSString
-					stringWithFormat:NSLocalizedString(@"A file type restriction policy prevented complete synchronization: \"%@\"", @"iFolder Policy Type Notification Message"), 
-					[fse name]];
-				[iFolderWindowController updateStatusTS:
-					[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
+				NSRange thumbsDB = [[fse name] rangeOfString:@"Thumbs.db"] ;
+				NSRange dsStore = [[fse name] rangeOfString:@".DS_Store"];
+
+				if(thumbsDB.location == 0 || dsStore.location == 0)
+				{
+					syncMessage = [NSString stringWithFormat:NSLocalizedString(@"A file type restriction policy prevented complete synchronization: \"%@\"", @"iFolder Policy Type Notification Message"), [fse name]];
 					
-				//[iFolderNotificationController syncFailNotification:[fse name]];
-				[self addLogTS:syncMessage];
-				
-				NSString *notificationFileDetails = [NSString stringWithFormat:@"%@###%@",[ifolder Name],[fse name]];
-				
-				if(ifolder != nil)
-					[iFolderNotificationController policyTypeNotification:notificationFileDetails];
+					[iFolderWindowController updateStatusTS:[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
+					   
+					//[iFolderNotificationController syncFailNotification:[fse name]];
+					[self addLogTS:syncMessage];
+					   
+					NSString *notificationFileDetails = [NSString stringWithFormat:@"%@###%@",[ifolder Name],[fse name]];
+					   
+					if(ifolder != nil)
+					{
+						[iFolderNotificationController policyTypeNotification:notificationFileDetails];					   	
+					}
+				}
 				
 				
 //				if([syncFailNotifications objectForKey:[fse collectionID]] == nil && 
