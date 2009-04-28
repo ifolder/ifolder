@@ -1866,6 +1866,7 @@ namespace Novell.iFolder
 //				WindowNotebook.CurrentPage = 1;
 				ViewServeriFoldersMenuItem.Active = true;
 				ShowAvailableiFolders();	// FIXME: Make this an automatic config setting that is remembered (i.e., if a user hides this and restarts iFolder, it is not shown)
+				UpdateLocalViewItems(null);
 //                RefreshiFolders(true);
 //			}
 			
@@ -2142,7 +2143,7 @@ namespace Novell.iFolder
 		
 		private void OnDomainDeletedEvent(object sender, DomainEventArgs args)
 		{
-//			RefreshiFolders(true);
+			RefreshiFolders(true);
 			
 //			if (domainController.GetDomains().Length == 0)
 //				WindowNotebook.CurrentPage = 0;
@@ -2189,7 +2190,7 @@ namespace Novell.iFolder
 
 			// Update the item on the main thread
 			GLib.Idle.Add(UpdateLocalViewItemsMainThread);
-            RefreshiFolders(true);
+            //RefreshiFolders(true);
 		}
 		
 		private void OnDomainLoggedOutEvent(object sender, DomainEventArgs args)
@@ -2207,6 +2208,7 @@ namespace Novell.iFolder
 
 			// Update the item on the main thread
 			GLib.Idle.Add(UpdateLocalViewItemsMainThread);
+			//RefreshiFolders(true);
 		}
 		
 		///
