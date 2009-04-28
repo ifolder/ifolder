@@ -1971,17 +1971,24 @@ namespace Novell.iFolder
 
 		public static void Main (string[] args)
 		{
-			System.Diagnostics.Process[] processes =
-				System.Diagnostics.Process.GetProcessesByName("iFolderClient");
-
-			if(processes.Length > 1)
+			try
 			{
-				// Send a message to the first instance to show its main window
-//				Connection connection = Bus.GetSessionBus();
-//				Service service = Service.Get(connection, "com.novell.iFolder");
-//				iFolderApplication initialApp = service.GetObject(typeof(iFolderApplication), "/opt/novell/iFolder/Application") as iFolderApplication
-				Debug.PrintLine("iFolder is already running!");
-				return;
+				System.Diagnostics.Process[] processes =
+					System.Diagnostics.Process.GetProcessesByName("iFolderClient");
+
+				if(processes.Length > 1)
+				{
+					// Send a message to the first instance to show its main window
+//					Connection connection = Bus.GetSessionBus();
+//					Service service = Service.Get(connection, "com.novell.iFolder");
+//					iFolderApplication initialApp = service.GetObject(typeof(iFolderApplication), "/opt/novell/iFolder/Application") as iFolderApplication
+					Debug.PrintLine("iFolder is already running!");
+					return;
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine("\n GetProcessesByName failed to fetch the list of processes");
 			}
 
 			///
