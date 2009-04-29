@@ -1,15 +1,15 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="en" lang="en">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="en" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Wednesday, April 29, 2009 13:53" />
+<meta name="Content-Date" content="Mon, 29 Apr 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -17,19 +17,32 @@
 
 <title>Configuring an iFolder Account</title>
 <script type="text/javascript">
-  var prev_link = "startclient.html";
-  var next_link = "login.html";
-  var parentfile = "../accountsprefs.html";
-  var parenttoc = "../toc_accountsprefs.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "accounts";
+  var parentId = "accountsprefs";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="accounts">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Table of Contents' title='Table of Contents' />Table of Contents</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="startclient.html" class="nav"><img src="ui/images/prev.png" alt="previous" title="previous" />previous</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="login.html" class="nav">&nbsp;next<img src="ui/images/next.png" alt="next" title="next" /></a>
+</div>
+
+
+<div class="sect1" id="accounts">
 
 <h1 class="title"> Configuring an iFolder Account</h1>
 
@@ -131,10 +144,17 @@
 <p class="para">You can enable secure channel for both regular and encrypted iFolders. With this option selected, iFolder allows you use a secure channel to synchronize between iFolder on the server and on the local machine.</p>
 <p class="para">After a folder is made a default iFolder, you can change the type only by deleting it from the server. If you remove the default iFolder on the server, the next time you configure the account from any thick client, iFolder prompts you to create a default iFolder again. </p></li>
 <li class="step" id="bctnqjn">
-<p class="para">If you have already set up a default iFolder, it asks you to download it to your local machine.</p>
+<p class="para">If you have already set up a default iFolder, you can download it to your local machine.</p>
 <p class="para">Download the default iFolder and click <span class="guimenu">Next</span> to go to complete account configuration.</p>
 <div class="informalfigure">
                 <img src="images/if3_defaultifolder_dwnld_a.png" alt="" />
+              </div>
+</li>
+<li class="step" id="bk84xbh">
+<p class="para">If a folder with the same name as the default ifolder already exists on your system, you are prompted to either merge the two folders or download the default ifolder to a different location.</p>
+<p class="para">Click <span class="guimenu">OK</span> to merge the two folders or click <span class="guimenu">Cancel</span> to download the default iFolder to a different location</p>
+<div class="informalfigure">
+                <img src="images/if3_defaultifolder_dwnld_merge_a.png" alt="" />
               </div>
 </li>
 <li class="step" id="b407oqi">
@@ -176,6 +196,11 @@
 
 <p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="startclient.html" class="nav"><img src="ui/images/prev.png" alt="previous" title="previous" />previous</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="login.html" class="nav">&nbsp;next<img src="ui/images/next.png" alt="next" title="next" /></a>
+</div>
+
 </body>
 </html>
