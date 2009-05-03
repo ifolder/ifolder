@@ -13,7 +13,7 @@ BUILDNUM=`expr \`date +%G%j\` - 2000000`
 # workarea/versioning/trunk/ark-iman/install
 PACKAGE_DIR=../
 PACKAGE_VER=${PACKAGE_VER:="3.7.1"}
-PACKAGE=nautilus-ifolder3
+PACKAGE=${PACKAGE:="nautilus-ifolder3"}
 SRC_DIR=nautilus-ifolder
 TARBALL_NAME=$PACKAGE
 NPS_BUILDNUM=`printf "%x%s\n" \`date +%_m\` \`date +%d\` | tr [:lower:] [:upper:]`

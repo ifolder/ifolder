@@ -13,7 +13,7 @@ BUILDNUM=`expr \`date +%G%j\` - 2000000`
 # workarea/versioning/trunk/ark-iman/install
 PACKAGE_DIR=../
 PACKAGE_VER=${PACKAGE_VER:="3.7.1"}
-PACKAGE=nautilus-ifolder3
+PACKAGE=${PACKAGE:="nautilus-ifolder3"}
 SRC_DIR=nautilus-ifolder
 TARBALL_NAME=$PACKAGE
 NPS_BUILDNUM=`printf "%x%s\n" \`date +%_m\` \`date +%d\` | tr [:lower:] [:upper:]`
@@ -34,6 +34,15 @@ then
 	svn up $SVN_OPTIONS
 fi
 
+# Handle the situation when NovelliFolder sources have been checked out
+# / exported to a different directory, more so, in a directory called
+# $TARBALL_NAME
+if [ ! -d ../$TARBALL_NAME ]
+then
+	mkdir ../$TARBALL_NAME
+	cp -rf ../`basename \`pwd\``/* ../$TARBALL_NAME
+fi
+
 # Prepare spec file
 mkdir -p $PACKAGE
 echo "Preparing spec file and copying to $PACKAGE/ ..."
@@ -42,14 +51,12 @@ sed -e "s/@@BUILDNUM@@/$BUILDNUM/" package/linux/$PACKAGE.spec.autobuild > $PACK
 # Create the tarballs
 echo "Generating tarball for $PACKAGE..."
 pushd $PACKAGE_DIR
-mkdir $PACKAGE
-cp -rf $SRC_DIR/* $PACKAGE/
 tar -c --wildcards --exclude "*.svn*" --exclude "*.tar.gz" -czf $TARBALL_NAME.tar.gz $TARBALL_NAME
-rm -rf $PACKAGE
 popd
 
 # Copying tarballs
 echo "Tarball generated!!"
 mv $PACKAGE_DIR/$TARBALL_NAME.tar.gz $PACKAGE
-##rm ../$TARBALL_NAME
 
+# Let's not nuke ourselves!
+[ "`basename \`pwd\``" = "$TARBALL_NAME" ] || rm -rf ../$TARBALL_NAME

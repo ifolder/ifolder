@@ -20,8 +20,8 @@ BUILDNUM=`expr \`date +%G%j\` - 2000000`
 # workarea/versioning/trunk/ark-iman/install
 PACKAGE_DIR=../
 #PACKAGE_VER=${PACKAGE_VER:="3.7.2"}
-PACKAGE=ifolder3
-SRC_DIR=ifolder3-clients
+PACKAGE=${PACKAGE:="ifolder3"}
+SRC_DIR=`basename \`pwd\``
 TARBALL_NAME=$PACKAGE
 NPS_BUILDNUM=`printf "%x%s\n" \`date +%_m\` \`date +%d\` | tr [:lower:] [:upper:]`
 RPM_DIR="../rpms/$NPS_BUILDNUM"
