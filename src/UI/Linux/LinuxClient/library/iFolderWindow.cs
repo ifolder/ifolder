@@ -2190,7 +2190,7 @@ namespace Novell.iFolder
 
 			// Update the item on the main thread
 			GLib.Idle.Add(UpdateLocalViewItemsMainThread);
-            //RefreshiFolders(true);
+            RefreshiFolders(true);
 		}
 		
 		private void OnDomainLoggedOutEvent(object sender, DomainEventArgs args)

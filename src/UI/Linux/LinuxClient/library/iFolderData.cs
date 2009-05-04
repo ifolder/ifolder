@@ -88,8 +88,6 @@ namespace Novell.iFolder
 		private DomainController domainController;
 
 		private Hashtable		ifolderIters = null;
-		private Hashtable		subToiFolderMap = null;
-		private Hashtable 		AcceptediFolders = null;
 		
 		/// Keep a hashtable around to keep track of when a user deletes an
 		/// iFolder.  By doing this, the client can immediately give
@@ -171,9 +169,7 @@ namespace Novell.iFolder
 			iFolderListStore.SetSortColumnId(0, SortType.Ascending);
 			
 			ifolderIters = new Hashtable();
-			subToiFolderMap = new Hashtable();
 			deletediFolders = new Hashtable();
-			AcceptediFolders = new Hashtable();
 
 			// Register for domain events
 			if (domainController != null)
@@ -279,7 +275,7 @@ namespace Novell.iFolder
 					}
 					catch(Exception ex)
 					{
-						Debug.PrintLine(string.Format("Exception while cloning ahshtable. {0}", ex.Message));
+						Debug.PrintLine(string.Format("Exception while cloning hashtable. {0}", ex.Message));
 					}
 					// Populate/update iFolderListStore
 					foreach (iFolderWeb ifolder in ifolders)
@@ -296,10 +292,6 @@ namespace Novell.iFolder
 								ifolder.CollectionID :
 								ifolder.ID;
 
-						if( AcceptediFolders.ContainsKey(ifolderID) )
-						{
-							AcceptediFolders.Remove( ifolderID);
-						}
 						if (ifolderIters.ContainsKey(ifolderID))
 						{
 							// We already have this iFolder in the ListStore so
@@ -327,9 +319,9 @@ namespace Novell.iFolder
 								{
 									iFolderChangedHandler changedHandler =
 								    new iFolderChangedHandler( path, iter, iFolderListStore);
-                                    GLib.Idle.Add(changedHandler.IdleHandler);
-                                }
-		                       //  iFolderListStore.EmitRowChanged(path, iter);
+				                                    GLib.Idle.Add(changedHandler.IdleHandler);
+                                				}
+						                       //  iFolderListStore.EmitRowChanged(path, iter);
 
 							}
 							try
@@ -357,14 +349,12 @@ namespace Novell.iFolder
 								Debug.PrintLine(string.Format("Removing entry: {0}", key));
 								try
 								{
-									if( AcceptediFolders.ContainsKey( key))
-										continue;
 									if( ifws.CheckiFolder( key ) == false)
 										throw new Exception( "Invalid iFolderID");
 								}
 								catch(Exception ex)
 								{
-									RealDelete(key, true);
+									DeliFolder(key);
 								}
 							}
 							catch(Exception ex)
@@ -407,21 +397,17 @@ namespace Novell.iFolder
 
 						DomainInformation domain =
 							domainController.GetDomain(holder.iFolder.DomainID);
-						
-						if (domain == null || !domain.Authenticated)
+					
+					 if (domain == null || (!domain.Authenticated && holder.iFolder.IsSubscription))	
 						{
 							// Queue removal of the holder
 							itersToRemove.Add(holder.iFolder.ID);
 						}
-//						else
-//						{
-//Debug.PrintLine("\tdomain is NOT null");
-//						}
 					} while (iFolderListStore.IterNext(ref iter));
 					
 					foreach(string ifolderID in itersToRemove)
 					{
-						RealDelete(ifolderID, false);
+						DeliFolder(ifolderID);
 					}
 				}
 			}
@@ -472,10 +458,6 @@ namespace Novell.iFolder
 							GLib.Idle.Add(changedHandler.IdleHandler);
 						}
 					}
-//					else
-//					{
-//Debug.PrintLine("*** SOMETHING WENT BAD IN iFolderData.AddiFolder() ***");
-//					}
 				}
 				else
 				{
@@ -513,7 +495,7 @@ namespace Novell.iFolder
 					if (ifolder.IsSubscription)
 					{
 						ifolderIters[ifolder.CollectionID] = iter;
-						subToiFolderMap[ifolder.ID] = ifolder.CollectionID;
+//This needs a fix, since ifolder.CollectionID and ifolder.ID are same
 					}
 					else
 					{
@@ -541,7 +523,7 @@ namespace Novell.iFolder
 		}
 		
         /// <summary>
-        /// Real Data
+        /// RealDelete
         /// </summary>
         /// <param name="ifolderID">iFolder ID</param>
         /// <param name="deleteImmediately">true if delete immediately</param>
@@ -560,11 +542,9 @@ namespace Novell.iFolder
 
 				if(!IsiFolder(realID))
 				{
-					realID = GetiFolderID(ifolderID);
-					if( (realID == null) || (!IsiFolder(realID)) )
+					if( (realID == null)/* || (!IsiFolder(realID)) */)
 						return;
 
-					subToiFolderMap.Remove(ifolderID);
 				}
 
 				if (ifolderIters.ContainsKey(realID))
@@ -645,7 +625,7 @@ namespace Novell.iFolder
 		{
 			lock(instanceLock)
 			{
-				return (string)subToiFolderMap[subscriptionID];
+				return subscriptionID;
 			}
 		}
 
@@ -970,21 +950,7 @@ namespace Novell.iFolder
 				{
 					return null;
 				}
-				if( AcceptediFolders == null)
-					AcceptediFolders = new Hashtable();
-				if( subToiFolderMap == null)
-					subToiFolderMap = new Hashtable();
-				AcceptediFolders[ifolderID] = newifolder;
 
- 				if(newifolder.ID != ifolderID)
- 				{
-					subToiFolderMap.Remove(ifolderID);
- 					if (newifolder.IsSubscription)
- 					{
-						subToiFolderMap[newifolder.ID]
-							= newifolder.CollectionID;
-					}
-				}
 
 
 				ifHolder = GetiFolder(ifolderID);
@@ -994,26 +960,6 @@ namespace Novell.iFolder
 					ifHolder = AddiFolder(newifolder);
 				}
 				ifHolder.iFolder = newifolder;
-				if( ifolderIters == null)
-					ifolderIters = new Hashtable();
-
-				if (ifolderIters.ContainsKey(ifolderID))
-				{
-					// Emit a TreeModel RowChanged Event
-					TreeIter iter = (TreeIter)
-					    ifolderIters[ifolderID];
-					TreePath path = iFolderListStore.GetPath(iter);
-					if (path != null)
-					{
-						iFolderChangedHandler changedHandler =
-							new iFolderChangedHandler(
-							path, iter, iFolderListStore);
-						GLib.Idle.Add(changedHandler.IdleHandler);
-					}
-				}
-
-				// FIXME: Figure out if there's a better way to cause the UI to update besides causing a Refresh
-				//Refresh();
 
 				return ifHolder;
 			}
@@ -1047,31 +993,19 @@ namespace Novell.iFolder
 						ifHolder = null;
 						return ifHolder;
 					}
+					reviFolder.IsSubscription = true;
 					ifHolder.iFolder = reviFolder;
-					if(reviFolder.IsSubscription)
-					{
-						subToiFolderMap[reviFolder.ID] = reviFolder.CollectionID;
-						
-						ifHolder = ReadAvailableiFolder(reviFolder.ID, reviFolder.CollectionID);
-					}
+
 				    if( ifolderIters == null)
 					{
 						ifolderIters = new Hashtable();
 					}
 					if (ifolderIters.ContainsKey(ifolderID))
 					{
-                        // Emit a TreeModel RowChanged Event
 						TreeIter iter = (TreeIter)
 						ifolderIters[ifolderID];
-				        TreePath path = iFolderListStore.GetPath(iter);
-				        if (path != null)
-						{
-							//below code was commented, BUG#488624 ,as list.IterIsValid(iter) throwing random Exception		
-                            iFolderChangedHandler changedHandler =
-								  new iFolderChangedHandler(path, iter, iFolderListStore);
-						    GLib.Idle.Add(changedHandler.IdleHandler);	
-						//	Refresh();	
-						}		
+						//Update the iter, so that the Deleted event will update UI in GLib.Idle
+						iFolderListStore.SetValue(iter, 0, ifHolder);
 					}
 					
 				}
@@ -1400,12 +1334,6 @@ namespace Novell.iFolder
 						Debug.PrintLine(String.Format("\t{0}, {1}", ifHolder.iFolder.ID, ifHolder.iFolder.Name));
 				}
 				
-				Debug.PrintLine(String.Format("subToiFolderMap Hashtable (All subscriptions, {0})", subToiFolderMap.Count));
-				foreach(string key in subToiFolderMap.Keys)
-				{
-					string ifolderID = (string)subToiFolderMap[key];
-					Debug.PrintLine(String.Format("\t{0}, {1}", key, ifolderID));
-				}
 				
 				Debug.PrintLine(String.Format("iFolderListStore Contents ({0}):", iFolderListStore.IterNChildren()));
 				TreeIter iter;
