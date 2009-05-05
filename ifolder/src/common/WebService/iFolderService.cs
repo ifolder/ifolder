@@ -852,32 +852,40 @@ namespace Novell.iFolder.Web
 		[SoapDocumentMethod]
 		public iFolderWeb[] GetAlliFolders()
 		{
-			ArrayList list = new ArrayList();
-
+			Collection col = null;
+			ArrayList list = null;
+			list = new ArrayList();
 			Store store = Store.GetStore();
-			ArrayList collectionList;
-			ICSList iFolderList = 
-					store.GetCollectionsByType(iFolderWeb.iFolderType);
-
-			foreach(ShallowNode sn in iFolderList)
-			{
-				Collection col = store.GetCollectionByID(sn.ID);
-				list.Add(new iFolderWeb(col));
-			}
-
+			ArrayList collectionList = null;
 			Simias.Discovery.DiscService.UpdateCollectionList();
 			collectionList = Simias.Discovery.CollectionList.GetCollectionList();
-
-			if (collectionList != null )
+			if (collectionList != null ) //When domain/server is connected/online
 			{
 
 			        foreach ( CollectionInfo ci in collectionList ) 
 				{
-					if (store.GetCollectionByID(ci.CollectionID) != null)
-					    continue;
-					list.Add(new iFolderWeb(ci));
+					col = null;
+					if ((col = store.GetCollectionByID(ci.CollectionID)) != null)
+					{
+						list.Add( new iFolderWeb(col)); //adding ifolder on local box
+					}
+					else
+					{
+						list.Add(new iFolderWeb(ci));//adding ifolder on server
+					}
 				}
 			}
+			else //When domain/server is disconnected/offline
+			{
+				ICSList iFolderList = null;
+                                iFolderList = store.GetCollectionsByType(iFolderWeb.iFolderType);
+                        	foreach(ShallowNode sn in iFolderList)
+                        	{
+					col = null;
+                                	col = store.GetCollectionByID(sn.ID);
+                                	list.Add(new iFolderWeb(col));
+                        	}
+			}	
 
 			return (iFolderWeb[])list.ToArray(typeof(iFolderWeb));
 		}
