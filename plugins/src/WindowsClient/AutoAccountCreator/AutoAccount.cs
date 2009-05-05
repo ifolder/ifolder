@@ -53,7 +53,7 @@ namespace Novell.AutoAccount
         UserAccount[] userAccount;
         private bool iFolderCreationConfirmation = true, iFolderShareNotify = true, userJoinNotify = true, conflictNotify = true, autoSync = true;
         private int syncInterval = 0;
-        private int defaultSyncInterval = 300;
+        private int defaultSyncInterval = 5;
         private SimiasWebService simws;
         private Manager simiasManager;
         private iFolderWebService ifWebService;
