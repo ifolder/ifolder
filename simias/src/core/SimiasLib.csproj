@@ -1,0 +1,534 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7839E703-0177-4162-B083-BCFD4ED1CC1B}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>SimiasLib</AssemblyName>
+    <AssemblyOriginatorKeyFile>iFolder.snk</AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Simias</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <SignAssembly>true</SignAssembly>
+    <OldToolsVersion>2.0</OldToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE;DEBUG;NET_2_0 WINDOWS</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE;NET_2_0 WINDOWS</DefineConstants>
+    <DocumentationFile>Simias.doc.xml</DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NET_2_0 WINDOWS</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>NET_2_0 WINDOWS</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <DocumentationFile>Simias.doc.xml</DocumentationFile>
+    <Optimize>true</Optimize>
+    <DebugType>
+    </DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NET_2_0 WINDOWS</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>NET_2_0 WINDOWS</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <DocumentationFile>Simias.doc.xml</DocumentationFile>
+    <Optimize>true</Optimize>
+    <DebugType>
+    </DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\dependencies\external\log4net\bin\net\2.0\release\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Runtime.Remoting">
+      <Name>System.Runtime.Remoting</Name>
+    </Reference>
+    <Reference Include="System.Security">
+      <Name>System.Security</Name>
+    </Reference>
+    <Reference Include="System.Web">
+      <Name>System.Web</Name>
+    </Reference>
+    <Reference Include="System.Web.Services">
+      <Name>System.Web.Services</Name>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+    <ProjectReference Include="SimiasClient\SimiasClient.csproj">
+      <Name>SimiasClient</Name>
+      <Project>{E38BAF80-9B31-4D15-A002-E775B96FAFA6}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ChangeLog\ChangeLog.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CollectionStore\AccessControl.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CollectionStore\BaseFileNode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CollectionStore\Collection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CollectionStore\Collision.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CollectionStore\CryptoKey.cs" />
+    <Compile Include="CollectionStore\DirNode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CollectionStore\Domain.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CollectionStore\EventSubscriber.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CollectionStore\Exception.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CollectionStore\FileNode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CollectionStore\HostNode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CollectionStore\ICSEnumerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CollectionStore\Identity.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CollectionStore\LinkNode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CollectionStore\LocalDatabase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CollectionStore\Member.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CollectionStore\MultiValuedList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CollectionStore\Node.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CollectionStore\NodeCache.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CollectionStore\Policy.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CollectionStore\Property.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CollectionStore\PropertyList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CollectionStore\ShallowNode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CollectionStore\Store.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CollectionStore\StoreFileNode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Common\CertificateStore.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Common\Configuration.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Common\Defaults.cs" />
+    <Compile Include="Common\Exception.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Common\ISimiasLog.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Common\MyDns.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Common\SimiasLog.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Common\SimiasLogManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Common\WebState.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Credentials\Credentials.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Credentials\NeedCredentialsEventSubscriber.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Discovery\Discovery.cs" />
+    <Compile Include="Discovery\DiscoveryFramework.cs" />
+    <Compile Include="Discovery\DiscoveryServiceProxy.cs" />
+    <Compile Include="Discovery\Service.cs" />
+    <Compile Include="DomainProvider\DomainProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DomainProvider\EnterpriseProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DomainProvider\IDomainProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DomainProvider\LocalProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DomainWatcher\DomainWatcher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DomainWatcher\Service.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Domain\DomainAgent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Domain\WSInspection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Encryption\Blowfish.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Events\DefaultSubscriber.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Events\EventBroker.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Events\EventPublisher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Events\IProcEventServer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Events\IProcEventSubscriber.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Events\NotifyEventSubscriber.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FlaimProvider\FlaimError.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FlaimProvider\FlaimProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FlaimProvider\FlaimRecord.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FlaimProvider\FlaimResultSet.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FlaimProvider\FlaimServer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="HttpAuthentication\AuthHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="HttpAuthentication\HttpAuth.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="HttpAuthentication\IAuthService.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Journal\Journal.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Login\Login.ashx.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Notifications\Notification.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POBox\Message.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POBox\POBox.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POBox\POBoxServiceProxy.cs">
+      <SubType>code</SubType>
+    </Compile>
+    <Compile Include="POBox\POService.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POBox\Subscription.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POBox\SubscriptionDetails.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POBox\SubscriptionInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POBox\SubscriptionStatus.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POBox\SubscriptionThread.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Policy\DiskSpaceQuota.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Policy\FileSizeFilter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Policy\FileTypeFilter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Policy\iFolderLimit.cs" />
+    <Compile Include="Policy\SecurityState.cs" />
+    <Compile Include="Policy\Sharing.cs" />
+    <Compile Include="Policy\SyncInterval.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\IThreadService.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Service\Manager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Service\Message.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Service\ServiceCtl.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Service\ServiceType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Service\State.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Service\ThreadServiceCtl.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Simias.Web\SharedCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Simias.Web\SimiasBrowser.asmx.cs">
+      <DependentUpon>SimiasBrowser.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Storage\BaseSchema.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Storage\PropertyTags.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Storage\Search.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Storage\Syntax.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Storage\XmlTags.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="StoreProvider\IProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="StoreProvider\IResultSet.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="StoreProvider\Provider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="StoreProvider\Query.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="StoreProvider\Record.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sync\ClientFile.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sync\Conflict.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sync\FileMonitor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sync\HashMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sync\Http.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sync\ServerFile.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sync\StartSyncInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sync\StreamStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sync\StrongHash.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sync\StrongWeakHashtable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sync\SyncClient.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sync\SyncEventSubscriber.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sync\SyncFile.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sync\SyncLog.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sync\SyncNode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sync\SyncPolicy.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sync\SyncRoles.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sync\SyncService.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sync\WeakHash.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <None Include="Discovery\Changelog" />
+    <None Include="iFolder.snk" />
+    <None Include="Login\Login.ashx" />
+    <Content Include="Simias.Web\SimiasBrowser.asmx" />
+    <EmbeddedResource Include="Simias.Web\SimiasBrowser.asmx.resx">
+      <DependentUpon>SimiasBrowser.asmx.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SimiasLib.dll\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>if exist $(ProjectDir)Common\MyDNS.cs.in copy $(ProjectDir)Common\MyDNS.cs.in $(ProjectDir)Common\MyDNS.cs</PreBuildEvent>
+    <PostBuildEvent>if not exist C:\iFolder_stage mkdir C:\iFolder_stage
+if not exist C:\iFolder_stage\lib mkdir C:\iFolder_stage\lib
+if not exist C:\iFolder_stage\lib\simias mkdir C:\iFolder_stage\lib\simias
+if not exist C:\iFolder_stage\lib\simias\web mkdir C:\iFolder_stage\lib\simias\web
+if not exist C:\iFolder_stage\lib\simias\web\bin mkdir C:\iFolder_stage\lib\simias\web\bin
+if not exist C:\iFolder_stage\etc mkdir C:\iFolder_stage\etc
+if not exist C:\iFolder_stage\etc\simias mkdir C:\iFolder_stage\etc\simias
+if not exist C:\iFolder_stage\lib\simias\web\modules mkdir C:\iFolder_stage\lib\simias\web\modules
+copy $(TargetFileName) C:\iFolder_stage\lib\simias\web\bin
+if exist $(TargetName).pdb copy $(TargetName).pdb C:\iFolder_stage\lib\simias\web\bin
+if exist $(SolutionDir)Common\Simias.config.win copy $(SolutionDir)Common\Simias.config.win C:\iFolder_stage\etc\simias\Simias.config
+if exist $(SolutionDir)Common\defaults.config.win copy $(SolutionDir)Common\defaults.config.win C:\iFolder_stage\etc\simias\defaults.config
+copy $(SolutionDir)Common\Simias.log4net.win C:\iFolder_stage\etc\simias\Simias.log4net
+copy $(SolutionDir)SimiasLib.dll\SimiasLib.conf C:\iFolder_stage\lib\simias\web\modules
+copy $(ProjectDir)..\..\dependencies\external\Mono.WebServer\Mono.WebServer2.dll C:\iFolder_stage\lib\simias\web\bin
+copy $(ProjectDir)..\..\dependencies\external\Mono.WebServer\Mono.Security.dll C:\iFolder_stage\lib\simias\web\bin
+copy $(SolutionDir)Login\Login.ashx C:\iFolder_stage\lib\simias\web
+copy $(ProjectDir)..\..\dependencies\external\log4net\bin\net\2.0\release\log4net.dll C:\iFolder_stage\lib\simias\web\bin</PostBuildEvent>
+  </PropertyGroup>
+</Project>

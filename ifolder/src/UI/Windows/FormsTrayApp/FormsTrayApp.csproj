@@ -1,0 +1,2572 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8EFF791C-2C5B-42BC-B0C5-851FD2B6BE72}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>ifolder_16.ico</ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>iFolderApp</AssemblyName>
+    <AssemblyOriginatorKeyFile>iFolder.snk</AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>TrayApp</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <SignAssembly>true</SignAssembly>
+    <OldToolsVersion>2.0</OldToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE;DEBUG;WINDOWS</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;WINDOWS</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <Optimize>true</Optimize>
+    <DebugType>
+    </DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;WINDOWS</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <BaseAddress>285212672</BaseAddress>
+    <Optimize>true</Optimize>
+    <DebugType>
+    </DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\iFolder_stage\lib\simias\web\bin\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="SimiasClient, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\iFolder_stage\lib\simias\web\bin\SimiasClient.dll</HintPath>
+    </Reference>
+    <Reference Include="SimiasLib, Version=3.6.1.0, Culture=neutral, PublicKeyToken=08dab5faaddc8eb1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\iFolder_stage\lib\simias\web\bin\SimiasLib.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Configuration.Install">
+      <Name>System.Configuration.Install</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Web.Services">
+      <Name>System.Web.Services</Name>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <Name>System.Windows.Forms</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="About.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AccountWizard\AccountWizard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AccountWizard\BaseWizardPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AccountWizard\CompletionPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AccountWizard\DefaultiFolderPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AccountWizard\IdentityPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AccountWizard\InteriorPageTemplate.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AccountWizard\ServerPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AccountWizard\VerifyPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AccountWizard\WelcomePage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AccountWizard\WelcomePageTemplate.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AdvancedSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BalloonType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Connecting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Credits.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Domain.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DomainConnectEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DomainRemoveEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="EnterPassphraseDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExportKeysDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormsTrayApp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GlobalProperties.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="iFolderAppInstallerClass.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="iFolderLog.cs" />
+    <Compile Include="iFolderLogManager.cs" />
+    <Compile Include="iFolderMigration.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iFolderObject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iFoldersListView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="IiFolderLog.cs" />
+    <Compile Include="ImportKeysDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ItemSelectedEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MigrationWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MigrationWizard\MigrationBaseWizardPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MigrationWizard\MigrationCompletionPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MigrationWizard\MigrationIdentityPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MigrationWizard\MigrationInteriorPageTemplate.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MigrationWizard\MigrationPassphrasePage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MigrationWizard\MigrationPassphraseVerifyPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MigrationWizard\MigrationServerPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MigrationWizard\MigrationVerifyPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MigrationWizard\MigrationWelcomePage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MigrationWizard\MigrationWelcomePageTemplate.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MigrationWizard\MigrationWizard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NavigateItemEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NoiFolderMessage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Preferences.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RemoveAccount.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ResetPassphrase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ResetPassword.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Security.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ServerDetails.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ServerInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ShellNotifyIcon.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SyncLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TileListView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TileListViewItem.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TileListViewItemCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ToolBarEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="VerifyPassphraseDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <EmbeddedResource Include="About.cs.resx">
+      <DependentUpon>About.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="About.de.resx">
+      <DependentUpon>About.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="About.es.resx">
+      <DependentUpon>About.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="About.fr.resx">
+      <DependentUpon>About.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="About.hu.resx">
+      <DependentUpon>About.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="About.it.resx">
+      <DependentUpon>About.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="About.ja.resx">
+      <DependentUpon>About.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="About.pl.resx">
+      <DependentUpon>About.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="About.pt-BR.resx">
+      <DependentUpon>About.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="About.resx">
+      <DependentUpon>About.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="About.ru.resx">
+      <DependentUpon>About.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="About.sk.resx">
+      <DependentUpon>About.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="About.zh-CN.resx">
+      <DependentUpon>About.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="About.zh-TW.resx">
+      <DependentUpon>About.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\AccountWizard.cs.resx">
+      <DependentUpon>AccountWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\AccountWizard.de.resx">
+      <DependentUpon>AccountWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\AccountWizard.es.resx">
+      <DependentUpon>AccountWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\AccountWizard.fr.resx">
+      <DependentUpon>AccountWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\AccountWizard.hu.resx">
+      <DependentUpon>AccountWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\AccountWizard.it.resx">
+      <DependentUpon>AccountWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\AccountWizard.ja.resx">
+      <DependentUpon>AccountWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\AccountWizard.pl.resx">
+      <DependentUpon>AccountWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\AccountWizard.pt-BR.resx">
+      <DependentUpon>AccountWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\AccountWizard.resx">
+      <DependentUpon>AccountWizard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\AccountWizard.ru.resx">
+      <DependentUpon>AccountWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\AccountWizard.sk.resx">
+      <DependentUpon>AccountWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\AccountWizard.zh-CN.resx">
+      <DependentUpon>AccountWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\AccountWizard.zh-TW.resx">
+      <DependentUpon>AccountWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\BaseWizardPage.cs.resx">
+      <DependentUpon>BaseWizardPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\BaseWizardPage.de.resx">
+      <DependentUpon>BaseWizardPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\BaseWizardPage.es.resx">
+      <DependentUpon>BaseWizardPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\BaseWizardPage.fr.resx">
+      <DependentUpon>BaseWizardPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\BaseWizardPage.hu.resx">
+      <DependentUpon>BaseWizardPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\BaseWizardPage.it.resx">
+      <DependentUpon>BaseWizardPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\BaseWizardPage.ja.resx">
+      <DependentUpon>BaseWizardPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\BaseWizardPage.pl.resx">
+      <DependentUpon>BaseWizardPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\BaseWizardPage.pt-BR.resx">
+      <DependentUpon>BaseWizardPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\BaseWizardPage.resx">
+      <DependentUpon>BaseWizardPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\BaseWizardPage.ru.resx">
+      <DependentUpon>BaseWizardPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\BaseWizardPage.sk.resx">
+      <DependentUpon>BaseWizardPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\BaseWizardPage.zh-CN.resx">
+      <DependentUpon>BaseWizardPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\BaseWizardPage.zh-TW.resx">
+      <DependentUpon>BaseWizardPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\CompletionPage.cs.resx">
+      <DependentUpon>CompletionPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\CompletionPage.de.resx">
+      <DependentUpon>CompletionPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\CompletionPage.es.resx">
+      <DependentUpon>CompletionPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\CompletionPage.fr.resx">
+      <DependentUpon>CompletionPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\CompletionPage.hu.resx">
+      <DependentUpon>CompletionPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\CompletionPage.it.resx">
+      <DependentUpon>CompletionPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\CompletionPage.ja.resx">
+      <DependentUpon>CompletionPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\CompletionPage.pl.resx">
+      <DependentUpon>CompletionPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\CompletionPage.pt-BR.resx">
+      <DependentUpon>CompletionPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\CompletionPage.resx">
+      <DependentUpon>CompletionPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\CompletionPage.ru.resx">
+      <DependentUpon>CompletionPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\CompletionPage.sk.resx">
+      <DependentUpon>CompletionPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\CompletionPage.zh-CN.resx">
+      <DependentUpon>CompletionPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\CompletionPage.zh-TW.resx">
+      <DependentUpon>CompletionPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\IdentityPage.cs.resx">
+      <DependentUpon>IdentityPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\IdentityPage.de.resx">
+      <DependentUpon>IdentityPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\IdentityPage.es.resx">
+      <DependentUpon>IdentityPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\IdentityPage.fr.resx">
+      <DependentUpon>IdentityPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\IdentityPage.hu.resx">
+      <DependentUpon>IdentityPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\IdentityPage.it.resx">
+      <DependentUpon>IdentityPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\IdentityPage.ja.resx">
+      <DependentUpon>IdentityPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\IdentityPage.pl.resx">
+      <DependentUpon>IdentityPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\IdentityPage.pt-BR.resx">
+      <DependentUpon>IdentityPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\IdentityPage.resx">
+      <DependentUpon>IdentityPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\IdentityPage.ru.resx">
+      <DependentUpon>IdentityPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\IdentityPage.sk.resx">
+      <DependentUpon>IdentityPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\IdentityPage.zh-CN.resx">
+      <DependentUpon>IdentityPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\IdentityPage.zh-TW.resx">
+      <DependentUpon>IdentityPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\InteriorPageTemplate.cs.resx">
+      <DependentUpon>InteriorPageTemplate.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\InteriorPageTemplate.de.resx">
+      <DependentUpon>InteriorPageTemplate.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\InteriorPageTemplate.es.resx">
+      <DependentUpon>InteriorPageTemplate.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\InteriorPageTemplate.fr.resx">
+      <DependentUpon>InteriorPageTemplate.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\InteriorPageTemplate.hu.resx">
+      <DependentUpon>InteriorPageTemplate.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\InteriorPageTemplate.it.resx">
+      <DependentUpon>InteriorPageTemplate.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\InteriorPageTemplate.ja.resx">
+      <DependentUpon>InteriorPageTemplate.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\InteriorPageTemplate.pl.resx">
+      <DependentUpon>InteriorPageTemplate.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\InteriorPageTemplate.pt-BR.resx">
+      <DependentUpon>InteriorPageTemplate.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\InteriorPageTemplate.resx">
+      <DependentUpon>InteriorPageTemplate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\InteriorPageTemplate.ru.resx">
+      <DependentUpon>InteriorPageTemplate.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\InteriorPageTemplate.sk.resx">
+      <DependentUpon>InteriorPageTemplate.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\InteriorPageTemplate.zh-CN.resx">
+      <DependentUpon>InteriorPageTemplate.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\InteriorPageTemplate.zh-TW.resx">
+      <DependentUpon>InteriorPageTemplate.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\ServerPage.cs.resx">
+      <DependentUpon>ServerPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\ServerPage.de.resx">
+      <DependentUpon>ServerPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\ServerPage.es.resx">
+      <DependentUpon>ServerPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\ServerPage.fr.resx">
+      <DependentUpon>ServerPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\ServerPage.hu.resx">
+      <DependentUpon>ServerPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\ServerPage.it.resx">
+      <DependentUpon>ServerPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\ServerPage.ja.resx">
+      <DependentUpon>ServerPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\ServerPage.pl.resx">
+      <DependentUpon>ServerPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\ServerPage.pt-BR.resx">
+      <DependentUpon>ServerPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\ServerPage.resx">
+      <DependentUpon>ServerPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\ServerPage.ru.resx">
+      <DependentUpon>ServerPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\ServerPage.sk.resx">
+      <DependentUpon>ServerPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\ServerPage.zh-CN.resx">
+      <DependentUpon>ServerPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\ServerPage.zh-TW.resx">
+      <DependentUpon>ServerPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\VerifyPage.cs.resx">
+      <DependentUpon>VerifyPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\VerifyPage.de.resx">
+      <DependentUpon>VerifyPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\VerifyPage.es.resx">
+      <DependentUpon>VerifyPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\VerifyPage.fr.resx">
+      <DependentUpon>VerifyPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\VerifyPage.hu.resx">
+      <DependentUpon>VerifyPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\VerifyPage.it.resx">
+      <DependentUpon>VerifyPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\VerifyPage.ja.resx">
+      <DependentUpon>VerifyPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\VerifyPage.pl.resx">
+      <DependentUpon>VerifyPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\VerifyPage.pt-BR.resx">
+      <DependentUpon>VerifyPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\VerifyPage.resx">
+      <DependentUpon>VerifyPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\VerifyPage.ru.resx">
+      <DependentUpon>VerifyPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\VerifyPage.sk.resx">
+      <DependentUpon>VerifyPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\VerifyPage.zh-CN.resx">
+      <DependentUpon>VerifyPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\VerifyPage.zh-TW.resx">
+      <DependentUpon>VerifyPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\WelcomePage.cs.resx">
+      <DependentUpon>WelcomePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\WelcomePage.de.resx">
+      <DependentUpon>WelcomePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\WelcomePage.es.resx">
+      <DependentUpon>WelcomePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\WelcomePage.fr.resx">
+      <DependentUpon>WelcomePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\WelcomePage.hu.resx">
+      <DependentUpon>WelcomePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\WelcomePage.it.resx">
+      <DependentUpon>WelcomePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\WelcomePage.ja.resx">
+      <DependentUpon>WelcomePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\WelcomePage.pl.resx">
+      <DependentUpon>WelcomePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\WelcomePage.pt-BR.resx">
+      <DependentUpon>WelcomePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\WelcomePage.resx">
+      <DependentUpon>WelcomePage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\WelcomePage.ru.resx">
+      <DependentUpon>WelcomePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\WelcomePage.sk.resx">
+      <DependentUpon>WelcomePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\WelcomePage.zh-CN.resx">
+      <DependentUpon>WelcomePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\WelcomePage.zh-TW.resx">
+      <DependentUpon>WelcomePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\WelcomePageTemplate.cs.resx">
+      <DependentUpon>WelcomePageTemplate.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\WelcomePageTemplate.de.resx">
+      <DependentUpon>WelcomePageTemplate.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\WelcomePageTemplate.es.resx">
+      <DependentUpon>WelcomePageTemplate.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\WelcomePageTemplate.fr.resx">
+      <DependentUpon>WelcomePageTemplate.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\WelcomePageTemplate.hu.resx">
+      <DependentUpon>WelcomePageTemplate.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\WelcomePageTemplate.it.resx">
+      <DependentUpon>WelcomePageTemplate.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\WelcomePageTemplate.ja.resx">
+      <DependentUpon>WelcomePageTemplate.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\WelcomePageTemplate.pl.resx">
+      <DependentUpon>WelcomePageTemplate.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\WelcomePageTemplate.pt-BR.resx">
+      <DependentUpon>WelcomePageTemplate.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\WelcomePageTemplate.resx">
+      <DependentUpon>WelcomePageTemplate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\WelcomePageTemplate.ru.resx">
+      <DependentUpon>WelcomePageTemplate.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\WelcomePageTemplate.sk.resx">
+      <DependentUpon>WelcomePageTemplate.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\WelcomePageTemplate.zh-CN.resx">
+      <DependentUpon>WelcomePageTemplate.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AccountWizard\WelcomePageTemplate.zh-TW.resx">
+      <DependentUpon>WelcomePageTemplate.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AdvancedSettings.cs.resx">
+      <DependentUpon>AdvancedSettings.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AdvancedSettings.de.resx">
+      <DependentUpon>AdvancedSettings.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AdvancedSettings.es.resx">
+      <DependentUpon>AdvancedSettings.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AdvancedSettings.fr.resx">
+      <DependentUpon>AdvancedSettings.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AdvancedSettings.hu.resx">
+      <DependentUpon>AdvancedSettings.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AdvancedSettings.it.resx">
+      <DependentUpon>AdvancedSettings.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AdvancedSettings.ja.resx">
+      <DependentUpon>AdvancedSettings.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AdvancedSettings.pl.resx">
+      <DependentUpon>AdvancedSettings.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AdvancedSettings.pt-BR.resx">
+      <DependentUpon>AdvancedSettings.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AdvancedSettings.resx">
+      <DependentUpon>AdvancedSettings.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AdvancedSettings.ru.resx">
+      <DependentUpon>AdvancedSettings.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AdvancedSettings.sk.resx">
+      <DependentUpon>AdvancedSettings.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AdvancedSettings.zh-CN.resx">
+      <DependentUpon>AdvancedSettings.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AdvancedSettings.zh-TW.resx">
+      <DependentUpon>AdvancedSettings.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Connecting.cs.resx">
+      <DependentUpon>Connecting.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Connecting.de.resx">
+      <DependentUpon>Connecting.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Connecting.es.resx">
+      <DependentUpon>Connecting.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Connecting.fr.resx">
+      <DependentUpon>Connecting.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Connecting.hu.resx">
+      <DependentUpon>Connecting.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Connecting.it.resx">
+      <DependentUpon>Connecting.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Connecting.ja.resx">
+      <DependentUpon>Connecting.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Connecting.pl.resx">
+      <DependentUpon>Connecting.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Connecting.pt-BR.resx">
+      <DependentUpon>Connecting.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Connecting.resx">
+      <DependentUpon>Connecting.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Connecting.ru.resx">
+      <DependentUpon>Connecting.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Connecting.sk.resx">
+      <DependentUpon>Connecting.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Connecting.zh-CN.resx">
+      <DependentUpon>Connecting.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Connecting.zh-TW.resx">
+      <DependentUpon>Connecting.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Credits.cs.resx">
+      <DependentUpon>Credits.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Credits.de.resx">
+      <DependentUpon>Credits.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Credits.es.resx">
+      <DependentUpon>Credits.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Credits.fr.resx">
+      <DependentUpon>Credits.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Credits.hu.resx">
+      <DependentUpon>Credits.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Credits.it.resx">
+      <DependentUpon>Credits.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Credits.ja.resx">
+      <DependentUpon>Credits.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Credits.pl.resx">
+      <DependentUpon>Credits.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Credits.pt-BR.resx">
+      <DependentUpon>Credits.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Credits.resx">
+      <DependentUpon>Credits.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Credits.ru.resx">
+      <DependentUpon>Credits.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Credits.sk.resx">
+      <DependentUpon>Credits.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Credits.zh-CN.resx">
+      <DependentUpon>Credits.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Credits.zh-TW.resx">
+      <DependentUpon>Credits.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnterPassphraseDialog.cs.resx">
+      <DependentUpon>EnterPassphraseDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnterPassphraseDialog.de.resx">
+      <DependentUpon>EnterPassphraseDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnterPassphraseDialog.es.resx">
+      <DependentUpon>EnterPassphraseDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnterPassphraseDialog.fr.resx">
+      <DependentUpon>EnterPassphraseDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnterPassphraseDialog.hu.resx">
+      <DependentUpon>EnterPassphraseDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnterPassphraseDialog.it.resx">
+      <DependentUpon>EnterPassphraseDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnterPassphraseDialog.ja.resx">
+      <DependentUpon>EnterPassphraseDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnterPassphraseDialog.pl.resx">
+      <DependentUpon>EnterPassphraseDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnterPassphraseDialog.pt-BR.resx">
+      <DependentUpon>EnterPassphraseDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnterPassphraseDialog.resx">
+      <DependentUpon>EnterPassphraseDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnterPassphraseDialog.ru.resx">
+      <DependentUpon>EnterPassphraseDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnterPassphraseDialog.sk.resx">
+      <DependentUpon>EnterPassphraseDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnterPassphraseDialog.zh-CN.resx">
+      <DependentUpon>EnterPassphraseDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnterPassphraseDialog.zh-TW.resx">
+      <DependentUpon>EnterPassphraseDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExportKeysDialog.cs.resx">
+      <DependentUpon>ExportKeysDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExportKeysDialog.de.resx">
+      <DependentUpon>ExportKeysDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExportKeysDialog.es.resx">
+      <DependentUpon>ExportKeysDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExportKeysDialog.fr.resx">
+      <DependentUpon>ExportKeysDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExportKeysDialog.hu.resx">
+      <DependentUpon>ExportKeysDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExportKeysDialog.it.resx">
+      <DependentUpon>ExportKeysDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExportKeysDialog.ja.resx">
+      <DependentUpon>ExportKeysDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExportKeysDialog.pl.resx">
+      <DependentUpon>ExportKeysDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExportKeysDialog.pt-BR.resx">
+      <DependentUpon>ExportKeysDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExportKeysDialog.resx">
+      <DependentUpon>ExportKeysDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExportKeysDialog.ru.resx">
+      <DependentUpon>ExportKeysDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExportKeysDialog.sk.resx">
+      <DependentUpon>ExportKeysDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExportKeysDialog.zh-CN.resx">
+      <DependentUpon>ExportKeysDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExportKeysDialog.zh-TW.resx">
+      <DependentUpon>ExportKeysDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormsTrayApp.cs.resx">
+      <DependentUpon>FormsTrayApp.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormsTrayApp.de.resx">
+      <DependentUpon>FormsTrayApp.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormsTrayApp.es.resx">
+      <DependentUpon>FormsTrayApp.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormsTrayApp.fr.resx">
+      <DependentUpon>FormsTrayApp.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormsTrayApp.hu.resx">
+      <DependentUpon>FormsTrayApp.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormsTrayApp.it.resx">
+      <DependentUpon>FormsTrayApp.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormsTrayApp.ja.resx">
+      <DependentUpon>FormsTrayApp.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormsTrayApp.pl.resx">
+      <DependentUpon>FormsTrayApp.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormsTrayApp.pt-BR.resx">
+      <DependentUpon>FormsTrayApp.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormsTrayApp.resx">
+      <DependentUpon>FormsTrayApp.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormsTrayApp.ru.resx">
+      <DependentUpon>FormsTrayApp.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormsTrayApp.sk.resx">
+      <DependentUpon>FormsTrayApp.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormsTrayApp.zh-CN.resx">
+      <DependentUpon>FormsTrayApp.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormsTrayApp.zh-TW.resx">
+      <DependentUpon>FormsTrayApp.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GlobalProperties.cs.resx">
+      <DependentUpon>GlobalProperties.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GlobalProperties.de.resx">
+      <DependentUpon>GlobalProperties.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GlobalProperties.es.resx">
+      <DependentUpon>GlobalProperties.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GlobalProperties.fr.resx">
+      <DependentUpon>GlobalProperties.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GlobalProperties.hu.resx">
+      <DependentUpon>GlobalProperties.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GlobalProperties.it.resx">
+      <DependentUpon>GlobalProperties.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GlobalProperties.ja.resx">
+      <DependentUpon>GlobalProperties.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GlobalProperties.pl.resx">
+      <DependentUpon>GlobalProperties.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GlobalProperties.pt-BR.resx">
+      <DependentUpon>GlobalProperties.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GlobalProperties.resx">
+      <DependentUpon>GlobalProperties.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GlobalProperties.ru.resx">
+      <DependentUpon>GlobalProperties.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GlobalProperties.sk.resx">
+      <DependentUpon>GlobalProperties.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GlobalProperties.zh-CN.resx">
+      <DependentUpon>GlobalProperties.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GlobalProperties.zh-TW.resx">
+      <DependentUpon>GlobalProperties.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="iFoldersListView.cs.resx">
+      <DependentUpon>iFoldersListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="iFoldersListView.de.resx">
+      <DependentUpon>iFoldersListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="iFoldersListView.es.resx">
+      <DependentUpon>iFoldersListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="iFoldersListView.fr.resx">
+      <DependentUpon>iFoldersListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="iFoldersListView.hu.resx">
+      <DependentUpon>iFoldersListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="iFoldersListView.it.resx">
+      <DependentUpon>iFoldersListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="iFoldersListView.ja.resx">
+      <DependentUpon>iFoldersListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="iFoldersListView.pl.resx">
+      <DependentUpon>iFoldersListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="iFoldersListView.pt-BR.resx">
+      <DependentUpon>iFoldersListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="iFoldersListView.resx">
+      <DependentUpon>iFoldersListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="iFoldersListView.ru.resx">
+      <DependentUpon>iFoldersListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="iFoldersListView.sk.resx">
+      <DependentUpon>iFoldersListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="iFoldersListView.zh-CN.resx">
+      <DependentUpon>iFoldersListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="iFoldersListView.zh-TW.resx">
+      <DependentUpon>iFoldersListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImportKeysDialog.cs.resx">
+      <DependentUpon>ImportKeysDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImportKeysDialog.de.resx">
+      <DependentUpon>ImportKeysDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImportKeysDialog.es.resx">
+      <DependentUpon>ImportKeysDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImportKeysDialog.fr.resx">
+      <DependentUpon>ImportKeysDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImportKeysDialog.hu.resx">
+      <DependentUpon>ImportKeysDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImportKeysDialog.it.resx">
+      <DependentUpon>ImportKeysDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImportKeysDialog.ja.resx">
+      <DependentUpon>ImportKeysDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImportKeysDialog.pl.resx">
+      <DependentUpon>ImportKeysDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImportKeysDialog.pt-BR.resx">
+      <DependentUpon>ImportKeysDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImportKeysDialog.resx">
+      <DependentUpon>ImportKeysDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImportKeysDialog.ru.resx">
+      <DependentUpon>ImportKeysDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImportKeysDialog.sk.resx">
+      <DependentUpon>ImportKeysDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImportKeysDialog.zh-CN.resx">
+      <DependentUpon>ImportKeysDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImportKeysDialog.zh-TW.resx">
+      <DependentUpon>ImportKeysDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWindow.cs.resx">
+      <DependentUpon>MigrationWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWindow.de.resx">
+      <DependentUpon>MigrationWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWindow.es.resx">
+      <DependentUpon>MigrationWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWindow.fr.resx">
+      <DependentUpon>MigrationWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWindow.hu.resx">
+      <DependentUpon>MigrationWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWindow.it.resx">
+      <DependentUpon>MigrationWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWindow.ja.resx">
+      <DependentUpon>MigrationWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWindow.pl.resx">
+      <DependentUpon>MigrationWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWindow.pt-BR.resx">
+      <DependentUpon>MigrationWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWindow.resx">
+      <DependentUpon>MigrationWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWindow.ru.resx">
+      <DependentUpon>MigrationWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWindow.sk.resx">
+      <DependentUpon>MigrationWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWindow.zh-CN.resx">
+      <DependentUpon>MigrationWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWindow.zh-TW.resx">
+      <DependentUpon>MigrationWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationBaseWizardPage.cs.resx">
+      <DependentUpon>MigrationBaseWizardPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationBaseWizardPage.de.resx">
+      <DependentUpon>MigrationBaseWizardPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationBaseWizardPage.es.resx">
+      <DependentUpon>MigrationBaseWizardPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationBaseWizardPage.fr.resx">
+      <DependentUpon>MigrationBaseWizardPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationBaseWizardPage.hu.resx">
+      <DependentUpon>MigrationBaseWizardPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationBaseWizardPage.it.resx">
+      <DependentUpon>MigrationBaseWizardPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationBaseWizardPage.ja.resx">
+      <DependentUpon>MigrationBaseWizardPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationBaseWizardPage.pl.resx">
+      <DependentUpon>MigrationBaseWizardPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationBaseWizardPage.pt-BR.resx">
+      <DependentUpon>MigrationBaseWizardPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationBaseWizardPage.resx">
+      <DependentUpon>MigrationBaseWizardPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationBaseWizardPage.ru.resx">
+      <DependentUpon>MigrationBaseWizardPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationBaseWizardPage.sk.resx">
+      <DependentUpon>MigrationBaseWizardPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationBaseWizardPage.zh-CN.resx">
+      <DependentUpon>MigrationBaseWizardPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationBaseWizardPage.zh-TW.resx">
+      <DependentUpon>MigrationBaseWizardPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationPassphrasePage.cs.resx">
+      <DependentUpon>MigrationPassphrasePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationPassphrasePage.de.resx">
+      <DependentUpon>MigrationPassphrasePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationPassphrasePage.es.resx">
+      <DependentUpon>MigrationPassphrasePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationPassphrasePage.fr.resx">
+      <DependentUpon>MigrationPassphrasePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationPassphrasePage.hu.resx">
+      <DependentUpon>MigrationPassphrasePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationPassphrasePage.it.resx">
+      <DependentUpon>MigrationPassphrasePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationPassphrasePage.ja.resx">
+      <DependentUpon>MigrationPassphrasePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationPassphrasePage.pl.resx">
+      <DependentUpon>MigrationPassphrasePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationPassphrasePage.pt-BR.resx">
+      <DependentUpon>MigrationPassphrasePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationPassphrasePage.resx">
+      <DependentUpon>MigrationPassphrasePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationPassphrasePage.ru.resx">
+      <DependentUpon>MigrationPassphrasePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationPassphrasePage.sk.resx">
+      <DependentUpon>MigrationPassphrasePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationPassphrasePage.zh-CN.resx">
+      <DependentUpon>MigrationPassphrasePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationPassphrasePage.zh-TW.resx">
+      <DependentUpon>MigrationPassphrasePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationPassphraseVerifyPage.cs.resx">
+      <DependentUpon>MigrationPassphraseVerifyPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationPassphraseVerifyPage.de.resx">
+      <DependentUpon>MigrationPassphraseVerifyPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationPassphraseVerifyPage.es.resx">
+      <DependentUpon>MigrationPassphraseVerifyPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationPassphraseVerifyPage.fr.resx">
+      <DependentUpon>MigrationPassphraseVerifyPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationPassphraseVerifyPage.hu.resx">
+      <DependentUpon>MigrationPassphraseVerifyPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationPassphraseVerifyPage.it.resx">
+      <DependentUpon>MigrationPassphraseVerifyPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationPassphraseVerifyPage.ja.resx">
+      <DependentUpon>MigrationPassphraseVerifyPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationPassphraseVerifyPage.pl.resx">
+      <DependentUpon>MigrationPassphraseVerifyPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationPassphraseVerifyPage.pt-BR.resx">
+      <DependentUpon>MigrationPassphraseVerifyPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationPassphraseVerifyPage.resx">
+      <DependentUpon>MigrationPassphraseVerifyPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationPassphraseVerifyPage.ru.resx">
+      <DependentUpon>MigrationPassphraseVerifyPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationPassphraseVerifyPage.sk.resx">
+      <DependentUpon>MigrationPassphraseVerifyPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationPassphraseVerifyPage.zh-CN.resx">
+      <DependentUpon>MigrationPassphraseVerifyPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationPassphraseVerifyPage.zh-TW.resx">
+      <DependentUpon>MigrationPassphraseVerifyPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationWelcomePage.cs.resx">
+      <DependentUpon>MigrationWelcomePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationWelcomePage.de.resx">
+      <DependentUpon>MigrationWelcomePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationWelcomePage.es.resx">
+      <DependentUpon>MigrationWelcomePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationWelcomePage.fr.resx">
+      <DependentUpon>MigrationWelcomePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationWelcomePage.hu.resx">
+      <DependentUpon>MigrationWelcomePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationWelcomePage.it.resx">
+      <DependentUpon>MigrationWelcomePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationWelcomePage.ja.resx">
+      <DependentUpon>MigrationWelcomePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationWelcomePage.pl.resx">
+      <DependentUpon>MigrationWelcomePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationWelcomePage.pt-BR.resx">
+      <DependentUpon>MigrationWelcomePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationWelcomePage.resx">
+      <DependentUpon>MigrationWelcomePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationWelcomePage.ru.resx">
+      <DependentUpon>MigrationWelcomePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationWelcomePage.sk.resx">
+      <DependentUpon>MigrationWelcomePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationWelcomePage.zh-CN.resx">
+      <DependentUpon>MigrationWelcomePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationWelcomePage.zh-TW.resx">
+      <DependentUpon>MigrationWelcomePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationWizard.cs.resx">
+      <DependentUpon>MigrationWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationWizard.de.resx">
+      <DependentUpon>MigrationWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationWizard.es.resx">
+      <DependentUpon>MigrationWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationWizard.fr.resx">
+      <DependentUpon>MigrationWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationWizard.hu.resx">
+      <DependentUpon>MigrationWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationWizard.it.resx">
+      <DependentUpon>MigrationWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationWizard.ja.resx">
+      <DependentUpon>MigrationWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationWizard.pl.resx">
+      <DependentUpon>MigrationWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationWizard.pt-BR.resx">
+      <DependentUpon>MigrationWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationWizard.resx">
+      <DependentUpon>MigrationWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationWizard.ru.resx">
+      <DependentUpon>MigrationWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationWizard.sk.resx">
+      <DependentUpon>MigrationWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationWizard.zh-CN.resx">
+      <DependentUpon>MigrationWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationWizard\MigrationWizard.zh-TW.resx">
+      <DependentUpon>MigrationWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NoiFolderMessage.cs.resx">
+      <DependentUpon>NoiFolderMessage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NoiFolderMessage.de.resx">
+      <DependentUpon>NoiFolderMessage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NoiFolderMessage.es.resx">
+      <DependentUpon>NoiFolderMessage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NoiFolderMessage.fr.resx">
+      <DependentUpon>NoiFolderMessage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NoiFolderMessage.hu.resx">
+      <DependentUpon>NoiFolderMessage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NoiFolderMessage.it.resx">
+      <DependentUpon>NoiFolderMessage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NoiFolderMessage.ja.resx">
+      <DependentUpon>NoiFolderMessage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NoiFolderMessage.pl.resx">
+      <DependentUpon>NoiFolderMessage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NoiFolderMessage.pt-BR.resx">
+      <DependentUpon>NoiFolderMessage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NoiFolderMessage.resx">
+      <DependentUpon>NoiFolderMessage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NoiFolderMessage.ru.resx">
+      <DependentUpon>NoiFolderMessage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NoiFolderMessage.sk.resx">
+      <DependentUpon>NoiFolderMessage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NoiFolderMessage.zh-CN.resx">
+      <DependentUpon>NoiFolderMessage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NoiFolderMessage.zh-TW.resx">
+      <DependentUpon>NoiFolderMessage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Preferences.cs.resx">
+      <DependentUpon>Preferences.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Preferences.de.resx">
+      <DependentUpon>Preferences.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Preferences.es.resx">
+      <DependentUpon>Preferences.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Preferences.fr.resx">
+      <DependentUpon>Preferences.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Preferences.hu.resx">
+      <DependentUpon>Preferences.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Preferences.it.resx">
+      <DependentUpon>Preferences.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Preferences.ja.resx">
+      <DependentUpon>Preferences.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Preferences.pl.resx">
+      <DependentUpon>Preferences.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Preferences.pt-BR.resx">
+      <DependentUpon>Preferences.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Preferences.resx">
+      <DependentUpon>Preferences.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Preferences.ru.resx">
+      <DependentUpon>Preferences.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Preferences.sk.resx">
+      <DependentUpon>Preferences.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Preferences.zh-CN.resx">
+      <DependentUpon>Preferences.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Preferences.zh-TW.resx">
+      <DependentUpon>Preferences.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RemoveAccount.cs.resx">
+      <DependentUpon>RemoveAccount.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RemoveAccount.de.resx">
+      <DependentUpon>RemoveAccount.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RemoveAccount.es.resx">
+      <DependentUpon>RemoveAccount.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RemoveAccount.fr.resx">
+      <DependentUpon>RemoveAccount.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RemoveAccount.hu.resx">
+      <DependentUpon>RemoveAccount.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RemoveAccount.it.resx">
+      <DependentUpon>RemoveAccount.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RemoveAccount.ja.resx">
+      <DependentUpon>RemoveAccount.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RemoveAccount.pl.resx">
+      <DependentUpon>RemoveAccount.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RemoveAccount.pt-BR.resx">
+      <DependentUpon>RemoveAccount.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RemoveAccount.resx">
+      <DependentUpon>RemoveAccount.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RemoveAccount.ru.resx">
+      <DependentUpon>RemoveAccount.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RemoveAccount.sk.resx">
+      <DependentUpon>RemoveAccount.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RemoveAccount.zh-CN.resx">
+      <DependentUpon>RemoveAccount.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RemoveAccount.zh-TW.resx">
+      <DependentUpon>RemoveAccount.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResetPassphrase.cs.resx">
+      <DependentUpon>ResetPassphrase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResetPassphrase.de.resx">
+      <DependentUpon>ResetPassphrase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResetPassphrase.es.resx">
+      <DependentUpon>ResetPassphrase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResetPassphrase.fr.resx">
+      <DependentUpon>ResetPassphrase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResetPassphrase.hu.resx">
+      <DependentUpon>ResetPassphrase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResetPassphrase.it.resx">
+      <DependentUpon>ResetPassphrase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResetPassphrase.ja.resx">
+      <DependentUpon>ResetPassphrase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResetPassphrase.pl.resx">
+      <DependentUpon>ResetPassphrase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResetPassphrase.pt-BR.resx">
+      <DependentUpon>ResetPassphrase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResetPassphrase.resx">
+      <DependentUpon>ResetPassphrase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResetPassphrase.ru.resx">
+      <DependentUpon>ResetPassphrase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResetPassphrase.sk.resx">
+      <DependentUpon>ResetPassphrase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResetPassphrase.zh-CN.resx">
+      <DependentUpon>ResetPassphrase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResetPassphrase.zh-TW.resx">
+      <DependentUpon>ResetPassphrase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResetPassword.cs.resx">
+      <DependentUpon>ResetPassword.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResetPassword.de.resx">
+      <DependentUpon>ResetPassword.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResetPassword.es.resx">
+      <DependentUpon>ResetPassword.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResetPassword.fr.resx">
+      <DependentUpon>ResetPassword.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResetPassword.hu.resx">
+      <DependentUpon>ResetPassword.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResetPassword.it.resx">
+      <DependentUpon>ResetPassword.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResetPassword.ja.resx">
+      <DependentUpon>ResetPassword.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResetPassword.pl.resx">
+      <DependentUpon>ResetPassword.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResetPassword.pt-BR.resx">
+      <DependentUpon>ResetPassword.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResetPassword.resx">
+      <DependentUpon>ResetPassword.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResetPassword.ru.resx">
+      <DependentUpon>ResetPassword.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResetPassword.sk.resx">
+      <DependentUpon>ResetPassword.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResetPassword.zh-CN.resx">
+      <DependentUpon>ResetPassword.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResetPassword.zh-TW.resx">
+      <DependentUpon>ResetPassword.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerDetails.cs.resx">
+      <DependentUpon>ServerDetails.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerDetails.de.resx">
+      <DependentUpon>ServerDetails.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerDetails.es.resx">
+      <DependentUpon>ServerDetails.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerDetails.fr.resx">
+      <DependentUpon>ServerDetails.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerDetails.hu.resx">
+      <DependentUpon>ServerDetails.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerDetails.it.resx">
+      <DependentUpon>ServerDetails.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerDetails.ja.resx">
+      <DependentUpon>ServerDetails.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerDetails.pl.resx">
+      <DependentUpon>ServerDetails.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerDetails.pt-BR.resx">
+      <DependentUpon>ServerDetails.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerDetails.resx">
+      <DependentUpon>ServerDetails.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerDetails.ru.resx">
+      <DependentUpon>ServerDetails.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerDetails.sk.resx">
+      <DependentUpon>ServerDetails.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerDetails.zh-CN.resx">
+      <DependentUpon>ServerDetails.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerDetails.zh-TW.resx">
+      <DependentUpon>ServerDetails.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerInfo.cs.resx">
+      <DependentUpon>ServerInfo.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerInfo.de.resx">
+      <DependentUpon>ServerInfo.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerInfo.es.resx">
+      <DependentUpon>ServerInfo.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerInfo.fr.resx">
+      <DependentUpon>ServerInfo.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerInfo.hu.resx">
+      <DependentUpon>ServerInfo.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerInfo.it.resx">
+      <DependentUpon>ServerInfo.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerInfo.ja.resx">
+      <DependentUpon>ServerInfo.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerInfo.pl.resx">
+      <DependentUpon>ServerInfo.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerInfo.pt-BR.resx">
+      <DependentUpon>ServerInfo.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerInfo.resx">
+      <DependentUpon>ServerInfo.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerInfo.ru.resx">
+      <DependentUpon>ServerInfo.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerInfo.sk.resx">
+      <DependentUpon>ServerInfo.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerInfo.zh-CN.resx">
+      <DependentUpon>ServerInfo.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerInfo.zh-TW.resx">
+      <DependentUpon>ServerInfo.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SyncLog.cs.resx">
+      <DependentUpon>SyncLog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SyncLog.de.resx">
+      <DependentUpon>SyncLog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SyncLog.es.resx">
+      <DependentUpon>SyncLog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SyncLog.fr.resx">
+      <DependentUpon>SyncLog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SyncLog.hu.resx">
+      <DependentUpon>SyncLog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SyncLog.it.resx">
+      <DependentUpon>SyncLog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SyncLog.ja.resx">
+      <DependentUpon>SyncLog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SyncLog.pl.resx">
+      <DependentUpon>SyncLog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SyncLog.pt-BR.resx">
+      <DependentUpon>SyncLog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SyncLog.resx">
+      <DependentUpon>SyncLog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SyncLog.ru.resx">
+      <DependentUpon>SyncLog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SyncLog.sk.resx">
+      <DependentUpon>SyncLog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SyncLog.zh-CN.resx">
+      <DependentUpon>SyncLog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SyncLog.zh-TW.resx">
+      <DependentUpon>SyncLog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TileListView.cs.resx">
+      <DependentUpon>TileListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TileListView.de.resx">
+      <DependentUpon>TileListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TileListView.es.resx">
+      <DependentUpon>TileListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TileListView.fr.resx">
+      <DependentUpon>TileListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TileListView.hu.resx">
+      <DependentUpon>TileListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TileListView.it.resx">
+      <DependentUpon>TileListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TileListView.ja.resx">
+      <DependentUpon>TileListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TileListView.pl.resx">
+      <DependentUpon>TileListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TileListView.pt-BR.resx">
+      <DependentUpon>TileListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TileListView.resx">
+      <DependentUpon>TileListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TileListView.ru.resx">
+      <DependentUpon>TileListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TileListView.sk.resx">
+      <DependentUpon>TileListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TileListView.zh-CN.resx">
+      <DependentUpon>TileListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TileListView.zh-TW.resx">
+      <DependentUpon>TileListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TileListViewItem.cs.resx">
+      <DependentUpon>TileListViewItem.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TileListViewItem.de.resx">
+      <DependentUpon>TileListViewItem.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TileListViewItem.es.resx">
+      <DependentUpon>TileListViewItem.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TileListViewItem.fr.resx">
+      <DependentUpon>TileListViewItem.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TileListViewItem.hu.resx">
+      <DependentUpon>TileListViewItem.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TileListViewItem.it.resx">
+      <DependentUpon>TileListViewItem.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TileListViewItem.ja.resx">
+      <DependentUpon>TileListViewItem.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TileListViewItem.pl.resx">
+      <DependentUpon>TileListViewItem.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TileListViewItem.pt-BR.resx">
+      <DependentUpon>TileListViewItem.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TileListViewItem.resx">
+      <DependentUpon>TileListViewItem.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TileListViewItem.ru.resx">
+      <DependentUpon>TileListViewItem.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TileListViewItem.sk.resx">
+      <DependentUpon>TileListViewItem.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TileListViewItem.zh-CN.resx">
+      <DependentUpon>TileListViewItem.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TileListViewItem.zh-TW.resx">
+      <DependentUpon>TileListViewItem.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ToolBarEx.cs.resx">
+      <DependentUpon>ToolBarEx.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ToolBarEx.de.resx">
+      <DependentUpon>ToolBarEx.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ToolBarEx.es.resx">
+      <DependentUpon>ToolBarEx.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ToolBarEx.fr.resx">
+      <DependentUpon>ToolBarEx.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ToolBarEx.hu.resx">
+      <DependentUpon>ToolBarEx.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ToolBarEx.it.resx">
+      <DependentUpon>ToolBarEx.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ToolBarEx.ja.resx">
+      <DependentUpon>ToolBarEx.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ToolBarEx.pl.resx">
+      <DependentUpon>ToolBarEx.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ToolBarEx.pt-BR.resx">
+      <DependentUpon>ToolBarEx.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ToolBarEx.resx">
+      <DependentUpon>ToolBarEx.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ToolBarEx.ru.resx">
+      <DependentUpon>ToolBarEx.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ToolBarEx.sk.resx">
+      <DependentUpon>ToolBarEx.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ToolBarEx.zh-CN.resx">
+      <DependentUpon>ToolBarEx.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ToolBarEx.zh-TW.resx">
+      <DependentUpon>ToolBarEx.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VerifyPassphraseDialog.cs.resx">
+      <DependentUpon>VerifyPassphraseDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VerifyPassphraseDialog.de.resx">
+      <DependentUpon>VerifyPassphraseDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VerifyPassphraseDialog.es.resx">
+      <DependentUpon>VerifyPassphraseDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VerifyPassphraseDialog.fr.resx">
+      <DependentUpon>VerifyPassphraseDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VerifyPassphraseDialog.hu.resx">
+      <DependentUpon>VerifyPassphraseDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VerifyPassphraseDialog.it.resx">
+      <DependentUpon>VerifyPassphraseDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VerifyPassphraseDialog.ja.resx">
+      <DependentUpon>VerifyPassphraseDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VerifyPassphraseDialog.pl.resx">
+      <DependentUpon>VerifyPassphraseDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VerifyPassphraseDialog.pt-BR.resx">
+      <DependentUpon>VerifyPassphraseDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VerifyPassphraseDialog.resx">
+      <DependentUpon>VerifyPassphraseDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VerifyPassphraseDialog.ru.resx">
+      <DependentUpon>VerifyPassphraseDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VerifyPassphraseDialog.sk.resx">
+      <DependentUpon>VerifyPassphraseDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VerifyPassphraseDialog.zh-CN.resx">
+      <DependentUpon>VerifyPassphraseDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VerifyPassphraseDialog.zh-TW.resx">
+      <DependentUpon>VerifyPassphraseDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Content Include="iFolderUpgrade.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ifolder_16.ico" />
+    <Content Include="MigrationWizard\Changelog.txt" />
+    <Content Include="res\encrypt_ilock_48.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder-add-account48.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder-download48.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder-error48.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder-shutdown.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder-startup.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder-sync48.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder-upload48.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder-waiting48.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder-warning48.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder48.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolderconflict.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder_16.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder_account_wiz.PNG">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder_conflict_emb.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder_contact_card.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder_download_16.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder_error_16.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder_loaded.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder_me_card.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder_startup_nl.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder_sync1.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder_sync10.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder_sync2.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder_sync3.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder_sync4.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder_sync5.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder_sync6.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder_sync7.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder_sync8.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder_sync9.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder_sync_16.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder_upload_16.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder_user_48.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder_user_current_16.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder_user_owner_16.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder_waiting_16.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifolder_warning_16.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ifold_emblem_48_32_16.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\inviteduser.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ltoolbar_dis.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ltoolbar_hot.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\ltoolbar_nor.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\mtoolbar_dis.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\mtoolbar_hot.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\mtoolbar_nor.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\serverifolder.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\common\iFolder\Novell.iFolder\Novell.iFolder.csproj">
+      <Project>{5E804109-1D93-4B40-B39A-CDBDF4446ED1}</Project>
+      <Name>Novell.iFolder</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\iFolderShell\iFolderComponent.csproj">
+      <Project>{44878C2B-BCB2-484A-9D15-1DD5ABBD9A5D}</Project>
+      <Name>iFolderComponent</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="iFolder.snk" />
+    <None Include="iFolderApp.exe.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="iFolderApp.exe.manifest">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>if not exist C:\iFolder_stage mkdir C:\iFolder_stage
+if not exist C:\iFolder_stage\lib mkdir C:\iFolder_stage\lib
+if not exist C:\iFolder_stage\lib\simias mkdir C:\iFolder_stage\lib\simias
+if not exist C:\iFolder_stage\lib\simias\web mkdir C:\iFolder_stage\lib\simias\web
+if not exist C:\iFolder_stage\lib\simias\web\bin mkdir C:\iFolder_stage\lib\simias\web\bin
+if not exist C:\iFolder_stage\etc mkdir C:\iFolder_stage\etc
+if not exist C:\iFolder_stage\etc\simias mkdir C:\iFolder_stage\etc\simias
+if not exist C:\iFolder_stage\lib\simias\web\modules mkdir C:\iFolder_stage\lib\simias\web\modules
+if not exist C:\iFolder_stage\res mkdir C:\iFolder_stage\res
+if not exist C:\iFolder_stage\help mkdir C:\iFolder_stage\help
+rem copy $(SolutionDir)res\* C:\iFolder_stage\res
+rem copy $(TargetFileName) C:\iFolder_stage
+xcopy /E /Y $(TargetDir)* C:\iFolder_stage\
+xcopy /E /Y $(ProjectDir)..\..\..\images\*.* C:\iFolder_stage\res\
+copy $(ProjectDir)UI.log4net C:\iFolder_stage\etc\
+xcopy /E /Y $(SolutionDir)..\..\..\..\help\* C:\iFolder_stage\help /EXCLUDE:$(SolutionDir)excludes.txt</PostBuildEvent>
+  </PropertyGroup>
+</Project>

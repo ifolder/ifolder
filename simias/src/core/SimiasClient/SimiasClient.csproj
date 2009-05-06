@@ -1,0 +1,230 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E38BAF80-9B31-4D15-A002-E775B96FAFA6}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>SimiasClient</AssemblyName>
+    <AssemblyOriginatorKeyFile>iFolder.snk</AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>SimiasClient</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <SignAssembly>true</SignAssembly>
+    <OldToolsVersion>2.0</OldToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE;DEBUG;WINDOWS</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE;WINDOWS</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;WINDOWS</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>WINDOWS</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <Optimize>true</Optimize>
+    <DebugType>
+    </DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <RegisterForComInterop>false</RegisterForComInterop>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;WINDOWS</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>WINDOWS</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <Optimize>true</Optimize>
+    <DebugType>
+    </DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Security">
+      <Name>System.Security</Name>
+    </Reference>
+    <Reference Include="System.Web">
+      <Name>System.Web</Name>
+    </Reference>
+    <Reference Include="System.Web.Services">
+      <Name>System.Web.Services</Name>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Authentication.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CertPolicy.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CollectionSyncEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DomainService.cs">
+      <SubType>code</SubType>
+    </Compile>
+    <Compile Include="FileSyncEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IProcEventClient.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IProcEventData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IProcEventListener.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IProcEventRegistration.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IProcEventTypes.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="LocalService.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Manager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MyEnvironment.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MyPath.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MyPlatformID.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MyRuntimeID.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NeedCredentialsEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NodeEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NodeTypes.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NotifyEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimiasEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="SimiasService.cs">
+      <SubType>code</SubType>
+    </Compile>
+    <Compile Include="SimiasSetup.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="SyncStatus.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="iFolder.snk" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>if exist $(ProjectDir)SimiasSetup.cs.win copy $(ProjectDir)SimiasSetup.cs.win $(ProjectDir)SimiasSetup.cs</PreBuildEvent>
+    <PostBuildEvent>if not exist C:\iFolder_stage mkdir C:\iFolder_stage
+if not exist C:\iFolder_stage\lib mkdir C:\iFolder_stage\lib
+if not exist C:\iFolder_stage\lib\simias mkdir C:\iFolder_stage\lib\simias
+if not exist C:\iFolder_stage\lib\simias\web mkdir C:\iFolder_stage\lib\simias\web
+if not exist C:\iFolder_stage\lib\simias\web\bin mkdir C:\iFolder_stage\lib\simias\web\bin
+if not exist C:\iFolder_stage\etc mkdir C:\iFolder_stage\etc
+if not exist C:\iFolder_stage\etc\simias mkdir C:\iFolder_stage\etc\simias
+copy $(TargetFileName) C:\iFolder_stage\lib\simias\web\bin
+copy $(TargetFileName) C:\iFolder_stage
+if exist $(TargetName).pdb copy $(TargetName).pdb C:\iFolder_stage\lib\simias\web\bin
+</PostBuildEvent>
+  </PropertyGroup>
+</Project>
