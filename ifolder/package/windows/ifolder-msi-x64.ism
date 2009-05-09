@@ -20971,88 +20971,88 @@
 		<col def="I2">Sequence</col>
 		<col def="S255">ISComments</col>
 		<col def="I4">ISAttributes</col>
-		<row><td>AllocateRegistrySpace</td><td>NOT Installed</td><td>1550</td><td>AllocateRegistrySpace</td><td/></row>
+		<row><td>AllocateRegistrySpace</td><td>NOT Installed</td><td>1501</td><td>AllocateRegistrySpace</td><td/></row>
 		<row><td>AppSearch</td><td/><td>400</td><td>AppSearch</td><td/></row>
-		<row><td>BindImage</td><td/><td>4300</td><td>BindImage</td><td/></row>
+		<row><td>BindImage</td><td/><td>4210</td><td>BindImage</td><td/></row>
 		<row><td>CCPSearch</td><td>CCP_TEST</td><td>500</td><td>CCPSearch</td><td/></row>
 		<row><td>CostFinalize</td><td/><td>1000</td><td>CostFinalize</td><td/></row>
 		<row><td>CostInitialize</td><td/><td>800</td><td>CostInitialize</td><td/></row>
-		<row><td>CreateFolders</td><td/><td>3700</td><td>CreateFolders</td><td/></row>
-		<row><td>CreateShortcuts</td><td/><td>4500</td><td>CreateShortcuts</td><td/></row>
-		<row><td>DeleteServices</td><td>VersionNT</td><td>2000</td><td>DeleteServices</td><td/></row>
-		<row><td>DuplicateFiles</td><td/><td>4210</td><td>DuplicateFiles</td><td/></row>
+		<row><td>CreateFolders</td><td/><td>3600</td><td>CreateFolders</td><td/></row>
+		<row><td>CreateShortcuts</td><td/><td>4300</td><td>CreateShortcuts</td><td/></row>
+		<row><td>DeleteServices</td><td>VersionNT</td><td>1900</td><td>DeleteServices</td><td/></row>
+		<row><td>DuplicateFiles</td><td/><td>4090</td><td>DuplicateFiles</td><td/></row>
 		<row><td>FileCost</td><td/><td>900</td><td>FileCost</td><td/></row>
 		<row><td>FindRelatedProducts</td><td>NOT ISSETUPDRIVEN</td><td>420</td><td>FindRelatedProducts</td><td/></row>
-		<row><td>ISSelfRegisterCosting</td><td/><td>2201</td><td/><td/></row>
-		<row><td>ISSelfRegisterFiles</td><td/><td>5601</td><td/><td/></row>
-		<row><td>ISSelfRegisterFinalize</td><td/><td>6604</td><td/><td/></row>
+		<row><td>ISSelfRegisterCosting</td><td/><td>2200</td><td/><td/></row>
+		<row><td>ISSelfRegisterFiles</td><td/><td>5600</td><td/><td/></row>
+		<row><td>ISSelfRegisterFinalize</td><td/><td>6601</td><td/><td/></row>
 		<row><td>ISSetAllUsers</td><td>Not Installed</td><td>10</td><td/><td/></row>
-		<row><td>ISUnSelfRegisterFiles</td><td/><td>2202</td><td/><td/></row>
-		<row><td>InstallExecute</td><td/><td>6505</td><td/><td/></row>
-		<row><td>InstallFiles</td><td/><td>4000</td><td>InstallFiles</td><td/></row>
-		<row><td>InstallFinalize</td><td/><td>6600</td><td>InstallFinalize</td><td/></row>
-		<row><td>InstallInitialize</td><td/><td>1501</td><td>InstallInitialize</td><td/></row>
-		<row><td>InstallODBC</td><td/><td>5400</td><td>InstallODBC</td><td/></row>
-		<row><td>InstallServices</td><td>VersionNT</td><td>5800</td><td>InstallServices</td><td/></row>
-		<row><td>InstallUtil_Simias</td><td>(NOT REMOVE) AND LOCATION_OF_INSTALLUTIL</td><td>1408</td><td/><td/></row>
+		<row><td>ISUnSelfRegisterFiles</td><td/><td>2201</td><td/><td/></row>
+		<row><td>InstallExecute</td><td/><td>6410</td><td/><td/></row>
+		<row><td>InstallFiles</td><td/><td>3800</td><td>InstallFiles</td><td/></row>
+		<row><td>InstallFinalize</td><td/><td>6505</td><td>InstallFinalize</td><td/></row>
+		<row><td>InstallInitialize</td><td/><td>1500</td><td>InstallInitialize</td><td/></row>
+		<row><td>InstallODBC</td><td/><td>5300</td><td>InstallODBC</td><td/></row>
+		<row><td>InstallServices</td><td>VersionNT</td><td>5700</td><td>InstallServices</td><td/></row>
+		<row><td>InstallUtil_Simias</td><td>(NOT REMOVE) AND LOCATION_OF_INSTALLUTIL</td><td>6604</td><td/><td/></row>
 		<row><td>InstallUtil_Simias_uninstall</td><td>REMOVE="ALL" AND (NOT UPGRADINGPRODUCTCODE)</td><td>1402</td><td/><td/></row>
 		<row><td>InstallUtil_iFolderApp</td><td>(NOT REMOVE) AND LOCATION_OF_INSTALLUTIL</td><td>6701</td><td/><td/></row>
-		<row><td>InstallUtil_iFolderApp_uninstall</td><td>REMOVE="ALL" AND (NOT UPGRADINGPRODUCTCODE)</td><td>1409</td><td/><td/></row>
+		<row><td>InstallUtil_iFolderApp_uninstall</td><td>REMOVE="ALL" AND (NOT UPGRADINGPRODUCTCODE)</td><td>1408</td><td/><td/></row>
 		<row><td>InstallValidate</td><td/><td>1400</td><td>InstallValidate</td><td/></row>
 		<row><td>IsolateComponents</td><td/><td>950</td><td>IsolateComponents</td><td/></row>
 		<row><td>LaunchConditions</td><td>Not Installed</td><td>410</td><td>LaunchConditions</td><td/></row>
 		<row><td>MigrateFeatureStates</td><td/><td>1200</td><td>MigrateFeatureStates</td><td/></row>
-		<row><td>MoveFiles</td><td/><td>3800</td><td>MoveFiles</td><td/></row>
-		<row><td>MsiPublishAssemblies</td><td/><td>6250</td><td>MsiPublishAssemblies</td><td/></row>
-		<row><td>MsiUnpublishAssemblies</td><td/><td>1750</td><td>MsiUnpublishAssemblies</td><td/></row>
-		<row><td>PatchFiles</td><td/><td>4090</td><td>PatchFiles</td><td/></row>
-		<row><td>ProcessComponents</td><td/><td>1600</td><td>ProcessComponents</td><td/></row>
-		<row><td>PublishComponents</td><td/><td>6200</td><td>PublishComponents</td><td/></row>
-		<row><td>PublishFeatures</td><td/><td>6300</td><td>PublishFeatures</td><td/></row>
-		<row><td>PublishProduct</td><td/><td>6400</td><td>PublishProduct</td><td/></row>
+		<row><td>MoveFiles</td><td/><td>3700</td><td>MoveFiles</td><td/></row>
+		<row><td>MsiPublishAssemblies</td><td/><td>6200</td><td>MsiPublishAssemblies</td><td/></row>
+		<row><td>MsiUnpublishAssemblies</td><td/><td>1700</td><td>MsiUnpublishAssemblies</td><td/></row>
+		<row><td>PatchFiles</td><td/><td>4000</td><td>PatchFiles</td><td/></row>
+		<row><td>ProcessComponents</td><td/><td>1550</td><td>ProcessComponents</td><td/></row>
+		<row><td>PublishComponents</td><td/><td>6100</td><td>PublishComponents</td><td/></row>
+		<row><td>PublishFeatures</td><td/><td>6250</td><td>PublishFeatures</td><td/></row>
+		<row><td>PublishProduct</td><td/><td>6300</td><td>PublishProduct</td><td/></row>
 		<row><td>RMCCPSearch</td><td>Not CCP_SUCCESS And CCP_TEST</td><td>600</td><td>RMCCPSearch</td><td/></row>
-		<row><td>RegAsm_iFolderComponent</td><td>(NOT REMOVE) AND LOCATION_OF_REGASM</td><td>6601</td><td/><td/></row>
+		<row><td>RegAsm_iFolderComponent</td><td>(NOT REMOVE) AND LOCATION_OF_REGASM</td><td>6600</td><td/><td/></row>
 		<row><td>RegAsm_iFolderComponent_uninstall</td><td>REMOVE="ALL" AND (NOT UPGRADINGPRODUCTCODE)</td><td>1405</td><td/><td/></row>
-		<row><td>RegisterClassInfo</td><td/><td>4600</td><td>RegisterClassInfo</td><td/></row>
-		<row><td>RegisterComPlus</td><td/><td>5700</td><td>RegisterComPlus</td><td/></row>
-		<row><td>RegisterExtensionInfo</td><td/><td>4700</td><td>RegisterExtensionInfo</td><td/></row>
-		<row><td>RegisterFonts</td><td/><td>5300</td><td>RegisterFonts</td><td/></row>
-		<row><td>RegisterMIMEInfo</td><td/><td>4900</td><td>RegisterMIMEInfo</td><td/></row>
-		<row><td>RegisterProduct</td><td/><td>6100</td><td>RegisterProduct</td><td/></row>
-		<row><td>RegisterProgIdInfo</td><td/><td>4800</td><td>RegisterProgIdInfo</td><td/></row>
-		<row><td>RegisterTypeLibraries</td><td/><td>5500</td><td>RegisterTypeLibraries</td><td/></row>
-		<row><td>RegisterUser</td><td/><td>6000</td><td>RegisterUser</td><td/></row>
-		<row><td>RemoveDuplicateFiles</td><td/><td>3400</td><td>RemoveDuplicateFiles</td><td/></row>
-		<row><td>RemoveEnvironmentStrings</td><td/><td>3300</td><td>RemoveEnvironmentStrings</td><td/></row>
-		<row><td>RemoveExistingProducts</td><td/><td>1500</td><td>RemoveExistingProducts</td><td/></row>
-		<row><td>RemoveFiles</td><td/><td>3500</td><td>RemoveFiles</td><td/></row>
-		<row><td>RemoveFolders</td><td/><td>3600</td><td>RemoveFolders</td><td/></row>
-		<row><td>RemoveIniValues</td><td/><td>3100</td><td>RemoveIniValues</td><td/></row>
-		<row><td>RemoveODBC</td><td/><td>2400</td><td>RemoveODBC</td><td/></row>
-		<row><td>RemoveRegistryValues</td><td/><td>2600</td><td>RemoveRegistryValues</td><td/></row>
-		<row><td>RemoveShortcuts</td><td/><td>3200</td><td>RemoveShortcuts</td><td/></row>
+		<row><td>RegisterClassInfo</td><td/><td>4500</td><td>RegisterClassInfo</td><td/></row>
+		<row><td>RegisterComPlus</td><td/><td>5601</td><td>RegisterComPlus</td><td/></row>
+		<row><td>RegisterExtensionInfo</td><td/><td>4600</td><td>RegisterExtensionInfo</td><td/></row>
+		<row><td>RegisterFonts</td><td/><td>5200</td><td>RegisterFonts</td><td/></row>
+		<row><td>RegisterMIMEInfo</td><td/><td>4800</td><td>RegisterMIMEInfo</td><td/></row>
+		<row><td>RegisterProduct</td><td/><td>6000</td><td>RegisterProduct</td><td/></row>
+		<row><td>RegisterProgIdInfo</td><td/><td>4700</td><td>RegisterProgIdInfo</td><td/></row>
+		<row><td>RegisterTypeLibraries</td><td/><td>5400</td><td>RegisterTypeLibraries</td><td/></row>
+		<row><td>RegisterUser</td><td/><td>5900</td><td>RegisterUser</td><td/></row>
+		<row><td>RemoveDuplicateFiles</td><td/><td>3300</td><td>RemoveDuplicateFiles</td><td/></row>
+		<row><td>RemoveEnvironmentStrings</td><td/><td>3200</td><td>RemoveEnvironmentStrings</td><td/></row>
+		<row><td>RemoveExistingProducts</td><td/><td>1454</td><td>RemoveExistingProducts</td><td/></row>
+		<row><td>RemoveFiles</td><td/><td>3400</td><td>RemoveFiles</td><td/></row>
+		<row><td>RemoveFolders</td><td/><td>3500</td><td>RemoveFolders</td><td/></row>
+		<row><td>RemoveIniValues</td><td/><td>3000</td><td>RemoveIniValues</td><td/></row>
+		<row><td>RemoveODBC</td><td/><td>2300</td><td>RemoveODBC</td><td/></row>
+		<row><td>RemoveRegistryValues</td><td/><td>2500</td><td>RemoveRegistryValues</td><td/></row>
+		<row><td>RemoveShortcuts</td><td/><td>3100</td><td>RemoveShortcuts</td><td/></row>
 		<row><td>Restore_Simias_Directory</td><td>IS_MAJOR_UPGRADE AND (UPGRADEACTIONPROPERTY="{76ACE820-A6D9-4B7E-A2D4-FFF30D2FE710}")</td><td>6751</td><td/><td/></row>
-		<row><td>Save_Simias_Directory</td><td>IS_MAJOR_UPGRADE AND (UPGRADEACTIONPROPERTY="{76ACE820-A6D9-4B7E-A2D4-FFF30D2FE710}")</td><td>1454</td><td/><td/></row>
-		<row><td>ScheduleReboot</td><td/><td>6410</td><td>ScheduleReboot</td><td/></row>
-		<row><td>SelfRegModules</td><td/><td>5600</td><td>SelfRegModules</td><td/></row>
-		<row><td>SelfUnregModules</td><td/><td>2200</td><td>SelfUnregModules</td><td/></row>
+		<row><td>Save_Simias_Directory</td><td>IS_MAJOR_UPGRADE AND (UPGRADEACTIONPROPERTY="{76ACE820-A6D9-4B7E-A2D4-FFF30D2FE710}")</td><td>1409</td><td/><td/></row>
+		<row><td>ScheduleReboot</td><td/><td>6400</td><td>ScheduleReboot</td><td/></row>
+		<row><td>SelfRegModules</td><td/><td>5500</td><td>SelfRegModules</td><td/></row>
+		<row><td>SelfUnregModules</td><td/><td>2100</td><td>SelfUnregModules</td><td/></row>
 		<row><td>SetARPINSTALLLOCATION</td><td>Not Installed</td><td>1010</td><td>SetARPINSTALLLOCATION</td><td/></row>
 		<row><td>SetODBCFolders</td><td/><td>1100</td><td>SetODBCFolders</td><td/></row>
-		<row><td>StartServices</td><td>VersionNT</td><td>5900</td><td>StartServices</td><td/></row>
-		<row><td>StopServices</td><td>VersionNT</td><td>1900</td><td>StopServices</td><td/></row>
-		<row><td>UnpublishComponents</td><td/><td>1700</td><td>UnpublishComponents</td><td/></row>
-		<row><td>UnpublishFeatures</td><td/><td>1800</td><td>UnpublishFeatures</td><td/></row>
-		<row><td>UnregisterClassInfo</td><td/><td>2700</td><td>UnregisterClassInfo</td><td/></row>
-		<row><td>UnregisterComPlus</td><td/><td>2100</td><td>UnregisterComPlus</td><td/></row>
-		<row><td>UnregisterExtensionInfo</td><td/><td>2800</td><td>UnregisterExtensionInfo</td><td/></row>
-		<row><td>UnregisterFonts</td><td/><td>2500</td><td>UnregisterFonts</td><td/></row>
-		<row><td>UnregisterMIMEInfo</td><td/><td>3000</td><td>UnregisterMIMEInfo</td><td/></row>
-		<row><td>UnregisterProgIdInfo</td><td/><td>2900</td><td>UnregisterProgIdInfo</td><td/></row>
-		<row><td>UnregisterTypeLibraries</td><td/><td>2300</td><td>UnregisterTypeLibraries</td><td/></row>
+		<row><td>StartServices</td><td>VersionNT</td><td>5800</td><td>StartServices</td><td/></row>
+		<row><td>StopServices</td><td>VersionNT</td><td>1800</td><td>StopServices</td><td/></row>
+		<row><td>UnpublishComponents</td><td/><td>1600</td><td>UnpublishComponents</td><td/></row>
+		<row><td>UnpublishFeatures</td><td/><td>1750</td><td>UnpublishFeatures</td><td/></row>
+		<row><td>UnregisterClassInfo</td><td/><td>2600</td><td>UnregisterClassInfo</td><td/></row>
+		<row><td>UnregisterComPlus</td><td/><td>2000</td><td>UnregisterComPlus</td><td/></row>
+		<row><td>UnregisterExtensionInfo</td><td/><td>2700</td><td>UnregisterExtensionInfo</td><td/></row>
+		<row><td>UnregisterFonts</td><td/><td>2400</td><td>UnregisterFonts</td><td/></row>
+		<row><td>UnregisterMIMEInfo</td><td/><td>2900</td><td>UnregisterMIMEInfo</td><td/></row>
+		<row><td>UnregisterProgIdInfo</td><td/><td>2800</td><td>UnregisterProgIdInfo</td><td/></row>
+		<row><td>UnregisterTypeLibraries</td><td/><td>2202</td><td>UnregisterTypeLibraries</td><td/></row>
 		<row><td>ValidateProductID</td><td/><td>700</td><td>ValidateProductID</td><td/></row>
-		<row><td>WriteEnvironmentStrings</td><td/><td>5200</td><td>WriteEnvironmentStrings</td><td/></row>
-		<row><td>WriteIniValues</td><td/><td>5100</td><td>WriteIniValues</td><td/></row>
-		<row><td>WriteRegistryValues</td><td/><td>5000</td><td>WriteRegistryValues</td><td/></row>
+		<row><td>WriteEnvironmentStrings</td><td/><td>5100</td><td>WriteEnvironmentStrings</td><td/></row>
+		<row><td>WriteIniValues</td><td/><td>5000</td><td>WriteIniValues</td><td/></row>
+		<row><td>WriteRegistryValues</td><td/><td>4900</td><td>WriteRegistryValues</td><td/></row>
 	</table>
 
 	<table name="InstallShield">
