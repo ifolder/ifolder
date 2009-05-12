@@ -353,7 +353,7 @@ namespace Novell.Win32Util
 			/// <summary>
 			/// 
 			/// </summary>
-			public int idFrom;
+			public IntPtr idFrom;
 			/// <summary>
 			/// 
 			/// </summary>
