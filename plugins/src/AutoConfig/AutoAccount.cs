@@ -728,7 +728,7 @@ namespace Novell.AutoAccount
                     {
                         firstIndex = i;
                         userAccount[i].DefaultAccount = true;
-                        iFolderWindow.log.Info("Setting the account {0} as default account", userAccount[i].Server );
+                        //iFolderWindow.log.Info("Setting the account {0} as default account", userAccount[i].Server );
                     }
                     status = AddDomainHelper(userAccount[i], true); 
                     if( status )

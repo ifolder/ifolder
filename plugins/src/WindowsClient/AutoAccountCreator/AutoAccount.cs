@@ -770,7 +770,7 @@ namespace Novell.AutoAccount
                     {
                         firstIndex = i;
                         userAccount[i].DefaultAccount = true;
-                        Novell.FormsTrayApp.FormsTrayApp.log.Info("Setting the account {0} as default account", userAccount[i].Server);
+                        //Novell.FormsTrayApp.FormsTrayApp.log.Info("Setting the account {0} as default account", userAccount[i].Server);
                     }
                     status = AddDomainHelper(userAccount[i], true);
                     if (status)
