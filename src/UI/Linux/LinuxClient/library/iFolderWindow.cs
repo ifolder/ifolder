@@ -131,6 +131,7 @@ namespace Novell.iFolder
 		private iFolderIconView	iFoldersIconView;
 		private static iFolderViewGroup	localGroup;
 		private TreeModelFilter	myiFoldersFilter;
+		private TreeModelFilter treeModelFilter;
 		private Timer				updateStatusTimer;
 
 		private VBox				SynchronizedFolderTasks;
@@ -1377,11 +1378,15 @@ namespace Novell.iFolder
 		private void DownloadAvailableiFolderHandler(object o, EventArgs args)
 		{
 			DownloadSelectedFolder();
+			myiFoldersFilter.Refilter();
+	        treeModelFilter.Refilter();
 		}
 
 		private void MergeAvailableiFolderHandler(object o, EventArgs args)
 		{
 			MergeSelectedFolder();
+			myiFoldersFilter.Refilter();
+	        treeModelFilter.Refilter();
 		}
 		
 		private void DeleteFromServerHandler(object o, EventArgs args)
@@ -2588,7 +2593,7 @@ namespace Novell.iFolder
 			
 			iFolderServerFilter serverFilter =
 				new iFolderServerFilter(domainID, SearchEntry);
-			TreeModelFilter treeModelFilter = new TreeModelFilter(ifdata.iFolders, null);
+			treeModelFilter = new TreeModelFilter(ifdata.iFolders, null);
 			treeModelFilter.VisibleFunc = serverFilter.FilterFunc;
 
 			iFolderViewGroup group =
