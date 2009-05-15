@@ -2801,7 +2801,15 @@ namespace Novell.iFolder
 
 				SynchronizedFolderTasks.Visible = true;
 				
-				RemoveiFolderButton.Sensitive = true;
+				if( ( holder.iFolder.State == "WaitSync" )
+				 && (holder.State == iFolderState.Synchronizing) )
+				{
+				   RemoveiFolderButton.Sensitive = false;
+				}
+				else
+				{
+				  RemoveiFolderButton.Sensitive = true;
+				}
 			}
 
 		}
@@ -2861,12 +2869,16 @@ namespace Novell.iFolder
 //					if (networkDetect.Connected)
 //					   SyncNowMenuItem.Sensitive = true;
 
-					if (holder.iFolder.Role.Equals("Master"))
+					if ( (holder.iFolder.Role.Equals("Master"))
+					  || ( ( holder.iFolder.State == "WaitSync" )
+							&& (holder.State == iFolderState.Synchronizing)	))
+					{
 						RevertMenuItem.Sensitive = false;
-
-					else
+					}
+					else 
+					{
 						RevertMenuItem.Sensitive = true;
-
+					}
 					PropMenuItem.Sensitive = true;
 					DeleteMenuItem.Sensitive = false;
 					RemoveMenuItem.Sensitive = false;
@@ -3686,6 +3698,9 @@ namespace Novell.iFolder
 			{
 				case Simias.Client.Event.Action.StartLocalSync:
 				{
+					//DeActivate the Revert Button and Options
+                    this.RevertMenuItem.Sensitive = false; 
+				    this.RemoveiFolderButton.Sensitive = false;
 						
 					if (args.Name != null && args.Name.StartsWith("POBox:"))
 					{
@@ -3705,9 +3720,6 @@ namespace Novell.iFolder
 				}
 				case Simias.Client.Event.Action.StartSync:
 				{
-					//DeActivate the Revert Button and Options
-                    this.RevertMenuItem.Sensitive = false; 
-				    this.RemoveiFolderButton.Sensitive = false;
 					if (args.Name != null && args.Name.StartsWith("POBox:"))
 					{
 						DomainInformation domain = domainController.GetPOBoxDomain(args.ID);
@@ -3730,15 +3742,15 @@ namespace Novell.iFolder
 
 					UpdateStatus(Util.GS("Idle..."));
 
-                    //Activate the Revert Button
-				    this.RevertMenuItem.Sensitive = true;	
-					this.RemoveiFolderButton.Sensitive = true;
 					
 					if (args.Name != null )
 					{
                          DomainInformation domain = domainController.GetDomain(args.ID);
 						 UpdateQoutaData(domain); 
 					}
+                    //Activate the Revert Button
+				    this.RevertMenuItem.Sensitive = true;	
+					this.RemoveiFolderButton.Sensitive = true;
 					break;
 				}
 			}
