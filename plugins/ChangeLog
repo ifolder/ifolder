@@ -1,3 +1,140 @@
+------------------------------------------------------------------------
+r6760 | ssutapalli | 2009-05-13 11:26:12 +0530 (Wed, 13 May 2009) | 1 line
+
+Preventing to log wrong information regarding default iFolder domain
+------------------------------------------------------------------------
+r6749 | ssutapalli | 2009-05-05 11:17:15 +0530 (Tue, 05 May 2009) | 1 line
+
+Changed default sync interval in AutoAccount to minimum of 5 seconds
+------------------------------------------------------------------------
+r6747 | srinidhi | 2009-05-03 16:17:30 +0530 (Sun, 03 May 2009) | 6 lines
+
+* Allow the package name to be overridden through env variable
+* Use the current working directory as the source directory
+* Use tarball script and remove duplicated code (enterprise-plugins)
+* Handle situation where a package is checked out with a different name
+
+
+------------------------------------------------------------------------
+r6741 | rkumar1 | 2009-04-27 21:34:18 +0530 (Mon, 27 Apr 2009) | 3 lines
+
+Updated spec files for Build Service for plugins to build on 11.0 and
+11.1
+
+------------------------------------------------------------------------
+r6739 | amahabaleshwar | 2009-04-23 17:01:02 +0530 (Thu, 23 Apr 2009) | 5 lines
+
+Support for Active directory user object creation / update with  ifolder
+iFolderHomeServer attribute is added. Existing Script is replaced with
+c# program which will detect directory type then create/update user
+objects.
+
+------------------------------------------------------------------------
+r6738 | srinidhi | 2009-04-23 01:51:18 +0530 (Thu, 23 Apr 2009) | 3 lines
+
+* Use the correct spec file
+
+
+------------------------------------------------------------------------
+r6737 | srinidhi | 2009-04-23 01:30:21 +0530 (Thu, 23 Apr 2009) | 6 lines
+
+* Change package names
+* Use tarball script and remove duplicated code (enterprise-plugins)
+* Handle situation where plugins is checked out with a different name
+  (enterprise-plugins)
+
+
+------------------------------------------------------------------------
+r6736 | srinidhi | 2009-04-23 00:02:53 +0530 (Thu, 23 Apr 2009) | 6 lines
+
+* Use client-plugins.sh to generate the tarball and avoid code
+  duplication
+* Handle the situation where plugins might be checked out with a
+  different name
+
+
+------------------------------------------------------------------------
+r6734 | rkumar1 | 2009-04-22 16:59:10 +0530 (Wed, 22 Apr 2009) | 2 lines
+
+Updated code and spec to work in autobuild.
+
+------------------------------------------------------------------------
+r6722 | kalidasbala | 2009-04-15 17:47:26 +0530 (Wed, 15 Apr 2009) | 4 lines
+
+Fixed the download path for Auto Account creation. Made the feature
+consistent by providing option to user to merge if download is selected
+and folder already exists
+
+------------------------------------------------------------------------
+r6721 | kalidasbala | 2009-04-15 17:45:21 +0530 (Wed, 15 Apr 2009) | 3 lines
+
+change such that after ldapsync if FullName is modified then it will
+update member node
+
+------------------------------------------------------------------------
+r6720 | kalidasbala | 2009-04-15 17:44:41 +0530 (Wed, 15 Apr 2009) | 2 lines
+
+Changes for change password feature in client plugins
+
+------------------------------------------------------------------------
+r6719 | kalidasbala | 2009-04-15 17:43:46 +0530 (Wed, 15 Apr 2009) | 3 lines
+
+changes for password change and users full name display order setting
+features
+
+------------------------------------------------------------------------
+r6718 | kalidasbala | 2009-04-15 17:39:51 +0530 (Wed, 15 Apr 2009) | 2 lines
+
+Updated configure.in 
+
+------------------------------------------------------------------------
+r6717 | kalidasbala | 2009-04-15 17:37:41 +0530 (Wed, 15 Apr 2009) | 2 lines
+
+Enabling plugins project for 64 bit target compilation
+
+------------------------------------------------------------------------
+r6716 | kalidasbala | 2009-04-15 17:36:43 +0530 (Wed, 15 Apr 2009) | 3 lines
+
+Reverting the Mono Configure and SPEC file changes. This is done to make
+sure that SVN iFolder trunk can be used to build iFolder in autobuild
+
+------------------------------------------------------------------------
+r6715 | kalidasbala | 2009-04-15 17:36:00 +0530 (Wed, 15 Apr 2009) | 2 lines
+
+Include EnhancedMenuItem.dll into the installer
+
+------------------------------------------------------------------------
+r6714 | kalidasbala | 2009-04-15 17:26:06 +0530 (Wed, 15 Apr 2009) | 2 lines
+
+committed plugin changes for mono2
+
+------------------------------------------------------------------------
+r6682 | mvikash | 2009-04-14 14:45:54 +0530 (Tue, 14 Apr 2009) | 2 lines
+
+changes are done to made code compatible.
+
+------------------------------------------------------------------------
+r6679 | ssutapalli | 2009-04-02 14:48:06 +0530 (Thu, 02 Apr 2009) | 1 line
+
+Updated ChangeLog and removed .changes file
+------------------------------------------------------------------------
+r6677 | ssutapalli | 2009-03-31 01:07:35 +0530 (Tue, 31 Mar 2009) | 1 line
+
+Updating ChangeLog
+------------------------------------------------------------------------
+r6676 | ramesh3 | 2009-03-31 01:01:46 +0530 (Tue, 31 Mar 2009) | 2 lines
+
+        added commandline instruction in README to build plugins.
+
+------------------------------------------------------------------------
+r6675 | ssutapalli | 2009-03-31 00:52:53 +0530 (Tue, 31 Mar 2009) | 1 line
+
+commiting changelogs
+------------------------------------------------------------------------
+r6674 | ramesh3 | 2009-03-31 00:39:37 +0530 (Tue, 31 Mar 2009) | 2 lines
+
+        Adding Plugin code.
+
 -------------------------------------------------------------------
 Tue Mar 17 01:48:43 MDT 2009 - sbipin@novell.com
 
