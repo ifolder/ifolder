@@ -1,3 +1,274 @@
+------------------------------------------------------------------------
+r6761 | mvikash | 2009-05-14 17:36:24 +0530 (Thu, 14 May 2009) | 4 lines
+
+changes are done to remove the delay in moving ifolder from server space
+to local ifolder space. while performing Download and Merge
+functionality.
+
+------------------------------------------------------------------------
+r6758 | hegdegg | 2009-05-12 12:26:38 +0530 (Tue, 12 May 2009) | 1 line
+
+Sharing is functional on Vista 64 now.
+------------------------------------------------------------------------
+r6756 | srinidhi | 2009-05-09 19:13:16 +0530 (Sat, 09 May 2009) | 5 lines
+
+#491452 : Fix the sequence of the InstallUtil_Simias custom action so
+that Simias.exe gets installed correctly. Autorestart of ifolder now
+works correctly.
+
+
+------------------------------------------------------------------------
+r6748 | mvikash | 2009-05-04 19:01:45 +0530 (Mon, 04 May 2009) | 2 lines
+
+changes are done to handle Linux UI hang issue
+
+------------------------------------------------------------------------
+r6747 | srinidhi | 2009-05-03 16:17:30 +0530 (Sun, 03 May 2009) | 6 lines
+
+* Allow the package name to be overridden through env variable
+* Use the current working directory as the source directory
+* Use tarball script and remove duplicated code (enterprise-plugins)
+* Handle situation where a package is checked out with a different name
+
+
+------------------------------------------------------------------------
+r6746 | jshaju | 2009-04-29 14:02:53 +0530 (Wed, 29 Apr 2009) | 1 line
+
+checking the client help file. 
+------------------------------------------------------------------------
+r6745 | mvikash | 2009-04-28 18:49:02 +0530 (Tue, 28 Apr 2009) | 2 lines
+
+Changes are done to handle client hang issue. 
+
+------------------------------------------------------------------------
+r6744 | ssutapalli | 2009-04-28 14:58:27 +0530 (Tue, 28 Apr 2009) | 1 line
+
+Adding check not to display/log .DS_Store/Thumbs.db policy restriction details
+------------------------------------------------------------------------
+r6743 | rkumar1 | 2009-04-28 14:20:26 +0530 (Tue, 28 Apr 2009) | 4 lines
+
+During client startup, some time GetProcessByName throws Exception. This
+has been handled.
+
+
+------------------------------------------------------------------------
+r6740 | rkumar1 | 2009-04-27 21:22:33 +0530 (Mon, 27 Apr 2009) | 2 lines
+
+Added spec file for ifolder to build on Build Service. on 11.0 and 11.1
+
+------------------------------------------------------------------------
+r6733 | rkumar1 | 2009-04-22 16:56:54 +0530 (Wed, 22 Apr 2009) | 2 lines
+
+Updated spec files to work with autobuild . Removed etcdi dependency
+
+------------------------------------------------------------------------
+r6732 | ssutapalli | 2009-04-21 18:31:54 +0530 (Tue, 21 Apr 2009) | 1 line
+
+Made code compatible .
+------------------------------------------------------------------------
+r6731 | rkumar1 | 2009-04-17 13:08:44 +0530 (Fri, 17 Apr 2009) | 2 lines
+
+Added lof messages during null check
+
+------------------------------------------------------------------------
+r6730 | kalidasbala | 2009-04-16 22:27:37 +0530 (Thu, 16 Apr 2009) | 2 lines
+
+Reset password update
+
+------------------------------------------------------------------------
+r6729 | kalidasbala | 2009-04-16 22:14:51 +0530 (Thu, 16 Apr 2009) | 2 lines
+
+Incorrect license due to copy error - apologizes
+
+------------------------------------------------------------------------
+r6728 | kalidasbala | 2009-04-15 20:58:34 +0530 (Wed, 15 Apr 2009) | 2 lines
+
+Owner check during upgrade - server is old error
+
+------------------------------------------------------------------------
+r6727 | kalidasbala | 2009-04-15 20:52:52 +0530 (Wed, 15 Apr 2009) | 2 lines
+
+Some null checks
+
+------------------------------------------------------------------------
+r6726 | rkumar1 | 2009-04-15 20:47:05 +0530 (Wed, 15 Apr 2009) | 1 line
+
+Removed Debug options from Novell iFolder solution
+------------------------------------------------------------------------
+r6725 | kuanil | 2009-04-15 20:35:28 +0530 (Wed, 15 Apr 2009) | 2 lines
+
+Updated configure.in to work with SLED 11 with mono 2.x 
+
+------------------------------------------------------------------------
+r6724 | kalidasbala | 2009-04-15 20:33:30 +0530 (Wed, 15 Apr 2009) | 2 lines
+
+Proper error messages
+
+------------------------------------------------------------------------
+r6723 | kalidasbala | 2009-04-15 19:51:48 +0530 (Wed, 15 Apr 2009) | 3 lines
+
+ changes are done to provide option for user to Hide ifolder main window
+while start up.
+
+------------------------------------------------------------------------
+r6713 | kalidasbala | 2009-04-15 17:14:34 +0530 (Wed, 15 Apr 2009) | 4 lines
+
+Fixed the download path for Auto Account creation. Made the feature
+consistent by providing option to user to merge if download is selected
+and folder already exists
+
+------------------------------------------------------------------------
+r6712 | kalidasbala | 2009-04-15 17:10:26 +0530 (Wed, 15 Apr 2009) | 2 lines
+
+Hide main window functionality implemented
+
+------------------------------------------------------------------------
+r6711 | kalidasbala | 2009-04-15 17:02:45 +0530 (Wed, 15 Apr 2009) | 2 lines
+
+HF recommendations implemented in Windows
+
+------------------------------------------------------------------------
+r6710 | kalidasbala | 2009-04-15 15:52:54 +0530 (Wed, 15 Apr 2009) | 2 lines
+
+HF recommendations implemented in Linux
+
+------------------------------------------------------------------------
+r6709 | kalidasbala | 2009-04-15 15:48:04 +0530 (Wed, 15 Apr 2009) | 3 lines
+
+changes are done to handle random Exception while performing
+operation Revert ifolder with delete from server
+
+------------------------------------------------------------------------
+r6708 | kalidasbala | 2009-04-15 15:46:53 +0530 (Wed, 15 Apr 2009) | 2 lines
+
+ Changes for change password feature - satya
+
+------------------------------------------------------------------------
+r6707 | kalidasbala | 2009-04-15 15:45:52 +0530 (Wed, 15 Apr 2009) | 2 lines
+
+ Changes for change password feature - arul
+
+------------------------------------------------------------------------
+r6706 | kalidasbala | 2009-04-15 15:42:45 +0530 (Wed, 15 Apr 2009) | 2 lines
+
+Changes for password change feature
+
+------------------------------------------------------------------------
+r6705 | kalidasbala | 2009-04-15 15:40:29 +0530 (Wed, 15 Apr 2009) | 2 lines
+
+Code changes for password change feature 
+
+------------------------------------------------------------------------
+r6704 | kalidasbala | 2009-04-15 15:30:56 +0530 (Wed, 15 Apr 2009) | 2 lines
+
+Vista 64, iFolder startup error for the first invoke if fixed.
+
+------------------------------------------------------------------------
+r6703 | kalidasbala | 2009-04-15 15:29:53 +0530 (Wed, 15 Apr 2009) | 6 lines
+
+Change are done to provide Option "-disableSyncLog"
+Which can be used while startup as
+
+e.g. iFolder.exe -disableSyncLog
+
+
+------------------------------------------------------------------------
+r6702 | mvikash | 2009-04-15 11:31:32 +0530 (Wed, 15 Apr 2009) | 2 lines
+
+merge wsdl command in ifolder code to work with all linux platform
+
+------------------------------------------------------------------------
+r6700 | kalidasbala | 2009-04-14 19:40:02 +0530 (Tue, 14 Apr 2009) | 2 lines
+
+Chagnes are done to handle Exception while adding account
+
+------------------------------------------------------------------------
+r6699 | kalidasbala | 2009-04-14 19:38:08 +0530 (Tue, 14 Apr 2009) | 2 lines
+
+Remove registration of iFolderWebService.dll and Novell.iFolder.dll
+
+------------------------------------------------------------------------
+r6698 | kalidasbala | 2009-04-14 19:36:06 +0530 (Tue, 14 Apr 2009) | 2 lines
+
+iFolder Shell extension is available on Vista64
+
+------------------------------------------------------------------------
+r6697 | kalidasbala | 2009-04-14 19:32:35 +0530 (Tue, 14 Apr 2009) | 2 lines
+
+Include /r option to iFolderApp.exe in the shortcut
+
+------------------------------------------------------------------------
+r6696 | kalidasbala | 2009-04-14 19:29:59 +0530 (Tue, 14 Apr 2009) | 3 lines
+
+InstallShield project file changes to enable 64bit packaging
+  of ifolder3
+
+------------------------------------------------------------------------
+r6695 | kalidasbala | 2009-04-14 19:28:26 +0530 (Tue, 14 Apr 2009) | 2 lines
+
+Updated configure.in for latest libtool
+
+------------------------------------------------------------------------
+r6694 | kalidasbala | 2009-04-14 19:25:29 +0530 (Tue, 14 Apr 2009) | 2 lines
+
+Enabling plugins project for 64 bit target compilation
+
+------------------------------------------------------------------------
+r6693 | kalidasbala | 2009-04-14 19:24:35 +0530 (Tue, 14 Apr 2009) | 2 lines
+
+Checking in updated project files to enable 64bit compilation
+
+------------------------------------------------------------------------
+r6692 | kalidasbala | 2009-04-14 19:23:26 +0530 (Tue, 14 Apr 2009) | 3 lines
+
+ now iFolder compiles on 64 bit for x64 arch. New target x64 bit is
+added. iFolder can be built using this target
+
+------------------------------------------------------------------------
+r6691 | kalidasbala | 2009-04-14 19:21:57 +0530 (Tue, 14 Apr 2009) | 3 lines
+
+Changing the command line option for regular iFolder start to "/r" from
+"\r" as per windows convention
+
+------------------------------------------------------------------------
+r6690 | kalidasbala | 2009-04-14 19:20:34 +0530 (Tue, 14 Apr 2009) | 2 lines
+
+Namespace change for RevertiFolder to iFolderCom
+
+------------------------------------------------------------------------
+r6689 | kalidasbala | 2009-04-14 19:17:18 +0530 (Tue, 14 Apr 2009) | 2 lines
+
+RevertiFolder Changes
+
+------------------------------------------------------------------------
+r6688 | kalidasbala | 2009-04-14 18:58:04 +0530 (Tue, 14 Apr 2009) | 2 lines
+
+Revert iFolder changes
+
+------------------------------------------------------------------------
+r6687 | kalidasbala | 2009-04-14 18:53:45 +0530 (Tue, 14 Apr 2009) | 3 lines
+
+Now on Windows XP, Revert an iFolder shell extension get the GUI that is
+same as the one called form iFolder Main GUI.
+
+------------------------------------------------------------------------
+r6686 | kalidasbala | 2009-04-14 18:49:39 +0530 (Tue, 14 Apr 2009) | 5 lines
+
+*The client on initial startup, just initializes the GUI and sits in the
+trayicon. The backend simias starts either on a timer event, or on user
+action upon the iFolder tray icon.
+*Fix for windows slow startup issue.
+
+------------------------------------------------------------------------
+r6683 | mvikash | 2009-04-14 16:39:40 +0530 (Tue, 14 Apr 2009) | 2 lines
+
+changes are done to make compatiblity for OpenSuse
+
+------------------------------------------------------------------------
+r6681 | mvikash | 2009-04-14 14:45:07 +0530 (Tue, 14 Apr 2009) | 2 lines
+
+changes are done to move code (r6503) to outerforge
+------------------------------------------------------------------------
 2009-04-08 Kalidas Balakrishnan <bkalidas@novell.com>
 	* Patch from Mathew O'Gorman <mog@rldn.net>
 	- Patch to make client work in Debian :-)
