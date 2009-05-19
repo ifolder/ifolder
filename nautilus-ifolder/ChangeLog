@@ -1,3 +1,43 @@
+------------------------------------------------------------------------
+r6747 | srinidhi | 2009-05-03 16:17:30 +0530 (Sun, 03 May 2009) | 6 lines
+
+* Allow the package name to be overridden through env variable
+* Use the current working directory as the source directory
+* Use tarball script and remove duplicated code (enterprise-plugins)
+* Handle situation where a package is checked out with a different name
+
+
+------------------------------------------------------------------------
+r6742 | rkumar1 | 2009-04-27 21:37:39 +0530 (Mon, 27 Apr 2009) | 2 lines
+
+Updated spec file for Build Service 
+
+------------------------------------------------------------------------
+r6735 | rkumar1 | 2009-04-22 17:00:04 +0530 (Wed, 22 Apr 2009) | 2 lines
+
+Updated spec to work with autobuild
+
+------------------------------------------------------------------------
+r6701 | mvikash | 2009-04-15 11:22:02 +0530 (Wed, 15 Apr 2009) | 2 lines
+
+changes made to nautilus to work with 2.0 extensions
+
+------------------------------------------------------------------------
+r6685 | kalidasbala | 2009-04-14 17:19:27 +0530 (Tue, 14 Apr 2009) | 2 lines
+
+space in file names were not handled.
+
+------------------------------------------------------------------------
+r6684 | kalidasbala | 2009-04-14 17:18:19 +0530 (Tue, 14 Apr 2009) | 2 lines
+
+Revert iFolder now calls the GUI that is used in the iFolder main gui.
+
+------------------------------------------------------------------------
+r6666 | hegdegg | 2009-03-30 23:48:47 +0530 (Mon, 30 Mar 2009) | 2 lines
+
+iFolder 3.7.2 nautilus shell extension
+
+------------------------------------------------------------------------
 2004-12-10 20:00  btimothy
 
 	* Makefile.am (1.6):
