@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="acceptError" xml:space="preserve">
+    <value>An exception occurred while attempting to download the iFolder.</value>
+  </data>
+  <data name="accessDenied" xml:space="preserve">
+    <value>You do not have the sufficient access to the selected location. iFodler can only be created in folder where you have access to read and write files. Please select a different location and try again.</value>
+  </data>
+  <data name="Available" xml:space="preserve">
+    <value>Not set up</value>
+  </data>
+  <data name="checkingForiFolders" xml:space="preserve">
+    <value>Checking for new iFolders...</value>
+  </data>
+  <data name="declineError" xml:space="preserve">
+    <value>An error was encountered while removing the iFolder.</value>
+  </data>
+  <data name="deleteAction" xml:space="preserve">
+    <value>&amp;amp:Delete</value>
+  </data>
+  <data name="deleteClientDir" xml:space="preserve">
+    <value>Deleting directory: {0}</value>
+  </data>
+  <data name="deleteClientFile" xml:space="preserve">
+    <value>Deleting file:{0}</value>
+  </data>
+  <data name="deleteiFolder" xml:space="preserve">
+    <value>This deletes the iFolder and its files from the server. Are you sure you sure you want to remove "{0}" form the server?</value>
+  </data>
+  <data name="deleteUnknown" xml:space="preserve">
+    <value>Deleting on server: {0}</value>
+  </data>
+  <data name="disconnected" xml:space="preserve">
+    <value>Server unavailable</value>
+  </data>
+  <data name="doneCheckingForiFolders" xml:space="preserve">
+    <value>Done checking for new iFolders</value>
+  </data>
+  <data name="downloadDir" xml:space="preserve">
+    <value>Downloading directory: {0}</value>
+  </data>
+  <data name="downloadFile" xml:space="preserve">
+    <value>Downloading file: {0}</value>
+  </data>
+  <data name="errorTitle" xml:space="preserve">
+    <value>iFolder Error</value>
+  </data>
+  <data name="iFolderError" xml:space="preserve">
+    <value>An error was encountered while reading iFolders</value>
+  </data>
+  <data name="iFolderErrorTittle" xml:space="preserve">
+    <value>Unable to read iFolders</value>
+  </data>
+  <data name="iFolderOpenError" xml:space="preserve">
+    <value>Unable to open iFolder {0}.</value>
+  </data>
+  <data name="iFolderRevertError" xml:space="preserve">
+    <value>An error was encountered while reverting the iFolder.</value>
+  </data>
+  <data name="localDir" xml:space="preserve">
+    <value>Found change in directory: {0}</value>
+  </data>
+  <data name="localFile" xml:space="preserve">
+    <value>Found changes in file: {0}</value>
+  </data>
+  <data name="localSync" xml:space="preserve">
+    <value>Checking for changes: {0}</value>
+  </data>
+  <data name="logEntriesCleared" xml:space="preserve">
+    <value>Log entries cleared.</value>
+  </data>
+  <data name="networkPath" xml:space="preserve">
+    <value>The selected location is on a network or non-physical drive. iFolders must reside on a physical drive. Please select a different location and try again.</value>
+  </data>
+  <data name="openErrorTitle" xml:space="preserve">
+    <value>iFolder Open Error</value>
+  </data>
+  <data name="PathDoesNotExist" xml:space="preserve">
+    <value> contain a folder with the same name as the iFolder.</value>
+  </data>
+  <data name="pathExistsError" xml:space="preserve">
+    <value>The loation you selected already contains a folder with the same name as this iFolder. Please select a different location and try again.</value>
+  </data>
+  <data name="PathIncludesProgFilesDirError" xml:space="preserve">
+    <value>The selected location includes the Program Files folder. The Program Files folder cannot contain an iFolder. Please select a different location and try again.</value>
+  </data>
+  <data name="pathIncludesWinDirError" xml:space="preserve">
+    <value>The selected location includes the Windows folder. The Windows folder cannot contain an iFolder. Please select a different lcoation and try again.</value>
+  </data>
+  <data name="pathIniFolderError" xml:space="preserve">
+    <value>The selected location is inside another iFolder. iFolders connot exist inside other iFolders. Please select a different location and try again.</value>
+  </data>
+  <data name="pathInStoreError" xml:space="preserve">
+    <value>The selected location is inside the iFolder data folder. Please select a different location and try again.</value>
+  </data>
+  <data name="pathInvalidErrorTitle" xml:space="preserve">
+    <value>Invalid Location</value>
+  </data>
+  <data name="preSync" xml:space="preserve">
+    <value>Checking for changes</value>
+  </data>
+  <data name="removeTitle" xml:space="preserve">
+    <value>Delete iFolder</value>
+  </data>
+  <data name="revertErrorTitle" xml:space="preserve">
+    <value>iFolder Revert Error</value>
+  </data>
+  <data name="statusConflicts" xml:space="preserve">
+    <value>Has Conflicts</value>
+  </data>
+  <data name="statusSynced" xml:space="preserve">
+    <value>Synchronized: {0}</value>
+  </data>
+  <data name="statusSyncFailure" xml:space="preserve">
+    <value>Incomplete synchronization</value>
+  </data>
+  <data name="statusSyncing" xml:space="preserve">
+    <value>Synchronizing</value>
+  </data>
+  <data name="statusSyncingItems" xml:space="preserve">
+    <value>{0} items to synchronize</value>
+  </data>
+  <data name="statusUnknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="syncComplete" xml:space="preserve">
+    <value>Started synchronization: {0}</value>
+  </data>
+  <data name="syncErrorTittle" xml:space="preserve">
+    <value>iFolder Synchronization Error</value>
+  </data>
+  <data name="synciFolder" xml:space="preserve">
+    <value>Started synchronization: {0}</value>
+  </data>
+  <data name="syncingDir" xml:space="preserve">
+    <value>Synchronizing directory: {0}</value>
+  </data>
+  <data name="syncingFile" xml:space="preserve">
+    <value>Synchronizing file: {0}</value>
+  </data>
+  <data name="uploadDir" xml:space="preserve">
+    <value>Uploading directory: {0}</value>
+  </data>
+  <data name="uploadFile" xml:space="preserve">
+    <value>Uploading file: {0}</value>
+  </data>
+  <data name="viewAvailableiFolders" xml:space="preserve">
+    <value>View available iFolders</value>
+  </data>
+  <data name="WaitConnect" xml:space="preserve">
+    <value>Waiting to Connect</value>
+  </data>
+  <data name="WaitSync" xml:space="preserve">
+    <value>Waiting to synchronize</value>
+  </data>
+  <data name="acceptDescription" xml:space="preserve">
+    <value>Download "{0}" to ...</value>
+  </data>
+  <data name="AlsoRemoveMembership" xml:space="preserve">
+    <value>Also remove my membership</value>
+  </data>
+  <data name="cannotShareMessage" xml:space="preserve">
+    <value>It is not possible to share an encrypted iFolder. Only regular folders can be shared</value>
+  </data>
+  <data name="cannotShareTitle" xml:space="preserve">
+    <value>Cannot share iFolder</value>
+  </data>
+  <data name="exitMessage" xml:space="preserve">
+    <value>If you exit the Novell iFolder application, changes in your iFolder will no longer be tracked. The next ime you login, Novell iFolder will reconcile any differences between your iFolder and Server</value>
+  </data>
+  <data name="exitTitle" xml:space="preserve">
+    <value>Exit Application</value>
+  </data>
+  <data name="FolderDoesNotExistError" xml:space="preserve">
+    <value>Then name of folder and iFolder must be the same</value>
+  </data>
+  <data name="FolderDoesNotExistErrorDesc" xml:space="preserve">
+    <value>You can merge an iFolder only with a folder with same name. Select a folder with same name as the iFolder and try again</value>
+  </data>
+  <data name="FolderDoesNotExistErrorTitle" xml:space="preserve">
+    <value>Folder doesnot exist</value>
+  </data>
+  <data name="freeSpaceUnits" xml:space="preserve">
+    <value>MB</value>
+  </data>
+  <data name="iFolderErrorTitle" xml:space="preserve">
+    <value>Unable to read iFolders</value>
+  </data>
+  <data name="menuActionRemove" xml:space="preserve">
+    <value>Delete from server</value>
+  </data>
+  <data name="mergeDescription" xml:space="preserve">
+    <value>Merge "{0}" to ...</value>
+  </data>
+  <data name="notApplicable" xml:space="preserve">
+    <value>N/A</value>
+  </data>
+  <data name="RemoveMembershipMesg" xml:space="preserve">
+    <value>This removes membership from iFolder and removes the iFolder from the list </value>
+  </data>
+  <data name="RemoveMembershipTitle" xml:space="preserve">
+    <value>Remove your membership from {0}</value>
+  </data>
+  <data name="RemoveMyMembership" xml:space="preserve">
+    <value>Remove My Membership</value>
+  </data>
+  <data name="showiFolders" xml:space="preserve">
+    <value>Hide available iFolders</value>
+  </data>
+  <data name="statusSyncItemsFailed" xml:space="preserve">
+    <value>{0} items not synchronized</value>
+  </data>
+  <data name="syncError" xml:space="preserve">
+    <value>An error was encountered while synchronizing the iFolder.</value>
+  </data>
+  <data name="syncErrorTitle" xml:space="preserve">
+    <value>iFolder Synchronization Error</value>
+  </data>
+</root>
