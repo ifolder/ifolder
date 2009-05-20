@@ -1,0 +1,6 @@
+\.svn\
+Makefile.am
+Makefile.in
+ChangeLog
+Makefile
+excludes.txt

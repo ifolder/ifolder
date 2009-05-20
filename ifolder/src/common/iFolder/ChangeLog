@@ -1,0 +1,9 @@
+2007-09-11 Kalidas Balakrishnan <bkalidas@novell.com>
+	* Novell.iFolder
+	Added support for Windows Vista
+
+2006-11-13  Sushma Rai  <rsushma@novell.com>
+
+	* Makefile.am: 
+
+	Patch submitted by Ramesh Sundar <sramesh@novell.com>

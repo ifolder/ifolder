@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- saved from url=(0014)about:internet -->
+
+<!DOCTYPE site [
+ <!ELEMENT site (topic+)>
+  <!ELEMENT topic (title,url,content)>
+   <!ELEMENT title (#PCDATA)>
+   <!ELEMENT url (#PCDATA)>
+   <!ELEMENT content (#PCDATA)>
+]>
+
+<site>
+<topic>
+  <title>OES 2 SP1：Novell iFolder 3.7 跨平台帮助</title>
+  <url>../bookinfo.html</url>
+  <content>OES 2 SP1：Novell iFolder 3.7 跨平台帮助 3.7 October 2008 iFolder 帮助 Novell® iFolder® 是用于 Linux*、Windows* 和 Macintosh* 客户端的文件共享应用程序。使用 iFolder，您的本地文件将跨过多台计算机自动跟随在您的左右，无论您处于联机还是脱机状态，都始终相伴，形影不离。您可以在多个 iFolder 中共享文件，每个 iFolder 都有不同的用户。您可以控制哪些用户可以加入 iFolder 以及他们对 iFolder 中文件的访问权限。您还可以加入其他用户与您共享的 iFolder。 本帮助系统介绍如何使用和管理 iFolder 客户程序。 适用对象 本指南适用于 iFolder 客户程序的用户。 其它文档 如果在 Novell iFolder 3.7 Enterprise Server 或万维网访问服务器上使用 iFolder 3.7 客户程序，请参见 Novell iFolder 文档万维网站点 上的 Novell iFolder 3.7 的 iFolder 3.7 用户指南 。 文档约定 在 Novell 文档中，大于号 (&gt;) 用于分隔步骤内的操作和交叉参照路径中的项目。 商标符号（®、™ 等）代表一个 Novell 商标。星号 (*) 表示第三方商标。 如果某个路径名的书写对某些平台需使用反斜线而对另一些平台需使用正斜线，则使用反斜线表示该路径名。在要求用正斜线的平台（例如 Linux 或 UNIX）上，用户应根据软件的要求使用正斜线。 </content>
+</topic>
+
+<topic>
+  <title>iFolder 概述</title>
+  <url>../overview.html</url>
+  <content>iFolder 概述 Novell® iFolder® 是用于 Linux、Windows 和 Macintosh 客户端的文件共享应用程序。您可在多个具有不同用户或 LDAP 组的 iFolder 中共享文件。您可以控制哪些用户可以加入 iFolder 以及每个成员的访问级别。您还可以加入其他用户与您共享的 iFolder。 iFolder 3.7 提供了一个简单易用的用户界面，可在客户端从 iFolder 2. x 迁移到 iFolder 3.6 和更高版本，并可在客户端从 iFolder 3.。 x 升级到 iFolder 3.6 和更高版本。 本节旨在让您熟悉一下 iFolder 的各种优点和功能： </content>
+</topic>
+
+<topic>
+  <title>iFolder 的优点</title>
+  <url>../benefits.html</url>
+  <content>iFolder 的优点 iFolder 具有以下优点： iFolder 与您的本机桌面环境相集成，从而更易于创建和管理多个 iFolder。 iFolder 高度灵活且可伸缩，对于每个用户的 iFolder 数或每个 iFolder 的成员数都没有任何实际限制。 启用加密功能后，iFolder 将在数据跨网移动和储存在 iFolder 服务器上时保护数据的安全。 使用增强的万维网访问控制台，您可从未安装 iFolder 客户程序的任何工作站访问您存放在 iFolder 服务器上的文件，并可使用万维网浏览器执行 iFolder 客户程序的所有操作。 您可轻松选择共享个人文件或业务文件。 iFolder 可将您的 iFolder 数据迁移和升级到最新版本。 iFolder 支持 LDAP 组。您可与 LDAP 组共享 iFolder。LDAP 组的成员可以创建和拥有 iFolder 并可与其他单个用户或其它 LDAP 组共享 iFolder。 您可控制您拥有的 iFolder 的成员用户的访问级别，或者，如果您有必需的权限，还可控制成员的访问权限。 iFolder 透明地将您的文件更新到多个工作站上的成员 iFolder。 iFolder 运行时，可跟踪和记录您脱机工作时所作的更改，并在连接到服务器时同步这些更改. iFolder 为访问 iFolder 以同步其数据的成员进行安全鉴定。 iFolder 提供了一种通过电子邮件交换文件的替代方法，从而避免了电子邮件附件的文件大小限制并降低了电子邮件储存要求。 </content>
+</topic>
+
+<topic>
+  <title>iFolder 客户程序</title>
+  <url>../bawqltp.html</url>
+  <content>iFolder 客户程序 iFolder 客户程序可与您的操作系统集成以在本机桌面环境中提供 iFolder 服务。通过使用 iFolder 客户程序，您可以管理自己的 iFolder，并且可以选择要在每台计算机上设置的共享 iFolder。iFolder 支持以下操作系统： SUSE® Linux Enterprise Desktop 10 SP1 Windows Vista SP1 Windows XP SP2/2000 Professional SP4 openSUSE® 10.2 和更高版本 Apple Macintosh® 10.4 和更高版本 </content>
+</topic>
+
+<topic>
+  <title>iFolder 帐户</title>
+  <url>../bawqmpe.html</url>
+  <content>iFolder 帐户 iFolder 帐户是在 iFolder 服务管理员将您设置为 iFolder 服务器的一个 iFolder 用户时创建的。管理员会向您提供用户名和口令。对于企业而言，这可能是您的用户名或电子邮件地址以及相关的口令。在创建 iFolder 之前，您必须至少配置一个 iFolder 帐户。有关更多信息，请参见 。 当您登录到某个 iFolder 服务帐户时，即会开始一个 iFolder 会话；当您注销该帐户或退出 iFolder 客户程序时，iFolder 会话就结束。仅当您的会话处于活动状态且您正在联机工作时，iFolder 才与其它活动 iFolder 同步文件。无论您是否已登录到帐户，都可随时访问本地 iFolder 中的数据。有关信息，请参见 。 </content>
+</topic>
+
+<topic>
+  <title>跨平台注意事项</title>
+  <url>../ovwxplat.html</url>
+  <content>跨平台注意事项 Linux、Windows 和 Macintosh 版本的 iFolder 客户程序的用户界面符合各自平台的界面规范。在每个平台中执行普通任务的方式都相同，但您在执行任务时可能会发现一些细微的差异，这些差异体现在按钮、显示区域、功能标签、桌面通知区域的位置、启动 iFolder 首选设置等方面。除了步骤存在明显差异的地方外，本指南只提供这三个平台中一个平台的说明。 下表列出了客户端界面中的典型不同和相似之处。 任务 Linux Windows Macintosh iFolder 菜单/右击系统盘图标中的选项 退出 退出 退出 “iFolder 首选设置” &gt; “帐户”对话框 “添加” 按钮 “添加” 按钮 “加号” ( + ) 按钮 “iFolder 首选设置” &gt; “帐户”对话框 “去除” 按钮 “去除” 按钮 “减号” ( - ) 按钮 多个位置 “关闭” 按钮 执行操作后即提交操作 “确定” 、 “取消” 和 “应用” 按钮 仅当单击 “应用” 或 “确定” 后才提交操作 “确定” 和 “取消” 按钮 执行操作后即提交操作 “iFolder 首选设置” 对话框 将 iFolder 添加到桌面的 启动程序 选择（启用） “登录到桌面时启动 iFolder” 此功能不可用 配置 iFolder 帐户 保存我的口令 在此计算机上保存口令 保存口令 “通知”区域 “通知”区域 “状态和通知”区域 “通知”区域 右击通知区域 帐户设置 帐户 此功能不可用 iFolder iFolder 菜单 属性 属性 获取信息 iFolder 向导 “向前” 按钮和 “后退” 按钮 “下一个” 按钮和 “上一个” 按钮 没有用于前后移动的按钮。您可在一个窗口中配置用户名、口令和服务器。 配置 iFolder 帐户 iFolder 帐户助理 iFolder 帐户创建向导 首选设置 &gt; 帐户 iFolder 服务器配置向导 iFolder 服务器 选择一个 iFolder 服务器 不可用 iFolder 身份配置向导 身份 iFolder 帐户信息 不可用 </content>
+</topic>
+
+<topic>
+  <title>iFolder 的主要功能</title>
+  <url>../keyfeatures.html</url>
+  <content>iFolder 的主要功能 在开始使用 iFolder 之前，必须先了解以下主要功能： iFolder 共享 通常，当您在多个地点工作或与其他人合作时，您必须认真负责地管理文件版本。 使用 iFolder，您就可以将最新版本的文件放置到您安装了 iFolder 客户程序并且为这些文件创建了一个 iFolder 的任何计算机上。iFolder 还允许您与其他授权用户或 LDAP 组共享多个 iFolder 及其各自的内容。有关共享 iFolder 的更多信息，请参见 。 iFolder 客户程序通过中央服务器同步多台计算机上的文件，从而实现对共享的支持。它允许您执行以下操作： 在多台计算机上共享文件 与其他用户共享文件 拥有多个 iFolder 参与其他用户共享给您的多个 iFolder 以 iFolder 的拥有者或成员的身份通过多个帐户参与 可以直接在文件管理器中或 iFolder 浏览器（iFolder 客户程序的一部分）中处理 iFolder。在 iFolder 中，您可以根据个人或公司的工作习惯设置任何子目录结构。子目录结构在所有成员 iFolder 中是稳定的。 共享的 iFolder 一个 iFolder 是一个本地目录，可选择性地通过中央服务器与用户指定的用户共享和同步文件。所有 iFolder 成员都可以访问 iFolder 文件，具有适当权限的成员可以更改 iFolder 文件。您可跨多个工作站来访问 iFolder 并可与单个用户和 LDAP 组共享它们。 您可以决定每个 iFolder 有哪些用户参与以及每个成员的访问级别。同样，您也可以参与协作环境中其他用户拥有的共享 iFolder。当您共享 iFolder 时，具有“写入”权限的成员用户可以修改目录结构，并且这些更改将应用于 iFolder 的所有副本。如果共享 iFolder 符合 的要求，则每个用户都可以将其放在自己计算机的任何位置上。 iFolder 访问权限 iFolder 客户程序支持拥有者和三种 iFolder 成员访问级别： LDAP 组的成员将继承该组的访问权限集。 拥有者： 只有一个用户担当 iFolder 的拥有者。这通常是创建该 iFolder 的用户。拥有者用户可以使用 iFolder 客户程序将所有权转让给 iFolder 的另一个成员。 iFolder 的拥有者具有“完全控制”权限。此用户对该 iFolder 具有读/写权限，管理成员用户的成员资格和访问权限并可去除任何成员的完全控制权限。 如果某一 LDAP 组拥有一个 iFolder，则该组的所有成员用户将被授予完全控制权限。 完全控制： 共享 iFolder 的成员，具有“完全控制”访问权限。此成员对该 iFolder 具有读/写权限，管理拥有者之外的所有用户的成员资格和访问权限。 读/写： 共享 iFolder 的成员，对 iFolder 中的目录和文件具有“读/写”访问权限。此成员可以修改文件，但所做的本地更改也会被同步到其他成员的 iFolder 副本。 只读： 共享 iFolder 的成员，对 iFolder 中的目录和文件具有“只读”访问权限。此成员可以修改文件，但所做的本地更改不会被同步到其他成员的 iFolder 副本。 任何 iFolder 用户或 LDAP 组都可拥有某些 iFolder 并可以是其它 iFolder 的成员。作为拥有者用户，您始终具有“完全控制”权限。作为成员用户，您在每个共享 iFolder 中的访问级别可能各不相同，具体取决于由具有“完全控制”权限的成员授予您的访问权限。 文件同步 当您连接到服务器时，iFolder 可以在您工作时在后台同步 iFolder 成员资格和文件。设置 iFolder 帐户后，即可启用 “保存我的口令” 以便 iFolder 在该计算机上保存口令，当您下次起动 iFolder 时，它将自动连接到服务器并同步数据而不提示输入口令。 您可以将 iFolder 客户程序配置为在每次登录计算机的桌面环境时自动运行。当您对本地 iFolder 中的文件进行处理时，该会话在后台运行，跟踪并记录您所做的任何更改。 可以手动或者以指定的间隔同步文件。 iFolder 也具有增量同步功能。对 iFolder 文件进行更改后，只将增量或更改同步到服务器。换句话说，增量同步只检索自 iFolder 客户程序和服务器上次同步后的更新。这将会提高效率，因为减少了同步时间。 迁移 Novell iFolder 提供了从 iFolder 2. x 到 Novell iFolder 3.7 的 iFolder 客户程序的简易迁移。在 iFolder 客户程序中提供的迁移向导可以帮助您将现有 iFolder 2. x 数据简便快速地迁移到 iFolder 3.6 和更高版本。有关更多信息，请参见 。 加密 iFolder 为您的机密 iFolder 文件提供了更高的安全性，可防止未授权用户有意或无意地访问这些文件。过去在服务器一端，数据安全无法保障，所以数据可以被管理员或对服务器拥有未经授权的访问权限的任何人访问。此外，当您通过 ISP 提供商访问 iFolder 时，未经授权的个人可能会有机会发现您的机密文件。现在，您可以对文件加密并将其保存到服务器上，然后通过只有您知道的通行口令来检索它们。如果您忘记通行口令，则在创建加密 iFolder 过程中选择的恢复代理可帮助您恢复数据。下图将有助于您了解 iFolder 如何恢复丢失的数据。 无法共享加密的 iFolder。 有关加密的更多信息，请参见 。 升级 Novell iFolder 3.7 提供了一种简单的升级方法，可将 iFolder 3. x 升级到 Novell iFolder 3.6 和更高版本的客户程序。有关更多信息，请参见 。 合并 使用合并功能，您可以合并 iFolder 数据并将 iFolder 客户程序和服务器之间的数据传输量降至最低。另外，您还可以使用此功能将现有文件夹移动到客户机上的其它位置。有关更多信息，请参见 。 默认 iFolder iFolder 允许您在配置新帐户时设置默认 iFolder。当您配置新的 iFolder 帐户时，iFolder 将自动检查是否存在默认 iFolder。如果您尚未创建默认 iFolder，则 iFolder 将提示您创建一个。如果已存在默认值，则 iFolder 客户程序将提示您进行下载。您也可以忽略这两个选项。有关更多信息，请参见 中的 。 增强型万维网访问 iFolder 提供一个增强型万维网界面，它允许您访问远程服务器上您的 iFolder 文件。使用万维网访问控制台，您可使用万维网浏览器从未安装 iFolder 客户程序的任何工作站来访问您在 iFolder 服务器上的文件。使用万维网访问界面，您可执行 iFolder 客户程序的拥有操作。 与以前的 iFolder 版本相比较，iFolder 3.6 和更高版本允许您通过增强的万维网访问控制台来创建、浏览、共享、上载和删除 iFolder。移动用户也可以通过万维网使用此功能。 同步日志 同步日志显示您的 iFolder 后台活动的日志，如为不同 iFolder 上载和下载文件、违反策略、已排除的文件以及未同步的文件。 </content>
+</topic>
+
+<topic>
+  <title>下一步</title>
+  <url>../ovwnext.html</url>
+  <content>下一步 有关使用 iFolder 客户程序进行配置的信息，请参见以下内容： </content>
+</topic>
+
+<topic>
+  <title>管理 iFolder 帐户和首选设置</title>
+  <url>../accountsprefs.html</url>
+  <content>管理 iFolder 帐户和首选设置 本节介绍如何配置 iFolder™ 帐户和如何管理 iFolder 客户程序的首选设置。 </content>
+</topic>
+
+<topic>
+  <title>启动 iFolder 客户程序</title>
+  <url>../startclient.html</url>
+  <content>启动 iFolder 客户程序 当 iFolder 运行时， “iFolder 服务” 图标将显示在任务栏的通知区域上。iFolder 已集成到桌面环境中。当在文件管理器、桌面或 iFolder 浏览器中查看 iFolder 时，iFolder 徽标（绿色的“i”） 会显示在 iFolder 上。加密的 iFolder 由 徽标（锁定的文件夹）表示。 必须启用任务栏的通知区域，才能在 iFolder 运行时显示 iFolder 服务 图标。 您可以随时对本地 iFolder 中的文件进行本地操作。无论 iFolder 客户程序是否正在运行，它都会记录您在操作期间对本地 iFolder 数据所作的更改。如果您在未运行 iFolder 时对本地 iFolder 数据作了更改，则 iFolder 会在您下次启动它时标识和记录这些差异。 当 iFolder 未在运行时，iFolder 将显示在文件管理器或桌面上。您可以访问 iFolder 本地拷贝中的文件，但不能管理 iFolder。此外，您必须登录到一个帐户才能创建 iFolder 或同步其文件。 创建帐户期间，用户通过 SSL 进行登录。当系统提示您是否接受服务器证书时，必须验证并接受该证书，才能成功连接。 有关停止 iFolder 客户程序的信息，请参见 。 Linux 登录时自动启动 iFolder 若要启用在登录到桌面时自动启动 iFolder，请执行下列操作之一： 打开应用程序菜单，单击 “更多应用程序” ，找到 “iFolder 3” 并右击，然后从菜单中选择 “添加到启动程序” 。 确保注销时 iFolder 正在运行，然后保存会话设置。当您登录到桌面时选择此会话选项。 打开一个终端窗口，以 root 用户身份登录，然后运行 /opt/gnome/bin/gnome-session-properties 可将 iFolder 添加为登录到计算机时要启动的程序。 若要禁止在登录时自动启动 iFolder，请执行下列操作之一： 打开应用程序菜单，找到 “iFolder 3” 并右击，然后选择 “从启动程序中去除” 。 确保注销时 iFolder 未运行，然后保存会话设置。当您登录到桌面时选择此会话选项。 手动启动 iFolder 以创建 iFolder 时要使用的本地 Linux 用户身份登录到计算机。 使用以下方法之一启动 iFolder： 在任务栏中，打开应用程序菜单，单击 “更多应用程序” ，通过搜索或滚动可用选项查找 “iFolder 3” ，右击“iFolder 3”，然后选择 “启动 iFolder 3” 。 打开终端壳层，然后输入 /opt/novell/ifolder3/bin/ifolder Windows 登录时自动启动 iFolder 要在登录到桌面时自动启动 iFolder： 右击 “iFolder 服务” 图标，然后选择 “首选设置” 以打开“iFolder 首选设置”对话框并进入 “常规” 选项卡。 选择 “登录到桌面时启动 iFolder” ，然后单击 “应用” 。 单击 “确定” 关闭“iFolder 首选设置”对话框。 禁止“登录到桌面时自动启动 iFolder”： 右击 iFolder 服务 图标，然后选择 “首选设置” 以打开“iFolder 首选设置”对话框并进入 “一般” 选项卡。 取消选择 “登录到桌面时启动 iFolder” ，然后单击 “应用” 。 单击 “确定” 关闭“iFolder 首选设置”对话框。 手动启动 iFolder 使用创建 iFolder 时要使用的本地 Windows 用户身份登录到计算机。 如果成功登录时 iFolder 未自动启动，则通过单击 “开始” &gt; “程序” &gt; “iFolder 3” 来启动 iFolder，然后选择 “iFolder 3 客户程序” 应用程序。 Macintosh 登录时自动启动 iFolder 要在登录到 Macintosh 计算机时自动启动 iFolder，应将 iFolder 添加到 “启动项目” 。 启动 iFolder。 从对接台右击 iFolder 图标并选择 “登录时打开” 选项。 或 从对接台按下 Ctrl 键，单击 iFolder 图标，然后选择 “登录时打开” 。 要禁用自动启动 iFolder，请从 “启动项目” 中去除 iFolder。 从对接台右击 iFolder 图标，然后取消选择 “登录时打开” 。 或 从对接台右击或按下 Ctrl 并单击 iFolder 图标，然后取消选择 “登录时打开” 。 手动启动 iFolder 使用要在创建 iFolder 时使用的本地 Macintosh 用户身份登录到计算机。 使用以下方法之一启动 iFolder： 打开 Macintosh HD 上的 “应用程序” 目录，选择 “应用程序” ，然后双击 “iFolder 3” 。 在聚光灯中键入 iFolder （Apple 按钮 + 空格键或单击右上部的放大镜图标），然后单击“应用程序”下的 “iFolder 3” 。 打开终端壳层，以根用户身份登录，然后输入 /Applications/iFolder 3.app/Contents/MacOS/iFolder 3 </content>
+</topic>
+
+<topic>
+  <title>配置 iFolder 帐户</title>
+  <url>../accounts.html</url>
+  <content>配置 iFolder 帐户 使用 iFolder 帐户助理添加并配置新帐户。您必须至少配置一个 iFolder 帐户才能创建 iFolder 或在系统上共享 iFolder。对于任何给定的 iFolder 主机服务，只能创建一个帐户，但可以拥有多个帐户。您可以分别登录到每个帐户，也可以同时登录多个帐户。 持有不同本地登录身份的多个用户可以在同一台计算机上拥有 iFolder。在第一次以本地用户身份运行 iFolder 客户程序时，iFolder 将提示活动的用户设置一个帐户。 iFolder 3.7 增加了一种称为自动创建帐户的新功能，可帮助 iFolder 管理员为您创建和配置帐户。如果您的 iFolder 管理员已启用了自动帐户创建功能，则不必为您自己配置帐户。当您首次启动 iFolder 时，将出现提示要求您输入口令。输入您的口令并完成帐户配置。 配置新帐户： 使用下列方法之一，访问 iFolder 帐户助理 ： 在您第一次使用当前本地登录身份启动 iFolder 时，iFolder 会提示您设置一个 iFolder 帐户。单击 “向前” 直接转到 “iFolder 帐户助理” 。 在通知区域中右击“iFolder 服务” 图标，选择 “帐户” 以打开“iFolder 首选设置”对话框并进入 “帐户” 选项卡，然后单击 “添加” 以打开 “iFolder 帐户助理” 。 遵循屏幕指导指定以下值： 参数 说明 服务器地址 您帐户所在的 iFolder Enterprise Server 的 DNS 名称或 IP 地址。从 iFolder 管理员处获取此信息。 例如： svr21.example.com 或 192.168.1.1 服务器名始终随同其 IP 地址一起显示在 iFolder 用户界面上。例如：iFolder - 192.162.1.1 您不能使用 iFolder 3.7 客户程序连接到 iFolder 3.2 服务器。 将它设置为我的默认服务器 当您拥有多个服务器时，选择 “将它设置为我的默认服务器” 可在您创建或上载 iFolder 时默认选中服务器下拉列表中的此服务器。 用户名 指定此帐户对应的用户身份。iFolder 管理员决定您应该使用网络用户 ID（LDAP 常用名）格式还是电子邮件地址格式。 例如，如果您的姓名是 John Smith，用户 ID 是 jsmith，电子邮件地址是 john.smith@example.com ，则管理员将为服务器配置一个设置以确定 “用户名” 字段接受两种格式中的哪一种来进行鉴定。 口令 指定用户名的口令。 通过安全通道 (SSL) 进行鉴定。系统提示您是否验证并接受服务器证书。 保存我的口令 选择 “记住我的口令” 可在您每次登录到计算机时自动登录到此 iFolder 帐户中。 如果更改了网络口令，则在下一次 iFolder 尝试登录 iFolder 帐户时，自动鉴定将失败。iFolder 将提示您用新口令登录并且允许您指定和保存新口令。 在 “通行口令” 字段中输入机密通行口令，并再次输入以进行验证。 如果管理员已将加密策略设置为“启用” ，则 iFolder 会提示您输入通行口令并选择通行口令恢复代理。有关通行口令管理的更多信息，请参见 选择 “记住通行口令” 以在当前会话过程中自动访问加密的 iFolder 数据。如果您选择此选项，则 iFolder 将记住您的通行口令。下次您开始登录过程时，此通行口令交换将自动完成；不会出现任何对话框。 从列表中选择所需的恢复代理，然后单击 “确定” 。 校验您已输入的信息是否正确，如有必要，返回到前几页进行更正，然后单击 “连接” 可通过登录到 iFolder 服务器对这些设置进行校验。 如果提示您 “接受此服务器的证书” ，则单击 “细节” 查看证书信息，然后单击 “确定” 接受该证书信息。 如果您不接受此证书，则无法设置通行口令。 成功连接后，如果您当前没有 iFolder，系统将提示您创建一个默认 iFolder。 指定用于创建默认 iFolder 的位置。 默认的 iFolder 名称为 Default_username ，其中 username 是指您用于此帐户的用户标识。例如，如果您用于当前帐户的用户名为 test1 ，则默认 iFolder 的名称将为 Default_test1 。 默认情况下，默认 iFolder 储存在 &lt;用户主目录&gt;/ifolder/服务器名/用户名 。您可以更改此位置。 选择您希望创建的默认 iFolder 的类型。如果您选择 “已加密” ，则系统将提示您输入通行口令。有关更多信息，请参见 。 您只能共享常规 iFolder。无法共享加密的 iFolder。 如果 iFolder 管理员尚未对您的当前帐户启用加密，您只能创建常规 iFolder，默认情况下， “常规” 选项是选定的。在此情况下，将同时禁用 “安全性” 的两个选项。 选择 “安全同步” 可对所创建的 iFolder 中的文件启用安全同步。 您可以同时对常规 iFolder 和加密 iFolder 启用安全通道。在选中此选项时，iFolder 允许使用安全通道在服务器上的 iFolder 与本地计算机上的 iFolder 间进行同步。 将一个文件夹设置为默认 iFolder 后，将只能通过从服务器删除类型来更改它。如果您去除服务器上的默认 iFolder，则下次从任何富客户端配置该帐户时，iFolder 将会提示您再次创建一个默认 iFolder。 如果已设置了一个默认 iFolder，则它将提示您将它下载到本地计算机。 下载该默认 iFolder 并单击 “下一个” 以继续完成帐户配置。 连接成功后，单击 “完成” 关闭“iFolder 帐户助理”。 iFolder 同步指定帐户的用户列表，并且标识可用于下载的 iFolder。初次下载可能需要花费一些时间，这取决于帐户的用户列表的大小。 校验您设置的帐户是否出现在帐户列表中。 在通知区域中右击 “iFolder 服务” 图标，然后从菜单中选择 “首选设置” 以打开 “iFolder 首选设置” 对话框并进入 “帐户” 选项卡。 当连接到 iFolder 服务器时，将选中 “联机” 复选框。 关闭“iFolder 首选设置”对话框 使用以下两种方法之一为帐户设置 iFolder： 右击通知区域中的 iFolder 服务 图标，然后选择 “iFolder” 以打开 iFolder 浏览器。继续 。 如果此帐户的 iFolder 可从服务器下载，则将在 &lt; iFolder 服务器名 &gt; 上 iFolder 窗口的“iFolder”下列出来。下载图标 指示 iFolder 可供下载。继续 。 </content>
+</topic>
+
+<topic>
+  <title>登录 iFolder 帐户</title>
+  <url>../login.html</url>
+  <content>登录 iFolder 帐户 可以随时在本地访问 iFolder 目录中的文件。您必须登录 iFolder 帐户以同步用户列表、同步 iFolder 数据、上载新的 iFolder、下载共享 iFolder、共享 iFolder 以及管理 iFolder。可以分别登录也可以同时登录多个帐户。 对每个帐户使用以下登录方法之一： 自动登录：如果希望在 iFolder 客户程序启动的时候自动登录 iFolder 帐户，则 启用 “记住我的口令” 。当您配置帐户或在以后修改帐户设置时，可以启用 “保存我的口令” 。 只要更改了口令，自动鉴定就会在您下次试图登录到 iFolder 帐户时以正常方式失败。iFolder 提示您登录，然后您可以输入新口令。如果需要，再次启用 “保存我的口令” 。 根据需要登录：如果希望仅根据需要登录 iFolder 帐户，则 禁用 “记住我的口令” 。 要为现有的 iFolder 帐户启用或禁用 “保存我的口令” ： 在通知区域中右击 “iFolder 服务” 图标，然后选择 “帐户” 以打开“iFolder 首选设置”对话框并进入 “帐户” 选项卡。 选择 iFolder 帐户，然后单击 “属性” 以查看其在 “属性” 对话框中的设置。 单击 “身份” 选项卡。 选择（启用）或取消选择（禁用） “保存我的口令” 。 单击 “确定” 即可成功完成。 在 “iFolder 属性” 对话框中，单击 “确定” 保存更改并登录服务器。 要登录 iFolder 帐户，请执行以下操作： 在通知区域中右击 “iFolder 服务” 图标，然后选择 “帐户” 。 选择 iFolder 帐户，然后选择它旁边的 “联机” 复选框。 如果提示需要输入口令，则指定口令，然后单击 “连接” 。 如果已启用了该帐户的 “保存我的口令” ，除非您的口令已过期，否则不会提示您输入口令。 如果登录失败，则出现报告原因的错误讯息，例如口令失败。 连接成功后，关闭 “iFolder 首选设置” 对话框。 </content>
+</topic>
+
+<topic>
+  <title>查看和修改 iFolder 帐户设置</title>
+  <url>../accountdetails.html</url>
+  <content>查看和修改 iFolder 帐户设置 可在“帐户设置”和“帐户属性”对话框中查看以下参数： 参数 说明 位置 可由用户修改（是/否） 联机 指示当前您是否连接到某个帐户的 iFolder 服务器。 选中该帐户旁边的 联机 复选框以连接到该帐户的 iFolder 服务器。 取消选中该帐户旁边的 “联机” 复选框以断开与 iFolder 服务器的连接。 “iFolder 首选设置” “帐户” 选项卡 是 名称 显示为帐户储存 iFolder 所在的 iFolder 服务器的描述名称。此名称由该服务器提供并由 iFolder 管理员进行控制。 用户不可修改此设置。 “iFolder 首选设置” “帐户” 选项卡 “帐户属性” &gt; “服务器” 选项卡 否 用户名 显示此帐户的用户身份，如网络用户 ID（LDAP 常用名）或电子邮件地址。不可修改此设置。 在“iFolder 帐户助理”中设置帐户时指定用户名。不可为现有帐户修改用户名。 要在同一服务器上使用不同的用户名，必须删除现有帐户，然后为该用户名创建一个不同的帐户。 “iFolder 首选设置” “帐户” 选项卡 “帐户属性” &gt; “身份” 选项卡 否 服务器地址 显示您的帐户所在的 iFolder Enterprise Server 的 DNS 名称或 IP 地址。从 iFolder 管理员处获取此信息。 例如： svr21.example.com 或 192.168.1.1 您可以修改地址，但进行更改时，必须中断与 iFolder 服务器的连接。 “帐户属性” &gt; “服务器” 选项卡 是 口令 允许为用户名指定口令。 “帐户属性” &gt; “身份” 选项卡 是 保存口令 指示 iFolder 启动时 iFolder 是否自动登录。如果帐户的 “自动连接” 参数已启用（默认），则帐户会尝试使用保存的口令进行连接。 选中 保存口令 可以在登录计算机时自动登录到此 iFolder 帐户。 如果更改了网络口令，则在下一次 iFolder 尝试登录 iFolder 帐户时，自动鉴定将失败。iFolder 将提示您用新口令登录并且允许您指定和保存新口令。 “帐户属性” &gt; “身份” 选项卡 是 定额 报告 Enterprise Server 上分配给您的 iFolder 帐户的空间总量。此值可能是为所有用户设置的默认定额，也可能是用户特有的定额。如果未设置定额，则该值为空或为 N/A （不适用）。 “帐户属性” &gt; “磁盘空间” 选项卡 否 已用空间 报告此帐户上您拥有的所有 iFolder 当前正在使用的空间总量。不包括与您共享但为其他人拥有的 iFolder 所使用的空间。对于您已连接到的每个服务器，还可以在 iFolder 主窗口中查看使用的空间。 “帐户属性” &gt; “磁盘空间” 选项卡 否 可用空间 报告此 iFolder 帐户上您当前可用于 iFolder 的空间总量。The value is equal to the quota minus the used space. 对于已连接的每个服务器，还可以在 iFolder 主窗口中查看可用空间。 “帐户属性” &gt; “磁盘空间” 选项卡 否 自动连接 如果选择（启用）了此值，则 iFolder 启动时将自动连接到此帐户。取消选中该设置可禁用连接到帐户。 该设置仅管理客户端启用或禁用帐户的能力。 当您同时使用 iFolder 和 Novell® iFolder® 3.7 服务器时，iFolder 系统管理员可禁用您在服务器端的 iFolder 帐户（通常是临时的）。禁用发生时可能出现以下情况： 如果从服务器端禁用帐户时您已登录，则您可以管理 iFolder，并且您的 iFolder 数据继续与服务器保持同步，直到您通过注销或禁用同步结束会话，或者服务器断开您的会话（以先发生的为准）为止。 如果帐户在服务器端被禁用，则您在尝试登录时将收到一个弹出讯息，通知您该帐户已被禁用。请与您的 iFolder 系统管理员联系以获取帮助。 所有选项卡上的 “帐户属性” 是 帐户为默认 当您有多个帐户时，请选中 “帐户为默认” 复选框以在创建和上载 iFolder 时使此帐户成为帐户下拉列表中默认选择的帐户。 如果只有一个帐户，则不能修改此值。 所有选项卡上的 “帐户属性” 是，如果有多个帐户 加密设置 您可以设置和重设置可从 “安全性” 菜单查看的加密设置。有关加密设置的更多信息，请参见 “安全性” 菜单 用户可以重设置通行口令 在通知区域中右击 “iFolder 服务” 图标，然后选择 “帐户设置” 以打开“iFolder 首选设置”并进入 “帐户” 选项卡。 在“帐户”报告中，可以管理每个帐户的以下参数： 联机（选中可进行连接；取消选中可中断连接） 名称（仅供查看） 用户名（仅供查看） 选择要管理的 iFolder 帐户，然后单击 “属性” 打开 “帐户 属性”对话框，显示 “服务器” 选项卡。 在 “服务器” 选项卡上，可以管理所选帐户的以下参数： 名称（仅供查看） 地址（如果已连接则仅可查看；如果已中断连接，则可修改） 服务器说明（仅查看；滚动以查看所有信息） 自动连接（选中可启用；取消选中可禁用） 帐户为默认（选中可启用；只有存在多个帐户时才可用） 选择 “身份” 选项卡可管理所选帐户的以下参数： 用户名（仅供查看） 口令（指定口令） 保存口令（选中可启用；取消选中可禁用） 自动连接（选中可启用；取消选中可禁用） 帐户为默认（选中可启用；只有存在多个帐户时才可用） 选择 “磁盘空间” 选项卡可查看所选帐户的以下参数： 定额（仅查看） 已用（仅查看） 可用（仅查看） 自动连接（选中可启用；取消选中可禁用） 帐户为默认（选中可启用；只有存在多个帐户时才可用） 完成后，请关闭 “帐户属性” 对话框，然后关闭 “iFolder 首选设置” 对话框。 </content>
+</topic>
+
+<topic>
+  <title>为客户程序配置 iFolder 首选设置</title>
+  <url>../preferences.html</url>
+  <content>为客户程序配置 iFolder 首选设置 在通知区域中右击 “iFolder 服务” 图标，然后选择 “首选设置” 以打开“iFolder 首选设置”对话框并进入 “一般” 选项卡。 指定以下选项的首选设置： 参数 说明 登录到桌面时启动 iFolder（仅在 Windows 客户程序中可用） 选中此选项可在您使用本地用户名登录到设置 iFolder 帐户的位置时启动 iFolder。对于已启用 “保存我的口令” 的帐户，同步过程将按指定的同步间隔在后台进行。 取消选中此选项以手动启动 iFolder。 创建 iFolder 时显示“确认”对话框 选中此选项可在每次创建 iFolder 时除了接收常规可视提示（如 iFolder 出现在 iFolder 列表中）外，还接收确认讯息。 取消选中此选项以停止接收确认讯息。 共享 iFolder 通知 选择此选项后，当您接收到新的邀请以共享一个 iFolder 时，将在通知区域中显示弹出讯息。 要查看当前计算机上可用于下载的 iFolder 的列表，请在iFolder 运行时在 iFolder 浏览器中选择 “显示可用 iFolder” 。 隐藏 iFolder 工具盘图标 选择此选项后，将在通知区域中隐藏 iFolder 工具盘图标。 还可以通过使用通知区域内的右击选项来隐藏 iFolder 系统盘图标。在通知区域内右击 “iFolder 服务” 图标，然后选择 “隐藏” 。 如果不选择此选项，将在 iFolder 运行时显示 iFolder 工具盘图标。 冲突通知 选择此选项后，当同步文件时出现冲突时，将在通知区域中显示弹出讯息 取消选中此选项以禁用同步冲突的弹出讯息。 当 iFolder 运行过程中出现冲突时，iFolder 上将显示出 iFolder 错误 图标。 用户加入通知 选择此选项后，当用户接受共享某一 iFolder 的邀请时，将在通知区域中显示弹出讯息。用户实际上在自己的计算机上设置此 iFolder 时就表示接受共享邀请。 取消选中此选项以禁用用户共享确认的弹出讯息。 您可选择一个 iFolder 以在它运行时查看其用户的完整列表，然后单击 “共享对象” 以打开“iFolder 属性”对话框来进入 “共享” 选项卡。 同步 自动同步 iFolder： 选中此复选框，可为此计算机上您在当前本地登录的、或您的登录身份下的所有 iFolder 启用同步。取消选中此复选框以禁用同步。 同步 iFolder 间隔： 指定用于同步此计算机上当前本地登录或登录身份下的 iFolder 的最小间隔。指定值和单位。如果启用了此选项，则默认值为 5 分钟。最小间隔可降低到 5 秒。 如果将此 iFolder 客户程序与 Novell iFolder 3.7 一起使用，则有效的最小同步间隔始终是以下设置的最大值： 系统策略默认值为零 ( 0 ），除非设置了用户策略。如果设置了用户策略，无论用户策略的值是大于还是小于系统策略的值，此用户策略都将覆盖系统策略。 本地计算机策略或客户机上的设置与服务器同步。 iFolder（集合）策略。 完成设置后，单击 “应用” 以应用更改。 单击 “确定” 关闭“iFolder 首选设置”对话框。 </content>
+</topic>
+
+<topic>
+  <title>为 iFolder 通讯配置本地防火墙设置</title>
+  <url>../firewall.html</url>
+  <content>为 iFolder 通讯配置本地防火墙设置 如果您使用的是本地防火墙，则必须设置您的防火墙以允许 iFolder 选择本地动态端口，或为 iFolder 客户程序配置本地静态端口以与 Mono® XSP 服务器进行本地（同一台计算机）通讯。iFolder 使用 Mono XSP 万维网服务通过 HTTP 与您拥有 iFolder 帐户的 Novell iFolder Enterprise Server 进行通讯。iFolder 管理员配置 iFolder 服务以确定是否在您的环境中使用 HTTP。 您的防火墙未阻止 Mono XSP 与 Novell iFolder Enterprise Server 之间的通讯，这是因为 Mono XSP 使用了标准的 HTTP 端口进行通讯。但是，如果您阻止客户程序与 Mono XSP 之间的通讯，则客户程序将无法与服务器进行通讯。您无法登录到您的 iFolder 帐户以及同步 iFolder 数据。 最初，iFolder 配置并未指定用于客户程序与 Mono XSP 通讯的特定端口。iFolder 首次运行时，将打开一个可用的本地端口以监听来自 Mono XSP 的请求，然后通过 Mono XSP 将数据发送到服务器上。iFolder 将端口号写入配置文件，除非此端口不可用，否则以后每当 iFolder 启动时都会使用此端口。If the port is in use by another application, iFolder selects a different available port, reconfigures the port in the configuration file, and uses the new port thereafter. 例如，如果 iFolder 关闭后由另一个应用程序使用该端口，则 iFolder 必须选择并配置重启动 iFolder 时要用的其它端口。 使用本地动态端口 如果在计算机上使用本地防火墙，则只要 iFolder 联系服务器同步其用户列表和 iFolder 数据时，该防火墙都应检测到 iFolder 与 Mono XSP 服务器之间的本地通讯。选择 “允许” 以允许此会话的 iFolder 通讯。如果您始终允许通讯，则防火墙应该不会再次提醒您，而且每次 iFolder 启动时，您都可以避免收到弹出式警报。 如果您阻止 iFolder 与 Mono XSP 的通讯，则您的防火墙将阻止您连接到 iFolder 服务器，而您也无法同步文件。iFolder 不会检测到通讯受防火墙阻止；它仅报告无法连接到您在 iFolder 服务器上的帐户。 使用本地静态端口 可以选择将万维网服务端口参数添加到 xspport.cfg 文件的端口部分，以允许 Mono XSP 服务器使用静态端口进行此本地通讯。这样，就可以在防火墙中打开此端口，以允许 Mono XSP 的通讯。 可以在以下位置找到 xspport.cfg ： 操作系统 Simias.config 文件的位置 Linux /home/ 用户名 /.local/share/simias/xspport.cfg Windows C:\Documents and Settings\\ 用户名 \Local Settings\Application Data\simias\xspport.cfg Macintosh /Users/username/.local/share/simias/xspport.cfg 将系统配置为使用特定端口： Configure your firewall to allow traffic for the port you want to use for iFolder traffic. 有关如何在防火墙中打开端口的信息，请参见防火墙的文档。 通过右击 iFolder 图标，然后选择 “退出” ，可停止 iFolder 客户程序。 通过将“万维网服务端口范围”参数添加到 “服务管理器” 部分，可修改 xspport.cfg 文件。 &lt;XspPortConfiguration&gt; &lt;Port&gt; monoxsp_port &lt;/Port&gt; &lt;/XspPortConfiguration&gt; 将 monoxsp_port 替换成一个端口号： 指定一个四位数字端口号的值（如 1234）以使用单个静态端口。例如： &lt;Port&gt; 1234 &lt;/Port&gt; 启动 iFolder 客户程序。 有关更多信息，请参见 。 </content>
+</topic>
+
+<topic>
+  <title>为 iFolder 通讯配置本地病毒扫描程序设置</title>
+  <url>../virusscan.html</url>
+  <content>为 iFolder 通讯配置本地病毒扫描程序设置 如果您在计算机上使用病毒扫描软件，请从病毒扫描中排除 ..\simias\WorkArea\ 目录。例如，Windows 上 ..\simias\WorkArea\ 目录的位置是 c:\documents and settings\ username \local settings\application data\simias\WorkArea\.simias.wf. guid 。 此 ..\simias\WorkArea\ 目录是从服务器中下载 iFolder 阶段文件的位置。如果 iFolder 文件附带有病毒，并且您的病毒扫描软件扫描出该病毒文件位于 ..\simias\WorkArea 目录中时，病毒扫描程序就会弹出一条讯息，说明已找到病毒，并将文件移到隔离区，然后 iFolder 会再次尝试同步该文件。 不扫描“工作区”允许完成同步。受到感染的文件被成功下载并移到本地 iFolder 中。然后病毒扫描程序检测出 iFolder 中受到感染的文件，并将它从该文件夹移到隔离区，以保护计算机免遭感染。iFolder 将检测该文件的删除情况，在下一次同步开始时，iFolder 将该文件从服务器和成员计算机上去除。 但是，如果从中下载文件的 iFolder 为只读，则不会对服务器和其它成员计算机实施本地删除。必须在允许同步更改的其它地方检测病毒。用户的病毒扫描程序可能会警告用户有病毒，因此该用户应该警告其他 iFolder 成员有关病毒的情况。 </content>
+</topic>
+
+<topic>
+  <title>删除 iFolder 帐户</title>
+  <url>../delacct.html</url>
+  <content>删除 iFolder 帐户 您可以指定是仅从当前计算机中去除帐户，还是同时从服务器中去除您的 iFolder。 如果仅从计算机中去除 iFolder 帐户，则： 此帐户的本地 iFolder 将恢复为常规文件夹。如果不需要数据的本地拷贝，则使用文件管理器查找并删除它们。 您可以继续从具有 iFolder 客户程序的其它计算机中访问 iFolder。 将 iFolder 客户程序与 Novell iFolder 3.7 企业服务器一起使用时，您还可从支持 Novell iFolder 3.7 万维网访问功能的任何地方访问文件。 如果从服务器中去除 iFolder 帐户，则： 对您拥有的所有 iFolder 取消共享。 成员计算机上的 iFolder 本地拷贝将恢复为常规文件夹。如果不需要数据的本地拷贝，则使用文件管理器查找并删除它们。 将从服务器中去除 iFolder 及其内容。 从其他用户共享给您的 iFolder 中去除您的成员资格。 将从本地计算机中去除此帐户。 如果您决定在此计算机或另一台计算机上再次使用此帐户，则必须像对待新帐户那样重新设置该帐户及其 iFolder。 删除 iFolder 帐户： 在通知区域中右击 “iFolder 服务” 图标，然后选择 “帐户设置” 以打开“iFolder 首选设置”对话框并进入 “帐户” 选项卡。 选择要删除的 iFolder 帐户，然后单击 “去除” 。 出现讯息提示您确定去除操作的作用范围。 执行以下操作之一： 只从当前计算机去除 iFolder 帐户： 确保未选中 “从服务器去除我的 iFolder 和文件” ，然后单击 “是” 。 从服务器去除 iFolder 帐户及您的 iFolder 和文件： 选择 “从服务器去除我的 iFolder 和文件” ，然后单击 “是” 。 取消删除： 单击 “否” 以取消删除操作。您的帐户及其 iFolder 保持不变。 </content>
+</topic>
+
+<topic>
+  <title>注销 iFolder 帐户</title>
+  <url>../logout.html</url>
+  <content>注销 iFolder 帐户 如果要脱机工作，则注销 iFolder 帐户。 Macintosh 在对接台中单击 iFolder 服务 图标，然后选择 “帐户” 以打开“iFolder 首选设置”对话框。 从工具栏单击 “帐户” 图标以查看当前 iFolder 域中的帐户列表。 找到要管理的帐户，然后单击 “注销” 以从 iFolder 服务器断开。 Linux 在通知区域中右击 “iFolder 服务” 图标，然后选择 “帐户” 以打开“iFolder 首选设置”对话框并进入 “帐户” 选项卡。 找到您希望管理的帐户，然后取消选择它旁边的 “联机” 复选框以断开与 iFolder 服务器的连接。 单击 “关闭” 可关闭“iFolder 首选设置”对话框。 Windows 在通知区域中右击 “iFolder 服务” 图标，然后选择 “帐户” 以打开“iFolder 首选设置”对话框并进入 “帐户” 选项卡。 找到您希望管理的帐户，然后取消选择它旁边的 “联机” 复选框。 单击 “应用” 断开与 iFolder 服务器的连接，然后单击 “确定” 关闭“iFolder 首选设置”对话框。 </content>
+</topic>
+
+<topic>
+  <title>退出 iFolder 客户程序</title>
+  <url>../stopclient.html</url>
+  <content>退出 iFolder 客户程序 要退出 iFolder 客户程序，请按以下给定的任一选项操作。 在通知区域中右击 “iFolder 服务” 图标，然后选择 “退出” 。 单击 “iFolder”&gt;“退出” 当您选择 “退出” 时，iFolder 将显示出一条确认讯息。单击 “是” 确认操作。 仅在您连接到 iFolder 服务器后文件才会与 iFolder 服务器帐户同步。您可以通过注销帐户来停止同步。脱机方式下，iFolder 继续在后台运行。有关信息，请参见 。 您可具有多个在不同主机服务器（域）上创建的帐户。 </content>
+</topic>
+
+<topic>
+  <title>下一步</title>
+  <url>../b9lvmk9.html</url>
+  <content>下一步 有关使用 iFolder 客户程序的信息，请参见以下内容： </content>
+</topic>
+
+<topic>
+  <title>管理 iFolder</title>
+  <url>../myifolders.html</url>
+  <content>管理 iFolder iFolder™ 是用于有选择地与用户指定的成员共享和同步文件的本地目录。所有成员都可通过主机服务（如 Novell® iFolder® 3.7 服务器）访问 iFolder 文件。那些具有特权的成员可修改和读取 iFolder 文件。 本节讨论 iFolder 的以下任务： </content>
+</topic>
+
+<topic>
+  <title>iFolder 的位置和用途的准则</title>
+  <url>../locguide.html</url>
+  <content>iFolder 的位置和用途的准则 通常情况下，当您创建 iFolder 或者设置共享的 iFolder 时，可以将 iFolder 放置在您的本地硬盘驱动器的任何地方。但是，有一些实际和特定的限制。在您的计算机上放置和使用 iFolder 时请考虑以下规范： 在您放置 iFolder 的目录中，iFolder 的名称必须是一个唯一的文件夹名。 iFolder 的名称不能包含以下这些无效的字符： \/:*?"&lt;&gt;|; For other naming conventions, see . iFolder 必须位于本地磁盘驱动器上；该位置不能在网络驱动器或非物理驱动器上。 iFolder 不能位于硬盘驱动器的根位置。 可以仅从文件夹中创建 iFolder，而且您对该文件夹中的文件拥有读和写的文件系统访问权限。当在计算机上设置共享的 iFolder 时，您必须对要放置 iFolder 的文件夹拥有文件系统访问权限。 iFolder 不能包含应用程序文件夹（例如，“Program Files”文件夹），也不能驻留在其中。 iFolder 不能包含 iFolder 元数据文件夹，也不能驻留在其中。元数据文件夹的默认位置如下： Linux： 在您的主文件夹（ &lt;用户主目录&gt;\.local\share simias ）子目录中 Windows： 在 C:\Documents and Settings\\ WindowsLogonUsername \Local Settings\Application Data\simias 目录中 Macintosh： 在 $HOME/.local/share/simias 中 iFolder 不能包含或属于其它 iFolder，包括 Novell iFolder 2. x iFolder。 iFolder 不支持作为 iFolder 的网络文件夹。例如，iFolder 无法成为用户映射到用户工作站的基于网络的目录/主目录。iFolder 也不支持用户通过 WebDAV 从桌面访问 iFolder 服务器的用户数据卷上的 iFolder 集合。 虽然您可以一次同时登录到多个 iFolder 帐户中，但 iFolder 仅可以与一个 iFolder 帐户相关联。无法将一个 iFolder 和多个帐户进行同步。创建一个 iFolder 时，只能与同一个 iFolder 服务器或域中配置的其他用户和 LDAP 组共享该 iFolder。 与一个 LDAP 组共享某一 iFolder 时，该 LDAP 组的所有成员都可以使用该 iFolder。 当多名用户共享一台计算机时，如果文件系统支持隐私功能并且您将系统配置为使用这些隐私功能，则您的 iFolder 本地副本对于磁盘上的储存空间是私用的。 在 Window 上，NTFS 包括内置安全性功能，例如文件和文件夹许可权限，以及加密文件系统 (EFS)，这些功能是用于在 NTFS 卷上储存加密文件的技术。FAT32 文件系统上不支持这些安全性功能。确保用户的本地登录身份（当然是非管理员身份）不具有管理员的权限或与其等效的权限。管理员用户有访问计算机上所有文件和目录的权限。对于每个用户都很注重隐私和安全性的共享计算机，用户可以使用 EFS 或第三方文件系统加密对其 iFolder 数据的本地副本进行加密。 Linux 和 Macintosh 文件系统专用于多用户环境。使用文件权限可以控制用户、用户组及其他人员的访问权限。通常，使用用户的完全权限设置用户的个人文件，组和其它设置没有访问权限。 如果您将 iFolder 储存在本地 Linux 的 FAT32 卷上，则需要特殊处理，因为 FAT32 文件系统与 POSIX* 不兼容。有关信息，请参见 。 如果同一台计算机的多个用户共享 iFolder，则该计算机上将存在 iFolder 的多个副本，以便每个用户可以从服务器上下载一个副本。不同的本地登录身份不能共享一个共享 iFolder 的位置。 </content>
+</topic>
+
+<topic>
+  <title>不进行同步的文件类型和大小的准则</title>
+  <url>../typeguide.html</url>
+  <content>不进行同步的文件类型和大小的准则 使用 iFolder 客户程序时，您的 iFolder 管理员可能会指定系统级、用户级、LDAP 组级或 iFolder 级的文件类型限制和最大文件大小限制。您的帐户可能也会限制在可用于自己拥有的 iFolder 中的数据的空间数量之内。您加入其它 iFolder 时，在服务器上占用的空间也视为被此 iFolder 的拥有者所耗用。 某些文件类型不适合进行同步，如操作系统文件、文件管理器创建的隐藏文件，作为已链接文件集实施的数据库等。您可以仅包括用于业务的主要的文件类型，或者排除可能与业务无关的文件，如 .mp3 文件。 操作系统文件 您不应将系统目录转换为 iFolder。大多数系统文件很少更改，最好保留基本系统和主要软件的映象文件，而不是尝试将那些文件与服务器上的文件同步。 隐藏文件 如果您的文件系统使用隐藏文件来跟踪显示首选设置，则您的管理员可能限制这些文件类型以排除它们被同步到您的系统上。通常，隐藏文件仅与创建它们的特定计算机有关，每次访问文件或目录时它们都会发生改变。您无需保留这些文件，同步它们会导致重复的文件冲突错误。 例如，iFolder 自动排除两个称为 thumbs.db 和 .DS_Store 的隐藏文件管理器文件。 数据库文件 iFolder 同步各个文件或各个文件的已更改部分；它不会将文件作为文件集来同步。如果您有作为已链接文件集实施的数据库文件，不要尝试在 iFolder 中同步它们。 不要尝试通过使 GroupWise 存档、超速缓存或远程目录进入 iFolder 来同步 GroupWise® 数据。如果这样做，在对文件进行几次同步后 GroupWise 数据文件将会损坏。GroupWise 需要将存档中的文件作为文件集保存。 </content>
+</topic>
+
+<topic>
+  <title>iFolder 及其文件夹和文件的命名约定</title>
+  <url>../nameconv.html</url>
+  <content>iFolder 及其文件夹和文件的命名约定 iFolder 客户程序强用考虑 Linux 和 Windows 文件系统的共同限制的命名约定。iFolder、文件夹或文件在可以同步之前必须拥有符合命名约定的有效名称。 为您的 iFolder 及其中的文件夹和文件使用以下命名约定： iFolder 支持使用 UTF-8 编码设置的 Unicode * 字符。 不要在 iFolder 的名称，或其中的文件夹和文件的名称中使用以下无效字符： \/:*?"&lt;&gt;|; 如果在文件或文件夹名称中使用无效字符，iFolder 会创建名称冲突。在文件或文件夹可以同步前必须解决此冲突。 单个路径部件的最大长度取决于客户机文件系统。对于文件名来说，最大长度包括点 (.) 和文件扩展名。 当您尝试下载或同步其名称长度超出文件系统支持的最大长度的 iFolder 时，iFolder 将显示出一条错误讯息。 iFolder、文件夹和文件的名称不区分大小写；但是，应保留大小写。如果文件名仅大小写不同，则 iFolder 将创建名称冲突。在文件或文件夹可以同步前必须解决此冲突。 如果在 Linux 的 FAT32 文件系统中创建 iFolder，避免全部用大写字符命名文件。在 Linux 上的 VFAT 或 FAT32 文件处理将自动更改全部是大写字符的文件名，并将所有的大写字符全部更改为小写字符，使其符合 MS-DOS 8.3 文件格式。如果该 iFolder 设置为只读访问权限，这会引起这些文件的同步问题。 </content>
+</topic>
+
+<topic>
+  <title>了解 iFolder 图标</title>
+  <url>../ificons.html</url>
+  <content>了解 iFolder 图标 下表说明了 iFolder 图标及相关任务。 iFolder 图标 说明 在桌面应用程序菜单中显示 iFolder 3 客户程序的 iFolder 服务 图标。 运行 iFolder 时， iFolder 服务 图标还出现在桌面任务栏的通知区域。右击该图标可获取一个可能任务的菜单，其中包括 iFolder 浏览器、帐户设置、同步日志、首选设置以及帮助。 如果以当前本地身份登录后，计算机上没有 iFolder，则 iFolder 浏览器中的 “此计算机上的 iFolder” 下将显示 iFolder 上载 图标。 您可以创建新的 iFolder 或将现有文件夹转换为 iFolder。如果您拥有多个帐户，则必须指定要使用的帐户；iFolder 只可以属于一个帐户。有关信息，请参见 。 如果以当前本地身份登录后，计算机上没有 iFolder，则 iFolder 浏览器中的 “此计算机上的 iFolder” 下将显示 iFolder 下载 图标。 如果指定服务器上存在您可用的 iFolder 但您尚未将其下载到此计算机，则 “服务器名上的 iFolder” 下将显示 iFolder 下载 图标。 服务器名 是由管理员指定的服务器的描述性名称，且您在该服务器上拥有 iFolder 帐户。 可以将不同帐户下的任何 iFolder 组合下载到本地计算机上。有关信息，请参见 。 加密的 iFolder 图标（锁定的 iFolder）指出该 iFolder 是加密的，此图标显示在 iFolder 浏览器中 “此计算机上的 iFolder” 下。 登录时提供的通行口令将为您检索加密的 iFolder 中的文件。有关加密的更多信息，请参见 。 iFolder 徽标（绿色的“i”），在文件管理器、桌面或 iFolder 浏览器中查看 iFolder 时，只要运行 iFolder 服务应用程序，都会在 iFolder 上显示该徽标。 iFolder 不运行时，如果在文件浏览器或桌面上查看 iFolder，它显示为常规文件夹 。当 iFolder 不运行时，iFolder 浏览器不可用。 在仅包含 iFolder 的单个目录中组织 iFolder 的本地集合是个很好的做法。这样可以在 iFolder 未运行且未提供将它们标记为 iFolder 的图标时轻松记住哪些文件夹为 iFolder。 iFolder 警告 图标指出服务器不可用。iFolder 正在运行，但您未连接到 iFolder 服务器上。可能的原因有： 您没有登录到 iFolder 帐户。有关信息，请参见 。 客户端禁用该帐户；即已禁用 “自动连接” 参数。有关信息，请参见 中的 “自动连接” 。 服务器已关闭或已禁用服务器端的帐户。与 iFolder 管理员联系以获取帮助。 防火墙阻止 iFolder 通讯。有关解决此问题的信息，请参见 。 网络连接已关闭。请检查本地网络设置。 iFolder 冲突 图标指示在本地拷贝和服务器拷贝之间存在文件冲突。通过指示要保留文件的哪个版本即可解决该冲突。有关文件冲突的更多信息，请参见 。 iFolder 等待同步 图标指出 iFolder 包含要与服务器同步的文件且同步过程尚未开始。 iFolder 每次同步一个 iFolder，并对同步任务进行排队。要确保本地 iFolder 中的文件已与服务器中的文件同步，请等待直到同步开始并成功完成再关闭 iFolder，如图标中的变化所示。 iFolder 正在同步 图标指出 iFolder 中的文件当前正在与服务器同步。 iFolder 错误 图标指示因文件大小限制或 iFolder 数量限制而产生策略冲突，致使 iFolder 中的一个或多个文件尚未进行同步。 在“共享”对话框中， iFolder 拥有者用户 图标指出该用户拥有该共享 iFolder。 在“共享”对话框中， iFolder 当前用户 图标指示该用户当前正在管理该 iFolder。如果当前用户是拥有者，则将显示 拥有者用户 图标。 </content>
+</topic>
+
+<topic>
+  <title>创建和上载 iFolder</title>
+  <url>../createifolder.html</url>
+  <content>创建和上载 iFolder 您可通过转换满足以下准则的现有文件夹来创建 iFolder： 如果不存在这样的文件夹，则可在此过程中浏览至一个位置，然后创建新的文件夹。 您只能共享常规 iFolder。无法共享加密的 iFolder。 在 iFolder 中，您可以根据个人或公司的工作习惯设置任何子目录结构。子目录结构将始终跨越所有成员 iFolder。每个工作站可为共享 iFolder 指定一个不同的父目录。 超出单个用户可创建的 iFolder 数目限制后，iFolder 将显示错误讯息。例如，如果管理员已将 “每个用户的 iFolder 数” 策略设置为 10，当您尝试创建第十一个 iFolder 时，iFolder 3.7 将通知您违反策略。 Linux 您可以使用文件管理器或 iFolder 浏览器（在客户应用程序中可用）创建 iFolder。使用下面的方法创建 iFolder： 在 iFolder 浏览器中创建 iFolder 在通知区域，使用下列方法之一打开 iFolder 浏览器： 单击 iFolder 服务 图标 。 右击 iFolder 服务 图标 ，然后单击 “iFolder” 。 单击 “上载文件夹” 。 在 “更多选项” 下，指定您要用于此 iFolder 的 “iFolder 帐户” 。 如果您有多个 iFolder 帐户，则首先列出默认帐户。使用下拉列表可选择其它帐户。 在浏览器中，导航到要创建 iFolder 的目录。 使用下列方法之一，选择要转换为 iFolder 的常规文件夹： 如果存在常规文件夹，则选择该文件夹，然后单击 “确定” 。 如果常规文件夹不存在，请单击 “创建文件夹” 以创建它，选择新创建的文件夹，然后单击 “确定” 。 从给定选项选择 iFolder “类型” 。您可以决定是创建加密的 iFolder 还是创建常规 iFolder。 仅当 iFolder 管理员将您的加密策略设置为 “启用” 时，您才有权创建加密的 iFolder。如果未设置为“启用”，则您只能创建常规 iFolder，此选项在默认情况下是选定的。在此情况下，将同时禁用这两种 “类型” 选项。 选择 “通行口令加密” 可对所选 iFolder 启用加密。 如果在登录会话过程中未设置通行口令，且您选择 “通行口令加密” ，则将出现提示，要求您输入通行口令。在“通行口令”对话框中指定通行口令。 选择 “常规” 可对所选 iFolder 启用共享。 iFolder 将在通知区域中显示一条弹出讯息以指出共享 iFolder 可用。共享用户可单击该讯息立即开始设置 iFolder，也可关闭该讯息以在稍后下载 iFolder。 选择 “安全同步” 可对所创建的 iFolder 中的文件启用安全同步。 您可以同时对常规 iFolder 和加密 iFolder 启用安全通道。在选中此选项时，iFolder 允许使用安全通道在服务器上的 iFolder 与本地计算机上的 iFolder 间进行同步。 您还可以通过右击 iFolder 主窗口中的“iFolder”&gt;“属性”选项来为所选 iFolder 启用安全同步。为此，请右击“iFolder”并选择 “属性” ，然后在“一般”选项卡中选择 “安全同步” 复选框。 单击 确定 。 该 iFolder 显示在 “此计算机上的 iFolder” 列表中。 如果显示 “已创建 iFolder” 讯息，请执行下列操作之一： 单击 “关闭” 关闭此讯息。 选择 “不要再次显示此讯息” 以禁用以后的通知，然后单击 “关闭” 退出该讯息。 如果稍后想要显示确认讯息，请转至 “iFolder 首选设置” ，选择 “创建 iFolder 时显示‘确认’对话框” ，然后单击 “确定” 。 在文件管理器中创建 iFolder 使用文件管理器导航到要转换为 iFolder 的文件夹，然后选择该文件夹。 使用下列方法之一： 右击该文件夹图标，然后单击 “转换为 iFolder” 。 在工具栏上，单击 “文件” ，然后单击 “转换为 iFolder” 。 文件夹图标 将变为带有 iFolder 徽标 （绿色“i”）的文件夹。 如果显示 “已创建 iFolder” 讯息，请执行下列操作之一： 单击 “关闭” 关闭此讯息。 选择 “不要再次显示此讯息” 以禁用以后的通知，然后单击 “关闭” 退出该讯息。 如果稍后想要显示确认讯息，请转至“iFolder 首选设置”，选择 “创建 iFolder 时显示‘确认’对话框” ，然后单击 “确定” 。 Windows 您可以使用文件管理器或 iFolder 浏览器（在客户应用程序中可用）创建 iFolder。使用下面的方法创建 iFolder： 在 iFolder 浏览器中创建 iFolder 在通知区域，使用下列方法之一打开 iFolder 浏览器： 单击 “iFolder 服务” 图标。 右击 “iFolder 服务” 图标，然后单击 “iFolder” 。 单击 “上载文件夹” 。 从下拉列表中，选择您要用于此 iFolder 的 iFolder 帐户。 如果您有多个 iFolder 帐户，则首先列出默认帐户。您可使用下拉列表选择一个不同的帐户。 在浏览器中，导航到要创建 iFolder 的目录。 使用下列方法之一，选择要转换为 iFolder 的常规文件夹： 如果存在常规文件夹，则选择该文件夹，然后单击 “确定” 。 如果不存在常规文件夹，则单击 “新建文件夹” 以进行创建，然后选择新创建的文件夹。 从以下给定选项中选择 iFolder 类型： 仅当 iFolder 管理员将您的加密策略设置为 “启用” 时，您才有权创建加密的 iFolder。如果未设置为“启用”，则您只能创建常规 iFolder，此选项在默认情况下是选定的。在此情况下，将同时禁用这两种 “类型” 选项。 选择 “通行口令加密” 可对所选 iFolder 启用加密。 如果管理员将您的加密策略设置为 “打开” ，则您有权创建加密的或共享的 iFolder。 如果在登录会话过程中未设置通行口令，且您选择 “通行口令加密” ，则将出现提示，要求您输入通行口令。 选择 “常规” 可对所选 iFolder 启用共享。 与其他 iFolder 成员共享您的 iFolder 时，iFolder 将在通知区域中显示一条弹出讯息以指出共享 iFolder 可用。共享用户可单击该讯息立即开始设置 iFolder，也可关闭该讯息以在稍后下载 iFolder。 选择 “安全同步” 可对所创建的 iFolder 中的文件启用安全同步。 您可以同时对常规 iFolder 和加密 iFolder 启用安全通道。在选中此选项时，iFolder 允许使用安全通道在服务器上的 iFolder 与本地计算机上的 iFolder 间进行同步。 您还可以通过右击 iFolder 主窗口中的“iFolder”&gt;“属性”选项来为所选 iFolder 启用安全同步。为此，请右击“iFolder”并选择 “属性” ，然后在“一般”选项卡中选择 “安全同步” 复选框。 单击 确定 。 该 iFolder 显示在 “此计算机上的 iFolder” 列表中。 如果显示 “已创建 iFolder” 讯息，请执行下列操作之一： 单击 “关闭” 关闭此讯息。 选择 “不要再次显示此讯息” 以禁用以后的通知，然后单击 “关闭” 退出该讯息。 如果稍后想要显示确认讯息，请转至 “iFolder 首选设置” ，选择 “创建 iFolder 时显示‘确认’对话框” ，然后单击 “确定” 。 在文件管理器中创建 iFolder 使用文件管理器导航到要转换为 iFolder 的文件夹，然后选择该文件夹。 使用下列方法之一： 右击该文件夹图标，然后单击 “转换为 iFolder” 。 在工具栏上，单击 “文件” ，然后单击 “转换为 iFolder” 。 文件夹图标 将变为带有 iFolder 徽标（绿色“i”）的文件夹。 如果显示 “已创建 iFolder” 讯息，请执行下列操作之一： 单击 “关闭” 关闭此讯息。 选择 “不要再次显示此讯息” 以禁用以后的通知，然后单击 “关闭” 退出该讯息。 如果稍后想要显示确认讯息，请转至“iFolder 首选设置”，选择 “创建 iFolder 时显示‘确认’对话框” ，然后单击 “确定” 。 Macintosh 您可从客户端应用程序中使用 iFolder 浏览器创建 iFolder。 从对接台单击 iFolder 服务 图标以打开 iFolder 浏览器。 使用下列方法之一打开该浏览器。 在工具栏上单击 “新建” 在菜单栏上单击 “文件”&gt;“新建” 在浏览器中，导航到要创建 iFolder 的目录。 选择要更改为 iFolder 的常规文件夹，然后单击 “打开” 。 从以下给定选项中选择 iFolder 类型： 仅当 iFolder 管理员将您的加密策略设置为 “启用” 时，您才有权创建加密的 iFolder。如果未设置为“启用”，则您只能创建常规 iFolder，此选项在默认情况下是选定的。在此情况下，将同时禁用这两种 “类型” 选项。 选择 “通行口令加密” 可对所选 iFolder 启用加密。 如果管理员将您的加密策略设置为 “打开” ，则您有权创建加密的或共享的 iFolder。 如果在登录会话过程中未设置通行口令，且您选择 “通行口令” “加密” ，则将出现提示，要求您输入通行口令。 选择 “常规” 可对所选 iFolder 启用共享。 选择 “安全同步” 可对所创建的 iFolder 中的文件启用安全同步。 您可以同时对常规 iFolder 和加密 iFolder 启用安全通道。在选中此选项时，iFolder 允许使用安全通道在服务器上的 iFolder 与本地计算机上的 iFolder 间进行同步。 单击 确定 。 该 iFolder 将出现在 iFolder 浏览器窗口中。 在 FAT32 装入点上创建 iFolder (Linux) 在 Linux 上，iFolder 支持在 FAT32 文件系统的装入点上创建和使用 iFolder。在 Linux 计算机的 FAT32 卷上创建新的 iFolder 或设置共享 iFolder 之前，iFolder 用户必须拥有要储存 iFolder 的 FAT32 装入点，且 /etc/fstab 文件必须为该装入点显式标识 iFolder 用户的本地用户 ID。 这是必须的，因为 FAT32 不支持文件权限。任何其它不支持权限的文件系统也都存在同样的问题。 对于双重引导系统，可以像访问系统中的常规文件夹（未被设置为 iFolder）一样访问 iFolder 中的数据。如果在两个平台上将文件夹都设置为 iFolder，则数据集储存在服务器上的两个不同 iFolder 中，它将占用两倍的已分配服务器磁盘资源。 由于 FAT32 文件系统不支持 POSIX 文件系统权限，因此请确保 iFolder 用户是装入点的本地拥有者。修改 /etc/fstab 文件，将用户的本地登录身份的用户 ID (UID) 参数设置为在该装入点上创建 iFolder 的 iFolder 用户。 以 根 用户身份登录到计算机。 创建要装入 FAT32 文件系统的目录。在命令提示符处，输入 mkdir /home/ username / fsmount 将 username 替换为想要对 iFolder 使用 FAT32 驱动器的用户的用户名。将 fsmount 替换为要用作装入点的目录名称。例如，如果对于 FAT32 驱动器或分区，用户名为 jsmith ，且目录名称为 fat32mntpt ，则输入 mkdir /home/jsmith/fat32mntpt 在所需的装入点装入 FAT32 驱动器。在命令提示符处，输入 mount -t vfat /dev/ hda1 /home/ username / fsmount 将 /dev/ hda1 替换为非 Linux 设备的设备或分区名称。将 username 替换为 iFolder 用户的用户名。将 fsmount 替换为要用作装入点的目录名称。 同样还是此示例，如果 FAT32 文件系统 ( vfat ) 位于 hda4 设备 ( /dev/hda4 ) 上，用户名为 jsmith ，且装入点目录为 /home/ jsmith / fat32mntpt ，则输入 mount -t vfat /dev/hda4 /home/jsmith/fat32mntpt 编辑 /etc/fstab 文件，将 iFolder 用户的 uid=username 参数添加到定义 FAT32 装入点的行中。 /dev/ hda1 /home/ username / fsmount vfat uid= username 同样还是此示例，通过将 uid=jsmith 添加到装入点来修改 /etc/fstab 文件： /dev/hda4 /home/jsmith/fat32mntpt vfat uid=jsmith </content>
+</topic>
+
+<topic>
+  <title>共享 iFolder</title>
+  <url>../sharewith.html</url>
+  <content>共享 iFolder 可以与多个用户共享 iFolder。本节讨论以下任务： 了解用户访问权限 下表说明了与用户或 LDAP 组的每个访问级别相关联的功能。 LDAP 组的所有成员都将继承该 LDAP 组的访问权限集。 功能 拥有者 具有“完全控制”权限的成员 具有“读/写”权限的成员 具有“只读”权限的成员 使用 Enterprise Server 时，服务器上的 iFolder 所占用的空间耗用用户的定额 否 否 否 否 将所有权转让给另一位状态为 iFolder 用户的成员 有 否 否 否 设置 iFolder 的定额 否 否 否 否 使 iFolder 可供其他用户使用（共享） 有 有 否 否 使 iFolder 不可供其他用户使用（停止共享） 是 是，拥有者除外 否 否 为其他用户指派 iFolder 访问权限 是 是，拥有者除外 否 否 读取 iFolder 中的目录和文件 有 是 是 有 添加、修改或删除 iFolder 中的目录和文件 有 是 有 无 重命名 iFolder 中的目录和文件 有 是 有 无 重命名 iFolder 否 否 否 否 在多台计算机上设置 iFolder 有 是 是 有 恢复 iFolder（不要在本地计算机上加入） 有 是 是 有 删除可用的 iFolder 以谢绝加入 有 是 是 有 删除 iFolder 并将 iFolder 及其文件从服务器上删除（使其再次成为常规文件夹并且不再与他人共享它） 有 否 否 否 访问“共享”选项卡 您可以通过“iFolder 属性”对话框中的 “共享” 选项卡管理 iFolder 的成员资格。 仅当 iFolder 管理员已为您的帐户启用共享策略后，您才能共享 iFolder。 如果 iFolder 没有运行，请启动 iFolder。 进行下面的操作之一以打开“iFolder 属性”对话框，显示 “共享” 选项卡。 在文件管理器中，右击要共享的 iFolder，然后选择 “共享对象” 。 在 iFolder 浏览器中，选择 iFolder，然后选择 “共享对象” 。 将用户添加到 iFolder 在 “共享” 选项卡上，单击 “添加” 以打开“选择用户”对话框。 从用户列表中，选择一个或多个用户或 LDAP 组将它们添加到 “所选用户” 列表中，然后单击 “确定” 。 用户可能需要花费几秒钟来同步到服务器。同步后不久，页的右底部将出现一个通知。 在 “共享” 选项卡上，选择一个或多个要指派相同访问权限的用户。 单击 “访问” ，选择 “完全控制” 、 “读/写” 或 “只读” 访问权限，然后单击 “确定” 。 重复前面的步骤，直到已邀请所有需要的用户或 LDAP 组共享 iFolder 并为其设置了访问权限。 单击 “应用” ，然后单击 “确定” 关闭“iFolder 属性”窗口。 修改用户访问权限 由于 iFolder 成员的工作关系和状态会发生改变，因此您可能需要更改某个用户对 iFolder 的访问权限。例如，您可能希望授予某个可信用户对 iFolder 的“完全控制”权限。 在 “共享” 选项卡上，选择一个或多个您希望他们拥有相同访问权限的用户。 选择 “访问” ，然后指定 “完全控制” 、 “读/写” 或 “只读” 权限。 首次邀请一个用户或 LDAP 组参与时，“访问权限”对话框中的 “将此用户作为 iFolder 的拥有者” 选项是禁用的（灰显）。如果您要将新用户设置为拥有者，则必须等到该用户的状态从 “已邀请用户” 变为 “iFolder 用户” ，然后才能转让所有权。将所有权转让给 LDAP 组时，该组的所有成员都将获得该所有权。 单击 “确定” ，然后单击 “确定” 关闭“iFolder 属性”窗口。 从 iFolder 中去除用户 要取消共享一个 iFolder，必须去除用户或 LDAP 组的 iFolder 成员资格。用户或 LDAP 组成员的工作站上的 iFolder 将变为常规文件夹。数据的一份拷贝保留在前成员的工作站上，但文件不再与共享的 iFolder 同步。 在 “共享” 选项卡上，从列表中选择一个或多个用户。 单击 “去除” ，然后单击 “应用” ，最后单击 “确定” 。 将所有权转让给 iFolder 用户 一个 iFolder 的拥有者可以将该 iFolder 的所有权转让给状态为“iFolder 用户”的其他单个用户或 LDAP 组。转让所有权后，原拥有者将变为具有读/写权限的成员，新拥有者将对该 iFolder 占用的空间付费。当一个 LDAP 组是 iFolder 的拥有者时，该组的所有成员都将获得拥有权。 在文件管理器或 iFolder 浏览器中，右击要转让的 iFolder，然后选择 “共享对象” 打开此 iFolder 的“属性”对话框，显示 “共享” 选项卡。 从用户列表中，选择将成为新的拥有者的 iFolder 用户，然后单击 “访问权限” 。 选择 “将此用户设置为此 iFolder 的拥有者” 。 如果用户的状态为 “已邀请用户” ，则“访问”对话框中的 “将此用户作为 iFolder 的拥有者” 选项被禁用（灰显）。在此情况下，请退出对话框，等到用户的状态从 “已邀请的用户” 变为 “iFolder 用户” 后，再重复上述步骤转让所有权。 单击 “确定” ，然后单击 “确定” 关闭“iFolder 属性”窗口。 </content>
+</topic>
+
+<topic>
+  <title>查看和隐藏可用的 iFolder</title>
+  <url>../viewhide.html</url>
+  <content>查看和隐藏可用的 iFolder 您可以决定将哪些 iFolder 到下载您的各台计算机上。如果您可以在服务器上使用尚未下载的 iFolder，则它们会列在相关帐户的 服务器名称 下的 iFolder 浏览器中。 服务器名称 是管理员指定的您拥有 iFolder 帐户的服务器的描述名称。 要在 iFolder 浏览器中查看可用的 iFolder，请单击 “查看可用的 iFolder” 。 要在 iFolder 浏览器中隐藏可用的 iFolder，请单击 “隐藏可用的 iFolder” 。 </content>
+</topic>
+
+<topic>
+  <title>合并 iFolder</title>
+  <url>../merge.html</url>
+  <content>合并 iFolder 合并功能可帮助您合并 iFolder 数据并将 iFolder 服务器和客户程序之间的数据传输量降至最低。您可将服务器上 iFolder 中的内容与本地计算机上现有文件夹的内容合并在一起。 合并 iFolder 与文件夹 您可将同名的 iFolder 和常规文件夹合并在一起。例如，您可将名为 “corporate” 的 iFolder 的内容与名为 “corporate” 的常规文件夹的内容合并在一起。 假定 “corporate” iFolder 具有三个子文件夹： hr 、 finance 和 marketing 。现在，您要将 “corporate” iFolder 的内容下载到名为 “corporate” 的文件夹中，该文件夹只包含 “hr” 和 “finance” 两个文件夹。在此情况下，您不必将所有三个文件夹都下载到 “corporate” 文件夹，这可避免增加传输率。您可将 “corporate” iFolder 与 “corporate” 文件夹合并在一起，这样， “合并到文件夹” 功能将自动避免下载子文件夹 “hr” 和 “finance” ，而只下载 “marketing” 子文件夹。如果 “corporate” iFolder 和 “corporate” 文件夹中的数据是不同的，则出现版本冲突。您可手工解决这些冲突。同样，如果出现文件名冲突，则也可手工解决。 要将服务器上的 iFolder 与本地计算机上的现有文件夹合并在一起： 在 iFolder 浏览器中，从选定服务器的 iFolder 列表中右击所需的 iFolder，然后选择 “合并到文件夹” 。 浏览并选择文件夹，然后单击 “确定” 。 现在，对这两个文件夹的内容进行比较，并从 iFolder 下载该常规文件夹中不存在的文件。如果 iFolder 中不存在该常规文件夹中的文件，则上载这些文件。 将现有 iFolder 移动到其它位置 要将名为 “corporate” 的 iFolder 移动到客户机上的其它位置： 将 “corporate” iFolder 转换为常规文件夹。 您不得删除服务器上的 iFolder。 有关更多信息，请参见 。 将 “corporate” 文件夹移动到其它位置。 您不得在移动文件夹时更改其名称。 在 iFolder 浏览器窗口中，选择服务器上的 “corporate” iFolder，然后单击 “合并到文件夹” 。 选择本地计算机上的 “corporate” 文件夹，然后单击 “确定” 以合并内容。 如果您使用 “立即同步” （而不是 “合并到文件夹” ）（如 中所述），则系统将检查服务器上的 iFolder 中的所有数据并同步所有数据。数据传输时间因此而延长。换言之， “合并到文件夹” 将把数据传输量降至最低，因为它只合并 iFolder 和常规文件夹中的内容。 有关合并的更多信息，请参见 。 将迁移的 2. x iFolder 合并到 iFolder 3.7 您可合并迁移的 2.x iFolder 与 iFolder 3.7 iFolder。有关迁移的更多信息，请参见 。 迁移后，2. x iFolder 将移动到 iFolder 3.7 服务器。您可选择将 3.7 服务器上的迁移的 iFolder 下载到客户机。但是，客户机上可能已存在这些 iFolder。如果遇到这种情况，请使用合并功能以避免将不必要的数据从服务器传输到客户机。 要将迁移的 2. x iFolder 合并到 iFolder 3.7： 将 2. x iFolder 迁移到 iFolder 3.7 域。 将本地计算机上的 2. x iFolder 转换为常规文件夹。 选择每个 iFolder 的服务器拷贝并单击 “合并到文件夹” 。 要合并内容，选择该常规文件夹并单击 “确定” 。 </content>
+</topic>
+
+<topic>
+  <title>下载可用的 iFolder</title>
+  <url>../setupifolder.html</url>
+  <content>下载可用的 iFolder 其他人与您共享 iFolder 时，iFolder 会与 iFolder 下载图标 一起出现，该图标位于您的 iFolder 浏览器中的 “iFolder 服务器名称上的 iFolder” 之下，在您的 iFolder 浏览器中， iFolder 服务器名称 是该帐户的服务器的名称。要加入计算机上的共享 iFolder，可以下载此 iFolder。 当一个新用户加入您的共享 iFolder 列表时，iFolder 将在通知区域中显示一条弹出讯息来指出新共享用户可用。 当该共享用户完成下载共享 iFolder 后，还将在通知区域中收到一条气球式弹出讯息。此讯息的内容为 &lt;共享 iFolder 的用户的用户名&gt; 已加入 &lt;iFolder 名称&gt;。新用户加入共享成员时，所有现有成员用户都会收到有关新共享成员的通知。 右击 iFolder 服务图标 ，然后单击 “iFolder” 以打开 iFolder 浏览器。 在 iFolder 列表中，选择可用的 iFolder，然后单击 “下载 iFolder” 。 如果未登录到帐户，请使用用户名和口令登录，然后单击 “连接” 。 浏览至要创建本地 iFolder 的位置，然后指定要为此 iFolder 本地使用的名称。 位置和文件夹名称必须遵循以下准则： 单击 “确定” 两次。 </content>
+</topic>
+
+<topic>
+  <title>查看和配置 iFolder 的属性</title>
+  <url>../propifolders.html</url>
+  <content>查看和配置 iFolder 的属性 使用“iFolders 属性”页查看和配置有关所选 iFolder 的以下信息。 了解 iFolder 属性 以下参数报告服务器上磁盘空间的使用情况： 参数 说明 可用 当前可用于所选 iFolder 中的文件或目录的服务器磁盘空间的总量。此值等于定额减去已使用空间。 已使用 所选 iFolder 中的所有文件和目录当前所占用的服务器磁盘空间的总量。 定额 此值报告 iFolder 拥有者分配给所选 iFolder 的服务器磁盘空间总量。如果未设置定额，则该值为空或为 N/A （不适用）。 以下参数报告 iFolder 的本地拷贝的同步状态： 参数 说明 上次成功同步 iFolder 的本地拷贝与 iFolder 服务器的最近一次成功同步的完成时间。 mm/dd/yyyy hh:mm:ss 要同步的文件/文件夹 需要同步的 iFolder 中的储存项目（文件和文件夹）的总数。 自动同步间隔 iFolder 的同步间隔。以分钟、小时或天为单位指定此值。 iFolder 客户程序与 Novell iFolder 3. 6 Enterprise Server 一起使用时，此间隔无法覆盖由 iFolder 管理员为服务器或服务器上的帐户指定的最小间隔，但它可以覆盖客户程序级的同步间隔。 立即同步 单击此按钮以根据需要启动同步。 安全同步 借助“安全同步”，可安全地同步您所创建的 iFolder 中的文件。对常规 iFolder 和加密 iFolder，都可以启用安全通道。在选中此选项时，iFolder 允许使用安全通道在服务器上的 iFolder 与本地计算机上的 iFolder 间进行同步。 通过文件管理器访问 iFolder 属性 在文件管理器中，导航至 iFolder，然后选择它。 右击该 iFolder，然后单击 “iFolder” &gt; “属性” 。 通过 iFolder 浏览器访问 iFolder 属性 在通知区域中，右击 iFolder 服务图标，然后单击 “iFolder” 打开 iFolder 浏览器。 在 iFolder 列表中，选择该 iFolder，然后单击 “属性” 。 </content>
+</topic>
+
+<topic>
+  <title>管理加密 iFolder 的通行口令</title>
+  <url>../managingpassphrse.html</url>
+  <content>管理加密 iFolder 的通行口令 Novell iFolder 提供用户友好界面加密 iFolder，以保证服务器端的数据安全。 在成功登录 iFolder 后，会打开一个可选的“iFolder 通行口令”对话框，如果管理员已启用加密，则您可以在此对话框中输入您的加密通行口令。iFolder 使用通行口令来生成用于加密及解密 iFolder 的唯一加密密钥。如果您不提供通行口令，则在处理加密 iFolder 的过程中会自动显示“通行口令”对话框。如果您想不起通行口令，则您在登录时选择的恢复代理会帮助您恢复加密密钥。有关详细信息，请参见 文件在离开工作站之前进行加密，然后通过因特网连接安全地传输，最后上载并储存到 iFolder 服务器上。iFolder 数据在 iFolder 服务器上保持加密状态，并且安全地在服务器通道上传输或传出服务器。当下载的文件到达本地工作站时，ifolder 客户程序会对其进行解密。 恢复加密的 iFolder 每个 iFolder 都具有唯一的在创建 iFolder 过程中自动生成的数据加密密钥。使用通行口令可以创建能够加密该唯一数据加密密钥的密钥。如果您忘记了机密通行口令，则无法访问 iFolder 数据或用于恢复 iFolder 数据的加密密钥，除非您已经在本地保存了通行口令（启用 “保存通行口令” ）。为了避免这种问题，您必须使用“导出加密密钥”菜单项将密钥导出，并且通过使用对话框中给出的电子邮件地址手动将密钥发送至恢复代理。恢复代理会检索密钥并且将其发送给您（通过电子邮件或任何其它通讯通道）。您可导入这些密钥并使用它们来重设置通行口令。 通常情况下，“恢复代理”是一个与拥有 iFolder 服务器体系架构的实体无关，或与 IT 部门（如果在公司环境中部署了 IT 部门）无关的实体。 要导出您的数据加密密钥， 选择 “安全性”&gt;“密钥恢复”&gt;“导出加密密钥” 从下拉表中选择 iFolder 帐户。 在本地计算机上指定位置，以储存包含加密密钥的导出文件。 选择在登录过程中选择的“恢复代理” 指定所选择的恢复代理的电子邮件 ID。 单击 “确定” 。 要导入恢复的数据加密密钥， 选择 “安全”&gt;“密钥恢复”&gt;“导入解密密钥” 指定包含解密密钥的导入文件的位置。 指定恢复代理提供的 “一次性通行口令” 以解密并清除该密钥。（可选） 恢复代理通过使用一次性通行口令对恢复的解密密钥进行加密。一次性通行口令和密钥文件需要通过不同的通讯通道发送（出于安全考虑）。如果恢复代理选择不重新加密，则导入的文件将包含解密密钥。 指定 “新建通行口令” 以重新加密数据加密密钥。 在 “再次键入通行口令” 字段中，再次键入通行口令以校验并单击 “确定” 重设置通行口令 为了安全起见，应该在导入密钥之后重设置通行口令。通过使用“恢复代理”发送的一次性通行口令来实现此目的。 选择 “安全性”&gt;“重设置通行口令” 。 在“重设置通行口令”窗口中，选择要为其重设置通行口令的 iFolder 帐户，并指定以下细节： 输入通行口令： 输入一次性通行口令。 输入新通行口令： 输入要为当前 iFolder 帐户设置的新通行口令。 重新键入通行口令： 再次输入新通行口令进行确认。 恢复代理： 选择为当前 iFolder 帐户所设置的恢复代理。 单击 “重设置” 。 </content>
+</topic>
+
+<topic>
+  <title>设置 iFolder 定额</title>
+  <url>../ifquota.html</url>
+  <content>设置 iFolder 定额 不能为自己所拥有的 iFolder 设置定额。iFolder 管理员会为您的用户帐户设置定额。管理员可以在四种不同级别设置定额：系统级别、LDAP 组级别、用户级别和 iFolder 级别。 有关查看为您的帐户设置的定额属性的更多细节，请参见以下内容： 如果管理员启用的 iFolder 定额小于您的 iFolder 数据当前占用的总空间，则数据会停止同步，直到数据减少到低于该限制，或直到定额增大到大于您已占用的总空间值。 </content>
+</topic>
+
+<topic>
+  <title>同步文件</title>
+  <url>../sync.html</url>
+  <content>同步文件 按需同步文件 在通知区域中右击 iFolder 服务图标 ，然后单击 “iFolder” 以打开“iFolder 浏览器”。 在 iFolder 列表中，选择 iFolder，然后单击 “立即同步” 。 配置同步间隔 在通知区域中右击 iFolder 服务图标 ，然后选择 “自选设置” 以打开“iFolder 首选设置”对话框并进入 “一般” 选项卡。 执行以下操作之一： 选中 “同步” 以启用后台同步。 取消选中 “同步” 以禁用同步。 如果启用了同步，则指定同步文件的间隔，如每隔 1 小时或每隔 2 天。 将 iFolder 客户程序与 Novell iFolder 一起使用时，最小的系统同步间隔一般为 5 分钟，这由 iFolder 管理员配置。您无法覆盖系统最小间隔。绝对系统最小间隔为 1 分钟。 </content>
+</topic>
+
+<topic>
+  <title>解决文件冲突</title>
+  <url>../conflicts.html</url>
+  <content>解决文件冲突 同时保存在不同计算机上的文件版本之间会发生冲突，或者文件名只是大小写不同时也会发生冲突。发生冲突时，文件会储存到冲突区域且状态会标记为 “名称冲突” 。iFolder 上会显示 iFolder 冲突图标 。如果在“iFolder 首选设置”中启用了 “冲突通知” 选项，则还会向通知区域发送一个警报。您可以在 “iFolder 首选设置” 的 “一般” 选项卡中设置首选项来控制通知的弹出行为。 要解决文件冲突，请参见以下内容： 解决文件版本冲突 要清除文件版本冲突，必须在“冲突解决方法”对话框中选择正确版本。 在通知区域中右击 iFolder 服务 图标 ，然后单击 “iFolder” 以打开 iFolder 浏览器。 选择存在冲突的文件 ，然后单击 “解决” 以打开 “解决冲突” 对话框。 您可查看同一文件的两种版本： 本地版本： 保存在本地计算机上的文件。 服务器版本： 保存在服务器上的文件。 您可查看有关本地计算机上文件和服务器上文件的细节来确定要保留哪个文件版本。 对每个文件单击 “打开” 以查看该文件。 根据首选设置为 “保存到 iFolder” 选择以下任一选项。 本地版本： 如果要将本地版本保存到 iFolder，请选择此选项。 服务器版本： 如果要将服务器版本保存到 iFolder，请选择此选项。 选择 “启用” 可启用 “保存到冲突文件箱” 选项。启用此选项后，存在冲突的文件将被自动选中以保存到冲突文件箱。您的选择将决定将哪个版本保存到本地的冲突文件箱供以后使用。 清除冲突后，单击 “保存” 。 解决文件名冲突 本地文件版本的名称与服务器文件版本的名称大小写不同时会发生文件名冲突。此类冲突可通过重命名文件来解决，但要注意重命名文件的位置。 如果文件内容相同，则可使用 “解决冲突” 对话框来重命名其中的一个文件。 如果文件内容不同，请确保创建本地文件的拷贝并为它指定一个不同的名称，然后返回至“解决冲突”对话框，保存文件的服务器版本。这允许文件的两个版本以不同的文件名存在于 iFolder 中。如果在“解决冲突”对话框中重命名一个文件版本，则该文件版本会覆盖另一文件版本，且另一文件的内容也会被破坏。 在通知区域中右击 iFolder 服务图标 ，然后单击 “iFolder” 以打开“iFolder 浏览器”。 选择存在冲突的文件 ，然后单击 “解决” 以打开“解决冲突”对话框。 确认它是文件名冲突，并确定文件内容是否相同。 执行以下操作之一： 如果文件内容相同，则重命名其中一个文件，单击 “保存该版本” ，然后单击 “确定” 关闭“解决冲突”对话框。操作完成。 If the content is different, continue with . 关闭“解决冲突”对话框。 打开文件管理器，并导航到冲突中文件的本地拷贝。 复制该文件并使用唯一的名称将其保存到 iFolder 中。 iFolder 将该文件作为新文件同步到服务器和成员计算机中。 返回至 “解决冲突” 对话框，选择文件的服务器版本，单击 “保存该版本” ，然后单击 “确定” 。 文件的服务器版本会下载到本地计算机中，并以该名称覆盖文件的本地拷贝。 </content>
+</topic>
+
+<topic>
+  <title>移动 iFolder</title>
+  <url>../movelocation.html</url>
+  <content>移动 iFolder 创建 iFolder 后，iFolder 的路径是静态的。您无法将 iFolder 从其原位置移动到本地计算机上的另一位置，且无法将它保留为 iFolder。移动 iFolder 会中断同步数据库和转换为 iFolder 的文件夹之间的链接。 要在创建 iFolder 的计算机上移动该 iFolder： 在文件管理器或 iFolder 浏览器中，选择要移动的 iFolder。 将 iFolder 恢复为常规文件夹。 在文件管理器中，将该文件夹移到计算机上的另一位置。 将该文件夹转换回为 iFolder 并且将该 iFolder 上载到服务器。 （可选）共享该 iFolder。 允许该 iFolder 将文件与 iFolder 服务器同步。 要在参与计算机上移动 iFolder： 在 iFolder 中，恢复 iFolder 以停止加入当前计算机上的 iFolder。 选择可用的 iFolder，然后单击 “下载 iFolder” 。 指定一个要放置 iFolder 的新的本地路径。 允许该 iFolder 将文件与 iFolder 服务器同步。 </content>
+</topic>
+
+<topic>
+  <title>将 iFolder 恢复为常规文件夹</title>
+  <url>../reverting.html</url>
+  <content>将 iFolder 恢复为常规文件夹 您可以为本地计算机将 iFolder 恢复为常规文件夹。恢复为常规文件夹后，仍为所有 iFolder 成员保留合作共享关系，但此 iFolder 不再与您的当前计算机同步。恢复 iFolder 并不从成员工作站或服务器上删除此 iFolder 及其内容。 在文件管理器或 iFolder 浏览器中，查找要恢复为常规文件夹的 iFolder。 使用下列方法之一来开始恢复 iFolder： 在文件管理器中，右击此 iFolder，然后单击 “恢复为常规文件夹” 。 在 iFolder 浏览器中，选择此 iFolder，然后单击 “文件” &gt; “恢复为常规文件夹” 。 这会 将此 iFolder 恢复回常规文件夹？ 对话框会请求确认和说明。 执行以下操作之一： 选择 “否” 将此文件夹在本地计算机上保持为 iFolder。 选择 “是” 将此 iFolder 恢复为常规文件夹。 iFolder 的本地拷贝为常规文件夹，并且不再与服务器同步。此 iFolder 的其他成员不受影响。 如果您是此 iFolder 的拥有者，则可以选择停止将此文件夹作为 iFolder 共享。选择 “同时从服务器上删除此 iFolder” ，然后单击 “是” 。 此 iFolder 在您的本地计算机和所有成员的计算机上都恢复为常规文件夹。此 iFolder 的服务器拷贝将从服务器上永久删除。 </content>
+</topic>
+
+<topic>
+  <title>从共享 iFolder 中去除成员资格</title>
+  <url>../bbb7rj2.html</url>
+  <content>从共享 iFolder 中去除成员资格 要从下载的共享 iFolder 去除成员资格： 如果某一 iFolder 由某一 LDAP 组共享，则不允许此 LDAP 组的各个成员从该 iFolder 去除自己的成员资格。 在文件管理器或 iFolder 浏览器中，找到您要从其去除自己的成员资格的 iFolder。 右击该 iFolder 并选择 “恢复为常规文件夹” ，将显示出确认对话框。 在确认对话框中，选中 “同时从 iFolder 中去除我的成员资格” 。 单击 “是” 确认操作。 该 iFolder 的本地拷贝是常规文件夹，将不再与服务器同步。 要从服务器上的共享 iFolder 去除成员资格： 在 iFolder 浏览器中，找到您要从其去除自己的成员资格的 iFolder。 右击 iFolder 并选择 “去除我的成员资格” 。 单击 “确定” 确认操作。 </content>
+</topic>
+
+<topic>
+  <title>删除 iFolder</title>
+  <url>../deleting.html</url>
+  <content>删除 iFolder 如果从集合中删除 iFolder，会删除 iFolder 的本地拷贝及其内容。It also can affect the share relationship for the iFolder, depending on the Access right you hold for it. 可以删除由您所在的 LDAP 组共享的 iFolder 的本地拷贝。但是，您不能从该 iFolder 删除您的成员资格。 下表基于删除 iFolder 的用户的访问权限列出了删除 iFolder 对共享关系和成员 iFolder 的影响。 删除 iFolder 的用户的访问权限 共享关系 iFolder 的服务器拷贝 iFolder 的成员拷贝 拥有者 结束 iFolder 的共享关系 从服务器中删除 iFolder 元数据和内容 将 iFolder 恢复为适用于所有用户的常规文件夹 “完全控制”用户 去除共享中的用户 没有影响 将 iFolder 的本地拷贝恢复为常规文件夹 “读/写”用户 去除用户的共享成员资格 没有影响 将 iFolder 的本地拷贝恢复为常规文件夹 “只读”用户 去除用户的共享成员资格 没有影响 将 iFolder 的本地拷贝恢复为常规文件夹 下表基于删除 iFolder 的 LDAP 组成员的访问权限列出了对共享关系和 iFolder 成员的影响。 删除 iFolder 的 LDAP 组成员的访问权限 共享关系 iFolder 的服务器拷贝 iFolder 的成员拷贝 拥有者 结束 iFolder 的共享关系 从服务器中删除 iFolder 元数据和内容 将 iFolder 恢复为适用于所有用户的常规文件夹 完全控制 LDAP 组 没有影响 不允许从服务器删除 iFolder 将 iFolder 的本地拷贝恢复为常规文件夹 读/写 LDAP 组 不允许终止共享关系 不允许从服务器删除 iFolder 将 iFolder 的本地拷贝恢复为常规文件夹 只读 LDAP 组 不允许终止共享关系 不允许从服务器删除 iFolder 将 iFolder 的本地拷贝恢复为常规文件夹 删除 iFolder 并不会从工作站中卸装 iFolder 客户程序。 在文件管理器或 iFolder 浏览器中，查找要删除的 iFolder。 右击该 iFolder，然后单击 “删除” 。 </content>
+</topic>
+
+<topic>
+  <title>下一步</title>
+  <url>../bbbcabq.html</url>
+  <content>下一步 有关迁移和升级的信息，请参见以下内容： </content>
+</topic>
+
+<topic>
+  <title>Novell iFolder 迁移和升级</title>
+  <url>../coexistmig.html</url>
+  <content>Novell iFolder 迁移和升级 本节讨论从 Novell iFolder 2 x 客户程序迁移到 Novell® iFolder 3.7 客户程序的用户友好的方法。此外，还讨论了从 iFolder 3. x 到 iFolder 3.7 的客户程序升级问题。 </content>
+</topic>
+
+<topic>
+  <title>从 iFolder 2.x 迁移到 iFolder 3.7</title>
+  <url>../migration.html</url>
+  <content>从 iFolder 2. x 迁移到 iFolder 3.7 本节讨论以下内容： 了解迁移过程 Novell iFolder 提供了一种简单的迁移方法，可轻松快速地迁移 iFolder 2. x 到 Novell iFolder 3.7 的 iFolder 客户程序的简单易行、无后顾之忧的迁移。iFolder 客户程序中提供的“迁移助理”可帮助您快速轻松地迁移现有 iFolder 2. x 数据。 启动期间，“迁移助理”检测 2. x 安装并提示您迁移数据。数据迁移期间，系统再次提示您转换现有文件夹或者制作 2. x iFolder 的拷贝。有关此内容的更多信息，请参见 。 iFolder 提示您将文件重新同步到 3.7 服务器，并询问您是否需要保留 2. x 客户程序到 3.7 完成同步为止。在此过程中，只有数据得到迁移，因此用户必须在新的客户程序中设置首选设置。 迁移过程 安装 iFolder 3.7 的 iFolder 客户程序，然后为 iFolder 3.7 企业服务器配置您的帐户。 有关安装客户程序及设置帐户的信息，请参见 。 在 iFolder 浏览器中，在本地计算机上创建一个或多个 iFolder。 可以使用 iFolder 的任意有效名称。不要在与当前 iFolder 2. x 目录相同的目录路径中创建 iFolder。有关信息，请参见 。 iFolder 将显示出一条讯息，指出存在上一版本的数据并请求迁移。 单击 “确定” 打开可用的 2. x iFolder 的列表。 选择要迁移的 2. x iFolder。 单击 “迁移” 显示“迁移助理”。 还可以通过 “iFolder”&gt;“迁移”&gt;“从 iFolder 2.x 迁移” 访问“迁移助理”。 迁移助理将帮助您执行迁移过程以完成数据迁移。 单击 “向前” 以显示“迁移”选项。 请选中以下选项之一： 迁移 iFolder 并中断其与 2.x 域的连接 ： 选中此选项可在将现有文件夹迁移到 3.7 后断开其与 iFolder 2. x 域的连接。 创建 iFolder 的拷贝并迁移： 选中此选项可创建 iFolder 2. x 文件的拷贝并将它们转换为 iFolder 3.7。这不会从 iFolder 2. x 域去除这些文件，即使将这些文件迁移到 iFolder 3.7 后。 选中此选项后，您还可以选中 “复制父文件夹” ，前提是您不仅要复制 2. x 文件夹的内容，而且还要复制父文件夹的内容。如果未选中此选项，则只将选定文件夹的内容迁移到 3.7。 单击 “浏览” 查找保存迁移的文件夹的位置。 例如， c:/Documents and Settings/&lt;user name&gt;/ifolder2dir 是一个 2. x iFolder， dir1 和 dir2 是 ifolder2dir 下的目录。选中选项 “复制父目录” 后，系统将在新位置创建 ifolder2dir 并将目录 dir1 和 dir2 复制到其中。如果未选中此选项，则只将目录 “dir1” 和 “dir2” 移动到指定位置。 单击 “转发” 可选择域和安全性选项，如下所示： 从下拉列表中选择域。 选中所需的安全性选项： 选中 “加密” 以加密所选的 iFolder。 如果登录过程中未设置通行口令，则 iFolder 会提示您输入通行口令。可以跳过此选项，以后再设置通行口令。 如果当前未连接到 iFolder 域，系统会提示您连接到该域。 选中 “共享” 可与 iFolder 3.7 域中的其他成员共享该 iFolder。 您可将加密的 2. x iFolder 迁移到共享文件夹。当您尝试将加密的 2. x iFolder 迁移到一个共享文件夹时，系统将提示您检验该操作。 单击 “确定” 确认操作。 单击 “转发” 可迁移选定的 iFolder。 校验输入信息是否正确，如有必要，单击 “后退” 返回到前面的页面进行改正。 如果给定信息正确，请单击 “迁移” 以开始迁移。 单击 “后退” 返回并进行所有必要的更改。 单击 “完成” 完成迁移。 </content>
+</topic>
+
+<topic>
+  <title>升级 iFolder 3。x 客户程序</title>
+  <url>../bctryt7.html</url>
+  <content>升级 iFolder 3。 x 客户程序 本节讨论以下内容： 在升级 3.4.1 客户程序前，必须备份本地 Simias 储存。如果不进行备份，当升级操作失败时，则会丢失计算机上的所有配置信息，因为该操作将删除 Simias 储存。 自动升级到 iFolder 3.7 仅当具有根访问权限时，才有可能进行自动升级，因为升级过程需要安装 RPM 包。在升级过程中将请求提供根口令。如果您不具有根访问权限，则不会自动安装该软件包。但是，客户程序包将被下载到一个临时位置。该 Linux 客户程序将被下载到 /tmp/&lt;32chardir&gt;/ifolder3-linux.tar.gz 。这样，您就可在以后进行升级，因为该位置包含两个您可手工运行的安装脚本。升级客户程序前，将不能使用 iFolder 3. x 客户程序连接到 iFolder 3.7 域。 从 iFolder 3. x 客户程序（低于 iFolder 3.7 版本），尝试连接到 iFolder 服务器。将出现提示，询问您是否要升级。 单击 “是” 以自动升级 iFolder 3. x 客户程序。 对于 iFolder 3.4.1，如果您单击 “否” 并试图将 iFolder 3.4.1 客户程序连接到 iFolder 3.7 服务器，则将显示一条错误讯息。单击 “确定” 关闭此讯息。 iFolder 3. x 客户程序（非 iFolder 3.4.1 客户程序）将连接到 iFolder 3.7 服务器，即使您选择不升级。尽管 3. x 客户程序仍连接到 3.7 服务器，但您不能使用该客户程序执行任何 iFolder 操作。当您试图将现有文件夹转换为 iFolder 时，服务器并不会考虑这些更改，并显示错误讯息指出服务器不可用。您可执行的唯一操作是从服务器下载新的 RPM 以安装 iFolder 3.7。 使用安装脚本手动升级 可以使用安装脚本来升级 iFolder 客户程序。可以从 OES 2 SP1 Linux 欢迎页面下载它们。 Linux 在 OES 2 SP1 Linux 欢迎页面上： 单击 “用于 Linux 的 iFolder 客户程序” ，然后下载 ifolder3 linux.tar.gz 。 单击 “安装 iFolder Linux 客户程序脚本” 链接，然后将 install-ifolder-script.sh 下载到 ifolder3-linux.tar.gz 的下载位置。 从终端控制台运行 install-ifolder-script . sh ，然后按照屏幕上的说明操作。 在系统请求根口令时输入该口令。 如果 iFolder 客户程序已在运行，此过程将关闭该客户程序，然后更新 XSP 万维网服务器和 iFolder 客户程序以及 Nautilus-ifolder3 插件。 从 “应用程序” 菜单启动 iFolder。 Windows 根据您的计算机体系结构，从 OES 2 SP1 Linux 欢迎页面上下载以下任意内容： 单击 “用于 Windows 的 iFolder 32 位客户程序” ，以下载 ifolder3 windows.exe 。 单击 “用于 Windows 的 iFolder 64 位客户程序” ，以下载 ifolder3 windows-x64.exe 。 运行此 exe 文件，然后按照屏幕上的说明完成安装。 从 “开始” 菜单启动 iFolder。 </content>
+</topic>
+
+<topic>
+  <title>Novell iFolder 2.x 与 iFolder 客户程序共存</title>
+  <url>../bctrxs4.html</url>
+  <content>Novell iFolder 2. x 与 iFolder 客户程序共存 Novell iFolder 3.7 的 iFolder 客户程序与 Novell iFolder 2. x 客户程序可在同一计算机上共存，但它们并未集成并且它们的软件不应安装在相同文件夹中。如果计划在计算机上使用 Novell iFolder 2. x ，您必须遵循以下限制条件： 任何储存 Novell iFolder 2. x 数据的本地目录都不应转换为 iFolder。 任何包含储存 Novell iFolder 2. x 数据的本地目录都不应转换为 iFolder。 </content>
+</topic>
+
+<topic>
+  <title>法律声明</title>
+  <url>../legal.html</url>
+  <content>法律声明 Novell, Inc. 对本文档的内容或使用不作任何声明或担保，特别是对用于任何特定目的的适销性或适用性不作任何明示或暗示的担保。另外，Novell, Inc. 保留随时修改本出版物及其内容的权利，并且没有义务将这些修改通知任何个人或实体。 另外，Novell, Inc. 对任何软件不作任何声明或保证，特别是对适销性或用于任何特定目的的适用性不作任何明示或暗示的保证。另外，Novell, Inc. 保留随时修改 Novell 软件全部或部分内容的权利，并且没有义务将这些修改通知任何个人或实体。 依据本协议提供的任何产品或技术信息都将受到美国出口控制和其它国家/地区的贸易法律的约束。您同意遵守所有出口控制法规，并同意在出口、再出口或进口可交付产品之前取得所有必要的许可证或分类证书。您同意不出口或再出口至当前美国出口排除列表上所列的实体，或者美国出口法律中规定的任何被禁运的国家/地区或支持恐怖主义的国家/地区。您同意不将可交付产品用于禁止的核武器、导弹或生物化学武器等终端用途。有关导出 Novell 软件的更多信息，请访问 Novell 国际贸易服务万维网页 。如果您未能获得任何必要的出口许可，Novell 对此将不负任何责任。 版权所有 © 2004-2008 Novell, Inc. 保留所有权利。根据自由软件基金会 (Free Software Foundation) 发布的 GNU 自由文档许可证（GNU Free Documentation License，GFDL）版本 1.2 或更高版本中的条款，在此授予您复制、分发和/或修订本文档的许可权限，本文档没有“固定部分”、“封面文字”和“封底文字”。可从 GNU 自由文档许可证 找到 GFDL 的拷贝。 本文档和本文档的修订版均依照 GNU 自由文档许可证的条款提供，并受以下条款约束： 1.本文档按“原样”提供，不包含任何种类的担保，无论是明示担保或暗示担保，包括但不限于本文档或其修订后的版本不存在缺陷、适销、适用于某种特定目的或非侵权的担保。有关本文档或其修订版的质量、准确性和作用方面的全部风险均由您承担。如经证实本文档或其修订版有任何缺陷，则由您（而不是原撰稿人、作者或投稿人）承担所需服务、修复或更正的费用。本免责声明是此许可证的基本组成部分。如无本免责声明，对本文档或本文档修订版的使用均视为未经授权。并且 2. 对于因使用本文档或其修订版所引起或者与之相关的任何性质的任何直接损失、间接损失、特殊损失、偶发或连带损失，包括但不限于商誉受损、工作中断、计算机故障以及所有其它损失，本文档或其修订版的作者、原撰稿人、任何投稿人、任何发行人或者上述各方的任何供应商，在任何情况下，无论涉及民事侵权（包括疏忽）、合约，还是其它方面，均不依据任何法律对任何人承担任何责任，即使上述各方已被告知可能出现此类损失。 Novell, Inc. 对本文档中介绍的产品中所包含的相关技术拥有知识产权。特别是（但不限于）这些知识产权可能包括 Novell 法律专利万维网页 上列出的一项或多项美国专利以及一项或多项美国和其它国家的其它专利或正在申请的专利。 Novell, Inc. 404 Wyman Street, Suite 500 Waltham, MA 02451 U.S.A. www.novell.com 联机文档： 要访问本产品和其它 Novell 产品的联机文档并获取更新，请访问 Novell 文档网页 。 Novell 商标 有关 Novell 商标，请参见 Novell 商标和服务标记列表 第三方资料 所有第三方商标均属其各自所有者的财产。 </content>
+</topic>
+
+</site>

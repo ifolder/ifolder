@@ -1,0 +1,17 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {onCancel = id; onOK = id; }; 
+            CLASS = VerifyPassPhraseController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                enterPassPhrase = NSSecureTextField; 
+                okButton = NSButton; 
+                savePassPhrase = NSButton; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }
+    ); 
+    IBVersion = 1; 
+}

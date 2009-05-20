@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="en" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
+<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>Managing Passphrase for Encrypted iFolders</title>
+<script type="text/javascript">
+  var prev_link = "propifolders.html";
+  var next_link = "ifquota.html";
+  var parentfile = "../myifolders.html";
+  var parenttoc = "../toc_myifolders.html";
+  if(parent.location != location) { parent.loadMenu(); }
+</script>
+<script type="text/javascript" src="ui/jsglobal.js"></script>
+</head>
+
+<body>
+<script type="text/javascript" src="ui/topnav.js"></script>
+
+<div class="sect1"  id="managingpassphrse">
+
+<h1 class="title"> Managing Passphrase for Encrypted iFolders</h1>
+
+<p class="para">Novell iFolder provides user-friendly interface to encrypt your iFolders to ensure data security at the server side. </p>
+<p class="para">After you successfully log in to the iFolder, an optional iFolder passphrase dialog box opens where you can enter your encryption passphrase if encryption is enabled by the Admin. iFolder uses the passphrase to generate a unique encryption key for encrypting and decrypting your iFolder. If you don’t provide a passphrase, the passphrase dialog box appears automatically while processing the encrypted iFolders. If you cannot recall your passphrase, the recovery agent you selected during login, helps you recover your encryption key. For more information, see <a href="accounts.html#b8yvcnt">Step 3</a></p>
+<p class="para">Encryption occurs before the files leave your workstation to travel securely across an Internet connection to be uploaded to, and stored on, the iFolder server. The iFolder data remain encrypted on the iFolder Server and travel securely on the channel to and from the server. The iFolder client decrypts the downloaded files as they arrive on your local workstation. </p>
+<div class="sect2"  id="recoveringpassphrse">
+
+<h2 class="title"> Recovering an Encrypted iFolder </h2>
+
+<p class="para">Each iFolder has a unique data encryption key which is auto-generated during iFolder creation. You use your passphrase to create the key that encrypts the unique data encryption key. If you forget the secret passphrase, you cannot access either the iFolder data or the encrypted key used for recovering it unless your passphrase is saved locally (enabling <span class="guimenu">Remember passphrase</span>). To avoid this problem, you must export the keys using the Export encrypted Keys menu item and send it manually to the recovery agent using e-mail address given in the dialog box. The recovery agent retrieves the keys and sends back to you (through e-mail or any other communication channel). You can import the keys and use them to reset the passphrase.</p>
+<div class="note">
+<p class="para"><em class="title">NOTE:</em> The Recovery agent is generally an entity independent of entities owning the iFolder server's infrastructure, or, independent of the IT department if deployed in a corporate environment. </p></div>
+
+<p class="para">To export your data encryption key,</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="b91cqi2">
+<p class="para">Select <span class="guimenu">Security &gt; Key Recovery &gt; Export Encrypted Keys</span></p>
+<div class="informalfigure">
+                  <img src="images/if3_export_encrypt_keys.png" alt="" />
+                </div>
+</li>
+<li class="step" id="b91cs8u">
+<p class="para">Select the iFolder account from the drop down list.</p></li>
+<li class="step" id="b91csad">
+<p class="para">Specify the location on your local machine where you want to store your exported file that contains the encrypted keys.</p></li>
+<li class="step" id="bewrvw3">
+<p class="para">Select the Recovery Agent you have selected during the login</p></li>
+<li class="step" id="bewrw6p">
+<p class="para">Specify the e-mail ID of the recovery agent you have selected.</p></li>
+<li class="step" id="b91csy8">
+<p class="para">Click <span class="guimenu">OK</span></p></li></ol>
+</div>
+
+<p class="para">To import your recovered data encryption key, </p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="b93ch7q">
+<p class="para">Select <span class="guimenu">Security&gt; Key Recovery &gt; Import Decryted Keys</span></p>
+<div class="informalfigure">
+                  <img src="images/if3_import_decyptd_key.png" alt="" />
+                </div>
+</li>
+<li class="step" id="b93cnjb">
+<p class="para">Specify the location of the imported file that contains the decrypted keys.</p></li>
+<li class="step" id="b93cnlj">
+<p class="para">Specify the <span class="guimenu">One Time Passphrase</span> provided by the Recovery agent to decrypt and rarefy the key.(optional)</p>
+<p class="para">The Recovery agent can choose to encrypt the recovered decrypted keys using the one time passphrase. The one time passphrase and key file need to be send through different communication channels (for security reason). If the Recover agent choose not to re-encrypt, then the imported file contains decrypted keys. </p></li>
+<li class="step" id="b93coe4">
+<p class="para">Specify the <span class="guimenu">New Passphrase</span> to re-encrypt the data encryption key.</p></li>
+<li class="step" id="b93conm">
+<p class="para">In the <span class="guimenu">Re-type Passphrase</span> field, re-type the passphrase to verify and then, click <span class="guimenu">OK</span></p></li></ol>
+</div>
+
+</div>
+
+<div class="sect2"  id="reset_passphrase">
+
+<h2 class="title"> Resetting the Passphrase</h2>
+
+<p class="para">For security reasons, you should reset the passphrase after you import the keys. You do this by using the one-time passphrase sent by your Recover agent.</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="beq0soc">
+<p class="para">Select <span class="guimenu">Security &gt; Reset Passphrase</span>.</p></li>
+<li class="step" id="beq0tkt">
+<p class="para">In the Reset Passphrase window, select the iFolder account you want to reset the passphrase for and specify the following details:</p>
+<div class="formalpara" id="beq168j">
+              <p class="title"><em class="title">Enter Passphrase:</em>
+              Enter the one-time passphrase.</p>
+            </div>
+
+<div class="formalpara" id="beq16hq">
+              <p class="title"><em class="title">Enter New Passphrase:</em>
+              Enter the new passphrase you want to set for the current iFolder account.</p>
+            </div>
+
+<div class="formalpara" id="beq16mx">
+              <p class="title"><em class="title">Retype Passphrase:</em>
+              Enter the new passphrase again for confirmation.</p>
+            </div>
+
+<div class="formalpara" id="beq16y3">
+              <p class="title"><em class="title">Recovery Agent:</em>
+              Select the Recovery agent you have set for the current iFolder account.</p>
+            </div>
+</li>
+<li class="step" id="beq2nh2">
+<p class="para">Click <span class="guimenu">Reset</span>.</p></li></ol>
+</div>
+
+</div>
+
+</div>
+
+<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+
+<script type="text/javascript" src="ui/bottomnav.js"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {accept = id; decline = id; }; 
+            CLASS = AcceptCertSheetController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                certView = SFCertificateView; 
+                message = NSTextField; 
+                messageTitle = NSTextField; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = SFCertificateView; LANGUAGE = ObjC; SUPERCLASS = NSView; }
+    ); 
+    IBVersion = 1; 
+}

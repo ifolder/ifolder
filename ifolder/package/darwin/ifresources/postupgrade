@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cp -r "/opt/novell/ifolder3/Applications/UninstalliFolder.app" /Applications
+cp -r "/opt/novell/ifolder3/Applications/iFolder 3.app" /Applications
+rm -rf /opt/novell/ifolder3/Applications
