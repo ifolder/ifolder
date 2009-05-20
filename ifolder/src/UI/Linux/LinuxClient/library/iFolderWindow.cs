@@ -1,24 +1,24 @@
-/*****************************************************************************
-*
-* Copyright (c) [2009] Novell, Inc.
-* All Rights Reserved.
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of version 2 of the GNU General Public License as
-* published by the Free Software Foundation.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.   See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, contact Novell, Inc.
-*
-* To contact Novell about this file by physical or electronic mail,
-* you may find current contact information at www.novell.com
-*
-*-----------------------------------------------------------------------------
+  /*******************************************************************************
+  * Copyright © [2007-08] Unpublished Work of Novell, Inc. All Rights Reserved.
+  *
+  * THIS IS AN UNPUBLISHED WORK OF NOVELL, INC.  IT CONTAINS NOVELL'S CONFIDENTIAL, 
+  * PROPRIETARY, AND TRADE SECRET INFORMATION.	NOVELL RESTRICTS THIS WORK TO 
+  * NOVELL EMPLOYEES WHO NEED THE WORK TO PERFORM THEIR ASSIGNMENTS AND TO 
+  * THIRD PARTIES AUTHORIZED BY NOVELL IN WRITING.  THIS WORK MAY NOT BE USED, 
+  * COPIED, DISTRIBUTED, DISCLOSED, ADAPTED, PERFORMED, DISPLAYED, COLLECTED,
+  * COMPILED, OR LINKED WITHOUT NOVELL'S PRIOR WRITTEN CONSENT.  USE OR 
+  * EXPLOITATION OF THIS WORK WITHOUT AUTHORIZATION COULD SUBJECT THE 
+  * PERPETRATOR TO CRIMINAL AND  CIVIL LIABILITY.
+  *
+  * Novell is the copyright owner of this file.  Novell may have released an earlier version of this
+  * file, also owned by Novell, under the GNU General Public License version 2 as part of Novell's 
+  * iFolder Project; however, Novell is not releasing this file under the GPL.
+  *
+  *-----------------------------------------------------------------------------
+  *
+  *                 Novell iFolder Enterprise
+  *
+  *-----------------------------------------------------------------------------
   *
   *                 $Author: Calvin Gaisford <cgaisford@novell.com>
   *                          Boyd Timothy <btimothy@novell.com>
@@ -114,6 +114,7 @@ namespace Novell.iFolder
 		/// iFolder Content Area
 		///
 		private EventBox			ContentEventBox;
+		private EventBox			WhiteBoradEventBox;
 
 		///
 		/// Actions Pane
@@ -131,7 +132,6 @@ namespace Novell.iFolder
 		private iFolderIconView	iFoldersIconView;
 		private static iFolderViewGroup	localGroup;
 		private TreeModelFilter	myiFoldersFilter;
-		private TreeModelFilter treeModelFilter;
 		private Timer				updateStatusTimer;
 
 		private VBox				SynchronizedFolderTasks;
@@ -169,6 +169,9 @@ namespace Novell.iFolder
 		private int lastYPos;
 
         public static IiFolderLog log;
+
+		//public TreeView tv = null;
+		private Gtk.ComboBox        ViewUserDomainList;
 
 		public int LastXPos
 		{
@@ -230,6 +233,7 @@ namespace Novell.iFolder
 			CreateWidgets();
 
 			RefreshiFolders(true);
+		//	UpdateSensitivity();
 			
 			if (domainController != null)
 			{
@@ -309,9 +313,19 @@ namespace Novell.iFolder
 			vbox.PackStart (menubar, false, false, 0);
 
 			///
+			/// Create the action button area
+			///
+			vbox.PackStart(CreateiFolderActionButtonArea(), false, true, 0);
+
+			///
 			/// Create the main content area
 			///
 			vbox.PackStart(CreateiFolderContentArea(), true, true, 0);
+
+			///
+			/// Create iFolder White Board Area
+			///
+			vbox.PackStart(CreateiFolderWhiteBoradArea(), false, true, 0);
 
 			//-----------------------------
 			// Create Status Bar
@@ -568,7 +582,473 @@ namespace Novell.iFolder
 
 			return menubar;
 		}
+
+		private Widget CreateiFolderActionButtonArea()
+		{
+			VBox actionsVBox = new VBox(false, 0);
+			actionsVBox.WidthRequest = 275;
+
+            HBox ButtonControl = new HBox (false, 0);
+             
+			actionsVBox.PackStart(ButtonControl, false, false, 0);
 		
+
+			Image stopImage = new Image(Stock.Stop, Gtk.IconSize.Menu);
+			stopImage.SetAlignment(0.5F, 0F);
+			
+			CancelSearchButton = new Button(stopImage);
+			CancelSearchButton.Sensitive = false;
+			CancelSearchButton.Clicked +=
+				new EventHandler(OnCancelSearchButton);
+			CancelSearchButton.Visible = false;
+
+			HBox spacerHBox = new HBox(false, 0);
+			ButtonControl.PackStart(spacerHBox, false, false, 0);
+			
+            //vikash changes modifing vbox from VBOx to Hbox for compile error, needed one
+			HBox vbox = new HBox(false, 0);
+			spacerHBox.PackStart(vbox, true, true, 0);
+
+			///
+			/// Add a folder Button
+			///
+			HBox hbox = new HBox(false, 0);
+			AddiFolderButton = new Button(hbox);
+			vbox.PackStart(AddiFolderButton, false, false, 0);
+			//AddiFolderButton.Relief = ReliefStyle.None;
+
+			Label buttonText = new Label(
+				string.Format("<span>{0}</span>",
+							  Util.GS("Upload a folder...")));
+//							  Util.GS("Upload a folder")));
+			hbox.PackStart(buttonText, false, false, 4);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+			AddiFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-upload48.png")));
+			
+			AddiFolderButton.Clicked +=
+				new EventHandler(AddiFolderHandler);
+			
+			///
+			/// ShowHideAllFoldersButton
+			///
+			hbox = new HBox(false, 0);
+			ShowHideAllFoldersButton = new Button(hbox);
+			vbox.PackStart(ShowHideAllFoldersButton, false, false, 0);
+			//ShowHideAllFoldersButton.Relief = ReliefStyle.None;
+
+			ShowHideAllFoldersButtonText = new Label(
+				string.Format("<span>{0}</span>",
+							  Util.GS("View available iFolders")));
+			hbox.PackStart(ShowHideAllFoldersButtonText, false, false, 4);
+			ShowHideAllFoldersButtonText.UseMarkup = true;
+			ShowHideAllFoldersButtonText.UseUnderline = false;
+			ShowHideAllFoldersButtonText.Xalign = 0;
+			
+			ShowHideAllFoldersButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png")));
+			ShowHideAllFoldersButton.Clicked +=
+				new EventHandler(ShowHideAllFoldersHandler);
+			///
+			/// Folder Actions
+			///
+			SynchronizedFolderTasks = new VBox(false, 0);
+			ButtonControl.PackStart(SynchronizedFolderTasks, false, false, 0);
+
+			spacerHBox = new HBox(false, 0);
+			SynchronizedFolderTasks.PackStart(spacerHBox, false, false, 0);
+			///
+			/// OpenSynchronizedFolderButton
+			///
+			hbox = new HBox(false, 0);
+			OpenSynchronizedFolderButton = new Button(hbox);
+			vbox.PackStart(OpenSynchronizedFolderButton, false, false, 0);
+			//OpenSynchronizedFolderButton.Relief = ReliefStyle.None;
+
+			buttonText = new Label(
+				string.Format("<span>{0}</span>",
+							  Util.GS("Open...")));
+			hbox.PackStart(buttonText, false, false, 4);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+			
+			OpenSynchronizedFolderButton.Visible	= false;
+			OpenSynchronizedFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png")));
+			OpenSynchronizedFolderButton.Clicked +=
+				new EventHandler(OnOpenSynchronizedFolder);
+			///
+			/// ResolveConflictsButton
+			///
+			hbox = new HBox(false, 0);
+			ResolveConflictsButton = new Button(hbox);
+			vbox.PackStart(ResolveConflictsButton, false, false, 0);
+		//	ResolveConflictsButton.Relief = ReliefStyle.None;
+
+			buttonText = new Label(
+				string.Format("<span>{0}</span>",
+							  Util.GS("Resolve conflicts...")));
+			hbox.PackStart(buttonText, false, false, 4);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+			
+			ResolveConflictsButton.Visible	= false;
+			ResolveConflictsButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("encrypt-ilock-48.png")));
+			ResolveConflictsButton.Clicked +=
+				new EventHandler(OnResolveConflicts);
+
+			///
+			/// SynchronizeNowButton
+			///
+			hbox = new HBox(false, 0);
+			SynchronizeNowButton = new Button(hbox);
+			vbox.PackStart(SynchronizeNowButton, false, false, 0);
+		//	SynchronizeNowButton.Relief = ReliefStyle.None;
+
+			buttonText = new Label(
+				string.Format("<span>{0}</span>",
+							  Util.GS("Synchronize Now")));
+			hbox.PackStart(buttonText, true, true, 4);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+
+			SynchronizeNowButton.Visible	= false;
+		    SynchronizeNowButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-sync48.png")));
+			SynchronizeNowButton.Clicked +=
+				new EventHandler(OnSynchronizeNow);
+			
+
+			///
+			/// ShareSynchronizedFolderButton
+			///
+			hbox = new HBox(false, 0);
+			ShareSynchronizedFolderButton = new Button(hbox);
+			vbox.PackStart(ShareSynchronizedFolderButton, false, false, 0);
+//			ShareSynchronizedFolderButton.Relief = ReliefStyle.None;
+
+			buttonText = new Label(
+				string.Format("<span>{0}</span>",
+							  Util.GS("Share with...")));
+			hbox.PackStart(buttonText, true, true, 4);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+
+			ShareSynchronizedFolderButton.Visible	= false;
+		    ShareSynchronizedFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder_dis2_48.png")));
+			ShareSynchronizedFolderButton.Clicked +=
+				new EventHandler(OnShareSynchronizedFolder);
+
+
+			///
+			/// RemoveiFolderButton
+			///
+			hbox = new HBox(false, 0);
+			RemoveiFolderButton = new Button(hbox);
+			vbox.PackStart(RemoveiFolderButton, false, false, 0);
+//			RemoveiFolderButton.Relief = ReliefStyle.None;
+
+			buttonText = new Label(
+				string.Format("<span>{0}</span>",
+							  Util.GS("Revert to a Normal Folder")));
+			hbox.PackStart(buttonText, true, true, 4);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+
+			RemoveiFolderButton.Visible	= false;
+			RemoveiFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-error48.png")));
+			RemoveiFolderButton.Clicked +=
+				new EventHandler(RemoveiFolderHandler);
+
+			///
+			/// ViewFolderPropertiesButton
+			///
+			hbox = new HBox(false, 0);
+			ViewFolderPropertiesButton = new Button(hbox);
+			vbox.PackStart(ViewFolderPropertiesButton, false, false, 0);
+		//	ViewFolderPropertiesButton.Relief = ReliefStyle.None;
+
+			buttonText = new Label(
+				string.Format("<span>{0}</span>",
+							  Util.GS("Properties...")));
+			hbox.PackStart(buttonText, true, true, 4);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+
+			ViewFolderPropertiesButton.Visible	= false;
+			ViewFolderPropertiesButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png")));
+			ViewFolderPropertiesButton.Clicked +=
+				new EventHandler(OnShowFolderProperties);
+
+
+
+			///
+			/// DownloadAvailableiFolderButton
+			///
+			hbox = new HBox(false, 0);
+			DownloadAvailableiFolderButton = new Button(hbox);
+			vbox.PackStart(DownloadAvailableiFolderButton, false, false, 0);
+	//		DownloadAvailableiFolderButton.Relief = ReliefStyle.None;
+
+			buttonText = new Label(
+				string.Format("<span>{0}</span>",
+							  Util.GS("Download...")));
+			hbox.PackStart(buttonText, true, true, 4);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+
+			DownloadAvailableiFolderButton.Visible	= false;
+			DownloadAvailableiFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-download48.png")));
+			DownloadAvailableiFolderButton.Clicked +=
+				new EventHandler(DownloadAvailableiFolderHandler);
+
+
+			///
+			/// MergeAvailableiFolderButton
+			///
+			hbox = new HBox(false, 0);
+			MergeAvailableiFolderButton = new Button(hbox);
+			vbox.PackStart(MergeAvailableiFolderButton, false, false, 0);
+		//	MergeAvailableiFolderButton.Relief = ReliefStyle.None;
+
+			buttonText = new Label(
+				string.Format("<span>{0}</span>",
+							  Util.GS("Merge")));
+			hbox.PackStart(buttonText, true, true, 4);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+
+			MergeAvailableiFolderButton.Visible	= false;
+			MergeAvailableiFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-download48.png")));
+			MergeAvailableiFolderButton.Clicked +=
+				new EventHandler(MergeAvailableiFolderHandler);
+
+
+			///
+			/// DeleteFromServerButton
+			///
+			hbox = new HBox(false, 0);
+			DeleteFromServerButton = new Button(hbox);
+			vbox.PackStart(DeleteFromServerButton, false, false, 0);
+		//	DeleteFromServerButton.Relief = ReliefStyle.None;
+
+			buttonText = new Label(
+				string.Format("<span>{0}</span>",
+							  Util.GS("Delete from server")));
+			hbox.PackStart(buttonText, true, true, 4);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+
+			DeleteFromServerButton.Visible	= false;
+			DeleteFromServerButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-error48.png")));
+			DeleteFromServerButton.Clicked +=
+				new EventHandler(DeleteFromServerHandler);
+
+
+			///
+			/// RemoveMembershipButton
+			///
+			hbox = new HBox(false, 0);
+			RemoveMembershipButton = new Button(hbox);
+			vbox.PackStart(RemoveMembershipButton, false, false, 0);
+		//	RemoveMembershipButton.Relief = ReliefStyle.None;
+
+			buttonText = new Label(
+				string.Format("<span>{0}</span>",
+							  Util.GS("Remove My Membership")));
+			hbox.PackStart(buttonText, true, true, 4);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+			RemoveMembershipButton.Visible	= false;
+			RemoveMembershipButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-download48.png")));
+			RemoveMembershipButton.Clicked += new EventHandler(RemoveMembershipHandler);
+
+			///
+			/// Spacer
+			///
+			ButtonControl.PackStart(new Label(""), false, false, 4);
+			///
+			/// Search
+			///
+			HBox searchHBox = new HBox(false, 4);
+			ButtonControl.PackEnd(searchHBox, false, false, 0);
+			
+			SearchEntry = new Entry();
+			searchHBox.PackStart(SearchEntry, true, true, 0);
+			SearchEntry.SelectRegion(0, -1);
+			SearchEntry.CanFocus = true;
+			SearchEntry.Changed +=
+				new EventHandler(OnSearchEntryChanged);
+
+			///
+			/// Label 
+			///
+			Label l = new Label("<span size=\"small\"></span>");
+			l = new Label(
+				string.Format(
+					"<span size=\"large\">{0}</span>",
+					Util.GS("Filter")));
+			ButtonControl.PackEnd(l, false, false, 0);
+			l.UseMarkup = true;
+			l.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+			l.Xalign = 0.0F;
+			//l.SetAlignment(1,1);
+
+			return actionsVBox;
+
+
+		}
+
+		 private Widget CreateiFolderWhiteBoradArea()
+		 {
+			//##########ADD BACKGROUND COLOR	 
+			WhiteBoradEventBox = new EventBox();
+			WhiteBoradEventBox.ModifyBg(StateType.Normal, this.Style.Background(StateType.Active));
+
+			VBox actionsVBox = new VBox(false, 0);
+			WhiteBoradEventBox.Add(actionsVBox);
+
+			//##########END BACKGROUND COLOR	 
+			HBox whiteBoard = new HBox(false,0);
+			whiteBoard.HeightRequest = 100;
+		   
+		    //##########CALL FUNCTION TO CREATE 3 VBOX AND APPEND TO HBOX	
+			
+			whiteBoard.PackStart(ServerInfoBox(), false, false,12);
+			whiteBoard.PackStart(iFolderInfoBox(), true, true,0);
+			whiteBoard.PackStart(UserInfoBox(), true, true,0);
+			
+			actionsVBox.PackStart(whiteBoard, true, true,0);
+
+			return WhiteBoradEventBox;
+		 }
+
+
+		private Widget ServerInfoBox()
+		{
+			VBox serverInfo = new VBox(false, 0);
+			serverInfo.WidthRequest = 175;
+
+           //################ADDED SERVER IMAGE
+			Gtk.Image serverImg = new Gtk.Image(Util.ImagesPath("ifolder128.png"));
+			serverInfo.PackStart(serverImg, false, true, 0);
+
+			return serverInfo;
+		}
+
+		
+		private Widget iFolderInfoBox()
+		{
+			VBox iFolderInfo = new VBox(false, 0);
+			string lable = null;
+
+            //####################### ADD SPACE
+		     //actionsVBox.PackStart(new Label(""), false, false, 4);
+
+            //####################### ADD LABEL
+			lable = null;
+			lable = string.Format(Util.GS("Name: {0}"),lable); 
+		    Label ifolderLabel1 = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
+
+		   	iFolderInfo.PackStart(ifolderLabel1, false, false, 0);
+		    ifolderLabel1.UseMarkup = true;
+			ifolderLabel1.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+		    ifolderLabel1.Xalign = 0.0F;
+
+            //####################### ADD LABEL
+			lable = null;
+			lable = string.Format(Util.GS("Owner: {0}"),lable); 
+		    Label ifolderLabel2 = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
+
+		   	iFolderInfo.PackStart(ifolderLabel2, false, false, 0);
+		    ifolderLabel2.UseMarkup = true;
+			ifolderLabel2.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+		    ifolderLabel2.Xalign = 0.0F;
+            //####################### ADD LABEL
+			lable = null;
+			lable = string.Format(Util.GS("Access: {0}"),lable); 
+		    Label ifolderLabel3 = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
+
+		   	iFolderInfo.PackStart(ifolderLabel3, false, false, 0);
+		    ifolderLabel3.UseMarkup = true;
+			ifolderLabel3.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+		    ifolderLabel3.Xalign = 0.0F;
+            //####################### ADD LABEL
+			lable = null;
+			lable = string.Format(Util.GS("Encrypted: {0}"),lable); 
+		    Label ifolderLabel4 = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
+
+		   	iFolderInfo.PackStart(ifolderLabel4, false, false, 0);
+		    ifolderLabel4.UseMarkup = true;
+			ifolderLabel4.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+		    ifolderLabel4.Xalign = 0.0F;
+
+			return iFolderInfo;
+		}
+
+
+		private Widget UserInfoBox()
+		{
+			VBox userInfo = new VBox(false, 0);
+			string lable = null;
+
+            //####################### ADD SPACE
+		    //userInfo.PackStart(new Label(""), false, false, 4);
+
+
+            //####################### ADD LABEL
+			lable = null;
+			lable = string.Format(Util.GS("File/Folder to synchronize: {0}"),lable); 
+		    Label ifolderLabel1 = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
+
+		   	userInfo.PackStart(ifolderLabel1, false, false, 0);
+		    ifolderLabel1.UseMarkup = true;
+			ifolderLabel1.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+		    ifolderLabel1.Xalign = 0.0F;
+            //####################### ADD LABEL
+			//TODO: Show Sync Status as well as Last iFolder Sync time
+			lable = null;
+			lable = string.Format(Util.GS("iFolder Status: {0}"),lable); 
+		    Label ifolderLabel2 = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
+
+		   	userInfo.PackStart(ifolderLabel2, false, false, 0);
+		    ifolderLabel2.UseMarkup = true;
+			ifolderLabel2.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+		    ifolderLabel2.Xalign = 0.0F;
+            //####################### ADD LABEL
+			lable = null;
+			lable = string.Format(Util.GS("Automatic Sync: {0}"),lable); 
+		    Label ifolderLabel3 = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
+
+		   	userInfo.PackStart(ifolderLabel3, false, false, 0);
+		    ifolderLabel3.UseMarkup = true;
+			ifolderLabel3.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+		    ifolderLabel3.Xalign = 0.0F;
+            //####################### ADD LABEL
+			//Display the server/domain this ifolder belongs to
+			lable = null;
+			lable = string.Format(Util.GS("Server: {0}"),lable); 
+		    Label ifolderLabel4 = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
+
+		   	userInfo.PackStart(ifolderLabel4, false, false, 0);
+		    ifolderLabel4.UseMarkup = true;
+			ifolderLabel4.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+		    ifolderLabel4.Xalign = 0.0F;
+
+
+
+			return userInfo;
+		}
+
+
 		private Widget CreateiFolderContentArea()
 		{
 			ContentEventBox = new EventBox();
@@ -605,325 +1085,191 @@ namespace Novell.iFolder
 			l = new Label(
 				string.Format(
 					"<span size=\"large\">{0}</span>",
-					Util.GS("Filter")));
-			actionsVBox.PackStart(l, false, false, 0);
-			l.UseMarkup = true;
-			l.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
-			l.Xalign = 0.0F;
-			
-			HBox searchHBox = new HBox(false, 4);
-			actionsVBox.PackStart(searchHBox, false, false, 0);
-			
-			SearchEntry = new Entry();
-			searchHBox.PackStart(SearchEntry, true, true, 0);
-			SearchEntry.SelectRegion(0, -1);
-			SearchEntry.CanFocus = true;
-			SearchEntry.Changed +=
-				new EventHandler(OnSearchEntryChanged);
-
-			Image stopImage = new Image(Stock.Stop, Gtk.IconSize.Menu);
-			stopImage.SetAlignment(0.5F, 0F);
-			
-			CancelSearchButton = new Button(stopImage);
-		//	searchHBox.PackEnd(CancelSearchButton, false, false, 0);
-			CancelSearchButton.Relief = ReliefStyle.None;
-			CancelSearchButton.Sensitive = false;
-			
-			CancelSearchButton.Clicked +=
-				new EventHandler(OnCancelSearchButton);
-			CancelSearchButton.Visible = false;
-
-			///
-			/// Spacer
-			///
-			l = new Label("<span size=\"small\"></span>");
-			actionsVBox.PackStart(l, false, false, 0);
-			l.UseMarkup = true;
-
-			///
-			/// iFolder Actions
-			///
-			l = new Label(
-				string.Format(
-					"<span size=\"large\">{0}</span>",
-					Util.GS("General Actions")));
+					Util.GS("Domain List")));
 			actionsVBox.PackStart(l, false, false, 0);
 			l.UseMarkup = true;
 			l.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
 			l.Xalign = 0.0F;
 
-			HBox spacerHBox = new HBox(false, 0);
-			actionsVBox.PackStart(spacerHBox, false, false, 0);
-			spacerHBox.PackStart(new Label(""), false, false, 4);
-			VBox vbox = new VBox(false, 0);
-			spacerHBox.PackStart(vbox, true, true, 0);
-
-			///
-			/// Add a folder Button
-			///
-			HBox hbox = new HBox(false, 0);
-			AddiFolderButton = new Button(hbox);
-			vbox.PackStart(AddiFolderButton, false, false, 0);
-			AddiFolderButton.Relief = ReliefStyle.None;
-
-			Label buttonText = new Label(
-				string.Format("<span>{0}</span>",
-							  Util.GS("Upload a folder...")));
-//							  Util.GS("Upload a folder")));
-			hbox.PackStart(buttonText, false, false, 4);
-			buttonText.UseMarkup = true;
-			buttonText.UseUnderline = false;
-			buttonText.Xalign = 0;
+ // Add Scroll Window Testing
 			
-			AddiFolderButton.Clicked +=
-				new EventHandler(AddiFolderHandler);
+		/*	ScrolledWindow serverList = new ScrolledWindow();
+			serverList.BorderWidth = 10;
+			serverList.HeightRequest = 200;
+			//serverList.Vadjustment.Lower = 4;
+
+			//Image uploadImg = new Image(Util.ImagesPath("ifolder-upload48.png"));
+			Gdk.Pixbuf uploadImg = new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png"));
+
+			//TreeStore store = new TreeStore (typeof (string), typeof (string));
+		/*	TreeStore store = new TreeStore (typeof (Gdk.Pixbuf), typeof (string));
+			for (int i=0; i < 4; i++)
+			{
+				//TreeIter iter = store.AppendValues ("Demo " + i, "Data " + i);
+				TreeIter iter = store.AppendValues (uploadImg, "Data " + i);
+			}
+			//TreeView tv = new TreeView (); //commented as "tv" was made global
+		*/	
+		/*	tv = new TreeView ();
 			
-			///
-			/// ShowHideAllFoldersButton
-			///
-			hbox = new HBox(false, 0);
-			ShowHideAllFoldersButton = new Button(hbox);
-			vbox.PackStart(ShowHideAllFoldersButton, false, false, 0);
-			ShowHideAllFoldersButton.Relief = ReliefStyle.None;
+			ListStore store = new ListStore (typeof (Gdk.Pixbuf),typeof (string)); 
+			//clear the store before appending values
+			store.Clear();
 
-			ShowHideAllFoldersButtonText = new Label(
-				string.Format("<span>{0}</span>",
-							  Util.GS("View available iFolders")));
-			hbox.PackStart(ShowHideAllFoldersButtonText, false, false, 4);
-			ShowHideAllFoldersButtonText.UseMarkup = true;
-			ShowHideAllFoldersButtonText.UseUnderline = false;
-			ShowHideAllFoldersButtonText.Xalign = 0;
-			
-			ShowHideAllFoldersButton.Clicked +=
-				new EventHandler(ShowHideAllFoldersHandler);
-             
-			///
-			/// Spacer
-			///
-			l = new Label("<span size=\"small\"></span>");
-			actionsVBox.PackStart(l, false, false, 0);
-			l.UseMarkup = true;
+	        store.AppendValues (uploadImg,"item 1");
+		    store.AppendValues (uploadImg,"item 2");		
+		    store.AppendValues (uploadImg,"item 3");		
+		    store.AppendValues (uploadImg,"item 4");		
 
-			///
-			/// Folder Actions
-			///
-			SynchronizedFolderTasks = new VBox(false, 0);
-			actionsVBox.PackStart(SynchronizedFolderTasks, false, false, 0);
-			l = new Label(
-				string.Format(
-					"<span size=\"large\">{0}</span>",
-					Util.GS("iFolder Actions")));
-			SynchronizedFolderTasks.PackStart(l, false, false, 0);
-			l.UseMarkup = true;
-			l.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
-			l.Xalign = 0.0F;
+			tv.Selection.Changed +=  new EventHandler(OnSelectionChanged);
+					
+			tv.Model = store;
+		//	tv.EnableGridLines = Gtk.TreeViewGridLines.Horizontal;
+			//tv.HeadersVisible = true;
+			tv.HeadersVisible = false;
+			tv.AppendColumn ("Demo", new CellRendererPixbuf(), "pixbuf", 0);
+			tv.AppendColumn ("Data", new CellRendererText (), "text", 1);
+			//tv.AppendColumn (null, new CellRendererPixbuf(), "pixbuf", 0);
+			//tv.AppendColumn (null, new CellRendererText (), "text", 1);
+			serverList.Add(tv);
+			serverList.ShadowType = Gtk.ShadowType.EtchedIn;
 
-			spacerHBox = new HBox(false, 0);
-			SynchronizedFolderTasks.PackStart(spacerHBox, false, false, 0);
-			spacerHBox.PackStart(new Label(""), false, false, 4);
-			vbox = new VBox(false, 0);
-			spacerHBox.PackStart(vbox, true, true, 0);
+			actionsVBox.PackStart(serverList, false, true, 0);
+			serverList.Show(); */
 
-			///
-			/// OpenSynchronizedFolderButton
-			///
-			hbox = new HBox(false, 0);
-			OpenSynchronizedFolderButton = new Button(hbox);
-			vbox.PackStart(OpenSynchronizedFolderButton, false, false, 0);
-			OpenSynchronizedFolderButton.Relief = ReliefStyle.None;
+           //################ADDED COMBOX BOX
+			string lable = null;
+			string domainName = null;
+			ViewUserDomainList = ComboBox.NewText();
 
-			buttonText = new Label(
-				string.Format("<span>{0}</span>",
-							  Util.GS("Open...")));
-			hbox.PackStart(buttonText, false, false, 4);
-			buttonText.UseMarkup = true;
-			buttonText.UseUnderline = false;
-			buttonText.Xalign = 0;
-			
-			OpenSynchronizedFolderButton.Clicked +=
-				new EventHandler(OnOpenSynchronizedFolder);
-			
-			
-			
-			///
-			/// ResolveConflictsButton
-			///
-			hbox = new HBox(false, 0);
-			ResolveConflictsButton = new Button(hbox);
-			vbox.PackStart(ResolveConflictsButton, false, false, 0);
-			ResolveConflictsButton.Relief = ReliefStyle.None;
+			//Event handler for Combobox
+			//vbox.PackStart(ViewUserDomainList, false, false, 0);
+			//ViewUserDomainList.Changed += new EventHandler(OnComboBoxIndexChange);
+			ViewUserDomainList.Clear();
+	        CellRendererText cell = new CellRendererText();
+        	ViewUserDomainList.PackStart(cell, false);
+        	ViewUserDomainList.AddAttribute(cell, "text", 0);
+        	ListStore store = new ListStore(typeof (string));
+        	ViewUserDomainList.Model = store;
+		
+		    //TODO: Move this code in a function and make call from on domain add and delete event as well as here/startup
+			DomainInformation[] domains = domainController.GetDomains();
+			int domaincount = 0;
+		    foreach (DomainInformation domain in domains)
+		    {
+		    	UriBuilder serverUri = new UriBuilder(domain.HostUrl); 
+		    	domainName = domain.Name + "-" + serverUri.Host; 
+		    	store.AppendValues(domainName);
+		    	domaincount++;
+				//this has to be move out of for loop and set to current index
+				ViewUserDomainList.Active = 0;
+		    }
+			ViewUserDomainList.Show();
+			actionsVBox.PackStart(ViewUserDomainList, false, true, 0);
+		
 
-			buttonText = new Label(
-				string.Format("<span>{0}</span>",
-							  Util.GS("Resolve conflicts...")));
-			hbox.PackStart(buttonText, false, false, 4);
-			buttonText.UseMarkup = true;
-			buttonText.UseUnderline = false;
-			buttonText.Xalign = 0;
-			
-			ResolveConflictsButton.Clicked +=
-				new EventHandler(OnResolveConflicts);
+            //####################### ADD SPACE
+		     actionsVBox.PackStart(new Label(""), false, false, 4);
 
-			///
-			/// SynchronizeNowButton
-			///
-			hbox = new HBox(false, 0);
-			SynchronizeNowButton = new Button(hbox);
-			vbox.PackStart(SynchronizeNowButton, false, false, 0);
-			SynchronizeNowButton.Relief = ReliefStyle.None;
+            //####################### ADD LABEL
+			lable = null;
+			lable = string.Format(Util.GS("User: {0}"),lable); 
+		    Label serverLabel1 = new Label(
+		                string.Format( "<span size=\"medium\">{0}</span>",lable ));
 
-			buttonText = new Label(
-				string.Format("<span>{0}</span>",
-							  Util.GS("Synchronize Now")));
-			hbox.PackStart(buttonText, true, true, 4);
-			buttonText.UseMarkup = true;
-			buttonText.UseUnderline = false;
-			buttonText.Xalign = 0;
-
-			SynchronizeNowButton.Clicked +=
-				new EventHandler(OnSynchronizeNow);
-			
-
-			///
-			/// ShareSynchronizedFolderButton
-			///
-			hbox = new HBox(false, 0);
-			ShareSynchronizedFolderButton = new Button(hbox);
-			vbox.PackStart(ShareSynchronizedFolderButton, false, false, 0);
-			ShareSynchronizedFolderButton.Relief = ReliefStyle.None;
-
-			buttonText = new Label(
-				string.Format("<span>{0}</span>",
-							  Util.GS("Share with...")));
-			hbox.PackStart(buttonText, true, true, 4);
-			buttonText.UseMarkup = true;
-			buttonText.UseUnderline = false;
-			buttonText.Xalign = 0;
-
-			ShareSynchronizedFolderButton.Clicked +=
-				new EventHandler(OnShareSynchronizedFolder);
+		   	actionsVBox.PackStart(serverLabel1, false, false, 0);
+		    serverLabel1.UseMarkup = true;
+			serverLabel1.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+		    serverLabel1.Xalign = 0.0F;
 
 
-			///
-			/// RemoveiFolderButton
-			///
-			hbox = new HBox(false, 0);
-			RemoveiFolderButton = new Button(hbox);
-			vbox.PackStart(RemoveiFolderButton, false, false, 0);
-			RemoveiFolderButton.Relief = ReliefStyle.None;
+            //####################### ADD LABEL
+			lable = null;
+			lable = string.Format(Util.GS("Server: {0}"),lable); 
+		    Label serverLabel2 = new Label( string.Format( "<span size=\"medium\">{0}</span>", lable));
 
-			buttonText = new Label(
-				string.Format("<span>{0}</span>",
-							  Util.GS("Revert to a Normal Folder")));
-			hbox.PackStart(buttonText, true, true, 4);
-			buttonText.UseMarkup = true;
-			buttonText.UseUnderline = false;
-			buttonText.Xalign = 0;
+            actionsVBox.PackStart(serverLabel2, false, false, 0);
+		    serverLabel2.UseMarkup = true;
+			serverLabel2.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+		    serverLabel2.Xalign = 0.0F;
 
-			RemoveiFolderButton.Clicked +=
-				new EventHandler(RemoveiFolderHandler);
+            //####################### ADD SPACE
+		     actionsVBox.PackStart(new Label(""), false, false, 0);
+            //####################### ADD LABEL
+			lable = null;
+			lable = string.Format(Util.GS("No. of iFolder: {0}"),lable); 
+		    Label serverLabel3 = new Label( string.Format( "<span size=\"medium\">{0}</span>", lable));
 
-			///
-			/// ViewFolderPropertiesButton
-			///
-			hbox = new HBox(false, 0);
-			ViewFolderPropertiesButton = new Button(hbox);
-			vbox.PackStart(ViewFolderPropertiesButton, false, false, 0);
-			ViewFolderPropertiesButton.Relief = ReliefStyle.None;
+		   	actionsVBox.PackStart(serverLabel3, false, false, 0);
+		    serverLabel3.UseMarkup = true;
+			serverLabel3.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+		    serverLabel3.Xalign = 0.0F;
 
-			buttonText = new Label(
-				string.Format("<span>{0}</span>",
-							  Util.GS("Properties...")));
-			hbox.PackStart(buttonText, true, true, 4);
-			buttonText.UseMarkup = true;
-			buttonText.UseUnderline = false;
-			buttonText.Xalign = 0;
+            //####################### ADD SPACE
+		     actionsVBox.PackStart(new Label(""), false, false, 0);
+            //####################### ADD LABEL
+			lable = null;
+			lable = string.Format(Util.GS("Disk Quota: {0}"),lable); 
+		    Label serverLabel4 = new Label( string.Format( "<span size=\"medium\">{0}</span>", lable));
 
-			ViewFolderPropertiesButton.Clicked +=
-				new EventHandler(OnShowFolderProperties);
+		    actionsVBox.PackStart(serverLabel4, false, false, 0);
+		    serverLabel4.UseMarkup = true;
+			serverLabel4.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+		    serverLabel4.Xalign = 0.0F;
 
+            //####################### ADD LABEL
+			lable = null;
+			lable = string.Format(Util.GS("Disk Used: {0}"),lable); 
+		    Label serverLabel5 = new Label( string.Format( "<span size=\"medium\">{0}</span>", lable));
 
-
-			///
-			/// DownloadAvailableiFolderButton
-			///
-			hbox = new HBox(false, 0);
-			DownloadAvailableiFolderButton = new Button(hbox);
-			vbox.PackStart(DownloadAvailableiFolderButton, false, false, 0);
-			DownloadAvailableiFolderButton.Relief = ReliefStyle.None;
-
-			buttonText = new Label(
-				string.Format("<span>{0}</span>",
-							  Util.GS("Download...")));
-			hbox.PackStart(buttonText, true, true, 4);
-			buttonText.UseMarkup = true;
-			buttonText.UseUnderline = false;
-			buttonText.Xalign = 0;
-
-			DownloadAvailableiFolderButton.Clicked +=
-				new EventHandler(DownloadAvailableiFolderHandler);
-
-			///
-			/// MergeAvailableiFolderButton
-			///
-			hbox = new HBox(false, 0);
-			MergeAvailableiFolderButton = new Button(hbox);
-			vbox.PackStart(MergeAvailableiFolderButton, false, false, 0);
-			MergeAvailableiFolderButton.Relief = ReliefStyle.None;
-
-			buttonText = new Label(
-				string.Format("<span>{0}</span>",
-							  Util.GS("Merge")));
-			hbox.PackStart(buttonText, true, true, 4);
-			buttonText.UseMarkup = true;
-			buttonText.UseUnderline = false;
-			buttonText.Xalign = 0;
-
-			MergeAvailableiFolderButton.Clicked +=
-				new EventHandler(MergeAvailableiFolderHandler);
+	        actionsVBox.PackStart(serverLabel5, false, false, 0);
+		    serverLabel5.UseMarkup = true;
+			serverLabel5.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+		    serverLabel5.Xalign = 0.0F;
 
 
-			///
-			/// DeleteFromServerButton
-			///
-			hbox = new HBox(false, 0);
-			DeleteFromServerButton = new Button(hbox);
-			vbox.PackStart(DeleteFromServerButton, false, false, 0);
-			DeleteFromServerButton.Relief = ReliefStyle.None;
+            //####################### ADD LABEL
+			lable = null;
+			lable = string.Format(Util.GS("Disk Available: {0}"),lable); 
+		    Label serverLabel6 = new Label( string.Format( "<span size=\"medium\">{0}</span>", lable));
 
-			buttonText = new Label(
-				string.Format("<span>{0}</span>",
-							  Util.GS("Delete from server")));
-			hbox.PackStart(buttonText, true, true, 4);
-			buttonText.UseMarkup = true;
-			buttonText.UseUnderline = false;
-			buttonText.Xalign = 0;
+	        actionsVBox.PackStart(serverLabel6, false, false, 0);
+		    serverLabel6.UseMarkup = true;
+			serverLabel6.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+		    serverLabel6.Xalign = 0.0F;
 
-			DeleteFromServerButton.Clicked +=
-				new EventHandler(DeleteFromServerHandler);
+            //####################### ADD SPACE
+		     actionsVBox.PackStart(new Label(""), false, false, 4);
 
+			//###############ADDED BUTTON FOR CONNECT/DISCONECT 
+			Button serverStat = new Button();	
+			//TODO:Verify current selected domain status and set button text
+			//TODO: Used localized string
+			serverStat.Label = "Connect";
+			serverStat.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("ifolder-download16.png")));
+			actionsVBox.PackStart(serverStat, false, false, 0);
+		    //################# END	
 
-			///
-			/// RemoveMembershipButton
-			///
-			hbox = new HBox(false, 0);
-			RemoveMembershipButton = new Button(hbox);
-			vbox.PackStart(RemoveMembershipButton, false, false, 0);
-			RemoveMembershipButton.Relief = ReliefStyle.None;
+				
 
-			buttonText = new Label(
-				string.Format("<span>{0}</span>",
-							  Util.GS("Remove My Membership")));
-			hbox.PackStart(buttonText, true, true, 4);
-			buttonText.UseMarkup = true;
-			buttonText.UseUnderline = false;
-			buttonText.Xalign = 0;
-
-			RemoveMembershipButton.Clicked +=
-				new EventHandler(RemoveMembershipHandler);
 
 			return actionsVBox;
 		}
+
+	   /* static void OnSelectionChanged (object o, EventArgs args)
+		{	
+			TreeIter iter;
+			TreeModel model;
+			if (((TreeSelection)o).GetSelected (out model, out iter))
+			{
+				string val = (string) model.GetValue (iter, 1);
+			    Console.WriteLine ("{0} was selected ", val);
+				Gdk.Pixbuf newImg = new Gdk.Pixbuf(Util.ImagesPath("ifolder128.png"));
+				model.SetValue(iter, 0, newImg);
+
+			}
+		}*/
+		
 		
 		private Widget CreateIconViewPane()
 		{
@@ -1378,15 +1724,11 @@ namespace Novell.iFolder
 		private void DownloadAvailableiFolderHandler(object o, EventArgs args)
 		{
 			DownloadSelectedFolder();
-			myiFoldersFilter.Refilter();
-	        treeModelFilter.Refilter();
 		}
 
 		private void MergeAvailableiFolderHandler(object o, EventArgs args)
 		{
 			MergeSelectedFolder();
-			myiFoldersFilter.Refilter();
-	        treeModelFilter.Refilter();
 		}
 		
 		private void DeleteFromServerHandler(object o, EventArgs args)
@@ -1597,7 +1939,8 @@ namespace Novell.iFolder
 							MenuItem item_revert = new MenuItem (
 									Util.GS("Revert to a Normal Folder"));
 							   menu.Append (item_revert);
-							if (false == this.RemoveiFolderButton.Sensitive)
+							//if (false == this.RemoveiFolderButton.Sensitive)
+							if (false == this.RevertMenuItem.Sensitive)
 							{
 							    item_revert.Sensitive = false;		
 							}
@@ -1871,7 +2214,6 @@ namespace Novell.iFolder
 //				WindowNotebook.CurrentPage = 1;
 				ViewServeriFoldersMenuItem.Active = true;
 				ShowAvailableiFolders();	// FIXME: Make this an automatic config setting that is remembered (i.e., if a user hides this and restarts iFolder, it is not shown)
-				UpdateLocalViewItems(null);
 //                RefreshiFolders(true);
 //			}
 			
@@ -2148,7 +2490,7 @@ namespace Novell.iFolder
 		
 		private void OnDomainDeletedEvent(object sender, DomainEventArgs args)
 		{
-			RefreshiFolders(true);
+//			RefreshiFolders(true);
 			
 //			if (domainController.GetDomains().Length == 0)
 //				WindowNotebook.CurrentPage = 0;
@@ -2213,7 +2555,6 @@ namespace Novell.iFolder
 
 			// Update the item on the main thread
 			GLib.Idle.Add(UpdateLocalViewItemsMainThread);
-			//RefreshiFolders(true);
 		}
 		
 		///
@@ -2593,7 +2934,7 @@ namespace Novell.iFolder
 			
 			iFolderServerFilter serverFilter =
 				new iFolderServerFilter(domainID, SearchEntry);
-			treeModelFilter = new TreeModelFilter(ifdata.iFolders, null);
+			TreeModelFilter treeModelFilter = new TreeModelFilter(ifdata.iFolders, null);
 			treeModelFilter.VisibleFunc = serverFilter.FilterFunc;
 
 			iFolderViewGroup group =
@@ -2726,6 +3067,21 @@ namespace Novell.iFolder
 		
 		private void UpdateActionsSensitivity(iFolderHolder holder)
 		{
+			//Initilize buttons Visiblity to False, should be removed if locate where button are getting initilized to TRUE
+				
+			OpenSynchronizedFolderButton.Visible	= false;
+			SynchronizeNowButton.Visible			= false;
+			ShareSynchronizedFolderButton.Visible	= false;
+			ViewFolderPropertiesButton.Visible		= false;
+			ResolveConflictsButton.Visible			= false;
+			RemoveiFolderButton.Visible	= false;
+		    DownloadAvailableiFolderButton.Visible	= false;
+			MergeAvailableiFolderButton.Visible  = false;
+			DeleteFromServerButton.Visible			= false;
+			RemoveMembershipButton.Visible			= false;
+			SynchronizedFolderTasks.Visible = false;
+
+				
 			if (holder == null)
 			{
 				SynchronizedFolderTasks.Visible = false;
@@ -2801,15 +3157,7 @@ namespace Novell.iFolder
 
 				SynchronizedFolderTasks.Visible = true;
 				
-				if( ( holder.iFolder.State == "WaitSync" )
-				 && (holder.State == iFolderState.Synchronizing) )
-				{
-				   RemoveiFolderButton.Sensitive = false;
-				}
-				else
-				{
-				  RemoveiFolderButton.Sensitive = true;
-				}
+				RemoveiFolderButton.Sensitive = true;
 			}
 
 		}
@@ -2818,7 +3166,8 @@ namespace Novell.iFolder
 		{
 			if (holder != null)
 			{
-			        if((holder.iFolder != null) && (holder.State == iFolderState.Initial))
+			        if( (holder.iFolder != null) && 
+						( (holder.State == iFolderState.Initial)|| (holder.State == iFolderState.Synchronizing) )  )
  				{
 				        ShareMenuItem.Sensitive = false;
 					OpenMenuItem.Sensitive = false;
@@ -2869,16 +3218,16 @@ namespace Novell.iFolder
 //					if (networkDetect.Connected)
 //					   SyncNowMenuItem.Sensitive = true;
 
-					if ( (holder.iFolder.Role.Equals("Master"))
-					  || ( ( holder.iFolder.State == "WaitSync" )
-							&& (holder.State == iFolderState.Synchronizing)	))
-					{
+					if (holder.iFolder.Role.Equals("Master"))
 						RevertMenuItem.Sensitive = false;
-					}
-					else 
+					else
 					{
-						RevertMenuItem.Sensitive = true;
-					}
+                        if(holder.State != iFolderState.Synchronizing)
+						{
+							RevertMenuItem.Sensitive = true;
+						}
+
+					}
 					PropMenuItem.Sensitive = true;
 					DeleteMenuItem.Sensitive = false;
 					RemoveMenuItem.Sensitive = false;
@@ -3698,7 +4047,6 @@ namespace Novell.iFolder
 			{
 				case Simias.Client.Event.Action.StartLocalSync:
 				{
-					//DeActivate the Revert Button and Options
                     this.RevertMenuItem.Sensitive = false; 
 				    this.RemoveiFolderButton.Sensitive = false;
 						
@@ -3720,6 +4068,9 @@ namespace Novell.iFolder
 				}
 				case Simias.Client.Event.Action.StartSync:
 				{
+					//DeActivate the Revert Button and Options
+                    this.RevertMenuItem.Sensitive = false; 
+				    this.RemoveiFolderButton.Sensitive = false;
 					if (args.Name != null && args.Name.StartsWith("POBox:"))
 					{
 						DomainInformation domain = domainController.GetPOBoxDomain(args.ID);
@@ -3742,15 +4093,15 @@ namespace Novell.iFolder
 
 					UpdateStatus(Util.GS("Idle..."));
 
+                    //Activate the Revert Button
+				    this.RevertMenuItem.Sensitive = true;	
+					this.RemoveiFolderButton.Sensitive = true;
 					
 					if (args.Name != null )
 					{
                          DomainInformation domain = domainController.GetDomain(args.ID);
 						 UpdateQoutaData(domain); 
 					}
-                    //Activate the Revert Button
-				    this.RevertMenuItem.Sensitive = true;	
-					this.RemoveiFolderButton.Sensitive = true;
 					break;
 				}
 			}
