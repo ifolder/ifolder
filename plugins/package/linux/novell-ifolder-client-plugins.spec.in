@@ -17,7 +17,7 @@
 
 # norootforbuild
 
-Name:           ifolder-client-plugins
+Name:           novell-ifolder-client-plugins
 
 %if %suse_version <= 1100
 BuildRequires:  aspell-en cairo cairo-devel compat-libstdc++ gdk-pixbuf glitz-devel libflaim libflaim-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ simias ifolder3 e2fsprogs-devel

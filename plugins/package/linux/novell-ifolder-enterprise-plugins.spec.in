@@ -16,7 +16,7 @@
 #
 # norootforbuild
 
-Name:           ifolder-enterprise-plugins
+Name:           novell-ifolder-enterprise-plugins
 
 %if %suse_version <= 1100
 BuildRequires:  compat-libstdc++ e2fsprogs e2fsprogs-devel gcc-c++ glib2 glib2-devel libflaim libflaim-devel libstdc++ libstdc++-devel libxml2 libxml2-devel mod_mono mono-core mono-data mono-devel mono-web pkgconfig xsp gtk-sharp2 glib-sharp2 ifolder3-enterprise
