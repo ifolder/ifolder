@@ -125,6 +125,8 @@ namespace Novell.FormsTrayApp
         private bool shutdown = false;
         private bool initialPositionSet = false;
         private DomainInformation defaultDomainInfo = null;
+        private DomainInformation selectedDomain = null;
+        private Manager simiasManager;
         private string domainList;
 
         private System.ComponentModel.IContainer components;
@@ -138,6 +140,13 @@ namespace Novell.FormsTrayApp
         private Domain Currentdomain = null;
         #endregion
 
+        public Manager simManager
+        {
+            set
+            {
+                this.simiasManager = value;
+            }
+        }
         public void PluginEnhancedMenu()
         {
             //Image Menu Items plugin
@@ -1651,6 +1660,7 @@ namespace Novell.FormsTrayApp
 			updateView();
 			panel2.ResumeLayout();
             DomainsListUpdate();
+            DomainsListUpdateComboBox();
 			inRefresh = false;
 		//	ifolderArray = null;
             oldHt = null;
@@ -1686,13 +1696,29 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
+       
+        private void showServerInfo(bool visible)
+        {
+            this.titleEncrypted.Visible = this.valueEncrypted.Visible =
+            this.titleRemainingToSync.Visible = this.valueRemainingToSync.Visible = 
+            this.titleLastSyncTime.Visible = this.valueLastSyncTime.Visible = 
+            this.titleAutomaticSync.Visible = this.valueAutomaticSync.Visible = visible;
+        }
+
+        private void showUserInfo(bool visible)
+        {
+            this.titleName.Visible = this.valueName.Visible = 
+            this.titleOwner.Visible = this.valueOwner.Visible = 
+            this.titleAccess.Visible = this.valueAccess.Visible = visible;
+        }
 		private void updateMenus(iFolderObject ifolderObject)
 		{
             
 			if ( ifolderObject == null )
 			{
 				// Disable all of the item-related menu items.
-                this.menuActionOpen.Enabled = this.menuActionAccept.Enabled = this.menuActionMerge.Enabled = this.menuActionProperties.Enabled =
+                this.menuActionOpen.Enabled = this.menuActionAccept.Enabled = 
+                this.menuActionMerge.Enabled = this.menuActionProperties.Enabled =
 				this.menuActionRemove.Enabled = this.menuActionResolve.Enabled = this.menuActionRevert.Enabled =
 				this.menuActionShare.Enabled = this.menuActionSync.Enabled = false;
 			}
@@ -1702,6 +1728,23 @@ namespace Novell.FormsTrayApp
 
 				if ( ifolderWeb.IsSubscription )
 				{
+                    this.showUserInfo(true);
+                    this.showServerInfo(true);
+                    this.valueName.Text = ifolderWeb.Name;
+                    this.valueOwner.Text = ifolderWeb.Owner;
+                    
+                    if (ifolderWeb.encryptionAlgorithm != null && ifolderWeb.encryptionAlgorithm != "")
+                    {
+                        this.valueEncrypted.Text = resourceManager.GetString("valueEncrypted.text");
+                    }
+                    else
+                    {
+                        this.valueEncrypted.Text = resourceManager.GetString("valueNormal.text");
+                    }
+
+                    this.valueAccess.Text = this.valueRemainingToSync.Text = this.valueLastSyncTime.Text = 
+                        this.valueAutomaticSync.Text = resourceManager.GetString("unknown");
+
 					// Disable the iFolder related menu items. //TODO
 					this.menuActionOpen.Enabled = this.menuActionProperties.Enabled =
 						this.menuActionRevert.Enabled = this.menuActionShare.Enabled =
@@ -1726,6 +1769,56 @@ namespace Novell.FormsTrayApp
 				}
 				else
 				{
+                    this.showUserInfo(true);
+                    this.showServerInfo(true);
+                    this.valueName.Text = ifolderWeb.Name;
+                    this.valueOwner.Text = ifolderWeb.Owner;
+                    
+                    iFolderUser[] ifolderUsers = ifWebService.GetiFolderUsers(ifolderWeb.ID);
+                    foreach (iFolderUser ifolderUser in ifolderUsers)
+                    {
+                        if (ifolderUser.UserID.Equals(ifolderWeb.CurrentUserID))
+                            this.valueAccess.Text = ifolderUser.Rights.ToString();
+                    }
+
+                    if (ifolderWeb.encryptionAlgorithm != null && ifolderWeb.encryptionAlgorithm != "")
+                    {
+                        this.valueEncrypted.Text = resourceManager.GetString("valueEncrypted.text");
+                    }
+                    else
+                    {
+                        this.valueEncrypted.Text = resourceManager.GetString("valueNormal.text");
+                    }
+
+                    try
+                    {
+                        SyncSize syncSize = ifWebService.CalculateSyncSize(ifolderWeb.ID);
+                        this.valueRemainingToSync.Text = syncSize.SyncNodeCount.ToString();
+                    }
+                    catch
+                    {
+                        if (ifolderWeb.Role.Equals("Master"))
+                        {
+                            this.valueRemainingToSync.Text = "0";
+                        }
+                        else
+                        {
+                            this.valueRemainingToSync.Text = resourceManager.GetString("unknown");
+                        }
+                    }
+
+                    this.valueLastSyncTime.Text = ifolderWeb.LastSyncTime;
+
+                    if (ifolderWeb.SyncInterval != Timeout.Infinite)
+                    {
+                        this.valueAutomaticSync.Text = ifolderWeb.SyncInterval.ToString();
+                    }
+                    else
+                    {
+                        this.valueAutomaticSync.Text = resourceManager.GetString("notApplicable");
+                    }
+                    //satya end
+
 					// Disable the available iFolder related menu items.
                     this.menuActionRemove.Enabled = this.menuActionAccept.Enabled = this.menuActionMerge.Enabled = false;
                     this.toolStripBtnMerge.Enabled = false;
@@ -2880,30 +2973,9 @@ namespace Novell.FormsTrayApp
             try
             {
                 DiskSpace diskSpace = ifWebService.GetUserDiskSpace(id);
-                //Calculating Available Space
-                if (diskSpace.Limit != 0)
-                {
-                    QuotaAvailable = ((double)Math.Round(diskSpace.AvailableSpace / megaByte, 2)).ToString();
-                    QuotaAvailable += TrayApp.Properties.Resources.freeSpaceUnits;
-                }
-                else
-                {
-                    QuotaAvailable = resourceManager.GetString("Unlimited.Text");
-                }
-                QuotaAvailable = string.Format(resourceManager.GetString("DiskSpace.Text") + resourceManager.GetString("Available.Text") + QuotaAvailable);
+                QuotaAvailable = calcAvailableQuota(id);
 
-                //Calculating Used Space
-                if (diskSpace.UsedSpace != 0)
-                {
-                    QuotaUsed = ((double)Math.Round(diskSpace.UsedSpace / megaByte, 2)).ToString();
-                    QuotaUsed += resourceManager.GetString("freeSpaceUnits.Text");
-                }
-                else
-                {
-                    QuotaUsed = resourceManager.GetString("notApplicable");
-                    
-                }
-                QuotaUsed = string.Format(resourceManager.GetString("DiskSpace.Text") + resourceManager.GetString("Used.Text") + QuotaUsed);
+                QuotaUsed = calcUsedQuota(id);
                 //combining both the Available and Used Space in single string
                 QuotaAvailable += string.Format("            " + QuotaUsed);
             }
@@ -2912,16 +2984,77 @@ namespace Novell.FormsTrayApp
                 QuotaAvailable = null;
                 QuotaUsed = null;
                 QuotaAvailable = TrayApp.Properties.Resources.notApplicable;
-                QuotaAvailable = string.Format(resourceManager.GetString("DiskSpace.Text") + resourceManager.GetString("Available.Text") + QuotaAvailable);
+                QuotaAvailable = string.Format(resourceManager.GetString("DiskSpace.Text") + 
+                    resourceManager.GetString("Available.Text") + QuotaAvailable);
                 QuotaUsed = TrayApp.Properties.Resources.notApplicable;
-                QuotaUsed = string.Format(resourceManager.GetString("DiskSpace.Text") + resourceManager.GetString("Used.Text") + QuotaUsed);
+                QuotaUsed = string.Format(resourceManager.GetString("DiskSpace.Text") + 
+                    resourceManager.GetString("Used.Text") + QuotaUsed);
                 //combining both the Available and Used Space in single string
                 QuotaAvailable += string.Format("            " + QuotaUsed);
             }
             return QuotaAvailable;
         }
 
+        private string calcUsedQuota(string usermemberid)
+        {
+            DiskSpace diskSpace = ifWebService.GetUserDiskSpace(usermemberid);
+            string QuotaUsed = null;
+            //Calculating Used Space
+            if (diskSpace.UsedSpace != 0)
+            {
+                QuotaUsed = ((double)Math.Round(diskSpace.UsedSpace / megaByte, 2)).ToString();
+                QuotaUsed += resourceManager.GetString("freeSpaceUnits.Text");
+            }
+            else
+            {
+                QuotaUsed = resourceManager.GetString("notApplicable");
 
+            }
+            QuotaUsed = string.Format(resourceManager.GetString("DiskSpace.Text") + 
+                                    resourceManager.GetString("Used.Text") + QuotaUsed);
+            return QuotaUsed;
+        }
+
+        private string calcAvailableQuota(string usermemberid)
+        {
+            DiskSpace diskSpace = ifWebService.GetUserDiskSpace(usermemberid);
+            string QuotaAvailable = null;
+            //Calculating Available Space
+            if (diskSpace.Limit != 0)
+            {
+                QuotaAvailable = ((double)Math.Round(diskSpace.AvailableSpace / megaByte, 2)).ToString();
+                QuotaAvailable += TrayApp.Properties.Resources.freeSpaceUnits;
+            }
+            else
+            {
+                QuotaAvailable = resourceManager.GetString("Unlimited.Text");
+            }
+            QuotaAvailable = string.Format(resourceManager.GetString("DiskSpace.Text") + 
+                resourceManager.GetString("Available.Text") + QuotaAvailable);
+            return QuotaAvailable;
+        }
+
+        private void DomainsListUpdateComboBox()
+        {
+            string DomainName = null;
+            DomainInformation[] domains;
+            //Reading and Initilizing the Domain List.
+            domains = this.simiasWebService.GetDomains(false);
+            domainListComboBox.Items.Clear();
+            foreach (DomainInformation dw in domains)
+            {
+                try
+                {
+                    if (domains != null)
+                    {
+                        domainListComboBox.Items.Add(dw.Name);
+                    }
+                }
+                catch { }
+            }
+            if (domainListComboBox.Items.Count >= 1 )
+                domainListComboBox.SelectedIndex = 0 ;
+        }
         
 
         /// <summary>
@@ -2978,18 +3111,76 @@ namespace Novell.FormsTrayApp
 
         private void toolStripMenuDetails_Click(object sender, EventArgs e)
         {
+            //panel3.Visible = !panel3.Visible;
             localiFoldersHeading.Visible = !localiFoldersHeading.Visible;
             iFolderView.Visible = !iFolderView.Visible;
-            listView1.Visible = !listView1.Visible;
-            
+            //listView1.Visible = !listView1.Visible;
+            //showiFoldersinList();
         }
 
         private void localiFoldersHeading_TextChanged(object sender, EventArgs e)
         {
 
         }
-	}
+        private void serverListComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DomainInformation[] domains;
+            //Reading and Initilizing the Domain List.
+            domains = this.simiasWebService.GetDomains(false);
+            int index = 0;
+            foreach (DomainInformation dw in domains)
+            {
+                try
+                {
+                    if (index == ((ComboBox)sender).SelectedIndex)
+                    {
+                        selectedDomain = dw;
+                        updateDomainInfo(dw);
+                        setAuthState(dw);
+                        break;
+                    }
+                    index++;
+                }
+                catch { }
+            } 
+        }
 
+        private void updateDomainInfo(DomainInformation dw)
+        {
+            titleUser.Text = TrayApp.Properties.Resources.user + ":  " + dw.MemberName;
+            titleServer.Text = TrayApp.Properties.Resources.server + ":  " + dw.Host;
+            titleAvailable.Text = TrayApp.Properties.Resources.availableQuota + ":  " +
+                                                calcAvailableQuota(dw.MemberUserID);
+            titleUsed.Text = TrayApp.Properties.Resources.usedQuota + ":  " +
+                                                calcUsedQuota(dw.MemberUserID);
+            titleNOFolders.Text = TrayApp.Properties.Resources.noifolder + ":  " +
+                                                this.ifWebService.GetiFoldersForDomain(dw.ID).Length;
+        }
+
+        private void setAuthState(DomainInformation dw)
+        {
+            if (dw.Authenticated)
+            {
+                LoginLogoff.Text = TrayApp.Properties.Resources.logoff;
+                pictureBox1.Image = new Bitmap (Path.Combine(Application.StartupPath, @"res\ifolder128.png"));
+            }
+            else
+            {
+                LoginLogoff.Text = TrayApp.Properties.Resources.login;
+                pictureBox1.Image = new Bitmap(Path.Combine(Application.StartupPath, @"res\ifolder-crash.gif"));
+            }
+        }
+
+        private void LoginLogoff_Click(object sender, EventArgs e)
+        {
+            Connecting connecting = new Connecting(ifWebService, simiasWebService, simiasManager, selectedDomain);
+            if (connecting.ShowDialog() == DialogResult.OK)
+            {
+                selectedDomain.Authenticated = true;
+                setAuthState(selectedDomain);
+            }
+        }
+	}
 }
 
 

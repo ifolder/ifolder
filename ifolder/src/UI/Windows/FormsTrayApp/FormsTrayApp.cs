@@ -821,6 +821,7 @@ namespace Novell.FormsTrayApp
                 this.globalProperties.iFWebService = ifWebService;
                 this.globalProperties.Simws = simiasWebService;
                 this.globalProperties.EventClient = eventClient;
+                this.globalProperties.simManager = simiasManager;
                 this.preferences.ifolderWebService = ifWebService;
                 this.preferences.Simws = simiasWebService;
                 this.preferences.simManager = simiasManager;
@@ -898,7 +899,6 @@ namespace Novell.FormsTrayApp
                     syncLog.CreateControl();
                     // For some reason, the handle isn't created until it is referenced.
                     handle = syncLog.Handle;
-
                     infolog = new SyncLog();
                     ///Make the changes to Sync lof to make it info log , make clear button hide and rename it
                     infolog.Customize();                    

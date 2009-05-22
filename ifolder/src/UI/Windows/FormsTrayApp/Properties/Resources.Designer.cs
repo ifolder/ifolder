@@ -106,6 +106,15 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Available.
+        /// </summary>
+        internal static string availableQuota {
+            get {
+                return ResourceManager.GetString("availableQuota", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to It is not possible to share an encrypted iFolder. Only regular folders can be shared.
         /// </summary>
         internal static string cannotShareMessage {
@@ -192,6 +201,15 @@ namespace TrayApp.Properties {
         internal static string disconnected {
             get {
                 return ResourceManager.GetString("disconnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disk quota.
+        /// </summary>
+        internal static string diskQuota {
+            get {
+                return ResourceManager.GetString("diskQuota", resourceCulture);
             }
         }
         
@@ -367,6 +385,24 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Connect.
+        /// </summary>
+        internal static string login {
+            get {
+                return ResourceManager.GetString("login", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disconnect.
+        /// </summary>
+        internal static string logoff {
+            get {
+                return ResourceManager.GetString("logoff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete from server.
         /// </summary>
         internal static string menuActionRemove {
@@ -390,6 +426,15 @@ namespace TrayApp.Properties {
         internal static string networkPath {
             get {
                 return ResourceManager.GetString("networkPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No of iFolders.
+        /// </summary>
+        internal static string noifolder {
+            get {
+                return ResourceManager.GetString("noifolder", resourceCulture);
             }
         }
         
@@ -525,6 +570,15 @@ namespace TrayApp.Properties {
         internal static string revertErrorTitle {
             get {
                 return ResourceManager.GetString("revertErrorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server.
+        /// </summary>
+        internal static string server {
+            get {
+                return ResourceManager.GetString("server", resourceCulture);
             }
         }
         
@@ -678,6 +732,24 @@ namespace TrayApp.Properties {
         internal static string uploadFile {
             get {
                 return ResourceManager.GetString("uploadFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Used.
+        /// </summary>
+        internal static string usedQuota {
+            get {
+                return ResourceManager.GetString("usedQuota", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User.
+        /// </summary>
+        internal static string user {
+            get {
+                return ResourceManager.GetString("user", resourceCulture);
             }
         }
         

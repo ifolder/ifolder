@@ -333,4 +333,28 @@
   <data name="syncErrorTitle" xml:space="preserve">
     <value>iFolder Synchronization Error</value>
   </data>
+  <data name="availableQuota" xml:space="preserve">
+    <value>Available</value>
+  </data>
+  <data name="diskQuota" xml:space="preserve">
+    <value>Disk quota</value>
+  </data>
+  <data name="login" xml:space="preserve">
+    <value>Connect</value>
+  </data>
+  <data name="logoff" xml:space="preserve">
+    <value>Disconnect</value>
+  </data>
+  <data name="noifolder" xml:space="preserve">
+    <value>No of iFolders</value>
+  </data>
+  <data name="server" xml:space="preserve">
+    <value>Server</value>
+  </data>
+  <data name="usedQuota" xml:space="preserve">
+    <value>Used</value>
+  </data>
+  <data name="user" xml:space="preserve">
+    <value>User</value>
+  </data>
 </root>

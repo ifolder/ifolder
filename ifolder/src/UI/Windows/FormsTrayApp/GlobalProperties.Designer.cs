@@ -85,23 +85,42 @@ namespace Novell.FormsTrayApp
             this.menuProperties = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuRefresh = new System.Windows.Forms.ToolStripMenuItem();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.LoginLogoff = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.filter = new System.Windows.Forms.TextBox();
+            this.titleAvailable = new System.Windows.Forms.Label();
+            this.titleUsed = new System.Windows.Forms.Label();
+            this.titleDiskQuota = new System.Windows.Forms.Label();
+            this.titleNOFolders = new System.Windows.Forms.Label();
+            this.titleServer = new System.Windows.Forms.Label();
+            this.titleUser = new System.Windows.Forms.Label();
+            this.domainListComboBox = new System.Windows.Forms.ComboBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.titleName = new System.Windows.Forms.Label();
             this.titleOwner = new System.Windows.Forms.Label();
             this.titleRemainingToSync = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.titleEncrypted = new System.Windows.Forms.Label();
+            this.titleLastSyncTime = new System.Windows.Forms.Label();
+            this.titleAutomaticSync = new System.Windows.Forms.Label();
             this.titleAccess = new System.Windows.Forms.Label();
+            this.valueName = new System.Windows.Forms.Label();
+            this.valueOwner = new System.Windows.Forms.Label();
+            this.valueAccess = new System.Windows.Forms.Label();
+            this.valueRemainingToSync = new System.Windows.Forms.Label();
+            this.valueLastSyncTime = new System.Windows.Forms.Label();
+            this.valueAutomaticSync = new System.Windows.Forms.Label();
+            this.titleEncrypted = new System.Windows.Forms.Label();
+            this.valueEncrypted = new System.Windows.Forms.Label();
             this.directorySearcher1 = new System.DirectoryServices.DirectorySearcher();
             this.panel2 = new System.Windows.Forms.Panel();
             this.localiFoldersHeading = new System.Windows.Forms.RichTextBox();
-            this.listView1 = new System.Windows.Forms.ListView();
             this.iFolderView = new Novell.FormsTrayApp.TileListView();
             this.toolStripiFolderActions.SuspendLayout();
             this.iFolderContextMenu.SuspendLayout();
             this.panel3.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -403,7 +422,6 @@ namespace Novell.FormsTrayApp
             // 
             // toolStripBtnCreate
             // 
-            this.toolStripBtnCreate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             resources.ApplyResources(this.toolStripBtnCreate, "toolStripBtnCreate");
             this.toolStripBtnCreate.Name = "toolStripBtnCreate";
             this.toolStripBtnCreate.Tag = "Create";
@@ -411,35 +429,30 @@ namespace Novell.FormsTrayApp
             // 
             // toolStripBtnDownload
             // 
-            this.toolStripBtnDownload.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             resources.ApplyResources(this.toolStripBtnDownload, "toolStripBtnDownload");
             this.toolStripBtnDownload.Name = "toolStripBtnDownload";
             this.toolStripBtnDownload.Click += new System.EventHandler(this.menuAccept_Click);
             // 
             // toolStripBtnSyncNow
             // 
-            this.toolStripBtnSyncNow.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             resources.ApplyResources(this.toolStripBtnSyncNow, "toolStripBtnSyncNow");
             this.toolStripBtnSyncNow.Name = "toolStripBtnSyncNow";
             this.toolStripBtnSyncNow.Click += new System.EventHandler(this.menuSyncNow_Click);
             // 
             // toolStripBtnShare
             // 
-            this.toolStripBtnShare.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             resources.ApplyResources(this.toolStripBtnShare, "toolStripBtnShare");
             this.toolStripBtnShare.Name = "toolStripBtnShare";
             this.toolStripBtnShare.Click += new System.EventHandler(this.menuShare_Click);
             // 
             // toolStripBtnResolve
             // 
-            this.toolStripBtnResolve.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             resources.ApplyResources(this.toolStripBtnResolve, "toolStripBtnResolve");
             this.toolStripBtnResolve.Name = "toolStripBtnResolve";
             this.toolStripBtnResolve.Click += new System.EventHandler(this.menuResolve_Click);
             // 
             // toolStripBtnMerge
             // 
-            this.toolStripBtnMerge.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             resources.ApplyResources(this.toolStripBtnMerge, "toolStripBtnMerge");
             this.toolStripBtnMerge.Name = "toolStripBtnMerge";
             this.toolStripBtnMerge.Click += new System.EventHandler(this.menuMerge_Click);
@@ -452,7 +465,6 @@ namespace Novell.FormsTrayApp
             // 
             // toolStipBtnChangeView
             // 
-            this.toolStipBtnChangeView.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.toolStipBtnChangeView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuThumbnails,
             this.toolStripMenuDetails,
@@ -578,13 +590,87 @@ namespace Novell.FormsTrayApp
             // 
             resources.ApplyResources(this.panel3, "panel3");
             this.panel3.BackColor = System.Drawing.Color.DarkGray;
-            this.panel3.Controls.Add(this.filter);
+            this.panel3.Controls.Add(this.groupBox2);
             this.panel3.Name = "panel3";
+            // 
+            // groupBox2
+            // 
+            resources.ApplyResources(this.groupBox2, "groupBox2");
+            this.groupBox2.Controls.Add(this.LoginLogoff);
+            this.groupBox2.Controls.Add(this.pictureBox1);
+            this.groupBox2.Controls.Add(this.label1);
+            this.groupBox2.Controls.Add(this.filter);
+            this.groupBox2.Controls.Add(this.titleAvailable);
+            this.groupBox2.Controls.Add(this.titleUsed);
+            this.groupBox2.Controls.Add(this.titleDiskQuota);
+            this.groupBox2.Controls.Add(this.titleNOFolders);
+            this.groupBox2.Controls.Add(this.titleServer);
+            this.groupBox2.Controls.Add(this.titleUser);
+            this.groupBox2.Controls.Add(this.domainListComboBox);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.TabStop = false;
+            // 
+            // LoginLogoff
+            // 
+            resources.ApplyResources(this.LoginLogoff, "LoginLogoff");
+            this.LoginLogoff.Name = "LoginLogoff";
+            this.LoginLogoff.UseVisualStyleBackColor = true;
+            this.LoginLogoff.Click += new System.EventHandler(this.LoginLogoff_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.ErrorImage = null;
+            resources.ApplyResources(this.pictureBox1, "pictureBox1");
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.TabStop = false;
+            // 
+            // label1
+            // 
+            resources.ApplyResources(this.label1, "label1");
+            this.label1.Name = "label1";
             // 
             // filter
             // 
             resources.ApplyResources(this.filter, "filter");
             this.filter.Name = "filter";
+            // 
+            // titleAvailable
+            // 
+            resources.ApplyResources(this.titleAvailable, "titleAvailable");
+            this.titleAvailable.Name = "titleAvailable";
+            // 
+            // titleUsed
+            // 
+            resources.ApplyResources(this.titleUsed, "titleUsed");
+            this.titleUsed.Name = "titleUsed";
+            // 
+            // titleDiskQuota
+            // 
+            resources.ApplyResources(this.titleDiskQuota, "titleDiskQuota");
+            this.titleDiskQuota.Name = "titleDiskQuota";
+            // 
+            // titleNOFolders
+            // 
+            resources.ApplyResources(this.titleNOFolders, "titleNOFolders");
+            this.titleNOFolders.Name = "titleNOFolders";
+            // 
+            // titleServer
+            // 
+            resources.ApplyResources(this.titleServer, "titleServer");
+            this.titleServer.Name = "titleServer";
+            // 
+            // titleUser
+            // 
+            resources.ApplyResources(this.titleUser, "titleUser");
+            this.titleUser.Name = "titleUser";
+            // 
+            // domainListComboBox
+            // 
+            this.domainListComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.domainListComboBox.FormattingEnabled = true;
+            resources.ApplyResources(this.domainListComboBox, "domainListComboBox");
+            this.domainListComboBox.Name = "domainListComboBox";
+            this.domainListComboBox.SelectedIndexChanged += new System.EventHandler(this.serverListComboBox_SelectedIndexChanged);
             // 
             // tableLayoutPanel1
             // 
@@ -593,10 +679,17 @@ namespace Novell.FormsTrayApp
             this.tableLayoutPanel1.Controls.Add(this.titleName, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.titleOwner, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.titleRemainingToSync, 2, 0);
-            this.tableLayoutPanel1.Controls.Add(this.label4, 2, 1);
-            this.tableLayoutPanel1.Controls.Add(this.label5, 2, 2);
-            this.tableLayoutPanel1.Controls.Add(this.titleEncrypted, 2, 3);
+            this.tableLayoutPanel1.Controls.Add(this.titleLastSyncTime, 2, 1);
+            this.tableLayoutPanel1.Controls.Add(this.titleAutomaticSync, 2, 2);
             this.tableLayoutPanel1.Controls.Add(this.titleAccess, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.valueName, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.valueOwner, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.valueAccess, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.valueRemainingToSync, 3, 0);
+            this.tableLayoutPanel1.Controls.Add(this.valueLastSyncTime, 3, 1);
+            this.tableLayoutPanel1.Controls.Add(this.valueAutomaticSync, 3, 2);
+            this.tableLayoutPanel1.Controls.Add(this.titleEncrypted, 2, 3);
+            this.tableLayoutPanel1.Controls.Add(this.valueEncrypted, 3, 3);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             // 
             // titleName
@@ -614,25 +707,60 @@ namespace Novell.FormsTrayApp
             resources.ApplyResources(this.titleRemainingToSync, "titleRemainingToSync");
             this.titleRemainingToSync.Name = "titleRemainingToSync";
             // 
-            // label4
+            // titleLastSyncTime
             // 
-            resources.ApplyResources(this.label4, "label4");
-            this.label4.Name = "label4";
+            resources.ApplyResources(this.titleLastSyncTime, "titleLastSyncTime");
+            this.titleLastSyncTime.Name = "titleLastSyncTime";
             // 
-            // label5
+            // titleAutomaticSync
             // 
-            resources.ApplyResources(this.label5, "label5");
-            this.label5.Name = "label5";
+            resources.ApplyResources(this.titleAutomaticSync, "titleAutomaticSync");
+            this.titleAutomaticSync.Name = "titleAutomaticSync";
+            // 
+            // titleAccess
+            // 
+            resources.ApplyResources(this.titleAccess, "titleAccess");
+            this.titleAccess.Name = "titleAccess";
+            // 
+            // valueName
+            // 
+            resources.ApplyResources(this.valueName, "valueName");
+            this.valueName.Name = "valueName";
+            // 
+            // valueOwner
+            // 
+            resources.ApplyResources(this.valueOwner, "valueOwner");
+            this.valueOwner.Name = "valueOwner";
+            // 
+            // valueAccess
+            // 
+            resources.ApplyResources(this.valueAccess, "valueAccess");
+            this.valueAccess.Name = "valueAccess";
+            // 
+            // valueRemainingToSync
+            // 
+            resources.ApplyResources(this.valueRemainingToSync, "valueRemainingToSync");
+            this.valueRemainingToSync.Name = "valueRemainingToSync";
+            // 
+            // valueLastSyncTime
+            // 
+            resources.ApplyResources(this.valueLastSyncTime, "valueLastSyncTime");
+            this.valueLastSyncTime.Name = "valueLastSyncTime";
+            // 
+            // valueAutomaticSync
+            // 
+            resources.ApplyResources(this.valueAutomaticSync, "valueAutomaticSync");
+            this.valueAutomaticSync.Name = "valueAutomaticSync";
             // 
             // titleEncrypted
             // 
             resources.ApplyResources(this.titleEncrypted, "titleEncrypted");
             this.titleEncrypted.Name = "titleEncrypted";
             // 
-            // titleAccess
+            // valueEncrypted
             // 
-            resources.ApplyResources(this.titleAccess, "titleAccess");
-            this.titleAccess.Name = "titleAccess";
+            resources.ApplyResources(this.valueEncrypted, "valueEncrypted");
+            this.valueEncrypted.Name = "valueEncrypted";
             // 
             // directorySearcher1
             // 
@@ -647,7 +775,6 @@ namespace Novell.FormsTrayApp
             this.panel2.ContextMenuStrip = this.iFolderContextMenu;
             this.panel2.Controls.Add(this.iFolderView);
             this.panel2.Controls.Add(this.localiFoldersHeading);
-            this.panel2.Controls.Add(this.listView1);
             this.panel2.Name = "panel2";
             this.panel2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel2_MouseDown);
             // 
@@ -662,13 +789,6 @@ namespace Novell.FormsTrayApp
             this.localiFoldersHeading.ReadOnly = true;
             this.localiFoldersHeading.TabStop = false;
             this.localiFoldersHeading.TextChanged += new System.EventHandler(this.localiFoldersHeading_TextChanged);
-            // 
-            // listView1
-            // 
-            resources.ApplyResources(this.listView1, "listView1");
-            this.listView1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.listView1.Name = "listView1";
-            this.listView1.UseCompatibleStateImageBehavior = false;
             // 
             // iFolderView
             // 
@@ -691,8 +811,8 @@ namespace Novell.FormsTrayApp
             resources.ApplyResources(this, "$this");
             this.BackColor = System.Drawing.Color.LightGray;
             this.Controls.Add(this.panel3);
-            this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.panel2);
+            this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.toolStripiFolderActions);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.statusBar1);
@@ -711,7 +831,9 @@ namespace Novell.FormsTrayApp
             this.toolStripiFolderActions.PerformLayout();
             this.iFolderContextMenu.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.panel2.ResumeLayout(false);
@@ -811,8 +933,8 @@ namespace Novell.FormsTrayApp
         private Label titleOwner;
         private Label titleEncrypted;
         private Label titleRemainingToSync;
-        private Label label4;
-        private Label label5;
+        private Label titleLastSyncTime;
+        private Label titleAutomaticSync;
         private Label titleAccess;
         private Panel panel2;
         private TileListView iFolderView;
@@ -820,7 +942,24 @@ namespace Novell.FormsTrayApp
         private ToolStripMenuItem toolStripMenuThumbnails;
         private ToolStripMenuItem toolStripMenuDetails;
         private ToolStripMenuItem toolStripMenuLeftPane;
-        private ListView listView1;
+        private Label valueName;
+        private Label valueOwner;
+        private Label valueAccess;
+        private Label valueRemainingToSync;
+        private Label valueEncrypted;
+        private Label valueLastSyncTime;
+        private Label valueAutomaticSync;
+        private ComboBox domainListComboBox;
+        private GroupBox groupBox2;
+        private Label titleDiskQuota;
+        private Label titleNOFolders;
+        private Label titleServer;
+        private Label titleUser;
+        private Label titleAvailable;
+        private Label titleUsed;
+        private Label label1;
+        private PictureBox pictureBox1;
+        private Button LoginLogoff;
 
 	}
 }
