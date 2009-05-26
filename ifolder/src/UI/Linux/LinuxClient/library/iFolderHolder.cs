@@ -99,7 +99,7 @@ namespace Novell.iFolder
 		private iFolderState	state;
 		private string			stateString;
 		private string			path;
-		private uint			objectsToSync;
+		public uint			objectsToSync;
 		
 //		private static bool unitTested = false;
 

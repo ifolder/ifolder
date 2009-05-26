@@ -534,7 +534,7 @@ namespace Novell.iFolder
         /// Login to Domain
         /// </summary>
         /// <param name="dom">Domain Information</param>
-		private void LoginDomain(DomainInformation dom)
+		public void LoginDomain(DomainInformation dom)
 		{
 			try
 			{
@@ -840,7 +840,7 @@ namespace Novell.iFolder
         /// Logout
         /// </summary>
         /// <param name="dom">Domain Information</param>
-		private void LogoutDomain(DomainInformation dom)
+		public void LogoutDomain(DomainInformation dom)
 		{
 			try
 			{
@@ -1062,5 +1062,23 @@ namespace Novell.iFolder
 
 			UpdateWidgetSensitivity();
 		}
+
+		public void ToggelDomainState(DomainInformation domainInfo, bool login)
+		{
+			//TODO: Refere code from function OnlineToggled and add needed code	
+			if(true == login)
+			{
+ 				LoginDomain(domainInfo);
+			}
+			else
+			{
+ 				LogoutDomain(domainInfo);
+			}
+
+		    UpdateDomainStatus(domainInfo.ID);
+
+		}
+
+		
 	}
 }
