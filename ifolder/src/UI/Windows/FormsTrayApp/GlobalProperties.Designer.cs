@@ -105,7 +105,6 @@ namespace Novell.FormsTrayApp
             this.titleAutomaticSync = new System.Windows.Forms.Label();
             this.titleAccess = new System.Windows.Forms.Label();
             this.valueName = new System.Windows.Forms.Label();
-            this.valueOwner = new System.Windows.Forms.Label();
             this.valueAccess = new System.Windows.Forms.Label();
             this.valueRemainingToSync = new System.Windows.Forms.Label();
             this.valueLastSyncTime = new System.Windows.Forms.Label();
@@ -481,7 +480,6 @@ namespace Novell.FormsTrayApp
             // 
             this.toolStripMenuDetails.Name = "toolStripMenuDetails";
             resources.ApplyResources(this.toolStripMenuDetails, "toolStripMenuDetails");
-            this.toolStripMenuDetails.Click += new System.EventHandler(this.toolStripMenuDetails_Click);
             // 
             // toolStripMenuLeftPane
             // 
@@ -490,7 +488,6 @@ namespace Novell.FormsTrayApp
             this.toolStripMenuLeftPane.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripMenuLeftPane.Name = "toolStripMenuLeftPane";
             resources.ApplyResources(this.toolStripMenuLeftPane, "toolStripMenuLeftPane");
-            this.toolStripMenuLeftPane.Click += new System.EventHandler(this.toolStripMenuLeftPane_Click);
             // 
             // iFolderContextMenu
             // 
@@ -683,7 +680,6 @@ namespace Novell.FormsTrayApp
             this.tableLayoutPanel1.Controls.Add(this.titleAutomaticSync, 2, 2);
             this.tableLayoutPanel1.Controls.Add(this.titleAccess, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.valueName, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.valueOwner, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.valueAccess, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.valueRemainingToSync, 3, 0);
             this.tableLayoutPanel1.Controls.Add(this.valueLastSyncTime, 3, 1);
@@ -726,11 +722,6 @@ namespace Novell.FormsTrayApp
             // 
             resources.ApplyResources(this.valueName, "valueName");
             this.valueName.Name = "valueName";
-            // 
-            // valueOwner
-            // 
-            resources.ApplyResources(this.valueOwner, "valueOwner");
-            this.valueOwner.Name = "valueOwner";
             // 
             // valueAccess
             // 
@@ -788,7 +779,6 @@ namespace Novell.FormsTrayApp
             this.localiFoldersHeading.Name = "localiFoldersHeading";
             this.localiFoldersHeading.ReadOnly = true;
             this.localiFoldersHeading.TabStop = false;
-            this.localiFoldersHeading.TextChanged += new System.EventHandler(this.localiFoldersHeading_TextChanged);
             // 
             // iFolderView
             // 
@@ -943,7 +933,6 @@ namespace Novell.FormsTrayApp
         private ToolStripMenuItem toolStripMenuDetails;
         private ToolStripMenuItem toolStripMenuLeftPane;
         private Label valueName;
-        private Label valueOwner;
         private Label valueAccess;
         private Label valueRemainingToSync;
         private Label valueEncrypted;

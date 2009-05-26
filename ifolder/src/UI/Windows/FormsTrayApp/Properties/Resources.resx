@@ -357,4 +357,25 @@
   <data name="user" xml:space="preserve">
     <value>User</value>
   </data>
+  <data name="access" xml:space="preserve">
+    <value>Access</value>
+  </data>
+  <data name="autoSync" xml:space="preserve">
+    <value>Automatic sync</value>
+  </data>
+  <data name="encrypted" xml:space="preserve">
+    <value>Encrypted</value>
+  </data>
+  <data name="filesnFolders" xml:space="preserve">
+    <value>Files/Folders to sync</value>
+  </data>
+  <data name="lastSyncTime" xml:space="preserve">
+    <value>Last sync time</value>
+  </data>
+  <data name="name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="owner" xml:space="preserve">
+    <value>Owner</value>
+  </data>
 </root>

@@ -793,7 +793,7 @@ namespace Novell.FormsTrayApp
             // 
             this.columnHeader3.Text = resources.GetString("columnHeader3.Text");
             this.columnHeader3.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("columnHeader3.TextAlign")));
-            this.columnHeader3.Width = ((int)(resources.GetObject("columnHeader3.Width")));
+            this.columnHeader3.Width = 0; // ((int)(resources.GetObject("columnHeader3.Width")));
             // 
             // columnHeader2
             // 
@@ -1753,6 +1753,16 @@ namespace Novell.FormsTrayApp
 
             ListViewItem lvi = accounts.Items[itemIndex];
             Domain domain = (Domain)lvi.Tag;
+            result = loginToDomain(domain);
+            if (result)
+                lvi.Tag = domain;
+
+            return result;
+        }
+
+        public bool loginToDomain(Domain domain)
+        {
+            bool result = false;
             if (domain != null)
             {
                 Connecting connecting = new Connecting(this.ifWebService, simiasWebService, simiasManager, domain.DomainInfo);
@@ -1777,9 +1787,7 @@ namespace Novell.FormsTrayApp
                 domain.DomainInfo.Authenticated = true;
                 FormsTrayApp.globalProp().updateifListViewDomainStatus(domain.DomainInfo.ID, true);
                 FormsTrayApp.globalProp().AddDomainToUIList(domain.DomainInfo);
-                lvi.Tag = domain;
             }
-
             return result;
         }
 
@@ -1789,6 +1797,16 @@ namespace Novell.FormsTrayApp
 
             ListViewItem lvi = accounts.Items[itemIndex];
             Domain domain = (Domain)lvi.Tag;
+            result = logoutFromDomain(domain);
+            if(result)
+                lvi.Tag = domain;
+
+            return result;
+        }
+
+        public bool logoutFromDomain(Domain domain)
+        {
+            bool result = false;
             if (domain != null)
             {
                 DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domain.ID, null);
@@ -1797,18 +1815,14 @@ namespace Novell.FormsTrayApp
                 {
                     result = true;
                     domain.DomainInfo.Authenticated = false;
-                    lvi.Tag = domain;
+
                     // Domain Logged out. Remove Passphrase if store passphrase is not selected..
                     if (this.simiasWebService.GetRememberOption(domain.ID) == false)
                     {
-                        //MessageBox.Show("Remember option not selected");
                         this.simiasWebService.StorePassPhrase(domain.ID, "", CredentialType.None, false);
                     }
-                    //else
-                    //	MessageBox.Show("Remember option selected");
                     FormsTrayApp.globalProp().updateifListViewDomainStatus(domain.DomainInfo.ID, false);
                     (FormsTrayApp.globalProp()).RemoveDomainFromUIList(domain.DomainInfo.ID, null);
-                   // (FormsTrayApp.globalProp()).refreshAll();
                 }
             }
             return result;

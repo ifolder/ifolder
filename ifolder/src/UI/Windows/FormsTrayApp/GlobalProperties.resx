@@ -1636,7 +1636,7 @@
     <value>NoControl</value>
   </data>
   <data name="titleRemainingToSync.Location" type="System.Drawing.Point, System.Drawing">
-    <value>279, 2</value>
+    <value>276, 2</value>
   </data>
   <data name="titleRemainingToSync.Size" type="System.Drawing.Size, System.Drawing">
     <value>132, 16</value>
@@ -1675,7 +1675,7 @@
     <value>NoControl</value>
   </data>
   <data name="titleLastSyncTime.Location" type="System.Drawing.Point, System.Drawing">
-    <value>279, 22</value>
+    <value>276, 22</value>
   </data>
   <data name="titleLastSyncTime.Size" type="System.Drawing.Size, System.Drawing">
     <value>85, 16</value>
@@ -1714,7 +1714,7 @@
     <value>NoControl</value>
   </data>
   <data name="titleAutomaticSync.Location" type="System.Drawing.Point, System.Drawing">
-    <value>279, 42</value>
+    <value>276, 42</value>
   </data>
   <data name="titleAutomaticSync.Size" type="System.Drawing.Size, System.Drawing">
     <value>98, 16</value>
@@ -1789,7 +1789,7 @@
     <value>NoControl</value>
   </data>
   <data name="valueName.Location" type="System.Drawing.Point, System.Drawing">
-    <value>68, 0</value>
+    <value>255, 0</value>
   </data>
   <data name="valueName.Size" type="System.Drawing.Size, System.Drawing">
     <value>0, 12</value>
@@ -1809,36 +1809,6 @@
   <data name="&gt;&gt;valueName.ZOrder" xml:space="preserve">
     <value>6</value>
   </data>
-  <data name="valueOwner.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="valueOwner.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 6.75pt</value>
-  </data>
-  <data name="valueOwner.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="valueOwner.Location" type="System.Drawing.Point, System.Drawing">
-    <value>68, 20</value>
-  </data>
-  <data name="valueOwner.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 12</value>
-  </data>
-  <data name="valueOwner.TabIndex" type="System.Int32, mscorlib">
-    <value>8</value>
-  </data>
-  <data name="&gt;&gt;valueOwner.Name" xml:space="preserve">
-    <value>valueOwner</value>
-  </data>
-  <data name="&gt;&gt;valueOwner.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;valueOwner.Parent" xml:space="preserve">
-    <value>tableLayoutPanel1</value>
-  </data>
-  <data name="&gt;&gt;valueOwner.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
   <data name="valueAccess.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -1849,7 +1819,7 @@
     <value>NoControl</value>
   </data>
   <data name="valueAccess.Location" type="System.Drawing.Point, System.Drawing">
-    <value>68, 40</value>
+    <value>255, 40</value>
   </data>
   <data name="valueAccess.Size" type="System.Drawing.Size, System.Drawing">
     <value>0, 12</value>
@@ -1867,7 +1837,7 @@
     <value>tableLayoutPanel1</value>
   </data>
   <data name="&gt;&gt;valueAccess.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>7</value>
   </data>
   <data name="valueRemainingToSync.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1879,7 +1849,7 @@
     <value>NoControl</value>
   </data>
   <data name="valueRemainingToSync.Location" type="System.Drawing.Point, System.Drawing">
-    <value>516, 0</value>
+    <value>548, 0</value>
   </data>
   <data name="valueRemainingToSync.Size" type="System.Drawing.Size, System.Drawing">
     <value>0, 12</value>
@@ -1897,7 +1867,7 @@
     <value>tableLayoutPanel1</value>
   </data>
   <data name="&gt;&gt;valueRemainingToSync.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>8</value>
   </data>
   <data name="valueLastSyncTime.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1909,7 +1879,7 @@
     <value>NoControl</value>
   </data>
   <data name="valueLastSyncTime.Location" type="System.Drawing.Point, System.Drawing">
-    <value>516, 20</value>
+    <value>548, 20</value>
   </data>
   <data name="valueLastSyncTime.Size" type="System.Drawing.Size, System.Drawing">
     <value>0, 12</value>
@@ -1927,7 +1897,7 @@
     <value>tableLayoutPanel1</value>
   </data>
   <data name="&gt;&gt;valueLastSyncTime.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>9</value>
   </data>
   <data name="valueAutomaticSync.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1939,7 +1909,7 @@
     <value>NoControl</value>
   </data>
   <data name="valueAutomaticSync.Location" type="System.Drawing.Point, System.Drawing">
-    <value>516, 40</value>
+    <value>548, 40</value>
   </data>
   <data name="valueAutomaticSync.Size" type="System.Drawing.Size, System.Drawing">
     <value>0, 12</value>
@@ -1957,7 +1927,7 @@
     <value>tableLayoutPanel1</value>
   </data>
   <data name="&gt;&gt;valueAutomaticSync.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>10</value>
   </data>
   <data name="titleEncrypted.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Left</value>
@@ -1972,7 +1942,7 @@
     <value>NoControl</value>
   </data>
   <data name="titleEncrypted.Location" type="System.Drawing.Point, System.Drawing">
-    <value>279, 63</value>
+    <value>276, 63</value>
   </data>
   <data name="titleEncrypted.Size" type="System.Drawing.Size, System.Drawing">
     <value>69, 16</value>
@@ -1996,7 +1966,7 @@
     <value>tableLayoutPanel1</value>
   </data>
   <data name="&gt;&gt;titleEncrypted.ZOrder" xml:space="preserve">
-    <value>12</value>
+    <value>11</value>
   </data>
   <data name="valueEncrypted.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Left</value>
@@ -2011,7 +1981,7 @@
     <value>NoControl</value>
   </data>
   <data name="valueEncrypted.Location" type="System.Drawing.Point, System.Drawing">
-    <value>516, 65</value>
+    <value>548, 65</value>
   </data>
   <data name="valueEncrypted.Size" type="System.Drawing.Size, System.Drawing">
     <value>0, 12</value>
@@ -2029,7 +1999,7 @@
     <value>tableLayoutPanel1</value>
   </data>
   <data name="&gt;&gt;valueEncrypted.ZOrder" xml:space="preserve">
-    <value>13</value>
+    <value>12</value>
   </data>
   <data name="tableLayoutPanel1.Location" type="System.Drawing.Point, System.Drawing">
     <value>224, 450</value>
@@ -2056,7 +2026,7 @@
     <value>3</value>
   </data>
   <data name="tableLayoutPanel1.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
-    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="titleName" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="titleOwner" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="titleRemainingToSync" Row="0" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="titleLastSyncTime" Row="1" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="titleAutomaticSync" Row="2" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="titleAccess" Row="2" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="valueName" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="valueOwner" Row="1" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="valueAccess" Row="2" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="valueRemainingToSync" Row="0" RowSpan="1" Column="3" ColumnSpan="1" /&gt;&lt;Control Name="valueLastSyncTime" Row="1" RowSpan="1" Column="3" ColumnSpan="1" /&gt;&lt;Control Name="valueAutomaticSync" Row="2" RowSpan="1" Column="3" ColumnSpan="1" /&gt;&lt;Control Name="titleEncrypted" Row="3" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="valueEncrypted" Row="3" RowSpan="1" Column="3" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,11.44366,Percent,37.14789,Percent,41.72535,Percent,9.507042" /&gt;&lt;Rows Styles="Percent,25,Percent,25,Percent,25,Percent,25" /&gt;&lt;/TableLayoutSettings&gt;</value>
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="titleName" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="titleOwner" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="titleRemainingToSync" Row="0" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="titleLastSyncTime" Row="1" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="titleAutomaticSync" Row="2" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="titleAccess" Row="2" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="valueName" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="valueAccess" Row="2" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="valueRemainingToSync" Row="0" RowSpan="1" Column="3" ColumnSpan="1" /&gt;&lt;Control Name="valueLastSyncTime" Row="1" RowSpan="1" Column="3" ColumnSpan="1" /&gt;&lt;Control Name="valueAutomaticSync" Row="2" RowSpan="1" Column="3" ColumnSpan="1" /&gt;&lt;Control Name="titleEncrypted" Row="3" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="valueEncrypted" Row="3" RowSpan="1" Column="3" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,44.3662,Percent,3.697183,Percent,47.88733,Percent,3.87324" /&gt;&lt;Rows Styles="Percent,25,Percent,25,Percent,25,Percent,25" /&gt;&lt;/TableLayoutSettings&gt;</value>
   </data>
   <metadata name="directorySearcher1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 58</value>
@@ -2159,6 +2129,9 @@
   </data>
   <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 9.75pt</value>
+  </data>
+  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="$this.MinimumSize" type="System.Drawing.Size, System.Drawing">
     <value>803, 595</value>

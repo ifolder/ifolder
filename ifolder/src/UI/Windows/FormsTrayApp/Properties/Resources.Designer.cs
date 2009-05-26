@@ -79,6 +79,15 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Access.
+        /// </summary>
+        internal static string access {
+            get {
+                return ResourceManager.GetString("access", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You do not have the sufficient access to the selected location. iFodler can only be created in folder where you have access to read and write files. Please select a different location and try again..
         /// </summary>
         internal static string accessDenied {
@@ -93,6 +102,15 @@ namespace TrayApp.Properties {
         internal static string AlsoRemoveMembership {
             get {
                 return ResourceManager.GetString("AlsoRemoveMembership", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Automatic sync.
+        /// </summary>
+        internal static string autoSync {
+            get {
+                return ResourceManager.GetString("autoSync", resourceCulture);
             }
         }
         
@@ -241,6 +259,15 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Encrypted.
+        /// </summary>
+        internal static string encrypted {
+            get {
+                return ResourceManager.GetString("encrypted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to iFolder Error.
         /// </summary>
         internal static string errorTitle {
@@ -264,6 +291,15 @@ namespace TrayApp.Properties {
         internal static string exitTitle {
             get {
                 return ResourceManager.GetString("exitTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Files/Folders to sync.
+        /// </summary>
+        internal static string filesnFolders {
+            get {
+                return ResourceManager.GetString("filesnFolders", resourceCulture);
             }
         }
         
@@ -349,6 +385,15 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Last sync time.
+        /// </summary>
+        internal static string lastSyncTime {
+            get {
+                return ResourceManager.GetString("lastSyncTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Found change in directory: {0}.
         /// </summary>
         internal static string localDir {
@@ -421,6 +466,15 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        internal static string name {
+            get {
+                return ResourceManager.GetString("name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The selected location is on a network or non-physical drive. iFolders must reside on a physical drive. Please select a different location and try again..
         /// </summary>
         internal static string networkPath {
@@ -453,6 +507,15 @@ namespace TrayApp.Properties {
         internal static string openErrorTitle {
             get {
                 return ResourceManager.GetString("openErrorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Owner.
+        /// </summary>
+        internal static string owner {
+            get {
+                return ResourceManager.GetString("owner", resourceCulture);
             }
         }
         

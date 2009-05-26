@@ -46,6 +46,7 @@ using Simias.Client.Event;
 using Novell.iFolder.Web;
 using System.Reflection;
 using TrayApp.Properties;
+using Simias.Client.Authentication;
 
 namespace Novell.FormsTrayApp
 {
@@ -138,6 +139,7 @@ namespace Novell.FormsTrayApp
         private System.Windows.Forms.Timer refreshTimer;
         private const double megaByte = 1048576;
         private Domain Currentdomain = null;
+        private int comboBoxSelectedIndex = -1;
         #endregion
 
         public Manager simManager
@@ -1563,7 +1565,7 @@ namespace Novell.FormsTrayApp
                 if (ifListView.DomainInfo.ID == domainID)
                 {
                     ifListView.DomainInfo.Authenticated = status;
-                    break;
+                    break; 
                 }
             }
         }
@@ -1690,7 +1692,10 @@ namespace Novell.FormsTrayApp
 			}
 			catch (Exception ex)
 			{
-				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(TrayApp.Properties.Resources.syncError, TrayApp.Properties.Resources.syncErrorTitle, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(TrayApp.Properties.Resources.syncError, 
+                                                                        TrayApp.Properties.Resources.syncErrorTitle, 
+                                                                        ex.Message, MyMessageBoxButtons.OK, 
+                                                                        MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 				mmb.Dispose();
 			}
@@ -1700,16 +1705,15 @@ namespace Novell.FormsTrayApp
         private void showServerInfo(bool visible)
         {
             this.titleEncrypted.Visible = this.valueEncrypted.Visible =
-            this.titleRemainingToSync.Visible = this.valueRemainingToSync.Visible = 
-            this.titleLastSyncTime.Visible = this.valueLastSyncTime.Visible = 
-            this.titleAutomaticSync.Visible = this.valueAutomaticSync.Visible = visible;
+            this.titleRemainingToSync.Visible = 
+            this.titleLastSyncTime.Visible = this.titleAutomaticSync.Visible =  visible;
         }
 
         private void showUserInfo(bool visible)
         {
             this.titleName.Visible = this.valueName.Visible = 
-            this.titleOwner.Visible = this.valueOwner.Visible = 
-            this.titleAccess.Visible = this.valueAccess.Visible = visible;
+            this.titleOwner.Visible = this.titleAccess.Visible = visible;
+            
         }
 		private void updateMenus(iFolderObject ifolderObject)
 		{
@@ -1726,12 +1730,13 @@ namespace Novell.FormsTrayApp
 			{
 				iFolderWeb ifolderWeb = ifolderObject.iFolderWeb;
 
-				if ( ifolderWeb.IsSubscription )
+				if ( ifolderWeb.IsSubscription ) //iFolders on the server
 				{
                     this.showUserInfo(true);
                     this.showServerInfo(true);
-                    this.valueName.Text = ifolderWeb.Name;
-                    this.valueOwner.Text = ifolderWeb.Owner;
+
+                    this.titleName.Text = TrayApp.Properties.Resources.name + ":  " +  ifolderWeb.Name;
+                    this.titleOwner.Text =TrayApp.Properties.Resources.owner + ":  "+  ifolderWeb.Owner;
                     
                     if (ifolderWeb.encryptionAlgorithm != null && ifolderWeb.encryptionAlgorithm != "")
                     {
@@ -1742,8 +1747,11 @@ namespace Novell.FormsTrayApp
                         this.valueEncrypted.Text = resourceManager.GetString("valueNormal.text");
                     }
 
-                    this.valueAccess.Text = this.valueRemainingToSync.Text = this.valueLastSyncTime.Text = 
-                        this.valueAutomaticSync.Text = resourceManager.GetString("unknown");
+                    this.valueAccess.Text =  resourceManager.GetString("unknown");
+
+                    this.titleRemainingToSync.Text = Resources.filesnFolders + ":  " + resourceManager.GetString("unknown");
+                    this.titleLastSyncTime.Text = Resources.lastSyncTime + ":  " + resourceManager.GetString("unknown");
+                    this.titleAutomaticSync.Text = Resources.autoSync + ":  " + resourceManager.GetString("unknown");
 
 					// Disable the iFolder related menu items. //TODO
 					this.menuActionOpen.Enabled = this.menuActionProperties.Enabled =
@@ -1767,18 +1775,18 @@ namespace Novell.FormsTrayApp
 					// Show the available iFolder buttons
                     this.toolStripBtnMerge.Visible = true;
 				}
-				else
+				else //local folders
 				{
                     this.showUserInfo(true);
                     this.showServerInfo(true);
-                    this.valueName.Text = ifolderWeb.Name;
-                    this.valueOwner.Text = ifolderWeb.Owner;
+                    this.titleName.Text = TrayApp.Properties.Resources.name + ":  " + ifolderWeb.Name;
+                    this.titleOwner.Text = TrayApp.Properties.Resources.owner + ":  " + ifolderWeb.Owner;
                     
                     iFolderUser[] ifolderUsers = ifWebService.GetiFolderUsers(ifolderWeb.ID);
                     foreach (iFolderUser ifolderUser in ifolderUsers)
                     {
                         if (ifolderUser.UserID.Equals(ifolderWeb.CurrentUserID))
-                            this.valueAccess.Text = ifolderUser.Rights.ToString();
+                            this.titleAccess.Text = Resources.access + ":  " + ifolderUser.Rights.ToString();
                     }
 
                     if (ifolderWeb.encryptionAlgorithm != null && ifolderWeb.encryptionAlgorithm != "")
@@ -1793,31 +1801,30 @@ namespace Novell.FormsTrayApp
                     try
                     {
                         SyncSize syncSize = ifWebService.CalculateSyncSize(ifolderWeb.ID);
-                        this.valueRemainingToSync.Text = syncSize.SyncNodeCount.ToString();
+                        this.titleRemainingToSync.Text =  Resources.filesnFolders + ":  " + syncSize.SyncNodeCount.ToString();
                     }
                     catch
                     {
                         if (ifolderWeb.Role.Equals("Master"))
                         {
-                            this.valueRemainingToSync.Text = "0";
+                            this.titleRemainingToSync.Text = Resources.filesnFolders + ":  " + "0";
                         }
                         else
                         {
-                            this.valueRemainingToSync.Text = resourceManager.GetString("unknown");
+                            this.titleRemainingToSync.Text = Resources.filesnFolders + ":  " + resourceManager.GetString("unknown");
                         }
                     }
 
-                    this.valueLastSyncTime.Text = ifolderWeb.LastSyncTime;
+                    this.titleLastSyncTime.Text = Resources.lastSyncTime +":  " + ifolderWeb.LastSyncTime;
 
                     if (ifolderWeb.SyncInterval != Timeout.Infinite)
                     {
-                        this.valueAutomaticSync.Text = ifolderWeb.SyncInterval.ToString();
+                        this.titleAutomaticSync.Text = Resources.autoSync + ":  "+ ifolderWeb.SyncInterval.ToString();
                     }
                     else
                     {
-                        this.valueAutomaticSync.Text = resourceManager.GetString("notApplicable");
+                        this.titleAutomaticSync.Text = Resources.autoSync + ":  " + resourceManager.GetString("notApplicable");
                     }
-                    //satya end
 
 					// Disable the available iFolder related menu items.
                     this.menuActionRemove.Enabled = this.menuActionAccept.Enabled = this.menuActionMerge.Enabled = false;
@@ -3034,28 +3041,6 @@ namespace Novell.FormsTrayApp
             return QuotaAvailable;
         }
 
-        private void DomainsListUpdateComboBox()
-        {
-            string DomainName = null;
-            DomainInformation[] domains;
-            //Reading and Initilizing the Domain List.
-            domains = this.simiasWebService.GetDomains(false);
-            domainListComboBox.Items.Clear();
-            foreach (DomainInformation dw in domains)
-            {
-                try
-                {
-                    if (domains != null)
-                    {
-                        domainListComboBox.Items.Add(dw.Name);
-                    }
-                }
-                catch { }
-            }
-            if (domainListComboBox.Items.Count >= 1 )
-                domainListComboBox.SelectedIndex = 0 ;
-        }
-        
 
         /// <summary>
         ///This function clear and then update the ComboBox with latest Domain details
@@ -3091,36 +3076,40 @@ namespace Novell.FormsTrayApp
             }
         }
 
-        private void toolStripMenuLeftPane_Click(object sender, EventArgs e)
+        private void DomainsListUpdateComboBox()
         {
-            if (panel3.Visible)
+            int domaincount = 0;
+            string DomainName = null;
+            DomainInformation[] domains;
+            //Reading and Initilizing the Domain List.
+            domains = this.simiasWebService.GetDomains(false);
+            domainListComboBox.Items.Clear();
+            foreach (DomainInformation dw in domains)
             {
-                panel3.Visible = !panel3.Visible;
-                panel2.Left = panel3.Left;
-                panel2.Width = panel2.Right + panel3.Width;
-                tableLayoutPanel1.Left = panel3.Left;
-                tableLayoutPanel1.Width = tableLayoutPanel1.Right + panel3.Width;
+                try
+                {
+                    if (domains != null)
+                    {
+                        domainListComboBox.Items.Add(dw.Name);
+                    }
+                }
+                catch { }
+            }
+            if (comboBoxSelectedIndex >= 0)
+            {
+                if (comboBoxSelectedIndex > (domaincount - 1))
+                {
+                    domainListComboBox.SelectedIndex = comboBoxSelectedIndex = 0;
+                }
+                else
+                {
+                    domainListComboBox.SelectedIndex = comboBoxSelectedIndex;
+                }
             }
             else
             {
-                panel3.Visible = !panel3.Visible;
-                panel2.Left = panel3.Right;
-                tableLayoutPanel1.Left = panel3.Right;
+                domainListComboBox.SelectedIndex = comboBoxSelectedIndex = 0;
             }
-        }
-
-        private void toolStripMenuDetails_Click(object sender, EventArgs e)
-        {
-            //panel3.Visible = !panel3.Visible;
-            localiFoldersHeading.Visible = !localiFoldersHeading.Visible;
-            iFolderView.Visible = !iFolderView.Visible;
-            //listView1.Visible = !listView1.Visible;
-            //showiFoldersinList();
-        }
-
-        private void localiFoldersHeading_TextChanged(object sender, EventArgs e)
-        {
-
         }
         private void serverListComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -3173,12 +3162,18 @@ namespace Novell.FormsTrayApp
 
         private void LoginLogoff_Click(object sender, EventArgs e)
         {
-            Connecting connecting = new Connecting(ifWebService, simiasWebService, simiasManager, selectedDomain);
-            if (connecting.ShowDialog() == DialogResult.OK)
+            if (selectedDomain.Authenticated)
             {
-                selectedDomain.Authenticated = true;
-                setAuthState(selectedDomain);
+                preferences.logoutFromDomain(new Domain(selectedDomain));
             }
+            else
+            {
+                if(preferences.loginToDomain(new Domain(selectedDomain)))
+                {
+                    selectedDomain.Authenticated = true;
+                }
+            }
+            setAuthState(selectedDomain);
         }
 	}
 }
