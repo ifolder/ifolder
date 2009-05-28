@@ -214,6 +214,15 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Details.
+        /// </summary>
+        internal static string details {
+            get {
+                return ResourceManager.GetString("details", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Server unavailable.
         /// </summary>
         internal static string disconnected {
@@ -777,6 +786,15 @@ namespace TrayApp.Properties {
         internal static string syncingFile {
             get {
                 return ResourceManager.GetString("syncingFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thumbnails.
+        /// </summary>
+        internal static string thumbnails {
+            get {
+                return ResourceManager.GetString("thumbnails", resourceCulture);
             }
         }
         

@@ -378,4 +378,10 @@
   <data name="owner" xml:space="preserve">
     <value>Owner</value>
   </data>
+  <data name="details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="thumbnails" xml:space="preserve">
+    <value>Thumbnails</value>
+  </data>
 </root>

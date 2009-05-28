@@ -140,6 +140,7 @@ namespace Novell.FormsTrayApp
         private const double megaByte = 1048576;
         private Domain Currentdomain = null;
         private int comboBoxSelectedIndex = -1;
+        private bool thumbnailView = false;
         #endregion
 
         public Manager simManager
@@ -156,7 +157,7 @@ namespace Novell.FormsTrayApp
             System.Object[] param = new System.Object[1];
             System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(GlobalProperties));
             try
-            {
+            { 
                 //load the plugin Dll from plugind lib
                 Assembly enhancedMenu = Assembly.LoadFrom(Path.Combine(Application.StartupPath,@"lib\plugins\EnhancedMenuItems.dll"));
                 if (enhancedMenu != null)// If the dll not there revert to old menu.
@@ -372,7 +373,7 @@ namespace Novell.FormsTrayApp
             }
             catch { } // Non-fatal ... just missing some graphics.
 
-            this.MinimumSize = this.Size;
+            //TODO: commented out, need to figure why is this giving error. this.MinimumSize = this.Size;
         }
         void MoreInitialization()
         {           
@@ -1584,25 +1585,22 @@ namespace Novell.FormsTrayApp
 				{
 					iFolderObject ifolderObject = (iFolderObject)tlvi.Tag;
 					tempHt.Add( ifolderObject.ID, ifolderObject.iFolderState );
-
 				}
-                
 			}
 			try
 			{
-				// Get the list of iFolders - now the calling thread does this and also handles exception
-			//	if( search != null)
-			//		ifolderArray = ifWebService.GetAlliFolders();
 				panel2.SuspendLayout();
-				//selectedItem = null;
+
                 if (selectedItem != null)
                     updateMenus((iFolderObject)selectedItem.Tag);
                 else
                     updateMenus(null);
+
 				// Walk the list of iFolders and add them to the listviews.
 				foreach (iFolderWeb ifolder in ifolderArray) //iFolderArray is a class member should be made null for GC
 				{
-					if( search != null && ((String)ifolder.Name).ToLower().IndexOf(search.ToLower(), 0, ((String)ifolder.Name).Length) < 0)
+					if( search != null && ((String)ifolder.Name).ToLower().IndexOf(search.ToLower(), 
+                        0, ((String)ifolder.Name).Length) < 0)
 						continue;
 					iFolderState state = iFolderState.Normal;
 			        if (tempHt.Contains(ifolder.ID))
@@ -1617,18 +1615,18 @@ namespace Novell.FormsTrayApp
                         ifobj = null;
                       }
                       oldHt.Add(ifolder.ID, state);
-             		if( this.acceptedFolders.Contains(ifolder.ID))
-					  {
-						 this.acceptedFolders.Remove(ifolder.ID);
-					  }
+                      if (this.acceptedFolders.Contains(ifolder.ID))
+                      {
+                          this.acceptedFolders.Remove(ifolder.ID);
+                      }
                 }
-				
                 // Check whether or not the count is same..
 				foreach( System.Object obj in this.acceptedFolders.Values)
 				{
 					TileListViewItem tlv = (TileListViewItem)obj;
 					iFolderObject ifobj = (iFolderObject)tlv.Tag;
-					if( search != null && ((String)ifobj.iFolderWeb.Name).ToLower().IndexOf(search.ToLower(), 0, ((String)ifobj.iFolderWeb.Name).Length) < 0)
+					if( search != null && ((String)ifobj.iFolderWeb.Name).ToLower().IndexOf(search.ToLower(), 
+                        0, ((String)ifobj.iFolderWeb.Name).Length) < 0)
 						continue;
 					ifobj.iFolderWeb.IsSubscription = false;
 					ifobj.iFolderState = iFolderState.Initial;
@@ -1645,11 +1643,14 @@ namespace Novell.FormsTrayApp
                         removeTileListViewItem((TileListViewItem)ht[ifolderid]);
                     }
                 }
-
 			}
 			catch (Exception ex)
 			{
-				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(TrayApp.Properties.Resources.iFolderError, TrayApp.Properties.Resources.iFolderErrorTitle, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+				Novell.iFolderCom.MyMessageBox mmb = 
+                    new MyMessageBox(TrayApp.Properties.Resources.iFolderError, 
+                    TrayApp.Properties.Resources.iFolderErrorTitle, 
+                    ex.Message, MyMessageBoxButtons.OK, 
+                    MyMessageBoxIcon.Information);
 				mmb.ShowDialog();
 				mmb.Dispose();
 			}
@@ -1658,17 +1659,15 @@ namespace Novell.FormsTrayApp
 			{
 				ifListView.FinalizeUpdate();
 			}
-
 			updateView();
 			panel2.ResumeLayout();
             DomainsListUpdate();
             DomainsListUpdateComboBox();
 			inRefresh = false;
-		//	ifolderArray = null;
             oldHt = null;
       	    Cursor.Current = Cursors.Default;
-			this.refreshTimer.Start();
-            
+            showiFolderinListView();
+			this.refreshTimer.Start(); 
 		}
 
 		private void invokeiFolderProperties(TileListViewItem tlvi, int activeTab)
@@ -1752,6 +1751,7 @@ namespace Novell.FormsTrayApp
                     this.titleRemainingToSync.Text = Resources.filesnFolders + ":  " + resourceManager.GetString("unknown");
                     this.titleLastSyncTime.Text = Resources.lastSyncTime + ":  " + resourceManager.GetString("unknown");
                     this.titleAutomaticSync.Text = Resources.autoSync + ":  " + resourceManager.GetString("unknown");
+
 
 					// Disable the iFolder related menu items. //TODO
 					this.menuActionOpen.Enabled = this.menuActionProperties.Enabled =
@@ -2231,15 +2231,12 @@ namespace Novell.FormsTrayApp
 			{
 				g.Dispose();
 			}
-
-             //	Call the refresh thread
-			/// Default refresh interval is 5 minutes now 
-			//this.refreshTimer.Interval = Math.Abs(this.ifWebService.GetDefaultSyncInterval()* 1000);
-		//	MessageBox.Show(string.Format("Setting default sync interval to {0}. Calling refreash.", this.refreshTimer.Interval));
 			refreshAll();
 			this.refreshTimer.Start();
 
 			showiFolders_Click( this, null );
+
+            setThumbnailView(thumbnailView);
 		}
 
 		private void GlobalProperties_VisibleChanged(object sender, System.EventArgs e)
@@ -3159,7 +3156,7 @@ namespace Novell.FormsTrayApp
                 pictureBox1.Image = new Bitmap(Path.Combine(Application.StartupPath, @"res\ifolder-crash.gif"));
             }
         }
-
+        
         private void LoginLogoff_Click(object sender, EventArgs e)
         {
             if (selectedDomain.Authenticated)
@@ -3174,6 +3171,119 @@ namespace Novell.FormsTrayApp
                 }
             }
             setAuthState(selectedDomain);
+        }
+
+        private void setThumbnailView(bool visible)
+        {
+            //show/hide panel2 that contains thumnail view.
+            this.iFolderView.Visible = visible;
+            this.localiFoldersHeading.Visible = visible;
+            panel2.Visible = visible;
+
+            //show/hide panel2 that contains detial view.
+            panel1.Visible = !visible;
+            listView1.Visible = !visible;
+        }
+
+        private void showiFolderinListView()
+        {
+            listView1.Items.Clear();
+            // Walk the list of iFolders and add them to the listviews.
+
+            this.listView1.SuspendLayout();
+            if (ht != null)
+            {
+                foreach (DictionaryEntry entry in ht)
+                {
+                    TileListViewItem tlvi = (TileListViewItem)entry.Value;
+                    
+                    iFolderObject ifObj = (iFolderObject)tlvi.Tag;
+                    int imageIndex;
+                    tlvi.Status = getItemState(ifObj, 0, out imageIndex);
+                    ListViewItem listViewItem1 = new ListViewItem(
+                    new string[] { 
+                    ifObj.iFolderWeb.Name,
+                    ifObj.iFolderWeb.ManagedPath,
+                    (simiasWebService.GetDomainInformation(ifObj.iFolderWeb.DomainID)).Host,
+                    tlvi.Status,
+                    ifObj.iFolderWeb.ID},
+                    -2,
+                    Color.Black,
+                    Color.Empty,
+                    new Font("Microsoft Sans Serif", 13.25F, FontStyle.Regular, GraphicsUnit.Point, ((System.Byte)(0))));
+                    listViewItem1.ImageIndex = imageIndex;
+                    listView1.Items.Add(listViewItem1);
+                }
+            }
+            this.ResumeLayout();
+            //TODO: imagelist should contain the similar set of images as the thumnail view.
+        }
+
+        private void toolStripMenuThumbnails_Click(object sender, EventArgs e)
+        {
+            thumbnailView = !thumbnailView;
+            if (thumbnailView)
+            {
+                toolStripMenuThumbnails.Text = Resources.details; 
+            }
+            else
+            {
+                toolStripMenuThumbnails.Text = Resources.thumbnails;
+                setListViewItemSelected();
+            }
+            setThumbnailView(thumbnailView);
+        }
+
+        private void toolStripMenuLeftPane_Click(object sender, EventArgs e)
+        {
+            const int margin = 3;
+            if (panel3.Visible)
+            {
+                panel3.Visible = !panel3.Visible;
+
+                panel1.Left = panel3.Left ;
+                panel2.Left = panel3.Left ;
+
+                panel1.Width = panel1.Right + panel3.Width -margin;
+                panel2.Width = panel2.Right + panel3.Width -margin;
+
+                tableLayoutPanel1.Left = panel3.Left;
+                tableLayoutPanel1.Width = tableLayoutPanel1.Right + panel3.Width;
+            }
+            else
+            {
+                panel3.Visible = !panel3.Visible;
+                panel1.Left = panel3.Right ;
+                panel2.Left = panel3.Right ;
+                tableLayoutPanel1.Left = panel3.Right +margin ;
+            }
+        }
+        
+        private void listView1_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            if (listView1.Sorting == SortOrder.Descending)
+                listView1.Sorting = SortOrder.Ascending;
+            else
+                listView1.Sorting = SortOrder.Descending;
+            listView1.Sort();
+        }
+
+        private void listView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            // below check is done as this event is generated twice
+            if (listView1.SelectedItems == null || listView1.SelectedItems.Count == 0)
+                return; 
+            string id = listView1.Items[listView1.SelectedIndices[0]].SubItems[4].Text.ToString();
+            TileListViewItem tlvi = (TileListViewItem)ht[id];
+            tlvi.Selected = true;
+        }
+        private void setListViewItemSelected()
+        {
+            listView1.Focus();
+            iFolderObject ifObj = (iFolderObject)selectedItem.Tag;
+            ListViewItem item = listView1.FindItemWithText(ifObj.iFolderWeb.ID);
+            listView1.Items[item.Index].Selected = true;
+            listView1.Items[item.Index].Focused = true;
         }
 	}
 }
