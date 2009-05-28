@@ -741,6 +741,7 @@ namespace Novell.iFolder
 						UpdateDomainStatus(args.DomainID);
 						break;
 				}
+				//UpdateiFolderWindowOnLoginComplete();
 			}
 			else
 			{
@@ -1065,19 +1066,46 @@ namespace Novell.iFolder
 
 		public void ToggelDomainState(DomainInformation domainInfo, bool login)
 		{
+			// disable the ability for the user to toggle the checkbox
+			onlineToggleButton.Activatable = false;
 			//TODO: Refere code from function OnlineToggled and add needed code	
-			if(true == login)
+			IDomainProviderUI provider = domainProviderUI.GetProviderForID(domainInfo.ID);
+			if(provider != null)
 			{
- 				LoginDomain(domainInfo);
+				if (domainInfo.Active)
+					domainController.InactivateDomain(domainInfo.ID);
+				else
+					domainController.ActivateDomain(domainInfo.ID);
 			}
 			else
 			{
- 				LogoutDomain(domainInfo);
+				if(true == login)
+				{
+ 					LoginDomain(domainInfo);
+				}
+				else
+				{
+ 					LogoutDomain(domainInfo);
+				}
 			}
 
 		    UpdateDomainStatus(domainInfo.ID);
 
+			// Reenable the ability for the user to toggle the checkbox
+			onlineToggleButton.Activatable = true;
+
 		}
+
+	/*	public void UpdateiFolderWindowOnLoginComplete()
+		{
+			TextWriter tw = null;
+			tw = new StreamWriter("vikashlog.txt");
+		    tw.WriteLine("Vikash:Domain already exist");
+		    tw.Close();
+
+			iFolderWindow ifwin = Util.GetiFolderWindow();
+			ifwin.PopulateCombobox();
+		} */
 
 		
 	}

@@ -189,13 +189,12 @@ namespace Novell.iFolder
 		public Label ifolderLabel1 = null;
 		public Label ifolderLabel2 = null;
 		public Label ifolderLabel3 = null;
-	//	public Label ifolderLabel4 = null;
 		public Label userLabel1 = null;
 		public Label userLabel2 = null;
 		public Label userLabel3 = null;
 		public Label userLabel4 = null;
 		public Label userLabel5 = null;
-
+		private Tooltips buttontips;
 
 
 		public int LastXPos
@@ -613,6 +612,8 @@ namespace Novell.iFolder
 			VBox actionsVBox = new VBox(false, 0);
 			actionsVBox.WidthRequest = 275;
 
+			buttontips = new Tooltips();
+
             HBox ButtonControl = new HBox (false, 0);
              
 			actionsVBox.PackStart(ButtonControl, false, false, 0);
@@ -654,6 +655,7 @@ namespace Novell.iFolder
 			
 			AddiFolderButton.Clicked +=
 				new EventHandler(AddiFolderHandler);
+			buttontips.SetTip(AddiFolderButton, Util.GS("Create iFolder"),"");	
 			
 			///
 			/// ShowHideAllFoldersButton
@@ -674,6 +676,7 @@ namespace Novell.iFolder
 			ShowHideAllFoldersButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png")));
 			ShowHideAllFoldersButton.Clicked +=
 				new EventHandler(ShowHideAllFoldersHandler);
+			buttontips.SetTip(ShowHideAllFoldersButton, Util.GS("Show or Hide iFolder"),"");	
 			///
 			/// Folder Actions
 			///
@@ -702,6 +705,7 @@ namespace Novell.iFolder
 			OpenSynchronizedFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png")));
 			OpenSynchronizedFolderButton.Clicked +=
 				new EventHandler(OnOpenSynchronizedFolder);
+			buttontips.SetTip(OpenSynchronizedFolderButton, Util.GS("Open iFolder"),"");	
 			///
 			/// ResolveConflictsButton
 			///
@@ -722,6 +726,7 @@ namespace Novell.iFolder
 			ResolveConflictsButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("encrypt-ilock-48.png")));
 			ResolveConflictsButton.Clicked +=
 				new EventHandler(OnResolveConflicts);
+			buttontips.SetTip(ResolveConflictsButton, Util.GS("Resolve Conflicts"),"");	
 
 			///
 			/// SynchronizeNowButton
@@ -743,6 +748,7 @@ namespace Novell.iFolder
 		    SynchronizeNowButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-sync48.png")));
 			SynchronizeNowButton.Clicked +=
 				new EventHandler(OnSynchronizeNow);
+			buttontips.SetTip(SynchronizeNowButton, Util.GS("Synchronize Now"),"");	
 			
 
 			///
@@ -765,6 +771,7 @@ namespace Novell.iFolder
 		    ShareSynchronizedFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder_dis2_48.png")));
 			ShareSynchronizedFolderButton.Clicked +=
 				new EventHandler(OnShareSynchronizedFolder);
+			buttontips.SetTip(ShareSynchronizedFolderButton, Util.GS("Share with"),"");	
 
 
 			///
@@ -787,6 +794,7 @@ namespace Novell.iFolder
 			RemoveiFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-error48.png")));
 			RemoveiFolderButton.Clicked +=
 				new EventHandler(RemoveiFolderHandler);
+			buttontips.SetTip(RemoveiFolderButton, Util.GS("Revert to a Normal Folder"),"");	
 
 			///
 			/// ViewFolderPropertiesButton
@@ -808,6 +816,7 @@ namespace Novell.iFolder
 			ViewFolderPropertiesButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png")));
 			ViewFolderPropertiesButton.Clicked +=
 				new EventHandler(OnShowFolderProperties);
+			buttontips.SetTip(ViewFolderPropertiesButton, Util.GS("Properties"),"");	
 
 
 
@@ -831,6 +840,7 @@ namespace Novell.iFolder
 			DownloadAvailableiFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-download48.png")));
 			DownloadAvailableiFolderButton.Clicked +=
 				new EventHandler(DownloadAvailableiFolderHandler);
+			buttontips.SetTip(DownloadAvailableiFolderButton, Util.GS("Download"),"");	
 
 
 			///
@@ -853,6 +863,7 @@ namespace Novell.iFolder
 			MergeAvailableiFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-download48.png")));
 			MergeAvailableiFolderButton.Clicked +=
 				new EventHandler(MergeAvailableiFolderHandler);
+			buttontips.SetTip(MergeAvailableiFolderButton, Util.GS("Merge"),"");	
 
 
 			///
@@ -875,6 +886,7 @@ namespace Novell.iFolder
 			DeleteFromServerButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-error48.png")));
 			DeleteFromServerButton.Clicked +=
 				new EventHandler(DeleteFromServerHandler);
+			buttontips.SetTip(DeleteFromServerButton, Util.GS("Delete from server"),"");	
 
 
 			///
@@ -895,6 +907,7 @@ namespace Novell.iFolder
 			RemoveMembershipButton.Visible	= false;
 			RemoveMembershipButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-download48.png")));
 			RemoveMembershipButton.Clicked += new EventHandler(RemoveMembershipHandler);
+			buttontips.SetTip(RemoveMembershipButton, Util.GS("Remove My Membership"),"");	
 
 			///
 			/// Spacer
@@ -1008,16 +1021,6 @@ namespace Novell.iFolder
 		    ifolderLabel3.UseMarkup = true;
 			ifolderLabel3.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
 		    ifolderLabel3.Xalign = 0.0F;
-            //####################### ADD LABEL
-	/*		lable = null;
-			lable = string.Format(Util.GS("Encrypted: {0}"),lable); 
-		    ifolderLabel4 = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
-
-		   	iFolderInfo.PackStart(ifolderLabel4, false, false, 0);
-		    ifolderLabel4.UseMarkup = true;
-			ifolderLabel4.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
-		    ifolderLabel4.Xalign = 0.0F;
-	 */
 
 			return iFolderInfo;
 		}
@@ -1043,7 +1046,6 @@ namespace Novell.iFolder
 			userLabel4.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
 		    userLabel4.Xalign = 0.0F;
             //####################### ADD LABEL
-			//TODO: Show Sync Status as well as Last iFolder Sync time
 			lable = Util.GS("N/A");
 			lable = string.Format(Util.GS("Last Successfull Sync time: {0}"),lable); 
 		    userLabel2 = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
@@ -1070,6 +1072,7 @@ namespace Novell.iFolder
 		    userLabel3.UseMarkup = true;
 			userLabel3.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
 		    userLabel3.Xalign = 0.0F;
+			userLabel3.Hide();
          
             //####################### ADD LABEL
 			lable = Util.GS("N/A");
@@ -1080,6 +1083,7 @@ namespace Novell.iFolder
 		    userLabel5.UseMarkup = true;
 			userLabel5.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
 		    userLabel5.Xalign = 0.0F;
+			userLabel5.Hide();
 
 
 			return userInfo;
@@ -1197,7 +1201,7 @@ namespace Novell.iFolder
 		     actionsVBox.PackStart(new Label(""), false, false, 4);
 
             //####################### ADD LABEL
-			lable = null;
+			lable = Util.GS("N/A");
 			lable = string.Format(Util.GS("User: {0}"),lable); 
 		    serverLabel1 = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
 
@@ -1208,7 +1212,7 @@ namespace Novell.iFolder
 
 
             //####################### ADD LABEL
-			lable = null;
+			lable = Util.GS("N/A");
 			lable = string.Format(Util.GS("Server: {0}"),lable); 
 		    serverLabel2 = new Label( string.Format( "<span size=\"medium\">{0}</span>", lable));
 
@@ -1220,7 +1224,7 @@ namespace Novell.iFolder
             //####################### ADD SPACE
 		     actionsVBox.PackStart(new Label(""), false, false, 0);
             //####################### ADD LABEL
-			lable = null;
+			lable = Util.GS("N/A");
 			lable = string.Format(Util.GS("No. of iFolder: {0}"),lable); 
 		    serverLabel3 = new Label( string.Format( "<span size=\"medium\">{0}</span>", lable));
 
@@ -1232,7 +1236,7 @@ namespace Novell.iFolder
             //####################### ADD SPACE
 		     actionsVBox.PackStart(new Label(""), false, false, 0);
             //####################### ADD LABEL
-			lable = null;
+			lable = Util.GS("N/A");
 			lable = string.Format(Util.GS("Disk Quota: {0}"),lable); 
 		    serverLabel4 = new Label( string.Format( "<span size=\"medium\">{0}</span>", lable));
 
@@ -1242,7 +1246,7 @@ namespace Novell.iFolder
 		    serverLabel4.Xalign = 0.0F;
 
             //####################### ADD LABEL
-			lable = null;
+			lable = Util.GS("N/A");
 			lable = string.Format(Util.GS("Disk Used: {0}"),lable); 
 		    serverLabel5 = new Label( string.Format( "<span size=\"medium\">{0}</span>", lable));
 
@@ -1253,7 +1257,7 @@ namespace Novell.iFolder
 
 
             //####################### ADD LABEL
-			lable = null;
+			lable = Util.GS("N/A");
 			lable = string.Format(Util.GS("Disk Available: {0}"),lable); 
 		    serverLabel6 = new Label( string.Format( "<span size=\"medium\">{0}</span>", lable));
 
@@ -1267,8 +1271,6 @@ namespace Novell.iFolder
 
 			//###############ADDED BUTTON FOR CONNECT/DISCONECT 
 			serverStat = new Button();	
-			//TODO:Verify current selected domain status and set button text
-			//TODO: Used localized string
 			serverStat.Label = Util.GS("N/A");
 			serverStat.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("ifolder-download16.png")));
 			serverStat.Clicked += new EventHandler(OnserverStatButtonHandler);
@@ -1283,7 +1285,6 @@ namespace Novell.iFolder
 
 		private void OnserverStatButtonHandler(object o, EventArgs args)
 		{
-			//TODO:Update button text and Server Image in DomainLogout/DoaminLogin event.	
 
 			//########### Validate current state of Selected Domain and toggel between Login/Logout.		
 			prefsWin = new PreferencesWindow(ifws, simiasManager);	
@@ -1292,34 +1293,30 @@ namespace Novell.iFolder
 		    	 if (!ServerDomain.Authenticated)  				
 				 {
 					//####Login Domain	 
-					//TODO: Update Butoon Image as well as server Image after Login	 
 					prefsWin.ToggelDomain(ServerDomain, true);
 					serverStat.Label = Util.GS("Disconnect");
 					serverStat.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png")));
 
-				//	serverImg.Pixbuf = new Gtk.Image(Util.ImagesPath("ifolder-warning16.png"));
+					//#######Updating Server Image based on selected Domain connection status
 					serverImg.Pixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png"));
 				 }
 			     else
 				 {
 					//######Logout Domain	 
-					//TODO: Update Butoon Image as well as server Image after Logout	 
 					prefsWin.ToggelDomain(ServerDomain, false);
 					serverStat.Label = Util.GS("Connect");
 					serverStat.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("ifolder-warning16.png")));
 
-					//serverImg.Pixbuf = new Gtk.Image(Util.ImagesPath("ifolder128.png"));
+					//#######Updating Server Image based on selected Domain connection status
 					serverImg.Pixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder-warning16.png"));
 				 }
 			}
 			
 		}
 
-		private void OnComboBoxIndexChange(object o, EventArgs args)
+		private void UpdateCurrentServer()
 		{
-				 string QoutaAvailable = null;
-		         int count=0, index = 0, tmpValue = 0;
-		         DiskSpace ds = null;
+		         int count=0, index = 0 ; 
 		         DomainInformation dom = null;
 
 
@@ -1336,7 +1333,6 @@ namespace Novell.iFolder
 		            dom = domain;       
 		           if(count == index)
 				   {
-						// Console.WriteLine("Hightlited index is :{0}", count);  
 		           		break;
 				   }
 		           count++;
@@ -1345,6 +1341,18 @@ namespace Novell.iFolder
 				 //################Updating Label Information
 				 //TODO: rename ServerDomain to Current/Highlighted Domain
 				 ServerDomain = dom;
+					
+				 UpdateServerStatButton();
+
+		}
+
+		private void OnComboBoxIndexChange(object o, EventArgs args)
+		{
+				 string QoutaAvailable = null;
+		         int count=0, index = 0, tmpValue = 0;
+		         DiskSpace ds = null;
+
+				 UpdateCurrentServer();
 
 				 if(serverLabel1 != null && ServerDomain != null)
 				 {
@@ -1360,28 +1368,26 @@ namespace Novell.iFolder
 
 				 }
 				
-		    	 if (ServerDomain != null && ServerDomain.Authenticated)  				
-				 {
-					serverStat.Label = Util.GS("Disconnect");
-				 }
-				 else
-				 {
-					serverStat.Label = Util.GS("Connect");
-				 }
-				 //######## Hiding Sever Text at Startup, move it at refresh function 
-				 if(userLabel3 != null && userLabel5 != null)
-				 {
-				 	userLabel3.Hide();
-				 	userLabel5.Hide();
-				 }
 
 			return;
 		}
 
-
+		public void UpdateServerStatButton()
+		{
+			
+		    	 if (ServerDomain != null && ServerDomain.Authenticated)  				
+				 {
+					//TODO: Use Label.Markup for assining text	 
+					serverStat.Label = Util.GS("Disconnect");
+				 }
+				 else if(ServerDomain != null)
+				 {
+					serverStat.Label = Util.GS("Connect");
+				 }
+		}
+		
 		public bool UpdateUserDetails(iFolderHolder holder)
 		{
-            //TODO: Disable when label are irrevelent, when server/local ifolder selected 
 			
 			//###############CALCULATE SYNC INTERVAL	
 			int syncInterval = 0;
@@ -1401,17 +1407,20 @@ namespace Novell.iFolder
 				}
 			}
 			//TO display in Minutes
-			//TODO: below condition doesn't check for less then 60 sec
-			if(syncInterval > 0)
+			string syncIntervalInMin = Util.GS("N/A");
+			if(syncInterval >= 60)
 			{
 				syncInterval = syncInterval / 60;
+				syncIntervalInMin = syncInterval + " " + Util.GS("minute(s)");
 			}
-			string syncIntervalInMin = syncInterval + " " + Util.GS("minute(s)");
+			else
+			{
+				syncIntervalInMin = syncInterval + " " + Util.GS("seconds");
+			}
 			
 			if(holder != null && userLabel1 != null)	
 			{
 	     		userLabel1.Text = string.Format(Util.GS("File/Folder to synchronize:    {0}"), holder.ObjectsToSync);
-				//TODO: verify if ifolder synced prooperly then update last sync interval too else show the status	
 	     		userLabel2.Text = string.Format(Util.GS("Last Successfull Sync time:    {0}"),syncIntervalInMin);
 				//TODO: Verify whether to user SyncInterval or EffecticeSyncInterval
 	     		userLabel3.Text = string.Format(Util.GS("iFolder Size:    {0}"),syncIntervalInMin);
@@ -1419,15 +1428,17 @@ namespace Novell.iFolder
 
 				DomainInformation domain = domainController.GetDomain(holder.iFolder.DomainID);
 	     		userLabel4.Text = string.Format(Util.GS("Server:    {0}"),domain.Name);
-				
-				if( true == holder.iFolder.shared )
+			
+				string iftype = null;	
+				if( (null == holder.iFolder.encryptionAlgorithm) || ("" == holder.iFolder.encryptionAlgorithm) )
 				{
-			    	userLabel5.Text= string.Format(Util.GS("iFolder Type:    Shared")); 
+			    	iftype = string.Format(Util.GS("Regular")); 
 				}
 				else
 				{
-			    	userLabel5.Text= string.Format(Util.GS("iFolder Type:    Regular")); 
+			    	iftype = string.Format(Util.GS("Encrypted")); 
 				}
+			    	userLabel5.Text= string.Format(Util.GS("iFolder Type:    {0}"), iftype); 
 
            		if(holder.iFolder.IsSubscription) 
 				{
@@ -1452,10 +1463,7 @@ namespace Novell.iFolder
 
 		public bool UpdateiFolderDetails(iFolderHolder holder)
 		{
-			//code to be used for verifying IsSubscription	
-           //if(holder.iFolder.IsSubscription) 
 
-            //TODO: Disable when label are irrevelent, when server/local ifolder selected 
 			if(holder != null && ifolderLabel1 != null)	
 			{
 	     		ifolderLabel1.Text = string.Format(Util.GS("Name:    {0}"),holder.iFolder.Name);
@@ -1471,25 +1479,27 @@ namespace Novell.iFolder
 					ifolderLabel2.Show();
 				}
 
-			/*	
-				if( true == holder.iFolder.shared )
-				{
-	     			ifolderLabel4.Text = string.Format(Util.GS("iFolder Type:    Shared"));
-				}
-				else
-				{
-	     			ifolderLabel4.Text = string.Format(Util.GS("iFolder Type:    Regular"));
-				}
-			*/
-
 			}
 
 			return true;
 		}	
 
+		public void DisableDetails()
+		{	
+		        string label = Util.GS("N/A");	
 
+	     		ifolderLabel1.Text = string.Format(Util.GS("Name:    {0}"),label);
+	     		ifolderLabel2.Text = string.Format(Util.GS("Owner:    {0}"),label);
+	     		ifolderLabel3.Text = string.Format(Util.GS("Access:    {0}"),label);
 
-		
+	     		userLabel1.Text = string.Format(Util.GS("File/Folder to synchronize:    {0}"), label);
+	     		userLabel2.Text = string.Format(Util.GS("Last Successfull Sync time:    {0}"), label);
+	     		userLabel3.Text = string.Format(Util.GS("iFolder Size:    {0}"), label);
+	     		userLabel4.Text = string.Format(Util.GS("Server:    {0}"), label);
+			   	userLabel5.Text= string.Format(Util.GS("iFolder Type:    {0}"), label);
+
+		}
+
 		public string CalcualteTotalQouta(string domainMemeberID)
 		{
 			 string totalQouta = string.Format("{0} {1}", 0, Util.GS("MB"));	
@@ -1532,7 +1542,6 @@ namespace Novell.iFolder
 		    	domainName =  serverUri.Host; 
 		    	store.AppendValues(domain.Host);
 		    	domaincount++;
-			//Console.WriteLine("domain name :{0}", domain.Host);
 		    }
 		//	ViewUserDomainList.Active = 0;
 
@@ -1556,7 +1565,8 @@ namespace Novell.iFolder
 			     ViewUserDomainList.Active = ComboBoxSelectionIndex = 0;
 			}
          
-           
+        	UpdateCurrentServer();	
+		 	
 		   //TODO: flag should reflect whether operation successed or not	
 			return true;
 		}
@@ -2074,6 +2084,8 @@ namespace Novell.iFolder
 		
 		private void OniFolderIconViewBackgroundClicked(object o, iFolderClickedArgs args)
 		{
+
+
 			iFoldersIconView.UnselectAll();
 
 			if (args.Button == 3)
@@ -2523,6 +2535,7 @@ namespace Novell.iFolder
 //			}
 			
 			OniFolderIconViewSelectionChanged(null, EventArgs.Empty);
+			PopulateCombobox();
 
 		}
 
@@ -2791,6 +2804,7 @@ namespace Novell.iFolder
 			AddServerGroup(args.DomainID);
 			
 			RefilterServerGroups();
+			PopulateCombobox();
 		}
 		
 		private void OnDomainDeletedEvent(object sender, DomainEventArgs args)
@@ -2819,6 +2833,7 @@ namespace Novell.iFolder
 
 			iFoldersIconView.UnselectAll();
 			RefilterServerGroups();
+			PopulateCombobox();
 		}
 		
 		private void OnDomainLoggedInEvent(object sender, DomainEventArgs args)
@@ -2843,8 +2858,9 @@ namespace Novell.iFolder
 			// Update the item on the main thread
 			GLib.Idle.Add(UpdateLocalViewItemsMainThread);
             RefreshiFolders(true);
+			UpdateCurrentServer();
 		}
-		
+
 		private void OnDomainLoggedOutEvent(object sender, DomainEventArgs args)
 		{
 			iFolderViewGroup group = (iFolderViewGroup)serverGroups[args.DomainID];
@@ -2860,6 +2876,7 @@ namespace Novell.iFolder
 
 			// Update the item on the main thread
 			GLib.Idle.Add(UpdateLocalViewItemsMainThread);
+			UpdateCurrentServer();
 		}
 		
 		///
@@ -3368,9 +3385,17 @@ namespace Novell.iFolder
 
 			UpdateActionsSensitivity(holder);
 			UpdateMenuSensitivity(holder);
-
-			UpdateUserDetails(holder);
-            UpdateiFolderDetails(holder); 
+		
+					
+			if (holder != null)
+			{	
+				UpdateUserDetails(holder);
+            	UpdateiFolderDetails(holder); 
+			}
+			else
+			{
+				DisableDetails();
+			}	
 		}
 		
 		private void UpdateActionsSensitivity(iFolderHolder holder)
@@ -3594,11 +3619,11 @@ namespace Novell.iFolder
 		
 		private void RefreshiFolders(bool bReadFromSimias)
 		{
+
 			ifdata.Refresh();
 			// Since POBox creation is completely removed from 3.7 and above clients so removing references too.
 			//domainController.CheckForNewiFolders();
 			this.RefreshAvailableiFolderTimer.Change(300000, 300000);
-			PopulateCombobox();
 		}
 
 		private void RefreshAvailableiFolderTimer_click(object sender)
