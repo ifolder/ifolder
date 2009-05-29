@@ -752,6 +752,10 @@ namespace Novell.iFolder
 
 				UpdateDomainStatus(args.DomainID);
 			}
+
+			//### Code to update Server status on domain login completed
+			iFolderWindow ifwin = Util.GetiFolderWindow();
+			ifwin.UpdateCurrentServer();
 		}
 
         /// <summary>

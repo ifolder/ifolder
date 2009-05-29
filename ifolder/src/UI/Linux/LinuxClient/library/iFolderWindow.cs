@@ -195,6 +195,8 @@ namespace Novell.iFolder
 		public Label userLabel4 = null;
 		public Label userLabel5 = null;
 		private Tooltips buttontips;
+	    private	VBox actionsVBox ;
+        private ComboBoxEntry viewList; 
 
 
 		public int LastXPos
@@ -222,6 +224,14 @@ namespace Novell.iFolder
         	RootWindow,
         	iFolderID
         };
+
+		public enum ViewOptions
+		{
+			OpenPanel = 0,
+			ClosePanel = 1,
+			ThumbnailView = 2,
+			ListView = 3,		
+		};
 
 		/// <summary>
 		/// Default constructor for iFolderWindow
@@ -349,7 +359,7 @@ namespace Novell.iFolder
 			///
 			/// Create iFolder White Board Area
 			///
-			vbox.PackStart(CreateiFolderWhiteBoradArea(), false, true, 0);
+			//vbox.PackStart(CreateiFolderWhiteBoradArea(), false, true, 0);
 
 			//-----------------------------
 			// Create Status Bar
@@ -940,6 +950,14 @@ namespace Novell.iFolder
 			l.Xalign = 0.0F;
 			//l.SetAlignment(1,1);
 
+
+			string[] list = {"OpenPanel","ClosePanel","ThumbnailView","ListView"};
+		    viewList = new ComboBoxEntry (list);	
+			viewList.Active = 0;
+			//viewList.Height = 50;
+			viewList.Changed += new EventHandler(OnviewListIndexChange);
+			ButtonControl.PackEnd(viewList, false, false,0);
+
 			return actionsVBox;
 
 
@@ -960,7 +978,6 @@ namespace Novell.iFolder
 		   
 		    //##########CALL FUNCTION TO CREATE 3 VBOX AND APPEND TO HBOX	
 			
-			whiteBoard.PackStart(ServerInfoBox(), false, false,12);
 			whiteBoard.PackStart(iFolderInfoBox(), true, true,0);
 			whiteBoard.PackStart(UserInfoBox(), true, true,0);
 			
@@ -970,21 +987,6 @@ namespace Novell.iFolder
 		 }
 
 
-		private Widget ServerInfoBox()
-		{
-			VBox serverInfo = new VBox(false, 0);
-			serverInfo.WidthRequest = 175;
-
-           //################ADDED SERVER IMAGE
-		//	serverImg.Pixbuf = new Gtk.Image(Util.ImagesPath("ifolder128.png"));
-			serverImg = new Gtk.Image();
-			serverImg.Pixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder128.png"));
-			serverInfo.PackStart(serverImg, false, true, 0);
-
-			return serverInfo;
-		}
-
-		
 		private Widget iFolderInfoBox()
 		{
 			VBox iFolderInfo = new VBox(false, 0);
@@ -1101,7 +1103,8 @@ namespace Novell.iFolder
 			HBox hbox = new HBox(false, 0);
 
 			hbox.PackStart(CreateActions(), false, false, 12);
-			hbox.PackStart(CreateIconViewPane(), true, true, 0);
+			//hbox.PackStart(CreateIconViewPane(), true, true, 0);
+			hbox.PackStart(CreateIconViewWithDetails(), true, true, 0);
 
 			vbox.PackStart(hbox, true, true, 0);
 
@@ -1110,7 +1113,8 @@ namespace Novell.iFolder
 		
 		private Widget CreateActions()
 		{
-			VBox actionsVBox = new VBox(false, 0);
+			//VBox actionsVBox = new VBox(false, 0);
+			actionsVBox = new VBox(false, 0);
 			actionsVBox.WidthRequest = 175;
 
 			///
@@ -1275,6 +1279,11 @@ namespace Novell.iFolder
 			serverStat.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("ifolder-download16.png")));
 			serverStat.Clicked += new EventHandler(OnserverStatButtonHandler);
 			actionsVBox.PackStart(serverStat, false, false, 0);
+
+			//################# ADD SERVER IMAGE, INDICATING CONNECT/DISCONNECT STAUTS OF SELECTED SERVER
+			serverImg = new Gtk.Image();
+			serverImg.Pixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder128.png"));
+			actionsVBox.PackStart(serverImg, false, false, 0);
 		    //################# END	
 
 				
@@ -1294,7 +1303,7 @@ namespace Novell.iFolder
 				 {
 					//####Login Domain	 
 					prefsWin.ToggelDomain(ServerDomain, true);
-					serverStat.Label = Util.GS("Disconnect");
+				//	serverStat.Label = Util.GS("Disconnect");
 					serverStat.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png")));
 
 					//#######Updating Server Image based on selected Domain connection status
@@ -1314,7 +1323,7 @@ namespace Novell.iFolder
 			
 		}
 
-		private void UpdateCurrentServer()
+		public DomainInformation UpdateCurrentServer()
 		{
 		         int count=0, index = 0 ; 
 		         DomainInformation dom = null;
@@ -1341,35 +1350,82 @@ namespace Novell.iFolder
 				 //################Updating Label Information
 				 //TODO: rename ServerDomain to Current/Highlighted Domain
 				 ServerDomain = dom;
-					
+				//TODO: If required call API to update Server Info for the current server	
 				 UpdateServerStatButton();
+				 return dom;
 
 		}
 
 		private void OnComboBoxIndexChange(object o, EventArgs args)
 		{
-				 string QoutaAvailable = null;
-		         int count=0, index = 0, tmpValue = 0;
-		         DiskSpace ds = null;
 
-				 UpdateCurrentServer();
-
-				 if(serverLabel1 != null && ServerDomain != null)
-				 {
-					serverLabel1.Text = string.Format(Util.GS("User: {0}"),ServerDomain.MemberName);
-				 }		 
-				 if (serverLabel3 != null && serverLabel5 != null && serverLabel6 != null && serverLabel4 != null && ServerDomain != null)
-				 {
-			     	serverLabel2.Text = string.Format(Util.GS("Server: {0}"),ServerDomain.Name);
-			     	serverLabel3.Text = string.Format(Util.GS("No. of iFolder: {0}"),ifws.GetiFoldersForDomain(ServerDomain.ID).Length);
-			     	serverLabel4.Text = string.Format(Util.GS("Disk Qouta: {0}"), CalcualteTotalQouta(ServerDomain.MemberUserID) );
-			        serverLabel5.Text =string.Format(Util.GS("Disk Available: {0}"),CalculateDiskQouta(ServerDomain.MemberUserID));
-  		         	serverLabel6.Text =  string.Format(Util.GS("Disk Used: {0}"), CalculateDiskUsed(ServerDomain.MemberUserID)); 
-
-				 }
-				
+			 DomainInformation domain = null;	
+			 domain =  UpdateCurrentServer();
+			 UpdateSelectedServerDetails(domain);
 
 			return;
+		}
+
+		private void OnviewListIndexChange(object o, EventArgs args)
+		{
+			//### indicate if First item in combobox is selected	
+			if(0 == viewList.Active)
+			{
+				if(!actionsVBox.Visible)
+						actionsVBox.Visible = true;
+			}
+			switch((ViewOptions)viewList.Active)
+			{
+				case ViewOptions.OpenPanel:
+					if(!actionsVBox.Visible)
+						actionsVBox.Visible = true;
+						break;	
+				case ViewOptions.ClosePanel:
+					if(actionsVBox.Visible)
+						actionsVBox.Visible = false;
+						break;	
+
+		//### below code is for toggeling between listview and thumbnail view				
+		/*		case ViewOptions.ThumbnailView:
+					if(!actionsVBox.Visible)
+						actionsVBox.Visible = true;
+						break;	
+
+				case ViewOptions.ListView:
+					if(!actionsVBox.Visible)
+						actionsVBox.Visible = true;
+						break;	
+		*/				
+				default:
+						Debug.PrintLine("Invalid option");
+						break;
+				        		
+			}		
+		}
+
+		public void UpdateSelectedServerDetails(DomainInformation domain)
+		{
+			 string QoutaAvailable = null;
+	         int count=0, index = 0, tmpValue = 0;
+	         DiskSpace ds = null;
+			 DomainInformation currentDomain = domain;
+
+			 if(serverLabel1 != null && currentDomain != null)
+			 {
+				serverLabel1.Text = string.Format(Util.GS("User: {0}"), currentDomain.MemberName);
+			 }		 
+			 if (serverLabel3 != null && serverLabel5 != null 
+				&& serverLabel6 != null && serverLabel4 != null 
+				&& currentDomain != null)
+			 {
+		     	serverLabel2.Text = string.Format(Util.GS("Server: {0}"), currentDomain.Name);
+		     	serverLabel3.Text = string.Format(Util.GS("No. of iFolder: {0}"),ifws.GetiFoldersForDomain(currentDomain.ID).Length);
+		     	serverLabel4.Text = string.Format(Util.GS("Disk Qouta: {0}"), CalcualteTotalQouta(currentDomain.MemberUserID) );
+		        serverLabel5.Text =string.Format(Util.GS("Disk Available: {0}"),CalculateDiskQouta(currentDomain.MemberUserID));
+  	         	serverLabel6.Text =  string.Format(Util.GS("Disk Used: {0}"), CalculateDiskUsed(currentDomain.MemberUserID)); 
+
+			 }
+
 		}
 
 		public void UpdateServerStatButton()
@@ -1388,42 +1444,14 @@ namespace Novell.iFolder
 		
 		public bool UpdateUserDetails(iFolderHolder holder)
 		{
-			
-			//###############CALCULATE SYNC INTERVAL	
-			int syncInterval = 0;
-			if(holder != null && holder.iFolder != null)
-			{
-		    	if (holder.iFolder.EffectiveSyncInterval <= 0)
-				{
-					try{
-							syncInterval = ifws.GetDefaultSyncInterval();
-					}
-					catch
-					{}
-				}			
-				else
-				{
-					syncInterval = holder.iFolder.EffectiveSyncInterval;
-				}
-			}
-			//TO display in Minutes
-			string syncIntervalInMin = Util.GS("N/A");
-			if(syncInterval >= 60)
-			{
-				syncInterval = syncInterval / 60;
-				syncIntervalInMin = syncInterval + " " + Util.GS("minute(s)");
-			}
-			else
-			{
-				syncIntervalInMin = syncInterval + " " + Util.GS("seconds");
-			}
-			
+
 			if(holder != null && userLabel1 != null)	
 			{
 	     		userLabel1.Text = string.Format(Util.GS("File/Folder to synchronize:    {0}"), holder.ObjectsToSync);
-	     		userLabel2.Text = string.Format(Util.GS("Last Successfull Sync time:    {0}"),syncIntervalInMin);
+	     		//userLabel2.Text = string.Format(Util.GS("Last Successfull Sync time:    {0}"),syncIntervalInMin);
+	     		userLabel2.Text = string.Format(Util.GS("Last Successfull Sync time:    {0}"),holder.iFolder.LastSyncTime);
 				//TODO: Verify whether to user SyncInterval or EffecticeSyncInterval
-	     		userLabel3.Text = string.Format(Util.GS("iFolder Size:    {0}"),syncIntervalInMin);
+	     		userLabel3.Text = string.Format(Util.GS("iFolder Size:    {0}"), "TODO");
 
 
 				DomainInformation domain = domainController.GetDomain(holder.iFolder.DomainID);
@@ -1586,6 +1614,17 @@ namespace Novell.iFolder
 		}*/
 		
 		
+		private Widget CreateIconViewWithDetails()
+		{
+			VBox view = new VBox();
+			view.PackStart(CreateIconViewPane(),true,true,0);
+			view.PackStart(CreateiFolderWhiteBoradArea(), false,true,0);
+			
+			return view;
+
+		}
+
+				
 		private Widget CreateIconViewPane()
 		{
 			iFoldersScrolledWindow = new ScrolledWindow();
@@ -3413,6 +3452,7 @@ namespace Novell.iFolder
 			DeleteFromServerButton.Visible			= false;
 			RemoveMembershipButton.Visible			= false;
 			SynchronizedFolderTasks.Visible = false;
+			ShowHideAllFoldersButton.Visible = false;
 
 				
 			if (holder == null)
@@ -3460,7 +3500,7 @@ namespace Novell.iFolder
 					RemoveMembershipButton.Visible			= false;
 					
 					// Show the Local iFolder Buttons
-					OpenSynchronizedFolderButton.Visible	= true;
+					//OpenSynchronizedFolderButton.Visible	= true;
 					SynchronizeNowButton.Visible			= true;
 		
 /*					if (networkDetect.Connected)
@@ -3477,7 +3517,7 @@ namespace Novell.iFolder
 					else 
 					{
 					        ShareSynchronizedFolderButton.Visible	= true;
-					        ViewFolderPropertiesButton.Visible	= true;
+					        //ViewFolderPropertiesButton.Visible	= true;
 					}
 
 					RemoveiFolderButton.Visible	= true;
