@@ -72,7 +72,7 @@ namespace Novell.iFolder
 		private ImageMenuItem		OpenMenuItem;
 		private Gtk.MenuItem		ConflictMenuItem;
 		private Gtk.MenuItem		SyncNowMenuItem;
-		private ImageMenuItem		RevertMenuItem;
+		public ImageMenuItem		RevertMenuItem;
 		private ImageMenuItem		DeleteMenuItem;
 		private ImageMenuItem		RemoveMenuItem;
 		private ImageMenuItem		DownloadMenuItem;
@@ -99,7 +99,7 @@ namespace Novell.iFolder
 
 //		private Gtk.MenuItem 		Migrate2xMenuItem;		
 
-		private DomainController	domainController;
+		public DomainController	domainController;
 
 		// Manager object that knows about simias resources.
 		private Manager			simiasManager;
@@ -130,10 +130,12 @@ namespace Novell.iFolder
 		private Label				ShowHideAllFoldersButtonText;
 		private bool				bAvailableFoldersShowing;
 
-		private ScrolledWindow		iFoldersScrolledWindow;
+		private ScrolledWindow		iFoldersScrolledWindow,serverList;
 		private iFolderIconView	iFoldersIconView;
+		private HBox 				viewpane;
+		private ListTreeView 			tv;
 		private static iFolderViewGroup	localGroup;
-		private TreeModelFilter	myiFoldersFilter;
+		private TreeModelFilter	myiFoldersFilter,iFolderFilter;
 		private Timer				updateStatusTimer;
 
 		private VBox				SynchronizedFolderTasks;
@@ -145,7 +147,7 @@ namespace Novell.iFolder
 		private Button				SynchronizeNowButton;
 		private Button				ShareSynchronizedFolderButton;
 		private Button				ResolveConflictsButton;
-		private Button				RemoveiFolderButton;
+		public Button				RemoveiFolderButton;
 		private Button				ViewFolderPropertiesButton;
 		
 		///
@@ -172,11 +174,10 @@ namespace Novell.iFolder
 
         public static IiFolderLog log;
 
-		public TreeView tv = null;
 		private Gtk.Image serverImg;
 		private Button serverStat;
 		private Gtk.ComboBox        ViewUserDomainList;
-		public  ListStore   store = null;
+		public  ListStore   store = null,viewstore = null;
 		public CellRendererText cell = null;
 		private DomainInformation   ServerDomain;
 		int ComboBoxSelectionIndex =-1;
@@ -314,6 +315,12 @@ namespace Novell.iFolder
 			}
 		}
 
+		public void ShowIconView()
+		{
+			serverList.Visible = false;
+			iFoldersIconView.Visible = true;
+		}
+
 		/// <summary>
 		/// Set up the UI inside the Window
 		/// </summary>
@@ -385,6 +392,7 @@ namespace Novell.iFolder
 			RevertMenuItem.Sensitive = false;
 			PropMenuItem.Sensitive = false;
 			
+
 			return vbox;
 		}
 		
@@ -1103,14 +1111,95 @@ namespace Novell.iFolder
 			HBox hbox = new HBox(false, 0);
 
 			hbox.PackStart(CreateActions(), false, false, 12);
-			//hbox.PackStart(CreateIconViewPane(), true, true, 0);
-			hbox.PackStart(CreateIconViewWithDetails(), true, true, 0);
+			viewpane = new HBox(false, 0);
+			viewpane.PackStart(CreateIconViewPane(), true, true, 0);
+			viewpane.PackStart(CreateListViewPane(), true, true, 0);
+			hbox.PackStart(CreateViewWithDetails(viewpane), true, true, 0);
 
 			vbox.PackStart(hbox, true, true, 0);
 
 			return ContentEventBox;
 		}
 		
+
+		private bool AlliFoldersFilterFunc(TreeModel model, TreeIter iter)
+		{
+			return true;
+		}
+
+		private void UpdateListViewItems()
+		{
+			Gdk.Pixbuf ServerImg = new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png"));
+			Gdk.Pixbuf DownloadedImg = new Gdk.Pixbuf((Util.ImagesPath("ifolder_user_48.png")));
+			TreeIter iter;
+			if( (ifdata.iFolders).GetIterFirst( out iter ))
+			{
+                        do
+                        {
+				try
+				{
+                                	iFolderHolder holder = (iFolderHolder)(ifdata.iFolders).GetValue(iter, 0);
+                                	if (holder != null)
+                                	{
+                                        	viewstore.AppendValues(holder.iFolder.IsSubscription?ServerImg:DownloadedImg,holder.iFolder.Name,holder.iFolder.Owner,(domainController.GetDomain(holder.iFolder.DomainID)).Name, holder.StateString, holder);
+                                	}
+				}
+				catch(Exception ex)
+				{
+				}
+                        }while ((ifdata.iFolders).IterNext(ref iter));
+			}
+			tv.Model = viewstore;
+                        tv.HeadersVisible = true;
+		}
+
+		private Widget CreateListViewPane()
+		{
+			serverList = new ScrolledWindow();
+			iFolderFilter = new TreeModelFilter(ifdata.iFolders, null);
+                        iFolderFilter.VisibleFunc = AlliFoldersFilterFunc;
+
+			tv = new ListTreeView(this);
+			store = ifdata.iFolders;
+			viewstore = new ListStore(typeof (Gdk.Pixbuf), typeof (string), typeof (string), typeof (string), typeof (string), typeof (iFolderHolder));
+			tv.Model = store;
+			UpdateListViewItems();
+                        tv.HeadersVisible = true;
+			tv.HeadersClickable = true;
+			tv.Selection.Changed  +=  new EventHandler(OnSelectionChanged);
+                        tv.RowActivated +=  OnRowActivated;
+                        tv.AppendColumn ("", new CellRendererPixbuf(), "pixbuf", 0);
+                        tv.AppendColumn (Util.GS("iFolder"), new CellRendererText (), "text", 1);
+			tv.AppendColumn ("Size", new CellRendererText(), "text", 2);
+			tv.AppendColumn ("Server", new CellRendererText(), "text", 3);
+			tv.AppendColumn ("Status", new CellRendererText(), "text", 4);
+			serverList.Add(tv);
+                        serverList.ShadowType = Gtk.ShadowType.EtchedIn;
+			
+                        serverList.Show();
+                        return serverList;
+
+		}
+	
+		/// <summary>
+                /// Event Handler for Tree View Selection Changed event
+                /// </summary>
+                private void OnSelectionChanged(object o, EventArgs args)
+                {
+			TreeIter iter;
+                	TreeModel model;
+			iFolderHolder ifolholder = null;
+ 
+                	if (((TreeSelection)o).GetSelected (out model, out iter))
+                	{
+                        	ifolholder = (iFolderHolder)model.GetValue (iter, 5);
+				iFolderIconView.SelectedFolder = ifolholder;	
+        	        }
+			
+			UpdateSensitivity();
+		}
+
+
 		private Widget CreateActions()
 		{
 			//VBox actionsVBox = new VBox(false, 0);
@@ -1169,12 +1258,11 @@ namespace Novell.iFolder
 		    store.AppendValues (uploadImg,"item 3");		
 		    store.AppendValues (uploadImg,"item 4");		
 
-			tv.Selection.Changed +=  new EventHandler(OnSelectionChanged);
+			//tv.Selection.Changed +=  new EventHandler(OnSelectionChanged);
 					
 			tv.Model = store;
 		//	tv.EnableGridLines = Gtk.TreeViewGridLines.Horizontal;
-			//tv.HeadersVisible = true;
-			tv.HeadersVisible = false;
+			tv.HeadersVisible = true;
 			tv.AppendColumn ("Demo", new CellRendererPixbuf(), "pixbuf", 0);
 			tv.AppendColumn ("Data", new CellRendererText (), "text", 1);
 			//tv.AppendColumn (null, new CellRendererPixbuf(), "pixbuf", 0);
@@ -1286,14 +1374,15 @@ namespace Novell.iFolder
 			actionsVBox.PackStart(serverImg, false, false, 0);
 		    //################# END	
 
-				
-
 
 			return actionsVBox;
 		}
 
+
 		private void OnserverStatButtonHandler(object o, EventArgs args)
 		{
+		
+			//TODO:Update button text and Server Image in DomainLogout/DoaminLogin event.	
 
 			//########### Validate current state of Selected Domain and toggel between Login/Logout.		
 			prefsWin = new PreferencesWindow(ifws, simiasManager);	
@@ -1371,31 +1460,34 @@ namespace Novell.iFolder
 			//### indicate if First item in combobox is selected	
 			if(0 == viewList.Active)
 			{
-				if(!actionsVBox.Visible)
-						actionsVBox.Visible = true;
+				//to check
+				//if(!actionsVBox.Visible)
+				//		actionsVBox.Visible = true;
 			}
 			switch((ViewOptions)viewList.Active)
 			{
-				case ViewOptions.OpenPanel:
+/*				case ViewOptions.OpenPanel:
 					if(!actionsVBox.Visible)
 						actionsVBox.Visible = true;
 						break;	
 				case ViewOptions.ClosePanel:
 					if(actionsVBox.Visible)
 						actionsVBox.Visible = false;
-						break;	
+						break;	*/
 
 		//### below code is for toggeling between listview and thumbnail view				
-		/*		case ViewOptions.ThumbnailView:
-					if(!actionsVBox.Visible)
-						actionsVBox.Visible = true;
+				case ViewOptions.ThumbnailView:
+					if(!iFoldersIconView.Visible)
+						iFoldersIconView.Visible = true;
+						serverList.Visible = false;
 						break;	
 
 				case ViewOptions.ListView:
-					if(!actionsVBox.Visible)
-						actionsVBox.Visible = true;
+					if(!serverList.Visible)
+						serverList.Visible = true;
+						iFoldersIconView.Visible = false;
 						break;	
-		*/				
+						
 				default:
 						Debug.PrintLine("Invalid option");
 						break;
@@ -1614,10 +1706,11 @@ namespace Novell.iFolder
 		}*/
 		
 		
-		private Widget CreateIconViewWithDetails()
+
+		private Widget CreateViewWithDetails(Widget combinedview)
 		{
 			VBox view = new VBox();
-			view.PackStart(CreateIconViewPane(),true,true,0);
+			view.PackStart(combinedview,true,true,0);
 			view.PackStart(CreateiFolderWhiteBoradArea(), false,true,0);
 			
 			return view;
@@ -1820,27 +1913,27 @@ namespace Novell.iFolder
 			return false;	// Prevent GLib.Idle from calling this again automatically
 		}
 		
-		private void OnOpenSynchronizedFolder(object o, EventArgs args)
+		public void OnOpenSynchronizedFolder(object o, EventArgs args)
 		{
 			OpenSelectedFolder();
 		}
 		
-		private void OnResolveConflicts(object o, EventArgs args)
+		public void OnResolveConflicts(object o, EventArgs args)
 		{
 			ResolveSelectedFolderConflicts();
 		}
 
-		private void OnSynchronizeNow(object o, EventArgs args)
+		public void OnSynchronizeNow(object o, EventArgs args)
 		{
 			SyncSelectedFolder();
 		}
 		
-		private void OnShareSynchronizedFolder(object o, EventArgs args)
+		public void OnShareSynchronizedFolder(object o, EventArgs args)
 		{
 			ShareSelectedFolder();
 		}
 
-		private void ShowFolderProperties(iFolderHolder ifHolder, int desiredPage)
+		public void ShowFolderProperties(iFolderHolder ifHolder, int desiredPage)
 		{
 			if (ifHolder != null)
 			{
@@ -2070,27 +2163,27 @@ namespace Novell.iFolder
 				ShowAvailableiFolders();
 		}
 		
-		private void RemoveiFolderHandler(object o,  EventArgs args)
+		public void RemoveiFolderHandler(object o,  EventArgs args)
 		{
 			RemoveSelectedFolderHandler();
 		}
 
-		private void DownloadAvailableiFolderHandler(object o, EventArgs args)
+		public void DownloadAvailableiFolderHandler(object o, EventArgs args)
 		{
 			DownloadSelectedFolder();
 		}
 
-		private void MergeAvailableiFolderHandler(object o, EventArgs args)
+		public void MergeAvailableiFolderHandler(object o, EventArgs args)
 		{
 			MergeSelectedFolder();
 		}
 		
-		private void DeleteFromServerHandler(object o, EventArgs args)
+		public void DeleteFromServerHandler(object o, EventArgs args)
 		{
 			DeleteSelectedFolderFromServer();
 		}
 		
-		private void RemoveMembershipHandler(object o, EventArgs args)
+		public void RemoveMembershipHandler(object o, EventArgs args)
 		{
 			RemoveMembershipFromSelectedFolder();
 		}
@@ -2163,6 +2256,17 @@ namespace Novell.iFolder
 //			}
 //		}
 		
+		private void OnRowActivated(object o, RowActivatedArgs args)
+                {
+			iFolderHolder ifolderholder = iFolderIconView.SelectedFolder;
+                        if (ifolderholder == null || ifolderholder.iFolder == null) return;
+                        
+                        if (ifolderholder.iFolder.IsSubscription)
+                                DownloadSelectedFolder();
+                        else
+                                OpenSelectedFolder();
+                }
+
 		private void OniFolderActivated(object o, iFolderActivatedArgs args)
 		{
 			if (args.Holder == null || args.Holder.iFolder == null) return;
@@ -2178,7 +2282,7 @@ namespace Novell.iFolder
 			switch(args.Event.Key)
 			{
 				case Gdk.Key.Delete:
-					iFolderHolder holder = iFoldersIconView.SelectedFolder;
+					iFolderHolder holder = iFolderIconView.SelectedFolder;
 					if (holder != null)
 					{
 						if (holder.iFolder.IsSubscription)
@@ -2208,7 +2312,7 @@ namespace Novell.iFolder
 		
 		private void OniFolderClicked(object o, iFolderClickedArgs args)
 		{
-			iFolderHolder holder = args.Holder;
+			iFolderHolder holder = iFolderIconView.SelectedFolder;
 			if (holder == null) return;
 
 			switch(args.Button)
@@ -2229,8 +2333,7 @@ namespace Novell.iFolder
 						MenuItem item_merge =
 							new MenuItem(Util.GS("Merge"));
 						menu.Append(item_merge);
-						item_merge.Activated += new EventHandler(
-								MergeAvailableiFolderHandler);
+						item_merge.Activated += new EventHandler(MergeAvailableiFolderHandler);
 
 						menu.Append(new SeparatorMenuItem());
 
@@ -2319,8 +2422,7 @@ namespace Novell.iFolder
                             }
                             else
 							{
-							     item_delete.Activated += new EventHandler(
-									RemoveiFolderHandler);
+							     item_delete.Activated += new EventHandler(RemoveiFolderHandler);
 							}
 						}
 
@@ -2575,6 +2677,7 @@ namespace Novell.iFolder
 			
 			OniFolderIconViewSelectionChanged(null, EventArgs.Empty);
 			PopulateCombobox();
+			UpdateListViewItems();
 
 		}
 
@@ -2619,12 +2722,12 @@ namespace Novell.iFolder
 			Util.ShowPrefsPage(0, simiasManager);
 		}
 
-		private void OnOpenFolderMenu(object o, EventArgs args)
+		public void OnOpenFolderMenu(object o, EventArgs args)
 		{
 			OpenSelectedFolder();
 		}
 
-		private void OnShowFolderProperties(object o, EventArgs args)
+		public void OnShowFolderProperties(object o, EventArgs args)
 		{
 			ShowSelectedFolderProperties();
 		}
@@ -2948,7 +3051,7 @@ namespace Novell.iFolder
 			// If the currently selected item is a subscription, unselect all
 			// so the actions on the left don't still show up once the server
 			// iFolders are hidden.
-			iFolderHolder holder = iFoldersIconView.SelectedFolder;
+			iFolderHolder holder = iFolderIconView.SelectedFolder;
 			if (holder != null && holder.iFolder.IsSubscription)
 				iFoldersIconView.UnselectAll();
 			
@@ -2972,19 +3075,19 @@ namespace Novell.iFolder
 		
 		private void DownloadSelectedFolder()
 		{
-			iFolderHolder holder = iFoldersIconView.SelectedFolder;
+			iFolderHolder holder = iFolderIconView.SelectedFolder;
 			DownloadiFolder(holder, false);
 		}
 
 		private void MergeSelectedFolder()
 		{
-			iFolderHolder holder = iFoldersIconView.SelectedFolder;
+			iFolderHolder holder = iFolderIconView.SelectedFolder;
 			DownloadiFolder(holder, true);
 		}
 
 /*		public void UpdateNetworkSensitivity(bool networkState)
                {
-                       iFolderHolder holder = iFoldersIconView.SelectedFolder;
+                       iFolderHolder holder = iFolderIconView.SelectedFolder;
 
                        UpdateActionsSensitivity(holder);
                        UpdateMenuSensitivity(holder);
@@ -3187,7 +3290,7 @@ namespace Novell.iFolder
 		
 		private void DeleteSelectedFolderFromServer()
 		{
-			iFolderHolder holder = iFoldersIconView.SelectedFolder;
+			iFolderHolder holder = iFolderIconView.SelectedFolder;
 			if (holder != null && holder.iFolder.IsSubscription)
 			{
 				int rc = 0;
@@ -3235,7 +3338,7 @@ namespace Novell.iFolder
 		
 		private void RemoveMembershipFromSelectedFolder()
 		{
-			iFolderHolder holder = iFoldersIconView.SelectedFolder;
+			iFolderHolder holder = iFolderIconView.SelectedFolder;
 			if (holder != null && holder.iFolder.IsSubscription)
 			{
 				int rc = 0;
@@ -3420,7 +3523,7 @@ namespace Novell.iFolder
 		
 		public void UpdateSensitivity()
 		{
-			iFolderHolder holder = iFoldersIconView.SelectedFolder;
+			iFolderHolder holder = iFolderIconView.SelectedFolder;
 
 			UpdateActionsSensitivity(holder);
 			UpdateMenuSensitivity(holder);
@@ -3664,6 +3767,7 @@ namespace Novell.iFolder
 			// Since POBox creation is completely removed from 3.7 and above clients so removing references too.
 			//domainController.CheckForNewiFolders();
 			this.RefreshAvailableiFolderTimer.Change(300000, 300000);
+			UpdateListViewItems();
 		}
 
 		private void RefreshAvailableiFolderTimer_click(object sender)
@@ -3707,7 +3811,7 @@ namespace Novell.iFolder
 
 		private void OpenSelectedFolder()
 		{
-			iFolderHolder holder = iFoldersIconView.SelectedFolder;
+			iFolderHolder holder = iFolderIconView.SelectedFolder;
 			if (holder != null)
 			{
 				try
@@ -3732,7 +3836,7 @@ namespace Novell.iFolder
 
 		private void ResolveSelectedFolderConflicts()
 		{
-			iFolderHolder holder = iFoldersIconView.SelectedFolder;
+			iFolderHolder holder = iFolderIconView.SelectedFolder;
 			if (holder != null)
 				ResolveConflicts(holder);
 		}
@@ -3832,7 +3936,7 @@ namespace Novell.iFolder
 		
 		private void SyncSelectedFolder()
 		{
-			iFolderHolder holder = iFoldersIconView.SelectedFolder;
+			iFolderHolder holder = iFolderIconView.SelectedFolder;
 			if (holder != null)
 			{
 				try
@@ -3855,7 +3959,7 @@ namespace Novell.iFolder
 
 		private void ShareSelectedFolder()
 		{
-			iFolderHolder holder = iFoldersIconView.SelectedFolder;
+			iFolderHolder holder = iFolderIconView.SelectedFolder;
 			if (holder != null)
 			{
 				iFolderWeb selectedFolder = holder.iFolder;
@@ -3882,7 +3986,7 @@ namespace Novell.iFolder
 
 		private void ShowSelectedFolderProperties()
 		{
-			iFolderHolder holder = iFoldersIconView.SelectedFolder;
+			iFolderHolder holder = iFolderIconView.SelectedFolder;
 			if (holder != null)
 			{
 				ShowFolderProperties(holder, 0);
@@ -3891,7 +3995,7 @@ namespace Novell.iFolder
 
 		private void RemoveSelectedFolderHandler()
 		{
-			iFolderHolder holder = iFoldersIconView.SelectedFolder;
+			iFolderHolder holder = iFolderIconView.SelectedFolder;
 			if (holder != null)
 			{
 				iFolderMsgDialog dialog = new iFolderMsgDialog(
@@ -4883,10 +4987,174 @@ namespace Novell.iFolder
 			return passPhraseStatus;
 		}
 
-
-
 	}
 
+	///
+	/// class ListTreeView
+	///
+	public class ListTreeView : Gtk.TreeView 
+	{
+		iFolderWindow ifwin;
+
+        	public ListTreeView (iFolderWindow ifwin)
+        	{
+			this.ifwin = ifwin;
+        	}
+
+		
+        	protected override bool OnButtonPressEvent (Gdk.EventButton evnt)
+		{
+			iFolderHolder holder = null;
+			Gtk.TreePath path = new Gtk.TreePath();
+                        GetPathAtPos (System.Convert.ToInt16 (evnt.X), System.Convert.ToInt16 (evnt.Y), out path);
+                        Gtk.TreeIter iter;
+                        if ( this.Model.GetIter(out iter,path) ) 
+			{
+                                holder = (iFolderHolder) this.Model.GetValue (iter, 5);
+                        }
+			iFolderIconView.SelectedFolder = holder;
+			this.ifwin.UpdateSensitivity();
+			switch(evnt.Button)
+			{
+				case 3:	// right-click 
+					Menu menu = new Menu();
+
+					if (holder.iFolder.IsSubscription)
+					{
+						MenuItem item_download =
+							new MenuItem(Util.GS("Download..."));
+						menu.Append(item_download);
+						item_download.Activated += this.ifwin.DownloadAvailableiFolderHandler;
+
+						menu.Append(new SeparatorMenuItem());
+
+						MenuItem item_merge =
+							new MenuItem(Util.GS("Merge"));
+						menu.Append(item_merge);
+						item_merge.Activated += this.ifwin.MergeAvailableiFolderHandler;
+
+						menu.Append(new SeparatorMenuItem());
+
+						DomainInformation domain =
+							this.ifwin.domainController.GetDomain(holder.iFolder.DomainID);
+						
+						if ( holder.iFolder.CurrentUserID== holder.iFolder.OwnerID)
+						{
+							// The current user is the owner
+							MenuItem item_delete = new MenuItem (
+									Util.GS("Delete from Server"));
+							menu.Append (item_delete);
+							item_delete.Activated += this.ifwin.DeleteFromServerHandler;
+						}
+						else
+						{
+							// The current user is not the owner
+							MenuItem item_remove_membership = new MenuItem (
+									Util.GS("Remove My Membership"));
+							menu.Append (item_remove_membership);
+							item_remove_membership.Activated += this.ifwin.RemoveMembershipHandler;
+						}
+					}
+					else
+					{
+						MenuItem item_open =
+							new MenuItem (Util.GS("Open..."));
+						menu.Append (item_open);
+						item_open.Activated += this.ifwin.OnOpenFolderMenu;
+
+						menu.Append(new SeparatorMenuItem());
+
+						if(holder.iFolder.HasConflicts)
+						{
+							MenuItem item_resolve = new MenuItem (
+									Util.GS("Resolve conflicts..."));
+							menu.Append (item_resolve);
+							item_resolve.Activated += this.ifwin.OnResolveConflicts;
+						
+							menu.Append(new SeparatorMenuItem());
+						}
+
+						MenuItem item_sync =
+							new MenuItem(Util.GS("Synchronize Now"));
+						menu.Append (item_sync);
+						item_sync.Activated += this.ifwin.OnSynchronizeNow;
+
+						MenuItem item_share =
+							new MenuItem (Util.GS("Share with..."));
+						menu.Append (item_share);
+						item_share.Activated += this.ifwin.OnShareSynchronizedFolder;
+						
+						if (!holder.iFolder.Role.Equals("Master"))
+						{
+							MenuItem item_revert = new MenuItem (
+									Util.GS("Revert to a Normal Folder"));
+							   menu.Append (item_revert);
+							//if (false == this.RemoveiFolderButton.Sensitive)
+							if (false == this.ifwin.RevertMenuItem.Sensitive)
+							{
+							    item_revert.Sensitive = false;		
+							}
+							else
+							{
+							    item_revert.Activated += this.ifwin.RemoveiFolderHandler;
+							}
+							
+						}
+						else if (holder.iFolder.OwnerID !=
+										holder.iFolder.CurrentUserID)
+						{
+							MenuItem item_delete = new MenuItem (
+									Util.GS("Revert to a normal folder"));
+							menu.Append (item_delete);
+							if (false == this.ifwin.RemoveiFolderButton.Sensitive)
+                            {
+                                 item_delete.Sensitive = false;
+                            }
+                            else
+							{
+							     item_delete.Activated += this.ifwin.RemoveiFolderHandler;
+							}
+						}
+
+						menu.Append(new SeparatorMenuItem());
+	
+						MenuItem item_properties =
+							new MenuItem (Util.GS("Properties"));
+						menu.Append (item_properties);
+						item_properties.Activated += this.ifwin.OnShowFolderProperties;
+
+						if (holder.State == iFolderState.Initial && holder.iFolder.State == "Available")
+						{
+						        //iFolder has not synced yet. So these functions needs to be disabled.
+						        item_share.Sensitive = false;
+							item_properties.Sensitive = false;
+						}
+						else 
+						{
+						        item_share.Sensitive = true;
+							item_properties.Sensitive = true;
+						}
+						
+					/*	if (SynchronizeNowButton.Sensitive)
+							item_sync.Sensitive =true;
+						else
+							item_sync.Sensitive = false; 	*/
+					}
+
+					menu.ShowAll();
+
+					menu.Popup(null, null, null, 
+						IntPtr.Zero, 3, 
+						Gtk.Global.CurrentEventTime); 
+					return true; 
+					break;
+				default: return base.OnButtonPressEvent(evnt); 
+					break; 
+			}  
+
+		}
+							
+	}
 
 ///
 /// This UrlList class comes directly from F-Spot written by Miguel de Icaza
@@ -5114,5 +5382,5 @@ public class UriList : ArrayList {
 			
 			return false;
 		}
- }
+ 	}
 }

@@ -603,6 +603,7 @@ namespace Novell.iFolder
 						ifwin.Present();
 					}
 				}
+				ifwin.ShowIconView();
 			}
 		}
 		
