@@ -475,6 +475,15 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to N/A.
+        /// </summary>
+        internal static string na {
+            get {
+                return ResourceManager.GetString("na", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         internal static string name {
@@ -597,6 +606,15 @@ namespace TrayApp.Properties {
         internal static string preSync {
             get {
                 return ResourceManager.GetString("preSync", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Regular.
+        /// </summary>
+        internal static string regular {
+            get {
+                return ResourceManager.GetString("regular", resourceCulture);
             }
         }
         
@@ -795,6 +813,15 @@ namespace TrayApp.Properties {
         internal static string thumbnails {
             get {
                 return ResourceManager.GetString("thumbnails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type.
+        /// </summary>
+        internal static string type {
+            get {
+                return ResourceManager.GetString("type", resourceCulture);
             }
         }
         

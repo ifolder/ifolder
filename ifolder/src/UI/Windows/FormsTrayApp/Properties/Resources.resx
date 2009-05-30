@@ -384,4 +384,14 @@
   <data name="thumbnails" xml:space="preserve">
     <value>Thumbnails</value>
   </data>
+  <data name="na" xml:space="preserve">
+    <value>N/A</value>
+    <comment>Not Available</comment>
+  </data>
+  <data name="regular" xml:space="preserve">
+    <value>Regular</value>
+  </data>
+  <data name="type" xml:space="preserve">
+    <value>Type</value>
+  </data>
 </root>

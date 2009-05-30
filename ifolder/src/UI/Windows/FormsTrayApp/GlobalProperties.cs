@@ -296,8 +296,6 @@ namespace Novell.FormsTrayApp
                         
                     }
                 }
-
-                
             }
             catch (Exception ex)
             {
@@ -373,7 +371,8 @@ namespace Novell.FormsTrayApp
             }
             catch { } // Non-fatal ... just missing some graphics.
 
-            //TODO: commented out, need to figure why is this giving error. this.MinimumSize = this.Size;
+            //TODO: commented out, need to figure why is this giving error. 
+            //this.MinimumSize = this.Size;
         }
         void MoreInitialization()
         {           
@@ -383,17 +382,6 @@ namespace Novell.FormsTrayApp
                 MyMessageBoxButtons.YesNo, 
                 MyMessageBoxIcon.Question);
         }
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        
-
-        #region Windows Form Designer generated code
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        
 
         void menuResetPassword_Click(object sender, EventArgs e)
         {
@@ -409,7 +397,6 @@ namespace Novell.FormsTrayApp
                 mmb.Dispose();
             }
         }
-        #endregion
 
 		#region Properties
 		/// <summary>
@@ -546,7 +533,7 @@ namespace Novell.FormsTrayApp
 				}
 			}
 			Cursor.Current = Cursors.Default;
-
+            refreshAll(); //TODO: check if this is too heavy operation
 			return result;
 		}
 
@@ -1329,6 +1316,7 @@ namespace Novell.FormsTrayApp
                     ifListView = AddDomainToUIList(simiasWebService.GetDomainInformation(ifolderObject.iFolderWeb.DomainID));
                 tlvi = ifListView.AddiFolderToListView(ifolderObject);
                 ifListView.Items.Sort();
+                
                 int imageIndex;
                 tlvi.Status = getItemState(ifolderObject, 0, out imageIndex);
                 tlvi.ImageIndex = imageIndex;
@@ -1347,7 +1335,7 @@ namespace Novell.FormsTrayApp
 			{
 				minWidth = localiFoldersHeading.Left + localiFoldersHeading.Width;
 			}
-
+            
 			foreach ( iFoldersListView ifListView in iFolderListViews.Values )
 			{
 				ifListView.Anchor = AnchorStyles.Left | AnchorStyles.Top;
@@ -1356,7 +1344,7 @@ namespace Novell.FormsTrayApp
 					minWidth = ifListView.Width;
 				}
 			}
-
+           
 			minWidth += 20;
 
 			foreach ( iFoldersListView ifListView in iFolderListViews.Values )
@@ -1691,32 +1679,38 @@ namespace Novell.FormsTrayApp
 			}
 			catch (Exception ex)
 			{
-				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(TrayApp.Properties.Resources.syncError, 
-                                                                        TrayApp.Properties.Resources.syncErrorTitle, 
-                                                                        ex.Message, MyMessageBoxButtons.OK, 
-                                                                        MyMessageBoxIcon.Error);
+				Novell.iFolderCom.MyMessageBox mmb = new 
+                    MyMessageBox(TrayApp.Properties.Resources.syncError, 
+                    TrayApp.Properties.Resources.syncErrorTitle, 
+                    ex.Message, MyMessageBoxButtons.OK, 
+                    MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 				mmb.Dispose();
 			}
 		}
 
-       
-        private void showServerInfo(bool visible)
+        private void enableServerFolderLabels(bool visible)
         {
-            this.titleEncrypted.Visible = this.valueEncrypted.Visible =
-            this.titleRemainingToSync.Visible = 
-            this.titleLastSyncTime.Visible = this.titleAutomaticSync.Visible =  visible;
+            this.titleName.Visible =
+            this.titleAccess.Visible =
+            this.titleServerorSize.Visible =
+            this.titleEncrypted.Visible = visible;
+
+            this.titleOwner.Visible =
+            this.titleLastSyncTime.Visible = !visible;
         }
 
-        private void showUserInfo(bool visible)
+        private void enableLocalFoldersLabels(bool visible)
         {
-            this.titleName.Visible = this.valueName.Visible = 
-            this.titleOwner.Visible = this.titleAccess.Visible = visible;
-            
+            this.titleName.Visible =
+            this.titleAccess.Visible =
+            this.titleServerorSize.Visible =
+            this.titleEncrypted.Visible = 
+            this.titleOwner.Visible =
+            this.titleLastSyncTime.Visible = visible;
         }
 		private void updateMenus(iFolderObject ifolderObject)
 		{
-            
 			if ( ifolderObject == null )
 			{
 				// Disable all of the item-related menu items.
@@ -1731,37 +1725,13 @@ namespace Novell.FormsTrayApp
 
 				if ( ifolderWeb.IsSubscription ) //iFolders on the server
 				{
-                    this.showUserInfo(true);
-                    this.showServerInfo(true);
-
-                    this.titleName.Text = TrayApp.Properties.Resources.name + ":  " +  ifolderWeb.Name;
-                    this.titleOwner.Text =TrayApp.Properties.Resources.owner + ":  "+  ifolderWeb.Owner;
-                    
-                    if (ifolderWeb.encryptionAlgorithm != null && ifolderWeb.encryptionAlgorithm != "")
-                    {
-                        this.valueEncrypted.Text = resourceManager.GetString("valueEncrypted.text");
-                    }
-                    else
-                    {
-                        this.valueEncrypted.Text = resourceManager.GetString("valueNormal.text");
-                    }
-
-                    this.valueAccess.Text =  resourceManager.GetString("unknown");
-
-                    this.titleRemainingToSync.Text = Resources.filesnFolders + ":  " + resourceManager.GetString("unknown");
-                    this.titleLastSyncTime.Text = Resources.lastSyncTime + ":  " + resourceManager.GetString("unknown");
-                    this.titleAutomaticSync.Text = Resources.autoSync + ":  " + resourceManager.GetString("unknown");
-
+                    populateServeriFolderInfo(ifolderWeb);
 
 					// Disable the iFolder related menu items. //TODO
 					this.menuActionOpen.Enabled = this.menuActionProperties.Enabled =
 						this.menuActionRevert.Enabled = this.menuActionShare.Enabled =
 						this.menuActionSync.Enabled = this.menuActionResolve.Enabled = false;
-
-                    this.toolStripBtnResolve.Visible = this.toolStripBtnSyncNow.Visible =
-                        this.toolStripBtnShare.Visible = false;
                         
-
 					// Enable the available iFolder related menu items.
                     this.menuActionRemove.Enabled = this.menuActionAccept.Enabled = this.menuActionMerge.Enabled = true;
 					if( ifolderWeb.CurrentUserID != ifolderWeb.OwnerID)
@@ -1773,61 +1743,15 @@ namespace Novell.FormsTrayApp
 						this.MenuRemove.Text = this.menuActionRemove.Text = TrayApp.Properties.Resources.menuActionRemove;
 					}
 					// Show the available iFolder buttons
-                    this.toolStripBtnMerge.Visible = true;
+                    enableRemoteFoldersButtons(true);
 				}
 				else //local folders
 				{
-                    this.showUserInfo(true);
-                    this.showServerInfo(true);
-                    this.titleName.Text = TrayApp.Properties.Resources.name + ":  " + ifolderWeb.Name;
-                    this.titleOwner.Text = TrayApp.Properties.Resources.owner + ":  " + ifolderWeb.Owner;
-                    
-                    iFolderUser[] ifolderUsers = ifWebService.GetiFolderUsers(ifolderWeb.ID);
-                    foreach (iFolderUser ifolderUser in ifolderUsers)
-                    {
-                        if (ifolderUser.UserID.Equals(ifolderWeb.CurrentUserID))
-                            this.titleAccess.Text = Resources.access + ":  " + ifolderUser.Rights.ToString();
-                    }
-
-                    if (ifolderWeb.encryptionAlgorithm != null && ifolderWeb.encryptionAlgorithm != "")
-                    {
-                        this.valueEncrypted.Text = resourceManager.GetString("valueEncrypted.text");
-                    }
-                    else
-                    {
-                        this.valueEncrypted.Text = resourceManager.GetString("valueNormal.text");
-                    }
-
-                    try
-                    {
-                        SyncSize syncSize = ifWebService.CalculateSyncSize(ifolderWeb.ID);
-                        this.titleRemainingToSync.Text =  Resources.filesnFolders + ":  " + syncSize.SyncNodeCount.ToString();
-                    }
-                    catch
-                    {
-                        if (ifolderWeb.Role.Equals("Master"))
-                        {
-                            this.titleRemainingToSync.Text = Resources.filesnFolders + ":  " + "0";
-                        }
-                        else
-                        {
-                            this.titleRemainingToSync.Text = Resources.filesnFolders + ":  " + resourceManager.GetString("unknown");
-                        }
-                    }
-
-                    this.titleLastSyncTime.Text = Resources.lastSyncTime +":  " + ifolderWeb.LastSyncTime;
-
-                    if (ifolderWeb.SyncInterval != Timeout.Infinite)
-                    {
-                        this.titleAutomaticSync.Text = Resources.autoSync + ":  "+ ifolderWeb.SyncInterval.ToString();
-                    }
-                    else
-                    {
-                        this.titleAutomaticSync.Text = Resources.autoSync + ":  " + resourceManager.GetString("notApplicable");
-                    }
+                    populateLocaliFolderInfo(ifolderWeb);
 
 					// Disable the available iFolder related menu items.
                     this.menuActionRemove.Enabled = this.menuActionAccept.Enabled = this.menuActionMerge.Enabled = false;
+
                     this.toolStripBtnMerge.Enabled = false;
 					// Hide the available iFolder buttons
                     //this.accept.Visible = this.merge.Visible = this.remove.Visible = false;
@@ -1860,18 +1784,83 @@ namespace Novell.FormsTrayApp
 						return;
 					}
 					// Show the local iFolder buttons
-					//this.open.Visible = this.syncNow.Visible = this.share.Visible =
-					//this.revert.Visible = this.properties.Visible = true;
-
-                    this.toolStripBtnSyncNow.Visible = this.toolStripBtnShare.Visible =
-                        this.toolStripBtnShare.Enabled = true;
+                    enableRemoteFoldersButtons(false);
 					// Show right-click menu
 					this.CtxMenuOpen.Enabled = this.menuShare.Enabled = true; 
-					this.MenuRevert.Enabled = this.menuProperties.Enabled = true;
-                    
+					this.MenuRevert.Enabled = this.menuProperties.Enabled = true; 
 				}
 			}
 		}
+
+        private void enableRemoteFoldersButtons(bool server)
+        {
+            this.toolStripBtnCreate.Visible = true;
+            if (server)
+            {
+                this.toolStripBtnDownload.Visible =
+                this.toolStripBtnMerge.Visible =
+                this.toolStripBtnDelete.Visible = server;
+
+                this.toolStripBtnSyncNow.Visible = 
+                this.toolStripBtnShare.Visible = 
+                this.toolStripBtnRevert.Visible = ! server;
+            }
+            else
+            {
+                this.toolStripBtnDownload.Visible =
+                this.toolStripBtnMerge.Visible =
+                this.toolStripBtnDelete.Visible = server;
+
+                this.toolStripBtnSyncNow.Visible =
+                this.toolStripBtnShare.Visible =
+                this.toolStripBtnRevert.Visible = !server;
+            }
+        }
+
+        private void populateLocaliFolderInfo(iFolderWeb ifolderWeb)
+        {
+            enableLocalFoldersLabels(true);
+
+            this.titleName.Text = TrayApp.Properties.Resources.name + ":  " + ifolderWeb.Name;
+            this.titleOwner.Text = TrayApp.Properties.Resources.owner + ":  " + ifolderWeb.Owner;
+            iFolderUser[] ifolderUsers = ifWebService.GetiFolderUsers(ifolderWeb.ID);
+            foreach (iFolderUser ifolderUser in ifolderUsers)
+            {
+                if (ifolderUser.UserID.Equals(ifolderWeb.CurrentUserID))
+                    this.titleAccess.Text = Resources.access + ":  " + ifolderUser.Rights.ToString();
+            }
+            if (ifolderWeb.encryptionAlgorithm != null && ifolderWeb.encryptionAlgorithm != "")
+                this.titleEncrypted.Text =  Resources.type + ":  " + Resources.encrypted;
+            else
+                this.titleEncrypted.Text = Resources.type + ":  " + Resources.regular;
+
+            this.titleLastSyncTime.Text = Resources.lastSyncTime + ":  " + ifolderWeb.LastSyncTime;
+        }
+
+        private void populateServeriFolderInfo(iFolderWeb ifolderWeb)
+        {
+            enableServerFolderLabels(true);
+            this.titleName.Text = TrayApp.Properties.Resources.name + ":  " + ifolderWeb.Name;
+            this.titleOwner.Text = TrayApp.Properties.Resources.owner + ":  " + ifolderWeb.Owner;
+
+            if (ifolderWeb.encryptionAlgorithm != null && ifolderWeb.encryptionAlgorithm != "")
+                this.titleEncrypted.Text = Resources.type + ":  " + Resources.encrypted;
+            else
+                this.titleEncrypted.Text = Resources.type + ":  " + Resources.regular;
+            try
+            {
+                iFolderUser[] ifolderUsers = ifWebService.GetiFolderUsers(ifolderWeb.ID);
+                foreach (iFolderUser ifolderUser in ifolderUsers)
+                {
+                    if (ifolderUser.UserID.Equals(ifolderWeb.CurrentUserID))
+                        this.titleAccess.Text = Resources.access + ":  " + ifolderUser.Rights.ToString();
+                }
+            }
+            catch { } //TODO: Getting incorrect ID at times needs to be fixed.
+            this.titleServerorSize.Text = Resources.server + ":  " + 
+                simiasWebService.GetDomainInformation(ifolderWeb.DomainID).Host;
+            this.titleLastSyncTime.Text = Resources.lastSyncTime + ":  " + Resources.na;
+        } 
 
 		private void updateEnterpriseData()
 		{
@@ -2225,7 +2214,7 @@ namespace Novell.FormsTrayApp
 			try
 			{
 				SizeF textSize = g.MeasureString(localiFoldersHeading.Text, localiFoldersHeading.Font);
-				localiFoldersHeading.Width = (int)(textSize.Width * 1.1);
+                localiFoldersHeading.Width = panel2.Width; // (int)(textSize.Width * 1.1);
 			}
 			finally
 			{
@@ -2237,6 +2226,7 @@ namespace Novell.FormsTrayApp
 			showiFolders_Click( this, null );
 
             setThumbnailView(thumbnailView);
+
 		}
 
 		private void GlobalProperties_VisibleChanged(object sender, System.EventArgs e)
@@ -2505,6 +2495,7 @@ namespace Novell.FormsTrayApp
 
 		private void menuSyncNow_Click(object sender, System.EventArgs e)
 		{
+            //TODO: check for null object
 			synciFolder(((iFolderObject)selectedItem.Tag).iFolderWeb.ID);
 		}
 
@@ -3175,6 +3166,7 @@ namespace Novell.FormsTrayApp
 
         private void setThumbnailView(bool visible)
         {
+            updateChangeViewMenuText();
             //show/hide panel2 that contains thumnail view.
             this.iFolderView.Visible = visible;
             this.localiFoldersHeading.Visible = visible;
@@ -3222,16 +3214,18 @@ namespace Novell.FormsTrayApp
         private void toolStripMenuThumbnails_Click(object sender, EventArgs e)
         {
             thumbnailView = !thumbnailView;
-            if (thumbnailView)
-            {
-                toolStripMenuThumbnails.Text = Resources.details; 
-            }
-            else
-            {
-                toolStripMenuThumbnails.Text = Resources.thumbnails;
+            updateChangeViewMenuText();
+            if (!thumbnailView)
                 setListViewItemSelected();
-            }
             setThumbnailView(thumbnailView);
+        }
+
+        private void updateChangeViewMenuText()
+        {
+            if (thumbnailView)
+                toolStripMenuThumbnails.Text = Resources.details;
+            else
+                toolStripMenuThumbnails.Text = Resources.thumbnails;
         }
 
         private void toolStripMenuLeftPane_Click(object sender, EventArgs e)
@@ -3279,11 +3273,14 @@ namespace Novell.FormsTrayApp
         }
         private void setListViewItemSelected()
         {
-            listView1.Focus();
-            iFolderObject ifObj = (iFolderObject)selectedItem.Tag;
-            ListViewItem item = listView1.FindItemWithText(ifObj.iFolderWeb.ID);
-            listView1.Items[item.Index].Selected = true;
-            listView1.Items[item.Index].Focused = true;
+            if (listView1 != null && selectedItem != null)
+            {
+                listView1.Focus();
+                iFolderObject ifObj = (iFolderObject)selectedItem.Tag;
+                ListViewItem item = listView1.FindItemWithText(ifObj.iFolderWeb.ID);
+                listView1.Items[item.Index].Selected = true;
+                listView1.Items[item.Index].Focused = true;
+            }
         }
 	}
 }
