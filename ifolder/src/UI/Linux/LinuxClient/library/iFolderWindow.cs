@@ -916,7 +916,7 @@ namespace Novell.iFolder
 			buttonText.Xalign = 0;
 			RemoveMembershipButton.Visible	= false;
 			RemoveMembershipButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-download48.png")));
-			RemoveMembershipButton.Clicked += new EventHandler(RemoveMembershipHandler);
+			RemoveMembershipButton.Clicked += new EventHandler(RemoveMembershipHandler);
 			buttontips.SetTip(RemoveMembershipButton, Util.GS("Remove My Membership"),"");	
 
 			///
