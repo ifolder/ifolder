@@ -198,7 +198,10 @@ namespace Novell.iFolder
 		private Tooltips buttontips;
 	    private	VBox actionsVBox ;
         private ComboBoxEntry viewList; 
-
+			
+		public VBox packIconView;
+		public VBox packListView;
+		
 
 		public int LastXPos
 		{
@@ -1111,16 +1114,31 @@ namespace Novell.iFolder
 			HBox hbox = new HBox(false, 0);
 
 			hbox.PackStart(CreateActions(), false, false, 12);
+			/* 
 			viewpane = new HBox(false, 0);
 			viewpane.PackStart(CreateIconViewPane(), true, true, 0);
 			viewpane.PackStart(CreateListViewPane(), true, true, 0);
 			hbox.PackStart(CreateViewWithDetails(viewpane), true, true, 0);
+            */
 
+			hbox.PackStart(CreateCombinedView(), true, true, 0);
 			vbox.PackStart(hbox, true, true, 0);
 
 			return ContentEventBox;
 		}
 		
+		private Widget CreateCombinedView()
+		{
+			HBox combinedView = new HBox(false,0);
+			combinedView.PackStart(CreateIconViewPane(), true, true,0);
+			combinedView.PackStart(CreateListViewPane(),true,true,0);
+
+			VBox combinedViewWithDetails = new VBox(false,0);
+			combinedViewWithDetails.PackStart(combinedView, true,true,0);
+			combinedViewWithDetails.PackStart(CreateiFolderWhiteBoradArea(),false,true,0);
+
+			return combinedViewWithDetails;
+		}
 
 		private bool AlliFoldersFilterFunc(TreeModel model, TreeIter iter)
 		{
@@ -1177,6 +1195,11 @@ namespace Novell.iFolder
                         serverList.ShadowType = Gtk.ShadowType.EtchedIn;
 			
                         serverList.Show();
+
+		/*	packListView = new VBox(false,0);
+			packListView.PackStart(serverList,true,true,0);
+			return packListView;
+*/
                         return serverList;
 
 		}
@@ -1458,34 +1481,33 @@ namespace Novell.iFolder
 		private void OnviewListIndexChange(object o, EventArgs args)
 		{
 			//### indicate if First item in combobox is selected	
-			if(0 == viewList.Active)
-			{
-				//to check
-				//if(!actionsVBox.Visible)
-				//		actionsVBox.Visible = true;
-			}
 			switch((ViewOptions)viewList.Active)
 			{
-/*				case ViewOptions.OpenPanel:
+				case ViewOptions.OpenPanel:
 					if(!actionsVBox.Visible)
 						actionsVBox.Visible = true;
 						break;	
 				case ViewOptions.ClosePanel:
 					if(actionsVBox.Visible)
 						actionsVBox.Visible = false;
-						break;	*/
-
-		//### below code is for toggeling between listview and thumbnail view				
+						break;	
 				case ViewOptions.ThumbnailView:
-					if(!iFoldersIconView.Visible)
-						iFoldersIconView.Visible = true;
+					//if(!iFoldersIconView.Visible)
+					if(!iFoldersScrolledWindow.Visible)
+					{
+						//iFoldersIconView.Visible = true;
+						iFoldersScrolledWindow.Visible = true;	
 						serverList.Visible = false;
+					}
 						break;	
 
 				case ViewOptions.ListView:
 					if(!serverList.Visible)
+					{
 						serverList.Visible = true;
-						iFoldersIconView.Visible = false;
+						//iFoldersIconView.Visible = false;
+						iFoldersScrolledWindow.Visible = false;
+					}
 						break;	
 						
 				default:
@@ -1888,6 +1910,10 @@ namespace Novell.iFolder
 */
 			iFoldersScrolledWindow.AddWithViewport(iFoldersIconView);
 			
+	/*		packIconView = new VBox(false,0);
+			packIconView.PackStart(serverList,true,true,0);
+			return packIconView;
+	*/		
 			return iFoldersScrolledWindow;
 		}
 		
