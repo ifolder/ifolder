@@ -3544,3 +3544,12 @@ msgid ""
 msgstr ""
 "Click Ok to merge the folder or Cancel to select a different location"
 
+msgid ""
+"iFolder"
+msgstr ""
+"iFolder"
+
+msgid ""
+"Size"
+msgstr ""
+"Size"
