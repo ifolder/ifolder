@@ -1142,7 +1142,31 @@ namespace Novell.iFolder
 
 		private bool AlliFoldersFilterFunc(TreeModel model, TreeIter iter)
 		{
-			return true;
+			iFolderHolder ifHolder = (iFolderHolder)model.GetValue(iter, 0);
+                        if (ifHolder == null || ifHolder.iFolder == null || ifHolder.iFolder.DomainID == null) return false;
+
+			string searchString = SearchEntry.Text;
+                        if (searchString != null)
+                        {
+	                        searchString = searchString.Trim();
+                                if (searchString.Length > 0)
+         	                       searchString = searchString.ToLower();
+                        }
+
+                        if (searchString == null || searchString.Trim().Length == 0)
+                	        return true;    // Include this
+                        else
+                        {
+                                // Search the iFolder's Name (for now)
+                                string name = ifHolder.iFolder.Name;
+                                if (name != null)
+                                {
+                         	       name = name.ToLower();
+                                       if (name.IndexOf(searchString) >= 0)
+                                	       return true;
+                                }
+                        }	
+			return false;
 		}
 
 		private void UpdateListViewItems()
@@ -1150,13 +1174,14 @@ namespace Novell.iFolder
 			Gdk.Pixbuf ServerImg = new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png"));
 			Gdk.Pixbuf DownloadedImg = new Gdk.Pixbuf((Util.ImagesPath("ifolder_user_48.png")));
 			TreeIter iter;
-			if( (ifdata.iFolders).GetIterFirst( out iter ))
+			viewstore.Clear();
+			if( (iFolderFilter).GetIterFirst( out iter ))
 			{
                         do
                         {
 				try
 				{
-                                	iFolderHolder holder = (iFolderHolder)(ifdata.iFolders).GetValue(iter, 0);
+                                	iFolderHolder holder = (iFolderHolder)(iFolderFilter).GetValue(iter, 0);
                                 	if (holder != null)
                                 	{
                                         	viewstore.AppendValues(holder.iFolder.IsSubscription?ServerImg:DownloadedImg,holder.iFolder.Name,holder.iFolder.Owner,(domainController.GetDomain(holder.iFolder.DomainID)).Name, holder.StateString, holder);
@@ -1165,7 +1190,7 @@ namespace Novell.iFolder
 				catch(Exception ex)
 				{
 				}
-                        }while ((ifdata.iFolders).IterNext(ref iter));
+                        }while ((iFolderFilter).IterNext(ref iter));
 			}
 			tv.Model = viewstore;
                         tv.HeadersVisible = true;
@@ -1180,7 +1205,7 @@ namespace Novell.iFolder
 			tv = new ListTreeView(this);
 			store = ifdata.iFolders;
 			viewstore = new ListStore(typeof (Gdk.Pixbuf), typeof (string), typeof (string), typeof (string), typeof (string), typeof (iFolderHolder));
-			tv.Model = store;
+			tv.Model = iFolderFilter;
 			UpdateListViewItems();
                         tv.HeadersVisible = true;
 			tv.HeadersClickable = true;
@@ -1196,10 +1221,6 @@ namespace Novell.iFolder
 			
                         serverList.Show();
 
-		/*	packListView = new VBox(false,0);
-			packListView.PackStart(serverList,true,true,0);
-			return packListView;
-*/
                         return serverList;
 
 		}
@@ -1216,7 +1237,7 @@ namespace Novell.iFolder
                 	if (((TreeSelection)o).GetSelected (out model, out iter))
                 	{
                         	ifolholder = (iFolderHolder)model.GetValue (iter, 5);
-				iFolderIconView.SelectedFolder = ifolholder;	
+				iFolderIconView.SelectedFolder = ifolholder;
         	        }
 			
 			UpdateSensitivity();
@@ -3403,6 +3424,13 @@ namespace Novell.iFolder
 		private void SearchFolders()
 		{
 			RefilterServerGroups();
+			RefilterListView();
+		}
+	
+		private void RefilterListView()
+		{
+			iFolderFilter.Refilter();
+			UpdateListViewItems();
 		}
 		
 		private void RefilterServerGroups()
@@ -5034,6 +5062,8 @@ namespace Novell.iFolder
 			Gtk.TreePath path = new Gtk.TreePath();
                         GetPathAtPos (System.Convert.ToInt16 (evnt.X), System.Convert.ToInt16 (evnt.Y), out path);
                         Gtk.TreeIter iter;
+			if( path != null )
+			{
                         if ( this.Model.GetIter(out iter,path) ) 
 			{
                                 holder = (iFolderHolder) this.Model.GetValue (iter, 5);
@@ -5176,7 +5206,9 @@ namespace Novell.iFolder
 					break;
 				default: return base.OnButtonPressEvent(evnt); 
 					break; 
-			}  
+			}
+			}
+			return false;  
 
 		}
 							
