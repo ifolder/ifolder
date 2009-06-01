@@ -3367,6 +3367,11 @@ namespace Novell.iFolder
 
 					ifdata.DeleteiFolder(holder.iFolder.ID);
 					iFoldersIconView.UnselectAll();
+					
+					//###### Update Server Information for the selected Domain.
+			 		DomainInformation domain = null;	
+			 		domain =  UpdateCurrentServer();
+			 		UpdateSelectedServerDetails(domain);
 				}
 				catch(Exception e)
 				{
@@ -4399,6 +4404,11 @@ namespace Novell.iFolder
 				}
 			}
 			while(rc == (int)ResponseType.Ok);
+
+			//###### Update Server Information for the selected Domain.
+			 DomainInformation domain = null;	
+			 domain =  UpdateCurrentServer();
+			 UpdateSelectedServerDetails(domain);
 		}
 
 		// Return true if we were able to determine the exception type.
