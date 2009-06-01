@@ -1209,6 +1209,7 @@ namespace Novell.iFolder
 			UpdateListViewItems();
                         tv.HeadersVisible = true;
 			tv.HeadersClickable = true;
+			tv.Reorderable = true;
 			tv.Selection.Changed  +=  new EventHandler(OnSelectionChanged);
                         tv.RowActivated +=  OnRowActivated;
                         tv.AppendColumn ("", new CellRendererPixbuf(), "pixbuf", 0);
@@ -1220,6 +1221,7 @@ namespace Novell.iFolder
                         serverList.ShadowType = Gtk.ShadowType.EtchedIn;
 			
                         serverList.Show();
+
 
                         return serverList;
 
@@ -1513,12 +1515,11 @@ namespace Novell.iFolder
 						actionsVBox.Visible = false;
 						break;	
 				case ViewOptions.ThumbnailView:
-					//if(!iFoldersIconView.Visible)
 					if(!iFoldersScrolledWindow.Visible)
 					{
-						//iFoldersIconView.Visible = true;
 						iFoldersScrolledWindow.Visible = true;	
 						serverList.Visible = false;
+						UpdateLocalViewItemsMainThread();
 					}
 						break;	
 
@@ -1526,8 +1527,8 @@ namespace Novell.iFolder
 					if(!serverList.Visible)
 					{
 						serverList.Visible = true;
-						//iFoldersIconView.Visible = false;
 						iFoldersScrolledWindow.Visible = false;
+						UpdateListViewItems();
 					}
 						break;	
 						
@@ -1691,9 +1692,9 @@ namespace Novell.iFolder
 			
 			string domainName = null;
 			UriBuilder serverUri = null;
-        	store = new ListStore(typeof (string));
+        		store = new ListStore(typeof (string));
 			//ViewUserDomainList.Clear();
-        	ViewUserDomainList.Model = store;
+			ViewUserDomainList.Model = store;
 		
 		    //TODO: Move this code in a function and make call from on domain add and delete event as well as here/startup
 			DomainInformation[] domains = domainController.GetDomains();
@@ -1703,7 +1704,7 @@ namespace Novell.iFolder
 		    	serverUri = new UriBuilder(domain.HostUrl); 
 		    	//domainName = domain.Name + "-" + serverUri.Host; 
 		    	domainName =  serverUri.Host; 
-		    	store.AppendValues(domain.Host);
+		    	store.AppendValues(domainName);
 		    	domaincount++;
 		    }
 		//	ViewUserDomainList.Active = 0;
@@ -1941,11 +1942,14 @@ namespace Novell.iFolder
 		///
 		/// Event Handlers
 		///
-		
+	
 		private void UpdateLocalViewItems(object state)
 		{
 			// Do the work on the main UI thread so that stuff isn't corrupted.
-			GLib.Idle.Add(UpdateLocalViewItemsMainThread);
+			if( serverList.Visible )
+				UpdateListViewItems();
+			else
+				GLib.Idle.Add(UpdateLocalViewItemsMainThread);
 		}
 		
 		private bool UpdateLocalViewItemsMainThread()
@@ -2724,7 +2728,8 @@ namespace Novell.iFolder
 			
 			OniFolderIconViewSelectionChanged(null, EventArgs.Empty);
 			PopulateCombobox();
-			UpdateListViewItems();
+			if( serverList.Visible )
+                                UpdateListViewItems();
 
 		}
 
@@ -3318,7 +3323,10 @@ namespace Novell.iFolder
 							else
 		                                                ifdata.AcceptiFolderInvitation( holder.iFolder.ID, holder.iFolder.DomainID, downloadpath);
 						}
-						iFoldersIconView.UnselectAll();
+						if( serverList.Visible )
+                            				UpdateListViewItems();
+                        			else
+							iFoldersIconView.UnselectAll();
 						rc = 0;
 
 						// Save off the path so that the next time the user
@@ -3366,7 +3374,10 @@ namespace Novell.iFolder
 						Debug.PrintLine("Not a default account");
 
 					ifdata.DeleteiFolder(holder.iFolder.ID);
-					iFoldersIconView.UnselectAll();
+					if( serverList.Visible )
+                                		UpdateListViewItems();
+                        		else
+						iFoldersIconView.UnselectAll();
 					
 					//###### Update Server Information for the selected Domain.
 			 		DomainInformation domain = null;	
@@ -3404,7 +3415,10 @@ namespace Novell.iFolder
 				try
 				{
 					ifdata.DeleteiFolder(holder.iFolder.ID);
-					iFoldersIconView.UnselectAll();
+					if( serverList.Visible )
+                            		        UpdateListViewItems();
+                        		else
+						iFoldersIconView.UnselectAll();
 				}
 				catch(Exception e)
 				{
@@ -3826,7 +3840,6 @@ namespace Novell.iFolder
 			// Since POBox creation is completely removed from 3.7 and above clients so removing references too.
 			//domainController.CheckForNewiFolders();
 			this.RefreshAvailableiFolderTimer.Change(300000, 300000);
-			UpdateListViewItems();
 		}
 
 		private void RefreshAvailableiFolderTimer_click(object sender)
@@ -4110,7 +4123,10 @@ namespace Novell.iFolder
 								simws.DefaultAccount(domainID, null);
 						}
 						
-						iFoldersIconView.UnselectAll();
+						if( serverList.Visible )
+                            		    	        UpdateListViewItems();
+                        			else
+							iFoldersIconView.UnselectAll();
 					}
 					catch(Exception e)
 					{
@@ -5065,7 +5081,6 @@ namespace Novell.iFolder
 			this.ifwin = ifwin;
         	}
 
-		
         	protected override bool OnButtonPressEvent (Gdk.EventButton evnt)
 		{
 			iFolderHolder holder = null;
