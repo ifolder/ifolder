@@ -545,7 +545,7 @@ namespace Novell.FormsTrayApp
             // 
             this.MenuAccept.Name = "MenuAccept";
             resources.ApplyResources(this.MenuAccept, "MenuAccept");
-            this.MenuAccept.Click += new System.EventHandler(this.menuCreate_Click);
+            this.MenuAccept.Click += new System.EventHandler(this.menuAccept_Click);
             // 
             // MenuMerge
             // 
