@@ -64,11 +64,13 @@ namespace Novell.FormsTrayApp
             this.toolStripBtnSyncNow = new System.Windows.Forms.ToolStripButton();
             this.toolStripBtnShare = new System.Windows.Forms.ToolStripButton();
             this.toolStripBtnResolve = new System.Windows.Forms.ToolStripButton();
+            this.toolStripBtnRevert = new System.Windows.Forms.ToolStripButton();
             this.toolStripBtnMerge = new System.Windows.Forms.ToolStripButton();
-            this.toolStripBtnFilter = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripBtnDelete = new System.Windows.Forms.ToolStripButton();
             this.toolStipBtnChangeView = new System.Windows.Forms.ToolStripDropDownButton();
             this.toolStripMenuThumbnails = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuLeftPane = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripBtnFilter = new System.Windows.Forms.ToolStripComboBox();
             this.iFolderContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.CtxMenuOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuResolveSeperator = new System.Windows.Forms.ToolStripSeparator();
@@ -114,8 +116,6 @@ namespace Novell.FormsTrayApp
             this.ID = new System.Windows.Forms.ColumnHeader();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
-            this.toolStripBtnRevert = new System.Windows.Forms.ToolStripButton();
-            this.toolStripBtnDelete = new System.Windows.Forms.ToolStripButton();
             this.iFolderView = new Novell.FormsTrayApp.TileListView();
             this.toolStripiFolderActions.SuspendLayout();
             this.iFolderContextMenu.SuspendLayout();
@@ -455,18 +455,23 @@ namespace Novell.FormsTrayApp
             this.toolStripBtnResolve.Name = "toolStripBtnResolve";
             this.toolStripBtnResolve.Click += new System.EventHandler(this.menuResolve_Click);
             // 
+            // toolStripBtnRevert
+            // 
+            resources.ApplyResources(this.toolStripBtnRevert, "toolStripBtnRevert");
+            this.toolStripBtnRevert.Name = "toolStripBtnRevert";
+            this.toolStripBtnRevert.Click += new System.EventHandler(this.menuRevert_Click);
+            // 
             // toolStripBtnMerge
             // 
             resources.ApplyResources(this.toolStripBtnMerge, "toolStripBtnMerge");
             this.toolStripBtnMerge.Name = "toolStripBtnMerge";
             this.toolStripBtnMerge.Click += new System.EventHandler(this.menuMerge_Click);
             // 
-            // toolStripBtnFilter
+            // toolStripBtnDelete
             // 
-            this.toolStripBtnFilter.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripBtnFilter.Name = "toolStripBtnFilter";
-            resources.ApplyResources(this.toolStripBtnFilter, "toolStripBtnFilter");
-            this.toolStripBtnFilter.TextUpdate += new System.EventHandler(this.toolStripBtnFilter_TextUpdate);
+            resources.ApplyResources(this.toolStripBtnDelete, "toolStripBtnDelete");
+            this.toolStripBtnDelete.Name = "toolStripBtnDelete";
+            this.toolStripBtnDelete.Click += new System.EventHandler(this.menuRemove_Click);
             // 
             // toolStipBtnChangeView
             // 
@@ -491,6 +496,13 @@ namespace Novell.FormsTrayApp
             this.toolStripMenuLeftPane.Name = "toolStripMenuLeftPane";
             resources.ApplyResources(this.toolStripMenuLeftPane, "toolStripMenuLeftPane");
             this.toolStripMenuLeftPane.Click += new System.EventHandler(this.toolStripMenuLeftPane_Click);
+            // 
+            // toolStripBtnFilter
+            // 
+            this.toolStripBtnFilter.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripBtnFilter.Name = "toolStripBtnFilter";
+            resources.ApplyResources(this.toolStripBtnFilter, "toolStripBtnFilter");
+            this.toolStripBtnFilter.TextUpdate += new System.EventHandler(this.toolStripBtnFilter_TextUpdate);
             // 
             // iFolderContextMenu
             // 
@@ -678,11 +690,11 @@ namespace Novell.FormsTrayApp
             resources.ApplyResources(this.tableLayoutPanel1, "tableLayoutPanel1");
             this.tableLayoutPanel1.BackColor = System.Drawing.Color.Gainsboro;
             this.tableLayoutPanel1.Controls.Add(this.titleName, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.titleOwner, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.titleServerorSize, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.titleLastSyncTime, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.titleAccess, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.titleEncrypted, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.titleAccess, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.titleEncrypted, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.titleOwner, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.titleLastSyncTime, 1, 2);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             // 
             // titleName
@@ -802,16 +814,6 @@ namespace Novell.FormsTrayApp
             resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Controls.Add(this.listView1);
             this.panel1.Name = "panel1";
-            // 
-            // toolStripBtnRevert
-            // 
-            resources.ApplyResources(this.toolStripBtnRevert, "toolStripBtnRevert");
-            this.toolStripBtnRevert.Name = "toolStripBtnRevert";
-            // 
-            // toolStripBtnDelete
-            // 
-            resources.ApplyResources(this.toolStripBtnDelete, "toolStripBtnDelete");
-            this.toolStripBtnDelete.Name = "toolStripBtnDelete";
             // 
             // iFolderView
             // 

@@ -392,7 +392,12 @@ namespace Novell.FormsTrayApp
             else
             {
                 System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(FormsTrayApp));
-                Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(Resource.GetString("NoLoggedInDomainsPasswordText")/*"There are no logged-in domains for changing passphrase. For changing passphrase the domain should be connected. Log on to a domain and try."*/, Resource.GetString("ResetPasswordError")/*"Reset passphrase error"*/, "", MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+                Novell.iFolderCom.MyMessageBox mmb = 
+                    new MyMessageBox(Resource.GetString("NoLoggedInDomainsPasswordText"),
+                        Resource.GetString("ResetPasswordError"),
+                        "", 
+                        MyMessageBoxButtons.OK, 
+                        MyMessageBoxIcon.Error);
                 mmb.ShowDialog();
                 mmb.Dispose();
             }
@@ -1362,7 +1367,7 @@ namespace Novell.FormsTrayApp
 			if ( iFolderView.Items.Count == 0 )
 			{
 				iFolderView.Visible = false;
-				if( this.filter.Text.Length > 0)
+				if(this.toolStripBtnFilter.Text.Length > 0) // if( this.filter.Text.Length > 0)
 					infoMessage.DisplayNoMatches();
 				else
 					infoMessage.DisplayNoiFolders();
@@ -1562,7 +1567,7 @@ namespace Novell.FormsTrayApp
 		public void refreshiFolders(string search/*Domain domain*/)
 		{
             if (search == null) search = "";
-			search = this.filter.Text;
+            search = this.toolStripBtnFilter.Text; // this.filter.Text;
 			Cursor.Current = Cursors.WaitCursor;
 			Hashtable oldHt = new Hashtable();
             Hashtable tempHt = new Hashtable(); 
@@ -1728,12 +1733,18 @@ namespace Novell.FormsTrayApp
                     populateServeriFolderInfo(ifolderWeb);
 
 					// Disable the iFolder related menu items. //TODO
-					this.menuActionOpen.Enabled = this.menuActionProperties.Enabled =
-						this.menuActionRevert.Enabled = this.menuActionShare.Enabled =
-						this.menuActionSync.Enabled = this.menuActionResolve.Enabled = false;
+					this.menuActionOpen.Enabled = 
+                    this.menuActionProperties.Enabled =
+					this.menuActionRevert.Enabled = 
+                    this.menuActionShare.Enabled =
+					this.menuActionSync.Enabled = 
+                    this.menuActionResolve.Enabled = false;
                         
 					// Enable the available iFolder related menu items.
-                    this.menuActionRemove.Enabled = this.menuActionAccept.Enabled = this.menuActionMerge.Enabled = true;
+                    this.menuActionRemove.Enabled = 
+                    this.menuActionAccept.Enabled = 
+                    this.menuActionMerge.Enabled = true;
+
 					if( ifolderWeb.CurrentUserID != ifolderWeb.OwnerID)
 					{
 						this.MenuRemove.Text = this.menuActionRemove.Text = TrayApp.Properties.Resources.RemoveMyMembership;
@@ -1752,17 +1763,10 @@ namespace Novell.FormsTrayApp
 					// Disable the available iFolder related menu items.
                     this.menuActionRemove.Enabled = this.menuActionAccept.Enabled = this.menuActionMerge.Enabled = false;
 
-                    this.toolStripBtnMerge.Enabled = false;
-					// Hide the available iFolder buttons
-                    //this.accept.Visible = this.merge.Visible = this.remove.Visible = false;
-                    this.toolStripBtnMerge.Visible = false;
-
 					// Enable the iFolder related menu items.
 					this.menuActionOpen.Enabled = this.menuActionProperties.Enabled =
 						this.menuActionRevert.Enabled = this.menuActionShare.Enabled =
 						this.menuActionSync.Enabled = true;
-
-					//int buttonDelta = resolve.Top - open.Top;
 
 					if ( ifolderWeb.HasConflicts )
 					{
@@ -2740,9 +2744,6 @@ namespace Novell.FormsTrayApp
                 else
                     ifListView.Visible = !hide;
             }
-
-           // updateView();
-            
 		}
 
 		private void iFolderView_LastItemRemoved(object sender, System.EventArgs e)
@@ -3133,7 +3134,14 @@ namespace Novell.FormsTrayApp
             titleNOFolders.Text = TrayApp.Properties.Resources.noifolder + ":  " +
                                                 this.ifWebService.GetiFoldersForDomain(dw.ID).Length;
         }
-
+        private void updateDomainInfo(string strValue)
+        {
+            titleUser.Text = TrayApp.Properties.Resources.user + ":  " + strValue;
+            titleServer.Text = TrayApp.Properties.Resources.server + ":  " + strValue;
+            titleAvailable.Text = TrayApp.Properties.Resources.availableQuota + ":  " + strValue;
+            titleUsed.Text = TrayApp.Properties.Resources.usedQuota + ":  " + strValue;
+            titleNOFolders.Text = TrayApp.Properties.Resources.noifolder + ":  " + strValue;
+        }
         private void setAuthState(DomainInformation dw)
         {
             if (dw.Authenticated)
@@ -3192,6 +3200,7 @@ namespace Novell.FormsTrayApp
                     iFolderObject ifObj = (iFolderObject)tlvi.Tag;
                     int imageIndex;
                     tlvi.Status = getItemState(ifObj, 0, out imageIndex);
+                    //SyncSize syncSize = ifWebService.CalculateSyncSize(ifObj.iFolderWeb.CollectionID);
                     ListViewItem listViewItem1 = new ListViewItem(
                     new string[] { 
                     ifObj.iFolderWeb.Name,
