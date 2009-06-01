@@ -100,13 +100,14 @@ namespace Novell.FormsTrayApp
             this.domainListComboBox = new System.Windows.Forms.ComboBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.titleName = new System.Windows.Forms.Label();
-            this.titleOwner = new System.Windows.Forms.Label();
             this.titleServerorSize = new System.Windows.Forms.Label();
-            this.titleLastSyncTime = new System.Windows.Forms.Label();
             this.titleAccess = new System.Windows.Forms.Label();
             this.titleEncrypted = new System.Windows.Forms.Label();
+            this.titleOwner = new System.Windows.Forms.Label();
+            this.titleLastSyncTime = new System.Windows.Forms.Label();
             this.directorySearcher1 = new System.DirectoryServices.DirectorySearcher();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.iFolderView = new Novell.FormsTrayApp.TileListView();
             this.localiFoldersHeading = new System.Windows.Forms.RichTextBox();
             this.listView1 = new System.Windows.Forms.ListView();
             this.iFolder = new System.Windows.Forms.ColumnHeader();
@@ -116,7 +117,6 @@ namespace Novell.FormsTrayApp
             this.ID = new System.Windows.Forms.ColumnHeader();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
-            this.iFolderView = new Novell.FormsTrayApp.TileListView();
             this.toolStripiFolderActions.SuspendLayout();
             this.iFolderContextMenu.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -702,20 +702,10 @@ namespace Novell.FormsTrayApp
             resources.ApplyResources(this.titleName, "titleName");
             this.titleName.Name = "titleName";
             // 
-            // titleOwner
-            // 
-            resources.ApplyResources(this.titleOwner, "titleOwner");
-            this.titleOwner.Name = "titleOwner";
-            // 
             // titleServerorSize
             // 
             resources.ApplyResources(this.titleServerorSize, "titleServerorSize");
             this.titleServerorSize.Name = "titleServerorSize";
-            // 
-            // titleLastSyncTime
-            // 
-            resources.ApplyResources(this.titleLastSyncTime, "titleLastSyncTime");
-            this.titleLastSyncTime.Name = "titleLastSyncTime";
             // 
             // titleAccess
             // 
@@ -726,6 +716,16 @@ namespace Novell.FormsTrayApp
             // 
             resources.ApplyResources(this.titleEncrypted, "titleEncrypted");
             this.titleEncrypted.Name = "titleEncrypted";
+            // 
+            // titleOwner
+            // 
+            resources.ApplyResources(this.titleOwner, "titleOwner");
+            this.titleOwner.Name = "titleOwner";
+            // 
+            // titleLastSyncTime
+            // 
+            resources.ApplyResources(this.titleLastSyncTime, "titleLastSyncTime");
+            this.titleLastSyncTime.Name = "titleLastSyncTime";
             // 
             // directorySearcher1
             // 
@@ -742,6 +742,22 @@ namespace Novell.FormsTrayApp
             this.panel2.Controls.Add(this.localiFoldersHeading);
             this.panel2.Name = "panel2";
             this.panel2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel2_MouseDown);
+            // 
+            // iFolderView
+            // 
+            resources.ApplyResources(this.iFolderView, "iFolderView");
+            this.iFolderView.BackColor = System.Drawing.Color.White;
+            this.iFolderView.ContextMenuStrip = this.iFolderContextMenu;
+            this.iFolderView.HorizontalSpacing = 5;
+            this.iFolderView.ItemHeight = 72;
+            this.iFolderView.ItemWidth = 280;
+            this.iFolderView.LargeImageList = null;
+            this.iFolderView.Name = "iFolderView";
+            this.iFolderView.SelectedItem = null;
+            this.iFolderView.VerticleSpacing = 5;
+            this.iFolderView.DoubleClick += new System.EventHandler(this.iFolderView_DoubleClick);
+            this.iFolderView.NavigateItem += new Novell.FormsTrayApp.TileListView.NavigateItemDelegate(this.iFolderView_NavigateItem);
+            this.iFolderView.SelectedIndexChanged += new Novell.FormsTrayApp.TileListView.SelectedIndexChangedDelegate(this.ifListView_SelectedIndexChanged);
             // 
             // localiFoldersHeading
             // 
@@ -814,22 +830,6 @@ namespace Novell.FormsTrayApp
             resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Controls.Add(this.listView1);
             this.panel1.Name = "panel1";
-            // 
-            // iFolderView
-            // 
-            resources.ApplyResources(this.iFolderView, "iFolderView");
-            this.iFolderView.BackColor = System.Drawing.Color.White;
-            this.iFolderView.ContextMenuStrip = this.iFolderContextMenu;
-            this.iFolderView.HorizontalSpacing = 5;
-            this.iFolderView.ItemHeight = 72;
-            this.iFolderView.ItemWidth = 280;
-            this.iFolderView.LargeImageList = null;
-            this.iFolderView.Name = "iFolderView";
-            this.iFolderView.SelectedItem = null;
-            this.iFolderView.VerticleSpacing = 5;
-            this.iFolderView.DoubleClick += new System.EventHandler(this.iFolderView_DoubleClick);
-            this.iFolderView.NavigateItem += new Novell.FormsTrayApp.TileListView.NavigateItemDelegate(this.iFolderView_NavigateItem);
-            this.iFolderView.SelectedIndexChanged += new Novell.FormsTrayApp.TileListView.SelectedIndexChangedDelegate(this.ifListView_SelectedIndexChanged);
             // 
             // GlobalProperties
             // 
