@@ -367,7 +367,7 @@ namespace Simias.Host
 					hostDomain.Commit( new Node[] { hostDomain, host } );
 					
 					// Now Associate this host with the local identity.
-					store.AddDomainIdentity( hostDomain.ID, host.UserID, rsa.ToXmlString(true), CredentialType.PPK );
+					store.AddDomainIdentity( hostDomain.ID, host.UserID, rsa.ToXmlString(true), (Simias.Storage.CredentialType)CredentialType.PPK );
 					SlaveSetup.DeleteTempSetupFiles( Store.StorePath );
 				}
 				else

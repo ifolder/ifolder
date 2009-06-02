@@ -30,6 +30,7 @@ IdentityManagement_LIBS1 = \
 	System.Web.dll \
 	System.Web.Services.dll \
 	SimiasLib.dll \
+	Novell.Directory.Ldap.dll \
 	SimiasClient.dll 
 
 IdentityManagement_LIBS := $(IdentityManagement_LIBS1)

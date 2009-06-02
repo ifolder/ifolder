@@ -35,6 +35,7 @@ using System.Collections;
 using System.IO;
 using System.Threading;
 using System.Web;
+using Novell.Directory.Ldap;
 
 using Simias.Client;
 using Simias.Storage;
@@ -99,6 +100,18 @@ namespace Simias.IdentitySynchronization
 		private DateTime endTime;
 		private DateTime startTime;
 		private Domain domain;
+		
+                /// <summary>
+                /// Group Quota Restriction Method.
+                /// </summary>
+                private enum QuotaRestriction
+                {
+                                // For current Implementation, enum value AllAdmins is not used, can be used in future
+                                UI_Based,
+                                Sync_Based
+                };
+
+
 		#endregion
 		
 		#region Properties
@@ -366,7 +379,13 @@ namespace Simias.IdentitySynchronization
 			log.Debug( "Processing member: " + Username + " , " + groupmembers + " , " + groupmembership + ".");
 			Simias.Storage.Member member = null;
 			MemberStatus status = MemberStatus.Unchanged;
-			
+
+			if(Username == null || Username.Equals(String.Empty))
+			{
+				log.Debug("Empty Username, canot create blank user in iFolder, returning");
+				return;
+			}			
+
 			try
 			{
 				member = domain.GetMemberByName( Username );
@@ -377,6 +396,9 @@ namespace Simias.IdentitySynchronization
 			{
 				bool timeStampPresent = false;
 
+				if(UserGuid != null && String.Compare(member.UserID, UserGuid) != 0)
+					return;
+					
 				if ( Properties != null )
 				{
 					// check if the properties provided by the identity sync
@@ -476,14 +498,31 @@ namespace Simias.IdentitySynchronization
 				if(Group == true)
 				{
 					string oldMemberList = String.Empty;
-					try
+					MultiValuedList mvl = member.Properties.GetProperties( "MembersList" );
+					if( mvl != null && mvl.Count > 0)
 					{
-						oldMemberList = member.Properties.GetSingleProperty( "MembersList" ).Value as string;
+						foreach( Property p in mvl )
+						{
+							if( p != null)
+							{
+								oldMemberList += p.Value as string;
+								oldMemberList += ";";
+							}
+						}
 					}
-					catch{}
-					Property membersList = new Property( "MembersList", groupmembers);
-					membersList.ServerOnlyProperty = true;
-					member.Properties.ModifyProperty( membersList );
+					member.Properties.DeleteProperties("MembersList");
+
+					string[] newMemberArray = groupmembers.Split(new char[] { ';' });
+					foreach(string newMember in newMemberArray)
+					{
+						if(newMember != null && newMember != String.Empty && newMember != "" )
+						{
+							Property memberinGroup = new Property( "MembersList", newMember);
+							memberinGroup.ServerOnlyProperty = true;
+                                        		member.Properties.AddNodeProperty( memberinGroup );
+						}
+					}
+
 					UpdateMemberList(oldMemberList,groupmembers,DN);
 				}
 				{
@@ -547,9 +586,17 @@ namespace Simias.IdentitySynchronization
 					member.Properties.ModifyProperty( dn );
 					if(Group == true)
 					{
-						Property membersList = new Property( "MembersList", groupmembers);
-						membersList.ServerOnlyProperty = true;
-						member.Properties.ModifyProperty( membersList );
+						string[] newMemberArray = groupmembers.Split(new char[] { ';' });
+						foreach(string newMember in newMemberArray)
+                                        	{
+                                               	 	if(newMember != null && newMember != String.Empty && newMember != "" )
+                                                	{
+                                 	                        Property memberinGroup = new Property( "MembersList", newMember);
+                                        	                memberinGroup.ServerOnlyProperty = true;
+                                                	        member.Properties.AddNodeProperty( memberinGroup );
+                                                	}
+                                        	}
+
 						Property groupType = new Property( "GroupType", "Global" );
 						groupType.ServerOnlyProperty = true;
 						member.Properties.ModifyProperty( groupType );
@@ -566,6 +613,56 @@ namespace Simias.IdentitySynchronization
 					foreach( Property prop in Properties )
 					{
 						member.Properties.ModifyProperty( prop );
+					}
+			
+					// while creating member, if sum of allocated disk quota per user is equal to aggregate disk quota set on group
+					// then set 0 MB as disk quota limit for this user
+					{
+						string [] GroupIDs = domain.GetMemberFamilyList(member.UserID);
+						foreach(string GroupID in GroupIDs)
+						{
+							bool IsChildGroup = false;
+							Member GroupAsMember = domain.GetMemberByID(GroupID);
+							string ParentGroups = GroupAsMember.Properties.GetSingleProperty( "UserGroups" ).Value as string;
+							if(ParentGroups != null && ParentGroups != String.Empty)
+							{
+								// no point in 
+								IsChildGroup = true;
+							}
+							long GroupDiskQuota = GroupAsMember.AggregateDiskQuota;
+							if(GroupDiskQuota < 0)
+							{
+									
+								if( IsChildGroup )
+									continue;
+								else
+								{
+									Simias.Policy.DiskSpaceQuota.Set(member, -1);
+									log.Debug("MEMBERADD: No aggregate Disk Quota set for group, so it will set unlimited space for newly added member");
+									break;
+								}
+
+							}
+							if( domain.GroupQuotaRestrictionMethod == (int)QuotaRestriction.UI_Based )
+							{
+								// add the allocated disk quota per user for whole group
+								long SizeAllocatedToMembers = 0;
+								string [] MembersList = domain.GetGroupsMemberList( GroupID );
+								foreach( string GroupMemberID in MembersList)
+								{
+									long MemberAllocation = Simias.Policy.DiskSpaceQuota.Get( domain.GetMemberByID(GroupMemberID)).Limit;
+									if( MemberAllocation >= 0 )
+										SizeAllocatedToMembers += MemberAllocation;
+								}
+								if( SizeAllocatedToMembers >= GroupDiskQuota )
+								{
+									log.Debug("MEMBERADD: Sum of Disk Quota per user for all users is equal to aggregate disk quota set for group, so committing 0 MB for newly added user");
+									Simias.Policy.DiskSpaceQuota.Set(member, 0);	
+									break;
+								}
+								
+							}
+						}
 					}
 					
 					status = MemberStatus.Created;
@@ -629,6 +726,78 @@ namespace Simias.IdentitySynchronization
 		}
 
 		/// <summary>
+		/// To check whether for any of this member's group, there exists a secondary admin or not
+		/// </summary>
+		/// <param name="OldGroupList">the group list which user belonged to before deleted from e-dir</param>
+		/// <param name="AllAdministeredGroupDNs">all groups DNs which are being monitored by one secondary admin or other</param>
+		/// <returns>
+		/// true if there exists a secondary admin for this user, false otherwise
+		/// </returns>
+		public bool UsersGroupIsMonitored(string OldGroupList, ArrayList AllAdministeredGroupDNs)
+		{
+			if( OldGroupList == "" )
+				return false;
+
+			string[] UsersGroupArray = OldGroupList.Split(new char[] { ';' });
+
+			foreach(string GroupDN in AllAdministeredGroupDNs)
+			{
+				
+				if( Array.IndexOf( UsersGroupArray, GroupDN ) >= 0)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// Return all GroupIDs for which there is a secondary administrator
+		/// </summary>
+		/// <param name="UserID">userID for which check has to be done.</param>
+		/// <returns>
+		/// true if there exists a secondary admin for this user, false otherwise
+		/// </returns>
+		public ArrayList GetAllAdministeredGroupDNs()
+		{
+			// may return repeated DNs, but very less in number and no extra iteration effect in other calling functions.
+	
+			ArrayList AllAdministeredGroupDNs = new ArrayList();
+			int index = 0;
+			Member SecondaryAdmin = null;
+			string [] MonitoredGroups = null;
+			
+			ICSList members = domain.GetMembersByRights(Access.Rights.Secondary);
+			foreach(ShallowNode sn in members)
+			{
+				SecondaryAdmin = new Member(domain, sn);
+				MonitoredGroups = SecondaryAdmin.GetMonitoredGroups();
+				foreach(string MonitoredGroupID in MonitoredGroups)
+				{
+					Member GroupAsMember = domain.GetMemberByID(MonitoredGroupID);
+					Property p = GroupAsMember.Properties.GetSingleProperty( "DN" );
+					string FullDN = ( p != null ) ? p.Value as String : null;
+					if( FullDN != null )
+					{
+						AllAdministeredGroupDNs.Add(FullDN);
+					}
+				}	
+				
+			}
+			return AllAdministeredGroupDNs;
+		}
+
+		/// <summary>
+		/// Check if this property exists with the member or not
+		/// </summary>
+		public bool MemberPropExists(Member mem)
+		{
+			Property p = mem.Properties.GetSingleProperty( "TempUserGroups" );
+			return ( p != null ? true : false );
+		}		
+
+
+		/// <summary>
 		/// Method to delete the group entry from member object 
 		/// Used by UpdateMemberList method
 		/// </summary>
@@ -637,9 +806,13 @@ namespace Simias.IdentitySynchronization
 			log.Debug( " In DeleteGroupMembership: " + membersList + " , " + groupDn + ".");
 			string[] memberArray = membersList.Split(new char[] { ';' });
 
+			// Useful to decide whether we need to store the UserGroups property temporarily
+			ArrayList AllAdministeredGroupDNs = GetAllAdministeredGroupDNs();
+
                         foreach(string memberDn in memberArray)
                         {
 				Simias.Storage.Member member = null;
+				bool CreateTempUserGroups = false;
 				try
 				{
 					member = domain.GetMemberByDN( memberDn );
@@ -648,12 +821,18 @@ namespace Simias.IdentitySynchronization
 
 				if ( member != null )
 				{
-				
 					string oldGroupList = String.Empty;
 					string newGroupList = String.Empty;
 					try
 					{
 						oldGroupList = member.Properties.GetSingleProperty( "UserGroups" ).Value as string;
+
+						// If group/secondary admin exist for any of this member's groups, then store the whole UserGroups prop as temp
+						// because later when his iFolders become orphan, then we need the group admin from the group he belongs
+						// also, if this temp property was stored earlier (either during previous groupprocessing or previous LdapSync)
+						// then do not store because it will overwrite the original UserGroups entry
+
+						CreateTempUserGroups = ( !MemberPropExists( member ) && UsersGroupIsMonitored( oldGroupList, AllAdministeredGroupDNs) ) ? true : false;
 					}
 					catch{}
 					string[] oldGroupArray = oldGroupList.Split(new char[] { ';' });
@@ -667,6 +846,15 @@ namespace Simias.IdentitySynchronization
 					}
 					Property userGroups = new Property( "UserGroups", newGroupList);
 					member.Properties.ModifyProperty( userGroups );
+					
+					if( CreateTempUserGroups )
+					{
+						Property tempUserGroups = new Property( "TempUserGroups", oldGroupList);
+						tempUserGroups.ServerOnlyProperty = true;
+						member.Properties.ModifyProperty( tempUserGroups );
+						log.Debug(" DeleteGroupMembership, the old grouplist added as tempgrouplist");
+					}	
+
 					domain.Commit( member );
 				}
 				else
@@ -677,7 +865,7 @@ namespace Simias.IdentitySynchronization
 
 		/// <summary>
 		/// Method to delete the group entry from member object 
-		/// Used by UpdateMemberList method
+		/// Used by UpdateMemberList method, Take all member list of this group and remove memberDn
 		/// </summary>
 		public void DeleteUserGroupMembership(string groupList,string memberDn)
 		{
@@ -686,41 +874,45 @@ namespace Simias.IdentitySynchronization
 
                         foreach(string groupDn in groupArray)
                         {
-			if(groupDn != "")
-			{
-				Simias.Storage.Member member = null;
-				try
+				if(groupDn != "")
 				{
-					member = domain.GetMemberByDN( groupDn );
-				}
-				catch{}
-
-				if ( member != null )
-				{
-				
-					string oldMemberList = String.Empty;
-					string newMemberList = String.Empty;
+					Simias.Storage.Member member = null;
 					try
 					{
-						oldMemberList = member.Properties.GetSingleProperty( "MembersList" ).Value as string;
+						member = domain.GetMemberByDN( groupDn );
 					}
 					catch{}
-					string[] oldMemberArray = oldMemberList.Split(new char[] { ';' });
-                        		foreach(string oldMember in oldMemberArray)
-                        		{
-						if(String.Compare(memberDn, oldMember) != 0 && oldMember != "")
+					if ( member != null )
+					{
+						MultiValuedList mvl = member.Properties.GetProperties( "MembersList" );
+						if( mvl != null && mvl.Count > 0)
 						{
-							newMemberList += oldMember;
-							newMemberList += ";";
+							ArrayList entries = new ArrayList();
+							foreach( Property p in mvl )
+							{
+								if(p != null)
+									entries.Add(p.Value as string);
+							}
+							member.Properties.DeleteProperties("MembersList");
+							foreach( string memDN in entries )
+							{
+								if(memDN != null)
+									if(String.Compare(memberDn, memDN) != 0)
+									{
+										Property memberInGroup = new Property( "MembersList", memDN);
+										memberInGroup.ServerOnlyProperty = true;
+                                        					member.Properties.AddNodeProperty( memberInGroup );
+									}
+							}
 						}
+						domain.Commit( member );
 					}
-					Property groupMembers = new Property( "MembersList", newMemberList);
-					member.Properties.ModifyProperty( groupMembers );
-					domain.Commit( member );
+					else
+						log.Debug( "DeleteUserGroupMembership GetMemberByDN returned null");
 				}
-				else
-					log.Debug( "DeleteUserGroupMembership GetMemberByDN returned null");
-			}
+				//else
+				//	log.Debug( "DeleteUserGroupMembership GetMemberByDN returned null");
+			//}
 			}
 			return;
 		}
@@ -968,7 +1160,7 @@ namespace Simias.IdentitySynchronization
 		/// </summary>
 		private
 		static
-		void OrphanCollections( IdentitySynchronization.State State, Member Zombie )
+		void OrphanCollections( IdentitySynchronization.State State, Member Zombie, string [] GroupIDs )
 		{
 			string dn =	Zombie.Properties.GetSingleProperty( "DN" ).Value as string;
 			if ( dn == null || dn == "" )
@@ -976,8 +1168,11 @@ namespace Simias.IdentitySynchronization
 				dn = Zombie.Name;
 			}
 			log.Debug( "OC :  dn for deleted user is  "+dn );
+			string GroupOrphOwnerID = null;
+			bool CheckForSecondaryAdmin = true;
 
 			Store store = Store.GetStore();
+			Domain domain = store.GetDomain(store.DefaultDomain);
 			ICSList cList = store.GetCollectionsByOwner( Zombie.UserID );
 			foreach ( ShallowNode sn in cList )
 			{
@@ -993,9 +1188,51 @@ namespace Simias.IdentitySynchronization
 					Member member = c.GetMemberByID( Zombie.UserID );
 					if (member != null && member.IsOwner == true )
 					{
+						if( CheckForSecondaryAdmin = true && GroupIDs.Length > 0 ) //make sure this cond gets executed only once, even if collections change
+						{
+							// foreach group this zombie user belongs to, check if the group has a right secondary admin
+							foreach( string groupID in GroupIDs)
+							{
+								if(groupID == Zombie.UserID)
+								{
+									// zombie user should not be iterated
+									continue;
+								}
+								ICSList SecondaryAdmins = domain.GetMembersByRights(Access.Rights.Secondary);
+								foreach(ShallowNode sns in SecondaryAdmins)
+								{
+									Member SecondaryAdminMem = new Member(domain, sns);
+									long Preference = 0;
+									Preference = SecondaryAdminMem.GetPreferencesForGroup(groupID);
+									//check, if this secondary admin has rights to own Orphan iFolders of this group
+									if (Preference == 0)
+									{
+										// Secondary admin is not owner of this group, check for next sec admin
+										continue;
+									}	
+									else
+									{
+										log.Debug("The returned Preference is :"+Preference);
+										GroupOrphOwnerID = ( (Preference & (int)512) != (int)512) ? null : SecondaryAdminMem.UserID;
+										if(GroupOrphOwnerID != null)
+										{
+											break;
+										}
+									}
+								}	
+								// We want this check to be performed only once for one zombie user, so disable the check
+								// so that for other collections of same owner, it does not search same data again.
+								CheckForSecondaryAdmin = false;
+								if(GroupOrphOwnerID != null)
+								{
+									break;
+								}
+							}
+						}
 						// Don't remove an orphaned collection.
 						if ( ( member.UserID != State.SDomain.Owner.UserID ) )
 						{
+							
 							//
 							// The desired IT behavior is to orphan all collections
 							// where the zombie user is the owner of the collection.
@@ -1005,18 +1242,25 @@ namespace Simias.IdentitySynchronization
 							// the new owner.
 							//
 
+							// Adding the code so that, if zombie user is member of a group and the group has a setting
+							// so that all orphaned iFolders should be owned by groupadmin, then primary admin will not
+							// get the ownership
+
+							string SimiasAdminUserID = ( GroupOrphOwnerID == null ? State.SDomain.Owner.UserID : GroupOrphOwnerID );
+							Member SimiasAdminAsMember = domain.GetMemberByID(SimiasAdminUserID);
+
 							// Simias Admin must be a member first before ownership
 							// can be transfered
 							Member adminMember =
-								c.GetMemberByID( State.SDomain.Owner.UserID );
+								c.GetMemberByID( SimiasAdminUserID );
 							if ( adminMember == null )
 							{
 								adminMember =
 									new Member(
-											State.SDomain.Owner.Name,
-											State.SDomain.Owner.UserID,
+											SimiasAdminAsMember.Name,
+											SimiasAdminAsMember.UserID,
 											Simias.Storage.Access.Rights.Admin );
-									c.Commit( adminMember );
+								c.Commit( adminMember );
 							}
 
 							Property prevProp = new Property( "OrphanedOwner", dn );
@@ -1126,6 +1370,7 @@ namespace Simias.IdentitySynchronization
 								if ( dt.AddSeconds( Service.deleteGracePeriod ) < DateTime.Now )
 								{
 									string group = null;
+									string [] groupIDs = null;
 									try
 									{
 										group = cMember.Properties.GetSingleProperty( "GroupType" ).Value as string;
@@ -1134,16 +1379,27 @@ namespace Simias.IdentitySynchronization
 									if(group != null && group != "" && String.Compare(group.ToLower(),"global") == 0)
 									{
 										string DN = null;
-										string memberList = null;
+										string membersList = "";
 										try
 										{
 											DN = cMember.Properties.GetSingleProperty( "DN" ).Value as string;
-											memberList = cMember.Properties.GetSingleProperty( "MembersList" ).Value as string;
+											MultiValuedList mvl = cMember.Properties.GetProperties( "MembersList" );
+											if( mvl != null && mvl.Count > 0)
+											{
+												foreach( Property prop in mvl )
+												{
+													if( prop.Value != null)
+													{
+														membersList += prop.Value as string;
+														membersList += ";";
+													}
+												}
+											}
 										}
 										catch{}
-										if ( DN != null && DN != "" && memberList != null && memberList != "")
+										if ( DN != null && DN != "" && membersList != "" )
 										{
-										       State.DeleteGroupMembership(memberList,dn );
+										       State.DeleteGroupMembership(membersList, dn );
 										}
 									}	
 									else if(group != null && group != "" && String.Compare(group.ToLower(),"local") == 0)
@@ -1158,15 +1414,18 @@ namespace Simias.IdentitySynchronization
 										{
 											DN = cMember.Properties.GetSingleProperty( "DN" ).Value as string;
 											groupList = cMember.Properties.GetSingleProperty( "UserGroups" ).Value as string;
+											groupIDs = State.SDomain.GetDeletedMembersGroupList(cMember.UserID);
+											log.Debug("tmp ProcessDeletedMembers, no of groups is :"+groupIDs.Length);
 										}
-										catch{}
+										catch{log.Debug("ExceptionException!!!!");}
 										if ( DN != null && DN != "" && groupList != null && groupList != "")
 										{
 											State.DeleteUserGroupMembership(groupList,DN);
 										}
 									}
 									DeletePOBox( State, cMember );
-									OrphanCollections( State, cMember );
+									log.Debug("tmp calling OrphanCollections with groupIDs length :"+groupIDs.Length);
+									OrphanCollections( State, cMember, groupIDs );
 									RemoveMemberships( State, cMember );
 
 									// gather log info before commit
@@ -1453,11 +1712,13 @@ namespace Simias.IdentitySynchronization
 						current.Start( state );
 						current = null;
 					}
-					ProcessMembersAndGroupsLocally( state );
 					if ( state.Errors == 0 )
 					{
 						ProcessDeletedMembers( state );
 					}
+					// moving this call after ProcessDeletedMembers() because in ProcessDeletedMembers(), disabling of users will
+					// take place which will be used by ProcessMembersAndGroupsLocally..
+					ProcessMembersAndGroupsLocally( state );
 				}
 				catch( Exception ex )
 				{
@@ -1515,8 +1776,8 @@ namespace Simias.IdentitySynchronization
                                         memObject = new Member(domain, sn);
                                         if(memObject == null)
                                         {
-                                                log.Debug("ProcessMembersAndGroupsLocally : Could not form member object, returning before completion");
-                                                return;
+                                                log.Debug("ProcessMembersAndGroupsLocally : Could not form member object, Continuing with other objects");
+                                                continue;
                                         }
                                         dn = memObject.Properties.GetSingleProperty( "DN" );
                                         if(dn == null)
@@ -1557,29 +1818,55 @@ namespace Simias.IdentitySynchronization
 
                                                 // Take a fresh member object which has latest committed value
                                                 memObject = domain.GetMemberByID(memObject.UserID);
-                                                Property MemberListProp = memObject.Properties.GetSingleProperty( "MemberList" );
-                                                if(MemberListProp != null)
-                                                {
-                                                        MemList = MemberListProp.Value as string;
-                                                        if( MemList != null && MemList != String.Empty && MemList != "")
-                                                        {
-                                                                string[] MemberArray = MemList.Split(new char[] { ';' });
-                                                                foreach(string MemberDN in MemberArray)
-                                                                {
-                                                                        if(MemberDN != null && MemberDN != "")
-                                                                        {
-                                                                                Member mem = domain.GetMemberByDN(MemberDN);
-                                                                                if(mem == null)
-                                                                                {
+						try
+						{
+							MultiValuedList mvl = memObject.Properties.GetProperties( "MembersList" );
+							if(mvl != null && mvl.Count > 0)
+							{
+								foreach( Property p in mvl )
+								{
+									string memberDN = p.Value as string;
+									if(memberDN != null && memberDN != "")
+									{
+										Member mem = domain.GetMemberByDN(memberDN);
+										if(mem == null)
+										{
                                                                                         // modify group's MemberList property and remove this non-existent member DN
-                                                                                        log.Debug("Member DN {0} does not exist in the domain, so remove from Group's Memberslist",MemberDN);
+                                                                                        log.Debug("Member DN {0} does not exist in the domain, so remove from Group's Memberslist",memberDN);
                                                                                         // remove member's DN from the MemberList (its grouplist currently) 
-                                                                                        state.DeleteUserGroupMembership(MemberList, MemberDN);
-                                                                                }
-                                                                        }
-                                                                }
-                                                         }
-                                                }
+                                                                                        state.DeleteUserGroupMembership(MemberList, memberDN);
+											
+										}
+									}
+								}
+							}
+						}
+						catch{}
+
+						// during ProcessMembers, if user was removed from group (in e-dir), or removed from e-dir 
+						// then we delete the usergroups prop, but in both cases we store a tempusergroups prop... In first case
+						// it is not needed, because user is removed really from group, in second case it is required because
+						// during orphaned iFolder ownership, a policy may be there to be owned by secondary admins, so we need
+						// the groups the deleted user belonged to... so find out first case and delete the user.
+
+						// Did the sync service disable the account?
+						Property disabledAt = memObject.Properties.GetSingleProperty( disabledAtProperty );
+						if ( disabledAt == null )
+						{
+							// delete this temp prop only if user was not disabled by sync service
+							Property tempUserGroupsProp = memObject.Properties.GetSingleProperty( "TempUserGroups" );
+							if( tempUserGroupsProp != null)
+							{
+								
+								memObject.Properties.DeleteSingleProperty("TempUserGroups");
+								domain.Commit( memObject );
+								log.Debug("The user was disabled because he was removed from group (not from e-dir), so tempgrouplist prop is not useful going forward so it was deleted, For this user, disabledAt prop was null , user id :"+memObject.UserID);
+							}
+						}
+						else
+							log.Debug("The user was disabled by ldapsync (because he was deleted in e-dir), so tempgrouplist prop would not be deleted , userid :"+memObject.UserID);												
+		
+
                                         }
                                 }
 				ConvertXMLPoliciesToString(state);
