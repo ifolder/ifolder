@@ -1872,6 +1872,8 @@ namespace Novell.FormsTrayApp
                 this.titleEncrypted.Text = Resources.type + ":  " + Resources.regular;
 
             this.titleLastSyncTime.Text = Resources.lastSyncTime + ":  " + ifolderWeb.LastSyncTime;
+            this.titleServerorSize.Text = Resources.server + ":  " +
+                    simiasWebService.GetDomainInformation(ifolderWeb.DomainID).Host;
         }
 
         private void populateServeriFolderInfo(iFolderWeb ifolderWeb)
@@ -2647,7 +2649,8 @@ namespace Novell.FormsTrayApp
 			{
 				iFolderWeb ifolder = ((iFolderObject)selectedItem.Tag).iFolderWeb;
                 
-				iFolderObject ifobj = new iFolderObject(((iFolderObject)selectedItem.Tag).iFolderWeb, iFolderState.Disconnected);
+				iFolderObject ifobj = 
+                    new iFolderObject(((iFolderObject)selectedItem.Tag).iFolderWeb, iFolderState.Disconnected);
 				// Accept the iFolder.
                 result = AcceptiFolder(ifolder, out added, mergeFolder);
 				if (  result && added )
@@ -2655,9 +2658,7 @@ namespace Novell.FormsTrayApp
 					ifobj.iFolderWeb.IsSubscription = false;
 					lock (ht)
 					{
-						//MessageBox.Show("Ramesh: Removing from the tilelistview");
-						removeTileListViewItem( selectedItem );
-						//MessageBox.Show("Ramesh: Adding to list view");					
+						removeTileListViewItem( selectedItem );					
                         iFolderObject ifolderobj = new iFolderObject(ifolder, iFolderState.Initial);
                         addiFolderToListView(ifolderobj);
                         if( acceptedFolders.Contains(ifobj.iFolderWeb.ID) )
@@ -2665,9 +2666,6 @@ namespace Novell.FormsTrayApp
 						ifobj.iFolderWeb.UnManagedPath = DownloadPath;
 						TileListViewItem tlvi = new TileListViewItem(ifobj);
 						acceptedFolders.Add(ifobj.iFolderWeb.ID, tlvi);
-					//	iFolderView.Items.Add(tlvi);
-					//	ht.Add( ifobj.iFolderWeb.DomainID, tlvi);
-					//	addiFolderToAvailableListView();
                         ifolderobj = null;
                         tlvi = null;
 					}
@@ -2675,7 +2673,8 @@ namespace Novell.FormsTrayApp
 				else if( result && !added )
 				{
 					// Add syncLog message
-					syncLog.AddMessageToLog(DateTime.Now, string.Format("Download of iFolder \"{0}\" failed",ifobj.iFolderWeb.Name));
+					syncLog.AddMessageToLog(DateTime.Now, 
+                        string.Format("Download of iFolder \"{0}\" failed",ifobj.iFolderWeb.Name));
 				}
 			}
 		}
