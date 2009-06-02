@@ -409,4 +409,196 @@
   <data name="mb" xml:space="preserve">
     <value>MB</value>
   </data>
+  <data name="confirmPassphrase" xml:space="preserve">
+    <value>Confirm passphrase:</value>
+  </data>
+  <data name="back" xml:space="preserve">
+    <value>back</value>
+  </data>
+  <data name="backText" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="browseText" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="cancel" xml:space="preserve">
+    <value>cancel</value>
+  </data>
+  <data name="cancelText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="finishText" xml:space="preserve">
+    <value>Finish</value>
+  </data>
+  <data name="helpText" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="emailPageFirst" xml:space="preserve">
+    <value>The encrypted key file was successfully exported.</value>
+  </data>
+  <data name="emailPageName" xml:space="preserve">
+    <value>EmailPage</value>
+  </data>
+  <data name="emailPageSecond" xml:space="preserve">
+    <value>Send this file to the administrator who will decrypt the key file and send it back to you. You can then use the decrypted key file to reset your passphrase using the second option of the wizard.</value>
+  </data>
+  <data name="emailPageTitle" xml:space="preserve">
+    <value>Old data file sent successfully. </value>
+  </data>
+  <data name="exportPageFilePath" xml:space="preserve">
+    <value>Location to save old data file:</value>
+  </data>
+  <data name="exportPageFirst" xml:space="preserve">
+    <value>Gets the encrypted key file from the server and stores it locally.</value>
+  </data>
+  <data name="exportPageName" xml:space="preserve">
+    <value>ExportPage</value>
+  </data>
+  <data name="exportPageRA" xml:space="preserve">
+    <value>Recovery agent :</value>
+  </data>
+  <data name="exportPageTitle" xml:space="preserve">
+    <value>Obtain old data file</value>
+  </data>
+  <data name="finalPageFirst" xml:space="preserve">
+    <value>Congratulations!! You have successfully reset the passphrase.Now,you can use the new passphrase to access your data.</value>
+  </data>
+  <data name="finalPageName" xml:space="preserve">
+    <value>finalPage</value>
+  </data>
+  <data name="finalPageTitle" xml:space="preserve">
+    <value>Passphrase is reset successfully.</value>
+  </data>
+  <data name="iFolderAcc" xml:space="preserve">
+    <value>iFolder account :</value>
+  </data>
+  <data name="importErrorMesg" xml:space="preserve">
+    <value>Unable to import keys. Try again.</value>
+  </data>
+  <data name="importPageFilePathOne" xml:space="preserve">
+    <value>Location of the new data file</value>
+  </data>
+  <data name="importPageFirstLine" xml:space="preserve">
+    <value>The Passphrase is reset using the Decrypted key file.</value>
+  </data>
+  <data name="importPageName" xml:space="preserve">
+    <value>ImportPage</value>
+  </data>
+  <data name="importPageOTP" xml:space="preserve">
+    <value>One time password : </value>
+  </data>
+  <data name="infoPageName" xml:space="preserve">
+    <value>InfoPage</value>
+  </data>
+  <data name="infoPageFirst" xml:space="preserve">
+    <value>To recover a lost passphrase, you need the secret file (private key of the certificate) and the password to it or the data file from the administrator.</value>
+  </data>
+  <data name="infoPageSecond" xml:space="preserve">
+    <value>If you don't have these parameters, you can use this wizard to export the old data file, which you can mail to your administrator who will decrypt and send it back to you. You can then use this new data file to reset your passphrase.</value>
+  </data>
+  <data name="infoPageTitle" xml:space="preserve">
+    <value>Welcome to the Passphrase Recovery Wizard</value>
+  </data>
+  <data name="selectionPageFive" xml:space="preserve">
+    <value>You can exit the wizard at any step and work on subsequent steps later by using this page         </value>
+  </data>
+  <data name="selectionPageFour" xml:space="preserve">
+    <value>I have no secret file or data file.</value>
+  </data>
+  <data name="selectionPageName" xml:space="preserve">
+    <value>SelectionPage</value>
+  </data>
+  <data name="selectionPageOne" xml:space="preserve">
+    <value>Select an option to recover your passphrase.</value>
+  </data>
+  <data name="selectionPageSecond" xml:space="preserve">
+    <value>I have the secret file and the password to it</value>
+  </data>
+  <data name="selectionPageThird" xml:space="preserve">
+    <value>I have the new data file sent by the administrator.</value>
+  </data>
+  <data name="selectionPageTitle" xml:space="preserve">
+    <value>Select Passphrase Recovery step</value>
+  </data>
+  <data name="singleWizName" xml:space="preserve">
+    <value>SingleWizPage</value>
+  </data>
+  <data name="singleWizP12File" xml:space="preserve">
+    <value>Location  of secret file: </value>
+  </data>
+  <data name="singleWizPageName" xml:space="preserve">
+    <value>SingleWizPage</value>
+  </data>
+  <data name="singleWizPasswd" xml:space="preserve">
+    <value>Secret file password:</value>
+  </data>
+  <data name="setNewPassphraseTitle" xml:space="preserve">
+    <value>Set New Passphrase</value>
+  </data>
+  <data name="successPageName" xml:space="preserve">
+    <value>SuccessPage</value>
+  </data>
+  <data name="unableToExportMesg" xml:space="preserve">
+    <value>Unable to export keys.Try again</value>
+  </data>
+  <data name="wizardText" xml:space="preserve">
+    <value>Passphrase Recovery Wizard</value>
+  </data>
+  <data name="nextText" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="newPassphrase" xml:space="preserve">
+    <value>New passphrase:</value>
+  </data>
+  <data name="emailAddress" xml:space="preserve">
+    <value>Email adress:</value>
+  </data>
+  <data name="importPageEncryCheck" xml:space="preserve">
+    <value>Is the above file encrypted?</value>
+  </data>
+  <data name="wizardName" xml:space="preserve">
+    <value>passphraseRecoveryWizard</value>
+  </data>
+  <data name="domainSelectionFirst" xml:space="preserve">
+    <value>Select the account for which the passphrase needs to be reset.</value>
+  </data>
+  <data name="singleAccountText" xml:space="preserve">
+    <value>You have a single account. Click Next to proceed.</value>
+  </data>
+  <data name="verifyText" xml:space="preserve">
+    <value>Verify</value>
+  </data>
+  <data name="domainSelectionPageName" xml:space="preserve">
+    <value>domainSelectionPage</value>
+  </data>
+  <data name="domainSelectionPageTitle" xml:space="preserve">
+    <value>Select account</value>
+  </data>
+  <data name="enterPassphrasePageName" xml:space="preserve">
+    <value>enterPassphrasePage</value>
+  </data>
+  <data name="serverDefaultRA" xml:space="preserve">
+    <value>Server_Default</value>
+  </data>
+  <data name="singleWizPageFirst" xml:space="preserve">
+    <value>Passphrase is reset using the secret file and its password.</value>
+  </data>
+  <data name="next" xml:space="preserve">
+    <value>next</value>
+  </data>
+  <data name="help" xml:space="preserve">
+    <value>help</value>
+  </data>
+  <data name="loginError" xml:space="preserve">
+    <value>Unable to authenticate to the domain.You have logged out of the account. Please login and try again.</value>
+  </data>
+  <data name="recoveryError" xml:space="preserve">
+    <value>Cannot reset passphrase. You have been logged out of the account.Please login and try again.</value>
+  </data>
+  <data name="authenticateError" xml:space="preserve">
+    <value>Authentication failed</value>
+  </data>
+  <data name="resetPassphraseError" xml:space="preserve">
+    <value>Passphrase reset failed</value>
+  </data>
 </root>

@@ -106,6 +106,15 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Authentication failed.
+        /// </summary>
+        internal static string authenticateError {
+            get {
+                return ResourceManager.GetString("authenticateError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Automatic sync.
         /// </summary>
         internal static string autoSync {
@@ -151,6 +160,51 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to back.
+        /// </summary>
+        internal static string back {
+            get {
+                return ResourceManager.GetString("back", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Back.
+        /// </summary>
+        internal static string backText {
+            get {
+                return ResourceManager.GetString("backText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Browse.
+        /// </summary>
+        internal static string browseText {
+            get {
+                return ResourceManager.GetString("browseText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to cancel.
+        /// </summary>
+        internal static string cancel {
+            get {
+                return ResourceManager.GetString("cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        internal static string cancelText {
+            get {
+                return ResourceManager.GetString("cancelText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to It is not possible to share an encrypted iFolder. Only regular folders can be shared.
         /// </summary>
         internal static string cannotShareMessage {
@@ -174,6 +228,15 @@ namespace TrayApp.Properties {
         internal static string checkingForiFolders {
             get {
                 return ResourceManager.GetString("checkingForiFolders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm passphrase:.
+        /// </summary>
+        internal static string confirmPassphrase {
+            get {
+                return ResourceManager.GetString("confirmPassphrase", resourceCulture);
             }
         }
         
@@ -259,6 +322,33 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select the account for which the passphrase needs to be reset..
+        /// </summary>
+        internal static string domainSelectionFirst {
+            get {
+                return ResourceManager.GetString("domainSelectionFirst", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to domainSelectionPage.
+        /// </summary>
+        internal static string domainSelectionPageName {
+            get {
+                return ResourceManager.GetString("domainSelectionPageName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select account.
+        /// </summary>
+        internal static string domainSelectionPageTitle {
+            get {
+                return ResourceManager.GetString("domainSelectionPageTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Done checking for new iFolders.
         /// </summary>
         internal static string doneCheckingForiFolders {
@@ -286,11 +376,65 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Email adress:.
+        /// </summary>
+        internal static string emailAddress {
+            get {
+                return ResourceManager.GetString("emailAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The encrypted key file was successfully exported..
+        /// </summary>
+        internal static string emailPageFirst {
+            get {
+                return ResourceManager.GetString("emailPageFirst", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EmailPage.
+        /// </summary>
+        internal static string emailPageName {
+            get {
+                return ResourceManager.GetString("emailPageName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send this file to the administrator who will decrypt the key file and send it back to you. You can then use the decrypted key file to reset your passphrase using the second option of the wizard..
+        /// </summary>
+        internal static string emailPageSecond {
+            get {
+                return ResourceManager.GetString("emailPageSecond", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Old data file sent successfully. .
+        /// </summary>
+        internal static string emailPageTitle {
+            get {
+                return ResourceManager.GetString("emailPageTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Encrypted.
         /// </summary>
         internal static string encrypted {
             get {
                 return ResourceManager.GetString("encrypted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to enterPassphrasePage.
+        /// </summary>
+        internal static string enterPassphrasePageName {
+            get {
+                return ResourceManager.GetString("enterPassphrasePageName", resourceCulture);
             }
         }
         
@@ -322,11 +466,92 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Location to save old data file:.
+        /// </summary>
+        internal static string exportPageFilePath {
+            get {
+                return ResourceManager.GetString("exportPageFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gets the encrypted key file from the server and stores it locally..
+        /// </summary>
+        internal static string exportPageFirst {
+            get {
+                return ResourceManager.GetString("exportPageFirst", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ExportPage.
+        /// </summary>
+        internal static string exportPageName {
+            get {
+                return ResourceManager.GetString("exportPageName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recovery agent :.
+        /// </summary>
+        internal static string exportPageRA {
+            get {
+                return ResourceManager.GetString("exportPageRA", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Obtain old data file.
+        /// </summary>
+        internal static string exportPageTitle {
+            get {
+                return ResourceManager.GetString("exportPageTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Files/Folders to sync.
         /// </summary>
         internal static string filesnFolders {
             get {
                 return ResourceManager.GetString("filesnFolders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Congratulations!! You have successfully reset the passphrase.Now,you can use the new passphrase to access your data..
+        /// </summary>
+        internal static string finalPageFirst {
+            get {
+                return ResourceManager.GetString("finalPageFirst", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to finalPage.
+        /// </summary>
+        internal static string finalPageName {
+            get {
+                return ResourceManager.GetString("finalPageName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Passphrase is reset successfully..
+        /// </summary>
+        internal static string finalPageTitle {
+            get {
+                return ResourceManager.GetString("finalPageTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Finish.
+        /// </summary>
+        internal static string finishText {
+            get {
+                return ResourceManager.GetString("finishText", resourceCulture);
             }
         }
         
@@ -376,6 +601,33 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to help.
+        /// </summary>
+        internal static string help {
+            get {
+                return ResourceManager.GetString("help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Help.
+        /// </summary>
+        internal static string helpText {
+            get {
+                return ResourceManager.GetString("helpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to iFolder account :.
+        /// </summary>
+        internal static string iFolderAcc {
+            get {
+                return ResourceManager.GetString("iFolderAcc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An error was encountered while reading iFolders.
         /// </summary>
         internal static string iFolderError {
@@ -417,6 +669,96 @@ namespace TrayApp.Properties {
         internal static string iFolderRevertError {
             get {
                 return ResourceManager.GetString("iFolderRevertError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to import keys. Try again..
+        /// </summary>
+        internal static string importErrorMesg {
+            get {
+                return ResourceManager.GetString("importErrorMesg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Is the above file encrypted?.
+        /// </summary>
+        internal static string importPageEncryCheck {
+            get {
+                return ResourceManager.GetString("importPageEncryCheck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Location of the new data file.
+        /// </summary>
+        internal static string importPageFilePathOne {
+            get {
+                return ResourceManager.GetString("importPageFilePathOne", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Passphrase is reset using the Decrypted key file..
+        /// </summary>
+        internal static string importPageFirstLine {
+            get {
+                return ResourceManager.GetString("importPageFirstLine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ImportPage.
+        /// </summary>
+        internal static string importPageName {
+            get {
+                return ResourceManager.GetString("importPageName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to One time password : .
+        /// </summary>
+        internal static string importPageOTP {
+            get {
+                return ResourceManager.GetString("importPageOTP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To recover a lost passphrase, you need the secret file (private key of the certificate) and the password to it or the data file from the administrator..
+        /// </summary>
+        internal static string infoPageFirst {
+            get {
+                return ResourceManager.GetString("infoPageFirst", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to InfoPage.
+        /// </summary>
+        internal static string infoPageName {
+            get {
+                return ResourceManager.GetString("infoPageName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If you don&apos;t have these parameters, you can use this wizard to export the old data file, which you can mail to your administrator who will decrypt and send it back to you. You can then use this new data file to reset your passphrase..
+        /// </summary>
+        internal static string infoPageSecond {
+            get {
+                return ResourceManager.GetString("infoPageSecond", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Welcome to the Passphrase Recovery Wizard.
+        /// </summary>
+        internal static string infoPageTitle {
+            get {
+                return ResourceManager.GetString("infoPageTitle", resourceCulture);
             }
         }
         
@@ -484,6 +826,15 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to authenticate to the domain.You have logged out of the account. Please login and try again..
+        /// </summary>
+        internal static string loginError {
+            get {
+                return ResourceManager.GetString("loginError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Disconnect.
         /// </summary>
         internal static string logoff {
@@ -543,6 +894,33 @@ namespace TrayApp.Properties {
         internal static string networkPath {
             get {
                 return ResourceManager.GetString("networkPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New passphrase:.
+        /// </summary>
+        internal static string newPassphrase {
+            get {
+                return ResourceManager.GetString("newPassphrase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to next.
+        /// </summary>
+        internal static string next {
+            get {
+                return ResourceManager.GetString("next", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next.
+        /// </summary>
+        internal static string nextText {
+            get {
+                return ResourceManager.GetString("nextText", resourceCulture);
             }
         }
         
@@ -655,6 +1033,15 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot reset passphrase. You have been logged out of the account.Please login and try again..
+        /// </summary>
+        internal static string recoveryError {
+            get {
+                return ResourceManager.GetString("recoveryError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Regular.
         /// </summary>
         internal static string regular {
@@ -700,11 +1087,83 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Passphrase reset failed.
+        /// </summary>
+        internal static string resetPassphraseError {
+            get {
+                return ResourceManager.GetString("resetPassphraseError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to iFolder Revert Error.
         /// </summary>
         internal static string revertErrorTitle {
             get {
                 return ResourceManager.GetString("revertErrorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can exit the wizard at any step and work on subsequent steps later by using this page         .
+        /// </summary>
+        internal static string selectionPageFive {
+            get {
+                return ResourceManager.GetString("selectionPageFive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to I have no secret file or data file..
+        /// </summary>
+        internal static string selectionPageFour {
+            get {
+                return ResourceManager.GetString("selectionPageFour", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SelectionPage.
+        /// </summary>
+        internal static string selectionPageName {
+            get {
+                return ResourceManager.GetString("selectionPageName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select an option to recover your passphrase..
+        /// </summary>
+        internal static string selectionPageOne {
+            get {
+                return ResourceManager.GetString("selectionPageOne", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to I have the secret file and the password to it.
+        /// </summary>
+        internal static string selectionPageSecond {
+            get {
+                return ResourceManager.GetString("selectionPageSecond", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to I have the new data file sent by the administrator..
+        /// </summary>
+        internal static string selectionPageThird {
+            get {
+                return ResourceManager.GetString("selectionPageThird", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Passphrase Recovery step.
+        /// </summary>
+        internal static string selectionPageTitle {
+            get {
+                return ResourceManager.GetString("selectionPageTitle", resourceCulture);
             }
         }
         
@@ -718,11 +1177,83 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Server_Default.
+        /// </summary>
+        internal static string serverDefaultRA {
+            get {
+                return ResourceManager.GetString("serverDefaultRA", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set New Passphrase.
+        /// </summary>
+        internal static string setNewPassphraseTitle {
+            get {
+                return ResourceManager.GetString("setNewPassphraseTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hide available iFolders.
         /// </summary>
         internal static string showiFolders {
             get {
                 return ResourceManager.GetString("showiFolders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have a single account. Click Next to proceed..
+        /// </summary>
+        internal static string singleAccountText {
+            get {
+                return ResourceManager.GetString("singleAccountText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SingleWizPage.
+        /// </summary>
+        internal static string singleWizName {
+            get {
+                return ResourceManager.GetString("singleWizName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Location  of secret file: .
+        /// </summary>
+        internal static string singleWizP12File {
+            get {
+                return ResourceManager.GetString("singleWizP12File", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Passphrase is reset using the secret file and its password..
+        /// </summary>
+        internal static string singleWizPageFirst {
+            get {
+                return ResourceManager.GetString("singleWizPageFirst", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SingleWizPage.
+        /// </summary>
+        internal static string singleWizPageName {
+            get {
+                return ResourceManager.GetString("singleWizPageName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Secret file password:.
+        /// </summary>
+        internal static string singleWizPasswd {
+            get {
+                return ResourceManager.GetString("singleWizPasswd", resourceCulture);
             }
         }
         
@@ -786,6 +1317,15 @@ namespace TrayApp.Properties {
         internal static string statusUnknown {
             get {
                 return ResourceManager.GetString("statusUnknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SuccessPage.
+        /// </summary>
+        internal static string successPageName {
+            get {
+                return ResourceManager.GetString("successPageName", resourceCulture);
             }
         }
         
@@ -871,6 +1411,15 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to export keys.Try again.
+        /// </summary>
+        internal static string unableToExportMesg {
+            get {
+                return ResourceManager.GetString("unableToExportMesg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Uploading directory: {0}.
         /// </summary>
         internal static string uploadDir {
@@ -907,6 +1456,15 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Verify.
+        /// </summary>
+        internal static string verifyText {
+            get {
+                return ResourceManager.GetString("verifyText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to View available iFolders.
         /// </summary>
         internal static string viewAvailableiFolders {
@@ -930,6 +1488,24 @@ namespace TrayApp.Properties {
         internal static string WaitSync {
             get {
                 return ResourceManager.GetString("WaitSync", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to passphraseRecoveryWizard.
+        /// </summary>
+        internal static string wizardName {
+            get {
+                return ResourceManager.GetString("wizardName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Passphrase Recovery Wizard.
+        /// </summary>
+        internal static string wizardText {
+            get {
+                return ResourceManager.GetString("wizardText", resourceCulture);
             }
         }
     }

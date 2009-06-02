@@ -47,6 +47,7 @@ using Novell.iFolder.Web;
 using System.Reflection;
 using TrayApp.Properties;
 using Simias.Client.Authentication;
+using Novell.Wizard;
 
 namespace Novell.FormsTrayApp
 {
@@ -292,10 +293,8 @@ namespace Novell.FormsTrayApp
 
                         this.menuRecoverKeys.Visible = false;
                         this.menuRecoverKeys = menuSecurity.MenuItems.Find("iMenuRecoverKeys", true)[0];
-                        this.menuRecoverKeys.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-																							 this.menuExportKeys,
-																							 this.menuImportKeys
-																						 });
+                        this.menuRecoverKeys.Click += new System.EventHandler(menuRecoverKeys_Click);
+
                         this.menuResetPassphrase.Visible = false;
                         this.menuResetPassphrase = menuSecurity.MenuItems.Find("iMenuResetPassphrase", true)[0];
                         this.menuResetPassphrase.Click += new System.EventHandler(menuResetPassphrase_Select);
@@ -3409,6 +3408,25 @@ namespace Novell.FormsTrayApp
             }
 
             return String.Format("{0}{1}", Math.Round(tempsize,0), modifier);
+        }
+
+        private void menuRecoverKeys_Click(object sender, EventArgs e)
+        {
+            KeyRecoveryWizard kr = new KeyRecoveryWizard(this.ifWebService, this.simiasWebService, this.simiasManager);
+            if (kr.GetLoggedInDomains() == true)
+                kr.ShowDialog();
+
+            else
+            {
+
+                System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(FormsTrayApp));
+                Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(Resource.GetString("NoLoggedInDomainsText")/*"There are no logged-in domains for changing passphrase. For changing passphrase the domain should be connected. Log on to a domain and try."*/, Resource.GetString("ResetError")/*"Reset passphrase error"*/, "", MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+                mmb.ShowDialog();
+                mmb.Dispose();
+            }
+                           
+
+
         }
 	}
 }

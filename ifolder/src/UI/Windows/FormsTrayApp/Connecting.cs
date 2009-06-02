@@ -83,6 +83,7 @@ namespace Novell.FormsTrayApp
 		private bool CertAcceptedCond1 = false;
 		private bool CertAcceptedCond2 = false;
 		private ArrayList ServersForCertStore = new ArrayList();
+        private bool verifyPrompt = false;           //Required for the wizard
 
 		/// <summary>
 		/// Required designer variable.
@@ -100,7 +101,14 @@ namespace Novell.FormsTrayApp
 			InitializeMigrationComponent();
             this.autoAccountEnabled = false;
 		}
-			
+
+
+       /* public Connecting(iFolderWebService ifws, SimiasWebService simiasWebService, Manager simiasManager, DomainInformation domainInfo, string password, bool rememberPassword, bool loginPrompt) :
+            this(ifws, simiasWebService, simiasManager, domainInfo, password)
+        {
+            this.loginPrompt = false;
+        }*/
+        
         /// <summary>
         /// Constructor
         /// </summary>
@@ -140,6 +148,13 @@ namespace Novell.FormsTrayApp
             this.autoAccountEnabled = false;
 		}
 
+        public Connecting(iFolderWebService ifws, SimiasWebService simiasWebService, Manager simiasManager, DomainInformation domainInfo, string password, bool rememberPassword,bool verifyPrompt) :
+            this(ifws, simiasWebService, simiasManager, domainInfo, password,rememberPassword)
+
+        {
+            this.verifyPrompt = verifyPrompt;
+        }
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -162,12 +177,22 @@ namespace Novell.FormsTrayApp
         /// <param name="simiasWebService">SimiasWebService</param>
         /// <param name="simiasManager">SimiasClient Manager</param>
         /// <param name="domainInfo">Domain Information</param>
-		public Connecting( iFolderWebService ifws, SimiasWebService simiasWebService, Manager simiasManager, DomainInformation domainInfo ) :
+        public Connecting(iFolderWebService ifws, SimiasWebService simiasWebService, Manager simiasManager, DomainInformation domainInfo) :
 			this( ifws, simiasWebService, simiasManager, domainInfo, null )
 		{
             this.autoAccountEnabled = false;
+
 		}
 
+
+        public Connecting(iFolderWebService ifws, SimiasWebService simiasWebService, Manager simiasManager, DomainInformation domainInfo, bool verifyPrompt) :
+            this(ifws, simiasWebService, simiasManager, domainInfo, null)
+        {
+
+            this.verifyPrompt = verifyPrompt;
+        }
+
+            
         /// <summary>
         /// Constructor
         /// </summary>
@@ -198,6 +223,8 @@ namespace Novell.FormsTrayApp
             displayMessageDelegate = new DisplayMessageDelegate(displayMessage);
             
         }
+
+      
 
         /// <summary>
         /// Constructor
@@ -434,6 +461,8 @@ namespace Novell.FormsTrayApp
 					null);
 
 				Status status = domainAuth.Authenticate(simiasManager.WebServiceUri, simiasManager.DataPath);
+               /* if(loginPrompt == true)
+                    status.statusCode = StatusCodes.Unknown;*/
 				switch (status.statusCode)
 				{
 					case StatusCodes.InvalidCertificate:
@@ -563,7 +592,8 @@ namespace Novell.FormsTrayApp
                 
 			}
             
-            if (connectResult)
+
+            if (connectResult && (verifyPrompt ==false))
             {
                 try
                 {
@@ -600,7 +630,7 @@ namespace Novell.FormsTrayApp
 			/*
 			 *	Add  code here for showing passphrase dialogs depending on I/P;
 			 */
-			if( connectResult)
+			if( connectResult && (verifyPrompt == false))
 			{
 				// Check which dialog to display.
 				/*	if passphrase is not set show verify dialog. else check for remember option 
@@ -678,7 +708,7 @@ namespace Novell.FormsTrayApp
 				{
 					// Passphrase not set
 				//	MessageBox.Show("Showing Enter passphrase dialog", "passphrase");
-					EnterPassphraseDialog enterPassPhrase= new EnterPassphraseDialog(this.domainInfo.ID, this.simiasWebService);
+					EnterPassphraseDialog enterPassPhrase= new EnterPassphraseDialog(this.domainInfo.ID, this.simiasWebService, this.ifWebService);
 					enterPassPhrase.ShowDialog();
 					passPhraseStatus = enterPassPhrase.PassphraseStatus;
 				}

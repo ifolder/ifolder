@@ -1,7 +1,7 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{8EFF791C-2C5B-42BC-B0C5-851FD2B6BE72}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -252,6 +252,67 @@
     </Compile>
     <Compile Include="ItemSelectedEventArgs.cs">
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="KeyRecovery\DomainSelectionPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="KeyRecovery\DomainSelectionPage.Designer.cs">
+      <DependentUpon>DomainSelectionPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeyRecovery\EmailPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="KeyRecovery\EmailPage.Designer.cs">
+      <DependentUpon>EmailPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeyRecovery\EnterPassphrasePage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="KeyRecovery\EnterPassphrasePage.Designer.cs">
+      <DependentUpon>EnterPassphrasePage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeyRecovery\ExportKeyPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="KeyRecovery\ExportKeyPage.Designer.cs">
+      <DependentUpon>ExportKeyPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeyRecovery\FinalPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="KeyRecovery\FinalPage.Designer.cs">
+      <DependentUpon>FinalPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeyRecovery\ImportKeyPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="KeyRecovery\ImportKeyPage.Designer.cs">
+      <DependentUpon>ImportKeyPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeyRecovery\InfoPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="KeyRecovery\InfoPage.Designer.cs">
+      <DependentUpon>InfoPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeyRecovery\Inner_keyRecovery.cs" />
+    <Compile Include="KeyRecovery\KeyRecoveryWizard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KeyRecovery\KeyRecoveryWizard.Designer.cs">
+      <DependentUpon>KeyRecoveryWizard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeyRecovery\SelectionPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="KeyRecovery\SelectionPage.Designer.cs">
+      <DependentUpon>SelectionPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeyRecovery\SinglePageWizard.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="KeyRecovery\SinglePageWizard.Designer.cs">
+      <DependentUpon>SinglePageWizard.cs</DependentUpon>
     </Compile>
     <Compile Include="MigrationWindow.cs">
       <SubType>Form</SubType>
@@ -1405,6 +1466,46 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ImportKeysDialog.zh-TW.resx">
       <DependentUpon>ImportKeysDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeyRecovery\DomainSelectionPage.resx">
+      <DependentUpon>DomainSelectionPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeyRecovery\EmailPage.resx">
+      <DependentUpon>EmailPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeyRecovery\EnterPassphrasePage.resx">
+      <DependentUpon>EnterPassphrasePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeyRecovery\ExportKeyPage.resx">
+      <DependentUpon>ExportKeyPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeyRecovery\FinalPage.resx">
+      <DependentUpon>FinalPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeyRecovery\ImportKeyPage.resx">
+      <DependentUpon>ImportKeyPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeyRecovery\InfoPage.resx">
+      <DependentUpon>InfoPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeyRecovery\KeyRecoveryWizard.resx">
+      <DependentUpon>KeyRecoveryWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeyRecovery\SelectionPage.resx">
+      <DependentUpon>SelectionPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeyRecovery\SinglePageWizard.resx">
+      <DependentUpon>SinglePageWizard.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationWindow.cs.resx">
