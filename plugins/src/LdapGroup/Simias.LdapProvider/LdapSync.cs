@@ -155,18 +155,23 @@ namespace Simias.LdapProvider
 				}
 				catch( SimiasShutdownException s )
 				{
+					log.Error( "ProcessSearchObjects SimiasShutdownException" );
 					log.Error( s.Message );
 					throw s;
 				}
 				catch ( LdapException e )
 				{
+					log.Error( "ProcessSearchObjects LdapException" );
 					log.Error( e.LdapErrorMessage );
 					log.Error( e.StackTrace );
+					throw e;
 				}
 				catch ( Exception e )
 				{
+					log.Error( "ProcessSearchObjects Exception" );
 					log.Error( e.Message );
 					log.Error( e.StackTrace );
+					throw e;
 				}
 			}
 		}
