@@ -96,6 +96,8 @@ namespace Novell.FormsTrayApp
 		/// <summary>
 		/// Constructs a ServerDetails object.
 		/// </summary>
+		/// <param name="ifolderWebService">The iFolderWebService object to use.</param>
+		/// <param name="domain">The server to provide details for.</param>
 		public ServerDetails(SimiasWebService simiasWebService, iFolderWebService ifolderWebService, Domain domain)
 		{
 			//
@@ -1152,7 +1154,7 @@ namespace Novell.FormsTrayApp
 					usedSpace.Text = "";
 				}
 
-				if (diskSpace.Limit != 0)
+				if (diskSpace.Limit != -1)
 				{
 					usedSpaceUnits.Text = freeSpaceUnits.Text = totalSpaceUnits.Text = 
 						resourceManager.GetString("freeSpaceUnits.Text");

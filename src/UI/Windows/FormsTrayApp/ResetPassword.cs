@@ -600,6 +600,7 @@ namespace Novell.FormsTrayApp
                     {
                         this.simiasWebservice.SetDomainCredentials(domainid, null, CredentialType.None);
                     }
+		    this.simiasWebservice.LogoutFromRemoteDomain(domainid);
                 }
                 catch { }
                 title = resources.GetString("ResetPasswordTitle");
