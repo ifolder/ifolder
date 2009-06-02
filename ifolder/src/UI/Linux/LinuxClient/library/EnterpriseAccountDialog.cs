@@ -600,7 +600,7 @@ namespace Novell.iFolder
 			{
 				int tmpValue;
 
-				if(ds.Limit == 0)
+				if(ds.Limit == -1)
 				{
 					QuotaTotalLabel.Text = Util.GS("N/A");
 				}

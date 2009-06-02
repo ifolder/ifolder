@@ -3500,9 +3500,9 @@ msgstr ""
 "Change password"
 
 msgid ""
-"Successfully changed the password."
+"Successfully changed the password. Log on to the domain with new password."
 msgstr ""
-"Successfully changed the password."
+"Successfully changed the password. Log on to the domain with new password."
 
 msgid ""
 "Current password"
