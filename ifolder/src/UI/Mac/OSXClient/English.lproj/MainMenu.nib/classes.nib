@@ -23,6 +23,7 @@
                 changePassword = id; 
                 deleteiFolder = id; 
                 exportKeys = id; 
+                forgotPassphrase = id; 
                 importKeys = id; 
                 mergeiFolder = id; 
                 myAction = id; 

@@ -31,6 +31,7 @@ n dialog after resetting PP
 *                 $Modified by: Satyam <ssutapalli@novell.com>  09/09/2008     Added new function for calling IsPassPhraseSet from Simias
 *                 $Modified by: Satyam <ssutapalli@novell.com>	18/09/2008     Commented the code which uses poBoxID of a domain
 *                 $Modified by: Satyam <ssutapalli@novell.com>	02/12/2008     Handling the UI refresh timer in "refresh" method than in menu event, returning valid value in createiFolder after checking the limit policy status
+*                 $Modified by: Satyam <ssutapalli@novell.com>  02/06/2009     Added new functions required for Forgot PP dialog
 *-----------------------------------------------------------------------------
 * This module is used to:
 *        <Description of the functionality of the file >
@@ -1204,9 +1205,9 @@ static iFolderData *sharedInstance = nil;
 {
 	NSString* recAgent = @"";
 	NSString* publicKey = @"";
-	if(![raName isEqualToString:NSLocalizedString(@"None",@"None Text")])
+	if(![raName isEqualToString:NSLocalizedString(@"Server_Default",@"Server_Default encrypt RA")])
 	{
-		recAgent = raName;
+		//recAgent = raName;
 		@try
 		{
 			publicKey = [simiasService GetPublicKey:domainID forRecoveryAgent:raName];
@@ -1216,12 +1217,17 @@ static iFolderData *sharedInstance = nil;
 				ifexconlog(@"GetPublicKey", ex);
 		}		
 	}
-		
+	else
+	{
+		iFolderDomain *domainInfo = [simiasService GetDomainInformation:domainID];
+		publicKey = [self getDefaultServerPublicKey:domainID forUser:[domainInfo userID]];
+		raName = @"DEFAULT";
+	}
 	
 	int resetPassPhraseStatus;
 	@try
 	{
-		AuthStatus* authStatus = [simiasService ReSetPassPhrase:domainID oldPassPhrase:oldPP passPhrase:newPP withRAName:recAgent andPublicKey:publicKey];
+		AuthStatus* authStatus = [simiasService ReSetPassPhrase:domainID oldPassPhrase:oldPP passPhrase:newPP withRAName:raName andPublicKey:publicKey];
 		
 		resetPassPhraseStatus = [[authStatus statusCode] intValue];
 	}
@@ -1253,6 +1259,21 @@ static iFolderData *sharedInstance = nil;
 	return NO;
 }
 
+-(AuthStatus*)loginToRemoteDomain:(NSString*)domainID usingPassword:(NSString*)password
+{
+	return [simiasService LoginToRemoteDomain:domainID usingPassword:password];
+}
+
+-(AuthStatus *)logoutFromRemoteDomain:(NSString *)domainID
+{
+	return [simiasService LogoutFromRemoteDomain:domainID];
+}
+
+-(iFolderDomain*)connectToDomain:(NSString *)UserName usingPassword:(NSString *)Password andHost:(NSString *)Host
+{
+	return [simiasService ConnectToDomain:UserName usingPassword:Password andHost:Host];
+}
+
 -(void)clearPassPhrase: (NSString*)domainID
 {
 	[simiasService StorePassPhrase:domainID PassPhrase:@"" Type:None andRememberPP:NO];	
@@ -1271,6 +1292,18 @@ static iFolderData *sharedInstance = nil;
 -(void)resolveEnhancedFileConflict:(NSString*)ifolderID havingConflictID:(NSString*)conflictID hasLocalChange:(BOOL)localOnly withConflictBinPath:(NSString*)conflictBinPath
 {
 	[ifolderService ResolveEnhancedFileConflict:ifolderID havingConflictID:conflictID hasLocalChange:localOnly withConflictBinPath:conflictBinPath];		
+}
+
+-(NSString*)getDefaultServerPublicKey:(NSString*)domainID forUser:(NSString*)userID
+{
+	return [ifolderService GetDefaultServerPublicKey:domainID forUser:userID];
+}
+
+-(void) exportRecoverImport:(NSString*)domainID forUser:(NSString*)userID withPassphrase:(NSString*)newPP
+{
+	NSLog(@"Before calling export recover");
+	[simiasService ExportRecoverImport:domainID forUser:userID withPassphrase:newPP];
+	NSLog(@"After calling export recover");
 }
 
 -(BOOL)createDirectoriesRecurssively:(NSString*)path

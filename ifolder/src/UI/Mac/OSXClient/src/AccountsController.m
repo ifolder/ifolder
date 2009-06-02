@@ -21,10 +21,11 @@
 *-----------------------------------------------------------------------------
 *
 *                 $Author: Calvin Gaisford <cgaisford@novell.com>
-*                 $Modified by: Satyam <ssutapalli@novell.com>	01/02/2007	Validating spaces in host and username when account creation
+*                 $Modified by: Satyam <ssutapalli@novell.com>	01/02/2007  Validating spaces in host and username when account creation
 *                 $Modified by: Satyam <ssutapalli@novell.com>  20/03/2008  Updated code related to set "Default Domain"
 *                 $Modified by: Satyam <ssutapalli@novell.com>  10/04/2008  Added DefaultiFolder functionality
 *                 $Modified by: Satyam <ssutapalli@novell.com>  23/09/2008  Setting the host details to get new certificate when user is moved to a different server 
+*                 $Modified by: Satyam <ssutapalli@novell.com>  02/06/2009  Changed the strings according to HF recommendations
 *-----------------------------------------------------------------------------
 * This module is used to:
 *        <Description of the functionality of the file >
@@ -283,7 +284,7 @@
 					NSBeginAlertSheet(NSLocalizedString(@"The server specified can not be located", @"Error dialog message when domain is unknown"), 
 					NSLocalizedString(@"OK", @"Error dialog button when domain is unknown"), nil, nil, 
 					parentWindow, nil, nil, nil, nil, 
-					NSLocalizedString(@"Please verify the information entered and try again.  If the problem persists, please contact your network administrator.", @"Error dialog details when domain is unknown"));
+					NSLocalizedString(@"Verify the information entered by you and try again. If the problem still persists, contact your network administrator.", @"Error dialog details when domain is unknown"));
 					break;
 				}
 				case ns1__StatusCodes__InternalException:		// InternalException
@@ -295,7 +296,7 @@
 					NSBeginAlertSheet(NSLocalizedString(@"An error was encountered while connecting to the iFolder server", @"General error dialog message for login"), 
 					NSLocalizedString(@"OK", @"General error dialog button for login"), nil, nil, 
 					parentWindow, nil, nil, nil, nil, 
-					NSLocalizedString(@"Please verify the information entered and try again.  If the problem persists, please contact your network administrator.", @"General error dialog details for login"));
+					NSLocalizedString(@"Verify the information entered by you and try again. If the problem still persists, contact your network administrator.", @"General error dialog details for login"));
 					break;
 				}
 				case ns1__StatusCodes__UserAlreadyMoved:
@@ -313,7 +314,7 @@
 			NSBeginAlertSheet(NSLocalizedString(@"An error was encountered while connecting to the iFolder server", @"Exception error dialog message for login"), 
 			NSLocalizedString(@"OK", @"Exception error button title for login"), nil, nil, 
 			parentWindow, nil, nil, nil, nil, 
-			NSLocalizedString(@"Please verify the information entered and try again.  If the problem persists, please contact your network administrator.", @"Exception error dialog details for login"));
+			NSLocalizedString(@"Verify the information entered by you and try again. If the problem still persists, contact your network administrator.", @"Exception error dialog details for login"));
 		}
 	}
 }
@@ -545,7 +546,7 @@
 					NSBeginAlertSheet(NSLocalizedString(@"The server specified can not be located", @"Error dialog message when domain is unknown"), 
 					NSLocalizedString(@"OK", @"Error dialog button when domain is unknown"), nil, nil, 
 					parentWindow, nil, nil, nil, nil, 
-					NSLocalizedString(@"Please verify the information entered and try again.  If the problem persists, please contact your network administrator.", @"Error dialog details when domain is unknown"));
+					NSLocalizedString(@"Verify the information entered by you and try again. If the problem still persists, contact your network administrator.", @"Error dialog details when domain is unknown"));
 					break;
 				}
 				case ns1__StatusCodes__InternalException:		// InternalException
@@ -557,7 +558,7 @@
 					NSBeginAlertSheet(NSLocalizedString(@"An error was encountered while connecting to the iFolder server", @"General error dialog message for login"), 
 					NSLocalizedString(@"OK", @"General error dialog button for login"), nil, nil, 
 					parentWindow, nil, nil, nil, nil, 
-					NSLocalizedString(@"Please verify the information entered and try again.  If the problem persists, please contact your network administrator.", @"General error dialog details for login"));
+					NSLocalizedString(@"Verify the information entered by you and try again. If the problem still persists, contact your network administrator.", @"General error dialog details for login"));
 					break;
 				}
 			}
@@ -577,7 +578,7 @@
 				NSBeginAlertSheet(NSLocalizedString(@"An error was encountered while connecting to the iFolder server", @"Exception error message for login"), 
 				NSLocalizedString(@"OK", @"Exception error button title for login"), nil, nil, 
 				parentWindow, nil, nil, nil, nil, 
-				NSLocalizedString(@"Please verify the information entered and try again.  If the problem persists, please contact your network administrator.", @"Exception error dialog details for login"));
+				NSLocalizedString(@"Verify the information entered by you and try again. If the problem still persists, contact your network administrator.", @"Exception error dialog details for login"));
 			}
 		}
 	}

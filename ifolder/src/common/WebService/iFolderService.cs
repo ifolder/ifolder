@@ -2874,26 +2874,41 @@ namespace Novell.iFolder.Web
 			Console.WriteLine("RunClientUpdate web service called");
 			return Novell.iFolder.Install.ClientUpgrade.RunUpdate(domainID, path);
 		}
-        /// <summary>
-        /// Gets the updated client application and runs the installation program.
-        /// Note: This call will return before the application is updated.
-        /// </summary>
-        /// <param name="domainID">The ID of the domain to check for updates against.</param>
-        /// <returns>True if the installation program is successfully started. Otherwise false is returned.</returns>
-        [WebMethod(EnableSession = true, Description = "Run the client update")]
-        [SoapDocumentMethod]
-        public int ChangePassword(string domainid, string oldpassword, string newpassword)
-        {
-            int retval = -1;
-            try
-            {
-                Simias.Storage.Store store = Simias.Storage.Store.GetStore();
-                Domain domain = store.GetDomain(domainid);
-                Member member = domain.GetCurrentMember();
-                retval = member.ChangePassword(oldpassword, newpassword);
-            }
-            catch { }
-            return retval;
-        }
+
+	        /// <summary>
+        	/// Gets the updated client application and runs the installation program.
+	        /// Note: This call will return before the application is updated.
+        	/// </summary>
+	        /// <param name="domainID">The ID of the domain to check for updates against.</param>
+        	/// <returns>True if the installation program is successfully started. Otherwise false is returned.</returns>
+	        [WebMethod(EnableSession = true, Description = "Run the client update")]
+        	[SoapDocumentMethod]
+	        public int ChangePassword(string domainid, string oldpassword, string newpassword)
+        	{
+	            int retval = -1;
+        	    try
+	            {
+        	        Simias.Storage.Store store = Simias.Storage.Store.GetStore();
+                	Domain domain = store.GetDomain(domainid);
+	                Member member = domain.GetCurrentMember();
+        	        retval = member.ChangePassword(oldpassword, newpassword);
+       		    }
+	            catch { }
+        	    return retval;
+	        }
+
+		/// <summary>
+		/// Gets the default public key for the domain - used for iFolder encryption.
+		/// </summary>
+		/// <param name="DomainID">The ID of the domain to get the Default public key .</param>
+		/// <param name="UserID">The ID of the user in the specified domain</param>
+		/// <returns>The default public key of the domain otherwise null.</returns>
+		[WebMethod(EnableSession = true, Description = "Gets the Default public key for iFolder key encryption")]
+		[SoapDocumentMethod]
+		//public string GetDefaultPublicKey(string DomainID, string UserID)
+		public string GetDefaultServerPublicKey(string DomainID, string UserID)
+		{
+			return SharedCollection.GetDefaultPublicKey(DomainID, UserID);
+		}
 	}
 }
