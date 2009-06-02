@@ -1169,6 +1169,60 @@ namespace Novell.iFolder
 			return false;
 		}
 
+		/// <summary>
+                /// Size Format Index
+                /// </summary>
+                private enum Index
+                {
+                        B = 0,
+                        KB = 1,
+                        MB = 2,
+                        GB = 3
+                }
+
+		private string GetFriendlySize(long size)
+		{
+			const int K = 1024;
+
+                        string modifier = "";
+
+                        double temp;
+                        double tempsize = (double) size;
+                        int index = 0;
+
+                        // adjust
+                        while((index < (int)Index.GB) && ((temp = ((double)tempsize / (double)K)) > 1))
+                        {
+                                ++index;
+                                tempsize = temp;
+                        }
+                        // modifier
+			switch((Index)index)
+                        {
+                                        // B
+                                case Index.B:
+                                        modifier = Util.GS("B");
+                                        break;
+
+                                        // KB
+                                case Index.KB:
+                                        modifier = Util.GS("KB");
+                                        break;
+
+                                        // MB
+                                case Index.MB:
+                                        modifier = Util.GS("MB");
+                                        break;
+
+                                        // GB
+                                case Index.GB:
+                                        modifier = Util.GS("GB");
+                                        break;
+                        }
+
+                        return String.Format("{0:N1} {1}", tempsize, modifier);
+		}
+
 		private void UpdateListViewItems()
 		{
 			Gdk.Pixbuf ServerImg = new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png"));
@@ -1184,7 +1238,7 @@ namespace Novell.iFolder
                                 	iFolderHolder holder = (iFolderHolder)(iFolderFilter).GetValue(iter, 0);
                                 	if (holder != null)
                                 	{
-                                        	viewstore.AppendValues(holder.iFolder.IsSubscription?ServerImg:DownloadedImg,holder.iFolder.Name,holder.iFolder.Owner,(domainController.GetDomain(holder.iFolder.DomainID)).Name, holder.StateString, holder);
+                                        	viewstore.AppendValues(holder.iFolder.IsSubscription?ServerImg:DownloadedImg,holder.iFolder.Name,GetFriendlySize(holder.iFolder.iFolderSize),(domainController.GetDomain(holder.iFolder.DomainID)).Name, holder.StateString, holder);
                                 	}
 				}
 				catch(Exception ex)
