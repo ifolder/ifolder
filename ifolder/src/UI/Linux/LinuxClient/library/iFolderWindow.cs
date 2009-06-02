@@ -672,7 +672,7 @@ namespace Novell.iFolder
 			buttonText.UseMarkup = true;
 			buttonText.UseUnderline = false;
 			buttonText.Xalign = 0;
-			AddiFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-upload48.png")));
+			AddiFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png")));
 			
 			AddiFolderButton.Clicked +=
 				new EventHandler(AddiFolderHandler);
@@ -743,11 +743,11 @@ namespace Novell.iFolder
 			buttonText.UseUnderline = false;
 			buttonText.Xalign = 0;
 			
-			ResolveConflictsButton.Visible	= false;
-			ResolveConflictsButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("encrypt-ilock-48.png")));
+			ResolveConflictsButton.Sensitive = false;
+			ResolveConflictsButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("conflict3_48.png")));
 			ResolveConflictsButton.Clicked +=
 				new EventHandler(OnResolveConflicts);
-			buttontips.SetTip(ResolveConflictsButton, Util.GS("Resolve Conflicts"),"");	
+			buttontips.SetTip(ResolveConflictsButton, Util.GS("Resolve conflicts"),"");	
 
 			///
 			/// SynchronizeNowButton
@@ -765,8 +765,8 @@ namespace Novell.iFolder
 			buttonText.UseUnderline = false;
 			buttonText.Xalign = 0;
 
-			SynchronizeNowButton.Visible	= false;
-		    SynchronizeNowButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-sync48.png")));
+			SynchronizeNowButton.Sensitive = false;
+		    SynchronizeNowButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder_sync48.png")));
 			SynchronizeNowButton.Clicked +=
 				new EventHandler(OnSynchronizeNow);
 			buttontips.SetTip(SynchronizeNowButton, Util.GS("Synchronize Now"),"");	
@@ -788,8 +788,8 @@ namespace Novell.iFolder
 			buttonText.UseUnderline = false;
 			buttonText.Xalign = 0;
 
-			ShareSynchronizedFolderButton.Visible	= false;
-		    ShareSynchronizedFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder_dis2_48.png")));
+			ShareSynchronizedFolderButton.Sensitive= false;
+		    ShareSynchronizedFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder_share48.png")));
 			ShareSynchronizedFolderButton.Clicked +=
 				new EventHandler(OnShareSynchronizedFolder);
 			buttontips.SetTip(ShareSynchronizedFolderButton, Util.GS("Share with"),"");	
@@ -811,8 +811,8 @@ namespace Novell.iFolder
 			buttonText.UseUnderline = false;
 			buttonText.Xalign = 0;
 
-			RemoveiFolderButton.Visible	= false;
-			RemoveiFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-error48.png")));
+			RemoveiFolderButton.Sensitive = false;
+			RemoveiFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder_revert03_48.png")));
 			RemoveiFolderButton.Clicked +=
 				new EventHandler(RemoveiFolderHandler);
 			buttontips.SetTip(RemoveiFolderButton, Util.GS("Revert to a Normal Folder"),"");	
@@ -857,8 +857,8 @@ namespace Novell.iFolder
 			buttonText.UseUnderline = false;
 			buttonText.Xalign = 0;
 
-			DownloadAvailableiFolderButton.Visible	= false;
-			DownloadAvailableiFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-download48.png")));
+			DownloadAvailableiFolderButton.Sensitive = false;
+			DownloadAvailableiFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder_download48.png")));
 			DownloadAvailableiFolderButton.Clicked +=
 				new EventHandler(DownloadAvailableiFolderHandler);
 			buttontips.SetTip(DownloadAvailableiFolderButton, Util.GS("Download"),"");	
@@ -880,8 +880,8 @@ namespace Novell.iFolder
 			buttonText.UseUnderline = false;
 			buttonText.Xalign = 0;
 
-			MergeAvailableiFolderButton.Visible	= false;
-			MergeAvailableiFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-download48.png")));
+			MergeAvailableiFolderButton.Sensitive = false;
+			MergeAvailableiFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder_merge1_48.png")));
 			MergeAvailableiFolderButton.Clicked +=
 				new EventHandler(MergeAvailableiFolderHandler);
 			buttontips.SetTip(MergeAvailableiFolderButton, Util.GS("Merge"),"");	
@@ -903,8 +903,8 @@ namespace Novell.iFolder
 			buttonText.UseUnderline = false;
 			buttonText.Xalign = 0;
 
-			DeleteFromServerButton.Visible	= false;
-			DeleteFromServerButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-error48.png")));
+			DeleteFromServerButton.Sensitive = false;
+			DeleteFromServerButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("delete_48.png")));
 			DeleteFromServerButton.Clicked +=
 				new EventHandler(DeleteFromServerHandler);
 			buttontips.SetTip(DeleteFromServerButton, Util.GS("Delete from server"),"");	
@@ -925,8 +925,8 @@ namespace Novell.iFolder
 			buttonText.UseMarkup = true;
 			buttonText.UseUnderline = false;
 			buttonText.Xalign = 0;
-			RemoveMembershipButton.Visible	= false;
-			RemoveMembershipButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-download48.png")));
+			RemoveMembershipButton.Sensitive = false;
+			RemoveMembershipButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-error48.png")));
 			RemoveMembershipButton.Clicked += new EventHandler(RemoveMembershipHandler);
 			buttontips.SetTip(RemoveMembershipButton, Util.GS("Remove My Membership"),"");	
 
@@ -962,7 +962,7 @@ namespace Novell.iFolder
 			//l.SetAlignment(1,1);
 
 
-			string[] list = {"OpenPanel","ClosePanel","ThumbnailView","ListView"};
+			string[] list = {Util.GS("Open Panel"),Util.GS("Close Panel"),Util.GS("Thumbnail View"),Util.GS("List View") };
 		    viewList = new ComboBoxEntry (list);	
 			viewList.Active = 0;
 			//viewList.Height = 50;
@@ -1225,6 +1225,7 @@ namespace Novell.iFolder
 
 		private void UpdateListViewItems()
 		{
+			//TODO: verify for same variable name ServerImg	
 			Gdk.Pixbuf ServerImg = new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png"));
 			Gdk.Pixbuf DownloadedImg = new Gdk.Pixbuf((Util.ImagesPath("ifolder_user_48.png")));
 			TreeIter iter;
@@ -1470,7 +1471,7 @@ namespace Novell.iFolder
 
 			//################# ADD SERVER IMAGE, INDICATING CONNECT/DISCONNECT STAUTS OF SELECTED SERVER
 			serverImg = new Gtk.Image();
-			serverImg.Pixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder128.png"));
+			serverImg.Pixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder_discon_128.png"));
 			actionsVBox.PackStart(serverImg, false, false, 0);
 		    //################# END	
 
@@ -1496,7 +1497,7 @@ namespace Novell.iFolder
 					serverStat.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png")));
 
 					//#######Updating Server Image based on selected Domain connection status
-					serverImg.Pixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png"));
+					serverImg.Pixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder_connect_128.png"));
 				 }
 			     else
 				 {
@@ -1506,7 +1507,7 @@ namespace Novell.iFolder
 					serverStat.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("ifolder-warning16.png")));
 
 					//#######Updating Server Image based on selected Domain connection status
-					serverImg.Pixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder-warning16.png"));
+					serverImg.Pixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder_discon_128.png"));
 				 }
 			}
 			
@@ -1625,10 +1626,14 @@ namespace Novell.iFolder
 				 {
 					//TODO: Use Label.Markup for assining text	 
 					serverStat.Label = Util.GS("Disconnect");
+					serverImg.Pixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder_connect_128.png"));
+				 
 				 }
 				 else if(ServerDomain != null)
 				 {
 					serverStat.Label = Util.GS("Connect");
+					serverImg.Pixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder_discon_128.png"));
+				 
 				 }
 		}
 		
@@ -3680,16 +3685,16 @@ namespace Novell.iFolder
 			//Initilize buttons Visiblity to False, should be removed if locate where button are getting initilized to TRUE
 				
 			OpenSynchronizedFolderButton.Visible	= false;
-			SynchronizeNowButton.Visible			= false;
-			ShareSynchronizedFolderButton.Visible	= false;
+			SynchronizeNowButton.Sensitive = false;
+			ShareSynchronizedFolderButton.Sensitive = false;
 			ViewFolderPropertiesButton.Visible		= false;
-			ResolveConflictsButton.Visible			= false;
-			RemoveiFolderButton.Visible	= false;
-		    DownloadAvailableiFolderButton.Visible	= false;
-			MergeAvailableiFolderButton.Visible  = false;
-			DeleteFromServerButton.Visible			= false;
-			RemoveMembershipButton.Visible			= false;
-			SynchronizedFolderTasks.Visible = false;
+			ResolveConflictsButton.Sensitive = false;
+			RemoveiFolderButton.Sensitive = false;
+		    DownloadAvailableiFolderButton.Sensitive = false;
+			MergeAvailableiFolderButton.Sensitive = false;
+			DeleteFromServerButton.Sensitive = false;
+			RemoveMembershipButton.Sensitive = false;
+			//SynchronizedFolderTasks.Visible = false;
 			ShowHideAllFoldersButton.Visible = false;
 
 				
@@ -3703,15 +3708,15 @@ namespace Novell.iFolder
 				{
 					// Hide the Local iFolder Buttons
 					OpenSynchronizedFolderButton.Visible	= false;
-					SynchronizeNowButton.Visible			= false;
-					ShareSynchronizedFolderButton.Visible	= false;
+					SynchronizeNowButton.Sensitive = false;
+					ShareSynchronizedFolderButton.Sensitive = false;
 					ViewFolderPropertiesButton.Visible		= false;
-					ResolveConflictsButton.Visible			= false;
-					RemoveiFolderButton.Visible	= false;
+					ResolveConflictsButton.Sensitive = false;
+					RemoveiFolderButton.Sensitive = false;
 
 					// Show the Available iFolder Buttons
-					DownloadAvailableiFolderButton.Visible	= true;
-					MergeAvailableiFolderButton.Visible  = true;
+					DownloadAvailableiFolderButton.Sensitive = true;
+					MergeAvailableiFolderButton.Sensitive = true;
 
 					DomainInformation domain =
 						domainController.GetDomain(holder.iFolder.DomainID);
@@ -3719,27 +3724,33 @@ namespace Novell.iFolder
 						domain.MemberUserID == holder.iFolder.OwnerID)
 					{
 						// The current user is the owner
-						DeleteFromServerButton.Visible			= true;
-						RemoveMembershipButton.Visible			= false;
+						DeleteFromServerButton.Sensitive = true;
+						RemoveMembershipButton.Sensitive = false;
+
+						DeleteFromServerButton.Visible = true;
+						RemoveMembershipButton.Visible = false;
 					}
 					else
 					{
 						// The current user is not the owner
-						DeleteFromServerButton.Visible			= false;
-						RemoveMembershipButton.Visible			= true;
+						DeleteFromServerButton.Sensitive = false;
+						RemoveMembershipButton.Sensitive = true;
+
+						DeleteFromServerButton.Visible = false;
+						RemoveMembershipButton.Visible = true;
 					}
 				}
 				else
 				{
 					// Hide the Available iFolders Buttons
-					DownloadAvailableiFolderButton.Visible	= false;
-					MergeAvailableiFolderButton.Visible  = false;
-					DeleteFromServerButton.Visible			= false;
-					RemoveMembershipButton.Visible			= false;
+					DownloadAvailableiFolderButton.Sensitive = false;
+					MergeAvailableiFolderButton.Sensitive  = false;
+					DeleteFromServerButton.Sensitive			= false;
+					RemoveMembershipButton.Sensitive		= false;
 					
 					// Show the Local iFolder Buttons
 					//OpenSynchronizedFolderButton.Visible	= true;
-					SynchronizeNowButton.Visible			= true;
+					SynchronizeNowButton.Sensitive = true;
 		
 /*					if (networkDetect.Connected)
 						SynchronizeNowButton.Visible= true;
@@ -3749,26 +3760,26 @@ namespace Novell.iFolder
 
 					if (holder.State == iFolderState.Initial && holder.iFolder.State == "Available")
 					{
-					        ShareSynchronizedFolderButton.Visible	= false;
+					        ShareSynchronizedFolderButton.Sensitive	= false;
 					        ViewFolderPropertiesButton.Visible	= false;
 					}
 					else 
 					{
-					        ShareSynchronizedFolderButton.Visible	= true;
+					        ShareSynchronizedFolderButton.Sensitive	= true;
 					        //ViewFolderPropertiesButton.Visible	= true;
 					}
 
-					RemoveiFolderButton.Visible	= true;
+					RemoveiFolderButton.Sensitive	= true;
 
 					if (holder.iFolder.HasConflicts)
-						ResolveConflictsButton.Visible = true;
+						ResolveConflictsButton.Sensitive = true;
 					else
-						ResolveConflictsButton.Visible = false;
+						ResolveConflictsButton.Sensitive = false;
 				}
 
 				SynchronizedFolderTasks.Visible = true;
 				
-				RemoveiFolderButton.Sensitive = true;
+				//RemoveiFolderButton.Sensitive = true;
 			}
 
 		}
