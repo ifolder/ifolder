@@ -2787,6 +2787,8 @@ namespace Novell.iFolder.Web {
         
         private bool sharedField;
         
+        private long iFolderSizeField;
+        
         /// <remarks/>
         public string DomainID {
             get {
@@ -3064,6 +3066,16 @@ namespace Novell.iFolder.Web {
             }
             set {
                 this.sharedField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public long iFolderSize {
+            get {
+                return this.iFolderSizeField;
+            }
+            set {
+                this.iFolderSizeField = value;
             }
         }
     }

@@ -60,11 +60,11 @@ namespace Novell.FormsTrayApp
             this.refreshTimer = new System.Windows.Forms.Timer(this.components);
             this.toolStripiFolderActions = new System.Windows.Forms.ToolStrip();
             this.toolStripBtnCreate = new System.Windows.Forms.ToolStripButton();
-            this.toolStripBtnDownload = new System.Windows.Forms.ToolStripButton();
             this.toolStripBtnSyncNow = new System.Windows.Forms.ToolStripButton();
             this.toolStripBtnShare = new System.Windows.Forms.ToolStripButton();
             this.toolStripBtnResolve = new System.Windows.Forms.ToolStripButton();
             this.toolStripBtnRevert = new System.Windows.Forms.ToolStripButton();
+            this.toolStripBtnDownload = new System.Windows.Forms.ToolStripButton();
             this.toolStripBtnMerge = new System.Windows.Forms.ToolStripButton();
             this.toolStripBtnDelete = new System.Windows.Forms.ToolStripButton();
             this.toolStipBtnChangeView = new System.Windows.Forms.ToolStripDropDownButton();
@@ -107,7 +107,6 @@ namespace Novell.FormsTrayApp
             this.titleLastSyncTime = new System.Windows.Forms.Label();
             this.directorySearcher1 = new System.DirectoryServices.DirectorySearcher();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.iFolderView = new Novell.FormsTrayApp.TileListView();
             this.localiFoldersHeading = new System.Windows.Forms.RichTextBox();
             this.listView1 = new System.Windows.Forms.ListView();
             this.iFolder = new System.Windows.Forms.ColumnHeader();
@@ -117,6 +116,7 @@ namespace Novell.FormsTrayApp
             this.ID = new System.Windows.Forms.ColumnHeader();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
+            this.iFolderView = new Novell.FormsTrayApp.TileListView();
             this.toolStripiFolderActions.SuspendLayout();
             this.iFolderContextMenu.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -412,11 +412,11 @@ namespace Novell.FormsTrayApp
             this.toolStripiFolderActions.ImageScalingSize = new System.Drawing.Size(48, 48);
             this.toolStripiFolderActions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripBtnCreate,
-            this.toolStripBtnDownload,
             this.toolStripBtnSyncNow,
             this.toolStripBtnShare,
             this.toolStripBtnResolve,
             this.toolStripBtnRevert,
+            this.toolStripBtnDownload,
             this.toolStripBtnMerge,
             this.toolStripBtnDelete,
             this.toolStipBtnChangeView,
@@ -430,12 +430,6 @@ namespace Novell.FormsTrayApp
             this.toolStripBtnCreate.Name = "toolStripBtnCreate";
             this.toolStripBtnCreate.Tag = "Create";
             this.toolStripBtnCreate.Click += new System.EventHandler(this.menuCreate_Click);
-            // 
-            // toolStripBtnDownload
-            // 
-            resources.ApplyResources(this.toolStripBtnDownload, "toolStripBtnDownload");
-            this.toolStripBtnDownload.Name = "toolStripBtnDownload";
-            this.toolStripBtnDownload.Click += new System.EventHandler(this.menuAccept_Click);
             // 
             // toolStripBtnSyncNow
             // 
@@ -460,6 +454,12 @@ namespace Novell.FormsTrayApp
             resources.ApplyResources(this.toolStripBtnRevert, "toolStripBtnRevert");
             this.toolStripBtnRevert.Name = "toolStripBtnRevert";
             this.toolStripBtnRevert.Click += new System.EventHandler(this.menuRevert_Click);
+            // 
+            // toolStripBtnDownload
+            // 
+            resources.ApplyResources(this.toolStripBtnDownload, "toolStripBtnDownload");
+            this.toolStripBtnDownload.Name = "toolStripBtnDownload";
+            this.toolStripBtnDownload.Click += new System.EventHandler(this.menuAccept_Click);
             // 
             // toolStripBtnMerge
             // 
@@ -743,22 +743,6 @@ namespace Novell.FormsTrayApp
             this.panel2.Name = "panel2";
             this.panel2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel2_MouseDown);
             // 
-            // iFolderView
-            // 
-            resources.ApplyResources(this.iFolderView, "iFolderView");
-            this.iFolderView.BackColor = System.Drawing.Color.White;
-            this.iFolderView.ContextMenuStrip = this.iFolderContextMenu;
-            this.iFolderView.HorizontalSpacing = 5;
-            this.iFolderView.ItemHeight = 72;
-            this.iFolderView.ItemWidth = 280;
-            this.iFolderView.LargeImageList = null;
-            this.iFolderView.Name = "iFolderView";
-            this.iFolderView.SelectedItem = null;
-            this.iFolderView.VerticleSpacing = 5;
-            this.iFolderView.DoubleClick += new System.EventHandler(this.iFolderView_DoubleClick);
-            this.iFolderView.NavigateItem += new Novell.FormsTrayApp.TileListView.NavigateItemDelegate(this.iFolderView_NavigateItem);
-            this.iFolderView.SelectedIndexChanged += new Novell.FormsTrayApp.TileListView.SelectedIndexChangedDelegate(this.ifListView_SelectedIndexChanged);
-            // 
             // localiFoldersHeading
             // 
             this.localiFoldersHeading.BackColor = System.Drawing.Color.LightGray;
@@ -773,6 +757,7 @@ namespace Novell.FormsTrayApp
             // listView1
             // 
             resources.ApplyResources(this.listView1, "listView1");
+            this.listView1.BackColor = System.Drawing.Color.White;
             this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.iFolder,
             this.Size,
@@ -830,6 +815,22 @@ namespace Novell.FormsTrayApp
             resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Controls.Add(this.listView1);
             this.panel1.Name = "panel1";
+            // 
+            // iFolderView
+            // 
+            resources.ApplyResources(this.iFolderView, "iFolderView");
+            this.iFolderView.BackColor = System.Drawing.Color.White;
+            this.iFolderView.ContextMenuStrip = this.iFolderContextMenu;
+            this.iFolderView.HorizontalSpacing = 5;
+            this.iFolderView.ItemHeight = 72;
+            this.iFolderView.ItemWidth = 280;
+            this.iFolderView.LargeImageList = null;
+            this.iFolderView.Name = "iFolderView";
+            this.iFolderView.SelectedItem = null;
+            this.iFolderView.VerticleSpacing = 5;
+            this.iFolderView.DoubleClick += new System.EventHandler(this.iFolderView_DoubleClick);
+            this.iFolderView.NavigateItem += new Novell.FormsTrayApp.TileListView.NavigateItemDelegate(this.iFolderView_NavigateItem);
+            this.iFolderView.SelectedIndexChanged += new Novell.FormsTrayApp.TileListView.SelectedIndexChangedDelegate(this.ifListView_SelectedIndexChanged);
             // 
             // GlobalProperties
             // 

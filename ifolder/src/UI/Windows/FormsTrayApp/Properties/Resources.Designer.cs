@@ -124,11 +124,29 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Available for download.
+        /// </summary>
+        internal static string availablefordownload {
+            get {
+                return ResourceManager.GetString("availablefordownload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Available.
         /// </summary>
         internal static string availableQuota {
             get {
                 return ResourceManager.GetString("availableQuota", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bytes.
+        /// </summary>
+        internal static string b {
+            get {
+                return ResourceManager.GetString("b", resourceCulture);
             }
         }
         
@@ -349,6 +367,15 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to GB.
+        /// </summary>
+        internal static string gb {
+            get {
+                return ResourceManager.GetString("gb", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An error was encountered while reading iFolders.
         /// </summary>
         internal static string iFolderError {
@@ -390,6 +417,15 @@ namespace TrayApp.Properties {
         internal static string iFolderRevertError {
             get {
                 return ResourceManager.GetString("iFolderRevertError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to KB.
+        /// </summary>
+        internal static string kb {
+            get {
+                return ResourceManager.GetString("kb", resourceCulture);
             }
         }
         
@@ -453,6 +489,15 @@ namespace TrayApp.Properties {
         internal static string logoff {
             get {
                 return ResourceManager.GetString("logoff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MB.
+        /// </summary>
+        internal static string mb {
+            get {
+                return ResourceManager.GetString("mb", resourceCulture);
             }
         }
         

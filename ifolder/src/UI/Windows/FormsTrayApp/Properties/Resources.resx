@@ -394,4 +394,19 @@
   <data name="type" xml:space="preserve">
     <value>Type</value>
   </data>
+  <data name="availablefordownload" xml:space="preserve">
+    <value>Available for download</value>
+  </data>
+  <data name="b" xml:space="preserve">
+    <value>Bytes</value>
+  </data>
+  <data name="gb" xml:space="preserve">
+    <value>GB</value>
+  </data>
+  <data name="kb" xml:space="preserve">
+    <value>KB</value>
+  </data>
+  <data name="mb" xml:space="preserve">
+    <value>MB</value>
+  </data>
 </root>

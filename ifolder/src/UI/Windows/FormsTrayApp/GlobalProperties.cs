@@ -141,6 +141,15 @@ namespace Novell.FormsTrayApp
         private Domain Currentdomain = null;
         private int comboBoxSelectedIndex = -1;
         private bool thumbnailView = false;
+
+        private enum Index
+        {
+            B=0,
+            KB=1,
+            MB=2,
+            GB=3
+        }
+
         #endregion
 
         public Manager simManager
@@ -1718,11 +1727,8 @@ namespace Novell.FormsTrayApp
 		{
 			if ( ifolderObject == null )
 			{
-				// Disable all of the item-related menu items.
-                this.menuActionOpen.Enabled = this.menuActionAccept.Enabled = 
-                this.menuActionMerge.Enabled = this.menuActionProperties.Enabled =
-				this.menuActionRemove.Enabled = this.menuActionResolve.Enabled = this.menuActionRevert.Enabled =
-				this.menuActionShare.Enabled = this.menuActionSync.Enabled = false;
+                initialButtonState(); //set the button state to initial values.
+                populateAllInfoWithNA(); //set the labels to Not Available
 			}
 			else
 			{
@@ -1795,32 +1801,59 @@ namespace Novell.FormsTrayApp
 				}
 			}
 		}
+        private void initialButtonState()
+        {
+            // Disable all of the item-related menu items.
+            this.menuActionOpen.Enabled = this.menuActionAccept.Enabled =
+            this.menuActionMerge.Enabled = this.menuActionProperties.Enabled =
+            this.menuActionRemove.Enabled = this.menuActionResolve.Enabled = 
+            this.menuActionRevert.Enabled = this.menuActionShare.Enabled = 
+            this.menuActionSync.Enabled = false;
 
+            this.toolStripBtnCreate.Visible = true;
+
+            this.toolStripBtnDownload.Enabled =
+            this.toolStripBtnMerge.Enabled =
+            this.toolStripBtnDelete.Enabled =
+            this.toolStripBtnSyncNow.Enabled =
+            this.toolStripBtnShare.Enabled =
+            this.toolStripBtnResolve.Enabled =
+            this.toolStripBtnRevert.Enabled = false;
+        }
         private void enableRemoteFoldersButtons(bool server)
         {
-            this.toolStripBtnCreate.Visible = true;
+            this.toolStripBtnCreate.Enabled = true;
             if (server)
             {
-                this.toolStripBtnDownload.Visible =
-                this.toolStripBtnMerge.Visible =
-                this.toolStripBtnDelete.Visible = server;
+                this.toolStripBtnDownload.Enabled =
+                this.toolStripBtnMerge.Enabled =
+                this.toolStripBtnDelete.Enabled = server;
 
-                this.toolStripBtnSyncNow.Visible = 
-                this.toolStripBtnShare.Visible = 
-                this.toolStripBtnRevert.Visible = ! server;
+                this.toolStripBtnSyncNow.Enabled = 
+                this.toolStripBtnShare.Enabled = 
+                this.toolStripBtnRevert.Enabled = ! server;
             }
             else
             {
-                this.toolStripBtnDownload.Visible =
-                this.toolStripBtnMerge.Visible =
-                this.toolStripBtnDelete.Visible = server;
+                this.toolStripBtnDownload.Enabled =
+                this.toolStripBtnMerge.Enabled =
+                this.toolStripBtnDelete.Enabled = server;
 
-                this.toolStripBtnSyncNow.Visible =
-                this.toolStripBtnShare.Visible =
-                this.toolStripBtnRevert.Visible = !server;
+                this.toolStripBtnSyncNow.Enabled =
+                this.toolStripBtnShare.Enabled =
+                this.toolStripBtnRevert.Enabled = !server;
             }
         }
 
+        private void populateAllInfoWithNA()
+        {
+            this.titleName.Text = TrayApp.Properties.Resources.name + ":  " + Resources.na;
+            this.titleOwner.Text = TrayApp.Properties.Resources.owner + ":  " + Resources.na;
+            this.titleAccess.Text = Resources.access + ":  " + Resources.na;
+            this.titleEncrypted.Text = Resources.type + ":  "  +Resources.na;
+            this.titleLastSyncTime.Text = Resources.lastSyncTime + ":  "  +Resources.na;
+            this.titleServerorSize.Text = Resources.server + ":  "  +Resources.na;
+        }
         private void populateLocaliFolderInfo(iFolderWeb ifolderWeb)
         {
             enableLocalFoldersLabels(true);
@@ -3147,12 +3180,12 @@ namespace Novell.FormsTrayApp
             if (dw.Authenticated)
             {
                 LoginLogoff.Text = TrayApp.Properties.Resources.logoff;
-                pictureBox1.Image = new Bitmap (Path.Combine(Application.StartupPath, @"res\ifolder128.png"));
+                pictureBox1.Image = new Bitmap(Path.Combine(Application.StartupPath, @"res\ifolder_connect_128.png"));
             }
             else
             {
                 LoginLogoff.Text = TrayApp.Properties.Resources.login;
-                pictureBox1.Image = new Bitmap(Path.Combine(Application.StartupPath, @"res\ifolder-crash.gif"));
+                pictureBox1.Image = new Bitmap(Path.Combine(Application.StartupPath, @"res\ifolder_discon_128.png"));
             }
         }
         
@@ -3189,7 +3222,7 @@ namespace Novell.FormsTrayApp
         {
             listView1.Items.Clear();
             // Walk the list of iFolders and add them to the listviews.
-
+            String status = null;
             this.listView1.SuspendLayout();
             if (ht != null)
             {
@@ -3200,13 +3233,19 @@ namespace Novell.FormsTrayApp
                     iFolderObject ifObj = (iFolderObject)tlvi.Tag;
                     int imageIndex;
                     tlvi.Status = getItemState(ifObj, 0, out imageIndex);
+                    
+                    if (ifObj.iFolderWeb.IsSubscription)
+                        status = Resources.availablefordownload;
+                    else
+                        status = tlvi.Status;
+
                     //SyncSize syncSize = ifWebService.CalculateSyncSize(ifObj.iFolderWeb.CollectionID);
                     ListViewItem listViewItem1 = new ListViewItem(
                     new string[] { 
                     ifObj.iFolderWeb.Name,
-                    ifObj.iFolderWeb.ManagedPath,
+                    FormatSize(ifObj.iFolderWeb.iFolderSize),
                     (simiasWebService.GetDomainInformation(ifObj.iFolderWeb.DomainID)).Host,
-                    tlvi.Status,
+                    status,
                     ifObj.iFolderWeb.ID},
                     -2,
                     Color.Black,
@@ -3290,6 +3329,51 @@ namespace Novell.FormsTrayApp
                 listView1.Items[item.Index].Selected = true;
                 listView1.Items[item.Index].Focused = true;
             }
+        }
+
+        //TODO: picked from WebUtils.cs need to find a better place to keep these 
+        // utility methods so that these could be used everywhere.
+        public static string FormatSize(long size)
+        {
+            const int K = 1024;
+
+            string modifier = "";
+
+            double temp;
+            double tempsize = (double)size;
+            int index = 0;
+
+            // adjust
+            while ((index < (int)Index.GB) && ((temp = ((double)tempsize / (double)K)) > 1))
+            {
+                ++index;
+                tempsize = temp;
+            }
+            // modifier
+            switch ((Index)index)
+            {
+                // B
+                case Index.B:
+                    modifier = Resources.b;
+                    break;
+
+                // KB
+                case Index.KB:
+                    modifier = Resources.kb;
+                    break;
+
+                // MB
+                case Index.MB:
+                    modifier = Resources.mb;
+                    break;
+
+                // GB
+                case Index.GB:
+                    modifier = Resources.gb;
+                    break;
+            }
+
+            return String.Format("{0}{1}", Math.Round(tempsize,0), modifier);
         }
 	}
 }
