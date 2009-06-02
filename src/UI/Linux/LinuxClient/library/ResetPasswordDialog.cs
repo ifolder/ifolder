@@ -248,7 +248,15 @@ namespace Novell.iFolder
 		{
 			this.passwordChangeStatus = this.ifws.ChangePassword(domainid, oldpassword, newpassword);
 			if( this.passwordChangeStatus == 0)
+			{
+				try
+				{
+					DomainController domainController = DomainController.GetDomainController();
+					domainController.LogoutDomain(domainid);
+				}
+				catch{ }
 				this.status = true;
+			}
 
                                 if( this.passwordChangeStatus != 0)
                                 {
