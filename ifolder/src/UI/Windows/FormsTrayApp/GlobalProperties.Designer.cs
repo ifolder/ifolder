@@ -113,7 +113,6 @@ namespace Novell.FormsTrayApp
             this.Size = new System.Windows.Forms.ColumnHeader();
             this.Server = new System.Windows.Forms.ColumnHeader();
             this.Status = new System.Windows.Forms.ColumnHeader();
-            this.ID = new System.Windows.Forms.ColumnHeader();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
             this.iFolderView = new Novell.FormsTrayApp.TileListView();
@@ -762,8 +761,7 @@ namespace Novell.FormsTrayApp
             this.iFolder,
             this.Size,
             this.Server,
-            this.Status,
-            this.ID});
+            this.Status});
             this.listView1.ContextMenuStrip = this.iFolderContextMenu;
             this.listView1.FullRowSelect = true;
             this.listView1.LargeImageList = this.imageList1;
@@ -791,10 +789,6 @@ namespace Novell.FormsTrayApp
             // Status
             // 
             resources.ApplyResources(this.Status, "Status");
-            // 
-            // ID
-            // 
-            resources.ApplyResources(this.ID, "ID");
             // 
             // imageList1
             // 
@@ -986,7 +980,6 @@ namespace Novell.FormsTrayApp
         private ColumnHeader Size;
         private ColumnHeader Server;
         private ColumnHeader Status;
-        private ColumnHeader ID;
         private ToolStripButton toolStripBtnRevert;
         private ToolStripButton toolStripBtnDelete;
 
