@@ -32,6 +32,7 @@
 *                 $Modified by: Satyam <ssutapalli@novell.com>	17-09-2008   Commented the code which uses poBoxID of a domain
 *                 $Modified by: Satyam <ssutapalli@novell.com> 13/10/2008    Vertical alignment of text field cell in table
 *                 $Modified by: Satyam <ssutapalli@novell.com> 02/12/2008    Moved the handling of UI refresh timer from refreshWindow to iFolderData:refresh method
+*                 $Modified by: Satyam <ssutapalli@novell.com> 02/06/2009    Added menu item for "Forgot Passphrase"
 *-----------------------------------------------------------------------------
 * This module is used to:
 *        <Description of the functionality of the file >
@@ -55,6 +56,7 @@
 #import "MCTableView.h"
 #import "applog.h"
 #import "iFolderTextFieldCell.h"
+#import "ForgotPassphraseSheetController.h"
 
 @implementation iFolderWindowController
 
@@ -526,6 +528,11 @@ static iFolderWindowController *sharedInstance = nil;
 	[changePasswordSheetController showWindow:self];
 }
 
+- (IBAction)forgotPassphrase:(id)sender
+{
+	[forgotPPSheetController showWindow:self];
+}
+
 //=======================================================================
 // createiFolder
 // This will further call iFolderData's create iFolder. This is just a
@@ -582,8 +589,8 @@ static iFolderWindowController *sharedInstance = nil;
 {
 	if([error compare:@"PathExists"] == 0)
 	{
-		NSRunAlertPanel(NSLocalizedString(@"A folder with the same name already exists.", @"iFolder folderexists create error dialog message"),
-						NSLocalizedString(@"The location you selected already contains a folder with the same name as this iFolder.  Please select a different location and try again.", @"iFolder folderexists create error dialog details"), 
+		NSRunAlertPanel(NSLocalizedString(@"Cannot download iFolder", @"iFolder folderexists create error dialog message"),
+						NSLocalizedString(@"A folder with the same name already exists in the location you specified. Specify a different location and try again", @"iFolder folderexists create error dialog details"), 
 						NSLocalizedString(@"OK", @"iFolder folderexists create error dialog button"),nil, nil);
 	}
 	else if([error compare:@"RootOfDrivePath"] == 0)
@@ -791,6 +798,7 @@ static iFolderWindowController *sharedInstance = nil;
 	}
 	else if( (action == @selector(exportKeys:)) ||
 			 (action == @selector(importKeys:)) ||
+			 (action == @selector(forgotPassphrase:)) || 
 			 (action == @selector(resetPassPhrase:)) )
 	{
 		if([[NSApp delegate] simiasIsRunning] == NO)

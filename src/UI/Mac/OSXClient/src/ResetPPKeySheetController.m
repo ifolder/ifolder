@@ -25,6 +25,7 @@
 *                 $Modified by: Satyam <ssutapalli@novell.com> 14/08/2008 Enable/Disable controls depending on iFolder domain's encryption policy
 *                 $Modified by: Satyam <ssutapalli@novell.com> 20/08/2008 Storing the PP after resetting instead of asking for re-login
 *                 $Modified by: Satyam <ssutapalli@novell.com> 09/09/2008 Updating UI controls depending on domains encryption/reglar policy
+*                 $Modified by: Satyam <ssutapalli@novell.com> 02/06/2009 Removed "None" from RA and added "Server_Default"
 *-----------------------------------------------------------------------------
 * This module is used to:
 *			This class will be used to reset the passphrase. It will ask for old passphrase,
@@ -83,7 +84,7 @@
 		[recoveryAgent setNumberOfVisibleItems:1];
 	}
 	
-	[recoveryAgent addItemWithObjectValue:NSLocalizedString(@"None",@"None Text") ];
+	[recoveryAgent addItemWithObjectValue:NSLocalizedString(@"Server_Default",@"Server_Default encrypt RA") ];
 	[recoveryAgent selectItemAtIndex:0];
 	
 	if([[iFolderData sharedInstance] getSecurityPolicy:[domainID stringValue]] == 0 || 
@@ -132,8 +133,8 @@
 	int option;
 	NSString* recoveryAgentText = [recoveryAgent objectValueOfSelectedItem];
 	
-	
-	if( [recoveryAgent indexOfSelectedItem] != -1 && [recoveryAgentText isEqualToString:NSLocalizedString(@"None",@"None Text")] )
+	/*
+	if( [recoveryAgent indexOfSelectedItem] != -1 && [recoveryAgentText isEqualToString:NSLocalizedString(@"Server_Default",@"Server_Default encrypt RA")] )
 	{
 		option = NSRunAlertPanel(NSLocalizedString(@"No Recovery agent",@"No Encryption Certificate Title"),
 								NSLocalizedString(@"There is no Recovery Agent selected. Encrypted data cannot be recovered later, if passphrase is lost. Do you want to continue?",@"No Encryption Certificate Message"),
@@ -146,6 +147,7 @@
 			return;
 		}
 	}
+	*/
 	
 	if( ([[enterPassphrase stringValue] compare:@""] != NSOrderedSame) &&
 		([[newPassphrase stringValue] compare:@""] != NSOrderedSame) &&
@@ -154,7 +156,7 @@
 	{
 		if([[iFolderData sharedInstance] validatePassPhrase:[domainID stringValue] andPassPhrase:[enterPassphrase stringValue]])
 		{
-			if(![recoveryAgentText isEqualToString:NSLocalizedString(@"None",@"None Text")])
+			if(![recoveryAgentText isEqualToString:NSLocalizedString(@"Server_Default",@"Server_Default encrypt RA")])
 			{
 				SecCertificateRef certRef = [[iFolderData sharedInstance] getCertificate:[domainID stringValue] withRAName:recoveryAgentText];				
 				if(certRef != NULL)

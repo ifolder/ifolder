@@ -22,6 +22,7 @@
 *
 *                 $Author: Satyam <ssutapalli@novell.com> 07/01/2007	Receive's pass phrase from user
 *                 $Modified by: Satyam <ssutapalli@novell.com> 10/04/2008 Made public private, and fix for setting passphrase if "None" is selected
+*                 $Modified by: Satyam <ssutapalli@novell.com> 02/06/2009 Made iFolderDomain available in whole class
 *-----------------------------------------------------------------------------
 * This module is used to:
 *			This class is written in connection with Accepting pass phrase dialog. It is inherited from
@@ -32,6 +33,7 @@
 
 #import <Cocoa/Cocoa.h>
 @class SimiasService;
+@class iFolderDomain;
 
 @interface iFolderEncryptController : NSWindowController
 {
@@ -44,6 +46,7 @@
 
 @private
 
+	iFolderDomain *domainInfo;
 	NSString* recoveryAgentText;
 }
 

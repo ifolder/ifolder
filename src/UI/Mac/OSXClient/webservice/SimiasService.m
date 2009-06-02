@@ -24,6 +24,7 @@
 *                 $Modified by: Satyam <ssutapalli@novell.com>   29/02/2008      Updated getDomainProperties and getAuthStatus methods with new properties, and increased timeout to 60 seconds
 *                 $Modified by: Satyam <ssutapalli@novell.com>   20/03/2008      Added GetDefaultDomainID functionality
 *                 $Modified by: Satyam <ssutapalli@novell.com>   08/04/2008      Added DefaultiFolder functionality
+*                 $Modified by: Satyam <ssutapalli@novell.com>  02/06/2009     Added new functions required for Forgot PP dialog
 *-----------------------------------------------------------------------------
 * This module is used to:
 *       	Connect to Simias on Server via gSoap 
@@ -1497,6 +1498,82 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 	
 	unlockSimiasSoap(soapData);
 }
+
+//----------------------------------------------------------------------------
+// ExportRecoverImport
+// Exports key's, recover's new keys and import them
+//----------------------------------------------------------------------------
+-(void) ExportRecoverImport:(NSString*)domainID forUser:(NSString*)userID withPassphrase:(NSString*)newPP
+{
+	struct soap *pSoap = lockSimiasSoap(soapData);
+	
+	NSAssert( (domainID != nil), @"domainID was nil");
+	NSAssert( (userID != nil), @"userID was nil");
+	NSAssert( (newPP != nil), @"newPP was nil");
+	
+	struct _ns1__ExportRecoverImport           exportRecoverImportInput;
+	struct _ns1__ExportRecoverImportResponse   exportRecoverImportResponse;
+	
+	exportRecoverImportInput.DomainID = (char*)[domainID UTF8String];
+	exportRecoverImportInput.UserID = (char*)[userID UTF8String];
+	exportRecoverImportInput.NewPassphrase = (char*)[newPP UTF8String];
+	
+	NSLog(@"Before export recover import in simiasservice");
+	int err_code = soap_call___ns1__ExportRecoverImport(
+														pSoap,
+														[simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
+														NULL,
+														&exportRecoverImportInput,
+														&exportRecoverImportResponse);
+	NSLog(@"after export recover import in simiasservice");	
+	handle_simias_soap_error(soapData,@"SimiasService.ExportRecoverImport");
+	
+	unlockSimiasSoap(soapData);
+}
+
+
+
+//----------------------------------------------------------------------------
+// GetDefaultPublicKey
+// Gets the default public key for a domain
+//----------------------------------------------------------------------------
+-(NSString*) GetDefaultPublicKey:(NSString*)domainID
+{
+	NSString *publicKey = nil;
+
+	struct soap *pSoap = lockSimiasSoap(soapData);
+	NSAssert( (domainID != nil), @"domainID was nil");
+
+	struct _ns1__GetDefaultPublicKey          getDefaultPublicKeyInput;
+	struct _ns1__GetDefaultPublicKeyResponse  getDefaultPublicKeyResponse;
+	
+	getDefaultPublicKeyInput.DomainID = (char*)[domainID UTF8String];
+	
+	int err_code = soap_call___ns1__GetDefaultPublicKey(
+														pSoap,
+														[simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
+														NULL,
+														&getDefaultPublicKeyInput,
+														&getDefaultPublicKeyResponse);
+	
+	handle_simias_soap_error(soapData,@"SimiasService.GetDefaultPublicKey");
+	
+	@try
+	{
+		if(getDefaultPublicKeyResponse.GetDefaultPublicKeyResult != nil)
+			publicKey = [NSString stringWithUTF8String:getDefaultPublicKeyResponse.GetDefaultPublicKeyResult];
+	}
+	@catch(NSException *ex)
+	{
+		ifexconlog(@"SimiasService.GetDefaultPublicKey",ex);
+	}
+	
+	unlockSimiasSoap(soapData);
+	
+	return publicKey;
+}
+
+
 //----------------------------------------------------------------------------
 // getDomainProperties
 // Prepares the properties to be store in the Domain object

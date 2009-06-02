@@ -23,6 +23,7 @@
 *                 $Author: Calvin Gaisford <cgaisford@novell.com>
 *                 $Modified by: Satyam <ssutapalli@novell.com>   20/03/2008      Added GetDefaultDomainID functionality
 *                 $Modified by: Satyam <ssutapalli@novell.com>   08/04/2008      Added DefaultiFolder functionality
+*                 $Modified by: Satyam <ssutapalli@novell.com>  02/06/2009     Added new functions required for Forgot PP dialog
 *-----------------------------------------------------------------------------
 * This module is used to:
 * 		Connect to the server via gSoap. 
@@ -112,6 +113,8 @@
 -(NSString*) GetDefaultiFolder:(NSString*)domainID;
 -(BOOL) DefaultAccountInDomainID:(NSString*)domainID foriFolderID:(NSString*)ifolderID;
 -(void) RemoveCertFromTable:(NSString*)hostURL;
+-(void) ExportRecoverImport:(NSString*)domainID forUser:(NSString*)userID withPassphrase:(NSString*)newPP;
+-(NSString*) GetDefaultPublicKey:(NSString*)domainID;
 @end
 
 #endif // __SimiasService__

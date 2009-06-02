@@ -26,6 +26,7 @@
 *                 $Modified by: Satya <ssutapalli@novell.com> 10/03/2008   Added IsiFolder simias functionality
 *                 $Modified by: Satya <ssutapalli@novell.com> 24/03/2008   Added GetLimitPolicy simias functionality
 *                 $Modified by: Satya <ssutapalli@novell.com> 22/05/2008   Added SetiFolderSecureSync simias functionality
+*                 $Modified by: Satyam <ssutapalli@novell.com>  02/06/2009     Added new functions required for Forgot PP dialog
 *-----------------------------------------------------------------------------
 * This module is used to:
 *       	Connect to local simias via gSoap 
@@ -118,6 +119,7 @@
 -(clientUpdate*) CheckForMacUpdate:(NSString*)domainID forCurrentVersion:(NSString*)curVer;
 -(BOOL) RunClientUpdate:(NSString*)domainID withDownloadPath:(NSString*)path;
 -(NSNumber*) ChangePassword:(NSString*)domainID changePassword:(NSString*)oldPasswd withNewPassword:(NSString*)newPasswd;
+-(NSString*)GetDefaultServerPublicKey:(NSString*)domainID forUser:(NSString*)userID;
 @end
 
 #endif // __iFolderService__

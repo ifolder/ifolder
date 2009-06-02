@@ -138,6 +138,7 @@
 		B20F07B90CF45FC9006979F5 /* ifolder-sync22.png in Resources */ = {isa = PBXBuildFile; fileRef = B20F07B80CF45FC9006979F5 /* ifolder-sync22.png */; };
 		B20F07C40CF460E9006979F5 /* ifolder-error22.png in Resources */ = {isa = PBXBuildFile; fileRef = B20F07C30CF460E9006979F5 /* ifolder-error22.png */; };
 		B20F07CB0CF461B4006979F5 /* ifolder-warning22.png in Resources */ = {isa = PBXBuildFile; fileRef = B20F07CA0CF461B4006979F5 /* ifolder-warning22.png */; };
+		B213B3B90FD10B340031911A /* ForgotPassphraseSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = B213B3B80FD10B340031911A /* ForgotPassphraseSheetController.m */; };
 		B220D2070D324594009F69D4 /* VerifyPassPhraseController.m in Sources */ = {isa = PBXBuildFile; fileRef = B220D2060D324594009F69D4 /* VerifyPassPhraseController.m */; };
 		B22215870CBA408400786405 /* RevertiFolderController.m in Sources */ = {isa = PBXBuildFile; fileRef = B22215860CBA408400786405 /* RevertiFolderController.m */; };
 		B2399CB60DA6481700C4EDDD /* DefaultiFolderSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2399CB40DA6481700C4EDDD /* DefaultiFolderSheetController.m */; };
@@ -298,6 +299,8 @@
 		B20F07B80CF45FC9006979F5 /* ifolder-sync22.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ifolder-sync22.png"; path = "../../../images/ifolder-sync22.png"; sourceTree = SOURCE_ROOT; };
 		B20F07C30CF460E9006979F5 /* ifolder-error22.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ifolder-error22.png"; path = "../../../images/ifolder-error22.png"; sourceTree = SOURCE_ROOT; };
 		B20F07CA0CF461B4006979F5 /* ifolder-warning22.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ifolder-warning22.png"; path = "../../../images/ifolder-warning22.png"; sourceTree = SOURCE_ROOT; };
+		B213B3B70FD10B340031911A /* ForgotPassphraseSheetController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ForgotPassphraseSheetController.h; path = src/ForgotPassphraseSheetController.h; sourceTree = "<group>"; };
+		B213B3B80FD10B340031911A /* ForgotPassphraseSheetController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ForgotPassphraseSheetController.m; path = src/ForgotPassphraseSheetController.m; sourceTree = "<group>"; };
 		B220D2050D324594009F69D4 /* VerifyPassPhraseController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = VerifyPassPhraseController.h; path = src/VerifyPassPhraseController.h; sourceTree = "<group>"; };
 		B220D2060D324594009F69D4 /* VerifyPassPhraseController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = VerifyPassPhraseController.m; path = src/VerifyPassPhraseController.m; sourceTree = "<group>"; };
 		B22215850CBA408400786405 /* RevertiFolderController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = RevertiFolderController.h; path = src/RevertiFolderController.h; sourceTree = "<group>"; };
@@ -549,6 +552,8 @@
 				B2399CB50DA6481700C4EDDD /* DefaultiFolderSheetController.h */,
 				B2CB48E20F82354B0051D657 /* ChangePasswordSheetController.m */,
 				B2CB48E30F82354B0051D657 /* ChangePasswordSheetController.h */,
+				B213B3B70FD10B340031911A /* ForgotPassphraseSheetController.h */,
+				B213B3B80FD10B340031911A /* ForgotPassphraseSheetController.m */,
 			);
 			name = OtherWindows;
 			sourceTree = "<group>";
@@ -1050,6 +1055,7 @@
 				B240E4BB0EA460B900117A56 /* iFolderTextFieldCell.m in Sources */,
 				B2A94CF00EB09A6700B1070A /* clientUpdate.m in Sources */,
 				B2CB48E40F82354B0051D657 /* ChangePasswordSheetController.m in Sources */,
+				B213B3B90FD10B340031911A /* ForgotPassphraseSheetController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

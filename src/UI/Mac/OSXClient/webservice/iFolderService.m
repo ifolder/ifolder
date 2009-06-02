@@ -26,6 +26,7 @@
 *                 $Modified by: Satya <ssutapalli@novell.com> 10/03/2008   Added IsiFolder simias functionality
 *                 $Modified by: Satya <ssutapalli@novell.com> 24/03/2008   Added GetLimitPolicy simias functionality
 *                 $Modified by: Satya <ssutapalli@novell.com> 22/05/2008   Added SetiFolderSecureSync simias functionality
+*                 $Modified by: Satyam <ssutapalli@novell.com>  02/06/2009     Added new functions required for Forgot PP dialog
 *-----------------------------------------------------------------------------
 * This module is used to:
 *       	Connect to local simias via gSoap 
@@ -1795,6 +1796,52 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	unlockSoap(soapData);
 	return status;
 }
+
+
+
+
+
+
+
+//----------------------------------------------------------------------------
+// GetDefaultPublicKey:forUser
+// Gets the default public for the user on a domain
+//----------------------------------------------------------------------------
+-(NSString*)GetDefaultServerPublicKey:(NSString*)domainID forUser:(NSString*)userID
+{
+	NSString* status;
+	
+	struct soap *pSoap = lockSoap(soapData);
+	
+	NSAssert((domainID != nil),@"domainID was nil");
+	//NSAssert((userID != nil),@"userID was nil");
+	
+	struct _ns1__GetDefaultServerPublicKey           getDefaultServerPublicKeyInput;
+	struct _ns1__GetDefaultServerPublicKeyResponse   getDefaultServerPublicKeyResponse;
+	
+	getDefaultServerPublicKeyInput.DomainID = (char*)[domainID UTF8String];
+	getDefaultServerPublicKeyInput.UserID = (char*)[userID UTF8String];
+	
+	int err_code =  soap_call___ns1__GetDefaultServerPublicKey(
+				 pSoap,
+				 [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
+				 NULL,
+				 &getDefaultServerPublicKeyInput,
+				 &getDefaultServerPublicKeyResponse);
+	
+	handle_soap_error(soapData,@"iFolderService.GetDefaultServerPublicKey");
+	
+	status = [NSString stringWithUTF8String:getDefaultServerPublicKeyResponse.GetDefaultServerPublicKeyResult];
+	
+	unlockSoap(soapData);
+	 
+	return status;
+}
+
+
+
+
+
 
 -(NSNumber*) ChangePassword:(NSString*)domainID changePassword:(NSString*)oldPasswd withNewPassword:(NSString*)newPasswd
 {

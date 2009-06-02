@@ -23,6 +23,8 @@
 *                 $Author: Satyam <ssutapalli@novell.com> 07/01/2007	Receive's pass phrase from user
 *                 $Modified by: Satyam <ssutapalli@novell.com> 11/02/2008 Removed windowDidLoad and implemented it directly before showWindow
 *                 $Modified by: Satyam <ssutapalli@novell.com> 10/04/2008 Made public private, and fix for setting passphrase if "None" is selected
+*                 $Modified by: Satyam <ssutapalli@novell.com> 30/05/2009 Changed "None" to "Server_Default"
+*                 $Modified by: Satyam <ssutapalli@novell.com> 02/06/2009 Made iFolderDomain available in whole class and changed "None" in RA to "Server_Default"
 *-----------------------------------------------------------------------------
 * This module is used to:
 *			This class is written in connection with Accepting pass phrase dialog. It is inherited from
@@ -36,7 +38,9 @@
 #import "applog.h"
 #import "AcceptCertSheetController.h"
 #import "AuthStatus.h"
+#import "iFolderData.h"
 #include "SecurityInterface/SFCertificatePanel.h"
+
 
 @implementation iFolderEncryptController
 
@@ -83,7 +87,7 @@ static id encryptInstance = nil;
 {
 	recoveryAgentText = [recoveryAgent objectValueOfSelectedItem];
 	
-	if( [recoveryAgent indexOfSelectedItem] != -1 && ![recoveryAgentText isEqualToString:NSLocalizedString(@"None",@"None Text")] )
+	if( [recoveryAgent indexOfSelectedItem] != -1 && ![recoveryAgentText isEqualToString:NSLocalizedString(@"Server_Default",@"Server_Default encrypt RA")] )
 	{
 		@try
 		{
@@ -102,6 +106,7 @@ static id encryptInstance = nil;
 	}
 	else
 	{
+		/*
 		int option = NSRunAlertPanel(NSLocalizedString(@"No Recovery agent",@"No Encryption Certificate Title"),
 						NSLocalizedString(@"There is no Recovery Agent selected. Encrypted data cannot be recovered later, if passphrase is lost. Do you want to continue?",
 										  @"No Encryption Certificate Message"),
@@ -110,9 +115,10 @@ static id encryptInstance = nil;
 						nil);
 						
 		if( option == NSAlertDefaultReturn )
-		{
+		{*/
+		
 			[self certSheetDidEnd:nil returnCode:1 contextInfo:nil];
-		}
+		//}
 	}
 }
 
@@ -125,9 +131,10 @@ static id encryptInstance = nil;
 - (void) certSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {	
 	NSString* publicKey = nil;
+	NSString* tempRAName = [recoveryAgent objectValueOfSelectedItem];
 	if(returnCode)
 	{
-		if(![recoveryAgentText isEqualToString:NSLocalizedString(@"None",@"None Text")])
+		if(![tempRAName isEqualToString:NSLocalizedString(@"Server_Default",@"Server_Default encrypt RA")])
 		{
 			@try
 			{
@@ -138,13 +145,18 @@ static id encryptInstance = nil;
 				ifexconlog(@"GetPublicKey", ex);
 			}		
 		}
+		else
+		{
+			publicKey = [[iFolderData sharedInstance] getDefaultServerPublicKey:domainIDHolder forUser:nil];
+			tempRAName = @"DEFAULT";
+		}
 		 
 		int ppStatus;
 	
 		@try
 		{
 			AuthStatus* authStatus = [simiasServiceHolder SetPassPhrase:domainIDHolder passPhrase:[enterPassPhrase stringValue] 
-										recoveryAgent:recoveryAgentText andPublicKey:publicKey];
+										recoveryAgent:tempRAName andPublicKey:publicKey];
 
 			ppStatus = [[authStatus statusCode] intValue];
 		}
@@ -258,7 +270,7 @@ static id encryptInstance = nil;
 		return;
 	}	
 	
-	iFolderDomain *domainInfo = [simiasServiceHolder GetDomainInformation:domainIDHolder];
+	domainInfo = [simiasServiceHolder GetDomainInformation:domainIDHolder];
 	NSString *domIP = [domainInfo host];
 	NSString *domName = [domainInfo name];
 	
@@ -272,7 +284,7 @@ static id encryptInstance = nil;
 		[recoveryAgent addItemsWithObjectValues:recoveryAgents];
 	}
 	
-	[recoveryAgent addItemWithObjectValue:NSLocalizedString(@"None",@"None Text") ];
+	[recoveryAgent addItemWithObjectValue:NSLocalizedString(@"Server_Default",@"Server_Default encrypt RA") ];
 	
 	[recoveryAgent selectItemAtIndex:0];
 	

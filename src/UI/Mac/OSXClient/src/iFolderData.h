@@ -26,6 +26,7 @@
 *                 $Modified by: Satyam <ssutapalli@novell.com>	22/05/2008     Modified Create iFolder method signature
 *                 $Modified by: Satyam <ssutapalli@novell.com>	20/08/2008     Added functionality to clear PP and getting remember PP option
 *                 $Modified by: Satyam <ssutapalli@novell.com>  09/09/2008     Added new function for calling IsPassPhraseSet from Simias
+*                 $Modified by: Satyam <ssutapalli@novell.com>  02/06/2009     Added new functions required for Forgot PP dialog
 *-----------------------------------------------------------------------------
 * This module is used to:
 *        <Description of the functionality of the file >
@@ -44,6 +45,8 @@
 @class SyncSize;
 @class MemberSearchResults;
 @class clientUpdate;
+@class AuthStatus;
+
 
 @interface iFolderData : NSObject 
 {
@@ -146,4 +149,10 @@
 //- (void)runUpdates:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo; // This method is to handle NSBeginAlertSheet to handle the upgrade client
 -(NSNumber*)changeUserPassword:(NSString*)domainID changePassword:(NSString*)oldPasswd withNewPassword:(NSString*)newPasswd;
 -(void)setDomainPassword:(NSString*)domainID withPassword:(NSString*)newPasswd;
+-(NSString*)getDefaultServerPublicKey:(NSString*)domainID forUser:(NSString*)userID;
+-(void) exportRecoverImport:(NSString*)domainID forUser:(NSString*)userID withPassphrase:(NSString*)newPP;
+-(AuthStatus*)loginToRemoteDomain:(NSString*)domainID usingPassword:(NSString*)password;
+-(iFolderDomain*)connectToDomain:(NSString *)UserName 
+				   usingPassword:(NSString *)Password andHost:(NSString *)Host;
+-(AuthStatus *) logoutFromRemoteDomain:(NSString *)domainID;
 @end

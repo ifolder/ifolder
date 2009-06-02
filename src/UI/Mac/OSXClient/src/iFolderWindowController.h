@@ -24,6 +24,7 @@
 *                 $Modified by: Satyam <ssutapalli@novell.com> 29/02/2008    Added menu item "Merge" and its implementation
 *                 $Modified by: Satyam <ssutapalli@novell.com> 22/05/2008    Bypassing Create iFolder directly to iFolderData
 *                 $Modified by: Satyam <ssutapalli@novell.com> 13/10/2008    Vertical alignment of text field cell in table
+*                 $Modified by: Satyam <ssutapalli@novell.com> 02/06/2009    Added menu item for "Forgot Passphrase"
 *-----------------------------------------------------------------------------
 * This module is used to:
 *       	iFolder Main Window controller 
@@ -43,11 +44,13 @@
 @class ExportKeysSheetController;
 @class ImportKeysSheetController;
 @class ResetPPKeySheetController;
+@class ForgotPassphraseSheetController;
 @class AdvConflictController;
 @class DefaultiFolderSheetController;
 @class iFolder;
 @class iFolderTextFieldCell;
 @class ChangePasswordSheetController;
+@class ForgotPassphraseSheetController;
 
 
 @interface iFolderWindowController : NSWindowController
@@ -60,6 +63,7 @@
 	IBOutlet ResetPPKeySheetController      *resetPPKeySheetController;
 	IBOutlet AdvConflictController          *advConflictSheetController;
 	IBOutlet ChangePasswordSheetController  *changePasswordSheetController;
+	IBOutlet ForgotPassphraseSheetController *forgotPPSheetController;
     IBOutlet NSTableView					*iFolderTable;
 	IBOutlet NSTextField					*statusText;
 	IBOutlet NSProgressIndicator			*statusProgress;
@@ -98,6 +102,7 @@
 - (IBAction)synciFolder:(id)sender;
 - (IBAction)resolveConflicts:(id)sender;
 - (IBAction)changePassword:(id)sender;
+- (IBAction)forgotPassphrase:(id)sender;
 
 +(void)updateStatusTS:(NSString *)message;
 -(void)updateStatus:(NSString *)message;

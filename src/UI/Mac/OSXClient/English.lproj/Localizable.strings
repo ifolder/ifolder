@@ -8,7 +8,7 @@
 "%u of %u items - " = "%1$u of %2$u items - ";
 
 /* iFolder folderexists create error dialog message */
-"A folder with the same name already exists." = "A folder with the same name already exists.";
+"Cannot download iFolder" = "Cannot download iFolder";
 
 /* Dialog question when a user selects to share with more than 20 users in Properties/Sharing */
 "A large number of users is selected." = "A large number of users is selected.";
@@ -521,7 +521,7 @@
    General error dialog title for login
    General error dialog details for login
    Exception error dialog details for login */
-"Please verify the information entered and try again.  If the problem persists, please contact your network administrator." = "Please verify the information entered and try again.  If the problem persists, please contact your network administrator.";
+"Verify the information entered by you and try again. If the problem still persists, contact your network administrator." = "Verify the information entered by you and try again. If the problem still persists, contact your network administrator.";
 
 /* iFolder Window Status Message */
 "Policy prevented synchronization: %@" = "Policy prevented synchronization: %@";
@@ -581,10 +581,10 @@
 "Server unavailable" = "Server unavailable";
 
 /* Initial Setup Dialog Title */
-"Set Up  iFolder Account" = "Set Up  iFolder Account";
+"Set Up an iFolder Account" = "Set Up an iFolder Account";
 
 /* Error dialog Title new iFolder */
-"Set Up iFolder Account" = "Set Up iFolder Account";
+"Set Up an iFolder Account" = "Set Up an iFolder Account";
 
 /* iFolderWin Toolbar Share Selector Button */
 "Share" = "Share";
@@ -667,7 +667,7 @@
 "The location you have selected contains the iFolder data files.  These are normally located in your home folder in the folder \".local/share\".  Please select a different location and try again." = "The location you have selected contains the iFolder data files.  These are normally located in your home folder in the folder \".local/share\".  Please select a different location and try again.";
 
 /* iFolder folderexists create error dialog details */
-"The location you selected already contains a folder with the same name as this iFolder.  Please select a different location and try again." = "The location you selected already contains a folder with the same name as this iFolder.  Please select a different location and try again.";
+"A folder with the same name already exists in the location you specified. Specify a different location and try again" = "A folder with the same name already exists in the location you specified. Specify a different location and try again";
 
 /* iFolder rootdrive create error dialog details */
 "The location you selected is at the root of the drive.  Please select a location that is not at the root of a drive and try again." = "The location you selected is at the root of the drive.  Please select a location that is not at the root of a drive and try again.";
@@ -757,7 +757,7 @@
 "To begin using iFolder, you must first set up an iFolder account." = "To begin using iFolder, you must first set up an iFolder account.";
 
 /* Initial Setup Dialog Message */
-"To begin using iFolder, you must first set up an iFolder account.  Would you like to set up an iFolder account now?" = "To begin using iFolder, you must first set up an iFolder account.  Would you like to set up an iFolder account now?";
+"There are no iFolder accounts configured. You must first set up an iFolder account. Would you like to set up an iFolder account now?" = "There are no iFolder accounts configured. You must first set up an iFolder account. Would you like to set up an iFolder account now?";
 
 /* ExportKey Failure Message */
 "Unable to export keys: %@" = "Unable to export keys: %@";
@@ -973,3 +973,36 @@
 
 /*Error changing password*/
 "Error changing password"="Error changing password";
+
+/*Server_Default encrypt RA*/
+"Server_Default" = "Server_Default";
+
+/*Invalid UserName*/
+"Invalid Username" = "Invalid Username";
+
+/*Check UserName*/
+"Verify the username that you entered" = "Verify the username that you entered";
+
+/*Authentication failed title*/
+"Authentication failed" = "Authentication failed";
+
+/*Authentication failed message*/
+"Unable to authenticate to the domain \"%@\"" = "Unable to authenticate to the domain \"%@\"";
+
+/*ForgotPP reset failed title*/
+"Passphrase reset failed" = "Passphrase reset failed";
+ 
+/*ForgotPP reset failed message*/
+"Cannot reset passphrase. You have been logged out of the domain" = "Cannot reset passphrase. You have been logged out of the domain";
+
+/*Domain logout title*/
+"Domain Logout" = "Domain Logout";
+
+/*Domain logout message*/
+"Unable to authenticate to the domain. You have been logged out of the domain" = "Unable to authenticate to the domain. You have been logged out of the domain";
+
+/*Dont support title*/
+"Cannot reset passphrase" = "Cannot reset passphrase";
+
+/*Dont support message*/
+"This iFolder account does not support server side passphrase recovery. To reset your passphrase, use the Export, Key Recovery and Import options from the Security Menu." = "This iFolder account does not support server side passphrase recovery. To reset your passphrase, use the Export, Key Recovery and Import options from the Security Menu.";
