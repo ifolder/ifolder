@@ -1423,6 +1423,7 @@ namespace Novell.FormsTrayApp
 			{
 				infoMessage.Visible = false;
 				iFolderView.Visible = true;
+                iFolderView.ReCalculateItems();
 				iFolderView.Location = point;
 				point.Y += iFolderView.Height;
 			}
