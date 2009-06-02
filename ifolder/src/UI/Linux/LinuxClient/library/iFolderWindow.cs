@@ -181,20 +181,20 @@ namespace Novell.iFolder
 		public CellRendererText cell = null;
 		private DomainInformation   ServerDomain;
 		int ComboBoxSelectionIndex =-1;
-		public Label serverLabel1 = null;
-		public Label serverLabel2 = null;
-		public Label serverLabel3 = null;
-		public Label serverLabel4 = null;
-		public Label serverLabel5 = null;
-		public Label serverLabel6 = null;
-		public Label ifolderLabel1 = null;
-		public Label ifolderLabel2 = null;
-		public Label ifolderLabel3 = null;
-		public Label userLabel1 = null;
-		public Label userLabel2 = null;
-		public Label userLabel3 = null;
-		public Label userLabel4 = null;
-		public Label userLabel5 = null;
+		public Label labelUser = null;
+		public Label labelServer = null;
+		public Label labeliFolderCount = null;
+		public Label labeliDiskQouta = null;
+		public Label labeliDiskUsed = null;
+		public Label labeliDiskAvailable = null;
+		public Label labelName = null;
+		public Label labelOwner = null;
+		public Label labelAccess = null;
+		public Label labelFolderToSync = null;
+		public Label labelLastSyncTime = null;
+		public Label labeliFolderSize = null;
+		public Label labeliFolderServer = null;
+		public Label labeliFolderType = null;
 		private Tooltips buttontips;
 	    private	VBox actionsVBox ;
         private ComboBoxEntry viewList; 
@@ -329,7 +329,8 @@ namespace Novell.iFolder
 		/// </summary>
 		private void CreateWidgets()
 		{
-			this.SetDefaultSize (600, 480);
+			//this.SetDefaultSize (600, 480);
+			this.SetDefaultSize (903, 688);
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png"));
 			this.WindowPosition = Gtk.WindowPosition.Center;
 
@@ -1009,31 +1010,31 @@ namespace Novell.iFolder
             //####################### ADD LABEL
 			lable = Util.GS("N/A");
 			lable = string.Format(Util.GS("Name: {0}"),lable); 
-		    ifolderLabel1 = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
+		    labelName = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
 
-		   	iFolderInfo.PackStart(ifolderLabel1, false, false, 0);
-		    ifolderLabel1.UseMarkup = true;
-			ifolderLabel1.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
-		    ifolderLabel1.Xalign = 0.0F;
+		   	iFolderInfo.PackStart(labelName, false, false, 0);
+		    labelName.UseMarkup = true;
+			labelName.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+		    labelName.Xalign = 0.0F;
 
             //####################### ADD LABEL
 			lable = Util.GS("N/A");
 			lable = string.Format(Util.GS("Owner: {0}"),lable); 
-		    ifolderLabel2 = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
+		    labelOwner = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
 
-		   	iFolderInfo.PackStart(ifolderLabel2, false, false, 0);
-		    ifolderLabel2.UseMarkup = true;
-			ifolderLabel2.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
-		    ifolderLabel2.Xalign = 0.0F;
+		   	iFolderInfo.PackStart(labelOwner, false, false, 0);
+		    labelOwner.UseMarkup = true;
+			labelOwner.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+		    labelOwner.Xalign = 0.0F;
             //####################### ADD LABEL
 			lable = Util.GS("N/A");
 			lable = string.Format(Util.GS("Access: {0}"),lable); 
-		    ifolderLabel3 = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
+		    labelAccess = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
 
-		   	iFolderInfo.PackStart(ifolderLabel3, false, false, 0);
-		    ifolderLabel3.UseMarkup = true;
-			ifolderLabel3.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
-		    ifolderLabel3.Xalign = 0.0F;
+		   	iFolderInfo.PackStart(labelAccess, false, false, 0);
+		    labelAccess.UseMarkup = true;
+			labelAccess.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+		    labelAccess.Xalign = 0.0F;
 
 			return iFolderInfo;
 		}
@@ -1052,51 +1053,51 @@ namespace Novell.iFolder
 			//Display the server/domain this ifolder belongs to
 			lable = Util.GS("N/A");
 			lable = string.Format(Util.GS("Server: {0}"),lable); 
-		    userLabel4 = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
+		    labeliFolderServer = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
 
-		   	userInfo.PackStart(userLabel4, false, false, 0);
-		    userLabel4.UseMarkup = true;
-			userLabel4.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
-		    userLabel4.Xalign = 0.0F;
+		   	userInfo.PackStart(labeliFolderServer, false, false, 0);
+		    labeliFolderServer.UseMarkup = true;
+			labeliFolderServer.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+		    labeliFolderServer.Xalign = 0.0F;
             //####################### ADD LABEL
 			lable = Util.GS("N/A");
 			lable = string.Format(Util.GS("Last Successfull Sync time: {0}"),lable); 
-		    userLabel2 = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
+		    labelLastSyncTime = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
 
-		   	userInfo.PackStart(userLabel2, false, false, 0);
-		    userLabel2.UseMarkup = true;
-			userLabel2.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
-		    userLabel2.Xalign = 0.0F;
+		   	userInfo.PackStart(labelLastSyncTime, false, false, 0);
+		    labelLastSyncTime.UseMarkup = true;
+			labelLastSyncTime.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+		    labelLastSyncTime.Xalign = 0.0F;
             //####################### ADD LABEL
 			lable = Util.GS("N/A");
 			lable = string.Format(Util.GS("File/Folder to synchronize: {0}"),lable); 
-		    userLabel1 = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
+		    labelFolderToSync = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
 
-		   	userInfo.PackStart(userLabel1, false, false, 0);
-		    userLabel1.UseMarkup = true;
-			userLabel1.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
-		    userLabel1.Xalign = 0.0F;
+		   	userInfo.PackStart(labelFolderToSync, false, false, 0);
+		    labelFolderToSync.UseMarkup = true;
+			labelFolderToSync.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+		    labelFolderToSync.Xalign = 0.0F;
             //####################### ADD LABEL
 			lable = Util.GS("N/A");
 			lable = string.Format(Util.GS("iFolder Size: {0}"),lable); 
-		    userLabel3 = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
+		    labeliFolderSize = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
 
-		   	userInfo.PackStart(userLabel3, false, false, 0);
-		    userLabel3.UseMarkup = true;
-			userLabel3.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
-		    userLabel3.Xalign = 0.0F;
-			userLabel3.Hide();
+		   	userInfo.PackStart(labeliFolderSize, false, false, 0);
+		    labeliFolderSize.UseMarkup = true;
+			labeliFolderSize.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+		    labeliFolderSize.Xalign = 0.0F;
+			labeliFolderSize.Hide();
          
             //####################### ADD LABEL
 			lable = Util.GS("N/A");
 			lable = string.Format(Util.GS("iFolder Type: {0}"),lable); 
-		    userLabel5 = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
+		    labeliFolderType = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
 
-		   	userInfo.PackStart(userLabel5, false, false, 0);
-		    userLabel5.UseMarkup = true;
-			userLabel5.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
-		    userLabel5.Xalign = 0.0F;
-			userLabel5.Hide();
+		   	userInfo.PackStart(labeliFolderType, false, false, 0);
+		    labeliFolderType.UseMarkup = true;
+			labeliFolderType.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+		    labeliFolderType.Xalign = 0.0F;
+			labeliFolderType.Hide();
 
 
 			return userInfo;
@@ -1239,7 +1240,7 @@ namespace Novell.iFolder
                                 	iFolderHolder holder = (iFolderHolder)(iFolderFilter).GetValue(iter, 0);
                                 	if (holder != null)
                                 	{
-                                        	viewstore.AppendValues(holder.iFolder.IsSubscription?ServerImg:DownloadedImg,holder.iFolder.Name,GetFriendlySize(holder.iFolder.iFolderSize),(domainController.GetDomain(holder.iFolder.DomainID)).Name, holder.StateString, holder);
+                                        	//viewstore.AppendValues(holder.iFolder.IsSubscription?ServerImg:DownloadedImg,holder.iFolder.Name,GetFriendlySize(holder.iFolder.iFolderSize),(domainController.GetDomain(holder.iFolder.DomainID)).Name, holder.StateString, holder);
                                 	}
 				}
 				catch(Exception ex)
@@ -1396,68 +1397,68 @@ namespace Novell.iFolder
             //####################### ADD LABEL
 			lable = Util.GS("N/A");
 			lable = string.Format(Util.GS("User: {0}"),lable); 
-		    serverLabel1 = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
+		    labelUser = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
 
-		   	actionsVBox.PackStart(serverLabel1, false, false, 0);
-		    serverLabel1.UseMarkup = true;
-			serverLabel1.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
-		    serverLabel1.Xalign = 0.0F;
+		   	actionsVBox.PackStart(labelUser, false, false, 0);
+		    labelUser.UseMarkup = true;
+			labelUser.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+		    labelUser.Xalign = 0.0F;
 
 
             //####################### ADD LABEL
 			lable = Util.GS("N/A");
 			lable = string.Format(Util.GS("Server: {0}"),lable); 
-		    serverLabel2 = new Label( string.Format( "<span size=\"medium\">{0}</span>", lable));
+		    labelServer = new Label( string.Format( "<span size=\"medium\">{0}</span>", lable));
 
-            actionsVBox.PackStart(serverLabel2, false, false, 0);
-		    serverLabel2.UseMarkup = true;
-			serverLabel2.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
-		    serverLabel2.Xalign = 0.0F;
+            actionsVBox.PackStart(labelServer, false, false, 0);
+		    labelServer.UseMarkup = true;
+			labelServer.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+		    labelServer.Xalign = 0.0F;
 
             //####################### ADD SPACE
 		     actionsVBox.PackStart(new Label(""), false, false, 0);
             //####################### ADD LABEL
 			lable = Util.GS("N/A");
 			lable = string.Format(Util.GS("No. of iFolder: {0}"),lable); 
-		    serverLabel3 = new Label( string.Format( "<span size=\"medium\">{0}</span>", lable));
+		    labeliFolderCount = new Label( string.Format( "<span size=\"medium\">{0}</span>", lable));
 
-		   	actionsVBox.PackStart(serverLabel3, false, false, 0);
-		    serverLabel3.UseMarkup = true;
-			serverLabel3.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
-		    serverLabel3.Xalign = 0.0F;
+		   	actionsVBox.PackStart(labeliFolderCount, false, false, 0);
+		    labeliFolderCount.UseMarkup = true;
+			labeliFolderCount.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+		    labeliFolderCount.Xalign = 0.0F;
 
             //####################### ADD SPACE
 		     actionsVBox.PackStart(new Label(""), false, false, 0);
             //####################### ADD LABEL
 			lable = Util.GS("N/A");
 			lable = string.Format(Util.GS("Disk Quota: {0}"),lable); 
-		    serverLabel4 = new Label( string.Format( "<span size=\"medium\">{0}</span>", lable));
+		    labeliDiskQouta = new Label( string.Format( "<span size=\"medium\">{0}</span>", lable));
 
-		    actionsVBox.PackStart(serverLabel4, false, false, 0);
-		    serverLabel4.UseMarkup = true;
-			serverLabel4.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
-		    serverLabel4.Xalign = 0.0F;
+		    actionsVBox.PackStart(labeliDiskQouta, false, false, 0);
+		    labeliDiskQouta.UseMarkup = true;
+			labeliDiskQouta.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+		    labeliDiskQouta.Xalign = 0.0F;
 
             //####################### ADD LABEL
 			lable = Util.GS("N/A");
 			lable = string.Format(Util.GS("Disk Used: {0}"),lable); 
-		    serverLabel5 = new Label( string.Format( "<span size=\"medium\">{0}</span>", lable));
+		    labeliDiskUsed = new Label( string.Format( "<span size=\"medium\">{0}</span>", lable));
 
-	        actionsVBox.PackStart(serverLabel5, false, false, 0);
-		    serverLabel5.UseMarkup = true;
-			serverLabel5.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
-		    serverLabel5.Xalign = 0.0F;
+	        actionsVBox.PackStart(labeliDiskUsed, false, false, 0);
+		    labeliDiskUsed.UseMarkup = true;
+			labeliDiskUsed.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+		    labeliDiskUsed.Xalign = 0.0F;
 
 
             //####################### ADD LABEL
 			lable = Util.GS("N/A");
 			lable = string.Format(Util.GS("Disk Available: {0}"),lable); 
-		    serverLabel6 = new Label( string.Format( "<span size=\"medium\">{0}</span>", lable));
+		    labeliDiskAvailable = new Label( string.Format( "<span size=\"medium\">{0}</span>", lable));
 
-	        actionsVBox.PackStart(serverLabel6, false, false, 0);
-		    serverLabel6.UseMarkup = true;
-			serverLabel6.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
-		    serverLabel6.Xalign = 0.0F;
+	        actionsVBox.PackStart(labeliDiskAvailable, false, false, 0);
+		    labeliDiskAvailable.UseMarkup = true;
+			labeliDiskAvailable.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+		    labeliDiskAvailable.Xalign = 0.0F;
 
             //####################### ADD SPACE
 		     actionsVBox.PackStart(new Label(""), false, false, 4);
@@ -1601,19 +1602,19 @@ namespace Novell.iFolder
 	         DiskSpace ds = null;
 			 DomainInformation currentDomain = domain;
 
-			 if(serverLabel1 != null && currentDomain != null)
+			 if(labelUser != null && currentDomain != null)
 			 {
-				serverLabel1.Text = string.Format(Util.GS("User: {0}"), currentDomain.MemberName);
+				labelUser.Text = string.Format(Util.GS("User: {0}"), currentDomain.MemberName);
 			 }		 
-			 if (serverLabel3 != null && serverLabel5 != null 
-				&& serverLabel6 != null && serverLabel4 != null 
+			 if (labeliFolderCount != null && labeliDiskUsed != null 
+				&& labeliDiskAvailable != null && labeliDiskQouta != null 
 				&& currentDomain != null)
 			 {
-		     	serverLabel2.Text = string.Format(Util.GS("Server: {0}"), currentDomain.Name);
-		     	serverLabel3.Text = string.Format(Util.GS("No. of iFolder: {0}"),ifws.GetiFoldersForDomain(currentDomain.ID).Length);
-		     	serverLabel4.Text = string.Format(Util.GS("Disk Qouta: {0}"), CalcualteTotalQouta(currentDomain.MemberUserID) );
-		        serverLabel5.Text =string.Format(Util.GS("Disk Available: {0}"),CalculateDiskQouta(currentDomain.MemberUserID));
-  	         	serverLabel6.Text =  string.Format(Util.GS("Disk Used: {0}"), CalculateDiskUsed(currentDomain.MemberUserID)); 
+		     	labelServer.Text = string.Format(Util.GS("Server: {0}"), currentDomain.Name);
+		     	labeliFolderCount.Text = string.Format(Util.GS("No. of iFolder: {0}"),ifws.GetiFoldersForDomain(currentDomain.ID).Length);
+		     	labeliDiskQouta.Text = string.Format(Util.GS("Disk Qouta: {0}"), CalcualteTotalQouta(currentDomain.MemberUserID) );
+		        labeliDiskUsed.Text =string.Format(Util.GS("Disk Available: {0}"),CalculateDiskQouta(currentDomain.MemberUserID));
+  	         	labeliDiskAvailable.Text =  string.Format(Util.GS("Disk Used: {0}"), CalculateDiskUsed(currentDomain.MemberUserID)); 
 
 			 }
 
@@ -1640,17 +1641,17 @@ namespace Novell.iFolder
 		public bool UpdateUserDetails(iFolderHolder holder)
 		{
 
-			if(holder != null && userLabel1 != null)	
+			if(holder != null && labelFolderToSync != null)	
 			{
-	     		userLabel1.Text = string.Format(Util.GS("File/Folder to synchronize:    {0}"), holder.ObjectsToSync);
-	     		//userLabel2.Text = string.Format(Util.GS("Last Successfull Sync time:    {0}"),syncIntervalInMin);
-	     		userLabel2.Text = string.Format(Util.GS("Last Successfull Sync time:    {0}"),holder.iFolder.LastSyncTime);
+	     		labelFolderToSync.Text = string.Format(Util.GS("File/Folder to synchronize:    {0}"), holder.ObjectsToSync);
+	     		//labelLastSyncTime.Text = string.Format(Util.GS("Last Successfull Sync time:    {0}"),syncIntervalInMin);
+	     		labelLastSyncTime.Text = string.Format(Util.GS("Last Successfull Sync time:    {0}"),holder.iFolder.LastSyncTime);
 				//TODO: Verify whether to user SyncInterval or EffecticeSyncInterval
-	     		userLabel3.Text = string.Format(Util.GS("iFolder Size:    {0}"), "TODO");
+	     		labeliFolderSize.Text = string.Format(Util.GS("iFolder Size:    {0}"), "TODO");
 
 
 				DomainInformation domain = domainController.GetDomain(holder.iFolder.DomainID);
-	     		userLabel4.Text = string.Format(Util.GS("Server:    {0}"),domain.Name);
+	     		labeliFolderServer.Text = string.Format(Util.GS("Server:    {0}"),domain.Name);
 			
 				string iftype = null;	
 				if( (null == holder.iFolder.encryptionAlgorithm) || ("" == holder.iFolder.encryptionAlgorithm) )
@@ -1661,23 +1662,23 @@ namespace Novell.iFolder
 				{
 			    	iftype = string.Format(Util.GS("Encrypted")); 
 				}
-			    	userLabel5.Text= string.Format(Util.GS("iFolder Type:    {0}"), iftype); 
+			    	labeliFolderType.Text= string.Format(Util.GS("iFolder Type:    {0}"), iftype); 
 
            		if(holder.iFolder.IsSubscription) 
 				{
-					userLabel1.Hide();	
-					userLabel2.Hide();	
-					userLabel4.Hide();	
-					userLabel3.Show();	
-					userLabel5.Show();	
+					labelFolderToSync.Hide();	
+					labelLastSyncTime.Hide();	
+					labeliFolderServer.Hide();	
+					labeliFolderSize.Show();	
+					labeliFolderType.Show();	
 				}
 				else
 				{
-					userLabel3.Hide();	
-					userLabel5.Hide();	
-					userLabel1.Show();	
-					userLabel2.Show();	
-					userLabel4.Show();	
+					labeliFolderSize.Hide();	
+					labeliFolderType.Hide();	
+					labelFolderToSync.Show();	
+					labelLastSyncTime.Show();	
+					labeliFolderServer.Show();	
 				}
 			}
 			
@@ -1687,19 +1688,19 @@ namespace Novell.iFolder
 		public bool UpdateiFolderDetails(iFolderHolder holder)
 		{
 
-			if(holder != null && ifolderLabel1 != null)	
+			if(holder != null && labelName != null)	
 			{
-	     		ifolderLabel1.Text = string.Format(Util.GS("Name:    {0}"),holder.iFolder.Name);
-	     		ifolderLabel2.Text = string.Format(Util.GS("Owner:    {0}"),holder.iFolder.Owner);
-	     		ifolderLabel3.Text = string.Format(Util.GS("Access:    {0}"),holder.iFolder.CurrentUserRights);
+	     		labelName.Text = string.Format(Util.GS("Name:    {0}"),holder.iFolder.Name);
+	     		labelOwner.Text = string.Format(Util.GS("Owner:    {0}"),holder.iFolder.Owner);
+	     		labelAccess.Text = string.Format(Util.GS("Access:    {0}"),holder.iFolder.CurrentUserRights);
 
            		if(holder.iFolder.IsSubscription) 
 				{
-					ifolderLabel2.Hide();	
+					labelOwner.Hide();	
 				}
 				else
 				{
-					ifolderLabel2.Show();
+					labelOwner.Show();
 				}
 
 			}
@@ -1711,15 +1712,15 @@ namespace Novell.iFolder
 		{	
 		        string label = Util.GS("N/A");	
 
-	     		ifolderLabel1.Text = string.Format(Util.GS("Name:    {0}"),label);
-	     		ifolderLabel2.Text = string.Format(Util.GS("Owner:    {0}"),label);
-	     		ifolderLabel3.Text = string.Format(Util.GS("Access:    {0}"),label);
+	     		labelName.Text = string.Format(Util.GS("Name:    {0}"),label);
+	     		labelOwner.Text = string.Format(Util.GS("Owner:    {0}"),label);
+	     		labelAccess.Text = string.Format(Util.GS("Access:    {0}"),label);
 
-	     		userLabel1.Text = string.Format(Util.GS("File/Folder to synchronize:    {0}"), label);
-	     		userLabel2.Text = string.Format(Util.GS("Last Successfull Sync time:    {0}"), label);
-	     		userLabel3.Text = string.Format(Util.GS("iFolder Size:    {0}"), label);
-	     		userLabel4.Text = string.Format(Util.GS("Server:    {0}"), label);
-			   	userLabel5.Text= string.Format(Util.GS("iFolder Type:    {0}"), label);
+	     		labelFolderToSync.Text = string.Format(Util.GS("File/Folder to synchronize:    {0}"), label);
+	     		labelLastSyncTime.Text = string.Format(Util.GS("Last Successfull Sync time:    {0}"), label);
+	     		labeliFolderSize.Text = string.Format(Util.GS("iFolder Size:    {0}"), label);
+	     		labeliFolderServer.Text = string.Format(Util.GS("Server:    {0}"), label);
+			   	labeliFolderType.Text= string.Format(Util.GS("iFolder Type:    {0}"), label);
 
 		}
 
@@ -3696,6 +3697,7 @@ namespace Novell.iFolder
 			RemoveMembershipButton.Sensitive = false;
 			//SynchronizedFolderTasks.Visible = false;
 			ShowHideAllFoldersButton.Visible = false;
+			RemoveMembershipButton.Visible = false;
 
 				
 			if (holder == null)
@@ -3913,6 +3915,10 @@ namespace Novell.iFolder
 			// Since POBox creation is completely removed from 3.7 and above clients so removing references too.
 			//domainController.CheckForNewiFolders();
 			this.RefreshAvailableiFolderTimer.Change(300000, 300000);
+
+			//###########Update Server Details
+			DomainInformation currentDomain = UpdateCurrentServer();
+			UpdateSelectedServerDetails(currentDomain);
 		}
 
 		private void RefreshAvailableiFolderTimer_click(object sender)
