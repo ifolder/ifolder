@@ -1323,17 +1323,17 @@ namespace Novell.iFolder
 			string lable = null;
 			string domainName = null;
 
-	        cell = new CellRendererText();
+	        //cell = new CellRendererText();
         	//store = new ListStore(typeof (string));
 			ViewUserDomainList = ComboBox.NewText();
+			actionsVBox.PackStart(ViewUserDomainList, false, true, 0);
+        	//ViewUserDomainList.PackStart(cell, false);
 
 			//Event handler for Combobox
 			ViewUserDomainList.Changed += new EventHandler(OnComboBoxIndexChange);
 			//ViewUserDomainList.Clear();
-        	ViewUserDomainList.PackStart(cell, false);
-        	ViewUserDomainList.AddAttribute(cell, "text", 0);
+        	//ViewUserDomainList.AddAttribute(cell, "text", 0);
 		
-			actionsVBox.PackStart(ViewUserDomainList, false, true, 0);
 		
             //####################### ADD SPACE
 		     actionsVBox.PackStart(new Label(""), false, false, 4);
@@ -1687,23 +1687,31 @@ namespace Novell.iFolder
 		public bool PopulateCombobox()
 		{
 
-			if(cell == null )
-				return false;
+			//if(cell == null )
+			//	return false;
 			
+			int domaincount = 0;
 			string domainName = null;
-			UriBuilder serverUri = null;
-        		store = new ListStore(typeof (string));
-			//ViewUserDomainList.Clear();
-			ViewUserDomainList.Model = store;
+			ViewUserDomainList.Clear();
+			CellRendererText cell = new CellRendererText();
+	        ViewUserDomainList.PackStart(cell, false);
+		    ViewUserDomainList.AddAttribute(cell, "text", 0);
+		    ListStore store = new ListStore(typeof (string));
+		    ViewUserDomainList.Model = store;
+			DomainInformation[] domains = domainController.GetDomains();
+
+
+			
+			//UriBuilder serverUri = null;
+        	//	store = new ListStore(typeof (string));
+			//ViewUserDomainList.Model = store;
 		
 		    //TODO: Move this code in a function and make call from on domain add and delete event as well as here/startup
-			DomainInformation[] domains = domainController.GetDomains();
-			int domaincount = 0;
 		    foreach (DomainInformation domain in domains)
 		    {
-		    	serverUri = new UriBuilder(domain.HostUrl); 
-		    	//domainName = domain.Name + "-" + serverUri.Host; 
-		    	domainName =  serverUri.Host; 
+		    	UriBuilder serverUri = new UriBuilder(domain.HostUrl); 
+		    	domainName = domain.Name + "-" + serverUri.Host; 
+		    	//domainName =  serverUri.Host; 
 		    	store.AppendValues(domainName);
 		    	domaincount++;
 		    }
