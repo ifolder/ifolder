@@ -113,7 +113,6 @@ namespace Novell.FormsTrayApp
             this.Size = new System.Windows.Forms.ColumnHeader();
             this.Server = new System.Windows.Forms.ColumnHeader();
             this.Status = new System.Windows.Forms.ColumnHeader();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
             this.iFolderView = new Novell.FormsTrayApp.TileListView();
             this.toolStripiFolderActions.SuspendLayout();
@@ -764,10 +763,8 @@ namespace Novell.FormsTrayApp
             this.Status});
             this.listView1.ContextMenuStrip = this.iFolderContextMenu;
             this.listView1.FullRowSelect = true;
-            this.listView1.LargeImageList = this.imageList1;
             this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
-            this.listView1.SmallImageList = this.imageList1;
             this.listView1.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -789,20 +786,6 @@ namespace Novell.FormsTrayApp
             // Status
             // 
             resources.ApplyResources(this.Status, "Status");
-            // 
-            // imageList1
-            // 
-            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "ifolder48.png");
-            this.imageList1.Images.SetKeyName(1, "ifolder-conflict48.png");
-            this.imageList1.Images.SetKeyName(2, "ifolder-download48.png");
-            this.imageList1.Images.SetKeyName(3, "ifolder-error48.png");
-            this.imageList1.Images.SetKeyName(4, "ifolder-sync48.png");
-            this.imageList1.Images.SetKeyName(5, "ifolder-upload48.png");
-            this.imageList1.Images.SetKeyName(6, "ifolder-waiting48.png");
-            this.imageList1.Images.SetKeyName(7, "encrypt_ilock_48.gif");
-            this.imageList1.Images.SetKeyName(8, "encrypt-ilock-48.png");
             // 
             // panel1
             // 
@@ -975,7 +958,6 @@ namespace Novell.FormsTrayApp
         private Button LoginLogoff;
         private ListView listView1;
         private Panel panel1;
-        private ImageList imageList1;
         private ColumnHeader iFolder;
         private ColumnHeader Size;
         private ColumnHeader Server;

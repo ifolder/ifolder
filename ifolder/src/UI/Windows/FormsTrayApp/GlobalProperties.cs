@@ -102,6 +102,7 @@ namespace Novell.FormsTrayApp
         private Hashtable iFolderListViews = new Hashtable();
         private Hashtable acceptedFolders = new Hashtable();
         private ImageList largeImageList;
+        private ImageList smallImageList;
         private ImageList largeMenuImageList;        
         private TileListViewItem selectedItem;
         private bool hide = true;
@@ -379,6 +380,9 @@ namespace Novell.FormsTrayApp
                 // TODO: load hot icons.
             }
             catch { } // Non-fatal ... just missing some graphics.
+            // Load the application icon
+
+
 
             //TODO: commented out, need to figure why is this giving error. 
             //this.MinimumSize = this.Size;
@@ -390,6 +394,38 @@ namespace Novell.FormsTrayApp
                 string.Empty, 
                 MyMessageBoxButtons.YesNo, 
                 MyMessageBoxIcon.Question);
+
+            try
+            {
+                smallImageList = new ImageList();
+                smallImageList.ImageSize = new Size(32, 32);
+                smallImageList.ColorDepth = ColorDepth.Depth32Bit;
+                smallImageList.TransparentColor = Color.Black;
+                smallImageList.Images.Add(Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\newifolder32.png")));
+                smallImageList.Images.Add(Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder-sync32.png")));
+                smallImageList.Images.Add(Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder-download32.png")));
+                smallImageList.Images.Add(Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder-upload32.png")));
+                smallImageList.Images.Add(Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder-waiting32.png")));
+                smallImageList.Images.Add(Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder-conflict32.png")));
+                smallImageList.Images.Add(Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder-error32.png")));
+                smallImageList.Images.Add(Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\encrypt_ilock_32.png")));
+                smallImageList.Images.Add(Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder_user_32.png")));
+                smallImageList.Images.Add(Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder-warning32.png")));
+
+
+                toolStripBtnCreate.Image = Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder48.png"));
+                toolStripBtnDelete.Image = Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\delete_48.png"));
+                toolStripBtnDownload.Image = Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder-download48.png"));
+                toolStripBtnMerge.Image = Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\merge48.png"));
+                toolStripBtnResolve.Image = Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\conflict48.png"));
+                toolStripBtnRevert.Image = Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\revert48.png"));
+                toolStripBtnShare.Image = Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\share48.png"));
+                toolStripBtnSyncNow.Image = Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder-sync48.png"));
+                toolStipBtnChangeView.Image = Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\change_view_48.png"));
+            }
+            catch { }
+            listView1.LargeImageList = largeImageList;
+            listView1.SmallImageList = smallImageList;
         }
 
         void menuResetPassword_Click(object sender, EventArgs e)
@@ -3246,11 +3282,11 @@ namespace Novell.FormsTrayApp
                     (simiasWebService.GetDomainInformation(ifObj.iFolderWeb.DomainID)).Host,
                     status,
                     ifObj.iFolderWeb.ID},
-                    -2,
-                    Color.Black,
+                    imageIndex,
+                    Color.Empty,
                     Color.Empty,
                     new Font("Microsoft Sans Serif", 13.25F, FontStyle.Regular, GraphicsUnit.Point, ((System.Byte)(0))));
-                    listViewItem1.ImageIndex = imageIndex;
+                    //listViewItem1.ImageIndex = imageIndex;
                     listView1.Items.Add(listViewItem1);
                 }
             }
