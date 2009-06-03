@@ -1115,12 +1115,6 @@ namespace Novell.iFolder
 			HBox hbox = new HBox(false, 0);
 
 			hbox.PackStart(CreateActions(), false, false, 12);
-			/* 
-			viewpane = new HBox(false, 0);
-			viewpane.PackStart(CreateIconViewPane(), true, true, 0);
-			viewpane.PackStart(CreateListViewPane(), true, true, 0);
-			hbox.PackStart(CreateViewWithDetails(viewpane), true, true, 0);
-            */
 
 			hbox.PackStart(CreateCombinedView(), true, true, 0);
 			vbox.PackStart(hbox, true, true, 0);
@@ -1391,53 +1385,6 @@ namespace Novell.iFolder
 			l.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
 			l.Xalign = 0.0F;
 
- // Add Scroll Window Testing
-			/*ScrolledWindow serverList = new ScrolledWindow();		
-			ifolderlistview.BorderWidth = 10;
-			ifolderlistview.HeightRequest = 200;
-			ifolderlistview.Vadjustment.Lower = 4;
-
-			//Image uploadImg = new Image(Util.ImagesPath("ifolder-upload48.png"));
-			Gdk.Pixbuf uploadImg = new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png"));
-
-			//TreeStore store = new TreeStore (typeof (string), typeof (string));
-			TreeStore store = new TreeStore (typeof (Gdk.Pixbuf), typeof (string));
-			for (int i=0; i < 4; i++)
-			{
-				//TreeIter iter = store.AppendValues ("Demo " + i, "Data " + i);
-				TreeIter iter = store.AppendValues (uploadImg, "Data " + i);
-			}
-			ifolderlistview.ShadowType = Gtk.ShadowType.EtchedIn;
-			actionsVBox.PackStart(ifolderlistview, false, true, 0);
-			ifolderlistview.Show(); 
-			//TreeView tv = new TreeView (); //commented as "tv" was made global
-		*/ 	
-		/*	tv = new TreeView ();
-			
-			ListStore store = new ListStore (typeof (Gdk.Pixbuf),typeof (string)); 
-			//clear the store before appending values
-			store.Clear();
-
-	        store.AppendValues (uploadImg,"item 1");
-		    store.AppendValues (uploadImg,"item 2");		
-		    store.AppendValues (uploadImg,"item 3");		
-		    store.AppendValues (uploadImg,"item 4");		
-
-			//tv.Selection.Changed +=  new EventHandler(OnSelectionChanged);
-					
-			tv.Model = store;
-		//	tv.EnableGridLines = Gtk.TreeViewGridLines.Horizontal;
-			tv.HeadersVisible = true;
-			tv.AppendColumn ("Demo", new CellRendererPixbuf(), "pixbuf", 0);
-			tv.AppendColumn ("Data", new CellRendererText (), "text", 1);
-			//tv.AppendColumn (null, new CellRendererPixbuf(), "pixbuf", 0);
-			//tv.AppendColumn (null, new CellRendererText (), "text", 1);
-			ifolderlistview.Add(tv);
-			ifolderlistview.ShadowType = Gtk.ShadowType.EtchedIn;
-
-			actionsVBox.PackStart(ifolderlistview, false, true, 0);
-			ifolderlistview.Show(); */
-
            //################ADDED COMBOX BOX
 			string lable = null;
 			string domainName = null;
@@ -1614,9 +1561,6 @@ namespace Novell.iFolder
 		private void OnComboBoxIndexChange(object o, EventArgs args)
 		{
 
-		/*	 DomainInformation domain = null;	
-			 domain =  UpdateCurrentServer();
-			 UpdateSelectedServerDetails(domain); */
 			 UpdateServerInfoForSelectedDomain();
 
 			return;
@@ -1872,21 +1816,6 @@ namespace Novell.iFolder
 			return true;
 		}
 
-	   /* static void OnSelectionChanged (object o, EventArgs args)
-		{	
-			TreeIter iter;
-			TreeModel model;
-			if (((TreeSelection)o).GetSelected (out model, out iter))
-			{
-				string val = (string) model.GetValue (iter, 1);
-			    Console.WriteLine ("{0} was selected ", val);
-				Gdk.Pixbuf newImg = new Gdk.Pixbuf(Util.ImagesPath("ifolder128.png"));
-				model.SetValue(iter, 0, newImg);
-
-			}
-		}*/
-		
-		
 
 		private Widget CreateViewWithDetails(Widget combinedview)
 		{
@@ -2069,10 +1998,6 @@ namespace Novell.iFolder
 */
 			iFoldersScrolledWindow.AddWithViewport(iFoldersIconView);
 			
-	/*		packIconView = new VBox(false,0);
-			packIconView.PackStart(ifolderlistview,true,true,0);
-			return packIconView;
-	*/		
 			return iFoldersScrolledWindow;
 		}
 		
@@ -3516,10 +3441,6 @@ namespace Novell.iFolder
                         		else
 						iFoldersIconView.UnselectAll();
 					
-			/*		//###### Update Server Information for the selected Domain.
-			 		DomainInformation domain = null;	
-			 		domain =  UpdateCurrentServer();
-			 		UpdateSelectedServerDetails(domain); */
 			        UpdateServerInfoForSelectedDomain();
 				}
 				catch(Exception e)
@@ -3986,9 +3907,6 @@ namespace Novell.iFolder
 			//domainController.CheckForNewiFolders();
 			this.RefreshAvailableiFolderTimer.Change(300000, 300000);
 
-	/*		//###########Update Server Details
-			DomainInformation currentDomain = UpdateCurrentServer();
-			UpdateSelectedServerDetails(currentDomain); */
 			 GLib.Idle.Add(UpdateServerInfoForSelectedDomain);
 		}
 
@@ -4571,10 +4489,6 @@ namespace Novell.iFolder
 			}
 			while(rc == (int)ResponseType.Ok);
 
-	/*		//###### Update Server Information for the selected Domain.
-			 DomainInformation domain = null;	
-			 domain =  UpdateCurrentServer();
-			 UpdateSelectedServerDetails(domain); */
 			 UpdateServerInfoForSelectedDomain();
 		}
 
