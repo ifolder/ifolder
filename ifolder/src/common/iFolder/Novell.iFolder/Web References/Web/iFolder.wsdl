@@ -1123,6 +1123,21 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="GetDefaultServerPublicKey">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DomainID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDefaultServerPublicKeyResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetDefaultServerPublicKeyResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
     </s:schema>
   </wsdl:types>
   <wsdl:message name="PingSoapIn">
@@ -1569,6 +1584,12 @@
   <wsdl:message name="ChangePasswordSoapOut">
     <wsdl:part name="parameters" element="tns:ChangePasswordResponse" />
   </wsdl:message>
+  <wsdl:message name="GetDefaultServerPublicKeySoapIn">
+    <wsdl:part name="parameters" element="tns:GetDefaultServerPublicKey" />
+  </wsdl:message>
+  <wsdl:message name="GetDefaultServerPublicKeySoapOut">
+    <wsdl:part name="parameters" element="tns:GetDefaultServerPublicKeyResponse" />
+  </wsdl:message>
   <wsdl:portType name="iFolderWebServiceSoap">
     <wsdl:operation name="Ping">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Allows a client to ping to make sure the Web Service is up and running</wsdl:documentation>
@@ -1939,6 +1960,11 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Run the client update</wsdl:documentation>
       <wsdl:input message="tns:ChangePasswordSoapIn" />
       <wsdl:output message="tns:ChangePasswordSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDefaultServerPublicKey">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets the Default public key for iFolder key encryption</wsdl:documentation>
+      <wsdl:input message="tns:GetDefaultServerPublicKeySoapIn" />
+      <wsdl:output message="tns:GetDefaultServerPublicKeySoapOut" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="iFolderWebServiceSoap" type="tns:iFolderWebServiceSoap">
@@ -2609,6 +2635,15 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetDefaultServerPublicKey">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetDefaultServerPublicKey" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:binding name="iFolderWebServiceSoap12" type="tns:iFolderWebServiceSoap">
     <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
@@ -3271,6 +3306,15 @@
     </wsdl:operation>
     <wsdl:operation name="ChangePassword">
       <soap12:operation soapAction="http://novell.com/ifolder/web/ChangePassword" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDefaultServerPublicKey">
+      <soap12:operation soapAction="http://novell.com/ifolder/web/GetDefaultServerPublicKey" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

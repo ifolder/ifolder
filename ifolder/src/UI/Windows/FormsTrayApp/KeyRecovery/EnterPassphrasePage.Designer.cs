@@ -35,6 +35,10 @@ namespace Novell.Wizard
             this.label3 = new System.Windows.Forms.Label();
             this.iFolderAcc = new System.Windows.Forms.TextBox();
             this.loginErrorLabel = new System.Windows.Forms.Label();
+            this.userNameLabel = new System.Windows.Forms.Label();
+            this.userName = new System.Windows.Forms.TextBox();
+            this.passwordLabel = new System.Windows.Forms.Label();
+            this.password = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // label1
@@ -86,6 +90,7 @@ namespace Novell.Wizard
             // 
             this.iFolderAcc.Location = new System.Drawing.Point(188, 90);
             this.iFolderAcc.Name = "iFolderAcc";
+            this.iFolderAcc.ReadOnly = true;
             this.iFolderAcc.Size = new System.Drawing.Size(211, 20);
             this.iFolderAcc.TabIndex = 8;
             // 
@@ -97,10 +102,49 @@ namespace Novell.Wizard
             this.loginErrorLabel.Size = new System.Drawing.Size(0, 13);
             this.loginErrorLabel.TabIndex = 9;
             // 
+            // userNameLabel
+            // 
+            this.userNameLabel.AutoSize = true;
+            this.userNameLabel.Location = new System.Drawing.Point(48, 201);
+            this.userNameLabel.Name = "userNameLabel";
+            this.userNameLabel.Size = new System.Drawing.Size(61, 13);
+            this.userNameLabel.TabIndex = 10;
+            this.userNameLabel.Text = "User name:";
+            // 
+            // userName
+            // 
+            this.userName.Location = new System.Drawing.Point(188, 194);
+            this.userName.Name = "userName";
+            this.userName.Size = new System.Drawing.Size(211, 20);
+            this.userName.TabIndex = 11;
+            this.userName.TextChanged += new System.EventHandler(this.userName_TextChanged);
+            // 
+            // passwordLabel
+            // 
+            this.passwordLabel.AutoSize = true;
+            this.passwordLabel.Location = new System.Drawing.Point(48, 234);
+            this.passwordLabel.Name = "passwordLabel";
+            this.passwordLabel.Size = new System.Drawing.Size(56, 13);
+            this.passwordLabel.TabIndex = 12;
+            this.passwordLabel.Text = "Password:";
+            // 
+            // password
+            // 
+            this.password.Location = new System.Drawing.Point(188, 234);
+            this.password.Name = "password";
+            this.password.PasswordChar = '*';
+            this.password.Size = new System.Drawing.Size(211, 20);
+            this.password.TabIndex = 13;
+            this.password.TextChanged += new System.EventHandler(this.password_TextChanged);
+            // 
             // EnterPassphrasePage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.password);
+            this.Controls.Add(this.passwordLabel);
+            this.Controls.Add(this.userName);
+            this.Controls.Add(this.userNameLabel);
             this.Controls.Add(this.loginErrorLabel);
             this.Controls.Add(this.newPassphrase);
             this.Controls.Add(this.label2);
@@ -116,6 +160,10 @@ namespace Novell.Wizard
             this.Controls.SetChildIndex(this.label2, 0);
             this.Controls.SetChildIndex(this.newPassphrase, 0);
             this.Controls.SetChildIndex(this.loginErrorLabel, 0);
+            this.Controls.SetChildIndex(this.userNameLabel, 0);
+            this.Controls.SetChildIndex(this.userName, 0);
+            this.Controls.SetChildIndex(this.passwordLabel, 0);
+            this.Controls.SetChildIndex(this.password, 0);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -130,5 +178,9 @@ namespace Novell.Wizard
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox iFolderAcc;
         private System.Windows.Forms.Label loginErrorLabel;
+        private System.Windows.Forms.Label userNameLabel;
+        private System.Windows.Forms.TextBox userName;
+        private System.Windows.Forms.Label passwordLabel;
+        private System.Windows.Forms.TextBox password;
     }
 }

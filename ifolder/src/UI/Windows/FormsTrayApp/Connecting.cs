@@ -83,7 +83,7 @@ namespace Novell.FormsTrayApp
 		private bool CertAcceptedCond1 = false;
 		private bool CertAcceptedCond2 = false;
 		private ArrayList ServersForCertStore = new ArrayList();
-        private bool verifyPrompt = false;           //Required for the wizard
+              
 
 		/// <summary>
 		/// Required designer variable.
@@ -148,13 +148,7 @@ namespace Novell.FormsTrayApp
             this.autoAccountEnabled = false;
 		}
 
-        public Connecting(iFolderWebService ifws, SimiasWebService simiasWebService, Manager simiasManager, DomainInformation domainInfo, string password, bool rememberPassword,bool verifyPrompt) :
-            this(ifws, simiasWebService, simiasManager, domainInfo, password,rememberPassword)
-
-        {
-            this.verifyPrompt = verifyPrompt;
-        }
-
+       
         /// <summary>
         /// Constructor
         /// </summary>
@@ -185,13 +179,7 @@ namespace Novell.FormsTrayApp
 		}
 
 
-        public Connecting(iFolderWebService ifws, SimiasWebService simiasWebService, Manager simiasManager, DomainInformation domainInfo, bool verifyPrompt) :
-            this(ifws, simiasWebService, simiasManager, domainInfo, null)
-        {
-
-            this.verifyPrompt = verifyPrompt;
-        }
-
+     
             
         /// <summary>
         /// Constructor
@@ -593,7 +581,7 @@ namespace Novell.FormsTrayApp
 			}
             
 
-            if (connectResult && (verifyPrompt ==false))
+            if (connectResult)
             {
                 try
                 {
@@ -630,7 +618,7 @@ namespace Novell.FormsTrayApp
 			/*
 			 *	Add  code here for showing passphrase dialogs depending on I/P;
 			 */
-			if( connectResult && (verifyPrompt == false))
+			if( connectResult)
 			{
 				// Check which dialog to display.
 				/*	if passphrase is not set show verify dialog. else check for remember option 

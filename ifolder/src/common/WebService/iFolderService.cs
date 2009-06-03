@@ -2225,35 +2225,7 @@ namespace Novell.iFolder.Web
                         return status;
 		}
 
-        		/// <summary>
-		/// Check for new Mac client avaibility
-		/// </summary>
-		/// <param name="DomainID"></param>
-		/// <param name = "CurrentVersion">
-		/// Version of the Mac client running on machine. 
-		/// </param>
-        [WebMethod(EnableSession = true, Description = "Check for newer Mac client availability.")]
-        [SoapDocumentMethod]
-        public void ValidateCredentialsForDomain(string DomainID, string UserID, string password)
-        {
-            Domain domain = Store.GetStore().GetDomain(DomainID);
-            Simias.Storage.Member member = domain.GetMemberByID(UserID);
-            string url = member.HomeServer.PublicUrl + "/DiscoveryService.asmx";          
-            DiscoveryService disc = new DiscoveryService();
-            disc.Credentials = new NetworkCredential(member.Name, password);
-            disc.Url = url;
-            try
-            {
-                string[] coll = disc.GetAllCollectionIDsByUser(UserID);
-                if (coll == null)
-                    throw new Exception("returned null");
-            }
-            catch (Exception e)
-            {
-                string message = string.Format("Exception at: {0}, url: {1}, message: {2}, stacktrace: {3}", "authenticate", url, e.Message, e.StackTrace);
-                throw new Exception(message);
-            }
-        }
+        	
 		/// <summary>
 		/// Decline an Enterprise subscription
 		/// </summary>

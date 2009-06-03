@@ -961,6 +961,15 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Password:.
+        /// </summary>
+        internal static string passwordText {
+            get {
+                return ResourceManager.GetString("passwordText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to  contain a folder with the same name as the iFolder..
         /// </summary>
         internal static string PathDoesNotExist {
@@ -1452,6 +1461,15 @@ namespace TrayApp.Properties {
         internal static string user {
             get {
                 return ResourceManager.GetString("user", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User name:.
+        /// </summary>
+        internal static string userNameText {
+            get {
+                return ResourceManager.GetString("userNameText", resourceCulture);
             }
         }
         

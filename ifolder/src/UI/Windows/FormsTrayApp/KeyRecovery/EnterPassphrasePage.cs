@@ -57,7 +57,7 @@ namespace Novell.Wizard
         private iFolderWebService ifolderWebService;
         private Manager simiasManager;
 
-        
+
         public EnterPassphrasePage(iFolderWebService ifws, SimiasWebService simws, Manager simiasManager)
         {
             InitializeComponent();
@@ -84,6 +84,9 @@ namespace Novell.Wizard
             wizard = (KeyRecoveryWizard)this.Parent;
             ((KeyRecoveryWizard)this.Parent).WizardButtons = KeyRecoveryWizardButtons.Cancel | KeyRecoveryWizardButtons.Back;
             iFolderAcc.Text = wizard.DomainSelectionPage.SelectedDomain.Name;
+            //DomainInformation di = new DomainInformation();
+            //di.ID =wizard.DomainSelectionPage.SelectedDomain.ID;
+           // userName.Text = di.MemberName;
             newPassphrase.Focus();
             UpdateSensitivity();
 
@@ -103,12 +106,12 @@ namespace Novell.Wizard
         private void UpdateSensitivity()
         {
 
-            if (this.newPassphrase.Text.Length > 0 && this.confirmPassphrase.Text.Length > 0 && this.newPassphrase.Text == this.confirmPassphrase.Text)
-
+            if (this.newPassphrase.Text.Length > 0 && this.confirmPassphrase.Text.Length > 0 && this.newPassphrase.Text == this.confirmPassphrase.Text && this.userName.Text.Length > 0 && this.password.Text.Length > 0)
+               // if(this.userName.Text.Length > 0 && this.password.Text.Length > 0)
                 ((KeyRecoveryWizard)this.Parent).WizardButtons = KeyRecoveryWizardButtons.Cancel | KeyRecoveryWizardButtons.Back | KeyRecoveryWizardButtons.Next;
 
             else
-                ((KeyRecoveryWizard)this.Parent).WizardButtons = KeyRecoveryWizardButtons.Cancel | KeyRecoveryWizardButtons.Back ;
+                ((KeyRecoveryWizard)this.Parent).WizardButtons = KeyRecoveryWizardButtons.Cancel | KeyRecoveryWizardButtons.Back;
 
 
         }
@@ -119,40 +122,65 @@ namespace Novell.Wizard
         /// <param name="currentIndex">current index</param>
         internal override int ValidatePage(int currentIndex)
         {
-            
-                DomainInformation[] domains;
-                DomainInformation selectedDomainInfo = null;
-                domains = this.simiasWebService.GetDomains(true);
-                foreach (DomainInformation di in domains)
+
+            DomainInformation[] domains;
+            DomainInformation selectedDomainInfo = null;
+            domains = this.simiasWebService.GetDomains(true);
+            Status passPhraseStatus = null;
+            foreach (DomainInformation di in domains)
+            {
+
+                if (di.Authenticated && di.ID == wizard.DomainSelectionPage.SelectedDomain.ID)
                 {
+                    selectedDomainInfo = (DomainInformation)di;
 
-                    if (di.Authenticated && di.ID == wizard.DomainSelectionPage.SelectedDomain.ID)
-                    {
-                        selectedDomainInfo = (DomainInformation) di;
-                        
-                    }
                 }
-             
-                bool result = false;
-                Domain domain = new Domain(selectedDomainInfo);
-             
-                Preferences prefs = new Preferences(this.ifolderWebService, this.simiasWebService, this.simiasManager);
-             
-            try{
-                
-                 /*result = prefs.logoutFromDomain(domain);
+            }
 
-                if (result)
-                        result = prefs.loginToDomain(domain, true);
-                if (!result) */
+            bool result = false;
+            Domain domain = new Domain(selectedDomainInfo);
+
+            try
+            {
+                Status status = this.simiasWebService.LogoutFromRemoteDomain(domain.ID);
+
+                if (status.statusCode == StatusCodes.Success)
+                {
+                    status = this.simiasWebService.LoginToRemoteDomain(domain.ID, this.password.Text);
+
+                    if (status.statusCode != StatusCodes.Success)
+                    {
+                        MessageBox.Show(Resources.authenticateError);
+                        return -999;
+                      
+                    }
+
+                    result = true;
+
+                }
+            }
+            catch (Exception e)
+
+            {
+               
+                    return -999;
+               
+            
+            }
+          /*  Preferences prefs = new Preferences(this.ifolderWebService, this.simiasWebService, this.simiasManager);
+
+            try
+            {
+
+
                 if (prefs.logoutFromDomain(domain))
                 {
-                    if(!prefs.loginToDomain(domain, true))
+                    if (!prefs.loginToDomain(domain, true))
                     {
-                       MyMessageBox mmb = new MyMessageBox(Resources.loginError,
-                           Resources.authenticateError, null, MyMessageBoxButtons.OK);
-                       mmb.ShowDialog();
-                        if ( mmb.DialogResult == DialogResult.OK )
+                        MyMessageBox mmb = new MyMessageBox(Resources.loginError,
+                            Resources.authenticateError, null, MyMessageBoxButtons.OK);
+                        mmb.ShowDialog();
+                        if (mmb.DialogResult == DialogResult.OK)
                         {
                             return -999;
                         }
@@ -160,54 +188,77 @@ namespace Novell.Wizard
                     ((KeyRecoveryWizard)this.Parent).WizardButtons = KeyRecoveryWizardButtons.Cancel;
                     newPassphrase.Enabled = confirmPassphrase.Enabled = false;
                     return currentIndex; */
-                    }
+                   /* }
 
                     result = true;
                 }
             }
-                catch (Exception e)
-                {
-                   /* loginErrorLabel.Text = TrayApp.Properties.Resources.loginError;
-                    ((KeyRecoveryWizard)this.Parent).WizardButtons = KeyRecoveryWizardButtons.Cancel;
-                    newPassphrase.Enabled = confirmPassphrase.Enabled = false;*/
-                    return currentIndex;
-                }
-                
-                           
-            if (result )
+            catch (Exception e)
             {
-               //selectedDomainInfo.Authenticated = true;
+                /* loginErrorLabel.Text = TrayApp.Properties.Resources.loginError;
+                 ((KeyRecoveryWizard)this.Parent).WizardButtons = KeyRecoveryWizardButtons.Cancel;
+                 newPassphrase.Enabled = confirmPassphrase.Enabled = false;*/
+               /* return currentIndex;
+            }
+            */
 
-               string memberUID = selectedDomainInfo.MemberUserID;
-               string publicKey = null;
-           
-               try{
-                    publicKey = this.ifolderWebService.GetDefaultServerPublicKey(selectedDomainInfo.ID,memberUID);
+            if (result)
+            {
+
+                string memberUID = selectedDomainInfo.MemberUserID;
+                string publicKey = null;
+
+                try
+                {
+                    publicKey = this.ifolderWebService.GetDefaultServerPublicKey(selectedDomainInfo.ID, memberUID);
                     this.simiasWebService.ExportRecoverImport(selectedDomainInfo.ID, memberUID, this.newPassphrase.Text);
-                     Status passPhraseStatus = null;
-                   
-                     passPhraseStatus = this.simiasWebService.SetPassPhrase(selectedDomainInfo.ID, this.newPassphrase.Text, "DEFAULT", publicKey);
-                     result = true;
-                     }
-                     catch (Exception ex)
-                     {
+                    passPhraseStatus = null;
 
-                         MyMessageBox mmb = new MyMessageBox(Resources.recoveryError,
-                          Resources.resetPassphraseError, null, MyMessageBoxButtons.OK);
-                         mmb.ShowDialog();
-                         if (mmb.DialogResult == DialogResult.OK)
-                         {
-                             return -999;
-                         }
-                     }
-                    
-              
+                    passPhraseStatus = this.simiasWebService.SetPassPhrase(selectedDomainInfo.ID, this.newPassphrase.Text, "DEFAULT", publicKey);
+                    result = true;
+                }
+                catch (Exception ex)
+                {
+
+                    MyMessageBox mmb = new MyMessageBox(Resources.recoveryError,
+                     Resources.resetPassphraseError, null, MyMessageBoxButtons.OK);
+                    mmb.ShowDialog();
+                    if (mmb.DialogResult == DialogResult.OK)
+                    {
+                        return -999;
+                    }
+                }
+
+
             }
 
-          
+            if (passPhraseStatus.statusCode != StatusCodes.Success)
+            {
+                MyMessageBox mmb = new MyMessageBox(Resources.recoveryError,
+                        Resources.resetPassphraseError, null, MyMessageBoxButtons.OK);
+                mmb.ShowDialog();
+                if (mmb.DialogResult == DialogResult.OK)
+                {
+                    return currentIndex;
+                }
+               
+            }
                 currentIndex = wizard.MaxPages - 4;
                 return base.ValidatePage(currentIndex);
-           
-                 }
+
+                        
+        }
+
+        private void userName_TextChanged(object sender, EventArgs e)
+        {
+            UpdateSensitivity();
+        }
+
+        private void password_TextChanged(object sender, EventArgs e)
+        {
+            UpdateSensitivity();
+        }
+
+       
     }
 }

@@ -74,7 +74,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Panel panel1;
 		private iFolderWebService ifWebService;
 		private Manager simiasManager;
-        private bool verifyPrompt = false;
+       
         private bool wizardStatus = false;
 		/// <summary>
 		/// Required designer variable.
@@ -86,13 +86,8 @@ namespace Novell.FormsTrayApp
 		/// </summary>
 		/// <param name="domainInfo">The DomainInformation object for the domain.</param>
 
-        public ServerInfo(iFolderWebService ifws, Manager simiasManager, DomainInformation domainInfo, string password, bool verifyPrompt )
-            : this(ifws, simiasManager, domainInfo, password)
-
-        {
-            this.verifyPrompt = verifyPrompt;
-            
-        }
+          
+      
         
         public ServerInfo(iFolderWebService ifws, Manager simiasManager, DomainInformation domainInfo, string password)
 		{
@@ -526,7 +521,7 @@ namespace Novell.FormsTrayApp
 			    bool result = false;
 
                 
-                    Connecting connecting = new Connecting(this.ifWebService, simiasWebService, simiasManager, domainInfo, password.Text, rememberPassword.Checked,this.verifyPrompt);
+                    Connecting connecting = new Connecting(this.ifWebService, simiasWebService, simiasManager, domainInfo, password.Text, rememberPassword.Checked);
                     if (connecting.ShowDialog() == DialogResult.OK)
                     {
                         result = true;

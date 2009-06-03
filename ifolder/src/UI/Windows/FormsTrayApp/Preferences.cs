@@ -1792,36 +1792,7 @@ namespace Novell.FormsTrayApp
         }
 
 
-        public bool loginToDomain(Domain domain, bool verifyPrompt)
-        {
-            bool result = false;
-            if (domain != null)
-            {
-                Connecting connecting = new Connecting(this.ifWebService, simiasWebService, simiasManager, domain.DomainInfo,verifyPrompt);
-                if (connecting.ShowDialog() == DialogResult.OK)
-                {
-                    result = true;
-                }
-
-                if (!result)
-                {
-                    ServerInfo serverInfo = new ServerInfo(this.ifWebService, simiasManager, domain.DomainInfo, connecting.Password,verifyPrompt);
-                    serverInfo.ShowDialog();
-                    result = serverInfo.DomainInfo.Authenticated;
-                    serverInfo.Dispose();
-                }
-
-                connecting.Dispose();
-            }
-
-            if (result)
-            {
-                domain.DomainInfo.Authenticated = true;
-                FormsTrayApp.globalProp().updateifListViewDomainStatus(domain.DomainInfo.ID, true);
-                FormsTrayApp.globalProp().AddDomainToUIList(domain.DomainInfo);
-            }
-            return result;
-        }
+      
 
 
         private bool logout(int itemIndex)

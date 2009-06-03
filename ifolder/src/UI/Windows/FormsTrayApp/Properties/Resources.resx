@@ -601,4 +601,10 @@
   <data name="resetPassphraseError" xml:space="preserve">
     <value>Passphrase reset failed</value>
   </data>
+  <data name="passwordText" xml:space="preserve">
+    <value>Password:</value>
+  </data>
+  <data name="userNameText" xml:space="preserve">
+    <value>User name:</value>
+  </data>
 </root>

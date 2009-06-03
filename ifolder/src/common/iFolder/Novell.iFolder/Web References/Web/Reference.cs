@@ -177,6 +177,8 @@ namespace Novell.iFolder.Web {
         
         private System.Threading.SendOrPostCallback ChangePasswordOperationCompleted;
         
+        private System.Threading.SendOrPostCallback GetDefaultServerPublicKeyOperationCompleted;
+        
         private bool useDefaultCredentialsSetExplicitly;
         
         /// <remarks/>
@@ -436,6 +438,9 @@ namespace Novell.iFolder.Web {
         
         /// <remarks/>
         public event ChangePasswordCompletedEventHandler ChangePasswordCompleted;
+        
+        /// <remarks/>
+        public event GetDefaultServerPublicKeyCompletedEventHandler GetDefaultServerPublicKeyCompleted;
         
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/ifolder/web/Ping", RequestNamespace="http://novell.com/ifolder/web/", ResponseNamespace="http://novell.com/ifolder/web/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
@@ -2701,6 +2706,37 @@ namespace Novell.iFolder.Web {
             if ((this.ChangePasswordCompleted != null)) {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ChangePasswordCompleted(this, new ChangePasswordCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/ifolder/web/GetDefaultServerPublicKey", RequestNamespace="http://novell.com/ifolder/web/", ResponseNamespace="http://novell.com/ifolder/web/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public string GetDefaultServerPublicKey(string DomainID, string UserID) {
+            object[] results = this.Invoke("GetDefaultServerPublicKey", new object[] {
+                        DomainID,
+                        UserID});
+            return ((string)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void GetDefaultServerPublicKeyAsync(string DomainID, string UserID) {
+            this.GetDefaultServerPublicKeyAsync(DomainID, UserID, null);
+        }
+        
+        /// <remarks/>
+        public void GetDefaultServerPublicKeyAsync(string DomainID, string UserID, object userState) {
+            if ((this.GetDefaultServerPublicKeyOperationCompleted == null)) {
+                this.GetDefaultServerPublicKeyOperationCompleted = new System.Threading.SendOrPostCallback(this.OnGetDefaultServerPublicKeyOperationCompleted);
+            }
+            this.InvokeAsync("GetDefaultServerPublicKey", new object[] {
+                        DomainID,
+                        UserID}, this.GetDefaultServerPublicKeyOperationCompleted, userState);
+        }
+        
+        private void OnGetDefaultServerPublicKeyOperationCompleted(object arg) {
+            if ((this.GetDefaultServerPublicKeyCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.GetDefaultServerPublicKeyCompleted(this, new GetDefaultServerPublicKeyCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
         
@@ -5038,6 +5074,32 @@ namespace Novell.iFolder.Web {
             get {
                 this.RaiseExceptionIfNecessary();
                 return ((int)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "2.0.50727.1433")]
+    public delegate void GetDefaultServerPublicKeyCompletedEventHandler(object sender, GetDefaultServerPublicKeyCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "2.0.50727.1433")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class GetDefaultServerPublicKeyCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal GetDefaultServerPublicKeyCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public string Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((string)(this.results[0]));
             }
         }
     }
