@@ -3260,6 +3260,7 @@ namespace Novell.FormsTrayApp
 
         private void showiFolderinListView()
         {
+            if (thumbnailView) return; //do not want to refresh when in other view.
             listView1.Items.Clear();
             // Walk the list of iFolders and add them to the listviews.
             String status = null;
@@ -3290,7 +3291,7 @@ namespace Novell.FormsTrayApp
                     imageIndex,
                     Color.Empty,
                     Color.Empty,
-                    new Font("Microsoft Sans Serif", 13.25F, FontStyle.Regular, GraphicsUnit.Point, ((System.Byte)(0))));
+                    new Font("Microsoft Sans Serif", 12.25F, FontStyle.Regular, GraphicsUnit.Point, ((System.Byte)(0))));
                     //listViewItem1.ImageIndex = imageIndex;
                     listView1.Items.Add(listViewItem1);
                 }
@@ -3303,6 +3304,7 @@ namespace Novell.FormsTrayApp
         {
             thumbnailView = !thumbnailView;
             updateChangeViewMenuText();
+            showiFolderinListView();
             if (!thumbnailView)
                 setListViewItemSelected();
             setThumbnailView(thumbnailView);
@@ -3420,19 +3422,22 @@ namespace Novell.FormsTrayApp
         {
             KeyRecoveryWizard kr = new KeyRecoveryWizard(this.ifWebService, this.simiasWebService, this.simiasManager);
             if (kr.GetLoggedInDomains() == true)
+            {
                 kr.ShowDialog();
-
+            }
             else
             {
-
-                System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(FormsTrayApp));
-                Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(Resource.GetString("NoLoggedInDomainsText")/*"There are no logged-in domains for changing passphrase. For changing passphrase the domain should be connected. Log on to a domain and try."*/, Resource.GetString("ResetError")/*"Reset passphrase error"*/, "", MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+                System.Resources.ResourceManager Resource =
+                    new System.Resources.ResourceManager(typeof(FormsTrayApp));
+                Novell.iFolderCom.MyMessageBox mmb =
+                    new MyMessageBox(Resource.GetString("NoLoggedInDomainsText"),
+                        Resource.GetString("ResetError"),
+                        "",
+                        MyMessageBoxButtons.OK,
+                        MyMessageBoxIcon.Error);
                 mmb.ShowDialog();
                 mmb.Dispose();
             }
-                           
-
-
         }
 	}
 }
