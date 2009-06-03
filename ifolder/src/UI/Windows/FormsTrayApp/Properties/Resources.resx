@@ -776,7 +776,7 @@ wizardText	Passphrase Recovery Wizard</value>
     <value>An error was encountered while reverting the iFolder.</value>
   </data>
   <data name="importErrorMesg" xml:space="preserve">
-    <value>Unable to import keys. Try again.</value>
+    <value>Unable to reset passphrase. Try again.</value>
   </data>
   <data name="importPageEncryCheck" xml:space="preserve">
     <value>Is the above file encrypted?</value>
@@ -827,7 +827,7 @@ wizardText	Passphrase Recovery Wizard</value>
     <value>Connect</value>
   </data>
   <data name="loginError" xml:space="preserve">
-    <value>Unable to authenticate to the domain.You have logged out of the account. Please login and try again.</value>
+    <value>Unable to authenticate to the domain.You have been logged out of the account. Please login and try again.</value>
   </data>
   <data name="logoff1" xml:space="preserve">
     <value>Disconnect</value>
@@ -1026,7 +1026,7 @@ wizardText	Passphrase Recovery Wizard</value>
     <value>Type</value>
   </data>
   <data name="unableToExportMesg" xml:space="preserve">
-    <value>Unable to export keys.Try again</value>
+    <value>Unable to obtain old data file.Try again</value>
   </data>
   <data name="uploadDir1" xml:space="preserve">
     <value>Uploading directory: {0}</value>
@@ -1060,5 +1060,8 @@ wizardText	Passphrase Recovery Wizard</value>
   </data>
   <data name="wizardText" xml:space="preserve">
     <value>Passphrase Recovery Wizard</value>
+  </data>
+  <data name="secretPathInvalid" xml:space="preserve">
+    <value>Location of secret file is invalid</value>
   </data>
 </root>

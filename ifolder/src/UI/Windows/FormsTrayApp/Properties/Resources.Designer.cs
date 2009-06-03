@@ -1040,7 +1040,7 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to import keys. Try again..
+        ///   Looks up a localized string similar to Unable to reset passphrase. Try again..
         /// </summary>
         internal static string importErrorMesg {
             get {
@@ -1256,7 +1256,7 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to authenticate to the domain.You have logged out of the account. Please login and try again..
+        ///   Looks up a localized string similar to Unable to authenticate to the domain.You have been logged out of the account. Please login and try again..
         /// </summary>
         internal static string loginError {
             get {
@@ -1769,6 +1769,15 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Location of secret file is invalid.
+        /// </summary>
+        internal static string secretPathInvalid {
+            get {
+                return ResourceManager.GetString("secretPathInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You can exit the wizard at any step and work on subsequent steps later by using this page         .
         /// </summary>
         internal static string selectionPageFive {
@@ -2237,7 +2246,7 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to export keys.Try again.
+        ///   Looks up a localized string similar to Unable to obtain old data file.Try again.
         /// </summary>
         internal static string unableToExportMesg {
             get {

@@ -150,7 +150,7 @@ namespace Novell.Wizard
 
                     if (status.statusCode != StatusCodes.Success)
                     {
-                        MessageBox.Show(Resources.authenticateError);
+                        MessageBox.Show(Resources.loginError);
                         return -999;
                       
                     }
