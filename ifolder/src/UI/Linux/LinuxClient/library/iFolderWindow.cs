@@ -2874,11 +2874,11 @@ namespace Novell.iFolder
 							&& (holder.State == iFolderState.Synchronizing)	))
 					{
 						RevertMenuItem.Sensitive = false;
-					}
+					}
 					else 
 					{
 						RevertMenuItem.Sensitive = true;
-					}
+					}
 					PropMenuItem.Sensitive = true;
 					DeleteMenuItem.Sensitive = false;
 					RemoveMenuItem.Sensitive = false;
