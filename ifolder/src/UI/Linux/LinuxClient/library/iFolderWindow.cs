@@ -130,7 +130,7 @@ namespace Novell.iFolder
 		private Label				ShowHideAllFoldersButtonText;
 		private bool				bAvailableFoldersShowing;
 
-		private ScrolledWindow		iFoldersScrolledWindow,serverList;
+		private ScrolledWindow		iFoldersScrolledWindow,ifolderlistview;
 		private iFolderIconView	iFoldersIconView;
 		private HBox 				viewpane;
 		private ListTreeView 			tv;
@@ -319,10 +319,10 @@ namespace Novell.iFolder
 		}
 
 		public void ShowIconView()
-		{
-			serverList.Visible = false;
-			iFoldersIconView.Visible = true;
-		}
+                {
+	        	ifolderlistview.Visible = false;  
+                      	iFoldersIconView.Visible = true;
+                }
 
 		/// <summary>
 		/// Set up the UI inside the Window
@@ -1224,11 +1224,75 @@ namespace Novell.iFolder
                         return String.Format("{0:N1} {1}", tempsize, modifier);
 		}
 
+		private Gdk.Pixbuf GetImage(iFolderHolder holder)
+		{
+			Gdk.Pixbuf returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png"));
+			if (holder.iFolder.IsSubscription)
+                        {
+				returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder-download48.png"));
+			}
+			else
+			{
+				if (holder.State == iFolderState.Synchronizing ||
+					holder.State == iFolderState.SynchronizingLocal)
+				{
+					returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder-sync48.png"));
+				}
+				else
+				{
+					// Set the pixbufs based on current state
+					if (holder.iFolder.HasConflicts)
+					{
+						returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder-warning48.png"));
+					}
+					else
+					{
+						switch (holder.State)
+						{
+							case iFolderState.Disconnected:
+								break; 
+							case iFolderState.FailedSync:
+								returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder-error48.png"));
+								break;
+							case iFolderState.Initial:
+								returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder-waiting48.png"));
+								break;
+							case iFolderState.Normal:
+							default:
+								if (holder.ObjectsToSync > 0)
+								{
+									returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder-waiting48.png"));
+								}
+								else
+								{
+									if( holder.iFolder.encryptionAlgorithm == null || holder.iFolder.encryptionAlgorithm == "")
+									{
+										// Not an encrypted file
+										if( holder.iFolder.shared == true)
+										{
+											returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder_user_48.png"));
+										}
+										else
+										{
+											returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png"));
+										}
+									}
+									else
+									{
+										returnimg = new Gdk.Pixbuf(Util.ImagesPath("encrypt-ilock-48.png"));
+									}
+								}
+								break;
+						}
+					}
+				}
+			}
+			return returnimg;
+			
+		}
+
 		private void UpdateListViewItems()
 		{
-			//TODO: verify for same variable name ServerImg	
-			Gdk.Pixbuf ServerImg = new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png"));
-			Gdk.Pixbuf DownloadedImg = new Gdk.Pixbuf((Util.ImagesPath("ifolder_user_48.png")));
 			TreeIter iter;
 			viewstore.Clear();
 			if( (iFolderFilter).GetIterFirst( out iter ))
@@ -1240,7 +1304,7 @@ namespace Novell.iFolder
                                 	iFolderHolder holder = (iFolderHolder)(iFolderFilter).GetValue(iter, 0);
                                 	if (holder != null)
                                 	{
-                                        	//viewstore.AppendValues(holder.iFolder.IsSubscription?ServerImg:DownloadedImg,holder.iFolder.Name,GetFriendlySize(holder.iFolder.iFolderSize),(domainController.GetDomain(holder.iFolder.DomainID)).Name, holder.StateString, holder);
+                                        	viewstore.AppendValues(GetImage(holder),holder.iFolder.Name,GetFriendlySize(holder.iFolder.iFolderSize),(domainController.GetDomain(holder.iFolder.DomainID)).Name, holder.StateString, holder);
                                 	}
 				}
 				catch(Exception ex)
@@ -1254,7 +1318,7 @@ namespace Novell.iFolder
 
 		private Widget CreateListViewPane()
 		{
-			serverList = new ScrolledWindow();
+			ifolderlistview = new ScrolledWindow();
 			iFolderFilter = new TreeModelFilter(ifdata.iFolders, null);
                         iFolderFilter.VisibleFunc = AlliFoldersFilterFunc;
 
@@ -1270,16 +1334,16 @@ namespace Novell.iFolder
                         tv.RowActivated +=  OnRowActivated;
                         tv.AppendColumn ("", new CellRendererPixbuf(), "pixbuf", 0);
                         tv.AppendColumn (Util.GS("iFolder"), new CellRendererText (), "text", 1);
-			tv.AppendColumn ("Size", new CellRendererText(), "text", 2);
-			tv.AppendColumn ("Server", new CellRendererText(), "text", 3);
-			tv.AppendColumn ("Status", new CellRendererText(), "text", 4);
-			serverList.Add(tv);
-                        serverList.ShadowType = Gtk.ShadowType.EtchedIn;
+			tv.AppendColumn (Util.GS("Size"), new CellRendererText(), "text", 2);
+			tv.AppendColumn (Util.GS("Server"), new CellRendererText(), "text", 3);
+			tv.AppendColumn (Util.GS("Status"), new CellRendererText(), "text", 4);
+			ifolderlistview.Add(tv);
+                        ifolderlistview.ShadowType = Gtk.ShadowType.EtchedIn;
 			
-                        serverList.Show();
+                        ifolderlistview.Show();
 
 
-                        return serverList;
+                        return ifolderlistview;
 
 		}
 	
@@ -1328,11 +1392,10 @@ namespace Novell.iFolder
 			l.Xalign = 0.0F;
 
  // Add Scroll Window Testing
-			
-			/*ScrolledWindow serverList = new ScrolledWindow();
-			serverList.BorderWidth = 10;
-			serverList.HeightRequest = 200;
-			serverList.Vadjustment.Lower = 4;
+			/*ScrolledWindow serverList = new ScrolledWindow();		
+			ifolderlistview.BorderWidth = 10;
+			ifolderlistview.HeightRequest = 200;
+			ifolderlistview.Vadjustment.Lower = 4;
 
 			//Image uploadImg = new Image(Util.ImagesPath("ifolder-upload48.png"));
 			Gdk.Pixbuf uploadImg = new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png"));
@@ -1344,11 +1407,11 @@ namespace Novell.iFolder
 				//TreeIter iter = store.AppendValues ("Demo " + i, "Data " + i);
 				TreeIter iter = store.AppendValues (uploadImg, "Data " + i);
 			}
-			serverList.ShadowType = Gtk.ShadowType.EtchedIn;
-			actionsVBox.PackStart(serverList, false, true, 0);
-			serverList.Show(); 
+			ifolderlistview.ShadowType = Gtk.ShadowType.EtchedIn;
+			actionsVBox.PackStart(ifolderlistview, false, true, 0);
+			ifolderlistview.Show(); 
 			//TreeView tv = new TreeView (); //commented as "tv" was made global
-		*/	
+		*/ 	
 		/*	tv = new TreeView ();
 			
 			ListStore store = new ListStore (typeof (Gdk.Pixbuf),typeof (string)); 
@@ -1369,11 +1432,11 @@ namespace Novell.iFolder
 			tv.AppendColumn ("Data", new CellRendererText (), "text", 1);
 			//tv.AppendColumn (null, new CellRendererPixbuf(), "pixbuf", 0);
 			//tv.AppendColumn (null, new CellRendererText (), "text", 1);
-			serverList.Add(tv);
-			serverList.ShadowType = Gtk.ShadowType.EtchedIn;
+			ifolderlistview.Add(tv);
+			ifolderlistview.ShadowType = Gtk.ShadowType.EtchedIn;
 
-			actionsVBox.PackStart(serverList, false, true, 0);
-			serverList.Show(); */
+			actionsVBox.PackStart(ifolderlistview, false, true, 0);
+			ifolderlistview.Show(); */
 
            //################ADDED COMBOX BOX
 			string lable = null;
@@ -1575,15 +1638,15 @@ namespace Novell.iFolder
 					if(!iFoldersScrolledWindow.Visible)
 					{
 						iFoldersScrolledWindow.Visible = true;	
-						serverList.Visible = false;
+						ifolderlistview.Visible = false;
 						UpdateLocalViewItemsMainThread();
 					}
 						break;	
 
 				case ViewOptions.ListView:
-					if(!serverList.Visible)
+					if(!ifolderlistview.Visible)
 					{
-						serverList.Visible = true;
+						ifolderlistview.Visible = true;
 						iFoldersScrolledWindow.Visible = false;
 						UpdateListViewItems();
 					}
@@ -2002,7 +2065,7 @@ namespace Novell.iFolder
 			iFoldersScrolledWindow.AddWithViewport(iFoldersIconView);
 			
 	/*		packIconView = new VBox(false,0);
-			packIconView.PackStart(serverList,true,true,0);
+			packIconView.PackStart(ifolderlistview,true,true,0);
 			return packIconView;
 	*/		
 			return iFoldersScrolledWindow;
@@ -2015,7 +2078,7 @@ namespace Novell.iFolder
 		private void UpdateLocalViewItems(object state)
 		{
 			// Do the work on the main UI thread so that stuff isn't corrupted.
-			if( serverList.Visible )
+			if( ifolderlistview.Visible )
 				UpdateListViewItems();
 			else
 				GLib.Idle.Add(UpdateLocalViewItemsMainThread);
@@ -2797,7 +2860,7 @@ namespace Novell.iFolder
 			
 			OniFolderIconViewSelectionChanged(null, EventArgs.Empty);
 			PopulateCombobox();
-			if( serverList.Visible )
+			if( ifolderlistview.Visible )
                                 UpdateListViewItems();
 
 		}
@@ -3392,7 +3455,7 @@ namespace Novell.iFolder
 							else
 		                                                ifdata.AcceptiFolderInvitation( holder.iFolder.ID, holder.iFolder.DomainID, downloadpath);
 						}
-						if( serverList.Visible )
+						if( ifolderlistview.Visible )
                             				UpdateListViewItems();
                         			else
 							iFoldersIconView.UnselectAll();
@@ -3443,7 +3506,7 @@ namespace Novell.iFolder
 						Debug.PrintLine("Not a default account");
 
 					ifdata.DeleteiFolder(holder.iFolder.ID);
-					if( serverList.Visible )
+					if( ifolderlistview.Visible )
                                 		UpdateListViewItems();
                         		else
 						iFoldersIconView.UnselectAll();
@@ -3485,7 +3548,7 @@ namespace Novell.iFolder
 				try
 				{
 					ifdata.DeleteiFolder(holder.iFolder.ID);
-					if( serverList.Visible )
+					if( ifolderlistview.Visible )
                             		        UpdateListViewItems();
                         		else
 						iFoldersIconView.UnselectAll();
@@ -4205,7 +4268,7 @@ namespace Novell.iFolder
 								simws.DefaultAccount(domainID, null);
 						}
 						
-						if( serverList.Visible )
+						if( ifolderlistview.Visible )
                             		    	        UpdateListViewItems();
                         			else
 							iFoldersIconView.UnselectAll();
@@ -5171,7 +5234,6 @@ namespace Novell.iFolder
 	public class ListTreeView : Gtk.TreeView 
 	{
 		iFolderWindow ifwin;
-
         	public ListTreeView (iFolderWindow ifwin)
         	{
 			this.ifwin = ifwin;
