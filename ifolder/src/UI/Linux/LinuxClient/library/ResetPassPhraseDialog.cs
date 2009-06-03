@@ -143,8 +143,8 @@ namespace Novell.iFolder
 		{
 			get
 			{
-				if(recoveryAgentCombo.ActiveText == Util.GS("None") || recoveryAgentCombo.ActiveText == String.Empty)
-					return null;
+				if(recoveryAgentCombo.ActiveText == Util.GS("Server_Default") || recoveryAgentCombo.ActiveText == String.Empty)
+					return "DEFAULT";
 				else
 					return recoveryAgentCombo.ActiveText;
 			}
@@ -344,7 +344,7 @@ namespace Novell.iFolder
                     return;
                 }
             }
-			if( this.RAName != null)
+			if( this.RAName != "DEFAULT")
 			{
 				byte [] RACertificateObj = domainController.GetRACertificate(this.Domain, this.RAName);
 				if( RACertificateObj != null && RACertificateObj.Length != 0)
@@ -377,7 +377,18 @@ namespace Novell.iFolder
 			}
 			else
 			{
-		                iFolderMsgDialog dg = new iFolderMsgDialog(
+
+				 DomainInformation domainInfo = (DomainInformation)this.simws.GetDomainInformation(this.Domain);
+
+                    string memberUID = domainInfo.MemberUserID;
+
+                    publicKey = this.ifws.GetDefaultServerPublicKey(this.Domain, memberUID);
+                        reset = true;
+
+			
+
+
+		               /* iFolderMsgDialog dg = new iFolderMsgDialog(
 		                    this, 
 		                    iFolderMsgDialog.DialogType.Warning,
 		                    iFolderMsgDialog.ButtonSet.YesNo,
@@ -395,7 +406,7 @@ namespace Novell.iFolder
 		                else
 		                {
 					return;
-		                }
+		                }*/
 			}
 			if( reset == true)
 			{
@@ -512,7 +523,7 @@ namespace Novell.iFolder
 			{
 				Debug.PrintLine("No recovery agent present");
 			}
-			recoveryAgentCombo.AppendText(Util.GS("None"));
+			recoveryAgentCombo.AppendText(Util.GS("Server_Default"));
 			recoveryAgentCombo.Active = 0;
 		}
 

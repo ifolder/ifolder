@@ -579,9 +579,9 @@ namespace Novell.iFolder
 			Menu SecurityMenu = new Menu();
 
 			RecoveryMenuItem = new MenuItem(Util.GS("_Key Recovery"));
-//			RecoveryMenuItem.Activated += new EventHandler(OnRecoveryMenuItem);
+			RecoveryMenuItem.Activated += new EventHandler(OnRecoveryMenuItem);
 			SecurityMenu.Append(RecoveryMenuItem);
-			ImportMenuSubItem = new MenuItem(Util.GS("Import Decrypted Keys"));
+		/*	ImportMenuSubItem = new MenuItem(Util.GS("Import Decrypted Keys"));
 			ExportMenuSubItem = new MenuItem(Util.GS("Export Encrypted Keys")); 
 			ImportMenuSubItem.Activated += new EventHandler(ImportClicked);
 			ExportMenuSubItem.Activated += new EventHandler(ExportClicked);
@@ -590,7 +590,7 @@ namespace Novell.iFolder
 			recoverMenu.Append( ExportMenuSubItem);
 			recoverMenu.Append( ImportMenuSubItem);
 
-			RecoveryMenuItem.Submenu = recoverMenu;;
+			RecoveryMenuItem.Submenu = recoverMenu;;*/
 
 			ResetPassMenuItem = new MenuItem(Util.GS("Reset _Passphrase"));
 			ResetPassMenuItem.Activated += new EventHandler(OnResetPassMenuItem);
@@ -2924,7 +2924,40 @@ namespace Novell.iFolder
 
 		private void OnRecoveryMenuItem(object o, EventArgs args)
 		{
-			Util.ShowHelp(Util.HelpMainPage, this);
+		//	Util.ShowHelp(Util.HelpMainPage, this);
+
+			 DomainInformation[] domains = this.domainController.GetLoggedInDomains();
+                        if( domains == null)
+                        {
+                                iFolderMsgDialog dialog = new iFolderMsgDialog(
+                                                                                                                null,
+                                                                                                                iFolderMsgDialog.DialogType.Error,
+                                                                                                                iFolderMsgDialog.ButtonSet.None,
+                                                                                                                Util.GS("No Logged-In domains"),
+                                                                                                                Util.GS("There are no logged-in domains for resetting keys."),
+                                                                                                                Util.GS("For resetting the passphrase the domain should be connected. Log on to the domain and try."));
+                                        dialog.Run();
+                                        dialog.Hide();
+                                        dialog.Destroy();
+                                        dialog = null;
+                                        return;
+                                }
+
+
+                        KeyRecoveryWizard krw = new KeyRecoveryWizard(simws,ifws);
+                         krw.TransientFor = this;
+                        if (!Util.RegisterModalWindow(krw))
+                        {
+                                try
+                                {
+                                        Util.CurrentModalWindow.Present();
+                                }
+                                catch{}
+                                krw.Destroy();
+                                return;
+                        }
+                        krw.ShowAll();
+
 		}
 
 		private void OnResetPasswordMenuItem(object o, EventArgs args)
@@ -4916,7 +4949,14 @@ namespace Novell.iFolder
     private static bool SetPassPhrase( EnterPassPhraseDialog epd, string DomainID, string publicKey, SimiasWebService simws )
     {
         bool status;
-        Status passPhraseStatus = simws.SetPassPhrase( DomainID, epd.PassPhrase, epd.RecoveryAgent, publicKey);
+        Status passPhraseStatus = null; 
+	
+	 if(epd.RecoveryAgent != null && epd.RecoveryAgent != Util.GS("Server_Default"))
+	passPhraseStatus = simws.SetPassPhrase( DomainID, epd.PassPhrase, epd.RecoveryAgent, publicKey);
+ 
+	else
+		 passPhraseStatus = simws.SetPassPhrase( DomainID, epd.PassPhrase, "DEFAULT", publicKey);
+	
         if(passPhraseStatus.statusCode == StatusCodes.Success)
         {
             status = true;
@@ -4984,7 +5024,7 @@ namespace Novell.iFolder
 		{
 			string publicKey = null;
 
-			if( epd.RecoveryAgent != null)
+			if( epd.RecoveryAgent != null && epd.RecoveryAgent != "Server_Default")
 			{
 				// Show Certificate..
 				byte [] RACertificateObj = DomainController.GetDomainController().GetRACertificate(DomainID, epd.RecoveryAgent);
@@ -5018,7 +5058,7 @@ namespace Novell.iFolder
                 epd.Hide();
                 return status;
 			}
-            else
+           /* else
             {
                 iFolderMsgDialog dg = new iFolderMsgDialog(
                     epd, 
@@ -5039,9 +5079,22 @@ namespace Novell.iFolder
                 else
                 {
                     epd.Hide();
-                    PassphraseHelper( epd, DomainID, simws );
+                    PassphraseHelper( epd, DomainID, simws);
                 }
-            }
+            }*/
+
+		else
+		{
+			  DomainInformation domainInfo = (DomainInformation)simws.GetDomainInformation(DomainID);
+                        string memberID = domainInfo.MemberUserID;
+        		iFolderWebService ifWebService = DomainController.GetiFolderService();
+
+	        publicKey = ifWebService.GetDefaultServerPublicKey(DomainID,memberID);
+                        status = SetPassPhrase(epd,DomainID,publicKey,simws);
+                        epd.Hide();
+                        return status;
+		}
+
 		}
         else
         {

@@ -244,7 +244,7 @@ namespace Novell.iFolder
 				Debug.PrintLine(String.Format("raagent:{0}", raagent));
                             RATreeStore.AppendValues (raagent);
 			}
-			RATreeStore.AppendValues(Util.GS("None"));
+			RATreeStore.AppendValues(Util.GS("Server_Default"));
 			// RA Name Column
 			TreeViewColumn raNameColumn = new TreeViewColumn();
 			raNameColumn.Title = Util.GS("Recovery Agents");
