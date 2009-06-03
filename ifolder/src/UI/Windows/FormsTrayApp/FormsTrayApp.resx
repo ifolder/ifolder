@@ -755,7 +755,7 @@
 		<value>Server Old</value>
 	</data>
 	<data name="UpgradeClientMsg">
-		<value>Would you like to upgrade your client to {0}? The client will be closed automatically if you click Ok.</value>
+		<value>Would you like to upgrade your client to {0}? The client will be closed automatically if you click Yes.</value>
 	</data>
 	<data name="UpgradeAvailableTitle">
 		<value>Client upgrade available.</value>

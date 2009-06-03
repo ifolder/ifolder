@@ -39,6 +39,9 @@ using System.Windows.Forms;
 using Novell.iFolderCom;
 
 using Simias.Client;
+using Simias.Client.Authentication;
+using Novell.iFolder.Web;
+using Novell.Wizard;
 
 namespace Novell.FormsTrayApp 
 {
@@ -64,6 +67,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Button btnOk;
 		private System.ComponentModel.Container components = null;
 		private SimiasWebService simws = null;
+        private iFolderWebService ifws = null; 
 		private string DomainID;
 		private bool	status;
 		private static System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(EnterPassphraseDialog));
@@ -96,10 +100,11 @@ namespace Novell.FormsTrayApp
         /// </summary>
         /// <param name="domainID">ID of the iFolder Domain</param>
         /// <param name="simws">Simias WebService</param>
-		public EnterPassphraseDialog(string domainID, SimiasWebService simws)
+		public EnterPassphraseDialog(string domainID, SimiasWebService simws, iFolderWebService ifws)
 		{
 			this.DomainID = domainID;
 			this.simws = simws;
+            this.ifws = ifws;
 			//
 			// Required for Windows Form Designer support
 			//
@@ -522,7 +527,7 @@ namespace Novell.FormsTrayApp
 			{
 				string publicKey = null;
 				string ragent = null;
-				if( this.RecoveryAgentCombo.SelectedItem != null && (string)this.RecoveryAgentCombo.SelectedItem != Resource.GetString("NoneText"))
+				if( this.RecoveryAgentCombo.SelectedItem != null && (string)this.RecoveryAgentCombo.SelectedItem != TrayApp.Properties.Resources.serverDefaultRA)
 				{
 					// Show the certificate.....
 					byte[] CertificateObj = this.simws.GetRACertificateOnClient(this.DomainID, (string)this.RecoveryAgentCombo.SelectedItem);
@@ -541,7 +546,7 @@ namespace Novell.FormsTrayApp
 					}
 					//return;
 				}
-				else	// If recovery agent is not selected...
+				/*else	// If recovery agent is not selected...
 				{
 					MyMessageBox mmb = new MyMessageBox( resManager.GetString("NoCertWarning"), resManager.GetString("NoCertTitle"), "", MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2);
 					DialogResult messageDialogResult = mmb.ShowDialog();
@@ -549,10 +554,20 @@ namespace Novell.FormsTrayApp
 					mmb.Close();
 					if( messageDialogResult != DialogResult.Yes )
 						return;
-				}
+				}*/
 				
+                 else
+                {
+                    ragent = "DEFAULT";
+                    
+                    DomainInformation domainInfo = (DomainInformation)this.simws.GetDomainInformation(this.DomainID);
+                    string memberUID = domainInfo.MemberUserID;
+                    publicKey = this.ifws.GetDefaultServerPublicKey(this.DomainID,memberUID);
+                    
+                }
 				Status passPhraseStatus = null;
 				try
+                   
 				{
 					passPhraseStatus = simws.SetPassPhrase( DomainID, this.Passphrase.Text, ragent, publicKey);
 				}
@@ -608,12 +623,14 @@ namespace Novell.FormsTrayApp
 			this.pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
 			this.pictureBox.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder-banner-scaler.png"));
 			string[] rAgents= this.simws.GetRAListOnClient(DomainID);
+            this.RecoveryAgentCombo.Items.Add(TrayApp.Properties.Resources.serverDefaultRA);
 			foreach( string rAgent in rAgents)
 			{
 				this.RecoveryAgentCombo.Items.Add( rAgent ); 
 				//MessageBox.Show(String.Format("Adding {0}", rAgent));
 			}
-			this.RecoveryAgentCombo.Items.Add(Resource.GetString("NoneText"));
+
+            this.RecoveryAgentCombo.SelectedIndex = 0;
 			// Needs to be changed
 			//string[] ralist = this.simws.GetRAList(this.DomainID);
 		}

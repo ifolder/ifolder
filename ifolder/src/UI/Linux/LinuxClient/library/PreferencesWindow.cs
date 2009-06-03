@@ -271,5 +271,10 @@ namespace Novell.iFolder
 			return null;
                 } */
 
+
+		public void ToggelDomain(DomainInformation domainInfo,bool flag)
+		{	
+			accountsPage.ToggelDomainState(domainInfo, flag);
+		}
 	}
 }

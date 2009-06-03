@@ -604,6 +604,7 @@ namespace Novell.iFolder
 					}
 				}
 			}
+			ifwin.ShowIconView();
 		}
 		
         /// <summary>

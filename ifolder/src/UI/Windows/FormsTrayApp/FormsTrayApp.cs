@@ -93,7 +93,6 @@ namespace Novell.FormsTrayApp
 		Unknown = 4,
 	};
 
-    
 	/// <summary>
 	/// Summary description for FormsTrayApp.
 	/// </summary>
@@ -251,6 +250,7 @@ namespace Novell.FormsTrayApp
             // Create/open the iFolder key.
             RegistryKey regKey = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Novell\iFolder");
             string language = regKey.GetValue("language") as String;
+            
             if (language != null)
             {
                 try
@@ -425,8 +425,11 @@ namespace Novell.FormsTrayApp
 				case UpdateResult.UpgradeNeeded:
 					// Client upgrade needed...
 					result = false;
-					res = (int) MessageBox.Show(String.Format( resourceManager.GetString("UpgradeClientMsg"),newClientVersion) /* "Would you like to upgrade your client to "+newClientVersion+ ". The client will be closed automatically if you click Yes"*/, resourceManager.GetString("UpgradeNeededTitle")/*"Client upgrade available. "*/, MessageBoxButtons.OKCancel);
-					if( res == (int) DialogResult.OK)
+					res = (int) MessageBox.Show(String.Format( resourceManager.GetString("UpgradeClientMsg"),
+                        newClientVersion), 
+                        resourceManager.GetString("UpgradeNeededTitle"),
+                        MessageBoxButtons.YesNo);
+					if( res == (int) DialogResult.Yes)
 					{
 						// download client
 						if(instance.ifWebService.RunClientUpdate(domainID, null))
@@ -451,8 +454,11 @@ namespace Novell.FormsTrayApp
 					
 				case UpdateResult.UpgradeAvailable:
 					// Client upgrade available...
-					res = (int) MessageBox.Show(String.Format( resourceManager.GetString("UpgradeClientMsg"),newClientVersion) /* "Would you like to upgrade your client to "+newClientVersion+ ". The client will be closed automatically if you click Yes"*/, resourceManager.GetString("UpgradeAvailableTitle")/*"Client upgrade available. "*/, MessageBoxButtons.OKCancel);
-					if( res == (int) DialogResult.OK)
+                    res = (int)MessageBox.Show(String.Format(resourceManager.GetString("UpgradeClientMsg"),
+                        newClientVersion),
+                        resourceManager.GetString("UpgradeNeededTitle"),
+                        MessageBoxButtons.YesNo);
+                    if (res == (int)DialogResult.Yes)
 					{
 						// download client
 						if(instance.ifWebService.RunClientUpdate(domainID, null))
@@ -821,6 +827,7 @@ namespace Novell.FormsTrayApp
                 this.globalProperties.iFWebService = ifWebService;
                 this.globalProperties.Simws = simiasWebService;
                 this.globalProperties.EventClient = eventClient;
+                this.globalProperties.simManager = simiasManager;
                 this.preferences.ifolderWebService = ifWebService;
                 this.preferences.Simws = simiasWebService;
                 this.preferences.simManager = simiasManager;
@@ -898,7 +905,6 @@ namespace Novell.FormsTrayApp
                     syncLog.CreateControl();
                     // For some reason, the handle isn't created until it is referenced.
                     handle = syncLog.Handle;
-
                     infolog = new SyncLog();
                     ///Make the changes to Sync lof to make it info log , make clear button hide and rename it
                     infolog.Customize();                    
@@ -1324,7 +1330,7 @@ namespace Novell.FormsTrayApp
 			}
 		}
 		#endregion
-
+        
 		#region Private Methods
 		private void InitializeComponent()
 		{
