@@ -234,7 +234,12 @@ namespace Novell.iFolder
         /// <returns></returns>
 		private Widget CreateWidgets()
 		{
+			EventBox widgetEventbox = new EventBox();
+		    widgetEventbox.ModifyBg(StateType.Normal, this.Style.Background(StateType.Normal));
+
 			VBox vbox = new VBox(false, 0);
+
+			widgetEventbox.Add(vbox);
 			
 			AddAccountPixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder-add-account48.png"));
 			AddAccountPixbuf = AddAccountPixbuf.ScaleSimple(48, 48, Gdk.InterpType.Bilinear);
@@ -254,7 +259,8 @@ namespace Novell.iFolder
 			AccountDruid.AppendPage(CreateSummaryPage());
 			AccountDruid.SetButtonsSensitive(false, true, true, true);
 			
-			return vbox;
+			//return vbox;
+			return widgetEventbox;
 		}
 		
 		///

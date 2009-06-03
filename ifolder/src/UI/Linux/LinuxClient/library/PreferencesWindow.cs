@@ -102,8 +102,12 @@ namespace Novell.iFolder
 			this.SetDefaultSize (480, 550);
 
 			// Create an extra vbox to add the spacing
+			EventBox prefsWindow = new EventBox();
+			prefsWindow.ModifyBg(StateType.Normal, this.Style.Background(StateType.Normal));
 			VBox winBox = new VBox();
-			this.Add (winBox);
+			//this.Add (winBox);
+			prefsWindow.Add(winBox);
+			this.Add (prefsWindow);
 			winBox.BorderWidth = 7;
 			winBox.Spacing = 7;
 
