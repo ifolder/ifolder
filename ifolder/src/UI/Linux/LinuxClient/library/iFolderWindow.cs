@@ -1550,9 +1550,10 @@ namespace Novell.iFolder
 		private void OnComboBoxIndexChange(object o, EventArgs args)
 		{
 
-			 DomainInformation domain = null;	
+		/*	 DomainInformation domain = null;	
 			 domain =  UpdateCurrentServer();
-			 UpdateSelectedServerDetails(domain);
+			 UpdateSelectedServerDetails(domain); */
+			 UpdateServerInfoForSelectedDomain();
 
 			return;
 		}
@@ -3447,10 +3448,11 @@ namespace Novell.iFolder
                         		else
 						iFoldersIconView.UnselectAll();
 					
-					//###### Update Server Information for the selected Domain.
+			/*		//###### Update Server Information for the selected Domain.
 			 		DomainInformation domain = null;	
 			 		domain =  UpdateCurrentServer();
-			 		UpdateSelectedServerDetails(domain);
+			 		UpdateSelectedServerDetails(domain); */
+			        UpdateServerInfoForSelectedDomain();
 				}
 				catch(Exception e)
 				{
@@ -3916,9 +3918,10 @@ namespace Novell.iFolder
 			//domainController.CheckForNewiFolders();
 			this.RefreshAvailableiFolderTimer.Change(300000, 300000);
 
-			//###########Update Server Details
+	/*		//###########Update Server Details
 			DomainInformation currentDomain = UpdateCurrentServer();
-			UpdateSelectedServerDetails(currentDomain);
+			UpdateSelectedServerDetails(currentDomain); */
+			 GLib.Idle.Add(UpdateServerInfoForSelectedDomain);
 		}
 
 		private void RefreshAvailableiFolderTimer_click(object sender)
@@ -4500,10 +4503,24 @@ namespace Novell.iFolder
 			}
 			while(rc == (int)ResponseType.Ok);
 
-			//###### Update Server Information for the selected Domain.
+	/*		//###### Update Server Information for the selected Domain.
 			 DomainInformation domain = null;	
 			 domain =  UpdateCurrentServer();
-			 UpdateSelectedServerDetails(domain);
+			 UpdateSelectedServerDetails(domain); */
+			 UpdateServerInfoForSelectedDomain();
+		}
+
+		private bool UpdateServerInfoForSelectedDomain()
+		{
+			//###### Update Server Information for the selected Domain.
+			try{	
+			 	DomainInformation domain = null;	
+			 	domain =  UpdateCurrentServer();
+			 	UpdateSelectedServerDetails(domain);
+			}
+			catch { } //#######web service throwing exception
+
+			 return true;
 		}
 
 		// Return true if we were able to determine the exception type.
