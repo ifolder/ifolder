@@ -745,7 +745,7 @@ namespace Novell.iFolder
 			buttonText.Xalign = 0;
 			
 			ResolveConflictsButton.Sensitive = false;
-			ResolveConflictsButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("conflict3_48.png")));
+			ResolveConflictsButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-conflict48.png")));
 			ResolveConflictsButton.Clicked +=
 				new EventHandler(OnResolveConflicts);
 			buttontips.SetTip(ResolveConflictsButton, Util.GS("Resolve conflicts"),"");	
@@ -767,7 +767,7 @@ namespace Novell.iFolder
 			buttonText.Xalign = 0;
 
 			SynchronizeNowButton.Sensitive = false;
-		    SynchronizeNowButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder_sync48.png")));
+		    SynchronizeNowButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-sync48.png")));
 			SynchronizeNowButton.Clicked +=
 				new EventHandler(OnSynchronizeNow);
 			buttontips.SetTip(SynchronizeNowButton, Util.GS("Synchronize Now"),"");	
@@ -813,7 +813,7 @@ namespace Novell.iFolder
 			buttonText.Xalign = 0;
 
 			RemoveiFolderButton.Sensitive = false;
-			RemoveiFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder_revert03_48.png")));
+			RemoveiFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("revert48.png")));
 			RemoveiFolderButton.Clicked +=
 				new EventHandler(RemoveiFolderHandler);
 			buttontips.SetTip(RemoveiFolderButton, Util.GS("Revert to a Normal Folder"),"");	
@@ -859,7 +859,7 @@ namespace Novell.iFolder
 			buttonText.Xalign = 0;
 
 			DownloadAvailableiFolderButton.Sensitive = false;
-			DownloadAvailableiFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder_download48.png")));
+			DownloadAvailableiFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-download48.png")));
 			DownloadAvailableiFolderButton.Clicked +=
 				new EventHandler(DownloadAvailableiFolderHandler);
 			buttontips.SetTip(DownloadAvailableiFolderButton, Util.GS("Download"),"");	
@@ -882,7 +882,7 @@ namespace Novell.iFolder
 			buttonText.Xalign = 0;
 
 			MergeAvailableiFolderButton.Sensitive = false;
-			MergeAvailableiFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder_merge1_48.png")));
+			MergeAvailableiFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("merge48.png")));
 			MergeAvailableiFolderButton.Clicked +=
 				new EventHandler(MergeAvailableiFolderHandler);
 			buttontips.SetTip(MergeAvailableiFolderButton, Util.GS("Merge"),"");	
@@ -1547,33 +1547,34 @@ namespace Novell.iFolder
 		private void OnserverStatButtonHandler(object o, EventArgs args)
 		{
 		
-			//TODO:Update button text and Server Image in DomainLogout/DoaminLogin event.	
+				//########### Validate current state of Selected Domain and toggel between Login/Logout.		
+			try{
+				prefsWin = new PreferencesWindow(ifws, simiasManager);	
+		    	if(null != ServerDomain)		
+				{
+		    	 	if (!ServerDomain.Authenticated)  				
+				 	{
+						//####Login Domain	 
+						prefsWin.ToggelDomain(ServerDomain, true);
+					//	serverStat.Label = Util.GS("Disconnect");
+						serverStat.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png")));
 
-			//########### Validate current state of Selected Domain and toggel between Login/Logout.		
-			prefsWin = new PreferencesWindow(ifws, simiasManager);	
-		    if(null != ServerDomain)		
-			{
-		    	 if (!ServerDomain.Authenticated)  				
-				 {
-					//####Login Domain	 
-					prefsWin.ToggelDomain(ServerDomain, true);
-				//	serverStat.Label = Util.GS("Disconnect");
-					serverStat.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png")));
+						//#######Updating Server Image based on selected Domain connection status
+						serverImg.Pixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder_connect_128.png"));
+				 	}
+			     	else
+				 	{
+						//######Logout Domain	 
+						prefsWin.ToggelDomain(ServerDomain, false);
+						serverStat.Label = string.Format(Util.GS("Connect"));
+						serverStat.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("ifolder-warning16.png")));
 
-					//#######Updating Server Image based on selected Domain connection status
-					serverImg.Pixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder_connect_128.png"));
-				 }
-			     else
-				 {
-					//######Logout Domain	 
-					prefsWin.ToggelDomain(ServerDomain, false);
-					serverStat.Label = Util.GS("Connect");
-					serverStat.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("ifolder-warning16.png")));
-
-					//#######Updating Server Image based on selected Domain connection status
-					serverImg.Pixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder_discon_128.png"));
-				 }
+						//#######Updating Server Image based on selected Domain connection status
+						serverImg.Pixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder_discon_128.png"));
+				 	}
+				}
 			}
+			catch{} //###Rando GTK Exception while assinging text to label
 			
 		}
 
@@ -1687,19 +1688,23 @@ namespace Novell.iFolder
 		public void UpdateServerStatButton()
 		{
 			
+			try
+			{	
 		    	 if (ServerDomain != null && ServerDomain.Authenticated)  				
 				 {
 					//TODO: Use Label.Markup for assining text	 
-					serverStat.Label = Util.GS("Disconnect");
+					serverStat.Label = string.Format(Util.GS("Disconnect"));
 					serverImg.Pixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder_connect_128.png"));
 				 
 				 }
 				 else if(ServerDomain != null)
 				 {
-					serverStat.Label = Util.GS("Connect");
+					serverStat.Label = string.Format(Util.GS("Connect"));
 					serverImg.Pixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder_discon_128.png"));
 				 
 				 }
+			}
+			catch{} //########Random GTK Exception while assinging text to Label
 		}
 		
 		public bool UpdateUserDetails(iFolderHolder holder)
@@ -1711,7 +1716,7 @@ namespace Novell.iFolder
 	     		//labelLastSyncTime.Text = string.Format(Util.GS("Last Successfull Sync time:    {0}"),syncIntervalInMin);
 	     		labelLastSyncTime.Text = string.Format(Util.GS("Last Successfull Sync time:    {0}"),holder.iFolder.LastSyncTime);
 				//TODO: Verify whether to user SyncInterval or EffecticeSyncInterval
-	     		labeliFolderSize.Text = string.Format(Util.GS("iFolder Size:    {0}"), "TODO");
+	     		labeliFolderSize.Text = string.Format(Util.GS("iFolder Size:    {0}"), GetFriendlySize(holder.iFolder.iFolderSize));
 
 
 				DomainInformation domain = domainController.GetDomain(holder.iFolder.DomainID);
