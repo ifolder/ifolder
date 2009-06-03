@@ -1,15 +1,15 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="en" lang="en">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="en" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
+<meta name="Generation-Date" content="Wednesday, June 03, 2009 16:24" />
 <meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -17,24 +17,37 @@
 
 <title>Configuring Local Firewall Settings for iFolder Traffic</title>
 <script type="text/javascript">
-  var prev_link = "preferences.html";
-  var next_link = "virusscan.html";
-  var parentfile = "../accountsprefs.html";
-  var parenttoc = "../toc_accountsprefs.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "firewall";
+  var parentId = "accountsprefs";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="firewall">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Table of Contents' title='Table of Contents' />Table of Contents</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="previous" title="previous" />previous</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="virusscan.html" class="nav">&nbsp;next<img src="ui/images/next.png" alt="next" title="next" /></a>
+</div>
+
+
+<div class="sect1" id="firewall">
 
 <h1 class="title"> Configuring Local Firewall Settings for iFolder Traffic</h1>
 
 <p class="para">If you use a local firewall, you must set your firewall to allow iFolder to choose a local dynamic port or configure a local static port for the iFolder client to communicate locally (the same computer) with Mono® XSP Server. iFolder uses Mono XSP Web services to communicate via HTTP with the Novell iFolder enterprise servers where you have iFolder accounts. The iFolder administrator configures iFolder services that determine whether communications use HTTP in your environment.</p>
-<p class="para">Your firewall does not block traffic between Mono XSP and the Novell iFolder enterprise server because Mono XSP uses the standard HTTP ports for traffic. However, if you block the traffic between the client and Mono XSP, the client has no way to communicate with the server. You cannot log in to your iFolder account and synchronize iFolder data.</p>
+<p class="para">Your firewall does not block traffic between Mono XSP and the Novell iFolder enterprise server because Mono XSP uses the standard HTTP ports for traffic. However, if you block the traffic between the client and Mono XSP, the client cannot communicate with the server. You cannot log in to your iFolder account and synchronize iFolder data.</p>
 <p class="para">Initially, the iFolder configuration does not specify a particular port to use for client-to-Mono XSP communications. When iFolder first runs, it opens an available local port to listen for requests from Mono XSP and to send data to the server via Mono XSP. It writes the port number to a configuration file and uses this port thereafter unless the port is not available whenever iFolder starts. If the port is in use by another application, iFolder selects a different available port, reconfigures the port in the configuration file, and uses the new port thereafter. For example, if iFolder is down and another application takes the port, iFolder must select and configure a different port to use when you restart iFolder.</p>
 <div class="itemizedlist">
 <ul class="listbullet">
@@ -47,7 +60,7 @@
             <a href="firewall.html#bctnqjp">Using a Local Static Port</a>
           </p></li></ul></div>
 
-<div class="sect2"  id="bctnqjo">
+<div class="sect2" id="bctnqjo">
 
 <h2 class="title"> Using a Local Dynamic Port</h2>
 
@@ -55,7 +68,7 @@
 <p class="para">If you block the iFolder-to-Mono XSP traffic, your firewall prevents you from connecting with the iFolder server and you cannot synchronize your files. iFolder does not detect that traffic is blocked by the firewall; it reports only that it cannot connect to your account on the iFolder server.</p>
 </div>
 
-<div class="sect2"  id="bctnqjp">
+<div class="sect2" id="bctnqjp">
 
 <h2 class="title"> Using a Local Static Port</h2>
 
@@ -134,6 +147,11 @@
 
 <p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="previous" title="previous" />previous</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="virusscan.html" class="nav">&nbsp;next<img src="ui/images/next.png" alt="next" title="next" /></a>
+</div>
+
 </body>
 </html>
