@@ -756,6 +756,7 @@ namespace Novell.iFolder
 			//### Code to update Server status on domain login completed
 			iFolderWindow ifwin = Util.GetiFolderWindow();
 			ifwin.UpdateCurrentServer();
+			ifwin.UpdateListViewItems();
 		}
 
         /// <summary>
@@ -1064,7 +1065,6 @@ namespace Novell.iFolder
 					curDomains.Remove(domainID);
 				}
 			}
-
 			UpdateWidgetSensitivity();
 		}
 
@@ -1100,17 +1100,5 @@ namespace Novell.iFolder
 
 		}
 
-	/*	public void UpdateiFolderWindowOnLoginComplete()
-		{
-			TextWriter tw = null;
-			tw = new StreamWriter("vikashlog.txt");
-		    tw.WriteLine("Vikash:Domain already exist");
-		    tw.Close();
-
-			iFolderWindow ifwin = Util.GetiFolderWindow();
-			ifwin.PopulateCombobox();
-		} */
-
-		
 	}
 }
