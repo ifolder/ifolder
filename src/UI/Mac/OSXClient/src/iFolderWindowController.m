@@ -865,7 +865,7 @@ static iFolderWindowController *sharedInstance = nil;
 	[item setToolTip:NSLocalizedString(@"Download the selected iFolder", @"iFolderWin Toolbar Set Up ToolTip")]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(setupiFolder:)];
-	[item setImage:[NSImage imageNamed:@"setup32"]];
+	[item setImage:[NSImage imageNamed:@"ifolder-download32"]];
     [toolbarItems setObject:item forKey:@"SetupiFolder"]; // add to toolbar list
 	[toolbarItemKeys addObject:@"SetupiFolder"];
 	[item release];
