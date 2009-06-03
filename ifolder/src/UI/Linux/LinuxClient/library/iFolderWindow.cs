@@ -631,8 +631,11 @@ namespace Novell.iFolder
 
 		private Widget CreateiFolderActionButtonArea()
 		{
+			EventBox buttonArea = new EventBox();
 			VBox actionsVBox = new VBox(false, 0);
-			actionsVBox.WidthRequest = 275;
+			actionsVBox.WidthRequest = 100;
+			buttonArea.ModifyBg(StateType.Normal, this.Style.Background(StateType.Normal));
+			buttonArea.Add(actionsVBox);
 
 			buttontips = new Tooltips();
 
@@ -653,7 +656,6 @@ namespace Novell.iFolder
 			HBox spacerHBox = new HBox(false, 0);
 			ButtonControl.PackStart(spacerHBox, false, false, 0);
 			
-            //vikash changes modifing vbox from VBOx to Hbox for compile error, needed one
 			HBox vbox = new HBox(false, 0);
 			spacerHBox.PackStart(vbox, true, true, 0);
 
@@ -970,7 +972,8 @@ namespace Novell.iFolder
 			viewList.Changed += new EventHandler(OnviewListIndexChange);
 			ButtonControl.PackEnd(viewList, false, false,0);
 
-			return actionsVBox;
+			//return actionsVBox;
+			return buttonArea;
 
 
 		}
@@ -979,14 +982,14 @@ namespace Novell.iFolder
 		 {
 			//##########ADD BACKGROUND COLOR	 
 			WhiteBoradEventBox = new EventBox();
-			WhiteBoradEventBox.ModifyBg(StateType.Normal, this.Style.Background(StateType.Active));
+			WhiteBoradEventBox.ModifyBg(StateType.Normal, this.Style.Background(StateType.Normal));
 
 			VBox actionsVBox = new VBox(false, 0);
 			WhiteBoradEventBox.Add(actionsVBox);
 
 			//##########END BACKGROUND COLOR	 
 			HBox whiteBoard = new HBox(false,0);
-			whiteBoard.HeightRequest = 100;
+			whiteBoard.HeightRequest = 55;
 		   
 		    //##########CALL FUNCTION TO CREATE 3 VBOX AND APPEND TO HBOX	
 			
@@ -1004,18 +1007,26 @@ namespace Novell.iFolder
 			VBox iFolderInfo = new VBox(false, 0);
 			string lable = null;
 
-            //####################### ADD SPACE
-		     //actionsVBox.PackStart(new Label(""), false, false, 4);
 
             //####################### ADD LABEL
 			lable = Util.GS("N/A");
-			lable = string.Format(Util.GS("Name: {0}"),lable); 
+			lable = string.Format(Util.GS("Name:   {0}"),lable); 
 		    labelName = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
 
 		   	iFolderInfo.PackStart(labelName, false, false, 0);
 		    labelName.UseMarkup = true;
 			labelName.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
 		    labelName.Xalign = 0.0F;
+
+            //####################### ADD LABEL
+			lable = Util.GS("N/A");
+			lable = string.Format(Util.GS("Access: {0}"),lable); 
+		    labelAccess = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
+
+		   	iFolderInfo.PackStart(labelAccess, false, false, 0);
+		    labelAccess.UseMarkup = true;
+			labelAccess.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+		    labelAccess.Xalign = 0.0F;
 
             //####################### ADD LABEL
 			lable = Util.GS("N/A");
@@ -1026,15 +1037,6 @@ namespace Novell.iFolder
 		    labelOwner.UseMarkup = true;
 			labelOwner.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
 		    labelOwner.Xalign = 0.0F;
-            //####################### ADD LABEL
-			lable = Util.GS("N/A");
-			lable = string.Format(Util.GS("Access: {0}"),lable); 
-		    labelAccess = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
-
-		   	iFolderInfo.PackStart(labelAccess, false, false, 0);
-		    labelAccess.UseMarkup = true;
-			labelAccess.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
-		    labelAccess.Xalign = 0.0F;
 
 			return iFolderInfo;
 		}
@@ -1107,7 +1109,7 @@ namespace Novell.iFolder
 		private Widget CreateiFolderContentArea()
 		{
 			ContentEventBox = new EventBox();
-			ContentEventBox.ModifyBg(StateType.Normal, this.Style.Background(StateType.Active));
+			ContentEventBox.ModifyBg(StateType.Normal, this.Style.Background(StateType.Normal));
 
 			VBox vbox = new VBox(false, 0);
 			ContentEventBox.Add(vbox);
@@ -1480,6 +1482,9 @@ namespace Novell.iFolder
 			serverStat.Clicked += new EventHandler(OnserverStatButtonHandler);
 			actionsVBox.PackStart(serverStat, false, false, 0);
 
+            //####################### ADD SPACE
+		     actionsVBox.PackStart(new Label(""), false, false, 4);
+
 			//################# ADD SERVER IMAGE, INDICATING CONNECT/DISCONNECT STAUTS OF SELECTED SERVER
 			serverImg = new Gtk.Image();
 			serverImg.Pixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder_discon_128.png"));
@@ -1703,9 +1708,9 @@ namespace Novell.iFolder
 
 			if(holder != null && labelName != null)	
 			{
-	     		labelName.Text = string.Format(Util.GS("Name:    {0}"),holder.iFolder.Name);
+	     		labelName.Text = string.Format(Util.GS("Name:     {0}"),holder.iFolder.Name);
 	     		labelOwner.Text = string.Format(Util.GS("Owner:    {0}"),holder.iFolder.Owner);
-	     		labelAccess.Text = string.Format(Util.GS("Access:    {0}"),holder.iFolder.CurrentUserRights);
+	     		labelAccess.Text = string.Format(Util.GS("Access:   {0}"),holder.iFolder.CurrentUserRights);
 
            		if(holder.iFolder.IsSubscription) 
 				{
@@ -1725,7 +1730,7 @@ namespace Novell.iFolder
 		{	
 		        string label = Util.GS("N/A");	
 
-	     		labelName.Text = string.Format(Util.GS("Name:    {0}"),label);
+	     		labelName.Text = string.Format(Util.GS("Name:     {0}"),label);
 	     		labelOwner.Text = string.Format(Util.GS("Owner:    {0}"),label);
 	     		labelAccess.Text = string.Format(Util.GS("Access:    {0}"),label);
 
@@ -3907,7 +3912,8 @@ namespace Novell.iFolder
 			//domainController.CheckForNewiFolders();
 			this.RefreshAvailableiFolderTimer.Change(300000, 300000);
 
-			 GLib.Idle.Add(UpdateServerInfoForSelectedDomain);
+			 //GLib.Idle.Add(UpdateServerInfoForSelectedDomain);
+			 UpdateServerInfoForSelectedDomain();
 		}
 
 		private void RefreshAvailableiFolderTimer_click(object sender)
