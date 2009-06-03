@@ -771,6 +771,7 @@ if not exist C:\iFolder_stage\lib\simias\web\bin mkdir C:\iFolder_stage\lib\simi
 if not exist C:\iFolder_stage\etc mkdir C:\iFolder_stage\etc
 if not exist C:\iFolder_stage\etc\simias mkdir C:\iFolder_stage\etc\simias
 if not exist C:\iFolder_stage\lib\simias\web\modules mkdir C:\iFolder_stage\lib\simias\web\modules
+%windir%\Microsoft.NET\Framework64\v2.0.50727\RegAsm.exe /tlb:$(TargetName).tlb $(TargetName).dll
 xcopy /E /Y $(TargetDir)* C:\iFolder_stage\
 copy $(TargetName).tlb $(ProjectDir)</PostBuildEvent>
   </PropertyGroup>
