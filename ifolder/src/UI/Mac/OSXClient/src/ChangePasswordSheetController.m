@@ -64,7 +64,7 @@
 				[[iFolderData sharedInstance] setDomainPassword:[domainID stringValue] withPassword:nil];				
 			}
 			title = NSLocalizedString(@"Successful",@"Successful");
-			message = NSLocalizedString(@"Successfuly changed password",@"Successfuly changed password");
+			message = NSLocalizedString(@"Successfuly changed password.Log on to the domain with new password",@"Successfuly changed password");
 			
 			break;
 		case 1:
@@ -100,8 +100,10 @@
 	
 	if([returnStatus intValue] == 0)
 	{
+		[[iFolderData sharedInstance] logoutFromRemoteDomain:[domainID stringValue]];
 		[changePasswordSheet orderOut:nil];
 		[NSApp endSheet:changePasswordSheet];
+		[[iFolderData sharedInstance] refresh:NO];
 	}
 }
 
@@ -122,6 +124,7 @@
 		if(([[enterOldPassword stringValue] compare:@""] != NSOrderedSame) &&
 		   ([[enterNewPassword stringValue] compare:@""] != NSOrderedSame) &&
 		   ([[retypePassword stringValue] compare:@""] != NSOrderedSame) &&
+		   ([[enterNewPassword stringValue] isEqualToString:[retypePassword stringValue]]) &&
 		   [ifolderAccount indexOfSelectedItem] != -1 )
 		{
 			[changeButton setEnabled:YES];
