@@ -95,16 +95,23 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
+        public EnterPassphraseDialog(string domainID, SimiasWebService simws, iFolderWebService ifws)
+            : this(domainID, simws)
+        {
+            this.ifws = ifws;    
+        }
+        
+
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="domainID">ID of the iFolder Domain</param>
         /// <param name="simws">Simias WebService</param>
-		public EnterPassphraseDialog(string domainID, SimiasWebService simws, iFolderWebService ifws)
+		public EnterPassphraseDialog(string domainID, SimiasWebService simws)
 		{
 			this.DomainID = domainID;
 			this.simws = simws;
-            this.ifws = ifws;
+            
 			//
 			// Required for Windows Form Designer support
 			//
