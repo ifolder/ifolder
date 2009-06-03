@@ -320,7 +320,6 @@
 		save32.png
 		serverifolder.ico
 		serverifolder24.png
-		setup32.png
 		share32.png
 		sync32.png
 		ifolder_account_wiz.PNG
