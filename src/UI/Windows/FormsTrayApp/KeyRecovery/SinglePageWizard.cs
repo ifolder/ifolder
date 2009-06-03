@@ -179,7 +179,7 @@ namespace Novell.Wizard
             }
             finally
             { result = false;
-            return result;
+           
             }
 
             return result;
@@ -243,9 +243,8 @@ namespace Novell.Wizard
                 MessageBox.Show(TrayApp.Properties.Resources.importErrorMesg);
 
             }
-            finally { result = false;
-            return result;
-            }
+            finally { result = false; }
+            
 
             return result;
         }
@@ -276,7 +275,7 @@ namespace Novell.Wizard
             }
             finally { 
                 result = false;
-                return result;
+               
             }
             return result;
         }
