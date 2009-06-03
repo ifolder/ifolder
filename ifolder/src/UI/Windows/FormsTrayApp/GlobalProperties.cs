@@ -407,7 +407,7 @@ namespace Novell.FormsTrayApp
                 smallImageList.Images.Add(Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder-waiting32.png")));
                 smallImageList.Images.Add(Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder-conflict32.png")));
                 smallImageList.Images.Add(Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder-error32.png")));
-                smallImageList.Images.Add(Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\encrypt_ilock_32.png")));
+                smallImageList.Images.Add(Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\encrypt-ilock32.png")));
                 smallImageList.Images.Add(Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder_user_32.png")));
                 smallImageList.Images.Add(Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder-warning32.png")));
 
@@ -416,7 +416,7 @@ namespace Novell.FormsTrayApp
                 toolStripBtnDelete.Image = Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\delete_48.png"));
                 toolStripBtnDownload.Image = Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder-download48.png"));
                 toolStripBtnMerge.Image = Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\merge48.png"));
-                toolStripBtnResolve.Image = Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\conflict48.png"));
+                toolStripBtnResolve.Image = Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder-conflict48.png"));
                 toolStripBtnRevert.Image = Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\revert48.png"));
                 toolStripBtnShare.Image = Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\share48.png"));
                 toolStripBtnSyncNow.Image = Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder-sync48.png"));
