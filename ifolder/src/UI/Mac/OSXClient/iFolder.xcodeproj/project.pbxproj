@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		3E09F7AC07C0387700381F59 /* save32.png in Resources */ = {isa = PBXBuildFile; fileRef = 3E09F7AB07C0387700381F59 /* save32.png */; };
 		3E09F7AE07C0388400381F59 /* clear32.png in Resources */ = {isa = PBXBuildFile; fileRef = 3E09F7AD07C0388400381F59 /* clear32.png */; };
-		3E09F82207C0489300381F59 /* setup32.png in Resources */ = {isa = PBXBuildFile; fileRef = 3E09F82107C0489300381F59 /* setup32.png */; };
 		3E09F82807C0489F00381F59 /* share32.png in Resources */ = {isa = PBXBuildFile; fileRef = 3E09F82707C0489F00381F59 /* share32.png */; };
 		3E09F82E07C048AA00381F59 /* sync32.png in Resources */ = {isa = PBXBuildFile; fileRef = 3E09F82D07C048AA00381F59 /* sync32.png */; };
 		3E09F83407C048B700381F59 /* conflict32.png in Resources */ = {isa = PBXBuildFile; fileRef = 3E09F83307C048B700381F59 /* conflict32.png */; };
@@ -126,6 +125,7 @@
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		B207D1290FD68A9D0088CABD /* ifolder-download32.png in Resources */ = {isa = PBXBuildFile; fileRef = B207D1280FD68A9D0088CABD /* ifolder-download32.png */; };
 		B20E50E10EA4B59800C52650 /* encrypt-ilock-48.png in Resources */ = {isa = PBXBuildFile; fileRef = B20E50D90EA4B59800C52650 /* encrypt-ilock-48.png */; };
 		B20E50E20EA4B59800C52650 /* ifolder_user_48.png in Resources */ = {isa = PBXBuildFile; fileRef = B20E50DA0EA4B59800C52650 /* ifolder_user_48.png */; };
 		B20E50E30EA4B59800C52650 /* ifolder-conflict48.png in Resources */ = {isa = PBXBuildFile; fileRef = B20E50DB0EA4B59800C52650 /* ifolder-conflict48.png */; };
@@ -169,7 +169,6 @@
 		32CA4F630368D1EE00C91783 /* iFolder_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iFolder_Prefix.pch; sourceTree = "<group>"; };
 		3E09F7AB07C0387700381F59 /* save32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = save32.png; path = ../../../images/save32.png; sourceTree = SOURCE_ROOT; };
 		3E09F7AD07C0388400381F59 /* clear32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = clear32.png; path = ../../../images/clear32.png; sourceTree = SOURCE_ROOT; };
-		3E09F82107C0489300381F59 /* setup32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = setup32.png; path = ../../../images/setup32.png; sourceTree = SOURCE_ROOT; };
 		3E09F82707C0489F00381F59 /* share32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = share32.png; path = ../../../images/share32.png; sourceTree = SOURCE_ROOT; };
 		3E09F82D07C048AA00381F59 /* sync32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sync32.png; path = ../../../images/sync32.png; sourceTree = SOURCE_ROOT; };
 		3E09F83307C048B700381F59 /* conflict32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = conflict32.png; path = ../../../images/conflict32.png; sourceTree = SOURCE_ROOT; };
@@ -287,6 +286,7 @@
 		3EEA9A6907B1DC4F0015FCF4 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = User.m; path = src/User.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* iFolder 3.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iFolder 3.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B207D1280FD68A9D0088CABD /* ifolder-download32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ifolder-download32.png"; path = "../../../images/ifolder-download32.png"; sourceTree = SOURCE_ROOT; };
 		B20E50D90EA4B59800C52650 /* encrypt-ilock-48.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "encrypt-ilock-48.png"; path = "../../../images/encrypt-ilock-48.png"; sourceTree = SOURCE_ROOT; };
 		B20E50DA0EA4B59800C52650 /* ifolder_user_48.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ifolder_user_48.png; path = ../../../images/ifolder_user_48.png; sourceTree = SOURCE_ROOT; };
 		B20E50DB0EA4B59800C52650 /* ifolder-conflict48.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ifolder-conflict48.png"; path = "../../../images/ifolder-conflict48.png"; sourceTree = SOURCE_ROOT; };
@@ -616,6 +616,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B207D1280FD68A9D0088CABD /* ifolder-download32.png */,
 				B20E50D90EA4B59800C52650 /* encrypt-ilock-48.png */,
 				B20E50DA0EA4B59800C52650 /* ifolder_user_48.png */,
 				B20E50DB0EA4B59800C52650 /* ifolder-conflict48.png */,
@@ -653,7 +654,6 @@
 				3E09F83307C048B700381F59 /* conflict32.png */,
 				3E09F82D07C048AA00381F59 /* sync32.png */,
 				3E09F82707C0489F00381F59 /* share32.png */,
-				3E09F82107C0489300381F59 /* setup32.png */,
 				3EE449E107A7DEDB00B93B2F /* ifolder24.png */,
 				3EE449E307A7DF0000B93B2F /* serverifolder24.png */,
 				3EE238DB07C108EB00772501 /* prefs-notification32.png */,
@@ -948,7 +948,6 @@
 				3E19994A07BAE47700AAC29A /* SMEvents.h in Resources */,
 				3E09F7AC07C0387700381F59 /* save32.png in Resources */,
 				3E09F7AE07C0388400381F59 /* clear32.png in Resources */,
-				3E09F82207C0489300381F59 /* setup32.png in Resources */,
 				3E09F82807C0489F00381F59 /* share32.png in Resources */,
 				3E09F82E07C048AA00381F59 /* sync32.png in Resources */,
 				3E09F83407C048B700381F59 /* conflict32.png in Resources */,
@@ -994,6 +993,7 @@
 				B20E50E60EA4B59800C52650 /* ifolder-waiting48.png in Resources */,
 				B20E50E70EA4B59800C52650 /* ifolder-warning48.png in Resources */,
 				B20E50E80EA4B59800C52650 /* ifolder48.png in Resources */,
+				B207D1290FD68A9D0088CABD /* ifolder-download32.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
