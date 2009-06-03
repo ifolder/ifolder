@@ -351,7 +351,8 @@ namespace Novell.iFolder
                         AttachOptions.Fill, 0, 0, 0);
 
                 iFolderAcc = new Entry();
-                 table.Attach(iFolderAcc, 1, 2, 0, 1,
+                iFolderAcc.Sensitive = false;
+		 table.Attach(iFolderAcc, 1, 2, 0, 1,
                         AttachOptions.Expand | AttachOptions.Fill, 0, 0, 0);
                 l.MnemonicWidget = iFolderAcc;
 
@@ -440,8 +441,8 @@ namespace Novell.iFolder
                                   dialog.Hide();
                                   dialog.Destroy();
                                   dialog = null;
-                         EnterPassphrasePage.Hide();
-			//         return false;
+               		 //         EnterPassphrasePage.Hide();
+		         return false;
 			//		CloseDialog();
 
 			//	Console.WriteLine("Inside not success");
