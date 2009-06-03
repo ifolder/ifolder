@@ -105,15 +105,14 @@ namespace Novell.FormsTrayApp
             this.titleLastSyncTime = new System.Windows.Forms.Label();
             this.directorySearcher1 = new System.DirectoryServices.DirectorySearcher();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.iFolderView = new Novell.FormsTrayApp.TileListView();
             this.localiFoldersHeading = new System.Windows.Forms.RichTextBox();
             this.listView1 = new System.Windows.Forms.ListView();
             this.iFolder = new System.Windows.Forms.ColumnHeader();
             this.Size = new System.Windows.Forms.ColumnHeader();
             this.Server = new System.Windows.Forms.ColumnHeader();
             this.Status = new System.Windows.Forms.ColumnHeader();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
-            this.iFolderView = new Novell.FormsTrayApp.TileListView();
             this.toolStripiFolderActions.SuspendLayout();
             this.iFolderContextMenu.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -726,6 +725,22 @@ namespace Novell.FormsTrayApp
             this.panel2.Name = "panel2";
             this.panel2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel2_MouseDown);
             // 
+            // iFolderView
+            // 
+            resources.ApplyResources(this.iFolderView, "iFolderView");
+            this.iFolderView.BackColor = System.Drawing.Color.White;
+            this.iFolderView.ContextMenuStrip = this.iFolderContextMenu;
+            this.iFolderView.HorizontalSpacing = 5;
+            this.iFolderView.ItemHeight = 72;
+            this.iFolderView.ItemWidth = 280;
+            this.iFolderView.LargeImageList = null;
+            this.iFolderView.Name = "iFolderView";
+            this.iFolderView.SelectedItem = null;
+            this.iFolderView.VerticleSpacing = 5;
+            this.iFolderView.DoubleClick += new System.EventHandler(this.iFolderView_DoubleClick);
+            this.iFolderView.NavigateItem += new Novell.FormsTrayApp.TileListView.NavigateItemDelegate(this.iFolderView_NavigateItem);
+            this.iFolderView.SelectedIndexChanged += new Novell.FormsTrayApp.TileListView.SelectedIndexChangedDelegate(this.ifListView_SelectedIndexChanged);
+            // 
             // localiFoldersHeading
             // 
             this.localiFoldersHeading.BackColor = System.Drawing.Color.LightGray;
@@ -748,13 +763,12 @@ namespace Novell.FormsTrayApp
             this.Status});
             this.listView1.ContextMenuStrip = this.iFolderContextMenu;
             this.listView1.FullRowSelect = true;
-            this.listView1.LargeImageList = this.imageList1;
             this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
-            this.listView1.SmallImageList = this.imageList1;
             this.listView1.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
+            this.listView1.DoubleClick += new System.EventHandler(this.menuOpen_Click);
             this.listView1.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listView1_ColumnClick);
             this.listView1.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listView1_ItemSelectionChanged);
             // 
@@ -774,41 +788,11 @@ namespace Novell.FormsTrayApp
             // 
             resources.ApplyResources(this.Status, "Status");
             // 
-            // imageList1
-            // 
-            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "ifolder48.png");
-            this.imageList1.Images.SetKeyName(1, "ifolder-conflict48.png");
-            this.imageList1.Images.SetKeyName(2, "ifolder-download48.png");
-            this.imageList1.Images.SetKeyName(3, "ifolder-error48.png");
-            this.imageList1.Images.SetKeyName(4, "ifolder-sync48.png");
-            this.imageList1.Images.SetKeyName(5, "ifolder-upload48.png");
-            this.imageList1.Images.SetKeyName(6, "ifolder-waiting48.png");
-            this.imageList1.Images.SetKeyName(7, "encrypt_ilock_48.gif");
-            this.imageList1.Images.SetKeyName(8, "encrypt-ilock-48.png");
-            // 
             // panel1
             // 
             resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Controls.Add(this.listView1);
             this.panel1.Name = "panel1";
-            // 
-            // iFolderView
-            // 
-            resources.ApplyResources(this.iFolderView, "iFolderView");
-            this.iFolderView.BackColor = System.Drawing.Color.White;
-            this.iFolderView.ContextMenuStrip = this.iFolderContextMenu;
-            this.iFolderView.HorizontalSpacing = 5;
-            this.iFolderView.ItemHeight = 72;
-            this.iFolderView.ItemWidth = 280;
-            this.iFolderView.LargeImageList = null;
-            this.iFolderView.Name = "iFolderView";
-            this.iFolderView.SelectedItem = null;
-            this.iFolderView.VerticleSpacing = 5;
-            this.iFolderView.DoubleClick += new System.EventHandler(this.iFolderView_DoubleClick);
-            this.iFolderView.NavigateItem += new Novell.FormsTrayApp.TileListView.NavigateItemDelegate(this.iFolderView_NavigateItem);
-            this.iFolderView.SelectedIndexChanged += new Novell.FormsTrayApp.TileListView.SelectedIndexChangedDelegate(this.ifListView_SelectedIndexChanged);
             // 
             // GlobalProperties
             // 
@@ -957,7 +941,6 @@ namespace Novell.FormsTrayApp
         private Button LoginLogoff;
         private ListView listView1;
         private Panel panel1;
-        private ImageList imageList1;
         private ColumnHeader iFolder;
         private ColumnHeader Size;
         private ColumnHeader Server;

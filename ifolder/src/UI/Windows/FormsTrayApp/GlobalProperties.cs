@@ -2412,7 +2412,12 @@ namespace Novell.FormsTrayApp
 				}
 				catch (Exception ex)
 				{
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(string.Format(TrayApp.Properties.Resources.iFolderOpenError, ifolder.Name), TrayApp.Properties.Resources.openErrorTitle, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					Novell.iFolderCom.MyMessageBox mmb = 
+                        new MyMessageBox(string.Format(TrayApp.Properties.Resources.iFolderOpenError, ifolder.Name), 
+                            TrayApp.Properties.Resources.openErrorTitle, 
+                            ex.Message, 
+                            MyMessageBoxButtons.OK, 
+                            MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 					mmb.Dispose();
 				}
