@@ -1484,7 +1484,7 @@ namespace Novell.iFolder
 			//###############ADDED BUTTON FOR CONNECT/DISCONECT 
 			serverStat = new Button();	
 			serverStat.Label = Util.GS("N/A");
-			serverStat.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("ifolder-download16.png")));
+			serverStat.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("ifolder-warning16.png")));
 			serverStat.Clicked += new EventHandler(OnserverStatButtonHandler);
 			actionsVBox.PackStart(serverStat, false, false, 0);
 
