@@ -21,6 +21,8 @@
 			bctryt7.html
 			benefits.html
 			bookinfo.html
+			bkjj1f9.html
+			bkmgmdj.html
 			coexistmig.html
 			conflicts.html
 			createifolder.html
@@ -138,6 +140,7 @@
 				if3_conflicts_a.png
 				if3_defaultifolder_a.png
 				if3_defaultifolder_dwnld_a.png
+				if3_defaultifolder_dwnld_merge_a.png
 				if3_download.png
 				if3_export_encrypt_keys.png
 				if3_folder.png
