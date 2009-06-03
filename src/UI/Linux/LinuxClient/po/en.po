@@ -3544,3 +3544,152 @@ msgid ""
 msgstr ""
 "Click Ok to merge the folder or Cancel to select a different location"
 
+msgid ""
+"iFolder"
+msgstr ""
+"iFolder"
+
+msgid ""
+"Size"
+msgstr ""
+"Size"
+
+msgid ""
+"Upload a folder"
+msgstr ""
+"Upload a folder"
+
+msgid ""
+"Create iFolder"
+msgstr ""
+"Create iFolder"
+
+msgid ""
+"Resolve conflicts"
+msgstr ""
+"Resolve conflicts"
+
+msgid ""
+"Share with"
+msgstr ""
+"Share with"
+
+msgid ""
+"Download"
+msgstr ""
+"Download"
+
+msgid ""
+"Open Panel"
+msgstr ""
+"Open Panel"
+
+msgid ""
+"Close Panel"
+msgstr ""
+"Close Panel"
+
+msgid ""
+"Thumbnail View"
+msgstr ""
+"Thumbnail View"
+
+msgid ""
+"List View"
+msgstr ""
+"List View"
+
+msgid ""
+"Name: {0}"
+msgstr ""
+"Name: {0}"
+
+msgid ""
+"Owner: {0}"
+msgstr ""
+"Owner: {0}"
+
+msgid ""
+"Access: {0}"
+msgstr ""
+"Access: {0}"
+
+msgid ""
+"Server: {0}"
+msgstr ""
+"Server: {0}"
+
+msgid ""
+"Last Successfull Sync time: {0}"
+msgstr ""
+"Last Successfull Sync time: {0}"
+
+msgid ""
+"File/Folder to synchronize: {0}"
+msgstr ""
+"File/Folder to synchronize: {0}"
+
+msgid ""
+"iFolder Size: {0}"
+msgstr ""
+"iFolder Size: {0}"
+
+msgid ""
+"iFolder Type: {0}"
+msgstr ""
+"iFolder Type: {0}"
+
+msgid ""
+"Domain List"
+msgstr ""
+"Domain List"
+
+msgid ""
+"User: {0}"
+msgstr ""
+"User: {0}"
+
+msgid ""
+"No. of iFolder: {0}"
+msgstr ""
+"No. of iFolder: {0}"
+
+msgid ""
+"Disk Quota: {0}"
+msgstr ""
+"Disk Quota: {0}"
+
+msgid ""
+"Disk Used: {0}"
+msgstr ""
+"Disk Used: {0}"
+
+msgid ""
+"Disk Available: {0}"
+msgstr ""
+"Disk Available: {0}"
+
+msgid ""
+"Disconnect"
+msgstr ""
+"Disconnect"
+
+msgid ""
+"Connect"
+msgstr ""
+"Connect"
+
+msgid ""
+"Regular"
+msgstr ""
+"Regular"
+
+msgid ""
+"Encrypted"
+msgstr ""
+"Encrypted"
+
+msgid ""
+"iFolder Type:    {0}"
+msgstr ""
+"iFolder Type:    {0}"

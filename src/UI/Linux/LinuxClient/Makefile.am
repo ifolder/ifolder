@@ -43,7 +43,27 @@ IMAGE_FILES =								\
 	$(IMAGE_DIR)/ifolder_encrypted_fold_48.png	\
 	$(IMAGE_DIR)/ifolder-startup-nl.png		\
 	$(IMAGE_DIR)/encrypt-ilock-48.png		\
-	$(IMAGE_DIR)/ifolder_user_48.png
+	$(IMAGE_DIR)/ifolder_user_48.png		\
+	$(IMAGE_DIR)/change_view_48.png         \
+	$(IMAGE_DIR)/ifolder_connect_128.png         \
+	$(IMAGE_DIR)/ifolder_discon_128.png         \
+	$(IMAGE_DIR)/ifolder_share48.png         \
+	$(IMAGE_DIR)/ifolder_share_22.png         \
+	$(IMAGE_DIR)/merge48.png         \
+	$(IMAGE_DIR)/delete_48.png         \
+	$(IMAGE_DIR)/revert48.png         \
+	$(IMAGE_DIR)/encrypt-ilock32.png         \
+	$(IMAGE_DIR)/ifolder-conflict32.png         \
+	$(IMAGE_DIR)/ifolder-conflict48.png         \
+	$(IMAGE_DIR)/ifolder-download32.png         \
+	$(IMAGE_DIR)/ifolder-error32.png         \
+	$(IMAGE_DIR)/ifolder-sync32.png         \
+	$(IMAGE_DIR)/ifolder-upload32.png         \
+	$(IMAGE_DIR)/ifolder-waiting32.png         \
+	$(IMAGE_DIR)/ifolder-warning32.png         \
+	$(IMAGE_DIR)/ifolder_user_32.png		
+
+
 
 schemasdir			= $(GCONF_SCHEMA_FILE_DIR)
 schemas_DATA		= ifolder3.schemas

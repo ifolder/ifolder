@@ -50,7 +50,7 @@ namespace Novell.iFolder
 		
 		private ArrayList						viewGroups;
 		
-		private iFolderHolder					currentSelection;
+		private static iFolderHolder					currentSelection;
 		
 		public event System.EventHandler		SelectionChanged;
 	
@@ -62,11 +62,15 @@ namespace Novell.iFolder
         /// <summary>
         /// Gets Current Selection
         /// </summary>
-		public iFolderHolder		SelectedFolder
+		public static iFolderHolder		SelectedFolder
 		{
 			get
 			{
 				return currentSelection;
+			}
+			set
+			{
+				currentSelection = (iFolderHolder)value;	
 			}
 		}
 		

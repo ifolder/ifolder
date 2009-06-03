@@ -2225,6 +2225,7 @@ namespace Novell.iFolder.Web
                         return status;
 		}
 
+        	
 		/// <summary>
 		/// Decline an Enterprise subscription
 		/// </summary>

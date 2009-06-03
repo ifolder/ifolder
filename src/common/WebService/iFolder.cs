@@ -140,6 +140,8 @@ namespace Novell.iFolder.Web
 		/// whether collection is shared or not 
 		/// </summary>
 		public bool shared;
+
+        public long iFolderSize;
 		
 		/// <summary>
 		/// </summary>
@@ -223,6 +225,7 @@ namespace Novell.iFolder.Web
                     this.shared = true;
                 else
                     this.shared = false;
+                this.iFolderSize = collection.StorageSize;
 
             }
         }
@@ -312,6 +315,7 @@ namespace Novell.iFolder.Web
 				this.shared = true;
 			else
 				this.shared = false;
+            this.iFolderSize = collection.StorageSize;
 		}
 
 
@@ -408,6 +412,7 @@ namespace Novell.iFolder.Web
 			else
 				this.encryptionAlgorithm = "";
 			this.MigratediFolder = c.MigratediFolder;
+            this.iFolderSize = c.Size;
 		}
 
 	}

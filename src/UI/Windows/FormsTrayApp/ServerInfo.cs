@@ -43,6 +43,10 @@ using Novell.iFolder.Web;
 using Novell.iFolderCom;
 using Simias.Client;
 using Simias.Client.Authentication;
+using Novell.Win32Util;
+using Novell.Wizard;
+using Simias.Client.Event;
+
 
 namespace Novell.FormsTrayApp
 {
@@ -55,7 +59,7 @@ namespace Novell.FormsTrayApp
 		bool cancelled = false;
 		bool updateStarted = false;
 		private DomainInformation domainInfo;
-		private System.Windows.Forms.Button ok;
+		public System.Windows.Forms.Button ok;
 		private System.Windows.Forms.Button cancel;
 		private System.Windows.Forms.TextBox password;
 		private System.Windows.Forms.PictureBox banner;
@@ -70,6 +74,8 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Panel panel1;
 		private iFolderWebService ifWebService;
 		private Manager simiasManager;
+       
+        private bool wizardStatus = false;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -79,7 +85,11 @@ namespace Novell.FormsTrayApp
 		/// Constructs a ServerInfo object.
 		/// </summary>
 		/// <param name="domainInfo">The DomainInformation object for the domain.</param>
-		public ServerInfo(iFolderWebService ifws, Manager simiasManager, DomainInformation domainInfo, string password)
+
+          
+      
+        
+        public ServerInfo(iFolderWebService ifws, Manager simiasManager, DomainInformation domainInfo, string password)
 		{
 			//
 			// Required for Windows Form Designer support
@@ -508,14 +518,16 @@ namespace Novell.FormsTrayApp
         /// <returns>true on success</returns>
 		private bool authenticate()
 		{
-			bool result = false;
+			    bool result = false;
 
-			Connecting connecting = new Connecting( this.ifWebService, simiasWebService, simiasManager, domainInfo, password.Text, rememberPassword.Checked );
-			if ( connecting.ShowDialog() == DialogResult.OK )
-			{
-				result = true;
-			}
-
+                
+                    Connecting connecting = new Connecting(this.ifWebService, simiasWebService, simiasManager, domainInfo, password.Text, rememberPassword.Checked);
+                    if (connecting.ShowDialog() == DialogResult.OK)
+                    {
+                        result = true;
+                    }
+               
+               
 			return result;
 		}
 
@@ -558,24 +570,27 @@ namespace Novell.FormsTrayApp
         /// </summary>
         private void ok_Click(object sender, System.EventArgs e)
 		{
-			if (authenticate())
-			{
-				domainInfo.Authenticated = true;
-				password.Clear();
-                (FormsTrayApp.globalProp()).updateifListViewDomainStatus(domainInfo.ID, true);
-                FormsTrayApp.globalProp().AddDomainToUIList(domainInfo);
-                //(FormsTrayApp.globalProp()).refreshAll();
-				Close();
-			}
-			else
-			{
-				password.Focus();
-				if (!password.Text.Equals(string.Empty))
-				{
-					password.SelectAll();
-				}
-			}
-		}
+                if (authenticate())
+                {
+                    domainInfo.Authenticated = true;
+                    password.Clear();
+                    (FormsTrayApp.globalProp()).updateifListViewDomainStatus(domainInfo.ID, true);
+                    FormsTrayApp.globalProp().AddDomainToUIList(domainInfo);
+                    //(FormsTrayApp.globalProp()).refreshAll();
+                    Close();
+                    
+                }
+                else
+                {
+                    
+                    password.Focus();
+                    if (!password.Text.Equals(string.Empty))
+                    {
+                        password.SelectAll();
+                    }
+                    
+                }
+          	}
 
         /// <summary>
         /// Event Handler for ServerInfo load event

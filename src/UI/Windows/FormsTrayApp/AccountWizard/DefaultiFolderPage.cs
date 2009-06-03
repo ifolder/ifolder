@@ -510,7 +510,7 @@ namespace Novell.Wizard
 				else
 				{
 					// Passphrase not enterd at the time of login...
-					EnterPassphraseDialog enterPassPhrase= new EnterPassphraseDialog(domainInfo.ID, this.simws);
+					EnterPassphraseDialog enterPassPhrase= new EnterPassphraseDialog(domainInfo.ID, this.simws,this.ifws);
 					enterPassPhrase.ShowDialog();
 					passPhraseStatus = enterPassPhrase.PassphraseStatus;
 				}

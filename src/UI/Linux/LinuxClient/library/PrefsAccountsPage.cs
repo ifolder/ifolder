@@ -534,7 +534,7 @@ namespace Novell.iFolder
         /// Login to Domain
         /// </summary>
         /// <param name="dom">Domain Information</param>
-		private void LoginDomain(DomainInformation dom)
+		public void LoginDomain(DomainInformation dom)
 		{
 			try
 			{
@@ -741,6 +741,7 @@ namespace Novell.iFolder
 						UpdateDomainStatus(args.DomainID);
 						break;
 				}
+				//UpdateiFolderWindowOnLoginComplete();
 			}
 			else
 			{
@@ -751,6 +752,10 @@ namespace Novell.iFolder
 
 				UpdateDomainStatus(args.DomainID);
 			}
+
+			//### Code to update Server status on domain login completed
+			iFolderWindow ifwin = Util.GetiFolderWindow();
+			ifwin.UpdateCurrentServer();
 		}
 
         /// <summary>
@@ -840,7 +845,7 @@ namespace Novell.iFolder
         /// Logout
         /// </summary>
         /// <param name="dom">Domain Information</param>
-		private void LogoutDomain(DomainInformation dom)
+		public void LogoutDomain(DomainInformation dom)
 		{
 			try
 			{
@@ -1062,5 +1067,50 @@ namespace Novell.iFolder
 
 			UpdateWidgetSensitivity();
 		}
+
+		public void ToggelDomainState(DomainInformation domainInfo, bool login)
+		{
+			// disable the ability for the user to toggle the checkbox
+			onlineToggleButton.Activatable = false;
+			//TODO: Refere code from function OnlineToggled and add needed code	
+			IDomainProviderUI provider = domainProviderUI.GetProviderForID(domainInfo.ID);
+			if(provider != null)
+			{
+				if (domainInfo.Active)
+					domainController.InactivateDomain(domainInfo.ID);
+				else
+					domainController.ActivateDomain(domainInfo.ID);
+			}
+			else
+			{
+				if(true == login)
+				{
+ 					LoginDomain(domainInfo);
+				}
+				else
+				{
+ 					LogoutDomain(domainInfo);
+				}
+			}
+
+		    UpdateDomainStatus(domainInfo.ID);
+
+			// Reenable the ability for the user to toggle the checkbox
+			onlineToggleButton.Activatable = true;
+
+		}
+
+	/*	public void UpdateiFolderWindowOnLoginComplete()
+		{
+			TextWriter tw = null;
+			tw = new StreamWriter("vikashlog.txt");
+		    tw.WriteLine("Vikash:Domain already exist");
+		    tw.Close();
+
+			iFolderWindow ifwin = Util.GetiFolderWindow();
+			ifwin.PopulateCombobox();
+		} */
+
+		
 	}
 }
