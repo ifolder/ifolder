@@ -3016,7 +3016,7 @@ namespace Novell.iFolder
                                                                                                                 iFolderMsgDialog.DialogType.Info,
                                                                                                                 iFolderMsgDialog.ButtonSet.None,
                                                                                                                 Util.GS("Change password"),
-                                                                                                                Util.GS("Successfully changed the password."), null);
+                                                                                                                Util.GS("Successfully changed the password. Log on to the domain with new password."), null);
                                         dialog.Run();
                                         dialog.Hide();
                                         dialog.Destroy();
