@@ -233,7 +233,8 @@ namespace Novell.iFolder
 			
 			this.VBox.ShowAll();
 		        Button helpbutton = (Button)this.AddButton(Stock.Help, ResponseType.Help); 
-			helpbutton.Sensitive = false;
+			helpbutton.Sensitive = true;
+			helpbutton.Clicked += new EventHandler(OnHelpButtonClicked);
 			this.AddButton(Stock.Cancel, ResponseType.Cancel);
 			Button but = (Button)this.AddButton(Util.GS("Reset"), ResponseType.Ok);
 			but.Clicked += new EventHandler(OnResetClicked);
@@ -302,6 +303,14 @@ namespace Novell.iFolder
                                         dialog.Destroy();
                                         dialog = null;
 				}
+		}
+		private void OnHelpButtonClicked(object o, EventArgs args)
+		{
+			try
+			{
+				Util.ShowHelp("bkmgmdj.html", this);	
+			}
+			catch{ }
 		}
 
 		private void OnResetClicked( object o, EventArgs args)
