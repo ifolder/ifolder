@@ -709,7 +709,7 @@ namespace Novell.FormsTrayApp
 
         private void buttonHelp_Click(object sender, EventArgs e)
         {
-            string helpFile = Path.Combine(Path.Combine(Path.Combine(Application.StartupPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"managingpassphrse.html");
+            string helpFile = Path.Combine(Path.Combine(Path.Combine(Application.StartupPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"bkmgmdj.html");
             new iFolderComponent().ShowHelp(Application.StartupPath, helpFile);
         }
 
