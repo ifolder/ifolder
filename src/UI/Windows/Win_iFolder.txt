@@ -186,28 +186,28 @@
 				<bin>
 					FlaimWrapper.dll
 					FlaimWrapper.dll.manifest
-					<Microsoft.VC80.CRT>
-						Microsoft.VC80.CRT.manifest
-						msvcm80.dll
-						msvcp80.dll
-						msvcr80.dll
-					<Microsoft.VC80.MFC>
-						mfc80.dll
-						mfc80u.dll
-						mfcm80.dll
-						mfcm80u.dll
-						Microsoft.VC80.MFC.manifest
-					<Microsoft.VC80.MFCLOC>
-						Microsoft.VC80.MFCLOC.manifest
-						mfc80chs.dll
-						mfc80cht.dll
-						mfc80deu.dll
-						mfc80enu.dll
-						mfc80esp.dll
-						mfc80fra.dll
-						mfc80ita.dll
-						mfc80jpn.dll
-						mfc80kor.dll
+					<Microsoft.VC90.CRT>
+						Microsoft.VC90.CRT.manifest
+						msvcm90.dll
+						msvcp90.dll
+						msvcr90.dll
+					<Microsoft.VC90.MFC>
+						mfc90.dll
+						mfc90u.dll
+						mfcm90.dll
+						mfcm90u.dll
+						Microsoft.VC90.MFC.manifest
+					<Microsoft.VC90.MFCLOC>
+						Microsoft.VC90.MFCLOC.manifest
+						mfc90chs.dll
+						mfc90cht.dll
+						mfc90deu.dll
+						mfc90enu.dll
+						mfc90esp.dll
+						mfc90fra.dll
+						mfc90ita.dll
+						mfc90jpn.dll
+						mfc90kor.dll
 					Mono.Security.dll
 					Mono.WebServer.dll
 					Novell.iFolder.Web.dll
@@ -325,32 +325,50 @@
 		sync32.png
 		ifolder_account_wiz.PNG
 		ifold_emblem_48_32_16.ico
+		ifolder_sync22.gif
+		change_view_48.png
+		ifolder_connect_128.png
+		ifolder_discon_128.png
+		ifolder_share48.png
+		ifolder_share_22.png
+		merge48.png
+		revert48.png
+		encrypt-ilock32.png
+		ifolder-conflict32.png
+		ifolder-download32.png
+		ifolder-error32.png
+		ifolder-sync32.png
+		ifolder-upload32.png
+		ifolder-waiting32.png
+		ifolder-warning32.png
+		ifolder_user_32.png
+		ifolder-conflict48.png
 	<cs> (language directory)
 		iFolderApp.resources.dll
 		iFolderComponent.resources.dll
 		iFolderShellRes.dll
-		<Microsoft.VC80.CRT>
-                        Microsoft.VC80.CRT.manifest
-                        msvcm80.dll
-                        msvcp80.dll
-                        msvcr80.dll
-                <Microsoft.VC80.MFC>
-                        mfc80.dll
-                        mfc80u.dll
-                        mfcm80.dll
-                        mfcm80u.dll
-                        Microsoft.VC80.MFC.manifest
-                <Microsoft.VC80.MFCLOC>
-                        Microsoft.VC80.MFCLOC.manifest
-                        mfc80chs.dll
-                        mfc80cht.dll
-                        mfc80deu.dll
-                        mfc80enu.dll
-                        mfc80esp.dll
-                        mfc80fra.dll
-                        mfc80ita.dll
-                        mfc80jpn.dll
-                        mfc80kor.dll
+		<Microsoft.VC90.CRT>
+                        Microsoft.VC90.CRT.manifest
+                        msvcm90.dll
+                        msvcp90.dll
+                        msvcr90.dll
+                <Microsoft.VC90.MFC>
+                        mfc90.dll
+                        mfc90u.dll
+                        mfcm90.dll
+                        mfcm90u.dll
+                        Microsoft.VC90.MFC.manifest
+                <Microsoft.VC90.MFCLOC>
+                        Microsoft.VC90.MFCLOC.manifest
+                        mfc90chs.dll
+                        mfc90cht.dll
+                        mfc90deu.dll
+                        mfc90enu.dll
+                        mfc90esp.dll
+                        mfc90fra.dll
+                        mfc90ita.dll
+                        mfc90jpn.dll
+                        mfc90kor.dll
 	<de>
 	<es>
 	<fr>
@@ -371,7 +389,6 @@
 	 iFolderShellRes.dll
 	 iFolderUpgrade.exe
 	 iFolderWebService.dll
-	KeyRecovery.exe
 	Novell.iFolder.dll
 	simias.cmd
 	SimiasClient.dll
