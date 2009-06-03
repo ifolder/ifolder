@@ -1514,8 +1514,8 @@ namespace Novell.iFolder
 				 	{
 						//####Login Domain	 
 						prefsWin.ToggelDomain(ServerDomain, true);
-					//	serverStat.Label = Util.GS("Disconnect");
-						serverStat.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png")));
+						//serverStat.Label = Util.GS("Disconnect");
+						//serverStat.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png")));
 
 						//#######Updating Server Image based on selected Domain connection status
 						serverImg.Pixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder_connect_128.png"));
@@ -1649,12 +1649,14 @@ namespace Novell.iFolder
 				 {
 					//TODO: Use Label.Markup for assining text	 
 					serverStat.Label = string.Format(Util.GS("Disconnect"));
+					serverStat.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png")));
 					serverImg.Pixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder_connect_128.png"));
 				 
 				 }
 				 else if(ServerDomain != null)
 				 {
 					serverStat.Label = string.Format(Util.GS("Connect"));
+					serverStat.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("ifolder-warning16.png")));
 					serverImg.Pixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder_discon_128.png"));
 				 
 				 }
