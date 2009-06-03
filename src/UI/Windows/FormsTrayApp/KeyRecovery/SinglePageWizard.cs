@@ -110,45 +110,30 @@ namespace Novell.Wizard
         /// <returns></returns>
         internal override int ValidatePage(int currentIndex)
         {
-            bool result = Export_func();
-            if (result == true)
-            {
-                result = KeyRecovery_func();
-                if (result == true)
-                {
-                    result = Import_func();
-                    if (result == true)
-                    {                           
-                    }
-                    else
+            
+
+            if (Export_func())
+                if (KeyRecovery_func())
+                    if (Import_func())
                     {
-
-                        return currentIndex;        //if import fails, stay in current
+                        currentIndex = wizard.MaxPages - 4;
+                        return base.ValidatePage(currentIndex);
+                        // if all fine, move to final page
                     }
-                }
-                else
-                {
-
-                    return currentIndex;        //if key recovery fails, stay in current
-                }
-            }
-            else
-            {
-
-                return currentIndex;        // if export fails, stay in current
-            }
-
-            currentIndex = wizard.MaxPages - 4;
-            return base.ValidatePage(currentIndex);           // if all fine, move to final page
+           return currentIndex;
         }
+
+
 
 
         internal override int DeactivatePage()
         {
 
             try
-            {
+            {   if(File.Exists(inputFilePath))
                 File.Delete(inputFilePath);
+
+                if(File.Exists(outputFilePath))
                 File.Delete(outputFilePath);
             }
               
@@ -179,20 +164,25 @@ namespace Novell.Wizard
           
         private bool Export_func()
         {
+            bool result = false;
             try
             {
                 GetDefaultPath(selectedDomain.Name);
                 this.simiasWebService.ExportiFoldersCryptoKeys(selectedDomain.ID, inputFilePath);
-
+                result = true;
             }
             catch (Exception ex)
             {
-                MyMessageBox mmb = new MyMessageBox(TrayApp.Properties.Resources.unableToExportMesg, TrayApp.Properties.Resources.wizardText, null, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-                mmb.ShowDialog();
-                return false;
+                MessageBox.Show(TrayApp.Properties.Resources.unableToExportMesg);
+
+
+            }
+            finally
+            { result = false;
+            return result;
             }
 
-            return true;
+            return result;
         }
 
 
@@ -214,6 +204,7 @@ namespace Novell.Wizard
         {
             string certname = "";
             string pass = "";
+            bool result = false;
 
 
             certname = Path.GetFullPath(p12TextBox.Text);
@@ -221,7 +212,7 @@ namespace Novell.Wizard
             if ((!File.Exists(certname)) || (!certname.EndsWith(".p12")))
             {
 
-                MessageBox.Show("Private key path invalid");
+                MessageBox.Show(TrayApp.Properties.Resources.secretPathInvalid);
                 return false;
             }
 
@@ -244,42 +235,50 @@ namespace Novell.Wizard
 
                 bool flag = false;
                 inner.ProcessInputKeyFile(this.inputFilePath, this.outputFilePath, pass, xcert, flag, null);
-
+                result = true;
             }
 
             catch
             {
+                MessageBox.Show(TrayApp.Properties.Resources.importErrorMesg);
 
             }
+            finally { result = false;
+            return result;
+            }
 
-            return true;
+            return result;
         }
 
         private bool Import_func()
         {
-         
+            bool result = false;
             try
             {
                 string onetimepp = null;
 
                 this.simiasWebService.ImportiFoldersCryptoKeys(selectedDomain.ID, this.newPassphrase.Text, onetimepp, this.outputFilePath);
-
-                bool rememberOption = this.simiasWebService.GetRememberOption(selectedDomain.ID);
+                result = true;
+               // bool rememberOption = this.simiasWebService.GetRememberOption(selectedDomain.ID);
                 //clear the values
-                this.simiasWebService.StorePassPhrase(selectedDomain.ID, "", CredentialType.None, false);
+               // this.simiasWebService.StorePassPhrase(selectedDomain.ID, "", CredentialType.None, false);
                 //set the values
-                this.simiasWebService.StorePassPhrase(selectedDomain.ID, this.newPassphrase.Text, CredentialType.Basic, rememberOption);
+               // this.simiasWebService.StorePassPhrase(selectedDomain.ID, this.newPassphrase.Text, CredentialType.Basic, rememberOption);
 
             
 
             }
             catch (Exception ex)
             {
-                MyMessageBox mmb = new MyMessageBox(TrayApp.Properties.Resources.importErrorMesg, TrayApp.Properties.Resources.wizardText, null, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-                mmb.ShowDialog();
-                return false;
+                MessageBox.Show(TrayApp.Properties.Resources.importErrorMesg);
+
+                
             }
-            return true;
+            finally { 
+                result = false;
+                return result;
+            }
+            return result;
         }
 
         private void UpdateSensitivity()
