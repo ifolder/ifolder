@@ -1246,6 +1246,7 @@ namespace Novell.iFolder
 						switch (holder.State)
 						{
 							case iFolderState.Disconnected:
+								returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder-warning48.png"));
 								break; 
 							case iFolderState.FailedSync:
 								returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder-error48.png"));
@@ -1287,7 +1288,12 @@ namespace Novell.iFolder
 			
 		}
 
-		private void UpdateListViewItems()
+		public void UpdateListViewItems()
+		{
+			UpdateListViewItems(false);
+		}
+
+		public void UpdateListViewItems(bool flag)
 		{
 			TreeIter iter;
 			viewstore.Clear();
@@ -3118,7 +3124,7 @@ namespace Novell.iFolder
 
 			// Update the item on the main thread
 			GLib.Idle.Add(UpdateLocalViewItemsMainThread);
-            RefreshiFolders(true);
+            		RefreshiFolders(true);
 			UpdateCurrentServer();
 		}
 
@@ -3136,7 +3142,12 @@ namespace Novell.iFolder
 			}
 
 			// Update the item on the main thread
-			GLib.Idle.Add(UpdateLocalViewItemsMainThread);
+			if( ifolderlistview.Visible )
+			{
+				UpdateListViewItems(true);
+			}
+			else
+				GLib.Idle.Add(UpdateLocalViewItemsMainThread);
 			UpdateCurrentServer();
 		}
 		
