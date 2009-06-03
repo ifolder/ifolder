@@ -3145,9 +3145,9 @@ msgstr ""
 "There are no logged-in domains for importing keys."
 
 msgid ""
-"For importing keys the domain should be connected. Log on to the domain and try."
+"For resetting keys the domain should be connected. Log on to the domain and try."
 msgstr ""
-"For importing keys the domain should be connected. Log on to the domain and try."
+"For resetting keys the domain should be connected. Log on to the domain and try."
 
 msgid ""
 "Successfully imported the keys and changed the passphrase"
@@ -3693,3 +3693,183 @@ msgid ""
 "iFolder Type:    {0}"
 msgstr ""
 "iFolder Type:    {0}"
+
+msgid ""
+"Welcome to the Passphrase Recovery Wizard"
+msgstr""
+"Welcome to the Passphrase Recovery Wizard"
+
+msgid ""
+"Select the account for which the passphrase must to be reset."
+msgstr""
+"Select the account for which the passphrase must to be reset."
+
+msgid ""
+"Click Next to proceed."
+msgstr ""
+"Click Next to proceed."
+
+msgid ""
+"New passphrase"
+msgstr ""
+"New passphrase"
+
+msgid ""
+"Confirm passphrase"
+msgstr ""
+"Confirm passphrase"
+
+msgid ""
+"To recover a lost passphrase, you require the secret file (private key of the certificate) and its passowrd or the data file from the administrator."
+msgstr ""
+"To recover a lost passphrase, you require the secret file (private key of the certificate) and its passowrd or the data file from the administrator."
+
+msgid ""
+"If you don't have this information, you must use this wizard to obtain the old data file and then mail the file to your administrator.The administrator will send back to you a new data file which you can use to reset your passphrase."
+msgstr ""
+"If you don't have this information, you must use this wizard to obtain the old data file and then mail the file to your administrator.The administrator will send back to you a new data file which you can use to reset your passphrase."
+
+msgid ""
+"I have the secret file and it password, I have the new data file sent by the administrator, I have no secret or data file."
+msgstr ""
+"I have the secret file and it password, I have the new data file sent by the administrator, I have no secret or data file."
+
+msgid ""
+"iFolder account"
+msgstr ""
+"iFolder account"
+
+msgid ""
+"iFolder account"
+msgstr ""
+"iFolder account"
+
+msgid ""
+"Location of secret file"
+msgstr ""
+"Location of secret file"
+
+msgid ""
+"Secret password"
+msgstr ""
+"Secret password"
+
+msgid ""
+"Location of new data file"
+msgstr ""
+"Location of new data file"
+
+msgid ""
+"One time password"
+msgstr ""
+"One time password"
+
+msgid ""
+"Passphrase is reset using the new data file obtained from the administrator."
+msgstr ""
+"Passphrase is reset using the new data file obtained from the administrator."
+
+msgid ""
+"Send this file to the administrator to obtain the new data file. You must then use the new data file to reset your passphrase using the second option of the wizard. "
+msgstr ""
+"Send this file to the administrator to obtain the new data file. You must then use the new data file to reset your passphrase using the second option of the wizard. "
+
+msgid ""
+"The old data file was successfully stored at the following path"
+msgstr ""
+"The old data file was successfully stored at the following path"
+
+msgid ""
+"Location to save old data file"
+msgstr ""
+"Location to save old data file"
+
+msgid ""
+"Congratulations!! You have successfully reset the passphrase.Now,you can use the new passphrase to access your data."
+msgstr ""
+"Congratulations!! You have successfully reset the passphrase.Now,you can use the new passphrase to access your data."
+
+msgid ""
+"Set new passphrase"
+msgstr ""
+"Set new passphrase"
+
+msgid ""
+"Old data file sent successfully"
+msgstr ""
+"Old data file sent successfully"
+
+msgid ""
+"Obtain old data file"
+msgstr ""
+"Obtain old data file"
+
+msgid ""
+"Select passphrase recovery step"
+msgstr ""
+"Select passphrase recovery step"
+
+msgid ""
+"Select account"
+msgstr ""
+"Select account"
+
+msgid ""
+"Select an option to recover your passphrase."
+msgstr ""
+"Select an option to recover your passphrase."
+
+msgid ""
+"I have the secret file and its password"
+msgstr ""
+"I have the secret file and its password"
+
+msgid ""
+"I have the new data file sent by the administrator"
+msgstr ""
+"I have the new data file sent by the administrator"
+
+msgid ""
+"I have no secret or data file"
+msgstr ""
+"I have no secret or data file"
+
+msgid ""
+"Select a file ...."
+msgstr ""
+"Select a file ...."
+
+msgid ""
+"Is the above file encrypted?"
+msgstr ""
+"Is the above file encrypted?"
+
+msgid ""
+"Finish"
+msgstr ""
+"Finish"
+
+msgid ""
+"Passphrase reset failed"
+msgstr ""
+"Passphrase reset failed"
+
+msgid ""
+"Unable to authenticate to the domain.You have been logged out of the account.Please login and try again"
+msgstr "'
+"Unable to authenticate to the domain.You have been logged out of the account.Please login and try again"
+
+msgid ""
+"You have been logged out of the account.Please login and try again."
+msgstr "'
+"You have been logged out of the account.Please login and try again."
+
+msgid ""
+"Passphrase reset successfully"
+msgstr ""
+"Passphrase reset successfully"
+
+msgid ""
+"Server_Default"
+msgstr ""
+"Server_Default"
