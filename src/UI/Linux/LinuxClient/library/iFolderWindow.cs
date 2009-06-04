@@ -964,15 +964,24 @@ namespace Novell.iFolder
 			l.Xalign = 0.0F;
 			//l.SetAlignment(1,1);
 
-
+		    VBox viewChanger = new VBox(false,0);	
 			string[] list = {Util.GS("Open Panel"),Util.GS("Close Panel"),Util.GS("Thumbnail View"),Util.GS("List View") };
 		    viewList = new ComboBoxEntry (list);	
 			viewList.Active = 0;
-			//viewList.Height = 50;
 			viewList.Changed += new EventHandler(OnviewListIndexChange);
-			ButtonControl.PackEnd(viewList, false, false,0);
+		
+			//#########ADD DUMMY VBOX FOR ALLINGEMENT
+			VBox dummyVbox = new VBox(false,0);		
+		    Label labeldummy = new Label( string.Format( ""));
+		    labeldummy.UseMarkup = true;
+			dummyVbox.PackStart(labeldummy,false,true,0);
 
-			//return actionsVBox;
+			viewChanger.PackStart(dummyVbox,false,true,0);
+			viewChanger.PackStart(viewList,false,true,0);
+			
+			
+			ButtonControl.PackEnd(viewChanger, false, true,0);
+
 			return buttonArea;
 
 
@@ -1672,7 +1681,7 @@ namespace Novell.iFolder
 	     		labelFolderToSync.Text = string.Format(Util.GS("File/Folder to synchronize:    {0}"), holder.ObjectsToSync);
 	     		//labelLastSyncTime.Text = string.Format(Util.GS("Last Successfull Sync time:    {0}"),syncIntervalInMin);
 	     		labelLastSyncTime.Text = string.Format(Util.GS("Last Successfull Sync time:    {0}"),holder.iFolder.LastSyncTime);
-				//TODO: Verify whether to user SyncInterval or EffecticeSyncInterval
+			//	TODO: Verify whether to user SyncInterval or EffecticeSyncInterval
 	     		labeliFolderSize.Text = string.Format(Util.GS("iFolder Size:    {0}"), GetFriendlySize(holder.iFolder.iFolderSize));
 
 
@@ -5110,7 +5119,7 @@ namespace Novell.iFolder
 
 	        publicKey = ifWebService.GetDefaultServerPublicKey(DomainID,memberID);
                         status = SetPassPhrase(epd,DomainID,publicKey,simws);
-                        epd.Hide();
+                        epd.Hide(); 
                         return status;
 		}
 
