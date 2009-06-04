@@ -135,7 +135,7 @@ namespace Novell.iFolder
 		private HBox 				viewpane;
 		private ListTreeView 			tv;
 		private static iFolderViewGroup	localGroup;
-		private TreeModelFilter	myiFoldersFilter,iFolderFilter;
+		private TreeModelFilter	myiFoldersFilter,iFolderFilter,treeModelFilter;
 		private Timer				updateStatusTimer;
 
 		private VBox				SynchronizedFolderTasks;
@@ -2297,11 +2297,15 @@ namespace Novell.iFolder
 		public void DownloadAvailableiFolderHandler(object o, EventArgs args)
 		{
 			DownloadSelectedFolder();
+			myiFoldersFilter.Refilter();
+			treeModelFilter.Refilter();
 		}
 
 		public void MergeAvailableiFolderHandler(object o, EventArgs args)
 		{
 			MergeSelectedFolder();
+			myiFoldersFilter.Refilter();
+  	                treeModelFilter.Refilter();
 		}
 		
 		public void DeleteFromServerHandler(object o, EventArgs args)
@@ -3581,7 +3585,7 @@ namespace Novell.iFolder
 			
 			iFolderServerFilter serverFilter =
 				new iFolderServerFilter(domainID, SearchEntry);
-			TreeModelFilter treeModelFilter = new TreeModelFilter(ifdata.iFolders, null);
+			treeModelFilter = new TreeModelFilter(ifdata.iFolders, null);
 			treeModelFilter.VisibleFunc = serverFilter.FilterFunc;
 
 			iFolderViewGroup group =
@@ -3823,7 +3827,15 @@ namespace Novell.iFolder
 
 				SynchronizedFolderTasks.Visible = true;
 				
-				//RemoveiFolderButton.Sensitive = true;
+				if( ( holder.iFolder.State == "WaitSync" )
+				 && (holder.State == iFolderState.Synchronizing) )
+				{
+					RemoveiFolderButton.Sensitive = false;
+				}
+				else
+				{
+					RemoveiFolderButton.Sensitive = true;
+				}
 			}
 
 		}
@@ -3884,14 +3896,16 @@ namespace Novell.iFolder
 //					if (networkDetect.Connected)
 //					   SyncNowMenuItem.Sensitive = true;
 
-					if (holder.iFolder.Role.Equals("Master"))
-						RevertMenuItem.Sensitive = false;
-					else
+					if ( (holder.iFolder.Role.Equals("Master"))
+					  || ( ( holder.iFolder.State == "WaitSync" )
+							&& (holder.State == iFolderState.Synchronizing)	))
 					{
-                        if(holder.State != iFolderState.Synchronizing)
-						{
-							RevertMenuItem.Sensitive = true;
-						}
+						RevertMenuItem.Sensitive = false;
+
+					}
+					else 
+					{
+						RevertMenuItem.Sensitive = true;
 
 					}
 					PropMenuItem.Sensitive = true;
@@ -4790,6 +4804,9 @@ namespace Novell.iFolder
                          DomainInformation domain = domainController.GetDomain(args.ID);
 						 UpdateQoutaData(domain); 
 					}
+					//Activate the Revert Button
+				        this.RevertMenuItem.Sensitive = true;	
+					this.RemoveiFolderButton.Sensitive = true;
 					break;
 				}
 			}
