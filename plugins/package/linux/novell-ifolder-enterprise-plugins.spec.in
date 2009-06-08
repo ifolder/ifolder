@@ -19,10 +19,10 @@
 Name:           novell-ifolder-enterprise-plugins
 
 %if %suse_version <= 1100
-BuildRequires:  compat-libstdc++ e2fsprogs e2fsprogs-devel gcc-c++ glib2 glib2-devel libflaim libflaim-devel libstdc++ libstdc++-devel libxml2 libxml2-devel mod_mono mono-core mono-data mono-devel mono-web pkgconfig xsp gtk-sharp2 glib-sharp2 ifolder3-enterprise
+BuildRequires:  compat-libstdc++ e2fsprogs e2fsprogs-devel gcc-c++ glib2 glib2-devel libflaim libflaim-devel libstdc++ libstdc++-devel libxml2 libxml2-devel apache2-mod_mono mono-core mono-data mono-devel mono-web pkgconfig xsp gtk-sharp2 glib-sharp2 ifolder3-enterprise
 %else
 %ifarch         x86_64
-BuildRequires:  libstdc++33-32bit libstdc++33-devel-32bit e2fsprogs e2fsprogs-devel gcc-c++ glib2 glib2-devel libflaim libflaim-devel libstdc++ libstdc++-devel libxml2 libxml2-devel mod_mono mono-core mono-data mono-devel mono-web pkgconfig xsp gtk-sharp2 glib-sharp2 ifolder3-enterprise
+BuildRequires:  libstdc++33-32bit libstdc++33-devel-32bit e2fsprogs e2fsprogs-devel gcc-c++ glib2 glib2-devel libflaim libflaim-devel libstdc++ libstdc++-devel libxml2 libxml2-devel apache2-mod_mono mono-core mono-data mono-devel mono-web pkgconfig xsp gtk-sharp2 glib-sharp2 ifolder3-enterprise
 %else
 BuildRequires:  libstdc++33 libstdc++33-devel e2fsprogs e2fsprogs-devel gcc-c++ glib2 glib2-devel libflaim libflaim-devel libstdc++ libstdc++-devel libxml2 libxml2-devel mod_mono mono-core mono-data mono-devel mono-web pkgconfig xsp gtk-sharp2 glib-sharp2 ifolder3-enterprise
 %endif
@@ -37,16 +37,15 @@ Url:            http://www.ifolder.com
 License:        GNU General Public License (GPL) v2
 Group:          Productivity/Networking/Novell
 Autoreqprov:    on
-Requires:       mono-core >= 1.1.8
-Requires:       mono-data >= 1.1.8
-Requires:       mono-web >= 1.1.8
-Requires:       mod_mono
+Requires:       mono-core >= 2.4 
+Requires:       mono-data >= 2.4
+Requires:       mono-web >= 2.4
 Requires:       ifolder3-enterprise > 3.7.2
 #Obsoletes:      %{name} < %{version}
 Version:        3.7.2.@@BUILDNUM@@.1
 Release:        2
 Summary:        Plugins adding additional capability to iFolder 3 enterprise server
-Source:         ifolder-enterprise-plugins.tar.gz
+Source:         novell-ifolder-enterprise-plugins.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 #=============================================================================
 %description
@@ -89,6 +88,7 @@ make DESTDIR=$RPM_BUILD_ROOT install
 %{sysconfdir}/iFolderLdapPlugin.schema
 %{sysconfdir}/simias/bill/modules/IdentityManagement.conf
 %{sysconfdir}/simias/bill/modules/UserMovement.conf
+%{sysconfdir}/iFolderLdapGroupExtend.ldif
 %{prefix}/%_lib/simias/web/bin/UserMovement.dll
 %{prefix}/%_lib/simias/web/bin/Simias.Identity.ADLdapProvider.dll
 %{prefix}/%_lib/simias/web/bin/IdentityManagement.dll
