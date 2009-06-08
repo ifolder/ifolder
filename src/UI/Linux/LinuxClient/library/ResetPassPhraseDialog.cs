@@ -179,7 +179,7 @@ namespace Novell.iFolder
         /// </summary>
 		private void SetupDialog()
 		{
-			this.Title = Util.GS("Reset Passphrase");
+			this.Title = Util.GS("Change Passphrase");
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png"));
 			this.HasSeparator = false;
 //			this.BorderWidth = 10;
@@ -433,7 +433,7 @@ namespace Novell.iFolder
                                                                                                                null,
                                                                                                                iFolderMsgDialog.DialogType.Error,
                                                                                                                 iFolderMsgDialog.ButtonSet.None,
-                                                                                                                Util.GS("Reset Passphrase"),
+                                                                                                                Util.GS("Change Passphrase"),
                                                                                                                 Util.GS("Unable to change the Passphrase"),
 				                                                                        Util.GS("Please try again"));
 				dialog.Run();
