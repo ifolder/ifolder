@@ -6,7 +6,7 @@ test -z "$srcdir" && srcdir=.
 
 ORIGDIR=`pwd`
 cd $srcdir
-PROJECT=simias
+PROJECT=plugins
 TEST_TYPE=-f
 FILE=./src/AutoConfig/AutoAccount.cs
 
