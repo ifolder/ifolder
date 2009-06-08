@@ -578,7 +578,7 @@ namespace Novell.iFolder
 			//----------------------------
 			Menu SecurityMenu = new Menu();
 
-			RecoveryMenuItem = new MenuItem(Util.GS("_Key Recovery"));
+			RecoveryMenuItem = new MenuItem(Util.GS("_Forgot Passphrase"));
 			RecoveryMenuItem.Activated += new EventHandler(OnRecoveryMenuItem);
 			SecurityMenu.Append(RecoveryMenuItem);
 		/*	ImportMenuSubItem = new MenuItem(Util.GS("Import Decrypted Keys"));
@@ -592,11 +592,11 @@ namespace Novell.iFolder
 
 			RecoveryMenuItem.Submenu = recoverMenu;;*/
 
-			ResetPassMenuItem = new MenuItem(Util.GS("Reset _Passphrase"));
+			ResetPassMenuItem = new MenuItem(Util.GS("Change _Passphrase"));
 			ResetPassMenuItem.Activated += new EventHandler(OnResetPassMenuItem);
 			SecurityMenu.Append(ResetPassMenuItem);
 
-			ResetPasswordMenuItem = new MenuItem(Util.GS("Change Password"));
+			ResetPasswordMenuItem = new MenuItem(Util.GS("_Change Password"));
 			ResetPasswordMenuItem.Activated += new EventHandler(OnResetPasswordMenuItem);
 			SecurityMenu.Append(ResetPasswordMenuItem);
 
@@ -3088,7 +3088,7 @@ namespace Novell.iFolder
                                                                                                                 null,
                                                                                                                 iFolderMsgDialog.DialogType.Info,
                                                                                                                 iFolderMsgDialog.ButtonSet.None,
-                                                                                                                Util.GS("Reset Passphrase"),
+                                                                                                                Util.GS("Change Passphrase"),
                                                                                                                 Util.GS("Successfully changed the passphrase"), null/*,
                                                                                                                 Util.GS("Please Re-login to iFolder and web client to continue the encrypted iFolder processing")*/);
 	                                dialog.Run();
