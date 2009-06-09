@@ -249,7 +249,7 @@ namespace Novell.iFolder
                         l1.Xalign = 0.0F;
 	
 						//Row 2
-							Label l2 = new Label(Util.GS("iFolder Account")+":");
+							Label l2 = new Label(Util.GS("_iFolder Account")+":");
 			
 							table.Attach(l2, 0,1,5,6,
                                 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
@@ -382,7 +382,7 @@ namespace Novell.iFolder
                         AttachOptions.Expand | AttachOptions.Fill, 0, 0, 0);
                 l.MnemonicWidget = confirmPassphrase;
 		
-		 l = new Label(Util.GS("Username") + ":");
+		 l = new Label(Util.GS("_User name") + ":");
                 l.Xalign = 0.0F;
                 table.Attach(l, 0, 1, 3, 4,
                         AttachOptions.Fill | AttachOptions.Expand, 0, 0, 0);
@@ -393,7 +393,7 @@ namespace Novell.iFolder
                         AttachOptions.Expand | AttachOptions.Fill, 0, 0, 0);
                 l.MnemonicWidget = userName;
 
-		 l = new Label(Util.GS("Password") + ":");
+		 l = new Label(Util.GS("_Password") + ":");
                 l.Xalign = 0.0F;
                 table.Attach(l, 0, 1, 4, 5,
                         AttachOptions.Fill | AttachOptions.Expand, 0, 0, 0);
@@ -605,7 +605,7 @@ namespace Novell.iFolder
 
 
 			//Choice 1: have Both parameters				
-			 haveBoth = new RadioButton(Util.GS("I have the secret file and its password"));
+			 haveBoth = new RadioButton(Util.GS("I have the _secret file and its password"));
                         table.Attach(haveBoth, 0,1, 1,2,
                                         AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			haveBoth.Sensitive = true;
@@ -613,14 +613,14 @@ namespace Novell.iFolder
 			
 
 			//Choice 2: have one parameter
-                        haveOne = new RadioButton(haveBoth, Util.GS("I have the new data file sent by the administrator"));
+                        haveOne = new RadioButton(haveBoth, Util.GS("I have the new _data file sent by the administrator"));
                         table.Attach(haveOne, 0,1, 2,3, AttachOptions.Fill | AttachOptions.Shrink, 0,0,0);
 			haveOne.Sensitive = true;
 
 
 			//Choice 3:have none
 
-			haveNone = new RadioButton(haveBoth,Util.GS("I have no secret or data file."));
+			haveNone = new RadioButton(haveBoth,Util.GS("_I have no secret or data file."));
 			table.Attach(haveNone,0,1,3,4,AttachOptions.Fill | AttachOptions.Shrink, 0,0,0);
 			haveNone.Sensitive = true;
 
@@ -722,7 +722,7 @@ namespace Novell.iFolder
 						
             
 		  				// Row 3
-                        l = new Label(Util.GS("Save the old data file in")+":");
+                        l = new Label(Util.GS("_Location to save old data file")+":");
                         l.Xalign = 0.0F;
                         table.Attach(l, 0,1, 2,3,
                                 AttachOptions.Fill, 0,0,0); // spacer
@@ -982,7 +982,7 @@ namespace Novell.iFolder
                         table.BorderWidth = 12;
 
                         //Row 0
-                        Label l = new Label(Util.GS("iFolder Account")+":");
+                        Label l = new Label(Util.GS("_iFolder Account")+":");
                         table.Attach(l, 0,1, 0,1, AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
                         l.LineWrap = true;
                         l.Xalign = 0.0F;
@@ -995,7 +995,7 @@ namespace Novell.iFolder
                       
 
                         // Row 1
-                        l = new Label(Util.GS("Location of new data file")+":");
+                        l = new Label(Util.GS("_Location of new data file")+":");
                         table.Attach(l, 0,1, 1,2,
                                 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
                         l.LineWrap = true;
@@ -1012,7 +1012,7 @@ namespace Novell.iFolder
                         importBrowseButton.Clicked += new EventHandler(OnImportBrowseButtonClicked);
 
                         
-			 isEncrypted = new CheckButton(Util.GS("Is the above file encrypted?"));
+			 isEncrypted = new CheckButton(Util.GS("Is the _above file encrypted?"));
                         table.Attach(isEncrypted, 1,2, 2,3, AttachOptions.Fill | AttachOptions.Shrink, 0,0,0);
 		//	isEncrypted.Toggled += new EventHandler(OnImportFieldsChanged);
 			isEncrypted.Active = true;
@@ -1030,7 +1030,7 @@ namespace Novell.iFolder
                         l.MnemonicWidget = oneTimePassphrase;
 
                         // Row 3
-                        l = new Label(Util.GS("New Passphrase")+":");
+                        l = new Label(Util.GS("_New Passphrase")+":");
                         l.Xalign = 0.0F;
                         table.Attach(l, 0,1, 4,5,
                                 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
@@ -1042,7 +1042,7 @@ namespace Novell.iFolder
                         l.MnemonicWidget = importPageNewPassphrase;
 
 						 // Row 4
-                        l = new Label("Confirm Passphrase"+":");
+                        l = new Label("_Confirm Passphrase"+":");
                         l.Xalign = 0.0F;
                         table.Attach(l, 0,1, 5,6,
                                 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
@@ -1162,7 +1162,7 @@ namespace Novell.iFolder
                         table.BorderWidth = 12;
 
                          // Row 1
-                        Label lbl = new Label(Util.GS("iFolder Account"+":"));
+                        Label lbl = new Label(Util.GS("_iFolder Account"+":"));
                         table.Attach(lbl, 0,1, 0,1,
                                 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
                         lbl.LineWrap = true;
@@ -1181,7 +1181,7 @@ namespace Novell.iFolder
 
                         //Row 2
 
-                        Label lb2 = new Label(Util.GS("Location of secret file")+ ":");
+                        Label lb2 = new Label(Util.GS("_Location of secret file")+ ":");
                         table.Attach(lb2, 0,1, 1,2,
                                 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
                         lb2.LineWrap = true;
@@ -1205,7 +1205,7 @@ namespace Novell.iFolder
                         //Row 3
 
 
-                         Label lb3 = new Label(Util.GS("Secret Password")+":");
+                         Label lb3 = new Label(Util.GS("_Secret Password")+":");
                         table.Attach(lb3, 0,1, 2,3,
                                 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
                         lb3.LineWrap = true;
@@ -1222,7 +1222,7 @@ namespace Novell.iFolder
 
                         //Row 4
 
-                         Label lb4 = new Label(Util.GS("New Passphrase")+":");
+                         Label lb4 = new Label(Util.GS("_New Passphrase")+":");
                         table.Attach(lb4, 0,1, 3,4,
                                 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
                         lb4.LineWrap = true;
@@ -1242,7 +1242,7 @@ namespace Novell.iFolder
 
                         //Row 6
 
-                        Label lb5 = new Label(Util.GS("Confirm Passphrase") + ":");
+                        Label lb5 = new Label(Util.GS("_Confirm Passphrase") + ":");
                         table.Attach(lb5, 0,1, 4,5,
                                 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
                         lb5.LineWrap = true;

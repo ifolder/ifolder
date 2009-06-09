@@ -212,7 +212,7 @@ namespace Novell.iFolder
 			table.BorderWidth = 12;
 
 			// Row 1
-			Label lbl = new Label(Util.GS("iFolder account")+":");
+			Label lbl = new Label(Util.GS("_iFolder account")+":");
 			table.Attach(lbl, 0,1, 0,1,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			lbl.LineWrap = true;
@@ -232,7 +232,7 @@ namespace Novell.iFolder
 			*/
 			// Row 2
 			
-			lbl = new Label(Util.GS("Enter passphrase")+":");
+			lbl = new Label(Util.GS("_Enter passphrase")+":");
 			table.Attach(lbl, 0,1, 1,2,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			lbl.LineWrap = true;
@@ -246,7 +246,7 @@ namespace Novell.iFolder
 			oldPassPhrase.Changed += new EventHandler(UpdateSensitivity);
 
 			// Row 3	
-			lbl = new Label(Util.GS("Enter new passphrase")+":");
+			lbl = new Label(Util.GS("Enter new _passphrase")+":");
 			table.Attach(lbl, 0,1, 2,3,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			lbl.LineWrap = true;
@@ -260,7 +260,7 @@ namespace Novell.iFolder
 			newPassPhrase.Changed += new EventHandler(UpdateSensitivity);	
 
 			// Row 4	
-			lbl = new Label(Util.GS("Re-type passphrase")+":");
+			lbl = new Label(Util.GS("_Re-type passphrase")+":");
 			table.Attach(lbl, 0,1, 3,4,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			lbl.LineWrap = true;
@@ -274,7 +274,7 @@ namespace Novell.iFolder
 			retypePassPhrase.Changed += new EventHandler(UpdateSensitivity);		
 
 			// Row 5
-			lbl = new Label(Util.GS("Recovery agent")+":");
+			lbl = new Label(Util.GS("Recovery _agent")+":");
 			table.Attach(lbl, 0,1, 4,5,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			lbl.LineWrap = true;
@@ -299,7 +299,7 @@ namespace Novell.iFolder
 		*/
 
 			// Row 6
-			savePassPhrase = new CheckButton(Util.GS("Remember passphrase"));
+			savePassPhrase = new CheckButton(Util.GS("_Remember passphrase"));
 			table.Attach(savePassPhrase, 1,2,5,6, AttachOptions.Expand|AttachOptions.Fill, 0,0,0);
 			
 			this.VBox.ShowAll();
