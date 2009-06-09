@@ -174,7 +174,7 @@ namespace Novell.iFolder
 			table.BorderWidth = 12;
 
 			// Row 1
-			Label lbl = new Label(Util.GS("iFolder Account")+":");
+			Label lbl = new Label(Util.GS("_iFolder Account")+":");
 			table.Attach(lbl, 0,1, 0,1,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			lbl.LineWrap = true;
@@ -184,7 +184,7 @@ namespace Novell.iFolder
 					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
 			// Row 2
 				
-			lbl = new Label(Util.GS("Current password")+":");
+			lbl = new Label(Util.GS("_Current password")+":");
 			table.Attach(lbl, 0,1, 1,2,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			lbl.LineWrap = true;
@@ -198,7 +198,7 @@ namespace Novell.iFolder
 			oldPassword.Changed += new EventHandler(UpdateSensitivity);
 
 			// Row 3	
-			lbl = new Label(Util.GS("New password")+":");
+			lbl = new Label(Util.GS("_New password")+":");
 			table.Attach(lbl, 0,1, 2,3,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			lbl.LineWrap = true;
@@ -212,7 +212,7 @@ namespace Novell.iFolder
 			newPassword.Changed += new EventHandler(UpdateSensitivity);	
 
 			// Row 4	
-			lbl = new Label(Util.GS("Confirm new password")+":");
+			lbl = new Label(Util.GS("Confirm new _password")+":");
 			table.Attach(lbl, 0,1, 3,4,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			lbl.LineWrap = true;
@@ -228,7 +228,7 @@ namespace Novell.iFolder
 			// Row 5
 			
 			// Row 6
-			savePassword = new CheckButton(Util.GS("Remember password"));
+			savePassword = new CheckButton(Util.GS("_Remember password"));
 			table.Attach(savePassword, 1,2,5,6, AttachOptions.Expand|AttachOptions.Fill, 0,0,0);
 			
 			this.VBox.ShowAll();
