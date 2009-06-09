@@ -1391,6 +1391,15 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to New data file location is invalid.
+        /// </summary>
+        internal static string newDataFileError {
+            get {
+                return ResourceManager.GetString("newDataFileError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New passphrase:.
         /// </summary>
         internal static string newPassphrase {
@@ -1454,6 +1463,24 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enter the location of an xml file..
+        /// </summary>
+        internal static string oldDataFileError {
+            get {
+                return ResourceManager.GetString("oldDataFileError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to send old data file.
+        /// </summary>
+        internal static string oldDataFileNotSend {
+            get {
+                return ResourceManager.GetString("oldDataFileNotSend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to iFolder Open Error.
         /// </summary>
         internal static string openErrorTitle {
@@ -1486,6 +1513,15 @@ namespace TrayApp.Properties {
         internal static string owner1 {
             get {
                 return ResourceManager.GetString("owner1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The values in the new and confirm passphrase fields do not match..
+        /// </summary>
+        internal static string passphraseNotEqualError {
+            get {
+                return ResourceManager.GetString("passphraseNotEqualError", resourceCulture);
             }
         }
         
