@@ -202,7 +202,7 @@
     <value>0</value>
   </data>
   <data name="accountLabel.Text" xml:space="preserve">
-    <value>iFolder account:</value>
+    <value>&amp;iFolder account:</value>
   </data>
   <data name="accountLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -232,7 +232,7 @@
     <value>1</value>
   </data>
   <data name="passphraseLabel.Text" xml:space="preserve">
-    <value>Enter passphrase:</value>
+    <value>E&amp;nter passphrase:</value>
   </data>
   <data name="passphraseLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -262,7 +262,7 @@
     <value>2</value>
   </data>
   <data name="newPassphraseLabel.Text" xml:space="preserve">
-    <value>Enter new passphrase:</value>
+    <value>&amp;Enter new passphrase:</value>
   </data>
   <data name="newPassphraseLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -292,7 +292,7 @@
     <value>3</value>
   </data>
   <data name="retypePassphraseLabel.Text" xml:space="preserve">
-    <value>Retype passphrase:</value>
+    <value>Retype &amp;passphrase:</value>
   </data>
   <data name="retypePassphraseLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -322,7 +322,7 @@
     <value>4</value>
   </data>
   <data name="recoveryAgentLabel.Text" xml:space="preserve">
-    <value>Recovery agent:</value>
+    <value>&amp;Recovery agent:</value>
   </data>
   <data name="recoveryAgentLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -472,7 +472,7 @@
     <value>10</value>
   </data>
   <data name="rememberPassphrase.Text" xml:space="preserve">
-    <value>Remember passphrase on this computer</value>
+    <value>Remember passphrase on &amp;this computer</value>
   </data>
   <data name="&gt;&gt;rememberPassphrase.Name" xml:space="preserve">
     <value>rememberPassphrase</value>
@@ -567,9 +567,9 @@
   <data name="&gt;&gt;buttonHelp.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <data name="$this.Localizable" type="System.Boolean, mscorlib">
     <value>True</value>
-  </metadata>
+  </data>
   <data name="$this.AutoScaleBaseSize" type="System.Drawing.Size, System.Drawing">
     <value>5, 13</value>
   </data>
