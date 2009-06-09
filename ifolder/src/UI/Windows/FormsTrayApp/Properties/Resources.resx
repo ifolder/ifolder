@@ -1064,4 +1064,16 @@ wizardText	Passphrase Recovery Wizard</value>
   <data name="secretPathInvalid" xml:space="preserve">
     <value>Location of secret file is invalid</value>
   </data>
+  <data name="passphraseNotEqualError" xml:space="preserve">
+    <value>The values in the new and confirm passphrase fields do not match.</value>
+  </data>
+  <data name="newDataFileError" xml:space="preserve">
+    <value>New data file location is invalid</value>
+  </data>
+  <data name="oldDataFileError" xml:space="preserve">
+    <value>Enter the location of an xml file.</value>
+  </data>
+  <data name="oldDataFileNotSend" xml:space="preserve">
+    <value>Unable to send old data file</value>
+  </data>
 </root>
