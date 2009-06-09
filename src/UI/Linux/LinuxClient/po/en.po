@@ -3878,3 +3878,23 @@ msgid ""
 "Server_Default"
 msgstr ""
 "Server_Default"
+
+msgid ""
+"The values in the new and confirm passphrase fields do not match"
+msgstr ""
+"The values in the new and confirm passphrase fields do not match"
+
+msgid ""
+"New data location is invalid"
+msgstr ""
+"New data location is invalid"
+
+msgid ""
+"Enter the location of an xml file"
+msgstr ""
+"Enter the location of an xml file"
+
+msgid "'
+"Unable to send old data file"
+msgstr ""
+"Unable to send old data file"
