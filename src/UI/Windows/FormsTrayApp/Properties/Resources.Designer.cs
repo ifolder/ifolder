@@ -356,7 +356,7 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Confirm passphrase:.
+        ///   Looks up a localized string similar to &amp;Confirm passphrase:.
         /// </summary>
         internal static string confirmPassphrase {
             get {
@@ -541,6 +541,15 @@ namespace TrayApp.Properties {
         internal static string domainSelectionPageName {
             get {
                 return ResourceManager.GetString("domainSelectionPageName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click Next to proceed..
+        /// </summary>
+        internal static string domainSelectionPageSecond {
+            get {
+                return ResourceManager.GetString("domainSelectionPageSecond", resourceCulture);
             }
         }
         
@@ -734,7 +743,7 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Location to save old data file:.
+        ///   Looks up a localized string similar to &amp;Location to save old data file:.
         /// </summary>
         internal static string exportPageFilePath {
             get {
@@ -761,7 +770,7 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Recovery agent :.
+        ///   Looks up a localized string similar to &amp;Recovery agent :.
         /// </summary>
         internal static string exportPageRA {
             get {
@@ -941,7 +950,7 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to iFolder account :.
+        ///   Looks up a localized string similar to &amp;iFolder account :.
         /// </summary>
         internal static string iFolderAcc {
             get {
@@ -1049,7 +1058,7 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Is the above file encrypted?.
+        ///   Looks up a localized string similar to Is the &amp;above file encrypted?.
         /// </summary>
         internal static string importPageEncryCheck {
             get {
@@ -1058,7 +1067,7 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Location of the new data file.
+        ///   Looks up a localized string similar to &amp;Location of the new data file.
         /// </summary>
         internal static string importPageFilePathOne {
             get {
@@ -1085,7 +1094,7 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to One time password : .
+        ///   Looks up a localized string similar to &amp;One time password : .
         /// </summary>
         internal static string importPageOTP {
             get {
@@ -1400,7 +1409,7 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to New passphrase:.
+        ///   Looks up a localized string similar to &amp;New passphrase:.
         /// </summary>
         internal static string newPassphrase {
             get {
@@ -1418,7 +1427,7 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Next.
+        ///   Looks up a localized string similar to &amp;Next.
         /// </summary>
         internal static string nextText {
             get {
@@ -1526,7 +1535,7 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Password:.
+        ///   Looks up a localized string similar to &amp;Password:.
         /// </summary>
         internal static string passwordText {
             get {
@@ -1823,7 +1832,7 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to I have no secret file or data file..
+        ///   Looks up a localized string similar to &amp;I have no secret file or data file..
         /// </summary>
         internal static string selectionPageFour {
             get {
@@ -1850,7 +1859,7 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to I have the secret file and the password to it.
+        ///   Looks up a localized string similar to I have the &amp;secret file and the password to it.
         /// </summary>
         internal static string selectionPageSecond {
             get {
@@ -1859,7 +1868,7 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to I have the new data file sent by the administrator..
+        ///   Looks up a localized string similar to I have the new &amp;data file sent by the administrator..
         /// </summary>
         internal static string selectionPageThird {
             get {
@@ -1949,7 +1958,7 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Location  of secret file: .
+        ///   Looks up a localized string similar to &amp;Location  of secret file: .
         /// </summary>
         internal static string singleWizP12File {
             get {
@@ -1976,7 +1985,7 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Secret file password:.
+        ///   Looks up a localized string similar to &amp;Secret file password:.
         /// </summary>
         internal static string singleWizPasswd {
             get {
