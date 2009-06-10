@@ -88,11 +88,14 @@ namespace Novell.Wizard
 		/// </summary>
 		private void InitializeComponent()
 		{
-			// 
-			// BaseWizardPage
-			// 
-			this.Name = "BaseWizardPage";
-			this.Size = new System.Drawing.Size(496, 304);
+            this.SuspendLayout();
+            // 
+            // BaseWizardPage
+            // 
+            this.BackColor = System.Drawing.SystemColors.Control;
+            this.Name = "BaseWizardPage";
+            this.Size = new System.Drawing.Size(496, 304);
+            this.ResumeLayout(false);
 
 		}
 		#endregion
