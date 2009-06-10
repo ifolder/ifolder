@@ -318,10 +318,10 @@ namespace Novell.iFolder
 			}
 		}
 
-		public void ShowIconView()
+		public void ShowIconView(bool val)
                 {
-	        	ifolderlistview.Visible = false;  
-                      	iFoldersIconView.Visible = true;
+			ifolderlistview.Visible = !val;
+                        iFoldersScrolledWindow.Visible = val;
                 }
 
 		/// <summary>
