@@ -980,6 +980,7 @@ namespace Novell.FormsTrayApp
              //   RemoveDomainFromUIList(ifolder.DomainID, null);
                 refreshAll();
             }
+            showiFolderinListView();
 			updateView();
 		}
 
@@ -1309,11 +1310,9 @@ namespace Novell.FormsTrayApp
 
 		private void addiFolderToListView(iFolderObject ifolderObject)
 		{
-			//MessageBox.Show("Called addifoldertolistview");
 			iFolderWeb ifolder = ifolderObject.iFolderWeb;
 			if ( !ifolder.IsSubscription )
 			{
-			//	MessageBox.Show("Not a subscription");
 				lock (ht)
 				{
 					// Add only if it isn't already in the list.
@@ -1327,16 +1326,13 @@ namespace Novell.FormsTrayApp
 						iFolderView.Items.Sort();
 						// Add the listviewitem to the hashtable.
 						ht.Add(ifolder.ID, tlvi);
-			//			MessageBox.Show(String.Format("Added a new Item to iFolderView: hashtable count: {0}", ht.Count));
-					}
-					else
-					{
-			//			MessageBox.Show("The folder is already present in ht:");
 					}
 				}
-
 				// Notify the shell.
-				Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
+				Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, 
+                    Win32Window.SHCNF_PATHW, 
+                    ifolder.UnManagedPath, 
+                    IntPtr.Zero);
 			}
 			else
 			{
@@ -1349,7 +1345,7 @@ namespace Novell.FormsTrayApp
 					}
 				}
 			}
-
+            showiFolderinListView();
 			updateView();
 		}
 
@@ -2629,9 +2625,14 @@ namespace Novell.FormsTrayApp
 
 		private void menuRefresh_Click(object sender, System.EventArgs e)
 		{
-			if( this.inRefresh == false )
-				refreshAll(/*(Domain)servers.SelectedItem*/);
+            refreshAllInvoke();
 		}
+
+        private void refreshAllInvoke()
+        {
+            if (this.inRefresh == false)
+                refreshAll(/*(Domain)servers.SelectedItem*/);
+        }
 
 		private void menuViewAccounts_Click(object sender, System.EventArgs e)
 		{
@@ -3161,7 +3162,9 @@ namespace Novell.FormsTrayApp
             {
                 if (comboBoxSelectedIndex > (domaincount - 1))
                 {
-                    domainListComboBox.SelectedIndex = comboBoxSelectedIndex = 0;
+                    if( domainListComboBox.Items.Count > 1)
+                        domainListComboBox.SelectedIndex = 0;
+                    comboBoxSelectedIndex = 0;
                 }
                 else
                 {
@@ -3170,7 +3173,9 @@ namespace Novell.FormsTrayApp
             }
             else
             {
-                domainListComboBox.SelectedIndex = comboBoxSelectedIndex = 0;
+                if (domainListComboBox.Items.Count > 1)
+                    domainListComboBox.SelectedIndex = 0;
+                comboBoxSelectedIndex = 0;
             }
         }
         private void serverListComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -3231,18 +3236,16 @@ namespace Novell.FormsTrayApp
         
         private void LoginLogoff_Click(object sender, EventArgs e)
         {
-            if (selectedDomain.Authenticated)
+            if (simiasWebService.GetDomainInformation(selectedDomain.ID).Authenticated)
             {
                 preferences.logoutFromDomain(new Domain(selectedDomain));
+                showiFolderinListView();
             }
             else
             {
-                if(preferences.loginToDomain(new Domain(selectedDomain)))
-                {
-                    selectedDomain.Authenticated = true;
-                }
+                preferences.loginToDomain(new Domain(selectedDomain));
             }
-            setAuthState(selectedDomain);
+            setAuthState(simiasWebService.GetDomainInformation(selectedDomain.ID));
         }
 
         private void setThumbnailView(bool visible)
@@ -3256,14 +3259,21 @@ namespace Novell.FormsTrayApp
             //show/hide panel2 that contains detial view.
             panel1.Visible = !visible;
             listView1.Visible = !visible;
+
+            //need to refresh when the view change from list to thumbnail
+            //and set focus on listview when changed to listview.
+            if (visible)
+                refreshAllInvoke();
+            else  
+                setListViewItemSelected();
         }
 
         private void showiFolderinListView()
         {
-            if (thumbnailView) return; //do not want to refresh when in other view.
+            //do not want to refresh when in other view
+            if (thumbnailView) return; 
             listView1.Items.Clear();
             // Walk the list of iFolders and add them to the listviews.
-            String status = null;
             this.listView1.SuspendLayout();
             if (ht != null)
             {
@@ -3274,30 +3284,21 @@ namespace Novell.FormsTrayApp
                     iFolderObject ifObj = (iFolderObject)tlvi.Tag;
                     int imageIndex;
                     tlvi.Status = getItemState(ifObj, 0, out imageIndex);
-                    
-                    if (ifObj.iFolderWeb.IsSubscription)
-                        status = Resources.availablefordownload;
-                    else
-                        status = tlvi.Status;
-
-                    //SyncSize syncSize = ifWebService.CalculateSyncSize(ifObj.iFolderWeb.CollectionID);
                     ListViewItem listViewItem1 = new ListViewItem(
                     new string[] { 
                     ifObj.iFolderWeb.Name,
                     FormatSize(ifObj.iFolderWeb.iFolderSize),
                     (simiasWebService.GetDomainInformation(ifObj.iFolderWeb.DomainID)).Host,
-                    status,
+                    ifObj.iFolderWeb.IsSubscription ? Resources.availablefordownload : tlvi.Status,
                     ifObj.iFolderWeb.ID},
                     imageIndex,
                     Color.Empty,
                     Color.Empty,
                     new Font("Microsoft Sans Serif", 12.25F, FontStyle.Regular, GraphicsUnit.Point, ((System.Byte)(0))));
-                    //listViewItem1.ImageIndex = imageIndex;
                     listView1.Items.Add(listViewItem1);
                 }
             }
             this.ResumeLayout();
-            //TODO: imagelist should contain the similar set of images as the thumnail view.
         }
 
         private void toolStripMenuThumbnails_Click(object sender, EventArgs e)
@@ -3356,7 +3357,15 @@ namespace Novell.FormsTrayApp
         {
             // below check is done as this event is generated twice
             if (listView1.SelectedItems == null || listView1.SelectedItems.Count == 0)
-                return; 
+            {
+                if (selectedItem != null && selectedItem.Selected  )
+                {
+                    selectedItem.Selected = false;
+                    selectedItem = null;
+                }
+                updateMenus(null);
+                return;
+            }
             string id = listView1.Items[listView1.SelectedIndices[0]].SubItems[4].Text.ToString();
             TileListViewItem tlvi = (TileListViewItem)ht[id];
             tlvi.Selected = true;
@@ -3368,8 +3377,8 @@ namespace Novell.FormsTrayApp
                 listView1.Focus();
                 iFolderObject ifObj = (iFolderObject)selectedItem.Tag;
                 ListViewItem item = listView1.FindItemWithText(ifObj.iFolderWeb.ID);
-                listView1.Items[item.Index].Selected = true;
                 listView1.Items[item.Index].Focused = true;
+                listView1.Items[item.Index].Selected = true;
             }
         }
 
